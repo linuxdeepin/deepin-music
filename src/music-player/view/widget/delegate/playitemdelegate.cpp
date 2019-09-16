@@ -232,8 +232,7 @@ void PlayItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
 
         painter->fillRect(option.rect, background);
 
-        int borderWidth = 10;
-        QRect rect = option.rect.adjusted(borderWidth, borderWidth, -borderWidth, -borderWidth);
+        QRect rect(option.rect.x(), option.rect.y(), 140, 183);
         QPainterPath roundRectPath;
         roundRectPath.addRoundRect(rect, 10, 10);
         painter->setClipPath(roundRectPath);
@@ -243,26 +242,59 @@ void PlayItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
         if (value.type() == QVariant::Icon) {
             icon = qvariant_cast<QIcon>(value);
         }
-        painter->drawPixmap(option.rect, icon.pixmap(option.rect.width(), option.rect.width()));
+        QRect pixmapRect(option.rect.x(), option.rect.y(), 140, 140);
+        painter->save();
+        QPainterPath roundPixmapRectPath;
+        roundPixmapRectPath.addRoundRect(pixmapRect, 10, 10);
+        painter->setClipPath(roundPixmapRectPath);
+        painter->drawPixmap(pixmapRect, icon.pixmap(option.rect.width(), option.rect.width()));
+        painter->restore();
 
-        QRect fillRect(option.rect.x() + borderWidth, option.rect.y() + option.rect.height() * 2 / 3, option.rect.width() - borderWidth * 2, option.rect.height() / 3 - borderWidth);
-        QColor fillColor(128, 128, 128, 220);
-        painter->fillRect(fillRect, fillColor);
+        int startHeight = option.rect.y() + 149;
+        int fillAllHeight = 34;
 
         QFont font = option.font;
-        font.setPixelSize(12);
+        font.setFamily("SourceHanSansSC-Normal");
+        font.setPixelSize(13);
         painter->setFont(font);
         QFontMetrics fm(font);
-        fillRect.adjust(5, 0, -5, 0);
-        auto text = fm.elidedText(meta->title, Qt::ElideMiddle, fillRect.width());
+
+        QRect nameFillRect(option.rect.x(), startHeight, option.rect.width(), fillAllHeight / 2);
+        nameFillRect.adjust(8, 0, -7, 0);
+        auto nameText = fm.elidedText(meta->title, Qt::ElideRight, 140);
+        painter->drawText(nameFillRect, Qt::AlignLeft | Qt::AlignTop, nameText);
+
+        font.setPixelSize(11);
+        painter->setFont(font);
+        QRect extraNameFillRect(option.rect.x(), startHeight + fillAllHeight / 2, 99, 16);
+        extraNameFillRect.adjust(8, 0, -7, 0);
+        auto extraNameText = fm.elidedText(meta->artist, Qt::ElideRight, 99);
+        painter->drawText(extraNameFillRect, Qt::AlignLeft | Qt::AlignTop, extraNameText);
+
+        //draw time
+        QRect timeFillRect(option.rect.x() + 102, startHeight + 17, 38, 16);
+        painter->save();
+        QColor timeFillColor("#232323");
+        timeFillColor.setAlphaF(0.3);
+        painter->setPen(Qt::NoPen);
+        painter->setBrush(timeFillColor);
+        painter->drawRoundedRect(timeFillRect, 10, 10);
+        painter->restore();
+
+        font.setPixelSize(12);
+        painter->setFont(font);
         painter->setPen(Qt::white);
-        painter->drawText(fillRect, Qt::AlignLeft | Qt::AlignVCenter, meta->title);
+        auto timeText = fm.elidedText(DMusic::lengthString(meta->length), Qt::ElideRight, 38);
+        painter->drawText(timeFillRect, Qt::AlignHCenter | Qt::AlignTop, timeText);
 
         QBrush t_fillBrush(QColor(128, 128, 128, 0));
-        if (option.state & QStyle::State_HasFocus) {
+        if (option.state & QStyle::State_Selected) {
             t_fillBrush = QBrush(QColor(128, 128, 128, 90));
         }
-        painter->fillRect(option.rect, t_fillBrush);
+        painter->save();
+        painter->setClipPath(roundPixmapRectPath);
+        painter->fillRect(pixmapRect, t_fillBrush);
+        painter->restore();
 
         painter->restore();
 

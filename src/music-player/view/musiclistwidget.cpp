@@ -43,14 +43,24 @@ MusicListWidget::MusicListWidget(QWidget *parent) : DWidget(parent)
     setObjectName("MusicListWidget");
 
     setAutoFillBackground(true);
+    auto palette = this->palette();
+    palette.setColor(DPalette::Background, QColor("#F8F8F8"));
+    setPalette(palette);
 
     auto layout = new QHBoxLayout(this);
     setFocusPolicy(Qt::ClickFocus);
     layout->setContentsMargins(0, 0, 0, 0);
     layout->setSpacing(0);
 
-    auto musicLayout = new QVBoxLayout(this);
-    musicLayout->setContentsMargins(0, 0, 0, 0);
+    auto leftFrame = new DFrame;
+    leftFrame->setFixedWidth(220);
+    leftFrame->setAutoFillBackground(true);
+    auto leftFramePalette = leftFrame->palette();
+    leftFramePalette.setColor(DPalette::Background, QColor("#FFFFFF"));
+    leftFrame->setPalette(leftFramePalette);
+
+    auto musicLayout = new QVBoxLayout(leftFrame);
+    musicLayout->setContentsMargins(10, 5, 10, 5);
     musicLayout->setSpacing(0);
 
     DLabel *dataBaseLabel = new DLabel;
@@ -81,6 +91,7 @@ MusicListWidget::MusicListWidget(QWidget *parent) : DWidget(parent)
     addListBtn->setFocusPolicy(Qt::NoFocus);
 
     auto customizeLayout = new QHBoxLayout(this);
+    customizeLayout->setContentsMargins(10, 0, 10, 0);
     customizeLayout->addWidget(customizeLabel, 100, Qt::AlignLeft);
     customizeLayout->addStretch();
     customizeLayout->addWidget(addListBtn, 0, Qt::AlignRight);
@@ -95,7 +106,7 @@ MusicListWidget::MusicListWidget(QWidget *parent) : DWidget(parent)
     musicLayout->addLayout(customizeLayout);
     musicLayout->addWidget(m_customizeListview);
 
-    layout->addLayout(musicLayout, 0);
+    layout->addWidget(leftFrame, 0);
     layout->addWidget(m_dataListView, 100);
 
     connect(addListBtn, &DPushButton::clicked, this, [ = ](bool /*checked*/) {
@@ -104,9 +115,9 @@ MusicListWidget::MusicListWidget(QWidget *parent) : DWidget(parent)
         Q_EMIT this->addPlaylist(true);
     });
 
-    connect(m_dataBaseListview, &MusicListView::itemClicked,
+    connect(m_dataBaseListview, &MusicListView::itemPressed,
     this, [ = ](QListWidgetItem * item) {
-        this->setEnabled(false);
+//        this->setEnabled(false);
         auto playlistItem = dynamic_cast<MusicListViewItem *>(item);
         if (!playlistItem) {
             qCritical() << "playlistItem is empty" << item << playlistItem;
@@ -117,7 +128,7 @@ MusicListWidget::MusicListWidget(QWidget *parent) : DWidget(parent)
         m_dataListView->onMusiclistChanged(playlistItem->data());
 //        Q_EMIT this->selectPlaylist(playlistItem->data());
         DUtil::TimerSingleShot(500, [this]() {
-            this->setEnabled(true);
+//            this->setEnabled(true);
             Q_EMIT this->hidePlaylist();
         });
     });
@@ -142,9 +153,9 @@ MusicListWidget::MusicListWidget(QWidget *parent) : DWidget(parent)
         Q_EMIT this->playall(playlist);
     });
 
-    connect(m_customizeListview, &MusicListView::itemClicked,
+    connect(m_customizeListview, &MusicListView::itemPressed,
     this, [ = ](QListWidgetItem * item) {
-        this->setEnabled(false);
+//        this->setEnabled(false);
         auto playlistItem = dynamic_cast<MusicListViewItem *>(item);
         if (!playlistItem) {
             qCritical() << "playlistItem is empty" << item << playlistItem;
@@ -155,7 +166,7 @@ MusicListWidget::MusicListWidget(QWidget *parent) : DWidget(parent)
         m_dataListView->onMusiclistChanged(playlistItem->data());
 //        Q_EMIT this->selectPlaylist(playlistItem->data());
         DUtil::TimerSingleShot(500, [this]() {
-            this->setEnabled(true);
+//            this->setEnabled(true);
             Q_EMIT this->hidePlaylist();
         });
     });
@@ -259,12 +270,13 @@ void MusicListWidget::initData(QList<PlaylistPtr > playlists, PlaylistPtr last)
     }
 }
 
-void MusicListWidget::onMusicPlayed(PlaylistPtr playlist, const MetaPtr)
+void MusicListWidget::onMusicPlayed(PlaylistPtr playlist, const MetaPtr meta)
 {
     for (int i = 0; i < m_dataBaseListview->count(); ++i) {
         QListWidgetItem *item = m_dataBaseListview->item(i);
         auto playlistItem = dynamic_cast<MusicListViewItem *>(item);
     }
+    m_dataListView->onMusicPlayed(playlist, meta);
 }
 
 void MusicListWidget::focusOutEvent(QFocusEvent *event)

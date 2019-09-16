@@ -48,6 +48,7 @@ public:
     QMap<QString, PlayMusicTypePtr>   metas;
 
     int     sortType    = 0;
+    int     orderType   = 0;
 };
 
 Q_DECLARE_METATYPE(PlayMusicType)
@@ -113,6 +114,8 @@ public:
 
     void play(const MetaPtr meta);
     void reset(const MetaPtrList);
+
+    void changePlayMusicTypeOrderType();
 
 public slots:
     void setDisplayName(const QString &name);

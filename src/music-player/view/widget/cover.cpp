@@ -32,7 +32,7 @@ class CoverPrivate
 public:
     CoverPrivate(Cover *parent): q_ptr(parent) {}
 
-    int     m_radius        = 4;
+    int     m_radius        = 10;
     QColor  m_borderColor;
     QColor  m_shadowColor;
     QPixmap m_Background;
@@ -49,7 +49,6 @@ Cover::Cover(QWidget *parent)
     Q_D(Cover);
 
     QWidget::setAttribute(Qt::WA_TranslucentBackground, true);
-    d->m_radius = 4;
     d->m_borderColor = QColor(255, 0, 0, 152);
     d->m_shadowColor = QColor(0, 255, 0, 126);
 
@@ -100,15 +99,19 @@ void Cover::paintEvent(QPaintEvent *)
     auto penWidthf = borderPenWidth;
 
     // draw background
-    auto backgroundRect = QRectF(rect()).marginsRemoved(d->outterMargins);
+    //auto backgroundRect = QRectF(rect()).marginsRemoved(d->outterMargins);
+    auto backgroundRect = rect();
+    QPainterPath backgroundPath;
+    backgroundPath.addRoundedRect(backgroundRect, radius, radius);
+    painter.setClipPath(backgroundPath);
+    painter.setPen(Qt::NoPen);
     if (d->m_Background.isNull()) {
-        QPainterPath backgroundPath;
-        backgroundPath.addRoundedRect(backgroundRect, radius, radius);
         painter.fillPath(backgroundPath, backgroundColor);
     } else {
-        painter.drawPixmap(backgroundRect.toRect(), d->m_Background);
+        painter.drawPixmap(backgroundRect, d->m_Background);
     }
 
+    return;
     // draw border
     QPainterPath innerBorderPath;
     QRectF borderRect = QRectF(rect()).marginsRemoved(d->outterMargins);

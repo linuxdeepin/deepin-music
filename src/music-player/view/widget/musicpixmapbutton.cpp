@@ -35,6 +35,9 @@ void MusicPixmapButton::paintEvent(QPaintEvent *event)
     QPainter painter(this);
     painter.save();
 
+    QPainterPath backgroundPath;
+    backgroundPath.addRoundedRect(rect(), 10, 10);
+    painter.setClipPath(backgroundPath);
     painter.drawPixmap(rect(), icon().pixmap(rect().width(), rect().height()));
 
     painter.restore();

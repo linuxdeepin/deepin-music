@@ -83,7 +83,7 @@ TitlebarWidget::TitlebarWidget(QWidget *parent) :
 
     d->search = new SearchEdit(this);
     d->search->setObjectName("TitleSearch");
-    d->search->setFixedSize(278, 26);
+    d->search->setFixedSize(278, 40);
     d->search->setPlaceHolder(tr("Search"));
     d->search->clear();
 

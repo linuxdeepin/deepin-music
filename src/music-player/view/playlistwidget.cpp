@@ -132,11 +132,23 @@ void PlayListWidgetPrivate::showEmptyHits(bool empty)
 }
 
 PlayListWidget::PlayListWidget(QWidget *parent) :
-    DWidget(parent), d_ptr(new PlayListWidgetPrivate(this))
+    DBlurEffectWidget(parent), d_ptr(new PlayListWidgetPrivate(this))
 {
     Q_D(PlayListWidget);
 
-    setAutoFillBackground(true);
+    setBlurRectXRadius(18);
+    setBlurRectYRadius(18);
+    setRadius(30);
+
+    //setAutoFillBackground(true);
+
+    setMode(DBlurEffectWidget::GaussianBlur);
+    setBlurEnabled(true);
+    setBlendMode(DBlurEffectWidget::BehindWindowBlend);
+    QColor maskColor("#F7F7F7");
+    maskColor.setAlphaF(0.6);
+    setMaskColor(maskColor);
+    setMaskAlpha(255);
 
     setObjectName("PlayListWidget");
     setAcceptDrops(true);

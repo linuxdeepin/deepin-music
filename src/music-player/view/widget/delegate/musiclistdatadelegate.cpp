@@ -25,6 +25,8 @@
 #include <QDebug>
 #include <QDate>
 
+#include <DHiDPIHelper>
+
 #include "../musiclistdataview.h"
 
 const int PlayItemRightMargin = 20;
@@ -40,6 +42,7 @@ public:
     explicit MusicListDataDelegatePrivate(MusicListDataDelegate *parent): q_ptr(parent) {}
 
     QWidget *parentWidget;
+    QPixmap playing = DHiDPIHelper::loadNxPixmap(":/common/image/jumpto_playing_normal.svg");
 
     MusicListDataDelegate *q_ptr;
     Q_DECLARE_PUBLIC(MusicListDataDelegate)
@@ -85,40 +88,64 @@ void MusicListDataDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
         if (value.type() == QVariant::Icon) {
             icon = qvariant_cast<QIcon>(value);
         }
-        painter->drawPixmap(option.rect, icon.pixmap(option.rect.width(), option.rect.width()));
+        painter->drawPixmap(rect, icon.pixmap(rect.width(), rect.width()));
 
         if (PlayMusicTypePtr->extraName.isEmpty()) {
-            QRect fillRect(option.rect.x() + borderWidth, option.rect.y() + option.rect.height() * 2 / 3, option.rect.width() - borderWidth * 2, option.rect.height() / 3 - borderWidth);
-            QColor fillColor(128, 128, 128, 220);
+            QColor fillColor(0, 0, 0);
+            fillColor.setAlphaF(0.3);
+            //draw playing
+            if (listview->playing() != nullptr && listview->playing()->artist == PlayMusicTypePtr->name) {
+                QRect fillPlayingRect(rect.x(), rect.y() + rect.height() - 64, rect.width(), 28);
+                painter->fillRect(fillPlayingRect, fillColor);
+
+                painter->drawPixmap(QRect(rect.x() + 64, rect.y() + 96, 22, 18), d->playing);
+            }
+
+            QRect fillRect(rect.x(), rect.y() + rect.height() - 36, rect.width(), 36);
             painter->fillRect(fillRect, fillColor);
 
             QFont font = option.font;
-            font.setPixelSize(12);
+            font.setFamily("SourceHanSansSC-Normal");
+            font.setPixelSize(14);
             painter->setFont(font);
             QFontMetrics fm(font);
-            fillRect.adjust(5, 0, -5, 0);
+            fillRect.adjust(8, 0, -7, 0);
             auto text = fm.elidedText(PlayMusicTypePtr->name, Qt::ElideMiddle, fillRect.width());
             painter->setPen(Qt::white);
             painter->drawText(fillRect, Qt::AlignLeft | Qt::AlignVCenter, text);
         } else {
-            int startHeight = option.rect.y() + option.rect.height() * 2 / 3;
-            int fillAllHeight = option.rect.height() / 3 - borderWidth;
+            QColor fillColor(0, 0, 0);
+            fillColor.setAlphaF(0.3);
 
-            QRect fillRect(option.rect.x() + borderWidth, startHeight, option.rect.width() - borderWidth * 2, fillAllHeight);
-            QColor fillColor(128, 128, 128, 220);
+            //draw playing
+            if (listview->playing() != nullptr && listview->playing()->album == PlayMusicTypePtr->name) {
+                QRect fillPlayingRect(rect.x(), rect.y() + rect.height() - 83, rect.width(), 39);
+                painter->fillRect(fillPlayingRect, fillColor);
+
+                painter->drawPixmap(QRect(rect.x() + 64, rect.y() + 82, 22, 18), d->playing);
+            }
+
+            int startHeight = rect.y() + rect.height() - 44;
+            int fillAllHeight = 44;
+
+            QRect fillRect(rect.x(), startHeight, rect.width(), fillAllHeight);
             painter->fillRect(fillRect, fillColor);
 
             QFont font = option.font;
-            font.setPixelSize(12);
+            font.setPixelSize(14);
             painter->setFont(font);
             QFontMetrics fm(font);
 
-            QRect nameFillRect(option.rect.x() + borderWidth, startHeight, option.rect.width() - borderWidth * 2, fillAllHeight / 2);
+            QRect nameFillRect(rect.x(), startHeight, rect.width(), fillAllHeight / 2);
+            nameFillRect.adjust(8, 0, -7, 0);
             auto nameText = fm.elidedText(PlayMusicTypePtr->name, Qt::ElideMiddle, fillRect.width());
             painter->setPen(Qt::white);
-            painter->drawText(nameFillRect, Qt::AlignLeft | Qt::AlignVCenter, nameText);
+            painter->drawText(nameFillRect, Qt::AlignLeft | Qt::AlignTop, nameText);
 
-            QRect extraNameFillRect(option.rect.x() + borderWidth, startHeight + fillAllHeight / 2, option.rect.width() - borderWidth * 2, fillAllHeight / 2);
+            font.setPixelSize(11);
+            painter->setFont(font);
+            QRect extraNameFillRect(rect.x(), startHeight + fillAllHeight / 2 - 5, rect.width(), fillAllHeight / 2);
+            extraNameFillRect.adjust(8, 0, -7, 0);
             auto extraNameText = fm.elidedText(PlayMusicTypePtr->extraName, Qt::ElideMiddle, fillRect.width());
             painter->setPen(Qt::white);
             painter->drawText(extraNameFillRect, Qt::AlignLeft | Qt::AlignTop, extraNameText);
@@ -126,7 +153,7 @@ void MusicListDataDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
 
 
         QBrush t_fillBrush(QColor(128, 128, 128, 0));
-        if (option.state & QStyle::State_HasFocus) {
+        if (option.state & QStyle::State_Selected) {
             t_fillBrush = QBrush(QColor(128, 128, 128, 90));
         }
         painter->fillRect(option.rect, t_fillBrush);
@@ -285,6 +312,7 @@ MusicListDataDelegate::MusicListDataDelegate(QWidget *parent): QStyledItemDelega
 {
     Q_D(MusicListDataDelegate);
     d->parentWidget = parent;
+    d->playing = d->playing.scaled(22, 18);
 }
 
 MusicListDataDelegate::~MusicListDataDelegate()

@@ -26,13 +26,22 @@
 #include <DDialog>
 
 #include <DScrollBar>
+#include <DPalette>
 
 #include "musiclistviewitem.h"
+
+DGUI_USE_NAMESPACE
 
 MusicListView::MusicListView(QWidget *parent) : DListWidget(parent)
 {
     setIconSize( QSize(40, 40) );
     setGridSize( QSize(40, 40) );
+
+    setFrameShape(QFrame::NoFrame);
+    setAutoFillBackground(true);
+    auto pl = palette();
+    pl.setColor(DPalette::Base, QColor(Qt::transparent));
+    setPalette(pl);
 
     setSelectionMode(QListView::SingleSelection);
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);

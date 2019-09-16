@@ -52,6 +52,7 @@ public:
     MusicListDataModel      *model        = nullptr;
     MusicListDataDelegate   *delegate     = nullptr;
     QString                 defaultCover = ":/common/image/cover_max.svg";
+    MetaPtr                 playing       = nullptr;
 
     MusicListDataView *q_ptr;
     Q_DECLARE_PUBLIC(MusicListDataView)
@@ -109,13 +110,25 @@ PlaylistPtr MusicListDataView::playlist() const
 void MusicListDataView::setViewModeFlag(QListView::ViewMode mode)
 {
     if (mode == QListView::IconMode) {
-        setIconSize( QSize(150, 150) );
-        setGridSize( QSize(150, 150) );
+        setIconSize( QSize(170, 170) );
+        setGridSize( QSize(170, 170) );
     } else {
         setIconSize( QSize(36, 36) );
         setGridSize( QSize(36, 36) );
     }
     setViewMode(mode);
+}
+
+void MusicListDataView::setPlaying(const MetaPtr meta)
+{
+    Q_D(MusicListDataView);
+    d->playing = meta;
+}
+
+MetaPtr MusicListDataView::playing() const
+{
+    Q_D(const MusicListDataView);
+    return d->playing;
 }
 
 void MusicListDataView::onMusiclistChanged(PlaylistPtr playlist)

@@ -93,6 +93,7 @@ void saveThemeTypeSetting(int type)
 
 int main(int argc, char *argv[])
 {
+    DApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 #ifdef SNAP_APP
     DStandardPaths::setMode(DStandardPaths::Snap);
 #endif

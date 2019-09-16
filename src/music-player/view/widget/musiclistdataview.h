@@ -36,6 +36,8 @@ public:
     PlaylistPtr playlist() const;
 
     void setViewModeFlag(QListView::ViewMode mode);
+    void setPlaying(const MetaPtr);
+    MetaPtr playing() const;
 
 public:
     void onMusiclistChanged(PlaylistPtr playlist);

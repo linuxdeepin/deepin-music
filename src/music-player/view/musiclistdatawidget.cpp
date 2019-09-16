@@ -214,13 +214,15 @@ void MusicListDataWidgetPrivate::initConntion()
     q, [ = ](QAction * action) {
         albumDropdown->setCurrentAction(action);
         int t_sortType = action->data().toInt() == 0 ? 1 : 0;
+        albumListView->playlist()->changePlayMusicTypeOrderType();
         albumListView->playlist()->sortPlayMusicTypePtrListData(t_sortType);
-        Q_EMIT q->resort(albumListView->playlist(), action->data().value<Playlist::SortType>());
+        //Q_EMIT q->resort(albumListView->playlist(), action->data().value<Playlist::SortType>());
     });
     q->connect(artistDropdown, &DDropdown::triggered,
     q, [ = ](QAction * action) {
         artistDropdown->setCurrentAction(action);
         int t_sortType = action->data().toInt() == 0 ? 1 : 0;
+        artistListView->playlist()->changePlayMusicTypeOrderType();
         artistListView->playlist()->sortPlayMusicTypePtrListData(t_sortType);
         //Q_EMIT q->resort(artistListView->playlist(), action->data().value<Playlist::SortType>());
     });
@@ -369,6 +371,11 @@ MusicListDataWidget::MusicListDataWidget(QWidget *parent) :
     setAcceptDrops(true);
 
     setAutoFillBackground(true);
+    auto palette = this->palette();
+    QColor background("#FFFFFF");
+    background.setAlphaF(0.1);
+    palette.setColor(DPalette::Background, background);
+    setPalette(palette);
 
     auto layout = new QVBoxLayout(this);
     layout->setContentsMargins(0, 0, 8, 0);
@@ -437,18 +444,26 @@ MusicListDataWidget::MusicListDataWidget(QWidget *parent) :
     d->btPlayAll = new DPushButton;
     auto playAllPalette = d->btPlayAll->palette();
     playAllPalette.setColor(DPalette::ButtonText, Qt::white);
-    playAllPalette.setColor(DPalette::Dark, QColor(Qt::red));
-    playAllPalette.setColor(DPalette::Light, QColor(Qt::red));
+    playAllPalette.setColor(DPalette::Dark, QColor("#FD5E5E"));
+    playAllPalette.setColor(DPalette::Light, QColor("#ED5656"));
     d->btPlayAll->setPalette(playAllPalette);
     d->btPlayAll->setIcon(QIcon(":/mpimage/light/normal/play_all_normal.svg"));
     d->btPlayAll->setObjectName("MusicListDataPlayAll");
     d->btPlayAll->setText(tr("Play All"));
-    d->btPlayAll->setFixedHeight(36);
+    d->btPlayAll->setFixedHeight(30);
     d->btPlayAll->setFocusPolicy(Qt::NoFocus);
+    auto btPlayAllFont = d->btPlayAll->font();
+    btPlayAllFont.setFamily("SourceHanSansSC-Medium");
+    btPlayAllFont.setPixelSize(14);
+    d->btPlayAll->setFont(btPlayAllFont);
 
     d->infoLabel = new DLabel;
     d->infoLabel->setObjectName("MusicListDataTitle");
     d->infoLabel->setText(tr("All Music"));
+    d->infoLabel->setFont(btPlayAllFont);
+    auto infoLabelPalette = d->infoLabel->palette();
+    infoLabelPalette.setColor(DPalette::ButtonText, ("#777777"));
+    d->infoLabel->setPalette(infoLabelPalette);
 
     d->btIconMode = new MusicImageButton(":/mpimage/light/normal/picture_list_normal.svg",
                                          ":/mpimage/light/hover/picture_list_hover.svg",
@@ -540,6 +555,15 @@ void MusicListDataWidget::onMusiclistUpdate()
 {
     Q_D(MusicListDataWidget);
     d->initData(d->curPlaylist);
+}
+
+void MusicListDataWidget::onMusicPlayed(PlaylistPtr playlist, const MetaPtr Meta)
+{
+    Q_D(MusicListDataWidget);
+    d->albumListView->setPlaying(Meta);
+    d->artistListView->setPlaying(Meta);
+    d->albumListView->update();
+    d->artistListView->update();
 }
 
 void MusicListDataWidget::onCustomContextMenuRequest(const QPoint &pos, PlaylistPtr selectedlist, PlaylistPtr favlist, QList<PlaylistPtr> newlists)

@@ -70,8 +70,8 @@ PlayListView::PlayListView(QWidget *parent)
     d->delegate = new PlayItemDelegate;
     setItemDelegate(d->delegate);
 
-    setDragEnabled(true);
-    viewport()->setAcceptDrops(true);
+    //setDragEnabled(true);
+    //viewport()->setAcceptDrops(true);
     setDropIndicatorShown(true);
     setDragDropOverwriteMode(false);
     setVerticalScrollMode(QAbstractItemView::ScrollPerItem);
@@ -79,6 +79,8 @@ PlayListView::PlayListView(QWidget *parent)
     setDefaultDropAction(Qt::MoveAction);
     setDragDropMode(QAbstractItemView::InternalMove);
     setMovement(QListView::Free);
+
+    setViewModeFlag(QListView::ListMode);
 
     setSelectionMode(QListView::ExtendedSelection);
     setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
@@ -137,11 +139,13 @@ QModelIndex PlayListView::findIndex(const MetaPtr meta)
 void PlayListView::setViewModeFlag(QListView::ViewMode mode)
 {
     if (mode == QListView::IconMode) {
-        setIconSize( QSize(150, 150) );
-        setGridSize( QSize(150, 150) );
+        setIconSize( QSize(140, 140) );
+        setGridSize( QSize(170, 213) );
+        setViewportMargins(10, 10, 10, 10);
     } else {
         setIconSize( QSize(36, 36) );
         setGridSize( QSize(36, 36) );
+        setViewportMargins(0, 0, 0, 0);
     }
     setViewMode(mode);
 }
@@ -370,10 +374,10 @@ void PlayListView::showContextMenu(const QPoint &pos,
             act->setData(QVariant::fromValue(codec));
         }
 
-        if (codecList.length() > 1) {
-            myMenu.addSeparator();
-            myMenu.addAction(tr("Encoding"))->setMenu(&textCodecMenu);
-        }
+//        if (codecList.length() > 1) {
+//            myMenu.addSeparator();
+//            myMenu.addAction(tr("Encoding"))->setMenu(&textCodecMenu);
+//        }
 
         myMenu.addSeparator();
         songAction = myMenu.addAction(tr("Song info"));

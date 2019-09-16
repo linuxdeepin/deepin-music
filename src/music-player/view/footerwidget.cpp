@@ -205,8 +205,17 @@ Footer::Footer(QWidget *parent) :
     setFixedHeight(70);
     setFocusPolicy(Qt::ClickFocus);
     setObjectName("Footer");
+
+    setBlurRectXRadius(18);
+    setBlurRectYRadius(18);
+    setRadius(30);
     setMode(DBlurEffectWidget::GaussianBlur);
-    setMaskColor(QColor(0, 0, 0, 75));
+    setBlurEnabled(true);
+    setBlendMode(DBlurEffectWidget::InWindowBlend);
+    QColor maskColor("#F7F7F7");
+    maskColor.setAlphaF(0.6);
+    setMaskColor(maskColor);
+    setMaskAlpha(255);
 
     auto mainVBoxlayout = new QVBoxLayout(this);
     mainVBoxlayout->setSpacing(0);
@@ -223,14 +232,22 @@ Footer::Footer(QWidget *parent) :
     d->btCover->setFixedSize(50, 50);
 
     d->title = new Label;
+    auto titleFont = d->title->font();
+    titleFont.setFamily("SourceHanSansSC-Normal");
+    titleFont.setPixelSize(12);
+    d->title->setFont(titleFont);
     d->title->setObjectName("FooterTitle");
-    d->title->setMaximumWidth(240);
+    d->title->setMaximumWidth(140);
     d->title->setText(tr("Unknown Title"));
 //    d->title->installEventFilter(hoverFilter);
 
     d->artist = new Label;
+    auto artistFont = d->artist->font();
+    artistFont.setFamily("SourceHanSansSC-Normal");
+    artistFont.setPixelSize(11);
+    d->artist->setFont(titleFont);
     d->artist->setObjectName("FooterArtist");
-    d->artist->setMaximumWidth(240);
+    d->artist->setMaximumWidth(140);
     d->artist->setText(tr("Unknown artist"));
 
     d->btPlay = new DButtonBoxButton("");
@@ -298,6 +315,8 @@ Footer::Footer(QWidget *parent) :
     d->btSound->setFixedSize(50, 50);
     d->btSound->setTransparent(false);
     d->btSound->setProperty("volume", "mid");
+    d->btSound->setCheckable(true);
+    d->btSound->setAutoChecked(true);
 
     d->btPlayList = new MusicImageButton(":/mpimage/light/normal/playlist_normal.svg",
                                          ":/mpimage/light/hover/playlist_hover.svg",
@@ -327,9 +346,11 @@ Footer::Footer(QWidget *parent) :
 
     auto musicMetaLayout = new QVBoxLayout;
     musicMetaLayout->setContentsMargins(0, 0, 0, 0);
-    musicMetaLayout->setSpacing(10);
+    musicMetaLayout->setSpacing(0);
+    musicMetaLayout->addStretch(100);
     musicMetaLayout->addWidget(d->title);
     musicMetaLayout->addWidget(d->artist);
+    musicMetaLayout->addStretch(100);
 
     auto metaWidget = new DFrame;
 //    metaWidget->setStyleSheet("border: 1px solid red;");

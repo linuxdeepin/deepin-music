@@ -37,6 +37,7 @@
 
 #include "../../core/metasearchservice.h"
 #include "../helper/widgethellper.h"
+#include "cover.h"
 
 DWIDGET_USE_NAMESPACE
 
@@ -53,7 +54,7 @@ public:
 
 //    DBlurEffectWidget   *bgBlurWidget   = nullptr;
     DFloatingWidget              *infoGridFrame  = nullptr;
-    DLabel              *cover          = nullptr;
+    Cover              *cover          = nullptr;
     DLabel              *title          = nullptr;
     QList<DLabel *>     valueList;
 
@@ -78,7 +79,7 @@ void InfoDialogPrivate::initUI()
     closeBt->setObjectName("InfoClose");
     closeBt->setFixedSize(27, 23);
 
-    cover = new DLabel;
+    cover = new Cover;
     cover->setContentsMargins(0, 0, 0, 0);
     cover->setObjectName("InfoCover");
     cover->setFixedSize(CoverSize, CoverSize);
@@ -237,7 +238,7 @@ void InfoDialog::updateInfo(const MetaPtr meta)
     }
     coverPixmap = QPixmap::fromImage(WidgetHelper::cropRect(cover, QSize(pixmapSize, pixmapSize)));
     coverPixmap.setDevicePixelRatio(d->cover->devicePixelRatioF());
-    d->cover->setPixmap(coverPixmap);
+    d->cover->setCoverPixmap(coverPixmap);
     d->updateLabelSize();
 
     d->title->setFocus();

@@ -195,7 +195,7 @@ void MainFramePrivate::initUI(bool showLoading)
 {
     showLoading = true;
     Q_Q(MainFrame);
-    q->setMinimumSize(QSize(720, 480));
+    q->setMinimumSize(QSize(1074, 680));
     q->setFocusPolicy(Qt::ClickFocus);
 
     titlebarwidget = new TitlebarWidget(q);
@@ -457,9 +457,9 @@ void MainFramePrivate::updateSize(QSize newSize)
     }
 
     footer->raise();
-    footer->resize(newSize.width(), FooterHeight);
+    footer->resize(newSize.width() - 20, FooterHeight);
     footer->setFixedHeight(FooterHeight);
-    footer->move(0, newSize.height() - FooterHeight);
+    footer->move(10, newSize.height() - FooterHeight - 10);
 }
 
 void MainFramePrivate::updateViewname(const QString &vm)
@@ -715,8 +715,8 @@ void MainFrame::binding(Presenter *presenter)
         Dtk::Widget::DDialog warnDlg(this);
         warnDlg.setIcon(QIcon(":/common/image/dialog_warning.svg"));
         warnDlg.setTextFormat(Qt::RichText);
-        warnDlg.setTitle(tr("Invalid or non-existent file"));
-        warnDlg.addButtons(QStringList() << tr("OK"));
+        warnDlg.setTitle(tr("Invalid or non-existent file,failed to load!"));
+        warnDlg.addButtons(QStringList() << tr("I know"));
         warnDlg.setDefaultButton(0);
 
         if (0 == warnDlg.exec()) {

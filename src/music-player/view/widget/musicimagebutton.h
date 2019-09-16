@@ -49,6 +49,7 @@ public:
                         const QString &pressPic);
 
     void setTransparent(bool flag);
+    void setAutoChecked(bool flag);
 
 protected:
     void paintEvent(QPaintEvent *event) Q_DECL_OVERRIDE;
@@ -59,6 +60,7 @@ protected:
 
 private:
     char                                               status                  = 0;
+    bool                                               autoChecked             = false;
     MusicPicPathInfo                                   defaultPicPath;
     bool                                               transparent             = true;
     QPair<QString, QMap<QVariant, MusicPicPathInfo> >  propertyPicPaths;

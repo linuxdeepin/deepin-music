@@ -21,14 +21,14 @@
 
 #pragma once
 
-#include <DWidget>
+#include <DBlurEffectWidget>
 
 #include "../core/playlist.h"
 
 DWIDGET_USE_NAMESPACE
 
 class PlayListWidgetPrivate;
-class PlayListWidget : public DWidget
+class PlayListWidget : public DBlurEffectWidget
 {
     Q_OBJECT
 public:

@@ -73,6 +73,11 @@ void MusicImageButton::setTransparent(bool flag)
     transparent = flag;
 }
 
+void MusicImageButton::setAutoChecked(bool flag)
+{
+    autoChecked = flag;
+}
+
 void MusicImageButton::paintEvent(QPaintEvent *event)
 {
     if (!transparent) {
@@ -132,12 +137,18 @@ void MusicImageButton::enterEvent(QEvent *event)
 {
     status = 1;
     DPushButton::enterEvent(event);
+    if (autoChecked) {
+        setChecked(true);
+    }
 }
 
 void MusicImageButton::leaveEvent(QEvent *event)
 {
     status = 0;
     DPushButton::leaveEvent(event);
+    if (autoChecked) {
+        setChecked(false);
+    }
 }
 
 void MusicImageButton::mousePressEvent(QMouseEvent *event)

@@ -279,6 +279,11 @@ void Playlist::reset(const MetaPtrList metalist)
     }
 }
 
+void Playlist::changePlayMusicTypeOrderType()
+{
+    playMusicTypePtrListData.orderType = playMusicTypePtrListData.orderType == 0 ? 1 : 0;
+}
+
 void Playlist::load()
 {
     QMap<int, QString> sortHashs;
@@ -581,15 +586,28 @@ void Playlist::sortPlayMusicTypePtrListData(int sortType)
     for (auto id : playMusicTypePtrListData.metas.keys()) {
         sortList << playMusicTypePtrListData.metas.value(id);
     }
-    if (sortType == 0) {
-        qSort(sortList.begin(), sortList.end(), [ = ](PlayMusicTypePtr p1, PlayMusicTypePtr p2) {
-            return lessCompareByString(p1->name, p2->name);
-        });
+    if (playMusicTypePtrListData.orderType == 0) {
+        if (sortType == 0) {
+            qSort(sortList.begin(), sortList.end(), [ = ](PlayMusicTypePtr p1, PlayMusicTypePtr p2) {
+                return lessCompareByString(p1->name, p2->name);
+            });
+        } else {
+            qSort(sortList.begin(), sortList.end(), [ = ](PlayMusicTypePtr p1, PlayMusicTypePtr p2) {
+                return p1->timestamp < p2->timestamp;
+            });
+        }
     } else {
-        qSort(sortList.begin(), sortList.end(), [ = ](PlayMusicTypePtr p1, PlayMusicTypePtr p2) {
-            return p1->timestamp < p2->timestamp;
-        });
+        if (sortType == 0) {
+            qSort(sortList.begin(), sortList.end(), [ = ](PlayMusicTypePtr p1, PlayMusicTypePtr p2) {
+                return !lessCompareByString(p1->name, p2->name);
+            });
+        } else {
+            qSort(sortList.begin(), sortList.end(), [ = ](PlayMusicTypePtr p1, PlayMusicTypePtr p2) {
+                return p1->timestamp > p2->timestamp;
+            });
+        }
     }
+
     playMusicTypePtrListData.sortMetas.clear();
     for (auto i = 0; i < sortList.size(); ++i) {
         playMusicTypePtrListData.sortMetas << sortList[i]->name;
