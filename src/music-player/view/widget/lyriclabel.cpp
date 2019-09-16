@@ -60,6 +60,28 @@ void LyricLabel::paintItem(QPainter *painter, int index, const QRect &rect)
         QFont font(*lyricFont);
         font.setPixelSize(font.pixelSize() + 1);
         painter->setFont(font);
+        QPoint leftpos = rect.bottomLeft();
+        QPoint rightpos = rect.bottomRight();
+        rightpos.setX(rightpos.x() - 3);
+        leftpos.setY(leftpos.y() - rect.height() / 2);
+        rightpos.setY(rightpos.y() - rect.height() / 2);
+        painter->save();
+        QPointF triangle1[3] = {QPointF(leftpos.x(), leftpos.y() * 1.0 + 4.5), QPointF(leftpos.x(), leftpos.y() * 1.0 - 4.5), QPointF(leftpos.x() + 9, leftpos.y())}; //1
+        QPointF triangle2[3] = {QPointF(rightpos.x(), rightpos.y() * 1.0 + 4.5), QPointF(rightpos.x(), rightpos.y() * 1.0 - 4.5), QPointF(rightpos.x() - 9, rightpos.y())}; //1
+
+        painter->setRenderHint(QPainter::Antialiasing, true);
+
+        QPen pen(*lyricNormal, 1, Qt::SolidLine, Qt::SquareCap, Qt::RoundJoin);
+
+        painter->setBrush(*lyricNormal);
+
+        painter->setPen(pen);
+
+        painter->drawPolygon(triangle1, 3); //2
+        painter->drawPolygon(triangle2, 3); //2
+
+        painter->drawLine(leftpos.x() + 23, leftpos.y(), rightpos.x() - 23, rightpos.y());
+        painter->restore();
     } else {
         QPen pen = painter->pen();
         QColor color = pen.color();

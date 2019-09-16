@@ -26,9 +26,11 @@
 #include <QWheelEvent>
 #include <QGraphicsDropShadowEffect>
 #include <QVBoxLayout>
+#include <QIcon>
 
 #include <DUtil>
 #include <DSlider>
+#include <DHiDPIHelper>
 
 #include "core/player.h"
 
@@ -43,7 +45,7 @@ public:
     DSlider     *volSlider  = nullptr;
     QBrush      background;
     QColor      borderColor = QColor(0, 0, 0,  255 * 2 / 10);
-    int         radius      = 4;
+    int         radius      = 20;
     bool        mouseIn     = false;
 
     Q_DECLARE_PUBLIC(SoundVolume)
@@ -55,7 +57,7 @@ SoundVolume::SoundVolume(QWidget *parent) : QWidget(parent), d_ptr(new SoundVolu
     setObjectName("SoundVolume");
     setProperty("_dm_keep_on_click", true);
 
-    setFixedSize(40, 106);
+    setFixedSize(62, 201);
     auto layout = new QVBoxLayout(this);
     layout->setContentsMargins(0, 5, 0, 11);
     layout->setSpacing(0);
@@ -65,13 +67,16 @@ SoundVolume::SoundVolume(QWidget *parent) : QWidget(parent), d_ptr(new SoundVolu
     d->volSlider->setMaximum(100);
     d->volSlider->slider()->setSingleStep(Player::VolumeStep);
     d->volSlider->setValue(50);
-    d->volSlider->setFixedHeight(90);
+    d->volSlider->setFixedHeight(180);
     d->volSlider->setFixedWidth(24);
+    d->volSlider->setIconSize(QSize(15, 15));
+    d->volSlider->setRightIcon(DHiDPIHelper::loadNxPixmap(":/mpimage/light/normal/volume_add_normal.svg"));
+    d->volSlider->setLeftIcon(DHiDPIHelper::loadNxPixmap(":/mpimage/light/normal/volume_lessen_normal.svg"));
 
     layout->addStretch();
     layout->addWidget(d->volSlider, 0, Qt::AlignCenter);
     layout->addStretch();
-    setFixedSize(40, 106);
+    setFixedSize(62, 201);
 
     auto *bodyShadow = new QGraphicsDropShadowEffect;
     bodyShadow->setBlurRadius(10.0);
@@ -195,8 +200,8 @@ void SoundVolume::paintEvent(QPaintEvent * /*event*/)
     auto borderColor = d->borderColor;
 
     const qreal radius = d->radius;;
-    const qreal triHeight = 6;
-    const qreal triWidth = 8;
+    const qreal triHeight = 12;
+    const qreal triWidth = 16;
     const qreal height = this->height() - triHeight;
     const qreal width = this->width();
 

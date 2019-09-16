@@ -51,6 +51,7 @@ signals:
     void musiclistDelete(PlaylistPtr playlist, const MetaPtrList  &metalist);
     void showInfoDialog(const MetaPtr meta);
     void updateMetaCodec(const MetaPtr meta);
+    void modeChanged(int);
 
 public slots:
     void onMusicPlayed(PlaylistPtr playlist, const MetaPtr);
@@ -64,7 +65,8 @@ public slots:
     void onCustomContextMenuRequest(const QPoint &pos,
                                     PlaylistPtr selectedlist,
                                     PlaylistPtr favlist,
-                                    QList<PlaylistPtr >newlists);
+                                    QList<PlaylistPtr >newlists,
+                                    char type);
 
 protected:
     virtual void focusOutEvent(QFocusEvent *event) Q_DECL_OVERRIDE;

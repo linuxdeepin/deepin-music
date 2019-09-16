@@ -277,9 +277,10 @@ void PlayListWidget::onMusicPlayed(PlaylistPtr playlist, const MetaPtr meta)
 {
     Q_D(PlayListWidget);
 
-    if (playlist != d->playListView->playlist()) {
-        d->initData(playlist);
-    }
+//    if (playlist != d->playListView->playlist()) {
+//        d->initData(playlist);
+//    }
+    d->initData(playlist);
 
     if (playlist != d->playListView->playlist() || meta.isNull()) {
         return;

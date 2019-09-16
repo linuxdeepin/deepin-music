@@ -21,6 +21,8 @@
 
 #pragma once
 
+#include <QHBoxLayout>
+
 #include <DFrame>
 
 #include <searchmeta.h>
@@ -68,10 +70,13 @@ public slots:
     void setBackgroundColor(QColor backgroundColor);
     void onUpdateMetaCodec(const MetaPtr meta);
 
+    void onsearchBt();
+    void slotonsearchresult(QString path);
 protected:
     virtual void resizeEvent(QResizeEvent *event) Q_DECL_OVERRIDE;
 
 private:
+    QHBoxLayout* m_leftLayout;
     QScopedPointer<MUsicLyricWidgetPrivate> d_ptr;
     Q_DECLARE_PRIVATE_D(qGetPtrHelper(d_ptr), MUsicLyricWidget)
 };

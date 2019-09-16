@@ -128,7 +128,7 @@ public slots:
     void saveSort(QMap<QString, int> hashIndexs);
 
     void metaListToPlayMusicTypePtrList(Playlist::SortType sortType, const MetaPtrList metalist);
-    void playMusicTypeToMeta();
+    void playMusicTypeToMeta(QString name = "");
     void sortPlayMusicTypePtrListData(int sortType);
 
 public:

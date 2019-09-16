@@ -115,6 +115,18 @@ void MusicLyric::getFromFile(QString dir)
     }
 }
 
+bool MusicLyric::getHeadFromFile(QString dir)
+{
+    QFile file(dir);
+    if(!file.open(QIODevice::ReadOnly))
+        return false;
+    while(!file.atEnd()) {
+        this->line.push_back(file.readLine());
+    }
+    file.close();
+    return true;
+}
+
 QString MusicLyric::getLineAt(int index)
 {
     return line[index];

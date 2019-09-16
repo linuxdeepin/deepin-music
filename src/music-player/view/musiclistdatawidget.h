@@ -46,12 +46,14 @@ public slots:
     void onCustomContextMenuRequest(const QPoint &pos,
                                     PlaylistPtr selectedlist,
                                     PlaylistPtr favlist,
-                                    QList<PlaylistPtr >newlists);
+                                    QList<PlaylistPtr >newlists,
+                                    char type);
 
 signals:
     void playall(PlaylistPtr playlist);
     void resort(PlaylistPtr playlist, int sortType);
     void playMedia(PlaylistPtr playlist, const MetaPtr meta);
+    void modeChanged(int);
 
     void requestCustomContextMenu(const QPoint &pos, char type);
     void addToPlaylist(PlaylistPtr playlist, const MetaPtrList  &metalist);

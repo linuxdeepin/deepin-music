@@ -260,6 +260,75 @@ void MusicListDataWidgetPrivate::initConntion()
         }
     });
 
+    //albumListView
+    q->connect(albumListView, &MusicListDataView::requestCustomContextMenu,
+    q, [ = ](const QPoint & pos) {
+        Q_EMIT q->requestCustomContextMenu(pos, 2);
+    });
+
+    q->connect(albumListView, &MusicListDataView::playMedia,
+    q, [ = ](const MetaPtr meta) {
+        PlaylistPtr curPlayList = albumListView->playlist();
+        curPlayList->play(meta);
+        initData(curPlayList);
+        Q_EMIT q->playMedia(albumListView->playlist(), meta);
+    });
+
+    q->connect(albumListView, &MusicListDataView::addToPlaylist,
+    q, [ = ](PlaylistPtr playlist, const MetaPtrList  & metalist) {
+        Q_EMIT q->addToPlaylist(playlist, metalist);
+    });
+
+    q->connect(albumListView, &MusicListDataView::musiclistRemove,
+    q, [ = ](const MetaPtrList  & metalist) {
+        Q_EMIT q->musiclistRemove(albumListView->playlist(), metalist);
+    });
+
+    q->connect(albumListView, &MusicListDataView::musiclistDelete,
+    q, [ = ](const MetaPtrList  & metalist) {
+        Q_EMIT q->musiclistDelete(albumListView->playlist(), metalist);
+    });
+
+    q->connect(albumListView, &MusicListDataView::modeChanged,
+    q, [ = ](int mode) {
+        Q_EMIT q->modeChanged(mode);
+    });
+
+    //artistListView
+    q->connect(artistListView, &MusicListDataView::requestCustomContextMenu,
+    q, [ = ](const QPoint & pos) {
+        Q_EMIT q->requestCustomContextMenu(pos, 3);
+    });
+
+    q->connect(artistListView, &MusicListDataView::playMedia,
+    q, [ = ](const MetaPtr meta) {
+        PlaylistPtr curPlayList = artistListView->playlist();
+        curPlayList->play(meta);
+        initData(curPlayList);
+        Q_EMIT q->playMedia(artistListView->playlist(), meta);
+    });
+
+    q->connect(artistListView, &MusicListDataView::addToPlaylist,
+    q, [ = ](PlaylistPtr playlist, const MetaPtrList  & metalist) {
+        Q_EMIT q->addToPlaylist(playlist, metalist);
+    });
+
+    q->connect(artistListView, &MusicListDataView::musiclistRemove,
+    q, [ = ](const MetaPtrList  & metalist) {
+        Q_EMIT q->musiclistRemove(albumListView->playlist(), metalist);
+    });
+
+    q->connect(artistListView, &MusicListDataView::musiclistDelete,
+    q, [ = ](const MetaPtrList  & metalist) {
+        Q_EMIT q->musiclistDelete(albumListView->playlist(), metalist);
+    });
+
+    q->connect(artistListView, &MusicListDataView::modeChanged,
+    q, [ = ](int mode) {
+        Q_EMIT q->modeChanged(mode);
+    });
+
+    //musicListView
     q->connect(musicListView, &PlayListView::playMedia,
     q, [ = ](const MetaPtr meta) {
         PlaylistPtr curPlayList = musicListView->playlist();
@@ -566,9 +635,15 @@ void MusicListDataWidget::onMusicPlayed(PlaylistPtr playlist, const MetaPtr Meta
     d->artistListView->update();
 }
 
-void MusicListDataWidget::onCustomContextMenuRequest(const QPoint &pos, PlaylistPtr selectedlist, PlaylistPtr favlist, QList<PlaylistPtr> newlists)
+void MusicListDataWidget::onCustomContextMenuRequest(const QPoint &pos, PlaylistPtr selectedlist, PlaylistPtr favlist, QList<PlaylistPtr> newlists, char type)
 {
     Q_D(MusicListDataWidget);
-    d->musicListView->showContextMenu(pos, d->musicListView->playlist(), favlist, newlists);
+    if (type == 2) {
+        d->albumListView->showContextMenu(pos, d->musicListView->playlist(), favlist, newlists);
+    } else if (type == 3) {
+        d->artistListView->showContextMenu(pos, d->musicListView->playlist(), favlist, newlists);
+    } else {
+        d->musicListView->showContextMenu(pos, d->musicListView->playlist(), favlist, newlists);
+    }
 }
 

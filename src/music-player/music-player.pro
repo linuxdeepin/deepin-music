@@ -88,7 +88,12 @@ SOURCES += \
     core/util/musiclyric.cpp \
     view/widget/lyriclabel.cpp \
     view/musiclyricwidget.cpp \
-    view/widget/waveformscale.cpp
+    view/widget/searchlyricswidget.cpp \
+    view/widget/waveformscale.cpp \
+    view/widget/musiclistinfoview.cpp \
+    view/widget/musiclistdialog.cpp \
+    view/widget/model/musiclistinfomodel.cpp \
+    view/widget/delegate/musicinfoitemdelegate.cpp
 
 HEADERS += \
     musicapp.h \
@@ -150,7 +155,13 @@ HEADERS += \
     core/util/musiclyric.h \
     view/widget/lyriclabel.h \
     view/musiclyricwidget.h \
-    view/widget/waveformscale.h
+    view/widget/searchlyricswidget.h \
+    view/widget/waveformscale.h \
+    view/widget/musiclistdialog.h \
+    view/widget/musiclistinfoview.h \
+    view/widget/model/musiclistinfomodel.h \
+    view/widget/delegate/musicinfoitemdelegate.h \
+    view/widget/delegate/musicinfoitemdelegate_p.h
 
 RESOURCES += \
     resource/theme/theme.qrc \

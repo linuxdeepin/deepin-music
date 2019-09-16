@@ -784,8 +784,8 @@ void MainFrame::binding(Presenter *presenter)
 
     connect(presenter, &Presenter::requestMusicListMenu,
     this, [ = ](const QPoint & pos, PlaylistPtr selectedlist, PlaylistPtr favlist, QList<PlaylistPtr >newlists, char type) {
-        if (type == 1) {
-            d->musicListWidget->onCustomContextMenuRequest(pos, selectedlist, favlist, newlists);
+        if (type > 0) {
+            d->musicListWidget->onCustomContextMenuRequest(pos, selectedlist, favlist, newlists, type);
         } else {
             d->playListWidget->onCustomContextMenuRequest(pos, selectedlist, favlist, newlists);
         }
@@ -961,6 +961,8 @@ void MainFrame::binding(Presenter *presenter)
         d->showInfoDialog(meta);
     });
 
+    connect(d->musicListWidget,  &MusicListWidget::modeChanged,
+            presenter, &Presenter::onPlayModeChanged);
     connect(d->musicListWidget, &MusicListWidget::resort,
             presenter, &Presenter::onResort);
     connect(d->musicListWidget,  &MusicListWidget::addPlaylist,

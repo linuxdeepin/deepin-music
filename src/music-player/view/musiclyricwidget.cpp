@@ -24,7 +24,6 @@
 #include <QDebug>
 #include <QFile>
 #include <QScrollArea>
-#include <QHBoxLayout>
 #include <QPainter>
 #include <QResizeEvent>
 #include <QPaintEvent>
@@ -32,8 +31,10 @@
 #include <QAbstractItemDelegate>
 #include <QFileInfo>
 #include <QDir>
+#include <QStandardPaths>
 
 #include <DPalette>
+#include <DPushButton>
 
 #include "../core/util/lyric.h"
 #include "../core/metasearchservice.h"
@@ -41,6 +42,7 @@
 #include "widget/cover.h"
 #include "widget/searchmetalist.h"
 #include "widget/searchmetaitem.h"
+#include "widget/searchlyricswidget.h"
 #include "widget/lyriclabel.h"
 #include "widget/musicimagebutton.h"
 
@@ -58,10 +60,15 @@ public:
 
     Cover               *m_cover              = nullptr;
 
+    SearchLyricsWidget  *searchLyricsWidget   = nullptr;
     LyricLabel          *lyricview            = nullptr;
+
+    MusicImageButton         *serachbt = nullptr;
 
     QString             defaultCover = ":/common/image/cover_max.svg";
     QColor              backgroundColor;
+
+    bool               serachflag = false;
 
     MUsicLyricWidget *q_ptr;
     Q_DECLARE_PUBLIC(MUsicLyricWidget)
@@ -75,14 +82,41 @@ MUsicLyricWidget::MUsicLyricWidget(QWidget *parent)
     auto layout = new QHBoxLayout(this);
     layout->setContentsMargins(20, 20, 20, 20);
 
+    auto musicDir =  QStandardPaths::standardLocations(QStandardPaths::MusicLocation);
+    d->searchLyricsWidget = new SearchLyricsWidget(musicDir.first());
+    d->searchLyricsWidget->hide();
+
     d->m_cover = new Cover;
     d->m_cover->setFixedSize(200, 200);
     d->m_cover->setObjectName("LyricCover");
 
+    m_leftLayout = new QHBoxLayout(this);
+    m_leftLayout->setContentsMargins(120, 190, 140, 160);
+    m_leftLayout->addWidget(d->m_cover);
+    m_leftLayout->addWidget(d->searchLyricsWidget);
+
     d->lyricview = new LyricLabel(false);
 
-    layout->addWidget(d->m_cover);
-    layout->addWidget(d->lyricview);
+    auto searchlayout = new QVBoxLayout(this);
+    d->serachbt = new MusicImageButton(":/mpimage/light/normal/search_normal.svg",
+                                       ":/mpimage/light/normal/search_normal.svg",
+                                       ":/mpimage/light/normal/search_normal.svg");
+    d->serachbt->setProperty("typeName", true);
+    d->serachbt->setPropertyPic("typeName", false, ":/mpimage/light/normal/back_normal.svg",
+                                ":/mpimage/light/normal/back_normal.svg",
+                                ":/mpimage/light/normal/back_normal.svg");
+    d->serachbt->setFixedSize(48, 48);
+
+    searchlayout->addWidget(d->serachbt);
+    searchlayout->addStretch();
+    searchlayout->setContentsMargins(58, 18, 34, 484);
+
+    layout->addLayout(m_leftLayout, 4);
+    layout->addWidget(d->lyricview, 4);
+    layout->addLayout(searchlayout, 1);
+
+    connect(d->serachbt, &DPushButton::clicked, this, &MUsicLyricWidget::onsearchBt);
+    connect(d->searchLyricsWidget, &SearchLyricsWidget::lyricPath, this, &MUsicLyricWidget::slotonsearchresult);
 }
 
 MUsicLyricWidget::~MUsicLyricWidget()
@@ -130,6 +164,7 @@ void MUsicLyricWidget::onMusicPlayed(PlaylistPtr playlist, const MetaPtr meta)
     QFileInfo fileInfo(meta->localPath);
     QString lrcPath = fileInfo.dir().path() + QDir::separator() + fileInfo.completeBaseName() + ".lrc";
     d->lyricview->getFromFile(lrcPath);
+    d->searchLyricsWidget->setSearchDir(fileInfo.dir().path() + QDir::separator());
 
     QImage cover(d->defaultCover);
     auto coverData = MetaSearchService::coverData(meta);
@@ -202,7 +237,31 @@ void MUsicLyricWidget::onUpdateMetaCodec(const MetaPtr /*meta*/)
 //        d->m_playingMusic.title = meta.title;
 //        d->m_playingMusic.artist = meta.artist;
 //        d->m_playingMusic.album = meta.album;
-//    }
+    //    }
+}
+
+void MUsicLyricWidget::onsearchBt()
+{
+    Q_D(MUsicLyricWidget);
+    d->serachflag = !d->serachflag;
+    if (d->serachflag) {
+        d->serachbt->setProperty("typeName", false);
+        d->m_cover->hide();
+        d->searchLyricsWidget->show();
+        d->searchLyricsWidget->setDefault(d->activingMeta->title, d->activingMeta->artist);
+        m_leftLayout->setContentsMargins(51, 21, 51, 19);
+    } else {
+        d->serachbt->setProperty("typeName", true);
+        d->m_cover->show();
+        d->searchLyricsWidget->hide();
+        m_leftLayout->setContentsMargins(120, 190, 140, 160);
+    }
+}
+
+void MUsicLyricWidget::slotonsearchresult(QString path)
+{
+    Q_D(MUsicLyricWidget);
+    d->lyricview->getFromFile(path);
 }
 
 void MUsicLyricWidget::setBackgroundColor(QColor backgroundColor)

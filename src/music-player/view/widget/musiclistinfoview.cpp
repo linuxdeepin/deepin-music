@@ -19,7 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "playlistview.h"
+#include "musiclistinfoview.h"
 
 #include <QDebug>
 #include <DMenu>
@@ -37,41 +37,47 @@
 #include "../../core/metasearchservice.h"
 #include "../helper/widgethellper.h"
 
-#include "delegate/playitemdelegate.h"
-#include "model/playlistmodel.h"
+#include "delegate/musicinfoitemdelegate.h"
+#include "model/musiclistinfomodel.h"
 
 DWIDGET_USE_NAMESPACE
 
-class PlayListViewPrivate
+class MusicListInfoViewPrivate
 {
 public:
-    PlayListViewPrivate(PlayListView *parent): q_ptr(parent) {}
+    MusicListInfoViewPrivate(MusicListInfoView *parent): q_ptr(parent) {}
 
     void addMedia(const MetaPtr meta);
     void removeSelection(QItemSelectionModel *selection);
 
-    PlaylistModel      *model        = nullptr;
-    PlayItemDelegate   *delegate     = nullptr;
+    MusiclistInfomodel      *model        = nullptr;
+    MusicInfoItemDelegate   *delegate     = nullptr;
 
-    PlayListView *q_ptr;
-    Q_DECLARE_PUBLIC(PlayListView)
+    QString                  curName      = "";
+
+    MusicListInfoView *q_ptr;
+    Q_DECLARE_PUBLIC(MusicListInfoView)
 };
 
-PlayListView::PlayListView(QWidget *parent)
-    : DListView(parent), d_ptr(new PlayListViewPrivate(this))
+MusicListInfoView::MusicListInfoView(QWidget *parent)
+    : DListView(parent), d_ptr(new MusicListInfoViewPrivate(this))
 {
-    Q_D(PlayListView);
+    Q_D(MusicListInfoView);
 
-    setObjectName("PlayListView");
+    setAutoFillBackground(true);
+    auto palette = this->palette();
+    QColor BackgroundColor("#FFFFFF");
+    palette.setColor(DPalette::Background, BackgroundColor);
+    setPalette(palette);
 
-    d->model = new PlaylistModel(0, 1, this);
+    d->model = new MusiclistInfomodel(0, 1, this);
     setModel(d->model);
 
-    d->delegate = new PlayItemDelegate;
+    d->delegate = new MusicInfoItemDelegate;
     setItemDelegate(d->delegate);
 
-    //setDragEnabled(true);
-    //viewport()->setAcceptDrops(true);
+    setDragEnabled(true);
+    viewport()->setAcceptDrops(true);
     setDropIndicatorShown(true);
     setDragDropOverwriteMode(false);
     setVerticalScrollMode(QAbstractItemView::ScrollPerItem);
@@ -80,40 +86,30 @@ PlayListView::PlayListView(QWidget *parent)
     setDragDropMode(QAbstractItemView::InternalMove);
     setMovement(QListView::Free);
 
-    setViewModeFlag(QListView::ListMode);
-
     setSelectionMode(QListView::ExtendedSelection);
     setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     setEditTriggers(QAbstractItemView::NoEditTriggers);
     setSelectionBehavior(QAbstractItemView::SelectRows);
     setContextMenuPolicy(Qt::CustomContextMenu);
-    connect(this, &PlayListView::customContextMenuRequested,
-            this, &PlayListView::requestCustomContextMenu);
+    connect(this, &MusicListInfoView::customContextMenuRequested,
+            this, &MusicListInfoView::requestCustomContextMenu);
 
-    connect(this, &PlayListView::doubleClicked,
+    connect(this, &MusicListInfoView::doubleClicked,
     this, [ = ](const QModelIndex & index) {
         MetaPtr meta = d->model->meta(index);
         Q_EMIT playMedia(meta);
     });
-
-    // For debug
-//    connect(selectionModel(), &QItemSelectionModel::selectionChanged,
-//    this, [ = ](const QItemSelection & /*selected*/, const QItemSelection & deselected) {
-//        if (!deselected.isEmpty()) {
-//            qDebug() << "cancel" << deselected;
-//        }
-//    });
 }
 
-PlayListView::~PlayListView()
+MusicListInfoView::~MusicListInfoView()
 {
 
 }
 
-MetaPtr PlayListView::activingMeta() const
+MetaPtr MusicListInfoView::activingMeta() const
 {
-    Q_D(const PlayListView);
+    Q_D(const MusicListInfoView);
 
     if (d->model->playlist().isNull()) {
         return MetaPtr();
@@ -122,37 +118,29 @@ MetaPtr PlayListView::activingMeta() const
     return d->model->playlist()->playing();
 }
 
-PlaylistPtr PlayListView::playlist() const
+PlaylistPtr MusicListInfoView::playlist() const
 {
-    Q_D(const PlayListView);
+    Q_D(const MusicListInfoView);
     return d->model->playlist();
 }
 
-QModelIndex PlayListView::findIndex(const MetaPtr meta)
+QModelIndex MusicListInfoView::findIndex(const MetaPtr meta)
 {
     Q_ASSERT(!meta.isNull());
-    Q_D(PlayListView);
+    Q_D(MusicListInfoView);
 
     return d->model->findIndex(meta);
 }
 
-void PlayListView::setViewModeFlag(QListView::ViewMode mode)
+QString MusicListInfoView::curName() const
 {
-    if (mode == QListView::IconMode) {
-        setIconSize( QSize(140, 140) );
-        setGridSize( QSize(170, 213) );
-        setViewportMargins(10, 10, 10, 10);
-    } else {
-        setIconSize( QSize(36, 36) );
-        setGridSize( QSize(36, 36) );
-        setViewportMargins(0, 0, 0, 0);
-    }
-    setViewMode(mode);
+    Q_D(const MusicListInfoView);
+    return d->curName;
 }
 
-void PlayListView::onMusicListRemoved(const MetaPtrList metalist)
+void MusicListInfoView::onMusicListRemoved(const MetaPtrList metalist)
 {
-    Q_D(PlayListView);
+    Q_D(MusicListInfoView);
 
     setAutoScroll(false);
     for (auto meta : metalist) {
@@ -172,10 +160,10 @@ void PlayListView::onMusicListRemoved(const MetaPtrList metalist)
     setAutoScroll(true);
 }
 
-void PlayListView::onMusicError(const MetaPtr meta, int /*error*/)
+void MusicListInfoView::onMusicError(const MetaPtr meta, int /*error*/)
 {
     Q_ASSERT(!meta.isNull());
-//    Q_D(PlayListView);
+//    Q_D(MusicListInfoView);
 
 //    qDebug() << error;
 //    QModelIndex index = findIndex(meta);
@@ -187,16 +175,15 @@ void PlayListView::onMusicError(const MetaPtr meta, int /*error*/)
     update();
 }
 
-void PlayListView::onMusicListAdded(const MetaPtrList metalist)
+void MusicListInfoView::onMusicListAdded(const MetaPtrList metalist)
 {
-    Q_D(PlayListView);
+    Q_D(MusicListInfoView);
     for (auto meta : metalist) {
         d->addMedia(meta);
     }
-    //updateScrollbar();
 }
 
-void PlayListView::onLocate(const MetaPtr meta)
+void MusicListInfoView::onLocate(const MetaPtr meta)
 {
     QModelIndex index = findIndex(meta);
     if (!index.isValid()) {
@@ -207,33 +194,38 @@ void PlayListView::onLocate(const MetaPtr meta)
 
     auto viewRect = QRect(QPoint(0, 0), size());
     if (!viewRect.intersects(visualRect(index))) {
-        scrollTo(index, PlayListView::PositionAtCenter);
+        scrollTo(index, MusicListInfoView::PositionAtCenter);
     }
     setCurrentIndex(index);
 }
 
-void PlayListView::onMusiclistChanged(PlaylistPtr playlist)
+void MusicListInfoView::onMusiclistChanged(PlaylistPtr playlist, const QString name)
 {
-    Q_D(PlayListView);
+    Q_D(MusicListInfoView);
 
     if (playlist.isNull()) {
         qWarning() << "can not change to emptry playlist";
         return;
     }
 
+    d->curName     = name;
+
     d->model->removeRows(0, d->model->rowCount());
-    for (auto meta : playlist->allmusic()) {
-//        qDebug() << meta->hash << meta->title;
-        d->addMedia(meta);
+    for (auto TypePtr : playlist->playMusicTypePtrList()) {
+        if (TypePtr->name == name) {
+            for (auto meta : TypePtr->playlistMeta.metas) {
+                d->addMedia(meta);
+            }
+        }
     }
 
     d->model->setPlaylist(playlist);
     //updateScrollbar();
 }
 
-void PlayListView::keyPressEvent(QKeyEvent *event)
+void MusicListInfoView::keyPressEvent(QKeyEvent *event)
 {
-    Q_D(PlayListView);
+    Q_D(MusicListInfoView);
     switch (event->modifiers()) {
     case Qt::NoModifier:
         switch (event->key()) {
@@ -256,7 +248,7 @@ void PlayListView::keyPressEvent(QKeyEvent *event)
     QAbstractItemView::keyPressEvent(event);
 }
 
-void PlayListView::keyboardSearch(const QString &search)
+void MusicListInfoView::keyboardSearch(const QString &search)
 {
     Q_UNUSED(search);
 // Disable keyborad serach
@@ -264,7 +256,7 @@ void PlayListView::keyboardSearch(const QString &search)
 //    QAbstractItemView::keyboardSearch(search);
 }
 
-void PlayListViewPrivate::addMedia(const MetaPtr meta)
+void MusicListInfoViewPrivate::addMedia(const MetaPtr meta)
 {
     QStandardItem *newItem = new QStandardItem;
     QImage cover(":/common/image/cover_max.svg");
@@ -281,10 +273,10 @@ void PlayListViewPrivate::addMedia(const MetaPtr meta)
     model->setData(index, meta->hash);
 }
 
-void PlayListViewPrivate::removeSelection(QItemSelectionModel *selection)
+void MusicListInfoViewPrivate::removeSelection(QItemSelectionModel *selection)
 {
     Q_ASSERT(selection != nullptr);
-    Q_Q(PlayListView);
+    Q_Q(MusicListInfoView);
 
     MetaPtrList metalist;
     for (auto index : selection->selectedRows()) {
@@ -294,12 +286,12 @@ void PlayListViewPrivate::removeSelection(QItemSelectionModel *selection)
     Q_EMIT q->removeMusicList(metalist);
 }
 
-void PlayListView::showContextMenu(const QPoint &pos,
-                                   PlaylistPtr selectedPlaylist,
-                                   PlaylistPtr favPlaylist,
-                                   QList<PlaylistPtr> newPlaylists)
+void MusicListInfoView::showContextMenu(const QPoint &pos,
+                                        PlaylistPtr selectedPlaylist,
+                                        PlaylistPtr favPlaylist,
+                                        QList<PlaylistPtr> newPlaylists)
 {
-    Q_D(PlayListView);
+    Q_D(MusicListInfoView);
     QItemSelectionModel *selection = this->selectionModel();
 
     if (selection->selectedRows().length() <= 0) {
@@ -467,14 +459,14 @@ void PlayListView::showContextMenu(const QPoint &pos,
     myMenu.exec(globalPos);
 }
 
-void PlayListView::dragEnterEvent(QDragEnterEvent *event)
+void MusicListInfoView::dragEnterEvent(QDragEnterEvent *event)
 {
     DListView::dragEnterEvent(event);
 }
 
-void PlayListView::startDrag(Qt::DropActions supportedActions)
+void MusicListInfoView::startDrag(Qt::DropActions supportedActions)
 {
-    Q_D(PlayListView);
+    Q_D(MusicListInfoView);
 
     MetaPtrList list;
     for (auto index : selectionModel()->selectedIndexes()) {

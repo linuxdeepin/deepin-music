@@ -737,16 +737,18 @@ void Playlist::metaListToPlayMusicTypePtrList(Playlist::SortType sortType, const
     sortPlayMusicTypePtrListData(playMusicTypePtrListData.sortType);
 }
 
-void Playlist::playMusicTypeToMeta()
+void Playlist::playMusicTypeToMeta(QString name)
 {
+    removeMusicList(allmusic());
     playlistMeta.sortMetas.clear();
     playlistMeta.metas.clear();
+    MetaPtrList mlist;
     for (auto meta : playMusicTypePtrListData.metas) {
-        for (auto hashCode : meta->playlistMeta.sortMetas) {
-            playlistMeta.sortMetas << hashCode;
-            playlistMeta.metas.insert(hashCode, meta->playlistMeta.metas[hashCode]);
+        if (name.isEmpty() || name == meta->name) {
+            for (auto hashCode : meta->playlistMeta.sortMetas) {
+                mlist << meta->playlistMeta.metas[hashCode];
+            }
         }
     }
-    MediaDatabase::removePlaylist(playlistMeta);
-    MediaDatabase::addPlaylist(playlistMeta);
+    appendMusicList(mlist);
 }

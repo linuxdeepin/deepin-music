@@ -21,23 +21,23 @@
 
 #pragma once
 
-#include "listview.h"
+#include <DDialog>
+#include <mediameta.h>
 
-#include "../../core/playlist.h"
+#include "../core/playlist.h"
 
-class MusicListDataViewPrivate;
-class MusicListDataView : public ListView
+DWIDGET_USE_NAMESPACE
+
+class MusicListDialogPrivate;
+class MusicListDialog : public DAbstractDialog
 {
     Q_OBJECT
+
 public:
-    explicit MusicListDataView(QWidget *parent = Q_NULLPTR);
-    ~MusicListDataView();
+    explicit MusicListDialog(QWidget *parent = Q_NULLPTR);
+    ~MusicListDialog();
 
-    PlaylistPtr playlist() const;
-
-    void setViewModeFlag(QListView::ViewMode mode);
-    void setPlaying(const MetaPtr);
-    MetaPtr playing() const;
+    void setPlayMusicData(PlaylistPtr playlist, PlayMusicTypePtr playMusicType);
 
     void showContextMenu(const QPoint &pos,
                          PlaylistPtr selectedPlaylist,
@@ -52,10 +52,8 @@ signals:
     void musiclistDelete(const MetaPtrList  &metalist);
     void modeChanged(int);
 
-public:
-    void onMusiclistChanged(PlaylistPtr playlist);
-
 private:
-    QScopedPointer<MusicListDataViewPrivate> d_ptr;
-    Q_DECLARE_PRIVATE_D(qGetPtrHelper(d_ptr), MusicListDataView)
+    QScopedPointer<MusicListDialogPrivate> d_ptr;
+    Q_DECLARE_PRIVATE_D(qGetPtrHelper(d_ptr), MusicListDialog)
 };
+

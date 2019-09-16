@@ -228,6 +228,10 @@ MusicListWidget::MusicListWidget(QWidget *parent) : DWidget(parent)
     this, [ = ](const MetaPtr  meta) {
         Q_EMIT this->updateMetaCodec(meta);
     });
+    connect(m_dataListView, &MusicListDataWidget::modeChanged,
+    this, [ = ](int mode) {
+        Q_EMIT this->modeChanged(mode);
+    });
 }
 
 void MusicListWidget::initData(QList<PlaylistPtr > playlists, PlaylistPtr last)
@@ -360,8 +364,8 @@ void MusicListWidget::onMusiclistUpdate()
     m_dataListView->onMusiclistUpdate();
 }
 
-void MusicListWidget::onCustomContextMenuRequest(const QPoint &pos, PlaylistPtr selectedlist, PlaylistPtr favlist, QList<PlaylistPtr> newlists)
+void MusicListWidget::onCustomContextMenuRequest(const QPoint &pos, PlaylistPtr selectedlist, PlaylistPtr favlist, QList<PlaylistPtr> newlists, char type)
 {
-    m_dataListView->onCustomContextMenuRequest(pos, selectedlist, favlist, newlists);
+    m_dataListView->onCustomContextMenuRequest(pos, selectedlist, favlist, newlists, type);
 }
 

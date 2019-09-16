@@ -39,6 +39,7 @@
 
 #include "delegate/musiclistdatadelegate.h"
 #include "model/musiclistdatamodel.h"
+#include "musiclistdialog.h"
 
 DWIDGET_USE_NAMESPACE
 
@@ -53,6 +54,8 @@ public:
     MusicListDataDelegate   *delegate     = nullptr;
     QString                 defaultCover = ":/common/image/cover_max.svg";
     MetaPtr                 playing       = nullptr;
+
+    MusicListDialog        *musciListDialog = nullptr;
 
     MusicListDataView *q_ptr;
     Q_DECLARE_PUBLIC(MusicListDataView)
@@ -92,6 +95,52 @@ MusicListDataView::MusicListDataView(QWidget *parent)
     setResizeMode( QListView::Adjust );
     setMovement( QListView::Static );
 
+    d->musciListDialog = new MusicListDialog(this);
+
+
+    connect(this, &MusicListDataView::doubleClicked,
+    this, [ = ](const QModelIndex & index) {
+        PlaylistPtr curPlaylist = d->model->playlist();
+        auto playMusicTypePtrList = curPlaylist->playMusicTypePtrList();
+        if (index.row() >= playMusicTypePtrList.size()) {
+            return;
+        }
+        auto PlayMusicTypePtr = playMusicTypePtrList[index.row()];
+
+        d->musciListDialog->setPlayMusicData(curPlaylist, PlayMusicTypePtr);
+        d->musciListDialog->exec();
+    });
+
+    connect(d->musciListDialog, &MusicListDialog::requestCustomContextMenu,
+    this, [ = ](const QPoint & pos) {
+        Q_EMIT requestCustomContextMenu(pos);
+    });
+
+    connect(d->musciListDialog, &MusicListDialog::playMedia,
+    this, [ = ](const MetaPtr meta) {
+        Q_EMIT playMedia(meta);
+    });
+
+    connect(d->musciListDialog, &MusicListDialog::addToPlaylist,
+    this, [ = ](PlaylistPtr playlist, const MetaPtrList  & metalist) {
+        Q_EMIT addToPlaylist(playlist, metalist);
+    });
+
+    connect(d->musciListDialog, &MusicListDialog::musiclistRemove,
+    this, [ = ](const MetaPtrList  & metalist) {
+        Q_EMIT musiclistRemove(metalist);
+    });
+
+    connect(d->musciListDialog, &MusicListDialog::musiclistDelete,
+    this, [ = ](const MetaPtrList  & metalist) {
+        Q_EMIT musiclistDelete(metalist);
+    });
+
+    connect(d->musciListDialog, &MusicListDialog::modeChanged,
+    this, [ = ](int mode) {
+        Q_EMIT modeChanged(mode);
+    });
+
     setSelectionMode(QListView::ExtendedSelection);
     setSelectionBehavior(QAbstractItemView::SelectRows);
 }
@@ -129,6 +178,12 @@ MetaPtr MusicListDataView::playing() const
 {
     Q_D(const MusicListDataView);
     return d->playing;
+}
+
+void MusicListDataView::showContextMenu(const QPoint &pos, PlaylistPtr selectedPlaylist, PlaylistPtr favPlaylist, QList<PlaylistPtr> newPlaylists)
+{
+    Q_D(const MusicListDataView);
+    d->musciListDialog->showContextMenu(pos, selectedPlaylist, favPlaylist, newPlaylists);
 }
 
 void MusicListDataView::onMusiclistChanged(PlaylistPtr playlist)
