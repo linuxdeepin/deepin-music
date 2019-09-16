@@ -48,6 +48,9 @@ public:
     void setViewname(const QString &viewname);
     QString defaultCover() const;
 
+    void setLyricButtonChecked(bool flag);
+    void setPlaylistButtonChecked(bool flag);
+
 signals:
     void toggleLyricView();
     void locateMusic(PlaylistPtr playlist, const MetaPtr meta);

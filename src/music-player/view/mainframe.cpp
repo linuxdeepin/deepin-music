@@ -256,7 +256,8 @@ void MainFramePrivate::postInitUI()
     loadWidget->hide();
 
     playListWidget = new PlayListWidget;
-    playListWidget->setContentsMargins(0, titlebar->height(), 0, FooterHeight);
+    playListWidget->setFixedHeight(384);
+    playListWidget->setContentsMargins(0, 0, 0, FooterHeight);
 
     lyricWidget = new MUsicLyricWidget;
     lyricWidget->setContentsMargins(0, titlebar->height(), 0, FooterHeight);
@@ -280,6 +281,7 @@ void MainFramePrivate::slideToLyricView()
 {
 //    Q_Q(MainFrame);
 
+    footer->setPlaylistButtonChecked(false);
     auto current = currentWidget ? currentWidget : playListWidget;
     WidgetHelper::slideBottom2TopWidget(
         current,  lyricWidget, AnimationDelay);
@@ -288,6 +290,7 @@ void MainFramePrivate::slideToLyricView()
 //    setPlaylistVisible(false);
     currentWidget = lyricWidget;
     titlebar->raise();
+    footer->setLyricButtonChecked(true);
     footer->raise();
 
     updateViewname(s_PropertyViewnameLyric);
@@ -297,6 +300,8 @@ void MainFramePrivate:: slideToImportView()
 {
 //    Q_Q(MainFrame);
 
+    footer->setLyricButtonChecked(false);
+    footer->setPlaylistButtonChecked(false);
     if (importWidget->isVisible()) {
         importWidget->showImportHint();
         footer->enableControl(false);
@@ -328,6 +333,8 @@ void MainFramePrivate:: slideToMusicListView(bool keepPlaylist)
 {
     Q_Q(MainFrame);
 
+    footer->setLyricButtonChecked(false);
+    footer->setPlaylistButtonChecked(false);
     auto current = currentWidget ? currentWidget : importWidget;
     if (musicListWidget->isVisible()) {
         musicListWidget->raise();
@@ -371,6 +378,7 @@ void MainFramePrivate::togglePlaylist()
 void MainFramePrivate::setPlayListVisible(bool visible)
 {
     Q_Q(MainFrame);
+    footer->setPlaylistButtonChecked(visible);
     if (playListWidget->isVisible() == visible) {
         if (visible) {
             playListWidget->setFocus();
@@ -390,9 +398,9 @@ void MainFramePrivate::setPlayListVisible(bool visible)
     auto titleBarHeight = titlebar->height();
 
     int delay = AnimationDelay * 6 / 10;
-    QRect start(q->width(), 0,
+    QRect start(0, q->height(),
                 playListWidget->width(), playListWidget->height());
-    QRect end(q->width() - playListWidget->width(), 0,
+    QRect end(q->width() - playListWidget->width(), q->height() - 384,
               playListWidget->width(), playListWidget->height());
     if (!visible) {
         WidgetHelper::slideEdgeWidget(playListWidget, end, start, delay, true);
@@ -443,8 +451,9 @@ void MainFramePrivate::updateSize(QSize newSize)
 
     if (lyricWidget) {
         lyricWidget->resize(newSize);
-        playListWidget->setFixedSize(newSize);
         musicListWidget->setFixedSize(newSize);
+        playListWidget->move(0, newSize.height() - 384);
+        playListWidget->setFixedSize(QSize(newSize.width(), 384));
     }
 
     footer->raise();
@@ -894,7 +903,7 @@ void MainFrame::binding(Presenter *presenter)
     this, [ = ](qreal realHeight) {
         int margin = FooterHeight
                      + static_cast<int>(realHeight);
-        d->playListWidget->setContentsMargins(0, d->titlebar->height(), 0, margin);
+        d->playListWidget->setContentsMargins(0, 0, 0, margin);
     });
 
     connect(presenter, &Presenter::modeChanged,
@@ -1079,6 +1088,19 @@ bool MainFrame::eventFilter(QObject *obj, QEvent *e)
 //                qDebug() << "match " << optkey << ke->count() << ke->isAutoRepeat();
                 Q_EMIT  triggerShortcutAction(optkey);
                 return true;
+            }
+        }
+    }
+
+    if (e->type() == QEvent::MouseButtonPress) {
+        QMouseEvent *me = static_cast<QMouseEvent *>(e);
+        if (obj->objectName() == this->objectName() || this->objectName() + "Window" == obj->objectName()) {
+            QPoint mousePos = me->pos();
+            auto geometry = d->playListWidget->geometry().marginsAdded(QMargins(0, 0, 40, 40));
+            if (!geometry.contains(mousePos)) {
+                DUtil::TimerSingleShot(50, [this]() {
+                    this->d_func()->setPlayListVisible(false);
+                });
             }
         }
     }

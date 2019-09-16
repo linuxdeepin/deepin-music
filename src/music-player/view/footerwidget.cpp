@@ -254,9 +254,9 @@ Footer::Footer(QWidget *parent) :
                                          ":/mpimage/light/hover/collection_hover.svg",
                                          ":/mpimage/light/press/collection_press.svg");
     d->btFavorite->setPropertyPic(sPropertyFavourite, QVariant(true),
-                                  ":/mpimage/light/normal/my_collection_normal.svg",
-                                  ":/mpimage/light/hover/my_collection_hover.svg",
-                                  ":/mpimage/light/press/my_collection_press.svg");
+                                  ":/common/image/unfav_normal.svg",
+                                  ":/common/image/unfav_hover.svg",
+                                  ":/common/image/unfav_press.svg");
     d->btFavorite->setObjectName("FooterActionFavorite");
     d->btFavorite->setFixedSize(50, 50);
     d->btFavorite->setTransparent(false);
@@ -305,6 +305,7 @@ Footer::Footer(QWidget *parent) :
     d->btPlayList->setObjectName("FooterActionPlayList");
     d->btPlayList->setFixedSize(50, 50);
     d->btPlayList->setTransparent(false);
+    d->btPlayList->setCheckable(true);
 //    d->btPlayList->hide();
 
     d->hoverShadowFilter = new HoverShadowFilter;
@@ -405,7 +406,6 @@ Footer::Footer(QWidget *parent) :
         } else {
             d->updateQssProperty(d->btCover, "viewname", "musiclist");
         }
-        d->btLyric->setChecked(!d->btLyric->isChecked());
     });
 
     d->btPlay->setIcon(DHiDPIHelper::loadNxPixmap(":/mpimage/light/normal/play_normal.svg"));
@@ -455,6 +455,26 @@ QString Footer::defaultCover() const
 {
     Q_D(const Footer);
     return d->defaultCover;
+}
+
+void Footer::setLyricButtonChecked(bool flag)
+{
+    Q_D(const Footer);
+    if (d->btLyric->isChecked() != flag) {
+        d->btLyric->blockSignals(true);
+        d->btLyric->setChecked(flag);
+        d->btLyric->blockSignals(false);
+    }
+}
+
+void Footer::setPlaylistButtonChecked(bool flag)
+{
+    Q_D(const Footer);
+    if (d->btPlayList->isChecked() != flag) {
+        d->btPlayList->blockSignals(true);
+        d->btPlayList->setChecked(flag);
+        d->btPlayList->blockSignals(false);
+    }
 }
 
 void Footer::mousePressEvent(QMouseEvent *event)

@@ -21,7 +21,7 @@
 
 #pragma once
 
-#include <DFrame>
+#include <DWidget>
 
 #include "../core/playlist.h"
 

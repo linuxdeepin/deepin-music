@@ -58,12 +58,21 @@ MusicListWidget::MusicListWidget(QWidget *parent) : DWidget(parent)
     dataBaseLabel->setText(tr("DataBase"));
     dataBaseLabel->setObjectName("MusicListWidgetDataBase");
     dataBaseLabel->setMargin(8);
+    auto dataBaseLabelFont = dataBaseLabel->font();
+    dataBaseLabelFont.setFamily("SourceHanSansSC-Medium");
+    dataBaseLabelFont.setPixelSize(14);
+    dataBaseLabel->setFont(dataBaseLabelFont);
+    auto dataBaseLabelPalette = dataBaseLabel->palette();
+    dataBaseLabelPalette.setColor(DPalette::ButtonText, QColor("#757F92"));
+    dataBaseLabel->setPalette(dataBaseLabelPalette);
 
     DLabel *customizeLabel = new DLabel;
     customizeLabel->setFixedHeight(40);
     customizeLabel->setText(tr("Play List"));
     customizeLabel->setObjectName("MusicListWidgetCustomizeLabel");
     customizeLabel->setMargin(8);
+    customizeLabel->setFont(dataBaseLabelFont);
+    customizeLabel->setPalette(dataBaseLabelPalette);
 
     auto *addListBtn = new MusicImageButton(":/mpimage/light/normal/add_normal.svg",
                                             ":/mpimage/light/hover/add_hover.svg",

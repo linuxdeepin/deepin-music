@@ -32,6 +32,7 @@
 #include <DPushButton>
 #include <DComboBox>
 #include <DLabel>
+#include <DPalette>
 
 #include "../core/music.h"
 #include "../core/playlist.h"
@@ -39,6 +40,7 @@
 #include "widget/ddropdown.h"
 
 DWIDGET_USE_NAMESPACE
+DGUI_USE_NAMESPACE
 
 class PlayListWidgetPrivate
 {
@@ -140,7 +142,7 @@ PlayListWidget::PlayListWidget(QWidget *parent) :
     setAcceptDrops(true);
 
     auto layout = new QHBoxLayout(this);
-    layout->setContentsMargins(0, 0, 0, 0);
+    layout->setContentsMargins(0, 30, 0, 0);
     layout->setSpacing(0);
 
     d->actionBar = new DWidget;
@@ -148,20 +150,32 @@ PlayListWidget::PlayListWidget(QWidget *parent) :
     d->actionBar->setObjectName("PlayListActionBar");
 
     auto actionBarLayout = new QVBoxLayout(d->actionBar);
-    actionBarLayout->setContentsMargins(20, 0, 8, 0);
+    actionBarLayout->setContentsMargins(36, 0, 8, 0);
     actionBarLayout->setSpacing(0);
 
     d->titleLabel = new DLabel();
+    d->titleLabel->setFixedHeight(36);
+    auto titleFont = d->titleLabel->font();
+    titleFont.setFamily("SourceHanSansSC-Medium");
+    titleFont.setPixelSize(24);
+    d->titleLabel->setFont(titleFont);
     d->titleLabel->setMargin(4);
     d->titleLabel->setText(tr("Play List"));
+
     d->infoLabel = new DLabel();
-    d->infoLabel->setMargin(4);
+    d->infoLabel->setFixedHeight(25);
     auto infoFont = d->infoLabel->font();
-    infoFont.setPointSize(10);
+    infoFont.setFamily("SourceHanSansSC-Medium");
+    infoFont.setPixelSize(14);
     d->infoLabel->setFont(infoFont);
+    d->infoLabel->setMargin(4);
+    auto infoLabelPalette = d->infoLabel->palette();
+    infoLabelPalette.setColor(DPalette::ButtonText, QColor("#777777"));
+    d->infoLabel->setPalette(infoLabelPalette);
 
     d->btClearAll = new DPushButton;
     d->btClearAll->setIcon(QIcon(":/mpimage/light/normal/clear_list_normal.svg"));
+    d->btClearAll->setFont(infoFont);
     auto playAllPalette = d->btClearAll->palette();
     playAllPalette.setColor(DPalette::ButtonText, Qt::white);
     playAllPalette.setColor(DPalette::Dark, QColor(Qt::darkGray));
@@ -170,7 +184,7 @@ PlayListWidget::PlayListWidget(QWidget *parent) :
     d->btClearAll->setObjectName("PlayListPlayAll");
     d->btClearAll->setText(tr("Clear List"));
     d->btClearAll->setFocusPolicy(Qt::NoFocus);
-    d->btClearAll->setFixedHeight(36);
+    d->btClearAll->setFixedHeight(30);
 
     d->emptyHits = new DLabel();
     d->emptyHits->setObjectName("PlayListEmptyHits");

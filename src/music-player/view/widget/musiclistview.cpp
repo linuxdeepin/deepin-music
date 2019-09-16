@@ -60,9 +60,9 @@ MusicListView::MusicListView(QWidget *parent) : DListWidget(parent)
                 bool existFlag = false;
                 for (int i = 0; i < count(); i++) {
                     QListWidgetItem *curItem = this->item(i);
-                    if (curItem != item)
+                    if (curItem == item)
                         continue;
-                    if (playlistItem->data()->displayName() == playlistItem->text()) {
+                    if (playlistItem->text() == curItem->text()) {
                         existFlag = true;
                     }
                 }
