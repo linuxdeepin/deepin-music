@@ -212,10 +212,23 @@ void MusicInfoItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
     painter->setRenderHint(QPainter::Antialiasing);
     painter->setRenderHint(QPainter::HighQualityAntialiasing);
 
-    auto background = (index.row() % 2) == 0 ? option.palette.base() : option.palette.alternateBase();
+    QColor baseColor("#FFFFFF");
+    baseColor.setAlphaF(0.1);
+    QColor alternateBaseColor("#000000");
+    alternateBaseColor.setAlphaF(0.02);
+    QColor selecteColor("#000000");
+    selecteColor.setAlphaF(0.10);
+    if (listview->getThemeType() == 2) {
+        baseColor.setAlphaF(0.05);
+        alternateBaseColor.setAlphaF(0.05);
+        selecteColor = QColor("#FFFFFF");
+        selecteColor.setAlphaF(0.20);
+    }
+
+    auto background = (index.row() % 2) == 0 ? baseColor : alternateBaseColor;
 
     if (option.state & QStyle::State_Selected) {
-        background = option.palette.dark();
+        background = selecteColor;
     }
 
     painter->fillRect(option.rect, background);
@@ -234,7 +247,7 @@ void MusicInfoItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
 
     QColor nameColor("#090909"), otherColor("#797979");
     if (listview->getThemeType() == 2) {
-        nameColor = QColor("#FFFFFF");
+        nameColor = QColor("#C0C6D4");
         otherColor = QColor("#C0C6D4");
     }
 
@@ -265,7 +278,7 @@ void MusicInfoItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
             }
 
             if (activeMeta == meta) {
-                auto playingIcon = d->playingIcon();
+                auto playingIcon = listview->getPlayPixmap();
                 if (option.state & QStyle::State_Selected) {
                     playingIcon = d->highlightPlayingIcon();
                 }

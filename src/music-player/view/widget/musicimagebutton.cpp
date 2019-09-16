@@ -68,6 +68,14 @@ void MusicImageButton::setPropertyPic(QString propertyName, const QVariant &valu
     }
 }
 
+void MusicImageButton::setPropertyPic(const QString &normalPic, const QString &hoverPic, const QString &pressPic, const QString &checkedPic)
+{
+    defaultPicPath.normalPicPath = normalPic;
+    defaultPicPath.hoverPicPath = hoverPic;
+    defaultPicPath.pressPicPath = pressPic;
+    defaultPicPath.checkedPicPath = checkedPic;
+}
+
 void MusicImageButton::setTransparent(bool flag)
 {
     transparent = flag;

@@ -315,10 +315,23 @@ void PlayItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
     painter->setRenderHint(QPainter::Antialiasing);
     painter->setRenderHint(QPainter::HighQualityAntialiasing);
 
-    auto background = (index.row() % 2) == 0 ? option.palette.base() : option.palette.alternateBase();
+    QColor baseColor("#FFFFFF");
+    baseColor.setAlphaF(0.1);
+    QColor alternateBaseColor("#000000");
+    alternateBaseColor.setAlphaF(0.02);
+    QColor selecteColor("#000000");
+    selecteColor.setAlphaF(0.10);
+    if (listview->getThemeType() == 2) {
+        baseColor.setAlphaF(0.05);
+        alternateBaseColor.setAlphaF(0.05);
+        selecteColor = QColor("#FFFFFF");
+        selecteColor.setAlphaF(0.20);
+    }
+
+    auto background = (index.row() % 2) == 0 ? baseColor : alternateBaseColor;
 
     if (option.state & QStyle::State_Selected) {
-        background = option.palette.dark();
+        background = selecteColor;
     }
 
     painter->fillRect(option.rect, background);
@@ -338,7 +351,7 @@ void PlayItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
 
     QColor nameColor("#090909"), otherColor("#797979");
     if (listview->getThemeType() == 2) {
-        nameColor = QColor("#FFFFFF");
+        nameColor = QColor("#C0C6D4");
         otherColor = QColor("#C0C6D4");
     }
 
@@ -372,7 +385,7 @@ void PlayItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
                 if (option.state & QStyle::State_Selected) {
                     playingIcon = d->highlightPlayingIcon();
                 }
-                auto icon = QPixmap(playingIcon);
+                auto icon = listview->getPlayPixmap();
                 auto centerF = QRectF(rect).center();
                 auto iconRect = QRectF(centerF.x() - icon.width() / 2,
                                        centerF.y() - icon.height() / 2,

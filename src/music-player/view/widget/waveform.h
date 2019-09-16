@@ -70,9 +70,13 @@ protected:
     void leaveEvent(QEvent *event) Q_DECL_OVERRIDE;
 
 private:
+    bool powerSpectrum();
+    void spline(QVector<float> &x, QVector<float> &y, QVector<float> &vx, QVector<float> &vy, int pnt);
+
+private:
     QWidget      *mainWindow;
-    QList<float> sampleList;
-    QList<float> reciveSampleList;
+    QVector<float> sampleList;
+    QVector<float> reciveSampleList;
     int          maxSampleNum;
     qint64       curValue = 0;
     qint64       allDuration = 1;

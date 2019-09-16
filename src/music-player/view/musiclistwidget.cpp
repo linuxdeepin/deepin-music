@@ -99,6 +99,7 @@ MusicListWidget::MusicListWidget(QWidget *parent) : DWidget(parent)
     customizeLayout->addWidget(addListBtn, 0, Qt::AlignRight);
 
     m_dataBaseListview = new MusicListView;
+    m_dataBaseListview->setEditTriggers(QAbstractItemView::EditKeyPressed);
     m_dataBaseListview->setFixedHeight(162);
     m_customizeListview = new MusicListView;
     m_dataListView = new MusicListDataWidget;
@@ -424,6 +425,15 @@ void MusicListWidget::slotTheme(int type)
     }
 
     m_dataListView->slotTheme(type);
+    m_dataBaseListview->slotTheme(type);
+    m_customizeListview->slotTheme(type);
+}
+
+void MusicListWidget::changePicture(QPixmap pixmap)
+{
+    m_dataBaseListview->changePicture(pixmap);
+    m_customizeListview->changePicture(pixmap);
+    m_dataListView->changePicture(pixmap);
 }
 
 void MusicListWidget::onCustomContextMenuRequest(const QPoint &pos, PlaylistPtr selectedlist, PlaylistPtr favlist, QList<PlaylistPtr> newlists, char type)

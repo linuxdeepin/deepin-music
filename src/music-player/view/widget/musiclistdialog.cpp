@@ -316,3 +316,9 @@ void MusicListDialog::setThemeType(int type)
     d->musicListInfoView->setThemeType(type);
     d->infoDialog->setThemeType(type);
 }
+
+void MusicListDialog::setPlayPixmap(QPixmap pixmap)
+{
+    Q_D(MusicListDialog);
+    d->musicListInfoView->setPlayPixmap(pixmap);
+}

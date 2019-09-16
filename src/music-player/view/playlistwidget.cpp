@@ -149,11 +149,9 @@ PlayListWidget::PlayListWidget(QWidget *parent) :
 
     setMode(DBlurEffectWidget::GaussianBlur);
     setBlurEnabled(true);
-    setBlendMode(DBlurEffectWidget::InWindowBlend);
-    QColor maskColor("#F7F7F7");
-    maskColor.setAlphaF(0.6);
-    setMaskColor(maskColor);
-    //setMaskAlpha(255);
+    //setBlendMode(DBlurEffectWidget::BehindWindowBlend);
+    setMaskColor(QColor(200, 200, 200, 170));
+    //setMaskAlpha(140);
 
     setObjectName("PlayListWidget");
     setAcceptDrops(true);
@@ -390,14 +388,18 @@ void PlayListWidget::slotTheme(int type)
 {
     Q_D(PlayListWidget);
     if (type == 1) {
-        QColor maskColor("#F7F7F7");
-        maskColor.setAlphaF(0.6);
+        QColor maskColor(200, 200, 200, 170);
         setMaskColor(maskColor);
     } else {
-        QColor maskColor("#252525");
-        maskColor.setAlphaF(0.6);
+        QColor maskColor(56, 56, 56, 170);
         setMaskColor(maskColor);
     }
     d->playListView->setThemeType(type);
+}
+
+void PlayListWidget::changePicture(QPixmap pixmap)
+{
+    Q_D(PlayListWidget);
+    d->playListView->setPlayPixmap(pixmap);
 }
 

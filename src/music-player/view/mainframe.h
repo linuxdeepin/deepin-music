@@ -52,6 +52,8 @@ public slots:
     void onSelectImportDirectory();
     void onSelectImportFiles();
     void slotTheme(int type);
+    void changePicture();
+
 protected:
     virtual void enterEvent(QEvent *event) Q_DECL_OVERRIDE;
     virtual bool eventFilter(QObject *obj, QEvent *e) Q_DECL_OVERRIDE;

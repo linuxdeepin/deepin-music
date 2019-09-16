@@ -32,6 +32,7 @@
 
 #include "waveform.h"
 #include "waveformscale.h"
+#include "core/util/fft.h"
 
 const int Waveform::SAMPLE_DURATION = 30;
 const int Waveform::WAVE_WIDTH = 2;
@@ -42,7 +43,7 @@ Waveform::Waveform(Qt::Orientation orientation, QWidget *widget, QWidget *parent
     QSizePolicy sp(QSizePolicy::Preferred, QSizePolicy::Preferred);
     setSizePolicy(sp);
     setFixedHeight(40);
-    maxSampleNum = 20;
+    maxSampleNum = 16;
     slider()->hide();
 
     waveformScale = new WaveformScale(mainWindow);
@@ -139,13 +140,20 @@ void Waveform::onAudioBufferProbed(const QAudioBuffer &buffer)
 {
     for (auto value : getBufferLevels(buffer)) {
         reciveSampleList.push_front(value);
+        break;
     }
-    if (width() > maxSampleNum)
-        maxSampleNum = width();
-    if (reciveSampleList.size() == maxSampleNum) {
-        sampleList = reciveSampleList;
-        reciveSampleList.clear();
-    }
+    if (reciveSampleList.size() > maxSampleNum)
+        reciveSampleList.pop_back();
+
+    powerSpectrum();
+    update();
+
+//    if (width() > maxSampleNum)
+//        maxSampleNum = width();
+//    if (reciveSampleList.size() == maxSampleNum) {
+//        sampleList = reciveSampleList;
+//        reciveSampleList.clear();
+//    }
 
 //    updateScaleSize();
 //    update();
@@ -351,4 +359,138 @@ void Waveform::leaveEvent(QEvent *event)
 {
     waveformScale->hide();
     DSlider::leaveEvent(event);
+}
+
+bool Waveform::powerSpectrum()
+{
+    sampleList.clear();
+    if (reciveSampleList.size() != maxSampleNum)
+        return false;
+
+    complex<float> *sample;
+
+    sample = new complex<float>[maxSampleNum];
+    for (int i = 0; i < maxSampleNum; i++)
+        sample[i] = complex<float>(reciveSampleList[i]/* / 32768.0*/, 0);
+
+    int log2N = log2(maxSampleNum - 1) + 1;
+    int sign = -1;
+
+    CFFT::process(sample, log2N, sign);
+
+    QVector<float> curSampleListX, curSampleListY;
+    for (int i = 0; i < maxSampleNum; i++) {
+        curSampleListY.append(abs(sample[i]) / sqrt(2) / 2);
+        if (curSampleListY[i] < 0 || curSampleListY[i] > 1)
+            curSampleListY[i] = 0;
+    }
+    curSampleListY = curSampleListY.mid(curSampleListY.size() / 2 - 3, 7);
+    int singleWidth = width() / (curSampleListY.size() - 1);
+    for (int i = 0; i < curSampleListY.size(); i++) {
+        curSampleListX.append(i * singleWidth);
+    }
+
+    QVector<float> endSampleListX, endSampleListY;
+    spline(curSampleListX, curSampleListY, endSampleListX, sampleList, width() / WAVE_DURATION + 1);
+    delete [] sample;
+    return true;
+}
+
+void Waveform::spline(QVector<float> &x, QVector<float> &y, QVector<float> &vx, QVector<float> &vy, int pnt)
+{
+    vx.clear();
+    vy.clear();
+
+    QVector<float> tx = x;
+    QVector<float> ty = y;
+
+    for (int i = 1; i < x.size();) {
+        if (fabs(x[i] - x[i - 1]) < 0.01) {
+            x.erase(x.begin() + i);
+            y.erase(y.begin() + i);
+            continue;
+        }
+
+        i ++;
+    }
+
+    int N = x.size();
+    if (N != y.size()) return;
+
+    if (N == 1) {
+        vx = x;
+        vy = y;
+        return;
+    }
+
+    if (N == 2) {
+        x.insert(x.begin() + 1, (x[0] + x[1]) / 2);
+        y.insert(y.begin() + 1, (y[0] + y[1]) / 2);
+    }
+
+    QVector<float> h;
+    h.resize(N - 1);
+    for (int i = 0; i < N - 1; i ++) h[i] = x[i + 1] - x[i];
+
+    QVector<float> M;
+    M.resize(N);
+    M[0] = 0;
+    M[N - 1] = 0;
+    for (int i = 1; i < N - 1; i ++) M[i] = 6 * ((y[i + 1] - y[i]) / h[i] - (y[i] - y[ i - 1]) / h[i - 1]);
+
+    QVector<QVector<float> > A;
+    A.resize(N);
+    for (int i = 0; i < N; i ++) A[i].resize(3);
+
+    A[0][0] = 1;
+    A[N - 1][2] = 1;
+
+    for (int i = 1; i < N - 1; i ++) {
+        A[i][0] = h[i - 1];
+        A[i][1] = 2 * (h[i - 1] + h[i]);
+        A[i][2] = h[i];
+    }
+
+    QVector<float> C;
+    C.resize(N);
+    C[0] = A[0][1] / A[0][0];
+    for (int i = 1; i < N; i ++) C[i] = A[i][2] / (A[i][1] - C[i - 1] * A[i][0]);
+
+    QVector<float> D;
+    D.resize(N);
+    D[0] = M[0] / A[0][0];
+    for (int i = 1; i < N; i ++) D[i] = (M[i] - D[i - 1] * A[i][0]) / (A[i][1] - C[i - 1] * A[i][0]);
+
+    QVector<float> m;
+    m.resize(N);
+    m[N - 1] = 0;
+
+    for (int i = N - 2; i >= 0; i --) m[i] = D[i] - C[i] * m[i + 1];
+
+    QVector<float> a, b, c, d;
+    a.resize(N - 1);
+    b.resize(N - 1);
+    c.resize(N - 1);
+    d.resize(N - 1);
+    for (int i = 0; i < N - 1; i ++) {
+        a[i] = y[i];
+        b[i] = (y[ i + 1] - y[i]) / h[i] - h[i] * m[i] / 2 - h[i] * (m[i + 1] - m[i]) / 6;
+        c[i] = m[i] / 2;
+        d[i] = (m[i + 1] - m[i]) / (6 * h[i]);
+    }
+
+    vx.resize(pnt);
+    vy.resize(pnt);
+
+    int index = 0;
+    for (int i = 0; i < pnt; i ++) {
+        vx[i] = i * (x[N - 1] - x[0]) / (pnt - 1) + x[0];
+
+        while (vx[i] > x[index + 1]) index ++;
+        float fx = vx[i] - x[index];
+
+        vy[i] = a[index] + b[index] * fx + c[index] * fx * fx + d[index] * fx * fx * fx;
+    }
+    x = tx;
+    y = ty;
 }

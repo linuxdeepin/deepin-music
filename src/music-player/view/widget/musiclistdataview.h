@@ -49,6 +49,9 @@ public:
     void setThemeType(int type);
     int getThemeType() const;
 
+    void setPlayPixmap(QPixmap pixmap);
+    QPixmap getPlayPixmap() const;
+
 signals:
     void requestCustomContextMenu(const QPoint &pos);
     void playMedia(const MetaPtr meta);

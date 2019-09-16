@@ -143,28 +143,39 @@ void SearchEdit::onTextChanged()
                     curList.append(action->title);
             }
         }
+        //filter
+        bool chineseFlag = false;
+        for (auto ch : text) {
+            if (isChinese(ch)) {
+                chineseFlag = true;
+                break;
+            }
+        }
         QStringList filterList;
-        if (text.length() == 1) {
-            if (isChinese(searchtext[0])) {
-                auto searchtextList = DMusic::PinyinSearch::simpleChineseSplit(searchtext);
-                if (searchtextList.size() == 1) {
-                    searchtext = searchtextList.first();
-                }
-            }
-            for (auto curText : curList) {
-                auto curTextList = DMusic::PinyinSearch::simpleChineseSplit(curText);
-                if (!curTextList.isEmpty() && curTextList.first().contains(searchtext, Qt::CaseInsensitive)) {
-                    filterList.append(curText);
-                }
-            }
-        } else {
+        if (chineseFlag) {
             filterList = curList.filter(searchtext, Qt::CaseInsensitive);
+        } else {
+            if (text.size() == 1) {
+                for (auto curText : curList) {
+                    auto curTextList = DMusic::PinyinSearch::simpleChineseSplit(curText);
+                    if (!curTextList.isEmpty() && curTextList.first().contains(searchtext, Qt::CaseInsensitive)) {
+                        filterList.append(curText);
+                    }
+                }
+            } else {
+                for (auto curText : curList) {
+                    auto curTextList = DMusic::PinyinSearch::simpleChineseSplit(curText);
+                    if (!curTextList.isEmpty() && curTextList.join("").contains(searchtext, Qt::CaseInsensitive)) {
+                        filterList.append(curText);
+                    }
+                }
+            }
         }
 
         if (filterList.size() > 10)
             filterList = filterList.mid(0, 10);
 
-        m_result->setSearchString(searchtext);
+        m_result->setSearchString(text);
         m_result->setResultList(filterList, QStringList());
 
         m_result->autoResize();

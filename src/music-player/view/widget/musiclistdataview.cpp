@@ -60,6 +60,7 @@ public:
 
     MusicListDialog        *musciListDialog = nullptr;
     PlayMusicTypePtrList    curPlayMusicTypePtrList;
+    QPixmap                 playingPixmap = QPixmap(":/mpimage/light/music1.svg");
 
     MusicListDataView *q_ptr;
     Q_DECLARE_PUBLIC(MusicListDataView)
@@ -218,6 +219,19 @@ int MusicListDataView::getThemeType() const
     return d->themeType;
 }
 
+void MusicListDataView::setPlayPixmap(QPixmap pixmap)
+{
+    Q_D(MusicListDataView);
+    d->playingPixmap = pixmap;
+    update();
+}
+
+QPixmap MusicListDataView::getPlayPixmap() const
+{
+    Q_D(const MusicListDataView);
+    return d->playingPixmap;
+}
+
 inline bool isChinese(const QChar &c)
 {
     return c.unicode() < 0x9FBF && c.unicode() > 0x4E00;
@@ -235,12 +249,11 @@ void MusicListDataView::onMusiclistChanged(PlaylistPtr playlist)
     d->model->removeRows(0, d->model->rowCount());
 
     QString searchStr = playlist->searchStr();
-    if (searchStr.size() == 1) {
-        if (isChinese(searchStr[0])) {
-            auto searchtextList = DMusic::PinyinSearch::simpleChineseSplit(searchStr);
-            if (searchtextList.size() == 1) {
-                searchStr = searchtextList.first();
-            }
+    bool chineseFlag = false;
+    for (auto ch : searchStr) {
+        if (isChinese(ch)) {
+            chineseFlag = true;
+            break;
         }
     }
     d->curPlayMusicTypePtrList.clear();
@@ -249,16 +262,24 @@ void MusicListDataView::onMusiclistChanged(PlaylistPtr playlist)
             d->addPlayMusicTypePtr(meta);
             d->curPlayMusicTypePtrList.append(meta);
         } else {
-            if (playlist->searchStr().size() == 1) {
-                auto curTextList = DMusic::PinyinSearch::simpleChineseSplit(meta->name);
-                if (!curTextList.isEmpty() && curTextList.first().contains(searchStr, Qt::CaseInsensitive)) {
+            if (chineseFlag) {
+                if (meta->name.contains(searchStr, Qt::CaseInsensitive)) {
                     d->addPlayMusicTypePtr(meta);
                     d->curPlayMusicTypePtrList.append(meta);
                 }
             } else {
-                if (meta->name.contains(searchStr, Qt::CaseInsensitive)) {
-                    d->addPlayMusicTypePtr(meta);
-                    d->curPlayMusicTypePtrList.append(meta);
+                if (playlist->searchStr().size() == 1) {
+                    auto curTextList = DMusic::PinyinSearch::simpleChineseSplit(meta->name);
+                    if (!curTextList.isEmpty() && curTextList.first().contains(searchStr, Qt::CaseInsensitive)) {
+                        d->addPlayMusicTypePtr(meta);
+                        d->curPlayMusicTypePtrList.append(meta);
+                    }
+                } else {
+                    auto curTextList = DMusic::PinyinSearch::simpleChineseSplit(meta->name);
+                    if (!curTextList.isEmpty() && curTextList.join("").contains(searchStr, Qt::CaseInsensitive)) {
+                        d->addPlayMusicTypePtr(meta);
+                        d->curPlayMusicTypePtrList.append(meta);
+                    }
                 }
             }
         }

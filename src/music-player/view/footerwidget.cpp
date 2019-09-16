@@ -102,6 +102,8 @@ public:
     int             mode            = -1;
     bool            enableMove      = false;
 
+    int             m_type = 1;
+
     Footer *q_ptr;
     Q_DECLARE_PUBLIC(Footer)
 };
@@ -429,8 +431,11 @@ Footer::Footer(QWidget *parent) :
             d->updateQssProperty(d->btCover, "viewname", "musiclist");
         }
     });
-
-    d->btPlay->setIcon(DHiDPIHelper::loadNxPixmap(":/mpimage/light/normal/play_normal.svg"));
+    if (d->m_type == 1) {
+        d->btPlay->setIcon(DHiDPIHelper::loadNxPixmap(":/mpimage/light/normal/play_normal.svg"));
+    } else {
+        d->btPlay->setIcon(DHiDPIHelper::loadNxPixmap(":/mpimage/dark/normal/play_normal.svg"));
+    }
     d->btCover->setIcon(Dtk::Widget::DHiDPIHelper::loadNxPixmap(d->defaultCover));
 
     bool themeFlag = false;
@@ -640,9 +645,19 @@ void Footer::onMusicPlayed(PlaylistPtr playlist, const MetaPtr meta)
     if (!meta->invalid) {
         d->updateQssProperty(d->btPlay, sPropertyPlayStatus, sPlayStatusValuePlaying);
         d->updateQssProperty(this, sPropertyPlayStatus, sPlayStatusValuePlaying);
-        d->btPlay->setIcon(DHiDPIHelper::loadNxPixmap(":/mpimage/light/normal/suspend_normal.svg"));
+        if (d->m_type == 1) {
+            d->btPlay->setIcon(DHiDPIHelper::loadNxPixmap(":/mpimage/light/normal/suspend_normal.svg"));
+        } else {
+            d->btPlay->setIcon(DHiDPIHelper::loadNxPixmap(":/mpimage/dark/normal/suspend_normal.svg"));
+        }
+
     } else {
-        d->btPlay->setIcon(DHiDPIHelper::loadNxPixmap(":/mpimage/light/normal/play_normal.svg"));
+        if (d->m_type == 1) {
+            d->btPlay->setIcon(DHiDPIHelper::loadNxPixmap(":/mpimage/light/normal/play_normal.svg"));
+        } else {
+            d->btPlay->setIcon(DHiDPIHelper::loadNxPixmap(":/mpimage/dark/normal/play_normal.svg"));
+        }
+
     }
 }
 
@@ -662,7 +677,11 @@ void Footer::onMusicError(PlaylistPtr playlist, const MetaPtr meta, int error)
 
     auto status = sPlayStatusValuePause;
     d->updateQssProperty(d->btPlay, sPropertyPlayStatus, status);
-    d->btPlay->setIcon(DHiDPIHelper::loadNxPixmap(":/mpimage/light/normal/play_normal.svg"));
+    if (d->m_type == 1) {
+        d->btPlay->setIcon(DHiDPIHelper::loadNxPixmap(":/mpimage/light/normal/play_normal.svg"));
+    } else {
+        d->btPlay->setIcon(DHiDPIHelper::loadNxPixmap(":/mpimage/dark/normal/play_normal.svg"));
+    }
 }
 
 void Footer::onMusicPause(PlaylistPtr playlist, const MetaPtr meta)
@@ -675,7 +694,12 @@ void Footer::onMusicPause(PlaylistPtr playlist, const MetaPtr meta)
     }
     auto status = sPlayStatusValuePause;
     d->updateQssProperty(d->btPlay, sPropertyPlayStatus, status);
-    d->btPlay->setIcon(DHiDPIHelper::loadNxPixmap(":/mpimage/light/normal/play_normal.svg"));
+    if (d->m_type == 1) {
+        d->btPlay->setIcon(DHiDPIHelper::loadNxPixmap(":/mpimage/light/normal/play_normal.svg"));
+    } else {
+        d->btPlay->setIcon(DHiDPIHelper::loadNxPixmap(":/mpimage/dark/normal/play_normal.svg"));
+    }
+
 }
 
 void Footer::onMusicStoped(PlaylistPtr playlist, const MetaPtr meta)
@@ -695,7 +719,11 @@ void Footer::onMusicStoped(PlaylistPtr playlist, const MetaPtr meta)
     d->btCover->update();
     d->updateQssProperty(d->btPlay, sPropertyPlayStatus, sPlayStatusValueStop);
     d->updateQssProperty(this, sPropertyPlayStatus, sPlayStatusValueStop);
-    d->btPlay->setIcon(DHiDPIHelper::loadNxPixmap(":/mpimage/light/normal/play_normal.svg"));
+    if (d->m_type == 1) {
+        d->btPlay->setIcon(DHiDPIHelper::loadNxPixmap(":/mpimage/light/normal/play_normal.svg"));
+    } else {
+        d->btPlay->setIcon(DHiDPIHelper::loadNxPixmap(":/mpimage/dark/normal/play_normal.svg"));
+    }
 }
 
 void Footer::onMediaLibraryClean()
@@ -711,17 +739,59 @@ void Footer::onMediaLibraryClean()
 void Footer::slotTheme(int type)
 {
     Q_D(Footer);
+    QString rStr;
     if (type == 1) {
         QColor maskColor("#F7F7F7");
         maskColor.setAlphaF(0.6);
         setMaskColor(maskColor);
         setMaskAlpha(255);
+        rStr = "light";
     } else {
         QColor maskColor("#202020");
         maskColor.setAlphaF(0.5);
         setMaskColor(maskColor);
         setMaskAlpha(255);
+        rStr = "dark";
     }
+    d->m_type = type;
+    d->btPlay->setIcon(DHiDPIHelper::loadNxPixmap(QString(":/mpimage/%1/normal/play_normal.svg").arg(rStr)));
+    d->btPrev->setIcon(DHiDPIHelper::loadNxPixmap(QString(":/mpimage/%1/normal/last_normal.svg").arg(rStr)));
+    d->btNext->setIcon(DHiDPIHelper::loadNxPixmap(QString(":/mpimage/%1/normal/next_normal.svg").arg(rStr)));
+    d->btFavorite->setPropertyPic(QString(":/mpimage/%1/normal/collection_normal.svg").arg(rStr),
+                                  QString(":/mpimage/%1/hover/collection_hover.svg").arg(rStr),
+                                  QString(":/mpimage/%1/press/collection_press.svg").arg(rStr));
+    d->btFavorite->setPropertyPic(sPropertyFavourite, QVariant(true),
+                                  QString(":/common/image/unfav_normal.svg"),
+                                  QString(":/common/image/unfav_hover.svg"),
+                                  QString(":/common/image/unfav_press.svg"));
+    d->btLyric->setPropertyPic(QString(":/mpimage/%1/normal/lyric_normal.svg").arg(rStr),
+                               QString(":/mpimage/%1/hover/lyric_hover.svg").arg(rStr),
+                               QString(":/mpimage/%1/press/lyric_press.svg").arg(rStr));
+    QStringList modes;
+    modes << QString(":/mpimage/%1/normal/sequential_loop_normal.svg").arg(rStr)
+          << QString(":/mpimage/%1/normal/single_tune_circulation_normal.svg").arg(rStr)
+          << QString(":/mpimage/%1/normal/cross_cycling_normal.svg").arg(rStr);
+    d->btSound->setPropertyPic(QString(":/mpimage/%1/normal/volume_normal.svg").arg(rStr),
+                               QString(":/mpimage/%1/hover/volume_hover.svg").arg(rStr),
+                               QString(":/mpimage/%1/press/volume_press.svg").arg(rStr));
+    d->btSound->setPropertyPic("volume", QVariant("mid"),
+                               QString(":/mpimage/%1/normal/volume_lessen_normal.svg").arg(rStr),
+                               QString(":/mpimage/%1/hover/volume_lessen_hover.svg").arg(rStr),
+                               QString(":/mpimage/%1/press/volume_lessen_press.svg").arg(rStr));
+    d->btSound->setPropertyPic("volume", QVariant("low"),
+                               QString(":/mpimage/%1/normal/volume_add_normal.svg").arg(rStr),
+                               QString(":/mpimage/%1/hover/volume_add_hover.svg").arg(rStr),
+                               QString(":/mpimage/%1/press/volume_add_press.svg").arg(rStr));
+    d->btSound->setPropertyPic("volume", QVariant("mute"),
+                               QString(":/mpimage/%1/normal/mute_normal.svg").arg(rStr),
+                               QString(":/mpimage/%1/normal/mute_normal.svg").arg(rStr),
+                               QString(":/mpimage/%1/press/mute_press.svg").arg(rStr));
+    d->btPlayList->setPropertyPic(QString(":/mpimage/%1/normal/playlist_normal.svg").arg(rStr),
+                                  QString(":/mpimage/%1/hover/playlist_hover.svg").arg(rStr),
+                                  QString(":/mpimage/%1/press/playlist_press.svg").arg(rStr));
+
+
+    d->btPlayMode->setModeIcons(modes);
     d->waveform->setThemeType(type);
 }
 

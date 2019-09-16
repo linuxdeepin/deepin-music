@@ -34,7 +34,7 @@
 
 DGUI_USE_NAMESPACE
 
-const QString linkTemplate = "<a href='%1' style='text-decoration: none; color: #0082FA; '>%2</a>";
+const QString linkTemplate = "<a href='%1'>%2</a>";
 
 class ImportWidgetPrivate
 {
@@ -89,7 +89,8 @@ ImportWidget::ImportWidget(QWidget *parent) : DFrame(parent), d_ptr(new ImportWi
     textFont.setPixelSize(12);
     d->text->setFont(textFont);
     d->text->setFixedHeight(18);
-    d->text->setText(tr("You can scan music catalogs or drag and drop music files to add music"));
+    QString linkText = QString(linkTemplate).arg(tr("Scan")).arg(tr("Scan"));
+    d->text->setText(tr("You can %1 music catalogs or drag and drop music files to add music").arg(linkText));
 
     layout->setSpacing(0);
     layout->addStretch();
@@ -130,7 +131,8 @@ void ImportWidget::showImportHint()
     Q_D(ImportWidget);
     d->importButton->setDisabled(false);
     d->importButton->show();
-    d->text->setText(tr("You can scan music catalogs or drag and drop music files to add music"));
+    QString linkText = QString(linkTemplate).arg(tr("Scan")).arg(tr("Scan"));
+    d->text->setText(tr("You can %1 music catalogs or drag and drop music files to add music").arg(linkText));
 }
 
 void ImportWidget::dragEnterEvent(QDragEnterEvent *event)

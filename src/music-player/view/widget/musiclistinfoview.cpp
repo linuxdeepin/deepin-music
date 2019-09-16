@@ -57,6 +57,7 @@ public:
     QString                  curName      = "";
 
     MetaPtr                 playing       = nullptr;
+    QPixmap                 playingPixmap = QPixmap(":/mpimage/light/music1.svg");
 
     MusicListInfoView *q_ptr;
     Q_DECLARE_PUBLIC(MusicListInfoView)
@@ -164,6 +165,18 @@ int MusicListInfoView::getThemeType() const
 {
     Q_D(const MusicListInfoView);
     return d->themeType;
+}
+
+void MusicListInfoView::setPlayPixmap(QPixmap pixmap)
+{
+    Q_D(MusicListInfoView);
+    d->playingPixmap = pixmap;
+}
+
+QPixmap MusicListInfoView::getPlayPixmap() const
+{
+    Q_D(const MusicListInfoView);
+    return d->playingPixmap;
 }
 
 void MusicListInfoView::onMusicListRemoved(const MetaPtrList metalist)

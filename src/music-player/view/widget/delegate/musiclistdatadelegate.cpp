@@ -100,7 +100,7 @@ void MusicListDataDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
                 QRect fillPlayingRect(rect.x(), rect.y() + rect.height() - 64, rect.width(), 28);
                 painter->fillRect(fillPlayingRect, fillColor);
 
-                painter->drawPixmap(QRect(rect.x() + 64, rect.y() + 96, 22, 18), d->playing);
+                painter->drawPixmap(QRect(rect.x() + 64, rect.y() + 96, 22, 18), listview->getPlayPixmap());
             }
 
             QRect fillRect(rect.x(), rect.y() + rect.height() - 36, rect.width(), 36);
@@ -124,7 +124,7 @@ void MusicListDataDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
                 QRect fillPlayingRect(rect.x(), rect.y() + rect.height() - 83, rect.width(), 39);
                 painter->fillRect(fillPlayingRect, fillColor);
 
-                painter->drawPixmap(QRect(rect.x() + 64, rect.y() + 82, 22, 18), d->playing);
+                painter->drawPixmap(QRect(rect.x() + 64, rect.y() + 82, 22, 18), listview->getPlayPixmap());
             }
 
             int startHeight = rect.y() + rect.height() - 44;
@@ -167,15 +167,28 @@ void MusicListDataDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
         painter->setRenderHint(QPainter::Antialiasing);
         painter->setRenderHint(QPainter::HighQualityAntialiasing);
 
-        auto background = (index.row() % 2) == 0 ? option.palette.base() : option.palette.alternateBase();
+        QColor baseColor("#FFFFFF");
+        baseColor.setAlphaF(0.1);
+        QColor alternateBaseColor("#000000");
+        alternateBaseColor.setAlphaF(0.02);
+        QColor selecteColor("#000000");
+        selecteColor.setAlphaF(0.10);
+        if (listview->getThemeType() == 2) {
+            baseColor.setAlphaF(0.05);
+            alternateBaseColor.setAlphaF(0.05);
+            selecteColor = QColor("#FFFFFF");
+            selecteColor.setAlphaF(0.20);
+        }
+
+        auto background = (index.row() % 2) == 0 ? baseColor : alternateBaseColor;
 
         if (option.state & QStyle::State_Selected) {
-            background = option.palette.dark();
+            background = selecteColor;
         }
         painter->fillRect(option.rect, background);
         QColor nameColor("#090909"), otherColor("#797979");
         if (listview->getThemeType() == 2) {
-            nameColor = QColor("#FFFFFF");
+            nameColor = QColor("#C0C6D4");
             otherColor = QColor("#C0C6D4");
         }
 
@@ -276,7 +289,7 @@ void MusicListDataDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
                 if (option.state & QStyle::State_Selected) {
                     playingIcon = d->highlightPlayingIcon;
                 }
-                auto icon = QPixmap(playingIcon);
+                auto icon = listview->getPlayPixmap();
                 auto centerF = numRect.center();
                 auto iconRect = QRectF(centerF.x() - icon.width() / 2,
                                        centerF.y() - icon.height() / 2,

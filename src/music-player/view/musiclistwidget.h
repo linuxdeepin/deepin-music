@@ -64,6 +64,7 @@ public slots:
     void onMusicListRemoved(PlaylistPtr playlist, const MetaPtrList metalist);
     void onMusiclistUpdate();
     void slotTheme(int type);
+    void changePicture(QPixmap pixmap);
 
     void onCustomContextMenuRequest(const QPoint &pos,
                                     PlaylistPtr selectedlist,

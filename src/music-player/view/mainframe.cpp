@@ -30,6 +30,7 @@
 #include <QKeyEvent>
 #include <QPainter>
 #include <QSystemTrayIcon>
+#include <QTimer>
 
 #include <DUtil>
 #include <DWidgetUtil>
@@ -92,6 +93,7 @@ public:
     void updateTitlebarViewname(const QString &vm);
     void overrideTitlebarStyle();
     const QString getLastImportPath() const;
+    void startTimer();
 
     //! ui: show info dialog
     void showInfoDialog(const MetaPtr meta);
@@ -119,6 +121,8 @@ public:
     QString             viewname                = "";
 
     QPoint              m_LastMousePos;
+    QTimer              *timer                  = nullptr;
+    int                 playingCount            = 0;
 
     MainFrame *q_ptr;
     Q_DECLARE_PUBLIC(MainFrame)
@@ -135,10 +139,16 @@ void MainFramePrivate::setTheme(int type)
     } else {
 
     }
-    musicListWidget->slotTheme(type);
-    footer->slotTheme(type);
-    lyricWidget->slotTheme(type);
-    infoDialog->setThemeType(type);
+    if (musicListWidget != nullptr)
+        musicListWidget->slotTheme(type);
+    if (playListWidget != nullptr)
+        playListWidget->slotTheme(type);
+    if (footer != nullptr)
+        footer->slotTheme(type);
+    if (lyricWidget != nullptr)
+        lyricWidget->slotTheme(type);
+    if (infoDialog != nullptr)
+        infoDialog->setThemeType(type);
 }
 void MainFramePrivate::initMenu()
 {
@@ -270,6 +280,7 @@ void MainFramePrivate::postInitUI()
     qApp->setApplicationDescription(descriptionText);
 
     loadWidget->hide();
+    newSonglistAction->setDisabled(false);
 
     playListWidget = new PlayListWidget;
     playListWidget->setFixedHeight(384);
@@ -285,6 +296,9 @@ void MainFramePrivate::postInitUI()
     contentLayout->addWidget(lyricWidget);
     contentLayout->addWidget(musicListWidget);
     contentLayout->addWidget(playListWidget);
+
+    timer = new QTimer(q);
+    q->connect(timer, SIGNAL(timeout()), q, SLOT(changePicture()));
 
     titlebarwidget->setSearchEnable(false);
     importWidget->show();
@@ -417,9 +431,9 @@ void MainFramePrivate::setPlayListVisible(bool visible)
     auto titleBarHeight = titlebar->height();
 
     int delay = AnimationDelay * 6 / 10;
-    QRect start(0, q->height(),
+    QRect start(10, q->height() - 10,
                 playListWidget->width(), playListWidget->height());
-    QRect end(q->width() - playListWidget->width(), q->height() - 384,
+    QRect end(10, q->height() - 384 - 10,
               playListWidget->width(), playListWidget->height());
     if (!visible) {
         WidgetHelper::slideEdgeWidget(playListWidget, end, start, delay, true);
@@ -471,8 +485,8 @@ void MainFramePrivate::updateSize(QSize newSize)
     if (lyricWidget) {
         lyricWidget->setFixedSize(newSize);
         musicListWidget->setFixedSize(newSize);
-        playListWidget->move(0, newSize.height() - 384);
-        playListWidget->setFixedSize(QSize(newSize.width(), 384));
+        playListWidget->move(10, newSize.height() - 384);
+        playListWidget->setFixedSize(QSize(newSize.width() - 20, 384));
     }
 
     footer->raise();
@@ -549,6 +563,11 @@ const QString MainFramePrivate::getLastImportPath() const
     }
 
     return lastImportPath;
+}
+
+void MainFramePrivate::startTimer()
+{
+    timer->start(250);
 }
 
 void MainFramePrivate::showInfoDialog(const MetaPtr meta)
@@ -741,6 +760,7 @@ void MainFrame::binding(Presenter *presenter)
     connect(presenter, &Presenter::musicStoped,
     this, [ = ](PlaylistPtr, const MetaPtr) {
         setCoverBackground(coverBackground());
+        d->timer->stop();
     });
 
     connect(presenter, &Presenter::notifyMusciError,
@@ -789,6 +809,12 @@ void MainFrame::binding(Presenter *presenter)
 
         qApp->setApplicationDisplayName(playlist->displayName());
         this->setWindowTitle(meta->title);
+        d->startTimer();
+    });
+
+    connect(presenter, &Presenter::musicPaused,
+    this, [ = ](PlaylistPtr playlist, const MetaPtr meta) {
+        d->timer->stop();
     });
 
     connect(presenter, &Presenter::meidaFilesImported,
@@ -931,6 +957,10 @@ void MainFrame::binding(Presenter *presenter)
             presenter, &Presenter::onPlayModeChanged);
     connect(d->footer,  &Footer::toggleFavourite,
             presenter, &Presenter::onToggleFavourite);
+    connect(d->footer, &Footer::pause,
+    this, [ = ](PlaylistPtr playlist, const MetaPtr meta) {
+        d->timer->stop();
+    });
 
     connect(d->footer,  &Footer::progressRealHeightChanged,
     this, [ = ](qreal realHeight) {
@@ -1108,6 +1138,33 @@ void MainFrame::slotTheme(int type)
 {
     Q_D(MainFrame);
     d->setTheme(type);
+}
+
+void MainFrame::changePicture()
+{
+    Q_D(MainFrame);
+    int curCount = d->playingCount % 4;
+    d->playingCount = curCount + 1;
+    QPixmap pixmap;
+    switch (curCount) {
+    case 0:
+        pixmap = QPixmap(":/mpimage/light/music1.svg");
+        break;
+    case 1:
+        pixmap = QPixmap(":/mpimage/light/music2.svg");
+        break;
+    case 2:
+        pixmap = QPixmap(":/mpimage/light/music3.svg");
+        break;
+    case 3:
+        pixmap = QPixmap(":/mpimage/light/music4.svg");
+        break;
+    default:
+        pixmap = QPixmap(":/mpimage/light/music1.svg");
+        break;
+    }
+    d->musicListWidget->changePicture(pixmap);
+    d->playListWidget->changePicture(pixmap);
 }
 
 bool MainFrame::eventFilter(QObject *obj, QEvent *e)

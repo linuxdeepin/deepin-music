@@ -48,6 +48,10 @@ public:
 
     void closeAllPersistentEditor();
 
+    void changePicture(QPixmap pixmap);
+
+public slots:
+    void slotTheme(int type);
 signals:
     void playall(PlaylistPtr playlist);
     void customResort(const QStringList &uuids);
@@ -62,4 +66,7 @@ private:
     QList<PlaylistPtr >  allPlaylists;
     QStandardItemModel   *model           = nullptr;
     DStyledItemDelegate  *delegate        = nullptr;
+    QStandardItem        *playingItem     = nullptr;
+    QPixmap              playingPixmap;
+    int                  m_type = 1;
 };
