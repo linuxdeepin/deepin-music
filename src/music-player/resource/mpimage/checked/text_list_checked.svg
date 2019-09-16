@@ -1,0 +1,20 @@
+<svg width="36" height="36" xmlns="http://www.w3.org/2000/svg">
+ <!-- Generator: Sketch 56.2 (81672) - https://sketch.com -->
+
+ <title>text list_normal</title>
+ <desc>Created with Sketch.</desc>
+ <g>
+  <title>background</title>
+  <rect fill="none" id="canvas_background" height="402" width="582" y="-1" x="-1"/>
+ </g>
+ <g>
+  <title>Layer 1</title>
+  <g fill-rule="evenodd" fill="none" id="页面-1">
+   <g fill-rule="nonzero" fill="#626E88" id="按钮规范">
+    <g id="text-list_normal">
+     <path fill="#00a0ff" id="列表视图-2" d="m23.5,23l-11,0l-0.5,0l0,-1l0.5,0l11,0l0.5,0l0,1l-0.5,0zm0,-3l-11,0l-0.5,0l0,-1l0.5,0l11,0l0.5,0l0,1l-0.5,0zm0,-3l-11,0l-0.5,0l0,-1l0.5,0l11,0l0.5,0l0,1l-0.5,0zm0,-3l-11,0l-0.5,0l0,-1l0.5,0l11,0l0.5,0l0,1l-0.5,0z"/>
+    </g>
+   </g>
+  </g>
+ </g>
+</svg>

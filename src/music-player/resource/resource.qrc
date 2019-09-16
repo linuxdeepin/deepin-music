@@ -80,5 +80,7 @@
         <file>mpimage/press/cross_cycling_press.svg</file>
         <file>mpimage/press/collection_press.svg</file>
         <file>mpimage/press/album_press.svg</file>
+        <file>mpimage/checked/text_list_checked.svg</file>
+        <file>mpimage/checked/picture_list_checked.svg</file>
     </qresource>
 </RCC>

@@ -110,6 +110,14 @@ void MusicListDataWidgetPrivate::initData(PlaylistPtr playlist)
 
         t_curDropdown = albumDropdown;
 
+        if (albumListView->viewMode() == QListView::IconMode) {
+            btIconMode->setChecked(true);
+            btlistMode->setChecked(false);
+        } else {
+            btIconMode->setChecked(false);
+            btlistMode->setChecked(true);
+        }
+
         albumListView->onMusiclistChanged(playlist);
     } else if (playlist->id() == ArtistMusicListID) {
         PlayMusicTypePtrList playMusicTypePtrList = playlist->playMusicTypePtrList();
@@ -142,6 +150,13 @@ void MusicListDataWidgetPrivate::initData(PlaylistPtr playlist)
 
         t_curDropdown = artistDropdown;
 
+        if (artistListView->viewMode() == QListView::IconMode) {
+            btIconMode->setChecked(true);
+            btlistMode->setChecked(false);
+        } else {
+            btIconMode->setChecked(false);
+            btlistMode->setChecked(true);
+        }
         artistListView->onMusiclistChanged(playlist);
     } else {
         QString infoStr;
@@ -165,6 +180,13 @@ void MusicListDataWidgetPrivate::initData(PlaylistPtr playlist)
 
         t_curDropdown = musicDropdown;
 
+        if (musicListView->viewMode() == QListView::IconMode) {
+            btIconMode->setChecked(true);
+            btlistMode->setChecked(false);
+        } else {
+            btIconMode->setChecked(false);
+            btlistMode->setChecked(true);
+        }
         musicListView->onMusiclistChanged(playlist);
     }
 
@@ -249,6 +271,7 @@ void MusicListDataWidgetPrivate::initConntion()
         } else {
             musicListView->setViewModeFlag(QListView::IconMode);
         }
+        btlistMode->setChecked(false);
     });
     q->connect(btlistMode, &DPushButton::clicked,
     q, [ = ](bool) {
@@ -259,6 +282,7 @@ void MusicListDataWidgetPrivate::initConntion()
         } else {
             musicListView->setViewModeFlag(QListView::ListMode);
         }
+        btIconMode->setChecked(false);
     });
 }
 
@@ -390,7 +414,8 @@ MusicListDataWidget::MusicListDataWidget(QWidget *parent) :
 
     d->btIconMode = new MusicImageButton(":/mpimage/normal/picture_list_normal.svg",
                                          ":/mpimage/hover/picture_list_hover.svg",
-                                         ":/mpimage/press/picture_list_press.svg");
+                                         ":/mpimage/press/picture_list_press.svg",
+                                         ":/mpimage/checked/picture_list_checked.svg");
     d->btIconMode->setFixedSize(36, 36);
     d->btIconMode->setObjectName("MusicListDataWidgetIconMode");
     d->btIconMode->setCheckable(true);
@@ -398,7 +423,8 @@ MusicListDataWidget::MusicListDataWidget(QWidget *parent) :
 
     d->btlistMode = new MusicImageButton(":/mpimage/normal/text_list_normal.svg",
                                          ":/mpimage/hover/text_list_hover.svg",
-                                         ":/mpimage/press/text_list_press.svg");
+                                         ":/mpimage/press/text_list_press.svg",
+                                         ":/mpimage/checked/text_list_checked.svg");
     d->btlistMode->setFixedSize(36, 36);
     d->btlistMode->setObjectName("MusicListDataWidgetListMode");
     d->btlistMode->setCheckable(true);

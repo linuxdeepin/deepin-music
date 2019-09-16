@@ -30,12 +30,13 @@ MusicImageButton::MusicImageButton(QWidget *parent)
 }
 
 MusicImageButton::MusicImageButton(const QString &normalPic, const QString &hoverPic,
-                                   const QString &pressPic, QWidget *parent)
+                                   const QString &pressPic, const QString &checkedPic, QWidget *parent)
     : DPushButton (parent)
 {
     defaultPicPath.normalPicPath = normalPic;
     defaultPicPath.hoverPicPath = hoverPic;
     defaultPicPath.pressPicPath = pressPic;
+    defaultPicPath.checkedPicPath = checkedPic;
 }
 
 void MusicImageButton::setPropertyPic(QString propertyName, const QVariant &value,
@@ -66,11 +67,16 @@ void MusicImageButton::paintEvent(QPaintEvent *event)
     QString curPicPath = defaultPicPath.normalPicPath;
     if (propertyPicPaths.first.isEmpty() || !propertyPicPaths.second.contains(property(propertyPicPaths.first.toStdString().data()))) {
         QString curPropertyPicPathStr;
-        if (status == 1 && !defaultPicPath.hoverPicPath.isEmpty()) {
-            curPropertyPicPathStr = defaultPicPath.hoverPicPath;
-        } else if (status == 2 && !defaultPicPath.pressPicPath.isEmpty()) {
-            curPropertyPicPathStr = defaultPicPath.pressPicPath;
+        if (isChecked() && !defaultPicPath.checkedPicPath.isEmpty()) {
+            curPropertyPicPathStr = defaultPicPath.checkedPicPath;
+        } else {
+            if (status == 1 && !defaultPicPath.hoverPicPath.isEmpty()) {
+                curPropertyPicPathStr = defaultPicPath.hoverPicPath;
+            } else if (status == 2 && !defaultPicPath.pressPicPath.isEmpty()) {
+                curPropertyPicPathStr = defaultPicPath.pressPicPath;
+            }
         }
+
         if (!curPropertyPicPathStr.isEmpty()) {
             curPicPath = curPropertyPicPathStr;
         }
