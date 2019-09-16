@@ -271,7 +271,6 @@ void MusicListDataWidgetPrivate::initConntion()
         } else {
             musicListView->setViewModeFlag(QListView::IconMode);
         }
-        btIconMode->setChecked(true);
         btlistMode->setChecked(false);
     });
     q->connect(btlistMode, &DPushButton::clicked,
@@ -284,7 +283,6 @@ void MusicListDataWidgetPrivate::initConntion()
             musicListView->setViewModeFlag(QListView::ListMode);
         }
         btIconMode->setChecked(false);
-        btlistMode->setChecked(true);
     });
 }
 
