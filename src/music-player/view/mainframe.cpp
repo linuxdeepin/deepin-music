@@ -987,7 +987,6 @@ void MainFrame::onSelectImportDirectory()
     fileDlg.setDirectory(lastImportPath);
 
     fileDlg.setViewMode(DFileDialog::Detail);
-    fileDlg.setFileMode(DFileDialog::Directory);
     if (DFileDialog::Accepted == fileDlg.exec()) {
         d->importWidget->showWaitHint();
         MusicSettings::setOption("base.play.last_import_path",  fileDlg.directory().path());
