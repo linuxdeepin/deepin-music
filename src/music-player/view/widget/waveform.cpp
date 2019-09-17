@@ -256,11 +256,13 @@ void Waveform::mouseMoveEvent(QMouseEvent *event)
 void Waveform::enterEvent(QEvent *event)
 {
     enterFlag = true;
+    update();
     DSlider::enterEvent(event);
 }
 
 void Waveform::leaveEvent(QEvent *event)
 {
     enterFlag = false;
+    update();
     DSlider::leaveEvent(event);
 }
