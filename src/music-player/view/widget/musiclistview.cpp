@@ -138,7 +138,8 @@ void MusicListView::showContextMenu(const QPoint &pos)
             m_data->id() != ArtistMusicListID && m_data->id() != FavMusicListID) {
         menu.addAction(tr("Rename"));
         menu.addAction(tr("Delete"));
-    } else if (m_data->id() == AlbumMusicListID && m_data->id() == ArtistMusicListID) {
+    }
+    if (m_data->id() == AlbumMusicListID || m_data->id() == ArtistMusicListID) {
         playact->setDisabled(m_data->playMusicTypePtrList().size() == 0);
     }
 
