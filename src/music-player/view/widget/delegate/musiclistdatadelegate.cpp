@@ -138,9 +138,10 @@ void MusicListDataDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
         painter->setRenderHint(QPainter::Antialiasing);
         painter->setRenderHint(QPainter::HighQualityAntialiasing);
 
-        auto background = option.palette.background();
+        auto background = (index.row() % 2) == 0 ? option.palette.base() : option.palette.alternateBase();
+
         if (option.state & QStyle::State_Selected) {
-            background = option.palette.highlight();
+            background = option.palette.dark();
         }
         painter->fillRect(option.rect, background);
 

@@ -281,10 +281,10 @@ void PlayItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
     painter->setRenderHint(QPainter::Antialiasing);
     painter->setRenderHint(QPainter::HighQualityAntialiasing);
 
-    auto background = (index.row() % 2) == 0 ? option.palette.background() : option.palette.alternateBase();
+    auto background = (index.row() % 2) == 0 ? option.palette.base() : option.palette.alternateBase();
 
     if (option.state & QStyle::State_Selected) {
-        background = option.palette.highlight();
+        background = option.palette.dark();
     }
 
     if (option.state & QStyle::State_HasFocus) {
@@ -306,14 +306,19 @@ void PlayItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
 
     for (int col = 0; col < ColumnButt; ++col) {
         auto textColor = d->foreground(col, option);
+        QColor brightTextColor(option.palette.brightText().color());
         auto flag = alignmentFlag(col);
         auto rect = colRect(col, option);
-        painter->setPen(textColor);
+        auto activeMeta = listview->activingMeta();
+        if (activeMeta == meta) {
+            painter->setPen(brightTextColor);
+        } else {
+            painter->setPen(textColor);
+        }
         switch (col) {
         case Number: {
             auto *listview = qobject_cast<PlayListView *>(const_cast<QWidget *>(option.widget));
             // Fixme:
-            auto activeMeta = listview->activingMeta();
             if (!meta.isNull() && meta->invalid) {
                 auto sz = QSizeF(15, 15);
                 auto icon = QIcon(":/common/image/warning.svg").pixmap(sz.toSize());
@@ -336,6 +341,7 @@ void PlayItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
                                        centerF.y() - icon.height() / 2,
                                        icon.width(), icon.height());
                 painter->drawPixmap(iconRect.toRect(), icon);
+
             } else {
                 painter->setFont(font11);
                 auto str = QString("%1").arg(index.row() + 1);
