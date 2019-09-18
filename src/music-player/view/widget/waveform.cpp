@@ -42,6 +42,7 @@ Waveform::Waveform(Qt::Orientation orientation, QWidget *parent) : DSlider(orien
     setFixedHeight(40);
     maxSampleNum = 500;
     enterFlag = false;
+    slider()->hide();
 }
 
 void Waveform::paintEvent(QPaintEvent *)
@@ -232,9 +233,9 @@ void Waveform::mousePressEvent(QMouseEvent *event)
             || event->button() == Qt::MiddleButton
             || event->button() == Qt::RightButton) {
         if (orientation() == Qt::Vertical) {
-            setSliderPosition(minimum() + ((maximum() - minimum()) * (height() - event->y())) / height()) ;
+            setValue(minimum() + ((maximum() - minimum()) * (height() - event->y())) / height()) ;
         } else {
-            setSliderPosition(minimum() + ((maximum() - minimum()) * (event->x())) / (width()));
+            setValue(minimum() + ((maximum() - minimum()) * (event->x())) / (width()));
         }
     }
     this->blockSignals(true);
@@ -250,7 +251,7 @@ void Waveform::mouseMoveEvent(QMouseEvent *event)
     }
 
     auto value = (event->x() - this->x()) * valueRange / this->width();
-    setSliderPosition(value);
+    setValue(value);
 }
 
 void Waveform::enterEvent(QEvent *event)

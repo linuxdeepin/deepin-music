@@ -63,7 +63,7 @@ SoundVolume::SoundVolume(QWidget *parent) : QWidget(parent), d_ptr(new SoundVolu
     d->volSlider = new DSlider(Qt::Vertical);
     d->volSlider->setMinimum(0);
     d->volSlider->setMaximum(100);
-    d->volSlider->setSingleStep(Player::VolumeStep);
+    d->volSlider->slider()->setSingleStep(Player::VolumeStep);
     d->volSlider->setValue(50);
     d->volSlider->setFixedHeight(90);
     d->volSlider->setFixedWidth(24);
