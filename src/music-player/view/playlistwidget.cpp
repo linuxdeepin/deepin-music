@@ -91,14 +91,17 @@ void PlayListWidgetPrivate::initConntion()
     q->connect(playListView, &PlayListView::removeMusicList,
     q, [ = ](const MetaPtrList  & metalist) {
         Q_EMIT q->musiclistRemove(playListView->playlist(), metalist);
+        q->updateInfo(playListView->playlist());
     });
     q->connect(playListView, &PlayListView::deleteMusicList,
     q, [ = ](const MetaPtrList & metalist) {
         Q_EMIT q->musiclistDelete(playListView->playlist(), metalist);
+        q->updateInfo(playListView->playlist());
     });
     q->connect(playListView, &PlayListView::addToPlaylist,
     q, [ = ](PlaylistPtr playlist, const MetaPtrList  metalist) {
         Q_EMIT q->addToPlaylist(playlist, metalist);
+        q->updateInfo(playListView->playlist());
     });
     q->connect(playListView, &PlayListView::playMedia,
     q, [ = ](const MetaPtr meta) {
