@@ -41,12 +41,11 @@ Waveform::Waveform(Qt::Orientation orientation, QWidget *parent) : DSlider(orien
     setSizePolicy(sp);
     setFixedHeight(40);
     maxSampleNum = 500;
-    enterFlag = false;
-    <<< <<< < HEAD
     slider()->hide();
-    == == == =
-    >>> >>> > fix:
-        modify wave form
+
+    waveformScale = new WaveformScale(mainWindow);
+    waveformScale->hide();
+
 }
 
 void Waveform::paintEvent(QPaintEvent *)
