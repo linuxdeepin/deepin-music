@@ -729,4 +729,6 @@ void Playlist::playMusicTypeToMeta()
             playlistMeta.metas.insert(hashCode, meta->playlistMeta.metas[hashCode]);
         }
     }
+    MediaDatabase::removePlaylist(playlistMeta);
+    MediaDatabase::addPlaylist(playlistMeta);
 }
