@@ -27,6 +27,8 @@
 #include <QMediaPlayer>
 #include <QPropertyAnimation>
 #include <QAudioProbe>
+#include <QFileSystemWatcher>
+
 #include "metasearchservice.h"
 
 #include <QMimeDatabase>
@@ -139,6 +141,8 @@ public:
 
     QPropertyAnimation  *fadeInAnimation    = nullptr;
     QPropertyAnimation  *fadeOutAnimation   = nullptr;
+
+    QFileSystemWatcher  fileSystemWatcher;
 
     Player *q_ptr;
     Q_DECLARE_PUBLIC(Player)
@@ -293,6 +297,11 @@ void PlayerPrivate::initConnection()
             break;
         }
     });
+
+    q->connect(&fileSystemWatcher, &QFileSystemWatcher::fileChanged,
+    q, [ = ](const QString & path) {
+        Q_EMIT q->mediaError(activePlaylist, activeMeta, Player::ResourceError);
+    });
 }
 
 void PlayerPrivate::selectNext(const MetaPtr info, Player::PlaybackMode mode)
@@ -391,6 +400,9 @@ void Player::playMeta(PlaylistPtr playlist, const MetaPtr meta)
 
     Q_D(Player);
     d->activePlaylist = playlist;
+
+    d->fileSystemWatcher.removePaths(d->fileSystemWatcher.files());
+    d->fileSystemWatcher.addPath(meta->localPath);
 
     d->activeMeta = meta;
     d->qplayer->setMedia(QMediaContent(QUrl::fromLocalFile(meta->localPath)));
