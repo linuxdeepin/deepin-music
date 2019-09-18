@@ -31,11 +31,11 @@
 
 MusicListView::MusicListView(QWidget *parent) : DListWidget(parent)
 {
-    setDragEnabled(true);
-    viewport()->setAcceptDrops(true);
-    setDropIndicatorShown(true);
-    setDefaultDropAction(Qt::MoveAction);
-    setDragDropMode(QAbstractItemView::DragOnly);
+//    setDragEnabled(true);
+//    viewport()->setAcceptDrops(true);
+//    setDropIndicatorShown(true);
+//    setDefaultDropAction(Qt::MoveAction);
+//    setDragDropMode(QAbstractItemView::DragOnly);
     setIconSize( QSize(40, 40) );
     setGridSize( QSize(40, 40) );
 
