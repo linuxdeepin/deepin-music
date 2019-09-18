@@ -209,16 +209,16 @@ void MusicListDataWidgetPrivate::initConntion()
     q->connect(albumDropdown, &DDropdown::triggered,
     q, [ = ](QAction * action) {
         albumDropdown->setCurrentAction(action);
-        int t_sortType = action->data().toInt() == 0 ? 0 : 1;
+        int t_sortType = action->data().toInt() == 0 ? 1 : 0;
         albumListView->playlist()->sortPlayMusicTypePtrListData(t_sortType);
         Q_EMIT q->resort(albumListView->playlist(), action->data().value<Playlist::SortType>());
     });
     q->connect(artistDropdown, &DDropdown::triggered,
     q, [ = ](QAction * action) {
         artistDropdown->setCurrentAction(action);
-        int t_sortType = action->data().toInt() == 0 ? 0 : 1;
+        int t_sortType = action->data().toInt() == 0 ? 1 : 0;
         artistListView->playlist()->sortPlayMusicTypePtrListData(t_sortType);
-        Q_EMIT q->resort(artistListView->playlist(), action->data().value<Playlist::SortType>());
+        //Q_EMIT q->resort(artistListView->playlist(), action->data().value<Playlist::SortType>());
     });
     q->connect(musicDropdown, &DDropdown::triggered,
     q, [ = ](QAction * action) {
