@@ -45,6 +45,8 @@ signals:
     void playMedia(PlaylistPtr playlist, const MetaPtr meta);
     void resort(PlaylistPtr playlist, int sortType);
 
+    void requestCustomContextMenu(const QPoint &pos, char type);
+
 public slots:
     void onMusicPlayed(PlaylistPtr playlist, const MetaPtr);
     void onPlaylistAdded(PlaylistPtr);
@@ -53,6 +55,11 @@ public slots:
     void onMusicListAdded(PlaylistPtr playlist, const MetaPtrList metalist);
     void onMusicListRemoved(PlaylistPtr playlist, const MetaPtrList metalist);
     void onMusiclistUpdate();
+
+    void onCustomContextMenuRequest(const QPoint &pos,
+                                    PlaylistPtr selectedlist,
+                                    PlaylistPtr favlist,
+                                    QList<PlaylistPtr >newlists);
 
 protected:
     virtual void focusOutEvent(QFocusEvent *event) Q_DECL_OVERRIDE;

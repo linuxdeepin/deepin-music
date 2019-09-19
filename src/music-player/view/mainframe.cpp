@@ -771,6 +771,15 @@ void MainFrame::binding(Presenter *presenter)
         }
     });
 
+    connect(presenter, &Presenter::requestMusicListMenu,
+    this, [ = ](const QPoint & pos, PlaylistPtr selectedlist, PlaylistPtr favlist, QList<PlaylistPtr >newlists, char type) {
+        if (type == 1) {
+            d->musicListWidget->onCustomContextMenuRequest(pos, selectedlist, favlist, newlists);
+        } else {
+            d->playListWidget->onCustomContextMenuRequest(pos, selectedlist, favlist, newlists);
+        }
+    });
+
     connect(d->footer,  &Footer::locateMusic,
     this, [ = ](PlaylistPtr playlist, const MetaPtr) {
         if (playlist && playlist->id() != SearchMusicListID) {
@@ -813,8 +822,6 @@ void MainFrame::binding(Presenter *presenter)
 
     connect(presenter, &Presenter::musicListResorted,
             d->playListWidget, &PlayListWidget::onMusiclistChanged);
-    connect(presenter, &Presenter::requestMusicListMenu,
-            d->playListWidget,  &PlayListWidget::onCustomContextMenuRequest);
     connect(presenter, &Presenter::currentMusicListChanged,
             d->playListWidget,  &PlayListWidget::onMusiclistChanged);
     connect(presenter, &Presenter::musicPlayed,
@@ -927,6 +934,8 @@ void MainFrame::binding(Presenter *presenter)
             d->musicListWidget,  &MusicListWidget::onMusicListAdded);
     connect(presenter, &Presenter::musicListRemoved,
             d->musicListWidget,  &MusicListWidget::onMusicListRemoved);
+    connect(d->musicListWidget, &MusicListWidget::requestCustomContextMenu,
+            presenter, &Presenter::onRequestMusiclistMenu);
 
     connect(d->musicListWidget, &MusicListWidget::resort,
             presenter, &Presenter::onResort);

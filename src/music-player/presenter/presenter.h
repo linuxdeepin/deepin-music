@@ -90,7 +90,8 @@ signals:
     void requestMusicListMenu(const QPoint &pos,
                               PlaylistPtr selectedlist,
                               PlaylistPtr favlist,
-                              QList<PlaylistPtr >newlists);
+                              QList<PlaylistPtr >newlists,
+                              char type);
 
     //! from control
     void musicPlayed(PlaylistPtr playlist, const MetaPtr meta);
@@ -150,7 +151,7 @@ public slots:
     void onCustomResort(const QStringList &uuids);
 
     //! ui: menu interface
-    void onRequestMusiclistMenu(const QPoint &pos);
+    void onRequestMusiclistMenu(const QPoint &pos, char type);
     void onSearchText(const QString text);
     void onExitSearch();
     void onLocateMusicAtAll(const QString &hash);

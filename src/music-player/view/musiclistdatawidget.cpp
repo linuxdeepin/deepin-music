@@ -262,6 +262,11 @@ void MusicListDataWidgetPrivate::initConntion()
         Q_EMIT q->playMedia(musicListView->playlist(), meta);
     });
 
+    q->connect(musicListView, &PlayListView::requestCustomContextMenu,
+    q, [ = ](const QPoint & pos) {
+        Q_EMIT q->requestCustomContextMenu(pos, 1);
+    });
+
     q->connect(btIconMode, &DPushButton::clicked,
     q, [ = ](bool) {
         if (albumListView->isVisible()) {
@@ -498,5 +503,11 @@ void MusicListDataWidget::onMusiclistUpdate()
 {
     Q_D(MusicListDataWidget);
     d->initData(d->curPlaylist);
+}
+
+void MusicListDataWidget::onCustomContextMenuRequest(const QPoint &pos, PlaylistPtr selectedlist, PlaylistPtr favlist, QList<PlaylistPtr> newlists)
+{
+    Q_D(MusicListDataWidget);
+    d->musicListView->showContextMenu(pos, d->musicListView->playlist(), favlist, newlists);
 }
 

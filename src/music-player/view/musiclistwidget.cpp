@@ -174,6 +174,10 @@ MusicListWidget::MusicListWidget(QWidget *parent) : DWidget(parent)
     this, [ = ](PlaylistPtr playlist, int sortType) {
         Q_EMIT this->resort(playlist, sortType);
     });
+    connect(m_dataListView, &MusicListDataWidget::requestCustomContextMenu,
+    this, [ = ](const QPoint & pos, char type) {
+        Q_EMIT this->requestCustomContextMenu(pos, type);
+    });
 }
 
 void MusicListWidget::initData(QList<PlaylistPtr > playlists, PlaylistPtr last)
@@ -298,5 +302,10 @@ void MusicListWidget::onMusicListRemoved(PlaylistPtr playlist, const MetaPtrList
 void MusicListWidget::onMusiclistUpdate()
 {
     m_dataListView->onMusiclistUpdate();
+}
+
+void MusicListWidget::onCustomContextMenuRequest(const QPoint &pos, PlaylistPtr selectedlist, PlaylistPtr favlist, QList<PlaylistPtr> newlists)
+{
+    m_dataListView->onCustomContextMenuRequest(pos, selectedlist, favlist, newlists);
 }
 

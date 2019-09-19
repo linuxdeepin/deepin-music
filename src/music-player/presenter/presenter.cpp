@@ -719,7 +719,7 @@ void Presenter::onCustomResort(const QStringList &uuids)
     d->playlistMgr->onCustomResort(uuids);
 }
 
-void Presenter::onRequestMusiclistMenu(const QPoint &pos)
+void Presenter::onRequestMusiclistMenu(const QPoint &pos, char type)
 {
     Q_D(Presenter);
     QList<PlaylistPtr > newlists = d->playlistMgr->allplaylist();
@@ -731,7 +731,7 @@ void Presenter::onRequestMusiclistMenu(const QPoint &pos)
     auto selectedlist = d->currentPlaylist;
     auto favlist = d->playlistMgr->playlist(FavMusicListID);
 
-    Q_EMIT this->requestMusicListMenu(pos, selectedlist, favlist, newlists);
+    Q_EMIT this->requestMusicListMenu(pos, selectedlist, favlist, newlists, type);
 }
 
 void Presenter::onSearchText(const QString text)

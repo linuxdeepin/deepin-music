@@ -41,10 +41,17 @@ public slots:
     void onMusiclistChanged(PlaylistPtr playlist);
     void onMusiclistUpdate();
 
+    void onCustomContextMenuRequest(const QPoint &pos,
+                                    PlaylistPtr selectedlist,
+                                    PlaylistPtr favlist,
+                                    QList<PlaylistPtr >newlists);
+
 signals:
     void playall(PlaylistPtr playlist);
     void resort(PlaylistPtr playlist, int sortType);
     void playMedia(PlaylistPtr playlist, const MetaPtr meta);
+
+    void requestCustomContextMenu(const QPoint &pos, char type);
 
 private:
     QScopedPointer<MusicListDataWidgetPrivate> d_ptr;

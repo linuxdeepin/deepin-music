@@ -86,7 +86,7 @@ void PlayListWidgetPrivate::initConntion()
 
     q->connect(playListView, &PlayListView::requestCustomContextMenu,
     q, [ = ](const QPoint & pos) {
-        Q_EMIT q->requestCustomContextMenu(pos);
+        Q_EMIT q->requestCustomContextMenu(pos, 0);
     });
     q->connect(playListView, &PlayListView::removeMusicList,
     q, [ = ](const MetaPtrList  & metalist) {
