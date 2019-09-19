@@ -266,6 +266,26 @@ void MusicListDataWidgetPrivate::initConntion()
     q, [ = ](const QPoint & pos) {
         Q_EMIT q->requestCustomContextMenu(pos, 1);
     });
+    q->connect(musicListView, &PlayListView::addToPlaylist,
+    q, [ = ](PlaylistPtr playlist, const MetaPtrList  metalist) {
+        Q_EMIT q->addToPlaylist(playlist, metalist);
+    });
+    q->connect(musicListView, &PlayListView::removeMusicList,
+    q, [ = ](const MetaPtrList  & metalist) {
+        Q_EMIT q->musiclistRemove(musicListView->playlist(), metalist);
+    });
+    q->connect(musicListView, &PlayListView::deleteMusicList,
+    q, [ = ](const MetaPtrList  & metalist) {
+        Q_EMIT q->musiclistDelete(musicListView->playlist(), metalist);
+    });
+    q->connect(musicListView, &PlayListView::showInfoDialog,
+    q, [ = ](const MetaPtr meta) {
+        Q_EMIT q->showInfoDialog(meta);
+    });
+    q->connect(musicListView, &PlayListView::updateMetaCodec,
+    q, [ = ](const MetaPtr  meta) {
+        Q_EMIT q->updateMetaCodec(meta);
+    });
 
     q->connect(btIconMode, &DPushButton::clicked,
     q, [ = ](bool) {

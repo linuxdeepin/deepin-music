@@ -937,6 +937,20 @@ void MainFrame::binding(Presenter *presenter)
     connect(d->musicListWidget, &MusicListWidget::requestCustomContextMenu,
             presenter, &Presenter::onRequestMusiclistMenu);
 
+    connect(d->playListWidget, &PlayListWidget::updateMetaCodec,
+            presenter, &Presenter::onUpdateMetaCodec);
+    connect(d->playListWidget, &PlayListWidget::addToPlaylist,
+            presenter, &Presenter::onAddToPlaylist);
+    connect(d->playListWidget, &PlayListWidget::musiclistRemove,
+            presenter, &Presenter::onMusiclistRemove);
+    connect(d->playListWidget, &PlayListWidget::musiclistDelete,
+            presenter, &Presenter::onMusiclistDelete);
+
+    connect(d->musicListWidget, &MusicListWidget::showInfoDialog,
+    this, [ = ](const MetaPtr meta) {
+        d->showInfoDialog(meta);
+    });
+
     connect(d->musicListWidget, &MusicListWidget::resort,
             presenter, &Presenter::onResort);
     connect(d->musicListWidget,  &MusicListWidget::addPlaylist,
@@ -949,6 +963,14 @@ void MainFrame::binding(Presenter *presenter)
             presenter, &Presenter::onCustomResort);
     connect(d->musicListWidget, &MusicListWidget::playMedia,
             presenter, &Presenter::onSyncMusicPlay);
+    connect(d->musicListWidget, &MusicListWidget::updateMetaCodec,
+            presenter, &Presenter::onUpdateMetaCodec);
+    connect(d->musicListWidget, &MusicListWidget::addToPlaylist,
+            presenter, &Presenter::onAddToPlaylist);
+    connect(d->musicListWidget, &MusicListWidget::musiclistRemove,
+            presenter, &Presenter::onMusiclistRemove);
+    connect(d->musicListWidget, &MusicListWidget::musiclistDelete,
+            presenter, &Presenter::onMusiclistDelete);
 //    connect(d->musicListWidget,  &MusicListWidget::hidePlaylist,
 //    this, [ = ]() {
 //        d->setPlaylistVisible(false);

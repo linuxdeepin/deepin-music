@@ -178,6 +178,26 @@ MusicListWidget::MusicListWidget(QWidget *parent) : DWidget(parent)
     this, [ = ](const QPoint & pos, char type) {
         Q_EMIT this->requestCustomContextMenu(pos, type);
     });
+    connect(m_dataListView, &MusicListDataWidget::addToPlaylist,
+    this, [ = ](PlaylistPtr playlist, const MetaPtrList  metalist) {
+        Q_EMIT this->addToPlaylist(playlist, metalist);
+    });
+    connect(m_dataListView, &MusicListDataWidget::musiclistRemove,
+    this, [ = ](PlaylistPtr playlist, const MetaPtrList  & metalist) {
+        Q_EMIT this->musiclistRemove(playlist, metalist);
+    });
+    connect(m_dataListView, &MusicListDataWidget::musiclistDelete,
+    this, [ = ](PlaylistPtr playlist, const MetaPtrList  & metalist) {
+        Q_EMIT this->musiclistDelete(playlist, metalist);
+    });
+    connect(m_dataListView, &MusicListDataWidget::showInfoDialog,
+    this, [ = ](const MetaPtr meta) {
+        Q_EMIT this->showInfoDialog(meta);
+    });
+    connect(m_dataListView, &MusicListDataWidget::updateMetaCodec,
+    this, [ = ](const MetaPtr  meta) {
+        Q_EMIT this->updateMetaCodec(meta);
+    });
 }
 
 void MusicListWidget::initData(QList<PlaylistPtr > playlists, PlaylistPtr last)

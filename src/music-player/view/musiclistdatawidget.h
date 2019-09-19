@@ -52,6 +52,11 @@ signals:
     void playMedia(PlaylistPtr playlist, const MetaPtr meta);
 
     void requestCustomContextMenu(const QPoint &pos, char type);
+    void addToPlaylist(PlaylistPtr playlist, const MetaPtrList  &metalist);
+    void musiclistRemove(PlaylistPtr playlist, const MetaPtrList  &metalist);
+    void musiclistDelete(PlaylistPtr playlist, const MetaPtrList  &metalist);
+    void showInfoDialog(const MetaPtr meta);
+    void updateMetaCodec(const MetaPtr meta);
 
 private:
     QScopedPointer<MusicListDataWidgetPrivate> d_ptr;

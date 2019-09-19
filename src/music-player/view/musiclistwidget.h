@@ -46,6 +46,11 @@ signals:
     void resort(PlaylistPtr playlist, int sortType);
 
     void requestCustomContextMenu(const QPoint &pos, char type);
+    void addToPlaylist(PlaylistPtr playlist, const MetaPtrList  &metalist);
+    void musiclistRemove(PlaylistPtr playlist, const MetaPtrList  &metalist);
+    void musiclistDelete(PlaylistPtr playlist, const MetaPtrList  &metalist);
+    void showInfoDialog(const MetaPtr meta);
+    void updateMetaCodec(const MetaPtr meta);
 
 public slots:
     void onMusicPlayed(PlaylistPtr playlist, const MetaPtr);
