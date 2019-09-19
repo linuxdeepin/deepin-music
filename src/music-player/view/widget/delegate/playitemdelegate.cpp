@@ -306,7 +306,7 @@ void PlayItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
 
     for (int col = 0; col < ColumnButt; ++col) {
         auto textColor = d->foreground(col, option);
-        QColor brightTextColor(option.palette.brightText().color());
+        QColor brightTextColor(option.palette.highlight().color());
         auto flag = alignmentFlag(col);
         auto rect = colRect(col, option);
         auto activeMeta = listview->activingMeta();
