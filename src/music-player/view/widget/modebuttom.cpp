@@ -33,8 +33,6 @@ ModeButton::ModeButton(QWidget *parent) : DPushButton(parent)
         }
         setMode((m_mode + 1) % m_modeIcons.length());
 
-        this->style()->unpolish(this);
-        this->style()->polish(this);
         this->update();
     });
 }
@@ -43,8 +41,6 @@ void ModeButton::setModeIcons(const QStringList &modeIcons)
 {
     m_modeIcons = modeIcons;
     m_mode = 0;
-    this->style()->unpolish(this);
-    this->style()->polish(this);
     this->update();
 }
 
@@ -60,8 +56,6 @@ void ModeButton::setMode(int mode)
     }
     m_mode = mode;
 
-    this->style()->unpolish(this);
-    this->style()->polish(this);
     this->update();
 
     Q_EMIT modeChanged(mode);
