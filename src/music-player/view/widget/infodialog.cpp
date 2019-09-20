@@ -171,14 +171,14 @@ void InfoDialogPrivate::initUI()
 void InfoDialogPrivate::updateLabelSize()
 {
     Q_Q(InfoDialog);
-    auto h = 0;
-    for (auto label : valueList) {
-        label->adjustSize();
-        h += label->size().height() + 6;
-    }
-    infoGridFrame->setFixedHeight(h);
-    infoGridFrame->adjustSize();
-    q->adjustSize();
+//    auto h = 0;
+//    for (auto label : valueList) {
+//        label->adjustSize();
+//        h += label->size().height() + 6;
+//    }
+//    infoGridFrame->setFixedHeight(h);
+//    infoGridFrame->adjustSize();
+//    q->adjustSize();
 }
 
 InfoDialog::InfoDialog(QWidget *parent)
