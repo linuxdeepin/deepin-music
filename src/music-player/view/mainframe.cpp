@@ -133,12 +133,12 @@ void MainFramePrivate::initMenu()
         Q_EMIT q->addPlaylist(true);
     });
 
-    auto addmusic = new QAction(MainFrame::tr("Add folder"), q);
-    q->connect(addmusic, &QAction::triggered, q, [ = ](bool) {
-        q->onSelectImportDirectory();
-    });
+//    auto addmusic = new QAction(MainFrame::tr("Add folder"), q);
+//    q->connect(addmusic, &QAction::triggered, q, [ = ](bool) {
+//        q->onSelectImportDirectory();
+//    });
 
-    auto addmusicfiles = new QAction(MainFrame::tr("Add file"), q);
+    auto addmusicfiles = new QAction(MainFrame::tr("Add music"), q);
     q->connect(addmusicfiles, &QAction::triggered, q, [ = ](bool) {
         q->onSelectImportFiles();
     });
@@ -180,7 +180,7 @@ void MainFramePrivate::initMenu()
 
     auto titleMenu = new DMenu(q);
     titleMenu->addAction(newSonglistAction);
-    titleMenu->addAction(addmusic);
+    //titleMenu->addAction(addmusic);
     titleMenu->addAction(addmusicfiles);
     titleMenu->addSeparator();
 

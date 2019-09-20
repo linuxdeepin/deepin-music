@@ -37,64 +37,64 @@
 <context>
     <name>Footer</name>
     <message>
-        <location filename="../view/footerwidget.cpp" line="314"/>
+        <location filename="../view/footerwidget.cpp" line="308"/>
         <source>Previous</source>
         <translation>上一首</translation>
     </message>
     <message>
-        <location filename="../view/footerwidget.cpp" line="315"/>
+        <location filename="../view/footerwidget.cpp" line="309"/>
         <source>Next</source>
         <translation>下一首</translation>
     </message>
     <message>
-        <location filename="../view/footerwidget.cpp" line="316"/>
+        <location filename="../view/footerwidget.cpp" line="310"/>
         <source>Play/Pause</source>
         <translation>播放/暂停</translation>
     </message>
     <message>
-        <location filename="../view/footerwidget.cpp" line="317"/>
+        <location filename="../view/footerwidget.cpp" line="311"/>
         <source>Favorite</source>
         <translation>收藏</translation>
     </message>
     <message>
-        <location filename="../view/footerwidget.cpp" line="318"/>
+        <location filename="../view/footerwidget.cpp" line="312"/>
         <source>Lyrics</source>
         <translation>歌词</translation>
     </message>
     <message>
-        <location filename="../view/footerwidget.cpp" line="229"/>
+        <location filename="../view/footerwidget.cpp" line="223"/>
         <source>Unknown Title</source>
         <translation>未知名称</translation>
     </message>
     <message>
-        <location filename="../view/footerwidget.cpp" line="235"/>
-        <location filename="../view/footerwidget.cpp" line="561"/>
-        <location filename="../view/footerwidget.cpp" line="751"/>
+        <location filename="../view/footerwidget.cpp" line="229"/>
+        <location filename="../view/footerwidget.cpp" line="556"/>
+        <location filename="../view/footerwidget.cpp" line="746"/>
         <source>Unknown artist</source>
         <translation>未知演唱者</translation>
     </message>
     <message>
-        <location filename="../view/footerwidget.cpp" line="319"/>
+        <location filename="../view/footerwidget.cpp" line="313"/>
         <source>Play Mode</source>
         <translation>播放模式</translation>
     </message>
     <message>
-        <location filename="../view/footerwidget.cpp" line="320"/>
+        <location filename="../view/footerwidget.cpp" line="314"/>
         <source>Playlist</source>
         <translation>播放列表</translation>
     </message>
     <message>
-        <location filename="../view/footerwidget.cpp" line="729"/>
+        <location filename="../view/footerwidget.cpp" line="724"/>
         <source>List Loop</source>
         <translation>列表循环</translation>
     </message>
     <message>
-        <location filename="../view/footerwidget.cpp" line="732"/>
+        <location filename="../view/footerwidget.cpp" line="727"/>
         <source>Single Loop</source>
         <translation>单曲循环</translation>
     </message>
     <message>
-        <location filename="../view/footerwidget.cpp" line="735"/>
+        <location filename="../view/footerwidget.cpp" line="730"/>
         <source>Shuffle</source>
         <translation>随机播放</translation>
     </message>
@@ -215,79 +215,82 @@
 <context>
     <name>MainFrame</name>
     <message>
-        <location filename="../view/mainframe.cpp" line="134"/>
+        <location filename="../view/mainframe.cpp" line="131"/>
         <source>New playlist</source>
         <translation>新建歌单</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="149"/>
+        <location filename="../view/mainframe.cpp" line="141"/>
+        <source>Add music</source>
+        <translation>添加音乐</translation>
+    </message>
+    <message>
+        <location filename="../view/mainframe.cpp" line="146"/>
         <source>Settings</source>
         <translation>设置</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="179"/>
-        <location filename="../view/mainframe.cpp" line="586"/>
+        <location filename="../view/mainframe.cpp" line="176"/>
+        <location filename="../view/mainframe.cpp" line="559"/>
         <source>Exit</source>
         <translation>退出</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="139"/>
         <source>Add folder</source>
-        <translation>添加文件夹</translation>
+        <translation type="vanished">添加文件夹</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="144"/>
         <source>Add file</source>
-        <translation>添加文件</translation>
+        <translation type="vanished">添加文件</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="164"/>
+        <location filename="../view/mainframe.cpp" line="161"/>
         <source>Dark theme</source>
         <translation>深色主题</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="249"/>
+        <location filename="../view/mainframe.cpp" line="246"/>
         <source>Deepin Music is a beautiful and simple music player that plays local audios. It supports viewing lyrics during playback, playing lossless audio and playlist customization, etc.</source>
         <translation>深度音乐是一款设计美观，功能简洁的本地音乐播放器。支持播放时查看歌词、播放无损音乐、自定义创建歌单等功能。</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="583"/>
+        <location filename="../view/mainframe.cpp" line="556"/>
         <source>Play/Pause</source>
         <translation>播放/暂停</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="584"/>
+        <location filename="../view/mainframe.cpp" line="557"/>
         <source>Previous</source>
         <translation>上一首</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="734"/>
+        <location filename="../view/mainframe.cpp" line="707"/>
         <source>Invalid or non-existent file</source>
         <translation>文件无效或不存在</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="755"/>
+        <location filename="../view/mainframe.cpp" line="728"/>
         <source>Failed to import, no vaild music file found!</source>
         <translation>导入失败，未找到有效的音乐文件！</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="1034"/>
+        <location filename="../view/mainframe.cpp" line="1038"/>
         <source>All music</source>
         <translation>所有音乐</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="735"/>
-        <location filename="../view/mainframe.cpp" line="760"/>
+        <location filename="../view/mainframe.cpp" line="708"/>
+        <location filename="../view/mainframe.cpp" line="733"/>
         <source>OK</source>
         <translation>确定</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="681"/>
+        <location filename="../view/mainframe.cpp" line="654"/>
         <source>Successfully added to &quot;%1&quot;</source>
         <translation>成功添加到“%1”</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="585"/>
+        <location filename="../view/mainframe.cpp" line="558"/>
         <source>Next</source>
         <translation>下一首</translation>
     </message>
@@ -295,20 +298,20 @@
 <context>
     <name>MusicListDataDelegate</name>
     <message>
-        <location filename="../view/widget/delegate/musiclistdatadelegate.cpp" line="182"/>
-        <location filename="../view/widget/delegate/musiclistdatadelegate.cpp" line="228"/>
+        <location filename="../view/widget/delegate/musiclistdatadelegate.cpp" line="183"/>
+        <location filename="../view/widget/delegate/musiclistdatadelegate.cpp" line="229"/>
         <source>   No songs</source>
         <translation>   无</translation>
     </message>
     <message>
-        <location filename="../view/widget/delegate/musiclistdatadelegate.cpp" line="184"/>
-        <location filename="../view/widget/delegate/musiclistdatadelegate.cpp" line="230"/>
+        <location filename="../view/widget/delegate/musiclistdatadelegate.cpp" line="185"/>
+        <location filename="../view/widget/delegate/musiclistdatadelegate.cpp" line="231"/>
         <source>   1 song</source>
         <translation>   1首</translation>
     </message>
     <message>
-        <location filename="../view/widget/delegate/musiclistdatadelegate.cpp" line="186"/>
-        <location filename="../view/widget/delegate/musiclistdatadelegate.cpp" line="232"/>
+        <location filename="../view/widget/delegate/musiclistdatadelegate.cpp" line="187"/>
+        <location filename="../view/widget/delegate/musiclistdatadelegate.cpp" line="233"/>
         <source>   %1 songs</source>
         <translation>   %1首</translation>
     </message>
@@ -317,8 +320,8 @@
     <name>MusicListDataWidget</name>
     <message>
         <location filename="../view/musiclistdatawidget.cpp" line="89"/>
-        <location filename="../view/musiclistdatawidget.cpp" line="122"/>
-        <location filename="../view/musiclistdatawidget.cpp" line="149"/>
+        <location filename="../view/musiclistdatawidget.cpp" line="130"/>
+        <location filename="../view/musiclistdatawidget.cpp" line="164"/>
         <source>   No songs</source>
         <translation>   无歌曲</translation>
     </message>
@@ -339,66 +342,66 @@
         <translation>   %1 部专辑-%2 首歌曲</translation>
     </message>
     <message>
-        <location filename="../view/musiclistdatawidget.cpp" line="124"/>
+        <location filename="../view/musiclistdatawidget.cpp" line="132"/>
         <source>   1 artist-1 song</source>
         <translation>  1位演唱者-1首歌曲</translation>
     </message>
     <message>
-        <location filename="../view/musiclistdatawidget.cpp" line="127"/>
+        <location filename="../view/musiclistdatawidget.cpp" line="135"/>
         <source>   %1 artist-%2 songs</source>
         <translation>  %1位演唱者-%2首歌曲</translation>
     </message>
     <message>
-        <location filename="../view/musiclistdatawidget.cpp" line="129"/>
+        <location filename="../view/musiclistdatawidget.cpp" line="137"/>
         <source>   %1 artists-%2 songs</source>
         <translation>  %1位演唱者-%2首歌曲</translation>
     </message>
     <message>
-        <location filename="../view/musiclistdatawidget.cpp" line="151"/>
+        <location filename="../view/musiclistdatawidget.cpp" line="166"/>
         <source>   1 song</source>
         <translation>   1首歌曲</translation>
     </message>
     <message>
-        <location filename="../view/musiclistdatawidget.cpp" line="153"/>
+        <location filename="../view/musiclistdatawidget.cpp" line="168"/>
         <source>   %1 songs</source>
         <translation>   %1首歌曲</translation>
     </message>
     <message>
-        <location filename="../view/musiclistdatawidget.cpp" line="270"/>
-        <location filename="../view/musiclistdatawidget.cpp" line="283"/>
-        <location filename="../view/musiclistdatawidget.cpp" line="296"/>
+        <location filename="../view/musiclistdatawidget.cpp" line="321"/>
+        <location filename="../view/musiclistdatawidget.cpp" line="334"/>
+        <location filename="../view/musiclistdatawidget.cpp" line="347"/>
         <source>No Music</source>
         <translation>当前歌单为空</translation>
     </message>
     <message>
-        <location filename="../view/musiclistdatawidget.cpp" line="272"/>
-        <location filename="../view/musiclistdatawidget.cpp" line="285"/>
-        <location filename="../view/musiclistdatawidget.cpp" line="298"/>
+        <location filename="../view/musiclistdatawidget.cpp" line="323"/>
+        <location filename="../view/musiclistdatawidget.cpp" line="336"/>
+        <location filename="../view/musiclistdatawidget.cpp" line="349"/>
         <source>No result found</source>
         <translation>无搜索结果</translation>
     </message>
     <message>
-        <location filename="../view/musiclistdatawidget.cpp" line="338"/>
         <location filename="../view/musiclistdatawidget.cpp" line="389"/>
+        <location filename="../view/musiclistdatawidget.cpp" line="440"/>
         <source>All Music</source>
         <translation>所有音乐</translation>
     </message>
     <message>
-        <location filename="../view/musiclistdatawidget.cpp" line="344"/>
-        <location filename="../view/musiclistdatawidget.cpp" line="352"/>
-        <location filename="../view/musiclistdatawidget.cpp" line="360"/>
+        <location filename="../view/musiclistdatawidget.cpp" line="395"/>
+        <location filename="../view/musiclistdatawidget.cpp" line="403"/>
+        <location filename="../view/musiclistdatawidget.cpp" line="411"/>
         <source>Time added</source>
         <translation>添加时间</translation>
     </message>
     <message>
-        <location filename="../view/musiclistdatawidget.cpp" line="345"/>
-        <location filename="../view/musiclistdatawidget.cpp" line="363"/>
+        <location filename="../view/musiclistdatawidget.cpp" line="396"/>
+        <location filename="../view/musiclistdatawidget.cpp" line="414"/>
         <source>Album name</source>
         <translation>专辑名称</translation>
     </message>
     <message>
-        <location filename="../view/musiclistdatawidget.cpp" line="353"/>
-        <location filename="../view/musiclistdatawidget.cpp" line="362"/>
+        <location filename="../view/musiclistdatawidget.cpp" line="404"/>
+        <location filename="../view/musiclistdatawidget.cpp" line="413"/>
         <source>Artist name</source>
         <translation>歌手名称</translation>
     </message>
@@ -407,17 +410,17 @@
         <translation type="vanished">演唱者</translation>
     </message>
     <message>
-        <location filename="../view/musiclistdatawidget.cpp" line="361"/>
+        <location filename="../view/musiclistdatawidget.cpp" line="412"/>
         <source>Title</source>
         <translation>歌曲名称</translation>
     </message>
     <message>
-        <location filename="../view/musiclistdatawidget.cpp" line="383"/>
+        <location filename="../view/musiclistdatawidget.cpp" line="434"/>
         <source>Play All</source>
         <translation>播放全部</translation>
     </message>
     <message>
-        <location filename="../view/musiclistdatawidget.cpp" line="454"/>
+        <location filename="../view/musiclistdatawidget.cpp" line="507"/>
         <source>Custom</source>
         <translation>自定义</translation>
     </message>
@@ -487,18 +490,18 @@
     </message>
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="134"/>
-        <location filename="../view/widget/musiclistview.cpp" line="146"/>
+        <location filename="../view/widget/musiclistview.cpp" line="147"/>
         <source>Play</source>
         <translation>播放</translation>
     </message>
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="139"/>
-        <location filename="../view/widget/musiclistview.cpp" line="149"/>
+        <location filename="../view/widget/musiclistview.cpp" line="150"/>
         <source>Rename</source>
         <translation>重命名</translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistview.cpp" line="153"/>
+        <location filename="../view/widget/musiclistview.cpp" line="154"/>
         <source>Are you sure you want to delete this playlist?</source>
         <translation>您确定要删除此歌单吗？</translation>
     </message>
@@ -535,14 +538,14 @@
         <translation type="vanished">编码方式</translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistview.cpp" line="159"/>
+        <location filename="../view/widget/musiclistview.cpp" line="160"/>
         <source>Cancel</source>
         <translation>取消</translation>
     </message>
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="140"/>
-        <location filename="../view/widget/musiclistview.cpp" line="152"/>
-        <location filename="../view/widget/musiclistview.cpp" line="160"/>
+        <location filename="../view/widget/musiclistview.cpp" line="153"/>
+        <location filename="../view/widget/musiclistview.cpp" line="161"/>
         <source>Delete</source>
         <translation>删除</translation>
     </message>
@@ -692,12 +695,12 @@
         <translation>删除</translation>
     </message>
     <message>
-        <location filename="../view/widget/delegate/playitemdelegate.cpp" line="360"/>
+        <location filename="../view/widget/delegate/playitemdelegate.cpp" line="366"/>
         <source>Unknown artist</source>
         <translation>未知演唱者</translation>
     </message>
     <message>
-        <location filename="../view/widget/delegate/playitemdelegate.cpp" line="371"/>
+        <location filename="../view/widget/delegate/playitemdelegate.cpp" line="377"/>
         <source>Unknown album</source>
         <translation>未知专辑</translation>
     </message>
@@ -705,37 +708,37 @@
 <context>
     <name>PlayListWidget</name>
     <message>
-        <location filename="../view/playlistwidget.cpp" line="121"/>
+        <location filename="../view/playlistwidget.cpp" line="124"/>
         <source>No Music</source>
         <translation>当前歌单为空</translation>
     </message>
     <message>
-        <location filename="../view/playlistwidget.cpp" line="123"/>
+        <location filename="../view/playlistwidget.cpp" line="126"/>
         <source>No result found</source>
         <translation>无搜索结果</translation>
     </message>
     <message>
-        <location filename="../view/playlistwidget.cpp" line="157"/>
+        <location filename="../view/playlistwidget.cpp" line="163"/>
         <source>Play List</source>
         <translation>播放列表</translation>
     </message>
     <message>
-        <location filename="../view/playlistwidget.cpp" line="172"/>
+        <location filename="../view/playlistwidget.cpp" line="178"/>
         <source>Clear List</source>
         <translation>清空列表</translation>
     </message>
     <message>
-        <location filename="../view/playlistwidget.cpp" line="214"/>
+        <location filename="../view/playlistwidget.cpp" line="211"/>
         <source>No songs</source>
         <translation>无歌曲</translation>
     </message>
     <message>
-        <location filename="../view/playlistwidget.cpp" line="216"/>
+        <location filename="../view/playlistwidget.cpp" line="213"/>
         <source>1 song</source>
         <translation>1首歌曲</translation>
     </message>
     <message>
-        <location filename="../view/playlistwidget.cpp" line="218"/>
+        <location filename="../view/playlistwidget.cpp" line="215"/>
         <source>%1 songs</source>
         <translation>%1首歌曲</translation>
     </message>
@@ -840,7 +843,7 @@
 <context>
     <name>QApplication</name>
     <message>
-        <location filename="../view/mainframe.cpp" line="251"/>
+        <location filename="../view/mainframe.cpp" line="248"/>
         <source>Deepin Music</source>
         <translation>深度音乐</translation>
     </message>
