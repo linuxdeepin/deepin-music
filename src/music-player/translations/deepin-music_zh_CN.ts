@@ -131,47 +131,52 @@
 <context>
     <name>InfoDialog</name>
     <message>
-        <location filename="../view/widget/infodialog.cpp" line="116"/>
+        <location filename="../view/widget/infodialog.cpp" line="125"/>
         <source>Title:</source>
         <translation>歌曲：</translation>
     </message>
     <message>
-        <location filename="../view/widget/infodialog.cpp" line="116"/>
+        <location filename="../view/widget/infodialog.cpp" line="125"/>
         <source>Artist:</source>
         <translation>演唱者：</translation>
     </message>
     <message>
-        <location filename="../view/widget/infodialog.cpp" line="117"/>
+        <location filename="../view/widget/infodialog.cpp" line="126"/>
         <source>Album:</source>
         <translation>专辑：</translation>
     </message>
     <message>
-        <location filename="../view/widget/infodialog.cpp" line="117"/>
+        <location filename="../view/widget/infodialog.cpp" line="126"/>
         <source>Type:</source>
         <translation>文件类型：</translation>
     </message>
     <message>
-        <location filename="../view/widget/infodialog.cpp" line="119"/>
+        <location filename="../view/widget/infodialog.cpp" line="128"/>
         <source>Path:</source>
         <translation>文件路径：</translation>
     </message>
     <message>
-        <location filename="../view/widget/infodialog.cpp" line="190"/>
+        <location filename="../view/widget/infodialog.cpp" line="206"/>
         <source>Unknown artist</source>
         <translation>未知演唱者</translation>
     </message>
     <message>
-        <location filename="../view/widget/infodialog.cpp" line="191"/>
+        <location filename="../view/widget/infodialog.cpp" line="207"/>
         <source>Unknown album</source>
         <translation>未知专辑</translation>
     </message>
     <message>
-        <location filename="../view/widget/infodialog.cpp" line="118"/>
+        <location filename="../view/widget/infodialog.cpp" line="127"/>
         <source>Size:</source>
         <translation>文件大小：</translation>
     </message>
     <message>
-        <location filename="../view/widget/infodialog.cpp" line="118"/>
+        <location filename="../view/widget/infodialog.cpp" line="114"/>
+        <source>   Basic Information</source>
+        <translation>   基本信息</translation>
+    </message>
+    <message>
+        <location filename="../view/widget/infodialog.cpp" line="127"/>
         <source>Duration:</source>
         <translation>时长：</translation>
     </message>

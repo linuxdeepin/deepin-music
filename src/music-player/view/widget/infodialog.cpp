@@ -24,12 +24,14 @@
 #include <QDebug>
 #include <QVBoxLayout>
 #include <QGridLayout>
+#include <QFileInfo>
 
 #include <DApplication>
 #include "dplatformwindowhandle.h"
 #include "dblureffectwidget.h"
 #include <DImageButton>
 #include <DFrame>
+#include <DFloatingWidget>
 
 #include <dwindowclosebutton.h>
 
@@ -50,7 +52,7 @@ public:
     void updateLabelSize();
 
 //    DBlurEffectWidget   *bgBlurWidget   = nullptr;
-    DFrame              *infoGridFrame  = nullptr;
+    DFloatingWidget              *infoGridFrame  = nullptr;
     DLabel              *cover          = nullptr;
     DLabel              *title          = nullptr;
     QList<DLabel *>     valueList;
@@ -89,24 +91,31 @@ void InfoDialogPrivate::initUI()
     split->setObjectName("InfoSplit");
     split->setFixedSize(300, 1);
 
-    infoGridFrame = new DFrame;
+    infoGridFrame = new DFloatingWidget;
     infoGridFrame->setMaximumWidth(300);
     infoGridFrame->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
     layout->addWidget(closeBt, 0, Qt::AlignTop | Qt::AlignRight);
-    layout->addSpacing(43);
+    layout->addSpacing(10);
     layout->addWidget(cover, 0, Qt::AlignCenter);
-    layout->addSpacing(13);
+    layout->addSpacing(10);
     layout->addWidget(title, 0, Qt::AlignCenter);
-    layout->addSpacing(19);
+    layout->addSpacing(10);
     layout->addWidget(split, 0, Qt::AlignCenter);
     layout->addSpacing(10);
     layout->addWidget(infoGridFrame, 0, Qt::AlignCenter);
     layout->addSpacing(10);
     layout->addStretch();
 
+    auto infoLayout = new QVBoxLayout(infoGridFrame);
+    infoLayout->setSpacing(0);
+    infoLayout->setMargin(5);
+
+    auto basicinfo = new DLabel(InfoDialog::tr("   Basic Information"));
+    basicinfo->setMinimumHeight(28);
+
     auto infogridLayout = new QGridLayout(infoGridFrame);
-    infogridLayout->setMargin(0);
+    infogridLayout->setMargin(10);
     infogridLayout->setHorizontalSpacing(5);
     infogridLayout->setVerticalSpacing(5);
     infogridLayout->setColumnStretch(0, 10);
@@ -120,13 +129,17 @@ void InfoDialogPrivate::initUI()
 
     for (int i = 0; i < infoKeys.length(); ++i) {
         auto infoKey = new DLabel(infoKeys.value(i));
+        auto infoFont = infoKey->font();
+        infoFont.setPointSize(8);
+        infoKey->setFont(infoFont);
         infoKey->setObjectName("InfoKey");
         infoKey->setMinimumHeight(18);
 
         auto infoValue = new DLabel();
+        infoValue->setFont(infoFont);
         infoValue->setWordWrap(true);
         infoValue->setObjectName("InfoValue");
-        infoValue->setMinimumHeight(18);
+        infoValue->setMinimumHeight(28);
         infoValue->setMinimumWidth(200);
         infoValue->setMaximumWidth(220);
         infoValue->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
@@ -135,6 +148,9 @@ void InfoDialogPrivate::initUI()
         infogridLayout->addWidget(infoKey);
         infogridLayout->addWidget(infoValue);
     }
+
+    infoLayout->addWidget(basicinfo);
+    infoLayout->addLayout(infogridLayout);
 
     q->connect(closeBt, &DImageButton::clicked, q, &DAbstractDialog::hide);
 
@@ -198,7 +214,9 @@ void InfoDialog::updateInfo(const MetaPtr meta)
         d->valueList.value(i)->setText(infoValues.value(i));
     }
 
-    d->title->setText(meta->title);
+    QFileInfo fileInfo(meta->localPath);
+    QString titleStr(meta->title + "-" + meta->artist + "." + fileInfo.suffix());
+    d->title->setText(titleStr);
 
     auto pixmapSize = static_cast<int>(CoverSize * d->cover->devicePixelRatioF());
     auto coverPixmap = QIcon(":/common/image/info_cover.svg").pixmap(QSize(pixmapSize, pixmapSize));
