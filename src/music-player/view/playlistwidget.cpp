@@ -125,7 +125,6 @@ void PlayListWidgetPrivate::showEmptyHits(bool empty)
     } else {
         emptyHits->setText(PlayListWidget::tr("No result found"));
     }
-    actionBar->setVisible(!empty);
     playListView->setVisible(!empty);
     emptyHits->setVisible(empty);
 }
@@ -154,7 +153,6 @@ PlayListWidget::PlayListWidget(QWidget *parent) :
     d->actionBar->setPalette(palette);
     d->actionBar->setFixedWidth(200);
     d->actionBar->setObjectName("PlayListActionBar");
-    d->actionBar->hide();
 
     auto actionBarLayout = new QVBoxLayout(d->actionBar);
     actionBarLayout->setContentsMargins(20, 0, 8, 0);
@@ -193,11 +191,9 @@ PlayListWidget::PlayListWidget(QWidget *parent) :
     d->playListView = new PlayListView;
     d->playListView->hide();
 
-    layout->addWidget(d->actionBar, 0, Qt::AlignTop);
-    layout->addWidget(d->playListView, 100, Qt::AlignTop);
-    layout->addStretch();
-    layout->addWidget(d->emptyHits, 0, Qt::AlignCenter);
-    layout->addStretch();
+    layout->addWidget(d->actionBar);
+    layout->addWidget(d->playListView);
+    layout->addWidget(d->emptyHits);
 
     d->initConntion();
 }
@@ -256,10 +252,6 @@ void PlayListWidget::resizeEvent(QResizeEvent *event)
 {
     Q_D(PlayListWidget);
     DWidget::resizeEvent(event);
-    auto viewrect = DWidget::rect();
-    auto viewsize = viewrect.marginsRemoved(contentsMargins()).size();
-    d->playListView->setFixedSize(viewsize.width(), viewsize.height() - 40);
-    d->emptyHits->setFixedSize(viewsize.width(), viewsize.height());
 }
 
 void PlayListWidget::onMusicPlayed(PlaylistPtr playlist, const MetaPtr meta)
