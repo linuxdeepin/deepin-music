@@ -236,7 +236,7 @@ void Presenter::prepareData()
             if (i % 30 == 0) {
                 Q_EMIT musicListAdded(playlist, slice);
                 slice.clear();
-                QThread::msleep(233);
+                QThread::msleep(50);
             }
         }
         if (slice.length() > 0) {
