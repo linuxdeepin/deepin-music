@@ -121,27 +121,6 @@
                             "default": ""
                         }
                     ]
-                },
-                {
-                    "key": "close",
-                    "name": "Close Main Window",
-                    "options": [
-                        {
-                            "key": "ask_close_action",
-                            "hide": true,
-                            "default": true
-                        },
-                        {
-                            "key": "close_action",
-                            "name": " ",
-                            "type": "radiogroup",
-                            "items": [
-                                "Minimize to system tray",
-                                "Exit Deepin Music"
-                            ],
-                            "default": 0
-                        }
-                    ]
                 }
             ]
         },
