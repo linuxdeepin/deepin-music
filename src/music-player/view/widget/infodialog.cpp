@@ -74,6 +74,7 @@ void InfoDialogPrivate::initUI()
     layout->setMargin(5);
 
     auto closeBt = new DImageButton;
+    closeBt->setPixmap(QPixmap(":/mpimage/disabled/close_disabled.svg"));
     closeBt->setObjectName("InfoClose");
     closeBt->setFixedSize(27, 23);
 
