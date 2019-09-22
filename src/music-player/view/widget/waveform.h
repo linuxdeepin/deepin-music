@@ -30,6 +30,7 @@ DWIDGET_USE_NAMESPACE
 
 class QAudioBuffer;
 class QAudioFormat;
+class WaveformScale;
 
 class Waveform : public DSlider
 {
@@ -40,7 +41,7 @@ class Waveform : public DSlider
     static const int WAVE_DURATION;
 
 public:
-    Waveform(Qt::Orientation orientation, QWidget *parent = 0);
+    Waveform(Qt::Orientation orientation, QWidget *widget, QWidget *parent = 0);
 
     static qreal getPeakValue(const QAudioFormat &format);
     static QVector<qreal> getBufferLevels(const QAudioBuffer &buffer);
@@ -50,11 +51,14 @@ public:
 
     void clearWave();
 
+    void updateScaleSize();
+
 Q_SIGNALS:
     void valueAccpet(int value);
 
 public slots:
     void onAudioBufferProbed(const QAudioBuffer &buffer);
+    void onProgressChanged(qint64 value, qint64 duration);
 
 protected:
     void paintEvent(QPaintEvent *event) Q_DECL_OVERRIDE;
@@ -65,9 +69,12 @@ protected:
     void leaveEvent(QEvent *event) Q_DECL_OVERRIDE;
 
 private:
+    QWidget      *mainWindow;
     QList<float> sampleList;
     int          maxSampleNum;
-    bool         enterFlag;
+    qint64       curValue = 0;
+    qint64       allDuration = 1;
+    WaveformScale *waveformScale;
 };
 
 #endif

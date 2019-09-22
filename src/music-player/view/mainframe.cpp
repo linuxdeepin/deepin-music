@@ -65,7 +65,7 @@ DWIDGET_USE_NAMESPACE
 
 const QString s_PropertyViewname = "viewname";
 const QString s_PropertyViewnameLyric = "lyric";
-static const int FooterHeight = 60;
+static const int FooterHeight = 70;
 static const int AnimationDelay = 400; //ms
 static const int BlurRadius = 25;
 
@@ -218,7 +218,6 @@ void MainFramePrivate::initUI(bool showLoading)
     importWidget = new ImportWidget(q);
 
     footer = new Footer(q);
-    footer->setFixedHeight(FooterHeight + footer->progressExtentHeight());
     footer->enableControl(false);
 
     contentLayout->addWidget(titlebar);
@@ -438,7 +437,6 @@ void MainFramePrivate::updateSize(QSize newSize)
 
     importWidget->setFixedSize(newSize);
 
-    auto progressExtHeight = footer->progressExtentHeight();
     if (lyricWidget) {
         lyricWidget->resize(newSize);
         playListWidget->setFixedSize(newSize);
@@ -446,9 +444,9 @@ void MainFramePrivate::updateSize(QSize newSize)
     }
 
     footer->raise();
-    footer->resize(newSize.width(), FooterHeight + progressExtHeight);
-    footer->setFixedHeight(FooterHeight + progressExtHeight);
-    footer->move(0, newSize.height() - FooterHeight - progressExtHeight);
+    footer->resize(newSize.width(), FooterHeight);
+    footer->setFixedHeight(FooterHeight);
+    footer->move(0, newSize.height() - FooterHeight);
 }
 
 void MainFramePrivate::updateViewname(const QString &vm)
@@ -891,7 +889,6 @@ void MainFrame::binding(Presenter *presenter)
     connect(d->footer,  &Footer::progressRealHeightChanged,
     this, [ = ](qreal realHeight) {
         int margin = FooterHeight
-                     - d->footer->progressExtentHeight()
                      + static_cast<int>(realHeight);
         d->playListWidget->setContentsMargins(0, d->titlebar->height(), 0, margin);
     });

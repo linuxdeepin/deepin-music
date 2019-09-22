@@ -28,14 +28,16 @@
 #include <QPainter>
 #include <QAudioBuffer>
 #include <QAudioFormat>
+#include <QWidget>
 
 #include "waveform.h"
+#include "waveformscale.h"
 
 const int Waveform::SAMPLE_DURATION = 30;
 const int Waveform::WAVE_WIDTH = 2;
 const int Waveform::WAVE_DURATION = 4;
 
-Waveform::Waveform(Qt::Orientation orientation, QWidget *parent) : DSlider(orientation, parent)
+Waveform::Waveform(Qt::Orientation orientation, QWidget *widget, QWidget *parent) : mainWindow(widget), DSlider(orientation, parent)
 {
     QSizePolicy sp(QSizePolicy::Preferred, QSizePolicy::Preferred);
     setSizePolicy(sp);
@@ -45,7 +47,6 @@ Waveform::Waveform(Qt::Orientation orientation, QWidget *parent) : DSlider(orien
 
     waveformScale = new WaveformScale(mainWindow);
     waveformScale->hide();
-
 }
 
 void Waveform::paintEvent(QPaintEvent *)
@@ -54,6 +55,7 @@ void Waveform::paintEvent(QPaintEvent *)
     painter.setRenderHint(QPainter::Antialiasing, true);
 
     painter.save();
+    painter.setPen(Qt::NoPen);
     qreal devicePixelRatio = qApp->devicePixelRatio();
     if (devicePixelRatio > 1.0) {
         painter.setClipRect(QRect(rect().x(), rect().y(), rect().width() - 1, rect().height()));
@@ -91,11 +93,6 @@ void Waveform::paintEvent(QPaintEvent *)
                             1));
         painter.fillPath(path, fillColor);
     }
-    if (enterFlag) {
-        QPainterPath path;
-        path.addRect(QRectF(rect().x() + curWidth, rect().y(), WAVE_DURATION, rect().height()));
-        painter.fillPath(path, QColor("#FF5736"));
-    }
     painter.restore();
 }
 
@@ -115,6 +112,7 @@ void Waveform::onAudioBufferProbed(const QAudioBuffer &buffer)
         sampleList.removeLast();
     }
     update();
+    updateScaleSize();
 }
 
 // returns the audio level for each channel
@@ -228,6 +226,7 @@ void Waveform::mouseReleaseEvent(QMouseEvent *event)
     this->blockSignals(false);
     DSlider::mouseReleaseEvent(event);
     Q_EMIT valueAccpet(value());
+    updateScaleSize();
 }
 
 void Waveform::mousePressEvent(QMouseEvent *event)
@@ -241,6 +240,7 @@ void Waveform::mousePressEvent(QMouseEvent *event)
             setValue(minimum() + ((maximum() - minimum()) * (event->x())) / (width()));
         }
     }
+    updateScaleSize();
     this->blockSignals(true);
 }
 
@@ -253,20 +253,59 @@ void Waveform::mouseMoveEvent(QMouseEvent *event)
         return;
     }
 
-    auto value = (event->x() - this->x()) * valueRange / this->width();
+    auto value = minimum() + ((maximum() - minimum()) * (event->x())) / (width());
     setValue(value);
+    updateScaleSize();
+}
+
+void Waveform::onProgressChanged(qint64 value, qint64 duration)
+{
+    auto length = maximum() - minimum();
+    Q_ASSERT(length != 0);
+
+    auto progress = 0;
+    if (0 != duration) {
+        progress = static_cast<int>(length * value / duration);
+    }
+
+    if (signalsBlocked()) {
+        return;
+    }
+
+    curValue = value;
+    allDuration = duration;
+    blockSignals(true);
+    setValue(progress);
+    blockSignals(false);
+}
+
+void Waveform::updateScaleSize()
+{
+    auto waveScaleWidth = waveformScale->width();
+    double curWidth = rect().width() * (value() * 1.0) / (maximum() - minimum());
+    curValue = allDuration * (value() * 1.0) / (maximum() - minimum());
+
+    auto wavePos = mapToParent(QPoint(curWidth - waveScaleWidth / 2, 0));
+    wavePos.ry() = -25;
+    wavePos = ((QWidget *)parent())->mapToGlobal(wavePos);
+    wavePos = mainWindow->mapFromGlobal(wavePos);
+
+    waveformScale->move(wavePos.x(), wavePos.y());
+    waveformScale->setValue(curValue);
+    waveformScale->setAttribute(Qt::WA_TransparentForMouseEvents, true);
 }
 
 void Waveform::enterEvent(QEvent *event)
 {
-    enterFlag = true;
-    update();
+    updateScaleSize();
+    waveformScale->show();
+    waveformScale->raise();
+
     DSlider::enterEvent(event);
 }
 
 void Waveform::leaveEvent(QEvent *event)
 {
-    enterFlag = false;
-    update();
+    waveformScale->hide();
     DSlider::leaveEvent(event);
 }

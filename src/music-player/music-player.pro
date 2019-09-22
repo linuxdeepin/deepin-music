@@ -87,7 +87,8 @@ SOURCES += \
     view/widget/waveform.cpp \
     core/util/musiclyric.cpp \
     view/widget/lyriclabel.cpp \
-    view/musiclyricwidget.cpp
+    view/musiclyricwidget.cpp \
+    view/widget/waveformscale.cpp
 
 HEADERS += \
     musicapp.h \
@@ -148,7 +149,8 @@ HEADERS += \
     view/widget/waveform.h \
     core/util/musiclyric.h \
     view/widget/lyriclabel.h \
-    view/musiclyricwidget.h
+    view/musiclyricwidget.h \
+    view/widget/waveformscale.h
 
 RESOURCES += \
     resource/theme/theme.qrc \

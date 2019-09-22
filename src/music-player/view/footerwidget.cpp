@@ -113,7 +113,6 @@ void FooterPrivate::installTipHint(QWidget *w, const QString &hintstr)
     // TODO: parent must be mainframe
     auto hintWidget = new DLabel(q->parentWidget());
     hintWidget->hide();
-    //hintWidget->layout()->setContentsMargins(10, 0, 10, 0);
     hintWidget->setText(hintstr);
     hintWidget->setFixedHeight(32);
     installHint(w, hintWidget);
@@ -198,6 +197,7 @@ Footer::Footer(QWidget *parent) :
 {
     Q_D(Footer);
 
+    setFixedHeight(70);
     setFocusPolicy(Qt::ClickFocus);
     setObjectName("Footer");
     setMode(DBlurEffectWidget::GaussianBlur);
@@ -343,7 +343,7 @@ Footer::Footer(QWidget *parent) :
     ctlLayout->addWidget(d->btNext, 0, Qt::AlignCenter);
     d->ctlWidget->adjustSize();
 
-    d->waveform = new Waveform(Qt::Horizontal);
+    d->waveform = new Waveform(Qt::Horizontal, (QWidget *)parent, this);
     d->waveform->setMinimum(0);
     d->waveform->setMaximum(1000);
     d->waveform->setValue(0);
@@ -411,12 +411,6 @@ Footer::Footer(QWidget *parent) :
 Footer::~Footer()
 {
 
-}
-
-int Footer::progressExtentHeight() const
-{
-    Q_D(const Footer);
-    return 0;
 }
 
 void Footer::enableControl(bool enable)
@@ -645,21 +639,7 @@ void Footer::onMediaLibraryClean()
 void Footer::onProgressChanged(qint64 value, qint64 duration)
 {
     Q_D(Footer);
-    auto length = d->waveform->maximum() - d->waveform->minimum();
-    Q_ASSERT(length != 0);
-
-    auto progress = 0;
-    if (0 != duration) {
-        progress = static_cast<int>(length * value / duration);
-    }
-
-    if (d->waveform->signalsBlocked()) {
-        return;
-    }
-
-    d->waveform->blockSignals(true);
-    d->waveform->setValue(progress);
-    d->waveform->blockSignals(false);
+    d->waveform->onProgressChanged(value, duration);
 }
 
 void Footer::onCoverChanged(const MetaPtr meta, const DMusic::SearchMeta &, const QByteArray &coverData)

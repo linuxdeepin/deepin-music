@@ -42,7 +42,6 @@ public:
     ~Footer();
 
 public:
-    int progressExtentHeight() const;
     void enableControl(bool enable = true);
     void initData(PlaylistPtr current, int mode);
 
