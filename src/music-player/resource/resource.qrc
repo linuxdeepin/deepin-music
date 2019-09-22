@@ -83,5 +83,6 @@
         <file>mpimage/checked/text_list_checked.svg</file>
         <file>mpimage/checked/picture_list_checked.svg</file>
         <file>mpimage/disabled/close_disabled.svg</file>
+        <file>mpimage/normal/close_normal.svg</file>
     </qresource>
 </RCC>
