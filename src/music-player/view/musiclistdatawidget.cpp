@@ -394,6 +394,7 @@ MusicListDataWidget::MusicListDataWidget(QWidget *parent) :
     d->albumDropdown->setObjectName("MusicListAlbumDataSort");
     d->albumDropdown->addAction(tr("Time added"), QVariant::fromValue<Playlist::SortType>(Playlist::SortByAddTime));
     d->albumDropdown->addAction(tr("Album name"), QVariant::fromValue<Playlist::SortType>(Playlist::SortByTitle));
+    d->albumDropdown->setCurrentAction();
     d->albumDropdown->hide();
 
     d->artistDropdown = new DDropdown;
@@ -402,6 +403,7 @@ MusicListDataWidget::MusicListDataWidget(QWidget *parent) :
     d->artistDropdown->setObjectName("MusicListArtistDataSort");
     d->artistDropdown->addAction(tr("Time added"), QVariant::fromValue<Playlist::SortType>(Playlist::SortByAddTime));
     d->artistDropdown->addAction(tr("Artist name"), QVariant::fromValue<Playlist::SortType>(Playlist::SortByArtist));
+    d->artistDropdown->setCurrentAction();
     d->artistDropdown->hide();
 
     d->musicDropdown = new DDropdown;
@@ -412,6 +414,7 @@ MusicListDataWidget::MusicListDataWidget(QWidget *parent) :
     d->musicDropdown->addAction(tr("Title"), QVariant::fromValue<Playlist::SortType>(Playlist::SortByTitle));
     d->musicDropdown->addAction(tr("Artist name"), QVariant::fromValue<Playlist::SortType>(Playlist::SortByArtist));
     d->musicDropdown->addAction(tr("Album name"), QVariant::fromValue<Playlist::SortType>(Playlist::SortByAblum));
+    d->musicDropdown->setCurrentAction();
 
     actionTileBarLayout->addWidget(d->titleLabel, 0, Qt::AlignLeft | Qt::AlignVCenter);
     actionTileBarLayout->addStretch();

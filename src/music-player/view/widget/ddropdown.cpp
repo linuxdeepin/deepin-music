@@ -52,7 +52,7 @@ DDropdown::DDropdown(QWidget *parent) : DFrame(parent), d_ptr(new DDropdownPriva
     auto layout = new QHBoxLayout(this);
     layout->setContentsMargins(15, 0, 15, 0);
     d->menu = new DMenu;
-    d->text = new DLabel("undefined");
+    d->text = new DLabel(tr("undefined"));
     auto font = d->text->font();
     font.setFamily("SourceHanSansSC-Normal");
     font.setPixelSize(11);
@@ -65,6 +65,9 @@ DDropdown::DDropdown(QWidget *parent) : DFrame(parent), d_ptr(new DDropdownPriva
     DPalette pl = d->dropdown->palette();
     pl.setColor(DPalette::Light, QColor(Qt::transparent));
     pl.setColor(DPalette::Dark, QColor(Qt::transparent));
+    QColor sbcolor("#000000");
+    sbcolor.setAlphaF(0);
+    pl.setColor(DPalette::Shadow, sbcolor);
     d->dropdown->setPalette(pl);
 
     layout->addStretch();
@@ -83,6 +86,10 @@ DDropdown::DDropdown(QWidget *parent) : DFrame(parent), d_ptr(new DDropdownPriva
         center.setY(center.y() + this->height() + 5);
         d->menu->move(center);
         d->menu->exec();
+    });
+
+    connect(d->dropdown, &DIconButton::clicked, this, [ = ](bool checked) {
+        Q_EMIT requestContextMenu();
     });
 }
 
@@ -122,6 +129,14 @@ void DDropdown::setCurrentAction(QAction *action)
         for (auto action : d->menu->actions()) {
             action->setChecked(false);
         }
+    }
+}
+
+void DDropdown::setCurrentAction(int index)
+{
+    Q_D(DDropdown);
+    if (!d->menu->actions().isEmpty()) {
+        setCurrentAction(d->menu->actions().first());
     }
 }
 
