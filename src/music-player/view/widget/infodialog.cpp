@@ -86,6 +86,7 @@ void InfoDialogPrivate::initUI()
     title = new DLabel;
     title->setObjectName("InfoTitle");
     title->setFixedWidth(300);
+    title->setAlignment(Qt::AlignCenter);
     title->setWordWrap(true);
 
     auto split = new DLabel();
@@ -95,6 +96,14 @@ void InfoDialogPrivate::initUI()
     infoGridFrame = new DFloatingWidget;
     infoGridFrame->setMaximumWidth(300);
     infoGridFrame->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    DPalette pl = infoGridFrame->palette();
+    QColor windowColor("#FFFFFF");
+    windowColor.setAlphaF(0.7);
+    pl.setColor(DPalette::Window, windowColor);
+    QColor sbcolor("#000000");
+    sbcolor.setAlphaF(0.05);
+    pl.setColor(DPalette::Shadow, sbcolor);
+    infoGridFrame->setPalette(pl);
 
     layout->addWidget(closeBt, 0, Qt::AlignTop | Qt::AlignRight);
     layout->addSpacing(10);

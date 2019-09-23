@@ -27,16 +27,17 @@
 
 #include <DLabel>
 #include <DMenu>
+#include <DIconButton>
 
 class DDropdownPrivate
 {
 public:
     DDropdownPrivate(DDropdown *parent) : q_ptr(parent) {}
 
-    DMenu       *menu       = nullptr;
-    DLabel      *text       = nullptr;
-    DLabel      *dropdown   = nullptr;
-    QString     status;
+    DMenu            *menu       = nullptr;
+    DLabel           *text       = nullptr;
+    DIconButton      *dropdown   = nullptr;
+    QString           status;
 
     DDropdown *q_ptr;
     Q_DECLARE_PUBLIC(DDropdown)
@@ -52,10 +53,19 @@ DDropdown::DDropdown(QWidget *parent) : DFrame(parent), d_ptr(new DDropdownPriva
     layout->setContentsMargins(15, 0, 15, 0);
     d->menu = new DMenu;
     d->text = new DLabel("undefined");
+    auto font = d->text->font();
+    font.setFamily("SourceHanSansSC-Normal");
+    font.setPixelSize(11);
+    d->text->setFont(font);
     d->text->setObjectName("DDropdownText");
-    d->dropdown = new DLabel;
+    d->dropdown = new DIconButton(DStyle::SP_ArrowDown, this);
+    d->dropdown->setIconSize(QSize(9, 9));
     d->dropdown->setObjectName("DDropdownIcon");
-    d->dropdown->setFixedSize(9, 5);
+    d->dropdown->setFixedSize(9, 9);
+    DPalette pl = d->dropdown->palette();
+    pl.setColor(DPalette::Light, QColor(Qt::transparent));
+    pl.setColor(DPalette::Dark, QColor(Qt::transparent));
+    d->dropdown->setPalette(pl);
 
     layout->addStretch();
     layout->addStretch();

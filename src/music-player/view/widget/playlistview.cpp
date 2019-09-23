@@ -444,10 +444,9 @@ void PlayListView::showContextMenu(const QPoint &pos,
             auto coverPixmap =  QPixmap::fromImage(WidgetHelper::cropRect(cover, QSize(64, 64)));
 
             warnDlg.setIcon(QIcon(coverPixmap));
-            if (0 == warnDlg.exec()) {
-                return;
+            if (1 == warnDlg.exec()) {
+                Q_EMIT deleteMusicList(metalist);
             }
-            Q_EMIT deleteMusicList(metalist);
         });
     }
 
