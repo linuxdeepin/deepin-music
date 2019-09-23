@@ -8,7 +8,6 @@ include($$PWD/../config.pri)
 
 QT  += network
 #QT  -= gui
-QT  += dtkcore
 
 TARGET      = dmusic
 TEMPLATE    = lib
@@ -18,6 +17,7 @@ DESTDIR     = $$BUILD_DIST/lib
 
 unix {
 PKGCONFIG += icu-uc icu-i18n taglib
+QT += dtkcore
 
 CONFIG(ENABLE_LIBAV) {
     PKGCONFIG += libavutil libavformat libavcodec
