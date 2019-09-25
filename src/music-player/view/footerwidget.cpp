@@ -340,7 +340,7 @@ Footer::Footer(QWidget *parent) :
     metaLayout->addLayout(musicMetaLayout);
 
     d->ctlWidget = new DButtonBox(this);
-    d->ctlWidget->setFixedSize(120, 50);
+    d->ctlWidget->setFixedHeight(50);
     QList<DButtonBoxButton *> allCtlButtons;
     allCtlButtons.append(d->btPrev);
     allCtlButtons.append(d->btPlay);
