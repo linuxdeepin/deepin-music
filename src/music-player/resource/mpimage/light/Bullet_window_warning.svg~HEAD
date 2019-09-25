@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="32px" height="32px" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 56.2 (81672) - https://sketch.com -->
+    <title>Bullet window warning</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="97.6283482%" id="linearGradient-1">
+            <stop stop-color="#FFD200" offset="0%"></stop>
+            <stop stop-color="#FFB223" offset="100%"></stop>
+        </linearGradient>
+        <path d="M1,15 C1,12.958324 1.39582936,11.013032 2.1875,9.164064 C2.9791708,7.315096 4.044264,5.72136 5.382812,4.382812 C6.72136,3.044264 8.315096,1.979172 10.164064,1.1875 C12.013032,0.395828 13.958324,0 16,0 C18.03126,0 19.971344,0.395828 21.820312,1.1875 C23.66928,1.979172 25.26562,3.044264 26.609376,4.382812 C27.953132,5.72136 29.020828,7.315096 29.8125,9.164064 C30.604172,11.013032 31,12.958324 31,15 C31,17.03126 30.604172,18.973948 29.8125,20.828124 C29.020828,22.6823 27.953132,24.27864 26.609376,25.617188 C25.26562,26.955736 23.66928,28.0208292 21.820312,28.8125 C19.971344,29.6041706 18.03126,30 16,30 C13.958324,30 12.013032,29.6041706 10.164064,28.8125 C8.315096,28.0208292 6.72136,26.955736 5.382812,25.617188 C4.044264,24.27864 2.9791708,22.6823 2.1875,20.828124 C1.39582936,18.973948 1,17.03126 1,15 L1,15 Z" id="path-2"></path>
+        <filter x="-6.7%" y="-3.3%" width="113.3%" height="113.3%" filterUnits="objectBoundingBox" id="filter-3">
+            <feOffset dx="0" dy="1" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="0.5" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.2 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+    </defs>
+    <g id="页面-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="按钮规范" transform="translate(-866.000000, -1346.000000)">
+            <g id="deepin-cloudprint-config-helper" transform="translate(866.000000, 1346.000000)">
+                <g id="Bullet-window-warning">
+                    <g id="Page-1">
+                        <use fill="black" fill-opacity="1" filter="url(#filter-3)" xlink:href="#path-2"></use>
+                        <use fill="url(#linearGradient-1)" fill-rule="evenodd" xlink:href="#path-2"></use>
+                    </g>
+                    <path d="M13.7777778,21.2013889 C13.7777778,21.8472249 14.0069458,22.3993049 14.4652818,22.8576369 C14.9236138,23.3159729 15.4756938,23.5451409 16.1215298,23.5451409 C16.7673658,23.5451409 17.3194458,23.3159729 17.7777778,22.8576369 C18.2361138,22.3993049 18.4652818,21.8472249 18.4652818,21.2013889 C18.4652818,20.5555529 18.2361138,20.0034729 17.7777778,19.5451409 C17.3402778,19.1076369 16.7881978,18.8888889 16.1215298,18.8888889 C15.4548618,18.8888889 14.9027818,19.1076369 14.4652818,19.5451409 C14.0069458,20.0034729 13.7777778,20.5555529 13.7777778,21.2013889 L13.7777778,21.2013889 Z" id="Path" fill="#FFFFFF"></path>
+                    <rect id="Rectangle-115" fill="#FFFFFF" x="14.3333333" y="5.55555556" width="3.33333333" height="11.1111111" rx="1.66666667"></rect>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>
