@@ -2,6 +2,7 @@
 include /usr/share/dpkg/default.mk
 
 export QT_SELECT=5
+include /usr/share/dpkg/default.mk
 
 %:
 	dh $@ --parallel
