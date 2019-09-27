@@ -442,6 +442,7 @@ Footer::Footer(QWidget *parent) :
         } else {
             d->updateQssProperty(d->btCover, "viewname", "musiclist");
         }
+        d->btLyric->setChecked(!d->btLyric->isChecked());
     });
     if (d->m_type == 1) {
         d->btPlay->setIcon(DHiDPIHelper::loadNxPixmap(":/mpimage/light/normal/play_normal.svg"));
