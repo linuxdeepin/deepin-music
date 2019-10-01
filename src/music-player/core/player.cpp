@@ -251,6 +251,7 @@ void PlayerPrivate::initConnection()
         case QMediaPlayer::EndOfMedia: {
             // next
             selectNext(activeMeta, mode);
+            Q_EMIT q->mediaEnded(activePlaylist, activeMeta);
             break;
         }
 
@@ -307,12 +308,17 @@ void PlayerPrivate::selectNext(const MetaPtr info, Player::PlaybackMode mode)
         q->playMeta(activePlaylist, activePlaylist->shuffleNext(info));
         break;
     }
+    case Player::Single: {
+        q->pause();
+        break;
+    }
     }
 }
 
 void PlayerPrivate::selectPrev(const MetaPtr info, Player::PlaybackMode mode)
 {
     Q_Q(Player);
+    Q_ASSERT(mode != Player::Single);
     if (!activePlaylist || activePlaylist->isEmpty()) {
         return;
     }
@@ -441,9 +447,12 @@ void Player::playNextMeta(PlaylistPtr playlist, const MetaPtr meta)
     Q_ASSERT(playlist == d->activePlaylist);
 
     setPlayOnLoaded(true);
-    if (d->mode == RepeatSingle) {
+    switch (d->mode) {
+    case RepeatSingle:
+    case Single:
         d->selectNext(meta, RepeatAll);
-    } else {
+        break;
+    default:
         d->selectNext(meta, d->mode);
     }
 }
@@ -454,9 +463,12 @@ void Player::playPrevMusic(PlaylistPtr playlist, const MetaPtr meta)
     Q_ASSERT(playlist == d->activePlaylist);
 
     setPlayOnLoaded(true);
-    if (d->mode == RepeatSingle) {
+    switch (d->mode) {
+    case RepeatSingle:
+    case Single:
         d->selectPrev(meta, RepeatAll);
-    } else {
+        break;
+    default:
         d->selectPrev(meta, d->mode);
     }
 }

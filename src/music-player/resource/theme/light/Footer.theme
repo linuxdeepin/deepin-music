@@ -173,6 +173,18 @@
   border-image: url(:/common/image/shuffle_press.svg);
 }
 
+#FooterActionPlayMode[mode="3"] {
+  border-image: url(:/common/image/single_normal.svg);
+}
+
+#FooterActionPlayMode:hover[mode="3"] {
+  border-image: url(:/common/image/single_hover.svg);
+}
+
+#FooterActionPlayMode:pressed[mode="3"] {
+  border-image: url(:/common/image/single_press.svg);
+}
+
 #FooterActionSound[volume="high"] {
   border-image: url(:/common/image/volume_high_normal.svg);
 }

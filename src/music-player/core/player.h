@@ -73,8 +73,9 @@ public:
 
     enum PlaybackMode {
         RepeatAll = 0,
-        RepeatSingle = 1,
-        Shuffle = 2,
+        RepeatSingle,
+        Shuffle,
+        Single,
     };
 
     enum Error {
@@ -114,6 +115,7 @@ public:
 signals:
     void mediaUpdate(PlaylistPtr playlist, const MetaPtr meta);
     void mediaPlayed(PlaylistPtr playlist, const MetaPtr meta);
+    void mediaEnded(PlaylistPtr playlist, const MetaPtr meta);
     void mediaError(PlaylistPtr playlist, const MetaPtr meta, Player::Error error);
 
 public:

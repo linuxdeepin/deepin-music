@@ -268,7 +268,8 @@ Footer::Footer(QWidget *parent) :
     modes /*<< ":/image/sequence"*/
             << ":/image/repeat_all"
             << ":/image/repeat_single"
-            << ":/image/shuffle";
+            << ":/image/shuffle"
+            << ":/image/single";
     d->btPlayMode = new ModeButton;
     d->btPlayMode->setObjectName("FooterActionPlayMode");
     d->btPlayMode->setFixedSize(24, 24);
@@ -700,6 +701,9 @@ void Footer::onModeChange(int mode)
         break;
     case 2:
         playmode = Footer::tr("Shuffle");
+        break;
+    case 3:
+        playmode = Footer::tr("Single");
         break;
     }
     if (hintWidget) {

@@ -260,6 +260,14 @@ void Presenter::prepareData()
         d->requestMetaSearch(meta);
     });
 
+    connect(d->player, &Player::mediaEnded,
+    this, [ = ](PlaylistPtr playlist, const MetaPtr meta) {
+        const auto mode = d->player->mode();
+        if (mode == Player::PlaybackMode::Single) {
+            Q_EMIT musicPaused(playlist, meta);
+        }
+    });
+
     connect(d->player, &Player::mediaError,
     this, [ = ](PlaylistPtr playlist, const MetaPtr meta, Player::Error error) {
         Q_D(Presenter);

@@ -57,6 +57,9 @@
         <file>common/image/shuffle_hover.svg</file>
         <file>common/image/shuffle_normal.svg</file>
         <file>common/image/shuffle_press.svg</file>
+        <file>common/image/single_hover.svg</file>
+        <file>common/image/single_normal.svg</file>
+        <file>common/image/single_press.svg</file>
         <file>common/image/slider_handle.svg</file>
         <file>common/image/start_hover.svg</file>
         <file>common/image/start_normal.svg</file>
