@@ -142,7 +142,9 @@ int main(int argc, char *argv[])
 
     // !!! MUST setApplicationDisplayName before DMainWindow create
     app.setApplicationDisplayName(QObject::tr("Deepin Music"));
-    app.setWindowIcon(QIcon(":/common/image/deepin-music.svg"));
+    QIcon t_icon = QIcon::fromTheme("deepin-music");
+    //app.setWindowIcon(QIcon(":/common/image/deepin-music.svg"));
+    app.setWindowIcon(t_icon);
 
     if (!app.setSingleInstance("deepinmusic")) {
         qDebug() << "another deepin music has started";
