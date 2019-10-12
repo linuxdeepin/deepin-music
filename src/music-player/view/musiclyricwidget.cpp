@@ -168,15 +168,6 @@ void MUsicLyricWidget::mousePressEvent(QMouseEvent *event)
     QWidget::mousePressEvent(event);
 }
 
-void MUsicLyricWidget::mousePressEvent(QMouseEvent *event)
-{
-    Q_D(MUsicLyricWidget);
-    if (!d->searchLyricsWidget->rect().contains(event->pos())) {
-        onsearchBt();
-    }
-    QWidget::mousePressEvent(event);
-}
-
 void MUsicLyricWidget::onMusicPlayed(PlaylistPtr playlist, const MetaPtr meta)
 {
     Q_D(MUsicLyricWidget);
