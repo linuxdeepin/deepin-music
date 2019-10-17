@@ -630,31 +630,6 @@ void Presenter::onMusiclistRemove(PlaylistPtr playlist, const MetaPtrList metali
 
         MediaDatabase::instance()->removeMediaMetaList(metalist);
         d->library->removeMediaMetaList(metalist);
-    } else if (playlist->id() == AlbumMusicListID || playlist->id() == ArtistMusicListID) {
-        auto curPlaylist = d->playlistMgr->playlist(AllMusicListID);
-        for (auto &autoPlaylist : allplaylist()) {
-            auto meta =  autoPlaylist->removeMusicList(metalist);
-            if (autoPlaylist == playinglist) {
-                next = meta;
-            }
-        }
-
-        if (curPlaylist->isEmpty()) {
-            qDebug() << "meta library clean";
-            onMusicStop(playlist, next);
-            Q_EMIT metaLibraryClean();
-        }
-        PlaylistPtr albumPlaylist = d->playlistMgr->playlist(AlbumMusicListID);
-        PlaylistPtr artistPlaylist = d->playlistMgr->playlist(ArtistMusicListID);
-        if (albumPlaylist) {
-            albumPlaylist->metaListToPlayMusicTypePtrList(Playlist::SortByAblum, curPlaylist->allmusic());
-        }
-        if (artistPlaylist) {
-            artistPlaylist->metaListToPlayMusicTypePtrList(Playlist::SortByArtist, curPlaylist->allmusic());
-        }
-
-        MediaDatabase::instance()->removeMediaMetaList(metalist);
-        d->library->removeMediaMetaList(metalist);
     } else {
         next = playlist->removeMusicList(metalist);
     }
