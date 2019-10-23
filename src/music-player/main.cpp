@@ -157,7 +157,7 @@ int main(int argc, char *argv[])
     //app.setStyle("chameleon");
 
     //监听当前应用主题切换事件
-    QObject::connect(DGuiApplicationHelper::instance(), &DGuiApplicationHelper::themeTypeChanged,
+    QObject::connect(DGuiApplicationHelper::instance(), &DGuiApplicationHelper::paletteTypeChanged,
     [] (DGuiApplicationHelper::ColorType type) {
         qDebug() << type;
         // 保存程序的主题设置  type : 0,系统主题， 1,浅色主题， 2,深色主题
