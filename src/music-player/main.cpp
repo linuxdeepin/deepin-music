@@ -165,7 +165,7 @@ int main(int argc, char *argv[])
         DGuiApplicationHelper::instance()->setPaletteType(type);
     });
 
-    QObject::connect(DGuiApplicationHelper::instance(), &DGuiApplicationHelper::paletteTypeChanged,
+    QObject::connect(DGuiApplicationHelper::instance(), &DGuiApplicationHelper::themeTypeChanged,
                      &mainframe, &MainFrame::slotTheme);
     return app.exec();
 }
