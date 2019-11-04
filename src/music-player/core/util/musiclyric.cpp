@@ -3,8 +3,9 @@
 #include <QTextStream>
 #include <QFileDialog>
 #include <QTextCodec>
-
 #include <QDebug>
+
+#include "basetool.h"
 
 MusicLyric::MusicLyric()
 {
@@ -41,26 +42,29 @@ static QString getFileCodex(QString dir)
     if (!fin.open(QIODevice::ReadOnly))
         return code;
 
-    unsigned char  s2;
-    fin.read((char *)&s2, sizeof(s2));
-    int p = s2 << 8;
-    fin.read((char *)&s2, sizeof(s2));
-    p += s2;
+//    unsigned char  s2;
+//    fin.read((char *)&s2, sizeof(s2));
+//    int p = s2 << 8;
+//    fin.read((char *)&s2, sizeof(s2));
+//    p += s2;
 
-    switch (p) {
-    case 0xfffe:  //65534
-        code = "Unicode";
-        break;
-    case 0xfeff://65279
-        code = "Unicode big endian";
-        break;
-    case 0xefbb://61371
-        code = "UTF-8";
-        break;
-    default:
-        code = "GB18030";
-    }
+//    switch (p) {
+//    case 0xfffe:  //65534
+//        code = "Unicode";
+//        break;
+//    case 0xfeff://65279
+//        code = "Unicode big endian";
+//        break;
+//    case 0xefbb://61371
+//        code = "UTF-8";
+//        break;
+//    default:
+//        code = "GB18030";
+//    }
+
+    QByteArray data = fin.readAll();
     fin.close();
+    code = BaseTool::detectEncode(data, dir);
 
     return code;
 }

@@ -4,7 +4,7 @@ include($$PWD/../interface/interface.pri)
 
 load(dtk_translation)
 
-QT       += core gui widgets svg multimedia multimediawidgets xml network sql dbus
+QT       += core gui widgets svg multimedia multimediawidgets xml KCodecs network sql dbus
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TEMPLATE    = app
@@ -94,7 +94,8 @@ SOURCES += \
     view/widget/musiclistdialog.cpp \
     view/widget/model/musiclistinfomodel.cpp \
     view/widget/delegate/musicinfoitemdelegate.cpp \
-    core/util/fft.cpp
+    core/util/fft.cpp \
+    core/util/basetool.cpp
 
 HEADERS += \
     musicapp.h \
@@ -163,7 +164,8 @@ HEADERS += \
     view/widget/model/musiclistinfomodel.h \
     view/widget/delegate/musicinfoitemdelegate.h \
     view/widget/delegate/musicinfoitemdelegate_p.h \
-    core/util/fft.h
+    core/util/fft.h \
+    core/util/basetool.h
 
 RESOURCES += \
     resource/theme/theme.qrc \
