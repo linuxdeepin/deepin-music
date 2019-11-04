@@ -35,7 +35,7 @@ public:
 
     PlaylistPtr playlist() const;
 
-    bool isEmpty();
+    int listSize();
 
     void setViewModeFlag(QListView::ViewMode mode);
     void setPlaying(const MetaPtr);
@@ -53,6 +53,8 @@ public:
 
     void setPlayPixmap(QPixmap pixmap);
     QPixmap getPlayPixmap() const;
+
+    void updateList();
 
 signals:
     void requestCustomContextMenu(const QPoint &pos);

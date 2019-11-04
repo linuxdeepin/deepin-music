@@ -90,7 +90,7 @@ MusicListWidget::MusicListWidget(QWidget *parent) : DWidget(parent)
     m_addListBtn = new MusicImageButton(":/mpimage/light/normal/add_normal.svg",
                                         ":/mpimage/light/hover/add_hover.svg",
                                         ":/mpimage/light/press/add_press.svg");
-    m_addListBtn->setFixedSize(28, 28);
+    m_addListBtn->setFixedSize(37, 37);
     m_addListBtn->setFocusPolicy(Qt::NoFocus);
 
     auto customizeLayout = new QHBoxLayout(this);
@@ -136,7 +136,7 @@ MusicListWidget::MusicListWidget(QWidget *parent) : DWidget(parent)
 //                Q_EMIT this->hidePlaylist();
 //            });
             curPtr->setSearchStr("");
-            //Q_EMIT selectedPlaylistChange(curPtr);
+            Q_EMIT selectedPlaylistChange(curPtr);
         }
     });
     connect(m_dataBaseListview, &MusicListView::currentChanged,
@@ -150,7 +150,7 @@ MusicListWidget::MusicListWidget(QWidget *parent) : DWidget(parent)
 //                Q_EMIT this->hidePlaylist();
 //            });
             curPtr->setSearchStr("");
-            //Q_EMIT selectedPlaylistChange(curPtr);
+            Q_EMIT selectedPlaylistChange(curPtr);
         }
     });
     connect(m_dataBaseListview, &MusicListView::customResort,
@@ -186,7 +186,7 @@ MusicListWidget::MusicListWidget(QWidget *parent) : DWidget(parent)
 //                Q_EMIT this->hidePlaylist();
 //            });
             curPtr->setSearchStr("");
-            //Q_EMIT selectedPlaylistChange(curPtr);
+            Q_EMIT selectedPlaylistChange(curPtr);
         }
     });
     connect(m_customizeListview, &MusicListView::currentChanged,
@@ -200,7 +200,7 @@ MusicListWidget::MusicListWidget(QWidget *parent) : DWidget(parent)
 //                Q_EMIT this->hidePlaylist();
 //            });
             curPtr->setSearchStr("");
-            //Q_EMIT selectedPlaylistChange(curPtr);
+            Q_EMIT selectedPlaylistChange(curPtr);
         }
     });
     connect(m_customizeListview, &MusicListView::customResort,
@@ -276,9 +276,9 @@ MusicListWidget::MusicListWidget(QWidget *parent) : DWidget(parent)
     });
 }
 
-void MusicListWidget::onSearchText()
+void MusicListWidget::onSearchText(QString str)
 {
-    m_dataListView->onSearchText();
+    m_dataListView->onSearchText(str);
 }
 
 void MusicListWidget::onMusicPlayed(PlaylistPtr playlist, const MetaPtr meta)

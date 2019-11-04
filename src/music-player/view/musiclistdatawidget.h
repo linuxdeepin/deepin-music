@@ -38,7 +38,7 @@ public:
     void setCustomSortType(PlaylistPtr playlist);
 
 public slots:
-    void onSearchText();
+    void onSearchText(QString str);
     void selectMusiclistChanged(PlaylistPtr playlist);
     void onMusiclistChanged(PlaylistPtr playlist);
     void onMusicListAdded(PlaylistPtr playlist, const MetaPtrList metalist);

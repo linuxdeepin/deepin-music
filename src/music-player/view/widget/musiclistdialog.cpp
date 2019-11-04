@@ -36,6 +36,7 @@
 #include "musiclistinfoview.h"
 #include "musicimagebutton.h"
 #include "infodialog.h"
+#include "musictitleimage.h"
 
 DWIDGET_USE_NAMESPACE
 
@@ -47,14 +48,14 @@ public:
     void initUI();
     void initConnection();
 
-    DLabel              *titleFrame     = nullptr;
-    DLabel              *titleLabel     = nullptr;
-    DLabel              *infoLabel      = nullptr;
-    DPushButton         *btPlayAll      = nullptr;
-    DPushButton         *btRandomPlay   = nullptr;
-    InfoDialog          *infoDialog     = nullptr;
-    DImageButton        *closeBt = nullptr;
-    MusicListInfoView   *musicListInfoView   = nullptr;
+    MusicTitleImageWidget              *titleFrame          = nullptr;
+    DLabel                             *titleLabel          = nullptr;
+    DLabel                             *infoLabel           = nullptr;
+    DPushButton                        *btPlayAll           = nullptr;
+    DPushButton                        *btRandomPlay        = nullptr;
+    InfoDialog                         *infoDialog          = nullptr;
+    DImageButton                       *closeBt             = nullptr;
+    MusicListInfoView                  *musicListInfoView   = nullptr;
 
     MusicListDialog *q_ptr;
     Q_DECLARE_PUBLIC(MusicListDialog)
@@ -74,7 +75,7 @@ void MusicListDialogPrivate::initUI()
     layout->setSpacing(0);
     layout->setMargin(10);
 
-    titleFrame = new DLabel;
+    titleFrame = new MusicTitleImageWidget;
     titleFrame->setFixedSize(480, 130);
     QPixmap pixmap = DHiDPIHelper::loadNxPixmap(":/common/image/cover_max.svg");
     pixmap = pixmap.scaled(480, 130, Qt::KeepAspectRatioByExpanding);
@@ -91,11 +92,15 @@ void MusicListDialogPrivate::initUI()
 
     titleLabel = new DLabel();
     auto titleFont = titleLabel->font();
+    titleFont.setFamily("SourceHanSansSC");
     titleFont.setPixelSize(24);
+    titleFont.setWeight(QFont::Medium);
     titleLabel->setFont(titleFont);
     infoLabel = new DLabel();
     auto infoFont = titleLabel->font();
+    infoFont.setFamily("SourceHanSansSC");
     infoFont.setPixelSize(18);
+    infoFont.setWeight(QFont::Medium);
     infoLabel->setFont(infoFont);
 
     auto btLayout = new QHBoxLayout(titleFrame);
@@ -313,6 +318,9 @@ void MusicListDialog::setThemeType(int type)
         palette.setColor(DPalette::Background, BackgroundColor);
         setPalette(palette);
 
+        auto titleLabelPl = d->titleLabel->palette();
+        titleLabelPl.setColor(DPalette::WindowText, Qt::black);
+        d->titleLabel->setPalette(titleLabelPl);
 
         auto playAllPalette = d->btPlayAll->palette();
         playAllPalette.setColor(DPalette::ButtonText, Qt::white);
@@ -337,6 +345,9 @@ void MusicListDialog::setThemeType(int type)
         palette.setColor(DPalette::Background, BackgroundColor);
         setPalette(palette);
 
+        auto titleLabelPl = d->titleLabel->palette();
+        titleLabelPl.setColor(DPalette::WindowText, Qt::white);
+        d->titleLabel->setPalette(titleLabelPl);
 
         auto playAllPalette = d->btPlayAll->palette();
         playAllPalette.setColor(DPalette::ButtonText, "#FFFFFF");
@@ -365,6 +376,7 @@ void MusicListDialog::setThemeType(int type)
     d->closeBt->setPixmap(QPixmap(QString(":/mpimage/light/normal/close_normal.svg").arg(rStr)));
     d->btPlayAll->setIcon(QIcon(QString(":/mpimage/light/normal/play_all_normal.svg").arg(rStr)));
     d->btRandomPlay->setIcon(QIcon(QString(":/mpimage/light/normal/random_play_normal.svg").arg(rStr)));
+    d->titleFrame->setThemeType(type);
     d->musicListInfoView->setThemeType(type);
     d->infoDialog->setThemeType(type);
 }

@@ -70,6 +70,7 @@ void MusicListDataDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
         painter->save();
         painter->setRenderHint(QPainter::Antialiasing);
         painter->setRenderHint(QPainter::HighQualityAntialiasing);
+        painter->setRenderHint(QPainter::SmoothPixmapTransform);
 
         auto background = option.palette.background();
 
@@ -91,6 +92,16 @@ void MusicListDataDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
             icon = qvariant_cast<QIcon>(value);
         }
         painter->drawPixmap(rect, icon.pixmap(rect.width(), rect.width()));
+
+        //draw border
+        painter->save();
+        QColor borderPenColor("#000000");
+        borderPenColor.setAlphaF(0.1);
+        QPen borderPen(borderPenColor);
+        borderPen.setWidth(1);
+        painter->setPen(borderPen);
+        painter->drawRoundRect(rect.adjusted(1, 1, -1, 1), 10, 10);
+        painter->restore();
 
         if (PlayMusicTypePtr->extraName.isEmpty()) {
             QColor fillColor(0, 0, 0);
@@ -148,15 +159,16 @@ void MusicListDataDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
 
             QRect nameFillRect(rect.x(), startHeight, rect.width(), fillAllHeight / 2);
             nameFillRect.adjust(8, 0, -7, 0);
-            auto nameText = fm.elidedText(PlayMusicTypePtr->name, Qt::ElideMiddle, fillRect.width());
+            auto nameText = fm.elidedText(PlayMusicTypePtr->name, Qt::ElideMiddle, nameFillRect.width());
             painter->setPen(Qt::white);
             painter->drawText(nameFillRect, Qt::AlignLeft | Qt::AlignTop, nameText);
 
             font.setPixelSize(11);
+            QFontMetrics extraNameFm(font);
             painter->setFont(font);
             QRect extraNameFillRect(rect.x(), startHeight + fillAllHeight / 2 - 5, rect.width(), fillAllHeight / 2);
             extraNameFillRect.adjust(8, 0, -7, 0);
-            auto extraNameText = fm.elidedText(PlayMusicTypePtr->extraName, Qt::ElideMiddle, fillRect.width());
+            auto extraNameText = extraNameFm.elidedText(PlayMusicTypePtr->extraName, Qt::ElideMiddle, extraNameFillRect.width());
             painter->setPen(Qt::white);
             painter->drawText(extraNameFillRect, Qt::AlignLeft | Qt::AlignTop, extraNameText);
         }
@@ -224,7 +236,7 @@ void MusicListDataDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
             }
             //icon
             if (playlistPtr->searchStr().isEmpty()) {
-                QRect numRect(0, option.rect.y(), 40, option.rect.height());
+                QRect numRect(0, option.rect.y(), 40, 40);
                 auto icon = option.icon;
                 auto value = index.data(Qt::DecorationRole);
                 if (value.type() == QVariant::Icon) {

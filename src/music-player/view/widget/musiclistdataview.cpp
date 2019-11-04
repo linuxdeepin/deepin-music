@@ -174,10 +174,10 @@ PlaylistPtr MusicListDataView::playlist() const
     return d->model->playlist();
 }
 
-bool MusicListDataView::isEmpty()
+int MusicListDataView::listSize()
 {
     Q_D(MusicListDataView);
-    return d->curPlayMusicTypePtrList.isEmpty();
+    return d->curPlayMusicTypePtrList.size();
 }
 
 void MusicListDataView::setViewModeFlag(QListView::ViewMode mode)
@@ -242,6 +242,30 @@ QPixmap MusicListDataView::getPlayPixmap() const
 {
     Q_D(const MusicListDataView);
     return d->playingPixmap;
+}
+
+void MusicListDataView::updateList()
+{
+    Q_D(MusicListDataView);
+    PlaylistPtr playlist = d->model->playlist();
+    if (playlist.isNull()) {
+        qWarning() << "can not change to emptry playlist";
+        return;
+    }
+
+    QVector<QString> allStr;
+    for (auto meta : playlist->playMusicTypePtrList()) {
+        allStr.append(meta->name);
+    }
+
+    for (int i = d->model->rowCount() - 1; i >= 0; --i) {
+        auto index = d->model->index(i, 0);
+        auto itemName = d->model->data(index).toString();
+        if (!allStr.contains(itemName)) {
+            d->curPlayMusicTypePtrList.removeAt(i);
+            d->model->removeRow(i);
+        }
+    }
 }
 
 void MusicListDataView::mouseMoveEvent(QMouseEvent *event)

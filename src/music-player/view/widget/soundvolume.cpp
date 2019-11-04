@@ -195,8 +195,10 @@ void SoundVolume::paintEvent(QPaintEvent * /*event*/)
     painter.setRenderHints(QPainter::Antialiasing | QPainter::HighQualityAntialiasing);
     QPainterPath path;
 
+    auto palette = this->palette();
+
     auto penWidthf = 1.0;
-    auto background =  d->background;
+    auto background =  palette.background();
     auto borderColor = d->borderColor;
 
     const qreal radius = d->radius;;
@@ -238,7 +240,7 @@ void SoundVolume::paintEvent(QPaintEvent * /*event*/)
 //    QPen pen(QColor(0, 0, 0, 0.1 * 255));
     QPen pen(borderColor);
     pen.setWidth(penWidthf);
-    painter.strokePath(path, pen);
+    //painter.strokePath(path, pen);
 }
 void SoundVolume::slotTheme(int type)
 {

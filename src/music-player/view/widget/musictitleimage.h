@@ -19,41 +19,28 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef MODEBUTTOM_H
-#define MODEBUTTOM_H
+#pragma once
 
-#include <DPushButton>
+#include <DWidget>
 
 DWIDGET_USE_NAMESPACE
 
-class ModeButton : public DPushButton
+class MusicTitleImageWidget : public DWidget
 {
     Q_OBJECT
-    Q_PROPERTY(int mode READ mode WRITE setMode NOTIFY modeChanged)
-
 public:
-    explicit ModeButton(QWidget *parent = Q_NULLPTR);
+    explicit MusicTitleImageWidget(QWidget *parent = Q_NULLPTR);
+    ~MusicTitleImageWidget();
 
-    void setModeIcons(const QStringList &modeIcons, const QStringList &pressIcons = QStringList());
-    int mode() const;
-    void setTransparent(bool flag);
-signals:
-    void modeChanged(int mode);
+    void setPixmap(QPixmap pixmap);
 
 public slots:
-    void setMode(int mode);
+    void setThemeType(int type);
 
 protected:
-    void paintEvent(QPaintEvent *event) Q_DECL_OVERRIDE;
-    void mousePressEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
-    void mouseReleaseEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
+    virtual void paintEvent(QPaintEvent *event) Q_DECL_OVERRIDE;
 
 private:
-    char        status = 0;
-    int         m_mode;
-    bool        transparent  = true;
-    QStringList m_modeIcons;
-    QStringList m_pressIcons;
+    QPixmap image;
+    int     type = 1;
 };
-
-#endif // MODEBUTTOM_H

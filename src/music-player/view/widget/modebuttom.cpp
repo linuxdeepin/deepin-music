@@ -48,9 +48,10 @@ ModeButton::ModeButton(QWidget *parent) : DPushButton(parent)
     setPalette(pl);
 }
 
-void ModeButton::setModeIcons(const QStringList &modeIcons)
+void ModeButton::setModeIcons(const QStringList &modeIcons, const QStringList &pressIcons)
 {
     m_modeIcons = modeIcons;
+    m_pressIcons = pressIcons;
     m_mode = 0;
     this->update();
 }
@@ -84,6 +85,10 @@ void ModeButton::paintEvent(QPaintEvent *event)
     }
 
     QString curPicPath = m_modeIcons[m_mode];
+    if (status == 1 && m_mode >= 0 && m_mode <= m_pressIcons.size()) {
+        curPicPath = m_pressIcons[m_mode];
+    }
+
     QPixmap pixmap = DHiDPIHelper::loadNxPixmap(curPicPath);
     pixmap.setDevicePixelRatio(devicePixelRatioF());
 
@@ -100,4 +105,16 @@ void ModeButton::paintEvent(QPaintEvent *event)
     painter.drawPixmap(pixmapRect, pixmap, QRect(0, 0, pixmapWidth, pixmapHeight));
 
     painter.restore();
+}
+
+void ModeButton::mousePressEvent(QMouseEvent *event)
+{
+    status = 1;
+    DPushButton::mousePressEvent(event);
+}
+
+void ModeButton::mouseReleaseEvent(QMouseEvent *event)
+{
+    status = 0;
+    DPushButton::mouseReleaseEvent(event);
 }

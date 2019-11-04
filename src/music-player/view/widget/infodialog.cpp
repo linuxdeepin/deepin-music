@@ -39,6 +39,7 @@
 #include "../../core/metasearchservice.h"
 #include "../helper/widgethellper.h"
 #include "cover.h"
+#include "musicimagebutton.h"
 
 DWIDGET_USE_NAMESPACE
 
@@ -55,8 +56,9 @@ public:
 
 //    DBlurEffectWidget   *bgBlurWidget   = nullptr;
     DFloatingWidget              *infoGridFrame  = nullptr;
-    Cover              *cover          = nullptr;
+    Cover               *cover          = nullptr;
     DLabel              *title          = nullptr;
+    MusicImageButton    *closeBt        = nullptr;
     QList<DLabel *>     valueList;
 
     InfoDialog *q_ptr;
@@ -73,11 +75,11 @@ void InfoDialogPrivate::initUI()
 
     auto layout = new QVBoxLayout(q);
     layout->setSpacing(0);
-    layout->setMargin(5);
+    layout->setContentsMargins(5, 50, 5, 5);
 
-    auto closeBt = new DImageButton;
-    closeBt->setPixmap(DHiDPIHelper::loadNxPixmap(":/mpimage/light/normal/close_normal.svg"));
-    closeBt->setFixedSize(27, 23);
+    closeBt = new MusicImageButton(":/mpimage/light/normal/close_normal.svg", "", "", "", q);
+    closeBt->setFixedSize(50, 50);
+    closeBt->move(q->width() - 50, 0);
 
     cover = new Cover;
     cover->setContentsMargins(0, 0, 0, 0);
@@ -106,7 +108,7 @@ void InfoDialogPrivate::initUI()
     pl.setColor(DPalette::Shadow, sbcolor);
     infoGridFrame->setPalette(pl);
 
-    layout->addWidget(closeBt, 0, Qt::AlignTop | Qt::AlignRight);
+    //layout->addWidget(closeBt, 0, Qt::AlignTop | Qt::AlignRight);
     layout->addSpacing(10);
     layout->addWidget(cover, 0, Qt::AlignCenter);
     layout->addSpacing(10);
@@ -163,7 +165,7 @@ void InfoDialogPrivate::initUI()
     infoLayout->addWidget(basicinfo);
     infoLayout->addLayout(infogridLayout);
 
-    q->connect(closeBt, &DImageButton::clicked, q, &DAbstractDialog::hide);
+    q->connect(closeBt, &MusicImageButton::clicked, q, &DAbstractDialog::hide);
 
 //    if (qApp->isDXcbPlatform()) {
 //        bgBlurWidget = new DBlurEffectWidget(q);
@@ -254,7 +256,10 @@ void InfoDialog::updateInfo(const MetaPtr meta)
 void InfoDialog::setThemeType(int type)
 {
     Q_D(InfoDialog);
+    QString rStr;
     if (type == 1) {
+        rStr = "light";
+
         DPalette pl = d->infoGridFrame->palette();
         QColor windowColor("#FFFFFF");
         windowColor.setAlphaF(0.7);
@@ -264,6 +269,8 @@ void InfoDialog::setThemeType(int type)
         pl.setColor(DPalette::Shadow, sbcolor);
         d->infoGridFrame->setPalette(pl);
     } else {
+        rStr = "dark";
+
         DPalette pl = d->infoGridFrame->palette();
         QColor windowColor("#FFFFFF");
         windowColor.setAlphaF(0.05);
@@ -273,4 +280,8 @@ void InfoDialog::setThemeType(int type)
         pl.setColor(DPalette::Shadow, sbcolor);
         d->infoGridFrame->setPalette(pl);
     }
+
+    d->closeBt->setPropertyPic(QString(":/mpimage/%1/normal/close_normal.svg").arg(rStr),
+                               QString(":/mpimage/%1/hover/close_normal.svg").arg(rStr),
+                               QString(":/mpimage/%1/press/close_normal.svg").arg(rStr));
 }

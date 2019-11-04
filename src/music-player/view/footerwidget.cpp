@@ -321,10 +321,14 @@ Footer::Footer(QWidget *parent) :
     modes << ":/mpimage/light/normal/sequential_loop_normal.svg"
           << ":/mpimage/light/normal/single_tune_circulation_normal.svg"
           << ":/mpimage/light/normal/cross_cycling_normal.svg";
+    QStringList pressModes;
+    pressModes << ":/mpimage/light/press/sequential_loop_press.svg"
+               << ":/mpimage/light/press/single_tune_circulation_press.svg"
+               << ":/mpimage/light/press/cross_cycling_press.svg";
     d->btPlayMode = new ModeButton;
     d->btPlayMode->setObjectName("FooterActionPlayMode");
     d->btPlayMode->setFixedSize(50, 50);
-    d->btPlayMode->setModeIcons(modes);
+    d->btPlayMode->setModeIcons(modes, pressModes);
     d->btPlayMode->setTransparent(false);
 
     d->btSound = new MusicImageButton(":/mpimage/light/normal/volume_normal.svg",
@@ -907,6 +911,10 @@ void Footer::slotTheme(int type)
     modes << QString(":/mpimage/%1/normal/sequential_loop_normal.svg").arg(rStr)
           << QString(":/mpimage/%1/normal/single_tune_circulation_normal.svg").arg(rStr)
           << QString(":/mpimage/%1/normal/cross_cycling_normal.svg").arg(rStr);
+    QStringList pressModes;
+    pressModes << QString(":/mpimage/%1/press/sequential_loop_press.svg").arg(rStr)
+               << QString(":/mpimage/%1/press/single_tune_circulation_press.svg").arg(rStr)
+               << QString(":/mpimage/%1/press/cross_cycling_press.svg").arg(rStr);
     d->btSound->setPropertyPic(QString(":/mpimage/%1/normal/volume_normal.svg").arg(rStr),
                                QString(":/mpimage/%1/hover/volume_hover.svg").arg(rStr),
                                QString(":/mpimage/%1/press/volume_press.svg").arg(rStr),
@@ -932,7 +940,7 @@ void Footer::slotTheme(int type)
                                   QString(":/mpimage/%1/checked/playlist_checked.svg").arg(rStr));
 
 
-    d->btPlayMode->setModeIcons(modes);
+    d->btPlayMode->setModeIcons(modes, pressModes);
     d->waveform->setThemeType(type);
     d->volSlider->slotTheme(type);
     d->playListWidget->slotTheme(type);
@@ -966,8 +974,10 @@ void Footer::onVolumeChanged(int volume)
         status = "high";
     } else if (volume > 33) {
         status = "mid";
-    } else  {
+    } else  if (volume > 0) {
         status = "low";
+    } else {
+        status = "mute";
     }
     d->updateQssProperty(d->btSound, "volume", status);
 

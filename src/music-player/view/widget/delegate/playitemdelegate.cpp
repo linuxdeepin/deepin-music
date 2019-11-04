@@ -250,6 +250,16 @@ void PlayItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
         painter->drawPixmap(pixmapRect, icon.pixmap(option.rect.width(), option.rect.width()));
         painter->restore();
 
+        //draw border
+        painter->save();
+        QColor borderPenColor("#000000");
+        borderPenColor.setAlphaF(0.1);
+        QPen borderPen(borderPenColor);
+        borderPen.setWidth(1);
+        painter->setPen(borderPen);
+        painter->drawRoundRect(pixmapRect.adjusted(1, 1, -1, 1), 10, 10);
+        painter->restore();
+
         int startHeight = option.rect.y() + 149;
         int fillAllHeight = 34;
 
@@ -266,16 +276,17 @@ void PlayItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
         painter->setPen(nameColor);
         QRect nameFillRect(option.rect.x(), startHeight, option.rect.width(), fillAllHeight / 2);
         nameFillRect.adjust(8, 0, -7, 0);
-        auto nameText = fm.elidedText(meta->title, Qt::ElideRight, 140);
+        auto nameText = fm.elidedText(meta->title, Qt::ElideRight, 125);
         painter->drawText(nameFillRect, Qt::AlignLeft | Qt::AlignTop, nameText);
 
         font.setPixelSize(11);
+        QFontMetrics extraNameFm(font);
         painter->setFont(font);
         nameColor.setAlphaF(0.6);
         painter->setPen(nameColor);
         QRect extraNameFillRect(option.rect.x(), startHeight + fillAllHeight / 2, 99, 16);
         extraNameFillRect.adjust(8, 0, -7, 0);
-        auto extraNameText = fm.elidedText(meta->artist, Qt::ElideRight, 99);
+        auto extraNameText = extraNameFm.elidedText(meta->artist, Qt::ElideRight, 84);
         painter->drawText(extraNameFillRect, Qt::AlignLeft | Qt::AlignTop, extraNameText);
 
         //draw time

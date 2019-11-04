@@ -22,9 +22,10 @@
 #include "musiclistview.h"
 
 #include <QDebug>
+#include <QKeyEvent>
+
 #include <DMenu>
 #include <DDialog>
-
 #include <DScrollBar>
 #include <DPalette>
 #include <DApplicationHelper>
@@ -343,6 +344,43 @@ void MusicListView::mousePressEvent(QMouseEvent *event)
             closePersistentEditor(item);
     }
     DListView::mousePressEvent(event);
+}
+
+void MusicListView::keyPressEvent(QKeyEvent *event)
+{
+    DListView::keyPressEvent(event);
+    if (event->key() == Qt::Key_Delete) {
+        auto indexes = this->selectedIndexes();
+        if (indexes.size() != 1) {
+            return;
+        }
+        auto item = model->itemFromIndex(indexes.first());
+        if (!item) {
+            return;
+        }
+        auto m_data = allPlaylists[item->row()];
+        if (!m_data) {
+            return;
+        }
+
+        if (m_data->id() != AllMusicListID && m_data->id() != AlbumMusicListID &&
+                m_data->id() != ArtistMusicListID && m_data->id() != FavMusicListID) {
+            QString message = QString(tr("Are you sure you want to delete this playlist?"));
+
+            DDialog warnDlg(this);
+            warnDlg.setIcon(QIcon::fromTheme("deepin-music"));
+            warnDlg.setTextFormat(Qt::AutoText);
+            warnDlg.setTitle(message);
+            warnDlg.addButton(tr("Cancel"), false, Dtk::Widget::DDialog::ButtonNormal);
+            warnDlg.addButton(tr("Delete"), true, Dtk::Widget::DDialog::ButtonWarning);
+            if (1 == warnDlg.exec()) {
+                allPlaylists.removeAt(item->row());
+                model->removeRow(item->row());
+                //delete model->takeItem(item->row());
+                Q_EMIT m_data->removed();
+            }
+        }
+    }
 }
 
 void MusicListView::showContextMenu(const QPoint &pos)

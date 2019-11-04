@@ -63,6 +63,9 @@ signals:
 protected:
 //    virtual void startDrag(Qt::DropActions supportedActions) Q_DECL_OVERRIDE;
     void mousePressEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
+
+    void keyPressEvent(QKeyEvent *event) Q_DECL_OVERRIDE;
+
 private:
     QList<PlaylistPtr >  allPlaylists;
     QStandardItemModel   *model           = nullptr;

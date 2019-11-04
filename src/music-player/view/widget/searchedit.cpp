@@ -198,8 +198,8 @@ void SearchEdit::onReturnPressed()
 
     onFocusOut();
 
-    if (playlist != nullptr)
-        playlist->setSearchStr(text);
+//    if (playlist != nullptr)
+//        playlist->setSearchStr(text);
     Q_EMIT this->searchText(this->text());
 }
 

@@ -676,8 +676,8 @@ void MainFrame::binding(Presenter *presenter)
 //            presenter, &Presenter::onExitSearch);
     connect(d->titlebarwidget, &TitlebarWidget::search,
             d->musicListWidget, &MusicListWidget::onSearchText);
-    connect(d->titlebarwidget, &TitlebarWidget::searchExited,
-            d->musicListWidget, &MusicListWidget::onSearchText);
+//    connect(d->titlebarwidget, &TitlebarWidget::searchExited,
+//            d->musicListWidget, &MusicListWidget::onSearchText);
 
     connect(d->importWidget, &ImportWidget::scanMusicDirectory,
             presenter, &Presenter::onScanMusicDirectory);
@@ -1267,6 +1267,6 @@ void MainFrame::paintEvent(QPaintEvent *e)
     Q_D(MainFrame);
     QPainter p(this);
 
-    p.drawImage(rect(), d->currentCoverImage);
+    //p.drawImage(rect(), d->currentCoverImage);
     DMainWindow::paintEvent(e);
 }
