@@ -32,6 +32,11 @@ class SearchEdit : public Dtk::Widget::DSearchEdit
 public:
     explicit SearchEdit(QWidget *parent = Q_NULLPTR);
 
+    PlaylistPtr curPlaylistPtr()
+    {
+        return playlist;
+    }
+
 public:
     void setResultWidget(SearchResult *);
 

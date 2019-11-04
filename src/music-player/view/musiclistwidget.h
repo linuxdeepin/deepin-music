@@ -58,6 +58,7 @@ signals:
     void modeChanged(int);
 
 public slots:
+    void onSearchText();
     void onMusicPlayed(PlaylistPtr playlist, const MetaPtr);
     void onPlaylistAdded(PlaylistPtr);
     void onCurrentChanged(PlaylistPtr playlist);

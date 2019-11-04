@@ -54,7 +54,8 @@ DDropdown::DDropdown(QWidget *parent) : DWidget(parent), d_ptr(new DDropdownPriv
     d->menu = new DMenu;
     d->text = new DLabel(tr("undefined"));
     auto font = d->text->font();
-    font.setFamily("SourceHanSansSC-Normal");
+    font.setFamily("SourceHanSansSC");
+    font.setWeight(QFont::Normal);
     font.setPixelSize(11);
     d->text->setFont(font);
     d->text->setObjectName("DDropdownText");

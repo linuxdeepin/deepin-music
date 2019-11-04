@@ -83,12 +83,22 @@ QString lengthString(qint64 length)
 {
     length = length / 1000;
     int hour = static_cast<int>(length / 3600);
-    QTime t(0, length % 3600 / 60, length % 60);
+
+    QString mmStr = QString("%1").arg(length % 3600 / 60, 2, 10, QLatin1Char('0'));
+    QString ssStr = QString("%1").arg(length % 60, 2, 10, QLatin1Char('0'));
+
     if (hour > 0) {
-        return QString("%1:%2").arg(hour).arg(t.toString("mm:ss"));
+        return QString("%1:%2:%3").arg(hour).arg(mmStr).arg(ssStr);
     } else {
-        return t.toString("mm:ss");
+        return QString("%1:%2").arg(mmStr).arg(ssStr);
     }
+
+//    QTime t(0, length % 3600 / 60, length % 60);
+//    if (hour > 0) {
+//        return QString("%1:%2").arg(hour).arg(t.toString("mm:ss"));
+//    } else {
+//        return t.toString("mm:ss");
+//    }
 }
 
 QString sizeString(qint64 sizeByte)

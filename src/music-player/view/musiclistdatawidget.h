@@ -38,8 +38,10 @@ public:
     void setCustomSortType(PlaylistPtr playlist);
 
 public slots:
+    void onSearchText();
     void onMusiclistChanged(PlaylistPtr playlist);
     void onMusicListAdded(PlaylistPtr playlist, const MetaPtrList metalist);
+    void onMusicListRemoved(PlaylistPtr playlist, const MetaPtrList metalist);
     void onMusiclistUpdate();
     void onMusicPlayed(PlaylistPtr playlist, const MetaPtr);
     void slotTheme(int type);

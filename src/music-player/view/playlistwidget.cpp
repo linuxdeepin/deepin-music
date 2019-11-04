@@ -164,7 +164,8 @@ PlayListWidget::PlayListWidget(QWidget *parent) :
     d->titleLabel = new DLabel();
     d->titleLabel->setFixedHeight(36);
     auto titleFont = d->titleLabel->font();
-    titleFont.setFamily("SourceHanSansSC-Medium");
+    titleFont.setFamily("SourceHanSansSC");
+    titleFont.setWeight(QFont::Medium);
     titleFont.setPixelSize(24);
     d->titleLabel->setFont(titleFont);
     d->titleLabel->setMargin(4);
@@ -173,7 +174,8 @@ PlayListWidget::PlayListWidget(QWidget *parent) :
     d->infoLabel = new DLabel();
     d->infoLabel->setFixedHeight(25);
     auto infoFont = d->infoLabel->font();
-    infoFont.setFamily("SourceHanSansSC-Medium");
+    infoFont.setFamily("SourceHanSansSC");
+    infoFont.setWeight(QFont::Medium);
     infoFont.setPixelSize(14);
     d->infoLabel->setFont(infoFont);
     d->infoLabel->setMargin(4);
@@ -203,7 +205,7 @@ PlayListWidget::PlayListWidget(QWidget *parent) :
     actionBarLayout->addWidget(d->btClearAll, 0, Qt::AlignLeft);
     actionBarLayout->addStretch();
 
-    d->playListView = new PlayListView;
+    d->playListView = new PlayListView(false);
     d->playListView->hide();
 
     layout->addWidget(d->actionBar);

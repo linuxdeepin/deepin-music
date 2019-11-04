@@ -32,7 +32,7 @@ class PlayListView : public DListView
 {
     Q_OBJECT
 public:
-    explicit PlayListView(QWidget *parent = Q_NULLPTR);
+    explicit PlayListView(bool searchFlag, QWidget *parent = Q_NULLPTR);
     ~PlayListView();
 
     MetaPtr activingMeta() const;
@@ -74,6 +74,7 @@ public:
                          QList<PlaylistPtr > newPlaylists);
 
 protected:
+    virtual void mouseMoveEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
     virtual void dragEnterEvent(QDragEnterEvent *event) Q_DECL_OVERRIDE;
     virtual void startDrag(Qt::DropActions supportedActions) Q_DECL_OVERRIDE;
     virtual void keyPressEvent(QKeyEvent *event) Q_DECL_OVERRIDE;

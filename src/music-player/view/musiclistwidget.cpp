@@ -71,7 +71,8 @@ MusicListWidget::MusicListWidget(QWidget *parent) : DWidget(parent)
     dataBaseLabel->setObjectName("MusicListWidgetDataBase");
     dataBaseLabel->setMargin(10);
     auto dataBaseLabelFont = dataBaseLabel->font();
-    dataBaseLabelFont.setFamily("SourceHanSansSC-Medium");
+    dataBaseLabelFont.setFamily("SourceHanSansSC");
+    dataBaseLabelFont.setWeight(QFont::Medium);
     dataBaseLabelFont.setPixelSize(14);
     dataBaseLabel->setFont(dataBaseLabelFont);
     auto dataBaseLabelPalette = dataBaseLabel->palette();
@@ -275,6 +276,11 @@ MusicListWidget::MusicListWidget(QWidget *parent) : DWidget(parent)
     });
 }
 
+void MusicListWidget::onSearchText()
+{
+    m_dataListView->onSearchText();
+}
+
 void MusicListWidget::onMusicPlayed(PlaylistPtr playlist, const MetaPtr meta)
 {
     m_dataListView->onMusicPlayed(playlist, meta);
@@ -385,7 +391,7 @@ void MusicListWidget::onMusicListRemoved(PlaylistPtr playlist, const MetaPtrList
 {
     Q_UNUSED(playlist)
     Q_UNUSED(metalist)
-    m_dataListView->onMusiclistUpdate();
+    m_dataListView->onMusicListRemoved(playlist, metalist);
 }
 
 void MusicListWidget::onMusiclistUpdate()

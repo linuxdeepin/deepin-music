@@ -462,9 +462,9 @@ MetaPtr Playlist::removeOneMusic(const MetaPtr meta)
             }
         }
     } else if (id() == ArtistMusicListID) {
-        QString artistStr = meta->album;
+        QString artistStr = meta->artist;
         if (artistStr.isEmpty()) {
-            artistStr = tr("Unknown artist");;
+            artistStr = tr("Unknown artist");
         }
         if (playMusicTypePtrListData.metas.contains(artistStr)) {
             playMusicTypePtrListData.metas[artistStr]->playlistMeta.sortMetas.removeOne(meta->hash);

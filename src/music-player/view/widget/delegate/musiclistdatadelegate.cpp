@@ -111,7 +111,8 @@ void MusicListDataDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
             painter->fillRect(fillRect, fillColor);
 
             QFont font = option.font;
-            font.setFamily("SourceHanSansSC-Normal");
+            font.setFamily("SourceHanSansSC");
+            font.setWeight(QFont::Normal);
             font.setPixelSize(14);
             painter->setFont(font);
             QFontMetrics fm(font);
@@ -203,10 +204,12 @@ void MusicListDataDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
             //QStyledItemDelegate::paint(painter, option, index);
 
             QFont font11 = option.font;
-            font11.setFamily("SourceHanSansSC-Normal");
+            font11.setFamily("SourceHanSansSC");
+            font11.setWeight(QFont::Normal);
             font11.setPixelSize(11);
             QFont font14 = option.font;
-            font14.setFamily("SourceHanSansSC-Normal");
+            font14.setFamily("SourceHanSansSC");
+            font14.setWeight(QFont::Normal);
             font14.setPixelSize(14);
 
             QFontMetrics songsFm(font14);
@@ -216,7 +219,8 @@ void MusicListDataDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
             if (listview->playing() != nullptr && listview->playing()->artist == PlayMusicTypePtr->name) {
                 nameColor = QColor("#2CA7F8");
                 otherColor = QColor("#2CA7F8");
-                font14.setFamily("SourceHanSansSC-Medium");
+                font14.setFamily("SourceHanSansSC");
+                font14.setWeight(QFont::Medium);
             }
             //icon
             if (playlistPtr->searchStr().isEmpty()) {
@@ -272,10 +276,12 @@ void MusicListDataDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
 
         } else {
             QFont font11 = option.font;
-            font11.setFamily("SourceHanSansSC-Normal");
+            font11.setFamily("SourceHanSansSC");
+            font11.setWeight(QFont::Normal);
             font11.setPixelSize(11);
             QFont font14 = option.font;
-            font14.setFamily("SourceHanSansSC-Normal");
+            font14.setFamily("SourceHanSansSC");
+            font14.setWeight(QFont::Normal);
             font14.setPixelSize(14);
 
             int rowCount = listview->model()->rowCount();
@@ -290,7 +296,8 @@ void MusicListDataDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
             if (listview->playing() != nullptr && listview->playing()->album == PlayMusicTypePtr->name) {
                 nameColor = QColor("#2CA7F8");
                 otherColor = QColor("#2CA7F8");
-                font14.setFamily("SourceHanSansSC-Medium");
+                font14.setFamily("SourceHanSansSC");
+                font14.setWeight(QFont::Medium);
                 QRect numRect(0, option.rect.y(), 40, option.rect.height());
                 auto playingIcon = d->playingIcon;
                 if (option.state & QStyle::State_Selected) {

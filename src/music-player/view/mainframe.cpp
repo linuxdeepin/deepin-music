@@ -274,13 +274,6 @@ void MainFramePrivate::postInitUI()
 {
     Q_Q(MainFrame);
 
-    QString descriptionText = MainFrame::tr("Deepin Music is a beautiful and simple music player that plays local audios. It supports viewing lyrics during playback, playing lossless audio and playlist customization, etc.");
-    QString acknowledgementLink = "https://www.deepin.org/acknowledgments/deepin-music#thanks";
-    qApp->setProductName(QApplication::tr("Deepin Music"));
-    qApp->setApplicationAcknowledgementPage(acknowledgementLink);
-    qApp->setProductIcon(QIcon::fromTheme("deepin-music"));
-    qApp->setApplicationDescription(descriptionText);
-
     loadWidget->hide();
     newSonglistAction->setDisabled(true);
 
@@ -451,9 +444,10 @@ void MainFramePrivate::updateSize(QSize newSize)
 
     auto titleBarHeight =  titlebar->height();
     titlebar->raise();
-    titlebar->move(0, 0);
+    //titlebar->move(0, 0);
+    //titlebar->resize(newSize.width(), titleBarHeight);
     titlebar->resize(newSize.width(), titleBarHeight);
-    titlebarwidget->setFixedSize(newSize.width() - titlebar->buttonAreaWidth() - FooterHeight, titleBarHeight);
+    //titlebarwidget->setFixedSize(newSize.width() - titlebar->buttonAreaWidth() - FooterHeight, titleBarHeight);
 
     importWidget->setFixedSize(newSize);
 
@@ -552,19 +546,29 @@ MainFrame::MainFrame(QWidget *parent) :
 {
     setObjectName("MainFrame");
 
+    QString descriptionText = MainFrame::tr("Music is a local music player with beautiful design and simple functions.");
+    QString acknowledgementLink = "https://www.deepin.org/acknowledgments/deepin-music#thanks";
+    qApp->setProductName(QApplication::tr("Music"));
+    qApp->setApplicationAcknowledgementPage(acknowledgementLink);
+    qApp->setProductIcon(QIcon::fromTheme("deepin-music"));
+    qApp->setApplicationDescription(descriptionText);
+
     Q_D(MainFrame);
     d->titlebarwidget = new TitlebarWidget(this);
-    d->titlebarwidget->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Ignored);
+    d->titlebarwidget->setFixedSize(365, 50);
+    //d->titlebarwidget->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
     d->searchResult = new SearchResult(this);
-    d->searchResult->hide();
+    d->searchResult->show();
     d->titlebarwidget->setResultWidget(d->searchResult);
-    d->titlebarwidget->hide();
+    d->titlebarwidget->setEnabled(false);
+    d->titlebarwidget->show();
 
     d->titlebar = titlebar();
     d->titlebar->setFixedHeight(50);
-    d->titlebar->setTitle(MainFrame::tr("Deepin Music"));
+    //d->titlebar->setTitle(MainFrame::tr("Deepin Music"));
     d->titlebar->setIcon(QIcon(":/mpimage/light/deepin_music_player.svg"));    //titlebar->setCustomWidget(titlebarwidget, Qt::AlignLeft, false);
-    d->titlebar->addWidget(d->titlebarwidget, Qt::AlignLeft);
+    d->titlebar->setCustomWidget(d->titlebarwidget, true);
+    d->titlebar->resize(width(), 50);
 }
 
 MainFrame::~MainFrame()
@@ -664,12 +668,16 @@ void MainFrame::binding(Presenter *presenter)
     });
 #endif
 
-    connect(d->titlebarwidget, &TitlebarWidget::locateMusicInAllMusiclist,
-            presenter, &Presenter::onLocateMusicAtAll);
+//    connect(d->titlebarwidget, &TitlebarWidget::locateMusicInAllMusiclist,
+//            presenter, &Presenter::onLocateMusicAtAll);
+//    connect(d->titlebarwidget, &TitlebarWidget::search,
+//            presenter, &Presenter::onSearchText);
+//    connect(d->titlebarwidget, &TitlebarWidget::searchExited,
+//            presenter, &Presenter::onExitSearch);
     connect(d->titlebarwidget, &TitlebarWidget::search,
-            presenter, &Presenter::onSearchText);
+            d->musicListWidget, &MusicListWidget::onSearchText);
     connect(d->titlebarwidget, &TitlebarWidget::searchExited,
-            presenter, &Presenter::onExitSearch);
+            d->musicListWidget, &MusicListWidget::onSearchText);
 
     connect(d->importWidget, &ImportWidget::scanMusicDirectory,
             presenter, &Presenter::onScanMusicDirectory);
@@ -1055,6 +1063,7 @@ void MainFrame::updateUI()
     Q_D(MainFrame);
     setCoverBackground(coverBackground());
     d->lyricWidget->updateUI();
+    d->titlebarwidget->setEnabled(true);
     d->titlebarwidget->show();
 }
 

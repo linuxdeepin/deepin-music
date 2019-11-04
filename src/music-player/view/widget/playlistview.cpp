@@ -55,7 +55,8 @@ public:
     PlaylistModel      *model        = nullptr;
     PlayItemDelegate   *delegate     = nullptr;
     int                 themeType    = 1;
-    MetaPtr             playing       = nullptr;
+    MetaPtr             playing      = nullptr;
+    bool                searchFlag   = true;
 
     MetaPtrList         playMetaPtrList;
     QPixmap              playingPixmap = QPixmap(":/mpimage/light/music1.svg");
@@ -64,13 +65,14 @@ public:
     Q_DECLARE_PUBLIC(PlayListView)
 };
 
-PlayListView::PlayListView(QWidget *parent)
+PlayListView::PlayListView(bool searchFlag, QWidget *parent)
     : DListView(parent), d_ptr(new PlayListViewPrivate(this))
 {
     Q_D(PlayListView);
 
     setObjectName("PlayListView");
 
+    d->searchFlag = searchFlag;
     d->model = new PlaylistModel(0, 1, this);
     setModel(d->model);
 
@@ -283,6 +285,8 @@ void PlayListView::onMusiclistChanged(PlaylistPtr playlist)
     d->playMetaPtrList.clear();
 
     QString searchStr = playlist->searchStr();
+    if (!d->searchFlag)
+        searchStr.clear();
     bool chineseFlag = false;
     for (auto ch : searchStr) {
         if (DMusic::PinyinSearch::isChinese(ch)) {
@@ -291,7 +295,7 @@ void PlayListView::onMusiclistChanged(PlaylistPtr playlist)
         }
     }
     for (auto meta : playlist->allmusic()) {
-        if (playlist->searchStr().isEmpty()) {
+        if (searchStr.isEmpty()) {
             d->addMedia(meta);
             d->playMetaPtrList.append(meta);
         } else {
@@ -574,6 +578,11 @@ void PlayListView::showContextMenu(const QPoint &pos,
     }
 
     myMenu.exec(globalPos);
+}
+
+void PlayListView::mouseMoveEvent(QMouseEvent *event)
+{
+
 }
 
 void PlayListView::dragEnterEvent(QDragEnterEvent *event)

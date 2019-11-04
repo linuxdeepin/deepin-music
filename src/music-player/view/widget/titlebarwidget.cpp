@@ -57,22 +57,22 @@ TitlebarWidget::TitlebarWidget(QWidget *parent) :
     setFocusPolicy(Qt::NoFocus);
     setObjectName("TitlebarWidget");
 
-    auto layout = new QHBoxLayout(this);
-    layout->setContentsMargins(5, 5, 10, 5);
+    auto layout = new QHBoxLayout();
+    //layout->setContentsMargins(0, 0, 0, 0);
 
-    auto leftWidget = new DWidget;
-    leftWidget->setObjectName("TitleLeft");
-    leftWidget->setFixedWidth(100);
-    auto leftLayout = new QHBoxLayout(leftWidget);
-    leftLayout->setSpacing(10);
-    leftLayout->setMargin(0);
+    //auto leftWidget = new DWidget;
+    // leftWidget->setObjectName("TitleLeft");
+    // leftWidget->setFixedWidth(100);
+    //auto leftLayout = new QHBoxLayout(leftWidget);
+    //leftLayout->setSpacing(10);
+    //leftLayout->setMargin(0);
 
-    auto iconLabel = new DLabel;
-    iconLabel->setObjectName("TitleIcon");
-    iconLabel->setFixedSize(32, 32);
+    //auto iconLabel = new DLabel;
+    //iconLabel->setObjectName("TitleIcon");
+    //iconLabel->setFixedSize(32, 32);
 
-    leftLayout->addWidget(iconLabel, 0, Qt::AlignCenter);
-    leftLayout->addStretch();
+    //leftLayout->addWidget(iconLabel, 0, Qt::AlignCenter);
+    //leftLayout->addStretch();
 
     d->search = new SearchEdit(this);
     d->search->setObjectName("TitleSearch");
@@ -80,15 +80,16 @@ TitlebarWidget::TitlebarWidget(QWidget *parent) :
     d->search->setPlaceHolder(tr("Search"));
     d->search->clear();
 
-    auto rightWidget = new DWidget;
-    rightWidget->setObjectName("TitleLeft");
-    rightWidget->setFixedWidth(1);
+    //auto rightWidget = new DWidget;
+    // rightWidget->setObjectName("TitleLeft");
+    //rightWidget->setFixedWidth(1);
 
-    layout->addWidget(leftWidget, 0,  Qt::AlignCenter);
-    layout->addStretch();
-    layout->addWidget(d->search, 0,  Qt::AlignCenter);
-    layout->addStretch();
-    layout->addWidget(rightWidget, 0,  Qt::AlignCenter);
+    //layout->addWidget(leftWidget, 0,  Qt::AlignCenter);
+    //layout->addStretch();
+    layout->addWidget(d->search);
+    setLayout(layout);
+    //layout->addStretch();
+    //layout->addWidget(rightWidget, 0,  Qt::AlignCenter);
 
     connect(d->search, &SearchEdit::locateMusic, this, &TitlebarWidget::locateMusicInAllMusiclist);
     connect(d->search, &SearchEdit::searchText, this, &TitlebarWidget::search);
@@ -135,8 +136,10 @@ void TitlebarWidget::setViewname(const QString &viewname)
 void TitlebarWidget::selectPlaylist(PlaylistPtr playlistPtr)
 {
     Q_D(TitlebarWidget);
-    d->search->selectPlaylist(playlistPtr);
-    d->search->clear();
+    if (playlistPtr != d->search->curPlaylistPtr()) {
+        d->search->selectPlaylist(playlistPtr);
+        d->search->clear();
+    }
 }
 
 void TitlebarWidget::resizeEvent(QResizeEvent *event)
@@ -148,10 +151,10 @@ void TitlebarWidget::resizeEvent(QResizeEvent *event)
 void TitlebarWidgetPrivate::fixSearchPosition()
 {
     Q_Q(TitlebarWidget);
-    auto fixSize = QPoint(search->width() / 2, search->height() / 2);
-    auto fixPos = q->geometry().center() - fixSize;
-    search->setGeometry(fixPos.x(), fixPos.y(),
-                        search->width(), search->height());
+    //auto fixSize = QPoint(search->width() / 2, search->height() / 2);
+    // auto fixPos = q->geometry().center() - fixSize;
+    // search->setGeometry(fixPos.x(), fixPos.y(),
+    //                    search->width(), search->height());
 
-    qDebug() << fixPos << search->size() << search->parent();
+    //qDebug() << fixPos << search->size() << search->parent();
 }

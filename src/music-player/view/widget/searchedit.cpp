@@ -62,6 +62,7 @@ SearchEdit::SearchEdit(QWidget *parent) : DSearchEdit(parent)
 void SearchEdit::setResultWidget(SearchResult *result)
 {
     m_result = result;
+
     m_result->hide();
 
     connect(m_result, &SearchResult::locateMusic,
@@ -178,7 +179,7 @@ void SearchEdit::onTextChanged()
         // parent is MainFrame
         QPoint bottomLeft = rect.bottomLeft();
         bottomLeft = mapTo(parentWidget()->parentWidget(), bottomLeft);
-        m_result->move(bottomLeft.x(), bottomLeft.y());
+        m_result->move(bottomLeft.x() + width() / 2 + 24, bottomLeft.y() + 5);
         m_result->setFocusPolicy(Qt::StrongFocus);
         m_result->raise();
     } else {

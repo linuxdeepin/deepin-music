@@ -174,6 +174,12 @@ PlaylistPtr MusicListDataView::playlist() const
     return d->model->playlist();
 }
 
+bool MusicListDataView::isEmpty()
+{
+    Q_D(MusicListDataView);
+    return d->curPlayMusicTypePtrList.isEmpty();
+}
+
 void MusicListDataView::setViewModeFlag(QListView::ViewMode mode)
 {
     if (mode == QListView::IconMode) {
@@ -236,6 +242,11 @@ QPixmap MusicListDataView::getPlayPixmap() const
 {
     Q_D(const MusicListDataView);
     return d->playingPixmap;
+}
+
+void MusicListDataView::mouseMoveEvent(QMouseEvent *event)
+{
+
 }
 
 void MusicListDataView::onMusiclistChanged(PlaylistPtr playlist)

@@ -25,7 +25,7 @@
 #include <dabstractdialog.h>
 DWIDGET_USE_NAMESPACE
 
-#include <DFloatingWidget>
+#include <DFrame>
 
 #include <DListView>
 
@@ -34,7 +34,7 @@ DWIDGET_USE_NAMESPACE
 class PushButton;
 class QStringListModel;
 
-class SearchResult : public DFloatingWidget
+class SearchResult : public DFrame
 {
     Q_OBJECT
 public:

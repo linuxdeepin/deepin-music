@@ -80,7 +80,8 @@ void WaveformScale::paintEvent(QPaintEvent *)
 
     painter.setPen(Qt::white);
     auto font  = painter.font();
-    font.setFamily("SourceHanSansSC-Normal");
+    font.setFamily("SourceHanSansSC");
+    font.setWeight(QFont::Normal);
     font.setPixelSize(12);
     painter.setFont(font);
     painter.drawText(t_textRect, Qt::AlignCenter, DMusic::lengthString(curValue));

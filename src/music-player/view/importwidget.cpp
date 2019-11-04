@@ -66,7 +66,8 @@ ImportWidget::ImportWidget(QWidget *parent) : DFrame(parent), d_ptr(new ImportWi
 
     d->importButton = new DPushButton;
     auto importButtonFont = d->importButton->font();
-    importButtonFont.setFamily("SourceHanSansSC-Normal");
+    importButtonFont.setFamily("SourceHanSansSC");
+    importButtonFont.setWeight(QFont::Normal);
     importButtonFont.setPixelSize(14);
     d->importButton->setFont(importButtonFont);
     auto pl = d->importButton->palette();
@@ -85,7 +86,8 @@ ImportWidget::ImportWidget(QWidget *parent) : DFrame(parent), d_ptr(new ImportWi
     d->text = new DLabel;
     d->text->setObjectName("ImportViewText");
     auto textFont = d->text->font();
-    textFont.setFamily("SourceHanSansSC-Normal");
+    textFont.setFamily("SourceHanSansSC");
+    textFont.setWeight(QFont::Normal);
     textFont.setPixelSize(12);
     d->text->setFont(textFont);
     d->text->setFixedHeight(18);

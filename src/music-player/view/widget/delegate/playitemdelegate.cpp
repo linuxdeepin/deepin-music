@@ -254,7 +254,8 @@ void PlayItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
         int fillAllHeight = 34;
 
         QFont font = option.font;
-        font.setFamily("SourceHanSansSC-Normal");
+        font.setFamily("SourceHanSansSC");
+        font.setWeight(QFont::Normal);
         font.setPixelSize(13);
         painter->setFont(font);
         QFontMetrics fm(font);
@@ -320,10 +321,12 @@ void PlayItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
     painter->save();
 
     QFont font11 = option.font;
-    font11.setFamily("SourceHanSansSC-Normal");
+    font11.setFamily("SourceHanSansSC");
+    font11.setWeight(QFont::Normal);
     font11.setPixelSize(11);
     QFont font14 = option.font;
-    font14.setFamily("SourceHanSansSC-Normal");
+    font14.setFamily("SourceHanSansSC");
+    font14.setWeight(QFont::Normal);
     font14.setPixelSize(14);
 
     painter->setRenderHint(QPainter::Antialiasing);
@@ -376,7 +379,8 @@ void PlayItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
         if (activeMeta == meta) {
             nameColor = QColor("#2CA7F8");
             otherColor = QColor("#2CA7F8");
-            font14.setFamily("SourceHanSansSC-Medium");
+            font14.setFamily("SourceHanSansSC");
+            font14.setWeight(QFont::Medium);
         }
         switch (col) {
         case Number: {

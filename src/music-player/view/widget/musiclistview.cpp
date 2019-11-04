@@ -47,7 +47,8 @@ MusicListView::MusicListView(QWidget *parent) : DListView(parent)
     playingPixmap = QPixmap(":/mpimage/light/music1.svg");
 
     auto font = this->font();
-    font.setFamily("SourceHanSansSC-Medium");
+    font.setFamily("SourceHanSansSC");
+    font.setWeight(QFont::Medium);
     font.setPixelSize(14);
     setFont(font);
 
@@ -75,6 +76,9 @@ MusicListView::MusicListView(QWidget *parent) : DListView(parent)
 
     connect(model, &QStandardItemModel::itemChanged,
     this, [ = ](QStandardItem * item) {
+        auto curItemRow = item->row();
+        if (curItemRow < 0 || curItemRow >= allPlaylists.size())
+            return;
         auto playlistPtr = allPlaylists[item->row()];
         if (playlistPtr->displayName() != item->text()) {
             if (item->text().isEmpty()) {
@@ -116,7 +120,10 @@ MusicListView::MusicListView(QWidget *parent) : DListView(parent)
         for (int i = 0; i < model->rowCount(); i++) {
             auto curIndex = model->index(i, 0);
             auto curStandardItem = dynamic_cast<DStandardItem *>(model->itemFromIndex(curIndex));
-            auto playlist = allPlaylists[curStandardItem->row()];
+            auto curItemRow = curStandardItem->row();
+            if (curItemRow < 0 || curItemRow >= allPlaylists.size())
+                continue;
+            auto playlist = allPlaylists[curItemRow];
             QString typeStr;
             if (current == curIndex) {
                 typeStr = "active";
@@ -271,7 +278,10 @@ void MusicListView::clearSelected()
     for (int i = 0; i < model->rowCount(); i++) {
         auto curIndex = model->index(i, 0);
         auto curStandardItem = dynamic_cast<DStandardItem *>(model->itemFromIndex(curIndex));
-        auto playlist = allPlaylists[curStandardItem->row()];
+        auto curItemRow = curStandardItem->row();
+        if (curItemRow < 0 || curItemRow >= allPlaylists.size())
+            continue;
+        auto playlist = allPlaylists[curItemRow];
         QIcon icon = QIcon(QString(":/mpimage/%1/%2/famous_ballad_%2.svg").arg(rStr).arg(typeStr));
         if (playlist->id() == AlbumMusicListID) {
             icon = QIcon(QString(":/mpimage/%1/%2/album_%2.svg").arg(rStr).arg(typeStr));
@@ -422,6 +432,9 @@ void MusicListView::slotTheme(int type)
         for (int i = 0; i < model->rowCount(); i++) {
             auto curIndex = model->index(i, 0);
             auto curStandardItem = dynamic_cast<DStandardItem *>(model->itemFromIndex(curIndex));
+            auto curItemRow = curStandardItem->row();
+            if (curItemRow < 0 || curItemRow >= allPlaylists.size())
+                continue;
             auto playlist = allPlaylists[curStandardItem->row()];
             QString typeStr;
             if (current == curIndex) {

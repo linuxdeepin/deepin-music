@@ -210,17 +210,20 @@ void SearchLyricsWidget::createList()
 
         lyricNmae->setText(m_lyricList[i].lyricsName);
         QFont font;
-        font.setFamily("SourceHanSansSC-Medium");
+        font.setFamily("SourceHanSansSC");
+        font.setWeight(QFont::Medium);
         font.setPixelSize(14);
         lyricNmae->setFont(font);
         singerName->setText(m_lyricList[i].singerName);
         QFont font2;
-        font2.setFamily("SourceHanSansSC-Medium");
+        font2.setFamily("SourceHanSansSC");
+        font2.setWeight(QFont::Medium);
         font2.setPixelSize(12);
         singerName->setFont(font2);
         duration->setText(m_lyricList[i].duration);
         QFont font1;
-        font1.setFamily("SourceHanSansSC-Medium");
+        font1.setFamily("SourceHanSansSC");
+        font1.setWeight(QFont::Medium);
         font1.setPixelSize(12);
         duration->setFont(font1);
 

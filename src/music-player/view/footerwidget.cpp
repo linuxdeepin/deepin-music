@@ -253,7 +253,8 @@ Footer::Footer(QWidget *parent) :
 
     d->title = new Label;
     auto titleFont = d->title->font();
-    titleFont.setFamily("SourceHanSansSC-Normal");
+    titleFont.setFamily("SourceHanSansSC");
+    titleFont.setWeight(QFont::Normal);
     titleFont.setPixelSize(12);
     d->title->setFont(titleFont);
     d->title->setObjectName("FooterTitle");
@@ -263,7 +264,8 @@ Footer::Footer(QWidget *parent) :
 
     d->artist = new Label;
     auto artistFont = d->artist->font();
-    artistFont.setFamily("SourceHanSansSC-Normal");
+    artistFont.setFamily("SourceHanSansSC");
+    artistFont.setWeight(QFont::Normal);
     artistFont.setPixelSize(11);
     d->artist->setFont(titleFont);
     d->artist->setObjectName("FooterArtist");

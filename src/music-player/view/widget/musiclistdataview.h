@@ -35,6 +35,8 @@ public:
 
     PlaylistPtr playlist() const;
 
+    bool isEmpty();
+
     void setViewModeFlag(QListView::ViewMode mode);
     void setPlaying(const MetaPtr);
     MetaPtr playing() const;
@@ -61,6 +63,9 @@ signals:
     void musiclistRemove(const MetaPtrList  &metalist);
     void musiclistDelete(const MetaPtrList  &metalist);
     void modeChanged(int);
+
+protected:
+    virtual void mouseMoveEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
 
 public:
     void onMusiclistChanged(PlaylistPtr playlist);

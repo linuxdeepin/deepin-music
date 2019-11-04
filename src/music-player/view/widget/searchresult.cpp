@@ -27,19 +27,21 @@
 #include <QStringListModel>
 
 #include <DListView>
+#include <DApplicationHelper>
 
 #include "pushbutton.h"
 
-SearchResult::SearchResult(QWidget *parent) : DFloatingWidget(parent)
+SearchResult::SearchResult(QWidget *parent) : DFrame(parent)
 {
     auto vlayout = new QVBoxLayout();
     setLayout(vlayout);
-    vlayout->setContentsMargins(2, 0, 2, 0);
+    vlayout->setContentsMargins(0, 4, 0, 0);
     vlayout->setSpacing(0);
 
-    setFixedWidth(354);
+    setFixedWidth(350);
+    setFrameRounded(true);
 
-    m_searchResult = new DListView;
+    m_searchResult = new DListView(this);
     m_searchResult->setMouseTracking(true);
     m_searchResult->setObjectName("SearchResultList");
     m_searchResult->setSelectionMode(QListView::SingleSelection);
@@ -48,8 +50,15 @@ SearchResult::SearchResult(QWidget *parent) : DFloatingWidget(parent)
     m_searchResult->setFocusPolicy(Qt::NoFocus);
     m_searchResult->setIconSize( QSize(34, 34) );
     m_searchResult->setGridSize( QSize(34, 34) );
+    m_searchResult->setItemSize(QSize(34, 34));
+    m_searchResult->setItemSpacing(1);
     m_searchResult->setViewportMargins(0, 0, 0, 0);
-    m_searchResult->setFixedWidth(350);
+    m_searchResult->setFixedWidth(348);
+
+    m_searchResult->setFrameShape(QFrame::NoFrame);
+    DPalette pa = DApplicationHelper::instance()->palette(m_searchResult);
+    pa.setColor(DPalette::ItemBackground, Qt::transparent);
+    DApplicationHelper::instance()->setPalette(m_searchResult, pa);
 
     m_model = new QStringListModel;
 
@@ -74,9 +83,9 @@ void SearchResult::autoResize()
     int rowCount = m_model->rowCount();
     if (rowCount > 10)
         rowCount = 10;
-    m_searchResult->setFixedHeight(rowCount * 34 + 2);
+    m_searchResult->setFixedHeight(rowCount * 34);
 
-    setFixedHeight(m_searchResult->height() + 11);
+    setFixedHeight(m_searchResult->height() + 4);
 
     m_searchResult->setVisible(!(0 == m_model->rowCount()));
     this->adjustSize();
@@ -97,13 +106,19 @@ void SearchResult::setResultList(const QStringList &titlelist, const QStringList
 
 void SearchResult::selectUp()
 {
-    auto newSelectedRow = m_searchResult->currentIndex().row() - 1;
-    if (newSelectedRow < 0) {
-        m_searchResult->setCurrentIndex(QModelIndex());
-        return;
+    if (!m_searchResult->currentIndex().isValid()) {
+        auto newSelectedRow = m_model->rowCount() - 1;
+        QModelIndex indexOfTheCellIWant = m_model->index(newSelectedRow, 0);
+        m_searchResult->setCurrentIndex(indexOfTheCellIWant);
+    } else {
+        auto newSelectedRow = m_searchResult->currentIndex().row() - 1;
+        if (newSelectedRow < 0) {
+            m_searchResult->setCurrentIndex(QModelIndex());
+            return;
+        }
+        QModelIndex indexOfTheCellIWant = m_model->index(newSelectedRow, 0);
+        m_searchResult->setCurrentIndex(indexOfTheCellIWant);
     }
-    QModelIndex indexOfTheCellIWant = m_model->index(newSelectedRow, 0);
-    m_searchResult->setCurrentIndex(indexOfTheCellIWant);
 }
 
 void SearchResult::selectDown()
@@ -132,7 +147,7 @@ QString SearchResult::currentStr()
 void SearchResult::leaveEvent(QEvent *event)
 {
     m_searchResult->setCurrentIndex(QModelIndex());
-    DFloatingWidget::leaveEvent(event);
+    QFrame::leaveEvent(event);
 }
 
 void SearchResult::onReturnPressed()

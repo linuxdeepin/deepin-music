@@ -60,7 +60,8 @@ CloseConfirmDialog::CloseConfirmDialog(QWidget *parent) :
     groupLabel->setObjectName("CloseConfirmDialogLabel");
 
     auto groupLabelFont = groupLabel->font();
-    groupLabelFont.setFamily("SourceHanSansSC-Medium");
+    groupLabelFont.setFamily("SourceHanSansSC");
+    groupLabelFont.setWeight(QFont::Medium);
     groupLabelFont.setPixelSize(14);
     groupLabel->setFont(groupLabelFont);
 
@@ -81,7 +82,8 @@ CloseConfirmDialog::CloseConfirmDialog(QWidget *parent) :
     d->remember = new DCheckBox(tr("Do not ask again"));
 
     auto font = d->exitBt->font();
-    font.setFamily("SourceHanSansSC-Medium");
+    font.setFamily("SourceHanSansSC");
+    font.setWeight(QFont::Medium);
     font.setPixelSize(14);
 
     d->exitBt->setFont(font);
