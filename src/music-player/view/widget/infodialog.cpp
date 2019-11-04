@@ -56,7 +56,7 @@ public:
     void updateLabelSize();
 
 //    DBlurEffectWidget   *bgBlurWidget   = nullptr;
-    DFloatingWidget              *infoGridFrame  = nullptr;
+    DFrame              *infoGridFrame  = nullptr;
     Cover               *cover          = nullptr;
     DLabel              *title          = nullptr;
     DWindowCloseButton  *closeBt        = nullptr;
@@ -73,6 +73,7 @@ void InfoDialogPrivate::initUI()
     q->setObjectName("InfoDialog");
     q->setFixedWidth(320);
 //    q->setWindowFlags(q->windowFlags() | Qt::WindowStaysOnTopHint);
+    q->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Expanding);
 
     auto layout = new QVBoxLayout(q);
     layout->setSpacing(0);
@@ -99,7 +100,8 @@ void InfoDialogPrivate::initUI()
     split->setObjectName("InfoSplit");
     split->setFixedSize(300, 1);
 
-    infoGridFrame = new DFloatingWidget;
+    infoGridFrame = new DFrame;
+    infoGridFrame->setFrameRounded(true);
     infoGridFrame->setMaximumWidth(300);
     infoGridFrame->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     DPalette pl = infoGridFrame->palette();
@@ -190,14 +192,15 @@ void InfoDialogPrivate::initUI()
 void InfoDialogPrivate::updateLabelSize()
 {
     Q_Q(InfoDialog);
+    title->adjustSize();
 //    auto h = 0;
 //    for (auto label : valueList) {
-//        label->adjustSize();
+////        label->adjustSize();
 //        h += label->size().height() + 6;
 //    }
 //    infoGridFrame->setFixedHeight(h);
-//    infoGridFrame->adjustSize();
-//    q->adjustSize();
+    infoGridFrame->adjustSize();
+    q->adjustSize();
 }
 
 InfoDialog::InfoDialog(QWidget *parent)
@@ -270,10 +273,12 @@ void InfoDialog::setThemeType(int type)
         QColor windowColor("#FFFFFF");
         windowColor.setAlphaF(0.7);
         pl.setColor(DPalette::Window, windowColor);
+
         QColor sbcolor("#000000");
         sbcolor.setAlphaF(0.05);
         pl.setColor(DPalette::Shadow, sbcolor);
         d->infoGridFrame->setPalette(pl);
+        d->infoGridFrame->setBackgroundRole(DPalette::Window);
     } else {
         rStr = "dark";
 
@@ -285,5 +290,6 @@ void InfoDialog::setThemeType(int type)
         sbcolor.setAlphaF(0.1);
         pl.setColor(DPalette::Shadow, sbcolor);
         d->infoGridFrame->setPalette(pl);
+        d->infoGridFrame->setBackgroundRole(DPalette::Window);
     }
 }

@@ -60,7 +60,7 @@ Q_SIGNALS:
 public slots:
     void onAudioBufferProbed(const QAudioBuffer &buffer);
     void onProgressChanged(qint64 value, qint64 duration);
-    void onAudioBuffer(QVector<float> allData);
+    void onAudioBuffer(const QVector<float> &allData, const QString &hash);
 
 protected:
     void paintEvent(QPaintEvent *event) Q_DECL_OVERRIDE;

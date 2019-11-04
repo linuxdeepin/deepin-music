@@ -61,6 +61,7 @@ signals:
     void resume(PlaylistPtr playlist, const MetaPtr meta);
     void pause(PlaylistPtr playlist, const MetaPtr meta);
     void modeChanged(int);
+    void importSelectFiles(PlaylistPtr playlist, QStringList urllist);
 
     void requestCustomContextMenu(const QPoint &pos, char type);
     void addToPlaylist(PlaylistPtr playlist, const MetaPtrList  &metalist);
@@ -68,6 +69,12 @@ signals:
     void musiclistDelete(PlaylistPtr playlist, const MetaPtrList  &metalist);
     void showInfoDialog(const MetaPtr meta);
     void updateMetaCodec(const MetaPtr meta);
+    void addMetasFavourite(const MetaPtrList  &metalist);
+    void removeMetasFavourite(const MetaPtrList  &metalist);
+
+protected:
+    virtual void dragEnterEvent(QDragEnterEvent *event) Q_DECL_OVERRIDE;
+    virtual void dropEvent(QDropEvent *event) Q_DECL_OVERRIDE;
 
 private:
     QScopedPointer<MusicListDataWidgetPrivate> d_ptr;

@@ -48,6 +48,7 @@ LyricLabel::LyricLabel(bool touch, QWidget *parent)
      menu->addAction(colorNormal);
      menu->addAction(colorHighLight);
      connect(this, SIGNAL(rightClicked()), menu, SLOT(menuVisiable()));*/
+    //setMinimumWidth(600);
 }
 
 void LyricLabel::getFromFile(QString dir)
@@ -76,9 +77,11 @@ void LyricLabel::paintItem(QPainter *painter, int index, const QRect &rect)
 
         painter->setRenderHint(QPainter::Antialiasing, true);
 
-        QPen pen(*lyricNormal, 1, Qt::SolidLine, Qt::SquareCap, Qt::RoundJoin);
+        QColor normalcolor = *lyricHighlight;
+        normalcolor.setAlphaF(0.5);
+        QPen pen(normalcolor, 1, Qt::SolidLine, Qt::SquareCap, Qt::RoundJoin);
 
-        painter->setBrush(*lyricNormal);
+        painter->setBrush(normalcolor);
 
         painter->setPen(pen);
 
@@ -131,7 +134,9 @@ void LyricLabel::slotTheme(int type)
 {
     m_themetype = type;
     if (type == 1) {
-        *lyricNormal =  QColor("#526A7F");
+        QColor normalcolor = "#000000";
+        normalcolor.setAlphaF(0.5);
+        *lyricNormal =  normalcolor;
         *lyricHighlight =  QColor("#000000");
     } else {
         *lyricNormal =  QColor("#C0C6D4");

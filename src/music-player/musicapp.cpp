@@ -130,8 +130,8 @@ void MusicAppPrivate::onDataPrepared()
 
 void MusicAppPrivate::onQuit()
 {
-//    appPresenter->deleteLater();
-//    playerFrame->deleteLater();
+    presenter->deleteLater();
+    playerFrame->deleteLater();
 //    this->deleteLater();
 }
 

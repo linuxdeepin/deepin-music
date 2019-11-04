@@ -158,46 +158,31 @@
                             "key": "play_pause",
                             "name": "Play/Pause",
                             "type": "shortcut",
-                            "default": [
-                                "201326592",
-                                "80"
-                            ]
+                            "default": "Space"
                         },
                         {
                             "key": "previous",
                             "name": "Previous",
                             "type": "shortcut",
-                            "default": [
-                                "201326592",
-                                "16777234"
-                            ]
+                            "default": "Ctrl+Left"
                         },
                         {
                             "key": "next",
                             "name": "Next",
                             "type": "shortcut",
-                            "default": [
-                                "201326592",
-                                "16777236"
-                            ]
+                            "default": "Ctrl+Right"
                         },
                         {
                             "key": "volume_up",
                             "name": "Volume up",
                             "type": "shortcut",
-                            "default": [
-                                "201326592",
-                                "16777235"
-                            ]
+                            "default": "Ctrl+Alt+Up"
                         },
                         {
                             "key": "volume_down",
                             "name": "Volume down",
                             "type": "shortcut",
-                            "default": [
-                                "201326592",
-                                "16777237"
-                            ]
+                            "default": "Ctrl+Alt+Down"
                         }
                     ]
                 }

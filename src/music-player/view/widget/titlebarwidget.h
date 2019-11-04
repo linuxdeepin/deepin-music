@@ -42,6 +42,8 @@ public:
     void setResultWidget(SearchResult *);
     void setViewname(const QString &viewname);
 
+    void setEditStatus();
+
 public slots:
     void selectPlaylist(PlaylistPtr playlistPtr);
 

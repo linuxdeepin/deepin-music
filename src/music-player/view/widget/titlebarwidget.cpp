@@ -135,6 +135,12 @@ void TitlebarWidget::setViewname(const QString &viewname)
     d->search->setProperty("viewname", viewname);
 }
 
+void TitlebarWidget::setEditStatus()
+{
+    Q_D(TitlebarWidget);
+    d->search->lineEdit()->setFocus();
+}
+
 void TitlebarWidget::selectPlaylist(PlaylistPtr playlistPtr)
 {
     Q_D(TitlebarWidget);

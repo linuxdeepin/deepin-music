@@ -51,6 +51,9 @@ public:
     QPixmap getPlayPixmap() const;
     QPixmap getSidebarPixmap() const;
 
+    int rowCount();
+    QString firstHash();
+
 signals:
     void addToPlaylist(PlaylistPtr playlist, const MetaPtrList &metalist);
     void removeMusicList(const MetaPtrList  &metalist);
@@ -62,6 +65,8 @@ signals:
     void showInfoDialog(const MetaPtr meta);
     void requestCustomContextMenu(const QPoint &pos);
     void customSort();
+    void addMetasFavourite(const MetaPtrList  &metalist);
+    void removeMetasFavourite(const MetaPtrList  &metalist);
 
 public:
     void onMusiclistChanged(PlaylistPtr playlist);

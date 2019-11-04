@@ -23,6 +23,7 @@
 
 #include <QDebug>
 #include <QKeyEvent>
+#include <QMimeData>
 
 #include <DMenu>
 #include <DDialog>
@@ -31,12 +32,14 @@
 #include <DApplicationHelper>
 
 #include "musiclistviewitem.h"
+#include "./model/musiclistmodel.h"
+#include "playlistview.h"
 
 DGUI_USE_NAMESPACE
 
 MusicListView::MusicListView(QWidget *parent) : DListView(parent)
 {
-    model = new QStandardItemModel(this);
+    model = new MusiclistModel(this);
     setModel(model);
     delegate = new DStyledItemDelegate(this);
     //delegate->setBackgroundType(DStyledItemDelegate::NoBackground);
@@ -45,8 +48,11 @@ MusicListView::MusicListView(QWidget *parent) : DListView(parent)
     delegate->setMargins(delegateMargins);
     setItemDelegate(delegate);
 
-    playingPixmap = QPixmap(":/mpimage/light/music1.svg");
+    setViewportMargins(8, 0, 8, 0);
 
+    playingPixmap = QPixmap(":/mpimage/light/music1.svg");
+    albumPixmap = QPixmap(":/mpimage/light/music_withe_sidebar/music1.svg");
+    defaultPixmap = QPixmap(":/mpimage/light/music_withe_sidebar/music1.svg");
     auto font = this->font();
     font.setFamily("SourceHanSansSC");
     font.setWeight(QFont::Medium);
@@ -55,7 +61,7 @@ MusicListView::MusicListView(QWidget *parent) : DListView(parent)
 
     setIconSize( QSize(20, 20) );
 //    setGridSize( QSize(40, 40) );
-//    setItemSize(QSize(40, 40));
+    setItemSize(QSize(40, 40));
 
     setFrameShape(QFrame::NoFrame);
 
@@ -63,6 +69,8 @@ MusicListView::MusicListView(QWidget *parent) : DListView(parent)
     pa.setColor(DPalette::ItemBackground, Qt::transparent);
     DApplicationHelper::instance()->setPalette(this, pa);
 
+    setAcceptDrops(true);
+    setDropIndicatorShown(true);
     setSelectionMode(QListView::SingleSelection);
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
@@ -125,9 +133,26 @@ MusicListView::MusicListView(QWidget *parent) : DListView(parent)
             if (curItemRow < 0 || curItemRow >= allPlaylists.size())
                 continue;
             auto playlist = allPlaylists[curItemRow];
+            if (!playlist->playing().isNull()) {
+                auto curItem = dynamic_cast<DStandardItem *>(curStandardItem);
+                //delete
+                QIcon playingIcon(playingPixmap);
+                playingIcon.actualSize(QSize(20, 20));
+                DViewItemActionList actionList = curItem->actionList(Qt::RightEdge);
+                if (!actionList.isEmpty()) {
+                    actionList.first()->setIcon(playingIcon);
+                } else {
+                    DViewItemActionList  actionList;
+                    auto viewItemAction = new DViewItemAction(Qt::AlignCenter);
+                    viewItemAction->setIcon(playingIcon);
+                    actionList.append(viewItemAction);
+                    curItem->setActionList(Qt::RightEdge, actionList);
+                }
+            }
             QString typeStr;
             if (current == curIndex) {
                 typeStr = "active";
+
             } else {
                 typeStr = "normal";
             }
@@ -145,6 +170,24 @@ MusicListView::MusicListView(QWidget *parent) : DListView(parent)
             }
             curStandardItem->setIcon(icon);
         }
+        m_currentitem = dynamic_cast<DStandardItem *>(model->itemFromIndex(current));
+        if (!playlistPtr->playing().isNull()) {
+            auto curItem = dynamic_cast<DStandardItem *>(m_currentitem);
+            //delete
+            QIcon playingIcon(albumPixmap);
+            playingIcon.actualSize(QSize(20, 20));
+            DViewItemActionList actionList = curItem->actionList(Qt::RightEdge);
+            if (!actionList.isEmpty()) {
+                actionList.first()->setIcon(playingIcon);
+            } else {
+                DViewItemActionList  actionList;
+                auto viewItemAction = new DViewItemAction(Qt::AlignCenter);
+                viewItemAction->setIcon(playingIcon);
+                actionList.append(viewItemAction);
+                curItem->setActionList(Qt::RightEdge, actionList);
+            }
+        }
+
     });
 }
 
@@ -303,25 +346,43 @@ void MusicListView::changePicture(QPixmap pixmap, QPixmap albumPixmap)
 {
     this->playingPixmap = pixmap;
     this->albumPixmap = albumPixmap;
-    QPixmap curPixmap = pixmap;
+    QPixmap curPixmap = albumPixmap;
 //    auto indexes = this->selectedIndexes();
 //    if (!indexes.isEmpty() && playingItem != nullptr && indexes[0].row() == playingItem->row()) {
 //        curPixmap = albumPixmap;
 //    }
-    if (playingItem != nullptr) {
-        auto curItem = dynamic_cast<DStandardItem *>(playingItem);
-        //delete
-        QIcon playingIcon(curPixmap);
-        playingIcon.actualSize(QSize(20, 20));
-        DViewItemActionList actionList = curItem->actionList(Qt::RightEdge);
-        if (!actionList.isEmpty()) {
-            actionList.first()->setIcon(playingIcon);
+    if (playingItem != nullptr ) {
+        if (m_currentitem == playingItem) {
+            auto curItem = dynamic_cast<DStandardItem *>(playingItem);
+            //delete
+            QIcon playingIcon(curPixmap);
+            playingIcon.actualSize(QSize(20, 20));
+            DViewItemActionList actionList = curItem->actionList(Qt::RightEdge);
+            if (!actionList.isEmpty()) {
+                actionList.first()->setIcon(playingIcon);
+            } else {
+                DViewItemActionList  actionList;
+                auto viewItemAction = new DViewItemAction(Qt::AlignCenter);
+                viewItemAction->setIcon(playingIcon);
+                actionList.append(viewItemAction);
+                curItem->setActionList(Qt::RightEdge, actionList);
+            }
         } else {
-            DViewItemActionList  actionList;
-            auto viewItemAction = new DViewItemAction(Qt::AlignCenter);
-            viewItemAction->setIcon(playingIcon);
-            actionList.append(viewItemAction);
-            curItem->setActionList(Qt::RightEdge, actionList);
+            curPixmap = pixmap;
+            auto curItem = dynamic_cast<DStandardItem *>(playingItem);
+            //delete
+            QIcon playingIcon(curPixmap);
+            playingIcon.actualSize(QSize(20, 20));
+            DViewItemActionList actionList = curItem->actionList(Qt::RightEdge);
+            if (!actionList.isEmpty()) {
+                actionList.first()->setIcon(playingIcon);
+            } else {
+                DViewItemActionList  actionList;
+                auto viewItemAction = new DViewItemAction(Qt::AlignCenter);
+                viewItemAction->setIcon(playingIcon);
+                actionList.append(viewItemAction);
+                curItem->setActionList(Qt::RightEdge, actionList);
+            }
         }
     }
     update();
@@ -391,6 +452,67 @@ void MusicListView::keyPressEvent(QKeyEvent *event)
     }
 }
 
+void MusicListView::dragEnterEvent(QDragEnterEvent *event)
+{
+    auto t_formats = event->mimeData()->formats();
+    qDebug() << t_formats;
+    if (event->mimeData()->hasFormat("text/uri-list") || event->mimeData()->hasFormat("application/x-qabstractitemmodeldatalist")) {
+        qDebug() << "acceptProposedAction" << event;
+        event->setDropAction(Qt::CopyAction);
+        event->acceptProposedAction();
+    }
+}
+
+void MusicListView::dragMoveEvent(QDragMoveEvent *event)
+{
+    auto index = indexAt(event->pos());
+    if (index.isValid() && (event->mimeData()->hasFormat("text/uri-list")  || event->mimeData()->hasFormat("application/x-qabstractitemmodeldatalist"))) {
+        qDebug() << "acceptProposedAction" << event;
+        event->setDropAction(Qt::CopyAction);
+        event->acceptProposedAction();
+    } else {
+        DListView::dragMoveEvent(event);
+    }
+}
+
+void MusicListView::dropEvent(QDropEvent *event)
+{
+    auto index = indexAt(event->pos());
+    if (!index.isValid())
+        return;
+
+    auto t_playlistPtr = playlistPtr(index);
+    if (t_playlistPtr == nullptr || (!event->mimeData()->hasFormat("text/uri-list") && !event->mimeData()->hasFormat("application/x-qabstractitemmodeldatalist"))) {
+        return;
+    }
+
+    if (event->mimeData()->hasFormat("text/uri-list")) {
+        auto urls = event->mimeData()->urls();
+        QStringList localpaths;
+        for (auto &url : urls) {
+            localpaths << url.toLocalFile();
+        }
+
+        if (!localpaths.isEmpty()) {
+            Q_EMIT importSelectFiles(t_playlistPtr, localpaths);
+        }
+    } else {
+        auto *source = qobject_cast<PlayListView *>(event->source());
+        if (source != nullptr) {
+            MetaPtrList metalist;
+            for (auto index : source->selectionModel()->selectedIndexes()) {
+                auto meta = source->playMetaPtrList()[index.row()];
+                metalist.append(meta);
+            }
+
+            if (!metalist.isEmpty())
+                Q_EMIT addToPlaylist(t_playlistPtr, metalist);
+        }
+    }
+
+    DListView::dropEvent(event);
+}
+
 void MusicListView::showContextMenu(const QPoint &pos)
 {
     // get select
@@ -454,6 +576,7 @@ void MusicListView::showContextMenu(const QPoint &pos)
             warnDlg.setIcon(QIcon::fromTheme("deepin-music"));
             warnDlg.setTextFormat(Qt::AutoText);
             warnDlg.setTitle(message);
+            warnDlg.addSpacing(20);
             warnDlg.addButton(tr("Cancel"), false, Dtk::Widget::DDialog::ButtonNormal);
             warnDlg.addButton(tr("Delete"), true, Dtk::Widget::DDialog::ButtonWarning);
             if (1 == warnDlg.exec()) {
@@ -463,6 +586,8 @@ void MusicListView::showContextMenu(const QPoint &pos)
 
                 //delete model->takeItem(item->row());
                 Q_EMIT m_data->removed();
+                if (allPlaylists.isEmpty())
+                    Q_EMIT removeAllList();
             }
 
         }

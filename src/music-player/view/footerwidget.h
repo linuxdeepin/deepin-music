@@ -78,6 +78,7 @@ signals:
     void mouseMoving(Qt::MouseButton button);
 
     void audioBufferProbed(const QAudioBuffer &buffer);
+    void metaBuffer(const QVector<float> &buffer, const QString &hash);
 
 public slots:
     void onMusicListAdded(PlaylistPtr playlist, const MetaPtrList metalist);

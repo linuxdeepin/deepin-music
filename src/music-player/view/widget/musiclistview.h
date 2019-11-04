@@ -58,6 +58,10 @@ signals:
     void customResort(const QStringList &uuids);
     void displayNameChanged();
     void pause(PlaylistPtr playlist, const MetaPtr meta);
+    void removeAllList();
+    void importSelectFiles(PlaylistPtr playlist, QStringList urllist);
+    void addToPlaylist(PlaylistPtr playlist, const MetaPtrList &metalist);
+
     void currentChanged(const QModelIndex &current, const QModelIndex &previous) Q_DECL_OVERRIDE;
 
 protected:
@@ -65,13 +69,18 @@ protected:
     void mousePressEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
 
     void keyPressEvent(QKeyEvent *event) Q_DECL_OVERRIDE;
+    void dragEnterEvent(QDragEnterEvent *event) Q_DECL_OVERRIDE;
+    void dragMoveEvent(QDragMoveEvent *event) Q_DECL_OVERRIDE;
+    void dropEvent(QDropEvent *event) Q_DECL_OVERRIDE;
 
 private:
     QList<PlaylistPtr >  allPlaylists;
     QStandardItemModel   *model           = nullptr;
     DStyledItemDelegate  *delegate        = nullptr;
     QStandardItem        *playingItem     = nullptr;
+    QStandardItem      *m_currentitem = nullptr;
     QPixmap              playingPixmap;
     QPixmap              albumPixmap;
+    QPixmap              defaultPixmap;
     int                  m_type = 1;
 };

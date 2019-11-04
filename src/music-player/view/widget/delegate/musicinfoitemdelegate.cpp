@@ -292,7 +292,7 @@ void MusicInfoItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
                 auto iconRect = QRectF(centerF.x() - icon.width() / 2,
                                        centerF.y() - icon.height() / 2,
                                        icon.width(), icon.height());
-                painter->drawPixmap(iconRect.toRect(), icon);
+                painter->drawPixmap(iconRect.toRect(), playingIcon);
 
             } else {
                 painter->setFont(font11);

@@ -96,16 +96,17 @@ MusicListWidget::MusicListWidget(QWidget *parent) : DWidget(parent)
     m_addListBtn->setFocusPolicy(Qt::NoFocus);
 
     auto customizeLayout = new QHBoxLayout(this);
-    customizeLayout->setContentsMargins(0, 0, 10, 0);
+    customizeLayout->setContentsMargins(0, 0, 0, 0);
     customizeLayout->addWidget(customizeLabel, 100, Qt::AlignLeft);
     customizeLayout->addStretch();
     customizeLayout->addWidget(m_addListBtn, 0, Qt::AlignRight);
 
     m_dataBaseListview = new MusicListView;
-    m_dataBaseListview->setEditTriggers(QAbstractItemView::EditKeyPressed);
+    m_dataBaseListview->setEditTriggers(QAbstractItemView::NoEditTriggers);
     m_dataBaseListview->setFixedHeight(162);
     m_customizeListview = new MusicListView;
     m_dataListView = new MusicListDataWidget;
+    musicLayout->setContentsMargins(0, 0, 0, 0);
 
     musicLayout->addWidget(dataBaseLabel, 0, Qt::AlignVCenter);
     musicLayout->addWidget(m_dataBaseListview, 0, Qt::AlignTop);
@@ -176,6 +177,14 @@ MusicListWidget::MusicListWidget(QWidget *parent) : DWidget(parent)
     this, [ = ](PlaylistPtr playlist, const MetaPtr meta) {
         Q_EMIT this->pause(playlist, meta);
     });
+    connect(m_dataBaseListview, &MusicListView::importSelectFiles,
+    this, [ = ](PlaylistPtr playlist, QStringList urllist) {
+        Q_EMIT this->importSelectFiles(playlist, urllist);
+    });
+    connect(m_dataBaseListview, &MusicListView::addToPlaylist,
+    this, [ = ](PlaylistPtr playlist, const MetaPtrList  metalist) {
+        Q_EMIT this->addToPlaylist(playlist, metalist);
+    });
 
     connect(m_customizeListview, &MusicListView::pressed,
     this, [ = ](const QModelIndex & index) {
@@ -205,6 +214,18 @@ MusicListWidget::MusicListWidget(QWidget *parent) : DWidget(parent)
             Q_EMIT selectedPlaylistChange(curPtr);
         }
     });
+    connect(m_customizeListview, &MusicListView::removeAllList,
+    this, [ = ]() {
+        auto current = m_dataBaseListview->item(2);
+        auto curPtr = m_dataBaseListview->playlistPtr(current);
+        if (curPtr != nullptr) {
+            m_customizeListview->clearSelected();
+            m_customizeListview->closeAllPersistentEditor();
+            m_dataListView->selectMusiclistChanged(curPtr);
+            curPtr->setSearchStr("");
+            Q_EMIT selectedPlaylistChange(curPtr);
+        }
+    });
     connect(m_customizeListview, &MusicListView::customResort,
     this, [ = ](const QStringList & uuids) {
         Q_EMIT this->customResort(uuids);
@@ -224,6 +245,14 @@ MusicListWidget::MusicListWidget(QWidget *parent) : DWidget(parent)
     connect(m_customizeListview, &MusicListView::pause,
     this, [ = ](PlaylistPtr playlist, const MetaPtr meta) {
         Q_EMIT this->pause(playlist, meta);
+    });
+    connect(m_customizeListview, &MusicListView::importSelectFiles,
+    this, [ = ](PlaylistPtr playlist, QStringList urllist) {
+        Q_EMIT this->importSelectFiles(playlist, urllist);
+    });
+    connect(m_customizeListview, &MusicListView::addToPlaylist,
+    this, [ = ](PlaylistPtr playlist, const MetaPtrList  metalist) {
+        Q_EMIT this->addToPlaylist(playlist, metalist);
     });
 
     //musiclistdatawidget
@@ -276,6 +305,18 @@ MusicListWidget::MusicListWidget(QWidget *parent) : DWidget(parent)
     this, [ = ](int mode) {
         Q_EMIT this->modeChanged(mode);
     });
+    connect(m_dataListView, &MusicListDataWidget::importSelectFiles,
+    this, [ = ](PlaylistPtr playlist, QStringList urllist) {
+        Q_EMIT this->importSelectFiles(playlist, urllist);
+    });
+    connect(m_dataListView, &MusicListDataWidget::addMetasFavourite,
+    this, [ = ](const MetaPtrList  & metalist) {
+        Q_EMIT addMetasFavourite(metalist);
+    });
+    connect(m_dataListView, &MusicListDataWidget::removeMetasFavourite,
+    this, [ = ](const MetaPtrList  & metalist) {
+        Q_EMIT removeMetasFavourite(metalist);
+    });
 }
 
 void MusicListWidget::onSearchText(QString str)
@@ -317,7 +358,7 @@ void MusicListWidget::keyPressEvent(QKeyEvent *event)
     DWidget::keyPressEvent(event);
 }
 
-void MusicListWidget::onPlaylistAdded(PlaylistPtr playlist)
+void MusicListWidget::onPlaylistAdded(PlaylistPtr playlist, bool newflag)
 {
     if (playlist->hide()) {
         return;
@@ -328,7 +369,7 @@ void MusicListWidget::onPlaylistAdded(PlaylistPtr playlist)
         m_dataBaseListview->addMusicList(playlist);
     } else {
         m_customizeListview->closeAllPersistentEditor();
-        m_customizeListview->addMusicList(playlist, addFlag);
+        m_customizeListview->addMusicList(playlist, newflag);
         addFlag = false;
     }
 //    auto item = new MusicListViewItem(playlist);

@@ -102,7 +102,7 @@ void Waveform::paintEvent(QPaintEvent *)
     fillColor = QColor("#000000");
     if (themeType == 2)
         fillColor = QColor("#FFFFFF");
-    fillColor.setAlphaF(0.5);
+    fillColor.setAlphaF(0.2);
     painter.save();
     if (devicePixelRatio > 1.0) {
         painter.setClipRect(QRect(rect().x() + curWidth - 1, rect().y(), rect().width() - (curWidth - 1), rect().height()));
@@ -139,8 +139,9 @@ void Waveform::clearWave()
     sampleList.clear();
 }
 
-void Waveform::onAudioBuffer(QVector<float> allData)
+void Waveform::onAudioBuffer(const QVector<float> &allData, const QString &hash)
 {
+    QVector<float> t_allData;
     if (!allData.isEmpty()) {
         float max = allData.first();
         for (auto data : allData) {
@@ -148,10 +149,10 @@ void Waveform::onAudioBuffer(QVector<float> allData)
                 max = data;
         }
         for (int i = 0; i < allData.size(); ++i) {
-            allData[i] = qAbs(allData[i] / max);
+            t_allData.append(qAbs(allData[i] / max));
         }
     }
-    reciveSampleList = allData;
+    reciveSampleList = t_allData;
     spectrumFlag = false;
     updateAudioBuffer();
 }

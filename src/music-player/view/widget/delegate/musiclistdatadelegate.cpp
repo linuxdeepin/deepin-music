@@ -71,6 +71,10 @@ void MusicListDataDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
     }
     auto PlayMusicTypePtr = playMusicTypePtrList[index.row()];
 
+//    if (listview->playing() != nullptr && listview->playing()->album != PlayMusicTypePtr->name){
+//        return
+//    }
+
     if (listview->viewMode() == QListView::IconMode) {
         //QStyledItemDelegate::paint(painter, option, index);
         painter->save();
@@ -130,7 +134,7 @@ void MusicListDataDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
             t_image  = t_image.copy(0, rect.height() - curFillSize, t_image.width(), curFillSize + 10);
             QTransform old_transform = painter->transform();
             painter->translate(fillBlurRect.topLeft());
-            qt_blurImage(painter, t_image, 10, false, false);
+            qt_blurImage(painter, t_image, 35, false, false);
             painter->setTransform(old_transform);
             //设置模糊
             painter->fillRect(fillBlurRect, fillColor);
@@ -158,22 +162,22 @@ void MusicListDataDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
                 fillColor = "#000000";
                 fillColor.setAlphaF(0.3);
             }
-            int startHeight = rect.y() + rect.height() - 44;
-            int fillAllHeight = 44;
+            int startHeight = rect.y() + rect.height() - 46;
+            int fillAllHeight = 46;
             int curFillSize = fillAllHeight;
             QRect fillBlurRect(rect.x(), rect.y() + rect.height() - fillAllHeight, rect.width(), fillAllHeight);
             if (listview->playing() != nullptr && listview->playing()->album == PlayMusicTypePtr->name) {
-                fillBlurRect = QRect(rect.x(), rect.y() + rect.height() - 83, rect.width(), 83);
-                curFillSize = 83;
+                fillBlurRect = QRect(rect.x(), rect.y() + rect.height() - 85, rect.width(), 85);
+                curFillSize = 85;
             }
 
             //设置模糊
             QImage t_image = icon.pixmap(rect.width(), rect.height()).toImage();
-            t_image  = t_image.copy(0, rect.height() - curFillSize, t_image.width(), curFillSize + 10);
+            t_image  = t_image.copy(0, rect.height() - curFillSize, t_image.width(), curFillSize);
 
             QTransform old_transform = painter->transform();
             painter->translate(fillBlurRect.topLeft());
-            qt_blurImage(painter, t_image, 10, false, false);
+            qt_blurImage(painter, t_image, 35, false, false);
             painter->setTransform(old_transform);
             //设置模糊
             painter->fillRect(fillBlurRect, fillColor);
@@ -208,9 +212,31 @@ void MusicListDataDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
 
 
         QBrush t_fillBrush(QColor(128, 128, 128, 0));
+
+        QColor fillColor(0, 0, 0);
+        fillColor.setAlphaF(0.3);
+        if (listview->getThemeType() == 2) {
+            fillColor = "#000000";
+            fillColor.setAlphaF(0.3);
+        }
+
         if (option.state & QStyle::State_Selected) {
             t_fillBrush = QBrush(QColor(128, 128, 128, 90));
         }
+
+//        if (option.state & QStyle::State_MouseOver) {
+//            QImage t_image = icon.pixmap(rect.width(), rect.height()).toImage();
+//            QRect t_hoverRect(rect.x() + 50, rect.y() + 50, 50, 50);
+//            t_image  = t_image.copy(t_hoverRect);
+
+//            QTransform old_transform = painter->transform();
+//            painter->translate(t_hoverRect.topLeft());
+//            qt_blurImage(painter, t_image, 35, false, false);
+//            painter->setTransform(old_transform);
+//            painter->fillRect(t_hoverRect, fillColor);
+//        }
+
+
         painter->fillRect(option.rect, t_fillBrush);
 
         painter->restore();
@@ -276,7 +302,7 @@ void MusicListDataDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
             }
             //icon
             if (playlistPtr->searchStr().isEmpty()) {
-                QRect numRect(2, option.rect.y() + 3, 32, 32);
+                QRect numRect(16, option.rect.y() + 3, 32, 32);
                 auto icon = option.icon;
                 auto value = index.data(Qt::DecorationRole);
                 if (value.type() == QVariant::Icon) {
@@ -306,7 +332,7 @@ void MusicListDataDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
 
             painter->setPen(nameColor);
             //name
-            QRect nameRect(40, option.rect.y(), w / 2 - 20, option.rect.height());
+            QRect nameRect(54, option.rect.y(), w / 2 - 20, option.rect.height());
             painter->setFont(font14);
             auto nameText = songsFm.elidedText(PlayMusicTypePtr->name, Qt::ElideMiddle, nameRect.width());
             painter->drawText(nameRect, Qt::AlignLeft | Qt::AlignVCenter, nameText);

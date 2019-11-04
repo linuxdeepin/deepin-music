@@ -274,7 +274,7 @@ void PlayItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
             nameColor = "#C0C6D4";
         }
         painter->setPen(nameColor);
-        QRect nameFillRect(option.rect.x(), startHeight, option.rect.width(), fm.height());
+        QRect nameFillRect(option.rect.x(), startHeight - 5, option.rect.width(), fm.height());
         nameFillRect.adjust(8, 0, -7, 0);
         auto nameText = fm.elidedText(meta->title, Qt::ElideRight, 125);
         painter->drawText(nameFillRect, Qt::AlignLeft | Qt::AlignTop, nameText);
@@ -348,7 +348,7 @@ void PlayItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
     QColor alternateBaseColor("#000000");
     alternateBaseColor.setAlphaF(0.02);
     QColor selecteColor("#000000");
-    selecteColor.setAlphaF(0.10);
+    selecteColor.setAlphaF(0.20);
     if (listview->getThemeType() == 2) {
         baseColor.setAlphaF(0.05);
         alternateBaseColor.setAlphaF(0.05);
@@ -382,7 +382,8 @@ void PlayItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
 //        qFatal(msg.toStdString().c_str());
     }
 
-    QColor nameColor("#090909"), otherColor("#797979");
+    QColor nameColor("#090909"), otherColor("#000000");
+    otherColor.setAlphaF(0.5);
     if (listview->getThemeType() == 2) {
         nameColor = QColor("#C0C6D4");
         otherColor = QColor("#C0C6D4");

@@ -127,6 +127,14 @@ void PlayListWidgetPrivate::initConntion()
     q, [ = ](const MetaPtr  meta) {
         Q_EMIT q->updateMetaCodec(meta);
     });
+    q->connect(playListView, &PlayListView::addMetasFavourite,
+    q, [ = ](const MetaPtrList  & metalist) {
+        Q_EMIT q->addMetasFavourite(metalist);
+    });
+    q->connect(playListView, &PlayListView::removeMetasFavourite,
+    q, [ = ](const MetaPtrList  & metalist) {
+        Q_EMIT q->removeMetasFavourite(metalist);
+    });
 }
 
 void PlayListWidgetPrivate::showEmptyHits(bool empty)
@@ -198,7 +206,7 @@ PlayListWidget::PlayListWidget(QWidget *parent) :
     d->btClearAll->setFocusPolicy(Qt::NoFocus);
     d->btClearAll->setFixedHeight(30);
 
-    d->emptyHits = new DLabel();
+    d->emptyHits = new DLabel(this);
     d->emptyHits->setObjectName("PlayListEmptyHits");
     d->emptyHits->hide();
 
@@ -286,9 +294,9 @@ void PlayListWidget::onMusicPlayed(PlaylistPtr playlist, const MetaPtr meta)
 //    if (playlist != d->playListView->playlist()) {
 //        d->initData(playlist);
 //    }
-    if (playlist != d->playListView->playlist() ||
-            playlist->allmusic().size() != d->playListView->playlist()->allmusic().size() ||
-            playlist->first() != d->playListView->playlist()->first())
+    if (d->playListView->rowCount() == 0 || playlist != d->playListView->playlist() ||
+            playlist->allmusic().size() != d->playListView->rowCount() ||
+            playlist->first()->hash != d->playListView->firstHash())
         d->initData(playlist);
 
     if (playlist != d->playListView->playlist() || meta.isNull()) {

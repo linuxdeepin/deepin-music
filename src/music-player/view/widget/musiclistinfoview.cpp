@@ -29,10 +29,12 @@
 #include <QStyleFactory>
 #include <QResizeEvent>
 #include <QStandardItemModel>
+#include <QVBoxLayout>
 
 #include <DDialog>
 #include <DDesktopServices>
 #include <DScrollBar>
+#include <DLabel>
 
 #include "../../core/metasearchservice.h"
 #include "../helper/widgethellper.h"
@@ -75,7 +77,6 @@ MusicListInfoView::MusicListInfoView(QWidget *parent)
     setPalette(palette);
     setIconSize( QSize(36, 36) );
 //    setGridSize( QSize(36, 36) );
-
     d->model = new MusiclistInfomodel(0, 1, this);
     setModel(d->model);
 
@@ -304,6 +305,51 @@ void MusicListInfoView::keyPressEvent(QKeyEvent *event)
             break;
         }
         break;
+    case Qt::AltModifier:
+        switch (event->key()) {
+        case Qt::Key_Return:
+            QItemSelectionModel *selection = this->selectionModel();
+            if (selection->selectedRows().length() <= 0) {
+                return;
+            }
+            auto index = selection->selectedRows().first();
+            auto meta = d->model->meta(index);
+            Q_EMIT showInfoDialog(meta);
+            break;
+        }
+        break;
+    case Qt::ControlModifier:
+        switch (event->key()) {
+        case Qt::Key_K:
+            QItemSelectionModel *selection = this->selectionModel();
+            if (selection->selectedRows().length() > 0) {
+                MetaPtrList metalist;
+                for (auto index : selection->selectedRows()) {
+                    auto meta = d->model->meta(index);
+                    metalist << meta;
+                }
+                if (!metalist.isEmpty())
+                    Q_EMIT addMetasFavourite(metalist);
+            }
+            break;
+        }
+        break;
+    case Qt::ControlModifier | Qt::ShiftModifier:
+        switch (event->key()) {
+        case Qt::Key_K:
+            QItemSelectionModel *selection = this->selectionModel();
+            if (selection->selectedRows().length() > 0) {
+                MetaPtrList metalist;
+                for (auto index : selection->selectedRows()) {
+                    auto meta = d->model->meta(index);
+                    metalist << meta;
+                }
+                if (!metalist.isEmpty())
+                    Q_EMIT removeMetasFavourite(metalist);
+            }
+            break;
+        }
+        break;
     default:
         break;
     }
@@ -512,12 +558,29 @@ void MusicListInfoView::showContextMenu(const QPoint &pos,
                 }
                 warnDlg.setMessage(QString(tr("Are you sure you want to delete %1?")).arg(meta->title));
             } else {
-                warnDlg.setMessage(QString(tr("Are you sure you want to delete the selected %1 songs?")).arg(metalist.length()));
+                DLabel *t_titleLabel = new DLabel(this);
+                t_titleLabel->setForegroundRole(DPalette::TextTitle);
+                DLabel *t_infoLabel = new DLabel(this);
+                t_infoLabel->setForegroundRole(DPalette::TextTips);
+                t_titleLabel->setText(tr("Are you sure you want to delete the selected %1 songs?").arg(metalist.length()));
+                t_infoLabel->setText(tr("Deleting the current song will also delete the song files contained"));
+                warnDlg.addContent(t_titleLabel, Qt::AlignHCenter);
+                warnDlg.addContent(t_infoLabel, Qt::AlignHCenter);
+                warnDlg.addSpacing(20);
             }
 
             if (containsCue) {
-                warnDlg.setTitle(tr("Are you sure you want to delete the selected %1 songs?").arg(metalist.length()));
-                warnDlg.setMessage(tr("Deleting the current song will also delete the song files contained"));
+//                warnDlg.setTitle(tr("Are you sure you want to delete the selected %1 songs?").arg(metalist.length()));
+//                warnDlg.setMessage(tr("Deleting the current song will also delete the song files contained"));
+                DLabel *t_titleLabel = new DLabel(this);
+                t_titleLabel->setForegroundRole(DPalette::TextTitle);
+                DLabel *t_infoLabel = new DLabel(this);
+                t_infoLabel->setForegroundRole(DPalette::TextTips);
+                t_titleLabel->setText(tr("Are you sure you want to delete the selected %1 songs?").arg(metalist.length()));
+                t_infoLabel->setText(tr("Deleting the current song will also delete the song files contained"));
+                warnDlg.addContent(t_titleLabel, Qt::AlignHCenter);
+                warnDlg.addContent(t_infoLabel, Qt::AlignHCenter);
+                warnDlg.addSpacing(20);
             }
             auto coverPixmap =  QPixmap::fromImage(WidgetHelper::cropRect(cover, QSize(64, 64)));
 

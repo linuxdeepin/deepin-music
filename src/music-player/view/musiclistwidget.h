@@ -50,6 +50,7 @@ signals:
     void pause(PlaylistPtr playlist, const MetaPtr meta);
     void resort(PlaylistPtr playlist, int sortType);
     void selectedPlaylistChange(PlaylistPtr playlist);
+    void importSelectFiles(PlaylistPtr playlist, QStringList urllist);
 
     void requestCustomContextMenu(const QPoint &pos, char type);
     void addToPlaylist(PlaylistPtr playlist, const MetaPtrList  &metalist);
@@ -58,11 +59,13 @@ signals:
     void showInfoDialog(const MetaPtr meta);
     void updateMetaCodec(const MetaPtr meta);
     void modeChanged(int);
+    void addMetasFavourite(const MetaPtrList  &metalist);
+    void removeMetasFavourite(const MetaPtrList  &metalist);
 
 public slots:
     void onSearchText(QString str);
     void onMusicPlayed(PlaylistPtr playlist, const MetaPtr);
-    void onPlaylistAdded(PlaylistPtr);
+    void onPlaylistAdded(PlaylistPtr, bool newflag = false);
     void onCurrentChanged(PlaylistPtr playlist);
     void onMusiclistChanged(PlaylistPtr playlist);
     void onMusicListAdded(PlaylistPtr playlist, const MetaPtrList metalist);

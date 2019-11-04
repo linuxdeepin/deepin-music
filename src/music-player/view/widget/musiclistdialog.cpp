@@ -263,6 +263,14 @@ void MusicListDialogPrivate::initConnection()
     q, [ = ](const MetaPtr meta) {
         Q_EMIT q->pause(meta);
     });
+    q->connect(musicListInfoView, &MusicListInfoView::addMetasFavourite,
+    q, [ = ](const MetaPtrList  & metalist) {
+        Q_EMIT q->addMetasFavourite(metalist);
+    });
+    q->connect(musicListInfoView, &MusicListInfoView::removeMetasFavourite,
+    q, [ = ](const MetaPtrList  & metalist) {
+        Q_EMIT q->removeMetasFavourite(metalist);
+    });
 }
 
 MusicListDialog::MusicListDialog(QWidget *parent)
@@ -414,4 +422,5 @@ void MusicListDialog::setPlayPixmap(QPixmap pixmap)
 {
     Q_D(MusicListDialog);
     d->musicListInfoView->setPlayPixmap(pixmap);
+    update();
 }

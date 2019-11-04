@@ -65,6 +65,7 @@ signals:
 signals:
     //! player
     void audioBufferProbed(const QAudioBuffer &buffer);
+    void metaBuffer(const QVector<float> &buffer, const QString &hash);
 
     //! ui: request import dialog
     void meidaFilesImported(PlaylistPtr playlist, MetaPtrList metalist);
@@ -76,7 +77,7 @@ signals:
     void showMusicList(PlaylistPtr playlist);
 
     //! from playlist manager
-    void playlistAdded(PlaylistPtr);
+    void playlistAdded(PlaylistPtr, bool newflag = false);
     void playlistRemove(PlaylistPtr);
     void activePlaylistChanged(PlaylistPtr);
 
@@ -131,6 +132,9 @@ public slots:
     void onMusicNext(PlaylistPtr playlist, const MetaPtr meta);
 
     void onToggleFavourite(const MetaPtr meta);
+    void onAddMetasFavourite(const MetaPtrList metalist);
+    void onRemoveMetasFavourite(const MetaPtrList metalist);
+
     void onChangeProgress(qint64 value, qint64 range);
     void onVolumeChanged(int volume);
     void onPlayModeChanged(int mode);

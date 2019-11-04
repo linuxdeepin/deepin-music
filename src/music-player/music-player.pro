@@ -96,7 +96,11 @@ SOURCES += \
     view/widget/delegate/musicinfoitemdelegate.cpp \
     core/util/fft.cpp \
     view/widget/musictitleimage.cpp \
-    view/widget/musiciconbutton.cpp
+    view/widget/musiciconbutton.cpp \
+    core/metabufferdetector.cpp \
+    view/widget/musicboxbutton.cpp \
+    view/widget/model/musiclistmodel.cpp \
+    view/shortcut.cpp
 
 HEADERS += \
     musicapp.h \
@@ -167,7 +171,11 @@ HEADERS += \
     view/widget/delegate/musicinfoitemdelegate_p.h \
     core/util/fft.h \
     view/widget/musictitleimage.h \
-    view/widget/musiciconbutton.h
+    view/widget/musiciconbutton.h \
+    core/metabufferdetector.h \
+    view/widget/musicboxbutton.h \
+    view/widget/model/musiclistmodel.h \
+    view/shortcut.h
 
 RESOURCES += \
     resource/theme/theme.qrc \

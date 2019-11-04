@@ -55,7 +55,7 @@
 #include "widget/musicpixmapbutton.h"
 #include "widget/waveform.h"
 #include "playlistwidget.h"
-
+#include"widget/musicboxbutton.h"
 static const char *sPropertyFavourite         = "fav";
 static const char *sPropertyPlayStatus        = "playstatus";
 
@@ -83,9 +83,9 @@ public:
     Label           *artist     = nullptr;
 
     MusicPixmapButton *btCover    = nullptr;
-    DButtonBoxButton  *btPlay     = nullptr;
-    DButtonBoxButton  *btPrev     = nullptr;
-    DButtonBoxButton  *btNext     = nullptr;
+    MusicBoxButton  *btPlay     = nullptr;
+    MusicBoxButton  *btPrev     = nullptr;
+    MusicBoxButton  *btNext     = nullptr;
     MusicIconButton  *btFavorite = nullptr;
     MusicIconButton  *btLyric    = nullptr;
     MusicIconButton  *btPlayList = nullptr;
@@ -206,6 +206,7 @@ void FooterPrivate::initConnection()
     });
 
     q->connect(q, &Footer::audioBufferProbed, waveform, &Waveform::onAudioBufferProbed);
+    q->connect(q, &Footer::metaBuffer, waveform, &Waveform::onAudioBuffer);
 }
 
 Footer::Footer(QWidget *parent) :
@@ -220,11 +221,11 @@ Footer::Footer(QWidget *parent) :
 
 //    this->blurBackground()->setBlurRectXRadius(18);
 //    this->blurBackground()->setBlurRectYRadius(18);
-//    this->blurBackground()->setRadius(30);
+    this->blurBackground()->setRadius(30);
     this->blurBackground()->setBlurEnabled(true);
     this->blurBackground()->setMode(DBlurEffectWidget::GaussianBlur);
-//    QColor backMaskColor(255, 255, 255, 170);
-//    this->blurBackground()->setMaskColor(backMaskColor);
+    QColor backMaskColor(255, 255, 255, 140);
+    this->blurBackground()->setMaskColor(backMaskColor);
 
     d->forwardWidget = new DBlurEffectWidget(this);
 //    d->forwardWidget->setBlurBackgroundEnabled(true);
@@ -234,7 +235,7 @@ Footer::Footer(QWidget *parent) :
     d->forwardWidget->setBlurEnabled(true);
     d->forwardWidget->setMode(DBlurEffectWidget::GaussianBlur);
 
-    QColor maskColor(255, 255, 255, 170);
+    QColor maskColor(255, 255, 255, 76);
     d->forwardWidget->setMaskColor(maskColor);
 
     auto backLayout = new QVBoxLayout(this);
@@ -257,6 +258,7 @@ Footer::Footer(QWidget *parent) :
     d->btCover->setObjectName("FooterCoverHover");
     d->btCover->setFixedSize(50, 50);
     d->btCover->setIconSize(QSize(50, 50));
+
 
     d->title = new Label;
     auto titleFont = d->title->font();
@@ -291,18 +293,24 @@ Footer::Footer(QWidget *parent) :
 //    d->artist->setForegroundRole(DPalette::WindowText);
     d->artist->setForegroundRole(DPalette::TextTips);
 
-    d->btPlay = new DButtonBoxButton(QStyle::SP_MediaPlay);
+    d->btPlay = new MusicBoxButton("", ":/mpimage/light/normal/play_normal.svg",
+                                   ":/mpimage/light/normal/play_normal.svg",
+                                   ":/mpimage/light/press/play_press.svg");
     //d->btPlay->setIcon(DHiDPIHelper::loadNxPixmap(":/mpimage/light/normal/play_normal.svg"));
     d->btPlay->setIconSize(QSize(36, 36));
     d->btPlay->setFixedSize(40, 50);
 
-    d->btPrev = new DButtonBoxButton(QStyle::SP_MediaSeekBackward);
+    d->btPrev = new MusicBoxButton("", ":/mpimage/light/normal/last_normal.svg",
+                                   ":/mpimage/light/normal/last_normal.svg",
+                                   ":/mpimage/light/press/last_press.svg");
     //d->btPrev->setIcon(DHiDPIHelper::loadNxPixmap(":/mpimage/light/normal/last_normal.svg"));
     d->btPrev->setIconSize(QSize(36, 36));
     d->btPrev->setObjectName("FooterActionPrev");
     d->btPrev->setFixedSize(40, 50);
 
-    d->btNext = new DButtonBoxButton(QStyle::SP_MediaSeekForward);
+    d->btNext = new MusicBoxButton("", ":/mpimage/light/normal/next_normal.svg",
+                                   ":/mpimage/light/normal/next_normal.svg",
+                                   ":/mpimage/light/press/next_press.svg");
     //d->btNext->setIcon(DHiDPIHelper::loadNxPixmap(":/mpimage/light/normal/next_normal.svg"));
     d->btNext->setIconSize(QSize(36, 36));
     d->btNext->setObjectName("FooterActionNext");
@@ -444,7 +452,7 @@ Footer::Footer(QWidget *parent) :
     layout->addWidget(actWidget, 0, Qt::AlignRight | Qt::AlignVCenter);
 
     d->playListWidget = new PlayListWidget;
-    d->playListWidget->setContentsMargins(0, 0, 0, 0);
+//    d->playListWidget->setContentsMargins(0, 0, 0, 0);
     d->playListWidget->hide();
 
     mainVBoxlayout->addWidget(d->playListWidget);
@@ -477,9 +485,15 @@ Footer::Footer(QWidget *parent) :
         }
     });
     if (d->m_type == 1) {
-        d->btPlay->setIcon(DHiDPIHelper::loadNxPixmap(":/mpimage/light/normal/play_normal.svg"));
+        d->btPlay->setPropertyPic(":/mpimage/light/normal/play_normal.svg",
+                                  ":/mpimage/light/normal/play_normal.svg",
+                                  ":/mpimage/light/press/play_press.svg");
+        //d->btPlay->setIcon(DHiDPIHelper::loadNxPixmap(":/mpimage/light/normal/play_press.svg"));
     } else {
-        d->btPlay->setIcon(DHiDPIHelper::loadNxPixmap(":/mpimage/dark/normal/play_normal.svg"));
+        d->btPlay->setPropertyPic(":/mpimage/dark/normal/play_normal.svg",
+                                  ":/mpimage/dark/normal/play_normal.svg",
+                                  ":/mpimage/dark/press/play_press.svg");
+        //d->btPlay->setIcon(DHiDPIHelper::loadNxPixmap(":/mpimage/dark/normal/play_press.svg"));
     }
     d->btCover->setIcon(Dtk::Widget::DHiDPIHelper::loadNxPixmap(d->defaultCover));
 
@@ -732,6 +746,7 @@ void Footer::onMusicPlayed(PlaylistPtr playlist, const MetaPtr meta)
     }
 
     d->forwardWidget->setSourceImage(coverImage);
+//    blurBackground()->setSourceImage(coverImage);
     //d->waveform->onAudioBuffer(MetaDetector::getMetaData(meta->localPath));
 
     this->enableControl(true);
@@ -759,16 +774,28 @@ void Footer::onMusicPlayed(PlaylistPtr playlist, const MetaPtr meta)
         d->updateQssProperty(d->btPlay, sPropertyPlayStatus, sPlayStatusValuePlaying);
         d->updateQssProperty(this, sPropertyPlayStatus, sPlayStatusValuePlaying);
         if (d->m_type == 1) {
-            d->btPlay->setIcon(DHiDPIHelper::loadNxPixmap(":/mpimage/light/normal/suspend_normal.svg"));
+            d->btPlay->setPropertyPic(":/mpimage/light/normal/suspend_normal.svg",
+                                      ":/mpimage/light/normal/suspend_normal.svg",
+                                      ":/mpimage/light/press/suspend_press.svg");
+            //d->btPlay->setIcon(DHiDPIHelper::loadNxPixmap(":/mpimage/light/normal/suspend_normal.svg"));
         } else {
-            d->btPlay->setIcon(DHiDPIHelper::loadNxPixmap(":/mpimage/dark/normal/suspend_normal.svg"));
+            //d->btPlay->setIcon(DHiDPIHelper::loadNxPixmap(":/mpimage/dark/normal/suspend_normal.svg"));
+            d->btPlay->setPropertyPic(":/mpimage/dark/normal/suspend_normal.svg",
+                                      ":/mpimage/dark/normal/suspend_normal.svg",
+                                      ":/mpimage/dark/press/suspend_press.svg");
         }
 
     } else {
         if (d->m_type == 1) {
-            d->btPlay->setIcon(DHiDPIHelper::loadNxPixmap(":/mpimage/light/normal/play_normal.svg"));
+            d->btPlay->setPropertyPic(":/mpimage/light/normal/play_normal.svg",
+                                      ":/mpimage/light/normal/play_normal.svg",
+                                      ":/mpimage/light/press/play_press.svg");
+            //d->btPlay->setIcon(DHiDPIHelper::loadNxPixmap(":/mpimage/light/normal/play_normal.svg"));
         } else {
-            d->btPlay->setIcon(DHiDPIHelper::loadNxPixmap(":/mpimage/dark/normal/play_normal.svg"));
+            d->btPlay->setPropertyPic(":/mpimage/dark/normal/play_normal.svg",
+                                      ":/mpimage/dark/normal/play_normal.svg",
+                                      ":/mpimage/dark/press/play_press.svg");
+            //d->btPlay->setIcon(DHiDPIHelper::loadNxPixmap(":/mpimage/dark/normal/play_normal.svg"));
         }
 
     }
@@ -791,9 +818,15 @@ void Footer::onMusicError(PlaylistPtr playlist, const MetaPtr meta, int error)
     auto status = sPlayStatusValuePause;
     d->updateQssProperty(d->btPlay, sPropertyPlayStatus, status);
     if (d->m_type == 1) {
-        d->btPlay->setIcon(DHiDPIHelper::loadNxPixmap(":/mpimage/light/normal/play_normal.svg"));
+        d->btPlay->setPropertyPic(":/mpimage/light/normal/play_normal.svg",
+                                  ":/mpimage/light/normal/play_normal.svg",
+                                  ":/mpimage/light/press/play_press.svg");
+        // d->btPlay->setIcon(DHiDPIHelper::loadNxPixmap(":/mpimage/light/normal/play_normal.svg"));
     } else {
-        d->btPlay->setIcon(DHiDPIHelper::loadNxPixmap(":/mpimage/dark/normal/play_normal.svg"));
+        d->btPlay->setPropertyPic(":/mpimage/dark/normal/play_normal.svg",
+                                  ":/mpimage/dark/normal/play_normal.svg",
+                                  ":/mpimage/dark/press/play_press.svg");
+        //d->btPlay->setIcon(DHiDPIHelper::loadNxPixmap(":/mpimage/dark/normal/play_normal.svg"));
     }
 }
 
@@ -808,9 +841,15 @@ void Footer::onMusicPause(PlaylistPtr playlist, const MetaPtr meta)
     auto status = sPlayStatusValuePause;
     d->updateQssProperty(d->btPlay, sPropertyPlayStatus, status);
     if (d->m_type == 1) {
-        d->btPlay->setIcon(DHiDPIHelper::loadNxPixmap(":/mpimage/light/normal/play_normal.svg"));
+        d->btPlay->setPropertyPic(":/mpimage/light/normal/play_normal.svg",
+                                  ":/mpimage/light/normal/play_normal.svg",
+                                  ":/mpimage/light/press/play_press.svg");
+        // d->btPlay->setIcon(DHiDPIHelper::loadNxPixmap(":/mpimage/light/normal/play_normal.svg"));
     } else {
-        d->btPlay->setIcon(DHiDPIHelper::loadNxPixmap(":/mpimage/dark/normal/play_normal.svg"));
+        // d->btPlay->setIcon(DHiDPIHelper::loadNxPixmap(":/mpimage/dark/normal/play_normal.svg"));
+        d->btPlay->setPropertyPic(":/mpimage/dark/normal/play_normal.svg",
+                                  ":/mpimage/dark/normal/play_normal.svg",
+                                  ":/mpimage/dark/press/play_press.svg");
     }
 
     if (playlist->allmusic().size() == 1) {
@@ -840,9 +879,15 @@ void Footer::onMusicStoped(PlaylistPtr playlist, const MetaPtr meta)
     d->updateQssProperty(d->btPlay, sPropertyPlayStatus, sPlayStatusValueStop);
     d->updateQssProperty(this, sPropertyPlayStatus, sPlayStatusValueStop);
     if (d->m_type == 1) {
-        d->btPlay->setIcon(DHiDPIHelper::loadNxPixmap(":/mpimage/light/normal/play_normal.svg"));
+        d->btPlay->setPropertyPic(":/mpimage/light/normal/play_normal.svg",
+                                  ":/mpimage/light/normal/play_normal.svg",
+                                  ":/mpimage/light/press/play_press.svg");
+        //d->btPlay->setIcon(DHiDPIHelper::loadNxPixmap(":/mpimage/light/normal/play_normal.svg"));
     } else {
-        d->btPlay->setIcon(DHiDPIHelper::loadNxPixmap(":/mpimage/dark/normal/play_normal.svg"));
+        //d->btPlay->setIcon(DHiDPIHelper::loadNxPixmap(":/mpimage/dark/normal/play_normal.svg"));
+        d->btPlay->setPropertyPic(":/mpimage/dark/normal/play_normal.svg",
+                                  ":/mpimage/dark/normal/play_normal.svg",
+                                  ":/mpimage/dark/press/play_press.svg");
     }
 
     if (playlist->allmusic().size() == 1) {
@@ -869,9 +914,9 @@ void Footer::slotTheme(int type)
     Q_D(Footer);
     QString rStr;
     if (type == 1) {
-//        QColor backMaskColor(255, 255, 255, 170);
-//        this->blurBackground()->setMaskColor(backMaskColor);
-        QColor maskColor(255, 255, 255, 170);
+        QColor backMaskColor(255, 255, 255, 140);
+        this->blurBackground()->setMaskColor(backMaskColor);
+        QColor maskColor(255, 255, 255, 76);
         d->forwardWidget->setMaskColor(maskColor);
         rStr = "light";
 
@@ -887,10 +932,41 @@ void Footer::slotTheme(int type)
 //        d->artist->setPalette(artistPl);
 //        d->artist->setForegroundRole(DPalette::WindowText);
 
+        DPalette pa;
+        pa = d->ctlWidget->palette();
+        pa.setColor(DPalette::Light, QColor("#FFFFFF"));
+        pa.setColor(DPalette::Dark, QColor("#FFFFFF"));
+        d->ctlWidget->setPalette(pa);
+
+        pa = d->btFavorite->palette();
+        pa.setColor(DPalette::Light, QColor("#FFFFFF"));
+        pa.setColor(DPalette::Dark, QColor("#FFFFFF"));
+        d->btFavorite->setPalette(pa);
+
+        pa = d->btLyric->palette();
+        pa.setColor(DPalette::Light, QColor("#FFFFFF"));
+        pa.setColor(DPalette::Dark, QColor("#FFFFFF"));
+        d->btLyric->setPalette(pa);
+
+        pa = d->btPlayList->palette();
+        pa.setColor(DPalette::Light, QColor("#FFFFFF"));
+        pa.setColor(DPalette::Dark, QColor("#FFFFFF"));
+        d->btPlayList->setPalette(pa);
+
+        pa = d->btPlayMode->palette();
+        pa.setColor(DPalette::Light, QColor("#FFFFFF"));
+        pa.setColor(DPalette::Dark, QColor("#FFFFFF"));
+        d->btPlayMode->setPalette(pa);
+
+        pa = d->btSound->palette();
+        pa.setColor(DPalette::Light, QColor("#FFFFFF"));
+        pa.setColor(DPalette::Dark, QColor("#FFFFFF"));
+        d->btSound->setPalette(pa);
+
     } else {
-//        QColor backMaskColor(56, 56, 56, 170);
-//        blurBackground()->setMaskColor(backMaskColor);
-        QColor maskColor(56, 56, 56, 170);
+        QColor backMaskColor(56, 56, 56, 140);
+        blurBackground()->setMaskColor(backMaskColor);
+        QColor maskColor(56, 56, 56, 76);
         d->forwardWidget->setMaskColor(maskColor);
         rStr = "dark";
 
@@ -905,11 +981,58 @@ void Footer::slotTheme(int type)
 //        artistPl.setColor(DPalette::WindowText, artistColor);
 //        d->artist->setPalette(artistPl);
 //        d->artist->setForegroundRole(DPalette::WindowText);
+
+        DPalette pa;
+        pa = d->ctlWidget->palette();
+        pa.setColor(DPalette::Light, QColor("#444444"));
+        pa.setColor(DPalette::Dark, QColor("#444444"));
+        d->ctlWidget->setPalette(pa);
+
+        pa = d->btFavorite->palette();
+        pa.setColor(DPalette::Light, QColor("#444444"));
+        pa.setColor(DPalette::Dark, QColor("#444444"));
+        d->btFavorite->setPalette(pa);
+
+        pa = d->btLyric->palette();
+        pa.setColor(DPalette::Light, QColor("#444444"));
+        pa.setColor(DPalette::Dark, QColor("#444444"));
+        d->btLyric->setPalette(pa);
+
+        pa = d->btPlayList->palette();
+        pa.setColor(DPalette::Light, QColor("#444444"));
+        pa.setColor(DPalette::Dark, QColor("#444444"));
+        d->btPlayList->setPalette(pa);
+
+        pa = d->btPlayMode->palette();
+        pa.setColor(DPalette::Light, QColor("#444444"));
+        pa.setColor(DPalette::Dark, QColor("#444444"));
+        d->btPlayMode->setPalette(pa);
+
+        pa = d->btSound->palette();
+        pa.setColor(DPalette::Light, QColor("#444444"));
+        pa.setColor(DPalette::Dark, QColor("#444444"));
+        d->btSound->setPalette(pa);
     }
     d->m_type = type;
-    d->btPlay->setIcon(DHiDPIHelper::loadNxPixmap(QString(":/mpimage/%1/normal/play_normal.svg").arg(rStr)));
-    d->btPrev->setIcon(DHiDPIHelper::loadNxPixmap(QString(":/mpimage/%1/normal/last_normal.svg").arg(rStr)));
-    d->btNext->setIcon(DHiDPIHelper::loadNxPixmap(QString(":/mpimage/%1/normal/next_normal.svg").arg(rStr)));
+    //d->btPlay->setIcon(DHiDPIHelper::loadNxPixmap(QString(":/mpimage/%1/normal/play_normal.svg").arg(rStr)));
+    //d->btPrev->setIcon(DHiDPIHelper::loadNxPixmap(QString(":/mpimage/%1/normal/last_normal.svg").arg(rStr)));
+    //d->btNext->setIcon(DHiDPIHelper::loadNxPixmap(QString(":/mpimage/%1/normal/next_normal.svg").arg(rStr)));
+    if (!d->activingMeta->invalid || true) {
+        d->btPlay->setPropertyPic(QString(":/mpimage/%1/normal/suspend_normal.svg").arg(rStr),
+                                  QString(":/mpimage/%1/normal/suspend_normal.svg").arg(rStr),
+                                  QString(":/mpimage/%1/press/suspend_press.svg").arg(rStr));
+    } else {
+        d->btPlay->setPropertyPic(QString(":/mpimage/%1/normal/play_normal.svg").arg(rStr),
+                                  QString(":/mpimage/%1/normal/play_normal.svg").arg(rStr),
+                                  QString(":/mpimage/%1/press/play_press.svg").arg(rStr));
+    }
+    d->btPrev->setPropertyPic(QString(":/mpimage/%1/normal/last_normal.svg").arg(rStr),
+                              QString(":/mpimage/%1/normal/last_normal.svg").arg(rStr),
+                              QString(":/mpimage/%1/press/last_press.svg").arg(rStr));
+    d->btNext->setPropertyPic(QString(":/mpimage/%1/normal/next_normal.svg").arg(rStr),
+                              QString(":/mpimage/%1/normal/next_normal.svg").arg(rStr),
+                              QString(":/mpimage/%1/press/next_press.svg").arg(rStr));
+
     d->btFavorite->setPropertyPic(QString(":/mpimage/%1/normal/collection_normal.svg").arg(rStr),
                                   QString(":/mpimage/%1/normal/collection_normal.svg").arg(rStr),
                                   QString(":/mpimage/%1/press/collection_press.svg").arg(rStr));
@@ -1092,4 +1215,5 @@ void Footer::resizeEvent(QResizeEvent *event)
         coverImage = cover.copy((cover.width() - imageWidth) / 2, 0, imageWidth, imageheight);
     }
     d->forwardWidget->setSourceImage(coverImage);
+//    blurBackground()->setSourceImage(coverImage);
 }

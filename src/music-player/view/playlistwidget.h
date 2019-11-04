@@ -68,6 +68,9 @@ signals:
     void musiclistDelete(PlaylistPtr playlist, const MetaPtrList  &metalist);
     void importSelectFiles(PlaylistPtr playlist, QStringList urllist);
 
+    void addMetasFavourite(const MetaPtrList  &metalist);
+    void removeMetasFavourite(const MetaPtrList  &metalist);
+
 protected:
     virtual void dragEnterEvent(QDragEnterEvent *event) Q_DECL_OVERRIDE;
 //    virtual void dragMoveEvent(QDragMoveEvent *event) Q_DECL_OVERRIDE;

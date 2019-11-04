@@ -60,9 +60,10 @@
 #include "footerwidget.h"
 #include "loadwidget.h"
 #include "musiclistwidget.h"
-
+#include "shortcut.h"
 #include <DSettingsDialog>
-
+#include <DMessageManager>
+#include <QShortcut>
 DWIDGET_USE_NAMESPACE
 
 const QString s_PropertyViewname = "viewname";
@@ -125,6 +126,12 @@ public:
     QTimer              *timer                  = nullptr;
     int                 playingCount            = 0;
 
+    QShortcut           *volumeUpShortcut       = nullptr;
+    QShortcut           *volumeDownShortcut     = nullptr;
+    QShortcut           *nextShortcut           = nullptr;
+    QShortcut           *playPauseShortcut      = nullptr;
+    QShortcut           *previousShortcut       = nullptr;
+
     MainFrame *q_ptr;
     Q_DECLARE_PUBLIC(MainFrame)
 };
@@ -186,6 +193,12 @@ void MainFramePrivate::initMenu()
         Dtk::Widget::moveToCenter(configDialog);
         configDialog->exec();
         MusicSettings::sync();
+
+        playPauseShortcut->setKey(QKeySequence(MusicSettings::value("shortcuts.all.play_pause").toString()));
+        volumeUpShortcut->setKey(QKeySequence(MusicSettings::value("shortcuts.all.volume_up").toString()));
+        volumeDownShortcut->setKey(QKeySequence(MusicSettings::value("shortcuts.all.volume_down").toString()));
+        nextShortcut->setKey(QKeySequence(MusicSettings::value("shortcuts.all.next").toString()));
+        previousShortcut->setKey(QKeySequence(MusicSettings::value("shortcuts.all.previous").toString()));
     });
 
     bool themeFlag = false;
@@ -223,6 +236,50 @@ void MainFramePrivate::initMenu()
     titleMenu->addSeparator();
 
     titlebar->setMenu(titleMenu);
+
+    //add shortcut
+    playPauseShortcut = new QShortcut(q);
+    playPauseShortcut->setKey(QKeySequence(MusicSettings::value("shortcuts.all.play_pause").toString()));
+    q->connect(playPauseShortcut, &QShortcut::activated, q, [ = ]() {
+        Q_EMIT  q->triggerShortcutAction("shortcuts.all.play_pause");
+    });
+
+    volumeUpShortcut = new QShortcut(q);
+    volumeUpShortcut->setKey(QKeySequence(MusicSettings::value("shortcuts.all.volume_up").toString()));
+    q->connect(volumeUpShortcut, &QShortcut::activated, q, [ = ]() {
+        Q_EMIT  q->triggerShortcutAction("shortcuts.all.volume_up");
+    });
+
+    volumeDownShortcut = new QShortcut(q);
+    volumeDownShortcut->setKey(QKeySequence(MusicSettings::value("shortcuts.all.volume_down").toString()));
+    q->connect(volumeDownShortcut, &QShortcut::activated, q, [ = ]() {
+        Q_EMIT  q->triggerShortcutAction("shortcuts.all.volume_down");
+    });
+
+    nextShortcut = new QShortcut(q);
+    nextShortcut->setKey(QKeySequence(MusicSettings::value("shortcuts.all.next").toString()));
+    q->connect(nextShortcut, &QShortcut::activated, q, [ = ]() {
+        Q_EMIT  q->triggerShortcutAction("shortcuts.all.next");
+    });
+
+    previousShortcut = new QShortcut(q);
+    previousShortcut->setKey(QKeySequence(MusicSettings::value("shortcuts.all.previous").toString()));
+    q->connect(previousShortcut, &QShortcut::activated, q, [ = ]() {
+        Q_EMIT  q->triggerShortcutAction("shortcuts.all.previous");
+    });
+
+    QShortcut *addmusicfilesShortcut = new QShortcut(q);
+    addmusicfilesShortcut->setKey(QKeySequence(QLatin1String("Ctrl+I")));
+    q->connect(addmusicfilesShortcut, &QShortcut::activated, q, [ = ]() {
+        q->onSelectImportFiles();
+    });
+
+    QShortcut *newSonglistShortcut = new QShortcut(q);
+    newSonglistShortcut->setKey(QKeySequence(QLatin1String("Ctrl+Shift+N")));
+    q->connect(newSonglistShortcut, &QShortcut::activated, q, [ = ]() {
+        if (newSonglistAction->isEnabled())
+            Q_EMIT q->addPlaylist(true);
+    });
 }
 
 void MainFramePrivate::initUI(bool showLoading)
@@ -285,6 +342,8 @@ void MainFramePrivate::postInitUI()
 
     musicListWidget = new MusicListWidget;
     musicListWidget->setContentsMargins(0, titlebar->height(), 0, FooterHeight + 10);
+
+    contentLayout->setContentsMargins(0, 0, 0, 0);
 
     contentLayout->addWidget(importWidget);
     contentLayout->addWidget(lyricWidget);
@@ -570,6 +629,25 @@ MainFrame::MainFrame(QWidget *parent) :
     d->titlebar->setIcon(QIcon(":/mpimage/light/deepin_music_player.svg"));    //titlebar->setCustomWidget(titlebarwidget, Qt::AlignLeft, false);
     d->titlebar->setCustomWidget(d->titlebarwidget, true);
     d->titlebar->resize(width(), 50);
+    QShortcut *viewshortcut = new QShortcut(this);
+    viewshortcut->setKey(QKeySequence(QLatin1String("Ctrl+Shift+/")));
+    connect(viewshortcut, SIGNAL(activated()), this, SLOT(onViewShortcut()));
+
+    QShortcut *searchShortcut = new QShortcut(this);
+    searchShortcut->setKey(QKeySequence(QLatin1String("Ctrl+F")));
+    connect(searchShortcut, &QShortcut::activated, this, [ = ]() {
+        d->titlebarwidget->setEditStatus();
+    });
+
+    QShortcut *windowShortcut = new QShortcut(this);
+    windowShortcut->setKey(QKeySequence(QLatin1String("Ctrl+Alt+F")));
+    connect(windowShortcut, &QShortcut::activated, this, [ = ]() {
+        if (windowState() == Qt::WindowMaximized) {
+            showNormal();
+        } else {
+            showMaximized();
+        }
+    });
 }
 
 MainFrame::~MainFrame()
@@ -698,6 +776,7 @@ void MainFrame::binding(Presenter *presenter)
         auto text = tr("Added to %1").arg(displayName);
         if (playlist->id() == FavMusicListID)
             text = tr("Successfully added to \"%1\"").arg(displayName);
+        //DMessageManager::instance()->sendMessage(d->footer, icon, text);
         this->sendMessage(icon, text);
     });
 
@@ -868,6 +947,10 @@ void MainFrame::binding(Presenter *presenter)
             presenter, &Presenter::onMusiclistRemove);
     connect(d->playListWidget, &PlayListWidget::musiclistDelete,
             presenter, &Presenter::onMusiclistDelete);
+    connect(d->playListWidget, &PlayListWidget::addMetasFavourite,
+            presenter, &Presenter::onAddMetasFavourite);
+    connect(d->playListWidget, &PlayListWidget::removeMetasFavourite,
+            presenter, &Presenter::onRemoveMetasFavourite);
 
     connect(d->playListWidget, &PlayListWidget::importSelectFiles,
     this, [ = ](PlaylistPtr playlist, QStringList urllist) {
@@ -979,6 +1062,8 @@ void MainFrame::binding(Presenter *presenter)
             d->footer,  &Footer::onMusicError);
     connect(presenter, &Presenter::audioBufferProbed,
             d->footer,  &Footer::audioBufferProbed);
+    connect(presenter, &Presenter::metaBuffer,
+            d->footer,  &Footer::metaBuffer);
 
     // musiclist
     connect(presenter, &Presenter::playlistAdded,
@@ -1038,6 +1123,15 @@ void MainFrame::binding(Presenter *presenter)
             presenter, &Presenter::onMusiclistRemove);
     connect(d->musicListWidget, &MusicListWidget::musiclistDelete,
             presenter, &Presenter::onMusiclistDelete);
+    connect(d->musicListWidget, &MusicListWidget::importSelectFiles,
+    this, [ = ](PlaylistPtr playlist, QStringList urllist) {
+        presenter->requestImportPaths(playlist, urllist);
+    });
+    connect(d->musicListWidget, &MusicListWidget::addMetasFavourite,
+            presenter, &Presenter::onAddMetasFavourite);
+    connect(d->musicListWidget, &MusicListWidget::removeMetasFavourite,
+            presenter, &Presenter::onRemoveMetasFavourite);
+
     connect(d->musicListWidget, &MusicListWidget::selectedPlaylistChange,
             d->searchResult, &SearchResult::selectPlaylist);
     connect(d->musicListWidget, &MusicListWidget::selectedPlaylistChange,
@@ -1047,6 +1141,10 @@ void MainFrame::binding(Presenter *presenter)
 //        d->setPlaylistVisible(false);
 //    });
 
+    //add Shortcut
+    QShortcut *muteShortcut = new QShortcut(this);
+    muteShortcut->setKey(QKeySequence(QLatin1String("M")));
+    connect(muteShortcut, &QShortcut::activated, presenter, &Presenter::onToggleMute);
 }
 
 void MainFrame::focusPlayList()
@@ -1139,32 +1237,49 @@ void MainFrame::changePicture()
     switch (curCount) {
     case 0:
         pixmap = DHiDPIHelper::loadNxPixmap(":/mpimage/light/music1.svg");
-        albumPixmap = DHiDPIHelper::loadNxPixmap(":/mpimage/light/music_white_album_cover/1.svg");
+        albumPixmap = DHiDPIHelper::loadNxPixmap(":/mpimage/light/music_white_album_cover/music1.svg");
         sidebarPixmap = DHiDPIHelper::loadNxPixmap(":/mpimage/light/music_withe_sidebar/music1.svg");
         break;
     case 1:
         pixmap = DHiDPIHelper::loadNxPixmap(":/mpimage/light/music2.svg");
-        albumPixmap = DHiDPIHelper::loadNxPixmap(":/mpimage/light/music_white_album_cover/2.svg");
+        albumPixmap = DHiDPIHelper::loadNxPixmap(":/mpimage/light/music_white_album_cover/music2.svg");
         sidebarPixmap = DHiDPIHelper::loadNxPixmap(":/mpimage/light/music_withe_sidebar/music2.svg");
         break;
     case 2:
         pixmap = DHiDPIHelper::loadNxPixmap(":/mpimage/light/music3.svg");
-        albumPixmap = DHiDPIHelper::loadNxPixmap(":/mpimage/light/music_white_album_cover/3.svg");
+        albumPixmap = DHiDPIHelper::loadNxPixmap(":/mpimage/light/music_white_album_cover/music3.svg");
         sidebarPixmap = DHiDPIHelper::loadNxPixmap(":/mpimage/light/music_withe_sidebar/music3.svg");
         break;
     case 3:
         pixmap = DHiDPIHelper::loadNxPixmap(":/mpimage/light/music4.svg");
-        albumPixmap = DHiDPIHelper::loadNxPixmap(":/mpimage/light/music_white_album_cover/4.svg");
+        albumPixmap = DHiDPIHelper::loadNxPixmap(":/mpimage/light/music_white_album_cover/music4.svg");
         sidebarPixmap = DHiDPIHelper::loadNxPixmap(":/mpimage/light/music_withe_sidebar/music4.svg");
         break;
     default:
         pixmap = DHiDPIHelper::loadNxPixmap(":/mpimage/light/music1.svg");
-        albumPixmap = DHiDPIHelper::loadNxPixmap(":/mpimage/light/music_white_album_cover/1.svg");
+        albumPixmap = DHiDPIHelper::loadNxPixmap(":/mpimage/light/music_white_album_cover/music1.svg");
         sidebarPixmap = DHiDPIHelper::loadNxPixmap(":/mpimage/light/music_withe_sidebar/music1.svg");
         break;
     }
-    d->musicListWidget->changePicture(pixmap, albumPixmap, sidebarPixmap);
-    d->playListWidget->changePicture(pixmap, sidebarPixmap);
+    d->musicListWidget->changePicture(pixmap, sidebarPixmap, albumPixmap);
+    d->playListWidget->changePicture(pixmap, albumPixmap);
+}
+
+void MainFrame::onViewShortcut()
+{
+    QRect rect = window()->geometry();
+    QPoint pos(rect.x() + rect.width() / 2, rect.y() + rect.height() / 2);
+    Shortcut sc;
+    QStringList shortcutString;
+    QString param1 = "-j=" + sc.toStr();
+    QString param2 = "-p=" + QString::number(pos.x()) + "," + QString::number(pos.y());
+    shortcutString << "-b" << param1 << param2;
+
+    QProcess *shortcutViewProc = new QProcess(this);
+    shortcutViewProc->startDetached("killall deepin-shortcut-viewer");
+    shortcutViewProc->startDetached("deepin-shortcut-viewer", shortcutString);
+
+    connect(shortcutViewProc, SIGNAL(finished(int)), shortcutViewProc, SLOT(deleteLater()));
 }
 
 bool MainFrame::eventFilter(QObject *obj, QEvent *e)

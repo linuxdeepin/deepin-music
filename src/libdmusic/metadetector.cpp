@@ -125,6 +125,9 @@ void MetaDetector::updateMediaFileTagCodec(MediaMeta *meta, const QByteArray &co
         return;
     }
 
+    TagLib::AudioProperties *t_audioProperties = f.audioProperties();
+    meta->length = t_audioProperties->length() * 1000;
+
     bool encode = true;
     encode &= tag->title().isNull() ? true : tag->title().isLatin1();
     encode &= tag->artist().isNull() ? true : tag->artist().isLatin1();
@@ -227,21 +230,23 @@ void MetaDetector::updateMetaFromLocalfile(MediaMeta *meta, const QFileInfo &fil
     }
     meta->length = 0;
 
-//#ifndef DISABLE_LIBAV
-    AVFormatContext *pFormatCtx = avformat_alloc_context();
-    avformat_open_input(&pFormatCtx, meta->localPath.toStdString().c_str(), NULL, NULL);
-    if (pFormatCtx) {
-        avformat_find_stream_info(pFormatCtx, NULL);
-        int64_t duration = pFormatCtx->duration / 1000;
-        if (duration > 0) {
-            meta->length = duration;
-        }
-    }
-    avformat_close_input(&pFormatCtx);
-    avformat_free_context(pFormatCtx);
-//#endif // DISABLE_LIBAV
-
     updateMediaFileTagCodec(meta, "", false);
+
+    if (meta->length == 0) {
+        //#ifndef DISABLE_LIBAV
+        AVFormatContext *pFormatCtx = avformat_alloc_context();
+        avformat_open_input(&pFormatCtx, meta->localPath.toStdString().c_str(), NULL, NULL);
+        if (pFormatCtx) {
+            avformat_find_stream_info(pFormatCtx, NULL);
+            int64_t duration = pFormatCtx->duration / 1000;
+            if (duration > 0) {
+                meta->length = duration;
+            }
+        }
+        avformat_close_input(&pFormatCtx);
+        avformat_free_context(pFormatCtx);
+        //#endif // DISABLE_LIBAV
+    }
 
     meta->size = fileInfo.size();
 

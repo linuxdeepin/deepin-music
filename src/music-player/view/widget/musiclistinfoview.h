@@ -60,6 +60,8 @@ signals:
     void requestCustomContextMenu(const QPoint &pos);
     void customSort();
     void pause(const MetaPtr meta);
+    void addMetasFavourite(const MetaPtrList  &metalist);
+    void removeMetasFavourite(const MetaPtrList  &metalist);
 
 public:
     void onMusiclistChanged(PlaylistPtr playlist, const QString name);

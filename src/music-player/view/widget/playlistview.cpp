@@ -33,6 +33,7 @@
 #include <DDialog>
 #include <DDesktopServices>
 #include <DScrollBar>
+#include <DLabel>
 
 #include "util/pinyinsearch.h"
 
@@ -77,24 +78,25 @@ PlayListView::PlayListView(bool searchFlag, QWidget *parent)
     d->model = new PlaylistModel(0, 1, this);
     setModel(d->model);
 
+
     d->delegate = new PlayItemDelegate;
     setItemDelegate(d->delegate);
 
-    //setDragEnabled(true);
+    setDragEnabled(true);
     //viewport()->setAcceptDrops(true);
     setDropIndicatorShown(true);
     setDragDropOverwriteMode(false);
     //setVerticalScrollMode(QAbstractItemView::ScrollPerItem);
     //setHorizontalScrollMode(QAbstractItemView::ScrollPerItem);
     setDefaultDropAction(Qt::MoveAction);
-    setDragDropMode(QAbstractItemView::InternalMove);
+    setDragDropMode(QAbstractItemView::DragOnly);
     setDragEnabled(true);
     setMovement(QListView::Free);
 
     setViewModeFlag(QListView::ListMode);
     setResizeMode(QListView::Adjust);
     setLayoutMode(QListView::Batched);
-    setBatchSize(20);
+    //setBatchSize(20);
 
     setSelectionMode(QListView::ExtendedSelection);
     //setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
@@ -169,12 +171,12 @@ void PlayListView::setViewModeFlag(QListView::ViewMode mode)
     if (mode == QListView::IconMode) {
         setIconSize( QSize(140, 140) );
         setGridSize( QSize(170, 213) );
-//        setViewportMargins(10, 10, 10, 10);
+        setViewportMargins(10, 10, 10, 10);
     } else {
         setIconSize( QSize(36, 36) );
 //        setGridSize( QSize(36, 36) );
         setGridSize( QSize(-1, -1) );
-//        setViewportMargins(0, 0, 0, 0);
+        setViewportMargins(0, 0, 8, 0);
     }
     setViewMode(mode);
 }
@@ -217,11 +219,31 @@ QPixmap PlayListView::getSidebarPixmap() const
     return d->sidebarPixmap;
 }
 
+int PlayListView::rowCount()
+{
+    Q_D(const PlayListView);
+    return d->model->rowCount();
+}
+
+QString PlayListView::firstHash()
+{
+    Q_D(const PlayListView);
+    QString hashStr;
+
+    if (d->model->rowCount() > 0) {
+        auto index = d->model->index(0, 0);
+        hashStr = d->model->data(index).toString();
+    }
+
+    return hashStr;
+}
+
 void PlayListView::onMusicListRemoved(const MetaPtrList metalist)
 {
     Q_D(PlayListView);
 
     setAutoScroll(false);
+    //d->model->blockSignals(true);
     for (auto meta : metalist) {
         if (meta.isNull()) {
             continue;
@@ -235,6 +257,7 @@ void PlayListView::onMusicListRemoved(const MetaPtrList metalist)
             }
         }
     }
+    //d->model->blockSignals(false);
     //updateScrollbar();
     setAutoScroll(true);
 }
@@ -357,6 +380,51 @@ void PlayListView::keyPressEvent(QKeyEvent *event)
     case Qt::ShiftModifier:
         switch (event->key()) {
         case Qt::Key_Delete:
+            break;
+        }
+        break;
+    case Qt::AltModifier:
+        switch (event->key()) {
+        case Qt::Key_Return:
+            QItemSelectionModel *selection = this->selectionModel();
+            if (selection->selectedRows().length() <= 0) {
+                return;
+            }
+            auto index = selection->selectedRows().first();
+            auto meta = d->model->meta(index);
+            Q_EMIT showInfoDialog(meta);
+            break;
+        }
+        break;
+    case Qt::ControlModifier:
+        switch (event->key()) {
+        case Qt::Key_K:
+            QItemSelectionModel *selection = this->selectionModel();
+            if (selection->selectedRows().length() > 0) {
+                MetaPtrList metalist;
+                for (auto index : selection->selectedRows()) {
+                    auto meta = d->model->meta(index);
+                    metalist << meta;
+                }
+                if (!metalist.isEmpty())
+                    Q_EMIT addMetasFavourite(metalist);
+            }
+            break;
+        }
+        break;
+    case Qt::ControlModifier | Qt::ShiftModifier:
+        switch (event->key()) {
+        case Qt::Key_K:
+            QItemSelectionModel *selection = this->selectionModel();
+            if (selection->selectedRows().length() > 0) {
+                MetaPtrList metalist;
+                for (auto index : selection->selectedRows()) {
+                    auto meta = d->model->meta(index);
+                    metalist << meta;
+                }
+                if (!metalist.isEmpty())
+                    Q_EMIT removeMetasFavourite(metalist);
+            }
             break;
         }
         break;
@@ -576,12 +644,28 @@ void PlayListView::showContextMenu(const QPoint &pos,
                 }
                 warnDlg.setMessage(QString(tr("Are you sure you want to delete %1?")).arg(meta->title));
             } else {
-                warnDlg.setMessage(QString(tr("Are you sure you want to delete the selected %1 songs?")).arg(metalist.length()));
+//                warnDlg.setTitle(QString(tr("Are you sure you want to delete the selected %1 songs?")).arg(metalist.length()));
+                DLabel *t_titleLabel = new DLabel(this);
+                t_titleLabel->setForegroundRole(DPalette::TextTitle);
+                DLabel *t_infoLabel = new DLabel(this);
+                t_infoLabel->setForegroundRole(DPalette::TextTips);
+                t_titleLabel->setText(tr("Are you sure you want to delete the selected %1 songs?").arg(metalist.length()));
+                t_infoLabel->setText(tr("Deleting the current song will also delete the song files contained"));
+                warnDlg.addContent(t_titleLabel, Qt::AlignHCenter);
+                warnDlg.addContent(t_infoLabel, Qt::AlignHCenter);
+                warnDlg.addSpacing(20);
             }
 
             if (containsCue) {
-                warnDlg.setTitle(tr("Are you sure you want to delete the selected %1 songs?").arg(metalist.length()));
-                warnDlg.setMessage(tr("Deleting the current song will also delete the song files contained"));
+                DLabel *t_titleLabel = new DLabel(this);
+                t_titleLabel->setForegroundRole(DPalette::TextTitle);
+                DLabel *t_infoLabel = new DLabel(this);
+                t_infoLabel->setForegroundRole(DPalette::TextTips);
+                t_titleLabel->setText(tr("Are you sure you want to delete the selected %1 songs?").arg(metalist.length()));
+                t_infoLabel->setText(tr("Deleting the current song will also delete the song files contained"));
+                warnDlg.addContent(t_titleLabel, Qt::AlignHCenter);
+                warnDlg.addContent(t_infoLabel, Qt::AlignHCenter);
+                warnDlg.addSpacing(20);
             }
             auto coverPixmap =  QPixmap::fromImage(WidgetHelper::cropRect(cover, QSize(64, 64)));
 
@@ -605,7 +689,7 @@ void PlayListView::showContextMenu(const QPoint &pos,
 
 void PlayListView::mouseMoveEvent(QMouseEvent *event)
 {
-
+    DListView::mouseMoveEvent(event);
 }
 
 void PlayListView::dragEnterEvent(QDragEnterEvent *event)

@@ -36,8 +36,9 @@ DWIDGET_USE_NAMESPACE
 
 SearchEdit::SearchEdit(QWidget *parent) : DSearchEdit(parent)
 {
+    lineEdit()->setFocusPolicy(Qt::ClickFocus);
     // Why qss not work if not call show
-    show();
+//    show();
 //    connect(this, &SearchEdit::focusOut,
 //            this, &SearchEdit::onFocusOut);
 //    connect(this, &SearchEdit::focusIn,

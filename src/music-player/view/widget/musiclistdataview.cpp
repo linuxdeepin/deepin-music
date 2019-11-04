@@ -97,6 +97,7 @@ MusicListDataView::MusicListDataView(QWidget *parent)
 
     d->delegate = new MusicListDataDelegate;
     setItemDelegate(d->delegate);
+    setViewportMargins(0, 0, 8, 0);
 
     setViewModeFlag(QListView::ListMode);
     setResizeMode( QListView::Adjust );
@@ -164,6 +165,16 @@ MusicListDataView::MusicListDataView(QWidget *parent)
         Q_EMIT pause(playlist(), meta);
     });
 
+    connect(d->musciListDialog, &MusicListDialog::addMetasFavourite,
+    this, [ = ](const MetaPtrList  & metalist) {
+        Q_EMIT addMetasFavourite(metalist);
+    });
+
+    connect(d->musciListDialog, &MusicListDialog::removeMetasFavourite,
+    this, [ = ](const MetaPtrList  & metalist) {
+        Q_EMIT removeMetasFavourite(metalist);
+    });
+
     setSelectionMode(QListView::ExtendedSelection);
     setSelectionBehavior(QAbstractItemView::SelectRows);
 }
@@ -177,6 +188,12 @@ PlaylistPtr MusicListDataView::playlist() const
 {
     Q_D(const MusicListDataView);
     return d->model->playlist();
+}
+
+int MusicListDataView::rowCount()
+{
+    Q_D(const MusicListDataView);
+    return d->model->rowCount();
 }
 
 int MusicListDataView::listSize()

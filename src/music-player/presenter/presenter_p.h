@@ -30,6 +30,7 @@ class MetaSearchService;
 class PlaylistManager;
 class Player;
 class MediaLibrary;
+class MetaBufferDetector;
 class PresenterPrivate: public QObject
 {
     Q_OBJECT
@@ -52,6 +53,8 @@ public:
     Player              *player         = nullptr;
     MediaLibrary        *library        = nullptr;
     MusicSettings         *settings       = nullptr;
+
+    MetaBufferDetector  *metaBufferDetector = nullptr;
 
     Presenter *q_ptr;
     Q_DECLARE_PUBLIC(Presenter)

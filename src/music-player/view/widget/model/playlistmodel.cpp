@@ -103,15 +103,16 @@ MetaPtr PlaylistModel::meta(const QModelIndex &index, int role) const
 Qt::DropActions PlaylistModel::supportedDropActions() const
 {
 //    return QAbstractItemModel::supportedDropActions();
-    return Qt::CopyAction | Qt::MoveAction;
+    return /*Qt::CopyAction | */Qt::MoveAction;
 }
 
 Qt::ItemFlags PlaylistModel::flags(const QModelIndex &index) const
 {
     Qt::ItemFlags defaultFlags = QAbstractItemModel::flags(index);
-    if (index.isValid()) {
-        return Qt::ItemIsDragEnabled | defaultFlags;
-    } else {
-        return Qt::ItemIsDropEnabled | defaultFlags;
-    }
+    return Qt::ItemIsDragEnabled | defaultFlags;
+//    if (index.isValid()) {
+//        return Qt::ItemIsDragEnabled | defaultFlags;
+//    } else {
+//        return Qt::ItemIsDropEnabled | defaultFlags;
+//    }
 }
