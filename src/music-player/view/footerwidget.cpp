@@ -178,7 +178,8 @@ void FooterPrivate::initConnection()
     });
 
     q->connect(btFavorite, &DPushButton::released, q, [ = ]() {
-        Q_EMIT q->toggleFavourite(activingMeta);
+        if (activingMeta != nullptr)
+            Q_EMIT q->toggleFavourite(activingMeta);
     });
     q->connect(title, &Label::clicked, q, [ = ](bool) {
         Q_EMIT q->locateMusic(activingPlaylist, activingMeta);
@@ -765,7 +766,7 @@ void Footer::onMusicStoped(PlaylistPtr playlist, const MetaPtr meta)
     onProgressChanged(0, 1);
     d->title->hide();
     d->artist->hide();
-    d->btFavorite->hide();
+    //d->btFavorite->hide();
     d->activingMeta = MetaPtr();
 
     d->btCover->setIcon(Dtk::Widget::DHiDPIHelper::loadNxPixmap(d->defaultCover));
@@ -784,8 +785,8 @@ void Footer::onMediaLibraryClean()
     Q_D(Footer);
 //    d->btPrev->hide();
 //    d->btNext->hide();
-    d->btFavorite->hide();
-    d->btLyric->hide();
+//    d->btFavorite->hide();
+//    d->btLyric->hide();
     enableControl(false);
 }
 
