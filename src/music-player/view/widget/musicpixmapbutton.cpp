@@ -34,11 +34,17 @@ void MusicPixmapButton::paintEvent(QPaintEvent *event)
 {
     QPainter painter(this);
     painter.save();
+    painter.setRenderHint(QPainter::Antialiasing);
+    painter.setRenderHint(QPainter::HighQualityAntialiasing);
+    painter.setRenderHint(QPainter::SmoothPixmapTransform);
+
+    QPixmap pixmap = icon().pixmap(rect().width(), rect().height());
+    pixmap.setDevicePixelRatio(devicePixelRatioF());
 
     QPainterPath backgroundPath;
     backgroundPath.addRoundedRect(rect(), 10, 10);
     painter.setClipPath(backgroundPath);
-    painter.drawPixmap(rect(), icon().pixmap(rect().width(), rect().height()));
+    painter.drawPixmap(rect(), pixmap);
 
     painter.restore();
 }

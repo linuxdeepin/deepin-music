@@ -178,7 +178,7 @@ void MusicListItem::onDelete()
     QString message = QString(tr("Are you sure you want to delete this playlist?"));
 
     DDialog warnDlg(this);
-    warnDlg.setIcon(QIcon(":/common/image/del_notify.svg"));
+    warnDlg.setIcon(QIcon::fromTheme("deepin-music"));
     warnDlg.setTextFormat(Qt::AutoText);
     warnDlg.setTitle(message);
     warnDlg.addButton(tr("Cancel"), false, Dtk::Widget::DDialog::ButtonNormal);

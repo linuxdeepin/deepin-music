@@ -287,10 +287,10 @@ void MainFramePrivate::postInitUI()
     playListWidget = footer->getPlayListWidget();
 
     lyricWidget = new MUsicLyricWidget;
-    lyricWidget->setContentsMargins(0, titlebar->height(), 0, FooterHeight);
+    lyricWidget->setContentsMargins(0, titlebar->height(), 0, FooterHeight + 10);
 
     musicListWidget = new MusicListWidget;
-    musicListWidget->setContentsMargins(0, titlebar->height(), 0, FooterHeight);
+    musicListWidget->setContentsMargins(0, titlebar->height(), 0, FooterHeight + 10);
 
     contentLayout->addWidget(importWidget);
     contentLayout->addWidget(lyricWidget);
@@ -601,6 +601,7 @@ void MainFrame::postInitUI()
 
     auto trayIcon = new QSystemTrayIcon(this);
     trayIcon->setIcon(QIcon::fromTheme("deepin-music"));
+    trayIcon->setToolTip(tr("Deepin Music"));
     trayIcon->setContextMenu(trayIconMenu);
     trayIcon->show();
 
@@ -738,7 +739,7 @@ void MainFrame::binding(Presenter *presenter)
     connect(presenter, &Presenter::notifyMusciError,
     this, [ = ](PlaylistPtr playlist, const MetaPtr  meta, int /*error*/) {
         Dtk::Widget::DDialog warnDlg(this);
-        warnDlg.setIcon(QIcon(":/common/image/dialog_warning.svg"));
+        warnDlg.setIcon(QIcon::fromTheme("deepin-music"));
         warnDlg.setTextFormat(Qt::RichText);
         warnDlg.setTitle(tr("Invalid or non-existent file,failed to load!"));
         warnDlg.addButtons(QStringList() << tr("I know"));
@@ -763,7 +764,7 @@ void MainFrame::binding(Presenter *presenter)
         if (0 == mediaCount) {
             QString message = QString(tr("Failed to import, no vaild music file found!"));
             Dtk::Widget::DDialog warnDlg(this);
-            warnDlg.setIcon(QIcon(":/common/image/dialog_warning.svg"));
+            warnDlg.setIcon(QIcon::fromTheme("deepin-music"));
             warnDlg.setTextFormat(Qt::AutoText);
             warnDlg.setTitle(message);
             warnDlg.addButtons(QStringList() << tr("OK"));

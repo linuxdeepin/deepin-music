@@ -128,7 +128,7 @@ MusicListWidget::MusicListWidget(QWidget *parent) : DWidget(parent)
     this, [ = ](const QModelIndex & index) {
         auto curPtr = m_dataBaseListview->playlistPtr(index);
         if (curPtr != nullptr) {
-            m_customizeListview->clearSelection();
+            m_customizeListview->clearSelected();
             m_customizeListview->closeAllPersistentEditor();
             m_dataListView->onMusiclistChanged(curPtr);
 //            DUtil::TimerSingleShot(500, [this]() {
@@ -142,7 +142,7 @@ MusicListWidget::MusicListWidget(QWidget *parent) : DWidget(parent)
     this, [ = ](const QModelIndex & current, const QModelIndex & previous) {
         auto curPtr = m_dataBaseListview->playlistPtr(current);
         if (curPtr != nullptr) {
-            m_customizeListview->clearSelection();
+            m_customizeListview->clearSelected();
             m_customizeListview->closeAllPersistentEditor();
             m_dataListView->onMusiclistChanged(curPtr);
 //            DUtil::TimerSingleShot(500, [this]() {
@@ -173,7 +173,7 @@ MusicListWidget::MusicListWidget(QWidget *parent) : DWidget(parent)
     this, [ = ](const QModelIndex & index) {
         auto curPtr = m_customizeListview->playlistPtr(index);
         if (curPtr != nullptr) {
-            m_dataBaseListview->clearSelection();
+            m_dataBaseListview->clearSelected();
             m_dataBaseListview->closeAllPersistentEditor();
             m_dataListView->onMusiclistChanged(curPtr);
 //            DUtil::TimerSingleShot(500, [this]() {
@@ -187,7 +187,7 @@ MusicListWidget::MusicListWidget(QWidget *parent) : DWidget(parent)
     this, [ = ](const QModelIndex & current, const QModelIndex & previous) {
         auto curPtr = m_customizeListview->playlistPtr(current);
         if (curPtr != nullptr) {
-            m_dataBaseListview->clearSelection();
+            m_dataBaseListview->clearSelected();
             m_dataBaseListview->closeAllPersistentEditor();
             m_dataListView->onMusiclistChanged(curPtr);
 //            DUtil::TimerSingleShot(500, [this]() {

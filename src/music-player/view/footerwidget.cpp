@@ -249,6 +249,7 @@ Footer::Footer(QWidget *parent) :
     d->btCover = new MusicPixmapButton();
     d->btCover->setObjectName("FooterCoverHover");
     d->btCover->setFixedSize(50, 50);
+    d->btCover->setIconSize(QSize(50, 50));
 
     d->title = new Label;
     auto titleFont = d->title->font();
@@ -468,8 +469,8 @@ void Footer::enableControl(bool enable)
     Q_D(Footer);
 
     d->btCover->setEnabled(enable);
-    d->btPrev->setEnabled(enable);
-    d->btNext->setEnabled(enable);
+//    d->btPrev->setEnabled(enable);
+//    d->btNext->setEnabled(enable);
     d->btFavorite->setEnabled(enable);
     d->btLyric->setEnabled(enable);
     d->btPlayList->setEnabled(enable);
@@ -628,23 +629,41 @@ bool Footer::eventFilter(QObject *obj, QEvent *event)
 void Footer::onMusicListAdded(PlaylistPtr playlist, const MetaPtrList metalist)
 {
     Q_D(Footer);
-    if (playlist->id() == FavMusicListID)
+    if (playlist->id() == FavMusicListID) {
         for (auto &meta : metalist) {
             if (d->activingMeta && meta == d->activingMeta) {
                 d->updateQssProperty(d->btFavorite, sPropertyFavourite, true);
             }
         }
+    } else if (d->activingPlaylist != nullptr && d->activingPlaylist->id() == playlist->id()) {
+        if (playlist->allmusic().size() == 1) {
+            d->btPrev->setDisabled(true);
+            d->btNext->setDisabled(true);
+        } else {
+            d->btPrev->setDisabled(false);
+            d->btNext->setDisabled(false);
+        }
+    }
 }
 
 void Footer::onMusicListRemoved(PlaylistPtr playlist, const MetaPtrList metalist)
 {
     Q_D(Footer);
-    if (playlist->id() == FavMusicListID)
+    if (playlist->id() == FavMusicListID) {
         for (auto &meta : metalist) {
             if (meta == d->activingMeta) {
                 d->updateQssProperty(d->btFavorite, sPropertyFavourite, false);
             }
         }
+    } else if (d->activingPlaylist != nullptr && d->activingPlaylist->id() == playlist->id()) {
+        if (playlist->allmusic().size() == 1) {
+            d->btPrev->setDisabled(true);
+            d->btNext->setDisabled(true);
+        } else {
+            d->btPrev->setDisabled(false);
+            d->btNext->setDisabled(false);
+        }
+    }
 }
 
 void Footer::onMusicPlayed(PlaylistPtr playlist, const MetaPtr meta)
@@ -693,6 +712,14 @@ void Footer::onMusicPlayed(PlaylistPtr playlist, const MetaPtr meta)
 
     d->activingPlaylist = playlist;
     d->activingMeta = meta;
+
+    if (playlist->allmusic().size() == 1) {
+        d->btPrev->setDisabled(true);
+        d->btNext->setDisabled(true);
+    } else {
+        d->btPrev->setDisabled(false);
+        d->btNext->setDisabled(false);
+    }
 
     d->updateQssProperty(d->btFavorite, sPropertyFavourite, meta->favourite);
 
@@ -754,6 +781,13 @@ void Footer::onMusicPause(PlaylistPtr playlist, const MetaPtr meta)
         d->btPlay->setIcon(DHiDPIHelper::loadNxPixmap(":/mpimage/dark/normal/play_normal.svg"));
     }
 
+    if (playlist->allmusic().size() == 1) {
+        d->btPrev->setDisabled(true);
+        d->btNext->setDisabled(true);
+    } else {
+        d->btPrev->setDisabled(false);
+        d->btNext->setDisabled(false);
+    }
 }
 
 void Footer::onMusicStoped(PlaylistPtr playlist, const MetaPtr meta)
@@ -777,6 +811,14 @@ void Footer::onMusicStoped(PlaylistPtr playlist, const MetaPtr meta)
         d->btPlay->setIcon(DHiDPIHelper::loadNxPixmap(":/mpimage/light/normal/play_normal.svg"));
     } else {
         d->btPlay->setIcon(DHiDPIHelper::loadNxPixmap(":/mpimage/dark/normal/play_normal.svg"));
+    }
+
+    if (playlist->allmusic().size() == 1) {
+        d->btPrev->setDisabled(true);
+        d->btNext->setDisabled(true);
+    } else {
+        d->btPrev->setDisabled(false);
+        d->btNext->setDisabled(false);
     }
 }
 

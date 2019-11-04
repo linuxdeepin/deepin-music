@@ -596,7 +596,8 @@ MusicListDataWidget::MusicListDataWidget(QWidget *parent) :
 
     d->titleLabel = new DLabel;
     auto titleFont = d->titleLabel->font();
-    titleFont.setFamily("SourceHanSansSC-Medium");
+    titleFont.setFamily("SourceHanSansSC");
+    titleFont.setWeight(QFont::Medium);
     titleFont.setPixelSize(24);
     d->titleLabel->setFont(titleFont);
     d->titleLabel->setFixedHeight(36);
@@ -803,7 +804,7 @@ void MusicListDataWidget::slotTheme(int type)
         setPalette(palette);
 
         auto titleLabelPalette = d->infoLabel->palette();
-        titleLabelPalette.setColor(DPalette::ButtonText, ("#777777"));
+        titleLabelPalette.setColor(DPalette::ButtonText, ("#000000"));
         d->titleLabel->setPalette(titleLabelPalette);
         d->titleLabel->setForegroundRole(DPalette::ButtonText);
 

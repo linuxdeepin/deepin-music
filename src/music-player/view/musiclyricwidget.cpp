@@ -271,6 +271,7 @@ void MUsicLyricWidget::onsearchBt()
         d->searchLyricsWidget->hide();
         m_leftLayout->setContentsMargins(120, 190, 140, 160);
     }
+    d->serachbt->update();
 }
 
 void MUsicLyricWidget::slotonsearchresult(QString path)

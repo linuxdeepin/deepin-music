@@ -51,7 +51,7 @@ CloseConfirmDialog::CloseConfirmDialog(QWidget *parent) :
 {
     Q_D(CloseConfirmDialog);
 
-    auto contentFrame = new DFrame;
+    auto contentFrame = new DWidget;
     auto contentLayout = new QVBoxLayout(contentFrame);
     contentLayout->setSpacing(0);
     contentLayout->setContentsMargins(0, 0, 0, 0);

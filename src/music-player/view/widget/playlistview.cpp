@@ -563,7 +563,7 @@ void PlayListView::showContextMenu(const QPoint &pos,
             }
             auto coverPixmap =  QPixmap::fromImage(WidgetHelper::cropRect(cover, QSize(64, 64)));
 
-            warnDlg.setIcon(QIcon(coverPixmap));
+            warnDlg.setIcon(QIcon::fromTheme("deepin-music"));
             if (1 == warnDlg.exec()) {
                 Q_EMIT deleteMusicList(metalist);
             }

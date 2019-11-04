@@ -47,6 +47,7 @@ public:
     void setCurPlaylist(QStandardItem *item);
 
     void closeAllPersistentEditor();
+    void clearSelected();
 
     void changePicture(QPixmap pixmap);
 

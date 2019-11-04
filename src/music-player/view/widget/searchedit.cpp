@@ -193,6 +193,8 @@ void SearchEdit::onTextChanged()
 
 void SearchEdit::onReturnPressed()
 {
+    if (!m_result->currentStr().isEmpty())
+        setText(m_result->currentStr());
     auto text = QString(this->text()).remove(" ");
 //    if (text.isEmpty()) {
 //        return;

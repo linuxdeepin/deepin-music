@@ -117,6 +117,18 @@ void SearchResult::selectDown()
     m_searchResult->setCurrentIndex(indexOfTheCellIWant);
 }
 
+QString SearchResult::currentStr()
+{
+    QString str;
+
+    auto index = m_searchResult->currentIndex();
+    if (index.isValid()) {
+        str = m_model->stringList()[index.row()];
+    }
+
+    return str;
+}
+
 void SearchResult::leaveEvent(QEvent *event)
 {
     m_searchResult->setCurrentIndex(QModelIndex());

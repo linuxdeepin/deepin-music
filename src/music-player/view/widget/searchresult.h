@@ -47,6 +47,8 @@ public:
     void selectUp();
     void selectDown();
 
+    QString currentStr();
+
     virtual void leaveEvent(QEvent *event) Q_DECL_OVERRIDE;
 signals:
     void locateMusic(const QString &hash);
