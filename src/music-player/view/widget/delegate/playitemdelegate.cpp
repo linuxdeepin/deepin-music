@@ -370,6 +370,7 @@ void PlayItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
     if (listview->getThemeType() == 2) {
         nameColor = QColor("#C0C6D4");
         otherColor = QColor("#C0C6D4");
+        otherColor.setAlphaF(0.6);
     }
 
     for (int col = 0; col < ColumnButt; ++col) {

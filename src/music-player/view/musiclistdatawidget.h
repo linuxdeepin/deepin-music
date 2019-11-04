@@ -39,6 +39,7 @@ public:
 
 public slots:
     void onSearchText();
+    void selectMusiclistChanged(PlaylistPtr playlist);
     void onMusiclistChanged(PlaylistPtr playlist);
     void onMusicListAdded(PlaylistPtr playlist, const MetaPtrList metalist);
     void onMusicListRemoved(PlaylistPtr playlist, const MetaPtrList metalist);

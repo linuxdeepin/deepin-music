@@ -261,6 +261,9 @@ Footer::Footer(QWidget *parent) :
     d->title->setMaximumWidth(140);
     d->title->setText(tr("Unknown Title"));
 //    d->title->installEventFilter(hoverFilter);
+    auto titlePl = d->title->palette();
+    titlePl.setColor(DPalette::WindowText, QColor("#000000"));
+    d->title->setPalette(titlePl);
 
     d->artist = new Label;
     auto artistFont = d->artist->font();
@@ -271,6 +274,11 @@ Footer::Footer(QWidget *parent) :
     d->artist->setObjectName("FooterArtist");
     d->artist->setMaximumWidth(140);
     d->artist->setText(tr("Unknown artist"));
+    auto artistPl = d->title->palette();
+    QColor artistColor("#000000");
+    artistColor.setAlphaF(0.6);
+    artistPl.setColor(DPalette::WindowText, artistColor);
+    d->artist->setPalette(artistPl);
 
     d->btPlay = new DButtonBoxButton(QStyle::SP_MediaPlay);
     //d->btPlay->setIcon(DHiDPIHelper::loadNxPixmap(":/mpimage/light/normal/play_normal.svg"));
@@ -850,12 +858,35 @@ void Footer::slotTheme(int type)
         QColor maskColor(200, 200, 200, 170);
         d->forwardWidget->setMaskColor(maskColor);
         rStr = "light";
+
+        auto titlePl = d->title->palette();
+        QColor titleColor("#000000");
+        titlePl.setColor(DPalette::WindowText, titleColor);
+        d->title->setPalette(titlePl);
+
+        auto artistPl = d->artist->palette();
+        QColor artistColor("#000000");
+        artistColor.setAlphaF(0.6);
+        artistPl.setColor(DPalette::WindowText, artistColor);
+        d->artist->setPalette(artistPl);
+
     } else {
         QColor backMaskColor(56, 56, 56);
         setMaskColor(backMaskColor);
         QColor maskColor(56, 56, 56, 170);
         d->forwardWidget->setMaskColor(maskColor);
         rStr = "dark";
+
+        auto titlePl = d->title->palette();
+        QColor titleColor("#FFFFFF");
+        titlePl.setColor(DPalette::WindowText, titleColor);
+        d->title->setPalette(titlePl);
+
+        auto artistPl = d->artist->palette();
+        QColor artistColor("#FFFFFF");
+        artistColor.setAlphaF(0.6);
+        artistPl.setColor(DPalette::WindowText, artistColor);
+        d->artist->setPalette(artistPl);
     }
     d->m_type = type;
     d->btPlay->setIcon(DHiDPIHelper::loadNxPixmap(QString(":/mpimage/%1/normal/play_normal.svg").arg(rStr)));

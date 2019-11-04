@@ -30,7 +30,7 @@
 #include <QHash>
 #include <QBuffer>
 
-#ifndef DISABLE_LIBAV
+//#ifndef DISABLE_LIBAV
 #ifdef __cplusplus
 extern "C" {
 #endif // __cplusplus
@@ -39,7 +39,7 @@ extern "C" {
 #ifdef __cplusplus
 }
 #endif // __cplusplus
-#endif // DISABLE_LIBAV
+//#endif // DISABLE_LIBAV
 
 #include <taglib/tag.h>
 #include <taglib/fileref.h>
@@ -55,9 +55,9 @@ static QMap<QString, QByteArray> localeCodes;
 
 void MetaDetector::init()
 {
-#ifndef DISABLE_LIBAV
+//#ifndef DISABLE_LIBAV
     av_register_all();
-#endif // DISABLE_LIBAV
+//#endif // DISABLE_LIBAV
     localeCodes.insert("zh_CN", "GB18030");
 }
 
@@ -221,7 +221,7 @@ void MetaDetector::updateMetaFromLocalfile(MediaMeta *meta, const QFileInfo &fil
     }
     meta->length = 0;
 
-#ifndef DISABLE_LIBAV
+//#ifndef DISABLE_LIBAV
     AVFormatContext *pFormatCtx = avformat_alloc_context();
     avformat_open_input(&pFormatCtx, meta->localPath.toStdString().c_str(), NULL, NULL);
     if (pFormatCtx) {
@@ -233,7 +233,7 @@ void MetaDetector::updateMetaFromLocalfile(MediaMeta *meta, const QFileInfo &fil
     }
     avformat_close_input(&pFormatCtx);
     avformat_free_context(pFormatCtx);
-#endif // DISABLE_LIBAV
+//#endif // DISABLE_LIBAV
 
     updateMediaFileTagCodec(meta, "", false);
 
@@ -254,7 +254,7 @@ void MetaDetector::updateMetaFromLocalfile(MediaMeta *meta, const QFileInfo &fil
 QByteArray MetaDetector::getCoverData(const QString &path)
 {
     QByteArray byteArray;
-#ifndef DISABLE_LIBAV
+//#ifndef DISABLE_LIBAV
     if (!path.isEmpty()) {
         AVFormatContext *pFormatCtx = avformat_alloc_context();
         avformat_open_input(&pFormatCtx, path.toStdString().c_str(), NULL, NULL);
@@ -280,7 +280,7 @@ QByteArray MetaDetector::getCoverData(const QString &path)
         avformat_close_input(&pFormatCtx);
         avformat_free_context(pFormatCtx);
     }
-#endif // DISABLE_LIBAV
+//#endif // DISABLE_LIBAV
 
     return byteArray;
 }

@@ -12,7 +12,7 @@ TARGET      = $$APP_TARGET
 CONFIG      += c++11 link_pkgconfig
 DESTDIR     = $$BUILD_DIST/bin
 
-unix{
+#unix{
     DEFINES += SUPPORT_INOTIFY
     QT += x11extras
     PKGCONFIG += icu-uc icu-i18n
@@ -24,7 +24,7 @@ unix{
     } else {
         DEFINES += DISABLE_LIBAV
     }
-}
+#}
 
 INCLUDEPATH += $$PWD/view/helper
 INCLUDEPATH += $$PWD/core

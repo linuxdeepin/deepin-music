@@ -550,10 +550,10 @@ QList<MediaMeta> MediaDatabase::allmetas()
         meta.artist = query.value(3).toString();
         meta.album = query.value(4).toString();
         meta.filetype = query.value(5).toString();
-        meta.track = query.value(6).toInt();
-        meta.offset = query.value(7).toInt();
-        meta.length = query.value(8).toInt();
-        meta.size = query.value(9).toInt();
+        meta.track = query.value(6).toLongLong();
+        meta.offset = query.value(7).toLongLong();
+        meta.length = query.value(8).toLongLong();
+        meta.size = query.value(9).toLongLong();
         meta.timestamp = query.value(10).toLongLong();
         meta.invalid = query.value(11).toBool();
         meta.searchID = query.value(12).toString();

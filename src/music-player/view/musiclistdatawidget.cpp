@@ -48,7 +48,7 @@ class MusicListDataWidgetPrivate
 public:
     MusicListDataWidgetPrivate(MusicListDataWidget *parent) : q_ptr(parent) {}
 
-    void initData(PlaylistPtr playlist);
+    void initData(PlaylistPtr playlist, bool selectFlag = false);
     void updateInfo();
     void initConntion();
     void showEmptyHits();
@@ -219,7 +219,7 @@ void MusicListDataWidgetPrivate::updateInfo()
     }
 }
 
-void MusicListDataWidgetPrivate::initData(PlaylistPtr playlist)
+void MusicListDataWidgetPrivate::initData(PlaylistPtr playlist, bool selectFlag)
 {
     Q_Q(MusicListDataWidget);
 
@@ -247,7 +247,8 @@ void MusicListDataWidgetPrivate::initData(PlaylistPtr playlist)
             btlistMode->setChecked(true);
         }
 
-        albumListView->onMusiclistChanged(playlist);
+        if (!selectFlag || albumListView->isEmpty())
+            albumListView->onMusiclistChanged(playlist);
     } else if (playlist->id() == ArtistMusicListID) {
         //update dropdown
         albumDropdown->hide();
@@ -267,7 +268,8 @@ void MusicListDataWidgetPrivate::initData(PlaylistPtr playlist)
             btIconMode->setChecked(false);
             btlistMode->setChecked(true);
         }
-        artistListView->onMusiclistChanged(playlist);
+        if (!selectFlag || artistListView->isEmpty())
+            artistListView->onMusiclistChanged(playlist);
     } else {
         //update dropdown
         albumDropdown->hide();
@@ -748,6 +750,20 @@ void MusicListDataWidget::onSearchText()
     }
 
     d->initData(d->curPlaylist);
+}
+
+void MusicListDataWidget::selectMusiclistChanged(PlaylistPtr playlist)
+{
+    if (playlist.isNull()) {
+        qWarning() << "can not change to emptry playlist";
+        return;
+    }
+
+    Q_D(MusicListDataWidget);
+
+    playlist->setSearchStr("");
+
+    d->initData(playlist, true);
 }
 
 void MusicListDataWidget::onMusiclistChanged(PlaylistPtr playlist)

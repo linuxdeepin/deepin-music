@@ -15,7 +15,7 @@ CONFIG      += c++11 link_pkgconfig
 
 DESTDIR     = $$BUILD_DIST/lib
 
-unix {
+#unix {
 PKGCONFIG += icu-uc icu-i18n taglib
 QT += dtkcore
 
@@ -25,7 +25,7 @@ CONFIG(ENABLE_LIBAV) {
     DEFINES += DISABLE_LIBAV
 }
 
-}
+#}
 
 DEFINES += LIBDMUSIC_LIBRARY
 

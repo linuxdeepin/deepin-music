@@ -131,12 +131,12 @@ MusicListWidget::MusicListWidget(QWidget *parent) : DWidget(parent)
         if (curPtr != nullptr) {
             m_customizeListview->clearSelected();
             m_customizeListview->closeAllPersistentEditor();
-            m_dataListView->onMusiclistChanged(curPtr);
+            m_dataListView->selectMusiclistChanged(curPtr);
 //            DUtil::TimerSingleShot(500, [this]() {
 //                Q_EMIT this->hidePlaylist();
 //            });
             curPtr->setSearchStr("");
-            Q_EMIT selectedPlaylistChange(curPtr);
+            //Q_EMIT selectedPlaylistChange(curPtr);
         }
     });
     connect(m_dataBaseListview, &MusicListView::currentChanged,
@@ -145,12 +145,12 @@ MusicListWidget::MusicListWidget(QWidget *parent) : DWidget(parent)
         if (curPtr != nullptr) {
             m_customizeListview->clearSelected();
             m_customizeListview->closeAllPersistentEditor();
-            m_dataListView->onMusiclistChanged(curPtr);
+            m_dataListView->selectMusiclistChanged(curPtr);
 //            DUtil::TimerSingleShot(500, [this]() {
 //                Q_EMIT this->hidePlaylist();
 //            });
             curPtr->setSearchStr("");
-            Q_EMIT selectedPlaylistChange(curPtr);
+            //Q_EMIT selectedPlaylistChange(curPtr);
         }
     });
     connect(m_dataBaseListview, &MusicListView::customResort,
@@ -181,12 +181,12 @@ MusicListWidget::MusicListWidget(QWidget *parent) : DWidget(parent)
         if (curPtr != nullptr) {
             m_dataBaseListview->clearSelected();
             m_dataBaseListview->closeAllPersistentEditor();
-            m_dataListView->onMusiclistChanged(curPtr);
+            m_dataListView->selectMusiclistChanged(curPtr);
 //            DUtil::TimerSingleShot(500, [this]() {
 //                Q_EMIT this->hidePlaylist();
 //            });
             curPtr->setSearchStr("");
-            Q_EMIT selectedPlaylistChange(curPtr);
+            //Q_EMIT selectedPlaylistChange(curPtr);
         }
     });
     connect(m_customizeListview, &MusicListView::currentChanged,
@@ -195,12 +195,12 @@ MusicListWidget::MusicListWidget(QWidget *parent) : DWidget(parent)
         if (curPtr != nullptr) {
             m_dataBaseListview->clearSelected();
             m_dataBaseListview->closeAllPersistentEditor();
-            m_dataListView->onMusiclistChanged(curPtr);
+            m_dataListView->selectMusiclistChanged(curPtr);
 //            DUtil::TimerSingleShot(500, [this]() {
 //                Q_EMIT this->hidePlaylist();
 //            });
             curPtr->setSearchStr("");
-            Q_EMIT selectedPlaylistChange(curPtr);
+            //Q_EMIT selectedPlaylistChange(curPtr);
         }
     });
     connect(m_customizeListview, &MusicListView::customResort,

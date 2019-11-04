@@ -753,6 +753,8 @@ void Playlist::metaListToPlayMusicTypePtrList(Playlist::SortType sortType, const
                     qDebug() << "skip dump music " << meta->hash << meta->localPath;
                     continue;
                 }
+                if (!playMusicTypePtrListData.metas[albumStr]->extraName.contains(artistStr, Qt::CaseInsensitive))
+                    playMusicTypePtrListData.metas[albumStr]->extraName += ("&" + artistStr);
                 if (playMusicTypePtrListData.metas[albumStr]->icon.isNull())
                     playMusicTypePtrListData.metas[albumStr]->icon = MetaSearchService::coverData(meta);
                 if (playMusicTypePtrListData.metas[albumStr]->timestamp < meta->timestamp)
