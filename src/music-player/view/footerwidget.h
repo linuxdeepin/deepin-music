@@ -23,6 +23,7 @@
 
 #include <DBlurEffectWidget>
 #include <QPointer>
+#include <DFloatingWidget>
 
 #include "../core/playlist.h"
 #include <searchmeta.h>
@@ -33,7 +34,7 @@ DWIDGET_USE_NAMESPACE
 
 class PlayListWidget;
 class FooterPrivate;
-class Footer : public DBlurEffectWidget
+class Footer : public DFloatingWidget
 {
     Q_OBJECT
     Q_PROPERTY(QString defaultCover READ defaultCover WRITE setDefaultCover)

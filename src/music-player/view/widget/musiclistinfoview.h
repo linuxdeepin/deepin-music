@@ -28,7 +28,7 @@
 DWIDGET_USE_NAMESPACE
 
 class MusicListInfoViewPrivate;
-class MusicListInfoView : public DListView
+class MusicListInfoView : public QListView
 {
     Q_OBJECT
 public:

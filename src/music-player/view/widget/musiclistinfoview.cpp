@@ -64,7 +64,7 @@ public:
 };
 
 MusicListInfoView::MusicListInfoView(QWidget *parent)
-    : DListView(parent), d_ptr(new MusicListInfoViewPrivate(this))
+    : QListView(parent), d_ptr(new MusicListInfoViewPrivate(this))
 {
     Q_D(MusicListInfoView);
 
@@ -73,6 +73,8 @@ MusicListInfoView::MusicListInfoView(QWidget *parent)
     QColor BackgroundColor("#FFFFFF");
     palette.setColor(DPalette::Background, BackgroundColor);
     setPalette(palette);
+    setIconSize( QSize(36, 36) );
+//    setGridSize( QSize(36, 36) );
 
     d->model = new MusiclistInfomodel(0, 1, this);
     setModel(d->model);
@@ -539,7 +541,7 @@ void MusicListInfoView::showContextMenu(const QPoint &pos,
 
 void MusicListInfoView::dragEnterEvent(QDragEnterEvent *event)
 {
-    DListView::dragEnterEvent(event);
+    QListView::dragEnterEvent(event);
 }
 
 void MusicListInfoView::startDrag(Qt::DropActions supportedActions)
@@ -552,7 +554,7 @@ void MusicListInfoView::startDrag(Qt::DropActions supportedActions)
     }
 
     setAutoScroll(false);
-    DListView::startDrag(supportedActions);
+    QListView::startDrag(supportedActions);
     setAutoScroll(true);
 
     QMap<QString, int> hashIndexs;

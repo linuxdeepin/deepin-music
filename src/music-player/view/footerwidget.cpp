@@ -129,6 +129,7 @@ void FooterPrivate::installTipHint(QWidget *w, const QString &hintstr)
     hintWidget->hide();
     hintWidget->setText(hintstr);
     hintWidget->setFixedHeight(32);
+    hintWidget->setForegroundRole(DPalette::TextTitle);
     installHint(w, hintWidget);
 }
 
@@ -208,28 +209,32 @@ void FooterPrivate::initConnection()
 }
 
 Footer::Footer(QWidget *parent) :
-    DBlurEffectWidget(parent), d_ptr(new FooterPrivate(this))
+    DFloatingWidget(parent), d_ptr(new FooterPrivate(this))
 {
     Q_D(Footer);
 
     //setFixedHeight(70);
     setFocusPolicy(Qt::ClickFocus);
     setObjectName("Footer");
+    this->setBlurBackgroundEnabled(true);
 
-    setBlurRectXRadius(18);
-    setBlurRectYRadius(18);
-    setRadius(30);
-    setBlurEnabled(true);
-    QColor backMaskColor(200, 200, 200);
-    setMaskColor(backMaskColor);
+//    this->blurBackground()->setBlurRectXRadius(18);
+//    this->blurBackground()->setBlurRectYRadius(18);
+//    this->blurBackground()->setRadius(30);
+    this->blurBackground()->setBlurEnabled(true);
+    this->blurBackground()->setMode(DBlurEffectWidget::GaussianBlur);
+//    QColor backMaskColor(255, 255, 255, 170);
+//    this->blurBackground()->setMaskColor(backMaskColor);
 
     d->forwardWidget = new DBlurEffectWidget(this);
+//    d->forwardWidget->setBlurBackgroundEnabled(true);
     d->forwardWidget->setBlurRectXRadius(18);
     d->forwardWidget->setBlurRectYRadius(18);
     d->forwardWidget->setRadius(30);
-    d->forwardWidget->setMode(DBlurEffectWidget::GaussianBlur);
     d->forwardWidget->setBlurEnabled(true);
-    QColor maskColor(200, 200, 200, 170);
+    d->forwardWidget->setMode(DBlurEffectWidget::GaussianBlur);
+
+    QColor maskColor(255, 255, 255, 170);
     d->forwardWidget->setMaskColor(maskColor);
 
     auto backLayout = new QVBoxLayout(this);
@@ -239,14 +244,14 @@ Footer::Footer(QWidget *parent) :
 
     auto mainVBoxlayout = new QVBoxLayout(d->forwardWidget);
     mainVBoxlayout->setSpacing(0);
-    mainVBoxlayout->setContentsMargins(0, 0, 0, 10);
+    mainVBoxlayout->setContentsMargins(10, 0, 10, 10);
 
     auto hoverFilter = new HoverFilter(this);
 
     auto downWidget = new DWidget();
     auto layout = new QHBoxLayout(downWidget);
-    layout->setContentsMargins(10, 0, 10, 0);
-    layout->setSpacing(10);
+    layout->setContentsMargins(0, 0, 0, 0);
+//    layout->setSpacing(10);
 
     d->btCover = new MusicPixmapButton();
     d->btCover->setObjectName("FooterCoverHover");
@@ -263,9 +268,11 @@ Footer::Footer(QWidget *parent) :
     d->title->setMaximumWidth(140);
     d->title->setText(tr("Unknown Title"));
 //    d->title->installEventFilter(hoverFilter);
-    auto titlePl = d->title->palette();
-    titlePl.setColor(DPalette::WindowText, QColor("#000000"));
-    d->title->setPalette(titlePl);
+//    auto titlePl = d->title->palette();
+//    titlePl.setColor(DPalette::WindowText, QColor("#000000"));
+//    d->title->setPalette(titlePl);
+
+    d->title->setForegroundRole(DPalette::TextTitle);
 
     d->artist = new Label;
     auto artistFont = d->artist->font();
@@ -276,11 +283,13 @@ Footer::Footer(QWidget *parent) :
     d->artist->setObjectName("FooterArtist");
     d->artist->setMaximumWidth(140);
     d->artist->setText(tr("Unknown artist"));
-    auto artistPl = d->title->palette();
-    QColor artistColor("#000000");
-    artistColor.setAlphaF(0.6);
-    artistPl.setColor(DPalette::WindowText, artistColor);
-    d->artist->setPalette(artistPl);
+//    auto artistPl = d->title->palette();
+//    QColor artistColor("#000000");
+//    artistColor.setAlphaF(0.6);
+//    artistPl.setColor(DPalette::WindowText, artistColor);
+//    d->artist->setPalette(artistPl);
+//    d->artist->setForegroundRole(DPalette::WindowText);
+    d->artist->setForegroundRole(DPalette::TextTips);
 
     d->btPlay = new DButtonBoxButton(QStyle::SP_MediaPlay);
     //d->btPlay->setIcon(DHiDPIHelper::loadNxPixmap(":/mpimage/light/normal/play_normal.svg"));
@@ -396,7 +405,7 @@ Footer::Footer(QWidget *parent) :
 
     auto metaLayout = new QHBoxLayout(this);
     metaLayout->setContentsMargins(0, 0, 0, 0);
-    metaLayout->setSpacing(10);
+//    metaLayout->setSpacing(10);
     metaLayout->addWidget(d->btCover);
     metaLayout->addLayout(musicMetaLayout);
 
@@ -417,7 +426,7 @@ Footer::Footer(QWidget *parent) :
     auto actWidget = new QWidget;
     auto actLayout = new QHBoxLayout(actWidget);
     actLayout->setMargin(0);
-    actLayout->setSpacing(10);
+//    actLayout->setSpacing(10);
     actLayout->addWidget(d->btFavorite, 0, Qt::AlignRight | Qt::AlignVCenter);
     actLayout->addWidget(d->btLyric, 0, Qt::AlignRight | Qt::AlignVCenter);
     actLayout->addWidget(d->btPlayMode, 0, Qt::AlignRight | Qt::AlignVCenter);
@@ -558,25 +567,25 @@ void Footer::showPlayListWidget(int width, int height, bool changFlag)
     if (changFlag) {
         if (d->showPlaylistFlag) {
             d->playListWidget->hide();
-            setFixedSize(width - 20, 70);
-            move(10, height - 80);
-            resize(width - 20, 70);
+            setFixedSize(width - 10, 80);
+            move(5, height - 86);
+            resize(width - 10, 80);
         } else {
             d->playListWidget->show();
-            setFixedSize(width - 20, 413);
-            move(10, height - 423);
-            resize(width - 20, 413);
+            setFixedSize(width - 10, 423);
+            move(5, height - 429);
+            resize(width - 10, 423);
         }
         d->showPlaylistFlag = (!d->showPlaylistFlag);
     } else {
         if (d->showPlaylistFlag) {
-            setFixedSize(width - 20, 413);
-            move(10, height - 423);
-            resize(width - 20, 413);
+            setFixedSize(width - 10, 423);
+            move(5, height - 429);
+            resize(width - 10, 423);
         } else {
-            setFixedSize(width - 20, 70);
-            move(10, height - 80);
-            resize(width - 20, 70);
+            setFixedSize(width - 10, 80);
+            move(5, height - 86);
+            resize(width - 10, 80);
         }
     }
 }
@@ -723,6 +732,7 @@ void Footer::onMusicPlayed(PlaylistPtr playlist, const MetaPtr meta)
     }
 
     d->forwardWidget->setSourceImage(coverImage);
+    //d->waveform->onAudioBuffer(MetaDetector::getMetaData(meta->localPath));
 
     this->enableControl(true);
     d->title->show();
@@ -859,40 +869,42 @@ void Footer::slotTheme(int type)
     Q_D(Footer);
     QString rStr;
     if (type == 1) {
-        QColor backMaskColor(200, 200, 200);
-        setMaskColor(backMaskColor);
-        QColor maskColor(200, 200, 200, 190);
+//        QColor backMaskColor(255, 255, 255, 170);
+//        this->blurBackground()->setMaskColor(backMaskColor);
+        QColor maskColor(255, 255, 255, 170);
         d->forwardWidget->setMaskColor(maskColor);
         rStr = "light";
 
-        auto titlePl = d->title->palette();
-        QColor titleColor("#000000");
-        titlePl.setColor(DPalette::WindowText, titleColor);
-        d->title->setPalette(titlePl);
+//        auto titlePl = d->title->palette();
+//        QColor titleColor("#000000");
+//        titlePl.setColor(DPalette::WindowText, titleColor);
+//        d->title->setPalette(titlePl);
 
-        auto artistPl = d->artist->palette();
-        QColor artistColor("#000000");
-        artistColor.setAlphaF(0.6);
-        artistPl.setColor(DPalette::WindowText, artistColor);
-        d->artist->setPalette(artistPl);
+//        auto artistPl = d->artist->palette();
+//        QColor artistColor("#000000");
+//        artistColor.setAlphaF(0.4);
+//        artistPl.setColor(DPalette::WindowText, artistColor);
+//        d->artist->setPalette(artistPl);
+//        d->artist->setForegroundRole(DPalette::WindowText);
 
     } else {
-        QColor backMaskColor(56, 56, 56);
-        setMaskColor(backMaskColor);
-        QColor maskColor(56, 56, 56, 190);
+//        QColor backMaskColor(56, 56, 56, 170);
+//        blurBackground()->setMaskColor(backMaskColor);
+        QColor maskColor(56, 56, 56, 170);
         d->forwardWidget->setMaskColor(maskColor);
         rStr = "dark";
 
-        auto titlePl = d->title->palette();
-        QColor titleColor("#FFFFFF");
-        titlePl.setColor(DPalette::WindowText, titleColor);
-        d->title->setPalette(titlePl);
+//        auto titlePl = d->title->palette();
+//        QColor titleColor("#FFFFFF");
+//        titlePl.setColor(DPalette::WindowText, titleColor);
+//        d->title->setPalette(titlePl);
 
-        auto artistPl = d->artist->palette();
-        QColor artistColor("#FFFFFF");
-        artistColor.setAlphaF(0.6);
-        artistPl.setColor(DPalette::WindowText, artistColor);
-        d->artist->setPalette(artistPl);
+//        auto artistPl = d->artist->palette();
+//        QColor artistColor("#FFFFFF");
+//        artistColor.setAlphaF(0.4);
+//        artistPl.setColor(DPalette::WindowText, artistColor);
+//        d->artist->setPalette(artistPl);
+//        d->artist->setForegroundRole(DPalette::WindowText);
     }
     d->m_type = type;
     d->btPlay->setIcon(DHiDPIHelper::loadNxPixmap(QString(":/mpimage/%1/normal/play_normal.svg").arg(rStr)));

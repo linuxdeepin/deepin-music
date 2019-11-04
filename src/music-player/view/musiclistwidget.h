@@ -22,10 +22,12 @@
 #pragma once
 
 #include <DWidget>
+#include <DLabel>
 
 #include "../core/playlist.h"
 
 DWIDGET_USE_NAMESPACE
+
 
 class MusicListView;
 class MusicListDataWidget;

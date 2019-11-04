@@ -127,7 +127,7 @@ void MusicListDataDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
             }
             //设置模糊
             QImage t_image = icon.pixmap(rect.width(), rect.height()).toImage();
-            t_image  = t_image.copy(0, rect.height() - curFillSize, t_image.width(), curFillSize);
+            t_image  = t_image.copy(0, rect.height() - curFillSize, t_image.width(), curFillSize + 10);
             QTransform old_transform = painter->transform();
             painter->translate(fillBlurRect.topLeft());
             qt_blurImage(painter, t_image, 10, false, false);
@@ -169,7 +169,7 @@ void MusicListDataDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
 
             //设置模糊
             QImage t_image = icon.pixmap(rect.width(), rect.height()).toImage();
-            t_image  = t_image.copy(0, rect.height() - curFillSize, t_image.width(), curFillSize);
+            t_image  = t_image.copy(0, rect.height() - curFillSize, t_image.width(), curFillSize + 10);
 
             QTransform old_transform = painter->transform();
             painter->translate(fillBlurRect.topLeft());
@@ -276,7 +276,7 @@ void MusicListDataDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
             }
             //icon
             if (playlistPtr->searchStr().isEmpty()) {
-                QRect numRect(0, option.rect.y(), 40, 40);
+                QRect numRect(2, option.rect.y() + 3, 32, 32);
                 auto icon = option.icon;
                 auto value = index.data(Qt::DecorationRole);
                 if (value.type() == QVariant::Icon) {

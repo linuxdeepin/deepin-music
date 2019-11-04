@@ -41,9 +41,9 @@ class ImportWidgetPrivate
 public:
     ImportWidgetPrivate(ImportWidget *parent) : q_ptr(parent) {}
 
-    DLabel                  *text = nullptr;
+    QLabel                  *text = nullptr;
     DPushButton             *importButton = nullptr;
-    DLabel                  *logo;
+    QLabel                  *logo;
     ImportWidget *q_ptr;
     Q_DECLARE_PUBLIC(ImportWidget)
 };
@@ -59,7 +59,7 @@ ImportWidget::ImportWidget(QWidget *parent) : DFrame(parent), d_ptr(new ImportWi
     auto layout = new QVBoxLayout(this);
     layout->setMargin(0);
 
-    d->logo = new DLabel;
+    d->logo = new QLabel;
     d->logo->setFixedSize(128, 128);
     d->logo->setObjectName("ImportViewLogo");
     d->logo->setPixmap(DHiDPIHelper::loadNxPixmap(":/mpimage/light/import_music.svg"));
@@ -83,7 +83,7 @@ ImportWidget::ImportWidget(QWidget *parent) : DFrame(parent), d_ptr(new ImportWi
     d->importButton->setText(tr("Add Music"));
     d->importButton->setFocusPolicy(Qt::NoFocus);
 
-    d->text = new DLabel;
+    d->text = new QLabel;
     d->text->setObjectName("ImportViewText");
     auto textFont = d->text->font();
     textFont.setFamily("SourceHanSansSC");
@@ -194,10 +194,11 @@ void ImportWidget::slotTheme(int type)
         pl.setColor(DPalette::Shadow, sbcolor);
         d->importButton->setPalette(pl);
 
-        DPalette pa = d->text->palette();
-        pa.setColor(DPalette::WindowText, "#777777");
+        QPalette pa = d->text->palette();
+        pa.setColor(QPalette::WindowText, "#777777");
         d->text->setPalette(pa);
-        d->text->setForegroundRole(DPalette::WindowText);
+        d->text->setForegroundRole(QPalette::WindowText);
+//        d->text->setForegroundRole(DPalette::TextTips);
     } else {
         rStr = "dark";
         auto pl = d->importButton->palette();
@@ -209,10 +210,11 @@ void ImportWidget::slotTheme(int type)
         pl.setColor(DPalette::Shadow, sbcolor);
         d->importButton->setPalette(pl);
 
-        DPalette pa = d->text->palette();
-        pa.setColor(DPalette::WindowText, "#798190");
+        QPalette pa = d->text->palette();
+        pa.setColor(QPalette::WindowText, "#798190");
         d->text->setPalette(pa);
-        d->text->setForegroundRole(DPalette::WindowText);
+        d->text->setForegroundRole(QPalette::WindowText);
+//        d->text->setForegroundRole(DPalette::TextTips);
     }
     d->logo->setPixmap(DHiDPIHelper::loadNxPixmap(QString(":/mpimage/%1/import_music.svg").arg(rStr)));
 }

@@ -139,8 +139,26 @@ void Waveform::clearWave()
     sampleList.clear();
 }
 
+void Waveform::onAudioBuffer(QVector<float> allData)
+{
+    if (!allData.isEmpty()) {
+        float max = allData.first();
+        for (auto data : allData) {
+            if (max < data)
+                max = data;
+        }
+        for (int i = 0; i < allData.size(); ++i) {
+            allData[i] = qAbs(allData[i] / max);
+        }
+    }
+    reciveSampleList = allData;
+    spectrumFlag = false;
+    updateAudioBuffer();
+}
+
 void Waveform::onAudioBufferProbed(const QAudioBuffer &buffer)
 {
+    spectrumFlag = true;
     for (auto value : getBufferLevels(buffer)) {
         reciveSampleList.push_front(value);
         break;
@@ -364,6 +382,31 @@ void Waveform::leaveEvent(QEvent *event)
     DSlider::leaveEvent(event);
 }
 
+void Waveform::resizeEvent(QResizeEvent *event)
+{
+    DSlider::resizeEvent(event);
+    if (!spectrumFlag)
+        updateAudioBuffer();
+    else
+        powerSpectrum();
+}
+
+void Waveform::updateAudioBuffer()
+{
+    if (reciveSampleList.isEmpty()) {
+        sampleList.clear();
+        return;
+    }
+    QVector<float> curSampleListX;
+    float singleWidth = width() / float(reciveSampleList.size() - 1);
+    for (int i = 0; i < reciveSampleList.size(); i++) {
+        curSampleListX.append(i * singleWidth);
+    }
+    QVector<float> endSampleListX, endSampleListY;
+    spline(curSampleListX, reciveSampleList, endSampleListX, sampleList, width() / WAVE_DURATION + 1);
+    update();
+}
+
 bool Waveform::powerSpectrum()
 {
     sampleList.clear();
@@ -486,10 +529,12 @@ void Waveform::spline(QVector<float> &x, QVector<float> &y, QVector<float> &vx, 
     vy.resize(pnt);
 
     int index = 0;
-    for (int i = 0; i < pnt; i ++) {
+    for (int i = 0; i < (pnt - 1); i ++) {
         vx[i] = i * (x[N - 1] - x[0]) / (pnt - 1) + x[0];
 
-        while (vx[i] > x[index + 1]) index ++;
+        while (vx[i] > x[index + 1]) {
+            index ++;
+        }
         float fx = vx[i] - x[index];
 
         vy[i] = a[index] + b[index] * fx + c[index] * fx * fx + d[index] * fx * fx * fx;

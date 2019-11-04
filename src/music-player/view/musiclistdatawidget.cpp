@@ -53,14 +53,14 @@ public:
     void initConntion();
     void showEmptyHits();
 
-    DLabel              *emptyHits      = nullptr;
+    QLabel              *emptyHits      = nullptr;
     DWidget             *actionBar      = nullptr;
-    DLabel              *titleLabel     = nullptr;
+    QLabel              *titleLabel     = nullptr;
     DDropdown           *albumDropdown  = nullptr;
     DDropdown           *artistDropdown = nullptr;
     DDropdown           *musicDropdown  = nullptr;
     DPushButton         *btPlayAll      = nullptr;
-    DLabel              *infoLabel      = nullptr;
+    QLabel              *infoLabel      = nullptr;
     MusicImageButton    *btIconMode     = nullptr;
     MusicImageButton    *btlistMode     = nullptr;
     MusicListDataView   *albumListView  = nullptr;
@@ -614,7 +614,7 @@ MusicListDataWidget::MusicListDataWidget(QWidget *parent) :
     actionTileBarLayout->setContentsMargins(10, 0, 8, 0);
     actionTileBarLayout->setSpacing(0);
 
-    d->titleLabel = new DLabel;
+    d->titleLabel = new QLabel;
     auto titleFont = d->titleLabel->font();
     titleFont.setFamily("SourceHanSansSC");
     titleFont.setWeight(QFont::Medium);
@@ -680,7 +680,7 @@ MusicListDataWidget::MusicListDataWidget(QWidget *parent) :
     btPlayAllFont.setPixelSize(14);
     d->btPlayAll->setFont(btPlayAllFont);
 
-    d->infoLabel = new DLabel;
+    d->infoLabel = new QLabel;
     d->infoLabel->setObjectName("MusicListDataTitle");
     d->infoLabel->setText(tr("All Music"));
     d->infoLabel->setMinimumWidth(200);
@@ -716,7 +716,7 @@ MusicListDataWidget::MusicListDataWidget(QWidget *parent) :
     actionBarLayout->addLayout(actionTileBarLayout);
     actionBarLayout->addLayout(actionInfoBarLayout);
 
-    d->emptyHits = new DLabel();
+    d->emptyHits = new QLabel();
     d->emptyHits->setObjectName("MusicListDataEmptyHits");
     d->emptyHits->hide();
 
@@ -796,8 +796,10 @@ void MusicListDataWidget::onMusicListAdded(PlaylistPtr playlist, const MetaPtrLi
 {
     Q_D(MusicListDataWidget);
     if (playlist->id() != AlbumMusicListID && playlist->id() != ArtistMusicListID) {
-        if (playlist == d->musicListView->playlist())
+        if (playlist == d->musicListView->playlist()) {
             d->musicListView->onMusicListAdded(metalist);
+            d->updateInfo();
+        }
     } else {
         d->initData(d->curPlaylist);
     }
@@ -873,9 +875,9 @@ void MusicListDataWidget::slotTheme(int type)
         setPalette(palette);
 
         auto titleLabelPalette = d->infoLabel->palette();
-        titleLabelPalette.setColor(DPalette::ButtonText, ("#000000"));
+        titleLabelPalette.setColor(QPalette::WindowText, QColor("#000000"));
         d->titleLabel->setPalette(titleLabelPalette);
-        d->titleLabel->setForegroundRole(DPalette::ButtonText);
+        d->titleLabel->setForegroundRole(QPalette::WindowText);
 
         auto playAllPalette = d->btPlayAll->palette();
         playAllPalette.setColor(DPalette::ButtonText, Qt::white);
@@ -884,9 +886,9 @@ void MusicListDataWidget::slotTheme(int type)
         d->btPlayAll->setPalette(playAllPalette);
 
         auto infoLabelPalette = d->infoLabel->palette();
-        infoLabelPalette.setColor(DPalette::ButtonText, ("#777777"));
+        infoLabelPalette.setColor(DPalette::WindowText, QColor("#777777"));
         d->infoLabel->setPalette(infoLabelPalette);
-        d->infoLabel->setForegroundRole(DPalette::ButtonText);
+        d->infoLabel->setForegroundRole(DPalette::WindowText);
 
 //        auto playAllPalette = d->btPlayAll->palette();
 //        playAllPalette.setColor(DPalette::Dark, QColor("#FD5E5E"));
@@ -898,9 +900,9 @@ void MusicListDataWidget::slotTheme(int type)
         palette.setColor(DPalette::Background, background);
         setPalette(palette);
         auto titleLabelPalette = d->infoLabel->palette();
-        titleLabelPalette.setColor(DPalette::ButtonText, ("#FFFFFF"));
+        titleLabelPalette.setColor(DPalette::WindowText, QColor("#FFFFFF"));
         d->titleLabel->setPalette(titleLabelPalette);
-        d->titleLabel->setForegroundRole(DPalette::ButtonText);
+        d->titleLabel->setForegroundRole(DPalette::WindowText);
 
         auto playAllPalette = d->btPlayAll->palette();
         playAllPalette.setColor(DPalette::ButtonText, "#FFFFFF");
@@ -909,9 +911,9 @@ void MusicListDataWidget::slotTheme(int type)
         d->btPlayAll->setPalette(playAllPalette);
 
         auto infoLabelPalette = d->infoLabel->palette();
-        infoLabelPalette.setColor(DPalette::ButtonText, ("#C0C6D4"));
+        infoLabelPalette.setColor(DPalette::WindowText, QColor("#C0C6D4"));
         d->infoLabel->setPalette(infoLabelPalette);
-        d->infoLabel->setForegroundRole(DPalette::ButtonText);
+        d->infoLabel->setForegroundRole(DPalette::WindowText);
 
 //        auto playAllPalette = d->btPlayAll->palette();
 //        playAllPalette.setColor(DPalette::Dark, QColor("#DA2D2D"));

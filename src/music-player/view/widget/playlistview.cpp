@@ -169,11 +169,12 @@ void PlayListView::setViewModeFlag(QListView::ViewMode mode)
     if (mode == QListView::IconMode) {
         setIconSize( QSize(140, 140) );
         setGridSize( QSize(170, 213) );
-        setViewportMargins(10, 10, 10, 10);
+//        setViewportMargins(10, 10, 10, 10);
     } else {
         setIconSize( QSize(36, 36) );
-        setGridSize( QSize(36, 36) );
-        setViewportMargins(0, 0, 0, 0);
+//        setGridSize( QSize(36, 36) );
+        setGridSize( QSize(-1, -1) );
+//        setViewportMargins(0, 0, 0, 0);
     }
     setViewMode(mode);
 }
@@ -376,6 +377,11 @@ void PlayListView::keyboardSearch(const QString &search)
 
 void PlayListViewPrivate::addMedia(const MetaPtr meta)
 {
+    for (int i = 0; i < model->rowCount(); ++i) {
+        auto hash = model->data(model->index(i, 0)).toString();
+        if (hash == meta->hash)
+            return;
+    }
     QStandardItem *newItem = new QStandardItem;
     QPixmap cover(":/common/image/cover_max.svg");
     auto coverData = meta->getCoverData();

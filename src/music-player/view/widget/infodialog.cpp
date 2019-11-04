@@ -93,6 +93,7 @@ void InfoDialogPrivate::initUI()
     title->setFixedWidth(300);
     title->setAlignment(Qt::AlignCenter);
     title->setWordWrap(true);
+    title->setForegroundRole(DPalette::TextTitle);
 
     auto split = new DLabel();
     split->setObjectName("InfoSplit");
@@ -128,6 +129,7 @@ void InfoDialogPrivate::initUI()
 
     auto basicinfo = new DLabel(InfoDialog::tr("   Basic Information"));
     basicinfo->setMinimumHeight(28);
+    basicinfo->setForegroundRole(DPalette::TextTitle);
 
     auto infogridLayout = new QGridLayout(infoGridFrame);
     infogridLayout->setMargin(10);
@@ -149,6 +151,7 @@ void InfoDialogPrivate::initUI()
         infoKey->setFont(infoFont);
         infoKey->setObjectName("InfoKey");
         infoKey->setMinimumHeight(18);
+        infoKey->setForegroundRole(DPalette::TextTitle);
 
         auto infoValue = new DLabel();
         infoValue->setFont(infoFont);
@@ -158,6 +161,7 @@ void InfoDialogPrivate::initUI()
         infoValue->setMinimumWidth(200);
         infoValue->setMaximumWidth(220);
         infoValue->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+        infoValue->setForegroundRole(DPalette::TextTitle);
         valueList << infoValue;
 
         infogridLayout->addWidget(infoKey);

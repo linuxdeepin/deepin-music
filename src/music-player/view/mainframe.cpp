@@ -374,7 +374,7 @@ void MainFramePrivate:: slideToMusicListView(bool keepPlaylist)
     WidgetHelper::slideTop2BottomWidget(
         current, musicListWidget, AnimationDelay);
     q->update();
-    disableControl(AnimationDelay);
+    //disableControl(AnimationDelay);
     currentWidget = musicListWidget;
     titlebar->raise();
     footer->show();
@@ -412,7 +412,7 @@ void MainFramePrivate::setPlayListVisible(bool visible)
 
     footer->showPlayListWidget(q->width(), q->height(), true);
     int delay = AnimationDelay * 6 / 10;
-    disableControl(delay);
+    //disableControl(delay);
     titlebar->raise();
     footer->raise();
 

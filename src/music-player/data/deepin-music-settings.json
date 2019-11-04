@@ -125,7 +125,7 @@
                 {
                     "key": "close",
                     "name": "Close Main Window",
-                    "hide": true,
+                    "hide": false,
                     "options": [
                         {
                             "key": "ask_close_action",

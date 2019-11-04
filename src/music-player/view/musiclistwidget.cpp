@@ -70,22 +70,24 @@ MusicListWidget::MusicListWidget(QWidget *parent) : DWidget(parent)
     dataBaseLabel->setText(tr("DataBase"));
     dataBaseLabel->setObjectName("MusicListWidgetDataBase");
     dataBaseLabel->setMargin(10);
-    auto dataBaseLabelFont = dataBaseLabel->font();
-    dataBaseLabelFont.setFamily("SourceHanSansSC");
-    dataBaseLabelFont.setWeight(QFont::Medium);
-    dataBaseLabelFont.setPixelSize(14);
-    dataBaseLabel->setFont(dataBaseLabelFont);
-    auto dataBaseLabelPalette = dataBaseLabel->palette();
-    dataBaseLabelPalette.setColor(DPalette::ButtonText, QColor("#757F92"));
-    dataBaseLabel->setPalette(dataBaseLabelPalette);
+//    auto dataBaseLabelFont = dataBaseLabel->font();
+//    dataBaseLabelFont.setFamily("SourceHanSansSC");
+//    dataBaseLabelFont.setWeight(QFont::Medium);
+//    dataBaseLabelFont.setPixelSize(14);
+//    dataBaseLabel->setFont(dataBaseLabelFont);
+//    auto dataBaseLabelPalette = dataBaseLabel->palette();
+//    dataBaseLabelPalette.setColor(DPalette::WindowText, QColor("#757F92"));
+//    dataBaseLabel->setPalette(dataBaseLabelPalette);
+    dataBaseLabel->setForegroundRole(DPalette::TextTips);
 
     customizeLabel = new DLabel;
     customizeLabel->setFixedHeight(40);
     customizeLabel->setText(tr("Play List"));
     customizeLabel->setObjectName("MusicListWidgetCustomizeLabel");
     customizeLabel->setMargin(10);
-    customizeLabel->setFont(dataBaseLabelFont);
-    customizeLabel->setPalette(dataBaseLabelPalette);
+//    customizeLabel->setFont(dataBaseLabelFont);
+//    customizeLabel->setPalette(dataBaseLabelPalette);
+    customizeLabel->setForegroundRole(DPalette::TextTips);
 
     m_addListBtn = new MusicImageButton(":/mpimage/light/normal/add_normal.svg",
                                         ":/mpimage/light/hover/add_hover.svg",
@@ -412,10 +414,11 @@ void MusicListWidget::slotTheme(int type)
         leftFramePalette.setColor(DPalette::Background, QColor("#FFFFFF"));
         leftFrame->setPalette(leftFramePalette);
 
-        DPalette dataBaseLabelPalette = dataBaseLabel->palette();
-        dataBaseLabelPalette.setColor(DPalette::WindowText, QColor("#757F92"));
-        dataBaseLabel->setPalette(dataBaseLabelPalette);
-        customizeLabel->setPalette(dataBaseLabelPalette);
+//        DPalette dataBaseLabelPalette = dataBaseLabel->palette();
+//        dataBaseLabelPalette.setColor(DPalette::WindowText, QColor("#757F92"));
+//        dataBaseLabel->setPalette(dataBaseLabelPalette);
+//        customizeLabel->setPalette(dataBaseLabelPalette);
+//        dataBaseLabel->setForegroundRole(DPalette::WindowText);
 
         DPalette dataBaseListviewPalette = m_dataBaseListview->palette();
         dataBaseListviewPalette.setColor(DPalette::Text, QColor("#414D68"));
@@ -435,10 +438,11 @@ void MusicListWidget::slotTheme(int type)
         leftFramePalette.setColor(DPalette::Background, QColor("#232323"));
         leftFrame->setPalette(leftFramePalette);
 
-        auto dataBaseLabelPalette = dataBaseLabel->palette();
-        dataBaseLabelPalette.setColor(DPalette::WindowText, QColor("#FFFFFF"));
-        dataBaseLabel->setPalette(dataBaseLabelPalette);
-        customizeLabel->setPalette(dataBaseLabelPalette);
+//        auto dataBaseLabelPalette = dataBaseLabel->palette();
+//        dataBaseLabelPalette.setColor(DPalette::WindowText, QColor("#FFFFFF"));
+//        dataBaseLabel->setPalette(dataBaseLabelPalette);
+//        customizeLabel->setPalette(dataBaseLabelPalette);
+//        dataBaseLabel->setForegroundRole(DPalette::WindowText);
 
         auto dataBaseListviewPalette = m_dataBaseListview->palette();
         dataBaseListviewPalette.setColor(DPalette::Text, QColor("#C0C6D4"));

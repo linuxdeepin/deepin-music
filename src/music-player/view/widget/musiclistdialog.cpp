@@ -32,6 +32,7 @@
 #include <DImageButton>
 #include <DPushButton>
 #include <DHiDPIHelper>
+#include <DApplicationHelper>
 
 #include "musiclistinfoview.h"
 #include "musicimagebutton.h"
@@ -86,31 +87,27 @@ void MusicListDialogPrivate::initUI()
     titleLayout->setContentsMargins(28, 0, 0, 18);
 
     closeBt = new DImageButton;
-    closeBt->setPixmap(QPixmap(":/mpimage/light/normal/close_normal.svg"));
+    closeBt->setNormalPic(":/mpimage/light/normal/close_round normal.svg");
+    closeBt->setHoverPic(":/mpimage/light/hover/close_round hover.svg");
+    closeBt->setPressPic(":/mpimage/light/press/close_round press.svg");
     closeBt->setObjectName("InfoClose");
-    closeBt->setFixedSize(27, 23);
+    closeBt->setBaseSize(30, 30);
 
     titleLabel = new DLabel();
-    auto titleFont = titleLabel->font();
-    titleFont.setFamily("SourceHanSansSC");
-    titleFont.setPixelSize(24);
-    titleFont.setWeight(QFont::Medium);
-    titleLabel->setFont(titleFont);
+    titleLabel->setForegroundRole(DPalette::TextTitle);
+
     infoLabel = new DLabel();
-    auto infoFont = titleLabel->font();
-    infoFont.setFamily("SourceHanSansSC");
-    infoFont.setPixelSize(18);
-    infoFont.setWeight(QFont::Medium);
-    infoLabel->setFont(infoFont);
+    infoLabel->setForegroundRole(DPalette::TextTitle);
+
 
     auto btLayout = new QHBoxLayout(titleFrame);
     btLayout->setSpacing(0);
     btLayout->setMargin(0);
 
     btPlayAll = new DPushButton;
-    auto btPlayAllFont = btPlayAll->font();
-    btPlayAllFont.setPixelSize(14);
-    btPlayAll->setFont(btPlayAllFont);
+//    auto btPlayAllFont = btPlayAll->font();
+//    btPlayAllFont.setPixelSize(14);
+//    btPlayAll->setFont(btPlayAllFont);
     auto playAllPalette = btPlayAll->palette();
     playAllPalette.setColor(DPalette::ButtonText, Qt::white);
     playAllPalette.setColor(DPalette::Dark, QColor(Qt::red));
@@ -122,7 +119,7 @@ void MusicListDialogPrivate::initUI()
     btPlayAll->setFocusPolicy(Qt::NoFocus);
 
     btRandomPlay = new DPushButton;
-    btRandomPlay->setFont(btPlayAllFont);
+//    btRandomPlay->setFont(btPlayAllFont);
     auto randomPlayPalette = btRandomPlay->palette();
     randomPlayPalette.setColor(DPalette::ButtonText, Qt::white);
     randomPlayPalette.setColor(DPalette::Dark, QColor(Qt::darkGray));
@@ -134,6 +131,7 @@ void MusicListDialogPrivate::initUI()
     btRandomPlay->setFocusPolicy(Qt::NoFocus);
 
     btLayout->addWidget(btPlayAll);
+    btLayout->addSpacing(10);
     btLayout->addWidget(btRandomPlay);
     btLayout->addStretch(100);
 
@@ -337,25 +335,30 @@ void MusicListDialog::setThemeType(int type)
         palette.setColor(DPalette::Background, BackgroundColor);
         setPalette(palette);
 
-        auto titleLabelPl = d->titleLabel->palette();
-        titleLabelPl.setColor(DPalette::WindowText, Qt::black);
-        d->titleLabel->setPalette(titleLabelPl);
+
+//        auto titleLabelPl = d->titleLabel->palette();
+//        titleLabelPl.setColor(DPalette::WindowText, Qt::black);
+//        d->titleLabel->setPalette(titleLabelPl);
+
+//        auto infoLabelPl = d->infoLabel->palette();
+//        infoLabelPl.setColor(DPalette::WindowText, Qt::black);
+//        d->infoLabel->setPalette(infoLabelPl);
 
         auto playAllPalette = d->btPlayAll->palette();
         playAllPalette.setColor(DPalette::ButtonText, Qt::white);
-        playAllPalette.setColor(DPalette::Dark, QColor(Qt::red));
-        playAllPalette.setColor(DPalette::Light, QColor(Qt::red));
-        QColor sbcolor("#C10A0A");
-        sbcolor.setAlphaF(0.5);
+        playAllPalette.setColor(DPalette::Dark, QColor("#FD5E5E"));
+        playAllPalette.setColor(DPalette::Light, QColor("#FD5E5E"));
+        QColor sbcolor("#F82C47");
+        sbcolor.setAlphaF(0.4);
         playAllPalette.setColor(DPalette::Shadow, sbcolor);
         d->btPlayAll->setPalette(playAllPalette);
 
         auto randomPlayPalette = d->btRandomPlay->palette();
         randomPlayPalette.setColor(DPalette::ButtonText, Qt::white);
-        randomPlayPalette.setColor(DPalette::Dark, QColor(Qt::darkGray));
-        randomPlayPalette.setColor(DPalette::Light, QColor(Qt::darkGray));
-        QColor randombcolor("#FFFFFF");
-        randombcolor.setAlphaF(0.08);
+        randomPlayPalette.setColor(DPalette::Dark, QColor("#646464"));
+        randomPlayPalette.setColor(DPalette::Light, QColor("#5C5C5C"));
+        QColor randombcolor("#000000");
+        randombcolor.setAlphaF(0.2);
         randomPlayPalette.setColor(DPalette::Shadow, randombcolor);
         d->btRandomPlay->setPalette(randomPlayPalette);
     } else {
@@ -364,9 +367,13 @@ void MusicListDialog::setThemeType(int type)
         palette.setColor(DPalette::Background, BackgroundColor);
         setPalette(palette);
 
-        auto titleLabelPl = d->titleLabel->palette();
-        titleLabelPl.setColor(DPalette::WindowText, Qt::white);
-        d->titleLabel->setPalette(titleLabelPl);
+//        auto titleLabelPl = d->titleLabel->palette();
+//        titleLabelPl.setColor(DPalette::WindowText, Qt::white);
+//        d->titleLabel->setPalette(titleLabelPl);
+
+//        auto infoLabelPl = d->infoLabel->palette();
+//        infoLabelPl.setColor(DPalette::WindowText, Qt::white);
+//        d->infoLabel->setPalette(infoLabelPl);
 
         auto playAllPalette = d->btPlayAll->palette();
         playAllPalette.setColor(DPalette::ButtonText, "#FFFFFF");
@@ -381,9 +388,9 @@ void MusicListDialog::setThemeType(int type)
         randomPlayPalette.setColor(DPalette::ButtonText, "#FFFFFF");
         randomPlayPalette.setColor(DPalette::Dark, QColor("#555454"));
         randomPlayPalette.setColor(DPalette::Light, QColor("#414141"));
-        QColor randombcolor("#FFFFFF");
-        randombcolor.setAlphaF(0.08);
-        randomPlayPalette.setColor(DPalette::Shadow, randombcolor);
+//        QColor randombcolor("#FFFFFF");
+//        randombcolor.setAlphaF(0.08);
+//        randomPlayPalette.setColor(DPalette::Shadow, randombcolor);
         d->btRandomPlay->setPalette(randomPlayPalette);
     }
     QString rStr;
@@ -392,7 +399,10 @@ void MusicListDialog::setThemeType(int type)
     } else {
         rStr = "dark";
     }
-    d->closeBt->setPixmap(QPixmap(QString(":/mpimage/light/normal/close_normal.svg").arg(rStr)));
+//    d->closeBt->setPixmap(QPixmap(QString(":/mpimage/light/normal/close_round normal.svg").arg(rStr)));
+    d->closeBt->setNormalPic(":/mpimage/light/normal/close_round normal.svg");
+    d->closeBt->setHoverPic(":/mpimage/light/hover/close_round hover.svg");
+    d->closeBt->setPressPic(":/mpimage/light/press/close_round press.svg");
     d->btPlayAll->setIcon(QIcon(QString(":/mpimage/light/normal/play_all_normal.svg").arg(rStr)));
     d->btRandomPlay->setIcon(QIcon(QString(":/mpimage/light/normal/random_play_normal.svg").arg(rStr)));
     d->titleFrame->setThemeType(type);

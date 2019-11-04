@@ -60,6 +60,7 @@ Q_SIGNALS:
 public slots:
     void onAudioBufferProbed(const QAudioBuffer &buffer);
     void onProgressChanged(qint64 value, qint64 duration);
+    void onAudioBuffer(QVector<float> allData);
 
 protected:
     void paintEvent(QPaintEvent *event) Q_DECL_OVERRIDE;
@@ -68,8 +69,10 @@ protected:
     void mouseMoveEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
     void enterEvent(QEvent *event) Q_DECL_OVERRIDE;
     void leaveEvent(QEvent *event) Q_DECL_OVERRIDE;
+    void resizeEvent(QResizeEvent *event) Q_DECL_OVERRIDE;
 
 private:
+    void updateAudioBuffer();
     bool powerSpectrum();
     void spline(QVector<float> &x, QVector<float> &y, QVector<float> &vx, QVector<float> &vy, int pnt);
 
@@ -82,6 +85,7 @@ private:
     qint64       allDuration = 1;
     int          themeType = 1;
     WaveformScale *waveformScale;
+    bool         spectrumFlag = true;
 };
 
 #endif

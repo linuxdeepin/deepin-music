@@ -54,8 +54,8 @@ MusicListView::MusicListView(QWidget *parent) : DListView(parent)
     setFont(font);
 
     setIconSize( QSize(20, 20) );
-    setGridSize( QSize(40, 40) );
-    setItemSize(QSize(40, 40));
+//    setGridSize( QSize(40, 40) );
+//    setItemSize(QSize(40, 40));
 
     setFrameShape(QFrame::NoFrame);
 
@@ -377,11 +377,13 @@ void MusicListView::keyPressEvent(QKeyEvent *event)
             warnDlg.setIcon(QIcon::fromTheme("deepin-music"));
             warnDlg.setTextFormat(Qt::AutoText);
             warnDlg.setTitle(message);
+            warnDlg.addSpacing(20);
             warnDlg.addButton(tr("Cancel"), false, Dtk::Widget::DDialog::ButtonNormal);
             warnDlg.addButton(tr("Delete"), true, Dtk::Widget::DDialog::ButtonWarning);
             if (1 == warnDlg.exec()) {
-                allPlaylists.removeAt(item->row());
-                model->removeRow(item->row());
+                int t_index = item->row();
+                model->removeRow(t_index);
+                allPlaylists.removeAt(t_index);
                 //delete model->takeItem(item->row());
                 Q_EMIT m_data->removed();
             }
@@ -455,8 +457,10 @@ void MusicListView::showContextMenu(const QPoint &pos)
             warnDlg.addButton(tr("Cancel"), false, Dtk::Widget::DDialog::ButtonNormal);
             warnDlg.addButton(tr("Delete"), true, Dtk::Widget::DDialog::ButtonWarning);
             if (1 == warnDlg.exec()) {
-                allPlaylists.removeAt(item->row());
+                int t_index = item->row();
                 model->removeRow(item->row());
+                allPlaylists.removeAt(t_index);
+
                 //delete model->takeItem(item->row());
                 Q_EMIT m_data->removed();
             }

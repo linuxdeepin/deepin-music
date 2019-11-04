@@ -6,6 +6,7 @@
 #include <DPushButton>
 #include <DListWidget>
 #include <DLineEdit>
+#include <DLabel>
 
 #include <QWidget>
 #include <QVector>

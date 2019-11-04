@@ -29,6 +29,7 @@
 #include <QFileInfo>
 #include <QHash>
 #include <QBuffer>
+#include <QByteArray>
 
 //#ifndef DISABLE_LIBAV
 #ifdef __cplusplus
@@ -288,4 +289,68 @@ QByteArray MetaDetector::getCoverData(const QString &path)
 //#endif // DISABLE_LIBAV
 
     return byteArray;
+}
+
+QVector<float> MetaDetector::getMetaData(const QString &path)
+{
+    QVector<float> curData;
+    if (path.isEmpty())
+        return curData;
+
+    AVFormatContext *pFormatCtx = avformat_alloc_context();
+    avformat_open_input(&pFormatCtx, path.toStdString().c_str(), NULL, NULL);
+
+    if (pFormatCtx == nullptr)
+        return curData;
+
+    avformat_find_stream_info(pFormatCtx, NULL);
+
+    int audio_stream_index = -1;
+    audio_stream_index = av_find_best_stream(pFormatCtx, AVMEDIA_TYPE_AUDIO, -1, -1, NULL, 0);
+    if (audio_stream_index < 0)
+        return curData;
+
+    AVStream *in_stream = pFormatCtx->streams[audio_stream_index];
+    AVCodecParameters *in_codecpar = in_stream->codecpar;
+
+    AVCodecContext *pCodecCtx = avcodec_alloc_context3(NULL);
+    avcodec_parameters_to_context(pCodecCtx, in_codecpar);
+
+    AVCodec *pCodec = avcodec_find_decoder(pCodecCtx->codec_id);
+    avcodec_open2(pCodecCtx, pCodec, NULL);
+
+    AVPacket *packet = av_packet_alloc();
+    AVFrame *frame = av_frame_alloc();
+
+    while (av_read_frame(pFormatCtx, packet) >= 0 ) {
+        if (packet->stream_index == audio_stream_index) {
+            int got_picture;
+            uint32_t ret = avcodec_decode_audio4( pCodecCtx, frame, &got_picture, packet);
+            if ( ret < 0 ) {
+                continue;
+            }
+            if ( got_picture > 0 ) {
+                int data_size = av_get_bytes_per_sample(pCodecCtx->sample_fmt);
+                int t_format = frame->format;
+                uint8_t *ptr = frame->extended_data[0];
+                short val;
+                for (int i = 0; i < frame->linesize[0]; i += 1024) {
+                    val = (short)(
+                              ((unsigned char)ptr[i]) << 8 |
+                              ((unsigned char)ptr[i + 1])
+                          );
+                    curData.append(val);
+                }
+            }
+        }
+        av_packet_unref(packet);
+    }
+
+    av_packet_unref(packet);
+    av_frame_free(&frame);
+    avcodec_close(pCodecCtx);
+    avformat_close_input(&pFormatCtx);
+    avformat_free_context(pFormatCtx);
+
+    return curData;
 }

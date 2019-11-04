@@ -41,6 +41,7 @@ LoadWidget::LoadWidget(QWidget *parent) :
 
     auto label = new DLabel(tr("Loading..."));
     label->setObjectName("LoadWidgetLabel");
+    label->setForegroundRole(DPalette::TextTitle);
 
     auto vbox = new QVBoxLayout;
     setLayout(vbox);
