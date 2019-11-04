@@ -25,10 +25,8 @@
 #include <QTextStream>
 #include <DPinyin>
 
-namespace DMusic
-{
-namespace PinyinSearch
-{
+namespace DMusic {
+namespace PinyinSearch {
 
 inline bool isAlphabeta(const QChar &c)
 {
@@ -42,16 +40,16 @@ inline bool isNumber(const QChar &c)
     return re.exactMatch(c);
 }
 
-inline bool isChinese(const QChar &c)
+bool isChinese(const QChar &c)
 {
-    return c.unicode() < 0x9FBF && c.unicode() > 0x4E00;
+    return c.unicode() <= 0x9FBF && c.unicode() >= 0x4E00;
 }
 
 inline QString toChinese(const QString &c)
 {
     QString pinyin = Dtk::Core::Chinese2Pinyin(c);
     if (pinyin.length() >= 2
-        && isNumber(pinyin.at(pinyin.length() - 1))) {
+            && isNumber(pinyin.at(pinyin.length() - 1))) {
         return pinyin.left(pinyin.length() - 1);
     }
     return pinyin;

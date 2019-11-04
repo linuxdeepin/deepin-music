@@ -630,12 +630,15 @@ LessThanFunctionPtr getSortFunction(Playlist::SortType sortType, Playlist::Order
 
 void Playlist::sortBy(Playlist::SortType sortType)
 {
-    playlistMeta.sortType = sortType;
-
-    if (playlistMeta.orderType == Playlist::Ascending) {
-        playlistMeta.orderType = Playlist::Descending ;
+    if (playlistMeta.sortType == sortType) {
+        if (playlistMeta.orderType == Playlist::Ascending) {
+            playlistMeta.orderType = Playlist::Descending ;
+        } else {
+            playlistMeta.orderType = Playlist::Ascending;
+        }
     } else {
         playlistMeta.orderType = Playlist::Ascending;
+        playlistMeta.sortType = sortType;
     }
 
     MediaDatabase::updatePlaylist(playlistMeta);

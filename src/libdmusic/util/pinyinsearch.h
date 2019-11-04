@@ -25,6 +25,7 @@
 
 namespace DMusic {
 namespace PinyinSearch {
+bool isChinese(const QChar &c);
 QStringList simpleChineseSplit(QString &pinyin);
 }
 }

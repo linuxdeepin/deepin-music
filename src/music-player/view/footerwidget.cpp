@@ -300,7 +300,8 @@ Footer::Footer(QWidget *parent) :
 
     d->btLyric = new MusicImageButton(":/mpimage/light/normal/lyric_normal.svg",
                                       ":/mpimage/light/hover/lyric_hover.svg",
-                                      ":/mpimage/light/press/lyric_press.svg");
+                                      ":/mpimage/light/press/lyric_press.svg",
+                                      ":/mpimage/light/checked/lyric_checked.svg");
     d->btLyric->setObjectName("FooterActionLyric");
     d->btLyric->setFixedSize(50, 50);
     d->btLyric->setTransparent(false);
@@ -318,19 +319,23 @@ Footer::Footer(QWidget *parent) :
 
     d->btSound = new MusicImageButton(":/mpimage/light/normal/volume_normal.svg",
                                       ":/mpimage/light/hover/volume_hover.svg",
-                                      ":/mpimage/light/press/volume_press.svg");
+                                      ":/mpimage/light/press/volume_press.svg",
+                                      ":/mpimage/light/checked/volume_checked.svg");
     d->btSound->setPropertyPic("volume", QVariant("mid"),
                                ":/mpimage/light/normal/volume_lessen_normal.svg",
                                ":/mpimage/light/hover/volume_lessen_hover.svg",
-                               ":/mpimage/light/press/volume_lessen_press.svg");
+                               ":/mpimage/light/press/volume_lessen_press.svg",
+                               ":/mpimage/light/checked/volume_lessen_checked.svg");
     d->btSound->setPropertyPic("volume", QVariant("low"),
                                ":/mpimage/light/normal/volume_add_normal.svg",
                                ":/mpimage/light/hover/volume_add_hover.svg",
-                               ":/mpimage/light/press/volume_add_press.svg");
+                               ":/mpimage/light/press/volume_add_press.svg",
+                               ":/mpimage/light/checked/volume_add_checked.svg");
     d->btSound->setPropertyPic("volume", QVariant("mute"),
                                ":/mpimage/light/normal/mute_normal.svg",
                                ":/mpimage/light/normal/mute_normal.svg",
-                               ":/mpimage/light/press/mute_press.svg");
+                               ":/mpimage/light/press/mute_press.svg",
+                               ":/mpimage/light/checked/mute_checked.svg");
     d->btSound->setObjectName("FooterActionSound");
     d->btSound->setFixedSize(50, 50);
     d->btSound->setTransparent(false);
@@ -340,7 +345,8 @@ Footer::Footer(QWidget *parent) :
 
     d->btPlayList = new MusicImageButton(":/mpimage/light/normal/playlist_normal.svg",
                                          ":/mpimage/light/hover/playlist_hover.svg",
-                                         ":/mpimage/light/press/playlist_press.svg");
+                                         ":/mpimage/light/press/playlist_press.svg",
+                                         ":/mpimage/checked/press/playlist_checked.svg");
     d->btPlayList->setObjectName("FooterActionPlayList");
     d->btPlayList->setFixedSize(50, 50);
     d->btPlayList->setTransparent(false);
@@ -862,29 +868,35 @@ void Footer::slotTheme(int type)
                                   QString(":/common/image/unfav_press.svg"));
     d->btLyric->setPropertyPic(QString(":/mpimage/%1/normal/lyric_normal.svg").arg(rStr),
                                QString(":/mpimage/%1/hover/lyric_hover.svg").arg(rStr),
-                               QString(":/mpimage/%1/press/lyric_press.svg").arg(rStr));
+                               QString(":/mpimage/%1/press/lyric_press.svg").arg(rStr),
+                               QString(":/mpimage/%1/checked/lyric_checked.svg").arg(rStr));
     QStringList modes;
     modes << QString(":/mpimage/%1/normal/sequential_loop_normal.svg").arg(rStr)
           << QString(":/mpimage/%1/normal/single_tune_circulation_normal.svg").arg(rStr)
           << QString(":/mpimage/%1/normal/cross_cycling_normal.svg").arg(rStr);
     d->btSound->setPropertyPic(QString(":/mpimage/%1/normal/volume_normal.svg").arg(rStr),
                                QString(":/mpimage/%1/hover/volume_hover.svg").arg(rStr),
-                               QString(":/mpimage/%1/press/volume_press.svg").arg(rStr));
+                               QString(":/mpimage/%1/press/volume_press.svg").arg(rStr),
+                               QString(":/mpimage/%1/checked/volume_checked.svg").arg(rStr));
     d->btSound->setPropertyPic("volume", QVariant("mid"),
                                QString(":/mpimage/%1/normal/volume_lessen_normal.svg").arg(rStr),
                                QString(":/mpimage/%1/hover/volume_lessen_hover.svg").arg(rStr),
-                               QString(":/mpimage/%1/press/volume_lessen_press.svg").arg(rStr));
+                               QString(":/mpimage/%1/press/volume_lessen_press.svg").arg(rStr),
+                               QString(":/mpimage/%1/checked/volume_lessen_checked.svg").arg(rStr));
     d->btSound->setPropertyPic("volume", QVariant("low"),
                                QString(":/mpimage/%1/normal/volume_add_normal.svg").arg(rStr),
                                QString(":/mpimage/%1/hover/volume_add_hover.svg").arg(rStr),
-                               QString(":/mpimage/%1/press/volume_add_press.svg").arg(rStr));
+                               QString(":/mpimage/%1/press/volume_add_press.svg").arg(rStr),
+                               QString(":/mpimage/%1/checked/volume_add_checked.svg").arg(rStr));
     d->btSound->setPropertyPic("volume", QVariant("mute"),
                                QString(":/mpimage/%1/normal/mute_normal.svg").arg(rStr),
                                QString(":/mpimage/%1/normal/mute_normal.svg").arg(rStr),
-                               QString(":/mpimage/%1/press/mute_press.svg").arg(rStr));
+                               QString(":/mpimage/%1/press/mute_press.svg").arg(rStr),
+                               QString(":/mpimage/%1/checked/mute_checked.svg").arg(rStr));
     d->btPlayList->setPropertyPic(QString(":/mpimage/%1/normal/playlist_normal.svg").arg(rStr),
                                   QString(":/mpimage/%1/hover/playlist_hover.svg").arg(rStr),
-                                  QString(":/mpimage/%1/press/playlist_press.svg").arg(rStr));
+                                  QString(":/mpimage/%1/press/playlist_press.svg").arg(rStr),
+                                  QString(":/mpimage/%1/checked/playlist_checked.svg").arg(rStr));
 
 
     d->btPlayMode->setModeIcons(modes);

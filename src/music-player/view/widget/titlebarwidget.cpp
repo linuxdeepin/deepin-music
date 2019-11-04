@@ -136,6 +136,7 @@ void TitlebarWidget::selectPlaylist(PlaylistPtr playlistPtr)
 {
     Q_D(TitlebarWidget);
     d->search->selectPlaylist(playlistPtr);
+    d->search->clear();
 }
 
 void TitlebarWidget::resizeEvent(QResizeEvent *event)

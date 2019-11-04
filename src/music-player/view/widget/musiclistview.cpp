@@ -27,6 +27,7 @@
 
 #include <DScrollBar>
 #include <DPalette>
+#include <DApplicationHelper>
 
 #include "musiclistviewitem.h"
 
@@ -37,7 +38,7 @@ MusicListView::MusicListView(QWidget *parent) : DListView(parent)
     model = new QStandardItemModel(this);
     setModel(model);
     delegate = new DStyledItemDelegate(this);
-    delegate->setBackgroundType(DStyledItemDelegate::NoBackground);
+    //delegate->setBackgroundType(DStyledItemDelegate::NoBackground);
     auto delegateMargins = delegate->margins();
     delegateMargins.setLeft(18);
     delegate->setMargins(delegateMargins);
@@ -55,10 +56,10 @@ MusicListView::MusicListView(QWidget *parent) : DListView(parent)
     setItemSize(QSize(40, 40));
 
     setFrameShape(QFrame::NoFrame);
-    setAutoFillBackground(true);
-    auto pl = palette();
-    pl.setColor(DPalette::Base, QColor(Qt::transparent));
-    setPalette(pl);
+
+    DPalette pa = DApplicationHelper::instance()->palette(this);
+    pa.setColor(DPalette::ItemBackground, Qt::transparent);
+    DApplicationHelper::instance()->setPalette(this, pa);
 
     setSelectionMode(QListView::SingleSelection);
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
@@ -169,6 +170,11 @@ void MusicListView::addMusicList(PlaylistPtr playlist, bool addFlag)
 
     allPlaylists.append(playlist);
     auto item = new DStandardItem(icon, playlist->displayName());
+    if (m_type == 1) {
+        item->setForeground(QColor("#414D68"));
+    } else {
+        item->setForeground(QColor("#C0C6D4"));
+    }
     model->appendRow(item);
     if (addFlag) {
         edit(model->index(item->row(), 0));
@@ -436,6 +442,11 @@ void MusicListView::slotTheme(int type)
                 icon = QIcon(QString(":/mpimage/%1/%2/famous_ballad_%2.svg").arg(rStr).arg(typeStr));
             }
             curStandardItem->setIcon(icon);
+            if (m_type == 1) {
+                curStandardItem->setForeground(QColor("#414D68"));
+            } else {
+                curStandardItem->setForeground(QColor("#C0C6D4"));
+            }
         }
     }
 

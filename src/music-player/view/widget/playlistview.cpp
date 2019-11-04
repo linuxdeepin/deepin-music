@@ -270,11 +270,6 @@ void PlayListView::onLocate(const MetaPtr meta)
     setCurrentIndex(index);
 }
 
-inline bool isChinese(const QChar &c)
-{
-    return c.unicode() < 0x9FBF && c.unicode() > 0x4E00;
-}
-
 void PlayListView::onMusiclistChanged(PlaylistPtr playlist)
 {
     Q_D(PlayListView);
@@ -290,7 +285,7 @@ void PlayListView::onMusiclistChanged(PlaylistPtr playlist)
     QString searchStr = playlist->searchStr();
     bool chineseFlag = false;
     for (auto ch : searchStr) {
-        if (isChinese(ch)) {
+        if (DMusic::PinyinSearch::isChinese(ch)) {
             chineseFlag = true;
             break;
         }

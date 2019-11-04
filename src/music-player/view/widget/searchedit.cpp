@@ -117,11 +117,6 @@ void SearchEdit::onFocusOut()
     });
 }
 
-inline bool isChinese(const QChar &c)
-{
-    return c.unicode() < 0x9FBF && c.unicode() > 0x4E00;
-}
-
 void SearchEdit::onTextChanged()
 {
     auto text = QString(this->text()).remove(" ").remove("\r").remove("\n");
@@ -146,7 +141,7 @@ void SearchEdit::onTextChanged()
         //filter
         bool chineseFlag = false;
         for (auto ch : text) {
-            if (isChinese(ch)) {
+            if (DMusic::PinyinSearch::isChinese(ch)) {
                 chineseFlag = true;
                 break;
             }

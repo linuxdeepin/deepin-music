@@ -72,11 +72,6 @@ public:
     Q_DECLARE_PUBLIC(MusicListDataWidget)
 };
 
-inline bool isChinese(const QChar &c)
-{
-    return c.unicode() < 0x9FBF && c.unicode() > 0x4E00;
-}
-
 void MusicListDataWidgetPrivate::initData(PlaylistPtr playlist)
 {
     Q_Q(MusicListDataWidget);
@@ -86,7 +81,7 @@ void MusicListDataWidgetPrivate::initData(PlaylistPtr playlist)
 
     bool chineseFlag = false;
     for (auto ch : searchStr) {
-        if (isChinese(ch)) {
+        if (DMusic::PinyinSearch::isChinese(ch)) {
             chineseFlag = true;
             break;
         }
@@ -452,7 +447,7 @@ void MusicListDataWidgetPrivate::initConntion()
     q, [ = ](const MetaPtr meta) {
         PlaylistPtr curPlayList = musicListView->playlist();
         curPlayList->play(meta);
-        initData(curPlayList);
+        //initData(curPlayList);
         Q_EMIT q->playMedia(musicListView->playlist(), meta);
     });
 

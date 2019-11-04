@@ -97,8 +97,8 @@ MUsicLyricWidget::MUsicLyricWidget(QWidget *parent)
     d->m_cover->setObjectName("LyricCover");
 
     m_leftLayout = new QHBoxLayout(this);
-    m_leftLayout->setContentsMargins(120, 190, 140, 160);
-    m_leftLayout->addWidget(d->m_cover);
+    m_leftLayout->setContentsMargins(120, 0, 140, 0);
+    m_leftLayout->addWidget(d->m_cover, Qt::AlignLeft | Qt::AlignVCenter);
     m_leftLayout->addWidget(d->searchLyricsWidget);
 
     d->lyricview = new LyricLabel(false);
@@ -112,6 +112,7 @@ MUsicLyricWidget::MUsicLyricWidget(QWidget *parent)
                                 ":/mpimage/light/normal/back_normal.svg",
                                 ":/mpimage/light/normal/back_normal.svg");
     d->serachbt->setFixedSize(48, 48);
+    d->serachbt->hide();
 
     searchlayout->addWidget(d->serachbt);
     searchlayout->addStretch();

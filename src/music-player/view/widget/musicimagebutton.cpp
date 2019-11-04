@@ -51,12 +51,13 @@ MusicImageButton::MusicImageButton(const QString &normalPic, const QString &hove
 }
 
 void MusicImageButton::setPropertyPic(QString propertyName, const QVariant &value,
-                                      const QString &normalPic, const QString &hoverPic, const QString &pressPic)
+                                      const QString &normalPic, const QString &hoverPic, const QString &pressPic, const QString &checkedPic)
 {
     MusicPicPathInfo curPicPath;
     curPicPath.normalPicPath = normalPic;
     curPicPath.hoverPicPath = hoverPic;
     curPicPath.pressPicPath = pressPic;
+    curPicPath.checkedPicPath = checkedPic;
 
     if (propertyPicPaths.first == propertyName && propertyPicPaths.second.contains(value)) {
         propertyPicPaths.second[value] = curPicPath;
@@ -112,12 +113,16 @@ void MusicImageButton::paintEvent(QPaintEvent *event)
         QVariant value = property(propertyPicPaths.first.toStdString().data());
         MusicPicPathInfo curPropertyPicPath = propertyPicPaths.second[value];
         QString curPropertyPicPathStr;
-        if (status == 1 && !defaultPicPath.hoverPicPath.isEmpty()) {
-            curPropertyPicPathStr = curPropertyPicPath.hoverPicPath;
-        } else if (status == 2 && !defaultPicPath.pressPicPath.isEmpty()) {
-            curPropertyPicPathStr = curPropertyPicPath.pressPicPath;
+        if (isChecked() && !defaultPicPath.checkedPicPath.isEmpty()) {
+            curPropertyPicPathStr = curPropertyPicPath.checkedPicPath;
         } else {
-            curPropertyPicPathStr = curPropertyPicPath.normalPicPath;
+            if (status == 1 && !defaultPicPath.hoverPicPath.isEmpty()) {
+                curPropertyPicPathStr = curPropertyPicPath.hoverPicPath;
+            } else if (status == 2 && !defaultPicPath.pressPicPath.isEmpty()) {
+                curPropertyPicPathStr = curPropertyPicPath.pressPicPath;
+            } else {
+                curPropertyPicPathStr = curPropertyPicPath.normalPicPath;
+            }
         }
         if (!curPropertyPicPathStr.isEmpty()) {
             curPicPath = curPropertyPicPathStr;

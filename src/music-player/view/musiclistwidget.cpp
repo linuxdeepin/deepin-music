@@ -158,11 +158,16 @@ MusicListWidget::MusicListWidget(QWidget *parent) : DWidget(parent)
     });
     connect(m_dataBaseListview, &MusicListView::playall,
     this, [ = ](PlaylistPtr playlist) {
-        if (playlist->id() == AlbumMusicListID || playlist->id() == ArtistMusicListID) {
-            playlist->playMusicTypeToMeta();
-            playlist->play(playlist->first());
+        if (playlist->playing() == nullptr) {
+            if (playlist->id() == AlbumMusicListID || playlist->id() == ArtistMusicListID) {
+                playlist->playMusicTypeToMeta();
+                playlist->play(playlist->first());
+            }
+            Q_EMIT this->playall(playlist);
+        } else {
+            Q_EMIT this->resume(playlist, playlist->playing());
         }
-        Q_EMIT this->playall(playlist);
+
     });
     connect(m_dataBaseListview, &MusicListView::pause,
     this, [ = ](PlaylistPtr playlist, const MetaPtr meta) {
@@ -203,7 +208,11 @@ MusicListWidget::MusicListWidget(QWidget *parent) : DWidget(parent)
     });
     connect(m_customizeListview, &MusicListView::playall,
     this, [ = ](PlaylistPtr playlist) {
-        Q_EMIT this->playall(playlist);
+        if (playlist->playing() == nullptr) {
+            Q_EMIT this->playall(playlist);
+        } else {
+            Q_EMIT this->resume(playlist, playlist->playing());
+        }
     });
     connect(m_customizeListview, &MusicListView::displayNameChanged,
     this, [ = ]() {

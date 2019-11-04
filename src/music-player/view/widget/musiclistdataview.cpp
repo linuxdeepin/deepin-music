@@ -238,11 +238,6 @@ QPixmap MusicListDataView::getPlayPixmap() const
     return d->playingPixmap;
 }
 
-inline bool isChinese(const QChar &c)
-{
-    return c.unicode() < 0x9FBF && c.unicode() > 0x4E00;
-}
-
 void MusicListDataView::onMusiclistChanged(PlaylistPtr playlist)
 {
     Q_D(MusicListDataView);
@@ -257,7 +252,7 @@ void MusicListDataView::onMusiclistChanged(PlaylistPtr playlist)
     QString searchStr = playlist->searchStr();
     bool chineseFlag = false;
     for (auto ch : searchStr) {
-        if (isChinese(ch)) {
+        if (DMusic::PinyinSearch::isChinese(ch)) {
             chineseFlag = true;
             break;
         }

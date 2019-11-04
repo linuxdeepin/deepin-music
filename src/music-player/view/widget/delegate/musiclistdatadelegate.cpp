@@ -266,7 +266,7 @@ void MusicListDataDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
             }
 
             painter->setPen(otherColor);
-            QFont measuringFont(font11);
+            painter->setFont(font11);
             QRect rect(w, option.rect.y(), tailwidth - 20, option.rect.height());
             painter->drawText(rect, Qt::AlignRight | Qt::AlignVCenter, infoStr);
 
