@@ -46,7 +46,7 @@ public slots:
     void onMusiclistUpdate();
     void onMusicPlayed(PlaylistPtr playlist, const MetaPtr);
     void slotTheme(int type);
-    void changePicture(QPixmap pixmap);
+    void changePicture(QPixmap pixmap, QPixmap sidebarPixmap);
 
     void onCustomContextMenuRequest(const QPoint &pos,
                                     PlaylistPtr selectedlist,

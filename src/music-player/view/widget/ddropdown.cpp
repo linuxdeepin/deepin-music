@@ -145,6 +145,9 @@ QAction *DDropdown::addAction(const QString &item, const QVariant &var)
 {
     Q_D(DDropdown);
     auto action = d->menu->addAction(item);
+    auto font = action->font();
+    font.setFamily("SourceHanSansSC");
+    font.setWeight(QFont::Medium);
     action->setData(var);
     action->setCheckable(true);
     return action;

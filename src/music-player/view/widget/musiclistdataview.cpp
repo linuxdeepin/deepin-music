@@ -61,6 +61,7 @@ public:
     MusicListDialog        *musciListDialog = nullptr;
     PlayMusicTypePtrList    curPlayMusicTypePtrList;
     QPixmap                 playingPixmap = QPixmap(":/mpimage/light/music1.svg");
+    QPixmap                 sidebarPixmap = QPixmap(":/mpimage/light/music_withe_sidebar/music1.svg");
 
     MusicListDataView *q_ptr;
     Q_DECLARE_PUBLIC(MusicListDataView)
@@ -84,7 +85,7 @@ void MusicListDataViewPrivate::addPlayMusicTypePtr(const PlayMusicTypePtr TypePt
 
 
 MusicListDataView::MusicListDataView(QWidget *parent)
-    : ListView(parent), d_ptr(new MusicListDataViewPrivate(this))
+    : DListView(parent), d_ptr(new MusicListDataViewPrivate(this))
 {
     Q_D(MusicListDataView);
 
@@ -102,7 +103,7 @@ MusicListDataView::MusicListDataView(QWidget *parent)
     setLayoutMode(QListView::Batched);
     setBatchSize(20);
 
-    setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    //setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
     d->musciListDialog = new MusicListDialog(this);
@@ -233,10 +234,11 @@ int MusicListDataView::getThemeType() const
     return d->themeType;
 }
 
-void MusicListDataView::setPlayPixmap(QPixmap pixmap)
+void MusicListDataView::setPlayPixmap(QPixmap pixmap, QPixmap sidebarPixmap)
 {
     Q_D(MusicListDataView);
     d->playingPixmap = pixmap;
+    d->sidebarPixmap = sidebarPixmap;
     d->musciListDialog->setPlayPixmap(pixmap);
     update();
 }
@@ -245,6 +247,12 @@ QPixmap MusicListDataView::getPlayPixmap() const
 {
     Q_D(const MusicListDataView);
     return d->playingPixmap;
+}
+
+QPixmap MusicListDataView::getSidebarPixmap() const
+{
+    Q_D(const MusicListDataView);
+    return d->sidebarPixmap;
 }
 
 void MusicListDataView::updateList()
@@ -325,5 +333,5 @@ void MusicListDataView::onMusiclistChanged(PlaylistPtr playlist)
     }
 
     d->model->setPlaylist(playlist);
-    updateScrollbar();
+    //updateScrollbar();
 }

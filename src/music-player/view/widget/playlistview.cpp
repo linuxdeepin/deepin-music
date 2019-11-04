@@ -60,6 +60,7 @@ public:
 
     MetaPtrList         playMetaPtrList;
     QPixmap              playingPixmap = QPixmap(":/mpimage/light/music1.svg");
+    QPixmap              sidebarPixmap = QPixmap(":/mpimage/light/music_withe_sidebar/music1.svg");
 
     PlayListView *q_ptr;
     Q_DECLARE_PUBLIC(PlayListView)
@@ -195,10 +196,11 @@ int PlayListView::getThemeType() const
     return d->themeType;
 }
 
-void PlayListView::setPlayPixmap(QPixmap pixmap)
+void PlayListView::setPlayPixmap(QPixmap pixmap, QPixmap sidebarPixmap)
 {
     Q_D(PlayListView);
     d->playingPixmap = pixmap;
+    d->sidebarPixmap = sidebarPixmap;
     update();
 }
 
@@ -206,6 +208,12 @@ QPixmap PlayListView::getPlayPixmap() const
 {
     Q_D(const PlayListView);
     return d->playingPixmap;
+}
+
+QPixmap PlayListView::getSidebarPixmap() const
+{
+    Q_D(const PlayListView);
+    return d->sidebarPixmap;
 }
 
 void PlayListView::onMusicListRemoved(const MetaPtrList metalist)

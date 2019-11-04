@@ -146,6 +146,7 @@ public slots:
     void onMusiclistRemove(PlaylistPtr playlist, const MetaPtrList metalist);
     void onMusiclistDelete(PlaylistPtr playlist, const MetaPtrList metalist);
     void onAddToPlaylist(PlaylistPtr playlist, const MetaPtrList metalist);
+    void onAddMetaToPlaylist(PlaylistPtr playlist, const MetaPtrList metalist);
     void onPlaylistAdd(bool edit);
     void onCurrentPlaylistChanged(PlaylistPtr playlist);
     void onCustomResort(const QStringList &uuids);

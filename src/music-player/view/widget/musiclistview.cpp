@@ -252,7 +252,7 @@ void MusicListView::setCurPlaylist(QStandardItem *item)
             }
         }
     }
-    setCurrentItem(item);
+    //setCurrentItem(item);
     update();
 }
 
@@ -299,13 +299,19 @@ void MusicListView::clearSelected()
     }
 }
 
-void MusicListView::changePicture(QPixmap pixmap)
+void MusicListView::changePicture(QPixmap pixmap, QPixmap albumPixmap)
 {
     this->playingPixmap = pixmap;
+    this->albumPixmap = albumPixmap;
+    QPixmap curPixmap = pixmap;
+//    auto indexes = this->selectedIndexes();
+//    if (!indexes.isEmpty() && playingItem != nullptr && indexes[0].row() == playingItem->row()) {
+//        curPixmap = albumPixmap;
+//    }
     if (playingItem != nullptr) {
         auto curItem = dynamic_cast<DStandardItem *>(playingItem);
         //delete
-        QIcon playingIcon(playingPixmap);
+        QIcon playingIcon(curPixmap);
         playingIcon.actualSize(QSize(20, 20));
         DViewItemActionList actionList = curItem->actionList(Qt::RightEdge);
         if (!actionList.isEmpty()) {
@@ -386,12 +392,16 @@ void MusicListView::keyPressEvent(QKeyEvent *event)
 void MusicListView::showContextMenu(const QPoint &pos)
 {
     // get select
-    auto indexes = this->selectedIndexes();
-    if (indexes.size() != 1) {
-        return;
-    }
+//    auto indexes = this->selectedIndexes();
+//    if (indexes.size() != 1) {
+//        return;
+//    }
 
-    auto item = model->itemFromIndex(indexes.first());
+    auto index = indexAt(pos);
+    if (!index.isValid())
+        return;
+
+    auto item = model->itemFromIndex(index);
     if (!item) {
         return;
     }
@@ -433,7 +443,7 @@ void MusicListView::showContextMenu(const QPoint &pos)
             Q_EMIT pause(m_data, m_data->playing());
         }
         if (action->text() == tr("Rename")) {
-            edit(indexes.first());
+            edit(index);
         }
         if (action->text() == tr("Delete")) {
             QString message = QString(tr("Are you sure you want to delete this playlist?"));

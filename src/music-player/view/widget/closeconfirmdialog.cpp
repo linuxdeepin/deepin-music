@@ -56,14 +56,14 @@ CloseConfirmDialog::CloseConfirmDialog(QWidget *parent) :
     contentLayout->setSpacing(0);
     contentLayout->setContentsMargins(0, 0, 0, 0);
 
-    auto groupLabel = new DLabel(tr("Please select your operation"));
-    groupLabel->setObjectName("CloseConfirmDialogLabel");
+//    auto groupLabel = new DLabel(tr("Please select your operation"));
+//    groupLabel->setObjectName("CloseConfirmDialogLabel");
 
-    auto groupLabelFont = groupLabel->font();
-    groupLabelFont.setFamily("SourceHanSansSC");
-    groupLabelFont.setWeight(QFont::Medium);
-    groupLabelFont.setPixelSize(14);
-    groupLabel->setFont(groupLabelFont);
+//    auto groupLabelFont = groupLabel->font();
+//    groupLabelFont.setFamily("SourceHanSansSC");
+//    groupLabelFont.setWeight(QFont::Medium);
+//    groupLabelFont.setPixelSize(14);
+//    groupLabel->setFont(groupLabelFont);
 
     auto actionSelectionGroup = new QGroupBox();
     actionSelectionGroup->setContentsMargins(0, 0, 4, 0);
@@ -90,11 +90,19 @@ CloseConfirmDialog::CloseConfirmDialog(QWidget *parent) :
     miniBt->setFont(font);
     d->remember->setFont(font);
 
-    contentLayout->addWidget(groupLabel, 0, Qt::AlignLeft);
-    contentLayout->addSpacing(4);
-    contentLayout->addWidget(actionSelectionGroup, 0, Qt::AlignLeft);
-    contentLayout->addSpacing(6);
-    contentLayout->addWidget(d->remember, 0, Qt::AlignLeft);
+//    contentLayout->addWidget(groupLabel, 0, Qt::AlignLeft);
+//    contentLayout->addSpacing(4);
+//    contentLayout->addWidget(actionSelectionGroup, 0, Qt::AlignLeft);
+//    contentLayout->addSpacing(6);
+//    contentLayout->addWidget(d->remember, 0, Qt::AlignLeft);
+
+//    this->addContent(groupLabel, Qt::AlignLeft);
+
+
+    this->setTitle(tr("Please select your operation"));
+    this->addContent(d->exitBt, Qt::AlignLeft);
+    this->addContent(miniBt, Qt::AlignLeft);
+    this->addContent(d->remember, Qt::AlignLeft);
 
     setIcon(QIcon::fromTheme("deepin-music"));
     addContent(contentFrame);

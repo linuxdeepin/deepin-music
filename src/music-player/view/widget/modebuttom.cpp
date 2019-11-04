@@ -90,7 +90,7 @@ void ModeButton::paintEvent(QPaintEvent *event)
     }
 
     QPixmap pixmap = DHiDPIHelper::loadNxPixmap(curPicPath);
-    pixmap.setDevicePixelRatio(devicePixelRatioF());
+    //pixmap.setDevicePixelRatio(devicePixelRatioF());
 
     QPainter painter(this);
     painter.save();

@@ -126,6 +126,21 @@ MetaPtr MusicListInfoView::activingMeta() const
     return d->model->playlist()->playing();
 }
 
+MetaPtr MusicListInfoView::firstMeta() const
+{
+    Q_D(const MusicListInfoView);
+    MetaPtr curMeta = nullptr;
+    for (int i = 0; i < d->model->rowCount(); ++i) {
+        auto index = d->model->index(i, 0);
+        MetaPtr meta = d->model->meta(index);
+        if (!meta->invalid) {
+            curMeta = meta;
+            break;
+        }
+    }
+    return curMeta;
+}
+
 PlaylistPtr MusicListInfoView::playlist() const
 {
     Q_D(const MusicListInfoView);

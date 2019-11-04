@@ -178,6 +178,11 @@ void MetaDetector::updateMediaFileTagCodec(MediaMeta *meta, const QByteArray &co
         QFileInfo localFi(meta->localPath);
         meta->title = localFi.completeBaseName();
     }
+
+    //empty str
+    meta->album = meta->album.simplified();
+    meta->artist = meta->artist.simplified();
+    meta->title = meta->title.simplified();
 }
 
 QList<QByteArray> MetaDetector::detectEncodings(const MetaPtr meta)

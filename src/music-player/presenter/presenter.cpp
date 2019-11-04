@@ -454,7 +454,7 @@ void Presenter::openUri(const QUrl &uri)
         return;
     }
     auto list = d->playlistMgr->playlist(AllMusicListID);
-    onAddToPlaylist(list, metas);
+    onAddMetaToPlaylist(list, metas);
     Q_EMIT MediaLibrary::instance()->meidaFileImported(AllMusicListID, metas);
 
     onSyncMusicPlay(list, metas.first());
@@ -732,6 +732,32 @@ void Presenter::onAddToPlaylist(PlaylistPtr playlist,
     modifiedPlaylist->appendMusicList(metalist);
 }
 
+void Presenter::onAddMetaToPlaylist(PlaylistPtr playlist, const MetaPtrList metalist)
+{
+    Q_D(Presenter);
+
+    PlaylistPtr modifiedPlaylist = playlist;
+    if (playlist.isNull()) {
+        Q_EMIT showPlaylist(true);
+
+        PlaylistMeta info;
+        info.editmode = true;
+        info.readonly = false;
+        info.uuid = d->playlistMgr->newID();
+        info.displayName = d->playlistMgr->newDisplayName();
+        modifiedPlaylist = d->playlistMgr->addPlaylist(info);
+        Q_EMIT playlistAdded(d->playlistMgr->playlist(info.uuid));
+    } else {
+        //Q_EMIT notifyAddToPlaylist(modifiedPlaylist, metalist);
+    }
+
+    if (d->playlistMgr->playlist(modifiedPlaylist->id()).isNull()) {
+        qCritical() << "no list" << modifiedPlaylist->id();
+        return;
+    }
+    modifiedPlaylist->appendMusicList(metalist);
+}
+
 void Presenter::onCurrentPlaylistChanged(PlaylistPtr playlist)
 {
     Q_D(Presenter);
@@ -780,6 +806,7 @@ void Presenter::onSearchText(const QString text)
 
 void Presenter::onExitSearch()
 {
+    qDebug() << "exit search";
     Q_D(Presenter);
     qDebug() << d->playlistBeforeSearch;
     if (!d->playlistBeforeSearch.isNull()) {

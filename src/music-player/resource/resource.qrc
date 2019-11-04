@@ -208,5 +208,13 @@
         <file>mpimage/dark/music4.svg</file>
         <file>mpimage/dark/select_2.svg</file>
         <file>mpimage/dark/Bullet_window_warning.svg</file>
+        <file>mpimage/light/music_withe_sidebar/music2.svg</file>
+        <file>mpimage/light/music_withe_sidebar/music3.svg</file>
+        <file>mpimage/light/music_withe_sidebar/music4.svg</file>
+        <file>mpimage/light/music_withe_sidebar/music1.svg</file>
+        <file>mpimage/light/music_white_album_cover/1.svg</file>
+        <file>mpimage/light/music_white_album_cover/2.svg</file>
+        <file>mpimage/light/music_white_album_cover/3.svg</file>
+        <file>mpimage/light/music_white_album_cover/4.svg</file>
     </qresource>
 </RCC>

@@ -174,11 +174,12 @@ void SearchEdit::onTextChanged()
         m_result->setSearchString(text);
         m_result->setResultList(filterList, QStringList());
 
-        m_result->autoResize();
         m_result->show();
         // parent is MainFrame
         QPoint bottomLeft = rect.bottomLeft();
         bottomLeft = mapTo(parentWidget()->parentWidget(), bottomLeft);
+        m_result->setFixedWidth(width() - 4);
+        m_result->autoResize();
         m_result->move(bottomLeft.x() + width() / 2 + 24, bottomLeft.y() + 5);
         m_result->setFocusPolicy(Qt::StrongFocus);
         m_result->raise();

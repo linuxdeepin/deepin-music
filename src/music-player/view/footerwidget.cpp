@@ -298,12 +298,12 @@ Footer::Footer(QWidget *parent) :
     d->btNext->setFixedSize(40, 50);
 
     d->btFavorite = new MusicImageButton(":/mpimage/light/normal/collection_normal.svg",
-                                         ":/mpimage/light/hover/collection_hover.svg",
+                                         ":/mpimage/light/normal/collection_normal.svg",
                                          ":/mpimage/light/press/collection_press.svg");
     d->btFavorite->setPropertyPic(sPropertyFavourite, QVariant(true),
-                                  ":/common/image/unfav_normal.svg",
-                                  ":/common/image/unfav_hover.svg",
-                                  ":/common/image/unfav_press.svg");
+                                  ":/mpimage/light/checked/collection1_checked.svg",
+                                  ":/mpimage/light/checked/collection1_checked.svg",
+                                  ":/mpimage/light/press/collection_press.svg");
     d->btFavorite->setObjectName("FooterActionFavorite");
     d->btFavorite->setFixedSize(50, 50);
     d->btFavorite->setTransparent(false);
@@ -897,12 +897,13 @@ void Footer::slotTheme(int type)
     d->btPrev->setIcon(DHiDPIHelper::loadNxPixmap(QString(":/mpimage/%1/normal/last_normal.svg").arg(rStr)));
     d->btNext->setIcon(DHiDPIHelper::loadNxPixmap(QString(":/mpimage/%1/normal/next_normal.svg").arg(rStr)));
     d->btFavorite->setPropertyPic(QString(":/mpimage/%1/normal/collection_normal.svg").arg(rStr),
-                                  QString(":/mpimage/%1/hover/collection_hover.svg").arg(rStr),
+                                  QString(":/mpimage/%1/normal/collection_normal.svg").arg(rStr),
                                   QString(":/mpimage/%1/press/collection_press.svg").arg(rStr));
     d->btFavorite->setPropertyPic(sPropertyFavourite, QVariant(true),
-                                  QString(":/common/image/unfav_normal.svg"),
-                                  QString(":/common/image/unfav_hover.svg"),
-                                  QString(":/common/image/unfav_press.svg"));
+                                  QString(":/mpimage/%1/checked/collection1_checked.svg").arg(rStr),
+                                  QString(":/mpimage/%1/checked/collection1_checked.svg").arg(rStr),
+                                  QString(":/mpimage/%1/press/collection_press.svg").arg(rStr));
+
     d->btLyric->setPropertyPic(QString(":/mpimage/%1/normal/lyric_normal.svg").arg(rStr),
                                QString(":/mpimage/%1/hover/lyric_hover.svg").arg(rStr),
                                QString(":/mpimage/%1/press/lyric_press.svg").arg(rStr),

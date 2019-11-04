@@ -170,8 +170,9 @@ void MusicListDialogPrivate::initConnection()
     q->connect(btPlayAll, &DPushButton::clicked,
     q, [ = ]() {
         musicListInfoView->playlist()->playMusicTypeToMeta(musicListInfoView->curName());
-        if (musicListInfoView->playlist()->first() != nullptr) {
-            Q_EMIT q->playMedia(musicListInfoView->playlist()->first());
+        auto curtMeta = musicListInfoView->firstMeta();
+        if (curtMeta != nullptr) {
+            Q_EMIT q->playMedia(curtMeta);
             Q_EMIT q->modeChanged(0);
         }
     });
@@ -180,8 +181,26 @@ void MusicListDialogPrivate::initConnection()
     q, [ = ]() {
         musicListInfoView->playlist()->playMusicTypeToMeta(musicListInfoView->curName());
         if (musicListInfoView->playlist()->first() != nullptr) {
-            Q_EMIT q->playMedia(musicListInfoView->playlist()->first());
-            Q_EMIT q->modeChanged(2);
+
+            auto curPlayList = musicListInfoView->playlist();
+            bool invalidFlag = true;
+            for (auto curMata : curPlayList->allmusic()) {
+                if (!curMata->invalid) {
+                    invalidFlag = false;
+                    break;
+                }
+            }
+            if (!invalidFlag) {
+                auto cutMeta = musicListInfoView->playlist()->playing();
+                while (true) {
+                    cutMeta = musicListInfoView->playlist()->shuffleNext(cutMeta);
+                    if (!cutMeta->invalid)
+                        break;
+                }
+
+                Q_EMIT q->playMedia(cutMeta);
+                Q_EMIT q->modeChanged(2);
+            }
         }
     });
 

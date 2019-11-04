@@ -33,6 +33,7 @@
 #include <DFrame>
 #include <DFloatingWidget>
 #include <DHiDPIHelper>
+#include <DWindowCloseButton>
 
 #include <dwindowclosebutton.h>
 
@@ -58,7 +59,7 @@ public:
     DFloatingWidget              *infoGridFrame  = nullptr;
     Cover               *cover          = nullptr;
     DLabel              *title          = nullptr;
-    MusicImageButton    *closeBt        = nullptr;
+    DWindowCloseButton  *closeBt        = nullptr;
     QList<DLabel *>     valueList;
 
     InfoDialog *q_ptr;
@@ -77,8 +78,9 @@ void InfoDialogPrivate::initUI()
     layout->setSpacing(0);
     layout->setContentsMargins(5, 50, 5, 5);
 
-    closeBt = new MusicImageButton(":/mpimage/light/normal/close_normal.svg", "", "", "", q);
+    closeBt = new DWindowCloseButton( q);
     closeBt->setFixedSize(50, 50);
+    closeBt->setIconSize(QSize(50, 50));
     closeBt->move(q->width() - 50, 0);
 
     cover = new Cover;
@@ -280,8 +282,4 @@ void InfoDialog::setThemeType(int type)
         pl.setColor(DPalette::Shadow, sbcolor);
         d->infoGridFrame->setPalette(pl);
     }
-
-    d->closeBt->setPropertyPic(QString(":/mpimage/%1/normal/close_normal.svg").arg(rStr),
-                               QString(":/mpimage/%1/hover/close_normal.svg").arg(rStr),
-                               QString(":/mpimage/%1/press/close_normal.svg").arg(rStr));
 }

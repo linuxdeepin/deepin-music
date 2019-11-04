@@ -40,6 +40,7 @@
 #include <DTitlebar>
 #include <DImageButton>
 #include <DFileDialog>
+#include <DHiDPIHelper>
 
 #include "../presenter/presenter.h"
 #include "../core/metasearchservice.h"
@@ -311,7 +312,7 @@ void MainFramePrivate::slideToLyricView()
         current,  lyricWidget, AnimationDelay);
 
 //    q->disableControl();
-//    setPlaylistVisible(false);
+    setPlayListVisible(false);
     musicListWidget->setVisible(false);
     currentWidget = lyricWidget;
     titlebar->raise();
@@ -555,7 +556,7 @@ MainFrame::MainFrame(QWidget *parent) :
 
     Q_D(MainFrame);
     d->titlebarwidget = new TitlebarWidget(this);
-    d->titlebarwidget->setFixedSize(365, 50);
+    //d->titlebarwidget->setFixedSize(365, 50);
     //d->titlebarwidget->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
     d->searchResult = new SearchResult(this);
     d->searchResult->show();
@@ -672,8 +673,8 @@ void MainFrame::binding(Presenter *presenter)
 //            presenter, &Presenter::onLocateMusicAtAll);
 //    connect(d->titlebarwidget, &TitlebarWidget::search,
 //            presenter, &Presenter::onSearchText);
-//    connect(d->titlebarwidget, &TitlebarWidget::searchExited,
-//            presenter, &Presenter::onExitSearch);
+    connect(d->titlebarwidget, &TitlebarWidget::searchExited,
+            presenter, &Presenter::onExitSearch);
     connect(d->titlebarwidget, &TitlebarWidget::search,
             d->musicListWidget, &MusicListWidget::onSearchText);
 //    connect(d->titlebarwidget, &TitlebarWidget::searchExited,
@@ -694,7 +695,9 @@ void MainFrame::binding(Presenter *presenter)
         auto icon = QIcon(":/common/image/notify_success.svg");
         QFontMetrics fm(font());
         auto displayName = fm.elidedText(playlist->displayName(), Qt::ElideMiddle, 300);
-        auto text = tr("Successfully added to \"%1\"").arg(displayName);
+        auto text = tr("Added to %1").arg(displayName);
+        if (playlist->id() == FavMusicListID)
+            text = tr("Successfully added to \"%1\"").arg(displayName);
         this->sendMessage(icon, text);
     });
 
@@ -1132,26 +1135,36 @@ void MainFrame::changePicture()
     Q_D(MainFrame);
     int curCount = d->playingCount % 4;
     d->playingCount = curCount + 1;
-    QPixmap pixmap;
+    QPixmap pixmap, albumPixmap, sidebarPixmap;
     switch (curCount) {
     case 0:
-        pixmap = QPixmap(":/mpimage/light/music1.svg");
+        pixmap = DHiDPIHelper::loadNxPixmap(":/mpimage/light/music1.svg");
+        albumPixmap = DHiDPIHelper::loadNxPixmap(":/mpimage/light/music_white_album_cover/1.svg");
+        sidebarPixmap = DHiDPIHelper::loadNxPixmap(":/mpimage/light/music_withe_sidebar/music1.svg");
         break;
     case 1:
-        pixmap = QPixmap(":/mpimage/light/music2.svg");
+        pixmap = DHiDPIHelper::loadNxPixmap(":/mpimage/light/music2.svg");
+        albumPixmap = DHiDPIHelper::loadNxPixmap(":/mpimage/light/music_white_album_cover/2.svg");
+        sidebarPixmap = DHiDPIHelper::loadNxPixmap(":/mpimage/light/music_withe_sidebar/music2.svg");
         break;
     case 2:
-        pixmap = QPixmap(":/mpimage/light/music3.svg");
+        pixmap = DHiDPIHelper::loadNxPixmap(":/mpimage/light/music3.svg");
+        albumPixmap = DHiDPIHelper::loadNxPixmap(":/mpimage/light/music_white_album_cover/3.svg");
+        sidebarPixmap = DHiDPIHelper::loadNxPixmap(":/mpimage/light/music_withe_sidebar/music3.svg");
         break;
     case 3:
-        pixmap = QPixmap(":/mpimage/light/music4.svg");
+        pixmap = DHiDPIHelper::loadNxPixmap(":/mpimage/light/music4.svg");
+        albumPixmap = DHiDPIHelper::loadNxPixmap(":/mpimage/light/music_white_album_cover/4.svg");
+        sidebarPixmap = DHiDPIHelper::loadNxPixmap(":/mpimage/light/music_withe_sidebar/music4.svg");
         break;
     default:
-        pixmap = QPixmap(":/mpimage/light/music1.svg");
+        pixmap = DHiDPIHelper::loadNxPixmap(":/mpimage/light/music1.svg");
+        albumPixmap = DHiDPIHelper::loadNxPixmap(":/mpimage/light/music_white_album_cover/1.svg");
+        sidebarPixmap = DHiDPIHelper::loadNxPixmap(":/mpimage/light/music_withe_sidebar/music1.svg");
         break;
     }
-    d->musicListWidget->changePicture(pixmap);
-    d->playListWidget->changePicture(pixmap);
+    d->musicListWidget->changePicture(pixmap, albumPixmap, sidebarPixmap);
+    d->playListWidget->changePicture(pixmap, sidebarPixmap);
 }
 
 bool MainFrame::eventFilter(QObject *obj, QEvent *e)

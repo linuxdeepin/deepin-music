@@ -683,6 +683,8 @@ MusicListDataWidget::MusicListDataWidget(QWidget *parent) :
     d->infoLabel = new DLabel;
     d->infoLabel->setObjectName("MusicListDataTitle");
     d->infoLabel->setText(tr("All Music"));
+    d->infoLabel->setMinimumWidth(200);
+    d->infoLabel->setWordWrap(true);
     d->infoLabel->setFont(btPlayAllFont);
     auto infoLabelPalette = d->infoLabel->palette();
     infoLabelPalette.setColor(DPalette::ButtonText, ("#777777"));
@@ -706,7 +708,7 @@ MusicListDataWidget::MusicListDataWidget(QWidget *parent) :
     d->btlistMode->setCheckable(true);
 
     actionInfoBarLayout->addWidget(d->btPlayAll, 0, Qt::AlignVCenter);
-    actionInfoBarLayout->addWidget(d->infoLabel, 0, Qt::AlignLeft | Qt::AlignVCenter);
+    actionInfoBarLayout->addWidget(d->infoLabel, 100, Qt::AlignLeft | Qt::AlignVCenter);
     actionInfoBarLayout->addStretch();
     actionInfoBarLayout->addWidget(d->btIconMode, 0, Qt::AlignCenter);
     actionInfoBarLayout->addWidget(d->btlistMode, 0, Qt::AlignCenter);
@@ -925,15 +927,15 @@ void MusicListDataWidget::slotTheme(int type)
     d->musicListView->setThemeType(type);
 }
 
-void MusicListDataWidget::changePicture(QPixmap pixmap)
+void MusicListDataWidget::changePicture(QPixmap pixmap, QPixmap sidebarPixmap)
 {
     Q_D(MusicListDataWidget);
     if (d->albumListView->isVisible()) {
-        d->albumListView->setPlayPixmap(pixmap);
+        d->albumListView->setPlayPixmap(pixmap, sidebarPixmap);
     } else if (d->artistListView->isVisible()) {
-        d->artistListView->setPlayPixmap(pixmap);
+        d->artistListView->setPlayPixmap(pixmap, sidebarPixmap);
     } else {
-        d->musicListView->setPlayPixmap(pixmap);
+        d->musicListView->setPlayPixmap(pixmap, sidebarPixmap);
     }
 }
 

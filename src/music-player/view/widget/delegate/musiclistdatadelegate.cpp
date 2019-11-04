@@ -29,6 +29,10 @@
 
 #include "../musiclistdataview.h"
 
+QT_BEGIN_NAMESPACE
+extern Q_WIDGETS_EXPORT void qt_blurImage(QPainter *p, QImage &blurImage, qreal radius, bool quality, bool alphaOnly, int transposed = 0);
+QT_END_NAMESPACE
+
 const int PlayItemRightMargin = 20;
 
 static inline int pixel2point(int pixel)
@@ -91,7 +95,9 @@ void MusicListDataDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
         if (value.type() == QVariant::Icon) {
             icon = qvariant_cast<QIcon>(value);
         }
+
         painter->drawPixmap(rect, icon.pixmap(rect.width(), rect.width()));
+
 
         //draw border
         painter->save();
@@ -110,17 +116,29 @@ void MusicListDataDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
                 fillColor = "#000000";
                 fillColor.setAlphaF(0.3);
             }
+
+            QRect fillBlurRect(rect.x(), rect.y() + rect.height() - 36, rect.width(), 36);
+            int curFillSize = 36;
+            if (listview->playing() != nullptr && listview->playing()->artist == PlayMusicTypePtr->name) {
+                fillBlurRect = QRect(rect.x(), rect.y() + rect.height() - 64, rect.width(), 64);
+                curFillSize = 64;
+            }
+            //设置模糊
+            QImage t_image = icon.pixmap(rect.width(), rect.height()).toImage();
+            t_image  = t_image.copy(0, rect.height() - curFillSize, t_image.width(), curFillSize);
+            QTransform old_transform = painter->transform();
+            painter->translate(fillBlurRect.topLeft());
+            qt_blurImage(painter, t_image, 10, false, false);
+            painter->setTransform(old_transform);
+            //设置模糊
+            painter->fillRect(fillBlurRect, fillColor);
+
             //draw playing
             if (listview->playing() != nullptr && listview->playing()->artist == PlayMusicTypePtr->name) {
-                QRect fillPlayingRect(rect.x(), rect.y() + rect.height() - 64, rect.width(), 28);
-                painter->fillRect(fillPlayingRect, fillColor);
-
-                painter->drawPixmap(QRect(rect.x() + 64, rect.y() + 96, 22, 18), listview->getPlayPixmap());
+                painter->drawPixmap(QRect(rect.x() + 64, rect.y() + 96, 22, 18), listview->getSidebarPixmap());
             }
 
             QRect fillRect(rect.x(), rect.y() + rect.height() - 36, rect.width(), 36);
-            painter->fillRect(fillRect, fillColor);
-
             QFont font = option.font;
             font.setFamily("SourceHanSansSC");
             font.setWeight(QFont::Normal);
@@ -138,19 +156,32 @@ void MusicListDataDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
                 fillColor = "#000000";
                 fillColor.setAlphaF(0.3);
             }
-            //draw playing
-            if (listview->playing() != nullptr && listview->playing()->album == PlayMusicTypePtr->name) {
-                QRect fillPlayingRect(rect.x(), rect.y() + rect.height() - 83, rect.width(), 39);
-                painter->fillRect(fillPlayingRect, fillColor);
-
-                painter->drawPixmap(QRect(rect.x() + 64, rect.y() + 82, 22, 18), listview->getPlayPixmap());
-            }
-
             int startHeight = rect.y() + rect.height() - 44;
             int fillAllHeight = 44;
+            int curFillSize = fillAllHeight;
+            QRect fillBlurRect(rect.x(), rect.y() + rect.height() - fillAllHeight, rect.width(), fillAllHeight);
+            if (listview->playing() != nullptr && listview->playing()->album == PlayMusicTypePtr->name) {
+                fillBlurRect = QRect(rect.x(), rect.y() + rect.height() - 83, rect.width(), 83);
+                curFillSize = 83;
+            }
+
+            //设置模糊
+            QImage t_image = icon.pixmap(rect.width(), rect.height()).toImage();
+            t_image  = t_image.copy(0, rect.height() - curFillSize, t_image.width(), curFillSize);
+
+            QTransform old_transform = painter->transform();
+            painter->translate(fillBlurRect.topLeft());
+            qt_blurImage(painter, t_image, 10, false, false);
+            painter->setTransform(old_transform);
+            //设置模糊
+            painter->fillRect(fillBlurRect, fillColor);
+
+            //draw playing
+            if (listview->playing() != nullptr && listview->playing()->album == PlayMusicTypePtr->name) {
+                painter->drawPixmap(QRect(rect.x() + 64, rect.y() + 82, 22, 18), listview->getSidebarPixmap());
+            }
 
             QRect fillRect(rect.x(), startHeight, rect.width(), fillAllHeight);
-            painter->fillRect(fillRect, fillColor);
 
             QFont font = option.font;
             font.setPixelSize(14);
@@ -205,7 +236,14 @@ void MusicListDataDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
         if (option.state & QStyle::State_Selected) {
             background = selecteColor;
         }
-        painter->fillRect(option.rect, background);
+
+        painter->save();
+        painter->setPen(Qt::NoPen);
+        painter->setBrush(background);
+        painter->drawRect(option.rect);
+        painter->restore();
+        //painter->fillRect(option.rect, background);
+
         QColor nameColor("#090909"), otherColor("#797979");
         if (listview->getThemeType() == 2) {
             nameColor = QColor("#C0C6D4");

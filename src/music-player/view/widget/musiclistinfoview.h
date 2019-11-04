@@ -36,6 +36,7 @@ public:
     ~MusicListInfoView();
 
     MetaPtr activingMeta() const;
+    MetaPtr firstMeta() const;
     PlaylistPtr playlist() const;
     QModelIndex findIndex(const MetaPtr meta);
     QString curName() const;

@@ -49,7 +49,7 @@ public:
     void closeAllPersistentEditor();
     void clearSelected();
 
-    void changePicture(QPixmap pixmap);
+    void changePicture(QPixmap pixmap, QPixmap albumPixmap);
 
 public slots:
     void slotTheme(int type);
@@ -72,5 +72,6 @@ private:
     DStyledItemDelegate  *delegate        = nullptr;
     QStandardItem        *playingItem     = nullptr;
     QPixmap              playingPixmap;
+    QPixmap              albumPixmap;
     int                  m_type = 1;
 };

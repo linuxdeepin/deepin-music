@@ -21,12 +21,14 @@
 
 #pragma once
 
-#include "listview.h"
+#include <DListView>
 
 #include "../../core/playlist.h"
 
+DWIDGET_USE_NAMESPACE
+
 class MusicListDataViewPrivate;
-class MusicListDataView : public ListView
+class MusicListDataView : public DListView
 {
     Q_OBJECT
 public:
@@ -51,8 +53,9 @@ public:
     void setThemeType(int type);
     int getThemeType() const;
 
-    void setPlayPixmap(QPixmap pixmap);
+    void setPlayPixmap(QPixmap pixmap, QPixmap sidebarPixmap);
     QPixmap getPlayPixmap() const;
+    QPixmap getSidebarPixmap() const;
 
     void updateList();
 

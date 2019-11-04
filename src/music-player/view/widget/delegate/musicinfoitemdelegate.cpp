@@ -233,7 +233,12 @@ void MusicInfoItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
         background = selecteColor;
     }
 
-    painter->fillRect(option.rect, background);
+    painter->save();
+    painter->setPen(Qt::NoPen);
+    painter->setBrush(background);
+    painter->drawRect(option.rect);
+    painter->restore();
+    //painter->fillRect(option.rect, background);
 
     int rowCount = listview->model()->rowCount();
     auto rowCountSize = QString::number(rowCount).size();

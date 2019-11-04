@@ -349,8 +349,8 @@ void MusicListWidget::onCurrentChanged(PlaylistPtr playlist)
 {
     if (playlist->id() != SearchMusicListID) {
         if (playlist) {
-            m_dataBaseListview->clearSelection();
-            m_customizeListview->clearSelection();
+//            m_dataBaseListview->clearSelection();
+//            m_customizeListview->clearSelection();
         }
         for (int i = 0; i < m_dataBaseListview->count(); ++i) {
             auto *item = m_dataBaseListview->item(i);
@@ -456,11 +456,11 @@ void MusicListWidget::slotTheme(int type)
     m_customizeListview->slotTheme(type);
 }
 
-void MusicListWidget::changePicture(QPixmap pixmap)
+void MusicListWidget::changePicture(QPixmap pixmap, QPixmap albumPixmap, QPixmap sidebarPixmap)
 {
-    m_dataBaseListview->changePicture(pixmap);
-    m_customizeListview->changePicture(pixmap);
-    m_dataListView->changePicture(pixmap);
+    m_dataBaseListview->changePicture(pixmap, albumPixmap);
+    m_customizeListview->changePicture(pixmap, albumPixmap);
+    m_dataListView->changePicture(pixmap, sidebarPixmap);
 }
 
 void MusicListWidget::onCustomContextMenuRequest(const QPoint &pos, PlaylistPtr selectedlist, PlaylistPtr favlist, QList<PlaylistPtr> newlists, char type)

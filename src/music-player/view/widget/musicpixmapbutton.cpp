@@ -39,7 +39,7 @@ void MusicPixmapButton::paintEvent(QPaintEvent *event)
     painter.setRenderHint(QPainter::SmoothPixmapTransform);
 
     QPixmap pixmap = icon().pixmap(rect().width(), rect().height());
-    pixmap.setDevicePixelRatio(devicePixelRatioF());
+    //pixmap.setDevicePixelRatio(devicePixelRatioF());
 
     QPainterPath backgroundPath;
     backgroundPath.addRoundedRect(rect(), 10, 10);

@@ -315,9 +315,28 @@ void PlayerPrivate::selectNext(const MetaPtr info, Player::PlaybackMode mode)
         return;
     }
 
+    bool invalidFlag = info->invalid;
+    if (invalidFlag) {
+        for (auto curMeta : activePlaylist->allmusic()) {
+            if (!curMeta->invalid) {
+                invalidFlag = false;
+                break;
+            }
+        }
+    }
+
     switch (mode) {
     case Player::RepeatAll: {
-        q->playMeta(activePlaylist, activePlaylist->next(info));
+        auto curMeta = activePlaylist->next(info);
+        if (curMeta->invalid && !invalidFlag) {
+            int curNum = 0;
+            while (curNum < activePlaylist->allmusic().size()) {
+                curMeta = activePlaylist->next(curMeta);
+                if (!curMeta->invalid)
+                    break;
+            }
+        }
+        q->playMeta(activePlaylist, curMeta);
         break;
     }
     case Player::RepeatSingle: {
@@ -325,7 +344,16 @@ void PlayerPrivate::selectNext(const MetaPtr info, Player::PlaybackMode mode)
         break;
     }
     case Player::Shuffle: {
-        q->playMeta(activePlaylist, activePlaylist->shuffleNext(info));
+        auto curMeta = activePlaylist->shuffleNext(info);
+        if (curMeta->invalid && !invalidFlag) {
+            int curNum = 0;
+            while (true) {
+                curMeta = activePlaylist->shuffleNext(curMeta);
+                if (!curMeta->invalid)
+                    break;
+            }
+        }
+        q->playMeta(activePlaylist, curMeta);
         break;
     }
     }
@@ -338,9 +366,28 @@ void PlayerPrivate::selectPrev(const MetaPtr info, Player::PlaybackMode mode)
         return;
     }
 
+    bool invalidFlag = info->invalid;
+    if (invalidFlag) {
+        for (auto curMeta : activePlaylist->allmusic()) {
+            if (!curMeta->invalid) {
+                invalidFlag = false;
+                break;
+            }
+        }
+    }
+
     switch (mode) {
     case Player::RepeatAll: {
-        q->playMeta(activePlaylist, activePlaylist->prev(info));
+        auto curMeta = activePlaylist->prev(info);
+        if (curMeta->invalid && !invalidFlag) {
+            int curNum = 0;
+            while (curNum < activePlaylist->allmusic().size()) {
+                curMeta = activePlaylist->prev(curMeta);
+                if (!curMeta->invalid)
+                    break;
+            }
+        }
+        q->playMeta(activePlaylist, curMeta);
         break;
     }
     case Player::RepeatSingle: {
@@ -348,7 +395,16 @@ void PlayerPrivate::selectPrev(const MetaPtr info, Player::PlaybackMode mode)
         break;
     }
     case Player::Shuffle: {
-        q->playMeta(activePlaylist, activePlaylist->shufflePrev(info));
+        auto curMeta = activePlaylist->shufflePrev(info);
+        if (curMeta->invalid && !invalidFlag) {
+            int curNum = 0;
+            while (true) {
+                curMeta = activePlaylist->shufflePrev(curMeta);
+                if (!curMeta->invalid)
+                    break;
+            }
+        }
+        q->playMeta(activePlaylist, curMeta);
         break;
     }
     }

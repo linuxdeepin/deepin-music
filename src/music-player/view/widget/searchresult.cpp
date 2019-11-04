@@ -38,7 +38,7 @@ SearchResult::SearchResult(QWidget *parent) : DFrame(parent)
     vlayout->setContentsMargins(0, 4, 0, 0);
     vlayout->setSpacing(0);
 
-    setFixedWidth(350);
+    //setFixedWidth(350);
     setFrameRounded(true);
 
     m_searchResult = new DListView(this);
@@ -53,7 +53,7 @@ SearchResult::SearchResult(QWidget *parent) : DFrame(parent)
     m_searchResult->setItemSize(QSize(34, 34));
     m_searchResult->setItemSpacing(1);
     m_searchResult->setViewportMargins(0, 0, 0, 0);
-    m_searchResult->setFixedWidth(348);
+    //m_searchResult->setFixedWidth(348);
 
     m_searchResult->setFrameShape(QFrame::NoFrame);
     DPalette pa = DApplicationHelper::instance()->palette(m_searchResult);
@@ -66,7 +66,7 @@ SearchResult::SearchResult(QWidget *parent) : DFrame(parent)
     m_model->setStringList(a);
     m_searchResult->setModel(m_model);
 
-    vlayout->addWidget(m_searchResult, 0, Qt::AlignHCenter | Qt::AlignTop);
+    vlayout->addWidget(m_searchResult, 100, Qt::AlignHCenter | Qt::AlignTop);
 
     m_searchResult->adjustSize();
 
@@ -84,6 +84,7 @@ void SearchResult::autoResize()
     if (rowCount > 10)
         rowCount = 10;
     m_searchResult->setFixedHeight(rowCount * 34);
+    m_searchResult->setFixedWidth(width() - 4);
 
     setFixedHeight(m_searchResult->height() + 4);
 

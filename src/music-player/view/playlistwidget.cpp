@@ -344,6 +344,13 @@ void PlayListWidget::onMusicListAdded(PlaylistPtr playlist, const MetaPtrList me
     if (playlist != d->playListView->playlist()) {
         return;
     }
+    MetaPtrList curMetalist;
+    for (auto curMeta : metalist) {
+        if (!playlist->contains(curMeta))
+            curMetalist.append(curMeta);
+    }
+    if (curMetalist.isEmpty())
+        return;
 
     d->playListView->onMusicListAdded(metalist);
     d->showEmptyHits(metalist.length() == 0);
@@ -427,9 +434,9 @@ void PlayListWidget::slotTheme(int type)
     d->playListView->setThemeType(type);
 }
 
-void PlayListWidget::changePicture(QPixmap pixmap)
+void PlayListWidget::changePicture(QPixmap pixmap, QPixmap sidebarPixmap)
 {
     Q_D(PlayListWidget);
-    d->playListView->setPlayPixmap(pixmap);
+    d->playListView->setPlayPixmap(pixmap, sidebarPixmap);
 }
 
