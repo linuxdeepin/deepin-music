@@ -48,6 +48,10 @@ void initMiniTypes()
     //black list
     QHash<QString, bool> suffixBlacklist;
     suffixBlacklist.insert("m3u", true);
+    suffixBlacklist.insert("mid", true);
+    suffixBlacklist.insert("midi", true);
+    suffixBlacklist.insert("imy", true);
+    suffixBlacklist.insert("xmf", true);
 
     QHash<QString, bool> suffixWhitelist;
     suffixWhitelist.insert("cue", true);

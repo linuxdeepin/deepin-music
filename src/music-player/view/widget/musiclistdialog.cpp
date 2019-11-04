@@ -252,7 +252,7 @@ MusicListDialog::MusicListDialog(QWidget *parent)
     : DAbstractDialog(parent), d_ptr(new MusicListDialogPrivate(this))
 {
     Q_D(MusicListDialog);
-    setFixedSize(500, 500);
+    resize(500, 500);
 
     d->initUI();
     d->initConnection();

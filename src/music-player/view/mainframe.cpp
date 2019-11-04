@@ -605,7 +605,7 @@ void MainFrame::postInitUI()
 
     auto trayIcon = new QSystemTrayIcon(this);
     trayIcon->setIcon(QIcon::fromTheme("deepin-music"));
-    trayIcon->setToolTip(tr("Deepin Music"));
+    trayIcon->setToolTip(tr("Music"));
     trayIcon->setContextMenu(trayIconMenu);
     trayIcon->show();
 

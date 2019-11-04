@@ -453,6 +453,8 @@ void PlayListView::showContextMenu(const QPoint &pos,
             pauseAction = myMenu.addAction(tr("Pause"));
         } else {
             playAction = myMenu.addAction(tr("Play"));
+            if (meta->invalid)
+                playAction->setEnabled(false);
         }
     }
     myMenu.addAction(tr("Add to playlist"))->setMenu(&playlistMenu);
@@ -541,8 +543,8 @@ void PlayListView::showContextMenu(const QPoint &pos,
 
             Dtk::Widget::DDialog warnDlg(this);
             warnDlg.setTextFormat(Qt::RichText);
-            warnDlg.addButton(tr("Cancel"), true, Dtk::Widget::DDialog::ButtonWarning);
-            warnDlg.addButton(tr("Delete"), false, Dtk::Widget::DDialog::ButtonNormal);
+            warnDlg.addButton(tr("Cancel"), true, Dtk::Widget::DDialog::ButtonNormal);
+            int deleteFlag = warnDlg.addButton(tr("Delete"), false, Dtk::Widget::DDialog::ButtonWarning);
 
             auto cover = QImage(QString(":/common/image/del_notify.svg"));
             if (1 == metalist.length()) {
@@ -563,7 +565,7 @@ void PlayListView::showContextMenu(const QPoint &pos,
             auto coverPixmap =  QPixmap::fromImage(WidgetHelper::cropRect(cover, QSize(64, 64)));
 
             warnDlg.setIcon(QIcon::fromTheme("deepin-music"));
-            if (1 == warnDlg.exec()) {
+            if (deleteFlag == warnDlg.exec()) {
                 Q_EMIT deleteMusicList(metalist);
             }
         });

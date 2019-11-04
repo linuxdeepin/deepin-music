@@ -99,7 +99,10 @@ void Waveform::paintEvent(QPaintEvent *)
     painter.restore();
 
     //draw right
-    fillColor = QColor(Qt::darkGray);
+    fillColor = QColor("#000000");
+    if (themeType == 2)
+        fillColor = QColor("#FFFFFF");
+    fillColor.setAlphaF(0.5);
     painter.save();
     if (devicePixelRatio > 1.0) {
         painter.setClipRect(QRect(rect().x() + curWidth - 1, rect().y(), rect().width() - (curWidth - 1), rect().height()));

@@ -1002,7 +1002,19 @@ void Presenter::onUpdateMetaCodec(const MetaPtr meta)
 
 void Presenter::onPlayall(PlaylistPtr playlist)
 {
-    onMusicPlay(playlist, playlist->first());
+    Q_D(Presenter);
+    int size = playlist->length();
+    if (size < 1)
+        return;
+    MetaPtr meta = playlist->playing();
+    if (meta == nullptr)
+        meta = playlist->first();
+    if (d->player->mode() == Player::Shuffle) {
+        int n = qrand() % size;
+        meta = playlist->allmusic()[n];
+    }
+
+    onMusicPlay(playlist, meta);
 }
 
 void Presenter::onResort(PlaylistPtr playlist, int sortType)

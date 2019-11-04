@@ -278,7 +278,7 @@ void MusicListDataWidgetPrivate::initData(PlaylistPtr playlist, bool selectFlag,
             btIconMode->setChecked(false);
             btlistMode->setChecked(true);
         }
-        if (!selectFlag || albumListView->listSize() != allCount || preSearchStr != searchStr) {
+        if (!selectFlag || artistListView->listSize() != allCount || preSearchStr != searchStr) {
             artistListView->onMusiclistChanged(playlist);
         }
     } else {

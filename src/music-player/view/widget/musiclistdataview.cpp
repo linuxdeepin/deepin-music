@@ -102,6 +102,9 @@ MusicListDataView::MusicListDataView(QWidget *parent)
     setLayoutMode(QListView::Batched);
     setBatchSize(20);
 
+    setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+
     d->musciListDialog = new MusicListDialog(this);
 
 

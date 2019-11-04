@@ -274,7 +274,7 @@ void PlayItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
             nameColor = "#C0C6D4";
         }
         painter->setPen(nameColor);
-        QRect nameFillRect(option.rect.x(), startHeight, option.rect.width(), fillAllHeight / 2);
+        QRect nameFillRect(option.rect.x(), startHeight, option.rect.width(), fm.height());
         nameFillRect.adjust(8, 0, -7, 0);
         auto nameText = fm.elidedText(meta->title, Qt::ElideRight, 125);
         painter->drawText(nameFillRect, Qt::AlignLeft | Qt::AlignTop, nameText);
@@ -284,7 +284,7 @@ void PlayItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
         painter->setFont(font);
         nameColor.setAlphaF(0.6);
         painter->setPen(nameColor);
-        QRect extraNameFillRect(option.rect.x(), startHeight + fillAllHeight / 2, 99, 16);
+        QRect extraNameFillRect(option.rect.x(), startHeight + fillAllHeight / 2, 99, fm.height());
         extraNameFillRect.adjust(8, 0, -7, 0);
         auto extraNameText = extraNameFm.elidedText(meta->artist, Qt::ElideRight, 84);
         painter->drawText(extraNameFillRect, Qt::AlignLeft | Qt::AlignTop, extraNameText);

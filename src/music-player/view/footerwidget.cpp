@@ -859,7 +859,7 @@ void Footer::slotTheme(int type)
     if (type == 1) {
         QColor backMaskColor(200, 200, 200);
         setMaskColor(backMaskColor);
-        QColor maskColor(200, 200, 200, 170);
+        QColor maskColor(200, 200, 200, 190);
         d->forwardWidget->setMaskColor(maskColor);
         rStr = "light";
 
@@ -877,7 +877,7 @@ void Footer::slotTheme(int type)
     } else {
         QColor backMaskColor(56, 56, 56);
         setMaskColor(backMaskColor);
-        QColor maskColor(56, 56, 56, 170);
+        QColor maskColor(56, 56, 56, 190);
         d->forwardWidget->setMaskColor(maskColor);
         rStr = "dark";
 

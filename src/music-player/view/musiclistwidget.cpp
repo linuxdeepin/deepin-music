@@ -413,7 +413,7 @@ void MusicListWidget::slotTheme(int type)
         leftFrame->setPalette(leftFramePalette);
 
         DPalette dataBaseLabelPalette = dataBaseLabel->palette();
-        dataBaseLabelPalette.setColor(DPalette::ButtonText, QColor("#757F92"));
+        dataBaseLabelPalette.setColor(DPalette::WindowText, QColor("#757F92"));
         dataBaseLabel->setPalette(dataBaseLabelPalette);
         customizeLabel->setPalette(dataBaseLabelPalette);
 
@@ -436,7 +436,7 @@ void MusicListWidget::slotTheme(int type)
         leftFrame->setPalette(leftFramePalette);
 
         auto dataBaseLabelPalette = dataBaseLabel->palette();
-        dataBaseLabelPalette.setColor(DPalette::ButtonText, QColor("#FFFFFF"));
+        dataBaseLabelPalette.setColor(DPalette::WindowText, QColor("#FFFFFF"));
         dataBaseLabel->setPalette(dataBaseLabelPalette);
         customizeLabel->setPalette(dataBaseLabelPalette);
 
