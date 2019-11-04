@@ -394,29 +394,26 @@ void Player::loadMedia(PlaylistPtr playlist, const MetaPtr meta)
 
 void Player::playMeta(PlaylistPtr playlist, const MetaPtr meta)
 {
-    MetaPtr curMeta = meta;
-    if (curMeta == nullptr)
-        curMeta = playlist->first();
     qDebug() << "playMeta"
-             << curMeta->title
-             << DMusic::lengthString(curMeta->offset) << "/"
-             << DMusic::lengthString(curMeta->length);
+             << meta->title
+             << DMusic::lengthString(meta->offset) << "/"
+             << DMusic::lengthString(meta->length);
 
     Q_D(Player);
     d->activePlaylist = playlist;
 
     d->fileSystemWatcher.removePaths(d->fileSystemWatcher.files());
-    d->fileSystemWatcher.addPath(curMeta->localPath);
+    d->fileSystemWatcher.addPath(meta->localPath);
 
-    d->activeMeta = curMeta;
-    d->qplayer->setMedia(QMediaContent(QUrl::fromLocalFile(curMeta->localPath)));
-    d->qplayer->setPosition(curMeta->offset);
-    d->activePlaylist->play(curMeta);
+    d->activeMeta = meta;
+    d->qplayer->setMedia(QMediaContent(QUrl::fromLocalFile(meta->localPath)));
+    d->qplayer->setPosition(meta->offset);
+    d->activePlaylist->play(meta);
 
     DRecentData data;
     data.appName = "Deepin Music";
     data.appExec = "deepin-music";
-    DRecentManager::addItem(curMeta->localPath, data);
+    DRecentManager::addItem(meta->localPath, data);
 
     Q_EMIT mediaPlayed(d->activePlaylist, d->activeMeta);
 

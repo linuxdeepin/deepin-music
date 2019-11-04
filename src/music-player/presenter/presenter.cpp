@@ -904,16 +904,13 @@ void Presenter::onMusicPrev(PlaylistPtr playlist, const MetaPtr meta)
         return;
     }
 
-    MetaPtr curMeta = meta;
-    if (curMeta == nullptr)
-        curMeta = playlist->first();
     if (playlist->isEmpty()) {
-        Q_EMIT coverSearchFinished(curMeta, SearchMeta(), "");
-        Q_EMIT lyricSearchFinished(curMeta, SearchMeta(), "");
+        Q_EMIT coverSearchFinished(meta, SearchMeta(), "");
+        Q_EMIT lyricSearchFinished(meta, SearchMeta(), "");
         d->player->stop();
-        Q_EMIT this->musicStoped(playlist, curMeta);
+        Q_EMIT this->musicStoped(playlist, meta);
     }
-    Q_EMIT d->playPrev(playlist, curMeta);
+    Q_EMIT d->playPrev(playlist, meta);
 }
 
 void Presenter::onMusicNext(PlaylistPtr playlist, const MetaPtr meta)
@@ -923,16 +920,13 @@ void Presenter::onMusicNext(PlaylistPtr playlist, const MetaPtr meta)
         return;
     }
 
-    MetaPtr curMeta = meta;
-    if (curMeta == nullptr)
-        curMeta = playlist->first();
     if (playlist->isEmpty()) {
-        Q_EMIT coverSearchFinished(curMeta, SearchMeta(), "");
-        Q_EMIT lyricSearchFinished(curMeta, SearchMeta(), "");
+        Q_EMIT coverSearchFinished(meta, SearchMeta(), "");
+        Q_EMIT lyricSearchFinished(meta, SearchMeta(), "");
         d->player->stop();
-        Q_EMIT this->musicStoped(playlist, curMeta);
+        Q_EMIT this->musicStoped(playlist, meta);
     }
-    Q_EMIT d->playNext(playlist, curMeta);
+    Q_EMIT d->playNext(playlist, meta);
 }
 
 void Presenter::onToggleFavourite(const MetaPtr meta)
