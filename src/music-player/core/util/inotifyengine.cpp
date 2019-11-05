@@ -156,9 +156,9 @@ void InotifyEngine::handleInotifyEvent(inotify_event *event)
     }
 
     if (event->mask & IN_MOVED_FROM
-        || event->mask & IN_DELETE) {
+            || event->mask & IN_DELETE) {
 //        qDebug() << "fileRemoved" << filepath;
-        Q_EMIT fileRemoved(filepath);
+        //Q_EMIT fileRemoved(filepath);
     }
 }
 
