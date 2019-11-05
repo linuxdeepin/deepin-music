@@ -897,14 +897,6 @@ void Footer::onMusicStoped(PlaylistPtr playlist, const MetaPtr meta)
         d->btPrev->setDisabled(false);
         d->btNext->setDisabled(false);
     }
-
-    if (playlist->allmusic().size() == 1) {
-        d->btPrev->setDisabled(true);
-        d->btNext->setDisabled(true);
-    } else {
-        d->btPrev->setDisabled(false);
-        d->btNext->setDisabled(false);
-    }
 }
 
 void Footer::onMediaLibraryClean()
