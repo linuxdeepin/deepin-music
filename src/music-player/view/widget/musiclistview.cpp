@@ -132,6 +132,7 @@ void MusicListView::addMusicList(PlaylistPtr playlist, bool addFlag)
     if (addFlag) {
         edit(model->index(item->row(), 0));
         setCurrentItem(item);
+        scrollToBottom();
     }
 
     allPlaylists.append(playlist);
