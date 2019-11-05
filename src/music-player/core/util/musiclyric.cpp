@@ -5,7 +5,7 @@
 #include <QTextCodec>
 #include <QDebug>
 
-#include "basetool.h"
+#include "util/basetool.h"
 
 MusicLyric::MusicLyric()
 {

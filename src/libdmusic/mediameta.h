@@ -40,6 +40,7 @@ public:
     QString title;
     QString artist;
     QString album;
+    QString lyricPath;
 
     QString pinyinTitle;
     QString pinyinTitleShort;

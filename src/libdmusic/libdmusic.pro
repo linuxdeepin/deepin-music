@@ -6,7 +6,7 @@
 
 include($$PWD/../config.pri)
 
-QT  += network
+QT  += network KCodecs
 #QT  -= gui
 
 TARGET      = dmusic
@@ -46,7 +46,8 @@ SOURCES += \
     util/cueparser.cpp \
     util/pinyinsearch.cpp \
     net/geese.cpp \
-    util/encodingdetector.cpp
+    util/encodingdetector.cpp \
+    util/basetool.cpp
 
 HEADERS +=\
     libdmusic_global.h \
@@ -57,7 +58,8 @@ HEADERS +=\
     util/pinyinsearch.h \
     net/geese.h \
     util/encodingdetector.h \
-    playlistmeta.h
+    playlistmeta.h \
+    util/basetool.h
 
 unix {
     PKGCONFIG += libcue
