@@ -299,7 +299,7 @@ void PlayerPrivate::initConnection()
 
     q->connect(&fileSystemWatcher, &QFileSystemWatcher::fileChanged,
     q, [ = ](const QString & path) {
-        if (!QFile::exists(path))
+        if (!QFile::exists(activeMeta->localPath))
             Q_EMIT q->mediaError(activePlaylist, activeMeta, Player::ResourceError);
     });
 }
