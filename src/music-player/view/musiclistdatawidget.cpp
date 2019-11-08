@@ -664,8 +664,7 @@ MusicListDataWidget::MusicListDataWidget(QWidget *parent) :
     d->btPlayAll->setFixedHeight(30);
     d->btPlayAll->setFocusPolicy(Qt::NoFocus);
     auto btPlayAllFont = d->btPlayAll->font();
-    btPlayAllFont.setFamily("SourceHanSansSC");
-    btPlayAllFont.setWeight(QFont::Medium);
+    btPlayAllFont.setFamily("SourceHanSansSC-Medium");
     btPlayAllFont.setPixelSize(14);
     d->btPlayAll->setFont(btPlayAllFont);
 

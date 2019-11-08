@@ -71,8 +71,7 @@ MusicListWidget::MusicListWidget(QWidget *parent) : DWidget(parent)
     dataBaseLabel->setObjectName("MusicListWidgetDataBase");
     dataBaseLabel->setMargin(10);
     auto dataBaseLabelFont = dataBaseLabel->font();
-    dataBaseLabelFont.setFamily("SourceHanSansSC");
-    dataBaseLabelFont.setWeight(QFont::Medium);
+    dataBaseLabelFont.setFamily("SourceHanSansSC-Medium");
     dataBaseLabelFont.setPixelSize(14);
     dataBaseLabel->setFont(dataBaseLabelFont);
     auto dataBaseLabelPalette = dataBaseLabel->palette();
