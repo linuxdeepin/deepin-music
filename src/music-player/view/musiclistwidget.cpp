@@ -283,7 +283,7 @@ void MusicListWidget::onSearchText(QString str)
 
 void MusicListWidget::onMusicPlayed(PlaylistPtr playlist, const MetaPtr meta)
 {
-//    m_dataListView->onMusicPlayed(playlist, meta);
+    m_dataListView->onMusicPlayed(playlist, meta);
     onCurrentChanged(playlist);
 }
 
