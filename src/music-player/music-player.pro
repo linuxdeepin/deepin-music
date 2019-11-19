@@ -95,7 +95,8 @@ SOURCES += \
     view/widget/model/musiclistinfomodel.cpp \
     view/widget/delegate/musicinfoitemdelegate.cpp \
     core/util/fft.cpp \
-    view/widget/musictitleimage.cpp
+    view/widget/musictitleimage.cpp \
+    view/widget/musiciconbutton.cpp
 
 HEADERS += \
     musicapp.h \
@@ -165,7 +166,8 @@ HEADERS += \
     view/widget/delegate/musicinfoitemdelegate.h \
     view/widget/delegate/musicinfoitemdelegate_p.h \
     core/util/fft.h \
-    view/widget/musictitleimage.h
+    view/widget/musictitleimage.h \
+    view/widget/musiciconbutton.h
 
 RESOURCES += \
     resource/theme/theme.qrc \

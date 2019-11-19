@@ -256,9 +256,13 @@ void PlayListView::onMusicError(const MetaPtr meta, int /*error*/)
 void PlayListView::onMusicListAdded(const MetaPtrList metalist)
 {
     Q_D(PlayListView);
+    setUpdatesEnabled(false);
+    setAutoScroll(false);
     for (auto meta : metalist) {
         d->addMedia(meta);
     }
+    setAutoScroll(true);
+    setUpdatesEnabled(true);
     //updateScrollbar();
 }
 
@@ -289,6 +293,7 @@ void PlayListView::onMusiclistChanged(PlaylistPtr playlist)
         return;
     }
 
+    setUpdatesEnabled(false);
     d->model->removeRows(0, d->model->rowCount());
     d->playMetaPtrList.clear();
 
@@ -302,6 +307,7 @@ void PlayListView::onMusiclistChanged(PlaylistPtr playlist)
             break;
         }
     }
+
     for (auto meta : playlist->allmusic()) {
         if (searchStr.isEmpty()) {
             d->addMedia(meta);
@@ -329,6 +335,7 @@ void PlayListView::onMusiclistChanged(PlaylistPtr playlist)
             }
         }
     }
+    setUpdatesEnabled(true);
 
     d->model->setPlaylist(playlist);
     //updateScrollbar();

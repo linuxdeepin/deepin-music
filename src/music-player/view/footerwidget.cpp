@@ -50,6 +50,8 @@
 #include "widget/cover.h"
 #include "widget/soundvolume.h"
 #include "widget/musicimagebutton.h"
+#include "widget/musiciconbutton.h"
+
 #include "widget/musicpixmapbutton.h"
 #include "widget/waveform.h"
 #include "playlistwidget.h"
@@ -84,11 +86,11 @@ public:
     DButtonBoxButton  *btPlay     = nullptr;
     DButtonBoxButton  *btPrev     = nullptr;
     DButtonBoxButton  *btNext     = nullptr;
-    MusicImageButton  *btFavorite = nullptr;
-    MusicImageButton  *btLyric    = nullptr;
-    MusicImageButton  *btPlayList = nullptr;
+    MusicIconButton  *btFavorite = nullptr;
+    MusicIconButton  *btLyric    = nullptr;
+    MusicIconButton  *btPlayList = nullptr;
     ModeButton        *btPlayMode = nullptr;
-    MusicImageButton  *btSound    = nullptr;
+    MusicIconButton  *btSound    = nullptr;
     SoundVolume       *volSlider  = nullptr;
     DButtonBox        *ctlWidget  = nullptr;
     Waveform          *waveform   = nullptr;
@@ -297,9 +299,9 @@ Footer::Footer(QWidget *parent) :
     d->btNext->setObjectName("FooterActionNext");
     d->btNext->setFixedSize(40, 50);
 
-    d->btFavorite = new MusicImageButton(":/mpimage/light/normal/collection_normal.svg",
-                                         ":/mpimage/light/normal/collection_normal.svg",
-                                         ":/mpimage/light/press/collection_press.svg");
+    d->btFavorite = new MusicIconButton(":/mpimage/light/normal/collection_normal.svg",
+                                        ":/mpimage/light/normal/collection_normal.svg",
+                                        ":/mpimage/light/press/collection_press.svg");
     d->btFavorite->setPropertyPic(sPropertyFavourite, QVariant(true),
                                   ":/mpimage/light/checked/collection1_checked.svg",
                                   ":/mpimage/light/checked/collection1_checked.svg",
@@ -308,10 +310,10 @@ Footer::Footer(QWidget *parent) :
     d->btFavorite->setFixedSize(50, 50);
     d->btFavorite->setTransparent(false);
 
-    d->btLyric = new MusicImageButton(":/mpimage/light/normal/lyric_normal.svg",
-                                      ":/mpimage/light/hover/lyric_hover.svg",
-                                      ":/mpimage/light/press/lyric_press.svg",
-                                      ":/mpimage/light/checked/lyric_checked.svg");
+    d->btLyric = new MusicIconButton(":/mpimage/light/normal/lyric_normal.svg",
+                                     ":/mpimage/light/hover/lyric_hover.svg",
+                                     ":/mpimage/light/press/lyric_press.svg",
+                                     ":/mpimage/light/checked/lyric_checked.svg");
     d->btLyric->setObjectName("FooterActionLyric");
     d->btLyric->setFixedSize(50, 50);
     d->btLyric->setTransparent(false);
@@ -331,10 +333,10 @@ Footer::Footer(QWidget *parent) :
     d->btPlayMode->setModeIcons(modes, pressModes);
     d->btPlayMode->setTransparent(false);
 
-    d->btSound = new MusicImageButton(":/mpimage/light/normal/volume_normal.svg",
-                                      ":/mpimage/light/hover/volume_hover.svg",
-                                      ":/mpimage/light/press/volume_press.svg",
-                                      ":/mpimage/light/checked/volume_checked.svg");
+    d->btSound = new MusicIconButton(":/mpimage/light/normal/volume_normal.svg",
+                                     ":/mpimage/light/hover/volume_hover.svg",
+                                     ":/mpimage/light/press/volume_press.svg",
+                                     ":/mpimage/light/checked/volume_checked.svg");
     d->btSound->setPropertyPic("volume", QVariant("mid"),
                                ":/mpimage/light/normal/volume_lessen_normal.svg",
                                ":/mpimage/light/hover/volume_lessen_hover.svg",
@@ -357,10 +359,10 @@ Footer::Footer(QWidget *parent) :
     d->btSound->setCheckable(true);
     d->btSound->setAutoChecked(true);
 
-    d->btPlayList = new MusicImageButton(":/mpimage/light/normal/playlist_normal.svg",
-                                         ":/mpimage/light/hover/playlist_hover.svg",
-                                         ":/mpimage/light/press/playlist_press.svg",
-                                         ":/mpimage/checked/press/playlist_checked.svg");
+    d->btPlayList = new MusicIconButton(":/mpimage/light/normal/playlist_normal.svg",
+                                        ":/mpimage/light/hover/playlist_hover.svg",
+                                        ":/mpimage/light/press/playlist_press.svg",
+                                        ":/mpimage/checked/press/playlist_checked.svg");
     d->btPlayList->setObjectName("FooterActionPlayList");
     d->btPlayList->setFixedSize(50, 50);
     d->btPlayList->setTransparent(false);
@@ -743,7 +745,7 @@ void Footer::onMusicPlayed(PlaylistPtr playlist, const MetaPtr meta)
 
     d->updateQssProperty(d->btFavorite, sPropertyFavourite, meta->favourite);
 
-    if (!meta->invalid) {
+    if (!meta->invalid || true) {
         d->updateQssProperty(d->btPlay, sPropertyPlayStatus, sPlayStatusValuePlaying);
         d->updateQssProperty(this, sPropertyPlayStatus, sPlayStatusValuePlaying);
         if (d->m_type == 1) {
@@ -902,10 +904,11 @@ void Footer::slotTheme(int type)
     d->btFavorite->setPropertyPic(sPropertyFavourite, QVariant(true),
                                   QString(":/mpimage/%1/checked/collection1_checked.svg").arg(rStr),
                                   QString(":/mpimage/%1/checked/collection1_checked.svg").arg(rStr),
-                                  QString(":/mpimage/%1/press/collection_press.svg").arg(rStr));
+                                  QString(":/mpimage/%1/press/collection1_press.svg").arg(rStr),
+                                  QString(":/mpimage/%1/checked/collection1_checked.svg").arg(rStr));
 
     d->btLyric->setPropertyPic(QString(":/mpimage/%1/normal/lyric_normal.svg").arg(rStr),
-                               QString(":/mpimage/%1/hover/lyric_hover.svg").arg(rStr),
+                               QString(":/mpimage/%1/normal/lyric_normal.svg").arg(rStr),
                                QString(":/mpimage/%1/press/lyric_press.svg").arg(rStr),
                                QString(":/mpimage/%1/checked/lyric_checked.svg").arg(rStr));
     QStringList modes;
@@ -936,7 +939,7 @@ void Footer::slotTheme(int type)
                                QString(":/mpimage/%1/press/mute_press.svg").arg(rStr),
                                QString(":/mpimage/%1/checked/mute_checked.svg").arg(rStr));
     d->btPlayList->setPropertyPic(QString(":/mpimage/%1/normal/playlist_normal.svg").arg(rStr),
-                                  QString(":/mpimage/%1/hover/playlist_hover.svg").arg(rStr),
+                                  QString(":/mpimage/%1/normal/playlist_normal.svg").arg(rStr),
                                   QString(":/mpimage/%1/press/playlist_press.svg").arg(rStr),
                                   QString(":/mpimage/%1/checked/playlist_checked.svg").arg(rStr));
 

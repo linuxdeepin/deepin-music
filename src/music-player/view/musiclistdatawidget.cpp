@@ -795,7 +795,12 @@ void MusicListDataWidget::onMusiclistChanged(PlaylistPtr playlist)
 void MusicListDataWidget::onMusicListAdded(PlaylistPtr playlist, const MetaPtrList metalist)
 {
     Q_D(MusicListDataWidget);
-    d->initData(d->curPlaylist);
+    if (playlist->id() != AlbumMusicListID && playlist->id() != ArtistMusicListID) {
+        if (playlist == d->musicListView->playlist())
+            d->musicListView->onMusicListAdded(metalist);
+    } else {
+        d->initData(d->curPlaylist);
+    }
 }
 
 void MusicListDataWidget::onMusicListRemoved(PlaylistPtr playlist, const MetaPtrList metalist)

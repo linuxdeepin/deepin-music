@@ -42,6 +42,7 @@ public:
     void setViewModeFlag(QListView::ViewMode mode);
     void setPlaying(const MetaPtr);
     MetaPtr playing() const;
+    MetaPtr hoverin() const;
 
     void showContextMenu(const QPoint &pos,
                          PlaylistPtr selectedPlaylist,

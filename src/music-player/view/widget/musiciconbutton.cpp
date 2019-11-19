@@ -19,7 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "musicimagebutton.h"
+#include "musiciconbutton.h"
 
 #include <QDebug>
 #include <QPainter>
@@ -29,13 +29,13 @@
 
 DGUI_USE_NAMESPACE
 
-MusicImageButton::MusicImageButton(QWidget *parent)
+MusicIconButton::MusicIconButton(QWidget *parent)
     : DPushButton(parent)
 {
 }
 
-MusicImageButton::MusicImageButton(const QString &normalPic, const QString &hoverPic,
-                                   const QString &pressPic, const QString &checkedPic, QWidget *parent)
+MusicIconButton::MusicIconButton(const QString &normalPic, const QString &hoverPic,
+                                 const QString &pressPic, const QString &checkedPic, QWidget *parent)
     : DPushButton (parent)
 {
     defaultPicPath.normalPicPath = normalPic;
@@ -50,8 +50,8 @@ MusicImageButton::MusicImageButton(const QString &normalPic, const QString &hove
     setPalette(pl);
 }
 
-void MusicImageButton::setPropertyPic(QString propertyName, const QVariant &value,
-                                      const QString &normalPic, const QString &hoverPic, const QString &pressPic, const QString &checkedPic)
+void MusicIconButton::setPropertyPic(QString propertyName, const QVariant &value,
+                                     const QString &normalPic, const QString &hoverPic, const QString &pressPic, const QString &checkedPic)
 {
     MusicPicPathInfo curPicPath;
     curPicPath.normalPicPath = normalPic;
@@ -69,7 +69,7 @@ void MusicImageButton::setPropertyPic(QString propertyName, const QVariant &valu
     }
 }
 
-void MusicImageButton::setPropertyPic(const QString &normalPic, const QString &hoverPic, const QString &pressPic, const QString &checkedPic)
+void MusicIconButton::setPropertyPic(const QString &normalPic, const QString &hoverPic, const QString &pressPic, const QString &checkedPic)
 {
     defaultPicPath.normalPicPath = normalPic;
     defaultPicPath.hoverPicPath = hoverPic;
@@ -77,17 +77,17 @@ void MusicImageButton::setPropertyPic(const QString &normalPic, const QString &h
     defaultPicPath.checkedPicPath = checkedPic;
 }
 
-void MusicImageButton::setTransparent(bool flag)
+void MusicIconButton::setTransparent(bool flag)
 {
     transparent = flag;
 }
 
-void MusicImageButton::setAutoChecked(bool flag)
+void MusicIconButton::setAutoChecked(bool flag)
 {
     autoChecked = flag;
 }
 
-void MusicImageButton::paintEvent(QPaintEvent *event)
+void MusicIconButton::paintEvent(QPaintEvent *event)
 {
     if (!transparent) {
         DPushButton::paintEvent(event);
@@ -128,29 +128,17 @@ void MusicImageButton::paintEvent(QPaintEvent *event)
             curPicPath = curPropertyPicPathStr;
         }
     }
-    QPixmap pixmap = DHiDPIHelper::loadNxPixmap(curPicPath);
-    if (pixmap.isNull()) {
-        pixmap = DHiDPIHelper::loadNxPixmap(defaultPicPath.normalPicPath);
-    }
 
 
-    pixmap.setDevicePixelRatio(devicePixelRatioF());
-    QPainter painter(this);
-    painter.save();
-    painter.setRenderHint(QPainter::Antialiasing);
-    painter.setRenderHint(QPainter::HighQualityAntialiasing);
-    painter.setRenderHint(QPainter::SmoothPixmapTransform);
+    QIcon icon;
+    icon.addFile(curPicPath);
 
-    int pixmapWidth = pixmap.rect().width();
-    int pixmapHeight = pixmap.rect().height();
-    QRect pixmapRect((rect().width() - pixmapWidth) / 2, (rect().height() - pixmapHeight) / 2, pixmapWidth, pixmapHeight);
-    pixmapRect = pixmapRect.intersected(rect());
-    painter.drawPixmap(pixmapRect, pixmap, QRect(0, 0, pixmapWidth, pixmapHeight));
+    this->setIconSize(QSize(35, 35));
+    this->setIcon(icon);
 
-    painter.restore();
 }
 
-void MusicImageButton::enterEvent(QEvent *event)
+void MusicIconButton::enterEvent(QEvent *event)
 {
     status = 1;
     DPushButton::enterEvent(event);
@@ -159,7 +147,7 @@ void MusicImageButton::enterEvent(QEvent *event)
     }
 }
 
-void MusicImageButton::leaveEvent(QEvent *event)
+void MusicIconButton::leaveEvent(QEvent *event)
 {
     status = 0;
     DPushButton::leaveEvent(event);
@@ -168,13 +156,13 @@ void MusicImageButton::leaveEvent(QEvent *event)
     }
 }
 
-void MusicImageButton::mousePressEvent(QMouseEvent *event)
+void MusicIconButton::mousePressEvent(QMouseEvent *event)
 {
     status = 2;
     DPushButton::mousePressEvent(event);
 }
 
-void MusicImageButton::mouseReleaseEvent(QMouseEvent *event)
+void MusicIconButton::mouseReleaseEvent(QMouseEvent *event)
 {
     status = 0;
     DPushButton::mouseReleaseEvent(event);

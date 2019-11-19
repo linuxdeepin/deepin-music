@@ -37,7 +37,7 @@
 #include "player.h"
 #include "mediadatabase.h"
 
-const static int ScanCacheSize = 50;
+const static int ScanCacheSize = 5000;
 
 class MediaLibraryPrivate
 {

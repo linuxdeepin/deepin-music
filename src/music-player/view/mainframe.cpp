@@ -805,7 +805,7 @@ void MainFrame::binding(Presenter *presenter)
     this, [ = ](PlaylistPtr playlist, const MetaPtrList metalist) {
         d->setPlayListVisible(false);
         d->playListWidget->onMusiclistChanged(playlist);
-        d->musicListWidget->onMusiclistUpdate();
+        d->musicListWidget->onMusicListAdded(playlist, metalist);
         d->disableControl(true);
         d->slideToMusicListView(true);
     });

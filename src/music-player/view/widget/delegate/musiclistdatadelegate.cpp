@@ -24,6 +24,7 @@
 #include <QPainter>
 #include <QDebug>
 #include <QDate>
+#include <QEvent>
 
 #include <DHiDPIHelper>
 
@@ -49,6 +50,7 @@ public:
     QPixmap playing = DHiDPIHelper::loadNxPixmap(":/common/image/jumpto_playing_normal.svg");
     QString playingIcon = ":/mpimage/light/music1.svg";
     QString highlightPlayingIcon = ":/mpimage/light/music1.svg";
+    QPixmap hoverImg = DHiDPIHelper::loadNxPixmap(":/common/image/start_hover.svg");
 
     MusicListDataDelegate *q_ptr;
     Q_DECLARE_PUBLIC(MusicListDataDelegate)
@@ -439,6 +441,7 @@ void MusicListDataDelegate::setModelData(QWidget *editor, QAbstractItemModel *mo
 {
     QStyledItemDelegate::setModelData(editor, model, index);
 }
+
 
 MusicListDataDelegate::MusicListDataDelegate(QWidget *parent): QStyledItemDelegate(parent), d_ptr(new MusicListDataDelegatePrivate(this))
 {

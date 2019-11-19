@@ -89,22 +89,27 @@ void ModeButton::paintEvent(QPaintEvent *event)
         curPicPath = m_pressIcons[m_mode];
     }
 
-    QPixmap pixmap = DHiDPIHelper::loadNxPixmap(curPicPath);
-    //pixmap.setDevicePixelRatio(devicePixelRatioF());
+//    QPixmap pixmap = DHiDPIHelper::loadNxPixmap(curPicPath);
+////    pixmap.setDevicePixelRatio(devicePixelRatioF());
 
-    QPainter painter(this);
-    painter.save();
-    painter.setRenderHint(QPainter::Antialiasing);
-    painter.setRenderHint(QPainter::HighQualityAntialiasing);
-    painter.setRenderHint(QPainter::SmoothPixmapTransform);
+//    QPainter painter(this);
+//    painter.save();
+//    painter.setRenderHint(QPainter::Antialiasing);
+//    painter.setRenderHint(QPainter::HighQualityAntialiasing);
+//    painter.setRenderHint(QPainter::SmoothPixmapTransform);
 
-    int pixmapWidth = pixmap.rect().width();
-    int pixmapHeight = pixmap.rect().height();
-    QRect pixmapRect((rect().width() - pixmapWidth) / 2, (rect().height() - pixmapHeight) / 2, pixmapWidth, pixmapHeight);
-    pixmapRect = pixmapRect.intersected(rect());
-    painter.drawPixmap(pixmapRect, pixmap, QRect(0, 0, pixmapWidth, pixmapHeight));
+//    int pixmapWidth = pixmap.rect().width();
+//    int pixmapHeight = pixmap.rect().height();
+//    QRect pixmapRect((rect().width() - pixmapWidth) / 2, (rect().height() - pixmapHeight) / 2, pixmapWidth, pixmapHeight);
+//    pixmapRect = pixmapRect.intersected(rect());
+//    painter.drawPixmap(pixmapRect, pixmap, QRect(0, 0, pixmapWidth, pixmapHeight));
 
-    painter.restore();
+//    painter.restore();
+    QIcon icon;
+    icon.addFile(curPicPath);
+
+    this->setIconSize(QSize(35, 35));
+    this->setIcon(icon);
 }
 
 void ModeButton::mousePressEvent(QMouseEvent *event)

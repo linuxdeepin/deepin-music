@@ -55,6 +55,7 @@ public:
     MusicListDataDelegate   *delegate     = nullptr;
     QString                 defaultCover = ":/common/image/cover_max.svg";
     MetaPtr                 playing       = nullptr;
+    MetaPtr                 hoverin       = nullptr;
 
     int                     themeType     = 1;
 
@@ -207,6 +208,12 @@ MetaPtr MusicListDataView::playing() const
 {
     Q_D(const MusicListDataView);
     return d->playing;
+}
+
+MetaPtr MusicListDataView::hoverin() const
+{
+    Q_D(const MusicListDataView);
+    return d->hoverin;
 }
 
 void MusicListDataView::showContextMenu(const QPoint &pos, PlaylistPtr selectedPlaylist, PlaylistPtr favPlaylist, QList<PlaylistPtr> newPlaylists)
