@@ -831,7 +831,7 @@ void MainFrame::binding(Presenter *presenter)
         Dtk::Widget::DDialog warnDlg(this);
         warnDlg.setIcon(QIcon::fromTheme("deepin-music"));
         warnDlg.setTextFormat(Qt::RichText);
-        warnDlg.setTitle(tr("Invalid or non-existent file,failed to load!"));
+        warnDlg.setTitle(tr("File is invalid or does not exist, load failed!"));
         warnDlg.addButtons(QStringList() << tr("I know"));
         warnDlg.setDefaultButton(0);
 

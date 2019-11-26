@@ -265,6 +265,11 @@
         <translation>退出</translation>
     </message>
     <message>
+        <location filename="../view/mainframe.cpp" line="834"/>
+        <source>File is invalid or does not exist, load failed!</source>
+        <translation>文件无效或不存在，加载失败！</translation>
+    </message>
+    <message>
         <source>Add folder</source>
         <translation type="vanished">添加文件夹</translation>
     </message>
@@ -311,9 +316,8 @@
         <translation>已添加到%1</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="834"/>
         <source>Invalid or non-existent file,failed to load!</source>
-        <translation>文件无效或不存在，加载失败！</translation>
+        <translation type="vanished">文件无效或不存在，加载失败！</translation>
     </message>
     <message>
         <location filename="../view/mainframe.cpp" line="835"/>
