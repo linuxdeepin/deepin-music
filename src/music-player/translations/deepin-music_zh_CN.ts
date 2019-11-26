@@ -30,8 +30,12 @@
     </message>
     <message>
         <location filename="../view/widget/closeconfirmdialog.cpp" line="111"/>
-        <source>OK</source>
+        <source>Confirm</source>
         <translation>确定</translation>
+    </message>
+    <message>
+        <source>OK</source>
+        <translation type="vanished">确定</translation>
     </message>
 </context>
 <context>
@@ -897,29 +901,41 @@
 <context>
     <name>PlayListWidget</name>
     <message>
-        <location filename="../view/playlistwidget.cpp" line="144"/>
         <source>No Music</source>
-        <translation>当前歌单为空</translation>
+        <translation type="vanished">当前歌单为空</translation>
+    </message>
+    <message>
+        <source>No result found</source>
+        <translation type="vanished">无搜索结果</translation>
+    </message>
+    <message>
+        <source>Play List</source>
+        <translation type="vanished">播放列表</translation>
+    </message>
+    <message>
+        <source>Clear List</source>
+        <translation type="vanished">清空列表</translation>
+    </message>
+    <message>
+        <location filename="../view/playlistwidget.cpp" line="144"/>
+        <location filename="../view/playlistwidget.cpp" line="244"/>
+        <source>No songs</source>
+        <translation>无歌曲</translation>
     </message>
     <message>
         <location filename="../view/playlistwidget.cpp" line="146"/>
-        <source>No result found</source>
+        <source>No search results</source>
         <translation>无搜索结果</translation>
     </message>
     <message>
         <location filename="../view/playlistwidget.cpp" line="180"/>
-        <source>Play List</source>
+        <source>Playlist</source>
         <translation>播放列表</translation>
     </message>
     <message>
         <location filename="../view/playlistwidget.cpp" line="205"/>
-        <source>Clear List</source>
+        <source>Empty</source>
         <translation>清空列表</translation>
-    </message>
-    <message>
-        <location filename="../view/playlistwidget.cpp" line="244"/>
-        <source>No songs</source>
-        <translation>无歌曲</translation>
     </message>
     <message>
         <location filename="../view/playlistwidget.cpp" line="246"/>
@@ -1056,8 +1072,12 @@
         <translation>最小化到系统托盘</translation>
     </message>
     <message>
-        <location filename="../view/widget/settingsdialog.cpp" line="27"/>
         <source>Exit Deepin Music</source>
+        <translation type="vanished">退出音乐</translation>
+    </message>
+    <message>
+        <location filename="../view/widget/settingsdialog.cpp" line="27"/>
+        <source>Exit Music</source>
         <translation>退出音乐</translation>
     </message>
     <message>

@@ -141,9 +141,9 @@ void PlayListWidgetPrivate::showEmptyHits(bool empty)
 {
     auto playlist = playListView->playlist();
     if (playlist.isNull() || playlist->id() != SearchMusicListID) {
-        emptyHits->setText(PlayListWidget::tr("No Music"));
+        emptyHits->setText(PlayListWidget::tr("No songs"));
     } else {
-        emptyHits->setText(PlayListWidget::tr("No result found"));
+        emptyHits->setText(PlayListWidget::tr("No search results"));
     }
     playListView->setVisible(!empty);
     emptyHits->setVisible(empty);
@@ -177,7 +177,7 @@ PlayListWidget::PlayListWidget(QWidget *parent) :
     titleFont.setPixelSize(24);
     d->titleLabel->setFont(titleFont);
     d->titleLabel->setMargin(4);
-    d->titleLabel->setText(tr("Play List"));
+    d->titleLabel->setText(tr("Playlist"));
     d->titleLabel->setForegroundRole(DPalette::TextTitle);
 
     d->infoLabel = new DLabel();
@@ -202,7 +202,7 @@ PlayListWidget::PlayListWidget(QWidget *parent) :
     playAllPalette.setColor(DPalette::Light, QColor(Qt::darkGray));
     d->btClearAll->setPalette(playAllPalette);
     d->btClearAll->setObjectName("PlayListPlayAll");
-    d->btClearAll->setText(tr("Clear List"));
+    d->btClearAll->setText(tr("Empty"));
     d->btClearAll->setFocusPolicy(Qt::NoFocus);
     d->btClearAll->setFixedHeight(30);
 

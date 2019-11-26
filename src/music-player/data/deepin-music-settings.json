@@ -138,7 +138,7 @@
                             "type": "radiogroup",
                             "items": [
                                 "Minimize to system tray",
-                                "Exit Deepin Music"
+                                "Exit Music"
                             ],
                             "default": 0
                         }
