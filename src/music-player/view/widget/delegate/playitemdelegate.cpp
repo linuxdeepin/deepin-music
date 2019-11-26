@@ -432,7 +432,6 @@ void PlayItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
                 auto iconRect = QRectF(centerF.x() - t_ratioRect.width() / 2,
                                        centerF.y() - t_ratioRect.height() / 2,
                                        t_ratioRect.width(), t_ratioRect.height());
-                qDebug() << "play delegate size:" << iconRect.toRect();
                 painter->drawPixmap(iconRect.toRect(), icon);
 
             } else {
