@@ -80,7 +80,7 @@ ImportWidget::ImportWidget(QWidget *parent) : DFrame(parent), d_ptr(new ImportWi
     d->importButton->setPalette(pl);
     d->importButton->setObjectName("ImportViewImportButton");
     d->importButton->setFixedSize(302, 36);
-    d->importButton->setText(tr("Add Music"));
+    d->importButton->setText(tr("Import Music"));
     d->importButton->setFocusPolicy(Qt::NoFocus);
 
     d->text = new QLabel;
@@ -92,7 +92,7 @@ ImportWidget::ImportWidget(QWidget *parent) : DFrame(parent), d_ptr(new ImportWi
     d->text->setFont(textFont);
     d->text->setFixedHeight(18);
     QString linkText = QString(linkTemplate).arg(tr("Scan")).arg(tr("Scan"));
-    d->text->setText(tr("You can %1 music catalogs or drag and drop music files to add music").arg(linkText));
+    d->text->setText(tr("%1 music directory or drag music files here").arg(linkText));
 
     layout->setSpacing(0);
     layout->addStretch();
@@ -139,7 +139,7 @@ void ImportWidget::showImportHint()
     d->importButton->setDisabled(false);
     d->importButton->show();
     QString linkText = QString(linkTemplate).arg(tr("Scan")).arg(tr("Scan"));
-    d->text->setText(tr("You can %1 music catalogs or drag and drop music files to add music").arg(linkText));
+    d->text->setText(tr("%1 music directory or drag music files here").arg(linkText));
 }
 
 void ImportWidget::dragEnterEvent(QDragEnterEvent *event)

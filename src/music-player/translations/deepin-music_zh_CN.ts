@@ -114,19 +114,21 @@
         <translation type="vanished">添加文件夹</translation>
     </message>
     <message>
-        <location filename="../view/importwidget.cpp" line="83"/>
         <source>Add Music</source>
-        <translation>添加音乐</translation>
+        <translation type="vanished">添加音乐</translation>
     </message>
     <message>
-        <location filename="../view/importwidget.cpp" line="95"/>
-        <location filename="../view/importwidget.cpp" line="142"/>
         <source>You can %1 music catalogs or drag and drop music files to add music</source>
-        <translation>你可以%1音乐目录或者拖拽音乐文件添加音乐</translation>
+        <translation type="vanished">你可以%1音乐目录或者拖拽音乐文件添加音乐</translation>
     </message>
     <message>
         <source>You can scan music catalogs or drag and drop music files to add music</source>
         <translation type="vanished">你可以扫描音乐目录或者拖拽音乐文件添加音乐</translation>
+    </message>
+    <message>
+        <location filename="../view/importwidget.cpp" line="83"/>
+        <source>Import Music</source>
+        <translation>导入音乐</translation>
     </message>
     <message>
         <location filename="../view/importwidget.cpp" line="94"/>
@@ -135,13 +137,19 @@
         <translation>扫描</translation>
     </message>
     <message>
+        <location filename="../view/importwidget.cpp" line="95"/>
+        <location filename="../view/importwidget.cpp" line="142"/>
+        <source>%1 music directory or drag music files here</source>
+        <translation>%1音乐目录或拖拽音乐文件来添加音乐</translation>
+    </message>
+    <message>
         <source>%1 music directory or drag &amp; drop music file to add music</source>
         <translation type="vanished">您可以%1音乐目录或拖拽音乐文件添加音乐</translation>
     </message>
     <message>
         <location filename="../view/importwidget.cpp" line="133"/>
         <source>Loading music, please wait...</source>
-        <translation>正在加载音乐，请稍候……</translation>
+        <translation>正在加载音乐，请稍候...</translation>
     </message>
 </context>
 <context>
@@ -313,13 +321,17 @@
         <translation>我知道了</translation>
     </message>
     <message>
+        <location filename="../view/mainframe.cpp" line="855"/>
+        <source>Import failed, no valid music file found!</source>
+        <translation>导入失败，未找到有效的音乐文件！</translation>
+    </message>
+    <message>
         <source>Invalid or non-existent file</source>
         <translation type="vanished">文件无效或不存在</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="855"/>
         <source>Failed to import, no vaild music file found!</source>
-        <translation>导入失败，未找到有效的音乐文件！</translation>
+        <translation type="vanished">导入失败，未找到有效的音乐文件！</translation>
     </message>
     <message>
         <location filename="../view/mainframe.cpp" line="1209"/>

@@ -852,7 +852,7 @@ void MainFrame::binding(Presenter *presenter)
     connect(presenter, &Presenter::scanFinished,
     this, [ = ](const QString & /*jobid*/, int mediaCount) {
         if (0 == mediaCount) {
-            QString message = QString(tr("Failed to import, no vaild music file found!"));
+            QString message = QString(tr("Import failed, no valid music file found!"));
             Dtk::Widget::DDialog warnDlg(this);
             warnDlg.setIcon(QIcon::fromTheme("deepin-music"));
             warnDlg.setTextFormat(Qt::AutoText);
