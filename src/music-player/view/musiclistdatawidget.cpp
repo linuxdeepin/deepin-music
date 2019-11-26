@@ -573,7 +573,7 @@ void MusicListDataWidgetPrivate::showEmptyHits()
         auto t_rowCount = albumListView->rowCount();
         auto playlist = albumListView->playlist();
         if (playlist->searchStr().isEmpty()) {
-            emptyHits->setText(MusicListDataWidget::tr("No Music"));
+            emptyHits->setText(MusicListDataWidget::tr("No songs"));
         } else {
             emptyHits->setText(MusicListDataWidget::tr("No search results"));
             emptySearchHits->setText(MusicListDataWidget::tr("No results for \"%1\", please try another word").arg(playlist->searchStr()));
@@ -589,7 +589,7 @@ void MusicListDataWidgetPrivate::showEmptyHits()
         auto t_rowCount = artistListView->rowCount();
         auto playlist = artistListView->playlist();
         if (playlist->searchStr().isEmpty()) {
-            emptyHits->setText(MusicListDataWidget::tr("No Music"));
+            emptyHits->setText(MusicListDataWidget::tr("No songs"));
         } else {
             emptyHits->setText(MusicListDataWidget::tr("No search results"));
             emptySearchHits->setText(MusicListDataWidget::tr("No results for \"%1\", please try another word").arg(playlist->searchStr()));
@@ -605,7 +605,7 @@ void MusicListDataWidgetPrivate::showEmptyHits()
         auto t_rowCount = musicListView->rowCount();
         auto playlist = musicListView->playlist();
         if (playlist->searchStr().isEmpty()) {
-            emptyHits->setText(MusicListDataWidget::tr("No Music"));
+            emptyHits->setText(MusicListDataWidget::tr("No songs"));
         } else {
             emptyHits->setText(MusicListDataWidget::tr("No search results"));
             emptySearchHits->setText(MusicListDataWidget::tr("No results for \"%1\", please try another word").arg(playlist->searchStr()));

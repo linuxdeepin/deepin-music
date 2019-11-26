@@ -436,8 +436,12 @@
         <location filename="../view/musiclistdatawidget.cpp" line="576"/>
         <location filename="../view/musiclistdatawidget.cpp" line="592"/>
         <location filename="../view/musiclistdatawidget.cpp" line="608"/>
+        <source>No songs</source>
+        <translation>无歌曲</translation>
+    </message>
+    <message>
         <source>No Music</source>
-        <translation>当前歌单为空</translation>
+        <translation type="vanished">当前歌单为空</translation>
     </message>
     <message>
         <location filename="../view/musiclistdatawidget.cpp" line="578"/>
