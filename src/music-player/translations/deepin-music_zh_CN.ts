@@ -337,11 +337,6 @@
         <translation>导入失败，未找到有效的音乐文件！</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="855"/>
-        <source>Import failed, no valid music file found!</source>
-        <translation>导入失败，未找到有效的音乐文件！</translation>
-    </message>
-    <message>
         <source>Invalid or non-existent file</source>
         <translation type="vanished">文件无效或不存在</translation>
     </message>
