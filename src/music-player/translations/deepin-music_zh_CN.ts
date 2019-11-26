@@ -265,7 +265,7 @@
         <translation>退出</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="834"/>
+        <location filename="../view/mainframe.cpp" line="835"/>
         <source>File is invalid or does not exist, load failed!</source>
         <translation>文件无效或不存在，加载失败！</translation>
     </message>
@@ -311,21 +311,20 @@
         <translation>音乐</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="776"/>
         <source>Added to %1</source>
-        <translation>已添加到%1</translation>
+        <translation type="vanished">已添加到%1</translation>
     </message>
     <message>
         <source>Invalid or non-existent file,failed to load!</source>
         <translation type="vanished">文件无效或不存在，加载失败！</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="835"/>
+        <location filename="../view/mainframe.cpp" line="836"/>
         <source>I know</source>
         <translation>我知道了</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="855"/>
+        <location filename="../view/mainframe.cpp" line="856"/>
         <source>Import failed, no valid music file found!</source>
         <translation>导入失败，未找到有效的音乐文件！</translation>
     </message>
@@ -338,17 +337,17 @@
         <translation type="vanished">导入失败，未找到有效的音乐文件！</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="1209"/>
+        <location filename="../view/mainframe.cpp" line="1210"/>
         <source>All music</source>
         <translation>所有音乐</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="860"/>
+        <location filename="../view/mainframe.cpp" line="861"/>
         <source>OK</source>
         <translation>确定</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="778"/>
+        <location filename="../view/mainframe.cpp" line="779"/>
         <source>Successfully added to &quot;%1&quot;</source>
         <translation>成功添加到“%1”</translation>
     </message>
@@ -598,6 +597,11 @@
         <translation>从本地删除</translation>
     </message>
     <message>
+        <location filename="../view/widget/musiclistinfoview.cpp" line="581"/>
+        <source>The song files contained will also be deleted</source>
+        <translation>这些歌曲所包含的歌曲文件也将被删除</translation>
+    </message>
+    <message>
         <source>Encoding</source>
         <translation type="vanished">编码方式</translation>
     </message>
@@ -622,16 +626,14 @@
         <translation>您确定要删除 %1 吗？</translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistinfoview.cpp" line="565"/>
-        <location filename="../view/widget/musiclistinfoview.cpp" line="579"/>
+        <location filename="../view/widget/musiclistinfoview.cpp" line="561"/>
+        <location filename="../view/widget/musiclistinfoview.cpp" line="580"/>
         <source>Are you sure you want to delete the selected %1 songs?</source>
         <translation>您确定要删除选中的%1首歌曲吗？</translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistinfoview.cpp" line="566"/>
-        <location filename="../view/widget/musiclistinfoview.cpp" line="580"/>
         <source>Deleting the current song will also delete the song files contained</source>
-        <translation>删除当前歌曲将会删除所包含的歌曲文件</translation>
+        <translation type="vanished">删除当前歌曲将会删除所包含的歌曲文件</translation>
     </message>
 </context>
 <context>
@@ -839,6 +841,11 @@
         <translation>从本地删除</translation>
     </message>
     <message>
+        <location filename="../view/widget/playlistview.cpp" line="665"/>
+        <source>The song files contained will also be deleted</source>
+        <translation>这些歌曲所包含的歌曲文件也将被删除</translation>
+    </message>
+    <message>
         <source>Encoding</source>
         <translation type="vanished">编码方式</translation>
     </message>
@@ -858,16 +865,14 @@
         <translation>您确定要删除 %1 吗？</translation>
     </message>
     <message>
-        <location filename="../view/widget/playlistview.cpp" line="652"/>
+        <location filename="../view/widget/playlistview.cpp" line="647"/>
         <location filename="../view/widget/playlistview.cpp" line="664"/>
         <source>Are you sure you want to delete the selected %1 songs?</source>
         <translation>您确定要删除选中的%1首歌曲吗？</translation>
     </message>
     <message>
-        <location filename="../view/widget/playlistview.cpp" line="653"/>
-        <location filename="../view/widget/playlistview.cpp" line="665"/>
         <source>Deleting the current song will also delete the song files contained</source>
-        <translation>删除当前歌曲将会删除所包含的歌曲文件</translation>
+        <translation type="vanished">删除当前歌曲将会删除所包含的歌曲文件</translation>
     </message>
     <message>
         <source>Rename</source>

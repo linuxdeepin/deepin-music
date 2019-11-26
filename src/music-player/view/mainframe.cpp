@@ -773,9 +773,10 @@ void MainFrame::binding(Presenter *presenter)
         auto icon = QIcon(":/common/image/notify_success.svg");
         QFontMetrics fm(font());
         auto displayName = fm.elidedText(playlist->displayName(), Qt::ElideMiddle, 300);
-        auto text = tr("Added to %1").arg(displayName);
-        if (playlist->id() == FavMusicListID)
-            text = tr("Successfully added to \"%1\"").arg(displayName);
+//        auto text = tr("Added to %1").arg(displayName);
+//        if (playlist->id() == FavMusicListID)
+//            text = tr("Successfully added to \"%1\"").arg(displayName);
+        auto text = tr("Successfully added to \"%1\"").arg(displayName);
         //DMessageManager::instance()->sendMessage(d->footer, icon, text);
         this->sendMessage(icon, text);
     });
