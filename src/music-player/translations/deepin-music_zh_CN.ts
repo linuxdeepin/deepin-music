@@ -1195,9 +1195,8 @@
         <translation>播放控制</translation>
     </message>
     <message>
-        <location filename="../view/shortcut.cpp" line="33"/>
         <source>Singing list Edit</source>
-        <translation>歌单编辑</translation>
+        <translation type="vanished">歌单编辑</translation>
     </message>
     <message>
         <location filename="../view/shortcut.cpp" line="36"/>
@@ -1215,14 +1214,59 @@
         <translation>帮助</translation>
     </message>
     <message>
+        <location filename="../view/shortcut.cpp" line="47"/>
+        <source>Volume Up</source>
+        <translation>音量增大</translation>
+    </message>
+    <message>
+        <location filename="../view/shortcut.cpp" line="48"/>
+        <source>Volume Down</source>
+        <translation>音量减小</translation>
+    </message>
+    <message>
         <location filename="../view/shortcut.cpp" line="52"/>
         <source>Add/Import Music</source>
         <translation>导入音乐/添加音乐</translation>
     </message>
     <message>
+        <location filename="../view/shortcut.cpp" line="53"/>
+        <source>Favorite</source>
+        <translation>收藏</translation>
+    </message>
+    <message>
+        <location filename="../view/shortcut.cpp" line="54"/>
+        <source>Cancel  Favorite</source>
+        <translation>取消收藏</translation>
+    </message>
+    <message>
+        <location filename="../view/shortcut.cpp" line="55"/>
+        <source>New playlist</source>
+        <translation>新建歌单</translation>
+    </message>
+    <message>
+        <location filename="../view/shortcut.cpp" line="56"/>
+        <source>Rename playlist</source>
+        <translation>重命名歌单</translation>
+    </message>
+    <message>
+        <location filename="../view/shortcut.cpp" line="57"/>
+        <source>Removed playlist</source>
+        <translation>删除歌单</translation>
+    </message>
+    <message>
+        <location filename="../view/shortcut.cpp" line="58"/>
+        <source>Song info</source>
+        <translation>歌曲信息</translation>
+    </message>
+    <message>
         <location filename="../view/shortcut.cpp" line="44"/>
         <source>Play/Pause</source>
         <translation>播放/暂停</translation>
+    </message>
+    <message>
+        <location filename="../view/shortcut.cpp" line="33"/>
+        <source>Edit playlist</source>
+        <translation>编辑歌单</translation>
     </message>
     <message>
         <location filename="../view/shortcut.cpp" line="45"/>
@@ -1235,14 +1279,12 @@
         <translation>下一首</translation>
     </message>
     <message>
-        <location filename="../view/shortcut.cpp" line="47"/>
         <source>Volume Increase</source>
-        <translation>音量增大</translation>
+        <translation type="vanished">音量增大</translation>
     </message>
     <message>
-        <location filename="../view/shortcut.cpp" line="48"/>
         <source>Volume Reduction</source>
-        <translation>音量减小</translation>
+        <translation type="vanished">音量减小</translation>
     </message>
     <message>
         <location filename="../view/shortcut.cpp" line="49"/>
@@ -1250,34 +1292,28 @@
         <translation>静音</translation>
     </message>
     <message>
-        <location filename="../view/shortcut.cpp" line="58"/>
         <source>Song Information</source>
-        <translation>歌曲信息</translation>
+        <translation type="vanished">歌曲信息</translation>
     </message>
     <message>
-        <location filename="../view/shortcut.cpp" line="53"/>
         <source>Collection</source>
-        <translation>收藏</translation>
+        <translation type="vanished">收藏</translation>
     </message>
     <message>
-        <location filename="../view/shortcut.cpp" line="54"/>
         <source>Cancel  Collection</source>
-        <translation>取消收藏</translation>
+        <translation type="vanished">取消收藏</translation>
     </message>
     <message>
-        <location filename="../view/shortcut.cpp" line="55"/>
         <source>New Song List</source>
-        <translation>新建歌单</translation>
+        <translation type="vanished">新建歌单</translation>
     </message>
     <message>
-        <location filename="../view/shortcut.cpp" line="56"/>
         <source>Rename The Song List</source>
-        <translation>重命名歌单</translation>
+        <translation type="vanished">重命名歌单</translation>
     </message>
     <message>
-        <location filename="../view/shortcut.cpp" line="57"/>
         <source>Removed From The Playlist</source>
-        <translation>从歌单中删除</translation>
+        <translation type="vanished">从歌单中删除</translation>
     </message>
 </context>
 <context>
