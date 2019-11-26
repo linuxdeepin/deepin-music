@@ -49,7 +49,7 @@ void MusicTitleImageWidget::paintEvent(QPaintEvent *event)
 
     QRect rect = this->rect();
     QPainterPath path;
-    int cornerSize = 10;
+    int cornerSize = 20;
     int arcR = cornerSize / 2;
     path.moveTo(rect.left() + arcR, rect.top());
     path.arcTo(rect.left(), rect.top(), cornerSize, cornerSize, 90.0f, 90.0f);
@@ -59,6 +59,8 @@ void MusicTitleImageWidget::paintEvent(QPaintEvent *event)
 
     path.lineTo(rect.right(), rect.top() + arcR);
     path.arcTo(rect.right() - cornerSize, rect.top(), cornerSize, cornerSize, 0.0f, 90.0f);
+
+    path.lineTo(rect.top(), rect.left());
 
     painter.save();
     painter.setClipPath(path);
@@ -79,6 +81,7 @@ void MusicTitleImageWidget::paintEvent(QPaintEvent *event)
     penColor.setAlphaF(0.1);
     QPen pen(penColor, 1);
     painter.setPen(pen);
+    painter.drawPath(path);
 
     QColor fillColor("#FFFFFF");
     if (type != 1) {

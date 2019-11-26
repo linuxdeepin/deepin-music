@@ -27,7 +27,7 @@ LyricLabel::LyricLabel(bool touch, QWidget *parent)
     lyricFont = new QFont();
     lyricFont->setFamily("SourceHanSansSC");
     lyricFont->setWeight(QFont::Normal);
-    lyricFont->setPixelSize(16);
+    lyricFont->setPixelSize(12);
     lyricNormal = new QColor("#526A7F");
     lyricHighlight = new QColor("#000000");
     connect(this, SIGNAL(changeTo(int)), this, SLOT(changeToEvent(int)));

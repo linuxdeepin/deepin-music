@@ -63,10 +63,10 @@ void WaveformScale::paintEvent(QPaintEvent *)
     int t_textWidth = WAVE_TEXTWIDTH;
     QRect t_textRect(rect().center().x() - t_textWidth / 2, 0, t_textWidth, 20);
     QPainterPath painterPath;
-    painterPath.addRoundRect(t_textRect, 60, 60);
+    painterPath.addRoundRect(t_textRect, 40, 80);
     QPolygonF topPoly;
-    topPoly.append(QPointF(rect().center().x() - 6, 20));
-    topPoly.append(QPointF(rect().center().x() + 6, 20));
+    topPoly.append(QPointF(rect().center().x() - 5, 20));
+    topPoly.append(QPointF(rect().center().x() + 5, 20));
     topPoly.append(QPointF(rect().center().x(), 25));
     painterPath.addPolygon(topPoly);
     painter.drawPath(painterPath);

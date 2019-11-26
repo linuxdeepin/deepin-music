@@ -82,16 +82,20 @@ void MusicListDialogPrivate::initUI()
     pixmap = pixmap.scaled(480, 130, Qt::KeepAspectRatioByExpanding);
     titleFrame->setPixmap(pixmap);
 
+    auto closeLayout = new QHBoxLayout(titleFrame);
+    closeLayout->setSpacing(0);
+    closeLayout->setContentsMargins(0, 5, 5, 0);
+
     auto titleLayout = new QVBoxLayout(titleFrame);
     titleLayout->setSpacing(0);
-    titleLayout->setContentsMargins(28, 0, 0, 18);
+    titleLayout->setContentsMargins(28, 10, 0, 18);
 
     closeBt = new DImageButton;
     closeBt->setNormalPic(":/mpimage/light/normal/close_round normal.svg");
     closeBt->setHoverPic(":/mpimage/light/hover/close_round hover.svg");
     closeBt->setPressPic(":/mpimage/light/press/close_round press.svg");
     closeBt->setObjectName("InfoClose");
-    closeBt->setBaseSize(30, 30);
+    closeBt->setBaseSize(24, 24);
 
     titleLabel = new DLabel();
     titleLabel->setForegroundRole(DPalette::TextTitle);
@@ -105,9 +109,9 @@ void MusicListDialogPrivate::initUI()
     btLayout->setMargin(0);
 
     btPlayAll = new DPushButton;
-//    auto btPlayAllFont = btPlayAll->font();
-//    btPlayAllFont.setPixelSize(14);
-//    btPlayAll->setFont(btPlayAllFont);
+    auto btPlayAllFont = btPlayAll->font();
+    btPlayAllFont.setPixelSize(12);
+    btPlayAll->setFont(btPlayAllFont);
     auto playAllPalette = btPlayAll->palette();
     playAllPalette.setColor(DPalette::ButtonText, Qt::white);
     playAllPalette.setColor(DPalette::Dark, QColor(Qt::red));
@@ -119,7 +123,7 @@ void MusicListDialogPrivate::initUI()
     btPlayAll->setFocusPolicy(Qt::NoFocus);
 
     btRandomPlay = new DPushButton;
-//    btRandomPlay->setFont(btPlayAllFont);
+    btRandomPlay->setFont(btPlayAllFont);
     auto randomPlayPalette = btRandomPlay->palette();
     randomPlayPalette.setColor(DPalette::ButtonText, Qt::white);
     randomPlayPalette.setColor(DPalette::Dark, QColor(Qt::darkGray));
@@ -135,10 +139,13 @@ void MusicListDialogPrivate::initUI()
     btLayout->addWidget(btRandomPlay);
     btLayout->addStretch(100);
 
-    titleLayout->addWidget(closeBt, 0, Qt::AlignTop | Qt::AlignRight);
-    titleLayout->addWidget(titleLabel);
-    titleLayout->addWidget(infoLabel);
-    titleLayout->addLayout(btLayout);
+//    titleLayout->addWidget(closeBt, 0, Qt::AlignTop | Qt::AlignRight);
+    titleLayout->addWidget(titleLabel, 0, Qt::AlignTop);
+    titleLayout->addWidget(infoLabel, 0, Qt::AlignTop);
+    titleLayout->addLayout(btLayout, Qt::AlignTop);
+
+    closeLayout->addLayout(titleLayout);
+    closeLayout->addWidget(closeBt, 0, Qt::AlignTop | Qt::AlignRight);
 
     musicListInfoView = new MusicListInfoView;
     musicListInfoView->setFixedWidth(480);
@@ -294,6 +301,7 @@ void MusicListDialog::setPlayMusicData(PlaylistPtr playlist, PlayMusicTypePtr pl
 
     d->titleLabel->setText(playMusicType->name);
     auto titleFont = d->titleLabel->font();
+    auto infoFont = d->infoLabel->font();
     if (!playMusicType->extraName.isEmpty()) {
         titleFont.setPixelSize(24);
         d->infoLabel->setText(playMusicType->extraName);
@@ -343,6 +351,10 @@ void MusicListDialog::setThemeType(int type)
         palette.setColor(DPalette::Background, BackgroundColor);
         setPalette(palette);
 
+//        d->closeBt->setNormalPic(":/mpimage/light/normal/close_round normal.svg");
+//        d->closeBt->setHoverPic(":/mpimage/light/hover/close_round hover.svg");
+//        d->closeBt->setPressPic(":/mpimage/light/press/close_round press.svg");
+
 
 //        auto titleLabelPl = d->titleLabel->palette();
 //        titleLabelPl.setColor(DPalette::WindowText, Qt::black);
@@ -374,6 +386,10 @@ void MusicListDialog::setThemeType(int type)
         QColor BackgroundColor("#252525");
         palette.setColor(DPalette::Background, BackgroundColor);
         setPalette(palette);
+
+//        d->closeBt->setNormalPic(":/mpimage/dark/close_round/close_normal_dark.svg");
+//        d->closeBt->setHoverPic(":/mpimage/dark/close_round/close_hover_dark.svg");
+//        d->closeBt->setPressPic(":/mpimage/dark/close_round/close_press.svg");
 
 //        auto titleLabelPl = d->titleLabel->palette();
 //        titleLabelPl.setColor(DPalette::WindowText, Qt::white);

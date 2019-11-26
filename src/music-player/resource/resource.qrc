@@ -215,9 +215,6 @@
         <file>mpimage/light/hover/close_round hover.svg</file>
         <file>mpimage/light/normal/close_round normal.svg</file>
         <file>mpimage/light/press/close_round press.svg</file>
-        <file>mpimage/light/close_round/close_round_hover.svg</file>
-        <file>mpimage/light/close_round/close_round_normal.svg</file>
-        <file>mpimage/light/close_round/close_round_press.svg</file>
         <file>mpimage/light/music_white_album_cover/music4.svg</file>
         <file>mpimage/light/music_white_album_cover/music1.svg</file>
         <file>mpimage/light/music_white_album_cover/music2.svg</file>
@@ -227,5 +224,8 @@
         <file>mpimage/dark/close_round/close_hover_dark.svg</file>
         <file>mpimage/dark/close_round/close_normal_dark.svg</file>
         <file>mpimage/dark/close_round/close_press.svg</file>
+        <file>mpimage/light/close-round/close_round hover.svg</file>
+        <file>mpimage/light/close-round/close_round normal.svg</file>
+        <file>mpimage/light/close-round/close_round press.svg</file>
     </qresource>
 </RCC>

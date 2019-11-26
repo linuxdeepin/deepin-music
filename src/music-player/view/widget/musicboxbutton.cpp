@@ -49,7 +49,7 @@ MusicBoxButton::MusicBoxButton(const QString &text, const QString &normalPic, co
     QIcon icon;
     icon.addFile(normalPic);
 
-    this->setIconSize(QSize(35, 35));
+    this->setIconSize(QSize(36, 36));
     this->setIcon(icon);
 }
 
@@ -73,7 +73,7 @@ void MusicBoxButton::setPropertyPic(QString propertyName, const QVariant &value,
     QIcon icon;
     icon.addFile(normalPic);
 
-    this->setIconSize(QSize(35, 35));
+    this->setIconSize(QSize(36, 36));
     this->setIcon(icon);
 }
 
@@ -86,7 +86,7 @@ void MusicBoxButton::setPropertyPic(const QString &normalPic, const QString &hov
     QIcon icon;
     icon.addFile(normalPic);
 
-    this->setIconSize(QSize(35, 35));
+    this->setIconSize(QSize(36, 36));
     this->setIcon(icon);
 }
 
@@ -145,7 +145,7 @@ void MusicBoxButton::enterEvent(QEvent *event)
     QIcon icon;
     icon.addFile(curPicPath);
 
-    this->setIconSize(QSize(35, 35));
+    this->setIconSize(QSize(36, 36));
     this->setIcon(icon);
     DButtonBoxButton::enterEvent(event);
     if (autoChecked) {
@@ -196,7 +196,7 @@ void MusicBoxButton::leaveEvent(QEvent *event)
     QIcon icon;
     icon.addFile(curPicPath);
 
-    this->setIconSize(QSize(35, 35));
+    this->setIconSize(QSize(36, 36));
     this->setIcon(icon);
     DButtonBoxButton::leaveEvent(event);
     if (autoChecked) {
@@ -247,7 +247,7 @@ void MusicBoxButton::mousePressEvent(QMouseEvent *event)
     QIcon icon;
     icon.addFile(curPicPath);
 
-    this->setIconSize(QSize(35, 35));
+    this->setIconSize(QSize(36, 36));
     this->setIcon(icon);
     DButtonBoxButton::mousePressEvent(event);
 }
@@ -295,7 +295,7 @@ void MusicBoxButton::mouseReleaseEvent(QMouseEvent *event)
     QIcon icon;
     icon.addFile(curPicPath);
 
-    this->setIconSize(QSize(35, 35));
+    this->setIconSize(QSize(36, 36));
     this->setIcon(icon);
     DButtonBoxButton::mouseReleaseEvent(event);
 }

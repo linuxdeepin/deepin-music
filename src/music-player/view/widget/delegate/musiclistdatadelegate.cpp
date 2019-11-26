@@ -50,7 +50,7 @@ public:
     QPixmap playing = DHiDPIHelper::loadNxPixmap(":/common/image/jumpto_playing_normal.svg");
     QString playingIcon = ":/mpimage/light/music1.svg";
     QString highlightPlayingIcon = ":/mpimage/light/music1.svg";
-    QPixmap hoverImg = DHiDPIHelper::loadNxPixmap(":/common/image/start_hover.svg");
+    QPixmap hoverPlayImg = DHiDPIHelper::loadNxPixmap(":/mpimage/dark/hover/play_hover.svg");
 
     MusicListDataDelegate *q_ptr;
     Q_DECLARE_PUBLIC(MusicListDataDelegate)
@@ -232,16 +232,25 @@ void MusicListDataDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
 
 //        if (option.state & QStyle::State_MouseOver) {
 //            QImage t_image = icon.pixmap(rect.width(), rect.height()).toImage();
-//            QRect t_hoverRect(rect.x() + 50, rect.y() + 50, 50, 50);
-//            t_image  = t_image.copy(t_hoverRect);
+//            QRect t_imageRect(rect.width() / 2 - 25, rect.height() / 2 - 25, 50, 50);
+//            t_image  = t_image.copy(t_imageRect);
+//            QRect t_hoverRect(rect.x() + 50, rect.y() + 36, 50, 50);
 
 //            QTransform old_transform = painter->transform();
 //            painter->translate(t_hoverRect.topLeft());
+
+//            QPainterPath t_imageClipPath;
+//            t_imageClipPath.addEllipse(QRect(0, 0, 50, 50));
+//            painter->setClipPath(t_imageClipPath);
+
 //            qt_blurImage(painter, t_image, 35, false, false);
 //            painter->setTransform(old_transform);
-//            painter->fillRect(t_hoverRect, fillColor);
-//        }
 
+//            QPixmap t_hoverPlayImg(d->hoverPlayImg);
+//            t_hoverPlayImg.setDevicePixelRatio(option.widget->devicePixelRatioF());
+//            t_hoverRect.adjust(7, 7, -7, -7);
+//            painter->drawPixmap(t_hoverRect, t_hoverPlayImg);
+//        }
 
         painter->fillRect(option.rect, t_fillBrush);
 

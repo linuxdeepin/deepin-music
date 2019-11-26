@@ -936,6 +936,7 @@ void Footer::slotTheme(int type)
         pa = d->ctlWidget->palette();
         pa.setColor(DPalette::Light, QColor("#FFFFFF"));
         pa.setColor(DPalette::Dark, QColor("#FFFFFF"));
+        pa.setColor(DPalette::Button, QColor("#FFFFFF"));
         d->ctlWidget->setPalette(pa);
 
         pa = d->btFavorite->palette();
@@ -986,6 +987,7 @@ void Footer::slotTheme(int type)
         pa = d->ctlWidget->palette();
         pa.setColor(DPalette::Light, QColor("#444444"));
         pa.setColor(DPalette::Dark, QColor("#444444"));
+        pa.setColor(DPalette::Button, QColor("#444444"));
         d->ctlWidget->setPalette(pa);
 
         pa = d->btFavorite->palette();

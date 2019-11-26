@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg width="30px" height="30px" viewBox="0 0 30 30" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
     <!-- Generator: Sketch 58 (84663) - https://sketch.com -->
-    <title>titlebutton/close_round press</title>
+    <title>titlebutton/close_round normal</title>
     <desc>Created with Sketch.</desc>
     <g id="页面-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-        <g id="按钮规范" transform="translate(-772.000000, -621.000000)">
-            <g id="titlebutton/close_round-2备份-2" transform="translate(772.000000, 621.000000)">
+        <g id="按钮规范" transform="translate(-772.000000, -211.000000)">
+            <g id="titlebutton/close_round-2" transform="translate(772.000000, 211.000000)">
                 <g id="titlebutton/close_round">
                     <g id="close_round">
-                        <rect id="占位" fill="#000000" opacity="0.2" x="0" y="0" width="30" height="30" rx="15"></rect>
-                        <g id="close_normal" transform="translate(9.000000, 9.000000)" fill="#0081FF">
+                        <rect id="占位" fill="#FFFFFF" opacity="0.400000006" x="0" y="0" width="30" height="30" rx="15"></rect>
+                        <g id="close_normal" transform="translate(9.000000, 9.000000)" fill="#000000" fill-rule="nonzero">
                             <polygon id="Combined-Shape" points="1.64644661 11.5459415 1.29289322 11.8994949 0.585786438 11.1923882 0.939339828 10.8388348 5.53553391 6.24264069 0.939339828 1.64644661 0.585786438 1.29289322 1.29289322 0.585786438 1.64644661 0.939339828 6.24264069 5.53553391 10.8388348 0.939339828 11.1923882 0.585786438 11.8994949 1.29289322 11.5459415 1.64644661 6.94974747 6.24264069 11.5459415 10.8388348 11.8994949 11.1923882 11.1923882 11.8994949 10.8388348 11.5459415 6.24264069 6.94974747"></polygon>
                         </g>
                     </g>
