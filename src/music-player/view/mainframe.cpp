@@ -241,7 +241,8 @@ void MainFramePrivate::initMenu()
     playPauseShortcut = new QShortcut(q);
     playPauseShortcut->setKey(QKeySequence(MusicSettings::value("shortcuts.all.play_pause").toString()));
     q->connect(playPauseShortcut, &QShortcut::activated, q, [ = ]() {
-        Q_EMIT  q->triggerShortcutAction("shortcuts.all.play_pause");
+        //Q_EMIT  q->triggerShortcutAction("shortcuts.all.play_pause");
+        footer->onTogglePlayButton();
     });
 
     volumeUpShortcut = new QShortcut(q);
@@ -839,8 +840,21 @@ void MainFrame::binding(Presenter *presenter)
 
         if (0 == warnDlg.exec()) {
             if (playlist->canNext() && playlist->playing() == meta) {
-                Q_EMIT presenter->playNext(playlist, meta);
+                bool existFlag = false;
+                for (auto meta : playlist->allmusic()) {
+                    if (!meta->invalid || QFile::exists(meta->localPath)) {
+                        Q_EMIT presenter->playNext(playlist, meta);
+                        break;
+                    }
+                }
+                if (!existFlag) {
+                    d->timer->stop();
+                }
+            } else {
+                d->timer->stop();
             }
+        } else {
+            d->timer->stop();
         }
     });
 

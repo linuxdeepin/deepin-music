@@ -125,9 +125,9 @@ void MusicListDataDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
             }
 
             bool playFlag = false;
-            if (listview->playing() != nullptr && (listview->playing()->artist == PlayMusicTypePtr->name)
-                    || (listview->playing()->artist.isEmpty() && !PlayMusicTypePtr->playlistMeta.metas.isEmpty()
-                        && PlayMusicTypePtr->playlistMeta.metas.begin().value()->artist.isEmpty())) {
+            if (listview->playing() != nullptr && (listview->playing()->artist == PlayMusicTypePtr->name
+                                                   || (listview->playing()->artist.isEmpty() && !PlayMusicTypePtr->playlistMeta.metas.isEmpty()
+                                                       && PlayMusicTypePtr->playlistMeta.metas.begin().value()->artist.isEmpty()))) {
                 playFlag = true;
             }
 
@@ -179,9 +179,9 @@ void MusicListDataDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
             QRect fillBlurRect(rect.x(), rect.y() + rect.height() - fillAllHeight, rect.width(), fillAllHeight);
 
             bool playFlag = false;
-            if (listview->playing() != nullptr && (listview->playing()->album == PlayMusicTypePtr->name)
-                    || (listview->playing()->album.isEmpty() && !PlayMusicTypePtr->playlistMeta.metas.isEmpty()
-                        && PlayMusicTypePtr->playlistMeta.metas.begin().value()->album.isEmpty()))  {
+            if (listview->playing() != nullptr && (listview->playing()->album == PlayMusicTypePtr->name
+                                                   || (listview->playing()->album.isEmpty() && !PlayMusicTypePtr->playlistMeta.metas.isEmpty()
+                                                       && PlayMusicTypePtr->playlistMeta.metas.begin().value()->album.isEmpty())))  {
                 playFlag = true;
             }
 
@@ -262,6 +262,7 @@ void MusicListDataDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
 
             qt_blurImage(painter, t_image, 30, false, false);
             painter->setTransform(old_transform);
+            painter->fillRect(t_hoverRect, fillColor);
 
             QPixmap t_hoverPlayImg(d->hoverPlayImg);
             t_hoverPlayImg.setDevicePixelRatio(option.widget->devicePixelRatioF());

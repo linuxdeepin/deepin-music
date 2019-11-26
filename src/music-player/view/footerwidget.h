@@ -96,6 +96,7 @@ public slots:
     void setDefaultCover(QString defaultCover);
     void onMediaLibraryClean();
     void slotTheme(int type);
+    void onTogglePlayButton();
 
 protected:
     virtual void resizeEvent(QResizeEvent *event) Q_DECL_OVERRIDE;

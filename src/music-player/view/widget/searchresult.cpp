@@ -35,7 +35,7 @@ SearchResult::SearchResult(QWidget *parent) : DFrame(parent)
 {
     auto vlayout = new QVBoxLayout();
     setLayout(vlayout);
-    vlayout->setContentsMargins(0, 4, 0, 0);
+    vlayout->setContentsMargins(0, 4, 0, 4);
     vlayout->setSpacing(0);
 
     //setFixedWidth(350);
@@ -84,9 +84,9 @@ void SearchResult::autoResize()
     if (rowCount > 10)
         rowCount = 10;
     m_searchResult->setFixedHeight(rowCount * 34);
-    m_searchResult->setFixedWidth(width() - 4);
+    m_searchResult->setFixedWidth(width() - 8);
 
-    setFixedHeight(m_searchResult->height() + 4);
+    setFixedHeight(m_searchResult->height() + 8);
 
     m_searchResult->setVisible(!(0 == m_model->rowCount()));
     this->adjustSize();

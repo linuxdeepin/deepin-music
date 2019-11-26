@@ -165,14 +165,7 @@ void FooterPrivate::initConnection()
     });
 
     q->connect(btPlay, &DPushButton::released, q, [ = ]() {
-        auto status = btPlay->property(sPropertyPlayStatus).toString();
-        if (status == sPlayStatusValuePlaying) {
-            Q_EMIT q->pause(activingPlaylist, activingMeta);
-        } else  if (status == sPlayStatusValuePause) {
-            Q_EMIT q->resume(activingPlaylist, activingMeta);
-        } else {
-            Q_EMIT q->play(activingPlaylist, activingMeta);
-        }
+        q->onTogglePlayButton();
     });
 
     q->connect(btPrev, &DPushButton::released, q, [ = ]() {
@@ -1096,6 +1089,19 @@ void Footer::slotTheme(int type)
     d->waveform->setThemeType(type);
     d->volSlider->slotTheme(type);
     d->playListWidget->slotTheme(type);
+}
+
+void Footer::onTogglePlayButton()
+{
+    Q_D(Footer);
+    auto status = d->btPlay->property(sPropertyPlayStatus).toString();
+    if (status == sPlayStatusValuePlaying) {
+        Q_EMIT pause(d->activingPlaylist, d->activingMeta);
+    } else  if (status == sPlayStatusValuePause) {
+        Q_EMIT resume(d->activingPlaylist, d->activingMeta);
+    } else {
+        Q_EMIT play(d->activingPlaylist, d->activingMeta);
+    }
 }
 
 void Footer::onProgressChanged(qint64 value, qint64 duration)

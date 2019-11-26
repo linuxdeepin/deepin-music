@@ -1027,8 +1027,22 @@ void Presenter::onToggleFavourite(const MetaPtr meta)
 void Presenter::onAddMetasFavourite(const MetaPtrList metalist)
 {
     Q_D(Presenter);
+    auto favMusicList = d->playlistMgr->playlist(FavMusicListID);
+    auto favAllMetas = favMusicList->allmusic();
+    bool existFlag = false;
+    for (auto meta : metalist) {
+        for (auto fMeta : favAllMetas) {
+            if (meta->hash == fMeta->hash) {
+                existFlag = true;
+                break;
+            }
+        }
+        if (existFlag)
+            break;
+    }
     d->playlistMgr->playlist(FavMusicListID)->appendMusicList(metalist);
-    Q_EMIT notifyAddToPlaylist(d->playlistMgr->playlist(FavMusicListID), metalist);
+    if (!existFlag)
+        Q_EMIT notifyAddToPlaylist(d->playlistMgr->playlist(FavMusicListID), metalist);
 }
 
 void Presenter::onRemoveMetasFavourite(const MetaPtrList metalist)
