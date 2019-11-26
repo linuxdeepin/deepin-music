@@ -58,7 +58,7 @@ TitlebarWidget::TitlebarWidget(QWidget *parent) :
     setObjectName("TitlebarWidget");
 
     auto layout = new QHBoxLayout();
-    //layout->setContentsMargins(0, 0, 0, 0);
+    layout->setContentsMargins(0, 0, 0, 0);
 
     //auto leftWidget = new DWidget;
     // leftWidget->setObjectName("TitleLeft");

@@ -170,7 +170,7 @@ PlayListWidget::PlayListWidget(QWidget *parent) :
     actionBarLayout->setSpacing(0);
 
     d->titleLabel = new DLabel();
-    d->titleLabel->setFixedHeight(36);
+    //d->titleLabel->setFixedHeight(36);
     auto titleFont = d->titleLabel->font();
     titleFont.setFamily("SourceHanSansSC");
     titleFont.setWeight(QFont::Medium);
@@ -181,7 +181,7 @@ PlayListWidget::PlayListWidget(QWidget *parent) :
     d->titleLabel->setForegroundRole(DPalette::TextTitle);
 
     d->infoLabel = new DLabel();
-    d->infoLabel->setFixedHeight(25);
+    //d->infoLabel->setFixedHeight(25);
     auto infoFont = d->infoLabel->font();
     infoFont.setFamily("SourceHanSansSC");
     infoFont.setWeight(QFont::Medium);

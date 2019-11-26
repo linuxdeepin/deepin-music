@@ -27,35 +27,33 @@ Shortcut::Shortcut(QObject *parent) : QObject(parent)
     ShortcutGroup group3;
     ShortcutGroup group4;
 
-    group1.groupName = tr("Start/Music");
-    group2.groupName = tr("Search");
-    group3.groupName = tr("Playing");
-    group4.groupName = tr("Edit playlist");
+    group1.groupName = tr("Play");
+    group2.groupName = tr("Songs");
+    group3.groupName = tr("Playlists");
+    group4.groupName = tr("Settings");
 
     group1.groupItems <<
-                      ShortcutItem(tr("Window Size Toggle"), "Ctrl+Alt+F") <<
-                      ShortcutItem(tr("Close"),  "Alt+F4") <<
-                      ShortcutItem(tr("Help"),  "F1");
-
-    group2.groupItems << ShortcutItem(tr("Search"), "Ctrl+F");
-
-
-    group3.groupItems <<
                       ShortcutItem(tr("Play/Pause"),       MusicSettings::value("shortcuts.all.play_pause").toString()) <<
-                      ShortcutItem(tr("Prev"),   MusicSettings::value("shortcuts.all.previous").toString()) <<
+                      ShortcutItem(tr("Previous"),   MusicSettings::value("shortcuts.all.previous").toString()) <<
                       ShortcutItem(tr("Next"),   MusicSettings::value("shortcuts.all.next").toString()) <<
                       ShortcutItem(tr("Volume Up"),   MusicSettings::value("shortcuts.all.volume_up").toString()) <<
                       ShortcutItem(tr("Volume Down"),   MusicSettings::value("shortcuts.all.volume_down").toString()) <<
                       ShortcutItem(tr("Mute"),   "M");
 
-    group4.groupItems <<
-                      ShortcutItem(tr("Add/Import Music"),       "Ctrl+I") <<
+    group2.groupItems <<
                       ShortcutItem(tr("Favorite"), "Ctrl+K") <<
-                      ShortcutItem(tr("Cancel  Favorite"),  "Ctrl+Shift+K") <<
+                      ShortcutItem(tr("Unfavorite"),  "Ctrl+Shift+K") <<
+                      ShortcutItem(tr("Song info"),   "Alt+Enter");
+
+    group3.groupItems <<
                       ShortcutItem(tr("New playlist"), "Ctrl+Shift+N") <<
                       ShortcutItem(tr("Rename playlist"), "F2") <<
-                      ShortcutItem(tr("Removed playlist"), "Delete") <<
-                      ShortcutItem(tr("Song info"),   "Alt+Enter");
+                      ShortcutItem(tr("Removed from playlist"), "Delete");
+
+    group4.groupItems <<
+                      ShortcutItem(tr("Help"),  "F1") <<
+                      ShortcutItem(tr("Display shortcuts"), "Ctrl+Shift+?");
+
     m_shortcutGroups << group1 << group2 << group3 << group4;
 
     //convert to json object

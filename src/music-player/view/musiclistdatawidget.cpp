@@ -786,7 +786,7 @@ MusicListDataWidget::MusicListDataWidget(QWidget *parent) :
     d->artistListView = new MusicListDataView;
     d->musicListView = new PlayListView(true);
     d->musicListView->hide();
-    layout->setContentsMargins(0, 0, 4, 0);
+    layout->setContentsMargins(0, 0, 0, 0);
 
     layout->addWidget(d->actionBar, 0, Qt::AlignTop);
     layout->addLayout(emptyLayout, 0);

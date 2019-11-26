@@ -247,13 +247,13 @@ Footer::Footer(QWidget *parent) :
 
     auto mainVBoxlayout = new QVBoxLayout(d->forwardWidget);
     mainVBoxlayout->setSpacing(0);
-    mainVBoxlayout->setContentsMargins(10, 0, 10, 10);
+    mainVBoxlayout->setContentsMargins(10, 0, 0, 10);
 
     auto hoverFilter = new HoverFilter(this);
 
     auto downWidget = new DWidget();
     auto layout = new QHBoxLayout(downWidget);
-    layout->setContentsMargins(0, 0, 0, 0);
+    layout->setContentsMargins(0, 0, 10, 0);
 //    layout->setSpacing(10);
 
     d->btCover = new MusicPixmapButton();
@@ -287,13 +287,13 @@ Footer::Footer(QWidget *parent) :
     d->artist->setObjectName("FooterArtist");
     d->artist->setMaximumWidth(140);
     d->artist->setText(tr("Unknown artist"));
-//    auto artistPl = d->title->palette();
-//    QColor artistColor("#000000");
-//    artistColor.setAlphaF(0.6);
-//    artistPl.setColor(DPalette::WindowText, artistColor);
-//    d->artist->setPalette(artistPl);
-//    d->artist->setForegroundRole(DPalette::WindowText);
-    d->artist->setForegroundRole(DPalette::TextTips);
+    auto artistPl = d->title->palette();
+    QColor artistColor("#000000");
+    artistColor.setAlphaF(0.6);
+    artistPl.setColor(DPalette::WindowText, artistColor);
+    d->artist->setPalette(artistPl);
+    d->artist->setForegroundRole(DPalette::WindowText);
+//    d->artist->setForegroundRole(DPalette::BrightText);
 
     d->btPlay = new MusicBoxButton("", ":/mpimage/light/normal/play_normal.svg",
                                    ":/mpimage/light/normal/play_normal.svg",
@@ -734,8 +734,8 @@ void Footer::onMusicPlayed(PlaylistPtr playlist, const MetaPtr meta)
     }
     d->btCover->setIcon(QPixmap::fromImage(cover));
     d->btCover->update();
-    if (d->activingMeta != meta)
-        d->waveform->clearBufferAudio();
+//    if (d->activingMeta != meta)
+//        d->waveform->clearBufferAudio();
 
     //cut image
     double windowScale = (width() * 1.0) / height();
@@ -936,11 +936,11 @@ void Footer::slotTheme(int type)
 //        titlePl.setColor(DPalette::WindowText, titleColor);
 //        d->title->setPalette(titlePl);
 
-//        auto artistPl = d->artist->palette();
-//        QColor artistColor("#000000");
-//        artistColor.setAlphaF(0.4);
-//        artistPl.setColor(DPalette::WindowText, artistColor);
-//        d->artist->setPalette(artistPl);
+        auto artistPl = d->artist->palette();
+        QColor artistColor("#000000");
+        artistColor.setAlphaF(0.6);
+        artistPl.setColor(DPalette::WindowText, artistColor);
+        d->artist->setPalette(artistPl);
 //        d->artist->setForegroundRole(DPalette::WindowText);
 
         DPalette pa;
@@ -987,11 +987,11 @@ void Footer::slotTheme(int type)
 //        titlePl.setColor(DPalette::WindowText, titleColor);
 //        d->title->setPalette(titlePl);
 
-//        auto artistPl = d->artist->palette();
-//        QColor artistColor("#FFFFFF");
-//        artistColor.setAlphaF(0.4);
-//        artistPl.setColor(DPalette::WindowText, artistColor);
-//        d->artist->setPalette(artistPl);
+        auto artistPl = d->artist->palette();
+        QColor artistColor("#FFFFFF");
+        artistColor.setAlphaF(0.6);
+        artistPl.setColor(DPalette::WindowText, artistColor);
+        d->artist->setPalette(artistPl);
 //        d->artist->setForegroundRole(DPalette::WindowText);
 
         DPalette pa;

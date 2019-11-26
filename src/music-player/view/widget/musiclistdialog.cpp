@@ -69,7 +69,7 @@ void MusicListDialogPrivate::initUI()
     q->setAutoFillBackground(true);
     auto palette = q->palette();
     QColor BackgroundColor("#F8F8F8");
-    palette.setColor(DPalette::Background, BackgroundColor);
+    palette.setColor(DPalette::Window, BackgroundColor);
     q->setPalette(palette);
 
     auto layout = new QVBoxLayout(q);
@@ -110,7 +110,7 @@ void MusicListDialogPrivate::initUI()
 
     btPlayAll = new DPushButton;
     auto btPlayAllFont = btPlayAll->font();
-    btPlayAllFont.setPixelSize(12);
+    btPlayAllFont.setPixelSize(13);
     btPlayAll->setFont(btPlayAllFont);
     auto playAllPalette = btPlayAll->palette();
     playAllPalette.setColor(DPalette::ButtonText, Qt::white);
@@ -119,7 +119,7 @@ void MusicListDialogPrivate::initUI()
     btPlayAll->setPalette(playAllPalette);
     btPlayAll->setIcon(QIcon(":/mpimage/light/normal/play_all_normal.svg"));
     btPlayAll->setText(MusicListDialog::tr("Play All"));
-    btPlayAll->setFixedHeight(30);
+    btPlayAll->setFixedHeight(31);
     btPlayAll->setFocusPolicy(Qt::NoFocus);
 
     btRandomPlay = new DPushButton;
@@ -131,7 +131,7 @@ void MusicListDialogPrivate::initUI()
     btRandomPlay->setPalette(randomPlayPalette);
     btRandomPlay->setIcon(QIcon(":/mpimage/light/normal/random_play_normal.svg"));
     btRandomPlay->setText(MusicListDialog::tr("Shuffle Play"));
-    btRandomPlay->setFixedHeight(30);
+    btRandomPlay->setFixedHeight(31);
     btRandomPlay->setFocusPolicy(Qt::NoFocus);
 
     btLayout->addWidget(btPlayAll);
@@ -148,9 +148,14 @@ void MusicListDialogPrivate::initUI()
     closeLayout->addWidget(closeBt, 0, Qt::AlignTop | Qt::AlignRight);
 
     musicListInfoView = new MusicListInfoView;
-    musicListInfoView->setFixedWidth(480);
+//    DPalette pa = musicListInfoView->palette();
+//    pa.setColor(DPalette::Base, pa.window().color());
+//    musicListInfoView->setFrameShape(QFrame::NoFrame);
+//    musicListInfoView->setPalette(pa);
+//    musicListInfoView->setAutoFillBackground(true);
+    musicListInfoView->setFixedWidth(479);
 
-    layout->addWidget(titleFrame, 0, Qt::AlignTop | Qt::AlignRight);
+    layout->addWidget(titleFrame, 0, Qt::AlignTop | Qt::AlignCenter);
     layout->addWidget(musicListInfoView);
 
     infoDialog = new InfoDialog(q);
@@ -304,12 +309,14 @@ void MusicListDialog::setPlayMusicData(PlaylistPtr playlist, PlayMusicTypePtr pl
     auto infoFont = d->infoLabel->font();
     if (!playMusicType->extraName.isEmpty()) {
         titleFont.setPixelSize(24);
+        infoFont.setPixelSize(18);
         d->infoLabel->setText(playMusicType->extraName);
     } else {
         titleFont.setPixelSize(36);
         d->infoLabel->hide();
     }
     d->titleLabel->setFont(titleFont);
+    d->infoLabel->setFont(infoFont);
 
     QString name = playMusicType->name;
     for (auto meta : playlist->playMusicTypePtrList()) {

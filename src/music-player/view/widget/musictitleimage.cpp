@@ -61,6 +61,8 @@ void MusicTitleImageWidget::paintEvent(QPaintEvent *event)
     path.arcTo(rect.right() - cornerSize, rect.top(), cornerSize, cornerSize, 0.0f, 90.0f);
 
     path.lineTo(rect.top(), rect.left());
+//    QPainterPath path;
+//    path.addRoundRect(rect, 10, 10);
 
     painter.save();
     painter.setClipPath(path);
@@ -77,18 +79,18 @@ void MusicTitleImageWidget::paintEvent(QPaintEvent *event)
     }
     painter.drawPixmap(rect, coverImage);
 
-    QColor penColor("#000000");
-    penColor.setAlphaF(0.1);
-    QPen pen(penColor, 1);
-    painter.setPen(pen);
-    painter.drawPath(path);
-
     QColor fillColor("#FFFFFF");
     if (type != 1) {
         fillColor = QColor("#000000");
     }
     fillColor.setAlphaF(0.6);
     painter.setBrush(fillColor);
+
+    QColor penColor("#000000");
+    penColor.setAlphaF(0.05);
+    QPen pen(penColor, 2);
+    painter.setPen(pen);
+//    painter.drawRoundRect(rect, 10, 10);
     painter.drawPath(path);
 
     painter.restore();

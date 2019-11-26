@@ -174,7 +174,7 @@ int Playlist::index(const QString &hash)
 bool Playlist::isLast(const MetaPtr meta) const
 {
     Q_ASSERT(!meta.isNull());
-    return playlistMeta.sortMetas.last() == meta->hash;
+    return playlistMeta.sortMetas.isEmpty() ? false : playlistMeta.sortMetas.last() == meta->hash;
 }
 
 bool Playlist::contains(const MetaPtr meta) const

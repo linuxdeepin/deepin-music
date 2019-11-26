@@ -51,6 +51,7 @@ extern "C" {
 
 #include "util/encodingdetector.h"
 #include "util/cueparser.h"
+#include "util/pinyinsearch.h"
 
 static QMap<QString, QByteArray> localeCodes;
 
@@ -71,15 +72,15 @@ void MetaDetector::init()
 QList<QByteArray> MetaDetector::detectEncodings(const QByteArray &rawData)
 {
     auto icuCodes = DMusic::EncodingDetector::detectEncodings(rawData);
-    auto localeCode = localeCodes.value(QLocale::system().name());
+//    auto localeCode = localeCodes.value(QLocale::system().name());
 
-    if (icuCodes.contains(localeCode)) {
-        icuCodes.removeAll(localeCode);
-    }
+//    if (icuCodes.contains(localeCode)) {
+//        icuCodes.removeAll(localeCode);
+//    }
 
-    if (!localeCode.isEmpty()) {
-        icuCodes.push_front(localeCode);
-    }
+//    if (!localeCode.isEmpty()) {
+//        icuCodes.push_front(localeCode);
+//    }
     return icuCodes;
 }
 
@@ -144,6 +145,17 @@ void MetaDetector::updateMediaFileTagCodec(MediaMeta *meta, const QByteArray &co
             detectByte += tag->album().toCString();
             detectCodec = detectEncodings(detectByte).value(0);
 //            qDebug() << "detect codec" << detectEncodings(detectByte);
+            QString curStr = QString::fromLocal8Bit(tag->title().toCString());
+            if (curStr.isEmpty())
+                curStr = QString::fromLocal8Bit(tag->artist().toCString());
+            if (curStr.isEmpty())
+                curStr = QString::fromLocal8Bit(tag->album().toCString());
+            for (auto ch : curStr) {
+                if (DMusic::PinyinSearch::isChinese(ch)) {
+                    detectCodec = "GB18030";
+                    break;
+                }
+            }
         }
 
 //        qDebug() << "convert to" << detectCodec;

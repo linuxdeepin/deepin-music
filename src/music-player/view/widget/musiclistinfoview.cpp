@@ -70,6 +70,8 @@ MusicListInfoView::MusicListInfoView(QWidget *parent)
 {
     Q_D(MusicListInfoView);
 
+    setFrameShape(QFrame::NoFrame);
+
     setAutoFillBackground(true);
     auto palette = this->palette();
     QColor BackgroundColor("#FFFFFF");

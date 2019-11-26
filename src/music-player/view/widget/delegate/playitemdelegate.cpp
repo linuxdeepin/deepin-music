@@ -223,6 +223,7 @@ void PlayItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
         painter->save();
         painter->setRenderHint(QPainter::Antialiasing);
         painter->setRenderHint(QPainter::HighQualityAntialiasing);
+        painter->setRenderHint(QPainter::SmoothPixmapTransform);
 
         auto background = option.palette.background();
 
@@ -248,16 +249,17 @@ void PlayItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
         roundPixmapRectPath.addRoundRect(pixmapRect, 10, 10);
         painter->setClipPath(roundPixmapRectPath);
         painter->drawPixmap(pixmapRect, icon.pixmap(option.rect.width(), option.rect.width()));
-        painter->restore();
 
         //draw border
         painter->save();
         QColor borderPenColor("#000000");
-        borderPenColor.setAlphaF(0.1);
+        borderPenColor.setAlphaF(0.05);
         QPen borderPen(borderPenColor);
-        borderPen.setWidthF(0.5);
+        borderPen.setWidthF(2);
         painter->setPen(borderPen);
-        painter->drawRoundRect(pixmapRect.adjusted(1, 1, -1, 1), 10, 10);
+        painter->drawRoundRect(pixmapRect/*.adjusted(1, 1, -1, 1)*/, 10, 10);
+        painter->restore();
+
         painter->restore();
 
         int startHeight = option.rect.y() + 149;

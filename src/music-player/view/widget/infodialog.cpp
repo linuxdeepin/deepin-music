@@ -80,6 +80,7 @@ void InfoDialogPrivate::initUI()
     layout->setContentsMargins(5, 50, 5, 5);
 
     closeBt = new DWindowCloseButton( q);
+    closeBt->setFocusPolicy(Qt::NoFocus);
     closeBt->setFixedSize(50, 50);
     closeBt->setIconSize(QSize(50, 50));
     closeBt->move(q->width() - 50, 0);

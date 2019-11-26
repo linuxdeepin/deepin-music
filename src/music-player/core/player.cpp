@@ -142,6 +142,7 @@ public:
     bool            playOnLoad  = true;
     bool            fadeInOut   = true;
     double          fadeInOutFactor     = 1.0;
+    qlonglong m_position             = 0.0;//只能用于判断音乐是否正常结束
 
     QPropertyAnimation  *fadeInAnimation    = nullptr;
     QPropertyAnimation  *fadeOutAnimation   = nullptr;
@@ -216,6 +217,7 @@ void PlayerPrivate::initConnection()
 //        }
 
         Q_EMIT q->positionChanged(position - activeMeta->offset,  activeMeta->length);
+
     });
 
     q->connect(qplayer, &QMediaPlayer::stateChanged,
@@ -265,6 +267,10 @@ void PlayerPrivate::initConnection()
         }
         case QMediaPlayer::EndOfMedia: {
             // next
+//            if (m_position < activeMeta->length) {
+//                m_position = activeMeta->length;
+//                return;
+//            }
             selectNext(activeMeta, mode);
             break;
         }
@@ -705,6 +711,8 @@ void Player::setPosition(qlonglong position)
     if (d->activeMeta.isNull()) {
         return;
     }
+
+//    d->m_position = position;
 
     if (d->qplayer->duration() == d->activeMeta->length) {
         return d->qplayer->setPosition(position);

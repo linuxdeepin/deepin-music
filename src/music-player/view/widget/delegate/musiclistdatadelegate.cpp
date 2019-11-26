@@ -109,11 +109,11 @@ void MusicListDataDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
         //draw border
         painter->save();
         QColor borderPenColor("#000000");
-        borderPenColor.setAlphaF(0.1);
+        borderPenColor.setAlphaF(0.05);
         QPen borderPen(borderPenColor);
-        borderPen.setWidthF(0.5);
+        borderPen.setWidthF(2);
         painter->setPen(borderPen);
-        painter->drawRoundRect(rect.adjusted(1, 1, -1, 1), 10, 10);
+        painter->drawRoundRect(rect/*.adjusted(1, 1, -1, 1)*/, 10, 10);
         painter->restore();
 
         if (PlayMusicTypePtr->extraName.isEmpty()) {
