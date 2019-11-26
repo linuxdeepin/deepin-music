@@ -54,6 +54,8 @@ public:
     void updateScaleSize();
     void setThemeType(int type);
 
+    void clearBufferAudio();
+
 Q_SIGNALS:
     void valueAccpet(int value);
 

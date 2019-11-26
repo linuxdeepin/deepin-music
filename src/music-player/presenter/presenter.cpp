@@ -606,6 +606,14 @@ void Presenter::onMusiclistRemove(PlaylistPtr playlist, const MetaPtrList metali
         return;
     auto playinglist = d->player->activePlaylist();
     MetaPtr next;
+    bool t_isLastMeta = false;
+
+    //检查当前播放的是否包含最后一首
+    for (auto meta : metalist) {
+        if (meta->hash == d->player->activeMeta()->hash && playlist->isLast(meta)) {
+            t_isLastMeta = true;
+        }
+    }
 
     qDebug() << "remove " << playlist->id() << metalist.length();
 
@@ -652,7 +660,7 @@ void Presenter::onMusiclistRemove(PlaylistPtr playlist, const MetaPtrList metali
         //stop music
         for (auto &meta : metalist) {
             if (d->player->isActiveMeta(meta)) {
-                if (playinglist->isEmpty()) {
+                if (playinglist->isEmpty() || t_isLastMeta) {
                     onMusicStop(playinglist, next);
                 } else {
                     onMusicPlay(playinglist, next);
@@ -668,13 +676,24 @@ void Presenter::onMusiclistDelete(PlaylistPtr playlist, const MetaPtrList metali
 
     // find next music
     MetaPtr next;
+    bool t_isLastMeta = false;
     auto playinglist = d->player->activePlaylist();
+
+    //检查当前播放的是否包含最后一首
+    for (auto meta : metalist) {
+        if (meta->hash == d->player->activeMeta()->hash && playlist->isLast(meta)) {
+            t_isLastMeta = true;
+        }
+    }
 
     for (auto &playlist : allplaylist()) {
         auto meta = playlist->removeMusicList(metalist);
         if (playlist == playinglist) {
             next = meta;
         }
+    }
+    if (playinglist->isEmpty()) {
+        playinglist->play(nullptr);
     }
 
     auto allMusicList = d->playlistMgr->playlist(AllMusicListID);
@@ -691,7 +710,7 @@ void Presenter::onMusiclistDelete(PlaylistPtr playlist, const MetaPtrList metali
     for (auto &meta : metalist) {
         if (d->player->activeMeta() &&
                 (meta->hash == d->player->activeMeta()->hash)) {
-            if (playinglist->isEmpty()) {
+            if (playinglist->isEmpty() || t_isLastMeta) {
                 onMusicStop(playinglist, next);
             } else {
                 onMusicPlay(playinglist, next);

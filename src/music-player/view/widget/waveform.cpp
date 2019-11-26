@@ -374,6 +374,12 @@ void Waveform::setThemeType(int type)
     themeType = type;
 }
 
+void Waveform::clearBufferAudio()
+{
+    reciveSampleList.clear();
+    sampleList.clear();
+}
+
 void Waveform::enterEvent(QEvent *event)
 {
     updateScaleSize();

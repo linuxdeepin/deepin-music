@@ -74,7 +74,7 @@ void MusicListDataViewPrivate::addPlayMusicTypePtr(const PlayMusicTypePtr TypePt
     QStandardItem *newItem = new QStandardItem;
     QIcon icon(defaultCover);
     if (!TypePtr->icon.isEmpty()) {
-        icon = QIcon(QPixmap::fromImage(QImage::fromData(TypePtr->icon).scaled(170, 170)));
+        icon = QIcon(QPixmap::fromImage(QImage::fromData(TypePtr->icon).scaled(170, 170, Qt::IgnoreAspectRatio, Qt::SmoothTransformation)));
     }
     newItem->setIcon(icon);
     model->appendRow(newItem);

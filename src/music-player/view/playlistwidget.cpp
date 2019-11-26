@@ -220,7 +220,7 @@ PlayListWidget::PlayListWidget(QWidget *parent) :
 
     layout->addWidget(d->actionBar);
     layout->addWidget(d->playListView);
-//    layout->addWidget(d->emptyHits);
+    layout->addWidget(d->emptyHits, 0, Qt::AlignCenter);
 
     d->initConntion();
 
@@ -333,7 +333,7 @@ void PlayListWidget::onMusicListRemoved(PlaylistPtr playlist, const MetaPtrList 
 {
     Q_D(PlayListWidget);
 
-    if (playlist != d->playListView->playlist()) {
+    if (playlist != d->playListView->playlist() && d->playListView->rowCount() != playlist->allmusic().size()) {
         return;
     }
 
@@ -353,16 +353,16 @@ void PlayListWidget::onMusicListAdded(PlaylistPtr playlist, const MetaPtrList me
 {
     Q_D(PlayListWidget);
 
-    if (playlist != d->playListView->playlist()) {
+    if (playlist != d->playListView->playlist() && d->playListView->rowCount() != playlist->allmusic().size()) {
         return;
     }
-    MetaPtrList curMetalist;
-    for (auto curMeta : metalist) {
-        if (!playlist->contains(curMeta))
-            curMetalist.append(curMeta);
-    }
-    if (curMetalist.isEmpty())
-        return;
+//    MetaPtrList curMetalist;
+//    for (auto curMeta : metalist) {
+//        if (!playlist->contains(curMeta))
+//            curMetalist.append(curMeta);
+//    }
+//    if (curMetalist.isEmpty())
+//        return;
 
     d->playListView->onMusicListAdded(metalist);
     d->showEmptyHits(metalist.length() == 0);

@@ -186,7 +186,7 @@
     <message>
         <location filename="../view/widget/infodialog.cpp" line="228"/>
         <source>Unknown artist</source>
-        <translation>未知演唱者</translation>
+        <translation>未知歌手</translation>
     </message>
     <message>
         <location filename="../view/widget/infodialog.cpp" line="229"/>
@@ -908,7 +908,7 @@
     <message>
         <location filename="../view/widget/delegate/playitemdelegate.cpp" line="461"/>
         <source>Unknown artist</source>
-        <translation>未知演唱者</translation>
+        <translation>未知歌手</translation>
     </message>
     <message>
         <location filename="../view/widget/delegate/playitemdelegate.cpp" line="473"/>
@@ -1022,7 +1022,7 @@
         <location filename="../core/playlist.cpp" line="749"/>
         <location filename="../core/playlist.cpp" line="780"/>
         <source>Unknown artist</source>
-        <translation>未知演唱者</translation>
+        <translation>未知歌手</translation>
     </message>
 </context>
 <context>

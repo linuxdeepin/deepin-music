@@ -110,6 +110,8 @@ public:
 
     int             m_type = 1;
 
+    bool            btPlayingStatus = false;
+
     Footer *q_ptr;
     Q_DECLARE_PUBLIC(Footer)
 };
@@ -732,6 +734,8 @@ void Footer::onMusicPlayed(PlaylistPtr playlist, const MetaPtr meta)
     }
     d->btCover->setIcon(QPixmap::fromImage(cover));
     d->btCover->update();
+    if (d->activingMeta != meta)
+        d->waveform->clearBufferAudio();
 
     //cut image
     double windowScale = (width() * 1.0) / height();
@@ -785,6 +789,7 @@ void Footer::onMusicPlayed(PlaylistPtr playlist, const MetaPtr meta)
                                       ":/mpimage/dark/press/suspend_press.svg");
         }
 
+        d->btPlayingStatus = true;
     } else {
         if (d->m_type == 1) {
             d->btPlay->setPropertyPic(":/mpimage/light/normal/play_normal.svg",
@@ -798,6 +803,7 @@ void Footer::onMusicPlayed(PlaylistPtr playlist, const MetaPtr meta)
             //d->btPlay->setIcon(DHiDPIHelper::loadNxPixmap(":/mpimage/dark/normal/play_normal.svg"));
         }
 
+        d->btPlayingStatus = false;
     }
 }
 
@@ -805,6 +811,7 @@ void Footer::onMusicError(PlaylistPtr playlist, const MetaPtr meta, int error)
 {
     Q_D(Footer);
 
+    d->waveform->clearBufferAudio();
     if (d->activingMeta && d->activingPlaylist) {
         if (meta != d->activingMeta || playlist != d->activingPlaylist) {
             return;
@@ -828,11 +835,13 @@ void Footer::onMusicError(PlaylistPtr playlist, const MetaPtr meta, int error)
                                   ":/mpimage/dark/press/play_press.svg");
         //d->btPlay->setIcon(DHiDPIHelper::loadNxPixmap(":/mpimage/dark/normal/play_normal.svg"));
     }
+    d->btPlayingStatus = false;
 }
 
 void Footer::onMusicPause(PlaylistPtr playlist, const MetaPtr meta)
 {
     Q_D(Footer);
+//    d->waveform->clearBufferAudio();
     if (meta->hash != d->activingMeta->hash || playlist != d->activingPlaylist) {
         qWarning() << "can not pasue" << d->activingPlaylist << playlist
                    << d->activingMeta->hash << meta->hash;
@@ -851,6 +860,7 @@ void Footer::onMusicPause(PlaylistPtr playlist, const MetaPtr meta)
                                   ":/mpimage/dark/normal/play_normal.svg",
                                   ":/mpimage/dark/press/play_press.svg");
     }
+    d->btPlayingStatus = false;
 
     if (playlist->allmusic().size() == 1) {
         d->btPrev->setDisabled(true);
@@ -889,6 +899,7 @@ void Footer::onMusicStoped(PlaylistPtr playlist, const MetaPtr meta)
                                   ":/mpimage/dark/normal/play_normal.svg",
                                   ":/mpimage/dark/press/play_press.svg");
     }
+    d->btPlayingStatus = false;
 
     if (playlist->allmusic().size() == 1) {
         d->btPrev->setDisabled(true);
@@ -1019,7 +1030,7 @@ void Footer::slotTheme(int type)
     //d->btPlay->setIcon(DHiDPIHelper::loadNxPixmap(QString(":/mpimage/%1/normal/play_normal.svg").arg(rStr)));
     //d->btPrev->setIcon(DHiDPIHelper::loadNxPixmap(QString(":/mpimage/%1/normal/last_normal.svg").arg(rStr)));
     //d->btNext->setIcon(DHiDPIHelper::loadNxPixmap(QString(":/mpimage/%1/normal/next_normal.svg").arg(rStr)));
-    if (!d->activingMeta->invalid || true) {
+    if (d->btPlayingStatus) {
         d->btPlay->setPropertyPic(QString(":/mpimage/%1/normal/suspend_normal.svg").arg(rStr),
                                   QString(":/mpimage/%1/normal/suspend_normal.svg").arg(rStr),
                                   QString(":/mpimage/%1/press/suspend_press.svg").arg(rStr));

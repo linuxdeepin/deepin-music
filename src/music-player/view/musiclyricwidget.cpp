@@ -166,6 +166,7 @@ void MUsicLyricWidget::updateUI()
         coverImage = cover.copy((cover.width() - imageWidth) / 2, 0, imageWidth, imageheight);
     }
     d->backgroundW->setSourceImage(coverImage);
+    d->backgroundimage = cover;
 }
 
 QString MUsicLyricWidget::defaultCover() const
@@ -228,6 +229,19 @@ void MUsicLyricWidget::onMusicPlayed(PlaylistPtr playlist, const MetaPtr meta)
 
     d->m_cover->setCoverPixmap(QPixmap::fromImage(cover));
     d->m_cover->update();
+    d->backgroundimage = cover;
+    //cut image
+    double windowScale = (width() * 1.0) / height();
+    int imageWidth = cover.height() * windowScale;
+    QImage coverImage;
+    if (imageWidth > cover.width()) {
+        int imageheight = cover.width() / windowScale;
+        coverImage = cover.copy(0, (cover.height() - imageheight) / 2, cover.width(), imageheight);
+    } else {
+        int imageheight = cover.height();
+        coverImage = cover.copy((cover.width() - imageWidth) / 2, 0, imageWidth, imageheight);
+    }
+    d->backgroundW->setSourceImage(coverImage);
 }
 
 void MUsicLyricWidget::onMusicStop(PlaylistPtr playlist, const MetaPtr meta)
@@ -241,6 +255,20 @@ void MUsicLyricWidget::onMusicStop(PlaylistPtr playlist, const MetaPtr meta)
     }
     d->m_cover->setCoverPixmap(QPixmap::fromImage(cover));
     d->m_cover->update();
+
+    d->backgroundimage = cover;
+    //cut image
+    double windowScale = (width() * 1.0) / height();
+    int imageWidth = cover.height() * windowScale;
+    QImage coverImage;
+    if (imageWidth > cover.width()) {
+        int imageheight = cover.width() / windowScale;
+        coverImage = cover.copy(0, (cover.height() - imageheight) / 2, cover.width(), imageheight);
+    } else {
+        int imageheight = cover.height();
+        coverImage = cover.copy((cover.width() - imageWidth) / 2, 0, imageWidth, imageheight);
+    }
+    d->backgroundW->setSourceImage(coverImage);
 }
 
 void MUsicLyricWidget::onProgressChanged(qint64 value, qint64 /*length*/)
@@ -350,10 +378,16 @@ void MUsicLyricWidget::slotTheme(int type)
         auto palette = this->palette();
         palette.setColor(DPalette::Background, QColor("#F8F8F8"));
         setPalette(palette);
+
+        QColor backMaskColor(255, 255, 255, 140);
+        d->backgroundW->setMaskColor(backMaskColor);
     } else {
         auto palette = this->palette();
         palette.setColor(DPalette::Background, QColor("#252525"));
         setPalette(palette);
+
+        QColor backMaskColor(37, 37, 37, 140);
+        d->backgroundW->setMaskColor(backMaskColor);
     }
     d->serachbt->setPropertyPic(QString(":/mpimage/%1/normal/search_normal.svg").arg(rStr),
                                 QString(":/mpimage/%1/normal/search_normal.svg").arg(rStr),

@@ -201,16 +201,16 @@ void MusicListDataDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
             painter->setFont(font);
             QFontMetrics fm(font);
 
-            QRect nameFillRect(rect.x(), startHeight, rect.width(), fillAllHeight / 2);
+            QRect nameFillRect(rect.x(), startHeight + 2, rect.width(), fillAllHeight / 2);
             nameFillRect.adjust(8, 0, -7, 0);
             auto nameText = fm.elidedText(PlayMusicTypePtr->name, Qt::ElideMiddle, nameFillRect.width());
             painter->setPen(Qt::white);
             painter->drawText(nameFillRect, Qt::AlignLeft | Qt::AlignTop, nameText);
 
-            font.setPixelSize(11);
+            font.setPixelSize(10);
             QFontMetrics extraNameFm(font);
             painter->setFont(font);
-            QRect extraNameFillRect(rect.x(), startHeight + fillAllHeight / 2 - 5, rect.width(), fillAllHeight / 2);
+            QRect extraNameFillRect(rect.x(), startHeight + fillAllHeight / 2 + 1, rect.width(), fillAllHeight / 2);
             extraNameFillRect.adjust(8, 0, -7, 0);
             auto extraNameText = extraNameFm.elidedText(PlayMusicTypePtr->extraName, Qt::ElideMiddle, extraNameFillRect.width());
             painter->setPen(Qt::white);
@@ -233,9 +233,10 @@ void MusicListDataDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
 
         if (option.state & QStyle::State_MouseOver) {
             QImage t_image = icon.pixmap(rect.width(), rect.height()).toImage();
-            QRect t_imageRect(rect.width() / 2 - 25, rect.height() / 2 - 25, 50, 50);
+            qreal t_ratio = t_image.devicePixelRatioF();
+            QRect t_imageRect(rect.width() / 2 - 25, rect.height() / 2 - 25, 50 * t_ratio, 50 * t_ratio);
             t_image  = t_image.copy(t_imageRect);
-            QRect t_hoverRect(rect.x() + 50, rect.y() + 36, 50, 50);
+            QRect t_hoverRect(rect.x() + 50, rect.y() + 36, 50 * t_ratio, 50 * t_ratio);
 
             QTransform old_transform = painter->transform();
             painter->translate(t_hoverRect.topLeft());
@@ -244,14 +245,15 @@ void MusicListDataDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
             t_imageClipPath.addEllipse(QRect(0, 0, 50, 50));
             painter->setClipPath(t_imageClipPath);
 
-            qt_blurImage(painter, t_image, 35, false, false);
+            qt_blurImage(painter, t_image, 30, false, false);
             painter->setTransform(old_transform);
 
             QPixmap t_hoverPlayImg(d->hoverPlayImg);
             t_hoverPlayImg.setDevicePixelRatio(option.widget->devicePixelRatioF());
-            t_hoverRect.adjust(7, 7, -7, -7);
+//            t_hoverRect.adjust(0, 0, -7 * t_ratio, -7 * t_ratio);
+            QRect t_pixMapRect(rect.x() + 53, rect.y() + 40, 43, 43);
             QIcon icon(t_hoverPlayImg);
-            painter->drawPixmap(t_hoverRect, t_hoverPlayImg);
+            painter->drawPixmap(t_pixMapRect, t_hoverPlayImg);
         }
 
         painter->fillRect(option.rect, t_fillBrush);

@@ -96,7 +96,7 @@ PlayListView::PlayListView(bool searchFlag, QWidget *parent)
     setViewModeFlag(QListView::ListMode);
     setResizeMode(QListView::Adjust);
     setLayoutMode(QListView::Batched);
-    //setBatchSize(20);
+    setBatchSize(2000);
 
     setSelectionMode(QListView::ExtendedSelection);
     //setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);

@@ -569,8 +569,12 @@ void MusicListDataWidgetPrivate::initConntion()
 
 void MusicListDataWidgetPrivate::showEmptyHits()
 {
-    if (curPlaylist.isNull() || curPlaylist->searchStr().isEmpty())
+    if (curPlaylist.isNull() || curPlaylist->searchStr().isEmpty()) {
+        actionBar->setVisible(true);
+        emptyHits->setVisible(false);
+        emptySearchHits->setVisible(false);
         return;
+    }
     if (!curPlaylist.isNull() && curPlaylist->id() == AlbumMusicListID) {
         auto t_rowCount = albumListView->rowCount();
         auto playlist = albumListView->playlist();
