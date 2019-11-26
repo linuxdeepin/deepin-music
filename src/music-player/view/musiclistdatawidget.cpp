@@ -575,8 +575,8 @@ void MusicListDataWidgetPrivate::showEmptyHits()
         if (playlist->searchStr().isEmpty()) {
             emptyHits->setText(MusicListDataWidget::tr("No Music"));
         } else {
-            emptyHits->setText(MusicListDataWidget::tr("No result found"));
-            emptySearchHits->setText(MusicListDataWidget::tr("Without the result of \"%1\", please try to search for new words").arg(playlist->searchStr()));
+            emptyHits->setText(MusicListDataWidget::tr("No search results"));
+            emptySearchHits->setText(MusicListDataWidget::tr("No results for \"%1\", please try another word").arg(playlist->searchStr()));
         }
         bool empty = t_rowCount == 0 ? true : false;
         actionBar->setVisible(!empty);
@@ -591,8 +591,8 @@ void MusicListDataWidgetPrivate::showEmptyHits()
         if (playlist->searchStr().isEmpty()) {
             emptyHits->setText(MusicListDataWidget::tr("No Music"));
         } else {
-            emptyHits->setText(MusicListDataWidget::tr("No result found"));
-            emptySearchHits->setText(MusicListDataWidget::tr("Without the result of \"%1\", please try to search for new words").arg(playlist->searchStr()));
+            emptyHits->setText(MusicListDataWidget::tr("No search results"));
+            emptySearchHits->setText(MusicListDataWidget::tr("No results for \"%1\", please try another word").arg(playlist->searchStr()));
         }
         bool empty = t_rowCount == 0 ? true : false;
         actionBar->setVisible(!empty);
@@ -607,8 +607,8 @@ void MusicListDataWidgetPrivate::showEmptyHits()
         if (playlist->searchStr().isEmpty()) {
             emptyHits->setText(MusicListDataWidget::tr("No Music"));
         } else {
-            emptyHits->setText(MusicListDataWidget::tr("No result found"));
-            emptySearchHits->setText(MusicListDataWidget::tr("Without the result of \"%1\", please try to search for new words").arg(playlist->searchStr()));
+            emptyHits->setText(MusicListDataWidget::tr("No search results"));
+            emptySearchHits->setText(MusicListDataWidget::tr("No results for \"%1\", please try another word").arg(playlist->searchStr()));
         }
         bool empty = t_rowCount == 0 ? true : false;
         actionBar->setVisible(!empty);
