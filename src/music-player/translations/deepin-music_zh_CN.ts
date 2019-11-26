@@ -447,6 +447,12 @@
         <translation>没有“%1”的结果，请尝试搜索新词</translation>
     </message>
     <message>
+        <location filename="../view/musiclistdatawidget.cpp" line="669"/>
+        <location filename="../view/musiclistdatawidget.cpp" line="689"/>
+        <source>Album</source>
+        <translation>专辑名称</translation>
+    </message>
+    <message>
         <location filename="../view/musiclistdatawidget.cpp" line="903"/>
         <source>No result found</source>
         <translation>无搜索结果</translation>
@@ -469,20 +475,18 @@
         <translation>添加时间</translation>
     </message>
     <message>
-        <location filename="../view/musiclistdatawidget.cpp" line="669"/>
-        <location filename="../view/musiclistdatawidget.cpp" line="689"/>
         <source>Album name</source>
-        <translation>专辑名称</translation>
+        <translation type="vanished">专辑名称</translation>
+    </message>
+    <message>
+        <source>Artist name</source>
+        <translation type="vanished">歌手名称</translation>
     </message>
     <message>
         <location filename="../view/musiclistdatawidget.cpp" line="678"/>
         <location filename="../view/musiclistdatawidget.cpp" line="688"/>
-        <source>Artist name</source>
-        <translation>歌手名称</translation>
-    </message>
-    <message>
         <source>Artist</source>
-        <translation type="vanished">演唱者</translation>
+        <translation>歌手名称</translation>
     </message>
     <message>
         <location filename="../view/musiclistdatawidget.cpp" line="687"/>
