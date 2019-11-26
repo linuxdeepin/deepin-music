@@ -964,9 +964,9 @@ void Footer::slotTheme(int type)
         d->btSound->setPalette(pa);
 
     } else {
-        QColor backMaskColor(56, 56, 56, 140);
+        QColor backMaskColor(37, 37, 37, 140);
         blurBackground()->setMaskColor(backMaskColor);
-        QColor maskColor(56, 56, 56, 76);
+        QColor maskColor(37, 37, 37, 76);
         d->forwardWidget->setMaskColor(maskColor);
         rStr = "dark";
 

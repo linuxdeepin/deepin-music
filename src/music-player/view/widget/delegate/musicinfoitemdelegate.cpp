@@ -288,10 +288,16 @@ void MusicInfoItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
             if (activeMeta == meta) {
                 auto playingIcon = listview->getPlayPixmap();
                 auto icon = QPixmap(playingIcon);
+                qreal t_ratio = icon.devicePixelRatioF();
+                QRect t_ratioRect;
+                t_ratioRect.setX(0);
+                t_ratioRect.setY(0);
+                t_ratioRect.setWidth(icon.width() / t_ratio);
+                t_ratioRect.setHeight(icon.height() / t_ratio);
                 auto centerF = QRectF(rect).center();
-                auto iconRect = QRectF(centerF.x() - icon.width() / 2,
-                                       centerF.y() - icon.height() / 2,
-                                       icon.width(), icon.height());
+                auto iconRect = QRectF(centerF.x() - t_ratioRect.width() / 2,
+                                       centerF.y() - t_ratioRect.height() / 2,
+                                       t_ratioRect.width(), t_ratioRect.height());
                 painter->drawPixmap(iconRect.toRect(), playingIcon);
 
             } else {

@@ -79,14 +79,17 @@ void Waveform::paintEvent(QPaintEvent *)
     }
     for (int i = 0; i < sampleList.size(); i++) {
         volume = sampleList[i] * rect().height();
+//        if (volume == 0) {
+//            QPainterPath path;
+//            path.addRect(QRectF(rect().x() + i * WAVE_DURATION, rect().y() + (rect().height() - 1), WAVE_DURATION, 1));
+//            painter.fillPath(path, fillColor);
+//        } else {
         if (volume == 0) {
-            QPainterPath path;
-            path.addRect(QRectF(rect().x() + i * WAVE_DURATION, rect().y() + (rect().height() - 1), WAVE_DURATION, 1));
-            painter.fillPath(path, fillColor);
-        } else {
-            QRect sampleRect(rect().x() + i * WAVE_DURATION, rect().y() + (rect().height() - 1), WAVE_WIDTH, -qAbs(volume));
-            painter.fillRect(sampleRect, fillColor);
+            volume = 1;
         }
+        QRect sampleRect(rect().x() + i * WAVE_DURATION, rect().y() + (rect().height() - 1), WAVE_WIDTH, -qAbs(volume));
+        painter.fillRect(sampleRect, fillColor);
+//        }
     }
     if (sampleList.size() < curWidth / WAVE_DURATION) {
         QPainterPath path;
@@ -111,14 +114,17 @@ void Waveform::paintEvent(QPaintEvent *)
     }
     for (int i = 0; i < sampleList.size(); i++) {
         volume = sampleList[i] * rect().height();
+//        if (volume == 0) {
+//            QPainterPath path;
+//            path.addRect(QRectF(rect().x() + i * WAVE_DURATION, rect().y() + (rect().height() - 1), WAVE_DURATION, 1));
+//            painter.fillPath(path, fillColor);
+//        } else {
         if (volume == 0) {
-            QPainterPath path;
-            path.addRect(QRectF(rect().x() + i * WAVE_DURATION, rect().y() + (rect().height() - 1), WAVE_DURATION, 1));
-            painter.fillPath(path, fillColor);
-        } else {
-            QRect sampleRect(rect().x() + i * WAVE_DURATION, rect().y() + (rect().height() - 1), WAVE_WIDTH, -qAbs(volume));
-            painter.fillRect(sampleRect, fillColor);
+            volume = 1;
         }
+        QRect sampleRect(rect().x() + i * WAVE_DURATION, rect().y() + (rect().height() - 1), WAVE_WIDTH, -qAbs(volume));
+        painter.fillRect(sampleRect, fillColor);
+//        }
     }
     if (sampleList.size() < rect().width() / WAVE_DURATION) {
         fillColor = Qt::darkGray;

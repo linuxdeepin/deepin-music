@@ -300,10 +300,10 @@ void PlayItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
         }
         painter->setPen(Qt::NoPen);
         painter->setBrush(timeFillColor);
-        painter->drawRoundedRect(timeFillRect, 10, 10);
+        painter->drawRoundedRect(timeFillRect, 8, 8);
         painter->restore();
 
-        font.setPixelSize(12);
+        font.setPixelSize(10);
         painter->setFont(font);
         QColor timedColor = Qt::white;
         if (listview->getThemeType() == 2) {
@@ -423,9 +423,16 @@ void PlayItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
                 }
                 auto icon = listview->getPlayPixmap();
                 auto centerF = QRectF(rect).center();
-                auto iconRect = QRectF(centerF.x() - icon.width() / 2,
-                                       centerF.y() - icon.height() / 2,
-                                       icon.width(), icon.height());
+                qreal t_ratio = icon.devicePixelRatioF();
+                QRect t_ratioRect;
+                t_ratioRect.setX(0);
+                t_ratioRect.setY(0);
+                t_ratioRect.setWidth(icon.width() / t_ratio);
+                t_ratioRect.setHeight(icon.height() / t_ratio);
+                auto iconRect = QRectF(centerF.x() - t_ratioRect.width() / 2,
+                                       centerF.y() - t_ratioRect.height() / 2,
+                                       t_ratioRect.width(), t_ratioRect.height());
+                qDebug() << "play delegate size:" << iconRect.toRect();
                 painter->drawPixmap(iconRect.toRect(), icon);
 
             } else {
