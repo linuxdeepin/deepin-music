@@ -384,7 +384,7 @@ void MusicListDataWidgetPrivate::initConntion()
     q, [ = ](const MetaPtr meta) {
         PlaylistPtr curPlayList = albumListView->playlist();
         curPlayList->play(meta);
-        initData(curPlayList);
+        //initData(curPlayList);
         Q_EMIT q->playMedia(albumListView->playlist(), meta);
     });
     q->connect(albumListView, &MusicListDataView::resume,
@@ -437,7 +437,7 @@ void MusicListDataWidgetPrivate::initConntion()
     q, [ = ](const MetaPtr meta) {
         PlaylistPtr curPlayList = artistListView->playlist();
         curPlayList->play(meta);
-        initData(curPlayList);
+        //initData(curPlayList);
         Q_EMIT q->playMedia(artistListView->playlist(), meta);
     });
 

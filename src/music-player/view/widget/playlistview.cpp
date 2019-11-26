@@ -644,19 +644,19 @@ void PlayListView::showContextMenu(const QPoint &pos,
                 }
                 warnDlg.setMessage(QString(tr("Are you sure you want to delete %1?")).arg(meta->title));
             } else {
-                warnDlg.setTitle(QString(tr("Are you sure you want to delete the selected %1 songs?")).arg(metalist.length()));
-//                DLabel *t_titleLabel = new DLabel(this);
-//                t_titleLabel->setForegroundRole(DPalette::TextTitle);
-//                DLabel *t_infoLabel = new DLabel(this);
-//                t_infoLabel->setForegroundRole(DPalette::TextTips);
-//                t_titleLabel->setText(tr("Are you sure you want to delete the selected %1 songs?").arg(metalist.length()));
-//                t_infoLabel->setText(tr("The song files contained will also be deleted"));
-//                warnDlg.addContent(t_titleLabel, Qt::AlignHCenter);
-//                warnDlg.addContent(t_infoLabel, Qt::AlignHCenter);
-//                warnDlg.addSpacing(20);
+//                warnDlg.setTitle(QString(tr("Are you sure you want to delete the selected %1 songs?")).arg(metalist.length()));
+                DLabel *t_titleLabel = new DLabel(this);
+                t_titleLabel->setForegroundRole(DPalette::TextTitle);
+                DLabel *t_infoLabel = new DLabel(this);
+                t_infoLabel->setForegroundRole(DPalette::TextTips);
+                t_titleLabel->setText(tr("Are you sure you want to delete the selected %1 songs?").arg(metalist.length()));
+                t_infoLabel->setText(tr("The song files contained will also be deleted"));
+                warnDlg.addContent(t_titleLabel, Qt::AlignHCenter);
+                warnDlg.addContent(t_infoLabel, Qt::AlignHCenter);
+                warnDlg.addSpacing(20);
             }
 
-            if (containsCue) {
+            if (containsCue && false) {
                 DLabel *t_titleLabel = new DLabel(this);
                 t_titleLabel->setForegroundRole(DPalette::TextTitle);
                 DLabel *t_infoLabel = new DLabel(this);

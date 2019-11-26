@@ -27,7 +27,7 @@ LyricLabel::LyricLabel(bool touch, QWidget *parent)
     lyricFont = new QFont();
     lyricFont->setFamily("SourceHanSansSC");
     lyricFont->setWeight(QFont::Normal);
-    lyricFont->setPixelSize(12);
+    lyricFont->setPixelSize(14);
     lyricNormal = new QColor("#526A7F");
     lyricHighlight = new QColor("#000000");
     connect(this, SIGNAL(changeTo(int)), this, SLOT(changeToEvent(int)));
@@ -67,8 +67,8 @@ void LyricLabel::paintItem(QPainter *painter, int index, const QRect &rect)
         QPoint leftpos = rect.bottomLeft();
         QPoint rightpos = rect.bottomRight();
         rightpos.setX(rightpos.x() - 3);
-        leftpos.setY(leftpos.y() - 16);
-        rightpos.setY(rightpos.y() - 16);
+        leftpos.setY(leftpos.y() - 3);
+        rightpos.setY(rightpos.y() - 3);
         //leftpos.setY(leftpos.y() - rect.height() / 2);
         //rightpos.setY(rightpos.y() - rect.height() / 2);
         painter->save();
@@ -106,7 +106,7 @@ int LyricLabel::itemHeight() const
 {
     QFontMetrics fm(*lyricFont);
     //qDebug() << "itemheight" << fm.height()*2.8;
-    return fm.height() * 2.8;
+    return fm.height() * 1.4;
     //return 45;
 }
 
@@ -348,7 +348,7 @@ void AbstractWheelWidget::paintEvent(QPaintEvent *event)
                 */
                 //抛物线衰减的方法
                 int t = abs(i);
-                t = 255 - t * t * 220 / len / len; //220是255-y得到,y为边界透明度
+                t = 255 - t * t * 220 / len / len - 35; //220是255-y得到,y为边界透明度
                 if (t < 0) t = 0;
                 //qDebug() << "a值:" << t << endl;
                 if (m_themetype == 1) {

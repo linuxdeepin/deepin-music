@@ -49,7 +49,7 @@ Cover::Cover(QWidget *parent)
     Q_D(Cover);
 
     QWidget::setAttribute(Qt::WA_TranslucentBackground, true);
-    d->m_borderColor = QColor(255, 0, 0, 152);
+    d->m_borderColor = QColor(0, 0, 0, 200);
     d->m_shadowColor = QColor(0, 255, 0, 126);
 
 //    QGraphicsDropShadowEffect *bodyShadow = new QGraphicsDropShadowEffect;
@@ -111,6 +111,15 @@ void Cover::paintEvent(QPaintEvent *)
         painter.drawPixmap(backgroundRect, d->m_Background);
     }
 
+    painter.setRenderHints(QPainter::HighQualityAntialiasing);
+    painter.setRenderHints(QPainter::Antialiasing);
+    painter.setBrush(Qt::NoBrush);
+    QPen BorderPen(innerBorderColor);
+    BorderPen.setWidthF(0.1);
+    painter.setPen(BorderPen);
+    painter.drawRoundRect(QRect(1, 1, width() - 2, height() - 2), 8, 8); //画矩形
+
+
     return;
     // draw border
     QPainterPath innerBorderPath;
@@ -121,7 +130,7 @@ void Cover::paintEvent(QPaintEvent *)
     borderRect = borderRect.marginsRemoved(borderMargin);
     innerBorderPath.addRoundedRect(borderRect, borderRadius, borderRadius);
     QPen innerBorderPen(innerBorderColor);
-    innerBorderPen.setWidthF(penWidthf);
+    innerBorderPen.setWidthF(penWidthf / 2);
     painter.strokePath(innerBorderPath, innerBorderPen);
 
     QPainterPath outerBorderPath;
@@ -132,7 +141,7 @@ void Cover::paintEvent(QPaintEvent *)
 
     outerBorderPath.addRoundedRect(borderRect, borderRadius, borderRadius);
     QPen outerBorderPen(outerBorderColor);
-    outerBorderPen.setWidthF(penWidthf);
+    outerBorderPen.setWidthF(penWidthf / 2);
     painter.strokePath(outerBorderPath, outerBorderPen);
 }
 

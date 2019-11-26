@@ -69,23 +69,26 @@ QModelIndex PlaylistModel::findIndex(const MetaPtr meta)
     Q_ASSERT(!meta.isNull());
     Q_D(PlaylistModel);
 
-    auto row = d->playlist->index(meta->hash);
-    auto itemIndex = this->index(row, 0);
+    if (!d->playlist.isNull()) {
+        auto row = d->playlist->index(meta->hash);
+        auto itemIndex = this->index(row, 0);
 
-    auto itemHash = data(itemIndex).toString();
-    if (itemHash == meta->hash) {
-        return itemIndex;
-    }
-
-    qCritical() << "search index failed" << meta->hash << itemHash;
-
-    for (int i = 0; i < rowCount(); ++i) {
-        itemIndex = index(i, 0);
         auto itemHash = data(itemIndex).toString();
         if (itemHash == meta->hash) {
             return itemIndex;
         }
+
+        qCritical() << "search index failed" << meta->hash << itemHash;
+
+        for (int i = 0; i < rowCount(); ++i) {
+            itemIndex = index(i, 0);
+            auto itemHash = data(itemIndex).toString();
+            if (itemHash == meta->hash) {
+                return itemIndex;
+            }
+        }
     }
+
     return QModelIndex();
 }
 

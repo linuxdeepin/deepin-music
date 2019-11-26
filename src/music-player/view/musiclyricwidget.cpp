@@ -72,6 +72,8 @@ public:
 
     bool               serachflag = false;
 
+    QImage              backgroundimage;
+
     DBlurEffectWidget *backgroundW;
     MUsicLyricWidget *q_ptr;
     Q_DECLARE_PUBLIC(MUsicLyricWidget)
@@ -181,7 +183,7 @@ void MUsicLyricWidget::checkHiddenSearch(QPoint mousePos)
 void MUsicLyricWidget::resizeEvent(QResizeEvent *event)
 {
     Q_D(MUsicLyricWidget);
-    QImage cover(d->defaultCover);
+    QImage cover(d->backgroundimage);
 
     //cut image
     double windowScale = (width() * 1.0) / height();
@@ -267,8 +269,22 @@ void MUsicLyricWidget::onCoverChanged(const MetaPtr meta,  const DMusic::SearchM
     if (coverData.length() > 0) {
         cover = QImage::fromData(coverData);
     }
+    d->backgroundimage = cover;
     d->m_cover->setCoverPixmap(QPixmap::fromImage(cover));
     d->m_cover->update();
+
+    //cut image
+    double windowScale = (width() * 1.0) / height();
+    int imageWidth = cover.height() * windowScale;
+    QImage coverImage;
+    if (imageWidth > cover.width()) {
+        int imageheight = cover.width() / windowScale;
+        coverImage = cover.copy(0, (cover.height() - imageheight) / 2, cover.width(), imageheight);
+    } else {
+        int imageheight = cover.height();
+        coverImage = cover.copy((cover.width() - imageWidth) / 2, 0, imageWidth, imageheight);
+    }
+    d->backgroundW->setSourceImage(coverImage);
 }
 
 void MUsicLyricWidget::setDefaultCover(QString defaultCover)

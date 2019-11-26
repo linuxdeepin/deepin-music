@@ -25,6 +25,7 @@
 #include <QDebug>
 #include <QDate>
 #include <QEvent>
+#include <QMouseEvent>
 
 #include <DHiDPIHelper>
 
@@ -110,7 +111,7 @@ void MusicListDataDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
         QColor borderPenColor("#000000");
         borderPenColor.setAlphaF(0.1);
         QPen borderPen(borderPenColor);
-        borderPen.setWidth(1);
+        borderPen.setWidthF(0.5);
         painter->setPen(borderPen);
         painter->drawRoundRect(rect.adjusted(1, 1, -1, 1), 10, 10);
         painter->restore();
@@ -230,27 +231,28 @@ void MusicListDataDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
             t_fillBrush = QBrush(QColor(128, 128, 128, 90));
         }
 
-//        if (option.state & QStyle::State_MouseOver) {
-//            QImage t_image = icon.pixmap(rect.width(), rect.height()).toImage();
-//            QRect t_imageRect(rect.width() / 2 - 25, rect.height() / 2 - 25, 50, 50);
-//            t_image  = t_image.copy(t_imageRect);
-//            QRect t_hoverRect(rect.x() + 50, rect.y() + 36, 50, 50);
+        if (option.state & QStyle::State_MouseOver) {
+            QImage t_image = icon.pixmap(rect.width(), rect.height()).toImage();
+            QRect t_imageRect(rect.width() / 2 - 25, rect.height() / 2 - 25, 50, 50);
+            t_image  = t_image.copy(t_imageRect);
+            QRect t_hoverRect(rect.x() + 50, rect.y() + 36, 50, 50);
 
-//            QTransform old_transform = painter->transform();
-//            painter->translate(t_hoverRect.topLeft());
+            QTransform old_transform = painter->transform();
+            painter->translate(t_hoverRect.topLeft());
 
-//            QPainterPath t_imageClipPath;
-//            t_imageClipPath.addEllipse(QRect(0, 0, 50, 50));
-//            painter->setClipPath(t_imageClipPath);
+            QPainterPath t_imageClipPath;
+            t_imageClipPath.addEllipse(QRect(0, 0, 50, 50));
+            painter->setClipPath(t_imageClipPath);
 
-//            qt_blurImage(painter, t_image, 35, false, false);
-//            painter->setTransform(old_transform);
+            qt_blurImage(painter, t_image, 35, false, false);
+            painter->setTransform(old_transform);
 
-//            QPixmap t_hoverPlayImg(d->hoverPlayImg);
-//            t_hoverPlayImg.setDevicePixelRatio(option.widget->devicePixelRatioF());
-//            t_hoverRect.adjust(7, 7, -7, -7);
-//            painter->drawPixmap(t_hoverRect, t_hoverPlayImg);
-//        }
+            QPixmap t_hoverPlayImg(d->hoverPlayImg);
+            t_hoverPlayImg.setDevicePixelRatio(option.widget->devicePixelRatioF());
+            t_hoverRect.adjust(7, 7, -7, -7);
+            QIcon icon(t_hoverPlayImg);
+            painter->drawPixmap(t_hoverRect, t_hoverPlayImg);
+        }
 
         painter->fillRect(option.rect, t_fillBrush);
 
@@ -487,6 +489,29 @@ void MusicListDataDelegate::setModelData(QWidget *editor, QAbstractItemModel *mo
                                          const QModelIndex &index) const
 {
     QStyledItemDelegate::setModelData(editor, model, index);
+}
+
+bool MusicListDataDelegate::editorEvent(QEvent *event, QAbstractItemModel *model, const QStyleOptionViewItem &option, const QModelIndex &index)
+{
+    auto listview = qobject_cast<const MusicListDataView *>(option.widget);
+    if (index.isValid() && listview->viewMode() == QListView::IconMode && event->type() == QEvent::MouseButtonPress) {
+        int borderWidth = 10;
+        QRect rect = option.rect.adjusted(borderWidth, borderWidth, -borderWidth, -borderWidth);
+        QRect t_hoverRect(rect.x() + 50, rect.y() + 36, 50, 50);
+
+        QPainterPath t_imageClipPath;
+        t_imageClipPath.addEllipse(QRect(rect.x() + 50, rect.y() + 36, 50, 50));
+        t_imageClipPath.closeSubpath();
+        auto fillPolygon = t_imageClipPath.toFillPolygon();
+
+        QMouseEvent *pressEvent = static_cast<QMouseEvent *>(event);
+        QPointF pressPos = pressEvent->pos();
+        if (fillPolygon.containsPoint(pressPos, Qt::OddEvenFill))
+            Q_EMIT hoverPress(index);
+
+        return false;
+    }
+    return QStyledItemDelegate::editorEvent(event, model, option, index);
 }
 
 

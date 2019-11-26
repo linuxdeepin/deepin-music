@@ -818,5 +818,19 @@ void Playlist::playMusicTypeToMeta(QString name)
             }
         }
     }
-    appendMusicList(mlist);
+//    appendMusicList(mlist);
+    MetaPtrList newMetalist;
+    for (auto meta : mlist) {
+        // TODO: Get called multiple times, maybe because multi-thread. Should find out why.
+        if (playlistMeta.metas.contains(meta->hash)) {
+            qDebug() << "skip dump music " << meta->hash << meta->localPath;
+            continue;
+        }
+
+        newMetalist << meta;
+        playlistMeta.sortMetas << meta->hash;
+        playlistMeta.metas.insert(meta->hash, meta);
+    }
+
+    Q_EMIT MediaDatabase::instance()->insertMusicList(newMetalist, this->playlistMeta);
 }

@@ -125,6 +125,21 @@ MusicListDataView::MusicListDataView(QWidget *parent)
         d->musciListDialog->exec();
     });
 
+    connect(d->delegate, &MusicListDataDelegate::hoverPress, this, [ = ](const QModelIndex & index) {
+        PlaylistPtr curPlaylist = d->model->playlist();
+        auto playMusicTypePtrList = curPlaylist->playMusicTypePtrList();
+        if (index.row() >= playMusicTypePtrList.size()) {
+            return;
+        }
+        auto PlayMusicTypePtr = playMusicTypePtrList[index.row()];
+
+        playlist()->playMusicTypeToMeta(PlayMusicTypePtr->name);
+        auto curtMeta = playlist()->first();
+        if (curtMeta != nullptr) {
+            Q_EMIT playMedia(curtMeta);
+        }
+    });
+
     connect(d->musciListDialog, &MusicListDialog::requestCustomContextMenu,
     this, [ = ](const QPoint & pos) {
         Q_EMIT requestCustomContextMenu(pos);
@@ -263,7 +278,8 @@ void MusicListDataView::setPlayPixmap(QPixmap pixmap, QPixmap sidebarPixmap)
     Q_D(MusicListDataView);
     d->playingPixmap = pixmap;
     d->sidebarPixmap = sidebarPixmap;
-    d->musciListDialog->setPlayPixmap(pixmap);
+    if (d->musciListDialog->isVisible())
+        d->musciListDialog->setPlayPixmap(pixmap);
     update();
 }
 

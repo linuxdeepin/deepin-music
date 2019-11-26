@@ -87,15 +87,17 @@ MusicListInfoView::MusicListInfoView(QWidget *parent)
     viewport()->setAcceptDrops(true);
     setDropIndicatorShown(true);
     setDragDropOverwriteMode(false);
-    setVerticalScrollMode(QAbstractItemView::ScrollPerItem);
-    setHorizontalScrollMode(QAbstractItemView::ScrollPerItem);
+    //setVerticalScrollMode(QAbstractItemView::ScrollPerItem);
+    //setHorizontalScrollMode(QAbstractItemView::ScrollPerItem);
     setDefaultDropAction(Qt::MoveAction);
-    setDragDropMode(QAbstractItemView::InternalMove);
+    setDragDropMode(QAbstractItemView::NoDragDrop);
+    setResizeMode(QListView::Adjust);
     setMovement(QListView::Free);
+    setLayoutMode(QListView::Batched);
 
     setSelectionMode(QListView::ExtendedSelection);
     setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    //setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     setEditTriggers(QAbstractItemView::NoEditTriggers);
     setSelectionBehavior(QAbstractItemView::SelectRows);
     setContextMenuPolicy(Qt::CustomContextMenu);
@@ -193,7 +195,9 @@ void MusicListInfoView::setPlayPixmap(QPixmap pixmap)
 {
     Q_D(MusicListInfoView);
     d->playingPixmap = pixmap;
-    update();
+    auto index = d->model->findIndex(d->playing);
+    if (index.isValid())
+        update(index);
 }
 
 QPixmap MusicListInfoView::getPlayPixmap() const
@@ -558,19 +562,19 @@ void MusicListInfoView::showContextMenu(const QPoint &pos,
                 }
                 warnDlg.setMessage(QString(tr("Are you sure you want to delete %1?")).arg(meta->title));
             } else {
-                warnDlg.setTitle(QString(tr("Are you sure you want to delete the selected %1 songs?")).arg(metalist.length()));
-//                DLabel *t_titleLabel = new DLabel(this);
-//                t_titleLabel->setForegroundRole(DPalette::TextTitle);
-//                DLabel *t_infoLabel = new DLabel(this);
-//                t_infoLabel->setForegroundRole(DPalette::TextTips);
-//                t_titleLabel->setText(tr("Are you sure you want to delete the selected %1 songs?").arg(metalist.length()));
-//                t_infoLabel->setText(tr("The song files contained will also be deleted"));
-//                warnDlg.addContent(t_titleLabel, Qt::AlignHCenter);
-//                warnDlg.addContent(t_infoLabel, Qt::AlignHCenter);
-//                warnDlg.addSpacing(20);
+//                warnDlg.setTitle(QString(tr("Are you sure you want to delete the selected %1 songs?")).arg(metalist.length()));
+                DLabel *t_titleLabel = new DLabel(this);
+                t_titleLabel->setForegroundRole(DPalette::TextTitle);
+                DLabel *t_infoLabel = new DLabel(this);
+                t_infoLabel->setForegroundRole(DPalette::TextTips);
+                t_titleLabel->setText(tr("Are you sure you want to delete the selected %1 songs?").arg(metalist.length()));
+                t_infoLabel->setText(tr("The song files contained will also be deleted"));
+                warnDlg.addContent(t_titleLabel, Qt::AlignHCenter);
+                warnDlg.addContent(t_infoLabel, Qt::AlignHCenter);
+                warnDlg.addSpacing(20);
             }
 
-            if (containsCue) {
+            if (containsCue && false) {
 //                warnDlg.setTitle(tr("Are you sure you want to delete the selected %1 songs?").arg(metalist.length()));
 //                warnDlg.setMessage(tr("The song files contained will also be deleted"));
                 DLabel *t_titleLabel = new DLabel(this);

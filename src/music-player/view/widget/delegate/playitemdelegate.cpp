@@ -255,7 +255,7 @@ void PlayItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
         QColor borderPenColor("#000000");
         borderPenColor.setAlphaF(0.1);
         QPen borderPen(borderPenColor);
-        borderPen.setWidth(1);
+        borderPen.setWidthF(0.5);
         painter->setPen(borderPen);
         painter->drawRoundRect(pixmapRect.adjusted(1, 1, -1, 1), 10, 10);
         painter->restore();
@@ -342,6 +342,7 @@ void PlayItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
 
     painter->setRenderHint(QPainter::Antialiasing);
     painter->setRenderHint(QPainter::HighQualityAntialiasing);
+    painter->setRenderHint(QPainter::SmoothPixmapTransform);
 
     QColor baseColor("#FFFFFF");
     baseColor.setAlphaF(0.1);

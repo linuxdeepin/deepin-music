@@ -67,7 +67,7 @@ MusicListWidget::MusicListWidget(QWidget *parent) : DWidget(parent)
 
     dataBaseLabel = new DLabel;
     dataBaseLabel->setFixedHeight(40);
-    dataBaseLabel->setText(tr("DataBase"));
+    dataBaseLabel->setText(tr("Database"));
     dataBaseLabel->setObjectName("MusicListWidgetDataBase");
     dataBaseLabel->setMargin(10);
     auto dataBaseLabelFont = dataBaseLabel->font();
@@ -82,7 +82,7 @@ MusicListWidget::MusicListWidget(QWidget *parent) : DWidget(parent)
 
     customizeLabel = new DLabel;
     customizeLabel->setFixedHeight(40);
-    customizeLabel->setText(tr("Play List"));
+    customizeLabel->setText(tr("Playlists"));
     customizeLabel->setObjectName("MusicListWidgetCustomizeLabel");
     customizeLabel->setMargin(10);
     customizeLabel->setFont(dataBaseLabelFont);
