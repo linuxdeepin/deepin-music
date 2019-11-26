@@ -58,7 +58,7 @@ signals:
     void customResort(const QStringList &uuids);
     void displayNameChanged();
     void pause(PlaylistPtr playlist, const MetaPtr meta);
-    void removeAllList();
+    void removeAllList(const MetaPtr meta);
     void importSelectFiles(PlaylistPtr playlist, QStringList urllist);
     void addToPlaylist(PlaylistPtr playlist, const MetaPtrList &metalist);
 
@@ -78,7 +78,7 @@ private:
     QStandardItemModel   *model           = nullptr;
     DStyledItemDelegate  *delegate        = nullptr;
     QStandardItem        *playingItem     = nullptr;
-    QStandardItem      *m_currentitem = nullptr;
+    //QStandardItem      *m_currentitem = nullptr;
     QPixmap              playingPixmap;
     QPixmap              albumPixmap;
     QPixmap              defaultPixmap;

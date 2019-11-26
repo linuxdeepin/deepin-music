@@ -143,7 +143,18 @@ void MetaDetector::updateMediaFileTagCodec(MediaMeta *meta, const QByteArray &co
             detectByte += tag->title().toCString();
             detectByte += tag->artist().toCString();
             detectByte += tag->album().toCString();
-            detectCodec = detectEncodings(detectByte).value(0);
+            auto allDetectCodecs = detectEncodings(detectByte);
+            auto localeCode = localeCodes.value(QLocale::system().name());
+
+            for (auto curDetext : allDetectCodecs) {
+                if (curDetext == "Big5" || curDetext == localeCode) {
+                    detectCodec = curDetext;
+                    break;
+                }
+            }
+            if (detectCodec.isEmpty())
+                detectCodec = allDetectCodecs.value(0);
+
 //            qDebug() << "detect codec" << detectEncodings(detectByte);
             QString curStr = QString::fromLocal8Bit(tag->title().toCString());
             if (curStr.isEmpty())

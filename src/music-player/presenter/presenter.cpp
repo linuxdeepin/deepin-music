@@ -282,6 +282,7 @@ void Presenter::prepareData()
         d->settings->setOption("base.play.last_playlist", playlist->id());
         d->notifyMusicPlayed(playlist, meta);
         d->requestMetaSearch(meta);
+        d->metaBufferDetector->onBufferDetector(meta->localPath, meta->hash);
     });
 
     connect(d->player, &Player::mediaError,
@@ -944,7 +945,6 @@ void Presenter::onMusicPlay(PlaylistPtr playlist,  const MetaPtr meta)
              << toPlayMeta->title << toPlayMeta->hash;
     playlist->setPlayingStatus(true);
     Q_EMIT d->play(playlist, toPlayMeta);
-    d->metaBufferDetector->onBufferDetector(toPlayMeta->localPath, toPlayMeta->hash);
 }
 
 void Presenter::onMusicPause(PlaylistPtr playlist, const MetaPtr info)
@@ -961,7 +961,6 @@ void Presenter::onMusicResume(PlaylistPtr playlist, const MetaPtr info)
     playlist->setPlayingStatus(true);
     Q_EMIT d->resume(playlist, info);
     d->notifyMusicPlayed(playlist, info);
-    d->metaBufferDetector->onBufferDetector(info->localPath, info->hash);
 }
 
 void Presenter::onMusicStop(PlaylistPtr playlist, const MetaPtr meta)
@@ -989,9 +988,9 @@ void Presenter::onMusicPrev(PlaylistPtr playlist, const MetaPtr meta)
         Q_EMIT lyricSearchFinished(curMeta, SearchMeta(), "");
         d->player->stop();
         Q_EMIT this->musicStoped(playlist, curMeta);
+        return;
     }
     Q_EMIT d->playPrev(playlist, curMeta);
-    d->metaBufferDetector->onBufferDetector(curMeta->localPath, curMeta->hash);
 }
 
 void Presenter::onMusicNext(PlaylistPtr playlist, const MetaPtr meta)
@@ -1009,9 +1008,9 @@ void Presenter::onMusicNext(PlaylistPtr playlist, const MetaPtr meta)
         Q_EMIT lyricSearchFinished(curMeta, SearchMeta(), "");
         d->player->stop();
         Q_EMIT this->musicStoped(playlist, curMeta);
+        return;
     }
     Q_EMIT d->playNext(playlist, curMeta);
-    d->metaBufferDetector->onBufferDetector(curMeta->localPath, curMeta->hash);
 }
 
 void Presenter::onToggleFavourite(const MetaPtr meta)

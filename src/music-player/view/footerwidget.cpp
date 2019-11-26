@@ -357,15 +357,15 @@ Footer::Footer(QWidget *parent) :
                                      ":/mpimage/light/press/volume_press.svg",
                                      ":/mpimage/light/checked/volume_checked.svg");
     d->btSound->setPropertyPic("volume", QVariant("mid"),
-                               ":/mpimage/light/normal/volume_lessen_normal.svg",
-                               ":/mpimage/light/hover/volume_lessen_hover.svg",
-                               ":/mpimage/light/press/volume_lessen_press.svg",
-                               ":/mpimage/light/checked/volume_lessen_checked.svg");
+                               ":/mpimage/light/normal/volume_mid_normal.svg",
+                               ":/mpimage/light/hover/volume_mid_hover.svg",
+                               ":/mpimage/light/press/volume_mid_press.svg",
+                               ":/mpimage/light/checked/volume_mid_checked.svg");
     d->btSound->setPropertyPic("volume", QVariant("low"),
-                               ":/mpimage/light/normal/volume_add_normal.svg",
-                               ":/mpimage/light/hover/volume_add_hover.svg",
-                               ":/mpimage/light/press/volume_add_press.svg",
-                               ":/mpimage/light/checked/volume_add_checked.svg");
+                               ":/mpimage/light/normal/volume_low_normal.svg",
+                               ":/mpimage/light/hover/volume_low_hover.svg",
+                               ":/mpimage/light/press/volume_low_press.svg",
+                               ":/mpimage/light/checked/volume_low_checked.svg");
     d->btSound->setPropertyPic("volume", QVariant("mute"),
                                ":/mpimage/light/normal/mute_normal.svg",
                                ":/mpimage/light/normal/mute_normal.svg",
@@ -811,7 +811,7 @@ void Footer::onMusicError(PlaylistPtr playlist, const MetaPtr meta, int error)
 {
     Q_D(Footer);
 
-    d->waveform->clearBufferAudio();
+    //d->waveform->clearBufferAudio();
     if (d->activingMeta && d->activingPlaylist) {
         if (meta != d->activingMeta || playlist != d->activingPlaylist) {
             return;
@@ -1072,15 +1072,15 @@ void Footer::slotTheme(int type)
                                QString(":/mpimage/%1/press/volume_press.svg").arg(rStr),
                                QString(":/mpimage/%1/checked/volume_checked.svg").arg(rStr));
     d->btSound->setPropertyPic("volume", QVariant("mid"),
-                               QString(":/mpimage/%1/normal/volume_lessen_normal.svg").arg(rStr),
-                               QString(":/mpimage/%1/hover/volume_lessen_hover.svg").arg(rStr),
-                               QString(":/mpimage/%1/press/volume_lessen_press.svg").arg(rStr),
-                               QString(":/mpimage/%1/checked/volume_lessen_checked.svg").arg(rStr));
+                               QString(":/mpimage/%1/normal/volume_mid_normal.svg").arg(rStr),
+                               QString(":/mpimage/%1/hover/volume_mid_hover.svg").arg(rStr),
+                               QString(":/mpimage/%1/press/volume_mid_press.svg").arg(rStr),
+                               QString(":/mpimage/%1/checked/volume_mid_checked.svg").arg(rStr));
     d->btSound->setPropertyPic("volume", QVariant("low"),
-                               QString(":/mpimage/%1/normal/volume_add_normal.svg").arg(rStr),
-                               QString(":/mpimage/%1/hover/volume_add_hover.svg").arg(rStr),
-                               QString(":/mpimage/%1/press/volume_add_press.svg").arg(rStr),
-                               QString(":/mpimage/%1/checked/volume_add_checked.svg").arg(rStr));
+                               QString(":/mpimage/%1/normal/volume_low_normal.svg").arg(rStr),
+                               QString(":/mpimage/%1/hover/volume_low_hover.svg").arg(rStr),
+                               QString(":/mpimage/%1/press/volume_low_press.svg").arg(rStr),
+                               QString(":/mpimage/%1/checked/volume_low_checked.svg").arg(rStr));
     d->btSound->setPropertyPic("volume", QVariant("mute"),
                                QString(":/mpimage/%1/normal/mute_normal.svg").arg(rStr),
                                QString(":/mpimage/%1/normal/mute_normal.svg").arg(rStr),

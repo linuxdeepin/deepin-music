@@ -200,6 +200,8 @@ void MusicListInfoView::setPlayPixmap(QPixmap pixmap)
     auto index = d->model->findIndex(d->playing);
     if (index.isValid())
         update(index);
+
+    viewport()->update();
 }
 
 QPixmap MusicListInfoView::getPlayPixmap() const

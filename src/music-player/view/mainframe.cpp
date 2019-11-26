@@ -448,6 +448,7 @@ void MainFramePrivate::toggleLyricView()
     playListWidget->hide();
     if (lyricWidget->isVisible()) {
         slideToMusicListView(false);
+        setPlayListVisible(false);
     } else {
         titlebarwidget->setSearchEnable(false);
         slideToLyricView();

@@ -59,7 +59,7 @@ void MusicIconButton::setPropertyPic(QString propertyName, const QVariant &value
     curPicPath.pressPicPath = pressPic;
     curPicPath.checkedPicPath = checkedPic;
 
-    if (propertyPicPaths.first == propertyName && propertyPicPaths.second.contains(value)) {
+    if (propertyPicPaths.first == propertyName) {
         propertyPicPaths.second[value] = curPicPath;
     } else {
         QMap<QVariant, MusicPicPathInfo> curPicPathInfo;

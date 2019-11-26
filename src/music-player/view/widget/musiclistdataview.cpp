@@ -103,7 +103,7 @@ MusicListDataView::MusicListDataView(QWidget *parent)
     setResizeMode( QListView::Adjust );
     setMovement( QListView::Static );
     setLayoutMode(QListView::Batched);
-    setBatchSize(20);
+    setBatchSize(2000);
 
     //setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);

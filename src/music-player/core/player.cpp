@@ -520,8 +520,10 @@ void Player::resume(PlaylistPtr playlist, const MetaPtr meta)
 {
     Q_D(Player);
     qDebug() << "resume top";
-    Q_ASSERT(playlist == d->activePlaylist);
-    Q_ASSERT(meta->hash == d->activeMeta->hash);
+    if (playlist == d->activePlaylist && meta->hash == d->activeMeta->hash)
+        return;
+//    Q_ASSERT(playlist == d->activePlaylist);
+//    Q_ASSERT(meta->hash == d->activeMeta->hash);
 
     setPlayOnLoaded(true);
     //增大音乐自动开始播放时间，给setposition留足空间

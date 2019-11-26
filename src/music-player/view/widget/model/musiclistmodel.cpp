@@ -63,7 +63,3 @@ Qt::ItemFlags MusiclistModel::flags(const QModelIndex &index) const
         return defaultFlags;
 }
 
-bool MusiclistModel::dropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent)
-{
-
-}

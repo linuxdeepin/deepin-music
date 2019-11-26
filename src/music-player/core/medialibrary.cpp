@@ -141,6 +141,9 @@ MetaPtr MediaLibraryPrivate::importMeta(const QString &filepath,
 
     auto meta = createMeta(fileInfo);
 
+    if (meta->length == 0)
+        return MetaPtr();
+
     //check is lossless file
     if (losslessSuffixs.contains(fileInfo.suffix())) {
         losslessMetaCache.insert(meta->localPath, meta);

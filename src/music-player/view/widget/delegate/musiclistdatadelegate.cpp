@@ -124,9 +124,16 @@ void MusicListDataDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
                 fillColor.setAlphaF(0.3);
             }
 
+            bool playFlag = false;
+            if (listview->playing() != nullptr && (listview->playing()->artist == PlayMusicTypePtr->name)
+                    || (listview->playing()->artist.isEmpty() && !PlayMusicTypePtr->playlistMeta.metas.isEmpty()
+                        && PlayMusicTypePtr->playlistMeta.metas.begin().value()->artist.isEmpty())) {
+                playFlag = true;
+            }
+
             QRect fillBlurRect(rect.x(), rect.y() + rect.height() - 36, rect.width(), 36);
             int curFillSize = 36;
-            if (listview->playing() != nullptr && listview->playing()->artist == PlayMusicTypePtr->name) {
+            if (playFlag) {
                 fillBlurRect = QRect(rect.x(), rect.y() + rect.height() - 64, rect.width(), 70);
                 curFillSize = 64;
             }
@@ -144,7 +151,7 @@ void MusicListDataDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
             painter->fillRect(fillBlurRect, fillColor);
 
             //draw playing
-            if (listview->playing() != nullptr && listview->playing()->artist == PlayMusicTypePtr->name) {
+            if (playFlag) {
                 painter->drawPixmap(QRect(rect.x() + 64, rect.y() + 96, 22, 18), listview->getSidebarPixmap());
             }
 
@@ -170,7 +177,15 @@ void MusicListDataDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
             int fillAllHeight = 46;
             int curFillSize = fillAllHeight;
             QRect fillBlurRect(rect.x(), rect.y() + rect.height() - fillAllHeight, rect.width(), fillAllHeight);
-            if (listview->playing() != nullptr && listview->playing()->album == PlayMusicTypePtr->name) {
+
+            bool playFlag = false;
+            if (listview->playing() != nullptr && (listview->playing()->album == PlayMusicTypePtr->name)
+                    || (listview->playing()->album.isEmpty() && !PlayMusicTypePtr->playlistMeta.metas.isEmpty()
+                        && PlayMusicTypePtr->playlistMeta.metas.begin().value()->album.isEmpty()))  {
+                playFlag = true;
+            }
+
+            if (playFlag) {
                 fillBlurRect = QRect(rect.x(), rect.y() + rect.height() - 80, rect.width(), 86);
                 curFillSize = 80;
             }
@@ -190,7 +205,7 @@ void MusicListDataDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
             painter->fillRect(fillBlurRect, fillColor);
 
             //draw playing
-            if (listview->playing() != nullptr && listview->playing()->album == PlayMusicTypePtr->name) {
+            if (playFlag)  {
                 painter->drawPixmap(QRect(rect.x() + 64, rect.y() + 82, 22, 18), listview->getSidebarPixmap());
             }
 

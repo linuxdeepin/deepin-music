@@ -202,6 +202,9 @@ void MusicListDialogPrivate::initConnection()
             }
             if (!invalidFlag) {
                 auto cutMeta = musicListInfoView->playlist()->playing();
+                if (cutMeta == nullptr) {
+                    cutMeta = musicListInfoView->playlist()->first();
+                }
                 while (true) {
                     cutMeta = musicListInfoView->playlist()->shuffleNext(cutMeta);
                     if (!cutMeta->invalid)

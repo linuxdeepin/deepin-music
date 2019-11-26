@@ -170,22 +170,25 @@ MusicListView::MusicListView(QWidget *parent) : DListView(parent)
             }
             curStandardItem->setIcon(icon);
         }
-        m_currentitem = dynamic_cast<DStandardItem *>(model->itemFromIndex(current));
+        //m_currentitem = dynamic_cast<DStandardItem *>(model->itemFromIndex(current));
         if (!playlistPtr->playing().isNull()) {
-            auto curItem = dynamic_cast<DStandardItem *>(m_currentitem);
-            //delete
-            QIcon playingIcon(albumPixmap);
-            playingIcon.actualSize(QSize(20, 20));
-            DViewItemActionList actionList = curItem->actionList(Qt::RightEdge);
-            if (!actionList.isEmpty()) {
-                actionList.first()->setIcon(playingIcon);
-            } else {
-                DViewItemActionList  actionList;
-                auto viewItemAction = new DViewItemAction(Qt::AlignCenter);
-                viewItemAction->setIcon(playingIcon);
-                actionList.append(viewItemAction);
-                curItem->setActionList(Qt::RightEdge, actionList);
+            auto curItem = dynamic_cast<DStandardItem *>(model->itemFromIndex(current));
+            if (curItem != NULL) {
+                //delete
+                QIcon playingIcon(albumPixmap);
+                playingIcon.actualSize(QSize(20, 20));
+                DViewItemActionList actionList = curItem->actionList(Qt::RightEdge);
+                if (!actionList.isEmpty()) {
+                    actionList.first()->setIcon(playingIcon);
+                } else {
+                    DViewItemActionList  actionList;
+                    auto viewItemAction = new DViewItemAction(Qt::AlignCenter);
+                    viewItemAction->setIcon(playingIcon);
+                    actionList.append(viewItemAction);
+                    curItem->setActionList(Qt::RightEdge, actionList);
+                }
             }
+
         }
 
     });
@@ -228,8 +231,8 @@ void MusicListView::addMusicList(PlaylistPtr playlist, bool addFlag)
     }
     model->appendRow(item);
     if (addFlag) {
-        edit(model->index(item->row(), 0));
         setCurrentItem(item);
+        edit(model->index(item->row(), 0));
         scrollToBottom();
     }
 }
@@ -339,39 +342,13 @@ void MusicListView::clearSelected()
             icon = QIcon(QString(":/mpimage/%1/%2/famous_ballad_%2.svg").arg(rStr).arg(typeStr));
         }
         curStandardItem->setIcon(icon);
-    }
-}
 
-void MusicListView::changePicture(QPixmap pixmap, QPixmap albumPixmap)
-{
-    this->playingPixmap = pixmap;
-    this->albumPixmap = albumPixmap;
-    QPixmap curPixmap = albumPixmap;
-//    auto indexes = this->selectedIndexes();
-//    if (!indexes.isEmpty() && playingItem != nullptr && indexes[0].row() == playingItem->row()) {
-//        curPixmap = albumPixmap;
-//    }
-    if (playingItem != nullptr ) {
-        if (m_currentitem == playingItem) {
-            auto curItem = dynamic_cast<DStandardItem *>(playingItem);
+    }
+    if (playingItem != nullptr) {
+        auto curItem = dynamic_cast<DStandardItem *>(playingItem);
+        if (curItem != NULL) {
             //delete
-            QIcon playingIcon(curPixmap);
-            playingIcon.actualSize(QSize(20, 20));
-            DViewItemActionList actionList = curItem->actionList(Qt::RightEdge);
-            if (!actionList.isEmpty()) {
-                actionList.first()->setIcon(playingIcon);
-            } else {
-                DViewItemActionList  actionList;
-                auto viewItemAction = new DViewItemAction(Qt::AlignCenter);
-                viewItemAction->setIcon(playingIcon);
-                actionList.append(viewItemAction);
-                curItem->setActionList(Qt::RightEdge, actionList);
-            }
-        } else {
-            curPixmap = pixmap;
-            auto curItem = dynamic_cast<DStandardItem *>(playingItem);
-            //delete
-            QIcon playingIcon(curPixmap);
+            QIcon playingIcon(playingPixmap);
             playingIcon.actualSize(QSize(20, 20));
             DViewItemActionList actionList = curItem->actionList(Qt::RightEdge);
             if (!actionList.isEmpty()) {
@@ -385,9 +362,43 @@ void MusicListView::changePicture(QPixmap pixmap, QPixmap albumPixmap)
             }
         }
     }
-    update();
 }
 
+void MusicListView::changePicture(QPixmap pixmap, QPixmap albumPixmap)
+{
+    this->playingPixmap = pixmap;
+    this->albumPixmap = albumPixmap;
+    QPixmap curPixmap = pixmap;
+
+
+    auto indexes = this->selectedIndexes();
+    if (!indexes.isEmpty() && playingItem != nullptr) {
+        if (indexes[0].row() >= 0 && indexes[0].row() < allPlaylists.count()) {
+            auto mdata = allPlaylists.at(indexes[0].row());
+            if (mdata->playing() != nullptr)
+                curPixmap = albumPixmap;
+        }
+
+    }
+    if (playingItem != nullptr ) {
+        auto curItem = dynamic_cast<DStandardItem *>(playingItem);
+        //delete
+        QIcon playingIcon(curPixmap);
+        playingIcon.actualSize(QSize(20, 20));
+        DViewItemActionList actionList = curItem->actionList(Qt::RightEdge);
+        if (!actionList.isEmpty()) {
+            actionList.first()->setIcon(playingIcon);
+        } else {
+            DViewItemActionList  actionList;
+            auto viewItemAction = new DViewItemAction(Qt::AlignCenter);
+            viewItemAction->setIcon(playingIcon);
+            actionList.append(viewItemAction);
+            curItem->setActionList(Qt::RightEdge, actionList);
+
+        }
+        update();
+    }
+}
 //void MusicListView::startDrag(Qt::DropActions supportedActions)
 //{
 //    DListWidget::startDrag(supportedActions);
@@ -583,11 +594,13 @@ void MusicListView::showContextMenu(const QPoint &pos)
                 int t_index = item->row();
                 model->removeRow(item->row());
                 allPlaylists.removeAt(t_index);
+                if (item == playingItem)
+                    playingItem = nullptr;
 
                 //delete model->takeItem(item->row());
                 Q_EMIT m_data->removed();
-                if (allPlaylists.isEmpty())
-                    Q_EMIT removeAllList();
+                if (m_data->playing() != nullptr || allPlaylists.isEmpty())
+                    Q_EMIT removeAllList(m_data->playing());
             }
 
         }

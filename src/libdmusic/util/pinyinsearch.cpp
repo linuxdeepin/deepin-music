@@ -70,12 +70,17 @@ QStringList simpleChineseSplit(QString &pinyin)
             continue;
         }
         isLastAlphabeta = isCurAlphabeta;
-        if (isNumber(c)) {
-            wordList << c;
-            continue;
-        }
+//        if (isNumber(c)) {
+//            wordList << c;
+//            continue;
+//        }
+
+        //除了中文外，其它字符不作特殊处理
         if (isChinese(c)) {
             wordList << toChinese(c);
+            continue;
+        } else {
+            wordList << c;
             continue;
         }
     }

@@ -205,5 +205,19 @@
         <file>mpimage/light/close-round/close_round normal.svg</file>
         <file>mpimage/light/close-round/close_round press.svg</file>
         <file>mpimage/light/normal/my_collection_normal.svg</file>
+        <file>mpimage/dark/hover/volume_low_hover.svg</file>
+        <file>mpimage/dark/normal/volume_mid_normal.svg</file>
+        <file>mpimage/dark/normal/volume_low_normal.svg</file>
+        <file>mpimage/light/checked/volume_mid_checked.svg</file>
+        <file>mpimage/light/checked/volume_low_checked.svg</file>
+        <file>mpimage/light/hover/volume_mid_hover.svg</file>
+        <file>mpimage/light/hover/volume_low_hover.svg</file>
+        <file>mpimage/light/normal/volume_mid_normal.svg</file>
+        <file>mpimage/light/normal/volume_low_normal.svg</file>
+        <file>mpimage/light/press/volume_mid_press.svg</file>
+        <file>mpimage/light/press/volume_low_press.svg</file>
+        <file>mpimage/dark/hover/volume_mid_hover.svg</file>
+        <file>mpimage/dark/checked/volume_mid_checked.svg</file>
+        <file>mpimage/dark/checked/volume_low_checked.svg</file>
     </qresource>
 </RCC>

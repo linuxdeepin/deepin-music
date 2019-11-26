@@ -36,8 +36,6 @@ public:
     virtual Qt::DropActions supportedDropActions() const Q_DECL_OVERRIDE;
     virtual Qt::ItemFlags flags(const QModelIndex &index) const Q_DECL_OVERRIDE;
 
-    bool dropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent);
-
 private:
     QScopedPointer<MusiclistModelPrivate> d_ptr;
     Q_DECLARE_PRIVATE_D(qGetPtrHelper(d_ptr), MusiclistModel)
