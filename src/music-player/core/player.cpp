@@ -59,6 +59,7 @@ void initMiniTypes()
     suffixBlacklist.insert("3gp", true);
     suffixBlacklist.insert("flv", true);
     suffixBlacklist.insert("amr", true);
+    suffixBlacklist.insert("ass", true);
 
     QHash<QString, bool> suffixWhitelist;
     suffixWhitelist.insert("cue", true);
@@ -521,7 +522,7 @@ void Player::resume(PlaylistPtr playlist, const MetaPtr meta)
 {
     Q_D(Player);
     qDebug() << "resume top";
-    if (playlist == d->activePlaylist && meta->hash == d->activeMeta->hash)
+    if (playlist == d->activePlaylist && d->qplayer->state() == QMediaPlayer::PlayingState && meta->hash == d->activeMeta->hash)
         return;
 //    Q_ASSERT(playlist == d->activePlaylist);
 //    Q_ASSERT(meta->hash == d->activeMeta->hash);
@@ -550,6 +551,7 @@ void Player::resume(PlaylistPtr playlist, const MetaPtr meta)
         });
         d->fadeInAnimation->start();
     }
+    Q_EMIT mediaPlayed(d->activePlaylist, d->activeMeta);
 }
 
 void Player::playNextMeta(PlaylistPtr playlist, const MetaPtr meta)

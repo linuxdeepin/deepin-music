@@ -178,7 +178,7 @@ PlayListWidget::PlayListWidget(QWidget *parent) :
     d->titleLabel->setFont(titleFont);
     d->titleLabel->setMargin(4);
     d->titleLabel->setText(tr("Playlist"));
-    d->titleLabel->setForegroundRole(DPalette::TextTitle);
+    d->titleLabel->setForegroundRole(DPalette::BrightText);
 
     d->infoLabel = new DLabel();
     //d->infoLabel->setFixedHeight(25);
@@ -188,10 +188,12 @@ PlayListWidget::PlayListWidget(QWidget *parent) :
     infoFont.setPixelSize(14);
     d->infoLabel->setFont(infoFont);
     d->infoLabel->setMargin(4);
-//    auto infoLabelPalette = d->infoLabel->palette();
-//    infoLabelPalette.setColor(DPalette::ButtonText, QColor("#777777"));
-//    d->infoLabel->setPalette(infoLabelPalette);
-    d->infoLabel->setForegroundRole(DPalette::TextTips);
+    auto infoLabelPalette = d->infoLabel->palette();
+    QColor infoLabelColor = infoLabelPalette.color(DPalette::BrightText);
+    infoLabelColor.setAlphaF(0.5);
+    infoLabelPalette.setColor(DPalette::ButtonText, infoLabelColor);
+    d->infoLabel->setPalette(infoLabelPalette);
+    d->infoLabel->setForegroundRole(DPalette::ButtonText);
 
     d->btClearAll = new DPushButton;
     d->btClearAll->setIcon(QIcon(":/mpimage/light/normal/clear_list_normal.svg"));
@@ -410,10 +412,11 @@ void PlayListWidget::slotTheme(int type)
 //        d->titleLabel->setPalette(titleLabelPalette);
 //        d->titleLabel->setForegroundRole(DPalette::ButtonText);
 
-//        auto infoLabelPalette = d->infoLabel->palette();
-//        infoLabelPalette.setColor(DPalette::ButtonText, ("#777777"));
-//        d->infoLabel->setPalette(infoLabelPalette);
-//        d->infoLabel->setForegroundRole(DPalette::ButtonText);
+        auto infoLabelPalette = d->infoLabel->palette();
+        QColor infoLabelColor = infoLabelPalette.color(DPalette::BrightText);
+        infoLabelColor.setAlphaF(0.5);
+        infoLabelPalette.setColor(DPalette::ButtonText, infoLabelColor);
+        d->infoLabel->setPalette(infoLabelPalette);
 
         DPalette pl = d->btClearAll ->palette();
         pl.setColor(DPalette::ButtonText, QColor("#FFFFFF"));
@@ -429,10 +432,11 @@ void PlayListWidget::slotTheme(int type)
 //        d->titleLabel->setPalette(titleLabelPalette);
 //        d->titleLabel->setForegroundRole(DPalette::ButtonText);
 
-//        auto infoLabelPalette = d->infoLabel->palette();
-//        infoLabelPalette.setColor(DPalette::ButtonText, ("#C0C6D4"));
-//        d->infoLabel->setPalette(infoLabelPalette);
-//        d->infoLabel->setForegroundRole(DPalette::ButtonText);
+        auto infoLabelPalette = d->infoLabel->palette();
+        QColor infoLabelColor = infoLabelPalette.color(DPalette::BrightText);
+        infoLabelColor.setAlphaF(0.5);
+        infoLabelPalette.setColor(DPalette::ButtonText, infoLabelColor);
+        d->infoLabel->setPalette(infoLabelPalette);
 
         DPalette pl = d->btClearAll->palette();
         pl.setColor(DPalette::ButtonText, QColor("#FFFFFF"));

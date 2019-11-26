@@ -98,19 +98,19 @@ void MusicListDialogPrivate::initUI()
     closeBt->setBaseSize(24, 24);
 
     titleLabel = new DLabel();
-    titleLabel->setForegroundRole(DPalette::TextTitle);
+    titleLabel->setForegroundRole(DPalette::BrightText);
 
     infoLabel = new DLabel();
-    infoLabel->setForegroundRole(DPalette::TextTitle);
+    infoLabel->setForegroundRole(DPalette::BrightText);
 
 
     auto btLayout = new QHBoxLayout(titleFrame);
     btLayout->setSpacing(0);
-    btLayout->setContentsMargins(10, 0, 10, 0);
+    btLayout->setContentsMargins(0, 0, 0, 0);
 
     btPlayAll = new DPushButton;
     auto btPlayAllFont = btPlayAll->font();
-    btPlayAllFont.setPixelSize(13);
+    btPlayAllFont.setPixelSize(14);
     btPlayAll->setFont(btPlayAllFont);
     auto playAllPalette = btPlayAll->palette();
     playAllPalette.setColor(DPalette::ButtonText, Qt::white);
@@ -119,8 +119,9 @@ void MusicListDialogPrivate::initUI()
     btPlayAll->setPalette(playAllPalette);
     btPlayAll->setIcon(QIcon(":/mpimage/light/normal/play_all_normal.svg"));
     btPlayAll->setText(MusicListDialog::tr("Play All"));
-    btPlayAll->setFixedHeight(31);
+    btPlayAll->setFixedHeight(30);
     btPlayAll->setFocusPolicy(Qt::NoFocus);
+    btPlayAll->setIconSize(QSize(18, 18));
 
     btRandomPlay = new DPushButton;
     btRandomPlay->setFont(btPlayAllFont);
@@ -131,8 +132,9 @@ void MusicListDialogPrivate::initUI()
     btRandomPlay->setPalette(randomPlayPalette);
     btRandomPlay->setIcon(QIcon(":/mpimage/light/normal/random_play_normal.svg"));
     btRandomPlay->setText(MusicListDialog::tr("Shuffle Play"));
-    btRandomPlay->setFixedHeight(31);
+    btRandomPlay->setFixedHeight(30);
     btRandomPlay->setFocusPolicy(Qt::NoFocus);
+    btRandomPlay->setIconSize(QSize(18, 18));
 
     btLayout->addWidget(btPlayAll);
     btLayout->addSpacing(10);

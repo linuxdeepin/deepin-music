@@ -156,6 +156,7 @@ void InfoDialogPrivate::initUI()
         infoKey->setObjectName("InfoKey");
         infoKey->setMinimumHeight(18);
         infoKey->setForegroundRole(DPalette::TextTitle);
+        infoKey->setAlignment(Qt::AlignLeft | Qt::AlignTop);
 
         auto infoValue = new DLabel();
         infoValue->setFont(infoFont);
@@ -164,6 +165,7 @@ void InfoDialogPrivate::initUI()
         infoValue->setMinimumHeight(28);
         infoValue->setMinimumWidth(200);
         infoValue->setMaximumWidth(220);
+        infoValue->setAlignment(Qt::AlignLeft | Qt::AlignTop);
         infoValue->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
         infoValue->setForegroundRole(DPalette::TextTitle);
         valueList << infoValue;
@@ -246,19 +248,24 @@ void InfoDialog::updateInfo(const MetaPtr meta)
         if (i != d->valueList.length() - 1) {
             QString str = geteElidedText(d->valueList.value(i)->font(), infoValues.value(i), d->valueList.value(i)->width());
             d->valueList.value(i)->setText(str);
+            QFontMetrics fontWidth(d->valueList.value(i)->font());
+            QRect rec = fontWidth.boundingRect( d->valueList.value(i)->text());
+            d->valueList.value(i)->setFixedHeight(rec.height());
         } else {
             QFontMetrics fontWidth(d->valueList.value(i)->font());
             int width = fontWidth.width(infoValues.value(i));  //计算字符串宽度
             if (width >= d->valueList.value(i)->width()) { //当字符串宽度大于最大宽度时进行转换
                 //两行
-                QString str = geteElidedText(d->valueList.value(i)->font(), infoValues.value(i), d->valueList.value(i)->width() * 2);
+                QString str = geteElidedText(d->valueList.value(i)->font(), infoValues.value(i), d->valueList.value(i)->width() * 3 / 2);
                 d->valueList.value(i)->setText(str);
                 QRect rec = fontWidth.boundingRect( d->valueList.value(i)->text());
                 d->valueList.value(i)->setFixedHeight(2 * rec.height());
 
             } else {
-                QString str = geteElidedText(d->valueList.value(i)->font(), infoValues.value(i), d->valueList.value(i)->width());
-                d->valueList.value(i)->setText(str);
+                //QString str = geteElidedText(d->valueList.value(i)->font(), infoValues.value(i), d->valueList.value(i)->width() / 2);
+                d->valueList.value(i)->setText(infoValues.value(i));
+                QRect rec = fontWidth.boundingRect( d->valueList.value(i)->text());
+                d->valueList.value(i)->setFixedHeight( rec.height());
             }
         }
 

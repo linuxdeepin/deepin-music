@@ -285,8 +285,9 @@ void MusicListInfoView::onMusiclistChanged(PlaylistPtr playlist, const QString n
     d->model->removeRows(0, d->model->rowCount());
     for (auto TypePtr : playlist->playMusicTypePtrList()) {
         if (TypePtr->name == name) {
-            for (auto meta : TypePtr->playlistMeta.metas) {
-                d->addMedia(meta);
+            for (auto metaHash : TypePtr->playlistMeta.sortMetas) {
+                if (TypePtr->playlistMeta.metas.contains(metaHash))
+                    d->addMedia(TypePtr->playlistMeta.metas[metaHash]);
             }
         }
     }

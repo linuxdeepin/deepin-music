@@ -59,7 +59,7 @@ DDropdown::DDropdown(QWidget *parent) : DWidget(parent), d_ptr(new DDropdownPriv
     font.setPixelSize(11);
     d->text->setFont(font);
     d->text->setObjectName("DDropdownText");
-    d->text->setForegroundRole(DPalette::TextTitle);
+    d->text->setForegroundRole(DPalette::BrightText);
     d->dropdown = new DIconButton(DStyle::SP_ArrowDown, this);
     d->dropdown->setIconSize(QSize(9, 9));
     d->dropdown->setObjectName("DDropdownIcon");

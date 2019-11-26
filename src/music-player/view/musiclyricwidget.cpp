@@ -130,9 +130,9 @@ MUsicLyricWidget::MUsicLyricWidget(QWidget *parent)
     searchlayout->addStretch();
     searchlayout->setContentsMargins(58, 18, 34, 484);
 
-    layout->addLayout(m_leftLayout, 4);
-    layout->addWidget(d->lyricview, 4);
-    layout->addLayout(searchlayout, 1);
+    layout->addLayout(m_leftLayout, 0);
+    layout->addWidget(d->lyricview, 10);
+    layout->addLayout(searchlayout, 0);
 
     d->backgroundW->setLayout(layout);
     mainlayout->addWidget(d->backgroundW);

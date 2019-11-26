@@ -399,6 +399,7 @@ void AbstractWheelWidget::paintEvent(QPaintEvent *event)
 void AbstractWheelWidget::scrollTo(int index)
 {
     this->dosignal = false;
-    QScroller *scroller = QScroller::scroller(this);
-    scroller->scrollTo(QPointF(0, WHEEL_SCROLL_OFFSET + index * itemHeight()), 500);
+    setCurrentIndex(index);
+//    QScroller *scroller = QScroller::scroller(this);
+//    scroller->scrollTo(QPointF(0, WHEEL_SCROLL_OFFSET + index * itemHeight()), 500);
 }

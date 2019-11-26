@@ -278,6 +278,7 @@ void MusicInfoItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
             font14.setFamily("SourceHanSansSC");
             font14.setWeight(QFont::Medium);
         }
+        otherColor.setAlphaF(0.5);
         switch (col) {
         case Number: {
             // Fixme:

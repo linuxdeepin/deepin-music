@@ -42,9 +42,17 @@ void MusicPixmapButton::paintEvent(QPaintEvent *event)
     //pixmap.setDevicePixelRatio(devicePixelRatioF());
 
     QPainterPath backgroundPath;
-    backgroundPath.addRoundedRect(rect(), 10, 10);
+    backgroundPath.addRoundedRect(rect(), 8, 8);
     painter.setClipPath(backgroundPath);
     painter.drawPixmap(rect(), pixmap);
+
+    painter.setBrush(Qt::NoBrush);
+    QColor BorderColor("000000");
+    BorderColor.setAlphaF(0.05);
+    QPen BorderPen(BorderColor);
+    BorderPen.setWidthF(2);
+    painter.setPen(BorderPen);
+    painter.drawRoundedRect(rect(), 8, 8); //画矩形
 
     painter.restore();
 }

@@ -610,9 +610,11 @@ void Presenter::onMusiclistRemove(PlaylistPtr playlist, const MetaPtrList metali
     bool t_isLastMeta = false;
 
     //检查当前播放的是否包含最后一首
-    for (auto meta : metalist) {
-        if (meta->hash == d->player->activeMeta()->hash && playlist->isLast(meta)) {
-            t_isLastMeta = true;
+    if (playinglist != nullptr) {
+        for (auto meta : metalist) {
+            if (meta->hash == d->player->activeMeta()->hash && playlist->isLast(meta)) {
+                t_isLastMeta = true;
+            }
         }
     }
 

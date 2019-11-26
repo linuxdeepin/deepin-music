@@ -269,7 +269,7 @@ Footer::Footer(QWidget *parent) :
 //    titlePl.setColor(DPalette::WindowText, QColor("#000000"));
 //    d->title->setPalette(titlePl);
 
-    d->title->setForegroundRole(DPalette::TextTitle);
+    d->title->setForegroundRole(DPalette::BrightText);
 
     d->artist = new Label;
     auto artistFont = d->artist->font();
@@ -281,7 +281,7 @@ Footer::Footer(QWidget *parent) :
     d->artist->setMaximumWidth(140);
     d->artist->setText(tr("Unknown artist"));
     auto artistPl = d->title->palette();
-    QColor artistColor("#000000");
+    QColor artistColor = artistPl.color(DPalette::BrightText);
     artistColor.setAlphaF(0.6);
     artistPl.setColor(DPalette::WindowText, artistColor);
     d->artist->setPalette(artistPl);
@@ -930,11 +930,10 @@ void Footer::slotTheme(int type)
 //        d->title->setPalette(titlePl);
 
         auto artistPl = d->artist->palette();
-        QColor artistColor("#000000");
-        artistColor.setAlphaF(0.6);
+        QColor artistColor = artistPl.color(DPalette::BrightText);
+        artistColor.setAlphaF(0.4);
         artistPl.setColor(DPalette::WindowText, artistColor);
         d->artist->setPalette(artistPl);
-//        d->artist->setForegroundRole(DPalette::WindowText);
 
         DPalette pa;
         pa = d->ctlWidget->palette();
@@ -981,11 +980,10 @@ void Footer::slotTheme(int type)
 //        d->title->setPalette(titlePl);
 
         auto artistPl = d->artist->palette();
-        QColor artistColor("#FFFFFF");
+        QColor artistColor = artistPl.color(DPalette::BrightText);
         artistColor.setAlphaF(0.6);
         artistPl.setColor(DPalette::WindowText, artistColor);
         d->artist->setPalette(artistPl);
-//        d->artist->setForegroundRole(DPalette::WindowText);
 
         DPalette pa;
         pa = d->ctlWidget->palette();
