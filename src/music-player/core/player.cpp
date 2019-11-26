@@ -52,6 +52,12 @@ void initMiniTypes()
     suffixBlacklist.insert("midi", true);
     suffixBlacklist.insert("imy", true);
     suffixBlacklist.insert("xmf", true);
+    suffixBlacklist.insert("mp4", true);
+    suffixBlacklist.insert("mkv", true);
+    suffixBlacklist.insert("avi", true);
+    suffixBlacklist.insert("mpeg4", true);
+    suffixBlacklist.insert("3gp", true);
+    suffixBlacklist.insert("flv", true);
 
     QHash<QString, bool> suffixWhitelist;
     suffixWhitelist.insert("cue", true);
@@ -61,7 +67,7 @@ void initMiniTypes()
 
     QMimeDatabase mdb;
     for (auto &mt : mdb.allMimeTypes()) {
-        if (mt.name().startsWith("audio/") || mt.name().startsWith("video/")) {
+        if (mt.name().startsWith("audio/") /*|| mt.name().startsWith("video/")*/) {
             sSupportedFiterList << mt.filterString();
             for (auto &suffix : mt.suffixes()) {
                 if (suffixBlacklist.contains(suffix)) {

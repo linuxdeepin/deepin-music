@@ -106,7 +106,7 @@ MetaPtr PlaylistModel::meta(const QModelIndex &index, int role) const
 Qt::DropActions PlaylistModel::supportedDropActions() const
 {
 //    return QAbstractItemModel::supportedDropActions();
-    return /*Qt::CopyAction | */Qt::MoveAction;
+    return /*Qt::CopyAction | */Qt::IgnoreAction;
 }
 
 Qt::ItemFlags PlaylistModel::flags(const QModelIndex &index) const

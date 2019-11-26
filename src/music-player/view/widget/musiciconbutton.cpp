@@ -133,9 +133,10 @@ void MusicIconButton::paintEvent(QPaintEvent *event)
     QIcon icon;
     icon.addFile(curPicPath);
 
-    this->setIconSize(QSize(35, 35));
+    this->setIconSize(QSize(36, 36));
     this->setIcon(icon);
 
+    DPushButton::paintEvent(event);
 }
 
 void MusicIconButton::enterEvent(QEvent *event)

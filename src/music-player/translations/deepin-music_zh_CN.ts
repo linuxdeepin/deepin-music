@@ -1267,8 +1267,12 @@
     </message>
     <message>
         <location filename="../view/shortcut.cpp" line="51"/>
-        <source>Removed from playlist</source>
+        <source>Remove from playlist</source>
         <translation>从歌单中删除</translation>
+    </message>
+    <message>
+        <source>Removed from playlist</source>
+        <translation type="vanished">从歌单中删除</translation>
     </message>
     <message>
         <location filename="../view/shortcut.cpp" line="55"/>

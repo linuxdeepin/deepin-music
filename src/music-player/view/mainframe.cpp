@@ -626,7 +626,7 @@ MainFrame::MainFrame(QWidget *parent) :
     d->titlebar = titlebar();
     d->titlebar->setFixedHeight(50);
     //d->titlebar->setTitle(MainFrame::tr("Deepin Music"));
-    d->titlebar->setIcon(QIcon(":/mpimage/light/deepin_music_player.svg"));    //titlebar->setCustomWidget(titlebarwidget, Qt::AlignLeft, false);
+    d->titlebar->setIcon(QIcon::fromTheme("deepin-music"));    //titlebar->setCustomWidget(titlebarwidget, Qt::AlignLeft, false);
     d->titlebar->setCustomWidget(d->titlebarwidget, true);
     d->titlebar->resize(width(), 50);
     QShortcut *viewshortcut = new QShortcut(this);

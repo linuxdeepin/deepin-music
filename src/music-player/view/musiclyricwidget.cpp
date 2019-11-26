@@ -90,6 +90,9 @@ MUsicLyricWidget::MUsicLyricWidget(QWidget *parent)
     setPalette(palette);
 
     d->backgroundW = new DBlurEffectWidget (this);
+//    d->backgroundW->setBlurEnabled(true);
+//    d->backgroundW->setMode(DBlurEffectWidget::GaussianBlur);
+
     auto mainlayout = new QHBoxLayout(this);
     mainlayout->setMargin(0);
     mainlayout->setSpacing(0);
@@ -198,6 +201,7 @@ void MUsicLyricWidget::resizeEvent(QResizeEvent *event)
         coverImage = cover.copy((cover.width() - imageWidth) / 2, 0, imageWidth, imageheight);
     }
     d->backgroundW->setSourceImage(coverImage);
+    d->backgroundW->update();
     QWidget::resizeEvent(event);
 }
 
@@ -242,6 +246,7 @@ void MUsicLyricWidget::onMusicPlayed(PlaylistPtr playlist, const MetaPtr meta)
         coverImage = cover.copy((cover.width() - imageWidth) / 2, 0, imageWidth, imageheight);
     }
     d->backgroundW->setSourceImage(coverImage);
+    d->backgroundW->update();
 }
 
 void MUsicLyricWidget::onMusicStop(PlaylistPtr playlist, const MetaPtr meta)
@@ -269,6 +274,7 @@ void MUsicLyricWidget::onMusicStop(PlaylistPtr playlist, const MetaPtr meta)
         coverImage = cover.copy((cover.width() - imageWidth) / 2, 0, imageWidth, imageheight);
     }
     d->backgroundW->setSourceImage(coverImage);
+    d->backgroundW->update();
 }
 
 void MUsicLyricWidget::onProgressChanged(qint64 value, qint64 /*length*/)
@@ -313,6 +319,7 @@ void MUsicLyricWidget::onCoverChanged(const MetaPtr meta,  const DMusic::SearchM
         coverImage = cover.copy((cover.width() - imageWidth) / 2, 0, imageWidth, imageheight);
     }
     d->backgroundW->setSourceImage(coverImage);
+    d->backgroundW->update();
 }
 
 void MUsicLyricWidget::setDefaultCover(QString defaultCover)

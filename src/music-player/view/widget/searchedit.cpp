@@ -53,7 +53,10 @@ SearchEdit::SearchEdit(QWidget *parent) : DSearchEdit(parent)
     this, [ = ](bool onFocus) {
         if (!onFocus) {
             m_result->hide();
-            onReturnPressed();
+            if (this->text().isEmpty())
+                onReturnPressed();
+//            else
+//                clear();
         } else {
             onTextChanged();
         }

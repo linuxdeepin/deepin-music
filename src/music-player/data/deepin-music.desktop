@@ -4,7 +4,7 @@ Comment=Play your music collection
 Exec=deepin-music %F
 GenericName=Music
 Icon=deepin-music
-MimeType=audio/musepack;application/musepack;application/x-ape;audio/ape;audio/x-ape;audio/x-musepack;application/x-musepack;audio/x-mp3;application/x-id3;audio/mpeg;audio/x-mpeg;audio/x-mpeg-3;audio/mpeg3;audio/mp3;audio/x-m4a;audio/mpc;audio/x-mpc;audio/mp;audio/x-mp;application/ogg;application/x-ogg;audio/vorbis;audio/x-vorbis;audio/ogg;audio/x-ogg;audio/x-flac;application/x-flac;audio/flac;audio/3gp;audio/imy;audio/midi;audio/x-mpeg-4;audio/mpeg4;audio/mp4;audio/xmf;audio/x-wav;application/x-wav;audio/x-ms-wma;application/x-ms-wma;audio/aac;application/aac;
+MimeType=audio/musepack;application/musepack;application/x-ape;audio/ape;audio/x-ape;audio/x-musepack;application/x-musepack;audio/x-mp3;application/x-id3;audio/mpeg;audio/x-mpeg;audio/x-mpeg-3;audio/mpeg3;audio/mp3;audio/x-m4a;audio/mpc;audio/x-mpc;audio/mp;audio/x-mp;application/ogg;application/x-ogg;audio/vorbis;audio/x-vorbis;audio/ogg;audio/x-ogg;audio/x-flac;application/x-flac;audio/flac;audio/3gp;audio/imy;audio/midi;audio/xmf;audio/x-wav;application/x-wav;audio/x-ms-wma;application/x-ms-wma;audio/aac;application/aac;
 Name=Deepin Music
 Type=Application
 X-Deepin-ManualID=deepin-music
@@ -169,150 +169,150 @@ Name[zh_CN]=音乐
 Name[zh_HK]=Deepin 音樂
 Name[zh_TW]=Deepin 音樂
 
-[X-Next Shortcut Group]
-Exec=dbus-send --print-reply --dest=org.mpris.MediaPlayer2.DeepinMusic /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Next
-Name=Next track
-
-# Translations:
-# Do not manually modify!
-Name[am_ET]=የሚቀጥለው ተረኛ
-Name[ar]=المسار التالي
-Name[ast]=Pista siguiente
-Name[bg]=Следваща песен
-Name[ca]=Pista següent
-Name[cs]=Další skladba
-Name[da]=Næste spor
-Name[de]=Nächster Titel
-Name[el]=Επόμενο κομμάτι
-Name[es]=Siguiente pista
-Name[es_419]=Pista siguiente
-Name[fa]=قطعه بعدی
-Name[fi]=Seuraava raita
-Name[fr]=Piste suivante
-Name[gl_ES]=Seguinte pista
-Name[he]=הקטע הבא
-Name[hi_IN]=अगला गाना
-Name[hr]=Slijedeći zapis
-Name[hu]=Következő szám
-Name[hy]=Հաջորդը
-Name[id]=Lajur selanjutnya
-Name[it]=Traccia successiva
-Name[ja]=次へ
-Name[ko]=다음 트랙
-Name[ku_IQ]=Strana pêşve
-Name[lt]=Kitas takelis
-Name[mn]=Дараагийн дуу
-Name[ms]=trek seterusnya
-Name[nl]=Volgende nummer
-Name[pl]=Następna ścieżka
-Name[pt]=Faixa seguinte
-Name[pt_BR]=Próxima
-Name[ro]=Melodia următoare
-Name[ru]=Следующая дорожка
-Name[sk]=Ďalšia stopa
-Name[sl]=Naslednja skladba
-Name[sr]=Следећа нумера
-Name[tr]=Sonraki parça
-Name[uk]=Наступний трек
-Name[zh_CN]=下一首
-Name[zh_HK]=下一首歌曲
-Name[zh_TW]=下一曲
-
-[X-PlayPause Shortcut Group]
-Exec=dbus-send --print-reply --dest=org.mpris.MediaPlayer2.DeepinMusic /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.PlayPause
-Name=Play/Pause track
-
-# Translations:
-# Do not manually modify!
-Name[am_ET]=ተረኛ ማጫወቻ/ማስቆሚያ
-Name[ar]=تشغيل / إيقاف المسار
-Name[ast]=Reproducir/posar pista
-Name[bg]=Изпълнение/Пауза на записа
-Name[ca]=Reprodueix / pausa la pista
-Name[cs]=Přehrát/Pozastavit skladbu
-Name[da]=Afspil/pause spor
-Name[de]=Titel abspielen/pausieren
-Name[el]=Αναπαραγωγή/Παύση κομματιού
-Name[es]=Reproducir/Pausar pista
-Name[es_419]=Reproducir/Pausar Pista
-Name[fa]=پخش/توقف قطعه
-Name[fi]=Toista/Pysäytä raita
-Name[fr]=Lire / Mettre en pause la piste
-Name[gl_ES]=Reproducir/Pausar pista
-Name[he]=נגן/הפסק קטע
-Name[hi_IN]=गाना प्ले/पौज़ करें
-Name[hr]=Izvodi/pauziraj zapis
-Name[hu]=Szám lejátszása/Szüneteltetése
-Name[hy]=Նվագել/կանգնեցնել
-Name[id]=Mainkan/hentikan lajur
-Name[it]=Play/Pausa
-Name[ja]=再生/一時停止
-Name[ko]=트랙 재생/일시정지
-Name[ku_IQ]=Li stranê bixe/Stranê Bisekinîne
-Name[lt]=Groti/Pristabdyti takelį
-Name[mn]=Дуу Тоглуулах/Түр Зогсоох
-Name[ms]=Main/Jeda trek
-Name[nl]=Nummer afspelen/pauzeren
-Name[pl]=Odtwórz/Wstrzymaj ścieżkę
-Name[pt]=Reproduzir/Pausar faixa
-Name[pt_BR]=Play/Pause
-Name[ro]=Redare/Pauză melodia
-Name[ru]=Воспроизведение/Пауза дорожки
-Name[sk]=Prehrávať/Pozastaviť skladbu
-Name[sl]=Predvajaj/Zaustavi skladbo
-Name[sr]=Пусти/Паузирај нумеру
-Name[tr]=Parçayı oynat/duraklat
-Name[uk]=Відтворити/Призупинити трек
-Name[zh_CN]=暂停/继续
-Name[zh_HK]=播放／暫停曲目
-Name[zh_TW]=播放／暫停
-
-[X-Previous Shortcut Group]
-Exec=dbus-send --print-reply --dest=org.mpris.MediaPlayer2.DeepinMusic /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Previous
-Name=Previous track
-
-# Translations:
-# Do not manually modify!
-Name[am_ET]=ያለፈው ተረኛ
-Name[ar]=المسار السابق
-Name[ast]=Pista previa
-Name[bg]=Предишна песен
-Name[ca]=Pista anterior
-Name[cs]=Předchozí skladba
-Name[da]=Forrige spor
-Name[de]=Vorheriger Titel
-Name[el]=Προηγούμενο κομμάτι
-Name[es]=Pista anterior
-Name[es_419]=Pista anterior
-Name[fa]=قطعه قبلی
-Name[fi]=Edellinen raita
-Name[fr]=Piste précédente
-Name[gl_ES]=Pista anterior
-Name[he]=הקטע הקודם
-Name[hi_IN]=पिछला गाना
-Name[hr]=Prethodni zapis
-Name[hu]=Előző szám
-Name[hy]=Նախորդը
-Name[id]=Lajur sebelumnya
-Name[it]=Traccia precedente
-Name[ja]=前へ
-Name[ko]=이전 트랙
-Name[ku_IQ]=Strana paşve
-Name[lt]=Ankstesnis takelis
-Name[mn]=Өмнөх дуу
-Name[ms]=trek sebelumnya
-Name[nl]=Vorig nummer
-Name[pl]=Poprzednia ścieżka
-Name[pt]=Faixa anterior
-Name[pt_BR]=Anterior
-Name[ro]=Melodia anterioară
-Name[ru]=Предыдущая дорожка
-Name[sk]=Predchádzajúca stopa
-Name[sl]=Prejšnja skladba
-Name[sr]=Претходна нумера
-Name[tr]=Önceki parça
-Name[uk]=Попередній трек
-Name[zh_CN]=上一首
-Name[zh_HK]=上一首歌曲
-Name[zh_TW]=上一曲
+#[X-Next Shortcut Group]
+#Exec=dbus-send --print-reply --dest=org.mpris.MediaPlayer2.DeepinMusic /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Next
+#Name=Next track
+#
+## Translations:
+## Do not manually modify!
+#Name[am_ET]=የሚቀጥለው ተረኛ
+#Name[ar]=المسار التالي
+#Name[ast]=Pista siguiente
+#Name[bg]=Следваща песен
+#Name[ca]=Pista següent
+#Name[cs]=Další skladba
+#Name[da]=Næste spor
+#Name[de]=Nächster Titel
+#Name[el]=Επόμενο κομμάτι
+#Name[es]=Siguiente pista
+#Name[es_419]=Pista siguiente
+#Name[fa]=قطعه بعدی
+#Name[fi]=Seuraava raita
+#Name[fr]=Piste suivante
+#Name[gl_ES]=Seguinte pista
+#Name[he]=הקטע הבא
+#Name[hi_IN]=अगला गाना
+#Name[hr]=Slijedeći zapis
+#Name[hu]=Következő szám
+#Name[hy]=Հաջորդը
+#Name[id]=Lajur selanjutnya
+#Name[it]=Traccia successiva
+#Name[ja]=次へ
+#Name[ko]=다음 트랙
+#Name[ku_IQ]=Strana pêşve
+#Name[lt]=Kitas takelis
+#Name[mn]=Дараагийн дуу
+#Name[ms]=trek seterusnya
+#Name[nl]=Volgende nummer
+#Name[pl]=Następna ścieżka
+#Name[pt]=Faixa seguinte
+#Name[pt_BR]=Próxima
+#Name[ro]=Melodia următoare
+#Name[ru]=Следующая дорожка
+#Name[sk]=Ďalšia stopa
+#Name[sl]=Naslednja skladba
+#Name[sr]=Следећа нумера
+#Name[tr]=Sonraki parça
+#Name[uk]=Наступний трек
+#Name[zh_CN]=下一首
+#Name[zh_HK]=下一首歌曲
+#Name[zh_TW]=下一曲
+#
+#[X-PlayPause Shortcut Group]
+#Exec=dbus-send --print-reply --dest=org.mpris.MediaPlayer2.DeepinMusic /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.PlayPause
+#Name=Play/Pause track
+#
+## Translations:
+## Do not manually modify!
+#Name[am_ET]=ተረኛ ማጫወቻ/ማስቆሚያ
+#Name[ar]=تشغيل / إيقاف المسار
+#Name[ast]=Reproducir/posar pista
+#Name[bg]=Изпълнение/Пауза на записа
+#Name[ca]=Reprodueix / pausa la pista
+#Name[cs]=Přehrát/Pozastavit skladbu
+#Name[da]=Afspil/pause spor
+#Name[de]=Titel abspielen/pausieren
+#Name[el]=Αναπαραγωγή/Παύση κομματιού
+#Name[es]=Reproducir/Pausar pista
+#Name[es_419]=Reproducir/Pausar Pista
+#Name[fa]=پخش/توقف قطعه
+#Name[fi]=Toista/Pysäytä raita
+#Name[fr]=Lire / Mettre en pause la piste
+#Name[gl_ES]=Reproducir/Pausar pista
+#Name[he]=נגן/הפסק קטע
+#Name[hi_IN]=गाना प्ले/पौज़ करें
+#Name[hr]=Izvodi/pauziraj zapis
+#Name[hu]=Szám lejátszása/Szüneteltetése
+#Name[hy]=Նվագել/կանգնեցնել
+#Name[id]=Mainkan/hentikan lajur
+#Name[it]=Play/Pausa
+#Name[ja]=再生/一時停止
+#Name[ko]=트랙 재생/일시정지
+#Name[ku_IQ]=Li stranê bixe/Stranê Bisekinîne
+#Name[lt]=Groti/Pristabdyti takelį
+#Name[mn]=Дуу Тоглуулах/Түр Зогсоох
+#Name[ms]=Main/Jeda trek
+#Name[nl]=Nummer afspelen/pauzeren
+#Name[pl]=Odtwórz/Wstrzymaj ścieżkę
+#Name[pt]=Reproduzir/Pausar faixa
+#Name[pt_BR]=Play/Pause
+#Name[ro]=Redare/Pauză melodia
+#Name[ru]=Воспроизведение/Пауза дорожки
+#Name[sk]=Prehrávať/Pozastaviť skladbu
+#Name[sl]=Predvajaj/Zaustavi skladbo
+#Name[sr]=Пусти/Паузирај нумеру
+#Name[tr]=Parçayı oynat/duraklat
+#Name[uk]=Відтворити/Призупинити трек
+#Name[zh_CN]=暂停/继续
+#Name[zh_HK]=播放／暫停曲目
+#Name[zh_TW]=播放／暫停
+#
+#[X-Previous Shortcut Group]
+#Exec=dbus-send --print-reply --dest=org.mpris.MediaPlayer2.DeepinMusic /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Previous
+#Name=Previous track
+#
+## Translations:
+## Do not manually modify!
+#Name[am_ET]=ያለፈው ተረኛ
+#Name[ar]=المسار السابق
+#Name[ast]=Pista previa
+#Name[bg]=Предишна песен
+#Name[ca]=Pista anterior
+#Name[cs]=Předchozí skladba
+#Name[da]=Forrige spor
+#Name[de]=Vorheriger Titel
+#Name[el]=Προηγούμενο κομμάτι
+#Name[es]=Pista anterior
+#Name[es_419]=Pista anterior
+#Name[fa]=قطعه قبلی
+#Name[fi]=Edellinen raita
+#Name[fr]=Piste précédente
+#Name[gl_ES]=Pista anterior
+#Name[he]=הקטע הקודם
+#Name[hi_IN]=पिछला गाना
+#Name[hr]=Prethodni zapis
+#Name[hu]=Előző szám
+#Name[hy]=Նախորդը
+#Name[id]=Lajur sebelumnya
+#Name[it]=Traccia precedente
+#Name[ja]=前へ
+#Name[ko]=이전 트랙
+#Name[ku_IQ]=Strana paşve
+#Name[lt]=Ankstesnis takelis
+#Name[mn]=Өмнөх дуу
+#Name[ms]=trek sebelumnya
+#Name[nl]=Vorig nummer
+#Name[pl]=Poprzednia ścieżka
+#Name[pt]=Faixa anterior
+#Name[pt_BR]=Anterior
+#Name[ro]=Melodia anterioară
+#Name[ru]=Предыдущая дорожка
+#Name[sk]=Predchádzajúca stopa
+#Name[sl]=Prejšnja skladba
+#Name[sr]=Претходна нумера
+#Name[tr]=Önceki parça
+#Name[uk]=Попередній трек
+#Name[zh_CN]=上一首
+#Name[zh_HK]=上一首歌曲
+#Name[zh_TW]=上一曲
 

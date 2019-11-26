@@ -35,17 +35,11 @@
         <file>mpimage/light/focus/search_focus.svg</file>
         <file>mpimage/light/hover/volume_add_hover.svg</file>
         <file>mpimage/light/hover/text_list_hover.svg</file>
-        <file>mpimage/light/hover/close_hover.svg</file>
         <file>mpimage/light/hover/back_hover.svg</file>
-        <file>mpimage/light/hover/famous_ballad_hover.svg</file>
         <file>mpimage/light/hover/add_hover.svg</file>
         <file>mpimage/light/hover/picture_list_hover.svg</file>
-        <file>mpimage/light/hover/my_collection_hover.svg</file>
         <file>mpimage/light/hover/search_hover.svg</file>
-        <file>mpimage/light/hover/singer_hover.svg</file>
-        <file>mpimage/light/hover/all_music_hover.svg</file>
         <file>mpimage/light/hover/volume_lessen_hover.svg</file>
-        <file>mpimage/light/hover/album_hover.svg</file>
         <file>mpimage/light/normal/album_normal.svg</file>
         <file>mpimage/light/normal/singer_normal.svg</file>
         <file>mpimage/light/normal/volume_lessen_normal.svg</file>
@@ -57,7 +51,6 @@
         <file>mpimage/light/normal/next_normal.svg</file>
         <file>mpimage/light/normal/clear_list_normal.svg</file>
         <file>mpimage/light/normal/suspend_normal.svg</file>
-        <file>mpimage/light/normal/close_normal.svg</file>
         <file>mpimage/light/normal/random_play_normal.svg</file>
         <file>mpimage/light/normal/volume_add_normal.svg</file>
         <file>mpimage/light/normal/back_normal.svg</file>
@@ -71,10 +64,8 @@
         <file>mpimage/light/normal/sequential_loop_normal.svg</file>
         <file>mpimage/light/normal/all_music_normal.svg</file>
         <file>mpimage/light/normal/picture_list_normal.svg</file>
-        <file>mpimage/light/normal/my_collection_normal.svg</file>
         <file>mpimage/light/normal/play_normal.svg</file>
         <file>mpimage/light/normal/single_tune_circulation_normal.svg</file>
-        <file>mpimage/light/press/singer_press.svg</file>
         <file>mpimage/light/press/volume_add_press.svg</file>
         <file>mpimage/light/press/mute_press.svg</file>
         <file>mpimage/light/press/text_list_press.svg</file>
@@ -89,17 +80,12 @@
         <file>mpimage/light/press/volume_press.svg</file>
         <file>mpimage/light/press/add_press.svg</file>
         <file>mpimage/light/press/back_press.svg</file>
-        <file>mpimage/light/press/album_press.svg</file>
-        <file>mpimage/light/press/close_press.svg</file>
         <file>mpimage/light/press/lyric_press.svg</file>
-        <file>mpimage/light/press/my_collection_press.svg</file>
         <file>mpimage/light/press/play_all_press.svg</file>
         <file>mpimage/light/press/play_press.svg</file>
         <file>mpimage/light/press/playlist_press.svg</file>
-        <file>mpimage/light/press/all_music_press.svg</file>
         <file>mpimage/light/press/last_press.svg</file>
         <file>mpimage/light/press/clear_list_press.svg</file>
-        <file>mpimage/light/press/famous_ballad_press.svg</file>
         <file>mpimage/light/press/cross_cycling_press.svg</file>
         <file>mpimage/light/press/suspend_press.svg</file>
         <file>mpimage/light/press/search_press.svg</file>
@@ -132,8 +118,6 @@
         <file>mpimage/dark/hover/single_tune_circulation_hover.svg</file>
         <file>mpimage/dark/hover/volume_lessen_hover.svg</file>
         <file>mpimage/dark/hover/volume_hover.svg</file>
-        <file>mpimage/dark/hover/last_normal.svg</file>
-        <file>mpimage/dark/hover/close_hover.svg</file>
         <file>mpimage/dark/hover/cross_cycling_hover.svg</file>
         <file>mpimage/dark/hover/collection_hover.svg</file>
         <file>mpimage/dark/hover/add_hover.svg</file>
@@ -149,7 +133,6 @@
         <file>mpimage/dark/normal/play_normal.svg</file>
         <file>mpimage/dark/normal/play_all_normal.svg</file>
         <file>mpimage/dark/normal/all_music_normal.svg</file>
-        <file>mpimage/dark/normal/close_normal.svg</file>
         <file>mpimage/dark/normal/cross_cycling_normal.svg</file>
         <file>mpimage/dark/normal/next_normal.svg</file>
         <file>mpimage/dark/normal/playlist_normal.svg</file>
@@ -171,7 +154,6 @@
         <file>mpimage/dark/normal/suspend_normal.svg</file>
         <file>mpimage/dark/normal/volume_add_normal.svg</file>
         <file>mpimage/dark/press/clear_list_press.svg</file>
-        <file>mpimage/dark/press/close_press.svg</file>
         <file>mpimage/dark/press/play_press.svg</file>
         <file>mpimage/dark/press/collection1_press.svg</file>
         <file>mpimage/dark/press/mute_press.svg</file>
@@ -179,17 +161,12 @@
         <file>mpimage/dark/press/random_play_press.svg</file>
         <file>mpimage/dark/press/collection_press.svg</file>
         <file>mpimage/dark/press/single_tune_circulation_press.svg</file>
-        <file>mpimage/dark/press/my_collection_press.svg</file>
         <file>mpimage/dark/press/cross_cycling_press.svg</file>
         <file>mpimage/dark/press/last_press.svg</file>
-        <file>mpimage/dark/press/all_music_press.svg</file>
         <file>mpimage/dark/press/volume_lessen_press.svg</file>
-        <file>mpimage/dark/press/album_press.svg</file>
         <file>mpimage/dark/press/picture_list_press.svg</file>
-        <file>mpimage/dark/press/famous_ballad_press.svg</file>
         <file>mpimage/dark/press/text_list_press.svg</file>
         <file>mpimage/dark/press/play_all_press.svg</file>
-        <file>mpimage/dark/press/singer_press.svg</file>
         <file>mpimage/dark/press/next_press.svg</file>
         <file>mpimage/dark/press/volume_press.svg</file>
         <file>mpimage/dark/press/add_press.svg</file>
@@ -227,5 +204,6 @@
         <file>mpimage/light/close-round/close_round hover.svg</file>
         <file>mpimage/light/close-round/close_round normal.svg</file>
         <file>mpimage/light/close-round/close_round press.svg</file>
+        <file>mpimage/light/normal/my_collection_normal.svg</file>
     </qresource>
 </RCC>

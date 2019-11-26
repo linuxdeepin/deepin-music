@@ -754,7 +754,23 @@ void Presenter::onAddToPlaylist(PlaylistPtr playlist,
         modifiedPlaylist = d->playlistMgr->addPlaylist(info);
         Q_EMIT playlistAdded(d->playlistMgr->playlist(info.uuid), true);
     } else {
-        Q_EMIT notifyAddToPlaylist(modifiedPlaylist, metalist);
+        bool existFlag = true;
+        auto allMetas = modifiedPlaylist->allmusic();
+        for (auto meta : metalist) {
+            bool curExistFlag = false;
+            for (auto curMeta : allMetas) {
+                if (curMeta->hash == meta->hash) {
+                    curExistFlag = true;
+                    break;
+                }
+            }
+            if (!curExistFlag) {
+                existFlag = false;
+                break;
+            }
+        }
+        if (!existFlag)
+            Q_EMIT notifyAddToPlaylist(modifiedPlaylist, metalist);
     }
 
     if (d->playlistMgr->playlist(modifiedPlaylist->id()).isNull()) {
