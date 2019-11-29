@@ -630,7 +630,7 @@ MainFrame::MainFrame(QWidget *parent) :
     d->titlebar->setCustomWidget(d->titlebarwidget, true);
     d->titlebar->resize(width(), 50);
     QShortcut *viewshortcut = new QShortcut(this);
-    viewshortcut->setKey(QKeySequence(QLatin1String("Ctrl+Shift+/")));
+    viewshortcut->setKey(QKeySequence(QLatin1String("Ctrl+Shift+?")));
     connect(viewshortcut, SIGNAL(activated()), this, SLOT(onViewShortcut()));
 
     QShortcut *searchShortcut = new QShortcut(this);
