@@ -74,7 +74,7 @@ void MusicListDialogPrivate::initUI()
 
     auto layout = new QVBoxLayout(q);
     layout->setSpacing(0);
-    layout->setMargin(10);
+    layout->setContentsMargins(0, 10, 0, 10);
 
     titleFrame = new MusicTitleImageWidget;
     titleFrame->setFixedSize(480, 130);
@@ -106,7 +106,7 @@ void MusicListDialogPrivate::initUI()
 
     auto btLayout = new QHBoxLayout(titleFrame);
     btLayout->setSpacing(0);
-    btLayout->setMargin(0);
+    btLayout->setContentsMargins(10, 0, 10, 0);
 
     btPlayAll = new DPushButton;
     auto btPlayAllFont = btPlayAll->font();
@@ -153,7 +153,7 @@ void MusicListDialogPrivate::initUI()
 //    musicListInfoView->setFrameShape(QFrame::NoFrame);
 //    musicListInfoView->setPalette(pa);
 //    musicListInfoView->setAutoFillBackground(true);
-    musicListInfoView->setFixedWidth(479);
+    //musicListInfoView->setFixedWidth(479);
 
     layout->addWidget(titleFrame, 0, Qt::AlignTop | Qt::AlignCenter);
     layout->addWidget(musicListInfoView);

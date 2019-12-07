@@ -181,9 +181,9 @@ static inline QRect colRect(int col, const QStyleOptionViewItem &option)
     auto emCol = static_cast<MusicInfoItemDelegate::MusicColumn>(col);
     switch (emCol) {
     case MusicInfoItemDelegate::Number:
-        return QRect(0, option.rect.y(), 40, option.rect.height());
+        return QRect(10, option.rect.y(), 40, option.rect.height());
     case MusicInfoItemDelegate::Title:
-        return QRect(40, option.rect.y(), w / 2 - 20, option.rect.height());
+        return QRect(50, option.rect.y(), w / 2 - 20, option.rect.height());
     case MusicInfoItemDelegate::Length:
         return QRect(w, option.rect.y(), tailwidth - 20, option.rect.height());
     default:
@@ -219,25 +219,33 @@ void MusicInfoItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
     QColor alternateBaseColor("#000000");
     alternateBaseColor.setAlphaF(0.02);
     QColor selecteColor("#000000");
-    selecteColor.setAlphaF(0.10);
+    selecteColor.setAlphaF(0.20);
     if (listview->getThemeType() == 2) {
+        baseColor = QColor("#000000");
         baseColor.setAlphaF(0.05);
+        alternateBaseColor = QColor("#FFFFFF");
         alternateBaseColor.setAlphaF(0.05);
         selecteColor = QColor("#FFFFFF");
         selecteColor.setAlphaF(0.20);
     }
 
-    auto background = (index.row() % 2) == 0 ? baseColor : alternateBaseColor;
-
-    if (option.state & QStyle::State_Selected) {
-        background = selecteColor;
-    }
+    auto background = (index.row() % 2) == 1 ? baseColor : alternateBaseColor;
 
     painter->save();
     painter->setPen(Qt::NoPen);
     painter->setBrush(background);
     painter->drawRect(option.rect);
     painter->restore();
+
+    if (option.state & QStyle::State_Selected) {
+        painter->save();
+        painter->setPen(Qt::NoPen);
+        painter->setBrush(selecteColor);
+        QRect selecteColorRect = option.rect.adjusted(5, 0, -5, 0);
+        painter->drawRoundedRect(selecteColorRect, 8, 8);
+        painter->restore();
+    }
+
     //painter->fillRect(option.rect, background);
 
     int rowCount = listview->model()->rowCount();

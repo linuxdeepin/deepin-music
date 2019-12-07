@@ -294,11 +294,7 @@ void MusicListDataDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
             selecteColor.setAlphaF(0.20);
         }
 
-        auto background = (index.row() % 2) == 0 ? baseColor : alternateBaseColor;
-
-        if (option.state & QStyle::State_Selected) {
-            background = selecteColor;
-        }
+        auto background = (index.row() % 2) == 1 ? baseColor : alternateBaseColor;
 
         painter->save();
         painter->setPen(Qt::NoPen);
@@ -306,6 +302,15 @@ void MusicListDataDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
         painter->drawRect(option.rect);
         painter->restore();
         //painter->fillRect(option.rect, background);
+
+        if (option.state & QStyle::State_Selected) {
+            painter->save();
+            painter->setPen(Qt::NoPen);
+            painter->setBrush(selecteColor);
+            QRect selecteColorRect = option.rect.adjusted(5, 0, -5, 0);
+            painter->drawRoundedRect(selecteColorRect, 8, 8);
+            painter->restore();
+        }
 
         QColor nameColor("#090909"), otherColor("#797979");
         if (listview->getThemeType() == 2) {
@@ -329,33 +334,58 @@ void MusicListDataDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
             auto tailwidth = pixel2point(songsFm.width("0000-00-00")) + PlayItemRightMargin  + 20;
             auto w = option.rect.width() - 0 - tailwidth;
 
-            if (listview->playing() != nullptr && listview->playing()->artist == PlayMusicTypePtr->name) {
+            bool playingFlag = false;
+            if (listview->playing() != nullptr && (listview->playing()->artist == PlayMusicTypePtr->name
+                                                   || (listview->playing()->artist.isEmpty() && !PlayMusicTypePtr->playlistMeta.metas.isEmpty()
+                                                       && PlayMusicTypePtr->playlistMeta.metas.begin().value()->artist.isEmpty()))) {
                 nameColor = QColor("#2CA7F8");
                 otherColor = QColor("#2CA7F8");
                 font14.setFamily("SourceHanSansSC");
                 font14.setWeight(QFont::Medium);
+                playingFlag = true;
             }
             //icon
             if (playlistPtr->searchStr().isEmpty()) {
-                QRect numRect(16, option.rect.y() + 3, 32, 32);
-                auto icon = option.icon;
-                auto value = index.data(Qt::DecorationRole);
-                if (value.type() == QVariant::Icon) {
-                    icon = qvariant_cast<QIcon>(value);
+                if (!playingFlag) {
+                    QRect numRect(16, option.rect.y() + 3, 32, 32);
+                    auto icon = option.icon;
+                    auto value = index.data(Qt::DecorationRole);
+                    if (value.type() == QVariant::Icon) {
+                        icon = qvariant_cast<QIcon>(value);
+                    }
+                    painter->save();
+                    QPainterPath clipPath;
+                    clipPath.addEllipse(numRect.adjusted(4, 4, -4, -4));
+                    painter->setClipPath(clipPath);
+                    painter->drawPixmap(numRect, icon.pixmap(numRect.width(), numRect.width()));
+                    painter->restore();
+                } else {
+                    QRect numRect(16, option.rect.y(), 40, option.rect.height());
+                    auto playingIcon = d->playingIcon;
+                    if (option.state & QStyle::State_Selected) {
+                        playingIcon = d->highlightPlayingIcon;
+                    }
+                    auto icon = listview->getPlayPixmap();
+                    qreal t_ratio = icon.devicePixelRatioF();
+                    auto centerF = numRect.center();
+                    QRect t_ratioRect;
+                    t_ratioRect.setX(0);
+                    t_ratioRect.setY(0);
+                    t_ratioRect.setWidth(icon.width() / t_ratio);
+                    t_ratioRect.setHeight(icon.height() / t_ratio);
+                    auto iconRect = QRectF(centerF.x() - t_ratioRect.width() / 2,
+                                           centerF.y() - t_ratioRect.height() / 2,
+                                           t_ratioRect.width(), t_ratioRect.height());
+                    painter->drawPixmap(iconRect.toRect(), icon);
                 }
-                painter->save();
-                QPainterPath clipPath;
-                clipPath.addEllipse(numRect.adjusted(4, 4, -4, -4));
-                painter->setClipPath(clipPath);
-                painter->drawPixmap(numRect, icon.pixmap(numRect.width(), numRect.width()));
-                painter->restore();
+
             } else {
                 int rowCount = listview->model()->rowCount();
                 auto rowCountSize = QString::number(rowCount).size();
                 rowCountSize = qMax(rowCountSize, 2);
                 QFont measuringFont(font11);
                 painter->setPen(otherColor);
-                QRect numRect(0, option.rect.y(), 40, option.rect.height());
+                QRect numRect(10, option.rect.y(), 40, option.rect.height());
                 painter->setFont(font11);
                 auto str = QString("%1").arg(index.row() + 1, rowCountSize, 10, QLatin1Char('0'));
                 QFont font(font11);
@@ -406,12 +436,14 @@ void MusicListDataDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
             auto w = option.rect.width() - 0 - tailwidth;
 
             //num
-            if (listview->playing() != nullptr && listview->playing()->album == PlayMusicTypePtr->name) {
+            if (listview->playing() != nullptr && (listview->playing()->album == PlayMusicTypePtr->name
+                                                   || (listview->playing()->album.isEmpty() && !PlayMusicTypePtr->playlistMeta.metas.isEmpty()
+                                                       && PlayMusicTypePtr->playlistMeta.metas.begin().value()->album.isEmpty()))) {
                 nameColor = QColor("#2CA7F8");
                 otherColor = QColor("#2CA7F8");
                 font14.setFamily("SourceHanSansSC");
                 font14.setWeight(QFont::Medium);
-                QRect numRect(0, option.rect.y(), 40, option.rect.height());
+                QRect numRect(5, option.rect.y(), 40, option.rect.height());
                 auto playingIcon = d->playingIcon;
                 if (option.state & QStyle::State_Selected) {
                     playingIcon = d->highlightPlayingIcon;
@@ -430,7 +462,7 @@ void MusicListDataDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
                 painter->drawPixmap(iconRect.toRect(), icon);
             } else {
                 painter->setPen(otherColor);
-                QRect numRect(0, option.rect.y(), 40, option.rect.height());
+                QRect numRect(5, option.rect.y(), 40, option.rect.height());
                 painter->setFont(font11);
                 auto str = QString("%1").arg(index.row() + 1, rowCountSize, 10, QLatin1Char('0'));
                 QFont font(font11);
@@ -442,14 +474,14 @@ void MusicListDataDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
 
             //name
             painter->setPen(nameColor);
-            QRect nameRect(40, option.rect.y(), w / 2 - 20, option.rect.height());
+            QRect nameRect(45, option.rect.y(), w / 2 - 20, option.rect.height());
             painter->setFont(font14);
             auto nameText = songsFm.elidedText(PlayMusicTypePtr->name, Qt::ElideMiddle, nameRect.width());
             painter->drawText(nameRect, Qt::AlignLeft | Qt::AlignVCenter, nameText);
 
             painter->setPen(otherColor);
             //extraname
-            QRect extraRect(40 + w / 2, option.rect.y(), w / 4 - 20, option.rect.height());
+            QRect extraRect(45 + w / 2, option.rect.y(), w / 4 - 20, option.rect.height());
             painter->setFont(font11);
             auto extraText = songsFm.elidedText(PlayMusicTypePtr->extraName, Qt::ElideMiddle, extraRect.width());
             painter->drawText(extraRect, Qt::AlignLeft | Qt::AlignVCenter, extraText);
@@ -466,7 +498,7 @@ void MusicListDataDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
             }
             painter->save();
             QFont measuringFont(font11);
-            QRect songsRect(40 + w / 2 + w / 4, option.rect.y(), w / 4 - 20, option.rect.height());
+            QRect songsRect(45 + w / 2 + w / 4, option.rect.y(), w / 4 - 20, option.rect.height());
             painter->drawText(songsRect, Qt::AlignLeft | Qt::AlignVCenter, infoStr);
             painter->restore();
 

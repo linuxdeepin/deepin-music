@@ -39,6 +39,9 @@ public:
     void setThemeType(int type);
 
 private:
+    QString geteElidedText(QFont font, QString str, int MaxWidth);
+
+private:
     QScopedPointer<InfoDialogPrivate> d_ptr;
     Q_DECLARE_PRIVATE_D(qGetPtrHelper(d_ptr), InfoDialog)
 };

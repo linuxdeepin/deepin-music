@@ -102,6 +102,7 @@ void InfoDialogPrivate::initUI()
     split->setFixedSize(300, 1);
 
     infoGridFrame = new DFrame;
+    infoGridFrame->setFocusPolicy(Qt::NoFocus);
     infoGridFrame->setFrameRounded(true);
     infoGridFrame->setMaximumWidth(300);
     infoGridFrame->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
@@ -234,33 +235,52 @@ void InfoDialog::updateInfo(const MetaPtr meta)
                << meta->localPath;
 
     for (int i = 0; i < d->valueList.length(); ++i) {
-        d->valueList.value(i)->setText(infoValues.value(i));
+        /*d->valueList.value(i)->setText(infoValues.value(i));
         QFontMetrics fm(d->valueList.value(i)->font());
         QRect rec = fm.boundingRect( d->valueList.value(i)->text());
         int labelRow = d->valueList.value(i)->height() / 14;
         if (rec.width() > d->valueList.value(i)->width() * labelRow) {
             int row = rec.width() / d->valueList.value(i)->width() + 1;
             d->valueList.value(i)->setFixedHeight(row * rec.height());
+        }*/
+        if (i != d->valueList.length() - 1) {
+            QString str = geteElidedText(d->valueList.value(i)->font(), infoValues.value(i), d->valueList.value(i)->width());
+            d->valueList.value(i)->setText(str);
+        } else {
+            QFontMetrics fontWidth(d->valueList.value(i)->font());
+            int width = fontWidth.width(infoValues.value(i));  //计算字符串宽度
+            if (width >= d->valueList.value(i)->width()) { //当字符串宽度大于最大宽度时进行转换
+                //两行
+                QString str = geteElidedText(d->valueList.value(i)->font(), infoValues.value(i), d->valueList.value(i)->width() * 2);
+                d->valueList.value(i)->setText(str);
+                QRect rec = fontWidth.boundingRect( d->valueList.value(i)->text());
+                d->valueList.value(i)->setFixedHeight(2 * rec.height());
+
+            } else {
+                QString str = geteElidedText(d->valueList.value(i)->font(), infoValues.value(i), d->valueList.value(i)->width());
+                d->valueList.value(i)->setText(str);
+            }
         }
+
+        QFileInfo fileInfo(meta->localPath);
+        QString titleStr(meta->title + "-" + meta->artist + "." + fileInfo.suffix());
+        titleStr = geteElidedText(d->title->font(), titleStr, d->title->width());
+        d->title->setText(titleStr);
+
+        auto pixmapSize = static_cast<int>(CoverSize * d->cover->devicePixelRatioF());
+        auto coverPixmap = QIcon(":/common/image/info_cover.svg").pixmap(QSize(pixmapSize, pixmapSize));
+        QImage cover = coverPixmap.toImage();
+        auto coverData = MetaSearchService::coverData(meta);
+        if (coverData.length() > 0) {
+            cover = QImage::fromData(coverData);
+        }
+        coverPixmap = QPixmap::fromImage(WidgetHelper::cropRect(cover, QSize(pixmapSize, pixmapSize)));
+        coverPixmap.setDevicePixelRatio(d->cover->devicePixelRatioF());
+        d->cover->setCoverPixmap(coverPixmap);
+        d->updateLabelSize();
+
+        d->title->setFocus();
     }
-
-    QFileInfo fileInfo(meta->localPath);
-    QString titleStr(meta->title + "-" + meta->artist + "." + fileInfo.suffix());
-    d->title->setText(titleStr);
-
-    auto pixmapSize = static_cast<int>(CoverSize * d->cover->devicePixelRatioF());
-    auto coverPixmap = QIcon(":/common/image/info_cover.svg").pixmap(QSize(pixmapSize, pixmapSize));
-    QImage cover = coverPixmap.toImage();
-    auto coverData = MetaSearchService::coverData(meta);
-    if (coverData.length() > 0) {
-        cover = QImage::fromData(coverData);
-    }
-    coverPixmap = QPixmap::fromImage(WidgetHelper::cropRect(cover, QSize(pixmapSize, pixmapSize)));
-    coverPixmap.setDevicePixelRatio(d->cover->devicePixelRatioF());
-    d->cover->setCoverPixmap(coverPixmap);
-    d->updateLabelSize();
-
-    d->title->setFocus();
 }
 
 void InfoDialog::setThemeType(int type)
@@ -284,7 +304,7 @@ void InfoDialog::setThemeType(int type)
         rStr = "dark";
 
         DPalette pl = d->infoGridFrame->palette();
-        QColor windowColor("#FFFFFF");
+        QColor windowColor("#000000");
         windowColor.setAlphaF(0.05);
         pl.setColor(DPalette::Window, windowColor);
         QColor sbcolor("#FFFFFF");
@@ -293,4 +313,14 @@ void InfoDialog::setThemeType(int type)
         d->infoGridFrame->setPalette(pl);
         d->infoGridFrame->setBackgroundRole(DPalette::Window);
     }
+}
+
+QString InfoDialog::geteElidedText(QFont font, QString str, int MaxWidth)
+{
+    QFontMetrics fontWidth(font);
+    int width = fontWidth.width(str);  //计算字符串宽度
+    if (width >= MaxWidth) { //当字符串宽度大于最大宽度时进行转换
+        str = fontWidth.elidedText(str, Qt::ElideMiddle, MaxWidth); //右部显示省略号
+    }
+    return str;
 }

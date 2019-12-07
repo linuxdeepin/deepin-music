@@ -194,13 +194,13 @@ static inline QRect colRect(int col, const QStyleOptionViewItem &option)
     auto emCol = static_cast<PlayItemDelegate::MusicColumn>(col);
     switch (emCol) {
     case PlayItemDelegate::Number:
-        return QRect(0, option.rect.y(), 40, option.rect.height());
+        return QRect(5, option.rect.y(), 40, option.rect.height());
     case PlayItemDelegate::Title:
-        return QRect(40, option.rect.y(), w / 2 - 20, option.rect.height());
+        return QRect(45, option.rect.y(), w / 2 - 20, option.rect.height());
     case PlayItemDelegate::Artist:
-        return QRect(40 + w / 2, option.rect.y(), w / 4 - 20, option.rect.height());
+        return QRect(45 + w / 2, option.rect.y(), w / 4 - 20, option.rect.height());
     case PlayItemDelegate::Album:
-        return QRect(40 + w / 2 + w / 4, option.rect.y(), w / 4 - 20, option.rect.height());
+        return QRect(45 + w / 2 + w / 4, option.rect.y(), w / 4 - 20, option.rect.height());
     case PlayItemDelegate::Length:
         return QRect(w, option.rect.y(), tailwidth - 20, option.rect.height());
     case PlayItemDelegate::ColumnButt:
@@ -359,11 +359,7 @@ void PlayItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
         selecteColor.setAlphaF(0.20);
     }
 
-    auto background = (index.row() % 2) == 0 ? baseColor : alternateBaseColor;
-
-    if (option.state & QStyle::State_Selected) {
-        background = selecteColor;
-    }
+    auto background = (index.row() % 2) == 1 ? baseColor : alternateBaseColor;
 
     painter->save();
     painter->setPen(Qt::NoPen);
@@ -371,6 +367,15 @@ void PlayItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
     painter->drawRect(option.rect);
     painter->restore();
     //painter->fillRect(option.rect, background);
+
+    if (option.state & QStyle::State_Selected) {
+        painter->save();
+        painter->setPen(Qt::NoPen);
+        painter->setBrush(selecteColor);
+        QRect selecteColorRect = option.rect.adjusted(5, 0, -5, 0);
+        painter->drawRoundedRect(selecteColorRect, 8, 8);
+        painter->restore();
+    }
 
     int rowCount = listview->model()->rowCount();
     auto rowCountSize = QString::number(rowCount).size();
