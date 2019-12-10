@@ -224,6 +224,9 @@ void MusicListView::addMusicList(PlaylistPtr playlist, bool addFlag)
 
     allPlaylists.append(playlist);
     auto item = new DStandardItem(icon, playlist->displayName());
+    auto itemFont = item->font();
+    itemFont.setPixelSize(14);
+    item->setFont(itemFont);
     if (m_type == 1) {
         item->setForeground(QColor("#414D68"));
     } else {

@@ -780,7 +780,9 @@ void MainFrame::binding(Presenter *presenter)
 //            text = tr("Successfully added to \"%1\"").arg(displayName);
         auto text = tr("Successfully added to \"%1\"").arg(displayName);
         //DMessageManager::instance()->sendMessage(d->footer, icon, text);
-        this->sendMessage(icon, text);
+        if (playlist->id() != AlbumMusicListID && playlist->id() != ArtistMusicListID
+                && playlist->id() != AllMusicListID)
+            this->sendMessage(icon, text);
     });
 
 //    connect(presenter, &Presenter::showPlaylist,

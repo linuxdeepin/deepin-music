@@ -37,6 +37,7 @@ public:
 
 public slots:
     void onBufferDetector(const QString &path, const QString &hash);
+    void onClearBufferDetector();
 
 signals:
     void metaBuffer(const QVector<float> &buffer, const QString &hash);

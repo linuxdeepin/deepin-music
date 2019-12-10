@@ -173,6 +173,16 @@ void MetaBufferDetector::onBufferDetector(const QString &path, const QString &ha
     start();
 }
 
+void MetaBufferDetector::onClearBufferDetector()
+{
+    Q_D(MetaBufferDetector);
+    if (isRunning()) {
+        d->stopFlag = true;
+    }
+    d->curPath.clear();
+    d->curHash.clear();
+}
+
 void MetaBufferDetector::resample(const QVector<float> &buffer, const QString &hash)
 {
     QVector<float> t_buffer;

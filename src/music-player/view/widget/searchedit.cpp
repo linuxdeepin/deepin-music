@@ -36,6 +36,10 @@ DWIDGET_USE_NAMESPACE
 
 SearchEdit::SearchEdit(QWidget *parent) : DSearchEdit(parent)
 {
+    auto textFont = font();
+    textFont.setPixelSize(14);
+    setFont(textFont);
+
     lineEdit()->setFocusPolicy(Qt::ClickFocus);
     // Why qss not work if not call show
 //    show();

@@ -147,6 +147,7 @@ void Waveform::clearWave()
 
 void Waveform::onAudioBuffer(const QVector<float> &allData, const QString &hash)
 {
+    metaHash = hash;
     QVector<float> t_allData;
     if (!allData.isEmpty()) {
         float max = allData.first();
@@ -374,10 +375,13 @@ void Waveform::setThemeType(int type)
     themeType = type;
 }
 
-void Waveform::clearBufferAudio()
+void Waveform::clearBufferAudio(const QString &hash)
 {
-    reciveSampleList.clear();
-    sampleList.clear();
+    if (hash.isEmpty() || hash != metaHash) {
+        reciveSampleList.clear();
+        sampleList.clear();
+        metaHash.clear();
+    }
 }
 
 void Waveform::enterEvent(QEvent *event)

@@ -971,6 +971,7 @@ void Presenter::onMusicStop(PlaylistPtr playlist, const MetaPtr meta)
     Q_EMIT coverSearchFinished(meta, SearchMeta(), "");
     Q_EMIT lyricSearchFinished(meta, SearchMeta(), "");
     d->player->stop();
+    d->metaBufferDetector->onClearBufferDetector();
     playlist->setPlayingStatus(false);
     Q_EMIT this->musicStoped(playlist, meta);
 }

@@ -727,8 +727,7 @@ void Footer::onMusicPlayed(PlaylistPtr playlist, const MetaPtr meta)
     }
     d->btCover->setIcon(QPixmap::fromImage(cover));
     d->btCover->update();
-//    if (d->activingMeta != meta)
-//        d->waveform->clearBufferAudio();
+    d->waveform->clearBufferAudio(meta->hash);
 
     //cut image
     double windowScale = (width() * 1.0) / height();
@@ -877,6 +876,7 @@ void Footer::onMusicStoped(PlaylistPtr playlist, const MetaPtr meta)
     //d->btFavorite->hide();
     d->activingMeta = MetaPtr();
 
+    d->waveform->clearBufferAudio(QString());
     d->btCover->setIcon(Dtk::Widget::DHiDPIHelper::loadNxPixmap(d->defaultCover));
     d->btCover->update();
     d->updateQssProperty(d->btPlay, sPropertyPlayStatus, sPlayStatusValueStop);
