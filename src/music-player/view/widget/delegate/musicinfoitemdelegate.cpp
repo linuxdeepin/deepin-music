@@ -229,29 +229,6 @@ void MusicInfoItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
         selecteColor.setAlphaF(0.20);
     }
 
-    auto background = (index.row() % 2) == 1 ? baseColor : alternateBaseColor;
-
-    painter->save();
-    painter->setPen(Qt::NoPen);
-    painter->setBrush(background);
-    painter->drawRect(option.rect);
-    painter->restore();
-
-    if (option.state & QStyle::State_Selected) {
-        painter->save();
-        painter->setPen(Qt::NoPen);
-        painter->setBrush(selecteColor);
-        QRect selecteColorRect = option.rect.adjusted(5, 0, -5, 0);
-        painter->drawRoundedRect(selecteColorRect, 8, 8);
-        painter->restore();
-    }
-
-    //painter->fillRect(option.rect, background);
-
-    int rowCount = listview->model()->rowCount();
-    auto rowCountSize = QString::number(rowCount).size();
-    rowCountSize = qMax(rowCountSize, 2);
-
     auto hash = index.data().toString();
     auto meta = MediaLibrary::instance()->meta(hash);
     if (meta.isNull()) {
@@ -266,19 +243,55 @@ void MusicInfoItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
         otherColor = QColor("#C0C6D4");
     }
 
+    auto activeMeta = listview->playing();
+    if (activeMeta == meta) {
+        nameColor = QColor("#2CA7F8");
+        otherColor = QColor("#2CA7F8");
+        otherColor.setAlphaF(0.5);
+        font14.setFamily("SourceHanSansSC");
+        font14.setWeight(QFont::Medium);
+    }
+
+    //auto background = (index.row() % 2) == 1 ? baseColor : alternateBaseColor;
+
+    auto background = baseColor;
+
+    painter->save();
+    painter->setPen(Qt::NoPen);
+    painter->setBrush(background);
+    painter->drawRect(option.rect);
+    painter->restore();
+
+    if (option.state & QStyle::State_Selected) {
+        painter->save();
+        painter->setPen(Qt::NoPen);
+        painter->setBrush(option.palette.highlight());
+        QRect selecteColorRect = option.rect.adjusted(5, 0, -5, 0);
+        painter->drawRoundedRect(selecteColorRect, 8, 8);
+        painter->restore();
+
+        nameColor = option.palette.highlightedText().color();
+        otherColor = option.palette.highlightedText().color();
+    } else if ((index.row() % 2) == 0) {
+        painter->save();
+        painter->setPen(Qt::NoPen);
+        painter->setBrush(alternateBaseColor);
+        QRect selecteColorRect = option.rect.adjusted(5, 0, -5, 0);
+        painter->drawRoundedRect(selecteColorRect, 8, 8);
+        painter->restore();
+    }
+
+    //painter->fillRect(option.rect, background);
+
+    int rowCount = listview->model()->rowCount();
+    auto rowCountSize = QString::number(rowCount).size();
+    rowCountSize = qMax(rowCountSize, 2);
+
     for (int col = 0; col < 3; ++col) {
         auto textColor = d->foreground(col, option);
         QColor brightTextColor(option.palette.highlight().color());
         auto flag = alignmentFlag(col);
         auto rect = colRect(col, option);
-        auto activeMeta = listview->playing();
-        if (activeMeta == meta) {
-            nameColor = QColor("#2CA7F8");
-            otherColor = QColor("#2CA7F8");
-            font14.setFamily("SourceHanSansSC");
-            font14.setWeight(QFont::Medium);
-        }
-        otherColor.setAlphaF(0.5);
         switch (col) {
         case Number: {
             // Fixme:

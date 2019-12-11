@@ -74,7 +74,7 @@ void MusicListDialogPrivate::initUI()
 
     auto layout = new QVBoxLayout(q);
     layout->setSpacing(0);
-    layout->setContentsMargins(0, 10, 0, 10);
+    layout->setContentsMargins(0, 10, 0, 0);
 
     titleFrame = new MusicTitleImageWidget;
     titleFrame->setFixedSize(480, 130);
