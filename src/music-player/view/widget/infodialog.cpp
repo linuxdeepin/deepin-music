@@ -34,6 +34,7 @@
 #include <DFloatingWidget>
 #include <DHiDPIHelper>
 #include <DWindowCloseButton>
+#include <DFontSizeManager>
 
 #include <dwindowclosebutton.h>
 
@@ -150,24 +151,26 @@ void InfoDialogPrivate::initUI()
 
     for (int i = 0; i < infoKeys.length(); ++i) {
         auto infoKey = new DLabel(infoKeys.value(i));
-        auto infoFont = infoKey->font();
-        infoFont.setPointSize(8);
-        infoKey->setFont(infoFont);
+//        auto infoFont = infoKey->font();
+//        infoFont.setPointSize(8);
+//        infoKey->setFont(infoFont);
         infoKey->setObjectName("InfoKey");
-        infoKey->setMinimumHeight(18);
-        infoKey->setForegroundRole(DPalette::TextTitle);
+//        infoKey->setMinimumHeight(18);
+        infoKey->setForegroundRole(DPalette::WindowText);
         infoKey->setAlignment(Qt::AlignLeft | Qt::AlignTop);
+        DFontSizeManager::instance()->bind(infoKey, DFontSizeManager::T6);
 
         auto infoValue = new DLabel();
-        infoValue->setFont(infoFont);
+//        infoValue->setFont(infoFont);
         infoValue->setWordWrap(true);
         infoValue->setObjectName("InfoValue");
-        infoValue->setMinimumHeight(28);
+//        infoValue->setMinimumHeight(28);
         infoValue->setMinimumWidth(200);
         infoValue->setMaximumWidth(220);
         infoValue->setAlignment(Qt::AlignLeft | Qt::AlignTop);
         infoValue->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-        infoValue->setForegroundRole(DPalette::TextTitle);
+        infoValue->setForegroundRole(DPalette::WindowText);
+        DFontSizeManager::instance()->bind(infoValue, DFontSizeManager::T6);
         valueList << infoValue;
 
         infogridLayout->addWidget(infoKey);

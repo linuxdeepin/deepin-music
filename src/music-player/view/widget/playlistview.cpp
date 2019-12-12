@@ -706,6 +706,8 @@ void PlayListView::startDrag(Qt::DropActions supportedActions)
         list << d->model->meta(index);
     }
 
+    if (!selectionModel()->selectedIndexes().isEmpty())
+        scrollTo(selectionModel()->selectedIndexes().first());
     setAutoScroll(false);
     DListView::startDrag(supportedActions);
     setAutoScroll(true);
