@@ -47,9 +47,10 @@ public:
     void setThemeType(int type);
     int getThemeType() const;
 
-    void setPlayPixmap(QPixmap pixmap, QPixmap sidebarPixmap);
+    void setPlayPixmap(QPixmap pixmap, QPixmap sidebarPixmap, QPixmap albumPixmap);
     QPixmap getPlayPixmap() const;
     QPixmap getSidebarPixmap() const;
+    QPixmap getAlbumPixmap() const;
 
     int rowCount();
     QString firstHash();

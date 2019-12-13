@@ -1032,15 +1032,15 @@ void MusicListDataWidget::slotTheme(int type)
     d->musicListView->setThemeType(type);
 }
 
-void MusicListDataWidget::changePicture(QPixmap pixmap, QPixmap sidebarPixmap)
+void MusicListDataWidget::changePicture(QPixmap pixmap, QPixmap sidebarPixmap, QPixmap albumPixmap)
 {
     Q_D(MusicListDataWidget);
     if (d->albumListView->isVisible()) {
-        d->albumListView->setPlayPixmap(pixmap, sidebarPixmap);
+        d->albumListView->setPlayPixmap(pixmap, sidebarPixmap, albumPixmap);
     } else if (d->artistListView->isVisible()) {
-        d->artistListView->setPlayPixmap(pixmap, sidebarPixmap);
+        d->artistListView->setPlayPixmap(pixmap, sidebarPixmap, albumPixmap);
     } else {
-        d->musicListView->setPlayPixmap(pixmap, sidebarPixmap);
+        d->musicListView->setPlayPixmap(pixmap, sidebarPixmap, albumPixmap);
     }
 }
 

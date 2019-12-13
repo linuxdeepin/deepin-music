@@ -152,7 +152,7 @@ void MusicListDataDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
 
             //draw playing
             if (playFlag) {
-                painter->drawPixmap(QRect(rect.x() + 64, rect.y() + 96, 22, 18), listview->getSidebarPixmap());
+                painter->drawPixmap(QRect(rect.x() + 64, rect.y() + 96, 22, 18), listview->getAlbumPixmap());
             }
 
             QRect fillRect(rect.x(), rect.y() + rect.height() - 36, rect.width(), 36);
@@ -206,7 +206,7 @@ void MusicListDataDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
 
             //draw playing
             if (playFlag)  {
-                painter->drawPixmap(QRect(rect.x() + 64, rect.y() + 82, 22, 18), listview->getSidebarPixmap());
+                painter->drawPixmap(QRect(rect.x() + 64, rect.y() + 82, 22, 18), listview->getAlbumPixmap());
             }
 
             QRect fillRect(rect.x(), startHeight, rect.width(), fillAllHeight);
@@ -294,15 +294,17 @@ void MusicListDataDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
             selecteColor.setAlphaF(0.20);
         }
 
-        //auto background = (index.row() % 2) == 1 ? baseColor : alternateBaseColor;
-        auto background = baseColor;
+        auto background = (index.row() % 2) == 1 ? baseColor : alternateBaseColor;
+        //auto background = baseColor;
 
-        painter->save();
-        painter->setPen(Qt::NoPen);
-        painter->setBrush(background);
-        painter->drawRect(option.rect);
-        painter->restore();
-        //painter->fillRect(option.rect, background);
+        if (!(option.state & QStyle::State_Selected)) {
+            painter->save();
+            painter->setPen(Qt::NoPen);
+            painter->setBrush(background);
+            painter->drawRect(option.rect);
+            painter->restore();
+            //painter->fillRect(option.rect, background);
+        }
 
         if (option.state & QStyle::State_Selected) {
             painter->save();
@@ -311,14 +313,14 @@ void MusicListDataDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
             QRect selecteColorRect = option.rect.adjusted(5, 0, -5, 0);
             painter->drawRoundedRect(selecteColorRect, 8, 8);
             painter->restore();
-        } else if ((index.row() % 2) == 0) {
+        }/* else if ((index.row() % 2) == 0) {
             painter->save();
             painter->setPen(Qt::NoPen);
             painter->setBrush(alternateBaseColor);
             QRect selecteColorRect = option.rect.adjusted(5, 0, -5, 0);
             painter->drawRoundedRect(selecteColorRect, 8, 8);
             painter->restore();
-        }
+        }*/
 
         QColor nameColor("#090909"), otherColor("#797979");
         otherColor.setAlphaF(0.5);
@@ -381,11 +383,10 @@ void MusicListDataDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
                     painter->restore();
                 } else {
                     QRect numRect(16, option.rect.y(), 40, option.rect.height());
-                    auto playingIcon = d->playingIcon;
-                    if (option.state & QStyle::State_Selected) {
-                        playingIcon = d->highlightPlayingIcon;
-                    }
                     auto icon = listview->getPlayPixmap();
+                    if (option.state & QStyle::State_Selected) {
+                        icon = listview->getSidebarPixmap();
+                    }
                     qreal t_ratio = icon.devicePixelRatioF();
                     auto centerF = numRect.center();
                     QRect t_ratioRect;
@@ -469,11 +470,10 @@ void MusicListDataDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
                 font14.setFamily("SourceHanSansSC");
                 font14.setWeight(QFont::Medium);
                 QRect numRect(5, option.rect.y(), 40, option.rect.height());
-                auto playingIcon = d->playingIcon;
-                if (option.state & QStyle::State_Selected) {
-                    playingIcon = d->highlightPlayingIcon;
-                }
                 auto icon = listview->getPlayPixmap();
+                if (option.state & QStyle::State_Selected) {
+                    icon = listview->getSidebarPixmap();
+                }
                 qreal t_ratio = icon.devicePixelRatioF();
                 auto centerF = numRect.center();
                 QRect t_ratioRect;

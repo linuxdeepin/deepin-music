@@ -446,9 +446,9 @@ void MusicListDialog::setThemeType(int type)
     d->infoDialog->setThemeType(type);
 }
 
-void MusicListDialog::setPlayPixmap(QPixmap pixmap)
+void MusicListDialog::setPlayPixmap(QPixmap pixmap, QPixmap sidebarPixmap)
 {
     Q_D(MusicListDialog);
-    d->musicListInfoView->setPlayPixmap(pixmap);
+    d->musicListInfoView->setPlayPixmap(pixmap, sidebarPixmap);
     update();
 }

@@ -46,7 +46,7 @@ public:
                          QList<PlaylistPtr > newPlaylists);
 
     void setThemeType(int type);
-    void setPlayPixmap(QPixmap pixmap);
+    void setPlayPixmap(QPixmap pixmap, QPixmap sidebarPixmap);
 
 signals:
     void requestCustomContextMenu(const QPoint &pos);

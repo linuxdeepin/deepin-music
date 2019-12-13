@@ -62,6 +62,7 @@ public:
     MetaPtrList         playMetaPtrList;
     QPixmap              playingPixmap = QPixmap(":/mpimage/light/music1.svg");
     QPixmap              sidebarPixmap = QPixmap(":/mpimage/light/music_withe_sidebar/music1.svg");
+    QPixmap              albumPixmap   = QPixmap(":/mpimage/light/music_white_album_cover/music1.svg");
 
     PlayListView *q_ptr;
     Q_DECLARE_PUBLIC(PlayListView)
@@ -78,9 +79,10 @@ PlayListView::PlayListView(bool searchFlag, QWidget *parent)
     d->model = new PlaylistModel(0, 1, this);
     setModel(d->model);
 
-
     d->delegate = new PlayItemDelegate;
     setItemDelegate(d->delegate);
+
+    setUniformItemSizes(true);
 
     setDragEnabled(true);
     //viewport()->setAcceptDrops(true);
@@ -199,11 +201,12 @@ int PlayListView::getThemeType() const
     return d->themeType;
 }
 
-void PlayListView::setPlayPixmap(QPixmap pixmap, QPixmap sidebarPixmap)
+void PlayListView::setPlayPixmap(QPixmap pixmap, QPixmap sidebarPixmap, QPixmap albumPixmap)
 {
     Q_D(PlayListView);
     d->playingPixmap = pixmap;
     d->sidebarPixmap = sidebarPixmap;
+    d->albumPixmap = albumPixmap;
     update();
 }
 
@@ -214,6 +217,12 @@ QPixmap PlayListView::getPlayPixmap() const
 }
 
 QPixmap PlayListView::getSidebarPixmap() const
+{
+    Q_D(const PlayListView);
+    return d->sidebarPixmap;
+}
+
+QPixmap PlayListView::getAlbumPixmap() const
 {
     Q_D(const PlayListView);
     return d->sidebarPixmap;

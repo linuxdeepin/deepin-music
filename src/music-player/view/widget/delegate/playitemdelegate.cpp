@@ -359,15 +359,16 @@ void PlayItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
         selecteColor.setAlphaF(0.20);
     }
 
-    //auto background = (index.row() % 2) == 1 ? baseColor : alternateBaseColor;
-    auto background = baseColor;
+    auto background = (index.row() % 2) == 1 ? baseColor : alternateBaseColor;
+    //auto background = baseColor;
 
-    painter->save();
-    painter->setPen(Qt::NoPen);
-    painter->setBrush(background);
-    painter->drawRect(option.rect);
-    painter->restore();
-    //painter->fillRect(option.rect, background);
+    if (!(option.state & QStyle::State_Selected)) {
+        painter->save();
+        painter->setPen(Qt::NoPen);
+        painter->setBrush(background);
+        painter->drawRect(option.rect);
+        painter->restore();
+    }
 
     QColor nameColor("#090909"), otherColor("#000000");
     otherColor.setAlphaF(0.5);
@@ -404,14 +405,14 @@ void PlayItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
 
         nameColor = option.palette.highlightedText().color();
         otherColor = option.palette.highlightedText().color();
-    } else if ((index.row() % 2) == 0) {
+    }/* else if ((index.row() % 2) == 0) {
         painter->save();
         painter->setPen(Qt::NoPen);
         painter->setBrush(alternateBaseColor);
         QRect selecteColorRect = option.rect.adjusted(5, 0, -5, 0);
         painter->drawRoundedRect(selecteColorRect, 8, 8);
         painter->restore();
-    }
+    }*/
 
     int rowCount = listview->model()->rowCount();
     auto rowCountSize = QString::number(rowCount).size();
@@ -437,11 +438,10 @@ void PlayItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
             }
 
             if (activeMeta == meta) {
-                auto playingIcon = d->playingIcon();
-                if (option.state & QStyle::State_Selected) {
-                    playingIcon = d->highlightPlayingIcon();
-                }
                 auto icon = listview->getPlayPixmap();
+                if (option.state & QStyle::State_Selected) {
+                    icon = listview->getAlbumPixmap();
+                }
                 auto centerF = QRectF(rect).center();
                 qreal t_ratio = icon.devicePixelRatioF();
                 QRect t_ratioRect;

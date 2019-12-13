@@ -514,9 +514,9 @@ void MusicListWidget::slotTheme(int type)
 
 void MusicListWidget::changePicture(QPixmap pixmap, QPixmap albumPixmap, QPixmap sidebarPixmap)
 {
-    m_dataBaseListview->changePicture(pixmap, albumPixmap);
-    m_customizeListview->changePicture(pixmap, albumPixmap);
-    m_dataListView->changePicture(pixmap, sidebarPixmap);
+    m_dataBaseListview->changePicture(pixmap, sidebarPixmap);
+    m_customizeListview->changePicture(pixmap, sidebarPixmap);
+    m_dataListView->changePicture(pixmap, sidebarPixmap, albumPixmap);
 }
 
 void MusicListWidget::onCustomContextMenuRequest(const QPoint &pos, PlaylistPtr selectedlist, PlaylistPtr favlist, QList<PlaylistPtr> newlists, char type)

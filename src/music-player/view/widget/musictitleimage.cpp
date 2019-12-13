@@ -87,7 +87,7 @@ void MusicTitleImageWidget::paintEvent(QPaintEvent *event)
     painter.setBrush(fillColor);
 
     QColor penColor("#000000");
-    penColor.setAlphaF(0.05);
+    penColor.setAlphaF(0.08);
     QPen pen(penColor, 2);
     painter.setPen(pen);
 //    painter.drawRoundRect(rect, 10, 10);

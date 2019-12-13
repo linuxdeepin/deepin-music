@@ -46,8 +46,9 @@ public:
     void setThemeType(int type);
     int getThemeType() const;
 
-    void setPlayPixmap(QPixmap pixmap);
+    void setPlayPixmap(QPixmap pixmap, QPixmap sidebarPixmap);
     QPixmap getPlayPixmap() const;
+    QPixmap getSidebarPixmap() const;
 
 signals:
     void addToPlaylist(PlaylistPtr playlist, const MetaPtrList &metalist);

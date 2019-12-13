@@ -48,7 +48,7 @@ void MusicPixmapButton::paintEvent(QPaintEvent *event)
 
     painter.setBrush(Qt::NoBrush);
     QColor BorderColor("000000");
-    BorderColor.setAlphaF(0.05);
+    BorderColor.setAlphaF(0.08);
     QPen BorderPen(BorderColor);
     BorderPen.setWidthF(2);
     painter.setPen(BorderPen);

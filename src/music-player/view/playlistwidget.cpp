@@ -450,9 +450,9 @@ void PlayListWidget::slotTheme(int type)
     d->playListView->setThemeType(type);
 }
 
-void PlayListWidget::changePicture(QPixmap pixmap, QPixmap sidebarPixmap)
+void PlayListWidget::changePicture(QPixmap pixmap, QPixmap sidebarPixmap, QPixmap albumPixmap)
 {
     Q_D(PlayListWidget);
-    d->playListView->setPlayPixmap(pixmap, sidebarPixmap);
+    d->playListView->setPlayPixmap(pixmap, sidebarPixmap, albumPixmap);
 }
 

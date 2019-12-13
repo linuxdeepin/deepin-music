@@ -1279,8 +1279,8 @@ void MainFrame::changePicture()
         sidebarPixmap = DHiDPIHelper::loadNxPixmap(":/mpimage/light/music_withe_sidebar/music1.svg");
         break;
     }
-    d->musicListWidget->changePicture(pixmap, sidebarPixmap, albumPixmap);
-    d->playListWidget->changePicture(pixmap, albumPixmap);
+    d->musicListWidget->changePicture(pixmap, albumPixmap, sidebarPixmap);
+    d->playListWidget->changePicture(pixmap, sidebarPixmap, albumPixmap);
 }
 
 void MainFrame::onViewShortcut()

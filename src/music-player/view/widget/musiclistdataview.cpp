@@ -63,6 +63,7 @@ public:
     PlayMusicTypePtrList    curPlayMusicTypePtrList;
     QPixmap                 playingPixmap = QPixmap(":/mpimage/light/music1.svg");
     QPixmap                 sidebarPixmap = QPixmap(":/mpimage/light/music_withe_sidebar/music1.svg");
+    QPixmap                 albumPixmap   = QPixmap(":/mpimage/light/music_white_album_cover/music1.svg");
 
     MusicListDataView *q_ptr;
     Q_DECLARE_PUBLIC(MusicListDataView)
@@ -98,6 +99,8 @@ MusicListDataView::MusicListDataView(QWidget *parent)
     d->delegate = new MusicListDataDelegate;
     setItemDelegate(d->delegate);
     setViewportMargins(0, 0, 8, 0);
+
+    setUniformItemSizes(true);
 
     setViewModeFlag(QListView::ListMode);
     setResizeMode( QListView::Adjust );
@@ -273,13 +276,14 @@ int MusicListDataView::getThemeType() const
     return d->themeType;
 }
 
-void MusicListDataView::setPlayPixmap(QPixmap pixmap, QPixmap sidebarPixmap)
+void MusicListDataView::setPlayPixmap(QPixmap pixmap, QPixmap sidebarPixmap, QPixmap albumPixmap)
 {
     Q_D(MusicListDataView);
     d->playingPixmap = pixmap;
     d->sidebarPixmap = sidebarPixmap;
+    d->albumPixmap = albumPixmap;
     if (d->musciListDialog->isVisible())
-        d->musciListDialog->setPlayPixmap(pixmap);
+        d->musciListDialog->setPlayPixmap(pixmap, sidebarPixmap);
     update();
 }
 
@@ -293,6 +297,12 @@ QPixmap MusicListDataView::getSidebarPixmap() const
 {
     Q_D(const MusicListDataView);
     return d->sidebarPixmap;
+}
+
+QPixmap MusicListDataView::getAlbumPixmap() const
+{
+    Q_D(const MusicListDataView);
+    return d->albumPixmap;
 }
 
 void MusicListDataView::updateList()
@@ -333,6 +343,7 @@ void MusicListDataView::onMusiclistChanged(PlaylistPtr playlist)
         return;
     }
 
+    setUpdatesEnabled(false);
     d->model->removeRows(0, d->model->rowCount());
 
     QString searchStr = playlist->searchStr();
@@ -373,5 +384,6 @@ void MusicListDataView::onMusiclistChanged(PlaylistPtr playlist)
     }
 
     d->model->setPlaylist(playlist);
+    setUpdatesEnabled(true);
     //updateScrollbar();
 }

@@ -50,7 +50,7 @@ Cover::Cover(QWidget *parent)
 
     QWidget::setAttribute(Qt::WA_TranslucentBackground, true);
     d->m_borderColor = QColor(0, 0, 0);
-    d->m_borderColor.setAlphaF(0.05);
+    d->m_borderColor.setAlphaF(0.08);
     d->m_shadowColor = QColor(0, 255, 0, 126);
 
 //    QGraphicsDropShadowEffect *bodyShadow = new QGraphicsDropShadowEffect;

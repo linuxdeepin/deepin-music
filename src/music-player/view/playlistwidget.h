@@ -51,7 +51,7 @@ public slots:
                                     QList<PlaylistPtr >newlists);
 
     void slotTheme(int type);
-    void changePicture(QPixmap pixmap, QPixmap sidebarPixmap);
+    void changePicture(QPixmap pixmap, QPixmap sidebarPixmap, QPixmap albumPixmap);
 
 signals:
     void playall(PlaylistPtr playlist);

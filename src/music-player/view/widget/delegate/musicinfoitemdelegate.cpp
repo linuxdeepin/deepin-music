@@ -252,15 +252,16 @@ void MusicInfoItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
         font14.setWeight(QFont::Medium);
     }
 
-    //auto background = (index.row() % 2) == 1 ? baseColor : alternateBaseColor;
+    auto background = (index.row() % 2) == 1 ? baseColor : alternateBaseColor;
+    //auto background = baseColor;
 
-    auto background = baseColor;
-
-    painter->save();
-    painter->setPen(Qt::NoPen);
-    painter->setBrush(background);
-    painter->drawRect(option.rect);
-    painter->restore();
+    if (!(option.state & QStyle::State_Selected)) {
+        painter->save();
+        painter->setPen(Qt::NoPen);
+        painter->setBrush(background);
+        painter->drawRect(option.rect);
+        painter->restore();
+    }
 
     if (option.state & QStyle::State_Selected) {
         painter->save();
@@ -272,14 +273,14 @@ void MusicInfoItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
 
         nameColor = option.palette.highlightedText().color();
         otherColor = option.palette.highlightedText().color();
-    } else if ((index.row() % 2) == 0) {
+    }/* else if ((index.row() % 2) == 0) {
         painter->save();
         painter->setPen(Qt::NoPen);
         painter->setBrush(alternateBaseColor);
         QRect selecteColorRect = option.rect.adjusted(5, 0, -5, 0);
         painter->drawRoundedRect(selecteColorRect, 8, 8);
         painter->restore();
-    }
+    }*/
 
     //painter->fillRect(option.rect, background);
 
@@ -308,8 +309,10 @@ void MusicInfoItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
             }
 
             if (activeMeta == meta) {
-                auto playingIcon = listview->getPlayPixmap();
-                auto icon = QPixmap(playingIcon);
+                auto icon = listview->getPlayPixmap();
+                if (option.state & QStyle::State_Selected) {
+                    icon = listview->getSidebarPixmap();
+                }
                 qreal t_ratio = icon.devicePixelRatioF();
                 QRect t_ratioRect;
                 t_ratioRect.setX(0);
@@ -320,7 +323,7 @@ void MusicInfoItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
                 auto iconRect = QRectF(centerF.x() - t_ratioRect.width() / 2,
                                        centerF.y() - t_ratioRect.height() / 2,
                                        t_ratioRect.width(), t_ratioRect.height());
-                painter->drawPixmap(iconRect.toRect(), playingIcon);
+                painter->drawPixmap(iconRect.toRect(), icon);
 
             } else {
                 painter->setFont(font11);
