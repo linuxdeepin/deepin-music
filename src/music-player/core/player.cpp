@@ -800,8 +800,8 @@ void Player::setPlayOnLoaded(bool playOnLoaded)
 void Player::readSinkInputPath()
 {
     Q_D(Player);
-    if (!d->sinkInputPath.isEmpty())
-        return;
+//    if (!d->sinkInputPath.isEmpty())
+//        return;
     QVariant v = DBusUtils::redDBusProperty("com.deepin.daemon.Audio", "/com/deepin/daemon/Audio",
                                             "com.deepin.daemon.Audio", "SinkInputs");
 
