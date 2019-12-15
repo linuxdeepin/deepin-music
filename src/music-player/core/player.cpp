@@ -140,6 +140,7 @@ public:
     bool canSeek        = false;
     bool shuffle        = false;
     bool mute           = false; // unused
+    QString sinkInputPath;
 //    double volume       = 0;
 
     Player::PlaybackMode    mode    = Player::RepeatAll;
@@ -677,7 +678,7 @@ Player::PlaybackMode Player::mode() const
     return  d->mode;
 }
 
-bool Player::muted() const
+bool Player::muted()
 {
     Q_D(const Player);
     //return d->qplayer->isMuted();
@@ -796,13 +797,16 @@ void Player::setPlayOnLoaded(bool playOnLoaded)
     d->playOnLoad = playOnLoaded;
 }
 
-bool Player::setMusicVolume(double volume)
+void Player::readSinkInputPath()
 {
+    Q_D(Player);
+    if (!d->sinkInputPath.isEmpty())
+        return;
     QVariant v = DBusUtils::redDBusProperty("com.deepin.daemon.Audio", "/com/deepin/daemon/Audio",
                                             "com.deepin.daemon.Audio", "SinkInputs");
 
     if (!v.isValid())
-        return false;
+        return;
 
     QList<QDBusObjectPath> allSinkInputsList = v.value<QList<QDBusObjectPath> >();
     qDebug() << "allSinkInputsListSize: " << allSinkInputsList.size();
@@ -816,7 +820,18 @@ bool Player::setMusicVolume(double volume)
         if (!nameV.isValid() || nameV.toString() != "Deepin Music")
             continue;
 
-        QDBusInterface ainterface("com.deepin.daemon.Audio", curPath.path(),
+        d->sinkInputPath = curPath.path();
+        break;
+    }
+}
+
+bool Player::setMusicVolume(double volume)
+{
+    Q_D(Player);
+    readSinkInputPath();
+
+    if (!d->sinkInputPath.isEmpty()) {
+        QDBusInterface ainterface("com.deepin.daemon.Audio", d->sinkInputPath,
                                   "com.deepin.daemon.Audio.SinkInput",
                                   QDBusConnection::sessionBus());
         if (!ainterface.isValid()) {
@@ -829,30 +844,16 @@ bool Player::setMusicVolume(double volume)
         if (qFuzzyCompare(volume, 0.0))
             ainterface.call(QLatin1String("SetMute"), true);
     }
+
     return false;
 }
 
 bool Player::setMusicMuted(bool muted)
 {
-    QVariant v = DBusUtils::redDBusProperty("com.deepin.daemon.Audio", "/com/deepin/daemon/Audio",
-                                            "com.deepin.daemon.Audio", "SinkInputs");
-
-    if (!v.isValid())
-        return false;
-
-    QList<QDBusObjectPath> allSinkInputsList = v.value<QList<QDBusObjectPath> >();
-    qDebug() << "allSinkInputsListSize: " << allSinkInputsList.size();
-
-    for (auto curPath : allSinkInputsList) {
-        qDebug() << "path: " << curPath.path();
-
-        QVariant nameV = DBusUtils::redDBusProperty("com.deepin.daemon.Audio", curPath.path(),
-                                                    "com.deepin.daemon.Audio.SinkInput", "Name");
-
-        if (!nameV.isValid() || nameV.toString() != "Deepin Music")
-            continue;
-
-        QDBusInterface ainterface("com.deepin.daemon.Audio", curPath.path(),
+    Q_D(Player);
+    readSinkInputPath();
+    if (!d->sinkInputPath.isEmpty()) {
+        QDBusInterface ainterface("com.deepin.daemon.Audio", d->sinkInputPath,
                                   "com.deepin.daemon.Audio.SinkInput",
                                   QDBusConnection::sessionBus());
         if (!ainterface.isValid()) {
@@ -864,30 +865,17 @@ bool Player::setMusicMuted(bool muted)
 
         Q_EMIT mutedChanged(muted);
     }
+
     return false;
 }
 
-bool Player::isMusicMuted() const
+bool Player::isMusicMuted()
 {
-    QVariant v = DBusUtils::redDBusProperty("com.deepin.daemon.Audio", "/com/deepin/daemon/Audio",
-                                            "com.deepin.daemon.Audio", "SinkInputs");
+    Q_D(Player);
+    readSinkInputPath();
 
-    if (!v.isValid())
-        return false;
-
-    QList<QDBusObjectPath> allSinkInputsList = v.value<QList<QDBusObjectPath> >();
-    qDebug() << "allSinkInputsListSize: " << allSinkInputsList.size();
-
-    for (auto curPath : allSinkInputsList) {
-        qDebug() << "path: " << curPath.path();
-
-        QVariant nameV = DBusUtils::redDBusProperty("com.deepin.daemon.Audio", curPath.path(),
-                                                    "com.deepin.daemon.Audio.SinkInput", "Name");
-
-        if (!nameV.isValid() || nameV.toString() != "Deepin Music")
-            continue;
-
-        QVariant MuteV = DBusUtils::redDBusProperty("com.deepin.daemon.Audio", curPath.path(),
+    if (!d->sinkInputPath.isEmpty()) {
+        QVariant MuteV = DBusUtils::redDBusProperty("com.deepin.daemon.Audio", d->sinkInputPath,
                                                     "com.deepin.daemon.Audio.SinkInput", "Mute");
 
         if (!MuteV.isValid()) {
@@ -896,5 +884,6 @@ bool Player::isMusicMuted() const
 
         return MuteV.toBool();
     }
+
     return false;
 }

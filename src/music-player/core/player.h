@@ -134,7 +134,7 @@ public:
 //    bool shuffle() const;
     int volume() const;
     PlaybackMode mode() const;
-    bool muted() const;
+    bool muted();
     qint64 duration() const;
     double fadeInOutFactor() const;
     bool fadeInOut() const;
@@ -187,9 +187,10 @@ public slots:
     void setPlayOnLoaded(bool playOnLoaded);
 
 private:
+    void readSinkInputPath();
     bool setMusicVolume(double volume);
     bool setMusicMuted(bool muted);
-    bool isMusicMuted() const;
+    bool isMusicMuted();
 
 private:
     friend class DMusic::DSingleton<Player>;
