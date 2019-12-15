@@ -30,6 +30,7 @@
 #include <QHash>
 #include <QBuffer>
 #include <QByteArray>
+#include <QProcess>
 
 //#ifndef DISABLE_LIBAV
 #ifdef __cplusplus
@@ -41,6 +42,8 @@ extern "C" {
 }
 #endif // __cplusplus
 //#endif // DISABLE_LIBAV
+
+#include "util/global.h"
 
 class MetaBufferDetectorPrivate
 {
@@ -78,6 +81,18 @@ void MetaBufferDetector::run()
     QString hash = d->curHash;
     if (path.isEmpty())
         return;
+
+    QFileInfo fileInfo(path);
+    if (fileInfo.suffix() == "ape") {
+        QString curPath = Global::configPath();
+        QString toPath = QString("%1/.tmp.ape.mp3").arg(curPath);
+        if (QFile::exists(toPath)) {
+            QFile::remove(toPath);
+        }
+        QString program = QString("ffmpeg -i %1 -ac 1 -ab 32 -ar 24000 %2/.tmp.ape.mp3").arg(path).arg(curPath);
+        QProcess::execute(program);
+        path = toPath;
+    }
 
     AVFormatContext *pFormatCtx = avformat_alloc_context();
     avformat_open_input(&pFormatCtx, path.toStdString().c_str(), NULL, NULL);

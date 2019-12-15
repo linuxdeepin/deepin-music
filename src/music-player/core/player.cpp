@@ -28,11 +28,15 @@
 #include <QPropertyAnimation>
 #include <QAudioProbe>
 #include <QFileSystemWatcher>
+#include <QMimeDatabase>
+#include <QDBusObjectPath>
+#include <QDBusInterface>
+#include <QDBusReply>
+
+#include <DRecentManager>
 
 #include "metasearchservice.h"
-
-#include <QMimeDatabase>
-#include <DRecentManager>
+#include "util/dbusutils.h"
 
 DCORE_USE_NAMESPACE
 
@@ -119,6 +123,7 @@ public:
     PlayerPrivate(Player *parent) : q_ptr(parent)
     {
         qplayer = new QMediaPlayer();
+        qplayer->setVolume(100);
         qProbe = new QAudioProbe();
     }
 
@@ -675,7 +680,8 @@ Player::PlaybackMode Player::mode() const
 bool Player::muted() const
 {
     Q_D(const Player);
-    return d->qplayer->isMuted();
+    //return d->qplayer->isMuted();
+    return this->isMusicMuted();
 }
 
 qint64 Player::duration() const
@@ -752,14 +758,17 @@ void Player::setVolume(double volume)
     d->volume = volume;
 
     d->qplayer->blockSignals(true);
-    d->qplayer->setVolume(d->volume * d->fadeInOutFactor);
+    //d->qplayer->setVolume(d->volume * d->fadeInOutFactor);
     d->qplayer->blockSignals(false);
+
+    setMusicVolume(volume / 100.0);
 }
 
 void Player::setMuted(bool mute)
 {
     Q_D(Player);
-    d->qplayer->setMuted(mute);
+    //d->qplayer->setMuted(mute);
+    setMusicMuted(mute);
 }
 
 void Player::setFadeInOutFactor(double fadeInOutFactor)
@@ -769,9 +778,10 @@ void Player::setFadeInOutFactor(double fadeInOutFactor)
 //    qDebug() << "setFadeInOutFactor" << fadeInOutFactor
 //             << d->volume *d->fadeInOutFactor << d->volume;
     d->qplayer->blockSignals(true);
-    d->qplayer->setVolume(d->volume * d->fadeInOutFactor);
+    //d->qplayer->setVolume(d->volume * d->fadeInOutFactor);
     d->qplayer->blockSignals(false);
 
+    setMusicVolume(d->volume / 100.0);
 }
 
 void Player::setFadeInOut(bool fadeInOut)
@@ -784,4 +794,107 @@ void Player::setPlayOnLoaded(bool playOnLoaded)
 {
     Q_D(Player);
     d->playOnLoad = playOnLoaded;
+}
+
+bool Player::setMusicVolume(double volume)
+{
+    QVariant v = DBusUtils::redDBusProperty("com.deepin.daemon.Audio", "/com/deepin/daemon/Audio",
+                                            "com.deepin.daemon.Audio", "SinkInputs");
+
+    if (!v.isValid())
+        return false;
+
+    QList<QDBusObjectPath> allSinkInputsList = v.value<QList<QDBusObjectPath> >();
+    qDebug() << "allSinkInputsListSize: " << allSinkInputsList.size();
+
+    for (auto curPath : allSinkInputsList) {
+        qDebug() << "path: " << curPath.path();
+
+        QVariant nameV = DBusUtils::redDBusProperty("com.deepin.daemon.Audio", curPath.path(),
+                                                    "com.deepin.daemon.Audio.SinkInput", "Name");
+
+        if (!nameV.isValid() || nameV.toString() != "Deepin Music")
+            continue;
+
+        QDBusInterface ainterface("com.deepin.daemon.Audio", curPath.path(),
+                                  "com.deepin.daemon.Audio.SinkInput",
+                                  QDBusConnection::sessionBus());
+        if (!ainterface.isValid()) {
+            return false;
+        }
+
+        //调用设置音量
+        ainterface.call(QLatin1String("SetVolume"), volume, false);
+
+        if (qFuzzyCompare(volume, 0.0))
+            ainterface.call(QLatin1String("SetMute"), true);
+    }
+    return false;
+}
+
+bool Player::setMusicMuted(bool muted)
+{
+    QVariant v = DBusUtils::redDBusProperty("com.deepin.daemon.Audio", "/com/deepin/daemon/Audio",
+                                            "com.deepin.daemon.Audio", "SinkInputs");
+
+    if (!v.isValid())
+        return false;
+
+    QList<QDBusObjectPath> allSinkInputsList = v.value<QList<QDBusObjectPath> >();
+    qDebug() << "allSinkInputsListSize: " << allSinkInputsList.size();
+
+    for (auto curPath : allSinkInputsList) {
+        qDebug() << "path: " << curPath.path();
+
+        QVariant nameV = DBusUtils::redDBusProperty("com.deepin.daemon.Audio", curPath.path(),
+                                                    "com.deepin.daemon.Audio.SinkInput", "Name");
+
+        if (!nameV.isValid() || nameV.toString() != "Deepin Music")
+            continue;
+
+        QDBusInterface ainterface("com.deepin.daemon.Audio", curPath.path(),
+                                  "com.deepin.daemon.Audio.SinkInput",
+                                  QDBusConnection::sessionBus());
+        if (!ainterface.isValid()) {
+            return false;
+        }
+
+        //调用设置音量
+        ainterface.call(QLatin1String("SetMute"), muted);
+
+        Q_EMIT mutedChanged(muted);
+    }
+    return false;
+}
+
+bool Player::isMusicMuted() const
+{
+    QVariant v = DBusUtils::redDBusProperty("com.deepin.daemon.Audio", "/com/deepin/daemon/Audio",
+                                            "com.deepin.daemon.Audio", "SinkInputs");
+
+    if (!v.isValid())
+        return false;
+
+    QList<QDBusObjectPath> allSinkInputsList = v.value<QList<QDBusObjectPath> >();
+    qDebug() << "allSinkInputsListSize: " << allSinkInputsList.size();
+
+    for (auto curPath : allSinkInputsList) {
+        qDebug() << "path: " << curPath.path();
+
+        QVariant nameV = DBusUtils::redDBusProperty("com.deepin.daemon.Audio", curPath.path(),
+                                                    "com.deepin.daemon.Audio.SinkInput", "Name");
+
+        if (!nameV.isValid() || nameV.toString() != "Deepin Music")
+            continue;
+
+        QVariant MuteV = DBusUtils::redDBusProperty("com.deepin.daemon.Audio", curPath.path(),
+                                                    "com.deepin.daemon.Audio.SinkInput", "Mute");
+
+        if (!MuteV.isValid()) {
+            return false;
+        }
+
+        return MuteV.toBool();
+    }
+    return false;
 }

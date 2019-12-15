@@ -100,7 +100,8 @@ SOURCES += \
     core/metabufferdetector.cpp \
     view/widget/musicboxbutton.cpp \
     view/widget/model/musiclistmodel.cpp \
-    view/shortcut.cpp
+    view/shortcut.cpp \
+    core/util/dbusutils.cpp
 
 HEADERS += \
     musicapp.h \
@@ -175,7 +176,8 @@ HEADERS += \
     core/metabufferdetector.h \
     view/widget/musicboxbutton.h \
     view/widget/model/musiclistmodel.h \
-    view/shortcut.h
+    view/shortcut.h \
+    core/util/dbusutils.h
 
 RESOURCES += \
     resource/theme/theme.qrc \

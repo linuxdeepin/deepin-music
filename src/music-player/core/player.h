@@ -187,6 +187,11 @@ public slots:
     void setPlayOnLoaded(bool playOnLoaded);
 
 private:
+    bool setMusicVolume(double volume);
+    bool setMusicMuted(bool muted);
+    bool isMusicMuted() const;
+
+private:
     friend class DMusic::DSingleton<Player>;
     QScopedPointer<PlayerPrivate> d_ptr;
     Q_DECLARE_PRIVATE_D(qGetPtrHelper(d_ptr), Player)
