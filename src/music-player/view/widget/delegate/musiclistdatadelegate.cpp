@@ -297,7 +297,7 @@ void MusicListDataDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
         auto background = (index.row() % 2) == 1 ? baseColor : alternateBaseColor;
         //auto background = baseColor;
 
-        if (!(option.state & QStyle::State_Selected)) {
+        if (!(option.state & QStyle::State_Selected) && !(option.state & QStyle::State_MouseOver) ) {
             painter->save();
             painter->setPen(Qt::NoPen);
             painter->setBrush(background);
@@ -309,7 +309,12 @@ void MusicListDataDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
         if (option.state & QStyle::State_Selected) {
             painter->save();
             painter->setPen(Qt::NoPen);
-            painter->setBrush(option.palette.highlight());
+            QColor selectColor("#000000");
+            if (listview->getThemeType() == 2) {
+                selectColor = QColor("#FFFFFF");
+            }
+            selectColor.setAlphaF(0.2);
+            painter->setBrush(selectColor);
             QRect selecteColorRect = option.rect.adjusted(5, 0, -5, 0);
             painter->drawRoundedRect(selecteColorRect, 8, 8);
             painter->restore();
@@ -321,6 +326,15 @@ void MusicListDataDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
             painter->drawRoundedRect(selecteColorRect, 8, 8);
             painter->restore();
         }*/
+
+        if (option.state & QStyle::State_MouseOver) {
+            painter->save();
+            painter->setPen(Qt::NoPen);
+            painter->setBrush(option.palette.midlight());
+            QRect selecteColorRect = option.rect.adjusted(5, 0, -5, 0);
+            painter->drawRoundedRect(selecteColorRect, 8, 8);
+            painter->restore();
+        }
 
         QColor nameColor("#090909"), otherColor("#797979");
         otherColor.setAlphaF(0.5);

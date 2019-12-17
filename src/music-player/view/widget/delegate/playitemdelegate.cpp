@@ -362,7 +362,7 @@ void PlayItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
     auto background = (index.row() % 2) == 1 ? baseColor : alternateBaseColor;
     //auto background = baseColor;
 
-    if (!(option.state & QStyle::State_Selected)) {
+    if (!(option.state & QStyle::State_Selected) && !(option.state & QStyle::State_MouseOver) ) {
         painter->save();
         painter->setPen(Qt::NoPen);
         painter->setBrush(background);
@@ -398,7 +398,12 @@ void PlayItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
     if (option.state & QStyle::State_Selected) {
         painter->save();
         painter->setPen(Qt::NoPen);
-        painter->setBrush(option.palette.highlight());
+        QColor selectColor("#000000");
+        if (listview->getThemeType() == 2) {
+            selectColor = QColor("#FFFFFF");
+        }
+        selectColor.setAlphaF(0.2);
+        painter->setBrush(selectColor);
         QRect selecteColorRect = option.rect.adjusted(5, 0, -5, 0);
         painter->drawRoundedRect(selecteColorRect, 8, 8);
         painter->restore();
@@ -413,6 +418,15 @@ void PlayItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
         painter->drawRoundedRect(selecteColorRect, 8, 8);
         painter->restore();
     }*/
+
+    if (option.state & QStyle::State_MouseOver) {
+        painter->save();
+        painter->setPen(Qt::NoPen);
+        painter->setBrush(option.palette.midlight());
+        QRect selecteColorRect = option.rect.adjusted(5, 0, -5, 0);
+        painter->drawRoundedRect(selecteColorRect, 8, 8);
+        painter->restore();
+    }
 
     int rowCount = listview->model()->rowCount();
     auto rowCountSize = QString::number(rowCount).size();
