@@ -783,6 +783,9 @@ void MainFrame::binding(Presenter *presenter)
         if (playlist->id() != AlbumMusicListID && playlist->id() != ArtistMusicListID
                 && playlist->id() != AllMusicListID)
             this->sendMessage(icon, text);
+
+        QWidget *content = this->findChild<QWidget *>("_d_message_manager_content");
+        content->setContentsMargins(0, 0, 0, 90);
     });
 
 //    connect(presenter, &Presenter::showPlaylist,

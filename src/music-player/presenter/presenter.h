@@ -48,6 +48,7 @@ public:
     void openUri(const QUrl &uri);
 
     QList<PlaylistPtr > allplaylist();
+    PlaylistPtr playlist(const QString &id);
 
 public slots:
     void volumeUp();

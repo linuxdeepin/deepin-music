@@ -34,6 +34,7 @@ const QString ArtistMusicListID = "artist";
 const QString AllMusicListID = "all";
 const QString FavMusicListID = "fav";
 const QString SearchMusicListID = "search";
+const QString PlayMusicListID = "play";
 const QString NewMusicListID = "new";
 
 static PlaylistMeta emptyInfo;
@@ -113,7 +114,7 @@ void PlaylistManager::load()
     if (sortUUIDs.size() != d->playlists.size()) {
         qWarning() << "playlist order crash, restrot";
         d->sortUUIDs.clear();
-        d->sortUUIDs << SearchMusicListID << AlbumMusicListID << ArtistMusicListID << AllMusicListID << FavMusicListID;
+        d->sortUUIDs << SearchMusicListID << AlbumMusicListID << ArtistMusicListID << AllMusicListID << FavMusicListID << PlayMusicListID;
 
         QStringList sortUUIDs;
         for (auto playlist : d->playlists.values()) {
@@ -125,6 +126,7 @@ void PlaylistManager::load()
         sortUUIDs.removeAll(ArtistMusicListID);
         sortUUIDs.removeAll(AllMusicListID);
         sortUUIDs.removeAll(FavMusicListID);
+        sortUUIDs.removeAll(PlayMusicListID);
 
         d->sortUUIDs << sortUUIDs;
 
@@ -163,6 +165,12 @@ void PlaylistManager::load()
     auto searchName = tr("Search result");
     if (!search.isNull() && search->displayName() != searchName) {
         search->setDisplayName(searchName);
+    }
+
+    auto play = playlist(PlayMusicListID);
+    auto playName = tr("Play");
+    if (!play.isNull() && play->displayName() != playName) {
+        play->setDisplayName(playName);
     }
     QSqlDatabase::database().commit();
 }

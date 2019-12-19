@@ -59,7 +59,7 @@ SoundVolume::SoundVolume(QWidget *parent) : QWidget(parent), d_ptr(new SoundVolu
 
     setFixedSize(62, 201);
     auto layout = new QVBoxLayout(this);
-    layout->setContentsMargins(0, 5, 0, 11);
+    layout->setContentsMargins(2, 5, 0, 21);
     layout->setSpacing(0);
 
     d->volSlider = new DSlider(Qt::Vertical);
@@ -67,11 +67,11 @@ SoundVolume::SoundVolume(QWidget *parent) : QWidget(parent), d_ptr(new SoundVolu
     d->volSlider->setMaximum(100);
     d->volSlider->slider()->setSingleStep(Player::VolumeStep);
     d->volSlider->setValue(50);
-    d->volSlider->setFixedHeight(180);
+    d->volSlider->setFixedHeight(160);
     d->volSlider->setFixedWidth(24);
     d->volSlider->setIconSize(QSize(15, 15));
-    d->volSlider->setRightIcon(DHiDPIHelper::loadNxPixmap(":/mpimage/light/normal/volume_add_normal.svg"));
-    d->volSlider->setLeftIcon(DHiDPIHelper::loadNxPixmap(":/mpimage/light/normal/volume_lessen_normal.svg"));
+//    d->volSlider->setRightIcon(DHiDPIHelper::loadNxPixmap(":/mpimage/light/normal/volume_add_normal.svg"));
+//    d->volSlider->setLeftIcon(DHiDPIHelper::loadNxPixmap(":/mpimage/light/normal/volume_lessen_normal.svg"));
 
     layout->addStretch();
     layout->addWidget(d->volSlider, 0, Qt::AlignCenter);
@@ -251,7 +251,7 @@ void SoundVolume::slotTheme(int type)
     } else {
         rStr = "dark";
     }
-    d->volSlider->setRightIcon(DHiDPIHelper::loadNxPixmap(QString(":/mpimage/%1/normal/volume_add_normal.svg").arg(rStr)));
-    d->volSlider->setLeftIcon(DHiDPIHelper::loadNxPixmap(QString(":/mpimage/%1/normal/volume_lessen_normal.svg").arg(rStr)));
+//    d->volSlider->setRightIcon(DHiDPIHelper::loadNxPixmap(QString(":/mpimage/%1/normal/volume_add_normal.svg").arg(rStr)));
+//    d->volSlider->setLeftIcon(DHiDPIHelper::loadNxPixmap(QString(":/mpimage/%1/normal/volume_lessen_normal.svg").arg(rStr)));
 
 }

@@ -517,6 +517,12 @@ QList<PlaylistPtr > Presenter::allplaylist()
     return d->playlistMgr->allplaylist();
 }
 
+PlaylistPtr Presenter::playlist(const QString &id)
+{
+    Q_D(Presenter);
+    return d->playlistMgr->playlist(id);
+}
+
 void Presenter::volumeUp()
 {
     Q_D(Presenter);

@@ -280,6 +280,16 @@ void MediaDatabase::init()
         addPlaylist(playlistMeta);
     }
 
+    playlistMeta.displayName = "Playlist";
+    playlistMeta.uuid = "play";
+    playlistMeta.icon = "play";
+    playlistMeta.readonly = true;
+    playlistMeta.hide = true;
+    playlistMeta.sortID = 5;
+    if (!playlistExist("play")) {
+        addPlaylist(playlistMeta);
+    }
+
     playlistMeta.displayName = "Search result";
     playlistMeta.uuid = "search";
     playlistMeta.icon = "search";

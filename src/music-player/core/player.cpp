@@ -535,7 +535,7 @@ void Player::resume(PlaylistPtr playlist, const MetaPtr meta)
 
     setPlayOnLoaded(true);
     //增大音乐自动开始播放时间，给setposition留足空间
-    QTimer::singleShot(1000, this, [ = ]() {
+    QTimer::singleShot(100, this, [ = ]() {
         d->qplayer->play();
     });
 

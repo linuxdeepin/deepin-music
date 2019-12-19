@@ -101,7 +101,8 @@ SOURCES += \
     view/widget/musicboxbutton.cpp \
     view/widget/model/musiclistmodel.cpp \
     view/shortcut.cpp \
-    core/util/dbusutils.cpp
+    core/util/dbusutils.cpp \
+    view/widget/tooltips.cpp
 
 HEADERS += \
     musicapp.h \
@@ -177,7 +178,8 @@ HEADERS += \
     view/widget/musicboxbutton.h \
     view/widget/model/musiclistmodel.h \
     view/shortcut.h \
-    core/util/dbusutils.h
+    core/util/dbusutils.h \
+    view/widget/tooltips.h
 
 RESOURCES += \
     resource/theme/theme.qrc \

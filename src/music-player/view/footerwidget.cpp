@@ -35,6 +35,7 @@
 #include <DFloatingWidget>
 #include <DPalette>
 #include <DButtonBox>
+#include <DToolTip>
 
 #include <metadetector.h>
 
@@ -55,7 +56,9 @@
 #include "widget/musicpixmapbutton.h"
 #include "widget/waveform.h"
 #include "playlistwidget.h"
-#include"widget/musicboxbutton.h"
+#include "widget/musicboxbutton.h"
+#include "widget/tooltips.h"
+
 static const char *sPropertyFavourite         = "fav";
 static const char *sPropertyPlayStatus        = "playstatus";
 
@@ -127,11 +130,11 @@ void FooterPrivate::installTipHint(QWidget *w, const QString &hintstr)
 {
     Q_Q(Footer);
     // TODO: parent must be mainframe
-    auto hintWidget = new DLabel(q->parentWidget());
+    auto hintWidget = new ToolTips("", q->parentWidget());
     hintWidget->hide();
     hintWidget->setText(hintstr);
     hintWidget->setFixedHeight(32);
-    hintWidget->setForegroundRole(DPalette::TextTitle);
+//    hintWidget->setForegroundRole(DPalette::TextTitle);
     installHint(w, hintWidget);
 }
 
@@ -392,6 +395,15 @@ Footer::Footer(QWidget *parent) :
     d->installTipHint(d->btLyric, tr("Lyrics"));
     d->installTipHint(d->btPlayMode, tr("Play Mode"));
     d->installTipHint(d->btPlayList, tr("Playlist"));
+
+//    d->btPrev->setToolTip(tr("Previous"));
+//    d->btNext->setToolTip(tr("Next"));
+//    d->btPlay->setToolTip(tr("Play/Pause"));
+//    d->btFavorite->setToolTip(tr("Favorite"));
+//    d->btLyric->setToolTip(tr("Lyrics"));
+//    d->btPlayMode->setToolTip(tr("Play Mode"));
+//    d->btPlayList->setToolTip(tr("Playlist"));
+
     d->volSlider = new SoundVolume(this->parentWidget());
     d->volSlider->hide();
     d->volSlider->setProperty("DelayHide", true);
