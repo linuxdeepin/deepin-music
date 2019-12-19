@@ -511,7 +511,7 @@ void Player::playMeta(PlaylistPtr playlist, const MetaPtr meta)
     d->activePlaylist->play(curMeta);
 
     DRecentData data;
-    data.appName = "Deepin Music";
+    data.appName = "Music";
     data.appExec = "deepin-music";
     DRecentManager::addItem(curMeta->localPath, data);
 
@@ -817,7 +817,7 @@ void Player::readSinkInputPath()
         QVariant nameV = DBusUtils::redDBusProperty("com.deepin.daemon.Audio", curPath.path(),
                                                     "com.deepin.daemon.Audio.SinkInput", "Name");
 
-        if (!nameV.isValid() || nameV.toString() != "Deepin Music")
+        if (!nameV.isValid() || nameV.toString() != "Music")
             continue;
 
         d->sinkInputPath = curPath.path();
