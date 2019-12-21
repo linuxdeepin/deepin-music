@@ -101,10 +101,112 @@ void PresenterPrivate::initBackend()
     PlaylistPtr artistPlaylist = playlistMgr->playlist(ArtistMusicListID);
     artistPlaylist->metaListToPlayMusicTypePtrList(Playlist::SortByArtist, currentPlaylist->allmusic());
 
-    connect(this, &PresenterPrivate::play, player, &Player::playMeta);
-    connect(this, &PresenterPrivate::resume, player, &Player::resume);
-    connect(this, &PresenterPrivate::playNext, player, &Player::playNextMeta);
-    connect(this, &PresenterPrivate::playPrev, player, &Player::playPrevMusic);
+    player->setCurPlaylist(playlistMgr->playlist(PlayMusicListID));
+
+    connect(this, &PresenterPrivate::play,
+    this, [ = ](PlaylistPtr playlist, const MetaPtr meta) {
+        auto curPlaylist = player->curPlaylist();
+        if (curPlaylist != playlist) {
+            curPlaylist->removeMusicList(curPlaylist->allmusic());
+            auto curAllMetas = playlist->allmusic();
+            for (int i = curAllMetas.size() - 1; i >= 0; i--) {
+                if (meta == curAllMetas[i])
+                    continue;
+                if (curAllMetas[i]->invalid)
+                    curAllMetas.removeAt(i);
+            }
+            curPlaylist->appendMusicList(curAllMetas);
+        } else {
+            auto curPlaylist = player->curPlaylist();
+            auto curAllMetas = curPlaylist->allmusic();
+            for (int i = curAllMetas.size() - 1; i >= 0; i--) {
+                if (!curAllMetas[i]->invalid)
+                    curAllMetas.removeAt(i);
+            }
+            if (!curAllMetas.isEmpty()) {
+                curPlaylist->removeMusicList(curAllMetas);
+            }
+        }
+        player->playMeta(playlist, meta);
+    });
+    connect(this, &PresenterPrivate::resume,
+    this, [ = ](PlaylistPtr playlist, const MetaPtr meta) {
+        auto curPlaylist = player->curPlaylist();
+        if (curPlaylist != playlist) {
+            curPlaylist->removeMusicList(curPlaylist->allmusic());
+            auto curAllMetas = playlist->allmusic();
+            for (int i = curAllMetas.size() - 1; i >= 0; i--) {
+                if (meta == curAllMetas[i])
+                    continue;
+                if (curAllMetas[i]->invalid)
+                    curAllMetas.removeAt(i);
+            }
+            curPlaylist->appendMusicList(curAllMetas);
+        } else {
+            auto curPlaylist = player->curPlaylist();
+            auto curAllMetas = curPlaylist->allmusic();
+            for (int i = curAllMetas.size() - 1; i >= 0; i--) {
+                if (!curAllMetas[i]->invalid)
+                    curAllMetas.removeAt(i);
+            }
+            if (!curAllMetas.isEmpty()) {
+                curPlaylist->removeMusicList(curAllMetas);
+            }
+        }
+        player->resume(playlist, meta);
+    });
+    connect(this, &PresenterPrivate::playNext,
+    this, [ = ](PlaylistPtr playlist, const MetaPtr meta) {
+        auto curPlaylist = player->curPlaylist();
+        if (curPlaylist != playlist) {
+            curPlaylist->removeMusicList(curPlaylist->allmusic());
+            auto curAllMetas = playlist->allmusic();
+            for (int i = curAllMetas.size() - 1; i >= 0; i--) {
+                if (meta == curAllMetas[i])
+                    continue;
+                if (curAllMetas[i]->invalid)
+                    curAllMetas.removeAt(i);
+            }
+            curPlaylist->appendMusicList(curAllMetas);
+        } else {
+            auto curPlaylist = player->curPlaylist();
+            auto curAllMetas = curPlaylist->allmusic();
+            for (int i = curAllMetas.size() - 1; i >= 0; i--) {
+                if (!curAllMetas[i]->invalid)
+                    curAllMetas.removeAt(i);
+            }
+            if (!curAllMetas.isEmpty()) {
+                curPlaylist->removeMusicList(curAllMetas);
+            }
+        }
+        player->playNextMeta(playlist, meta);
+    });
+    connect(this, &PresenterPrivate::playPrev,
+    this, [ = ](PlaylistPtr playlist, const MetaPtr meta) {
+        auto curPlaylist = player->curPlaylist();
+        if (curPlaylist != playlist) {
+            curPlaylist->removeMusicList(curPlaylist->allmusic());
+            auto curAllMetas = playlist->allmusic();
+            for (int i = curAllMetas.size() - 1; i >= 0; i--) {
+                if (meta == curAllMetas[i])
+                    continue;
+                if (curAllMetas[i]->invalid)
+                    curAllMetas.removeAt(i);
+            }
+            curPlaylist->appendMusicList(curAllMetas);
+        } else {
+            auto curPlaylist = player->curPlaylist();
+            auto curAllMetas = curPlaylist->allmusic();
+            for (int i = curAllMetas.size() - 1; i >= 0; i--) {
+                if (!curAllMetas[i]->invalid)
+                    curAllMetas.removeAt(i);
+            }
+            if (!curAllMetas.isEmpty()) {
+                curPlaylist->removeMusicList(curAllMetas);
+            }
+        }
+        player->playPrevMusic(playlist, meta);
+    });
     connect(this, &PresenterPrivate::pause, player, &Player::pause);
     connect(this, &PresenterPrivate::stop, player, &Player::stop);
 
@@ -611,7 +713,7 @@ void Presenter::onMusiclistRemove(PlaylistPtr playlist, const MetaPtrList metali
     Q_D(Presenter);
     if (playlist == nullptr)
         return;
-    auto playinglist = d->player->activePlaylist();
+    auto playinglist = d->player->curPlaylist();
     MetaPtr next;
     bool t_isLastMeta = false;
 
@@ -660,11 +762,18 @@ void Presenter::onMusiclistRemove(PlaylistPtr playlist, const MetaPtrList metali
 
         MediaDatabase::instance()->removeMediaMetaList(metalist);
         d->library->removeMediaMetaList(metalist);
+    } else if (playlist->id() == PlayMusicListID) {
+        next = playlist->removeMusicList(metalist);
+        if (playlist->isEmpty()) {
+            qDebug() << "meta library clean";
+            onMusicStop(playlist, next);
+            d->player->activePlaylist()->play(nullptr);
+        }
     } else {
         next = playlist->removeMusicList(metalist);
     }
 
-    if (playlist == d->player->activePlaylist()
+    if (playlist == d->player->curPlaylist()
             || playlist->id() == AllMusicListID) {
         //stop music
         for (auto &meta : metalist) {
@@ -686,7 +795,7 @@ void Presenter::onMusiclistDelete(PlaylistPtr playlist, const MetaPtrList metali
     // find next music
     MetaPtr next;
     bool t_isLastMeta = false;
-    auto playinglist = d->player->activePlaylist();
+    auto playinglist = d->player->curPlaylist();
 
     //检查当前播放的是否包含最后一首
     for (auto meta : metalist) {

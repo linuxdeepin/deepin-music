@@ -516,6 +516,12 @@ Footer::~Footer()
 
 }
 
+void Footer::setCurPlaylist(PlaylistPtr playlist)
+{
+    Q_D(Footer);
+    d->activingPlaylist = playlist;
+}
+
 void Footer::enableControl(bool enable)
 {
     Q_D(Footer);
@@ -535,13 +541,13 @@ void Footer::enableControl(bool enable)
     d->artist->blockSignals(!enable);
 }
 
-void Footer::initData(PlaylistPtr current, int mode)
-{
-    Q_D(Footer);
-    d->mode = mode;
-    d->activingPlaylist = current;
-    d->btPlayMode->setMode(mode);
-}
+//void Footer::initData(PlaylistPtr current, int mode)
+//{
+//    Q_D(Footer);
+//    d->mode = mode;
+//    d->activingPlaylist = current;
+//    d->btPlayMode->setMode(mode);
+//}
 
 void Footer::setViewname(const QString &viewname)
 {
@@ -681,19 +687,19 @@ bool Footer::eventFilter(QObject *obj, QEvent *event)
 void Footer::onMusicListAdded(PlaylistPtr playlist, const MetaPtrList metalist)
 {
     Q_D(Footer);
-    if (playlist->id() == FavMusicListID) {
-        for (auto &meta : metalist) {
-            if (d->activingMeta && meta == d->activingMeta) {
-                d->updateQssProperty(d->btFavorite, sPropertyFavourite, true);
-            }
-        }
-    } else if (d->activingPlaylist != nullptr && d->activingPlaylist->id() == playlist->id()) {
-        if (playlist->allmusic().size() == 1) {
+    if (d->activingPlaylist != nullptr) {
+        if (d->activingPlaylist->allmusic().isEmpty()) {
+            d->btPlay->setDisabled(true);
             d->btPrev->setDisabled(true);
             d->btNext->setDisabled(true);
+        } else if (d->activingPlaylist->allmusic().size() == 1) {
+            d->btPrev->setDisabled(true);
+            d->btNext->setDisabled(true);
+            d->btPlay->setDisabled(false);
         } else {
             d->btPrev->setDisabled(false);
             d->btNext->setDisabled(false);
+            d->btPlay->setDisabled(false);
         }
     }
 }
@@ -701,19 +707,19 @@ void Footer::onMusicListAdded(PlaylistPtr playlist, const MetaPtrList metalist)
 void Footer::onMusicListRemoved(PlaylistPtr playlist, const MetaPtrList metalist)
 {
     Q_D(Footer);
-    if (playlist->id() == FavMusicListID) {
-        for (auto &meta : metalist) {
-            if (meta == d->activingMeta) {
-                d->updateQssProperty(d->btFavorite, sPropertyFavourite, false);
-            }
-        }
-    } else if (d->activingPlaylist != nullptr && d->activingPlaylist->id() == playlist->id()) {
-        if (playlist->allmusic().size() == 1) {
+    if (d->activingPlaylist != nullptr) {
+        if (d->activingPlaylist->allmusic().isEmpty()) {
+            d->btPlay->setDisabled(true);
             d->btPrev->setDisabled(true);
             d->btNext->setDisabled(true);
+        } else if (d->activingPlaylist->allmusic().size() == 1) {
+            d->btPrev->setDisabled(true);
+            d->btNext->setDisabled(true);
+            d->btPlay->setDisabled(false);
         } else {
             d->btPrev->setDisabled(false);
             d->btNext->setDisabled(false);
+            d->btPlay->setDisabled(false);
         }
     }
 }
@@ -765,15 +771,23 @@ void Footer::onMusicPlayed(PlaylistPtr playlist, const MetaPtr meta)
     d->btFavorite->show();
     d->btLyric->show();
 
-    d->activingPlaylist = playlist;
+    //d->activingPlaylist = playlist;
     d->activingMeta = meta;
 
-    if (playlist->allmusic().size() == 1) {
-        d->btPrev->setDisabled(true);
-        d->btNext->setDisabled(true);
-    } else {
-        d->btPrev->setDisabled(false);
-        d->btNext->setDisabled(false);
+    if (d->activingPlaylist != nullptr) {
+        if (d->activingPlaylist->allmusic().isEmpty()) {
+            d->btPlay->setDisabled(true);
+            d->btPrev->setDisabled(true);
+            d->btNext->setDisabled(true);
+        } else if (d->activingPlaylist->allmusic().size() == 1) {
+            d->btPrev->setDisabled(true);
+            d->btNext->setDisabled(true);
+            d->btPlay->setDisabled(false);
+        } else {
+            d->btPrev->setDisabled(false);
+            d->btNext->setDisabled(false);
+            d->btPlay->setDisabled(false);
+        }
     }
 
     d->updateQssProperty(d->btFavorite, sPropertyFavourite, meta->favourite);
@@ -816,11 +830,11 @@ void Footer::onMusicError(PlaylistPtr playlist, const MetaPtr meta, int error)
     Q_D(Footer);
 
     //d->waveform->clearBufferAudio();
-    if (d->activingMeta && d->activingPlaylist) {
-        if (meta != d->activingMeta || playlist != d->activingPlaylist) {
-            return;
-        }
-    }
+//    if (d->activingMeta && d->activingPlaylist) {
+//        if (meta != d->activingMeta || playlist != d->activingPlaylist) {
+//            return;
+//        }
+//    }
 
     if (0 == error) {
         return;
@@ -846,11 +860,11 @@ void Footer::onMusicPause(PlaylistPtr playlist, const MetaPtr meta)
 {
     Q_D(Footer);
 //    d->waveform->clearBufferAudio();
-    if (meta->hash != d->activingMeta->hash || playlist != d->activingPlaylist) {
-        qWarning() << "can not pasue" << d->activingPlaylist << playlist
-                   << d->activingMeta->hash << meta->hash;
-        return;
-    }
+//    if (meta->hash != d->activingMeta->hash || playlist != d->activingPlaylist) {
+//        qWarning() << "can not pasue" << d->activingPlaylist << playlist
+//                   << d->activingMeta->hash << meta->hash;
+//        return;
+//    }
     auto status = sPlayStatusValuePause;
     d->updateQssProperty(d->btPlay, sPropertyPlayStatus, status);
     if (d->m_type == 1) {
@@ -866,12 +880,20 @@ void Footer::onMusicPause(PlaylistPtr playlist, const MetaPtr meta)
     }
     d->btPlayingStatus = false;
 
-    if (playlist->allmusic().size() == 1) {
-        d->btPrev->setDisabled(true);
-        d->btNext->setDisabled(true);
-    } else {
-        d->btPrev->setDisabled(false);
-        d->btNext->setDisabled(false);
+    if (d->activingPlaylist != nullptr) {
+        if (d->activingPlaylist->allmusic().isEmpty()) {
+            d->btPlay->setDisabled(true);
+            d->btPrev->setDisabled(true);
+            d->btNext->setDisabled(true);
+        } else if (d->activingPlaylist->allmusic().size() == 1) {
+            d->btPrev->setDisabled(true);
+            d->btNext->setDisabled(true);
+            d->btPlay->setDisabled(false);
+        } else {
+            d->btPrev->setDisabled(false);
+            d->btNext->setDisabled(false);
+            d->btPlay->setDisabled(false);
+        }
     }
 }
 
@@ -906,12 +928,20 @@ void Footer::onMusicStoped(PlaylistPtr playlist, const MetaPtr meta)
     }
     d->btPlayingStatus = false;
 
-    if (playlist->allmusic().size() == 1) {
-        d->btPrev->setDisabled(true);
-        d->btNext->setDisabled(true);
-    } else {
-        d->btPrev->setDisabled(false);
-        d->btNext->setDisabled(false);
+    if (d->activingPlaylist != nullptr) {
+        if (d->activingPlaylist->allmusic().isEmpty()) {
+            d->btPlay->setDisabled(true);
+            d->btPrev->setDisabled(true);
+            d->btNext->setDisabled(true);
+        } else if (d->activingPlaylist->allmusic().size() == 1) {
+            d->btPrev->setDisabled(true);
+            d->btNext->setDisabled(true);
+            d->btPlay->setDisabled(false);
+        } else {
+            d->btPrev->setDisabled(false);
+            d->btNext->setDisabled(false);
+            d->btPlay->setDisabled(false);
+        }
     }
 }
 

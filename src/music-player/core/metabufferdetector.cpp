@@ -90,7 +90,9 @@ void MetaBufferDetector::run()
             QFile::remove(toPath);
         }
         QString fromPath = QString("%1/.tmp.ape").arg(curPath);
-        QFile::copy(path, fromPath);
+        QFile file(path);
+        file.link(fromPath);
+//        QFile::copy(path, fromPath);
         QString program = QString("ffmpeg -i %1 -ac 1 -ab 32 -ar 24000 %2/.tmp.ape.mp3").arg(fromPath).arg(curPath);
         QProcess::execute(program);
         path = toPath;

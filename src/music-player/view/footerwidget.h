@@ -44,8 +44,10 @@ public:
     ~Footer();
 
 public:
+    void setCurPlaylist(PlaylistPtr playlist);
+
     void enableControl(bool enable = true);
-    void initData(PlaylistPtr current, int mode);
+//    void initData(PlaylistPtr current, int mode);
 
     void setViewname(const QString &viewname);
     QString defaultCover() const;

@@ -70,6 +70,9 @@ void PlayListWidgetPrivate::initData(PlaylistPtr playlist)
 {
     Q_Q(PlayListWidget);
 
+    if (playlist->id() != PlayMusicListID)
+        return;
+
     q->updateInfo(playlist);
 
     playListView->onMusiclistChanged(playlist);
@@ -240,6 +243,10 @@ PlayListWidget::~PlayListWidget()
 void PlayListWidget::updateInfo(PlaylistPtr playlist)
 {
     Q_D(PlayListWidget);
+
+    if (playlist->id() != PlayMusicListID)
+        return;
+
     QString infoStr;
     int sortMetasSize = playlist->allmusic().size();
     if (sortMetasSize == 0) {
@@ -250,6 +257,12 @@ void PlayListWidget::updateInfo(PlaylistPtr playlist)
         infoStr = tr("%1 songs").arg(sortMetasSize);
     }
     d->infoLabel->setText(infoStr);
+}
+
+void PlayListWidget::setCurPlaylist(PlaylistPtr playlist)
+{
+    Q_D(PlayListWidget);
+    d->initData(playlist);
 }
 
 void PlayListWidget::dragEnterEvent(QDragEnterEvent *event)

@@ -729,6 +729,9 @@ void MainFrame::binding(Presenter *presenter)
 {
     Q_D(MainFrame);
 
+    d->playListWidget->setCurPlaylist(presenter->playlist(PlayMusicListID));
+    d->footer->setCurPlaylist(presenter->playlist(PlayMusicListID));
+
     connect(this, &MainFrame::importSelectFiles, presenter, &Presenter::onImportFiles);
     connect(this, &MainFrame::addPlaylist, presenter, &Presenter::onPlaylistAdd);
 
@@ -1099,9 +1102,9 @@ void MainFrame::binding(Presenter *presenter)
             d->musicListWidget,  &MusicListWidget::onMusicListAdded);
     connect(presenter, &Presenter::musicListRemoved,
             d->musicListWidget,  &MusicListWidget::onMusicListRemoved);
+
     connect(d->musicListWidget, &MusicListWidget::requestCustomContextMenu,
             presenter, &Presenter::onRequestMusiclistMenu);
-
     connect(d->playListWidget, &PlayListWidget::updateMetaCodec,
             presenter, &Presenter::onUpdateMetaCodec);
     connect(d->playListWidget, &PlayListWidget::addToPlaylist,

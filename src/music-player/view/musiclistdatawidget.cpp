@@ -879,8 +879,15 @@ void MusicListDataWidget::onMusicListAdded(PlaylistPtr playlist, const MetaPtrLi
 void MusicListDataWidget::onMusicListRemoved(PlaylistPtr playlist, const MetaPtrList metalist)
 {
     Q_D(MusicListDataWidget);
-    if (playlist != d->curPlaylist)
+    if (playlist != d->curPlaylist) {
+        if (playlist->id() == PlayMusicListID && playlist->allmusic().isEmpty()) {
+            d->albumListView->setPlaying(nullptr);
+            d->artistListView->setPlaying(nullptr);
+            d->musicListView->setPlaying(nullptr);
+        }
         return;
+    }
+
     if (d->curPlaylist->id() == playlist->id()) {
         if (playlist->id() != AlbumMusicListID && playlist->id() != ArtistMusicListID && playlist->id() != AllMusicListID) {
             d->updateInfo();

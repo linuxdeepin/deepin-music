@@ -36,6 +36,7 @@ public:
     ~PlayListWidget();
 
     void updateInfo(PlaylistPtr playlist);
+    void setCurPlaylist(PlaylistPtr playlist);
 
 public slots:
     void onMusiclistChanged(PlaylistPtr playlist);

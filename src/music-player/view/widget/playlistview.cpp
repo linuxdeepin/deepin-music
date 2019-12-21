@@ -380,10 +380,23 @@ void PlayListView::keyPressEvent(QKeyEvent *event)
     switch (event->modifiers()) {
     case Qt::NoModifier:
         switch (event->key()) {
-        case Qt::Key_Delete:
+        case Qt::Key_Delete: {
             QItemSelectionModel *selection = this->selectionModel();
             d->removeSelection(selection);
-            break;
+        }
+        break;
+        case Qt::Key_Return: {
+            QItemSelectionModel *selection = this->selectionModel();
+            if (!selection->selectedRows().isEmpty()) {
+                auto index = selection->selectedRows().first();
+                if (d->model->meta(index) == playlist()->playing()) {
+                    Q_EMIT resume(d->model->meta(index));
+                } else {
+                    Q_EMIT playMedia(d->model->meta(index));
+                }
+            }
+        }
+        break;
         }
         break;
     case Qt::ShiftModifier:

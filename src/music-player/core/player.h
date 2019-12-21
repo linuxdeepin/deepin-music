@@ -96,6 +96,7 @@ public:
 public:
     void init();
 
+    void setCurPlaylist(PlaylistPtr curPlaylist);
     void loadMedia(PlaylistPtr playlist, const MetaPtr meta);
     void playMeta(PlaylistPtr playlist, const MetaPtr meta);
     void resume(PlaylistPtr playlist, const MetaPtr meta);
@@ -107,6 +108,7 @@ public:
 
     bool isActiveMeta(MetaPtr meta) const;
     MetaPtr activeMeta() const;
+    PlaylistPtr curPlaylist() const;
     PlaylistPtr activePlaylist() const;
     QStringList supportedFilterStringList()const;
     QStringList supportedSuffixList()const;

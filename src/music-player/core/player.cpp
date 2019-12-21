@@ -150,6 +150,7 @@ public:
     QMediaPlayer    *qplayer;
     QAudioProbe     *qProbe;
     PlaylistPtr     activePlaylist;
+    PlaylistPtr     curPlaylist;
     MetaPtr         activeMeta;
 
     double          volume      = 50.0;
@@ -309,6 +310,9 @@ void PlayerPrivate::initConnection()
         qWarning() << error << activePlaylist << activeMeta;
         if (error == QMediaPlayer::ResourceError) {
             if (!QFile::exists(activeMeta->localPath)) {
+                MetaPtrList removeMusicList;
+                removeMusicList.append(activeMeta);
+                curPlaylist->removeMusicList(removeMusicList);
                 Q_EMIT q->mediaError(activePlaylist, activeMeta, static_cast<Player::Error>(error));
             }
         }
@@ -335,13 +339,13 @@ void PlayerPrivate::initConnection()
 void PlayerPrivate::selectNext(const MetaPtr info, Player::PlaybackMode mode)
 {
     Q_Q(Player);
-    if (!activePlaylist || activePlaylist->isEmpty()) {
+    if (!curPlaylist || curPlaylist->isEmpty()) {
         return;
     }
 
     bool invalidFlag = info->invalid;
     if (invalidFlag) {
-        for (auto curMeta : activePlaylist->allmusic()) {
+        for (auto curMeta : curPlaylist->allmusic()) {
             if (!curMeta->invalid) {
                 invalidFlag = false;
                 break;
@@ -352,14 +356,14 @@ void PlayerPrivate::selectNext(const MetaPtr info, Player::PlaybackMode mode)
 
     switch (mode) {
     case Player::RepeatAll: {
-        auto curMeta = activePlaylist->next(info);
+        auto curMeta = curPlaylist->next(info);
         if (QFile::exists(curMeta->localPath)) {
             curMeta->invalid = false;
         }
         if (curMeta->invalid && !invalidFlag) {
             int curNum = 0;
-            while (curNum < activePlaylist->allmusic().size()) {
-                curMeta = activePlaylist->next(curMeta);
+            while (curNum < curPlaylist->allmusic().size()) {
+                curMeta = curPlaylist->next(curMeta);
                 if (!curMeta->invalid)
                     break;
             }
@@ -372,14 +376,14 @@ void PlayerPrivate::selectNext(const MetaPtr info, Player::PlaybackMode mode)
         break;
     }
     case Player::Shuffle: {
-        auto curMeta = activePlaylist->shuffleNext(info);
+        auto curMeta = curPlaylist->shuffleNext(info);
         if (QFile::exists(curMeta->localPath)) {
             curMeta->invalid = false;
         }
         if (curMeta->invalid && !invalidFlag) {
             int curNum = 0;
             while (true) {
-                curMeta = activePlaylist->shuffleNext(curMeta);
+                curMeta = curPlaylist->shuffleNext(curMeta);
                 if (!curMeta->invalid || QFile::exists(curMeta->localPath))
                     break;
             }
@@ -393,13 +397,13 @@ void PlayerPrivate::selectNext(const MetaPtr info, Player::PlaybackMode mode)
 void PlayerPrivate::selectPrev(const MetaPtr info, Player::PlaybackMode mode)
 {
     Q_Q(Player);
-    if (!activePlaylist || activePlaylist->isEmpty()) {
+    if (!curPlaylist || curPlaylist->isEmpty()) {
         return;
     }
 
     bool invalidFlag = info->invalid;
     if (invalidFlag) {
-        for (auto curMeta : activePlaylist->allmusic()) {
+        for (auto curMeta : curPlaylist->allmusic()) {
             if (!curMeta->invalid) {
                 invalidFlag = false;
                 break;
@@ -409,14 +413,14 @@ void PlayerPrivate::selectPrev(const MetaPtr info, Player::PlaybackMode mode)
 
     switch (mode) {
     case Player::RepeatAll: {
-        auto curMeta = activePlaylist->prev(info);
+        auto curMeta = curPlaylist->prev(info);
         if (QFile::exists(curMeta->localPath)) {
             curMeta->invalid = false;
         }
         if (curMeta->invalid && !invalidFlag) {
             int curNum = 0;
-            while (curNum < activePlaylist->allmusic().size()) {
-                curMeta = activePlaylist->prev(curMeta);
+            while (curNum < curPlaylist->allmusic().size()) {
+                curMeta = curPlaylist->prev(curMeta);
                 if (!curMeta->invalid || QFile::exists(curMeta->localPath))
                     break;
             }
@@ -429,14 +433,14 @@ void PlayerPrivate::selectPrev(const MetaPtr info, Player::PlaybackMode mode)
         break;
     }
     case Player::Shuffle: {
-        auto curMeta = activePlaylist->shufflePrev(info);
+        auto curMeta = curPlaylist->shufflePrev(info);
         if (QFile::exists(curMeta->localPath)) {
             curMeta->invalid = false;
         }
         if (curMeta->invalid && !invalidFlag) {
             int curNum = 0;
             while (true) {
-                curMeta = activePlaylist->shufflePrev(curMeta);
+                curMeta = curPlaylist->shufflePrev(curMeta);
                 if (!curMeta->invalid || QFile::exists(curMeta->localPath))
                     break;
             }
@@ -461,6 +465,12 @@ void Player::init()
     d->initConnection();
 }
 
+void Player::setCurPlaylist(PlaylistPtr curPlaylist)
+{
+    Q_D(Player);
+    d->curPlaylist = curPlaylist;
+}
+
 Player::~Player()
 {
     qDebug() << "destroy Player";
@@ -481,7 +491,8 @@ void Player::loadMedia(PlaylistPtr playlist, const MetaPtr meta)
              << DMusic::lengthString(meta->length);
     Q_D(Player);
     d->activeMeta = meta;
-    d->activePlaylist = playlist;
+    if (playlist->id() != PlayMusicListID)
+        d->activePlaylist = playlist;
 
     d->qplayer->blockSignals(true);
     d->qplayer->setMedia(QMediaContent(QUrl::fromLocalFile(meta->localPath)));
@@ -491,16 +502,17 @@ void Player::loadMedia(PlaylistPtr playlist, const MetaPtr meta)
 
 void Player::playMeta(PlaylistPtr playlist, const MetaPtr meta)
 {
+    Q_D(Player);
     MetaPtr curMeta = meta;
     if (curMeta == nullptr)
-        curMeta = playlist->first();
+        curMeta = d->curPlaylist->first();
     qDebug() << "playMeta"
              << curMeta->title
              << DMusic::lengthString(curMeta->offset) << "/"
              << DMusic::lengthString(curMeta->length);
 
-    Q_D(Player);
-    d->activePlaylist = playlist;
+    if (playlist->id() != PlayMusicListID)
+        d->activePlaylist = playlist;
 
     d->fileSystemWatcher.removePaths(d->fileSystemWatcher.files());
     d->fileSystemWatcher.addPath(curMeta->localPath);
@@ -509,6 +521,7 @@ void Player::playMeta(PlaylistPtr playlist, const MetaPtr meta)
     d->qplayer->setMedia(QMediaContent(QUrl::fromLocalFile(curMeta->localPath)));
     d->qplayer->setPosition(curMeta->offset);
     d->activePlaylist->play(curMeta);
+    d->curPlaylist->play(curMeta);
 
     DRecentData data;
     data.appName = "Music";
@@ -533,6 +546,8 @@ void Player::resume(PlaylistPtr playlist, const MetaPtr meta)
 //    Q_ASSERT(playlist == d->activePlaylist);
 //    Q_ASSERT(meta->hash == d->activeMeta->hash);
 
+    if (d->curPlaylist != nullptr)
+        d->curPlaylist->play(meta);
     setPlayOnLoaded(true);
     //增大音乐自动开始播放时间，给setposition留足空间
     QTimer::singleShot(100, this, [ = ]() {
@@ -563,7 +578,7 @@ void Player::resume(PlaylistPtr playlist, const MetaPtr meta)
 void Player::playNextMeta(PlaylistPtr playlist, const MetaPtr meta)
 {
     Q_D(Player);
-    Q_ASSERT(playlist == d->activePlaylist);
+//    Q_ASSERT(playlist == d->activePlaylist);
 
     setPlayOnLoaded(true);
     if (d->mode == RepeatSingle) {
@@ -576,7 +591,7 @@ void Player::playNextMeta(PlaylistPtr playlist, const MetaPtr meta)
 void Player::playPrevMusic(PlaylistPtr playlist, const MetaPtr meta)
 {
     Q_D(Player);
-    Q_ASSERT(playlist == d->activePlaylist);
+//    Q_ASSERT(playlist == d->activePlaylist);
 
     setPlayOnLoaded(true);
     if (d->mode == RepeatSingle) {
@@ -643,6 +658,12 @@ MetaPtr Player::activeMeta() const
 {
     Q_D(const Player);
     return d->activeMeta;
+}
+
+PlaylistPtr Player::curPlaylist() const
+{
+    Q_D(const Player);
+    return d->curPlaylist;
 }
 
 PlaylistPtr Player::activePlaylist() const
