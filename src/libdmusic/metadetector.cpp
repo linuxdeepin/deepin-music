@@ -253,7 +253,7 @@ void MetaDetector::updateMetaFromLocalfile(MediaMeta *meta, const QFileInfo &fil
     }
     meta->length = 0;
 
-    updateMediaFileTagCodec(meta, "", false);
+    updateMediaFileTagCodec(meta, "", true);
 
     if (meta->length == 0) {
         //#ifndef DISABLE_LIBAV

@@ -151,7 +151,7 @@ void FooterPrivate::initConnection()
     q->connect(btPlayMode, &ModeButton::modeChanged,
     q, [ = ](int mode) {
         Q_EMIT q->modeChanged(mode);
-        auto hintWidget = btPlayMode->property("HintWidget").value<DLabel *>();
+        auto hintWidget = btPlayMode->property("HintWidget").value<QWidget *>();
         hintFilter->showHitsFor(btPlayMode, hintWidget);
     });
 
@@ -687,6 +687,13 @@ bool Footer::eventFilter(QObject *obj, QEvent *event)
 void Footer::onMusicListAdded(PlaylistPtr playlist, const MetaPtrList metalist)
 {
     Q_D(Footer);
+    if (playlist != nullptr && playlist->id() == FavMusicListID
+            && d->activingMeta != nullptr && playlist->contains(d->activingMeta))
+        d->updateQssProperty(d->btFavorite, sPropertyFavourite, true);
+    else {
+        d->updateQssProperty(d->btFavorite, sPropertyFavourite, false);
+    }
+
     if (d->activingPlaylist != nullptr) {
         if (d->activingPlaylist->allmusic().isEmpty()) {
             d->btPlay->setDisabled(true);
@@ -707,6 +714,13 @@ void Footer::onMusicListAdded(PlaylistPtr playlist, const MetaPtrList metalist)
 void Footer::onMusicListRemoved(PlaylistPtr playlist, const MetaPtrList metalist)
 {
     Q_D(Footer);
+    if (playlist != nullptr && playlist->id() == FavMusicListID
+            && d->activingMeta != nullptr && playlist->contains(d->activingMeta))
+        d->updateQssProperty(d->btFavorite, sPropertyFavourite, true);
+    else {
+        d->updateQssProperty(d->btFavorite, sPropertyFavourite, false);
+    }
+
     if (d->activingPlaylist != nullptr) {
         if (d->activingPlaylist->allmusic().isEmpty()) {
             d->btPlay->setDisabled(true);
@@ -1206,22 +1220,25 @@ void Footer::onModeChange(int mode)
     d->btPlayMode->blockSignals(false);
     d->mode = mode;
 
-    auto hintWidget = d->btPlayMode->property("HintWidget").value<DLabel *>();
-    QString playmode;
-    switch (mode) {
-    default:
-    case 0:
-        playmode = Footer::tr("List Loop");
-        break;
-    case 1:
-        playmode = Footer::tr("Single Loop");
-        break;
-    case 2:
-        playmode = Footer::tr("Shuffle");
-        break;
-    }
-    if (hintWidget) {
-        hintWidget->setText(playmode);
+    auto hintWidget = d->btPlayMode->property("HintWidget").value<QWidget *>();
+    if (hintWidget != nullptr) {
+        auto hintToolTips = static_cast<ToolTips *>(hintWidget);
+        QString playmode;
+        switch (mode) {
+        default:
+        case 0:
+            playmode = Footer::tr("List Loop");
+            break;
+        case 1:
+            playmode = Footer::tr("Single Loop");
+            break;
+        case 2:
+            playmode = Footer::tr("Shuffle");
+            break;
+        }
+        if (hintToolTips != nullptr) {
+            hintToolTips->setText(playmode);
+        }
     }
 }
 
