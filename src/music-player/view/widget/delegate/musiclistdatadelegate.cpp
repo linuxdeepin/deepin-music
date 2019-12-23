@@ -301,7 +301,9 @@ void MusicListDataDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
             painter->save();
             painter->setPen(Qt::NoPen);
             painter->setBrush(background);
-            painter->drawRect(option.rect);
+            //painter->drawRect(option.rect);
+            QRect selecteColorRect = option.rect.adjusted(5, 0, -5, 0);
+            painter->drawRoundedRect(selecteColorRect, 8, 8);
             painter->restore();
             //painter->fillRect(option.rect, background);
         }
