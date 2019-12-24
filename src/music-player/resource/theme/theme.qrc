@@ -157,5 +157,7 @@
         <file>common/image/picturelist_press.svg</file>
         <file>common/image/textlist_normal.svg</file>
         <file>common/image/picturelist_normal.svg</file>
+        <file>common/image/notify_fail_new.svg</file>
+        <file>common/image/notify_success_new.svg</file>
     </qresource>
 </RCC>

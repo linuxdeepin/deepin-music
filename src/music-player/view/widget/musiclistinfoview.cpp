@@ -434,7 +434,12 @@ void MusicListInfoView::showContextMenu(const QPoint &pos,
         act->setData(QVariant::fromValue(favPlaylist));
     }
 
+    PlaylistPtr curPlaylist = nullptr;
     for (auto playlist : newPlaylists) {
+        if (playlist->id() == PlayMusicListID) {
+            curPlaylist = playlist;
+            continue;
+        }
         QFont font(playlistMenu.font());
         QFontMetrics fm(font);
         auto text = fm.elidedText(QString(playlist->displayName().replace("&", "&&")),

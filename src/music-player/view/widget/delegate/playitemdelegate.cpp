@@ -425,7 +425,7 @@ void PlayItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
     if (option.state & QStyle::State_MouseOver) {
         painter->save();
         painter->setPen(Qt::NoPen);
-        QColor hovertColor(option.palette.midlight().color());
+        QColor hovertColor(option.palette.shadow().color());
         if (option.state & QStyle::State_Selected)
             hovertColor.setAlphaF(0.2);
         painter->setBrush(hovertColor);

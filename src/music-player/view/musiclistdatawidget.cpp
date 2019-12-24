@@ -31,6 +31,7 @@
 
 #include <DLabel>
 #include <DPushButton>
+#include <DToolButton>
 #include <DComboBox>
 #include <DLabel>
 
@@ -62,8 +63,8 @@ public:
     DDropdown           *musicDropdown  = nullptr;
     DPushButton         *btPlayAll      = nullptr;
     QLabel              *infoLabel      = nullptr;
-    MusicImageButton    *btIconMode     = nullptr;
-    MusicImageButton    *btlistMode     = nullptr;
+    DToolButton    *btIconMode     = nullptr;
+    DToolButton    *btlistMode     = nullptr;
     MusicListDataView   *albumListView  = nullptr;
     MusicListDataView   *artistListView = nullptr;
     PlayListView        *musicListView  = nullptr;
@@ -539,7 +540,7 @@ void MusicListDataWidgetPrivate::initConntion()
         Q_EMIT q->removeMetasFavourite(metalist);
     });
 
-    q->connect(btIconMode, &DPushButton::clicked,
+    q->connect(btIconMode, &DToolButton::clicked,
     q, [ = ](bool) {
         if (albumListView->isVisible()) {
             albumListView->setViewModeFlag(QListView::IconMode);
@@ -552,7 +553,7 @@ void MusicListDataWidgetPrivate::initConntion()
         btIconMode->setChecked(true);
         btlistMode->setChecked(false);
     });
-    q->connect(btlistMode, &DPushButton::clicked,
+    q->connect(btlistMode, &DToolButton::clicked,
     q, [ = ](bool) {
         if (albumListView->isVisible()) {
             albumListView->setViewModeFlag(QListView::ListMode);
@@ -737,19 +738,21 @@ MusicListDataWidget::MusicListDataWidget(QWidget *parent) :
     d->infoLabel->setPalette(infoLabelPalette);
     d->infoLabel->setForegroundRole(DPalette::ButtonText);
 
-    d->btIconMode = new MusicImageButton(":/mpimage/light/normal/picture_list_normal.svg",
-                                         ":/mpimage/light/hover/picture_list_hover.svg",
-                                         ":/mpimage/light/press/picture_list_press.svg",
-                                         ":/mpimage/light/active/picture_list_active.svg");
+//    d->btIconMode = new MusicImageButton(":/mpimage/light/normal/picture_list_normal.svg",
+//                                         ":/mpimage/light/hover/picture_list_hover.svg",
+//                                         ":/mpimage/light/press/picture_list_press.svg",
+//                                         ":/mpimage/light/active/picture_list_active.svg");
+    d->btIconMode = new DToolButton;
     d->btIconMode->setFixedSize(36, 36);
     d->btIconMode->setObjectName("MusicListDataWidgetIconMode");
     d->btIconMode->setCheckable(true);
     d->btIconMode->setChecked(true);
 
-    d->btlistMode = new MusicImageButton(":/mpimage/light/normal/text_list_normal.svg",
-                                         ":/mpimage/light/hover/text_list_hover.svg",
-                                         ":/mpimage/light/press/text_list_press.svg",
-                                         ":/mpimage/light/active/text_list_active.svg");
+//    d->btlistMode = new MusicImageButton(":/mpimage/light/normal/text_list_normal.svg",
+//                                         ":/mpimage/light/hover/text_list_hover.svg",
+//                                         ":/mpimage/light/press/text_list_press.svg",
+//                                         ":/mpimage/light/active/text_list_active.svg");
+    d->btlistMode = new DToolButton;
     d->btlistMode->setFixedSize(36, 36);
     d->btlistMode->setObjectName("MusicListDataWidgetListMode");
     d->btlistMode->setCheckable(true);
@@ -1026,14 +1029,19 @@ void MusicListDataWidget::slotTheme(int type)
 //        d->btPlayAll->setPalette(palette);
     }
 
-    d->btIconMode->setPropertyPic(QString(":/mpimage/%1/normal/picture_list_normal.svg").arg(rStr),
-                                  QString(":/mpimage/%1/hover/picture_list_hover.svg").arg(rStr),
-                                  QString(":/mpimage/%1/press/picture_list_press.svg").arg(rStr),
-                                  QString(":/mpimage/%1/active/picture_list_active.svg").arg(rStr));
-    d->btlistMode->setPropertyPic(QString(":/mpimage/%1/normal/text_list_normal.svg").arg(rStr),
-                                  QString(":/mpimage/%1/hover/text_list_hover.svg").arg(rStr),
-                                  QString(":/mpimage/%1/press/text_list_press.svg").arg(rStr),
-                                  QString(":/mpimage/%1/active/text_list_active.svg").arg(rStr));
+//    d->btIconMode->setPropertyPic(QString(":/mpimage/%1/normal/picture_list_normal.svg").arg(rStr),
+//                                  QString(":/mpimage/%1/hover/picture_list_hover.svg").arg(rStr),
+//                                  QString(":/mpimage/%1/press/picture_list_press.svg").arg(rStr),
+//                                  QString(":/mpimage/%1/active/picture_list_active.svg").arg(rStr));
+//    d->btlistMode->setPropertyPic(QString(":/mpimage/%1/normal/text_list_normal.svg").arg(rStr),
+//                                  QString(":/mpimage/%1/hover/text_list_hover.svg").arg(rStr),
+//                                  QString(":/mpimage/%1/press/text_list_press.svg").arg(rStr),
+//                                  QString(":/mpimage/%1/active/text_list_active.svg").arg(rStr));
+
+    d->btIconMode->setIcon(QIcon(QString(":/mpimage/light/normal/picture_list_normal.svg").arg(rStr)));
+    d->btIconMode->setIconSize(QSize(36, 36));
+    d->btlistMode->setIcon(QIcon(QString(":/mpimage/light/normal/text_list_normal.svg").arg(rStr)));
+    d->btlistMode->setIconSize(QSize(36, 36));
     d->albumListView->setThemeType(type);
     d->artistListView->setThemeType(type);
     d->musicListView->setThemeType(type);

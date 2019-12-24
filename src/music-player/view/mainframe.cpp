@@ -775,7 +775,7 @@ void MainFrame::binding(Presenter *presenter)
 
     connect(presenter, &Presenter::notifyAddToPlaylist,
     this, [ = ](PlaylistPtr playlist, const MetaPtrList) {
-        auto icon = QIcon(":/common/image/notify_success.svg");
+        auto icon = QIcon(":/common/image/notify_success_new.svg");
         QFontMetrics fm(font());
         auto displayName = fm.elidedText(playlist->displayName(), Qt::ElideMiddle, 300);
 //        auto text = tr("Added to %1").arg(displayName);

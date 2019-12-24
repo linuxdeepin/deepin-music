@@ -948,7 +948,7 @@ void Presenter::onRequestMusiclistMenu(const QPoint &pos, char type)
     newlists.removeAll(d->playlistMgr->playlist(AllMusicListID));
     newlists.removeAll(d->playlistMgr->playlist(FavMusicListID));
     newlists.removeAll(d->playlistMgr->playlist(SearchMusicListID));
-    newlists.removeAll(d->playlistMgr->playlist(PlayMusicListID));
+    //newlists.removeAll(d->playlistMgr->playlist(PlayMusicListID));
 
     auto selectedlist = d->currentPlaylist;
     auto favlist = d->playlistMgr->playlist(FavMusicListID);
