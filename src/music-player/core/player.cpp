@@ -62,7 +62,7 @@ void initMiniTypes()
     suffixBlacklist.insert("mpeg4", true);
     suffixBlacklist.insert("3gp", true);
     suffixBlacklist.insert("flv", true);
-    suffixBlacklist.insert("amr", true);
+//    suffixBlacklist.insert("amr", true);
     suffixBlacklist.insert("ass", true);
 
     QHash<QString, bool> suffixWhitelist;

@@ -459,6 +459,12 @@ void Presenter::postAction()
     d->player->setMode(static_cast<Player::PlaybackMode>(playmode));
     Q_EMIT this->modeChanged(playmode);
 
+    auto curPlaylist = d->playlistMgr->playlist(PlayMusicListID);
+    if (curPlaylist->isEmpty()) {
+        d->settings->setOption("base.play.last_playlist", "");
+        d->settings->setOption("base.play.last_meta", "");
+    }
+
     auto allplaylist = d->playlistMgr->playlist(AllMusicListID);
     auto lastPlaylist = allplaylist;
     if (lastPlaylist.isNull()) {
@@ -470,7 +476,7 @@ void Presenter::postAction()
     auto isMetaLibClear = MediaLibrary::instance()->isEmpty();
     isMetaLibClear |= allplaylist->isEmpty();
 
-    if (d->settings->value("base.play.remember_progress").toBool() && !isMetaLibClear) {
+    if (!curPlaylist->isEmpty() && d->settings->value("base.play.remember_progress").toBool() && !isMetaLibClear) {
         d->syncPlayerResult = true;
 
         auto lastPlaylistId = d->settings->value("base.play.last_playlist").toString();
@@ -718,7 +724,7 @@ void Presenter::onMusiclistRemove(PlaylistPtr playlist, const MetaPtrList metali
     bool t_isLastMeta = false;
 
     //检查当前播放的是否包含最后一首
-    if (playinglist != nullptr) {
+    if (playinglist != nullptr && d->player->activeMeta() != nullptr) {
         for (auto meta : metalist) {
             if (meta->hash == d->player->activeMeta()->hash && playlist->isLast(meta)) {
                 t_isLastMeta = true;
@@ -767,7 +773,8 @@ void Presenter::onMusiclistRemove(PlaylistPtr playlist, const MetaPtrList metali
         if (playlist->isEmpty()) {
             qDebug() << "meta library clean";
             onMusicStop(playlist, next);
-            d->player->activePlaylist()->play(nullptr);
+            if (d->player->activePlaylist() != nullptr)
+                d->player->activePlaylist()->play(nullptr);
         }
     } else {
         next = playlist->removeMusicList(metalist);

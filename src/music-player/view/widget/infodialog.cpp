@@ -96,7 +96,7 @@ void InfoDialogPrivate::initUI()
     title->setFixedWidth(300);
     title->setAlignment(Qt::AlignCenter);
     title->setWordWrap(true);
-    title->setForegroundRole(DPalette::TextTitle);
+    title->setForegroundRole(DPalette::BrightText);
 
     auto split = new DLabel();
     split->setObjectName("InfoSplit");
@@ -104,6 +104,7 @@ void InfoDialogPrivate::initUI()
 
     infoGridFrame = new DFrame;
     infoGridFrame->setFocusPolicy(Qt::NoFocus);
+    infoGridFrame->setLineWidth(1);
     infoGridFrame->setFrameRounded(true);
     infoGridFrame->setMaximumWidth(300);
     infoGridFrame->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
@@ -158,7 +159,7 @@ void InfoDialogPrivate::initUI()
 //        infoKey->setMinimumHeight(18);
         infoKey->setForegroundRole(DPalette::WindowText);
         infoKey->setAlignment(Qt::AlignLeft | Qt::AlignTop);
-        DFontSizeManager::instance()->bind(infoKey, DFontSizeManager::T6);
+        DFontSizeManager::instance()->bind(infoKey, DFontSizeManager::T8);
 
         auto infoValue = new DLabel();
 //        infoValue->setFont(infoFont);
@@ -170,7 +171,7 @@ void InfoDialogPrivate::initUI()
         infoValue->setAlignment(Qt::AlignLeft | Qt::AlignTop);
         infoValue->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
         infoValue->setForegroundRole(DPalette::WindowText);
-        DFontSizeManager::instance()->bind(infoValue, DFontSizeManager::T6);
+        DFontSizeManager::instance()->bind(infoValue, DFontSizeManager::T8);
         valueList << infoValue;
 
         infogridLayout->addWidget(infoKey);
@@ -300,6 +301,12 @@ void InfoDialog::setThemeType(int type)
     if (type == 1) {
         rStr = "light";
 
+        DPalette framePl = this->palette();
+        QColor frameColor("#F7F7F7");
+        frameColor.setAlphaF(0.8);
+        framePl.setColor(DPalette::Window, frameColor);
+        this->setBackgroundRole(DPalette::Window);
+
         DPalette pl = d->infoGridFrame->palette();
         QColor windowColor("#FFFFFF");
         windowColor.setAlphaF(0.7);
@@ -312,6 +319,13 @@ void InfoDialog::setThemeType(int type)
         d->infoGridFrame->setBackgroundRole(DPalette::Window);
     } else {
         rStr = "dark";
+
+        DPalette framePl = this->palette();
+        QColor frameColor("#191919");
+        frameColor.setAlphaF(0.8);
+        framePl.setColor(DPalette::Window, frameColor);
+        this->setBackgroundRole(DPalette::Window);
+
 
         DPalette pl = d->infoGridFrame->palette();
         QColor windowColor("#000000");

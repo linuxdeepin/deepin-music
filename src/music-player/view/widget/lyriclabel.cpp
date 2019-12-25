@@ -65,7 +65,9 @@ void LyricLabel::paintItem(QPainter *painter, int index, const QRect &rect)
         font.setPixelSize(font.pixelSize() + 1);
         painter->setFont(font);
         QPoint leftpos = rect.bottomLeft();
+        leftpos.setY(leftpos.y() + rect.height() / 2.0 + 5);
         QPoint rightpos = rect.bottomRight();
+        rightpos.setY(leftpos.y());
         rightpos.setX(rightpos.x() - 3);
         leftpos.setY(leftpos.y() - 3);
         rightpos.setY(rightpos.y() - 3);
@@ -99,14 +101,36 @@ void LyricLabel::paintItem(QPainter *painter, int index, const QRect &rect)
         painter->setPen(color);
         painter->setFont(*lyricFont);
     }
-    painter->drawText(rect, Qt::AlignCenter, lyric->getLineAt(index));
+    QFontMetrics fm(*lyricFont);
+    QString lricstr = lyric->getLineAt(index);
+    QPoint tleftpos = rect.topLeft();
+    if (fm.width(lricstr)  > rect.width() - 100) {
+
+        QString str1, str2;
+        for (int i = 0; i < lricstr.count(); i++) {
+            str1.append(lricstr.at(i));
+            if (fm.width(str1) > rect.width() - 100) {
+                str1.chop(1);
+                break;
+            }
+        }
+        str2 = lricstr.remove(str1);
+
+        painter->drawText(QRect(tleftpos.x(), tleftpos.y(), rect.width(), rect.height() / 2), Qt::AlignCenter, str1);
+        painter->drawText(QRect(tleftpos.x(), tleftpos.y() + rect.height() / 2, rect.width(), rect.height() / 2), Qt::AlignCenter, str2);
+
+    } else {
+        painter->drawText(QRect(tleftpos.x(), tleftpos.y(), rect.width(), rect.height() / 2), Qt::AlignCenter, lyric->getLineAt(index));
+    }
+
 }
 
 int LyricLabel::itemHeight() const
 {
     QFontMetrics fm(*lyricFont);
     //qDebug() << "itemheight" << fm.height()*2.8;
-    return fm.height() * 1.4;
+    //return fm.height() * 1.4;
+    return fm.height() * 2.8;
     //return 45;
 }
 

@@ -170,12 +170,12 @@ void MetaDetector::updateMediaFileTagCodec(MediaMeta *meta, const QByteArray &co
         }
 
 //        qDebug() << "convert to" << detectCodec;
-//        QTextCodec *codec = QTextCodec::codecForName(detectCodec);
-//        meta->album = codec->toUnicode(tag->album().to8Bit().c_str());
-//        meta->artist = codec->toUnicode(tag->artist().to8Bit().c_str());
-//        meta->title = codec->toUnicode(tag->title().to8Bit().c_str());
+        QTextCodec *codec = QTextCodec::codecForName(detectCodec);
+        meta->album = codec->toUnicode(tag->album().toCString());
+        meta->artist = codec->toUnicode(tag->artist().toCString());
+        meta->title = codec->toUnicode(tag->title().toCString());
 
-//#ifndef true
+#ifdef true
 //        qDebug() << "convert to" << detectCodec << QTextCodec::availableCodecs();
         const size_t buflen = 1024 * 10;
         char buf[buflen];
@@ -194,7 +194,7 @@ void MetaDetector::updateMediaFileTagCodec(MediaMeta *meta, const QByteArray &co
         meta->album = QString::fromUtf8(buf);
 //        qDebug() << len <<  QString::fromUtf8(buf) << buf << u_errorName(err);
         Q_UNUSED(len);
-//#endif
+#endif
     } else {
         meta->album = TStringToQString(tag->album());
         meta->artist = TStringToQString(tag->artist());

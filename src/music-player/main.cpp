@@ -93,7 +93,7 @@ int main(int argc, char *argv[])
     app.loadTranslator();
 
     // !!! MUST setApplicationDisplayName before DMainWindow create
-    app.setApplicationDisplayName(QObject::tr("Music"));
+//    app.setApplicationDisplayName(QObject::tr("Music"));
     //app.setWindowIcon(QIcon(":/common/image/deepin-music.svg"));
     QIcon icon = QIcon::fromTheme("deepin-music");
     app.setProductIcon(icon);

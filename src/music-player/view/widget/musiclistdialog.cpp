@@ -200,6 +200,11 @@ void MusicListDialogPrivate::initConnection()
                 if (!curMata->invalid) {
                     invalidFlag = false;
                     break;
+                } else {
+                    if (QFile::exists(curMata->localPath)) {
+                        invalidFlag = false;
+                        break;
+                    }
                 }
             }
             if (!invalidFlag) {
@@ -211,6 +216,11 @@ void MusicListDialogPrivate::initConnection()
                     cutMeta = musicListInfoView->playlist()->shuffleNext(cutMeta);
                     if (!cutMeta->invalid)
                         break;
+                    else {
+                        if (QFile::exists(cutMeta->localPath)) {
+                            break;
+                        }
+                    }
                 }
 
                 Q_EMIT q->playMedia(cutMeta);

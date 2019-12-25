@@ -481,6 +481,10 @@ Footer::Footer(QWidget *parent) :
     d->btSound->setFocusPolicy(Qt::NoFocus);
     d->btPlayList->setFocusPolicy(Qt::NoFocus);
 
+    d->btPrev->setDisabled(true);
+    d->btNext->setDisabled(true);
+    d->btPlay->setDisabled(true);
+
     d->initConnection();
 
     connect(d->btCover, &DPushButton::clicked, this, [ = ](bool) {
@@ -741,6 +745,9 @@ void Footer::onMusicListRemoved(PlaylistPtr playlist, const MetaPtrList metalist
 void Footer::onMusicPlayed(PlaylistPtr playlist, const MetaPtr meta)
 {
     Q_D(Footer);
+
+    if (!d->activingPlaylist->contains(meta))
+        return;
 
     QFontMetrics fm(d->title->font());
     auto text = fm.elidedText(meta->title, Qt::ElideMiddle, d->title->maximumWidth());

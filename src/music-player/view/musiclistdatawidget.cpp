@@ -34,6 +34,7 @@
 #include <DToolButton>
 #include <DComboBox>
 #include <DLabel>
+#include <DFrame>
 
 #include "util/pinyinsearch.h"
 
@@ -54,15 +55,15 @@ public:
     void initConntion();
     void showEmptyHits();
 
-    QLabel              *emptyHits      = nullptr;
-    QLabel             *emptySearchHits = nullptr;
+    DLabel              *emptyHits      = nullptr;
+    DLabel             *emptySearchHits = nullptr;
     DWidget             *actionBar      = nullptr;
-    QLabel              *titleLabel     = nullptr;
+    DLabel              *titleLabel     = nullptr;
     DDropdown           *albumDropdown  = nullptr;
     DDropdown           *artistDropdown = nullptr;
     DDropdown           *musicDropdown  = nullptr;
     DPushButton         *btPlayAll      = nullptr;
-    QLabel              *infoLabel      = nullptr;
+    DLabel              *infoLabel      = nullptr;
     DToolButton    *btIconMode     = nullptr;
     DToolButton    *btlistMode     = nullptr;
     MusicListDataView   *albumListView  = nullptr;
@@ -650,14 +651,14 @@ MusicListDataWidget::MusicListDataWidget(QWidget *parent) :
     d->actionBar->setObjectName("MusicListDataActionBar");
 
     auto actionBarLayout = new QVBoxLayout(d->actionBar);
-    actionBarLayout->setContentsMargins(10, 0, 8, 0);
+    actionBarLayout->setContentsMargins(10, 3, 8, 0);
     actionBarLayout->setSpacing(0);
 
     auto actionTileBarLayout = new QHBoxLayout();
-    actionTileBarLayout->setContentsMargins(10, 0, 8, 0);
+    actionTileBarLayout->setContentsMargins(10, 3, 8, 0);
     actionTileBarLayout->setSpacing(0);
 
-    d->titleLabel = new QLabel;
+    d->titleLabel = new DLabel;
     auto titleFont = d->titleLabel->font();
     titleFont.setFamily("SourceHanSansSC");
     titleFont.setWeight(QFont::Medium);
@@ -668,6 +669,9 @@ MusicListDataWidget::MusicListDataWidget(QWidget *parent) :
     d->titleLabel->setObjectName("MusicListDataTitle");
     d->titleLabel->setText(tr("All Music"));
     d->titleLabel->setForegroundRole(DPalette::BrightText);
+
+//    DFrame *t_spaceFrame = new DFrame();
+
 
     d->albumDropdown = new DDropdown;
     d->albumDropdown->setFixedHeight(28);
@@ -699,12 +703,13 @@ MusicListDataWidget::MusicListDataWidget(QWidget *parent) :
 
     actionTileBarLayout->addWidget(d->titleLabel, 0, Qt::AlignLeft | Qt::AlignBottom);
     actionTileBarLayout->addStretch();
+//    actionTileBarLayout->addWidget(t_spaceFrame, 0, Qt::AlignRight | Qt::AlignBottom);
     actionTileBarLayout->addWidget(d->albumDropdown, 0, Qt::AlignRight | Qt::AlignBottom);
     actionTileBarLayout->addWidget(d->artistDropdown, 0, Qt::AlignRight | Qt::AlignBottom);
     actionTileBarLayout->addWidget(d->musicDropdown, 0, Qt::AlignRight | Qt::AlignBottom);
 
     auto actionInfoBarLayout = new QHBoxLayout();
-    actionInfoBarLayout->setContentsMargins(10, 0, 8, 0);
+    actionInfoBarLayout->setContentsMargins(10, 3, 8, 0);
     actionInfoBarLayout->setSpacing(0);
 
     d->btPlayAll = new DPushButton;
@@ -716,16 +721,17 @@ MusicListDataWidget::MusicListDataWidget(QWidget *parent) :
     d->btPlayAll->setIcon(QIcon(":/mpimage/light/normal/play_all_normal.svg"));
     d->btPlayAll->setObjectName("MusicListDataPlayAll");
     d->btPlayAll->setText(tr("Play All"));
+    d->btPlayAll->setFixedWidth(93);
     d->btPlayAll->setFixedHeight(30);
     d->btPlayAll->setFocusPolicy(Qt::NoFocus);
     d->btPlayAll->setIconSize(QSize(18, 18));
     auto btPlayAllFont = d->btPlayAll->font();
     btPlayAllFont.setFamily("SourceHanSansSC");
     btPlayAllFont.setWeight(QFont::Medium);
-    btPlayAllFont.setPixelSize(14);
+    btPlayAllFont.setPixelSize(13);
     d->btPlayAll->setFont(btPlayAllFont);
 
-    d->infoLabel = new QLabel;
+    d->infoLabel = new DLabel;
     d->infoLabel->setObjectName("MusicListDataTitle");
     d->infoLabel->setText(tr("All Music"));
     d->infoLabel->setMinimumWidth(200);
@@ -766,7 +772,7 @@ MusicListDataWidget::MusicListDataWidget(QWidget *parent) :
     actionBarLayout->addLayout(actionTileBarLayout);
     actionBarLayout->addLayout(actionInfoBarLayout);
 
-    d->emptyHits = new QLabel();
+    d->emptyHits = new DLabel();
     d->emptyHits->setObjectName("MusicListDataEmptyHits");
     d->emptyHits->hide();
     auto emptyHitsFont = d->emptyHits->font();
@@ -774,7 +780,7 @@ MusicListDataWidget::MusicListDataWidget(QWidget *parent) :
     emptyHitsFont.setPixelSize(20);
     d->emptyHits->setFont(emptyHitsFont);
 
-    d->emptySearchHits = new QLabel();
+    d->emptySearchHits = new DLabel();
     d->emptySearchHits->hide();
     auto emptySearchHitsFont = d->emptySearchHits->font();
     emptySearchHitsFont.setFamily("SourceHanSansSC");
@@ -794,10 +800,11 @@ MusicListDataWidget::MusicListDataWidget(QWidget *parent) :
     d->artistListView = new MusicListDataView;
     d->musicListView = new PlayListView(true);
     d->musicListView->hide();
-    layout->setContentsMargins(0, 0, 0, 0);
+    layout->setContentsMargins(0, 1, 0, 0);
 
     layout->addWidget(d->actionBar, 0, Qt::AlignTop);
     layout->addLayout(emptyLayout, 0);
+    layout->addSpacing(8);
     layout->addWidget(d->albumListView, 100);
     layout->addWidget(d->artistListView, 100);
     layout->addWidget(d->musicListView, 100);
@@ -976,8 +983,8 @@ void MusicListDataWidget::slotTheme(int type)
 
         auto playAllPalette = d->btPlayAll->palette();
         playAllPalette.setColor(DPalette::ButtonText, Qt::white);
-        playAllPalette.setColor(DPalette::Dark, QColor("#FD5E5E"));
-        playAllPalette.setColor(DPalette::Light, QColor("#ED5656"));
+        playAllPalette.setColor(DPalette::Light, QColor("#FD5E5E"));
+        playAllPalette.setColor(DPalette::Dark, QColor("#ED5656"));
         d->btPlayAll->setPalette(playAllPalette);
 
         auto infoLabelPalette = d->infoLabel->palette();
@@ -1013,8 +1020,8 @@ void MusicListDataWidget::slotTheme(int type)
 
         auto playAllPalette = d->btPlayAll->palette();
         playAllPalette.setColor(DPalette::ButtonText, "#FFFFFF");
-        playAllPalette.setColor(DPalette::Dark, QColor("#DA2D2D"));
-        playAllPalette.setColor(DPalette::Light, QColor("#A51B1B"));
+        playAllPalette.setColor(DPalette::Light, QColor("#DA2D2D"));
+        playAllPalette.setColor(DPalette::Dark, QColor("#A51B1B"));
         d->btPlayAll->setPalette(playAllPalette);
 
         auto infoLabelPalette = d->infoLabel->palette();

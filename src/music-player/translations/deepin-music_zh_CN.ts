@@ -314,6 +314,10 @@
         <source>Previous</source>
         <translation>上一首</translation>
     </message>
+   <message>
+        <source>Music</source>
+        <translation>音乐</translation>
+    </message>
     <message>
         <location filename="../view/mainframe.cpp" line="689"/>
         <source>Music</source>

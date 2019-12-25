@@ -66,6 +66,8 @@ void MusiclistInfomodel::setPlaylist(PlaylistPtr playlist)
 
 QModelIndex MusiclistInfomodel::findIndex(const MetaPtr meta)
 {
+    if (meta.isNull())
+        return QModelIndex();
     Q_ASSERT(!meta.isNull());
     Q_D(MusiclistInfomodel);
 

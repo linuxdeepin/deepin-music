@@ -144,6 +144,11 @@ MetaPtr MusicListInfoView::firstMeta() const
         if (!meta->invalid) {
             curMeta = meta;
             break;
+        } else {
+            if (QFile::exists(meta->localPath)) {
+                curMeta = meta;
+                break;
+            }
         }
     }
     return curMeta;
