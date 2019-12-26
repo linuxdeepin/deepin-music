@@ -219,5 +219,6 @@
         <file>mpimage/dark/hover/volume_mid_hover.svg</file>
         <file>mpimage/dark/checked/volume_mid_checked.svg</file>
         <file>mpimage/dark/checked/volume_low_checked.svg</file>
+        <file>mpimage/light/shadow.svg</file>
     </qresource>
 </RCC>

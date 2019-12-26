@@ -657,7 +657,8 @@ MainFrame::MainFrame(QWidget *parent) :
 
 MainFrame::~MainFrame()
 {
-
+    MusicSettings::setOption("base.play.state", int(windowState()));
+    MusicSettings::setOption("base.play.geometry", saveGeometry());
 }
 
 void MainFrame::initUI(bool showLoading)
@@ -773,7 +774,7 @@ void MainFrame::binding(Presenter *presenter)
     connect(d->importWidget, &ImportWidget::importSelectFiles,
     this, [ = ](const QStringList & urllist) {
         d->importWidget->showWaitHint();
-        Q_EMIT importSelectFiles(urllist);
+        Q_EMIT importSelectFiles(urllist, nullptr);
     });
 
     connect(presenter, &Presenter::notifyAddToPlaylist,
@@ -1220,7 +1221,7 @@ void MainFrame::onSelectImportDirectory()
     if (DFileDialog::Accepted == fileDlg.exec()) {
         d->importWidget->showWaitHint();
         MusicSettings::setOption("base.play.last_import_path",  fileDlg.directory().path());
-        Q_EMIT importSelectFiles(fileDlg.selectedFiles());
+        Q_EMIT importSelectFiles(fileDlg.selectedFiles(), nullptr);
     }
 }
 
@@ -1244,7 +1245,7 @@ void MainFrame::onSelectImportFiles()
     if (DFileDialog::Accepted == fileDlg.exec()) {
         d->importWidget->showWaitHint();
         MusicSettings::setOption("base.play.last_import_path",  fileDlg.directory().path());
-        Q_EMIT importSelectFiles(fileDlg.selectedFiles());
+        Q_EMIT importSelectFiles(fileDlg.selectedFiles(), d->musicListWidget->curPlaylist());
     }
 }
 

@@ -73,7 +73,7 @@ public:
 public:
     void updateSearchIndex();
     void updateCodec(const QByteArray &codec);
-    QByteArray getCoverData();
+    QByteArray getCoverData(const QString &tmpPath);
 
     static MediaMeta fromLocalFile(const QFileInfo &fileInfo);
 };

@@ -106,25 +106,32 @@ void PresenterPrivate::initBackend()
     connect(this, &PresenterPrivate::play,
     this, [ = ](PlaylistPtr playlist, const MetaPtr meta) {
         auto curPlaylist = player->curPlaylist();
-        if (curPlaylist != playlist) {
+        if (curPlaylist->id() != playlist->id()) {
             curPlaylist->removeMusicList(curPlaylist->allmusic());
             auto curAllMetas = playlist->allmusic();
             for (int i = curAllMetas.size() - 1; i >= 0; i--) {
                 if (meta == curAllMetas[i])
                     continue;
-                if (curAllMetas[i]->invalid)
+                if (curAllMetas[i]->invalid && !QFile::exists(curAllMetas[i]->localPath))
                     curAllMetas.removeAt(i);
+                else {
+                    curAllMetas[i]->invalid = false;
+                }
             }
             curPlaylist->appendMusicList(curAllMetas);
         } else {
             auto curPlaylist = player->curPlaylist();
             auto curAllMetas = curPlaylist->allmusic();
+            MetaPtrList curRemoveMetas;
             for (int i = curAllMetas.size() - 1; i >= 0; i--) {
-                if (!curAllMetas[i]->invalid)
-                    curAllMetas.removeAt(i);
+                if (curAllMetas[i]->invalid && !QFile::exists(curAllMetas[i]->localPath))
+                    curRemoveMetas.append(curAllMetas[i]);
+                else {
+                    curAllMetas[i]->invalid = false;
+                }
             }
-            if (!curAllMetas.isEmpty()) {
-                curPlaylist->removeMusicList(curAllMetas);
+            if (!curRemoveMetas.isEmpty()) {
+                curPlaylist->removeMusicList(curRemoveMetas);
             }
         }
         player->playMeta(playlist, meta);
@@ -132,25 +139,32 @@ void PresenterPrivate::initBackend()
     connect(this, &PresenterPrivate::resume,
     this, [ = ](PlaylistPtr playlist, const MetaPtr meta) {
         auto curPlaylist = player->curPlaylist();
-        if (curPlaylist != playlist) {
+        if (curPlaylist->id() != playlist->id()) {
             curPlaylist->removeMusicList(curPlaylist->allmusic());
             auto curAllMetas = playlist->allmusic();
             for (int i = curAllMetas.size() - 1; i >= 0; i--) {
                 if (meta == curAllMetas[i])
                     continue;
-                if (curAllMetas[i]->invalid)
+                if (curAllMetas[i]->invalid && !QFile::exists(curAllMetas[i]->localPath))
                     curAllMetas.removeAt(i);
+                else {
+                    curAllMetas[i]->invalid = false;
+                }
             }
             curPlaylist->appendMusicList(curAllMetas);
         } else {
             auto curPlaylist = player->curPlaylist();
             auto curAllMetas = curPlaylist->allmusic();
+            MetaPtrList curRemoveMetas;
             for (int i = curAllMetas.size() - 1; i >= 0; i--) {
-                if (!curAllMetas[i]->invalid)
-                    curAllMetas.removeAt(i);
+                if (curAllMetas[i]->invalid && !QFile::exists(curAllMetas[i]->localPath))
+                    curRemoveMetas.append(curAllMetas[i]);
+                else {
+                    curAllMetas[i]->invalid = false;
+                }
             }
-            if (!curAllMetas.isEmpty()) {
-                curPlaylist->removeMusicList(curAllMetas);
+            if (!curRemoveMetas.isEmpty()) {
+                curPlaylist->removeMusicList(curRemoveMetas);
             }
         }
         player->resume(playlist, meta);
@@ -158,25 +172,29 @@ void PresenterPrivate::initBackend()
     connect(this, &PresenterPrivate::playNext,
     this, [ = ](PlaylistPtr playlist, const MetaPtr meta) {
         auto curPlaylist = player->curPlaylist();
-        if (curPlaylist != playlist) {
+        if (curPlaylist->id() != playlist->id()) {
             curPlaylist->removeMusicList(curPlaylist->allmusic());
             auto curAllMetas = playlist->allmusic();
             for (int i = curAllMetas.size() - 1; i >= 0; i--) {
                 if (meta == curAllMetas[i])
                     continue;
-                if (curAllMetas[i]->invalid)
+                if (curAllMetas[i]->invalid && !QFile::exists(curAllMetas[i]->localPath))
                     curAllMetas.removeAt(i);
             }
             curPlaylist->appendMusicList(curAllMetas);
         } else {
             auto curPlaylist = player->curPlaylist();
             auto curAllMetas = curPlaylist->allmusic();
+            MetaPtrList curRemoveMetas;
             for (int i = curAllMetas.size() - 1; i >= 0; i--) {
-                if (!curAllMetas[i]->invalid)
-                    curAllMetas.removeAt(i);
+                if (curAllMetas[i]->invalid && !QFile::exists(curAllMetas[i]->localPath))
+                    curRemoveMetas.append(curAllMetas[i]);
+                else {
+                    curAllMetas[i]->invalid = false;
+                }
             }
-            if (!curAllMetas.isEmpty()) {
-                curPlaylist->removeMusicList(curAllMetas);
+            if (!curRemoveMetas.isEmpty()) {
+                curPlaylist->removeMusicList(curRemoveMetas);
             }
         }
         player->playNextMeta(playlist, meta);
@@ -184,25 +202,29 @@ void PresenterPrivate::initBackend()
     connect(this, &PresenterPrivate::playPrev,
     this, [ = ](PlaylistPtr playlist, const MetaPtr meta) {
         auto curPlaylist = player->curPlaylist();
-        if (curPlaylist != playlist) {
+        if (curPlaylist->id() != playlist->id()) {
             curPlaylist->removeMusicList(curPlaylist->allmusic());
             auto curAllMetas = playlist->allmusic();
             for (int i = curAllMetas.size() - 1; i >= 0; i--) {
                 if (meta == curAllMetas[i])
                     continue;
-                if (curAllMetas[i]->invalid)
+                if (curAllMetas[i]->invalid && !QFile::exists(curAllMetas[i]->localPath))
                     curAllMetas.removeAt(i);
             }
             curPlaylist->appendMusicList(curAllMetas);
         } else {
             auto curPlaylist = player->curPlaylist();
             auto curAllMetas = curPlaylist->allmusic();
+            MetaPtrList curRemoveMetas;
             for (int i = curAllMetas.size() - 1; i >= 0; i--) {
-                if (!curAllMetas[i]->invalid)
-                    curAllMetas.removeAt(i);
+                if (curAllMetas[i]->invalid && !QFile::exists(curAllMetas[i]->localPath))
+                    curRemoveMetas.append(curAllMetas[i]);
+                else {
+                    curAllMetas[i]->invalid = false;
+                }
             }
-            if (!curAllMetas.isEmpty()) {
-                curPlaylist->removeMusicList(curAllMetas);
+            if (!curRemoveMetas.isEmpty()) {
+                curPlaylist->removeMusicList(curRemoveMetas);
             }
         }
         player->playPrevMusic(playlist, meta);
@@ -459,12 +481,6 @@ void Presenter::postAction()
     d->player->setMode(static_cast<Player::PlaybackMode>(playmode));
     Q_EMIT this->modeChanged(playmode);
 
-    auto curPlaylist = d->playlistMgr->playlist(PlayMusicListID);
-    if (curPlaylist->isEmpty()) {
-        d->settings->setOption("base.play.last_playlist", "");
-        d->settings->setOption("base.play.last_meta", "");
-    }
-
     auto allplaylist = d->playlistMgr->playlist(AllMusicListID);
     auto lastPlaylist = allplaylist;
     if (lastPlaylist.isNull()) {
@@ -476,7 +492,7 @@ void Presenter::postAction()
     auto isMetaLibClear = MediaLibrary::instance()->isEmpty();
     isMetaLibClear |= allplaylist->isEmpty();
 
-    if (!curPlaylist->isEmpty() && d->settings->value("base.play.remember_progress").toBool() && !isMetaLibClear) {
+    if (d->settings->value("base.play.remember_progress").toBool() && !isMetaLibClear) {
         d->syncPlayerResult = true;
 
         auto lastPlaylistId = d->settings->value("base.play.last_playlist").toString();
@@ -508,7 +524,7 @@ void Presenter::postAction()
             d->player->setFadeInOut(false);
             d->player->loadMedia(lastPlaylist, lastMeta);
             d->player->pause();
-            QTimer::singleShot(10, [ = ]() {
+            QTimer::singleShot(9, [ = ]() {
                 d->player->setPosition(position);
             });
 
@@ -531,7 +547,9 @@ void Presenter::postAction()
                 onCurrentPlaylistChanged(lastPlaylist);
 
 //                d->player->setPosition(position);
-                onMusicResume(lastPlaylist, lastMeta);
+                QTimer::singleShot(10, [ = ]() {
+                    onMusicResume(lastPlaylist, lastMeta);
+                });
 
             } else {
                 d->lastPlayPosition = 0;
@@ -724,7 +742,7 @@ void Presenter::onMusiclistRemove(PlaylistPtr playlist, const MetaPtrList metali
     bool t_isLastMeta = false;
 
     //检查当前播放的是否包含最后一首
-    if (playinglist != nullptr && d->player->activeMeta() != nullptr) {
+    if (playinglist != nullptr) {
         for (auto meta : metalist) {
             if (meta->hash == d->player->activeMeta()->hash && playlist->isLast(meta)) {
                 t_isLastMeta = true;
@@ -773,8 +791,7 @@ void Presenter::onMusiclistRemove(PlaylistPtr playlist, const MetaPtrList metali
         if (playlist->isEmpty()) {
             qDebug() << "meta library clean";
             onMusicStop(playlist, next);
-            if (d->player->activePlaylist() != nullptr)
-                d->player->activePlaylist()->play(nullptr);
+            d->player->activePlaylist()->play(nullptr);
         }
     } else {
         next = playlist->removeMusicList(metalist);
@@ -1256,12 +1273,14 @@ void Presenter::onResort(PlaylistPtr playlist, int sortType)
     }
 }
 
-void Presenter::onImportFiles(const QStringList &filelist)
+void Presenter::onImportFiles(const QStringList &filelist, PlaylistPtr playlist)
 {
     Q_D(Presenter);
     //PlaylistPtr playlist = d->currentPlaylist;
-    PlaylistPtr playlist = d->playlistMgr->playlist(AllMusicListID);
-    requestImportPaths(playlist, filelist);
+    PlaylistPtr curPlaylist = playlist;
+    if (playlist == nullptr)
+        curPlaylist = d->playlistMgr->playlist(AllMusicListID);
+    requestImportPaths(curPlaylist, filelist);
     return;
 }
 
@@ -1269,7 +1288,8 @@ void Presenter::onScanMusicDirectory()
 {
     auto musicDir =  QStandardPaths::standardLocations(QStandardPaths::MusicLocation);
     qWarning() << "scan" << musicDir;
-    onImportFiles(musicDir);
+    PlaylistPtr playlist = nullptr;
+    onImportFiles(musicDir, playlist);
 }
 
 

@@ -45,13 +45,17 @@ static inline int pixel2point(int pixel)
 class MusicListDataDelegatePrivate
 {
 public:
-    explicit MusicListDataDelegatePrivate(MusicListDataDelegate *parent): q_ptr(parent) {}
+    explicit MusicListDataDelegatePrivate(MusicListDataDelegate *parent): q_ptr(parent)
+    {
+        shadowImg = shadowImg.copy(5, 5, shadowImg.width() - 10, shadowImg.height() - 10);
+    }
 
     QWidget *parentWidget;
     QPixmap playing = DHiDPIHelper::loadNxPixmap(":/common/image/jumpto_playing_normal.svg");
     QString playingIcon = ":/mpimage/light/music1.svg";
     QString highlightPlayingIcon = ":/mpimage/light/music1.svg";
     QPixmap hoverPlayImg = DHiDPIHelper::loadNxPixmap(":/mpimage/dark/hover/play_hover.svg");
+    QPixmap shadowImg = DHiDPIHelper::loadNxPixmap(":/mpimage/light/shadow.svg");
 
     MusicListDataDelegate *q_ptr;
     Q_DECLARE_PUBLIC(MusicListDataDelegate)
@@ -90,6 +94,16 @@ void MusicListDataDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
         }
 
         //painter->fillRect(option.rect, background);
+
+        //draw shadow
+        int shadowBorderWidth = 2;
+        QRect shadowRect = option.rect.adjusted(shadowBorderWidth, shadowBorderWidth, -shadowBorderWidth, -shadowBorderWidth);;
+        QPainterPath roundRectShadowPath;
+        roundRectShadowPath.addRoundRect(shadowRect, 10, 10);
+        painter->save();
+        painter->setClipPath(roundRectShadowPath);
+        painter->drawPixmap(shadowRect, d->shadowImg);
+        painter->restore();
 
         int borderWidth = 10;
         QRect rect = option.rect.adjusted(borderWidth, borderWidth, -borderWidth, -borderWidth);

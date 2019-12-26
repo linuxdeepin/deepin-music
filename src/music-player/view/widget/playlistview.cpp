@@ -474,7 +474,7 @@ void PlayListViewPrivate::addMedia(const MetaPtr meta)
     }
     QStandardItem *newItem = new QStandardItem;
     QPixmap cover(":/common/image/cover_max.svg");
-    auto coverData = meta->getCoverData();
+    auto coverData = MetaSearchService::coverData(meta);
     if (coverData.length() > 0) {
         cover = QPixmap::fromImage(QImage::fromData(coverData));
     }

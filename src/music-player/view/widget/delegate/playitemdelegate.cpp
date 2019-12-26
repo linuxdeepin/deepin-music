@@ -29,6 +29,8 @@
 
 #include <musicmeta.h>
 
+#include <DHiDPIHelper>
+
 #include "../playlistview.h"
 #include "core/medialibrary.h"
 
@@ -70,6 +72,8 @@ PlayItemDelegatePrivate::PlayItemDelegatePrivate(PlayItemDelegate *parent):
     QWidget(nullptr), q_ptr(parent)
 {
     setObjectName("PlayItemStyleProxy");
+    shadowImg = DHiDPIHelper::loadNxPixmap(":/mpimage/light/shadow.svg");
+    shadowImg = shadowImg.copy(5, 5, shadowImg.width() - 10, shadowImg.height() - 10);
 }
 
 QColor PlayItemDelegatePrivate::textColor() const
@@ -232,6 +236,15 @@ void PlayItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
         }
 
         painter->fillRect(option.rect, background);
+
+        //draw shadow
+        QRect shadowRect(option.rect.x() - 10, option.rect.y() - 10, 160, 160);
+        QPainterPath roundRectShadowPath;
+        roundRectShadowPath.addRoundRect(shadowRect, 10, 10);
+        painter->save();
+        painter->setClipPath(roundRectShadowPath);
+        painter->drawPixmap(shadowRect, d_ptr->shadowImg);
+        painter->restore();
 
         QRect rect(option.rect.x(), option.rect.y(), 140, 183);
         QPainterPath roundRectPath;

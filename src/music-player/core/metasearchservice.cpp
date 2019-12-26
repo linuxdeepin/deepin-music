@@ -156,7 +156,7 @@ QByteArray MetaSearchService::coverData(const MetaPtr meta)
 //    }
     QByteArray byteArray;
     if (meta) {
-        byteArray = meta->getCoverData();
+        byteArray = meta->getCoverData(Global::cacheDir());
     }
     return byteArray;
 }

@@ -55,7 +55,7 @@ public:
     DPushButton                        *btPlayAll           = nullptr;
     DPushButton                        *btRandomPlay        = nullptr;
     InfoDialog                         *infoDialog          = nullptr;
-    DImageButton                       *closeBt             = nullptr;
+    MusicImageButton                   *closeBt             = nullptr;
     MusicListInfoView                  *musicListInfoView   = nullptr;
 
     MusicListDialog *q_ptr;
@@ -90,12 +90,17 @@ void MusicListDialogPrivate::initUI()
     titleLayout->setSpacing(0);
     titleLayout->setContentsMargins(28, 10, 0, 18);
 
-    closeBt = new DImageButton;
-    closeBt->setNormalPic(":/mpimage/light/normal/close_round normal.svg");
-    closeBt->setHoverPic(":/mpimage/light/hover/close_round hover.svg");
-    closeBt->setPressPic(":/mpimage/light/press/close_round press.svg");
-    closeBt->setObjectName("InfoClose");
-    closeBt->setBaseSize(24, 24);
+    closeBt = new MusicImageButton(":/mpimage/light/normal/close_round normal.svg",
+                                   ":/mpimage/light/hover/close_round hover.svg",
+                                   ":/mpimage/light/press/close_round press.svg");
+    closeBt->setFixedSize(24, 24);
+    closeBt->setFocusPolicy(Qt::NoFocus);
+//    closeBt = new DImageButton;
+//    closeBt->setNormalPic(":/mpimage/light/normal/close_round normal.svg");
+//    closeBt->setHoverPic(":/mpimage/light/hover/close_round hover.svg");
+//    closeBt->setPressPic(":/mpimage/light/press/close_round press.svg");
+//    closeBt->setObjectName("InfoClose");
+//    closeBt->setBaseSize(24, 24);
 
     titleLabel = new DLabel();
     titleLabel->setForegroundRole(DPalette::BrightText);
@@ -163,7 +168,7 @@ void MusicListDialogPrivate::initUI()
     infoDialog = new InfoDialog(q);
     infoDialog->hide();
 
-    q->connect(closeBt, &DImageButton::clicked, q, &DAbstractDialog::close);
+    q->connect(closeBt, &MusicImageButton::pressed, q, &DAbstractDialog::close);
 }
 
 void MusicListDialogPrivate::initConnection()
@@ -446,9 +451,9 @@ void MusicListDialog::setThemeType(int type)
         rStr = "dark";
     }
 //    d->closeBt->setPixmap(QPixmap(QString(":/mpimage/light/normal/close_round normal.svg").arg(rStr)));
-    d->closeBt->setNormalPic(":/mpimage/light/normal/close_round normal.svg");
-    d->closeBt->setHoverPic(":/mpimage/light/hover/close_round hover.svg");
-    d->closeBt->setPressPic(":/mpimage/light/press/close_round press.svg");
+//    d->closeBt->setNormalPic(":/mpimage/light/normal/close_round normal.svg");
+//    d->closeBt->setHoverPic(":/mpimage/light/hover/close_round hover.svg");
+//    d->closeBt->setPressPic(":/mpimage/light/press/close_round press.svg");
     d->btPlayAll->setIcon(QIcon(QString(":/mpimage/light/normal/play_all_normal.svg").arg(rStr)));
     d->btRandomPlay->setIcon(QIcon(QString(":/mpimage/light/normal/random_play_normal.svg").arg(rStr)));
     d->titleFrame->setThemeType(type);

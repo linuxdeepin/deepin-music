@@ -39,6 +39,8 @@ public:
     explicit MusicListWidget(QWidget *parent = Q_NULLPTR);
     //void initData(QList<PlaylistPtr > playlists, PlaylistPtr last);
 
+    PlaylistPtr curPlaylist();
+
 signals:
     void addPlaylist(bool editmode);
     void selectPlaylist(PlaylistPtr playlist);

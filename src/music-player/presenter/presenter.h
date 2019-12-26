@@ -164,7 +164,7 @@ public slots:
     void onChangeSearchMetaCache(const MetaPtr meta, const DMusic::SearchMeta &search);
 
     void onScanMusicDirectory();
-    void onImportFiles(const QStringList &filelist);
+    void onImportFiles(const QStringList &filelist, PlaylistPtr playlist);
 
 private:
     QScopedPointer<PresenterPrivate> d_ptr;

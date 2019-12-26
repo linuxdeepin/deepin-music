@@ -23,6 +23,7 @@
 
 #include <QScopedPointer>
 #include "DMainWindow"
+#include "core/playlist.h"
 
 class Presenter;
 class MainFramePrivate;
@@ -43,7 +44,7 @@ public:
 signals:
     void requitQuit();
     void addPlaylist(bool);
-    void importSelectFiles(const QStringList &filelist);
+    void importSelectFiles(const QStringList &filelist, PlaylistPtr playlist);
     void triggerShortcutAction(const QString &optKey);
 
 public slots:

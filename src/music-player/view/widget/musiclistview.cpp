@@ -463,6 +463,12 @@ void MusicListView::keyPressEvent(QKeyEvent *event)
                 Q_EMIT m_data->removed();
             }
         }
+    } else if (event->key() == Qt::Key_Up || event->key() == Qt::Key_Down) {
+        auto indexes = this->selectedIndexes();
+        if (indexes.size() != 1) {
+            return;
+        }
+        scrollTo(indexes.first());
     }
 }
 

@@ -56,10 +56,10 @@ void MediaMeta::updateCodec(const QByteArray &codec)
     }
 }
 
-QByteArray MediaMeta::getCoverData()
+QByteArray MediaMeta::getCoverData(const QString &tmpPath)
 {
     if (!loadCover) {
-        coverData = MetaDetector::getCoverData(localPath);
+        coverData = MetaDetector::getCoverData(localPath, tmpPath, hash);
     }
     loadCover = true;
     return coverData;

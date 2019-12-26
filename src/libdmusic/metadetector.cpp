@@ -30,6 +30,7 @@
 #include <QHash>
 #include <QBuffer>
 #include <QByteArray>
+#include <QDir>
 
 //#ifndef DISABLE_LIBAV
 #ifdef __cplusplus
@@ -285,9 +286,30 @@ void MetaDetector::updateMetaFromLocalfile(MediaMeta *meta, const QFileInfo &fil
     meta->updateSearchIndex();
 }
 
-QByteArray MetaDetector::getCoverData(const QString &path)
+QByteArray MetaDetector::getCoverData(const QString &path, const QString &tmpPath, const QString &hash)
 {
+    QString imagesDirPath = tmpPath + "/images";
+    QString imageName = hash + ".jpg";
+    QDir imageDir(imagesDirPath);
+    if (!imageDir.exists()) {
+        imageDir.cdUp();
+        imageDir.mkdir("images");
+        imageDir.cd("images");
+    }
+
     QByteArray byteArray;
+    if (!tmpPath.isEmpty() && !hash.isEmpty()) {
+        if (imageDir.exists(imageName)) {
+            QImage image(imagesDirPath + "/" + imageName);
+            if (!image.isNull()) {
+                QBuffer buffer(&byteArray);
+                buffer.open(QIODevice::WriteOnly);
+                image.save(&buffer, "jpg");
+            }
+            return byteArray;
+        }
+    }
+
 //#ifndef DISABLE_LIBAV
     if (!path.isEmpty()) {
         AVFormatContext *pFormatCtx = avformat_alloc_context();
@@ -309,6 +331,7 @@ QByteArray MetaDetector::getCoverData(const QString &path)
             QBuffer buffer(&byteArray);
             buffer.open(QIODevice::WriteOnly);
             image.save(&buffer, "jpg");
+            image.save(imagesDirPath + "/" + imageName);
         }
 
         avformat_close_input(&pFormatCtx);

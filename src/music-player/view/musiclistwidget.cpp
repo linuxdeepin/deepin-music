@@ -328,6 +328,14 @@ MusicListWidget::MusicListWidget(QWidget *parent) : DWidget(parent)
     });
 }
 
+PlaylistPtr MusicListWidget::curPlaylist()
+{
+    PlaylistPtr curPlaylist = nullptr;
+    if (m_dataListView != nullptr)
+        curPlaylist = m_dataListView->curPlaylist();
+    return curPlaylist;
+}
+
 void MusicListWidget::onSearchText(QString str)
 {
     m_dataListView->onSearchText(str);

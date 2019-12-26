@@ -105,13 +105,33 @@ void ModeButton::paintEvent(QPaintEvent *event)
 //    painter.drawPixmap(pixmapRect, pixmap, QRect(0, 0, pixmapWidth, pixmapHeight));
 
 //    painter.restore();
-    QIcon icon;
-    icon.addFile(curPicPath);
+//    QIcon icon;
+//    icon.addFile(curPicPath);
 
-    this->setIconSize(QSize(36, 36));
-    this->setIcon(icon);
+//    this->setIconSize(QSize(36, 36));
+//    this->setIcon(icon);
 
     DPushButton::paintEvent(event);
+
+    QPixmap pixmap = DHiDPIHelper::loadNxPixmap(curPicPath);
+
+    QPainter painter(this);
+    painter.save();
+    painter.setRenderHint(QPainter::Antialiasing);
+    painter.setRenderHint(QPainter::HighQualityAntialiasing);
+    painter.setRenderHint(QPainter::SmoothPixmapTransform);
+
+    int pixmapWidth = pixmap.rect().width();
+    int pixmapHeight = pixmap.rect().height();
+    QRect pixmapRect((rect().width() - pixmapWidth) / 2, (rect().height() - pixmapHeight) / 2, pixmapWidth, pixmapHeight);
+    pixmapRect = pixmapRect.intersected(rect());
+//    painter.drawPixmap(pixmapRect, pixmap, QRect(0, 0, pixmapWidth, pixmapHeight));
+
+    QIcon icon;
+    icon.addFile(curPicPath);
+    icon.paint(&painter, pixmapRect);
+
+    painter.restore();
 }
 
 void ModeButton::mousePressEvent(QMouseEvent *event)

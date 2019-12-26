@@ -721,14 +721,15 @@ MusicListDataWidget::MusicListDataWidget(QWidget *parent) :
     d->btPlayAll->setIcon(QIcon(":/mpimage/light/normal/play_all_normal.svg"));
     d->btPlayAll->setObjectName("MusicListDataPlayAll");
     d->btPlayAll->setText(tr("Play All"));
-    d->btPlayAll->setFixedWidth(93);
+//    d->btPlayAll->setFixedWidth(93);
     d->btPlayAll->setFixedHeight(30);
     d->btPlayAll->setFocusPolicy(Qt::NoFocus);
     d->btPlayAll->setIconSize(QSize(18, 18));
     auto btPlayAllFont = d->btPlayAll->font();
     btPlayAllFont.setFamily("SourceHanSansSC");
     btPlayAllFont.setWeight(QFont::Medium);
-    btPlayAllFont.setPixelSize(13);
+//    btPlayAllFont.setPixelSize(13);
+    DFontSizeManager::instance()->bind(d->btPlayAll, DFontSizeManager::T8);
     d->btPlayAll->setFont(btPlayAllFont);
 
     d->infoLabel = new DLabel;
@@ -752,7 +753,7 @@ MusicListDataWidget::MusicListDataWidget(QWidget *parent) :
     d->btIconMode->setFixedSize(36, 36);
     d->btIconMode->setObjectName("MusicListDataWidgetIconMode");
     d->btIconMode->setCheckable(true);
-    d->btIconMode->setChecked(true);
+    d->btIconMode->setChecked(false);
 
 //    d->btlistMode = new MusicImageButton(":/mpimage/light/normal/text_list_normal.svg",
 //                                         ":/mpimage/light/hover/text_list_hover.svg",
@@ -761,7 +762,13 @@ MusicListDataWidget::MusicListDataWidget(QWidget *parent) :
     d->btlistMode = new DToolButton;
     d->btlistMode->setFixedSize(36, 36);
     d->btlistMode->setObjectName("MusicListDataWidgetListMode");
-    d->btlistMode->setCheckable(true);
+    d->btlistMode->setCheckable(false);
+
+//    auto framelayout = new QHBoxLayout(this);
+//    DFrame *t_frame = new DFrame(this);
+//    framelayout->addWidget(d->btIconMode, 0, Qt::AlignCenter);
+//    framelayout->addWidget(d->btlistMode, 0, Qt::AlignCenter);
+//    t_frame->setLayout(framelayout);
 
     actionInfoBarLayout->addWidget(d->btPlayAll, 0, Qt::AlignVCenter);
     actionInfoBarLayout->addWidget(d->infoLabel, 100, Qt::AlignLeft | Qt::AlignVCenter);
@@ -830,6 +837,12 @@ void MusicListDataWidget::setCustomSortType(PlaylistPtr playlist)
     }
     t_curDropdown->setCurrentAction(nullptr);
     t_curDropdown->setText(tr("Custom"));
+}
+
+PlaylistPtr MusicListDataWidget::curPlaylist()
+{
+    Q_D(MusicListDataWidget);
+    return d->curPlaylist;
 }
 
 void MusicListDataWidget::onSearchText(QString str)
@@ -1045,9 +1058,11 @@ void MusicListDataWidget::slotTheme(int type)
 //                                  QString(":/mpimage/%1/press/text_list_press.svg").arg(rStr),
 //                                  QString(":/mpimage/%1/active/text_list_active.svg").arg(rStr));
 
-    d->btIconMode->setIcon(QIcon(QString(":/mpimage/light/normal/picture_list_normal.svg").arg(rStr)));
+    d->btIconMode->setIcon(QIcon(QString(":/mpimage/light/normal/picture_list_normal.svg")));
+//    d->btIconMode->setIcon(QIcon::fromTheme("dcc_iconmode_normal"));
     d->btIconMode->setIconSize(QSize(36, 36));
-    d->btlistMode->setIcon(QIcon(QString(":/mpimage/light/normal/text_list_normal.svg").arg(rStr)));
+    d->btlistMode->setIcon(QIcon(QString(":/mpimage/light/normal/text_list_normal.svg")));
+//    d->btlistMode->setIcon(QIcon::fromTheme("dcc_listmode_normal"));
     d->btlistMode->setIconSize(QSize(36, 36));
     d->albumListView->setThemeType(type);
     d->artistListView->setThemeType(type);

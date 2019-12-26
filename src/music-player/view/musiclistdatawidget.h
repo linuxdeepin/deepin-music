@@ -36,6 +36,7 @@ public:
     ~MusicListDataWidget();
 
     void setCustomSortType(PlaylistPtr playlist);
+    PlaylistPtr curPlaylist();
 
 public slots:
     void onSearchText(QString str);
