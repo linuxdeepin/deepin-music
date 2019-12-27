@@ -288,6 +288,7 @@ void InfoDialog::updateInfo(const MetaPtr meta)
         coverPixmap = QPixmap::fromImage(WidgetHelper::cropRect(cover, QSize(pixmapSize, pixmapSize)));
         coverPixmap.setDevicePixelRatio(d->cover->devicePixelRatioF());
         d->cover->setCoverPixmap(coverPixmap);
+        d->cover->update();
         d->updateLabelSize();
 
         d->title->setFocus();

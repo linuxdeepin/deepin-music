@@ -31,6 +31,8 @@
 #include <DPushButton>
 #include <DHiDPIHelper>
 #include <DPalette>
+#include <DGuiApplicationHelper>
+
 #include "musicsettings.h"
 DGUI_USE_NAMESPACE
 
@@ -113,10 +115,11 @@ ImportWidget::ImportWidget(QWidget *parent) : DFrame(parent), d_ptr(new ImportWi
         showWaitHint();
         Q_EMIT this->scanMusicDirectory();
     });
-    bool themeFlag = false;
-    int themeType = MusicSettings::value("base.play.theme").toInt(&themeFlag);
-    if (!themeFlag)
-        themeType = 1;
+//    bool themeFlag = false;
+//    int themeType = MusicSettings::value("base.play.theme").toInt(&themeFlag);
+//    if (!themeFlag)
+//        themeType = 1;
+    int themeType = DGuiApplicationHelper::instance()->themeType();
     slotTheme(themeType);
 }
 

@@ -5,6 +5,7 @@
 #include <DLabel>
 #include <DLineEdit>
 #include <DCheckBox>
+#include <DGuiApplicationHelper>
 
 #include <QDir>
 
@@ -176,11 +177,11 @@ void SearchLyricsWidget::createList()
         DLabel *singerName = new DLabel(frame);
         DLabel *duration = new DLabel(frame);
 
-
-        bool themeFlag = false;
-        int themeType = MusicSettings::value("base.play.theme").toInt(&themeFlag);
-        if (!themeFlag)
-            themeType = 1;
+//      bool themeFlag = false;
+//      int themeType = MusicSettings::value("base.play.theme").toInt(&themeFlag);
+//      if (!themeFlag)
+//        themeType = 1;
+        int themeType = DGuiApplicationHelper::instance()->themeType();
         if (themeType == 1) {
             DPalette lyricNamepl = lyricNmae->palette();
             lyricNamepl.setColor(DPalette::WindowText, QColor("#414D68"));

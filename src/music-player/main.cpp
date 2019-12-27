@@ -30,6 +30,7 @@
 #include <DStandardPaths>
 #include <DApplication>
 #include <DGuiApplicationHelper>
+#include <DApplicationSettings>
 
 #include <metadetector.h>
 
@@ -122,12 +123,13 @@ int main(int argc, char *argv[])
     MusicSettings::init();
 
     // set theme
-    qDebug() << "TRACE:" << "set theme";
-    bool isOk = false;
-    int theme = MusicSettings::value("base.play.theme").toInt(&isOk);
-    if (!isOk)
-        theme = 1;
-    DGuiApplicationHelper::instance()->setPaletteType((DGuiApplicationHelper::ColorType)theme);
+//    qDebug() << "TRACE:" << "set theme";
+//    bool isOk = false;
+//    int theme = MusicSettings::value("base.play.theme").toInt(&isOk);
+//    if (!isOk)
+//        theme = 1;
+//    DGuiApplicationHelper::instance()->setPaletteType((DGuiApplicationHelper::ColorType)theme);
+    DApplicationSettings saveTheme;
 
     // DMainWindow must create on main function, so it can deconstruction before QApplication
     MainFrame mainframe;
@@ -151,19 +153,19 @@ int main(int argc, char *argv[])
             music->quit();
         }
     });
-    mainframe.slotTheme(theme);
+    //mainframe.slotTheme(theme);
     //app.setTheme("light");
     app.setQuitOnLastWindowClosed(false);
     //app.setStyle("chameleon");
 
     //监听当前应用主题切换事件
-    QObject::connect(DGuiApplicationHelper::instance(), &DGuiApplicationHelper::paletteTypeChanged,
-    [] (DGuiApplicationHelper::ColorType type) {
-        qDebug() << type;
-        // 保存程序的主题设置  type : 0,系统主题， 1,浅色主题， 2,深色主题
-        MusicSettings::setOption("base.play.theme", (int)type);
-        DGuiApplicationHelper::instance()->setPaletteType(type);
-    });
+//    QObject::connect(DGuiApplicationHelper::instance(), &DGuiApplicationHelper::paletteTypeChanged,
+//    [] (DGuiApplicationHelper::ColorType type) {
+//        qDebug() << type;
+//        // 保存程序的主题设置  type : 0,系统主题， 1,浅色主题， 2,深色主题
+//        MusicSettings::setOption("base.play.theme", (int)type);
+//        DGuiApplicationHelper::instance()->setPaletteType(type);
+//    });
 
     QObject::connect(DGuiApplicationHelper::instance(), &DGuiApplicationHelper::themeTypeChanged,
                      &mainframe, &MainFrame::slotTheme);

@@ -186,7 +186,7 @@ void MusicListDialogPrivate::initConnection()
 
     q->connect(btPlayAll, &DPushButton::clicked,
     q, [ = ]() {
-        musicListInfoView->playlist()->playMusicTypeToMeta(musicListInfoView->curName());
+        musicListInfoView->playlist()->playMusicTypeToMeta(musicListInfoView->curName(), musicListInfoView->allMetaNames());
         auto curtMeta = musicListInfoView->firstMeta();
         if (curtMeta != nullptr) {
             Q_EMIT q->playMedia(curtMeta);

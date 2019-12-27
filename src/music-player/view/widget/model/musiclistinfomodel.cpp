@@ -129,7 +129,7 @@ MetaPtr MusiclistInfomodel::meta(const QModelIndex &index, int role) const
 Qt::DropActions MusiclistInfomodel::supportedDropActions() const
 {
 //    return QAbstractItemModel::supportedDropActions();
-    return Qt::CopyAction | Qt::MoveAction;
+    return /*Qt::CopyAction | */Qt::MoveAction;
 }
 
 Qt::ItemFlags MusiclistInfomodel::flags(const QModelIndex &index) const

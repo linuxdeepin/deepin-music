@@ -230,9 +230,11 @@ PlayListWidget::PlayListWidget(QWidget *parent) :
     d->initConntion();
 
     bool themeFlag = false;
-    int themeType = MusicSettings::value("base.play.theme").toInt(&themeFlag);
-    if (!themeFlag)
-        themeType = 1;
+//    bool themeFlag = false;
+//    int themeType = MusicSettings::value("base.play.theme").toInt(&themeFlag);
+//    if (!themeFlag)
+//        themeType = 1;
+    int themeType = DGuiApplicationHelper::instance()->themeType();
     slotTheme(themeType);
 }
 

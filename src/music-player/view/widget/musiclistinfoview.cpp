@@ -223,6 +223,20 @@ QPixmap MusicListInfoView::getSidebarPixmap() const
     return d->sidebarPixmap;
 }
 
+QStringList MusicListInfoView::allMetaNames() const
+{
+    Q_D(const MusicListInfoView);
+    QStringList allMetaNames;
+    for (int i = 0; i < d->model->rowCount(); ++i) {
+        auto index = d->model->index(i, 0);
+        auto hash = d->model->data(index).toString();
+        if (!hash.isEmpty()) {
+            allMetaNames.append(hash);
+        }
+    }
+    return allMetaNames;
+}
+
 void MusicListInfoView::onMusicListRemoved(const MetaPtrList metalist)
 {
     Q_D(MusicListInfoView);

@@ -117,9 +117,11 @@ MusicListWidget::MusicListWidget(QWidget *parent) : DWidget(parent)
     layout->addWidget(m_dataListView, 100);
 
     bool themeFlag = false;
-    int themeType = MusicSettings::value("base.play.theme").toInt(&themeFlag);
-    if (!themeFlag)
-        themeType = 1;
+//    bool themeFlag = false;
+//    int themeType = MusicSettings::value("base.play.theme").toInt(&themeFlag);
+//    if (!themeFlag)
+//        themeType = 1;
+    int themeType = DGuiApplicationHelper::instance()->themeType();
     slotTheme(themeType);
 
     connect(m_addListBtn, &DPushButton::clicked, this, [ = ](bool /*checked*/) {

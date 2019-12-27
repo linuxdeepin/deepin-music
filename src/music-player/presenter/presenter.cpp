@@ -276,6 +276,9 @@ void PresenterPrivate::notifyMusicPlayed(PlaylistPtr playlist, const MetaPtr met
 {
     Q_Q(Presenter);
 
+    if (playlist.isNull() || meta.isNull())
+        return;
+
     MetaPtr favInfo(meta);
     favInfo->favourite = playlistMgr->playlist(FavMusicListID)->contains(meta);
 //    qDebug() << FavMusicListID << meta->title << favInfo->favourite;
@@ -702,6 +705,8 @@ void Presenter::pause()
 void Presenter::next()
 {
     Q_D(Presenter);
+    if (d->player->curPlaylist().isNull() || d->player->curPlaylist()->isEmpty())
+        return;
     auto alllist = d->playlistMgr->playlist(AllMusicListID);
     auto activeList = d->player->activePlaylist();
     auto activeMeta = d->player->activeMeta();
@@ -715,6 +720,8 @@ void Presenter::next()
 void Presenter::prev()
 {
     Q_D(Presenter);
+    if (d->player->curPlaylist().isNull() || d->player->curPlaylist()->isEmpty())
+        return;
     auto alllist = d->playlistMgr->playlist(AllMusicListID);
     auto activeList = d->player->activePlaylist();
     auto activeMeta = d->player->activeMeta();

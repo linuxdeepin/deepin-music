@@ -114,6 +114,7 @@ public:
 
     DWidget             *currentWidget          = nullptr;
     InfoDialog          *infoDialog             = nullptr;
+    DSettingsDialog     *configDialog           = nullptr;
 
     QAction             *newSonglistAction      = nullptr;
     QAction             *colorModeAction        = nullptr;
@@ -140,12 +141,6 @@ void MainFramePrivate::setTheme(int type)
     Q_Q(MainFrame);
     if (type == 0) {
         type = DGuiApplicationHelper::instance()->themeType();
-    }
-    if (type == 1) {
-
-
-    } else {
-
     }
     if (musicListWidget != nullptr)
         musicListWidget->slotTheme(type);
@@ -182,15 +177,18 @@ void MainFramePrivate::initMenu()
 
     auto settings = new QAction(MainFrame::tr("Settings"), q);
     q->connect(settings, &QAction::triggered, q, [ = ](bool) {
-        auto configDialog = new DSettingsDialog(q);
-        configDialog->setProperty("_d_QSSThemename", "dark");
-        configDialog->setProperty("_d_QSSFilename", "DSettingsDialog");
+        if (configDialog == nullptr) {
+            configDialog = new DSettingsDialog(q);
+//        configDialog->setProperty("_d_QSSThemename", "dark");
+//        configDialog->setProperty("_d_QSSFilename", "DSettingsDialog");
 
-        configDialog->setFixedSize(720, 550);
-        configDialog->updateSettings(MusicSettings::settings());
+            configDialog->setFixedSize(720, 550);
+            configDialog->updateSettings(MusicSettings::settings());
 
-        WidgetHelper::workaround_updateStyle(configDialog, "dlight");
-        Dtk::Widget::moveToCenter(configDialog);
+            //WidgetHelper::workaround_updateStyle(configDialog, "dlight");
+            Dtk::Widget::moveToCenter(configDialog);
+        }
+
         configDialog->exec();
         MusicSettings::sync();
 
@@ -201,10 +199,11 @@ void MainFramePrivate::initMenu()
         previousShortcut->setKey(QKeySequence(MusicSettings::value("shortcuts.all.previous").toString()));
     });
 
-    bool themeFlag = false;
-    int themeType = MusicSettings::value("base.play.theme").toInt(&themeFlag);
-    if (!themeFlag)
-        themeType = 1;
+//    bool themeFlag = false;
+//    int themeType = MusicSettings::value("base.play.theme").toInt(&themeFlag);
+//    if (!themeFlag)
+//        themeType = 1;
+    int themeType = DGuiApplicationHelper::instance()->themeType();
     colorModeAction = new QAction(MainFrame::tr("Dark theme"), q);
     colorModeAction->setCheckable(true);
     colorModeAction->setChecked(themeType == 2);
@@ -321,10 +320,11 @@ void MainFramePrivate::initUI(bool showLoading)
     footer->hide();
 
     infoDialog = new InfoDialog(q);
-    bool themeFlag = false;
-    int themeType = MusicSettings::value("base.play.theme").toInt(&themeFlag);
-    if (!themeFlag)
-        themeType = 1;
+//    bool themeFlag = false;
+//    int themeType = MusicSettings::value("base.play.theme").toInt(&themeFlag);
+//    if (!themeFlag)
+//        themeType = 1;
+    int themeType = DGuiApplicationHelper::instance()->themeType();
     infoDialog->setThemeType(themeType);
     infoDialog->hide();
 }

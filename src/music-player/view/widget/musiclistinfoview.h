@@ -50,6 +50,8 @@ public:
     QPixmap getPlayPixmap() const;
     QPixmap getSidebarPixmap() const;
 
+    QStringList allMetaNames() const;
+
 signals:
     void addToPlaylist(PlaylistPtr playlist, const MetaPtrList &metalist);
     void removeMusicList(const MetaPtrList  &metalist);

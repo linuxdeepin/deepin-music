@@ -508,10 +508,11 @@ Footer::Footer(QWidget *parent) :
     }
     d->btCover->setIcon(Dtk::Widget::DHiDPIHelper::loadNxPixmap(d->defaultCover));
 
-    bool themeFlag = false;
-    int themeType = MusicSettings::value("base.play.theme").toInt(&themeFlag);
-    if (!themeFlag)
-        themeType = 1;
+//    bool themeFlag = false;
+//    int themeType = MusicSettings::value("base.play.theme").toInt(&themeFlag);
+//    if (!themeFlag)
+//        themeType = 1;
+    int themeType = DGuiApplicationHelper::instance()->themeType();
     slotTheme(themeType);
 }
 
@@ -1155,6 +1156,8 @@ void Footer::slotTheme(int type)
 void Footer::onTogglePlayButton()
 {
     Q_D(Footer);
+    if (d->activingMeta == nullptr)
+        return;
     auto status = d->btPlay->property(sPropertyPlayStatus).toString();
     if (status == sPlayStatusValuePlaying) {
         Q_EMIT pause(d->activingPlaylist, d->activingMeta);

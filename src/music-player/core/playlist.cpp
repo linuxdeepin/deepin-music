@@ -805,7 +805,7 @@ void Playlist::metaListToPlayMusicTypePtrList(Playlist::SortType sortType, const
     sortPlayMusicTypePtrListData(playMusicTypePtrListData.sortType);
 }
 
-void Playlist::playMusicTypeToMeta(QString name)
+void Playlist::playMusicTypeToMeta(QString name, QStringList sortMetas)
 {
     //removeMusicList(allmusic());
     playlistMeta.sortMetas.clear();
@@ -830,6 +830,18 @@ void Playlist::playMusicTypeToMeta(QString name)
         newMetalist << meta;
         playlistMeta.sortMetas << meta->hash;
         playlistMeta.metas.insert(meta->hash, meta);
+    }
+    if (!name.isEmpty() && sortMetas.size() == playlistMeta.sortMetas.size()) {
+        bool allFlag = true;
+        for (auto curStr : playlistMeta.sortMetas) {
+            if (!sortMetas.contains(curStr)) {
+                allFlag = false;
+                break;
+            }
+        }
+        if (allFlag) {
+            playlistMeta.sortMetas = sortMetas;
+        }
     }
 
     Q_EMIT MediaDatabase::instance()->insertMusicList(newMetalist, this->playlistMeta);

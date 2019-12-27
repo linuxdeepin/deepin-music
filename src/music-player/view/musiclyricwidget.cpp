@@ -136,10 +136,11 @@ MUsicLyricWidget::MUsicLyricWidget(QWidget *parent)
 
     d->backgroundW->setLayout(layout);
     mainlayout->addWidget(d->backgroundW);
-    bool themeFlag = false;
-    int themeType = MusicSettings::value("base.play.theme").toInt(&themeFlag);
-    if (!themeFlag)
-        themeType = 1;
+//    bool themeFlag = false;
+//    int themeType = MusicSettings::value("base.play.theme").toInt(&themeFlag);
+//    if (!themeFlag)
+//        themeType = 1;
+    int themeType = DGuiApplicationHelper::instance()->themeType();
     slotTheme(themeType);
 
     connect(d->serachbt, &DPushButton::clicked, this, &MUsicLyricWidget::onsearchBt);
