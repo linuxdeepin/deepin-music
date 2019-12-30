@@ -350,6 +350,9 @@ void PlayListWidget::onMusicListRemoved(PlaylistPtr playlist, const MetaPtrList 
 {
     Q_D(PlayListWidget);
 
+    if (playlist.isNull())
+        return;
+
     if (playlist != d->playListView->playlist() && d->playListView->rowCount() != playlist->allmusic().size()) {
         return;
     }

@@ -115,7 +115,7 @@ MUsicLyricWidget::MUsicLyricWidget(QWidget *parent)
 
     d->lyricview = new LyricLabel(false);
 
-    auto searchlayout = new QVBoxLayout(this);
+    auto searchlayout = new QVBoxLayout();
     d->serachbt = new MusicImageButton(":/mpimage/light/normal/search_normal.svg",
                                        ":/mpimage/light/normal/search_normal.svg",
                                        ":/mpimage/light/normal/search_normal.svg");

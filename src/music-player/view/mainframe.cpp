@@ -778,7 +778,7 @@ void MainFrame::binding(Presenter *presenter)
     });
 
     connect(presenter, &Presenter::notifyAddToPlaylist,
-    this, [ = ](PlaylistPtr playlist, const MetaPtrList) {
+    this, [ = ](PlaylistPtr playlist, const MetaPtrList metaPtrList, int count) {
         auto icon = QIcon(":/common/image/notify_success_new.svg");
         QFontMetrics fm(font());
         auto displayName = fm.elidedText(playlist->displayName(), Qt::ElideMiddle, 300);
@@ -786,6 +786,30 @@ void MainFrame::binding(Presenter *presenter)
 //        if (playlist->id() == FavMusicListID)
 //            text = tr("Successfully added to \"%1\"").arg(displayName);
         auto text = tr("Successfully added to \"%1\"").arg(displayName);
+        int curCount = metaPtrList.size() - count;
+        if (count == 1) {
+            if (metaPtrList.size() == 1)
+                text = tr("Added this song");
+            else {
+                if (curCount == 1)
+                    text = tr("Successfully added %1 song").arg(curCount);
+                else
+                    text = tr("Successfully added %1 songs").arg(curCount);
+            }
+
+        } else if (count > 1) {
+            if (curCount == 0) {
+                if (metaPtrList.size() == 1)
+                    text = tr("Added this song");
+                else
+                    text = tr("Added this songs");
+            } else {
+                if (curCount == 1)
+                    text = tr("Successfully added %1 song").arg(curCount);
+                else
+                    text = tr("Successfully added %1 songs").arg(curCount);
+            }
+        }
         //DMessageManager::instance()->sendMessage(d->footer, icon, text);
         if (playlist->id() != AlbumMusicListID && playlist->id() != ArtistMusicListID
                 && playlist->id() != AllMusicListID)

@@ -103,8 +103,8 @@ public:
     HintFilter          *hintFilter         = nullptr;
     HoverShadowFilter   *hoverShadowFilter  = nullptr;
 
-    PlaylistPtr     activingPlaylist;
-    MetaPtr         activingMeta;
+    PlaylistPtr     activingPlaylist        = nullptr;
+    MetaPtr         activingMeta            = nullptr;
 
     QString         defaultCover    = ":/common/image/info_cover.svg";
 
@@ -418,7 +418,7 @@ Footer::Footer(QWidget *parent) :
     musicMetaLayout->addWidget(d->artist);
     musicMetaLayout->addStretch(100);
 
-    auto metaLayout = new QHBoxLayout(this);
+    auto metaLayout = new QHBoxLayout();
     metaLayout->setContentsMargins(0, 0, 0, 0);
 //    metaLayout->setSpacing(10);
     metaLayout->addWidget(d->btCover);

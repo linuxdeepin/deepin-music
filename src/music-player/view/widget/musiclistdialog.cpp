@@ -175,10 +175,6 @@ void MusicListDialogPrivate::initConnection()
 {
     Q_Q(MusicListDialog);
 
-    auto layout = new QVBoxLayout(q);
-    layout->setSpacing(0);
-    layout->setMargin(5);
-
     q->connect(musicListInfoView, &MusicListInfoView::requestCustomContextMenu,
     q, [ = ](const QPoint & pos) {
         Q_EMIT q->requestCustomContextMenu(pos);

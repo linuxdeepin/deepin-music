@@ -325,6 +325,10 @@ void PlayListView::onMusiclistChanged(PlaylistPtr playlist)
         qWarning() << "can not change to emptry playlist";
         return;
     }
+    if (playlist->searchStr().isEmpty() && playlist == d->model->playlist()
+            && playlist->allmusic().size() == rowCount()) {
+        return;
+    }
 
     setUpdatesEnabled(false);
     d->model->removeRows(0, d->model->rowCount());

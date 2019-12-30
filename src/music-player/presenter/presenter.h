@@ -116,7 +116,7 @@ signals:
     void metaLibraryClean();
     void scanFinished(const QString &jobid, int mediaCount);
     void notifyMusciError(PlaylistPtr playlist, const MetaPtr meta, int error);
-    void notifyAddToPlaylist(PlaylistPtr playlist, const MetaPtrList metalist);
+    void notifyAddToPlaylist(PlaylistPtr playlist, const MetaPtrList metalist, int count);
 
 public slots:
     //! music control interface
