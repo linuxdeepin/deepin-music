@@ -246,7 +246,7 @@ void PlayListWidget::updateInfo(PlaylistPtr playlist)
 {
     Q_D(PlayListWidget);
 
-    if (playlist->id() != PlayMusicListID)
+    if (playlist.isNull() || playlist->id() != PlayMusicListID)
         return;
 
     QString infoStr;

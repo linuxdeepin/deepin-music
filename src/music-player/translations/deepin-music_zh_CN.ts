@@ -130,9 +130,13 @@
         <translation type="vanished">你可以扫描音乐目录或者拖拽音乐文件添加音乐</translation>
     </message>
     <message>
-        <location filename="../view/importwidget.cpp" line="85"/>
         <source>Import Music</source>
-        <translation>导入音乐</translation>
+        <translation type="vanished">导入音乐</translation>
+    </message>
+    <message>
+        <location filename="../view/importwidget.cpp" line="85"/>
+        <source>Import Folder</source>
+        <translation>导入文件夹</translation>
     </message>
     <message>
         <location filename="../view/importwidget.cpp" line="96"/>
@@ -393,20 +397,20 @@
 <context>
     <name>MusicListDataDelegate</name>
     <message>
-        <location filename="../view/widget/delegate/musiclistdatadelegate.cpp" line="463"/>
-        <location filename="../view/widget/delegate/musiclistdatadelegate.cpp" line="557"/>
+        <location filename="../view/widget/delegate/musiclistdatadelegate.cpp" line="464"/>
+        <location filename="../view/widget/delegate/musiclistdatadelegate.cpp" line="558"/>
         <source>   No songs</source>
         <translation>   无</translation>
     </message>
     <message>
-        <location filename="../view/widget/delegate/musiclistdatadelegate.cpp" line="465"/>
-        <location filename="../view/widget/delegate/musiclistdatadelegate.cpp" line="559"/>
+        <location filename="../view/widget/delegate/musiclistdatadelegate.cpp" line="466"/>
+        <location filename="../view/widget/delegate/musiclistdatadelegate.cpp" line="560"/>
         <source>   1 song</source>
         <translation>   1首</translation>
     </message>
     <message>
-        <location filename="../view/widget/delegate/musiclistdatadelegate.cpp" line="467"/>
-        <location filename="../view/widget/delegate/musiclistdatadelegate.cpp" line="561"/>
+        <location filename="../view/widget/delegate/musiclistdatadelegate.cpp" line="468"/>
+        <location filename="../view/widget/delegate/musiclistdatadelegate.cpp" line="562"/>
         <source>   %1 songs</source>
         <translation>   %1首</translation>
     </message>
@@ -935,12 +939,12 @@
         <translation>删除</translation>
     </message>
     <message>
-        <location filename="../view/widget/delegate/playitemdelegate.cpp" line="513"/>
+        <location filename="../view/widget/delegate/playitemdelegate.cpp" line="514"/>
         <source>Unknown artist</source>
         <translation>未知歌手</translation>
     </message>
     <message>
-        <location filename="../view/widget/delegate/playitemdelegate.cpp" line="525"/>
+        <location filename="../view/widget/delegate/playitemdelegate.cpp" line="526"/>
         <source>Unknown album</source>
         <translation>未知专辑</translation>
     </message>

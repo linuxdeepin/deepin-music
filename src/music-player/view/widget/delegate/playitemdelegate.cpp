@@ -198,13 +198,13 @@ static inline QRect colRect(int col, const QStyleOptionViewItem &option)
     auto emCol = static_cast<PlayItemDelegate::MusicColumn>(col);
     switch (emCol) {
     case PlayItemDelegate::Number:
-        return QRect(5, option.rect.y(), 40, option.rect.height());
+        return QRect(10, option.rect.y(), 40, option.rect.height());
     case PlayItemDelegate::Title:
-        return QRect(45, option.rect.y(), w / 2 - 20, option.rect.height());
+        return QRect(50, option.rect.y(), w / 2 - 20, option.rect.height());
     case PlayItemDelegate::Artist:
-        return QRect(45 + w / 2, option.rect.y(), w / 4 - 20, option.rect.height());
+        return QRect(50 + w / 2, option.rect.y(), w / 4 - 20, option.rect.height());
     case PlayItemDelegate::Album:
-        return QRect(45 + w / 2 + w / 4, option.rect.y(), w / 4 - 20, option.rect.height());
+        return QRect(50 + w / 2 + w / 4, option.rect.y(), w / 4 - 20, option.rect.height());
     case PlayItemDelegate::Length:
         return QRect(w, option.rect.y(), tailwidth - 20, option.rect.height());
     case PlayItemDelegate::ColumnButt:
@@ -375,12 +375,13 @@ void PlayItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
     auto background = (index.row() % 2) == 1 ? baseColor : alternateBaseColor;
     //auto background = baseColor;
 
+    int lrWidth = 10;
     if (!(option.state & QStyle::State_Selected) && !(option.state & QStyle::State_MouseOver) ) {
         painter->save();
         painter->setPen(Qt::NoPen);
         painter->setBrush(background);
         //painter->drawRect(option.rect);
-        QRect selecteColorRect = option.rect.adjusted(5, 0, -5, 0);
+        QRect selecteColorRect = option.rect.adjusted(lrWidth, 0, -lrWidth, 0);
         painter->drawRoundedRect(selecteColorRect, 8, 8);
         painter->restore();
     }
@@ -420,7 +421,7 @@ void PlayItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
 //        selectColor.setAlphaF(0.2);
         QColor selectColor(option.palette.highlight().color());
         painter->setBrush(selectColor);
-        QRect selecteColorRect = option.rect.adjusted(5, 0, -5, 0);
+        QRect selecteColorRect = option.rect.adjusted(lrWidth, 0, -lrWidth, 0);
         painter->drawRoundedRect(selecteColorRect, 8, 8);
         painter->restore();
 
@@ -442,7 +443,7 @@ void PlayItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
         if (option.state & QStyle::State_Selected)
             hovertColor.setAlphaF(0.2);
         painter->setBrush(hovertColor);
-        QRect selecteColorRect = option.rect.adjusted(5, 0, -5, 0);
+        QRect selecteColorRect = option.rect.adjusted(lrWidth, 0, -lrWidth, 0);
         painter->drawRoundedRect(selecteColorRect, 8, 8);
         painter->restore();
     }

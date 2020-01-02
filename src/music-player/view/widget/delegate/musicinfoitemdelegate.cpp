@@ -255,12 +255,13 @@ void MusicInfoItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
     auto background = (index.row() % 2) == 1 ? baseColor : alternateBaseColor;
     //auto background = baseColor;
 
+    int lrWidth = 10;
     if (!(option.state & QStyle::State_Selected) && !(option.state & QStyle::State_MouseOver) ) {
         painter->save();
         painter->setPen(Qt::NoPen);
         painter->setBrush(background);
         //painter->drawRect(option.rect);
-        QRect selecteColorRect = option.rect.adjusted(5, 0, -5, 0);
+        QRect selecteColorRect = option.rect.adjusted(lrWidth, 0, -lrWidth, 0);
         painter->drawRoundedRect(selecteColorRect, 8, 8);
         painter->restore();
     }
@@ -275,7 +276,7 @@ void MusicInfoItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
 //        selectColor.setAlphaF(0.2);
         QColor selectColor(option.palette.highlight().color());
         painter->setBrush(selectColor);
-        QRect selecteColorRect = option.rect.adjusted(5, 0, -5, 0);
+        QRect selecteColorRect = option.rect.adjusted(lrWidth, 0, -lrWidth, 0);
         painter->drawRoundedRect(selecteColorRect, 8, 8);
         painter->restore();
 
@@ -297,7 +298,7 @@ void MusicInfoItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
         if (option.state & QStyle::State_Selected)
             hovertColor.setAlphaF(0.2);
         painter->setBrush(hovertColor);
-        QRect selecteColorRect = option.rect.adjusted(5, 0, -5, 0);
+        QRect selecteColorRect = option.rect.adjusted(lrWidth, 0, -lrWidth, 0);
         painter->drawRoundedRect(selecteColorRect, 8, 8);
         painter->restore();
     }

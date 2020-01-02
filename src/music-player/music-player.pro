@@ -184,7 +184,8 @@ HEADERS += \
 RESOURCES += \
     resource/theme/theme.qrc \
     config.qrc \
-    resource/resource.qrc
+    resource/resource.qrc \
+    icons/icons.qrc
 
 unix{
 SOURCES += \

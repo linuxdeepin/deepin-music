@@ -762,7 +762,8 @@ MusicListDataWidget::MusicListDataWidget(QWidget *parent) :
     d->btlistMode = new DToolButton;
     d->btlistMode->setFixedSize(36, 36);
     d->btlistMode->setObjectName("MusicListDataWidgetListMode");
-    d->btlistMode->setCheckable(false);
+    d->btlistMode->setCheckable(true);
+    d->btlistMode->setChecked(false);
 
 //    auto framelayout = new QHBoxLayout(this);
 //    DFrame *t_frame = new DFrame(this);
@@ -1058,11 +1059,11 @@ void MusicListDataWidget::slotTheme(int type)
 //                                  QString(":/mpimage/%1/press/text_list_press.svg").arg(rStr),
 //                                  QString(":/mpimage/%1/active/text_list_active.svg").arg(rStr));
 
-    d->btIconMode->setIcon(QIcon(QString(":/mpimage/light/normal/picture_list_normal.svg")));
-//    d->btIconMode->setIcon(QIcon::fromTheme("dcc_iconmode_normal"));
+//    d->btIconMode->setIcon(QIcon(QString(":/mpimage/light/normal/picture_list_normal.svg")));
+    d->btIconMode->setIcon(QIcon::fromTheme("picture_list_texts"));
     d->btIconMode->setIconSize(QSize(36, 36));
-    d->btlistMode->setIcon(QIcon(QString(":/mpimage/light/normal/text_list_normal.svg")));
-//    d->btlistMode->setIcon(QIcon::fromTheme("dcc_listmode_normal"));
+//    d->btlistMode->setIcon(QIcon(QString(":/mpimage/light/normal/text_list_normal.svg")));
+    d->btlistMode->setIcon(QIcon::fromTheme("text_list_texts"));
     d->btlistMode->setIconSize(QSize(36, 36));
     d->albumListView->setThemeType(type);
     d->artistListView->setThemeType(type);

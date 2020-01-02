@@ -82,7 +82,7 @@ ImportWidget::ImportWidget(QWidget *parent) : DFrame(parent), d_ptr(new ImportWi
     d->importButton->setPalette(pl);
     d->importButton->setObjectName("ImportViewImportButton");
     d->importButton->setFixedSize(302, 36);
-    d->importButton->setText(tr("Import Music"));
+    d->importButton->setText(tr("Import Folder"));
     d->importButton->setFocusPolicy(Qt::NoFocus);
 
     d->text = new QLabel;
