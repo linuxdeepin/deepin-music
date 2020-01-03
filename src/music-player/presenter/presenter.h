@@ -140,6 +140,7 @@ public slots:
     void onVolumeChanged(int volume);
     void onPlayModeChanged(int mode);
     void onToggleMute();
+    void onFadeInOut();
 
     void onUpdateMetaCodec(const MetaPtr meta);
 

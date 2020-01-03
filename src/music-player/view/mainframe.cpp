@@ -192,11 +192,42 @@ void MainFramePrivate::initMenu()
         configDialog->exec();
         MusicSettings::sync();
 
-        playPauseShortcut->setKey(QKeySequence(MusicSettings::value("shortcuts.all.play_pause").toString()));
-        volumeUpShortcut->setKey(QKeySequence(MusicSettings::value("shortcuts.all.volume_up").toString()));
-        volumeDownShortcut->setKey(QKeySequence(MusicSettings::value("shortcuts.all.volume_down").toString()));
-        nextShortcut->setKey(QKeySequence(MusicSettings::value("shortcuts.all.next").toString()));
-        previousShortcut->setKey(QKeySequence(MusicSettings::value("shortcuts.all.previous").toString()));
+        auto play_pauseStr = MusicSettings::value("shortcuts.all.play_pause").toString();
+        if (play_pauseStr.isEmpty())
+            playPauseShortcut->setEnabled(false);
+        else {
+            playPauseShortcut->setEnabled(true);
+            playPauseShortcut->setKey(QKeySequence(play_pauseStr));
+        }
+        auto volume_upStr = MusicSettings::value("shortcuts.all.volume_up").toString();
+        if (volume_upStr.isEmpty())
+            volumeUpShortcut->setEnabled(false);
+        else {
+            volumeUpShortcut->setEnabled(true);
+            volumeUpShortcut->setKey(QKeySequence(volume_upStr));
+        }
+        auto volume_downStr = MusicSettings::value("shortcuts.all.volume_down").toString();
+        if (volume_downStr.isEmpty())
+            volumeDownShortcut->setEnabled(false);
+        else {
+            volumeDownShortcut->setEnabled(true);
+            volumeDownShortcut->setKey(QKeySequence(volume_downStr));
+        }
+        auto nextStr = MusicSettings::value("shortcuts.all.next").toString();
+        if (nextStr.isEmpty())
+            nextShortcut->setEnabled(false);
+        else {
+            nextShortcut->setEnabled(true);
+            nextShortcut->setKey(QKeySequence(nextStr));
+        }
+        auto previousStr = MusicSettings::value("shortcuts.all.previous").toString();
+        if (previousStr.isEmpty())
+            previousShortcut->setEnabled(false);
+        else {
+            previousShortcut->setEnabled(true);
+            previousShortcut->setKey(QKeySequence(previousStr));
+        }
+        Q_EMIT q->fadeInOut();
     });
 
 //    bool themeFlag = false;
@@ -738,6 +769,7 @@ void MainFrame::binding(Presenter *presenter)
 
     connect(this, &MainFrame::importSelectFiles, presenter, &Presenter::onImportFiles);
     connect(this, &MainFrame::addPlaylist, presenter, &Presenter::onPlaylistAdd);
+    connect(this, &MainFrame::fadeInOut, presenter, &Presenter::onFadeInOut);
 
 //    connect(d->titlebar, &Titlebar::mouseMoving, this, &MainFrame::moveWindow);
 //    connect(d->footer, &Footer::mouseMoving, this, &MainFrame::moveWindow);
@@ -877,9 +909,10 @@ void MainFrame::binding(Presenter *presenter)
         if (0 == warnDlg.exec()) {
             if (playlist->canNext() && playlist->playing() == meta) {
                 bool existFlag = false;
-                for (auto meta : playlist->allmusic()) {
-                    if (!meta->invalid || QFile::exists(meta->localPath)) {
+                for (auto curMeta : playlist->allmusic()) {
+                    if (!curMeta->invalid || QFile::exists(curMeta->localPath)) {
                         Q_EMIT presenter->playNext(playlist, meta);
+                        existFlag = true;
                         break;
                     }
                 }

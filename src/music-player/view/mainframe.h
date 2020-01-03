@@ -46,6 +46,7 @@ signals:
     void addPlaylist(bool);
     void importSelectFiles(const QStringList &filelist, PlaylistPtr playlist);
     void triggerShortcutAction(const QString &optKey);
+    void fadeInOut();
 
 public slots:
     void updateUI();

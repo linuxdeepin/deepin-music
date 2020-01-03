@@ -45,7 +45,7 @@ static QStringList          sSupportedSuffixList;
 static QStringList          sSupportedFiterList;
 static QStringList          sSupportedMimeTypes;
 
-static const int sFadeInOutAnimationDuration = 400; //ms
+static const int sFadeInOutAnimationDuration = 1000; //ms
 
 void initMiniTypes()
 {
@@ -535,6 +535,25 @@ void Player::playMeta(PlaylistPtr playlist, const MetaPtr meta)
             d->qplayer->play();
         });
     }
+
+    if (d->fadeOutAnimation) {
+        d->fadeOutAnimation->stop();
+        d->fadeOutAnimation->deleteLater();
+        d->fadeOutAnimation = nullptr;
+    }
+    if (d->fadeInOut && !d->fadeInAnimation) {
+        qDebug() << "start fade in";
+        d->fadeInAnimation = new QPropertyAnimation(this, "fadeInOutFactor");
+        d->fadeInAnimation->setStartValue(0.10000);
+        d->fadeInAnimation->setEndValue(1.0000);
+        d->fadeInAnimation->setDuration(sFadeInOutAnimationDuration);
+        connect(d->fadeInAnimation, &QPropertyAnimation::finished,
+        this, [ = ]() {
+            d->fadeInAnimation->deleteLater();
+            d->fadeInAnimation = nullptr;
+        });
+        d->fadeInAnimation->start();
+    }
 }
 
 void Player::resume(PlaylistPtr playlist, const MetaPtr meta)
@@ -614,14 +633,15 @@ void Player::pause()
     if (d->fadeInOut && !d->fadeOutAnimation) {
         d->fadeOutAnimation = new QPropertyAnimation(this, "fadeInOutFactor");
         d->fadeOutAnimation->setStartValue(1.0000);
-        d->fadeOutAnimation->setKeyValueAt(0.9999, 0.1000);
-        d->fadeOutAnimation->setEndValue(1.0000);
+//        d->fadeOutAnimation->setKeyValueAt(0.9999, 0.1000);
+        d->fadeOutAnimation->setEndValue(0.10000);
         d->fadeOutAnimation->setDuration(sFadeInOutAnimationDuration);
         connect(d->fadeOutAnimation, &QPropertyAnimation::finished,
         this, [ = ]() {
             d->fadeOutAnimation->deleteLater();
             d->fadeOutAnimation = nullptr;
             d->qplayer->pause();
+            setFadeInOutFactor(1.0);
         });
         d->fadeOutAnimation->start();
     } else {
@@ -803,7 +823,7 @@ void Player::setFadeInOutFactor(double fadeInOutFactor)
     //d->qplayer->setVolume(d->volume * d->fadeInOutFactor);
     d->qplayer->blockSignals(false);
 
-    setMusicVolume(d->volume / 100.0);
+    setMusicVolume(d->volume * d->fadeInOutFactor / 100.0);
 }
 
 void Player::setFadeInOut(bool fadeInOut)

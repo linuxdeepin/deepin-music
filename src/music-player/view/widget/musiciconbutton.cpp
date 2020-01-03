@@ -150,8 +150,8 @@ void MusicIconButton::paintEvent(QPaintEvent *event)
     painter.setRenderHint(QPainter::HighQualityAntialiasing);
     painter.setRenderHint(QPainter::SmoothPixmapTransform);
 
-    int pixmapWidth = pixmap.rect().width();
-    int pixmapHeight = pixmap.rect().height();
+    int pixmapWidth = pixmap.rect().width() / devicePixelRatioF();
+    int pixmapHeight = pixmap.rect().height() / devicePixelRatioF();
     QRect pixmapRect((rect().width() - pixmapWidth) / 2, (rect().height() - pixmapHeight) / 2, pixmapWidth, pixmapHeight);
     pixmapRect = pixmapRect.intersected(rect());
 //    painter.drawPixmap(pixmapRect, pixmap, QRect(0, 0, pixmapWidth, pixmapHeight));

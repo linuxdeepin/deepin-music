@@ -1322,6 +1322,13 @@ void Presenter::onToggleMute()
     }
 }
 
+void Presenter::onFadeInOut()
+{
+    Q_D(Presenter);
+    auto fadeInOut = d->settings->value("base.play.fade_in_out").toBool();
+    d->player->setFadeInOut(fadeInOut);
+}
+
 void Presenter::onUpdateMetaCodec(const MetaPtr meta)
 {
     Q_D(Presenter);

@@ -327,7 +327,17 @@ void PlayListView::onMusiclistChanged(PlaylistPtr playlist)
     }
     if (playlist->searchStr().isEmpty() && playlist == d->model->playlist()
             && playlist->allmusic().size() == rowCount()) {
-        return;
+        bool flag = true;
+        auto allMusic = playlist->allmusic();
+        for (int i = 0; i < allMusic.size(); ++i) {
+            auto curIndex = d->model->index(i, 0);
+            if (!curIndex.isValid() || allMusic[i]->hash != d->model->data(d->model->index(i, 0)).toString()) {
+                flag = false;
+                break;
+            }
+        }
+        if (flag)
+            return;
     }
 
     setUpdatesEnabled(false);
