@@ -102,7 +102,8 @@ SOURCES += \
     view/widget/model/musiclistmodel.cpp \
     view/shortcut.cpp \
     core/util/dbusutils.cpp \
-    view/widget/tooltips.cpp
+    view/widget/tooltips.cpp \
+    core/util/inotifyfiles.cpp
 
 HEADERS += \
     musicapp.h \
@@ -179,7 +180,8 @@ HEADERS += \
     view/widget/model/musiclistmodel.h \
     view/shortcut.h \
     core/util/dbusutils.h \
-    view/widget/tooltips.h
+    view/widget/tooltips.h \
+    core/util/inotifyfiles.h
 
 RESOURCES += \
     resource/theme/theme.qrc \
@@ -196,6 +198,7 @@ HEADERS += \
 }
 
 TRANSLATIONS += $$PWD/translations/$${TARGET}.ts \
-                $$PWD/translations/$${TARGET}_zh_CN.ts
+                $$PWD/translations/$${TARGET}_zh_CN.ts \
+                $$PWD/translations/$${TARGET}_en_US.ts
 
 include($$PWD/install.pri)

@@ -33,13 +33,15 @@
 #include <DComboBox>
 #include <DLabel>
 #include <DPalette>
+#include <DGuiApplicationHelper>
 
 #include "../core/music.h"
 #include "../core/playlist.h"
 #include "../core/musicsettings.h"
+#include "../core/util/inotifyfiles.h"
+#include "../core/util/threadpool.h"
 #include "widget/playlistview.h"
 #include "widget/ddropdown.h"
-#include <DGuiApplicationHelper>
 
 DWIDGET_USE_NAMESPACE
 DGUI_USE_NAMESPACE
@@ -60,6 +62,7 @@ public:
     DPushButton         *btClearAll     = nullptr;
     PlayListView        *playListView   = nullptr;
     QAction             *customAction   = nullptr;
+    InotifyFiles        inotifyFiles;
 
     PlayListWidget *q_ptr;
     Q_DECLARE_PUBLIC(PlayListWidget)
@@ -137,6 +140,26 @@ void PlayListWidgetPrivate::initConntion()
     q->connect(playListView, &PlayListView::removeMetasFavourite,
     q, [ = ](const MetaPtrList  & metalist) {
         Q_EMIT q->removeMetasFavourite(metalist);
+    });
+
+    q->connect(&inotifyFiles, &InotifyFiles::fileChanged,
+    q, [ = ](const QStringList  & files) {
+        auto allMetas = playListView->playlist()->allmusic();
+        if (!allMetas.isEmpty()) {
+            MetaPtrList  metalist;
+            for (auto file : files) {
+                for (int i = 0; i < allMetas.size(); i++) {
+                    if (file == allMetas[i]->localPath) {
+                        metalist.append(allMetas[i]);
+                        allMetas.removeAt(i);
+                        break;
+                    }
+                }
+            }
+            if (!metalist.isEmpty()) {
+                playListView->playlist()->removeMusicList(metalist);
+            }
+        }
     });
 }
 
@@ -236,6 +259,9 @@ PlayListWidget::PlayListWidget(QWidget *parent) :
 //        themeType = 1;
     int themeType = DGuiApplicationHelper::instance()->themeType();
     slotTheme(themeType);
+
+    d->inotifyFiles.start();
+    ThreadPool::instance()->moveToNewThread(&d->inotifyFiles);
 }
 
 PlayListWidget::~PlayListWidget()
@@ -248,6 +274,11 @@ void PlayListWidget::updateInfo(PlaylistPtr playlist)
 
     if (playlist.isNull() || playlist->id() != PlayMusicListID)
         return;
+
+    d->inotifyFiles.clear();
+    for (auto curMeta : playlist->allmusic()) {
+        d->inotifyFiles.addPath(curMeta->localPath);
+    }
 
     QString infoStr;
     int sortMetasSize = playlist->allmusic().size();
@@ -265,6 +296,12 @@ void PlayListWidget::setCurPlaylist(PlaylistPtr playlist)
 {
     Q_D(PlayListWidget);
     d->initData(playlist);
+}
+
+PlaylistPtr PlayListWidget::curPlaylist()
+{
+    Q_D(PlayListWidget);
+    return d->playListView->playlist();
 }
 
 void PlayListWidget::dragEnterEvent(QDragEnterEvent *event)

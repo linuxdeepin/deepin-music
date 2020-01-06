@@ -67,7 +67,7 @@ SoundVolume::SoundVolume(QWidget *parent) : QWidget(parent), d_ptr(new SoundVolu
     d->volSlider->setMaximum(100);
     d->volSlider->slider()->setSingleStep(Player::VolumeStep);
     d->volSlider->setValue(50);
-    d->volSlider->setFixedHeight(160);
+    d->volSlider->slider()->setFixedHeight(160);
     d->volSlider->setFixedWidth(24);
     d->volSlider->setIconSize(QSize(15, 15));
 //    d->volSlider->setRightIcon(DHiDPIHelper::loadNxPixmap(":/mpimage/light/normal/volume_add_normal.svg"));

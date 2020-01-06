@@ -907,11 +907,12 @@ void MainFrame::binding(Presenter *presenter)
         warnDlg.setDefaultButton(0);
 
         if (0 == warnDlg.exec()) {
-            if (playlist->canNext() && playlist->playing() == meta) {
+            auto curPlaylist = d->playListWidget->curPlaylist();
+            if (curPlaylist->canNext()) {
                 bool existFlag = false;
-                for (auto curMeta : playlist->allmusic()) {
+                for (auto curMeta : curPlaylist->allmusic()) {
                     if (!curMeta->invalid || QFile::exists(curMeta->localPath)) {
-                        Q_EMIT presenter->playNext(playlist, meta);
+                        Q_EMIT presenter->playNext(curPlaylist, meta);
                         existFlag = true;
                         break;
                     }

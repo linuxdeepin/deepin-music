@@ -5,7 +5,7 @@ mode = developer
 
 [deepin-music.deepin-music]
 file_filter = src/music-player/translations/deepin-music_<lang>.ts
-source_file = src/music-player/translations/deepin-music.ts
+source_file = src/music-player/translations/deepin-music_en_US.ts
 source_lang = en
 type = QT
 

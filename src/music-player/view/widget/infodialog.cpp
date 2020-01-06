@@ -329,7 +329,7 @@ void InfoDialog::setThemeType(int type)
 
 
         DPalette pl = d->infoGridFrame->palette();
-        QColor windowColor("#000000");
+        QColor windowColor("#808080");
         windowColor.setAlphaF(0.05);
         pl.setColor(DPalette::Window, windowColor);
         QColor sbcolor("#FFFFFF");

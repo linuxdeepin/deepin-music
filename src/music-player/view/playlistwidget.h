@@ -37,6 +37,7 @@ public:
 
     void updateInfo(PlaylistPtr playlist);
     void setCurPlaylist(PlaylistPtr playlist);
+    PlaylistPtr curPlaylist();
 
 public slots:
     void onMusiclistChanged(PlaylistPtr playlist);
