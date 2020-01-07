@@ -14,7 +14,8 @@ dman.path = $${PREFIX}/share/dman/
 dman.files = $$PWD/dman/*
 
 translations.path = $${PREFIX}/share/$${TARGET}/translations
-translations.files = $$PWD/translations/*.qm
+translations.files = $$PWD/translations/*.qm \
+                     $$PWD/translations/desktop/*.qm
 
 hicolor.path =  $${PREFIX}/share/icons/hicolor/scalable/apps
 hicolor.files = $$PWD/resource/theme/common/image/deepin-music.svg

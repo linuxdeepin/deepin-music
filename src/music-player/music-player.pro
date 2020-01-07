@@ -199,6 +199,8 @@ HEADERS += \
 
 TRANSLATIONS += $$PWD/translations/$${TARGET}.ts \
                 $$PWD/translations/$${TARGET}_zh_CN.ts \
-                $$PWD/translations/$${TARGET}_en_US.ts
+                $$PWD/translations/$${TARGET}_en_US.ts \
+                $$PWD/translations/desktop/desktop_zh_CN.ts \
+                $$PWD/translations/desktop/desktop_en_US.ts
 
 include($$PWD/install.pri)
