@@ -30,7 +30,7 @@
 #include <DPushButton>
 #include <DFloatingButton>
 #include <DPalette>
-
+#include <DGuiApplicationHelper>
 #include <DUtil>
 
 #include "../core/playlist.h"
@@ -39,7 +39,8 @@
 #include "widget/musiclistviewitem.h"
 #include "musiclistdatawidget.h"
 #include "widget/musicimagebutton.h"
-#include <DGuiApplicationHelper>
+#include "musiclistscrollarea.h"
+
 MusicListWidget::MusicListWidget(QWidget *parent) : DWidget(parent)
 {
     setObjectName("MusicListWidget");
@@ -54,64 +55,18 @@ MusicListWidget::MusicListWidget(QWidget *parent) : DWidget(parent)
     layout->setContentsMargins(0, 0, 0, 0);
     layout->setSpacing(0);
 
-    leftFrame = new DWidget;
+    leftFrame = new MusicListScrollArea;
     leftFrame->setFixedWidth(220);
     leftFrame->setAutoFillBackground(true);
     auto leftFramePalette = leftFrame->palette();
     leftFramePalette.setColor(DPalette::Background, QColor("#FFFFFF"));
     leftFrame->setPalette(leftFramePalette);
 
-    auto musicLayout = new QVBoxLayout(leftFrame);
-    musicLayout->setContentsMargins(10, 5, 10, 5);
-    musicLayout->setSpacing(0);
+    m_addListBtn = leftFrame->getAddButton();
 
-    dataBaseLabel = new DLabel;
-    dataBaseLabel->setFixedHeight(40);
-    dataBaseLabel->setText(tr("Database"));
-    dataBaseLabel->setObjectName("MusicListWidgetDataBase");
-    dataBaseLabel->setMargin(10);
-    auto dataBaseLabelFont = dataBaseLabel->font();
-    dataBaseLabelFont.setFamily("SourceHanSansSC");
-    dataBaseLabelFont.setWeight(QFont::Medium);
-    dataBaseLabelFont.setPixelSize(14);
-    dataBaseLabel->setFont(dataBaseLabelFont);
-//    auto dataBaseLabelPalette = dataBaseLabel->palette();
-//    dataBaseLabelPalette.setColor(DPalette::WindowText, QColor("#757F92"));
-//    dataBaseLabel->setPalette(dataBaseLabelPalette);
-    //dataBaseLabel->setForegroundRole(DPalette::TextTips);
-
-    customizeLabel = new DLabel;
-    customizeLabel->setFixedHeight(40);
-    customizeLabel->setText(tr("Playlists"));
-    customizeLabel->setObjectName("MusicListWidgetCustomizeLabel");
-    customizeLabel->setMargin(10);
-    customizeLabel->setFont(dataBaseLabelFont);
-//    customizeLabel->setPalette(dataBaseLabelPalette);
-    //customizeLabel->setForegroundRole(DPalette::TextTips);
-
-    m_addListBtn = new MusicImageButton(":/mpimage/light/normal/add_normal.svg",
-                                        ":/mpimage/light/hover/add_hover.svg",
-                                        ":/mpimage/light/press/add_press.svg");
-    m_addListBtn->setFixedSize(37, 37);
-    m_addListBtn->setFocusPolicy(Qt::NoFocus);
-
-    auto customizeLayout = new QHBoxLayout(this);
-    customizeLayout->setContentsMargins(0, 0, 0, 0);
-    customizeLayout->addWidget(customizeLabel, 100, Qt::AlignLeft);
-    customizeLayout->addStretch();
-    customizeLayout->addWidget(m_addListBtn, 0, Qt::AlignRight);
-
-    m_dataBaseListview = new MusicListView;
-    m_dataBaseListview->setEditTriggers(QAbstractItemView::NoEditTriggers);
-    m_dataBaseListview->setFixedHeight(162);
-    m_customizeListview = new MusicListView;
+    m_dataBaseListview = leftFrame->getDBMusicListView();
+    m_customizeListview = leftFrame->getCustomMusicListView();
     m_dataListView = new MusicListDataWidget;
-    musicLayout->setContentsMargins(0, 0, 0, 0);
-
-    musicLayout->addWidget(dataBaseLabel, 0, Qt::AlignVCenter);
-    musicLayout->addWidget(m_dataBaseListview, 0, Qt::AlignTop);
-    musicLayout->addLayout(customizeLayout);
-    musicLayout->addWidget(m_customizeListview);
 
     layout->addWidget(leftFrame, 0);
     layout->addWidget(m_dataListView, 100);
@@ -473,54 +428,13 @@ void MusicListWidget::slotTheme(int type)
         auto palette = this->palette();
         palette.setColor(DPalette::Background, QColor("#F8F8F8"));
         setPalette(palette);
-
-        DPalette leftFramePalette = leftFrame->palette();
-        leftFramePalette.setColor(DPalette::Background, QColor("#FFFFFF"));
-        leftFrame->setPalette(leftFramePalette);
-
-        DPalette dataBaseLabelPalette = dataBaseLabel->palette();
-        QColor WindowTextColor("#757F92");
-        WindowTextColor.setAlphaF(0.8);
-        dataBaseLabelPalette.setColor(DPalette::WindowText, WindowTextColor);
-        dataBaseLabel->setPalette(dataBaseLabelPalette);
-        customizeLabel->setPalette(dataBaseLabelPalette);
-
-//        DPalette dataBaseListviewPalette = m_dataBaseListview->palette();
-//        dataBaseListviewPalette.setColor(DPalette::Text, QColor("#414D68"));
-//        dataBaseListviewPalette.setColor(DPalette::HighlightedText, QColor("#FFFFFF"));
-//        m_dataBaseListview->setPalette(dataBaseListviewPalette);
-//        m_customizeListview->setPalette(dataBaseListviewPalette);
-
-        m_addListBtn->setPropertyPic(":/mpimage/light/normal/add_normal.svg",
-                                     ":/mpimage/light/hover/add_hover.svg",
-                                     ":/mpimage/light/press/add_press.svg");
     } else {
         auto palette = this->palette();
         palette.setColor(DPalette::Background, QColor("#252525"));
         setPalette(palette);
-
-        auto leftFramePalette = leftFrame->palette();
-        leftFramePalette.setColor(DPalette::Background, QColor("#232323"));
-        leftFrame->setPalette(leftFramePalette);
-
-        DPalette dataBaseLabelPalette = dataBaseLabel->palette();
-        QColor WindowTextColor("#C0C6D4");
-        WindowTextColor.setAlphaF(0.8);
-        dataBaseLabelPalette.setColor(DPalette::WindowText, WindowTextColor);
-        dataBaseLabel->setPalette(dataBaseLabelPalette);
-        customizeLabel->setPalette(dataBaseLabelPalette);
-
-//        auto dataBaseListviewPalette = m_dataBaseListview->palette();
-//        dataBaseListviewPalette.setColor(DPalette::Text, QColor("#C0C6D4"));
-//        dataBaseListviewPalette.setColor(DPalette::HighlightedText, QColor("#FFFFFF"));
-//        m_dataBaseListview->setPalette(dataBaseListviewPalette);
-//        m_customizeListview->setPalette(dataBaseListviewPalette);
-
-        m_addListBtn->setPropertyPic(":/mpimage/dark/normal/add_normal.svg",
-                                     ":/mpimage/dark/hover/add_hover.svg",
-                                     ":/mpimage/dark/press/add_press.svg");
     }
 
+    leftFrame->slotTheme(type);
     m_dataListView->slotTheme(type);
     m_dataBaseListview->slotTheme(type);
     m_customizeListview->slotTheme(type);
@@ -528,8 +442,7 @@ void MusicListWidget::slotTheme(int type)
 
 void MusicListWidget::changePicture(QPixmap pixmap, QPixmap albumPixmap, QPixmap sidebarPixmap)
 {
-    m_dataBaseListview->changePicture(pixmap, sidebarPixmap);
-    m_customizeListview->changePicture(pixmap, sidebarPixmap);
+    leftFrame->changePicture(pixmap, albumPixmap, sidebarPixmap);
     m_dataListView->changePicture(pixmap, sidebarPixmap, albumPixmap);
 }
 

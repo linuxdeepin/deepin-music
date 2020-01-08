@@ -32,6 +32,8 @@ DWIDGET_USE_NAMESPACE
 class MusicListView;
 class MusicListDataWidget;
 class MusicImageButton;
+class MusicListScrollArea;
+
 class MusicListWidget : public DWidget
 {
     Q_OBJECT
@@ -90,10 +92,8 @@ private:
     MusicListView         *m_dataBaseListview;
     MusicListView         *m_customizeListview;
     MusicListDataWidget   *m_dataListView;
-    MusicImageButton     *m_addListBtn;
-    DWidget               *leftFrame;
-    DLabel                *dataBaseLabel;
-    DLabel                *customizeLabel;
+    MusicImageButton      *m_addListBtn;
+    MusicListScrollArea   *leftFrame;
     bool                   addFlag = false;
 };
 

@@ -103,7 +103,8 @@ SOURCES += \
     view/shortcut.cpp \
     core/util/dbusutils.cpp \
     view/widget/tooltips.cpp \
-    core/util/inotifyfiles.cpp
+    core/util/inotifyfiles.cpp \
+    view/musiclistscrollarea.cpp
 
 HEADERS += \
     musicapp.h \
@@ -181,7 +182,8 @@ HEADERS += \
     view/shortcut.h \
     core/util/dbusutils.h \
     view/widget/tooltips.h \
-    core/util/inotifyfiles.h
+    core/util/inotifyfiles.h \
+    view/musiclistscrollarea.h
 
 RESOURCES += \
     resource/theme/theme.qrc \

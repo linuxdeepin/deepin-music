@@ -844,11 +844,12 @@ void MainFrame::binding(Presenter *presenter)
         }
         //DMessageManager::instance()->sendMessage(d->footer, icon, text);
         if (playlist->id() != AlbumMusicListID && playlist->id() != ArtistMusicListID
-                && playlist->id() != AllMusicListID)
+                /*&& playlist->id() != AllMusicListID*/)
             this->sendMessage(icon, text);
 
         QWidget *content = this->findChild<QWidget *>("_d_message_manager_content");
-        content->setContentsMargins(0, 0, 0, 90);
+        if (nullptr != content)
+            content->setContentsMargins(0, 0, 0, 90);
     });
 
 //    connect(presenter, &Presenter::showPlaylist,

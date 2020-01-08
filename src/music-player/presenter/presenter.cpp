@@ -410,6 +410,18 @@ void Presenter::prepareData()
             PlaylistPtr allplaylist = d->playlistMgr->playlist(AllMusicListID);
             allplaylist->appendMusicList(metalist);
         }
+        auto allMetas = playlist->allmusic();
+        int count = 0;
+        for (auto meta : metalist) {
+            for (auto curMeta : allMetas) {
+                if (curMeta->hash == meta->hash) {
+                    count++;
+                    break;
+                }
+            }
+        }
+        Q_EMIT notifyAddToPlaylist(playlist, metalist, count);
+
         playlist->appendMusicList(metalist);
         PlaylistPtr allplaylist = d->playlistMgr->playlist(AllMusicListID);
         if (!allplaylist.isNull()) {
