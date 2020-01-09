@@ -78,7 +78,7 @@ void InfoDialogPrivate::initUI()
 
     auto layout = new QVBoxLayout(q);
     layout->setSpacing(0);
-    layout->setContentsMargins(5, 50, 5, 5);
+    layout->setContentsMargins(15, 50, 15, 15);
 
     closeBt = new DWindowCloseButton( q);
     closeBt->setFocusPolicy(Qt::NoFocus);
@@ -106,7 +106,7 @@ void InfoDialogPrivate::initUI()
     infoGridFrame->setFocusPolicy(Qt::NoFocus);
     infoGridFrame->setLineWidth(1);
     infoGridFrame->setFrameRounded(true);
-    infoGridFrame->setMaximumWidth(300);
+    //infoGridFrame->setMaximumWidth(300);
     infoGridFrame->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     DPalette pl = infoGridFrame->palette();
     QColor windowColor("#FFFFFF");
@@ -125,9 +125,7 @@ void InfoDialogPrivate::initUI()
     layout->addSpacing(10);
     layout->addWidget(split, 0, Qt::AlignCenter);
     layout->addSpacing(10);
-    layout->addWidget(infoGridFrame, 0, Qt::AlignCenter);
-    layout->addSpacing(10);
-    layout->addStretch();
+    layout->addWidget(infoGridFrame);
 
     auto infoLayout = new QVBoxLayout(infoGridFrame);
     infoLayout->setSpacing(0);
@@ -329,8 +327,8 @@ void InfoDialog::setThemeType(int type)
 
 
         DPalette pl = d->infoGridFrame->palette();
-        QColor windowColor("#808080");
-        windowColor.setAlphaF(0.05);
+        QColor windowColor("#282828");
+        //windowColor.setAlphaF(0.05);
         pl.setColor(DPalette::Window, windowColor);
         QColor sbcolor("#FFFFFF");
         sbcolor.setAlphaF(0.1);

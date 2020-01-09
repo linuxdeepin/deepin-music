@@ -87,7 +87,7 @@ int main(int argc, char *argv[])
 
     // handle open file
     QString toOpenFile;
-    if (1 == parser.positionalArguments().length()) {
+    if (parser.positionalArguments().length() > 0) {
         toOpenFile = parser.positionalArguments().first();
     }
 
@@ -99,16 +99,31 @@ int main(int argc, char *argv[])
     QIcon icon = QIcon::fromTheme("deepin-music");
     app.setProductIcon(icon);
 
-    if (!app.setSingleInstance("deepinmusic")) {
+    auto *sharedMemory = new QSharedMemory(QString("deepinmusicsingle"));
+    volatile int i = 2;
+    while (i--) {
+        if (sharedMemory->attach(QSharedMemory::ReadOnly)) {
+            sharedMemory->detach();
+        }
+    }
+
+    if (!app.setSingleInstance("deepinmusic") || !sharedMemory->create(1)) {
         qDebug() << "another deepin music has started";
-        if (!toOpenFile.isEmpty()) {
-            QFileInfo fi(toOpenFile);
-            QUrl url = QUrl::fromLocalFile(fi.absoluteFilePath());
-            QDBusInterface iface("org.mpris.MediaPlayer2.DeepinMusic",
-                                 "/org/mpris/MediaPlayer2",
-                                 "org.mpris.MediaPlayer2.Player",
-                                 QDBusConnection::sessionBus());
-            iface.asyncCall("OpenUri", url.toString());
+        for (auto curStr : parser.positionalArguments()) {
+            if (!curStr.isEmpty()) {
+                QFileInfo fi(curStr);
+                QUrl url = QUrl::fromLocalFile(fi.absoluteFilePath());
+                while (true) {
+                    QDBusInterface iface("org.mpris.MediaPlayer2.DeepinMusic",
+                                         "/org/mpris/MediaPlayer2",
+                                         "org.mpris.MediaPlayer2.Player",
+                                         QDBusConnection::sessionBus());
+                    if (iface.isValid()) {
+                        iface.asyncCall("OpenUri", url.toString());
+                        break;
+                    }
+                }
+            }
         }
 
         // show deepin-music

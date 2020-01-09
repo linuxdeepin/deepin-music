@@ -51,6 +51,8 @@ public:
 
     void changePicture(QPixmap pixmap, QPixmap albumPixmap);
 
+    void adjustHeight();
+
 public slots:
     void slotTheme(int type);
 signals:
@@ -84,3 +86,4 @@ private:
     QPixmap              defaultPixmap;
     int                  m_type = 1;
 };
+

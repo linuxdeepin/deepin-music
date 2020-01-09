@@ -238,6 +238,7 @@ void MusicListView::addMusicList(PlaylistPtr playlist, bool addFlag)
         edit(model->index(item->row(), 0));
         scrollToBottom();
     }
+    adjustHeight();
 }
 
 QStandardItem *MusicListView::item(int row, int column) const
@@ -402,6 +403,12 @@ void MusicListView::changePicture(QPixmap pixmap, QPixmap albumPixmap)
         update();
     }
 }
+
+void MusicListView::adjustHeight()
+{
+    setMinimumHeight(model->rowCount() * 40);
+}
+
 //void MusicListView::startDrag(Qt::DropActions supportedActions)
 //{
 //    DListWidget::startDrag(supportedActions);
@@ -461,6 +468,7 @@ void MusicListView::keyPressEvent(QKeyEvent *event)
                 allPlaylists.removeAt(t_index);
                 //delete model->takeItem(item->row());
                 Q_EMIT m_data->removed();
+                adjustHeight();
             }
         }
     } else if (event->key() == Qt::Key_Up || event->key() == Qt::Key_Down) {
@@ -610,6 +618,8 @@ void MusicListView::showContextMenu(const QPoint &pos)
                 Q_EMIT m_data->removed();
                 if (m_data->playing() != nullptr || allPlaylists.isEmpty())
                     Q_EMIT removeAllList(m_data->playing());
+
+                adjustHeight();
             }
 
         }

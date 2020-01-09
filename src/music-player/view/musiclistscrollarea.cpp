@@ -41,16 +41,21 @@
 #include "widget/musicimagebutton.h"
 #include <DGuiApplicationHelper>
 
-MusicListScrollArea::MusicListScrollArea(QWidget *parent) : DWidget(parent)
+MusicListScrollArea::MusicListScrollArea(QWidget *parent) : DScrollArea(parent)
 {
-    setWindowFlags(Qt::FramelessWindowHint);
+    setFrameShape(QFrame::NoFrame);
     setFixedWidth(220);
+    setWidgetResizable(true);
+
     setAutoFillBackground(true);
     auto leftFramePalette = palette();
     leftFramePalette.setColor(DPalette::Background, QColor("#FFFFFF"));
     setPalette(leftFramePalette);
 
-    auto musicLayout = new QVBoxLayout(this);
+    QWidget *widget = new QWidget(this);
+    setWidget(widget);
+
+    auto musicLayout = new QVBoxLayout(widget);
     musicLayout->setContentsMargins(10, 5, 10, 5);
     musicLayout->setSpacing(0);
 
@@ -84,7 +89,7 @@ MusicListScrollArea::MusicListScrollArea(QWidget *parent) : DWidget(parent)
     m_addListBtn->setFixedSize(37, 37);
     m_addListBtn->setFocusPolicy(Qt::NoFocus);
 
-    auto customizeLayout = new QHBoxLayout(this);
+    auto customizeLayout = new QHBoxLayout(widget);
     customizeLayout->setContentsMargins(0, 0, 0, 0);
     customizeLayout->addWidget(customizeLabel, 100, Qt::AlignLeft);
     customizeLayout->addStretch();
@@ -176,5 +181,12 @@ void MusicListScrollArea::changePicture(QPixmap pixmap, QPixmap albumPixmap, QPi
 {
     m_dataBaseListview->changePicture(pixmap, sidebarPixmap);
     m_customizeListview->changePicture(pixmap, sidebarPixmap);
+}
+
+void MusicListScrollArea::resizeEvent(QResizeEvent *event)
+{
+    m_customizeListview->adjustHeight();
+    DScrollArea::resizeEvent(event);
+    sizeHint();
 }
 

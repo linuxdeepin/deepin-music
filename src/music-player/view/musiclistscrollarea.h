@@ -21,7 +21,7 @@
 
 #pragma once
 
-#include <DWidget>
+#include <DScrollArea>
 #include <DLabel>
 
 DWIDGET_USE_NAMESPACE
@@ -30,7 +30,7 @@ class MusicListView;
 class MusicListDataWidget;
 class MusicImageButton;
 
-class MusicListScrollArea : public DWidget
+class MusicListScrollArea : public DScrollArea
 {
     Q_OBJECT
 public:
@@ -43,6 +43,9 @@ public:
 public slots:
     void slotTheme(int type);
     void changePicture(QPixmap pixmap, QPixmap albumPixmap, QPixmap sidebarPixmap);
+
+protected:
+    virtual void resizeEvent(QResizeEvent *event) Q_DECL_OVERRIDE;
 
 private:
     MusicListView         *m_dataBaseListview;
