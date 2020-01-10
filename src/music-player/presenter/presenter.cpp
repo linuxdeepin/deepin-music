@@ -982,6 +982,11 @@ void Presenter::onAddToPlaylist(PlaylistPtr playlist,
 {
     Q_D(Presenter);
 
+    if (!playlist.isNull() && playlist->id() == FavMusicListID) {
+        onAddMetasFavourite(metalist);
+        return;
+    }
+
     PlaylistPtr modifiedPlaylist = playlist;
     if (playlist.isNull()) {
         Q_EMIT showPlaylist(true);
@@ -1180,14 +1185,22 @@ void Presenter::onMusicPlay(PlaylistPtr playlist,  const MetaPtr meta)
     qDebug() << "play" << playlist->displayName()
              << "( count:" << playlist->length() << ")"
              << toPlayMeta->title << toPlayMeta->hash;
-    playlist->setPlayingStatus(true);
+    auto alllists = d->playlistMgr->allplaylist();
+    for (auto curList : alllists) {
+        if (!curList.isNull())
+            curList->setPlayingStatus(true);
+    }
     Q_EMIT d->play(playlist, toPlayMeta);
 }
 
 void Presenter::onMusicPause(PlaylistPtr playlist, const MetaPtr info)
 {
     Q_D(Presenter);
-    playlist->setPlayingStatus(false);
+    auto alllists = d->playlistMgr->allplaylist();
+    for (auto curList : alllists) {
+        if (!curList.isNull())
+            curList->setPlayingStatus(false);
+    }
     Q_EMIT d->pause();
     Q_EMIT musicPaused(playlist, info);
 }
@@ -1195,7 +1208,11 @@ void Presenter::onMusicPause(PlaylistPtr playlist, const MetaPtr info)
 void Presenter::onMusicResume(PlaylistPtr playlist, const MetaPtr info)
 {
     Q_D(Presenter);
-    playlist->setPlayingStatus(true);
+    auto alllists = d->playlistMgr->allplaylist();
+    for (auto curList : alllists) {
+        if (!curList.isNull())
+            curList->setPlayingStatus(true);
+    }
     Q_EMIT d->resume(playlist, info);
     d->notifyMusicPlayed(playlist, info);
 }
@@ -1207,7 +1224,11 @@ void Presenter::onMusicStop(PlaylistPtr playlist, const MetaPtr meta)
     Q_EMIT lyricSearchFinished(meta, SearchMeta(), "");
     d->player->stop();
     d->metaBufferDetector->onClearBufferDetector();
-    playlist->setPlayingStatus(false);
+    auto alllists = d->playlistMgr->allplaylist();
+    for (auto curList : alllists) {
+        if (!curList.isNull())
+            curList->setPlayingStatus(false);
+    }
     Q_EMIT this->musicStoped(playlist, meta);
 }
 
@@ -1257,7 +1278,7 @@ void Presenter::onToggleFavourite(const MetaPtr meta)
     if (d->playlistMgr->playlist(FavMusicListID)->contains(meta)) {
         d->playlistMgr->playlist(FavMusicListID)->removeMusicList(MetaPtrList() << meta);
     } else {
-        Q_EMIT notifyAddToPlaylist(d->playlistMgr->playlist(FavMusicListID), MetaPtrList() << meta, 1);
+        Q_EMIT notifyAddToPlaylist(d->playlistMgr->playlist(FavMusicListID), MetaPtrList() << meta, 0);
         d->playlistMgr->playlist(FavMusicListID)->appendMusicList(MetaPtrList() << meta);
     }
 }

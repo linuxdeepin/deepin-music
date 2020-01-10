@@ -84,34 +84,7 @@ MusicListView::MusicListView(QWidget *parent) : DListView(parent)
     });
 
     connect(model, &QStandardItemModel::itemChanged,
-    this, [ = ](QStandardItem * item) {
-        auto curItemRow = item->row();
-        if (curItemRow < 0 || curItemRow >= allPlaylists.size())
-            return;
-        auto playlistPtr = allPlaylists[item->row()];
-        if (playlistPtr->displayName() != item->text()) {
-            if (item->text().isEmpty()) {
-                item->setText(playlistPtr->displayName());
-            } else {
-                bool existFlag = false;
-                for (int i = 0; i < count(); i++) {
-                    auto curItem = model->itemFromIndex(model->index(i, 0));
-                    if (curItem == item)
-                        continue;
-                    if (item->text() == curItem->text()) {
-                        existFlag = true;
-                    }
-                }
-                if (existFlag) {
-                    item->setText(playlistPtr->displayName());
-                } else {
-                    playlistPtr->setDisplayName(item->text());
-                    Q_EMIT playlistPtr->displayNameChanged(item->text());
-                    Q_EMIT displayNameChanged();
-                }
-            }
-        }
-    });
+            this, &MusicListView::onRename);
     connect(this, &MusicListView::currentChanged,
     this, [ = ](const QModelIndex & current, const QModelIndex & previous) {
         if (current.row() < 0 || current.row() >= allPlaylists.size()) {
@@ -426,11 +399,14 @@ void MusicListView::adjustHeight()
 
 void MusicListView::mousePressEvent(QMouseEvent *event)
 {
-    for (int i = 0; i < count(); i++) {
-        auto item = model->index(i, 0);
-        if (this->isPersistentEditorOpen(item))
-            closePersistentEditor(item);
-    }
+//    for (int i = 0; i < count(); i++) {
+//        auto itemIndex = model->index(i, 0);
+//        if (this->isPersistentEditorOpen(itemIndex)) {
+//            auto item = model->itemFromIndex(itemIndex);
+//            onRename(item);
+//            closePersistentEditor(itemIndex);
+//        }
+//    }
     DListView::mousePressEvent(event);
 }
 
@@ -672,4 +648,34 @@ void MusicListView::slotTheme(int type)
         }
     }
 
+}
+
+void MusicListView::onRename(QStandardItem *item)
+{
+    auto curItemRow = item->row();
+    if (curItemRow < 0 || curItemRow >= allPlaylists.size())
+        return;
+    auto playlistPtr = allPlaylists[item->row()];
+    if (playlistPtr->displayName() != item->text()) {
+        if (item->text().isEmpty()) {
+            item->setText(playlistPtr->displayName());
+        } else {
+            bool existFlag = false;
+            for (int i = 0; i < count(); i++) {
+                auto curItem = model->itemFromIndex(model->index(i, 0));
+                if (curItem == item)
+                    continue;
+                if (item->text() == curItem->text()) {
+                    existFlag = true;
+                }
+            }
+            if (existFlag) {
+                item->setText(playlistPtr->displayName());
+            } else {
+                playlistPtr->setDisplayName(item->text());
+                Q_EMIT playlistPtr->displayNameChanged(item->text());
+                Q_EMIT displayNameChanged();
+            }
+        }
+    }
 }

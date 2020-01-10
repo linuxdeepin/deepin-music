@@ -341,6 +341,7 @@ void PlayListView::onMusiclistChanged(PlaylistPtr playlist)
     }
 
     setUpdatesEnabled(false);
+    setModel(nullptr);
     d->model->removeRows(0, d->model->rowCount());
     d->playMetaPtrList.clear();
 
@@ -383,6 +384,7 @@ void PlayListView::onMusiclistChanged(PlaylistPtr playlist)
         }
     }
     setUpdatesEnabled(true);
+    setModel(d->model);
 
     d->model->setPlaylist(playlist);
     //updateScrollbar();

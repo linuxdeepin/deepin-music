@@ -332,6 +332,9 @@ QByteArray MetaDetector::getCoverData(const QString &path, const QString &tmpPat
             buffer.open(QIODevice::WriteOnly);
             image.save(&buffer, "jpg");
             image.save(imagesDirPath + "/" + imageName);
+        } else {
+            image = QImage(":/common/image/cover_max.svg");
+            image.save(imagesDirPath + "/" + imageName);
         }
 
         avformat_close_input(&pFormatCtx);

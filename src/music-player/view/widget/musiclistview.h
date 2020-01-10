@@ -55,6 +55,8 @@ public:
 
 public slots:
     void slotTheme(int type);
+    void onRename(QStandardItem *item);
+
 signals:
     void playall(PlaylistPtr playlist);
     void customResort(const QStringList &uuids);

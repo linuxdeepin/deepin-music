@@ -844,7 +844,7 @@ void MainFrame::binding(Presenter *presenter)
         }
         //DMessageManager::instance()->sendMessage(d->footer, icon, text);
         if (playlist->id() != AlbumMusicListID && playlist->id() != ArtistMusicListID
-                /*&& playlist->id() != AllMusicListID*/)
+                && playlist->id() != PlayMusicListID)
             this->sendMessage(icon, text);
 
         QWidget *content = this->findChild<QWidget *>("_d_message_manager_content");
@@ -1038,6 +1038,8 @@ void MainFrame::binding(Presenter *presenter)
             presenter, &Presenter::onAddMetasFavourite);
     connect(d->playListWidget, &PlayListWidget::removeMetasFavourite,
             presenter, &Presenter::onRemoveMetasFavourite);
+    connect(d->playListWidget,  &PlayListWidget::pause,
+            presenter, &Presenter::onMusicPause);
 
     connect(d->playListWidget, &PlayListWidget::importSelectFiles,
     this, [ = ](PlaylistPtr playlist, QStringList urllist) {
@@ -1168,16 +1170,6 @@ void MainFrame::binding(Presenter *presenter)
 
     connect(d->musicListWidget, &MusicListWidget::requestCustomContextMenu,
             presenter, &Presenter::onRequestMusiclistMenu);
-    connect(d->playListWidget, &PlayListWidget::updateMetaCodec,
-            presenter, &Presenter::onUpdateMetaCodec);
-    connect(d->playListWidget, &PlayListWidget::addToPlaylist,
-            presenter, &Presenter::onAddToPlaylist);
-    connect(d->playListWidget, &PlayListWidget::musiclistRemove,
-            presenter, &Presenter::onMusiclistRemove);
-    connect(d->playListWidget, &PlayListWidget::musiclistDelete,
-            presenter, &Presenter::onMusiclistDelete);
-    connect(d->playListWidget,  &PlayListWidget::pause,
-            presenter, &Presenter::onMusicPause);
 
     connect(d->musicListWidget, &MusicListWidget::showInfoDialog,
     this, [ = ](const MetaPtr meta) {
