@@ -94,7 +94,7 @@ public slots:
     void onVolumeChanged(int volume);
     void onMutedChanged(bool muted);
     void onModeChange(int mode);
-    void onUpdateMetaCodec(const MetaPtr meta);
+    void onUpdateMetaCodec(const QString &preTitle, const QString &preArtist, const QString &preAlbum, const MetaPtr meta);
     void setDefaultCover(QString defaultCover);
     void onMediaLibraryClean();
     void slotTheme(int type);

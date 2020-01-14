@@ -62,7 +62,7 @@ signals:
     void playMedia(const MetaPtr meta);
     void resume(const MetaPtr meta);
     void pause(const MetaPtr meta);
-    void updateMetaCodec(const MetaPtr meta);
+    void updateMetaCodec(const QString &preTitle, const QString &preArtist, const QString &preAlbum, const MetaPtr meta);
     void showInfoDialog(const MetaPtr meta);
     void requestCustomContextMenu(const QPoint &pos);
     void customSort();

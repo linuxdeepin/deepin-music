@@ -1252,7 +1252,7 @@ void Footer::onModeChange(int mode)
     }
 }
 
-void Footer::onUpdateMetaCodec(const MetaPtr meta)
+void Footer::onUpdateMetaCodec(const QString &preTitle, const QString &preArtist, const QString &preAlbum, const MetaPtr meta)
 {
     Q_D(Footer);
     if (d->activingMeta && d->activingMeta == meta) {

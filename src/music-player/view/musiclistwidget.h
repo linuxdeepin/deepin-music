@@ -61,7 +61,7 @@ signals:
     void musiclistRemove(PlaylistPtr playlist, const MetaPtrList  &metalist);
     void musiclistDelete(PlaylistPtr playlist, const MetaPtrList  &metalist);
     void showInfoDialog(const MetaPtr meta);
-    void updateMetaCodec(const MetaPtr meta);
+    void updateMetaCodec(const QString &preTitle, const QString &preArtist, const QString &preAlbum, const MetaPtr meta);
     void modeChanged(int);
     void addMetasFavourite(const MetaPtrList  &metalist);
     void removeMetasFavourite(const MetaPtrList  &metalist);

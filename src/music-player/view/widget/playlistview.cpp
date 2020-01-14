@@ -623,8 +623,12 @@ void PlayListView::showContextMenu(const QPoint &pos,
 
         connect(&textCodecMenu, &DMenu::triggered, this, [ = ](QAction * action) {
             auto codec = action->data().toByteArray();
+            auto preTitle = meta->title;
+            auto preArtist = meta->artist;
+            auto preAlbum = meta->album;
             meta->updateCodec(codec);
-            Q_EMIT updateMetaCodec(meta);
+            if (preTitle != meta->title || preArtist != meta->artist || preAlbum != meta->album)
+                Q_EMIT updateMetaCodec(preTitle, preArtist, preAlbum, meta);
         });
     }
 

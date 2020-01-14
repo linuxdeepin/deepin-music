@@ -142,7 +142,7 @@ public slots:
     void onToggleMute();
     void onFadeInOut();
 
-    void onUpdateMetaCodec(const MetaPtr meta);
+    void onUpdateMetaCodec(const QString &preTitle, const QString &preArtist, const QString &preAlbum, const MetaPtr meta);
 
     //! music list
     void onPlayall(PlaylistPtr playlist);

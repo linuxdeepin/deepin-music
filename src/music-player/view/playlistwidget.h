@@ -62,7 +62,7 @@ signals:
     void resume(PlaylistPtr playlist, const MetaPtr meta);
     void pause(PlaylistPtr playlist, const MetaPtr meta);
     void showInfoDialog(const MetaPtr meta);
-    void updateMetaCodec(const MetaPtr meta);
+    void updateMetaCodec(const QString &preTitle, const QString &preArtist, const QString &preAlbum, const MetaPtr meta);
 
     void requestCustomContextMenu(const QPoint &pos, char type);
     void addToPlaylist(PlaylistPtr playlist, const MetaPtrList  &metalist);

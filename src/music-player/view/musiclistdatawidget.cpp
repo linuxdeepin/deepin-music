@@ -529,8 +529,8 @@ void MusicListDataWidgetPrivate::initConntion()
         Q_EMIT q->showInfoDialog(meta);
     });
     q->connect(musicListView, &PlayListView::updateMetaCodec,
-    q, [ = ](const MetaPtr  meta) {
-        Q_EMIT q->updateMetaCodec(meta);
+    q, [ = ](const QString & preTitle, const QString & preArtist, const QString & preAlbum, const MetaPtr  meta) {
+        Q_EMIT q->updateMetaCodec(preTitle, preArtist, preAlbum, meta);
     });
     q->connect(musicListView, &PlayListView::addMetasFavourite,
     q, [ = ](const MetaPtrList  & metalist) {

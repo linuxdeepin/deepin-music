@@ -264,8 +264,8 @@ MusicListWidget::MusicListWidget(QWidget *parent) : DWidget(parent)
         Q_EMIT this->showInfoDialog(meta);
     });
     connect(m_dataListView, &MusicListDataWidget::updateMetaCodec,
-    this, [ = ](const MetaPtr  meta) {
-        Q_EMIT this->updateMetaCodec(meta);
+    this, [ = ](const QString & preTitle, const QString & preArtist, const QString & preAlbum, const MetaPtr  meta) {
+        Q_EMIT this->updateMetaCodec(preTitle, preArtist, preAlbum, meta);
     });
     connect(m_dataListView, &MusicListDataWidget::modeChanged,
     this, [ = ](int mode) {

@@ -1362,7 +1362,7 @@ void Presenter::onFadeInOut()
     d->player->setFadeInOut(fadeInOut);
 }
 
-void Presenter::onUpdateMetaCodec(const MetaPtr meta)
+void Presenter::onUpdateMetaCodec(const QString &preTitle, const QString &preArtist, const QString &preAlbum, const MetaPtr meta)
 {
     Q_D(Presenter);
     Q_EMIT musicMetaUpdate(d->player->activePlaylist(), meta);
