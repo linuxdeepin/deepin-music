@@ -466,6 +466,12 @@ void Player::init()
     d->initConnection();
 }
 
+void Player::setActivePlaylist(PlaylistPtr playlist)
+{
+    Q_D(Player);
+    d->activePlaylist = playlist;
+}
+
 void Player::setCurPlaylist(PlaylistPtr curPlaylist)
 {
     Q_D(Player);

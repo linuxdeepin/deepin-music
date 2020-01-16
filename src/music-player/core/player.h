@@ -96,6 +96,7 @@ public:
 public:
     void init();
 
+    void setActivePlaylist(PlaylistPtr playlist);
     void setCurPlaylist(PlaylistPtr curPlaylist);
     void loadMedia(PlaylistPtr playlist, const MetaPtr meta);
     void playMeta(PlaylistPtr playlist, const MetaPtr meta);

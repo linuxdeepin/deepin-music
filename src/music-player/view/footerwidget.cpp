@@ -1156,9 +1156,15 @@ void Footer::slotTheme(int type)
 void Footer::onTogglePlayButton()
 {
     Q_D(Footer);
-    if (d->activingMeta == nullptr)
-        return;
+
     auto status = d->btPlay->property(sPropertyPlayStatus).toString();
+    if (d->activingMeta == nullptr) {
+        if (d->activingPlaylist->isEmpty())
+            return;
+        d->activingMeta = d->activingPlaylist->first();
+        status = "";
+    }
+
     if (status == sPlayStatusValuePlaying) {
         Q_EMIT pause(d->activingPlaylist, d->activingMeta);
     } else  if (status == sPlayStatusValuePause) {

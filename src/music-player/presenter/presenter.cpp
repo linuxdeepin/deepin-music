@@ -1398,9 +1398,18 @@ void Presenter::onImportFiles(const QStringList &filelist, PlaylistPtr playlist)
     Q_D(Presenter);
     //PlaylistPtr playlist = d->currentPlaylist;
     PlaylistPtr curPlaylist = playlist;
-    if (playlist == nullptr)
+    bool flag = false;
+    if (playlist == nullptr) {
         curPlaylist = d->playlistMgr->playlist(AllMusicListID);
+        flag = true;
+    }
     requestImportPaths(curPlaylist, filelist);
+    auto curPlayerlist = d->player->curPlaylist();
+    if (curPlayerlist->isEmpty() && flag) {
+        d->player->setActivePlaylist(curPlaylist);
+        curPlayerlist->appendMusicList(curPlaylist->allmusic());
+    }
+
     return;
 }
 
@@ -1410,6 +1419,12 @@ void Presenter::onScanMusicDirectory()
     qWarning() << "scan" << musicDir;
     PlaylistPtr playlist = nullptr;
     onImportFiles(musicDir, playlist);
+
+    Q_D(Presenter);
+    auto curPlaylist = d->playlistMgr->playlist(AllMusicListID);
+    d->player->setActivePlaylist(curPlaylist);
+    auto curPlayerlist = d->player->curPlaylist();
+    curPlayerlist->appendMusicList(curPlaylist->allmusic());
 }
 
 
