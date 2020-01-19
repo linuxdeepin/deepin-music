@@ -237,7 +237,7 @@ void PlayItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
 
         painter->fillRect(option.rect, background);
 
-        //draw shadow
+        //绘制阴影
         QRect shadowRect(option.rect.x() - 10, option.rect.y() - 10, 160, 160);
         QPainterPath roundRectShadowPath;
         roundRectShadowPath.addRoundRect(shadowRect, 10, 10);
@@ -246,11 +246,13 @@ void PlayItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
         painter->drawPixmap(shadowRect, d_ptr->shadowImg);
         painter->restore();
 
+        //绘制圆角框
         QRect rect(option.rect.x(), option.rect.y(), 140, 183);
         QPainterPath roundRectPath;
         roundRectPath.addRoundRect(rect, 10, 10);
         painter->setClipPath(roundRectPath);
 
+        //绘制专辑图片
         auto icon = option.icon;
         auto value = index.data(Qt::DecorationRole);
         if (value.type() == QVariant::Icon) {
@@ -263,7 +265,7 @@ void PlayItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
         painter->setClipPath(roundPixmapRectPath);
         painter->drawPixmap(pixmapRect, icon.pixmap(option.rect.width(), option.rect.width()));
 
-        //draw border
+        //绘制图片上添加描边
         painter->save();
         QColor borderPenColor("#000000");
         borderPenColor.setAlphaF(0.05);
@@ -278,6 +280,7 @@ void PlayItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
         int startHeight = option.rect.y() + 149;
         int fillAllHeight = 34;
 
+        //设置信息字体大小
         QFont font = option.font;
         font.setFamily("SourceHanSansSC");
         font.setWeight(QFont::Normal);

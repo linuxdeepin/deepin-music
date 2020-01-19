@@ -78,7 +78,7 @@ void InfoDialogPrivate::initUI()
 
     auto layout = new QVBoxLayout(q);
     layout->setSpacing(0);
-    layout->setContentsMargins(15, 50, 15, 15);
+    layout->setContentsMargins(10, 50, 10, 10);
 
     closeBt = new DWindowCloseButton( q);
     closeBt->setFocusPolicy(Qt::NoFocus);

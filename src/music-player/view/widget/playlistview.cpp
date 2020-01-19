@@ -607,16 +607,29 @@ void PlayListView::showContextMenu(const QPoint &pos,
         auto index = selection->selectedRows().first();
         auto meta = d->model->meta(index);
         QList<QByteArray> codecList = DMusic::detectMetaEncodings(meta);
-//        codecList << "utf-8" ;
+//        codecList << "UTF-8" ;
+        if (!codecList.contains("UTF-8")) {
+            codecList.push_front("UTF-8");
+        }
+        if (QLocale::system().name() == "zh_CN") {
+            if (codecList.contains("GB18030")) {
+                codecList.removeAll("GB18030");
+            }
+
+            if (!codecList.isEmpty()) {
+                codecList.push_front("GB18030");
+            }
+        }
+
         for (auto codec : codecList) {
             auto act = textCodecMenu.addAction(codec);
             act->setData(QVariant::fromValue(codec));
         }
 
-//        if (codecList.length() > 1) {
-//            myMenu.addSeparator();
-//            myMenu.addAction(tr("Encoding"))->setMenu(&textCodecMenu);
-//        }
+        if (codecList.length() > 1) {
+            myMenu.addSeparator();
+            myMenu.addAction(tr("Encoding"))->setMenu(&textCodecMenu);
+        }
 
         myMenu.addSeparator();
         songAction = myMenu.addAction(tr("Song info"));

@@ -1365,7 +1365,29 @@ void Presenter::onFadeInOut()
 void Presenter::onUpdateMetaCodec(const QString &preTitle, const QString &preArtist, const QString &preAlbum, const MetaPtr meta)
 {
     Q_D(Presenter);
+    if (meta.isNull() || (preTitle == meta->title && preArtist == meta->artist && preAlbum == meta->album))
+        return;
     Q_EMIT musicMetaUpdate(d->player->activePlaylist(), meta);
+
+    if ((!preArtist.isEmpty() && preArtist != meta->artist) || (!preAlbum.isEmpty() && preAlbum != meta->album)) {
+        auto artistPlaylist = d->playlistMgr->playlist(ArtistMusicListID);
+        auto artistTypePtrList = artistPlaylist->playMusicTypePtrList();
+        for (auto curType : artistTypePtrList) {
+            if (curType->name == preArtist) {
+                curType->name = meta->artist;
+                break;
+            }
+        }
+        auto albumPlaylist = d->playlistMgr->playlist(AlbumMusicListID);
+        auto albumTypePtrList = albumPlaylist->playMusicTypePtrList();
+        for (auto curType : albumTypePtrList) {
+            if (curType->name == preAlbum) {
+                curType->name = meta->album;
+                curType->extraName = meta->artist;
+                break;
+            }
+        }
+    }
 }
 
 void Presenter::onPlayall(PlaylistPtr playlist)
