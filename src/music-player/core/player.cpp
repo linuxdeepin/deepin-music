@@ -857,10 +857,10 @@ void Player::readSinkInputPath()
         return;
 
     QList<QDBusObjectPath> allSinkInputsList = v.value<QList<QDBusObjectPath> >();
-    qDebug() << "allSinkInputsListSize: " << allSinkInputsList.size();
+//    qDebug() << "allSinkInputsListSize: " << allSinkInputsList.size();
 
     for (auto curPath : allSinkInputsList) {
-        qDebug() << "path: " << curPath.path();
+//        qDebug() << "path: " << curPath.path();
 
         QVariant nameV = DBusUtils::redDBusProperty("com.deepin.daemon.Audio", curPath.path(),
                                                     "com.deepin.daemon.Audio.SinkInput", "Name");

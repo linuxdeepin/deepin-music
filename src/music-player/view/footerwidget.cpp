@@ -44,6 +44,8 @@
 #include "../core/player.h"
 #include "../core/metasearchservice.h"
 #include "../core/musicsettings.h"
+#include "../core/volumemonitoring.h"
+#include "../core/util/threadpool.h"
 
 #include "widget/filter.h"
 #include "widget/modebuttom.h"
@@ -114,6 +116,8 @@ public:
     int             m_type = 1;
 
     bool            btPlayingStatus = false;
+
+    VolumeMonitoring         volumeMonitoring;
 
     Footer *q_ptr;
     Q_DECLARE_PUBLIC(Footer)
@@ -205,6 +209,28 @@ void FooterPrivate::initConnection()
 
     q->connect(q, &Footer::audioBufferProbed, waveform, &Waveform::onAudioBufferProbed);
     q->connect(q, &Footer::metaBuffer, waveform, &Waveform::onAudioBuffer);
+
+    q->connect(&volumeMonitoring, &VolumeMonitoring::volumeChanged, q, [ = ](int vol) {
+
+        QString status;
+        if (vol > 77) {
+            status = "high";
+        } else if (vol > 33) {
+            status = "mid";
+        } else  if (vol > 0) {
+            status = "low";
+        }
+        if (!status.isEmpty())
+            updateQssProperty(btSound, "volume", status);
+
+        volSlider->onVolumeChanged(vol);
+
+        q->onVolumeChanged(vol);
+    });
+
+    q->connect(&volumeMonitoring, &VolumeMonitoring::muteChanged, q, [ = ](bool mute) {
+        q->onMutedChanged(mute);
+    });
 }
 
 Footer::Footer(QWidget *parent) :
@@ -514,6 +540,9 @@ Footer::Footer(QWidget *parent) :
 //        themeType = 1;
     int themeType = DGuiApplicationHelper::instance()->themeType();
     slotTheme(themeType);
+
+    ThreadPool::instance()->moveToNewThread(&d->volumeMonitoring);
+    d->volumeMonitoring.start();
 }
 
 Footer::~Footer()

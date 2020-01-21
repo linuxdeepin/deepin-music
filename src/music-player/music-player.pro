@@ -104,7 +104,8 @@ SOURCES += \
     core/util/dbusutils.cpp \
     view/widget/tooltips.cpp \
     core/util/inotifyfiles.cpp \
-    view/musiclistscrollarea.cpp
+    view/musiclistscrollarea.cpp \
+    core/volumemonitoring.cpp
 
 HEADERS += \
     musicapp.h \
@@ -183,7 +184,8 @@ HEADERS += \
     core/util/dbusutils.h \
     view/widget/tooltips.h \
     core/util/inotifyfiles.h \
-    view/musiclistscrollarea.h
+    view/musiclistscrollarea.h \
+    core/volumemonitoring.h
 
 RESOURCES += \
     resource/theme/theme.qrc \
