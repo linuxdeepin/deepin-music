@@ -52,7 +52,7 @@ DDropdown::DDropdown(QWidget *parent) : DWidget(parent), d_ptr(new DDropdownPriv
     auto layout = new QHBoxLayout(this);
     layout->setContentsMargins(15, 0, 15, 0);
     d->menu = new DMenu;
-    d->text = new DLabel(tr("undefined"));
+    d->text = new DLabel("undefined");
     auto font = d->text->font();
     font.setFamily("SourceHanSansSC");
     font.setWeight(QFont::Normal);

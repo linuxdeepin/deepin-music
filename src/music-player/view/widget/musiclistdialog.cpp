@@ -136,7 +136,7 @@ void MusicListDialogPrivate::initUI()
     randomPlayPalette.setColor(DPalette::Light, QColor(Qt::darkGray));
     btRandomPlay->setPalette(randomPlayPalette);
     btRandomPlay->setIcon(QIcon(":/mpimage/light/normal/random_play_normal.svg"));
-    btRandomPlay->setText(MusicListDialog::tr("Shuffle Play"));
+    btRandomPlay->setText(MusicListDialog::tr("Shuffle"));
     btRandomPlay->setFixedHeight(30);
     btRandomPlay->setFocusPolicy(Qt::NoFocus);
     btRandomPlay->setIconSize(QSize(18, 18));

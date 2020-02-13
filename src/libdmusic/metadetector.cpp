@@ -31,6 +31,7 @@
 #include <QBuffer>
 #include <QByteArray>
 #include <QDir>
+#include <QString>
 
 //#ifndef DISABLE_LIBAV
 #ifdef __cplusplus
@@ -171,10 +172,17 @@ void MetaDetector::updateMediaFileTagCodec(MediaMeta *meta, const QByteArray &co
         }
 
 //        qDebug() << "convert to" << detectCodec;
-        QTextCodec *codec = QTextCodec::codecForName(detectCodec);
-        meta->album = codec->toUnicode(tag->album().toCString());
-        meta->artist = codec->toUnicode(tag->artist().toCString());
-        meta->title = codec->toUnicode(tag->title().toCString());
+        QString detectCodecStr(detectCodec);
+        if (detectCodecStr.compare("utf-8", Qt::CaseInsensitive) == 0) {
+            meta->album = TStringToQString(tag->album());
+            meta->artist = TStringToQString(tag->artist());
+            meta->title = TStringToQString(tag->title());
+        } else {
+            QTextCodec *codec = QTextCodec::codecForName(detectCodec);
+            meta->album = codec->toUnicode(tag->album().toCString());
+            meta->artist = codec->toUnicode(tag->artist().toCString());
+            meta->title = codec->toUnicode(tag->title().toCString());
+        }
 
 #ifdef true
 //        qDebug() << "convert to" << detectCodec << QTextCodec::availableCodecs();

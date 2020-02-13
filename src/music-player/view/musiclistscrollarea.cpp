@@ -61,7 +61,7 @@ MusicListScrollArea::MusicListScrollArea(QWidget *parent) : DScrollArea(parent)
 
     dataBaseLabel = new DLabel;
     dataBaseLabel->setFixedHeight(40);
-    dataBaseLabel->setText(tr("Database"));
+    dataBaseLabel->setText(tr("Library"));
     dataBaseLabel->setObjectName("MusicListScrollAreaDataBase");
     dataBaseLabel->setMargin(10);
     auto dataBaseLabelFont = dataBaseLabel->font();
@@ -90,7 +90,7 @@ MusicListScrollArea::MusicListScrollArea(QWidget *parent) : DScrollArea(parent)
     m_addListBtn->setFocusPolicy(Qt::NoFocus);
 
     auto customizeLayout = new QHBoxLayout(widget);
-    customizeLayout->setContentsMargins(0, 0, 0, 0);
+    customizeLayout->setContentsMargins(0, 0, 5, 0);
     customizeLayout->addWidget(customizeLabel, 100, Qt::AlignLeft);
     customizeLayout->addStretch();
     customizeLayout->addWidget(m_addListBtn, 0, Qt::AlignRight);

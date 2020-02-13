@@ -114,8 +114,8 @@ void SearchLyricsWidget::initUI()
 
     m_keyWord->setClearButtonEnabled(false);
     m_singer->setClearButtonEnabled(false);
-    m_keyWord->lineEdit()->setPlaceholderText(tr("Song name"));
-    m_singer->lineEdit()->setPlaceholderText(tr("Singer name"));
+    m_keyWord->lineEdit()->setPlaceholderText(tr("Title"));
+    m_singer->lineEdit()->setPlaceholderText(tr("Artist"));
     m_keyWord->setFixedHeight(36);
     m_singer->setFixedHeight(36);
     m_search->setText(tr("Search"));

@@ -131,7 +131,7 @@ void InfoDialogPrivate::initUI()
     infoLayout->setSpacing(0);
     infoLayout->setMargin(5);
 
-    auto basicinfo = new DLabel(InfoDialog::tr("   Basic Information"));
+    auto basicinfo = new DLabel("   " + InfoDialog::tr("Basic info"));
     basicinfo->setMinimumHeight(28);
     basicinfo->setForegroundRole(DPalette::TextTitle);
 

@@ -130,15 +130,15 @@ int MusicListDataWidgetPrivate::updateInfo()
         }
         QString infoStr;
         if (musicCount == 0) {
-            infoStr = MusicListDataWidget::tr("   No songs");
+            infoStr = QString("   ") + MusicListDataWidget::tr("No songs");
         } else if (musicCount == 1) {
-            infoStr = MusicListDataWidget::tr("   1 album-1 song");
+            infoStr = QString("   ") + MusicListDataWidget::tr("1 album -1 song");
         } else {
-            infoStr = MusicListDataWidget::tr("   %1 album-%2 songs").arg(musicListCount).arg(musicCount);
+            infoStr = QString("   ") + MusicListDataWidget::tr("%1 album -%2 songs").arg(musicListCount).arg(musicCount);
             if (musicListCount == 1) {
-                infoStr = MusicListDataWidget::tr("   %1 album-%2 songs").arg(musicListCount).arg(musicCount);
+                infoStr = QString("   ") + MusicListDataWidget::tr("%1 album -%2 songs").arg(musicListCount).arg(musicCount);
             } else {
-                infoStr = MusicListDataWidget::tr("   %1 albums-%2 songs").arg(musicListCount).arg(musicCount);
+                infoStr = QString("   ") + MusicListDataWidget::tr("%1 albums -%2 songs").arg(musicListCount).arg(musicCount);
             }
         }
         allCount = musicListCount;
@@ -176,14 +176,14 @@ int MusicListDataWidgetPrivate::updateInfo()
         }
         QString infoStr;
         if (musicCount == 0) {
-            infoStr = MusicListDataWidget::tr("   No songs");
+            infoStr = QString("   ") + MusicListDataWidget::tr("No songs");
         } else if (musicCount == 1) {
-            infoStr = MusicListDataWidget::tr("   1 artist-1 song");
+            infoStr = QString("   ") + MusicListDataWidget::tr("1 artist -1 song");
         } else {
             if (musicListCount == 1) {
-                infoStr = MusicListDataWidget::tr("   %1 artist-%2 songs").arg(musicListCount).arg(musicCount);
+                infoStr = QString("   ") + MusicListDataWidget::tr("%1 artist -%2 songs").arg(musicListCount).arg(musicCount);
             } else {
-                infoStr = MusicListDataWidget::tr("   %1 artists-%2 songs").arg(musicListCount).arg(musicCount);
+                infoStr = QString("   ") + MusicListDataWidget::tr("%1 artists -%2 songs").arg(musicListCount).arg(musicCount);
             }
         }
         allCount = musicListCount;
@@ -215,11 +215,11 @@ int MusicListDataWidgetPrivate::updateInfo()
             }
         }
         if (musicCount == 0) {
-            infoStr = MusicListDataWidget::tr("   No songs");
+            infoStr = QString("   ") + MusicListDataWidget::tr("No songs");
         } else if (musicCount == 1) {
-            infoStr = MusicListDataWidget::tr("   1 song");
+            infoStr = QString("   ") + MusicListDataWidget::tr("1 song");
         } else {
-            infoStr = MusicListDataWidget::tr("   %1 songs").arg(musicCount);
+            infoStr = QString("   ") + MusicListDataWidget::tr("%1 songs").arg(musicCount);
         }
         allCount = musicCount;
         infoLabel->setText(infoStr);
@@ -584,7 +584,7 @@ void MusicListDataWidgetPrivate::showEmptyHits()
             emptyHits->setText(MusicListDataWidget::tr("No songs"));
         } else {
             emptyHits->setText(MusicListDataWidget::tr("No search results"));
-            emptySearchHits->setText(MusicListDataWidget::tr("No results for \"%1\", please try another word").arg(playlist->searchStr()));
+            //emptySearchHits->setText(MusicListDataWidget::tr("No results for \"%1\", please try another word").arg(playlist->searchStr()));
         }
         bool empty = t_rowCount == 0 ? true : false;
         actionBar->setVisible(!empty);
@@ -600,7 +600,7 @@ void MusicListDataWidgetPrivate::showEmptyHits()
             emptyHits->setText(MusicListDataWidget::tr("No songs"));
         } else {
             emptyHits->setText(MusicListDataWidget::tr("No search results"));
-            emptySearchHits->setText(MusicListDataWidget::tr("No results for \"%1\", please try another word").arg(playlist->searchStr()));
+            //emptySearchHits->setText(MusicListDataWidget::tr("No results for \"%1\", please try another word").arg(playlist->searchStr()));
         }
         bool empty = t_rowCount == 0 ? true : false;
         actionBar->setVisible(!empty);
@@ -616,14 +616,14 @@ void MusicListDataWidgetPrivate::showEmptyHits()
             emptyHits->setText(MusicListDataWidget::tr("No songs"));
         } else {
             emptyHits->setText(MusicListDataWidget::tr("No search results"));
-            emptySearchHits->setText(MusicListDataWidget::tr("No results for \"%1\", please try another word").arg(playlist->searchStr()));
+            //emptySearchHits->setText(MusicListDataWidget::tr("No results for \"%1\", please try another word").arg(playlist->searchStr()));
         }
         bool empty = t_rowCount == 0 ? true : false;
         actionBar->setVisible(!empty);
         artistListView->setVisible(false);
         musicListView->setVisible(!empty);
         emptyHits->setVisible(empty);
-        emptySearchHits->setVisible(empty && !playlist->searchStr().isEmpty());
+        //emptySearchHits->setVisible(empty && !playlist->searchStr().isEmpty());
     }
 }
 

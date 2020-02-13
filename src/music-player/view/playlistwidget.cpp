@@ -203,7 +203,7 @@ PlayListWidget::PlayListWidget(QWidget *parent) :
     titleFont.setPixelSize(24);
     d->titleLabel->setFont(titleFont);
     d->titleLabel->setMargin(4);
-    d->titleLabel->setText(tr("Playlist"));
+    d->titleLabel->setText(tr("Play Queue"));
     d->titleLabel->setForegroundRole(DPalette::BrightText);
 
     d->infoLabel = new DLabel();

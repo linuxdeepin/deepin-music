@@ -159,7 +159,7 @@ void MainFramePrivate::initMenu()
 {
     Q_Q(MainFrame);
 
-    newSonglistAction = new QAction(MainFrame::tr("New playlist"), q);
+    newSonglistAction = new QAction(MainFrame::tr("Add playlist"), q);
     newSonglistAction->setEnabled(false);
     q->connect(newSonglistAction, &QAction::triggered, q, [ = ](bool) {
         Q_EMIT q->addPlaylist(true);
@@ -819,27 +819,14 @@ void MainFrame::binding(Presenter *presenter)
 //            text = tr("Successfully added to \"%1\"").arg(displayName);
         auto text = tr("Successfully added to \"%1\"").arg(displayName);
         int curCount = metaPtrList.size() - count;
-        if (count == 1) {
-            if (metaPtrList.size() == 1)
-                text = tr("Added this song");
+        if (count > 0) {
+            if (metaPtrList.size() == 1 || curCount == 0)
+                text = tr("Already added to the playlist");
             else {
                 if (curCount == 1)
-                    text = tr("Successfully added %1 song").arg(curCount);
+                    text = tr("1 song added");
                 else
-                    text = tr("Successfully added %1 songs").arg(curCount);
-            }
-
-        } else if (count > 1) {
-            if (curCount == 0) {
-                if (metaPtrList.size() == 1)
-                    text = tr("Added this song");
-                else
-                    text = tr("Added this songs");
-            } else {
-                if (curCount == 1)
-                    text = tr("Successfully added %1 song").arg(curCount);
-                else
-                    text = tr("Successfully added %1 songs").arg(curCount);
+                    text = tr("%1 songs added").arg(curCount);
             }
         }
         //DMessageManager::instance()->sendMessage(d->footer, icon, text);
@@ -903,8 +890,8 @@ void MainFrame::binding(Presenter *presenter)
         Dtk::Widget::DDialog warnDlg(this);
         warnDlg.setIcon(QIcon::fromTheme("deepin-music"));
         warnDlg.setTextFormat(Qt::RichText);
-        warnDlg.setTitle(tr("File is invalid or does not exist, load failed!"));
-        warnDlg.addButtons(QStringList() << tr("Confirm"));
+        warnDlg.setTitle(tr("File is invalid or does not exist, load failed"));
+        warnDlg.addButtons(QStringList() << tr("OK"));
         warnDlg.setDefaultButton(0);
 
         if (0 == warnDlg.exec()) {
@@ -939,7 +926,7 @@ void MainFrame::binding(Presenter *presenter)
     connect(presenter, &Presenter::scanFinished,
     this, [ = ](const QString & /*jobid*/, int mediaCount) {
         if (0 == mediaCount) {
-            QString message = QString(tr("Import failed, no valid music file found!"));
+            QString message = QString(tr("Import failed, no valid music file found"));
             Dtk::Widget::DDialog warnDlg(this);
             warnDlg.setIcon(QIcon::fromTheme("deepin-music"));
             warnDlg.setTextFormat(Qt::AutoText);

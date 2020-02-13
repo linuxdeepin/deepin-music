@@ -47,6 +47,7 @@ Shortcut::Shortcut(QObject *parent) : QObject(parent)
 
     group3.groupItems <<
                       ShortcutItem(tr("New playlist"), "Ctrl+Shift+N") <<
+                      ShortcutItem(tr("Add music"), "Ctrl+I") <<
                       ShortcutItem(tr("Rename playlist"), "F2") <<
                       ShortcutItem(tr("Remove from playlist"), "Delete");
 
