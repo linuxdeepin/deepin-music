@@ -62,6 +62,21 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../view/footerwidget.cpp" line="423"/>
+        <source>Play Queue</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../view/footerwidget.cpp" line="1275"/>
+        <source>List Loop</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../view/footerwidget.cpp" line="1278"/>
+        <source>Single Loop</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="../view/footerwidget.cpp" line="295"/>
         <source>Unknown Title</source>
         <translation type="unfinished"></translation>
@@ -76,21 +91,6 @@
     <message>
         <location filename="../view/footerwidget.cpp" line="422"/>
         <source>Play Mode</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../view/footerwidget.cpp" line="423"/>
-        <source>Playlist</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../view/footerwidget.cpp" line="1275"/>
-        <source>List Loop</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../view/footerwidget.cpp" line="1278"/>
-        <source>Single Loop</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -319,19 +319,19 @@
     <message>
         <location filename="../view/widget/delegate/musiclistdatadelegate.cpp" line="464"/>
         <location filename="../view/widget/delegate/musiclistdatadelegate.cpp" line="558"/>
-        <source>   No songs</source>
+        <source>No songs</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/widget/delegate/musiclistdatadelegate.cpp" line="466"/>
         <location filename="../view/widget/delegate/musiclistdatadelegate.cpp" line="560"/>
-        <source>   1 song</source>
+        <source>1 song</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/widget/delegate/musiclistdatadelegate.cpp" line="468"/>
         <location filename="../view/widget/delegate/musiclistdatadelegate.cpp" line="562"/>
-        <source>   %1 songs</source>
+        <source>%1 songs</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -349,33 +349,33 @@
     </message>
     <message>
         <location filename="../view/musiclistdatawidget.cpp" line="135"/>
-        <source>1 album -1 song</source>
+        <source>1 album - 1 song</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/musiclistdatawidget.cpp" line="137"/>
         <location filename="../view/musiclistdatawidget.cpp" line="139"/>
-        <source>%1 album -%2 songs</source>
+        <source>%1 album - %2 songs</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/musiclistdatawidget.cpp" line="141"/>
-        <source>%1 albums -%2 songs</source>
+        <source>%1 albums - %2 songs</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/musiclistdatawidget.cpp" line="181"/>
-        <source>1 artist -1 song</source>
+        <source>1 artist - 1 song</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/musiclistdatawidget.cpp" line="184"/>
-        <source>%1 artist -%2 songs</source>
+        <source>%1 artist - %2 songs</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/musiclistdatawidget.cpp" line="186"/>
-        <source>%1 artists -%2 songs</source>
+        <source>%1 artists - %2 songs</source>
         <translation type="unfinished"></translation>
     </message>
     <message>

@@ -461,11 +461,11 @@ void MusicListDataDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
             int sortMetasSize = PlayMusicTypePtr->playlistMeta.sortMetas.size();
             QString infoStr;
             if (sortMetasSize == 0) {
-                infoStr = tr("   No songs");
+                infoStr = QString("   ") + tr("No songs");
             } else if (sortMetasSize == 1) {
-                infoStr = tr("   1 song");
+                infoStr = QString("   ") + tr("1 song");
             } else {
-                infoStr = tr("   %1 songs").arg(sortMetasSize);
+                infoStr = QString("   ") + tr("%1 songs").arg(sortMetasSize);
             }
 
             painter->setPen(otherColor);
@@ -555,11 +555,11 @@ void MusicListDataDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
             int sortMetasSize = PlayMusicTypePtr->playlistMeta.sortMetas.size();
             QString infoStr;
             if (sortMetasSize == 0) {
-                infoStr = tr("   No songs");
+                infoStr = QString("   ") + tr("No songs");
             } else if (sortMetasSize == 1) {
-                infoStr = tr("   1 song");
+                infoStr = QString("   ") + tr("1 song");
             } else {
-                infoStr = tr("   %1 songs").arg(sortMetasSize);
+                infoStr = QString("   ") + tr("%1 songs").arg(sortMetasSize);
             }
             painter->save();
             QFont measuringFont(font11);

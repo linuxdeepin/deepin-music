@@ -420,7 +420,7 @@ Footer::Footer(QWidget *parent) :
     d->installTipHint(d->btFavorite, tr("Favorite"));
     d->installTipHint(d->btLyric, tr("Lyrics"));
     d->installTipHint(d->btPlayMode, tr("Play Mode"));
-    d->installTipHint(d->btPlayList, tr("Playlist"));
+    d->installTipHint(d->btPlayList, tr("Play Queue"));
 
 //    d->btPrev->setToolTip(tr("Previous"));
 //    d->btNext->setToolTip(tr("Next"));

@@ -73,6 +73,11 @@
         <translation>歌词</translation>
     </message>
     <message>
+        <location filename="../view/footerwidget.cpp" line="423"/>
+        <source>Play Queue</source>
+        <translation>播放队列</translation>
+    </message>
+    <message>
         <location filename="../view/footerwidget.cpp" line="295"/>
         <source>Unknown Title</source>
         <translation>未知名称</translation>
@@ -90,9 +95,8 @@
         <translation>播放模式</translation>
     </message>
     <message>
-        <location filename="../view/footerwidget.cpp" line="423"/>
         <source>Playlist</source>
-        <translation>播放列表</translation>
+        <translation type="vanished">播放列表</translation>
     </message>
     <message>
         <location filename="../view/footerwidget.cpp" line="1275"/>
@@ -420,22 +424,34 @@
 <context>
     <name>MusicListDataDelegate</name>
     <message>
+        <source>   No songs</source>
+        <translation type="vanished">   无</translation>
+    </message>
+    <message>
+        <source>   1 song</source>
+        <translation type="vanished">   1首</translation>
+    </message>
+    <message>
+        <source>   %1 songs</source>
+        <translation type="vanished">   %1首</translation>
+    </message>
+    <message>
         <location filename="../view/widget/delegate/musiclistdatadelegate.cpp" line="464"/>
         <location filename="../view/widget/delegate/musiclistdatadelegate.cpp" line="558"/>
-        <source>   No songs</source>
-        <translation>   无</translation>
+        <source>No songs</source>
+        <translation>无歌曲</translation>
     </message>
     <message>
         <location filename="../view/widget/delegate/musiclistdatadelegate.cpp" line="466"/>
         <location filename="../view/widget/delegate/musiclistdatadelegate.cpp" line="560"/>
-        <source>   1 song</source>
-        <translation>   1首</translation>
+        <source>1 song</source>
+        <translation>1首歌曲</translation>
     </message>
     <message>
         <location filename="../view/widget/delegate/musiclistdatadelegate.cpp" line="468"/>
         <location filename="../view/widget/delegate/musiclistdatadelegate.cpp" line="562"/>
-        <source>   %1 songs</source>
-        <translation>   %1首</translation>
+        <source>%1 songs</source>
+        <translation>%1首歌曲</translation>
     </message>
 </context>
 <context>
@@ -491,35 +507,28 @@
         <translation type="vanished">当前歌单为空</translation>
     </message>
     <message>
-        <location filename="../view/musiclistdatawidget.cpp" line="135"/>
         <source>1 album -1 song</source>
-        <translation>1张专辑-1首歌曲</translation>
+        <translation type="vanished">1张专辑-1首歌曲</translation>
     </message>
     <message>
-        <location filename="../view/musiclistdatawidget.cpp" line="137"/>
-        <location filename="../view/musiclistdatawidget.cpp" line="139"/>
         <source>%1 album -%2 songs</source>
-        <translation>%1 部专辑-%2 首歌曲</translation>
+        <translation type="vanished">%1 部专辑-%2 首歌曲</translation>
     </message>
     <message>
-        <location filename="../view/musiclistdatawidget.cpp" line="141"/>
         <source>%1 albums -%2 songs</source>
-        <translation>%1 部专辑-%2 首歌曲</translation>
+        <translation type="vanished">%1 部专辑-%2 首歌曲</translation>
     </message>
     <message>
-        <location filename="../view/musiclistdatawidget.cpp" line="181"/>
         <source>1 artist -1 song</source>
-        <translation>1位演唱者-1首歌曲</translation>
+        <translation type="vanished">1位演唱者-1首歌曲</translation>
     </message>
     <message>
-        <location filename="../view/musiclistdatawidget.cpp" line="184"/>
         <source>%1 artist -%2 songs</source>
-        <translation>%1位演唱者-%2首歌曲</translation>
+        <translation type="vanished">%1位演唱者-%2首歌曲</translation>
     </message>
     <message>
-        <location filename="../view/musiclistdatawidget.cpp" line="186"/>
         <source>%1 artists -%2 songs</source>
-        <translation>%1位演唱者-%2首歌曲</translation>
+        <translation type="vanished">%1位演唱者-%2首歌曲</translation>
     </message>
     <message>
         <location filename="../view/musiclistdatawidget.cpp" line="220"/>
@@ -577,6 +586,37 @@
     <message>
         <source>Artist name</source>
         <translation type="vanished">歌手名称</translation>
+    </message>
+    <message>
+        <location filename="../view/musiclistdatawidget.cpp" line="135"/>
+        <source>1 album - 1 song</source>
+        <translation>1张专辑-1首歌曲</translation>
+    </message>
+    <message>
+        <location filename="../view/musiclistdatawidget.cpp" line="137"/>
+        <location filename="../view/musiclistdatawidget.cpp" line="139"/>
+        <source>%1 album - %2 songs</source>
+        <translation>%1 部专辑-%2 首歌曲</translation>
+    </message>
+    <message>
+        <location filename="../view/musiclistdatawidget.cpp" line="141"/>
+        <source>%1 albums - %2 songs</source>
+        <translation>%1 部专辑-%2 首歌曲</translation>
+    </message>
+    <message>
+        <location filename="../view/musiclistdatawidget.cpp" line="181"/>
+        <source>1 artist - 1 song</source>
+        <translation>1位演唱者-1首歌曲</translation>
+    </message>
+    <message>
+        <location filename="../view/musiclistdatawidget.cpp" line="184"/>
+        <source>%1 artist - %2 songs</source>
+        <translation>%1位演唱者-%2首歌曲</translation>
+    </message>
+    <message>
+        <location filename="../view/musiclistdatawidget.cpp" line="186"/>
+        <source>%1 artists - %2 songs</source>
+        <translation>%1位演唱者-%2首歌曲</translation>
     </message>
     <message>
         <location filename="../view/musiclistdatawidget.cpp" line="690"/>

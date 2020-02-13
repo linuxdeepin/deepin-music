@@ -132,13 +132,13 @@ int MusicListDataWidgetPrivate::updateInfo()
         if (musicCount == 0) {
             infoStr = QString("   ") + MusicListDataWidget::tr("No songs");
         } else if (musicCount == 1) {
-            infoStr = QString("   ") + MusicListDataWidget::tr("1 album -1 song");
+            infoStr = QString("   ") + MusicListDataWidget::tr("1 album - 1 song");
         } else {
-            infoStr = QString("   ") + MusicListDataWidget::tr("%1 album -%2 songs").arg(musicListCount).arg(musicCount);
+            infoStr = QString("   ") + MusicListDataWidget::tr("%1 album - %2 songs").arg(musicListCount).arg(musicCount);
             if (musicListCount == 1) {
-                infoStr = QString("   ") + MusicListDataWidget::tr("%1 album -%2 songs").arg(musicListCount).arg(musicCount);
+                infoStr = QString("   ") + MusicListDataWidget::tr("%1 album - %2 songs").arg(musicListCount).arg(musicCount);
             } else {
-                infoStr = QString("   ") + MusicListDataWidget::tr("%1 albums -%2 songs").arg(musicListCount).arg(musicCount);
+                infoStr = QString("   ") + MusicListDataWidget::tr("%1 albums - %2 songs").arg(musicListCount).arg(musicCount);
             }
         }
         allCount = musicListCount;
@@ -178,12 +178,12 @@ int MusicListDataWidgetPrivate::updateInfo()
         if (musicCount == 0) {
             infoStr = QString("   ") + MusicListDataWidget::tr("No songs");
         } else if (musicCount == 1) {
-            infoStr = QString("   ") + MusicListDataWidget::tr("1 artist -1 song");
+            infoStr = QString("   ") + MusicListDataWidget::tr("1 artist - 1 song");
         } else {
             if (musicListCount == 1) {
-                infoStr = QString("   ") + MusicListDataWidget::tr("%1 artist -%2 songs").arg(musicListCount).arg(musicCount);
+                infoStr = QString("   ") + MusicListDataWidget::tr("%1 artist - %2 songs").arg(musicListCount).arg(musicCount);
             } else {
-                infoStr = QString("   ") + MusicListDataWidget::tr("%1 artists -%2 songs").arg(musicListCount).arg(musicCount);
+                infoStr = QString("   ") + MusicListDataWidget::tr("%1 artists - %2 songs").arg(musicListCount).arg(musicCount);
             }
         }
         allCount = musicListCount;
