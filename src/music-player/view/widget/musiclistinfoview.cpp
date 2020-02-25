@@ -448,12 +448,30 @@ void MusicListInfoView::showContextMenu(const QPoint &pos,
     DMenu playlistMenu;
     auto newvar = QVariant::fromValue(PlaylistPtr());
 
+    PlaylistPtr curPlaylist = nullptr;
+    for (auto playlist : newPlaylists) {
+        if (playlist->id() == PlayMusicListID) {
+            curPlaylist = playlist;
+            auto act = playlistMenu.addAction(tr("Play Queue"));
+            act->setData(QVariant::fromValue(curPlaylist));
+            playlistMenu.addSeparator();
+            break;
+        }
+    }
+
     if (selectedPlaylist != favPlaylist) {
         auto act = playlistMenu.addAction(favPlaylist->displayName());
         act->setData(QVariant::fromValue(favPlaylist));
+        playlistMenu.addSeparator();
     }
 
-    PlaylistPtr curPlaylist = nullptr;
+    auto createPlaylist = playlistMenu.addAction(tr("Add to new playlist"));
+//    auto font = createPlaylist->font();
+//    font.setWeight(QFont::DemiBold);
+//    createPlaylist->setFont(font);
+    createPlaylist->setData(newvar);
+    playlistMenu.addSeparator();
+
     for (auto playlist : newPlaylists) {
         if (playlist->id() == PlayMusicListID) {
             curPlaylist = playlist;
@@ -468,12 +486,6 @@ void MusicListInfoView::showContextMenu(const QPoint &pos,
     }
 
     playlistMenu.addSeparator();
-
-    auto createPlaylist = playlistMenu.addAction(tr("New playlist"));
-    auto font = createPlaylist->font();
-    font.setWeight(QFont::DemiBold);
-    createPlaylist->setFont(font);
-    createPlaylist->setData(newvar);
 
     connect(&playlistMenu, &DMenu::triggered, this, [ = ](QAction * action) {
         auto playlist = action->data().value<PlaylistPtr >();
@@ -569,7 +581,30 @@ void MusicListInfoView::showContextMenu(const QPoint &pos,
 
     if (removeAction) {
         connect(removeAction, &QAction::triggered, this, [ = ](bool) {
-            d->removeSelection(selection);
+            MetaPtrList metalist;
+            for (auto index : selection->selectedRows()) {
+                auto meta = d->model->meta(index);
+                metalist << meta;
+            }
+            if (metalist.isEmpty())
+                return ;
+
+            Dtk::Widget::DDialog warnDlg(this);
+            warnDlg.setTextFormat(Qt::RichText);
+            warnDlg.addButton(tr("Cancel"), true, Dtk::Widget::DDialog::ButtonNormal);
+            int deleteFlag = warnDlg.addButton(tr("Remove"), false, Dtk::Widget::DDialog::ButtonWarning);
+
+            if (1 == metalist.length()) {
+                auto meta = metalist.first();
+                warnDlg.setMessage(QString(tr("Are you sure you want to remove %1?")).arg(meta->title));
+            } else {
+                warnDlg.setMessage(QString(tr("Are you sure you want to remove the selected %1 songs?").arg(metalist.length())));
+            }
+
+            warnDlg.setIcon(QIcon::fromTheme("deepin-music"));
+            if (deleteFlag == warnDlg.exec()) {
+                d->removeSelection(selection);
+            }
         });
     }
 

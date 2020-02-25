@@ -104,7 +104,7 @@ void SearchLyricsWidget::initUI()
     font.setFamily("SourceHanSansSC-Bold");
     font.setPixelSize(17);
     m_title->setFont(font);
-    m_title->setText(tr("Search Lyrics"));
+    m_title->setText(tr("Find Lyrics"));
     m_title->setAlignment(Qt::AlignCenter | Qt::AlignVCenter);
     m_title->setFixedHeight(30);
     DPalette pa = m_title->palette();

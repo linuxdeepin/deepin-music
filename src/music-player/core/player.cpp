@@ -521,6 +521,9 @@ void Player::playMeta(PlaylistPtr playlist, const MetaPtr meta)
     if (playlist->id() != PlayMusicListID)
         d->activePlaylist = playlist;
 
+    if (d->activePlaylist.isNull())
+        return;
+
     d->fileSystemWatcher.removePaths(d->fileSystemWatcher.files());
     d->fileSystemWatcher.addPath(curMeta->localPath);
 

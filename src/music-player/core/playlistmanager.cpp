@@ -138,13 +138,13 @@ void PlaylistManager::load()
     }
 
     auto album = playlist(AlbumMusicListID);
-    auto trAlbumName = tr("Album");
+    auto trAlbumName = tr("Albums");
     if (!album.isNull() && album->displayName() != trAlbumName) {
         album->setDisplayName(trAlbumName);
     }
 
     auto artist = playlist(ArtistMusicListID);
-    auto trArtistName = tr("Artist");
+    auto trArtistName = tr("Artists");
     if (!artist.isNull() && artist->displayName() != trArtistName) {
         artist->setDisplayName(trArtistName);
     }

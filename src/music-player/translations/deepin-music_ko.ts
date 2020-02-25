@@ -493,69 +493,94 @@
 <context>
     <name>MusicListInfoView</name>
     <message>
-        <location filename="../view/widget/musiclistinfoview.cpp" line="472"/>
         <source>New playlist</source>
-        <translation type="unfinished">새 재생목록</translation>
+        <translation type="obsolete">새 재생목록</translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistinfoview.cpp" line="499"/>
+        <location filename="../view/widget/musiclistinfoview.cpp" line="455"/>
+        <source>Play Queue</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../view/widget/musiclistinfoview.cpp" line="468"/>
+        <source>Add to new playlist</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../view/widget/musiclistinfoview.cpp" line="511"/>
         <source>Pause</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistinfoview.cpp" line="501"/>
+        <location filename="../view/widget/musiclistinfoview.cpp" line="513"/>
         <source>Play</source>
         <translation type="unfinished">재생</translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistinfoview.cpp" line="504"/>
+        <location filename="../view/widget/musiclistinfoview.cpp" line="516"/>
         <source>Add to playlist</source>
         <translation type="unfinished">재생 목록에 추가</translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistinfoview.cpp" line="509"/>
+        <location filename="../view/widget/musiclistinfoview.cpp" line="521"/>
         <source>Display in file manager</source>
         <translation type="unfinished">파일 관리자에 표시</translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistinfoview.cpp" line="512"/>
+        <location filename="../view/widget/musiclistinfoview.cpp" line="524"/>
         <source>Remove from playlist</source>
         <translation type="unfinished">재생 목록에서 제거</translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistinfoview.cpp" line="513"/>
+        <location filename="../view/widget/musiclistinfoview.cpp" line="525"/>
         <source>Delete from local disk</source>
         <translation type="unfinished">로컬 디스크에서 삭제</translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistinfoview.cpp" line="534"/>
+        <location filename="../view/widget/musiclistinfoview.cpp" line="546"/>
         <source>Song info</source>
         <translation type="unfinished">노래 정보</translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistinfoview.cpp" line="590"/>
+        <location filename="../view/widget/musiclistinfoview.cpp" line="594"/>
+        <location filename="../view/widget/musiclistinfoview.cpp" line="625"/>
         <source>Cancel</source>
         <translation type="unfinished">취소</translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistinfoview.cpp" line="591"/>
+        <location filename="../view/widget/musiclistinfoview.cpp" line="595"/>
+        <source>Remove</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../view/widget/musiclistinfoview.cpp" line="599"/>
+        <source>Are you sure you want to remove %1?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../view/widget/musiclistinfoview.cpp" line="601"/>
+        <source>Are you sure you want to remove the selected %1 songs?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../view/widget/musiclistinfoview.cpp" line="626"/>
         <source>Delete</source>
         <translation type="unfinished">삭제</translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistinfoview.cpp" line="600"/>
+        <location filename="../view/widget/musiclistinfoview.cpp" line="635"/>
         <source>Are you sure you want to delete %1?</source>
         <translation type="unfinished">%1을(를) 삭제하시겠습니까?</translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistinfoview.cpp" line="607"/>
-        <location filename="../view/widget/musiclistinfoview.cpp" line="621"/>
+        <location filename="../view/widget/musiclistinfoview.cpp" line="642"/>
+        <location filename="../view/widget/musiclistinfoview.cpp" line="656"/>
         <source>Are you sure you want to delete the selected %1 songs?</source>
         <translation type="unfinished">선택한 %1 곡을 삭제하시겠습니까?</translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistinfoview.cpp" line="608"/>
-        <location filename="../view/widget/musiclistinfoview.cpp" line="622"/>
+        <location filename="../view/widget/musiclistinfoview.cpp" line="643"/>
+        <location filename="../view/widget/musiclistinfoview.cpp" line="657"/>
         <source>The song files contained will also be deleted</source>
         <translation type="unfinished"></translation>
     </message>
@@ -733,69 +758,94 @@
 <context>
     <name>PlayListView</name>
     <message>
-        <location filename="../view/widget/playlistview.cpp" line="557"/>
         <source>New playlist</source>
-        <translation type="unfinished">새 재생목록</translation>
+        <translation type="obsolete">새 재생목록</translation>
     </message>
     <message>
-        <location filename="../view/widget/playlistview.cpp" line="585"/>
+        <location filename="../view/widget/playlistview.cpp" line="540"/>
+        <source>Play Queue</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../view/widget/playlistview.cpp" line="552"/>
+        <source>Add to new playlist</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../view/widget/playlistview.cpp" line="596"/>
         <source>Pause</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/widget/playlistview.cpp" line="587"/>
+        <location filename="../view/widget/playlistview.cpp" line="598"/>
         <source>Play</source>
         <translation>재생</translation>
     </message>
     <message>
-        <location filename="../view/widget/playlistview.cpp" line="592"/>
+        <location filename="../view/widget/playlistview.cpp" line="603"/>
         <source>Add to playlist</source>
         <translation type="unfinished">재생 목록에 추가</translation>
     </message>
     <message>
-        <location filename="../view/widget/playlistview.cpp" line="597"/>
+        <location filename="../view/widget/playlistview.cpp" line="608"/>
         <source>Display in file manager</source>
         <translation type="unfinished">파일 관리자에 표시</translation>
     </message>
     <message>
-        <location filename="../view/widget/playlistview.cpp" line="600"/>
+        <location filename="../view/widget/playlistview.cpp" line="611"/>
         <source>Remove from playlist</source>
         <translation type="unfinished">재생 목록에서 제거</translation>
     </message>
     <message>
-        <location filename="../view/widget/playlistview.cpp" line="601"/>
+        <location filename="../view/widget/playlistview.cpp" line="612"/>
         <source>Delete from local disk</source>
         <translation type="unfinished">로컬 디스크에서 삭제</translation>
     </message>
     <message>
-        <location filename="../view/widget/playlistview.cpp" line="631"/>
+        <location filename="../view/widget/playlistview.cpp" line="642"/>
         <source>Encoding</source>
         <translation type="unfinished">인코딩</translation>
     </message>
     <message>
-        <location filename="../view/widget/playlistview.cpp" line="635"/>
+        <location filename="../view/widget/playlistview.cpp" line="646"/>
         <source>Song info</source>
         <translation type="unfinished">노래 정보</translation>
     </message>
     <message>
-        <location filename="../view/widget/playlistview.cpp" line="695"/>
+        <location filename="../view/widget/playlistview.cpp" line="698"/>
+        <location filename="../view/widget/playlistview.cpp" line="729"/>
         <source>Cancel</source>
         <translation type="unfinished">취소</translation>
     </message>
     <message>
+        <location filename="../view/widget/playlistview.cpp" line="699"/>
+        <source>Remove</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../view/widget/playlistview.cpp" line="703"/>
+        <source>Are you sure you want to remove %1?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="../view/widget/playlistview.cpp" line="705"/>
+        <source>Are you sure you want to remove the selected %1 songs?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../view/widget/playlistview.cpp" line="739"/>
         <source>Are you sure you want to delete %1?</source>
         <translation type="unfinished">%1을(를) 삭제하시겠습니까?</translation>
     </message>
     <message>
-        <location filename="../view/widget/playlistview.cpp" line="712"/>
-        <location filename="../view/widget/playlistview.cpp" line="724"/>
+        <location filename="../view/widget/playlistview.cpp" line="746"/>
+        <location filename="../view/widget/playlistview.cpp" line="758"/>
         <source>Are you sure you want to delete the selected %1 songs?</source>
         <translation type="unfinished">선택한 %1 곡을 삭제하시겠습니까?</translation>
     </message>
     <message>
-        <location filename="../view/widget/playlistview.cpp" line="713"/>
-        <location filename="../view/widget/playlistview.cpp" line="725"/>
+        <location filename="../view/widget/playlistview.cpp" line="747"/>
+        <location filename="../view/widget/playlistview.cpp" line="759"/>
         <source>The song files contained will also be deleted</source>
         <translation type="unfinished"></translation>
     </message>
@@ -804,7 +854,7 @@
         <translation type="vanished">이름 변경</translation>
     </message>
     <message>
-        <location filename="../view/widget/playlistview.cpp" line="696"/>
+        <location filename="../view/widget/playlistview.cpp" line="730"/>
         <source>Delete</source>
         <translation>삭제</translation>
     </message>
@@ -877,14 +927,18 @@
         <translation>새 재생목록</translation>
     </message>
     <message>
+        <source>Artist</source>
+        <translation type="obsolete">아티스트</translation>
+    </message>
+    <message>
         <location filename="../core/playlistmanager.cpp" line="141"/>
-        <source>Album</source>
+        <source>Albums</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../core/playlistmanager.cpp" line="147"/>
-        <source>Artist</source>
-        <translation type="unfinished">아티스트</translation>
+        <source>Artists</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../core/playlistmanager.cpp" line="153"/>
@@ -1016,7 +1070,7 @@
     <name>SearchLyricsWidget</name>
     <message>
         <location filename="../view/widget/searchlyricswidget.cpp" line="107"/>
-        <source>Search Lyrics</source>
+        <source>Find Lyrics</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
