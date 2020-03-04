@@ -831,7 +831,7 @@
     <message>
         <location filename="../view/musiclistscrollarea.cpp" line="79"/>
         <source>Playlists</source>
-        <translation>播放列表</translation>
+        <translation>我的歌单</translation>
     </message>
 </context>
 <context>

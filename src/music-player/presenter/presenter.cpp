@@ -495,11 +495,13 @@ void Presenter::prepareData()
 
     connect(d->player, &Player::mediaPlayed,
     this, [ = ](PlaylistPtr playlist, const MetaPtr meta) {
-        d->settings->setOption("base.play.last_meta", meta->hash);
-        d->settings->setOption("base.play.last_playlist", playlist->id());
-        d->notifyMusicPlayed(playlist, meta);
-        d->requestMetaSearch(meta);
-        d->metaBufferDetector->onBufferDetector(meta->localPath, meta->hash);
+        if (!meta.isNull()) {
+            d->settings->setOption("base.play.last_meta", meta->hash);
+            d->settings->setOption("base.play.last_playlist", playlist->id());
+            d->notifyMusicPlayed(playlist, meta);
+            d->requestMetaSearch(meta);
+            d->metaBufferDetector->onBufferDetector(meta->localPath, meta->hash);
+        }
     });
 
     connect(d->player, &Player::mediaError,

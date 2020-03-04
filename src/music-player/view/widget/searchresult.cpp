@@ -92,6 +92,7 @@ void SearchResult::autoResize()
     this->adjustSize();
     qDebug() << this->height();
     m_searchResult->raise();
+    setVisible(!(0 == m_model->rowCount()));
 }
 
 void SearchResult::setSearchString(const QString &str)

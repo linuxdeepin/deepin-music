@@ -275,7 +275,7 @@ void PlayerPrivate::initConnection()
                 return;
             }
 
-            if (playOnLoad) {
+            if (playOnLoad && QFile::exists(activeMeta->localPath)) {
                 qplayer->play();
             }
             break;
@@ -291,7 +291,7 @@ void PlayerPrivate::initConnection()
         }
 
         case QMediaPlayer::LoadingMedia: {
-            Q_ASSERT(!activeMeta.isNull());
+            //Q_ASSERT(!activeMeta.isNull());
 
             break;
         }
@@ -331,7 +331,9 @@ void PlayerPrivate::initConnection()
 
     q->connect(&fileSystemWatcher, &QFileSystemWatcher::fileChanged,
     q, [ = ](const QString & path) {
-        if (!QFile::exists(activeMeta->localPath) && activePlaylist->allmusic().isEmpty()) {
+        if (!QFile::exists(activeMeta->localPath) && !activePlaylist->allmusic().isEmpty()) {
+            qplayer->pause();
+            qplayer->stop();
             Q_EMIT q->mediaError(activePlaylist, activeMeta, Player::ResourceError);
         }
     });
