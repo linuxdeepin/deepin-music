@@ -185,4 +185,5 @@ int main(int argc, char *argv[])
     QObject::connect(DGuiApplicationHelper::instance(), &DGuiApplicationHelper::themeTypeChanged,
                      &mainframe, &MainFrame::slotTheme);
     return app.exec();
+    
 }
