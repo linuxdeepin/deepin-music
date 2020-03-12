@@ -282,7 +282,7 @@
         <translation type="vanished">가져오지 못했습니다. 음악 파일을 찾을 수 없습니다!</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="1275"/>
+        <location filename="../view/mainframe.cpp" line="1280"/>
         <source>All music</source>
         <translation>모든 음악</translation>
     </message>
@@ -311,6 +311,7 @@
         <location filename="../view/mainframe.cpp" line="649"/>
         <location filename="../view/mainframe.cpp" line="663"/>
         <location filename="../view/mainframe.cpp" line="724"/>
+        <location filename="../view/mainframe.cpp" line="1195"/>
         <source>Music</source>
         <translation type="unfinished"></translation>
     </message>

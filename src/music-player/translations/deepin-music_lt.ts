@@ -282,7 +282,7 @@
         <translation type="vanished">Nepavyko importuoti, nėrasta jokio teisingo muzikinio failo!</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="1275"/>
+        <location filename="../view/mainframe.cpp" line="1280"/>
         <source>All music</source>
         <translation>Visa muzika</translation>
     </message>
@@ -311,6 +311,7 @@
         <location filename="../view/mainframe.cpp" line="649"/>
         <location filename="../view/mainframe.cpp" line="663"/>
         <location filename="../view/mainframe.cpp" line="724"/>
+        <location filename="../view/mainframe.cpp" line="1195"/>
         <source>Music</source>
         <translation type="unfinished"></translation>
     </message>

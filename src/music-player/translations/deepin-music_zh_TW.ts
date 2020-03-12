@@ -282,7 +282,7 @@
         <translation type="vanished">無法匯入，找不到有效的音樂檔案！</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="1275"/>
+        <location filename="../view/mainframe.cpp" line="1280"/>
         <source>All music</source>
         <translation>所有音樂</translation>
     </message>
@@ -311,6 +311,7 @@
         <location filename="../view/mainframe.cpp" line="649"/>
         <location filename="../view/mainframe.cpp" line="663"/>
         <location filename="../view/mainframe.cpp" line="724"/>
+        <location filename="../view/mainframe.cpp" line="1195"/>
         <source>Music</source>
         <translation type="unfinished"></translation>
     </message>

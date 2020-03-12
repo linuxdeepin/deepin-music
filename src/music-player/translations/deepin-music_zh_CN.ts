@@ -367,6 +367,7 @@
         <location filename="../view/mainframe.cpp" line="649"/>
         <location filename="../view/mainframe.cpp" line="663"/>
         <location filename="../view/mainframe.cpp" line="724"/>
+        <location filename="../view/mainframe.cpp" line="1195"/>
         <source>Music</source>
         <translation>音乐</translation>
     </message>
@@ -395,7 +396,7 @@
         <translation type="vanished">导入失败，未找到有效的音乐文件！</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="1275"/>
+        <location filename="../view/mainframe.cpp" line="1280"/>
         <source>All music</source>
         <translation>所有音乐</translation>
     </message>

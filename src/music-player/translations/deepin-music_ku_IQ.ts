@@ -278,7 +278,7 @@
         <translation type="vanished">Nebû bê navanîn, dosyeke derbasdar nehat dîtin!</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="1275"/>
+        <location filename="../view/mainframe.cpp" line="1280"/>
         <source>All music</source>
         <translation>Hemû mûzîk</translation>
     </message>
@@ -307,6 +307,7 @@
         <location filename="../view/mainframe.cpp" line="649"/>
         <location filename="../view/mainframe.cpp" line="663"/>
         <location filename="../view/mainframe.cpp" line="724"/>
+        <location filename="../view/mainframe.cpp" line="1195"/>
         <source>Music</source>
         <translation type="unfinished"></translation>
     </message>
