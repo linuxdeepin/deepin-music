@@ -1431,9 +1431,8 @@ void Presenter::onImportFiles(const QStringList &filelist, PlaylistPtr playlist)
     auto curPlayerlist = d->player->curPlaylist();
     if (curPlayerlist->isEmpty()/* && flag*/) {
         d->player->setActivePlaylist(curPlaylist);
-        curPlayerlist->appendMusicList(curPlaylist->allmusic());
     }
-
+    curPlayerlist->appendMusicList(curPlaylist->allmusic());
     return;
 }
 
