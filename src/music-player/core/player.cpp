@@ -870,7 +870,7 @@ void Player::readSinkInputPath()
         QVariant nameV = DBusUtils::redDBusProperty("com.deepin.daemon.Audio", curPath.path(),
                                                     "com.deepin.daemon.Audio.SinkInput", "Name");
 
-        if (!nameV.isValid() || nameV.toString() != "Music")
+        if (!nameV.isValid() || !nameV.toString().contains( "Music", Qt::CaseInsensitive))
             continue;
 
         d->sinkInputPath = curPath.path();
