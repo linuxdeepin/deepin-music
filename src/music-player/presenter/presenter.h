@@ -94,6 +94,7 @@ signals:
                               PlaylistPtr favlist,
                               QList<PlaylistPtr >newlists,
                               char type);
+    void musicListClear();
 
     //! from control
     void musicPlayed(PlaylistPtr playlist, const MetaPtr meta);

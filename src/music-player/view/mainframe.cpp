@@ -943,7 +943,6 @@ void MainFrame::binding(Presenter *presenter)
     this, [ = ](PlaylistPtr playlist, const MetaPtr meta) {
         Q_ASSERT(!playlist.isNull());
         Q_ASSERT(!meta.isNull());
-
         qApp->setApplicationDisplayName(playlist->displayName());
         this->setWindowTitle(meta->title);
         d->startTimer();
@@ -1189,6 +1188,12 @@ void MainFrame::binding(Presenter *presenter)
             presenter, &Presenter::onMusiclistRemove);
     connect(d->musicListWidget, &MusicListWidget::musiclistDelete,
             presenter, &Presenter::onMusiclistDelete);
+
+    connect(presenter, &Presenter::musicListClear,
+    this, [ = ]() {
+        qApp->setApplicationDisplayName("");
+        this->setWindowTitle(tr("Music"));
+    });
     connect(d->musicListWidget, &MusicListWidget::importSelectFiles,
     this, [ = ](PlaylistPtr playlist, QStringList urllist) {
         presenter->requestImportPaths(playlist, urllist);

@@ -910,6 +910,8 @@ void Presenter::onMusiclistRemove(PlaylistPtr playlist, const MetaPtrList metali
             }
         }
     }
+    if (playlist->allmusic().size() == 0)
+        Q_EMIT musicListClear();
 }
 
 void Presenter::onMusiclistDelete(PlaylistPtr playlist, const MetaPtrList metalist)
