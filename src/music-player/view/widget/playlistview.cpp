@@ -537,7 +537,7 @@ void PlayListView::showContextMenu(const QPoint &pos,
     for (auto playlist : newPlaylists) {
         if (playlist->id() == PlayMusicListID) {
             curPlaylist = playlist;
-            auto act = playlistMenu.addAction(tr("Play Queue"));
+            auto act = playlistMenu.addAction(tr("Play queue"));
             act->setData(QVariant::fromValue(curPlaylist));
             playlistMenu.addSeparator();
             break;
