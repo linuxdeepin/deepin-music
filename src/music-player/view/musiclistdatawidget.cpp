@@ -1308,6 +1308,9 @@ void MusicListDataWidget::resultTabwidget(int index)
 
         tabwidgetInfo(MusicPlaylists);
 
+        d->singerListView->clearSelection();
+        d->albListView->clearSelection();
+
     } else if (index == 1) {
 
         d->albumSearchDropdown->hide();
@@ -1324,6 +1327,9 @@ void MusicListDataWidget::resultTabwidget(int index)
 
         tabwidgetInfo(ArtistPlaylists);
 
+        d->songListView->clearSelection();
+        d->albListView->clearSelection();
+
     } else if (index == 2) {
 
         d->albumSearchDropdown->show();
@@ -1339,6 +1345,9 @@ void MusicListDataWidget::resultTabwidget(int index)
         }
 
         tabwidgetInfo(AlbumPlaylists);
+
+        d->songListView->clearSelection();
+        d->singerListView->clearSelection();
     }
 }
 
