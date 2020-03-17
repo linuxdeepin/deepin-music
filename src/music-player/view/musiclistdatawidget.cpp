@@ -1639,6 +1639,9 @@ void MusicListDataWidget::onMusicPlayed(PlaylistPtr playlist, const MetaPtr Meta
     d->artistListView->update();
     d->musicListView->update();
 
+    d->songListView->setPlaying(Meta);
+    d->singerListView->setPlaying(Meta);
+    d->albListView->setPlaying(Meta);
     d->songListView->update();
     d->singerListView->update();
     d->albListView->update();

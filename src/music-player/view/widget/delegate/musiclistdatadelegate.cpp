@@ -141,6 +141,7 @@ void MusicListDataDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
             }
 
             if (listview->playing() != nullptr && (listview->playing()->artist == PlayMusicTypePtr->name
+                                                   || listview->playing()->album == PlayMusicTypePtr->name
                                                    || (listview->playing()->artist.isEmpty() && !PlayMusicTypePtr->playlistMeta.metas.isEmpty()
                                                        && PlayMusicTypePtr->playlistMeta.metas.begin().value()->artist.isEmpty()))) {
                 playFlag = true;
@@ -197,9 +198,10 @@ void MusicListDataDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
             int curFillSize = fillAllHeight;
             QRect fillBlurRect(rect.x(), rect.y() + rect.height() - fillAllHeight, rect.width(), fillAllHeight);
 
-            if (listview->playing() != nullptr && (listview->playing()->album == PlayMusicTypePtr->name
-                                                   || (listview->playing()->album.isEmpty() && !PlayMusicTypePtr->playlistMeta.metas.isEmpty()
-                                                       && PlayMusicTypePtr->playlistMeta.metas.begin().value()->album.isEmpty())))  {
+            if (listview->playing() != nullptr && (listview->playing()->artist == PlayMusicTypePtr->name
+                                                   || listview->playing()->album == PlayMusicTypePtr->name
+                                                   || (listview->playing()->artist.isEmpty() && !PlayMusicTypePtr->playlistMeta.metas.isEmpty()
+                                                       && PlayMusicTypePtr->playlistMeta.metas.begin().value()->artist.isEmpty()))) {
                 playFlag = true;
             }
 
@@ -209,23 +211,26 @@ void MusicListDataDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
             }
 
             //设置模糊
+            QImage t_image = icon.pixmap(rect.width(), rect.height()).toImage();
+            qreal t_ratio = t_image.devicePixelRatioF();
+            curFillSize = curFillSize * t_ratio;
 
-//            QImage t_image = icon.pixmap(rect.width(), rect.height()).toImage();
-//            qreal t_ratio = t_image.devicePixelRatioF();
-//            curFillSize = curFillSize * t_ratio;
-//            t_image  = t_image.copy(0, rect.height() - curFillSize, t_image.width(), curFillSize);
-
-//            QTransform old_transform = painter->transform();
-//            painter->translate(fillBlurRect.topLeft());
-//            qt_blurImage(painter, t_image, 35, false, false);
-//            painter->setTransform(old_transform);
-//            //设置模糊
-//            painter->fillRect(fillBlurRect, fillColor);
+            t_image  = t_image.copy(0, rect.height() - curFillSize, t_image.width(), curFillSize);
+            QTransform old_transform = painter->transform();
+            painter->translate(fillBlurRect.topLeft());
+            qt_blurImage(painter, t_image, 35, false, false);
+            painter->setTransform(old_transform);
+            //设置模糊
+            painter->fillRect(fillBlurRect, fillColor);
 
             //draw playing
-//            if (playFlag)  {
-//                painter->drawPixmap(QRect(rect.x() + 64, rect.y() + 82, 22, 18), listview->getAlbumPixmap());
-//            }
+            if (playFlag) {
+                if (option.state & QStyle::State_MouseOver) {
+                    painter->drawPixmap(QRect(rect.x() + 60, rect.y() + 88, 40, 40), d->hoverSuspendImg);
+                } else {
+                    painter->drawPixmap(QRect(rect.x() + 64, rect.y() + 96, 22, 18), listview->getAlbumPixmap());
+                }
+            }
 
             QRect fillRect(rect.x(), startHeight, rect.width(), fillAllHeight);
 
@@ -264,7 +269,7 @@ void MusicListDataDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
             t_fillBrush = QBrush(QColor(128, 128, 128, 90));
         }
 
-        if (option.state & QStyle::State_MouseOver) {
+        if ((option.state & QStyle::State_MouseOver) && !playFlag) {
             if (!playlistPtr->playingStatus() || !playFlag ) {
                 QImage t_image = icon.pixmap(rect.width(), rect.height()).toImage();
                 qreal t_ratio = t_image.devicePixelRatioF();
