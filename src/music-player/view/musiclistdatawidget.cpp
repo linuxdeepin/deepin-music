@@ -529,6 +529,7 @@ void MusicListDataWidgetPrivate::initConntion()
         } else if (singerListView->isVisible()) {
             if (singerListView->playlist()) {
                 PlaylistPtr curPlayList = singerListView->playlist();
+                curPlayList->playMusicTypeToMeta();
                 curPlayList->play(curPlayList->first());
                 Q_EMIT q->playall(curPlayList);
                 //initData(curPlayList);
@@ -536,6 +537,7 @@ void MusicListDataWidgetPrivate::initConntion()
         } else if (albListView->isVisible()) {
             if (albListView->playlist()) {
                 PlaylistPtr curPlayList = albListView->playlist();
+                curPlayList->playMusicTypeToMeta();
                 curPlayList->play(curPlayList->first());
                 Q_EMIT q->playall(curPlayList);
                 //initData(curPlayList);
