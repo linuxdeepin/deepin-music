@@ -176,7 +176,7 @@ void PlayListView::setViewModeFlag(QListView::ViewMode mode)
         setViewportMargins(10, 10, 10, 10);
     } else {
         setIconSize( QSize(36, 36) );
-//        setGridSize( QSize(36, 36) );
+
         setGridSize( QSize(-1, -1) );
         setViewportMargins(0, 0, 8, 0);
     }

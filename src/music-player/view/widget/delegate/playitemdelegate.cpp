@@ -238,7 +238,8 @@ void PlayItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
         painter->fillRect(option.rect, background);
 
         //绘制阴影
-        QRect shadowRect(option.rect.x() - 10, option.rect.y() - 10, 160, 160);
+        //QRect shadowRect(option.rect.x() - 10, option.rect.y() - 10, 160, 160);
+        QRect shadowRect(option.rect.x() - 10, option.rect.y(), 160, 150);
         QPainterPath roundRectShadowPath;
         roundRectShadowPath.addRoundRect(shadowRect, 10, 10);
         painter->save();
