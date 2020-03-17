@@ -1762,6 +1762,10 @@ void MusicListDataWidget::slotTheme(int type)
     d->albumListView->setThemeType(type);
     d->artistListView->setThemeType(type);
     d->musicListView->setThemeType(type);
+    /*----------tabwidget-------------*/
+    d->songListView->setThemeType(type);
+    d->singerListView->setThemeType(type);
+    d->albListView->setThemeType(type);
 }
 
 void MusicListDataWidget::changePicture(QPixmap pixmap, QPixmap sidebarPixmap, QPixmap albumPixmap)
