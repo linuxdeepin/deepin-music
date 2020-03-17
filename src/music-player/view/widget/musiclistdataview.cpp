@@ -385,5 +385,6 @@ void MusicListDataView::onMusiclistChanged(PlaylistPtr playlist)
 
     d->model->setPlaylist(playlist);
     setUpdatesEnabled(true);
+
     //updateScrollbar();
 }

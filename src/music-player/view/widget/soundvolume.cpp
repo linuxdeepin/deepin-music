@@ -70,6 +70,7 @@ SoundVolume::SoundVolume(QWidget *parent) : QWidget(parent), d_ptr(new SoundVolu
     d->volSlider->slider()->setFixedHeight(160);
     d->volSlider->setFixedWidth(24);
     d->volSlider->setIconSize(QSize(15, 15));
+    d->volSlider->setMouseWheelEnabled(true);
 //    d->volSlider->setRightIcon(DHiDPIHelper::loadNxPixmap(":/mpimage/light/normal/volume_add_normal.svg"));
 //    d->volSlider->setLeftIcon(DHiDPIHelper::loadNxPixmap(":/mpimage/light/normal/volume_lessen_normal.svg"));
 

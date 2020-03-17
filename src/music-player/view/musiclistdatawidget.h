@@ -36,6 +36,7 @@ public:
     ~MusicListDataWidget();
 
     void setCustomSortType(PlaylistPtr playlist);
+    void tabwidgetInfo(PlaylistPtr infoPlaylist);
     PlaylistPtr curPlaylist();
 
 public slots:
@@ -48,7 +49,10 @@ public slots:
     void onMusicPlayed(PlaylistPtr playlist, const MetaPtr);
     void slotTheme(int type);
     void changePicture(QPixmap pixmap, QPixmap sidebarPixmap, QPixmap albumPixmap);
+    void retResult(QString searchText, QList<PlaylistPtr> resultlist);
+    void resultTabwidget(int index);
 
+    void CloseSearch();
     void onCustomContextMenuRequest(const QPoint &pos,
                                     PlaylistPtr selectedlist,
                                     PlaylistPtr favlist,
@@ -78,6 +82,10 @@ protected:
     virtual void dropEvent(QDropEvent *event) Q_DECL_OVERRIDE;
 
 private:
+    PlaylistPtr  MusicPlaylists;
+    PlaylistPtr ArtistPlaylists;
+    PlaylistPtr  AlbumPlaylists;
+
     QScopedPointer<MusicListDataWidgetPrivate> d_ptr;
     Q_DECLARE_PRIVATE_D(qGetPtrHelper(d_ptr), MusicListDataWidget)
 };

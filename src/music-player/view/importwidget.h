@@ -37,6 +37,7 @@ public:
 signals:
     void scanMusicDirectory();
     void importFiles();
+    void selectImportDirectory();
     void importSelectFiles(const QStringList &urllist);
 
 public slots:

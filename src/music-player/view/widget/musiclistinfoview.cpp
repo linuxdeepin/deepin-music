@@ -462,6 +462,18 @@ void MusicListInfoView::showContextMenu(const QPoint &pos,
     if (selectedPlaylist != favPlaylist) {
         auto act = playlistMenu.addAction(favPlaylist->displayName());
         act->setData(QVariant::fromValue(favPlaylist));
+        bool flag = true;
+        for (auto &index : selection->selectedRows()) {
+            auto meta = d->model->meta(index);
+            if (!favPlaylist->contains(meta)) {
+                flag = false;
+            }
+        }
+        if (flag == true) {
+            act->setEnabled(false);
+        } else {
+            act->setEnabled(true);
+        }
         playlistMenu.addSeparator();
     }
 
@@ -473,6 +485,8 @@ void MusicListInfoView::showContextMenu(const QPoint &pos,
     playlistMenu.addSeparator();
 
     for (auto playlist : newPlaylists) {
+        if (playlist == nullptr)
+            continue;
         if (playlist->id() == PlayMusicListID) {
             curPlaylist = playlist;
             continue;

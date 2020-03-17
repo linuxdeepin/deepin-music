@@ -105,7 +105,10 @@ SOURCES += \
     view/widget/tooltips.cpp \
     core/util/inotifyfiles.cpp \
     view/musiclistscrollarea.cpp \
-    core/volumemonitoring.cpp
+    core/volumemonitoring.cpp \
+    view/widget/musicsearchlistview.cpp \
+    view/widget/model/musicsearchlistmodel.cpp \
+    view/widget/delegate/musicsearchlistdelegate.cpp
 
 HEADERS += \
     musicapp.h \
@@ -185,7 +188,10 @@ HEADERS += \
     view/widget/tooltips.h \
     core/util/inotifyfiles.h \
     view/musiclistscrollarea.h \
-    core/volumemonitoring.h
+    core/volumemonitoring.h \
+    view/widget/musicsearchlistview.h \
+    view/widget/model/musicsearchlistmodel.h \
+    view/widget/delegate/musicsearchlistdelegate.h
 
 RESOURCES += \
     resource/theme/theme.qrc \

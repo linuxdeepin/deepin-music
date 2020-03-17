@@ -42,25 +42,25 @@ SearchEdit::SearchEdit(QWidget *parent) : DSearchEdit(parent)
 
     lineEdit()->setFocusPolicy(Qt::ClickFocus);
     // Why qss not work if not call show
-//    show();
-//    connect(this, &SearchEdit::focusOut,
-//            this, &SearchEdit::onFocusOut);
-//    connect(this, &SearchEdit::focusIn,
-//            this, &SearchEdit::onFocusIn);
+    //    show();
+    //    connect(this, &SearchEdit::focusOut,
+    //            this, &SearchEdit::onFocusOut);
+    //    connect(this, &SearchEdit::focusIn,
+    //            this, &SearchEdit::onFocusIn);
     connect(this, &SearchEdit::textChanged,
             this, &SearchEdit::onTextChanged);
     connect(this, &SearchEdit::returnPressed,
             this, &SearchEdit::onReturnPressed);
-//    connect(this, &SearchEdit::editingFinished,
-//            this, &SearchEdit::onReturnPressed);
+    //    connect(this, &SearchEdit::editingFinished,
+    //            this, &SearchEdit::onReturnPressed);
     connect(this, &SearchEdit::focusChanged,
     this, [ = ](bool onFocus) {
         if (!onFocus) {
             m_result->hide();
-            if (this->text().isEmpty())
-                onReturnPressed();
-//            else
-//                clear();
+//            if (this->text().isEmpty())
+//                onReturnPressed();
+            //            else
+            //                clear();
         } else {
             onTextChanged();
         }
@@ -72,23 +72,24 @@ void SearchEdit::setResultWidget(SearchResult *result)
     m_result = result;
 
     m_result->hide();
-
-    connect(m_result, &SearchResult::locateMusic,
-    this, [ = ](const QString & hash) {
-//        onFocusOut();
-        Q_EMIT this->locateMusic(hash);
+    m_result->move(this->x(), this->y() + 50);
+    connect(m_result, &SearchResult::searchText,
+    this, [ = ](const QString & id, const QString & text) {
+        onFocusOut();
+        setText(text);
+        onFocusOut();
+        Q_EMIT this->searchText(id, text);
     });
 
-    connect(m_result, &SearchResult::searchText,
-    this, [ = ](const QString & text) {
-//        onFocusOut();
-        setText(text);
-        onReturnPressed();
+    connect(m_result, &SearchResult::searchText2,
+    this, [ = ](const QString & id, const QString & text) {
+        searchText2(id, text);
     });
 }
 
 void SearchEdit::keyPressEvent(QKeyEvent *event)
 {
+    //输入框中上下按键操作
     if (event->key() == Qt::Key_Up) {
         m_result->selectUp();
     }
@@ -96,26 +97,23 @@ void SearchEdit::keyPressEvent(QKeyEvent *event)
         m_result->selectDown();
     }
 
-    // TODO: event fiter here tab cap by line edit
-//    if (event->key() == Qt::Key_Backtab) {
-//        m_result->selectUp();
-//        event->accept();
-//        return;
-//    }
-//    if (event->key() == Qt::Key_Tab) {
-//        m_result->selectDown();
-//        event->accept();
-//        return;
-//    }
     DSearchEdit::keyPressEvent(event);
+}
+
+void SearchEdit::searchText2(QString id, QString text)
+{
+    m_CurrentId = id;
+    m_Text = text;
 }
 
 void SearchEdit::onFocusIn()
 {
-//    m_result->adjustSize();
-//    auto pos = this->mapToGlobal(QPoint(0, this->height() + 2));
-//    m_result->show();
-//    m_result->move(pos);
+    setText("");
+    m_CurrentId = "";
+    m_result->adjustSize();
+    auto pos = this->mapToGlobal(QPoint(0, this->height() + 2));
+    m_result->show();
+    m_result->move(pos);
 }
 
 void SearchEdit::onFocusOut()
@@ -129,70 +127,26 @@ void SearchEdit::onFocusOut()
 void SearchEdit::onTextChanged()
 {
     auto text = QString(this->text()).remove(" ").remove("\r").remove("\n");
+    if (m_LastText == text) {
+        return;
+    }
+    m_LastText = text;
     if (text.length() >= 1) {
-        auto searchtext = QString(this->text()).remove("\r").remove("\n");
-        QRect rect = this->rect();
-
-        QStringList curList;
-        if (playlist->id() == AlbumMusicListID || playlist->id() == ArtistMusicListID) {
-            PlayMusicTypePtrList playMusicTypePtrList = playlist->playMusicTypePtrList();
-
-            for (auto action : playMusicTypePtrList) {
-                if (!curList.contains(action->name))
-                    curList.append(action->name);
-            }
-        } else {
-            for (auto action : playlist->allmusic()) {
-                if (!curList.contains(action->title))
-                    curList.append(action->title);
-            }
-        }
-        //filter
-        bool chineseFlag = false;
-        for (auto ch : text) {
-            if (DMusic::PinyinSearch::isChinese(ch)) {
-                chineseFlag = true;
-                break;
-            }
-        }
-        QStringList filterList;
-        if (chineseFlag) {
-            filterList = curList.filter(searchtext, Qt::CaseInsensitive);
-        } else {
-            if (text.size() == 1) {
-                for (auto curText : curList) {
-                    auto curTextList = DMusic::PinyinSearch::simpleChineseSplit(curText);
-                    if (!curTextList.isEmpty() && curTextList.first().contains(searchtext, Qt::CaseInsensitive)) {
-                        filterList.append(curText);
-                    }
-                }
-            } else {
-                for (auto curText : curList) {
-                    auto curTextList = DMusic::PinyinSearch::simpleChineseSplit(curText);
-                    if (!curTextList.isEmpty() && curTextList.join("").contains(searchtext, Qt::CaseInsensitive)) {
-                        filterList.append(curText);
-                    }
-                }
-            }
-        }
-
-        if (filterList.size() > 10)
-            filterList = filterList.mid(0, 10);
-
         m_result->setSearchString(text);
-        m_result->setResultList(filterList, QStringList());
-
         m_result->show();
         // parent is MainFrame
+        QRect rect = this->rect();
         QPoint bottomLeft = rect.bottomLeft();
         bottomLeft = mapTo(parentWidget()->parentWidget(), bottomLeft);
         m_result->setFixedWidth(width() - 4);
-        m_result->autoResize();
-        m_result->move(bottomLeft.x() + width() / 2 + 24, bottomLeft.y() + 5);
+        m_result->move(bottomLeft.x() + width() / 2 + 24, bottomLeft.y());
         m_result->setFocusPolicy(Qt::StrongFocus);
         m_result->raise();
     } else {
         onFocusOut();
+    }
+    if (text.size() != 0) {
+        Q_EMIT this->searchCand(text);
     }
 }
 
@@ -200,19 +154,14 @@ void SearchEdit::onReturnPressed()
 {
     if (!m_result->currentStr().isEmpty())
         setText(m_result->currentStr());
-    auto text = QString(this->text()).remove(" ");
-//    if (text.isEmpty()) {
-//        return;
-//    }
-
+    auto text = QString(this->text()).remove(" ").remove("\r").remove("\n");;
+    if (text.length() == 0)
+        return;
     onFocusOut();
-
-//    if (playlist != nullptr)
-//        playlist->setSearchStr(text);
-    Q_EMIT this->searchText(this->text());
+    if (m_CurrentId.size() == 0) {
+        Q_EMIT this->searchText("", text);
+    } else {
+        Q_EMIT this->searchText(m_CurrentId, m_Text);
+    }
 }
 
-void SearchEdit::selectPlaylist(PlaylistPtr playlistPtr)
-{
-    playlist = playlistPtr;
-}

@@ -34,7 +34,6 @@ public:
     QString         extraName;
     QByteArray      icon;
     qint64          timestamp   = 0;    // addTime;
-
     PlaylistMeta    playlistMeta;
 };
 typedef QSharedPointer<PlayMusicType>   PlayMusicTypePtr;
@@ -125,6 +124,9 @@ public:
     void setViewMode(const int &mode);
     int viewMode() const;
 
+    void clearTypePtr();
+    void appendMusicTypePtrListData(PlayMusicTypePtr  musicTypePtr);
+
 public slots:
     void setDisplayName(const QString &name);
     void appendMusicList(const MetaPtrList metalist);
@@ -180,4 +182,11 @@ extern const QString AllMusicListID;
 extern const QString FavMusicListID;
 extern const QString SearchMusicListID;
 extern const QString PlayMusicListID;
+extern const QString AlbumCandListID;
+extern const QString MusicCandListID;
+extern const QString ArtistCandListID;
+extern const QString AlbumResultListID;
+extern const QString MusicResultListID;
+extern const QString ArtistResultListID;
+
 

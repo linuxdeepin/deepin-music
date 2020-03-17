@@ -41,7 +41,8 @@ public:
     void setResultWidget(SearchResult *);
 
 signals:
-    void searchText(const QString &text);
+    void searchText(const QString &id, const QString &text);
+    void searchCand (const QString &text);
     void locateMusic(const QString &hash);
 
 public slots:
@@ -49,12 +50,15 @@ public slots:
     void onFocusOut();
     void onTextChanged();
     void onReturnPressed();
-    void selectPlaylist(PlaylistPtr playlistPtr);
 
 protected:
     virtual void keyPressEvent(QKeyEvent *event) Q_DECL_OVERRIDE;
 
 private:
+    void searchText2(QString id, QString text);
     SearchResult    *m_result = nullptr;
     PlaylistPtr      playlist = nullptr;
+    QString         m_CurrentId;
+    QString         m_Text;
+    QString         m_LastText;
 };

@@ -29,13 +29,19 @@
 
 #include "mediadatabase.h"
 
-const QString AlbumMusicListID = "album";
-const QString ArtistMusicListID = "artist";
-const QString AllMusicListID = "all";
-const QString FavMusicListID = "fav";
-const QString SearchMusicListID = "search";
-const QString PlayMusicListID = "play";
-const QString NewMusicListID = "new";
+const QString AlbumMusicListID      = "album";
+const QString ArtistMusicListID     = "artist";
+const QString AllMusicListID        = "all";
+const QString FavMusicListID        = "fav";
+const QString SearchMusicListID     = "search";
+const QString PlayMusicListID       = "play";
+const QString NewMusicListID        = "new";
+const QString MusicCandListID       = "musicCand";
+const QString AlbumCandListID       = "albumCand";
+const QString ArtistCandListID      = "artistCand";
+const QString MusicResultListID     = "musicResult";
+const QString AlbumResultListID     = "albumResult";
+const QString ArtistResultListID    = "artistResult";
 
 static PlaylistMeta emptyInfo;
 
@@ -114,19 +120,38 @@ void PlaylistManager::load()
     if (sortUUIDs.size() != d->playlists.size()) {
         qWarning() << "playlist order crash, restrot";
         d->sortUUIDs.clear();
-        d->sortUUIDs << SearchMusicListID << AlbumMusicListID << ArtistMusicListID << AllMusicListID << FavMusicListID << PlayMusicListID;
+        d->sortUUIDs << AlbumMusicListID
+                     << ArtistMusicListID
+                     << AllMusicListID
+                     << FavMusicListID
+                     << SearchMusicListID
+                     << PlayMusicListID
+                     << NewMusicListID
+                     << MusicCandListID
+                     << AlbumCandListID
+                     << ArtistCandListID
+                     << MusicResultListID
+                     << AlbumResultListID
+                     << ArtistResultListID;
 
         QStringList sortUUIDs;
         for (auto playlist : d->playlists.values()) {
             sortUUIDs <<  playlist->id();
         }
 
-        sortUUIDs.removeAll(SearchMusicListID);
         sortUUIDs.removeAll(AlbumMusicListID);
         sortUUIDs.removeAll(ArtistMusicListID);
         sortUUIDs.removeAll(AllMusicListID);
         sortUUIDs.removeAll(FavMusicListID);
+        sortUUIDs.removeAll(SearchMusicListID);
         sortUUIDs.removeAll(PlayMusicListID);
+        sortUUIDs.removeAll(NewMusicListID);
+        sortUUIDs.removeAll(MusicCandListID);
+        sortUUIDs.removeAll(AlbumCandListID);
+        sortUUIDs.removeAll(ArtistCandListID);
+        sortUUIDs.removeAll(MusicResultListID);
+        sortUUIDs.removeAll(AlbumResultListID);
+        sortUUIDs.removeAll(ArtistResultListID);
 
         d->sortUUIDs << sortUUIDs;
 
@@ -172,6 +197,43 @@ void PlaylistManager::load()
     if (!play.isNull() && play->displayName() != playName) {
         play->setDisplayName(playName);
     }
+
+    auto musicCand = playlist(AlbumCandListID);
+    auto strMusic = tr("All Music");
+    if (!musicCand.isNull() && musicCand->displayName() != playName) {
+        musicCand->setDisplayName(strMusic);
+    }
+
+    auto albumCand = playlist(AlbumCandListID);
+    auto strAlbum = tr("Alblums");
+    if (!albumCand.isNull() && albumCand->displayName() != playName) {
+        albumCand->setDisplayName(strAlbum);
+    }
+
+    auto artistCand = playlist(AlbumCandListID);
+    auto strArtist = tr("Artists");
+    if (!artistCand.isNull() && artistCand->displayName() != playName) {
+        artistCand->setDisplayName(strArtist);
+    }
+
+    auto musicResult = playlist(AlbumResultListID);
+    auto resMusic = tr("Music");
+    if (!musicResult.isNull() && musicResult->displayName() != playName) {
+        musicResult->setDisplayName(resMusic);
+    }
+
+    auto albumResult = playlist(AlbumResultListID);
+    auto resAlbum = tr("Alblums");
+    if (!albumResult.isNull() && albumResult->displayName() != playName) {
+        albumResult->setDisplayName(resAlbum);
+    }
+
+    auto artistResult = playlist(AlbumResultListID);
+    auto resArtist = tr("Artists");
+    if (!artistResult.isNull() && artistResult->displayName() != playName) {
+        artistResult->setDisplayName(resArtist);
+    }
+
     QSqlDatabase::database().commit();
 }
 
@@ -199,7 +261,8 @@ QList<PlaylistPtr > PlaylistManager::allplaylist()
 
     QList<PlaylistPtr >  list;
     for (auto &uuid : d->sortUUIDs) {
-        list << d->playlists.value(uuid);
+        if (d->playlists.value(uuid) != nullptr)
+            list << d->playlists.value(uuid);
     }
     return list;
 }

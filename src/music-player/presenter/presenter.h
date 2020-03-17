@@ -119,6 +119,10 @@ signals:
     void notifyMusciError(PlaylistPtr playlist, const MetaPtr meta, int error);
     void notifyAddToPlaylist(PlaylistPtr playlist, const MetaPtrList metalist, int count);
 
+    //搜索
+    void searchCand(QString searchText, PlaylistPtr playlist);
+    void searchResult(QString searchText, QList<PlaylistPtr> resultlist, QString id);
+
 public slots:
     //! music control interface
     void onSyncMusicPlay(PlaylistPtr playlist, const MetaPtr meta);
@@ -160,7 +164,8 @@ public slots:
 
     //! ui: menu interface
     void onRequestMusiclistMenu(const QPoint &pos, char type);
-    void onSearchText(const QString text);
+    void onSearchText(const QString &id, const QString &text);
+    void onSearchCand(const QString text);//查询候选项
     void onExitSearch();
     void onLocateMusicAtAll(const QString &hash);
     void onChangeSearchMetaCache(const MetaPtr meta, const DMusic::SearchMeta &search);
@@ -169,6 +174,7 @@ public slots:
     void onImportFiles(const QStringList &filelist, PlaylistPtr playlist);
 
 private:
+    bool containsStr(QString searchText, QString text);
     QScopedPointer<PresenterPrivate> d_ptr;
     Q_DECLARE_PRIVATE_D(qGetPtrHelper(d_ptr), Presenter)
 };

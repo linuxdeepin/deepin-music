@@ -69,10 +69,6 @@ MusicListScrollArea::MusicListScrollArea(QWidget *parent) : DScrollArea(parent)
     dataBaseLabelFont.setWeight(QFont::Medium);
     dataBaseLabelFont.setPixelSize(14);
     dataBaseLabel->setFont(dataBaseLabelFont);
-//    auto dataBaseLabelPalette = dataBaseLabel->palette();
-//    dataBaseLabelPalette.setColor(DPalette::WindowText, QColor("#757F92"));
-//    dataBaseLabel->setPalette(dataBaseLabelPalette);
-    //dataBaseLabel->setForegroundRole(DPalette::TextTips);
 
     customizeLabel = new DLabel;
     customizeLabel->setFixedHeight(40);
@@ -80,8 +76,6 @@ MusicListScrollArea::MusicListScrollArea(QWidget *parent) : DScrollArea(parent)
     customizeLabel->setObjectName("MusicListScrollAreaCustomizeLabel");
     customizeLabel->setMargin(10);
     customizeLabel->setFont(dataBaseLabelFont);
-//    customizeLabel->setPalette(dataBaseLabelPalette);
-    //customizeLabel->setForegroundRole(DPalette::TextTips);
 
     m_addListBtn = new MusicImageButton(":/mpimage/light/normal/add_normal.svg",
                                         ":/mpimage/light/hover/add_hover.svg",

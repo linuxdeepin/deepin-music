@@ -65,6 +65,8 @@ signals:
     void modeChanged(int);
     void addMetasFavourite(const MetaPtrList  &metalist);
     void removeMetasFavourite(const MetaPtrList  &metalist);
+    void seaResult(QString searchText, QList<PlaylistPtr> resultlist);
+    void closeSearch();
 
 public slots:
     void onSearchText(QString str);

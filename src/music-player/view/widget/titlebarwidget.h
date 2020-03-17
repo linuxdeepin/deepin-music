@@ -49,7 +49,8 @@ public slots:
 
 signals:
     void searchExited();
-    void search(const QString &text);
+    void searchText(const QString &id, const QString &text);
+    void searchCand(const QString &text);//查询候选
     void locateMusicInAllMusiclist(const QString &hash);
 
 protected:

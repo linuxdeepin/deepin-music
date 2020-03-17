@@ -137,10 +137,10 @@ void InfoDialogPrivate::initUI()
 
     auto infogridLayout = new QGridLayout(infoGridFrame);
     infogridLayout->setMargin(10);
-    infogridLayout->setHorizontalSpacing(5);
+    infogridLayout->setHorizontalSpacing(10);
     infogridLayout->setVerticalSpacing(5);
-    infogridLayout->setColumnStretch(0, 10);
-    infogridLayout->setColumnStretch(1, 100);
+    infogridLayout->setColumnStretch(0, 60);
+    infogridLayout->setColumnStretch(1, 200);
 
     QStringList infoKeys;
     infoKeys << InfoDialog::tr("Title:") << InfoDialog::tr("Artist:")

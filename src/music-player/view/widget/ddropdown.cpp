@@ -64,6 +64,7 @@ DDropdown::DDropdown(QWidget *parent) : DWidget(parent), d_ptr(new DDropdownPriv
     d->dropdown->setIconSize(QSize(9, 9));
     d->dropdown->setObjectName("DDropdownIcon");
     d->dropdown->setFixedSize(9, 9);
+    d->dropdown->setWindowModality(Qt::WindowModal);
     DPalette pl = d->dropdown->palette();
     pl.setColor(DPalette::Light, QColor(Qt::transparent));
     pl.setColor(DPalette::Dark, QColor(Qt::transparent));

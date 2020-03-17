@@ -45,6 +45,7 @@ public:
 
     QLabel                  *text = nullptr;
     DPushButton             *importButton = nullptr;
+    DPushButton             *addMusicButton = nullptr;
     QLabel                  *logo;
     ImportWidget *q_ptr;
     Q_DECLARE_PUBLIC(ImportWidget)
@@ -79,11 +80,19 @@ ImportWidget::ImportWidget(QWidget *parent) : DFrame(parent), d_ptr(new ImportWi
     QColor sbcolor("#000000");
     sbcolor.setAlphaF(0);
     pl.setColor(DPalette::Shadow, sbcolor);
-    d->importButton->setPalette(pl);
+//    d->importButton->setPalette(pl);
     d->importButton->setObjectName("ImportViewImportButton");
     d->importButton->setFixedSize(302, 36);
-    d->importButton->setText(tr("Import Music"));
+    d->importButton->setText(tr("Open Folder"));
     d->importButton->setFocusPolicy(Qt::NoFocus);
+
+    d->addMusicButton = new DPushButton;
+    d->addMusicButton->setFont(importButtonFont);
+//    d->addMusicButton->setPalette(pl);
+    d->addMusicButton->setObjectName("ImportViewImportButton");
+    d->addMusicButton->setFixedSize(302, 36);
+    d->addMusicButton->setText(tr("Add Music"));
+    d->addMusicButton->setFocusPolicy(Qt::NoFocus);
 
     d->text = new QLabel;
     d->text->setObjectName("ImportViewText");
@@ -100,12 +109,19 @@ ImportWidget::ImportWidget(QWidget *parent) : DFrame(parent), d_ptr(new ImportWi
     layout->addStretch();
     layout->addWidget(d->logo, 0, Qt::AlignCenter);
     layout->addSpacing(20);
+    layout->addWidget(d->addMusicButton, 0, Qt::AlignCenter);
+    layout->addSpacing(10);
     layout->addWidget(d->importButton, 0, Qt::AlignCenter);
     layout->addSpacing(10);
     layout->addWidget(d->text, 0, Qt::AlignCenter);
     layout->addStretch();
 
     connect(d->importButton, &DPushButton::clicked,
+    this, [ = ] {
+        Q_EMIT this->selectImportDirectory();
+    });
+
+    connect(d->addMusicButton, &DPushButton::clicked,
     this, [ = ] {
         Q_EMIT this->importFiles();
     });
@@ -195,11 +211,13 @@ void ImportWidget::slotTheme(int type)
         QColor sbcolor("#000000");
         sbcolor.setAlphaF(0);
         pl.setColor(DPalette::Shadow, sbcolor);
-        d->importButton->setPalette(pl);
+//        d->importButton->setPalette(pl);
+
+//        d->addMusicButton->setPalette(pl);
 
         QPalette pa = d->text->palette();
         pa.setColor(QPalette::WindowText, "#777777");
-        d->text->setPalette(pa);
+//        d->text->setPalette(pa);
         d->text->setForegroundRole(QPalette::WindowText);
 //        d->text->setForegroundRole(DPalette::TextTips);
     } else {
@@ -211,11 +229,13 @@ void ImportWidget::slotTheme(int type)
         QColor sbcolor("#0091FF");
         sbcolor.setAlphaF(0.1);
         pl.setColor(DPalette::Shadow, sbcolor);
-        d->importButton->setPalette(pl);
+//        d->importButton->setPalette(pl);
+
+//        d->addMusicButton->setPalette(pl);
 
         QPalette pa = d->text->palette();
         pa.setColor(QPalette::WindowText, "#798190");
-        d->text->setPalette(pa);
+//        d->text->setPalette(pa);
         d->text->setForegroundRole(QPalette::WindowText);
 //        d->text->setForegroundRole(DPalette::TextTips);
     }

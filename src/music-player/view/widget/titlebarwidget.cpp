@@ -93,7 +93,8 @@ TitlebarWidget::TitlebarWidget(QWidget *parent) :
     //layout->addWidget(rightWidget, 0,  Qt::AlignCenter);
 
     connect(d->search, &SearchEdit::locateMusic, this, &TitlebarWidget::locateMusicInAllMusiclist);
-    connect(d->search, &SearchEdit::searchText, this, &TitlebarWidget::search);
+    connect(d->search, &SearchEdit::searchText, this, &TitlebarWidget::searchText);
+    connect(d->search, &SearchEdit::searchCand, this, &TitlebarWidget::searchCand);
     connect(d->search, &SearchEdit::searchAborted, this, &TitlebarWidget::searchExited);
 }
 
@@ -145,7 +146,7 @@ void TitlebarWidget::selectPlaylist(PlaylistPtr playlistPtr)
 {
     Q_D(TitlebarWidget);
     if (playlistPtr != d->search->curPlaylistPtr()) {
-        d->search->selectPlaylist(playlistPtr);
+//        d->search->selectPlaylist(playlistPtr);
         d->search->clear();
     }
 }

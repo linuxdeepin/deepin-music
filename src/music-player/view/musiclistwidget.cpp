@@ -22,6 +22,7 @@
 #include "musiclistwidget.h"
 
 #include <QDebug>
+
 #include <QVBoxLayout>
 #include <QFocusEvent>
 
@@ -72,12 +73,23 @@ MusicListWidget::MusicListWidget(QWidget *parent) : DWidget(parent)
     layout->addWidget(m_dataListView, 100);
 
     bool themeFlag = false;
-//    bool themeFlag = false;
-//    int themeType = MusicSettings::value("base.play.theme").toInt(&themeFlag);
-//    if (!themeFlag)
-//        themeType = 1;
+
     int themeType = DGuiApplicationHelper::instance()->themeType();
     slotTheme(themeType);
+
+    connect(this, &MusicListWidget::seaResult,
+            m_dataListView,  &MusicListDataWidget::retResult);
+
+    connect(this, &MusicListWidget::seaResult, this, [ = ]() {
+        m_customizeListview->clearSelected();
+        m_customizeListview->closeAllPersistentEditor();
+
+        m_dataBaseListview->clearSelected();
+        m_dataBaseListview->closeAllPersistentEditor();
+    });
+
+    connect(this, &MusicListWidget::closeSearch,
+            m_dataListView,  &MusicListDataWidget::CloseSearch);
 
     connect(m_addListBtn, &DPushButton::clicked, this, [ = ](bool /*checked*/) {
         qDebug() << "addPlaylist(true);";
@@ -92,9 +104,7 @@ MusicListWidget::MusicListWidget(QWidget *parent) : DWidget(parent)
             m_customizeListview->clearSelected();
             m_customizeListview->closeAllPersistentEditor();
             m_dataListView->selectMusiclistChanged(curPtr);
-//            DUtil::TimerSingleShot(500, [this]() {
-//                Q_EMIT this->hidePlaylist();
-//            });
+
             curPtr->setSearchStr("");
             Q_EMIT selectedPlaylistChange(curPtr);
         }
@@ -107,9 +117,7 @@ MusicListWidget::MusicListWidget(QWidget *parent) : DWidget(parent)
             m_customizeListview->clearSelected();
             m_customizeListview->closeAllPersistentEditor();
             m_dataListView->selectMusiclistChanged(curPtr);
-//            DUtil::TimerSingleShot(500, [this]() {
-//                Q_EMIT this->hidePlaylist();
-//            });
+
             curPtr->setSearchStr("");
             Q_EMIT selectedPlaylistChange(curPtr);
         }
@@ -298,6 +306,7 @@ void MusicListWidget::onSearchText(QString str)
     m_dataListView->onSearchText(str);
 }
 
+
 void MusicListWidget::onMusicPlayed(PlaylistPtr playlist, const MetaPtr meta)
 {
     m_dataListView->onMusicPlayed(playlist, meta);
@@ -334,6 +343,9 @@ void MusicListWidget::keyPressEvent(QKeyEvent *event)
 
 void MusicListWidget::onPlaylistAdded(PlaylistPtr playlist, bool newflag)
 {
+    if (playlist == nullptr) {
+        return;
+    }
     if (playlist->hide()) {
         return;
     }
@@ -408,11 +420,16 @@ void MusicListWidget::onMusicListRemoved(PlaylistPtr playlist, const MetaPtrList
 {
     Q_UNUSED(playlist)
     Q_UNUSED(metalist)
+
     m_dataListView->onMusicListRemoved(playlist, metalist);
     if (playlist->id() == PlayMusicListID && playlist->allmusic().isEmpty()) {
         m_dataBaseListview->setCurPlaylist(nullptr);
         m_customizeListview->setCurPlaylist(nullptr);
     }
+
+    m_dataBaseListview->setCurPlaylist(nullptr);
+    m_customizeListview->setCurPlaylist(nullptr);
+
 }
 
 void MusicListWidget::onMusiclistUpdate()

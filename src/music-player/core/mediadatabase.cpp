@@ -300,6 +300,66 @@ void MediaDatabase::init()
         addPlaylist(playlistMeta);
     }
 
+    playlistMeta.displayName = "Music";
+    playlistMeta.uuid = "musicCand";
+    playlistMeta.icon = "musicCand";
+    playlistMeta.readonly = true;
+    playlistMeta.hide = true;
+    playlistMeta.sortID = 0;
+    if (!playlistExist("musicCand")) {
+        addPlaylist(playlistMeta);
+    }
+
+    playlistMeta.displayName = "Album";
+    playlistMeta.uuid = "albumCand";
+    playlistMeta.icon = "albumCand";
+    playlistMeta.readonly = true;
+    playlistMeta.hide = true;
+    playlistMeta.sortID = 0;
+    if (!playlistExist("albumCand")) {
+        addPlaylist(playlistMeta);
+    }
+
+    playlistMeta.displayName = "Artist";
+    playlistMeta.uuid = "artistCand";
+    playlistMeta.icon = "artistCand";
+    playlistMeta.readonly = true;
+    playlistMeta.hide = true;
+    playlistMeta.sortID = 0;
+    if (!playlistExist("artistCand")) {
+        addPlaylist(playlistMeta);
+    }
+
+    playlistMeta.displayName = "Music";
+    playlistMeta.uuid = "musicResult";
+    playlistMeta.icon = "musicResult";
+    playlistMeta.readonly = true;
+    playlistMeta.hide = true;
+    playlistMeta.sortID = 0;
+    if (!playlistExist("musicResult")) {
+        addPlaylist(playlistMeta);
+    }
+
+    playlistMeta.displayName = "Album";
+    playlistMeta.uuid = "albumResult";
+    playlistMeta.icon = "albumResult";
+    playlistMeta.readonly = true;
+    playlistMeta.hide = true;
+    playlistMeta.sortID = 0;
+    if (!playlistExist("albumResult")) {
+        addPlaylist(playlistMeta);
+    }
+
+    playlistMeta.displayName = "Artist";
+    playlistMeta.uuid = "artistResult";
+    playlistMeta.icon = "artistResult";
+    playlistMeta.readonly = true;
+    playlistMeta.hide = true;
+    playlistMeta.sortID = 0;
+    if (!playlistExist("artistResult")) {
+        addPlaylist(playlistMeta);
+    }
+
     QSqlDatabase::database().commit();
 }
 

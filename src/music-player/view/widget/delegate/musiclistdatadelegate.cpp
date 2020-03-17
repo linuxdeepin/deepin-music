@@ -52,9 +52,10 @@ public:
 
     QWidget *parentWidget;
     QPixmap playing = DHiDPIHelper::loadNxPixmap(":/common/image/jumpto_playing_normal.svg");
-    QString playingIcon = ":/mpimage/light/music1.svg";
-    QString highlightPlayingIcon = ":/mpimage/light/music1.svg";
+//    QString playingIcon = ":/mpimage/light/music1.svg";
+//    QString highlightPlayingIcon = ":/mpimage/light/music1.svg";
     QPixmap hoverPlayImg = DHiDPIHelper::loadNxPixmap(":/mpimage/dark/hover/play_hover.svg");
+    QPixmap hoverSuspendImg = DHiDPIHelper::loadNxPixmap(":/mpimage/dark/hover/suspend_hover.svg");
     QPixmap shadowImg = DHiDPIHelper::loadNxPixmap(":/mpimage/light/shadow.svg");
 
     MusicListDataDelegate *q_ptr;
@@ -130,6 +131,7 @@ void MusicListDataDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
         painter->drawRoundRect(rect/*.adjusted(1, 1, -1, 1)*/, 10, 10);
         painter->restore();
 
+        bool playFlag = false;
         if (PlayMusicTypePtr->extraName.isEmpty()) {
             QColor fillColor(0, 0, 0);
             fillColor.setAlphaF(0.3);
@@ -138,7 +140,6 @@ void MusicListDataDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
                 fillColor.setAlphaF(0.3);
             }
 
-            bool playFlag = false;
             if (listview->playing() != nullptr && (listview->playing()->artist == PlayMusicTypePtr->name
                                                    || (listview->playing()->artist.isEmpty() && !PlayMusicTypePtr->playlistMeta.metas.isEmpty()
                                                        && PlayMusicTypePtr->playlistMeta.metas.begin().value()->artist.isEmpty()))) {
@@ -166,7 +167,11 @@ void MusicListDataDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
 
             //draw playing
             if (playFlag) {
-                painter->drawPixmap(QRect(rect.x() + 64, rect.y() + 96, 22, 18), listview->getAlbumPixmap());
+                if (option.state & QStyle::State_MouseOver) {
+                    painter->drawPixmap(QRect(rect.x() + 60, rect.y() + 88, 40, 40), d->hoverSuspendImg);
+                } else {
+                    painter->drawPixmap(QRect(rect.x() + 64, rect.y() + 96, 22, 18), listview->getAlbumPixmap());
+                }
             }
 
             QRect fillRect(rect.x(), rect.y() + rect.height() - 36, rect.width(), 36);
@@ -192,7 +197,6 @@ void MusicListDataDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
             int curFillSize = fillAllHeight;
             QRect fillBlurRect(rect.x(), rect.y() + rect.height() - fillAllHeight, rect.width(), fillAllHeight);
 
-            bool playFlag = false;
             if (listview->playing() != nullptr && (listview->playing()->album == PlayMusicTypePtr->name
                                                    || (listview->playing()->album.isEmpty() && !PlayMusicTypePtr->playlistMeta.metas.isEmpty()
                                                        && PlayMusicTypePtr->playlistMeta.metas.begin().value()->album.isEmpty())))  {
@@ -206,22 +210,22 @@ void MusicListDataDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
 
             //设置模糊
 
-            QImage t_image = icon.pixmap(rect.width(), rect.height()).toImage();
-            qreal t_ratio = t_image.devicePixelRatioF();
-            curFillSize = curFillSize * t_ratio;
-            t_image  = t_image.copy(0, rect.height() - curFillSize, t_image.width(), curFillSize);
+//            QImage t_image = icon.pixmap(rect.width(), rect.height()).toImage();
+//            qreal t_ratio = t_image.devicePixelRatioF();
+//            curFillSize = curFillSize * t_ratio;
+//            t_image  = t_image.copy(0, rect.height() - curFillSize, t_image.width(), curFillSize);
 
-            QTransform old_transform = painter->transform();
-            painter->translate(fillBlurRect.topLeft());
-            qt_blurImage(painter, t_image, 35, false, false);
-            painter->setTransform(old_transform);
-            //设置模糊
-            painter->fillRect(fillBlurRect, fillColor);
+//            QTransform old_transform = painter->transform();
+//            painter->translate(fillBlurRect.topLeft());
+//            qt_blurImage(painter, t_image, 35, false, false);
+//            painter->setTransform(old_transform);
+//            //设置模糊
+//            painter->fillRect(fillBlurRect, fillColor);
 
             //draw playing
-            if (playFlag)  {
-                painter->drawPixmap(QRect(rect.x() + 64, rect.y() + 82, 22, 18), listview->getAlbumPixmap());
-            }
+//            if (playFlag)  {
+//                painter->drawPixmap(QRect(rect.x() + 64, rect.y() + 82, 22, 18), listview->getAlbumPixmap());
+//            }
 
             QRect fillRect(rect.x(), startHeight, rect.width(), fillAllHeight);
 
@@ -261,29 +265,38 @@ void MusicListDataDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
         }
 
         if (option.state & QStyle::State_MouseOver) {
-            QImage t_image = icon.pixmap(rect.width(), rect.height()).toImage();
-            qreal t_ratio = t_image.devicePixelRatioF();
-            QRect t_imageRect(rect.width() / 2 - 25, rect.height() / 2 - 25, 50 * t_ratio, 50 * t_ratio);
-            t_image  = t_image.copy(t_imageRect);
-            QRect t_hoverRect(rect.x() + 50, rect.y() + 36, 50 * t_ratio, 50 * t_ratio);
+            if (!playlistPtr->playingStatus() || !playFlag ) {
+                QImage t_image = icon.pixmap(rect.width(), rect.height()).toImage();
+                qreal t_ratio = t_image.devicePixelRatioF();
+                QRect t_imageRect(rect.width() / 2 - 25, rect.height() / 2 - 25, 50 * t_ratio, 50 * t_ratio);
+                t_image  = t_image.copy(t_imageRect);
+                QRect t_hoverRect(rect.x() + 50, rect.y() + 36, 50 * t_ratio, 50 * t_ratio);
 
-            QTransform old_transform = painter->transform();
-            painter->translate(t_hoverRect.topLeft());
+                QTransform old_transform = painter->transform();
+                painter->translate(t_hoverRect.topLeft());
 
-            QPainterPath t_imageClipPath;
-            t_imageClipPath.addEllipse(QRect(0, 0, 50, 50));
-            painter->setClipPath(t_imageClipPath);
+                QPainterPath t_imageClipPath;
+                t_imageClipPath.addEllipse(QRect(0, 0, 50, 50));
+                painter->setClipPath(t_imageClipPath);
 
-            qt_blurImage(painter, t_image, 30, false, false);
-            painter->setTransform(old_transform);
-            painter->fillRect(t_hoverRect, fillColor);
+                qt_blurImage(painter, t_image, 30, false, false);
+                painter->setTransform(old_transform);
+                painter->fillRect(t_hoverRect, fillColor);
 
-            QPixmap t_hoverPlayImg(d->hoverPlayImg);
-            t_hoverPlayImg.setDevicePixelRatio(option.widget->devicePixelRatioF());
-//            t_hoverRect.adjust(0, 0, -7 * t_ratio, -7 * t_ratio);
-            QRect t_pixMapRect(rect.x() + 53, rect.y() + 40, 43, 43);
-            QIcon icon(t_hoverPlayImg);
-            painter->drawPixmap(t_pixMapRect, t_hoverPlayImg);
+                QPixmap t_hoverPlayImg(d->hoverPlayImg);
+                t_hoverPlayImg.setDevicePixelRatio(option.widget->devicePixelRatioF());
+                //            t_hoverRect.adjust(0, 0, -7 * t_ratio, -7 * t_ratio);
+                QRect t_pixMapRect(rect.x() + 53, rect.y() + 40, 43, 43);
+                QIcon icon(t_hoverPlayImg);
+                painter->drawPixmap(t_pixMapRect, t_hoverPlayImg);
+            } /*else {
+                QPixmap t_hoverPlayImg(d->hoverSuspendImg);
+                t_hoverPlayImg.setDevicePixelRatio(option.widget->devicePixelRatioF());
+                //            t_hoverRect.adjust(0, 0, -7 * t_ratio, -7 * t_ratio);
+                QRect t_pixMapRect(rect.x() + 53, rect.y() + 40, 43, 43);
+                QIcon icon(t_hoverPlayImg);
+                painter->drawPixmap(t_pixMapRect, t_hoverPlayImg);
+            }*/
         }
 
         painter->fillRect(option.rect, t_fillBrush);

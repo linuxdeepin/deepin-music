@@ -179,7 +179,7 @@ bool Playlist::isLast(const MetaPtr meta) const
 
 bool Playlist::contains(const MetaPtr meta) const
 {
-//    qDebug() << meta->hash << playlistMeta.metas;
+    //    qDebug() << meta->hash << playlistMeta.metas;
     return !meta.isNull() && playlistMeta.metas.contains(meta->hash);
 }
 
@@ -315,6 +315,21 @@ int Playlist::viewMode() const
     return viewModeFlag;
 }
 
+void Playlist::clearTypePtr()
+{
+    if (playMusicTypePtrListData.sortMetas.size() > 0) {
+        playMusicTypePtrListData.sortMetas.clear();
+        playMusicTypePtrListData.metas.clear();
+    }
+}
+
+void Playlist::appendMusicTypePtrListData(PlayMusicTypePtr musicTypePtr)
+{
+    playMusicTypePtrListData.sortMetas.append(musicTypePtr->name);
+    playMusicTypePtrListData.metas.insert(musicTypePtr->name, musicTypePtr);
+}
+
+
 void Playlist::load()
 {
     QMap<int, QString> sortHashs;
@@ -416,7 +431,7 @@ void Playlist::updateMeta(const MetaPtr meta)
 {
     Q_ASSERT(!meta.isNull());
     if (!playlistMeta.metas.contains(meta->hash)) {
-//        qWarning() << "no such id in playlist" << meta->hash << meta->localPath << listmeta->displayName;
+        //        qWarning() << "no such id in playlist" << meta->hash << meta->localPath << listmeta->displayName;
         return;
     }
 
@@ -476,7 +491,7 @@ MetaPtr Playlist::removeOneMusic(const MetaPtr meta)
         }
     }
     if (!playlistMeta.metas.contains(meta->hash)) {
-//        qWarning() << "no such id in playlist" << meta->hash << meta->localPath << listmeta->displayName;
+        //        qWarning() << "no such id in playlist" << meta->hash << meta->localPath << listmeta->displayName;
         return MetaPtr();
     }
 
@@ -508,13 +523,13 @@ inline bool startWithHanzi(const QString &text)
 
 bool lessCompareByString(const QString &str1, const QString &str2)
 {
-//    if (startWithHanzi(str1)) {
-//        if (!startWithHanzi(str2)) {
-//            return false;
-//        }
-//    } else if (startWithHanzi(str2)) {
-//        return true;
-//    }
+    //    if (startWithHanzi(str1)) {
+    //        if (!startWithHanzi(str2)) {
+    //            return false;
+    //        }
+    //    } else if (startWithHanzi(str2)) {
+    //        return true;
+    //    }
 
     QString curStr1(str1), curStr2(str2);
     QStringList strList1 = DMusic::PinyinSearch::simpleChineseSplit(curStr1);
@@ -546,7 +561,7 @@ bool lessThanTitle(const MetaPtr v1, const MetaPtr v2)
     if (v2->title.isEmpty()) {
         return true;
     }
-//    qDebug() << v1->title << v2->title << collator.compare(v1->title , v2->title);
+    //    qDebug() << v1->title << v2->title << collator.compare(v1->title , v2->title);
     return lessCompareByString(v1->title, v2->title);
 }
 
@@ -798,6 +813,7 @@ void Playlist::metaListToPlayMusicTypePtrList(Playlist::SortType sortType, const
                 t_playMusicTypePtr->playlistMeta.sortMetas << meta->hash;
                 t_playMusicTypePtr->playlistMeta.metas.insert(meta->hash, meta);
                 playMusicTypePtrListData.sortMetas << artistStr;
+
                 playMusicTypePtrListData.metas.insert(artistStr, t_playMusicTypePtr);
             }
         }
@@ -818,7 +834,7 @@ void Playlist::playMusicTypeToMeta(QString name, QStringList sortMetas)
             }
         }
     }
-//    appendMusicList(mlist);
+    //    appendMusicList(mlist);
     MetaPtrList newMetalist;
     for (auto meta : mlist) {
         // TODO: Get called multiple times, maybe because multi-thread. Should find out why.
