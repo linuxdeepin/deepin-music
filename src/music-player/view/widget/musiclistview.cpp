@@ -505,8 +505,10 @@ void MusicListView::dropEvent(QDropEvent *event)
         if (source != nullptr) {
             MetaPtrList metalist;
             for (auto index : source->selectionModel()->selectedIndexes()) {
-                auto meta = source->playMetaPtrList()[index.row()];
-                metalist.append(meta);
+                if (index.row() >= 0 && index.row() < source->playMetaPtrList().size()) {
+                    auto meta = source->playMetaPtrList()[index.row()];
+                    metalist.append(meta);
+                }
             }
 
             if (!metalist.isEmpty())
