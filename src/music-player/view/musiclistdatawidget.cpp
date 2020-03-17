@@ -361,7 +361,7 @@ void MusicListDataWidgetPrivate::initData(PlaylistPtr playlist, bool selectFlag,
         if (updateFlag == true) {
 
             if ( playlist->id() == ArtistResultListID || playlist->id() == AlbumResultListID) {
-                // musicSearchDropdown->hide();
+                musicSearchDropdown->hide();
             }
 
             if (updatePlaylist->id() == MusicResultListID) {
