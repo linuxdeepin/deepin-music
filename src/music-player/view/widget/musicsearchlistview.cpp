@@ -41,6 +41,7 @@ public:
     PlayMusicTypePtrList        searchMusicTypePtrList;
     MetaPtrList                 searchMetaPtrPtrList;
     int                         themeType     = 1;
+    int                         m_CurrentIndex = 0;
     QString                     defaultCover = ":/images/logo.svg";
     QPixmap                     playingPixmap = QPixmap(":/images/logo.svg");
     QPixmap                     sidebarPixmap = QPixmap(":/images/logo.svg");
@@ -105,6 +106,12 @@ int MusicSearchListview::listSize()
 {
     Q_D(MusicSearchListview);
     return d->searchMusicTypePtrList.size();
+}
+
+int MusicSearchListview::getIndexInt()const
+{
+    Q_D(const MusicSearchListview);
+    return d->m_CurrentIndex;
 }
 
 void MusicSearchListview::onMusiclistChanged(QString text, PlaylistPtr playlist)
@@ -200,15 +207,8 @@ QString MusicSearchListview::getSearchText()const
 
 void MusicSearchListview::setCurrentIndexInt(int row)
 {
-    Q_D(const MusicSearchListview);
-    if (row == -1) {
-        setCurrentIndex(QModelIndex());
-    } else {
-        auto mIndex = d->model->index(row, 0);
-        PlaylistPtr playList = dynamic_cast<MusicSearchListview *>(mIndex.model()->parent())->playlist();
-        setCurrentIndex(mIndex);
-
-    }
+    Q_D(MusicSearchListview);
+    d->m_CurrentIndex = row;
 }
 
 void MusicSearchListview::setPlayPixmap(QPixmap pixmap, QPixmap sidebarPixmap, QPixmap albumPixmap)

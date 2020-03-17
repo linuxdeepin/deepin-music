@@ -37,8 +37,8 @@ public:
     PlaylistPtr playlist() const;
     int rowCount();
     int listSize();
+    int getIndexInt()const;
     void onMusiclistChanged(QString text, PlaylistPtr playlist);
-
     MetaPtrList playMetaList() const;
     PlayMusicTypePtrList playMusicTypePtrList() const;
 

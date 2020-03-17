@@ -85,6 +85,17 @@ bool MusicSearchListDelegate::editorEvent(QEvent *event, QAbstractItemModel *mod
 void MusicSearchListDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
     Q_D(const MusicSearchListDelegate);
+    /********************设置基础颜色***************************/
+    QColor backColor("#FFFFFF");
+    backColor.setAlphaF(0.2);
+    QColor textColor("#000000 ");
+    QColor lightColor("#0081FF");
+    QColor grandColor("#003300 ");
+
+    QColor alternateBaseColor("#000000");
+    alternateBaseColor.setAlphaF(0.2);
+    QColor selecteColor("#000000");
+
     //获取当前行信息
     auto listview = qobject_cast<const MusicSearchListview *>(option.widget);
     PlaylistPtr playlistPtr = listview->playlist();
@@ -103,12 +114,35 @@ void MusicSearchListDelegate::paint(QPainter *painter, const QStyleOptionViewIte
             return;
         }
     }
+    //主题改变需要修改color
+    if (listview->getThemeType() == 2) {
+        backColor = QColor("#C0C6D4");
+        textColor = QColor("#C0C6D4");
+        //        grandColor.setAlphaF(0.5);
+    }
 
     //绘制选中状态
     if (option.state & QStyle::State_MouseOver) {
         painter->save();
         painter->setPen(Qt::NoPen);
-        QColor hovertColor(option.palette.shadow().color());
+        QColor hovertColor(option.palette.highlight().color());
+        textColor = QColor("#FFFFFF");
+        lightColor = option.palette.highlightedText().color();
+        if (option.state & QStyle::State_Selected)
+            hovertColor.setAlphaF(0.2);
+        painter->setBrush(hovertColor);
+        QRect selecteColorRect = option.rect.adjusted(0, 0, 0, 0);
+        painter->drawRoundedRect(selecteColorRect, 8, 8);
+        painter->restore();
+    }
+    //绘制上下键选中
+    if (index.row() == listview->getIndexInt()
+            && listview->getIndexInt() >= 0) {
+        painter->save();
+        painter->setPen(Qt::NoPen);
+        QColor hovertColor(option.palette.highlight().color());
+        textColor = QColor("#FFFFFF");
+        lightColor = option.palette.highlightedText().color();
         if (option.state & QStyle::State_Selected)
             hovertColor.setAlphaF(0.2);
         painter->setBrush(hovertColor);
@@ -119,24 +153,6 @@ void MusicSearchListDelegate::paint(QPainter *painter, const QStyleOptionViewIte
 
     painter->setRenderHint(QPainter::Antialiasing);
     painter->setRenderHint(QPainter::HighQualityAntialiasing);
-
-    /********************设置基础颜色***************************/
-    QColor backColor("#FFFFFF");
-    backColor.setAlphaF(0.2);
-    QColor textColor("#000000 ");
-    QColor grandColor("#003300 ");
-
-    QColor alternateBaseColor("#000000");
-    alternateBaseColor.setAlphaF(0.2);
-    QColor selecteColor("#000000");
-    QColor lightColor("#0081FF");
-
-    //主题改变需要修改color
-    if (listview->getThemeType() == 2) {
-        backColor = QColor("#C0C6D4");
-        textColor = QColor("#C0C6D4");
-        //        grandColor.setAlphaF(0.5);
-    }
 
     /***********************设置字体***************************/
     QFont textFont = option.font;
@@ -199,7 +215,7 @@ void MusicSearchListDelegate::paint(QPainter *painter, const QStyleOptionViewIte
         QPixmap image;
         image.loadFromData(playMusicTypePtr->icon);
         painter->save();
-        QRect imageRect(0, index.row() * 34, 24, 24);
+        QRect imageRect(0, index.row() * 34 + 2, 24, 24);
         if (playlistPtr->id() == ArtistCandListID) {
             QPainterPath clipPath;
             clipPath.addEllipse(imageRect.adjusted(0, 0, 0, 0));

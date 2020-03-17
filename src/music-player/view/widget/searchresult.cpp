@@ -166,8 +166,6 @@ void SearchResult::autoResize()
 void SearchResult::setSearchString(const QString &str)
 {
     m_MusicView->setProperty("searchString", str);
-    //    QModelIndex indexOfTheCellIWant = m_MusicView->;
-    //    m_MusicView->setCurrentIndex();
 }
 
 void SearchResult::selectUp()
@@ -196,6 +194,9 @@ void SearchResult::selectUp()
         m_MusicView->setCurrentIndexInt(-1);
         m_ArtistView->setCurrentIndexInt(-1);
     }
+    m_MusicView->repaint();
+    m_ArtistView->repaint();
+    m_AlbumView->repaint();
     getSearchStr();
 }
 
@@ -225,6 +226,9 @@ void SearchResult::selectDown()
         m_MusicView->setCurrentIndexInt(-1);
         m_ArtistView->setCurrentIndexInt(-1);
     }
+    m_MusicView->repaint();
+    m_ArtistView->repaint();
+    m_AlbumView->repaint();
     getSearchStr();
 }
 
@@ -260,6 +264,7 @@ void SearchResult::selectPlaylist(PlaylistPtr playlistPtr)
 
 void SearchResult::onSearchCand(QString text, PlaylistPtr playlistPtr)
 {
+    m_CurrentIndex = -1;
     if (playlistPtr->id() == MusicCandListID) {
         m_MusicView->onMusiclistChanged(text, playlistPtr);
     }
@@ -318,29 +323,25 @@ void SearchResult::getSearchStr()
     if (m_CurrentIndex < 0) {
         return;
     }
-    QModelIndex index;
+    QString text;
+    QString id;
     if (m_CurrentIndex < m_MusicView->rowCount()) {
-        index = m_MusicView->currentIndex();
+        text = m_MusicView->playlist()->allmusic().at(m_CurrentIndex)->title;
+        id = MusicResultListID;
     } else if (m_CurrentIndex >= m_MusicView->rowCount() - 1
                && m_CurrentIndex < (m_MusicView->rowCount() + m_ArtistView->rowCount())) {
-        index = m_ArtistView->currentIndex();
+        text = m_ArtistView->playlist()->playMusicTypePtrList().at(m_CurrentIndex - m_MusicView->rowCount())->name;
+        id = ArtistResultListID;
     } else if (m_CurrentIndex >= m_MusicView->rowCount() + m_ArtistView->rowCount() - 1
                && m_CurrentIndex < (m_MusicView->rowCount() + m_ArtistView->rowCount() + m_AlbumView->rowCount())) {
-        index = m_AlbumView->currentIndex();
+        text = m_AlbumView->playlist()->playMusicTypePtrList().at(m_CurrentIndex
+                                                                  - m_MusicView->rowCount()
+                                                                  - m_ArtistView->rowCount() )->name;
+        id = AlbumResultListID;
     } else {
         Q_EMIT this->searchText2("", "");
+        return;
     }
 
-    PlaylistPtr playList = dynamic_cast<MusicSearchListview *>(index.model()->parent())->playlist();
-    QString currentId = playList->id();
-    int row = index.row();
-    if (currentId == MusicCandListID) {
-        Q_EMIT  this->searchText2(MusicResultListID, playList->allmusic().at(row)->title);
-    }
-    if (currentId == AlbumCandListID) {
-        Q_EMIT this->searchText2(AlbumResultListID, playList->playMusicTypePtrList().at(row)->name);
-    }
-    if (currentId == ArtistCandListID) {
-        Q_EMIT this->searchText2(ArtistResultListID, playList->playMusicTypePtrList().at(row)->name);
-    }
+    Q_EMIT  this->searchText2(id, text);
 }

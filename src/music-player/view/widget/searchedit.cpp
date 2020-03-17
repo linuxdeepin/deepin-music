@@ -96,6 +96,11 @@ void SearchEdit::keyPressEvent(QKeyEvent *event)
     if (event->key() == Qt::Key_Down) {
         m_result->selectDown();
     }
+    if (event->key() == Qt::Key_Backspace) {
+//        m_result->selectDown();
+        int a = 5;
+    }
+
 
     DSearchEdit::keyPressEvent(event);
 }
@@ -127,6 +132,9 @@ void SearchEdit::onFocusOut()
 void SearchEdit::onTextChanged()
 {
     m_CurrentId = "";
+    if (m_LastText.size() == 1 && this->text().size() == 0) {
+//        setFocus();
+    }
     auto text = QString(this->text()).remove(" ").remove("\r").remove("\n");
     if (m_LastText == text) {
         return;
