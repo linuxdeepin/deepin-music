@@ -317,6 +317,9 @@ void SearchResult::itemClicked(QModelIndex index)
 
 void SearchResult::getSearchStr()
 {
+    if (m_CurrentIndex < 0) {
+        return;
+    }
     QModelIndex index;
     if (m_CurrentIndex < m_MusicView->rowCount()) {
         index = m_MusicView->currentIndex();
