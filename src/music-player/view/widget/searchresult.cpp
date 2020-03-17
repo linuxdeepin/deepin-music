@@ -172,7 +172,6 @@ void SearchResult::setSearchString(const QString &str)
 
 void SearchResult::selectUp()
 {
-    qDebug() << "===>selectUp" << endl;
     if (m_Count == 0) {
         return;
     }
@@ -202,7 +201,6 @@ void SearchResult::selectUp()
 
 void SearchResult::selectDown()
 {
-    qDebug() << "===>selectDown" << endl;
     if (m_Count == 0) {
         return;
     }
