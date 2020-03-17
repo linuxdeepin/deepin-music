@@ -126,6 +126,7 @@ void SearchEdit::onFocusOut()
 
 void SearchEdit::onTextChanged()
 {
+    m_CurrentId = "";
     auto text = QString(this->text()).remove(" ").remove("\r").remove("\n");
     if (m_LastText == text) {
         return;
