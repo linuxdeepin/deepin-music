@@ -357,10 +357,11 @@ void MusicListDataWidgetPrivate::initData(PlaylistPtr playlist, bool selectFlag,
         musicListView->hide();
         tabWidget->show();
 
+
         if (updateFlag == true) {
 
             if ( playlist->id() == ArtistResultListID || playlist->id() == AlbumResultListID) {
-                musicSearchDropdown->hide();
+                // musicSearchDropdown->hide();
             }
 
             if (updatePlaylist->id() == MusicResultListID) {
@@ -1892,10 +1893,12 @@ void MusicListDataWidget::retResult(QString searchText, QList<PlaylistPtr> resul
         if (d->songListView->rowCount() == 0 && d->singerListView->rowCount() == 0 && d->albListView->rowCount() == 0 ) {
             d->initData(retdata, false, "noSearchResults");
         } else {
-            d->updateFlag = true;
 
             /*-----Load the interface------*/
             d->initData(retdata, false, search);
+
+            /*-------Search for signal-----*/
+            d->updateFlag = true;
 
             tabwidgetInfo(MusicPlaylists);
         }
