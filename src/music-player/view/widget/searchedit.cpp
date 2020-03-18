@@ -64,7 +64,7 @@ SearchEdit::SearchEdit(QWidget *parent) : DSearchEdit(parent)
     connect(this, &SearchEdit::cursorPositionChanged,
     this, [ = ](int index1, int index2) {
         if (index1 == 1 && index2 == 0) {
-//            onFocusOut();
+            searchAborted();
         }
     });
 }
@@ -103,12 +103,6 @@ void SearchEdit::keyPressEvent(QKeyEvent *event)
     if (event->key() == Qt::Key_Down) {
         m_result->selectDown();
     }
-    if (event->key() == Qt::Key_Backspace) {
-//        m_result->selectDown();
-        int a = 5;
-    }
-
-
     DSearchEdit::keyPressEvent(event);
 }
 
