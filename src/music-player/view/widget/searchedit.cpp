@@ -63,7 +63,7 @@ SearchEdit::SearchEdit(QWidget *parent) : DSearchEdit(parent)
     });
     connect(this, &SearchEdit::cursorPositionChanged,
     this, [ = ](int index1, int index2) {
-        if (index1 == 1 && index2 == 0) {
+        if (index1 > 0 && index2 == 0) {
             searchAborted();
         }
     });
