@@ -1776,6 +1776,12 @@ void MusicListDataWidget::changePicture(QPixmap pixmap, QPixmap sidebarPixmap, Q
         d->albumListView->setPlayPixmap(pixmap, sidebarPixmap, albumPixmap);
     } else if (d->artistListView->isVisible()) {
         d->artistListView->setPlayPixmap(pixmap, sidebarPixmap, albumPixmap);
+    } else if (d->albListView->isVisible()) {
+        d->albListView->setPlayPixmap(pixmap, sidebarPixmap, albumPixmap);
+    } else if (d->singerListView->isVisible()) {
+        d->singerListView->setPlayPixmap(pixmap, sidebarPixmap, albumPixmap);
+    } else if (d->songListView->isVisible()) {
+        d->songListView->setPlayPixmap(pixmap, sidebarPixmap, albumPixmap);
     } else {
         d->musicListView->setPlayPixmap(pixmap, sidebarPixmap, albumPixmap);
     }
