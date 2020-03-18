@@ -367,6 +367,7 @@ void PresenterPrivate::notifyMusicPlayed(PlaylistPtr playlist, const MetaPtr met
 bool Presenter::containsStr(QString searchText, QString text)
 {
     //filter
+    text = QString(text).remove(" ").remove("\r").remove("\n");
     bool chineseFlag = false;
     for (auto ch : searchText) {
         if (DMusic::PinyinSearch::isChinese(ch)) {
