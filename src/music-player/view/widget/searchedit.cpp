@@ -57,12 +57,14 @@ SearchEdit::SearchEdit(QWidget *parent) : DSearchEdit(parent)
     this, [ = ](bool onFocus) {
         if (!onFocus) {
             m_result->hide();
-//            if (this->text().isEmpty())
-//                onReturnPressed();
-            //            else
-            //                clear();
         } else {
             onTextChanged();
+        }
+    });
+    connect(this, &SearchEdit::cursorPositionChanged,
+    this, [ = ](int index1, int index2) {
+        if (index1 == 1 && index2 == 0) {
+//            onFocusOut();
         }
     });
 }
@@ -84,6 +86,11 @@ void SearchEdit::setResultWidget(SearchResult *result)
     connect(m_result, &SearchResult::searchText2,
     this, [ = ](const QString & id, const QString & text) {
         searchText2(id, text);
+    });
+
+    connect(m_result, &SearchResult::searchText3,
+    this, [ = ](const QString & id, const QString & text) {
+        searchText3(id, text);
     });
 }
 
@@ -109,6 +116,15 @@ void SearchEdit::searchText2(QString id, QString text)
 {
     m_CurrentId = id;
     m_Text = text;
+    setText(m_Text);
+    Q_EMIT this->searchText(m_CurrentId, QString(m_Text).remove(" ").remove("\r").remove("\n"));
+}
+
+void SearchEdit::searchText3(QString id, QString text)
+{
+    m_CurrentId = id;
+    m_Text = text;
+    setText(m_Text);
 }
 
 void SearchEdit::onFocusIn()
@@ -131,11 +147,11 @@ void SearchEdit::onFocusOut()
 
 void SearchEdit::onTextChanged()
 {
-    m_CurrentId = "";
-    if (m_LastText.size() == 1 && this->text().size() == 0) {
-//        setFocus();
-    }
     auto text = QString(this->text()).remove(" ").remove("\r").remove("\n");
+    if (m_Text == this->text()) {
+        return;
+    }
+    m_CurrentId = "";
     if (m_LastText == text) {
         return;
     }
@@ -170,7 +186,7 @@ void SearchEdit::onReturnPressed()
     if (m_CurrentId.size() == 0) {
         Q_EMIT this->searchText("", text);
     } else {
-        Q_EMIT this->searchText(m_CurrentId, m_Text);
+        Q_EMIT this->searchText(m_CurrentId, QString(m_Text).remove(" ").remove("\r").remove("\n"));
     }
 }
 

@@ -305,15 +305,14 @@ void SearchResult::itemClicked(QModelIndex index)
     PlaylistPtr playList = dynamic_cast<MusicSearchListview *>(index.model()->parent())->playlist();
     QString currentId = playList->id();
     int row = index.row();
-    Q_EMIT this->searchText2("", "");
     if (currentId == MusicCandListID) {
-        Q_EMIT this->searchText(MusicResultListID, playList->allmusic().at(row)->title);
+        Q_EMIT this->searchText2(MusicResultListID, playList->allmusic().at(row)->title);
     }
     if (currentId == AlbumCandListID) {
-        Q_EMIT this->searchText(AlbumResultListID, playList->playMusicTypePtrList().at(row)->name);
+        Q_EMIT this->searchText2(AlbumResultListID, playList->playMusicTypePtrList().at(row)->name);
     }
     if (currentId == ArtistCandListID) {
-        Q_EMIT this->searchText(ArtistResultListID, playList->playMusicTypePtrList().at(row)->name);
+        Q_EMIT this->searchText2(ArtistResultListID, playList->playMusicTypePtrList().at(row)->name);
     }
 
 }
@@ -339,9 +338,9 @@ void SearchResult::getSearchStr()
                                                                   - m_ArtistView->rowCount() )->name;
         id = AlbumResultListID;
     } else {
-        Q_EMIT this->searchText2("", "");
+        Q_EMIT this->searchText3("", "");
         return;
     }
 
-    Q_EMIT  this->searchText2(id, text);
+    Q_EMIT  this->searchText3(id, text);
 }

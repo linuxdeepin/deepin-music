@@ -56,6 +56,7 @@ protected:
 
 private:
     void searchText2(QString id, QString text);
+    void searchText3(QString id, QString text);
     SearchResult    *m_result = nullptr;
     PlaylistPtr      playlist = nullptr;
     QString         m_CurrentId;
