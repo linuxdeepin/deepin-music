@@ -140,10 +140,12 @@ void MusicListDataDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
                 fillColor.setAlphaF(0.3);
             }
 
-            if (listview->playing() != nullptr && (listview->playing()->artist == PlayMusicTypePtr->name
-                                                   || listview->playing()->album == PlayMusicTypePtr->name
-                                                   || (listview->playing()->artist.isEmpty() && !PlayMusicTypePtr->playlistMeta.metas.isEmpty()
-                                                       && PlayMusicTypePtr->playlistMeta.metas.begin().value()->artist.isEmpty()))) {
+            if (listview->playing() != nullptr
+                    && listview->playingState()
+                    && (listview->playing()->artist == PlayMusicTypePtr->name
+                        || listview->playing()->album == PlayMusicTypePtr->name
+                        || (listview->playing()->artist.isEmpty() && !PlayMusicTypePtr->playlistMeta.metas.isEmpty()
+                            && PlayMusicTypePtr->playlistMeta.metas.begin().value()->artist.isEmpty()))) {
                 playFlag = true;
             }
 
@@ -198,10 +200,12 @@ void MusicListDataDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
             int curFillSize = fillAllHeight;
             QRect fillBlurRect(rect.x(), rect.y() + rect.height() - fillAllHeight, rect.width(), fillAllHeight);
 
-            if (listview->playing() != nullptr && (listview->playing()->artist == PlayMusicTypePtr->name
-                                                   || listview->playing()->album == PlayMusicTypePtr->name
-                                                   || (listview->playing()->artist.isEmpty() && !PlayMusicTypePtr->playlistMeta.metas.isEmpty()
-                                                       && PlayMusicTypePtr->playlistMeta.metas.begin().value()->artist.isEmpty()))) {
+            if (listview->playing() != nullptr
+                    && listview->playingState()
+                    && (listview->playing()->artist == PlayMusicTypePtr->name
+                        || listview->playing()->album == PlayMusicTypePtr->name
+                        || (listview->playing()->artist.isEmpty() && !PlayMusicTypePtr->playlistMeta.metas.isEmpty()
+                            && PlayMusicTypePtr->playlistMeta.metas.begin().value()->artist.isEmpty()))) {
                 playFlag = true;
             }
 
@@ -510,9 +514,11 @@ void MusicListDataDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
             auto w = option.rect.width() - 0 - tailwidth;
 
             //num
-            if (listview->playing() != nullptr && (listview->playing()->album == PlayMusicTypePtr->name
-                                                   || (listview->playing()->album.isEmpty() && !PlayMusicTypePtr->playlistMeta.metas.isEmpty()
-                                                       && PlayMusicTypePtr->playlistMeta.metas.begin().value()->album.isEmpty()))) {
+            if (listview->playing() != nullptr
+                    && listview->playingState()
+                    && (listview->playing()->album == PlayMusicTypePtr->name
+                        || (listview->playing()->album.isEmpty() && !PlayMusicTypePtr->playlistMeta.metas.isEmpty()
+                            && PlayMusicTypePtr->playlistMeta.metas.begin().value()->album.isEmpty()))) {
                 if (option.state & QStyle::State_Selected) {
                     nameColor = option.palette.highlightedText().color();
                     otherColor = option.palette.highlightedText().color();

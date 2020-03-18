@@ -135,11 +135,37 @@ MusicListDataView::MusicListDataView(QWidget *parent)
             return;
         }
         auto PlayMusicTypePtr = playMusicTypePtrList[index.row()];
-
         playlist()->playMusicTypeToMeta(PlayMusicTypePtr->name);
-        auto curtMeta = playlist()->first();
-        if (curtMeta != nullptr) {
-            Q_EMIT playMedia(curtMeta);
+
+        if (curPlaylist->id() == ArtistResultListID
+                || curPlaylist->id() == ArtistMusicListID) {
+            if (this->playing()->artist != PlayMusicTypePtr->name) {
+                auto curtMeta = playlist()->first();
+                Q_EMIT playMedia(curtMeta);
+                setPlaying(curtMeta);
+            } else {
+                auto curtMeta = playlist()->playing();
+                if (!playlist()->playingStatus()) {
+                    Q_EMIT resume(curtMeta);
+                } else {
+                    Q_EMIT pause(curPlaylist, curtMeta);
+                }
+            }
+        }
+        if (curPlaylist->id() == AlbumMusicListID
+                || curPlaylist->id() == AlbumResultListID) {
+            if (this->playing()->album != PlayMusicTypePtr->name) {
+                auto curtMeta = playlist()->first();
+                Q_EMIT playMedia(curtMeta);
+                setPlaying(curtMeta);
+            } else {
+                auto curtMeta = playlist()->playing();
+                if (!playlist()->playingStatus()) {
+                    Q_EMIT resume(curtMeta);
+                } else {
+                    Q_EMIT pause(curPlaylist, curtMeta);
+                }
+            }
         }
     });
 
@@ -249,6 +275,11 @@ MetaPtr MusicListDataView::hoverin() const
 {
     Q_D(const MusicListDataView);
     return d->hoverin;
+}
+
+bool MusicListDataView::playingState() const
+{
+    return playlist()->playingStatus();
 }
 
 void MusicListDataView::showContextMenu(const QPoint &pos, PlaylistPtr selectedPlaylist, PlaylistPtr favPlaylist, QList<PlaylistPtr> newPlaylists)

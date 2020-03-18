@@ -45,6 +45,7 @@ public:
     void setPlaying(const MetaPtr);
     MetaPtr playing() const;
     MetaPtr hoverin() const;
+    bool  playingState()const;
 
     void showContextMenu(const QPoint &pos,
                          PlaylistPtr selectedPlaylist,
