@@ -137,21 +137,15 @@ int main(int argc, char *argv[])
 
     MusicSettings::init();
 
-    // set theme
-//    qDebug() << "TRACE:" << "set theme";
-//    bool isOk = false;
-//    int theme = MusicSettings::value("base.play.theme").toInt(&isOk);
-//    if (!isOk)
-//        theme = 1;
-//    DGuiApplicationHelper::instance()->setPaletteType((DGuiApplicationHelper::ColorType)theme);
     DApplicationSettings saveTheme;
 
-    // DMainWindow must create on main function, so it can deconstruction before QApplication
+    /*-DMainWindow must create on main function, so it can deconstruction before QApplication-*/
+
     MainFrame mainframe;
     MusicApp *music = new MusicApp(&mainframe);
     music->initUI();
 
-    //Player::instance()->init();
+    /*---Player instance init---*/
 
     music->initConnection();
 
@@ -185,5 +179,5 @@ int main(int argc, char *argv[])
     QObject::connect(DGuiApplicationHelper::instance(), &DGuiApplicationHelper::themeTypeChanged,
                      &mainframe, &MainFrame::slotTheme);
     return app.exec();
-    
+
 }

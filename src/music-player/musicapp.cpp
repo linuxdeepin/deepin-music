@@ -246,11 +246,16 @@ void MusicApp::initUI()
 {
     Q_D(MusicApp);
 
-//    auto mediaCount = AppSettings::instance()->value("base.play.media_count").toInt();
-//    auto mediaCount = 1;
+    /*
+     *auto mediaCount = AppSettings::instance()->value("base.play.media_count").toInt();
+     *auto mediaCount = 1;
+     *d->playerFrame->initUI(0 != mediaCount);
+     */
+
     d->playerFrame->initUI(true);
+
     qDebug() << "TRACE:" << "create MainFrame";
-//    d->playerFrame->initUI(0 != mediaCount);
+
     show();
 }
 

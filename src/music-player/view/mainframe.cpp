@@ -323,7 +323,7 @@ void MainFramePrivate::initUI(bool showLoading)
     q->setMinimumSize(QSize(800, 600));
     q->setFocusPolicy(Qt::ClickFocus);
 
-    //    titlebar->setBackgroundTransparent(true);
+    //titlebar->setBackgroundTransparent(true);
     //overrideTitlebarStyle();
 
     centralWidget = new QWidget(q);
@@ -354,13 +354,13 @@ void MainFramePrivate::initUI(bool showLoading)
     footer->hide();
 
     infoDialog = new InfoDialog(q);
-    //    bool themeFlag = false;
-    //    int themeType = MusicSettings::value("base.play.theme").toInt(&themeFlag);
-    //    if (!themeFlag)
-    //        themeType = 1;
+
     int themeType = DGuiApplicationHelper::instance()->themeType();
     infoDialog->setThemeType(themeType);
     infoDialog->hide();
+#if 0
+    footer->show();
+#endif
 }
 
 void MainFramePrivate::postInitUI()
@@ -698,7 +698,9 @@ MainFrame::~MainFrame()
 void MainFrame::initUI(bool showLoading)
 {
     Q_D(MainFrame);
+
     d->initUI(showLoading);
+
     d->initMenu();
 }
 

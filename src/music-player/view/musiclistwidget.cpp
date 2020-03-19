@@ -105,7 +105,6 @@ MusicListWidget::MusicListWidget(QWidget *parent) : DWidget(parent)
             m_customizeListview->closeAllPersistentEditor();
             m_dataListView->selectMusiclistChanged(curPtr);
 
-            qDebug() << "==========> MusicListView::pressed" << endl;
             curPtr->setSearchStr("");
             Q_EMIT selectedPlaylistChange(curPtr);
         }

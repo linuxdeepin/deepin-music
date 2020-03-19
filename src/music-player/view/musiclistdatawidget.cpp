@@ -357,9 +357,7 @@ void MusicListDataWidgetPrivate::initData(PlaylistPtr playlist, bool selectFlag,
         musicListView->hide();
         tabWidget->show();
 
-
         if (updateFlag == true) {
-
             if ( playlist->id() == ArtistResultListID || playlist->id() == AlbumResultListID) {
                 musicSearchDropdown->hide();
             }
@@ -1901,7 +1899,7 @@ void MusicListDataWidget::retResult(QString searchText, QList<PlaylistPtr> resul
         } else {
 
             /*-----Load the interface------*/
-            d->initData(retdata, false, search);
+            d->initData(MusicPlaylists, false, search);
 
             /*-------Search for signal-----*/
             d->updateFlag = true;
