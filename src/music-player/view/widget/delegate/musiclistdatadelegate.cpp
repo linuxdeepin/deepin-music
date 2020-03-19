@@ -633,21 +633,35 @@ void MusicListDataDelegate::setModelData(QWidget *editor, QAbstractItemModel *mo
 bool MusicListDataDelegate::editorEvent(QEvent *event, QAbstractItemModel *model, const QStyleOptionViewItem &option, const QModelIndex &index)
 {
     auto listview = qobject_cast<const MusicListDataView *>(option.widget);
+    int borderWidth = 10;
+    QRect rect = option.rect.adjusted(borderWidth, borderWidth, -borderWidth, -borderWidth);
     if (index.isValid() && listview->viewMode() == QListView::IconMode && event->type() == QEvent::MouseButtonPress) {
-        int borderWidth = 10;
-        QRect rect = option.rect.adjusted(borderWidth, borderWidth, -borderWidth, -borderWidth);
-        QRect t_hoverRect(rect.x() + 50, rect.y() + 36, 50, 50);
+        if (!listview->playingState()) {
+            QRect t_hoverRect(rect.x() + 50, rect.y() + 36, 50, 50);
 
-        QPainterPath t_imageClipPath;
-        t_imageClipPath.addEllipse(QRect(rect.x() + 50, rect.y() + 36, 50, 50));
-        t_imageClipPath.closeSubpath();
-        auto fillPolygon = t_imageClipPath.toFillPolygon();
+            QPainterPath t_imageClipPath;
+            t_imageClipPath.addEllipse(QRect(rect.x() + 50, rect.y() + 36, 50, 50));
+            t_imageClipPath.closeSubpath();
+            auto fillPolygon = t_imageClipPath.toFillPolygon();
 
-        QMouseEvent *pressEvent = static_cast<QMouseEvent *>(event);
-        QPointF pressPos = pressEvent->pos();
-        if (fillPolygon.containsPoint(pressPos, Qt::OddEvenFill))
-            Q_EMIT hoverPress(index);
+            QMouseEvent *pressEvent = static_cast<QMouseEvent *>(event);
+            QPointF pressPos = pressEvent->pos();
 
+            if (fillPolygon.containsPoint(pressPos, Qt::OddEvenFill))
+                Q_EMIT hoverPress(index);
+        } else {
+            QRect t_hoverRect (rect.x() + 64, rect.y() + 96, 22, 18);
+            QPainterPath t_imageClipPath;
+            t_imageClipPath.addEllipse(QRect(rect.x() + 64, rect.y() + 96, 25, 25));
+            t_imageClipPath.closeSubpath();
+            auto fillPolygon = t_imageClipPath.toFillPolygon();
+
+            QMouseEvent *pressEvent = static_cast<QMouseEvent *>(event);
+            QPointF pressPos = pressEvent->pos();
+
+            if (fillPolygon.containsPoint(pressPos, Qt::OddEvenFill))
+                Q_EMIT hoverPress(index);
+        }
         return false;
     }
     return QStyledItemDelegate::editorEvent(event, model, option, index);
