@@ -492,11 +492,6 @@
         <translation type="unfinished">Reproduciraj sve</translation>
     </message>
     <message>
-        <location filename="../view/musiclistdatawidget.cpp" line="1252"/>
-        <source>Music</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <location filename="../view/musiclistdatawidget.cpp" line="1253"/>
         <source>Artists</source>
         <translation type="unfinished"></translation>
@@ -516,6 +511,11 @@
         <location filename="../view/musiclistdatawidget.cpp" line="1377"/>
         <location filename="../view/musiclistdatawidget.cpp" line="1585"/>
         <source>Search Results</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../view/musiclistdatawidget.cpp" line="1252"/>
+        <source>Songs</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1011,7 +1011,7 @@
     <message>
         <location filename="../core/playlistmanager.cpp" line="208"/>
         <location filename="../core/playlistmanager.cpp" line="226"/>
-        <source>Alblums</source>
+        <source>Ablums</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1160,28 +1160,13 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/widget/searchresult.cpp" line="58"/>
-        <source>SearchMusicView</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <location filename="../view/widget/searchresult.cpp" line="64"/>
         <source>Artists</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/widget/searchresult.cpp" line="70"/>
-        <source>SearchArtistView</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <location filename="../view/widget/searchresult.cpp" line="76"/>
         <source>Albums</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../view/widget/searchresult.cpp" line="82"/>
-        <source>SearchAlbumView</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

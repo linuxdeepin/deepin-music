@@ -198,37 +198,37 @@ void PlaylistManager::load()
         play->setDisplayName(playName);
     }
 
-    auto musicCand = playlist(AlbumCandListID);
+    auto musicCand = playlist(MusicCandListID);
     auto strMusic = tr("All Music");
     if (!musicCand.isNull() && musicCand->displayName() != playName) {
         musicCand->setDisplayName(strMusic);
     }
 
     auto albumCand = playlist(AlbumCandListID);
-    auto strAlbum = tr("Alblums");
+    auto strAlbum = tr("Ablums");
     if (!albumCand.isNull() && albumCand->displayName() != playName) {
         albumCand->setDisplayName(strAlbum);
     }
 
-    auto artistCand = playlist(AlbumCandListID);
+    auto artistCand = playlist(ArtistCandListID);
     auto strArtist = tr("Artists");
     if (!artistCand.isNull() && artistCand->displayName() != playName) {
         artistCand->setDisplayName(strArtist);
     }
 
-    auto musicResult = playlist(AlbumResultListID);
+    auto musicResult = playlist(MusicResultListID);
     auto resMusic = tr("Music");
     if (!musicResult.isNull() && musicResult->displayName() != playName) {
         musicResult->setDisplayName(resMusic);
     }
 
     auto albumResult = playlist(AlbumResultListID);
-    auto resAlbum = tr("Alblums");
+    auto resAlbum = tr("Ablums");
     if (!albumResult.isNull() && albumResult->displayName() != playName) {
         albumResult->setDisplayName(resAlbum);
     }
 
-    auto artistResult = playlist(AlbumResultListID);
+    auto artistResult = playlist(ArtistResultListID);
     auto resArtist = tr("Artists");
     if (!artistResult.isNull() && artistResult->displayName() != playName) {
         artistResult->setDisplayName(resArtist);

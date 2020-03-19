@@ -669,9 +669,13 @@
     </message>
     <message>
         <location filename="../view/musiclistdatawidget.cpp" line="1252"/>
+        <source>Songs</source>
+        <translation>歌曲</translation>
+    </message>
+    <message>
         <source>Music</source>
         <translatorcomment>音乐</translatorcomment>
-        <translation>音乐</translation>
+        <translation type="vanished">音乐</translation>
     </message>
     <message>
         <location filename="../view/musiclistdatawidget.cpp" line="1253"/>
@@ -1351,15 +1355,18 @@
     <message>
         <location filename="../core/playlistmanager.cpp" line="208"/>
         <location filename="../core/playlistmanager.cpp" line="226"/>
+        <source>Ablums</source>
+        <translation>专辑</translation>
+    </message>
+    <message>
         <source>Alblums</source>
         <translatorcomment>专辑</translatorcomment>
-        <translation>专辑</translation>
+        <translation type="vanished">专辑</translation>
     </message>
     <message>
         <location filename="../core/playlistmanager.cpp" line="220"/>
         <source>Music</source>
-        <translatorcomment>专辑</translatorcomment>
-        <translation>音乐</translation>
+        <translation>歌曲</translation>
     </message>
 </context>
 <context>
@@ -1511,13 +1518,7 @@
     <message>
         <location filename="../view/widget/searchresult.cpp" line="52"/>
         <source>Music</source>
-        <translatorcomment>音乐</translatorcomment>
-        <translation>音乐</translation>
-    </message>
-    <message>
-        <location filename="../view/widget/searchresult.cpp" line="58"/>
-        <source>SearchMusicView</source>
-        <translation></translation>
+        <translation>歌曲</translation>
     </message>
     <message>
         <location filename="../view/widget/searchresult.cpp" line="64"/>
@@ -1526,20 +1527,10 @@
         <translation>演唱者</translation>
     </message>
     <message>
-        <location filename="../view/widget/searchresult.cpp" line="70"/>
-        <source>SearchArtistView</source>
-        <translation></translation>
-    </message>
-    <message>
         <location filename="../view/widget/searchresult.cpp" line="76"/>
         <source>Albums</source>
         <translatorcomment>专辑</translatorcomment>
         <translation>专辑</translation>
-    </message>
-    <message>
-        <location filename="../view/widget/searchresult.cpp" line="82"/>
-        <source>SearchAlbumView</source>
-        <translation></translation>
     </message>
 </context>
 <context>
