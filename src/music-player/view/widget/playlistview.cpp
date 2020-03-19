@@ -545,7 +545,8 @@ void PlayListView::showContextMenu(const QPoint &pos,
     }
 
     if (selectedPlaylist != favPlaylist) {
-        auto act = playlistMenu.addAction(favPlaylist->displayName());
+//        auto act = playlistMenu.addAction(favPlaylist->displayName());
+        auto act = playlistMenu.addAction(tr("My favorites"));
         bool flag = true;
         for (auto &index : selection->selectedRows()) {
             auto meta = d->model->meta(index);
@@ -579,6 +580,7 @@ void PlayListView::showContextMenu(const QPoint &pos,
         }
         QFont font(playlistMenu.font());
         QFontMetrics fm(font);
+
         auto text = fm.elidedText(QString(playlist->displayName().replace("&", "&&")),
                                   Qt::ElideMiddle, 160);
         auto act = playlistMenu.addAction(text);
