@@ -604,7 +604,8 @@ QList<MediaMeta> MediaDatabase::allmetas()
     QList<MediaMeta> metalist;
     QString queryString = QString("SELECT hash, localpath, title, artist, album, "
                                   "filetype, track, offset, length, size, "
-                                  "timestamp, invalid, search_id, cuepath "
+                                  "timestamp, invalid, search_id, cuepath, "
+                                  "lyricPath, codec"
                                   "FROM music");
 
     QSqlQuery query;
@@ -630,6 +631,8 @@ QList<MediaMeta> MediaDatabase::allmetas()
         meta.invalid = query.value(11).toBool();
         meta.searchID = query.value(12).toString();
         meta.cuePath = query.value(13).toString();
+        meta.lyricPath = query.value(14).toString();
+        meta.codec = query.value(15).toString();
         metalist << meta;
     }
 
