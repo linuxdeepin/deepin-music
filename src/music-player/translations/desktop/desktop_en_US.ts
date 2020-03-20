@@ -839,6 +839,8 @@
     </message>
     <message>
         <location filename="../../core/playlistmanager.cpp" line="166"/>
+        <location filename="../../core/playlistmanager.cpp" line="208"/>
+        <location filename="../../core/playlistmanager.cpp" line="226"/>
         <source>Albums</source>
         <translation type="unfinished"></translation>
     </message>
@@ -868,12 +870,6 @@
     <message>
         <location filename="../../core/playlistmanager.cpp" line="196"/>
         <source>Play</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../core/playlistmanager.cpp" line="208"/>
-        <location filename="../../core/playlistmanager.cpp" line="226"/>
-        <source>Ablums</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
