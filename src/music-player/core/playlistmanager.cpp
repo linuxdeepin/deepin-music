@@ -205,7 +205,7 @@ void PlaylistManager::load()
     }
 
     auto albumCand = playlist(AlbumCandListID);
-    auto strAlbum = tr("Ablums");
+    auto strAlbum = tr("Albums");
     if (!albumCand.isNull() && albumCand->displayName() != playName) {
         albumCand->setDisplayName(strAlbum);
     }
@@ -223,7 +223,7 @@ void PlaylistManager::load()
     }
 
     auto albumResult = playlist(AlbumResultListID);
-    auto resAlbum = tr("Ablums");
+    auto resAlbum = tr("Albums");
     if (!albumResult.isNull() && albumResult->displayName() != playName) {
         albumResult->setDisplayName(resAlbum);
     }
