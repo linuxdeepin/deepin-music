@@ -63,6 +63,8 @@ static bool createConnection()
                "localpath VARCHAR(4096), length INTEGER, "
                "search_id VARCHAR(256), "
                "invalid INTEGER(32), "
+               "lyricPath VARCHAR(4096), "
+               "codec VARCHAR(35), "
                "cuepath VARCHAR(4096) )"
               );
 
