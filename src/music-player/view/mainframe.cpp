@@ -68,6 +68,7 @@ DWIDGET_USE_NAMESPACE
 
 const QString s_PropertyViewname = "viewname";
 const QString s_PropertyViewnameLyric = "lyric";
+const QString s_PropertyViewnamePlay = "playList";
 static const int FooterHeight = 70;
 static const int AnimationDelay = 400; //ms
 static const int BlurRadius = 25;
@@ -87,7 +88,10 @@ public:
     void toggleLyricView();
     void togglePlaylist();
     void slideToImportView();
-    void slideToLyricView();
+    void showLyricView();
+    void hideLyricView();
+    void showPlaylistView();
+    void hidePlaylistView();
     void slideToMusicListView(bool keepPlaylist);
     void disableControl(int delay = 350);
     void updateSize(QSize newSize);
@@ -133,6 +137,8 @@ public:
     QShortcut           *playPauseShortcut      = nullptr;
     QShortcut           *previousShortcut       = nullptr;
 
+    int                 width                   = 0;
+    int                 height                  = 0;
     MainFrame *q_ptr;
     Q_DECLARE_PUBLIC(MainFrame)
 };
@@ -395,26 +401,66 @@ void MainFramePrivate::postInitUI()
     infoDialog->move(q->pos().x() + q->size().width() / 2 - infoDialog->width() / 2, q->pos().y() + titlebar->height());
 }
 
-void MainFramePrivate::slideToLyricView()
+void MainFramePrivate::showLyricView()
 {
-    //    Q_Q(MainFrame);
-
     footer->setPlaylistButtonChecked(false);
+    musicListWidget->setVisible(false);
     auto current = currentWidget ? currentWidget : playListWidget;
     lyricWidget->setFixedSize(current->size());
     WidgetHelper::slideBottom2TopWidget(
         current,  lyricWidget, AnimationDelay);
-
-    //    q->disableControl();
-    setPlayListVisible(false);
-    musicListWidget->setVisible(false);
     currentWidget = lyricWidget;
+    setPlayListVisible(false);
     titlebar->raise();
     footer->setLyricButtonChecked(true);
     footer->raise();
 
     updateViewname(s_PropertyViewnameLyric);
 }
+
+void MainFramePrivate::hideLyricView()
+{
+    footer->setPlaylistButtonChecked(false);
+    auto current = currentWidget ? currentWidget : playListWidget;
+    lyricWidget->setFixedSize(current->size());
+    WidgetHelper::slideTop2BottomWidget(
+        current, musicListWidget, AnimationDelay);
+    titlebar->raise();
+    footer->setLyricButtonChecked(false);
+    footer->raise();
+
+    updateViewname(s_PropertyViewnameLyric);
+}
+
+void MainFramePrivate::showPlaylistView()
+{
+
+    QRect start ( 5,  height - 86,
+                  width - 10, 80);
+    QRect end ( 5,  height - 429,
+                width - 10, 423);
+
+    WidgetHelper::slideEdgeWidget(
+        footer, start, end, AnimationDelay, false);
+    titlebar->raise();
+    footer->setPlaylistButtonChecked(true);
+    footer->raise();
+}
+
+void MainFramePrivate::hidePlaylistView()
+{
+    QRect start ( 5,  height - 429,
+                  width - 5,  height - 429 + 423);
+    QRect end ( 5,  height - 86,
+                width - 5,  height - 86 + 80);
+    WidgetHelper::slideEdgeWidget(
+        footer, start, end, AnimationDelay, false);
+    titlebar->raise();
+    footer->setPlaylistButtonChecked(false);
+    footer->raise();
+    playListWidget->hide();
+}
+
 
 void MainFramePrivate:: slideToImportView()
 {
@@ -481,20 +527,27 @@ void MainFramePrivate:: slideToMusicListView(bool keepPlaylist)
 void MainFramePrivate::toggleLyricView()
 {
     playListWidget->hide();
+    musicListWidget->hide();
     if (lyricWidget->isVisible()) {
-        slideToMusicListView(false);
-        setPlayListVisible(false);
+        hideLyricView();
+        titlebarwidget->setSearchEnable(true);
     } else {
         titlebarwidget->setSearchEnable(false);
-        slideToLyricView();
+        showLyricView();
     }
 }
 
 void MainFramePrivate::togglePlaylist()
 {
     importWidget->hide();
-    slideToMusicListView(true);
-    setPlayListVisible(!footer->getShowPlayListFlag());
+    if (playListWidget->isVisible()) {
+        hidePlaylistView();
+        titlebarwidget->setSearchEnable(true);
+    } else {
+        titlebarwidget->setSearchEnable(false);
+        showPlaylistView();
+    }
+    setPlayListVisible(!footer                                                                           ->getShowPlayListFlag());
 }
 
 void MainFramePrivate::setPlayListVisible(bool visible)
@@ -553,6 +606,8 @@ void MainFramePrivate::updateSize(QSize newSize)
     }
 
     footer->raise();
+    width  =  newSize.width();
+    height =  newSize.height();
     footer->showPlayListWidget(newSize.width(), newSize.height());
 }
 
