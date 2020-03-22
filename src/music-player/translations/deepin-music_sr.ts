@@ -1,4 +1,6 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS language="sr" version="2.1">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.1" language="sr">
 <context>
     <name>CloseConfirmDialog</name>
     <message>
@@ -219,97 +221,97 @@
 <context>
     <name>MainFrame</name>
     <message>
-        <location filename="../view/mainframe.cpp" line="165"/>
+        <location filename="../view/mainframe.cpp" line="171"/>
         <source>Add playlist</source>
         <translation>Додај листу пуштања</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="176"/>
+        <location filename="../view/mainframe.cpp" line="182"/>
         <source>Add music</source>
         <translation>Додај музику</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="181"/>
+        <location filename="../view/mainframe.cpp" line="187"/>
         <source>Settings</source>
         <translation>Подешавања</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="241"/>
+        <location filename="../view/mainframe.cpp" line="247"/>
         <source>Dark theme</source>
         <translation>Тамна тема</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="256"/>
-        <location filename="../view/mainframe.cpp" line="718"/>
+        <location filename="../view/mainframe.cpp" line="262"/>
+        <location filename="../view/mainframe.cpp" line="773"/>
         <source>Exit</source>
         <translation>Изађи</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="645"/>
+        <location filename="../view/mainframe.cpp" line="700"/>
         <source>Music is a local music player with beautiful design and simple functions.</source>
         <translation>Музика је локални пуштач музике лепог дизајна са једноставним функцијама.</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="652"/>
-        <location filename="../view/mainframe.cpp" line="666"/>
-        <location filename="../view/mainframe.cpp" line="729"/>
-        <location filename="../view/mainframe.cpp" line="1228"/>
+        <location filename="../view/mainframe.cpp" line="707"/>
+        <location filename="../view/mainframe.cpp" line="721"/>
+        <location filename="../view/mainframe.cpp" line="784"/>
+        <location filename="../view/mainframe.cpp" line="1283"/>
         <source>Music</source>
         <translation>Музика</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="715"/>
+        <location filename="../view/mainframe.cpp" line="770"/>
         <source>Play/Pause</source>
         <translation>Пусти/Паузирај</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="716"/>
+        <location filename="../view/mainframe.cpp" line="771"/>
         <source>Previous</source>
         <translation>Претходно</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="717"/>
+        <location filename="../view/mainframe.cpp" line="772"/>
         <source>Next</source>
         <translation>Следеће</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="838"/>
+        <location filename="../view/mainframe.cpp" line="893"/>
         <source>Successfully added to &quot;%1&quot;</source>
         <translation>Успешно додато у &quot;%1&quot;</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="842"/>
+        <location filename="../view/mainframe.cpp" line="897"/>
         <source>Already added to the playlist</source>
         <translation>Већ додато листи пуштања</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="845"/>
+        <location filename="../view/mainframe.cpp" line="900"/>
         <source>1 song added</source>
         <translation>1 нумера додато</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="847"/>
+        <location filename="../view/mainframe.cpp" line="902"/>
         <source>%1 songs added</source>
         <translation>%1 нумера/е додато</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="911"/>
+        <location filename="../view/mainframe.cpp" line="966"/>
         <source>File is invalid or does not exist, load failed</source>
         <translation>Датотека је неважећа или не постоји, учитавање неуспешно</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="912"/>
-        <location filename="../view/mainframe.cpp" line="952"/>
+        <location filename="../view/mainframe.cpp" line="967"/>
+        <location filename="../view/mainframe.cpp" line="1007"/>
         <source>OK</source>
         <translation>У реду</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="947"/>
+        <location filename="../view/mainframe.cpp" line="1002"/>
         <source>Import failed, no valid music file found</source>
         <translation>Неуспешан увоз, нису пронађене регуларне музичке датотеке</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="1313"/>
+        <location filename="../view/mainframe.cpp" line="1368"/>
         <source>All music</source>
         <translation>Сва музика</translation>
     </message>
@@ -715,9 +717,13 @@
         <translation>Прикажи у управнику података</translation>
     </message>
     <message>
-        <location filename="../view/widget/playlistview.cpp" line="629"/>
         <source>Remove from playlist</source>
-        <translation>Уклони из листе пуштања</translation>
+        <translation type="vanished">Уклони из листе пуштања</translation>
+    </message>
+    <message>
+        <location filename="../view/widget/playlistview.cpp" line="629"/>
+        <source>Remove from play queue</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/widget/playlistview.cpp" line="630"/>
@@ -879,7 +885,7 @@
 <context>
     <name>QApplication</name>
     <message>
-        <location filename="../view/mainframe.cpp" line="647"/>
+        <location filename="../view/mainframe.cpp" line="702"/>
         <source>Music</source>
         <translation>Музика</translation>
     </message>

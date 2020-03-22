@@ -626,7 +626,7 @@ void PlayListView::showContextMenu(const QPoint &pos,
         displayAction = myMenu.addAction(tr("Display in file manager"));
     }
 
-    auto removeAction = myMenu.addAction(tr("Remove from playlist"));
+    auto removeAction = myMenu.addAction(tr("Remove from play queue"));
     auto deleteAction = myMenu.addAction(tr("Delete from local disk"));
 
     QAction *songAction = nullptr;

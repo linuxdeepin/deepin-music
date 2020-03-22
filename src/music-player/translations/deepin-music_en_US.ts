@@ -1,4 +1,6 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS language="en" version="2.1">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.1" language="en">
 <context>
     <name>CloseConfirmDialog</name>
     <message>
@@ -219,97 +221,97 @@
 <context>
     <name>MainFrame</name>
     <message>
-        <location filename="../view/mainframe.cpp" line="165"/>
+        <location filename="../view/mainframe.cpp" line="171"/>
         <source>Add playlist</source>
         <translation>Add playlist</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="176"/>
+        <location filename="../view/mainframe.cpp" line="182"/>
         <source>Add music</source>
         <translation>Add music</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="181"/>
+        <location filename="../view/mainframe.cpp" line="187"/>
         <source>Settings</source>
         <translation>Settings</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="241"/>
+        <location filename="../view/mainframe.cpp" line="247"/>
         <source>Dark theme</source>
         <translation>Dark theme</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="256"/>
-        <location filename="../view/mainframe.cpp" line="718"/>
+        <location filename="../view/mainframe.cpp" line="262"/>
+        <location filename="../view/mainframe.cpp" line="773"/>
         <source>Exit</source>
         <translation>Exit</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="645"/>
+        <location filename="../view/mainframe.cpp" line="700"/>
         <source>Music is a local music player with beautiful design and simple functions.</source>
         <translation>Music is a local music player with beautiful design and simple functions.</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="652"/>
-        <location filename="../view/mainframe.cpp" line="666"/>
-        <location filename="../view/mainframe.cpp" line="729"/>
-        <location filename="../view/mainframe.cpp" line="1228"/>
+        <location filename="../view/mainframe.cpp" line="707"/>
+        <location filename="../view/mainframe.cpp" line="721"/>
+        <location filename="../view/mainframe.cpp" line="784"/>
+        <location filename="../view/mainframe.cpp" line="1283"/>
         <source>Music</source>
         <translation>Music</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="715"/>
+        <location filename="../view/mainframe.cpp" line="770"/>
         <source>Play/Pause</source>
         <translation>Play/Pause</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="716"/>
+        <location filename="../view/mainframe.cpp" line="771"/>
         <source>Previous</source>
         <translation>Previous</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="717"/>
+        <location filename="../view/mainframe.cpp" line="772"/>
         <source>Next</source>
         <translation>Next</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="838"/>
+        <location filename="../view/mainframe.cpp" line="893"/>
         <source>Successfully added to &quot;%1&quot;</source>
         <translation>Successfully added to &quot;%1&quot;</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="842"/>
+        <location filename="../view/mainframe.cpp" line="897"/>
         <source>Already added to the playlist</source>
         <translation>Already added to the playlist</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="845"/>
+        <location filename="../view/mainframe.cpp" line="900"/>
         <source>1 song added</source>
         <translation>1 song added</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="847"/>
+        <location filename="../view/mainframe.cpp" line="902"/>
         <source>%1 songs added</source>
         <translation>%1 songs added</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="911"/>
+        <location filename="../view/mainframe.cpp" line="966"/>
         <source>File is invalid or does not exist, load failed</source>
         <translation>File is invalid or does not exist, load failed</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="912"/>
-        <location filename="../view/mainframe.cpp" line="952"/>
+        <location filename="../view/mainframe.cpp" line="967"/>
+        <location filename="../view/mainframe.cpp" line="1007"/>
         <source>OK</source>
         <translation>OK</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="947"/>
+        <location filename="../view/mainframe.cpp" line="1002"/>
         <source>Import failed, no valid music file found</source>
         <translation>Import failed, no valid music file found</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="1313"/>
+        <location filename="../view/mainframe.cpp" line="1368"/>
         <source>All music</source>
         <translation>All music</translation>
     </message>
@@ -715,9 +717,13 @@
         <translation>Display in file manager</translation>
     </message>
     <message>
-        <location filename="../view/widget/playlistview.cpp" line="629"/>
         <source>Remove from playlist</source>
-        <translation>Remove from playlist</translation>
+        <translation type="vanished">Remove from playlist</translation>
+    </message>
+    <message>
+        <location filename="../view/widget/playlistview.cpp" line="629"/>
+        <source>Remove from play queue</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/widget/playlistview.cpp" line="630"/>
@@ -879,7 +885,7 @@
 <context>
     <name>QApplication</name>
     <message>
-        <location filename="../view/mainframe.cpp" line="647"/>
+        <location filename="../view/mainframe.cpp" line="702"/>
         <source>Music</source>
         <translation>Music</translation>
     </message>

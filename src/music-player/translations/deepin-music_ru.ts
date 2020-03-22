@@ -1,4 +1,6 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS language="ru" version="2.1">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.1" language="ru">
 <context>
     <name>CloseConfirmDialog</name>
     <message>
@@ -79,7 +81,7 @@
     <message>
         <location filename="../view/footerwidget.cpp" line="423"/>
         <source>Play Queue</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/footerwidget.cpp" line="1275"/>
@@ -102,7 +104,7 @@
     <message>
         <location filename="../view/importwidget.cpp" line="86"/>
         <source>Open Folder</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/importwidget.cpp" line="94"/>
@@ -219,97 +221,97 @@
 <context>
     <name>MainFrame</name>
     <message>
-        <location filename="../view/mainframe.cpp" line="165"/>
+        <location filename="../view/mainframe.cpp" line="171"/>
         <source>Add playlist</source>
         <translation>Новый список воспроизведения</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="176"/>
+        <location filename="../view/mainframe.cpp" line="182"/>
         <source>Add music</source>
         <translation>Добавить музыку</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="181"/>
+        <location filename="../view/mainframe.cpp" line="187"/>
         <source>Settings</source>
         <translation>Настройки</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="241"/>
+        <location filename="../view/mainframe.cpp" line="247"/>
         <source>Dark theme</source>
         <translation>Темная тема</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="256"/>
-        <location filename="../view/mainframe.cpp" line="718"/>
+        <location filename="../view/mainframe.cpp" line="262"/>
+        <location filename="../view/mainframe.cpp" line="773"/>
         <source>Exit</source>
         <translation>Выход</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="645"/>
+        <location filename="../view/mainframe.cpp" line="700"/>
         <source>Music is a local music player with beautiful design and simple functions.</source>
         <translation>Плеер - это локальный музыкальный плеер с красивым дизайном и простыми функциями.</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="652"/>
-        <location filename="../view/mainframe.cpp" line="666"/>
-        <location filename="../view/mainframe.cpp" line="729"/>
-        <location filename="../view/mainframe.cpp" line="1228"/>
+        <location filename="../view/mainframe.cpp" line="707"/>
+        <location filename="../view/mainframe.cpp" line="721"/>
+        <location filename="../view/mainframe.cpp" line="784"/>
+        <location filename="../view/mainframe.cpp" line="1283"/>
         <source>Music</source>
         <translation>Музыка</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="715"/>
+        <location filename="../view/mainframe.cpp" line="770"/>
         <source>Play/Pause</source>
         <translation>Воспроизведение / Пауза</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="716"/>
+        <location filename="../view/mainframe.cpp" line="771"/>
         <source>Previous</source>
         <translation>Предыдущий</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="717"/>
+        <location filename="../view/mainframe.cpp" line="772"/>
         <source>Next</source>
         <translation>Следующий</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="838"/>
+        <location filename="../view/mainframe.cpp" line="893"/>
         <source>Successfully added to &quot;%1&quot;</source>
         <translation>Успешно добавлено &quot;%1&quot;</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="842"/>
+        <location filename="../view/mainframe.cpp" line="897"/>
         <source>Already added to the playlist</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="845"/>
+        <location filename="../view/mainframe.cpp" line="900"/>
         <source>1 song added</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="847"/>
+        <location filename="../view/mainframe.cpp" line="902"/>
         <source>%1 songs added</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="911"/>
+        <location filename="../view/mainframe.cpp" line="966"/>
         <source>File is invalid or does not exist, load failed</source>
         <translation>Файл недействителен или не существует, не удалось загрузить</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="912"/>
-        <location filename="../view/mainframe.cpp" line="952"/>
+        <location filename="../view/mainframe.cpp" line="967"/>
+        <location filename="../view/mainframe.cpp" line="1007"/>
         <source>OK</source>
         <translation>OK</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="947"/>
+        <location filename="../view/mainframe.cpp" line="1002"/>
         <source>Import failed, no valid music file found</source>
         <translation>Не удалось импортировать, не найден действительный музыкальный файл</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="1313"/>
+        <location filename="../view/mainframe.cpp" line="1368"/>
         <source>All music</source>
         <translation>Вся музыка</translation>
     </message>
@@ -456,12 +458,12 @@
     <message>
         <location filename="../view/musiclistdatawidget.cpp" line="1253"/>
         <source>Artists</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Исполнитель</translation>
     </message>
     <message>
         <location filename="../view/musiclistdatawidget.cpp" line="1254"/>
         <source>Albums</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Альбом</translation>
     </message>
     <message>
         <location filename="../view/musiclistdatawidget.cpp" line="1289"/>
@@ -473,12 +475,12 @@
         <location filename="../view/musiclistdatawidget.cpp" line="1377"/>
         <location filename="../view/musiclistdatawidget.cpp" line="1585"/>
         <source>Search Results</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/musiclistdatawidget.cpp" line="1252"/>
         <source>Songs</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Песни</translation>
     </message>
     <message>
         <location filename="../view/musiclistdatawidget.cpp" line="1631"/>
@@ -504,12 +506,12 @@
     <message>
         <location filename="../view/widget/musiclistinfoview.cpp" line="455"/>
         <source>Play queue</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/widget/musiclistinfoview.cpp" line="480"/>
         <source>Add to new playlist</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/widget/musiclistinfoview.cpp" line="525"/>
@@ -555,17 +557,17 @@
     <message>
         <location filename="../view/widget/musiclistinfoview.cpp" line="609"/>
         <source>Remove</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/widget/musiclistinfoview.cpp" line="613"/>
         <source>Are you sure you want to remove %1?</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/widget/musiclistinfoview.cpp" line="615"/>
         <source>Are you sure you want to remove the selected %1 songs?</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/widget/musiclistinfoview.cpp" line="640"/>
@@ -626,7 +628,7 @@
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="201"/>
         <source>My Favorites</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="438"/>
@@ -682,17 +684,17 @@
     <message>
         <location filename="../view/widget/playlistview.cpp" line="540"/>
         <source>Play queue</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/widget/playlistview.cpp" line="549"/>
         <source>My favorites</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Избранное</translation>
     </message>
     <message>
         <location filename="../view/widget/playlistview.cpp" line="565"/>
         <source>Add to new playlist</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/widget/playlistview.cpp" line="614"/>
@@ -715,9 +717,13 @@
         <translation>Отобразить в менеджере файлов</translation>
     </message>
     <message>
-        <location filename="../view/widget/playlistview.cpp" line="629"/>
         <source>Remove from playlist</source>
-        <translation>Удалить из списка воспроизведения</translation>
+        <translation type="vanished">Удалить из списка воспроизведения</translation>
+    </message>
+    <message>
+        <location filename="../view/widget/playlistview.cpp" line="629"/>
+        <source>Remove from play queue</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/widget/playlistview.cpp" line="630"/>
@@ -743,17 +749,17 @@
     <message>
         <location filename="../view/widget/playlistview.cpp" line="717"/>
         <source>Remove</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/widget/playlistview.cpp" line="721"/>
         <source>Are you sure you want to remove %1?</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/widget/playlistview.cpp" line="723"/>
         <source>Are you sure you want to remove the selected %1 songs?</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/widget/playlistview.cpp" line="748"/>
@@ -794,7 +800,7 @@
     <message>
         <location filename="../view/playlistwidget.cpp" line="206"/>
         <source>Play Queue</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/playlistwidget.cpp" line="233"/>
@@ -873,13 +879,13 @@
     <message>
         <location filename="../core/playlistmanager.cpp" line="220"/>
         <source>Music</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Музыка</translation>
     </message>
 </context>
 <context>
     <name>QApplication</name>
     <message>
-        <location filename="../view/mainframe.cpp" line="647"/>
+        <location filename="../view/mainframe.cpp" line="702"/>
         <source>Music</source>
         <translation>Музыка</translation>
     </message>
@@ -990,17 +996,17 @@
     <message>
         <location filename="../view/widget/searchresult.cpp" line="52"/>
         <source>Music</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Музыка</translation>
     </message>
     <message>
         <location filename="../view/widget/searchresult.cpp" line="64"/>
         <source>Artists</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Исполнитель</translation>
     </message>
     <message>
         <location filename="../view/widget/searchresult.cpp" line="76"/>
         <source>Albums</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Альбом</translation>
     </message>
 </context>
 <context>

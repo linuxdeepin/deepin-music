@@ -1,4 +1,6 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS language="ar" version="2.1">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.1" language="ar">
 <context>
     <name>CloseConfirmDialog</name>
     <message>
@@ -102,7 +104,7 @@
     <message>
         <location filename="../view/importwidget.cpp" line="86"/>
         <source>Open Folder</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/importwidget.cpp" line="94"/>
@@ -219,97 +221,97 @@
 <context>
     <name>MainFrame</name>
     <message>
-        <location filename="../view/mainframe.cpp" line="165"/>
+        <location filename="../view/mainframe.cpp" line="171"/>
         <source>Add playlist</source>
         <translation>أضف قائمة تشغيل</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="176"/>
+        <location filename="../view/mainframe.cpp" line="182"/>
         <source>Add music</source>
         <translation>إضافة مقاطع صوتية</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="181"/>
+        <location filename="../view/mainframe.cpp" line="187"/>
         <source>Settings</source>
         <translation>إعدادات</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="241"/>
+        <location filename="../view/mainframe.cpp" line="247"/>
         <source>Dark theme</source>
         <translation>سمة داكنة</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="256"/>
-        <location filename="../view/mainframe.cpp" line="718"/>
+        <location filename="../view/mainframe.cpp" line="262"/>
+        <location filename="../view/mainframe.cpp" line="773"/>
         <source>Exit</source>
         <translation>خروج</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="645"/>
+        <location filename="../view/mainframe.cpp" line="700"/>
         <source>Music is a local music player with beautiful design and simple functions.</source>
         <translation>موسيقى: هو مشغّل مقاطع صوتية محلي مع تصميم جميل ووظائف بسيطة.</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="652"/>
-        <location filename="../view/mainframe.cpp" line="666"/>
-        <location filename="../view/mainframe.cpp" line="729"/>
-        <location filename="../view/mainframe.cpp" line="1228"/>
+        <location filename="../view/mainframe.cpp" line="707"/>
+        <location filename="../view/mainframe.cpp" line="721"/>
+        <location filename="../view/mainframe.cpp" line="784"/>
+        <location filename="../view/mainframe.cpp" line="1283"/>
         <source>Music</source>
         <translation>موسيقى</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="715"/>
+        <location filename="../view/mainframe.cpp" line="770"/>
         <source>Play/Pause</source>
         <translation>تشغيل/إيقاف مؤقت</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="716"/>
+        <location filename="../view/mainframe.cpp" line="771"/>
         <source>Previous</source>
         <translation>السابق</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="717"/>
+        <location filename="../view/mainframe.cpp" line="772"/>
         <source>Next</source>
         <translation>التالي</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="838"/>
+        <location filename="../view/mainframe.cpp" line="893"/>
         <source>Successfully added to &quot;%1&quot;</source>
         <translation>تمت الاضافة بنجاح الى &quot;%1&quot;</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="842"/>
+        <location filename="../view/mainframe.cpp" line="897"/>
         <source>Already added to the playlist</source>
         <translation>تم إضافتة مسبقاً إلى قائمة التشغيل</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="845"/>
+        <location filename="../view/mainframe.cpp" line="900"/>
         <source>1 song added</source>
         <translation>تم إضافة 1 مقطع صوتي</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="847"/>
+        <location filename="../view/mainframe.cpp" line="902"/>
         <source>%1 songs added</source>
         <translation>تم إضافة %1 مقاطع صوتية</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="911"/>
+        <location filename="../view/mainframe.cpp" line="966"/>
         <source>File is invalid or does not exist, load failed</source>
         <translation>فشل التحميل، الملف غير صالح أو غير موجود</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="912"/>
-        <location filename="../view/mainframe.cpp" line="952"/>
+        <location filename="../view/mainframe.cpp" line="967"/>
+        <location filename="../view/mainframe.cpp" line="1007"/>
         <source>OK</source>
         <translation>موافق</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="947"/>
+        <location filename="../view/mainframe.cpp" line="1002"/>
         <source>Import failed, no valid music file found</source>
         <translation>فشل الاستيراد، لم يتم إيجاد مقطع صوتي صالح</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="1313"/>
+        <location filename="../view/mainframe.cpp" line="1368"/>
         <source>All music</source>
         <translation>كافة الموسيقى</translation>
     </message>
@@ -456,12 +458,12 @@
     <message>
         <location filename="../view/musiclistdatawidget.cpp" line="1253"/>
         <source>Artists</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">الفنّانين</translation>
     </message>
     <message>
         <location filename="../view/musiclistdatawidget.cpp" line="1254"/>
         <source>Albums</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">الإلبومات</translation>
     </message>
     <message>
         <location filename="../view/musiclistdatawidget.cpp" line="1289"/>
@@ -473,12 +475,12 @@
         <location filename="../view/musiclistdatawidget.cpp" line="1377"/>
         <location filename="../view/musiclistdatawidget.cpp" line="1585"/>
         <source>Search Results</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/musiclistdatawidget.cpp" line="1252"/>
         <source>Songs</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">المقاطع الصوتية</translation>
     </message>
     <message>
         <location filename="../view/musiclistdatawidget.cpp" line="1631"/>
@@ -626,7 +628,7 @@
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="201"/>
         <source>My Favorites</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="438"/>
@@ -687,7 +689,7 @@
     <message>
         <location filename="../view/widget/playlistview.cpp" line="549"/>
         <source>My favorites</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">مفضلتي</translation>
     </message>
     <message>
         <location filename="../view/widget/playlistview.cpp" line="565"/>
@@ -715,9 +717,13 @@
         <translation>عرض في مدير الملفات</translation>
     </message>
     <message>
-        <location filename="../view/widget/playlistview.cpp" line="629"/>
         <source>Remove from playlist</source>
-        <translation>إزالة من قائمة التشغيل</translation>
+        <translation type="vanished">إزالة من قائمة التشغيل</translation>
+    </message>
+    <message>
+        <location filename="../view/widget/playlistview.cpp" line="629"/>
+        <source>Remove from play queue</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/widget/playlistview.cpp" line="630"/>
@@ -873,13 +879,13 @@
     <message>
         <location filename="../core/playlistmanager.cpp" line="220"/>
         <source>Music</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">موسيقى</translation>
     </message>
 </context>
 <context>
     <name>QApplication</name>
     <message>
-        <location filename="../view/mainframe.cpp" line="647"/>
+        <location filename="../view/mainframe.cpp" line="702"/>
         <source>Music</source>
         <translation>موسيقى</translation>
     </message>
@@ -990,17 +996,17 @@
     <message>
         <location filename="../view/widget/searchresult.cpp" line="52"/>
         <source>Music</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">موسيقى</translation>
     </message>
     <message>
         <location filename="../view/widget/searchresult.cpp" line="64"/>
         <source>Artists</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">الفنّانين</translation>
     </message>
     <message>
         <location filename="../view/widget/searchresult.cpp" line="76"/>
         <source>Albums</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">الإلبومات</translation>
     </message>
 </context>
 <context>
