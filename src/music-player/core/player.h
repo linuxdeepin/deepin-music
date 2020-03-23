@@ -194,6 +194,8 @@ private:
     bool setMusicVolume(double volume);
     bool setMusicMuted(bool muted);
     bool isMusicMuted();
+    void resumeAni();
+    void pauseAni();
 
 private:
     friend class DMusic::DSingleton<Player>;
