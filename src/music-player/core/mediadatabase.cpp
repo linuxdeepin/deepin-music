@@ -609,12 +609,10 @@ QList<MediaMeta> MediaDatabase::allmetas()
     query.prepare(queryString);
     if (! query.exec()) {
         qCritical() << query.lastError();
-
         return metalist;
     }
 
     while (query.next()) {
-
         MediaMeta meta;
         meta.hash = query.value(0).toString();
         meta.localPath = query.value(1).toString();
