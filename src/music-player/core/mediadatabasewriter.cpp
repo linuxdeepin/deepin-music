@@ -56,7 +56,7 @@ void MediaDatabaseWriter::updateMediaMeta(const MetaPtr meta)
                   "title=:title, artist=:artist, album=:album, "
                   "py_title=:py_title, py_title_short=:py_title_short, py_artist=:py_artist, "
                   "py_artist_short=:py_artist_short, py_album=:py_album, py_album_short=:py_album_short, "
-                  "lyricPath=:lyricPath, codec=:codec "
+                  // "lyricPath=:lyricPath, codec=:codec "
                   "where hash=:hash");
 
     query.bindValue(":search_id", meta->searchID);
@@ -71,8 +71,8 @@ void MediaDatabaseWriter::updateMediaMeta(const MetaPtr meta)
     query.bindValue(":py_artist_short", meta->pinyinArtistShort);
     query.bindValue(":py_album", meta->pinyinAlbum);
     query.bindValue(":py_album_short", meta->pinyinAlbumShort);
-    query.bindValue(":lyricPath", meta->lyricPath);
-    query.bindValue(":codec", meta->codec);
+    // query.bindValue(":lyricPath", meta->lyricPath);
+    // query.bindValue(":codec", meta->codec);
     query.bindValue(":hash", meta->hash);
 
     if (! query.exec()) {
@@ -125,7 +125,7 @@ void MediaDatabaseWriter::addMediaMeta(const MetaPtr meta)
                   ":hash, :timestamp, :title, :artist, :album, "
                   ":filetype, :size, :track, :offset, :favourite, :localpath, :length, "
                   ":py_title, :py_title_short, :py_artist, :py_artist_short, "
-                  ":py_album, :py_album_short, :lyricPath, :codec, :cuepath "
+                  ":py_album, :py_album_short, :cuepath "
                   ")");
     query.bindValue(":hash", meta->hash);
     query.bindValue(":timestamp", meta->timestamp);
@@ -145,8 +145,6 @@ void MediaDatabaseWriter::addMediaMeta(const MetaPtr meta)
     query.bindValue(":py_artist_short", meta->pinyinArtistShort);
     query.bindValue(":py_album", meta->pinyinAlbum);
     query.bindValue(":py_album_short", meta->pinyinAlbumShort);
-    query.bindValue(":lyricPath", meta->lyricPath);
-    query.bindValue(":codec", meta->codec);
     query.bindValue(":cuepath", meta->cuePath);
 
     if (! query.exec()) {
