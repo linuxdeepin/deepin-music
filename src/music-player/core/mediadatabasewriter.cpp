@@ -56,7 +56,7 @@ void MediaDatabaseWriter::updateMediaMeta(const MetaPtr meta)
                   "title=:title, artist=:artist, album=:album, "
                   "py_title=:py_title, py_title_short=:py_title_short, py_artist=:py_artist, "
                   "py_artist_short=:py_artist_short, py_album=:py_album, py_album_short=:py_album_short, "
-                  "lyricPath=:lyricPath, codec=:codec"
+                  "lyricPath=:lyricPath, codec=:codec "
                   "where hash=:hash");
 
     query.bindValue(":search_id", meta->searchID);
@@ -110,10 +110,10 @@ void MediaDatabaseWriter::removeMediaMetaList(const MetaPtrList metalist)
     QSqlDatabase::database().commit();
 }
 
-
 void MediaDatabaseWriter::addMediaMeta(const MetaPtr meta)
 {
 //    qDebug() << "addMediaMeta begin";
+
     QSqlQuery query;
     query.prepare("INSERT INTO music ("
                   "hash, timestamp, title, artist, album, "
