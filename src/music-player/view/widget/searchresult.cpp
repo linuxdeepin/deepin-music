@@ -55,7 +55,7 @@ SearchResult::SearchResult(QWidget *parent) : DFrame(parent)
     m_MusicLabel->adjustSize();
 
     m_MusicView = new MusicSearchListview(this);
-    m_MusicView->setObjectName(tr("SearchMusicView"));
+    m_MusicView->setObjectName("SearchMusicView");
     m_MusicView->setGridSize( QSize(34, 34) );
     m_MusicView->setMinimumWidth(287);
     m_MusicView->adjustSize();
@@ -67,7 +67,7 @@ SearchResult::SearchResult(QWidget *parent) : DFrame(parent)
     m_ArtistLabel->adjustSize();
 
     m_ArtistView = new MusicSearchListview(this);
-    m_ArtistView->setObjectName(tr("SearchArtistView"));
+    m_ArtistView->setObjectName("SearchArtistView");
     m_ArtistView->setGridSize( QSize(34, 34) );
     m_ArtistView->setMinimumWidth(287);
     m_ArtistView->adjustSize();
@@ -79,7 +79,7 @@ SearchResult::SearchResult(QWidget *parent) : DFrame(parent)
     m_AblumLabel->adjustSize();
 
     m_AlbumView = new MusicSearchListview(this);
-    m_AlbumView->setObjectName(tr("SearchAlbumView"));
+    m_AlbumView->setObjectName("SearchAlbumView");
     m_AlbumView->setGridSize( QSize(34, 34) );
     m_AlbumView->setMinimumWidth(287);
     m_AlbumView->adjustSize();

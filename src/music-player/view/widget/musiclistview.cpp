@@ -60,7 +60,7 @@ MusicListView::MusicListView(QWidget *parent) : DListView(parent)
     setFont(font);
 
     setIconSize( QSize(20, 20) );
-//    setGridSize( QSize(40, 40) );
+    //    setGridSize( QSize(40, 40) );
     setItemSize(QSize(40, 40));
 
     setFrameShape(QFrame::NoFrame);
@@ -196,7 +196,13 @@ void MusicListView::addMusicList(PlaylistPtr playlist, bool addFlag)
     }
 
     allPlaylists.append(playlist);
-    auto item = new DStandardItem(icon, playlist->displayName());
+    QString displayName;
+    if (playlist->id() == FavMusicListID) {
+        displayName = tr("My Favorites");
+    } else {
+        displayName = playlist->displayName();
+    }
+    auto item = new DStandardItem(icon, displayName);
     auto itemFont = item->font();
     itemFont.setPixelSize(14);
     item->setFont(itemFont);
@@ -399,14 +405,14 @@ void MusicListView::adjustHeight()
 
 void MusicListView::mousePressEvent(QMouseEvent *event)
 {
-//    for (int i = 0; i < count(); i++) {
-//        auto itemIndex = model->index(i, 0);
-//        if (this->isPersistentEditorOpen(itemIndex)) {
-//            auto item = model->itemFromIndex(itemIndex);
-//            onRename(item);
-//            closePersistentEditor(itemIndex);
-//        }
-//    }
+    //    for (int i = 0; i < count(); i++) {
+    //        auto itemIndex = model->index(i, 0);
+    //        if (this->isPersistentEditorOpen(itemIndex)) {
+    //            auto item = model->itemFromIndex(itemIndex);
+    //            onRename(item);
+    //            closePersistentEditor(itemIndex);
+    //        }
+    //    }
     DListView::mousePressEvent(event);
 }
 
@@ -522,10 +528,10 @@ void MusicListView::dropEvent(QDropEvent *event)
 void MusicListView::showContextMenu(const QPoint &pos)
 {
     // get select
-//    auto indexes = this->selectedIndexes();
-//    if (indexes.size() != 1) {
-//        return;
-//    }
+    //    auto indexes = this->selectedIndexes();
+    //    if (indexes.size() != 1) {
+    //        return;
+    //    }
 
     auto index = indexAt(pos);
     if (!index.isValid())
