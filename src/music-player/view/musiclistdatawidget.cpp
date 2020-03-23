@@ -1249,7 +1249,7 @@ MusicListDataWidget::MusicListDataWidget(QWidget *parent) :
     d->songListView     = new PlayListView(true);
     d->singerListView   = new MusicListDataView();
     d->albListView      = new MusicListDataView();
-    d->tabWidget->addTab(d->songListView, QString(tr("Music")));
+    d->tabWidget->addTab(d->songListView, QString(tr("Songs")));
     d->tabWidget->addTab(d->singerListView, QString(tr("Artists")));
     d->tabWidget->addTab(d->albListView, QString(tr("Albums")));
     d->tabWidget->setDocumentMode(true);
