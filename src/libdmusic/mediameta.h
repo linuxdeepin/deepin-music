@@ -68,6 +68,7 @@ public:
     bool    favourite   = false;
     bool    invalid     = false;
     bool    loadCover   = false;
+    QString codec;
 
     QString codec;              //save codec
 
