@@ -658,9 +658,7 @@ bool MusicListDataDelegate::editorEvent(QEvent *event, QAbstractItemModel *model
 
             QMouseEvent *pressEvent = static_cast<QMouseEvent *>(event);
             QPointF pressPos = pressEvent->pos();
-
-            if (fillPolygon.containsPoint(pressPos, Qt::OddEvenFill))
-                Q_EMIT hoverPress(index);
+            Q_EMIT hoverPress(index);
         }
         return false;
     }

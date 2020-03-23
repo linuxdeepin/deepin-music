@@ -41,7 +41,6 @@ public:
     QString artist;
     QString album;
     QString lyricPath;
-//    QString codec;
 
     QString pinyinTitle;
     QString pinyinTitleShort;
@@ -70,6 +69,7 @@ public:
     bool    favourite   = false;
     bool    invalid     = false;
     bool    loadCover   = false;
+    QString codec;
 
 public:
     void updateSearchIndex();
