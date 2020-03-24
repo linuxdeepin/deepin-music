@@ -27,6 +27,7 @@
 #include <QGraphicsDropShadowEffect>
 #include <QVBoxLayout>
 #include <QIcon>
+#include <DLabel>
 
 #include <DUtil>
 #include <DSlider>
@@ -42,6 +43,7 @@ public:
     SoundVolumePrivate(SoundVolume *parent) : q_ptr(parent) {}
 
     SoundVolume *q_ptr;
+    DLabel      *lblPersent;
     DSlider     *volSlider  = nullptr;
     QBrush      background;
     QColor      borderColor = QColor(0, 0, 0,  255 * 2 / 10);
@@ -59,15 +61,23 @@ SoundVolume::SoundVolume(QWidget *parent) : QWidget(parent), d_ptr(new SoundVolu
 
     setFixedSize(62, 201);
     auto layout = new QVBoxLayout(this);
-    layout->setContentsMargins(2, 5, 0, 21);
+    layout->setContentsMargins(2, 16, 0, 31);
     layout->setSpacing(0);
+
+    d->lblPersent = new DLabel(this);
+    auto titleFont = d->lblPersent->font();
+    titleFont.setFamily("SourceHanSansSC");
+    titleFont.setWeight(QFont::Medium);
+    titleFont.setPixelSize(14);
+    d->lblPersent->setFont(titleFont);
+    d->lblPersent->setText("100%");
 
     d->volSlider = new DSlider(Qt::Vertical);
     d->volSlider->setMinimum(0);
     d->volSlider->setMaximum(100);
     d->volSlider->slider()->setSingleStep(Player::VolumeStep);
     d->volSlider->setValue(50);
-    d->volSlider->slider()->setFixedHeight(160);
+    d->volSlider->slider()->setFixedHeight(126);
     d->volSlider->setFixedWidth(24);
     d->volSlider->setIconSize(QSize(15, 15));
     d->volSlider->setMouseWheelEnabled(true);
@@ -75,7 +85,9 @@ SoundVolume::SoundVolume(QWidget *parent) : QWidget(parent), d_ptr(new SoundVolu
 //    d->volSlider->setLeftIcon(DHiDPIHelper::loadNxPixmap(":/mpimage/light/normal/volume_lessen_normal.svg"));
 
     layout->addStretch();
-    layout->addWidget(d->volSlider, 0, Qt::AlignCenter);
+
+    layout->addWidget(d->lblPersent, 0, Qt::AlignTop | Qt::AlignHCenter);
+    layout->addWidget(d->volSlider, 1, Qt::AlignCenter);
     layout->addStretch();
     setFixedSize(62, 201);
 
@@ -151,6 +163,7 @@ void SoundVolume::deleyHide()
 void SoundVolume::onVolumeChanged(int volume)
 {
     Q_D(SoundVolume);
+    d->lblPersent->setText(QString::number(volume) + QString("%"));
     d->volSlider->blockSignals(true);
     d->volSlider->setValue(volume);
     d->volSlider->blockSignals(false);
