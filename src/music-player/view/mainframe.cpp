@@ -326,7 +326,7 @@ void MainFramePrivate::initUI(bool showLoading)
 {
     showLoading = true;
     Q_Q(MainFrame);
-    q->setMinimumSize(QSize(800, 600));
+    q->setMinimumSize(QSize(945, 600));
     q->setFocusPolicy(Qt::ClickFocus);
 
     //titlebar->setBackgroundTransparent(true);
