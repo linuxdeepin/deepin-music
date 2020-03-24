@@ -52,7 +52,6 @@ public:
     QString filetype;
 
     qint64  timestamp   = 0;    // addTime;
-
     qint64  offset      = 0;    //msec
     qint64  length      = 1;    //msec
     qint64  track       = 0;
@@ -69,7 +68,8 @@ public:
     bool    favourite   = false;
     bool    invalid     = false;
     bool    loadCover   = false;
-    QString codec;
+
+    QString codec;              //save codec
 
 public:
     void updateSearchIndex();

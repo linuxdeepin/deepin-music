@@ -268,7 +268,6 @@ void PlayerPrivate::initConnection()
 
     q->connect(qplayer, &QMediaPlayer::mediaStatusChanged,
     q, [ = ](QMediaPlayer::MediaStatus status) {
-        qDebug() << "================> change " << status << endl;
         switch (status) {
         case QMediaPlayer::LoadedMedia: {
             //wtf the QMediaPlayer can play image format, 233333333

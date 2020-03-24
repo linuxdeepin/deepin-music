@@ -636,7 +636,7 @@ void PlayListView::showContextMenu(const QPoint &pos,
         auto index = selection->selectedRows().first();
         auto meta = d->model->meta(index);
         QList<QByteArray> codecList = DMusic::detectMetaEncodings(meta);
-//        codecList << "UTF-8" ;
+
         if (!codecList.contains("UTF-8")) {
             codecList.push_front("UTF-8");
         }
@@ -651,7 +651,15 @@ void PlayListView::showContextMenu(const QPoint &pos,
         }
 
         for (auto codec : codecList) {
+
             auto act = textCodecMenu.addAction(codec);
+
+            act->setCheckable(true);
+
+            if (codec == meta->codec) {
+                act->setChecked(true);
+            }
+
             act->setData(QVariant::fromValue(codec));
         }
 
@@ -665,10 +673,14 @@ void PlayListView::showContextMenu(const QPoint &pos,
 
         connect(&textCodecMenu, &DMenu::triggered, this, [ = ](QAction * action) {
             auto codec = action->data().toByteArray();
+
             auto preTitle = meta->title;
             auto preArtist = meta->artist;
             auto preAlbum = meta->album;
+
             meta->updateCodec(codec);
+            meta->codec = codec;
+
             if (preTitle != meta->title || preArtist != meta->artist || preAlbum != meta->album)
                 Q_EMIT updateMetaCodec(preTitle, preArtist, preAlbum, meta);
         });
