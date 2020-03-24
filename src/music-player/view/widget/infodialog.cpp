@@ -25,6 +25,7 @@
 #include <QVBoxLayout>
 #include <QGridLayout>
 #include <QFileInfo>
+#include <QTimer>
 
 #include <DApplication>
 #include "dplatformwindowhandle.h"
@@ -35,6 +36,7 @@
 #include <DHiDPIHelper>
 #include <DWindowCloseButton>
 #include <DFontSizeManager>
+#include <DArrowLineDrawer>
 
 #include <dwindowclosebutton.h>
 
@@ -62,7 +64,8 @@ public:
     DLabel              *title          = nullptr;
     DWindowCloseButton  *closeBt        = nullptr;
     QList<DLabel *>     valueList;
-
+    DArrowLineDrawer    *dArrowLine     = nullptr;
+    int                 frameHeight     = 0;
     InfoDialog *q_ptr;
     Q_DECLARE_PUBLIC(InfoDialog)
 };
@@ -72,13 +75,13 @@ void InfoDialogPrivate::initUI()
     Q_Q(InfoDialog);
 
     q->setObjectName("InfoDialog");
-    q->setFixedWidth(320);
+    q->setFixedSize(320, 512);
 //    q->setWindowFlags(q->windowFlags() | Qt::WindowStaysOnTopHint);
     q->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Expanding);
 
-    auto layout = new QVBoxLayout(q);
-    layout->setSpacing(0);
-    layout->setContentsMargins(10, 50, 10, 10);
+//    auto layout = new QVBoxLayout(q);
+//    layout->setSpacing(0);
+//    layout->setContentsMargins(10, 50, 10, 10);
 
     closeBt = new DWindowCloseButton( q);
     closeBt->setFocusPolicy(Qt::NoFocus);
@@ -86,23 +89,20 @@ void InfoDialogPrivate::initUI()
     closeBt->setIconSize(QSize(50, 50));
     closeBt->move(q->width() - 50, 0);
 
-    cover = new Cover;
+    cover = new Cover(q);
     cover->setContentsMargins(0, 0, 0, 0);
     cover->setObjectName("InfoCover");
     cover->setFixedSize(CoverSize, CoverSize);
-
-    title = new DLabel;
+    cover->move(89, 60);
+    title = new DLabel(q);
     title->setObjectName("InfoTitle");
     title->setFixedWidth(300);
     title->setAlignment(Qt::AlignCenter);
     title->setWordWrap(true);
     title->setForegroundRole(DPalette::BrightText);
+    title->move(10, 212);;
 
-    auto split = new DLabel();
-    split->setObjectName("InfoSplit");
-    split->setFixedSize(300, 1);
-
-    infoGridFrame = new DFrame;
+    infoGridFrame = new DFrame(q);
     infoGridFrame->setFocusPolicy(Qt::NoFocus);
     infoGridFrame->setLineWidth(1);
     infoGridFrame->setFrameRounded(true);
@@ -117,23 +117,14 @@ void InfoDialogPrivate::initUI()
     pl.setColor(DPalette::Shadow, sbcolor);
     infoGridFrame->setPalette(pl);
 
-    //layout->addWidget(closeBt, 0, Qt::AlignTop | Qt::AlignRight);
-    layout->addSpacing(10);
-    layout->addWidget(cover, 0, Qt::AlignCenter);
-    layout->addSpacing(10);
-    layout->addWidget(title, 0, Qt::AlignCenter);
-    layout->addSpacing(10);
-    layout->addWidget(split, 0, Qt::AlignCenter);
-    layout->addSpacing(10);
-    layout->addWidget(infoGridFrame);
+    dArrowLine = new DArrowLineDrawer(q);
+    dArrowLine->setTitle(" " + InfoDialog::tr("Basic info"));
+    dArrowLine->setContent(infoGridFrame);
+    dArrowLine->setFixedSize(300, 200);
 
     auto infoLayout = new QVBoxLayout(infoGridFrame);
     infoLayout->setSpacing(0);
     infoLayout->setMargin(5);
-
-    auto basicinfo = new DLabel("   " + InfoDialog::tr("Basic info"));
-    basicinfo->setMinimumHeight(28);
-    basicinfo->setForegroundRole(DPalette::TextTitle);
 
     auto infogridLayout = new QGridLayout(infoGridFrame);
     infogridLayout->setMargin(10);
@@ -175,35 +166,29 @@ void InfoDialogPrivate::initUI()
         infogridLayout->addWidget(infoKey);
         infogridLayout->addWidget(infoValue);
     }
-
-    infoLayout->addWidget(basicinfo);
     infoLayout->addLayout(infogridLayout);
 
     q->connect(closeBt, &MusicImageButton::clicked, q, &DAbstractDialog::hide);
-
-//    if (qApp->isDXcbPlatform()) {
-//        bgBlurWidget = new DBlurEffectWidget(q);
-//        bgBlurWidget->setMaskColor(QColor(255, 255, 255));
-//        bgBlurWidget->lower();
-//        bgBlurWidget->setBlendMode(DBlurEffectWidget::BehindWindowBlend);
-//        bgBlurWidget->setVisible(DPlatformWindowHandle::hasBlurWindow());
-
-//        DPlatformWindowHandle::connectWindowManagerChangedSignal(q, [ = ] {
-//            bgBlurWidget->setVisible(DPlatformWindowHandle::hasBlurWindow());
-//        });
-//    }
-
+    q->connect(dArrowLine, &DArrowLineDrawer::expandChange, q, [ = ](bool expand) {
+        q->expand(expand);
+    });;
+    q->connect(closeBt, &MusicImageButton::clicked, q, [ = ]() {
+        dArrowLine->setExpand(true);
+    });;
+    dArrowLine->move(10, 252);;
+    dArrowLine->setExpand(true);
 }
+
 
 void InfoDialogPrivate::updateLabelSize()
 {
     Q_Q(InfoDialog);
     title->adjustSize();
-//    auto h = 0;
-//    for (auto label : valueList) {
-////        label->adjustSize();
-//        h += label->size().height() + 6;
-//    }
+    auto h = 0;
+    for (auto label : valueList) {
+//        label->adjustSize();
+        h += label->size().height() + 6;
+    }
 //    infoGridFrame->setFixedHeight(h);
     infoGridFrame->adjustSize();
     q->adjustSize();
@@ -225,7 +210,18 @@ void InfoDialog::resizeEvent(QResizeEvent *event)
 {
 //    Q_D(InfoDialog);
     Dtk::Widget::DAbstractDialog::resizeEvent(event);
-//    d->bgBlurWidget->resize(this->size());
+}
+
+void InfoDialog::expand(bool expand)
+{
+    Q_D(InfoDialog);
+    if (expand) {
+        setFixedHeight(252 + 200 + 60);
+    } else {
+        QTimer::singleShot(200, this, [ = ]() {
+            setFixedHeight(252 + 60);
+        });
+    }
 }
 
 void InfoDialog::updateInfo(const MetaPtr meta)

@@ -37,7 +37,7 @@ public:
     void updateInfo(const MetaPtr meta);
 
     void setThemeType(int type);
-
+    void expand(bool expand);
 private:
     QString geteElidedText(QFont font, QString str, int MaxWidth);
 
