@@ -434,7 +434,6 @@ void MainFramePrivate::hideLyricView()
 
 void MainFramePrivate::showPlaylistView()
 {
-
     QRect start ( 5,  height - 86,
                   width - 10, 80);
     QRect end ( 5,  height - 429,
@@ -443,8 +442,8 @@ void MainFramePrivate::showPlaylistView()
     WidgetHelper::slideEdgeWidget(
         footer, start, end, AnimationDelay, false);
     titlebar->raise();
-    footer->setPlaylistButtonChecked(true);
     footer->raise();
+    footer->setPlaylistButtonChecked(true);
 }
 
 void MainFramePrivate::hidePlaylistView()
@@ -459,6 +458,7 @@ void MainFramePrivate::hidePlaylistView()
     footer->setPlaylistButtonChecked(false);
     footer->raise();
     playListWidget->hide();
+//    setPlayListVisible(false);
 }
 
 
@@ -541,13 +541,13 @@ void MainFramePrivate::togglePlaylist()
 {
     importWidget->hide();
     if (playListWidget->isVisible()) {
-        hidePlaylistView();
+//        hidePlaylistView();
         titlebarwidget->setSearchEnable(true);
     } else {
-        titlebarwidget->setSearchEnable(false);
-        showPlaylistView();
+        titlebarwidget->setSearchEnable(true);
+//        showPlaylistView();
     }
-    setPlayListVisible(!footer                                                                           ->getShowPlayListFlag());
+    setPlayListVisible(!footer->getShowPlayListFlag());
 }
 
 void MainFramePrivate::setPlayListVisible(bool visible)
