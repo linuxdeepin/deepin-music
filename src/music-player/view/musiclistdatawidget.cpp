@@ -814,7 +814,6 @@ void MusicListDataWidgetPrivate::initConntion()
     q->connect(musicListView, &PlayListView::removeMusicList,
     q, [ = ](const MetaPtrList  & metalist) {
         Q_EMIT q->musiclistRemove(musicListView->playlist(), metalist);
-        qDebug() << "============> PlayListView::removeMusicList" << endl;
     });
     q->connect(musicListView, &PlayListView::deleteMusicList,
     q, [ = ](const MetaPtrList  & metalist) {

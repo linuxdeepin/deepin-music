@@ -25,6 +25,7 @@
 #include <QSqlDatabase>
 #include <QSqlQuery>
 #include <QSqlError>
+#include <QUuid>
 #include <QDir>
 
 #include <mediameta.h>
@@ -620,6 +621,7 @@ bool MediaDatabase::mediaMetaExist(const QString &hash)
 QList<MediaMeta> MediaDatabase::allmetas()
 {
     QList<MediaMeta> metalist;
+
     QString queryString = QString("SELECT hash, localpath, title, artist, album, "
                                   "filetype, track, offset, length, size, "
                                   "timestamp, invalid, search_id, cuepath "
@@ -649,80 +651,125 @@ QList<MediaMeta> MediaDatabase::allmetas()
         meta.searchID = query.value(12).toString();
         meta.cuePath = query.value(13).toString();
 
-        /*--------------INSERT INTO musicNew------------------------*/
+        /*----------INSERT INTO musicNew------------*/
 
-        query.prepare("INSERT INTO musicNew ("
-                      "hash, timestamp, title, artist, album, "
-                      "filetype, size, track, offset, favourite, localpath, length, "
-                      "py_title, py_title_short, py_artist, py_artist_short, "
-                      "py_album, py_album_short, lyricPath, codec, cuepath "
-                      ") "
-                      "VALUES ("
-                      ":hash, :timestamp, :title, :artist, :album, "
-                      ":filetype, :size, :track, :offset, :favourite, :localpath, :length, "
-                      ":py_title, :py_title_short, :py_artist, :py_artist_short, "
-                      ":py_album, :py_album_short, :lyricPath, :codec, :cuepath "
-                      ")");
-        query.bindValue(":hash", meta.hash);
-        query.bindValue(":timestamp", meta.timestamp);
-        query.bindValue(":title", meta.title);
-        query.bindValue(":artist", meta.artist);
-        query.bindValue(":album", meta.album);
-        query.bindValue(":filetype", meta.filetype);
-        query.bindValue(":size", meta.size);
-        query.bindValue(":track", meta.track);
-        query.bindValue(":offset", meta.offset);
-        query.bindValue(":favourite", meta.favourite);
-        query.bindValue(":localpath", meta.localPath);
-        query.bindValue(":length", meta.length);
-        query.bindValue(":py_title", meta.pinyinTitle);
-        query.bindValue(":py_title_short", meta.pinyinTitleShort);
-        query.bindValue(":py_artist", meta.pinyinArtist);
-        query.bindValue(":py_artist_short", meta.pinyinArtistShort);
-        query.bindValue(":py_album", meta.pinyinAlbum);
-        query.bindValue(":py_album_short", meta.pinyinAlbumShort);
-        query.bindValue(":lyricPath", meta.lyricPath);
-        query.bindValue(":codec", meta.codec);
-        query.bindValue(":cuepath", meta.cuePath);
+        QSqlQuery querys;
 
-        if (! query.exec()) {
-            qCritical() << query.lastError();
+        querys.prepare("INSERT INTO musicNew ("
+                       "hash, timestamp, title, artist, album, "
+                       "filetype, size, track, offset, favourite, localpath, length, "
+                       "py_title, py_title_short, py_artist, py_artist_short, "
+                       "py_album, py_album_short, lyricPath, codec, cuepath "
+                       ") "
+                       "VALUES ("
+                       ":hash, :timestamp, :title, :artist, :album, "
+                       ":filetype, :size, :track, :offset, :favourite, :localpath, :length, "
+                       ":py_title, :py_title_short, :py_artist, :py_artist_short, "
+                       ":py_album, :py_album_short, :lyricPath, :codec, :cuepath "
+                       ")");
+
+        QString uuid = QUuid::createUuid().toString().remove('{').remove('}').remove('-');
+        qDebug() << "uuid : " << uuid << endl;
+
+        querys.bindValue(":hash", meta.hash);
+        querys.bindValue(":timestamp", meta.timestamp);
+        querys.bindValue(":title", meta.title);
+        querys.bindValue(":artist", meta.artist);
+        querys.bindValue(":album", meta.album);
+        querys.bindValue(":filetype", meta.filetype);
+        querys.bindValue(":size", meta.size);
+        querys.bindValue(":track", meta.track);
+        querys.bindValue(":offset", meta.offset);
+        querys.bindValue(":favourite", meta.favourite);
+        querys.bindValue(":localpath", meta.localPath);
+        querys.bindValue(":length", meta.length);
+        querys.bindValue(":py_title", meta.pinyinTitle);
+        querys.bindValue(":py_title_short", meta.pinyinTitleShort);
+        querys.bindValue(":py_artist", meta.pinyinArtist);
+        querys.bindValue(":py_artist_short", meta.pinyinArtistShort);
+        querys.bindValue(":py_album", meta.pinyinAlbum);
+        querys.bindValue(":py_album_short", meta.pinyinAlbumShort);
+        querys.bindValue(":lyricPath", meta.lyricPath);
+        querys.bindValue(":codec", meta.codec);
+        querys.bindValue(":cuepath", meta.cuePath);
+
+
+        /*-------------querys.exec----------------*/
+
+        if (! querys.exec()) {
+            qCritical() << querys.lastError();
+
+
+            QString queryStringNew = QString("SELECT hash, localpath, title, artist, album, "
+                                             "filetype, track, offset, length, size, "
+                                             "timestamp, invalid, search_id, cuepath, "
+                                             "lyricPath, codec "
+                                             "FROM musicNew");
+
+            QSqlQuery queryNew;
+
+            queryNew.prepare(queryStringNew);
+            if (! queryNew.exec()) {
+                qCritical() << queryNew.lastError();
+                return metalist;
+            }
+
+            while (queryNew.next()) {
+                MediaMeta meta;
+                meta.hash = queryNew.value(0).toString();
+                meta.localPath = queryNew.value(1).toString();
+                meta.title = queryNew.value(2).toString();
+                meta.artist = queryNew.value(3).toString();
+                meta.album = queryNew.value(4).toString();
+                meta.filetype = queryNew.value(5).toString();
+                meta.track = queryNew.value(6).toLongLong();
+                meta.offset = queryNew.value(7).toLongLong();
+                meta.length = queryNew.value(8).toLongLong();
+                meta.size = queryNew.value(9).toLongLong();
+                meta.timestamp = queryNew.value(10).toLongLong();
+                meta.invalid = queryNew.value(11).toBool();
+                meta.searchID = queryNew.value(12).toString();
+                meta.cuePath = queryNew.value(13).toString();
+                meta.lyricPath = queryNew.value(14).toString();
+                meta.codec = queryNew.value(15).toString();
+                metalist << meta;
+            }
         }
+
     }
 
-    metalist.clear();
-    queryString.clear();
-    queryString = QString("SELECT hash, localpath, title, artist, album, "
-                          "filetype, track, offset, length, size, "
-                          "timestamp, invalid, search_id, cuepath, "
-                          "lyricPath, codec "
-                          "FROM musicNew");
+    QString queryStringNew = QString("SELECT hash, localpath, title, artist, album, "
+                                     "filetype, track, offset, length, size, "
+                                     "timestamp, invalid, search_id, cuepath, "
+                                     "lyricPath, codec "
+                                     "FROM musicNew");
 
-    query.clear();
-    query.prepare(queryString);
-    if (! query.exec()) {
-        qCritical() << query.lastError();
+    QSqlQuery queryNew;
+
+    queryNew.prepare(queryStringNew);
+    if (! queryNew.exec()) {
+        qCritical() << queryNew.lastError();
         return metalist;
     }
 
-    while (query.next()) {
+    while (queryNew.next()) {
         MediaMeta meta;
-        meta.hash = query.value(0).toString();
-        meta.localPath = query.value(1).toString();
-        meta.title = query.value(2).toString();
-        meta.artist = query.value(3).toString();
-        meta.album = query.value(4).toString();
-        meta.filetype = query.value(5).toString();
-        meta.track = query.value(6).toLongLong();
-        meta.offset = query.value(7).toLongLong();
-        meta.length = query.value(8).toLongLong();
-        meta.size = query.value(9).toLongLong();
-        meta.timestamp = query.value(10).toLongLong();
-        meta.invalid = query.value(11).toBool();
-        meta.searchID = query.value(12).toString();
-        meta.cuePath = query.value(13).toString();
-        meta.lyricPath = query.value(14).toString();
-        meta.codec = query.value(15).toString();
+        meta.hash = queryNew.value(0).toString();
+        meta.localPath = queryNew.value(1).toString();
+        meta.title = queryNew.value(2).toString();
+        meta.artist = queryNew.value(3).toString();
+        meta.album = queryNew.value(4).toString();
+        meta.filetype = queryNew.value(5).toString();
+        meta.track = queryNew.value(6).toLongLong();
+        meta.offset = queryNew.value(7).toLongLong();
+        meta.length = queryNew.value(8).toLongLong();
+        meta.size = queryNew.value(9).toLongLong();
+        meta.timestamp = queryNew.value(10).toLongLong();
+        meta.invalid = queryNew.value(11).toBool();
+        meta.searchID = queryNew.value(12).toString();
+        meta.cuePath = queryNew.value(13).toString();
+        meta.lyricPath = queryNew.value(14).toString();
+        meta.codec = queryNew.value(15).toString();
         metalist << meta;
     }
 
