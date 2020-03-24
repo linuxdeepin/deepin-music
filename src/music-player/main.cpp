@@ -99,7 +99,9 @@ int main(int argc, char *argv[])
     QIcon icon = QIcon::fromTheme("deepin-music");
     app.setProductIcon(icon);
 
-    auto *sharedMemory = new QSharedMemory(QString("deepinmusicsingle"));
+    QString userName = QDir::homePath().section("/", -1, -1);
+
+    auto *sharedMemory = new QSharedMemory(userName + QString("-deepinmusicsingle"));
     volatile int i = 2;
     while (i--) {
         if (sharedMemory->attach(QSharedMemory::ReadOnly)) {
