@@ -104,7 +104,7 @@ void InfoDialogPrivate::initUI()
 
     infoGridFrame = new DFrame(q);
     infoGridFrame->setFocusPolicy(Qt::NoFocus);
-    infoGridFrame->setLineWidth(1);
+    infoGridFrame->setLineWidth(0);
     infoGridFrame->setFrameRounded(true);
     //infoGridFrame->setMaximumWidth(300);
     infoGridFrame->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
