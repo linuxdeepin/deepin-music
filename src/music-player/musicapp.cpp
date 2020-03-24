@@ -217,14 +217,17 @@ void MusicApp::show()
     qDebug() << "restore state:" << state;
     dumpGeometry(geometry);
 
-    if (geometry.isEmpty()) {
-        d->playerFrame->resize(QSize(1070, 680));
-        d->playerFrame->show();
-        Dtk::Widget::moveToCenter(d->playerFrame);
-    } else {
-        d->playerFrame->restoreGeometry(geometry);
-        d->playerFrame->setWindowState(static_cast<Qt::WindowStates >(state));
-    }
+    d->playerFrame->resize(QSize(1070, 680));
+    d->playerFrame->show();
+    Dtk::Widget::moveToCenter(d->playerFrame);
+//    if (geometry.isEmpty()) {
+//        d->playerFrame->resize(QSize(1070, 680));
+//        d->playerFrame->show();
+//        Dtk::Widget::moveToCenter(d->playerFrame);
+//    } else {
+//        d->playerFrame->restoreGeometry(geometry);
+//        d->playerFrame->setWindowState(static_cast<Qt::WindowStates >(state));
+//    }
     d->playerFrame->show();
     d->playerFrame->setFocus();
 }
