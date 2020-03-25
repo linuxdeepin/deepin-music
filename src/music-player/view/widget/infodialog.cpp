@@ -75,7 +75,7 @@ void InfoDialogPrivate::initUI()
     Q_Q(InfoDialog);
 
     q->setObjectName("InfoDialog");
-    q->setFixedSize(320, 512);
+    q->setFixedSize(320, 500);
 //    q->setWindowFlags(q->windowFlags() | Qt::WindowStaysOnTopHint);
     q->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Expanding);
 
@@ -216,10 +216,10 @@ void InfoDialog::expand(bool expand)
 {
     Q_D(InfoDialog);
     if (expand) {
-        setFixedHeight(252 + 200 + 60);
+        setFixedHeight(252 + 200 + 50);
     } else {
         QTimer::singleShot(200, this, [ = ]() {
-            setFixedHeight(252 + 60);
+            setFixedHeight(252 + 50);
         });
     }
 }
