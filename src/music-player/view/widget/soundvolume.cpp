@@ -47,8 +47,10 @@ public:
     DSlider     *volSlider  = nullptr;
     QBrush      background;
     QColor      borderColor = QColor(0, 0, 0,  255 * 2 / 10);
+
     int         radius      = 20;
     bool        mouseIn     = false;
+    int         sThemeType  = 0;
 
     Q_DECLARE_PUBLIC(SoundVolume)
 };
@@ -194,12 +196,16 @@ void SoundVolume::leaveEvent(QEvent *event)
 void SoundVolume::wheelEvent(QWheelEvent *event)
 {
     QWidget::wheelEvent(event);
-//    Q_D(SoundVolume);
-//    if (event->angleDelta().y() > 0) {
-//        d->volSlider->setValue(d->volSlider->value() + 5);
-//    } else {
-//        d->volSlider->setValue(d->volSlider->value() - 5);
-//    }
+
+    /*
+    Q_D(SoundVolume);
+    if (event->angleDelta().y() > 0) {
+        d->volSlider->setValue(d->volSlider->value() + 5);
+    } else {
+        d->volSlider->setValue(d->volSlider->value() - 5);
+    }
+    */
+
 }
 
 void SoundVolume::paintEvent(QPaintEvent * /*event*/)
@@ -246,26 +252,36 @@ void SoundVolume::paintEvent(QPaintEvent * /*event*/)
     path.arcTo(topRightRect, 180.0, -90.0);
     path.lineTo(radius, 0.0);
 
-    // FIXME: light: white
-//    painter.fillPath(path, QColor(49, 49, 49));
-    painter.fillPath(path, background);
+    /*
+    FIXME: light: white
+    painter.fillPath(path, QColor(49, 49, 49));
+    FIXME: light: QColor(0, 0, 0, 51)
+    QPen pen(QColor(0, 0, 0, 0.1 * 255));
+    */
 
-    // FIXME: light: QColor(0, 0, 0, 51)
-//    QPen pen(QColor(0, 0, 0, 0.1 * 255));
+    if (d->sThemeType == 2) {
+        painter.fillPath(path, QColor(43, 43, 43));
+
+    } else {
+        painter.fillPath(path, background);
+    }
+
     QPen pen(borderColor);
     pen.setWidth(penWidthf);
     //painter.strokePath(path, pen);
 }
 void SoundVolume::slotTheme(int type)
 {
-    Q_D(const SoundVolume);
+    Q_D(SoundVolume);
+
+    d->sThemeType = type;
+
     QString rStr;
     if (type == 1) {
         rStr = "light";
     } else {
         rStr = "dark";
     }
-//    d->volSlider->setRightIcon(DHiDPIHelper::loadNxPixmap(QString(":/mpimage/%1/normal/volume_add_normal.svg").arg(rStr)));
-//    d->volSlider->setLeftIcon(DHiDPIHelper::loadNxPixmap(QString(":/mpimage/%1/normal/volume_lessen_normal.svg").arg(rStr)));
+//  d->volSlider->setRightIcon(DHiDPIHelper::loadNxPixmap(QString(":/mpimage/%1/normal/volume_add_normal.svg").arg(rStr)));
 
 }

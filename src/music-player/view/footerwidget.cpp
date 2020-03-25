@@ -1008,6 +1008,7 @@ void Footer::onMediaLibraryClean()
 
 void Footer::slotTheme(int type)
 {
+
     Q_D(Footer);
     QString rStr;
     if (type == 1) {
@@ -1017,10 +1018,12 @@ void Footer::slotTheme(int type)
         d->forwardWidget->setMaskColor(maskColor);
         rStr = "light";
 
-//        auto titlePl = d->title->palette();
-//        QColor titleColor("#000000");
-//        titlePl.setColor(DPalette::WindowText, titleColor);
-//        d->title->setPalette(titlePl);
+        /*
+        auto titlePl = d->title->palette();
+        QColor titleColor("#000000");
+        titlePl.setColor(DPalette::WindowText, titleColor);
+        d->title->setPalette(titlePl);
+        */
 
         auto artistPl = d->artist->palette();
         QColor artistColor = artistPl.color(DPalette::BrightText);
@@ -1067,10 +1070,12 @@ void Footer::slotTheme(int type)
         d->forwardWidget->setMaskColor(maskColor);
         rStr = "dark";
 
-//        auto titlePl = d->title->palette();
-//        QColor titleColor("#FFFFFF");
-//        titlePl.setColor(DPalette::WindowText, titleColor);
-//        d->title->setPalette(titlePl);
+        /*
+        auto titlePl = d->title->palette();
+        QColor titleColor("#FFFFFF");
+        titlePl.setColor(DPalette::WindowText, titleColor);
+        d->title->setPalette(titlePl);
+        */
 
         auto artistPl = d->artist->palette();
         QColor artistColor = artistPl.color(DPalette::BrightText);
@@ -1109,6 +1114,7 @@ void Footer::slotTheme(int type)
         pa.setColor(DPalette::Light, QColor("#444444"));
         pa.setColor(DPalette::Dark, QColor("#444444"));
         d->btSound->setPalette(pa);
+
     }
     d->m_type = type;
     //d->btPlay->setIcon(DHiDPIHelper::loadNxPixmap(QString(":/mpimage/%1/normal/play_normal.svg").arg(rStr)));
