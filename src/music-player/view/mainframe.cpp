@@ -92,6 +92,7 @@ public:
     void hideLyricView();
     void showPlaylistView();
     void hidePlaylistView();
+    void resiveistView();
     void slideToMusicListView(bool keepPlaylist);
     void disableControl(int delay = 350);
     void updateSize(QSize newSize);
@@ -139,6 +140,7 @@ public:
 
     int                 width                   = 0;
     int                 height                  = 0;
+    bool                first                   = true;
     MainFrame *q_ptr;
     Q_DECLARE_PUBLIC(MainFrame)
 };
@@ -404,13 +406,12 @@ void MainFramePrivate::postInitUI()
 void MainFramePrivate::showLyricView()
 {
     footer->setPlaylistButtonChecked(false);
-    musicListWidget->setVisible(false);
+    hidePlaylistView();
     auto current = currentWidget ? currentWidget : playListWidget;
     lyricWidget->setFixedSize(current->size());
     WidgetHelper::slideBottom2TopWidget(
         current,  lyricWidget, AnimationDelay);
     currentWidget = lyricWidget;
-    setPlayListVisible(false);
     titlebar->raise();
     footer->setLyricButtonChecked(true);
     footer->raise();
@@ -440,7 +441,7 @@ void MainFramePrivate::showPlaylistView()
                 width - 10, 423);
 
     WidgetHelper::slideEdgeWidget(
-        footer, start, end, AnimationDelay, false);
+        footer, playListWidget, start, end, AnimationDelay, true);
     titlebar->raise();
     footer->raise();
     footer->setPlaylistButtonChecked(true);
@@ -449,16 +450,33 @@ void MainFramePrivate::showPlaylistView()
 void MainFramePrivate::hidePlaylistView()
 {
     QRect start ( 5,  height - 429,
-                  width - 5,  height - 429 + 423);
+                  width - 10, 423);
     QRect end ( 5,  height - 86,
-                width - 5,  height - 86 + 80);
+                width - 10, 80);
     WidgetHelper::slideEdgeWidget(
-        footer, start, end, AnimationDelay, false);
+        footer, playListWidget, start, end, AnimationDelay, false);
     titlebar->raise();
     footer->setPlaylistButtonChecked(false);
     footer->raise();
-    playListWidget->hide();
-//    setPlayListVisible(false);
+}
+
+void MainFramePrivate::resiveistView()
+{
+    if (first) {
+        first = false;
+        return ;
+    }
+    if (playListWidget->isVisible()) {
+        QRect rect ( 5,  height - 429,
+                     width - 10, 423);
+        WidgetHelper::slideEdgeWidget(
+            footer, playListWidget, rect, rect, 10, true);
+    } else {
+        QRect rect ( 5,  height - 429,
+                     width - 10, 423);
+        WidgetHelper::slideEdgeWidget(
+            footer, playListWidget, rect, rect, 10, false);
+    }
 }
 
 
@@ -526,7 +544,6 @@ void MainFramePrivate:: slideToMusicListView(bool keepPlaylist)
 
 void MainFramePrivate::toggleLyricView()
 {
-    playListWidget->hide();
     musicListWidget->hide();
     if (lyricWidget->isVisible()) {
         hideLyricView();
@@ -541,13 +558,12 @@ void MainFramePrivate::togglePlaylist()
 {
     importWidget->hide();
     if (playListWidget->isVisible()) {
-//        hidePlaylistView();
+        hidePlaylistView();
         titlebarwidget->setSearchEnable(true);
     } else {
+        showPlaylistView();
         titlebarwidget->setSearchEnable(true);
-//        showPlaylistView();
     }
-    setPlayListVisible(!footer->getShowPlayListFlag());
 }
 
 void MainFramePrivate::setPlayListVisible(bool visible)
@@ -558,15 +574,15 @@ void MainFramePrivate::setPlayListVisible(bool visible)
         return;
     }
 
-    footer->showPlayListWidget(q->width(), q->height(), true);
-    int delay = AnimationDelay * 6 / 10;
+    footer->showPlayListWidget(q->width(), q->height(), false);
+//    int delay = AnimationDelay * 6 / 10;
     //disableControl(delay);
     titlebar->raise();
     footer->raise();
 
-    QTimer::singleShot(delay * 1, q, [ = ]() {
-        playListWidget->setProperty("moving", false);
-    });
+//    QTimer::singleShot(delay * 1, q, [ = ]() {
+//        playListWidget->setProperty("moving", false);
+//    });
 }
 
 void MainFramePrivate::disableControl(int delay)
@@ -609,6 +625,9 @@ void MainFramePrivate::updateSize(QSize newSize)
     width  =  newSize.width();
     height =  newSize.height();
     footer->showPlayListWidget(newSize.width(), newSize.height());
+    if (playListWidget != nullptr) {
+        resiveistView();
+    }
 }
 
 void MainFramePrivate::updateViewname(const QString &vm)

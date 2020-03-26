@@ -24,8 +24,7 @@
 #include <QPixmap>
 #include <QImage>
 
-namespace WidgetHelper
-{
+namespace WidgetHelper {
 
 QPixmap blurImage(const QImage &image, int radius);
 QImage cropRect(const QImage &image, QSize sz);
@@ -34,7 +33,7 @@ QPixmap coverPixmap(const QString &coverPath, QSize sz);
 void slideRight2LeftWidget(QWidget *left, QWidget *right, int delay);
 void slideBottom2TopWidget(QWidget *top, QWidget *bottom, int delay);
 void slideTop2BottomWidget(QWidget *top, QWidget *bottom, int delay);
-void slideEdgeWidget(QWidget *right, QRect start, QRect end, int delay, bool hide = false);
+void slideEdgeWidget(QWidget *widget, QWidget *child, QRect start, QRect end, int delay, bool hide = false);
 
 void workaround_updateStyle(QWidget *parent, const QString &theme);
 }

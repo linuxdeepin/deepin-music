@@ -263,21 +263,24 @@ void slideTop2BottomWidget(QWidget *top, QWidget *bottom, int delay)
     });
 }
 
-void slideEdgeWidget(QWidget *right, QRect start, QRect end, int delay, bool hide)
+void slideEdgeWidget(QWidget *widget, QWidget *child, QRect start, QRect end, int delay, bool visible)
 {
-    right->show();
-
-    QPropertyAnimation *animation2 = new QPropertyAnimation(right, "geometry");
+    QPropertyAnimation *animation2 = new QPropertyAnimation(widget, "geometry");
     animation2->setEasingCurve(QEasingCurve::InCurve);
     animation2->setDuration(delay);
     animation2->setStartValue(start);
     animation2->setEndValue(end);
     animation2->start();
+    if (visible) {
+        child->show();
+    }
     animation2->connect(animation2, &QPropertyAnimation::finished,
                         animation2, &QPropertyAnimation::deleteLater);
-    if (hide)
-        animation2->connect(animation2, &QPropertyAnimation::finished,
-                            right, &QWidget::hide);
+    animation2->connect(animation2, &QPropertyAnimation::finished, widget, [ = ]() {
+        if (!visible) {
+            child->hide();
+        }
+    });
 
 }
 

@@ -57,6 +57,7 @@ public:
 
     PlayListWidget *getPlayListWidget();
     void showPlayListWidget(int width, int height, bool changFlag = false);
+    void setSize(int width, int height, bool changFlag = false);
     bool getShowPlayListFlag();
 
 signals:
