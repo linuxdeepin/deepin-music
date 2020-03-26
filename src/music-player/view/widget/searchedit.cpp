@@ -145,6 +145,7 @@ void SearchEdit::onTextChanged()
     qDebug() << "this->text().size() :" << this->text().size();
     if (this->text().size() == 0) {
         m_result->hide();
+        m_LastText = "";
         return;
     }
     if (m_Text == this->text()) {
