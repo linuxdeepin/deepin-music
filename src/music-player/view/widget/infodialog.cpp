@@ -96,11 +96,11 @@ void InfoDialogPrivate::initUI()
     cover->move(89, 60);
     title = new DLabel(q);
     title->setObjectName("InfoTitle");
-    title->setFixedWidth(300);
+    title->setFixedWidth(290);
     title->setAlignment(Qt::AlignCenter);
     title->setWordWrap(true);
     title->setForegroundRole(DPalette::BrightText);
-    title->move(10, 212);;
+    title->move(15, 212);
 
     infoGridFrame = new DFrame(q);
     infoGridFrame->setFocusPolicy(Qt::NoFocus);
@@ -120,7 +120,7 @@ void InfoDialogPrivate::initUI()
     dArrowLine = new DArrowLineDrawer(q);
     dArrowLine->setTitle(" " + InfoDialog::tr("Basic info"));
     dArrowLine->setContent(infoGridFrame);
-    dArrowLine->setFixedSize(300, 200);
+    dArrowLine->setFixedSize(290, 195);
 
     auto infoLayout = new QVBoxLayout(infoGridFrame);
     infoLayout->setSpacing(0);
@@ -175,7 +175,7 @@ void InfoDialogPrivate::initUI()
     q->connect(closeBt, &MusicImageButton::clicked, q, [ = ]() {
         dArrowLine->setExpand(true);
     });;
-    dArrowLine->move(10, 252);;
+    dArrowLine->move(15, 252);;
     dArrowLine->setExpand(true);
 }
 
