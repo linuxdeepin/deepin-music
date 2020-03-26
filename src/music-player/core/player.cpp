@@ -908,10 +908,10 @@ void Player::setFadeInOutFactor(double fadeInOutFactor)
 //    qDebug() << "setFadeInOutFactor" << fadeInOutFactor
 //             << d->volume *d->fadeInOutFactor << d->volume;
     d->qplayer->blockSignals(true);
-    //d->qplayer->setVolume(d->volume * d->fadeInOutFactor);
+    d->qplayer->setVolume(d->volume * d->fadeInOutFactor);
     d->qplayer->blockSignals(false);
 
-    setMusicVolume(d->volume * d->fadeInOutFactor / 100.0);
+    //setMusicVolume(d->volume * d->fadeInOutFactor / 100.0);
 }
 
 void Player::setFadeInOut(bool fadeInOut)
