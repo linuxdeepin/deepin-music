@@ -46,7 +46,7 @@ static QStringList          sSupportedSuffixList;
 static QStringList          sSupportedFiterList;
 static QStringList          sSupportedMimeTypes;
 
-static const int sFadeInOutAnimationDuration = 500; //ms
+static const int sFadeInOutAnimationDuration = 1000; //ms
 
 void initMiniTypes()
 {
@@ -594,6 +594,7 @@ void Player::playMeta(PlaylistPtr playlist, const MetaPtr meta)
 void Player::resumeAni()
 {
     Q_D(Player);
+    d->pauseTimer->stop();
     if (d->resumeCount < 0.9) {
         //qDebug() << " Player::resumeAni();" << d->resumeCount;
         setFadeInOutFactor(d->resumeCount);
@@ -610,10 +611,10 @@ void Player::resumeAni()
 void Player::resume(PlaylistPtr playlist, const MetaPtr meta)
 {
     Q_D(Player);
-    d->resumeTimer->stop();
-    if (d->fadeInOut) {
-        d->resumeTimer->start(100);
-    }
+//    d->resumeTimer->stop();
+//    if (d->fadeInOut) {
+//        d->resumeTimer->start(100);
+//    }
     qDebug() << "resume top";
     if (playlist == d->activePlaylist && d->qplayer->state() == QMediaPlayer::PlayingState && meta->hash == d->activeMeta->hash)
         return;
@@ -628,7 +629,7 @@ void Player::resume(PlaylistPtr playlist, const MetaPtr meta)
         d->qplayer->play();
     });
 
-#if 0
+#if 1
     if (d->fadeOutAnimation) {
         d->fadeOutAnimation->stop();
         d->fadeOutAnimation->deleteLater();
@@ -680,6 +681,7 @@ void Player::playPrevMusic(PlaylistPtr playlist, const MetaPtr meta)
 void Player::pauseAni()
 {
     Q_D(Player);
+    d->resumeTimer->stop();
     if (d->pauseCount > 0.11) {
         setFadeInOutFactor(d->pauseCount);
         d->pauseCount -= 0.1;
@@ -698,13 +700,13 @@ void Player::pauseAni()
 void Player::pause()
 {
     Q_D(Player);
-    d->pauseTimer->stop();
-    if (d->fadeInOut) {
-        d->pauseTimer->start(100);
-    } else {
-        d->qplayer->pause();
-    }
-#if 0
+//    d->pauseTimer->stop();
+//    if (d->fadeInOut) {
+//        d->pauseTimer->start(100);
+//    } else {
+//        d->qplayer->pause();
+//    }
+#if 1
     if (d->fadeInAnimation) {
 
         d->fadeInAnimation->stop();
