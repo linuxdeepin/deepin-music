@@ -512,6 +512,7 @@ void Presenter::prepareData()
     this, [ = ](qint64 position, qint64 duration) {
         d->lastPlayPosition = position;
         Q_EMIT progrossChanged(position, duration);
+        qDebug() << "=========> Q_EMIT progrossChanged" << endl;
     });
 
     connect(d->player, &Player::volumeChanged,

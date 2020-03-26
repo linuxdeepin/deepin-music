@@ -534,10 +534,7 @@ Footer::Footer(QWidget *parent) :
     }
     d->btCover->setIcon(Dtk::Widget::DHiDPIHelper::loadNxPixmap(d->defaultCover));
 
-//    bool themeFlag = false;
-//    int themeType = MusicSettings::value("base.play.theme").toInt(&themeFlag);
-//    if (!themeFlag)
-//        themeType = 1;
+
     int themeType = DGuiApplicationHelper::instance()->themeType();
     slotTheme(themeType);
 
@@ -1200,7 +1197,6 @@ void Footer::slotTheme(int type)
                                   QString(":/mpimage/%1/normal/playlist_normal.svg").arg(rStr),
                                   QString(":/mpimage/%1/press/playlist_press.svg").arg(rStr),
                                   QString(":/mpimage/%1/checked/playlist_checked.svg").arg(rStr));
-
 
     d->btPlayMode->setModeIcons(modes, pressModes);
     d->waveform->setThemeType(type);

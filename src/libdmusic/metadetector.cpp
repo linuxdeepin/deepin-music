@@ -157,7 +157,6 @@ void MetaDetector::updateMediaFileTagCodec(MediaMeta *meta, const QByteArray &co
             if (detectCodec.isEmpty())
                 detectCodec = allDetectCodecs.value(0);
 
-//            qDebug() << "detect codec" << detectEncodings(detectByte);
             QString curStr = QString::fromLocal8Bit(tag->title().toCString());
             if (curStr.isEmpty())
                 curStr = QString::fromLocal8Bit(tag->artist().toCString());
@@ -171,17 +170,19 @@ void MetaDetector::updateMediaFileTagCodec(MediaMeta *meta, const QByteArray &co
             }
         }
 
-//        qDebug() << "convert to" << detectCodec;
         QString detectCodecStr(detectCodec);
         if (detectCodecStr.compare("utf-8", Qt::CaseInsensitive) == 0) {
             meta->album = TStringToQString(tag->album());
             meta->artist = TStringToQString(tag->artist());
             meta->title = TStringToQString(tag->title());
+            meta->codec = "UTF-8";
+
         } else {
             QTextCodec *codec = QTextCodec::codecForName(detectCodec);
             meta->album = codec->toUnicode(tag->album().toCString());
             meta->artist = codec->toUnicode(tag->artist().toCString());
             meta->title = codec->toUnicode(tag->title().toCString());
+            meta->codec = detectCodec;
         }
 
 #ifdef true
@@ -208,6 +209,7 @@ void MetaDetector::updateMediaFileTagCodec(MediaMeta *meta, const QByteArray &co
         meta->album = TStringToQString(tag->album());
         meta->artist = TStringToQString(tag->artist());
         meta->title = TStringToQString(tag->title());
+        meta->codec = "UTF-8";
     }
 
     if (meta->title.isEmpty()) {

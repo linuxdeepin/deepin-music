@@ -218,27 +218,32 @@ void PlayerPrivate::initConnection()
             return;
         }
 
-//        qDebug() << position << sFadeInOutAnimationDuration << activeMeta->offset << activeMeta->length;
-//        qDebug() << position/1000 << sFadeInOutAnimationDuration << activeMeta->offset/1000 << activeMeta->length/1000;
 
-//        if (position + (sFadeInOutAnimationDuration) >= activeMeta->offset + activeMeta->length) {
-//            qDebug() << "start fade out";
-//            if (fadeInOut&& !fadeOutAnimation) {
-//                fadeOutAnimation = new QPropertyAnimation(q, "fadeInOutFactor");
-//                fadeOutAnimation->setStartValue(1.0000);
-//                fadeOutAnimation->setKeyValueAt(0.9999, 0.1000);
-//                fadeOutAnimation->setEndValue(1.0000);
-//                fadeOutAnimation->setDuration(sFadeInOutAnimationDuration);
-//                q->connect(fadeOutAnimation, &QPropertyAnimation::finished,
-//                q, [ = ]() {
-//                    fadeOutAnimation->deleteLater();
-//                    fadeOutAnimation = nullptr;
-//                });
-//                fadeOutAnimation->start();
-//            }
-//        }
+        /*
+        qDebug() << position << sFadeInOutAnimationDuration << activeMeta->offset << activeMeta->length;
+        qDebug() << position / 1000 << sFadeInOutAnimationDuration << activeMeta->offset / 1000 << activeMeta->length / 1000;
+
+        if (position + (sFadeInOutAnimationDuration) >= activeMeta->offset + activeMeta->length) {
+            qDebug() << "start fade out";
+            if (fadeInOut && !fadeOutAnimation) {
+                fadeOutAnimation = new QPropertyAnimation(q, "fadeInOutFactor");
+                fadeOutAnimation->setStartValue(1.0000);
+                fadeOutAnimation->setKeyValueAt(0.9999, 0.1000);
+                fadeOutAnimation->setEndValue(1.0000);
+                fadeOutAnimation->setDuration(sFadeInOutAnimationDuration);
+                q->connect(fadeOutAnimation, &QPropertyAnimation::finished,
+                q, [ = ]() {
+                    fadeOutAnimation->deleteLater();
+                    fadeOutAnimation = nullptr;
+                });
+                fadeOutAnimation->start();
+            }
+        }
+        */
+
 
         Q_EMIT q->positionChanged(position - activeMeta->offset,  activeMeta->length);
+        qDebug() << "=========> q->positionChanged" << endl;
 
     });
 
