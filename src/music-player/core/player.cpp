@@ -611,8 +611,9 @@ void Player::resume(PlaylistPtr playlist, const MetaPtr meta)
 {
     Q_D(Player);
     d->resumeTimer->stop();
-    d->resumeTimer->start(100);
-
+    if (d->fadeInOut) {
+        d->resumeTimer->start(100);
+    }
     qDebug() << "resume top";
     if (playlist == d->activePlaylist && d->qplayer->state() == QMediaPlayer::PlayingState && meta->hash == d->activeMeta->hash)
         return;
@@ -698,7 +699,11 @@ void Player::pause()
 {
     Q_D(Player);
     d->pauseTimer->stop();
-    d->pauseTimer->start(100);
+    if (d->fadeInOut) {
+        d->pauseTimer->start(100);
+    } else {
+        d->qplayer->pause();
+    }
 #if 0
     if (d->fadeInAnimation) {
 
