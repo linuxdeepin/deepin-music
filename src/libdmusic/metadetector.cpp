@@ -175,7 +175,8 @@ void MetaDetector::updateMediaFileTagCodec(MediaMeta *meta, const QByteArray &co
             meta->album = TStringToQString(tag->album());
             meta->artist = TStringToQString(tag->artist());
             meta->title = TStringToQString(tag->title());
-            meta->codec = "UTF-8";
+            meta->codec = "UTF-8";  //info codec
+
 
         } else {
             QTextCodec *codec = QTextCodec::codecForName(detectCodec);
