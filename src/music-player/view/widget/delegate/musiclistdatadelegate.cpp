@@ -59,8 +59,26 @@ public:
     QPixmap shadowImg = DHiDPIHelper::loadNxPixmap(":/mpimage/light/shadow.svg");
 
     MusicListDataDelegate *q_ptr;
+    bool containsMusic(QString uuid, MetaPtr playing, PlayMusicTypePtr currentList)const;
     Q_DECLARE_PUBLIC(MusicListDataDelegate)
 };
+
+
+bool MusicListDataDelegatePrivate::containsMusic(QString uuid, MetaPtr playing, PlayMusicTypePtr currentList)const
+{
+
+    if (uuid == AlbumResultListID || uuid == AlbumMusicListID) {
+        if (playing->album == currentList->playlistMeta.metas.first()->album) {
+            return true;
+        }
+    }
+    if (uuid == ArtistResultListID || uuid == ArtistMusicListID) {
+        if (playing->artist == currentList->playlistMeta.metas.first()->artist) {
+            return true;
+        }
+    }
+    return false;
+}
 
 void MusicListDataDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option,
                                   const QModelIndex &index) const
@@ -142,10 +160,7 @@ void MusicListDataDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
 
             if (listview->playing() != nullptr
                     && listview->playingState()
-                    && (listview->playing()->artist == PlayMusicTypePtr->name
-                        || listview->playing()->album == PlayMusicTypePtr->name
-                        || (listview->playing()->artist.isEmpty() && !PlayMusicTypePtr->playlistMeta.metas.isEmpty()
-                            && PlayMusicTypePtr->playlistMeta.metas.begin().value()->artist.isEmpty()))) {
+                    && d->containsMusic(listview->playlist()->id(), listview->playing(), PlayMusicTypePtr)) {
                 playFlag = true;
             }
 
@@ -202,10 +217,7 @@ void MusicListDataDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
 
             if (listview->playing() != nullptr
                     && listview->playingState()
-                    && (listview->playing()->artist == PlayMusicTypePtr->name
-                        || listview->playing()->album == PlayMusicTypePtr->name
-                        || (listview->playing()->artist.isEmpty() && !PlayMusicTypePtr->playlistMeta.metas.isEmpty()
-                            && PlayMusicTypePtr->playlistMeta.metas.begin().value()->artist.isEmpty()))) {
+                    && d->containsMusic(listview->playlist()->id(), listview->playing(), PlayMusicTypePtr)) {
                 playFlag = true;
             }
 
@@ -666,6 +678,7 @@ bool MusicListDataDelegate::editorEvent(QEvent *event, QAbstractItemModel *model
 }
 
 
+
 MusicListDataDelegate::MusicListDataDelegate(QWidget *parent): QStyledItemDelegate(parent), d_ptr(new MusicListDataDelegatePrivate(this))
 {
     Q_D(MusicListDataDelegate);
@@ -682,3 +695,4 @@ void MusicListDataDelegate::initStyleOption(QStyleOptionViewItem *option, const 
 {
     QStyledItemDelegate::initStyleOption(option, index);
 }
+

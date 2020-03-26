@@ -64,7 +64,6 @@ public:
     QPixmap                 playingPixmap = QPixmap(":/mpimage/light/music1.svg");
     QPixmap                 sidebarPixmap = QPixmap(":/mpimage/light/music_withe_sidebar/music1.svg");
     QPixmap                 albumPixmap   = QPixmap(":/mpimage/light/music_white_album_cover/music1.svg");
-
     MusicListDataView *q_ptr;
     Q_DECLARE_PUBLIC(MusicListDataView)
 };
@@ -139,7 +138,7 @@ MusicListDataView::MusicListDataView(QWidget *parent)
 
         if (curPlaylist->id() == ArtistResultListID
                 || curPlaylist->id() == ArtistMusicListID) {
-            if (this->playing()->artist != PlayMusicTypePtr->name) {
+            if (this->playing()->artist != PlayMusicTypePtr->playlistMeta.metas.first()->artist) {
                 auto curtMeta = playlist()->first();
                 Q_EMIT playMedia(curtMeta);
                 setPlaying(curtMeta);
@@ -154,7 +153,7 @@ MusicListDataView::MusicListDataView(QWidget *parent)
         }
         if (curPlaylist->id() == AlbumMusicListID
                 || curPlaylist->id() == AlbumResultListID) {
-            if (this->playing()->album != PlayMusicTypePtr->name) {
+            if (this->playing()->album != PlayMusicTypePtr->playlistMeta.metas.first()->album) {
                 auto curtMeta = playlist()->first();
                 Q_EMIT playMedia(curtMeta);
                 setPlaying(curtMeta);
