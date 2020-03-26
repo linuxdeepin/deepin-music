@@ -71,7 +71,6 @@ public:
 
     QString codec;              //save codec
 
-    QString codec;              //save codec
 
 public:
     void updateSearchIndex();
