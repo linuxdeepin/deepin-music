@@ -435,6 +435,9 @@ void MainFramePrivate::hideLyricView()
 
 void MainFramePrivate::showPlaylistView()
 {
+    if (footer->height() > 80) {
+        return;
+    }
     QRect start ( 5,  height - 86,
                   width - 10, 80);
     QRect end ( 5,  height - 429,
@@ -449,6 +452,9 @@ void MainFramePrivate::showPlaylistView()
 
 void MainFramePrivate::hidePlaylistView()
 {
+    if (footer->height() <= 80) {
+        return;
+    }
     QRect start ( 5,  height - 429,
                   width - 10, 423);
     QRect end ( 5,  height - 86,
@@ -1499,7 +1505,8 @@ bool MainFrame::eventFilter(QObject *obj, QEvent *e)
             auto geometry = d->footer->geometry().marginsAdded(QMargins(0, 0, 40, 40));
             if (!geometry.contains(mousePos)) {
                 DUtil::TimerSingleShot(50, [this]() {
-                    this->d_func()->setPlayListVisible(false);
+                    //this->d_func()->setPlayListVisible(false);
+                    this->d_func()->hidePlaylistView();
                 });
             }
         }
