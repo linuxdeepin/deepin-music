@@ -341,8 +341,6 @@ void Waveform::onProgressChanged(qint64 value, qint64 duration)
         progress = static_cast<int>(length * value / duration);
     }
 
-    qDebug() << "value : " << value << "duration : " << duration << endl;
-
     if (signalsBlocked()) {
         return;
     }

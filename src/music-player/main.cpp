@@ -93,9 +93,12 @@ int main(int argc, char *argv[])
 
     app.loadTranslator();
 
-    // !!! MUST setApplicationDisplayName before DMainWindow create
-//    app.setApplicationDisplayName(QObject::tr("Music"));
-    //app.setWindowIcon(QIcon(":/common/image/deepin-music.svg"));
+    /*
+     MUST setApplicationDisplayName before DMainWindow create
+     app.setApplicationDisplayName(QObject::tr("Music"));
+     app.setWindowIcon(QIcon(":/common/image/deepin-music.svg"));
+    */
+
     QIcon icon = QIcon::fromTheme("deepin-music");
     app.setProductIcon(icon);
 
@@ -128,7 +131,7 @@ int main(int argc, char *argv[])
             }
         }
 
-        // show deepin-music
+        /*-----show deepin-music----*/
         QDBusInterface iface("org.mpris.MediaPlayer2.DeepinMusic",
                              "/org/mpris/MediaPlayer2",
                              "org.mpris.MediaPlayer2",
@@ -164,22 +167,12 @@ int main(int argc, char *argv[])
             music->quit();
         }
     });
-    //mainframe.slotTheme(theme);
-    //app.setTheme("light");
-    app.setQuitOnLastWindowClosed(false);
-    //app.setStyle("chameleon");
 
-    //监听当前应用主题切换事件
-//    QObject::connect(DGuiApplicationHelper::instance(), &DGuiApplicationHelper::paletteTypeChanged,
-//    [] (DGuiApplicationHelper::ColorType type) {
-//        qDebug() << type;
-//        // 保存程序的主题设置  type : 0,系统主题， 1,浅色主题， 2,深色主题
-//        MusicSettings::setOption("base.play.theme", (int)type);
-//        DGuiApplicationHelper::instance()->setPaletteType(type);
-//    });
+    app.setQuitOnLastWindowClosed(false);
+
 
     QObject::connect(DGuiApplicationHelper::instance(), &DGuiApplicationHelper::themeTypeChanged,
                      &mainframe, &MainFrame::slotTheme);
-    return app.exec();
 
+    return app.exec();
 }

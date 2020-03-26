@@ -48,9 +48,6 @@ void MusicSettings::init()
 {
     m_settings = Dtk::Core::DSettings::fromJsonFile(":/data/deepin-music-settings.json");
     auto configFilepath = Global::configPath() + "/config.ini";
-
-    qDebug() << "=======> configFilepath" << configFilepath << endl;
-
     auto backend = new Dtk::Core::QSettingBackend(configFilepath);
     m_settings->setBackend(backend);
 }

@@ -193,17 +193,20 @@ void PlayerPrivate::initConnection()
         }
 
         auto duration = qplayer->duration();
-//        qDebug() << DMusic::lengthString(duration)
-//                 << DMusic::lengthString(position)
-//                 << DMusic::lengthString(activeMeta->offset)
-//                 << DMusic::lengthString(activeMeta->length)
-//                 << activeMeta->title;
+
+        /*
+        qDebug() << DMusic::lengthString(duration)
+                 << DMusic::lengthString(position)
+                 << DMusic::lengthString(activeMeta->offset)
+                 << DMusic::lengthString(activeMeta->length)
+                 << activeMeta->title;
+        */
 
         if (position > 1 && activeMeta->invalid) {
             Q_EMIT q->mediaError(activePlaylist, activeMeta, Player::NoError);
         }
 
-        // fix len
+        /*----fix len----*/
         if (activeMeta->length == 0 && duration != 0 && duration > 0) {
             activeMeta->length = duration;
             qDebug() << "update" << activeMeta->length;
@@ -243,7 +246,6 @@ void PlayerPrivate::initConnection()
 
 
         Q_EMIT q->positionChanged(position - activeMeta->offset,  activeMeta->length);
-        qDebug() << "=========> q->positionChanged" << endl;
 
     });
 

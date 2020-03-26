@@ -448,6 +448,7 @@ void MainFramePrivate::showPlaylistView()
     titlebar->raise();
     footer->raise();
     footer->setPlaylistButtonChecked(true);
+
 }
 
 void MainFramePrivate::hidePlaylistView()
@@ -562,7 +563,9 @@ void MainFramePrivate::toggleLyricView()
 
 void MainFramePrivate::togglePlaylist()
 {
+
     importWidget->hide();
+
     if (playListWidget->isVisible()) {
         hidePlaylistView();
         titlebarwidget->setSearchEnable(true);
@@ -1408,7 +1411,7 @@ void MainFrame::onSelectImportFiles()
 void MainFrame::slotTheme(int type)
 {
     Q_D(MainFrame);
-    //type = DGuiApplicationHelper::instance()->themeType();
+
     d->setTheme(type);
 }
 

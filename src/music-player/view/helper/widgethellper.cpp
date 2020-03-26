@@ -281,7 +281,6 @@ void slideEdgeWidget(QWidget *widget, QWidget *child, QRect start, QRect end, in
             child->hide();
         }
     });
-
 }
 
 QPixmap coverPixmap(const QString &coverPath, QSize sz)
