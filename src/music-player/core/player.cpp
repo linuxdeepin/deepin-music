@@ -46,7 +46,7 @@ static QStringList          sSupportedSuffixList;
 static QStringList          sSupportedFiterList;
 static QStringList          sSupportedMimeTypes;
 
-static const int sFadeInOutAnimationDuration = 1000; //ms
+static const int sFadeInOutAnimationDuration = 500; //ms
 
 void initMiniTypes()
 {
@@ -946,7 +946,7 @@ void Player::readSinkInputPath()
         QVariant nameV = DBusUtils::redDBusProperty("com.deepin.daemon.Audio", curPath.path(),
                                                     "com.deepin.daemon.Audio.SinkInput", "Name");
 
-        if (!nameV.isValid() || !nameV.toString().contains( "Music", Qt::CaseInsensitive))
+        if (!nameV.isValid() || nameV.toString() != "Music")
             continue;
 
         d->sinkInputPath = curPath.path();
