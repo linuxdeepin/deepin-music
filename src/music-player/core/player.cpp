@@ -32,6 +32,7 @@
 #include <QDBusObjectPath>
 #include <QDBusInterface>
 #include <QDBusReply>
+#include <QThread>
 
 #include <DRecentManager>
 
@@ -514,6 +515,12 @@ void Player::loadMedia(PlaylistPtr playlist, const MetaPtr meta)
 
     d->qplayer->blockSignals(true);
     d->qplayer->setMedia(QMediaContent(QUrl::fromLocalFile(meta->localPath)));
+    int volume = d->qplayer->volume();
+    d->qplayer->setVolume(0);
+    d->qplayer->play();
+    thread()->msleep(100);
+    d->qplayer->pause();
+    d->qplayer->setVolume(volume);
     d->qplayer->blockSignals(false);
     d->activePlaylist->play(meta);
 }
