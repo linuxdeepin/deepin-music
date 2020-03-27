@@ -490,11 +490,23 @@ void MainFramePrivate::resiveistView()
                      width - 10, 423);
         WidgetHelper::slideEdgeWidget(
             footer, playListWidget, rect, rect, 10, true);
+        QRect start1 ( 0, 0,
+                       width - 10, 314);
+        QRect end1 ( 0,  0,
+                     width - 10, 314);
+        WidgetHelper::slideEdgeWidget2(
+            playListWidget, start1, end1, AnimationDelay, true);
     } else {
-        QRect rect ( 5,  height - 429,
-                     width - 10, 423);
+        QRect rect ( 5,  height - 86,
+                     width - 10, 80);
         WidgetHelper::slideEdgeWidget(
             footer, playListWidget, rect, rect, 10, false);
+        QRect start1 ( 0,  0,
+                       width - 10, 0);
+        QRect end1 ( 0, 0,
+                     width - 10, 0);
+        WidgetHelper::slideEdgeWidget2(
+            playListWidget, start1, end1, AnimationDelay, false);
     }
 }
 
