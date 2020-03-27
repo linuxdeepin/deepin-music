@@ -579,6 +579,7 @@ void Player::playMeta(PlaylistPtr playlist, const MetaPtr meta)
     if (d->fadeInOut && !d->fadeInAnimation) {
         qDebug() << "start fade in";
         d->fadeInAnimation = new QPropertyAnimation(this, "fadeInOutFactor");
+        d->fadeInAnimation->setEasingCurve(QEasingCurve::InCubic);
         d->fadeInAnimation->setStartValue(0.10000);
         d->fadeInAnimation->setEndValue(1.0000);
         d->fadeInAnimation->setDuration(sFadeInOutAnimationDuration);
@@ -638,6 +639,7 @@ void Player::resume(PlaylistPtr playlist, const MetaPtr meta)
     if (d->fadeInOut && !d->fadeInAnimation) {
         qDebug() << "start fade in";
         d->fadeInAnimation = new QPropertyAnimation(this, "fadeInOutFactor");
+        d->fadeInAnimation->setEasingCurve(QEasingCurve::InCubic);
         d->fadeInAnimation->setStartValue(0.10000);
         d->fadeInAnimation->setEndValue(1.0000);
         d->fadeInAnimation->setDuration(sFadeInOutAnimationDuration);
@@ -718,6 +720,7 @@ void Player::pause()
 
 
         d->fadeOutAnimation = new QPropertyAnimation(this, "fadeInOutFactor");
+        d->fadeOutAnimation->setEasingCurve(QEasingCurve::OutCubic);
         d->fadeOutAnimation->setStartValue(1.0000);
 //        d->fadeOutAnimation->setKeyValueAt(0.9999, 0.1000);
         d->fadeOutAnimation->setEndValue(0.10000);
