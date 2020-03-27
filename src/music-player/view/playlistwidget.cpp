@@ -180,7 +180,7 @@ PlayListWidget::PlayListWidget(QWidget *parent) :
 {
     Q_D(PlayListWidget);
 
-    setFixedHeight(314);
+//    setFixedHeight(314);
     setAcceptDrops(true);
 
     auto layout = new QHBoxLayout(this);

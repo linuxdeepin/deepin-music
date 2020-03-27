@@ -484,11 +484,12 @@ Footer::Footer(QWidget *parent) :
     layout->addWidget(d->waveform, 100);
     layout->addWidget(actWidget, 0, Qt::AlignRight | Qt::AlignVCenter);
 
-    d->playListWidget = new PlayListWidget;
+    d->playListWidget = new PlayListWidget(d->forwardWidget);
 //    d->playListWidget->setContentsMargins(0, 0, 0, 0);
     d->playListWidget->hide();
 
-    mainVBoxlayout->addWidget(d->playListWidget);
+//    mainVBoxlayout->addWidget(d->playListWidget);
+    mainVBoxlayout->addStretch();
     mainVBoxlayout->addWidget(downWidget, 0, Qt::AlignBottom);
 
     d->title->hide();
@@ -533,8 +534,6 @@ Footer::Footer(QWidget *parent) :
         //d->btPlay->setIcon(DHiDPIHelper::loadNxPixmap(":/mpimage/dark/normal/play_press.svg"));
     }
     d->btCover->setIcon(Dtk::Widget::DHiDPIHelper::loadNxPixmap(d->defaultCover));
-
-
     int themeType = DGuiApplicationHelper::instance()->themeType();
     slotTheme(themeType);
 

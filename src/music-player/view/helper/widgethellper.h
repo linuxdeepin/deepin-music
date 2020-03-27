@@ -34,6 +34,7 @@ void slideRight2LeftWidget(QWidget *left, QWidget *right, int delay);
 void slideBottom2TopWidget(QWidget *top, QWidget *bottom, int delay);
 void slideTop2BottomWidget(QWidget *top, QWidget *bottom, int delay);
 void slideEdgeWidget(QWidget *widget, QWidget *child, QRect start, QRect end, int delay, bool hide = false);
+void slideEdgeWidget2(QWidget *widget, QRect start, QRect end, int delay, bool hide = false);
 
 void workaround_updateStyle(QWidget *parent, const QString &theme);
 }
