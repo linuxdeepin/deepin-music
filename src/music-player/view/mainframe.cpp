@@ -192,7 +192,7 @@ void MainFramePrivate::initMenu()
         //        configDialog->setProperty("_d_QSSThemename", "dark");
         //        configDialog->setProperty("_d_QSSFilename", "DSettingsDialog");
 
-        configDialog->setFixedSize(720, 550);
+//        configDialog->setFixedSize(720, 550);
         configDialog->updateSettings(MusicSettings::settings());
 
         //WidgetHelper::workaround_updateStyle(configDialog, "dlight");
