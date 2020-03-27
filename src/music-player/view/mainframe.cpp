@@ -119,7 +119,7 @@ public:
 
     DWidget             *currentWidget          = nullptr;
     InfoDialog          *infoDialog             = nullptr;
-    DSettingsDialog     *configDialog           = nullptr;
+//    DSettingsDialog     *configDialog           = nullptr;
 
     QAction             *newSonglistAction      = nullptr;
     QAction             *colorModeAction        = nullptr;
@@ -188,19 +188,18 @@ void MainFramePrivate::initMenu()
 
     auto settings = new QAction(MainFrame::tr("Settings"), q);
     q->connect(settings, &QAction::triggered, q, [ = ](bool) {
-        if (configDialog == nullptr) {
-            configDialog = new DSettingsDialog(q);
-            //        configDialog->setProperty("_d_QSSThemename", "dark");
-            //        configDialog->setProperty("_d_QSSFilename", "DSettingsDialog");
+        DSettingsDialog *configDialog = new DSettingsDialog(q);
+        //        configDialog->setProperty("_d_QSSThemename", "dark");
+        //        configDialog->setProperty("_d_QSSFilename", "DSettingsDialog");
 
-            configDialog->setFixedSize(720, 550);
-            configDialog->updateSettings(MusicSettings::settings());
+        configDialog->setFixedSize(720, 550);
+        configDialog->updateSettings(MusicSettings::settings());
 
-            //WidgetHelper::workaround_updateStyle(configDialog, "dlight");
-            Dtk::Widget::moveToCenter(configDialog);
-        }
+        //WidgetHelper::workaround_updateStyle(configDialog, "dlight");
+        Dtk::Widget::moveToCenter(configDialog);
 
         configDialog->exec();
+        delete configDialog;
         MusicSettings::sync();
 
         auto play_pauseStr = MusicSettings::value("shortcuts.all.play_pause").toString();
@@ -241,10 +240,10 @@ void MainFramePrivate::initMenu()
         Q_EMIT q->fadeInOut();
     });
 
-    //    bool themeFlag = false;
-    //    int themeType = MusicSettings::value("base.play.theme").toInt(&themeFlag);
-    //    if (!themeFlag)
-    //        themeType = 1;
+//    bool themeFlag = false;
+//    int themeType = MusicSettings::value("base.play.theme").toInt(&themeFlag);
+//    if (!themeFlag)
+//        themeType = 1;
     int themeType = DGuiApplicationHelper::instance()->themeType();
     colorModeAction = new QAction(MainFrame::tr("Dark theme"), q);
     colorModeAction->setCheckable(true);
@@ -268,17 +267,17 @@ void MainFramePrivate::initMenu()
 
     auto titleMenu = new DMenu(q);
     titleMenu->addAction(newSonglistAction);
-    //titleMenu->addAction(addmusic);
+//titleMenu->addAction(addmusic);
     titleMenu->addAction(addmusicfiles);
     titleMenu->addSeparator();
 
-    //titleMenu->addAction(colorModeAction);
+//titleMenu->addAction(colorModeAction);
     titleMenu->addAction(settings);
     titleMenu->addSeparator();
 
     titlebar->setMenu(titleMenu);
 
-    //add shortcut
+//add shortcut
     playPauseShortcut = new QShortcut(q);
     playPauseShortcut->setKey(QKeySequence(MusicSettings::value("shortcuts.all.play_pause").toString()));
     q->connect(playPauseShortcut, &QShortcut::activated, q, [ = ]() {
