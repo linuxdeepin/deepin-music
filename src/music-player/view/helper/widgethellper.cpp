@@ -271,14 +271,28 @@ void slideEdgeWidget(QWidget *widget, QWidget *child, QRect start, QRect end, in
     animation2->setStartValue(start);
     animation2->setEndValue(end);
     animation2->start();
+    animation2->connect(animation2, &QPropertyAnimation::finished,
+                        animation2, &QPropertyAnimation::deleteLater);
+    animation2->connect(animation2, &QPropertyAnimation::finished, widget, [ = ]() {
+    });
+}
+
+void slideEdgeWidget2(QWidget *widget, QRect start, QRect end, int delay, bool visible)
+{
+    QPropertyAnimation *animation2 = new QPropertyAnimation(widget, "geometry");
+    animation2->setEasingCurve(QEasingCurve::InCurve);
+    animation2->setDuration(delay);
+    animation2->setStartValue(start);
+    animation2->setEndValue(end);
+    animation2->start();
     if (visible) {
-        child->show();
+        widget->show();
     }
     animation2->connect(animation2, &QPropertyAnimation::finished,
                         animation2, &QPropertyAnimation::deleteLater);
     animation2->connect(animation2, &QPropertyAnimation::finished, widget, [ = ]() {
         if (!visible) {
-            child->hide();
+            widget->hide();
         }
     });
 }

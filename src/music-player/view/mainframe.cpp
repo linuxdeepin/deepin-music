@@ -442,9 +442,14 @@ void MainFramePrivate::showPlaylistView()
                   width - 10, 80);
     QRect end ( 5,  height - 429,
                 width - 10, 423);
-
+    QRect start1 ( 0, 0,
+                   width - 10, 0);
+    QRect end1 ( 0,  0,
+                 width - 10, 314);
     WidgetHelper::slideEdgeWidget(
         footer, playListWidget, start, end, AnimationDelay, true);
+    WidgetHelper::slideEdgeWidget2(
+        playListWidget, start1, end1, AnimationDelay, true);
     titlebar->raise();
     footer->raise();
     footer->setPlaylistButtonChecked(true);
@@ -460,8 +465,15 @@ void MainFramePrivate::hidePlaylistView()
                   width - 10, 423);
     QRect end ( 5,  height - 86,
                 width - 10, 80);
+
+    QRect start1 ( 0,  0,
+                   width - 10, 314);
+    QRect end1 ( 0, 0,
+                 width - 10, 0);
     WidgetHelper::slideEdgeWidget(
         footer, playListWidget, start, end, AnimationDelay, false);
+    WidgetHelper::slideEdgeWidget2(
+        playListWidget, start1, end1, AnimationDelay, false);
     titlebar->raise();
     footer->setPlaylistButtonChecked(false);
     footer->raise();
