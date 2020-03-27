@@ -625,16 +625,20 @@ void Footer::showPlayListWidget(int width, int height, bool changFlag)
         if (d->showPlaylistFlag) {
             d->playListWidget->hide();
             setGeometry(5, height - 86, width - 10, 80);
+            d->playListWidget->setGeometry(0, 0, width - 10, 0);
         } else {
             d->playListWidget->show();
             setGeometry(5, height - 429, width - 10, 423);
+            d->playListWidget->setGeometry(0, 0, width - 10, 314);
         }
         d->showPlaylistFlag = (!d->showPlaylistFlag);
     } else {
         if (d->showPlaylistFlag) {
             setGeometry(5, height - 429, width - 10, 423);
+            d->playListWidget->setGeometry(0, 0, width - 10, 314);
         } else {
             setGeometry(5, height - 86, width - 10, 80);
+            d->playListWidget->setGeometry(0, 0, width - 10, 0);
         }
     }
 }
