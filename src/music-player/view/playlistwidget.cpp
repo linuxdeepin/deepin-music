@@ -276,7 +276,8 @@ void PlayListWidget::updateInfo(PlaylistPtr playlist)
     }
 
     QString infoStr;
-    int sortMetasSize = playlist->allmusic().size();
+//    int sortMetasSize = playlist->allmusic().size();
+    int sortMetasSize = d->playListView->rowCount();
     if (sortMetasSize == 0) {
         infoStr = tr("No songs");
     } else if (sortMetasSize == 1) {
@@ -405,6 +406,10 @@ void PlayListWidget::onMusicError(PlaylistPtr playlist, const MetaPtr meta, int 
 void PlayListWidget::onMusicListAdded(PlaylistPtr playlist, const MetaPtrList metalist)
 {
     Q_D(PlayListWidget);
+
+    if (playlist->id() != PlayMusicListID) {
+        return;
+    }
 
     if (playlist != d->playListView->playlist() && d->playListView->rowCount() != playlist->allmusic().size()) {
         return;

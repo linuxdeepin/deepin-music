@@ -85,3 +85,12 @@ private:
     Q_DECLARE_PRIVATE_D(qGetPtrHelper(d_ptr), PlayListWidget)
 };
 
+extern const QString AlbumMusicListID;
+extern const QString ArtistMusicListID;
+extern const QString AllMusicListID;
+extern const QString FavMusicListID;
+extern const QString SearchMusicListID;
+extern const QString PlayMusicListID;
+extern const QString AlbumCandListID;
+extern const QString MusicCandListID;
+extern const QString ArtistCandListID;
