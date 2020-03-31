@@ -46,7 +46,7 @@ public:
 
 public slots:
     void selectPlaylist(PlaylistPtr playlistPtr);
-
+    void onSearchAborted();
 signals:
     void searchExited();
     void searchText(const QString &id, const QString &text);
