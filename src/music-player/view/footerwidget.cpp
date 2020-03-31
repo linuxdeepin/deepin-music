@@ -745,7 +745,7 @@ void Footer::onMusicListAdded(PlaylistPtr playlist, const MetaPtrList metalist)
             && d->activingMeta != nullptr && playlist->contains(d->activingMeta))
         d->updateQssProperty(d->btFavorite, sPropertyFavourite, true);
     else {
-        d->updateQssProperty(d->btFavorite, sPropertyFavourite, false);
+        d->updateQssProperty(d->btFavorite, sPropertyFavourite, d->activingMeta->favourite);
     }
 
     if (d->activingPlaylist != nullptr) {
@@ -772,7 +772,7 @@ void Footer::onMusicListRemoved(PlaylistPtr playlist, const MetaPtrList metalist
             && d->activingMeta != nullptr && playlist->contains(d->activingMeta))
         d->updateQssProperty(d->btFavorite, sPropertyFavourite, true);
     else {
-        d->updateQssProperty(d->btFavorite, sPropertyFavourite, false);
+        d->updateQssProperty(d->btFavorite, sPropertyFavourite, d->activingMeta->favourite);
     }
 
     if (d->activingPlaylist != nullptr) {
