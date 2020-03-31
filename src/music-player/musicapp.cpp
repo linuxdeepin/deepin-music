@@ -82,7 +82,7 @@ void MusicAppPrivate::initMpris(const QString &serviceName)
     mprisPlayer->setCanPause(true);
 
     q->connect(mprisPlayer, &MprisPlayer::quitRequested, q, [ = ]() {
-        onQuit();
+//        onQuit();
     });
     q->connect(mprisPlayer, &MprisPlayer::raiseRequested, q, [ = ]() {
         onRaise();

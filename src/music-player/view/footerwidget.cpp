@@ -1360,6 +1360,10 @@ void Footer::resizeEvent(QResizeEvent *event)
         int imageheight = cover.height();
         coverImage = cover.copy((cover.width() - imageWidth) / 2, 0, imageWidth, imageheight);
     }
+    if (d->btPlayList->isChecked()) {
+        d->forwardWidget->setSourceImage(QImage(" "));
+        return;
+    }
     d->forwardWidget->setSourceImage(coverImage);
 //    blurBackground()->setSourceImage(coverImage);
 }

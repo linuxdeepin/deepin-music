@@ -1582,6 +1582,7 @@ void MusicListDataWidget::onMusicListRemoved(PlaylistPtr playlist, const MetaPtr
 
         d->infoLabel->setText(infoStr);
         d->titleLabel->setText(MusicListDataWidget::tr("Search Results"));
+
     }
 
     if (playlist != d->curPlaylist) {
