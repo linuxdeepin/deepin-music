@@ -138,7 +138,8 @@ MusicListDataView::MusicListDataView(QWidget *parent)
 
         if (curPlaylist->id() == ArtistResultListID
                 || curPlaylist->id() == ArtistMusicListID) {
-            if (this->playing()->artist != PlayMusicTypePtr->playlistMeta.metas.first()->artist) {
+            if (this->playing() == nullptr ||
+                    this->playing()->artist != PlayMusicTypePtr->playlistMeta.metas.first()->artist) {
                 auto curtMeta = playlist()->first();
                 Q_EMIT playMedia(curtMeta);
                 setPlaying(curtMeta);
@@ -153,7 +154,8 @@ MusicListDataView::MusicListDataView(QWidget *parent)
         }
         if (curPlaylist->id() == AlbumMusicListID
                 || curPlaylist->id() == AlbumResultListID) {
-            if (this->playing()->album != PlayMusicTypePtr->playlistMeta.metas.first()->album) {
+            if (this->playing() == nullptr ||
+                    this->playing()->album != PlayMusicTypePtr->playlistMeta.metas.first()->album) {
                 auto curtMeta = playlist()->first();
                 Q_EMIT playMedia(curtMeta);
                 setPlaying(curtMeta);
