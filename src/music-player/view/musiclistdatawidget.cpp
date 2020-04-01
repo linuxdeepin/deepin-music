@@ -1900,15 +1900,24 @@ void MusicListDataWidget::retResult(QString searchText, QList<PlaylistPtr> resul
         /*---------Search without result------*/
         if (d->songListView->rowCount() == 0 && d->singerListView->rowCount() == 0 && d->albListView->rowCount() == 0 ) {
             d->initData(retdata, false, "noSearchResults");
-        } else {
+            return;
+        }
+        d->updateFlag = true;
 
-            /*-----Load the interface------*/
+        if (CurIndex == 2) {
             d->initData(MusicPlaylists, false, search);
-
-            /*-------Search for signal-----*/
-            d->updateFlag = true;
-
             tabwidgetInfo(MusicPlaylists);
+            return;
+        }
+        if (CurIndex == 1) {
+            d->initData(ArtistPlaylists, false, search);
+            tabwidgetInfo(ArtistPlaylists);
+            return;
+        }
+        if (CurIndex == 0) {
+            d->initData(AlbumPlaylists, false, search);
+            tabwidgetInfo(AlbumPlaylists);
+            return;
         }
     }
 }
