@@ -1,4 +1,4 @@
-﻿/*
+/*
  * Copyright (C) 2016 ~ 2018 Wuhan Deepin Technology Co., Ltd.
  *
  * Author:     Iceyer <me@iceyer.net>
@@ -284,11 +284,8 @@ void MusicListDataWidgetPrivate::initData(PlaylistPtr playlist, bool selectFlag,
 
     DDropdown *t_curDropdown = nullptr;
     if (playlist->id() == AlbumMusicListID) {
-
+        //update dropdown
         updateFlag = false;
-
-        artistListView->clearSelection();
-        musicListView->clearSelection();
 
         selectPlaylist  = playlist;
 
@@ -318,11 +315,8 @@ void MusicListDataWidgetPrivate::initData(PlaylistPtr playlist, bool selectFlag,
         if (!selectFlag || albumListView->listSize() != allCount || preSearchStr != searchStr)
             albumListView->onMusiclistChanged(playlist);
     } else if (playlist->id() == ArtistMusicListID) {
-
+        //update dropdown
         updateFlag = false;
-
-        albumListView->clearSelection();
-        musicListView->clearSelection();
 
         selectPlaylist  = playlist;
         albumDropdown->hide();
@@ -408,11 +402,8 @@ void MusicListDataWidgetPrivate::initData(PlaylistPtr playlist, bool selectFlag,
         titleLabel->setText(MusicListDataWidget::tr("Search Results"));
 
     } else {
-
+        //update dropdown
         updateFlag = false;
-
-        albumListView->clearSelection();
-        artistListView->clearSelection();
 
         selectPlaylist  = playlist;
         albumDropdown->hide();
@@ -443,6 +434,20 @@ void MusicListDataWidgetPrivate::initData(PlaylistPtr playlist, bool selectFlag,
         }
         musicListView->onMusiclistChanged(playlist);
     }
+
+#if 0
+    if (playlist->sortType() == Playlist::SortByCustom) {
+        q->setCustomSortType(playlist);
+    } else {
+        for (auto action : t_curDropdown->actions()) {
+            if (action->data().toInt() == playlist->sortType()) {
+                t_curDropdown->setCurrentAction(action);
+            }
+        }
+    }
+    showEmptyHits();
+#endif
+
 }
 
 void MusicListDataWidgetPrivate::initConntion()
@@ -499,25 +504,26 @@ void MusicListDataWidgetPrivate::initConntion()
     q, [ = ](bool) {
         if (albumListView->isVisible()) {
             PlaylistPtr curPlayList = albumListView->playlist();
-
             if (curPlayList) {
                 curPlayList->playMusicTypeToMeta();
                 curPlayList->play(curPlayList->first());
                 Q_EMIT q->playall(curPlayList);
+                //initData(curPlayList);
             }
         } else if (artistListView->isVisible()) {
             PlaylistPtr curPlayList = artistListView->playlist();
-
             if (curPlayList) {
                 curPlayList->playMusicTypeToMeta();
                 curPlayList->play(curPlayList->first());
                 Q_EMIT q->playall(curPlayList);
+                //initData(curPlayList);
             }
         } else if (songListView->isVisible()) {
             if (songListView->playlist()) {
                 PlaylistPtr curPlayList = songListView->playlist();
                 curPlayList->play(curPlayList->first());
                 Q_EMIT q->playall(curPlayList);
+                //initData(curPlayList);
             }
         } else if (singerListView->isVisible()) {
             if (singerListView->playlist()) {
@@ -525,6 +531,7 @@ void MusicListDataWidgetPrivate::initConntion()
                 curPlayList->playMusicTypeToMeta();
                 curPlayList->play(curPlayList->first());
                 Q_EMIT q->playall(curPlayList);
+                //initData(curPlayList);
             }
         } else if (albListView->isVisible()) {
             if (albListView->playlist()) {
@@ -532,12 +539,14 @@ void MusicListDataWidgetPrivate::initConntion()
                 curPlayList->playMusicTypeToMeta();
                 curPlayList->play(curPlayList->first());
                 Q_EMIT q->playall(curPlayList);
+                //initData(curPlayList);
             }
         } else {
             if (musicListView->playlist()) {
                 PlaylistPtr curPlayList = musicListView->playlist();
                 curPlayList->play(curPlayList->first());
                 Q_EMIT q->playall(curPlayList);
+                //initData(curPlayList);
             }
         }
     });
@@ -553,6 +562,7 @@ void MusicListDataWidgetPrivate::initConntion()
     q, [ = ](const MetaPtr meta) {
         PlaylistPtr curPlayList = albumListView->playlist();
         curPlayList->play(meta);
+        //initData(curPlayList);
         Q_EMIT q->playMedia(albumListView->playlist(), meta);
     });
     q->connect(albumListView, &MusicListDataView::resume,
@@ -606,6 +616,7 @@ void MusicListDataWidgetPrivate::initConntion()
     q, [ = ](const MetaPtr meta) {
         PlaylistPtr curPlayList = albListView->playlist();
         curPlayList->play(meta);
+        //initData(curPlayList);
         Q_EMIT q->playMedia(albListView->playlist(), meta);
     });
     q->connect(albListView, &MusicListDataView::resume,
@@ -659,6 +670,7 @@ void MusicListDataWidgetPrivate::initConntion()
     q, [ = ](const MetaPtr meta) {
         PlaylistPtr curPlayList = artistListView->playlist();
         curPlayList->play(meta);
+        //initData(curPlayList);
         Q_EMIT q->playMedia(artistListView->playlist(), meta);
     });
 
@@ -713,6 +725,7 @@ void MusicListDataWidgetPrivate::initConntion()
     q, [ = ](const MetaPtr meta) {
         PlaylistPtr curPlayList = singerListView->playlist();
         curPlayList->play(meta);
+        //initData(curPlayList);
         Q_EMIT q->playMedia(singerListView->playlist(), meta);
     });
 
@@ -968,6 +981,7 @@ void MusicListDataWidgetPrivate::showEmptyHits()
             emptyHits->setText(MusicListDataWidget::tr("No songs"));
         } else {
             emptyHits->setText(MusicListDataWidget::tr("No search results"));
+            //emptySearchHits->setText(MusicListDataWidget::tr("No results for \"%1\", please try another word").arg(playlist->searchStr()));
         }
         bool empty = t_rowCount == 0 ? true : false;
         actionBar->setVisible(!empty);
@@ -983,6 +997,7 @@ void MusicListDataWidgetPrivate::showEmptyHits()
             emptyHits->setText(MusicListDataWidget::tr("No songs"));
         } else {
             emptyHits->setText(MusicListDataWidget::tr("No search results"));
+            //emptySearchHits->setText(MusicListDataWidget::tr("No results for \"%1\", please try another word").arg(playlist->searchStr()));
         }
         bool empty = t_rowCount == 0 ? true : false;
         actionBar->setVisible(!empty);
@@ -998,12 +1013,14 @@ void MusicListDataWidgetPrivate::showEmptyHits()
             emptyHits->setText(MusicListDataWidget::tr("No songs"));
         } else {
             emptyHits->setText(MusicListDataWidget::tr("No search results"));
+            //emptySearchHits->setText(MusicListDataWidget::tr("No results for \"%1\", please try another word").arg(playlist->searchStr()));
         }
         bool empty = t_rowCount == 0 ? true : false;
         actionBar->setVisible(!empty);
         artistListView->setVisible(false);
         musicListView->setVisible(!empty);
         emptyHits->setVisible(empty);
+        //emptySearchHits->setVisible(empty && !playlist->searchStr().isEmpty());
     }
 }
 
@@ -1078,6 +1095,7 @@ MusicListDataWidget::MusicListDataWidget(QWidget *parent) :
     d->musicDropdown->addAction(tr("Album"), QVariant::fromValue<Playlist::SortType>(Playlist::SortByAblum));
     d->musicDropdown->setCurrentAction();
     /*-------New sorting function-----------*/
+#if 1
     d->albumSearchDropdown = new DDropdown;
     d->albumSearchDropdown->setFixedHeight(28);
     d->albumSearchDropdown->setMinimumWidth(130);
@@ -1106,6 +1124,7 @@ MusicListDataWidget::MusicListDataWidget(QWidget *parent) :
     d->musicSearchDropdown->addAction(tr("Album"), QVariant::fromValue<Playlist::SortType>(Playlist::SortByAblum));
     d->musicSearchDropdown->setCurrentAction();
     d->musicSearchDropdown->hide();
+#endif
 
     actionTileBarLayout->addWidget(d->titleLabel, 0, Qt::AlignLeft | Qt::AlignBottom);
     actionTileBarLayout->addStretch();
@@ -1113,11 +1132,11 @@ MusicListDataWidget::MusicListDataWidget(QWidget *parent) :
     actionTileBarLayout->addWidget(d->albumDropdown, 0, Qt::AlignRight | Qt::AlignBottom);
     actionTileBarLayout->addWidget(d->artistDropdown, 0, Qt::AlignRight | Qt::AlignBottom);
     actionTileBarLayout->addWidget(d->musicDropdown, 0, Qt::AlignRight | Qt::AlignBottom);
-
+#if 1
     actionTileBarLayout->addWidget(d->albumSearchDropdown, 0, Qt::AlignRight | Qt::AlignBottom);
     actionTileBarLayout->addWidget(d->artistSearchDropdown, 0, Qt::AlignRight | Qt::AlignBottom);
     actionTileBarLayout->addWidget(d->musicSearchDropdown, 0, Qt::AlignRight | Qt::AlignBottom);
-
+#endif
     auto actionInfoBarLayout = new QHBoxLayout();
     actionInfoBarLayout->setContentsMargins(10, 3, 8, 0);
     actionInfoBarLayout->setSpacing(0);
@@ -1559,7 +1578,7 @@ void MusicListDataWidget::onMusicListRemoved(PlaylistPtr playlist, const MetaPtr
         d->songListView->onMusicListRemoved(metalist);
 
         QString infoStr;
-        if (d->titleLabel->text() == MusicListDataWidget::tr("All Music")) {
+        if(d->titleLabel->text()==MusicListDataWidget::tr("All Music")){
             infoStr = QString("   ") + MusicListDataWidget::tr("%1 songs").arg(d->musicListView->rowCount());
             d->infoLabel->setText(infoStr);
             return;
@@ -1793,7 +1812,7 @@ void MusicListDataWidget::retResult(QString searchText, QList<PlaylistPtr> resul
 
                 MusicPlaylists = resultlist.at(i);
                 flagMus = true;
-               
+                CurIndex = 0;
 
                 if (d->songListView->viewMode() != (resultlist.at(i)->viewMode())) {
                     d->songListView->setViewModeFlag((QListView::ViewMode)resultlist.at(i)->viewMode());
@@ -1812,7 +1831,7 @@ void MusicListDataWidget::retResult(QString searchText, QList<PlaylistPtr> resul
                 ArtistPlaylists = resultlist.at(i);
                 retdata = resultlist.at(i);
                 flagArt = true;
-               
+                CurIndex = 1;
 
                 if (d->singerListView->viewMode() != (resultlist.at(i)->viewMode())) {
                     d->singerListView->setViewModeFlag((QListView::ViewMode)resultlist.at(i)->viewMode());
@@ -1830,7 +1849,7 @@ void MusicListDataWidget::retResult(QString searchText, QList<PlaylistPtr> resul
                 AlbumPlaylists = resultlist.at(i);
                 retdata = resultlist.at(i);
                 flagAlb = true;
-               
+                CurIndex = 2;
 
                 if (d->albListView->viewMode() != (resultlist.at(i)->viewMode())) {
                     d->albListView->setViewModeFlag((QListView::ViewMode)resultlist.at(i)->viewMode());
@@ -1851,42 +1870,46 @@ void MusicListDataWidget::retResult(QString searchText, QList<PlaylistPtr> resul
             d->tabWidget->setCurrentIndex(j);
         }
 
-        if (resultlist.first()->id() == MusicResultListID) {
-            CurIndex = 0;
+        if (retdata->id() == MusicResultListID) {
 
-        } else if (resultlist.first()->id() == ArtistResultListID) {
-            CurIndex = 1;
+            d->tabWidget->setCurrentIndex(0);
 
-        } else if (resultlist.first()->id() == AlbumResultListID) {
-            CurIndex = 2;
+        } else if (retdata->id() == ArtistResultListID) {
+
+            d->tabWidget->setCurrentIndex(1);
+
+        } else if (retdata->id() == AlbumResultListID) {
+            d->tabWidget->setCurrentIndex(2);
+        }
+
+        /*------Current display page------*/
+        if (CurIndex == 0) {
+            tabwidgetInfo(MusicPlaylists);
+        } else if (CurIndex == 1) {
+            tabwidgetInfo(ArtistPlaylists);
+
+        } else if (CurIndex == 2) {
+            tabwidgetInfo(AlbumPlaylists);
         }
 
         if ( flagMus & flagArt & flagAlb) {
 
             d->tabWidget->setCurrentIndex(0);
-
         }
 
         /*---------Search without result------*/
         if (d->songListView->rowCount() == 0 && d->singerListView->rowCount() == 0 && d->albListView->rowCount() == 0 ) {
             d->initData(retdata, false, "noSearchResults");
-            return;
-        }
-        d->updateFlag = true;
+        } else {
 
-        if (CurIndex == 0) {
+            /*-----Load the interface------*/
             d->initData(MusicPlaylists, false, search);
+
+            /*-------Search for signal-----*/
+            d->updateFlag = true;
+
             tabwidgetInfo(MusicPlaylists);
         }
-        if (CurIndex == 1) {
-            d->initData(ArtistPlaylists, false, search);
-            tabwidgetInfo(ArtistPlaylists);
-        }
-        if (CurIndex == 2) {
-            d->initData(AlbumPlaylists, false, search);
-            tabwidgetInfo(AlbumPlaylists);
-        }
-            d->tabWidget->setCurrentIndex(CurIndex);
     }
 }
 
