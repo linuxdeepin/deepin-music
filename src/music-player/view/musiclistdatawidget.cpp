@@ -1578,8 +1578,12 @@ void MusicListDataWidget::onMusicListRemoved(PlaylistPtr playlist, const MetaPtr
         d->songListView->onMusicListRemoved(metalist);
 
         QString infoStr;
+        if(d->titleLabel->text()==MusicListDataWidget::tr("All Music")){
+            infoStr = QString("   ") + MusicListDataWidget::tr("%1 songs").arg(d->musicListView->rowCount());
+            d->infoLabel->setText(infoStr);
+            return;
+        }
         infoStr = QString("   ") + MusicListDataWidget::tr("%1 songs").arg(d->songListView->rowCount());
-
         d->infoLabel->setText(infoStr);
         d->titleLabel->setText(MusicListDataWidget::tr("Search Results"));
 

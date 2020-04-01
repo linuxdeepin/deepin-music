@@ -504,7 +504,7 @@ void Presenter::prepareData()
 
     connect(d->playlistMgr, &PlaylistManager::musiclistRemoved,
     this, [ = ](PlaylistPtr playlist, const MetaPtrList metalist) {
-        qDebug() << playlist << playlist->id();
+        //qDebug() << playlist << playlist->id();
         Q_EMIT musicListRemoved(playlist, metalist);
     });
 
