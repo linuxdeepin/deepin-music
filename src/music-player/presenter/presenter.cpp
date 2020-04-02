@@ -894,7 +894,9 @@ void Presenter::onMusiclistRemove(PlaylistPtr playlist, const MetaPtrList metali
             }
         }
 
-        if (playlist->isEmpty()) {
+        /*-----Import song interface----*/
+        if (playlist->isEmpty()  && playlist->id() != "musicResult") {
+
             qDebug() << "meta library clean";
             onMusicStop(playlist, next);
             Q_EMIT metaLibraryClean();
