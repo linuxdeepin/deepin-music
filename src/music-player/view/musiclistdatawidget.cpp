@@ -1895,6 +1895,7 @@ void MusicListDataWidget::retResult(QString searchText, QList<PlaylistPtr> resul
         if ( flagMus & flagArt & flagAlb) {
 
             d->tabWidget->setCurrentIndex(0);
+            CurIndex = 0;
         }
 
         /*---------Search without result------*/
@@ -1904,7 +1905,7 @@ void MusicListDataWidget::retResult(QString searchText, QList<PlaylistPtr> resul
         }
         d->updateFlag = true;
 
-        if (CurIndex == 2) {
+        if (CurIndex == 0) {
             d->initData(MusicPlaylists, false, search);
             tabwidgetInfo(MusicPlaylists);
             return;
@@ -1914,7 +1915,7 @@ void MusicListDataWidget::retResult(QString searchText, QList<PlaylistPtr> resul
             tabwidgetInfo(ArtistPlaylists);
             return;
         }
-        if (CurIndex == 0) {
+        if (CurIndex == 2) {
             d->initData(AlbumPlaylists, false, search);
             tabwidgetInfo(AlbumPlaylists);
             return;
