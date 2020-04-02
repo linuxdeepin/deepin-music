@@ -135,12 +135,6 @@ void MusicListScrollArea::slotTheme(int type)
         dataBaseLabel->setPalette(dataBaseLabelPalette);
         customizeLabel->setPalette(dataBaseLabelPalette);
 
-//        DPalette dataBaseListviewPalette = m_dataBaseListview->palette();
-//        dataBaseListviewPalette.setColor(DPalette::Text, QColor("#414D68"));
-//        dataBaseListviewPalette.setColor(DPalette::HighlightedText, QColor("#FFFFFF"));
-//        m_dataBaseListview->setPalette(dataBaseListviewPalette);
-//        m_customizeListview->setPalette(dataBaseListviewPalette);
-
         m_addListBtn->setPropertyPic(":/mpimage/light/normal/add_normal.svg",
                                      ":/mpimage/light/hover/add_hover.svg",
                                      ":/mpimage/light/press/add_press.svg");
@@ -155,12 +149,6 @@ void MusicListScrollArea::slotTheme(int type)
         dataBaseLabelPalette.setColor(DPalette::WindowText, WindowTextColor);
         dataBaseLabel->setPalette(dataBaseLabelPalette);
         customizeLabel->setPalette(dataBaseLabelPalette);
-
-//        auto dataBaseListviewPalette = m_dataBaseListview->palette();
-//        dataBaseListviewPalette.setColor(DPalette::Text, QColor("#C0C6D4"));
-//        dataBaseListviewPalette.setColor(DPalette::HighlightedText, QColor("#FFFFFF"));
-//        m_dataBaseListview->setPalette(dataBaseListviewPalette);
-//        m_customizeListview->setPalette(dataBaseListviewPalette);
 
         m_addListBtn->setPropertyPic(":/mpimage/dark/normal/add_normal.svg",
                                      ":/mpimage/dark/hover/add_hover.svg",
