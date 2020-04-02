@@ -525,6 +525,8 @@ void Presenter::prepareData()
             Q_EMIT this->volumeChanged(d->player->volume());
         }
     });
+    connect(this, &Presenter::musicFileMiss,
+    d->player,&Player::musicFileMiss);
 
     connect(d->player, &Player::mediaPlayed,
     this, [ = ](PlaylistPtr playlist, const MetaPtr meta) {

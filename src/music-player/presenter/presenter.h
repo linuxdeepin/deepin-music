@@ -21,11 +21,12 @@
 
 #pragma once
 
-#include "../core/playlist.h"
-
 #include <QObject>
 #include <QScopedPointer>
+
 #include <MprisPlayer>
+
+#include "../core/playlist.h"
 #include <searchmeta.h>
 
 class QAudioBuffer;
@@ -45,7 +46,6 @@ public:
     void postAction();
     void handleQuit();
     void openUri(const QUrl &uri);
-    void removeListSame(QStringList *list);
 
     QList<PlaylistPtr > allplaylist();
     PlaylistPtr playlist(const QString &id);
@@ -57,7 +57,7 @@ public slots:
     void pause();
     void next();
     void prev();
-    void onHandleQuit();
+
     void requestImportPaths(PlaylistPtr playlist, const QStringList &filelist);
 
 signals:
@@ -102,7 +102,7 @@ signals:
     void musicPaused(PlaylistPtr playlist, const MetaPtr meta);
     void musicStoped(PlaylistPtr playlist, const MetaPtr meta);
     void musicMetaUpdate(PlaylistPtr playlist, const MetaPtr meta);
-    void progrossChanged(qint64 pos, qint64 length, qint64 coefficient);
+    void progrossChanged(qint64 pos, qint64 length);
     void volumeChanged(int volume);
     void mutedChanged(bool muted);
     void modeChanged(int);
@@ -119,12 +119,10 @@ signals:
     void notifyMusciError(PlaylistPtr playlist, const MetaPtr meta, int error);
     void notifyAddToPlaylist(PlaylistPtr playlist, const MetaPtrList metalist, int count);
 
-    //! search
+    //搜索
     void searchCand(QString searchText, PlaylistPtr playlist);
     void searchResult(QString searchText, QList<PlaylistPtr> resultlist, QString id);
     void musicFileMiss();
-	 //语音控制
-    void sigSpeedResult(int action, bool result);
 
 public slots:
     //! music control interface
@@ -135,7 +133,6 @@ public slots:
 
     void onMusicPlay(PlaylistPtr playlist, const MetaPtr meta);
     void onMusicPause(PlaylistPtr playlist, const MetaPtr meta);
-    void onMusicPauseNow(PlaylistPtr playlist, const MetaPtr meta);
     void onMusicResume(PlaylistPtr playlist, const MetaPtr meta);
     void onMusicStop(PlaylistPtr playlist, const MetaPtr meta);
     void onMusicPrev(PlaylistPtr playlist, const MetaPtr meta);
@@ -177,28 +174,9 @@ public slots:
     void onScanMusicDirectory();
     void onImportFiles(const QStringList &filelist, PlaylistPtr playlist);
 
-    //语音控制槽函数
-    void onSpeechPlayMusic(const QString music);
-    void onSpeechPlayArtist(const QString artist);
-    void onSpeechPlayArtistMusic(const QString artist, const QString music);
-    void onSpeechPlayFaverite();
-    void onSpeechPlayCustom(const QString listName);
-    void onSpeechPlayRadom();
-
-    void onSpeechPause();
-    void onSpeechStop();
-    void onSpeechResume();
-    void onSpeechPrevious();
-    void onSpeechNext();
-
-    void onSpeechFavorite();
-    void onSpeechunFaverite();
-    void onSpeechsetMode(const int mode);
-
 private:
     bool containsStr(QString searchText, QString text);
     QScopedPointer<PresenterPrivate> d_ptr;
     Q_DECLARE_PRIVATE_D(qGetPtrHelper(d_ptr), Presenter)
 };
-
 
