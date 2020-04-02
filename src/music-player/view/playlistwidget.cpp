@@ -342,9 +342,6 @@ void PlayListWidget::onMusicPlayed(PlaylistPtr playlist, const MetaPtr meta)
 {
     Q_D(PlayListWidget);
 
-//    if (playlist != d->playListView->playlist()) {
-//        d->initData(playlist);
-//    }
     if (d->playListView->rowCount() == 0 || playlist != d->playListView->playlist() ||
             playlist->allmusic().size() != d->playListView->rowCount() ||
             playlist->first()->hash != d->playListView->firstHash())

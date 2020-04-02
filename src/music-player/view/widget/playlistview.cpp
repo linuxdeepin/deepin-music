@@ -521,6 +521,7 @@ void PlayListView::showContextMenu(const QPoint &pos,
                                    PlaylistPtr favPlaylist,
                                    QList<PlaylistPtr> newPlaylists)
 {
+
     Q_D(PlayListView);
     QItemSelectionModel *selection = this->selectionModel();
 
@@ -608,16 +609,29 @@ void PlayListView::showContextMenu(const QPoint &pos,
     QAction *playAction = nullptr;
     QAction *pauseAction = nullptr;
     if (singleSelect) {
+
         auto activeMeta = activingMeta();
         auto meta = d->model->meta(selection->selectedRows().first());
+
         if (d->model->playlist()->playingStatus() && activeMeta == meta) {
-            pauseAction = myMenu.addAction(tr("Pause"));
+
+            if (rowCount() == 1 && meta->invalid) {
+                playAction = myMenu.addAction(tr("Play"));
+                if (meta->invalid)
+                    playAction->setEnabled(false);
+            } else {
+
+                pauseAction = myMenu.addAction(tr("Pause"));
+                if (meta->invalid)
+                    pauseAction->setEnabled(false);
+            }
         } else {
             playAction = myMenu.addAction(tr("Play"));
             if (meta->invalid)
                 playAction->setEnabled(false);
         }
     }
+
     myMenu.addAction(tr("Add to playlist"))->setMenu(&playlistMenu);
     myMenu.addSeparator();
 
