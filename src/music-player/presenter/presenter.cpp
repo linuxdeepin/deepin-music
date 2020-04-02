@@ -933,22 +933,19 @@ void Presenter::onMusiclistRemove(PlaylistPtr playlist, const MetaPtrList metali
         next = playlist->removeMusicList(metalist);
     }
 
-    if (playlist == d->player->curPlaylist()
-            || playlist->id() == AllMusicListID || playlist->id() == "musicResult") {
-        //stop music
-        for (auto &meta : metalist) {
-            if (d->player->isActiveMeta(meta)) {
-                if (playinglist->isEmpty() || t_isLastMeta) {
-                    onMusicStop(playinglist, next);
-                } else {
-                    onMusicPlay(playinglist, next);
-                }
+    /*-----Judge the condition to remove the song playback switch -----*/
+    for (auto &meta : metalist) {
+        if (d->player->isActiveMeta(meta)) {
+            if (playinglist->isEmpty() || t_isLastMeta) {
+                onMusicStop(playinglist, next);
+            } else {
+                onMusicPlay(playinglist, next);
             }
         }
     }
+
     if (playlist->allmusic().size() == 0)
         Q_EMIT musicListClear();
-
 }
 
 void Presenter::onMusiclistDelete(PlaylistPtr playlist, const MetaPtrList metalist)
