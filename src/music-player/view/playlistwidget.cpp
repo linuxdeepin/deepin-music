@@ -160,6 +160,7 @@ void PlayListWidgetPrivate::initConntion()
                 playListView->playlist()->removeMusicList(metalist);
             }
         }
+        Q_EMIT q->musicFileMiss();
     });
 }
 

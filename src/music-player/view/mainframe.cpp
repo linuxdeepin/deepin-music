@@ -1160,6 +1160,8 @@ void MainFrame::binding(Presenter *presenter)
             presenter, &Presenter::onRemoveMetasFavourite);
     connect(d->playListWidget,  &PlayListWidget::pause,
             presenter, &Presenter::onMusicPause);
+    connect(d->playListWidget,  &PlayListWidget::musicFileMiss,
+            presenter, &Presenter::musicFileMiss);
 
     connect(d->playListWidget, &PlayListWidget::importSelectFiles,
     this, [ = ](PlaylistPtr playlist, QStringList urllist) {

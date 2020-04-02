@@ -188,6 +188,8 @@ public slots:
     void setFadeInOutFactor(double fadeInOutFactor);
     void setFadeInOut(bool fadeInOut);
     void setPlayOnLoaded(bool playOnLoaded);
+    void musicFileMiss();
+
 
 private:
     void readSinkInputPath();
