@@ -38,6 +38,7 @@
 
 #include "metasearchservice.h"
 #include "util/dbusutils.h"
+#include <unistd.h>
 
 DCORE_USE_NAMESPACE
 
@@ -169,7 +170,7 @@ public:
     QPropertyAnimation  *fadeInAnimation    = nullptr;
     QPropertyAnimation  *fadeOutAnimation   = nullptr;
 
-    QFileSystemWatcher  fileSystemWatcher;
+//    QFileSystemWatcher  fileSystemWatcher;
 
     Player *q_ptr;
     Q_DECLARE_PUBLIC(Player)
@@ -343,14 +344,17 @@ void PlayerPrivate::initConnection()
         }
     });
 
-    q->connect(&fileSystemWatcher, &QFileSystemWatcher::fileChanged,
-    q, [ = ](const QString & path) {
-        if (!QFile::exists(activeMeta->localPath) && !activePlaylist->allmusic().isEmpty()) {
-            qplayer->pause();
-            qplayer->stop();
-            Q_EMIT q->mediaError(activePlaylist, activeMeta, Player::ResourceError);
-        }
-    });
+//    q->connect(&fileSystemWatcher, &QFileSystemWatcher::fileChanged,
+//    q, [ = ](const QString & path) {
+////        qDebug() << "change " << path;
+//        if (!QFile::exists(activeMeta->localPath) && !activePlaylist->allmusic().isEmpty()) {
+//             qDebug() << "change " << path;
+//            qplayer->pause();
+//            qplayer->stop();
+//            Q_EMIT q->mediaError(activePlaylist, activeMeta, Player::ResourceError);
+//        }
+//    });
+
 
     q->connect(this->resumeTimer, &QTimer::timeout, q, &Player::resumeAni);
     q->connect(this->pauseTimer, &QTimer::timeout, q, &Player::pauseAni);
@@ -549,8 +553,10 @@ void Player::playMeta(PlaylistPtr playlist, const MetaPtr meta)
     if (d->activePlaylist.isNull())
         return;
 
-    d->fileSystemWatcher.removePaths(d->fileSystemWatcher.files());
-    d->fileSystemWatcher.addPath(curMeta->localPath);
+//    qDebug()<<"d->fileSystemWatcher.files())"<< curMeta->localPath;
+//    d->fileSystemWatcher.removePaths(d->fileSystemWatcher.files());
+//    QString path =curMeta->localPath;
+//    d->fileSystemWatcher.addPath(path);
 
     d->activeMeta = curMeta;
     d->qplayer->setMedia(QMediaContent(QUrl::fromLocalFile(curMeta->localPath)));
@@ -929,6 +935,17 @@ void Player::setPlayOnLoaded(bool playOnLoaded)
 {
     Q_D(Player);
     d->playOnLoad = playOnLoaded;
+}
+
+void Player::musicFileMiss()
+{
+    Q_D(Player);
+
+    if(access(d->activeMeta->localPath.toStdString().c_str(),F_OK) != 0 && (!d->activePlaylist->allmusic().isEmpty())){
+        d->qplayer->pause();
+        d->qplayer->stop();
+        Q_EMIT mediaError(d->activePlaylist, d->activeMeta, Player::ResourceError);
+    }
 }
 
 void Player::readSinkInputPath()

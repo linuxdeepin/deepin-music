@@ -72,6 +72,7 @@ signals:
 
     void addMetasFavourite(const MetaPtrList  &metalist);
     void removeMetasFavourite(const MetaPtrList  &metalist);
+    void musicFileMiss();
 
 protected:
     virtual void dragEnterEvent(QDragEnterEvent *event) Q_DECL_OVERRIDE;

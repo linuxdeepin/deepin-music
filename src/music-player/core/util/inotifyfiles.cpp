@@ -26,6 +26,7 @@
 #include <QDir>
 #include <QFileInfo>
 #include <QTimer>
+#include <unistd.h>
 
 class InotifyFilesPrivate
 {
@@ -71,13 +72,22 @@ void InotifyFiles::scanFiles()
     QStringList allFiles;
     for (int i = d->paths.size() - 1; i >= 0; i--) {
         auto curtFile = d->paths[i];
-        if (!QFile::exists(curtFile)) {
+        if(access(curtFile.toStdString().c_str(),F_OK) != 0){
+//            qDebug()<<"d->activeMeta->localPath "<<curtFile;
             d->paths.removeAt(i);
             allFiles.append(curtFile);
         }
+//        if (!QFile::exists(curtFile)) {
+//            d->paths.removeAt(i);
+//            allFiles.append(curtFile);
+//        }
     }
+
+
     if (!allFiles.isEmpty())
         emit fileChanged(allFiles);
+
+
 }
 
 void InotifyFiles::addPath(const QString &path)
