@@ -526,7 +526,7 @@ void Presenter::prepareData()
         }
     });
     connect(this, &Presenter::musicFileMiss,
-    d->player,&Player::musicFileMiss);
+            d->player, &Player::musicFileMiss);
 
     connect(d->player, &Player::mediaPlayed,
     this, [ = ](PlaylistPtr playlist, const MetaPtr meta) {
@@ -622,7 +622,7 @@ void Presenter::postAction()
     auto isMetaLibClear = MediaLibrary::instance()->isEmpty();
     isMetaLibClear |= allplaylist->isEmpty();
 
-    if (d->settings->value("base.play.remember_progress").toBool() && !isMetaLibClear) {
+    if (/*d->settings->value("base.play.remember_progress").toBool() && */!isMetaLibClear) {
         d->syncPlayerResult = true;
 
         auto lastPlaylistId = d->settings->value("base.play.last_playlist").toString();
@@ -644,9 +644,13 @@ void Presenter::postAction()
         }
 
         if (!lastMeta.isNull()) {
-            position = d->settings->value("base.play.last_position").toInt();
+            position = 0;
+            if (d->settings->value("base.play.remember_progress").toBool()) {
+                position = d->settings->value("base.play.last_position").toInt();
+            }
             d->lastPlayPosition = position;
-            onCurrentPlaylistChanged(lastPlaylist);
+            if (d->settings->value("base.play.remember_progress").toBool())
+                onCurrentPlaylistChanged(lastPlaylist);
             Q_EMIT locateMusic(lastPlaylist, lastMeta);
             d->notifyMusicPlayed(lastPlaylist, lastMeta);
 
