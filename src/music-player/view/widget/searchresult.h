@@ -63,6 +63,8 @@ public slots:
     void slotTheme(int type);
     void itemClicked(QModelIndex);
     void getSearchStr();
+    void clearKeyState();
+
 private:
     DLabel *m_MusicLabel;
     DLabel *m_ArtistLabel;
