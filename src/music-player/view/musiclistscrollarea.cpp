@@ -87,7 +87,7 @@ MusicListScrollArea::MusicListScrollArea(QWidget *parent) : DScrollArea(parent)
     customizeLayout->setContentsMargins(0, 0, 5, 0);
     customizeLayout->addWidget(customizeLabel, 100, Qt::AlignLeft);
     customizeLayout->addStretch();
-    customizeLayout->addWidget(m_addListBtn, 0, Qt::AlignRight);
+    customizeLayout->addWidget(m_addListBtn, 0, Qt::AlignBottom);
 
     m_dataBaseListview = new MusicListView;
     m_dataBaseListview->setEditTriggers(QAbstractItemView::NoEditTriggers);
