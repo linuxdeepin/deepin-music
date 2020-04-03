@@ -96,6 +96,10 @@ SearchResult::SearchResult(QWidget *parent) : DFrame(parent)
     connect(m_MusicView, &MusicSearchListview::clicked, this, &SearchResult::itemClicked);
     connect(m_ArtistView, &MusicSearchListview::clicked, this, &SearchResult::itemClicked);
     connect(m_AlbumView, &MusicSearchListview::clicked, this, &SearchResult::itemClicked);
+
+    connect(m_MusicView, &MusicSearchListview::sigSearchClear, this, &SearchResult::clearKeyState);
+    connect(m_ArtistView, &MusicSearchListview::sigSearchClear, this, &SearchResult::clearKeyState);
+    connect(m_AlbumView, &MusicSearchListview::sigSearchClear, this, &SearchResult::clearKeyState);
 }
 
 void SearchResult::autoResize()
@@ -194,9 +198,11 @@ void SearchResult::selectUp()
         m_MusicView->setCurrentIndexInt(-1);
         m_ArtistView->setCurrentIndexInt(-1);
     }
-    m_MusicView->repaint();
-    m_ArtistView->repaint();
-    m_AlbumView->repaint();
+
+    m_MusicView->update();
+    m_ArtistView->update();
+    m_AlbumView->update();
+
     getSearchStr();
 }
 
@@ -208,27 +214,40 @@ void SearchResult::selectDown()
     if (m_CurrentIndex >= m_Count - 1) {
         return;
     }
+
     m_CurrentIndex ++;
+
     if (m_CurrentIndex < m_MusicView->rowCount()) {
         m_MusicView->setCurrentIndexInt(m_CurrentIndex);
+
         m_ArtistView->setCurrentIndexInt(-1);
         m_AlbumView->setCurrentIndexInt(-1);
+
     } else if (m_CurrentIndex >= m_MusicView->rowCount() - 1
                && m_CurrentIndex < (m_MusicView->rowCount() + m_ArtistView->rowCount())) {
+
         m_ArtistView->setCurrentIndexInt(m_CurrentIndex
                                          - m_MusicView->rowCount());
+
         m_MusicView->setCurrentIndexInt(-1);
         m_AlbumView->setCurrentIndexInt(-1);
+
     } else {
         m_AlbumView->setCurrentIndexInt(m_CurrentIndex
                                         - m_MusicView->rowCount()
                                         - m_ArtistView->rowCount());
+
         m_MusicView->setCurrentIndexInt(-1);
         m_ArtistView->setCurrentIndexInt(-1);
+
+        m_MusicView->clearSelection();
+        m_ArtistView->clearSelection();
     }
-    m_MusicView->repaint();
-    m_ArtistView->repaint();
-    m_AlbumView->repaint();
+
+    m_MusicView->update();
+    m_ArtistView->update();
+    m_AlbumView->update();
+
     getSearchStr();
 }
 
@@ -344,3 +363,17 @@ void SearchResult::getSearchStr()
 
     Q_EMIT  this->searchText3(id, text);
 }
+
+void SearchResult::clearKeyState()
+{
+    m_MusicView->setCurrentIndexInt(-1);
+    m_AlbumView->setCurrentIndexInt(-1);
+    m_ArtistView->setCurrentIndexInt(-1);
+
+    m_MusicView->update();
+    m_ArtistView->update();
+    m_AlbumView->update();
+}
+
+
+

@@ -30,6 +30,10 @@ public:
     MusicSearchListDelegate(QWidget *parent = Q_NULLPTR);
     ~MusicSearchListDelegate();
 
+
+signals:
+    void SearchClear() const;
+
 protected:
     virtual void initStyleOption(QStyleOptionViewItem *option, const QModelIndex &index) const;
 
