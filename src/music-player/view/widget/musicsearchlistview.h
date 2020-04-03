@@ -56,6 +56,16 @@ public:
     void keyChoice();
 
     void setViewModeFlag(QListView::ViewMode mode);
+
+
+signals:
+    void sigSearchClear();
+
+public slots:
+    void SearchClear();
+
+
+
 protected:
     virtual void mouseMoveEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
 

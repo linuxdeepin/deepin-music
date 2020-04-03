@@ -104,7 +104,6 @@ MusicListWidget::MusicListWidget(QWidget *parent) : DWidget(parent)
             m_customizeListview->clearSelected();
             m_customizeListview->closeAllPersistentEditor();
             m_dataListView->selectMusiclistChanged(curPtr);
-
             curPtr->setSearchStr("");
             Q_EMIT selectedPlaylistChange(curPtr);
         }
@@ -117,7 +116,6 @@ MusicListWidget::MusicListWidget(QWidget *parent) : DWidget(parent)
             m_customizeListview->clearSelected();
             m_customizeListview->closeAllPersistentEditor();
             m_dataListView->selectMusiclistChanged(curPtr);
-
             curPtr->setSearchStr("");
             Q_EMIT selectedPlaylistChange(curPtr);
         }
@@ -125,7 +123,9 @@ MusicListWidget::MusicListWidget(QWidget *parent) : DWidget(parent)
     });
     connect(m_dataBaseListview, &MusicListView::customResort,
     this, [ = ](const QStringList & uuids) {
+
         Q_EMIT this->customResort(uuids);
+
     });
     connect(m_dataBaseListview, &MusicListView::playall,
     this, [ = ](PlaylistPtr playlist) {
@@ -160,9 +160,7 @@ MusicListWidget::MusicListWidget(QWidget *parent) : DWidget(parent)
             m_dataBaseListview->clearSelected();
             m_dataBaseListview->closeAllPersistentEditor();
             m_dataListView->selectMusiclistChanged(curPtr);
-//            DUtil::TimerSingleShot(500, [this]() {
-//                Q_EMIT this->hidePlaylist();
-//            });
+
             curPtr->setSearchStr("");
             Q_EMIT selectedPlaylistChange(curPtr);
         }
@@ -175,9 +173,7 @@ MusicListWidget::MusicListWidget(QWidget *parent) : DWidget(parent)
             m_dataBaseListview->clearSelected();
             m_dataBaseListview->closeAllPersistentEditor();
             m_dataListView->selectMusiclistChanged(curPtr);
-//            DUtil::TimerSingleShot(500, [this]() {
-//                Q_EMIT this->hidePlaylist();
-//            });
+
             curPtr->setSearchStr("");
             Q_EMIT selectedPlaylistChange(curPtr);
         }

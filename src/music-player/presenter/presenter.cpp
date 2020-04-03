@@ -504,7 +504,7 @@ void Presenter::prepareData()
 
     connect(d->playlistMgr, &PlaylistManager::musiclistRemoved,
     this, [ = ](PlaylistPtr playlist, const MetaPtrList metalist) {
-        qDebug() << playlist << playlist->id();
+        //qDebug() << playlist << playlist->id();
         Q_EMIT musicListRemoved(playlist, metalist);
     });
 
@@ -525,6 +525,8 @@ void Presenter::prepareData()
             Q_EMIT this->volumeChanged(d->player->volume());
         }
     });
+    connect(this, &Presenter::musicFileMiss,
+            d->player, &Player::musicFileMiss);
 
     connect(d->player, &Player::mediaPlayed,
     this, [ = ](PlaylistPtr playlist, const MetaPtr meta) {
@@ -620,7 +622,7 @@ void Presenter::postAction()
     auto isMetaLibClear = MediaLibrary::instance()->isEmpty();
     isMetaLibClear |= allplaylist->isEmpty();
 
-    if (d->settings->value("base.play.remember_progress").toBool() && !isMetaLibClear) {
+    if (/*d->settings->value("base.play.remember_progress").toBool() && */!isMetaLibClear) {
         d->syncPlayerResult = true;
 
         auto lastPlaylistId = d->settings->value("base.play.last_playlist").toString();
@@ -642,9 +644,13 @@ void Presenter::postAction()
         }
 
         if (!lastMeta.isNull()) {
-            position = d->settings->value("base.play.last_position").toInt();
+            position = 0;
+            if (d->settings->value("base.play.remember_progress").toBool()) {
+                position = d->settings->value("base.play.last_position").toInt();
+            }
             d->lastPlayPosition = position;
-            onCurrentPlaylistChanged(lastPlaylist);
+            if (d->settings->value("base.play.remember_progress").toBool())
+                onCurrentPlaylistChanged(lastPlaylist);
             Q_EMIT locateMusic(lastPlaylist, lastMeta);
             d->notifyMusicPlayed(lastPlaylist, lastMeta);
 
@@ -894,7 +900,9 @@ void Presenter::onMusiclistRemove(PlaylistPtr playlist, const MetaPtrList metali
             }
         }
 
-        if (playlist->isEmpty()) {
+        /*-----Import song interface----*/
+        if (playlist->isEmpty()  && playlist->id() != "musicResult") {
+
             qDebug() << "meta library clean";
             onMusicStop(playlist, next);
             Q_EMIT metaLibraryClean();
@@ -931,22 +939,19 @@ void Presenter::onMusiclistRemove(PlaylistPtr playlist, const MetaPtrList metali
         next = playlist->removeMusicList(metalist);
     }
 
-    if (playlist == d->player->curPlaylist()
-            || playlist->id() == AllMusicListID || playlist->id() == "musicResult") {
-        //stop music
-        for (auto &meta : metalist) {
-            if (d->player->isActiveMeta(meta)) {
-                if (playinglist->isEmpty() || t_isLastMeta) {
-                    onMusicStop(playinglist, next);
-                } else {
-                    onMusicPlay(playinglist, next);
-                }
+    /*-----Judge the condition to remove the song playback switch -----*/
+    for (auto &meta : metalist) {
+        if (d->player->isActiveMeta(meta)) {
+            if (playinglist->isEmpty() || t_isLastMeta) {
+                onMusicStop(playinglist, next);
+            } else {
+                onMusicPlay(playinglist, next);
             }
         }
     }
+
     if (playlist->allmusic().size() == 0)
         Q_EMIT musicListClear();
-
 }
 
 void Presenter::onMusiclistDelete(PlaylistPtr playlist, const MetaPtrList metalist)

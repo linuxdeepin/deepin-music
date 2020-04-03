@@ -60,7 +60,6 @@ MusicListView::MusicListView(QWidget *parent) : DListView(parent)
     setFont(font);
 
     setIconSize( QSize(20, 20) );
-    //    setGridSize( QSize(40, 40) );
     setItemSize(QSize(40, 40));
 
     setFrameShape(QFrame::NoFrame);
@@ -259,7 +258,9 @@ void MusicListView::setCurPlaylist(QStandardItem *item)
             itemActionList.first()->setIcon(playingIcon);
         } else {
             DViewItemActionList  actionList;
-            auto viewItemAction = new DViewItemAction(Qt::AlignCenter);
+
+            /*----------delegate QSize-----------*/
+            auto viewItemAction = new DViewItemAction(Qt::AlignCenter, QSize(20, 20));
             viewItemAction->setIcon(playingIcon);
             actionList.append(viewItemAction);
             curItem->setActionList(Qt::RightEdge, actionList);

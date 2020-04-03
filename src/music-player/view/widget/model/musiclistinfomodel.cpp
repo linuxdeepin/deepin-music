@@ -80,7 +80,7 @@ QModelIndex MusiclistInfomodel::findIndex(const MetaPtr meta)
             return itemIndex;
         }
 
-        qCritical() << "search index failed" << meta->hash << itemHash;
+        //   qCritical() << "search index failed" << meta->hash << itemHash;
 
         for (int i = 0; i < rowCount(); ++i) {
             itemIndex = index(i, 0);

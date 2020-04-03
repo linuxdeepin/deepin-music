@@ -122,6 +122,7 @@ signals:
     //搜索
     void searchCand(QString searchText, PlaylistPtr playlist);
     void searchResult(QString searchText, QList<PlaylistPtr> resultlist, QString id);
+    void musicFileMiss();
 
 public slots:
     //! music control interface

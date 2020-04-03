@@ -64,7 +64,8 @@ SearchEdit::SearchEdit(QWidget *parent) : DSearchEdit(parent)
     connect(this, &SearchEdit::cursorPositionChanged,
     this, [ = ](int index1, int index2) {
         if (index1 > 0 && index2 == 0) {
-            searchAborted();
+            clearEdit();
+            Q_EMIT searchAborted();
         }
     });
 }
@@ -82,6 +83,12 @@ void SearchEdit::setResultWidget(SearchResult *result)
         onFocusOut();
         Q_EMIT this->searchText(id, text);
     });
+    connect(this, &SearchEdit::focusChanged,
+    this, [ = ](const bool onFocus) {
+        bool a = onFocus;
+        qDebug() << "onfacus" << onFocus;
+    });
+
 
     connect(m_result, &SearchResult::searchText2,
     this, [ = ](const QString & id, const QString & text) {
@@ -142,7 +149,9 @@ void SearchEdit::onFocusOut()
 void SearchEdit::onTextChanged()
 {
     auto text = QString(this->text()).remove(" ").remove("\r").remove("\n");
-    qDebug() << "this->text().size() :" << this->text().size();
+    /*-- -----charCount --------*/
+    //qDebug() << "charCount :" << this->text().size();
+
     if (this->text().size() == 0) {
         m_result->hide();
         m_LastText = "";

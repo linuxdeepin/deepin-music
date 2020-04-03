@@ -85,6 +85,7 @@ bool MusicSearchListDelegate::editorEvent(QEvent *event, QAbstractItemModel *mod
 void MusicSearchListDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
     Q_D(const MusicSearchListDelegate);
+
     /********************设置基础颜色***************************/
     QColor backColor("#FFFFFF");
     backColor.setAlphaF(0.2);
@@ -123,6 +124,8 @@ void MusicSearchListDelegate::paint(QPainter *painter, const QStyleOptionViewIte
 
     //绘制选中状态
     if (option.state & QStyle::State_MouseOver) {
+        // Q_EMIT this->SearchClear();
+
         painter->save();
         painter->setPen(Qt::NoPen);
         QColor hovertColor(option.palette.highlight().color());
@@ -134,6 +137,8 @@ void MusicSearchListDelegate::paint(QPainter *painter, const QStyleOptionViewIte
         QRect selecteColorRect = option.rect.adjusted(0, 0, 0, 0);
         painter->drawRoundedRect(selecteColorRect, 8, 8);
         painter->restore();
+
+        emit SearchClear();
     }
     //绘制上下键选中
     if (index.row() == listview->getIndexInt()
