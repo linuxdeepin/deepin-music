@@ -149,7 +149,9 @@ void SearchEdit::onFocusOut()
 void SearchEdit::onTextChanged()
 {
     auto text = QString(this->text()).remove(" ").remove("\r").remove("\n");
-    qDebug() << "charCount :" << this->text().size();
+    /*-- -----charCount --------*/
+    //qDebug() << "charCount :" << this->text().size();
+
     if (this->text().size() == 0) {
         m_result->hide();
         m_LastText = "";
