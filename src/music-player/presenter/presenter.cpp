@@ -902,7 +902,7 @@ void Presenter::onMusiclistRemove(PlaylistPtr playlist, const MetaPtrList metali
         }
 
         /*-----Import song interface----*/
-        if (playlist->isEmpty()  && playlist->id() != "musicResult") {
+        if (playlist->isEmpty()  && playinglist->allmusic().isEmpty()) {
 
             qDebug() << "meta library clean";
             onMusicStop(playlist, next);
@@ -943,7 +943,7 @@ void Presenter::onMusiclistRemove(PlaylistPtr playlist, const MetaPtrList metali
     /*-----Judge the condition to remove the song playback switch -----*/
     for (auto &meta : metalist) {
         if (d->player->isActiveMeta(meta)) {
-            if (playinglist->isEmpty() || t_isLastMeta) {
+            if (playinglist->isEmpty() || t_isLastMeta || next.isNull()) { /*新建歌单清空时停止播放*/
                 onMusicStop(playinglist, next);
             } else {
                 onMusicPlay(playinglist, next);
@@ -953,6 +953,8 @@ void Presenter::onMusiclistRemove(PlaylistPtr playlist, const MetaPtrList metali
 
     if (playlist->allmusic().size() == 0)
         Q_EMIT musicListClear();
+
+
 }
 
 void Presenter::onMusiclistDelete(PlaylistPtr playlist, const MetaPtrList metalist)
