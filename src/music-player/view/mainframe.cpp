@@ -444,7 +444,7 @@ void MainFramePrivate::showPlaylistView()
     QRect start1 ( 0, 0,
                    width - 10, 0);
     QRect end1 ( 0,  0,
-                 width - 10, 314);
+                 width - 10, 349);
     WidgetHelper::slideEdgeWidget2(
         playListWidget, start1, end1, AnimationDelay, true);
     WidgetHelper::slideEdgeWidget(
@@ -466,7 +466,7 @@ void MainFramePrivate::hidePlaylistView()
                 width - 10, 80);
 
     QRect start1 ( 0,  0,
-                   width - 10, 314);
+                   width - 10, 349);
     QRect end1 ( 0, 0,
                  width - 10, 0);
     WidgetHelper::slideEdgeWidget2(
@@ -486,9 +486,9 @@ void MainFramePrivate::resiveistView()
     }
     if (playListWidget->isVisible()) {
         QRect start1 ( 0, 0,
-                       width - 10, 314);
+                       width - 10, 349);
         QRect end1 ( 0,  0,
-                     width - 10, 314);
+                     width - 10, 349);
         WidgetHelper::slideEdgeWidget2(
             playListWidget, start1, end1, AnimationDelay, true);
         QRect rect ( 5,  height - 429,
