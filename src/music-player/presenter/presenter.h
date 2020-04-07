@@ -133,6 +133,7 @@ public slots:
 
     void onMusicPlay(PlaylistPtr playlist, const MetaPtr meta);
     void onMusicPause(PlaylistPtr playlist, const MetaPtr meta);
+    void onMusicPauseNow(PlaylistPtr playlist, const MetaPtr meta);
     void onMusicResume(PlaylistPtr playlist, const MetaPtr meta);
     void onMusicStop(PlaylistPtr playlist, const MetaPtr meta);
     void onMusicPrev(PlaylistPtr playlist, const MetaPtr meta);

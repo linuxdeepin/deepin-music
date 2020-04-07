@@ -815,7 +815,7 @@ void Presenter::togglePaly()
         onMusicPlay(activeList, activeMeta);
         break;
     case Player::Playing:
-        onMusicPause(activeList, activeMeta);
+        onMusicPauseNow(activeList, activeMeta);
         break;
     case Player::Paused:
         onMusicResume(activeList, activeMeta);
@@ -1393,6 +1393,18 @@ void Presenter::onMusicPause(PlaylistPtr playlist, const MetaPtr info)
     }
     Q_EMIT d->pause();
     Q_EMIT musicPaused(playlist, info);
+}
+
+void Presenter::onMusicPauseNow(PlaylistPtr playlist, const MetaPtr meta)
+{
+    Q_D(Presenter);
+    auto alllists = d->playlistMgr->allplaylist();
+    for (auto curList : alllists) {
+        if (!curList.isNull())
+            curList->setPlayingStatus(false);
+    }
+    d->player->pauseNow();
+    Q_EMIT musicPaused(playlist, meta);
 }
 
 void Presenter::onMusicResume(PlaylistPtr playlist, const MetaPtr info)
