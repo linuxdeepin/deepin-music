@@ -866,6 +866,11 @@ void Presenter::prev()
     onMusicPrev(activeList, activeMeta);
 }
 
+void Presenter::onHandleQuit()
+{
+    handleQuit();
+}
+
 void Presenter::requestImportPaths(PlaylistPtr playlist, const QStringList &filelist)
 {
     Q_D(Presenter);
@@ -1810,3 +1815,4 @@ void Presenter::initMpris(MprisPlayer *mprisPlayer)
         mprisPlayer->setMetadata(metadata);
     });
 }
+

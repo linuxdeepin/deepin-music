@@ -235,9 +235,9 @@ void MusicApp::show()
 void MusicApp::quit()
 {
     Q_D(MusicApp);
-    d->presenter->handleQuit();
+//    d->presenter->handleQuit();
     qDebug() << "sync config start";
-    MusicSettings::sync();
+//    MusicSettings::sync();
 #ifdef Q_OS_LINUX
     sync();
 #endif
@@ -279,3 +279,4 @@ void MusicApp::initConnection()
     presenterWork->start();
     qDebug() << "TRACE:" << "start prepare data";
 }
+

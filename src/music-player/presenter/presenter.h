@@ -57,7 +57,7 @@ public slots:
     void pause();
     void next();
     void prev();
-
+    void onHandleQuit();
     void requestImportPaths(PlaylistPtr playlist, const QStringList &filelist);
 
 signals:
@@ -180,4 +180,5 @@ private:
     QScopedPointer<PresenterPrivate> d_ptr;
     Q_DECLARE_PRIVATE_D(qGetPtrHelper(d_ptr), Presenter)
 };
+
 
