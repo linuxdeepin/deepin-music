@@ -1887,16 +1887,34 @@ void MusicListDataWidget::retResult(QString searchText, QList<PlaylistPtr> resul
         if (CurIndex == 0) {
             d->initData(MusicPlaylists, false, search);
             tabwidgetInfo(MusicPlaylists);
+            if (resultlist.size() == 1) {
+                ArtistPlaylists = nullptr;
+                d->singerListView->onMusiclistChanged(ArtistPlaylists);
+                AlbumPlaylists = nullptr;
+                d->albListView->onMusiclistChanged(AlbumPlaylists);
+            }
             return;
         }
         if (CurIndex == 1) {
             d->initData(ArtistPlaylists, false, search);
             tabwidgetInfo(ArtistPlaylists);
+            if (resultlist.size() == 1) {
+                MusicPlaylists = nullptr;
+                d->songListView->onMusiclistChanged(MusicPlaylists);
+                AlbumPlaylists = nullptr;
+                d->albListView->onMusiclistChanged(AlbumPlaylists);
+            }
             return;
         }
         if (CurIndex == 2) {
             d->initData(AlbumPlaylists, false, search);
             tabwidgetInfo(AlbumPlaylists);
+            if (resultlist.size() == 1) {
+                MusicPlaylists = nullptr;
+                d->songListView->onMusiclistChanged(MusicPlaylists);
+                ArtistPlaylists = nullptr;
+                d->singerListView->onMusiclistChanged(ArtistPlaylists);
+            }
             return;
         }
     }
