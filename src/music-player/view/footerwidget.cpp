@@ -745,7 +745,11 @@ void Footer::onMusicListAdded(PlaylistPtr playlist, const MetaPtrList metalist)
             && d->activingMeta != nullptr && playlist->contains(d->activingMeta))
         d->updateQssProperty(d->btFavorite, sPropertyFavourite, true);
     else {
-        d->updateQssProperty(d->btFavorite, sPropertyFavourite, false);
+        if (d->activingMeta != nullptr) {
+            d->updateQssProperty(d->btFavorite, sPropertyFavourite, d->activingMeta->favourite);
+        } else {
+            d->updateQssProperty(d->btFavorite, sPropertyFavourite, false);
+        }
     }
 
     if (d->activingPlaylist != nullptr) {
@@ -772,7 +776,11 @@ void Footer::onMusicListRemoved(PlaylistPtr playlist, const MetaPtrList metalist
             && d->activingMeta != nullptr && playlist->contains(d->activingMeta))
         d->updateQssProperty(d->btFavorite, sPropertyFavourite, true);
     else {
-        d->updateQssProperty(d->btFavorite, sPropertyFavourite, false);
+        if (d->activingMeta != nullptr) {
+            d->updateQssProperty(d->btFavorite, sPropertyFavourite, d->activingMeta->favourite);
+        } else {
+            d->updateQssProperty(d->btFavorite, sPropertyFavourite, false);
+        }
     }
 
     if (d->activingPlaylist != nullptr) {
@@ -1360,8 +1368,8 @@ void Footer::resizeEvent(QResizeEvent *event)
         int imageheight = cover.height();
         coverImage = cover.copy((cover.width() - imageWidth) / 2, 0, imageWidth, imageheight);
     }
-    if (d->btPlayList->isChecked()) {
-        coverImage.fill(QColor(255,255,255));
+    if (d->playListWidget->isVisible()) {
+        coverImage.fill(QColor(255, 255, 255));
     }
     d->forwardWidget->setSourceImage(coverImage);
 //    blurBackground()->setSourceImage(coverImage);
