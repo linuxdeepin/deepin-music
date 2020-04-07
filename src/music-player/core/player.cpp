@@ -528,12 +528,14 @@ void Player::loadMedia(PlaylistPtr playlist, const MetaPtr meta)
     d->qplayer->setMedia(QMediaContent(QUrl::fromLocalFile(meta->localPath)));
     int volume = d->qplayer->volume();
     d->qplayer->setVolume(0);
-    d->qplayer->play();
-    thread()->msleep(100);
-    d->qplayer->pause();
-    d->qplayer->setVolume(volume);
-    d->qplayer->blockSignals(false);
     d->activePlaylist->play(meta);
+//    d->qplayer->play();
+    QTimer::singleShot(100, this, [ = ]() {
+        d->qplayer->pause();
+        d->qplayer->setVolume(volume);
+        d->qplayer->blockSignals(false);
+        d->activePlaylist->play(meta);
+    });
 }
 
 void Player::playMeta(PlaylistPtr playlist, const MetaPtr meta)
