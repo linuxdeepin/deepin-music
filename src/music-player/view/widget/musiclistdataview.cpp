@@ -372,6 +372,9 @@ void MusicListDataView::onMusiclistChanged(PlaylistPtr playlist)
 
     if (playlist.isNull()) {
         qWarning() << "can not change to emptry playlist";
+        d->model->removeRows(0, d->model->rowCount());
+        d->model->setPlaylist(nullptr);
+        d->curPlayMusicTypePtrList.clear();
         return;
     }
 
