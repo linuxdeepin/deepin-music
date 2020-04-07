@@ -749,6 +749,12 @@ void Player::pause()
 #endif
 }
 
+void Player::pauseNow()
+{
+    Q_D(Player);
+    d->qplayer->pause();
+}
+
 void Player::stop()
 {
     Q_D(Player);

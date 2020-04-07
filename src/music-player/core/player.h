@@ -104,6 +104,7 @@ public:
     void playNextMeta(PlaylistPtr playlist, const MetaPtr meta);
     void playPrevMusic(PlaylistPtr playlist, const MetaPtr meta);
     void pause();
+    void pauseNow();
     void stop();
     PlaybackStatus status();
 
