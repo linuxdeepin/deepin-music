@@ -47,6 +47,7 @@ signals:
     void importSelectFiles(const QStringList &filelist, PlaylistPtr playlist);
     void triggerShortcutAction(const QString &optKey);
     void fadeInOut();
+    void exit();
 
 public slots:
     void updateUI();
@@ -70,3 +71,4 @@ private:
 
 extern const QString s_PropertyViewname;
 extern const QString s_PropertyViewnameLyric;
+
