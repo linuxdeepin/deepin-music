@@ -658,6 +658,7 @@ void Presenter::postAction()
             d->player->setPlayOnLoaded(false);
             d->player->setFadeInOut(false);
             d->player->loadMedia(lastPlaylist, lastMeta);
+            d->metaBufferDetector->onBufferDetector(lastMeta->localPath, lastMeta->hash);
             d->player->pause();
             QTimer::singleShot(9, [ = ]() {
                 d->player->setPosition(position);
