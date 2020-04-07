@@ -33,6 +33,7 @@
 #include <QDBusInterface>
 #include <QDBusReply>
 #include <QThread>
+#include <QFileInfo>
 
 #include <DRecentManager>
 
@@ -329,6 +330,14 @@ void PlayerPrivate::initConnection()
                 removeMusicList.append(activeMeta);
                 curPlaylist->removeMusicList(removeMusicList);
                 Q_EMIT q->mediaError(activePlaylist, activeMeta, static_cast<Player::Error>(error));
+            } else {
+                QFileInfo fi("activeMeta->localPath");
+                if (!fi.isReadable()) {
+                    MetaPtrList removeMusicList;
+                    removeMusicList.append(activeMeta);
+                    curPlaylist->removeMusicList(removeMusicList);
+                    Q_EMIT q->mediaError(activePlaylist, activeMeta, static_cast<Player::Error>(error));
+                }
             }
         }
     });
