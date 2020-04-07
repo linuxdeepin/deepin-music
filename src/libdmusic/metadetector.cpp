@@ -180,9 +180,15 @@ void MetaDetector::updateMediaFileTagCodec(MediaMeta *meta, const QByteArray &co
 
         } else {
             QTextCodec *codec = QTextCodec::codecForName(detectCodec);
-            meta->album = codec->toUnicode(tag->album().toCString());
-            meta->artist = codec->toUnicode(tag->artist().toCString());
-            meta->title = codec->toUnicode(tag->title().toCString());
+            if (codec == nullptr) {
+                meta->album = TStringToQString(tag->album());
+                meta->artist = TStringToQString(tag->artist());
+                meta->title = TStringToQString(tag->title());
+            } else {
+                meta->album = codec->toUnicode(tag->album().toCString());
+                meta->artist = codec->toUnicode(tag->artist().toCString());
+                meta->title = codec->toUnicode(tag->title().toCString());
+            }
             meta->codec = detectCodec;
         }
 
