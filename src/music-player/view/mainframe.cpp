@@ -445,10 +445,10 @@ void MainFramePrivate::showPlaylistView()
                    width - 10, 0);
     QRect end1 ( 0,  0,
                  width - 10, 314);
-    WidgetHelper::slideEdgeWidget(
-        footer, playListWidget, start, end, AnimationDelay, true);
     WidgetHelper::slideEdgeWidget2(
         playListWidget, start1, end1, AnimationDelay, true);
+    WidgetHelper::slideEdgeWidget(
+        footer, playListWidget, start, end, AnimationDelay, true);
     titlebar->raise();
     footer->raise();
     footer->setPlaylistButtonChecked(true);
@@ -469,10 +469,10 @@ void MainFramePrivate::hidePlaylistView()
                    width - 10, 314);
     QRect end1 ( 0, 0,
                  width - 10, 0);
-    WidgetHelper::slideEdgeWidget(
-        footer, playListWidget, start, end, AnimationDelay, false);
     WidgetHelper::slideEdgeWidget2(
         playListWidget, start1, end1, AnimationDelay, false);
+    WidgetHelper::slideEdgeWidget(
+        footer, playListWidget, start, end, AnimationDelay, false);
     titlebar->raise();
     footer->setPlaylistButtonChecked(false);
     footer->raise();
@@ -485,27 +485,27 @@ void MainFramePrivate::resiveistView()
         return ;
     }
     if (playListWidget->isVisible()) {
-        QRect rect ( 5,  height - 429,
-                     width - 10, 423);
-        WidgetHelper::slideEdgeWidget(
-            footer, playListWidget, rect, rect, 10, true);
         QRect start1 ( 0, 0,
                        width - 10, 314);
         QRect end1 ( 0,  0,
                      width - 10, 314);
         WidgetHelper::slideEdgeWidget2(
             playListWidget, start1, end1, AnimationDelay, true);
-    } else {
-        QRect rect ( 5,  height - 86,
-                     width - 10, 80);
+        QRect rect ( 5,  height - 429,
+                     width - 10, 423);
         WidgetHelper::slideEdgeWidget(
-            footer, playListWidget, rect, rect, 10, false);
+            footer, playListWidget, rect, rect, 10, true);
+    } else {
         QRect start1 ( 0,  0,
                        width - 10, 0);
         QRect end1 ( 0, 0,
                      width - 10, 0);
         WidgetHelper::slideEdgeWidget2(
             playListWidget, start1, end1, AnimationDelay, false);
+        QRect rect ( 5,  height - 86,
+                     width - 10, 80);
+        WidgetHelper::slideEdgeWidget(
+            footer, playListWidget, rect, rect, 10, false);
     }
 }
 
