@@ -136,7 +136,7 @@ void PresenterPrivate::initBackend()
             }
             if (!same) {
                 curPlaylist->removeMusicList(curPlaylist->allmusic());
-                this->thread()->msleep(10);
+                this->thread()->msleep(50);
                 curPlaylist->appendMusicList(curAllMetas);
             }
         } else {
@@ -658,6 +658,7 @@ void Presenter::postAction()
             d->player->setPlayOnLoaded(false);
             d->player->setFadeInOut(false);
             d->player->loadMedia(lastPlaylist, lastMeta);
+            d->metaBufferDetector->onBufferDetector(lastMeta->localPath, lastMeta->hash);
             d->player->pause();
             QTimer::singleShot(9, [ = ]() {
                 d->player->setPosition(position);
@@ -815,7 +816,7 @@ void Presenter::togglePaly()
         onMusicPlay(activeList, activeMeta);
         break;
     case Player::Playing:
-        onMusicPause(activeList, activeMeta);
+        onMusicPauseNow(activeList, activeMeta);
         break;
     case Player::Paused:
         onMusicResume(activeList, activeMeta);
@@ -863,6 +864,11 @@ void Presenter::prev()
         return;
     }
     onMusicPrev(activeList, activeMeta);
+}
+
+void Presenter::onHandleQuit()
+{
+    handleQuit();
 }
 
 void Presenter::requestImportPaths(PlaylistPtr playlist, const QStringList &filelist)
@@ -1395,6 +1401,18 @@ void Presenter::onMusicPause(PlaylistPtr playlist, const MetaPtr info)
     Q_EMIT musicPaused(playlist, info);
 }
 
+void Presenter::onMusicPauseNow(PlaylistPtr playlist, const MetaPtr meta)
+{
+    Q_D(Presenter);
+    auto alllists = d->playlistMgr->allplaylist();
+    for (auto curList : alllists) {
+        if (!curList.isNull())
+            curList->setPlayingStatus(false);
+    }
+    d->player->pauseNow();
+    Q_EMIT musicPaused(playlist, meta);
+}
+
 void Presenter::onMusicResume(PlaylistPtr playlist, const MetaPtr info)
 {
     Q_D(Presenter);
@@ -1797,3 +1815,4 @@ void Presenter::initMpris(MprisPlayer *mprisPlayer)
         mprisPlayer->setMetadata(metadata);
     });
 }
+

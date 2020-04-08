@@ -262,6 +262,10 @@ void MainFramePrivate::initMenu()
 
     QAction *m_close = new QAction(MainFrame::tr("Exit"), q);
     q->connect(m_close, &QAction::triggered, q, [ = ](bool) {
+//        d->presenter->handleQuit();
+        Q_EMIT q->exit();
+        qDebug() << "sync config start";
+//        MusicSettings::sync();
         q->close();
     });
 
@@ -274,6 +278,8 @@ void MainFramePrivate::initMenu()
 //titleMenu->addAction(colorModeAction);
     titleMenu->addAction(settings);
     titleMenu->addSeparator();
+//    titleMenu->addAction(m_close);
+//    titleMenu->addSeparator();
 
     titlebar->setMenu(titleMenu);
 
@@ -797,6 +803,8 @@ MainFrame::MainFrame(QWidget *parent) :
 
 MainFrame::~MainFrame()
 {
+    Q_EMIT exit();
+    MusicSettings::sync();
     MusicSettings::setOption("base.play.state", int(windowState()));
     MusicSettings::setOption("base.play.geometry", saveGeometry());
 }
@@ -875,9 +883,11 @@ void MainFrame::binding(Presenter *presenter)
 {
     Q_D(MainFrame);
 
+
     d->playListWidget->setCurPlaylist(presenter->playlist(PlayMusicListID));
     d->footer->setCurPlaylist(presenter->playlist(PlayMusicListID));
 
+    connect(this, &MainFrame::exit, presenter, &Presenter::onHandleQuit, Qt::DirectConnection);
     connect(this, &MainFrame::importSelectFiles, presenter, &Presenter::onImportFiles);
     connect(this, &MainFrame::addPlaylist, presenter, &Presenter::onPlaylistAdd);
     connect(this, &MainFrame::fadeInOut, presenter, &Presenter::onFadeInOut);
@@ -1611,3 +1621,4 @@ void MainFrame::paintEvent(QPaintEvent *e)
     //p.drawImage(rect(), d->currentCoverImage);
     DMainWindow::paintEvent(e);
 }
+

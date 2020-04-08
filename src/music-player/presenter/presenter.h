@@ -57,7 +57,7 @@ public slots:
     void pause();
     void next();
     void prev();
-
+    void onHandleQuit();
     void requestImportPaths(PlaylistPtr playlist, const QStringList &filelist);
 
 signals:
@@ -133,6 +133,7 @@ public slots:
 
     void onMusicPlay(PlaylistPtr playlist, const MetaPtr meta);
     void onMusicPause(PlaylistPtr playlist, const MetaPtr meta);
+    void onMusicPauseNow(PlaylistPtr playlist, const MetaPtr meta);
     void onMusicResume(PlaylistPtr playlist, const MetaPtr meta);
     void onMusicStop(PlaylistPtr playlist, const MetaPtr meta);
     void onMusicPrev(PlaylistPtr playlist, const MetaPtr meta);
@@ -179,4 +180,5 @@ private:
     QScopedPointer<PresenterPrivate> d_ptr;
     Q_DECLARE_PRIVATE_D(qGetPtrHelper(d_ptr), Presenter)
 };
+
 

@@ -33,6 +33,7 @@
 #include <QDBusInterface>
 #include <QDBusReply>
 #include <QThread>
+#include <QFileInfo>
 
 #include <DRecentManager>
 
@@ -329,6 +330,14 @@ void PlayerPrivate::initConnection()
                 removeMusicList.append(activeMeta);
                 curPlaylist->removeMusicList(removeMusicList);
                 Q_EMIT q->mediaError(activePlaylist, activeMeta, static_cast<Player::Error>(error));
+            } else {
+                QFileInfo fi("activeMeta->localPath");
+                if (!fi.isReadable()) {
+                    MetaPtrList removeMusicList;
+                    removeMusicList.append(activeMeta);
+                    curPlaylist->removeMusicList(removeMusicList);
+                    Q_EMIT q->mediaError(activePlaylist, activeMeta, static_cast<Player::Error>(error));
+                }
             }
         }
     });
@@ -528,12 +537,14 @@ void Player::loadMedia(PlaylistPtr playlist, const MetaPtr meta)
     d->qplayer->setMedia(QMediaContent(QUrl::fromLocalFile(meta->localPath)));
     int volume = d->qplayer->volume();
     d->qplayer->setVolume(0);
-    d->qplayer->play();
-    thread()->msleep(100);
-    d->qplayer->pause();
-    d->qplayer->setVolume(volume);
-    d->qplayer->blockSignals(false);
     d->activePlaylist->play(meta);
+//    d->qplayer->play();
+    QTimer::singleShot(100, this, [ = ]() {
+        d->qplayer->pause();
+        d->qplayer->setVolume(volume);
+        d->qplayer->blockSignals(false);
+        d->activePlaylist->play(meta);
+    });
 }
 
 void Player::playMeta(PlaylistPtr playlist, const MetaPtr meta)
@@ -747,6 +758,12 @@ void Player::pause()
         setFadeInOutFactor(1.0);
     }
 #endif
+}
+
+void Player::pauseNow()
+{
+    Q_D(Player);
+    d->qplayer->pause();
 }
 
 void Player::stop()
