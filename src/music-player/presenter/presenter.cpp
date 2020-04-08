@@ -136,7 +136,7 @@ void PresenterPrivate::initBackend()
             }
             if (!same) {
                 curPlaylist->removeMusicList(curPlaylist->allmusic());
-                this->thread()->msleep(10);
+                this->thread()->msleep(50);
                 curPlaylist->appendMusicList(curAllMetas);
             }
         } else {
