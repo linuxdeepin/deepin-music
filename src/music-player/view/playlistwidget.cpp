@@ -277,8 +277,8 @@ void PlayListWidget::updateInfo(PlaylistPtr playlist)
     }
 
     QString infoStr;
-//    int sortMetasSize = playlist->allmusic().size();
-    int sortMetasSize = d->playListView->rowCount();
+    int sortMetasSize = playlist->allmusic().size();
+    //int sortMetasSize = d->playListView->rowCount();
     if (sortMetasSize == 0) {
         infoStr = tr("No songs");
     } else if (sortMetasSize == 1) {
