@@ -59,6 +59,7 @@ public:
     void showPlayListWidget(int width, int height, bool changFlag = false);
     void setSize(int width, int height, bool changFlag = false);
     bool getShowPlayListFlag();
+    void refreshBackground();
 
 signals:
     void toggleLyricView();
