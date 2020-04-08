@@ -896,8 +896,6 @@ void Presenter::onMusiclistRemove(PlaylistPtr playlist, const MetaPtrList metali
         }
     }
 
-    qDebug() << "remove " << playlist->id() << metalist.length();
-
     // TODO: do better;
     if (playlist->id() == AllMusicListID || playlist->id() == "musicResult") {
         for (auto &playlist : allplaylist()) {
@@ -913,6 +911,8 @@ void Presenter::onMusiclistRemove(PlaylistPtr playlist, const MetaPtrList metali
             qDebug() << "meta library clean";
             onMusicStop(playlist, next);
             if (d->playlistMgr->playlist(AllMusicListID)->isEmpty()) {
+
+                qDebug() << "Presenter::onMusiclistRemove Q_EMIT 1";
                 Q_EMIT metaLibraryClean();
             }
         }
@@ -933,6 +933,7 @@ void Presenter::onMusiclistRemove(PlaylistPtr playlist, const MetaPtrList metali
             qDebug() << "meta library clean";
             onMusicStop(playlist, next);
             if (d->playlistMgr->playlist(AllMusicListID)->isEmpty()) {
+                qDebug() << "Presenter::onMusiclistRemove Q_EMIT 2";
                 Q_EMIT metaLibraryClean();
             }
         }
@@ -961,10 +962,11 @@ void Presenter::onMusiclistRemove(PlaylistPtr playlist, const MetaPtrList metali
         }
     }
 
-    if (playlist->allmusic().size() == 0)
+    if (playlist->allmusic().size() == 0 &&  playlist->id() != "play") {
+
+        qDebug() << "Presenter::onMusiclistRemove Q_EMIT 3";
         Q_EMIT musicListClear();
-
-
+    }
 }
 
 void Presenter::onMusiclistDelete(PlaylistPtr playlist, const MetaPtrList metalist)
