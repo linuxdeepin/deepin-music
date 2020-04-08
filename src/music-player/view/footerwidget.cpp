@@ -677,6 +677,34 @@ bool Footer::getShowPlayListFlag()
     return d->showPlaylistFlag;
 }
 
+void Footer::refreshBackground()
+{
+    Q_D(const Footer);
+    QImage cover(d->defaultCover);
+    if (d->activingMeta != nullptr) {
+        auto coverData = MetaSearchService::coverData(d->activingMeta);
+        if (coverData.length() > 0) {
+            cover = QImage::fromData(coverData);
+        }
+    }
+    //cut image
+    double windowScale = (width() * 1.0) / height();
+    int imageWidth = cover.height() * windowScale;
+    QImage coverImage;
+    if (d->playListWidget->isVisible()) {
+        coverImage.fill(QColor(255, 255, 255));
+    } else {
+        if (imageWidth > cover.width()) {
+            int imageheight = cover.width() / windowScale;
+            coverImage = cover.copy(0, (cover.height() - imageheight) / 2, cover.width(), imageheight);
+        } else {
+            int imageheight = cover.height();
+            coverImage = cover.copy((cover.width() - imageWidth) / 2, 0, imageWidth, imageheight);
+        }
+    }
+    d->forwardWidget->setSourceImage(coverImage);
+}
+
 void Footer::mousePressEvent(QMouseEvent *event)
 {
     Q_D(Footer);
@@ -838,7 +866,8 @@ void Footer::onMusicPlayed(PlaylistPtr playlist, const MetaPtr meta)
         coverImage = cover.copy((cover.width() - imageWidth) / 2, 0, imageWidth, imageheight);
     }
 
-    d->forwardWidget->setSourceImage(coverImage);
+    refreshBackground();
+//    d->forwardWidget->setSourceImage(coverImage);
 //    blurBackground()->setSourceImage(coverImage);
     //d->waveform->onAudioBuffer(MetaDetector::getMetaData(meta->localPath));
 
