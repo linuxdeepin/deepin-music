@@ -25,8 +25,7 @@
 #include <QDBusObjectPath>
 #include <QDBusInterface>
 #include <QDBusReply>
-#include <QDebug>
-
+#include <QtDebug>
 #include "util/dbusutils.h"
 #include "musicsettings.h"
 
@@ -106,13 +105,15 @@ void VolumeMonitoring::timeoutSlot()
 
     int volume = volumeV.toDouble() * 100;
     bool mute = muteV.toBool();
-
     auto oldMute = MusicSettings::value("base.play.mute").toBool();
     auto oldVolume = MusicSettings::value("base.play.volume").toInt();
 
-    if (volume != oldVolume) {
+    if (volume != oldVolume){
         Q_EMIT volumeChanged(volume);
+        MusicSettings::setOption("base.play.volume", volume);
     }
-    if (mute != oldMute)
+    if (mute != oldMute){
+        MusicSettings::setOption("base.play.mute", mute);
         Q_EMIT muteChanged(muteV.toBool());
+    }
 }
