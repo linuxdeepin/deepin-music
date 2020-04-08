@@ -912,7 +912,9 @@ void Presenter::onMusiclistRemove(PlaylistPtr playlist, const MetaPtrList metali
 
             qDebug() << "meta library clean";
             onMusicStop(playlist, next);
-            Q_EMIT metaLibraryClean();
+            if (d->playlistMgr->playlist(AllMusicListID)->isEmpty()) {
+                Q_EMIT metaLibraryClean();
+            }
         }
 
         MediaDatabase::instance()->removeMediaMetaList(metalist);
@@ -930,7 +932,9 @@ void Presenter::onMusiclistRemove(PlaylistPtr playlist, const MetaPtrList metali
         if (curPlaylist->isEmpty()) {
             qDebug() << "meta library clean";
             onMusicStop(playlist, next);
-            Q_EMIT metaLibraryClean();
+            if (d->playlistMgr->playlist(AllMusicListID)->isEmpty()) {
+                Q_EMIT metaLibraryClean();
+            }
         }
 
         MediaDatabase::instance()->removeMediaMetaList(metalist);
