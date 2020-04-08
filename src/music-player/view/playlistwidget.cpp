@@ -268,7 +268,7 @@ void PlayListWidget::updateInfo(PlaylistPtr playlist)
 {
     Q_D(PlayListWidget);
 
-    if (playlist.isNull() || playlist->id() != PlayMusicListID)
+    if (playlist.isNull() || playlist->id() != PlayMusicListID || playlist->allmusic().isEmpty())
         return;
 
     d->inotifyFiles.clear();
