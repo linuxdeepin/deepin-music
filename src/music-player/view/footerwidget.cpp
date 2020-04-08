@@ -804,11 +804,7 @@ void Footer::onMusicListRemoved(PlaylistPtr playlist, const MetaPtrList metalist
             && d->activingMeta != nullptr && playlist->contains(d->activingMeta))
         d->updateQssProperty(d->btFavorite, sPropertyFavourite, true);
     else {
-        if (d->activingMeta != nullptr) {
-            d->updateQssProperty(d->btFavorite, sPropertyFavourite, d->activingMeta->favourite);
-        } else {
-            d->updateQssProperty(d->btFavorite, sPropertyFavourite, false);
-        }
+        d->updateQssProperty(d->btFavorite, sPropertyFavourite, false);
     }
 
     if (d->activingPlaylist != nullptr) {
