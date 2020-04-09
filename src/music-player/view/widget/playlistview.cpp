@@ -172,8 +172,8 @@ void PlayListView::setViewModeFlag(QListView::ViewMode mode)
 {
     if (mode == QListView::IconMode) {
         setIconSize( QSize(140, 140) );
-        setGridSize( QSize(-1, -1) );
-        setViewportMargins(100, 10, 10, 10);
+        setGridSize( QSize(170, 213) );
+        setViewportMargins(10, 10, 10, 10);
     } else {
         setIconSize( QSize(36, 36) );
 

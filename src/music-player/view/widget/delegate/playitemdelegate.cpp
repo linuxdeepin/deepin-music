@@ -552,11 +552,12 @@ QSize PlayItemDelegate::sizeHint(const QStyleOptionViewItem &option,
 {
     Q_D(const PlayItemDelegate);
 
-    auto listview = qobject_cast<const PlayListView *>(option.widget);
-    if (listview->viewMode() == QListView::IconMode) {
-        return QSize(170,213);
-    }
-        return QStyledItemDelegate::sizeHint(option, index);
+    return QStyledItemDelegate::sizeHint(option, index);
+
+//    auto listview = qobject_cast<const PlayListView *>(option.widget);
+//    if (listview->viewMode() == QListView::IconMode) {
+//        return QStyledItemDelegate::sizeHint(option, index);
+//    }
 
 //    auto baseSize = QStyledItemDelegate::sizeHint(option, index);
 //    return  QSize(baseSize.width() / 5, baseSize.height());
