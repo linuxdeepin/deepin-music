@@ -120,7 +120,7 @@ void InfoDialogPrivate::initUI()
     dArrowLine = new DArrowLineDrawer(q);
     dArrowLine->setTitle(" " + InfoDialog::tr("Basic info"));
     dArrowLine->setContent(infoGridFrame);
-    dArrowLine->setFixedSize(290, 195);
+    dArrowLine->setFixedSize(300, 195);
 
     auto infoLayout = new QVBoxLayout(infoGridFrame);
     infoLayout->setSpacing(0);
@@ -131,7 +131,7 @@ void InfoDialogPrivate::initUI()
     infogridLayout->setHorizontalSpacing(10);
     infogridLayout->setVerticalSpacing(5);
     infogridLayout->setColumnStretch(0, 60);
-    infogridLayout->setColumnStretch(1, 200);
+    infogridLayout->setColumnStretch(1, 260);
 
     QStringList infoKeys;
     infoKeys << InfoDialog::tr("Title:") << InfoDialog::tr("Artist:")
@@ -156,7 +156,7 @@ void InfoDialogPrivate::initUI()
         infoValue->setObjectName("InfoValue");
 //        infoValue->setMinimumHeight(28);
         infoValue->setMinimumWidth(200);
-        infoValue->setMaximumWidth(220);
+        infoValue->setMaximumWidth(260);
         infoValue->setAlignment(Qt::AlignLeft | Qt::AlignTop);
         infoValue->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
         infoValue->setForegroundRole(DPalette::WindowText);
@@ -175,7 +175,7 @@ void InfoDialogPrivate::initUI()
     q->connect(closeBt, &MusicImageButton::clicked, q, [ = ]() {
         dArrowLine->setExpand(true);
     });;
-    dArrowLine->move(15, 252);;
+    dArrowLine->move(10, 252);;
     dArrowLine->setExpand(true);
 }
 
