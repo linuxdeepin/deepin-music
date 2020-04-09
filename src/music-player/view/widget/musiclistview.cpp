@@ -142,27 +142,9 @@ MusicListView::MusicListView(QWidget *parent) : DListView(parent)
             }
             curStandardItem->setIcon(icon);
         }
-        //m_currentitem = dynamic_cast<DStandardItem *>(model->itemFromIndex(current));
-        if (!playlistPtr->playing().isNull()) {
-            auto curItem = dynamic_cast<DStandardItem *>(model->itemFromIndex(current));
-            if (curItem != NULL) {
-                //delete
-                QIcon playingIcon(albumPixmap);
-                playingIcon.actualSize(QSize(20, 20));
-                DViewItemActionList actionList = curItem->actionList(Qt::RightEdge);
-                if (!actionList.isEmpty()) {
-                    actionList.first()->setIcon(playingIcon);
-                } else {
-                    DViewItemActionList  actionList;
-                    auto viewItemAction = new DViewItemAction(Qt::AlignCenter);
-                    viewItemAction->setIcon(playingIcon);
-                    actionList.append(viewItemAction);
-                    curItem->setActionList(Qt::RightEdge, actionList);
-                }
-            }
 
-        }
-
+        /*------Refresh play state--------*/
+        changePicture(playingPixmap, playingPixmap);
     });
 }
 
