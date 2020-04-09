@@ -286,7 +286,7 @@ void PlaylistManager::onCustomResort(QStringList uuids)
     uuids.push_front(playlist(SearchMusicListID)->id());
 
     d->sortUUIDs.clear();
-    for (auto sortID = 0; sortID < uuids.length(); ++sortID) {
+    for (auto sortID = 0; sortID < uuids.length(); sortID++) {
         d->sortUUIDs << uuids.value(sortID);
     }
 
