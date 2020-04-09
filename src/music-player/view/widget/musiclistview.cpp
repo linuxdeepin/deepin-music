@@ -328,7 +328,7 @@ void MusicListView::clearSelected()
         curStandardItem->setIcon(icon);
 
     }
-    if (playingItem != nullptr) {
+    if (playingItem != nullptr && playingItem->rowCount() > 0) {
         auto curItem = dynamic_cast<DStandardItem *>(playingItem);
         if (curItem != NULL) {
             //delete
@@ -447,10 +447,16 @@ void MusicListView::keyPressEvent(QKeyEvent *event)
             warnDlg.addButton(tr("Delete"), true, Dtk::Widget::DDialog::ButtonWarning);
             if (1 == warnDlg.exec()) {
                 int t_index = item->row();
-                model->removeRow(t_index);
+                model->removeRow(item->row());
                 allPlaylists.removeAt(t_index);
+                if (item == playingItem)
+                    playingItem = nullptr;
+
                 //delete model->takeItem(item->row());
                 Q_EMIT m_data->removed();
+                if (m_data->playing() != nullptr || allPlaylists.isEmpty())
+                    Q_EMIT removeAllList(m_data->playing());
+
                 adjustHeight();
             }
         }

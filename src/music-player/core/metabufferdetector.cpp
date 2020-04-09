@@ -138,6 +138,7 @@ void MetaBufferDetector::run()
             avcodec_close(pCodecCtx);
             avformat_close_input(&pFormatCtx);
             avformat_free_context(pFormatCtx);
+            resample(curData, hash);//刷新波浪条
             d->stopFlag = false;
             return;
         }
