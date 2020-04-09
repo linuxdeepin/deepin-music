@@ -116,13 +116,12 @@ MusicListDataView::MusicListDataView(QWidget *parent)
     connect(this, &MusicListDataView::doubleClicked,
     this, [ = ](const QModelIndex & index) {
         PlaylistPtr curPlaylist = d->model->playlist();
-
         auto playMusicTypePtrList = curPlaylist->playMusicTypePtrList();
         if (index.row() >= playMusicTypePtrList.size()) {
             return;
         }
-
         auto PlayMusicTypePtr = playMusicTypePtrList[index.row()];
+
         d->musciListDialog->setPlayMusicData(curPlaylist, PlayMusicTypePtr);
         d->musciListDialog->setPlaying(playing());
         d->musciListDialog->exec();
@@ -250,17 +249,13 @@ int MusicListDataView::listSize()
 
 void MusicListDataView::setViewModeFlag(QListView::ViewMode mode)
 {
-
     if (mode == QListView::IconMode) {
-        setIconSize( QSize(150, 150));
-        setGridSize( QSize(-1, -1));
-        setViewportMargins(-10, -13, -35, 10);
-        setSpacing(20);
+        setIconSize( QSize(170, 170) );
+        setGridSize( QSize(-1, -1) );
+        setViewportMargins(80,0,0,0);
     } else {
         setIconSize( QSize(36, 36) );
         setGridSize( QSize(-1, -1) );
-        setViewportMargins(0, 0, 8, 0);
-        setSpacing(0);
     }
     setViewMode(mode);
 }

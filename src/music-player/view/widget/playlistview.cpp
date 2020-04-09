@@ -118,6 +118,14 @@ PlayListView::PlayListView(bool searchFlag, QWidget *parent)
             Q_EMIT playMedia(meta);
         }
     });
+
+    // For debug
+//    connect(selectionModel(), &QItemSelectionModel::selectionChanged,
+//    this, [ = ](const QItemSelection & /*selected*/, const QItemSelection & deselected) {
+//        if (!deselected.isEmpty()) {
+//            qDebug() << "cancel" << deselected;
+//        }
+//    });
 }
 
 PlayListView::~PlayListView()
@@ -163,14 +171,13 @@ void PlayListView::setPlaying(const MetaPtr meta)
 void PlayListView::setViewModeFlag(QListView::ViewMode mode)
 {
     if (mode == QListView::IconMode) {
-        setIconSize( QSize(150, 150) );
+        setIconSize( QSize(140, 140) );
         setGridSize( QSize(-1, -1) );
-        setSpacing(20);
-        setViewportMargins(-10, -10, -35, 10);
+        setViewportMargins(100, 10, 10, 10);
     } else {
         setIconSize( QSize(36, 36) );
+
         setGridSize( QSize(-1, -1) );
-        setSpacing(0);
         setViewportMargins(0, 0, 8, 0);
     }
     setViewMode(mode);
@@ -266,9 +273,15 @@ void PlayListView::onMusicListRemoved(const MetaPtrList metalist)
 
 void PlayListView::onMusicError(const MetaPtr meta, int /*error*/)
 {
-    if (meta == nullptr) {
-        return ;
-    }
+    Q_ASSERT(!meta.isNull());
+//    Q_D(PlayListView);
+
+//    qDebug() << error;
+//    QModelIndex index = findIndex(meta);
+
+//    auto indexData = index.data().value<MetaPtr>();
+//    indexData.invalid = (error != 0);
+//    d->m_model->setData(index, QVariant::fromValue<MetaPtr>(indexData));
 
     update();
 }
@@ -534,7 +547,8 @@ void PlayListView::showContextMenu(const QPoint &pos,
             break;
         }
     }
-    if (selectedPlaylist != favPlaylist || this->playlist()->id() == tr("musicResult")) {
+
+    if (selectedPlaylist != favPlaylist) {
 //        auto act = playlistMenu.addAction(favPlaylist->displayName());
         auto act = playlistMenu.addAction(tr("My favorites"));
         bool flag = true;

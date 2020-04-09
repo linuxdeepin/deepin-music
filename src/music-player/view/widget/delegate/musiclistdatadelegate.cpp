@@ -109,31 +109,22 @@ void MusicListDataDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
         auto background = option.palette.background();
 
         if (option.state & QStyle::State_Selected) {
-//            background = option.palette.highlight();
+            //background = option.palette.highlight();
         }
 
-        painter->fillRect(option.rect, background);
+        //painter->fillRect(option.rect, background);
 
         //draw shadow
-//        int shadowBorderWidth = 10;
-//        QRect shadowRect = option.rect.adjusted(shadowBorderWidth, shadowBorderWidth, -shadowBorderWidth, -shadowBorderWidth);;
-//        QPainterPath roundRectShadowPath;
-//        roundRectShadowPath.addRoundRect(shadowRect, 10, 10);
-//        painter->save();
-//        painter->setClipPath(roundRectShadowPath);
-//        painter->drawPixmap(shadowRect, d->shadowImg);
-//        painter->restore();
-
-        //绘制阴影
-        QRect shadowRect(option.rect.x() - 10, option.rect.y(), 158, 158);
+        int shadowBorderWidth = 2;
+        QRect shadowRect = option.rect.adjusted(shadowBorderWidth, shadowBorderWidth, -shadowBorderWidth, -shadowBorderWidth);;
         QPainterPath roundRectShadowPath;
-        roundRectShadowPath.addRoundRect(shadowRect, 8, 8);
+        roundRectShadowPath.addRoundRect(shadowRect, 10, 10);
         painter->save();
         painter->setClipPath(roundRectShadowPath);
-        painter->drawPixmap(shadowRect, d_ptr->shadowImg);
+        painter->drawPixmap(shadowRect, d->shadowImg);
         painter->restore();
 
-        int borderWidth = 0;
+        int borderWidth = 10;
         QRect rect = option.rect.adjusted(borderWidth, borderWidth, -borderWidth, -borderWidth);
         QPainterPath roundRectPath;
         roundRectPath.addRoundRect(rect, 10, 10);
@@ -626,9 +617,9 @@ void MusicListDataDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
 QSize MusicListDataDelegate::sizeHint(const QStyleOptionViewItem &option,
                                       const QModelIndex &index) const
 {
-    auto listview = qobject_cast<const MusicListDataView *>(option.widget);
-    if (listview->viewMode() == QListView::IconMode) {
-        return QSize(150,150);
+    auto musiclistview = qobject_cast<const MusicListDataView *>(option.widget);
+    if (musiclistview->viewMode() == QListView::IconMode) {
+        return QSize(170,170);
     }
     return QStyledItemDelegate::sizeHint(option, index);
 }
