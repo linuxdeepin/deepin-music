@@ -100,7 +100,7 @@ void InfoDialogPrivate::initUI()
     title->setAlignment(Qt::AlignCenter);
     title->setWordWrap(true);
     title->setForegroundRole(DPalette::BrightText);
-    title->move(15, 212);
+    title->move(10, 212);
 
     infoGridFrame = new DFrame(q);
     infoGridFrame->setFocusPolicy(Qt::NoFocus);
@@ -124,7 +124,7 @@ void InfoDialogPrivate::initUI()
 
     auto infoLayout = new QVBoxLayout(infoGridFrame);
     infoLayout->setSpacing(0);
-    infoLayout->setMargin(5);
+    infoLayout->setMargin(0);
 
     auto infogridLayout = new QGridLayout(infoGridFrame);
     infogridLayout->setMargin(10);
