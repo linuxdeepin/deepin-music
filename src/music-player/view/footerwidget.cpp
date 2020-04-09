@@ -118,7 +118,8 @@ public:
     bool            btPlayingStatus = false;
 
     VolumeMonitoring         volumeMonitoring;
-
+    int             m_Volume = 0;
+    int             m_Mute = 0;
     Footer *q_ptr;
     Q_DECLARE_PUBLIC(Footer)
 };
@@ -197,9 +198,13 @@ void FooterPrivate::initConnection()
     });
     q->connect(btSound, &DPushButton::pressed, q, [ = ]() {
         Q_EMIT q->toggleMute();
+        if (m_Mute) {
+            Q_EMIT q->volumeChanged(m_Volume);
+        }
     });
     q->connect(volSlider, &SoundVolume::volumeChanged, q, [ = ](int vol) {
         q->onVolumeChanged(vol);
+        m_Volume = vol;
         Q_EMIT q->volumeChanged(vol);
     });
 
@@ -223,12 +228,14 @@ void FooterPrivate::initConnection()
         if (!status.isEmpty())
             updateQssProperty(btSound, "volume", status);
 
+        MusicSettings::setOption("base.play.volume", ((double)m_Volume) / 100);
         volSlider->onVolumeChanged(vol);
-
+        m_Volume = vol;
         q->onVolumeChanged(vol);
     });
 
     q->connect(&volumeMonitoring, &VolumeMonitoring::muteChanged, q, [ = ](bool mute) {
+        m_Mute = mute;
         q->onMutedChanged(mute);
     });
 }
@@ -1295,18 +1302,30 @@ void Footer::onVolumeChanged(int volume)
         status = "mute";
     }
     d->updateQssProperty(d->btSound, "volume", status);
-
-//    qDebug() << status << volume;
+    d->m_Volume = volume;
+    MusicSettings::setOption("base.play.volume", ((double)volume) / 100);
     d->volSlider->onVolumeChanged(volume);
 }
 
 void Footer::onMutedChanged(bool muted)
 {
     Q_D(Footer);
-//    qDebug() << muted;
     if (muted) {
         d->updateQssProperty(d->btSound, "volume", "mute");
-        d->volSlider->onVolumeChanged(0);
+        MusicSettings::setOption("base.play.mute", muted);
+    } else {
+        QString status = "mid";
+        if (d->m_Volume > 77) {
+            status = "high";
+        } else if (d->m_Volume > 33) {
+            status = "mid";
+        } else  if (d->m_Volume > 0) {
+            status = "low";
+        } else {
+            status = "mute";
+        }
+        MusicSettings::setOption("base.play.mute", muted);
+        d->updateQssProperty(d->btSound, "volume", status);
     }
 }
 
