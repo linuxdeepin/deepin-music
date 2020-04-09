@@ -617,10 +617,6 @@ void MusicListDataDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
 QSize MusicListDataDelegate::sizeHint(const QStyleOptionViewItem &option,
                                       const QModelIndex &index) const
 {
-    auto musiclistview = qobject_cast<const MusicListDataView *>(option.widget);
-    if (musiclistview->viewMode() == QListView::IconMode) {
-        return QSize(170,170);
-    }
     return QStyledItemDelegate::sizeHint(option, index);
 }
 
