@@ -157,6 +157,8 @@ signals:
 //    void minimumRateChanged(double minimumRate);
     void playbackStatusChanged(Player::PlaybackStatus playbackStatus);
     void positionChanged(qlonglong position, qlonglong length);
+    void sliderReleased(qint64 value);
+
 //    void rateChanged(double rate);
 //    void shuffleChanged(bool shuffle);
     void volumeChanged(double volume);
@@ -181,6 +183,8 @@ public slots:
 //    void setMinimumRate(double minimumRate);
 //    void setPlaybackStatus(PlaybackStatus playbackStatus);
     void setPosition(qlonglong position);
+    void setIOPosition(qint64 value, qint64 range);
+
     void setMode(PlaybackMode mode);
 //    void setRate(double rate);
 //    void setShuffle(bool shuffle);
@@ -190,7 +194,6 @@ public slots:
     void setFadeInOut(bool fadeInOut);
     void setPlayOnLoaded(bool playOnLoaded);
     void musicFileMiss();
-
 
 private:
     void readSinkInputPath();

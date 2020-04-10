@@ -24,7 +24,7 @@ qint64 AudioBufferDevice::readData(char *data, qint64 size)
     }
 
     if (position == _abuffer_queue.size()) {
-        //qDebug() << "数据已播放完成";
+        qDebug() << "数据已播放完成";
         Q_EMIT endOfMedia();
         return  0;
     }

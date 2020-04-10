@@ -110,9 +110,7 @@ SOURCES += \
     view/widget/model/musicsearchlistmodel.cpp \
     view/widget/delegate/musicsearchlistdelegate.cpp \
     core/AudioBufferDevice.cpp \
-    core/AudioPlayer.cpp \
-    speech/exportedinterface.cpp \
-    speech/speechCenter.cpp
+    core/AudioPlayer.cpp
 
 HEADERS += \
     musicapp.h \
@@ -197,9 +195,7 @@ HEADERS += \
     view/widget/model/musicsearchlistmodel.h \
     view/widget/delegate/musicsearchlistdelegate.h \
     core/AudioBufferDevice.h \
-    core/AudioPlayer.h \
-    speech/exportedinterface.h \
-    speech/speechCenter.h
+    core/AudioPlayer.h
 
 RESOURCES += \
     resource/theme/theme.qrc \
