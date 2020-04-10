@@ -1524,11 +1524,13 @@ void Presenter::onRemoveMetasFavourite(const MetaPtrList metalist)
 void Presenter::onChangeProgress(qint64 value, qint64 range)
 {
     Q_D(Presenter);
-    //    auto position = value * d->player->duration() / range;
-    //    if (position < 0) {
-    //        qCritical() << "invalid position:" << d->player->media().canonicalUrl() << position;
-    //    }
-    //    d->player->setPosition(position);
+
+    /*-----setIOPosition------*/
+
+    //qDebug() << value << "-" << range;
+
+    d->player->setIOPosition(value, range);
+
     auto position = value * d->player->duration() / range;
     d->player->setPosition(position);
 }
@@ -1538,7 +1540,7 @@ void Presenter::onVolumeChanged(int volume)
     Q_D(Presenter);
 
     d->player->setVolume(volume);
-    qDebug() << "change play volume" << d->player->volume();
+
     if (volume > 0 && d->player->muted()) {
         d->player->setMuted(false);
         d->settings->setOption("base.play.mute", false);
