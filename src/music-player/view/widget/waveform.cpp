@@ -331,10 +331,13 @@ void Waveform::mouseMoveEvent(QMouseEvent *event)
     updateScaleSize();
 }
 
-void Waveform::onProgressChanged(qint64 value, qint64 duration)
+void Waveform::onProgressChanged(qint64 value, qint64 duration, qint64 coefficient)
 {
     auto length = maximum() - minimum();
     Q_ASSERT(length != 0);
+
+    /*------curCoefficient-------*/
+    curCoefficient = coefficient;
 
     auto progress = 0;
     if (0 != duration) {
@@ -347,6 +350,7 @@ void Waveform::onProgressChanged(qint64 value, qint64 duration)
 
     curValue = value;
     allDuration = duration;
+
     blockSignals(true);
     setValue(progress);
 
@@ -367,7 +371,8 @@ void Waveform::updateScaleSize()
     wavePos = mainWindow->mapFromGlobal(wavePos);
 
     waveformScale->move(wavePos.x(), wavePos.y());
-    waveformScale->setValue(curValue);
+    waveformScale->setValue(curValue * curCoefficient);
+
     waveformScale->update();
 }
 

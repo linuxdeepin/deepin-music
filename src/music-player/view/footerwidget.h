@@ -45,11 +45,9 @@ public:
 
 public:
     void setCurPlaylist(PlaylistPtr playlist);
-
     void enableControl(bool enable = true);
-//    void initData(PlaylistPtr current, int mode);
-
     void setViewname(const QString &viewname);
+
     QString defaultCover() const;
 
     void setLyricButtonChecked(bool flag);
@@ -91,7 +89,7 @@ public slots:
     void onMusicError(PlaylistPtr playlist, const MetaPtr meta, int error);
     void onMusicPause(PlaylistPtr playlist, const MetaPtr meta);
     void onMusicStoped(PlaylistPtr playlist, const MetaPtr meta);
-    void onProgressChanged(qint64 value, qint64 duration);
+    void onProgressChanged(qint64 value, qint64 duration, qint64 coefficient);
     void onCoverChanged(const MetaPtr meta, const DMusic::SearchMeta &, const QByteArray &coverData);
     void onVolumeChanged(int volume);
     void onMutedChanged(bool muted);

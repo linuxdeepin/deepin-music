@@ -156,7 +156,7 @@ signals:
 //    void metadataChanged(QVariantMap metadata);
 //    void minimumRateChanged(double minimumRate);
     void playbackStatusChanged(Player::PlaybackStatus playbackStatus);
-    void positionChanged(qlonglong position, qlonglong length);
+    void positionChanged(qlonglong position, qlonglong length, qint64 coefficient);
     void sliderReleased(qint64 value);
 
 //    void rateChanged(double rate);
