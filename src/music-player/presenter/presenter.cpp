@@ -1539,7 +1539,7 @@ void Presenter::onVolumeChanged(int volume)
 {
     Q_D(Presenter);
 
-    d->player->setVolume(volume);
+    d->player->setVolume(volume + 1);
 
     if (volume > 0 && d->player->muted()) {
         d->player->setMuted(false);
