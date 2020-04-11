@@ -67,7 +67,6 @@ void initMiniTypes()
     suffixBlacklist.insert("mpeg4", true);
     suffixBlacklist.insert("3gp", true);
     suffixBlacklist.insert("flv", true);
-//    suffixBlacklist.insert("amr", true);
     suffixBlacklist.insert("ass", true);
 
     QHash<QString, bool> suffixWhitelist;
@@ -194,7 +193,7 @@ void PlayerPrivate::initConnection()
     [ = ](qint64 position) {
 
         //qDebug() << position << "-" << ioDuration;
-        Q_EMIT q->positionChanged(position, ioDuration);
+        Q_EMIT q->positionChanged(position, ioDuration, 20);
     });
 
     q->connect(ioPlayer->_buffer, &AudioBufferDevice::durationChanged, q,
@@ -213,9 +212,7 @@ void PlayerPrivate::initConnection()
 
     q->connect(ioPlayer->_buffer, &AudioBufferDevice::againMedia, q,
     [ = ]() {
-        qDebug() << "重新加载资源";
-
-#if 1
+        //! 重新加载资源
         if (playOnLoad && QFile::exists(activeMeta->localPath)) {
 
             ioDuration = 0;
@@ -223,16 +220,10 @@ void PlayerPrivate::initConnection()
             QString temp = activeMeta->localPath;
             if (temp.endsWith(".amr")) {
                 qplayer->stop();
-
                 ioPlayer->play();
-
                 ioPlayer->setSourceFilename(activeMeta->localPath);
-
             }
         }
-#endif
-
-
     });
 
 
@@ -250,7 +241,6 @@ void PlayerPrivate::initConnection()
         }
 
         auto duration = qplayer->duration();
-
 
         if (position > 1 && activeMeta->invalid) {
             Q_EMIT q->mediaError(activePlaylist, activeMeta, Player::NoError);
@@ -271,9 +261,7 @@ void PlayerPrivate::initConnection()
             return;
         }
 
-
-        Q_EMIT q->positionChanged(position - activeMeta->offset,  activeMeta->length);
-
+        Q_EMIT q->positionChanged(position - activeMeta->offset,  activeMeta->length, 1);
     });
 
     q->connect(qplayer, &QMediaPlayer::stateChanged,

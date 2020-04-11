@@ -61,7 +61,7 @@ Q_SIGNALS:
 
 public slots:
     void onAudioBufferProbed(const QAudioBuffer &buffer);
-    void onProgressChanged(qint64 value, qint64 duration);
+    void onProgressChanged(qint64 value, qint64 duration, qint64 coefficient);
     void onAudioBuffer(const QVector<float> &allData, const QString &hash);
 
 protected:
@@ -85,6 +85,7 @@ private:
     int          maxSampleNum;
     qint64       curValue = 0;
     qint64       allDuration = 1;
+    qint64       curCoefficient = 1;
     int          themeType = 1;
     WaveformScale *waveformScale;
     bool         spectrumFlag = true;

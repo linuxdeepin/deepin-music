@@ -21,12 +21,11 @@
 
 #pragma once
 
+#include "../core/playlist.h"
+
 #include <QObject>
 #include <QScopedPointer>
-
 #include <MprisPlayer>
-
-#include "../core/playlist.h"
 #include <searchmeta.h>
 
 class QAudioBuffer;
@@ -102,7 +101,7 @@ signals:
     void musicPaused(PlaylistPtr playlist, const MetaPtr meta);
     void musicStoped(PlaylistPtr playlist, const MetaPtr meta);
     void musicMetaUpdate(PlaylistPtr playlist, const MetaPtr meta);
-    void progrossChanged(qint64 pos, qint64 length);
+    void progrossChanged(qint64 pos, qint64 length, qint64 coefficient);
     void volumeChanged(int volume);
     void mutedChanged(bool muted);
     void modeChanged(int);
@@ -119,7 +118,7 @@ signals:
     void notifyMusciError(PlaylistPtr playlist, const MetaPtr meta, int error);
     void notifyAddToPlaylist(PlaylistPtr playlist, const MetaPtrList metalist, int count);
 
-    //搜索
+    //! search
     void searchCand(QString searchText, PlaylistPtr playlist);
     void searchResult(QString searchText, QList<PlaylistPtr> resultlist, QString id);
     void musicFileMiss();

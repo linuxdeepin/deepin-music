@@ -93,12 +93,6 @@ QString lengthString(qint64 length)
         return QString("%1:%2").arg(mmStr).arg(ssStr);
     }
 
-//    QTime t(0, length % 3600 / 60, length % 60);
-//    if (hour > 0) {
-//        return QString("%1:%2").arg(hour).arg(t.toString("mm:ss"));
-//    } else {
-//        return t.toString("mm:ss");
-//    }
 }
 
 QString sizeString(qint64 sizeByte)

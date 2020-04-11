@@ -510,9 +510,9 @@ void Presenter::prepareData()
     });
 
     connect(d->player, &Player::positionChanged,
-    this, [ = ](qint64 position, qint64 duration) {
+    this, [ = ](qint64 position, qint64 duration, qint64 coefficient) {
         d->lastPlayPosition = position;
-        Q_EMIT progrossChanged(position, duration);
+        Q_EMIT progrossChanged(position, duration, coefficient);
     });
 
     connect(d->player, &Player::volumeChanged,

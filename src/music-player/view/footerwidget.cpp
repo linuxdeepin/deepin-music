@@ -160,12 +160,6 @@ void FooterPrivate::initConnection()
         hintFilter->showHitsFor(btPlayMode, hintWidget);
     });
 
-//    q->connect(progress, &Slider::valueAccpet, q, [ = ](int value) {
-//        auto range = progress->maximum() - progress->minimum();
-//        Q_ASSERT(range != 0);
-//        Q_EMIT q->changeProgress(value, range);
-//    });
-
     q->connect(waveform, &Waveform::valueAccpet, q, [ = ](int value) {
         auto range = waveform->maximum() - waveform->minimum();
         Q_ASSERT(range != 0);
@@ -300,11 +294,6 @@ Footer::Footer(QWidget *parent) :
     d->title->setObjectName("FooterTitle");
     d->title->setMaximumWidth(140);
     d->title->setText(tr("Unknown Title"));
-//    d->title->installEventFilter(hoverFilter);
-//    auto titlePl = d->title->palette();
-//    titlePl.setColor(DPalette::WindowText, QColor("#000000"));
-//    d->title->setPalette(titlePl);
-
     d->title->setForegroundRole(DPalette::BrightText);
 
     d->artist = new Label;
@@ -428,14 +417,6 @@ Footer::Footer(QWidget *parent) :
     d->installTipHint(d->btLyric, tr("Lyrics"));
     d->installTipHint(d->btPlayMode, tr("Play Mode"));
     d->installTipHint(d->btPlayList, tr("Play Queue"));
-
-//    d->btPrev->setToolTip(tr("Previous"));
-//    d->btNext->setToolTip(tr("Next"));
-//    d->btPlay->setToolTip(tr("Play/Pause"));
-//    d->btFavorite->setToolTip(tr("Favorite"));
-//    d->btLyric->setToolTip(tr("Lyrics"));
-//    d->btPlayMode->setToolTip(tr("Play Mode"));
-//    d->btPlayList->setToolTip(tr("Playlist"));
 
     d->volSlider = new SoundVolume(this->parentWidget());
     d->volSlider->hide();
@@ -577,14 +558,6 @@ void Footer::enableControl(bool enable)
     d->title->blockSignals(!enable);
     d->artist->blockSignals(!enable);
 }
-
-//void Footer::initData(PlaylistPtr current, int mode)
-//{
-//    Q_D(Footer);
-//    d->mode = mode;
-//    d->activingPlaylist = current;
-//    d->btPlayMode->setMode(mode);
-//}
 
 void Footer::setViewname(const QString &viewname)
 {
@@ -870,9 +843,6 @@ void Footer::onMusicPlayed(PlaylistPtr playlist, const MetaPtr meta)
     }
 
     refreshBackground();
-//    d->forwardWidget->setSourceImage(coverImage);
-//    blurBackground()->setSourceImage(coverImage);
-    //d->waveform->onAudioBuffer(MetaDetector::getMetaData(meta->localPath));
 
     this->enableControl(true);
     d->title->show();
@@ -940,13 +910,6 @@ void Footer::onMusicError(PlaylistPtr playlist, const MetaPtr meta, int error)
 {
     Q_D(Footer);
 
-    //d->waveform->clearBufferAudio();
-//    if (d->activingMeta && d->activingPlaylist) {
-//        if (meta != d->activingMeta || playlist != d->activingPlaylist) {
-//            return;
-//        }
-//    }
-
     if (0 == error) {
         return;
     }
@@ -970,12 +933,7 @@ void Footer::onMusicError(PlaylistPtr playlist, const MetaPtr meta, int error)
 void Footer::onMusicPause(PlaylistPtr playlist, const MetaPtr meta)
 {
     Q_D(Footer);
-//    d->waveform->clearBufferAudio();
-//    if (meta->hash != d->activingMeta->hash || playlist != d->activingPlaylist) {
-//        qWarning() << "can not pasue" << d->activingPlaylist << playlist
-//                   << d->activingMeta->hash << meta->hash;
-//        return;
-//    }
+
     auto status = sPlayStatusValuePause;
     d->updateQssProperty(d->btPlay, sPropertyPlayStatus, status);
     if (d->m_type == 1) {
@@ -1015,7 +973,7 @@ void Footer::onMusicStoped(PlaylistPtr playlist, const MetaPtr meta)
     Q_UNUSED(playlist);
     Q_UNUSED(meta);
 
-    onProgressChanged(0, 1);
+    onProgressChanged(0, 1, 1);
     d->title->hide();
     d->artist->hide();
     //d->btFavorite->hide();
@@ -1059,10 +1017,8 @@ void Footer::onMusicStoped(PlaylistPtr playlist, const MetaPtr meta)
 void Footer::onMediaLibraryClean()
 {
     Q_D(Footer);
-//    d->btPrev->hide();
-//    d->btNext->hide();
-//    d->btFavorite->hide();
-//    d->btLyric->hide();
+
+    /*---enableControl----*/
     enableControl(false);
 }
 
@@ -1268,10 +1224,11 @@ void Footer::onTogglePlayButton()
     }
 }
 
-void Footer::onProgressChanged(qint64 value, qint64 duration)
+void Footer::onProgressChanged(qint64 value, qint64 duration, qint64 coefficient)
 {
     Q_D(Footer);
-    d->waveform->onProgressChanged(value, duration);
+
+    d->waveform->onProgressChanged(value, duration, coefficient);
 }
 
 void Footer::onCoverChanged(const MetaPtr meta, const DMusic::SearchMeta &, const QByteArray &coverData)
