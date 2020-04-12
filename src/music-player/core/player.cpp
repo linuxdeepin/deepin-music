@@ -892,7 +892,7 @@ void Player::setVolume(int volume)
     //d->qplayer->setVolume(d->volume * d->fadeInOutFactor);
     d->qplayer->blockSignals(false);
 
-    setMusicVolume(volume / 100.0);
+    setMusicVolume((volume + 0.1) / 100.0);
 }
 
 void Player::setMuted(bool mute)
