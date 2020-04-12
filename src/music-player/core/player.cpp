@@ -169,7 +169,7 @@ public:
     PlaylistPtr     curPlaylist;
     MetaPtr         activeMeta;
 
-    double          volume      = 50.0;
+    int             volume      = 50.0;
     bool            playOnLoad  = true;
     bool            fadeInOut   = true;
     double          fadeInOutFactor     = 1.0;
@@ -932,17 +932,15 @@ void Player::setMode(Player::PlaybackMode mode)
     d->mode = mode;
 }
 
-void Player::setVolume(double volume)
+void Player::setVolume(int volume)
 {
     Q_D(Player);
     if (volume > 100) {
         volume = 100;
     }
-
     if (volume < 0) {
         volume = 0;
     }
-
     d->volume = volume;
 
     d->qplayer->blockSignals(true);
