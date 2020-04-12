@@ -50,7 +50,7 @@ static QStringList          sSupportedSuffixList;
 static QStringList          sSupportedFiterList;
 static QStringList          sSupportedMimeTypes;
 
-static const int sFadeInOutAnimationDuration = 1000; //ms
+static const int sFadeInOutAnimationDuration = 900; //ms
 
 void initMiniTypes()
 {
@@ -129,8 +129,6 @@ public:
         qplayer = new QMediaPlayer();
         qplayer->setVolume(100);
         qProbe = new QAudioProbe();
-        resumeTimer = new QTimer ();
-        pauseTimer = new QTimer ();
         /*-------AudioPlayer-------*/
         ioPlayer  =  new AudioPlayer();
     }
@@ -149,11 +147,6 @@ public:
     bool shuffle        = false;
     bool mute           = false; // unused
     QString sinkInputPath;
-    QTimer *resumeTimer;
-    QTimer *pauseTimer;
-    double     resumeCount = 0.1;
-    double     pauseCount = 1.0;
-//    double volume       = 0;
 
     Player::PlaybackMode    mode    = Player::RepeatAll;
     Player::PlaybackStatus  status  = Player::InvalidPlaybackStatus;
@@ -287,7 +280,7 @@ void PlayerPrivate::initConnection()
         if (fadeInOutFactor < 1.0) {
             return;
         }
-        Q_EMIT q->volumeChanged(volume / fadeInOutFactor);
+        Q_EMIT q->volumeChanged(volume);
     });
     q->connect(qplayer, &QMediaPlayer::mutedChanged,
                q, &Player::mutedChanged);
@@ -381,10 +374,6 @@ void PlayerPrivate::initConnection()
             }
         });
       */
-
-
-    q->connect(this->resumeTimer, &QTimer::timeout, q, &Player::resumeAni);
-    q->connect(this->pauseTimer, &QTimer::timeout, q, &Player::pauseAni);
 }
 
 void PlayerPrivate::selectNext(const MetaPtr info, Player::PlaybackMode mode)
@@ -623,23 +612,6 @@ void Player::playMeta(PlaylistPtr playlist, const MetaPtr meta)
     }
 }
 
-void Player::resumeAni()
-{
-    Q_D(Player);
-    d->pauseTimer->stop();
-    if (d->resumeCount < 0.9) {
-        //qDebug() << " Player::resumeAni();" << d->resumeCount;
-        setFadeInOutFactor(d->resumeCount);
-        d->resumeCount += 0.1;
-        d->resumeTimer->stop();
-        d->resumeTimer->start(100);
-    } else {
-        d->resumeTimer->stop();
-        d->resumeCount = 0.1;
-        setFadeInOutFactor(1.0);
-    }
-}
-
 void Player::resume(PlaylistPtr playlist, const MetaPtr meta)
 {
     Q_D(Player);
@@ -653,16 +625,12 @@ void Player::resume(PlaylistPtr playlist, const MetaPtr meta)
     setPlayOnLoaded(true);
     //增大音乐自动开始播放时间，给setposition留足空间
     QTimer::singleShot(100, this, [ = ]() {
-
-#if 1
         QString temp = meta->localPath;
         if (temp.endsWith(".amr")) {
             d->ioPlayer->play();
         } else {
             d->qplayer->play();
         }
-#endif
-
     });
 
     if (d->fadeOutAnimation) {
@@ -671,10 +639,9 @@ void Player::resume(PlaylistPtr playlist, const MetaPtr meta)
         d->fadeOutAnimation = nullptr;
     }
     if (d->fadeInOut && !d->fadeInAnimation) {
-        qDebug() << "start fade in";
         d->fadeInAnimation = new QPropertyAnimation(this, "fadeInOutFactor");
         d->fadeInAnimation->setEasingCurve(QEasingCurve::InCubic);
-        d->fadeInAnimation->setStartValue(0.10000);
+        d->fadeInAnimation->setStartValue(0.1000);
         d->fadeInAnimation->setEndValue(1.0000);
         d->fadeInAnimation->setDuration(sFadeInOutAnimationDuration);
         connect(d->fadeInAnimation, &QPropertyAnimation::finished,
@@ -714,25 +681,6 @@ void Player::playPrevMusic(PlaylistPtr playlist, const MetaPtr meta)
     }
 }
 
-void Player::pauseAni()
-{
-    Q_D(Player);
-    d->resumeTimer->stop();
-    if (d->pauseCount > 0.11) {
-        setFadeInOutFactor(d->pauseCount);
-        d->pauseCount -= 0.1;
-        d->pauseTimer->stop();
-        d->pauseTimer->start(100);
-        //qDebug() << " Player::pauseAni() " << d->pauseCount;
-    } else {
-        d->pauseCount = 1.0;
-        d->pauseTimer->stop();
-        d->qplayer->pause();
-        setFadeInOutFactor(1.0);
-        //qDebug() << " Player::pauseAni() " << d->pauseCount;
-    }
-}
-
 void Player::pause()
 {
     Q_D(Player);
@@ -752,19 +700,13 @@ void Player::pause()
         d->fadeOutAnimation = new QPropertyAnimation(this, "fadeInOutFactor");
         d->fadeOutAnimation->setEasingCurve(QEasingCurve::OutCubic);
         d->fadeOutAnimation->setStartValue(1.0000);
-//        d->fadeOutAnimation->setKeyValueAt(0.9999, 0.1000);
-        d->fadeOutAnimation->setEndValue(0.10000);
+        d->fadeOutAnimation->setEndValue(0.1000);
         d->fadeOutAnimation->setDuration(sFadeInOutAnimationDuration);
         connect(d->fadeOutAnimation, &QPropertyAnimation::finished,
         this, [ = ]() {
             d->fadeOutAnimation->deleteLater();
             d->fadeOutAnimation = nullptr;
             d->qplayer->pause();
-
-
-
-            qDebug() << "pause stop" << endl;
-
             setFadeInOutFactor(1.0);
         });
         d->fadeOutAnimation->start();
