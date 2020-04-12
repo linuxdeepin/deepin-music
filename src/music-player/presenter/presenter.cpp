@@ -517,15 +517,9 @@ void Presenter::prepareData()
 
     connect(d->player, &Player::volumeChanged,
             this, &Presenter::volumeChanged);
-
     connect(d->player, &Player::mutedChanged,
-    this, [ = ](bool mute) {
-        if (mute) {
-            Q_EMIT this->mutedChanged(mute);
-        } else {
-            Q_EMIT this->volumeChanged(d->player->volume());
-        }
-    });
+            this, &Presenter::mutedChanged);
+            
     connect(this, &Presenter::musicFileMiss,
             d->player, &Player::musicFileMiss);
 
@@ -600,9 +594,9 @@ void Presenter::postAction()
     Q_D(Presenter);
     Q_EMIT d->requestInitPlugin();
 
-    auto volume = d->settings->value("base.play.volume").toInt();
+    int volume = d->settings->value("base.play.volume").toInt();
     d->player->setVolume(volume);
-    Q_EMIT this->volumeChanged(d->player->volume());
+    Q_EMIT this->volumeChanged(volume);
 
     auto mute = d->settings->value("base.play.mute").toBool();
     d->player->setMuted(mute);
@@ -1538,14 +1532,7 @@ void Presenter::onChangeProgress(qint64 value, qint64 range)
 void Presenter::onVolumeChanged(int volume)
 {
     Q_D(Presenter);
-
-    d->player->setVolume(volume + 1);
-
-    if (volume > 0 && d->player->muted()) {
-        d->player->setMuted(false);
-        d->settings->setOption("base.play.mute", false);
-    }
-    d->settings->setOption("base.play.volume", volume);
+    d->player->setVolume(volume);
     Q_EMIT d->updateMprisVolume(volume);
 }
 
@@ -1561,9 +1548,7 @@ void Presenter::onPlayModeChanged(int mode)
 void Presenter::onToggleMute()
 {
     Q_D(Presenter);
-    d->player->setMuted(! d->player->muted());
-    d->settings->setOption("base.play.mute", d->player->muted());
-
+    d->player->setMuted(!d->player->muted());
     if (d->player->muted()) {
         Q_EMIT d->updateMprisVolume(0);
     } else {
@@ -1792,13 +1777,13 @@ void Presenter::initMpris(MprisPlayer *mprisPlayer)
 
     connect(mprisPlayer, &MprisPlayer::volumeRequested,
     this, [ = ](double volume) {
-        onVolumeChanged(volume * 100);
-        Q_EMIT this->volumeChanged(volume * 100);
+//        onVolumeChanged(volume * 100);
+//        Q_EMIT this->volumeChanged(volume * 100);
     });
 
     connect(d, &PresenterPrivate::updateMprisVolume,
     this, [ = ](int volume) {
-        mprisPlayer->setVolume(volume / 100.0);
+        mprisPlayer->setVolume(((double)volume) / 100.0);
     });
 
     connect(this, &Presenter::progrossChanged,

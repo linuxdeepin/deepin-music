@@ -161,7 +161,7 @@ signals:
 
 //    void rateChanged(double rate);
 //    void shuffleChanged(bool shuffle);
-    void volumeChanged(double volume);
+    void volumeChanged(int volume);
     void modeChanged(PlaybackMode mode);
     void mutedChanged(bool muted);
     void durationChanged(qint64 duration);
@@ -188,7 +188,7 @@ public slots:
     void setMode(PlaybackMode mode);
 //    void setRate(double rate);
 //    void setShuffle(bool shuffle);
-    void setVolume(double volume);
+    void setVolume(int volume);
     void setMuted(bool muted);
     void setFadeInOutFactor(double fadeInOutFactor);
     void setFadeInOut(bool fadeInOut);
