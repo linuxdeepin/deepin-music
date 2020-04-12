@@ -1410,12 +1410,12 @@ void Presenter::onMusicPause(PlaylistPtr playlist, const MetaPtr info)
 void Presenter::onMusicPauseNow(PlaylistPtr playlist, const MetaPtr meta)
 {
     Q_D(Presenter);
+    d->player->pauseNow();
     auto alllists = d->playlistMgr->allplaylist();
     for (auto curList : alllists) {
         if (!curList.isNull())
             curList->setPlayingStatus(false);
     }
-    d->player->pauseNow();
     Q_EMIT musicPaused(playlist, meta);
 }
 
@@ -1761,11 +1761,12 @@ void Presenter::initMpris(MprisPlayer *mprisPlayer)
 
     connect(mprisPlayer, &MprisPlayer::pauseRequested,
     this, [ = ]() {
-        if (d->player->activePlaylist().isNull()) {
+        if (d->player->activePlaylist().isNull() &&  d->player != nullptr) {
+            d->player->pauseNow();
             return;
         }
 
-        onMusicPause(player->activePlaylist(), player->activeMeta());
+        onMusicPauseNow(player->activePlaylist(), player->activeMeta());
         mprisPlayer->setPlaybackStatus(Mpris::Paused);
     });
 
