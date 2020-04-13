@@ -20,7 +20,7 @@
  */
 
 #include "volumemonitoring.h"
-
+#include <QtMath>
 #include <QTimer>
 #include <QDBusObjectPath>
 #include <QDBusInterface>
@@ -46,7 +46,7 @@ VolumeMonitoring::VolumeMonitoring(QObject *parent)
 {
     Q_D(VolumeMonitoring);
     d->oldMute = (bool)MusicSettings::value("base.play.mute").toBool();
-    d->oldVolume = (int)MusicSettings::value("base.play.volume").toDouble() * 100;
+    d->oldVolume = MusicSettings::value("base.play.volume").toInt();
     connect(&d->timer, SIGNAL(timeout()), this, SLOT(timeoutSlot()));
 }
 
@@ -106,8 +106,8 @@ void VolumeMonitoring::timeoutSlot()
     //获取音量
     QVariant muteV = DBusUtils::redDBusProperty("com.deepin.daemon.Audio", sinkInputPath,
                                                 "com.deepin.daemon.Audio.SinkInput", "Mute");
-
-    int volume = volumeV.toDouble() * 100 + 0.1;
+    //取最小正整数
+    int volume = qFloor(volumeV.toDouble() * 100);
     bool mute = muteV.toBool();
 
     if (volume != d->oldVolume) {

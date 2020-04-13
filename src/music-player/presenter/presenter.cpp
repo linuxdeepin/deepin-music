@@ -510,22 +510,16 @@ void Presenter::prepareData()
     });
 
     connect(d->player, &Player::positionChanged,
-    this, [ = ](qint64 position, qint64 duration) {
+    this, [ = ](qint64 position, qint64 duration, qint64 coefficient) {
         d->lastPlayPosition = position;
-        Q_EMIT progrossChanged(position, duration);
+        Q_EMIT progrossChanged(position, duration, coefficient);
     });
 
     connect(d->player, &Player::volumeChanged,
             this, &Presenter::volumeChanged);
-
     connect(d->player, &Player::mutedChanged,
-    this, [ = ](bool mute) {
-        if (mute) {
-            Q_EMIT this->mutedChanged(mute);
-        } else {
-            Q_EMIT this->volumeChanged(d->player->volume());
-        }
-    });
+            this, &Presenter::mutedChanged);
+            
     connect(this, &Presenter::musicFileMiss,
             d->player, &Player::musicFileMiss);
 
@@ -600,9 +594,9 @@ void Presenter::postAction()
     Q_D(Presenter);
     Q_EMIT d->requestInitPlugin();
 
-    auto volume = d->settings->value("base.play.volume").toInt();
+    int volume = d->settings->value("base.play.volume").toInt();
     d->player->setVolume(volume);
-    Q_EMIT this->volumeChanged(d->player->volume());
+    Q_EMIT this->volumeChanged(volume);
 
     auto mute = d->settings->value("base.play.mute").toBool();
     d->player->setMuted(mute);
@@ -1410,12 +1404,12 @@ void Presenter::onMusicPause(PlaylistPtr playlist, const MetaPtr info)
 void Presenter::onMusicPauseNow(PlaylistPtr playlist, const MetaPtr meta)
 {
     Q_D(Presenter);
+    d->player->pauseNow();
     auto alllists = d->playlistMgr->allplaylist();
     for (auto curList : alllists) {
         if (!curList.isNull())
             curList->setPlayingStatus(false);
     }
-    d->player->pauseNow();
     Q_EMIT musicPaused(playlist, meta);
 }
 
@@ -1524,11 +1518,13 @@ void Presenter::onRemoveMetasFavourite(const MetaPtrList metalist)
 void Presenter::onChangeProgress(qint64 value, qint64 range)
 {
     Q_D(Presenter);
-    //    auto position = value * d->player->duration() / range;
-    //    if (position < 0) {
-    //        qCritical() << "invalid position:" << d->player->media().canonicalUrl() << position;
-    //    }
-    //    d->player->setPosition(position);
+
+    /*-----setIOPosition------*/
+
+    //qDebug() << value << "-" << range;
+
+    d->player->setIOPosition(value, range);
+
     auto position = value * d->player->duration() / range;
     d->player->setPosition(position);
 }
@@ -1536,14 +1532,7 @@ void Presenter::onChangeProgress(qint64 value, qint64 range)
 void Presenter::onVolumeChanged(int volume)
 {
     Q_D(Presenter);
-
     d->player->setVolume(volume);
-    qDebug() << "change play volume" << d->player->volume();
-    if (volume > 0 && d->player->muted()) {
-        d->player->setMuted(false);
-        d->settings->setOption("base.play.mute", false);
-    }
-    d->settings->setOption("base.play.volume", volume);
     Q_EMIT d->updateMprisVolume(volume);
 }
 
@@ -1559,9 +1548,7 @@ void Presenter::onPlayModeChanged(int mode)
 void Presenter::onToggleMute()
 {
     Q_D(Presenter);
-    d->player->setMuted(! d->player->muted());
-    d->settings->setOption("base.play.mute", d->player->muted());
-
+    d->player->setMuted(!d->player->muted());
     if (d->player->muted()) {
         Q_EMIT d->updateMprisVolume(0);
     } else {
@@ -1759,11 +1746,12 @@ void Presenter::initMpris(MprisPlayer *mprisPlayer)
 
     connect(mprisPlayer, &MprisPlayer::pauseRequested,
     this, [ = ]() {
-        if (d->player->activePlaylist().isNull()) {
+        if (d->player->activePlaylist().isNull() &&  d->player != nullptr) {
+            d->player->pauseNow();
             return;
         }
 
-        onMusicPause(player->activePlaylist(), player->activeMeta());
+        onMusicPauseNow(player->activePlaylist(), player->activeMeta());
         mprisPlayer->setPlaybackStatus(Mpris::Paused);
     });
 
@@ -1789,13 +1777,13 @@ void Presenter::initMpris(MprisPlayer *mprisPlayer)
 
     connect(mprisPlayer, &MprisPlayer::volumeRequested,
     this, [ = ](double volume) {
-        onVolumeChanged(volume * 100);
-        Q_EMIT this->volumeChanged(volume * 100);
+//        onVolumeChanged(volume * 100);
+//        Q_EMIT this->volumeChanged(volume * 100);
     });
 
     connect(d, &PresenterPrivate::updateMprisVolume,
     this, [ = ](int volume) {
-        mprisPlayer->setVolume(volume / 100.0);
+        mprisPlayer->setVolume(((double)volume) / 100.0);
     });
 
     connect(this, &Presenter::progrossChanged,

@@ -198,12 +198,13 @@ void FooterPrivate::initConnection()
     });
     q->connect(btSound, &DPushButton::pressed, q, [ = ]() {
         Q_EMIT q->toggleMute();
-        if (m_Mute) {
-            Q_EMIT q->volumeChanged(m_Volume);
-        }
     });
     q->connect(volSlider, &SoundVolume::volumeChanged, q, [ = ](int vol) {
         q->onVolumeChanged(vol);
+        if (m_Mute) {
+            m_Mute = false;
+            Q_EMIT q->toggleMute();
+        }
         m_Volume = vol;
         Q_EMIT q->volumeChanged(vol);
     });
@@ -216,26 +217,10 @@ void FooterPrivate::initConnection()
     q->connect(q, &Footer::metaBuffer, waveform, &Waveform::onAudioBuffer);
 
     q->connect(&volumeMonitoring, &VolumeMonitoring::volumeChanged, q, [ = ](int vol) {
-
-        QString status;
-        if (vol > 77) {
-            status = "high";
-        } else if (vol > 33) {
-            status = "mid";
-        } else  if (vol > 0) {
-            status = "low";
-        }
-        if (!status.isEmpty())
-            updateQssProperty(btSound, "volume", status);
-
-        MusicSettings::setOption("base.play.volume", ((double)m_Volume) / 100);
-        volSlider->onVolumeChanged(vol);
-        m_Volume = vol;
         q->onVolumeChanged(vol);
     });
 
     q->connect(&volumeMonitoring, &VolumeMonitoring::muteChanged, q, [ = ](bool mute) {
-        m_Mute = mute;
         q->onMutedChanged(mute);
     });
 }
@@ -543,6 +528,10 @@ Footer::Footer(QWidget *parent) :
     d->btCover->setIcon(Dtk::Widget::DHiDPIHelper::loadNxPixmap(d->defaultCover));
     int themeType = DGuiApplicationHelper::instance()->themeType();
     slotTheme(themeType);
+    d->m_Mute   = MusicSettings::value("base.play.mute").toBool();
+    d->m_Volume = MusicSettings::value("base.play.volume").toInt();
+    onMutedChanged(d->m_Mute);
+    onVolumeChanged(d->m_Volume);
 
     ThreadPool::instance()->moveToNewThread(&d->volumeMonitoring);
     d->volumeMonitoring.start();
@@ -970,12 +959,7 @@ void Footer::onMusicError(PlaylistPtr playlist, const MetaPtr meta, int error)
 void Footer::onMusicPause(PlaylistPtr playlist, const MetaPtr meta)
 {
     Q_D(Footer);
-//    d->waveform->clearBufferAudio();
-//    if (meta->hash != d->activingMeta->hash || playlist != d->activingPlaylist) {
-//        qWarning() << "can not pasue" << d->activingPlaylist << playlist
-//                   << d->activingMeta->hash << meta->hash;
-//        return;
-//    }
+
     auto status = sPlayStatusValuePause;
     d->updateQssProperty(d->btPlay, sPropertyPlayStatus, status);
     if (d->m_type == 1) {
@@ -1015,7 +999,7 @@ void Footer::onMusicStoped(PlaylistPtr playlist, const MetaPtr meta)
     Q_UNUSED(playlist);
     Q_UNUSED(meta);
 
-    onProgressChanged(0, 1);
+    onProgressChanged(0, 1, 1);
     d->title->hide();
     d->artist->hide();
     //d->btFavorite->hide();
@@ -1059,10 +1043,8 @@ void Footer::onMusicStoped(PlaylistPtr playlist, const MetaPtr meta)
 void Footer::onMediaLibraryClean()
 {
     Q_D(Footer);
-//    d->btPrev->hide();
-//    d->btNext->hide();
-//    d->btFavorite->hide();
-//    d->btLyric->hide();
+
+    /*---enableControl----*/
     enableControl(false);
 }
 
@@ -1268,10 +1250,11 @@ void Footer::onTogglePlayButton()
     }
 }
 
-void Footer::onProgressChanged(qint64 value, qint64 duration)
+void Footer::onProgressChanged(qint64 value, qint64 duration, qint64 coefficient)
 {
     Q_D(Footer);
-    d->waveform->onProgressChanged(value, duration);
+
+    d->waveform->onProgressChanged(value, duration, coefficient);
 }
 
 void Footer::onCoverChanged(const MetaPtr meta, const DMusic::SearchMeta &, const QByteArray &coverData)
@@ -1296,36 +1279,41 @@ void Footer::onVolumeChanged(int volume)
         status = "high";
     } else if (volume > 33) {
         status = "mid";
-    } else  if (volume > 0) {
-        status = "low";
     } else {
-        status = "mute";
+        status = "low";
     }
-    d->updateQssProperty(d->btSound, "volume", status);
+    if (d->m_Mute) {
+        d->updateQssProperty(d->btSound, "volume", "mute");
+    } else {
+        d->updateQssProperty(d->btSound, "volume", status);
+    }
     d->m_Volume = volume;
-    MusicSettings::setOption("base.play.volume", ((double)volume) / 100);
+    MusicSettings::setOption("base.play.volume", d->m_Volume);
     d->volSlider->onVolumeChanged(volume);
 }
 
 void Footer::onMutedChanged(bool muted)
 {
     Q_D(Footer);
+    d->m_Mute = muted;
+    MusicSettings::setOption("base.play.mute", muted);
     if (muted) {
         d->updateQssProperty(d->btSound, "volume", "mute");
-        MusicSettings::setOption("base.play.mute", muted);
     } else {
         QString status = "mid";
         if (d->m_Volume > 77) {
             status = "high";
         } else if (d->m_Volume > 33) {
             status = "mid";
-        } else  if (d->m_Volume > 0) {
-            status = "low";
         } else {
-            status = "mute";
+            status = "low";
         }
-        MusicSettings::setOption("base.play.mute", muted);
-        d->updateQssProperty(d->btSound, "volume", status);
+        if (d->m_Mute) {
+            d->updateQssProperty(d->btSound, "volume", "mute");
+        } else {
+            d->updateQssProperty(d->btSound, "volume", status);
+        }
+        d->volSlider->onVolumeChanged(d->m_Volume);
     }
 }
 
