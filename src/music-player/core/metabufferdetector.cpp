@@ -132,7 +132,7 @@ void MetaBufferDetector::run()
     bool flag = false;
     while (av_read_frame(pFormatCtx, packet) >= 0 ) {
         //stop detector
-        if (d->stopFlag && curData.size() > 0) {
+        if (d->stopFlag && curData.size() > 100) {
             av_packet_unref(packet);
             av_frame_free(&frame);
             avcodec_close(pCodecCtx);
