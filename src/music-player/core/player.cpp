@@ -164,6 +164,7 @@ public:
 
     int             volume      = 50.0;
     bool            playOnLoad  = true;
+    bool            firstPlayOnLoad  = true; //外部双击打开处理一次
     bool            fadeInOut   = true;
     double          fadeInOutFactor     = 1.0;
     qlonglong       m_position          = 0.0;//只能用于判断音乐是否正常结束
@@ -545,7 +546,7 @@ void Player::loadMedia(PlaylistPtr playlist, const MetaPtr meta)
     int volume = d->qplayer->volume();
     d->qplayer->setVolume(0);
     d->activePlaylist->play(meta);
-//    d->qplayer->play();
+    d->qplayer->play();
     QTimer::singleShot(100, this, [ = ]() {
         d->qplayer->pause();
         d->qplayer->setVolume(volume);
@@ -584,12 +585,21 @@ void Player::playMeta(PlaylistPtr playlist, const MetaPtr meta)
 
     Q_EMIT mediaPlayed(d->activePlaylist, d->activeMeta);
 
-    if (d->qplayer->mediaStatus() == QMediaPlayer::BufferedMedia) {
-        QTimer::singleShot(100, this, [ = ]() {
+//    if (d->qplayer->mediaStatus() == QMediaPlayer::BufferedMedia) {
+//        QTimer::singleShot(100, this, [ = ]() {
 
+//            d->qplayer->play();
+//        });
+//    }
+
+    if (d->firstPlayOnLoad == true) {
+        d->firstPlayOnLoad = false;
+        QTimer::singleShot(150, this, [ = ]() {
             d->qplayer->play();
         });
     }
+
+
 
     if (d->fadeOutAnimation) {
         d->fadeOutAnimation->stop();

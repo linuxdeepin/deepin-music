@@ -249,12 +249,17 @@ int MusicListDataView::listSize()
 
 void MusicListDataView::setViewModeFlag(QListView::ViewMode mode)
 {
+
     if (mode == QListView::IconMode) {
-        setIconSize( QSize(170, 170) );
-        setGridSize( QSize(170, 170) );
+        setIconSize( QSize(150, 150));
+        setGridSize( QSize(-1, -1));
+        setViewportMargins(-10, -13, -35, 10);
+        setSpacing(20);
     } else {
         setIconSize( QSize(36, 36) );
         setGridSize( QSize(-1, -1) );
+        setViewportMargins(0, 0, 8, 0);
+        setSpacing(0);
     }
     setViewMode(mode);
 }

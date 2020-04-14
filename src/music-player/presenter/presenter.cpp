@@ -519,7 +519,7 @@ void Presenter::prepareData()
             this, &Presenter::volumeChanged);
     connect(d->player, &Player::mutedChanged,
             this, &Presenter::mutedChanged);
-            
+
     connect(this, &Presenter::musicFileMiss,
             d->player, &Player::musicFileMiss);
 
@@ -653,8 +653,8 @@ void Presenter::postAction()
             d->player->setFadeInOut(false);
             d->player->loadMedia(lastPlaylist, lastMeta);
             d->metaBufferDetector->onBufferDetector(lastMeta->localPath, lastMeta->hash);
-            d->player->pause();
-            QTimer::singleShot(9, [ = ]() {
+//            d->player->pause();
+            QTimer::singleShot(150, [ = ]() {
                 d->player->setPosition(position);
             });
 
@@ -678,7 +678,7 @@ void Presenter::postAction()
                 onCurrentPlaylistChanged(lastPlaylist);
 
                 //                d->player->setPosition(position);
-                QTimer::singleShot(10, [ = ]() {
+                QTimer::singleShot(200, [ = ]() {
                     onMusicResume(lastPlaylist, lastMeta);
                 });
 

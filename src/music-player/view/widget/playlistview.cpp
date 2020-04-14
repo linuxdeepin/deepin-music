@@ -171,13 +171,14 @@ void PlayListView::setPlaying(const MetaPtr meta)
 void PlayListView::setViewModeFlag(QListView::ViewMode mode)
 {
     if (mode == QListView::IconMode) {
-        setIconSize( QSize(140, 140) );
-        setGridSize( QSize(170, 213) );
-        setViewportMargins(10, 10, 10, 10);
+        setIconSize( QSize(150, 150) );
+        setGridSize( QSize(-1, -1) );
+        setSpacing(20);
+        setViewportMargins(-10, -10, -35, 10);
     } else {
         setIconSize( QSize(36, 36) );
-
         setGridSize( QSize(-1, -1) );
+        setSpacing(0);
         setViewportMargins(0, 0, 8, 0);
     }
     setViewMode(mode);
