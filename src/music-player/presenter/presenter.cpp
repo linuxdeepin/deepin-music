@@ -654,7 +654,7 @@ void Presenter::postAction()
             d->player->loadMedia(lastPlaylist, lastMeta);
             d->metaBufferDetector->onBufferDetector(lastMeta->localPath, lastMeta->hash);
 //            d->player->pause();
-            QTimer::singleShot(150, [ = ]() {
+            QTimer::singleShot(150, [ = ]() {//延迟150ms是为了在加载的时候，音乐播放100ms后再设置进度
                 d->player->setPosition(position);
             });
 
@@ -678,7 +678,7 @@ void Presenter::postAction()
                 onCurrentPlaylistChanged(lastPlaylist);
 
                 //                d->player->setPosition(position);
-                QTimer::singleShot(200, [ = ]() {
+                QTimer::singleShot(200, [ = ]() {//200ms播放是为了在加载播放的100ms结束，150ms设置播放进度后再播放。
                     onMusicResume(lastPlaylist, lastMeta);
                 });
 
