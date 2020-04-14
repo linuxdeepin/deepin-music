@@ -29,7 +29,6 @@ QVariant DBusUtils::redDBusProperty(const QString &service, const QString &path,
     }
     //调用远程的value方法
     QVariant v = ainterface.property(propert);
-    ainterface.destroyed();
     mutex.unlock();
     return  v;
 }
