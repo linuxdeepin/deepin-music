@@ -943,9 +943,10 @@ void Player::musicFileMiss()
 
     /*--------Remove the usb flash drive, the music is invalid-------*/
     if (d->activeMeta != nullptr && access(d->activeMeta->localPath.toStdString().c_str(), F_OK) != 0 && (!d->activePlaylist->allmusic().isEmpty())) {
-        d->qplayer->pause();
-        d->qplayer->stop();
+        stop();
         Q_EMIT mediaError(d->activePlaylist, d->activeMeta, Player::ResourceError);
+        d->activeMeta = nullptr;
+        d->activePlaylist->play(MetaPtr());
     }
 }
 
