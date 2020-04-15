@@ -547,7 +547,7 @@ void Player::loadMedia(PlaylistPtr playlist, const MetaPtr meta)
     d->qplayer->setVolume(0);
     d->activePlaylist->play(meta);
     d->qplayer->play();
-    QTimer::singleShot(100, this, [ = ]() {
+    QTimer::singleShot(100, this, [ = ]() {//为了记录进度条生效，在加载的时候让音乐播放100ms
         d->qplayer->pause();
         d->qplayer->setVolume(volume);
         d->qplayer->blockSignals(false);
@@ -902,7 +902,7 @@ void Player::setVolume(int volume)
     //d->qplayer->setVolume(d->volume * d->fadeInOutFactor);
     d->qplayer->blockSignals(false);
 
-    setMusicVolume((volume + 0.1) / 100.0);
+    setMusicVolume((volume + 0.1) / 100.0);//设置到dbus的音量必须大1，设置才会生效
 }
 
 void Player::setMuted(bool mute)
@@ -943,9 +943,10 @@ void Player::musicFileMiss()
 
     /*--------Remove the usb flash drive, the music is invalid-------*/
     if (d->activeMeta != nullptr && access(d->activeMeta->localPath.toStdString().c_str(), F_OK) != 0 && (!d->activePlaylist->allmusic().isEmpty())) {
-        d->qplayer->pause();
-        d->qplayer->stop();
+        stop();
         Q_EMIT mediaError(d->activePlaylist, d->activeMeta, Player::ResourceError);
+        d->activeMeta = nullptr;
+        d->activePlaylist->play(MetaPtr());
     }
 }
 
