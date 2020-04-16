@@ -1635,6 +1635,205 @@ void Presenter::onImportFiles(const QStringList &filelist, PlaylistPtr playlist)
     return;
 }
 
+void Presenter::onSpeechPlayMusic(const QString music)
+{
+    Q_D(Presenter);
+    PlaylistPtr musicList = d->playlistMgr->playlist(AllMusicListID);
+    PlaylistPtr curPlayList  = d->playlistMgr->playlist(PlayMusicListID);
+    bool find = false;
+    MetaPtrList musicMetaDataList;
+    MetaPtr playMetaData;
+    for (auto &metaData : musicList->allmusic()) {
+        if (containsStr(music, metaData->title)) {
+            musicMetaDataList.append(metaData);
+            playMetaData = metaData;
+            find = true;
+        }
+    }
+    if (find) {
+        curPlayList->reset(musicMetaDataList);
+//        d->player->setActivePlaylist(curPlayList);
+        onSyncMusicPlay(curPlayList, playMetaData);
+        Q_EMIT sigSpeedResult(1, true);
+    } else {
+        Q_EMIT sigSpeedResult(1, false);
+    }
+}
+
+void Presenter::onSpeechPlayArtist(const QString artist)
+{
+    Q_D(Presenter);
+    int count = 0;
+    MetaPtrList artistMetaDataList;
+    PlaylistPtr musicList = d->playlistMgr->playlist(AllMusicListID);
+    PlaylistPtr curPlayList = d->playlistMgr->playlist(PlayMusicListID);
+    bool find = false;
+    MetaPtrList musicMetaDataList;
+    MetaPtr playMetaData;
+    for (auto &metaData : musicList->allmusic()) {
+        if (containsStr(artist, metaData->artist)) {
+            musicMetaDataList.append(metaData);
+            find = true;
+        }
+    }
+    if (find) {
+        playMetaData = musicMetaDataList.first();
+        curPlayList->reset(musicMetaDataList);
+        d->player->setActivePlaylist(curPlayList);
+        onSyncMusicPlay(curPlayList, playMetaData);
+        Q_EMIT sigSpeedResult(2, true);
+    } else {
+        Q_EMIT sigSpeedResult(2, false);
+    }
+}
+
+void Presenter::onSpeechPlayArtistMusic(const QString artist, const QString music)
+{
+    Q_D(Presenter);
+    int count = 0;
+    MetaPtrList artistMetaDataList;
+    PlaylistPtr musicList = d->playlistMgr->playlist(AllMusicListID);
+    PlaylistPtr curPlayList = d->playlistMgr->playlist(PlayMusicListID);
+    bool find = false;
+    MetaPtrList musicMetaDataList;
+    MetaPtr playMetaData;
+    for (auto &metaData : musicList->allmusic()) {
+        if (containsStr(artist, metaData->artist)) {
+            if (containsStr(music, metaData->title)) {
+                musicMetaDataList.append(metaData);
+            }
+            find = true;
+        }
+    }
+    if (find) {
+        playMetaData = musicMetaDataList.first();
+        curPlayList->reset(musicMetaDataList);
+//        d->player->setActivePlaylist(curPlayList);
+        onSyncMusicPlay(curPlayList, playMetaData);
+        Q_EMIT sigSpeedResult(3, true);
+    } else {
+        Q_EMIT sigSpeedResult(3, false);
+    }
+}
+
+void Presenter::onSpeechPlayFaverite()
+{
+    Q_D(Presenter);
+    int count = 0;
+    MetaPtrList artistMetaDataList;
+    PlaylistPtr musicList = d->playlistMgr->playlist(FavMusicListID);
+    PlaylistPtr curPlayList = d->playlistMgr->playlist(PlayMusicListID);
+    bool find = false;
+    MetaPtrList musicMetaDataList;
+    MetaPtr playMetaData;
+    if (musicList->allmusic().size() == 0) {
+        Q_EMIT sigSpeedResult(4, false);
+    } else {
+        playMetaData = musicList->allmusic().first();
+        curPlayList->reset(musicList->allmusic());
+        d->player->setActivePlaylist(curPlayList);
+        onSyncMusicPlay(curPlayList, playMetaData);
+        Q_EMIT sigSpeedResult(4, true);
+    }
+}
+
+void Presenter::onSpeechPlayCustom(const QString listName)
+{
+    Q_D(Presenter);
+    int count = 0;
+    MetaPtrList artistMetaDataList;
+    PlaylistPtr musicList ;
+    PlaylistPtr curPlayList = d->playlistMgr->playlist(PlayMusicListID);
+    bool find = false;
+    for (auto mList : d->playlistMgr->allplaylist()) {
+        if (containsStr(mList->displayName(), listName)) {
+            musicList = mList;
+            find = true;
+        }
+    }
+    if (find) {
+        MetaPtrList musicMetaDataList;
+        MetaPtr playMetaData;
+        playMetaData = musicList->allmusic().first();
+        curPlayList->reset(musicList->allmusic());
+        d->player->setActivePlaylist(curPlayList);
+        onSyncMusicPlay(curPlayList, playMetaData);
+        Q_EMIT sigSpeedResult(5, true);
+    } else {
+        Q_EMIT sigSpeedResult(5, false);
+    }
+}
+
+void Presenter::onSpeechPlayRadom()
+{
+    Q_D(Presenter);
+    PlaylistPtr musicList = d->playlistMgr->playlist(AllMusicListID);
+    PlaylistPtr curPlayList  = d->playlistMgr->playlist(PlayMusicListID);
+    bool find = false;
+    MetaPtrList musicMetaDataList;
+    MetaPtr playMetaData;
+    int count = musicList->allmusic().size();
+    if (count == 0) {
+        Q_EMIT sigSpeedResult(6, false);
+    } else {
+        int index = qrand() % count;
+        playMetaData = musicList->allmusic().at(index);
+        musicMetaDataList.append(playMetaData);
+        curPlayList->reset(musicMetaDataList);
+        onSyncMusicPlay(curPlayList, playMetaData);
+        Q_EMIT sigSpeedResult(6, true);
+    }
+
+}
+
+void Presenter::onSpeechPause()
+{
+    Q_D(Presenter);
+    onMusicPause(d->currentPlaylist, nullptr);
+}
+
+void Presenter::onSpeechStop()
+{
+    Q_D(Presenter);
+    onMusicStop(d->currentPlaylist, d->currentPlaylist->playing());
+}
+
+void Presenter::onSpeechResume()
+{
+    Q_D(Presenter);
+    onSyncMusicResume(d->currentPlaylist, d->currentPlaylist->playing());
+}
+
+void Presenter::onSpeechPrevious()
+{
+    Q_D(Presenter);
+    onSyncMusicPrev(d->currentPlaylist, d->currentPlaylist->playing());
+}
+
+void Presenter::onSpeechNext()
+{
+    Q_D(Presenter);
+    onSyncMusicNext(d->currentPlaylist, d->currentPlaylist->playing());
+}
+
+void Presenter::onSpeechFavorite()
+{
+    Q_D(Presenter);
+    onToggleFavourite(d->currentPlaylist->playing());
+}
+
+void Presenter::onSpeechunFaverite()
+{
+    Q_D(Presenter);
+    onToggleFavourite(d->currentPlaylist->playing());
+}
+
+void Presenter::onSpeechsetMode(const int mode)
+{
+    Q_D(Presenter);
+    onPlayModeChanged(mode);
+}
+
 void Presenter::onScanMusicDirectory()
 {
     auto musicDir =  QStandardPaths::standardLocations(QStandardPaths::MusicLocation);

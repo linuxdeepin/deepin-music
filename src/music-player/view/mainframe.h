@@ -38,6 +38,8 @@ public:
     void postInitUI();
     void binding(Presenter *presenter);
 
+    void bindSpeechConnect(Presenter *presenter);
+
     void focusPlayList();
     QString coverBackground() const;
 

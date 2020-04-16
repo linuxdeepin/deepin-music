@@ -122,6 +122,8 @@ signals:
     void searchCand(QString searchText, PlaylistPtr playlist);
     void searchResult(QString searchText, QList<PlaylistPtr> resultlist, QString id);
     void musicFileMiss();
+	 //语音控制
+    void sigSpeedResult(int action, bool result);
 
 public slots:
     //! music control interface
@@ -173,6 +175,24 @@ public slots:
 
     void onScanMusicDirectory();
     void onImportFiles(const QStringList &filelist, PlaylistPtr playlist);
+
+    //语音控制槽函数
+    void onSpeechPlayMusic(const QString music);
+    void onSpeechPlayArtist(const QString artist);
+    void onSpeechPlayArtistMusic(const QString artist, const QString music);
+    void onSpeechPlayFaverite();
+    void onSpeechPlayCustom(const QString listName);
+    void onSpeechPlayRadom();
+
+    void onSpeechPause();
+    void onSpeechStop();
+    void onSpeechResume();
+    void onSpeechPrevious();
+    void onSpeechNext();
+
+    void onSpeechFavorite();
+    void onSpeechunFaverite();
+    void onSpeechsetMode(const int mode);
 
 private:
     bool containsStr(QString searchText, QString text);
