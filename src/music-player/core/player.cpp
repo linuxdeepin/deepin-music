@@ -740,6 +740,7 @@ void Player::stop()
 
     d->qplayer->pause();
     d->qplayer->setMedia(QMediaContent());
+    d->activeMeta.clear(); //清除当前播放音乐；
     d->qplayer->stop();
     //    d->qplayer->blockSignals(false);
 }
