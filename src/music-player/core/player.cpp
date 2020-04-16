@@ -625,7 +625,9 @@ void Player::playMeta(PlaylistPtr playlist, const MetaPtr meta)
 void Player::resume(PlaylistPtr playlist, const MetaPtr meta)
 {
     Q_D(Player);
-
+    if (meta == nullptr) {
+        return;
+    }
     qDebug() << "resume top";
     if (playlist == d->activePlaylist && d->qplayer->state() == QMediaPlayer::PlayingState && meta->hash == d->activeMeta->hash)
         return;
@@ -850,7 +852,7 @@ void Player::setIOPosition(qint64 value, qint64 range)
 {
     Q_D(Player);
 
-    if (d->playOnLoad && QFile::exists(d->activeMeta->localPath)) {
+    if (d->playOnLoad && d->activeMeta && QFile::exists(d->activeMeta->localPath)) {
 
         QString temp = d->activeMeta->localPath;
 
