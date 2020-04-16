@@ -26,6 +26,7 @@
 #include <QGridLayout>
 #include <QFileInfo>
 #include <QTimer>
+#include <QScrollArea>
 
 #include <DApplication>
 #include "dplatformwindowhandle.h"
@@ -67,6 +68,11 @@ public:
     DArrowLineDrawer    *dArrowLine     = nullptr;
     int                 frameHeight     = 0;
     InfoDialog *q_ptr;
+    MetaPtr             meta            = nullptr;
+    //QScrollArea         *m_scrollArea   = nullptr;
+    bool                DoubleElements  = false;
+    bool                isExPand          = true;
+    int                 CurrentFontHeight = -1;
     Q_DECLARE_PUBLIC(InfoDialog)
 };
 
@@ -74,6 +80,7 @@ void InfoDialogPrivate::initUI()
 {
     Q_Q(InfoDialog);
 
+    meta = MetaPtr(new MediaMeta);
     q->setObjectName("InfoDialog");
     q->setFixedSize(320, 500);
 //    q->setWindowFlags(q->windowFlags() | Qt::WindowStaysOnTopHint);
@@ -170,13 +177,46 @@ void InfoDialogPrivate::initUI()
 
     q->connect(closeBt, &MusicImageButton::clicked, q, &DAbstractDialog::hide);
     q->connect(dArrowLine, &DArrowLineDrawer::expandChange, q, [ = ](bool expand) {
+        isExPand = expand;
         q->expand(expand);
-    });;
+    });
     q->connect(closeBt, &MusicImageButton::clicked, q, [ = ]() {
         dArrowLine->setExpand(true);
-    });;
-    dArrowLine->move(10, 252);;
+    });
+    q->connect(qApp, &QGuiApplication::fontChanged, q, [ = ](const QFont &font) {
+        QFontMetrics fm(font);
+        if ( meta->size > 1.0){
+            //q->updateInfo(meta);
+
+            int h1 = dArrowLine->height();
+            if (DoubleElements){
+                if(isExPand){
+                    q->setFixedHeight(340 + CurrentFontHeight * 8);
+                }else{
+                    q->setFixedHeight(252 + 45);
+                }
+            }else{
+                if(isExPand){
+                    q->setFixedHeight(332 + CurrentFontHeight * 8);
+                }else{
+                    q->setFixedHeight(252 + 45);
+                }
+            }
+            q->updateInfo(meta);
+        }
+        CurrentFontHeight = fm.height();
+    });
+    dArrowLine->move(11, 252);
     dArrowLine->setExpand(true);
+
+    QFont font = qApp->font();
+    QFontMetrics fm(font);
+    CurrentFontHeight = fm.height();
+    if (DoubleElements){
+        q->setFixedHeight(340 + CurrentFontHeight * 8);
+    }else{
+        q->setFixedHeight(332 + CurrentFontHeight * 8);
+    }
 }
 
 
@@ -215,11 +255,19 @@ void InfoDialog::resizeEvent(QResizeEvent *event)
 void InfoDialog::expand(bool expand)
 {
     Q_D(InfoDialog);
+    QFont font = qApp->font();
+    QFontMetrics fm(font);
+    int h = fm.height();
     if (expand) {
-        setFixedHeight(252 + 200 + 50);
+//        setFixedHeight(252 + 200 + 50);
+        if (d->DoubleElements){
+            setFixedHeight(340 + h * 8);
+        }else{
+            setFixedHeight(330 + h * 8);
+        }
     } else {
         QTimer::singleShot(200, this, [ = ]() {
-            setFixedHeight(252 + 50);
+            setFixedHeight(252 + 45);
         });
     }
 }
@@ -227,6 +275,7 @@ void InfoDialog::expand(bool expand)
 void InfoDialog::updateInfo(const MetaPtr meta)
 {
     Q_D(InfoDialog);
+    d->meta = meta;
     QString artist = meta->artist.isEmpty() ? tr("Unknown artist") : meta->artist;
     QString album = meta->album.isEmpty() ? tr("Unknown album") : meta->album;
     QStringList infoValues;
@@ -254,12 +303,14 @@ void InfoDialog::updateInfo(const MetaPtr meta)
             int width = fontWidth.width(infoValues.value(i));  //计算字符串宽度
             if (width >= d->valueList.value(i)->width()) { //当字符串宽度大于最大宽度时进行转换
                 //两行
+                d->DoubleElements = true;
                 QString str = geteElidedText(d->valueList.value(i)->font(), infoValues.value(i), d->valueList.value(i)->width() * 3 / 2);
                 d->valueList.value(i)->setText(str);
                 QRect rec = fontWidth.boundingRect( d->valueList.value(i)->text());
                 d->valueList.value(i)->setFixedHeight(2 * rec.height());
 
             } else {
+                d->DoubleElements = false;
                 //QString str = geteElidedText(d->valueList.value(i)->font(), infoValues.value(i), d->valueList.value(i)->width() / 2);
                 d->valueList.value(i)->setText(infoValues.value(i));
                 QRect rec = fontWidth.boundingRect( d->valueList.value(i)->text());
