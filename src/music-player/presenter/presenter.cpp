@@ -1594,18 +1594,46 @@ void Presenter::onUpdateMetaCodec(const QString &preTitle, const QString &preArt
 void Presenter::onPlayall(PlaylistPtr playlist)
 {
     Q_D(Presenter);
-    int size = playlist->length();
-    if (size < 1)
-        return;
-    MetaPtr meta = playlist->playing();
-    if (meta == nullptr)
-        meta = playlist->first();
-    if (d->player->mode() == Player::Shuffle) {
-        int n = qrand() % size;
-        meta = playlist->allmusic()[n];
-    }
 
-    onMusicPlay(playlist, meta);
+    if (playlist->id() == AlbumMusicListID || playlist->id() == ArtistMusicListID) {
+
+        PlaylistPtr curPlaylist = playlist;
+        auto playMusicTypePtrList = curPlaylist->playMusicTypePtrList();
+        auto PlayMusicTypePtr = playMusicTypePtrList[0];
+        QString name = PlayMusicTypePtr->name;
+
+        if (curPlaylist.isNull()) {
+            qWarning() << "can not player emptry playlist";
+            return;
+        }
+
+        MetaPtr curMeta;
+        for (auto TypePtr : curPlaylist->playMusicTypePtrList()) {
+            if (TypePtr->name == name) {
+
+                auto metaHash  =  TypePtr->playlistMeta.sortMetas.at(0);
+                if (TypePtr->playlistMeta.metas.contains(metaHash)) {
+                    curMeta = TypePtr->playlistMeta.metas[metaHash];
+                }
+            }
+        }
+        onMusicPlay(playlist, curMeta);
+
+    }  else {
+
+        int size = playlist->length();
+        if (size < 1)
+            return;
+        MetaPtr meta = playlist->playing();
+        if (meta == nullptr)
+            meta = playlist->first();
+        if (d->player->mode() == Player::Shuffle) {
+            int n = qrand() % size;
+            meta = playlist->allmusic()[n];
+        }
+
+        onMusicPlay(playlist, meta);
+    }
 }
 
 void Presenter::onResort(PlaylistPtr playlist, int sortType)
