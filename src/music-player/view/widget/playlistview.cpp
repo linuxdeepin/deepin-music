@@ -118,14 +118,6 @@ PlayListView::PlayListView(bool searchFlag, QWidget *parent)
             Q_EMIT playMedia(meta);
         }
     });
-
-    // For debug
-//    connect(selectionModel(), &QItemSelectionModel::selectionChanged,
-//    this, [ = ](const QItemSelection & /*selected*/, const QItemSelection & deselected) {
-//        if (!deselected.isEmpty()) {
-//            qDebug() << "cancel" << deselected;
-//        }
-//    });
 }
 
 PlayListView::~PlayListView()
@@ -274,15 +266,9 @@ void PlayListView::onMusicListRemoved(const MetaPtrList metalist)
 
 void PlayListView::onMusicError(const MetaPtr meta, int /*error*/)
 {
-    Q_ASSERT(!meta.isNull());
-//    Q_D(PlayListView);
-
-//    qDebug() << error;
-//    QModelIndex index = findIndex(meta);
-
-//    auto indexData = index.data().value<MetaPtr>();
-//    indexData.invalid = (error != 0);
-//    d->m_model->setData(index, QVariant::fromValue<MetaPtr>(indexData));
+    if (meta == nullptr) {
+        return ;
+    }
 
     update();
 }

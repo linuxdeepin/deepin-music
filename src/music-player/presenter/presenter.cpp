@@ -538,10 +538,11 @@ void Presenter::prepareData()
     this, [ = ](PlaylistPtr playlist, const MetaPtr meta, Player::Error error) {
         Q_D(Presenter);
         Q_ASSERT(!playlist.isNull());
+
         Q_EMIT musicError(playlist, meta, error);
 
         if (error == Player::NoError) {
-            //            qDebug() << "set d->syncPlayerResult false " << meta->title;
+
             d->syncPlayerResult = false;
             if (meta->invalid) {
                 meta->invalid = false;
@@ -551,25 +552,20 @@ void Presenter::prepareData()
             return;
         }
 
-        if (!meta->invalid) {
-            meta->invalid = true;
-            Q_EMIT musicMetaUpdate(playlist, meta);
+        if (meta != nullptr) {
+            if (!meta->invalid) {
+                meta->invalid = true;
+                Q_EMIT musicMetaUpdate(playlist, meta);
+            }
         }
 
-        //        qDebug() << "check d->syncPlayerResult" << d->syncPlayerResult << meta->title;
         if (d->syncPlayerResult) {
-            //            qDebug() << "set d->syncPlayerResult false " << meta->title;
+
             d->syncPlayerResult = false;
             Q_EMIT notifyMusciError(playlist, meta, error);
         } else {
-            //            qDebug() << "next" << playlist->displayName() << playlist->canNext();
+
             Q_EMIT notifyMusciError(playlist, meta, error);
-            //            if (playlist->canNext() && d->continueErrorCount < 5) {
-            //                DUtil::TimerSingleShot(800, [d, playlist, meta]() {
-            //                    ++d->continueErrorCount;
-            //                    d->playNext(playlist, meta);
-            //                });
-            //            }
         }
     });
 
@@ -734,6 +730,7 @@ void Presenter::openUri(const QUrl &uri)
 
 void Presenter::onSyncMusicPlay(PlaylistPtr playlist, const MetaPtr meta)
 {
+
     Q_D(Presenter);
     d->syncPlayerResult = true;
     d->continueErrorCount = 0;
@@ -1358,9 +1355,6 @@ void Presenter::onMusicPlay(PlaylistPtr playlist,  const MetaPtr meta)
         qDebug() << "stop old list" << oldPlayinglist->id() << playlist->id();
         oldPlayinglist->play(MetaPtr());
     }
-    //    if (oldPlayinglist.isNull()) {
-    //        d->player->playMeta()
-    //    }
 
     if (0 == playlist->length()) {
         qCritical() << "empty playlist" << playlist->displayName();

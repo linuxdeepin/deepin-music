@@ -978,6 +978,7 @@ void MainFrame::binding(Presenter *presenter)
 
     connect(presenter, &Presenter::notifyMusciError,
     this, [ = ](PlaylistPtr playlist, const MetaPtr  meta, int /*error*/) {
+
         Dtk::Widget::DDialog warnDlg(this);
         warnDlg.setIcon(QIcon::fromTheme("deepin-music"));
         warnDlg.setTextFormat(Qt::RichText);
@@ -1005,6 +1006,7 @@ void MainFrame::binding(Presenter *presenter)
         } else {
             d->timer->stop();
         }
+
     });
 
     connect(presenter, &Presenter::metaLibraryClean,

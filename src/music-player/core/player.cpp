@@ -237,6 +237,7 @@ void PlayerPrivate::initConnection()
         auto duration = qplayer->duration();
 
         if (position > 1 && activeMeta->invalid) {
+            qDebug() << " ======> position > 1 && activeMeta->invalid";
             Q_EMIT q->mediaError(activePlaylist, activeMeta, Player::NoError);
         }
 
@@ -299,6 +300,7 @@ void PlayerPrivate::initConnection()
                 qDebug() << "unsupported mime type" << type << activePlaylist << activeMeta;
                 qplayer->pause();
                 qplayer->stop();
+                qDebug() << "===========> QMediaPlayer::LoadedMedia";
                 Q_EMIT q->mediaError(activePlaylist, activeMeta, Player::FormatError);
                 return;
             }
@@ -328,8 +330,6 @@ void PlayerPrivate::initConnection()
         }
 
         case QMediaPlayer::LoadingMedia: {
-            //Q_ASSERT(!activeMeta.isNull());
-
             break;
         }
         case QMediaPlayer::UnknownMediaStatus:
@@ -362,7 +362,6 @@ void PlayerPrivate::initConnection()
             }
         }
     });
-
 
     /*
         q->connect(&fileSystemWatcher, &QFileSystemWatcher::fileChanged,
@@ -947,7 +946,9 @@ void Player::musicFileMiss()
     /*--------Remove the usb flash drive, the music is invalid-------*/
     if (d->activeMeta != nullptr && access(d->activeMeta->localPath.toStdString().c_str(), F_OK) != 0 && (!d->activePlaylist->allmusic().isEmpty())) {
         stop();
-        Q_EMIT mediaError(d->activePlaylist, d->activeMeta, Player::ResourceError);
+
+        //Q_EMIT mediaError(d->activePlaylist, d->activeMeta, Player::ResourceError);
+
         d->activeMeta = nullptr;
         d->activePlaylist->play(MetaPtr());
     }
