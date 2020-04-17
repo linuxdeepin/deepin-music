@@ -143,8 +143,11 @@ MusicListView::MusicListView(QWidget *parent) : DListView(parent)
             curStandardItem->setIcon(icon);
         }
 
+#if 0
         /*------Refresh play state--------*/
         changePicture(playingPixmap, playingPixmap);
+#endif
+
     });
 }
 
@@ -516,12 +519,6 @@ void MusicListView::dropEvent(QDropEvent *event)
 
 void MusicListView::showContextMenu(const QPoint &pos)
 {
-    // get select
-    //    auto indexes = this->selectedIndexes();
-    //    if (indexes.size() != 1) {
-    //        return;
-    //    }
-
     auto index = indexAt(pos);
     if (!index.isValid())
         return;
@@ -540,6 +537,7 @@ void MusicListView::showContextMenu(const QPoint &pos)
     DMenu menu;
     QAction *playact = nullptr;
     QAction *pauseact = nullptr;
+
     if (m_data->playingStatus() && m_data->playing() != nullptr) {
         pauseact = menu.addAction(tr("Pause"));
         pauseact->setDisabled(0 == m_data->length());
@@ -561,6 +559,7 @@ void MusicListView::showContextMenu(const QPoint &pos)
     }
 
     connect(&menu, &DMenu::triggered, this, [ = ](QAction * action) {
+
         if (action->text() == tr("Play")) {
             Q_EMIT playall(m_data);
         }
@@ -594,7 +593,6 @@ void MusicListView::showContextMenu(const QPoint &pos)
 
                 adjustHeight();
             }
-
         }
     });
 
