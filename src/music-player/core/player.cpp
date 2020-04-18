@@ -50,7 +50,7 @@ static QStringList          sSupportedSuffixList;
 static QStringList          sSupportedFiterList;
 static QStringList          sSupportedMimeTypes;
 
-static const int sFadeInOutAnimationDuration = 1900; //ms
+static const int sFadeInOutAnimationDuration = 900; //ms
 
 void initMiniTypes()
 {
@@ -207,7 +207,7 @@ void PlayerPrivate::initConnection()
     q->connect(ioPlayer->_buffer, &AudioBufferDevice::againMedia, q,
     [ = ]() {
         //! 重新加载资源
-        if (playOnLoad && QFile::exists(activeMeta->localPath)) {
+        if (playOnLoad && (!activeMeta.isNull()) && QFile::exists(activeMeta->localPath)) {
 
             ioDuration = 0;
 
@@ -294,6 +294,11 @@ void PlayerPrivate::initConnection()
         switch (status) {
         case QMediaPlayer::LoadedMedia: {
             //wtf the QMediaPlayer can play image format, 233333333
+            if (activeMeta.isNull()) {
+                qplayer->pause();
+                qplayer->stop();
+                return;
+            }
             QMimeDatabase db;
             QMimeType type = db.mimeTypeForFile(activeMeta->localPath, QMimeDatabase::MatchContent);
             if (!sSupportedMimeTypes.contains(type.name())) {
@@ -346,7 +351,7 @@ void PlayerPrivate::initConnection()
     q, [ = ](QMediaPlayer::Error error) {
         qWarning() << error << activePlaylist << activeMeta;
         if (error == QMediaPlayer::ResourceError) {
-            if (!QFile::exists(activeMeta->localPath)) {
+            if (!activeMeta.isNull() && !QFile::exists(activeMeta->localPath)) {
                 MetaPtrList removeMusicList;
                 removeMusicList.append(activeMeta);
                 curPlaylist->removeMusicList(removeMusicList);
@@ -637,6 +642,15 @@ void Player::resume(PlaylistPtr playlist, const MetaPtr meta)
     if (meta == nullptr) {
         return;
     }
+
+    if (d->fadeOutAnimation) {
+        setFadeInOutFactor(1.0);
+        d->fadeOutAnimation->stop();
+        d->fadeOutAnimation->deleteLater();
+        d->fadeOutAnimation = nullptr;
+    }
+
+
     qDebug() << "resume top";
     if (playlist == d->activePlaylist && d->qplayer->state() == QMediaPlayer::PlayingState && meta->hash == d->activeMeta->hash)
         return;
@@ -655,11 +669,6 @@ void Player::resume(PlaylistPtr playlist, const MetaPtr meta)
         }
     });
 
-    if (d->fadeOutAnimation) {
-        d->fadeOutAnimation->stop();
-        d->fadeOutAnimation->deleteLater();
-        d->fadeOutAnimation = nullptr;
-    }
     if (d->fadeInOut && !d->fadeInAnimation) {
         d->fadeInAnimation = new QPropertyAnimation(this, "fadeInOutFactor");
         d->fadeInAnimation->setEasingCurve(QEasingCurve::InCubic);
