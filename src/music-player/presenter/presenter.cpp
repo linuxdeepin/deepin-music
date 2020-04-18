@@ -527,7 +527,8 @@ void Presenter::prepareData()
     this, [ = ](PlaylistPtr playlist, const MetaPtr meta) {
         if (!meta.isNull()) {
             d->settings->setOption("base.play.last_meta", meta->hash);
-            d->settings->setOption("base.play.last_playlist", playlist->id());
+            if (!playlist.isNull() || playlist->id() != PlayMusicListID)
+                d->settings->setOption("base.play.last_playlist", playlist->id());
             d->notifyMusicPlayed(playlist, meta);
             d->requestMetaSearch(meta);
             d->metaBufferDetector->onBufferDetector(meta->localPath, meta->hash);

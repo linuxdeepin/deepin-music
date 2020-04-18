@@ -50,7 +50,7 @@ static QStringList          sSupportedSuffixList;
 static QStringList          sSupportedFiterList;
 static QStringList          sSupportedMimeTypes;
 
-static const int sFadeInOutAnimationDuration = 900; //ms
+static const int sFadeInOutAnimationDuration = 1900; //ms
 
 void initMiniTypes()
 {
@@ -544,13 +544,15 @@ void Player::loadMedia(PlaylistPtr playlist, const MetaPtr meta)
     d->qplayer->setMedia(QMediaContent(QUrl::fromLocalFile(meta->localPath)));
     int volume = d->qplayer->volume();
     d->qplayer->setVolume(0);
-    d->activePlaylist->play(meta);
+    if (!d->activePlaylist.isNull())
+        d->activePlaylist->play(meta);
     d->qplayer->play();
     QTimer::singleShot(100, this, [ = ]() {//为了记录进度条生效，在加载的时候让音乐播放100ms
         d->qplayer->pause();
         d->qplayer->setVolume(volume);
         d->qplayer->blockSignals(false);
-        d->activePlaylist->play(meta);
+        if (!d->activePlaylist.isNull())
+            d->activePlaylist->play(meta);
     });
 }
 
@@ -565,16 +567,20 @@ void Player::playMeta(PlaylistPtr playlist, const MetaPtr meta)
              << DMusic::lengthString(curMeta->offset) << "/"
              << DMusic::lengthString(curMeta->length);
 
+    if (curMeta.isNull())
+        return;
+
     if (playlist->id() != PlayMusicListID)
         d->activePlaylist = playlist;
 
-    if (d->activePlaylist.isNull())
-        return;
+//    if (d->activePlaylist.isNull())
+//        return;
 
     d->activeMeta = curMeta;
     d->qplayer->setMedia(QMediaContent(QUrl::fromLocalFile(curMeta->localPath)));
     d->qplayer->setPosition(curMeta->offset);
-    d->activePlaylist->play(curMeta);
+    if (!d->activePlaylist.isNull())
+        d->activePlaylist->play(curMeta);
     d->curPlaylist->play(curMeta);
 
     DRecentData data;
@@ -582,7 +588,11 @@ void Player::playMeta(PlaylistPtr playlist, const MetaPtr meta)
     data.appExec = "deepin-music";
     DRecentManager::addItem(curMeta->localPath, data);
 
-    Q_EMIT mediaPlayed(d->activePlaylist, d->activeMeta);
+    if (!d->activePlaylist.isNull()) {
+        Q_EMIT mediaPlayed(d->activePlaylist, d->activeMeta);
+    } else {
+        Q_EMIT mediaPlayed(d->curPlaylist, d->activeMeta);
+    }
 
 //    if (d->qplayer->mediaStatus() == QMediaPlayer::BufferedMedia) {
 //        QTimer::singleShot(100, this, [ = ]() {
@@ -631,6 +641,7 @@ void Player::resume(PlaylistPtr playlist, const MetaPtr meta)
     if (playlist == d->activePlaylist && d->qplayer->state() == QMediaPlayer::PlayingState && meta->hash == d->activeMeta->hash)
         return;
 
+    d->activeMeta = meta;
     if (d->curPlaylist != nullptr)
         d->curPlaylist->play(meta);
     setPlayOnLoaded(true);
@@ -663,7 +674,11 @@ void Player::resume(PlaylistPtr playlist, const MetaPtr meta)
         d->fadeInAnimation->start();
     }
 
-    Q_EMIT mediaPlayed(d->activePlaylist, d->activeMeta);
+    if (!d->activePlaylist.isNull() && d->activePlaylist->contains(d->activeMeta)) {
+        Q_EMIT mediaPlayed(d->activePlaylist, d->activeMeta);
+    } else {
+        Q_EMIT mediaPlayed(d->curPlaylist, d->activeMeta);
+    }
 }
 
 void Player::playNextMeta(PlaylistPtr playlist, const MetaPtr meta)

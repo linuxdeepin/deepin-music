@@ -546,6 +546,21 @@ void Footer::setCurPlaylist(PlaylistPtr playlist)
 {
     Q_D(Footer);
     d->activingPlaylist = playlist;
+    if (d->activingPlaylist != nullptr) {
+        if (d->activingPlaylist->allmusic().isEmpty()) {
+            d->btPlay->setDisabled(true);
+            d->btPrev->setDisabled(true);
+            d->btNext->setDisabled(true);
+        } else if (d->activingPlaylist->allmusic().size() == 1) {
+            d->btPrev->setDisabled(true);
+            d->btNext->setDisabled(true);
+            d->btPlay->setDisabled(false);
+        } else {
+            d->btPrev->setDisabled(false);
+            d->btNext->setDisabled(false);
+            d->btPlay->setDisabled(false);
+        }
+    }
 }
 
 void Footer::enableControl(bool enable)
