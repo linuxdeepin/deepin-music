@@ -742,7 +742,7 @@ MainFrame::MainFrame(QWidget *parent) :
     d->titlebarwidget = new TitlebarWidget(this);
 
     d->searchResult = new SearchResult(this);
-    d->searchResult->show();
+//    d->searchResult->show();
     d->titlebarwidget->setResultWidget(d->searchResult);
     d->titlebarwidget->setEnabled(false);
     d->titlebarwidget->show();
@@ -752,7 +752,8 @@ MainFrame::MainFrame(QWidget *parent) :
     d->titlebar->setTitle(tr("Music"));
     d->titlebar->setIcon(QIcon::fromTheme("deepin-music"));    //titlebar->setCustomWidget(titlebarwidget, Qt::AlignLeft, false);
 
-    d->titlebar->setCustomWidget(d->titlebarwidget, true);
+    d->titlebar->setCustomWidget(d->titlebarwidget);
+    d->titlebar->layout()->setAlignment(d->titlebarwidget, Qt::AlignCenter);
     d->titlebar->resize(width(), 50);
     QShortcut *viewshortcut = new QShortcut(this);
     viewshortcut->setKey(QKeySequence(QLatin1String("Ctrl+Shift+/")));
