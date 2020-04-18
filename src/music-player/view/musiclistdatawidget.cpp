@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright (C) 2016 ~ 2018 Wuhan Deepin Technology Co., Ltd.
  *
  * Author:     Iceyer <me@iceyer.net>
@@ -499,6 +499,7 @@ void MusicListDataWidgetPrivate::initConntion()
     q, [ = ](bool) {
         if (albumListView->isVisible()) {
             PlaylistPtr curPlayList = albumListView->playlist();
+
             if (curPlayList) {
                 curPlayList->playMusicTypeToMeta();
                 curPlayList->play(curPlayList->first());
@@ -506,6 +507,7 @@ void MusicListDataWidgetPrivate::initConntion()
             }
         } else if (artistListView->isVisible()) {
             PlaylistPtr curPlayList = artistListView->playlist();
+
             if (curPlayList) {
                 curPlayList->playMusicTypeToMeta();
                 curPlayList->play(curPlayList->first());

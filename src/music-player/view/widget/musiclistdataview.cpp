@@ -116,12 +116,13 @@ MusicListDataView::MusicListDataView(QWidget *parent)
     connect(this, &MusicListDataView::doubleClicked,
     this, [ = ](const QModelIndex & index) {
         PlaylistPtr curPlaylist = d->model->playlist();
+
         auto playMusicTypePtrList = curPlaylist->playMusicTypePtrList();
         if (index.row() >= playMusicTypePtrList.size()) {
             return;
         }
-        auto PlayMusicTypePtr = playMusicTypePtrList[index.row()];
 
+        auto PlayMusicTypePtr = playMusicTypePtrList[index.row()];
         d->musciListDialog->setPlayMusicData(curPlaylist, PlayMusicTypePtr);
         d->musciListDialog->setPlaying(playing());
         d->musciListDialog->exec();

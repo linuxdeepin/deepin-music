@@ -173,7 +173,7 @@ void SearchEdit::onTextChanged()
         QPoint bottomLeft = rect.bottomLeft();
         bottomLeft = mapTo(parentWidget()->parentWidget(), bottomLeft);
         m_result->setFixedWidth(width() - 4);
-        m_result->move(bottomLeft.x() + width() / 2 + 24, bottomLeft.y());
+        m_result->move(bottomLeft.x()/* + width() / 2 + 24*/, bottomLeft.y());
         m_result->setFocusPolicy(Qt::StrongFocus);
         m_result->raise();
     } else {

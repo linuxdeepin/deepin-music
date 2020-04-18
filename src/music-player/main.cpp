@@ -31,7 +31,7 @@
 #include <DApplication>
 #include <DGuiApplicationHelper>
 #include <DApplicationSettings>
-
+#include <DExportedInterface>
 #include <metadetector.h>
 
 #include "view/mainframe.h"
@@ -44,9 +44,32 @@
 #include "core/util/threadpool.h"
 #include "core/util/global.h"
 #include "musicapp.h"
+#include "speech/exportedinterface.h"
 
 using namespace Dtk::Core;
 using namespace Dtk::Widget;
+
+void createSpeechDbus()
+{
+    QDBusConnection::sessionBus().registerService("com.deepin.musicSpeech");
+    ExportedInterface *mSpeech = new ExportedInterface(nullptr);
+    mSpeech->registerAction("1", "playmusic");
+    mSpeech->registerAction("2", "play artist");
+    mSpeech->registerAction("3", "play artist song");
+    mSpeech->registerAction("4", "play faverite");
+    mSpeech->registerAction("5", "play custom ");
+    mSpeech->registerAction("6", "play radom");
+    mSpeech->registerAction("11", "pause");
+    mSpeech->registerAction("12", "stop");
+    mSpeech->registerAction("13", "resume");
+    mSpeech->registerAction("14", "previous");
+    mSpeech->registerAction("15", "next");
+    mSpeech->registerAction("21", "faverite");
+    mSpeech->registerAction("22", "unfaverite");
+    mSpeech->registerAction("23", "set play mode");
+
+}
+
 
 int main(int argc, char *argv[])
 {
@@ -84,7 +107,7 @@ int main(int argc, char *argv[])
     parser.addVersionOption();
     parser.addPositionalArgument("file", "Music file path");
     parser.process(app);
-
+    createSpeechDbus();//创建语音dbus
     // handle open file
     QString toOpenFile;
     if (parser.positionalArguments().length() > 0) {
@@ -149,7 +172,6 @@ int main(int argc, char *argv[])
     MainFrame mainframe;
     MusicApp *music = new MusicApp(&mainframe);
     music->initUI();
-
     /*---Player instance init---*/
 
     music->initConnection();

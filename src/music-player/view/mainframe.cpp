@@ -42,6 +42,7 @@
 #include <DFileDialog>
 #include <DHiDPIHelper>
 
+#include "../speech/speechCenter.h"
 #include "../presenter/presenter.h"
 #include "../core/metasearchservice.h"
 #include "../core/musicsettings.h"
@@ -105,6 +106,7 @@ public:
     //! ui: show info dialog
     void showInfoDialog(const MetaPtr meta);
 
+    SpeechCenter        *m_SpeechCenter         = nullptr;
     DWidget             *centralWidget          = nullptr;
     QStackedLayout      *contentLayout          = nullptr;
     DTitlebar           *titlebar               = nullptr;
@@ -352,7 +354,10 @@ void MainFramePrivate::initUI(bool showLoading)
     int themeType = DGuiApplicationHelper::instance()->themeType();
     infoDialog->setThemeType(themeType);
     infoDialog->hide();
-
+    m_SpeechCenter = SpeechCenter::getInstance();
+#if 0
+    footer->show();
+#endif
 }
 
 void MainFramePrivate::postInitUI()
@@ -737,7 +742,7 @@ MainFrame::MainFrame(QWidget *parent) :
     d->titlebarwidget = new TitlebarWidget(this);
 
     d->searchResult = new SearchResult(this);
-    d->searchResult->show();
+//    d->searchResult->show();
     d->titlebarwidget->setResultWidget(d->searchResult);
     d->titlebarwidget->setEnabled(false);
     d->titlebarwidget->show();
@@ -747,7 +752,8 @@ MainFrame::MainFrame(QWidget *parent) :
     d->titlebar->setTitle(tr("Music"));
     d->titlebar->setIcon(QIcon::fromTheme("deepin-music"));    //titlebar->setCustomWidget(titlebarwidget, Qt::AlignLeft, false);
 
-    d->titlebar->setCustomWidget(d->titlebarwidget, true);
+    d->titlebar->setCustomWidget(d->titlebarwidget);
+    d->titlebar->layout()->setAlignment(d->titlebarwidget, Qt::AlignCenter);
     d->titlebar->resize(width(), 50);
     QShortcut *viewshortcut = new QShortcut(this);
     viewshortcut->setKey(QKeySequence(QLatin1String("Ctrl+Shift+/")));
@@ -973,6 +979,7 @@ void MainFrame::binding(Presenter *presenter)
 
     connect(presenter, &Presenter::notifyMusciError,
     this, [ = ](PlaylistPtr playlist, const MetaPtr  meta, int /*error*/) {
+
         Dtk::Widget::DDialog warnDlg(this);
         warnDlg.setIcon(QIcon::fromTheme("deepin-music"));
         warnDlg.setTextFormat(Qt::RichText);
@@ -1000,6 +1007,7 @@ void MainFrame::binding(Presenter *presenter)
         } else {
             d->timer->stop();
         }
+
     });
 
     connect(presenter, &Presenter::metaLibraryClean,
@@ -1315,6 +1323,48 @@ void MainFrame::binding(Presenter *presenter)
     QShortcut *muteShortcut = new QShortcut(this);
     muteShortcut->setKey(QKeySequence(QLatin1String("M")));
     connect(muteShortcut, &QShortcut::activated, presenter, &Presenter::onToggleMute);
+
+    bindSpeechConnect(presenter);
+}
+
+//绑定语音处理信号
+void MainFrame::bindSpeechConnect(Presenter *presenter)
+{
+    Q_D(const MainFrame);
+    connect(d->m_SpeechCenter, &SpeechCenter::sigPlayMusic,
+            presenter, &Presenter::onSpeechPlayMusic);
+    connect(d->m_SpeechCenter, &SpeechCenter::sigPlayArtist,
+            presenter, &Presenter::onSpeechPlayArtist);
+    connect(d->m_SpeechCenter, &SpeechCenter::sigPlayArtistMusic,
+            presenter, &Presenter::onSpeechPlayArtistMusic);
+    connect(d->m_SpeechCenter, &SpeechCenter::sigPlayFaverite,
+            presenter, &Presenter::onSpeechPlayFaverite);
+    connect(d->m_SpeechCenter, &SpeechCenter::sigPlayCustom,
+            presenter, &Presenter::onSpeechPlayCustom);
+    connect(d->m_SpeechCenter, &SpeechCenter::sigPlayRadom,
+            presenter, &Presenter::onSpeechPlayRadom);
+
+    connect(d->m_SpeechCenter, &SpeechCenter::sigPause,
+            presenter, &Presenter::onSpeechPause);
+    connect(d->m_SpeechCenter, &SpeechCenter::sigStop,
+            presenter, &Presenter::onSpeechStop);
+    connect(d->m_SpeechCenter, &SpeechCenter::sigResume,
+            presenter, &Presenter::onSpeechResume);
+    connect(d->m_SpeechCenter, &SpeechCenter::sigPrevious,
+            presenter, &Presenter::onSpeechPrevious);
+    connect(d->m_SpeechCenter, &SpeechCenter::sigNext,
+            presenter, &Presenter::onSpeechNext);
+
+    connect(d->m_SpeechCenter, &SpeechCenter::sigFavorite,
+            presenter, &Presenter::onSpeechFavorite);
+    connect(d->m_SpeechCenter, &SpeechCenter::sigUnFaverite,
+            presenter, &Presenter::onSpeechunFaverite);
+    connect(d->m_SpeechCenter, &SpeechCenter::sigSetMode,
+            presenter, &Presenter::onSpeechsetMode);
+
+    //语音返回信号
+    connect(presenter, &Presenter::sigSpeedResult,
+            d->m_SpeechCenter, &SpeechCenter::onSpeedResult);
 }
 
 void MainFrame::focusPlayList()
