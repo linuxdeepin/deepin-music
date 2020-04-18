@@ -936,7 +936,8 @@ void Presenter::onMusiclistRemove(PlaylistPtr playlist, const MetaPtrList metali
         if (playlist->isEmpty()) {
             qDebug() << "meta library clean";
             onMusicStop(playlist, next);
-            d->player->activePlaylist()->play(nullptr);
+            if (!d->player->activePlaylist().isNull())
+                d->player->activePlaylist()->play(nullptr);
         }
     } else {
         next = playlist->removeMusicList(metalist);
