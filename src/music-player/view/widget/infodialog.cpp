@@ -72,7 +72,6 @@ public:
     //QScrollArea         *m_scrollArea   = nullptr;
     bool                DoubleElements  = false;
     bool                isExPand          = true;
-    int                 CurrentFontHeight = -1;
     Q_DECLARE_PUBLIC(InfoDialog)
 };
 
@@ -186,36 +185,37 @@ void InfoDialogPrivate::initUI()
     q->connect(qApp, &QGuiApplication::fontChanged, q, [ = ](const QFont &font) {
         QFontMetrics fm(font);
         if ( meta->size > 1.0){
-            //q->updateInfo(meta);
-
-            int h1 = dArrowLine->height();
+            q->updateInfo(meta);
+            int h = valueList.value(0)->height();
             if (DoubleElements){
                 if(isExPand){
-                    q->setFixedHeight(340 + CurrentFontHeight * 8);
+                    q->setFixedHeight(346 + h * 8);
                 }else{
                     q->setFixedHeight(252 + 45);
                 }
             }else{
                 if(isExPand){
-                    q->setFixedHeight(332 + CurrentFontHeight * 8);
+                    q->setFixedHeight(346 + h * 8);
                 }else{
                     q->setFixedHeight(252 + 45);
                 }
             }
-            q->updateInfo(meta);
         }
-        CurrentFontHeight = fm.height();
     });
     dArrowLine->move(11, 252);
     dArrowLine->setExpand(true);
 
-    QFont font = qApp->font();
-    QFontMetrics fm(font);
-    CurrentFontHeight = fm.height();
-    if (DoubleElements){
-        q->setFixedHeight(340 + CurrentFontHeight * 8);
-    }else{
-        q->setFixedHeight(332 + CurrentFontHeight * 8);
+    q->updateInfo(meta);
+    int h = 0;
+    for (int i = 0;i < valueList.size(); i++) {
+        h = valueList.value(i)->height();
+        if(h != 0)
+            break;
+    }
+    if (h == 0) {
+        q->setFixedHeight(252 + 45);
+    }else {
+        q->setFixedHeight(346 + h * 8);
     }
 }
 
@@ -248,20 +248,22 @@ InfoDialog::~InfoDialog()
 
 void InfoDialog::resizeEvent(QResizeEvent *event)
 {
-//    Q_D(InfoDialog);
+    //Q_Q(InfoDialog);
     Dtk::Widget::DAbstractDialog::resizeEvent(event);
 }
 
 void InfoDialog::expand(bool expand)
 {
     Q_D(InfoDialog);
-    QFont font = qApp->font();
-    QFontMetrics fm(font);
-    int h = fm.height();
+    int h = 0;
+    for (int i = 0;i < d->valueList.size(); i++) {
+        h = d->valueList.value(i)->height();
+        if(h != 0)
+            break;
+    }
     if (expand) {
-//        setFixedHeight(252 + 200 + 50);
         if (d->DoubleElements){
-            setFixedHeight(340 + h * 8);
+            setFixedHeight(346 + h * 8);
         }else{
             setFixedHeight(330 + h * 8);
         }
