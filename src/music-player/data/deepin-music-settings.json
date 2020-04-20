@@ -27,7 +27,7 @@
                             "name": " ",
                             "type": "checkbox",
                             "text": "Enable fade in/out",
-                            "default": true
+                            "default": false
                         },
                         {
                             "key": "sort_type",
