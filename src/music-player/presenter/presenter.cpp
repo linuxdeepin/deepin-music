@@ -1137,10 +1137,26 @@ void Presenter::onRequestMusiclistMenu(const QPoint &pos, char type)
     Q_EMIT this->requestMusicListMenu(pos, selectedlist, favlist, newlists, type);
 }
 
+void Presenter::removeListSame(QStringList *list)
+{
+    for (int i = 0; i < list->count(); i++)
+    {
+        for (int k = i + 1; k <  list->count(); k++)
+        {
+            if ( list->at(i) ==  list->at(k))
+            {
+                list->removeAt(k);
+                k--;
+            }
+        }
+    }
+}
+
 void Presenter::onSearchText(const QString &id, const QString &text)
 {
     Q_D(Presenter);
     QList<PlaylistPtr> resultlist;
+        resultlist.clear();
     if (id == "") {//搜索栏enter按键
         //搜索歌曲候选:<=5个
         auto musicList = d->playlistMgr->playlist(AllMusicListID);;
@@ -1184,26 +1200,82 @@ void Presenter::onSearchText(const QString &id, const QString &text)
         }
         resultlist.push_back(searchAlbumList);
         Q_EMIT searchResult(text, resultlist, "");
+        return;
     }
     if (id == MusicResultListID) { //点击歌曲
-        //搜索歌曲候选:<=5个
+        resultlist.clear();
+        //搜索歌曲
         auto musicList = d->playlistMgr->playlist(AllMusicListID);;
 
         auto searchList = d->playlistMgr->playlist(MusicResultListID);
         MetaPtrList musicMetaDataList;
-
+        //该音乐的歌手列表
+        QStringList artist,album;
+        artist.clear();
+        album.clear();
         for (auto &metaData : musicList->allmusic()) {
             if (containsStr(text, metaData->title)) {
                 musicMetaDataList.append(metaData);
+                if(metaData->album == ""){
+                   album.append("未知专辑");
+                }
+                else{
+
+                    album.append(metaData->album);
+                }
+                if(metaData->artist== ""){
+                   album.append("未知歌手");
+                }
+                else{
+                     artist.append(metaData->artist);
+                }
             }
         }
         searchList->reset(musicMetaDataList);
         //    Q_EMIT searchResult(text, searchList);
         resultlist.push_back(searchList);
+
+        removeListSame(&artist);
+        removeListSame(&album);
+
+        //搜索该音乐的专辑
+        PlaylistPtr albumList = d->playlistMgr->playlist(AlbumMusicListID);
+        auto searchAlbumList = d->playlistMgr->playlist(AlbumResultListID);
+        MetaPtrList albumMetaDataList;
+        searchAlbumList->clearTypePtr();
+
+        for (auto &metaData : albumList->playMusicTypePtrList()) {
+            for (int i=0;i <album.length();i++) {
+                if (metaData->name.contains(album.at(i))) {
+                    searchAlbumList->appendMusicTypePtrListData(metaData);
+                }
+            }
+        }
+        resultlist.push_back(searchAlbumList);
+
+        //搜索该音乐的歌手
+        PlaylistPtr artistList = d->playlistMgr->playlist(ArtistMusicListID);
+        auto searchArtistList = d->playlistMgr->playlist(ArtistResultListID);
+        MetaPtrList artistMetaDataList;
+        searchArtistList->clearTypePtr();
+
+        for (auto &metaData : artistList->playMusicTypePtrList()) {
+            for (int i=0;i <artist.length();i++) {
+                if (metaData->name.contains(artist.at(i))) {
+                    searchArtistList->appendMusicTypePtrListData(metaData);
+                }
+            }
+        }
+        resultlist.push_back(searchArtistList);
+
         Q_EMIT searchResult(text, resultlist, MusicResultListID);
+        return;
     }
+
     if (id == ArtistResultListID) {
-        //搜索演唱者候选：<=3
+        resultlist.clear();
+
+        //搜索该歌手
         PlaylistPtr artistList = d->playlistMgr->playlist(ArtistMusicListID);
         auto searchArtistList = d->playlistMgr->playlist(ArtistResultListID);
         MetaPtrList artistMetaDataList;
@@ -1215,10 +1287,58 @@ void Presenter::onSearchText(const QString &id, const QString &text)
             }
         }
         resultlist.push_back(searchArtistList);
+
+        //搜索该歌手的音乐
+        auto musicList = d->playlistMgr->playlist(AllMusicListID);;
+        auto searchList = d->playlistMgr->playlist(MusicResultListID);
+        MetaPtrList musicMetaDataList;
+        //该歌手的专辑列表
+        QStringList albumlist;
+        albumlist.clear();
+        for (auto &metaData : musicList->allmusic()) {
+            if(metaData->artist == "")
+            {
+                metaData->artist = "未知歌手";
+            }
+            if (containsStr(text, metaData->artist)) {
+                musicMetaDataList.append(metaData);
+                if(metaData->album == ""){
+                   albumlist.append("未知专辑");
+                }
+                else{
+                    albumlist.append(metaData->album);
+                }
+            }
+        }
+        searchList->reset(musicMetaDataList);
+        resultlist.push_back(searchList);
+        //去除相同的专辑
+        removeListSame(&albumlist);
+
+
+        //该歌手的专辑
+        PlaylistPtr albumList = d->playlistMgr->playlist(AlbumMusicListID);
+        auto searchAlbumList = d->playlistMgr->playlist(AlbumResultListID);
+        MetaPtrList albumMetaDataList;
+        searchAlbumList->clearTypePtr();
+
+        for (auto &metaData : albumList->playMusicTypePtrList()) {
+            for (int i=0; i<albumlist.length(); i++) {
+                if (metaData->name.contains(albumlist.at(i))) {
+                    searchAlbumList->appendMusicTypePtrListData(metaData);
+                }
+            }
+        }
+        resultlist.push_back(searchAlbumList);
+
         Q_EMIT searchResult(text, resultlist, ArtistResultListID);
+        return;
     }
+
     if (id == AlbumResultListID) {
-        //搜索专辑候选：<=3
+        resultlist.clear();
+
+        //搜索该专辑
         PlaylistPtr albumList = d->playlistMgr->playlist(AlbumMusicListID);
         auto searchAlbumList = d->playlistMgr->playlist(AlbumResultListID);
         MetaPtrList albumMetaDataList;
@@ -1230,10 +1350,55 @@ void Presenter::onSearchText(const QString &id, const QString &text)
             }
         }
         resultlist.push_back(searchAlbumList);
+
+        //搜索该专辑的音乐
+        auto musicList = d->playlistMgr->playlist(AllMusicListID);;
+        auto searchList = d->playlistMgr->playlist(MusicResultListID);
+        MetaPtrList musicMetaDataList;
+        //该专辑的歌手列表
+        QStringList artist;
+        artist.clear();
+        for (auto &metaData : musicList->allmusic()) {
+            if(metaData->album == "")
+            {
+                metaData->album ="未知专辑";
+            }
+            if (containsStr(text, metaData->album)) {
+                musicMetaDataList.append(metaData);
+                if(metaData->artist== ""){
+                   artist.append("未知歌手");
+                }
+                else{
+                     artist.append(metaData->artist);
+                }
+            }
+        }
+        searchList->reset(musicMetaDataList);
+        resultlist.push_back(searchList);
+        //去除相同的歌手
+        removeListSame(&artist);
+
+        //搜索该专辑的歌手
+        auto artistList = d->playlistMgr->playlist(ArtistMusicListID);
+        auto searchArtistList = d->playlistMgr->playlist(ArtistResultListID);
+        MetaPtrList artistMetaDataList;
+        searchArtistList->clearTypePtr();
+
+        for (auto &metaData : artistList->playMusicTypePtrList()) {
+            for (int i=0; i<artist.length(); i++) {
+                if (metaData->name.contains(artist.at(i) )) {
+                    searchArtistList->appendMusicTypePtrListData(metaData);
+                }
+            }
+        }
+        resultlist.push_back(searchArtistList);
+
         Q_EMIT searchResult(text, resultlist, AlbumResultListID);
+        return;
     }
 
 }
+
 void Presenter::onSearchCand(const QString text)
 {
     Q_D(Presenter);
@@ -1343,11 +1508,13 @@ void Presenter::onMusicPlay(PlaylistPtr playlist,  const MetaPtr meta)
 
     auto toPlayMeta = meta;
     if (playlist.isNull()) {
+        //为空则播放所有音乐
         playlist = d->playlistMgr->playlist(AllMusicListID);
     }
 
     d->player->setPlayOnLoaded(true);
     if (0 == d->playlistMgr->playlist(AllMusicListID)->length()) {
+        //所有音乐为空则导入音乐
         Q_EMIT requestImportFiles();
         return;
     }

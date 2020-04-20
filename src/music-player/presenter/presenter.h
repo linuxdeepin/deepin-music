@@ -45,6 +45,7 @@ public:
     void postAction();
     void handleQuit();
     void openUri(const QUrl &uri);
+    void removeListSame(QStringList *list);
 
     QList<PlaylistPtr > allplaylist();
     PlaylistPtr playlist(const QString &id);
