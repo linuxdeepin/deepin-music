@@ -368,7 +368,7 @@ void PresenterPrivate::notifyMusicPlayed(PlaylistPtr playlist, const MetaPtr met
 bool Presenter::containsStr(QString searchText, QString text)
 {
     //filter
-    text = QString(text).remove(" ").remove("\r").remove("\n");
+    text = QString(text).remove("\r").remove("\n");
     bool chineseFlag = false;
     for (auto ch : searchText) {
         if (DMusic::PinyinSearch::isChinese(ch)) {
@@ -388,7 +388,7 @@ bool Presenter::containsStr(QString searchText, QString text)
                 }
                 curTextListStr += mText;
             }
-            curTextListStr = QString(curTextListStr.remove(" "));
+//            curTextListStr = QString(curTextListStr.remove(" "));
             if (curTextListStr.contains(searchText, Qt::CaseInsensitive)) {
                 return true;
             }
