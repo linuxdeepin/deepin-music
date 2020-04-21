@@ -1008,6 +1008,9 @@ void Player::readSinkInputPath()
 
 bool Player::setMusicVolume(double volume)
 {
+    if (volume > 1.0) {
+        volume = 1.000;
+    }
     Q_D(Player);
     readSinkInputPath();
 
