@@ -143,9 +143,9 @@ MusicListView::MusicListView(QWidget *parent) : DListView(parent)
             curStandardItem->setIcon(icon);
         }
 
-#if 0
+#if 1
         /*------Refresh play state--------*/
-        changePicture(playingPixmap, playingPixmap);
+        changePicture(defaultPixmap, defaultPixmap);
 #endif
 
     });
