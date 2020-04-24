@@ -1526,7 +1526,10 @@ bool MainFrame::eventFilter(QObject *obj, QEvent *e)
             auto keystr = shortcut.value(1);
             auto sckey = static_cast<Qt::Key>(keystr.toInt());
 
-            if (scmodifiers == keyModifiers && key == sckey && !ke->isAutoRepeat()) {
+            if (scmodifiers != Qt::NoModifier &&
+                    scmodifiers == keyModifiers &&
+                    key == sckey
+                    && !ke->isAutoRepeat()) {
                 //qDebug() << "match " << optkey << ke->count() << ke->isAutoRepeat();
                 Q_EMIT  triggerShortcutAction(optkey);
                 return true;

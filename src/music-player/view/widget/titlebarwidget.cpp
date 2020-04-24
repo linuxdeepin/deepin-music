@@ -148,7 +148,8 @@ void TitlebarWidget::selectPlaylist(PlaylistPtr playlistPtr)
     Q_D(TitlebarWidget);
     if (playlistPtr != d->search->curPlaylistPtr()) {
 //        d->search->selectPlaylist(playlistPtr);
-        d->search->clear();
+//        d->search->clear();
+        d->search->clearEdit();
     }
 }
 

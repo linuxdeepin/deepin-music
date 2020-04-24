@@ -212,7 +212,7 @@ void PlayerPrivate::initConnection()
             ioDuration = 0;
 
             QString temp = activeMeta->localPath;
-            if (temp.endsWith(".amr")) {
+            if (temp.endsWith(".amr1")) {
                 qplayer->stop();
                 ioPlayer->play();
                 ioPlayer->setSourceFilename(activeMeta->localPath);
@@ -315,7 +315,7 @@ void PlayerPrivate::initConnection()
                 ioDuration = 0;
 
                 QString temp = activeMeta->localPath;
-                if (temp.endsWith(".amr")) {
+                if (temp.endsWith(".amr1")) {
                     qplayer->stop();
 
                     ioPlayer->play();
@@ -662,7 +662,7 @@ void Player::resume(PlaylistPtr playlist, const MetaPtr meta)
     //增大音乐自动开始播放时间，给setposition留足空间
     QTimer::singleShot(100, this, [ = ]() {
         QString temp = meta->localPath;
-        if (temp.endsWith(".amr")) {
+        if (temp.endsWith(".amr1")) {
             d->ioPlayer->play();
         } else {
             d->qplayer->play();
@@ -880,7 +880,7 @@ void Player::setIOPosition(qint64 value, qint64 range)
 
         QString temp = d->activeMeta->localPath;
 
-        if (temp.endsWith(".amr")) {
+        if (temp.endsWith(".amr1")) {
 
             if (value != 0 && d->ioDuration != 0) {
                 // qint64 position =  (value * d->ioDuration) / range;
@@ -1008,6 +1008,9 @@ void Player::readSinkInputPath()
 
 bool Player::setMusicVolume(double volume)
 {
+    if (volume > 1.0) {
+        volume = 1.000;
+    }
     Q_D(Player);
     readSinkInputPath();
 
