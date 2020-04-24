@@ -186,37 +186,12 @@ void InfoDialogPrivate::initUI()
         QFontMetrics fm(font);
         if ( meta->size > 1.0){
             q->updateInfo(meta);
-            int h = valueList.value(0)->height();
-            if (DoubleElements){
-                if(isExPand){
-                    q->setFixedHeight(346 + h * 8);
-                }else{
-                    q->setFixedHeight(252 + 45);
-                }
-            }else{
-                if(isExPand){
-                    q->setFixedHeight(346 + h * 8);
-                }else{
-                    q->setFixedHeight(252 + 45);
-                }
-            }
         }
     });
     dArrowLine->move(11, 252);
     dArrowLine->setExpand(true);
 
     q->updateInfo(meta);
-    int h = 0;
-    for (int i = 0;i < valueList.size(); i++) {
-        h = valueList.value(i)->height();
-        if(h != 0)
-            break;
-    }
-    if (h == 0) {
-        q->setFixedHeight(252 + 45);
-    }else {
-        q->setFixedHeight(346 + h * 8);
-    }
 }
 
 
@@ -248,7 +223,7 @@ InfoDialog::~InfoDialog()
 
 void InfoDialog::resizeEvent(QResizeEvent *event)
 {
-    //Q_Q(InfoDialog);
+    //Q_D(InfoDialog);
     Dtk::Widget::DAbstractDialog::resizeEvent(event);
 }
 
@@ -262,10 +237,10 @@ void InfoDialog::expand(bool expand)
             break;
     }
     if (expand) {
-        if (d->DoubleElements){
+        if (d->DoubleElements) {
             setFixedHeight(346 + h * 8);
-        }else{
-            setFixedHeight(330 + h * 8);
+        } else {
+            setFixedHeight(346 + h * 7);
         }
     } else {
         QTimer::singleShot(200, this, [ = ]() {
@@ -339,6 +314,22 @@ void InfoDialog::updateInfo(const MetaPtr meta)
         d->updateLabelSize();
 
         d->title->setFocus();
+    }
+
+    int h = 0;//one Label Height
+    for (int i = 0;i < d->valueList.size(); i++) {
+        h = d->valueList.value(i)->height();
+        if(h != 0)
+            break;
+    }
+    if (h == 0 || !d->isExPand) {
+        setFixedHeight(252 + 45);
+    } else {
+        if (d->DoubleElements) {
+            setFixedHeight(346 + h * 8);
+        } else {
+            setFixedHeight(346 + h * 7);
+        }
     }
 }
 
