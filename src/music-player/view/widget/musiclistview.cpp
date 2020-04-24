@@ -534,22 +534,22 @@ void MusicListView::showContextMenu(const QPoint &pos)
 
     QPoint globalPos = this->mapToGlobal(pos);
 
-    DMenu menu;
+    DMenu *menu = new  DMenu(this) ;
     QAction *playact = nullptr;
     QAction *pauseact = nullptr;
 
     if (m_data->playingStatus() && m_data->playing() != nullptr) {
-        pauseact = menu.addAction(tr("Pause"));
+        pauseact = menu->addAction(tr("Pause"));
         pauseact->setDisabled(0 == m_data->length());
     } else {
-        playact = menu.addAction(tr("Play"));
+        playact = menu->addAction(tr("Play"));
         playact->setDisabled(0 == m_data->length());
     }
 
     if (m_data->id() != AllMusicListID && m_data->id() != AlbumMusicListID &&
             m_data->id() != ArtistMusicListID && m_data->id() != FavMusicListID) {
-        menu.addAction(tr("Rename"));
-        menu.addAction(tr("Delete"));
+        menu->addAction(tr("Rename"));
+        menu->addAction(tr("Delete"));
     }
     if (m_data->id() == AlbumMusicListID || m_data->id() == ArtistMusicListID) {
         if (playact != nullptr)
@@ -558,7 +558,7 @@ void MusicListView::showContextMenu(const QPoint &pos)
             pauseact->setDisabled(m_data->playMusicTypePtrList().size() == 0);
     }
 
-    connect(&menu, &DMenu::triggered, this, [ = ](QAction * action) {
+    connect(menu, &DMenu::triggered, this, [ = ](QAction * action) {
 
         if (action->text() == tr("Play")) {
             Q_EMIT playall(m_data);
@@ -596,7 +596,7 @@ void MusicListView::showContextMenu(const QPoint &pos)
         }
     });
 
-    menu.exec(globalPos);
+    menu->exec(globalPos);
 }
 void MusicListView::slotTheme(int type)
 {
