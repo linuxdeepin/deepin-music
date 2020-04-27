@@ -40,6 +40,7 @@ void MediaDatabaseWriter::addMediaMetaList(const MetaPtrList metalist)
 {
     QSqlDatabase::database().transaction();
     for (auto &meta : metalist) {
+        QThread::msleep(1);
         addMediaMeta(meta);
     }
     QSqlDatabase::database().commit();
@@ -86,6 +87,7 @@ void MediaDatabaseWriter::updateMediaMetaList(const MetaPtrList metalist)
 {
     QSqlDatabase::database().transaction();
     for (auto &meta : metalist) {
+        QThread::msleep(1);
         updateMediaMeta(meta);
     }
     QSqlDatabase::database().commit();
@@ -107,6 +109,7 @@ void MediaDatabaseWriter::removeMediaMetaList(const MetaPtrList metalist)
 {
     QSqlDatabase::database().transaction();
     for (auto &meta : metalist) {
+        QThread::msleep(1);
         removeMediaMeta(meta);
     }
     QSqlDatabase::database().commit();
@@ -186,6 +189,7 @@ void MediaDatabaseWriter::insertMusicList(const MetaPtrList metalist, const Play
 //    qDebug() << "insertMusicList begin";
     QSqlDatabase::database().transaction();
     for (auto &meta : metalist) {
+        QThread::msleep(1);
         insertMusic(meta, playlistMeta);
     }
     QSqlDatabase::database().commit();

@@ -192,6 +192,7 @@ MetaPtr MediaLibraryPrivate::importMeta(const QString &filepath,
         InvalidDetection = true;
     } else {
         InvalidDetection = false;
+
     }
 
     if (pCodecCtx->channel_layout == 3 || pCodecCtx->channel_layout == 4) {
@@ -199,12 +200,11 @@ MetaPtr MediaLibraryPrivate::importMeta(const QString &filepath,
         InvalidDetection = true;
     } else {
         InvalidDetection = false;
+
     }
 
-    if (pCodecCtx->bit_rate == 1411200 && pCodecCtx->channel_layout == 0) {
-
-        qDebug() << "InvalidDetection = true";
-
+    if (pCodecCtx->channels == 2 && pCodecCtx->channel_layout == 0) {
+        qDebug() << "InvalidDetection is true " << filepath;
         InvalidDetection = true;
     }
 
@@ -255,7 +255,7 @@ MetaPtr MediaLibraryPrivate::importMeta(const QString &filepath,
     avformat_close_input(&pFormatCtx);
     avformat_free_context(pFormatCtx);
 
-    if (filepath.endsWith(".ape")) {
+    if (filepath.endsWith(".ape") || filepath.endsWith(".APE")) {
 
     } else {
 
