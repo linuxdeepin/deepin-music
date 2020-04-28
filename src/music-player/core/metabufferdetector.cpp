@@ -81,7 +81,7 @@ void MetaBufferDetector::run()
     QString hash = d->curHash;
     if (path.isEmpty())
         return;
-
+#if 0
     QFileInfo fileInfo(path);
     if (fileInfo.suffix() == "ape") {
         QString curPath = Global::configPath();
@@ -97,7 +97,7 @@ void MetaBufferDetector::run()
         QProcess::execute(program);
         path = toPath;
     }
-
+#endif
     AVFormatContext *pFormatCtx = avformat_alloc_context();
     avformat_open_input(&pFormatCtx, path.toStdString().c_str(), NULL, NULL);
 
@@ -158,12 +158,20 @@ void MetaBufferDetector::run()
                 int t_format = frame->format;
                 uint8_t *ptr = frame->extended_data[0];
                 short val;
-                for (int i = 0; i < frame->linesize[0]; i += 1024) {
-                    val = (short)(
-                              ((unsigned char)ptr[i]) << 8 |
-                              ((unsigned char)ptr[i + 1])
-                          );
-                    curData.append(val);
+                if (path.endsWith(".ape") || path.endsWith(".APE")) {
+                    for (int i = 0; i < frame->linesize[0]/2; i++) {
+                        curData.append(qrand());
+
+                    }
+
+                }else {
+                    for (int i = 0; i < frame->linesize[0]; i += 1024) {
+                        val = (short)(
+                                  ((unsigned char)ptr[i]) << 8 |
+                                  ((unsigned char)ptr[i + 1])
+                              );
+                        curData.append(val);
+                    }
                 }
             }
         }
