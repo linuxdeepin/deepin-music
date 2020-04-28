@@ -43,6 +43,16 @@
 #include "util/dbusutils.h"
 #include <unistd.h>
 
+
+#include <vlc/vlc.h>
+#include "vlc/Audio.h"
+#include "vlc/Error.h"
+#include "vlc/Common.h"
+#include "vlc/Enums.h"
+#include "vlc/Instance.h"
+#include "vlc/Media.h"
+#include "vlc/MediaPlayer.h"
+
 DCORE_USE_NAMESPACE
 
 static QMap<QString, bool>  sSupportedSuffix;
@@ -131,6 +141,12 @@ public:
         qProbe = new QAudioProbe();
         /*-------AudioPlayer-------*/
         ioPlayer  =  new AudioPlayer();
+
+        qvinstance = new VlcInstance(VlcCommon::args(), NULL);
+        qvplayer = new VlcMediaPlayer(qvinstance);
+        qvmedia = new VlcMedia();
+//        qvplayer->audio()->setVolume(100);
+
     }
 
     void initConnection();
@@ -157,6 +173,12 @@ public:
     /*-------ioPlayer----------*/
     AudioPlayer  *ioPlayer;
     qint64 ioDuration = 0;
+
+
+    VlcInstance *qvinstance;
+    VlcMedia *qvmedia;
+    VlcMediaPlayer *qvplayer;
+    bool isamr = false;
 
     PlaylistPtr     activePlaylist;
     PlaylistPtr     curPlaylist;
@@ -259,6 +281,69 @@ void PlayerPrivate::initConnection()
         Q_EMIT q->positionChanged(position - activeMeta->offset,  activeMeta->length, 1);
     });
 
+    //vlc timeChanged to show
+    q->connect(qvplayer, &VlcMediaPlayer::timeChanged,
+    q, [ = ](qint64 position) {
+        if (activeMeta.isNull()) {
+            return;
+        }
+
+        auto duration = qvplayer->time();
+
+        if (position > 1 && activeMeta->invalid) {
+            Q_EMIT q->mediaError(activePlaylist, activeMeta, Player::NoError);
+        }
+
+        if (activeMeta->length == 0 && duration != 0 && duration > 0) {
+            activeMeta->length = duration;
+            Q_EMIT q->mediaUpdate(activePlaylist, activeMeta);
+        }
+
+        if (position >= activeMeta->offset + activeMeta->length + 1800 && qvplayer->state() == Vlc::Playing) {
+            qDebug() << "WARN!!! change to next by position change";
+            QTimer::singleShot(10, [ = ]() {
+                selectNext(activeMeta, mode);
+            });
+            return;
+        }
+
+        Q_EMIT q->positionChanged(position - activeMeta->offset,  activeMeta->length, 1);
+    });
+
+    //        Idle,
+    //        Opening,
+    //        Buffering,
+    //        Playing,
+    //        Paused,
+    //        Stopped,
+    //        Ended,
+    //        Error
+    //vlc stateChanged VlcMedia *qvmedia;
+    q->connect(qvmedia, &VlcMedia::stateChanged,
+    q, [ = ](Vlc::State status) {
+//        if (status == Vlc::Ended) {
+//            selectNext(activeMeta, mode);
+//        }
+        switch (status) {
+
+        case Vlc::Idle: {
+            break;
+        }
+        case Vlc::Ended: {
+
+            selectNext(activeMeta, mode);
+            break;
+        }
+
+        case Vlc::Opening: {
+            break;
+        }
+
+        }
+    });
+
+
+
     q->connect(qplayer, &QMediaPlayer::stateChanged,
     q, [ = ](QMediaPlayer::State newState) {
 
@@ -329,8 +414,8 @@ void PlayerPrivate::initConnection()
             break;
         }
         case QMediaPlayer::EndOfMedia: {
-
-            selectNext(activeMeta, mode);
+            if (!isamr)
+                selectNext(activeMeta, mode);
             break;
         }
 
@@ -530,6 +615,11 @@ Player::~Player()
     d->qplayer->deleteLater();
 
     delete d->qplayer;
+
+    delete d->qvmedia;
+    delete d->qvplayer;
+    delete d->qvinstance;
+
     qDebug() << "Player destroyed";
 }
 
@@ -546,18 +636,44 @@ void Player::loadMedia(PlaylistPtr playlist, const MetaPtr meta)
         d->activePlaylist = playlist;
 
     d->qplayer->blockSignals(true);
-    d->qplayer->setMedia(QMediaContent(QUrl::fromLocalFile(meta->localPath)));
-    int volume = d->qplayer->volume();
-    d->qplayer->setVolume(0);
+
+    int volume = -1;
+    if (meta->localPath.endsWith(".amr") && !meta.isNull() ) {
+        d->qvplayer->blockSignals(true);
+        d->isamr = true;
+        d->qvmedia->initMedia(meta->localPath, true, d->qvinstance);
+        d->qvplayer->open(d->qvmedia);
+        volume = d->qvplayer->audio()->volume();
+//        d->qvplayer->audio()->setVolume(0);
+        d->qvplayer->play();
+
+    } else {
+        d->isamr = false;
+        d->qplayer->setMedia(QMediaContent(QUrl::fromLocalFile(meta->localPath)));
+        volume = d->qplayer->volume();
+        d->qplayer->setVolume(0);
+        d->qplayer->play();
+    }
+
+
     if (!d->activePlaylist.isNull())
         d->activePlaylist->play(meta);
-    d->qplayer->play();
+
+
     QTimer::singleShot(100, this, [ = ]() {//为了记录进度条生效，在加载的时候让音乐播放100ms
-        d->qplayer->pause();
-        d->qplayer->setVolume(volume);
+        if (d->isamr) {
+            d->qvplayer->pause();
+//            d->qvplayer->audio()->setVolume(volume);
+            d->qvplayer->blockSignals(false);
+        } else {
+            d->qplayer->pause();
+            d->qplayer->setVolume(volume);
+        }
+
         d->qplayer->blockSignals(false);
         if (!d->activePlaylist.isNull())
             d->activePlaylist->play(meta);
+
     });
 }
 
@@ -582,8 +698,33 @@ void Player::playMeta(PlaylistPtr playlist, const MetaPtr meta)
 //        return;
 
     d->activeMeta = curMeta;
-    d->qplayer->setMedia(QMediaContent(QUrl::fromLocalFile(curMeta->localPath)));
-    d->qplayer->setPosition(curMeta->offset);
+//    d->qplayer->setMedia(QMediaContent(QUrl::fromLocalFile(curMeta->localPath)));
+//    d->qplayer->setPosition(curMeta->offset);
+
+    if (curMeta->localPath.endsWith(".amr") && !curMeta.isNull() ) {
+
+//        if (d->qplayer->state() != QMediaPlayer::StoppedState) {
+        d->qplayer->setMedia(QMediaContent());
+        d->qplayer->stop();
+//        }
+
+        d->isamr = true;
+        d->qvmedia->initMedia(curMeta->localPath, true, d->qvinstance);
+        d->qvplayer->open(d->qvmedia);
+        d->qvplayer->setTime(curMeta->offset);
+        d->qvplayer->play();
+
+    } else {
+        if (d->qvplayer->state() != Vlc::Stopped) {
+            d->qvplayer->stop();
+        }
+
+        d->isamr = false;
+        d->qplayer->setMedia(QMediaContent(QUrl::fromLocalFile(meta->localPath)));
+        d->qplayer->setPosition(curMeta->offset);
+        d->qplayer->play();
+    }
+
     if (!d->activePlaylist.isNull())
         d->activePlaylist->play(curMeta);
     d->curPlaylist->play(curMeta);
@@ -606,10 +747,20 @@ void Player::playMeta(PlaylistPtr playlist, const MetaPtr meta)
 //        });
 //    }
 
+    //vlc & qplayer 声音同步
+    QTimer::singleShot(200, this, [ = ]() {
+        setVolume(d->volume);
+    });
+
+
     if (d->firstPlayOnLoad == true) {
         d->firstPlayOnLoad = false;
         QTimer::singleShot(150, this, [ = ]() {
-            d->qplayer->play();
+            if (d->isamr) {
+                d->qvplayer->play();
+            } else {
+                d->qplayer->play();
+            }
         });
     }
 
@@ -661,12 +812,19 @@ void Player::resume(PlaylistPtr playlist, const MetaPtr meta)
     setPlayOnLoaded(true);
     //增大音乐自动开始播放时间，给setposition留足空间
     QTimer::singleShot(100, this, [ = ]() {
-        QString temp = meta->localPath;
-        if (temp.endsWith(".amr1")) {
-            d->ioPlayer->play();
+//        QString temp = meta->localPath;
+//        if (temp.endsWith(".amr1")) {
+//            d->ioPlayer->play();
+//        } else {
+//            d->qplayer->play();
+//        }
+        if (d->isamr) {
+            d->qvplayer->play();
         } else {
             d->qplayer->play();
         }
+
+
     });
 
     if (d->fadeInOut && !d->fadeInAnimation) {
@@ -721,7 +879,7 @@ void Player::pause()
     Q_D(Player);
 
     /*--------suspend--------*/
-    d->ioPlayer->suspend();
+//    d->ioPlayer->suspend();
 
     if (d->fadeInAnimation) {
 
@@ -741,12 +899,21 @@ void Player::pause()
         this, [ = ]() {
             d->fadeOutAnimation->deleteLater();
             d->fadeOutAnimation = nullptr;
-            d->qplayer->pause();
+            if (d->isamr) {
+                d->qvplayer->pause();
+            } else {
+                d->qplayer->pause();
+            }
+
             setFadeInOutFactor(1.0);
         });
         d->fadeOutAnimation->start();
     } else {
-        d->qplayer->pause();
+        if (d->isamr) {
+            d->qvplayer->pause();
+        } else {
+            d->qplayer->pause();
+        }
         setFadeInOutFactor(1.0);
     }
 }
@@ -754,18 +921,28 @@ void Player::pause()
 void Player::pauseNow()
 {
     Q_D(Player);
-    d->qplayer->pause();
+    if (d->isamr) {
+        d->qvplayer->pause();
+    } else {
+        d->qplayer->pause();
+    }
 }
 
 void Player::stop()
 {
     Q_D(Player);
 
-    d->qplayer->pause();
-    d->qplayer->setMedia(QMediaContent());
-    d->activeMeta.clear(); //清除当前播放音乐；
-    d->qplayer->stop();
-    //    d->qplayer->blockSignals(false);
+    if (d->isamr) {
+        d->qvplayer->pause();
+        d->activeMeta.clear(); //清除当前播放音乐；
+        d->qvplayer->stop();
+    } else {
+        d->qplayer->pause();
+        d->qplayer->setMedia(QMediaContent());
+        d->activeMeta.clear(); //清除当前播放音乐；
+        d->qplayer->stop();
+    }
+
 }
 
 Player::PlaybackStatus Player::status()
@@ -840,12 +1017,16 @@ qint64 Player::duration() const
     if (d->activeMeta.isNull()) {
         return 0;
     }
-
-    if (d->qplayer->duration() == d->activeMeta->length) {
-        return d->qplayer->duration();
+    if (d->isamr) {
+        return  d->qvplayer->length();
     } else {
-        return  d->activeMeta->length;
+        if (d->qplayer->duration() == d->activeMeta->length) {
+            return d->qplayer->duration();
+        } else {
+            return  d->activeMeta->length;
+        }
     }
+
 }
 
 double Player::fadeInOutFactor() const
@@ -899,11 +1080,21 @@ void Player::setPosition(qlonglong position)
         return;
     }
 
-    if (d->qplayer->duration() == d->activeMeta->length) {
-        return d->qplayer->setPosition(position);
+    if (d->isamr) {
+        if (d->qvplayer->length() == d->activeMeta->length) {
+            return d->qvplayer->setTime(position);
+        } else {
+            d->qvplayer->setTime(position + d->activeMeta->offset);
+        }
     } else {
-        d->qplayer->setPosition(position + d->activeMeta->offset);
+        if (d->qplayer->duration() == d->activeMeta->length) {
+            return d->qplayer->setPosition(position);
+        } else {
+            d->qplayer->setPosition(position + d->activeMeta->offset);
+        }
     }
+
+
 }
 
 
