@@ -56,6 +56,7 @@ public slots:
     void setCoverBackground(QString coverBackground);
     void onSelectImportDirectory();
     void onSelectImportFiles();
+    void onClickedImportFiles(QStringList files);
     void slotTheme(int type);
     void changePicture();
     void onViewShortcut();

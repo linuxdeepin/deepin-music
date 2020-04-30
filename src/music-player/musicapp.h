@@ -32,13 +32,17 @@ class MusicApp : public QObject
 {
     Q_OBJECT
 public:
-    MusicApp(MainFrame* frame, QObject *parent = nullptr);
+    MusicApp(MainFrame *frame, QObject *parent = nullptr);
     ~MusicApp();
 
     void initUI();
     void initConnection();
     void show();
     void quit();
+    void onStartImport(QStringList files);
+public:
+signals:
+    void sigStartImport(QStringList files);
 
 private:
     QScopedPointer<MusicAppPrivate> d_ptr;
