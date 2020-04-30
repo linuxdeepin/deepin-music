@@ -146,7 +146,7 @@ int main(int argc, char *argv[])
     QIcon icon = QIcon::fromTheme("deepin-music");
     app.setProductIcon(icon);
 
-    if (!checkOnly()) {
+    if (!app.setSingleInstance("deepinmusic") ||!checkOnly()) {
         qDebug() << "another deepin music has started";
         for (auto curStr : parser.positionalArguments()) {
             if (!curStr.isEmpty()) {
