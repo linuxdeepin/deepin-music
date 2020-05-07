@@ -146,7 +146,7 @@ int main(int argc, char *argv[])
     QIcon icon = QIcon::fromTheme("deepin-music");
     app.setProductIcon(icon);
 
-    if (!checkOnly()) {
+    if (!app.setSingleInstance("deepinmusic") ||!checkOnly()) {
         qDebug() << "another deepin music has started";
         for (auto curStr : parser.positionalArguments()) {
             if (!curStr.isEmpty()) {
@@ -184,6 +184,12 @@ int main(int argc, char *argv[])
     music->initUI();
     /*---Player instance init---*/
 
+    int count = parser.positionalArguments().length();
+    if (count > 1) {
+        QStringList files = parser.positionalArguments();
+        files.removeFirst();
+        music->onStartImport(files);
+    }
     music->initConnection();
 
     if (!toOpenFile.isEmpty()) {
@@ -204,5 +210,6 @@ int main(int argc, char *argv[])
 
     QObject::connect(DGuiApplicationHelper::instance(), &DGuiApplicationHelper::themeTypeChanged,
                      &mainframe, &MainFrame::slotTheme);
+
     return app.exec();
 }

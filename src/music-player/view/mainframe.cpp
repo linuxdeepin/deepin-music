@@ -1441,6 +1441,12 @@ void MainFrame::onSelectImportFiles()
     }
 }
 
+void MainFrame::onClickedImportFiles(QStringList files )
+{
+    Q_D(const MainFrame);
+    Q_EMIT importSelectFiles(files, nullptr);
+}
+
 void MainFrame::slotTheme(int type)
 {
     Q_D(MainFrame);
