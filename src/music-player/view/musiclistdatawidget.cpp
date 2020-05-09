@@ -1219,14 +1219,14 @@ MusicListDataWidget::MusicListDataWidget(QWidget *parent) :
 
     d->albumListView = new MusicListDataView;
     d->artistListView = new MusicListDataView;
-    d->musicListView = new PlayListView(true);
+    d->musicListView = new PlayListView(true, false);
     d->musicListView->hide();
 
     layout->setContentsMargins(0, 1, 0, 0);
 
     /*---------------tabWidget----------------*/
     d->tabWidget = new DTabWidget();
-    d->songListView     = new PlayListView(true);
+    d->songListView     = new PlayListView(true, false);
     d->singerListView   = new MusicListDataView();
     d->albListView      = new MusicListDataView();
     d->tabWidget->addTab(d->songListView, QString(tr("Songs")));
@@ -1793,7 +1793,7 @@ void MusicListDataWidget::retResult(QString searchText, QList<PlaylistPtr> resul
 
                 MusicPlaylists = resultlist.at(i);
                 flagMus = true;
-               
+
 
                 if (d->songListView->viewMode() != (resultlist.at(i)->viewMode())) {
                     d->songListView->setViewModeFlag((QListView::ViewMode)resultlist.at(i)->viewMode());
@@ -1812,7 +1812,7 @@ void MusicListDataWidget::retResult(QString searchText, QList<PlaylistPtr> resul
                 ArtistPlaylists = resultlist.at(i);
                 retdata = resultlist.at(i);
                 flagArt = true;
-               
+
 
                 if (d->singerListView->viewMode() != (resultlist.at(i)->viewMode())) {
                     d->singerListView->setViewModeFlag((QListView::ViewMode)resultlist.at(i)->viewMode());
@@ -1830,7 +1830,7 @@ void MusicListDataWidget::retResult(QString searchText, QList<PlaylistPtr> resul
                 AlbumPlaylists = resultlist.at(i);
                 retdata = resultlist.at(i);
                 flagAlb = true;
-               
+
 
                 if (d->albListView->viewMode() != (resultlist.at(i)->viewMode())) {
                     d->albListView->setViewModeFlag((QListView::ViewMode)resultlist.at(i)->viewMode());
@@ -1886,7 +1886,7 @@ void MusicListDataWidget::retResult(QString searchText, QList<PlaylistPtr> resul
             d->initData(AlbumPlaylists, false, search);
             tabwidgetInfo(AlbumPlaylists);
         }
-            d->tabWidget->setCurrentIndex(CurIndex);
+        d->tabWidget->setCurrentIndex(CurIndex);
     }
 }
 

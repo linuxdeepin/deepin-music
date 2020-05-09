@@ -68,11 +68,11 @@ public:
     Q_DECLARE_PUBLIC(PlayListView)
 };
 
-PlayListView::PlayListView(bool searchFlag, QWidget *parent)
+PlayListView::PlayListView(bool searchFlag, bool isPlayList, QWidget *parent)
     : DListView(parent), d_ptr(new PlayListViewPrivate(this))
 {
     Q_D(PlayListView);
-
+    m_IsPlayList = isPlayList;
     setObjectName("PlayListView");
 
     d->searchFlag = searchFlag;
@@ -534,7 +534,7 @@ void PlayListView::showContextMenu(const QPoint &pos,
             break;
         }
     }
-    if (selectedPlaylist != favPlaylist || this->playlist()->id() == tr("musicResult")) {
+    if (selectedPlaylist != favPlaylist || this->playlist()->id() == "musicResult") {
 //        auto act = playlistMenu.addAction(favPlaylist->displayName());
         auto act = playlistMenu.addAction(tr("My favorites"));
         bool flag = true;
@@ -628,8 +628,12 @@ void PlayListView::showContextMenu(const QPoint &pos,
     if (singleSelect) {
         displayAction = myMenu.addAction(tr("Display in file manager"));
     }
-
-    auto removeAction = myMenu.addAction(tr("Remove from play queue"));
+    QAction *removeAction = nullptr;
+    if (m_IsPlayList) {
+        removeAction = myMenu.addAction(tr("Remove from play queue"));
+    } else {
+        removeAction = myMenu.addAction(tr("Remove from playlist"));
+    }
     auto deleteAction = myMenu.addAction(tr("Delete from local disk"));
 
     QAction *songAction = nullptr;

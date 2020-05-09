@@ -32,7 +32,7 @@ class PlayListView : public DListView
 {
     Q_OBJECT
 public:
-    explicit PlayListView(bool searchFlag, QWidget *parent = Q_NULLPTR);
+    explicit PlayListView(bool searchFlag, bool isPlayList, QWidget *parent = Q_NULLPTR);
     ~PlayListView();
 
     MetaPtr activingMeta() const;
@@ -89,6 +89,7 @@ protected:
 
 private:
     QScopedPointer<PlayListViewPrivate> d_ptr;
+    bool m_IsPlayList;
     Q_DECLARE_PRIVATE_D(qGetPtrHelper(d_ptr), PlayListView)
 
 };
