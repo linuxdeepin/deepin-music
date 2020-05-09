@@ -60,7 +60,6 @@ MusicListView::MusicListView(QWidget *parent) : DListView(parent)
     setFont(font);
 
     setIconSize( QSize(20, 20) );
-    //    setGridSize( QSize(40, 40) );
     setItemSize(QSize(40, 40));
 
     setFrameShape(QFrame::NoFrame);
@@ -143,26 +142,11 @@ MusicListView::MusicListView(QWidget *parent) : DListView(parent)
             }
             curStandardItem->setIcon(icon);
         }
-        //m_currentitem = dynamic_cast<DStandardItem *>(model->itemFromIndex(current));
-        if (!playlistPtr->playing().isNull()) {
-            auto curItem = dynamic_cast<DStandardItem *>(model->itemFromIndex(current));
-            if (curItem != NULL) {
-                //delete
-                QIcon playingIcon(albumPixmap);
-                playingIcon.actualSize(QSize(20, 20));
-                DViewItemActionList actionList = curItem->actionList(Qt::RightEdge);
-                if (!actionList.isEmpty()) {
-                    actionList.first()->setIcon(playingIcon);
-                } else {
-                    DViewItemActionList  actionList;
-                    auto viewItemAction = new DViewItemAction(Qt::AlignCenter);
-                    viewItemAction->setIcon(playingIcon);
-                    actionList.append(viewItemAction);
-                    curItem->setActionList(Qt::RightEdge, actionList);
-                }
-            }
 
-        }
+#if 1
+        /*------Refresh play state--------*/
+        changePicture(defaultPixmap, defaultPixmap);
+#endif
 
     });
 }
@@ -259,7 +243,9 @@ void MusicListView::setCurPlaylist(QStandardItem *item)
             itemActionList.first()->setIcon(playingIcon);
         } else {
             DViewItemActionList  actionList;
-            auto viewItemAction = new DViewItemAction(Qt::AlignCenter);
+
+            /*----------delegate QSize-----------*/
+            auto viewItemAction = new DViewItemAction(Qt::AlignCenter, QSize(20, 20));
             viewItemAction->setIcon(playingIcon);
             actionList.append(viewItemAction);
             curItem->setActionList(Qt::RightEdge, actionList);
@@ -327,7 +313,7 @@ void MusicListView::clearSelected()
         curStandardItem->setIcon(icon);
 
     }
-    if (playingItem != nullptr) {
+    if (playingItem != nullptr && playingItem->rowCount() > 0) {
         auto curItem = dynamic_cast<DStandardItem *>(playingItem);
         if (curItem != NULL) {
             //delete
@@ -446,10 +432,16 @@ void MusicListView::keyPressEvent(QKeyEvent *event)
             warnDlg.addButton(tr("Delete"), true, Dtk::Widget::DDialog::ButtonWarning);
             if (1 == warnDlg.exec()) {
                 int t_index = item->row();
-                model->removeRow(t_index);
+                model->removeRow(item->row());
                 allPlaylists.removeAt(t_index);
+                if (item == playingItem)
+                    playingItem = nullptr;
+
                 //delete model->takeItem(item->row());
                 Q_EMIT m_data->removed();
+                if (m_data->playing() != nullptr || allPlaylists.isEmpty())
+                    Q_EMIT removeAllList(m_data->playing());
+
                 adjustHeight();
             }
         }
@@ -527,12 +519,6 @@ void MusicListView::dropEvent(QDropEvent *event)
 
 void MusicListView::showContextMenu(const QPoint &pos)
 {
-    // get select
-    //    auto indexes = this->selectedIndexes();
-    //    if (indexes.size() != 1) {
-    //        return;
-    //    }
-
     auto index = indexAt(pos);
     if (!index.isValid())
         return;
@@ -548,21 +534,22 @@ void MusicListView::showContextMenu(const QPoint &pos)
 
     QPoint globalPos = this->mapToGlobal(pos);
 
-    DMenu menu;
+    DMenu *menu = new  DMenu(this) ;
     QAction *playact = nullptr;
     QAction *pauseact = nullptr;
+
     if (m_data->playingStatus() && m_data->playing() != nullptr) {
-        pauseact = menu.addAction(tr("Pause"));
+        pauseact = menu->addAction(tr("Pause"));
         pauseact->setDisabled(0 == m_data->length());
     } else {
-        playact = menu.addAction(tr("Play"));
+        playact = menu->addAction(tr("Play"));
         playact->setDisabled(0 == m_data->length());
     }
 
     if (m_data->id() != AllMusicListID && m_data->id() != AlbumMusicListID &&
             m_data->id() != ArtistMusicListID && m_data->id() != FavMusicListID) {
-        menu.addAction(tr("Rename"));
-        menu.addAction(tr("Delete"));
+        menu->addAction(tr("Rename"));
+        menu->addAction(tr("Delete"));
     }
     if (m_data->id() == AlbumMusicListID || m_data->id() == ArtistMusicListID) {
         if (playact != nullptr)
@@ -571,7 +558,8 @@ void MusicListView::showContextMenu(const QPoint &pos)
             pauseact->setDisabled(m_data->playMusicTypePtrList().size() == 0);
     }
 
-    connect(&menu, &DMenu::triggered, this, [ = ](QAction * action) {
+    connect(menu, &DMenu::triggered, this, [ = ](QAction * action) {
+
         if (action->text() == tr("Play")) {
             Q_EMIT playall(m_data);
         }
@@ -605,11 +593,10 @@ void MusicListView::showContextMenu(const QPoint &pos)
 
                 adjustHeight();
             }
-
         }
     });
 
-    menu.exec(globalPos);
+    menu->exec(globalPos);
 }
 void MusicListView::slotTheme(int type)
 {

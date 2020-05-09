@@ -23,7 +23,6 @@
 #include "musicsearchlistview.h"
 
 #include <QDebug>
-#include <QVBoxLayout>
 #include <DPushButton>
 #include <QStringListModel>
 
@@ -33,19 +32,34 @@
 #include "pushbutton.h"
 
 
-
-SearchResult::SearchResult(QWidget *parent) : DFrame(parent)
+SearchResult::SearchResult(QWidget *parent) : DBlurEffectWidget(parent)
 {
     QFont labelFont("SourceHanSansSC");
     labelFont.setPointSize(10);
     QPalette labelPalette;
     labelPalette.setColor(QPalette::WindowText, QColor("#414D68 "));
+    //设置圆角
+    setBlurRectXRadius(18);
+    setBlurRectYRadius(18);
+    setRadius(30);
+    setBlurEnabled(true);
+    setMode(DBlurEffectWidget::GaussianBlur);
 
-    setFrameRounded(true);
+//    QColor maskColor(255, 255, 255, 76);
+//    setMaskColor(maskColor);
 
-    auto vlayout = new QVBoxLayout();
-    vlayout->setContentsMargins(32, 0, 31, 0);
-    vlayout->setSpacing(2);
+    vlayout1 = new QVBoxLayout();
+    vlayout2 = new QVBoxLayout();
+    vlayout3 = new QVBoxLayout();
+    vlayout = new QVBoxLayout();
+    vlayout1->setContentsMargins(32, 0, 31, 0);
+    vlayout2->setContentsMargins(32, 0, 31, 0);
+    vlayout3->setContentsMargins(32, 0, 31, 0);
+    vlayout->setContentsMargins(0, 0, 0, 0);
+    vlayout1->setSpacing(2);
+    vlayout2->setSpacing(2);
+    vlayout3->setSpacing(2);
+    vlayout->setSpacing(0);
     setLayout(vlayout);
 
     //音乐
@@ -60,6 +74,11 @@ SearchResult::SearchResult(QWidget *parent) : DFrame(parent)
     m_MusicView->setMinimumWidth(287);
     m_MusicView->adjustSize();
 
+    //分割线1
+    s_ArtistLine = new DHorizontalLine;
+    s_ArtistLine->setFixedSize(350,20);
+    s_ArtistLine->setContentsMargins(-32,0,0,0);
+
     //演唱者
     m_ArtistLabel = new DLabel (tr("Artists"), this);
     m_ArtistLabel->setFont(labelFont);
@@ -71,6 +90,10 @@ SearchResult::SearchResult(QWidget *parent) : DFrame(parent)
     m_ArtistView->setGridSize( QSize(34, 34) );
     m_ArtistView->setMinimumWidth(287);
     m_ArtistView->adjustSize();
+
+    //分割线2
+    s_AblumLine = new DHorizontalLine;
+    s_AblumLine->setFixedSize(380,20);
 
     //专辑
     m_AblumLabel = new DLabel (tr("Albums"), this);
@@ -84,18 +107,28 @@ SearchResult::SearchResult(QWidget *parent) : DFrame(parent)
     m_AlbumView->setMinimumWidth(287);
     m_AlbumView->adjustSize();
 
-    vlayout->addWidget(m_MusicLabel);
-    vlayout->addWidget(m_MusicView);
-    vlayout->addWidget(m_ArtistLabel);
-    vlayout->addWidget(m_ArtistView);
-    vlayout->addWidget(m_AblumLabel);
-    vlayout->addWidget(m_AlbumView);
+    vlayout1->addWidget(m_MusicLabel);
+    vlayout1->addWidget(m_MusicView);
+    vlayout2->addWidget(m_ArtistLabel);
+    vlayout2->addWidget(m_ArtistView);
+    vlayout3->addWidget(m_AblumLabel);
+    vlayout3->addWidget(m_AlbumView);
+    vlayout->addLayout(vlayout1);
+    vlayout->addWidget(s_ArtistLine);
+    vlayout->addLayout(vlayout2);
+    vlayout->addWidget(s_AblumLine);
+    vlayout->addLayout(vlayout3);
+
 
     int themeType = DGuiApplicationHelper::instance()->themeType();
     slotTheme(themeType);
     connect(m_MusicView, &MusicSearchListview::clicked, this, &SearchResult::itemClicked);
     connect(m_ArtistView, &MusicSearchListview::clicked, this, &SearchResult::itemClicked);
     connect(m_AlbumView, &MusicSearchListview::clicked, this, &SearchResult::itemClicked);
+
+    connect(m_MusicView, &MusicSearchListview::sigSearchClear, this, &SearchResult::clearKeyState);
+    connect(m_ArtistView, &MusicSearchListview::sigSearchClear, this, &SearchResult::clearKeyState);
+    connect(m_AlbumView, &MusicSearchListview::sigSearchClear, this, &SearchResult::clearKeyState);
 }
 
 void SearchResult::autoResize()
@@ -127,26 +160,33 @@ void SearchResult::autoResize()
     if (m_MusicView->rowCount() == 0) {
         m_MusicLabel->hide();
         m_MusicView->hide();
+        s_ArtistLine->hide();
+        s_AblumLine->hide();
     } else {
         m_MusicLabel->show();
         m_MusicView->show();
+        s_ArtistLine->show();
+        s_AblumLine->show();
     }
 
 
     if (m_ArtistView->rowCount() == 0) {
         m_ArtistLabel->hide();
         m_ArtistView->hide();
+        s_ArtistLine->hide();
     } else {
         m_ArtistLabel->show();
         m_ArtistView->show();
+        s_AblumLine->show();
     }
 
 
     if (m_AlbumView->rowCount() == 0) {
         m_AblumLabel->hide();
         m_AlbumView->hide();
+        s_AblumLine->hide();
     } else {
-        m_AblumLabel->show();
+        m_AblumLabel->show(); 
         m_AlbumView->show();
     }
 
@@ -194,9 +234,11 @@ void SearchResult::selectUp()
         m_MusicView->setCurrentIndexInt(-1);
         m_ArtistView->setCurrentIndexInt(-1);
     }
-    m_MusicView->repaint();
-    m_ArtistView->repaint();
-    m_AlbumView->repaint();
+
+    m_MusicView->update();
+    m_ArtistView->update();
+    m_AlbumView->update();
+
     getSearchStr();
 }
 
@@ -208,27 +250,40 @@ void SearchResult::selectDown()
     if (m_CurrentIndex >= m_Count - 1) {
         return;
     }
+
     m_CurrentIndex ++;
+
     if (m_CurrentIndex < m_MusicView->rowCount()) {
         m_MusicView->setCurrentIndexInt(m_CurrentIndex);
+
         m_ArtistView->setCurrentIndexInt(-1);
         m_AlbumView->setCurrentIndexInt(-1);
+
     } else if (m_CurrentIndex >= m_MusicView->rowCount() - 1
                && m_CurrentIndex < (m_MusicView->rowCount() + m_ArtistView->rowCount())) {
+
         m_ArtistView->setCurrentIndexInt(m_CurrentIndex
                                          - m_MusicView->rowCount());
+
         m_MusicView->setCurrentIndexInt(-1);
         m_AlbumView->setCurrentIndexInt(-1);
+
     } else {
         m_AlbumView->setCurrentIndexInt(m_CurrentIndex
                                         - m_MusicView->rowCount()
                                         - m_ArtistView->rowCount());
+
         m_MusicView->setCurrentIndexInt(-1);
         m_ArtistView->setCurrentIndexInt(-1);
+
+        m_MusicView->clearSelection();
+        m_ArtistView->clearSelection();
     }
-    m_MusicView->repaint();
-    m_ArtistView->repaint();
-    m_AlbumView->repaint();
+
+    m_MusicView->update();
+    m_ArtistView->update();
+    m_AlbumView->update();
+
     getSearchStr();
 }
 
@@ -247,7 +302,7 @@ QString SearchResult::currentStr()
 void SearchResult::leaveEvent(QEvent *event)
 {
     m_MusicView->setCurrentIndexInt(-1);
-    QFrame::leaveEvent(event);
+    DBlurEffectWidget::leaveEvent(event);
 }
 
 void SearchResult::onReturnPressed()
@@ -301,10 +356,10 @@ void SearchResult::slotTheme(int type)
 
 void SearchResult::itemClicked(QModelIndex index)
 {
-    index.row();
     PlaylistPtr playList = dynamic_cast<MusicSearchListview *>(index.model()->parent())->playlist();
     QString currentId = playList->id();
     int row = index.row();
+    qDebug()<<"鼠标选中行:"<<row;
     if (currentId == MusicCandListID) {
         Q_EMIT this->searchText2(MusicResultListID, playList->allmusic().at(row)->title);
     }
@@ -317,6 +372,7 @@ void SearchResult::itemClicked(QModelIndex index)
 
 }
 
+//键盘上下选择结果
 void SearchResult::getSearchStr()
 {
     if (m_CurrentIndex < 0) {
@@ -326,16 +382,17 @@ void SearchResult::getSearchStr()
     QString id;
     if (m_CurrentIndex < m_MusicView->rowCount()) {
         text = m_MusicView->playlist()->allmusic().at(m_CurrentIndex)->title;
+        qDebug()<<"当前选中歌曲:"<<text;
         id = MusicResultListID;
     } else if (m_CurrentIndex >= m_MusicView->rowCount() - 1
                && m_CurrentIndex < (m_MusicView->rowCount() + m_ArtistView->rowCount())) {
         text = m_ArtistView->playlist()->playMusicTypePtrList().at(m_CurrentIndex - m_MusicView->rowCount())->name;
+        qDebug()<<"当前选中歌手:"<<text;
         id = ArtistResultListID;
     } else if (m_CurrentIndex >= m_MusicView->rowCount() + m_ArtistView->rowCount() - 1
                && m_CurrentIndex < (m_MusicView->rowCount() + m_ArtistView->rowCount() + m_AlbumView->rowCount())) {
-        text = m_AlbumView->playlist()->playMusicTypePtrList().at(m_CurrentIndex
-                                                                  - m_MusicView->rowCount()
-                                                                  - m_ArtistView->rowCount() )->name;
+        text = m_AlbumView->playlist()->playMusicTypePtrList().at(m_CurrentIndex - m_MusicView->rowCount()- m_ArtistView->rowCount() )->name;
+        qDebug()<<"当前选中专辑:"<<text;
         id = AlbumResultListID;
     } else {
         Q_EMIT this->searchText3("", "");
@@ -344,3 +401,17 @@ void SearchResult::getSearchStr()
 
     Q_EMIT  this->searchText3(id, text);
 }
+
+void SearchResult::clearKeyState()
+{
+    m_MusicView->setCurrentIndexInt(-1);
+    m_AlbumView->setCurrentIndexInt(-1);
+    m_ArtistView->setCurrentIndexInt(-1);
+
+    m_MusicView->update();
+    m_ArtistView->update();
+    m_AlbumView->update();
+}
+
+
+

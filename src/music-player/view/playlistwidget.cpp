@@ -160,6 +160,7 @@ void PlayListWidgetPrivate::initConntion()
                 playListView->playlist()->removeMusicList(metalist);
             }
         }
+        Q_EMIT q->musicFileMiss();
     });
 }
 
@@ -267,16 +268,9 @@ void PlayListWidget::updateInfo(PlaylistPtr playlist)
 {
     Q_D(PlayListWidget);
 
-    if (playlist.isNull() || playlist->id() != PlayMusicListID)
-        return;
-
-    d->inotifyFiles.clear();
-    for (auto curMeta : playlist->allmusic()) {
-        d->inotifyFiles.addPath(curMeta->localPath);
-    }
-
     QString infoStr;
     int sortMetasSize = playlist->allmusic().size();
+    //int sortMetasSize = d->playListView->rowCount();
     if (sortMetasSize == 0) {
         infoStr = tr("No songs");
     } else if (sortMetasSize == 1) {
@@ -285,6 +279,15 @@ void PlayListWidget::updateInfo(PlaylistPtr playlist)
         infoStr = tr("%1 songs").arg(sortMetasSize);
     }
     d->infoLabel->setText(infoStr);
+
+    if (playlist.isNull() || playlist->id() != PlayMusicListID || playlist->allmusic().isEmpty())
+        return;
+
+    d->inotifyFiles.clear();
+    for (auto curMeta : playlist->allmusic()) {
+        d->inotifyFiles.addPath(curMeta->localPath);
+    }
+
 }
 
 void PlayListWidget::setCurPlaylist(PlaylistPtr playlist)
@@ -340,9 +343,6 @@ void PlayListWidget::onMusicPlayed(PlaylistPtr playlist, const MetaPtr meta)
 {
     Q_D(PlayListWidget);
 
-//    if (playlist != d->playListView->playlist()) {
-//        d->initData(playlist);
-//    }
     if (d->playListView->rowCount() == 0 || playlist != d->playListView->playlist() ||
             playlist->allmusic().size() != d->playListView->rowCount() ||
             playlist->first()->hash != d->playListView->firstHash())
@@ -405,6 +405,10 @@ void PlayListWidget::onMusicError(PlaylistPtr playlist, const MetaPtr meta, int 
 void PlayListWidget::onMusicListAdded(PlaylistPtr playlist, const MetaPtrList metalist)
 {
     Q_D(PlayListWidget);
+
+    if (playlist->id() != PlayMusicListID) {
+        return;
+    }
 
     if (playlist != d->playListView->playlist() && d->playListView->rowCount() != playlist->allmusic().size()) {
         return;

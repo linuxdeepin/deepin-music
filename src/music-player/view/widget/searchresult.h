@@ -29,13 +29,16 @@ DWIDGET_USE_NAMESPACE
 #include <DWidget>
 #include <DListView>
 #include <DLabel>
+#include <DHorizontalLine>
+#include <DBlurEffectWidget>
+#include <QVBoxLayout>
 #include "../core/playlist.h"
 
 class PushButton;
 class QStringListModel;
 class MusicSearchListview;
 
-class SearchResult : public DFrame
+class SearchResult : public DBlurEffectWidget
 {
     Q_OBJECT
 public:
@@ -63,10 +66,15 @@ public slots:
     void slotTheme(int type);
     void itemClicked(QModelIndex);
     void getSearchStr();
+    void clearKeyState();
+
 private:
     DLabel *m_MusicLabel;
     DLabel *m_ArtistLabel;
     DLabel *m_AblumLabel;
+
+    DHorizontalLine *s_ArtistLine;
+    DHorizontalLine *s_AblumLine;
 
     PlaylistPtr         playlist        = nullptr;
 
@@ -75,6 +83,10 @@ private:
     MusicSearchListview *m_AlbumView    = nullptr;
     int                 m_CurrentIndex  = -1;
     int                 m_Count         = 0;
+    QVBoxLayout         *vlayout        = nullptr;
+    QVBoxLayout         *vlayout1       = nullptr;
+    QVBoxLayout         *vlayout2       = nullptr;
+    QVBoxLayout         *vlayout3       = nullptr;
 };
 
 

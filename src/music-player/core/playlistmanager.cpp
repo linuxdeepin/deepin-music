@@ -33,15 +33,15 @@ const QString AlbumMusicListID      = "album";
 const QString ArtistMusicListID     = "artist";
 const QString AllMusicListID        = "all";
 const QString FavMusicListID        = "fav";
-const QString SearchMusicListID     = "search";
 const QString PlayMusicListID       = "play";
-const QString NewMusicListID        = "new";
 const QString MusicCandListID       = "musicCand";
 const QString AlbumCandListID       = "albumCand";
 const QString ArtistCandListID      = "artistCand";
 const QString MusicResultListID     = "musicResult";
 const QString AlbumResultListID     = "albumResult";
 const QString ArtistResultListID    = "artistResult";
+const QString SearchMusicListID     = "search";
+const QString NewMusicListID        = "new";
 
 static PlaylistMeta emptyInfo;
 
@@ -117,22 +117,22 @@ void PlaylistManager::load()
 
     QSqlDatabase::database().transaction();
 
-    if (sortUUIDs.size() != d->playlists.size()) {
+    if (sortUUIDs.size() <= d->playlists.size()) {
         qWarning() << "playlist order crash, restrot";
         d->sortUUIDs.clear();
         d->sortUUIDs << AlbumMusicListID
                      << ArtistMusicListID
                      << AllMusicListID
                      << FavMusicListID
-                     << SearchMusicListID
                      << PlayMusicListID
-                     << NewMusicListID
                      << MusicCandListID
                      << AlbumCandListID
                      << ArtistCandListID
                      << MusicResultListID
                      << AlbumResultListID
-                     << ArtistResultListID;
+                     << ArtistResultListID
+                     << SearchMusicListID
+                     << NewMusicListID;
 
         QStringList sortUUIDs;
         for (auto playlist : d->playlists.values()) {
@@ -143,15 +143,15 @@ void PlaylistManager::load()
         sortUUIDs.removeAll(ArtistMusicListID);
         sortUUIDs.removeAll(AllMusicListID);
         sortUUIDs.removeAll(FavMusicListID);
-        sortUUIDs.removeAll(SearchMusicListID);
         sortUUIDs.removeAll(PlayMusicListID);
-        sortUUIDs.removeAll(NewMusicListID);
         sortUUIDs.removeAll(MusicCandListID);
         sortUUIDs.removeAll(AlbumCandListID);
         sortUUIDs.removeAll(ArtistCandListID);
         sortUUIDs.removeAll(MusicResultListID);
         sortUUIDs.removeAll(AlbumResultListID);
         sortUUIDs.removeAll(ArtistResultListID);
+        sortUUIDs.removeAll(SearchMusicListID);
+        sortUUIDs.removeAll(NewMusicListID);
 
         d->sortUUIDs << sortUUIDs;
 

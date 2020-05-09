@@ -95,7 +95,8 @@ TitlebarWidget::TitlebarWidget(QWidget *parent) :
     connect(d->search, &SearchEdit::locateMusic, this, &TitlebarWidget::locateMusicInAllMusiclist);
     connect(d->search, &SearchEdit::searchText, this, &TitlebarWidget::searchText);
     connect(d->search, &SearchEdit::searchCand, this, &TitlebarWidget::searchCand);
-    connect(d->search, &SearchEdit::searchAborted, this, &TitlebarWidget::searchExited);
+//    connect(d->search, &SearchEdit::searchAborted, this, &TitlebarWidget::searchExited);
+    connect(d->search, &SearchEdit::searchAborted, this, &TitlebarWidget::onSearchAborted);
 }
 
 TitlebarWidget::~TitlebarWidget()
@@ -147,7 +148,16 @@ void TitlebarWidget::selectPlaylist(PlaylistPtr playlistPtr)
     Q_D(TitlebarWidget);
     if (playlistPtr != d->search->curPlaylistPtr()) {
 //        d->search->selectPlaylist(playlistPtr);
-        d->search->clear();
+//        d->search->clear();
+        d->search->clearEdit();
+    }
+}
+
+void TitlebarWidget::onSearchAborted()
+{
+    Q_D(TitlebarWidget);
+    if (d->search->text().size() == 0) {
+        emit searchExited();
     }
 }
 

@@ -118,14 +118,6 @@ PlayListView::PlayListView(bool searchFlag, QWidget *parent)
             Q_EMIT playMedia(meta);
         }
     });
-
-    // For debug
-//    connect(selectionModel(), &QItemSelectionModel::selectionChanged,
-//    this, [ = ](const QItemSelection & /*selected*/, const QItemSelection & deselected) {
-//        if (!deselected.isEmpty()) {
-//            qDebug() << "cancel" << deselected;
-//        }
-//    });
 }
 
 PlayListView::~PlayListView()
@@ -171,13 +163,14 @@ void PlayListView::setPlaying(const MetaPtr meta)
 void PlayListView::setViewModeFlag(QListView::ViewMode mode)
 {
     if (mode == QListView::IconMode) {
-        setIconSize( QSize(140, 140) );
-        setGridSize( QSize(170, 213) );
-        setViewportMargins(10, 10, 10, 10);
+        setIconSize( QSize(150, 150) );
+        setGridSize( QSize(-1, -1) );
+        setSpacing(20);
+        setViewportMargins(-10, -10, -35, 10);
     } else {
         setIconSize( QSize(36, 36) );
-
         setGridSize( QSize(-1, -1) );
+        setSpacing(0);
         setViewportMargins(0, 0, 8, 0);
     }
     setViewMode(mode);
@@ -273,15 +266,9 @@ void PlayListView::onMusicListRemoved(const MetaPtrList metalist)
 
 void PlayListView::onMusicError(const MetaPtr meta, int /*error*/)
 {
-    Q_ASSERT(!meta.isNull());
-//    Q_D(PlayListView);
-
-//    qDebug() << error;
-//    QModelIndex index = findIndex(meta);
-
-//    auto indexData = index.data().value<MetaPtr>();
-//    indexData.invalid = (error != 0);
-//    d->m_model->setData(index, QVariant::fromValue<MetaPtr>(indexData));
+    if (meta == nullptr) {
+        return ;
+    }
 
     update();
 }
@@ -323,6 +310,9 @@ void PlayListView::onMusiclistChanged(PlaylistPtr playlist)
 
     if (playlist.isNull()) {
         qWarning() << "can not change to emptry playlist";
+        d->model->removeRows(0, d->model->rowCount());
+        d->playMetaPtrList.clear();
+        d->model->setPlaylist(nullptr);
         return;
     }
     if (playlist->searchStr().isEmpty() && playlist == d->model->playlist()
@@ -521,6 +511,7 @@ void PlayListView::showContextMenu(const QPoint &pos,
                                    PlaylistPtr favPlaylist,
                                    QList<PlaylistPtr> newPlaylists)
 {
+
     Q_D(PlayListView);
     QItemSelectionModel *selection = this->selectionModel();
 
@@ -543,8 +534,7 @@ void PlayListView::showContextMenu(const QPoint &pos,
             break;
         }
     }
-
-    if (selectedPlaylist != favPlaylist) {
+    if (selectedPlaylist != favPlaylist || this->playlist()->id() == tr("musicResult")) {
 //        auto act = playlistMenu.addAction(favPlaylist->displayName());
         auto act = playlistMenu.addAction(tr("My favorites"));
         bool flag = true;
@@ -608,16 +598,29 @@ void PlayListView::showContextMenu(const QPoint &pos,
     QAction *playAction = nullptr;
     QAction *pauseAction = nullptr;
     if (singleSelect) {
+
         auto activeMeta = activingMeta();
         auto meta = d->model->meta(selection->selectedRows().first());
+
         if (d->model->playlist()->playingStatus() && activeMeta == meta) {
-            pauseAction = myMenu.addAction(tr("Pause"));
+
+            if (rowCount() == 1 && meta->invalid) {
+                playAction = myMenu.addAction(tr("Play"));
+                if (meta->invalid)
+                    playAction->setEnabled(false);
+            } else {
+
+                pauseAction = myMenu.addAction(tr("Pause"));
+                if (meta->invalid)
+                    pauseAction->setEnabled(false);
+            }
         } else {
             playAction = myMenu.addAction(tr("Play"));
             if (meta->invalid)
                 playAction->setEnabled(false);
         }
     }
+
     myMenu.addAction(tr("Add to playlist"))->setMenu(&playlistMenu);
     myMenu.addSeparator();
 

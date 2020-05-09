@@ -116,12 +116,13 @@ MusicListDataView::MusicListDataView(QWidget *parent)
     connect(this, &MusicListDataView::doubleClicked,
     this, [ = ](const QModelIndex & index) {
         PlaylistPtr curPlaylist = d->model->playlist();
+
         auto playMusicTypePtrList = curPlaylist->playMusicTypePtrList();
         if (index.row() >= playMusicTypePtrList.size()) {
             return;
         }
-        auto PlayMusicTypePtr = playMusicTypePtrList[index.row()];
 
+        auto PlayMusicTypePtr = playMusicTypePtrList[index.row()];
         d->musciListDialog->setPlayMusicData(curPlaylist, PlayMusicTypePtr);
         d->musciListDialog->setPlaying(playing());
         d->musciListDialog->exec();
@@ -138,7 +139,8 @@ MusicListDataView::MusicListDataView(QWidget *parent)
 
         if (curPlaylist->id() == ArtistResultListID
                 || curPlaylist->id() == ArtistMusicListID) {
-            if (this->playing()->artist != PlayMusicTypePtr->playlistMeta.metas.first()->artist) {
+            if (this->playing() == nullptr ||
+                    this->playing()->artist != PlayMusicTypePtr->playlistMeta.metas.first()->artist) {
                 auto curtMeta = playlist()->first();
                 Q_EMIT playMedia(curtMeta);
                 setPlaying(curtMeta);
@@ -153,7 +155,8 @@ MusicListDataView::MusicListDataView(QWidget *parent)
         }
         if (curPlaylist->id() == AlbumMusicListID
                 || curPlaylist->id() == AlbumResultListID) {
-            if (this->playing()->album != PlayMusicTypePtr->playlistMeta.metas.first()->album) {
+            if (this->playing() == nullptr ||
+                    this->playing()->album != PlayMusicTypePtr->playlistMeta.metas.first()->album) {
                 auto curtMeta = playlist()->first();
                 Q_EMIT playMedia(curtMeta);
                 setPlaying(curtMeta);
@@ -247,12 +250,17 @@ int MusicListDataView::listSize()
 
 void MusicListDataView::setViewModeFlag(QListView::ViewMode mode)
 {
+
     if (mode == QListView::IconMode) {
-        setIconSize( QSize(170, 170) );
-        setGridSize( QSize(170, 170) );
+        setIconSize( QSize(150, 150));
+        setGridSize( QSize(-1, -1));
+        setViewportMargins(-10, -13, -35, 10);
+        setSpacing(20);
     } else {
         setIconSize( QSize(36, 36) );
         setGridSize( QSize(-1, -1) );
+        setViewportMargins(0, 0, 8, 0);
+        setSpacing(0);
     }
     setViewMode(mode);
 }
@@ -370,6 +378,9 @@ void MusicListDataView::onMusiclistChanged(PlaylistPtr playlist)
 
     if (playlist.isNull()) {
         qWarning() << "can not change to emptry playlist";
+        d->model->removeRows(0, d->model->rowCount());
+        d->model->setPlaylist(nullptr);
+        d->curPlayMusicTypePtrList.clear();
         return;
     }
 

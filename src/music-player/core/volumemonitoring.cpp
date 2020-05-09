@@ -20,12 +20,12 @@
  */
 
 #include "volumemonitoring.h"
-
+#include <QtMath>
 #include <QTimer>
 #include <QDBusObjectPath>
 #include <QDBusInterface>
 #include <QDBusReply>
-
+#include <QtDebug>
 #include "util/dbusutils.h"
 #include "musicsettings.h"
 
@@ -35,7 +35,8 @@ public:
     VolumeMonitoringPrivate(VolumeMonitoring *parent) : q_ptr(parent) {}
 
     QTimer            timer;
-
+    bool oldMute  = false;
+    int oldVolume = 0;
     VolumeMonitoring *q_ptr;
     Q_DECLARE_PUBLIC(VolumeMonitoring)
 };
@@ -44,6 +45,8 @@ VolumeMonitoring::VolumeMonitoring(QObject *parent)
     : QObject(parent), d_ptr(new VolumeMonitoringPrivate(this))
 {
     Q_D(VolumeMonitoring);
+    d->oldMute = (bool)MusicSettings::value("base.play.mute").toBool();
+    d->oldVolume = MusicSettings::value("base.play.volume").toInt();
     connect(&d->timer, SIGNAL(timeout()), this, SLOT(timeoutSlot()));
 }
 
@@ -66,6 +69,7 @@ void VolumeMonitoring::stop()
 
 void VolumeMonitoring::timeoutSlot()
 {
+    Q_D(VolumeMonitoring);
     QVariant v = DBusUtils::redDBusProperty("com.deepin.daemon.Audio", "/com/deepin/daemon/Audio",
                                             "com.deepin.daemon.Audio", "SinkInputs");
 
@@ -102,15 +106,17 @@ void VolumeMonitoring::timeoutSlot()
     //获取音量
     QVariant muteV = DBusUtils::redDBusProperty("com.deepin.daemon.Audio", sinkInputPath,
                                                 "com.deepin.daemon.Audio.SinkInput", "Mute");
-
-    int volume = volumeV.toDouble() * 100;
+    //取最小正整数
+    int volume = qFloor(volumeV.toDouble() * 100);
     bool mute = muteV.toBool();
 
-    auto oldMute = MusicSettings::value("base.play.mute").toBool();
-    auto oldVolume = MusicSettings::value("base.play.volume").toInt();
-
-    if (volume != oldMute)
+    if (volume != d->oldVolume) {
+        d->oldVolume = volume;
         Q_EMIT volumeChanged(volume);
-    if (mute != oldVolume)
-        Q_EMIT muteChanged(muteV.toBool());
+
+    }
+    if (mute != d->oldMute) {
+        d->oldMute = mute;
+        Q_EMIT muteChanged(mute);
+    }
 }

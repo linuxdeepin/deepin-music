@@ -6,6 +6,9 @@
 #include <QDBusError>
 #include <QDBusMessage>
 #include <QDBusObjectPath>
+#include <QMutex>
+
+static QMutex mutex;
 
 DBusUtils::DBusUtils()
 {
@@ -15,6 +18,7 @@ DBusUtils::DBusUtils()
 QVariant DBusUtils::redDBusProperty(const QString &service, const QString &path, const QString &interface, const char *propert)
 {
     // 创建QDBusInterface接口
+    mutex.lock();
     QDBusInterface ainterface(service, path,
                               interface,
                               QDBusConnection::sessionBus());
@@ -25,6 +29,7 @@ QVariant DBusUtils::redDBusProperty(const QString &service, const QString &path,
     }
     //调用远程的value方法
     QVariant v = ainterface.property(propert);
+    mutex.unlock();
     return  v;
 }
 QVariant DBusUtils::redDBusMethod(const QString &service, const QString &path, const QString &interface, const char *method)

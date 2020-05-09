@@ -104,6 +104,7 @@ public:
     void playNextMeta(PlaylistPtr playlist, const MetaPtr meta);
     void playPrevMusic(PlaylistPtr playlist, const MetaPtr meta);
     void pause();
+    void pauseNow();
     void stop();
     PlaybackStatus status();
 
@@ -155,10 +156,12 @@ signals:
 //    void metadataChanged(QVariantMap metadata);
 //    void minimumRateChanged(double minimumRate);
     void playbackStatusChanged(Player::PlaybackStatus playbackStatus);
-    void positionChanged(qlonglong position, qlonglong length);
+    void positionChanged(qlonglong position, qlonglong length, qint64 coefficient);
+    void sliderReleased(qint64 value);
+
 //    void rateChanged(double rate);
 //    void shuffleChanged(bool shuffle);
-    void volumeChanged(double volume);
+    void volumeChanged(int volume);
     void modeChanged(PlaybackMode mode);
     void mutedChanged(bool muted);
     void durationChanged(qint64 duration);
@@ -180,22 +183,23 @@ public slots:
 //    void setMinimumRate(double minimumRate);
 //    void setPlaybackStatus(PlaybackStatus playbackStatus);
     void setPosition(qlonglong position);
+    void setIOPosition(qint64 value, qint64 range);
+
     void setMode(PlaybackMode mode);
 //    void setRate(double rate);
 //    void setShuffle(bool shuffle);
-    void setVolume(double volume);
+    void setVolume(int volume);
     void setMuted(bool muted);
     void setFadeInOutFactor(double fadeInOutFactor);
     void setFadeInOut(bool fadeInOut);
     void setPlayOnLoaded(bool playOnLoaded);
+    void musicFileMiss();
 
 private:
     void readSinkInputPath();
     bool setMusicVolume(double volume);
     bool setMusicMuted(bool muted);
     bool isMusicMuted();
-    void resumeAni();
-    void pauseAni();
 
 private:
     friend class DMusic::DSingleton<Player>;

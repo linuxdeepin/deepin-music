@@ -38,6 +38,8 @@ public:
     void postInitUI();
     void binding(Presenter *presenter);
 
+    void bindSpeechConnect(Presenter *presenter);
+
     void focusPlayList();
     QString coverBackground() const;
 
@@ -47,6 +49,7 @@ signals:
     void importSelectFiles(const QStringList &filelist, PlaylistPtr playlist);
     void triggerShortcutAction(const QString &optKey);
     void fadeInOut();
+    void exit();
 
 public slots:
     void updateUI();
@@ -70,3 +73,4 @@ private:
 
 extern const QString s_PropertyViewname;
 extern const QString s_PropertyViewnameLyric;
+

@@ -108,7 +108,11 @@ SOURCES += \
     core/volumemonitoring.cpp \
     view/widget/musicsearchlistview.cpp \
     view/widget/model/musicsearchlistmodel.cpp \
-    view/widget/delegate/musicsearchlistdelegate.cpp
+    view/widget/delegate/musicsearchlistdelegate.cpp \
+    core/AudioBufferDevice.cpp \
+    core/AudioPlayer.cpp \
+    speech/exportedinterface.cpp \
+    speech/speechCenter.cpp
 
 HEADERS += \
     musicapp.h \
@@ -191,7 +195,11 @@ HEADERS += \
     core/volumemonitoring.h \
     view/widget/musicsearchlistview.h \
     view/widget/model/musicsearchlistmodel.h \
-    view/widget/delegate/musicsearchlistdelegate.h
+    view/widget/delegate/musicsearchlistdelegate.h \
+    core/AudioBufferDevice.h \
+    core/AudioPlayer.h \
+    speech/exportedinterface.h \
+    speech/speechCenter.h
 
 RESOURCES += \
     resource/theme/theme.qrc \

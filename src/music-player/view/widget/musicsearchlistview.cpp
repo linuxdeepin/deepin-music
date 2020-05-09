@@ -80,8 +80,9 @@ MusicSearchListview::MusicSearchListview(QWidget *parent)
     setLayoutMode(QListView::Batched);
     setBatchSize(2000);
 
-    //setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+
+    connect(d->delegate, &MusicSearchListDelegate::SearchClear, this, &MusicSearchListview::SearchClear);
 }
 
 
@@ -285,7 +286,13 @@ void MusicSearchListview::setViewModeFlag(QListView::ViewMode mode)
     setViewMode(mode);
 }
 
+void MusicSearchListview::SearchClear()
+{
+    Q_EMIT this->sigSearchClear();
+}
+
+
 void MusicSearchListview::mouseMoveEvent(QMouseEvent *event)
 {
-    //    qDebug() << "MusicSearchListview::mouseMoveEvent";
+    qDebug() << "MusicSearchListview::mouseMoveEvent";
 }
