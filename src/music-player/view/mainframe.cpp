@@ -1307,8 +1307,11 @@ void MainFrame::binding(Presenter *presenter)
     });
     connect(d->musicListWidget, &MusicListWidget::importSelectFiles,
     this, [ = ](PlaylistPtr playlist, QStringList urllist) {
-        presenter->requestImportPaths(playlist, urllist);
+        emit onImportFiles(urllist, playlist);
     });
+    connect(this, &MainFrame::onImportFiles,
+            presenter, &Presenter::onImportFiles);
+
     connect(d->musicListWidget, &MusicListWidget::addMetasFavourite,
             presenter, &Presenter::onAddMetasFavourite);
     connect(d->musicListWidget, &MusicListWidget::removeMetasFavourite,
