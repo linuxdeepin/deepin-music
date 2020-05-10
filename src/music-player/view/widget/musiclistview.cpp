@@ -109,8 +109,6 @@ MusicListView::MusicListView(QWidget *parent) : DListView(parent)
                 auto curItem = dynamic_cast<DStandardItem *>(curStandardItem);
                 //delete
                 QIcon playingIcon(playingPixmap);
-                if (current == curIndex)
-                    playingIcon = albumPixmap;
                 playingIcon.actualSize(QSize(20, 20));
                 DViewItemActionList actionList = curItem->actionList(Qt::RightEdge);
                 if (!actionList.isEmpty()) {
