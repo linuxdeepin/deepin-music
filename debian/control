@@ -2,11 +2,11 @@ Source: deepin-music
 Section: sound
 Priority: extra
 Maintainer: Deepin Packages Builder <packages@deepin.com>
-Build-Depends: debhelper,  python, pkg-config, qttools5-dev-tools,
+Build-Depends: debhelper, pkg-config, qttools5-dev-tools,
  libqt5svg5-dev, qtmultimedia5-dev,
  libtag1-dev, libicu-dev, libcue-dev,
  libavutil-dev, libavformat-dev, libavcodec-dev,
- libdtkgui-dev,libdtkwidget-dev,libkf5codecs-dev
+ libdtkgui-dev,libdtkwidget-dev,libkf5codecs-dev, libvlc-dev,libvlccore-dev
 Standards-Version: 3.9.8
 Homepage: http://www.deepin.org/
 

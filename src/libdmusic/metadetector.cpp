@@ -129,6 +129,8 @@ void MetaDetector::updateMediaFileTagCodec(MediaMeta *meta, const QByteArray &co
     }
 
     TagLib::AudioProperties *t_audioProperties = f.audioProperties();
+    if (t_audioProperties == nullptr)
+        return ;
     meta->length = t_audioProperties->length() * 1000;
 
     bool encode = true;

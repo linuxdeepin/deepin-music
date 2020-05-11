@@ -187,6 +187,35 @@
                     ]
                 }
             ]
+        },
+        {
+            "key": "equalizer",
+            "name": "Equalizer",
+            "groups": [
+                {
+                    "key": "all",
+                    "name": "All",
+                    "options": [
+                        {
+                            "key": "switch",
+                            "reset": false,
+                            "hide": true,
+                            "default": false
+                        },
+                        {
+                            "key": "combox",
+                            "name": "Combobox",
+                            "type": "combobox",
+                            "items": [
+                                    "自定义","单调","古典","俱乐部","舞曲","全低音",
+                                    "全低音和高音","全高音","耳机","大厅","实况","聚会",
+                                    "流行","雷盖","摇滚","斯卡","柔和","慢摇","电子乐"
+                            ],
+                            "default": "单调"
+                        }
+                    ]
+                }
+            ]
         }
     ]
 }

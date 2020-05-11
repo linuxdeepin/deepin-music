@@ -54,6 +54,7 @@
 #include "widget/searchresult.h"
 #include "widget/closeconfirmdialog.h"
 #include "helper/widgethellper.h"
+#include "widget/dequalizerdialog.h"
 
 #include "importwidget.h"
 #include "playlistwidget.h"
@@ -188,6 +189,17 @@ void MainFramePrivate::initMenu()
         q->onSelectImportFiles();
     });
 
+    auto equalizer = new QAction(MainFrame::tr("均衡器"), q);
+    q->connect(equalizer, &QAction::triggered, q, [ = ](bool) {
+        DequalizerDialog *equalizerDialog = new DequalizerDialog;
+//        equalizerDialog->updateSettings(MusicSettings::settings());
+        Dtk::Widget::moveToCenter(equalizerDialog);
+
+        equalizerDialog->exec();
+        delete equalizerDialog;
+        MusicSettings::sync();
+    });
+
     auto settings = new QAction(MainFrame::tr("Settings"), q);
     q->connect(settings, &QAction::triggered, q, [ = ](bool) {
         DSettingsDialog *configDialog = new DSettingsDialog(q);
@@ -260,7 +272,7 @@ void MainFramePrivate::initMenu()
     titleMenu->addAction(newSonglistAction);
     titleMenu->addAction(addmusicfiles);
     titleMenu->addSeparator();
-
+    titleMenu->addAction(equalizer);
     titleMenu->addAction(settings);
     titleMenu->addSeparator();
 
