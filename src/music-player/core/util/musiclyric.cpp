@@ -71,60 +71,68 @@ static QString getFileCodex(QString dir)
 
 void MusicLyric::getFromFile(QString dir)
 {
-    qDebug() << "Lyric dir:" << dir << endl;
-    this->filedir = dir;
-    //this->offset
-    this->line.clear();
-    this->postion.clear();
-    //先使用暴力的字符串匹配，还不会正则表达式
-    //时间复杂度O(n)
-    QString codeStr = getFileCodex(dir);
-    QFile file(dir);
-    if (!file.exists()) return;
-    if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
-        return;
-    QTextStream read(&file);
-    if (!codeStr.isEmpty()) {
-        read.setCodec(QTextCodec::codecForName(codeStr.toStdString().c_str()));
-    }
-    qint64 mm;
-    double ss = 0.0;
-    QMap<qint64, QString> ans;
-    while (!read.atEnd()) {
-        QString lineStr = read.readLine();
-        if (lineStr.isEmpty() || lineStr[0] != '[')
-            continue;
-        QStringList curLineList = lineStr.split('[');
-        for (auto curLineStr : curLineList) {
+    if (dir != "clearLyric") {
 
-            QStringList lineList = curLineStr.split(']');
-            if (lineList.isEmpty() || lineList[0].size() < 3)
+        qDebug() << "Lyric dir:" << dir << endl;
+        this->filedir = dir;
+        //this->offset
+        this->line.clear();
+        this->postion.clear();
+        //先使用暴力的字符串匹配，还不会正则表达式
+        //时间复杂度O(n)
+        QString codeStr = getFileCodex(dir);
+        QFile file(dir);
+        if (!file.exists()) return;
+        if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
+            return;
+        QTextStream read(&file);
+        if (!codeStr.isEmpty()) {
+            read.setCodec(QTextCodec::codecForName(codeStr.toStdString().c_str()));
+        }
+        qint64 mm;
+        double ss = 0.0;
+        QMap<qint64, QString> ans;
+        while (!read.atEnd()) {
+            QString lineStr = read.readLine();
+            if (lineStr.isEmpty() || lineStr[0] != '[')
                 continue;
+            QStringList curLineList = lineStr.split('[');
+            for (auto curLineStr : curLineList) {
 
-            QString str;
-            if (lineList.size() == 2)
-                str = lineList[1];
-            QString t_timeStr = lineList[0].remove(0, 1);
-            QStringList t_timelist = t_timeStr.split(':');
-            if (t_timelist.size() != 2)
-                continue;
-            bool flag = false;
-            mm = t_timelist[0].toLongLong(&flag, 10);
-            if (flag ) {
-                ss = t_timelist[1].toDouble(&flag);
-                if (flag) {
-                    qint64  curtime = (qint64)(ss * 1000) + mm * 60 * 1000;
-                    ans.insert(curtime, str);
+                QStringList lineList = curLineStr.split(']');
+                if (lineList.isEmpty() || lineList[0].size() < 3)
+                    continue;
+
+                QString str;
+                if (lineList.size() == 2)
+                    str = lineList[1];
+                QString t_timeStr = lineList[0].remove(0, 1);
+                QStringList t_timelist = t_timeStr.split(':');
+                if (t_timelist.size() != 2)
+                    continue;
+                bool flag = false;
+                mm = t_timelist[0].toLongLong(&flag, 10);
+                if (flag ) {
+                    ss = t_timelist[1].toDouble(&flag);
+                    if (flag) {
+                        qint64  curtime = (qint64)(ss * 1000) + mm * 60 * 1000;
+                        ans.insert(curtime, str);
+                    }
                 }
             }
+
         }
 
-    }
+        QMap<qint64, QString>::iterator it;
+        for (it = ans.begin(); it != ans.end(); ++it) {
+            this->postion.push_back(it.key());
+            this->line.push_back(it.value());
+        }
 
-    QMap<qint64, QString>::iterator it;
-    for (it = ans.begin(); it != ans.end(); ++it) {
-        this->postion.push_back(it.key());
-        this->line.push_back(it.value());
+    } else {
+
+        line.clear();
+        postion.clear();
     }
 }
 

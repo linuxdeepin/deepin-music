@@ -118,7 +118,7 @@ void SearchEdit::searchText2(QString id, QString text)
     m_CurrentId = id;
     m_Text = text;
     setText(m_Text);
-    Q_EMIT this->searchText(m_CurrentId, QString(m_Text).remove(" ").remove("\r").remove("\n"));
+    Q_EMIT this->searchText(m_CurrentId, QString(m_Text).remove("\r").remove("\n"));
 }
 
 void SearchEdit::searchText3(QString id, QString text)
@@ -148,7 +148,7 @@ void SearchEdit::onFocusOut()
 
 void SearchEdit::onTextChanged()
 {
-    auto text = QString(this->text()).remove(" ").remove("\r").remove("\n");
+    auto text = QString(this->text()).remove("\r").remove("\n");
     /*-- -----charCount --------*/
     //qDebug() << "charCount :" << this->text().size();
 
@@ -173,7 +173,7 @@ void SearchEdit::onTextChanged()
         QPoint bottomLeft = rect.bottomLeft();
         bottomLeft = mapTo(parentWidget()->parentWidget(), bottomLeft);
         m_result->setFixedWidth(width() - 4);
-        m_result->move(bottomLeft.x() + width() / 2 + 24, bottomLeft.y());
+        m_result->move(bottomLeft.x()/* + width() / 2 + 24*/, bottomLeft.y());
         m_result->setFocusPolicy(Qt::StrongFocus);
         m_result->raise();
     } else {

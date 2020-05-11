@@ -232,23 +232,22 @@ void PlayItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
         auto background = option.palette.background();
 
         if (option.state & QStyle::State_Selected) {
-            //background = option.palette.highlight();
+//            background = option.palette.highlight();
         }
 
         painter->fillRect(option.rect, background);
 
         //绘制阴影
-        //QRect shadowRect(option.rect.x() - 10, option.rect.y() - 10, 160, 160);
-        QRect shadowRect(option.rect.x() - 10, option.rect.y(), 160, 150);
+        QRect shadowRect(option.rect.x() - 10, option.rect.y(), 168, 158);
         QPainterPath roundRectShadowPath;
-        roundRectShadowPath.addRoundRect(shadowRect, 10, 10);
+        roundRectShadowPath.addRoundRect(shadowRect, 8, 8);
         painter->save();
         painter->setClipPath(roundRectShadowPath);
         painter->drawPixmap(shadowRect, d_ptr->shadowImg);
         painter->restore();
 
         //绘制圆角框
-        QRect rect(option.rect.x(), option.rect.y(), 140, 183);
+        QRect rect(option.rect.x(), option.rect.y(), 150, 200);
         QPainterPath roundRectPath;
         roundRectPath.addRoundRect(rect, 10, 10);
         painter->setClipPath(roundRectPath);
@@ -259,7 +258,7 @@ void PlayItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
         if (value.type() == QVariant::Icon) {
             icon = qvariant_cast<QIcon>(value);
         }
-        QRect pixmapRect(option.rect.x(), option.rect.y(), 140, 140);
+        QRect pixmapRect(option.rect.x(), option.rect.y(), 150, 150);
         painter->save();
         QPainterPath roundPixmapRectPath;
         roundPixmapRectPath.addRoundRect(pixmapRect, 10, 10);
@@ -278,7 +277,7 @@ void PlayItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
 
         painter->restore();
 
-        int startHeight = option.rect.y() + 149;
+        int startHeight = option.rect.y() + 159;
         int fillAllHeight = 34;
 
         //设置信息字体大小
@@ -551,8 +550,11 @@ QSize PlayItemDelegate::sizeHint(const QStyleOptionViewItem &option,
                                  const QModelIndex &index) const
 {
     Q_D(const PlayItemDelegate);
-
-    return QStyledItemDelegate::sizeHint(option, index);
+        auto listview = qobject_cast<const PlayListView *>(option.widget);
+        if (listview->viewMode() == QListView::IconMode) {
+            return QSize(150,200);
+        }
+        return QStyledItemDelegate::sizeHint(option, index);
 
 //    auto listview = qobject_cast<const PlayListView *>(option.widget);
 //    if (listview->viewMode() == QListView::IconMode) {

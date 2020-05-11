@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright (C) 2016 ~ 2018 Wuhan Deepin Technology Co., Ltd.
  *
  * Author:     Iceyer <me@iceyer.net>
@@ -499,6 +499,7 @@ void MusicListDataWidgetPrivate::initConntion()
     q, [ = ](bool) {
         if (albumListView->isVisible()) {
             PlaylistPtr curPlayList = albumListView->playlist();
+
             if (curPlayList) {
                 curPlayList->playMusicTypeToMeta();
                 curPlayList->play(curPlayList->first());
@@ -506,6 +507,7 @@ void MusicListDataWidgetPrivate::initConntion()
             }
         } else if (artistListView->isVisible()) {
             PlaylistPtr curPlayList = artistListView->playlist();
+
             if (curPlayList) {
                 curPlayList->playMusicTypeToMeta();
                 curPlayList->play(curPlayList->first());
@@ -1217,14 +1219,14 @@ MusicListDataWidget::MusicListDataWidget(QWidget *parent) :
 
     d->albumListView = new MusicListDataView;
     d->artistListView = new MusicListDataView;
-    d->musicListView = new PlayListView(true);
+    d->musicListView = new PlayListView(true, false);
     d->musicListView->hide();
 
     layout->setContentsMargins(0, 1, 0, 0);
 
     /*---------------tabWidget----------------*/
     d->tabWidget = new DTabWidget();
-    d->songListView     = new PlayListView(true);
+    d->songListView     = new PlayListView(true, false);
     d->singerListView   = new MusicListDataView();
     d->albListView      = new MusicListDataView();
     d->tabWidget->addTab(d->songListView, QString(tr("Songs")));
@@ -1791,7 +1793,7 @@ void MusicListDataWidget::retResult(QString searchText, QList<PlaylistPtr> resul
 
                 MusicPlaylists = resultlist.at(i);
                 flagMus = true;
-                CurIndex = 0;
+
 
                 if (d->songListView->viewMode() != (resultlist.at(i)->viewMode())) {
                     d->songListView->setViewModeFlag((QListView::ViewMode)resultlist.at(i)->viewMode());
@@ -1810,7 +1812,7 @@ void MusicListDataWidget::retResult(QString searchText, QList<PlaylistPtr> resul
                 ArtistPlaylists = resultlist.at(i);
                 retdata = resultlist.at(i);
                 flagArt = true;
-                CurIndex = 1;
+
 
                 if (d->singerListView->viewMode() != (resultlist.at(i)->viewMode())) {
                     d->singerListView->setViewModeFlag((QListView::ViewMode)resultlist.at(i)->viewMode());
@@ -1828,7 +1830,7 @@ void MusicListDataWidget::retResult(QString searchText, QList<PlaylistPtr> resul
                 AlbumPlaylists = resultlist.at(i);
                 retdata = resultlist.at(i);
                 flagAlb = true;
-                CurIndex = 2;
+
 
                 if (d->albListView->viewMode() != (resultlist.at(i)->viewMode())) {
                     d->albListView->setViewModeFlag((QListView::ViewMode)resultlist.at(i)->viewMode());
@@ -1849,32 +1851,20 @@ void MusicListDataWidget::retResult(QString searchText, QList<PlaylistPtr> resul
             d->tabWidget->setCurrentIndex(j);
         }
 
-        if (retdata->id() == MusicResultListID) {
+        if (resultlist.first()->id() == MusicResultListID) {
+            CurIndex = 0;
 
-            d->tabWidget->setCurrentIndex(0);
+        } else if (resultlist.first()->id() == ArtistResultListID) {
+            CurIndex = 1;
 
-        } else if (retdata->id() == ArtistResultListID) {
-
-            d->tabWidget->setCurrentIndex(1);
-
-        } else if (retdata->id() == AlbumResultListID) {
-            d->tabWidget->setCurrentIndex(2);
-        }
-
-        /*------Current display page------*/
-        if (CurIndex == 0) {
-            tabwidgetInfo(MusicPlaylists);
-        } else if (CurIndex == 1) {
-            tabwidgetInfo(ArtistPlaylists);
-
-        } else if (CurIndex == 2) {
-            tabwidgetInfo(AlbumPlaylists);
+        } else if (resultlist.first()->id() == AlbumResultListID) {
+            CurIndex = 2;
         }
 
         if ( flagMus & flagArt & flagAlb) {
 
             d->tabWidget->setCurrentIndex(0);
-            CurIndex = 0;
+
         }
 
         /*---------Search without result------*/
@@ -1887,36 +1877,16 @@ void MusicListDataWidget::retResult(QString searchText, QList<PlaylistPtr> resul
         if (CurIndex == 0) {
             d->initData(MusicPlaylists, false, search);
             tabwidgetInfo(MusicPlaylists);
-            if (resultlist.size() == 1) {
-                ArtistPlaylists = nullptr;
-                d->singerListView->onMusiclistChanged(ArtistPlaylists);
-                AlbumPlaylists = nullptr;
-                d->albListView->onMusiclistChanged(AlbumPlaylists);
-            }
-            return;
         }
         if (CurIndex == 1) {
             d->initData(ArtistPlaylists, false, search);
             tabwidgetInfo(ArtistPlaylists);
-            if (resultlist.size() == 1) {
-                MusicPlaylists = nullptr;
-                d->songListView->onMusiclistChanged(MusicPlaylists);
-                AlbumPlaylists = nullptr;
-                d->albListView->onMusiclistChanged(AlbumPlaylists);
-            }
-            return;
         }
         if (CurIndex == 2) {
             d->initData(AlbumPlaylists, false, search);
             tabwidgetInfo(AlbumPlaylists);
-            if (resultlist.size() == 1) {
-                MusicPlaylists = nullptr;
-                d->songListView->onMusiclistChanged(MusicPlaylists);
-                ArtistPlaylists = nullptr;
-                d->singerListView->onMusiclistChanged(ArtistPlaylists);
-            }
-            return;
         }
+        d->tabWidget->setCurrentIndex(CurIndex);
     }
 }
 

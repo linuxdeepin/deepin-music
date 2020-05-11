@@ -164,6 +164,7 @@ public:
 
     int             volume      = 50.0;
     bool            playOnLoad  = true;
+    bool            firstPlayOnLoad  = true; //外部双击打开处理一次
     bool            fadeInOut   = true;
     double          fadeInOutFactor     = 1.0;
     qlonglong       m_position          = 0.0;//只能用于判断音乐是否正常结束
@@ -206,12 +207,12 @@ void PlayerPrivate::initConnection()
     q->connect(ioPlayer->_buffer, &AudioBufferDevice::againMedia, q,
     [ = ]() {
         //! 重新加载资源
-        if (playOnLoad && QFile::exists(activeMeta->localPath)) {
+        if (playOnLoad && (!activeMeta.isNull()) && QFile::exists(activeMeta->localPath)) {
 
             ioDuration = 0;
 
             QString temp = activeMeta->localPath;
-            if (temp.endsWith(".amr")) {
+            if (temp.endsWith(".amr1")) {
                 qplayer->stop();
                 ioPlayer->play();
                 ioPlayer->setSourceFilename(activeMeta->localPath);
@@ -236,6 +237,7 @@ void PlayerPrivate::initConnection()
         auto duration = qplayer->duration();
 
         if (position > 1 && activeMeta->invalid) {
+            qDebug() << " ======> position > 1 && activeMeta->invalid";
             Q_EMIT q->mediaError(activePlaylist, activeMeta, Player::NoError);
         }
 
@@ -292,12 +294,18 @@ void PlayerPrivate::initConnection()
         switch (status) {
         case QMediaPlayer::LoadedMedia: {
             //wtf the QMediaPlayer can play image format, 233333333
+            if (activeMeta.isNull()) {
+                qplayer->pause();
+                qplayer->stop();
+                return;
+            }
             QMimeDatabase db;
             QMimeType type = db.mimeTypeForFile(activeMeta->localPath, QMimeDatabase::MatchContent);
             if (!sSupportedMimeTypes.contains(type.name())) {
                 qDebug() << "unsupported mime type" << type << activePlaylist << activeMeta;
                 qplayer->pause();
                 qplayer->stop();
+                qDebug() << "===========> QMediaPlayer::LoadedMedia";
                 Q_EMIT q->mediaError(activePlaylist, activeMeta, Player::FormatError);
                 return;
             }
@@ -307,7 +315,7 @@ void PlayerPrivate::initConnection()
                 ioDuration = 0;
 
                 QString temp = activeMeta->localPath;
-                if (temp.endsWith(".amr")) {
+                if (temp.endsWith(".amr1")) {
                     qplayer->stop();
 
                     ioPlayer->play();
@@ -327,8 +335,6 @@ void PlayerPrivate::initConnection()
         }
 
         case QMediaPlayer::LoadingMedia: {
-            //Q_ASSERT(!activeMeta.isNull());
-
             break;
         }
         case QMediaPlayer::UnknownMediaStatus:
@@ -345,7 +351,7 @@ void PlayerPrivate::initConnection()
     q, [ = ](QMediaPlayer::Error error) {
         qWarning() << error << activePlaylist << activeMeta;
         if (error == QMediaPlayer::ResourceError) {
-            if (!QFile::exists(activeMeta->localPath)) {
+            if (!activeMeta.isNull() && !QFile::exists(activeMeta->localPath)) {
                 MetaPtrList removeMusicList;
                 removeMusicList.append(activeMeta);
                 curPlaylist->removeMusicList(removeMusicList);
@@ -361,7 +367,6 @@ void PlayerPrivate::initConnection()
             }
         }
     });
-
 
     /*
         q->connect(&fileSystemWatcher, &QFileSystemWatcher::fileChanged,
@@ -544,13 +549,15 @@ void Player::loadMedia(PlaylistPtr playlist, const MetaPtr meta)
     d->qplayer->setMedia(QMediaContent(QUrl::fromLocalFile(meta->localPath)));
     int volume = d->qplayer->volume();
     d->qplayer->setVolume(0);
-    d->activePlaylist->play(meta);
-//    d->qplayer->play();
-    QTimer::singleShot(100, this, [ = ]() {
+    if (!d->activePlaylist.isNull())
+        d->activePlaylist->play(meta);
+    d->qplayer->play();
+    QTimer::singleShot(100, this, [ = ]() {//为了记录进度条生效，在加载的时候让音乐播放100ms
         d->qplayer->pause();
         d->qplayer->setVolume(volume);
         d->qplayer->blockSignals(false);
-        d->activePlaylist->play(meta);
+        if (!d->activePlaylist.isNull())
+            d->activePlaylist->play(meta);
     });
 }
 
@@ -565,16 +572,20 @@ void Player::playMeta(PlaylistPtr playlist, const MetaPtr meta)
              << DMusic::lengthString(curMeta->offset) << "/"
              << DMusic::lengthString(curMeta->length);
 
+    if (curMeta.isNull())
+        return;
+
     if (playlist->id() != PlayMusicListID)
         d->activePlaylist = playlist;
 
-    if (d->activePlaylist.isNull())
-        return;
+//    if (d->activePlaylist.isNull())
+//        return;
 
     d->activeMeta = curMeta;
     d->qplayer->setMedia(QMediaContent(QUrl::fromLocalFile(curMeta->localPath)));
     d->qplayer->setPosition(curMeta->offset);
-    d->activePlaylist->play(curMeta);
+    if (!d->activePlaylist.isNull())
+        d->activePlaylist->play(curMeta);
     d->curPlaylist->play(curMeta);
 
     DRecentData data;
@@ -582,14 +593,27 @@ void Player::playMeta(PlaylistPtr playlist, const MetaPtr meta)
     data.appExec = "deepin-music";
     DRecentManager::addItem(curMeta->localPath, data);
 
-    Q_EMIT mediaPlayed(d->activePlaylist, d->activeMeta);
+    if (!d->activePlaylist.isNull()) {
+        Q_EMIT mediaPlayed(d->activePlaylist, d->activeMeta);
+    } else {
+        Q_EMIT mediaPlayed(d->curPlaylist, d->activeMeta);
+    }
 
-    if (d->qplayer->mediaStatus() == QMediaPlayer::BufferedMedia) {
-        QTimer::singleShot(100, this, [ = ]() {
+//    if (d->qplayer->mediaStatus() == QMediaPlayer::BufferedMedia) {
+//        QTimer::singleShot(100, this, [ = ]() {
 
+//            d->qplayer->play();
+//        });
+//    }
+
+    if (d->firstPlayOnLoad == true) {
+        d->firstPlayOnLoad = false;
+        QTimer::singleShot(150, this, [ = ]() {
             d->qplayer->play();
         });
     }
+
+
 
     if (d->fadeOutAnimation) {
         d->fadeOutAnimation->stop();
@@ -615,29 +639,36 @@ void Player::playMeta(PlaylistPtr playlist, const MetaPtr meta)
 void Player::resume(PlaylistPtr playlist, const MetaPtr meta)
 {
     Q_D(Player);
+    if (meta == nullptr) {
+        return;
+    }
+
+    if (d->fadeOutAnimation) {
+        setFadeInOutFactor(1.0);
+        d->fadeOutAnimation->stop();
+        d->fadeOutAnimation->deleteLater();
+        d->fadeOutAnimation = nullptr;
+    }
+
 
     qDebug() << "resume top";
     if (playlist == d->activePlaylist && d->qplayer->state() == QMediaPlayer::PlayingState && meta->hash == d->activeMeta->hash)
         return;
 
+    d->activeMeta = meta;
     if (d->curPlaylist != nullptr)
         d->curPlaylist->play(meta);
     setPlayOnLoaded(true);
     //增大音乐自动开始播放时间，给setposition留足空间
     QTimer::singleShot(100, this, [ = ]() {
         QString temp = meta->localPath;
-        if (temp.endsWith(".amr")) {
+        if (temp.endsWith(".amr1")) {
             d->ioPlayer->play();
         } else {
             d->qplayer->play();
         }
     });
 
-    if (d->fadeOutAnimation) {
-        d->fadeOutAnimation->stop();
-        d->fadeOutAnimation->deleteLater();
-        d->fadeOutAnimation = nullptr;
-    }
     if (d->fadeInOut && !d->fadeInAnimation) {
         d->fadeInAnimation = new QPropertyAnimation(this, "fadeInOutFactor");
         d->fadeInAnimation->setEasingCurve(QEasingCurve::InCubic);
@@ -652,7 +683,11 @@ void Player::resume(PlaylistPtr playlist, const MetaPtr meta)
         d->fadeInAnimation->start();
     }
 
-    Q_EMIT mediaPlayed(d->activePlaylist, d->activeMeta);
+    if (!d->activePlaylist.isNull() && d->activePlaylist->contains(d->activeMeta)) {
+        Q_EMIT mediaPlayed(d->activePlaylist, d->activeMeta);
+    } else {
+        Q_EMIT mediaPlayed(d->curPlaylist, d->activeMeta);
+    }
 }
 
 void Player::playNextMeta(PlaylistPtr playlist, const MetaPtr meta)
@@ -728,6 +763,7 @@ void Player::stop()
 
     d->qplayer->pause();
     d->qplayer->setMedia(QMediaContent());
+    d->activeMeta.clear(); //清除当前播放音乐；
     d->qplayer->stop();
     //    d->qplayer->blockSignals(false);
 }
@@ -840,11 +876,11 @@ void Player::setIOPosition(qint64 value, qint64 range)
 {
     Q_D(Player);
 
-    if (d->playOnLoad && QFile::exists(d->activeMeta->localPath)) {
+    if (d->playOnLoad && d->activeMeta && QFile::exists(d->activeMeta->localPath)) {
 
         QString temp = d->activeMeta->localPath;
 
-        if (temp.endsWith(".amr")) {
+        if (temp.endsWith(".amr1")) {
 
             if (value != 0 && d->ioDuration != 0) {
                 // qint64 position =  (value * d->ioDuration) / range;
@@ -892,7 +928,7 @@ void Player::setVolume(int volume)
     //d->qplayer->setVolume(d->volume * d->fadeInOutFactor);
     d->qplayer->blockSignals(false);
 
-    setMusicVolume((volume + 0.1) / 100.0);
+    setMusicVolume((volume + 0.1) / 100.0);//设置到dbus的音量必须大1，设置才会生效
 }
 
 void Player::setMuted(bool mute)
@@ -933,9 +969,12 @@ void Player::musicFileMiss()
 
     /*--------Remove the usb flash drive, the music is invalid-------*/
     if (d->activeMeta != nullptr && access(d->activeMeta->localPath.toStdString().c_str(), F_OK) != 0 && (!d->activePlaylist->allmusic().isEmpty())) {
-        d->qplayer->pause();
-        d->qplayer->stop();
-        Q_EMIT mediaError(d->activePlaylist, d->activeMeta, Player::ResourceError);
+        stop();
+
+        //Q_EMIT mediaError(d->activePlaylist, d->activeMeta, Player::ResourceError);
+
+        d->activeMeta = nullptr;
+        d->activePlaylist->play(MetaPtr());
     }
 }
 
@@ -969,6 +1008,9 @@ void Player::readSinkInputPath()
 
 bool Player::setMusicVolume(double volume)
 {
+    if (volume > 1.0) {
+        volume = 1.000;
+    }
     Q_D(Player);
     readSinkInputPath();
 

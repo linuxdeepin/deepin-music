@@ -189,12 +189,13 @@ void FooterPrivate::initConnection()
     });
     q->connect(title, &Label::clicked, q, [ = ](bool) {
         Q_EMIT q->locateMusic(activingPlaylist, activingMeta);
+        Q_EMIT q->togglePlaylist(true);
     });
     q->connect(btLyric, &DPushButton::released, q, [ = ]() {
         Q_EMIT  q->toggleLyricView();
     });
     q->connect(btPlayList, &DPushButton::released, q, [ = ]() {
-        Q_EMIT q->togglePlaylist();
+        Q_EMIT q->togglePlaylist(false);
     });
     q->connect(btSound, &DPushButton::pressed, q, [ = ]() {
         Q_EMIT q->toggleMute();
@@ -546,6 +547,21 @@ void Footer::setCurPlaylist(PlaylistPtr playlist)
 {
     Q_D(Footer);
     d->activingPlaylist = playlist;
+    if (d->activingPlaylist != nullptr) {
+        if (d->activingPlaylist->allmusic().isEmpty()) {
+            d->btPlay->setDisabled(true);
+            d->btPrev->setDisabled(true);
+            d->btNext->setDisabled(true);
+        } else if (d->activingPlaylist->allmusic().size() == 1) {
+            d->btPrev->setDisabled(true);
+            d->btNext->setDisabled(true);
+            d->btPlay->setDisabled(false);
+        } else {
+            d->btPrev->setDisabled(false);
+            d->btNext->setDisabled(false);
+            d->btPlay->setDisabled(false);
+        }
+    }
 }
 
 void Footer::enableControl(bool enable)

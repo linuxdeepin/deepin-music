@@ -42,6 +42,7 @@
 #include <DFileDialog>
 #include <DHiDPIHelper>
 
+#include "../speech/speechCenter.h"
 #include "../presenter/presenter.h"
 #include "../core/metasearchservice.h"
 #include "../core/musicsettings.h"
@@ -86,7 +87,7 @@ public:
     void setTheme(int type);
     void setPlayListVisible(bool visible);
     void toggleLyricView();
-    void togglePlaylist();
+    void togglePlaylist(bool visible);
     void slideToImportView();
     void showLyricView();
     void hideLyricView();
@@ -105,6 +106,7 @@ public:
     //! ui: show info dialog
     void showInfoDialog(const MetaPtr meta);
 
+    SpeechCenter        *m_SpeechCenter         = nullptr;
     DWidget             *centralWidget          = nullptr;
     QStackedLayout      *contentLayout          = nullptr;
     DTitlebar           *titlebar               = nullptr;
@@ -352,7 +354,10 @@ void MainFramePrivate::initUI(bool showLoading)
     int themeType = DGuiApplicationHelper::instance()->themeType();
     infoDialog->setThemeType(themeType);
     infoDialog->hide();
-
+    m_SpeechCenter = SpeechCenter::getInstance();
+#if 0
+    footer->show();
+#endif
 }
 
 void MainFramePrivate::postInitUI()
@@ -405,7 +410,7 @@ void MainFramePrivate::showLyricView()
 
 void MainFramePrivate::hideLyricView()
 {
-    footer->setPlaylistButtonChecked(false);
+    //footer->setPlaylistButtonChecked(false);
     auto current = currentWidget ? currentWidget : playListWidget;
     lyricWidget->setFixedSize(current->size());
     WidgetHelper::slideTop2BottomWidget(
@@ -436,7 +441,7 @@ void MainFramePrivate::showPlaylistView()
         footer, playListWidget, start, end, AnimationDelay, true);
     titlebar->raise();
     footer->raise();
-    footer->setPlaylistButtonChecked(true);
+    //footer->setPlaylistButtonChecked(true);
 
 }
 
@@ -506,6 +511,7 @@ void MainFramePrivate:: slideToImportView()
     if (importWidget->isVisible()) {
         importWidget->showImportHint();
         footer->enableControl(false);
+        importWidget->raise();
         return;
     }
 
@@ -515,13 +521,13 @@ void MainFramePrivate:: slideToImportView()
     importWidget->showImportHint();
     footer->enableControl(false);
     importWidget->setFixedSize(current->size());
-
     qDebug() << "show importWidget" << current << importWidget;
 
     WidgetHelper::slideRight2LeftWidget(
         current, importWidget, AnimationDelay);
     footer->enableControl(false);
     currentWidget = importWidget;
+    importWidget->raise();
     titlebar->raise();
     footer->hide();
 
@@ -569,10 +575,17 @@ void MainFramePrivate::toggleLyricView()
     }
 }
 
-void MainFramePrivate::togglePlaylist()
+void MainFramePrivate::togglePlaylist(bool visible)
 {
-
     importWidget->hide();
+    if(visible) {
+        if (!playListWidget->isVisible()) {
+            showPlaylistView();
+            footer->setPlaylistButtonChecked(true);
+            titlebarwidget->setSearchEnable(true);
+        }
+        return;
+    }
 
     if (playListWidget->isVisible()) {
         hidePlaylistView();
@@ -591,7 +604,7 @@ void MainFramePrivate::setPlayListVisible(bool visible)
         return;
     }
 
-    footer->showPlayListWidget(q->width(), q->height(), false);
+    footer->showPlayListWidget(q->width(), q->height(), visible);
     titlebar->raise();
     footer->raise();
 }
@@ -737,7 +750,7 @@ MainFrame::MainFrame(QWidget *parent) :
     d->titlebarwidget = new TitlebarWidget(this);
 
     d->searchResult = new SearchResult(this);
-    d->searchResult->show();
+//    d->searchResult->show();
     d->titlebarwidget->setResultWidget(d->searchResult);
     d->titlebarwidget->setEnabled(false);
     d->titlebarwidget->show();
@@ -747,7 +760,8 @@ MainFrame::MainFrame(QWidget *parent) :
     d->titlebar->setTitle(tr("Music"));
     d->titlebar->setIcon(QIcon::fromTheme("deepin-music"));    //titlebar->setCustomWidget(titlebarwidget, Qt::AlignLeft, false);
 
-    d->titlebar->setCustomWidget(d->titlebarwidget, true);
+    d->titlebar->setCustomWidget(d->titlebarwidget);
+    d->titlebar->layout()->setAlignment(d->titlebarwidget, Qt::AlignCenter);
     d->titlebar->resize(width(), 50);
     QShortcut *viewshortcut = new QShortcut(this);
     viewshortcut->setKey(QKeySequence(QLatin1String("Ctrl+Shift+/")));
@@ -973,6 +987,7 @@ void MainFrame::binding(Presenter *presenter)
 
     connect(presenter, &Presenter::notifyMusciError,
     this, [ = ](PlaylistPtr playlist, const MetaPtr  meta, int /*error*/) {
+
         Dtk::Widget::DDialog warnDlg(this);
         warnDlg.setIcon(QIcon::fromTheme("deepin-music"));
         warnDlg.setTextFormat(Qt::RichText);
@@ -1000,6 +1015,7 @@ void MainFrame::binding(Presenter *presenter)
         } else {
             d->timer->stop();
         }
+
     });
 
     connect(presenter, &Presenter::metaLibraryClean,
@@ -1173,8 +1189,8 @@ void MainFrame::binding(Presenter *presenter)
         d->toggleLyricView();
     });
     connect(d->footer, &Footer::togglePlaylist,
-    this, [ = ]() {
-        d->togglePlaylist();
+    this, [ = ](bool visible) {
+        d->togglePlaylist(visible);
     });
 
 
@@ -1299,8 +1315,11 @@ void MainFrame::binding(Presenter *presenter)
     });
     connect(d->musicListWidget, &MusicListWidget::importSelectFiles,
     this, [ = ](PlaylistPtr playlist, QStringList urllist) {
-        presenter->requestImportPaths(playlist, urllist);
+        emit onImportFiles(urllist, playlist);
     });
+    connect(this, &MainFrame::onImportFiles,
+            presenter, &Presenter::onImportFiles);
+
     connect(d->musicListWidget, &MusicListWidget::addMetasFavourite,
             presenter, &Presenter::onAddMetasFavourite);
     connect(d->musicListWidget, &MusicListWidget::removeMetasFavourite,
@@ -1315,6 +1334,48 @@ void MainFrame::binding(Presenter *presenter)
     QShortcut *muteShortcut = new QShortcut(this);
     muteShortcut->setKey(QKeySequence(QLatin1String("M")));
     connect(muteShortcut, &QShortcut::activated, presenter, &Presenter::onToggleMute);
+
+    bindSpeechConnect(presenter);
+}
+
+//绑定语音处理信号
+void MainFrame::bindSpeechConnect(Presenter *presenter)
+{
+    Q_D(const MainFrame);
+    connect(d->m_SpeechCenter, &SpeechCenter::sigPlayMusic,
+            presenter, &Presenter::onSpeechPlayMusic);
+    connect(d->m_SpeechCenter, &SpeechCenter::sigPlayArtist,
+            presenter, &Presenter::onSpeechPlayArtist);
+    connect(d->m_SpeechCenter, &SpeechCenter::sigPlayArtistMusic,
+            presenter, &Presenter::onSpeechPlayArtistMusic);
+    connect(d->m_SpeechCenter, &SpeechCenter::sigPlayFaverite,
+            presenter, &Presenter::onSpeechPlayFaverite);
+    connect(d->m_SpeechCenter, &SpeechCenter::sigPlayCustom,
+            presenter, &Presenter::onSpeechPlayCustom);
+    connect(d->m_SpeechCenter, &SpeechCenter::sigPlayRadom,
+            presenter, &Presenter::onSpeechPlayRadom);
+
+    connect(d->m_SpeechCenter, &SpeechCenter::sigPause,
+            presenter, &Presenter::onSpeechPause);
+    connect(d->m_SpeechCenter, &SpeechCenter::sigStop,
+            presenter, &Presenter::onSpeechStop);
+    connect(d->m_SpeechCenter, &SpeechCenter::sigResume,
+            presenter, &Presenter::onSpeechResume);
+    connect(d->m_SpeechCenter, &SpeechCenter::sigPrevious,
+            presenter, &Presenter::onSpeechPrevious);
+    connect(d->m_SpeechCenter, &SpeechCenter::sigNext,
+            presenter, &Presenter::onSpeechNext);
+
+    connect(d->m_SpeechCenter, &SpeechCenter::sigFavorite,
+            presenter, &Presenter::onSpeechFavorite);
+    connect(d->m_SpeechCenter, &SpeechCenter::sigUnFaverite,
+            presenter, &Presenter::onSpeechunFaverite);
+    connect(d->m_SpeechCenter, &SpeechCenter::sigSetMode,
+            presenter, &Presenter::onSpeechsetMode);
+
+    //语音返回信号
+    connect(presenter, &Presenter::sigSpeedResult,
+            d->m_SpeechCenter, &SpeechCenter::onSpeedResult);
 }
 
 void MainFrame::focusPlayList()
@@ -1389,6 +1450,12 @@ void MainFrame::onSelectImportFiles()
         MusicSettings::setOption("base.play.last_import_path",  fileDlg.directory().path());
         Q_EMIT importSelectFiles(fileDlg.selectedFiles(), d->musicListWidget->curPlaylist());
     }
+}
+
+void MainFrame::onClickedImportFiles(QStringList files )
+{
+    Q_D(const MainFrame);
+    Q_EMIT importSelectFiles(files, nullptr);
 }
 
 void MainFrame::slotTheme(int type)
@@ -1476,7 +1543,10 @@ bool MainFrame::eventFilter(QObject *obj, QEvent *e)
             auto keystr = shortcut.value(1);
             auto sckey = static_cast<Qt::Key>(keystr.toInt());
 
-            if (scmodifiers == keyModifiers && key == sckey && !ke->isAutoRepeat()) {
+            if (scmodifiers != Qt::NoModifier &&
+                    scmodifiers == keyModifiers &&
+                    key == sckey
+                    && !ke->isAutoRepeat()) {
                 //qDebug() << "match " << optkey << ke->count() << ke->isAutoRepeat();
                 Q_EMIT  triggerShortcutAction(optkey);
                 return true;

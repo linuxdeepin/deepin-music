@@ -276,6 +276,8 @@ void MUsicLyricWidget::onMusicStop(PlaylistPtr playlist, const MetaPtr meta)
     }
     d->backgroundW->setSourceImage(coverImage);
     d->backgroundW->update();
+
+    d->lyricview->getFromFile("clearLyric");
 }
 
 void MUsicLyricWidget::onProgressChanged(qint64 value, qint64 /*length*/)
