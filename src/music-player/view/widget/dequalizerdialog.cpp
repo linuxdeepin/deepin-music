@@ -15,11 +15,16 @@
 #include <DPushButton>
 #include <QDebug>
 
+#include <vlc/Audio.h>
+#include <vlc/Equalizer.h>
+#include <vlc/MediaPlayer.h>
+
+
 class CustomTabStyle : public QProxyStyle
 {
 public:
     QSize sizeFromContents(ContentsType type, const QStyleOption *option,
-        const QSize &size, const QWidget *widget) const
+                           const QSize &size, const QWidget *widget) const
     {
         QSize s = QProxyStyle::sizeFromContents(type, option, size, widget);
         if (type == QStyle::CT_TabBarTab) {
@@ -45,8 +50,7 @@ public:
                 option.setAlignment(Qt::AlignCenter);
                 if (tab->state & QStyle::State_Selected) {
                     painter->setPen(0xf8fcff);
-                }
-                else {
+                } else {
                     painter->setPen(0x5d5d5d);
                 }
 
@@ -464,4 +468,15 @@ DequalizerDialog::DequalizerDialog(QWidget *parent):
 DequalizerDialog::~DequalizerDialog()
 {
 //    Q_D(DequalizerDialog);
+}
+
+void DequalizerDialog::setMediaPlayer(VlcMediaPlayer *mediaPlayer)
+{
+    Q_D(DequalizerDialog);
+    _mediaPlayer = mediaPlayer;
+    if (!_mediaPlayer)
+        return;
+
+    _vlcEqualizer = _mediaPlayer->equalizer();
+    d->initConnection();
 }

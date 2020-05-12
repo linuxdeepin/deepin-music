@@ -126,6 +126,7 @@ SOURCES += \
     core/vlc/Instance.cpp \
     core/vlc/Media.cpp \
     core/vlc/MediaPlayer.cpp \
+    core/vlc/Equalizer.cpp \
     view/widget/dequalizerdialog.cpp
 
 HEADERS += \
@@ -221,6 +222,7 @@ HEADERS += \
     core/vlc/Instance.h \
     core/vlc/Media.h \
     core/vlc/MediaPlayer.h \
+    core/vlc/Equalizer.h \
     view/widget/dequalizerdialog.h
 
 RESOURCES += \

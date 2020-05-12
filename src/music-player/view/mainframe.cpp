@@ -192,6 +192,8 @@ void MainFramePrivate::initMenu()
     auto equalizer = new QAction(MainFrame::tr("均衡器"), q);
     q->connect(equalizer, &QAction::triggered, q, [ = ](bool) {
         DequalizerDialog *equalizerDialog = new DequalizerDialog;
+        VlcMediaPlayer *player = Player::instance()->core();
+        equalizerDialog->setMediaPlayer(player);
 //        equalizerDialog->updateSettings(MusicSettings::settings());
         Dtk::Widget::moveToCenter(equalizerDialog);
 

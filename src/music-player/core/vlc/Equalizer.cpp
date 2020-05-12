@@ -1,27 +1,10 @@
-/****************************************************************************
-* VLC-Qt - Qt and libvlc connector library
-* Copyright (C) 2012 Tadej Novak <tadej@tano.si>
-*
-* This library is free software: you can redistribute it and/or modify
-* it under the terms of the GNU Lesser General Public License as published
-* by the Free Software Foundation, either version 3 of the License, or
-* (at your option) any later version.
-*
-* This library is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-* GNU Lesser General Public License for more details.
-*
-* You should have received a copy of the GNU Lesser General Public License
-* along with this library. If not, see <http://www.gnu.org/licenses/>.
-*****************************************************************************/
 
 #include <cmath>
 #include <vlc/vlc.h>
 
-#include "core/Equalizer.h"
-#include "core/Error.h"
-#include "core/MediaPlayer.h"
+#include "Equalizer.h"
+#include "error.h"
+#include "MediaPlayer.h"
 
 VlcEqualizer::VlcEqualizer(VlcMediaPlayer *vlcMediaPlayer)
     : QObject(vlcMediaPlayer),
@@ -94,7 +77,7 @@ void VlcEqualizer::loadFromPreset(uint index)
         libvlc_audio_equalizer_release(_vlcEqualizer);
     }
     _vlcEqualizer = libvlc_audio_equalizer_new_from_preset(index);
-    VlcError::showErrmsg();
+//    VlcError::showErrmsg();
     if (_vlcEqualizer) {
         emit presetLoaded();
     }
@@ -107,7 +90,7 @@ void VlcEqualizer::setAmplificationForBandAt(float amp, uint bandIndex)
     }
     libvlc_audio_equalizer_set_amp_at_index(_vlcEqualizer, amp, bandIndex);
     libvlc_media_player_set_equalizer(_vlcMediaPlayer->core(), _vlcEqualizer);
-    VlcError::showErrmsg();
+//    VlcError::showErrmsg();
 }
 
 void VlcEqualizer::setEnabled(bool enabled)
@@ -126,5 +109,5 @@ void VlcEqualizer::setPreamplification(float value)
     }
     libvlc_audio_equalizer_set_preamp(_vlcEqualizer, value);
     libvlc_media_player_set_equalizer(_vlcMediaPlayer->core(), _vlcEqualizer);
-    VlcError::showErrmsg();
+//    VlcError::showErrmsg();
 }

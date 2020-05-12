@@ -30,6 +30,7 @@
 
 #include <util/singleton.h>
 #include "playlist.h"
+#include "vlc/MediaPlayer.h"
 
 class QAudioBuffer;
 class PlayerPrivate;
@@ -106,6 +107,8 @@ public:
     void pause();
     void pauseNow();
     void stop();
+
+    VlcMediaPlayer *core();
     PlaybackStatus status();
 
     bool isActiveMeta(MetaPtr meta) const;

@@ -52,6 +52,7 @@
 #include "vlc/Instance.h"
 #include "vlc/Media.h"
 #include "vlc/MediaPlayer.h"
+#include "vlc/Equalizer.h"
 
 DCORE_USE_NAMESPACE
 
@@ -146,7 +147,6 @@ public:
         qvplayer = new VlcMediaPlayer(qvinstance);
         qvmedia = new VlcMedia();
 //        qvplayer->audio()->setVolume(100);
-
     }
 
     void initConnection();
@@ -254,10 +254,8 @@ void PlayerPrivate::initConnection()
         if (activeMeta.isNull()) {
             return;
         }
-
 //        auto duration = qvplayer->time();
         auto duration = position;
-
 
         if (position > 1 && activeMeta->invalid) {
             Q_EMIT q->mediaError(activePlaylist, activeMeta, Player::NoError);
@@ -824,6 +822,12 @@ void Player::stop()
     d->qvplayer->stop();
 
 }
+VlcMediaPlayer *Player::core()
+{
+    Q_D(const Player);
+    return d->qvplayer;
+}
+
 
 Player::PlaybackStatus Player::status()
 {

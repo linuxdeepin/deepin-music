@@ -10,9 +10,8 @@
 #include <QDebug>
 
 
-#if LIBVLC_VERSION >= 0x020200
-//#include "Equalizer.h"
-#endif
+#include "Equalizer.h"
+
 
 VlcMediaPlayer::VlcMediaPlayer(VlcInstance *instance)
     : QObject(instance)
@@ -23,6 +22,7 @@ VlcMediaPlayer::VlcMediaPlayer(VlcInstance *instance)
     VlcError::showErrmsg();
 
     _vlcAudio = new VlcAudio(this);
+    _vlcEqualizer = new VlcEqualizer(this);
 
     _media = 0;
 
@@ -60,12 +60,11 @@ VlcAudio *VlcMediaPlayer::audio() const
 ////    return _vlcVideo;
 //}
 
-#if LIBVLC_VERSION >= 0x020200
 VlcEqualizer *VlcMediaPlayer::equalizer() const
 {
-//    return _vlcEqualizer;
+    return _vlcEqualizer;
 }
-#endif
+
 
 void VlcMediaPlayer::createCoreConnections()
 {
@@ -162,8 +161,6 @@ void VlcMediaPlayer::open(VlcMedia *media)
     libvlc_media_player_set_media(_vlcMediaPlayer, media->core());
 
     VlcError::showErrmsg();
-
-//    play();
 }
 
 void VlcMediaPlayer::openOnly(VlcMedia *media)

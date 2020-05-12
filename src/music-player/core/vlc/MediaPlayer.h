@@ -340,6 +340,9 @@ private:
 
     VlcAudio *_vlcAudio;
     VlcVideo *_vlcVideo;
+    VlcEqualizer *_vlcEqualizer;
+
+
     QTimer   timer;
 
 };
