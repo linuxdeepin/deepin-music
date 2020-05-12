@@ -218,6 +218,7 @@ void FooterPrivate::initConnection()
 
     q->connect(&volumeMonitoring, &VolumeMonitoring::volumeChanged, q, [ = ](int vol) {
         q->onVolumeChanged(vol);
+        Q_EMIT q->updateVolume(vol);//change DBus volume
     });
 
     q->connect(&volumeMonitoring, &VolumeMonitoring::muteChanged, q, [ = ](bool mute) {
@@ -1303,6 +1304,7 @@ void Footer::onVolumeChanged(int volume)
         d->updateQssProperty(d->btSound, "volume", status);
     }
     d->m_Volume = volume;
+//    Q_EMIT volumeChanged(volume);//change DBus volume
     MusicSettings::setOption("base.play.volume", d->m_Volume);
     d->volSlider->onVolumeChanged(volume);
 }

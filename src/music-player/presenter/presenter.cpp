@@ -1699,6 +1699,12 @@ void Presenter::onVolumeChanged(int volume)
     Q_EMIT d->updateMprisVolume(volume);
 }
 
+void Presenter::UpdateVolume(int volume)
+{
+    Q_D(Presenter);
+    d->player->updateVolume(volume);
+}
+
 void Presenter::onPlayModeChanged(int mode)
 {
     Q_D(Presenter);

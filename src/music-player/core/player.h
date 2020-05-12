@@ -189,6 +189,7 @@ public slots:
 //    void setRate(double rate);
 //    void setShuffle(bool shuffle);
     void setVolume(int volume);
+    void updateVolume(int volume);
     void setMuted(bool muted);
     void setFadeInOutFactor(double fadeInOutFactor);
     void setFadeInOut(bool fadeInOut);

@@ -179,6 +179,7 @@ public:
     VlcMedia *qvmedia;
     VlcMediaPlayer *qvplayer;
     bool isamr = false;
+    bool ischangeMusic = false;
 
     PlaylistPtr     activePlaylist;
     PlaylistPtr     curPlaylist;
@@ -700,13 +701,20 @@ void Player::playMeta(PlaylistPtr playlist, const MetaPtr meta)
     d->activeMeta = curMeta;
 //    d->qplayer->setMedia(QMediaContent(QUrl::fromLocalFile(curMeta->localPath)));
 //    d->qplayer->setPosition(curMeta->offset);
-
+    d->ischangeMusic = true;
     if (curMeta->localPath.endsWith(".amr") && !curMeta.isNull() ) {
 
 //        if (d->qplayer->state() != QMediaPlayer::StoppedState) {
         d->qplayer->setMedia(QMediaContent());
         d->qplayer->stop();
 //        }
+        if(!d->isamr){
+            //vlc & qplayer 声音同步
+            QTimer::singleShot(200, this, [ = ]() {
+                setVolume(d->volume);
+                d->ischangeMusic = false;
+            });
+        }
 
         d->isamr = true;
         d->qvmedia->initMedia(curMeta->localPath, true, d->qvinstance);
@@ -717,6 +725,13 @@ void Player::playMeta(PlaylistPtr playlist, const MetaPtr meta)
     } else {
         if (d->qvplayer->state() != Vlc::Stopped) {
             d->qvplayer->stop();
+        }
+        if(d->isamr){
+            //vlc & qplayer 声音同步
+            QTimer::singleShot(200, this, [ = ]() {
+                setVolume(d->volume);
+                d->ischangeMusic = false;
+            });
         }
 
         d->isamr = false;
@@ -748,9 +763,9 @@ void Player::playMeta(PlaylistPtr playlist, const MetaPtr meta)
 //    }
 
     //vlc & qplayer 声音同步
-    QTimer::singleShot(200, this, [ = ]() {
-        setVolume(d->volume);
-    });
+//    QTimer::singleShot(200, this, [ = ]() {
+//        setVolume(d->volume);
+//    });
 
 
     if (d->firstPlayOnLoad == true) {
@@ -1120,6 +1135,20 @@ void Player::setVolume(int volume)
     d->qplayer->blockSignals(false);
 
     setMusicVolume((volume + 0.1) / 100.0);//设置到dbus的音量必须大1，设置才会生效
+}
+
+void Player::updateVolume(int volume)
+{
+    Q_D(Player);
+    if (volume > 100) {
+        volume = 100;
+    }
+    if (volume < 0) {
+        volume = 0;
+    }
+    if(!d->ischangeMusic){
+        d->volume = volume;
+    }
 }
 
 void Player::setMuted(bool mute)

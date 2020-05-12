@@ -1202,6 +1202,8 @@ void MainFrame::binding(Presenter *presenter)
             presenter, &Presenter::onChangeProgress);
     connect(d->footer,  &Footer::volumeChanged,
             presenter, &Presenter::onVolumeChanged);
+    connect(d->footer,  &Footer::updateVolume,
+            presenter, &Presenter::UpdateVolume);
     connect(d->footer,  &Footer::toggleMute,
             presenter, &Presenter::onToggleMute);
     connect(d->footer,  &Footer::modeChanged,

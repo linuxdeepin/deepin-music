@@ -150,6 +150,7 @@ public slots:
     void onPlayModeChanged(int mode);
     void onToggleMute();
     void onFadeInOut();
+    void UpdateVolume(int volume);
 
     void onUpdateMetaCodec(const QString &preTitle, const QString &preArtist, const QString &preAlbum, const MetaPtr meta);
 
