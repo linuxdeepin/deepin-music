@@ -70,6 +70,7 @@ signals:
     void prev(PlaylistPtr playlist, const MetaPtr meta);
     void changeProgress(qint64 value, qint64 duration);
     void volumeChanged(int volume);
+    void updateVolume(int volume);
 
     void toggleMute();
     void togglePlaylist();
