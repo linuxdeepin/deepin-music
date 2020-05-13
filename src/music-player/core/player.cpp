@@ -703,18 +703,10 @@ void Player::playMeta(PlaylistPtr playlist, const MetaPtr meta)
 //    d->qplayer->setPosition(curMeta->offset);
     d->ischangeMusic = true;
     if (curMeta->localPath.endsWith(".amr") && !curMeta.isNull() ) {
-
 //        if (d->qplayer->state() != QMediaPlayer::StoppedState) {
         d->qplayer->setMedia(QMediaContent());
         d->qplayer->stop();
 //        }
-        if(!d->isamr){
-            //vlc & qplayer 声音同步
-            QTimer::singleShot(200, this, [ = ]() {
-                setVolume(d->volume);
-                d->ischangeMusic = false;
-            });
-        }
 
         d->isamr = true;
         d->qvmedia->initMedia(curMeta->localPath, true, d->qvinstance);
@@ -726,14 +718,6 @@ void Player::playMeta(PlaylistPtr playlist, const MetaPtr meta)
         if (d->qvplayer->state() != Vlc::Stopped) {
             d->qvplayer->stop();
         }
-        if(d->isamr){
-            //vlc & qplayer 声音同步
-            QTimer::singleShot(200, this, [ = ]() {
-                setVolume(d->volume);
-                d->ischangeMusic = false;
-            });
-        }
-
         d->isamr = false;
         d->qplayer->setMedia(QMediaContent(QUrl::fromLocalFile(meta->localPath)));
         d->qplayer->setPosition(curMeta->offset);
@@ -755,18 +739,11 @@ void Player::playMeta(PlaylistPtr playlist, const MetaPtr meta)
         Q_EMIT mediaPlayed(d->curPlaylist, d->activeMeta);
     }
 
-//    if (d->qplayer->mediaStatus() == QMediaPlayer::BufferedMedia) {
-//        QTimer::singleShot(100, this, [ = ]() {
-
-//            d->qplayer->play();
-//        });
-//    }
-
     //vlc & qplayer 声音同步
-//    QTimer::singleShot(200, this, [ = ]() {
-//        setVolume(d->volume);
-//    });
-
+    QTimer::singleShot(200, this, [ = ]() {
+        setVolume(d->volume);
+        d->ischangeMusic = false;
+    });
 
     if (d->firstPlayOnLoad == true) {
         d->firstPlayOnLoad = false;
@@ -778,8 +755,6 @@ void Player::playMeta(PlaylistPtr playlist, const MetaPtr meta)
             }
         });
     }
-
-
 
     if (d->fadeOutAnimation) {
         d->fadeOutAnimation->stop();
