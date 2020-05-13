@@ -194,10 +194,11 @@ void MainFramePrivate::initMenu()
         DequalizerDialog *equalizerDialog = new DequalizerDialog;
         VlcMediaPlayer *player = Player::instance()->core();
         equalizerDialog->setMediaPlayer(player);
-//        equalizerDialog->updateSettings(MusicSettings::settings());
+        equalizerDialog->updateSettings();
         Dtk::Widget::moveToCenter(equalizerDialog);
 
         equalizerDialog->exec();
+        equalizerDialog->updateSettings();
         delete equalizerDialog;
         MusicSettings::sync();
     });
@@ -1084,6 +1085,16 @@ void MainFrame::binding(Presenter *presenter)
         if (d->lyricWidget->isVisible()) {
             d->setPlayListVisible(true);
         }
+    });
+
+    connect(presenter, &Presenter::setEnabled,
+    this, [ = ](bool enabled) {
+        Player::instance()->core()->equalizer()->setEnabled(enabled);
+    });
+
+    connect(presenter, &Presenter::loadFromPreset,
+    this, [ = ](int curIndex) {
+        Player::instance()->core()->equalizer()->loadFromPreset(uint(curIndex));
     });
 
     connect(presenter, &Presenter::requestMusicListMenu,

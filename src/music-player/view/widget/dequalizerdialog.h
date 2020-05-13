@@ -11,24 +11,27 @@ class DequalizerDialog: public Dtk::Widget::DAbstractDialog
 public:
     explicit DequalizerDialog(QWidget *parent = Q_NULLPTR);
     ~DequalizerDialog();
-
+    void readConfig(MusicSettings *settings);
+    void writeConfig(MusicSettings *settings);
+    void enabledUI(bool flag);
+    void initConnection();
+    void customMode();
     void setMediaPlayer(VlcMediaPlayer *mediaPlayer);
 
 signals:
-    void entered();
+    void getCurIndex(int index);
 
 public Q_SLOTS:
+    void updateSettings();
 //    void updateSettings(DTK_CORE_NAMESPACE::DSettings *settings);
 //    void updateSettings(const QByteArray &translateContext, DTK_CORE_NAMESPACE::DSettings *settings);
+    void applyChangesForBand(int value);
+    void applySelectedPreset();
+    void checkedChanged(bool checked);
 
 private:
     QScopedPointer<DequalizerDialogPrivate> d_ptr;
     Q_DECLARE_PRIVATE_D(qGetPtrHelper(d_ptr), DequalizerDialog)
-
-private:
-    VlcMediaPlayer *_mediaPlayer;
-    VlcEqualizer *_vlcEqualizer;
-
 };
 
 #endif // DEQUALIZERDIALOG_H

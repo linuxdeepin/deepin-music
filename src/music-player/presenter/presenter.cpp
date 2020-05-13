@@ -603,6 +603,15 @@ void Presenter::postAction()
     d->player->setMode(static_cast<Player::PlaybackMode>(playmode));
     Q_EMIT this->modeChanged(playmode);
 
+    //读取均衡器使能开关配置
+    auto eqSwitch = d->settings->value("equalizer.all.switch").toBool();
+    Q_EMIT this->setEnabled(eqSwitch);
+    //载入当前设置音效
+    auto eqCurEffect = d->settings->value("equalizer.all.curEffect").toInt();
+    if (eqSwitch) {
+        Q_EMIT this->loadFromPreset(eqCurEffect);
+    }
+
     auto allplaylist = d->playlistMgr->playlist(AllMusicListID);
     auto lastPlaylist = allplaylist;
     if (lastPlaylist.isNull()) {
@@ -1139,12 +1148,9 @@ void Presenter::onRequestMusiclistMenu(const QPoint &pos, char type)
 
 void Presenter::removeListSame(QStringList *list)
 {
-    for (int i = 0; i < list->count(); i++)
-    {
-        for (int k = i + 1; k <  list->count(); k++)
-        {
-            if ( list->at(i) ==  list->at(k))
-            {
+    for (int i = 0; i < list->count(); i++) {
+        for (int k = i + 1; k <  list->count(); k++) {
+            if ( list->at(i) ==  list->at(k)) {
                 list->removeAt(k);
                 k--;
             }
@@ -1156,7 +1162,7 @@ void Presenter::onSearchText(const QString &id, const QString &text)
 {
     Q_D(Presenter);
     QList<PlaylistPtr> resultlist;
-        resultlist.clear();
+    resultlist.clear();
     if (id == "") {//搜索栏enter按键
         //搜索歌曲候选:<=5个
         auto musicList = d->playlistMgr->playlist(AllMusicListID);;
@@ -1210,24 +1216,22 @@ void Presenter::onSearchText(const QString &id, const QString &text)
         auto searchList = d->playlistMgr->playlist(MusicResultListID);
         MetaPtrList musicMetaDataList;
         //该音乐的歌手列表
-        QStringList artist,album;
+        QStringList artist, album;
         artist.clear();
         album.clear();
         for (auto &metaData : musicList->allmusic()) {
             if (containsStr(text, metaData->title)) {
                 musicMetaDataList.append(metaData);
-                if(metaData->album == ""){
-                   album.append("未知专辑");
-                }
-                else{
+                if (metaData->album == "") {
+                    album.append("未知专辑");
+                } else {
 
                     album.append(metaData->album);
                 }
-                if(metaData->artist== ""){
-                   album.append("未知歌手");
-                }
-                else{
-                     artist.append(metaData->artist);
+                if (metaData->artist == "") {
+                    album.append("未知歌手");
+                } else {
+                    artist.append(metaData->artist);
                 }
             }
         }
@@ -1245,7 +1249,7 @@ void Presenter::onSearchText(const QString &id, const QString &text)
         searchAlbumList->clearTypePtr();
 
         for (auto &metaData : albumList->playMusicTypePtrList()) {
-            for (int i=0;i <album.length();i++) {
+            for (int i = 0; i < album.length(); i++) {
                 if (metaData->name.contains(album.at(i))) {
                     searchAlbumList->appendMusicTypePtrListData(metaData);
                 }
@@ -1260,7 +1264,7 @@ void Presenter::onSearchText(const QString &id, const QString &text)
         searchArtistList->clearTypePtr();
 
         for (auto &metaData : artistList->playMusicTypePtrList()) {
-            for (int i=0;i <artist.length();i++) {
+            for (int i = 0; i < artist.length(); i++) {
                 if (metaData->name.contains(artist.at(i))) {
                     searchArtistList->appendMusicTypePtrListData(metaData);
                 }
@@ -1296,16 +1300,14 @@ void Presenter::onSearchText(const QString &id, const QString &text)
         QStringList albumlist;
         albumlist.clear();
         for (auto &metaData : musicList->allmusic()) {
-            if(metaData->artist == "")
-            {
+            if (metaData->artist == "") {
                 metaData->artist = "未知歌手";
             }
             if (containsStr(text, metaData->artist)) {
                 musicMetaDataList.append(metaData);
-                if(metaData->album == ""){
-                   albumlist.append("未知专辑");
-                }
-                else{
+                if (metaData->album == "") {
+                    albumlist.append("未知专辑");
+                } else {
                     albumlist.append(metaData->album);
                 }
             }
@@ -1323,7 +1325,7 @@ void Presenter::onSearchText(const QString &id, const QString &text)
         searchAlbumList->clearTypePtr();
 
         for (auto &metaData : albumList->playMusicTypePtrList()) {
-            for (int i=0; i<albumlist.length(); i++) {
+            for (int i = 0; i < albumlist.length(); i++) {
                 if (metaData->name.contains(albumlist.at(i))) {
                     searchAlbumList->appendMusicTypePtrListData(metaData);
                 }
@@ -1359,17 +1361,15 @@ void Presenter::onSearchText(const QString &id, const QString &text)
         QStringList artist;
         artist.clear();
         for (auto &metaData : musicList->allmusic()) {
-            if(metaData->album == "")
-            {
-                metaData->album ="未知专辑";
+            if (metaData->album == "") {
+                metaData->album = "未知专辑";
             }
             if (containsStr(text, metaData->album)) {
                 musicMetaDataList.append(metaData);
-                if(metaData->artist== ""){
-                   artist.append("未知歌手");
-                }
-                else{
-                     artist.append(metaData->artist);
+                if (metaData->artist == "") {
+                    artist.append("未知歌手");
+                } else {
+                    artist.append(metaData->artist);
                 }
             }
         }
@@ -1385,7 +1385,7 @@ void Presenter::onSearchText(const QString &id, const QString &text)
         searchArtistList->clearTypePtr();
 
         for (auto &metaData : artistList->playMusicTypePtrList()) {
-            for (int i=0; i<artist.length(); i++) {
+            for (int i = 0; i < artist.length(); i++) {
                 if (metaData->name.contains(artist.at(i) )) {
                     searchArtistList->appendMusicTypePtrListData(metaData);
                 }

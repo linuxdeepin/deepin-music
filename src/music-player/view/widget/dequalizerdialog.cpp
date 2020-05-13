@@ -14,6 +14,7 @@
 #include <DFrame>
 #include <DPushButton>
 #include <QDebug>
+#include <QMap>
 
 #include <vlc/Audio.h>
 #include <vlc/Equalizer.h>
@@ -71,9 +72,7 @@ class DequalizerDialogPrivate
 public:
     DequalizerDialogPrivate(DequalizerDialog *parent) : q_ptr(parent) {}
 
-    void initUI();
-    void initConnection();
-    void setCurrentEffect(QString currentText);
+    void initUI(bool flag);
 
     DTitlebar   *mtitlebar            = nullptr;
     DLabel      *mtitleLabel          = nullptr;
@@ -81,13 +80,7 @@ public:
     DSwitchButton *mswitchBtn         = nullptr;
     DComboBox      *mcombox           = nullptr;
     DPushButton    *saveBtn           = nullptr;
-    QStringList    effect_type        = {"自定义","单调","古典","俱乐部","舞曲","全低音",
-                                         "全低音和高音","全高音","耳机","大厅","实况","聚会",
-                                         "流行","雷盖","摇滚","斯卡","柔和","慢摇","电子乐"};
-    bool          switch_flag         = false;
-    QMap <DSlider*,int> Slider_map;
-
-    DSlider     *slider_preamplifier  = nullptr;
+    DSlider     *slider_pre           = nullptr;
     DSlider     *slider_60            = nullptr;
     DSlider     *slider_170           = nullptr;
     DSlider     *slider_310           = nullptr;
@@ -99,8 +92,21 @@ public:
     DSlider     *slider_14k           = nullptr;
     DSlider     *slider_16k           = nullptr;
 
-    MusicSettings     *settings       = nullptr;
+    QStringList    effect_type        = {"自定义", "单调", "古典", "俱乐部", "舞曲", "全低音",
+                                         "全低音和高音", "全高音", "耳机", "大厅", "实况", "聚会",
+                                         "流行", "雷盖", "摇滚", "斯卡", "柔和", "慢摇", "电子乐"
+                                        };
 
+    QMap<DSlider *, int> mapSliders;
+    MusicSettings   *settings         = nullptr;
+
+    //读取配置文件
+    bool    switch_flag               = false;
+    int     curEffect                 = 0;
+
+
+    VlcMediaPlayer *_mediaPlayer;
+    VlcEqualizer *_vlcEqualizer;
     //slidergroup
     DBlurEffectWidget *slWidget  = nullptr;
     DequalizerDialog *q_ptr;
@@ -108,72 +114,128 @@ public:
     Q_DECLARE_PUBLIC(DequalizerDialog)
 };
 
-void DequalizerDialogPrivate::initUI()
+void DequalizerDialogPrivate::initUI(bool flag)
 {
     Q_Q(DequalizerDialog);
 
-    q->resize(720,463);
+    q->resize(720, 463);
 
     QFont font;
     font.setFamily("SourceHanSansSC");
     font.setWeight(QFont::Normal);
     font.setPixelSize(17);
     mtitleLabel  = new DLabel("均衡器");
-    mtitleLabel->resize(51,25);
+    mtitleLabel->resize(51, 25);
     mtitleLabel->setFont(font);
 
     mswitchLabel = new DLabel("关");
-    mswitchLabel->resize(14,20);
+    mswitchLabel->resize(14, 20);
 
     mswitchBtn = new DSwitchButton(q);
-    mswitchBtn->resize(50,20);
+    mswitchBtn->resize(50, 20);
 //    //设置底色
 //    DPalette sw;
 //    sw.setColor(DPalette::Button,QColor("#000000"));
 //    mswitchBtn->setPalette(sw);
 
     mcombox = new DComboBox(q);
-    mcombox->setMinimumSize(240,36);
+    mcombox->setMinimumSize(240, 36);
     mcombox->addItems(effect_type);
 
 
     saveBtn = new DPushButton(q);
-    saveBtn->setMinimumSize(110,36);
+    saveBtn->setMinimumSize(110, 36);
     saveBtn->setText("保存");
 
-    slider_preamplifier = new DSlider(Qt::Vertical);
+    slider_pre = new DSlider(Qt::Vertical);
+    slider_pre->setValue(0);
+    slider_pre->setMinimum(-20);
+    slider_pre->setMaximum(20);
+    slider_pre->setPageStep(1);
     auto lb_preamplifier = new DLabel("前置放大");
 
-//    Slider_map.insert(slider_60,"60");
     slider_60 = new DSlider(Qt::Vertical);
+    slider_60->setValue(0);
+    slider_60->setMinimum(-20);
+    slider_60->setMaximum(20);
+    slider_60->setPageStep(1);
     auto lb1     = new DLabel("60");
 
     slider_170 = new DSlider(Qt::Vertical);
+    slider_170->setValue(0);
+    slider_170->setMinimum(-20);
+    slider_170->setMaximum(20);
+    slider_170->setPageStep(1);
     auto lb2     = new DLabel("170");
 
     slider_310 = new DSlider(Qt::Vertical);
+    slider_310->setValue(0);
+    slider_310->setMinimum(-20);
+    slider_310->setMaximum(20);
+    slider_310->setPageStep(1);
     auto lb3     = new DLabel("310");
 
     slider_600 = new DSlider(Qt::Vertical);
+    slider_600->setValue(0);
+    slider_600->setMinimum(-20);
+    slider_600->setMaximum(20);
+    slider_600->setPageStep(1);
     auto lb4     = new DLabel("600");
 
     slider_1k = new DSlider(Qt::Vertical);
+    slider_1k->setValue(0);
+    slider_1k->setMinimum(-20);
+    slider_1k->setMaximum(20);
+    slider_1k->setPageStep(1);
     auto lb5     = new DLabel("1K");
 
     slider_3k = new DSlider(Qt::Vertical);
+    slider_3k->setValue(0);
+    slider_3k->setMinimum(-20);
+    slider_3k->setMaximum(20);
+    slider_3k->setPageStep(1);
+
     auto lb6     = new DLabel("3K");
 
     slider_6k = new DSlider(Qt::Vertical);
+    slider_6k->setValue(0);
+    slider_6k->setMinimum(-20);
+    slider_6k->setMaximum(20);
+    slider_6k->setPageStep(1);
     auto lb7    = new DLabel("6K");
 
     slider_12k = new DSlider(Qt::Vertical);
+    slider_12k->setValue(0);
+    slider_12k->setMinimum(-20);
+    slider_12k->setMaximum(20);
+    slider_12k->setPageStep(1);
     auto lb8     = new DLabel("12K");
 
     slider_14k = new DSlider(Qt::Vertical);
+    slider_14k->setValue(0);
+    slider_14k->setMinimum(-20);
+    slider_14k->setMaximum(20);
+    slider_14k->setPageStep(1);
     auto lb9     = new DLabel("14K");
 
     slider_16k = new DSlider(Qt::Vertical);
+    slider_16k->setValue(0);
+    slider_16k->setMinimum(-20);
+    slider_16k->setMaximum(20);
+    slider_16k->setPageStep(1);
     auto lb10     = new DLabel("16K");
+
+    mapSliders.insert(slider_pre, 0);
+    mapSliders.insert(slider_60, 1);
+    mapSliders.insert(slider_170, 2);
+    mapSliders.insert(slider_310, 3);
+    mapSliders.insert(slider_600, 4);
+    mapSliders.insert(slider_1k, 5);
+    mapSliders.insert(slider_3k, 6);
+    mapSliders.insert(slider_6k, 7);
+    mapSliders.insert(slider_12k, 8);
+    mapSliders.insert(slider_14k, 9);
+    mapSliders.insert(slider_16k, 10);
 
     auto vlayout0  = new QVBoxLayout;
     auto vlayout1  = new QVBoxLayout;
@@ -187,7 +249,7 @@ void DequalizerDialogPrivate::initUI()
     auto vlayout9  = new QVBoxLayout;
     auto vlayout10 = new QVBoxLayout;
 
-    vlayout0->addWidget(slider_preamplifier,Qt::AlignCenter);
+    vlayout0->addWidget(slider_pre, Qt::AlignCenter);
     vlayout0->addWidget(lb_preamplifier);
 
     vlayout1->addWidget(slider_60);
@@ -243,41 +305,41 @@ void DequalizerDialogPrivate::initUI()
     slWidget->setMinimumWidth(517);
     slWidget->setMinimumHeight(264);
     slWidget->setLayout(hlayout);
-    slWidget->setContentsMargins(10,10,9,20);
+    slWidget->setContentsMargins(10, 10, 9, 20);
 
     auto vlay  = new QVBoxLayout;
     //第一行
     vlay->addWidget(mtitleLabel);
     //第二行
     auto hlay  = new QHBoxLayout;
-    hlay->addWidget(mswitchLabel,Qt::AlignLeft);
-    hlay->addWidget(mswitchBtn,Qt::AlignLeft);
-    hlay->addWidget(mcombox,20,Qt::AlignCenter);
-    hlay->addWidget(saveBtn,Qt::AlignRight);
+    hlay->addWidget(mswitchLabel, Qt::AlignLeft);
+    hlay->addWidget(mswitchBtn, Qt::AlignLeft);
+    hlay->addWidget(mcombox, 20, Qt::AlignCenter);
+    hlay->addWidget(saveBtn, Qt::AlignRight);
 
     //第三行
     vlay->addLayout(hlay);
     vlay->addStretch(2);
     vlay->addWidget(slWidget);
-    vlay->setContentsMargins(20,10,20,20);
+    vlay->setContentsMargins(20, 10, 20, 20);
 
     //均衡器页面
     auto mequalizer = new DWidget(q);
-    mequalizer->resize(537,393);
+    mequalizer->resize(537, 393);
     mequalizer->setLayout(vlay);
 
     auto mtabwidget = new DTabWidget;
     mtabwidget->setTabPosition(QTabWidget::West);
     mtabwidget->setAutoFillBackground(true);
     mtabwidget->setDocumentMode(true);
-    mtabwidget->resize(720,463);
-    mtabwidget->addTab(mequalizer,"均衡器");
+    mtabwidget->resize(720, 463);
+    mtabwidget->addTab(mequalizer, "均衡器");
     mtabwidget->tabBar()->setStyle(new CustomTabStyle);
-    mtabwidget->tabBar()->setContentsMargins(10,0,10,0);
+    mtabwidget->tabBar()->setContentsMargins(10, 0, 10, 0);
 
     auto mTitlebar = new DTitlebar(q);
     mTitlebar->setTitle("");
-    mTitlebar->resize(720,50);
+    mTitlebar->resize(720, 50);
 
     //垂直布局TabWidget和TitleBar
     auto  mlayout = new QVBoxLayout;
@@ -287,182 +349,97 @@ void DequalizerDialogPrivate::initUI()
     mlayout->setMargin(0);
     q->setLayout(mlayout);
 
-
-    //开机后默认参数设置
-    switch_flag = settings->value("equalizer.all.switch").toBool();
-    mswitchBtn->setChecked(switch_flag);
-    mcombox->setEnabled(switch_flag);
-    mcombox->setCurrentText(settings->value("equalizer.all.combox").toString());
-    saveBtn->setEnabled(false);
-
-    slider_preamplifier->setValue(0);
-    slider_preamplifier->setMinimum(-20);
-    slider_preamplifier->setMaximum(20);
-    slider_preamplifier->setPageStep(1);
-    slider_preamplifier->setEnabled(false);
-
-    slider_60->setValue(0);
-    slider_60->setMinimum(-20);
-    slider_60->setMaximum(20);
-    slider_60->setPageStep(1);
-    slider_60->setEnabled(false);
-
-    slider_170->setValue(0);
-    slider_170->setMinimum(-20);
-    slider_170->setMaximum(20);
-    slider_170->setPageStep(1);
-    slider_170->setEnabled(false);
-
-    slider_310->setValue(0);
-    slider_310->setMinimum(-20);
-    slider_310->setMaximum(20);
-    slider_310->setPageStep(1);
-    slider_310->setEnabled(false);
-
-    slider_600->setValue(0);
-    slider_600->setMinimum(-20);
-    slider_600->setMaximum(20);
-    slider_600->setPageStep(1);
-    slider_600->setEnabled(false);
-
-    slider_1k->setValue(0);
-    slider_1k->setMinimum(-20);
-    slider_1k->setMaximum(20);
-    slider_1k->setPageStep(1);
-    slider_1k->setEnabled(false);
-
-    slider_3k->setValue(0);
-    slider_3k->setMinimum(-20);
-    slider_3k->setMaximum(20);
-    slider_3k->setPageStep(1);
-    slider_3k->setEnabled(false);
-
-    slider_6k->setValue(0);
-    slider_6k->setMinimum(-20);
-    slider_6k->setMaximum(20);
-    slider_6k->setPageStep(1);
-    slider_6k->setEnabled(false);
-
-    slider_12k->setValue(0);
-    slider_12k->setMinimum(-20);
-    slider_12k->setMaximum(20);
-    slider_12k->setPageStep(1);
-    slider_12k->setEnabled(false);
-
-    slider_14k->setValue(0);
-    slider_14k->setMinimum(-20);
-    slider_14k->setMaximum(20);
-    slider_14k->setPageStep(1);
-    slider_14k->setEnabled(false);
-
-    slider_16k->setValue(0);
-    slider_16k->setMinimum(-20);
-    slider_16k->setMaximum(20);
-    slider_16k->setPageStep(1);
-    slider_16k->setEnabled(false);
-
+    mcombox->setCurrentIndex(curEffect);
+    q->enabledUI(flag);
+    if (curEffect == 0) {
+        q->customMode();
+    }
 
 }
 
-void DequalizerDialogPrivate::initConnection()
+//开机后默认参数设置
+void DequalizerDialog::readConfig(MusicSettings *settings)
 {
-    Q_Q(DequalizerDialog);
-    q->connect(mswitchBtn, &DSwitchButton::checkedChanged,
-    q, [ = ](bool flag) {
-        mcombox->setEnabled(flag);
-        slider_preamplifier->setEnabled(flag);
-        slider_60->setEnabled(flag);
-        slider_170->setEnabled(flag);
-        slider_310->setEnabled(flag);
-        slider_600->setEnabled(flag);
-        slider_1k->setEnabled(flag);
-        slider_3k->setEnabled(flag);
-        slider_6k->setEnabled(flag);
-        slider_12k->setEnabled(flag);
-        slider_14k->setEnabled(flag);
-        slider_16k->setEnabled(flag);
-            qDebug()<<"均衡器已启用:"<<flag;
-            settings->setOption("equalizer.all.switch",flag);
-    });
+    Q_D(DequalizerDialog);
+    d->switch_flag = settings->value("equalizer.all.switch").toBool();
+    d->curEffect   = settings->value("equalizer.all.curEffect").toInt();
 
-    q->connect(mcombox, &DComboBox::currentTextChanged,
-    q, [ = ](const QString &currentText) {
-            setCurrentEffect(currentText);
-            saveBtn->setEnabled(false);
-            settings->setOption("equalizer.all.combox",currentText);
-    });
+}
 
-    q->connect(saveBtn, &DPushButton::clicked,
-    q, [ = ]() {
-            qDebug()<<"保存";
-    });
+void DequalizerDialog::writeConfig(MusicSettings *settings)
+{
+    Q_D(DequalizerDialog);
+    settings->setOption("equalizer.all.frequency_pre", d->slider_pre->value());
+    settings->setOption("equalizer.all.frequency_60", d->slider_60->value());
+    settings->setOption("equalizer.all.frequency_170", d->slider_170->value());
+    settings->setOption("equalizer.all.frequency_310", d->slider_310->value());
+    settings->setOption("equalizer.all.frequency_600", d->slider_600->value());
+    settings->setOption("equalizer.all.frequency_1K", d->slider_1k->value());
+    settings->setOption("equalizer.all.frequency_3K", d->slider_3k->value());
+    settings->setOption("equalizer.all.frequency_6K", d->slider_6k->value());
+    settings->setOption("equalizer.all.frequency_12K", d->slider_12k->value());
+    settings->setOption("equalizer.all.frequency_14K", d->slider_14k->value());
+    settings->setOption("equalizer.all.frequency_16K", d->slider_16k->value());
+}
 
-    q->connect(slider_60, &DSlider::sliderPressed,
-    q, [ = ]() {
-            mcombox->setCurrentText("自定义");
-            saveBtn->setEnabled(true);
+//UI使能
+void DequalizerDialog::enabledUI(bool flag)
+{
+    Q_D(DequalizerDialog);
+    d->mswitchBtn->setChecked(flag);
+    d->mcombox->setEnabled(flag);
+    for (DSlider *slider : findChildren<DSlider *>()) {
+        slider->setEnabled(flag);
+    }
+
+    if (flag && d->curEffect == 0) {
+        d->saveBtn->setEnabled(true);
+    } else {
+        d->saveBtn->setEnabled(false);
+    }
+}
+
+void DequalizerDialog::initConnection()
+{
+    Q_D(DequalizerDialog);
+    //均衡器使能
+    connect(d->mswitchBtn, &DSwitchButton::checkedChanged, this, &DequalizerDialog::checkedChanged);
+    // Create local connections
+    connect(d->mcombox, QOverload<int>::of(&DComboBox::currentIndexChanged),
+    this, [ = ](int index) {
+
+        if (index == 0) {
+            //“自定义”
+            d->saveBtn->setEnabled(true);
+            Q_EMIT getCurIndex(18);
+        } else {
+            d->saveBtn->setEnabled(false);
+            Q_EMIT getCurIndex(index - 1);
+        }
+        d->curEffect = index;
     });
-    q->connect(slider_170, &DSlider::sliderPressed,
-    q, [ = ]( ) {
-            mcombox->setCurrentText("自定义");
-            saveBtn->setEnabled(true);
-    });
-    q->connect(slider_310, &DSlider::sliderPressed,
-    q, [ = ]( ) {
-            mcombox->setCurrentText("自定义");
-            saveBtn->setEnabled(true);
-    });
-    q->connect(slider_600, &DSlider::sliderPressed,
-    q, [ = ]( ) {
-            mcombox->setCurrentText("自定义");
-            saveBtn->setEnabled(true);
-    });
-    q->connect(slider_1k, &DSlider::sliderPressed,
-    q, [ = ]( ) {
-            mcombox->setCurrentText("自定义");
-            saveBtn->setEnabled(true);
-    });
-    q->connect(slider_3k, &DSlider::sliderPressed,
-    q, [ = ]( ) {
-            mcombox->setCurrentText("自定义");
-            saveBtn->setEnabled(true);
-    });
-    q->connect(slider_6k, &DSlider::sliderPressed,
-    q, [ = ]( ) {
-            mcombox->setCurrentText("自定义");
-            saveBtn->setEnabled(true);
-    });
-    q->connect(slider_12k, &DSlider::sliderPressed,
-    q, [ = ]( ) {
-            mcombox->setCurrentText("自定义");
-            saveBtn->setEnabled(true);
-    });
-    q->connect(slider_14k, &DSlider::sliderPressed,
-    q, [ = ]( ) {
-            mcombox->setCurrentText("自定义");
-            saveBtn->setEnabled(true);
-    });
-    q->connect(slider_16k, &DSlider::sliderPressed,
-    q, [ = ]( ) {
-            mcombox->setCurrentText("自定义");
-            saveBtn->setEnabled(true);
+    connect(this, &DequalizerDialog::getCurIndex, d->_mediaPlayer->equalizer(), &VlcEqualizer::loadFromPreset);
+    connect(d->_mediaPlayer->equalizer(), &VlcEqualizer::presetLoaded, this, &DequalizerDialog::applySelectedPreset);
+
+    connect(d->slider_pre, &DSlider::valueChanged, d->_vlcEqualizer, &VlcEqualizer::setPreamplification);
+    for (DSlider *slider : findChildren<DSlider *>()) {
+        if (slider != d->slider_pre) {
+            connect(slider, &DSlider::valueChanged, this, &DequalizerDialog::applyChangesForBand);
+        }
+    }
+    connect(d->saveBtn, &DPushButton::clicked,
+    this, [ = ]() {
+        writeConfig(d->settings);
+        qDebug() << "保存";
     });
 }
-//设置模式
- void DequalizerDialogPrivate::setCurrentEffect(QString currentText)
- {
-
-
-
-
- }
 
 DequalizerDialog::DequalizerDialog(QWidget *parent):
     DAbstractDialog(parent), d_ptr(new DequalizerDialogPrivate(this))
 {
     Q_D(DequalizerDialog);
-    d->initUI();
-    d->initConnection();
+    readConfig(d->settings);
+    d->initUI(d->switch_flag);
 }
 
 DequalizerDialog::~DequalizerDialog()
@@ -470,13 +447,75 @@ DequalizerDialog::~DequalizerDialog()
 //    Q_D(DequalizerDialog);
 }
 
+void DequalizerDialog::updateSettings()
+{
+    Q_D(DequalizerDialog);
+    d->settings->setOption("equalizer.all.switch", d->switch_flag);
+    d->settings->setOption("equalizer.all.curEffect", d->curEffect);
+}
+
 void DequalizerDialog::setMediaPlayer(VlcMediaPlayer *mediaPlayer)
 {
     Q_D(DequalizerDialog);
-    _mediaPlayer = mediaPlayer;
-    if (!_mediaPlayer)
-        return;
 
-    _vlcEqualizer = _mediaPlayer->equalizer();
-    d->initConnection();
+    d->_mediaPlayer = mediaPlayer;
+    if (!d->_mediaPlayer)
+        return;
+    d->_vlcEqualizer = d->_mediaPlayer->equalizer();
+    initConnection();
+}
+
+void DequalizerDialog::applyChangesForBand(int value)
+{
+    Q_D(DequalizerDialog);
+    int bandIndex = d->mapSliders.value(static_cast<DSlider *>(sender()));
+    d->_mediaPlayer->equalizer()->setAmplificationForBandAt((float)value, bandIndex);
+    d->mcombox->setCurrentIndex(0);
+}
+
+void DequalizerDialog::applySelectedPreset()
+{
+    Q_D(DequalizerDialog);
+    auto equalizer = d->_mediaPlayer->equalizer();
+
+    disconnect(d->slider_pre, 0, equalizer, 0);
+    for (DSlider *slider : findChildren<DSlider *>()) {
+        if (slider == d->slider_pre) {
+            slider->setValue(equalizer->preamplification());
+        } else {
+            disconnect(slider, &DSlider::valueChanged, this, &DequalizerDialog::applyChangesForBand);
+            slider->setValue(equalizer->amplificationForBandAt(d->mapSliders.value(slider)));
+            connect(slider, &DSlider::valueChanged, this, &DequalizerDialog::applyChangesForBand);
+        }
+    }
+    connect(d->slider_pre, &DSlider::valueChanged, equalizer, &VlcEqualizer::setPreamplification);
+}
+
+void DequalizerDialog::checkedChanged(bool checked)
+{
+    Q_D(DequalizerDialog);
+    for (DSlider *slider : findChildren<DSlider *>()) {
+        slider->setEnabled(checked);
+    }
+    d->switch_flag = checked;
+    d->mcombox->setEnabled(checked);
+    if (checked) {
+        d->mcombox->setCurrentIndex(1);
+    }
+    d->_mediaPlayer->equalizer()->setEnabled(checked);
+}
+void DequalizerDialog::customMode()
+{
+    Q_D(DequalizerDialog);
+    d->slider_pre->setValue(d->settings->value("equalizer.all.frequency_pre").toInt());
+    d->slider_60->setValue(d->settings->value("equalizer.all.frequency_60").toInt());
+    d->slider_170->setValue(d->settings->value("equalizer.all.frequency_170").toInt());
+    d->slider_310->setValue(d->settings->value("equalizer.all.frequency_310").toInt());
+    d->slider_600->setValue(d->settings->value("equalizer.all.frequency_600").toInt());
+    d->slider_1k->setValue(d->settings->value("equalizer.all.frequency_1K").toInt());
+    d->slider_3k->setValue(d->settings->value("equalizer.all.frequency_3K").toInt());
+    d->slider_6k->setValue(d->settings->value("equalizer.all.frequency_6K").toInt());
+    d->slider_12k->setValue(d->settings->value("equalizer.all.frequency_12K").toInt());
+    d->slider_14k->setValue(d->settings->value("equalizer.all.frequency_14K").toInt());
+    d->slider_16k->setValue(d->settings->value("equalizer.all.frequency_16K").toInt());
 }

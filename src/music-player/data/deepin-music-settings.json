@@ -191,6 +191,8 @@
         {
             "key": "equalizer",
             "name": "Equalizer",
+            "reset": false,
+            "hide": true,
             "groups": [
                 {
                     "key": "all",
@@ -198,20 +200,55 @@
                     "options": [
                         {
                             "key": "switch",
-                            "reset": false,
-                            "hide": true,
                             "default": false
                         },
                         {
-                            "key": "combox",
-                            "name": "Combobox",
-                            "type": "combobox",
-                            "items": [
-                                    "自定义","单调","古典","俱乐部","舞曲","全低音",
-                                    "全低音和高音","全高音","耳机","大厅","实况","聚会",
-                                    "流行","雷盖","摇滚","斯卡","柔和","慢摇","电子乐"
-                            ],
-                            "default": "单调"
+                            "key": "curEffect",
+                            "default": 0
+                        },
+                        {
+                            "key": "frequency_pre",
+                            "default": 0
+                        },
+                        {
+                            "key": "frequency_60",
+                            "default": 0
+                        },
+                        {
+                            "key": "frequency_170",
+                            "default": 0
+                        },
+                        {
+                            "key": "frequency_310",
+                            "default": 0
+                        },
+                        {
+                            "key": "frequency_600",
+                            "default": 0
+                        },
+                        {
+                            "key": "frequency_1K",
+                            "default": 0
+                        },
+                        {
+                            "key": "frequency_3K",
+                            "default": 0
+                        },
+                        {
+                            "key": "frequency_6K",
+                            "default": 0
+                        },
+                        {
+                            "key": "frequency_12K",
+                            "default": 0
+                        },
+                        {
+                            "key": "frequency_14K",
+                            "default": 0
+                        },
+                        {
+                            "key": "frequency_16K",
+                            "default": 0
                         }
                     ]
                 }

@@ -123,8 +123,11 @@ signals:
     void searchCand(QString searchText, PlaylistPtr playlist);
     void searchResult(QString searchText, QList<PlaylistPtr> resultlist, QString id);
     void musicFileMiss();
-	 //语音控制
+    //语音控制
     void sigSpeedResult(int action, bool result);
+    //均衡器
+    void setEnabled(bool enabled);
+    void loadFromPreset(int curIndex);
 
 public slots:
     //! music control interface
