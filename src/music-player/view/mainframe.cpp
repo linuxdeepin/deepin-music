@@ -848,10 +848,7 @@ void MainFrame::postInitUI()
         if (QSystemTrayIcon::Trigger == reason) {
             if (isVisible()) {
                 if (isMinimized()) {
-                    showNormal();
-                    // when window flags changed, should call hide and show
-                    hide();
-                    show();
+                    activateWindow();
                 } else {
                     showMinimized();
                 }
