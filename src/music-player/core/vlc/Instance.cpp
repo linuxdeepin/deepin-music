@@ -36,7 +36,7 @@ void logCallback(void *data,
 
     switch (level) {
     case Vlc::ErrorLevel:
-        qCritical(message.toUtf8().data(), NULL);
+//        qCritical(message.toUtf8().data(), NULL);
         break;
     case Vlc::WarningLevel:
         qWarning(message.toUtf8().data(), NULL);

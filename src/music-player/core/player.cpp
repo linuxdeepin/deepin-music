@@ -660,13 +660,6 @@ void Player::playMeta(PlaylistPtr playlist, const MetaPtr meta)
         Q_EMIT mediaPlayed(d->curPlaylist, d->activeMeta);
     }
 
-
-//    //vlc & qplayer 声音同步
-//    QTimer::singleShot(200, this, [ = ]() {
-//        setVolume(d->volume);
-//    });
-
-
     if (d->firstPlayOnLoad == true) {
         d->firstPlayOnLoad = false;
         QTimer::singleShot(150, this, [ = ]() {
@@ -972,7 +965,6 @@ void Player::setPosition(qlonglong position)
         d->qvplayer->setTime(position + d->activeMeta->offset);
     }
 }
-
 
 void Player::setMode(Player::PlaybackMode mode)
 {

@@ -76,7 +76,12 @@ void VlcEqualizer::loadFromPreset(uint index)
     if (_vlcEqualizer) {
         libvlc_audio_equalizer_release(_vlcEqualizer);
     }
-    _vlcEqualizer = libvlc_audio_equalizer_new_from_preset(index);
+    //18：The custom mode
+    if (index < 18)
+        _vlcEqualizer = libvlc_audio_equalizer_new_from_preset(index);
+    else {
+        _vlcEqualizer = libvlc_audio_equalizer_new();
+    }
 //    VlcError::showErrmsg();
     if (_vlcEqualizer) {
         emit presetLoaded();

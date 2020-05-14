@@ -418,10 +418,16 @@ void DequalizerDialog::initConnection()
         }
         d->curEffect = index;
     });
+    //Switch mode
     connect(this, &DequalizerDialog::getCurIndex, d->_mediaPlayer->equalizer(), &VlcEqualizer::loadFromPreset);
+    //display after switch mode
     connect(d->_mediaPlayer->equalizer(), &VlcEqualizer::presetLoaded, this, &DequalizerDialog::applySelectedPreset);
 
+    applySelectedPreset();
+
+    //set pream
     connect(d->slider_pre, &DSlider::valueChanged, d->_vlcEqualizer, &VlcEqualizer::setPreamplification);
+    //set other slider
     for (DSlider *slider : findChildren<DSlider *>()) {
         if (slider != d->slider_pre) {
             connect(slider, &DSlider::valueChanged, this, &DequalizerDialog::applyChangesForBand);
@@ -478,7 +484,7 @@ void DequalizerDialog::applySelectedPreset()
     Q_D(DequalizerDialog);
     auto equalizer = d->_mediaPlayer->equalizer();
 
-    disconnect(d->slider_pre, 0, equalizer, 0);
+//    disconnect(d->slider_pre, 0, equalizer, 0);
     for (DSlider *slider : findChildren<DSlider *>()) {
         if (slider == d->slider_pre) {
             slider->setValue(equalizer->preamplification());
@@ -488,7 +494,7 @@ void DequalizerDialog::applySelectedPreset()
             connect(slider, &DSlider::valueChanged, this, &DequalizerDialog::applyChangesForBand);
         }
     }
-    connect(d->slider_pre, &DSlider::valueChanged, equalizer, &VlcEqualizer::setPreamplification);
+//    connect(d->slider_pre, &DSlider::valueChanged, equalizer, &VlcEqualizer::setPreamplification);
 }
 
 void DequalizerDialog::checkedChanged(bool checked)
