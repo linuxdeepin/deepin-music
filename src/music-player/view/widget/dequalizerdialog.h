@@ -3,6 +3,7 @@
 #include <DAbstractDialog>
 #include "../core/musicsettings.h"
 #include "vlc/Equalizer.h"
+#include "../core/util/threadpool.h"
 
 class DequalizerDialogPrivate;
 class DequalizerDialog: public Dtk::Widget::DAbstractDialog
@@ -11,9 +12,6 @@ class DequalizerDialog: public Dtk::Widget::DAbstractDialog
 public:
     explicit DequalizerDialog(QWidget *parent = Q_NULLPTR);
     ~DequalizerDialog();
-    void readConfig(MusicSettings *settings);
-    void writeConfig(MusicSettings *settings);
-    void enabledUI(bool flag);
     void initConnection();
     void customMode();
     void setMediaPlayer(VlcMediaPlayer *mediaPlayer);
@@ -23,8 +21,6 @@ signals:
 
 public Q_SLOTS:
     void updateSettings();
-//    void updateSettings(DTK_CORE_NAMESPACE::DSettings *settings);
-//    void updateSettings(const QByteArray &translateContext, DTK_CORE_NAMESPACE::DSettings *settings);
     void applyChangesForBand(int value);
     void applySelectedPreset();
     void checkedChanged(bool checked);

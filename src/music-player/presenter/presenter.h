@@ -126,8 +126,9 @@ signals:
     //语音控制
     void sigSpeedResult(int action, bool result);
     //均衡器
-    void setEnabled(bool enabled);
+    void setEqualizerEnabled(bool enabled);
     void loadFromPreset(int curIndex);
+    void setCustomData(QList<int> indexbaud);
 
 public slots:
     //! music control interface

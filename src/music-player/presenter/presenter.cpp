@@ -605,12 +605,26 @@ void Presenter::postAction()
 
     //读取均衡器使能开关配置
     auto eqSwitch = d->settings->value("equalizer.all.switch").toBool();
-    Q_EMIT this->setEnabled(eqSwitch);
+    Q_EMIT this->setEqualizerEnabled(eqSwitch);
     //载入当前设置音效
     auto eqCurEffect = d->settings->value("equalizer.all.curEffect").toInt();
     if (eqSwitch) {
         Q_EMIT this->loadFromPreset(eqCurEffect);
     }
+    //自定义频率
+    QList<int > allBauds;
+    allBauds.clear();
+    allBauds.append(d->settings->value("equalizer.all.baud_60").toInt());
+    allBauds.append(d->settings->value("equalizer.all.baud_170").toInt());
+    allBauds.append(d->settings->value("equalizer.all.baud_310").toInt());
+    allBauds.append(d->settings->value("equalizer.all.baud_600").toInt());
+    allBauds.append(d->settings->value("equalizer.all.baud_1K").toInt());
+    allBauds.append(d->settings->value("equalizer.all.baud_3K").toInt());
+    allBauds.append(d->settings->value("equalizer.all.baud_6K").toInt());
+    allBauds.append(d->settings->value("equalizer.all.baud_12K").toInt());
+    allBauds.append(d->settings->value("equalizer.all.baud_14K").toInt());
+    allBauds.append(d->settings->value("equalizer.all.baud_16K").toInt());
+    Q_EMIT this->setCustomData(allBauds);
 
     auto allplaylist = d->playlistMgr->playlist(AllMusicListID);
     auto lastPlaylist = allplaylist;

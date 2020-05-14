@@ -107,6 +107,7 @@ public:
     //! ui: show info dialog
     void showInfoDialog(const MetaPtr meta);
 
+    VlcMediaPlayer      *m_VlcMediaPlayer       = nullptr;
     SpeechCenter        *m_SpeechCenter         = nullptr;
     DWidget             *centralWidget          = nullptr;
     QStackedLayout      *contentLayout          = nullptr;
@@ -192,13 +193,11 @@ void MainFramePrivate::initMenu()
     auto equalizer = new QAction(MainFrame::tr("均衡器"), q);
     q->connect(equalizer, &QAction::triggered, q, [ = ](bool) {
         DequalizerDialog *equalizerDialog = new DequalizerDialog;
-        VlcMediaPlayer *player = Player::instance()->core();
-        equalizerDialog->setMediaPlayer(player);
-        equalizerDialog->updateSettings();
+        equalizerDialog->setMediaPlayer(m_VlcMediaPlayer);
+
         Dtk::Widget::moveToCenter(equalizerDialog);
 
         equalizerDialog->exec();
-        equalizerDialog->updateSettings();
         delete equalizerDialog;
         MusicSettings::sync();
     });
@@ -331,7 +330,7 @@ void MainFramePrivate::initUI(bool showLoading)
 {
     showLoading = true;
     Q_Q(MainFrame);
-    q->setMinimumSize(QSize(945, 600));
+    q->setMinimumSize(QSize(900, 600));
     q->setFocusPolicy(Qt::ClickFocus);
 
     //titlebar->setBackgroundTransparent(true);
@@ -370,6 +369,7 @@ void MainFramePrivate::initUI(bool showLoading)
     infoDialog->setThemeType(themeType);
     infoDialog->hide();
     m_SpeechCenter = SpeechCenter::getInstance();
+    m_VlcMediaPlayer = Player::instance()->core();
 #if 0
     footer->show();
 #endif
@@ -1087,16 +1087,6 @@ void MainFrame::binding(Presenter *presenter)
         }
     });
 
-    connect(presenter, &Presenter::setEnabled,
-    this, [ = ](bool enabled) {
-        Player::instance()->core()->equalizer()->setEnabled(enabled);
-    });
-
-    connect(presenter, &Presenter::loadFromPreset,
-    this, [ = ](int curIndex) {
-        Player::instance()->core()->equalizer()->loadFromPreset(uint(curIndex));
-    });
-
     connect(presenter, &Presenter::requestMusicListMenu,
     this, [ = ](const QPoint & pos, PlaylistPtr selectedlist, PlaylistPtr favlist, QList<PlaylistPtr >newlists, char type) {
         if (type > 0) {
@@ -1350,6 +1340,28 @@ void MainFrame::binding(Presenter *presenter)
     connect(muteShortcut, &QShortcut::activated, presenter, &Presenter::onToggleMute);
 
     bindSpeechConnect(presenter);
+
+//均衡器处理信号
+    connect(presenter, &Presenter::setEqualizerEnabled,
+    this, [ = ](bool enabled) {
+        d->m_VlcMediaPlayer->equalizer()->setEnabled(enabled);
+    });
+
+    connect(presenter, &Presenter::loadFromPreset,
+    this, [ = ](int curIndex) {
+        //非自定义模式时
+        if (curIndex != 0) {
+            d->m_VlcMediaPlayer->equalizer()->loadFromPreset(uint(curIndex));
+        } else {
+            connect(presenter, &Presenter::setCustomData, [ = ](QList<int> indexBaud) {
+                d->m_VlcMediaPlayer->equalizer()->setPreamplification(indexBaud.at(0));
+                for (int i = 1; i < indexBaud.size(); i++) {
+                    qDebug() << "baud:" << indexBaud.at(i);
+                    d->m_VlcMediaPlayer->equalizer()->setAmplificationForBandAt(indexBaud.at(i), uint(i));
+                }
+            });
+        }
+    });
 }
 
 //绑定语音处理信号

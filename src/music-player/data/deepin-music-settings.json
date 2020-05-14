@@ -207,47 +207,47 @@
                             "default": 0
                         },
                         {
-                            "key": "frequency_pre",
+                            "key": "baud_pre",
                             "default": 0
                         },
                         {
-                            "key": "frequency_60",
+                            "key": "baud_60",
                             "default": 0
                         },
                         {
-                            "key": "frequency_170",
+                            "key": "baud_170",
                             "default": 0
                         },
                         {
-                            "key": "frequency_310",
+                            "key": "baud_310",
                             "default": 0
                         },
                         {
-                            "key": "frequency_600",
+                            "key": "baud_600",
                             "default": 0
                         },
                         {
-                            "key": "frequency_1K",
+                            "key": "baud_1K",
                             "default": 0
                         },
                         {
-                            "key": "frequency_3K",
+                            "key": "baud_3K",
                             "default": 0
                         },
                         {
-                            "key": "frequency_6K",
+                            "key": "baud_6K",
                             "default": 0
                         },
                         {
-                            "key": "frequency_12K",
+                            "key": "baud_12K",
                             "default": 0
                         },
                         {
-                            "key": "frequency_14K",
+                            "key": "baud_14K",
                             "default": 0
                         },
                         {
-                            "key": "frequency_16K",
+                            "key": "baud_16K",
                             "default": 0
                         }
                     ]

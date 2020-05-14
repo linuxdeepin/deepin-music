@@ -77,15 +77,17 @@ void VlcEqualizer::loadFromPreset(uint index)
         libvlc_audio_equalizer_release(_vlcEqualizer);
     }
     //18：The custom mode
-    if (index < 18)
+    if (index < 18) {
         _vlcEqualizer = libvlc_audio_equalizer_new_from_preset(index);
-    else {
+        if (_vlcEqualizer) {
+            emit presetLoaded();
+        }
+    } else {
         _vlcEqualizer = libvlc_audio_equalizer_new();
+
     }
 //    VlcError::showErrmsg();
-    if (_vlcEqualizer) {
-        emit presetLoaded();
-    }
+
 }
 
 void VlcEqualizer::setAmplificationForBandAt(float amp, uint bandIndex)
