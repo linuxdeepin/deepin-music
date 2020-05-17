@@ -103,6 +103,8 @@ void MetaBufferDetector::run()
 
     if (pFormatCtx == nullptr) {
         avformat_free_context(pFormatCtx);
+        d->curPath.clear();
+        d->curHash.clear();
         return;
     }
 
@@ -113,6 +115,8 @@ void MetaBufferDetector::run()
     if (audio_stream_index < 0) {
         avformat_close_input(&pFormatCtx);
         avformat_free_context(pFormatCtx);
+        d->curPath.clear();
+        d->curHash.clear();
         return;
     }
 
@@ -140,6 +144,8 @@ void MetaBufferDetector::run()
             avformat_free_context(pFormatCtx);
             resample(curData, hash);//刷新波浪条
             d->stopFlag = false;
+            d->curPath.clear();
+            d->curHash.clear();
             return;
         }
 
@@ -164,9 +170,9 @@ void MetaBufferDetector::run()
                                   ((unsigned char)ptr[i]) << 16 |
                                   ((unsigned char)ptr[i + 1])
                               );
-                            curData.append(val+qrand());
+                        curData.append(val + qrand());
                     }
-                }else {
+                } else {
                     for (int i = 0; i < frame->linesize[0]; i += 1024) {
                         val = (short)(
                                   ((unsigned char)ptr[i]) << 8 |
