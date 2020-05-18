@@ -1043,6 +1043,68 @@ void Player::musicFileMiss()
     }
 }
 
+void Player::setEqualizer(bool enabled, int curIndex, QList<int> indexbaud)
+{
+    Q_D(const Player);
+    if (enabled) {
+        d->qvplayer->equalizer()->setEnabled(true);
+        //非自定义模式时
+        if (curIndex > 0) {
+            d->qvplayer->equalizer()->loadFromPreset(uint(curIndex - 1));
+            //设置放大值
+            d->qvplayer->equalizer()->setPreamplification(d->qvplayer->equalizer()->preamplification());
+            for (int i = 0 ; i < 10; i++) {
+                //设置频率值
+                d->qvplayer->equalizer()->setAmplificationForBandAt(d->qvplayer->equalizer()->amplificationForBandAt(uint(i)), uint(i));
+            }
+        } else {
+            if (indexbaud.size() == 0) {
+                d->qvplayer->equalizer()->setEnabled(false);
+            } else {
+                d->qvplayer->equalizer()->setPreamplification(indexbaud.at(0));
+                for (int i = 1; i < 11; i++) {
+                    d->qvplayer->equalizer()->setAmplificationForBandAt(indexbaud.at(i), uint(i));
+                }
+            }
+        }
+    } else {
+        d->qvplayer->equalizer()->setEnabled(false);
+    }
+}
+
+void Player::setEqualizerEnable(bool enable)
+{
+    Q_D(Player);
+    d->qvplayer->equalizer()->setEnabled(enable);
+}
+
+void Player::setEqualizerpre(int val)
+{
+    Q_D(Player);
+    d->qvplayer->equalizer()->setPreamplification(val);
+}
+
+void Player::setEqualizerbauds(int index, int val)
+{
+    Q_D(Player);
+    d->qvplayer->equalizer()->setAmplificationForBandAt(index, uint(val));
+}
+
+void Player::setEqualizerCurMode(int curIndex)
+{
+    Q_D(Player);
+    //非自定义模式时
+    if (curIndex != 0) {
+        d->qvplayer->equalizer()->loadFromPreset(uint(curIndex - 1));
+        //设置放大值
+        d->qvplayer->equalizer()->setPreamplification(d->qvplayer->equalizer()->amplificationForBandAt(uint(curIndex - 1)));
+        for (int i = 0 ; i < 11; i++) {
+            //设置频率值
+            d->qvplayer->equalizer()->setAmplificationForBandAt(d->qvplayer->equalizer()->amplificationForBandAt(uint(i)), uint(i));
+        }
+    }
+}
+
 void Player::readSinkInputPath()
 {
     Q_D(Player);

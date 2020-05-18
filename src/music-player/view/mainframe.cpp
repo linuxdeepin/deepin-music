@@ -108,6 +108,7 @@ public:
     void showInfoDialog(const MetaPtr meta);
 
     VlcMediaPlayer      *m_VlcMediaPlayer       = nullptr;
+    DequalizerDialog    *equalizerDialog        = nullptr;
     SpeechCenter        *m_SpeechCenter         = nullptr;
     DWidget             *centralWidget          = nullptr;
     QStackedLayout      *contentLayout          = nullptr;
@@ -191,14 +192,10 @@ void MainFramePrivate::initMenu()
     });
 
     auto equalizer = new QAction(MainFrame::tr("均衡器"), q);
+        equalizerDialog = new DequalizerDialog(q);
     q->connect(equalizer, &QAction::triggered, q, [ = ](bool) {
-        DequalizerDialog *equalizerDialog = new DequalizerDialog;
-        equalizerDialog->setMediaPlayer(m_VlcMediaPlayer);
-
         Dtk::Widget::moveToCenter(equalizerDialog);
-
         equalizerDialog->exec();
-        delete equalizerDialog;
         MusicSettings::sync();
     });
 
@@ -1341,27 +1338,7 @@ void MainFrame::binding(Presenter *presenter)
 
     bindSpeechConnect(presenter);
 
-//均衡器处理信号
-    connect(presenter, &Presenter::setEqualizerEnabled,
-    this, [ = ](bool enabled) {
-        d->m_VlcMediaPlayer->equalizer()->setEnabled(enabled);
-    });
-
-    connect(presenter, &Presenter::loadFromPreset,
-    this, [ = ](int curIndex) {
-        //非自定义模式时
-        if (curIndex != 0) {
-            d->m_VlcMediaPlayer->equalizer()->loadFromPreset(uint(curIndex));
-        } else {
-            connect(presenter, &Presenter::setCustomData, [ = ](QList<int> indexBaud) {
-                d->m_VlcMediaPlayer->equalizer()->setPreamplification(indexBaud.at(0));
-                for (int i = 1; i < indexBaud.size(); i++) {
-                    qDebug() << "baud:" << indexBaud.at(i);
-                    d->m_VlcMediaPlayer->equalizer()->setAmplificationForBandAt(indexBaud.at(i), uint(i));
-                }
-            });
-        }
-    });
+    bindEqualizerConnect(presenter);
 }
 
 //绑定语音处理信号
@@ -1402,6 +1379,19 @@ void MainFrame::bindSpeechConnect(Presenter *presenter)
     //语音返回信号
     connect(presenter, &Presenter::sigSpeedResult,
             d->m_SpeechCenter, &SpeechCenter::onSpeedResult);
+}
+//绑定均衡器处理信号
+void MainFrame::bindEqualizerConnect(Presenter *presenter)
+{
+    Q_D(const MainFrame);
+    connect(d->equalizerDialog, &DequalizerDialog::setEqualizerEnable,
+            presenter, &Presenter::setEqualizerEnable);
+    connect(d->equalizerDialog, &DequalizerDialog::setEqualizerpre,
+            presenter, &Presenter::setEqualizerpre);
+    connect(d->equalizerDialog, &DequalizerDialog::setEqualizerbauds,
+            presenter, &Presenter::setEqualizerbauds);
+    connect(d->equalizerDialog, &DequalizerDialog::setEqualizerIndex,
+            presenter, &Presenter::setEqualizerCurMode);
 }
 
 void MainFrame::focusPlayList()

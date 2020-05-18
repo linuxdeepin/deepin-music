@@ -605,15 +605,10 @@ void Presenter::postAction()
 
     //读取均衡器使能开关配置
     auto eqSwitch = d->settings->value("equalizer.all.switch").toBool();
-    Q_EMIT this->setEqualizerEnabled(eqSwitch);
-    //载入当前设置音效
-    auto eqCurEffect = d->settings->value("equalizer.all.curEffect").toInt();
-    if (eqSwitch) {
-        Q_EMIT this->loadFromPreset(eqCurEffect);
-    }
     //自定义频率
     QList<int > allBauds;
     allBauds.clear();
+    allBauds.append(d->settings->value("equalizer.all.baud_pre").toInt());
     allBauds.append(d->settings->value("equalizer.all.baud_60").toInt());
     allBauds.append(d->settings->value("equalizer.all.baud_170").toInt());
     allBauds.append(d->settings->value("equalizer.all.baud_310").toInt());
@@ -624,7 +619,12 @@ void Presenter::postAction()
     allBauds.append(d->settings->value("equalizer.all.baud_12K").toInt());
     allBauds.append(d->settings->value("equalizer.all.baud_14K").toInt());
     allBauds.append(d->settings->value("equalizer.all.baud_16K").toInt());
-    Q_EMIT this->setCustomData(allBauds);
+    //载入当前设置音效
+    auto eqCurEffect = d->settings->value("equalizer.all.curEffect").toInt();
+
+    if (eqSwitch) {
+        setEqualizer(eqSwitch, eqCurEffect, allBauds);
+    }
 
     auto allplaylist = d->playlistMgr->playlist(AllMusicListID);
     auto lastPlaylist = allplaylist;
@@ -2037,6 +2037,37 @@ void Presenter::onSpeechsetMode(const int mode)
 {
     Q_D(Presenter);
     onPlayModeChanged(mode);
+}
+//设置均衡器(配置文件)
+void Presenter::setEqualizer(bool enabled, int curIndex, QList<int> indexbaud)
+{
+    Q_D(Presenter);
+//    qDebug() << "read equalizer config:" << enabled << "curIndex:" << curIndex << "indexbaud:" << indexbaud;
+    d->player->setEqualizer(enabled, curIndex, indexbaud);
+}
+//使能
+void Presenter::setEqualizerEnable(bool enabled)
+{
+    Q_D(Presenter);
+    d->player->setEqualizerEnable(enabled);
+}
+//滑动滑调（前置放大）
+void Presenter::setEqualizerpre(int val)
+{
+    Q_D(Presenter);
+    d->player->setEqualizerpre(val);
+}
+//滑动滑调（其他）
+void Presenter::setEqualizerbauds(int index, int val)
+{
+    Q_D(Presenter);
+    d->player->setEqualizerbauds(index, val);
+}
+//设置当前模式
+void Presenter::setEqualizerCurMode(int curIndex)
+{
+    Q_D(Presenter);
+    d->player->setEqualizerCurMode(curIndex);
 }
 
 void Presenter::onScanMusicDirectory()

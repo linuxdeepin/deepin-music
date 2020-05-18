@@ -125,10 +125,6 @@ signals:
     void musicFileMiss();
     //语音控制
     void sigSpeedResult(int action, bool result);
-    //均衡器
-    void setEqualizerEnabled(bool enabled);
-    void loadFromPreset(int curIndex);
-    void setCustomData(QList<int> indexbaud);
 
 public slots:
     //! music control interface
@@ -198,6 +194,13 @@ public slots:
     void onSpeechFavorite();
     void onSpeechunFaverite();
     void onSpeechsetMode(const int mode);
+
+    //均衡器
+    void setEqualizer(bool enabled, int curIndex, QList<int> indexbaud);
+    void setEqualizerEnable(bool enabled);
+    void setEqualizerpre(int val);
+    void setEqualizerbauds(int index, int val);
+    void setEqualizerCurMode(int curIndex);
 
 private:
     bool containsStr(QString searchText, QString text);

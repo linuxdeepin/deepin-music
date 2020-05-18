@@ -74,39 +74,73 @@ public:
     void readConfig();
     void initUI();
 
+private:
     DTitlebar   *mtitlebar            = nullptr;
-    DLabel      *mtitleLabel          = nullptr;
-    DLabel      *mswitchLabel         = nullptr;
     DSwitchButton *mswitchBtn         = nullptr;
     DComboBox      *mcombox           = nullptr;
     DPushButton    *saveBtn           = nullptr;
+
+    DLabel      *mtitleLabel          = nullptr;
+    DLabel      *mswitchLabel         = nullptr;
+    DLabel      *lb_baud_pre          = nullptr;
+    DLabel      *lb_baud_60           = nullptr;
+    DLabel      *lb_baud_170          = nullptr;
+    DLabel      *lb_baud_310          = nullptr;
+    DLabel      *lb_baud_600          = nullptr;
+    DLabel      *lb_baud_1K           = nullptr;
+    DLabel      *lb_baud_3K           = nullptr;
+    DLabel      *lb_baud_6K           = nullptr;
+    DLabel      *lb_baud_12K          = nullptr;
+    DLabel      *lb_baud_14K          = nullptr;
+    DLabel      *lb_baud_16K          = nullptr;
+
     DSlider     *slider_pre           = nullptr;
     DSlider     *slider_60            = nullptr;
     DSlider     *slider_170           = nullptr;
     DSlider     *slider_310           = nullptr;
     DSlider     *slider_600           = nullptr;
-    DSlider     *slider_1k            = nullptr;
-    DSlider     *slider_3k            = nullptr;
-    DSlider     *slider_6k            = nullptr;
-    DSlider     *slider_12k           = nullptr;
-    DSlider     *slider_14k           = nullptr;
-    DSlider     *slider_16k           = nullptr;
+    DSlider     *slider_1K            = nullptr;
+    DSlider     *slider_3K            = nullptr;
+    DSlider     *slider_6K            = nullptr;
+    DSlider     *slider_12K           = nullptr;
+    DSlider     *slider_14K           = nullptr;
+    DSlider     *slider_16K           = nullptr;
+    DPushButton *btn_default          = nullptr;
 
     QStringList    effect_type        = {"自定义", "单调", "古典", "俱乐部", "舞曲", "全低音",
                                          "全低音和高音", "全高音", "耳机", "大厅", "实况", "聚会",
                                          "流行", "雷盖", "摇滚", "斯卡", "柔和", "慢摇", "电子乐"
                                         };
+    QList<int> BaudList;
 
-    QMap<DSlider *, int> mapSliders;
     MusicSettings   *settings         = nullptr;
 
 
     bool    switch_flag               = false;
+    bool    changeflag                = true;
     int     curEffect                 = 0;
 
 
-    VlcMediaPlayer *_mediaPlayer;
-    VlcEqualizer *_vlcEqualizer;
+    int flat_bauds[11] = {12, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+    int Classical_bauds[11] = {12, 0, 0, 0, 0, 0, 0, -7, -7, -7, -9};
+    int Club_bauds[11] = {12, 0, 0, 0, 0, 0, 0, -7, -7, -7, -9};
+    int Dance_bauds[11] = {5, 9, 7, 2, 0, 0, -5, -7, -7, 0, 0};
+    int Full_bass_bauds[11] = {5, -8, 9, 9, 5, 1, -4, -8, -10, -11, -11};
+    int Full_bass_and_treble_bauds[11] = {4, 7, 5, 0, -7, -4, 1, 8, 11, 12, 12};
+    int Full_treble_bauds[11] = {3, -9, -9, -9, -4, 2, 11, 16, 16, 16, 16};
+    int Headphones_bauds[11] = {4, 4, 11, 5, -3, -2, 1, 4, 9, 12, 14};
+    int Large_Hall_bauds[11] = {5, 10, 10, 5, 5, 0, -4, -4, -4, 0, 0};
+    int Live_bauds[11] = {7, -4, 0, 4, 5, 5, 5, 4, 2, 2, 2};
+    int Party_bauds[11] = {6, 7, 7, 0, 0, 0, 0, 0, 0, 7, 7};
+    int Pop_bauds[11] = {6, -1, 4, 7, 8, 5, 0, -2, -2, -1, -1};
+    int Reggae_bauds[11] = {8, 0, 0, 0, -5, 0, 6, 6, 0, 0, 0};
+    int Rock_bauds[11] = {5, 8, 4, -5, -8, -3, 4, 8, 11, 11, 11};
+    int Ska_bauds[11] = {6, -2, -4, -4, 0, 4, 5, 8, 9, 11, 9};
+    int Soft_bauds[11] = {5, 4, 1, 0, -2, 0, 4, 8, 9, 11, 12};
+    int Soft_rock_bauds[11] = {7, 4, 4, 2, 0, -4, -5, -3, 0, 2, 8};
+    int Techno_bauds[11] = {5, 8, 5, 0, -5, -4, 0, 8, 9, 9, 8};
+
+    QList<int *> AllbaudTypes;
     //slidergroup
     DBlurEffectWidget *slWidget  = nullptr;
     DequalizerDialog *q_ptr;
@@ -117,7 +151,7 @@ public:
 //开机后默认参数设置
 void DequalizerDialogPrivate::readConfig()
 {
-    Q_Q(DequalizerDialog);
+//    Q_Q(DequalizerDialog);
     switch_flag = settings->value("equalizer.all.switch").toBool();
     curEffect   = settings->value("equalizer.all.curEffect").toInt();
 
@@ -137,8 +171,13 @@ void DequalizerDialogPrivate::initUI()
     mtitleLabel->resize(51, 25);
     mtitleLabel->setFont(font);
 
-    mswitchLabel = new DLabel("关");
+    mswitchLabel = new DLabel;
     mswitchLabel->resize(14, 20);
+    if (switch_flag) {
+        mswitchLabel->setText("开");
+    } else {
+        mswitchLabel->setText("关");
+    }
 
     mswitchBtn = new DSwitchButton(q);
     mswitchBtn->resize(50, 20);
@@ -162,6 +201,7 @@ void DequalizerDialogPrivate::initUI()
     slider_pre->setMaximum(20);
     slider_pre->setPageStep(1);
     auto lb_preamplifier = new DLabel("前置放大");
+    lb_baud_pre = new DLabel(q);
 
     slider_60 = new DSlider(Qt::Vertical);
     slider_60->setObjectName("baud_60");
@@ -169,6 +209,7 @@ void DequalizerDialogPrivate::initUI()
     slider_60->setMaximum(20);
     slider_60->setPageStep(1);
     auto lb1     = new DLabel("60");
+    lb_baud_60 = new DLabel(q);
 
     slider_170 = new DSlider(Qt::Vertical);
     slider_170->setObjectName("baud_170");
@@ -176,6 +217,7 @@ void DequalizerDialogPrivate::initUI()
     slider_170->setMaximum(20);
     slider_170->setPageStep(1);
     auto lb2     = new DLabel("170");
+    lb_baud_170 = new DLabel(q);
 
     slider_310 = new DSlider(Qt::Vertical);
     slider_310->setObjectName("baud_310");
@@ -183,6 +225,7 @@ void DequalizerDialogPrivate::initUI()
     slider_310->setMaximum(20);
     slider_310->setPageStep(1);
     auto lb3     = new DLabel("310");
+    lb_baud_310 = new DLabel(q);
 
     slider_600 = new DSlider(Qt::Vertical);
     slider_600->setObjectName("baud_600");
@@ -190,61 +233,59 @@ void DequalizerDialogPrivate::initUI()
     slider_600->setMaximum(20);
     slider_600->setPageStep(1);
     auto lb4     = new DLabel("600");
+    lb_baud_600 = new DLabel(q);
 
-    slider_1k = new DSlider(Qt::Vertical);
-    slider_1k->setObjectName("baud_1K");
-    slider_1k->setMinimum(-20);
-    slider_1k->setMaximum(20);
-    slider_1k->setPageStep(1);
+    slider_1K = new DSlider(Qt::Vertical);
+    slider_1K->setObjectName("baud_1K");
+    slider_1K->setMinimum(-20);
+    slider_1K->setMaximum(20);
+    slider_1K->setPageStep(1);
     auto lb5     = new DLabel("1K");
+    lb_baud_1K = new DLabel(q);
 
-    slider_3k = new DSlider(Qt::Vertical);
-    slider_3k->setObjectName("baud_3K");
-    slider_3k->setMinimum(-20);
-    slider_3k->setMaximum(20);
-    slider_3k->setPageStep(1);
+    slider_3K = new DSlider(Qt::Vertical);
+    slider_3K->setObjectName("baud_3K");
+    slider_3K->setMinimum(-20);
+    slider_3K->setMaximum(20);
+    slider_3K->setPageStep(1);
 
     auto lb6     = new DLabel("3K");
+    lb_baud_3K = new DLabel(q);
 
-    slider_6k = new DSlider(Qt::Vertical);
-    slider_6k->setObjectName("baud_6K");
-    slider_6k->setMinimum(-20);
-    slider_6k->setMaximum(20);
-    slider_6k->setPageStep(1);
+    slider_6K = new DSlider(Qt::Vertical);
+    slider_6K->setObjectName("baud_6K");
+    slider_6K->setMinimum(-20);
+    slider_6K->setMaximum(20);
+    slider_6K->setPageStep(1);
     auto lb7    = new DLabel("6K");
+    lb_baud_6K = new DLabel(q);
 
-    slider_12k = new DSlider(Qt::Vertical);
-    slider_12k->setObjectName("baud_12K");
-    slider_12k->setMinimum(-20);
-    slider_12k->setMaximum(20);
-    slider_12k->setPageStep(1);
+    slider_12K = new DSlider(Qt::Vertical);
+    slider_12K->setObjectName("baud_12K");
+    slider_12K->setMinimum(-20);
+    slider_12K->setMaximum(20);
+    slider_12K->setPageStep(1);
     auto lb8     = new DLabel("12K");
+    lb_baud_12K = new DLabel(q);
 
-    slider_14k = new DSlider(Qt::Vertical);
-    slider_14k->setObjectName("baud_14K");
-    slider_14k->setMinimum(-20);
-    slider_14k->setMaximum(20);
-    slider_14k->setPageStep(1);
+    slider_14K = new DSlider(Qt::Vertical);
+    slider_14K->setObjectName("baud_14K");
+    slider_14K->setMinimum(-20);
+    slider_14K->setMaximum(20);
+    slider_14K->setPageStep(1);
     auto lb9     = new DLabel("14K");
+    lb_baud_14K = new DLabel(q);
 
-    slider_16k = new DSlider(Qt::Vertical);
-    slider_16k->setObjectName("baud_16K");
-    slider_16k->setMinimum(-20);
-    slider_16k->setMaximum(20);
-    slider_16k->setPageStep(1);
+    slider_16K = new DSlider(Qt::Vertical);
+    slider_16K->setObjectName("baud_16K");
+    slider_16K->setMinimum(-20);
+    slider_16K->setMaximum(20);
+    slider_16K->setPageStep(1);
     auto lb10     = new DLabel("16K");
+    lb_baud_16K = new DLabel(q);
 
-    mapSliders.insert(slider_pre, 0);
-    mapSliders.insert(slider_60, 1);
-    mapSliders.insert(slider_170, 2);
-    mapSliders.insert(slider_310, 3);
-    mapSliders.insert(slider_600, 4);
-    mapSliders.insert(slider_1k, 5);
-    mapSliders.insert(slider_3k, 6);
-    mapSliders.insert(slider_6k, 7);
-    mapSliders.insert(slider_12k, 8);
-    mapSliders.insert(slider_14k, 9);
-    mapSliders.insert(slider_16k, 10);
+    btn_default = new DPushButton("恢复默认");
+    btn_default->setMinimumSize(240, 36);
 
     auto vlayout0  = new QVBoxLayout;
     auto vlayout1  = new QVBoxLayout;
@@ -258,37 +299,48 @@ void DequalizerDialogPrivate::initUI()
     auto vlayout9  = new QVBoxLayout;
     auto vlayout10 = new QVBoxLayout;
 
+//    vlayout0->addWidget(lb_baud_pre);
     vlayout0->addWidget(slider_pre, Qt::AlignCenter);
     vlayout0->addWidget(lb_preamplifier);
 
+//    vlayout1->addWidget(lb_baud_60);
     vlayout1->addWidget(slider_60);
     vlayout1->addWidget(lb1);
 
+//    vlayout2->addWidget(lb_baud_170);
     vlayout2->addWidget(slider_170);
     vlayout2->addWidget(lb2);
 
+//    vlayout3->addWidget(lb_baud_310);
     vlayout3->addWidget(slider_310);
     vlayout3->addWidget(lb3);
 
+//    vlayout4->addWidget(lb_baud_600);
     vlayout4->addWidget(slider_600);
     vlayout4->addWidget(lb4);
 
-    vlayout5->addWidget(slider_1k);
+//    vlayout5->addWidget(lb_baud_1K);
+    vlayout5->addWidget(slider_1K);
     vlayout5->addWidget(lb5);
 
-    vlayout6->addWidget(slider_3k);
+//    vlayout6->addWidget(lb_baud_3K);
+    vlayout6->addWidget(slider_3K);
     vlayout6->addWidget(lb6);
 
-    vlayout7->addWidget(slider_6k);
+//    vlayout7->addWidget(lb_baud_6K);
+    vlayout7->addWidget(slider_6K);
     vlayout7->addWidget(lb7);
 
-    vlayout8->addWidget(slider_12k);
+//    vlayout8->addWidget(lb_baud_12K);
+    vlayout8->addWidget(slider_12K);
     vlayout8->addWidget(lb8);
 
-    vlayout9->addWidget(slider_14k);
+//    vlayout9->addWidget(lb_baud_14K);
+    vlayout9->addWidget(slider_14K);
     vlayout9->addWidget(lb9);
 
-    vlayout10->addWidget(slider_16k);
+//    vlayout10->addWidget(lb_baud_16K);
+    vlayout10->addWidget(slider_16K);
     vlayout10->addWidget(lb10);
 
     auto hlayout  = new QHBoxLayout;
@@ -330,6 +382,7 @@ void DequalizerDialogPrivate::initUI()
     vlay->addLayout(hlay);
     vlay->addStretch(2);
     vlay->addWidget(slWidget);
+    vlay->addWidget(btn_default, 0, Qt::AlignCenter);
     vlay->setContentsMargins(20, 10, 20, 20);
 
     //均衡器页面
@@ -358,20 +411,58 @@ void DequalizerDialogPrivate::initUI()
     mlayout->setMargin(0);
     q->setLayout(mlayout);
 
+    AllbaudTypes.append(flat_bauds);
+    AllbaudTypes.append(Classical_bauds);
+    AllbaudTypes.append(Club_bauds);
+    AllbaudTypes.append(Dance_bauds);
+    AllbaudTypes.append(Full_bass_bauds);
+    AllbaudTypes.append(Full_bass_and_treble_bauds);
+    AllbaudTypes.append(Full_treble_bauds);
+    AllbaudTypes.append(Headphones_bauds);
+    AllbaudTypes.append(Large_Hall_bauds);
+    AllbaudTypes.append(Live_bauds);
+    AllbaudTypes.append(Party_bauds);
+    AllbaudTypes.append(Pop_bauds);
+    AllbaudTypes.append(Reggae_bauds);
+    AllbaudTypes.append(Rock_bauds);
+    AllbaudTypes.append(Ska_bauds);
+    AllbaudTypes.append(Soft_bauds);
+    AllbaudTypes.append(Soft_rock_bauds);
+    AllbaudTypes.append(Techno_bauds);
+
     mswitchBtn->setChecked(switch_flag);
     mcombox->setEnabled(switch_flag);
 
     for (DSlider *slider : q->findChildren<DSlider *>()) {
+//        DLabel *valueLabel = q->findChild<DLabel *>(q->tr("lb_%1").arg(slider->objectName()));
+//        q->connect(slider, &DSlider::valueChanged, q, [ = ](int value) {
+//            valueLabel->setText(q->tr("%1 dB").arg(value));
+//        });
         slider->setEnabled(switch_flag);
     }
 
-    if (switch_flag && curEffect == 0) {
-        saveBtn->setEnabled(true);
+    if (curEffect != 0 ) {
+        q->showCurMode(AllbaudTypes.at(curEffect - 1));
+        mcombox->setCurrentIndex(curEffect);
     } else {
-        saveBtn->setEnabled(false);
+        q->showCustom();
     }
-    mcombox->setCurrentIndex(curEffect);
 
+}
+
+
+DequalizerDialog::DequalizerDialog(QWidget *parent):
+    DAbstractDialog(parent), d_ptr(new DequalizerDialogPrivate(this))
+{
+    Q_D(DequalizerDialog);
+    d->readConfig();
+    d->initUI();
+    initConnection();
+}
+
+DequalizerDialog::~DequalizerDialog()
+{
+//    Q_D(DequalizerDialog);
 }
 
 void DequalizerDialog::initConnection()
@@ -380,145 +471,130 @@ void DequalizerDialog::initConnection()
 
     connect(d->mswitchBtn, &DSwitchButton::checkedChanged, this, &DequalizerDialog::checkedChanged);
 
-    // Create local connections
-    connect(d->mcombox, QOverload<int>::of(&DComboBox::currentIndexChanged),
-    this, [ = ](int index) {
-        if (index == 0) {
-            d->saveBtn->setEnabled(true);
-//            customMode();
-            Q_EMIT getCurIndex(18);
-        } else {
-            d->saveBtn->setEnabled(false);
-            Q_EMIT getCurIndex(index - 1);
-        }
-        d->curEffect = index;
-        updateSettings();
-    });
-    //switch mode
-    connect(this, &DequalizerDialog::getCurIndex, d->_mediaPlayer->equalizer(), &VlcEqualizer::loadFromPreset);
-    //display after switch mode
-    connect(d->_mediaPlayer->equalizer(), &VlcEqualizer::presetLoaded, this, &DequalizerDialog::applySelectedPreset);
-
-    //set pream
-    connect(d->slider_pre, &DSlider::valueChanged, d->_vlcEqualizer, &VlcEqualizer::setPreamplification);
-    //set other slider
     for (DSlider *slider : findChildren<DSlider *>()) {
-        if (slider != d->slider_pre) {
-            connect(slider, &DSlider::valueChanged, this, &DequalizerDialog::applyChangesForBand);
-        }
         connect(slider, &DSlider::sliderReleased, [ = ]() {
+            d->changeflag = false;
             d->mcombox->setCurrentIndex(0);
         });
+        connect(slider, &DSlider::valueChanged, [ = ](int value) {
+            if (slider == d->slider_pre) {
+                Q_EMIT setEqualizerpre(value);
+            } else {
+                int bandIndex = -1;
+                if (slider == d->slider_60) {
+                    bandIndex = 0;
+                } else if (slider == d->slider_170) {
+                    bandIndex = 1;
+                } else if (slider == d->slider_310) {
+                    bandIndex = 2;
+                } else if (slider == d->slider_600) {
+                    bandIndex = 3;
+                } else if (slider == d->slider_1K) {
+                    bandIndex = 4;
+                } else if (slider == d->slider_3K) {
+                    bandIndex = 5;
+                } else if (slider == d->slider_6K) {
+                    bandIndex = 6;
+                } else if (slider == d->slider_12K) {
+                    bandIndex = 7;
+                } else if (slider == d->slider_14K) {
+                    bandIndex = 8;
+                } else if (slider == d->slider_16K) {
+                    bandIndex = 9;
+                }
+                if (bandIndex == -1) {
+                    return;
+                }
+                Q_EMIT setEqualizerbauds(bandIndex, value);
+            }
+            d->saveBtn->setEnabled(true);
+        });
     }
-
-    connect(d->saveBtn, &DPushButton::clicked,
-    this, [ = ]() {
+    connect(d->saveBtn, &DPushButton::clicked, [ = ]() {
         for (DSlider *slider : findChildren<DSlider *>()) {
             d->settings->setOption(tr("equalizer.all.%1").arg( slider->objectName()), slider->value());
             qDebug() << "save" << slider->value();
         }
-
     });
-}
 
-DequalizerDialog::DequalizerDialog(QWidget *parent):
-    DAbstractDialog(parent), d_ptr(new DequalizerDialogPrivate(this))
+    connect(d->mcombox, QOverload<int>::of(&DComboBox::currentIndexChanged),
+    this, [ = ](int index) {
+        qDebug() << "index:" << index;
+        if (index == 0) {
+            //自定义模式
+            showCustom();
+        } else {
+            d->changeflag = true;
+            showCurMode(d->AllbaudTypes.at(index - 1));
+            Q_EMIT setEqualizerIndex(index);
+        }
+        d->settings->setOption("equalizer.all.curEffect", index);
+    });
+    connect(d->btn_default, &DPushButton::clicked, this, &DequalizerDialog::setDefaultClicked);
+
+}
+//显示自定义模式
+void DequalizerDialog::showCustom()
 {
     Q_D(DequalizerDialog);
-    d->readConfig();
-    d->initUI();
-}
+    if (d->changeflag) {
+        for (DSlider *slider : findChildren<DSlider *>()) {
+            int indexbaud = d->settings->value(tr("equalizer.all.%1").arg(slider->objectName())).toInt();
+            slider->setValue(indexbaud );
+        }
+    }
 
-DequalizerDialog::~DequalizerDialog()
-{
-//    Q_D(DequalizerDialog);
 }
-
-void DequalizerDialog::updateSettings()
-{
-    Q_D(DequalizerDialog);
-    d->settings->setOption("equalizer.all.switch", d->switch_flag);
-    d->settings->setOption("equalizer.all.curEffect", d->curEffect);
-}
-
-void DequalizerDialog::setMediaPlayer(VlcMediaPlayer *mediaPlayer)
+//显示非自定义模式
+void DequalizerDialog::showCurMode(int *Allbauds)
 {
     Q_D(DequalizerDialog);
-
-    d->_mediaPlayer = mediaPlayer;
-    if (!d->_mediaPlayer) {
+    if (Allbauds == nullptr) {
         return;
     }
-
-    d->_vlcEqualizer = d->_mediaPlayer->equalizer();
-
-    initConnection();
-
-    //load current mode sliders value
-    if (d->curEffect == 0) {
-        customMode();
-    } else {
-        Q_EMIT getCurIndex(d->curEffect - 1);
-    }
-
-
-    ThreadPool::instance()->moveToNewThread(d->_mediaPlayer);
-    d->_mediaPlayer->startTimer(1000);
-}
-
-void DequalizerDialog::applyChangesForBand(int value)
-{
-    Q_D(DequalizerDialog);
-    int bandIndex = d->mapSliders.value(static_cast<DSlider *>(sender()));
-    d->_mediaPlayer->equalizer()->setAmplificationForBandAt((float)value, bandIndex);
-}
-//接收均衡器值
-void DequalizerDialog::applySelectedPreset()
-{
-    Q_D(DequalizerDialog);
-    auto equalizer = d->_mediaPlayer->equalizer();
-
-//    disconnect(d->slider_pre, 0, equalizer, 0);
-    if (d->curEffect != 0) {
-        for (DSlider *slider : findChildren<DSlider *>()) {
-            //        qDebug() << "slider_name:" << slider->objectName();
-            if (slider == d->slider_pre) {
-                slider->setValue(equalizer->preamplification());
-            } else {
-                disconnect(slider, &DSlider::valueChanged, this, &DequalizerDialog::applyChangesForBand);
-                slider->setValue(equalizer->amplificationForBandAt(d->mapSliders.value(slider)));
-                connect(slider, &DSlider::valueChanged, this, &DequalizerDialog::applyChangesForBand);
-            }
+    int i = 0;
+    for (DSlider *slider : findChildren<DSlider *>()) {
+        if (d->mswitchBtn->isChecked()) {
+            slider->setEnabled(true);
         }
-        //    connect(d->slider_pre, &DSlider::valueChanged, equalizer, &VlcEqualizer::setPreamplification);
+        slider->setValue(Allbauds[i]);
+        slider->setToolTip(QString::number(slider->value()) + "dB");
+        i++;
     }
-
+    d->saveBtn->setEnabled(false);
 }
 
+//开关
 void DequalizerDialog::checkedChanged(bool checked)
 {
     Q_D(DequalizerDialog);
     for (DSlider *slider : findChildren<DSlider *>()) {
         slider->setEnabled(checked);
     }
-    d->switch_flag = checked;
-    d->mcombox->setEnabled(checked);
+    d->mswitchLabel->setText("关");
     if (checked) {
-        //打开开关时为"单调"
+        d->mswitchLabel->setText("开");
+        //flat;
+        showCurMode(d->flat_bauds);
         d->mcombox->setCurrentIndex(1);
-        d->slider_pre->setValue(12);
-        d->_mediaPlayer->equalizer()->loadFromPreset(0);
-        d->settings->setOption("equalizer.all.baud_pre", 12);
-        updateSettings();
-    }
-    d->_mediaPlayer->equalizer()->setEnabled(checked);
+        Q_EMIT setEqualizerIndex(1);
+        d->settings->setOption("equalizer.all.curEffect", 1);
+    };
+    d->mcombox->setEnabled(checked);
+    d->saveBtn->setEnabled(false);
+    Q_EMIT setEqualizerEnable(checked);
+    d->settings->setOption("equalizer.all.switch", checked);
 }
-void DequalizerDialog::customMode()
+
+//恢复默认
+void DequalizerDialog::setDefaultClicked()
 {
     Q_D(DequalizerDialog);
-    for (DSlider *slider : findChildren<DSlider *>()) {
-        int indexbaud = d->settings->value(tr("equalizer.all.%1").arg(slider->objectName())).toInt();
-        slider->setValue(indexbaud );
-        qDebug() << "index baud:" << indexbaud;
+    if (d->mswitchBtn->isChecked()) {
+        showCurMode(d->flat_bauds);
+        d->mswitchBtn->setChecked(false);
+        d->mcombox->setCurrentIndex(1);
+        Q_EMIT setEqualizerEnable(false);
+        d->settings->setOption("equalizer.all.curEffect", 1);
     }
 }

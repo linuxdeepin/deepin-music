@@ -40,6 +40,8 @@ public:
 
     void bindSpeechConnect(Presenter *presenter);
 
+    void bindEqualizerConnect(Presenter *presenter);
+
     void focusPlayList();
     QString coverBackground() const;
 

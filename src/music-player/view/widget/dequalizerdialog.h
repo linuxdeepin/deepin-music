@@ -1,9 +1,9 @@
 #ifndef DEQUALIZERDIALOG_H
 #define DEQUALIZERDIALOG_H
 #include <DAbstractDialog>
+#include <QToolTip>
 #include "../core/musicsettings.h"
 #include "vlc/Equalizer.h"
-#include "../core/util/threadpool.h"
 
 class DequalizerDialogPrivate;
 class DequalizerDialog: public Dtk::Widget::DAbstractDialog
@@ -12,18 +12,20 @@ class DequalizerDialog: public Dtk::Widget::DAbstractDialog
 public:
     explicit DequalizerDialog(QWidget *parent = Q_NULLPTR);
     ~DequalizerDialog();
+
     void initConnection();
-    void customMode();
-    void setMediaPlayer(VlcMediaPlayer *mediaPlayer);
+    void showCustom();
+    void showCurMode(int *Allbauds);
 
 signals:
-    void getCurIndex(int index);
+    void setEqualizerEnable(bool enabled);
+    void setEqualizerIndex(int curIndex);
+    void setEqualizerpre(int val);
+    void setEqualizerbauds(int index, int val);
 
 public Q_SLOTS:
-    void updateSettings();
-    void applyChangesForBand(int value);
-    void applySelectedPreset();
     void checkedChanged(bool checked);
+    void setDefaultClicked();
 
 private:
     QScopedPointer<DequalizerDialogPrivate> d_ptr;

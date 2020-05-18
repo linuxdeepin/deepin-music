@@ -197,6 +197,11 @@ public slots:
     void setFadeInOut(bool fadeInOut);
     void setPlayOnLoaded(bool playOnLoaded);
     void musicFileMiss();
+    void setEqualizer(bool enabled, int curIndex, QList<int> indexbaud);
+    void setEqualizerEnable(bool enable);
+    void setEqualizerpre(int val);
+    void setEqualizerbauds(int index, int val);
+    void setEqualizerCurMode(int curIndex);
 
 private:
     void readSinkInputPath();
