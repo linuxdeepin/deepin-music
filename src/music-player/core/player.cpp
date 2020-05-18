@@ -351,6 +351,12 @@ void PlayerPrivate::initConnection()
                 break;
             }
             case Vlc::Error: {
+                if (!activeMeta.isNull() && !QFile::exists(activeMeta->localPath)) {
+                    MetaPtrList removeMusicList;
+                    removeMusicList.append(activeMeta);
+                    curPlaylist->removeMusicList(removeMusicList);
+                    Q_EMIT q->mediaError(activePlaylist, activeMeta, Player::ResourceError);
+                }
                 break;
             }
 
@@ -724,7 +730,7 @@ void Player::playMeta(PlaylistPtr playlist, const MetaPtr meta)
 //    d->qplayer->setMedia(QMediaContent(QUrl::fromLocalFile(curMeta->localPath)));
 //    d->qplayer->setPosition(curMeta->offset);
     d->ischangeMusic = true;
-    if (curMeta->localPath.endsWith(".amr") && !curMeta.isNull() ) {
+    if (curMeta->localPath.endsWith(".amr") && QFile::exists(curMeta->localPath) ) {
 //        if (d->qplayer->state() != QMediaPlayer::StoppedState) {
         d->qplayer->setMedia(QMediaContent());
         d->qplayer->stop();
