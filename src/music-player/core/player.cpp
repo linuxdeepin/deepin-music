@@ -680,7 +680,7 @@ void Player::loadMedia(PlaylistPtr playlist, const MetaPtr meta)
         d->isamr = false;
         d->qplayer->setMedia(QMediaContent(QUrl::fromLocalFile(meta->localPath)));
         volume = d->qplayer->volume();
-//        d->qplayer->setVolume(0);
+        d->qplayer->setVolume(0);
         d->qplayer->play();
     }
 
@@ -695,10 +695,13 @@ void Player::loadMedia(PlaylistPtr playlist, const MetaPtr meta)
             d->qvplayer->blockSignals(false);
         } else {
             d->qplayer->pause();
-//            d->qplayer->setVolume(volume);
+            if (volume == 0) {
+                d->qplayer->setVolume(100);
+            } else {
+                d->qplayer->setVolume(volume);
+            }
             d->qplayer->blockSignals(false);
         }
-
 
         if (!d->activePlaylist.isNull())
             d->activePlaylist->play(meta);
