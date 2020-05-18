@@ -319,28 +319,50 @@ void PlayerPrivate::initConnection()
     //        Stopped,
     //        Ended,
     //        Error
-    //vlc stateChanged VlcMedia *qvmedia;
+    //vlc stateChanged
     q->connect(qvmedia, &VlcMedia::stateChanged,
     q, [ = ](Vlc::State status) {
-//        if (status == Vlc::Ended) {
-//            selectNext(activeMeta, mode);
-//        }
-        switch (status) {
+        if (isamr) {
+            switch (status) {
+            case Vlc::Idle: {
+                break;
+            }
+            case Vlc::Opening: {
+                break;
+            }
+            case Vlc::Buffering: {
+                break;
+            }
+            case Vlc::Playing: {
+                Q_EMIT q->playbackStatusChanged(Player::Playing);
+                break;
+            }
+            case Vlc::Paused: {
+                Q_EMIT q->playbackStatusChanged(Player::Paused);
+                break;
+            }
+            case Vlc::Stopped: {
+                Q_EMIT q->playbackStatusChanged(Player::Stopped);
+                break;
+            }
+            case Vlc::Ended: {
 
-        case Vlc::Idle: {
-            break;
-        }
-        case Vlc::Ended: {
+                selectNext(activeMeta, mode);
+                break;
+            }
+            case Vlc::Error: {
+                if (!activeMeta.isNull() && !QFile::exists(activeMeta->localPath)) {
+                    MetaPtrList removeMusicList;
+                    removeMusicList.append(activeMeta);
+                    curPlaylist->removeMusicList(removeMusicList);
+                    Q_EMIT q->mediaError(activePlaylist, activeMeta, Player::ResourceError);
+                }
+                break;
+            }
 
-            selectNext(activeMeta, mode);
-            break;
+            }
         }
 
-        case Vlc::Opening: {
-            break;
-        }
-
-        }
     });
 
 
@@ -348,19 +370,22 @@ void PlayerPrivate::initConnection()
     q->connect(qplayer, &QMediaPlayer::stateChanged,
     q, [ = ](QMediaPlayer::State newState) {
 
-        ioPlayer->reset();
+//        ioPlayer->reset();
 
         switch (newState) {
-        case QMediaPlayer::StoppedState:
-            Q_EMIT q->playbackStatusChanged(Player::Stopped);
-            break;
-        case QMediaPlayer::PlayingState:
-            Q_EMIT q->playbackStatusChanged(Player::Playing);
-            break;
-        case QMediaPlayer::PausedState:
-            Q_EMIT q->playbackStatusChanged(Player::Paused);
-            break;
+            if (!isamr) {
+            case QMediaPlayer::StoppedState:
+                Q_EMIT q->playbackStatusChanged(Player::Stopped);
+                break;
+            case QMediaPlayer::PlayingState:
+                Q_EMIT q->playbackStatusChanged(Player::Playing);
+                break;
+            case QMediaPlayer::PausedState:
+                Q_EMIT q->playbackStatusChanged(Player::Paused);
+                break;
+            }
         }
+
     });
 
     q->connect(qplayer, &QMediaPlayer::volumeChanged,
@@ -442,7 +467,7 @@ void PlayerPrivate::initConnection()
                 removeMusicList.append(activeMeta);
                 curPlaylist->removeMusicList(removeMusicList);
                 Q_EMIT q->mediaError(activePlaylist, activeMeta, static_cast<Player::Error>(error));
-            } else {
+            } /*else {
                 QFileInfo fi("activeMeta->localPath");
                 if (!fi.isReadable()) {
                     MetaPtrList removeMusicList;
@@ -450,7 +475,7 @@ void PlayerPrivate::initConnection()
                     curPlaylist->removeMusicList(removeMusicList);
                     Q_EMIT q->mediaError(activePlaylist, activeMeta, static_cast<Player::Error>(error));
                 }
-            }
+            }*/
         }
     });
 
@@ -636,10 +661,11 @@ void Player::loadMedia(PlaylistPtr playlist, const MetaPtr meta)
     if (playlist->id() != PlayMusicListID)
         d->activePlaylist = playlist;
 
-    d->qplayer->blockSignals(true);
+
 
     int volume = -1;
     if (meta->localPath.endsWith(".amr") && !meta.isNull() ) {
+//        d->qplayer->stop();
         d->qvplayer->blockSignals(true);
         d->isamr = true;
         d->qvmedia->initMedia(meta->localPath, true, d->qvinstance);
@@ -649,6 +675,8 @@ void Player::loadMedia(PlaylistPtr playlist, const MetaPtr meta)
         d->qvplayer->play();
 
     } else {
+//        d->qvplayer->stop();
+        d->qplayer->blockSignals(true);
         d->isamr = false;
         d->qplayer->setMedia(QMediaContent(QUrl::fromLocalFile(meta->localPath)));
         volume = d->qplayer->volume();
@@ -664,14 +692,17 @@ void Player::loadMedia(PlaylistPtr playlist, const MetaPtr meta)
     QTimer::singleShot(100, this, [ = ]() {//为了记录进度条生效，在加载的时候让音乐播放100ms
         if (d->isamr) {
             d->qvplayer->pause();
-//            d->qvplayer->audio()->setVolume(volume);
             d->qvplayer->blockSignals(false);
         } else {
             d->qplayer->pause();
-            d->qplayer->setVolume(volume);
+            if (volume == 0) {
+                d->qplayer->setVolume(100);
+            } else {
+                d->qplayer->setVolume(volume);
+            }
+            d->qplayer->blockSignals(false);
         }
 
-        d->qplayer->blockSignals(false);
         if (!d->activePlaylist.isNull())
             d->activePlaylist->play(meta);
 
@@ -702,7 +733,7 @@ void Player::playMeta(PlaylistPtr playlist, const MetaPtr meta)
 //    d->qplayer->setMedia(QMediaContent(QUrl::fromLocalFile(curMeta->localPath)));
 //    d->qplayer->setPosition(curMeta->offset);
     d->ischangeMusic = true;
-    if (curMeta->localPath.endsWith(".amr") && !curMeta.isNull() ) {
+    if (curMeta->localPath.endsWith(".amr") && QFile::exists(curMeta->localPath) ) {
 //        if (d->qplayer->state() != QMediaPlayer::StoppedState) {
         d->qplayer->setMedia(QMediaContent());
         d->qplayer->stop();
@@ -715,12 +746,13 @@ void Player::playMeta(PlaylistPtr playlist, const MetaPtr meta)
         d->qvplayer->play();
 
     } else {
-        if (d->qvplayer->state() != Vlc::Stopped) {
+        if (d->qvplayer->state() != Vlc::Stopped && d->qvplayer->state() != Vlc::Idle ) {
             d->qvplayer->stop();
         }
         d->isamr = false;
         d->qplayer->setMedia(QMediaContent(QUrl::fromLocalFile(meta->localPath)));
         d->qplayer->setPosition(curMeta->offset);
+        d->qplayer->setVolume(100);
         d->qplayer->play();
     }
 
@@ -790,7 +822,6 @@ void Player::resume(PlaylistPtr playlist, const MetaPtr meta)
         d->fadeOutAnimation->deleteLater();
         d->fadeOutAnimation = nullptr;
     }
-
 
     qDebug() << "resume top";
     if (playlist == d->activePlaylist && d->qplayer->state() == QMediaPlayer::PlayingState && meta->hash == d->activeMeta->hash)
@@ -938,7 +969,22 @@ void Player::stop()
 Player::PlaybackStatus Player::status()
 {
     Q_D(const Player);
-    return static_cast<PlaybackStatus>(d->qplayer->state());
+    if (d->isamr) {
+        Vlc::State  status = d->qvplayer->state();
+
+        if (status == Vlc::Playing) {
+            return PlaybackStatus::Playing;
+        } else if (status == Vlc::Paused) {
+            return PlaybackStatus::Paused;
+        } else if (status == Vlc::Stopped) {
+            return PlaybackStatus::Stopped;
+        } else {
+            return PlaybackStatus::InvalidPlaybackStatus;
+        }
+    } else {
+        return static_cast<PlaybackStatus>(d->qplayer->state());
+    }
+
 }
 
 bool Player::isActiveMeta(MetaPtr meta) const
@@ -1121,7 +1167,7 @@ void Player::updateVolume(int volume)
     if (volume < 0) {
         volume = 0;
     }
-    if(!d->ischangeMusic){
+    if (!d->ischangeMusic) {
         d->volume = volume;
     }
 }

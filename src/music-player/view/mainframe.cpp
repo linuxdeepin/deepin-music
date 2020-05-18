@@ -840,12 +840,14 @@ void MainFrame::postInitUI()
         if (QSystemTrayIcon::Trigger == reason) {
             if (isVisible()) {
                 if (isMinimized()) {
+                    showNormal();
                     activateWindow();
                 } else {
                     showMinimized();
                 }
             } else {
                 showNormal();
+                activateWindow();
             }
         }
     });

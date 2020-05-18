@@ -112,7 +112,7 @@ PlayListView::PlayListView(bool searchFlag, bool isPlayList, QWidget *parent)
     connect(this, &PlayListView::doubleClicked,
     this, [ = ](const QModelIndex & index) {
         MetaPtr meta = d->model->meta(index);
-        if (meta == playlist()->playing()) {
+        if (meta == d->playing) {
             Q_EMIT resume(meta);
         } else {
             Q_EMIT playMedia(meta);
