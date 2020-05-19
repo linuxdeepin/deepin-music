@@ -195,94 +195,116 @@ void DequalizerDialogPrivate::initUI()
     saveBtn->setMinimumSize(110, 36);
     saveBtn->setText("保存");
 
+    lb_baud_pre = new DLabel(q);
+    lb_baud_pre->setMaximumWidth(20);
+    lb_baud_pre->setAlignment(Qt::AlignCenter);
     slider_pre = new DSlider(Qt::Vertical);
     slider_pre->setObjectName("baud_pre");
     slider_pre->setMinimum(-20);
     slider_pre->setMaximum(20);
     slider_pre->setPageStep(1);
     auto lb_preamplifier = new DLabel("前置放大");
-    lb_baud_pre = new DLabel(q);
+    lb_preamplifier->setAlignment(Qt::AlignCenter);
 
+    lb_baud_60 = new DLabel(q);
+    lb_baud_60->setMaximumWidth(20);
+    lb_baud_60->setAlignment(Qt::AlignCenter);
     slider_60 = new DSlider(Qt::Vertical);
     slider_60->setObjectName("baud_60");
     slider_60->setMinimum(-20);
     slider_60->setMaximum(20);
     slider_60->setPageStep(1);
-    auto lb1     = new DLabel("60");
-    lb_baud_60 = new DLabel(q);
+    auto lb_60     = new DLabel("60");
 
+    lb_baud_170 = new DLabel(q);
+    lb_baud_170->setMaximumWidth(20);
+    lb_baud_170->setAlignment(Qt::AlignCenter);
     slider_170 = new DSlider(Qt::Vertical);
     slider_170->setObjectName("baud_170");
     slider_170->setMinimum(-20);
     slider_170->setMaximum(20);
     slider_170->setPageStep(1);
-    auto lb2     = new DLabel("170");
-    lb_baud_170 = new DLabel(q);
+    auto lb_170     = new DLabel("170");
 
+    lb_baud_310 = new DLabel(q);
+    lb_baud_310->setMaximumWidth(20);
+    lb_baud_310->setAlignment(Qt::AlignCenter);
     slider_310 = new DSlider(Qt::Vertical);
     slider_310->setObjectName("baud_310");
     slider_310->setMinimum(-20);
     slider_310->setMaximum(20);
     slider_310->setPageStep(1);
-    auto lb3     = new DLabel("310");
-    lb_baud_310 = new DLabel(q);
+    auto lb_310     = new DLabel("310");
 
+    lb_baud_600 = new DLabel(q);
+    lb_baud_600->setMaximumWidth(20);
+    lb_baud_600->setAlignment(Qt::AlignCenter);
     slider_600 = new DSlider(Qt::Vertical);
     slider_600->setObjectName("baud_600");
     slider_600->setMinimum(-20);
     slider_600->setMaximum(20);
     slider_600->setPageStep(1);
-    auto lb4     = new DLabel("600");
-    lb_baud_600 = new DLabel(q);
+    auto lb_600     = new DLabel("600");
 
+    lb_baud_1K = new DLabel(q);
+    lb_baud_1K->setMaximumWidth(20);
+    lb_baud_1K->setAlignment(Qt::AlignCenter);
     slider_1K = new DSlider(Qt::Vertical);
     slider_1K->setObjectName("baud_1K");
     slider_1K->setMinimum(-20);
     slider_1K->setMaximum(20);
     slider_1K->setPageStep(1);
-    auto lb5     = new DLabel("1K");
-    lb_baud_1K = new DLabel(q);
+    auto lb_1K     = new DLabel("1K");
 
+    lb_baud_3K = new DLabel(q);
+    lb_baud_3K->setMaximumWidth(20);
+    lb_baud_3K->setAlignment(Qt::AlignCenter);
     slider_3K = new DSlider(Qt::Vertical);
     slider_3K->setObjectName("baud_3K");
     slider_3K->setMinimum(-20);
     slider_3K->setMaximum(20);
     slider_3K->setPageStep(1);
+    auto lb_3K     = new DLabel("3K");
 
-    auto lb6     = new DLabel("3K");
-    lb_baud_3K = new DLabel(q);
-
+    lb_baud_6K = new DLabel(q);
+    lb_baud_6K->setMaximumWidth(20);
+    lb_baud_6K->setAlignment(Qt::AlignCenter);
     slider_6K = new DSlider(Qt::Vertical);
     slider_6K->setObjectName("baud_6K");
     slider_6K->setMinimum(-20);
     slider_6K->setMaximum(20);
     slider_6K->setPageStep(1);
-    auto lb7    = new DLabel("6K");
-    lb_baud_6K = new DLabel(q);
+    auto lb_6K    = new DLabel("6K");
 
+    lb_baud_12K = new DLabel(q);
+    lb_baud_12K->setMaximumWidth(20);
+    lb_baud_12K->setAlignment(Qt::AlignCenter);
     slider_12K = new DSlider(Qt::Vertical);
     slider_12K->setObjectName("baud_12K");
     slider_12K->setMinimum(-20);
     slider_12K->setMaximum(20);
     slider_12K->setPageStep(1);
-    auto lb8     = new DLabel("12K");
-    lb_baud_12K = new DLabel(q);
+    auto lb_12K     = new DLabel("12K");
 
+    lb_baud_14K = new DLabel(q);
+    lb_baud_14K->setMaximumWidth(20);
+    lb_baud_14K->setAlignment(Qt::AlignCenter);
     slider_14K = new DSlider(Qt::Vertical);
     slider_14K->setObjectName("baud_14K");
     slider_14K->setMinimum(-20);
     slider_14K->setMaximum(20);
     slider_14K->setPageStep(1);
-    auto lb9     = new DLabel("14K");
-    lb_baud_14K = new DLabel(q);
+    auto lb_14K     = new DLabel("14K");
 
+    lb_baud_16K = new DLabel(q);
+    lb_baud_16K->setMaximumWidth(20);
+    lb_baud_16K->setAlignment(Qt::AlignCenter);
     slider_16K = new DSlider(Qt::Vertical);
     slider_16K->setObjectName("baud_16K");
     slider_16K->setMinimum(-20);
     slider_16K->setMaximum(20);
     slider_16K->setPageStep(1);
-    auto lb10     = new DLabel("16K");
-    lb_baud_16K = new DLabel(q);
+    auto lb_16K     = new DLabel("16K");
 
     btn_default = new DPushButton("恢复默认");
     btn_default->setMinimumSize(240, 36);
@@ -299,49 +321,49 @@ void DequalizerDialogPrivate::initUI()
     auto vlayout9  = new QVBoxLayout;
     auto vlayout10 = new QVBoxLayout;
 
-//    vlayout0->addWidget(lb_baud_pre);
-    vlayout0->addWidget(slider_pre, Qt::AlignCenter);
+    vlayout0->addWidget(lb_baud_pre);
+    vlayout0->addWidget(slider_pre);
     vlayout0->addWidget(lb_preamplifier);
 
-//    vlayout1->addWidget(lb_baud_60);
+    vlayout1->addWidget(lb_baud_60);
     vlayout1->addWidget(slider_60);
-    vlayout1->addWidget(lb1);
+    vlayout1->addWidget(lb_60);
 
-//    vlayout2->addWidget(lb_baud_170);
+    vlayout2->addWidget(lb_baud_170);
     vlayout2->addWidget(slider_170);
-    vlayout2->addWidget(lb2);
+    vlayout2->addWidget(lb_170);
 
-//    vlayout3->addWidget(lb_baud_310);
+    vlayout3->addWidget(lb_baud_310);
     vlayout3->addWidget(slider_310);
-    vlayout3->addWidget(lb3);
+    vlayout3->addWidget(lb_310);
 
-//    vlayout4->addWidget(lb_baud_600);
+    vlayout4->addWidget(lb_baud_600);
     vlayout4->addWidget(slider_600);
-    vlayout4->addWidget(lb4);
+    vlayout4->addWidget(lb_600);
 
-//    vlayout5->addWidget(lb_baud_1K);
+    vlayout5->addWidget(lb_baud_1K);
     vlayout5->addWidget(slider_1K);
-    vlayout5->addWidget(lb5);
+    vlayout5->addWidget(lb_1K);
 
-//    vlayout6->addWidget(lb_baud_3K);
+    vlayout6->addWidget(lb_baud_3K);
     vlayout6->addWidget(slider_3K);
-    vlayout6->addWidget(lb6);
+    vlayout6->addWidget(lb_3K);
 
-//    vlayout7->addWidget(lb_baud_6K);
+    vlayout7->addWidget(lb_baud_6K);
     vlayout7->addWidget(slider_6K);
-    vlayout7->addWidget(lb7);
+    vlayout7->addWidget(lb_6K);
 
-//    vlayout8->addWidget(lb_baud_12K);
+    vlayout8->addWidget(lb_baud_12K);
     vlayout8->addWidget(slider_12K);
-    vlayout8->addWidget(lb8);
+    vlayout8->addWidget(lb_12K);
 
-//    vlayout9->addWidget(lb_baud_14K);
+    vlayout9->addWidget(lb_baud_14K);
     vlayout9->addWidget(slider_14K);
-    vlayout9->addWidget(lb9);
+    vlayout9->addWidget(lb_14K);
 
-//    vlayout10->addWidget(lb_baud_16K);
+    vlayout10->addWidget(lb_baud_16K);
     vlayout10->addWidget(slider_16K);
-    vlayout10->addWidget(lb10);
+    vlayout10->addWidget(lb_16K);
 
     auto hlayout  = new QHBoxLayout;
     hlayout->addLayout(vlayout0);
@@ -434,10 +456,8 @@ void DequalizerDialogPrivate::initUI()
     mcombox->setEnabled(switch_flag);
 
     for (DSlider *slider : q->findChildren<DSlider *>()) {
-//        DLabel *valueLabel = q->findChild<DLabel *>(q->tr("lb_%1").arg(slider->objectName()));
-//        q->connect(slider, &DSlider::valueChanged, q, [ = ](int value) {
-//            valueLabel->setText(q->tr("%1 dB").arg(value));
-//        });
+        slider->setAttribute(Qt::WA_Hover, true); //开启悬停事件
+        slider->installEventFilter(q);       //安装事件过滤器
         slider->setEnabled(switch_flag);
     }
 
@@ -476,7 +496,10 @@ void DequalizerDialog::initConnection()
             d->changeflag = false;
             d->mcombox->setCurrentIndex(0);
         });
+
         connect(slider, &DSlider::valueChanged, [ = ](int value) {
+
+            selectSlider(slider, QString::number(value));
             if (slider == d->slider_pre) {
                 Q_EMIT setEqualizerpre(value);
             } else {
@@ -510,6 +533,7 @@ void DequalizerDialog::initConnection()
             d->saveBtn->setEnabled(true);
         });
     }
+
     connect(d->saveBtn, &DPushButton::clicked, [ = ]() {
         for (DSlider *slider : findChildren<DSlider *>()) {
             d->settings->setOption(tr("equalizer.all.%1").arg( slider->objectName()), slider->value());
@@ -541,6 +565,7 @@ void DequalizerDialog::showCustom()
         for (DSlider *slider : findChildren<DSlider *>()) {
             int indexbaud = d->settings->value(tr("equalizer.all.%1").arg(slider->objectName())).toInt();
             slider->setValue(indexbaud );
+            selectSlider(slider, "");
         }
     }
 
@@ -558,7 +583,7 @@ void DequalizerDialog::showCurMode(int *Allbauds)
             slider->setEnabled(true);
         }
         slider->setValue(Allbauds[i]);
-        slider->setToolTip(QString::number(slider->value()) + "dB");
+        selectSlider(slider, "");
         i++;
     }
     d->saveBtn->setEnabled(false);
@@ -597,4 +622,49 @@ void DequalizerDialog::setDefaultClicked()
         Q_EMIT setEqualizerEnable(false);
         d->settings->setOption("equalizer.all.curEffect", 1);
     }
+}
+void DequalizerDialog::selectSlider(QObject *obj, QString SliderVal)
+{
+    Q_D(DequalizerDialog);
+    if (obj == d->slider_pre) {
+        d->lb_baud_pre->setText(SliderVal);
+    } else if (obj == d->slider_60) {
+        d->lb_baud_60->setText(SliderVal);
+    } else if (obj == d->slider_170) {
+        d->lb_baud_170->setText(SliderVal);
+    } else if (obj == d->slider_310) {
+        d->lb_baud_310->setText(SliderVal);
+    } else if (obj == d->slider_600) {
+        d->lb_baud_600->setText(SliderVal);
+    } else if (obj == d->slider_1K) {
+        d->lb_baud_1K->setText(SliderVal);
+    } else if (obj == d->slider_3K) {
+        d->lb_baud_3K->setText(SliderVal);
+    } else if (obj == d->slider_6K) {
+        d->lb_baud_6K->setText(SliderVal);
+    } else if (obj == d->slider_12K) {
+        d->lb_baud_12K->setText(SliderVal);
+    } else if (obj == d->slider_14K) {
+        d->lb_baud_14K->setText(SliderVal);
+    } else if (obj == d->slider_16K) {
+        d->lb_baud_16K->setText(SliderVal);
+    }
+}
+
+bool DequalizerDialog::eventFilter(QObject *obj, QEvent *event)
+{
+    Q_D(DequalizerDialog);
+    for (DSlider *slider : findChildren<DSlider *>()) {
+        if (obj == slider) {
+            if (event->type() == QEvent::HoverEnter) {
+                selectSlider(slider, QString::number(slider->value()));
+                return true;
+            }
+            if (event->type() == QEvent::HoverLeave) {
+                selectSlider(slider, "");
+                return true;
+            }
+        }
+    }
+    return QWidget::eventFilter(obj, event);
 }

@@ -28,6 +28,8 @@ public Q_SLOTS:
     void setDefaultClicked();
 
 private:
+    void selectSlider(QObject *obj, QString val);
+    bool eventFilter(QObject *obj, QEvent *event);
     QScopedPointer<DequalizerDialogPrivate> d_ptr;
     Q_DECLARE_PRIVATE_D(qGetPtrHelper(d_ptr), DequalizerDialog)
 };
