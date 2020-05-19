@@ -204,11 +204,11 @@
                         },
                         {
                             "key": "curEffect",
-                            "default": 1
+                            "default": 0
                         },
                         {
                             "key": "baud_pre",
-                            "default": 12
+                            "default": 0
                         },
                         {
                             "key": "baud_60",
