@@ -233,7 +233,6 @@ MusicListWidget::MusicListWidget(QWidget *parent) : DWidget(parent)
     });
     connect(m_dataListView, &MusicListDataWidget::playMedia,
     this, [ = ](PlaylistPtr playlist, const MetaPtr meta) {
-            qDebug() << "MusicListDataWidget==============="<<meta->localPath;
         Q_EMIT this->playMedia(playlist, meta);
     });
     connect(m_dataListView, &MusicListDataWidget::resume,
