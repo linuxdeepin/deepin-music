@@ -178,6 +178,7 @@ MetaPtr MediaLibraryPrivate::importMeta(const QString &filepath,
     AVPacket *packet = av_packet_alloc();
     AVFrame *frame = av_frame_alloc();
 
+
     if (pCodecCtx->channels > 20  || pCodecCtx->channels < 1 ) {
 
         return MetaPtr();
@@ -219,19 +220,20 @@ MetaPtr MediaLibraryPrivate::importMeta(const QString &filepath,
         return MetaPtr();
     }
 
-    QVector<float> curData;
-    bool flag = false;
-
     int erroCount = 0;
     int readCount = 0;
+    int packageErr = 0;
 
     while ( av_read_frame(pFormatCtx, packet) >= 0 ) {
 
         if (packet->stream_index == audio_stream_index) {
             int got_picture;
-            uint32_t ret = avcodec_decode_audio4( pCodecCtx, frame, &got_picture, packet);
-            if ( ret < 0 ) {
+            int ret = avcodec_decode_audio4( pCodecCtx, frame, &got_picture, packet);
 
+            qDebug() << "ret : " << ret;
+
+            if ( ret < 20 ) {
+                packageErr ++;
             }
             if ( got_picture <= 0 ) {
 
@@ -259,7 +261,7 @@ MetaPtr MediaLibraryPrivate::importMeta(const QString &filepath,
 
     } else {
 
-        if (erroCount > 5) {
+        if (erroCount > 5 || packageErr > 15) {
 
             return MetaPtr();
         }
