@@ -128,7 +128,7 @@ int main(int argc, char *argv[])
     parser.addVersionOption();
     parser.addPositionalArgument("file", "Music file path");
     parser.process(app);
-    createSpeechDbus();//创建语音dbus
+//    createSpeechDbus();//创建语音dbus
     // handle open file
     QString toOpenFile;
     if (parser.positionalArguments().length() > 0) {
@@ -146,7 +146,7 @@ int main(int argc, char *argv[])
     QIcon icon = QIcon::fromTheme("deepin-music");
     app.setProductIcon(icon);
 
-    if (!app.setSingleInstance("deepinmusic") ||!checkOnly()) {
+    if (!app.setSingleInstance("deepinmusic") || !checkOnly()) {
         qDebug() << "another deepin music has started";
         for (auto curStr : parser.positionalArguments()) {
             if (!curStr.isEmpty()) {
@@ -170,7 +170,9 @@ int main(int argc, char *argv[])
                              "/org/mpris/MediaPlayer2",
                              "org.mpris.MediaPlayer2",
                              QDBusConnection::sessionBus());
-        iface.asyncCall("Raise");
+        if (iface.isValid()) {
+            iface.asyncCall("Raise");
+        }
         exit(0);
     }
     MusicSettings::init();

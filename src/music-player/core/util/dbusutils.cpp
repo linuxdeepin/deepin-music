@@ -23,8 +23,10 @@ QVariant DBusUtils::redDBusProperty(const QString &service, const QString &path,
                               interface,
                               QDBusConnection::sessionBus());
     if (!ainterface.isValid()) {
-        qDebug() << qPrintable(QDBusConnection::sessionBus().lastError().message());
+//        qDebug() << qPrintable(QDBusConnection::sessionBus().lastError().message());
+        qDebug() << " QDBusInterface ainterface isValid" << path << propert;
         QVariant v(0) ;
+        mutex.unlock();
         return  v;
     }
     //调用远程的value方法
