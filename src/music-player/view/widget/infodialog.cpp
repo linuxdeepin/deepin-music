@@ -64,12 +64,12 @@ public:
     Cover               *cover          = nullptr;
     DLabel              *title          = nullptr;
     DWindowCloseButton  *closeBt        = nullptr;
+    DLabel              *basicinfo      = nullptr;
     QList<DLabel *>     valueList;
-    DArrowLineDrawer    *dArrowLine     = nullptr;
+    QList<DLabel *>     keyList;
     int                 frameHeight     = 0;
     InfoDialog *q_ptr;
     MetaPtr             meta            = nullptr;
-    //QScrollArea         *m_scrollArea   = nullptr;
     bool                DoubleElements  = false;
     bool                isExPand          = true;
     Q_DECLARE_PUBLIC(InfoDialog)
@@ -82,12 +82,11 @@ void InfoDialogPrivate::initUI()
     meta = MetaPtr(new MediaMeta);
     q->setObjectName("InfoDialog");
     q->setFixedSize(320, 500);
-//    q->setWindowFlags(q->windowFlags() | Qt::WindowStaysOnTopHint);
     q->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Expanding);
 
-//    auto layout = new QVBoxLayout(q);
-//    layout->setSpacing(0);
-//    layout->setContentsMargins(10, 50, 10, 10);
+    auto layout = new QVBoxLayout(q);
+    layout->setSpacing(0);
+    layout->setContentsMargins(10, 50, 10, 10);
 
     closeBt = new DWindowCloseButton( q);
     closeBt->setFocusPolicy(Qt::NoFocus);
@@ -112,7 +111,7 @@ void InfoDialogPrivate::initUI()
     infoGridFrame->setFocusPolicy(Qt::NoFocus);
     infoGridFrame->setLineWidth(0);
     infoGridFrame->setFrameRounded(true);
-    //infoGridFrame->setMaximumWidth(300);
+    infoGridFrame->setMaximumWidth(300);
     infoGridFrame->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     DPalette pl = infoGridFrame->palette();
     QColor windowColor("#FFFFFF");
@@ -123,12 +122,16 @@ void InfoDialogPrivate::initUI()
     pl.setColor(DPalette::Shadow, sbcolor);
     infoGridFrame->setPalette(pl);
 
-    dArrowLine = new DArrowLineDrawer(q);
-    dArrowLine->setTitle(InfoDialog::tr("Basic info"));
-    dArrowLine->setContent(infoGridFrame);
-    dArrowLine->setFixedSize(300, 195);
-//    dArrowLine->setExpandedSeparatorVisible(false);//隐藏扩展分隔符
-//    dArrowLine->setSeparatorVisible(false);
+    layout->addSpacing(10);
+    layout->addWidget(cover, 0, Qt::AlignCenter);
+    layout->addSpacing(10);
+    layout->addWidget(title, 0, Qt::AlignCenter);
+    layout->addSpacing(10);
+    layout->addWidget(infoGridFrame);
+
+    basicinfo = new DLabel("   " + InfoDialog::tr("Basic info"),q);
+    basicinfo->setForegroundRole(DPalette::TextTitle);
+    basicinfo->setFixedWidth(300);
 
     auto infoLayout = new QVBoxLayout(infoGridFrame);
     infoLayout->setSpacing(0);
@@ -157,8 +160,9 @@ void InfoDialogPrivate::initUI()
         infoKey->setForegroundRole(DPalette::WindowText);
         infoKey->setAlignment(Qt::AlignLeft | Qt::AlignTop);
         DFontSizeManager::instance()->bind(infoKey, DFontSizeManager::T8);
+        keyList << infoKey;
 
-        auto infoValue = new DLabel();
+        auto infoValue = new DLabel(q);
 //        infoValue->setFont(infoFont);
         infoValue->setWordWrap(true);
         infoValue->setObjectName("InfoValue");
@@ -174,25 +178,22 @@ void InfoDialogPrivate::initUI()
         infogridLayout->addWidget(infoKey);
         infogridLayout->addWidget(infoValue);
     }
+    infoLayout->addWidget(basicinfo);
     infoLayout->addLayout(infogridLayout);
 
     q->connect(closeBt, &MusicImageButton::clicked, q, &DAbstractDialog::hide);
-    q->connect(dArrowLine, &DArrowLineDrawer::expandChange, q, [ = ](bool expand) {
-        isExPand = expand;
-        q->expand(expand);
-    });
-    q->connect(closeBt, &MusicImageButton::clicked, q, [ = ]() {
-        dArrowLine->setExpand(true);
-    });
     q->connect(qApp, &QGuiApplication::fontChanged, q, [ = ](const QFont &font) {
         QFontMetrics fm(font);
+        for (int i = 0; i < keyList.size();i++) {
+
+            int w = keyList.at(0)->width();
+            int value_w = 300 - w;
+            valueList.at(i)->setFixedWidth(value_w - 20);
+        }
         if ( meta->size > 1.0){
             q->updateInfo(meta);
         }
     });
-    dArrowLine->move(11, 252);
-    dArrowLine->setExpand(true);
-
     q->updateInfo(meta);
 }
 
@@ -204,9 +205,9 @@ void InfoDialogPrivate::updateLabelSize()
     auto h = 0;
     for (auto label : valueList) {
 //        label->adjustSize();
-        h += label->size().height() + 6;
+        h += label->size().height() + 6 + 6;
     }
-//    infoGridFrame->setFixedHeight(h);
+    infoGridFrame->setFixedHeight(h);
     infoGridFrame->adjustSize();
     q->adjustSize();
 }
@@ -227,28 +228,6 @@ void InfoDialog::resizeEvent(QResizeEvent *event)
 {
     //Q_D(InfoDialog);
     Dtk::Widget::DAbstractDialog::resizeEvent(event);
-}
-
-void InfoDialog::expand(bool expand)
-{
-    Q_D(InfoDialog);
-    int h = 0;
-    for (int i = 0;i < d->valueList.size(); i++) {
-        h = d->valueList.value(i)->height();
-        if(h != 0)
-            break;
-    }
-    if (expand) {
-        if (d->DoubleElements) {
-            setFixedHeight(346 + h * 8);
-        } else {
-            setFixedHeight(346 + h * 7);
-        }
-    } else {
-        QTimer::singleShot(200, this, [ = ]() {
-            setFixedHeight(252 + 45);
-        });
-    }
 }
 
 void InfoDialog::updateInfo(const MetaPtr meta)
@@ -316,14 +295,13 @@ void InfoDialog::updateInfo(const MetaPtr meta)
         if(h != 0)
             break;
     }
-    if (h == 0 || !d->isExPand) {
-        setFixedHeight(252 + 45);
+    int title_height = d->title->height();
+    int grideframe_height = d->infoGridFrame->height();
+    int total = title_height + grideframe_height + 192 + 70;
+    if (d->DoubleElements) {
+        setFixedHeight(total + h);
     } else {
-        if (d->DoubleElements) {
-            setFixedHeight(346 + h * 8);
-        } else {
-            setFixedHeight(346 + h * 7);
-        }
+        setFixedHeight(total + 22);
     }
 }
 
@@ -375,9 +353,9 @@ void InfoDialog::setThemeType(int type)
 QString InfoDialog::geteElidedText(QFont font, QString str, int MaxWidth)
 {
     QFontMetrics fontWidth(font);
-    int width = fontWidth.width(str) + 10;  //计算字符串宽度,+10避免右边遮挡
+    int width = fontWidth.width(str) + 10;  //计算字符串宽度,+10提前进入省略，避免右边遮挡
     if (width >= MaxWidth) { //当字符串宽度大于最大宽度时进行转换
-        str = fontWidth.elidedText(str, Qt::ElideMiddle, MaxWidth - 15); //右部显示省略号
+        str = fontWidth.elidedText(str, Qt::ElideMiddle, MaxWidth); //中间显示省略号
     }
     return str;
 }
