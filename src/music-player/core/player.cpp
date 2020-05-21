@@ -36,7 +36,7 @@
 #include <QDBusReply>
 #include <QThread>
 #include <QFileInfo>
-
+#include <QProcess>
 #include <DRecentManager>
 #include <QMutex>
 
@@ -53,6 +53,7 @@
 #include "vlc/Instance.h"
 #include "vlc/Media.h"
 #include "vlc/MediaPlayer.h"
+#include "util/global.h"
 
 DCORE_USE_NAMESPACE
 
@@ -117,6 +118,8 @@ void initMiniTypes()
     }
 }
 
+
+
 QStringList Player::supportedFilterStringList() const
 {
     return sSupportedFiterList;
@@ -153,7 +156,7 @@ public:
     void initConnection();
     void selectPrev(const MetaPtr info, Player::PlaybackMode mode);
     void selectNext(const MetaPtr info, Player::PlaybackMode mode);
-
+    void apeToMp3(QString path, QString hash);
     // player property
     bool canControl     = true;
     bool canGoNext      = false;
@@ -203,6 +206,22 @@ public:
     Q_DECLARE_PUBLIC(Player)
 };
 
+void PlayerPrivate::apeToMp3(QString path, QString hash)
+{
+    QFileInfo fileInfo(path);
+    if (fileInfo.suffix().toLower() == "ape") {
+        QString curPath = Global::cacheDir();
+        QString toPath = QString("%1/images/%2.mp3").arg(curPath).arg(hash);
+        if (QFile::exists(toPath)) {
+            QFile::remove(toPath);
+        }
+        QFile file(path);
+        file.link(path);
+        QString program = QString("ffmpeg -i %1  -ac 1 -ab 32 -ar 24000 %2").arg(path).arg(toPath);
+        QProcess::execute(program);
+        path = toPath;
+    }
+}
 void PlayerPrivate::initConnection()
 {
     Q_Q(Player);
@@ -712,6 +731,7 @@ void Player::loadMedia(PlaylistPtr playlist, const MetaPtr meta)
     });
 }
 
+
 void Player::playMeta(PlaylistPtr playlist, const MetaPtr meta)
 {
     Q_D(Player);
@@ -739,6 +759,7 @@ void Player::playMeta(PlaylistPtr playlist, const MetaPtr meta)
     d->activeMeta = curMeta;
 
     d->ischangeMusic = true;
+    QFileInfo fileInfo(curMeta->localPath);
     if (curMeta->localPath.endsWith(".amr") && QFile::exists(curMeta->localPath) ) {
 //        if (d->qplayer->state() != QMediaPlayer::StoppedState) {
         d->qplayer->setMedia(QMediaContent());
@@ -751,6 +772,17 @@ void Player::playMeta(PlaylistPtr playlist, const MetaPtr meta)
         d->qvplayer->setTime(curMeta->offset);
         d->qvplayer->play();
 
+    } else if (QFile::exists(curMeta->localPath) && fileInfo.suffix().toLower() == "ape") {
+        d->isamr = false;
+        QString curPath = Global::cacheDir();
+        QString toPath = QString("%1/images/%2.mp3").arg(curPath).arg(curMeta->hash);
+        if (!QFile::exists(toPath)) {
+            d->apeToMp3(curMeta->localPath, curMeta->hash);
+        }
+        d->qplayer->setMedia(QMediaContent(QUrl::fromLocalFile(toPath)));
+        d->qplayer->setPosition(curMeta->offset);
+        d->qplayer->setVolume(100);
+        d->qplayer->play();
     } else {
         if (d->qvplayer->state() != Vlc::Stopped && d->qvplayer->state() != Vlc::Idle ) {
             d->qvplayer->stop();
@@ -1183,19 +1215,14 @@ void Player::setMuted(bool mute)
 void Player::setFadeInOutFactor(double fadeInOutFactor)
 {
     Q_D(Player);
-    if (d->activeMeta->localPath.endsWith(".ape")) {
-        d->fadeInOutFactor = 1.0;
-    } else {
-        d->fadeInOutFactor = fadeInOutFactor;
-    }
-
+    d->fadeInOutFactor = fadeInOutFactor;
 //    qDebug() << "setFadeInOutFactor" << fadeInOutFactor
 //             << d->volume *d->fadeInOutFactor << d->volume;
     d->qplayer->blockSignals(true);
     d->qplayer->setVolume(/*d->volume*/100 * d->fadeInOutFactor);
     d->qplayer->blockSignals(false);
 
-    //setMusicVolume(d->volume * d->fadeInOutFactor / 100.0);
+//setMusicVolume(d->volume * d->fadeInOutFactor / 100.0);
 }
 
 void Player::setFadeInOut(bool fadeInOut)
@@ -1218,7 +1245,7 @@ void Player::musicFileMiss()
     if (d->activeMeta != nullptr && access(d->activeMeta->localPath.toStdString().c_str(), F_OK) != 0 && (!d->activePlaylist->allmusic().isEmpty())) {
         stop();
 
-        //Q_EMIT mediaError(d->activePlaylist, d->activeMeta, Player::ResourceError);
+        Q_EMIT mediaError(d->activePlaylist, d->activeMeta, Player::ResourceError);
 
         d->activeMeta = nullptr;
         d->activePlaylist->play(MetaPtr());
