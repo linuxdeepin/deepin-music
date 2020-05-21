@@ -24,7 +24,7 @@
 #include <QDebug>
 #include <QFileInfo>
 #include <QDirIterator>
-
+#include <QProcess>
 //#ifndef DISABLE_LIBAV
 #ifdef __cplusplus
 extern "C" {
@@ -45,6 +45,7 @@ extern "C" {
 #endif
 
 #include "player.h"
+#include "util/global.h"
 #include "mediadatabase.h"
 
 const static int ScanCacheSize = 5000;
@@ -76,6 +77,7 @@ public:
                        QMap<QString, MetaPtr> &losslessMetaCache,
                        QList<DMusic::CueParserPtr> &cuelist);
 
+    void apeToMp3(QString path, QString hash);
     void startMonitor()
     {
         auto metalist = MediaDatabase::instance()->allmetas();
@@ -118,6 +120,23 @@ MetaPtr MediaLibraryPrivate::createMeta(const QFileInfo &fileinfo)
     meta->hash = hash;
     MetaDetector::updateMetaFromLocalfile(meta.data(), fileinfo);
     return meta;
+}
+
+void MediaLibraryPrivate::apeToMp3(QString path, QString hash)
+{
+    QFileInfo fileInfo(path);
+    if (fileInfo.suffix().toLower() == "ape") {
+        QString curPath = Global::cacheDir();
+        QString toPath = QString("%1/images/%2.mp3").arg(curPath).arg(hash);
+        if (QFile::exists(toPath)) {
+            QFile::remove(toPath);
+        }
+        QFile file(path);
+        file.link(path);
+        QString program = QString("ffmpeg -i %1 -ac 1 -ab 32 -ar 24000 %2").arg(path).arg(toPath);
+        QProcess::execute(program);
+        path = toPath;
+    }
 }
 
 MetaPtr MediaLibraryPrivate::importMeta(const QString &filepath,
@@ -271,9 +290,11 @@ MetaPtr MediaLibraryPrivate::importMeta(const QString &filepath,
         qDebug() << "exit" << hash << MediaLibrary::instance()->meta(hash);
         return MediaLibrary::instance()->meta(hash);
     }
-
     auto meta = createMeta(fileInfo);
 
+    if (fileInfo.suffix().toLower() == "ape") {
+        apeToMp3(filepath, meta->hash);
+    }
     if (meta->length == 0)
         return MetaPtr();
 

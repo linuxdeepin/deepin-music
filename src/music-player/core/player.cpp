@@ -53,6 +53,7 @@
 #include "vlc/Instance.h"
 #include "vlc/Media.h"
 #include "vlc/MediaPlayer.h"
+#include "util/global.h"
 
 DCORE_USE_NAMESPACE
 
@@ -739,6 +740,7 @@ void Player::playMeta(PlaylistPtr playlist, const MetaPtr meta)
     d->activeMeta = curMeta;
 
     d->ischangeMusic = true;
+    QFileInfo fileInfo(curMeta->localPath);
     if (curMeta->localPath.endsWith(".amr") && QFile::exists(curMeta->localPath) ) {
 //        if (d->qplayer->state() != QMediaPlayer::StoppedState) {
         d->qplayer->setMedia(QMediaContent());
@@ -751,6 +753,14 @@ void Player::playMeta(PlaylistPtr playlist, const MetaPtr meta)
         d->qvplayer->setTime(curMeta->offset);
         d->qvplayer->play();
 
+    } else if (QFile::exists(curMeta->localPath) && fileInfo.suffix().toLower() == "ape") {
+        d->isamr = false;
+        QString curPath = Global::cacheDir();
+        QString toPath = QString("%1/images/%2.mp3").arg(curPath).arg(curMeta->hash);
+        d->qplayer->setMedia(QMediaContent(QUrl::fromLocalFile(toPath)));
+        d->qplayer->setPosition(curMeta->offset);
+        d->qplayer->setVolume(100);
+        d->qplayer->play();
     } else {
         if (d->qvplayer->state() != Vlc::Stopped && d->qvplayer->state() != Vlc::Idle ) {
             d->qvplayer->stop();
@@ -1183,19 +1193,14 @@ void Player::setMuted(bool mute)
 void Player::setFadeInOutFactor(double fadeInOutFactor)
 {
     Q_D(Player);
-    if (d->activeMeta->localPath.endsWith(".ape")) {
-        d->fadeInOutFactor = 1.0;
-    } else {
-        d->fadeInOutFactor = fadeInOutFactor;
-    }
-
+    d->fadeInOutFactor = fadeInOutFactor;
 //    qDebug() << "setFadeInOutFactor" << fadeInOutFactor
 //             << d->volume *d->fadeInOutFactor << d->volume;
     d->qplayer->blockSignals(true);
     d->qplayer->setVolume(/*d->volume*/100 * d->fadeInOutFactor);
     d->qplayer->blockSignals(false);
 
-    //setMusicVolume(d->volume * d->fadeInOutFactor / 100.0);
+//setMusicVolume(d->volume * d->fadeInOutFactor / 100.0);
 }
 
 void Player::setFadeInOut(bool fadeInOut)
