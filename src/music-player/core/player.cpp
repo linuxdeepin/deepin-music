@@ -863,6 +863,7 @@ void Player::resume(PlaylistPtr playlist, const MetaPtr meta)
     }
 
     qDebug() << "resume top";
+
     if (playlist == d->activePlaylist && d->qplayer->state() == QMediaPlayer::PlayingState && meta->hash == d->activeMeta->hash)
         return;
 
@@ -872,12 +873,15 @@ void Player::resume(PlaylistPtr playlist, const MetaPtr meta)
     setPlayOnLoaded(true);
     //增大音乐自动开始播放时间，给setposition留足空间
     QTimer::singleShot(100, this, [ = ]() {
+
         if (d->isamr) {
             d->qvplayer->play();
+
         } else {
+
+            d->qplayer->setMedia(QMediaContent(QUrl::fromLocalFile(meta->localPath)));
             d->qplayer->play();
         }
-
 
     });
 
