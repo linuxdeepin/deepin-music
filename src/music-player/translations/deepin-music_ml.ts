@@ -42,11 +42,6 @@
         <translation type="unfinished">കസ്റ്റം</translation>
     </message>
     <message>
-        <location filename="../view/widget/dequalizerdialog.cpp" line="111"/>
-        <source>Flat</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <location filename="../view/widget/dequalizerdialog.cpp" line="112"/>
         <source>Classical</source>
         <translation type="unfinished"></translation>
@@ -62,28 +57,33 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/widget/dequalizerdialog.cpp" line="115"/>
-        <source>Full bass</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../view/widget/dequalizerdialog.cpp" line="116"/>
-        <source>Full bass and treble</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../view/widget/dequalizerdialog.cpp" line="117"/>
-        <source>Full treble</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <location filename="../view/widget/dequalizerdialog.cpp" line="118"/>
         <source>Headphones</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../view/widget/dequalizerdialog.cpp" line="111"/>
+        <source>Monophony</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../view/widget/dequalizerdialog.cpp" line="115"/>
+        <source>Full Bass</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../view/widget/dequalizerdialog.cpp" line="116"/>
+        <source>Full Bass and Treble</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../view/widget/dequalizerdialog.cpp" line="117"/>
+        <source>Full Treble</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="../view/widget/dequalizerdialog.cpp" line="119"/>
-        <source>Large Hall</source>
+        <source>Hall</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -123,7 +123,19 @@
     </message>
     <message>
         <location filename="../view/widget/dequalizerdialog.cpp" line="127"/>
-        <source>Soft rock</source>
+        <source>Soft Rock</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../view/widget/dequalizerdialog.cpp" line="193"/>
+        <location filename="../view/widget/dequalizerdialog.cpp" line="617"/>
+        <source>ON</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../view/widget/dequalizerdialog.cpp" line="195"/>
+        <location filename="../view/widget/dequalizerdialog.cpp" line="615"/>
+        <source>OFF</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -135,18 +147,6 @@
         <location filename="../view/widget/dequalizerdialog.cpp" line="186"/>
         <location filename="../view/widget/dequalizerdialog.cpp" line="436"/>
         <source>Equalizer</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../view/widget/dequalizerdialog.cpp" line="193"/>
-        <location filename="../view/widget/dequalizerdialog.cpp" line="617"/>
-        <source>Open</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../view/widget/dequalizerdialog.cpp" line="195"/>
-        <location filename="../view/widget/dequalizerdialog.cpp" line="615"/>
-        <source>Close</source>
         <translation type="unfinished"></translation>
     </message>
     <message>

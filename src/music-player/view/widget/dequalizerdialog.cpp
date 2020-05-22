@@ -108,15 +108,15 @@ private:
     DPushButton *btn_default          = nullptr;
 
     QStringList    effect_type        =  { DequalizerDialog::tr("Custom")
-                                           , DequalizerDialog::tr("Flat")
+                                           , DequalizerDialog::tr("Monophony")
                                            , DequalizerDialog::tr("Classical")
                                            , DequalizerDialog::tr("Club")
                                            , DequalizerDialog::tr("Dance")
-                                           , DequalizerDialog::tr("Full bass")
-                                           , DequalizerDialog::tr("Full bass and treble")
-                                           , DequalizerDialog::tr("Full treble")
+                                           , DequalizerDialog::tr("Full Bass")
+                                           , DequalizerDialog::tr("Full Bass and Treble")
+                                           , DequalizerDialog::tr("Full Treble")
                                            , DequalizerDialog::tr("Headphones")
-                                           , DequalizerDialog::tr("Large Hall")
+                                           , DequalizerDialog::tr("Hall")
                                            , DequalizerDialog::tr("Live")
                                            , DequalizerDialog::tr("Party")
                                            , DequalizerDialog::tr("Pop")
@@ -124,7 +124,7 @@ private:
                                            , DequalizerDialog::tr("Rock")
                                            , DequalizerDialog::tr("Ska")
                                            , DequalizerDialog::tr("Soft")
-                                           , DequalizerDialog::tr("Soft rock")
+                                           , DequalizerDialog::tr("Soft Rock")
                                            , DequalizerDialog::tr("Techno")
                                          };
     QList<int> BaudList;
@@ -190,9 +190,9 @@ void DequalizerDialogPrivate::initUI()
     mswitchLabel = new DLabel;
     mswitchLabel->resize(14, 20);
     if (switch_flag) {
-        mswitchLabel->setText(DequalizerDialog::tr("Open"));
+        mswitchLabel->setText(DequalizerDialog::tr("ON"));
     } else {
-        mswitchLabel->setText(DequalizerDialog::tr("Close"));
+        mswitchLabel->setText(DequalizerDialog::tr("OFF"));
     }
 
     mswitchBtn = new DSwitchButton(q);
@@ -612,9 +612,9 @@ void DequalizerDialog::checkedChanged(bool checked)
     for (DSlider *slider : findChildren<DSlider *>()) {
         slider->setEnabled(checked);
     }
-    d->mswitchLabel->setText(tr("Close"));
+    d->mswitchLabel->setText(tr("OFF"));
     if (checked) {
-        d->mswitchLabel->setText(tr("Open"));
+        d->mswitchLabel->setText(tr("ON"));
         //flat;
         showCurMode(d->flat_bauds);
         d->mcombox->setCurrentIndex(1);

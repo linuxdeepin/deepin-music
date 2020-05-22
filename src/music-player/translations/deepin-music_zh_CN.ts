@@ -42,9 +42,8 @@
         <translation>自定义</translation>
     </message>
     <message>
-        <location filename="../view/widget/dequalizerdialog.cpp" line="111"/>
         <source>Flat</source>
-        <translation>单调</translation>
+        <translation type="vanished">单调</translation>
     </message>
     <message>
         <location filename="../view/widget/dequalizerdialog.cpp" line="112"/>
@@ -62,19 +61,16 @@
         <translation>舞曲</translation>
     </message>
     <message>
-        <location filename="../view/widget/dequalizerdialog.cpp" line="115"/>
         <source>Full bass</source>
-        <translation>全低音</translation>
+        <translation type="vanished">全低音</translation>
     </message>
     <message>
-        <location filename="../view/widget/dequalizerdialog.cpp" line="116"/>
         <source>Full bass and treble</source>
-        <translation>全低音和高音</translation>
+        <translation type="vanished">全低音和高音</translation>
     </message>
     <message>
-        <location filename="../view/widget/dequalizerdialog.cpp" line="117"/>
         <source>Full treble</source>
-        <translation>全高音</translation>
+        <translation type="vanished">全高音</translation>
     </message>
     <message>
         <location filename="../view/widget/dequalizerdialog.cpp" line="118"/>
@@ -82,8 +78,32 @@
         <translation>耳机</translation>
     </message>
     <message>
-        <location filename="../view/widget/dequalizerdialog.cpp" line="119"/>
         <source>Large Hall</source>
+        <translation type="vanished">大厅</translation>
+    </message>
+    <message>
+        <location filename="../view/widget/dequalizerdialog.cpp" line="111"/>
+        <source>Monophony</source>
+        <translation>单调</translation>
+    </message>
+    <message>
+        <location filename="../view/widget/dequalizerdialog.cpp" line="115"/>
+        <source>Full Bass</source>
+        <translation>全低音</translation>
+    </message>
+    <message>
+        <location filename="../view/widget/dequalizerdialog.cpp" line="116"/>
+        <source>Full Bass and Treble</source>
+        <translation>全低音和高音</translation>
+    </message>
+    <message>
+        <location filename="../view/widget/dequalizerdialog.cpp" line="117"/>
+        <source>Full Treble</source>
+        <translation>全高音</translation>
+    </message>
+    <message>
+        <location filename="../view/widget/dequalizerdialog.cpp" line="119"/>
+        <source>Hall</source>
         <translation>大厅</translation>
     </message>
     <message>
@@ -123,8 +143,24 @@
     </message>
     <message>
         <location filename="../view/widget/dequalizerdialog.cpp" line="127"/>
-        <source>Soft rock</source>
+        <source>Soft Rock</source>
         <translation>慢摇</translation>
+    </message>
+    <message>
+        <location filename="../view/widget/dequalizerdialog.cpp" line="193"/>
+        <location filename="../view/widget/dequalizerdialog.cpp" line="617"/>
+        <source>ON</source>
+        <translation>开</translation>
+    </message>
+    <message>
+        <location filename="../view/widget/dequalizerdialog.cpp" line="195"/>
+        <location filename="../view/widget/dequalizerdialog.cpp" line="615"/>
+        <source>OFF</source>
+        <translation>关</translation>
+    </message>
+    <message>
+        <source>Soft rock</source>
+        <translation type="vanished">慢摇</translation>
     </message>
     <message>
         <location filename="../view/widget/dequalizerdialog.cpp" line="128"/>
@@ -138,16 +174,12 @@
         <translation>均衡器</translation>
     </message>
     <message>
-        <location filename="../view/widget/dequalizerdialog.cpp" line="193"/>
-        <location filename="../view/widget/dequalizerdialog.cpp" line="617"/>
         <source>Open</source>
-        <translation>开</translation>
+        <translation type="vanished">开</translation>
     </message>
     <message>
-        <location filename="../view/widget/dequalizerdialog.cpp" line="195"/>
-        <location filename="../view/widget/dequalizerdialog.cpp" line="615"/>
         <source>Close</source>
-        <translation>关</translation>
+        <translation type="vanished">关</translation>
     </message>
     <message>
         <location filename="../view/widget/dequalizerdialog.cpp" line="212"/>
