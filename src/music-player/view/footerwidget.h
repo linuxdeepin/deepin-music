@@ -72,7 +72,7 @@ signals:
     void volumeChanged(int volume);
 
     void toggleMute();
-    void togglePlaylist();
+    void togglePlaylist(bool isShow);
     void modeChanged(int);
     void toggleFavourite(const MetaPtr meta);
 

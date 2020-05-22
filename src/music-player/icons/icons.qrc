@@ -1,38 +1,16 @@
 <RCC>
     <qresource prefix="/icons/deepin/builtin">
-        <file>actions/picture_list_normal_36px.svg</file>
-        <file>actions/text_list_normal_36px.svg</file>
         <file>texts/picture_list_texts_36px.svg</file>
         <file>texts/text_list_texts_36px.svg</file>
-        <file>actions/collection_normal.svg</file>
-        <file>actions/add_normal.svg</file>
-        <file>actions/album_normal.svg</file>
-        <file>actions/all_music_normal.svg</file>
-        <file>actions/back_normal.svg</file>
-        <file>actions/clear_list_normal.svg</file>
-        <file>actions/close_round normal.svg</file>
-        <file>actions/cross_cycling_normal.svg</file>
-        <file>actions/famous_ballad_normal.svg</file>
-        <file>actions/last_normal.svg</file>
-        <file>actions/lyric_normal.svg</file>
-        <file>actions/mute_normal.svg</file>
-        <file>actions/my_collection_normal.svg</file>
-        <file>actions/next_normal.svg</file>
-        <file>actions/picture_list_normal.svg</file>
-        <file>actions/play_all_normal.svg</file>
-        <file>actions/play_normal.svg</file>
-        <file>actions/playlist_normal.svg</file>
-        <file>actions/random_play_normal.svg</file>
-        <file>actions/search_normal.svg</file>
-        <file>actions/sequential_loop_normal.svg</file>
-        <file>actions/singer_normal.svg</file>
-        <file>actions/single_tune_circulation_normal.svg</file>
-        <file>actions/suspend_normal.svg</file>
-        <file>actions/text_list_normal.svg</file>
-        <file>actions/volume_add_normal.svg</file>
-        <file>actions/volume_lessen_normal.svg</file>
-        <file>actions/volume_low_normal.svg</file>
-        <file>actions/volume_mid_normal.svg</file>
-        <file>actions/volume_normal.svg</file>
+        <file>dark/actions/music_album_24px.svg</file>
+        <file>light/actions/music_album_24px.svg</file>
+        <file>dark/actions/music_singer_24px.svg</file>
+        <file>dark/actions/music_allmusic_24px.svg</file>
+        <file>dark/actions/music_famousballad_24px.svg</file>
+        <file>dark/actions/music_mycollection_24px.svg</file>
+        <file>light/actions/music_singer_24px.svg</file>
+        <file>light/actions/music_allmusic_24px.svg</file>
+        <file>light/actions/music_famousballad_24px.svg</file>
+        <file>light/actions/music_mycollection_24px.svg</file>
     </qresource>
 </RCC>
