@@ -107,10 +107,26 @@ private:
     DSlider     *slider_16K           = nullptr;
     DPushButton *btn_default          = nullptr;
 
-    QStringList    effect_type        = {"自定义", "单调", "古典", "俱乐部", "舞曲", "全低音",
-                                         "全低音和高音", "全高音", "耳机", "大厅", "实况", "聚会",
-                                         "流行", "雷盖", "摇滚", "斯卡", "柔和", "慢摇", "电子乐"
-                                        };
+    QStringList    effect_type        =  { DequalizerDialog::tr("Custom")
+                                           , DequalizerDialog::tr("Flat")
+                                           , DequalizerDialog::tr("Classical")
+                                           , DequalizerDialog::tr("Club")
+                                           , DequalizerDialog::tr("Dance")
+                                           , DequalizerDialog::tr("Full bass")
+                                           , DequalizerDialog::tr("Full bass and treble")
+                                           , DequalizerDialog::tr("Full treble")
+                                           , DequalizerDialog::tr("Headphones")
+                                           , DequalizerDialog::tr("Large Hall")
+                                           , DequalizerDialog::tr("Live")
+                                           , DequalizerDialog::tr("Party")
+                                           , DequalizerDialog::tr("Pop")
+                                           , DequalizerDialog::tr("Reggae")
+                                           , DequalizerDialog::tr("Rock")
+                                           , DequalizerDialog::tr("Ska")
+                                           , DequalizerDialog::tr("Soft")
+                                           , DequalizerDialog::tr("Soft rock")
+                                           , DequalizerDialog::tr("Techno")
+                                         };
     QList<int> BaudList;
 
     MusicSettings   *settings         = nullptr;
@@ -167,16 +183,16 @@ void DequalizerDialogPrivate::initUI()
     font.setFamily("SourceHanSansSC");
     font.setWeight(QFont::Normal);
     font.setPixelSize(17);
-    mtitleLabel  = new DLabel("均衡器");
+    mtitleLabel  = new DLabel(DequalizerDialog::tr("Equalizer"));
     mtitleLabel->resize(51, 25);
     mtitleLabel->setFont(font);
 
     mswitchLabel = new DLabel;
     mswitchLabel->resize(14, 20);
     if (switch_flag) {
-        mswitchLabel->setText("开");
+        mswitchLabel->setText(DequalizerDialog::tr("Open"));
     } else {
-        mswitchLabel->setText("关");
+        mswitchLabel->setText(DequalizerDialog::tr("Close"));
     }
 
     mswitchBtn = new DSwitchButton(q);
@@ -193,7 +209,7 @@ void DequalizerDialogPrivate::initUI()
 
     saveBtn = new DPushButton(q);
     saveBtn->setMinimumSize(110, 36);
-    saveBtn->setText("保存");
+    saveBtn->setText(DequalizerDialog::tr("Save"));
 
     lb_baud_pre = new DLabel(q);
     lb_baud_pre->setMaximumWidth(20);
@@ -203,7 +219,7 @@ void DequalizerDialogPrivate::initUI()
     slider_pre->setMinimum(-20);
     slider_pre->setMaximum(20);
     slider_pre->setPageStep(1);
-    auto lb_preamplifier = new DLabel("前置放大");
+    auto lb_preamplifier = new DLabel(DequalizerDialog::tr("Preamplifier"));
     lb_preamplifier->setAlignment(Qt::AlignCenter);
 
     lb_baud_60 = new DLabel(q);
@@ -306,7 +322,7 @@ void DequalizerDialogPrivate::initUI()
     slider_16K->setPageStep(1);
     auto lb_16K     = new DLabel("16K");
 
-    btn_default = new DPushButton("恢复默认");
+    btn_default = new DPushButton(DequalizerDialog::tr("Restore Defaults"));
     btn_default->setMinimumSize(240, 36);
 
     auto vlayout0  = new QVBoxLayout;
@@ -417,7 +433,7 @@ void DequalizerDialogPrivate::initUI()
     mtabwidget->setAutoFillBackground(true);
     mtabwidget->setDocumentMode(true);
     mtabwidget->resize(720, 463);
-    mtabwidget->addTab(mequalizer, "均衡器");
+    mtabwidget->addTab(mequalizer, DequalizerDialog::tr("Equalizer"));
     mtabwidget->tabBar()->setStyle(new CustomTabStyle);
     mtabwidget->tabBar()->setContentsMargins(10, 0, 10, 0);
 
@@ -536,14 +552,14 @@ void DequalizerDialog::initConnection()
 
     connect(d->saveBtn, &DPushButton::clicked, [ = ]() {
         for (DSlider *slider : findChildren<DSlider *>()) {
-            d->settings->setOption(tr("equalizer.all.%1").arg( slider->objectName()), slider->value());
-            qDebug() << "save" << slider->value();
+            d->settings->setOption("equalizer.all." + slider->objectName(), slider->value());
+//            qDebug() << "save" << slider->value();
         }
     });
 
     connect(d->mcombox, QOverload<int>::of(&DComboBox::currentIndexChanged),
     this, [ = ](int index) {
-        qDebug() << "index:" << index;
+//        qDebug() << "index:" << index;
         if (index == 0) {
             //自定义模式
             showCustom();
@@ -563,7 +579,7 @@ void DequalizerDialog::showCustom()
     Q_D(DequalizerDialog);
     if (d->changeflag) {
         for (DSlider *slider : findChildren<DSlider *>()) {
-            int indexbaud = d->settings->value(tr("equalizer.all.%1").arg(slider->objectName())).toInt();
+            int indexbaud = d->settings->value("equalizer.all." + slider->objectName()).toInt();
             slider->setValue(indexbaud );
             selectSlider(slider, "");
         }
@@ -596,9 +612,9 @@ void DequalizerDialog::checkedChanged(bool checked)
     for (DSlider *slider : findChildren<DSlider *>()) {
         slider->setEnabled(checked);
     }
-    d->mswitchLabel->setText("关");
+    d->mswitchLabel->setText(tr("Close"));
     if (checked) {
-        d->mswitchLabel->setText("开");
+        d->mswitchLabel->setText(tr("Open"));
         //flat;
         showCurMode(d->flat_bauds);
         d->mcombox->setCurrentIndex(1);

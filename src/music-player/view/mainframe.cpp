@@ -191,8 +191,8 @@ void MainFramePrivate::initMenu()
         q->onSelectImportFiles();
     });
 
-    auto equalizer = new QAction(MainFrame::tr("均衡器"), q);
-        equalizerDialog = new DequalizerDialog(q);
+    auto equalizer = new QAction(MainFrame::tr("Equalizer"), q);
+    equalizerDialog = new DequalizerDialog(q);
     q->connect(equalizer, &QAction::triggered, q, [ = ](bool) {
         Dtk::Widget::moveToCenter(equalizerDialog);
         equalizerDialog->exec();
