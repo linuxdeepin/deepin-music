@@ -491,7 +491,10 @@ void PlayerPrivate::initConnection()
                 removeMusicList.append(activeMeta);
                 curPlaylist->removeMusicList(removeMusicList);
                 Q_EMIT q->mediaError(activePlaylist, activeMeta, static_cast<Player::Error>(error));
-            } /*else {
+            } else {
+                qplayer->pause();
+            }
+            /*else {//pause Audio报错，m4a文件没有问题
                 QFileInfo fi("activeMeta->localPath");
                 if (!fi.isReadable()) {
                     MetaPtrList removeMusicList;
