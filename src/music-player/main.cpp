@@ -37,6 +37,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
+#include <stdlib.h>
 #include <unistd.h>
 
 #include "view/mainframe.h"
@@ -92,8 +93,16 @@ bool checkOnly()
     return true;
 }
 
+void setEnv()
+{
+    QString cmd = "rm -rf " + QDir::homePath() + "/.cache/gstreamer-1.0";
+    QProcess::execute(cmd);
+    putenv("LD_PRELOAD=libgomp.so.1");
+}
+
 int main(int argc, char *argv[])
 {
+    setEnv();
 //    DApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 #ifdef SNAP_APP
     DStandardPaths::setMode(DStandardPaths::Snap);
