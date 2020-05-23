@@ -491,7 +491,10 @@ void PlayerPrivate::initConnection()
                 removeMusicList.append(activeMeta);
                 curPlaylist->removeMusicList(removeMusicList);
                 Q_EMIT q->mediaError(activePlaylist, activeMeta, static_cast<Player::Error>(error));
-            } /*else {
+            } else {
+                qplayer->pause();
+            }
+            /*else {//pause Audio报错，m4a文件没有问题
                 QFileInfo fi("activeMeta->localPath");
                 if (!fi.isReadable()) {
                     MetaPtrList removeMusicList;
@@ -863,6 +866,7 @@ void Player::resume(PlaylistPtr playlist, const MetaPtr meta)
     }
 
     qDebug() << "resume top";
+
     if (playlist == d->activePlaylist && d->qplayer->state() == QMediaPlayer::PlayingState && meta->hash == d->activeMeta->hash)
         return;
 
@@ -872,12 +876,15 @@ void Player::resume(PlaylistPtr playlist, const MetaPtr meta)
     setPlayOnLoaded(true);
     //增大音乐自动开始播放时间，给setposition留足空间
     QTimer::singleShot(100, this, [ = ]() {
+
         if (d->isamr) {
             d->qvplayer->play();
+
         } else {
+
+            d->qplayer->setMedia(QMediaContent(QUrl::fromLocalFile(meta->localPath)));
             d->qplayer->play();
         }
-
 
     });
 
