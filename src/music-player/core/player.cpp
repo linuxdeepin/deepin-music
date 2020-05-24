@@ -215,9 +215,13 @@ void PlayerPrivate::apeToMp3(QString path, QString hash)
         if (QFile::exists(toPath)) {
             QFile::remove(toPath);
         }
+        QString fromPath = QString("%1/.tmp1.ape").arg(curPath);
+        if (QFile::exists(fromPath)) {
+            QFile::remove(fromPath);
+        }
         QFile file(path);
-        file.link(path);
-        QString program = QString("ffmpeg -i %1  -ac 1 -ab 32 -ar 24000 %2").arg(path).arg(toPath);
+        file.link(fromPath);
+        QString program = QString("ffmpeg -i %1  -ac 1 -ab 32 -ar 24000 %2").arg(fromPath).arg(toPath);
         QProcess::execute(program);
         path = toPath;
     }
@@ -703,7 +707,15 @@ void Player::loadMedia(PlaylistPtr playlist, const MetaPtr meta)
 //        d->qvplayer->stop();
         d->qplayer->blockSignals(true);
         d->isamr = false;
-        d->qplayer->setMedia(QMediaContent(QUrl::fromLocalFile(meta->localPath)));
+        QString curPath = Global::cacheDir();
+        QString toPath = QString("%1/images/%2.mp3").arg(curPath).arg(meta->hash);
+        if (!QFile::exists(toPath)) {
+            d->apeToMp3(meta->localPath, meta->hash);
+            if (!QFile::exists(toPath)) {
+                toPath = meta->localPath;
+            }
+        }
+        d->qplayer->setMedia(QMediaContent(QUrl::fromLocalFile(toPath)));
         volume = d->qplayer->volume();
         d->qplayer->setVolume(0);
         d->qplayer->play();
@@ -781,6 +793,9 @@ void Player::playMeta(PlaylistPtr playlist, const MetaPtr meta)
         QString toPath = QString("%1/images/%2.mp3").arg(curPath).arg(curMeta->hash);
         if (!QFile::exists(toPath)) {
             d->apeToMp3(curMeta->localPath, curMeta->hash);
+            if (!QFile::exists(toPath)) {
+                toPath = curMeta->localPath;
+            }
         }
         d->qplayer->setMedia(QMediaContent(QUrl::fromLocalFile(toPath)));
         d->qplayer->setPosition(curMeta->offset);
