@@ -788,6 +788,9 @@ void Player::playMeta(PlaylistPtr playlist, const MetaPtr meta)
         d->qvplayer->play();
 
     } else if (QFile::exists(curMeta->localPath) && fileInfo.suffix().toLower() == "ape") {
+        if (d->qvplayer->state() != Vlc::Stopped && d->qvplayer->state() != Vlc::Idle ) {
+            d->qvplayer->stop();
+        }
         d->isamr = false;
         QString curPath = Global::cacheDir();
         QString toPath = QString("%1/images/%2.mp3").arg(curPath).arg(curMeta->hash);
