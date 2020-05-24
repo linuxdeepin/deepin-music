@@ -131,9 +131,13 @@ void MediaLibraryPrivate::apeToMp3(QString path, QString hash)
         if (QFile::exists(toPath)) {
             QFile::remove(toPath);
         }
+        QString fromPath = QString("%1/.tmp1.ape").arg(curPath);
+        if (QFile::exists(fromPath)) {
+            QFile::remove(fromPath);
+        }
         QFile file(path);
-        file.link(path);
-        QString program = QString("ffmpeg -i %1 -ac 1 -ab 32 -ar 24000 %2").arg(path).arg(toPath);
+        file.link(fromPath);
+        QString program = QString("ffmpeg -i %1 -ac 1 -ab 32 -ar 24000 %2").arg(fromPath).arg(toPath);
         QProcess::execute(program);
         path = toPath;
     }
