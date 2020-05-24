@@ -879,10 +879,7 @@ void Player::resume(PlaylistPtr playlist, const MetaPtr meta)
 
         if (d->isamr) {
             d->qvplayer->play();
-
         } else {
-
-            d->qplayer->setMedia(QMediaContent(QUrl::fromLocalFile(meta->localPath)));
             d->qplayer->play();
         }
 
