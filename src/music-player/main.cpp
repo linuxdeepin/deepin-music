@@ -182,7 +182,8 @@ int main(int argc, char *argv[])
         if (iface.isValid()) {
             iface.asyncCall("Raise");
         }
-        exit(0);
+        return 0;
+//        exit(0);
     }
     MusicSettings::init();
 
