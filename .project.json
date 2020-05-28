@@ -1,0 +1,6 @@
+{
+	"type": "homebrew",
+	"3rdparty": [],
+	"ignore": ["./.tx", "./debian", "./snap", "./src/dist", "./src/music-player/data", "./src/music-player/dman", "./src/music-player/icons", "./src/music-player/resource", "./src/music-player/translations", ".gitignore","LICENSE", "README.md", "COPYING", "*.pri", "*.pro", "*.png", "*.svg", "*.qrc",".clog.toml",".transifexrc"],
+	"license": ["GPLv3"]
+}
