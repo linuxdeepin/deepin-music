@@ -790,10 +790,12 @@ MainFrame::MainFrame(QWidget *parent) :
 
 MainFrame::~MainFrame()
 {
+    Q_D(MainFrame);
     Q_EMIT exit();
     MusicSettings::sync();
     MusicSettings::setOption("base.play.state", int(windowState()));
     MusicSettings::setOption("base.play.geometry", saveGeometry());
+    delete d->equalizerDialog;
 }
 
 void MainFrame::initUI(bool showLoading)

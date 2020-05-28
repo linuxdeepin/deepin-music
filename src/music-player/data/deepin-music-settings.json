@@ -208,7 +208,7 @@
                         },
                         {
                             "key": "baud_pre",
-                            "default": 0
+                            "default": 12
                         },
                         {
                             "key": "baud_60",

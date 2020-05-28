@@ -37,109 +37,115 @@
 <context>
     <name>DequalizerDialog</name>
     <message>
-        <location filename="../../view/widget/dequalizerdialog.cpp" line="110"/>
+        <location filename="../../view/widget/dequalizerdialog.cpp" line="111"/>
         <source>Custom</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../view/widget/dequalizerdialog.cpp" line="112"/>
+        <location filename="../../view/widget/dequalizerdialog.cpp" line="113"/>
         <source>Classical</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../view/widget/dequalizerdialog.cpp" line="113"/>
+        <location filename="../../view/widget/dequalizerdialog.cpp" line="114"/>
         <source>Club</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../view/widget/dequalizerdialog.cpp" line="114"/>
+        <location filename="../../view/widget/dequalizerdialog.cpp" line="115"/>
         <source>Dance</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../view/widget/dequalizerdialog.cpp" line="118"/>
+        <location filename="../../view/widget/dequalizerdialog.cpp" line="119"/>
         <source>Headphones</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../view/widget/dequalizerdialog.cpp" line="111"/>
+        <location filename="../../view/widget/dequalizerdialog.cpp" line="112"/>
         <source>Monophony</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../view/widget/dequalizerdialog.cpp" line="115"/>
+        <location filename="../../view/widget/dequalizerdialog.cpp" line="116"/>
         <source>Full Bass</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../view/widget/dequalizerdialog.cpp" line="116"/>
+        <location filename="../../view/widget/dequalizerdialog.cpp" line="117"/>
         <source>Full Bass and Treble</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../view/widget/dequalizerdialog.cpp" line="117"/>
+        <location filename="../../view/widget/dequalizerdialog.cpp" line="118"/>
         <source>Full Treble</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../view/widget/dequalizerdialog.cpp" line="119"/>
+        <location filename="../../view/widget/dequalizerdialog.cpp" line="120"/>
         <source>Hall</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../view/widget/dequalizerdialog.cpp" line="120"/>
+        <location filename="../../view/widget/dequalizerdialog.cpp" line="121"/>
         <source>Live</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../view/widget/dequalizerdialog.cpp" line="121"/>
+        <location filename="../../view/widget/dequalizerdialog.cpp" line="122"/>
         <source>Party</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../view/widget/dequalizerdialog.cpp" line="122"/>
+        <location filename="../../view/widget/dequalizerdialog.cpp" line="123"/>
         <source>Pop</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../view/widget/dequalizerdialog.cpp" line="123"/>
+        <location filename="../../view/widget/dequalizerdialog.cpp" line="124"/>
         <source>Reggae</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../view/widget/dequalizerdialog.cpp" line="124"/>
+        <location filename="../../view/widget/dequalizerdialog.cpp" line="125"/>
         <source>Rock</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../view/widget/dequalizerdialog.cpp" line="125"/>
+        <location filename="../../view/widget/dequalizerdialog.cpp" line="126"/>
         <source>Ska</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../view/widget/dequalizerdialog.cpp" line="126"/>
+        <location filename="../../view/widget/dequalizerdialog.cpp" line="127"/>
         <source>Soft</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../view/widget/dequalizerdialog.cpp" line="127"/>
+        <location filename="../../view/widget/dequalizerdialog.cpp" line="128"/>
         <source>Soft Rock</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../view/widget/dequalizerdialog.cpp" line="193"/>
-        <location filename="../../view/widget/dequalizerdialog.cpp" line="617"/>
+        <location filename="../../view/widget/dequalizerdialog.cpp" line="630"/>
         <source>ON</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../view/widget/dequalizerdialog.cpp" line="195"/>
-        <location filename="../../view/widget/dequalizerdialog.cpp" line="615"/>
+        <location filename="../../view/widget/dequalizerdialog.cpp" line="628"/>
         <source>OFF</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../view/widget/dequalizerdialog.cpp" line="128"/>
+        <location filename="../../view/widget/dequalizerdialog.cpp" line="502"/>
+        <location filename="../../view/widget/dequalizerdialog.cpp" line="503"/>
+        <source>Sound Effects Saved</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../view/widget/dequalizerdialog.cpp" line="129"/>
         <source>Techno</source>
         <translation type="unfinished"></translation>
     </message>
@@ -378,7 +384,7 @@
     </message>
     <message>
         <location filename="../../view/mainframe.cpp" line="261"/>
-        <location filename="../../view/mainframe.cpp" line="819"/>
+        <location filename="../../view/mainframe.cpp" line="821"/>
         <source>Exit</source>
         <translation type="unfinished"></translation>
     </message>
@@ -390,64 +396,64 @@
     <message>
         <location filename="../../view/mainframe.cpp" line="751"/>
         <location filename="../../view/mainframe.cpp" line="764"/>
-        <location filename="../../view/mainframe.cpp" line="830"/>
-        <location filename="../../view/mainframe.cpp" line="1318"/>
+        <location filename="../../view/mainframe.cpp" line="832"/>
+        <location filename="../../view/mainframe.cpp" line="1320"/>
         <source>Music</source>
         <translation type="unfinished">音乐</translation>
     </message>
     <message>
-        <location filename="../../view/mainframe.cpp" line="816"/>
+        <location filename="../../view/mainframe.cpp" line="818"/>
         <source>Play/Pause</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../view/mainframe.cpp" line="817"/>
+        <location filename="../../view/mainframe.cpp" line="819"/>
         <source>Previous</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../view/mainframe.cpp" line="818"/>
+        <location filename="../../view/mainframe.cpp" line="820"/>
         <source>Next</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../view/mainframe.cpp" line="929"/>
+        <location filename="../../view/mainframe.cpp" line="931"/>
         <source>Successfully added to &quot;%1&quot;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../view/mainframe.cpp" line="933"/>
+        <location filename="../../view/mainframe.cpp" line="935"/>
         <source>Already added to the playlist</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../view/mainframe.cpp" line="936"/>
+        <location filename="../../view/mainframe.cpp" line="938"/>
         <source>1 song added</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../view/mainframe.cpp" line="938"/>
+        <location filename="../../view/mainframe.cpp" line="940"/>
         <source>%1 songs added</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../view/mainframe.cpp" line="998"/>
+        <location filename="../../view/mainframe.cpp" line="1000"/>
         <source>File is invalid or does not exist, load failed</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../view/mainframe.cpp" line="999"/>
-        <location filename="../../view/mainframe.cpp" line="1040"/>
+        <location filename="../../view/mainframe.cpp" line="1001"/>
+        <location filename="../../view/mainframe.cpp" line="1042"/>
         <source>OK</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../view/mainframe.cpp" line="1035"/>
+        <location filename="../../view/mainframe.cpp" line="1037"/>
         <source>Import failed, no valid music file found</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../view/mainframe.cpp" line="1456"/>
+        <location filename="../../view/mainframe.cpp" line="1458"/>
         <source>All music</source>
         <translation type="unfinished"></translation>
     </message>
