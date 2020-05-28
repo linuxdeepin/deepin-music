@@ -26,7 +26,7 @@ VlcMediaPlayer::VlcMediaPlayer(VlcInstance *instance)
 
     _media = 0;
 
-    connect(&timer, SIGNAL(timeout()), this, SLOT(timeoutSlot()));
+//    connect(&timer, SIGNAL(timeout()), this, SLOT(timeoutSlot()));
 //    timer.start(1000);
 
     createCoreConnections();
@@ -260,13 +260,13 @@ Vlc::State VlcMediaPlayer::state() const
 
     return Vlc::State(state);
 }
-void VlcMediaPlayer::timeoutSlot()
-{
-    if (!_vlcMediaPlayer)
-        return;
+//void VlcMediaPlayer::timeoutSlot()
+//{
+//    if (!_vlcMediaPlayer)
+//        return;
 
-    emit timeChanged(libvlc_media_player_get_time(_vlcMediaPlayer));
-}
+//    emit timeChanged(libvlc_media_player_get_time(_vlcMediaPlayer));
+//}
 
 void VlcMediaPlayer::stop()
 {

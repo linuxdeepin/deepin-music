@@ -14,7 +14,7 @@
 #include <DFrame>
 #include <DPushButton>
 #include <QDebug>
-#include <QMap>
+#include <DFloatingMessage>
 
 #include <vlc/Audio.h>
 #include <vlc/Equalizer.h>
@@ -106,6 +106,7 @@ private:
     DSlider     *slider_14K           = nullptr;
     DSlider     *slider_16K           = nullptr;
     DPushButton *btn_default          = nullptr;
+    DFloatingMessage *saveMessage     = nullptr;
 
     QStringList    effect_type        =  { DequalizerDialog::tr("Custom")
                                            , DequalizerDialog::tr("Monophony")
@@ -132,14 +133,13 @@ private:
     MusicSettings   *settings         = nullptr;
 
 
-    bool    switch_flag               = false;
-    bool    changeflag                = true;
+    bool    switchflag               = false;
+    bool    changeflag                = false;
     int     curEffect                 = 0;
-
 
     int flat_bauds[11] = {12, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
     int Classical_bauds[11] = {12, 0, 0, 0, 0, 0, 0, -7, -7, -7, -9};
-    int Club_bauds[11] = {12, 0, 0, 0, 0, 0, 0, -7, -7, -7, -9};
+    int Club_bauds[11] = {6, 0, 0, 8, 5, 5, 5, 3, 0, 0, 0};
     int Dance_bauds[11] = {5, 9, 7, 2, 0, 0, -5, -7, -7, 0, 0};
     int Full_bass_bauds[11] = {5, -8, 9, 9, 5, 1, -4, -8, -10, -11, -11};
     int Full_bass_and_treble_bauds[11] = {4, 7, 5, 0, -7, -4, 1, 8, 11, 12, 12};
@@ -168,7 +168,7 @@ private:
 void DequalizerDialogPrivate::readConfig()
 {
 //    Q_Q(DequalizerDialog);
-    switch_flag = settings->value("equalizer.all.switch").toBool();
+    switchflag = settings->value("equalizer.all.switch").toBool();
     curEffect   = settings->value("equalizer.all.curEffect").toInt();
 
 }
@@ -189,7 +189,7 @@ void DequalizerDialogPrivate::initUI()
 
     mswitchLabel = new DLabel;
     mswitchLabel->resize(14, 20);
-    if (switch_flag) {
+    if (switchflag) {
         mswitchLabel->setText(DequalizerDialog::tr("ON"));
     } else {
         mswitchLabel->setText(DequalizerDialog::tr("OFF"));
@@ -213,6 +213,7 @@ void DequalizerDialogPrivate::initUI()
 
     lb_baud_pre = new DLabel(q);
     lb_baud_pre->setMaximumWidth(20);
+    lb_baud_pre->setMinimumHeight(22);
     lb_baud_pre->setAlignment(Qt::AlignCenter);
     slider_pre = new DSlider(Qt::Vertical);
     slider_pre->setObjectName("baud_pre");
@@ -224,6 +225,7 @@ void DequalizerDialogPrivate::initUI()
 
     lb_baud_60 = new DLabel(q);
     lb_baud_60->setMaximumWidth(20);
+    lb_baud_60->setMinimumHeight(22);
     lb_baud_60->setAlignment(Qt::AlignCenter);
     slider_60 = new DSlider(Qt::Vertical);
     slider_60->setObjectName("baud_60");
@@ -234,6 +236,7 @@ void DequalizerDialogPrivate::initUI()
 
     lb_baud_170 = new DLabel(q);
     lb_baud_170->setMaximumWidth(20);
+    lb_baud_170->setMinimumHeight(22);
     lb_baud_170->setAlignment(Qt::AlignCenter);
     slider_170 = new DSlider(Qt::Vertical);
     slider_170->setObjectName("baud_170");
@@ -244,6 +247,7 @@ void DequalizerDialogPrivate::initUI()
 
     lb_baud_310 = new DLabel(q);
     lb_baud_310->setMaximumWidth(20);
+    lb_baud_310->setMinimumHeight(22);
     lb_baud_310->setAlignment(Qt::AlignCenter);
     slider_310 = new DSlider(Qt::Vertical);
     slider_310->setObjectName("baud_310");
@@ -254,6 +258,7 @@ void DequalizerDialogPrivate::initUI()
 
     lb_baud_600 = new DLabel(q);
     lb_baud_600->setMaximumWidth(20);
+    lb_baud_600->setMinimumHeight(22);
     lb_baud_600->setAlignment(Qt::AlignCenter);
     slider_600 = new DSlider(Qt::Vertical);
     slider_600->setObjectName("baud_600");
@@ -264,6 +269,7 @@ void DequalizerDialogPrivate::initUI()
 
     lb_baud_1K = new DLabel(q);
     lb_baud_1K->setMaximumWidth(20);
+    lb_baud_1K->setMinimumHeight(22);
     lb_baud_1K->setAlignment(Qt::AlignCenter);
     slider_1K = new DSlider(Qt::Vertical);
     slider_1K->setObjectName("baud_1K");
@@ -274,6 +280,7 @@ void DequalizerDialogPrivate::initUI()
 
     lb_baud_3K = new DLabel(q);
     lb_baud_3K->setMaximumWidth(20);
+    lb_baud_3K->setMinimumHeight(22);
     lb_baud_3K->setAlignment(Qt::AlignCenter);
     slider_3K = new DSlider(Qt::Vertical);
     slider_3K->setObjectName("baud_3K");
@@ -284,6 +291,7 @@ void DequalizerDialogPrivate::initUI()
 
     lb_baud_6K = new DLabel(q);
     lb_baud_6K->setMaximumWidth(20);
+    lb_baud_6K->setMinimumHeight(22);
     lb_baud_6K->setAlignment(Qt::AlignCenter);
     slider_6K = new DSlider(Qt::Vertical);
     slider_6K->setObjectName("baud_6K");
@@ -294,6 +302,7 @@ void DequalizerDialogPrivate::initUI()
 
     lb_baud_12K = new DLabel(q);
     lb_baud_12K->setMaximumWidth(20);
+    lb_baud_12K->setMinimumHeight(22);
     lb_baud_12K->setAlignment(Qt::AlignCenter);
     slider_12K = new DSlider(Qt::Vertical);
     slider_12K->setObjectName("baud_12K");
@@ -304,6 +313,7 @@ void DequalizerDialogPrivate::initUI()
 
     lb_baud_14K = new DLabel(q);
     lb_baud_14K->setMaximumWidth(20);
+    lb_baud_14K->setMinimumHeight(22);
     lb_baud_14K->setAlignment(Qt::AlignCenter);
     slider_14K = new DSlider(Qt::Vertical);
     slider_14K->setObjectName("baud_14K");
@@ -314,6 +324,7 @@ void DequalizerDialogPrivate::initUI()
 
     lb_baud_16K = new DLabel(q);
     lb_baud_16K->setMaximumWidth(20);
+    lb_baud_16K->setMinimumHeight(22);
     lb_baud_16K->setAlignment(Qt::AlignCenter);
     slider_16K = new DSlider(Qt::Vertical);
     slider_16K->setObjectName("baud_16K");
@@ -468,22 +479,21 @@ void DequalizerDialogPrivate::initUI()
     AllbaudTypes.append(Soft_rock_bauds);
     AllbaudTypes.append(Techno_bauds);
 
-    mswitchBtn->setChecked(switch_flag);
-    mcombox->setEnabled(switch_flag);
+    mswitchBtn->setChecked(switchflag);
+    mcombox->setEnabled(switchflag);
+    saveBtn->setEnabled(switchflag);
 
     for (DSlider *slider : q->findChildren<DSlider *>()) {
         slider->setAttribute(Qt::WA_Hover, true); //开启悬停事件
         slider->installEventFilter(q);       //安装事件过滤器
-        slider->setEnabled(switch_flag);
+        slider->setEnabled(switchflag);
     }
-
     if (curEffect != 0 ) {
         q->showCurMode(AllbaudTypes.at(curEffect - 1));
         mcombox->setCurrentIndex(curEffect);
     } else {
         q->showCustom();
     }
-
 }
 
 
@@ -494,11 +504,24 @@ DequalizerDialog::DequalizerDialog(QWidget *parent):
     d->readConfig();
     d->initUI();
     initConnection();
+    QFont font;
+    font.setPixelSize(13);
+    QFontMetrics fm(font);
+    d->saveMessage  = new DFloatingMessage(DFloatingMessage::TransientType, this);
+    d->saveMessage->setFont(font);
+    d->saveMessage->setIcon(QIcon(":/common/image/notify_success_new.svg"));
+    d->saveMessage->setMessage(tr("Sound Effects Saved"));
+    int Minwid = fm.width(tr("Sound Effects Saved")) + 70;
+    d->saveMessage->setMinimumSize(Minwid, 60);
+    d->saveMessage->setDuration(2000);
+    d->saveMessage->move(width() / 2 - 80, height() - 70);
+    d->saveMessage->hide();
 }
 
 DequalizerDialog::~DequalizerDialog()
 {
-//    Q_D(DequalizerDialog);
+    Q_D(DequalizerDialog);
+    delete d->saveMessage;
 }
 
 void DequalizerDialog::initConnection()
@@ -509,12 +532,15 @@ void DequalizerDialog::initConnection()
 
     for (DSlider *slider : findChildren<DSlider *>()) {
         connect(slider, &DSlider::sliderReleased, [ = ]() {
-            d->changeflag = false;
+            d->changeflag = true;
             d->mcombox->setCurrentIndex(0);
         });
 
         connect(slider, &DSlider::valueChanged, [ = ](int value) {
-
+            d->saveBtn->setEnabled(true);
+            if (!d->changeflag) {
+                return ;
+            }
             selectSlider(slider, QString::number(value));
             if (slider == d->slider_pre) {
                 Q_EMIT setEqualizerpre(value);
@@ -546,29 +572,27 @@ void DequalizerDialog::initConnection()
                 }
                 Q_EMIT setEqualizerbauds(bandIndex, value);
             }
-            d->saveBtn->setEnabled(true);
         });
     }
 
     connect(d->saveBtn, &DPushButton::clicked, [ = ]() {
         for (DSlider *slider : findChildren<DSlider *>()) {
             d->settings->setOption("equalizer.all." + slider->objectName(), slider->value());
-//            qDebug() << "save" << slider->value();
         }
+        d->settings->setOption("equalizer.all.curEffect", 0);
+        d->saveMessage->show();
     });
 
     connect(d->mcombox, QOverload<int>::of(&DComboBox::currentIndexChanged),
     this, [ = ](int index) {
-//        qDebug() << "index:" << index;
         if (index == 0) {
-            //自定义模式
             showCustom();
         } else {
-            d->changeflag = true;
+            d->changeflag = false;
             showCurMode(d->AllbaudTypes.at(index - 1));
             Q_EMIT setEqualizerIndex(index);
+            d->settings->setOption("equalizer.all.curEffect", index);
         }
-        d->settings->setOption("equalizer.all.curEffect", index);
     });
     connect(d->btn_default, &DPushButton::clicked, this, &DequalizerDialog::setDefaultClicked);
 
@@ -578,14 +602,17 @@ void DequalizerDialog::showCustom()
 {
     Q_D(DequalizerDialog);
     if (d->changeflag) {
-        for (DSlider *slider : findChildren<DSlider *>()) {
-            int indexbaud = d->settings->value("equalizer.all." + slider->objectName()).toInt();
-            slider->setValue(indexbaud );
-            selectSlider(slider, "");
-        }
+        return;
     }
 
+    for (DSlider *slider : findChildren<DSlider *>()) {
+        int indexbaud = d->settings->value("equalizer.all." + slider->objectName()).toInt();
+        slider->setValue(indexbaud );
+        selectSlider(slider, "");
+    }
+    d->settings->setOption("equalizer.all.curEffect", 0);
 }
+
 //显示非自定义模式
 void DequalizerDialog::showCurMode(int *Allbauds)
 {
@@ -623,7 +650,7 @@ void DequalizerDialog::checkedChanged(bool checked)
     };
     d->mcombox->setEnabled(checked);
     d->saveBtn->setEnabled(false);
-    Q_EMIT setEqualizerEnable(checked);
+//    Q_EMIT setEqualizerEnable(checked);
     d->settings->setOption("equalizer.all.switch", checked);
 }
 
@@ -635,8 +662,15 @@ void DequalizerDialog::setDefaultClicked()
         showCurMode(d->flat_bauds);
         d->mswitchBtn->setChecked(false);
         d->mcombox->setCurrentIndex(1);
-        Q_EMIT setEqualizerEnable(false);
+//        Q_EMIT setEqualizerEnable(false);
         d->settings->setOption("equalizer.all.curEffect", 1);
+        for (DSlider *slider : findChildren<DSlider *>()) {
+            if (slider == d->slider_pre) {
+                d->settings->setOption("equalizer.all." + slider->objectName(), 12);
+            } else {
+                d->settings->setOption("equalizer.all." + slider->objectName(), 0);
+            }
+        }
     }
 }
 void DequalizerDialog::selectSlider(QObject *obj, QString SliderVal)

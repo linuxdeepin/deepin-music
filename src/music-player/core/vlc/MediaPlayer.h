@@ -207,7 +207,7 @@ public slots:
     */
     void stop();
 
-    void timeoutSlot();
+//    void timeoutSlot();
 
 signals:
     /*!

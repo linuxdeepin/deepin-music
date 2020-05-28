@@ -16,6 +16,6 @@ Depends: ${shlibs:Depends}, ${misc:Depends},
  gstreamer1.0-libav, gstreamer1.0-plugins-base, gstreamer1.0-plugins-good,
  gstreamer1.0-plugins-bad, gstreamer1.0-plugins-ugly, gstreamer1.0-pulseaudio,
  libqt5sql5-sqlite, libqt5multimedia5-plugins, gstreamer1.0-fluendo-mp3,
- gvfs-bin
+ gvfs-bin,vlc-plugin-base
 Description: Music software for UOS
  Music is a local music player with beautiful design and simple functions.

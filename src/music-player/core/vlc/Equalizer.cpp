@@ -84,7 +84,6 @@ void VlcEqualizer::loadFromPreset(uint index)
         }
     } else {
         _vlcEqualizer = libvlc_audio_equalizer_new();
-
     }
 //    VlcError::showErrmsg();
 

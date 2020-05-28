@@ -603,6 +603,7 @@ void Presenter::postAction()
     d->player->setMode(static_cast<Player::PlaybackMode>(playmode));
     Q_EMIT this->modeChanged(playmode);
 
+    setEqualizerEnable(true);
     //读取均衡器使能开关配置
     auto eqSwitch = d->settings->value("equalizer.all.switch").toBool();
     //自定义频率
@@ -1700,7 +1701,7 @@ void Presenter::onChangeProgress(qint64 value, qint64 range)
 
     //qDebug() << value << "-" << range;
 
-    d->player->setIOPosition(value, range);
+//    d->player->setIOPosition(value, range);
 
     auto position = value * d->player->duration() / range;
     d->player->setPosition(position);
