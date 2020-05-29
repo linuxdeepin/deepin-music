@@ -63,7 +63,7 @@ public:
             supportedSuffixs.insert(suffix, true);
         }
 
-//        qDebug() << supportedSuffixs;
+        //        qDebug() << supportedSuffixs;
 
 #ifdef SUPPORT_INOTIFY
         watcher = new InotifyEngine;
@@ -90,9 +90,9 @@ public:
         watcher->addPaths(dirs.keys());
 #endif
 
-//        for (auto meta : metas) {
-//            qDebug() << meta->title;
-//        }
+        //        for (auto meta : metas) {
+        //            qDebug() << meta->title;
+        //        }
     }
 
 private:
@@ -131,7 +131,17 @@ MetaPtr MediaLibraryPrivate::importMeta(const QString &filepath,
         return MetaPtr();
     }
 
-    if (fileInfo.suffix().toLower() == "cue") {
+    if (    fileInfo.suffix().toLower() != "wav" &&
+            fileInfo.suffix().toLower() != "mp3" &&
+            fileInfo.suffix().toLower() != "ogg" &&
+            fileInfo.suffix().toLower() != "vorbis" &&
+            fileInfo.suffix().toLower() != "flac" &&
+            fileInfo.suffix().toLower() != "wma" &&
+            fileInfo.suffix().toLower() != "m4a" &&
+            fileInfo.suffix().toLower() != "aac" &&
+            fileInfo.suffix().toLower() != "ape" &&
+            fileInfo.suffix().toLower() != "amr"
+       ) {
         cuelist << DMusic::CueParserPtr(new DMusic::CueParser(filepath));
         // TODO: check cue invalid
 #ifdef SUPPORT_INOTIFY
@@ -230,8 +240,6 @@ MetaPtr MediaLibraryPrivate::importMeta(const QString &filepath,
             int got_picture;
             int ret = avcodec_decode_audio4( pCodecCtx, frame, &got_picture, packet);
 
-            qDebug() << "ret : " << ret;
-
             if ( ret < 20 ) {
                 packageErr ++;
             }
@@ -246,7 +254,7 @@ MetaPtr MediaLibraryPrivate::importMeta(const QString &filepath,
         }
         av_packet_unref(packet);
 
-        if (readCount++ > 500) {
+        if (readCount++ > 300) {
             break ;
         }
     }

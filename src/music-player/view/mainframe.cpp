@@ -578,7 +578,7 @@ void MainFramePrivate::toggleLyricView()
 void MainFramePrivate::togglePlaylist(bool visible)
 {
     importWidget->hide();
-    if(visible) {
+    if (visible) {
         if (!playListWidget->isVisible()) {
             showPlaylistView();
             footer->setPlaylistButtonChecked(true);
@@ -848,6 +848,7 @@ void MainFrame::postInitUI()
         if (QSystemTrayIcon::Trigger == reason) {
             if (isVisible()) {
                 if (isMinimized()) {
+                    showNormal();
                     activateWindow();
                 } else {
                     showMinimized();
