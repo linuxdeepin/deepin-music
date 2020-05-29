@@ -225,6 +225,22 @@ void PlayerPrivate::apeToMp3(QString path, QString hash)
         QProcess::execute(program);
         path = toPath;
     }
+    if (fileInfo.suffix().toLower() == "amr") {
+        QString curPath = Global::cacheDir();
+        QString toPath = QString("%1/images/%2.mp3").arg(curPath).arg(hash);
+        if (QFile::exists(toPath)) {
+            QFile::remove(toPath);
+        }
+        QString fromPath = QString("%1/.tmp1.amr").arg(curPath);
+        if (QFile::exists(fromPath)) {
+            QFile::remove(fromPath);
+        }
+        QFile file(path);
+        file.link(fromPath);
+        QString program = QString("ffmpeg -i %1  -ac 1 -ab 32 -ar 24000 %2").arg(fromPath).arg(toPath);
+        QProcess::execute(program);
+        path = toPath;
+    }
 }
 void PlayerPrivate::initConnection()
 {
@@ -693,7 +709,7 @@ void Player::loadMedia(PlaylistPtr playlist, const MetaPtr meta)
         d->activePlaylist = playlist;
 
     int volume = -1;
-    if (meta->localPath.endsWith(".amr") && !meta.isNull() ) {
+/*    if (meta->localPath.endsWith(".amr") && !meta.isNull() ) {
 //        d->qplayer->stop();
         d->qvplayer->blockSignals(true);
         d->isamr = true;
@@ -703,7 +719,11 @@ void Player::loadMedia(PlaylistPtr playlist, const MetaPtr meta)
 //        d->qvplayer->audio()->setVolume(0);
         d->qvplayer->play();
 
-    } else {
+    } else */{
+//        if(meta->localPath.endsWith(".APE")){
+//            QFileInfo fileInfo(meta->localPath);
+//            fileInfo.suffix().toLower() == "ape";
+//        }
 //        d->qvplayer->stop();
         d->qplayer->blockSignals(true);
         d->isamr = false;
@@ -775,7 +795,7 @@ void Player::playMeta(PlaylistPtr playlist, const MetaPtr meta)
 
     d->ischangeMusic = true;
     QFileInfo fileInfo(curMeta->localPath);
-    if (curMeta->localPath.endsWith(".amr") && QFile::exists(curMeta->localPath) ) {
+/*    if (curMeta->localPath.endsWith(".amr") && QFile::exists(curMeta->localPath) ) {
 //        if (d->qplayer->state() != QMediaPlayer::StoppedState) {
         d->qplayer->setMedia(QMediaContent());
         d->qplayer->stop();
@@ -786,8 +806,11 @@ void Player::playMeta(PlaylistPtr playlist, const MetaPtr meta)
         d->qvplayer->open(d->qvmedia);
         d->qvplayer->setTime(curMeta->offset);
         d->qvplayer->play();
-
-    } else if (QFile::exists(curMeta->localPath) && fileInfo.suffix().toLower() == "ape") {
+    } else */if (QFile::exists(curMeta->localPath) ) {
+//        if(curMeta->localPath.endsWith(".APE")){
+//            QFileInfo fileInfo(curMeta->localPath);
+//            fileInfo.suffix().toLower() == "ape";
+//        }
         if (d->qvplayer->state() != Vlc::Stopped && d->qvplayer->state() != Vlc::Idle ) {
             d->qvplayer->stop();
         }
