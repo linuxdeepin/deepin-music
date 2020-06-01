@@ -846,7 +846,7 @@ Player::PlaybackStatus Player::status()
         return PlaybackStatus::Playing;
     } else if (status == Vlc::Paused) {
         return PlaybackStatus::Paused;
-    } else if (status == Vlc::Stopped) {
+    } else if (status == Vlc::Stopped || status == Vlc::Idle) {
         return PlaybackStatus::Stopped;
     } else {
         return PlaybackStatus::InvalidPlaybackStatus;
