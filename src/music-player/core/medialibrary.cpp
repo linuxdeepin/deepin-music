@@ -242,6 +242,22 @@ MetaPtr MediaLibraryPrivate::importMeta(const QString &filepath,
         InvalidDetection = false;
     }
 
+    int layout = 0;
+    QString chaLayout = QString::number(pCodecCtx->channel_layout, 2);
+    QByteArray bytes = chaLayout.toUtf8();
+
+    for (int i = 0; i < bytes.size(); i++) {
+
+        if (bytes[i] == '1') {
+            layout++;
+        }
+    }
+
+    if (layout == pCodecCtx->channels) {
+
+        InvalidDetection = true;
+    }
+
     if (pCodecCtx->channels == 2 && pCodecCtx->channel_layout == 0) {
         qDebug() << "InvalidDetection is true " << filepath;
         InvalidDetection = true;
@@ -258,12 +274,10 @@ MetaPtr MediaLibraryPrivate::importMeta(const QString &filepath,
         return MetaPtr();
     }
 
-
     int erroCount = 0;
     int readCount = 0;
     int packageErr = 0;
     int packageCount = 0;
-
 
     while ( av_read_frame(pFormatCtx, packet) >= 0 ) {
 
