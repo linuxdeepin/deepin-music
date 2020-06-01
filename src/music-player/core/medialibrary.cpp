@@ -132,9 +132,9 @@ void MediaLibraryPrivate::apeToMp3(QString path, QString hash)
             QFile::remove(toPath);
         }
         QString fromPath = QString("%1/.tmp1.ape").arg(curPath);
-        if (QFile::exists(fromPath)) {
-            QFile::remove(fromPath);
-        }
+//        if (QFile::exists(fromPath)) {
+        QFile::remove(fromPath);
+//        }
         QFile file(path);
         file.link(fromPath);
         QString program = QString("ffmpeg -i %1 -ac 1 -ab 32 -ar 24000 %2").arg(fromPath).arg(toPath);
@@ -148,9 +148,9 @@ void MediaLibraryPrivate::apeToMp3(QString path, QString hash)
             QFile::remove(toPath);
         }
         QString fromPath = QString("%1/.tmp1.amr").arg(curPath);
-        if (QFile::exists(fromPath)) {
-            QFile::remove(fromPath);
-        }
+//        if (QFile::exists(fromPath)) {
+        QFile::remove(fromPath);
+//        }
         QFile file(path);
         file.link(fromPath);
         QString program = QString("ffmpeg -i %1 -ac 1 -ab 32 -ar 24000 %2").arg(fromPath).arg(toPath);

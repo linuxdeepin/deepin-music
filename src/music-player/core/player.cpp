@@ -216,9 +216,9 @@ void PlayerPrivate::apeToMp3(QString path, QString hash)
             QFile::remove(toPath);
         }
         QString fromPath = QString("%1/.tmp1.ape").arg(curPath);
-        if (QFile::exists(fromPath)) {
-            QFile::remove(fromPath);
-        }
+//        if (QFile::exists(fromPath)) {
+        QFile::remove(fromPath);
+//        }
         QFile file(path);
         file.link(fromPath);
         QString program = QString("ffmpeg -i %1  -ac 1 -ab 32 -ar 24000 %2").arg(fromPath).arg(toPath);
@@ -232,9 +232,9 @@ void PlayerPrivate::apeToMp3(QString path, QString hash)
             QFile::remove(toPath);
         }
         QString fromPath = QString("%1/.tmp1.amr").arg(curPath);
-        if (QFile::exists(fromPath)) {
-            QFile::remove(fromPath);
-        }
+//        if (QFile::exists(fromPath)) {
+        QFile::remove(fromPath);
+//        }
         QFile file(path);
         file.link(fromPath);
         QString program = QString("ffmpeg -i %1  -ac 1 -ab 32 -ar 24000 %2").arg(fromPath).arg(toPath);
@@ -709,17 +709,17 @@ void Player::loadMedia(PlaylistPtr playlist, const MetaPtr meta)
         d->activePlaylist = playlist;
 
     int volume = -1;
-/*    if (meta->localPath.endsWith(".amr") && !meta.isNull() ) {
-//        d->qplayer->stop();
-        d->qvplayer->blockSignals(true);
-        d->isamr = true;
-        d->qvmedia->initMedia(meta->localPath, true, d->qvinstance);
-        d->qvplayer->open(d->qvmedia);
-        volume = d->qvplayer->audio()->volume();
-//        d->qvplayer->audio()->setVolume(0);
-        d->qvplayer->play();
+    /*    if (meta->localPath.endsWith(".amr") && !meta.isNull() ) {
+    //        d->qplayer->stop();
+            d->qvplayer->blockSignals(true);
+            d->isamr = true;
+            d->qvmedia->initMedia(meta->localPath, true, d->qvinstance);
+            d->qvplayer->open(d->qvmedia);
+            volume = d->qvplayer->audio()->volume();
+    //        d->qvplayer->audio()->setVolume(0);
+            d->qvplayer->play();
 
-    } else */{
+        } else */{
 //        if(meta->localPath.endsWith(".APE")){
 //            QFileInfo fileInfo(meta->localPath);
 //            fileInfo.suffix().toLower() == "ape";
@@ -795,18 +795,18 @@ void Player::playMeta(PlaylistPtr playlist, const MetaPtr meta)
 
     d->ischangeMusic = true;
     QFileInfo fileInfo(curMeta->localPath);
-/*    if (curMeta->localPath.endsWith(".amr") && QFile::exists(curMeta->localPath) ) {
-//        if (d->qplayer->state() != QMediaPlayer::StoppedState) {
-        d->qplayer->setMedia(QMediaContent());
-        d->qplayer->stop();
-//        }
+    /*    if (curMeta->localPath.endsWith(".amr") && QFile::exists(curMeta->localPath) ) {
+    //        if (d->qplayer->state() != QMediaPlayer::StoppedState) {
+            d->qplayer->setMedia(QMediaContent());
+            d->qplayer->stop();
+    //        }
 
-        d->isamr = true;
-        d->qvmedia->initMedia(curMeta->localPath, true, d->qvinstance);
-        d->qvplayer->open(d->qvmedia);
-        d->qvplayer->setTime(curMeta->offset);
-        d->qvplayer->play();
-    } else */if (QFile::exists(curMeta->localPath) ) {
+            d->isamr = true;
+            d->qvmedia->initMedia(curMeta->localPath, true, d->qvinstance);
+            d->qvplayer->open(d->qvmedia);
+            d->qvplayer->setTime(curMeta->offset);
+            d->qvplayer->play();
+        } else */if (QFile::exists(curMeta->localPath) ) {
 //        if(curMeta->localPath.endsWith(".APE")){
 //            QFileInfo fileInfo(curMeta->localPath);
 //            fileInfo.suffix().toLower() == "ape";
