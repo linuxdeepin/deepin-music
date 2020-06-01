@@ -182,7 +182,7 @@ MetaPtr MediaLibraryPrivate::importMeta(const QString &filepath,
     }
 
     AVFormatContext *pFormatCtx = avformat_alloc_context();
-    avformat_open_input(&pFormatCtx, filepath.toStdString().c_str(), NULL, NULL);
+    avformat_open_input(&pFormatCtx, filepath.toStdString().c_str(), nullptr, nullptr);
 
     if (pFormatCtx == nullptr) {
         avformat_free_context(pFormatCtx);
@@ -190,13 +190,13 @@ MetaPtr MediaLibraryPrivate::importMeta(const QString &filepath,
     }
 
 
-    if (avformat_find_stream_info(pFormatCtx, NULL) < 0) {
+    if (avformat_find_stream_info(pFormatCtx, nullptr) < 0) {
         avformat_free_context(pFormatCtx);
         return MetaPtr();
     }
 
     int audio_stream_index = -1;
-    audio_stream_index = av_find_best_stream(pFormatCtx, AVMEDIA_TYPE_AUDIO, -1, -1, NULL, 0);
+    audio_stream_index = av_find_best_stream(pFormatCtx, AVMEDIA_TYPE_AUDIO, -1, -1, nullptr, 0);
 
 
 
@@ -209,11 +209,11 @@ MetaPtr MediaLibraryPrivate::importMeta(const QString &filepath,
     AVStream *in_stream = pFormatCtx->streams[audio_stream_index];
     AVCodecParameters *in_codecpar = in_stream->codecpar;
 
-    AVCodecContext *pCodecCtx = avcodec_alloc_context3(NULL);
+    AVCodecContext *pCodecCtx = avcodec_alloc_context3(nullptr);
     avcodec_parameters_to_context(pCodecCtx, in_codecpar);
 
     AVCodec *pCodec = avcodec_find_decoder(pCodecCtx->codec_id);
-    avcodec_open2(pCodecCtx, pCodec, NULL);
+    avcodec_open2(pCodecCtx, pCodec, nullptr);
 
     AVPacket *packet = av_packet_alloc();
     AVFrame *frame = av_frame_alloc();
@@ -240,7 +240,6 @@ MetaPtr MediaLibraryPrivate::importMeta(const QString &filepath,
         InvalidDetection = true;
     } else {
         InvalidDetection = false;
-
     }
 
     if (pCodecCtx->channels == 2 && pCodecCtx->channel_layout == 0) {
@@ -263,12 +262,17 @@ MetaPtr MediaLibraryPrivate::importMeta(const QString &filepath,
     int erroCount = 0;
     int readCount = 0;
     int packageErr = 0;
+    int packageCount = 0;
+
 
     while ( av_read_frame(pFormatCtx, packet) >= 0 ) {
 
         if (packet->stream_index == audio_stream_index) {
             int got_picture;
             int ret = avcodec_decode_audio4( pCodecCtx, frame, &got_picture, packet);
+
+            packageCount++;
+
             if ( ret < 20) {
                 packageErr++;
             }
@@ -298,9 +302,19 @@ MetaPtr MediaLibraryPrivate::importMeta(const QString &filepath,
 
     } else {
 
-        if (erroCount > 5 || packageErr > 15) {
+        if (erroCount > 5) {
 
             return MetaPtr();
+        }
+
+        if (packageCount > 300) {
+
+        } else {
+
+            if (packageErr > 15) {
+
+                return MetaPtr();
+            }
         }
     }
 
