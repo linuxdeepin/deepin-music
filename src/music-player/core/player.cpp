@@ -438,8 +438,15 @@ void PlayerPrivate::selectNext(const MetaPtr info, Player::PlaybackMode mode)
     if (!curPlaylist || curPlaylist->isEmpty()) {
         return;
     }
-
-    bool invalidFlag = info->invalid;
+    MetaPtr cinfo = info;
+    if (cinfo == nullptr) {
+        for (int i = 0; i < curPlaylist->allmusic().size(); ++i) {
+            cinfo = curPlaylist->music(i);
+            if (cinfo != nullptr)
+                break;
+        }
+    }
+    bool invalidFlag = cinfo->invalid;
     if (invalidFlag) {
         for (auto curMeta : curPlaylist->allmusic()) {
             if (!curMeta->invalid) {
@@ -452,7 +459,7 @@ void PlayerPrivate::selectNext(const MetaPtr info, Player::PlaybackMode mode)
 
     switch (mode) {
     case Player::RepeatAll: {
-        auto curMeta = curPlaylist->next(info);
+        auto curMeta = curPlaylist->next(cinfo);
         if (QFile::exists(curMeta->localPath)) {
             curMeta->invalid = false;
         }
@@ -468,11 +475,11 @@ void PlayerPrivate::selectNext(const MetaPtr info, Player::PlaybackMode mode)
         break;
     }
     case Player::RepeatSingle: {
-        q->playMeta(activePlaylist, info);
+        q->playMeta(activePlaylist, cinfo);
         break;
     }
     case Player::Shuffle: {
-        auto curMeta = curPlaylist->shuffleNext(info);
+        auto curMeta = curPlaylist->shuffleNext(cinfo);
         if (QFile::exists(curMeta->localPath)) {
             curMeta->invalid = false;
         }
