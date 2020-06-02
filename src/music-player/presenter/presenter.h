@@ -33,6 +33,18 @@ class QAudioBuffer;
 class Playlist;
 
 class PresenterPrivate;
+class Transfer: public QObject
+{
+    Q_OBJECT
+public:
+    explicit Transfer(QObject *parent = 0);
+    ~Transfer();
+public slots:
+    void onMusicListAdded(PlaylistPtr playlist, const MetaPtrList metalist);
+signals:
+    void musicListAdded(PlaylistPtr playlist, const MetaPtrList metalist);
+};
+
 class Presenter : public QObject
 {
     Q_OBJECT

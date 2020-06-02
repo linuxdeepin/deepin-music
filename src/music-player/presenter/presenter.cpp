@@ -52,6 +52,35 @@
 
 using namespace DMusic;
 
+Transfer::Transfer(QObject *parent): QObject(parent)
+{
+
+}
+
+Transfer::~Transfer()
+{
+
+}
+
+void Transfer::onMusicListAdded(PlaylistPtr playlist, const MetaPtrList metalist)
+{
+    int length = metalist.length();
+    MetaPtrList slice;
+    for (int i = 0; i < length; i++) {
+        auto meta = metalist.at(i);
+        slice << meta;
+        if (i % 30 == 0) {
+            Q_EMIT musicListAdded(playlist, slice);
+            slice.clear();
+            QThread::msleep(50);
+        }
+    }
+    if (slice.length() > 0) {
+        Q_EMIT musicListAdded(playlist, slice);
+        slice.clear();
+    }
+}
+
 PresenterPrivate::PresenterPrivate(Presenter *parent)
     : QObject(parent), q_ptr(parent)
 {
@@ -431,7 +460,8 @@ void Presenter::prepareData()
     //    QThread::sleep(10);
     d->initBackend();
     qDebug() << "TRACE:" << "initBackend finished";
-
+    d->transfer = new Transfer ();
+    ThreadPool::instance()->moveToNewThread(d->transfer);
     connect(d->library, &MediaLibrary::meidaFileImported,
     this, [ = ](const QString & playlistId, MetaPtrList metalist) {
         auto playlist = d->playlistMgr->playlist(playlistId);
@@ -485,23 +515,11 @@ void Presenter::prepareData()
     });
 
     connect(d->playlistMgr, &PlaylistManager::musiclistAdded,
-    this, [ = ](PlaylistPtr playlist, const MetaPtrList metalist) {
-        int length = metalist.length();
-        MetaPtrList slice;
-        for (int i = 0; i < length; i++) {
-            auto meta = metalist.at(i);
-            slice << meta;
-            if (i % 30 == 0) {
-                Q_EMIT musicListAdded(playlist, slice);
-                slice.clear();
-                QThread::msleep(50);
-            }
-        }
-        if (slice.length() > 0) {
-            Q_EMIT musicListAdded(playlist, slice);
-            slice.clear();
-        }
-    });
+            d->transfer, &Transfer::onMusicListAdded, Qt::UniqueConnection);
+    connect(d->transfer, &Transfer::musicListAdded,
+            this, &Presenter::musicListAdded, Qt::UniqueConnection);
+
+
 
     connect(d->playlistMgr, &PlaylistManager::musiclistRemoved,
     this, [ = ](PlaylistPtr playlist, const MetaPtrList metalist) {
