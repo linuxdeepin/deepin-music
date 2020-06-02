@@ -145,6 +145,7 @@ public:
 
         qvinstance = new VlcInstance(VlcCommon::args(), nullptr);
         qvplayer = new VlcMediaPlayer(qvinstance);
+        qvplayer->equalizer()->setPreamplification(12);
         qvmedia = new VlcMedia();
 //        qvplayer->audio()->setVolume(100);
     }

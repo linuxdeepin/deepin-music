@@ -647,7 +647,10 @@ void DequalizerDialog::checkedChanged(bool checked)
         d->mcombox->setCurrentIndex(1);
         Q_EMIT setEqualizerIndex(1);
         d->settings->setOption("equalizer.all.curEffect", 1);
-    };
+    } else {
+        Q_EMIT setEqualizerIndex(1);
+        d->settings->setOption("equalizer.all.curEffect", 1);
+    }
     d->mcombox->setEnabled(checked);
     d->saveBtn->setEnabled(false);
 //    Q_EMIT setEqualizerEnable(checked);
