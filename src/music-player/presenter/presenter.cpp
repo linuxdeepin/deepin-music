@@ -631,7 +631,9 @@ void Presenter::postAction()
 
         if (lastPlaylist->contains(lastMeta)) {
             lastMeta = lastPlaylist->music(lastMetaId);
-        } else {
+        } else if(lastMetaId == ""){
+            lastMeta = nullptr;
+        }else{
             lastMeta = lastPlaylist->first();
         }
 
@@ -937,6 +939,7 @@ void Presenter::onMusiclistRemove(PlaylistPtr playlist, const MetaPtrList metali
         if (playlist->isEmpty()) {
             qDebug() << "meta library clean";
             onMusicStop(playlist, next);
+            d->settings->setOption("base.play.last_meta", "");
             if (!d->player->activePlaylist().isNull())
                 d->player->activePlaylist()->play(nullptr);
         }
