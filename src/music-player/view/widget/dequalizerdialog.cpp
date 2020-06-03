@@ -73,6 +73,7 @@ public:
     DequalizerDialogPrivate(DequalizerDialog *parent) : q_ptr(parent) {}
     void readConfig();
     void initUI();
+    void SliderOneEntry(DSlider *slider, int value);
 
 private:
     DTitlebar   *mtitlebar            = nullptr;
@@ -496,6 +497,42 @@ void DequalizerDialogPrivate::initUI()
     }
 }
 
+void DequalizerDialogPrivate::SliderOneEntry(DSlider *slider, int value)
+{
+    Q_Q(DequalizerDialog);
+    q->selectSlider(slider, QString::number(value));
+    if (slider == slider_pre) {
+        Q_EMIT q->setEqualizerpre(value);
+    } else {
+        int bandIndex = -1;
+        if (slider == slider_60) {
+            bandIndex = 0;
+        } else if (slider == slider_170) {
+            bandIndex = 1;
+        } else if (slider == slider_310) {
+            bandIndex = 2;
+        } else if (slider == slider_600) {
+            bandIndex = 3;
+        } else if (slider == slider_1K) {
+            bandIndex = 4;
+        } else if (slider == slider_3K) {
+            bandIndex = 5;
+        } else if (slider == slider_6K) {
+            bandIndex = 6;
+        } else if (slider == slider_12K) {
+            bandIndex = 7;
+        } else if (slider == slider_14K) {
+            bandIndex = 8;
+        } else if (slider == slider_16K) {
+            bandIndex = 9;
+        }
+        if (bandIndex == -1) {
+            return;
+        }
+        Q_EMIT q->setEqualizerbauds(bandIndex, value);
+    }
+}
+
 
 DequalizerDialog::DequalizerDialog(QWidget *parent):
     DAbstractDialog(parent), d_ptr(new DequalizerDialogPrivate(this))
@@ -533,7 +570,11 @@ void DequalizerDialog::initConnection()
     for (DSlider *slider : findChildren<DSlider *>()) {
         connect(slider, &DSlider::sliderReleased, [ = ]() {
             d->changeflag = true;
-            d->mcombox->setCurrentIndex(0);
+            if (d->mcombox->currentIndex() != 0 ) {
+                d->mcombox->setCurrentIndex(0);
+            }
+            int value = slider->value();
+            d->SliderOneEntry(slider, value);
         });
 
         connect(slider, &DSlider::valueChanged, [ = ](int value) {
@@ -541,37 +582,7 @@ void DequalizerDialog::initConnection()
             if (!d->changeflag) {
                 return ;
             }
-            selectSlider(slider, QString::number(value));
-            if (slider == d->slider_pre) {
-                Q_EMIT setEqualizerpre(value);
-            } else {
-                int bandIndex = -1;
-                if (slider == d->slider_60) {
-                    bandIndex = 0;
-                } else if (slider == d->slider_170) {
-                    bandIndex = 1;
-                } else if (slider == d->slider_310) {
-                    bandIndex = 2;
-                } else if (slider == d->slider_600) {
-                    bandIndex = 3;
-                } else if (slider == d->slider_1K) {
-                    bandIndex = 4;
-                } else if (slider == d->slider_3K) {
-                    bandIndex = 5;
-                } else if (slider == d->slider_6K) {
-                    bandIndex = 6;
-                } else if (slider == d->slider_12K) {
-                    bandIndex = 7;
-                } else if (slider == d->slider_14K) {
-                    bandIndex = 8;
-                } else if (slider == d->slider_16K) {
-                    bandIndex = 9;
-                }
-                if (bandIndex == -1) {
-                    return;
-                }
-                Q_EMIT setEqualizerbauds(bandIndex, value);
-            }
+            d->SliderOneEntry(slider, value);
         });
     }
 
