@@ -25,14 +25,17 @@
 
 #include <mediameta.h>
 #include <playlistmeta.h>
-
+#include <QSqlDatabase>
 class MediaDatabaseWriter : public QObject
 {
     Q_OBJECT
 public:
     explicit MediaDatabaseWriter(QObject *parent = 0);
-
+    QSqlDatabase db;
+private:
+    bool createConnection();
 public slots:
+    void initDataBase();
     void addMediaMeta(const MetaPtr meta);
     void addMediaMetaList(const MetaPtrList metalist);
     void updateMediaMeta(const MetaPtr meta);

@@ -48,6 +48,7 @@ public:
     bool playlistExist(const QString &uuid);
 
 signals:
+    void initWrter();
     void addMediaMeta(const MetaPtr meta);
     void addMediaMetaList(const MetaPtrList metalist);
     void updateMediaMeta(const MetaPtr meta);

@@ -251,13 +251,16 @@ MediaDatabase::MediaDatabase(QObject *parent) : QObject(parent)
 void MediaDatabase::init()
 {
     createConnection();
+    margeDatabase();
 
     // sqlite must run in one thread!!!
     m_writer = new MediaDatabaseWriter;
     ThreadPool::instance()->moveToNewThread(m_writer);//将读写耗时操作放到子线程操作
+    connect(this, &MediaDatabase::initWrter,
+            m_writer, &MediaDatabaseWriter::initDataBase);
+    Q_EMIT initWrter();
     bind();
 
-    margeDatabase();
 
     QSqlDatabase::database().transaction();
     PlaylistMeta playlistMeta;
