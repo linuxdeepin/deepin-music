@@ -329,7 +329,8 @@ void PlayerPrivate::initConnection()
         if (fadeInOutFactor < 1.0) {
             return;
         }
-        Q_EMIT q->volumeChanged(volume);
+        if (volume >= 0)
+            Q_EMIT q->volumeChanged(volume);
     });
 
 
