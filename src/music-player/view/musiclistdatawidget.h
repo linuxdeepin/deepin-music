@@ -27,6 +27,7 @@
 
 DWIDGET_USE_NAMESPACE
 
+class ActionBar;
 class MusicListDataWidgetPrivate;
 class MusicListDataWidget : public DWidget
 {
@@ -90,3 +91,18 @@ private:
     Q_DECLARE_PRIVATE_D(qGetPtrHelper(d_ptr), MusicListDataWidget)
 };
 
+class ActionBar : public DWidget
+{
+    Q_OBJECT
+public:
+    explicit ActionBar(QWidget *parent = Q_NULLPTR);
+    ~ActionBar() {}
+private:
+    bool MoveFlag = false;
+
+protected:
+    //Filter the mousemoveevent
+    virtual void mouseReleaseEvent(QMouseEvent *event);
+    virtual void mousePressEvent(QMouseEvent *event);
+    virtual void mouseMoveEvent(QMouseEvent *event);
+};
