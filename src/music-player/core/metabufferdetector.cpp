@@ -81,7 +81,7 @@ void MetaBufferDetector::run()
     QString hash = d->curHash;
     if (path.isEmpty())
         return;
-#if 0
+    /*
     QFileInfo fileInfo(path);
     if (fileInfo.suffix() == "ape") {
         QString curPath = Global::configPath();
@@ -92,14 +92,14 @@ void MetaBufferDetector::run()
         QString fromPath = QString("%1/.tmp.ape").arg(curPath);
         QFile file(path);
         file.link(fromPath);
-//        QFile::copy(path, fromPath);
         QString program = QString("ffmpeg -i %1 -ac 1 -ab 32 -ar 24000 %2/.tmp.ape.mp3").arg(fromPath).arg(curPath);
         QProcess::execute(program);
         path = toPath;
     }
-#endif
+    */
+
     AVFormatContext *pFormatCtx = avformat_alloc_context();
-    avformat_open_input(&pFormatCtx, path.toStdString().c_str(), NULL, NULL);
+    avformat_open_input(&pFormatCtx, path.toStdString().c_str(), nullptr, nullptr);
 
     if (pFormatCtx == nullptr) {
         avformat_free_context(pFormatCtx);
@@ -108,10 +108,10 @@ void MetaBufferDetector::run()
         return;
     }
 
-    avformat_find_stream_info(pFormatCtx, NULL);
+    avformat_find_stream_info(pFormatCtx, nullptr);
 
     int audio_stream_index = -1;
-    audio_stream_index = av_find_best_stream(pFormatCtx, AVMEDIA_TYPE_AUDIO, -1, -1, NULL, 0);
+    audio_stream_index = av_find_best_stream(pFormatCtx, AVMEDIA_TYPE_AUDIO, -1, -1, nullptr, 0);
     if (audio_stream_index < 0) {
         avformat_close_input(&pFormatCtx);
         avformat_free_context(pFormatCtx);
@@ -123,11 +123,11 @@ void MetaBufferDetector::run()
     AVStream *in_stream = pFormatCtx->streams[audio_stream_index];
     AVCodecParameters *in_codecpar = in_stream->codecpar;
 
-    AVCodecContext *pCodecCtx = avcodec_alloc_context3(NULL);
+    AVCodecContext *pCodecCtx = avcodec_alloc_context3(nullptr);
     avcodec_parameters_to_context(pCodecCtx, in_codecpar);
 
     AVCodec *pCodec = avcodec_find_decoder(pCodecCtx->codec_id);
-    avcodec_open2(pCodecCtx, pCodec, NULL);
+    avcodec_open2(pCodecCtx, pCodec, nullptr);
 
     AVPacket *packet = av_packet_alloc();
     AVFrame *frame = av_frame_alloc();
@@ -142,7 +142,7 @@ void MetaBufferDetector::run()
             avcodec_close(pCodecCtx);
             avformat_close_input(&pFormatCtx);
             avformat_free_context(pFormatCtx);
-            resample(curData, hash);//刷新波浪条
+            resample(curData, hash);    //刷新波浪条
             d->stopFlag = false;
             d->curPath.clear();
             d->curHash.clear();
@@ -153,32 +153,30 @@ void MetaBufferDetector::run()
             resample(curData, hash);
             flag = true;
         }
-        if (packet->stream_index == audio_stream_index) {
-            int got_picture;
-            uint32_t ret = avcodec_decode_audio4( pCodecCtx, frame, &got_picture, packet);
-            if ( ret < 0 ) {
-                continue;
-            }
-            if ( got_picture > 0 ) {
-                int data_size = av_get_bytes_per_sample(pCodecCtx->sample_fmt);
-                int t_format = frame->format;
-                uint8_t *ptr = frame->extended_data[0];
-                short val;
-                if (path.endsWith(".ape") || path.endsWith(".APE")) {
-                    for (int i = 0; i < frame->linesize[0]; i++) {
-                        val = (short)(
-                                  ((unsigned char)ptr[i]) << 16 |
-                                  ((unsigned char)ptr[i + 1])
-                              );
-                        curData.append(val + qrand());
-                    }
-                } else {
-                    for (int i = 0; i < frame->linesize[0]; i += 1024) {
-                        val = (short)(
-                                  ((unsigned char)ptr[i]) << 8 |
-                                  ((unsigned char)ptr[i + 1])
-                              );
-                        curData.append(val);
+
+        while ( av_read_frame(pFormatCtx, packet) >= 0 ) {
+            if (packet->stream_index == audio_stream_index) {
+                int state;
+                state = avcodec_send_packet(pCodecCtx, packet);
+                av_packet_unref(packet);
+                if (state != 0) {
+                    continue;
+                }
+
+                state = avcodec_receive_frame(pCodecCtx, frame);
+                if (state == 0) {
+
+                    quint8 *ptr = frame->extended_data[0];
+                    if (path.endsWith(".ape") || path.endsWith(".APE")) {
+                        for (int i = 0; i < frame->linesize[0]; i++) {
+                            auto  valDate = ((ptr[i]) << 16 | (ptr[i + 1]));
+                            curData.append(valDate + qrand());
+                        }
+                    } else {
+                        for (int i = 0; i < frame->linesize[0]; i += 1024) {
+                            auto  valDate = ((ptr[i]) << 16 | (ptr[i + 1]));
+                            curData.append(valDate);
+                        }
                     }
                 }
             }
