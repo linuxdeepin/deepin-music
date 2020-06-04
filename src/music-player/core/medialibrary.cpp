@@ -131,17 +131,7 @@ MetaPtr MediaLibraryPrivate::importMeta(const QString &filepath,
         return MetaPtr();
     }
 
-    if (    fileInfo.suffix().toLower() != "wav" &&
-            fileInfo.suffix().toLower() != "mp3" &&
-            fileInfo.suffix().toLower() != "ogg" &&
-            fileInfo.suffix().toLower() != "vorbis" &&
-            fileInfo.suffix().toLower() != "flac" &&
-            fileInfo.suffix().toLower() != "wma" &&
-            fileInfo.suffix().toLower() != "m4a" &&
-            fileInfo.suffix().toLower() != "aac" &&
-            fileInfo.suffix().toLower() != "ape" &&
-            fileInfo.suffix().toLower() != "amr"
-       ) {
+    if (fileInfo.suffix().toLower() == "cue") {
         cuelist << DMusic::CueParserPtr(new DMusic::CueParser(filepath));
         // TODO: check cue invalid
 #ifdef SUPPORT_INOTIFY
@@ -152,23 +142,20 @@ MetaPtr MediaLibraryPrivate::importMeta(const QString &filepath,
     }
 
     AVFormatContext *pFormatCtx = avformat_alloc_context();
-    avformat_open_input(&pFormatCtx, filepath.toStdString().c_str(), NULL, NULL);
+    avformat_open_input(&pFormatCtx, filepath.toStdString().c_str(), nullptr, nullptr);
 
     if (pFormatCtx == nullptr) {
         avformat_free_context(pFormatCtx);
         return MetaPtr();
     }
 
-
-    if (avformat_find_stream_info(pFormatCtx, NULL) < 0) {
+    if (avformat_find_stream_info(pFormatCtx, nullptr) < 0) {
         avformat_free_context(pFormatCtx);
         return MetaPtr();
     }
 
     int audio_stream_index = -1;
-    audio_stream_index = av_find_best_stream(pFormatCtx, AVMEDIA_TYPE_AUDIO, -1, -1, NULL, 0);
-
-
+    audio_stream_index = av_find_best_stream(pFormatCtx, AVMEDIA_TYPE_AUDIO, -1, -1, nullptr, 0);
 
     if (audio_stream_index < 0) {
         avformat_close_input(&pFormatCtx);
@@ -179,48 +166,59 @@ MetaPtr MediaLibraryPrivate::importMeta(const QString &filepath,
     AVStream *in_stream = pFormatCtx->streams[audio_stream_index];
     AVCodecParameters *in_codecpar = in_stream->codecpar;
 
-    AVCodecContext *pCodecCtx = avcodec_alloc_context3(NULL);
+    AVCodecContext *pCodecCtx = avcodec_alloc_context3(nullptr);
     avcodec_parameters_to_context(pCodecCtx, in_codecpar);
 
     AVCodec *pCodec = avcodec_find_decoder(pCodecCtx->codec_id);
-    avcodec_open2(pCodecCtx, pCodec, NULL);
+    avcodec_open2(pCodecCtx, pCodec, nullptr);
 
     AVPacket *packet = av_packet_alloc();
     AVFrame *frame = av_frame_alloc();
 
+    int readCount = 0;
+    int sendCount = 0;
+    int receiveCount = 0;
 
-    if (pCodecCtx->channels > 20  || pCodecCtx->channels < 1 ) {
+    while ( av_read_frame(pFormatCtx, packet) >= 0 ) {
+        if (packet->stream_index == audio_stream_index) {
+            int ret;
+            ret = avcodec_send_packet(pCodecCtx, packet);
+            av_packet_unref(packet);
+            if (ret != 0) {
+                sendCount++;
+            }
 
-        return MetaPtr();
+            ret = avcodec_receive_frame(pCodecCtx, frame);
+            if (ret != 0) {
+                receiveCount++;
+            }
+        }
+        av_packet_unref(packet);
+
+        if (readCount++ > 500) {
+            break ;
+        }
     }
 
-    bool InvalidDetection = true;
+    bool invalidFile = false;
 
-    if (pCodecCtx->sample_rate == 8000 || pCodecCtx->sample_rate == 11025  || pCodecCtx->sample_rate == 16000 ||
-            pCodecCtx->sample_rate == 22050 || pCodecCtx->sample_rate == 44100 ||
-            pCodecCtx->sample_rate == 48000) {
-
-        InvalidDetection = true;
-    } else {
-        InvalidDetection = false;
-
+    if (sendCount != 0 || receiveCount != 0) {
+        if (sendCount == receiveCount) {
+            invalidFile = true;
+        }
     }
 
-    if (pCodecCtx->channel_layout == 3 || pCodecCtx->channel_layout == 4) {
-
-        InvalidDetection = true;
-    } else {
-        InvalidDetection = false;
-
+    if (readCount < 65) {
+        if (receiveCount > 2) {
+            invalidFile = true;
+        }
     }
 
-    if (pCodecCtx->channels == 2 && pCodecCtx->channel_layout == 0) {
-        qDebug() << "InvalidDetection is true " << filepath;
-        InvalidDetection = true;
+    if (readCount == 33 && sendCount == 1 && receiveCount == 2) {
+        invalidFile = true;
     }
 
-    if (!InvalidDetection) {
-
+    if (invalidFile) {
         av_packet_unref(packet);
         av_frame_free(&frame);
         avcodec_close(pCodecCtx);
@@ -230,50 +228,11 @@ MetaPtr MediaLibraryPrivate::importMeta(const QString &filepath,
         return MetaPtr();
     }
 
-    int erroCount = 0;
-    int readCount = 0;
-    int packageErr = 0;
-
-    while ( av_read_frame(pFormatCtx, packet) >= 0 ) {
-
-        if (packet->stream_index == audio_stream_index) {
-            int got_picture;
-            int ret = avcodec_decode_audio4( pCodecCtx, frame, &got_picture, packet);
-
-            if ( ret < 20 ) {
-                packageErr ++;
-            }
-            if ( got_picture <= 0 ) {
-
-                erroCount++;
-
-                if (erroCount > 5) {
-                    break;
-                }
-            }
-        }
-        av_packet_unref(packet);
-
-        if (readCount++ > 300) {
-            break ;
-        }
-    }
-
     av_packet_unref(packet);
     av_frame_free(&frame);
     avcodec_close(pCodecCtx);
     avformat_close_input(&pFormatCtx);
     avformat_free_context(pFormatCtx);
-
-    if (filepath.endsWith(".ape") || filepath.endsWith(".APE")) {
-
-    } else {
-
-        if (erroCount > 5 || packageErr > 15) {
-
-            return MetaPtr();
-        }
-    }
 
     auto hash = DMusic::filepathHash(filepath);
     if (MediaLibrary::instance()->contains(hash)) {
@@ -282,9 +241,12 @@ MetaPtr MediaLibraryPrivate::importMeta(const QString &filepath,
         qDebug() << "exit" << hash << MediaLibrary::instance()->meta(hash);
         return MediaLibrary::instance()->meta(hash);
     }
-
     auto meta = createMeta(fileInfo);
 
+    if (fileInfo.suffix().toLower() == "ape" ||
+            fileInfo.suffix().toLower() == "amr") {
+        //  apeToMp3(filepath, meta->hash);
+    }
     if (meta->length == 0)
         return MetaPtr();
 
