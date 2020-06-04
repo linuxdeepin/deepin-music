@@ -481,6 +481,6 @@ void MediaLibrary::importMedias(const QString &jobid, const QStringList &urllist
     }
 
     qDebug() << "scanFinished" << jobid << "with media count:" << mediaCount;
-    Q_EMIT scanFinished(jobid, mediaCount);
+    Q_EMIT scanFinished(jobid, urllist.size()==mediaCount?mediaCount:0);
 }
 
