@@ -139,7 +139,6 @@ public:
     QShortcut           *nextShortcut           = nullptr;
     QShortcut           *playPauseShortcut      = nullptr;
     QShortcut           *previousShortcut       = nullptr;
-
     int                 width                   = 0;
     int                 height                  = 0;
     bool                first                   = true;
@@ -1019,16 +1018,25 @@ void MainFrame::binding(Presenter *presenter)
     connect(presenter, &Presenter::scanFinished,
     this, [ = ](const QString & /*jobid*/, int mediaCount) {
         if (0 == mediaCount) {
+            QList<DDialog*> ql= this->findChildren<DDialog*>("uniquewarndailog");
+            if(ql.size()>0)
+            {
+                if(!ql.first()->isHidden())
+                    return ;
+            }
+
             QString message = QString(tr("Import failed, no valid music file found"));
             Dtk::Widget::DDialog warnDlg(this);
+            warnDlg.setObjectName("uniquewarndailog");
             warnDlg.setIcon(QIcon::fromTheme("deepin-music"));
             warnDlg.setTextFormat(Qt::AutoText);
             warnDlg.setTitle(message);
             warnDlg.addButtons(QStringList() << tr("OK"));
             warnDlg.setDefaultButton(0);
-            if (0 == warnDlg.exec()) {
-                return;
-            }
+            warnDlg.exec();
+//            if (0 == warnDlg.exec()) {
+//                return;
+//            }
         }
     });
 

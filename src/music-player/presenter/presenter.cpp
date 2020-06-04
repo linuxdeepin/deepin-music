@@ -29,6 +29,7 @@
 #include <QProcess>
 #include <QApplication>
 #include <QStandardPaths>
+#include <DDialog>
 
 #include <DSettingsOption>
 #include <DDesktopServices>
@@ -721,7 +722,8 @@ void Presenter::openUri(const QUrl &uri)
     auto metas = MediaLibrary::instance()->importFile(localfile);
     if (0 == metas.length()) {
         qCritical() << "openUriRequested" << uri;
-        return;
+        Q_EMIT scanFinished(localfile , 0);
+        return ;
     }
     auto list = d->playlistMgr->playlist(AllMusicListID);
     onAddMetaToPlaylist(list, metas);
