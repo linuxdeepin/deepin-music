@@ -64,7 +64,7 @@ public:
 
     DLabel              *emptyHits      = nullptr;
     DLabel             *emptySearchHits = nullptr;
-    DWidget             *actionBar      = nullptr;
+    ActionBar             *actionBar      = nullptr;
     DLabel              *titleLabel     = nullptr;
     DDropdown           *albumDropdown  = nullptr;
     DDropdown           *artistDropdown = nullptr;
@@ -1026,7 +1026,7 @@ MusicListDataWidget::MusicListDataWidget(QWidget *parent) :
     layout->setContentsMargins(0, 0, 8, 0);
     layout->setSpacing(0);
 
-    d->actionBar = new DWidget;
+    d->actionBar = new ActionBar;
     d->actionBar->setFixedHeight(80);
     d->actionBar->setObjectName("MusicListDataActionBar");
 
@@ -1947,5 +1947,29 @@ void MusicListDataWidget::dropEvent(QDropEvent *event)
     if (!localpaths.isEmpty() && !d->curPlaylist.isNull()) {
         Q_EMIT importSelectFiles(d->curPlaylist, localpaths);
     }
+}
+
+
+ActionBar::ActionBar(QWidget *parent)
+{
+    Q_UNUSED(parent)
+    MoveFlag = false;
+}
+
+void ActionBar::mouseReleaseEvent(QMouseEvent *event)
+{
+    MoveFlag = true;
+    DWidget::mouseReleaseEvent(event);
+}
+
+void ActionBar::mousePressEvent(QMouseEvent *event)
+{
+    MoveFlag = false;
+    DWidget::mousePressEvent(event);
+}
+void ActionBar::mouseMoveEvent(QMouseEvent *event)
+{
+    if (MoveFlag)
+        DWidget::mousePressEvent(event);
 }
 
