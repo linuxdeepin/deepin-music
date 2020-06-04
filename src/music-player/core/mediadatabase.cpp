@@ -622,6 +622,8 @@ QList<MediaMeta> MediaDatabase::allmetas()
 {
     QList<MediaMeta> metalist;
 
+#if 0
+
     QString queryString = QString("SELECT hash, localpath, title, artist, album, "
                                   "filetype, track, offset, length, size, "
                                   "timestamp, invalid, search_id, cuepath "
@@ -700,6 +702,7 @@ QList<MediaMeta> MediaDatabase::allmetas()
             qCritical() << querys.lastError();
 
 
+
             QString queryStringNew = QString("SELECT hash, localpath, title, artist, album, "
                                              "filetype, track, offset, length, size, "
                                              "timestamp, invalid, search_id, cuepath, "
@@ -737,6 +740,7 @@ QList<MediaMeta> MediaDatabase::allmetas()
         }
 
     }
+#endif
 
     QString queryStringNew = QString("SELECT hash, localpath, title, artist, album, "
                                      "filetype, track, offset, length, size, "
