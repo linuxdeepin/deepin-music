@@ -1273,6 +1273,8 @@ void MusicListDataWidget::resultTabwidget(int index)
 {
     Q_D(MusicListDataWidget);
 
+    d->tabWidget->setCurrentIndex(index);
+
     if (index == 0) {
 
         d->albumSearchDropdown->hide();
