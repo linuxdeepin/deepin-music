@@ -131,7 +131,17 @@ MetaPtr MediaLibraryPrivate::importMeta(const QString &filepath,
         return MetaPtr();
     }
 
-    if (fileInfo.suffix().toLower() == "cue") {
+    if (    fileInfo.suffix().toLower() != "wav" &&
+            fileInfo.suffix().toLower() != "mp3" &&
+            fileInfo.suffix().toLower() != "ogg" &&
+            fileInfo.suffix().toLower() != "vorbis" &&
+            fileInfo.suffix().toLower() != "flac" &&
+            fileInfo.suffix().toLower() != "wma" &&
+            fileInfo.suffix().toLower() != "m4a" &&
+            fileInfo.suffix().toLower() != "aac" &&
+            fileInfo.suffix().toLower() != "ape" &&
+            fileInfo.suffix().toLower() != "amr"
+       ) {
         cuelist << DMusic::CueParserPtr(new DMusic::CueParser(filepath));
         // TODO: check cue invalid
 #ifdef SUPPORT_INOTIFY
