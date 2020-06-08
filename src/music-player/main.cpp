@@ -98,6 +98,7 @@ void setEnv()
     QString cmd = "rm -rf " + QDir::homePath() + "/.cache/gstreamer-1.0";
     QProcess::execute(cmd);
     putenv("LD_PRELOAD=libgomp.so.1");
+    setenv("PULSE_PROP_media.role", "music", 1);
 }
 
 int main(int argc, char *argv[])
