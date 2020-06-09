@@ -183,6 +183,8 @@ MusicListWidget::MusicListWidget(QWidget *parent) : DWidget(parent)
     this, [ = ](const MetaPtr meta) {
         auto current = m_dataBaseListview->item(2);
         auto curPtr = m_dataBaseListview->playlistPtr(current);
+
+#if 0
         if (curPtr != nullptr) {
             if (meta != nullptr) {
                 curPtr->play(meta);
@@ -195,6 +197,8 @@ MusicListWidget::MusicListWidget(QWidget *parent) : DWidget(parent)
             curPtr->setSearchStr("");
             Q_EMIT selectedPlaylistChange(curPtr);
         }
+#endif
+        Q_EMIT this->playall(curPtr);
     });
     connect(m_customizeListview, &MusicListView::customResort,
     this, [ = ](const QStringList & uuids) {
