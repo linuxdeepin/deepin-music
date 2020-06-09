@@ -176,7 +176,7 @@ void MusicSearchListDelegate::paint(QPainter *painter, const QStyleOptionViewIte
             mtext = metaPtr->title + " - " + metaPtr->artist;
         }
         QFontMetricsF fontWidth(textFont);
-        mtext = fontWidth.elidedText(mtext, Qt::ElideMiddle, 287);
+        mtext = fontWidth.elidedText(mtext, Qt::ElideMiddle, 280);
 
         QStyleOptionViewItem viewOption(option);
         initStyleOption(&viewOption, index);
