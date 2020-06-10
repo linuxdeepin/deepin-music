@@ -56,7 +56,7 @@ public:
 public slots:
     void slotTheme(int type);
     void onRename(QStandardItem *item);
-
+    void closeEditor(QWidget *editor, QAbstractItemDelegate::EndEditHint hint) Q_DECL_OVERRIDE;
 signals:
     void playall(PlaylistPtr playlist);
     void customResort(const QStringList &uuids);
