@@ -946,7 +946,7 @@ void Presenter::onMusiclistRemove(PlaylistPtr playlist, const MetaPtrList metali
 
     /*-----Judge the condition to remove the song playback switch -----*/
     for (auto &meta : metalist) {
-        if (d->player->isActiveMeta(meta)) {
+        if (d->player->isActiveMeta(meta)&& playinglist == playlist) {
             if (playinglist->isEmpty() || t_isLastMeta || next.isNull()) { /*新建歌单清空时停止播放*/
                 onMusicStop(playinglist, next);
             } else {
