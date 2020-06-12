@@ -566,7 +566,6 @@ void MusicListView::slotTheme(int type)
         rStr = "dark";
     }
     for (int i = 0; i < model->rowCount(); i++) {
-        auto current = currentIndex();
         for (int i = 0; i < model->rowCount(); i++) {
             auto curIndex = model->index(i, 0);
             auto curStandardItem = dynamic_cast<DStandardItem *>(model->itemFromIndex(curIndex));

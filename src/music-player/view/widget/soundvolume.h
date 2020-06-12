@@ -33,7 +33,7 @@ class SoundVolume : public QWidget
     Q_PROPERTY(QColor borderColor READ borderColor WRITE setBorderColor)
 public:
     explicit SoundVolume(QWidget *parent = nullptr);
-    ~SoundVolume();
+    ~SoundVolume() override;
 
     int volume() const;
     int radius() const;

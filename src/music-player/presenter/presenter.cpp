@@ -1051,11 +1051,11 @@ void Presenter::onAddToPlaylist(PlaylistPtr playlist,
         modifiedPlaylist = d->playlistMgr->addPlaylist(info);
         Q_EMIT playlistAdded(d->playlistMgr->playlist(info.uuid), true);
     } else {
-        bool existFlag = true;
+        //bool existFlag = true;
         auto allMetas = modifiedPlaylist->allmusic();
         int count = 0;
         for (auto meta : metalist) {
-            bool curExistFlag = false;
+            //bool curExistFlag = false;
             for (auto curMeta : allMetas) {
                 if (curMeta->hash == meta->hash) {
                     count++;
@@ -1139,12 +1139,9 @@ void Presenter::onRequestMusiclistMenu(const QPoint &pos, char type)
 
 void Presenter::removeListSame(QStringList *list)
 {
-    for (int i = 0; i < list->count(); i++)
-    {
-        for (int k = i + 1; k <  list->count(); k++)
-        {
-            if ( list->at(i) ==  list->at(k))
-            {
+    for (int i = 0; i < list->count(); i++) {
+        for (int k = i + 1; k <  list->count(); k++) {
+            if ( list->at(i) ==  list->at(k)) {
                 list->removeAt(k);
                 k--;
             }
@@ -1156,7 +1153,7 @@ void Presenter::onSearchText(const QString &id, const QString &text)
 {
     Q_D(Presenter);
     QList<PlaylistPtr> resultlist;
-        resultlist.clear();
+    resultlist.clear();
     if (id == "") {//搜索栏enter按键
         //搜索歌曲候选:<=5个
         auto musicList = d->playlistMgr->playlist(AllMusicListID);;
@@ -1210,24 +1207,22 @@ void Presenter::onSearchText(const QString &id, const QString &text)
         auto searchList = d->playlistMgr->playlist(MusicResultListID);
         MetaPtrList musicMetaDataList;
         //该音乐的歌手列表
-        QStringList artist,album;
+        QStringList artist, album;
         artist.clear();
         album.clear();
         for (auto &metaData : musicList->allmusic()) {
             if (containsStr(text, metaData->title)) {
                 musicMetaDataList.append(metaData);
-                if(metaData->album == ""){
-                   album.append("未知专辑");
-                }
-                else{
+                if (metaData->album == "") {
+                    album.append("未知专辑");
+                } else {
 
                     album.append(metaData->album);
                 }
-                if(metaData->artist== ""){
-                   album.append("未知歌手");
-                }
-                else{
-                     artist.append(metaData->artist);
+                if (metaData->artist == "") {
+                    album.append("未知歌手");
+                } else {
+                    artist.append(metaData->artist);
                 }
             }
         }
@@ -1245,7 +1240,7 @@ void Presenter::onSearchText(const QString &id, const QString &text)
         searchAlbumList->clearTypePtr();
 
         for (auto &metaData : albumList->playMusicTypePtrList()) {
-            for (int i=0;i <album.length();i++) {
+            for (int i = 0; i < album.length(); i++) {
                 if (metaData->name.contains(album.at(i))) {
                     searchAlbumList->appendMusicTypePtrListData(metaData);
                 }
@@ -1260,7 +1255,7 @@ void Presenter::onSearchText(const QString &id, const QString &text)
         searchArtistList->clearTypePtr();
 
         for (auto &metaData : artistList->playMusicTypePtrList()) {
-            for (int i=0;i <artist.length();i++) {
+            for (int i = 0; i < artist.length(); i++) {
                 if (metaData->name.contains(artist.at(i))) {
                     searchArtistList->appendMusicTypePtrListData(metaData);
                 }
@@ -1296,16 +1291,14 @@ void Presenter::onSearchText(const QString &id, const QString &text)
         QStringList albumlist;
         albumlist.clear();
         for (auto &metaData : musicList->allmusic()) {
-            if(metaData->artist == "")
-            {
+            if (metaData->artist == "") {
                 metaData->artist = "未知歌手";
             }
             if (containsStr(text, metaData->artist)) {
                 musicMetaDataList.append(metaData);
-                if(metaData->album == ""){
-                   albumlist.append("未知专辑");
-                }
-                else{
+                if (metaData->album == "") {
+                    albumlist.append("未知专辑");
+                } else {
                     albumlist.append(metaData->album);
                 }
             }
@@ -1359,17 +1352,15 @@ void Presenter::onSearchText(const QString &id, const QString &text)
         QStringList artist;
         artist.clear();
         for (auto &metaData : musicList->allmusic()) {
-            if(metaData->album == "")
-            {
-                metaData->album ="未知专辑";
+            if (metaData->album == "") {
+                metaData->album = "未知专辑";
             }
             if (containsStr(text, metaData->album)) {
                 musicMetaDataList.append(metaData);
-                if(metaData->artist== ""){
-                   artist.append("未知歌手");
-                }
-                else{
-                     artist.append(metaData->artist);
+                if (metaData->artist == "") {
+                    artist.append("未知歌手");
+                } else {
+                    artist.append(metaData->artist);
                 }
             }
         }
@@ -1385,7 +1376,7 @@ void Presenter::onSearchText(const QString &id, const QString &text)
         searchArtistList->clearTypePtr();
 
         for (auto &metaData : artistList->playMusicTypePtrList()) {
-            for (int i=0; i<artist.length(); i++) {
+            for (int i = 0; i < artist.length(); i++) {
                 if (metaData->name.contains(artist.at(i) )) {
                     searchArtistList->appendMusicTypePtrListData(metaData);
                 }
@@ -1812,10 +1803,10 @@ void Presenter::onImportFiles(const QStringList &filelist, PlaylistPtr playlist)
     Q_D(Presenter);
     //PlaylistPtr playlist = d->currentPlaylist;
     PlaylistPtr curPlaylist = playlist;
-    bool flag = false;
+    //bool flag = false;
     if (playlist == nullptr) {
         curPlaylist = d->playlistMgr->playlist(AllMusicListID);
-        flag = true;
+        //flag = true;
     }
     requestImportPaths(curPlaylist, filelist);
     auto curPlayerlist = d->player->curPlaylist();
@@ -1854,7 +1845,6 @@ void Presenter::onSpeechPlayMusic(const QString music)
 void Presenter::onSpeechPlayArtist(const QString artist)
 {
     Q_D(Presenter);
-    int count = 0;
     MetaPtrList artistMetaDataList;
     PlaylistPtr musicList = d->playlistMgr->playlist(AllMusicListID);
     PlaylistPtr curPlayList = d->playlistMgr->playlist(PlayMusicListID);
@@ -1881,7 +1871,6 @@ void Presenter::onSpeechPlayArtist(const QString artist)
 void Presenter::onSpeechPlayArtistMusic(const QString artist, const QString music)
 {
     Q_D(Presenter);
-    int count = 0;
     MetaPtrList artistMetaDataList;
     PlaylistPtr musicList = d->playlistMgr->playlist(AllMusicListID);
     PlaylistPtr curPlayList = d->playlistMgr->playlist(PlayMusicListID);
@@ -1910,11 +1899,9 @@ void Presenter::onSpeechPlayArtistMusic(const QString artist, const QString musi
 void Presenter::onSpeechPlayFaverite()
 {
     Q_D(Presenter);
-    int count = 0;
     MetaPtrList artistMetaDataList;
     PlaylistPtr musicList = d->playlistMgr->playlist(FavMusicListID);
     PlaylistPtr curPlayList = d->playlistMgr->playlist(PlayMusicListID);
-    bool find = false;
     MetaPtrList musicMetaDataList;
     MetaPtr playMetaData;
     if (musicList->allmusic().size() == 0) {
@@ -1931,7 +1918,6 @@ void Presenter::onSpeechPlayFaverite()
 void Presenter::onSpeechPlayCustom(const QString listName)
 {
     Q_D(Presenter);
-    int count = 0;
     MetaPtrList artistMetaDataList;
     PlaylistPtr musicList ;
     PlaylistPtr curPlayList = d->playlistMgr->playlist(PlayMusicListID);
@@ -1960,7 +1946,6 @@ void Presenter::onSpeechPlayRadom()
     Q_D(Presenter);
     PlaylistPtr musicList = d->playlistMgr->playlist(AllMusicListID);
     PlaylistPtr curPlayList  = d->playlistMgr->playlist(PlayMusicListID);
-    bool find = false;
     MetaPtrList musicMetaDataList;
     MetaPtr playMetaData;
     int count = musicList->allmusic().size();
@@ -2021,7 +2006,7 @@ void Presenter::onSpeechunFaverite()
 
 void Presenter::onSpeechsetMode(const int mode)
 {
-    Q_D(Presenter);
+    //Q_D(Presenter);
     onPlayModeChanged(mode);
 }
 
@@ -2167,13 +2152,14 @@ void Presenter::initMpris(MprisPlayer *mprisPlayer)
 
     connect(mprisPlayer, &MprisPlayer::volumeRequested,
     this, [ = ](double volume) {
+        Q_UNUSED(volume)
 //        onVolumeChanged(volume * 100);
 //        Q_EMIT this->volumeChanged(volume * 100);
     });
 
     connect(d, &PresenterPrivate::updateMprisVolume,
     this, [ = ](int volume) {
-        mprisPlayer->setVolume(((double)volume) / 100.0);
+        mprisPlayer->setVolume((static_cast<double>(volume)) / 100.0);
     });
 
     connect(this, &Presenter::progrossChanged,

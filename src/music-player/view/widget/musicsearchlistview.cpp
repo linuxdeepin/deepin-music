@@ -294,5 +294,6 @@ void MusicSearchListview::SearchClear()
 
 void MusicSearchListview::mouseMoveEvent(QMouseEvent *event)
 {
+    Q_UNUSED(event)
     qDebug() << "MusicSearchListview::mouseMoveEvent";
 }

@@ -41,7 +41,7 @@ class Footer : public DFloatingWidget
 
 public:
     explicit Footer(QWidget *parent = nullptr);
-    ~Footer();
+    ~Footer() override;
 
 public:
     void setCurPlaylist(PlaylistPtr playlist);

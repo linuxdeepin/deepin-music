@@ -198,7 +198,7 @@ void MusicInfoItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
 {
     auto listview = qobject_cast<const MusicListInfoView *>(option.widget);
 
-    Q_D(const MusicInfoItemDelegate);
+    //Q_D(const MusicInfoItemDelegate);
 
     painter->save();
 
@@ -310,7 +310,6 @@ void MusicInfoItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
     rowCountSize = qMax(rowCountSize, 2);
 
     for (int col = 0; col < 3; ++col) {
-        auto textColor = d->foreground(col, option);
         QColor brightTextColor(option.palette.highlight().color());
         auto flag = alignmentFlag(col);
         auto rect = colRect(col, option);
@@ -338,8 +337,8 @@ void MusicInfoItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
                 QRect t_ratioRect;
                 t_ratioRect.setX(0);
                 t_ratioRect.setY(0);
-                t_ratioRect.setWidth(icon.width() / t_ratio);
-                t_ratioRect.setHeight(icon.height() / t_ratio);
+                t_ratioRect.setWidth(static_cast<int>(icon.width() / t_ratio));
+                t_ratioRect.setHeight(static_cast<int>(icon.height() / t_ratio));
                 auto centerF = QRectF(rect).center();
                 auto iconRect = QRectF(centerF.x() - t_ratioRect.width() / 2,
                                        centerF.y() - t_ratioRect.height() / 2,
@@ -352,7 +351,7 @@ void MusicInfoItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
                 QFont font(font11);
                 QFontMetrics fm(font);
                 auto text = fm.elidedText(str, Qt::ElideMiddle, rect.width());
-                painter->drawText(rect, flag, text);
+                painter->drawText(rect, static_cast<int>(flag), text);
             }
             break;
         }
@@ -362,13 +361,13 @@ void MusicInfoItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
             QFont font(font14);
             QFontMetrics fm(font);
             auto text = fm.elidedText(meta->title, Qt::ElideMiddle, rect.width());
-            painter->drawText(rect, flag, text);
+            painter->drawText(rect, static_cast<int>(flag), text);
             break;
         }
         case Length:
             painter->setPen(otherColor);
             painter->setFont(font11);
-            painter->drawText(rect, flag, DMusic::lengthString(meta->length));
+            painter->drawText(rect, static_cast<int>(flag), DMusic::lengthString(meta->length));
             break;
         default:
             break;
@@ -380,30 +379,28 @@ void MusicInfoItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
 QSize MusicInfoItemDelegate::sizeHint(const QStyleOptionViewItem &option,
                                       const QModelIndex &index) const
 {
-    Q_D(const MusicInfoItemDelegate);
-
-    auto listview = qobject_cast<const MusicListInfoView *>(option.widget);
+//    Q_D(const MusicInfoItemDelegate);
 
     auto baseSize = QStyledItemDelegate::sizeHint(option, index);
     return  QSize(baseSize.width() / 5, baseSize.height());
 //    auto headerWidth = headerPointWidth(option, index);
-    auto headerWidth = 17 + 10 + 10 + 4;
-    auto tialWidth = d->timePropertyWidth(option);
-    auto w = option.widget->width() - headerWidth - tialWidth;
-    Q_ASSERT(w > 0);
-    switch (index.column()) {
-    case 0:
-        return  QSize(headerWidth, baseSize.height());
-    case 1:
-        return  QSize(w / 2, baseSize.height());
-    case 2:
-    case 3:
-        return  QSize(w / 4, baseSize.height());
-    case 4:
-        return  QSize(tialWidth, baseSize.height());
-    }
+//    auto headerWidth = 17 + 10 + 10 + 4;
+//    auto tialWidth = d->timePropertyWidth(option);
+//    auto w = option.widget->width() - headerWidth - tialWidth;
+//    Q_ASSERT(w > 0);
+//    switch (index.column()) {
+//    case 0:
+//        return  QSize(headerWidth, baseSize.height());
+//    case 1:
+//        return  QSize(w / 2, baseSize.height());
+//    case 2:
+//    case 3:
+//        return  QSize(w / 4, baseSize.height());
+//    case 4:
+//        return  QSize(tialWidth, baseSize.height());
+//    }
 
-    return baseSize;
+//    return baseSize;
 }
 
 QWidget *MusicInfoItemDelegate::createEditor(QWidget *parent,

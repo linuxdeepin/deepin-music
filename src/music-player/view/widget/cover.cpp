@@ -95,9 +95,9 @@ void Cover::paintEvent(QPaintEvent *)
     painter.setRenderHints(QPainter::Antialiasing | QPainter::HighQualityAntialiasing | QPainter::SmoothPixmapTransform);
     auto radius = d->m_radius;
     auto innerBorderColor = d->m_borderColor;
-    auto outerBorderColor = d->m_shadowColor;
+    //auto outerBorderColor = d->m_shadowColor;
     auto backgroundColor = QColor(255, 255, 255, 255);
-    auto penWidthf = borderPenWidth;
+    //auto penWidthf = borderPenWidth;
 
     // draw background
     //auto backgroundRect = QRectF(rect()).marginsRemoved(d->outterMargins);
@@ -121,27 +121,27 @@ void Cover::paintEvent(QPaintEvent *)
 
     return;
     // draw border
-    QPainterPath innerBorderPath;
-    QRectF borderRect = QRectF(rect()).marginsRemoved(d->outterMargins);
-    auto borderRadius = radius;
-    QMarginsF borderMargin(penWidthf / 2, penWidthf / 2, penWidthf / 2, penWidthf / 2);
-    borderRadius -= penWidthf / 2;
-    borderRect = borderRect.marginsRemoved(borderMargin);
-    innerBorderPath.addRoundedRect(borderRect, borderRadius, borderRadius);
-    QPen innerBorderPen(innerBorderColor);
-    innerBorderPen.setWidthF(penWidthf / 2);
-    painter.strokePath(innerBorderPath, innerBorderPen);
+//    QPainterPath innerBorderPath;
+//    QRectF borderRect = QRectF(rect()).marginsRemoved(d->outterMargins);
+//    auto borderRadius = radius;
+//    QMarginsF borderMargin(penWidthf / 2, penWidthf / 2, penWidthf / 2, penWidthf / 2);
+//    borderRadius -= penWidthf / 2;
+//    borderRect = borderRect.marginsRemoved(borderMargin);
+//    innerBorderPath.addRoundedRect(borderRect, borderRadius, borderRadius);
+//    QPen innerBorderPen(innerBorderColor);
+//    innerBorderPen.setWidthF(penWidthf / 2);
+//    painter.strokePath(innerBorderPath, innerBorderPen);
 
-    QPainterPath outerBorderPath;
-    borderRect = QRectF(rect()).marginsRemoved(d->outterMargins);
-    borderRadius = radius;
-    borderRadius += penWidthf / 2;
-    borderRect = borderRect.marginsAdded(borderMargin);
+//    QPainterPath outerBorderPath;
+//    borderRect = QRectF(rect()).marginsRemoved(d->outterMargins);
+//    borderRadius = radius;
+//    borderRadius += penWidthf / 2;
+//    borderRect = borderRect.marginsAdded(borderMargin);
 
-    outerBorderPath.addRoundedRect(borderRect, borderRadius, borderRadius);
-    QPen outerBorderPen(outerBorderColor);
-    outerBorderPen.setWidthF(penWidthf / 2);
-    painter.strokePath(outerBorderPath, outerBorderPen);
+//    outerBorderPath.addRoundedRect(borderRect, borderRadius, borderRadius);
+//    QPen outerBorderPen(outerBorderColor);
+//    outerBorderPen.setWidthF(penWidthf / 2);
+//    painter.strokePath(outerBorderPath, outerBorderPen);
 }
 
 void Cover::setCoverPixmap(const QPixmap &pixmap)

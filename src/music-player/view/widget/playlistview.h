@@ -33,7 +33,7 @@ class PlayListView : public DListView
     Q_OBJECT
 public:
     explicit PlayListView(bool searchFlag, bool isPlayList, QWidget *parent = Q_NULLPTR);
-    ~PlayListView();
+    ~PlayListView() override;
 
     MetaPtr activingMeta() const;
     PlaylistPtr playlist() const;

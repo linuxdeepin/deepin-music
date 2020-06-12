@@ -278,9 +278,9 @@ void MetaDetector::updateMetaFromLocalfile(MediaMeta *meta, const QFileInfo &fil
     if (meta->length == 0) {
         //#ifndef DISABLE_LIBAV
         AVFormatContext *pFormatCtx = avformat_alloc_context();
-        avformat_open_input(&pFormatCtx, meta->localPath.toStdString().c_str(), NULL, NULL);
+        avformat_open_input(&pFormatCtx, meta->localPath.toStdString().c_str(), nullptr, nullptr);
         if (pFormatCtx) {
-            avformat_find_stream_info(pFormatCtx, NULL);
+            avformat_find_stream_info(pFormatCtx, nullptr);
             int64_t duration = pFormatCtx->duration / 1000;
             if (duration > 0) {
                 meta->length = duration;
@@ -332,15 +332,15 @@ QByteArray MetaDetector::getCoverData(const QString &path, const QString &tmpPat
 //#ifndef DISABLE_LIBAV
     if (!path.isEmpty()) {
         AVFormatContext *pFormatCtx = avformat_alloc_context();
-        avformat_open_input(&pFormatCtx, path.toStdString().c_str(), NULL, NULL);
+        avformat_open_input(&pFormatCtx, path.toStdString().c_str(), nullptr, nullptr);
 
         QImage image;
         if (pFormatCtx) {
-            if (pFormatCtx->iformat != NULL && pFormatCtx->iformat->read_header(pFormatCtx) >= 0) {
-                for (int i = 0; i < pFormatCtx->nb_streams; i++) {
+            if (pFormatCtx->iformat != nullptr && pFormatCtx->iformat->read_header(pFormatCtx) >= 0) {
+                for (unsigned int i = 0; i < pFormatCtx->nb_streams; i++) {
                     if (pFormatCtx->streams[i]->disposition & AV_DISPOSITION_ATTACHED_PIC) {
                         AVPacket pkt = pFormatCtx->streams[i]->attached_pic;
-                        image = QImage::fromData((uchar *)pkt.data, pkt.size);
+                        image = QImage::fromData(static_cast<uchar *>(pkt.data), pkt.size);
                         break;
                     }
                 }
@@ -371,48 +371,54 @@ QVector<float> MetaDetector::getMetaData(const QString &path)
         return curData;
 
     AVFormatContext *pFormatCtx = avformat_alloc_context();
-    avformat_open_input(&pFormatCtx, path.toStdString().c_str(), NULL, NULL);
+    avformat_open_input(&pFormatCtx, path.toStdString().c_str(), nullptr, nullptr);
 
     if (pFormatCtx == nullptr)
         return curData;
 
-    avformat_find_stream_info(pFormatCtx, NULL);
+    avformat_find_stream_info(pFormatCtx, nullptr);
 
     int audio_stream_index = -1;
-    audio_stream_index = av_find_best_stream(pFormatCtx, AVMEDIA_TYPE_AUDIO, -1, -1, NULL, 0);
+    audio_stream_index = av_find_best_stream(pFormatCtx, AVMEDIA_TYPE_AUDIO, -1, -1, nullptr, 0);
     if (audio_stream_index < 0)
         return curData;
 
     AVStream *in_stream = pFormatCtx->streams[audio_stream_index];
     AVCodecParameters *in_codecpar = in_stream->codecpar;
 
-    AVCodecContext *pCodecCtx = avcodec_alloc_context3(NULL);
+    AVCodecContext *pCodecCtx = avcodec_alloc_context3(nullptr);
     avcodec_parameters_to_context(pCodecCtx, in_codecpar);
 
     AVCodec *pCodec = avcodec_find_decoder(pCodecCtx->codec_id);
-    avcodec_open2(pCodecCtx, pCodec, NULL);
+    avcodec_open2(pCodecCtx, pCodec, nullptr);
 
     AVPacket *packet = av_packet_alloc();
     AVFrame *frame = av_frame_alloc();
 
     while (av_read_frame(pFormatCtx, packet) >= 0 ) {
         if (packet->stream_index == audio_stream_index) {
-            int got_picture;
-            uint32_t ret = avcodec_decode_audio4( pCodecCtx, frame, &got_picture, packet);
-            if ( ret < 0 ) {
+
+            int state;
+            state = avcodec_send_packet(pCodecCtx, packet);
+            av_packet_unref(packet);
+            if (state != 0) {
                 continue;
             }
-            if ( got_picture > 0 ) {
-                int data_size = av_get_bytes_per_sample(pCodecCtx->sample_fmt);
-                int t_format = frame->format;
-                uint8_t *ptr = frame->extended_data[0];
-                short val;
-                for (int i = 0; i < frame->linesize[0]; i += 1024) {
-                    val = (short)(
-                              ((unsigned char)ptr[i]) << 8 |
-                              ((unsigned char)ptr[i + 1])
-                          );
-                    curData.append(val);
+
+            state = avcodec_receive_frame(pCodecCtx, frame);
+            if (state == 0) {
+
+                quint8 *ptr = frame->extended_data[0];
+                if (path.endsWith(".ape") || path.endsWith(".APE")) {
+                    for (int i = 0; i < frame->linesize[0]; i++) {
+                        auto  valDate = ((ptr[i]) << 16 | (ptr[i + 1]));
+                        curData.append(valDate + qrand());
+                    }
+                } else {
+                    for (int i = 0; i < frame->linesize[0]; i += 1024) {
+                        auto  valDate = ((ptr[i]) << 16 | (ptr[i + 1]));
+                        curData.append(valDate);
+                    }
                 }
             }
         }

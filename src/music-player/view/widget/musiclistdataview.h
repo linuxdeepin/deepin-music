@@ -33,7 +33,7 @@ class MusicListDataView : public DListView
     Q_OBJECT
 public:
     explicit MusicListDataView(QWidget *parent = Q_NULLPTR);
-    ~MusicListDataView();
+    ~MusicListDataView() override;
 
     PlaylistPtr playlist() const;
 
