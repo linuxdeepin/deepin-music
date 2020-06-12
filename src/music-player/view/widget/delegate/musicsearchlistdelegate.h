@@ -28,26 +28,26 @@ class MusicSearchListDelegate : public QStyledItemDelegate
     Q_OBJECT
 public:
     MusicSearchListDelegate(QWidget *parent = Q_NULLPTR);
-    ~MusicSearchListDelegate();
+    ~MusicSearchListDelegate() override;
 
 
 signals:
     void SearchClear() const;
 
 protected:
-    virtual void initStyleOption(QStyleOptionViewItem *option, const QModelIndex &index) const;
+    virtual void initStyleOption(QStyleOptionViewItem *option, const QModelIndex &index) const override;
 
     bool editorEvent(QEvent *event, QAbstractItemModel *model, const QStyleOptionViewItem &option, const QModelIndex &index) override;
 
-    void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const override;;
+    void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const override;
 
-    QSize sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const override;;
+    QSize sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const override;
 
-    QWidget *createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const;
+    QWidget *createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const override;
 
-    void setEditorData(QWidget *editor, const QModelIndex &index) const;
+    void setEditorData(QWidget *editor, const QModelIndex &index) const override;
 
-    void setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const;
+    void setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const override;
 private:
     QString getElidedText(QFont font, QString str, int MaxWidth);
     QScopedPointer<MusicSearchListDelegatePrivate> d_ptr;

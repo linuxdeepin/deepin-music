@@ -45,7 +45,7 @@ VolumeMonitoring::VolumeMonitoring(QObject *parent)
     : QObject(parent), d_ptr(new VolumeMonitoringPrivate(this))
 {
     Q_D(VolumeMonitoring);
-    d->oldMute = (bool)MusicSettings::value("base.play.mute").toBool();
+    d->oldMute = MusicSettings::value("base.play.mute").toBool();
     d->oldVolume = MusicSettings::value("base.play.volume").toInt();
     connect(&d->timer, SIGNAL(timeout()), this, SLOT(timeoutSlot()));
 }

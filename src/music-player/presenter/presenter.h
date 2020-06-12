@@ -49,7 +49,7 @@ class Presenter : public QObject
 {
     Q_OBJECT
 public:
-    explicit Presenter(QObject *parent = 0);
+    explicit Presenter(QObject *parent = nullptr);
     ~Presenter();
 
     void initMpris(MprisPlayer *mprisPlayer);

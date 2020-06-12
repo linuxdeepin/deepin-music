@@ -81,7 +81,7 @@ void MetaBufferDetector::run()
     QString hash = d->curHash;
     if (path.isEmpty())
         return;
-    /*
+#if 0
     QFileInfo fileInfo(path);
     if (fileInfo.suffix() == "ape") {
         QString curPath = Global::configPath();
@@ -96,8 +96,7 @@ void MetaBufferDetector::run()
         QProcess::execute(program);
         path = toPath;
     }
-    */
-
+#endif
     AVFormatContext *pFormatCtx = avformat_alloc_context();
     avformat_open_input(&pFormatCtx, path.toStdString().c_str(), nullptr, nullptr);
 
@@ -142,7 +141,7 @@ void MetaBufferDetector::run()
             avcodec_close(pCodecCtx);
             avformat_close_input(&pFormatCtx);
             avformat_free_context(pFormatCtx);
-            resample(curData, hash);    //刷新波浪条
+            resample(curData, hash);//刷新波浪条
             d->stopFlag = false;
             d->curPath.clear();
             d->curHash.clear();

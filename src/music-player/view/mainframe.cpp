@@ -151,7 +151,7 @@ public:
 };
 void MainFramePrivate::setTheme(int type)
 {
-    Q_Q(MainFrame);
+    //Q_Q(MainFrame);
     if (type == 0) {
         type = DGuiApplicationHelper::instance()->themeType();
     }
@@ -547,6 +547,7 @@ void MainFramePrivate:: slideToImportView()
 
 void MainFramePrivate:: slideToMusicListView(bool keepPlaylist)
 {
+    Q_UNUSED(keepPlaylist)
     Q_Q(MainFrame);
 
     titlebarwidget->setSearchEnable(true);
@@ -993,7 +994,7 @@ void MainFrame::binding(Presenter *presenter)
 
     connect(presenter, &Presenter::notifyMusciError,
     this, [ = ](PlaylistPtr playlist, const MetaPtr  meta, int /*error*/) {
-
+        Q_UNUSED(playlist)
         Dtk::Widget::DDialog warnDlg(this);
         warnDlg.setIcon(QIcon::fromTheme("deepin-music"));
         warnDlg.setTextFormat(Qt::RichText);
@@ -1059,6 +1060,8 @@ void MainFrame::binding(Presenter *presenter)
 
     connect(presenter, &Presenter::musicPaused,
     this, [ = ](PlaylistPtr playlist, const MetaPtr meta) {
+        Q_UNUSED(playlist)
+        Q_UNUSED(meta)
         d->timer->stop();
     });
 
@@ -1224,6 +1227,8 @@ void MainFrame::binding(Presenter *presenter)
             presenter, &Presenter::onToggleFavourite);
     connect(d->footer, &Footer::pause,
     this, [ = ](PlaylistPtr playlist, const MetaPtr meta) {
+        Q_UNUSED(playlist)
+        Q_UNUSED(meta)
         d->timer->stop();
     });
 
@@ -1644,7 +1649,7 @@ void MainFrame::closeEvent(QCloseEvent *event)
 
 void MainFrame::paintEvent(QPaintEvent *e)
 {
-    Q_D(MainFrame);
+    //Q_D(MainFrame);
     QPainter p(this);
 
     DMainWindow::paintEvent(e);

@@ -85,10 +85,10 @@ static float codecConfidenceForData(const QTextCodec *codec, const QByteArray &d
         }
     }
 
-    float c = qreal(hep_count) / non_base_latin_count / 1.2;
+    float c = static_cast<float>(qreal(hep_count) / non_base_latin_count / 1.2);
 
-    c -= qreal(replacement_count) / non_base_latin_count;
-    c -= qreal(unidentification_count) / non_base_latin_count;
+    c -= static_cast<float>(qreal(replacement_count) / non_base_latin_count);
+    c -= static_cast<float>(qreal(unidentification_count) / non_base_latin_count);
 
     return qMax(0.0f, c);
 }
@@ -219,7 +219,7 @@ confidence:
 
             float c = codecConfidenceForData(codec, data, i.second);
 
-            if (prober_confidence > 0.5) {
+            if (prober_confidence > 0.5f) {
                 c = c / 2 + prober_confidence / 2;
             } else {
                 c = c / 3 * 2 + prober_confidence / 3;
@@ -230,11 +230,11 @@ confidence:
                 encoding = prober_encoding;
             }
 
-            if (i.first == KEncodingProber::ChineseTraditional && c < 0.5) {
+            if (i.first == KEncodingProber::ChineseTraditional && c < 0.5f) {
                 // test Big5
                 c = codecConfidenceForData(QTextCodec::codecForName("Big5"), data, i.second);
 
-                if (c > 0.5 && c > confidence) {
+                if (c > 0.5f && c > confidence) {
                     confidence = c;
                     encoding = "Big5";
                 }

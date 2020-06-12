@@ -182,7 +182,7 @@ QMap<int, QString> VlcAudio::tracks() const
         first = desc = libvlc_audio_get_track_description(_vlcMediaPlayer);
         VlcError::showErrmsg();
 
-        if (desc != NULL) {
+        if (desc != nullptr) {
             tracks.insert(desc->i_id, QString().fromUtf8(desc->psz_name));
             if (trackCount() > 1) {
                 for (int i = 1; i < trackCount(); i++) {

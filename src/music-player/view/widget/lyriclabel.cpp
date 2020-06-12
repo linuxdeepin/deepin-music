@@ -65,7 +65,7 @@ void LyricLabel::paintItem(QPainter *painter, int index, const QRect &rect)
         font.setPixelSize(font.pixelSize() + 1);
         painter->setFont(font);
         QPoint leftpos = rect.bottomLeft();
-        leftpos.setY(leftpos.y() + rect.height() / 2.0 + 5);
+        leftpos.setY(static_cast<int>( leftpos.y() + rect.height() / 2.0 + 5));
         QPoint rightpos = rect.bottomRight();
         rightpos.setY(leftpos.y());
         rightpos.setX(rightpos.x() - 3);
@@ -130,7 +130,7 @@ int LyricLabel::itemHeight() const
     QFontMetrics fm(*lyricFont);
     //qDebug() << "itemheight" << fm.height()*2.8;
     //return fm.height() * 1.4;
-    return fm.height() * 2.8;
+    return static_cast<int>( fm.height() * 2.8);
     //return 45;
 }
 
@@ -198,11 +198,13 @@ void LyricLabel::changeHightLightColor()
 
 void LyricLabel::contextMenuEvent(QContextMenuEvent *event)
 {
+    Q_UNUSED(event)
     emit rightClicked();
 }
 
 void LyricLabel::enterEvent(QEvent *e)
 {
+    Q_UNUSED(e)
     emit mouseEnter();
 }
 
@@ -274,7 +276,7 @@ bool AbstractWheelWidget::event(QEvent *e)
         }
 
         qreal y = se->contentPos().y();
-        int iy = y - WHEEL_SCROLL_OFFSET;
+        int iy = static_cast<int>(y - WHEEL_SCROLL_OFFSET);
         int ih = itemHeight();
 
 // ![2]
@@ -310,7 +312,7 @@ bool AbstractWheelWidget::event(QEvent *e)
     default:
         return QWidget::event(e);
     }
-    return true;
+//    return true;
 }
 
 void AbstractWheelWidget::paintEvent(QPaintEvent *event)

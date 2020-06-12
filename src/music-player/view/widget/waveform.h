@@ -41,7 +41,7 @@ class Waveform : public DSlider
     static const int WAVE_DURATION;
 
 public:
-    Waveform(Qt::Orientation orientation, QWidget *widget, QWidget *parent = 0);
+    Waveform(Qt::Orientation orientation, QWidget *widget, QWidget *parent = nullptr);
 
     static qreal getPeakValue(const QAudioFormat &format);
     static QVector<qreal> getBufferLevels(const QAudioBuffer &buffer);

@@ -543,7 +543,7 @@ void PlayerPrivate::selectPrev(const MetaPtr info, Player::PlaybackMode mode)
             curMeta->invalid = false;
         }
         if (curMeta->invalid && !invalidFlag) {
-            int curNum = 0;
+            //int curNum = 0;
             while (true) {
                 curMeta = curPlaylist->shufflePrev(curMeta);
                 if (!curMeta->invalid || QFile::exists(curMeta->localPath))
@@ -613,12 +613,12 @@ void Player::loadMedia(PlaylistPtr playlist, const MetaPtr meta)
 
     d->qvplayer->blockSignals(true);
 
-    int volume = -1;
+    //int volume = -1;
     d->qvplayer->blockSignals(true);
     d->isamr = true;
     d->qvmedia->initMedia(meta->localPath, true, d->qvinstance);
     d->qvplayer->open(d->qvmedia);
-    volume = d->qvplayer->audio()->volume();
+    //volume = d->qvplayer->audio()->volume();
     d->qvplayer->play();
 
 
@@ -734,7 +734,7 @@ void Player::resume(PlaylistPtr playlist, const MetaPtr meta)
     });
 
     if (d->fadeInOut && !d->fadeInAnimation) {
-        d->fadeInAnimation = new QPropertyAnimation( this, "fadeInOutFactor");
+        d->fadeInAnimation = new QPropertyAnimation(this, "fadeInOutFactor");
         d->fadeInAnimation->setEasingCurve(QEasingCurve::InCubic);
         d->fadeInAnimation->setStartValue(0.1000);
         d->fadeInAnimation->setEndValue(1.0000);
@@ -756,6 +756,7 @@ void Player::resume(PlaylistPtr playlist, const MetaPtr meta)
 
 void Player::playNextMeta(PlaylistPtr playlist, const MetaPtr meta)
 {
+    Q_UNUSED(playlist)
     Q_D(Player);
 //    Q_ASSERT(playlist == d->activePlaylist);
 
@@ -769,6 +770,7 @@ void Player::playNextMeta(PlaylistPtr playlist, const MetaPtr meta)
 
 void Player::playPrevMusic(PlaylistPtr playlist, const MetaPtr meta)
 {
+    Q_UNUSED(playlist)
     Q_D(Player);
 //    Q_ASSERT(playlist == d->activePlaylist);
 
@@ -911,7 +913,7 @@ Player::PlaybackMode Player::mode() const
 
 bool Player::muted()
 {
-    Q_D(const Player);
+    //Q_D(const Player);
     //return d->qplayer->isMuted();
     return this->isMusicMuted();
 }
@@ -1009,7 +1011,7 @@ void Player::setVolume(int volume)
 
 void Player::setMuted(bool mute)
 {
-    Q_D(Player);
+    //Q_D(Player);
     //d->qplayer->setMuted(mute);
     setMusicMuted(mute);
 }

@@ -30,7 +30,7 @@ class MediaDatabaseWriter : public QObject
 {
     Q_OBJECT
 public:
-    explicit MediaDatabaseWriter(QObject *parent = 0);
+    explicit MediaDatabaseWriter(QObject *parent = nullptr);
     QSqlDatabase db;
 private:
     bool createConnection();

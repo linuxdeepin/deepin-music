@@ -28,7 +28,7 @@ class MusicSettings : public QObject, public DMusic::DSingleton<MusicSettings>
 {
     Q_OBJECT
 public:
-    explicit MusicSettings(QObject *parent = 0);
+    explicit MusicSettings(QObject *parent = nullptr);
     ~MusicSettings();
 
     static void init();

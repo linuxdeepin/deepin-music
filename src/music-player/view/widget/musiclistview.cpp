@@ -343,7 +343,7 @@ void MusicListView::clearSelected()
     }
     if (playingItem != nullptr && playingItem->rowCount() > 0) {
         auto curItem = dynamic_cast<DStandardItem *>(playingItem);
-        if (curItem != NULL) {
+        if (curItem != nullptr) {
             //delete
             QIcon playingIcon(playingPixmap);
             playingIcon.actualSize(QSize(20, 20));

@@ -32,7 +32,7 @@ class MusicApp : public QObject
 {
     Q_OBJECT
 public:
-    MusicApp(MainFrame* frame, QObject *parent = nullptr);
+    MusicApp(MainFrame *frame, QObject *parent = nullptr);
     ~MusicApp();
 
     void initUI();

@@ -39,7 +39,7 @@ bool MediaDatabaseWriter::createConnection()
         cacheDir.mkpath(".");
     }
     QString cachePath = Global::cacheDir() + "/mediameta.sqlite";
-    db = QSqlDatabase::addDatabase("QSQLITE","writer");
+    db = QSqlDatabase::addDatabase("QSQLITE", "writer");
     db.setDatabaseName(cachePath);
 
     if (!db.open()) {
@@ -48,6 +48,7 @@ bool MediaDatabaseWriter::createConnection()
                     << cachePath;
         return false;
     }
+    return true;
 }
 
 void MediaDatabaseWriter::initDataBase()

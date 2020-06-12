@@ -31,7 +31,7 @@ class InfoDialog : public Dtk::Widget::DAbstractDialog
 
 public:
     explicit InfoDialog(QWidget *parent = Q_NULLPTR);
-    ~InfoDialog();
+    ~InfoDialog() override;
 
     void resizeEvent(QResizeEvent *event) Q_DECL_OVERRIDE;
     void updateInfo(const MetaPtr meta);

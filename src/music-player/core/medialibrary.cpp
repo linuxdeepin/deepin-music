@@ -63,7 +63,7 @@ public:
             supportedSuffixs.insert(suffix, true);
         }
 
-//        qDebug() << supportedSuffixs;
+        //        qDebug() << supportedSuffixs;
 
 #ifdef SUPPORT_INOTIFY
         watcher = new InotifyEngine;
@@ -90,9 +90,9 @@ public:
         watcher->addPaths(dirs.keys());
 #endif
 
-//        for (auto meta : metas) {
-//            qDebug() << meta->title;
-//        }
+        //        for (auto meta : metas) {
+        //            qDebug() << meta->title;
+        //        }
     }
 
 private:
@@ -159,7 +159,6 @@ MetaPtr MediaLibraryPrivate::importMeta(const QString &filepath,
         return MetaPtr();
     }
 
-
     if (avformat_find_stream_info(pFormatCtx, nullptr) < 0) {
         avformat_free_context(pFormatCtx);
         return MetaPtr();
@@ -167,8 +166,6 @@ MetaPtr MediaLibraryPrivate::importMeta(const QString &filepath,
 
     int audio_stream_index = -1;
     audio_stream_index = av_find_best_stream(pFormatCtx, AVMEDIA_TYPE_AUDIO, -1, -1, nullptr, 0);
-
-
 
     if (audio_stream_index < 0) {
         avformat_close_input(&pFormatCtx);
@@ -187,7 +184,6 @@ MetaPtr MediaLibraryPrivate::importMeta(const QString &filepath,
 
     AVPacket *packet = av_packet_alloc();
     AVFrame *frame = av_frame_alloc();
-
 
     int readCount = 0;
     int sendCount = 0;
@@ -248,7 +244,6 @@ MetaPtr MediaLibraryPrivate::importMeta(const QString &filepath,
     avformat_close_input(&pFormatCtx);
     avformat_free_context(pFormatCtx);
 
-
     auto hash = DMusic::filepathHash(filepath);
     if (MediaLibrary::instance()->contains(hash)) {
         // FIXME: insertToPlaylist;
@@ -256,7 +251,6 @@ MetaPtr MediaLibraryPrivate::importMeta(const QString &filepath,
         qDebug() << "exit" << hash << MediaLibrary::instance()->meta(hash);
         return MediaLibrary::instance()->meta(hash);
     }
-
     auto meta = createMeta(fileInfo);
 
     if (meta->length == 0)
