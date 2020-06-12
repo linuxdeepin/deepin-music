@@ -157,7 +157,7 @@ void PlayListWidgetPrivate::initConntion()
                 }
             }
             if (!metalist.isEmpty()) {
-                playListView->playlist()->removeMusicList(metalist);
+                Q_EMIT q->musiclistRemove(playListView->playlist(), playListView->playlist()->allmusic());
             }
         }
         Q_EMIT q->musicFileMiss();
