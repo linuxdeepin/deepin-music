@@ -512,7 +512,12 @@ void PlayerPrivate::initConnection()
                 curPlaylist->removeMusicList(removeMusicList);
                 Q_EMIT q->mediaError(activePlaylist, activeMeta, static_cast<Player::Error>(error));
             } else {
+                qDebug()<<"#####QMediaPlayer::error";
                 qplayer->pause();
+                qlonglong postion = qplayer->position();
+                sleep(1);
+                qplayer->setPosition(postion);
+                qplayer->play();
             }
             /*else {//pause Audio报错，m4a文件没有问题
                 QFileInfo fi("activeMeta->localPath");
