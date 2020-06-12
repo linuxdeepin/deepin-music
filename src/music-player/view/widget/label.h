@@ -31,7 +31,7 @@ class Label : public DLabel
 public:
     explicit Label(QWidget *parent = Q_NULLPTR);
     explicit Label(const QString &text, QWidget *parent = Q_NULLPTR);
-    ~Label();
+    ~Label() override;
 
 signals:
     void clicked(bool);

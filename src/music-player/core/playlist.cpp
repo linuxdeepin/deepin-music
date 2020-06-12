@@ -459,7 +459,7 @@ MetaPtr Playlist::removeMusicList(const MetaPtrList metalist)
 MetaPtr Playlist::removeOneMusic(const MetaPtr meta)
 {
 //    Q_ASSERT(!meta.isNull());
-    if(meta.isNull())
+    if (meta.isNull())
         return MetaPtr();
     if (meta->hash.isEmpty()) {
         qCritical() << "Cannot remove empty id" << meta->hash << meta->title;

@@ -42,7 +42,7 @@ class PlayItemDelegatePrivate : public QWidget
 public:
     int                                 tialWidth = -1;
 
-    explicit PlayItemDelegatePrivate(PlayItemDelegate *parent = 0);
+    explicit PlayItemDelegatePrivate(PlayItemDelegate *parent = nullptr);
 
     inline QColor foreground(int col, const QStyleOptionViewItem &option) const;
     inline int timePropertyWidth(const QStyleOptionViewItem &option) const;

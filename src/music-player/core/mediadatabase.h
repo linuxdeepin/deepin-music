@@ -32,7 +32,7 @@ class MediaDatabase : public QObject, public DMusic::DSingleton<MediaDatabase>
 {
     Q_OBJECT
 public:
-    explicit MediaDatabase(QObject *parent = 0);
+    explicit MediaDatabase(QObject *parent = nullptr);
     void init();
 
     //! music meta query interface
@@ -48,6 +48,7 @@ public:
     bool playlistExist(const QString &uuid);
 
 signals:
+    void initWrter();
     void addMediaMeta(const MetaPtr meta);
     void addMediaMetaList(const MetaPtrList metalist);
     void updateMediaMeta(const MetaPtr meta);

@@ -83,11 +83,11 @@ void SearchEdit::setResultWidget(SearchResult *result)
         onFocusOut();
         Q_EMIT this->searchText(id, text);
     });
-    connect(this, &SearchEdit::focusChanged,
-    this, [ = ](const bool onFocus) {
-        bool a = onFocus;
-        qDebug() << "onfacus" << onFocus;
-    });
+//    connect(this, &SearchEdit::focusChanged,
+//    this, [ = ](const bool onFocus) {
+//        bool a = onFocus;
+//        qDebug() << "onfacus" << onFocus;
+//    });
 
 
     connect(m_result, &SearchResult::searchText2,
@@ -188,14 +188,23 @@ void SearchEdit::onReturnPressed()
 {
     if (!m_result->currentStr().isEmpty())
         setText(m_result->currentStr());
-    auto text = QString(this->text()).remove(" ").remove("\r").remove("\n");;
+    auto text = QString(this->text()).remove("\r").remove("\n");
     if (text.length() == 0)
         return;
+    int i = text.size();
+    for (; i > 0; i--) {
+        QChar index = text.back();
+        if (index == ' ') {
+            text.remove(text.size() - 1, 1);
+        } else {
+            break;
+        }
+    }
     onFocusOut();
     if (m_CurrentId.size() == 0) {
         Q_EMIT this->searchText("", text);
     } else {
-        Q_EMIT this->searchText(m_CurrentId, QString(m_Text).remove(" ").remove("\r").remove("\n"));
+        Q_EMIT this->searchText(m_CurrentId, QString(m_Text).remove("\r").remove("\n"));
     }
 }
 

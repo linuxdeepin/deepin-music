@@ -29,8 +29,8 @@ class MusiclistModel : public QStandardItemModel
 {
     Q_OBJECT
 public:
-    explicit MusiclistModel(QObject *parent = 0);
-    ~MusiclistModel();
+    explicit MusiclistModel(QObject *parent = nullptr);
+    ~MusiclistModel() override;
 
     virtual bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole) Q_DECL_OVERRIDE;
     virtual Qt::DropActions supportedDropActions() const Q_DECL_OVERRIDE;

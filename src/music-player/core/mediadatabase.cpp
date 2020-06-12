@@ -251,13 +251,16 @@ MediaDatabase::MediaDatabase(QObject *parent) : QObject(parent)
 void MediaDatabase::init()
 {
     createConnection();
+    margeDatabase();
 
     // sqlite must run in one thread!!!
     m_writer = new MediaDatabaseWriter;
-
+    ThreadPool::instance()->moveToNewThread(m_writer);//将读写耗时操作放到子线程操作
+    connect(this, &MediaDatabase::initWrter,
+            m_writer, &MediaDatabaseWriter::initDataBase);
+    Q_EMIT initWrter();
     bind();
 
-    margeDatabase();
 
     QSqlDatabase::database().transaction();
     PlaylistMeta playlistMeta;
@@ -779,19 +782,19 @@ QList<MediaMeta> MediaDatabase::allmetas()
 void MediaDatabase::bind()
 {
     connect(this, &MediaDatabase::addMediaMeta,
-            m_writer, &MediaDatabaseWriter::addMediaMeta);
+            m_writer, &MediaDatabaseWriter::addMediaMeta, Qt::UniqueConnection);
     connect(this, &MediaDatabase::addMediaMetaList,
-            m_writer, &MediaDatabaseWriter::addMediaMetaList);
+            m_writer, &MediaDatabaseWriter::addMediaMetaList, Qt::UniqueConnection);
     connect(this, &MediaDatabase::updateMediaMeta,
-            m_writer, &MediaDatabaseWriter::updateMediaMeta);
+            m_writer, &MediaDatabaseWriter::updateMediaMeta, Qt::UniqueConnection);
     connect(this, &MediaDatabase::updateMediaMetaList,
-            m_writer, &MediaDatabaseWriter::updateMediaMetaList);
+            m_writer, &MediaDatabaseWriter::updateMediaMetaList, Qt::UniqueConnection);
     connect(this, &MediaDatabase::insertMusic,
-            m_writer, &MediaDatabaseWriter::insertMusic);
+            m_writer, &MediaDatabaseWriter::insertMusic, Qt::UniqueConnection);
     connect(this, &MediaDatabase::insertMusicList,
-            m_writer, &MediaDatabaseWriter::insertMusicList);
+            m_writer, &MediaDatabaseWriter::insertMusicList, Qt::UniqueConnection);
     connect(this, &MediaDatabase::removeMediaMetaList,
-            m_writer, &MediaDatabaseWriter::removeMediaMetaList);
+            m_writer, &MediaDatabaseWriter::removeMediaMetaList, Qt::UniqueConnection);
 }
 
 

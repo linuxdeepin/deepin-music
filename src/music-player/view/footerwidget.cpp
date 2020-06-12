@@ -126,7 +126,7 @@ public:
 
 void FooterPrivate::updateQssProperty(QWidget *w, const char *name, const QVariant &value)
 {
-    Q_Q(Footer);
+    //Q_Q(Footer);
     w->setProperty(name, value);
     w->update();
 }
@@ -262,8 +262,6 @@ Footer::Footer(QWidget *parent) :
     auto mainVBoxlayout = new QVBoxLayout(d->forwardWidget);
     mainVBoxlayout->setSpacing(0);
     mainVBoxlayout->setContentsMargins(10, 0, 0, 10);
-
-    auto hoverFilter = new HoverFilter(this);
 
     auto downWidget = new DWidget();
     auto layout = new QHBoxLayout(downWidget);
@@ -450,7 +448,7 @@ Footer::Footer(QWidget *parent) :
     allCtlButtons.append(d->btNext);
     d->ctlWidget->setButtonList(allCtlButtons, false);
 
-    d->waveform = new Waveform(Qt::Horizontal, (QWidget *)parent, this);
+    d->waveform = new Waveform(Qt::Horizontal, static_cast<QWidget *>(parent), this);
     d->waveform->setMinimum(0);
     d->waveform->setMaximum(1000);
     d->waveform->setValue(0);
@@ -700,13 +698,13 @@ void Footer::refreshBackground()
     }
     //cut image
     double windowScale = (width() * 1.0) / height();
-    int imageWidth = cover.height() * windowScale;
+    int imageWidth = static_cast<int>(cover.height() * windowScale);
     QImage coverImage;
     if (d->playListWidget->isVisible()) {
         coverImage.fill(QColor(255, 255, 255));
     } else {
         if (imageWidth > cover.width()) {
-            int imageheight = cover.width() / windowScale;
+            int imageheight = static_cast<int>(cover.width() / windowScale);
             coverImage = cover.copy(0, (cover.height() - imageheight) / 2, cover.width(), imageheight);
         } else {
             int imageheight = cover.height();
@@ -779,6 +777,7 @@ bool Footer::eventFilter(QObject *obj, QEvent *event)
 
 void Footer::onMusicListAdded(PlaylistPtr playlist, const MetaPtrList metalist)
 {
+    Q_UNUSED(metalist)
     Q_D(Footer);
     if (playlist != nullptr && playlist->id() == FavMusicListID
             && d->activingMeta != nullptr && playlist->contains(d->activingMeta))
@@ -810,6 +809,7 @@ void Footer::onMusicListAdded(PlaylistPtr playlist, const MetaPtrList metalist)
 
 void Footer::onMusicListRemoved(PlaylistPtr playlist, const MetaPtrList metalist)
 {
+    Q_UNUSED(metalist)
     Q_D(Footer);
     if (playlist != nullptr && playlist->id() == FavMusicListID
             && d->activingMeta != nullptr && playlist->contains(d->activingMeta))
@@ -837,6 +837,7 @@ void Footer::onMusicListRemoved(PlaylistPtr playlist, const MetaPtrList metalist
 
 void Footer::onMusicPlayed(PlaylistPtr playlist, const MetaPtr meta)
 {
+    Q_UNUSED(playlist)
     Q_D(Footer);
 
     if (!d->activingPlaylist->contains(meta))
@@ -863,10 +864,10 @@ void Footer::onMusicPlayed(PlaylistPtr playlist, const MetaPtr meta)
 
     //cut image
     double windowScale = (width() * 1.0) / height();
-    int imageWidth = cover.height() * windowScale;
+    int imageWidth = static_cast<int>(cover.height() * windowScale);
     QImage coverImage;
     if (imageWidth > cover.width()) {
-        int imageheight = cover.width() / windowScale;
+        int imageheight = static_cast<int>(cover.width() / windowScale);
         coverImage = cover.copy(0, (cover.height() - imageheight) / 2, cover.width(), imageheight);
     } else {
         int imageheight = cover.height();
@@ -942,6 +943,8 @@ void Footer::onMusicPlayed(PlaylistPtr playlist, const MetaPtr meta)
 
 void Footer::onMusicError(PlaylistPtr playlist, const MetaPtr meta, int error)
 {
+    Q_UNUSED(playlist)
+    Q_UNUSED(meta)
     Q_D(Footer);
 
     //d->waveform->clearBufferAudio();
@@ -973,6 +976,8 @@ void Footer::onMusicError(PlaylistPtr playlist, const MetaPtr meta, int error)
 
 void Footer::onMusicPause(PlaylistPtr playlist, const MetaPtr meta)
 {
+    Q_UNUSED(playlist)
+    Q_UNUSED(meta)
     Q_D(Footer);
 
     auto status = sPlayStatusValuePause;
@@ -1057,7 +1062,7 @@ void Footer::onMusicStoped(PlaylistPtr playlist, const MetaPtr meta)
 
 void Footer::onMediaLibraryClean()
 {
-    Q_D(Footer);
+    //Q_D(Footer);
 
     /*---enableControl----*/
     enableControl(false);
@@ -1369,6 +1374,9 @@ void Footer::onModeChange(int mode)
 
 void Footer::onUpdateMetaCodec(const QString &preTitle, const QString &preArtist, const QString &preAlbum, const MetaPtr meta)
 {
+    Q_UNUSED(preTitle)
+    Q_UNUSED(preArtist)
+    Q_UNUSED(preAlbum)
     Q_D(Footer);
     if (d->activingMeta && d->activingMeta == meta) {
         d->title->setText(meta->title);
@@ -1406,10 +1414,10 @@ void Footer::resizeEvent(QResizeEvent *event)
     }
     //cut image
     double windowScale = (width() * 1.0) / height();
-    int imageWidth = cover.height() * windowScale;
+    int imageWidth = static_cast<int>(cover.height() * windowScale);
     QImage coverImage;
     if (imageWidth > cover.width()) {
-        int imageheight = cover.width() / windowScale;
+        int imageheight = static_cast<int>(cover.width() / windowScale);
         coverImage = cover.copy(0, (cover.height() - imageheight) / 2, cover.width(), imageheight);
     } else {
         int imageheight = cover.height();

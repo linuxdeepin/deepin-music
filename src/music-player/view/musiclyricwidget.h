@@ -38,7 +38,7 @@ class MUsicLyricWidget : public DWidget
 
 public:
     explicit MUsicLyricWidget(QWidget *parent = Q_NULLPTR);
-    ~MUsicLyricWidget();
+    ~MUsicLyricWidget() override;
 
     void updateUI();
     QString defaultCover() const;

@@ -42,7 +42,7 @@ class MusicInfoItemDelegatePrivate : public QWidget
 public:
     int                                 tialWidth = -1;
 
-    explicit MusicInfoItemDelegatePrivate(MusicInfoItemDelegate *parent = 0);
+    explicit MusicInfoItemDelegatePrivate(MusicInfoItemDelegate *parent = nullptr);
 
     inline QColor foreground(int col, const QStyleOptionViewItem &option) const;
     inline int timePropertyWidth(const QStyleOptionViewItem &option) const;

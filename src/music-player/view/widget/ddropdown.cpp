@@ -92,6 +92,7 @@ DDropdown::DDropdown(QWidget *parent) : DWidget(parent), d_ptr(new DDropdownPriv
     });
 
     connect(d->dropdown, &DIconButton::clicked, this, [ = ](bool checked) {
+        Q_UNUSED(checked)
         Q_EMIT requestContextMenu();
     });
 }
@@ -137,6 +138,7 @@ void DDropdown::setCurrentAction(QAction *action)
 
 void DDropdown::setCurrentAction(int index)
 {
+    Q_UNUSED(index)
     Q_D(DDropdown);
     if (!d->menu->actions().isEmpty()) {
         setCurrentAction(d->menu->actions().first());

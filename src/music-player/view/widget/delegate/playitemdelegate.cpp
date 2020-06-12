@@ -345,7 +345,7 @@ void PlayItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
         return;
     }
 
-    Q_D(const PlayItemDelegate);
+    //Q_D(const PlayItemDelegate);
 
     painter->save();
 
@@ -484,8 +484,8 @@ void PlayItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
                 QRect t_ratioRect;
                 t_ratioRect.setX(0);
                 t_ratioRect.setY(0);
-                t_ratioRect.setWidth(icon.width() / t_ratio);
-                t_ratioRect.setHeight(icon.height() / t_ratio);
+                t_ratioRect.setWidth(static_cast<int>(icon.width() / t_ratio));
+                t_ratioRect.setHeight(static_cast<int>(icon.height() / t_ratio));
                 auto iconRect = QRectF(centerF.x() - t_ratioRect.width() / 2,
                                        centerF.y() - t_ratioRect.height() / 2,
                                        t_ratioRect.width(), t_ratioRect.height());
@@ -497,7 +497,7 @@ void PlayItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
                 QFont font(font11);
                 QFontMetrics fm(font);
                 auto text = fm.elidedText(str, Qt::ElideMiddle, rect.width());
-                painter->drawText(rect, flag, text);
+                painter->drawText(rect, static_cast<int>(flag), text);
             }
             break;
         }
@@ -507,7 +507,7 @@ void PlayItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
             QFont font(font14);
             QFontMetrics fm(font);
             auto text = fm.elidedText(meta->title, Qt::ElideMiddle, rect.width());
-            painter->drawText(rect, flag, text);
+            painter->drawText(rect, static_cast<int>(flag), text);
             break;
         }
         case Artist: {
@@ -519,7 +519,7 @@ void PlayItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
             QFont font(font11);
             QFontMetrics fm(font);
             auto text = fm.elidedText(str, Qt::ElideMiddle, rect.width());
-            painter->drawText(rect, flag, text);
+            painter->drawText(rect, static_cast<int>(flag), text);
             break;
         }
         case Album: {
@@ -531,13 +531,13 @@ void PlayItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
             QFont font(font11);
             QFontMetrics fm(font);
             auto text = fm.elidedText(str, Qt::ElideMiddle, rect.width());
-            painter->drawText(rect, flag, text);
+            painter->drawText(rect, static_cast<int>(flag), text);
             break;
         }
         case Length:
             painter->setPen(otherColor);
             painter->setFont(font11);
-            painter->drawText(rect, flag, DMusic::lengthString(meta->length));
+            painter->drawText(rect, static_cast<int>(flag), DMusic::lengthString(meta->length));
             break;
         default:
             break;
@@ -549,12 +549,12 @@ void PlayItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
 QSize PlayItemDelegate::sizeHint(const QStyleOptionViewItem &option,
                                  const QModelIndex &index) const
 {
-    Q_D(const PlayItemDelegate);
-        auto listview = qobject_cast<const PlayListView *>(option.widget);
-        if (listview->viewMode() == QListView::IconMode) {
-            return QSize(150,200);
-        }
-        return QStyledItemDelegate::sizeHint(option, index);
+    //Q_D(const PlayItemDelegate);
+    auto listview = qobject_cast<const PlayListView *>(option.widget);
+    if (listview->viewMode() == QListView::IconMode) {
+        return QSize(150, 200);
+    }
+    return QStyledItemDelegate::sizeHint(option, index);
 
 //    auto listview = qobject_cast<const PlayListView *>(option.widget);
 //    if (listview->viewMode() == QListView::IconMode) {
