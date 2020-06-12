@@ -709,7 +709,7 @@ void Presenter::postAction()
 
     Q_EMIT currentMusicListChanged(lastPlaylist);
 
-    if (position == 0) {
+    if (position == 0 && lastPlaylist != nullptr && lastMeta != nullptr) {
         d->player->playMeta(lastPlaylist, lastMeta);
     }
 }
