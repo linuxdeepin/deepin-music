@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="9px" height="5px" viewBox="0 0 9 5" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 46.2 (44496) - http://www.bohemiancoding.com/sketch -->
+    <title>dropdown_arrow</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" stroke-linecap="round">
+        <g id="dropdown_arrow" stroke-width="1.2" stroke="#303030">
+            <g id="下拉箭头--浅色" transform="translate(1.000000, 1.000000)">
+                <polyline id="下拉箭头" points="0.343145751 -0.171572875 3.65685425 3.14213562 6.97056275 -0.171572875"></polyline>
+            </g>
+        </g>
+    </g>
+</svg>

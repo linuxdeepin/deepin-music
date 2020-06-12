@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 46.2 (44496) - http://www.bohemiancoding.com/sketch -->
+    <title>show_playlist_press</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="show_playlist_press" fill-rule="nonzero" fill="#2CA7F8">
+            <g id="Group-9" transform="translate(4.000000, 4.000000)">
+                <path d="M12,14 C12,15.3807119 10.8807119,16.5 9.5,16.5 C8.11928813,16.5 7,15.3807119 7,14 C7,12.6192881 8.11928813,11.5 9.5,11.5 C10.8807119,11.5 12,12.6192881 12,14 Z M8,14 C8,14.8284271 8.67157288,15.5 9.5,15.5 C10.3284271,15.5 11,14.8284271 11,14 C11,13.1715729 10.3284271,12.5 9.5,12.5 C8.67157288,12.5 8,13.1715729 8,14 Z M8.56206917,6 L0.317113673,6 L0.317113673,5 L8.56206917,5 L8.56206917,6 Z M6.63349774,9 L0.245685102,9 L0.245685102,8 L6.63349774,8 L6.63349774,9 Z M8.65591149,3 L0.320589315,3 L0.320589315,2 L8.65591149,2 L8.65591149,3 Z M12,1 L12,13.6152876 L11,13.6152876 L11,1 L11,0.5 L11.5,0.5 L15.5,0.5 L15.5,1.5 L11.5,1.5 L12,1 Z" id="Combined-Shape"></path>
+            </g>
+        </g>
+    </g>
+</svg>

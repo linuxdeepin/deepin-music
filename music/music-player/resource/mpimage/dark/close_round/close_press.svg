@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="46px" height="46px" viewBox="0 0 46 46" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 58 (84663) - https://sketch.com -->
+    <title>close-press</title>
+    <desc>Created with Sketch.</desc>
+    <g id="深" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="按钮规范（深）" transform="translate(-2704.000000, -98.000000)">
+            <g id="截图工具栏备份-2" transform="translate(2197.000000, 89.000000)">
+                <g id="close_round" transform="translate(507.000000, 9.000000)">
+                    <g id="close-focus">
+                        <rect id="占位备份-6" fill="#000000" opacity="0.3" x="8" y="6" width="30" height="30" rx="15"></rect>
+                        <g id="cancel-normal" transform="translate(18.000000, 16.000000)" stroke="#0081FF" stroke-linecap="round">
+                            <path d="M0.0909,0.09091 L10.6975017,10.6975117" id="Stroke-25"></path>
+                            <path d="M0.0909,10.909091 L10.6975017,0.302489282" id="Stroke-27"></path>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

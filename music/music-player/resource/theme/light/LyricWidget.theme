@@ -1,0 +1,91 @@
+#LyricWidget {
+  qproperty-backgroundColor: rgba(0, 0, 0, 30%);
+  qproperty-defaultCover: ":/common/image/cover_max.svg";
+  background-color: rgba(0, 0, 0, 30%);
+}
+
+#LyricCover {
+  qproperty-radius: 4.0px;
+  qproperty-borderColor: rgba(255, 255, 255, 20%);
+  qproperty-shadowColor: rgba(0, 0, 0, 10%);
+}
+
+#SearchMetaFrame {
+  border: 0px solid rgba(29, 129, 255, 0.5);
+}
+
+#SearchMetaHeader {
+  color: white;
+  font-size: 18px;
+  qproperty-alignment: AlignCenter;
+}
+
+#SearchMetaTitle {
+  padding-left: 7px;
+  color: white;
+  font-size: 12px;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 4.0px;
+}
+
+#SearchMetaArtist {
+  padding-left: 7px;
+  color: white;
+  font-size: 12px;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 4.0px;
+}
+
+#SearchMetaButton {
+  outline: none;
+  font-size: 12px;
+  border-radius: 4px;
+  color: white;
+  background-color: qlineargradient(x1: 0 y1: 0, x2: 0 y2: 1, stop: 0.0000 rgba(255, 255, 255, 0.20), stop: 1.0000 rgba(255, 255, 255, 0.20));
+  border: 0px solid rgba(29, 129, 255, 0.5);
+}
+
+#SearchMetaButton:hover {
+  color: white;
+  background-color: qlineargradient(x1: 0 y1: 0, x2: 0 y2: 1, stop: 0.0000 rgba(255, 255, 255, 0.30), stop: 1.0000 rgba(255, 255, 255, 0.30));
+  border: 0px solid rgba(29, 129, 255, 0.3);
+}
+
+#SearchMetaButton:pressed {
+  color: #2ca7f8;
+  background-color: qlineargradient(x1: 0 y1: 0, x2: 0 y2: 1, stop: 0.0000 rgba(255, 255, 255, 0.10), stop: 1.0000 rgba(255, 255, 255, 0.10));
+  border: 0px solid rgba(0, 0, 0, 0.08);
+}
+
+#SearchMetaButton:disabled {
+  color: rgba(255, 255, 255, 40%);
+  background-color: qlineargradient(x1: 0 y1: 0, x2: 0 y2: 1, stop: 0.0000 rgba(255, 255, 255, 0.08), stop: 1.0000 rgba(255, 255, 255, 0.08));
+  border: 0px solid rgba(29, 129, 255, 0.5);
+}
+
+#ShowSearch {
+  border-image: url(:/common/image/lrc_search_hover.svg);
+}
+
+#ShowSearch:hover {
+  border-image: url(:/common/image/lrc_search_hover.svg);
+}
+
+#ShowSearch:pressed {
+  border-image: url(:/common/image/lrc_search_press.svg);
+}
+
+#ExitSearch {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 12px;
+  background-color: transparent;
+  border: none;
+}
+
+#ExitSearch:hover {
+  color: white;
+}
+
+#ExitSearch:pressed {
+  color: #0082fa;
+}

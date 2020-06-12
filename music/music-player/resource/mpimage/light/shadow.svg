@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="176px" height="176px" viewBox="0 0 176 176" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 58 (84663) - https://sketch.com -->
+    <title>shadow</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <filter x="-10.0%" y="-10.0%" width="120.0%" height="120.0%" filterUnits="objectBoundingBox" id="filter-1">
+            <feGaussianBlur stdDeviation="5" in="SourceGraphic"></feGaussianBlur>
+        </filter>
+    </defs>
+    <g id="页面-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" opacity="0.3" stroke-opacity="0.1">
+        <g id="6-1-1音乐1备份-2" transform="translate(-642.000000, -337.000000)" fill="#000000" stroke="#000000">
+            <g id="音乐" transform="translate(425.000000, 200.000000)">
+                <g id="音乐1">
+                    <g id="Group-42" transform="translate(217.000000, 50.000000)">
+                        <g id="1" transform="translate(0.000000, 87.000000)">
+                            <g id="列_深色-5">
+                                <rect id="列_深色-4" filter="url(#filter-1)" x="13.5" y="13.5" width="149" height="149" rx="8"></rect>
+                            </g>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 46.2 (44496) - http://www.bohemiancoding.com/sketch -->
+    <title>back_normal</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="back_normal" fill="#303030">
+            <g id="back-normal">
+                <g transform="translate(0.010180, 0.000000)" id="Path">
+                    <path d="M7.20748538,11.5461813 C6.93080565,11.7854708 6.93080565,12.2145292 7.20748538,12.4538187 L14.6075098,18.8538126 C14.858147,19.070579 15.2370524,19.0431213 15.4538187,18.7924841 C15.6705851,18.5418469 15.6431274,18.1629415 15.3924902,17.9461752 L7.99246579,11.5461813 L7.99246579,12.4538187 L15.3924902,6.05382483 C15.6431274,5.83705848 15.6705851,5.45815306 15.4538187,5.2075159 C15.2370524,4.95687874 14.858147,4.92942102 14.6075098,5.14618737 L7.20748538,11.5461813 Z" fill-rule="nonzero"></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

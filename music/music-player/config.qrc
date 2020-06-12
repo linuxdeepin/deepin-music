@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/">
+        <file>data/deepin-music-settings.json</file>
+    </qresource>
+</RCC>
