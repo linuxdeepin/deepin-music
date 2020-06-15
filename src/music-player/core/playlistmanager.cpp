@@ -155,12 +155,15 @@ void PlaylistManager::load()
 
         d->sortUUIDs << sortUUIDs;
 
-        saveSortOrder();
-    } else {
-        for (auto sortID = 0; sortID < sortUUIDs.size(); ++sortID) {
-            d->sortUUIDs << sortUUIDs.value(static_cast<uint>(sortID));
-        }
+        // saveSortOrder();
     }
+
+
+    d->sortUUIDs.clear();
+    for (auto sortID = 0; sortID < sortUUIDs.size(); ++sortID) {
+        d->sortUUIDs << sortUUIDs.value(static_cast<uint>(sortID));
+    }
+
 
     auto album = playlist(AlbumMusicListID);
     auto trAlbumName = tr("Albums");
@@ -323,7 +326,7 @@ void PlaylistManager::insertPlaylist(const QString &uuid, PlaylistPtr playlist)
         QSqlDatabase::database().commit();
     });
     connect(playlist.data(), &Playlist::displayNameChanged,
-    this, [ = ] (QString displayName) {
+    this, [ = ](QString displayName) {
         QSqlDatabase::database().transaction();
         playlist.data()->setDisplayName(displayName);
         QSqlDatabase::database().commit();
