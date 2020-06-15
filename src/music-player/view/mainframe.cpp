@@ -88,7 +88,7 @@ public:
     void setTheme(int type);
     void setPlayListVisible(bool visible);
     void toggleLyricView();
-    void togglePlaylist();
+    void togglePlaylist(bool visible);
     void slideToImportView();
     void showLyricView();
     void hideLyricView();
@@ -422,7 +422,7 @@ void MainFramePrivate::showLyricView()
 
 void MainFramePrivate::hideLyricView()
 {
-    footer->setPlaylistButtonChecked(false);
+    //footer->setPlaylistButtonChecked(false);
     auto current = currentWidget ? currentWidget : playListWidget;
     lyricWidget->setFixedSize(current->size());
     WidgetHelper::slideTop2BottomWidget(
@@ -453,7 +453,7 @@ void MainFramePrivate::showPlaylistView()
         footer, playListWidget, start, end, AnimationDelay, true);
     titlebar->raise();
     footer->raise();
-    footer->setPlaylistButtonChecked(true);
+    //footer->setPlaylistButtonChecked(true);
 
 }
 
@@ -523,6 +523,7 @@ void MainFramePrivate:: slideToImportView()
     if (importWidget->isVisible()) {
         importWidget->showImportHint();
         footer->enableControl(false);
+        importWidget->raise();
         return;
     }
 
@@ -532,13 +533,13 @@ void MainFramePrivate:: slideToImportView()
     importWidget->showImportHint();
     footer->enableControl(false);
     importWidget->setFixedSize(current->size());
-
     qDebug() << "show importWidget" << current << importWidget;
 
     WidgetHelper::slideRight2LeftWidget(
         current, importWidget, AnimationDelay);
     footer->enableControl(false);
     currentWidget = importWidget;
+    importWidget->raise();
     titlebar->raise();
     footer->hide();
 
@@ -587,10 +588,17 @@ void MainFramePrivate::toggleLyricView()
     }
 }
 
-void MainFramePrivate::togglePlaylist()
+void MainFramePrivate::togglePlaylist(bool visible)
 {
-
     importWidget->hide();
+    if (visible) {
+        if (!playListWidget->isVisible()) {
+            showPlaylistView();
+            footer->setPlaylistButtonChecked(true);
+            titlebarwidget->setSearchEnable(true);
+        }
+        return;
+    }
 
     if (playListWidget->isVisible()) {
         hidePlaylistView();
@@ -609,7 +617,7 @@ void MainFramePrivate::setPlayListVisible(bool visible)
         return;
     }
 
-    footer->showPlayListWidget(q->width(), q->height(), false);
+    footer->showPlayListWidget(q->width(), q->height(), visible);
     titlebar->raise();
     footer->raise();
 }
@@ -794,7 +802,7 @@ MainFrame::~MainFrame()
     Q_D(MainFrame);
     Q_EMIT exit();
     MusicSettings::sync();
-    MusicSettings::setOption("base.play.state", int(windowState()));
+    MusicSettings::setOption("base.play.state", saveState());
     MusicSettings::setOption("base.play.geometry", saveGeometry());
     delete d->equalizerDialog;
 }
@@ -856,9 +864,7 @@ void MainFrame::postInitUI()
             if (isVisible()) {
                 if (isMinimized()) {
                     showNormal();
-                    // when window flags changed, should call hide and show
-                    hide();
-                    show();
+                    activateWindow();
                 } else {
                     showMinimized();
                 }
@@ -1035,8 +1041,15 @@ void MainFrame::binding(Presenter *presenter)
     connect(presenter, &Presenter::scanFinished,
     this, [ = ](const QString & /*jobid*/, int mediaCount) {
         if (0 == mediaCount) {
+            QList<DDialog*> ql= this->findChildren<DDialog*>("uniquewarndailog");
+            if(ql.size()>0)
+            {
+                if(!ql.first()->isHidden())
+                    return ;
+            }
             QString message = QString(tr("Import failed, no valid music file found"));
             Dtk::Widget::DDialog warnDlg(this);
+            warnDlg.setObjectName("uniquewarndailog");
             warnDlg.setIcon(QIcon::fromTheme("deepin-music"));
             warnDlg.setTextFormat(Qt::AutoText);
             warnDlg.setTitle(message);
@@ -1198,8 +1211,8 @@ void MainFrame::binding(Presenter *presenter)
         d->toggleLyricView();
     });
     connect(d->footer, &Footer::togglePlaylist,
-    this, [ = ]() {
-        d->togglePlaylist();
+    this, [ = ](bool visible) {
+        d->togglePlaylist(visible);
     });
 
 
@@ -1326,8 +1339,11 @@ void MainFrame::binding(Presenter *presenter)
     });
     connect(d->musicListWidget, &MusicListWidget::importSelectFiles,
     this, [ = ](PlaylistPtr playlist, QStringList urllist) {
-        presenter->requestImportPaths(playlist, urllist);
+        emit onImportFiles(urllist, playlist);
     });
+    connect(this, &MainFrame::onImportFiles,
+            presenter, &Presenter::onImportFiles);
+
     connect(d->musicListWidget, &MusicListWidget::addMetasFavourite,
             presenter, &Presenter::onAddMetasFavourite);
     connect(d->musicListWidget, &MusicListWidget::removeMetasFavourite,
@@ -1473,6 +1489,12 @@ void MainFrame::onSelectImportFiles()
         MusicSettings::setOption("base.play.last_import_path",  fileDlg.directory().path());
         Q_EMIT importSelectFiles(fileDlg.selectedFiles(), d->musicListWidget->curPlaylist());
     }
+}
+
+void MainFrame::onClickedImportFiles(QStringList files)
+{
+//    /Q_D(const MainFrame);
+    Q_EMIT importSelectFiles(files, nullptr);
 }
 
 void MainFrame::slotTheme(int type)

@@ -28,6 +28,7 @@
 #include <QtDebug>
 #include "util/dbusutils.h"
 #include "musicsettings.h"
+static const int timerInterval = 100;//轮巡Debus音量的周期
 
 class VolumeMonitoringPrivate
 {
@@ -58,7 +59,7 @@ VolumeMonitoring::~VolumeMonitoring()
 void VolumeMonitoring::start()
 {
     Q_D(VolumeMonitoring);
-    d->timer.start(1000);
+    d->timer.start(timerInterval);
 }
 
 void VolumeMonitoring::stop()

@@ -54,7 +54,7 @@ public:
 
     Presenter       *presenter      = nullptr;
     MainFrame       *playerFrame    = nullptr;
-
+    QStringList     m_Files;
     MusicApp *q_ptr;
     Q_DECLARE_PUBLIC(MusicApp)
 };
@@ -220,14 +220,14 @@ void MusicApp::show()
     d->playerFrame->resize(QSize(1070, 680));
     d->playerFrame->show();
     Dtk::Widget::moveToCenter(d->playerFrame);
-//    if (geometry.isEmpty()) {
-//        d->playerFrame->resize(QSize(1070, 680));
-//        d->playerFrame->show();
-//        Dtk::Widget::moveToCenter(d->playerFrame);
-//    } else {
-//        d->playerFrame->restoreGeometry(geometry);
-//        d->playerFrame->setWindowState(static_cast<Qt::WindowStates >(state));
-//    }
+    if (geometry.isEmpty()) {
+        d->playerFrame->resize(QSize(1070, 680));
+        d->playerFrame->show();
+        Dtk::Widget::moveToCenter(d->playerFrame);
+    } else {
+        d->playerFrame->restoreGeometry(geometry);
+        d->playerFrame->restoreState(MusicSettings::value("base.play.state").toByteArray());
+    }
     d->playerFrame->show();
     d->playerFrame->setFocus();
 }
@@ -243,6 +243,12 @@ void MusicApp::quit()
 #endif
     qDebug() << "sync config finish, app exit";
     qApp->quit();
+}
+
+void MusicApp::onStartImport(QStringList files)
+{
+    Q_D(MusicApp);
+    d->m_Files = files;
 }
 
 void MusicApp::initUI()
@@ -271,9 +277,14 @@ void MusicApp::initConnection()
     auto presenterWork = ThreadPool::instance()->newThread();
     d->presenter->moveToThread(presenterWork);
     connect(presenterWork, &QThread::started, d->presenter, &Presenter::prepareData);
+    connect(this, &MusicApp::sigStartImport, d->playerFrame, &MainFrame::onClickedImportFiles);
     connect(d->presenter, &Presenter::dataLoaded, this, [ = ]() {
         d->onDataPrepared();
         Player::instance()->init();
+        if (d->m_Files.size() > 0) {
+            emit sigStartImport(d->m_Files);
+            d->m_Files.clear();
+        }
     });
 
     presenterWork->start();

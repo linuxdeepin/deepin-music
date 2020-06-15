@@ -1218,14 +1218,14 @@ MusicListDataWidget::MusicListDataWidget(QWidget *parent) :
 
     d->albumListView = new MusicListDataView;
     d->artistListView = new MusicListDataView;
-    d->musicListView = new PlayListView(true);
+    d->musicListView = new PlayListView(true, false);
     d->musicListView->hide();
 
     layout->setContentsMargins(0, 1, 0, 0);
 
     /*---------------tabWidget----------------*/
     d->tabWidget = new DTabWidget();
-    d->songListView     = new PlayListView(true);
+    d->songListView     = new PlayListView(true, false);
     d->singerListView   = new MusicListDataView();
     d->albListView      = new MusicListDataView();
     d->tabWidget->addTab(d->songListView, QString(tr("Songs")));
@@ -1795,7 +1795,7 @@ void MusicListDataWidget::retResult(QString searchText, QList<PlaylistPtr> resul
 
                 MusicPlaylists = resultlist.at(i);
                 flagMus = true;
-               
+
 
                 if (d->songListView->viewMode() != (resultlist.at(i)->viewMode())) {
                     d->songListView->setViewModeFlag(static_cast<QListView::ViewMode>(resultlist.at(i)->viewMode()));

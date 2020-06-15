@@ -189,12 +189,13 @@ void FooterPrivate::initConnection()
     });
     q->connect(title, &Label::clicked, q, [ = ](bool) {
         Q_EMIT q->locateMusic(activingPlaylist, activingMeta);
+        Q_EMIT q->togglePlaylist(true);
     });
     q->connect(btLyric, &DPushButton::released, q, [ = ]() {
         Q_EMIT  q->toggleLyricView();
     });
     q->connect(btPlayList, &DPushButton::released, q, [ = ]() {
-        Q_EMIT q->togglePlaylist();
+        Q_EMIT q->togglePlaylist(false);
     });
     q->connect(btSound, &DPushButton::pressed, q, [ = ]() {
         Q_EMIT q->toggleMute();

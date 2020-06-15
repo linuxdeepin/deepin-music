@@ -96,67 +96,31 @@ MusicListView::MusicListView(QWidget *parent) : DListView(parent)
             curStandardItem->setIcon(QIcon::fromTheme("music_famousballad"));
         }
 
-        auto playlistPtr = allPlaylists[current.row()];
-        QString rStr;
-        if (m_type == 1) {
-            rStr = "light";
-        } else {
-            rStr = "dark";
+        QPixmap curPixmap = QPixmap(":/mpimage/light/music1.svg");
+        auto indexes = this->selectedIndexes();
+        if (playingItem != nullptr && current == playingItem->index()) {
+            auto mdata = allPlaylists.at(current.row());
+            if (mdata->playing() != nullptr)
+                curPixmap = QPixmap(":/mpimage/light/music_withe_sidebar/music1.svg");
         }
-        for (int i = 0; i < model->rowCount(); i++) {
-            auto curIndex = model->index(i, 0);
-            auto curStandardItem = dynamic_cast<DStandardItem *>(model->itemFromIndex(curIndex));
-            auto curItemRow = curStandardItem->row();
-            if (curItemRow < 0 || curItemRow >= allPlaylists.size())
-                continue;
-            auto playlist = allPlaylists[curItemRow];
-            if (!playlist->playing().isNull()) {
-                auto curItem = dynamic_cast<DStandardItem *>(curStandardItem);
-                //delete
-                QIcon playingIcon(playingPixmap);
-                playingIcon.actualSize(QSize(20, 20));
-                DViewItemActionList actionList = curItem->actionList(Qt::RightEdge);
-                if (!actionList.isEmpty()) {
-                    actionList.first()->setIcon(playingIcon);
-                } else {
-                    DViewItemActionList  actionList;
-                    auto viewItemAction = new DViewItemAction(Qt::AlignCenter);
-                    viewItemAction->setIcon(playingIcon);
-                    actionList.append(viewItemAction);
-                    curItem->setActionList(Qt::RightEdge, actionList);
-                }
-            }
-            QString typeStr;
-            if (current == curIndex) {
-                typeStr = "active";
+        if (playingItem != nullptr ) {
+            auto curItem = dynamic_cast<DStandardItem *>(playingItem);
+            //delete
+            QIcon playingIcon(curPixmap);
+            playingIcon.actualSize(QSize(20, 20));
+            DViewItemActionList actionList = curItem->actionList(Qt::RightEdge);
+            if (!actionList.isEmpty()) {
+                actionList.first()->setIcon(playingIcon);
+            } else {
+                DViewItemActionList  actionList;
+                auto viewItemAction = new DViewItemAction(Qt::AlignCenter);
+                viewItemAction->setIcon(playingIcon);
+                actionList.append(viewItemAction);
+                curItem->setActionList(Qt::RightEdge, actionList);
 
-            } else {
-                typeStr = "normal";
             }
-            QIcon icon = QIcon(QString(":/mpimage/%1/normal/music_famousballad.svg").arg(rStr));
-            if (playlist->id() == AlbumMusicListID) {
-        //        icon = QIcon(QString(":/mpimage/%1/normal/album_normal.svg").arg(rStr));
-                icon = QIcon::fromTheme("music_album");
-            } else if (playlist->id() == ArtistMusicListID) {
-        //        icon = QIcon(QString(":/mpimage/%1/normal/singer_normal.svg").arg(rStr));
-                icon = QIcon::fromTheme("music_singer");
-            } else if (playlist->id() == AllMusicListID) {
-        //        icon = QIcon(QString(":/mpimage/%1/normal/all_music_normal.svg").arg(rStr));
-                icon = QIcon::fromTheme("music_allmusic");
-            } else if (playlist->id() == FavMusicListID) {
-        //        icon = QIcon(QString(":/mpimage/%1/normal/my_collection_normal.svg").arg(rStr));
-                icon = QIcon::fromTheme("music_mycollection");
-            } else {
-        //        icon = QIcon(QString(":/mpimage/%1/normal/famous_ballad_normal.svg").arg(rStr));
-                icon = QIcon::fromTheme("music_famousballad");
-            }
-            curStandardItem->setIcon(icon);
+            update();
         }
-
-#if 1
-        /*------Refresh play state--------*/
-        changePicture(defaultPixmap, defaultPixmap);
-#endif
 
     });
 
@@ -184,7 +148,7 @@ void MusicListView::addMusicList(PlaylistPtr playlist, bool addFlag)
     } else {
         rStr = "dark";
     }
-    QIcon icon = QIcon(QString(":/mpimage/%1/normal/music_famousballad.svg").arg(rStr));
+    QIcon icon(QString(":/mpimage/%1/normal/famous_ballad_normal.svg").arg(rStr));
     if (playlist->id() == AlbumMusicListID) {
 //        icon = QIcon(QString(":/mpimage/%1/normal/album_normal.svg").arg(rStr));
         icon = QIcon::fromTheme("music_album");
@@ -307,45 +271,11 @@ void MusicListView::clearSelected()
 {
     clearSelection();
     setCurrentItem(nullptr);
-    QString rStr;
-    if (m_type == 1) {
-        rStr = "light";
-    } else {
-        rStr = "dark";
-    }
-    QString typeStr = "normal";
-    for (int i = 0; i < model->rowCount(); i++) {
-        auto curIndex = model->index(i, 0);
-        auto curStandardItem = dynamic_cast<DStandardItem *>(model->itemFromIndex(curIndex));
-        auto curItemRow = curStandardItem->row();
-        if (curItemRow < 0 || curItemRow >= allPlaylists.size())
-            continue;
-        auto playlist = allPlaylists[curItemRow];
-        QIcon icon = QIcon(QString(":/mpimage/%1/normal/music_famousballad.svg").arg(rStr));
-        if (playlist->id() == AlbumMusicListID) {
-    //        icon = QIcon(QString(":/mpimage/%1/normal/album_normal.svg").arg(rStr));
-            icon = QIcon::fromTheme("music_album");
-        } else if (playlist->id() == ArtistMusicListID) {
-    //        icon = QIcon(QString(":/mpimage/%1/normal/singer_normal.svg").arg(rStr));
-            icon = QIcon::fromTheme("music_singer");
-        } else if (playlist->id() == AllMusicListID) {
-    //        icon = QIcon(QString(":/mpimage/%1/normal/all_music_normal.svg").arg(rStr));
-            icon = QIcon::fromTheme("music_allmusic");
-        } else if (playlist->id() == FavMusicListID) {
-    //        icon = QIcon(QString(":/mpimage/%1/normal/my_collection_normal.svg").arg(rStr));
-            icon = QIcon::fromTheme("music_mycollection");
-        } else {
-    //        icon = QIcon(QString(":/mpimage/%1/normal/famous_ballad_normal.svg").arg(rStr));
-            icon = QIcon::fromTheme("music_famousballad");
-        }
-        curStandardItem->setIcon(icon);
-
-    }
-    if (playingItem != nullptr && playingItem->rowCount() > 0) {
+    if (playingItem != nullptr && playingItem->index().row() >= 0 && playingItem->index().row() < allPlaylists.size()) {
         auto curItem = dynamic_cast<DStandardItem *>(playingItem);
         if (curItem != nullptr) {
             //delete
-            QIcon playingIcon(playingPixmap);
+            QIcon playingIcon(QPixmap(":/mpimage/light/music1.svg"));
             playingIcon.actualSize(QSize(20, 20));
             DViewItemActionList actionList = curItem->actionList(Qt::RightEdge);
             if (!actionList.isEmpty()) {
@@ -644,24 +574,6 @@ void MusicListView::slotTheme(int type)
                 continue;
             auto playlist = allPlaylists[curStandardItem->row()];
 
-            QIcon icon = QIcon(QString(":/mpimage/%1/normal/music_famousballad.svg").arg(rStr));
-            if (playlist->id() == AlbumMusicListID) {
-        //        icon = QIcon(QString(":/mpimage/%1/normal/album_normal.svg").arg(rStr));
-                icon = QIcon::fromTheme("music_album");
-            } else if (playlist->id() == ArtistMusicListID) {
-        //        icon = QIcon(QString(":/mpimage/%1/normal/singer_normal.svg").arg(rStr));
-                icon = QIcon::fromTheme("music_singer");
-            } else if (playlist->id() == AllMusicListID) {
-        //        icon = QIcon(QString(":/mpimage/%1/normal/all_music_normal.svg").arg(rStr));
-                icon = QIcon::fromTheme("music_allmusic");
-            } else if (playlist->id() == FavMusicListID) {
-        //        icon = QIcon(QString(":/mpimage/%1/normal/my_collection_normal.svg").arg(rStr));
-                icon = QIcon::fromTheme("music_mycollection");
-            } else {
-        //        icon = QIcon(QString(":/mpimage/%1/normal/famous_ballad_normal.svg").arg(rStr));
-                icon = QIcon::fromTheme("music_famousballad");
-            }
-            curStandardItem->setIcon(icon);
             if (m_type == 1) {
                 curStandardItem->setForeground(QColor("#414D68"));
             } else {
@@ -697,6 +609,8 @@ void MusicListView::onRename(QStandardItem *item)
                 playlistPtr->setDisplayName(item->text());
                 Q_EMIT playlistPtr->displayNameChanged(item->text());
                 Q_EMIT displayNameChanged();
+                auto curStandardItem = dynamic_cast<DStandardItem *>(item);
+                curStandardItem->setIcon(QIcon::fromTheme("music_famousballad"));
             }
         }
     }

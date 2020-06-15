@@ -29,7 +29,7 @@
 #include <QProcess>
 #include <QApplication>
 #include <QStandardPaths>
-
+#include <DDialog>
 #include <DSettingsOption>
 #include <DDesktopServices>
 #include <DUtil>
@@ -673,6 +673,8 @@ void Presenter::postAction()
 
         if (lastPlaylist->contains(lastMeta)) {
             lastMeta = lastPlaylist->music(lastMetaId);
+        } else if (lastMetaId == "") {
+            lastMeta = nullptr;
         } else {
             lastMeta = lastPlaylist->first();
         }
@@ -765,6 +767,7 @@ void Presenter::openUri(const QUrl &uri)
     auto metas = MediaLibrary::instance()->importFile(localfile);
     if (0 == metas.length()) {
         qCritical() << "openUriRequested" << uri;
+        Q_EMIT scanFinished(localfile, 0);
         return;
     }
     auto list = d->playlistMgr->playlist(AllMusicListID);
@@ -983,6 +986,7 @@ void Presenter::onMusiclistRemove(PlaylistPtr playlist, const MetaPtrList metali
         if (playlist->isEmpty()) {
             qDebug() << "meta library clean";
             onMusicStop(playlist, next);
+            d->settings->setOption("base.play.last_meta", "");
             if (!d->player->activePlaylist().isNull())
                 d->player->activePlaylist()->play(nullptr);
         }
@@ -992,7 +996,7 @@ void Presenter::onMusiclistRemove(PlaylistPtr playlist, const MetaPtrList metali
 
     /*-----Judge the condition to remove the song playback switch -----*/
     for (auto &meta : metalist) {
-        if (d->player->isActiveMeta(meta) && playinglist == playlist) {
+        if (d->player->isActiveMeta(meta) && (playinglist == playlist || playlist->id() == AllMusicListID)) {
             if (playinglist->isEmpty() || t_isLastMeta || next.isNull()) { /*新建歌单清空时停止播放*/
                 onMusicStop(playinglist, next);
             } else {

@@ -51,6 +51,7 @@ signals:
     void importSelectFiles(const QStringList &filelist, PlaylistPtr playlist);
     void triggerShortcutAction(const QString &optKey);
     void fadeInOut();
+    void onImportFiles(const QStringList &filelist, PlaylistPtr playlist);
     void exit();
 
 public slots:
@@ -58,6 +59,7 @@ public slots:
     void setCoverBackground(QString coverBackground);
     void onSelectImportDirectory();
     void onSelectImportFiles();
+    void onClickedImportFiles(QStringList files);
     void slotTheme(int type);
     void changePicture();
     void onViewShortcut();
