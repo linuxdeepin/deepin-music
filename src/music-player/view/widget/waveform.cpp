@@ -334,6 +334,8 @@ void Waveform::mouseMoveEvent(QMouseEvent *event)
 
 void Waveform::onProgressChanged(qint64 value, qint64 duration, qint64 coefficient)
 {
+    if (IsShowwaveformScale)
+        waveformScale->show();
     auto length = maximum() - minimum();
     Q_ASSERT(length != 0);
 
@@ -391,8 +393,14 @@ void Waveform::clearBufferAudio(const QString &hash)
     }
 }
 
+void Waveform::hidewaveformScale()
+{
+    waveformScale->hide();
+}
+
 void Waveform::enterEvent(QEvent *event)
 {
+    IsShowwaveformScale = true;
     updateScaleSize();
     waveformScale->show();
     waveformScale->raise();
@@ -402,6 +410,7 @@ void Waveform::enterEvent(QEvent *event)
 
 void Waveform::leaveEvent(QEvent *event)
 {
+    IsShowwaveformScale = false;
     waveformScale->hide();
     DSlider::leaveEvent(event);
 }

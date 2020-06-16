@@ -428,14 +428,14 @@ void MainFramePrivate::showPlaylistView()
     if (footer->height() > 80) {
         return;
     }
-    QRect start ( 5,  height - 86,
-                  width - 10, 80);
-    QRect end ( 5,  height - 429,
-                width - 10, 423);
-    QRect start1 ( 0, 0,
-                   width - 10, 0);
-    QRect end1 ( 0,  0,
-                 width - 10, 349);
+    QRect start(5,  height - 86,
+                width - 10, 80);
+    QRect end(5,  height - 429,
+              width - 10, 423);
+    QRect start1(0, 0,
+                 width - 10, 0);
+    QRect end1(0,  0,
+               width - 10, 349);
     WidgetHelper::slideEdgeWidget2(
         playListWidget, start1, end1, AnimationDelay, true);
     WidgetHelper::slideEdgeWidget(
@@ -451,15 +451,15 @@ void MainFramePrivate::hidePlaylistView()
     if (footer->height() <= 80) {
         return;
     }
-    QRect start ( 5,  height - 429,
-                  width - 10, 423);
-    QRect end ( 5,  height - 86,
-                width - 10, 80);
+    QRect start(5,  height - 429,
+                width - 10, 423);
+    QRect end(5,  height - 86,
+              width - 10, 80);
 
-    QRect start1 ( 0,  0,
-                   width - 10, 349);
-    QRect end1 ( 0, 0,
-                 width - 10, 0);
+    QRect start1(0,  0,
+                 width - 10, 349);
+    QRect end1(0, 0,
+               width - 10, 0);
     WidgetHelper::slideEdgeWidget2(
         playListWidget, start1, end1, AnimationDelay, false);
     WidgetHelper::slideEdgeWidget(
@@ -476,25 +476,25 @@ void MainFramePrivate::resiveistView()
         return ;
     }
     if (playListWidget->isVisible()) {
-        QRect start1 ( 0, 0,
-                       width - 10, 349);
-        QRect end1 ( 0,  0,
+        QRect start1(0, 0,
                      width - 10, 349);
+        QRect end1(0,  0,
+                   width - 10, 349);
         WidgetHelper::slideEdgeWidget2(
             playListWidget, start1, end1, AnimationDelay, true);
-        QRect rect ( 5,  height - 429,
-                     width - 10, 423);
+        QRect rect(5,  height - 429,
+                   width - 10, 423);
         WidgetHelper::slideEdgeWidget(
             footer, playListWidget, rect, rect, 10, true);
     } else {
-        QRect start1 ( 0,  0,
-                       width - 10, 0);
-        QRect end1 ( 0, 0,
+        QRect start1(0,  0,
                      width - 10, 0);
+        QRect end1(0, 0,
+                   width - 10, 0);
         WidgetHelper::slideEdgeWidget2(
             playListWidget, start1, end1, AnimationDelay, false);
-        QRect rect ( 5,  height - 86,
-                     width - 10, 80);
+        QRect rect(5,  height - 86,
+                   width - 10, 80);
         WidgetHelper::slideEdgeWidget(
             footer, playListWidget, rect, rect, 10, false);
     }
@@ -1339,6 +1339,8 @@ void MainFrame::binding(Presenter *presenter)
     muteShortcut->setKey(QKeySequence(QLatin1String("M")));
     connect(muteShortcut, &QShortcut::activated, presenter, &Presenter::onToggleMute);
 
+    connect(presenter, &Presenter::hidewaveformScale, d->footer, &Footer::hidewaveform);
+
     bindSpeechConnect(presenter);
 }
 
@@ -1456,7 +1458,7 @@ void MainFrame::onSelectImportFiles()
     }
 }
 
-void MainFrame::onClickedImportFiles(QStringList files )
+void MainFrame::onClickedImportFiles(QStringList files)
 {
 //    /Q_D(const MainFrame);
     Q_EMIT importSelectFiles(files, nullptr);
