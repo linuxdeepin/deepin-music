@@ -63,47 +63,47 @@ SearchResult::SearchResult(QWidget *parent) : DBlurEffectWidget(parent)
     setLayout(vlayout);
 
     //音乐
-    m_MusicLabel = new DLabel (tr("Music"), this);
+    m_MusicLabel = new DLabel(tr("Music"), this);
     m_MusicLabel->setFont(labelFont);
     m_MusicLabel->setPalette(labelPalette);
     m_MusicLabel->adjustSize();
 
     m_MusicView = new MusicSearchListview(this);
     m_MusicView->setObjectName("SearchMusicView");
-    m_MusicView->setGridSize( QSize(34, 34) );
+    m_MusicView->setGridSize(QSize(34, 34));
     m_MusicView->setMinimumWidth(287);
     m_MusicView->adjustSize();
 
     //分割线1
     s_ArtistLine = new DHorizontalLine;
-    s_ArtistLine->setFixedSize(350,20);
-    s_ArtistLine->setContentsMargins(-32,0,0,0);
+    s_ArtistLine->setFixedSize(350, 20);
+    s_ArtistLine->setContentsMargins(-32, 0, 0, 0);
 
     //演唱者
-    m_ArtistLabel = new DLabel (tr("Artists"), this);
+    m_ArtistLabel = new DLabel(tr("Artists"), this);
     m_ArtistLabel->setFont(labelFont);
     m_ArtistLabel->setPalette(labelPalette);
     m_ArtistLabel->adjustSize();
 
     m_ArtistView = new MusicSearchListview(this);
     m_ArtistView->setObjectName("SearchArtistView");
-    m_ArtistView->setGridSize( QSize(34, 34) );
+    m_ArtistView->setGridSize(QSize(34, 34));
     m_ArtistView->setMinimumWidth(287);
     m_ArtistView->adjustSize();
 
     //分割线2
     s_AblumLine = new DHorizontalLine;
-    s_AblumLine->setFixedSize(380,20);
+    s_AblumLine->setFixedSize(380, 20);
 
     //专辑
-    m_AblumLabel = new DLabel (tr("Albums"), this);
+    m_AblumLabel = new DLabel(tr("Albums"), this);
     m_AblumLabel->setFont(labelFont);
     m_AblumLabel->setPalette(labelPalette);
     m_AblumLabel->adjustSize();
 
     m_AlbumView = new MusicSearchListview(this);
     m_AlbumView->setObjectName("SearchAlbumView");
-    m_AlbumView->setGridSize( QSize(34, 34) );
+    m_AlbumView->setGridSize(QSize(34, 34));
     m_AlbumView->setMinimumWidth(287);
     m_AlbumView->adjustSize();
 
@@ -186,7 +186,7 @@ void SearchResult::autoResize()
         m_AlbumView->hide();
         s_AblumLine->hide();
     } else {
-        m_AblumLabel->show(); 
+        m_AblumLabel->show();
         m_AlbumView->show();
     }
 
@@ -342,13 +342,13 @@ void SearchResult::slotTheme(int type)
 {
     QPalette labelPalette;
     if (type == 2) {
-        labelPalette.setColor(QPalette::WindowText, QColor("#C0C6D4 "));
+        labelPalette.setColor(QPalette::Text, QColor("#FFF0F5 "));
     } else {
-        labelPalette.setColor(QPalette::WindowText, QColor("#414D68 "));
+        labelPalette.setColor(QPalette::Text, QColor("#414D68 "));
     }
     m_MusicLabel->setPalette(labelPalette);
-    m_MusicLabel->setPalette(labelPalette);
-    m_MusicLabel->setPalette(labelPalette);
+    m_ArtistLabel->setPalette(labelPalette);
+    m_AblumLabel->setPalette(labelPalette);
     m_MusicView->setThemeType(type);
     m_AlbumView->setThemeType(type);
     m_ArtistView->setThemeType(type);
@@ -359,7 +359,7 @@ void SearchResult::itemClicked(QModelIndex index)
     PlaylistPtr playList = dynamic_cast<MusicSearchListview *>(index.model()->parent())->playlist();
     QString currentId = playList->id();
     int row = index.row();
-    qDebug()<<"鼠标选中行:"<<row;
+    qDebug() << "鼠标选中行:" << row;
     if (currentId == MusicCandListID) {
         Q_EMIT this->searchText2(MusicResultListID, playList->allmusic().at(row)->title);
     }
@@ -382,17 +382,17 @@ void SearchResult::getSearchStr()
     QString id;
     if (m_CurrentIndex < m_MusicView->rowCount()) {
         text = m_MusicView->playlist()->allmusic().at(m_CurrentIndex)->title;
-        qDebug()<<"当前选中歌曲:"<<text;
+        qDebug() << "当前选中歌曲:" << text;
         id = MusicResultListID;
     } else if (m_CurrentIndex >= m_MusicView->rowCount() - 1
                && m_CurrentIndex < (m_MusicView->rowCount() + m_ArtistView->rowCount())) {
         text = m_ArtistView->playlist()->playMusicTypePtrList().at(m_CurrentIndex - m_MusicView->rowCount())->name;
-        qDebug()<<"当前选中歌手:"<<text;
+        qDebug() << "当前选中歌手:" << text;
         id = ArtistResultListID;
     } else if (m_CurrentIndex >= m_MusicView->rowCount() + m_ArtistView->rowCount() - 1
                && m_CurrentIndex < (m_MusicView->rowCount() + m_ArtistView->rowCount() + m_AlbumView->rowCount())) {
-        text = m_AlbumView->playlist()->playMusicTypePtrList().at(m_CurrentIndex - m_MusicView->rowCount()- m_ArtistView->rowCount() )->name;
-        qDebug()<<"当前选中专辑:"<<text;
+        text = m_AlbumView->playlist()->playMusicTypePtrList().at(m_CurrentIndex - m_MusicView->rowCount() - m_ArtistView->rowCount())->name;
+        qDebug() << "当前选中专辑:" << text;
         id = AlbumResultListID;
     } else {
         Q_EMIT this->searchText3("", "");
