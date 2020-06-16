@@ -53,6 +53,7 @@ signals:
     void fadeInOut();
     void onImportFiles(const QStringList &filelist, PlaylistPtr playlist);
     void exit();
+    void savePosition();
 
 public slots:
     void updateUI();
