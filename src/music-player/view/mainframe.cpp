@@ -1360,6 +1360,8 @@ void MainFrame::binding(Presenter *presenter)
     muteShortcut->setKey(QKeySequence(QLatin1String("M")));
     connect(muteShortcut, &QShortcut::activated, presenter, &Presenter::onToggleMute);
 
+    connect(presenter, &Presenter::hidewaveformScale, d->footer, &Footer::hidewaveform);
+
     bindSpeechConnect(presenter);
 
     bindEqualizerConnect(presenter);

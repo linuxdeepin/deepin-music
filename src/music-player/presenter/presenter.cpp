@@ -891,6 +891,7 @@ void Presenter::next()
         return;
     }
     onMusicNext(activeList, activeMeta);
+    Q_EMIT hidewaveformScale();
 }
 
 void Presenter::prev()
@@ -906,6 +907,7 @@ void Presenter::prev()
         return;
     }
     onMusicPrev(activeList, activeMeta);
+    Q_EMIT hidewaveformScale();
 }
 
 void Presenter::onHandleQuit()

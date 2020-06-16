@@ -55,6 +55,7 @@ public:
     void setThemeType(int type);
 
     void clearBufferAudio(const QString &hash);
+    void hidewaveformScale();
 
 Q_SIGNALS:
     void valueAccpet(int value);
@@ -90,6 +91,7 @@ private:
     WaveformScale *waveformScale;
     bool         spectrumFlag = true;
     QString      metaHash;
+    bool         IsShowwaveformScale = false;
 };
 
 #endif
