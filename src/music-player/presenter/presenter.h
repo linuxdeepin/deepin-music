@@ -75,6 +75,8 @@ public slots:
 
 signals:
     void dataLoaded();
+    //控制进度条滑块
+    void hidewaveformScale();
 
 signals:
     //! player

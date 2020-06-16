@@ -58,6 +58,7 @@ public:
     void setSize(int width, int height, bool changFlag = false);
     bool getShowPlayListFlag();
     void refreshBackground();
+    void hidewaveform();
 
 signals:
     void toggleLyricView();
