@@ -49,6 +49,7 @@
 #include "widget/musiclistdataview.h"
 #include "widget/ddropdown.h"
 #include "widget/musicimagebutton.h"
+#include <malloc.h>
 
 DWIDGET_USE_NAMESPACE
 
@@ -363,7 +364,7 @@ void MusicListDataWidgetPrivate::initData(PlaylistPtr playlist, bool selectFlag,
         tabWidget->show();
 
         if (updateFlag == true) {
-            if ( playlist->id() == ArtistResultListID || playlist->id() == AlbumResultListID) {
+            if (playlist->id() == ArtistResultListID || playlist->id() == AlbumResultListID) {
                 musicSearchDropdown->hide();
             }
 
@@ -1597,6 +1598,7 @@ void MusicListDataWidget::onMusicListRemoved(PlaylistPtr playlist, const MetaPtr
             }
         }
     }
+    malloc_trim(0);
 }
 
 void MusicListDataWidget::onMusiclistUpdate()
@@ -1605,7 +1607,7 @@ void MusicListDataWidget::onMusiclistUpdate()
     d->initData(d->curPlaylist);
 
     int t_count = 0;
-    if (d->curPlaylist->id() == AlbumMusicListID ) {
+    if (d->curPlaylist->id() == AlbumMusicListID) {
         t_count = d->albumListView->playMusicTypePtrList().size();
     } else if (d->curPlaylist->id() == ArtistMusicListID) {
         t_count = d->artistListView->playMusicTypePtrList().size();
@@ -1789,7 +1791,7 @@ void MusicListDataWidget::retResult(QString searchText, QList<PlaylistPtr> resul
 
     } else {
 
-        for ( int i = 0; i < resultlist.size(); ++i) {
+        for (int i = 0; i < resultlist.size(); ++i) {
             if (resultlist.at(i)->id() == MusicResultListID) {
                 retdata = resultlist.at(i);
 
@@ -1863,14 +1865,14 @@ void MusicListDataWidget::retResult(QString searchText, QList<PlaylistPtr> resul
             CurIndex = 2;
         }
 
-        if ( flagMus & flagArt & flagAlb) {
+        if (flagMus & flagArt & flagAlb) {
 
             d->tabWidget->setCurrentIndex(0);
 
         }
 
         /*---------Search without result------*/
-        if (d->songListView->rowCount() == 0 && d->singerListView->rowCount() == 0 && d->albListView->rowCount() == 0 ) {
+        if (d->songListView->rowCount() == 0 && d->singerListView->rowCount() == 0 && d->albListView->rowCount() == 0) {
             d->initData(retdata, false, "noSearchResults");
             return;
         }
