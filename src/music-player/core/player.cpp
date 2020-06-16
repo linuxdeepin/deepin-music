@@ -509,7 +509,7 @@ void PlayerPrivate::initConnection()
                 curPlaylist->removeMusicList(removeMusicList);
                 Q_EMIT q->mediaError(activePlaylist, activeMeta, static_cast<Player::Error>(error));
             } else {
-                qDebug()<<"#####QMediaPlayer::error";
+                qDebug() << "#####QMediaPlayer::error";
                 qplayer->pause();
                 qlonglong postion = qplayer->position();
                 sleep(1);
@@ -809,12 +809,12 @@ void Player::playMeta(PlaylistPtr playlist, const MetaPtr meta)
             d->qvplayer->open(d->qvmedia);
             d->qvplayer->setTime(curMeta->offset);
             d->qvplayer->play();
-        } else */if (QFile::exists(curMeta->localPath) ) {
+        } else */if (QFile::exists(curMeta->localPath)) {
 //        if(curMeta->localPath.endsWith(".APE")){
 //            QFileInfo fileInfo(curMeta->localPath);
 //            fileInfo.suffix().toLower() == "ape";
 //        }
-        if (d->qvplayer->state() != Vlc::Stopped && d->qvplayer->state() != Vlc::Idle ) {
+        if (d->qvplayer->state() != Vlc::Stopped && d->qvplayer->state() != Vlc::Idle) {
             d->qvplayer->stop();
         }
         d->isamr = false;
@@ -832,7 +832,7 @@ void Player::playMeta(PlaylistPtr playlist, const MetaPtr meta)
         d->qplayer->setVolume(100);
         d->qplayer->play();
     } else {
-        if (d->qvplayer->state() != Vlc::Stopped && d->qvplayer->state() != Vlc::Idle ) {
+        if (d->qvplayer->state() != Vlc::Stopped && d->qvplayer->state() != Vlc::Idle) {
             d->qvplayer->stop();
         }
         d->isamr = false;
@@ -920,11 +920,10 @@ void Player::resume(PlaylistPtr playlist, const MetaPtr meta)
         d->curPlaylist->play(meta);
     setPlayOnLoaded(true);
     //增大音乐自动开始播放时间，给setposition留足空间
-    QTimer::singleShot(100, this, [=]() {
+    QTimer::singleShot(100, this, [ = ]() {
         QString curPath = Global::cacheDir();
         QString toPath = QString("%1/images/%2.mp3").arg(curPath).arg(meta->hash);
-        if (QFileInfo(toPath).exists() && d->m_position != -1) //fisrt start
-        {
+        if (QFileInfo(toPath).exists() && d->m_position != -1) { //fisrt start
             stop();
 
             if (playlist->id() != PlayMusicListID)
@@ -962,14 +961,14 @@ void Player::resume(PlaylistPtr playlist, const MetaPtr meta)
             DRecentManager::addItem(meta->localPath, data);
 
             //vlc & qplayer 声音同步
-            QTimer::singleShot(200, this, [=]() {
+            QTimer::singleShot(200, this, [ = ]() {
                 setVolume(d->volume);
                 d->ischangeMusic = false;
             });
 
             if (d->firstPlayOnLoad == true) {
                 d->firstPlayOnLoad = false;
-                QTimer::singleShot(150, this, [=]() {
+                QTimer::singleShot(150, this, [ = ]() {
                     if (d->isamr) {
                         d->qvplayer->play();
                     } else {
@@ -1249,7 +1248,7 @@ void Player::setIOPosition(qint64 value, qint64 range)
 
             if (value != 0 && d->ioDuration != 0) {
                 // qint64 position =  (value * d->ioDuration) / range;
-                qint64 position =  (value * d->ioDuration) / 1000;
+                qint64 position = (value * d->ioDuration) / 1000;
                 Q_EMIT this->sliderReleased(position);
             }
         }
