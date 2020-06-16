@@ -39,6 +39,7 @@
 #include <QProcess>
 #include <DRecentManager>
 #include <QMutex>
+#include <QMediaContent>
 
 #include "metasearchservice.h"
 #include "util/dbusutils.h"
@@ -64,6 +65,7 @@ static QStringList          sSupportedMimeTypes;
 
 static const int sFadeInOutAnimationDuration = 900; //ms
 
+extern void apeToMp3(QString path, QString hash);
 void initMiniTypes()
 {
     //black list
@@ -156,7 +158,7 @@ public:
     void initConnection();
     void selectPrev(const MetaPtr info, Player::PlaybackMode mode);
     void selectNext(const MetaPtr info, Player::PlaybackMode mode);
-    void apeToMp3(QString path, QString hash);
+    //void apeToMp3(QString path, QString hash);
     // player property
     bool canControl     = true;
     bool canGoNext      = false;
@@ -195,7 +197,7 @@ public:
     bool            firstPlayOnLoad  = true; //外部双击打开处理一次
     bool            fadeInOut   = true;
     double          fadeInOutFactor     = 1.0;
-    qlonglong       m_position          = 0.0;//只能用于判断音乐是否正常结束
+    qlonglong m_position = -1; //用于音乐暂停时的播放位置
 
     QPropertyAnimation  *fadeInAnimation    = nullptr;
     QPropertyAnimation  *fadeOutAnimation   = nullptr;
@@ -206,40 +208,35 @@ public:
     Q_DECLARE_PUBLIC(Player)
 };
 
-void PlayerPrivate::apeToMp3(QString path, QString hash)
+void apeToMp3(QString path, QString hash)
 {
     QFileInfo fileInfo(path);
     if (fileInfo.suffix().toLower() == "ape") {
         QString curPath = Global::cacheDir();
-        QString toPath = QString("%1/images/%2.mp3").arg(curPath).arg(hash);
+        QString toPath = QString("%1/images/%2.mp3").arg(curPath).arg(hash + "tmp");
         if (QFile::exists(toPath)) {
             QFile::remove(toPath);
         }
         QString fromPath = QString("%1/.tmp1.ape").arg(curPath);
-//        if (QFile::exists(fromPath)) {
         QFile::remove(fromPath);
-//        }
         QFile file(path);
         file.link(fromPath);
         QString program = QString("ffmpeg -i %1  -ac 1 -ab 32 -ar 24000 %2").arg(fromPath).arg(toPath);
         QProcess::execute(program);
-        path = toPath;
-    }
-    if (fileInfo.suffix().toLower() == "amr") {
+    } else if (fileInfo.suffix().toLower() == "amr") {
         QString curPath = Global::cacheDir();
         QString toPath = QString("%1/images/%2.mp3").arg(curPath).arg(hash);
         if (QFile::exists(toPath)) {
             QFile::remove(toPath);
         }
         QString fromPath = QString("%1/.tmp1.amr").arg(curPath);
-//        if (QFile::exists(fromPath)) {
         QFile::remove(fromPath);
-//        }
         QFile file(path);
         file.link(fromPath);
         QString program = QString("ffmpeg -i %1  -ac 1 -ab 32 -ar 24000 %2").arg(fromPath).arg(toPath);
         QProcess::execute(program);
-        path = toPath;
+    } else {
+        //do nothing
     }
 }
 void PlayerPrivate::initConnection()
@@ -735,7 +732,8 @@ void Player::loadMedia(PlaylistPtr playlist, const MetaPtr meta)
         QString curPath = Global::cacheDir();
         QString toPath = QString("%1/images/%2.mp3").arg(curPath).arg(meta->hash);
         if (!QFile::exists(toPath)) {
-            d->apeToMp3(meta->localPath, meta->hash);
+            //apeToMp3(meta->localPath, meta->hash);
+            Q_EMIT addApeTask(meta->localPath, meta->hash);
             if (!QFile::exists(toPath)) {
                 toPath = meta->localPath;
             }
@@ -823,7 +821,8 @@ void Player::playMeta(PlaylistPtr playlist, const MetaPtr meta)
         QString curPath = Global::cacheDir();
         QString toPath = QString("%1/images/%2.mp3").arg(curPath).arg(curMeta->hash);
         if (!QFile::exists(toPath)) {
-            d->apeToMp3(curMeta->localPath, curMeta->hash);
+            //apeToMp3(curMeta->localPath, curMeta->hash);
+            Q_EMIT Player::instance()->addApeTask(meta->localPath, meta->hash);
             if (!QFile::exists(toPath)) {
                 toPath = curMeta->localPath;
             }
@@ -921,14 +920,72 @@ void Player::resume(PlaylistPtr playlist, const MetaPtr meta)
         d->curPlaylist->play(meta);
     setPlayOnLoaded(true);
     //增大音乐自动开始播放时间，给setposition留足空间
-    QTimer::singleShot(100, this, [ = ]() {
+    QTimer::singleShot(100, this, [=]() {
+        QString curPath = Global::cacheDir();
+        QString toPath = QString("%1/images/%2.mp3").arg(curPath).arg(meta->hash);
+        if (QFileInfo(toPath).exists() && d->m_position != -1) //fisrt start
+        {
+            stop();
+
+            if (playlist->id() != PlayMusicListID)
+                d->activePlaylist = playlist;
+            d->activeMeta = meta;
+
+            d->ischangeMusic = true;
+            playMeta(playlist, meta);
+
+            if (d->qvplayer->state() != Vlc::Stopped && d->qvplayer->state() != Vlc::Idle) {
+                d->qvplayer->stop();
+            }
+            d->isamr = false;
+            QString curPath = Global::cacheDir();
+            QString toPath = QString("%1/images/%2.mp3").arg(curPath).arg(meta->hash);
+            if (!QFile::exists(toPath)) {
+                //apeToMp3(curMeta->localPath, curMeta->hash);
+                Q_EMIT Player::instance()->addApeTask(meta->localPath, meta->hash);
+                if (!QFile::exists(toPath)) {
+                    toPath = meta->localPath;
+                }
+            }
+            d->qplayer->setMedia(QMediaContent(QUrl::fromLocalFile(toPath)));
+            d->qplayer->setPosition(d->m_position);
+            d->qplayer->setVolume(100);
+            d->qplayer->play();
+
+            if (!d->activePlaylist.isNull())
+                d->activePlaylist->play(meta);
+            d->curPlaylist->play(meta);
+
+            DRecentData data;
+            data.appName = "Music";
+            data.appExec = "deepin-music";
+            DRecentManager::addItem(meta->localPath, data);
+
+            //vlc & qplayer 声音同步
+            QTimer::singleShot(200, this, [=]() {
+                setVolume(d->volume);
+                d->ischangeMusic = false;
+            });
+
+            if (d->firstPlayOnLoad == true) {
+                d->firstPlayOnLoad = false;
+                QTimer::singleShot(150, this, [=]() {
+                    if (d->isamr) {
+                        d->qvplayer->play();
+                    } else {
+                        d->qplayer->play();
+                    }
+                });
+            }
+
+            return;
+        }
 
         if (d->isamr) {
             d->qvplayer->play();
         } else {
             d->qplayer->play();
         }
-
     });
 
     if (d->fadeInOut && !d->fadeInAnimation) {
@@ -1020,6 +1077,12 @@ void Player::pause()
         }
         setFadeInOutFactor(1.0);
     }
+
+    if (d->isamr) {
+        d->m_position = static_cast<qlonglong>(d->qvplayer->position());
+    } else {
+        d->m_position = d->qplayer->position();
+    }
 }
 
 void Player::pauseNow()
@@ -1027,8 +1090,10 @@ void Player::pauseNow()
     Q_D(Player);
     if (d->isamr) {
         d->qvplayer->pause();
+        d->m_position = static_cast<qlonglong>(d->qvplayer->position());
     } else {
         d->qplayer->pause();
+        d->m_position = d->qplayer->position();
     }
 }
 

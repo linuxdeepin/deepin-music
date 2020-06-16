@@ -51,7 +51,8 @@ signals:
     void fadeInOut();
     void onImportFiles(const QStringList &filelist, PlaylistPtr playlist);
     void exit();
-
+    //convert ape task
+    void onConvertApe(const QString &path, const QString &name);
 public slots:
     void updateUI();
     void setCoverBackground(QString coverBackground);
