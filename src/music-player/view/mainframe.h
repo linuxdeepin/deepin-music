@@ -52,6 +52,7 @@ signals:
     void triggerShortcutAction(const QString &optKey);
     void fadeInOut();
     void exit();
+    void savePosition();
 
 public slots:
     void updateUI();

@@ -247,6 +247,8 @@ void MainFramePrivate::initMenu()
             previousShortcut->setKey(QKeySequence(previousStr));
         }
         Q_EMIT q->fadeInOut();
+        Q_EMIT q->savePosition();
+
     });
 
     int themeType = DGuiApplicationHelper::instance()->themeType();
@@ -439,14 +441,14 @@ void MainFramePrivate::showPlaylistView()
     if (footer->height() > 80) {
         return;
     }
-    QRect start ( 5,  height - 86,
-                  width - 10, 80);
-    QRect end ( 5,  height - 429,
-                width - 10, 423);
-    QRect start1 ( 0, 0,
-                   width - 10, 0);
-    QRect end1 ( 0,  0,
-                 width - 10, 349);
+    QRect start(5,  height - 86,
+                width - 10, 80);
+    QRect end(5,  height - 429,
+              width - 10, 423);
+    QRect start1(0, 0,
+                 width - 10, 0);
+    QRect end1(0,  0,
+               width - 10, 349);
     WidgetHelper::slideEdgeWidget2(
         playListWidget, start1, end1, AnimationDelay, true);
     WidgetHelper::slideEdgeWidget(
@@ -462,15 +464,15 @@ void MainFramePrivate::hidePlaylistView()
     if (footer->height() <= 80) {
         return;
     }
-    QRect start ( 5,  height - 429,
-                  width - 10, 423);
-    QRect end ( 5,  height - 86,
-                width - 10, 80);
+    QRect start(5,  height - 429,
+                width - 10, 423);
+    QRect end(5,  height - 86,
+              width - 10, 80);
 
-    QRect start1 ( 0,  0,
-                   width - 10, 349);
-    QRect end1 ( 0, 0,
-                 width - 10, 0);
+    QRect start1(0,  0,
+                 width - 10, 349);
+    QRect end1(0, 0,
+               width - 10, 0);
     WidgetHelper::slideEdgeWidget2(
         playListWidget, start1, end1, AnimationDelay, false);
     WidgetHelper::slideEdgeWidget(
@@ -487,25 +489,25 @@ void MainFramePrivate::resiveistView()
         return ;
     }
     if (playListWidget->isVisible()) {
-        QRect start1 ( 0, 0,
-                       width - 10, 349);
-        QRect end1 ( 0,  0,
+        QRect start1(0, 0,
                      width - 10, 349);
+        QRect end1(0,  0,
+                   width - 10, 349);
         WidgetHelper::slideEdgeWidget2(
             playListWidget, start1, end1, AnimationDelay, true);
-        QRect rect ( 5,  height - 429,
-                     width - 10, 423);
+        QRect rect(5,  height - 429,
+                   width - 10, 423);
         WidgetHelper::slideEdgeWidget(
             footer, playListWidget, rect, rect, 10, true);
     } else {
-        QRect start1 ( 0,  0,
-                       width - 10, 0);
-        QRect end1 ( 0, 0,
+        QRect start1(0,  0,
                      width - 10, 0);
+        QRect end1(0, 0,
+                   width - 10, 0);
         WidgetHelper::slideEdgeWidget2(
             playListWidget, start1, end1, AnimationDelay, false);
-        QRect rect ( 5,  height - 86,
-                     width - 10, 80);
+        QRect rect(5,  height - 86,
+                   width - 10, 80);
         WidgetHelper::slideEdgeWidget(
             footer, playListWidget, rect, rect, 10, false);
     }
@@ -877,7 +879,8 @@ void MainFrame::binding(Presenter *presenter)
     d->playListWidget->setCurPlaylist(presenter->playlist(PlayMusicListID));
     d->footer->setCurPlaylist(presenter->playlist(PlayMusicListID));
 
-    connect(this, &MainFrame::exit, presenter, &Presenter::onHandleQuit, Qt::DirectConnection);
+    connect(this, &MainFrame::exit, presenter, &Presenter::onHandleQuit);
+    connect(this, &MainFrame::savePosition, presenter, &Presenter::onSavePosition);
     connect(this, &MainFrame::importSelectFiles, presenter, &Presenter::onImportFiles);
     connect(this, &MainFrame::addPlaylist, presenter, &Presenter::onPlaylistAdd);
     connect(this, &MainFrame::fadeInOut, presenter, &Presenter::onFadeInOut);
@@ -1616,6 +1619,7 @@ void MainFrame::resizeEvent(QResizeEvent *e)
 
 void MainFrame::closeEvent(QCloseEvent *event)
 {
+    Q_D(const MainFrame);
     auto askCloseAction = MusicSettings::value("base.close.ask_close_action").toBool();
     if (askCloseAction) {
         CloseConfirmDialog ccd(this);
