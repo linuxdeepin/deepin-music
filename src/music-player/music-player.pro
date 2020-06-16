@@ -125,7 +125,8 @@ SOURCES += \
     core/vlc/Error.cpp \
     core/vlc/Instance.cpp \
     core/vlc/Media.cpp \
-    core/vlc/MediaPlayer.cpp
+    core/vlc/MediaPlayer.cpp \
+    core/util/convertthread.cpp
 
 HEADERS += \
     musicapp.h \
@@ -219,7 +220,8 @@ HEADERS += \
     core/vlc/Error.h \
     core/vlc/Instance.h \
     core/vlc/Media.h \
-    core/vlc/MediaPlayer.h
+    core/vlc/MediaPlayer.h \
+    core/util/convertthread.h
 
 RESOURCES += \
     resource/theme/theme.qrc \

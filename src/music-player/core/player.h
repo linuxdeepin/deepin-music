@@ -120,6 +120,8 @@ signals:
     void mediaUpdate(PlaylistPtr playlist, const MetaPtr meta);
     void mediaPlayed(PlaylistPtr playlist, const MetaPtr meta);
     void mediaError(PlaylistPtr playlist, const MetaPtr meta, Player::Error error);
+    //convert ape to mp3
+    void addApeTask(QString, QString);
 
 public:
     bool canControl() const;

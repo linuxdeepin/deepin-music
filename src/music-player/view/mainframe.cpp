@@ -48,6 +48,7 @@
 #include "../core/musicsettings.h"
 #include "../core/player.h"
 #include "../musicapp.h"
+#include "../core/util/convertthread.h"
 
 #include "widget/titlebarwidget.h"
 #include "widget/infodialog.h"
@@ -142,6 +143,7 @@ public:
     int                 width                   = 0;
     int                 height                  = 0;
     bool                first                   = true;
+
     MainFrame *q_ptr;
     Q_DECLARE_PUBLIC(MainFrame)
 };
@@ -354,6 +356,7 @@ void MainFramePrivate::initUI(bool showLoading)
     infoDialog->setThemeType(themeType);
     infoDialog->hide();
     m_SpeechCenter = SpeechCenter::getInstance();
+
 #if 0
     footer->show();
 #endif
@@ -771,6 +774,16 @@ MainFrame::MainFrame(QWidget *parent) :
             showNormal();
         } else {
             showMaximized();
+        }
+    });
+
+    //convert thread init
+    convertThread *converThd = new convertThread;
+    connect(this, &MainFrame::exit, converThd, &convertThread::exitToCheckFile);
+    connect(Player::instance(), &Player::addApeTask, this, [=](QString path, QString name) {
+        converThd->addApeandAmr(path, name);
+        if (!converThd->isRunning()) {
+            converThd->start();
         }
     });
 }

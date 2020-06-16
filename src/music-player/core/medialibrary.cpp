@@ -25,6 +25,8 @@
 #include <QFileInfo>
 #include <QDirIterator>
 #include <QProcess>
+#include <QTime>
+#include <thread>
 //#ifndef DISABLE_LIBAV
 #ifdef __cplusplus
 extern "C" {
@@ -49,7 +51,7 @@ extern "C" {
 #include "mediadatabase.h"
 
 const static int ScanCacheSize = 5000;
-
+extern void apeToMp3(QString path, QString hash);
 class MediaLibraryPrivate
 {
 public:
@@ -77,7 +79,7 @@ public:
                        QMap<QString, MetaPtr> &losslessMetaCache,
                        QList<DMusic::CueParserPtr> &cuelist);
 
-    void apeToMp3(QString path, QString hash);
+    //void apeToMp3(QString path, QString hash);
     void startMonitor()
     {
         auto metalist = MediaDatabase::instance()->allmetas();
@@ -122,43 +124,43 @@ MetaPtr MediaLibraryPrivate::createMeta(const QFileInfo &fileinfo)
     return meta;
 }
 
-void MediaLibraryPrivate::apeToMp3(QString path, QString hash)
-{
-    QFileInfo fileInfo(path);
-    if (fileInfo.suffix().toLower() == "ape") {
-        QString curPath = Global::cacheDir();
-        QString toPath = QString("%1/images/%2.mp3").arg(curPath).arg(hash);
-        if (QFile::exists(toPath)) {
-            QFile::remove(toPath);
-        }
-        QString fromPath = QString("%1/.tmp1.ape").arg(curPath);
-//        if (QFile::exists(fromPath)) {
-        QFile::remove(fromPath);
+//void MediaLibraryPrivate::apeToMp3(QString path, QString hash)
+//{
+//    QFileInfo fileInfo(path);
+//    if (fileInfo.suffix().toLower() == "ape") {
+//        QString curPath = Global::cacheDir();
+//        QString toPath = QString("%1/images/%2.mp3").arg(curPath).arg(hash);
+//        if (QFile::exists(toPath)) {
+//            QFile::remove(toPath);
 //        }
-        QFile file(path);
-        file.link(fromPath);
-        QString program = QString("ffmpeg -i %1 -ac 1 -ab 32 -ar 24000 %2").arg(fromPath).arg(toPath);
-        QProcess::execute(program);
-        path = toPath;
-    }
-    if (fileInfo.suffix().toLower() == "amr") {
-        QString curPath = Global::cacheDir();
-        QString toPath = QString("%1/images/%2.mp3").arg(curPath).arg(hash);
-        if (QFile::exists(toPath)) {
-            QFile::remove(toPath);
-        }
-        QString fromPath = QString("%1/.tmp1.amr").arg(curPath);
-//        if (QFile::exists(fromPath)) {
-        QFile::remove(fromPath);
+//        QString fromPath = QString("%1/.tmp1.ape").arg(curPath);
+////        if (QFile::exists(fromPath)) {
+//        QFile::remove(fromPath);
+////        }
+//        QFile file(path);
+//        file.link(fromPath);
+//        QString program = QString("ffmpeg -i %1 -ac 1 -ab 32 -ar 24000 %2").arg(fromPath).arg(toPath);
+//        QProcess::execute(program);
+//        path = toPath;
+//    }
+//    if (fileInfo.suffix().toLower() == "amr") {
+//        QString curPath = Global::cacheDir();
+//        QString toPath = QString("%1/images/%2.mp3").arg(curPath).arg(hash);
+//        if (QFile::exists(toPath)) {
+//            QFile::remove(toPath);
 //        }
-        QFile file(path);
-        file.link(fromPath);
-        QString program = QString("ffmpeg -i %1 -ac 1 -ab 32 -ar 24000 %2").arg(fromPath).arg(toPath);
-        qDebug() << program;
-        QProcess::execute(program);
-        path = toPath;
-    }
-}
+//        QString fromPath = QString("%1/.tmp1.amr").arg(curPath);
+////        if (QFile::exists(fromPath)) {
+//        QFile::remove(fromPath);
+////        }
+//        QFile file(path);
+//        file.link(fromPath);
+//        QString program = QString("ffmpeg -i %1 -ac 1 -ab 32 -ar 24000 %2").arg(fromPath).arg(toPath);
+//        qDebug() << program;
+//        QProcess::execute(program);
+//        path = toPath;
+//    }
+//}
 
 MetaPtr MediaLibraryPrivate::importMeta(const QString &filepath,
                                         QMap<QString, MetaPtr> &losslessMetaCache,
@@ -285,7 +287,8 @@ MetaPtr MediaLibraryPrivate::importMeta(const QString &filepath,
 
     if (fileInfo.suffix().toLower() == "ape" ||
             fileInfo.suffix().toLower() == "amr") {
-        apeToMp3(filepath, meta->hash);
+        Q_EMIT Player::instance()->addApeTask(filepath, meta->hash);
+        //apeToMp3(filepath, meta->hash);
     }
     if (meta->length == 0)
         return MetaPtr();
