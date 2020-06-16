@@ -31,7 +31,7 @@ class PlaylistManager : public QObject
 {
     Q_OBJECT
 public:
-    explicit PlaylistManager(QObject *parent = 0);
+    explicit PlaylistManager(QObject *parent = nullptr);
     ~PlaylistManager();
 
     QString newID();

@@ -28,6 +28,7 @@
 #include <QtDebug>
 #include "util/dbusutils.h"
 #include "musicsettings.h"
+static const int timerInterval = 100;//轮巡Debus音量的周期
 
 class VolumeMonitoringPrivate
 {
@@ -45,7 +46,7 @@ VolumeMonitoring::VolumeMonitoring(QObject *parent)
     : QObject(parent), d_ptr(new VolumeMonitoringPrivate(this))
 {
     Q_D(VolumeMonitoring);
-    d->oldMute = (bool)MusicSettings::value("base.play.mute").toBool();
+    d->oldMute = MusicSettings::value("base.play.mute").toBool();
     d->oldVolume = MusicSettings::value("base.play.volume").toInt();
     connect(&d->timer, SIGNAL(timeout()), this, SLOT(timeoutSlot()));
 }
@@ -58,7 +59,7 @@ VolumeMonitoring::~VolumeMonitoring()
 void VolumeMonitoring::start()
 {
     Q_D(VolumeMonitoring);
-    d->timer.start(1000);
+    d->timer.start(timerInterval);
 }
 
 void VolumeMonitoring::stop()

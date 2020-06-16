@@ -32,8 +32,7 @@ extern "C" {
 
 #include "encodingdetector.h"
 
-namespace Libcue
-{
+namespace Libcue {
 
 void time_frame_to_msf(long frame, int *m, int *s, int *f)
 {
@@ -41,7 +40,7 @@ void time_frame_to_msf(long frame, int *m, int *s, int *f)
     frame /= 75;
     *s = frame % 60;          /* 0 <= seconds <= 59 */
     frame /= 60;
-    *m = frame;               /* 0 <= minutes */
+    *m = static_cast<int>(frame);               /* 0 <= minutes */
 }
 
 }
@@ -62,8 +61,7 @@ qint64 timeframe2mtime(long frame)
     }while(0)
 
 
-namespace DMusic
-{
+namespace DMusic {
 
 class CueParserPrivate
 {

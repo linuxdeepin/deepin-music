@@ -149,6 +149,7 @@ void ImportWidget::showWaitHint()
     Q_D(ImportWidget);
     d->importButton->setDisabled(true);
     d->importButton->hide();
+    d->addMusicButton->hide();
     d->text->setText(tr("Loading music, please wait..."));
 }
 
@@ -157,6 +158,7 @@ void ImportWidget::showImportHint()
     Q_D(ImportWidget);
     d->importButton->setDisabled(false);
     d->importButton->show();
+    d->addMusicButton->show();
     QString linkText = QString(linkTemplate).arg(tr("Scan")).arg(tr("Scan"));
     d->text->setText(tr("%1 music directory or drag music files here").arg(linkText));
 }

@@ -67,7 +67,7 @@ QList<QByteArray> EncodingDetector::detectEncodings(const QByteArray &rawData)
         const char *name = ucsdet_getName(csm[match], &status);
         const char *lang = ucsdet_getLanguage(csm[match], &status);
 //        int32_t confidence = ucsdet_getConfidence(csm[match], &status);
-        if (lang == NULL || strlen(lang) == 0) {
+        if (lang == nullptr || strlen(lang) == 0) {
             lang = "**";
         }
 //        qDebug() <<  name << lang << confidence;

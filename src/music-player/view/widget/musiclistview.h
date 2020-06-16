@@ -32,7 +32,7 @@ class MusicListView : public DListView
     Q_OBJECT
 public:
     explicit MusicListView(QWidget *parent = Q_NULLPTR);
-    ~MusicListView();
+    ~MusicListView() override;
 
     void showContextMenu(const QPoint &pos);
 
@@ -56,6 +56,7 @@ public:
 public slots:
     void slotTheme(int type);
     void onRename(QStandardItem *item);
+    void closeEditor(QWidget *editor, QAbstractItemDelegate::EndEditHint hint) Q_DECL_OVERRIDE;
 
 signals:
     void playall(PlaylistPtr playlist);

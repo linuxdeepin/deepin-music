@@ -68,11 +68,11 @@ public:
     Q_DECLARE_PUBLIC(PlayListView)
 };
 
-PlayListView::PlayListView(bool searchFlag, QWidget *parent)
+PlayListView::PlayListView(bool searchFlag, bool isPlayList, QWidget *parent)
     : DListView(parent), d_ptr(new PlayListViewPrivate(this))
 {
     Q_D(PlayListView);
-
+    m_IsPlayList = isPlayList;
     setObjectName("PlayListView");
 
     d->searchFlag = searchFlag;
@@ -163,13 +163,13 @@ void PlayListView::setPlaying(const MetaPtr meta)
 void PlayListView::setViewModeFlag(QListView::ViewMode mode)
 {
     if (mode == QListView::IconMode) {
-        setIconSize( QSize(150, 150) );
-        setGridSize( QSize(-1, -1) );
+        setIconSize(QSize(150, 150));
+        setGridSize(QSize(-1, -1));
         setSpacing(20);
         setViewportMargins(-10, -10, -35, 10);
     } else {
-        setIconSize( QSize(36, 36) );
-        setGridSize( QSize(-1, -1) );
+        setIconSize(QSize(36, 36));
+        setGridSize(QSize(-1, -1));
         setSpacing(0);
         setViewportMargins(0, 0, 8, 0);
     }
@@ -484,6 +484,7 @@ void PlayListViewPrivate::addMedia(const MetaPtr meta)
     if (coverData.length() > 0) {
         cover = QPixmap::fromImage(QImage::fromData(coverData));
     }
+    cover = cover.scaled(QSize(250, 250));
     QIcon icon = QIcon(cover);
     newItem->setIcon(icon);
     model->appendRow(newItem);
@@ -534,7 +535,7 @@ void PlayListView::showContextMenu(const QPoint &pos,
             break;
         }
     }
-    if (selectedPlaylist != favPlaylist || this->playlist()->id() == tr("musicResult")) {
+    if (selectedPlaylist != favPlaylist || this->playlist()->id() == "musicResult") {
 //        auto act = playlistMenu.addAction(favPlaylist->displayName());
         auto act = playlistMenu.addAction(tr("My favorites"));
         bool flag = true;
@@ -628,8 +629,12 @@ void PlayListView::showContextMenu(const QPoint &pos,
     if (singleSelect) {
         displayAction = myMenu.addAction(tr("Display in file manager"));
     }
-
-    auto removeAction = myMenu.addAction(tr("Remove from play queue"));
+    QAction *removeAction = nullptr;
+    if (m_IsPlayList) {
+        removeAction = myMenu.addAction(tr("Remove from play queue"));
+    } else {
+        removeAction = myMenu.addAction(tr("Remove from playlist"));
+    }
     auto deleteAction = myMenu.addAction(tr("Delete from local disk"));
 
     QAction *songAction = nullptr;

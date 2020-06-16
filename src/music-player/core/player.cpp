@@ -145,6 +145,7 @@ public:
 
         qvinstance = new VlcInstance(VlcCommon::args(), nullptr);
         qvplayer = new VlcMediaPlayer(qvinstance);
+        qvplayer->equalizer()->setPreamplification(12);
         qvmedia = new VlcMedia();
 //        qvplayer->audio()->setVolume(100);
     }
@@ -328,7 +329,8 @@ void PlayerPrivate::initConnection()
         if (fadeInOutFactor < 1.0) {
             return;
         }
-        Q_EMIT q->volumeChanged(volume);
+        if (volume >= 0)
+            Q_EMIT q->volumeChanged(volume);
     });
 
 
@@ -438,8 +440,15 @@ void PlayerPrivate::selectNext(const MetaPtr info, Player::PlaybackMode mode)
     if (!curPlaylist || curPlaylist->isEmpty()) {
         return;
     }
-
-    bool invalidFlag = info->invalid;
+    MetaPtr cinfo = info;
+    if (cinfo == nullptr) {
+        for (int i = 0; i < curPlaylist->allmusic().size(); ++i) {
+            cinfo = curPlaylist->music(i);
+            if (cinfo != nullptr)
+                break;
+        }
+    }
+    bool invalidFlag = cinfo->invalid;
     if (invalidFlag) {
         for (auto curMeta : curPlaylist->allmusic()) {
             if (!curMeta->invalid) {
@@ -452,7 +461,7 @@ void PlayerPrivate::selectNext(const MetaPtr info, Player::PlaybackMode mode)
 
     switch (mode) {
     case Player::RepeatAll: {
-        auto curMeta = curPlaylist->next(info);
+        auto curMeta = curPlaylist->next(cinfo);
         if (QFile::exists(curMeta->localPath)) {
             curMeta->invalid = false;
         }
@@ -468,11 +477,11 @@ void PlayerPrivate::selectNext(const MetaPtr info, Player::PlaybackMode mode)
         break;
     }
     case Player::RepeatSingle: {
-        q->playMeta(activePlaylist, info);
+        q->playMeta(activePlaylist, cinfo);
         break;
     }
     case Player::Shuffle: {
-        auto curMeta = curPlaylist->shuffleNext(info);
+        auto curMeta = curPlaylist->shuffleNext(cinfo);
         if (QFile::exists(curMeta->localPath)) {
             curMeta->invalid = false;
         }
@@ -534,7 +543,7 @@ void PlayerPrivate::selectPrev(const MetaPtr info, Player::PlaybackMode mode)
             curMeta->invalid = false;
         }
         if (curMeta->invalid && !invalidFlag) {
-            int curNum = 0;
+            //int curNum = 0;
             while (true) {
                 curMeta = curPlaylist->shufflePrev(curMeta);
                 if (!curMeta->invalid || QFile::exists(curMeta->localPath))
@@ -604,12 +613,12 @@ void Player::loadMedia(PlaylistPtr playlist, const MetaPtr meta)
 
     d->qvplayer->blockSignals(true);
 
-    int volume = -1;
+    //int volume = -1;
     d->qvplayer->blockSignals(true);
     d->isamr = true;
     d->qvmedia->initMedia(meta->localPath, true, d->qvinstance);
     d->qvplayer->open(d->qvmedia);
-    volume = d->qvplayer->audio()->volume();
+    //volume = d->qvplayer->audio()->volume();
     d->qvplayer->play();
 
 
@@ -725,7 +734,7 @@ void Player::resume(PlaylistPtr playlist, const MetaPtr meta)
     });
 
     if (d->fadeInOut && !d->fadeInAnimation) {
-        d->fadeInAnimation = new QPropertyAnimation( this, "fadeInOutFactor");
+        d->fadeInAnimation = new QPropertyAnimation(this, "fadeInOutFactor");
         d->fadeInAnimation->setEasingCurve(QEasingCurve::InCubic);
         d->fadeInAnimation->setStartValue(0.1000);
         d->fadeInAnimation->setEndValue(1.0000);
@@ -747,6 +756,7 @@ void Player::resume(PlaylistPtr playlist, const MetaPtr meta)
 
 void Player::playNextMeta(PlaylistPtr playlist, const MetaPtr meta)
 {
+    Q_UNUSED(playlist)
     Q_D(Player);
 //    Q_ASSERT(playlist == d->activePlaylist);
 
@@ -760,6 +770,7 @@ void Player::playNextMeta(PlaylistPtr playlist, const MetaPtr meta)
 
 void Player::playPrevMusic(PlaylistPtr playlist, const MetaPtr meta)
 {
+    Q_UNUSED(playlist)
     Q_D(Player);
 //    Q_ASSERT(playlist == d->activePlaylist);
 
@@ -839,7 +850,7 @@ Player::PlaybackStatus Player::status()
         return PlaybackStatus::Playing;
     } else if (status == Vlc::Paused) {
         return PlaybackStatus::Paused;
-    } else if (status == Vlc::Stopped) {
+    } else if (status == Vlc::Stopped || status == Vlc::Idle) {
         return PlaybackStatus::Stopped;
     } else {
         return PlaybackStatus::InvalidPlaybackStatus;
@@ -902,7 +913,7 @@ Player::PlaybackMode Player::mode() const
 
 bool Player::muted()
 {
-    Q_D(const Player);
+    //Q_D(const Player);
     //return d->qplayer->isMuted();
     return this->isMusicMuted();
 }
@@ -1000,7 +1011,7 @@ void Player::setVolume(int volume)
 
 void Player::setMuted(bool mute)
 {
-    Q_D(Player);
+    //Q_D(Player);
     //d->qplayer->setMuted(mute);
     setMusicMuted(mute);
 }

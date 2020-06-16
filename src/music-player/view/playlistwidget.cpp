@@ -244,7 +244,7 @@ PlayListWidget::PlayListWidget(QWidget *parent) :
     actionBarLayout->addWidget(d->btClearAll, 0, Qt::AlignLeft);
     actionBarLayout->addStretch();
 
-    d->playListView = new PlayListView(false);
+    d->playListView = new PlayListView(false, true);
     d->playListView->hide();
 
     layout->addWidget(d->actionBar);
@@ -335,7 +335,7 @@ void PlayListWidget::dropEvent(QDropEvent *event)
 
 void PlayListWidget::resizeEvent(QResizeEvent *event)
 {
-    Q_D(PlayListWidget);
+    //Q_D(PlayListWidget);
     DWidget::resizeEvent(event);
 }
 

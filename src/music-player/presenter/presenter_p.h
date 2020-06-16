@@ -31,6 +31,7 @@ class PlaylistManager;
 class Player;
 class MediaLibrary;
 class MetaBufferDetector;
+class Transfer;
 class PresenterPrivate: public QObject
 {
     Q_OBJECT
@@ -53,7 +54,7 @@ public:
     Player              *player         = nullptr;
     MediaLibrary        *library        = nullptr;
     MusicSettings         *settings       = nullptr;
-
+    Transfer            *transfer       = nullptr;
     MetaBufferDetector  *metaBufferDetector = nullptr;
 
     Presenter *q_ptr;

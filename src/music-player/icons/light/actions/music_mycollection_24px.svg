@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 58 (84663) - https://sketch.com -->
+    <title>my collection_normal</title>
+    <desc>Created with Sketch.</desc>
+    <g id="页面-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="按钮规范" transform="translate(-211.000000, -144.000000)">
+            <g id="my-collection_normal" transform="translate(211.000000, 144.000000)">
+                <g id="Page-1">
+                    <polygon id="Stroke-1" stroke-opacity="0.00784313771" stroke="#000000" stroke-width="1.33333335e-11" points="0 0 23.9999985 0 23.9999985 23.9999985 0 23.9999985"></polygon>
+                    <path d="M11.9166662,19.5669259 L10.7687497,18.5190601 C6.69166658,14.8118363 4,12.3668156 4,9.36610852 C4,6.92108781 5.91583328,5 8.35416642,5 C9.73166616,5 11.0537494,5.64300866 11.9166662,6.65912136 C12.7795829,5.64300866 14.1016662,5 15.479166,5 C17.9174991,5 19.8333324,6.92108781 19.8333324,9.36610852 C19.8333324,12.3668156 17.1416661,14.8118371 13.0645827,18.5269988 L11.9166662,19.5669259 L11.9166662,19.5669259 Z" id="Fill-2" fill="#536076"></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

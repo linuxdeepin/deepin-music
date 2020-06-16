@@ -27,10 +27,8 @@
 
 #include "libdmusic_global.h"
 
-namespace DMusic
-{
-namespace Net
-{
+namespace DMusic {
+namespace Net {
 
 class Geese;
 
@@ -56,7 +54,7 @@ class LIBDMUSICSHARED_EXPORT Geese : public QNetworkAccessManager
 
     friend class Goose;
 public:
-    explicit Geese(QObject *parent = 0);
+    explicit Geese(QObject *parent = nullptr);
     ~Geese();
 
     Goose *getGoose(QUrl url);

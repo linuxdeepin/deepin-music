@@ -33,11 +33,23 @@ class QAudioBuffer;
 class Playlist;
 
 class PresenterPrivate;
+class Transfer: public QObject
+{
+    Q_OBJECT
+public:
+    explicit Transfer(QObject *parent = 0);
+    ~Transfer();
+public slots:
+    void onMusicListAdded(PlaylistPtr playlist, const MetaPtrList metalist);
+signals:
+    void musicListAdded(PlaylistPtr playlist, const MetaPtrList metalist);
+};
+
 class Presenter : public QObject
 {
     Q_OBJECT
 public:
-    explicit Presenter(QObject *parent = 0);
+    explicit Presenter(QObject *parent = nullptr);
     ~Presenter();
 
     void initMpris(MprisPlayer *mprisPlayer);
@@ -58,10 +70,13 @@ public slots:
     void next();
     void prev();
     void onHandleQuit();
+    void onSavePosition();
     void requestImportPaths(PlaylistPtr playlist, const QStringList &filelist);
 
 signals:
     void dataLoaded();
+    //控制进度条滑块
+    void hidewaveformScale();
 
 signals:
     //! player

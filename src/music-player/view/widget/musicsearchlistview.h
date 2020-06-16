@@ -32,7 +32,7 @@ class MusicSearchListview: public DListView
     Q_OBJECT
 public:
     explicit MusicSearchListview(QWidget *parent = Q_NULLPTR);
-    ~MusicSearchListview();
+    ~MusicSearchListview() override;
 
     PlaylistPtr playlist() const;
     int rowCount();

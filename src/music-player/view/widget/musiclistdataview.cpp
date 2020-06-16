@@ -369,7 +369,7 @@ void MusicListDataView::updateList()
 
 void MusicListDataView::mouseMoveEvent(QMouseEvent *event)
 {
-
+    Q_UNUSED(event)
 }
 
 void MusicListDataView::onMusiclistChanged(PlaylistPtr playlist)

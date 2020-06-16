@@ -33,7 +33,7 @@ class PlayListWidget : public DWidget
     Q_OBJECT
 public:
     explicit PlayListWidget(QWidget *parent = Q_NULLPTR);
-    ~PlayListWidget();
+    ~PlayListWidget() override;
 
     void updateInfo(PlaylistPtr playlist);
     void setCurPlaylist(PlaylistPtr playlist);
