@@ -104,12 +104,17 @@ void PlaylistManager::load()
 {
     Q_D(PlaylistManager);
 
+    d->sortUUIDs.clear();
+
     for (auto &playlistmeta : MediaDatabase::instance()->allPlaylistMeta()) {
         PlaylistPtr emptylist(new Playlist(playlistmeta));
         emptylist->load();
         insertPlaylist(playlistmeta.uuid, emptylist);
+
+        d->sortUUIDs << playlistmeta.uuid;
     }
 
+#if 0
     QMap<uint, QString> sortUUIDs;
     for (auto playlist : d->playlists) {
         sortUUIDs.insert(playlist->sortID(), playlist->id());
@@ -164,6 +169,7 @@ void PlaylistManager::load()
         d->sortUUIDs << sortUUIDs.value(static_cast<uint>(sortID));
     }
 
+#endif
 
     auto album = playlist(AlbumMusicListID);
     auto trAlbumName = tr("Albums");
