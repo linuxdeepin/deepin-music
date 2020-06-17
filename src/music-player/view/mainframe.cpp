@@ -207,9 +207,17 @@ void MainFramePrivate::initMenu()
 
         Dtk::Widget::moveToCenter(configDialog);
 
+        auto curAskCloseAction = MusicSettings::value("base.close.ask_close_action").toBool();
+        auto curLastPlaylist = MusicSettings::value("base.play.last_playlist").toString();
+        auto curLastMeta = MusicSettings::value("base.play.last_meta").toString();
+        auto curLastPosition = MusicSettings::value("base.play.last_position").toInt();
         configDialog->exec();
         delete configDialog;
         MusicSettings::sync();
+        MusicSettings::setOption("base.close.ask_close_action", curAskCloseAction);
+        MusicSettings::setOption("base.play.last_playlist", curLastPlaylist);
+        MusicSettings::setOption("base.play.last_meta", curLastMeta);
+        MusicSettings::setOption("base.play.last_position", curLastPosition);
 
         auto play_pauseStr = MusicSettings::value("shortcuts.all.play_pause").toString();
         if (play_pauseStr.isEmpty())
@@ -247,8 +255,6 @@ void MainFramePrivate::initMenu()
             previousShortcut->setKey(QKeySequence(previousStr));
         }
         Q_EMIT q->fadeInOut();
-        Q_EMIT q->savePosition();
-
     });
 
     int themeType = DGuiApplicationHelper::instance()->themeType();
@@ -879,8 +885,7 @@ void MainFrame::binding(Presenter *presenter)
     d->playListWidget->setCurPlaylist(presenter->playlist(PlayMusicListID));
     d->footer->setCurPlaylist(presenter->playlist(PlayMusicListID));
 
-    connect(this, &MainFrame::exit, presenter, &Presenter::onHandleQuit);
-    connect(this, &MainFrame::savePosition, presenter, &Presenter::onSavePosition);
+    connect(this, &MainFrame::exit, presenter, &Presenter::onHandleQuit, Qt::DirectConnection);
     connect(this, &MainFrame::importSelectFiles, presenter, &Presenter::onImportFiles);
     connect(this, &MainFrame::addPlaylist, presenter, &Presenter::onPlaylistAdd);
     connect(this, &MainFrame::fadeInOut, presenter, &Presenter::onFadeInOut);

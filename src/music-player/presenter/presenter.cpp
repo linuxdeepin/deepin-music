@@ -449,7 +449,6 @@ Presenter::~Presenter()
 void Presenter::handleQuit()
 {
     Q_D(Presenter);
-    d->settings->setOption("base.play.last_meta", d->syncPlayerMeta->hash);
     d->settings->setOption("base.play.last_position", d->lastPlayPosition);
     d->player->stop();
 }
@@ -908,12 +907,6 @@ void Presenter::prev()
 void Presenter::onHandleQuit()
 {
     handleQuit();
-}
-void Presenter::onSavePosition()
-{
-    Q_D(Presenter);
-    d->settings->setOption("base.play.last_meta", d->syncPlayerMeta->hash);
-    d->settings->setOption("base.play.last_position", d->lastPlayPosition);
 }
 
 void Presenter::requestImportPaths(PlaylistPtr playlist, const QStringList &filelist)

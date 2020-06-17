@@ -70,7 +70,6 @@ public slots:
     void next();
     void prev();
     void onHandleQuit();
-    void onSavePosition();
     void requestImportPaths(PlaylistPtr playlist, const QStringList &filelist);
 
 signals:
