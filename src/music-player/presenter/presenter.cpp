@@ -732,7 +732,9 @@ void Presenter::postAction()
                 d->player->setFadeInOut(false);
                 d->player->loadMedia(lastPlaylist, lastMeta);
 
-                onMusicResume(lastPlaylist, lastMeta);
+                QTimer::singleShot(200, [ = ]() {//200ms播放是为了在加载播放的100ms结束，150ms设置播放进度后再播放。
+                    onMusicResume(lastPlaylist, lastMeta);
+                });
             }
 
         }
@@ -751,10 +753,6 @@ void Presenter::postAction()
     }
 
     Q_EMIT currentMusicListChanged(lastPlaylist);
-
-    if (position == 0 && lastPlaylist != nullptr && lastMeta != nullptr) {
-        d->player->playMeta(lastPlaylist, lastMeta);
-    }
 }
 
 void Presenter::openUri(const QUrl &uri)
