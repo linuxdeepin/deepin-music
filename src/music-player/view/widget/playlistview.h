@@ -38,7 +38,7 @@ public:
 public slots:
     void onModelMake(PlaylistPtr playlist, QString searchStr);
 signals:
-    void addMeta(const MetaPtr meta);
+    void addMeta(QString playListId, const MetaPtr meta);
 };
 
 class PlayListView : public DListView
@@ -68,7 +68,7 @@ public:
     int rowCount();
     QString firstHash();
 public slots:
-    void onAddMeta(const MetaPtr meta);
+    void onAddMeta(QString playListId, const MetaPtr meta);
 
 
 signals:

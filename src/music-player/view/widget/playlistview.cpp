@@ -246,12 +246,14 @@ QString PlayListView::firstHash()
     return hashStr;
 }
 
-void PlayListView::onAddMeta(const MetaPtr meta)
+void PlayListView::onAddMeta(QString playListId, const MetaPtr meta)
 {
     Q_D(PlayListView);
 //    qDebug() << "PlayListView::onAddMeta:" << meta->title;
-    d->addMedia(meta);
-    d->playMetaPtrList.append(meta);
+    if (playListId == playlist()->id()) {
+        d->addMedia(meta);
+        d->playMetaPtrList.append(meta);
+    }
 }
 
 void PlayListView::onMusicListRemoved(const MetaPtrList metalist)
@@ -265,7 +267,8 @@ void PlayListView::onMusicListRemoved(const MetaPtrList metalist)
             continue;
         }
 
-        for (int i = 0; i < d->model->rowCount(); ++i) {
+//        for (int i = 0; i < d->model->rowCount(); ++i) {
+        for (int i = 0; i < d->playMetaPtrList.size(); ++i) {
             auto index = d->model->index(i, 0);
             auto itemHash = d->model->data(index).toString();
             if (itemHash == meta->hash) {
@@ -470,7 +473,7 @@ void PlayListViewPrivate::addMedia(const MetaPtr meta)
     if (coverData.length() > 0) {
         cover = QPixmap::fromImage(QImage::fromData(coverData));
     }
-    if(cover.width() > 160 || cover.height() > 160)
+    if (cover.width() > 160 || cover.height() > 160)
         cover = cover.scaled(QSize(160, 160));
     QIcon icon = QIcon(cover);
     newItem->setIcon(icon);
@@ -874,32 +877,33 @@ void ModelMake::onModelMake(PlaylistPtr playlist, QString searchStr)
         }
     }
     MetaPtr meta;
-    #pragma omp parallel for
-    for (int i = 0; i < playlist->allmusic().size(); i++) {
-        meta = playlist->allmusic().at(i);
+    QString id = playlist->id();
+    int count = 0;
+    for (auto meta : playlist->allmusic()) {
         if (searchStr.isEmpty()) {
-            Q_EMIT addMeta(meta);
+            Q_EMIT addMeta(id, meta);
         } else {
             if (chineseFlag) {
                 if (meta->title.contains(searchStr, Qt::CaseInsensitive)) {
-                    Q_EMIT addMeta(meta);
+                    Q_EMIT addMeta(id, meta);
                 }
             } else {
                 if (playlist->searchStr().size() == 1) {
                     auto curTextList = DMusic::PinyinSearch::simpleChineseSplit(meta->title);
                     if (!curTextList.isEmpty() && curTextList.first().contains(searchStr, Qt::CaseInsensitive)) {
-                        Q_EMIT addMeta(meta);
+                        Q_EMIT addMeta(id, meta);
                     }
                 } else {
                     auto curTextList = DMusic::PinyinSearch::simpleChineseSplit(meta->title);
                     if (!curTextList.isEmpty() && curTextList.join("").contains(searchStr, Qt::CaseInsensitive)) {
-                        Q_EMIT addMeta(meta);
+                        Q_EMIT addMeta(id, meta);
                     }
                 }
             }
         }
-        if (i % 10== 0) {
-            QThread::msleep(500);
+        if (count % 12 == 0) {
+            QThread::msleep(50);
         }
+        count ++;
     }
 }
