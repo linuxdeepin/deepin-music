@@ -77,9 +77,9 @@ void PresenterPrivate::initBackend()
 
     player = Player::instance();
     qDebug() << "TRACE:" << "player init finished";
-    connect(player, &Player::audioBufferProbed, q, [ = ](const QAudioBuffer & buffer) {
+    connect(player, &Player::audioBufferProbed, q, [=](const QAudioBuffer &buffer) {
         Q_EMIT q->audioBufferProbed(buffer);
-    } );
+    });
 
     metaBufferDetector = new MetaBufferDetector(this);
     connect(metaBufferDetector, &MetaBufferDetector::metaBuffer, q, [ = ](const QVector<float> &buffer, const QString & hash) {
@@ -632,9 +632,9 @@ void Presenter::postAction()
 
         if (lastPlaylist->contains(lastMeta)) {
             lastMeta = lastPlaylist->music(lastMetaId);
-        } else if(lastMetaId == ""){
+        } else if (lastMetaId == "") {
             lastMeta = nullptr;
-        }else{
+        } else {
             lastMeta = lastPlaylist->first();
         }
 
@@ -692,7 +692,9 @@ void Presenter::postAction()
                 d->player->setFadeInOut(false);
                 d->player->loadMedia(lastPlaylist, lastMeta);
 
-                onMusicResume(lastPlaylist, lastMeta);
+                QTimer::singleShot(200, [=]() { //200ms播放是为了在加载播放的100ms结束，150ms设置播放进度后再播放。
+                    onMusicResume(lastPlaylist, lastMeta);
+                });
             }
 
         }
@@ -722,7 +724,7 @@ void Presenter::openUri(const QUrl &uri)
     auto metas = MediaLibrary::instance()->importFile(localfile);
     if (0 == metas.length()) {
         qCritical() << "openUriRequested" << uri;
-        Q_EMIT scanFinished(localfile , 0);
+        Q_EMIT scanFinished(localfile, 0);
         return ;
     }
     auto list = d->playlistMgr->playlist(AllMusicListID);
@@ -1146,7 +1148,7 @@ void Presenter::removeListSame(QStringList *list)
 {
     for (int i = 0; i < list->count(); i++) {
         for (int k = i + 1; k <  list->count(); k++) {
-            if ( list->at(i) ==  list->at(k)) {
+            if (list->at(i) == list->at(k)) {
                 list->removeAt(k);
                 k--;
             }
@@ -1382,7 +1384,7 @@ void Presenter::onSearchText(const QString &id, const QString &text)
 
         for (auto &metaData : artistList->playMusicTypePtrList()) {
             for (int i = 0; i < artist.length(); i++) {
-                if (metaData->name.contains(artist.at(i) )) {
+                if (metaData->name.contains(artist.at(i))) {
                     searchArtistList->appendMusicTypePtrListData(metaData);
                 }
             }
@@ -1445,7 +1447,7 @@ void Presenter::onSearchCand(const QString text)
             searchAlbumList->appendMusicTypePtrListData(metaData);
             count ++;
         }
-        if (count >= 3  ) {
+        if (count >= 3) {
             break;
         }
     }
