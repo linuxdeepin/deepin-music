@@ -34,7 +34,7 @@
 #include <DDesktopServices>
 #include <DScrollBar>
 #include <DLabel>
-
+#include "util/threadpool.h"
 #include "util/pinyinsearch.h"
 
 #include "../../core/metasearchservice.h"
@@ -118,6 +118,12 @@ PlayListView::PlayListView(bool searchFlag, bool isPlayList, QWidget *parent)
             Q_EMIT playMedia(meta);
         }
     });
+    m_ModelMake = new ModelMake();
+    ThreadPool::instance()->moveToNewThread(m_ModelMake);
+    connect(this, &PlayListView::modelMake, m_ModelMake, &ModelMake::onModelMake, Qt::QueuedConnection);
+    connect(m_ModelMake, &ModelMake::addMeta, this, &PlayListView::onAddMeta, Qt::QueuedConnection);
+
+
 }
 
 PlayListView::~PlayListView()
@@ -240,6 +246,14 @@ QString PlayListView::firstHash()
     return hashStr;
 }
 
+void PlayListView::onAddMeta(const MetaPtr meta)
+{
+    Q_D(PlayListView);
+//    qDebug() << "PlayListView::onAddMeta:" << meta->title;
+    d->addMedia(meta);
+    d->playMetaPtrList.append(meta);
+}
+
 void PlayListView::onMusicListRemoved(const MetaPtrList metalist)
 {
     Q_D(PlayListView);
@@ -307,7 +321,6 @@ void PlayListView::onLocate(const MetaPtr meta)
 void PlayListView::onMusiclistChanged(PlaylistPtr playlist)
 {
     Q_D(PlayListView);
-
     if (playlist.isNull()) {
         qWarning() << "can not change to emptry playlist";
         d->model->removeRows(0, d->model->rowCount());
@@ -346,36 +359,9 @@ void PlayListView::onMusiclistChanged(PlaylistPtr playlist)
         }
     }
 
-    for (auto meta : playlist->allmusic()) {
-        if (searchStr.isEmpty()) {
-            d->addMedia(meta);
-            d->playMetaPtrList.append(meta);
-        } else {
-            if (chineseFlag) {
-                if (meta->title.contains(searchStr, Qt::CaseInsensitive)) {
-                    d->addMedia(meta);
-                    d->playMetaPtrList.append(meta);
-                }
-            } else {
-                if (playlist->searchStr().size() == 1) {
-                    auto curTextList = DMusic::PinyinSearch::simpleChineseSplit(meta->title);
-                    if (!curTextList.isEmpty() && curTextList.first().contains(searchStr, Qt::CaseInsensitive)) {
-                        d->addMedia(meta);
-                        d->playMetaPtrList.append(meta);
-                    }
-                } else {
-                    auto curTextList = DMusic::PinyinSearch::simpleChineseSplit(meta->title);
-                    if (!curTextList.isEmpty() && curTextList.join("").contains(searchStr, Qt::CaseInsensitive)) {
-                        d->addMedia(meta);
-                        d->playMetaPtrList.append(meta);
-                    }
-                }
-            }
-        }
-    }
+    Q_EMIT modelMake(playlist, searchStr);
     setUpdatesEnabled(true);
     setModel(d->model);
-
     d->model->setPlaylist(playlist);
     //updateScrollbar();
 }
@@ -466,9 +452,9 @@ void PlayListView::keyPressEvent(QKeyEvent *event)
 void PlayListView::keyboardSearch(const QString &search)
 {
     Q_UNUSED(search);
-// Disable keyborad serach
-//    qDebug() << search;
-//    QAbstractItemView::keyboardSearch(search);
+    // Disable keyborad serach
+    //    qDebug() << search;
+    //    QAbstractItemView::keyboardSearch(search);
 }
 
 void PlayListViewPrivate::addMedia(const MetaPtr meta)
@@ -484,7 +470,8 @@ void PlayListViewPrivate::addMedia(const MetaPtr meta)
     if (coverData.length() > 0) {
         cover = QPixmap::fromImage(QImage::fromData(coverData));
     }
-    cover = cover.scaled(QSize(250, 250));
+    if(cover.width() > 160 || cover.height() > 160)
+        cover = cover.scaled(QSize(160, 160));
     QIcon icon = QIcon(cover);
     newItem->setIcon(icon);
     model->appendRow(newItem);
@@ -536,7 +523,7 @@ void PlayListView::showContextMenu(const QPoint &pos,
         }
     }
     if (selectedPlaylist != favPlaylist || this->playlist()->id() == "musicResult") {
-//        auto act = playlistMenu.addAction(favPlaylist->displayName());
+        //        auto act = playlistMenu.addAction(favPlaylist->displayName());
         auto act = playlistMenu.addAction(tr("My favorites"));
         bool flag = true;
         for (auto &index : selection->selectedRows()) {
@@ -554,9 +541,9 @@ void PlayListView::showContextMenu(const QPoint &pos,
         playlistMenu.addSeparator();
     }
     auto createPlaylist = playlistMenu.addAction(tr("Add to new playlist"));
-//    auto font = createPlaylist->font();
-//    font.setWeight(QFont::DemiBold);
-//    createPlaylist->setFont(font);
+    //    auto font = createPlaylist->font();
+    //    font.setWeight(QFont::DemiBold);
+    //    createPlaylist->setFont(font);
     createPlaylist->setData(newvar);
     playlistMenu.addSeparator();
 
@@ -866,3 +853,53 @@ void PlayListView::startDrag(Qt::DropActions supportedActions)
     }
 }
 
+
+ModelMake::ModelMake(QObject *parent)
+{
+
+}
+
+ModelMake::~ModelMake()
+{
+
+}
+
+void ModelMake::onModelMake(PlaylistPtr playlist, QString searchStr)
+{
+    bool chineseFlag = false;
+    for (auto ch : searchStr) {
+        if (DMusic::PinyinSearch::isChinese(ch)) {
+            chineseFlag = true;
+            break;
+        }
+    }
+    MetaPtr meta;
+    #pragma omp parallel for
+    for (int i = 0; i < playlist->allmusic().size(); i++) {
+        meta = playlist->allmusic().at(i);
+        if (searchStr.isEmpty()) {
+            Q_EMIT addMeta(meta);
+        } else {
+            if (chineseFlag) {
+                if (meta->title.contains(searchStr, Qt::CaseInsensitive)) {
+                    Q_EMIT addMeta(meta);
+                }
+            } else {
+                if (playlist->searchStr().size() == 1) {
+                    auto curTextList = DMusic::PinyinSearch::simpleChineseSplit(meta->title);
+                    if (!curTextList.isEmpty() && curTextList.first().contains(searchStr, Qt::CaseInsensitive)) {
+                        Q_EMIT addMeta(meta);
+                    }
+                } else {
+                    auto curTextList = DMusic::PinyinSearch::simpleChineseSplit(meta->title);
+                    if (!curTextList.isEmpty() && curTextList.join("").contains(searchStr, Qt::CaseInsensitive)) {
+                        Q_EMIT addMeta(meta);
+                    }
+                }
+            }
+        }
+        if (i % 10== 0) {
+            QThread::msleep(500);
+        }
+    }
+}

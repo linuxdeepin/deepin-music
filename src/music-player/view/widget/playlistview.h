@@ -28,6 +28,19 @@
 DWIDGET_USE_NAMESPACE
 
 class PlayListViewPrivate;
+
+class ModelMake: public QObject
+{
+    Q_OBJECT
+public:
+    explicit ModelMake(QObject *parent = 0);
+    ~ModelMake();
+public slots:
+    void onModelMake(PlaylistPtr playlist, QString searchStr);
+signals:
+    void addMeta(const MetaPtr meta);
+};
+
 class PlayListView : public DListView
 {
     Q_OBJECT
@@ -54,6 +67,8 @@ public:
 
     int rowCount();
     QString firstHash();
+public slots:
+    void onAddMeta(const MetaPtr meta);
 
 
 signals:
@@ -69,6 +84,7 @@ signals:
     void customSort();
     void addMetasFavourite(const MetaPtrList  &metalist);
     void removeMetasFavourite(const MetaPtrList  &metalist);
+    void modelMake(PlaylistPtr playlist, QString searchStr);
 
 public:
     void onMusiclistChanged(PlaylistPtr playlist);
@@ -89,6 +105,7 @@ protected:
     virtual void keyboardSearch(const QString &search) Q_DECL_OVERRIDE;
 
 private:
+    ModelMake *m_ModelMake;
     QScopedPointer<PlayListViewPrivate> d_ptr;
     bool m_IsPlayList;
     Q_DECLARE_PRIVATE_D(qGetPtrHelper(d_ptr), PlayListView)
