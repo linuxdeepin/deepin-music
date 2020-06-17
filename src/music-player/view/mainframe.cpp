@@ -196,9 +196,17 @@ void MainFramePrivate::initMenu()
 
         Dtk::Widget::moveToCenter(configDialog);
 
+        auto curAskCloseAction = MusicSettings::value("base.close.ask_close_action").toBool();
+        auto curLastPlaylist = MusicSettings::value("base.play.last_playlist").toString();
+        auto curLastMeta = MusicSettings::value("base.play.last_meta").toString();
+        auto curLastPosition = MusicSettings::value("base.play.last_position").toInt();
         configDialog->exec();
         delete configDialog;
         MusicSettings::sync();
+        MusicSettings::setOption("base.close.ask_close_action", curAskCloseAction);
+        MusicSettings::setOption("base.play.last_playlist", curLastPlaylist);
+        MusicSettings::setOption("base.play.last_meta", curLastMeta);
+        MusicSettings::setOption("base.play.last_position", curLastPosition);
 
         auto play_pauseStr = MusicSettings::value("shortcuts.all.play_pause").toString();
         if (play_pauseStr.isEmpty())
