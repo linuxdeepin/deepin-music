@@ -157,13 +157,26 @@ void PlayListWidgetPrivate::initConntion()
                         metalist.append(allMetas[i]);
                         missCount++;
                         allMetas.removeAt(i);
-                        break;
+                        //break;
                     }
                 }
             }
 
             if (allCount == missCount) {
+                if(allCount == 1)
+                    Q_EMIT q->fileRemoved(playListView->playlist() ,metalist.at(0), 1);
                 Q_EMIT q->musiclistRemove(playListView->playlist(), playListView->playlist()->allmusic());
+            }else if (missCount > 0){
+                /***************************************************************
+                 * stop current music
+                 * *************************************************************/
+                Q_EMIT q->musiclistRemove(playListView->playlist(), metalist);
+                /****************************************************************
+                 * emit file not found
+                 * 1 = Player::ResourceError
+                 * ***************************************************************/
+                if(metalist.at(0) == playListView->activingMeta())
+                    Q_EMIT q->fileRemoved(playListView->playlist() ,metalist.at(0), 1); //
             }
 
             if (!metalist.isEmpty()) {

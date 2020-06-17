@@ -993,6 +993,11 @@ void MainFrame::binding(Presenter *presenter)
         d->timer->stop();
     });
 
+    /************************************************
+     * handl the case where file does not exsit
+     * ***********************************************/
+    connect(d->playListWidget,&PlayListWidget::fileRemoved,
+            presenter,&Presenter::notifyMusciError);
     connect(presenter, &Presenter::notifyMusciError,
     this, [ = ](PlaylistPtr playlist, const MetaPtr  meta, int /*error*/) {
         Q_UNUSED(playlist)
@@ -1009,6 +1014,10 @@ void MainFrame::binding(Presenter *presenter)
                 bool existFlag = false;
                 for (auto curMeta : curPlaylist->allmusic()) {
                     if (!curMeta->invalid || QFile::exists(curMeta->localPath)) {
+                      if (QFileInfo(curMeta->localPath).dir().isEmpty())
+                        {
+                            continue;
+                        }
                         Q_EMIT presenter->playNext(curPlaylist, meta);
                         existFlag = true;
                         break;

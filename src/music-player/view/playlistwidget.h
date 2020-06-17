@@ -74,6 +74,7 @@ signals:
     void removeMetasFavourite(const MetaPtrList  &metalist);
     void musicFileMiss();
 
+    void fileRemoved(PlaylistPtr playlist ,const MetaPtr meta ,int );
 protected:
     virtual void dragEnterEvent(QDragEnterEvent *event) Q_DECL_OVERRIDE;
 //    virtual void dragMoveEvent(QDragMoveEvent *event) Q_DECL_OVERRIDE;
