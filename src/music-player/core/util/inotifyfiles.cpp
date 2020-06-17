@@ -25,6 +25,7 @@
 #include <QMap>
 #include <QDir>
 #include <QFileInfo>
+#include <QDir>
 #include <QTimer>
 #include <unistd.h>
 
@@ -71,23 +72,30 @@ void InotifyFiles::scanFiles()
 {
     QStringList allFiles;
     for (int i = d->paths.size() - 1; i >= 0; i--) {
+        QStringList strlist;
         auto curtFile = d->paths[i];
-        if(access(curtFile.toStdString().c_str(),F_OK) != 0){
-//            qDebug()<<"d->activeMeta->localPath "<<curtFile;
+        if(QFileInfo(curtFile).dir().isEmpty())
+        {
+            /****************************************************************
+             * deal with cd ejecting while Optical drive is still connecting
+             * or directory did not exsit
+             * **************************************************************/
             d->paths.removeAt(i);
             allFiles.append(curtFile);
+        }else{
+            /**************************************
+             * to kown whether the file exists
+             * ************************************/
+            if(access(curtFile.toStdString().c_str(),F_OK) != 0)
+            {
+                d->paths.removeAt(i);
+                allFiles.append(curtFile);
+            }
         }
-//        if (!QFile::exists(curtFile)) {
-//            d->paths.removeAt(i);
-//            allFiles.append(curtFile);
-//        }
     }
-
 
     if (!allFiles.isEmpty())
         emit fileChanged(allFiles);
-
-
 }
 
 void InotifyFiles::addPath(const QString &path)
