@@ -330,7 +330,7 @@ void MainFramePrivate::initMenu()
             Q_EMIT q->addPlaylist(true);
     });
 }
-
+#include<QTimer>
 void MainFramePrivate::initUI(bool showLoading)
 {
     showLoading = true;
@@ -373,7 +373,7 @@ void MainFramePrivate::initUI(bool showLoading)
     int themeType = DGuiApplicationHelper::instance()->themeType();
     infoDialog->setThemeType(themeType);
     infoDialog->hide();
-    m_SpeechCenter = SpeechCenter::getInstance();
+    m_SpeechCenter = nullptr/*SpeechCenter::getInstance()*/;
     m_VlcMediaPlayer = Player::instance()->core();
 #if 0
     footer->show();
@@ -829,8 +829,8 @@ void MainFrame::postInitUI()
     Q_D(MainFrame);
 
     d->postInitUI();
-    updateUI();
-    focusPlayList();
+    //updateUI();
+    //focusPlayList();
 
     auto playAction = new QAction(tr("Play/Pause"), this);
     auto prevAction = new QAction(tr("Previous"), this);

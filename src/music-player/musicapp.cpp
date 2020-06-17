@@ -113,7 +113,7 @@ void MusicAppPrivate::triggerShortcutAction(const QString &optKey)
 void MusicAppPrivate::onDataPrepared()
 {
     Q_Q(MusicApp);
-    qDebug() << "TRACE:" << "data prepared";
+    //qDebug() << "TRACE:" << "data prepared";
 
     playerFrame->postInitUI();
     playerFrame->binding(presenter);
@@ -123,9 +123,9 @@ void MusicAppPrivate::onDataPrepared()
         this->triggerShortcutAction(optKey);
     });
 
-    initMpris("DeepinMusic");
+//    initMpris("DeepinMusic");
 
-    presenter->postAction();
+//    presenter->postAction();
 }
 
 void MusicAppPrivate::onQuit()
@@ -198,11 +198,11 @@ void dumpGeometry(const QByteArray &geometry)
            >> maximized
            >> fullScreen;
 
-    qDebug() << "restore geometry:" << restoredFrameGeometry
-             << restoredNormalGeometry
-             << restoredScreenNumber
-             << maximized
-             << fullScreen;
+//    qDebug() << "restore geometry:" << restoredFrameGeometry
+//             << restoredNormalGeometry
+//             << restoredScreenNumber
+//             << maximized
+//             << fullScreen;
 
     if (majorVersion > 1) {
         stream >> restoredScreenWidth;
@@ -213,8 +213,7 @@ void MusicApp::show()
 {
     Q_D(MusicApp);
     auto geometry = MusicSettings::value("base.play.geometry").toByteArray();
-    auto state = MusicSettings::value("base.play.state").toInt();
-    qDebug() << "restore state:" << state;
+    //qDebug() << "restore state:" << state;
     dumpGeometry(geometry);
 
     d->playerFrame->resize(QSize(1070, 680));
@@ -263,7 +262,7 @@ void MusicApp::initUI()
 
     d->playerFrame->initUI(true);
 
-    qDebug() << "TRACE:" << "create MainFrame";
+    //qDebug() << "TRACE:" << "create MainFrame";
 
     show();
 }
@@ -272,14 +271,17 @@ void MusicApp::initConnection()
 {
     Q_D(MusicApp);
 
-    qDebug() << "TRACE:" << "create Presenter";
+    //qDebug() << "TRACE:" << "create Presenter";
     d->presenter = new Presenter;
     auto presenterWork = ThreadPool::instance()->newThread();
     d->presenter->moveToThread(presenterWork);
     connect(presenterWork, &QThread::started, d->presenter, &Presenter::prepareData);
     connect(this, &MusicApp::sigStartImport, d->playerFrame, &MainFrame::onClickedImportFiles);
     connect(d->presenter, &Presenter::dataLoaded, this, [ = ]() {
-        d->onDataPrepared();
+//        d->onDataPrepared();
+        d->initMpris("DeepinMusic");
+
+        d->presenter->postAction();
         Player::instance()->init();
         if (d->m_Files.size() > 0) {
             emit sigStartImport(d->m_Files);
@@ -288,6 +290,7 @@ void MusicApp::initConnection()
     });
 
     presenterWork->start();
-    qDebug() << "TRACE:" << "start prepare data";
+    d->onDataPrepared();
+    //qDebug() << "TRACE:" << "start prepare data";
 }
 
