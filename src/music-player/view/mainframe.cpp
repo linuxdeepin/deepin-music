@@ -47,6 +47,7 @@
 #include "../core/metasearchservice.h"
 #include "../core/musicsettings.h"
 #include "../core/player.h"
+#include "../core/util/global.h"
 #include "../musicapp.h"
 
 #include "widget/titlebarwidget.h"
@@ -174,7 +175,6 @@ void MainFramePrivate::setTheme(int type)
 void MainFramePrivate::initMenu()
 {
     Q_Q(MainFrame);
-
     newSonglistAction = new QAction(MainFrame::tr("Add playlist"), q);
     newSonglistAction->setEnabled(false);
     q->connect(newSonglistAction, &QAction::triggered, q, [ = ](bool) {
@@ -207,9 +207,17 @@ void MainFramePrivate::initMenu()
 
         Dtk::Widget::moveToCenter(configDialog);
 
+        auto curAskCloseAction = MusicSettings::value("base.close.ask_close_action").toBool();
+        auto curLastPlaylist = MusicSettings::value("base.play.last_playlist").toString();
+        auto curLastMeta = MusicSettings::value("base.play.last_meta").toString();
+        auto curLastPosition = MusicSettings::value("base.play.last_position").toInt();
         configDialog->exec();
         delete configDialog;
         MusicSettings::sync();
+        MusicSettings::setOption("base.close.ask_close_action", curAskCloseAction);
+        MusicSettings::setOption("base.play.last_playlist", curLastPlaylist);
+        MusicSettings::setOption("base.play.last_meta", curLastMeta);
+        MusicSettings::setOption("base.play.last_position", curLastPosition);
 
         auto play_pauseStr = MusicSettings::value("shortcuts.all.play_pause").toString();
         if (play_pauseStr.isEmpty())
@@ -247,8 +255,6 @@ void MainFramePrivate::initMenu()
             previousShortcut->setKey(QKeySequence(previousStr));
         }
         Q_EMIT q->fadeInOut();
-        Q_EMIT q->savePosition();
-
     });
 
     int themeType = DGuiApplicationHelper::instance()->themeType();
@@ -743,7 +749,7 @@ MainFrame::MainFrame(QWidget *parent) :
     DMainWindow(parent), dd_ptr(new MainFramePrivate(this))
 {
     setObjectName("MainFrame");
-
+    Global::setAppName(tr("Music"));
     QString descriptionText = MainFrame::tr("Music is a local music player with beautiful design and simple functions.");
     QString acknowledgementLink = "https://www.deepin.org/acknowledgments/deepin-music#thanks";
     qApp->setProductName(QApplication::tr("Music"));
@@ -879,8 +885,7 @@ void MainFrame::binding(Presenter *presenter)
     d->playListWidget->setCurPlaylist(presenter->playlist(PlayMusicListID));
     d->footer->setCurPlaylist(presenter->playlist(PlayMusicListID));
 
-    connect(this, &MainFrame::exit, presenter, &Presenter::onHandleQuit);
-    connect(this, &MainFrame::savePosition, presenter, &Presenter::onSavePosition);
+    connect(this, &MainFrame::exit, presenter, &Presenter::onHandleQuit, Qt::DirectConnection);
     connect(this, &MainFrame::importSelectFiles, presenter, &Presenter::onImportFiles);
     connect(this, &MainFrame::addPlaylist, presenter, &Presenter::onPlaylistAdd);
     connect(this, &MainFrame::fadeInOut, presenter, &Presenter::onFadeInOut);
@@ -995,6 +1000,11 @@ void MainFrame::binding(Presenter *presenter)
         d->timer->stop();
     });
 
+    /************************************************
+     * handl the case where file does not exsit
+     * ***********************************************/
+    connect(d->playListWidget, &PlayListWidget::fileRemoved,
+            presenter, &Presenter::notifyMusciError);
     connect(presenter, &Presenter::notifyMusciError,
     this, [ = ](PlaylistPtr playlist, const MetaPtr  meta, int /*error*/) {
         Q_UNUSED(playlist)
@@ -1011,6 +1021,9 @@ void MainFrame::binding(Presenter *presenter)
                 bool existFlag = false;
                 for (auto curMeta : curPlaylist->allmusic()) {
                     if (!curMeta->invalid || QFile::exists(curMeta->localPath)) {
+                        if (QFileInfo(curMeta->localPath).dir().isEmpty()) {
+                            continue;
+                        }
                         Q_EMIT presenter->playNext(curPlaylist, meta);
                         existFlag = true;
                         break;
@@ -1345,6 +1358,8 @@ void MainFrame::binding(Presenter *presenter)
     QShortcut *muteShortcut = new QShortcut(this);
     muteShortcut->setKey(QKeySequence(QLatin1String("M")));
     connect(muteShortcut, &QShortcut::activated, presenter, &Presenter::onToggleMute);
+
+    connect(presenter, &Presenter::hidewaveformScale, d->footer, &Footer::hidewaveform);
 
     bindSpeechConnect(presenter);
 

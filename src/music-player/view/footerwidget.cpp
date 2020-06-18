@@ -714,6 +714,12 @@ void Footer::refreshBackground()
     d->forwardWidget->setSourceImage(coverImage);
 }
 
+void Footer::hidewaveform()
+{
+    Q_D(Footer);
+    d->waveform->hidewaveformScale();
+}
+
 void Footer::mousePressEvent(QMouseEvent *event)
 {
     Q_D(Footer);

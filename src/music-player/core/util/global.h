@@ -28,4 +28,7 @@ class Global
 public:
     static QString configPath();
     static QString cacheDir();
+    static void setAppName(QString name);
+    static QString getAppName();
+
 };

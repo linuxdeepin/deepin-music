@@ -484,7 +484,8 @@ void PlayListViewPrivate::addMedia(const MetaPtr meta)
     if (coverData.length() > 0) {
         cover = QPixmap::fromImage(QImage::fromData(coverData));
     }
-    cover = cover.scaled(QSize(250, 250));
+    if (cover.width() > 160 || cover.height() > 160)
+        cover = cover.scaled(QSize(160, 160));
     QIcon icon = QIcon(cover);
     newItem->setIcon(icon);
     model->appendRow(newItem);

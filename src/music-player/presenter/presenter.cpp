@@ -449,7 +449,6 @@ Presenter::~Presenter()
 void Presenter::handleQuit()
 {
     Q_D(Presenter);
-    d->settings->setOption("base.play.last_meta", d->syncPlayerMeta->hash);
     d->settings->setOption("base.play.last_position", d->lastPlayPosition);
     d->player->stop();
 }
@@ -732,7 +731,9 @@ void Presenter::postAction()
                 d->player->setFadeInOut(false);
                 d->player->loadMedia(lastPlaylist, lastMeta);
 
-                onMusicResume(lastPlaylist, lastMeta);
+                QTimer::singleShot(200, [ = ]() {//200ms播放是为了在加载播放的100ms结束，150ms设置播放进度后再播放。
+                    onMusicResume(lastPlaylist, lastMeta);
+                });
             }
 
         }
@@ -751,10 +752,6 @@ void Presenter::postAction()
     }
 
     Q_EMIT currentMusicListChanged(lastPlaylist);
-
-    if (position == 0 && lastPlaylist != nullptr && lastMeta != nullptr) {
-        d->player->playMeta(lastPlaylist, lastMeta);
-    }
 }
 
 void Presenter::openUri(const QUrl &uri)
@@ -888,6 +885,7 @@ void Presenter::next()
         return;
     }
     onMusicNext(activeList, activeMeta);
+    Q_EMIT hidewaveformScale();
 }
 
 void Presenter::prev()
@@ -903,17 +901,12 @@ void Presenter::prev()
         return;
     }
     onMusicPrev(activeList, activeMeta);
+    Q_EMIT hidewaveformScale();
 }
 
 void Presenter::onHandleQuit()
 {
     handleQuit();
-}
-void Presenter::onSavePosition()
-{
-    Q_D(Presenter);
-    d->settings->setOption("base.play.last_meta", d->syncPlayerMeta->hash);
-    d->settings->setOption("base.play.last_position", d->lastPlayPosition);
 }
 
 void Presenter::requestImportPaths(PlaylistPtr playlist, const QStringList &filelist)
@@ -1550,6 +1543,14 @@ void Presenter::onMusicPlay(PlaylistPtr playlist,  const MetaPtr meta)
 {
     Q_D(Presenter);
 
+    /****************************************************************
+     * deal with cd ejecting while Optical drive is still connecting.
+     * **************************************************************/
+    if(QFileInfo(meta->localPath).dir().isEmpty())
+    {
+        Q_EMIT d->player->mediaError(playlist, meta, Player::ResourceError);
+        return ;
+    }
     auto toPlayMeta = meta;
     if (playlist.isNull()) {
         //为空则播放所有音乐
@@ -1623,6 +1624,14 @@ void Presenter::onMusicPauseNow(PlaylistPtr playlist, const MetaPtr meta)
 void Presenter::onMusicResume(PlaylistPtr playlist, const MetaPtr info)
 {
     Q_D(Presenter);
+    /****************************************************************
+     * deal with cd ejecting while Optical drive is still connecting.
+     * **************************************************************/
+    if(QFileInfo(info->localPath).dir().isEmpty())
+    {
+        Q_EMIT d->player->mediaError(playlist, info, Player::ResourceError);
+        return ;
+    }
     auto alllists = d->playlistMgr->allplaylist();
     for (auto curList : alllists) {
         if (!curList.isNull())

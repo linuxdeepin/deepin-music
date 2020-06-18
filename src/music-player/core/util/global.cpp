@@ -25,7 +25,7 @@
 #include <DStandardPaths>
 
 DCORE_USE_NAMESPACE;
-
+QString appName;
 QString Global::configPath()
 {
     auto userConfigPath = DStandardPaths::standardLocations(QStandardPaths::AppConfigLocation).value(0);
@@ -36,5 +36,15 @@ QString Global::cacheDir()
 {
     auto userCachePath = DStandardPaths::standardLocations(QStandardPaths::CacheLocation).value(0);
     return userCachePath;
+}
+
+void Global::setAppName(QString name)
+{
+    appName = name;
+}
+
+QString Global::getAppName()
+{
+    return appName;
 }
 
