@@ -47,6 +47,7 @@
 #include "../core/metasearchservice.h"
 #include "../core/musicsettings.h"
 #include "../core/player.h"
+#include "../core/util/global.h"
 #include "../musicapp.h"
 
 #include "widget/titlebarwidget.h"
@@ -174,7 +175,6 @@ void MainFramePrivate::setTheme(int type)
 void MainFramePrivate::initMenu()
 {
     Q_Q(MainFrame);
-
     newSonglistAction = new QAction(MainFrame::tr("Add playlist"), q);
     newSonglistAction->setEnabled(false);
     q->connect(newSonglistAction, &QAction::triggered, q, [ = ](bool) {
@@ -757,7 +757,7 @@ MainFrame::MainFrame(QWidget *parent) :
     DMainWindow(parent), dd_ptr(new MainFramePrivate(this))
 {
     setObjectName("MainFrame");
-
+    Global::setAppName(tr("Music"));
     QString descriptionText = MainFrame::tr("Music is a local music player with beautiful design and simple functions.");
     QString acknowledgementLink = "https://www.deepin.org/acknowledgments/deepin-music#thanks";
     qApp->setProductName(QApplication::tr("Music"));
@@ -1009,8 +1009,8 @@ void MainFrame::binding(Presenter *presenter)
     /************************************************
      * handl the case where file does not exsit
      * ***********************************************/
-    connect(d->playListWidget,&PlayListWidget::fileRemoved,
-            presenter,&Presenter::notifyMusciError);
+    connect(d->playListWidget, &PlayListWidget::fileRemoved,
+            presenter, &Presenter::notifyMusciError);
     connect(presenter, &Presenter::notifyMusciError,
     this, [ = ](PlaylistPtr playlist, const MetaPtr  meta, int /*error*/) {
         Q_UNUSED(playlist)
@@ -1027,8 +1027,7 @@ void MainFrame::binding(Presenter *presenter)
                 bool existFlag = false;
                 for (auto curMeta : curPlaylist->allmusic()) {
                     if (!curMeta->invalid || QFile::exists(curMeta->localPath)) {
-                      if (QFileInfo(curMeta->localPath).dir().isEmpty())
-                        {
+                        if (QFileInfo(curMeta->localPath).dir().isEmpty()) {
                             continue;
                         }
                         Q_EMIT presenter->playNext(curPlaylist, meta);

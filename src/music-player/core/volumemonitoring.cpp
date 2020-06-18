@@ -26,6 +26,7 @@
 #include <QDBusInterface>
 #include <QDBusReply>
 #include <QtDebug>
+#include "util/global.h"
 #include "util/dbusutils.h"
 #include "musicsettings.h"
 static const int timerInterval = 100;//轮巡Debus音量的周期
@@ -84,7 +85,7 @@ void VolumeMonitoring::timeoutSlot()
         QVariant nameV = DBusUtils::redDBusProperty("com.deepin.daemon.Audio", curPath.path(),
                                                     "com.deepin.daemon.Audio.SinkInput", "Name");
 
-        if (!nameV.isValid() || nameV.toString() != "Music")
+        if (!nameV.isValid() || nameV != Global::getAppName())
             continue;
 
         sinkInputPath = curPath.path();
