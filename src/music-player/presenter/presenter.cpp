@@ -1547,6 +1547,14 @@ void Presenter::onMusicPlay(PlaylistPtr playlist,  const MetaPtr meta)
 {
     Q_D(Presenter);
 
+    /****************************************************************
+     * deal with cd ejecting while Optical drive is still connecting.
+     * **************************************************************/
+    if(QFileInfo(meta->localPath).dir().isEmpty())
+    {
+        Q_EMIT d->player->mediaError(playlist, meta, Player::ResourceError);
+        return ;
+    }
     auto toPlayMeta = meta;
     if (playlist.isNull()) {
         //为空则播放所有音乐
@@ -1620,6 +1628,14 @@ void Presenter::onMusicPauseNow(PlaylistPtr playlist, const MetaPtr meta)
 void Presenter::onMusicResume(PlaylistPtr playlist, const MetaPtr info)
 {
     Q_D(Presenter);
+    /****************************************************************
+     * deal with cd ejecting while Optical drive is still connecting.
+     * **************************************************************/
+    if(QFileInfo(info->localPath).dir().isEmpty())
+    {
+        Q_EMIT d->player->mediaError(playlist, info, Player::ResourceError);
+        return ;
+    }
     auto alllists = d->playlistMgr->allplaylist();
     for (auto curList : alllists) {
         if (!curList.isNull())

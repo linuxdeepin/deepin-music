@@ -36,6 +36,7 @@
 #include <QDBusReply>
 #include <QThread>
 #include <QFileInfo>
+#include <QDir>
 
 #include <DRecentManager>
 
@@ -635,6 +636,12 @@ void Player::loadMedia(PlaylistPtr playlist, const MetaPtr meta)
 void Player::playMeta(PlaylistPtr playlist, const MetaPtr meta)
 {
     Q_D(Player);
+    if(QFileInfo(meta->localPath).dir().isEmpty())
+    {
+        Q_EMIT mediaError(playlist, meta, Player::ResourceError);
+        return ;
+    }
+
     MetaPtr curMeta = meta;
     if (curMeta == nullptr)
         curMeta = d->curPlaylist->first();
@@ -712,6 +719,11 @@ void Player::resume(PlaylistPtr playlist, const MetaPtr meta)
         return;
     }
 
+    if(QFileInfo(meta->localPath).dir().isEmpty())
+    {
+        Q_EMIT mediaError(playlist, meta, Player::ResourceError);
+        return ;
+    }
     if (d->fadeOutAnimation) {
         setFadeInOutFactor(1.0);
         d->fadeOutAnimation->stop();
