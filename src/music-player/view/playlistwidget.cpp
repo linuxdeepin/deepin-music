@@ -174,8 +174,13 @@ void PlayListWidgetPrivate::initConntion()
                  * emit file not found
                  * 1 = Player::ResourceError
                  * ***************************************************************/
-                if(metalist.at(0) == playListView->activingMeta())
-                    Q_EMIT q->fileRemoved(playListView->playlist() ,metalist.at(0), 1); //
+                for(MetaPtr meta : metalist)
+                {
+                     if(meta == playListView->activingMeta())
+                     {
+                         Q_EMIT q->fileRemoved(playListView->playlist() ,metalist.at(0), 1);
+                     }
+                }
             }
 
             if (!metalist.isEmpty()) {
