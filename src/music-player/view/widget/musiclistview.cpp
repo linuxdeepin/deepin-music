@@ -59,7 +59,7 @@ MusicListView::MusicListView(QWidget *parent) : DListView(parent)
     font.setPixelSize(14);
     setFont(font);
 
-    setIconSize( QSize(20, 20) );
+    setIconSize(QSize(20, 20));
     setItemSize(QSize(40, 40));
 
     setFrameShape(QFrame::NoFrame);
@@ -86,6 +86,7 @@ MusicListView::MusicListView(QWidget *parent) : DListView(parent)
             this, &MusicListView::onRename);
     connect(this, &MusicListView::currentChanged,
     this, [ = ](const QModelIndex & current, const QModelIndex & previous) {
+        Q_UNUSED(previous)
         if (current.row() < 0 || current.row() >= allPlaylists.size()) {
             this->clearSelected();
             return ;
@@ -98,7 +99,7 @@ MusicListView::MusicListView(QWidget *parent) : DListView(parent)
             if (mdata->playing() != nullptr)
                 curPixmap = QPixmap(":/mpimage/light/music_withe_sidebar/music1.svg");
         }
-        if (playingItem != nullptr ) {
+        if (playingItem != nullptr) {
             auto curItem = dynamic_cast<DStandardItem *>(playingItem);
             //delete
             QIcon playingIcon(curPixmap);
@@ -302,7 +303,7 @@ void MusicListView::changePicture(QPixmap pixmap, QPixmap albumPixmap)
         }
 
     }
-    if (playingItem != nullptr ) {
+    if (playingItem != nullptr) {
         auto curItem = dynamic_cast<DStandardItem *>(playingItem);
         //delete
         QIcon playingIcon(curPixmap);
@@ -561,7 +562,7 @@ void MusicListView::slotTheme(int type)
         rStr = "dark";
     }
     for (int i = 0; i < model->rowCount(); i++) {
-        auto current = currentIndex();
+//        auto current = currentIndex();
         for (int i = 0; i < model->rowCount(); i++) {
             auto curIndex = model->index(i, 0);
             auto curStandardItem = dynamic_cast<DStandardItem *>(model->itemFromIndex(curIndex));

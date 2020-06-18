@@ -80,7 +80,7 @@ class MPRIS_QT_EXPORT MprisController : public QObject
 
 public:
 
-    MprisController(const QString &service, const QDBusConnection &connection, QObject *parent = 0);
+    MprisController(const QString &service, const QDBusConnection &connection, QObject *parent = nullptr);
     ~MprisController();
 
     bool isValid() const;

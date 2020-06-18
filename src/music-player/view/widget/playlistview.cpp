@@ -753,12 +753,12 @@ void PlayListView::showContextMenu(const QPoint &pos,
 
     if (deleteAction) {
         connect(deleteAction, &QAction::triggered, this, [ = ](bool) {
-            bool containsCue = false;
+//            bool containsCue = false;
             MetaPtrList metalist;
             for (auto index : selection->selectedRows()) {
                 auto meta = d->model->meta(index);
                 if (!meta->cuePath.isEmpty()) {
-                    containsCue = true;
+//                    containsCue = true;
                 }
                 metalist << meta;
             }
@@ -788,7 +788,7 @@ void PlayListView::showContextMenu(const QPoint &pos,
                 warnDlg.addContent(t_infoLabel, Qt::AlignHCenter);
                 warnDlg.addSpacing(20);
             }
-
+#if 0
             if (containsCue && false) {
                 DLabel *t_titleLabel = new DLabel(this);
                 t_titleLabel->setForegroundRole(DPalette::TextTitle);
@@ -800,6 +800,7 @@ void PlayListView::showContextMenu(const QPoint &pos,
                 warnDlg.addContent(t_infoLabel, Qt::AlignHCenter);
                 warnDlg.addSpacing(20);
             }
+#endif
             auto coverPixmap =  QPixmap::fromImage(WidgetHelper::cropRect(cover, QSize(64, 64)));
 
             warnDlg.setIcon(QIcon::fromTheme("deepin-music"));

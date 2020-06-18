@@ -345,7 +345,7 @@ void PlayListWidget::dropEvent(QDropEvent *event)
 
 void PlayListWidget::resizeEvent(QResizeEvent *event)
 {
-    Q_D(PlayListWidget);
+//    Q_D(PlayListWidget);
     DWidget::resizeEvent(event);
 }
 

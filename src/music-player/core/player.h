@@ -90,7 +90,7 @@ public:
 
     static const int VolumeStep = 10;
 
-    explicit Player(QObject *parent = 0);
+    explicit Player(QObject *parent = nullptr);
     ~Player();
 
 public:

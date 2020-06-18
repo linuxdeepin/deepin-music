@@ -36,7 +36,7 @@ class WaveformScale : public DFrame
     static const int WAVE_TEXTWIDTH;
 
 public:
-    WaveformScale(QWidget *parent = 0);
+    WaveformScale(QWidget *parent = nullptr);
 
     void setValue(qint64 value);
 

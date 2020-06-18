@@ -33,7 +33,7 @@ class InotifyEngine : public QObject
 {
     Q_OBJECT
 public:
-    explicit InotifyEngine(QObject *parent = 0);
+    explicit InotifyEngine(QObject *parent = nullptr);
     ~InotifyEngine();
 
 signals:
@@ -48,7 +48,7 @@ private slots:
     void handleInotifyEvent(inotify_event *);
 
 private:
-    bool watchDirectory(QDir& dir);
+    bool watchDirectory(QDir &dir);
     void watchAllDirectory(const QString &path);
     QScopedPointer<InotifyEnginePrivate> d;
 };

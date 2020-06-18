@@ -80,8 +80,8 @@ bool checkOnly()
 {
     QString userName = QDir::homePath().section("/", -1, -1);
     std::string path = ("/home/" + userName + "/.cache/deepin/deepin-music/single").toStdString();
-    int fd = open (path.c_str(), O_WRONLY | O_CREAT, 0644);
-    int flock = lockf(fd, F_TLOCK, 0 );
+    int fd = open(path.c_str(), O_WRONLY | O_CREAT, 0644);
+    int flock = lockf(fd, F_TLOCK, 0);
     if (fd == -1) {
         perror("open lockfile/n");
         return false;
@@ -122,7 +122,7 @@ int main(int argc, char *argv[])
 
     app.setApplicationName("deepin-music");
     //app.setApplicationVersion(DApplication::buildVersion("3.1"));
-    const QDate buildDate = QLocale( QLocale::English ).toDate( QString(__DATE__).replace("  ", " 0"), "MMM dd yyyy");
+    const QDate buildDate = QLocale(QLocale::English).toDate(QString(__DATE__).replace("  ", " 0"), "MMM dd yyyy");
     QString t_date = buildDate.toString("MMdd");
     // Version Time
     app.setApplicationVersion(DApplication::buildVersion(t_date));

@@ -140,7 +140,7 @@ QColor MusicInfoItemDelegatePrivate::foreground(int col, const QStyleOptionViewI
 
     auto emCol = static_cast<MusicInfoItemDelegate::MusicColumn>(col);
     switch (emCol) {
-    case MusicInfoItemDelegate::Number:
+//    case MusicInfoItemDelegate::Number:
     case MusicInfoItemDelegate::Length:
         return textColor();
     case MusicInfoItemDelegate::Title:
@@ -167,8 +167,8 @@ static inline QFlags<Qt::AlignmentFlag> alignmentFlag(int col)
         return (Qt::AlignLeft | Qt::AlignVCenter);
     case MusicInfoItemDelegate::Length:
         return (Qt::AlignRight | Qt::AlignVCenter);
-    default:
-        break;
+//    default:
+//        break;
     }
     return (Qt::AlignLeft | Qt::AlignVCenter);;
 }
@@ -186,8 +186,8 @@ static inline QRect colRect(int col, const QStyleOptionViewItem &option)
         return QRect(50, option.rect.y(), w / 2 - 20, option.rect.height());
     case MusicInfoItemDelegate::Length:
         return QRect(w, option.rect.y(), tailwidth - 20, option.rect.height());
-    default:
-        break;
+//    default:
+//        break;
     }
     return option.rect.marginsRemoved(QMargins(0, 0, 0, 0));
 }
@@ -198,7 +198,7 @@ void MusicInfoItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
 {
     auto listview = qobject_cast<const MusicListInfoView *>(option.widget);
 
-    Q_D(const MusicInfoItemDelegate);
+//    Q_D(const MusicInfoItemDelegate);
 
     painter->save();
 
@@ -256,7 +256,7 @@ void MusicInfoItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
     //auto background = baseColor;
 
     int lrWidth = 10;
-    if (!(option.state & QStyle::State_Selected) && !(option.state & QStyle::State_MouseOver) ) {
+    if (!(option.state & QStyle::State_Selected) && !(option.state & QStyle::State_MouseOver)) {
         painter->save();
         painter->setPen(Qt::NoPen);
         painter->setBrush(background);
@@ -310,7 +310,6 @@ void MusicInfoItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
     rowCountSize = qMax(rowCountSize, 2);
 
     for (int col = 0; col < 3; ++col) {
-        auto textColor = d->foreground(col, option);
         QColor brightTextColor(option.palette.highlight().color());
         auto flag = alignmentFlag(col);
         auto rect = colRect(col, option);
@@ -338,8 +337,8 @@ void MusicInfoItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
                 QRect t_ratioRect;
                 t_ratioRect.setX(0);
                 t_ratioRect.setY(0);
-                t_ratioRect.setWidth(icon.width() / t_ratio);
-                t_ratioRect.setHeight(icon.height() / t_ratio);
+                t_ratioRect.setWidth(static_cast<int>(icon.width() / t_ratio));
+                t_ratioRect.setHeight(static_cast<int>(icon.height() / t_ratio));
                 auto centerF = QRectF(rect).center();
                 auto iconRect = QRectF(centerF.x() - t_ratioRect.width() / 2,
                                        centerF.y() - t_ratioRect.height() / 2,
@@ -352,7 +351,7 @@ void MusicInfoItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
                 QFont font(font11);
                 QFontMetrics fm(font);
                 auto text = fm.elidedText(str, Qt::ElideMiddle, rect.width());
-                painter->drawText(rect, flag, text);
+                painter->drawText(rect, static_cast<int>(flag), text);
             }
             break;
         }
@@ -362,13 +361,13 @@ void MusicInfoItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
             QFont font(font14);
             QFontMetrics fm(font);
             auto text = fm.elidedText(meta->title, Qt::ElideMiddle, rect.width());
-            painter->drawText(rect, flag, text);
+            painter->drawText(rect, static_cast<int>(flag), text);
             break;
         }
         case Length:
             painter->setPen(otherColor);
             painter->setFont(font11);
-            painter->drawText(rect, flag, DMusic::lengthString(meta->length));
+            painter->drawText(rect, static_cast<int>(flag), DMusic::lengthString(meta->length));
             break;
         default:
             break;
@@ -380,13 +379,12 @@ void MusicInfoItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
 QSize MusicInfoItemDelegate::sizeHint(const QStyleOptionViewItem &option,
                                       const QModelIndex &index) const
 {
-    Q_D(const MusicInfoItemDelegate);
-
-    auto listview = qobject_cast<const MusicListInfoView *>(option.widget);
+//    Q_D(const MusicInfoItemDelegate);
 
     auto baseSize = QStyledItemDelegate::sizeHint(option, index);
     return  QSize(baseSize.width() / 5, baseSize.height());
 //    auto headerWidth = headerPointWidth(option, index);
+#if 0
     auto headerWidth = 17 + 10 + 10 + 4;
     auto tialWidth = d->timePropertyWidth(option);
     auto w = option.widget->width() - headerWidth - tialWidth;
@@ -404,6 +402,7 @@ QSize MusicInfoItemDelegate::sizeHint(const QStyleOptionViewItem &option,
     }
 
     return baseSize;
+#endif
 }
 
 QWidget *MusicInfoItemDelegate::createEditor(QWidget *parent,

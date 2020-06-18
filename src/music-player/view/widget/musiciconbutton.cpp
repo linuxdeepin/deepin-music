@@ -36,7 +36,7 @@ MusicIconButton::MusicIconButton(QWidget *parent)
 
 MusicIconButton::MusicIconButton(const QString &normalPic, const QString &hoverPic,
                                  const QString &pressPic, const QString &checkedPic, QWidget *parent)
-    : DPushButton (parent)
+    : DPushButton(parent)
 {
     defaultPicPath.normalPicPath = normalPic;
     defaultPicPath.hoverPicPath = hoverPic;
@@ -150,8 +150,8 @@ void MusicIconButton::paintEvent(QPaintEvent *event)
     painter.setRenderHint(QPainter::HighQualityAntialiasing);
     painter.setRenderHint(QPainter::SmoothPixmapTransform);
 
-    int pixmapWidth = pixmap.rect().width() / devicePixelRatioF();
-    int pixmapHeight = pixmap.rect().height() / devicePixelRatioF();
+    int pixmapWidth = static_cast<int>(pixmap.rect().width() / devicePixelRatioF());
+    int pixmapHeight = static_cast<int>(pixmap.rect().height() / devicePixelRatioF());
     QRect pixmapRect((rect().width() - pixmapWidth) / 2, (rect().height() - pixmapHeight) / 2, pixmapWidth, pixmapHeight);
     pixmapRect = pixmapRect.intersected(rect());
 //    painter.drawPixmap(pixmapRect, pixmap, QRect(0, 0, pixmapWidth, pixmapHeight));

@@ -52,19 +52,16 @@ void logCallback(void *data,
 VlcInstance::VlcInstance(const QStringList &args,
                          QObject *parent)
     : QObject(parent),
-      _vlcInstance(0),
+      _vlcInstance(nullptr),
       _status(false),
       _logLevel(Vlc::ErrorLevel)
 {
+    Q_UNUSED(args)
 // Convert arguments to required format
-
-    char *argv[args.count()];
-    for (int i = 0; i < args.count(); ++i)
-        argv[i] = (char *)qstrdup(args.at(i).toUtf8().data());
 
     // Create new libvlc instance
 //    _vlcInstance = libvlc_new(args.count(), argv);
-    _vlcInstance = libvlc_new(0, NULL);
+    _vlcInstance = libvlc_new(0, nullptr);
 
     libvlc_set_user_agent(_vlcInstance, "Music", "");//name
     libvlc_set_app_id(_vlcInstance, "", "", "deepin-music");//icon

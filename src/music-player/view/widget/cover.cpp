@@ -95,9 +95,9 @@ void Cover::paintEvent(QPaintEvent *)
     painter.setRenderHints(QPainter::Antialiasing | QPainter::HighQualityAntialiasing | QPainter::SmoothPixmapTransform);
     auto radius = d->m_radius;
     auto innerBorderColor = d->m_borderColor;
-    auto outerBorderColor = d->m_shadowColor;
+//    auto outerBorderColor = d->m_shadowColor;
     auto backgroundColor = QColor(255, 255, 255, 255);
-    auto penWidthf = borderPenWidth;
+//    auto penWidthf = borderPenWidth;
 
     // draw background
     //auto backgroundRect = QRectF(rect()).marginsRemoved(d->outterMargins);
@@ -121,6 +121,7 @@ void Cover::paintEvent(QPaintEvent *)
 
     return;
     // draw border
+#if 0
     QPainterPath innerBorderPath;
     QRectF borderRect = QRectF(rect()).marginsRemoved(d->outterMargins);
     auto borderRadius = radius;
@@ -142,6 +143,7 @@ void Cover::paintEvent(QPaintEvent *)
     QPen outerBorderPen(outerBorderColor);
     outerBorderPen.setWidthF(penWidthf / 2);
     painter.strokePath(outerBorderPath, outerBorderPen);
+#endif
 }
 
 void Cover::setCoverPixmap(const QPixmap &pixmap)

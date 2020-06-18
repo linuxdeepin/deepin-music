@@ -47,7 +47,7 @@ DBusExtendedAbstractInterface::DBusExtendedAbstractInterface(const QString &serv
     : QDBusAbstractInterface(service, path, interface, connection, parent)
     , m_sync(false)
     , m_useCache(false)
-    , m_getAllPendingCallWatcher(0)
+    , m_getAllPendingCallWatcher(nullptr)
     , m_propertiesChangedConnected(false)
 {
 }
@@ -99,7 +99,7 @@ void DBusExtendedAbstractInterface::getAllProperties()
         QDBusPendingReply<QVariantMap> async = connection().asyncCall(msg);
         m_getAllPendingCallWatcher = new QDBusPendingCallWatcher(async, this);
 
-        connect(m_getAllPendingCallWatcher, SIGNAL(finished(QDBusPendingCallWatcher*)), this, SLOT(onAsyncGetAllPropertiesFinished(QDBusPendingCallWatcher*)));
+        connect(m_getAllPendingCallWatcher, SIGNAL(finished(QDBusPendingCallWatcher *)), this, SLOT(onAsyncGetAllPropertiesFinished(QDBusPendingCallWatcher *)));
         return;
     }
 }
@@ -107,8 +107,8 @@ void DBusExtendedAbstractInterface::getAllProperties()
 void DBusExtendedAbstractInterface::connectNotify(const QMetaMethod &signal)
 {
     if (signal.methodType() == QMetaMethod::Signal
-        && (signal.methodSignature() == *propertyChangedSignature()
-            || signal.methodSignature() == *propertyInvalidatedSignature())) {
+            && (signal.methodSignature() == *propertyChangedSignature()
+                || signal.methodSignature() == *propertyInvalidatedSignature())) {
         if (!m_propertiesChangedConnected) {
             QStringList argumentMatch;
             argumentMatch << interface();
@@ -127,11 +127,11 @@ void DBusExtendedAbstractInterface::connectNotify(const QMetaMethod &signal)
 void DBusExtendedAbstractInterface::disconnectNotify(const QMetaMethod &signal)
 {
     if (signal.methodType() == QMetaMethod::Signal
-        && (signal.methodSignature() == *propertyChangedSignature()
-            || signal.methodSignature() == *propertyInvalidatedSignature())) {
+            && (signal.methodSignature() == *propertyChangedSignature()
+                || signal.methodSignature() == *propertyInvalidatedSignature())) {
         if (m_propertiesChangedConnected
-            && 0 == receivers(propertyChangedSignature()->constData())
-            && 0 == receivers(propertyInvalidatedSignature()->constData())) {
+                && 0 == receivers(propertyChangedSignature()->constData())
+                && 0 == receivers(propertyInvalidatedSignature()->constData())) {
             QStringList argumentMatch;
             argumentMatch << interface();
             connection().disconnect(service(), path(), *dBusPropertiesInterface(), *dBusPropertiesChangedSignal(),
@@ -153,7 +153,7 @@ QVariant DBusExtendedAbstractInterface::internalPropGet(const char *propname, vo
     if (m_useCache) {
         int propertyIndex = metaObject()->indexOfProperty(propname);
         QMetaProperty metaProperty = metaObject()->property(propertyIndex);
-        return QVariant(metaProperty.type(), propertyPtr);
+        return QVariant(static_cast<int>(metaProperty.type()), propertyPtr);
     }
 
     if (m_sync) {
@@ -190,7 +190,7 @@ QVariant DBusExtendedAbstractInterface::internalPropGet(const char *propname, vo
         const char *expectedSignature = "";
         if (int(metaProperty.type()) != QMetaType::QVariant) {
             expectedSignature = QDBusMetaType::typeToSignature(metaProperty.userType());
-            if (0 == expectedSignature) {
+            if (nullptr == expectedSignature) {
                 QString errorMessage =
                     QStringLiteral("Type %1 must be registered with Qt D-Bus "
                                    "before it can be used to read property "
@@ -205,7 +205,7 @@ QVariant DBusExtendedAbstractInterface::internalPropGet(const char *propname, vo
         }
 
         asyncProperty(propname);
-        return QVariant(metaProperty.type(), propertyPtr);
+        return QVariant(static_cast<int>(metaProperty.type()), propertyPtr);
     }
 }
 
@@ -243,7 +243,7 @@ void DBusExtendedAbstractInterface::internalPropSet(const char *propname, const 
             return;
         }
 
-        asyncSetProperty(propname, QVariant(metaProperty.type(), propertyPtr));
+        asyncSetProperty(propname, QVariant(static_cast<int>(metaProperty.type()), propertyPtr));
     }
 }
 
@@ -254,7 +254,7 @@ QVariant DBusExtendedAbstractInterface::asyncProperty(const QString &propertyNam
     QDBusPendingReply<QVariant> async = connection().asyncCall(msg);
     DBusExtendedPendingCallWatcher *watcher = new DBusExtendedPendingCallWatcher(async, propertyName, QVariant(), this);
 
-    connect(watcher, SIGNAL(finished(QDBusPendingCallWatcher*)), this, SLOT(onAsyncPropertyFinished(QDBusPendingCallWatcher*)));
+    connect(watcher, SIGNAL(finished(QDBusPendingCallWatcher *)), this, SLOT(onAsyncPropertyFinished(QDBusPendingCallWatcher *)));
 
     return QVariant();
 }
@@ -266,7 +266,7 @@ void DBusExtendedAbstractInterface::asyncSetProperty(const QString &propertyName
     QDBusPendingReply<QVariant> async = connection().asyncCall(msg);
     DBusExtendedPendingCallWatcher *watcher = new DBusExtendedPendingCallWatcher(async, propertyName, value, this);
 
-    connect(watcher, SIGNAL(finished(QDBusPendingCallWatcher*)), this, SLOT(onAsyncSetPropertyFinished(QDBusPendingCallWatcher*)));
+    connect(watcher, SIGNAL(finished(QDBusPendingCallWatcher *)), this, SLOT(onAsyncSetPropertyFinished(QDBusPendingCallWatcher *)));
 }
 
 void DBusExtendedAbstractInterface::onAsyncPropertyFinished(DBusExtendedPendingCallWatcher *watcher)
@@ -317,7 +317,7 @@ void DBusExtendedAbstractInterface::onAsyncSetPropertyFinished(DBusExtendedPendi
 
 void DBusExtendedAbstractInterface::onAsyncGetAllPropertiesFinished(QDBusPendingCallWatcher *watcher)
 {
-    m_getAllPendingCallWatcher = 0;
+    m_getAllPendingCallWatcher = nullptr;
 
     QDBusPendingReply<QVariantMap> reply = *watcher;
 
@@ -336,9 +336,9 @@ void DBusExtendedAbstractInterface::onAsyncGetAllPropertiesFinished(QDBusPending
     watcher->deleteLater();
 }
 
-void DBusExtendedAbstractInterface::onPropertiesChanged(const QString& interfaceName,
-        const QVariantMap& changedProperties,
-        const QStringList& invalidatedProperties)
+void DBusExtendedAbstractInterface::onPropertiesChanged(const QString &interfaceName,
+                                                        const QVariantMap &changedProperties,
+                                                        const QStringList &invalidatedProperties)
 {
     if (interfaceName == interface()) {
         QVariantMap::const_iterator i = changedProperties.constBegin();
@@ -377,7 +377,7 @@ void DBusExtendedAbstractInterface::onPropertiesChanged(const QString& interface
 QVariant DBusExtendedAbstractInterface::demarshall(const QString &interface, const QMetaProperty &metaProperty, const QVariant &value, QDBusError *error)
 {
     Q_ASSERT(metaProperty.isValid());
-    Q_ASSERT(error != 0);
+    Q_ASSERT(error != nullptr);
 
     if (value.userType() == metaProperty.userType()) {
         // No need demarshalling. Passing back straight away ...
@@ -385,7 +385,7 @@ QVariant DBusExtendedAbstractInterface::demarshall(const QString &interface, con
         return value;
     }
 
-    QVariant result = QVariant(metaProperty.userType(), (void*)0);
+    QVariant result = QVariant(metaProperty.userType(), nullptr);
     QString errorMessage;
     const char *expectedSignature = QDBusMetaType::typeToSignature(metaProperty.userType());
 

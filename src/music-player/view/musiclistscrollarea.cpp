@@ -161,6 +161,7 @@ void MusicListScrollArea::slotTheme(int type)
 
 void MusicListScrollArea::changePicture(QPixmap pixmap, QPixmap albumPixmap, QPixmap sidebarPixmap)
 {
+    Q_UNUSED(albumPixmap)
     m_dataBaseListview->changePicture(pixmap, sidebarPixmap);
     m_customizeListview->changePicture(pixmap, sidebarPixmap);
 }

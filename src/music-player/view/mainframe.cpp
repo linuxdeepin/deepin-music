@@ -149,7 +149,7 @@ public:
 };
 void MainFramePrivate::setTheme(int type)
 {
-    Q_Q(MainFrame);
+//    Q_Q(MainFrame);
     if (type == 0) {
         type = DGuiApplicationHelper::instance()->themeType();
     }
@@ -545,6 +545,7 @@ void MainFramePrivate:: slideToImportView()
 
 void MainFramePrivate:: slideToMusicListView(bool keepPlaylist)
 {
+    Q_UNUSED(keepPlaylist)
     Q_Q(MainFrame);
 
     titlebarwidget->setSearchEnable(true);
@@ -788,7 +789,7 @@ MainFrame::MainFrame(QWidget *parent) :
     //convert thread init
     convertThread *converThd = new convertThread;
     connect(this, &MainFrame::exit, converThd, &convertThread::exitToCheckFile);
-    connect(Player::instance(), &Player::addApeTask, this, [=](QString path, QString name) {
+    connect(Player::instance(), &Player::addApeTask, this, [ = ](QString path, QString name) {
         converThd->addApeandAmr(path, name);
         if (!converThd->isRunning()) {
             converThd->start();
@@ -998,7 +999,7 @@ void MainFrame::binding(Presenter *presenter)
 
     connect(presenter, &Presenter::notifyMusciError,
     this, [ = ](PlaylistPtr playlist, const MetaPtr  meta, int /*error*/) {
-
+        Q_UNUSED(playlist)
         Dtk::Widget::DDialog warnDlg(this);
         warnDlg.setIcon(QIcon::fromTheme("deepin-music"));
         warnDlg.setTextFormat(Qt::RichText);
@@ -1072,6 +1073,8 @@ void MainFrame::binding(Presenter *presenter)
 
     connect(presenter, &Presenter::musicPaused,
     this, [ = ](PlaylistPtr playlist, const MetaPtr meta) {
+        Q_UNUSED(playlist)
+        Q_UNUSED(meta)
         d->timer->stop();
     });
 
@@ -1239,6 +1242,8 @@ void MainFrame::binding(Presenter *presenter)
             presenter, &Presenter::onToggleFavourite);
     connect(d->footer, &Footer::pause,
     this, [ = ](PlaylistPtr playlist, const MetaPtr meta) {
+        Q_UNUSED(playlist)
+        Q_UNUSED(meta)
         d->timer->stop();
     });
 
@@ -1475,7 +1480,7 @@ void MainFrame::onSelectImportFiles()
 
 void MainFrame::onClickedImportFiles(QStringList files)
 {
-    Q_D(const MainFrame);
+//    Q_D(const MainFrame);
     Q_EMIT importSelectFiles(files, nullptr);
 }
 
@@ -1653,7 +1658,7 @@ void MainFrame::closeEvent(QCloseEvent *event)
 
 void MainFrame::paintEvent(QPaintEvent *e)
 {
-    Q_D(MainFrame);
+//    Q_D(MainFrame);
     QPainter p(this);
 
     DMainWindow::paintEvent(e);

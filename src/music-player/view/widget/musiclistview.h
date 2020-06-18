@@ -32,14 +32,14 @@ class MusicListView : public DListView
     Q_OBJECT
 public:
     explicit MusicListView(QWidget *parent = Q_NULLPTR);
-    ~MusicListView();
+    ~MusicListView() override;
 
     void showContextMenu(const QPoint &pos);
 
     void addMusicList(PlaylistPtr playlist, bool addFlag = false);
 
     QStandardItem *item(int row, int column = 0) const;
-    void setCurrentItem ( QStandardItem *item );
+    void setCurrentItem(QStandardItem *item);
 
     PlaylistPtr playlistPtr(const QModelIndex &index);
     PlaylistPtr playlistPtr(QStandardItem *item);

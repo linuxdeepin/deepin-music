@@ -50,7 +50,7 @@ public:
     explicit DBusExtendedPendingCallWatcher(const QDBusPendingCall &call,
                                             const QString &asyncProperty,
                                             const QVariant &previousValue,
-                                            QObject *parent = 0);
+                                            QObject *parent = nullptr);
     ~DBusExtendedPendingCallWatcher();
 
     Q_PROPERTY(QString AsyncProperty READ asyncProperty)

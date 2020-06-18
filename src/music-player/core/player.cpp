@@ -148,7 +148,7 @@ public:
         /*-------AudioPlayer-------*/
         ioPlayer  =  new AudioPlayer();
 
-        qvinstance = new VlcInstance(VlcCommon::args(), NULL);
+        qvinstance = new VlcInstance(VlcCommon::args(), nullptr);
         qvplayer = new VlcMediaPlayer(qvinstance);
         qvmedia = new VlcMedia();
 //        qvplayer->audio()->setVolume(100);
@@ -253,6 +253,7 @@ void PlayerPrivate::initConnection()
 
     q->connect(ioPlayer->_buffer, &AudioBufferDevice::durationChanged, q,
     [ = ](qint64 position) {
+        Q_UNUSED(position)
         ioDuration++;
     });
 
@@ -410,11 +411,11 @@ void PlayerPrivate::initConnection()
 
     q->connect(qplayer, &QMediaPlayer::stateChanged,
     q, [ = ](QMediaPlayer::State newState) {
-
+        Q_UNUSED(newState)
 //        ioPlayer->reset();
-
+#if 0
         switch (newState) {
-            if (!isamr) {
+            if (!isamr) {   //warning: code will never be exetuted
             case QMediaPlayer::StoppedState:
                 Q_EMIT q->playbackStatusChanged(Player::Stopped);
                 break;
@@ -426,6 +427,7 @@ void PlayerPrivate::initConnection()
                 break;
             }
         }
+#endif
 
     });
 
@@ -1010,6 +1012,8 @@ void Player::resume(PlaylistPtr playlist, const MetaPtr meta)
 
 void Player::playNextMeta(PlaylistPtr playlist, const MetaPtr meta)
 {
+    Q_UNUSED(playlist)
+    Q_UNUSED(meta)
     Q_D(Player);
 //    Q_ASSERT(playlist == d->activePlaylist);
 
@@ -1023,6 +1027,7 @@ void Player::playNextMeta(PlaylistPtr playlist, const MetaPtr meta)
 
 void Player::playPrevMusic(PlaylistPtr playlist, const MetaPtr meta)
 {
+    Q_UNUSED(playlist)
     Q_D(Player);
 //    Q_ASSERT(playlist == d->activePlaylist);
 
@@ -1189,7 +1194,7 @@ Player::PlaybackMode Player::mode() const
 
 bool Player::muted()
 {
-    Q_D(const Player);
+    //Q_D(const Player);
     //return d->qplayer->isMuted();
     return this->isMusicMuted();
 }
@@ -1238,6 +1243,7 @@ void Player::setCanControl(bool canControl)
 
 void Player::setIOPosition(qint64 value, qint64 range)
 {
+    Q_UNUSED(range)
     Q_D(Player);
 
     if (d->playOnLoad && d->activeMeta && QFile::exists(d->activeMeta->localPath)) {
@@ -1321,7 +1327,7 @@ void Player::updateVolume(int volume)
 
 void Player::setMuted(bool mute)
 {
-    Q_D(Player);
+//    Q_D(Player);
     //d->qplayer->setMuted(mute);
     setMusicMuted(mute);
 }
@@ -1333,7 +1339,7 @@ void Player::setFadeInOutFactor(double fadeInOutFactor)
 //    qDebug() << "setFadeInOutFactor" << fadeInOutFactor
 //             << d->volume *d->fadeInOutFactor << d->volume;
     d->qplayer->blockSignals(true);
-    d->qplayer->setVolume(/*d->volume*/100 * d->fadeInOutFactor);
+    d->qplayer->setVolume(/*d->volume*/static_cast<int>(100 * d->fadeInOutFactor));
     d->qplayer->blockSignals(false);
 
 //setMusicVolume(d->volume * d->fadeInOutFactor / 100.0);

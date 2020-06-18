@@ -37,12 +37,12 @@ QT_BEGIN_NAMESPACE
 extern Q_WIDGETS_EXPORT void qt_blurImage(QPainter *p, QImage &blurImage, qreal radius, bool quality, bool alphaOnly, int transposed = 0);
 QT_END_NAMESPACE
 
-static inline int pixel2point(int pixel)
-{
-    return pixel * 96 / 72;
-}
+//static inline int pixel2point(int pixel)
+//{
+//    return pixel * 96 / 72;
+//}
 
-const int PlayItemRightMargin = 20;
+//const int PlayItemRightMargin = 20;
 
 class MusicSearchListDelegatePrivate
 {
@@ -79,12 +79,16 @@ void MusicSearchListDelegate::initStyleOption(QStyleOptionViewItem *option, cons
 
 bool MusicSearchListDelegate::editorEvent(QEvent *event, QAbstractItemModel *model, const QStyleOptionViewItem &option, const QModelIndex &index)
 {
+    Q_UNUSED(event)
+    Q_UNUSED(model)
+    Q_UNUSED(option)
+    Q_UNUSED(index)
     return true;
 }
 
 void MusicSearchListDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
-    Q_D(const MusicSearchListDelegate);
+//    Q_D(const MusicSearchListDelegate);
 
     /********************设置基础颜色***************************/
     QColor backColor("#FFFFFF");
@@ -272,6 +276,8 @@ void MusicSearchListDelegate::paint(QPainter *painter, const QStyleOptionViewIte
 
 QSize MusicSearchListDelegate::sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
+    Q_UNUSED(option)
+    Q_UNUSED(index)
     //return QStyledItemDelegate::sizeHint(option, index);
     return QSize(30, 30);
 }

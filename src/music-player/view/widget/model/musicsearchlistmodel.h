@@ -30,9 +30,9 @@ class MusicSearchListModel : public QStandardItemModel
 {
     Q_OBJECT
 public:
-    explicit MusicSearchListModel(QObject *parent = 0);
+    explicit MusicSearchListModel(QObject *parent = nullptr);
     MusicSearchListModel(int rows, int columns, QObject *parent = Q_NULLPTR);
-    ~MusicSearchListModel();
+    ~MusicSearchListModel() override;
 
     PlaylistPtr playlist() const;
     void setPlaylist(PlaylistPtr playlist);

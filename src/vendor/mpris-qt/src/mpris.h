@@ -82,7 +82,7 @@ public:
         UserRating
     };
 
-    Mpris(QObject *parent = 0);
+    Mpris(QObject *parent = nullptr);
     ~Mpris();
 
     static QObject *api_factory(QQmlEngine *, QJSEngine *);
@@ -93,7 +93,7 @@ private:
     template<class T, int N> static int arraySize(T(&)[N])
     {
         return N;
-    };
+    }
     template<typename T, typename U> struct is_same {
         static const bool value = false;
     };

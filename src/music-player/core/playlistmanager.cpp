@@ -52,7 +52,7 @@ public:
 
     inline uint indexUUID(const QString &uuid)
     {
-        return sortUUIDs.indexOf(uuid);
+        return static_cast<uint>(sortUUIDs.indexOf(uuid));
     }
 
     QStringList                 sortUUIDs;
@@ -280,7 +280,7 @@ PlaylistPtr PlaylistManager::addPlaylist(const PlaylistMeta &listinfo)
 {
     Q_D(PlaylistManager);
     PlaylistMeta saveInfo(listinfo);
-    saveInfo.sortID = d->sortUUIDs.length();
+    saveInfo.sortID = static_cast<uint>(d->sortUUIDs.length());
     d->sortUUIDs << saveInfo.uuid;
     insertPlaylist(listinfo.uuid, PlaylistPtr(new Playlist(saveInfo)));
     MediaDatabase::addPlaylist(saveInfo);

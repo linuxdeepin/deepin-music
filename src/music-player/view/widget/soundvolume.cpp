@@ -267,7 +267,7 @@ void SoundVolume::paintEvent(QPaintEvent * /*event*/)
     }
 
     QPen pen(borderColor);
-    pen.setWidth(penWidthf);
+    pen.setWidth(static_cast<int>(penWidthf));
     //painter.strokePath(path, pen);
 }
 void SoundVolume::slotTheme(int type)
