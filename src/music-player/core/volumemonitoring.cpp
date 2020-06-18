@@ -27,6 +27,7 @@
 #include <QDBusReply>
 #include <QtDebug>
 #include "util/dbusutils.h"
+#include "util/global.h"
 #include "musicsettings.h"
 
 class VolumeMonitoringPrivate
@@ -83,7 +84,7 @@ void VolumeMonitoring::timeoutSlot()
         QVariant nameV = DBusUtils::redDBusProperty("com.deepin.daemon.Audio", curPath.path(),
                                                     "com.deepin.daemon.Audio.SinkInput", "Name");
 
-        if (!nameV.isValid() || nameV.toString() != "Music")
+        if (!nameV.isValid() || nameV != Global::getAppName())
             continue;
 
         sinkInputPath = curPath.path();
