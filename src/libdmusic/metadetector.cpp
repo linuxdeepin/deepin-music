@@ -350,9 +350,11 @@ QByteArray MetaDetector::getCoverData(const QString &path, const QString &tmpPat
             QBuffer buffer(&byteArray);
             buffer.open(QIODevice::WriteOnly);
             image.save(&buffer, "jpg");
+            image = image.scaled(QSize(160, 160));
             image.save(imagesDirPath + "/" + imageName);
         } else {
             image = QImage(":/common/image/cover_max.svg");
+            image = image.scaled(QSize(160, 160));
             image.save(imagesDirPath + "/" + imageName);
         }
 
@@ -395,14 +397,14 @@ QVector<float> MetaDetector::getMetaData(const QString &path)
     AVPacket *packet = av_packet_alloc();
     AVFrame *frame = av_frame_alloc();
 
-    while (av_read_frame(pFormatCtx, packet) >= 0 ) {
+    while (av_read_frame(pFormatCtx, packet) >= 0) {
         if (packet->stream_index == audio_stream_index) {
             int got_picture;
-            uint32_t ret = avcodec_decode_audio4( pCodecCtx, frame, &got_picture, packet);
-            if ( ret < 0 ) {
+            uint32_t ret = avcodec_decode_audio4(pCodecCtx, frame, &got_picture, packet);
+            if (ret < 0) {
                 continue;
             }
-            if ( got_picture > 0 ) {
+            if (got_picture > 0) {
                 int data_size = av_get_bytes_per_sample(pCodecCtx->sample_fmt);
                 int t_format = frame->format;
                 uint8_t *ptr = frame->extended_data[0];
