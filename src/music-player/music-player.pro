@@ -4,13 +4,17 @@ include($$PWD/../interface/interface.pri)
 
 load(dtk_translation)
 
-QT       += core gui widgets svg multimedia multimediawidgets xml network sql dbus
+QT       += core gui widgets svg sql dbus
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TEMPLATE    = app
 TARGET      = $$APP_TARGET
 CONFIG      += c++11 link_pkgconfig
 DESTDIR     = $$BUILD_DIST/bin
+
+QMAKE_CXXFLAGS += -fopenmp
+
+LIBS += -fopenmp
 
 #unix{
     DEFINES += SUPPORT_INOTIFY

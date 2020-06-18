@@ -449,7 +449,6 @@ Presenter::~Presenter()
 void Presenter::handleQuit()
 {
     Q_D(Presenter);
-    d->settings->setOption("base.play.last_meta", d->syncPlayerMeta->hash);
     d->settings->setOption("base.play.last_position", d->lastPlayPosition);
     d->player->stop();
 }
@@ -734,7 +733,9 @@ void Presenter::postAction()
                 d->player->setFadeInOut(false);
                 d->player->loadMedia(lastPlaylist, lastMeta);
 
-                onMusicResume(lastPlaylist, lastMeta);
+                QTimer::singleShot(200, [ = ]() {//200ms播放是为了在加载播放的100ms结束，150ms设置播放进度后再播放。
+                    onMusicResume(lastPlaylist, lastMeta);
+                });
             }
 
         }
@@ -753,10 +754,6 @@ void Presenter::postAction()
     }
 
     Q_EMIT currentMusicListChanged(lastPlaylist);
-
-    if (position == 0 && lastPlaylist != nullptr && lastMeta != nullptr) {
-        d->player->playMeta(lastPlaylist, lastMeta);
-    }
 }
 
 void Presenter::openUri(const QUrl &uri)
@@ -913,12 +910,6 @@ void Presenter::prev()
 void Presenter::onHandleQuit()
 {
     handleQuit();
-}
-void Presenter::onSavePosition()
-{
-    Q_D(Presenter);
-    d->settings->setOption("base.play.last_meta", d->syncPlayerMeta->hash);
-    d->settings->setOption("base.play.last_position", d->lastPlayPosition);
 }
 
 void Presenter::requestImportPaths(PlaylistPtr playlist, const QStringList &filelist)
