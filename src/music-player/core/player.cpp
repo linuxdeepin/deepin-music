@@ -314,7 +314,7 @@ void PlayerPrivate::initConnection()
             break;
         }
         case Vlc::Error: {
-            if (!activeMeta.isNull() && !QFile::exists(activeMeta->localPath)) {
+            if (!activeMeta.isNull() /*&& !QFile::exists(activeMeta->localPath)*/) {
                 MetaPtrList removeMusicList;
                 removeMusicList.append(activeMeta);
                 curPlaylist->removeMusicList(removeMusicList);
@@ -637,7 +637,8 @@ void Player::loadMedia(PlaylistPtr playlist, const MetaPtr meta)
 void Player::playMeta(PlaylistPtr playlist, const MetaPtr meta)
 {
     Q_D(Player);
-    if (QFileInfo(meta->localPath).dir().isEmpty()) {
+
+    if (QFileInfo(meta->localPath).dir().isEmpty() /*|| access(meta->localPath.toStdString().c_str(),F_OK) != 0*/) {
         Q_EMIT mediaError(playlist, meta, Player::ResourceError);
         return ;
     }
@@ -719,17 +720,25 @@ void Player::resume(PlaylistPtr playlist, const MetaPtr meta)
         return;
     }
 
-    if (QFileInfo(meta->localPath).dir().isEmpty()) {
+    if (QFileInfo(meta->localPath).dir().isEmpty() /*|| access(meta->localPath.toStdString().c_str(),F_OK) != 0*/) {
         Q_EMIT mediaError(playlist, meta, Player::ResourceError);
         return ;
     }
+
+    if(d->qvplayer->state() == Vlc::Stopped)
+    {
+        //reopen data
+        d->qvmedia->initMedia(meta->localPath, true, d->qvinstance);
+        d->qvplayer->open(d->qvmedia);
+        d->qvplayer->setTime(meta->offset);
+    }
+
     if (d->fadeOutAnimation) {
         setFadeInOutFactor(1.0);
         d->fadeOutAnimation->stop();
 //        d->fadeOutAnimation->deleteLater();
         d->fadeOutAnimation = nullptr;
     }
-
 
     qDebug() << "resume top";
     if (playlist == d->activePlaylist && d->qvplayer->state() == Vlc::Playing && meta->hash == d->activeMeta->hash)

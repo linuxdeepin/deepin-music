@@ -1008,7 +1008,14 @@ void MainFrame::binding(Presenter *presenter)
     connect(presenter, &Presenter::notifyMusciError,
     this, [ = ](PlaylistPtr playlist, const MetaPtr  meta, int /*error*/) {
         Q_UNUSED(playlist)
+        QList<DDialog *> ql = this->findChildren<DDialog *>("uniqueinvaliddailog");
+        if (ql.size() > 0) {
+            if (!ql.first()->isHidden())
+                return ;
+        }
+
         Dtk::Widget::DDialog warnDlg(this);
+        warnDlg.setObjectName("uniqueinvaliddailog");
         warnDlg.setIcon(QIcon::fromTheme("deepin-music"));
         warnDlg.setTextFormat(Qt::RichText);
         warnDlg.setTitle(tr("File is invalid or does not exist, load failed"));
@@ -1051,8 +1058,15 @@ void MainFrame::binding(Presenter *presenter)
     connect(presenter, &Presenter::scanFinished,
     this, [ = ](const QString & /*jobid*/, int mediaCount) {
         if (0 == mediaCount) {
+            QList<DDialog *> ql = this->findChildren<DDialog *>("uniquewarndailog");
+            if (ql.size() > 0) {
+                if (!ql.first()->isHidden())
+                    return ;
+            }
+
             QString message = QString(tr("Import failed, no valid music file found"));
             Dtk::Widget::DDialog warnDlg(this);
+            warnDlg.setObjectName("uniquewarndailog");
             warnDlg.setIcon(QIcon::fromTheme("deepin-music"));
             warnDlg.setTextFormat(Qt::AutoText);
             warnDlg.setTitle(message);
