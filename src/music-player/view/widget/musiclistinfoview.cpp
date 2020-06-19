@@ -78,7 +78,7 @@ MusicListInfoView::MusicListInfoView(QWidget *parent)
     QColor BackgroundColor("#FFFFFF");
     palette.setColor(DPalette::Background, BackgroundColor);
     setPalette(palette);
-    setIconSize( QSize(36, 36) );
+    setIconSize(QSize(36, 36));
 //    setGridSize( QSize(36, 36) );
     d->model = new MusiclistInfomodel(0, 1, this);
     setModel(d->model);
@@ -403,6 +403,9 @@ void MusicListInfoView::keyboardSearch(const QString &search)
 
 void MusicListInfoViewPrivate::addMedia(const MetaPtr meta)
 {
+    if (meta == nullptr) {
+        return;
+    }
     QStandardItem *newItem = new QStandardItem;
     QPixmap cover(":/common/image/cover_max.svg");
     auto coverData = MetaSearchService::coverData(meta);
