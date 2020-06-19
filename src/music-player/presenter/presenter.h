@@ -37,7 +37,7 @@ class Presenter : public QObject
 {
     Q_OBJECT
 public:
-    explicit Presenter(QObject *parent = 0);
+    explicit Presenter(QObject *parent = nullptr);
     ~Presenter();
 
     void initMpris(MprisPlayer *mprisPlayer);
@@ -62,6 +62,8 @@ public slots:
 
 signals:
     void dataLoaded();
+    //控制进度条滑块
+    void hidewaveformScale();
 
 signals:
     //! player
@@ -123,7 +125,7 @@ signals:
     void searchCand(QString searchText, PlaylistPtr playlist);
     void searchResult(QString searchText, QList<PlaylistPtr> resultlist, QString id);
     void musicFileMiss();
-	 //语音控制
+    //语音控制
     void sigSpeedResult(int action, bool result);
 
 public slots:

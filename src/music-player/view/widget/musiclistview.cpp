@@ -86,9 +86,14 @@ MusicListView::MusicListView(QWidget *parent) : DListView(parent)
             this, &MusicListView::onRename);
     connect(this, &MusicListView::currentChanged,
     this, [ = ](const QModelIndex & current, const QModelIndex & previous) {
+        Q_UNUSED(previous)
         if (current.row() < 0 || current.row() >= allPlaylists.size()) {
             this->clearSelected();
             return ;
+        }
+        if (state() != EditingState) {
+            auto curStandardItem = dynamic_cast<DStandardItem *>(model->itemFromIndex(current));
+            curStandardItem->setIcon(QIcon::fromTheme("music_famousballad"));
         }
 
         QPixmap curPixmap = QPixmap(":/mpimage/light/music1.svg");
@@ -561,7 +566,6 @@ void MusicListView::slotTheme(int type)
         rStr = "dark";
     }
     for (int i = 0; i < model->rowCount(); i++) {
-        auto current = currentIndex();
         for (int i = 0; i < model->rowCount(); i++) {
             auto curIndex = model->index(i, 0);
             auto curStandardItem = dynamic_cast<DStandardItem *>(model->itemFromIndex(curIndex));
@@ -610,4 +614,17 @@ void MusicListView::onRename(QStandardItem *item)
             }
         }
     }
+}
+
+void MusicListView::closeEditor(QWidget *editor, QAbstractItemDelegate::EndEditHint hint)
+{
+    DListView::closeEditor(editor, hint);
+    auto current = currentIndex();
+    if (current.row() < 0 || current.row() >= allPlaylists.size()) {
+        this->clearSelected();
+        return ;
+    }
+
+    auto curStandardItem = dynamic_cast<DStandardItem *>(model->itemFromIndex(current));
+    curStandardItem->setIcon(QIcon::fromTheme("music_famousballad"));
 }

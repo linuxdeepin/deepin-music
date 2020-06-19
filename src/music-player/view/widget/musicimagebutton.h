@@ -43,7 +43,7 @@ public:
     explicit MusicImageButton(QWidget *parent = Q_NULLPTR);
 
     MusicImageButton(const QString &normalPic, const QString &hoverPic,
-                     const QString &pressPic, const QString &checkedPic = QString(), QWidget *parent = 0);
+                     const QString &pressPic, const QString &checkedPic = QString(), QWidget *parent = nullptr);
 
     void setPropertyPic(QString propertyName, const QVariant &value, const QString &normalPic, const QString &hoverPic,
                         const QString &pressPic, const QString &checkedPic = QString());

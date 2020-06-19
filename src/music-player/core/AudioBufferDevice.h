@@ -18,7 +18,7 @@ public:
 
 protected:
     virtual qint64 readData(char *data, qint64 size) override;
-    virtual qint64 writeData(const char *data, qint64 maxSize);
+    virtual qint64 writeData(const char *data, qint64 maxSize) override;
 
 signals:
     void positionChanged(qint64 value);

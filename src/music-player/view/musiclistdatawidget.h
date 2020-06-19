@@ -34,7 +34,7 @@ class MusicListDataWidget : public DWidget
     Q_OBJECT
 public:
     explicit MusicListDataWidget(QWidget *parent = Q_NULLPTR);
-    ~MusicListDataWidget();
+    ~MusicListDataWidget() override;
 
     void setCustomSortType(PlaylistPtr playlist);
     void tabwidgetInfo(PlaylistPtr infoPlaylist);

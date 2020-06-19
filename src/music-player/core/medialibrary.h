@@ -51,7 +51,7 @@ public slots:
     void importMedias(const QString &jobid, const QStringList &urllist);
 
 private:
-    explicit MediaLibrary(QObject *parent = 0);
+    explicit MediaLibrary(QObject *parent = nullptr);
     friend class DMusic::DSingleton<MediaLibrary>;
     QScopedPointer<MediaLibraryPrivate> d_ptr;
     Q_DECLARE_PRIVATE_D(qGetPtrHelper(d_ptr), MediaLibrary)

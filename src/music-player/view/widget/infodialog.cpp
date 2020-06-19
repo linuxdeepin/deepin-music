@@ -130,7 +130,8 @@ void InfoDialogPrivate::initUI()
     layout->addWidget(infoGridFrame);
 
     basicinfo = new DLabel("   " + InfoDialog::tr("Basic info"),q);
-    basicinfo->setForegroundRole(DPalette::TextTitle);
+
+    basicinfo->setForegroundRole(DPalette::Text);
     basicinfo->setFixedWidth(300);
 
     auto infoLayout = new QVBoxLayout(infoGridFrame);

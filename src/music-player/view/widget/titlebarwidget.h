@@ -34,7 +34,7 @@ class TitlebarWidget : public DWidget
     Q_OBJECT
 public:
     explicit TitlebarWidget(QWidget *parent = Q_NULLPTR);
-    ~TitlebarWidget();
+    ~TitlebarWidget() override;
 
     void exitSearch();
     void clearSearch();

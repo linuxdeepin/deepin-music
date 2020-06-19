@@ -18,7 +18,7 @@ class ToolTips : public QFrame
 public:
     explicit ToolTips(const QString &text,
                       QWidget *parent = nullptr);
-    ~ToolTips();
+    ~ToolTips() override;
 
     void pop(QPoint center);
 
