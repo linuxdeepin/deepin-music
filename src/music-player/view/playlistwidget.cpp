@@ -164,6 +164,15 @@ void PlayListWidgetPrivate::initConntion()
             if (allCount == missCount) {
                 if(allCount == 1)
                     Q_EMIT q->fileRemoved(playListView->playlist() ,metalist.at(0), 1);
+                else{
+                    for(MetaPtr meta : metalist)
+                    {
+                         if(meta == playListView->activingMeta())
+                         {
+                             Q_EMIT q->fileRemoved(playListView->playlist() ,metalist.at(0), 1);
+                         }
+                    }
+                }
                 Q_EMIT q->musiclistRemove(playListView->playlist(), playListView->playlist()->allmusic());
             }else if (missCount > 0){
                 /***************************************************************
