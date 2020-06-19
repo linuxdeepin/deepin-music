@@ -940,6 +940,7 @@ void Presenter::onMusiclistRemove(PlaylistPtr playlist, const MetaPtrList metali
             auto meta =  playlist->removeMusicList(metalist);
             if (playlist == playinglist) {
                 next = meta;
+                d->player->playMeta(playlist, next);
             }
         }
 
@@ -1546,8 +1547,7 @@ void Presenter::onMusicPlay(PlaylistPtr playlist,  const MetaPtr meta)
     /****************************************************************
      * deal with cd ejecting while Optical drive is still connecting.
      * **************************************************************/
-    if(QFileInfo(meta->localPath).dir().isEmpty())
-    {
+    if (QFileInfo(meta->localPath).dir().isEmpty()) {
         Q_EMIT d->player->mediaError(playlist, meta, Player::ResourceError);
         return ;
     }
@@ -1627,8 +1627,7 @@ void Presenter::onMusicResume(PlaylistPtr playlist, const MetaPtr info)
     /****************************************************************
      * deal with cd ejecting while Optical drive is still connecting.
      * **************************************************************/
-    if(QFileInfo(info->localPath).dir().isEmpty())
-    {
+    if (QFileInfo(info->localPath).dir().isEmpty()) {
         Q_EMIT d->player->mediaError(playlist, info, Player::ResourceError);
         return ;
     }
