@@ -65,6 +65,7 @@ public:
 
     SearchLyricsWidget  *searchLyricsWidget   = nullptr;
     LyricLabel          *lyricview            = nullptr;
+    DLabel              *nolyric              = nullptr;
 
     MusicImageButton         *serachbt = nullptr;
 
@@ -89,7 +90,7 @@ MUsicLyricWidget::MUsicLyricWidget(QWidget *parent)
     palette.setColor(DPalette::Background, QColor("#F8F8F8"));
     setPalette(palette);
 
-    d->backgroundW = new DBlurEffectWidget (this);
+    d->backgroundW = new DBlurEffectWidget(this);
 //    d->backgroundW->setBlurEnabled(true);
 //    d->backgroundW->setMode(DBlurEffectWidget::GaussianBlur);
 
@@ -114,6 +115,12 @@ MUsicLyricWidget::MUsicLyricWidget(QWidget *parent)
     m_leftLayout->addWidget(d->searchLyricsWidget);
 
     d->lyricview = new LyricLabel(false);
+    d->nolyric = new DLabel();
+    d->nolyric->setAlignment(Qt::AlignCenter);
+    d->nolyric->setText(tr("No lyrics yet"));
+    QPalette nolyr = d->nolyric->palette();
+    nolyr.setColor(QPalette::WindowText, QColor(85, 85, 85, 102));
+    d->nolyric->setPalette(nolyr);
 
     auto searchlayout = new QVBoxLayout();
     d->serachbt = new MusicImageButton(":/mpimage/light/normal/search_normal.svg",
@@ -132,6 +139,8 @@ MUsicLyricWidget::MUsicLyricWidget(QWidget *parent)
 
     layout->addLayout(m_leftLayout, 0);
     layout->addWidget(d->lyricview, 10);
+    layout->addWidget(d->nolyric, 10);
+    d->nolyric->hide();
     layout->addLayout(searchlayout, 0);
 
     d->backgroundW->setLayout(layout);
@@ -224,6 +233,14 @@ void MUsicLyricWidget::onMusicPlayed(PlaylistPtr playlist, const MetaPtr meta)
 
     QFileInfo fileInfo(meta->localPath);
     QString lrcPath = fileInfo.dir().path() + QDir::separator() + fileInfo.completeBaseName() + ".lrc";
+    QFile file(lrcPath);
+    if (!file.exists()) {
+        d->nolyric->show();
+        d->lyricview->hide();
+    } else {
+        d->nolyric->hide();
+        d->lyricview->show();
+    }
     d->lyricview->getFromFile(lrcPath);
     d->searchLyricsWidget->setSearchDir(fileInfo.dir().path() + QDir::separator());
 
