@@ -37,136 +37,136 @@
 <context>
     <name>DequalizerDialog</name>
     <message>
-        <location filename="../view/widget/dequalizerdialog.cpp" line="111"/>
+        <location filename="../view/widget/dequalizerdialog.cpp" line="112"/>
         <source>Custom</source>
         <translation type="unfinished">사용자 지정</translation>
     </message>
     <message>
-        <location filename="../view/widget/dequalizerdialog.cpp" line="113"/>
+        <location filename="../view/widget/dequalizerdialog.cpp" line="114"/>
         <source>Classical</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/widget/dequalizerdialog.cpp" line="114"/>
+        <location filename="../view/widget/dequalizerdialog.cpp" line="115"/>
         <source>Club</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/widget/dequalizerdialog.cpp" line="115"/>
+        <location filename="../view/widget/dequalizerdialog.cpp" line="116"/>
         <source>Dance</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/widget/dequalizerdialog.cpp" line="119"/>
+        <location filename="../view/widget/dequalizerdialog.cpp" line="120"/>
         <source>Headphones</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/widget/dequalizerdialog.cpp" line="112"/>
+        <location filename="../view/widget/dequalizerdialog.cpp" line="113"/>
         <source>Monophony</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/widget/dequalizerdialog.cpp" line="116"/>
+        <location filename="../view/widget/dequalizerdialog.cpp" line="117"/>
         <source>Full Bass</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/widget/dequalizerdialog.cpp" line="117"/>
+        <location filename="../view/widget/dequalizerdialog.cpp" line="118"/>
         <source>Full Bass and Treble</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/widget/dequalizerdialog.cpp" line="118"/>
+        <location filename="../view/widget/dequalizerdialog.cpp" line="119"/>
         <source>Full Treble</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/widget/dequalizerdialog.cpp" line="120"/>
+        <location filename="../view/widget/dequalizerdialog.cpp" line="121"/>
         <source>Hall</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/widget/dequalizerdialog.cpp" line="121"/>
+        <location filename="../view/widget/dequalizerdialog.cpp" line="122"/>
         <source>Live</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/widget/dequalizerdialog.cpp" line="122"/>
+        <location filename="../view/widget/dequalizerdialog.cpp" line="123"/>
         <source>Party</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/widget/dequalizerdialog.cpp" line="123"/>
+        <location filename="../view/widget/dequalizerdialog.cpp" line="124"/>
         <source>Pop</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/widget/dequalizerdialog.cpp" line="124"/>
+        <location filename="../view/widget/dequalizerdialog.cpp" line="125"/>
         <source>Reggae</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/widget/dequalizerdialog.cpp" line="125"/>
+        <location filename="../view/widget/dequalizerdialog.cpp" line="126"/>
         <source>Rock</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/widget/dequalizerdialog.cpp" line="126"/>
+        <location filename="../view/widget/dequalizerdialog.cpp" line="127"/>
         <source>Ska</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/widget/dequalizerdialog.cpp" line="127"/>
+        <location filename="../view/widget/dequalizerdialog.cpp" line="128"/>
         <source>Soft</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/widget/dequalizerdialog.cpp" line="128"/>
+        <location filename="../view/widget/dequalizerdialog.cpp" line="129"/>
         <source>Soft Rock</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/widget/dequalizerdialog.cpp" line="193"/>
-        <location filename="../view/widget/dequalizerdialog.cpp" line="630"/>
+        <location filename="../view/widget/dequalizerdialog.cpp" line="194"/>
+        <location filename="../view/widget/dequalizerdialog.cpp" line="655"/>
         <source>ON</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/widget/dequalizerdialog.cpp" line="195"/>
-        <location filename="../view/widget/dequalizerdialog.cpp" line="628"/>
+        <location filename="../view/widget/dequalizerdialog.cpp" line="196"/>
+        <location filename="../view/widget/dequalizerdialog.cpp" line="653"/>
         <source>OFF</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/widget/dequalizerdialog.cpp" line="502"/>
-        <location filename="../view/widget/dequalizerdialog.cpp" line="503"/>
+        <location filename="../view/widget/dequalizerdialog.cpp" line="550"/>
+        <location filename="../view/widget/dequalizerdialog.cpp" line="551"/>
         <source>Sound Effects Saved</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/widget/dequalizerdialog.cpp" line="129"/>
+        <location filename="../view/widget/dequalizerdialog.cpp" line="130"/>
         <source>Techno</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/widget/dequalizerdialog.cpp" line="186"/>
-        <location filename="../view/widget/dequalizerdialog.cpp" line="436"/>
+        <location filename="../view/widget/dequalizerdialog.cpp" line="187"/>
+        <location filename="../view/widget/dequalizerdialog.cpp" line="448"/>
         <source>Equalizer</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/widget/dequalizerdialog.cpp" line="212"/>
+        <location filename="../view/widget/dequalizerdialog.cpp" line="213"/>
         <source>Save</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/widget/dequalizerdialog.cpp" line="222"/>
+        <location filename="../view/widget/dequalizerdialog.cpp" line="224"/>
         <source>Preamplifier</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/widget/dequalizerdialog.cpp" line="325"/>
+        <location filename="../view/widget/dequalizerdialog.cpp" line="337"/>
         <source>Restore Defaults</source>
         <translation type="unfinished">기본값 복원</translation>
     </message>
@@ -174,64 +174,64 @@
 <context>
     <name>Footer</name>
     <message>
-        <location filename="../view/footerwidget.cpp" line="287"/>
+        <location filename="../view/footerwidget.cpp" line="285"/>
         <source>Unknown Title</source>
         <translation>알 수 없는 제목</translation>
     </message>
     <message>
-        <location filename="../view/footerwidget.cpp" line="303"/>
-        <location filename="../view/footerwidget.cpp" line="852"/>
-        <location filename="../view/footerwidget.cpp" line="1378"/>
+        <location filename="../view/footerwidget.cpp" line="301"/>
+        <location filename="../view/footerwidget.cpp" line="859"/>
+        <location filename="../view/footerwidget.cpp" line="1392"/>
         <source>Unknown artist</source>
         <translation>알 수 없는 아티스트</translation>
     </message>
     <message>
-        <location filename="../view/footerwidget.cpp" line="409"/>
+        <location filename="../view/footerwidget.cpp" line="407"/>
         <source>Previous</source>
         <translation>이전</translation>
     </message>
     <message>
-        <location filename="../view/footerwidget.cpp" line="410"/>
+        <location filename="../view/footerwidget.cpp" line="408"/>
         <source>Next</source>
         <translation>다음</translation>
     </message>
     <message>
-        <location filename="../view/footerwidget.cpp" line="411"/>
+        <location filename="../view/footerwidget.cpp" line="409"/>
         <source>Play/Pause</source>
         <translation>재생/일시정지</translation>
     </message>
     <message>
-        <location filename="../view/footerwidget.cpp" line="412"/>
+        <location filename="../view/footerwidget.cpp" line="410"/>
         <source>Favorite</source>
         <translation>즐겨찾기</translation>
     </message>
     <message>
-        <location filename="../view/footerwidget.cpp" line="413"/>
+        <location filename="../view/footerwidget.cpp" line="411"/>
         <source>Lyrics</source>
         <translation>가사</translation>
     </message>
     <message>
-        <location filename="../view/footerwidget.cpp" line="414"/>
+        <location filename="../view/footerwidget.cpp" line="412"/>
         <source>Play Mode</source>
         <translation>재생 모드</translation>
     </message>
     <message>
-        <location filename="../view/footerwidget.cpp" line="415"/>
+        <location filename="../view/footerwidget.cpp" line="413"/>
         <source>Play Queue</source>
         <translation>재생 대기열</translation>
     </message>
     <message>
-        <location filename="../view/footerwidget.cpp" line="1355"/>
+        <location filename="../view/footerwidget.cpp" line="1366"/>
         <source>List Loop</source>
         <translation>목록 반복</translation>
     </message>
     <message>
-        <location filename="../view/footerwidget.cpp" line="1358"/>
+        <location filename="../view/footerwidget.cpp" line="1369"/>
         <source>Single Loop</source>
         <translation>한곡 반복</translation>
     </message>
     <message>
-        <location filename="../view/footerwidget.cpp" line="1361"/>
+        <location filename="../view/footerwidget.cpp" line="1372"/>
         <source>Shuffle</source>
         <translation>섞기</translation>
     </message>
@@ -250,18 +250,18 @@
     </message>
     <message>
         <location filename="../view/importwidget.cpp" line="105"/>
-        <location filename="../view/importwidget.cpp" line="160"/>
+        <location filename="../view/importwidget.cpp" line="162"/>
         <source>Scan</source>
         <translation>스캔</translation>
     </message>
     <message>
         <location filename="../view/importwidget.cpp" line="106"/>
-        <location filename="../view/importwidget.cpp" line="161"/>
+        <location filename="../view/importwidget.cpp" line="163"/>
         <source>%1 music directory or drag music files here</source>
         <translation>%1 음악 디렉토리 또는 음악 파일을 여기로 끌어다 놓습니다</translation>
     </message>
     <message>
-        <location filename="../view/importwidget.cpp" line="152"/>
+        <location filename="../view/importwidget.cpp" line="153"/>
         <source>Loading music, please wait...</source>
         <translation>음악을 로드하는 중, 잠시 기다리십시오...</translation>
     </message>
@@ -269,52 +269,52 @@
 <context>
     <name>InfoDialog</name>
     <message>
-        <location filename="../view/widget/infodialog.cpp" line="127"/>
+        <location filename="../view/widget/infodialog.cpp" line="132"/>
         <source>Basic info</source>
         <translation>기본 정보</translation>
     </message>
     <message>
-        <location filename="../view/widget/infodialog.cpp" line="143"/>
+        <location filename="../view/widget/infodialog.cpp" line="149"/>
         <source>Title:</source>
         <translation>제목:</translation>
     </message>
     <message>
-        <location filename="../view/widget/infodialog.cpp" line="143"/>
+        <location filename="../view/widget/infodialog.cpp" line="149"/>
         <source>Artist:</source>
         <translation>아티스트:</translation>
     </message>
     <message>
-        <location filename="../view/widget/infodialog.cpp" line="144"/>
+        <location filename="../view/widget/infodialog.cpp" line="150"/>
         <source>Album:</source>
         <translation>앨범:</translation>
     </message>
     <message>
-        <location filename="../view/widget/infodialog.cpp" line="144"/>
+        <location filename="../view/widget/infodialog.cpp" line="150"/>
         <source>Type:</source>
         <translation>종류:</translation>
     </message>
     <message>
-        <location filename="../view/widget/infodialog.cpp" line="145"/>
+        <location filename="../view/widget/infodialog.cpp" line="151"/>
         <source>Size:</source>
         <translation>크기:</translation>
     </message>
     <message>
-        <location filename="../view/widget/infodialog.cpp" line="145"/>
+        <location filename="../view/widget/infodialog.cpp" line="151"/>
         <source>Duration:</source>
         <translation>재생 시간:</translation>
     </message>
     <message>
-        <location filename="../view/widget/infodialog.cpp" line="146"/>
+        <location filename="../view/widget/infodialog.cpp" line="152"/>
         <source>Path:</source>
         <translation>경로:</translation>
     </message>
     <message>
-        <location filename="../view/widget/infodialog.cpp" line="256"/>
+        <location filename="../view/widget/infodialog.cpp" line="238"/>
         <source>Unknown artist</source>
         <translation>알 수 없는 아티스트</translation>
     </message>
     <message>
-        <location filename="../view/widget/infodialog.cpp" line="257"/>
+        <location filename="../view/widget/infodialog.cpp" line="239"/>
         <source>Unknown album</source>
         <translation>알 수 없는 앨범</translation>
     </message>
@@ -356,6 +356,14 @@
     </message>
 </context>
 <context>
+    <name>MUsicLyricWidget</name>
+    <message>
+        <location filename="../view/musiclyricwidget.cpp" line="120"/>
+        <source>No lyrics yet</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>MainFrame</name>
     <message>
         <location filename="../view/mainframe.cpp" line="178"/>
@@ -378,82 +386,83 @@
         <translation>설정 </translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="253"/>
+        <location filename="../view/mainframe.cpp" line="261"/>
         <source>Dark theme</source>
         <translation>어두운 색상 테마</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="261"/>
-        <location filename="../view/mainframe.cpp" line="821"/>
+        <location filename="../view/mainframe.cpp" line="269"/>
+        <location filename="../view/mainframe.cpp" line="830"/>
         <source>Exit</source>
         <translation>종료</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="744"/>
+        <location filename="../view/mainframe.cpp" line="753"/>
         <source>Music is a local music player with beautiful design and simple functions.</source>
         <translation>음악은 아름다운 디자인과 간단한 기능을 갖춘 로컬 음악 플레이어입니다.</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="751"/>
-        <location filename="../view/mainframe.cpp" line="764"/>
-        <location filename="../view/mainframe.cpp" line="832"/>
-        <location filename="../view/mainframe.cpp" line="1320"/>
+        <location filename="../view/mainframe.cpp" line="752"/>
+        <location filename="../view/mainframe.cpp" line="760"/>
+        <location filename="../view/mainframe.cpp" line="773"/>
+        <location filename="../view/mainframe.cpp" line="841"/>
+        <location filename="../view/mainframe.cpp" line="1355"/>
         <source>Music</source>
         <translation>음악</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="818"/>
+        <location filename="../view/mainframe.cpp" line="827"/>
         <source>Play/Pause</source>
         <translation>재생/일시정지</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="819"/>
+        <location filename="../view/mainframe.cpp" line="828"/>
         <source>Previous</source>
         <translation>이전</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="820"/>
+        <location filename="../view/mainframe.cpp" line="829"/>
         <source>Next</source>
         <translation>다음</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="931"/>
+        <location filename="../view/mainframe.cpp" line="940"/>
         <source>Successfully added to &quot;%1&quot;</source>
         <translation>%1에 성공적으로 추가됨</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="935"/>
+        <location filename="../view/mainframe.cpp" line="944"/>
         <source>Already added to the playlist</source>
         <translation>재생목록에 이미 추가됨</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="938"/>
+        <location filename="../view/mainframe.cpp" line="947"/>
         <source>1 song added</source>
         <translation>노래 1곡 추가됨</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="940"/>
+        <location filename="../view/mainframe.cpp" line="949"/>
         <source>%1 songs added</source>
         <translation>노래 %1곡 추가됨</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="1000"/>
+        <location filename="../view/mainframe.cpp" line="1021"/>
         <source>File is invalid or does not exist, load failed</source>
         <translation>파일이 잘못되었거나 존재하지 않습니다. 불러오기 실패</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="1001"/>
-        <location filename="../view/mainframe.cpp" line="1042"/>
+        <location filename="../view/mainframe.cpp" line="1022"/>
+        <location filename="../view/mainframe.cpp" line="1073"/>
         <source>OK</source>
         <translation>확인</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="1037"/>
+        <location filename="../view/mainframe.cpp" line="1067"/>
         <source>Import failed, no valid music file found</source>
         <translation>가져오기 실패, 올바른 음악 파일을 찾을 수 없습니다</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="1458"/>
+        <location filename="../view/mainframe.cpp" line="1495"/>
         <source>All music</source>
         <translation>모든 음악</translation>
     </message>
@@ -489,61 +498,61 @@
         <location filename="../view/musiclistdatawidget.cpp" line="983"/>
         <location filename="../view/musiclistdatawidget.cpp" line="998"/>
         <location filename="../view/musiclistdatawidget.cpp" line="1201"/>
-        <location filename="../view/musiclistdatawidget.cpp" line="1394"/>
-        <location filename="../view/musiclistdatawidget.cpp" line="1440"/>
-        <location filename="../view/musiclistdatawidget.cpp" line="1480"/>
+        <location filename="../view/musiclistdatawidget.cpp" line="1396"/>
+        <location filename="../view/musiclistdatawidget.cpp" line="1442"/>
+        <location filename="../view/musiclistdatawidget.cpp" line="1482"/>
         <source>No songs</source>
         <translation>노래 없음</translation>
     </message>
     <message>
         <location filename="../view/musiclistdatawidget.cpp" line="154"/>
-        <location filename="../view/musiclistdatawidget.cpp" line="1396"/>
+        <location filename="../view/musiclistdatawidget.cpp" line="1398"/>
         <source>1 album - 1 song</source>
         <translation>앨범 1장 - 노래 1곡</translation>
     </message>
     <message>
         <location filename="../view/musiclistdatawidget.cpp" line="156"/>
         <location filename="../view/musiclistdatawidget.cpp" line="158"/>
-        <location filename="../view/musiclistdatawidget.cpp" line="1398"/>
         <location filename="../view/musiclistdatawidget.cpp" line="1400"/>
+        <location filename="../view/musiclistdatawidget.cpp" line="1402"/>
         <source>%1 album - %2 songs</source>
         <translation>앨범 %1장 - 노래 %2곡</translation>
     </message>
     <message>
         <location filename="../view/musiclistdatawidget.cpp" line="160"/>
-        <location filename="../view/musiclistdatawidget.cpp" line="1402"/>
+        <location filename="../view/musiclistdatawidget.cpp" line="1404"/>
         <source>%1 albums - %2 songs</source>
         <translation>앨범 %1장 - 노래 %2곡</translation>
     </message>
     <message>
         <location filename="../view/musiclistdatawidget.cpp" line="200"/>
-        <location filename="../view/musiclistdatawidget.cpp" line="1442"/>
+        <location filename="../view/musiclistdatawidget.cpp" line="1444"/>
         <source>1 artist - 1 song</source>
         <translation>아티스트 1명 - 노래 1곡</translation>
     </message>
     <message>
         <location filename="../view/musiclistdatawidget.cpp" line="203"/>
-        <location filename="../view/musiclistdatawidget.cpp" line="1445"/>
+        <location filename="../view/musiclistdatawidget.cpp" line="1447"/>
         <source>%1 artist - %2 songs</source>
         <translation>아티스트 %1명 - 노래 %2곡</translation>
     </message>
     <message>
         <location filename="../view/musiclistdatawidget.cpp" line="205"/>
-        <location filename="../view/musiclistdatawidget.cpp" line="1447"/>
+        <location filename="../view/musiclistdatawidget.cpp" line="1449"/>
         <source>%1 artists - %2 songs</source>
         <translation>아티스트 %1명 - 노래 %2곡</translation>
     </message>
     <message>
         <location filename="../view/musiclistdatawidget.cpp" line="239"/>
-        <location filename="../view/musiclistdatawidget.cpp" line="1482"/>
+        <location filename="../view/musiclistdatawidget.cpp" line="1484"/>
         <source>1 song</source>
         <translation>노래 1곡</translation>
     </message>
     <message>
         <location filename="../view/musiclistdatawidget.cpp" line="241"/>
-        <location filename="../view/musiclistdatawidget.cpp" line="1484"/>
-        <location filename="../view/musiclistdatawidget.cpp" line="1563"/>
-        <location filename="../view/musiclistdatawidget.cpp" line="1567"/>
+        <location filename="../view/musiclistdatawidget.cpp" line="1486"/>
+        <location filename="../view/musiclistdatawidget.cpp" line="1565"/>
+        <location filename="../view/musiclistdatawidget.cpp" line="1569"/>
         <source>%1 songs</source>
         <translation>노래 %1곡</translation>
     </message>
@@ -558,7 +567,7 @@
     <message>
         <location filename="../view/musiclistdatawidget.cpp" line="1050"/>
         <location filename="../view/musiclistdatawidget.cpp" line="1147"/>
-        <location filename="../view/musiclistdatawidget.cpp" line="1562"/>
+        <location filename="../view/musiclistdatawidget.cpp" line="1564"/>
         <source>All Music</source>
         <translation>모든 음악</translation>
     </message>
@@ -616,8 +625,8 @@
     </message>
     <message>
         <location filename="../view/musiclistdatawidget.cpp" line="408"/>
-        <location filename="../view/musiclistdatawidget.cpp" line="1357"/>
-        <location filename="../view/musiclistdatawidget.cpp" line="1569"/>
+        <location filename="../view/musiclistdatawidget.cpp" line="1359"/>
+        <location filename="../view/musiclistdatawidget.cpp" line="1571"/>
         <source>Search Results</source>
         <translation type="unfinished"></translation>
     </message>
@@ -627,7 +636,7 @@
         <translation type="unfinished">노래</translation>
     </message>
     <message>
-        <location filename="../view/musiclistdatawidget.cpp" line="1616"/>
+        <location filename="../view/musiclistdatawidget.cpp" line="1619"/>
         <source>No result found</source>
         <translation>결과를 찾을 수 없음</translation>
     </message>
@@ -648,90 +657,90 @@
 <context>
     <name>MusicListInfoView</name>
     <message>
-        <location filename="../view/widget/musiclistinfoview.cpp" line="455"/>
+        <location filename="../view/widget/musiclistinfoview.cpp" line="458"/>
         <source>Play queue</source>
         <translation>재생 대기열</translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistinfoview.cpp" line="480"/>
+        <location filename="../view/widget/musiclistinfoview.cpp" line="483"/>
         <source>Add to new playlist</source>
         <translation>새 재생 목록에 추가</translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistinfoview.cpp" line="525"/>
+        <location filename="../view/widget/musiclistinfoview.cpp" line="528"/>
         <source>Pause</source>
         <translation>일시정지</translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistinfoview.cpp" line="527"/>
+        <location filename="../view/widget/musiclistinfoview.cpp" line="530"/>
         <source>Play</source>
         <translation>재생</translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistinfoview.cpp" line="530"/>
+        <location filename="../view/widget/musiclistinfoview.cpp" line="533"/>
         <source>Add to playlist</source>
         <translation>재생 목록에 추가</translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistinfoview.cpp" line="535"/>
+        <location filename="../view/widget/musiclistinfoview.cpp" line="538"/>
         <source>Display in file manager</source>
         <translation>파일 관리자에 표시</translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistinfoview.cpp" line="538"/>
+        <location filename="../view/widget/musiclistinfoview.cpp" line="541"/>
         <source>Remove from playlist</source>
         <translation>재생 목록에서 제거</translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistinfoview.cpp" line="539"/>
+        <location filename="../view/widget/musiclistinfoview.cpp" line="542"/>
         <source>Delete from local disk</source>
         <translation>로컬 디스크에서 삭제</translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistinfoview.cpp" line="560"/>
+        <location filename="../view/widget/musiclistinfoview.cpp" line="563"/>
         <source>Song info</source>
         <translation>노래 정보</translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistinfoview.cpp" line="608"/>
-        <location filename="../view/widget/musiclistinfoview.cpp" line="639"/>
+        <location filename="../view/widget/musiclistinfoview.cpp" line="611"/>
+        <location filename="../view/widget/musiclistinfoview.cpp" line="642"/>
         <source>Cancel</source>
         <translation>취소</translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistinfoview.cpp" line="609"/>
+        <location filename="../view/widget/musiclistinfoview.cpp" line="612"/>
         <source>Remove</source>
         <translation>제거</translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistinfoview.cpp" line="613"/>
+        <location filename="../view/widget/musiclistinfoview.cpp" line="616"/>
         <source>Are you sure you want to remove %1?</source>
         <translation>%1을(를) 제거 하시겠습니까?</translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistinfoview.cpp" line="615"/>
+        <location filename="../view/widget/musiclistinfoview.cpp" line="618"/>
         <source>Are you sure you want to remove the selected %1 songs?</source>
         <translation>선택한 %1 곡을 삭제 하시겠습니까?</translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistinfoview.cpp" line="640"/>
+        <location filename="../view/widget/musiclistinfoview.cpp" line="643"/>
         <source>Delete</source>
         <translation>삭제</translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistinfoview.cpp" line="649"/>
+        <location filename="../view/widget/musiclistinfoview.cpp" line="652"/>
         <source>Are you sure you want to delete %1?</source>
         <translation>%1을(를) 삭제하시겠습니까?</translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistinfoview.cpp" line="656"/>
-        <location filename="../view/widget/musiclistinfoview.cpp" line="670"/>
+        <location filename="../view/widget/musiclistinfoview.cpp" line="659"/>
+        <location filename="../view/widget/musiclistinfoview.cpp" line="673"/>
         <source>Are you sure you want to delete the selected %1 songs?</source>
         <translation>선택한 %1 노래를 삭제하시겠습니까?</translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistinfoview.cpp" line="657"/>
-        <location filename="../view/widget/musiclistinfoview.cpp" line="671"/>
+        <location filename="../view/widget/musiclistinfoview.cpp" line="660"/>
+        <location filename="../view/widget/musiclistinfoview.cpp" line="674"/>
         <source>The song files contained will also be deleted</source>
         <translation>포함된 노래 파일도 삭제됩니다</translation>
     </message>
@@ -770,45 +779,45 @@
 <context>
     <name>MusicListView</name>
     <message>
-        <location filename="../view/widget/musiclistview.cpp" line="185"/>
+        <location filename="../view/widget/musiclistview.cpp" line="208"/>
         <source>My Favorites</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistview.cpp" line="424"/>
-        <location filename="../view/widget/musiclistview.cpp" line="573"/>
+        <location filename="../view/widget/musiclistview.cpp" line="452"/>
+        <location filename="../view/widget/musiclistview.cpp" line="601"/>
         <source>Are you sure you want to delete this playlist?</source>
         <translation>이 재생 목록을 삭제하시겠습니까?</translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistview.cpp" line="431"/>
-        <location filename="../view/widget/musiclistview.cpp" line="580"/>
+        <location filename="../view/widget/musiclistview.cpp" line="459"/>
+        <location filename="../view/widget/musiclistview.cpp" line="608"/>
         <source>Cancel</source>
         <translation>취소</translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistview.cpp" line="432"/>
-        <location filename="../view/widget/musiclistview.cpp" line="552"/>
-        <location filename="../view/widget/musiclistview.cpp" line="572"/>
-        <location filename="../view/widget/musiclistview.cpp" line="581"/>
+        <location filename="../view/widget/musiclistview.cpp" line="460"/>
+        <location filename="../view/widget/musiclistview.cpp" line="580"/>
+        <location filename="../view/widget/musiclistview.cpp" line="600"/>
+        <location filename="../view/widget/musiclistview.cpp" line="609"/>
         <source>Delete</source>
         <translation>삭제</translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistview.cpp" line="542"/>
-        <location filename="../view/widget/musiclistview.cpp" line="566"/>
+        <location filename="../view/widget/musiclistview.cpp" line="570"/>
+        <location filename="../view/widget/musiclistview.cpp" line="594"/>
         <source>Pause</source>
         <translation>일시정지</translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistview.cpp" line="545"/>
-        <location filename="../view/widget/musiclistview.cpp" line="563"/>
+        <location filename="../view/widget/musiclistview.cpp" line="573"/>
+        <location filename="../view/widget/musiclistview.cpp" line="591"/>
         <source>Play</source>
         <translation>재생</translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistview.cpp" line="551"/>
-        <location filename="../view/widget/musiclistview.cpp" line="569"/>
+        <location filename="../view/widget/musiclistview.cpp" line="579"/>
+        <location filename="../view/widget/musiclistview.cpp" line="597"/>
         <source>Rename</source>
         <translation>이름 변경</translation>
     </message>
@@ -826,43 +835,43 @@
         <translation>알 수없는 앨범</translation>
     </message>
     <message>
-        <location filename="../view/widget/playlistview.cpp" line="531"/>
+        <location filename="../view/widget/playlistview.cpp" line="533"/>
         <source>Play queue</source>
         <translation>재생 대기열</translation>
     </message>
     <message>
-        <location filename="../view/widget/playlistview.cpp" line="537"/>
+        <location filename="../view/widget/playlistview.cpp" line="539"/>
         <source>musicResult</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/widget/playlistview.cpp" line="539"/>
+        <location filename="../view/widget/playlistview.cpp" line="541"/>
         <source>My favorites</source>
         <translation type="unfinished">내 즐겨찾기</translation>
     </message>
     <message>
-        <location filename="../view/widget/playlistview.cpp" line="555"/>
+        <location filename="../view/widget/playlistview.cpp" line="557"/>
         <source>Add to new playlist</source>
         <translation>새 재생 목록에 추가</translation>
     </message>
     <message>
-        <location filename="../view/widget/playlistview.cpp" line="613"/>
+        <location filename="../view/widget/playlistview.cpp" line="615"/>
         <source>Pause</source>
         <translation>일시정지</translation>
     </message>
     <message>
-        <location filename="../view/widget/playlistview.cpp" line="608"/>
-        <location filename="../view/widget/playlistview.cpp" line="618"/>
+        <location filename="../view/widget/playlistview.cpp" line="610"/>
+        <location filename="../view/widget/playlistview.cpp" line="620"/>
         <source>Play</source>
         <translation>재생</translation>
     </message>
     <message>
-        <location filename="../view/widget/playlistview.cpp" line="624"/>
+        <location filename="../view/widget/playlistview.cpp" line="626"/>
         <source>Add to playlist</source>
         <translation>재생 목록에 추가</translation>
     </message>
     <message>
-        <location filename="../view/widget/playlistview.cpp" line="629"/>
+        <location filename="../view/widget/playlistview.cpp" line="631"/>
         <source>Display in file manager</source>
         <translation>파일 관리자에 표시</translation>
     </message>
@@ -871,65 +880,65 @@
         <translation type="vanished">재생 목록에서 제거</translation>
     </message>
     <message>
-        <location filename="../view/widget/playlistview.cpp" line="632"/>
+        <location filename="../view/widget/playlistview.cpp" line="634"/>
         <source>Remove from play queue</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/widget/playlistview.cpp" line="633"/>
+        <location filename="../view/widget/playlistview.cpp" line="635"/>
         <source>Delete from local disk</source>
         <translation>로컬 디스크에서 삭제</translation>
     </message>
     <message>
-        <location filename="../view/widget/playlistview.cpp" line="671"/>
+        <location filename="../view/widget/playlistview.cpp" line="673"/>
         <source>Encoding</source>
         <translation>인코딩</translation>
     </message>
     <message>
-        <location filename="../view/widget/playlistview.cpp" line="675"/>
+        <location filename="../view/widget/playlistview.cpp" line="677"/>
         <source>Song info</source>
         <translation>노래 정보</translation>
     </message>
     <message>
-        <location filename="../view/widget/playlistview.cpp" line="731"/>
-        <location filename="../view/widget/playlistview.cpp" line="762"/>
+        <location filename="../view/widget/playlistview.cpp" line="733"/>
+        <location filename="../view/widget/playlistview.cpp" line="764"/>
         <source>Cancel</source>
         <translation>취소</translation>
     </message>
     <message>
-        <location filename="../view/widget/playlistview.cpp" line="732"/>
+        <location filename="../view/widget/playlistview.cpp" line="734"/>
         <source>Remove</source>
         <translation>제거</translation>
     </message>
     <message>
-        <location filename="../view/widget/playlistview.cpp" line="736"/>
+        <location filename="../view/widget/playlistview.cpp" line="738"/>
         <source>Are you sure you want to remove %1?</source>
         <translation>%1을(를) 제거 하시겠습니까?</translation>
     </message>
     <message>
-        <location filename="../view/widget/playlistview.cpp" line="738"/>
+        <location filename="../view/widget/playlistview.cpp" line="740"/>
         <source>Are you sure you want to remove the selected %1 songs?</source>
         <translation>선택한 %1 곡을 삭제 하시겠습니까?</translation>
     </message>
     <message>
-        <location filename="../view/widget/playlistview.cpp" line="763"/>
+        <location filename="../view/widget/playlistview.cpp" line="765"/>
         <source>Delete</source>
         <translation>삭제</translation>
     </message>
     <message>
-        <location filename="../view/widget/playlistview.cpp" line="772"/>
+        <location filename="../view/widget/playlistview.cpp" line="774"/>
         <source>Are you sure you want to delete %1?</source>
         <translation>%1을(를) 삭제하시겠습니까?</translation>
     </message>
     <message>
-        <location filename="../view/widget/playlistview.cpp" line="779"/>
-        <location filename="../view/widget/playlistview.cpp" line="791"/>
+        <location filename="../view/widget/playlistview.cpp" line="781"/>
+        <location filename="../view/widget/playlistview.cpp" line="793"/>
         <source>Are you sure you want to delete the selected %1 songs?</source>
         <translation>선택한 %1 노래를 삭제하시겠습니까?</translation>
     </message>
     <message>
-        <location filename="../view/widget/playlistview.cpp" line="780"/>
-        <location filename="../view/widget/playlistview.cpp" line="792"/>
+        <location filename="../view/widget/playlistview.cpp" line="782"/>
+        <location filename="../view/widget/playlistview.cpp" line="794"/>
         <source>The song files contained will also be deleted</source>
         <translation>포함된 노래 파일도 삭제됩니다</translation>
     </message>
@@ -937,33 +946,33 @@
 <context>
     <name>PlayListWidget</name>
     <message>
-        <location filename="../view/playlistwidget.cpp" line="171"/>
-        <location filename="../view/playlistwidget.cpp" line="275"/>
+        <location filename="../view/playlistwidget.cpp" line="208"/>
+        <location filename="../view/playlistwidget.cpp" line="312"/>
         <source>No songs</source>
         <translation>노래 없음</translation>
     </message>
     <message>
-        <location filename="../view/playlistwidget.cpp" line="173"/>
+        <location filename="../view/playlistwidget.cpp" line="210"/>
         <source>No search results</source>
         <translation>검색결과가 없습니다.</translation>
     </message>
     <message>
-        <location filename="../view/playlistwidget.cpp" line="207"/>
+        <location filename="../view/playlistwidget.cpp" line="244"/>
         <source>Play Queue</source>
         <translation>재생 대기열</translation>
     </message>
     <message>
-        <location filename="../view/playlistwidget.cpp" line="234"/>
+        <location filename="../view/playlistwidget.cpp" line="271"/>
         <source>Empty</source>
         <translation>비우기</translation>
     </message>
     <message>
-        <location filename="../view/playlistwidget.cpp" line="277"/>
+        <location filename="../view/playlistwidget.cpp" line="314"/>
         <source>1 song</source>
         <translation>노래 1곡</translation>
     </message>
     <message>
-        <location filename="../view/playlistwidget.cpp" line="279"/>
+        <location filename="../view/playlistwidget.cpp" line="316"/>
         <source>%1 songs</source>
         <translation>노래 %1곡</translation>
     </message>
@@ -1035,7 +1044,7 @@
 <context>
     <name>QApplication</name>
     <message>
-        <location filename="../view/mainframe.cpp" line="746"/>
+        <location filename="../view/mainframe.cpp" line="755"/>
         <source>Music</source>
         <translation>음악</translation>
     </message>
