@@ -42,6 +42,8 @@
 #include <DFileDialog>
 #include <DHiDPIHelper>
 
+#include <unistd.h>
+
 #include "../speech/speechCenter.h"
 #include "../presenter/presenter.h"
 #include "../core/metasearchservice.h"
@@ -1027,7 +1029,7 @@ void MainFrame::binding(Presenter *presenter)
             if (curPlaylist->canNext()) {
                 bool existFlag = false;
                 for (auto curMeta : curPlaylist->allmusic()) {
-                    if (!curMeta->invalid || QFile::exists(curMeta->localPath)) {
+                    if (!curMeta->invalid || access(curMeta->localPath.toStdString().c_str(),F_OK) == 0) {
                         if (QFileInfo(curMeta->localPath).dir().isEmpty()) {
                             continue;
                         }

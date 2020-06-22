@@ -208,7 +208,7 @@ private:
     bool setMusicVolume(double volume);
     bool setMusicMuted(bool muted);
     bool isMusicMuted();
-
+    bool isDevValid();
 private:
     friend class DMusic::DSingleton<Player>;
     QScopedPointer<PlayerPrivate> d_ptr;

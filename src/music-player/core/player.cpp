@@ -192,7 +192,7 @@ public:
     bool            firstPlayOnLoad  = true; //外部双击打开处理一次
     bool            fadeInOut   = true;
     double          fadeInOutFactor     = 1.0;
-    qlonglong       m_position          = 0.0;//只能用于判断音乐是否正常结束
+    qlonglong       m_position          = 0;//判断音乐播放的位置
 
     QPropertyAnimation  *fadeInAnimation    = nullptr;
     QPropertyAnimation  *fadeOutAnimation   = nullptr;
@@ -612,9 +612,6 @@ void Player::loadMedia(PlaylistPtr playlist, const MetaPtr meta)
     if (playlist->id() != PlayMusicListID)
         d->activePlaylist = playlist;
 
-
-    d->qvplayer->blockSignals(true);
-
     //int volume = -1;
     d->qvplayer->blockSignals(true);
     d->isamr = true;
@@ -725,7 +722,11 @@ void Player::resume(PlaylistPtr playlist, const MetaPtr meta)
         return ;
     }
 
-    if(d->qvplayer->state() == Vlc::Stopped)
+    /*****************************************************************************************
+     * 1.audio service dbus not start
+     * 2.audio device not start
+     * ****************************************************************************************/
+    if(d->qvplayer->state() == Vlc::Stopped  || (!isDevValid() &&  d->qvplayer->time() == 0 ) )
     {
         //reopen data
         d->qvmedia->initMedia(meta->localPath, true, d->qvinstance);
@@ -1235,6 +1236,22 @@ bool Player::isMusicMuted()
         }
 
         return MuteV.toBool();
+    }
+
+    return false;
+}
+
+bool Player::isDevValid()
+{
+    Q_D(Player);
+    readSinkInputPath();
+
+    if (!d->sinkInputPath.isEmpty()) {
+        QVariant MuteV = DBusUtils::redDBusProperty("com.deepin.daemon.Audio", d->sinkInputPath,
+                                                    "com.deepin.daemon.Audio.SinkInput", "Mute");
+
+
+        return MuteV.isValid();
     }
 
     return false;
