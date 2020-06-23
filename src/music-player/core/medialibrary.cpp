@@ -372,12 +372,19 @@ void MediaLibrary::importMedias(const QString &jobid, const QStringList &urllist
             QDirIterator it(filepath, d->supportedSuffixs.keys(),
                             QDir::Files, QDirIterator::Subdirectories);
             while (it.hasNext()) {
-                QString  filepath = it.next();
+                 QString  strtp =it.next();
+                 while(QFileInfo(strtp).isSymLink())
+                 {
+                     /*****************************
+                      * use oringnal path to replace link path
+                      * ***************************/
+                    strtp = QFileInfo(strtp).symLinkTarget();
+                 }
 
-                auto meta = d->importMeta(filepath, losslessMetaCache, cuelist);
-                qDebug() << "process file" << filepath << meta;
+                auto meta = d->importMeta(strtp, losslessMetaCache, cuelist);
+                qDebug() << "process file" << strtp << meta;
                 if (meta.isNull()) {
-                    qWarning() << "create meta failed:" << filepath << meta;
+                    qWarning() << "create meta failed:" << strtp << meta;
                     continue;
                 }
 
@@ -390,7 +397,16 @@ void MediaLibrary::importMedias(const QString &jobid, const QStringList &urllist
                 }
             }
         } else {
-            auto meta = d->importMeta(filepath, losslessMetaCache, cuelist);
+            QString strtp = filepath;
+            while(QFileInfo(strtp).isSymLink())
+            {
+                /*****************************
+                 * use oringnal path to replace link path
+                 * ***************************/
+                strtp = QFileInfo(strtp).symLinkTarget();
+            }
+            auto meta = d->importMeta(strtp, losslessMetaCache, cuelist);
+
             if (meta.isNull()) {
                 continue;
             }

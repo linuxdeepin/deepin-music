@@ -2,7 +2,7 @@
 
 #include <QtCore/QDebug>
 #include <QtCore/QStringList>
-
+#include "../util/global.h"
 #include <vlc/vlc.h>
 #include "Enums.h"
 #include "Error.h"
@@ -66,8 +66,7 @@ VlcInstance::VlcInstance(const QStringList &args,
     // Create new libvlc instance
 //    _vlcInstance = libvlc_new(args.count(), argv);
     _vlcInstance = libvlc_new(0, nullptr);
-
-    libvlc_set_user_agent(_vlcInstance, "Music", "");//name
+    libvlc_set_user_agent(_vlcInstance, Global::getAppName().toStdString().c_str(), "");//name
     libvlc_set_app_id(_vlcInstance, "", "", "deepin-music");//icon
 
     qRegisterMetaType<Vlc::Meta>("Vlc::Meta");

@@ -36,11 +36,13 @@
 #include <QDBusReply>
 #include <QThread>
 #include <QFileInfo>
+#include <QDir>
 
 #include <DRecentManager>
 
 #include "metasearchservice.h"
 #include "util/dbusutils.h"
+#include "util/global.h"
 #include <unistd.h>
 
 
@@ -635,6 +637,11 @@ void Player::loadMedia(PlaylistPtr playlist, const MetaPtr meta)
 void Player::playMeta(PlaylistPtr playlist, const MetaPtr meta)
 {
     Q_D(Player);
+    if (QFileInfo(meta->localPath).dir().isEmpty()) {
+        Q_EMIT mediaError(playlist, meta, Player::ResourceError);
+        return ;
+    }
+
     MetaPtr curMeta = meta;
     if (curMeta == nullptr)
         curMeta = d->curPlaylist->first();
@@ -667,7 +674,7 @@ void Player::playMeta(PlaylistPtr playlist, const MetaPtr meta)
     d->curPlaylist->play(curMeta);
 
     DRecentData data;
-    data.appName = "Music";
+    data.appName = Global::getAppName();
     data.appExec = "deepin-music";
     DRecentManager::addItem(curMeta->localPath, data);
 
@@ -712,6 +719,10 @@ void Player::resume(PlaylistPtr playlist, const MetaPtr meta)
         return;
     }
 
+    if (QFileInfo(meta->localPath).dir().isEmpty()) {
+        Q_EMIT mediaError(playlist, meta, Player::ResourceError);
+        return ;
+    }
     if (d->fadeOutAnimation) {
         setFadeInOutFactor(1.0);
         d->fadeOutAnimation->stop();
@@ -1146,7 +1157,7 @@ void Player::readSinkInputPath()
         QVariant nameV = DBusUtils::redDBusProperty("com.deepin.daemon.Audio", curPath.path(),
                                                     "com.deepin.daemon.Audio.SinkInput", "Name");
 
-        if (!nameV.isValid() || nameV.toString() != "Music")
+        if (!nameV.isValid() || nameV.toString() != Global::getAppName())
             continue;
 
         d->sinkInputPath = curPath.path();
