@@ -359,7 +359,12 @@ void PlayerPrivate::initConnection()
                 curPlaylist->removeMusicList(removeMusicList);
                 Q_EMIT q->mediaError(activePlaylist, activeMeta, static_cast<Player::Error>(error));
             } else {
+                qDebug() << "#####QMediaPlayer::error";
                 qplayer->pause();
+                qlonglong postion = qplayer->position();
+                sleep(1);
+                qplayer->setPosition(postion);
+                qplayer->play();
             }
 
             /*else {
@@ -568,8 +573,7 @@ void Player::loadMedia(PlaylistPtr playlist, const MetaPtr meta)
 void Player::playMeta(PlaylistPtr playlist, const MetaPtr meta)
 {
     Q_D(Player);
-    if(QFileInfo(meta->localPath).dir().isEmpty())
-    {
+    if (QFileInfo(meta->localPath).dir().isEmpty()) {
         Q_EMIT mediaError(playlist, meta, Player::ResourceError);
         return ;
     }
@@ -653,8 +657,7 @@ void Player::resume(PlaylistPtr playlist, const MetaPtr meta)
         return;
     }
 
-    if(QFileInfo(meta->localPath).dir().isEmpty())
-    {
+    if (QFileInfo(meta->localPath).dir().isEmpty()) {
         Q_EMIT mediaError(playlist, meta, Player::ResourceError);
         return ;
     }
@@ -902,7 +905,7 @@ void Player::setIOPosition(qint64 value, qint64 range)
 
             if (value != 0 && d->ioDuration != 0) {
                 // qint64 position =  (value * d->ioDuration) / range;
-                qint64 position =  (value * d->ioDuration) / 1000;
+                qint64 position = (value * d->ioDuration) / 1000;
                 Q_EMIT this->sliderReleased(position);
             }
         }
