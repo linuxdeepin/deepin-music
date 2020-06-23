@@ -38,7 +38,7 @@ const int Waveform::SAMPLE_DURATION = 30;
 const int Waveform::WAVE_WIDTH = 2;
 const int Waveform::WAVE_DURATION = 4;
 
-Waveform::Waveform(Qt::Orientation orientation, QWidget *widget, QWidget *parent) : mainWindow(widget), DSlider(orientation, parent)
+Waveform::Waveform(Qt::Orientation orientation, QWidget *widget, QWidget *parent) : DSlider(orientation, parent), mainWindow(widget)
 {
     QSizePolicy sp(QSizePolicy::Preferred, QSizePolicy::Preferred);
     setSizePolicy(sp);
@@ -73,12 +73,12 @@ void Waveform::paintEvent(QPaintEvent *)
         fillColor = QColor("#FFFFFF");
     painter.save();
     if (devicePixelRatio > 1.0) {
-        painter.setClipRect(QRect(rect().x(), rect().y(), curWidth - 1, rect().height()));
+        painter.setClipRect(QRect(rect().x(), rect().y(), static_cast<int>(curWidth - 1), rect().height()));
     } else {
-        painter.setClipRect(QRect(rect().x(), rect().y(), curWidth, rect().height()));
+        painter.setClipRect(QRect(rect().x(), rect().y(), static_cast<int>(curWidth), rect().height()));
     }
     for (int i = 0; i < sampleList.size(); i++) {
-        volume = sampleList[i] * rect().height();
+        volume = static_cast<int>(sampleList[i] * rect().height());
 //        if (volume == 0) {
 //            QPainterPath path;
 //            path.addRect(QRectF(rect().x() + i * WAVE_DURATION, rect().y() + (rect().height() - 1), WAVE_DURATION, 1));
@@ -108,12 +108,14 @@ void Waveform::paintEvent(QPaintEvent *)
     fillColor.setAlphaF(0.2);
     painter.save();
     if (devicePixelRatio > 1.0) {
-        painter.setClipRect(QRect(rect().x() + curWidth - 1, rect().y(), rect().width() - (curWidth - 1), rect().height()));
+        painter.setClipRect(QRect(rect().x() + static_cast<int>(curWidth - 1),
+                                  rect().y(), rect().width() - static_cast<int>(curWidth - 1), rect().height()));
     } else {
-        painter.setClipRect(QRect(rect().x() + curWidth, rect().y(), rect().width() - curWidth, rect().height()));
+        painter.setClipRect(QRect(rect().x() + static_cast<int>(curWidth), rect().y(),
+                                  rect().width() - static_cast<int>(curWidth), rect().height()));
     }
     for (int i = 0; i < sampleList.size(); i++) {
-        volume = sampleList[i] * rect().height();
+        volume = static_cast<int>(sampleList[i] * rect().height());
 //        if (volume == 0) {
 //            QPainterPath path;
 //            path.addRect(QRectF(rect().x() + i * WAVE_DURATION, rect().y() + (rect().height() - 1), WAVE_DURATION, 1));
@@ -168,7 +170,7 @@ void Waveform::onAudioBufferProbed(const QAudioBuffer &buffer)
 {
     spectrumFlag = true;
     for (auto value : getBufferLevels(buffer)) {
-        reciveSampleList.push_front(value);
+        reciveSampleList.push_front(static_cast<float>(value));
         break;
     }
     if (reciveSampleList.size() > maxSampleNum)
@@ -319,7 +321,7 @@ void Waveform::mousePressEvent(QMouseEvent *event)
 
 void Waveform::mouseMoveEvent(QMouseEvent *event)
 {
-    auto valueRange = this->maximum()  - this->minimum();
+//    auto valueRange = this->maximum()  - this->minimum();
     auto viewRange = this->width();
 
     if (0 == viewRange) {
@@ -363,11 +365,11 @@ void Waveform::updateScaleSize()
 {
     auto waveScaleWidth = waveformScale->width();
     double curWidth = rect().width() * (value() * 1.0) / (maximum() - minimum());
-    curValue = allDuration * (value() * 1.0) / (maximum() - minimum());
+    curValue = static_cast<qint64>(allDuration * (value() * 1.0) / (maximum() - minimum()));
 
-    auto wavePos = mapToParent(QPoint(curWidth - waveScaleWidth / 2, 0));
+    auto wavePos = mapToParent(QPoint(static_cast<int>(curWidth - waveScaleWidth / 2), 0));
     wavePos.ry() = -35;
-    wavePos = ((QWidget *)parent())->mapToGlobal(wavePos);
+    wavePos = (static_cast<QWidget *>(parent()))->mapToGlobal(wavePos);
     wavePos = mainWindow->mapFromGlobal(wavePos);
 
     waveformScale->move(wavePos.x(), wavePos.y());
@@ -442,14 +444,14 @@ bool Waveform::powerSpectrum()
     for (int i = 0; i < maxSampleNum; i++)
         sample[i] = complex<float>(reciveSampleList[i]/* / 32768.0*/, 0);
 
-    int log2N = log2(maxSampleNum - 1) + 1;
+    int log2N = static_cast<int>(log2(maxSampleNum - 1) + 1);
     int sign = -1;
 
     CFFT::process(sample, log2N, sign);
 
     QVector<float> curSampleListX, curSampleListY;
     for (int i = 0; i < maxSampleNum; i++) {
-        curSampleListY.append(abs(sample[i]) / sqrt(2) / 2);
+        curSampleListY.append(abs(sample[i]) / static_cast<float>(sqrt(2)) / 2);
         if (curSampleListY[i] < 0 || curSampleListY[i] > 1)
             curSampleListY[i] = 0;
     }
@@ -474,7 +476,7 @@ void Waveform::spline(QVector<float> &x, QVector<float> &y, QVector<float> &vx, 
     QVector<float> ty = y;
 
     for (int i = 1; i < x.size();) {
-        if (fabs(x[i] - x[i - 1]) < 0.01) {
+        if (fabs(x[i] - x[i - 1]) < 0.01f) {
             x.erase(x.begin() + i);
             y.erase(y.begin() + i);
             continue;

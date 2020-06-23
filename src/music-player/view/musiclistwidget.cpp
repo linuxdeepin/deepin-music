@@ -72,7 +72,7 @@ MusicListWidget::MusicListWidget(QWidget *parent) : DWidget(parent)
     layout->addWidget(leftFrame, 0);
     layout->addWidget(m_dataListView, 100);
 
-    bool themeFlag = false;
+//    bool themeFlag = false;
 
     int themeType = DGuiApplicationHelper::instance()->themeType();
     slotTheme(themeType);
@@ -111,6 +111,7 @@ MusicListWidget::MusicListWidget(QWidget *parent) : DWidget(parent)
     });
     connect(m_dataBaseListview, &MusicListView::currentChanged,
     this, [ = ](const QModelIndex & current, const QModelIndex & previous) {
+        Q_UNUSED(previous)
         auto curPtr = m_dataBaseListview->playlistPtr(current);
         if (curPtr != nullptr) {
             m_customizeListview->clearSelected();
@@ -168,6 +169,7 @@ MusicListWidget::MusicListWidget(QWidget *parent) : DWidget(parent)
     });
     connect(m_customizeListview, &MusicListView::currentChanged,
     this, [ = ](const QModelIndex & current, const QModelIndex & previous) {
+        Q_UNUSED(previous)
         auto curPtr = m_customizeListview->playlistPtr(current);
         if (curPtr != nullptr) {
             m_dataBaseListview->clearSelected();
@@ -347,7 +349,7 @@ void MusicListWidget::onPlaylistAdded(PlaylistPtr playlist, bool newflag)
     }
 
     if (playlist->id() == AlbumMusicListID || playlist->id() == ArtistMusicListID ||
-            playlist->id() == AllMusicListID || playlist->id() == FavMusicListID ) {
+            playlist->id() == AllMusicListID || playlist->id() == FavMusicListID) {
         m_dataBaseListview->addMusicList(playlist);
     } else {
         m_customizeListview->closeAllPersistentEditor();

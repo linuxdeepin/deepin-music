@@ -79,7 +79,7 @@ void PresenterPrivate::initBackend()
     qDebug() << "TRACE:" << "player init finished";
     connect(player, &Player::audioBufferProbed, q, [ = ](const QAudioBuffer & buffer) {
         Q_EMIT q->audioBufferProbed(buffer);
-    } );
+    });
 
     metaBufferDetector = new MetaBufferDetector(this);
     connect(metaBufferDetector, &MetaBufferDetector::metaBuffer, q, [ = ](const QVector<float> &buffer, const QString & hash) {
@@ -632,9 +632,9 @@ void Presenter::postAction()
 
         if (lastPlaylist->contains(lastMeta)) {
             lastMeta = lastPlaylist->music(lastMetaId);
-        } else if(lastMetaId == ""){
+        } else if (lastMetaId == "") {
             lastMeta = nullptr;
-        }else{
+        } else {
             lastMeta = lastPlaylist->first();
         }
 
@@ -692,7 +692,9 @@ void Presenter::postAction()
                 d->player->setFadeInOut(false);
                 d->player->loadMedia(lastPlaylist, lastMeta);
 
-                onMusicResume(lastPlaylist, lastMeta);
+                QTimer::singleShot(200, [ = ]() { //200ms播放是为了在加载播放的100ms结束，150ms设置播放进度后再播放。
+                    onMusicResume(lastPlaylist, lastMeta);
+                });
             }
 
         }
@@ -722,7 +724,7 @@ void Presenter::openUri(const QUrl &uri)
     auto metas = MediaLibrary::instance()->importFile(localfile);
     if (0 == metas.length()) {
         qCritical() << "openUriRequested" << uri;
-        Q_EMIT scanFinished(localfile , 0);
+        Q_EMIT scanFinished(localfile, 0);
         return ;
     }
     auto list = d->playlistMgr->playlist(AllMusicListID);
@@ -1056,11 +1058,9 @@ void Presenter::onAddToPlaylist(PlaylistPtr playlist,
         modifiedPlaylist = d->playlistMgr->addPlaylist(info);
         Q_EMIT playlistAdded(d->playlistMgr->playlist(info.uuid), true);
     } else {
-        bool existFlag = true;
         auto allMetas = modifiedPlaylist->allmusic();
         int count = 0;
         for (auto meta : metalist) {
-            bool curExistFlag = false;
             for (auto curMeta : allMetas) {
                 if (curMeta->hash == meta->hash) {
                     count++;
@@ -1146,7 +1146,7 @@ void Presenter::removeListSame(QStringList *list)
 {
     for (int i = 0; i < list->count(); i++) {
         for (int k = i + 1; k <  list->count(); k++) {
-            if ( list->at(i) ==  list->at(k)) {
+            if (list->at(i) == list->at(k)) {
                 list->removeAt(k);
                 k--;
             }
@@ -1382,7 +1382,7 @@ void Presenter::onSearchText(const QString &id, const QString &text)
 
         for (auto &metaData : artistList->playMusicTypePtrList()) {
             for (int i = 0; i < artist.length(); i++) {
-                if (metaData->name.contains(artist.at(i) )) {
+                if (metaData->name.contains(artist.at(i))) {
                     searchArtistList->appendMusicTypePtrListData(metaData);
                 }
             }
@@ -1445,7 +1445,7 @@ void Presenter::onSearchCand(const QString text)
             searchAlbumList->appendMusicTypePtrListData(metaData);
             count ++;
         }
-        if (count >= 3  ) {
+        if (count >= 3) {
             break;
         }
     }
@@ -1814,10 +1814,10 @@ void Presenter::onImportFiles(const QStringList &filelist, PlaylistPtr playlist)
     Q_D(Presenter);
     //PlaylistPtr playlist = d->currentPlaylist;
     PlaylistPtr curPlaylist = playlist;
-    bool flag = false;
+//    bool flag = false;
     if (playlist == nullptr) {
         curPlaylist = d->playlistMgr->playlist(AllMusicListID);
-        flag = true;
+//        flag = true;
     }
     requestImportPaths(curPlaylist, filelist);
     auto curPlayerlist = d->player->curPlaylist();
@@ -1856,7 +1856,6 @@ void Presenter::onSpeechPlayMusic(const QString music)
 void Presenter::onSpeechPlayArtist(const QString artist)
 {
     Q_D(Presenter);
-    int count = 0;
     MetaPtrList artistMetaDataList;
     PlaylistPtr musicList = d->playlistMgr->playlist(AllMusicListID);
     PlaylistPtr curPlayList = d->playlistMgr->playlist(PlayMusicListID);
@@ -1883,7 +1882,6 @@ void Presenter::onSpeechPlayArtist(const QString artist)
 void Presenter::onSpeechPlayArtistMusic(const QString artist, const QString music)
 {
     Q_D(Presenter);
-    int count = 0;
     MetaPtrList artistMetaDataList;
     PlaylistPtr musicList = d->playlistMgr->playlist(AllMusicListID);
     PlaylistPtr curPlayList = d->playlistMgr->playlist(PlayMusicListID);
@@ -1912,11 +1910,9 @@ void Presenter::onSpeechPlayArtistMusic(const QString artist, const QString musi
 void Presenter::onSpeechPlayFaverite()
 {
     Q_D(Presenter);
-    int count = 0;
     MetaPtrList artistMetaDataList;
     PlaylistPtr musicList = d->playlistMgr->playlist(FavMusicListID);
     PlaylistPtr curPlayList = d->playlistMgr->playlist(PlayMusicListID);
-    bool find = false;
     MetaPtrList musicMetaDataList;
     MetaPtr playMetaData;
     if (musicList->allmusic().size() == 0) {
@@ -1933,7 +1929,6 @@ void Presenter::onSpeechPlayFaverite()
 void Presenter::onSpeechPlayCustom(const QString listName)
 {
     Q_D(Presenter);
-    int count = 0;
     MetaPtrList artistMetaDataList;
     PlaylistPtr musicList ;
     PlaylistPtr curPlayList = d->playlistMgr->playlist(PlayMusicListID);
@@ -1962,7 +1957,6 @@ void Presenter::onSpeechPlayRadom()
     Q_D(Presenter);
     PlaylistPtr musicList = d->playlistMgr->playlist(AllMusicListID);
     PlaylistPtr curPlayList  = d->playlistMgr->playlist(PlayMusicListID);
-    bool find = false;
     MetaPtrList musicMetaDataList;
     MetaPtr playMetaData;
     int count = musicList->allmusic().size();
@@ -2023,7 +2017,7 @@ void Presenter::onSpeechunFaverite()
 
 void Presenter::onSpeechsetMode(const int mode)
 {
-    Q_D(Presenter);
+//    Q_D(Presenter);
     onPlayModeChanged(mode);
 }
 
@@ -2170,13 +2164,14 @@ void Presenter::initMpris(MprisPlayer *mprisPlayer)
 
     connect(mprisPlayer, &MprisPlayer::volumeRequested,
     this, [ = ](double volume) {
+        Q_UNUSED(volume)
 //        onVolumeChanged(volume * 100);
 //        Q_EMIT this->volumeChanged(volume * 100);
     });
 
     connect(d, &PresenterPrivate::updateMprisVolume,
     this, [ = ](int volume) {
-        mprisPlayer->setVolume(((double)volume) / 100.0);
+        mprisPlayer->setVolume(volume / 100);
     });
 
     connect(this, &Presenter::progrossChanged,

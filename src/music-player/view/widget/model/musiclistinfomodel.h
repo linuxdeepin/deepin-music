@@ -32,9 +32,9 @@ class MusiclistInfomodel : public QStandardItemModel
 {
     Q_OBJECT
 public:
-    explicit MusiclistInfomodel(QObject *parent = 0);
+    explicit MusiclistInfomodel(QObject *parent = nullptr);
     MusiclistInfomodel(int rows, int columns, QObject *parent = Q_NULLPTR);
-    ~MusiclistInfomodel();
+    ~MusiclistInfomodel() override;
 
     PlaylistPtr playlist() const;
     void setPlaylist(PlaylistPtr playlist);

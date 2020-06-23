@@ -37,7 +37,7 @@ class LyricWidget : public DFrame
 
 public:
     explicit LyricWidget(QWidget *parent = Q_NULLPTR);
-    ~LyricWidget();
+    ~LyricWidget() override;
 
     void updateUI();
     QString defaultCover() const;

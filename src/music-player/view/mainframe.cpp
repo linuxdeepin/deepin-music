@@ -149,7 +149,7 @@ public:
 };
 void MainFramePrivate::setTheme(int type)
 {
-    Q_Q(MainFrame);
+//    Q_Q(MainFrame);
     if (type == 0) {
         type = DGuiApplicationHelper::instance()->themeType();
     }
@@ -197,9 +197,17 @@ void MainFramePrivate::initMenu()
 
         Dtk::Widget::moveToCenter(configDialog);
 
+        auto curAskCloseAction = MusicSettings::value("base.close.ask_close_action").toBool();
+        auto curLastPlaylist = MusicSettings::value("base.play.last_playlist").toString();
+        auto curLastMeta = MusicSettings::value("base.play.last_meta").toString();
+        auto curLastPosition = MusicSettings::value("base.play.last_position").toInt();
         configDialog->exec();
         delete configDialog;
         MusicSettings::sync();
+        MusicSettings::setOption("base.close.ask_close_action", curAskCloseAction);
+        MusicSettings::setOption("base.play.last_playlist", curLastPlaylist);
+        MusicSettings::setOption("base.play.last_meta", curLastMeta);
+        MusicSettings::setOption("base.play.last_position", curLastPosition);
 
         auto play_pauseStr = MusicSettings::value("shortcuts.all.play_pause").toString();
         if (play_pauseStr.isEmpty())
@@ -429,14 +437,14 @@ void MainFramePrivate::showPlaylistView()
     if (footer->height() > 80) {
         return;
     }
-    QRect start ( 5,  height - 86,
-                  width - 10, 80);
-    QRect end ( 5,  height - 429,
-                width - 10, 423);
-    QRect start1 ( 0, 0,
-                   width - 10, 0);
-    QRect end1 ( 0,  0,
-                 width - 10, 349);
+    QRect start(5, height - 86,
+                width - 10, 80);
+    QRect end(5, height - 429,
+              width - 10, 423);
+    QRect start1(0, 0,
+                 width - 10, 0);
+    QRect end1(0, 0,
+               width - 10, 349);
     WidgetHelper::slideEdgeWidget2(
         playListWidget, start1, end1, AnimationDelay, true);
     WidgetHelper::slideEdgeWidget(
@@ -452,15 +460,15 @@ void MainFramePrivate::hidePlaylistView()
     if (footer->height() <= 80) {
         return;
     }
-    QRect start ( 5,  height - 429,
-                  width - 10, 423);
-    QRect end ( 5,  height - 86,
-                width - 10, 80);
+    QRect start(5, height - 429,
+                width - 10, 423);
+    QRect end(5, height - 86,
+              width - 10, 80);
 
-    QRect start1 ( 0,  0,
-                   width - 10, 349);
-    QRect end1 ( 0, 0,
-                 width - 10, 0);
+    QRect start1(0, 0,
+                 width - 10, 349);
+    QRect end1(0, 0,
+               width - 10, 0);
     WidgetHelper::slideEdgeWidget2(
         playListWidget, start1, end1, AnimationDelay, false);
     WidgetHelper::slideEdgeWidget(
@@ -477,25 +485,25 @@ void MainFramePrivate::resiveistView()
         return ;
     }
     if (playListWidget->isVisible()) {
-        QRect start1 ( 0, 0,
-                       width - 10, 349);
-        QRect end1 ( 0,  0,
+        QRect start1(0, 0,
                      width - 10, 349);
+        QRect end1(0, 0,
+                   width - 10, 349);
         WidgetHelper::slideEdgeWidget2(
             playListWidget, start1, end1, AnimationDelay, true);
-        QRect rect ( 5,  height - 429,
-                     width - 10, 423);
+        QRect rect(5, height - 429,
+                   width - 10, 423);
         WidgetHelper::slideEdgeWidget(
             footer, playListWidget, rect, rect, 10, true);
     } else {
-        QRect start1 ( 0,  0,
-                       width - 10, 0);
-        QRect end1 ( 0, 0,
+        QRect start1(0, 0,
                      width - 10, 0);
+        QRect end1(0, 0,
+                   width - 10, 0);
         WidgetHelper::slideEdgeWidget2(
             playListWidget, start1, end1, AnimationDelay, false);
-        QRect rect ( 5,  height - 86,
-                     width - 10, 80);
+        QRect rect(5, height - 86,
+                   width - 10, 80);
         WidgetHelper::slideEdgeWidget(
             footer, playListWidget, rect, rect, 10, false);
     }
@@ -537,6 +545,7 @@ void MainFramePrivate:: slideToImportView()
 
 void MainFramePrivate:: slideToMusicListView(bool keepPlaylist)
 {
+    Q_UNUSED(keepPlaylist)
     Q_Q(MainFrame);
 
     titlebarwidget->setSearchEnable(true);
@@ -780,7 +789,7 @@ MainFrame::MainFrame(QWidget *parent) :
     //convert thread init
     convertThread *converThd = new convertThread;
     connect(this, &MainFrame::exit, converThd, &convertThread::exitToCheckFile);
-    connect(Player::instance(), &Player::addApeTask, this, [=](QString path, QString name) {
+    connect(Player::instance(), &Player::addApeTask, this, [ = ](QString path, QString name) {
         converThd->addApeandAmr(path, name);
         if (!converThd->isRunning()) {
             converThd->start();
@@ -990,7 +999,7 @@ void MainFrame::binding(Presenter *presenter)
 
     connect(presenter, &Presenter::notifyMusciError,
     this, [ = ](PlaylistPtr playlist, const MetaPtr  meta, int /*error*/) {
-
+        Q_UNUSED(playlist)
         Dtk::Widget::DDialog warnDlg(this);
         warnDlg.setIcon(QIcon::fromTheme("deepin-music"));
         warnDlg.setTextFormat(Qt::RichText);
@@ -1031,10 +1040,9 @@ void MainFrame::binding(Presenter *presenter)
     connect(presenter, &Presenter::scanFinished,
     this, [ = ](const QString & /*jobid*/, int mediaCount) {
         if (0 == mediaCount) {
-            QList<DDialog*> ql= this->findChildren<DDialog*>("uniquewarndailog");
-            if(ql.size()>0)
-            {
-                if(!ql.first()->isHidden())
+            QList<DDialog *> ql = this->findChildren<DDialog *>("uniquewarndailog");
+            if (ql.size() > 0) {
+                if (!ql.first()->isHidden())
                     return ;
             }
 
@@ -1065,6 +1073,8 @@ void MainFrame::binding(Presenter *presenter)
 
     connect(presenter, &Presenter::musicPaused,
     this, [ = ](PlaylistPtr playlist, const MetaPtr meta) {
+        Q_UNUSED(playlist)
+        Q_UNUSED(meta)
         d->timer->stop();
     });
 
@@ -1232,6 +1242,8 @@ void MainFrame::binding(Presenter *presenter)
             presenter, &Presenter::onToggleFavourite);
     connect(d->footer, &Footer::pause,
     this, [ = ](PlaylistPtr playlist, const MetaPtr meta) {
+        Q_UNUSED(playlist)
+        Q_UNUSED(meta)
         d->timer->stop();
     });
 
@@ -1466,9 +1478,9 @@ void MainFrame::onSelectImportFiles()
     }
 }
 
-void MainFrame::onClickedImportFiles(QStringList files )
+void MainFrame::onClickedImportFiles(QStringList files)
 {
-    Q_D(const MainFrame);
+//    Q_D(const MainFrame);
     Q_EMIT importSelectFiles(files, nullptr);
 }
 
@@ -1646,7 +1658,7 @@ void MainFrame::closeEvent(QCloseEvent *event)
 
 void MainFrame::paintEvent(QPaintEvent *e)
 {
-    Q_D(MainFrame);
+//    Q_D(MainFrame);
     QPainter p(this);
 
     DMainWindow::paintEvent(e);

@@ -26,10 +26,8 @@
 
 #include "util/singleton.h"
 
-namespace DMusic
-{
-namespace Plugin
-{
+namespace DMusic {
+namespace Plugin {
 class PluginInterface;
 enum class PluginType;
 }
@@ -41,7 +39,7 @@ class PluginManager : public QObject, public DMusic::DSingleton<PluginManager>
     friend class DMusic::DSingleton<PluginManager>;
 
 public:
-    explicit PluginManager(QObject *parent = 0);
+    explicit PluginManager(QObject *parent = nullptr);
 
     void init()
     {

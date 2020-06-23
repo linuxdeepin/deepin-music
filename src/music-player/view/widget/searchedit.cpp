@@ -83,11 +83,11 @@ void SearchEdit::setResultWidget(SearchResult *result)
         onFocusOut();
         Q_EMIT this->searchText(id, text);
     });
-    connect(this, &SearchEdit::focusChanged,
-    this, [ = ](const bool onFocus) {
-        bool a = onFocus;
-        qDebug() << "onfacus" << onFocus;
-    });
+//    connect(this, &SearchEdit::focusChanged,
+//    this, [ = ](const bool onFocus) {
+//        bool a = onFocus;
+//        qDebug() << "onfacus" << onFocus;
+//    });
 
 
     connect(m_result, &SearchResult::searchText2,

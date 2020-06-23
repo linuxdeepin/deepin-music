@@ -24,7 +24,7 @@ VlcMediaPlayer::VlcMediaPlayer(VlcInstance *instance)
 
     _vlcAudio = new VlcAudio(this);
 
-    _media = 0;
+    _media = nullptr;
 
     createCoreConnections();
 
@@ -58,10 +58,10 @@ VlcAudio *VlcMediaPlayer::audio() const
 //}
 
 #if LIBVLC_VERSION >= 0x020200
-VlcEqualizer *VlcMediaPlayer::equalizer() const
-{
+//VlcEqualizer *VlcMediaPlayer::equalizer() const
+//{
 //    return _vlcEqualizer;
-}
+//}
 #endif
 
 void VlcMediaPlayer::createCoreConnections()
@@ -136,7 +136,7 @@ int VlcMediaPlayer::length() const
 
     VlcError::showErrmsg();
 
-    return length;
+    return static_cast<int>(length);
 }
 
 VlcMedia *VlcMediaPlayer::currentMedia() const
@@ -277,7 +277,7 @@ int VlcMediaPlayer::time() const
 
     VlcError::showErrmsg();
 
-    return time;
+    return static_cast<int>(time);
 }
 
 //VlcVideoDelegate *VlcMediaPlayer::videoWidget() const
@@ -344,7 +344,7 @@ void VlcMediaPlayer::libvlc_callback(const libvlc_event_t *event,
         emit core->snapshotTaken(event->u.media_player_snapshot_taken.psz_filename);
         break;
     case libvlc_MediaPlayerLengthChanged:
-        emit core->lengthChanged(event->u.media_player_length_changed.new_length);
+        emit core->lengthChanged(static_cast<int>(event->u.media_player_length_changed.new_length));
         break;
     case libvlc_MediaPlayerVout:
         emit core->vout(event->u.media_player_vout.new_count);
@@ -383,7 +383,7 @@ float VlcMediaPlayer::sampleAspectRatio()
             if (track->i_type == libvlc_track_video && track->i_id == 0) {
                 libvlc_video_track_t *videoTrack = track->video;
                 if (videoTrack->i_sar_num > 0)
-                    sar = (float)videoTrack->i_sar_den / (float)videoTrack->i_sar_num;
+                    sar = static_cast<float>(videoTrack->i_sar_den) / static_cast<float>(videoTrack->i_sar_num);
             }
         }
         libvlc_media_tracks_release(tracks, tracksCount);

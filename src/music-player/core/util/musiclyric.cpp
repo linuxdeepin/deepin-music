@@ -110,10 +110,10 @@ void MusicLyric::getFromFile(QString dir)
                 continue;
             bool flag = false;
             mm = t_timelist[0].toLongLong(&flag, 10);
-            if (flag ) {
+            if (flag) {
                 ss = t_timelist[1].toDouble(&flag);
                 if (flag) {
-                    qint64  curtime = (qint64)(ss * 1000) + mm * 60 * 1000;
+                    qint64  curtime = static_cast<qint64>(ss * 1000) + mm * 60 * 1000;
                     ans.insert(curtime, str);
                 }
             }
@@ -194,7 +194,7 @@ void MusicLyric::getFromFileOld(QString dir)
                 if (flag) {
                     ss = val.toDouble(&flag);
                     if (flag) {
-                        qint64  curtime = (qint64)(ss * 1000) + mm * 60 * 1000;
+                        qint64  curtime = static_cast<qint64>(ss * 1000) + mm * 60 * 1000;
                         muli.push_back(curtime);
                     }
                 }

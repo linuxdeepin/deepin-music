@@ -1,7 +1,8 @@
 #include "AudioPlayer.h"
 
-AudioPlayer::AudioPlayer( QObject *parent)
+AudioPlayer::AudioPlayer(QObject *parent)
 {
+    Q_UNUSED(parent)
     format = new QAudioFormat();
     format->setSampleRate(44100);
     format->setChannelCount(2);

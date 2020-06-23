@@ -120,59 +120,44 @@ QSizeF Vlc::ratioSize(const Vlc::Ratio &ratio)
     switch (ratio) {
     case Vlc::R_16_9:
         return QSizeF(16, 9);
-        break;
     case Vlc::R_16_10:
         return QSizeF(16, 10);
-        break;
     case Vlc::R_185_100:
         return QSizeF(185, 100);
-        break;
     case Vlc::R_221_100:
         return QSizeF(221, 100);
-        break;
     case Vlc::R_235_100:
         return QSizeF(235, 100);
-        break;
     case Vlc::R_239_100:
         return QSizeF(239, 100);
-        break;
     case Vlc::R_4_3:
         return QSizeF(4, 3);
-        break;
     case Vlc::R_5_4:
         return QSizeF(5, 4);
-        break;
     case Vlc::R_5_3:
         return QSizeF(5, 3);
-        break;
     case Vlc::R_1_1:
         return QSizeF(1, 1);
-        break;
-    case Vlc::Original:
-    case Vlc::Ignore:
     default:
         return QSizeF(0, 0);
-        break;
     }
-
-    return QSizeF(0, 0);
 }
 
 QList<float> Vlc::scale()
 {
     QList<float> list;
-    list << (float)0
-         << (float)1.05
-         << (float)1.1
-         << (float)1.2
-         << (float)1.3
-         << (float)1.4
-         << (float)1.5
-         << (float)1.6
-         << (float)1.7
-         << (float)1.8
-         << (float)1.9
-         << (float)2.0;
+    list << 0.0f
+         << 1.05f
+         << 1.1f
+         << 1.2f
+         << 1.3f
+         << 1.4f
+         << 1.5f
+         << 1.6f
+         << 1.7f
+         << 1.8f
+         << 1.9f
+         << 2.0f;
 
     return list;
 }

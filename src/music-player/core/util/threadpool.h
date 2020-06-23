@@ -29,7 +29,7 @@ class ThreadPool : public QObject, public DMusic::DSingleton<ThreadPool>
 {
     Q_OBJECT
 public:
-    explicit ThreadPool(QObject *parent = 0);
+    explicit ThreadPool(QObject *parent = nullptr);
     ~ThreadPool();
 
     QThread *newThread();

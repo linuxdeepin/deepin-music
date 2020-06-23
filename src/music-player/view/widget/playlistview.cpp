@@ -163,13 +163,13 @@ void PlayListView::setPlaying(const MetaPtr meta)
 void PlayListView::setViewModeFlag(QListView::ViewMode mode)
 {
     if (mode == QListView::IconMode) {
-        setIconSize( QSize(150, 150) );
-        setGridSize( QSize(-1, -1) );
+        setIconSize(QSize(150, 150));
+        setGridSize(QSize(-1, -1));
         setSpacing(20);
         setViewportMargins(-10, -10, -35, 10);
     } else {
-        setIconSize( QSize(36, 36) );
-        setGridSize( QSize(-1, -1) );
+        setIconSize(QSize(36, 36));
+        setGridSize(QSize(-1, -1));
         setSpacing(0);
         setViewportMargins(0, 0, 8, 0);
     }
@@ -484,6 +484,8 @@ void PlayListViewPrivate::addMedia(const MetaPtr meta)
     if (coverData.length() > 0) {
         cover = QPixmap::fromImage(QImage::fromData(coverData));
     }
+    if (cover.width() > 160 || cover.height() > 160)
+        cover = cover.scaled(QSize(160, 160));
     QIcon icon = QIcon(cover);
     newItem->setIcon(icon);
     model->appendRow(newItem);
@@ -751,12 +753,12 @@ void PlayListView::showContextMenu(const QPoint &pos,
 
     if (deleteAction) {
         connect(deleteAction, &QAction::triggered, this, [ = ](bool) {
-            bool containsCue = false;
+//            bool containsCue = false;
             MetaPtrList metalist;
             for (auto index : selection->selectedRows()) {
                 auto meta = d->model->meta(index);
                 if (!meta->cuePath.isEmpty()) {
-                    containsCue = true;
+//                    containsCue = true;
                 }
                 metalist << meta;
             }
@@ -786,7 +788,7 @@ void PlayListView::showContextMenu(const QPoint &pos,
                 warnDlg.addContent(t_infoLabel, Qt::AlignHCenter);
                 warnDlg.addSpacing(20);
             }
-
+#if 0
             if (containsCue && false) {
                 DLabel *t_titleLabel = new DLabel(this);
                 t_titleLabel->setForegroundRole(DPalette::TextTitle);
@@ -798,6 +800,7 @@ void PlayListView::showContextMenu(const QPoint &pos,
                 warnDlg.addContent(t_infoLabel, Qt::AlignHCenter);
                 warnDlg.addSpacing(20);
             }
+#endif
             auto coverPixmap =  QPixmap::fromImage(WidgetHelper::cropRect(cover, QSize(64, 64)));
 
             warnDlg.setIcon(QIcon::fromTheme("deepin-music"));

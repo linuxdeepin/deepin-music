@@ -66,9 +66,10 @@ QPixmap blurImage(const QImage &image, int radius)
     blur->setBlurRadius(radius);
     QImage result = applyEffectToImage(image, blur);
     auto cropFactor = 0.9;
-    QRect rect((1 - cropFactor) / 2 * result.width(), (1 - cropFactor) / 2 * result.height(),
-               result.width() *cropFactor,
-               result.height() *cropFactor);
+    QRect rect(static_cast<int>((1 - cropFactor) / 2 * result.width()),
+               static_cast<int>((1 - cropFactor) / 2 * result.height()),
+               static_cast<int>(result.width() *cropFactor),
+               static_cast<int>(result.height() *cropFactor));
     QImage cropped = result.copy(rect);
     return QPixmap::fromImage(cropped).scaled(image.size());
 }
@@ -265,6 +266,8 @@ void slideTop2BottomWidget(QWidget *top, QWidget *bottom, int delay)
 
 void slideEdgeWidget(QWidget *widget, QWidget *child, QRect start, QRect end, int delay, bool visible)
 {
+    Q_UNUSED(child)
+    Q_UNUSED(visible)
     QPropertyAnimation *animation2 = new QPropertyAnimation(widget, "geometry");
     animation2->setEasingCurve(QEasingCurve::InCurve);
     animation2->setDuration(delay);

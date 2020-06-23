@@ -32,6 +32,7 @@ MusicPixmapButton::MusicPixmapButton(QWidget *parent)
 
 void MusicPixmapButton::paintEvent(QPaintEvent *event)
 {
+    Q_UNUSED(event)
     QPainter painter(this);
     painter.save();
     painter.setRenderHint(QPainter::Antialiasing);

@@ -42,7 +42,7 @@ public:
 
         \param parent object parent (QObject *)
     */
-    explicit Vlc(QObject *parent = 0);
+    explicit Vlc(QObject *parent = nullptr);
 
     // Enums
     /*!

@@ -145,17 +145,27 @@ void PlayListWidgetPrivate::initConntion()
     q->connect(&inotifyFiles, &InotifyFiles::fileChanged,
     q, [ = ](const QStringList  & files) {
         auto allMetas = playListView->playlist()->allmusic();
+
+        int allCount = allMetas.size();
+        int missCount = 0;
+
         if (!allMetas.isEmpty()) {
             MetaPtrList  metalist;
             for (auto file : files) {
                 for (int i = 0; i < allMetas.size(); i++) {
                     if (file == allMetas[i]->localPath) {
                         metalist.append(allMetas[i]);
+                        missCount++;
                         allMetas.removeAt(i);
                         break;
                     }
                 }
             }
+
+            if (allCount == missCount) {
+                Q_EMIT q->musiclistRemove(playListView->playlist(), playListView->playlist()->allmusic());
+            }
+
             if (!metalist.isEmpty()) {
                 playListView->playlist()->removeMusicList(metalist);
             }
@@ -335,7 +345,7 @@ void PlayListWidget::dropEvent(QDropEvent *event)
 
 void PlayListWidget::resizeEvent(QResizeEvent *event)
 {
-    Q_D(PlayListWidget);
+//    Q_D(PlayListWidget);
     DWidget::resizeEvent(event);
 }
 

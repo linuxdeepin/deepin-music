@@ -32,7 +32,7 @@ class InotifyFiles : public QObject
 {
     Q_OBJECT
 public:
-    explicit InotifyFiles(QObject *parent = 0);
+    explicit InotifyFiles(QObject *parent = nullptr);
     ~InotifyFiles();
 
     void start();

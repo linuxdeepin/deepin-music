@@ -32,7 +32,7 @@ class LyricView : public DListView
     Q_OBJECT
 public:
     explicit LyricView(QWidget *parent = Q_NULLPTR);
-    ~LyricView();
+    ~LyricView() override;
 
     bool viewMode() const;
     int optical() const;

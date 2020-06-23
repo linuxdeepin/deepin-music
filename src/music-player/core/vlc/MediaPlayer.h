@@ -75,7 +75,7 @@ public:
         \brief Returns equalizer object.
         \return equalizer (VlcEqualizer *)
     */
-    VlcEqualizer *equalizer() const;
+//    VlcEqualizer *equalizer() const;
 #endif
 
     /*!

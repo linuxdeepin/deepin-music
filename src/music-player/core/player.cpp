@@ -148,7 +148,7 @@ public:
         /*-------AudioPlayer-------*/
         ioPlayer  =  new AudioPlayer();
 
-        qvinstance = new VlcInstance(VlcCommon::args(), NULL);
+        qvinstance = new VlcInstance(VlcCommon::args(), nullptr);
         qvplayer = new VlcMediaPlayer(qvinstance);
         qvmedia = new VlcMedia();
 //        qvplayer->audio()->setVolume(100);
@@ -253,6 +253,7 @@ void PlayerPrivate::initConnection()
 
     q->connect(ioPlayer->_buffer, &AudioBufferDevice::durationChanged, q,
     [ = ](qint64 position) {
+        Q_UNUSED(position)
         ioDuration++;
     });
 
@@ -410,11 +411,11 @@ void PlayerPrivate::initConnection()
 
     q->connect(qplayer, &QMediaPlayer::stateChanged,
     q, [ = ](QMediaPlayer::State newState) {
-
+        Q_UNUSED(newState)
 //        ioPlayer->reset();
-
+#if 0
         switch (newState) {
-            if (!isamr) {
+            if (!isamr) {   //warning: code will never be exetuted
             case QMediaPlayer::StoppedState:
                 Q_EMIT q->playbackStatusChanged(Player::Stopped);
                 break;
@@ -426,6 +427,7 @@ void PlayerPrivate::initConnection()
                 break;
             }
         }
+#endif
 
     });
 
@@ -509,7 +511,7 @@ void PlayerPrivate::initConnection()
                 curPlaylist->removeMusicList(removeMusicList);
                 Q_EMIT q->mediaError(activePlaylist, activeMeta, static_cast<Player::Error>(error));
             } else {
-                qDebug()<<"#####QMediaPlayer::error";
+                qDebug() << "#####QMediaPlayer::error";
                 qplayer->pause();
                 qlonglong postion = qplayer->position();
                 sleep(1);
@@ -809,12 +811,12 @@ void Player::playMeta(PlaylistPtr playlist, const MetaPtr meta)
             d->qvplayer->open(d->qvmedia);
             d->qvplayer->setTime(curMeta->offset);
             d->qvplayer->play();
-        } else */if (QFile::exists(curMeta->localPath) ) {
+        } else */if (QFile::exists(curMeta->localPath)) {
 //        if(curMeta->localPath.endsWith(".APE")){
 //            QFileInfo fileInfo(curMeta->localPath);
 //            fileInfo.suffix().toLower() == "ape";
 //        }
-        if (d->qvplayer->state() != Vlc::Stopped && d->qvplayer->state() != Vlc::Idle ) {
+        if (d->qvplayer->state() != Vlc::Stopped && d->qvplayer->state() != Vlc::Idle) {
             d->qvplayer->stop();
         }
         d->isamr = false;
@@ -832,7 +834,7 @@ void Player::playMeta(PlaylistPtr playlist, const MetaPtr meta)
         d->qplayer->setVolume(100);
         d->qplayer->play();
     } else {
-        if (d->qvplayer->state() != Vlc::Stopped && d->qvplayer->state() != Vlc::Idle ) {
+        if (d->qvplayer->state() != Vlc::Stopped && d->qvplayer->state() != Vlc::Idle) {
             d->qvplayer->stop();
         }
         d->isamr = false;
@@ -920,11 +922,10 @@ void Player::resume(PlaylistPtr playlist, const MetaPtr meta)
         d->curPlaylist->play(meta);
     setPlayOnLoaded(true);
     //增大音乐自动开始播放时间，给setposition留足空间
-    QTimer::singleShot(100, this, [=]() {
+    QTimer::singleShot(100, this, [ = ]() {
         QString curPath = Global::cacheDir();
         QString toPath = QString("%1/images/%2.mp3").arg(curPath).arg(meta->hash);
-        if (QFileInfo(toPath).exists() && d->m_position != -1) //fisrt start
-        {
+        if (QFileInfo(toPath).exists() && d->m_position != -1) { //fisrt start
             stop();
 
             if (playlist->id() != PlayMusicListID)
@@ -962,14 +963,14 @@ void Player::resume(PlaylistPtr playlist, const MetaPtr meta)
             DRecentManager::addItem(meta->localPath, data);
 
             //vlc & qplayer 声音同步
-            QTimer::singleShot(200, this, [=]() {
+            QTimer::singleShot(200, this, [ = ]() {
                 setVolume(d->volume);
                 d->ischangeMusic = false;
             });
 
             if (d->firstPlayOnLoad == true) {
                 d->firstPlayOnLoad = false;
-                QTimer::singleShot(150, this, [=]() {
+                QTimer::singleShot(150, this, [ = ]() {
                     if (d->isamr) {
                         d->qvplayer->play();
                     } else {
@@ -1011,6 +1012,8 @@ void Player::resume(PlaylistPtr playlist, const MetaPtr meta)
 
 void Player::playNextMeta(PlaylistPtr playlist, const MetaPtr meta)
 {
+    Q_UNUSED(playlist)
+    Q_UNUSED(meta)
     Q_D(Player);
 //    Q_ASSERT(playlist == d->activePlaylist);
 
@@ -1024,6 +1027,7 @@ void Player::playNextMeta(PlaylistPtr playlist, const MetaPtr meta)
 
 void Player::playPrevMusic(PlaylistPtr playlist, const MetaPtr meta)
 {
+    Q_UNUSED(playlist)
     Q_D(Player);
 //    Q_ASSERT(playlist == d->activePlaylist);
 
@@ -1190,7 +1194,7 @@ Player::PlaybackMode Player::mode() const
 
 bool Player::muted()
 {
-    Q_D(const Player);
+    //Q_D(const Player);
     //return d->qplayer->isMuted();
     return this->isMusicMuted();
 }
@@ -1239,6 +1243,7 @@ void Player::setCanControl(bool canControl)
 
 void Player::setIOPosition(qint64 value, qint64 range)
 {
+    Q_UNUSED(range)
     Q_D(Player);
 
     if (d->playOnLoad && d->activeMeta && QFile::exists(d->activeMeta->localPath)) {
@@ -1249,7 +1254,7 @@ void Player::setIOPosition(qint64 value, qint64 range)
 
             if (value != 0 && d->ioDuration != 0) {
                 // qint64 position =  (value * d->ioDuration) / range;
-                qint64 position =  (value * d->ioDuration) / 1000;
+                qint64 position = (value * d->ioDuration) / 1000;
                 Q_EMIT this->sliderReleased(position);
             }
         }
@@ -1322,7 +1327,7 @@ void Player::updateVolume(int volume)
 
 void Player::setMuted(bool mute)
 {
-    Q_D(Player);
+//    Q_D(Player);
     //d->qplayer->setMuted(mute);
     setMusicMuted(mute);
 }
@@ -1334,7 +1339,7 @@ void Player::setFadeInOutFactor(double fadeInOutFactor)
 //    qDebug() << "setFadeInOutFactor" << fadeInOutFactor
 //             << d->volume *d->fadeInOutFactor << d->volume;
     d->qplayer->blockSignals(true);
-    d->qplayer->setVolume(/*d->volume*/100 * d->fadeInOutFactor);
+    d->qplayer->setVolume(/*d->volume*/static_cast<int>(100 * d->fadeInOutFactor));
     d->qplayer->blockSignals(false);
 
 //setMusicVolume(d->volume * d->fadeInOutFactor / 100.0);

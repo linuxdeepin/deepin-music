@@ -106,7 +106,7 @@ bool SpeechCenter::favorite()
 bool SpeechCenter::unFaverite()
 {
     qDebug() << "-----set unFaverite:";
-    Q_EMIT unFaverite();
+    //Q_EMIT unFaverite();
     return true;
 }
 

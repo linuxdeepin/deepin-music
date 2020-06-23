@@ -33,7 +33,7 @@ public:
         \param parent Instance's parent object (QObject *)
     */
     explicit VlcInstance(const QStringList &args,
-                         QObject *parent = NULL);
+                         QObject *parent = nullptr);
 
     /*!
         VlcInstance destructor

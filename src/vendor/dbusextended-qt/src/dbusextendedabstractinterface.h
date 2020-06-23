@@ -65,7 +65,7 @@ public:
     inline QDBusError lastExtendedError() const
     {
         return m_lastExtendedError;
-    };
+    }
 
 protected:
     DBusExtendedAbstractInterface(const QString &service,
@@ -87,9 +87,9 @@ Q_SIGNALS:
     void asyncGetAllPropertiesFinished();
 
 private Q_SLOTS:
-    void onPropertiesChanged(const QString& interfaceName,
-                             const QVariantMap& changedProperties,
-                             const QStringList& invalidatedProperties);
+    void onPropertiesChanged(const QString &interfaceName,
+                             const QVariantMap &changedProperties,
+                             const QStringList &invalidatedProperties);
     void onAsyncPropertyFinished(DBusExtendedPendingCallWatcher *watcher);
     void onAsyncSetPropertyFinished(DBusExtendedPendingCallWatcher *watcher);
     void onAsyncGetAllPropertiesFinished(QDBusPendingCallWatcher *watcher);

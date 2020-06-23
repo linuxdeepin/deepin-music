@@ -20,8 +20,8 @@ SearchLyricsWidget::SearchLyricsWidget(QString path, QWidget *parent)
       m_listWidget(new DListWidget),
       m_keyWord(new DLineEdit),
       m_singer(new DLineEdit),
-      m_group(new QButtonGroup),
-      m_path(path)
+      m_path(path),
+      m_group(new QButtonGroup)
 {
     initUI();
     initConnection();
@@ -232,7 +232,7 @@ void SearchLyricsWidget::createList()
         singerName->move(15, 35);
         duration->move(269, 23);
         DPalette pl = frame->palette();
-        pl.setColor(DPalette::Background, QColor(0, 0, 0, 0.03 * 255));
+        pl.setColor(DPalette::Background, QColor(0, 0, 0, static_cast<int>(0.03 * 255)));
         frame->setPalette(pl);
 
         DCheckBox *checkBox = new DCheckBox(frame);
@@ -264,7 +264,7 @@ void SearchLyricsWidget::searchLyrics()
     dir.setNameFilters(filters);  //设置文件名称过滤器，只为filters格式
 
     //统计lrc格式的文件个数
-    int dir_count = dir.count();
+    int dir_count = static_cast<int>(dir.count());
     if (dir_count <= 0)
         return;
 
@@ -366,6 +366,7 @@ void SearchLyricsWidget::mySelectionIndex(int index)
 
 void SearchLyricsWidget::slottextChanged(const QString &str)
 {
+    Q_UNUSED(str)
     if (m_keyWord->lineEdit()->text().isEmpty() && m_singer->lineEdit()->text().isEmpty()) {
         m_search->setEnabled(false);
     } else {

@@ -62,7 +62,7 @@ class Playlist : public QObject
     Q_PROPERTY(QString displayName READ displayName WRITE setDisplayName NOTIFY displayNameChanged)
     Q_PROPERTY(bool active READ active WRITE setActive)
 public:
-    explicit Playlist(const PlaylistMeta &musiclistinfo, QObject *parent = 0);
+    explicit Playlist(const PlaylistMeta &musiclistinfo, QObject *parent = nullptr);
 
     enum SortType {
         SortByAddTime  = 0,
