@@ -1253,6 +1253,11 @@ void MainFrame::binding(Presenter *presenter)
             presenter, &Presenter::onVolumeChanged);
     connect(d->footer,  &Footer::toggleMute,
             presenter, &Presenter::onToggleMute);
+    /***************************************
+     * local toggle
+     * *************************************/
+    connect(d->footer,  &Footer::localToggleMute,
+            presenter, &Presenter::onLocalToggleMute);
     connect(d->footer,  &Footer::modeChanged,
             presenter, &Presenter::onPlayModeChanged);
     connect(d->footer,  &Footer::toggleFavourite,
@@ -1291,12 +1296,17 @@ void MainFrame::binding(Presenter *presenter)
             d->footer,  &Footer::onVolumeChanged);
     connect(presenter, &Presenter::mutedChanged,
             d->footer,  &Footer::onMutedChanged);
+    connect(presenter, &Presenter::localMutedChanged,
+            d->footer,  &Footer::onLocalMutedChanged);
     connect(presenter, &Presenter::musicError,
             d->footer,  &Footer::onMusicError);
     connect(presenter, &Presenter::audioBufferProbed,
             d->footer,  &Footer::audioBufferProbed);
     connect(presenter, &Presenter::metaBuffer,
             d->footer,  &Footer::metaBuffer);
+
+    connect(d->footer, &Footer::localMuteStat,
+            presenter,  &Presenter::localMuteChanged);
 
     // musiclist
     connect(presenter, &Presenter::playlistAdded,

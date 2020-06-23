@@ -3,6 +3,7 @@
 #include <vlc/vlc.h>
 #include <vlc_common.h>
 #include <vlc_variables.h>
+#include <QDebug>
 
 #include "Audio.h"
 #include "Error.h"
@@ -42,7 +43,8 @@ public:
         Q_UNUSED(oldVal);
 
         VlcAudio *core = static_cast<VlcAudio *>(data);
-        emit core->muteChanged(newVal.b_bool);
+        if(oldVal.b_bool != newVal.b_bool)
+            emit core->muteChanged(newVal.b_bool);
         return VLC_SUCCESS;
     }
 };
