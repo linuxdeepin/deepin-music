@@ -63,8 +63,6 @@ public:
             supportedSuffixs.insert(suffix, true);
         }
 
-        //        qDebug() << supportedSuffixs;
-
 #ifdef SUPPORT_INOTIFY
         watcher = new InotifyEngine;
 #endif

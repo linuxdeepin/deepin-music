@@ -119,6 +119,10 @@ signals:
     void progrossChanged(qint64 pos, qint64 length, qint64 coefficient);
     void volumeChanged(int volume);
     void mutedChanged(bool muted);
+    /***************************************
+     * local mute operation
+     * *************************************/
+    void localMutedChanged();
     void modeChanged(int);
 
     //! from lyricservice
@@ -139,7 +143,6 @@ signals:
     void musicFileMiss();
     //语音控制
     void sigSpeedResult(int action, bool result);
-
 public slots:
     //! music control interface
     void onSyncMusicPlay(PlaylistPtr playlist, const MetaPtr meta);
@@ -163,6 +166,10 @@ public slots:
     void onVolumeChanged(int volume);
     void onPlayModeChanged(int mode);
     void onToggleMute();
+    /******************************
+     *local toggle
+     * *****************************/
+    void onLocalToggleMute();
     void onFadeInOut();
 
     void onUpdateMetaCodec(const QString &preTitle, const QString &preArtist, const QString &preAlbum, const MetaPtr meta);
@@ -215,6 +222,11 @@ public slots:
     void setEqualizerpre(int val);
     void setEqualizerbauds(int index, int val);
     void setEqualizerCurMode(int curIndex);
+
+    /**************************************************
+     * local mute operation to player
+     * ***********************************************/
+    void localMuteChanged(bool mute);
 
 private:
     bool containsStr(QString searchText, QString text);

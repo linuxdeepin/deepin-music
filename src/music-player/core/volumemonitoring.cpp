@@ -22,6 +22,7 @@
 #include "volumemonitoring.h"
 #include <QtMath>
 #include <QTimer>
+#include <QThread>
 #include <QDBusObjectPath>
 #include <QDBusInterface>
 #include <QDBusReply>
@@ -36,9 +37,10 @@ public:
     VolumeMonitoringPrivate(VolumeMonitoring *parent) : q_ptr(parent) {}
 
     QTimer            timer;
-    bool oldMute  = false;
     int oldVolume = 0;
-    VolumeMonitoring *q_ptr;
+    bool oldMute  = false;
+    bool bUpdate = true;
+    VolumeMonitoring  *q_ptr;
     Q_DECLARE_PUBLIC(VolumeMonitoring)
 };
 
@@ -68,10 +70,22 @@ void VolumeMonitoring::stop()
     d->timer.stop();
 }
 
+bool VolumeMonitoring::needSyncLocalFlag()
+{
+    Q_D(VolumeMonitoring);
+    return d->bUpdate;
+}
+
+void VolumeMonitoring::syncLocalFlag()
+{
+    Q_D(VolumeMonitoring);
+    d->bUpdate = true;
+}
+
 void VolumeMonitoring::timeoutSlot()
 {
     Q_D(VolumeMonitoring);
-    QVariant v = DBusUtils::redDBusProperty("com.deepin.daemon.Audio", "/com/deepin/daemon/Audio",
+    QVariant v = DBusUtils::readDBusProperty("com.deepin.daemon.Audio", "/com/deepin/daemon/Audio",
                                             "com.deepin.daemon.Audio", "SinkInputs");
 
     if (!v.isValid())
@@ -81,7 +95,7 @@ void VolumeMonitoring::timeoutSlot()
 
     QString sinkInputPath;
     for (auto curPath : allSinkInputsList) {
-        QVariant nameV = DBusUtils::redDBusProperty("com.deepin.daemon.Audio", curPath.path(),
+        QVariant nameV = DBusUtils::readDBusProperty("com.deepin.daemon.Audio", curPath.path(),
                                                     "com.deepin.daemon.Audio.SinkInput", "Name");
 
         if (!nameV.isValid() || nameV != Global::getAppName())
@@ -100,15 +114,32 @@ void VolumeMonitoring::timeoutSlot()
         return ;
     }
 
+    if(d->bUpdate)
+    {
+        /*************************************
+         * sync local mute or volume to dbus
+         * ***********************************/
+        //调用设置音量
+        QVariant muteV = DBusUtils::readDBusProperty("com.deepin.daemon.Audio", sinkInputPath,
+                                                    "com.deepin.daemon.Audio.SinkInput", "Mute");
+        if(muteV.toBool() != MusicSettings::value("base.play.mute").toBool())
+            ainterface.call(QLatin1String("SetMute"), MusicSettings::value("base.play.mute").toBool());
+        //ainterface.call(QLatin1String("SetVolume"), MusicSettings::value("base.play.volume").toInt(), false);
+        if (qFuzzyCompare(MusicSettings::value("base.play.volume").toInt(), 0.0))
+            ainterface.call(QLatin1String("SetMute"), true);
+        d->bUpdate = false;
+    }
+
     //获取音量
-    QVariant volumeV = DBusUtils::redDBusProperty("com.deepin.daemon.Audio", sinkInputPath,
+    QVariant volumeV = DBusUtils::readDBusProperty("com.deepin.daemon.Audio", sinkInputPath,
                                                   "com.deepin.daemon.Audio.SinkInput", "Volume");
 
     //获取音量
-    QVariant muteV = DBusUtils::redDBusProperty("com.deepin.daemon.Audio", sinkInputPath,
+    QVariant muteV = DBusUtils::readDBusProperty("com.deepin.daemon.Audio", sinkInputPath,
                                                 "com.deepin.daemon.Audio.SinkInput", "Mute");
     //取最小正整数
     int volume = qFloor(volumeV.toDouble() * 100);
+
     bool mute = muteV.toBool();
 
     if (volume != d->oldVolume) {

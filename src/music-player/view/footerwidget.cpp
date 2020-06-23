@@ -197,7 +197,7 @@ void FooterPrivate::initConnection()
         Q_EMIT q->togglePlaylist();
     });
     q->connect(btSound, &DPushButton::pressed, q, [ = ]() {
-        Q_EMIT q->toggleMute();
+        Q_EMIT q->localToggleMute();
     });
     q->connect(volSlider, &SoundVolume::volumeChanged, q, [ = ](int vol) {
         q->onVolumeChanged(vol);
@@ -1315,14 +1315,21 @@ void Footer::onVolumeChanged(int volume)
     }
     d->m_Volume = volume;
     MusicSettings::setOption("base.play.volume", d->m_Volume);
+    MusicSettings::setOption("base.play.mute", d->m_Mute);
     d->volSlider->onVolumeChanged(volume);
 }
 
 void Footer::onMutedChanged(bool muted)
 {
     Q_D(Footer);
+    if(d->volumeMonitoring.needSyncLocalFlag())
+    {
+        d->volumeMonitoring.stop();
+        d->volumeMonitoring.timeoutSlot();
+        d->volumeMonitoring.start();
+        return ;
+    }
     d->m_Mute = muted;
-    MusicSettings::setOption("base.play.mute", muted);
     if (muted) {
         d->updateQssProperty(d->btSound, "volume", "mute");
     } else {
@@ -1334,13 +1341,38 @@ void Footer::onMutedChanged(bool muted)
         } else {
             status = "low";
         }
-        if (d->m_Mute) {
-            d->updateQssProperty(d->btSound, "volume", "mute");
-        } else {
-            d->updateQssProperty(d->btSound, "volume", status);
-        }
+
+        d->updateQssProperty(d->btSound, "volume", status);
         d->volSlider->onVolumeChanged(d->m_Volume);
     }
+    MusicSettings::setOption("base.play.volume", d->m_Volume);
+    MusicSettings::setOption("base.play.mute", d->m_Mute);
+}
+
+void Footer::onLocalMutedChanged()
+{
+    Q_D(Footer);
+    d->m_Mute = !d->m_Mute;
+    if (d->m_Mute) {
+        d->updateQssProperty(d->btSound, "volume", "mute");
+    } else {
+        QString status = "mid";
+        if (d->m_Volume > 77) {
+            status = "high";
+        } else if (d->m_Volume > 33) {
+            status = "mid";
+        } else {
+            status = "low";
+        }
+        d->updateQssProperty(d->btSound, "volume", status);
+        d->volSlider->onVolumeChanged(d->m_Volume);
+    }
+    MusicSettings::setOption("base.play.volume", d->m_Volume);
+    MusicSettings::setOption("base.play.mute", d->m_Mute);
+
+    d->volumeMonitoring.syncLocalFlag();
+    //emit mute state
+    Q_EMIT localMuteStat(d->m_Mute);
 }
 
 void Footer::onModeChange(int mode)

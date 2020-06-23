@@ -537,6 +537,8 @@ void Presenter::prepareData()
             this, &Presenter::volumeChanged);
     connect(d->player, &Player::mutedChanged,
             this, &Presenter::mutedChanged);
+    connect(d->player, &Player::localMutedChanged,
+            this, &Presenter::localMutedChanged);
 
     connect(this, &Presenter::musicFileMiss,
             d->player, &Player::musicFileMiss);
@@ -936,12 +938,11 @@ void Presenter::onMusiclistRemove(PlaylistPtr playlist, const MetaPtrList metali
 
     // TODO: do better;
     if (playlist->id() == AllMusicListID || playlist->id() == "musicResult") {
+
         for (auto &playlist : allplaylist()) {
             auto meta =  playlist->removeMusicList(metalist);
             if (playlist == playinglist) {
                 next = meta;
-                if(next != nullptr)
-                    d->player->playMeta(playlist, next);
             }
         }
 
@@ -994,7 +995,7 @@ void Presenter::onMusiclistRemove(PlaylistPtr playlist, const MetaPtrList metali
 
     /*-----Judge the condition to remove the song playback switch -----*/
     for (auto &meta : metalist) {
-        if (d->player->isActiveMeta(meta) && playinglist == playlist) {
+        if (d->player->isActiveMeta(meta) && (playinglist == playlist || playlist->id() == AllMusicListID)) {
             if (playinglist->isEmpty() || t_isLastMeta || next.isNull()) { /*新建歌单清空时停止播放*/
                 onMusicStop(playinglist, next);
             } else {
@@ -1764,11 +1765,31 @@ void Presenter::onPlayModeChanged(int mode)
 void Presenter::onToggleMute()
 {
     Q_D(Presenter);
-    d->player->setMuted(!d->player->muted());
-    if (d->player->muted()) {
-        Q_EMIT d->updateMprisVolume(0);
-    } else {
-        Q_EMIT d->updateMprisVolume(d->player->volume());
+    if(d->player->status() == Player::Paused ||
+       d->player->status() == Player::Playing )
+    {
+        if(d->player->isValidDbusMute())
+            d->player->setMuted(!d->player->muted());
+
+        if (d->player->muted()) {
+            Q_EMIT d->updateMprisVolume(0);
+        } else {
+            Q_EMIT d->updateMprisVolume(d->player->volume());
+        }
+    }else{
+        //local toggle
+        Q_EMIT d->player->localMutedChanged();
+    }
+}
+
+void Presenter::onLocalToggleMute()
+{
+    Q_D(Presenter);
+    if(d->player->isValidDbusMute())
+    {
+        d->player->setMuted(!d->player->muted());
+    }else{
+        Q_EMIT d->player->localMutedChanged();
     }
 }
 
@@ -2101,6 +2122,12 @@ void Presenter::setEqualizerCurMode(int curIndex)
 {
     Q_D(Presenter);
     d->player->setEqualizerCurMode(curIndex);
+}
+
+void Presenter::localMuteChanged(bool mute)
+{
+   Q_D(Presenter);
+    d->player->setLocalMuted(mute);
 }
 
 void Presenter::onScanMusicDirectory()
