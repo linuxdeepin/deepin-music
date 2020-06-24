@@ -119,10 +119,10 @@ signals:
     void progrossChanged(qint64 pos, qint64 length, qint64 coefficient);
     void volumeChanged(int volume);
     void mutedChanged(bool muted);
-    /***************************************
-     * local mute operation
-     * *************************************/
-    void localMutedChanged();
+    /**********************************************
+     * local mute operation,type: 0 volume , 1:mute
+     * *******************************************/
+    void localMutedChanged(int type);
     void modeChanged(int);
 
     //! from lyricservice

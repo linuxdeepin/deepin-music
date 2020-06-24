@@ -537,8 +537,8 @@ void Presenter::prepareData()
             this, &Presenter::volumeChanged);
     connect(d->player, &Player::mutedChanged,
             this, &Presenter::mutedChanged);
-    connect(d->player, &Player::localMutedChanged,
-            this, &Presenter::localMutedChanged);
+//    connect(d->player, &Player::localMutedChanged,
+//            this, &Presenter::localMutedChanged);
 
     connect(this, &Presenter::musicFileMiss,
             d->player, &Player::musicFileMiss);
@@ -1778,7 +1778,7 @@ void Presenter::onToggleMute()
         }
     }else{
         //local toggle
-        Q_EMIT d->player->localMutedChanged();
+        Q_EMIT localMutedChanged(0);
     }
 }
 
@@ -1789,7 +1789,7 @@ void Presenter::onLocalToggleMute()
     {
         d->player->setMuted(!d->player->muted());
     }else{
-        Q_EMIT d->player->localMutedChanged();
+        Q_EMIT localMutedChanged(1);
     }
 }
 
