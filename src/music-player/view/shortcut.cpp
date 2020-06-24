@@ -31,13 +31,17 @@ Shortcut::Shortcut(QObject *parent) : QObject(parent)
     group2.groupName = tr("Songs");
     group3.groupName = tr("Playlists");
     group4.groupName = tr("Settings");
-
+    auto strPlayPause = MusicSettings::value("shortcuts.all.play_pause").toString();
+    auto strPrevious = MusicSettings::value("shortcuts.all.previous").toString();
+    auto strNext = MusicSettings::value("shortcuts.all.next").toString();
+    auto strVolUP = MusicSettings::value("shortcuts.all.volume_up").toString();
+    auto strVolDown = MusicSettings::value("shortcuts.all.volume_down").toString();
     group1.groupItems <<
-                      ShortcutItem(tr("Play/Pause"),       MusicSettings::value("shortcuts.all.play_pause").toString()) <<
-                      ShortcutItem(tr("Previous"),   MusicSettings::value("shortcuts.all.previous").toString()) <<
-                      ShortcutItem(tr("Next"),   MusicSettings::value("shortcuts.all.next").toString()) <<
-                      ShortcutItem(tr("Volume Up"),   MusicSettings::value("shortcuts.all.volume_up").toString()) <<
-                      ShortcutItem(tr("Volume Down"),   MusicSettings::value("shortcuts.all.volume_down").toString()) <<
+                      ShortcutItem(tr("Play/Pause"),    strPlayPause.toUpper().compare("RETURN")==0?"Enter":strPlayPause) <<
+                      ShortcutItem(tr("Previous"),      strPrevious.toUpper().compare("RETURN")==0?"Enter":strPrevious) <<
+                      ShortcutItem(tr("Next"),          strNext.toUpper().compare("RETURN")==0?"Enter":strNext) <<
+                      ShortcutItem(tr("Volume Up"),     strVolUP.toUpper().compare("RETURN")==0?"Enter":strVolUP) <<
+                      ShortcutItem(tr("Volume Down"),   strVolDown.toUpper().compare("RETURN")==0?"Enter":strVolDown) <<
                       ShortcutItem(tr("Mute"),   "M");
 
     group2.groupItems <<
