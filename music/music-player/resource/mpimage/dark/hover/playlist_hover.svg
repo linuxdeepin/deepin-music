@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="36px" height="36px" viewBox="0 0 36 36" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 58 (84663) - https://sketch.com -->
+    <title>playlist_hover</title>
+    <desc>Created with Sketch.</desc>
+    <g id="页面-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="按钮规范" transform="translate(-1288.000000, -326.000000)" fill="#FFFFFF">
+            <g id="playlist_normal备份" transform="translate(1281.000000, 319.000000)">
+                <g id="Group-9" transform="translate(7.000000, 7.000000)">
+                    <path d="M26,10 L26,11.037037 L22,11 L22.0005978,23.3624997 C22.0030653,23.4080199 22.004315,23.453864 22.004315,23.5 C22.004315,24.8807119 20.8850269,26 19.504315,26 C18.1236031,26 17.004315,24.8807119 17.004315,23.5 C17.004315,22.1192881 18.1236031,21 19.504315,21 C20.0657284,21 20.5839199,21.1850552 21.0012183,21.4974946 L21,10 L26,10 Z M16,17 L16,18 L10,18 L10,17 L16,17 Z M18,14 L18,15 L10,15 L10,14 L18,14 Z M18,11 L18,12 L10,12 L10,11 L18,11 Z" id="Combined-Shape"></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

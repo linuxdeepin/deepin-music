@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="32px" height="32px" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 56.2 (81672) - https://sketch.com -->
+    <title>deepin-music-player</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <filter x="-14.3%" y="-15.4%" width="128.6%" height="130.8%" filterUnits="objectBoundingBox" id="filter-1">
+            <feOffset dx="0" dy="1" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="0.5" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feComposite in="shadowBlurOuter1" in2="SourceAlpha" operator="out" result="shadowBlurOuter1"></feComposite>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.15 0" type="matrix" in="shadowBlurOuter1" result="shadowMatrixOuter1"></feColorMatrix>
+            <feMerge>
+                <feMergeNode in="shadowMatrixOuter1"></feMergeNode>
+                <feMergeNode in="SourceGraphic"></feMergeNode>
+            </feMerge>
+        </filter>
+        <linearGradient x1="98.0163112%" y1="38.451407%" x2="0%" y2="41.8451878%" id="linearGradient-2">
+            <stop stop-color="#0BA186" offset="0%"></stop>
+            <stop stop-color="#68C639" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="98.0310694%" id="linearGradient-3">
+            <stop stop-color="#8DF34C" offset="0%"></stop>
+            <stop stop-color="#00CCB3" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="linearGradient-4">
+            <stop stop-color="#FFFFFF" offset="0%"></stop>
+            <stop stop-color="#FFFFFF" stop-opacity="0.7" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="页面-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="按钮规范" transform="translate(-30.000000, -1346.000000)">
+            <g id="logo" transform="translate(30.000000, 1346.000000)">
+                <g id="deepin-music-player">
+                    <g id="deepin-music-32px">
+                        <g id="Group-8" filter="url(#filter-1)" transform="translate(2.000000, 3.000000)">
+                            <circle id="circle13330" stroke="url(#linearGradient-2)" fill="#151E25" transform="translate(16.000000, 13.000000) rotate(-270.000000) translate(-16.000000, -13.000000) " cx="16" cy="13" r="11.5"></circle>
+                            <path d="M5.1277704,-2.07168062e-16 L17.8722296,2.07168062e-16 C19.6552671,-1.2037061e-16 20.3018396,0.185651222 20.9536914,0.534265408 C21.6055433,0.882879593 22.1171204,1.39445674 22.4657346,2.04630859 C22.8143488,2.69816044 23,3.34473292 23,5.1277704 L23,20.8722296 C23,22.6552671 22.8143488,23.3018396 22.4657346,23.9536914 C22.1171204,24.6055433 21.6055433,25.1171204 20.9536914,25.4657346 C20.3018396,25.8143488 19.6552671,26 17.8722296,26 L5.1277704,26 C3.34473292,26 2.69816044,25.8143488 2.04630859,25.4657346 C1.39445674,25.1171204 0.882879593,24.6055433 0.534265408,23.9536914 C0.185651222,23.3018396 8.02470732e-17,22.6552671 -1.38112041e-16,20.8722296 L1.38112041e-16,5.1277704 C-8.02470732e-17,3.34473292 0.185651222,2.69816044 0.534265408,2.04630859 C0.882879593,1.39445674 1.39445674,0.882879593 2.04630859,0.534265408 C2.69816044,0.185651222 3.34473292,1.2037061e-16 5.1277704,-2.07168062e-16 Z" id="Rectangle" fill="url(#linearGradient-3)"></path>
+                            <path d="M16.952381,14.4649176 L16.952381,7.36955016 C16.952381,7.00579109 16.657496,6.71090609 16.2937369,6.71090609 C16.2558358,6.71090609 16.2180054,6.71417756 16.1806669,6.72068408 L8.59085874,8.04326729 C8.27651066,8.09804489 8.04663793,8.37026982 8.04529052,8.68935208 L8,19.4146341 L7.99856989,19.4146341 C7.99952076,19.4429724 8,19.4714303 8,19.5 C8,20.8807119 6.88071187,22 5.5,22 C4.11928813,22 3,20.8807119 3,19.5 C3,18.1192881 4.11928813,17 5.5,17 C6.06280296,17 6.58216973,17.1859724 7,17.4998169 L7,7.19065517 C7,6.24022945 7.67664057,5.42445632 8.61068799,5.24877342 L15.6588236,3.92310528 C16.7312953,3.72138647 17.7642307,4.42727114 17.9659495,5.49974282 C17.9886007,5.62017165 18,5.74244651 18,5.86498703 L18,16.4137931 L17.9985415,16.4137931 C17.9995112,16.4424094 18,16.4711476 18,16.5 C18,17.8807119 16.8807119,19 15.5,19 C14.1192881,19 13,17.8807119 13,16.5 C13,15.1192881 14.1192881,14 15.5,14 C16.041615,14 16.5430028,14.1722333 16.952381,14.4649176 Z" id="Combined-Shape" fill="url(#linearGradient-4)"></path>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

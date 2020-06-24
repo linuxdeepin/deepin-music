@@ -1,0 +1,15 @@
+/* !!!! WARNING !!!!*/
+
+
+/* modify MusicItem.theme for color */
+
+#PlayListView {
+  border: 0px solid red;
+  margin: 0 0 0 0;
+  outline: none;
+  background: #202020;
+}
+
+/* #PlayListView::item {
+  height: 36px;
+}*/

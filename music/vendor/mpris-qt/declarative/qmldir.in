@@ -1,0 +1,2 @@
+module org.nemomobile.mpris
+plugin $${TARGET}

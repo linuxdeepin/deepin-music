@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="48px" height="48px" viewBox="0 0 48 48" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 46.2 (44496) - http://www.bohemiancoding.com/sketch -->
+    <title>playlist_fav</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <rect id="path-1" x="0" y="0" width="40" height="44" rx="2"></rect>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="playlist_fav">
+            <g id="Group" transform="translate(4.000000, 2.000000)">
+                <mask id="mask-2" fill="white">
+                    <use xlink:href="#path-1"></use>
+                </mask>
+                <g id="Rectangle-44">
+                    <use fill-opacity="0.4" fill="#FFFFFF" fill-rule="evenodd" xlink:href="#path-1"></use>
+                    <rect stroke-opacity="0.05" stroke="#000000" stroke-width="1" x="0.5" y="0.5" width="39" height="43" rx="2"></rect>
+                </g>
+                <path d="M19.9166662,29.5669259 L18.7687497,28.5190601 C14.6916666,24.8118363 12,22.3668156 12,19.3661085 C12,16.9210878 13.9158333,15 16.3541664,15 C17.7316662,15 19.0537494,15.6430087 19.9166662,16.6591214 C20.7795829,15.6430087 22.1016662,15 23.479166,15 C25.9174991,15 27.8333324,16.9210878 27.8333324,19.3661085 C27.8333324,22.3668156 25.1416661,24.8118371 21.0645827,28.5269988 L19.9166662,29.5669259 L19.9166662,29.5669259 Z" id="Fill-2" fill="#707070" mask="url(#mask-2)"></path>
+            </g>
+        </g>
+    </g>
+</svg>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="30px" height="30px" viewBox="0 0 30 30" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 46.2 (44496) - http://www.bohemiancoding.com/sketch -->
+    <title>start_press</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="start_press">
+            <g id="Group-3" transform="translate(1.000000, 1.000000)">
+                <rect id="rect49-3" stroke="#FFFFFF" fill="#000000" opacity="0" x="3" y="2" width="24" height="24"></rect>
+                <path d="M14,27.4 C21.4006156,27.4 27.4,21.4006156 27.4,14 C27.4,6.59938435 21.4006156,0.6 14,0.6 C6.59938435,0.6 0.6,6.59938435 0.6,14 C0.6,21.4006156 6.59938435,27.4 14,27.4 Z" id="Oval-31" stroke="#2CA7F8" stroke-width="1.2"></path>
+                <polygon id="polygon51-5" fill="#2CA7F8" fill-rule="nonzero" points="11.401572 8.69260413 11 8.46215587 11 8.93455885 11 19.4670612 11 19.9394641 11.401572 19.7090159 20.5783772 14.4427647 21 14.20081 20.5783772 13.9588553"></polygon>
+            </g>
+        </g>
+    </g>
+</svg>

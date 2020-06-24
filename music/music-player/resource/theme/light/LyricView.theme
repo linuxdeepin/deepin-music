@@ -1,0 +1,15 @@
+LyricView {
+  color: rgba(255, 255, 255, 50%);
+  font-size: 16px;
+  background-color: transparent;
+  border: 0px solid red;
+}
+
+LyricView::item {
+  height: 40px;
+}
+
+LyricView::item:selected {
+  color: white;
+  background-color: rgba(44, 167, 248, 100%);
+}

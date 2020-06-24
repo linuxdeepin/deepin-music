@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="20px" height="20px" viewBox="0 0 20 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 58 (84663) - https://sketch.com -->
+    <title>warning</title>
+    <desc>Created with Sketch.</desc>
+    <g id="页面-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="按钮规范" transform="translate(-807.000000, -1348.000000)">
+            <g id="warning" transform="translate(807.000000, 1348.000000)">
+                <g transform="translate(2.000000, 2.000000)">
+                    <path d="M7.99257143,0 C12.4149253,0 16,3.58260056 16,8 C16,12.4173994 12.4149253,16 7.99257143,16 C3.57764771,16 0,12.417404 0,8 C0,3.58259606 3.57764771,0 7.99257143,0 Z" id="Shape" fill="#FF6D6D"></path>
+                    <path d="M7,4 L9,4 L9,9 L7,9 L7,4 Z M7,10 L9,10 L9,12 L7,12 L7,10 Z" id="Combined-Shape" fill="#FFFFFF" fill-rule="nonzero" opacity="0.900000036"></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

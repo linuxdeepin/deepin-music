@@ -1,0 +1,15 @@
+#MusicListSort {
+  border: none;
+}
+
+#MusicListSort[status="hover"] {
+  border-radius: 4.0px;
+}
+
+#DDropdownText {
+  font-size: 12px;
+}
+
+#DDropdownIcon {
+  border-image: url(:/dark/image/dropdown_arrow.svg);
+}

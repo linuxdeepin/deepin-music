@@ -1,0 +1,10 @@
+#MusicItemStyleProxy {
+  qproperty-textColor: rgba(127, 127, 127, 100%);
+  qproperty-titleColor: rgba(41, 41, 41, 100%);
+  qproperty-highlightText: white;
+  qproperty-background: #fbfbfb;
+  qproperty-alternateBackground: #ffffff;
+  qproperty-highlightedBackground: #2ca7f8;
+  qproperty-playingIcon: ":/common/image/playing_normal.svg";
+  qproperty-highlightPlayingIcon: ":/common/image/playing_active.svg";
+}
