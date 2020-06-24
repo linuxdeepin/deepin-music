@@ -1308,6 +1308,7 @@ void Footer::onVolumeChanged(int volume)
     } else {
         status = "low";
     }
+
     if (d->m_Mute) {
         d->updateQssProperty(d->btSound, "volume", "mute");
     } else {
@@ -1349,10 +1350,14 @@ void Footer::onMutedChanged(bool muted)
     MusicSettings::setOption("base.play.mute", d->m_Mute);
 }
 
-void Footer::onLocalMutedChanged()
+void Footer::onLocalMutedChanged(int type)
 {
     Q_D(Footer);
-    d->m_Mute = !d->m_Mute;
+    if(type)
+        d->m_Mute = !d->m_Mute;
+    else
+        d->m_Mute = false;
+
     if (d->m_Mute) {
         d->updateQssProperty(d->btSound, "volume", "mute");
     } else {

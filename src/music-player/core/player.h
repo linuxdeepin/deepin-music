@@ -167,9 +167,9 @@ signals:
     void volumeChanged(int volume);
     void modeChanged(PlaybackMode mode);
     void mutedChanged(bool muted);
-    /**********************************
+    /************************************************
      * local mute operation
-     * ********************************/
+     * *********************************************/
     void localMutedChanged();
     void durationChanged(qint64 duration);
     void fadeInOutFactorChanged(double fadeInOutFactor);

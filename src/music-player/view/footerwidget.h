@@ -99,9 +99,9 @@ public slots:
     void onVolumeChanged(int volume);
     void onMutedChanged(bool muted);
     /**************************************
-     * slots local mute
+     * slots local mute ,type: 0 volume,1 mute
      * ************************************/
-    void onLocalMutedChanged();
+    void onLocalMutedChanged(int type);
     void onModeChange(int mode);
     void onUpdateMetaCodec(const QString &preTitle, const QString &preArtist, const QString &preAlbum, const MetaPtr meta);
     void setDefaultCover(QString defaultCover);
