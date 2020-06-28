@@ -338,6 +338,20 @@ void PlayerPrivate::initConnection()
 
     q->connect(qvplayer->audio(), &VlcAudio::muteChanged,
                q, &Player::mutedChanged);
+
+    q->connect(qvinstance , &VlcInstance::sendErrorOccour ,
+               q,  [ = ](int err)
+    {
+        Q_UNUSED(err)
+        /*****************************
+         * force stop and play
+         * ***************************/
+        PlaylistPtr pl = q->activePlaylist();
+        MetaPtr meta = q->activeMeta();
+        q->stop();
+        //play
+        q->playMeta(pl , meta);
+    });
 //    q->connect(qvmedia, &VlcMedia::durationChanged,
 //               q, &Player::durationChanged);
 
