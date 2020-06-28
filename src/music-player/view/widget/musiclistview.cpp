@@ -92,6 +92,11 @@ MusicListView::MusicListView(QWidget *parent) : DListView(parent)
             return ;
         }
 
+        if (state() != EditingState) {
+            auto curStandardItem = dynamic_cast<DStandardItem *>(model->itemFromIndex(current));
+            curStandardItem->setIcon(QIcon::fromTheme("music_famousballad"));
+        }
+
         QPixmap curPixmap = QPixmap(":/mpimage/light/music1.svg");
         auto indexes = this->selectedIndexes();
         if (playingItem != nullptr && current == playingItem->index()) {
@@ -612,3 +617,17 @@ void MusicListView::onRename(QStandardItem *item)
         }
     }
 }
+
+void MusicListView::closeEditor(QWidget *editor, QAbstractItemDelegate::EndEditHint hint)
+{
+    DListView::closeEditor(editor, hint);
+    auto current = currentIndex();
+    if (current.row() < 0 || current.row() >= allPlaylists.size()) {
+        this->clearSelected();
+        return ;
+    }
+
+    auto curStandardItem = dynamic_cast<DStandardItem *>(model->itemFromIndex(current));
+    curStandardItem->setIcon(QIcon::fromTheme("music_famousballad"));
+}
+
