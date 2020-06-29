@@ -867,6 +867,7 @@ void MainFrame::postInitUI()
                     showMinimized();
                 }
             } else {
+                this->setFocus();
                 showNormal();
                 activateWindow();
             }

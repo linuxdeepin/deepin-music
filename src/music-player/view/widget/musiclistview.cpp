@@ -92,6 +92,11 @@ MusicListView::MusicListView(QWidget *parent) : DListView(parent)
             return ;
         }
 
+        if (state() != EditingState) {
+            auto curStandardItem = dynamic_cast<DStandardItem *>(model->itemFromIndex(current));
+            curStandardItem->setIcon(QIcon::fromTheme("music_famousballad"));
+        }
+
         QPixmap curPixmap = QPixmap(":/mpimage/light/music1.svg");
         auto indexes = this->selectedIndexes();
         if (playingItem != nullptr && current == playingItem->index()) {
@@ -179,12 +184,13 @@ void MusicListView::addMusicList(PlaylistPtr playlist, bool addFlag)
         item->setForeground(QColor("#C0C6D4"));
     }
     model->appendRow(item);
+    adjustHeight();
     if (addFlag) {
         setCurrentItem(item);
         edit(model->index(item->row(), 0));
         scrollToBottom();
+        m_sizeChangedFlag = true;
     }
-    adjustHeight();
 }
 
 QStandardItem *MusicListView::item(int row, int column) const
@@ -326,6 +332,16 @@ void MusicListView::changePicture(QPixmap pixmap, QPixmap albumPixmap)
 void MusicListView::adjustHeight()
 {
     setMinimumHeight(model->rowCount() * 40);
+}
+
+void MusicListView::setSizeChangedFlag(bool flag)
+{
+    m_sizeChangedFlag = flag;
+}
+
+bool MusicListView::getSizeChangedFlag()
+{
+    return m_sizeChangedFlag;
 }
 
 //void MusicListView::startDrag(Qt::DropActions supportedActions)
@@ -612,3 +628,17 @@ void MusicListView::onRename(QStandardItem *item)
         }
     }
 }
+
+void MusicListView::closeEditor(QWidget *editor, QAbstractItemDelegate::EndEditHint hint)
+{
+    DListView::closeEditor(editor, hint);
+    auto current = currentIndex();
+    if (current.row() < 0 || current.row() >= allPlaylists.size()) {
+        this->clearSelected();
+        return ;
+    }
+
+    auto curStandardItem = dynamic_cast<DStandardItem *>(model->itemFromIndex(current));
+    curStandardItem->setIcon(QIcon::fromTheme("music_famousballad"));
+}
+
