@@ -33,11 +33,19 @@ void logCallback(void *data,
     free(result);
 
     message.prepend("VlcInstance  libvlc: ");
-
     switch (level) {
-    case Vlc::ErrorLevel:
+    case Vlc::ErrorLevel:{
         qCritical(message.toUtf8().data(), NULL);
+        if(message.contains("cannot write"))
+        {
+            /*****************************************
+             *vlc write error. we need to stop
+             * player then start it
+             * **************************************/
+            instance->catchPulseError(0);
+        }
         break;
+    }
     case Vlc::WarningLevel:
         qWarning(message.toUtf8().data(), NULL);
         break;
@@ -153,6 +161,12 @@ QString VlcInstance::changeset()
 {
     // Returns libvlc changeset
     return QString(libvlc_get_changeset());
+}
+
+void VlcInstance::catchPulseError(int err)
+{
+    Q_UNUSED(err)
+    emit sendErrorOccour(0);
 }
 
 QString VlcInstance::compiler()

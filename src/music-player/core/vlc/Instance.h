@@ -119,7 +119,13 @@ public:
         \return video filter module description list
     */
 //    QList<VlcModuleDescription *> videoFilterList() const;
-
+    /**
+     * @brief catchPulseError  catch the exception of pulseaudio
+     * @param err  error level
+     */
+    void catchPulseError(int err);
+signals:
+    void sendErrorOccour(int err);
 private:
     libvlc_instance_t *_vlcInstance;
     bool _status;
