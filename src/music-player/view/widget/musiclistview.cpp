@@ -184,12 +184,13 @@ void MusicListView::addMusicList(PlaylistPtr playlist, bool addFlag)
         item->setForeground(QColor("#C0C6D4"));
     }
     model->appendRow(item);
+    adjustHeight();
     if (addFlag) {
         setCurrentItem(item);
         edit(model->index(item->row(), 0));
         scrollToBottom();
+        m_sizeChangedFlag = true;
     }
-    adjustHeight();
 }
 
 QStandardItem *MusicListView::item(int row, int column) const
@@ -331,6 +332,16 @@ void MusicListView::changePicture(QPixmap pixmap, QPixmap albumPixmap)
 void MusicListView::adjustHeight()
 {
     setMinimumHeight(model->rowCount() * 40);
+}
+
+void MusicListView::setSizeChangedFlag(bool flag)
+{
+    m_sizeChangedFlag = flag;
+}
+
+bool MusicListView::getSizeChangedFlag()
+{
+    return m_sizeChangedFlag;
 }
 
 //void MusicListView::startDrag(Qt::DropActions supportedActions)

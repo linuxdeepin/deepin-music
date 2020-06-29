@@ -53,6 +53,9 @@ public:
 
     void adjustHeight();
 
+    void setSizeChangedFlag(bool flag);
+    bool getSizeChangedFlag();
+
 public slots:
     void slotTheme(int type);
     void onRename(QStandardItem *item);
@@ -88,5 +91,6 @@ private:
     QPixmap              albumPixmap;
     QPixmap              defaultPixmap;
     int                  m_type = 1;
+    bool m_sizeChangedFlag = false;
 };
 
