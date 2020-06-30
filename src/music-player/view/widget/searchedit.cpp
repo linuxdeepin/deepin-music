@@ -41,18 +41,10 @@ SearchEdit::SearchEdit(QWidget *parent) : DSearchEdit(parent)
     setFont(textFont);
 
     lineEdit()->setFocusPolicy(Qt::ClickFocus);
-    // Why qss not work if not call show
-    //    show();
-    //    connect(this, &SearchEdit::focusOut,
-    //            this, &SearchEdit::onFocusOut);
-    //    connect(this, &SearchEdit::focusIn,
-    //            this, &SearchEdit::onFocusIn);
     connect(this, &SearchEdit::textChanged,
             this, &SearchEdit::onTextChanged);
     connect(this, &SearchEdit::returnPressed,
             this, &SearchEdit::onReturnPressed);
-    //    connect(this, &SearchEdit::editingFinished,
-    //            this, &SearchEdit::onReturnPressed);
     connect(this, &SearchEdit::focusChanged,
     this, [ = ](bool onFocus) {
         if (!onFocus) {
@@ -83,12 +75,6 @@ void SearchEdit::setResultWidget(SearchResult *result)
         onFocusOut();
         Q_EMIT this->searchText(id, text);
     });
-//    connect(this, &SearchEdit::focusChanged,
-//    this, [ = ](const bool onFocus) {
-//        bool a = onFocus;
-//        qDebug() << "onfacus" << onFocus;
-//    });
-
 
     connect(m_result, &SearchResult::searchText2,
     this, [ = ](const QString & id, const QString & text) {
@@ -149,8 +135,6 @@ void SearchEdit::onFocusOut()
 void SearchEdit::onTextChanged()
 {
     auto text = QString(this->text()).remove("\r").remove("\n");
-    /*-- -----charCount --------*/
-    //qDebug() << "charCount :" << this->text().size();
 
     if (this->text().size() == 0) {
         m_result->hide();
@@ -172,8 +156,8 @@ void SearchEdit::onTextChanged()
         QRect rect = this->rect();
         QPoint bottomLeft = rect.bottomLeft();
         bottomLeft = mapTo(parentWidget()->parentWidget(), bottomLeft);
-        m_result->setFixedWidth(width() - 4);
-        m_result->move(bottomLeft.x()/* + width() / 2 + 24*/, bottomLeft.y());
+        m_result->setFixedWidth(width());
+        m_result->move(bottomLeft.x(), bottomLeft.y() + 5);
         m_result->setFocusPolicy(Qt::StrongFocus);
         m_result->raise();
     } else {
