@@ -98,7 +98,7 @@ public:
 
     void setActivePlaylist(PlaylistPtr playlist);
     void setCurPlaylist(PlaylistPtr curPlaylist);
-    void loadMedia(PlaylistPtr playlist, const MetaPtr meta);
+    void loadMedia(PlaylistPtr playlist, const MetaPtr meta ,int position = 0);
     void playMeta(PlaylistPtr playlist, const MetaPtr meta);
     void resume(PlaylistPtr playlist, const MetaPtr meta);
     void playNextMeta(PlaylistPtr playlist, const MetaPtr meta);
@@ -122,7 +122,10 @@ signals:
     void mediaError(PlaylistPtr playlist, const MetaPtr meta, Player::Error error);
     //convert ape to mp3
     void addApeTask(QString, QString);
-
+    /***********************************
+     * player ready & setposition ready
+     * *********************************/
+    void readyToResume();
 public:
     bool canControl() const;
 //    bool canGoNext() const;
