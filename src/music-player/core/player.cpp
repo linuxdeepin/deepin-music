@@ -289,7 +289,6 @@ void PlayerPrivate::initConnection()
 
     qplayer->setAudioRole(QAudio::MusicRole);
 
-
     q->connect(qplayer, &QMediaPlayer::positionChanged,
     q, [ = ](qint64 position) {
         if (activeMeta.isNull()) {
@@ -701,74 +700,91 @@ Player::~Player()
 }
 
 
-void Player::loadMedia(PlaylistPtr playlist, const MetaPtr meta)
+void Player::loadMedia(PlaylistPtr playlist, const MetaPtr meta ,int position)
 {
     qDebug() << "loadMedia"
              << meta->title
              << DMusic::lengthString(meta->offset) << "/"
-             << DMusic::lengthString(meta->length);
+             << DMusic::lengthString(meta->length) << "|"
+             << position;
     Q_D(Player);
     d->activeMeta = meta;
     if (playlist->id() != PlayMusicListID)
         d->activePlaylist = playlist;
 
     int volume = -1;
-    /*    if (meta->localPath.endsWith(".amr") && !meta.isNull() ) {
-    //        d->qplayer->stop();
-            d->qvplayer->blockSignals(true);
-            d->isamr = true;
-            d->qvmedia->initMedia(meta->localPath, true, d->qvinstance);
-            d->qvplayer->open(d->qvmedia);
-            volume = d->qvplayer->audio()->volume();
-    //        d->qvplayer->audio()->setVolume(0);
-            d->qvplayer->play();
+    d->qplayer->blockSignals(true);
+    d->isamr = false;
 
-        } else */{
-//        if(meta->localPath.endsWith(".APE")){
-//            QFileInfo fileInfo(meta->localPath);
-//            fileInfo.suffix().toLower() == "ape";
-//        }
-//        d->qvplayer->stop();
-        d->qplayer->blockSignals(true);
-        d->isamr = false;
-        QString curPath = Global::cacheDir();
-        QString toPath = QString("%1/images/%2.mp3").arg(curPath).arg(meta->hash);
-        if (!QFile::exists(toPath)) {
-            //apeToMp3(meta->localPath, meta->hash);
-            Q_EMIT addApeTask(meta->localPath, meta->hash);
-            if (!QFile::exists(toPath)) {
-                toPath = meta->localPath;
-            }
+    QString curPath = Global::cacheDir();
+    QString toPath = QString("%1/images/%2.mp3").arg(curPath).arg(meta->hash);
+    if (!QFile::exists(toPath)) {
+        Q_EMIT addApeTask(meta->localPath, meta->hash);
+        if (!QFile::exists(toPath))
+        {
+            toPath = meta->localPath;
         }
-        d->qplayer->setMedia(QMediaContent(QUrl::fromLocalFile(toPath)));
-        volume = d->qplayer->volume();
-        d->qplayer->setVolume(0);
-        d->qplayer->play();
     }
-
+    d->qplayer->setMedia(QMediaContent(QUrl::fromLocalFile(toPath)));
+    volume = d->qplayer->volume();
+    d->qplayer->setVolume(0);
+    d->qplayer->play();
 
     if (!d->activePlaylist.isNull())
         d->activePlaylist->play(meta);
 
-
-    QTimer::singleShot(100, this, [ = ]() {//为了记录进度条生效，在加载的时候让音乐播放100ms
-        if (d->isamr) {
-            d->qvplayer->pause();
-            d->qvplayer->blockSignals(false);
-        } else {
-            d->qplayer->pause();
-            if (volume == 0) {
-                d->qplayer->setVolume(100);
+    if(position == 0){  //do not care process
+        QTimer::singleShot(100, this, [ = ]() {//为了记录进度条生效，在加载的时候让音乐播放100ms
+            if (d->isamr) {
+                d->qvplayer->pause();
             } else {
-                d->qplayer->setVolume(volume);
+                d->qplayer->pause();
+                if (volume == 0) {
+                    d->qplayer->setVolume(100);
+                } else {
+                    d->qplayer->setVolume(volume);
+                }
             }
             d->qplayer->blockSignals(false);
-        }
+            d->qplayer->setPosition(position); //set position
+            if (!d->activePlaylist.isNull())
+                d->activePlaylist->play(meta);
+        });
+    }else{
+        QTimer* pt = new QTimer;
+        pt->start(150);
+        pt->setInterval(1000);
 
-        if (!d->activePlaylist.isNull())
-            d->activePlaylist->play(meta);
+        connect(pt,&QTimer::timeout ,this, [ = ]() {
+            if(d->qplayer->isSeekable())
+            {
+                if (d->isamr) {
+                    d->qvplayer->pause();
+                } else {
+                    d->qplayer->pause();
+                    if (volume == 0) {
+                        d->qplayer->setVolume(100);
+                    } else {
+                        d->qplayer->setVolume(volume);
+                    }
+                }
+                d->qplayer->blockSignals(false);
+                d->qplayer->setPosition(position); //set position
+                if (!d->activePlaylist.isNull())
+                    d->activePlaylist->play(meta);
 
-    });
+                emit readyToResume();
+                pt->stop();
+                pt->deleteLater();
+            }
+
+            if(pt->interval() >= 1000)
+            {
+                pt->stop();
+                pt->deleteLater();
+            }
+        });
+    }
 }
 
 
