@@ -52,7 +52,10 @@ public:
 
     QString currentStr();
 
+public:
+    // void paintEvent(QPaintEvent *event) Q_DECL_OVERRIDE;
     virtual void leaveEvent(QEvent *event) Q_DECL_OVERRIDE;
+
 signals:
     void locateMusic(const QString &hash);
     void searchText(const QString  id, const QString &text);

@@ -35,7 +35,7 @@
 SearchResult::SearchResult(QWidget *parent) : DBlurEffectWidget(parent)
 {
     QFont labelFont("SourceHanSansSC");
-    labelFont.setPointSize(10);
+    labelFont.setPointSize(DFontSizeManager::T9);
     QPalette labelPalette;
     labelPalette.setColor(QPalette::WindowText, QColor("#414D68 "));
     //设置圆角
@@ -45,16 +45,11 @@ SearchResult::SearchResult(QWidget *parent) : DBlurEffectWidget(parent)
     setBlurEnabled(true);
     setMode(DBlurEffectWidget::GaussianBlur);
 
-//    QColor maskColor(255, 255, 255, 76);
-//    setMaskColor(maskColor);
-
     vlayout1 = new QVBoxLayout();
     vlayout2 = new QVBoxLayout();
     vlayout3 = new QVBoxLayout();
     vlayout = new QVBoxLayout();
-    vlayout1->setContentsMargins(32, 0, 31, 0);
-    vlayout2->setContentsMargins(32, 0, 31, 0);
-    vlayout3->setContentsMargins(32, 0, 31, 0);
+
     vlayout->setContentsMargins(0, 0, 0, 0);
     vlayout1->setSpacing(2);
     vlayout2->setSpacing(2);
@@ -66,46 +61,46 @@ SearchResult::SearchResult(QWidget *parent) : DBlurEffectWidget(parent)
     m_MusicLabel = new DLabel(tr("Music"), this);
     m_MusicLabel->setFont(labelFont);
     m_MusicLabel->setPalette(labelPalette);
+    m_MusicLabel->setContentsMargins(32, 8, 0, 4);
     m_MusicLabel->adjustSize();
 
     m_MusicView = new MusicSearchListview(this);
     m_MusicView->setObjectName("SearchMusicView");
-    m_MusicView->setGridSize(QSize(34, 34));
-    m_MusicView->setMinimumWidth(287);
-    m_MusicView->adjustSize();
+    m_MusicView->setMinimumWidth(380);
+
 
     //分割线1
     s_ArtistLine = new DHorizontalLine;
-    s_ArtistLine->setFixedSize(350, 20);
+    s_ArtistLine->setFixedSize(380, 20);
     s_ArtistLine->setContentsMargins(-32, 0, 0, 0);
+    s_ArtistLine->setLineWidth(2);
 
     //演唱者
     m_ArtistLabel = new DLabel(tr("Artists"), this);
     m_ArtistLabel->setFont(labelFont);
     m_ArtistLabel->setPalette(labelPalette);
+    m_ArtistLabel->setContentsMargins(32, 0, 0, 8);
     m_ArtistLabel->adjustSize();
 
     m_ArtistView = new MusicSearchListview(this);
     m_ArtistView->setObjectName("SearchArtistView");
-    m_ArtistView->setGridSize(QSize(34, 34));
-    m_ArtistView->setMinimumWidth(287);
-    m_ArtistView->adjustSize();
+    m_ArtistView->setMinimumWidth(380);
 
     //分割线2
     s_AblumLine = new DHorizontalLine;
     s_AblumLine->setFixedSize(380, 20);
+    s_AblumLine->setLineWidth(2);
 
     //专辑
     m_AblumLabel = new DLabel(tr("Albums"), this);
     m_AblumLabel->setFont(labelFont);
     m_AblumLabel->setPalette(labelPalette);
+    m_AblumLabel->setContentsMargins(32, 0, 0, 8);
     m_AblumLabel->adjustSize();
 
     m_AlbumView = new MusicSearchListview(this);
     m_AlbumView->setObjectName("SearchAlbumView");
-    m_AlbumView->setGridSize(QSize(34, 34));
-    m_AlbumView->setMinimumWidth(287);
-    m_AlbumView->adjustSize();
+    m_AlbumView->setMinimumWidth(380);
 
     vlayout1->addWidget(m_MusicLabel);
     vlayout1->addWidget(m_MusicView);
@@ -298,6 +293,23 @@ QString SearchResult::currentStr()
 
     return str;
 }
+
+#if 0
+void SearchResult::paintEvent(QPaintEvent *event)
+{
+    QPainter painter(this);
+    painter.setRenderHint(QPainter::Antialiasing);  // 反锯齿;
+    painter.setBrush(QColor("#f8f8f8"));
+    painter.setPen(QPen(QColor("#E3E3E3"), 1));
+
+    QRect rect = this->rect();
+    rect.setWidth(rect.width());
+    rect.setHeight(rect.height());
+    painter.drawRoundedRect(rect, 18, 18);
+
+    QWidget::paintEvent(event);
+}
+#endif
 
 void SearchResult::leaveEvent(QEvent *event)
 {
