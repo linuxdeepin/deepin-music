@@ -27,6 +27,7 @@
 #include <QFileInfo>
 #include <QDir>
 #include <QTimer>
+
 #include <unistd.h>
 
 class InotifyFilesPrivate
@@ -57,30 +58,36 @@ void InotifyFiles::start()
 
 void InotifyFiles::clear()
 {
+    m_mutex.lock();
     d->paths.clear();
+    m_mutex.unlock();
 }
 
 void InotifyFiles::addPaths(const QStringList &paths)
 {
-    for (auto &path : paths) {
-        if (!d->paths.contains(path))
-            d->paths.append(path);
-    }
+    m_mutex.lock();
+    d->paths.append(paths);
+    d->paths.removeDuplicates();
+    m_mutex.unlock();
 }
 
 void InotifyFiles::scanFiles()
 {
     QStringList allFiles;
-    for (int i = d->paths.size() - 1; i >= 0; i--) {
+    for (int i = 0; i < d->paths.size();) {
         QStringList strlist;
+        m_mutex.lock();
         auto curtFile = d->paths[i];
+        m_mutex.unlock();
         if(QFileInfo(curtFile).dir().isEmpty())
         {
             /****************************************************************
              * deal with cd ejecting while Optical drive is still connecting
              * or directory did not exsit
              * **************************************************************/
+            m_mutex.lock();
             d->paths.removeAt(i);
+            m_mutex.unlock();
             allFiles.append(curtFile);
         }else{
             /**************************************
@@ -88,8 +95,12 @@ void InotifyFiles::scanFiles()
              * ************************************/
             if(access(curtFile.toStdString().c_str(),F_OK) != 0)
             {
+                m_mutex.lock();
                 d->paths.removeAt(i);
+                m_mutex.unlock();
                 allFiles.append(curtFile);
+            }else{
+                i++;
             }
         }
     }
