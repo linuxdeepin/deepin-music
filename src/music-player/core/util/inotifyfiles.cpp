@@ -75,7 +75,7 @@ void InotifyFiles::scanFiles()
 {
     QStringList allFiles;
     for (int i = 0; i < d->paths.size();) {
-        if (i >= d->paths.size() - 1)
+        if (i >= d->paths.size())
             break;
         QStringList strlist;
         m_mutex.lock();
