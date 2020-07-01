@@ -75,12 +75,13 @@ void InotifyFiles::scanFiles()
 {
     QStringList allFiles;
     for (int i = 0; i < d->paths.size();) {
+        if (i >= d->paths.size() - 1)
+            break;
         QStringList strlist;
         m_mutex.lock();
         auto curtFile = d->paths[i];
         m_mutex.unlock();
-        if(QFileInfo(curtFile).dir().isEmpty())
-        {
+        if (QFileInfo(curtFile).dir().isEmpty()) {
             /****************************************************************
              * deal with cd ejecting while Optical drive is still connecting
              * or directory did not exsit
@@ -89,17 +90,16 @@ void InotifyFiles::scanFiles()
             d->paths.removeAt(i);
             m_mutex.unlock();
             allFiles.append(curtFile);
-        }else{
+        } else {
             /**************************************
              * to kown whether the file exists
              * ************************************/
-            if(access(curtFile.toStdString().c_str(),F_OK) != 0)
-            {
+            if (access(curtFile.toStdString().c_str(), F_OK) != 0) {
                 m_mutex.lock();
                 d->paths.removeAt(i);
                 m_mutex.unlock();
                 allFiles.append(curtFile);
-            }else{
+            } else {
                 i++;
             }
         }
