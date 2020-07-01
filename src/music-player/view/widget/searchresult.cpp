@@ -286,21 +286,22 @@ QString SearchResult::currentStr()
 {
     QString str;
 
-    //    auto index = m_MusicView->currentIndex();
-    //    if (index.isValid()) {
-    //        str = m_MusicModel->stringList()[index.row()];
-    //    }
-
     return str;
 }
 
-#if 0
 void SearchResult::paintEvent(QPaintEvent *event)
 {
     QPainter painter(this);
     painter.setRenderHint(QPainter::Antialiasing);  // 反锯齿;
-    painter.setBrush(QColor("#f8f8f8"));
-    painter.setPen(QPen(QColor("#E3E3E3"), 1));
+
+    if (m_Theme == 2) {
+        painter.setBrush(QColor("#252525"));
+        painter.setPen(QPen(QColor("#454545"), 1));
+    } else {
+
+        painter.setBrush(QColor("#f8f8f8"));
+        painter.setPen(QPen(QColor("#E3E3E3"), 1));
+    }
 
     QRect rect = this->rect();
     rect.setWidth(rect.width());
@@ -309,7 +310,6 @@ void SearchResult::paintEvent(QPaintEvent *event)
 
     QWidget::paintEvent(event);
 }
-#endif
 
 void SearchResult::leaveEvent(QEvent *event)
 {
@@ -358,6 +358,7 @@ void SearchResult::slotTheme(int type)
     } else {
         labelPalette.setColor(QPalette::Text, QColor("#414D68 "));
     }
+    m_Theme = type;
     m_MusicLabel->setPalette(labelPalette);
     m_ArtistLabel->setPalette(labelPalette);
     m_AblumLabel->setPalette(labelPalette);
