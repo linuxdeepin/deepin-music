@@ -302,6 +302,21 @@ void PlayerPrivate::initConnection()
             qDebug()<<"device does not start";
         }
     });
+
+
+    q->connect(qvinstance , &VlcInstance::sendErrorOccour ,
+               q,  [ = ](int err)
+    {
+        Q_UNUSED(err)
+        /*****************************
+         * force stop and play
+         * ***************************/
+        PlaylistPtr pl = q->activePlaylist();
+        MetaPtr meta = q->activeMeta();
+        q->stop();
+        //play
+        q->playMeta(pl , meta);
+    });
 }
 
 void PlayerPrivate::selectNext(const MetaPtr info, Player::PlaybackMode mode)
