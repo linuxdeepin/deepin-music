@@ -42,6 +42,8 @@
 #include <DFileDialog>
 #include <DHiDPIHelper>
 
+#include <unistd.h>
+
 #include "../speech/speechCenter.h"
 #include "../presenter/presenter.h"
 #include "../core/metasearchservice.h"
@@ -1014,7 +1016,14 @@ void MainFrame::binding(Presenter *presenter)
     connect(presenter, &Presenter::notifyMusciError,
     this, [ = ](PlaylistPtr playlist, const MetaPtr  meta, int /*error*/) {
         Q_UNUSED(playlist)
+        QList<DDialog *> ql = this->findChildren<DDialog *>("uniqueinvaliddailog");
+        if (ql.size() > 0) {
+            if (!ql.first()->isHidden())
+                return ;
+        }
+
         Dtk::Widget::DDialog warnDlg(this);
+        warnDlg.setObjectName("uniqueinvaliddailog");
         warnDlg.setIcon(QIcon::fromTheme("deepin-music"));
         warnDlg.setTextFormat(Qt::RichText);
         warnDlg.setTitle(tr("File is invalid or does not exist, load failed"));
@@ -1026,7 +1035,7 @@ void MainFrame::binding(Presenter *presenter)
             if (curPlaylist->canNext()) {
                 bool existFlag = false;
                 for (auto curMeta : curPlaylist->allmusic()) {
-                    if (!curMeta->invalid || QFile::exists(curMeta->localPath)) {
+                    if (!curMeta->invalid || access(curMeta->localPath.toStdString().c_str(),F_OK) == 0) {
                         if (QFileInfo(curMeta->localPath).dir().isEmpty()) {
                             continue;
                         }

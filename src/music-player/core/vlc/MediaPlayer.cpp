@@ -216,10 +216,21 @@ void VlcMediaPlayer::resume()
 
 void VlcMediaPlayer::setTime(qint64 time)
 {
+    /*****************************************
+     *  add enum Opening to set progress value
+     * ***************************************/
+#ifdef QT_DEBUG
+    if (!(state() == Vlc::Buffering
+            || state() == Vlc::Playing
+            || state() == Vlc::Paused
+            ||  state() == Vlc::Opening))
+        return;
+#else
     if (!(state() == Vlc::Buffering
             || state() == Vlc::Playing
             || state() == Vlc::Paused))
         return;
+#endif
 
     libvlc_media_player_set_time(_vlcMediaPlayer, time);
 

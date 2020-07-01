@@ -943,6 +943,8 @@ void Presenter::onMusiclistRemove(PlaylistPtr playlist, const MetaPtrList metali
             auto meta =  playlist->removeMusicList(metalist);
             if (playlist == playinglist) {
                 next = meta;
+                if(next != nullptr)
+                    d->player->playMeta(playlist, next);
             }
         }
 

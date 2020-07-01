@@ -186,7 +186,7 @@ public:
     bool            fadeInOut   = true;
     bool            isamr = false;
     double          fadeInOutFactor     = 1.0;
-    qlonglong       m_position          = 0.0;//只能用于判断音乐是否正常结束
+    qlonglong       m_position          = 0;//只能用于判断音乐是否正常结束
 
     QPropertyAnimation  *fadeInAnimation    = nullptr;
     QPropertyAnimation  *fadeOutAnimation   = nullptr;
@@ -262,7 +262,7 @@ void PlayerPrivate::initConnection()
             break;
         }
         case Vlc::Error: {
-            if (!activeMeta.isNull() && !QFile::exists(activeMeta->localPath)) {
+            if (!activeMeta.isNull() /*&& !QFile::exists(activeMeta->localPath)*/) {
                 MetaPtrList removeMusicList;
                 removeMusicList.append(activeMeta);
                 curPlaylist->removeMusicList(removeMusicList);
@@ -470,9 +470,6 @@ void Player::loadMedia(PlaylistPtr playlist, const MetaPtr meta)
     if (playlist->id() != PlayMusicListID)
         d->activePlaylist = playlist;
 
-
-    d->qvplayer->blockSignals(true);
-
     //int volume = -1;
     d->qvplayer->blockSignals(true);
     d->isamr = true;
@@ -580,12 +577,24 @@ void Player::resume(PlaylistPtr playlist, const MetaPtr meta)
         Q_EMIT mediaError(playlist, meta, Player::ResourceError);
         return ;
     }
+
+    /*****************************************************************************************
+     * 1.audio service dbus not start
+     * 2.audio device not start
+     * ****************************************************************************************/
+    if(d->qvplayer->state() == Vlc::Stopped  || (!isDevValid() &&  d->qvplayer->time() == 0 ) )
+    {
+        //reopen data
+        d->qvmedia->initMedia(meta->localPath, true, d->qvinstance);
+        d->qvplayer->open(d->qvmedia);
+        d->qvplayer->setTime(meta->offset);
+    }
+
     if (d->fadeOutAnimation) {
         setFadeInOutFactor(1.0);
         d->fadeOutAnimation->stop();
         d->fadeOutAnimation = nullptr;
     }
-
 
     qDebug() << "resume top";
     if (playlist == d->activePlaylist && d->qvplayer->state() == Vlc::Playing && meta->hash == d->activeMeta->hash)
@@ -1076,6 +1085,22 @@ bool Player::isMusicMuted()
         }
 
         return MuteV.toBool();
+    }
+
+    return false;
+}
+
+bool Player::isDevValid()
+{
+    Q_D(Player);
+    readSinkInputPath();
+
+    if (!d->sinkInputPath.isEmpty()) {
+        QVariant MuteV = DBusUtils::redDBusProperty("com.deepin.daemon.Audio", d->sinkInputPath,
+                                                    "com.deepin.daemon.Audio.SinkInput", "Mute");
+
+
+        return MuteV.isValid();
     }
 
     return false;
