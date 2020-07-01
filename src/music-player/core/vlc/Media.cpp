@@ -345,11 +345,10 @@ void VlcMedia::libvlc_callback(const libvlc_event_t *event,
         emit core->subitemAdded(event->u.media_subitem_added.new_child);
         break;
     case libvlc_MediaDurationChanged:
-        emit core->durationChanged(event->u.media_duration_changed.new_duration);
+        emit core->durationChanged(static_cast<int>(event->u.media_duration_changed.new_duration));
         break;
     case libvlc_MediaParsedChanged:
-        emit core->parsedChanged(event->u.media_parsed_changed.new_status);
-        emit core->parsedChanged((bool)event->u.media_parsed_changed.new_status);
+        emit core->parsedChanged(static_cast<bool>(event->u.media_parsed_changed.new_status));
         break;
     case libvlc_MediaFreed:
         emit core->freed(event->u.media_freed.md);

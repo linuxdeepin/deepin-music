@@ -117,6 +117,10 @@ signals:
     void volumeChanged(int volume);
     void modeChanged(PlaybackMode mode);
     void mutedChanged(bool muted);
+    /************************************************
+     * local mute operation
+     * *********************************************/
+    void localMutedChanged();
     void durationChanged(qint64 duration);
     void fadeInOutFactorChanged(double fadeInOutFactor);
     void fadeInOutChanged(bool fadeInOut);
@@ -129,6 +133,14 @@ public slots:
     void setMode(PlaybackMode mode);
     void setVolume(int volume);
     void setMuted(bool muted);
+    /*********************
+     * local mute
+     * *********************/
+    void setLocalMuted(bool muted);
+    /*********************
+     * to dbus mute
+     * *********************/
+    void setDbusMuted(bool muted = false);
     void setFadeInOutFactor(double fadeInOutFactor);
     void setFadeInOut(bool fadeInOut);
     void setPlayOnLoaded(bool playOnLoaded);
@@ -138,7 +150,11 @@ public slots:
     void setEqualizerpre(int val);
     void setEqualizerbauds(int index, int val);
     void setEqualizerCurMode(int curIndex);
-
+    /***********************************************
+     * if player stat is stop state or
+     * device does not start
+     * **********************************/
+    bool isValidDbusMute();
 private:
     void readSinkInputPath();
     bool setMusicVolume(double volume);

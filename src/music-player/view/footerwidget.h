@@ -73,6 +73,7 @@ signals:
     void volumeChanged(int volume);
 
     void toggleMute();
+    void localToggleMute();
     void togglePlaylist(bool isShow);
     void modeChanged(int);
     void toggleFavourite(const MetaPtr meta);
@@ -82,7 +83,10 @@ signals:
 
     void audioBufferProbed(const QAudioBuffer &buffer);
     void metaBuffer(const QVector<float> &buffer, const QString &hash);
-
+    /*****************************************
+     * emit local changed mute state
+     * ****************************************/
+    void localMuteStat(bool mute);
 public slots:
     void onMusicListAdded(PlaylistPtr playlist, const MetaPtrList metalist);
     void onMusicListRemoved(PlaylistPtr playlist, const MetaPtrList metalist);
@@ -94,6 +98,10 @@ public slots:
     void onCoverChanged(const MetaPtr meta, const DMusic::SearchMeta &, const QByteArray &coverData);
     void onVolumeChanged(int volume);
     void onMutedChanged(bool muted);
+    /**************************************
+     * slots local mute ,type: 0 volume,1 mute
+     * ************************************/
+    void onLocalMutedChanged(int type);
     void onModeChange(int mode);
     void onUpdateMetaCodec(const QString &preTitle, const QString &preArtist, const QString &preAlbum, const MetaPtr meta);
     void setDefaultCover(QString defaultCover);
