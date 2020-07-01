@@ -23,10 +23,10 @@
 #define INOTIFYENGINE_H
 
 #include <QObject>
+#include <QMutex>
 #include <QScopedPointer>
 
 class QDir;
-
 class InotifyFilesPrivate;
 class InotifyFiles : public QObject
 {
@@ -48,6 +48,7 @@ public slots:
 
 private:
     QScopedPointer<InotifyFilesPrivate> d;
+    QMutex  m_mutex;
 };
 
 #endif // INOTIFYENGINE_H
