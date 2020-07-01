@@ -362,6 +362,7 @@ void MediaLibrary::importMedias(const QString &jobid, const QStringList &urllist
     qDebug() << "import form" << urllist << "to" << jobid;
 
     int                             mediaCount  = 0;
+    bool                            bfailed = false;
     QMap<QString, MetaPtr>          losslessMetaCache;
     QList<DMusic::CueParserPtr>     cuelist;
     MetaPtrList                     metaCache;
@@ -384,6 +385,7 @@ void MediaLibrary::importMedias(const QString &jobid, const QStringList &urllist
                 auto meta = d->importMeta(strtp, losslessMetaCache, cuelist);
                 qDebug() << "process file" << strtp << meta;
                 if (meta.isNull()) {
+                    bfailed = true;
                     qWarning() << "create meta failed:" << strtp << meta;
                     continue;
                 }
@@ -408,6 +410,7 @@ void MediaLibrary::importMedias(const QString &jobid, const QStringList &urllist
             auto meta = d->importMeta(strtp, losslessMetaCache, cuelist);
 
             if (meta.isNull()) {
+                bfailed = true;
                 continue;
             }
 
@@ -463,6 +466,6 @@ void MediaLibrary::importMedias(const QString &jobid, const QStringList &urllist
     }
 
     qDebug() << "scanFinished" << jobid << "with media count:" << mediaCount;
-    Q_EMIT scanFinished(jobid, urllist.size() == mediaCount ? mediaCount : 0);
+    Q_EMIT scanFinished(jobid, !bfailed);
 }
 
