@@ -651,7 +651,7 @@ void Presenter::postAction()
 
             d->player->setPlayOnLoaded(false);
             d->player->setFadeInOut(false);
-            d->player->loadMedia(lastPlaylist, lastMeta ,position);
+            d->player->loadMedia(lastPlaylist, lastMeta, position);
             d->metaBufferDetector->onBufferDetector(lastMeta->localPath, lastMeta->hash);
 
             Q_EMIT musicPaused(lastPlaylist, lastMeta);
@@ -668,7 +668,7 @@ void Presenter::postAction()
         MusicSettings::sync();
         openUri(QUrl(toOpenUri));
     } else {
-        connect(d->player , &Player::readyToResume ,this ,[ = ](){
+        connect(d->player, &Player::readyToResume, this, [ = ]() {
             if (d->settings->value("base.play.auto_play").toBool() && !curPlaylist->isEmpty() && !lastPlaylist->isEmpty() && !isMetaLibClear) {
                 qDebug() << lastPlaylist->id() << lastPlaylist->displayName();
                 if (d->settings->value("base.play.remember_progress").toBool() && !isMetaLibClear) {
@@ -725,8 +725,32 @@ void Presenter::openUri(const QUrl &uri)
     onAddMetaToPlaylist(list, metas);
     Q_EMIT MediaLibrary::instance()->meidaFileImported(AllMusicListID, metas);
 
-    onSyncMusicPlay(list, metas.first());
-    onCurrentPlaylistChanged(list);
+    if (!d->player->isReady() && d->player->status() != 0) {
+
+        auto lastMetaId = d->settings->value("base.play.last_meta").toString();
+        MetaPtr lastMeta = MediaLibrary::instance()->meta(lastMetaId);
+        bool bsame = false;
+        if (lastMeta->hash == metas.first()->hash) {
+            bsame = true;
+            d->player->setDoubleClickStartType(3);
+        }else{
+            d->player->setDoubleClickStartType(2);
+        }
+        connect(d->player, &Player::playerReady,
+        this, [ = ]() {
+            if (bsame) {
+                QTimer::singleShot(50, [ = ]() {
+                    onMusicResume(list, metas.first());
+                });
+            }else{
+                QTimer::singleShot(50, [ = ]() {
+                    onSyncMusicPlay(list, metas.first());
+                });
+            }
+        });
+    } else {
+        onSyncMusicPlay(list, metas.first());
+    }
 }
 
 void Presenter::onSyncMusicPlay(PlaylistPtr playlist, const MetaPtr meta)
