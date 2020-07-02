@@ -137,6 +137,7 @@ QStringList Player::supportedMimeTypes() const
     return sSupportedMimeTypes;
 }
 
+
 class PlayerPrivate
 {
 public:
@@ -168,6 +169,7 @@ public:
     bool canSeek        = false;
     bool shuffle        = false;
     bool mute           = false; // unused
+
     QString sinkInputPath;
 
     Player::PlaybackMode    mode    = Player::RepeatAll;
@@ -192,6 +194,7 @@ public:
     PlaylistPtr     curPlaylist;
     MetaPtr         activeMeta;
 
+    int             startSameMusic   = 1; //双击启动是否同一首歌
     int             volume      = 50.0;
     bool            playOnLoad  = true;
     bool            firstPlayOnLoad  = true; //外部双击打开处理一次
@@ -700,7 +703,7 @@ Player::~Player()
 }
 
 
-void Player::loadMedia(PlaylistPtr playlist, const MetaPtr meta ,int position)
+void Player::loadMedia(PlaylistPtr playlist, const MetaPtr meta, int position)
 {
     qDebug() << "loadMedia"
              << meta->title
@@ -720,8 +723,7 @@ void Player::loadMedia(PlaylistPtr playlist, const MetaPtr meta ,int position)
     QString toPath = QString("%1/images/%2.mp3").arg(curPath).arg(meta->hash);
     if (!QFile::exists(toPath)) {
         Q_EMIT addApeTask(meta->localPath, meta->hash);
-        if (!QFile::exists(toPath))
-        {
+        if (!QFile::exists(toPath)) {
             toPath = meta->localPath;
         }
     }
@@ -733,7 +735,7 @@ void Player::loadMedia(PlaylistPtr playlist, const MetaPtr meta ,int position)
     if (!d->activePlaylist.isNull())
         d->activePlaylist->play(meta);
 
-    if(position == 0){  //do not care process
+    if (position == 0) { //do not care process
         QTimer::singleShot(100, this, [ = ]() {//为了记录进度条生效，在加载的时候让音乐播放100ms
             if (d->isamr) {
                 d->qvplayer->pause();
@@ -750,14 +752,13 @@ void Player::loadMedia(PlaylistPtr playlist, const MetaPtr meta ,int position)
             if (!d->activePlaylist.isNull())
                 d->activePlaylist->play(meta);
         });
-    }else{
-        QTimer* pt = new QTimer;
+    } else {
+        QTimer *pt = new QTimer;
         pt->start(150);
         pt->setInterval(1000);
 
-        connect(pt,&QTimer::timeout ,this, [ = ]() {
-            if(d->qplayer->isSeekable())
-            {
+        connect(pt, &QTimer::timeout, this, [ = ]() {
+            if (d->qplayer->isSeekable()) {
                 if (d->isamr) {
                     d->qvplayer->pause();
                 } else {
@@ -769,17 +770,60 @@ void Player::loadMedia(PlaylistPtr playlist, const MetaPtr meta ,int position)
                     }
                 }
                 d->qplayer->blockSignals(false);
-                d->qplayer->setPosition(position); //set position
                 if (!d->activePlaylist.isNull())
                     d->activePlaylist->play(meta);
 
-                emit readyToResume();
+                d->canPlay = true;
+                switch (d->startSameMusic) {
+                case 1:
+                    d->qplayer->setPosition(position); //set position
+                    emit readyToResume();
+                    break;
+                case 2:
+                    emit playerReady();
+                    break;
+                case 3:
+                    d->qplayer->setPosition(position); //set position
+                    emit playerReady(); //the same music
+                    break;
+                default:
+                    d->qplayer->setPosition(position); //set position
+                    emit readyToResume();
+                    break;
+                }
+
                 pt->stop();
                 pt->deleteLater();
             }
 
-            if(pt->interval() >= 1000)
-            {
+            if (pt->interval() >= 1000) {
+                if (d->isamr) {
+                    d->qvplayer->pause();
+                } else {
+                    d->qplayer->pause();
+                    if (volume == 0) {
+                        d->qplayer->setVolume(100);
+                    } else {
+                        d->qplayer->setVolume(volume);
+                    }
+                }
+                d->qplayer->blockSignals(false);
+                if (!d->activePlaylist.isNull())
+                    d->activePlaylist->play(meta);
+
+                d->canPlay = true;
+                switch (d->startSameMusic) {
+                case 1:
+                    emit readyToResume();
+                    break;
+                case 2:
+                case 3:
+                    emit playerReady();
+                    break;
+                default:
+                    emit readyToResume();
+                    break;
+                }
                 pt->stop();
                 pt->deleteLater();
             }
@@ -1480,4 +1524,16 @@ bool Player::isMusicMuted()
     }
 
     return false;
+}
+
+bool Player::isReady()
+{
+    Q_D(Player);
+    return d->canPlay;
+}
+
+void Player::setDoubleClickStartType(int start)
+{
+    Q_D(Player);
+    d->startSameMusic = start;
 }
