@@ -98,7 +98,7 @@ public:
 
     void setActivePlaylist(PlaylistPtr playlist);
     void setCurPlaylist(PlaylistPtr curPlaylist);
-    void loadMedia(PlaylistPtr playlist, const MetaPtr meta ,int position = 0);
+    void loadMedia(PlaylistPtr playlist, const MetaPtr meta, int position = 0);
     void playMeta(PlaylistPtr playlist, const MetaPtr meta);
     void resume(PlaylistPtr playlist, const MetaPtr meta);
     void playNextMeta(PlaylistPtr playlist, const MetaPtr meta);
@@ -115,7 +115,14 @@ public:
     QStringList supportedFilterStringList()const;
     QStringList supportedSuffixList()const;
     QStringList supportedMimeTypes() const;
-
+    /*************************************************
+     * if player does not start,do not invoke playmeta
+     * ***********************************************/
+    bool isReady();
+    /******************************************************
+     * set double clicke start type
+     * ******************************************************/
+    void setDoubleClickStartType(int start = 1);
 signals:
     void mediaUpdate(PlaylistPtr playlist, const MetaPtr meta);
     void mediaPlayed(PlaylistPtr playlist, const MetaPtr meta);
@@ -126,6 +133,11 @@ signals:
      * player ready & setposition ready
      * *********************************/
     void readyToResume();
+
+    /*************************************
+     * notify presenter player is ready
+     * ***********************************/
+    void playerReady();
 public:
     bool canControl() const;
 //    bool canGoNext() const;
