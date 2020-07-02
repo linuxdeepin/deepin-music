@@ -221,7 +221,7 @@ MetaPtr MediaLibraryPrivate::importMeta(const QString &filepath,
     int sendCount = 0;
     int receiveCount = 0;
 
-    while ( av_read_frame(pFormatCtx, packet) >= 0 ) {
+    while (av_read_frame(pFormatCtx, packet) >= 0) {
         if (packet->stream_index == audio_stream_index) {
             int ret;
             ret = avcodec_send_packet(pCodecCtx, packet);
@@ -294,10 +294,10 @@ MetaPtr MediaLibraryPrivate::importMeta(const QString &filepath,
         return MetaPtr();
 
     //check is lossless file
-    if (losslessSuffixs.contains(fileInfo.suffix())) {
-        losslessMetaCache.insert(meta->localPath, meta);
-        return MetaPtr();
-    }
+//    if (losslessSuffixs.contains(fileInfo.suffix())) {
+//        losslessMetaCache.insert(meta->localPath, meta);
+//        return MetaPtr();
+//    }
 
     metas.insert(meta->hash, meta);
 #ifdef SUPPORT_INOTIFY
