@@ -2,12 +2,21 @@
 include /usr/share/dpkg/default.mk
 
 export QT_SELECT=5
+DEB_HOST_MULTIARCH ?= $(shell dpkg-architecture -qDEB_HOST_MULTIARCH)
 
 %:
-	dh $@ --parallel
+#	dh $@ --parallel
+
+#override_dh_auto_configure:
+#	dh_auto_configure -- DEFINES+="VERSION=$(DEB_VERSION_UPSTREAM)"
+
+#override_dh_auto_install:
+#	dh_auto_install -- PREFIX=/usr
+
+dh $@
 
 override_dh_auto_configure:
-	dh_auto_configure -- DEFINES+="VERSION=$(DEB_VERSION_UPSTREAM)"
-
-override_dh_auto_install:
-	dh_auto_install -- PREFIX=/usr
+	dh_auto_configure -- \
+	  -DCMAKE_BUILD_TYPE=Release \
+	  -DCMAKE_INSTALL_PREFIX=/usr \
+      -DAPP_VERSION=$(DEB_VERSION_UPSTREAM) -DVERSION=$(DEB_VERSION_UPSTREAM) LIB_INSTALL_DIR=/usr/lib/$(DEB_HOST_MULTIARCH) DH_AUTO_ARGS = --parallel --buildsystem=cmake
