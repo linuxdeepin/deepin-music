@@ -2,7 +2,7 @@ Source: deepin-music
 Section: sound
 Priority: extra
 Maintainer: Deepin Packages Builder <packages@deepin.com>
-Build-Depends: debhelper, pkg-config, qttools5-dev-tools,
+Build-Depends: debhelper, cmake, pkg-config, qttools5-dev-tools,
  libqt5svg5-dev, qtmultimedia5-dev,
  libtag1-dev, libicu-dev, libcue-dev,
  libavutil-dev, libavformat-dev, libavcodec-dev,
@@ -19,3 +19,25 @@ Depends: ${shlibs:Depends}, ${misc:Depends},
  gvfs-bin,vlc-plugin-base
 Description: Music software for UOS
  Music is a local music player with beautiful design and simple functions.
+
+Package: libdmusic
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Multi-Arch: same
+Description: music player widget library 
+ deepin music player widget library
+
+Package: libdbusextended-qt5
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Multi-Arch: same
+Description: music player widget library for dbus 
+ deepin music player widget library for dbus
+
+Package: libmpris-qt5
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Multi-Arch: same
+Description: music player widget library for mpris
+ deepin music player widget library for mpris
+
