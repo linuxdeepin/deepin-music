@@ -5,7 +5,7 @@
 #include <QJsonArray>
 #include <QVariant>
 #include <QDebug>
-#include "../mainframe.h"
+#include "../view/mainframe.h"
 
 #include "speechCenter.h"
 

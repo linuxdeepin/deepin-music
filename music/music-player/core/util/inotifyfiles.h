@@ -19,8 +19,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef INOTIFYENGINE_H
-#define INOTIFYENGINE_H
+#ifndef INOTIFYFILE_H
+#define INOTIFYFILE_H
 
 #include <QObject>
 #include <QScopedPointer>
@@ -50,4 +50,4 @@ private:
     QScopedPointer<InotifyFilesPrivate> d;
 };
 
-#endif // INOTIFYENGINE_H
+#endif // INOTIFYFILE_H
