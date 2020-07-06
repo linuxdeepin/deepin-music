@@ -100,7 +100,7 @@ install(TARGETS ${CMD_NAME} DESTINATION bin)
 install(DIRECTORY ${PROJECT_SOURCE_DIR}/music/music-player/translations
     DESTINATION share/${CMD_NAME}
     FILES_MATCHING PATTERN "*.qm")
-install(FILES ${PROJECT_SOURCE_DIR}/music/music-player/deepin-music.desktop
+install(FILES ${PROJECT_SOURCE_DIR}/music/music-player/data/deepin-music.desktop
     DESTINATION share/applications)
 
 install(FILES ${PROJECT_SOURCE_DIR}/music/music-player/resource/theme/common/image/deepin-music.svg
