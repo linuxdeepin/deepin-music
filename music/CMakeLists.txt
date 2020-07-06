@@ -88,7 +88,7 @@ target_include_directories(${CMD_NAME} PUBLIC  ${PROJECT_INCLUDE} )
 #将工程与这些模块链接起来
 qt5_use_modules(${CMD_NAME} ${QtModule})
 #X11 Xext Xtst
-set(TARGET_LIBS X11 Xext Qt5::Widgets Qt5::Network Qt5::Core Qt5::Gui
+set(TARGET_LIBS X11 Xext Qt5::Widgets Qt5::Network Qt5::Core Qt5::Gui Qt5::X11Extras
     Qt5::DBus Qt5::Sql Qt5::Svg Qt5::Multimedia Qt5::Xml PkgConfig::AV PkgConfig::Dtk
     dmusic dbusextended-qt5 mpris-qt5 vlccore)
 
