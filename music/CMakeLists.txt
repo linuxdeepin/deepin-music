@@ -101,11 +101,10 @@ install(DIRECTORY ${PROJECT_SOURCE_DIR}/music/music-player/translations
     FILES_MATCHING PATTERN "*.qm")
 install(FILES ${PROJECT_SOURCE_DIR}/music/music-player/deepin-music.desktop
     DESTINATION share/applications)
-#install(FILES ${CMAKE_SOURCE_DIR}/music/libdmr/com.deepin.deepin-movie.gschema.xml
-#    DESTINATION /usr/share/glib-2.0/schemas)
-#install(FILES ${PROJECT_SOURCE_DIR}/src/resources/icons/logo-big.svg
-#    DESTINATION share/icons/hicolor/scalable/apps
-#    RENAME deepin-movie.svg)
+
+install(FILES ${PROJECT_SOURCE_DIR}/music/music-player/resource/theme/common/image/deepin-music.svg
+    DESTINATION share/icons/hicolor/scalable/apps
+    RENAME deepin-music.svg)
 
 add_subdirectory(libdmusic)
 add_subdirectory(vendor/dbusextended-qt/src)
