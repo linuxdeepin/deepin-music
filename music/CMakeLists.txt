@@ -16,6 +16,7 @@ find_package(Qt5Network)
 find_package(Qt5Sql)
 find_package(Qt5DBus)
 find_package(Qt5LinguistTools)
+find_package(Qt5X11Extras)
 
 #文件夹包含
 set(PROJECT_INCLUDE ./#暂未使用(会包含空目录)
@@ -86,8 +87,8 @@ target_include_directories(${CMD_NAME} PUBLIC  ${PROJECT_INCLUDE} )
 
 #将工程与这些模块链接起来
 qt5_use_modules(${CMD_NAME} ${QtModule})
-
-set(TARGET_LIBS X11 Xext Xtst  Qt5::Widgets Qt5::Network Qt5::Core Qt5::Gui
+#X11 Xext Xtst
+set(TARGET_LIBS X11 Xext Qt5::Widgets Qt5::Network Qt5::Core Qt5::Gui
     Qt5::DBus Qt5::Sql Qt5::Svg Qt5::Multimedia Qt5::Xml PkgConfig::AV PkgConfig::Dtk
     dmusic dbusextended-qt5 mpris-qt5 vlccore)
 
