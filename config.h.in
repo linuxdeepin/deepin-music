@@ -1,0 +1,6 @@
+#ifndef __CONFIG_H__
+#define __CONFIG_H__
+
+#define VERSION        "@VERSION@"
+
+#endif  /* __CONFIG_H__ */

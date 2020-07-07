@@ -21,25 +21,3 @@ Depends: ${shlibs:Depends}, ${misc:Depends},
  gvfs-bin,vlc-plugin-base
 Description: Music software for UOS
  Music is a local music player with beautiful design and simple functions.
-
-Package: libdmusic
-Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}
-Multi-Arch: same
-Description: music player widget library 
- deepin music player widget library
-
-Package: libdbusextended-qt5
-Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}
-Multi-Arch: same
-Description: music player widget library for dbus 
- deepin music player widget library for dbus
-
-Package: libmpris-qt5
-Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}
-Multi-Arch: same
-Description: music player widget library for mpris
- deepin music player widget library for mpris
-

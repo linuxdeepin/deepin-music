@@ -40,5 +40,6 @@ set(QtModule Core Gui Widgets Svg Multimedia Xml Network Sql DBus)
 #先查找到这些qt相关的模块以供链接使用
 find_package(Qt5 REQUIRED ${QtModule})
 
+configure_file(${PROJECT_SOURCE_DIR}/config.h.in ${PROJECT_BINARY_DIR}/config.h @ONLY)
 
 add_subdirectory(music)
