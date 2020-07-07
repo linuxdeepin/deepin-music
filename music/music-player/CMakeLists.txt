@@ -1,8 +1,10 @@
 #定义需要的cmake版本
 cmake_minimum_required(VERSION 3.10)
 
-#工程名
-project(deepin-music)
+set(CMD_NAME deepin-music)
+
+#可执行文件路径
+#set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/music/dist/bin)
 
 #cmake属性
 set(CMAKE_CXX_STANDARD 14)
@@ -11,32 +13,43 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 
-#可执行文件路径
-set(EXECUTABLE_OUTPUT_PATH /home/tx-zy/work/masterCMake/src/dist/bin)
-
-set(EXE_USED_MYCODE_PATH
-    ./../libdmusic
-    ./../interface
-    ./../vendor/mpris-qt/src
-    /usr/include/libdtk-5.2.0/DWidget
-    /usr/include/libdtk-5.2.0/DCore)
-
 #文件夹包含
-include_directories(./)
-include_directories(./interface)
-include_directories(core)
-include_directories(core/util)
-include_directories(presenter)
-include_directories(speech)
-include_directories(view)
+set(PROJECT_INCLUDE ./
+    ./../vendor
+    ./../vendor/mpris-qt/src
+    ./../vendor/dbusextended-qt/src)
 
-aux_source_directory(. allSource)
-aux_source_directory(./../interfae allSource)
-aux_source_directory(core allSource)
-aux_source_directory(core/util allSource)
-aux_source_directory(presenter allSource)
-aux_source_directory(speech allSource)
-aux_source_directory(view allSource)
+include_directories(/usr/include/libdtk-5.2.0/DWidget)
+include_directories(/usr/include/libdtk-5.2.0/DCore)
+include_directories(/usr/include/vlc)
+include_directories(/usr/include/vlc/plugins)
+include_directories(./../interface)
+include_directories(./../libdmusic)
+include_directories(./core)
+include_directories(./core/util)
+include_directories(./presenter)
+include_directories(./speech)
+include_directories(./view)
+
+aux_source_directory(./ allSource)
+aux_source_directory(./core allSource)
+aux_source_directory(./core/util allSource)
+aux_source_directory(./core/vlc allSource)
+aux_source_directory(./presenter allSource)
+aux_source_directory(./speech allSource)
+aux_source_directory(./view allSource)
+aux_source_directory(./view/helper allSource)
+aux_source_directory(./view/widget allSource)
+aux_source_directory(./view/widget/delegate allSource)
+aux_source_directory(./view/widget/model allSource)
+
+find_package(PkgConfig REQUIRED)
+
+pkg_check_modules(Dtk REQUIRED IMPORTED_TARGET dtkwidget)
+pkg_check_modules(Dtk REQUIRED IMPORTED_TARGET dtkcore)
+pkg_check_modules(Dtk REQUIRED IMPORTED_TARGET dtkgui)
+pkg_check_modules(AV REQUIRED IMPORTED_TARGET libavutil libavcodec
+    libavformat libcue taglib libvlc )
 
 set(AllQRC
     ./resource/resource.qrc
@@ -47,26 +60,43 @@ set(AllQRC
 
 qt5_add_resources(QRC_FILES ${AllQRC})
 
-add_executable(${PROJECT_NAME} ${QRC_FILES} ${allSource} ${EXE_USED_MYCODE_PATH})
+file(GLOB TS LIST_DIRECTORIES false ./translations/${CMD_NAME}*.ts)
+set_source_files_properties(${TS}
+    PROPERTIES OUTPUT_LOCATION ${PROJECT_SOURCE_DIR}/music/music-player/translations)
+set(translate ${PROJECT_SOURCE_DIR}/music/music-player/translations)
 
-#使用第三方库需要用到的一个包
-find_package(PkgConfig REQUIRED)
+if (NOT (${CMAKE_BUILD_TYPE} MATCHES "Debug"))
+    qt5_create_translation(Translate1 ${allSource} ${TS})
+endif ()
+qt5_add_translation(${translate})
 
-#检查第三方库(这里检查了名字为dtkwidget的库和名字为dtkgui的库)，然后取名3rd_lib
-pkg_check_modules(3rd_lib REQUIRED
-        dtkwidget dtkgui
-        )
+file(GLOB INCLUDE_HEADER "./../interface/*.h"
+    "./../libdmusic/*.h")
+
+
+add_executable(${CMD_NAME} ${QRC_FILES} ${allSource} ${INCLUDE_HEADER} ${Translate1})
+
 #添加第三方库的所有文件夹路径到工程中来(注意 *_INCLUDE_DIRS)
-target_include_directories(${PROJECT_NAME} PUBLIC ${3rd_lib_INCLUDE_DIRS}
-    ${EXE_USED_MYCODE_PATH})
-
-#将第三方库链接进来(注意 *_LIBRARIES)
-target_link_libraries(${PROJECT_NAME} ${3rd_lib_LIBRARIES} dmusic dbusextended-qt5 mpris-qt5)
+target_include_directories(${CMD_NAME} PUBLIC  ${PROJECT_INCLUDE} )
 
 #将工程与这些模块链接起来
-qt5_use_modules(${PROJECT_NAME} ${QtModule})
+qt5_use_modules(${CMD_NAME} ${QtModule})
+#X11 Xext Xtst
+set(TARGET_LIBS X11 Xext Qt5::Widgets Qt5::Network Qt5::Core Qt5::Gui Qt5::X11Extras
+    Qt5::DBus Qt5::Sql Qt5::Svg Qt5::Multimedia Qt5::Xml PkgConfig::AV PkgConfig::Dtk
+    dmusic dbusextended-qt5 mpris-qt5 vlccore)
 
-add_subdirectory(libdmusic)
-add_subdirectory(vendor/dbusextended-qt/src)
-add_subdirectory(vendor/mpris-qt/src)
+
+#将第三方库链接进来(注意 *_LIBRARIES)
+target_link_libraries(${CMD_NAME} ${TARGET_LIBS} )
+
+install(TARGETS ${CMD_NAME} DESTINATION bin)
+install(DIRECTORY ${PROJECT_SOURCE_DIR}/music/music-player/translations
+    DESTINATION share/${CMD_NAME}
+    FILES_MATCHING PATTERN "*.qm")
+install(FILES ${PROJECT_SOURCE_DIR}/music/music-player/data/deepin-music.desktop
+    DESTINATION share/applications)
+
+install(FILES ${PROJECT_SOURCE_DIR}/music/music-player/resource/theme/common/image/deepin-music.svg
+    DESTINATION share/icons/hicolor/scalable/apps)
 

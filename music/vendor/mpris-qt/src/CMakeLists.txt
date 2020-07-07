@@ -1,17 +1,18 @@
 cmake_minimum_required(VERSION 3.10)
 #工程名
-project(mpris-qt5)
+#project(mpris-qt5)
+set(CMD_NAME mpris-qt5)
 
 #文件路径
-set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/../../../dist/lib)#${PROJECT_BINARY_DIR}./../../dist/lib)
+#set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/../../../dist/lib)#${PROJECT_BINARY_DIR}./../../dist/lib)
 set(MY_DBUS_PATH ./../../dbusextended-qt/src)
 #文件夹包含
 include_directories(./)
 
 aux_source_directory(./ allSourcelib1)
 
-add_library(mpris-qt5 SHARED ${allSourcelib1})
-
+add_library(${CMD_NAME} SHARED ${allSourcelib1})
+set_target_properties(${CMD_NAME} PROPERTIES VERSION 1.0.0 SOVERSION 1.0)
 #使用第三方库需要用到的一个包
 find_package(PkgConfig REQUIRED)
 
@@ -20,13 +21,13 @@ pkg_check_modules(3rd_lib REQUIRED
         dtkwidget dtkgui #libdbusextended-qt5 libdmusic libmpris-qt5
         )
 #添加第三方库的所有文件夹路径到工程中来(注意 *_INCLUDE_DIRS)
-target_include_directories(mpris-qt5 PUBLIC ${3rd_lib_INCLUDE_DIRS}
+target_include_directories(${CMD_NAME} PUBLIC ${3rd_lib_INCLUDE_DIRS}
     ${MY_DBUS_PATH})
 
 #将第三方库链接进来(注意 *_LIBRARIES)
-target_link_libraries(mpris-qt5 ${3rd_lib_LIBRARIES})
+target_link_libraries(${CMD_NAME} ${3rd_lib_LIBRARIES})
 
 #将工程与这些模块链接起来
-qt5_use_modules(mpris-qt5 ${QtModule})
+qt5_use_modules(${CMD_NAME} ${QtModule})
 
-install(TARGETS mpris-qt5 DESTINATION /lib/)
+install(TARGETS ${CMD_NAME} DESTINATION ${CMAKE_INSTALL_LIBDIR})
