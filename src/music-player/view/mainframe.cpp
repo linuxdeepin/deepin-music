@@ -441,6 +441,7 @@ void MainFramePrivate::hideLyricView()
     footer->setLyricButtonChecked(false);
     footer->raise();
 
+    currentWidget = musicListWidget;
     updateViewname(s_PropertyViewnameLyric);
 }
 
@@ -1029,7 +1030,7 @@ void MainFrame::binding(Presenter *presenter)
             if (curPlaylist->canNext()) {
                 bool existFlag = false;
                 for (auto curMeta : curPlaylist->allmusic()) {
-                    if (!curMeta->invalid || access(curMeta->localPath.toStdString().c_str(),F_OK) == 0) {
+                    if (!curMeta->invalid || access(curMeta->localPath.toStdString().c_str(), F_OK) == 0) {
                         if (QFileInfo(curMeta->localPath).dir().isEmpty()) {
                             continue;
                         }
