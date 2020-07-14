@@ -690,6 +690,8 @@ void Presenter::postAction()
                         onMusicResume(lastPlaylist, lastMeta);
                     });
                 }
+            } else {
+                Q_EMIT d->pause();
             }
         });
     }
@@ -733,7 +735,7 @@ void Presenter::openUri(const QUrl &uri)
         if (lastMeta->hash == metas.first()->hash) {
             bsame = true;
             d->player->setDoubleClickStartType(3);
-        }else{
+        } else {
             d->player->setDoubleClickStartType(2);
         }
         connect(d->player, &Player::playerReady,
@@ -742,7 +744,7 @@ void Presenter::openUri(const QUrl &uri)
                 QTimer::singleShot(50, [ = ]() {
                     onMusicResume(list, metas.first());
                 });
-            }else{
+            } else {
                 QTimer::singleShot(50, [ = ]() {
                     onSyncMusicPlay(list, metas.first());
                 });
@@ -2195,6 +2197,24 @@ void Presenter::initMpris(MprisPlayer *mprisPlayer)
     connect(this, &Presenter::progrossChanged,
     this, [ = ](qint64 pos, qint64) {
         mprisPlayer->setPosition(pos);
+    });
+
+    /*********************************************
+     *  set dbus PlaybackStatus as pause state
+     * *******************************************/
+    connect(d, &PresenterPrivate::pause,
+    this, [ = ]() {
+        mprisPlayer->setPlaybackStatus(Mpris::Paused);
+    });
+
+    connect(this, &Presenter::musicStoped,
+    this, [ = ]() {
+        mprisPlayer->setPlaybackStatus(Mpris::Stopped);
+    });
+
+    connect(d->player, &Player::playbackStatusChanged,
+    this, [ = ](Player::PlaybackStatus stat) {
+        mprisPlayer->setPlaybackStatus(static_cast<Mpris::PlaybackStatus>(stat));
     });
 
     connect(this, &Presenter::coverSearchFinished,
