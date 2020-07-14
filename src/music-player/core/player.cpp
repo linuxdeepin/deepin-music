@@ -749,6 +749,10 @@ void Player::loadMedia(PlaylistPtr playlist, const MetaPtr meta, int position)
             }
             d->qplayer->blockSignals(false);
             d->qplayer->setPosition(position); //set position
+            /*************************
+             * it does't matter whether it resumes
+             * **********************/
+            emit readyToResume();
             if (!d->activePlaylist.isNull())
                 d->activePlaylist->play(meta);
         });
