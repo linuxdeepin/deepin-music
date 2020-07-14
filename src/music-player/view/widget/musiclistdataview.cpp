@@ -102,8 +102,8 @@ MusicListDataView::MusicListDataView(QWidget *parent)
     setUniformItemSizes(true);
 
     setViewModeFlag(QListView::ListMode);
-    setResizeMode( QListView::Adjust );
-    setMovement( QListView::Static );
+    setResizeMode(QListView::Adjust);
+    setMovement(QListView::Static);
     setLayoutMode(QListView::Batched);
     setBatchSize(2000);
 
@@ -146,6 +146,12 @@ MusicListDataView::MusicListDataView(QWidget *parent)
                 setPlaying(curtMeta);
             } else {
                 auto curtMeta = playlist()->playing();
+
+                if (curtMeta.isNull() && !playlist()->isEmpty()) {
+                    curtMeta = playlist()->first();
+                    setPlaying(curtMeta);
+                }
+
                 if (!playlist()->playingStatus()) {
                     Q_EMIT resume(curtMeta);
                 } else {
@@ -162,6 +168,11 @@ MusicListDataView::MusicListDataView(QWidget *parent)
                 setPlaying(curtMeta);
             } else {
                 auto curtMeta = playlist()->playing();
+
+                if (curtMeta.isNull() && !playlist()->isEmpty()) {
+                    curtMeta = playlist()->first();
+                    setPlaying(curtMeta);
+                }
                 if (!playlist()->playingStatus()) {
                     Q_EMIT resume(curtMeta);
                 } else {
@@ -252,13 +263,13 @@ void MusicListDataView::setViewModeFlag(QListView::ViewMode mode)
 {
 
     if (mode == QListView::IconMode) {
-        setIconSize( QSize(150, 150));
-        setGridSize( QSize(-1, -1));
+        setIconSize(QSize(150, 150));
+        setGridSize(QSize(-1, -1));
         setViewportMargins(-10, -13, -35, 10);
         setSpacing(20);
     } else {
-        setIconSize( QSize(36, 36) );
-        setGridSize( QSize(-1, -1) );
+        setIconSize(QSize(36, 36));
+        setGridSize(QSize(-1, -1));
         setViewportMargins(0, 0, 8, 0);
         setSpacing(0);
     }
