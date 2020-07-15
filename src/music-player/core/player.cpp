@@ -749,6 +749,10 @@ void Player::loadMedia(PlaylistPtr playlist, const MetaPtr meta, int position)
             }
             d->qplayer->blockSignals(false);
             d->qplayer->setPosition(position); //set position
+            /*************************
+             * it does't matter whether it resumes
+             * **********************/
+            emit readyToResume();
             if (!d->activePlaylist.isNull())
                 d->activePlaylist->play(meta);
         });
@@ -832,9 +836,15 @@ void Player::loadMedia(PlaylistPtr playlist, const MetaPtr meta, int position)
 }
 
 
-void Player::playMeta(PlaylistPtr playlist, const MetaPtr meta)
+void Player::playMeta(PlaylistPtr playlist, const MetaPtr pmeta)
 {
     Q_D(Player);
+    MetaPtr meta = pmeta;
+    if (meta == nullptr) {
+        if (playlist == nullptr || playlist->isEmpty())
+            return;
+        meta = playlist->first();
+    }
     d->mutex.lock();
     MetaPtr curMeta = meta;
     if (curMeta == nullptr)
@@ -958,11 +968,14 @@ void Player::playMeta(PlaylistPtr playlist, const MetaPtr meta)
     d->mutex.unlock();
 }
 
-void Player::resume(PlaylistPtr playlist, const MetaPtr meta)
+void Player::resume(PlaylistPtr playlist, const MetaPtr pmeta)
 {
     Q_D(Player);
+    MetaPtr meta = pmeta;
     if (meta == nullptr) {
-        return;
+        if (playlist == nullptr || playlist->isEmpty())
+            return;
+        meta = playlist->first();
     }
 
     if (d->fadeOutAnimation) {
