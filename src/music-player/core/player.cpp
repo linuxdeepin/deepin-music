@@ -672,6 +672,10 @@ void Player::init()
     qRegisterMetaType<Player::PlaybackStatus>();
 
     d->initConnection();
+
+
+    d->fadeOutAnimation = new QPropertyAnimation(this, "fadeInOutFactor");
+    d->fadeInAnimation = new QPropertyAnimation(this, "fadeInOutFactor");
 }
 
 void Player::setActivePlaylist(PlaylistPtr playlist)
@@ -688,18 +692,15 @@ void Player::setCurPlaylist(PlaylistPtr curPlaylist)
 
 Player::~Player()
 {
-    qDebug() << "destroy Player";
     Q_D(Player);
     d->qplayer->stop();
     d->qplayer->deleteLater();
 
-    delete d->qplayer;
-
     delete d->qvmedia;
     delete d->qvplayer;
     delete d->qvinstance;
-
-    qDebug() << "Player destroyed";
+    delete d->fadeOutAnimation;
+    delete d->fadeInAnimation;
 }
 
 
@@ -859,33 +860,14 @@ void Player::playMeta(PlaylistPtr playlist, const MetaPtr pmeta)
         return;
     }
 
-
     if (playlist->id() != PlayMusicListID)
         d->activePlaylist = playlist;
-
-//    if (d->activePlaylist.isNull())
-//        return;
 
     d->activeMeta = curMeta;
 
     d->ischangeMusic = true;
     QFileInfo fileInfo(curMeta->localPath);
-    /*    if (curMeta->localPath.endsWith(".amr") && QFile::exists(curMeta->localPath) ) {
-    //        if (d->qplayer->state() != QMediaPlayer::StoppedState) {
-            d->qplayer->setMedia(QMediaContent());
-            d->qplayer->stop();
-    //        }
-
-            d->isamr = true;
-            d->qvmedia->initMedia(curMeta->localPath, true, d->qvinstance);
-            d->qvplayer->open(d->qvmedia);
-            d->qvplayer->setTime(curMeta->offset);
-            d->qvplayer->play();
-        } else */if (QFile::exists(curMeta->localPath)) {
-//        if(curMeta->localPath.endsWith(".APE")){
-//            QFileInfo fileInfo(curMeta->localPath);
-//            fileInfo.suffix().toLower() == "ape";
-//        }
+    if (QFile::exists(curMeta->localPath)) {
         if (d->qvplayer->state() != Vlc::Stopped && d->qvplayer->state() != Vlc::Idle) {
             d->qvplayer->stop();
         }
@@ -946,23 +928,14 @@ void Player::playMeta(PlaylistPtr playlist, const MetaPtr pmeta)
         });
     }
 
-    if (d->fadeOutAnimation) {
-        d->fadeOutAnimation->stop();
-        d->fadeOutAnimation->deleteLater();
-        d->fadeOutAnimation = nullptr;
-    }
-    if (d->fadeInOut && !d->fadeInAnimation) {
-        qDebug() << "start fade in";
+    d->fadeOutAnimation->stop();
+
+    if (d->fadeInOut && d->fadeInAnimation->state() != QPropertyAnimation::Running) {
         d->fadeInAnimation = new QPropertyAnimation(this, "fadeInOutFactor");
         d->fadeInAnimation->setEasingCurve(QEasingCurve::InCubic);
         d->fadeInAnimation->setStartValue(0.10000);
         d->fadeInAnimation->setEndValue(1.0000);
         d->fadeInAnimation->setDuration(sFadeInOutAnimationDuration);
-        connect(d->fadeInAnimation, &QPropertyAnimation::finished,
-        this, [ = ]() {
-            d->fadeInAnimation->deleteLater();
-            d->fadeInAnimation = nullptr;
-        });
         d->fadeInAnimation->start();
     }
     d->mutex.unlock();
@@ -981,8 +954,6 @@ void Player::resume(PlaylistPtr playlist, const MetaPtr pmeta)
     if (d->fadeOutAnimation) {
         setFadeInOutFactor(1.0);
         d->fadeOutAnimation->stop();
-        d->fadeOutAnimation->deleteLater();
-        d->fadeOutAnimation = nullptr;
     }
 
     qDebug() << "resume top";
@@ -1062,17 +1033,15 @@ void Player::resume(PlaylistPtr playlist, const MetaPtr pmeta)
         }
     });
 
-    if (d->fadeInOut && !d->fadeInAnimation) {
-        d->fadeInAnimation = new QPropertyAnimation(this, "fadeInOutFactor");
+    if (d->fadeInOut && d->fadeInAnimation->state() != QPropertyAnimation::Running) {
         d->fadeInAnimation->setEasingCurve(QEasingCurve::InCubic);
         d->fadeInAnimation->setStartValue(0.1000);
         d->fadeInAnimation->setEndValue(1.0000);
         d->fadeInAnimation->setDuration(sFadeInOutAnimationDuration);
-        connect(d->fadeInAnimation, &QPropertyAnimation::finished,
-        this, [ = ]() {
-            d->fadeInAnimation->deleteLater();
-            d->fadeInAnimation = nullptr;
-        });
+//        connect(d->fadeInAnimation, &QPropertyAnimation::finished,
+//        this, [ = ]() {
+//            d->fadeInAnimation = nullptr;
+//        });
         d->fadeInAnimation->start();
     }
 
@@ -1119,30 +1088,20 @@ void Player::pause()
     /*--------suspend--------*/
 //    d->ioPlayer->suspend();
 
-    if (d->fadeInAnimation) {
+    d->fadeInAnimation->stop();
 
-        d->fadeInAnimation->stop();
-        d->fadeInAnimation->deleteLater();
-        d->fadeInAnimation = nullptr;
-    }
-
-    if (d->fadeInOut && !d->fadeOutAnimation) {
-
-        d->fadeOutAnimation = new QPropertyAnimation(this, "fadeInOutFactor");
+    if (d->fadeInOut && d->fadeOutAnimation->state() != QPropertyAnimation::Running) {
         d->fadeOutAnimation->setEasingCurve(QEasingCurve::OutCubic);
         d->fadeOutAnimation->setStartValue(1.0000);
         d->fadeOutAnimation->setEndValue(0.1000);
         d->fadeOutAnimation->setDuration(sFadeInOutAnimationDuration);
         connect(d->fadeOutAnimation, &QPropertyAnimation::finished,
         this, [ = ]() {
-            d->fadeOutAnimation->deleteLater();
-            d->fadeOutAnimation = nullptr;
             if (d->isamr) {
                 d->qvplayer->pause();
             } else {
                 d->qplayer->pause();
             }
-
             setFadeInOutFactor(1.0);
         });
         d->fadeOutAnimation->start();
