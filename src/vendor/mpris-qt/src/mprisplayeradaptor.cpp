@@ -81,31 +81,31 @@ bool MprisPlayerAdaptor::canControl() const
 
 bool MprisPlayerAdaptor::canGoNext() const
 {
-    MprisPlayer * const player = static_cast<MprisPlayer *>(parent());
+    MprisPlayer *const player = static_cast<MprisPlayer *>(parent());
     return player->canControl() && player->canGoNext();
 }
 
 bool MprisPlayerAdaptor::canGoPrevious() const
 {
-    MprisPlayer * const player = static_cast<MprisPlayer *>(parent());
+    MprisPlayer *const player = static_cast<MprisPlayer *>(parent());
     return player->canControl() && player->canGoPrevious();
 }
 
 bool MprisPlayerAdaptor::canPause() const
 {
-    MprisPlayer * const player = static_cast<MprisPlayer *>(parent());
+    MprisPlayer *const player = static_cast<MprisPlayer *>(parent());
     return player->canControl() && player->canPause();
 }
 
 bool MprisPlayerAdaptor::canPlay() const
 {
-    MprisPlayer * const player = static_cast<MprisPlayer *>(parent());
+    MprisPlayer *const player = static_cast<MprisPlayer *>(parent());
     return player->canControl() && player->canPlay();
 }
 
 bool MprisPlayerAdaptor::canSeek() const
 {
-    MprisPlayer * const player = static_cast<MprisPlayer *>(parent());
+    MprisPlayer *const player = static_cast<MprisPlayer *>(parent());
     return player->canControl() && player->canSeek();
 }
 
@@ -116,7 +116,7 @@ QString MprisPlayerAdaptor::loopStatus() const
 
 void MprisPlayerAdaptor::setLoopStatus(const QString &value)
 {
-    MprisPlayer * const player = static_cast<MprisPlayer *>(parent());
+    MprisPlayer *const player = static_cast<MprisPlayer *>(parent());
     if (player->canControl()) {
         emit player->loopStatusRequested(Mpris::enumerationFromString<Mpris::LoopStatus>(value));
         return;
@@ -159,7 +159,7 @@ double MprisPlayerAdaptor::rate() const
 
 void MprisPlayerAdaptor::setRate(double value)
 {
-    MprisPlayer * const player = static_cast<MprisPlayer *>(parent());
+    MprisPlayer *const player = static_cast<MprisPlayer *>(parent());
     QString errorMessage;
 
     if (!player->canControl()) {
@@ -191,7 +191,7 @@ bool MprisPlayerAdaptor::shuffle() const
 
 void MprisPlayerAdaptor::setShuffle(bool value)
 {
-    MprisPlayer * const player = static_cast<MprisPlayer *>(parent());
+    MprisPlayer *const player = static_cast<MprisPlayer *>(parent());
     if (player->canControl()) {
         emit player->shuffleRequested(value);
         return;
@@ -209,7 +209,7 @@ double MprisPlayerAdaptor::volume() const
 
 void MprisPlayerAdaptor::setVolume(double value)
 {
-    MprisPlayer * const player = static_cast<MprisPlayer *>(parent());
+    MprisPlayer *const player = static_cast<MprisPlayer *>(parent());
     if (player->canControl()) {
         emit player->volumeRequested(value < 0 ? 0 : value);
         return;
@@ -222,7 +222,7 @@ void MprisPlayerAdaptor::setVolume(double value)
 
 void MprisPlayerAdaptor::Next()
 {
-    MprisPlayer * const player = static_cast<MprisPlayer *>(parent());
+    MprisPlayer *const player = static_cast<MprisPlayer *>(parent());
     if (!player->canControl()) {
         player->sendErrorReply(QDBusError::NotSupported, QStringLiteral("Wanted to move to next track but it is not supported."));
         return;
@@ -237,7 +237,7 @@ void MprisPlayerAdaptor::Next()
 
 void MprisPlayerAdaptor::OpenUri(const QString &Uri)
 {
-    MprisPlayer * const player = static_cast<MprisPlayer *>(parent());
+    MprisPlayer *const player = static_cast<MprisPlayer *>(parent());
     if (!player->canControl()) {
         player->sendErrorReply(QDBusError::NotSupported, QStringLiteral("Wanted to open an url but it is not supported."));
         return;
@@ -273,7 +273,7 @@ void MprisPlayerAdaptor::OpenUri(const QString &Uri)
 
 void MprisPlayerAdaptor::Pause()
 {
-    MprisPlayer * const player = static_cast<MprisPlayer *>(parent());
+    MprisPlayer *const player = static_cast<MprisPlayer *>(parent());
     if (!player->canControl()) {
         player->sendErrorReply(QDBusError::NotSupported, QStringLiteral("Wanted to pause but it is not supported."));
         return;
@@ -297,7 +297,7 @@ void MprisPlayerAdaptor::Pause()
 
 void MprisPlayerAdaptor::Play()
 {
-    MprisPlayer * const player = static_cast<MprisPlayer *>(parent());
+    MprisPlayer *const player = static_cast<MprisPlayer *>(parent());
     if (!player->canControl()) {
         player->sendErrorReply(QDBusError::NotSupported, QStringLiteral("Wanted to play but it is not supported."));
         return;
@@ -321,7 +321,7 @@ void MprisPlayerAdaptor::Play()
 
 void MprisPlayerAdaptor::PlayPause()
 {
-    MprisPlayer * const player = static_cast<MprisPlayer *>(parent());
+    MprisPlayer *const player = static_cast<MprisPlayer *>(parent());
     if (!player->canControl()) {
         player->sendErrorReply(QDBusError::NotSupported, QStringLiteral("Wanted to play or pause but it is not supported."));
         return;
@@ -353,7 +353,7 @@ void MprisPlayerAdaptor::PlayPause()
 
 void MprisPlayerAdaptor::Previous()
 {
-    MprisPlayer * const player = static_cast<MprisPlayer *>(parent());
+    MprisPlayer *const player = static_cast<MprisPlayer *>(parent());
     if (!player->canControl()) {
         player->sendErrorReply(QDBusError::NotSupported, QStringLiteral("Wanted to move to previous track but it is not supported."));
         return;
@@ -368,7 +368,7 @@ void MprisPlayerAdaptor::Previous()
 
 void MprisPlayerAdaptor::Seek(qlonglong Offset)
 {
-    MprisPlayer * const player = static_cast<MprisPlayer *>(parent());
+    MprisPlayer *const player = static_cast<MprisPlayer *>(parent());
     if (!player->canControl()) {
         player->sendErrorReply(QDBusError::NotSupported, QStringLiteral("Wanted to seek but it is not supported."));
         return;
@@ -385,17 +385,18 @@ void MprisPlayerAdaptor::Seek(qlonglong Offset)
 
     QVariantMap metadata = player->metadata();
     QVariant length = metadata[Mpris::metadataToString(Mpris::Length)];
-    if (length.isValid() && (player->position() + Offset) > length.toLongLong()) {
-        emit player->nextRequested();
-        return;
-    }
+//    if (length.isValid() && (player->position() + Offset) > length.toLongLong()) {
+//        emit player->nextRequested();
+//        return;
+//    }
 
     emit player->seekRequested(Offset);
 }
 
 void MprisPlayerAdaptor::SetPosition(const QDBusObjectPath &TrackId, qlonglong Position)
 {
-    MprisPlayer * const player = static_cast<MprisPlayer *>(parent());
+    Q_UNUSED(TrackId)
+    MprisPlayer *const player = static_cast<MprisPlayer *>(parent());
     if (!player->canControl()) {
         player->sendErrorReply(QDBusError::NotSupported, QStringLiteral("Wanted to move to position but it is not supported."));
         return;
@@ -405,29 +406,30 @@ void MprisPlayerAdaptor::SetPosition(const QDBusObjectPath &TrackId, qlonglong P
         return;
     }
 
-    QVariantMap metadata = player->metadata();
-    QVariant trackId = metadata[Mpris::metadataToString(Mpris::TrackId)];
-    QVariant length = metadata[Mpris::metadataToString(Mpris::Length)];
-    if (!trackId.isValid() || !length.isValid()) {
-        return;
-    }
+//    QVariantMap metadata = player->metadata();
+//    QVariant trackId = metadata[Mpris::metadataToString(Mpris::TrackId)];
+//    QVariant length = metadata[Mpris::metadataToString(Mpris::Length)];
+//    if (!trackId.isValid() || !length.isValid()) {
+//        return;
+//    }
 
-    if (trackId.value<QDBusObjectPath>() != TrackId) {
-        player->sendErrorReply(QDBusError::InvalidArgs, QStringLiteral("Wanted to move to position but the TrackId is not the current one."));
-        return;
-    }
+//    if (trackId.value<QDBusObjectPath>() != TrackId) {
+//        player->sendErrorReply(QDBusError::InvalidArgs, QStringLiteral("Wanted to move to position but the TrackId is not the current one."));
+//        return;
+//    }
 
-    if (Position > length.toLongLong()) {
-        player->sendErrorReply(QDBusError::InvalidArgs, QStringLiteral("Wanted to move to position but the position is off range."));
-        return;
-    }
+//    if (Position > length.toLongLong()) {
+//        player->sendErrorReply(QDBusError::InvalidArgs, QStringLiteral("Wanted to move to position but the position is off range."));
+//        return;
+//    }
 
-    emit player->setPositionRequested(TrackId, Position);
+    emit player->seekRequested(Position);
+    //emit player->setPositionRequested(TrackId, Position);
 }
 
 void MprisPlayerAdaptor::Stop()
 {
-    MprisPlayer * const player = static_cast<MprisPlayer *>(parent());
+    MprisPlayer *const player = static_cast<MprisPlayer *>(parent());
     if (!player->canControl()) {
         player->sendErrorReply(QDBusError::NotSupported, QStringLiteral("Wanted to stop but it is not supported."));
         return;
@@ -449,7 +451,7 @@ void MprisPlayerAdaptor::Stop()
 // Private
 void MprisPlayerAdaptor::onCanControlChanged() const
 {
-    MprisPlayer * const player = static_cast<MprisPlayer *>(parent());
+    MprisPlayer *const player = static_cast<MprisPlayer *>(parent());
 
     // canControlChanged signal is not forwarded through DBus, but
     // we can notify about the rest of "Can*" properties
@@ -480,7 +482,7 @@ void MprisPlayerAdaptor::onCanControlChanged() const
 
 void MprisPlayerAdaptor::onCanGoNextChanged() const
 {
-    MprisPlayer * const player = static_cast<MprisPlayer *>(parent());
+    MprisPlayer *const player = static_cast<MprisPlayer *>(parent());
 
     if (!player->canControl()) {
         return;
@@ -494,7 +496,7 @@ void MprisPlayerAdaptor::onCanGoNextChanged() const
 
 void MprisPlayerAdaptor::onCanGoPreviousChanged() const
 {
-    MprisPlayer * const player = static_cast<MprisPlayer *>(parent());
+    MprisPlayer *const player = static_cast<MprisPlayer *>(parent());
 
     if (!player->canControl()) {
         return;
@@ -508,7 +510,7 @@ void MprisPlayerAdaptor::onCanGoPreviousChanged() const
 
 void MprisPlayerAdaptor::onCanPauseChanged() const
 {
-    MprisPlayer * const player = static_cast<MprisPlayer *>(parent());
+    MprisPlayer *const player = static_cast<MprisPlayer *>(parent());
 
     if (!player->canControl()) {
         return;
@@ -522,7 +524,7 @@ void MprisPlayerAdaptor::onCanPauseChanged() const
 
 void MprisPlayerAdaptor::onCanPlayChanged() const
 {
-    MprisPlayer * const player = static_cast<MprisPlayer *>(parent());
+    MprisPlayer *const player = static_cast<MprisPlayer *>(parent());
 
     if (!player->canControl()) {
         return;
@@ -536,7 +538,7 @@ void MprisPlayerAdaptor::onCanPlayChanged() const
 
 void MprisPlayerAdaptor::onCanSeekChanged() const
 {
-    MprisPlayer * const player = static_cast<MprisPlayer *>(parent());
+    MprisPlayer *const player = static_cast<MprisPlayer *>(parent());
 
     if (!player->canControl()) {
         return;
@@ -550,7 +552,7 @@ void MprisPlayerAdaptor::onCanSeekChanged() const
 
 void MprisPlayerAdaptor::onLoopStatusChanged() const
 {
-    MprisPlayer * const player = static_cast<MprisPlayer *>(parent());
+    MprisPlayer *const player = static_cast<MprisPlayer *>(parent());
 
     QVariantMap changedProperties;
     changedProperties[QStringLiteral("LoopStatus")] = QVariant(Mpris::enumerationToString(player->loopStatus()));
@@ -560,7 +562,7 @@ void MprisPlayerAdaptor::onLoopStatusChanged() const
 
 void MprisPlayerAdaptor::onMaximumRateChanged() const
 {
-    MprisPlayer * const player = static_cast<MprisPlayer *>(parent());
+    MprisPlayer *const player = static_cast<MprisPlayer *>(parent());
 
     if (player->maximumRate() < 1) {
 //        qmlInfo(this) << "Maximum rate should be equal or above 1";
@@ -575,7 +577,7 @@ void MprisPlayerAdaptor::onMaximumRateChanged() const
 
 void MprisPlayerAdaptor::onMetadataChanged() const
 {
-    MprisPlayer * const player = static_cast<MprisPlayer *>(parent());
+    MprisPlayer *const player = static_cast<MprisPlayer *>(parent());
 
     QVariantMap changedProperties;
     changedProperties[QStringLiteral("Metadata")] = QVariant(player->metadata());
@@ -585,7 +587,7 @@ void MprisPlayerAdaptor::onMetadataChanged() const
 
 void MprisPlayerAdaptor::onMinimumRateChanged() const
 {
-    MprisPlayer * const player = static_cast<MprisPlayer *>(parent());
+    MprisPlayer *const player = static_cast<MprisPlayer *>(parent());
 
     if (player->minimumRate() > 1) {
 //        qmlInfo(this) << "Minimum rate should be equal or less than 1";
@@ -600,7 +602,7 @@ void MprisPlayerAdaptor::onMinimumRateChanged() const
 
 void MprisPlayerAdaptor::onPlaybackStatusChanged() const
 {
-    MprisPlayer * const player = static_cast<MprisPlayer *>(parent());
+    MprisPlayer *const player = static_cast<MprisPlayer *>(parent());
 
     QVariantMap changedProperties;
     changedProperties[QStringLiteral("PlaybackStatus")] = QVariant(Mpris::enumerationToString(player->playbackStatus()));
@@ -610,7 +612,7 @@ void MprisPlayerAdaptor::onPlaybackStatusChanged() const
 
 void MprisPlayerAdaptor::onRateChanged() const
 {
-    MprisPlayer * const player = static_cast<MprisPlayer *>(parent());
+    MprisPlayer *const player = static_cast<MprisPlayer *>(parent());
 
     if (player->rate() <= 0 || player->rate() < player->minimumRate() || player->rate() > player->maximumRate()) {
 //        qmlInfo(this) << "Rate should never be negative or out of the minimum and maximum limits";
@@ -625,7 +627,7 @@ void MprisPlayerAdaptor::onRateChanged() const
 
 void MprisPlayerAdaptor::onShuffleChanged() const
 {
-    MprisPlayer * const player = static_cast<MprisPlayer *>(parent());
+    MprisPlayer *const player = static_cast<MprisPlayer *>(parent());
 
     QVariantMap changedProperties;
     changedProperties[QStringLiteral("Shuffle")] = QVariant(player->shuffle());
@@ -635,7 +637,7 @@ void MprisPlayerAdaptor::onShuffleChanged() const
 
 void MprisPlayerAdaptor::onVolumeChanged() const
 {
-    MprisPlayer * const player = static_cast<MprisPlayer *>(parent());
+    MprisPlayer *const player = static_cast<MprisPlayer *>(parent());
 
     QVariantMap changedProperties;
     changedProperties[QStringLiteral("Volume")] = QVariant(player->volume() < 0 ? 0 : player->volume());
