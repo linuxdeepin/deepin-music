@@ -1702,6 +1702,12 @@ void Presenter::onChangeProgress(qint64 value, qint64 range)
 
     //qDebug() << value << "-" << range;
 
+    if (range <= 0)
+        return;
+    if (value > range) {
+        d->player->playNextMeta();
+        return;
+    }
     d->player->setIOPosition(value, range);
 
     auto position = value * d->player->duration() / range;
@@ -2197,6 +2203,11 @@ void Presenter::initMpris(MprisPlayer *mprisPlayer)
     connect(this, &Presenter::progrossChanged,
     this, [ = ](qint64 pos, qint64) {
         mprisPlayer->setPosition(pos);
+    });
+
+    connect(mprisPlayer, &MprisPlayer::seekRequested,
+    this, [ = ](qlonglong offset) {
+        this->onChangeProgress(d->player->position() + offset, d->player->duration());
     });
 
     /*********************************************
