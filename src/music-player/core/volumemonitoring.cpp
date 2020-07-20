@@ -111,12 +111,12 @@ void VolumeMonitoring::timeoutSlot()
     int volume = qFloor(volumeV.toDouble() * 100);
     bool mute = muteV.toBool();
 
-    if (volume != d->oldVolume) {
+    if (volumeV.isValid()  &&  volume != d->oldVolume) {
         d->oldVolume = volume;
         Q_EMIT volumeChanged(volume);
 
     }
-    if (mute != d->oldMute) {
+    if (muteV.isValid() && mute != d->oldMute) {
         d->oldMute = mute;
         Q_EMIT muteChanged(mute);
     }
