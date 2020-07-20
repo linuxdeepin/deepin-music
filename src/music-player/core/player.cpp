@@ -435,10 +435,11 @@ void PlayerPrivate::initConnection()
 
     q->connect(qplayer, &QMediaPlayer::volumeChanged,
     q, [ = ](int volume) {
+        Q_UNUSED(volume)
         if (fadeInOutFactor < 1.0) {
             return;
         }
-        Q_EMIT q->volumeChanged(volume);
+//        Q_EMIT q->volumeChanged(volume);
     });
     q->connect(qplayer, &QMediaPlayer::mutedChanged,
                q, &Player::mutedChanged);
