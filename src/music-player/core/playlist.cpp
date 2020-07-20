@@ -54,7 +54,12 @@ const MetaPtr Playlist::prev(const MetaPtr meta) const
         return MetaPtr();
     }
     auto index = playlistMeta.sortMetas.indexOf(meta->hash);
-    auto prev = (index + playlistMeta.sortMetas.length() - 1) % playlistMeta.sortMetas.length();
+    auto prev = (index + playlistMeta.sortMetas.length() * 2 - 1) % playlistMeta.sortMetas.length();
+
+    if (playlistMeta.sortMetas.size() > 1 && meta->hash == playlistMeta.metas.value(playlistMeta.sortMetas.at(prev))->hash) {
+        auto prev = (index + playlistMeta.sortMetas.length() * 2 - 1) % playlistMeta.sortMetas.length();
+    }
+
     return playlistMeta.metas.value(playlistMeta.sortMetas.at(prev));
 }
 
@@ -65,6 +70,11 @@ const MetaPtr Playlist::next(const MetaPtr meta) const
     }
     auto index = playlistMeta.sortMetas.indexOf(meta->hash);
     auto prev = (index + 1) % playlistMeta.sortMetas.length();
+
+    if (playlistMeta.sortMetas.size() > 1 && meta->hash == playlistMeta.metas.value(playlistMeta.sortMetas.at(prev))->hash) {
+        prev = (index + 2) % playlistMeta.sortMetas.length();
+    }
+
     return playlistMeta.metas.value(playlistMeta.sortMetas.at(prev));
 }
 
@@ -459,13 +469,13 @@ MetaPtr Playlist::removeMusicList(const MetaPtrList metalist)
 MetaPtr Playlist::removeOneMusic(const MetaPtr meta)
 {
 //    Q_ASSERT(!meta.isNull());
-    if(meta.isNull())
+    if (meta.isNull())
         return MetaPtr();
     if (meta->hash.isEmpty()) {
         qCritical() << "Cannot remove empty id" << meta->hash << meta->title;
         return MetaPtr();
     }
-    if (id() == AlbumMusicListID ) {
+    if (id() == AlbumMusicListID) {
         QString albumStr = meta->album;
         if (albumStr.isEmpty()) {
             albumStr = tr("Unknown album");

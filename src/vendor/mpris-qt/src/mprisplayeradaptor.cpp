@@ -243,7 +243,9 @@ void MprisPlayerAdaptor::OpenUri(const QString &Uri)
         return;
     }
 
-    QUrl url(Uri, QUrl::StrictMode);
+    //! QUrl url(Uri, QUrl::StrictMode);
+    QUrl url = QUrl::fromLocalFile(Uri);
+
     if (!url.isValid()) {
         player->sendErrorReply(QDBusError::InvalidArgs, QStringLiteral("Wanted to open an url but the url is invalid."));
     }
