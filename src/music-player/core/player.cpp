@@ -866,35 +866,41 @@ void Player::playMeta(PlaylistPtr playlist, const MetaPtr pmeta)
     d->activeMeta = curMeta;
 
     d->ischangeMusic = true;
-    QFileInfo fileInfo(curMeta->localPath);
-    if (QFile::exists(curMeta->localPath)) {
-        if (d->qvplayer->state() != Vlc::Stopped && d->qvplayer->state() != Vlc::Idle) {
-            d->qvplayer->stop();
-        }
-        d->isamr = false;
-        QString curPath = Global::cacheDir();
-        QString toPath = QString("%1/images/%2.mp3").arg(curPath).arg(curMeta->hash);
-        if (!QFile::exists(toPath)) {
-            //apeToMp3(curMeta->localPath, curMeta->hash);
-            Q_EMIT Player::instance()->addApeTask(meta->localPath, meta->hash);
-            if (!QFile::exists(toPath)) {
-                toPath = curMeta->localPath;
+    /******************************************************
+     *  MetaBufferDetector needs some time to load progress
+     * ****************************************************/
+    QTimer::singleShot(100, this, [ = ]() {
+        QFileInfo fileInfo(curMeta->localPath);
+        if (QFile::exists(curMeta->localPath)) {
+            if (d->qvplayer->state() != Vlc::Stopped && d->qvplayer->state() != Vlc::Idle) {
+                d->qvplayer->stop();
             }
+            d->isamr = false;
+            QString curPath = Global::cacheDir();
+            QString toPath = QString("%1/images/%2.mp3").arg(curPath).arg(curMeta->hash);
+            if (!QFile::exists(toPath)) {
+                //apeToMp3(curMeta->localPath, curMeta->hash);
+                Q_EMIT Player::instance()->addApeTask(meta->localPath, meta->hash);
+                if (!QFile::exists(toPath)) {
+                    toPath = curMeta->localPath;
+                }
+            }
+            d->qplayer->setMedia(QMediaContent(QUrl::fromLocalFile(toPath)));
+            d->qplayer->setPosition(curMeta->offset);
+            d->qplayer->setVolume(100);
+            d->qplayer->play();
+        } else {
+            if (d->qvplayer->state() != Vlc::Stopped && d->qvplayer->state() != Vlc::Idle) {
+                d->qvplayer->stop();
+            }
+            d->isamr = false;
+            d->qplayer->setMedia(QMediaContent(QUrl::fromLocalFile(meta->localPath)));
+            d->qplayer->setPosition(curMeta->offset);
+            d->qplayer->setVolume(100);
+            d->qplayer->play();
         }
-        d->qplayer->setMedia(QMediaContent(QUrl::fromLocalFile(toPath)));
-        d->qplayer->setPosition(curMeta->offset);
-        d->qplayer->setVolume(100);
-        d->qplayer->play();
-    } else {
-        if (d->qvplayer->state() != Vlc::Stopped && d->qvplayer->state() != Vlc::Idle) {
-            d->qvplayer->stop();
-        }
-        d->isamr = false;
-        d->qplayer->setMedia(QMediaContent(QUrl::fromLocalFile(meta->localPath)));
-        d->qplayer->setPosition(curMeta->offset);
-        d->qplayer->setVolume(100);
-        d->qplayer->play();
-    }
+    });
+
 
     if (!d->activePlaylist.isNull())
         d->activePlaylist->play(curMeta);
