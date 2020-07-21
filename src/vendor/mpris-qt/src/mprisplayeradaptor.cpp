@@ -242,16 +242,21 @@ void MprisPlayerAdaptor::OpenUri(const QString &Uri)
         player->sendErrorReply(QDBusError::NotSupported, QStringLiteral("Wanted to open an url but it is not supported."));
         return;
     }
-
-    //! QUrl url(Uri, QUrl::StrictMode);
-    QUrl url = QUrl::fromLocalFile(Uri);
+    //must use original url. warn:do not use local file  hj 2020/7/21
+    QUrl url(Uri, QUrl::StrictMode);
 
     if (!url.isValid()) {
         player->sendErrorReply(QDBusError::InvalidArgs, QStringLiteral("Wanted to open an url but the url is invalid."));
     }
 
     if (!player->supportedUriSchemes().contains(url.scheme())) {
-        player->sendErrorReply(QDBusError::NotSupported, QStringLiteral("Wanted to open an url but the scheme is not supported."));
+        //compatible the file that has not scheme   hj 2020/7/21
+        QUrl lurl = QUrl::fromLocalFile(Uri);
+        if (!lurl.isLocalFile()) {
+            player->sendErrorReply(QDBusError::NotSupported, QStringLiteral("Wanted to open an url but the scheme is not supported."));
+        } else {
+            url = lurl;
+        }
     }
 
     QMimeDatabase db;
