@@ -56,7 +56,7 @@ MprisPlayer::MprisPlayer(QObject *parent)
     , m_canGoPrevious(false)
     , m_canPause(false)
     , m_canPlay(false)
-    , m_canSeek(false)
+    , m_canSeek(true)
     , m_loopStatus(Mpris::None)
     , m_maximumRate(1)
     , m_minimumRate(1)
@@ -554,7 +554,7 @@ void MprisPlayer::unregisterService()
     }
 }
 
-void MprisPlayer::notifyPropertiesChanged(const QString& interfaceName, const QVariantMap &changedProperties, const QStringList &invalidatedProperties) const
+void MprisPlayer::notifyPropertiesChanged(const QString &interfaceName, const QVariantMap &changedProperties, const QStringList &invalidatedProperties) const
 {
     if (m_serviceName.isEmpty()) {
         return;
@@ -568,8 +568,8 @@ void MprisPlayer::notifyPropertiesChanged(const QString& interfaceName, const QV
     }
 
     QDBusMessage message = QDBusMessage::createSignal(mprisObjectPath,
-                           dBusPropertiesInterface,
-                           dBusPropertiesChangedSignal);
+                                                      dBusPropertiesInterface,
+                                                      dBusPropertiesChangedSignal);
 
     QList<QVariant> arguments;
     arguments << QVariant(interfaceName) << QVariant(changedProperties) << QVariant(invalidatedProperties);

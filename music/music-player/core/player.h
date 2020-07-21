@@ -76,6 +76,7 @@ public:
     void playMeta(PlaylistPtr playlist, const MetaPtr meta);
     void resume(PlaylistPtr playlist, const MetaPtr meta);
     void playNextMeta(PlaylistPtr playlist, const MetaPtr meta);
+    void playNextMeta();
     void playPrevMusic(PlaylistPtr playlist, const MetaPtr meta);
     void pause();
     void pauseNow();
