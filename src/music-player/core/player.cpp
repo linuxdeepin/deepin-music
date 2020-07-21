@@ -830,6 +830,17 @@ void Player::playNextMeta(PlaylistPtr playlist, const MetaPtr meta)
     }
 }
 
+void Player::playNextMeta()
+{
+    Q_D(Player);
+    if (d->mode == RepeatSingle) {
+        d->selectNext(d->activeMeta, RepeatAll);
+    } else {
+        d->selectNext(d->activeMeta, d->mode);
+    }
+}
+
+
 void Player::playPrevMusic(PlaylistPtr playlist, const MetaPtr meta)
 {
     Q_UNUSED(playlist)
