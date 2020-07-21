@@ -74,7 +74,7 @@ signals:
 
     void toggleMute();
     void localToggleMute();
-    void togglePlaylist();
+    void togglePlaylist(bool visible);
     void modeChanged(int);
     void toggleFavourite(const MetaPtr meta);
 

@@ -189,12 +189,13 @@ void FooterPrivate::initConnection()
     });
     q->connect(title, &Label::clicked, q, [ = ](bool) {
         Q_EMIT q->locateMusic(activingPlaylist, activingMeta);
+        Q_EMIT q->togglePlaylist(true);
     });
     q->connect(btLyric, &DPushButton::released, q, [ = ]() {
         Q_EMIT  q->toggleLyricView();
     });
     q->connect(btPlayList, &DPushButton::released, q, [ = ]() {
-        Q_EMIT q->togglePlaylist();
+        Q_EMIT q->togglePlaylist(false);
     });
     q->connect(btSound, &DPushButton::pressed, q, [ = ]() {
         Q_EMIT q->localToggleMute();
@@ -1323,8 +1324,7 @@ void Footer::onVolumeChanged(int volume)
 void Footer::onMutedChanged(bool muted)
 {
     Q_D(Footer);
-    if(d->volumeMonitoring.needSyncLocalFlag())
-    {
+    if (d->volumeMonitoring.needSyncLocalFlag()) {
         d->volumeMonitoring.stop();
         d->volumeMonitoring.timeoutSlot();
         d->volumeMonitoring.start();
@@ -1353,7 +1353,7 @@ void Footer::onMutedChanged(bool muted)
 void Footer::onLocalMutedChanged(int type)
 {
     Q_D(Footer);
-    if(type)
+    if (type)
         d->m_Mute = !d->m_Mute;
     else
         d->m_Mute = false;
