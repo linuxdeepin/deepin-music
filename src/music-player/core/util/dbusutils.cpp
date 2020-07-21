@@ -15,7 +15,7 @@ DBusUtils::DBusUtils()
 
 }
 
-QVariant DBusUtils::redDBusProperty(const QString &service, const QString &path, const QString &interface, const char *propert)
+QVariant DBusUtils::readDBusProperty(const QString &service, const QString &path, const QString &interface, const char *propert)
 {
     // 创建QDBusInterface接口
     mutex.lock();

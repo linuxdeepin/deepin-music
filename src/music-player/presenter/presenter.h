@@ -105,6 +105,11 @@ signals:
     void progrossChanged(qint64 pos, qint64 length, qint64 coefficient);
     void volumeChanged(int volume);
     void mutedChanged(bool muted);
+    /**********************************************
+     * local mute operation,type: 0 volume , 1:mute
+     * *******************************************/
+    void localMutedChanged(int type);
+
     void modeChanged(int);
 
     //! from lyricservice
@@ -149,6 +154,10 @@ public slots:
     void onVolumeChanged(int volume);
     void onPlayModeChanged(int mode);
     void onToggleMute();
+    /******************************
+     *local toggle
+     * *****************************/
+    void onLocalToggleMute();
     void onFadeInOut();
     void UpdateVolume(int volume);
 
@@ -195,6 +204,10 @@ public slots:
     void onSpeechFavorite();
     void onSpeechunFaverite();
     void onSpeechsetMode(const int mode);
+    /**************************************************
+     * local mute operation to player
+     * ***********************************************/
+    void localMuteChanged(bool mute);
 
 private:
     bool containsStr(QString searchText, QString text);
