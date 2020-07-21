@@ -696,7 +696,6 @@ void Presenter::postAction()
             d->player->setFadeInOut(false);
             d->player->loadMedia(lastPlaylist, lastMeta);
             d->metaBufferDetector->onBufferDetector(lastMeta->localPath, lastMeta->hash);
-//            d->player->pause();
             QTimer::singleShot(150, [ = ]() {//延迟150ms是为了在加载的时候，音乐播放100ms后再设置进度
                 d->player->setPosition(position);
             });
@@ -739,7 +738,8 @@ void Presenter::postAction()
                     onMusicResume(lastPlaylist, lastMeta);
                 });
             }
-
+        } else {
+            Q_EMIT d->pause();
         }
     }
 
@@ -1553,8 +1553,7 @@ void Presenter::onMusicPlay(PlaylistPtr playlist,  const MetaPtr meta)
     /****************************************************************
      * deal with cd ejecting while Optical drive is still connecting.
      * **************************************************************/
-    if(QFileInfo(meta->localPath).dir().isEmpty())
-    {
+    if (QFileInfo(meta->localPath).dir().isEmpty()) {
         Q_EMIT d->player->mediaError(playlist, meta, Player::ResourceError);
         return ;
     }
@@ -1634,8 +1633,7 @@ void Presenter::onMusicResume(PlaylistPtr playlist, const MetaPtr info)
     /****************************************************************
      * deal with cd ejecting while Optical drive is still connecting.
      * **************************************************************/
-    if(QFileInfo(info->localPath).dir().isEmpty())
-    {
+    if (QFileInfo(info->localPath).dir().isEmpty()) {
         Q_EMIT d->player->mediaError(playlist, info, Player::ResourceError);
         return ;
     }
@@ -1742,6 +1740,13 @@ void Presenter::onChangeProgress(qint64 value, qint64 range)
 {
     Q_D(Presenter);
 
+    if (range <= 0)
+        return;
+    if (value > range) {
+        d->player->playNextMeta();
+        return;
+    }
+
     /*-----setIOPosition------*/
 
     //qDebug() << value << "-" << range;
@@ -1771,10 +1776,9 @@ void Presenter::onPlayModeChanged(int mode)
 void Presenter::onToggleMute()
 {
     Q_D(Presenter);
-    if(d->player->status() == Player::Paused ||
-       d->player->status() == Player::Playing )
-    {
-        if(d->player->isValidDbusMute())
+    if (d->player->status() == Player::Paused ||
+            d->player->status() == Player::Playing) {
+        if (d->player->isValidDbusMute())
             d->player->setMuted(!d->player->muted());
 
         if (d->player->muted()) {
@@ -1782,7 +1786,7 @@ void Presenter::onToggleMute()
         } else {
             Q_EMIT d->updateMprisVolume(d->player->volume());
         }
-    }else{
+    } else {
         //local toggle
         Q_EMIT localMutedChanged(0);
     }
@@ -1791,10 +1795,9 @@ void Presenter::onToggleMute()
 void Presenter::onLocalToggleMute()
 {
     Q_D(Presenter);
-    if(d->player->isValidDbusMute())
-    {
+    if (d->player->isValidDbusMute()) {
         d->player->setMuted(!d->player->muted());
-    }else{
+    } else {
         Q_EMIT localMutedChanged(1);
     }
 }
@@ -2132,7 +2135,7 @@ void Presenter::setEqualizerCurMode(int curIndex)
 
 void Presenter::localMuteChanged(bool mute)
 {
-   Q_D(Presenter);
+    Q_D(Presenter);
     d->player->setLocalMuted(mute);
 }
 
@@ -2217,6 +2220,11 @@ void Presenter::initMpris(MprisPlayer *mprisPlayer)
             mprisPlayer->setPlaybackStatus(Mpris::Playing);
             break;
         }
+    });
+
+    connect(mprisPlayer, &MprisPlayer::seekRequested,
+    this, [ = ](qlonglong offset) {
+        this->onChangeProgress(d->player->position() + offset, d->player->duration());
     });
 
     connect(mprisPlayer, &MprisPlayer::stopRequested,
@@ -2309,6 +2317,43 @@ void Presenter::initMpris(MprisPlayer *mprisPlayer)
         QVariantMap metadata = mprisPlayer->metadata();
         metadata.insert(Mpris::metadataToString(Mpris::ArtUrl), meta->coverUrl);
         mprisPlayer->setMetadata(metadata);
+    });
+
+    /*********************************************
+     *  set dbus PlaybackStatus as pause state
+     * *******************************************/
+    connect(d, &PresenterPrivate::pause,
+    this, [ = ]() {
+        mprisPlayer->setPlaybackStatus(Mpris::Paused);
+    });
+
+    connect(this, &Presenter::musicStoped,
+    this, [ = ]() {
+        mprisPlayer->setPlaybackStatus(Mpris::Stopped);
+    });
+
+    connect(d->player, &Player::playbackStatusChanged,
+    this, [ = ](Player::PlaybackStatus stat) {
+        Mpris::PlaybackStatus pb;
+        switch (stat) {
+        case Player::PlaybackStatus::Stopped:
+            pb = Mpris::PlaybackStatus::Stopped;
+            break;
+        case Player::PlaybackStatus::Playing:
+            pb = Mpris::PlaybackStatus::Playing;
+            break;
+        case Player::PlaybackStatus::Paused:
+            pb = Mpris::PlaybackStatus::Paused;
+            break;
+        case Player::PlaybackStatus::InvalidPlaybackStatus:
+            pb = Mpris::PlaybackStatus::InvalidPlaybackStatus;
+            break;
+        default:
+            pb = Mpris::PlaybackStatus::Paused;
+            break;
+        }
+
+        mprisPlayer->setPlaybackStatus(pb);
     });
 }
 
