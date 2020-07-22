@@ -1275,6 +1275,15 @@ void MainFrame::binding(Presenter *presenter)
             d->footer,  &Footer::onVolumeChanged);
     connect(presenter, &Presenter::mutedChanged,
             d->footer,  &Footer::onMutedChanged);
+    /***************************************
+     * local toggle
+     * *************************************/
+    connect(d->footer,  &Footer::localToggleMute,
+            presenter, &Presenter::onLocalToggleMute);
+    connect(presenter, &Presenter::localMutedChanged,
+            d->footer,  &Footer::onLocalMutedChanged);
+    connect(d->footer, &Footer::localMuteStat,
+            presenter,  &Presenter::localMuteChanged);
     connect(presenter, &Presenter::musicError,
             d->footer,  &Footer::onMusicError);
     connect(presenter, &Presenter::audioBufferProbed,

@@ -520,7 +520,8 @@ void Presenter::prepareData()
             this, &Presenter::volumeChanged);
     connect(d->player, &Player::mutedChanged,
             this, &Presenter::mutedChanged);
-
+//    connect(d->player, &Player::localMutedChanged,
+//            this, &Presenter::localMutedChanged);
     connect(this, &Presenter::musicFileMiss,
             d->player, &Player::musicFileMiss);
 
@@ -1739,12 +1740,45 @@ void Presenter::onPlayModeChanged(int mode)
 void Presenter::onToggleMute()
 {
     Q_D(Presenter);
-    d->player->setMuted(!d->player->muted());
-    if (d->player->muted()) {
-        Q_EMIT d->updateMprisVolume(0);
+//    d->player->setMuted(!d->player->muted());
+//    if (d->player->muted()) {
+//        Q_EMIT d->updateMprisVolume(0);
+//    } else {
+//        Q_EMIT d->updateMprisVolume(d->player->volume());
+//    }
+    if (d->player->status() == Player::Paused ||
+            d->player->status() == Player::Playing) {
+        if (d->player->isValidDbusMute())
+            d->player->setMuted(!d->player->muted());
+
+        if (d->player->muted()) {
+            Q_EMIT d->updateMprisVolume(0);
+        } else {
+            Q_EMIT d->updateMprisVolume(d->player->volume());
+        }
     } else {
-        Q_EMIT d->updateMprisVolume(d->player->volume());
+        //local toggle
+        //Q_EMIT d->player->localMutedChanged();
+        Q_EMIT localMutedChanged(0);
     }
+
+}
+
+void Presenter::onLocalToggleMute()
+{
+    Q_D(Presenter);
+    if (d->player->isValidDbusMute()) {
+        d->player->setMuted(!d->player->muted());
+    } else {
+        //Q_EMIT d->player->localMutedChanged();
+        Q_EMIT localMutedChanged(1);
+    }
+}
+
+void Presenter::localMuteChanged(bool mute)
+{
+    Q_D(Presenter);
+    d->player->setLocalMuted(mute);
 }
 
 void Presenter::onFadeInOut()

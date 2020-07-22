@@ -33,14 +33,14 @@ public:
 
     void start();
     void stop();
-
+    bool needSyncLocalFlag();
 signals:
     void volumeChanged(int volume);
     void muteChanged(bool mute);
 
 public slots:
     void timeoutSlot();
-
+    void syncLocalFlag();
 private:
     QScopedPointer<VolumeMonitoringPrivate> d_ptr;
     Q_DECLARE_PRIVATE_D(qGetPtrHelper(d_ptr), VolumeMonitoring)

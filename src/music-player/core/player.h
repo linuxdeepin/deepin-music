@@ -182,6 +182,11 @@ signals:
     void volumeChanged(int volume);
     void modeChanged(PlaybackMode mode);
     void mutedChanged(bool muted);
+    /**********************************
+     * local mute operation
+     * ********************************/
+    void localMutedChanged();
+
     void durationChanged(qint64 duration);
     void fadeInOutFactorChanged(double fadeInOutFactor);
     void fadeInOutChanged(bool fadeInOut);
@@ -209,17 +214,29 @@ public slots:
     void setVolume(int volume);
     void updateVolume(int volume);
     void setMuted(bool muted);
+    /*********************
+     * local mute
+     * *********************/
+    void setLocalMuted(bool muted);
+    /*********************
+     * to dbus mute
+     * *********************/
+    void setDbusMuted(bool muted = false);
+
     void setFadeInOutFactor(double fadeInOutFactor);
     void setFadeInOut(bool fadeInOut);
     void setPlayOnLoaded(bool playOnLoaded);
     void musicFileMiss();
-
+    /***********************************************
+     * if player stat is stop state or
+     * device does not start
+     * **********************************/
+    bool isValidDbusMute();
 private:
     void readSinkInputPath();
     bool setMusicVolume(double volume);
     bool setMusicMuted(bool muted);
     bool isMusicMuted();
-
 private:
     friend class DMusic::DSingleton<Player>;
     QScopedPointer<PlayerPrivate> d_ptr;
