@@ -690,7 +690,7 @@ void Player::playMeta(PlaylistPtr playlist, const MetaPtr pmeta)
     if (curMeta.isNull())
         return;
 
-    if (playlist->id() != PlayMusicListID)
+    if (!playlist.isNull() && playlist->id() != PlayMusicListID)
         d->activePlaylist = playlist;
 
 //    if (d->activePlaylist.isNull())
