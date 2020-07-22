@@ -26,6 +26,7 @@
 #include <QFont>
 #include <DGuiApplicationHelper>
 #include <QPainter>
+#include <QPainterPath>
 #include <QStandardItemModel>
 
 #include <musicmeta.h>
