@@ -28,6 +28,8 @@
 #include <QMouseEvent>
 #include <QWheelEvent>
 #include <QStackedLayout>
+#include <QDBusInterface>
+#include <QDBusReply>
 
 #include <DHiDPIHelper>
 #include <DPushButton>
@@ -82,6 +84,7 @@ public:
     void installTipHint(QWidget *w, const QString &hintstr);
     void installHint(QWidget *w, QWidget *hint);
     void initConnection();
+    void screenStandby(bool isStandby);
 
     DBlurEffectWidget *forwardWidget = nullptr;
     Label           *title      = nullptr;
@@ -120,6 +123,7 @@ public:
     VolumeMonitoring         volumeMonitoring;
     int             m_Volume = 0;
     int             m_Mute = 0;
+    uint32_t        lastCookie = 0;
     Footer *q_ptr;
     Q_DECLARE_PUBLIC(Footer)
 };
@@ -197,7 +201,7 @@ void FooterPrivate::initConnection()
         Q_EMIT q->togglePlaylist();
     });
     q->connect(btSound, &DPushButton::pressed, q, [ = ]() {
-        Q_EMIT q->toggleMute();
+        Q_EMIT q->localToggleMute();
     });
     q->connect(volSlider, &SoundVolume::volumeChanged, q, [ = ](int vol) {
         q->onVolumeChanged(vol);
@@ -224,6 +228,35 @@ void FooterPrivate::initConnection()
     q->connect(&volumeMonitoring, &VolumeMonitoring::muteChanged, q, [ = ](bool mute) {
         q->onMutedChanged(mute);
     });
+}
+
+void FooterPrivate::screenStandby(bool isStandby)
+{
+    if (isStandby) {
+        if (lastCookie > 0) {
+            QDBusInterface iface("org.freedesktop.ScreenSaver",
+                                 "/org/freedesktop/ScreenSaver",
+                                 "org.freedesktop.ScreenSaver");
+            iface.call("UnInhibit", lastCookie);
+            lastCookie = 0;
+        }
+        QDBusInterface iface("org.freedesktop.ScreenSaver",
+                             "/org/freedesktop/ScreenSaver",
+                             "org.freedesktop.ScreenSaver");
+        QDBusReply<uint32_t> reply = iface.call("Inhibit", "deepin-movie", "playing in fullscreen");
+
+        if (reply.isValid()) {
+            lastCookie = reply.value();
+        }
+    } else {
+        if (lastCookie > 0) {
+            QDBusInterface iface("org.freedesktop.ScreenSaver",
+                                 "/org/freedesktop/ScreenSaver",
+                                 "org.freedesktop.ScreenSaver");
+            iface.call("UnInhibit", lastCookie);
+            lastCookie = 0;
+        }
+    }
 }
 
 Footer::Footer(QWidget *parent) :
@@ -540,7 +573,10 @@ Footer::Footer(QWidget *parent) :
 
 Footer::~Footer()
 {
-
+    Q_D(Footer);
+    if (d->lastCookie > 0) {
+        d->screenStandby(false);
+    }
 }
 
 void Footer::setCurPlaylist(PlaylistPtr playlist)
@@ -927,6 +963,7 @@ void Footer::onMusicPlayed(PlaylistPtr playlist, const MetaPtr meta)
         }
 
         d->btPlayingStatus = true;
+        d->screenStandby(true);
     }/* else {
         if (d->m_type == 1) {
             d->btPlay->setPropertyPic(":/mpimage/light/normal/play_normal.svg",
@@ -975,6 +1012,7 @@ void Footer::onMusicError(PlaylistPtr playlist, const MetaPtr meta, int error)
         //d->btPlay->setIcon(DHiDPIHelper::loadNxPixmap(":/mpimage/dark/normal/play_normal.svg"));
     }
     d->btPlayingStatus = false;
+    d->screenStandby(false);
 }
 
 void Footer::onMusicPause(PlaylistPtr playlist, const MetaPtr meta)
@@ -997,6 +1035,7 @@ void Footer::onMusicPause(PlaylistPtr playlist, const MetaPtr meta)
                                   ":/mpimage/dark/press/play_press.svg");
     }
     d->btPlayingStatus = false;
+    d->screenStandby(false);
 
     if (d->activingPlaylist != nullptr) {
         if (d->activingPlaylist->allmusic().isEmpty()) {
@@ -1045,6 +1084,7 @@ void Footer::onMusicStoped(PlaylistPtr playlist, const MetaPtr meta)
                                   ":/mpimage/dark/press/play_press.svg");
     }
     d->btPlayingStatus = false;
+    d->screenStandby(false);
 
     if (d->activingPlaylist != nullptr) {
         if (d->activingPlaylist->allmusic().isEmpty()) {
@@ -1313,14 +1353,20 @@ void Footer::onVolumeChanged(int volume)
     d->m_Volume = volume;
 //    Q_EMIT volumeChanged(volume);//change DBus volume
     MusicSettings::setOption("base.play.volume", d->m_Volume);
+    MusicSettings::setOption("base.play.mute", d->m_Mute);
     d->volSlider->onVolumeChanged(volume);
 }
 
 void Footer::onMutedChanged(bool muted)
 {
     Q_D(Footer);
+    if (d->volumeMonitoring.needSyncLocalFlag()) {
+        d->volumeMonitoring.stop();
+        d->volumeMonitoring.timeoutSlot();
+        d->volumeMonitoring.start();
+        return ;
+    }
     d->m_Mute = muted;
-    MusicSettings::setOption("base.play.mute", muted);
     if (muted) {
         d->updateQssProperty(d->btSound, "volume", "mute");
     } else {
@@ -1332,13 +1378,42 @@ void Footer::onMutedChanged(bool muted)
         } else {
             status = "low";
         }
-        if (d->m_Mute) {
-            d->updateQssProperty(d->btSound, "volume", "mute");
-        } else {
-            d->updateQssProperty(d->btSound, "volume", status);
-        }
+        d->updateQssProperty(d->btSound, "volume", status);
         d->volSlider->onVolumeChanged(d->m_Volume);
     }
+    MusicSettings::setOption("base.play.volume", d->m_Volume);
+    MusicSettings::setOption("base.play.mute", d->m_Mute);
+}
+
+void Footer::onLocalMutedChanged(int type)
+{
+    Q_D(Footer);
+    if (type)
+        d->m_Mute = !d->m_Mute;
+    else
+        d->m_Mute = false;
+
+    if (d->m_Mute) {
+        d->updateQssProperty(d->btSound, "volume", "mute");
+    } else {
+        QString status = "mid";
+        if (d->m_Volume > 77) {
+            status = "high";
+        } else if (d->m_Volume > 33) {
+            status = "mid";
+        } else {
+            d->updateQssProperty(d->btSound, "volume", status);
+            status = "low";
+        }
+        d->updateQssProperty(d->btSound, "volume", status);
+        d->volSlider->onVolumeChanged(d->m_Volume);
+    }
+    MusicSettings::setOption("base.play.volume", d->m_Volume);
+    MusicSettings::setOption("base.play.mute", d->m_Mute);
+
+    d->volumeMonitoring.syncLocalFlag();
+    //emit mute state
+    Q_EMIT localMuteStat(d->m_Mute);
 }
 
 void Footer::onModeChange(int mode)
