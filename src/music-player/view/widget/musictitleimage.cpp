@@ -22,6 +22,7 @@
 #include "musictitleimage.h"
 
 #include <QPainter>
+#include <QPainterPath>
 
 MusicTitleImageWidget::MusicTitleImageWidget(QWidget *parent)
     : DWidget( parent)

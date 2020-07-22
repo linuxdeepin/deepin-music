@@ -26,6 +26,7 @@
 #include <QPaintEvent>
 #include <QApplication>
 #include <QPainter>
+#include <QPainterPath>
 #include <QAudioBuffer>
 #include <QAudioFormat>
 #include <QWidget>

@@ -25,6 +25,7 @@
 #include <QDebug>
 #include <QFont>
 #include <QPainter>
+#include <QPainterPath>
 #include <QStandardItemModel>
 
 #include <musicmeta.h>
