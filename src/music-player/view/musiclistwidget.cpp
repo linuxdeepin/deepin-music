@@ -187,6 +187,13 @@ MusicListWidget::MusicListWidget(QWidget *parent) : DWidget(parent)
 
         Q_EMIT this->playall(curPtr);
     });
+    connect(m_customizeListview, &MusicListView::changeToAllMusic,
+    this, [ = ]() {
+        auto current = m_dataBaseListview->item(2);
+        auto curPtr = m_dataBaseListview->playlistPtr(current);
+
+        m_dataListView->selectMusiclistChanged(curPtr);
+    });
     connect(m_customizeListview, &MusicListView::customResort,
     this, [ = ](const QStringList & uuids) {
         Q_EMIT this->customResort(uuids);
@@ -338,7 +345,7 @@ void MusicListWidget::onPlaylistAdded(PlaylistPtr playlist, bool newflag)
     }
 
     if (playlist->id() == AlbumMusicListID || playlist->id() == ArtistMusicListID ||
-            playlist->id() == AllMusicListID || playlist->id() == FavMusicListID ) {
+            playlist->id() == AllMusicListID || playlist->id() == FavMusicListID) {
         m_dataBaseListview->addMusicList(playlist);
     } else {
         m_customizeListview->closeAllPersistentEditor();
