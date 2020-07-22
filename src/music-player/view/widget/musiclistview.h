@@ -39,7 +39,7 @@ public:
     void addMusicList(PlaylistPtr playlist, bool addFlag = false);
 
     QStandardItem *item(int row, int column = 0) const;
-    void setCurrentItem ( QStandardItem *item );
+    void setCurrentItem(QStandardItem *item);
 
     PlaylistPtr playlistPtr(const QModelIndex &index);
     PlaylistPtr playlistPtr(QStandardItem *item);
@@ -69,6 +69,7 @@ signals:
     void removeAllList(const MetaPtr meta);
     void importSelectFiles(PlaylistPtr playlist, QStringList urllist);
     void addToPlaylist(PlaylistPtr playlist, const MetaPtrList &metalist);
+    void changeToAllMusic();
 
     void currentChanged(const QModelIndex &current, const QModelIndex &previous) Q_DECL_OVERRIDE;
 
