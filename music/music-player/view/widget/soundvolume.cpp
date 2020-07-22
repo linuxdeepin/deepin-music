@@ -23,6 +23,7 @@
 
 #include <QDebug>
 #include <QPainter>
+#include <QPainterPath>
 #include <QWheelEvent>
 #include <QGraphicsDropShadowEffect>
 #include <QVBoxLayout>

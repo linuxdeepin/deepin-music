@@ -25,6 +25,7 @@
 #include <DHiDPIHelper>
 #include <QDebug>
 #include <QPainter>
+#include <QPainterPath>
 #include <QTextDocument>
 #include <QStyleOptionViewItem>
 #include <QTextCursor>

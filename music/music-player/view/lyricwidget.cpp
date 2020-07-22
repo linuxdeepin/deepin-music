@@ -26,6 +26,7 @@
 #include <QScrollArea>
 #include <QHBoxLayout>
 #include <QPainter>
+#include <QPainterPath>
 #include <QResizeEvent>
 #include <QPaintEvent>
 #include <QStringListModel>
