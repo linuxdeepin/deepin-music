@@ -39,6 +39,8 @@
 #include <fcntl.h>
 #include <unistd.h>
 
+#include "config.h"
+
 #include "view/mainframe.h"
 #include "core/mediadatabase.h"
 #include "core/medialibrary.h"
@@ -79,8 +81,8 @@ bool checkOnly()
 {
     QString userName = QDir::homePath().section("/", -1, -1);
     std::string path = ("/home/" + userName + "/.cache/deepin/deepin-music/single").toStdString();
-    int fd = open (path.c_str(), O_WRONLY | O_CREAT, 0644);
-    int flock = lockf(fd, F_TLOCK, 0 );
+    int fd = open(path.c_str(), O_WRONLY | O_CREAT, 0644);
+    int flock = lockf(fd, F_TLOCK, 0);
     if (fd == -1) {
         perror("open lockfile/n");
         return false;
@@ -112,11 +114,10 @@ int main(int argc, char *argv[])
     app.setOrganizationName("deepin");
 
     app.setApplicationName("deepin-music");
-    //app.setApplicationVersion(DApplication::buildVersion("3.1"));
-    const QDate buildDate = QLocale( QLocale::English ).toDate( QString(__DATE__).replace("  ", " 0"), "MMM dd yyyy");
-    QString t_date = buildDate.toString("MMdd");
+//    const QDate buildDate = QLocale( QLocale::English ).toDate( QString(__DATE__).replace("  ", " 0"), "MMM dd yyyy");
+//    QString t_date = buildDate.toString("MMdd");
     // Version Time
-    app.setApplicationVersion(DApplication::buildVersion(t_date));
+    app.setApplicationVersion(DApplication::buildVersion(VERSION));
     //app.setStyle("chameleon");
 
 
@@ -147,7 +148,7 @@ int main(int argc, char *argv[])
     QIcon icon = QIcon::fromTheme("deepin-music");
     app.setProductIcon(icon);
 
-    if (!app.setSingleInstance("deepinmusic") ||!checkOnly()) {
+    if (!app.setSingleInstance("deepinmusic") || !checkOnly()) {
         qDebug() << "another deepin music has started";
         for (auto curStr : parser.positionalArguments()) {
             if (!curStr.isEmpty()) {
