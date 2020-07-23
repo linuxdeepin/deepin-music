@@ -406,7 +406,7 @@
         <location filename="../view/mainframe.cpp" line="770"/>
         <location filename="../view/mainframe.cpp" line="783"/>
         <location filename="../view/mainframe.cpp" line="851"/>
-        <location filename="../view/mainframe.cpp" line="1372"/>
+        <location filename="../view/mainframe.cpp" line="1374"/>
         <source>Music</source>
         <translation>مۇزىكا</translation>
     </message>
@@ -446,23 +446,23 @@
         <translation>% 1 ناخشا قوشۇلدى</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="1029"/>
+        <location filename="../view/mainframe.cpp" line="1031"/>
         <source>File is invalid or does not exist, load failed</source>
         <translation>ھۆججەت ئىناۋەتسىز ياكى مەۋجۇت ئەمەس ،قوشۇش مەغلۇپ بولدى</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="1030"/>
-        <location filename="../view/mainframe.cpp" line="1080"/>
+        <location filename="../view/mainframe.cpp" line="1032"/>
+        <location filename="../view/mainframe.cpp" line="1082"/>
         <source>OK</source>
         <translation>تامام</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="1074"/>
+        <location filename="../view/mainframe.cpp" line="1076"/>
         <source>Import failed, no valid music file found</source>
         <translation>ئەكىرىش مەغلۇپ بولدى ، ئۈنۈملۈك مۇزىكا ھۆججىتى تېپىلمىدى</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="1515"/>
+        <location filename="../view/mainframe.cpp" line="1517"/>
         <source>All music</source>
         <translation>ھەممە ناخشىلار</translation>
     </message>

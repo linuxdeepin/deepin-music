@@ -432,13 +432,13 @@
         <translation type="vanished">आयात करने में विफल, कोई मान्य संगीत फ़ाइल नहीं मिली!</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="1515"/>
+        <location filename="../view/mainframe.cpp" line="1517"/>
         <source>All music</source>
         <translation>सारे गाने</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="1030"/>
-        <location filename="../view/mainframe.cpp" line="1080"/>
+        <location filename="../view/mainframe.cpp" line="1032"/>
+        <location filename="../view/mainframe.cpp" line="1082"/>
         <source>OK</source>
         <translation>ठीक</translation>
     </message>
@@ -467,7 +467,7 @@
         <location filename="../view/mainframe.cpp" line="770"/>
         <location filename="../view/mainframe.cpp" line="783"/>
         <location filename="../view/mainframe.cpp" line="851"/>
-        <location filename="../view/mainframe.cpp" line="1372"/>
+        <location filename="../view/mainframe.cpp" line="1374"/>
         <source>Music</source>
         <translation type="unfinished"></translation>
     </message>
@@ -492,12 +492,12 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="1029"/>
+        <location filename="../view/mainframe.cpp" line="1031"/>
         <source>File is invalid or does not exist, load failed</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="1074"/>
+        <location filename="../view/mainframe.cpp" line="1076"/>
         <source>Import failed, no valid music file found</source>
         <translation type="unfinished"></translation>
     </message>

@@ -979,8 +979,10 @@ void MainFrame::binding(Presenter *presenter)
         d->playListWidget->onMusiclistChanged(playlist);
         d->musicListWidget->onMusiclistChanged(playlist);
         d->disableControl(false);
-        d->titlebarwidget->setSearchEnable(true);
         d->newSonglistAction->setEnabled(true);
+
+        d->titlebarwidget->setSearchEnable(true);
+        d->titlebarwidget->setEnabled(true);
     });
 
     connect(presenter, &Presenter::coverSearchFinished,
@@ -1035,7 +1037,7 @@ void MainFrame::binding(Presenter *presenter)
             if (curPlaylist->canNext()) {
                 bool existFlag = false;
                 for (auto curMeta : curPlaylist->allmusic()) {
-                    if (!curMeta->invalid || access(curMeta->localPath.toStdString().c_str(),F_OK) == 0) {
+                    if (!curMeta->invalid || access(curMeta->localPath.toStdString().c_str(), F_OK) == 0) {
                         if (QFileInfo(curMeta->localPath).dir().isEmpty()) {
                             continue;
                         }

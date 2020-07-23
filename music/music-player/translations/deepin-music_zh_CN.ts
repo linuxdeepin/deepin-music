@@ -438,7 +438,7 @@
         <location filename="../view/mainframe.cpp" line="770"/>
         <location filename="../view/mainframe.cpp" line="783"/>
         <location filename="../view/mainframe.cpp" line="851"/>
-        <location filename="../view/mainframe.cpp" line="1372"/>
+        <location filename="../view/mainframe.cpp" line="1374"/>
         <source>Music</source>
         <translation>音乐</translation>
     </message>
@@ -478,23 +478,23 @@
         <translation>成功添加%1首音乐</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="1029"/>
+        <location filename="../view/mainframe.cpp" line="1031"/>
         <source>File is invalid or does not exist, load failed</source>
         <translation>文件无效或不存在，加载失败</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="1030"/>
-        <location filename="../view/mainframe.cpp" line="1080"/>
+        <location filename="../view/mainframe.cpp" line="1032"/>
+        <location filename="../view/mainframe.cpp" line="1082"/>
         <source>OK</source>
         <translation>确定</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="1074"/>
+        <location filename="../view/mainframe.cpp" line="1076"/>
         <source>Import failed, no valid music file found</source>
         <translation>导入失败，未找到有效的音乐文件</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="1515"/>
+        <location filename="../view/mainframe.cpp" line="1517"/>
         <source>All music</source>
         <translation>所有音乐</translation>
     </message>
