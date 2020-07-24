@@ -88,6 +88,12 @@ void PresenterPrivate::initBackend()
 
     settings = MusicSettings::instance();
 
+    pdbusinterval =  new QTimer;
+    connect(pdbusinterval, &QTimer::timeout,
+    this, [ = ]() {
+        pdbusinterval->stop();
+    });
+
     library = MediaLibrary::instance();
     library->init();
     ThreadPool::instance()->moveToNewThread(MediaLibrary::instance());
@@ -2198,7 +2204,10 @@ void Presenter::initMpris(MprisPlayer *mprisPlayer)
         if (d->player->activePlaylist().isNull()) {
             return;
         }
-
+        if (!d->pdbusinterval->isActive()) {
+            d->pdbusinterval->start(50);
+        } else
+            return;
         if (d->player->status() == Player::Paused) {
             onMusicResume(player->activePlaylist(), player->activeMeta());
         } else {
@@ -2210,6 +2219,11 @@ void Presenter::initMpris(MprisPlayer *mprisPlayer)
 
     connect(mprisPlayer, &MprisPlayer::pauseRequested,
     this, [ = ]() {
+        if (!d->pdbusinterval->isActive()) {
+            d->pdbusinterval->start(50);
+        } else
+            return;
+
         if (d->player->activePlaylist().isNull() &&  d->player != nullptr) {
             d->player->pauseNow();
             return;
