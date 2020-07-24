@@ -2186,7 +2186,8 @@ void Presenter::initMpris(MprisPlayer *mprisPlayer)
         if (d->player->status() == Player::Paused) {
             onMusicResume(player->activePlaylist(), player->activeMeta());
         } else {
-            onMusicPlay(player->activePlaylist(), player->activeMeta());
+            if (d->player->status() != Player::Playing)
+                onMusicPlay(player->activePlaylist(), player->activeMeta());
         }
         mprisPlayer->setPlaybackStatus(Mpris::Playing);
     });
@@ -2197,8 +2198,8 @@ void Presenter::initMpris(MprisPlayer *mprisPlayer)
             d->player->pauseNow();
             return;
         }
-
-        onMusicPauseNow(player->activePlaylist(), player->activeMeta());
+        if (d->player->status() == Player::Playing)
+            onMusicPauseNow(player->activePlaylist(), player->activeMeta());
         mprisPlayer->setPlaybackStatus(Mpris::Paused);
     });
 
