@@ -122,8 +122,9 @@ PlayListView::PlayListView(bool searchFlag, bool isPlayList, QWidget *parent)
     ThreadPool::instance()->moveToNewThread(m_ModelMake);
     connect(this, &PlayListView::modelMake, m_ModelMake, &ModelMake::onModelMake, Qt::QueuedConnection);
     connect(m_ModelMake, &ModelMake::addMeta, this, &PlayListView::onAddMeta, Qt::QueuedConnection);
-
-
+    connect(m_ModelMake, &ModelMake::hideEmptyHits, this, [ = ](bool a) {
+        Q_EMIT hideEmptyHits(a);
+    });
 }
 
 PlayListView::~PlayListView()
@@ -354,13 +355,6 @@ void PlayListView::onMusiclistChanged(PlaylistPtr playlist)
     QString searchStr = playlist->searchStr();
     if (!d->searchFlag)
         searchStr.clear();
-    bool chineseFlag = false;
-    for (auto ch : searchStr) {
-        if (DMusic::PinyinSearch::isChinese(ch)) {
-            chineseFlag = true;
-            break;
-        }
-    }
 
     Q_EMIT modelMake(playlist, searchStr);
     setUpdatesEnabled(true);
@@ -906,4 +900,6 @@ void ModelMake::onModelMake(PlaylistPtr playlist, QString searchStr)
         }
         count ++;
     }
+    if (count > 0)
+        Q_EMIT hideEmptyHits(false);
 }
