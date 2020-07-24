@@ -1699,18 +1699,34 @@ void Presenter::onChangeProgress(qint64 value, qint64 range)
 {
     Q_D(Presenter);
 
-    /*-----setIOPosition------*/
-
-    //qDebug() << value << "-" << range;
-
     if (range <= 0)
         return;
     if (value > range) {
-        d->player->playNextMeta();
+        //d->player->playNextMeta();
+        onMusicNext(d->player->activePlaylist(), d->player->activeMeta());
+        //mprisPlayer->setPlaybackStatus(Mpris::Playing);
         return;
     }
     d->player->setIOPosition(value, range);
 
+    auto position = value * d->player->duration() / range;
+    d->player->setPosition(position);
+}
+
+void Presenter::onChangePosition(qint64 value, qint64 range)
+{
+    Q_D(Presenter);
+
+    if (range <= 0)
+        return;
+
+    if (value > range) {
+        //d->player->playNextMeta();
+        onMusicNext(d->player->activePlaylist(), d->player->activeMeta());
+        return;
+    }
+
+    d->player->setIOPosition(value, range);
     auto position = value * d->player->duration() / range;
     d->player->setPosition(position);
 }
@@ -2242,7 +2258,13 @@ void Presenter::initMpris(MprisPlayer *mprisPlayer)
 
     connect(mprisPlayer, &MprisPlayer::seekRequested,
     this, [ = ](qlonglong offset) {
-        this->onChangeProgress(d->player->position() + offset, d->player->duration());
+        onChangeProgress(d->player->position() + offset, d->player->duration());
+    });
+
+    connect(mprisPlayer, &MprisPlayer::setPositionRequested,
+    this, [ = ](const QDBusObjectPath & trackId, qlonglong offset) {
+        Q_UNUSED(trackId)
+        onChangePosition(offset, d->player->duration());
     });
 
     /*********************************************

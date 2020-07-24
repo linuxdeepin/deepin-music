@@ -430,8 +430,7 @@ void MprisPlayerAdaptor::SetPosition(const QDBusObjectPath &TrackId, qlonglong P
 //        return;
 //    }
 
-    emit player->seekRequested(Position);
-    //emit player->setPositionRequested(TrackId, Position);
+    emit player->setPositionRequested(TrackId, Position);
 }
 
 void MprisPlayerAdaptor::Stop()
