@@ -1906,7 +1906,6 @@ void Presenter::onImportFiles(const QStringList &filelist, PlaylistPtr playlist)
         d->player->setActivePlaylist(curPlaylist);
     }
     curPlayerlist->appendMusicList(curPlaylist->allmusic());
-    return;
 }
 
 void Presenter::onSpeechPlayMusic(const QString music)

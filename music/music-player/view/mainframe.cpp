@@ -525,7 +525,6 @@ void MainFramePrivate::resiveistView()
 void MainFramePrivate:: slideToImportView()
 {
     //Q_Q(MainFrame);
-
     titlebarwidget->setSearchEnable(false);
     newSonglistAction->setDisabled(true);
     footer->setLyricButtonChecked(false);
@@ -533,7 +532,6 @@ void MainFramePrivate:: slideToImportView()
     if (importWidget->isVisible()) {
         importWidget->showImportHint();
         footer->enableControl(false);
-        importWidget->raise();
         return;
     }
 
