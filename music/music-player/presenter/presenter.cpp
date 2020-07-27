@@ -847,7 +847,7 @@ void Presenter::togglePaly()
     auto alllist = d->playlistMgr->playlist(AllMusicListID);
     auto activeList = d->player->activePlaylist();
     auto activeMeta = d->player->activeMeta();
-    if (activeList.isNull()) {
+    if (activeList.isNull() || activeMeta.isNull()) {
         onPlayall(alllist);
         return;
     }
