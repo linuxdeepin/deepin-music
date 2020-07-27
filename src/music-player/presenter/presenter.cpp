@@ -2238,7 +2238,10 @@ void Presenter::initMpris(MprisPlayer *mprisPlayer)
         if (d->player->activePlaylist().isNull()) {
             return;
         }
-
+        if (!d->pdbusinterval->isActive()) {
+            d->pdbusinterval->start(50);
+        } else
+            return;
         onMusicNext(player->activePlaylist(), player->activeMeta());
         mprisPlayer->setPlaybackStatus(Mpris::Playing);
     });
@@ -2248,7 +2251,10 @@ void Presenter::initMpris(MprisPlayer *mprisPlayer)
         if (d->player->activePlaylist().isNull()) {
             return;
         }
-
+        if (!d->pdbusinterval->isActive()) {
+            d->pdbusinterval->start(50);
+        } else
+            return;
         onMusicPrev(player->activePlaylist(), player->activeMeta());
         mprisPlayer->setPlaybackStatus(Mpris::Playing);
     });
@@ -2272,6 +2278,10 @@ void Presenter::initMpris(MprisPlayer *mprisPlayer)
 
     connect(mprisPlayer, &MprisPlayer::seekRequested,
     this, [ = ](qlonglong offset) {
+        if (!d->pdbusinterval->isActive()) {
+            d->pdbusinterval->start(50);
+        } else
+            return;
         onChangeProgress(d->player->position() + offset, d->player->duration());
     });
 
