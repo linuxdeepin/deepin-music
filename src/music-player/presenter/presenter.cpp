@@ -699,6 +699,7 @@ void Presenter::postAction()
                 }
             } else {
                 Q_EMIT d->pause();
+                d->player->setReady();
             }
         });
     }
@@ -734,8 +735,7 @@ void Presenter::openUri(const QUrl &uri)
     onAddMetaToPlaylist(list, metas);
     Q_EMIT MediaLibrary::instance()->meidaFileImported(AllMusicListID, metas);
 
-    if (!d->player->isReady() && d->player->status() != 0) {
-
+    if (!d->player->isReady() && d->player->status() != Player::Stopped) {
         auto lastMetaId = d->settings->value("base.play.last_meta").toString();
         MetaPtr lastMeta = MediaLibrary::instance()->meta(lastMetaId);
         bool bsame = false;
@@ -748,17 +748,15 @@ void Presenter::openUri(const QUrl &uri)
         connect(d->player, &Player::playerReady,
         this, [ = ]() {
             if (bsame) {
-                QTimer::singleShot(50, [ = ]() {
-                    onMusicResume(list, metas.first());
-                });
+                onMusicResume(list, metas.first());
             } else {
-                QTimer::singleShot(50, [ = ]() {
-                    onSyncMusicPlay(list, metas.first());
-                });
+                onSyncMusicPlay(list, metas.first());
             }
+            d->player->setReady();
         });
     } else {
         onSyncMusicPlay(list, metas.first());
+        d->player->setReady();
     }
 }
 
