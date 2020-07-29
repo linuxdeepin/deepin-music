@@ -750,15 +750,11 @@ void Player::loadMedia(PlaylistPtr playlist, const MetaPtr meta, int position)
 
     if (position == 0) { //do not care process
         QTimer::singleShot(100, this, [ = ]() {//为了记录进度条生效，在加载的时候让音乐播放100ms
-            if (d->isamr) {
-                d->qvplayer->pause();
+            d->qplayer->pause();
+            if (volume == 0) {
+                d->qplayer->setVolume(100);
             } else {
-                d->qplayer->pause();
-                if (volume == 0) {
-                    d->qplayer->setVolume(100);
-                } else {
-                    d->qplayer->setVolume(volume);
-                }
+                d->qplayer->setVolume(volume);
             }
             d->qplayer->blockSignals(false);
             d->qplayer->setPosition(position); //set position
@@ -771,20 +767,19 @@ void Player::loadMedia(PlaylistPtr playlist, const MetaPtr meta, int position)
         });
     } else {
         QTimer *pt = new QTimer;
+        pt->setProperty("calc", 0);
         pt->start(150);
-        pt->setInterval(1000);
 
         connect(pt, &QTimer::timeout, this, [ = ]() {
+            int timestamp = pt->property("calc").toInt();
+            timestamp += pt->interval();
+            pt->setProperty("calc", timestamp);
             if (d->qplayer->isSeekable()) {
-                if (d->isamr) {
-                    d->qvplayer->pause();
+                d->qplayer->pause();
+                if (volume == 0) {
+                    d->qplayer->setVolume(100);
                 } else {
-                    d->qplayer->pause();
-                    if (volume == 0) {
-                        d->qplayer->setVolume(100);
-                    } else {
-                        d->qplayer->setVolume(volume);
-                    }
+                    d->qplayer->setVolume(volume);
                 }
                 d->qplayer->blockSignals(false);
                 if (!d->activePlaylist.isNull())
@@ -813,16 +808,12 @@ void Player::loadMedia(PlaylistPtr playlist, const MetaPtr meta, int position)
                 pt->deleteLater();
             }
 
-            if (pt->interval() >= 1000) {
-                if (d->isamr) {
-                    d->qvplayer->pause();
+            if (timestamp >= 1000) {
+                d->qplayer->pause();
+                if (volume == 0) {
+                    d->qplayer->setVolume(100);
                 } else {
-                    d->qplayer->pause();
-                    if (volume == 0) {
-                        d->qplayer->setVolume(100);
-                    } else {
-                        d->qplayer->setVolume(volume);
-                    }
+                    d->qplayer->setVolume(volume);
                 }
                 d->qplayer->blockSignals(false);
                 if (!d->activePlaylist.isNull())
@@ -859,6 +850,7 @@ void Player::playMeta(PlaylistPtr playlist, const MetaPtr pmeta)
         meta = playlist->first();
     }
     d->mutex.lock();
+
     MetaPtr curMeta = meta;
     if (curMeta == nullptr)
         curMeta = d->curPlaylist->first();
@@ -1182,7 +1174,6 @@ Player::PlaybackStatus Player::status()
     Q_D(const Player);
     if (d->isamr) {
         Vlc::State  status = d->qvplayer->state();
-
         if (status == Vlc::Playing) {
             return PlaybackStatus::Playing;
         } else if (status == Vlc::Paused) {
@@ -1579,6 +1570,12 @@ bool Player::isReady()
 {
     Q_D(Player);
     return d->canPlay;
+}
+
+void Player::setReady(bool ready)
+{
+    Q_D(Player);
+    d->canPlay = ready;
 }
 
 void Player::setDoubleClickStartType(int start)
