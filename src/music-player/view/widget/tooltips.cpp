@@ -263,7 +263,6 @@ void ToolTips::paintEvent(QPaintEvent *)
     painter.strokePath(borderPath, borderPen);
 }
 
-}
 #else
 void ToolTips::paintEvent(QPaintEvent *)
 {
