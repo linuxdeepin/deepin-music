@@ -91,7 +91,7 @@ public:
     void setTheme(int type);
     void setPlayListVisible(bool visible);
     void toggleLyricView();
-    void togglePlaylist();
+    void togglePlaylist(bool visible);
     void slideToImportView();
     void showLyricView();
     void hideLyricView();
@@ -432,7 +432,7 @@ void MainFramePrivate::showLyricView()
 
 void MainFramePrivate::hideLyricView()
 {
-    footer->setPlaylistButtonChecked(false);
+//    footer->setPlaylistButtonChecked(false);
     auto current = currentWidget ? currentWidget : playListWidget;
     lyricWidget->setFixedSize(current->size());
     WidgetHelper::slideTop2BottomWidget(
@@ -441,7 +441,7 @@ void MainFramePrivate::hideLyricView()
     footer->setLyricButtonChecked(false);
     footer->raise();
 
-    currentWidget = musicListWidget;
+//    currentWidget = musicListWidget;
     updateViewname(s_PropertyViewnameLyric);
 }
 
@@ -464,7 +464,7 @@ void MainFramePrivate::showPlaylistView()
         footer, playListWidget, start, end, AnimationDelay, true);
     titlebar->raise();
     footer->raise();
-    footer->setPlaylistButtonChecked(true);
+    //footer->setPlaylistButtonChecked(true);
 
 }
 
@@ -598,10 +598,17 @@ void MainFramePrivate::toggleLyricView()
     }
 }
 
-void MainFramePrivate::togglePlaylist()
+void MainFramePrivate::togglePlaylist(bool visible)
 {
-
     importWidget->hide();
+    if (visible) {
+        if (!playListWidget->isVisible()) {
+            showPlaylistView();
+            footer->setPlaylistButtonChecked(true);
+            titlebarwidget->setSearchEnable(true);
+        }
+        return;
+    }
 
     if (playListWidget->isVisible()) {
         hidePlaylistView();
@@ -620,7 +627,7 @@ void MainFramePrivate::setPlayListVisible(bool visible)
         return;
     }
 
-    footer->showPlayListWidget(q->width(), q->height(), false);
+    footer->showPlayListWidget(q->width(), q->height(), visible);
     titlebar->raise();
     footer->raise();
 }
@@ -1231,8 +1238,8 @@ void MainFrame::binding(Presenter *presenter)
         d->toggleLyricView();
     });
     connect(d->footer, &Footer::togglePlaylist,
-    this, [ = ]() {
-        d->togglePlaylist();
+    this, [ = ](bool visible) {
+        d->togglePlaylist(visible);
     });
 
 

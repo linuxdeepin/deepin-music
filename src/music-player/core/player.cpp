@@ -690,7 +690,7 @@ void Player::playMeta(PlaylistPtr playlist, const MetaPtr pmeta)
     if (curMeta.isNull())
         return;
 
-    if (playlist->id() != PlayMusicListID)
+    if (!playlist.isNull() && playlist->id() != PlayMusicListID)
         d->activePlaylist = playlist;
 
 //    if (d->activePlaylist.isNull())
@@ -829,6 +829,17 @@ void Player::playNextMeta(PlaylistPtr playlist, const MetaPtr meta)
         d->selectNext(meta, d->mode);
     }
 }
+
+void Player::playNextMeta()
+{
+    Q_D(Player);
+    if (d->mode == RepeatSingle) {
+        d->selectNext(d->activeMeta, RepeatAll);
+    } else {
+        d->selectNext(d->activeMeta, d->mode);
+    }
+}
+
 
 void Player::playPrevMusic(PlaylistPtr playlist, const MetaPtr meta)
 {

@@ -134,6 +134,10 @@ void SearchEdit::onFocusOut()
 
 void SearchEdit::onTextChanged()
 {
+    auto alltext = this->text();
+    if (alltext == "")
+        Q_EMIT searchAborted();
+
     auto text = QString(this->text()).remove("\r").remove("\n");
 
     if (this->text().size() == 0) {
