@@ -38,6 +38,7 @@ protected:
     bool dosignal;
     bool     m_FadeFlag = false;
     int      m_themetype = 1;
+    int currentWheelNum = 0;
 };
 
 class MusicLyric;
