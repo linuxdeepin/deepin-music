@@ -223,7 +223,7 @@ void PlayItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
 
         auto hash = index.data().toString();
         auto meta = MediaLibrary::instance()->meta(hash);
-        if(meta.isNull())
+        if (meta.isNull())
             return;
 
         painter->save();
@@ -381,7 +381,7 @@ void PlayItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
     //auto background = baseColor;
 
     int lrWidth = 10;
-    if (!(option.state & QStyle::State_Selected) && !(option.state & QStyle::State_MouseOver) ) {
+    if (!(option.state & QStyle::State_Selected) && !(option.state & QStyle::State_MouseOver)) {
         painter->save();
         painter->setPen(Qt::NoPen);
         painter->setBrush(background);
@@ -409,7 +409,7 @@ void PlayItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
     }
 
     auto activeMeta = listview->activingMeta();
-    if (activeMeta == meta) {
+    if (!activeMeta.isNull() && activeMeta->hash == meta->hash) {
         nameColor = QColor("#2CA7F8");
         otherColor = QColor("#2CA7F8");
         font14.setFamily("SourceHanSansSC");
@@ -476,7 +476,7 @@ void PlayItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
                 break;
             }
 
-            if (activeMeta == meta) {
+            if (!activeMeta.isNull() && activeMeta->hash == meta->hash) {
                 auto icon = listview->getPlayPixmap();
                 if (option.state & QStyle::State_Selected) {
                     icon = listview->getAlbumPixmap();

@@ -59,7 +59,7 @@ MusicListView::MusicListView(QWidget *parent) : DListView(parent)
     font.setPixelSize(14);
     setFont(font);
 
-    setIconSize( QSize(20, 20) );
+    setIconSize(QSize(20, 20));
     setItemSize(QSize(40, 40));
 
     setFrameShape(QFrame::NoFrame);
@@ -103,7 +103,7 @@ MusicListView::MusicListView(QWidget *parent) : DListView(parent)
             if (mdata->playing() != nullptr)
                 curPixmap = QPixmap(":/mpimage/light/music_withe_sidebar/music1.svg");
         }
-        if (playingItem != nullptr ) {
+        if (playingItem != nullptr) {
             auto curItem = dynamic_cast<DStandardItem *>(playingItem);
             //delete
             QIcon playingIcon(curPixmap);
@@ -308,7 +308,7 @@ void MusicListView::changePicture(QPixmap pixmap, QPixmap albumPixmap)
         }
 
     }
-    if (playingItem != nullptr ) {
+    if (playingItem != nullptr) {
         auto curItem = dynamic_cast<DStandardItem *>(playingItem);
         //delete
         QIcon playingIcon(curPixmap);
@@ -408,8 +408,12 @@ void MusicListView::keyPressEvent(QKeyEvent *event)
 
                 //delete model->takeItem(item->row());
                 Q_EMIT m_data->removed();
-                if (m_data->playing() != nullptr || allPlaylists.isEmpty())
-                    Q_EMIT removeAllList(m_data->playing());
+                if (m_data->playing() != nullptr || allPlaylists.isEmpty()) {
+                    if (m_data->active())
+                        Q_EMIT removeAllList(m_data->playing());
+                }
+                if (allPlaylists.isEmpty())
+                    Q_EMIT changeToAllMusic();
 
                 adjustHeight();
             }
@@ -557,8 +561,12 @@ void MusicListView::showContextMenu(const QPoint &pos)
 
                 //delete model->takeItem(item->row());
                 Q_EMIT m_data->removed();
-                if (m_data->playing() != nullptr || allPlaylists.isEmpty())
-                    Q_EMIT removeAllList(m_data->playing());
+                if (m_data->playing() != nullptr || allPlaylists.isEmpty()) {
+                    if (m_data->active())
+                        Q_EMIT removeAllList(m_data->playing());
+                }
+                if (allPlaylists.isEmpty())
+                    Q_EMIT changeToAllMusic();
 
                 adjustHeight();
             }

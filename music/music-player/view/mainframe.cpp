@@ -525,7 +525,6 @@ void MainFramePrivate::resiveistView()
 void MainFramePrivate:: slideToImportView()
 {
     //Q_Q(MainFrame);
-
     titlebarwidget->setSearchEnable(false);
     newSonglistAction->setDisabled(true);
     footer->setLyricButtonChecked(false);
@@ -533,7 +532,6 @@ void MainFramePrivate:: slideToImportView()
     if (importWidget->isVisible()) {
         importWidget->showImportHint();
         footer->enableControl(false);
-        importWidget->raise();
         return;
     }
 
@@ -1501,6 +1499,8 @@ void MainFrame::onSelectImportDirectory()
     if (DFileDialog::Accepted == fileDlg.exec()) {
         d->importWidget->showWaitHint();
         MusicSettings::setOption("base.play.last_import_path",  fileDlg.directory().path());
+        d->titlebarwidget->setEnabled(true);
+        d->titlebarwidget->setSearchEnable(true);
         Q_EMIT importSelectFiles(fileDlg.selectedFiles(), nullptr);
     }
 }
@@ -1525,6 +1525,8 @@ void MainFrame::onSelectImportFiles()
     if (DFileDialog::Accepted == fileDlg.exec()) {
         d->importWidget->showWaitHint();
         MusicSettings::setOption("base.play.last_import_path",  fileDlg.directory().path());
+        d->titlebarwidget->setEnabled(true);
+        d->titlebarwidget->setSearchEnable(true);
         Q_EMIT importSelectFiles(fileDlg.selectedFiles(), d->musicListWidget->curPlaylist());
     }
 }
