@@ -51,7 +51,7 @@ public:
         Strop,
     };
     Q_ENUM(PlayStatus)
-
+public:
     PlayItemDelegate(QWidget *parent = Q_NULLPTR);
     ~PlayItemDelegate();
 
