@@ -133,7 +133,8 @@ void MetaBufferDetector::run()
 
     QVector<float> curData;
     bool flag = false;
-    while (av_read_frame(pFormatCtx, packet) >= 0 ) {
+    int readCount = 0;
+    while (av_read_frame(pFormatCtx, packet) >= 0) {
         //stop detector
         if (d->stopFlag && curData.size() > 100) {
             av_packet_unref(packet);
@@ -153,7 +154,7 @@ void MetaBufferDetector::run()
             flag = true;
         }
 
-        while ( av_read_frame(pFormatCtx, packet) >= 0 ) {
+        while (av_read_frame(pFormatCtx, packet) >= 0) {
             if (packet->stream_index == audio_stream_index) {
                 int state;
                 state = avcodec_send_packet(pCodecCtx, packet);
@@ -178,6 +179,10 @@ void MetaBufferDetector::run()
                         }
                     }
                 }
+            }
+
+            if (readCount++ > 1000) {
+                break ;
             }
         }
         av_packet_unref(packet);
