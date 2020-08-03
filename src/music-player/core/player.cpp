@@ -980,23 +980,17 @@ void Player::resume(PlaylistPtr playlist, const MetaPtr pmeta)
         QString curPath = Global::cacheDir();
         QString toPath = QString("%1/images/%2.mp3").arg(curPath).arg(meta->hash);
         if (QFileInfo(toPath).exists() && d->m_position != -1) { //fisrt start
+            d->m_position = d->qplayer->position();
             stop();
 
             if (playlist->id() != PlayMusicListID)
                 d->activePlaylist = playlist;
             d->activeMeta = meta;
-
             d->ischangeMusic = true;
-            playMeta(playlist, meta);
 
-            if (d->qvplayer->state() != Vlc::Stopped && d->qvplayer->state() != Vlc::Idle) {
-                d->qvplayer->stop();
-            }
-            d->isamr = false;
             QString curPath = Global::cacheDir();
             QString toPath = QString("%1/images/%2.mp3").arg(curPath).arg(meta->hash);
             if (!QFile::exists(toPath)) {
-                //apeToMp3(curMeta->localPath, curMeta->hash);
                 Q_EMIT Player::instance()->addApeTask(meta->localPath, meta->hash);
                 if (!QFile::exists(toPath)) {
                     toPath = meta->localPath;
@@ -1024,23 +1018,13 @@ void Player::resume(PlaylistPtr playlist, const MetaPtr pmeta)
 
             if (d->firstPlayOnLoad == true) {
                 d->firstPlayOnLoad = false;
-                QTimer::singleShot(150, this, [ = ]() {
-                    if (d->isamr) {
-                        d->qvplayer->play();
-                    } else {
-                        d->qplayer->play();
-                    }
+                QTimer::singleShot(150, this, [=]() {
+                    d->qplayer->play();
                 });
             }
-
             return;
         }
-
-        if (d->isamr) {
-            d->qvplayer->play();
-        } else {
-            d->qplayer->play();
-        }
+        d->qplayer->play();
     });
 
     if (d->fadeInOut && d->fadeInAnimation->state() != QPropertyAnimation::Running) {
@@ -1048,10 +1032,6 @@ void Player::resume(PlaylistPtr playlist, const MetaPtr pmeta)
         d->fadeInAnimation->setStartValue(0.1000);
         d->fadeInAnimation->setEndValue(1.0000);
         d->fadeInAnimation->setDuration(sFadeInOutAnimationDuration);
-//        connect(d->fadeInAnimation, &QPropertyAnimation::finished,
-//        this, [ = ]() {
-//            d->fadeInAnimation = nullptr;
-//        });
         d->fadeInAnimation->start();
     }
 
@@ -1143,30 +1123,19 @@ void Player::pause()
 void Player::pauseNow()
 {
     Q_D(Player);
-    if (d->isamr) {
-        d->qvplayer->pause();
-        d->m_position = static_cast<qlonglong>(d->qvplayer->position());
-    } else {
-        d->qplayer->pause();
-        d->m_position = d->qplayer->position();
-    }
+
+    d->qplayer->pause();
+    d->m_position = d->qplayer->position();
 }
 
 void Player::stop()
 {
     Q_D(Player);
 
-    if (d->isamr) {
-        d->qvplayer->pause();
-        d->activeMeta.clear(); //清除当前播放音乐；
-        d->qvplayer->stop();
-    } else {
-        d->qplayer->pause();
-        d->qplayer->setMedia(QMediaContent());
-        d->activeMeta.clear(); //清除当前播放音乐；
-        d->qplayer->stop();
-    }
-
+    d->qplayer->pause();
+    d->qplayer->setMedia(QMediaContent());
+    d->activeMeta.clear(); //清除当前播放音乐；
+    d->qplayer->stop();
 }
 
 Player::PlaybackStatus Player::status()
