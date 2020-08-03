@@ -978,7 +978,8 @@ void Presenter::onMusiclistRemove(PlaylistPtr playlist, const MetaPtrList metali
 
     /*-----Judge the condition to remove the song playback switch -----*/
     for (auto &meta : metalist) {
-        if (d->player->isActiveMeta(meta) && (playinglist == playlist || playlist->id() == AllMusicListID)) {
+        if (d->player->isActiveMeta(meta) && (playinglist == playlist || playlist->id() == AllMusicListID
+                                              || playlist->id() == AlbumMusicListID  || playlist->id() == ArtistMusicListID)) {
             if (playinglist->isEmpty() || t_isLastMeta || next.isNull()) { /*新建歌单清空时停止播放*/
                 onMusicStop(playinglist, next);
             } else {
@@ -1600,6 +1601,9 @@ void Presenter::onMusicPauseNow(PlaylistPtr playlist, const MetaPtr meta)
 void Presenter::onMusicResume(PlaylistPtr playlist, const MetaPtr info)
 {
     Q_D(Presenter);
+    if (!d->player->isReady()) {
+        return;
+    }
     auto alllists = d->playlistMgr->allplaylist();
     for (auto curList : alllists) {
         if (!curList.isNull())
