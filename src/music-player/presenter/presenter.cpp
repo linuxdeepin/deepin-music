@@ -1600,6 +1600,9 @@ void Presenter::onMusicPauseNow(PlaylistPtr playlist, const MetaPtr meta)
 void Presenter::onMusicResume(PlaylistPtr playlist, const MetaPtr info)
 {
     Q_D(Presenter);
+    if (!d->player->isReady()) {
+        return;
+    }
     auto alllists = d->playlistMgr->allplaylist();
     for (auto curList : alllists) {
         if (!curList.isNull())
