@@ -72,6 +72,8 @@ public:
 void PlayListWidgetPrivate::initData(PlaylistPtr playlist)
 {
     Q_Q(PlayListWidget);
+    if (playlist.isNull())
+        return;
 
     if (playlist->id() != PlayMusicListID)
         return;
