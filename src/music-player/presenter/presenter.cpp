@@ -994,8 +994,12 @@ void Presenter::onMusiclistRemove(PlaylistPtr playlist, const MetaPtrList metali
     }
 
     /*-----Judge the condition to remove the song playback switch -----*/
+
+    qDebug() << "playlist " << playlist->id();
+
     for (auto &meta : metalist) {
-        if (d->player->isActiveMeta(meta) /*&& (playinglist == playlist || playlist->id() == AllMusicListID)*/) {
+        if (d->player->isActiveMeta(meta) && (playinglist == playlist || playlist->id() == AllMusicListID
+                                              || playlist->id() == AlbumMusicListID  || playlist->id() == ArtistMusicListID)) {
             if (playinglist->isEmpty() || t_isLastMeta || next.isNull()) { /*新建歌单清空时停止播放*/
                 onMusicStop(playinglist, next);
             } else {
