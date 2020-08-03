@@ -718,8 +718,6 @@ void Presenter::postAction()
             qDebug() << lastPlaylist->id() << lastPlaylist->displayName();
             if (d->settings->value("base.play.remember_progress").toBool() && !isMetaLibClear) {
                 onCurrentPlaylistChanged(lastPlaylist);
-
-                //                d->player->setPosition(position);
                 QTimer::singleShot(200, [ = ]() {//200ms播放是为了在加载播放的100ms结束，150ms设置播放进度后再播放。
                     onMusicResume(lastPlaylist, lastMeta);
                 });
@@ -1010,7 +1008,6 @@ void Presenter::onMusiclistRemove(PlaylistPtr playlist, const MetaPtrList metali
     }
 
     if (playlist->allmusic().size() == 0 &&  playlist->id() != "play") {
-
         qDebug() << "Presenter::onMusiclistRemove Q_EMIT 3";
         Q_EMIT musicListClear();
     }
