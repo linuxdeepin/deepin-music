@@ -38,13 +38,9 @@ Shortcut::Shortcut(QObject *parent) : QObject(parent)
     auto strVolDown = MusicSettings::value("shortcuts.all.volume_down").toString();
     group1.groupItems << ShortcutItem(tr("Play/Pause"), strPlayPause.toUpper().compare("RETURN") == 0 ? "Enter" : strPlayPause) << ShortcutItem(tr("Previous"), strPrevious.toUpper().compare("RETURN") == 0 ? "Enter" : strPrevious) << ShortcutItem(tr("Next"), strNext.toUpper().compare("RETURN") == 0 ? "Enter" : strNext) << ShortcutItem(tr("Volume Up"), strVolUP.toUpper().compare("RETURN") == 0 ? "Enter" : strVolUP) << ShortcutItem(tr("Volume Down"), strVolDown.toUpper().compare("RETURN") == 0 ? "Enter" : strVolDown) << ShortcutItem(tr("Mute"), "M");
 
-    group2.groupItems << ShortcutItem(tr("Favorite"), ".") << ShortcutItem(tr("Unfavorite"), ".") << ShortcutItem(tr("Song info"), "Alt+L");
+    group2.groupItems << ShortcutItem(tr("Favorite"), ".") << ShortcutItem(tr("Unfavorite"), ".") << ShortcutItem(tr("Song info"), "Ctrl+I");
 
-    group3.groupItems <<
-                      ShortcutItem(tr("New playlist"), "Ctrl+Shift+N") <<
-                      ShortcutItem(tr("Add music"), "Ctrl+I") <<
-                      ShortcutItem(tr("Rename playlist"), "F2") <<
-                      ShortcutItem(tr("Remove from playlist"), "Delete");
+    group3.groupItems << ShortcutItem(tr("New playlist"), "Ctrl+Shift+N") << ShortcutItem(tr("Add music"), "Ctrl+O") << ShortcutItem(tr("Rename playlist"), "F2") << ShortcutItem(tr("Remove from playlist"), "Delete");
 
     group4.groupItems <<
                       ShortcutItem(tr("Help"),  "F1") <<

@@ -394,9 +394,9 @@ void PlayListView::keyPressEvent(QKeyEvent *event)
             break;
         }
         break;
-    case Qt::AltModifier:
+    case Qt::ControlModifier:
         switch (event->key()) {
-        case Qt::Key_L:
+        case Qt::Key_I:
             QItemSelectionModel *selection = this->selectionModel();
             if (selection->selectedRows().length() <= 0) {
                 return;
@@ -407,38 +407,38 @@ void PlayListView::keyPressEvent(QKeyEvent *event)
             break;
         }
         break;
-        //    case Qt::ControlModifier:
-        //        switch (event->key()) {
-        //        case Qt::Key_K:
-        //            QItemSelectionModel *selection = this->selectionModel();
-        //            if (selection->selectedRows().length() > 0) {
-        //                MetaPtrList metalist;
-        //                for (auto index : selection->selectedRows()) {
-        //                    auto meta = d->model->meta(index);
-        //                    metalist << meta;
-        //                }
-        //                if (!metalist.isEmpty())
-        //                    Q_EMIT addMetasFavourite(metalist);
-        //            }
-        //            break;
-        //        }
-        //        break;
-        //    case Qt::ControlModifier | Qt::ShiftModifier:
-        //        switch (event->key()) {
-        //        case Qt::Key_K:
-        //            QItemSelectionModel *selection = this->selectionModel();
-        //            if (selection->selectedRows().length() > 0) {
-        //                MetaPtrList metalist;
-        //                for (auto index : selection->selectedRows()) {
-        //                    auto meta = d->model->meta(index);
-        //                    metalist << meta;
-        //                }
-        //                if (!metalist.isEmpty())
-        //                    Q_EMIT removeMetasFavourite(metalist);
-        //            }
-        //            break;
-        //        }
-        //        break;
+    //    case Qt::ControlModifier:
+    //        switch (event->key()) {
+    //        case Qt::Key_K:
+    //            QItemSelectionModel *selection = this->selectionModel();
+    //            if (selection->selectedRows().length() > 0) {
+    //                MetaPtrList metalist;
+    //                for (auto index : selection->selectedRows()) {
+    //                    auto meta = d->model->meta(index);
+    //                    metalist << meta;
+    //                }
+    //                if (!metalist.isEmpty())
+    //                    Q_EMIT addMetasFavourite(metalist);
+    //            }
+    //            break;
+    //        }
+    //        break;
+    //    case Qt::ControlModifier | Qt::ShiftModifier:
+    //        switch (event->key()) {
+    //        case Qt::Key_K:
+    //            QItemSelectionModel *selection = this->selectionModel();
+    //            if (selection->selectedRows().length() > 0) {
+    //                MetaPtrList metalist;
+    //                for (auto index : selection->selectedRows()) {
+    //                    auto meta = d->model->meta(index);
+    //                    metalist << meta;
+    //                }
+    //                if (!metalist.isEmpty())
+    //                    Q_EMIT removeMetasFavourite(metalist);
+    //            }
+    //            break;
+    //        }
+    //        break;
     default:
         break;
     }
