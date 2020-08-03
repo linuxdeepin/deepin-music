@@ -47,7 +47,7 @@ public:
         Strop,
     };
     Q_ENUM(PlayStatus)
-
+public:
     MusicInfoItemDelegate(QWidget *parent = Q_NULLPTR);
     ~MusicInfoItemDelegate();
 

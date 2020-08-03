@@ -39,6 +39,7 @@ public slots:
     void onModelMake(PlaylistPtr playlist, QString searchStr);
 signals:
     void addMeta(QString playListId, const MetaPtr meta);
+    void hideEmptyHits(bool ishide);
 };
 
 class PlayListView : public DListView
@@ -85,6 +86,7 @@ signals:
     void addMetasFavourite(const MetaPtrList  &metalist);
     void removeMetasFavourite(const MetaPtrList  &metalist);
     void modelMake(PlaylistPtr playlist, QString searchStr);
+    void hideEmptyHits(bool ishide);
 
 public:
     void onMusiclistChanged(PlaylistPtr playlist);

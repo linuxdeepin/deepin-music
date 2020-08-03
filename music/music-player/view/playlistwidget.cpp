@@ -161,19 +161,17 @@ void PlayListWidgetPrivate::initConntion()
             }
 
             if (allCount == missCount) {
-                if(allCount == 1)
-                    Q_EMIT q->fileRemoved(playListView->playlist() ,metalist.at(0), 1);
-                else{
-                    for(MetaPtr meta : metalist)
-                    {
-                         if(meta == playListView->activingMeta())
-                         {
-                             Q_EMIT q->fileRemoved(playListView->playlist() ,metalist.at(0), 1);
-                         }
+                if (allCount == 1)
+                    Q_EMIT q->fileRemoved(playListView->playlist(), metalist.at(0), 1);
+                else {
+                    for (MetaPtr meta : metalist) {
+                        if (meta == playListView->activingMeta()) {
+                            Q_EMIT q->fileRemoved(playListView->playlist(), metalist.at(0), 1);
+                        }
                     }
                 }
                 Q_EMIT q->musiclistRemove(playListView->playlist(), playListView->playlist()->allmusic());
-            }else if (missCount > 0){
+            } else if (missCount > 0) {
                 /***************************************************************
                  * stop current music
                  * *************************************************************/
@@ -182,10 +180,9 @@ void PlayListWidgetPrivate::initConntion()
                  * emit file not found
                  * 1 = Player::ResourceError
                  * ***************************************************************/
-                for( MetaPtr meta: metalist)
-                {
-                    if(meta == playListView->activingMeta())
-                        Q_EMIT q->fileRemoved(playListView->playlist() ,metalist.at(0), 1);
+                for (MetaPtr meta : metalist) {
+                    if (meta == playListView->activingMeta())
+                        Q_EMIT q->fileRemoved(playListView->playlist(), metalist.at(0), 1);
                 }
             }
 
@@ -194,6 +191,9 @@ void PlayListWidgetPrivate::initConntion()
             }
         }
         Q_EMIT q->musicFileMiss();
+    });
+    q->connect(playListView, &PlayListView::hideEmptyHits, q, [ = ](bool a) {
+        showEmptyHits(a);
     });
 }
 

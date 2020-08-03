@@ -847,7 +847,7 @@ void Presenter::togglePaly()
     auto alllist = d->playlistMgr->playlist(AllMusicListID);
     auto activeList = d->player->activePlaylist();
     auto activeMeta = d->player->activeMeta();
-    if (activeList.isNull()) {
+    if (activeList.isNull() || activeMeta.isNull()) {
         onPlayall(alllist);
         return;
     }
@@ -999,8 +999,9 @@ void Presenter::onMusiclistRemove(PlaylistPtr playlist, const MetaPtrList metali
 
     /*-----Judge the condition to remove the song playback switch -----*/
     for (auto &meta : metalist) {
-        if (d->player->isActiveMeta(meta) && (playinglist == playlist || playlist->id() == AllMusicListID)) {
-            if (playinglist->isEmpty() || t_isLastMeta || next.isNull()) { /*新建歌单清空时停止播放*/
+        if (d->player->isActiveMeta(meta) && (playinglist == playlist || playlist->id() == AllMusicListID
+                                              || playlist->id() == AlbumMusicListID  || playlist->id() == ArtistMusicListID)) {
+            if (playinglist->isEmpty() || t_isLastMeta || next.isNull()) {
                 onMusicStop(playinglist, next);
             } else {
                 onMusicPlay(playinglist, next);
@@ -1906,7 +1907,6 @@ void Presenter::onImportFiles(const QStringList &filelist, PlaylistPtr playlist)
         d->player->setActivePlaylist(curPlaylist);
     }
     curPlayerlist->appendMusicList(curPlaylist->allmusic());
-    return;
 }
 
 void Presenter::onSpeechPlayMusic(const QString music)
