@@ -98,6 +98,8 @@ signals:
     void mediaPlayed(PlaylistPtr playlist, const MetaPtr meta);
     void mediaError(PlaylistPtr playlist, const MetaPtr meta, Player::Error error);
 
+    void readyToResume();
+
 public:
     bool canControl() const;
     qlonglong position() const;

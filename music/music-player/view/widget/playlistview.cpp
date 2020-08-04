@@ -298,6 +298,7 @@ void PlayListView::onMusicListAdded(const MetaPtrList metalist)
     setAutoScroll(false);
     for (auto meta : metalist) {
         d->addMedia(meta);
+        d->playMetaPtrList.append(meta);
     }
     setAutoScroll(true);
     setUpdatesEnabled(true);
