@@ -123,9 +123,9 @@ void MusicAppPrivate::onDataPrepared()
         this->triggerShortcutAction(optKey);
     });
 
-//    initMpris("DeepinMusic");
+    initMpris("DeepinMusic");
 
-//    presenter->postAction();
+    presenter->postAction();
 }
 
 void MusicAppPrivate::onQuit()
@@ -278,10 +278,10 @@ void MusicApp::initConnection()
     connect(presenterWork, &QThread::started, d->presenter, &Presenter::prepareData);
     connect(this, &MusicApp::sigStartImport, d->playerFrame, &MainFrame::onClickedImportFiles);
     connect(d->presenter, &Presenter::dataLoaded, this, [ = ]() {
-//        d->onDataPrepared();
-        d->initMpris("DeepinMusic");
+        d->onDataPrepared();
+//        d->initMpris("DeepinMusic");
 
-        d->presenter->postAction();
+//        d->presenter->postAction();
         Player::instance()->init();
         if (d->m_Files.size() > 0) {
             emit sigStartImport(d->m_Files);
@@ -290,7 +290,7 @@ void MusicApp::initConnection()
     });
 
     presenterWork->start();
-    d->onDataPrepared();
+//    d->onDataPrepared();
     //qDebug() << "TRACE:" << "start prepare data";
 }
 
