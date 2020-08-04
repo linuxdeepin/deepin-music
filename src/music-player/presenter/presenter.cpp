@@ -2210,11 +2210,18 @@ void Presenter::initMpris(MprisPlayer *mprisPlayer)
             d->pdbusinterval->start(50);
         } else
             return;
+        /************************************************************
+         * if no song in music,do not import songs when dbus msg comes
+         * ***********************************************************/
+        if (d->playlistMgr->playlist(AllMusicListID)->length() == 0) {
+            return;
+        }
         if (d->player->status() == Player::Paused) {
             onMusicResume(player->activePlaylist(), player->activeMeta());
         } else {
-            if (d->player->status() != Player::Playing)
+            if (d->player->status() != Player::Playing) {
                 onMusicPlay(player->activePlaylist(), player->activeMeta());
+            }
         }
         mprisPlayer->setPlaybackStatus(Mpris::Playing);
     });
@@ -2304,6 +2311,7 @@ void Presenter::initMpris(MprisPlayer *mprisPlayer)
     connect(this, &Presenter::musicStoped,
     this, [ = ]() {
         mprisPlayer->setPlaybackStatus(Mpris::Stopped);
+        mprisPlayer->setMetadata(QVariantMap());
     });
 
     connect(d->player, &Player::playbackStatusChanged,
