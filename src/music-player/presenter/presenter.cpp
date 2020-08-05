@@ -747,12 +747,12 @@ void Presenter::openUri(const QUrl &uri)
         }
         connect(d->player, &Player::playerReady,
         this, [ = ]() {
+            d->player->setReady();
             if (bsame) {
                 onMusicResume(list, metas.first());
             } else {
                 onSyncMusicPlay(list, metas.first());
             }
-            d->player->setReady();
         });
     } else {
         onSyncMusicPlay(list, metas.first());
@@ -762,7 +762,6 @@ void Presenter::openUri(const QUrl &uri)
 
 void Presenter::onSyncMusicPlay(PlaylistPtr playlist, const MetaPtr meta)
 {
-
     Q_D(Presenter);
     d->syncPlayerResult = true;
     d->continueErrorCount = 0;
