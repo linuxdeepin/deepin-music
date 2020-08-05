@@ -339,6 +339,7 @@ Footer::Footer(QWidget *parent) :
                                   ":/mpimage/light/checked/collection1_checked.svg",
                                   ":/mpimage/light/press/collection_press.svg");
     d->btFavorite->setObjectName("FooterActionFavorite");
+    d->btFavorite->setShortcut(QKeySequence::fromString("."));
     d->btFavorite->setFixedSize(50, 50);
     d->btFavorite->setTransparent(false);
 

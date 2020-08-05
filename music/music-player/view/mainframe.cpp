@@ -320,7 +320,7 @@ void MainFramePrivate::initMenu()
     });
 
     QShortcut *addmusicfilesShortcut = new QShortcut(q);
-    addmusicfilesShortcut->setKey(QKeySequence(QLatin1String("Ctrl+I")));
+    addmusicfilesShortcut->setKey(QKeySequence(QLatin1String("Ctrl+O")));
     q->connect(addmusicfilesShortcut, &QShortcut::activated, q, [ = ]() {
         q->onSelectImportFiles();
     });

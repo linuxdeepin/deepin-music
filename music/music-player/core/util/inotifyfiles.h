@@ -23,16 +23,16 @@
 #define INOTIFYFILES_H
 
 #include <QObject>
+#include <QMutex>
 #include <QScopedPointer>
 
 class QDir;
-
 class InotifyFilesPrivate;
 class InotifyFiles : public QObject
 {
     Q_OBJECT
 public:
-    explicit InotifyFiles(QObject *parent = 0);
+    explicit InotifyFiles(QObject *parent = nullptr);
     ~InotifyFiles();
 
     void start();
@@ -48,6 +48,7 @@ public slots:
 
 private:
     QScopedPointer<InotifyFilesPrivate> d;
+    QMutex  m_mutex;
 };
 
 #endif // INOTIFYFILES_H

@@ -714,33 +714,33 @@ void Presenter::postAction()
         MusicSettings::sync();
         openUri(QUrl(toOpenUri));
     } else {
-        if (d->settings->value("base.play.auto_play").toBool() && !curPlaylist->isEmpty() && !lastPlaylist->isEmpty() && !isMetaLibClear) {
-            qDebug() << lastPlaylist->id() << lastPlaylist->displayName();
-            if (d->settings->value("base.play.remember_progress").toBool() && !isMetaLibClear) {
-                onCurrentPlaylistChanged(lastPlaylist);
+        connect(d->player, &Player::readyToResume, this, [ = ]() {
+            if (d->settings->value("base.play.auto_play").toBool() && !curPlaylist->isEmpty() && !lastPlaylist->isEmpty() && !isMetaLibClear) {
+                qDebug() << lastPlaylist->id() << lastPlaylist->displayName();
+                if (d->settings->value("base.play.remember_progress").toBool() && !isMetaLibClear) {
+                    onCurrentPlaylistChanged(lastPlaylist);
+                    QTimer::singleShot(200, [ = ]() {//200ms播放是为了在加载播放的100ms结束，150ms设置播放进度后再播放。
+                        onMusicResume(lastPlaylist, lastMeta);
+                    });
 
-                //                d->player->setPosition(position);
-                QTimer::singleShot(200, [ = ]() {//200ms播放是为了在加载播放的100ms结束，150ms设置播放进度后再播放。
-                    onMusicResume(lastPlaylist, lastMeta);
-                });
+                } else {
+                    d->lastPlayPosition = 0;
+                    onCurrentPlaylistChanged(lastPlaylist);
+                    Q_EMIT locateMusic(lastPlaylist, lastMeta);
+                    d->notifyMusicPlayed(lastPlaylist, lastMeta);
 
+                    d->player->setPlayOnLoaded(false);
+                    d->player->setFadeInOut(false);
+                    d->player->loadMedia(lastPlaylist, lastMeta);
+
+                    QTimer::singleShot(200, [ = ]() {//200ms播放是为了在加载播放的100ms结束，150ms设置播放进度后再播放。
+                        onMusicResume(lastPlaylist, lastMeta);
+                    });
+                }
             } else {
-                d->lastPlayPosition = 0;
-                onCurrentPlaylistChanged(lastPlaylist);
-                Q_EMIT locateMusic(lastPlaylist, lastMeta);
-                d->notifyMusicPlayed(lastPlaylist, lastMeta);
-
-                d->player->setPlayOnLoaded(false);
-                d->player->setFadeInOut(false);
-                d->player->loadMedia(lastPlaylist, lastMeta);
-
-                QTimer::singleShot(200, [ = ]() {//200ms播放是为了在加载播放的100ms结束，150ms设置播放进度后再播放。
-                    onMusicResume(lastPlaylist, lastMeta);
-                });
+                Q_EMIT d->pause();
             }
-        } else {
-            Q_EMIT d->pause();
-        }
+        });
     }
 
     auto fadeInOut = d->settings->value("base.play.fade_in_out").toBool();
@@ -1010,7 +1010,6 @@ void Presenter::onMusiclistRemove(PlaylistPtr playlist, const MetaPtrList metali
     }
 
     if (playlist->allmusic().size() == 0 &&  playlist->id() != "play") {
-
         qDebug() << "Presenter::onMusiclistRemove Q_EMIT 3";
         Q_EMIT musicListClear();
     }
