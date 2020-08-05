@@ -747,12 +747,12 @@ void Presenter::openUri(const QUrl &uri)
         }
         connect(d->player, &Player::playerReady,
         this, [ = ]() {
+            d->player->setReady();
             if (bsame) {
                 onMusicResume(list, metas.first());
             } else {
                 onSyncMusicPlay(list, metas.first());
             }
-            d->player->setReady();
         });
     } else {
         onSyncMusicPlay(list, metas.first());
@@ -762,7 +762,6 @@ void Presenter::openUri(const QUrl &uri)
 
 void Presenter::onSyncMusicPlay(PlaylistPtr playlist, const MetaPtr meta)
 {
-
     Q_D(Presenter);
     d->syncPlayerResult = true;
     d->continueErrorCount = 0;
@@ -2210,11 +2209,21 @@ void Presenter::initMpris(MprisPlayer *mprisPlayer)
             d->pdbusinterval->start(50);
         } else
             return;
+        /************************************************************
+         * if no song in music,do not import songs when dbus msg comes
+         * ***********************************************************/
+        if (d->playlistMgr->playlist(AllMusicListID)->length() == 0) {
+            return;
+        }
+        //set player ready when dbus msg comes
+        d->player->setReady();
+
         if (d->player->status() == Player::Paused) {
             onMusicResume(player->activePlaylist(), player->activeMeta());
         } else {
-            if (d->player->status() != Player::Playing)
+            if (d->player->status() != Player::Playing) {
                 onMusicPlay(player->activePlaylist(), player->activeMeta());
+            }
         }
         mprisPlayer->setPlaybackStatus(Mpris::Playing);
     });
@@ -2304,6 +2313,7 @@ void Presenter::initMpris(MprisPlayer *mprisPlayer)
     connect(this, &Presenter::musicStoped,
     this, [ = ]() {
         mprisPlayer->setPlaybackStatus(Mpris::Stopped);
+        mprisPlayer->setMetadata(QVariantMap());
     });
 
     connect(d->player, &Player::playbackStatusChanged,

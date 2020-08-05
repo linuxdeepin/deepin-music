@@ -111,7 +111,6 @@ void MetaDetector::updateMediaFileTagCodec(MediaMeta *meta, const QByteArray &co
 
     QByteArray detectByte;
     QByteArray detectCodec = codecName;
-    auto mediaPath = QStringToTString(meta->localPath);
 #ifdef _WIN32
     TagLib::FileRef f(meta->localPath.toStdWString().c_str());
 #else

@@ -378,7 +378,7 @@ void MediaLibrary::init()
 {
     Q_D(MediaLibrary);
     d->startMonitor();
-    MetaDetector::init();
+    //MetaDetector::init();
 }
 
 void MediaLibrary::removeMediaMetaList(const MetaPtrList metalist)

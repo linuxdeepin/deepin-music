@@ -757,11 +757,26 @@ void Player::loadMedia(PlaylistPtr playlist, const MetaPtr meta, int position)
                 d->qplayer->setVolume(volume);
             }
             d->qplayer->blockSignals(false);
-            d->qplayer->setPosition(position); //set position
             /*************************
              * it does't matter whether it resumes
              * **********************/
-            emit readyToResume();
+            switch (d->startSameMusic) {
+            case 1:
+                d->qplayer->setPosition(position); //set position
+                emit readyToResume();
+                break;
+            case 2:
+                emit playerReady();
+                break;
+            case 3:
+                d->qplayer->setPosition(position); //set position
+                emit playerReady(); //the same music
+                break;
+            default:
+                d->qplayer->setPosition(position); //set position
+                emit readyToResume();
+                break;
+            }
             if (!d->activePlaylist.isNull())
                 d->activePlaylist->play(meta);
         });
@@ -1018,7 +1033,7 @@ void Player::resume(PlaylistPtr playlist, const MetaPtr pmeta)
 
             if (d->firstPlayOnLoad == true) {
                 d->firstPlayOnLoad = false;
-                QTimer::singleShot(150, this, [=]() {
+                QTimer::singleShot(150, this, [ = ]() {
                     d->qplayer->play();
                 });
             }
