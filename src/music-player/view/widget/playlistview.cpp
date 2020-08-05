@@ -536,7 +536,7 @@ void PlayListView::showContextMenu(const QPoint &pos,
             break;
         }
     }
-    if (selectedPlaylist != favPlaylist || this->playlist()->id() == tr("musicResult")) {
+    if (selectedPlaylist != favPlaylist || this->playlist()->id() == "musicResult") {
 //        auto act = playlistMenu.addAction(favPlaylist->displayName());
         auto act = playlistMenu.addAction(tr("My favorites"));
         bool flag = true;
