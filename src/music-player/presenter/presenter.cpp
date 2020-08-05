@@ -2216,6 +2216,9 @@ void Presenter::initMpris(MprisPlayer *mprisPlayer)
         if (d->playlistMgr->playlist(AllMusicListID)->length() == 0) {
             return;
         }
+        //set player ready when dbus msg comes
+        d->player->setReady();
+
         if (d->player->status() == Player::Paused) {
             onMusicResume(player->activePlaylist(), player->activeMeta());
         } else {
