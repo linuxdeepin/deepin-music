@@ -762,6 +762,7 @@ void Presenter::openUri(const QUrl &uri)
 
 void Presenter::onSyncMusicPlay(PlaylistPtr playlist, const MetaPtr meta)
 {
+
     Q_D(Presenter);
     d->syncPlayerResult = true;
     d->continueErrorCount = 0;
@@ -2253,6 +2254,14 @@ void Presenter::initMpris(MprisPlayer *mprisPlayer)
             d->pdbusinterval->start(50);
         } else
             return;
+        /************************************************************
+         * if no song in music,do not play songs when dbus msg comes
+         * ***********************************************************/
+        if (d->playlistMgr->playlist(AllMusicListID)->length() == 0) {
+            return;
+        }
+        //set player ready when dbus msg comes
+        d->player->setReady();
         onMusicNext(player->activePlaylist(), player->activeMeta());
         mprisPlayer->setPlaybackStatus(Mpris::Playing);
     });
@@ -2266,6 +2275,14 @@ void Presenter::initMpris(MprisPlayer *mprisPlayer)
             d->pdbusinterval->start(50);
         } else
             return;
+        /************************************************************
+         * if no song in music,do not play songs when dbus msg comes
+         * ***********************************************************/
+        if (d->playlistMgr->playlist(AllMusicListID)->length() == 0) {
+            return;
+        }
+        //set player ready when dbus msg comes
+        d->player->setReady();
         onMusicPrev(player->activePlaylist(), player->activeMeta());
         mprisPlayer->setPlaybackStatus(Mpris::Playing);
     });
