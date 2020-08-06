@@ -933,6 +933,8 @@ void MainFrame::binding(Presenter *presenter)
             this, &MainFrame::onSelectImportFiles);
     connect(d->importWidget, &ImportWidget::importSelectFiles,
     this, [ = ](const QStringList & urllist) {
+        d->titlebarwidget->setSearchEnable(true);
+        d->titlebarwidget->setEnabled(true);
         d->importWidget->showWaitHint();
         Q_EMIT importSelectFiles(urllist, nullptr);
     });
