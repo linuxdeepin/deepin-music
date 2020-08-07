@@ -223,7 +223,7 @@ void PlayItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
 
         auto hash = index.data().toString();
         auto meta = MediaLibrary::instance()->meta(hash);
-        if(meta.isNull())
+        if (meta.isNull())
             return;
 
         painter->save();

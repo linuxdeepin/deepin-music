@@ -956,7 +956,6 @@ void Player::playMeta(PlaylistPtr playlist, const MetaPtr pmeta)
     d->fadeOutAnimation->stop();
 
     if (d->fadeInOut && d->fadeInAnimation->state() != QPropertyAnimation::Running) {
-        d->fadeInAnimation = new QPropertyAnimation(this, "fadeInOutFactor");
         d->fadeInAnimation->setEasingCurve(QEasingCurve::InCubic);
         d->fadeInAnimation->setStartValue(0.10000);
         d->fadeInAnimation->setEndValue(1.0000);
@@ -976,15 +975,15 @@ void Player::resume(PlaylistPtr playlist, const MetaPtr pmeta)
         meta = playlist->first();
     }
 
-    if (d->fadeOutAnimation) {
-        setFadeInOutFactor(1.0);
-        d->fadeOutAnimation->stop();
-    }
-
     qDebug() << "resume top";
 
     if (playlist == d->activePlaylist && d->qplayer->state() == QMediaPlayer::PlayingState && meta->hash == d->activeMeta->hash)
         return;
+
+    if (d->fadeOutAnimation) {
+        setFadeInOutFactor(1.0);
+        d->fadeOutAnimation->stop();
+    }
 
     d->activeMeta = meta;
     if (d->curPlaylist != nullptr)
