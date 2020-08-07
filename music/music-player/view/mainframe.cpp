@@ -1238,7 +1238,7 @@ void MainFrame::binding(Presenter *presenter)
     this, [ = ](bool visible) {
         d->togglePlaylist(visible);
     });
-
+    connect(presenter, &Presenter::dockTogglePaly, d->footer, &Footer::onTogglePlayButton);
 
     connect(d->footer,  &Footer::locateMusic,
             d->playListWidget, &PlayListWidget::onLocate);

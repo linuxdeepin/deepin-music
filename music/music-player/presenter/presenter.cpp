@@ -843,6 +843,7 @@ void Presenter::volumeDown()
 
 void Presenter::togglePaly()
 {
+#if 0
     Q_D(Presenter);
     auto alllist = d->playlistMgr->playlist(AllMusicListID);
     auto activeList = d->player->activePlaylist();
@@ -865,6 +866,9 @@ void Presenter::togglePaly()
     case Player::InvalidPlaybackStatus:
         break;
     }
+#else
+    Q_EMIT dockTogglePaly();
+#endif
 }
 
 void Presenter::pause()
