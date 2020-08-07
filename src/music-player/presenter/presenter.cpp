@@ -736,14 +736,14 @@ void Presenter::openUri(const QUrl &uri)
     Q_EMIT MediaLibrary::instance()->meidaFileImported(AllMusicListID, metas);
 
     if (!d->player->isReady() && d->player->status() != Player::Stopped) {
-        auto lastMetaId = d->settings->value("base.play.last_meta").toString();
-        MetaPtr lastMeta = MediaLibrary::instance()->meta(lastMetaId);
+        //do not use last meta
+        MetaPtr curMeta = d->player->activeMeta();
         bool bsame = false;
         //last_meta maybe null
-        if (lastMeta.isNull()) {
+        if (curMeta.isNull()) {
             d->player->setDoubleClickStartType(2);
         } else {
-            if (lastMeta->hash == metas.first()->hash) {
+            if (curMeta->hash == metas.first()->hash) {
                 bsame = true;
                 d->player->setDoubleClickStartType(3);
             } else {
