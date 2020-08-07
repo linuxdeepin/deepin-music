@@ -109,6 +109,7 @@ signals:
                               QList<PlaylistPtr >newlists,
                               char type);
     void musicListClear();
+    void dockTogglePaly();
 
     //! from control
     void musicPlayed(PlaylistPtr playlist, const MetaPtr meta);
