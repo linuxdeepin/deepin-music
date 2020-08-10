@@ -420,14 +420,6 @@ void MusicListWidget::onMusicListRemoved(PlaylistPtr playlist, const MetaPtrList
     Q_UNUSED(metalist)
 
     m_dataListView->onMusicListRemoved(playlist, metalist);
-    if (playlist->id() == PlayMusicListID && playlist->allmusic().isEmpty()) {
-//        m_dataBaseListview->setCurPlaylist(nullptr);
-//        m_customizeListview->setCurPlaylist(nullptr);
-    }
-
-//    m_dataBaseListview->setCurPlaylist(nullptr);
-//    m_customizeListview->setCurPlaylist(nullptr);
-
 }
 
 void MusicListWidget::onMusiclistUpdate()

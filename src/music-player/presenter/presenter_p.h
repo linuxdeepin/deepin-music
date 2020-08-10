@@ -67,7 +67,7 @@ signals:
 
     void updateMprisVolume(int volume);
 
-    void play(PlaylistPtr playlist, const MetaPtr info);
+    void play(PlaylistPtr playlist, const MetaPtr info, bool dbus = false);
     void resume(PlaylistPtr playlist, const MetaPtr meta);
     void playNext(PlaylistPtr playlist, const MetaPtr info);
     void playPrev(PlaylistPtr playlist, const MetaPtr info);

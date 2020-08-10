@@ -583,7 +583,7 @@ void PlayerPrivate::selectNext(const MetaPtr info, Player::PlaybackMode mode)
         }
         if (curMeta->invalid && !invalidFlag) {
             int curNum = 0;
-            while (curNum < curPlaylist->allmusic().size()) {
+            while (curNum < curPlaylist->allMusicSize()) {
                 curMeta = curPlaylist->next(curMeta);
                 if (!curMeta->invalid)
                     break;
@@ -640,7 +640,7 @@ void PlayerPrivate::selectPrev(const MetaPtr info, Player::PlaybackMode mode)
         }
         if (curMeta->invalid && !invalidFlag) {
             int curNum = 0;
-            while (curNum < curPlaylist->allmusic().size()) {
+            while (curNum < curPlaylist->allMusicSize()) {
                 curMeta = curPlaylist->prev(curMeta);
                 if (!curMeta->invalid || QFile::exists(curMeta->localPath))
                     break;
@@ -1430,7 +1430,7 @@ void Player::musicFileMiss()
     Q_D(Player);
 
     /*--------Remove the usb flash drive, the music is invalid-------*/
-    if (d->activeMeta != nullptr && access(d->activeMeta->localPath.toStdString().c_str(), F_OK) != 0 && (!d->activePlaylist->allmusic().isEmpty())) {
+    if (d->activeMeta != nullptr && access(d->activeMeta->localPath.toStdString().c_str(), F_OK) != 0 && (d->activePlaylist->allMusicSize() > 0)) {
         stop();
 
         Q_EMIT mediaError(d->activePlaylist, d->activeMeta, Player::ResourceError);

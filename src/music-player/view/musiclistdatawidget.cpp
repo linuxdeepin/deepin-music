@@ -1573,7 +1573,7 @@ void MusicListDataWidget::onMusicListRemoved(PlaylistPtr playlist, const MetaPtr
     }
 
     if (playlist != d->curPlaylist) {
-        if (playlist->id() == PlayMusicListID && playlist->allmusic().isEmpty()) {
+        if (playlist->id() == PlayMusicListID && playlist->allMusicSize() == 0) {
             d->albumListView->setPlaying(nullptr);
             d->artistListView->setPlaying(nullptr);
             d->musicListView->setPlaying(nullptr);

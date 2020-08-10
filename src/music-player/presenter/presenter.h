@@ -138,7 +138,7 @@ public slots:
     void onSyncMusicPrev(PlaylistPtr playlist, const MetaPtr meta);
     void onSyncMusicNext(PlaylistPtr playlist, const MetaPtr meta);
 
-    void onMusicPlay(PlaylistPtr playlist, const MetaPtr meta);
+    void onMusicPlay(PlaylistPtr playlist, const MetaPtr meta, bool dbus = false); //if dbus open music to play
     void onMusicPause(PlaylistPtr playlist, const MetaPtr meta);
     void onMusicPauseNow(PlaylistPtr playlist, const MetaPtr meta);
     void onMusicResume(PlaylistPtr playlist, const MetaPtr meta);
