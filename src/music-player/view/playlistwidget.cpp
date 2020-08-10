@@ -279,7 +279,7 @@ void PlayListWidget::updateInfo(PlaylistPtr playlist)
     Q_D(PlayListWidget);
 
     QString infoStr;
-    int sortMetasSize = playlist->allmusic().size();
+    int sortMetasSize = playlist->allMusicSize();
     //int sortMetasSize = d->playListView->rowCount();
     if (sortMetasSize == 0) {
         infoStr = tr("No songs");
@@ -354,7 +354,7 @@ void PlayListWidget::onMusicPlayed(PlaylistPtr playlist, const MetaPtr meta)
     Q_D(PlayListWidget);
 
     if (d->playListView->rowCount() == 0 || playlist != d->playListView->playlist() ||
-            playlist->allmusic().size() != d->playListView->rowCount() ||
+            playlist->allMusicSize() != d->playListView->rowCount() ||
             playlist->first()->hash != d->playListView->firstHash())
         d->initData(playlist);
 
@@ -395,7 +395,7 @@ void PlayListWidget::onMusicListRemoved(PlaylistPtr playlist, const MetaPtrList 
     if (playlist.isNull())
         return;
 
-    if (playlist != d->playListView->playlist() && d->playListView->rowCount() != playlist->allmusic().size()) {
+    if (playlist != d->playListView->playlist() && d->playListView->rowCount() != playlist->allMusicSize()) {
         return;
     }
 
@@ -420,7 +420,7 @@ void PlayListWidget::onMusicListAdded(PlaylistPtr playlist, const MetaPtrList me
         return;
     }
 
-    if (playlist != d->playListView->playlist() && d->playListView->rowCount() != playlist->allmusic().size()) {
+    if (playlist != d->playListView->playlist() && d->playListView->rowCount() != playlist->allMusicSize()) {
         return;
     }
 //    MetaPtrList curMetalist;

@@ -279,6 +279,11 @@ MetaPtrList Playlist::allmusic() const
     return mlist;
 }
 
+int Playlist::allMusicSize() const
+{
+    return playlistMeta.sortMetas.size();
+}
+
 PlayMusicTypePtrList Playlist::playMusicTypePtrList() const
 {
     PlayMusicTypePtrList mlist;

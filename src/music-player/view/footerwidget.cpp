@@ -124,6 +124,8 @@ public:
     int             m_Volume = 0;
     int             m_Mute = 0;
     uint32_t        lastCookie = 0;
+    QTimer         *m_timer; //to avoid mul-repeat click
+    uint32_t        m_calcClick = 0;
     Footer *q_ptr;
     Q_DECLARE_PUBLIC(Footer)
 };
@@ -177,7 +179,17 @@ void FooterPrivate::initConnection()
     });
 
     q->connect(btPlay, &DPushButton::released, q, [ = ]() {
-        q->onTogglePlayButton();
+        //remember last operation in a period to avoid mult-repeat click
+        if (!m_timer->isActive())
+            m_timer->start(100);
+        m_calcClick += 1;
+        q->connect(m_timer, &QTimer::timeout, q, [ = ]() {
+            if (m_calcClick % 2 != 0)
+                q->onTogglePlayButton();
+
+            m_timer->stop();
+            m_calcClick = 0;
+        });
     });
 
     q->connect(btPrev, &DPushButton::released, q, [ = ]() {
@@ -324,6 +336,7 @@ Footer::Footer(QWidget *parent) :
 //    titlePl.setColor(DPalette::WindowText, QColor("#000000"));
 //    d->title->setPalette(titlePl);
 
+    d->m_timer = new QTimer(this);
     d->title->setForegroundRole(DPalette::BrightText);
 
     d->artist = new Label;
@@ -584,11 +597,11 @@ void Footer::setCurPlaylist(PlaylistPtr playlist)
     Q_D(Footer);
     d->activingPlaylist = playlist;
     if (d->activingPlaylist != nullptr) {
-        if (d->activingPlaylist->allmusic().isEmpty()) {
+        if (d->activingPlaylist->allMusicSize() == 0) {
             d->btPlay->setDisabled(true);
             d->btPrev->setDisabled(true);
             d->btNext->setDisabled(true);
-        } else if (d->activingPlaylist->allmusic().size() == 1) {
+        } else if (d->activingPlaylist->allMusicSize() == 1) {
             d->btPrev->setDisabled(true);
             d->btNext->setDisabled(true);
             d->btPlay->setDisabled(false);
@@ -830,11 +843,11 @@ void Footer::onMusicListAdded(PlaylistPtr playlist, const MetaPtrList metalist)
     }
 
     if (d->activingPlaylist != nullptr) {
-        if (d->activingPlaylist->allmusic().isEmpty()) {
+        if (d->activingPlaylist->allMusicSize() == 0) {
             d->btPlay->setDisabled(true);
             d->btPrev->setDisabled(true);
             d->btNext->setDisabled(true);
-        } else if (d->activingPlaylist->allmusic().size() == 1) {
+        } else if (d->activingPlaylist->allMusicSize() == 1) {
             d->btPrev->setDisabled(true);
             d->btNext->setDisabled(true);
             d->btPlay->setDisabled(false);
@@ -858,11 +871,11 @@ void Footer::onMusicListRemoved(PlaylistPtr playlist, const MetaPtrList metalist
     }
 
     if (d->activingPlaylist != nullptr) {
-        if (d->activingPlaylist->allmusic().isEmpty()) {
+        if (d->activingPlaylist->allMusicSize()) {
             d->btPlay->setDisabled(true);
             d->btPrev->setDisabled(true);
             d->btNext->setDisabled(true);
-        } else if (d->activingPlaylist->allmusic().size() == 1) {
+        } else if (d->activingPlaylist->allMusicSize() == 1) {
             d->btPrev->setDisabled(true);
             d->btNext->setDisabled(true);
             d->btPlay->setDisabled(false);
@@ -930,11 +943,11 @@ void Footer::onMusicPlayed(PlaylistPtr playlist, const MetaPtr meta)
     d->activingMeta = meta;
 
     if (d->activingPlaylist != nullptr) {
-        if (d->activingPlaylist->allmusic().isEmpty()) {
+        if (d->activingPlaylist->allMusicSize() == 0) {
             d->btPlay->setDisabled(true);
             d->btPrev->setDisabled(true);
             d->btNext->setDisabled(true);
-        } else if (d->activingPlaylist->allmusic().size() == 1) {
+        } else if (d->activingPlaylist->allMusicSize() == 1) {
             d->btPrev->setDisabled(true);
             d->btNext->setDisabled(true);
             d->btPlay->setDisabled(false);
@@ -1038,11 +1051,11 @@ void Footer::onMusicPause(PlaylistPtr playlist, const MetaPtr meta)
     d->screenStandby(false);
 
     if (d->activingPlaylist != nullptr) {
-        if (d->activingPlaylist->allmusic().isEmpty()) {
+        if (d->activingPlaylist->allMusicSize() == 0) {
             d->btPlay->setDisabled(true);
             d->btPrev->setDisabled(true);
             d->btNext->setDisabled(true);
-        } else if (d->activingPlaylist->allmusic().size() == 1) {
+        } else if (d->activingPlaylist->allMusicSize() == 1) {
             d->btPrev->setDisabled(true);
             d->btNext->setDisabled(true);
             d->btPlay->setDisabled(false);
@@ -1087,11 +1100,11 @@ void Footer::onMusicStoped(PlaylistPtr playlist, const MetaPtr meta)
     d->screenStandby(false);
 
     if (d->activingPlaylist != nullptr) {
-        if (d->activingPlaylist->allmusic().isEmpty()) {
+        if (d->activingPlaylist->allMusicSize() == 0) {
             d->btPlay->setDisabled(true);
             d->btPrev->setDisabled(true);
             d->btNext->setDisabled(true);
-        } else if (d->activingPlaylist->allmusic().size() == 1) {
+        } else if (d->activingPlaylist->allMusicSize() == 1) {
             d->btPrev->setDisabled(true);
             d->btNext->setDisabled(true);
             d->btPlay->setDisabled(false);

@@ -24,8 +24,7 @@
 
 using namespace std;
 
-namespace DMusic
-{
+namespace DMusic {
 
 template <class T>
 class DSingleton
@@ -33,14 +32,13 @@ class DSingleton
 public:
     static inline T *instance()
     {
-        static T*  _instance = new T;
+        static T  *_instance = new T;
         return _instance;
     }
 
 protected:
     DSingleton(void) {}
     ~DSingleton(void) {}
-    DSingleton(const DSingleton &) {}
     DSingleton &operator= (const DSingleton &)
     {
         return *this;

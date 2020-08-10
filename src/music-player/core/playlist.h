@@ -111,6 +111,7 @@ public:
     bool isLast(const MetaPtr meta) const;
     bool contains(const MetaPtr meta) const;
     MetaPtrList allmusic() const;
+    int  allMusicSize() const;
     PlayMusicTypePtrList playMusicTypePtrList() const;
 
     void play(const MetaPtr meta);
