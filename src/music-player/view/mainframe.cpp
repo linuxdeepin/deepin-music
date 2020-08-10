@@ -277,9 +277,9 @@ void MainFramePrivate::initMenu()
 
 //add shortcut
     playPauseShortcut = new QShortcut(q);
+    playPauseShortcut->setAutoRepeat(false);
     playPauseShortcut->setKey(QKeySequence(MusicSettings::value("shortcuts.all.play_pause").toString()));
     q->connect(playPauseShortcut, &QShortcut::activated, q, [ = ]() {
-        //Q_EMIT  q->triggerShortcutAction("shortcuts.all.play_pause");
         footer->onTogglePlayButton();
     });
 
@@ -296,12 +296,14 @@ void MainFramePrivate::initMenu()
     });
 
     nextShortcut = new QShortcut(q);
+    nextShortcut->setAutoRepeat(false);
     nextShortcut->setKey(QKeySequence(MusicSettings::value("shortcuts.all.next").toString()));
     q->connect(nextShortcut, &QShortcut::activated, q, [ = ]() {
         Q_EMIT  q->triggerShortcutAction("shortcuts.all.next");
     });
 
     previousShortcut = new QShortcut(q);
+    previousShortcut->setAutoRepeat(false);
     previousShortcut->setKey(QKeySequence(MusicSettings::value("shortcuts.all.previous").toString()));
     q->connect(previousShortcut, &QShortcut::activated, q, [ = ]() {
         Q_EMIT  q->triggerShortcutAction("shortcuts.all.previous");
