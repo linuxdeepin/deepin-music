@@ -316,7 +316,7 @@ void PlayListView::onMusiclistChanged(PlaylistPtr playlist)
         return;
     }
     if (playlist->searchStr().isEmpty() && playlist == d->model->playlist()
-            && playlist->allmusic().size() == rowCount()) {
+            && playlist->allMusicSize() == rowCount()) {
         bool flag = true;
         auto allMusic = playlist->allmusic();
         for (int i = 0; i < allMusic.size(); ++i) {
