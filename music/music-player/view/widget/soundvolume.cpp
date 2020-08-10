@@ -35,6 +35,7 @@
 
 #include "core/player.h"
 #include "widget/soundpixmapbutton.h"
+#include "musicsettings.h"
 
 using namespace Dtk::Widget;
 
@@ -53,6 +54,7 @@ public:
     int         radius      = 20;
     bool        mouseIn     = false;
     int         sThemeType  = 0;
+    bool        volMute     = false;
 
     Q_DECLARE_PUBLIC(SoundVolume)
 };
@@ -89,7 +91,16 @@ SoundVolume::SoundVolume(QWidget *parent) : QWidget(parent), d_ptr(new SoundVolu
     d->sound = new SoundPixmapButton();
     d->sound->setFixedSize(30, 30);
     d->sound->setIconSize(QSize(30, 30));
-    d->sound->setIcon(QPixmap(":/mpimage/light/normal/volume_low_normal.svg"));
+
+    d->volMute = MusicSettings::value("base.play.mute").toBool();
+
+    if (!d->volMute) {
+        d->sound->setIcon(QPixmap(":/mpimage/light/normal/volume_low_normal.svg"));
+        d->sound->update();
+    } else {
+        d->sound->setIcon(QPixmap(":/mpimage/light/normal/mute_normal.svg"));
+        d->sound->update();
+    }
 
     layout->addStretch();
     layout->addWidget(d->lblPersent, 0, Qt::AlignTop | Qt::AlignHCenter);
@@ -108,7 +119,20 @@ SoundVolume::SoundVolume(QWidget *parent) : QWidget(parent), d_ptr(new SoundVolu
             this, &SoundVolume::volumeChanged);
 
     connect(d->sound, &SoundPixmapButton::pressed,
-            this, &SoundVolume::volumeMute);
+    this, [ = ]() {
+
+        d->volMute = !d->volMute;
+
+        if (!d->volMute) {
+            d->sound->setIcon(QPixmap(":/mpimage/light/normal/volume_low_normal.svg"));
+            d->sound->update();
+        } else {
+            d->sound->setIcon(QPixmap(":/mpimage/light/normal/mute_normal.svg"));
+            d->sound->update();
+        }
+
+        Q_EMIT this->volumeMute();
+    });
 }
 
 SoundVolume::~SoundVolume()

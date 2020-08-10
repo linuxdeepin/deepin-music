@@ -160,12 +160,6 @@ void FooterPrivate::initConnection()
         hintFilter->showHitsFor(btPlayMode, hintWidget);
     });
 
-//    q->connect(progress, &Slider::valueAccpet, q, [ = ](int value) {
-//        auto range = progress->maximum() - progress->minimum();
-//        Q_ASSERT(range != 0);
-//        Q_EMIT q->changeProgress(value, range);
-//    });
-
     q->connect(waveform, &Waveform::valueAccpet, q, [ = ](int value) {
         auto range = waveform->maximum() - waveform->minimum();
         Q_ASSERT(range != 0);
@@ -198,12 +192,17 @@ void FooterPrivate::initConnection()
         Q_EMIT q->togglePlaylist(false);
     });
     q->connect(btSound, &DPushButton::pressed, q, [ = ]() {
-        Q_EMIT q->localToggleMute();
+        // Q_EMIT q->localToggleMute();
+
+        auto hintWidget = btSound->property("HintWidget").value<QWidget *>();
+        hintFilter->showHitsFor(btSound, hintWidget);
     });
 
     q->connect(volSlider, &SoundVolume::volumeMute, q, [ = ]() {
         Q_EMIT q->localToggleMute();
     });
+
+
 
     q->connect(volSlider, &SoundVolume::volumeChanged, q, [ = ](int vol) {
         q->onVolumeChanged(vol);
