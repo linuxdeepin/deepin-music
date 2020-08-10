@@ -34,6 +34,7 @@
 #include <DHiDPIHelper>
 
 #include "core/player.h"
+#include "widget/soundpixmapbutton.h"
 
 using namespace Dtk::Widget;
 
@@ -44,7 +45,8 @@ public:
 
     SoundVolume *q_ptr;
     DLabel      *lblPersent;
-    DSlider     *volSlider  = nullptr;
+    DSlider     *volSlider           = nullptr;
+    SoundPixmapButton *sound         = nullptr;
     QBrush      background;
     QColor      borderColor = QColor(0, 0, 0,  255 * 2 / 10);
 
@@ -63,7 +65,7 @@ SoundVolume::SoundVolume(QWidget *parent) : QWidget(parent), d_ptr(new SoundVolu
 
     setFixedSize(62, 201);
     auto layout = new QVBoxLayout(this);
-    layout->setContentsMargins(2, 16, 0, 31);
+    layout->setContentsMargins(2, 16, 0, 14);
     layout->setSpacing(0);
 
     d->lblPersent = new DLabel(this);
@@ -79,17 +81,20 @@ SoundVolume::SoundVolume(QWidget *parent) : QWidget(parent), d_ptr(new SoundVolu
     d->volSlider->setMaximum(100);
     d->volSlider->slider()->setSingleStep(Player::VolumeStep);
     d->volSlider->setValue(50);
-    d->volSlider->slider()->setFixedHeight(126);
+    d->volSlider->slider()->setFixedHeight(120);
     d->volSlider->setFixedWidth(24);
     d->volSlider->setIconSize(QSize(15, 15));
     d->volSlider->setMouseWheelEnabled(true);
-//    d->volSlider->setRightIcon(DHiDPIHelper::loadNxPixmap(":/mpimage/light/normal/volume_add_normal.svg"));
-//    d->volSlider->setLeftIcon(DHiDPIHelper::loadNxPixmap(":/mpimage/light/normal/volume_lessen_normal.svg"));
+
+    d->sound = new SoundPixmapButton();
+    d->sound->setFixedSize(30, 30);
+    d->sound->setIconSize(QSize(30, 30));
+    d->sound->setIcon(QPixmap(":/mpimage/light/normal/volume_low_normal.svg"));
 
     layout->addStretch();
-
     layout->addWidget(d->lblPersent, 0, Qt::AlignTop | Qt::AlignHCenter);
-    layout->addWidget(d->volSlider, 1, Qt::AlignCenter);
+    layout->addWidget(d->volSlider, 0, Qt::AlignCenter);
+    layout->addWidget(d->sound, 0, Qt::AlignHCenter);
     layout->addStretch();
     setFixedSize(62, 201);
 
@@ -101,6 +106,9 @@ SoundVolume::SoundVolume(QWidget *parent) : QWidget(parent), d_ptr(new SoundVolu
 
     connect(d->volSlider, &DSlider::valueChanged,
             this, &SoundVolume::volumeChanged);
+
+    connect(d->sound, &SoundPixmapButton::pressed,
+            this, &SoundVolume::volumeMute);
 }
 
 SoundVolume::~SoundVolume()

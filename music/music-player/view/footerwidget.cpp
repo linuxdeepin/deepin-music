@@ -200,6 +200,11 @@ void FooterPrivate::initConnection()
     q->connect(btSound, &DPushButton::pressed, q, [ = ]() {
         Q_EMIT q->localToggleMute();
     });
+
+    q->connect(volSlider, &SoundVolume::volumeMute, q, [ = ]() {
+        Q_EMIT q->localToggleMute();
+    });
+
     q->connect(volSlider, &SoundVolume::volumeChanged, q, [ = ](int vol) {
         q->onVolumeChanged(vol);
         if (m_Mute) {

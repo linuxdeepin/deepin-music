@@ -42,6 +42,7 @@ public:
 
 signals:
     void volumeChanged(int volume);
+    void volumeMute();
 
 public slots:
     void deleyHide();
