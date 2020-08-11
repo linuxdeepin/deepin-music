@@ -42,6 +42,7 @@ public:
 
 signals:
     void volumeChanged(int volume);
+    void volumeMute();
 
 public slots:
     void deleyHide();
@@ -49,6 +50,8 @@ public slots:
     void setBackground(QBrush background);
     void setRadius(int radius);
     void setBorderColor(QColor borderColor);
+    void volumeIcon();
+
 
     void slotTheme(int type);
 protected:
