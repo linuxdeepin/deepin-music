@@ -93,12 +93,7 @@ SoundVolume::SoundVolume(QWidget *parent) : QWidget(parent), d_ptr(new SoundVolu
     d->sound->setIconSize(QSize(30, 30));
 
     d->volMute = MusicSettings::value("base.play.mute").toBool();
-
-    if (!d->volMute) {
-        d->sound->setIcon(QPixmap(":/mpimage/light/normal/volume_low_normal.svg"));
-    } else {
-        d->sound->setIcon(QPixmap(":/mpimage/light/normal/mute_normal.svg"));
-    }
+    volumeIcon();
 
     layout->addStretch();
     layout->addWidget(d->lblPersent, 0, Qt::AlignTop | Qt::AlignHCenter);
@@ -119,20 +114,15 @@ SoundVolume::SoundVolume(QWidget *parent) : QWidget(parent), d_ptr(new SoundVolu
     connect(d->volSlider, &DSlider::valueChanged,
     this, [ = ](int volume) {
         d->volMute = false;
-        d->sound->setIcon(QPixmap(":/mpimage/light/normal/volume_low_normal.svg"));
+        volumeIcon();
+
         Q_EMIT volumeChanged(volume);
     });
 
     connect(d->sound, &SoundPixmapButton::pressed,
     this, [ = ]() {
-
         d->volMute = !d->volMute;
-
-        if (!d->volMute) {
-            d->sound->setIcon(QPixmap(":/mpimage/light/normal/volume_low_normal.svg"));
-        } else {
-            d->sound->setIcon(QPixmap(":/mpimage/light/normal/mute_normal.svg"));
-        }
+        volumeIcon();
 
         Q_EMIT volumeMute();
     });
@@ -183,6 +173,24 @@ void SoundVolume::setBorderColor(QColor borderColor)
 {
     Q_D(SoundVolume);
     d->borderColor = borderColor;
+}
+
+void SoundVolume::volumeIcon()
+{
+    Q_D(SoundVolume);
+    if (d->sThemeType != 2) {
+        if (!d->volMute) {
+            d->sound->setIcon(QPixmap(":/mpimage/light/normal/volume_low_normal.svg"));
+        } else {
+            d->sound->setIcon(QPixmap(":/mpimage/light/normal/mute_normal.svg"));
+        }
+    } else {
+        if (!d->volMute) {
+            d->sound->setIcon(QPixmap(":/mpimage/light/checked/volume_mid_checked.svg"));
+        } else {
+            d->sound->setIcon(QPixmap(":/mpimage/light/checked/mute_checked.svg"));
+        }
+    }
 }
 
 void SoundVolume::deleyHide()
@@ -310,12 +318,5 @@ void SoundVolume::slotTheme(int type)
     Q_D(SoundVolume);
     d->sThemeType = type;
 
-    qDebug() << "------------slotTheme------------" << type;
-
-    QString rStr;
-    if (type == 1) {
-        rStr = "light";
-    } else {
-        rStr = "dark";
-    }
+    volumeIcon();
 }
