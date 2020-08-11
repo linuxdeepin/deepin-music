@@ -96,10 +96,8 @@ SoundVolume::SoundVolume(QWidget *parent) : QWidget(parent), d_ptr(new SoundVolu
 
     if (!d->volMute) {
         d->sound->setIcon(QPixmap(":/mpimage/light/normal/volume_low_normal.svg"));
-        d->sound->update();
     } else {
         d->sound->setIcon(QPixmap(":/mpimage/light/normal/mute_normal.svg"));
-        d->sound->update();
     }
 
     layout->addStretch();
@@ -115,8 +113,15 @@ SoundVolume::SoundVolume(QWidget *parent) : QWidget(parent), d_ptr(new SoundVolu
     bodyShadow->setOffset(0, 2.0);
     this->setGraphicsEffect(bodyShadow);
 
+//    connect(d->volSlider, &DSlider::valueChanged,
+//            this, &SoundVolume::volumeChanged);
+
     connect(d->volSlider, &DSlider::valueChanged,
-            this, &SoundVolume::volumeChanged);
+    this, [ = ](int volume) {
+        d->volMute = false;
+        d->sound->setIcon(QPixmap(":/mpimage/light/normal/volume_low_normal.svg"));
+        Q_EMIT volumeChanged(volume);
+    });
 
     connect(d->sound, &SoundPixmapButton::pressed,
     this, [ = ]() {
@@ -125,13 +130,11 @@ SoundVolume::SoundVolume(QWidget *parent) : QWidget(parent), d_ptr(new SoundVolu
 
         if (!d->volMute) {
             d->sound->setIcon(QPixmap(":/mpimage/light/normal/volume_low_normal.svg"));
-            d->sound->update();
         } else {
             d->sound->setIcon(QPixmap(":/mpimage/light/normal/mute_normal.svg"));
-            d->sound->update();
         }
 
-        Q_EMIT this->volumeMute();
+        Q_EMIT volumeMute();
     });
 }
 
@@ -305,8 +308,9 @@ void SoundVolume::paintEvent(QPaintEvent * /*event*/)
 void SoundVolume::slotTheme(int type)
 {
     Q_D(SoundVolume);
-
     d->sThemeType = type;
+
+    qDebug() << "------------slotTheme------------" << type;
 
     QString rStr;
     if (type == 1) {
@@ -314,6 +318,4 @@ void SoundVolume::slotTheme(int type)
     } else {
         rStr = "dark";
     }
-//  d->volSlider->setRightIcon(DHiDPIHelper::loadNxPixmap(QString(":/mpimage/%1/normal/volume_add_normal.svg").arg(rStr)));
-
 }
