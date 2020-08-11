@@ -186,7 +186,7 @@ void SoundVolume::volumeIcon()
         }
     } else {
         if (!d->volMute) {
-            d->sound->setIcon(QPixmap(":/mpimage/light/checked/volume_mid_checked.svg"));
+            d->sound->setIcon(QPixmap(":/mpimage/light/checked/volume_low_checked.svg"));
         } else {
             d->sound->setIcon(QPixmap(":/mpimage/light/checked/mute_checked.svg"));
         }
@@ -279,6 +279,20 @@ void SoundVolume::paintEvent(QPaintEvent * /*event*/)
     QRectF bottomLeftRect(QPointF(width, height),
                           QPointF(width - 2 * radius, height - 2 * radius));
 
+
+#if 1
+    path.moveTo(radius, 0.0);
+    path.lineTo(width - radius, 0.0);
+
+    path.arcTo(topLeftRect, 90.0, 90.0);
+    path.lineTo(width, height - radius);
+    path.lineTo(width / 2, height + triHeight);
+    path.lineTo(0.0, height - radius);
+    path.lineTo(0.0, radius);
+
+    path.arcTo(topRightRect, 180.0, -90.0);
+    path.lineTo(radius, 0.0);
+#else
     path.moveTo(radius, 0.0);
     path.lineTo(width - radius, 0.0);
     path.arcTo(topLeftRect, 90.0, 90.0);
@@ -294,6 +308,7 @@ void SoundVolume::paintEvent(QPaintEvent * /*event*/)
 
     path.arcTo(topRightRect, 180.0, -90.0);
     path.lineTo(radius, 0.0);
+#endif
 
     /*
     FIXME: light: white
