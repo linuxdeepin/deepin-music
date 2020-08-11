@@ -87,10 +87,6 @@ public:
 #ifdef SUPPORT_INOTIFY
         watcher->addPaths(dirs.keys());
 #endif
-
-        //        for (auto meta : metas) {
-        //            qDebug() << meta->title;
-        //        }
     }
 
 private:
@@ -111,7 +107,6 @@ MetaPtr MediaLibraryPrivate::createMeta(const QFileInfo &fileinfo)
     if (metas.contains(hash)) {
         return metas.value(hash);
     }
-
     auto meta = MetaPtr(new MediaMeta);
     meta->hash = hash;
     MetaDetector::updateMetaFromLocalfile(meta.data(), fileinfo);

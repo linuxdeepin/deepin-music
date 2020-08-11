@@ -44,7 +44,6 @@ else()
     aux_source_directory(./ allSource)
 endif()
 
-#aux_source_directory(./ allSource)
 aux_source_directory(./core allSource)
 aux_source_directory(./core/util allSource)
 aux_source_directory(./core/vlc allSource)
@@ -96,8 +95,11 @@ target_include_directories(${CMD_NAME} PUBLIC  ${PROJECT_INCLUDE} )
 qt5_use_modules(${CMD_NAME} ${QtModule})
 #X11 Xext Xtst
 set(TARGET_LIBS X11 Xext Qt5::Widgets Qt5::Network Qt5::Core Qt5::Gui Qt5::X11Extras
-    Qt5::DBus Qt5::Sql Qt5::Svg Qt5::Multimedia Qt5::Xml PkgConfig::AV PkgConfig::Dtk
-    dmusic dbusextended-qt5 mpris-qt5 vlccore)
+    Qt5::DBus Qt5::Sql Qt5::Svg Qt5::Multimedia Qt5::Xml PkgConfig::AV PkgConfig::Dtk icui18n
+    mpris-qt5  dbusextended-qt5  mpris-qt5  dmusic vlccore)
+LINK_DIRECTORIES(${CMAKE_BINARY_DIR}/music/libdmusic/
+        ${CMAKE_BINARY_DIR}/music/vendor/dbusextended-qt/src/
+        ${CMAKE_BINARY_DIR}/music/vendor/mpris-qt/src/)
 
 
 #将第三方库链接进来(注意 *_LIBRARIES)

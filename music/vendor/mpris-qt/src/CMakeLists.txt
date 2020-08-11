@@ -11,7 +11,8 @@ include_directories(./)
 
 aux_source_directory(./ allSourcelib1)
 
-add_library(${CMD_NAME} SHARED ${allSourcelib1})
+#add_library(${CMD_NAME} SHARED ${allSourcelib1})
+add_library(${CMD_NAME} STATIC ${allSourcelib1})
 set_target_properties(${CMD_NAME} PROPERTIES VERSION 1.0.0 SOVERSION 1.0)
 #使用第三方库需要用到的一个包
 find_package(PkgConfig REQUIRED)

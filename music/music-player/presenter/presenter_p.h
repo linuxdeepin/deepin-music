@@ -39,6 +39,7 @@ public:
     PresenterPrivate(Presenter *parent = nullptr);
 
     void initBackend();
+    void quickReadSql();
     void notifyMusicPlayed(PlaylistPtr playlist, const MetaPtr meta);
 
     PlaylistPtr         playlistBeforeSearch;

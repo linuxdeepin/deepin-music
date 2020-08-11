@@ -29,6 +29,7 @@
 #include <QTime>
 
 #include "../core/metasearchservice.h"
+#include "../core/musicsettings.h"
 #include "util/pinyinsearch.h"
 
 #include "medialibrary.h"
@@ -421,6 +422,7 @@ void Playlist::appendMusicList(const MetaPtrList metalist)
         newMetalist << meta;
         playlistMeta.sortMetas << meta->hash;
         playlistMeta.metas.insert(meta->hash, meta);
+        MusicSettings::setOption("base.play.showFlag", 1);
     }
 
     Q_EMIT MediaDatabase::instance()->insertMusicList(newMetalist, this->playlistMeta);
