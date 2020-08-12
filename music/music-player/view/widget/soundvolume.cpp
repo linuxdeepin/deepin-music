@@ -297,11 +297,14 @@ void SoundVolume::paintEvent(QPaintEvent * /*event*/)
     path.lineTo(width - radius, 0.0);
     path.arcTo(topLeftRect, 90.0, 90.0);
     path.lineTo(width, height - radius);
-    path.arcTo(bottomLeftRect, 180.0, -90.0);
-    path.lineTo(width / 2 + triWidth / 2, height);
+    path.arcTo(bottomLeftRect, 180.0, -30.0);
+
+//    path.lineTo(width / 2 + triWidth / 2, height);
     path.lineTo(width / 2, height + triHeight);
-    path.lineTo(width / 2 - triWidth / 2, height);
-    path.lineTo(radius, height);
+
+//    path.lineTo(width / 2 - triWidth / 2, height);
+//    path.lineTo(radius, height - 10);
+    path.lineTo(0.0, height - 13);
 
     path.arcTo(bottomRightRect, 270.0, -90.0);
     path.lineTo(0.0, radius);

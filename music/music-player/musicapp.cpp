@@ -275,6 +275,7 @@ void MusicApp::initConnection(bool showFlag)
         QTimer::singleShot(200, nullptr, [ = ]() {
             d->initMpris("DeepinMusic");
             d->onDataPrepared();
+            d->quickPrepared();
             d->presenter->postAction(showFlag);
             Player::instance()->init();
             if (d->m_Files.size() > 0) {
