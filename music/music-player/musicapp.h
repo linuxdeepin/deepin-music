@@ -35,8 +35,8 @@ public:
     MusicApp(MainFrame *frame, QObject *parent = nullptr);
     ~MusicApp();
 
-    void initUI();
-    void initConnection();
+    void initUI(bool showFlag);
+    void initConnection(bool showFlag);
     void show();
     void quit();
     void onStartImport(QStringList files);

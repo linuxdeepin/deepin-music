@@ -54,7 +54,8 @@ public:
 
     void initMpris(MprisPlayer *mprisPlayer);
     void prepareData();
-    void postAction();
+    void postAction(bool showFlag);
+    void quickLoad();
     void handleQuit();
     void openUri(const QUrl &uri);
     void removeListSame(QStringList *list);

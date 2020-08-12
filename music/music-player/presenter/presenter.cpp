@@ -87,6 +87,22 @@ PresenterPrivate::PresenterPrivate(Presenter *parent)
 
 }
 
+void PresenterPrivate::quickReadSql()
+{
+    MediaDatabase::instance()->init();
+    ThreadPool::instance()->moveToNewThread(MediaDatabase::instance());
+    qDebug() << "TRACE:" << "database init finished";
+
+    library = MediaLibrary::instance();
+    library->init();
+    ThreadPool::instance()->moveToNewThread(MediaLibrary::instance());
+    qDebug() << "TRACE:" << "library init finished";
+
+    playlistMgr = new PlaylistManager;
+    playlistMgr->load();
+    qDebug() << "TRACE:" << "playlistMgr init finished";
+}
+
 void PresenterPrivate::initBackend()
 {
     Q_Q(Presenter);
@@ -97,11 +113,6 @@ void PresenterPrivate::initBackend()
     connect(this, &PresenterPrivate::requestInitPlugin,
             pm, &PluginManager::init);
     ThreadPool::instance()->moveToNewThread(pm);
-
-    MediaDatabase::instance()->init();
-    ThreadPool::instance()->moveToNewThread(MediaDatabase::instance());
-
-    qDebug() << "TRACE:" << "database init finished";
 
     player = Player::instance();
     qDebug() << "TRACE:" << "player init finished";
@@ -115,15 +126,6 @@ void PresenterPrivate::initBackend()
     }, Qt::QueuedConnection);
 
     settings = MusicSettings::instance();
-
-    library = MediaLibrary::instance();
-    library->init();
-    ThreadPool::instance()->moveToNewThread(MediaLibrary::instance());
-    qDebug() << "TRACE:" << "library init finished";
-
-    playlistMgr = new PlaylistManager;
-    playlistMgr->load();
-    qDebug() << "TRACE:" << "playlistMgr init finished";
 
     currentPlaylist = playlistMgr->playlist(AllMusicListID);
     PlaylistPtr albumPlaylist = playlistMgr->playlist(AlbumMusicListID);
@@ -457,7 +459,9 @@ void Presenter::prepareData()
 {
     Q_D(Presenter);
 
-    //    QThread::sleep(10);
+    d->quickReadSql();
+    Q_EMIT dataLoaded();
+
     d->initBackend();
     qDebug() << "TRACE:" << "initBackend finished";
     d->transfer = new Transfer();
@@ -602,11 +606,21 @@ void Presenter::prepareData()
     });
 
     connect(this, &Presenter::playNext, this, &Presenter::onMusicNext);
-
-    Q_EMIT dataLoaded();
 }
 
-void Presenter::postAction()
+void Presenter::quickLoad()
+{
+    Q_D(Presenter);
+
+    Q_EMIT showMusicList(d->playlistMgr->playlist(AllMusicListID));
+
+    // Add playlist
+    for (auto playlist : d->playlistMgr->allplaylist()) {
+        Q_EMIT playlistAdded(playlist);
+    }
+}
+
+void Presenter::postAction(bool showFlag)
 {
     Q_D(Presenter);
     Q_EMIT d->requestInitPlugin();
@@ -671,6 +685,7 @@ void Presenter::postAction()
         }
 
         auto lastMetaId = d->settings->value("base.play.last_meta").toString();
+
         lastMeta = MediaLibrary::instance()->meta(lastMetaId);
 
         if (lastPlaylist->contains(lastMeta)) {
@@ -750,9 +765,11 @@ void Presenter::postAction()
         Q_EMIT showMusicList(allplaylist);
     }
 
-    // Add playlist
-    for (auto playlist : d->playlistMgr->allplaylist()) {
-        Q_EMIT playlistAdded(playlist);
+    if (!showFlag) {
+        // Add playlist
+        for (auto playlist : d->playlistMgr->allplaylist()) {
+            Q_EMIT playlistAdded(playlist);
+        }
     }
 
     Q_EMIT currentMusicListChanged(lastPlaylist);
@@ -961,6 +978,7 @@ void Presenter::onMusiclistRemove(PlaylistPtr playlist, const MetaPtrList metali
             if (d->playlistMgr->playlist(AllMusicListID)->isEmpty()) {
 
                 qDebug() << "Presenter::onMusiclistRemove Q_EMIT 1";
+
                 Q_EMIT metaLibraryClean();
             }
         }
@@ -1014,6 +1032,7 @@ void Presenter::onMusiclistRemove(PlaylistPtr playlist, const MetaPtrList metali
     }
 
     if (playlist->allmusic().size() == 0 &&  playlist->id() != "play") {
+
         qDebug() << "Presenter::onMusiclistRemove Q_EMIT 3";
         Q_EMIT musicListClear();
     }
@@ -1910,6 +1929,7 @@ void Presenter::onImportFiles(const QStringList &filelist, PlaylistPtr playlist)
         d->player->setActivePlaylist(curPlaylist);
     }
     curPlayerlist->appendMusicList(curPlaylist->allmusic());
+    return;
 }
 
 void Presenter::onSpeechPlayMusic(const QString music)

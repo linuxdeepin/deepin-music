@@ -37,6 +37,7 @@ public:
     void initUI(bool showLoading);
     void postInitUI();
     void binding(Presenter *presenter);
+    void quickBinding(Presenter *presenter);
 
     void bindSpeechConnect(Presenter *presenter);
 
