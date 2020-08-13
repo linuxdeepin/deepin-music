@@ -129,7 +129,7 @@ MetaPtr MediaLibraryPrivate::importMeta(const QString &filepath,
         return MetaPtr();
     }
 
-    if (    fileInfo.suffix().toLower() != "wav" &&
+    if (fileInfo.suffix().toLower() != "wav" &&
             fileInfo.suffix().toLower() != "mp3" &&
             fileInfo.suffix().toLower() != "ogg" &&
             fileInfo.suffix().toLower() != "vorbis" &&
@@ -138,7 +138,7 @@ MetaPtr MediaLibraryPrivate::importMeta(const QString &filepath,
             fileInfo.suffix().toLower() != "m4a" &&
             fileInfo.suffix().toLower() != "aac" &&
             fileInfo.suffix().toLower() != "ape" &&
-            fileInfo.suffix().toLower() != "amr"
+            fileInfo.suffix().toLower() != "amr" //surpport to amr
        ) {
         cuelist << DMusic::CueParserPtr(new DMusic::CueParser(filepath));
         // TODO: check cue invalid
@@ -187,7 +187,7 @@ MetaPtr MediaLibraryPrivate::importMeta(const QString &filepath,
     int sendCount = 0;
     int receiveCount = 0;
 
-    while ( av_read_frame(pFormatCtx, packet) >= 0 ) {
+    while (av_read_frame(pFormatCtx, packet) >= 0) {
         if (packet->stream_index == audio_stream_index) {
             int ret;
             ret = avcodec_send_packet(pCodecCtx, packet);
