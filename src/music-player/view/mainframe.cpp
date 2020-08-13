@@ -95,7 +95,13 @@ public:
     void slideToImportView();
     void showLyricView();
     void hideLyricView();
+    /**
+     * @brief showPlaylistView  animation to show play list
+     */
     void showPlaylistView();
+    /**
+     * @brief hidePlaylistView  animation to hide play list
+     */
     void hidePlaylistView();
     void resiveistView();
     void slideToMusicListView(bool keepPlaylist);
