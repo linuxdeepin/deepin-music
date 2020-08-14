@@ -271,7 +271,6 @@ void MusicApp::initConnection(bool showFlag)
             d->quickPrepared();
             d->presenter->quickLoad();
         }
-
         QTimer::singleShot(200, nullptr, [ = ]() {
             d->initMpris("DeepinMusic");
             d->onDataPrepared();

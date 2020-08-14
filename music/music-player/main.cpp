@@ -79,10 +79,20 @@ void createSpeechDbus()
 
 bool checkOnly()
 {
+    //single
     QString userName = QDir::homePath().section("/", -1, -1);
-    std::string path = ("/home/" + userName + "/.cache/deepin/deepin-music/single").toStdString();
+    std::string path = ("/home/" + userName + "/.cache/deepin/deepin-music/").toStdString();
+    QDir tdir(path.c_str());
+    if (!tdir.exists()) {
+        bool ret =  tdir.mkpath(path.c_str());
+        MusicSettings::setOption("base.play.showFlag", 0);
+        qDebug() << ret ;
+    }
+
+    path += "single";
     int fd = open(path.c_str(), O_WRONLY | O_CREAT, 0644);
     int flock = lockf(fd, F_TLOCK, 0);
+
     if (fd == -1) {
         perror("open lockfile/n");
         return false;
@@ -107,14 +117,14 @@ int main(int argc, char *argv[])
     auto showflag = MusicSettings::value("base.play.showFlag").toBool();
     music->initUI(showflag);
 
-    QTimer::singleShot(10, nullptr, [ = ]() {
+    QTimer::singleShot(20, nullptr, [ = ]() {
         music->initConnection(showflag);
         /*----创建语音dbus-----*/
         createSpeechDbus();
-
         DLogManager::registerConsoleAppender();
         DLogManager::registerFileAppender();
         DApplication::loadDXcbPlugin();
+        DApplicationSettings saveTheme;
     });
 
     setenv("PULSE_PROP_media.role", "music", 1);
@@ -136,6 +146,7 @@ int main(int argc, char *argv[])
     // Version Time
     app.setApplicationVersion(DApplication::buildVersion(VERSION));
     //app.setStyle("chameleon");
+
 
     QCommandLineParser parser;
     parser.setApplicationDescription("Deepin music player.");
