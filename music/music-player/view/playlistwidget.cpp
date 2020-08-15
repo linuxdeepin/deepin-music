@@ -285,6 +285,8 @@ PlayListWidget::PlayListWidget(QWidget *parent) :
     layout->addWidget(d->actionBar);
     layout->addWidget(d->playListView);
     layout->addWidget(d->emptyHits, 0, Qt::AlignCenter);
+    //show scroll bar
+    layout->addSpacing(12);
 
     d->initConntion();
 
