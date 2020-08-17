@@ -615,6 +615,8 @@ void MainFramePrivate::togglePlaylist(bool visible)
     } else {
         showPlaylistView();
         titlebarwidget->setSearchEnable(true);
+
+        playListWidget->setFocus();
     }
 }
 
@@ -1199,6 +1201,11 @@ void MainFrame::binding(Presenter *presenter)
     connect(d->playListWidget, &PlayListWidget::showInfoDialog,
     this, [ = ](const MetaPtr meta) {
         d->showInfoDialog(meta);
+    });
+
+    connect(d->playListWidget, &PlayListWidget::btPlayList,
+    this, [ = ]() {
+        Q_EMIT  d->footer->focusButton();
     });
 
     connect(d->playListWidget, &PlayListWidget::playall,

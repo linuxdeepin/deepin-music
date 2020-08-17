@@ -170,6 +170,12 @@ void FooterPrivate::initConnection()
         q->onTogglePlayButton();
     });
 
+    q->connect(q, &Footer::focusButton, q, [ = ]() {
+
+        Q_EMIT btPlayList->click();
+    });
+
+
     q->connect(btPrev, &DPushButton::released, q, [ = ]() {
         Q_EMIT q->prev(activingPlaylist, activingMeta);
     });

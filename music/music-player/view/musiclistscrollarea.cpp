@@ -236,7 +236,7 @@ bool MusicListScrollArea::eventFilter(QObject *o, QEvent *e)
             int rowIndex = m_customizeListview->currentIndex().row();
             if (rowIndex == -1) {
                 auto index = m_customizeListview->item(0, 0);
-                // m_customizeListview->setCurrentItem(index);
+                m_customizeListview->setCurrentItem(index);
             }
 
         } else if (e->type() == QEvent::FocusOut) {
