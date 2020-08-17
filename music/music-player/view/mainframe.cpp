@@ -835,6 +835,8 @@ void MainFrame::postInitUI()
 
     d->postInitUI();
 
+    focusPlayList();
+
     auto playAction = new QAction(tr("Play/Pause"), this);
     auto prevAction = new QAction(tr("Previous"), this);
     auto nextAction = new QAction(tr("Next"), this);
@@ -1097,6 +1099,11 @@ void MainFrame::binding(Presenter *presenter)
         d->slideToImportView();
         d->titlebarwidget->clearSearch();
         d->footer->onMediaLibraryClean();
+    });
+
+    connect(d->playListWidget, &PlayListWidget::btPlayList,
+    this, [ = ]() {
+        Q_EMIT  d->footer->focusButton();
     });
 
     connect(presenter, &Presenter::scanFinished,

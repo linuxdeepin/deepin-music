@@ -78,6 +78,20 @@ MusicListWidget::MusicListWidget(QWidget *parent) : DWidget(parent)
     connect(this, &MusicListWidget::seaResult,
             m_dataListView,  &MusicListDataWidget::retResult);
 
+    connect(m_dataListView, &MusicListDataWidget::changeFocus, this, [ = ](QString type) {
+
+        if (type == "AllMusicListID") {
+            m_customizeListview->clearSelection();
+
+            auto index = m_dataBaseListview->item(2, 0);
+            m_dataBaseListview->setCurrentItem(index);
+        } else if (type == "btlistModeFocusOut") {
+
+            auto index = m_dataBaseListview->item(-1, 0);
+            m_dataBaseListview->setCurrentItem(index);
+        }
+    });
+
     connect(this, &MusicListWidget::seaResult, this, [ = ]() {
         m_customizeListview->clearSelected();
         m_customizeListview->closeAllPersistentEditor();

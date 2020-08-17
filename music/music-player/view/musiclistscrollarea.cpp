@@ -82,7 +82,9 @@ MusicListScrollArea::MusicListScrollArea(QWidget *parent) : DScrollArea(parent)
                                         ":/mpimage/light/hover/add_hover.svg",
                                         ":/mpimage/light/press/add_press.svg");
     m_addListBtn->setFixedSize(37, 37);
-    m_addListBtn->setFocusPolicy(Qt::NoFocus);
+
+    m_addListBtn->setFocusPolicy(Qt::TabFocus);
+    m_addListBtn->installEventFilter(this);
 
     auto customizeLayout = new QHBoxLayout(widget);
     customizeLayout->setContentsMargins(0, 0, 5, 0);
@@ -93,8 +95,15 @@ MusicListScrollArea::MusicListScrollArea(QWidget *parent) : DScrollArea(parent)
     m_dataBaseListview = new MusicListView;
     m_dataBaseListview->setEditTriggers(QAbstractItemView::NoEditTriggers);
     m_dataBaseListview->setFixedHeight(162);
+
+    m_dataBaseListview->setFocusPolicy(Qt::TabFocus);
+    m_dataBaseListview->installEventFilter(this);
+
     m_customizeListview = new MusicListView;
     musicLayout->setContentsMargins(0, 0, 0, 0);
+
+    m_customizeListview->setFocusPolicy(Qt::TabFocus);
+    m_customizeListview->installEventFilter(this);
 
     musicLayout->addWidget(dataBaseLabel, 0, Qt::AlignVCenter);
     musicLayout->addWidget(m_dataBaseListview, 0, Qt::AlignTop);
@@ -104,7 +113,7 @@ MusicListScrollArea::MusicListScrollArea(QWidget *parent) : DScrollArea(parent)
     int themeType = DGuiApplicationHelper::instance()->themeType();
     slotTheme(themeType);
 
-    connect(verticalScrollBar(), &QScrollBar::rangeChanged, this, [=]() {
+    connect(verticalScrollBar(), &QScrollBar::rangeChanged, this, [ = ]() {
         if (m_customizeListview->getSizeChangedFlag()) {
             this->verticalScrollBar()->setValue(this->verticalScrollBar()->maximum());
             m_customizeListview->setSizeChangedFlag(false);
@@ -172,6 +181,94 @@ void MusicListScrollArea::changePicture(QPixmap pixmap, QPixmap albumPixmap, QPi
     Q_UNUSED(albumPixmap)
     m_dataBaseListview->changePicture(pixmap, sidebarPixmap);
     m_customizeListview->changePicture(pixmap, sidebarPixmap);
+}
+
+
+bool MusicListScrollArea::eventFilter(QObject *o, QEvent *e)
+{
+    if (o == m_dataBaseListview) {
+
+        if (e->type() == QEvent::KeyPress) {
+            QKeyEvent *event = static_cast<QKeyEvent *>(e);
+            if ((event->modifiers() == Qt::ControlModifier) && (event->key() == Qt::Key_M)) {
+
+                int rowIndex = m_dataBaseListview->currentIndex().row();
+                int row = 40 * rowIndex;
+
+                QPoint pos(120, row);
+                m_dataBaseListview->showContextMenu(pos);
+            }
+        } else if (e->type() == QEvent::FocusIn) {
+            int rowIndex = m_dataBaseListview->currentIndex().row();
+            if (rowIndex == -1) {
+                auto index = m_dataBaseListview->item(0, 0);
+                m_dataBaseListview->setCurrentItem(index);
+            }
+
+        } else if (e->type() == QEvent::FocusOut) {
+
+            // m_dataBaseListview->clearSelection();
+        }
+    }
+
+    if (o == m_customizeListview) {
+
+        if (e->type() == QEvent::KeyPress) {
+            QKeyEvent *event = static_cast<QKeyEvent *>(e);
+            if ((event->modifiers() == Qt::ControlModifier) && (event->key() == Qt::Key_M)) {
+
+                int rowIndex = m_customizeListview->currentIndex().row();
+                int row = 40 * rowIndex;
+                QPoint pos;
+
+                if (row > 300) {
+                    QPoint posm(120, 120);
+                    pos = posm;
+                } else {
+                    QPoint posm(120, row);
+                    pos = posm;
+                }
+
+                m_customizeListview->showContextMenu(pos);
+            }
+        } else if (e->type() == QEvent::FocusIn) {
+
+            int rowIndex = m_customizeListview->currentIndex().row();
+            if (rowIndex == -1) {
+                auto index = m_customizeListview->item(0, 0);
+                // m_customizeListview->setCurrentItem(index);
+            }
+
+        } else if (e->type() == QEvent::FocusOut) {
+
+            //  m_customizeListview->clearSelection();
+        }
+    }
+
+    if (o == m_addListBtn) {
+
+        if (e->type() == QEvent::KeyPress) {
+            QKeyEvent *event = static_cast<QKeyEvent *>(e);
+            if (event->key() == Qt::Key_Return) {
+
+                Q_EMIT m_addListBtn->click();
+            }
+        } else if (e->type() == QEvent::FocusIn) {
+
+            m_addListBtn->setPropertyPic(":/mpimage/light/hover/add_hover.svg",
+                                         ":/mpimage/light/normal/add_normal.svg",
+                                         ":/mpimage/light/press/add_press.svg");
+            m_dataBaseListview->clearSelection();
+
+        } else if (e->type() == QEvent::FocusOut) {
+
+            m_addListBtn->setPropertyPic(":/mpimage/light/normal/add_normal.svg",
+                                         ":/mpimage/light/hover/add_hover.svg",
+                                         ":/mpimage/light/press/add_press.svg");
+        }
+    }
+
+    return QWidget::eventFilter(o, e);
 }
 
 void MusicListScrollArea::resizeEvent(QResizeEvent *event)

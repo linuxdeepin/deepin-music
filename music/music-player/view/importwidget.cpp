@@ -84,7 +84,9 @@ ImportWidget::ImportWidget(QWidget *parent) : DFrame(parent), d_ptr(new ImportWi
     d->importButton->setObjectName("ImportViewImportButton");
     d->importButton->setFixedSize(302, 36);
     d->importButton->setText(tr("Open Folder"));
-    d->importButton->setFocusPolicy(Qt::NoFocus);
+    d->importButton->setFocusPolicy(Qt::TabFocus);
+    d->importButton->setDefault(true);
+    d->importButton->installEventFilter(this);
 
     d->addMusicButton = new DPushButton;
     d->addMusicButton->setFont(importButtonFont);
@@ -92,7 +94,9 @@ ImportWidget::ImportWidget(QWidget *parent) : DFrame(parent), d_ptr(new ImportWi
     d->addMusicButton->setObjectName("ImportViewImportButton");
     d->addMusicButton->setFixedSize(302, 36);
     d->addMusicButton->setText(tr("Add Music"));
-    d->addMusicButton->setFocusPolicy(Qt::NoFocus);
+    d->addMusicButton->setFocusPolicy(Qt::TabFocus);
+    d->addMusicButton->setDefault(true);
+    d->addMusicButton->installEventFilter(this);
 
     d->text = new QLabel;
     d->text->setObjectName("ImportViewText");
@@ -104,6 +108,8 @@ ImportWidget::ImportWidget(QWidget *parent) : DFrame(parent), d_ptr(new ImportWi
     d->text->setFixedHeight(18);
     QString linkText = QString(linkTemplate).arg(tr("Scan")).arg(tr("Scan"));
     d->text->setText(tr("%1 music directory or drag music files here").arg(linkText));
+    d->text->setFocusPolicy(Qt::TabFocus);
+    d->text->installEventFilter(this);
 
     layout->setSpacing(0);
     layout->addStretch();
@@ -162,6 +168,40 @@ void ImportWidget::showImportHint()
     QString linkText = QString(linkTemplate).arg(tr("Scan")).arg(tr("Scan"));
     d->text->setText(tr("%1 music directory or drag music files here").arg(linkText));
 }
+
+
+bool ImportWidget::eventFilter(QObject *o, QEvent *e)
+{
+    Q_D(ImportWidget);
+
+    if (o == d->text) {
+        if (e->type() == QEvent::KeyPress) {
+            QKeyEvent *event = static_cast<QKeyEvent *>(e);
+            if (event->key() == Qt::Key_Return) {
+
+                Q_EMIT this->scanMusicDirectory();
+
+                auto pe =  d->text->palette();
+                pe.setColor(QPalette::WindowText, QColor("#696969"));
+                d->text->setPalette(pe);
+            }
+        } else if (e->type() == QEvent::FocusIn) {
+
+            auto pe =  d->text->palette();
+            pe.setColor(QPalette::WindowText, QColor("#A9A9A9"));
+            d->text->setPalette(pe);
+
+        } else if (e->type() == QEvent::FocusOut) {
+
+            auto pe =  d->text->palette();
+            pe.setColor(QPalette::WindowText, QColor("#696969"));
+            d->text->setPalette(pe);
+        }
+    }
+
+    return QWidget::eventFilter(o, e);
+}
+
 
 void ImportWidget::dragEnterEvent(QDragEnterEvent *event)
 {

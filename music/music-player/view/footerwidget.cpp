@@ -495,14 +495,17 @@ Footer::Footer(QWidget *parent) :
     d->btFavorite->hide();
     d->btLyric->hide();
 
-    d->btPrev->setFocusPolicy(Qt::NoFocus);
-    d->btPlay->setFocusPolicy(Qt::NoFocus);
-    d->btNext->setFocusPolicy(Qt::NoFocus);
-    d->btFavorite->setFocusPolicy(Qt::NoFocus);
-    d->btLyric->setFocusPolicy(Qt::NoFocus);
-    d->btPlayMode ->setFocusPolicy(Qt::NoFocus);
-    d->btSound->setFocusPolicy(Qt::NoFocus);
-    d->btPlayList->setFocusPolicy(Qt::NoFocus);
+
+    d->btFavorite->setFocusPolicy(Qt::TabFocus);
+    d->btFavorite->setDefault(true);
+    d->btLyric->setFocusPolicy(Qt::TabFocus);
+    d->btLyric->setDefault(true);
+    d->btPlayMode ->setFocusPolicy(Qt::TabFocus);
+    d->btPlayMode->setDefault(true);
+    d->btSound->setFocusPolicy(Qt::TabFocus);
+    d->btSound->setDefault(true);
+    d->btPlayList->setFocusPolicy(Qt::TabFocus);
+    d->btPlayList->setDefault(true);
 
     d->btPrev->setDisabled(true);
     d->btNext->setDisabled(true);

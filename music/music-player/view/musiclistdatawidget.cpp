@@ -1142,6 +1142,10 @@ MusicListDataWidget::MusicListDataWidget(QWidget *parent) :
     DFontSizeManager::instance()->bind(d->btPlayAll, DFontSizeManager::T8);
     d->btPlayAll->setFont(btPlayAllFont);
 
+    d->btPlayAll->setFocusPolicy(Qt::TabFocus);
+    d->btPlayAll->setDefault(true);
+    d->btPlayAll->installEventFilter(this);
+
     d->infoLabel = new DLabel;
     d->infoLabel->setObjectName("MusicListDataTitle");
     d->infoLabel->setText(tr("All Music"));
@@ -1165,21 +1169,17 @@ MusicListDataWidget::MusicListDataWidget(QWidget *parent) :
     d->btIconMode->setCheckable(true);
     d->btIconMode->setChecked(false);
 
-//    d->btlistMode = new MusicImageButton(":/mpimage/light/normal/text_list_normal.svg",
-//                                         ":/mpimage/light/hover/text_list_hover.svg",
-//                                         ":/mpimage/light/press/text_list_press.svg",
-//                                         ":/mpimage/light/active/text_list_active.svg");
+    d->btIconMode->setFocusPolicy(Qt::TabFocus);
+    d->btIconMode->installEventFilter(this);
+
     d->btlistMode = new DToolButton;
     d->btlistMode->setFixedSize(36, 36);
     d->btlistMode->setObjectName("MusicListDataWidgetListMode");
     d->btlistMode->setCheckable(true);
     d->btlistMode->setChecked(false);
 
-//    auto framelayout = new QHBoxLayout(this);
-//    DFrame *t_frame = new DFrame(this);
-//    framelayout->addWidget(d->btIconMode, 0, Qt::AlignCenter);
-//    framelayout->addWidget(d->btlistMode, 0, Qt::AlignCenter);
-//    t_frame->setLayout(framelayout);
+    d->btlistMode->setFocusPolicy(Qt::TabFocus);
+    d->btlistMode->installEventFilter(this);
 
     actionInfoBarLayout->addWidget(d->btPlayAll, 0, Qt::AlignVCenter);
     actionInfoBarLayout->addWidget(d->infoLabel, 100, Qt::AlignLeft | Qt::AlignVCenter);
@@ -1221,6 +1221,9 @@ MusicListDataWidget::MusicListDataWidget(QWidget *parent) :
     d->artistListView = new MusicListDataView;
     d->musicListView = new PlayListView(true, false);
     d->musicListView->hide();
+
+    d->musicListView->setFocusPolicy(Qt::StrongFocus);
+    d->musicListView->installEventFilter(this);
 
     layout->setContentsMargins(0, 1, 0, 0);
 
@@ -1922,6 +1925,73 @@ void MusicListDataWidget::onCustomContextMenuRequest(const QPoint &pos, Playlist
         d->musicListView->showContextMenu(pos, d->musicListView->playlist(), favlist, newlists);
     }
 }
+
+
+bool MusicListDataWidget::eventFilter(QObject *o, QEvent *e)
+{
+    Q_D(MusicListDataWidget);
+
+    if (o == d->btPlayAll) {
+        if (e->type() == QEvent::FocusIn) {
+
+            Q_EMIT changeFocus("AllMusicListID");
+        }
+    } else if (o == d->btIconMode) {
+        if (e->type() == QEvent::KeyPress) {
+            QKeyEvent *event = static_cast<QKeyEvent *>(e);
+            if (event->key() == Qt::Key_Return) {
+
+                Q_EMIT d->btIconMode->click();
+            }
+        }
+    }  else  if (o == d->btlistMode) {
+        if (e->type() == QEvent::KeyPress) {
+            QKeyEvent *event = static_cast<QKeyEvent *>(e);
+            if (event->key() == Qt::Key_Return) {
+
+                Q_EMIT d->btlistMode->click();
+            }
+        } else if (e->type() == QEvent::FocusOut) {
+
+            Q_EMIT changeFocus("btlistModeFocusOut");
+        }
+    } else if (o == d->musicListView) {
+
+        if (e->type() == QEvent::KeyPress) {
+            QKeyEvent *event = static_cast<QKeyEvent *>(e);
+            if ((event->modifiers() == Qt::ControlModifier) && (event->key() == Qt::Key_M)) {
+
+                int rowIndex = d->musicListView->currentIndex().row();
+                int row = 40 * rowIndex;
+                QPoint pos;
+
+                if (row > 440) {
+                    QPoint posm(300, 220);
+                    pos = posm;
+                } else {
+                    QPoint posm(300, row);
+                    pos = posm;
+                }
+
+                Q_EMIT requestCustomContextMenu(pos, 1);
+            }
+        } else if (e->type() == QEvent::FocusIn) {
+
+            int rowIndex = d->musicListView->currentIndex().row();
+
+            if (rowIndex == -1) {
+                auto index = d->musicListView->item(0, 0);
+                d->musicListView->setCurrentItem(index);
+            }
+
+        } else if (e->type() == QEvent::FocusOut) {
+
+        }
+    }
+
+    return QWidget::eventFilter(o, e);
+}
+
 
 void MusicListDataWidget::dragEnterEvent(QDragEnterEvent *event)
 {
