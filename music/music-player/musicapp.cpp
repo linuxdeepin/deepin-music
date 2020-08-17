@@ -49,6 +49,7 @@ public:
     void initMpris(const QString &serviceName);
     void triggerShortcutAction(const QString &optKey);
     void onDataPrepared();
+    void quickPrepared();
     void onQuit();
     void onRaise();
 
@@ -110,6 +111,11 @@ void MusicAppPrivate::triggerShortcutAction(const QString &optKey)
     }
 }
 
+void MusicAppPrivate::quickPrepared()
+{
+    playerFrame->quickBinding(presenter);
+}
+
 void MusicAppPrivate::onDataPrepared()
 {
     Q_Q(MusicApp);
@@ -122,10 +128,6 @@ void MusicAppPrivate::onDataPrepared()
     q, [ = ](const QString & optKey) {
         this->triggerShortcutAction(optKey);
     });
-
-    initMpris("DeepinMusic");
-
-    presenter->postAction();
 }
 
 void MusicAppPrivate::onQuit()
@@ -139,12 +141,10 @@ void MusicAppPrivate::onRaise()
 {
     // blumia: call show() will not bring it up (at least it's not working under dde-kwin),
     //         so we need call showNormal() here.
-    // playerFrame->show();
     playerFrame->showNormal();
     playerFrame->raise();
     playerFrame->activateWindow();
 }
-
 
 MusicApp::MusicApp(MainFrame *frame, QObject *parent)
     : QObject(parent), d_ptr(new MusicAppPrivate(this))
@@ -250,47 +250,40 @@ void MusicApp::onStartImport(QStringList files)
     d->m_Files = files;
 }
 
-void MusicApp::initUI()
+void MusicApp::initUI(bool showFlag)
 {
     Q_D(MusicApp);
-
-    /*
-     *auto mediaCount = AppSettings::instance()->value("base.play.media_count").toInt();
-     *auto mediaCount = 1;
-     *d->playerFrame->initUI(0 != mediaCount);
-     */
-
-    d->playerFrame->initUI(true);
-
-    //qDebug() << "TRACE:" << "create MainFrame";
-
+    d->playerFrame->initUI(showFlag);
     show();
 }
 
-void MusicApp::initConnection()
+void MusicApp::initConnection(bool showFlag)
 {
     Q_D(MusicApp);
 
-    //qDebug() << "TRACE:" << "create Presenter";
     d->presenter = new Presenter;
     auto presenterWork = ThreadPool::instance()->newThread();
     d->presenter->moveToThread(presenterWork);
     connect(presenterWork, &QThread::started, d->presenter, &Presenter::prepareData);
     connect(this, &MusicApp::sigStartImport, d->playerFrame, &MainFrame::onClickedImportFiles);
     connect(d->presenter, &Presenter::dataLoaded, this, [ = ]() {
-        d->onDataPrepared();
-//        d->initMpris("DeepinMusic");
-
-//        d->presenter->postAction();
-        Player::instance()->init();
-        if (d->m_Files.size() > 0) {
-            emit sigStartImport(d->m_Files);
-            d->m_Files.clear();
+        if (showFlag) {
+            d->quickPrepared();
+            d->presenter->quickLoad();
         }
+        QTimer::singleShot(200, nullptr, [ = ]() {
+            d->initMpris("DeepinMusic");
+            d->onDataPrepared();
+            d->quickPrepared();
+            d->presenter->postAction(showFlag);
+            Player::instance()->init();
+            if (d->m_Files.size() > 0) {
+                emit sigStartImport(d->m_Files);
+                d->m_Files.clear();
+            }
+        });
     });
 
     presenterWork->start();
-//    d->onDataPrepared();
-    //qDebug() << "TRACE:" << "start prepare data";
 }
 

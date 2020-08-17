@@ -88,6 +88,13 @@
                             "default": false
                         },
                         {
+                            "key": "showFlag",
+                            "hide": true,
+                            "reset": false,
+                            "default": false
+                        },
+
+                        {
                             "key": "theme",
                             "hide": true,
                             "reset": false,

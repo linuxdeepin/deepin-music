@@ -79,10 +79,20 @@ void createSpeechDbus()
 
 bool checkOnly()
 {
+    //single
     QString userName = QDir::homePath().section("/", -1, -1);
-    std::string path = ("/home/" + userName + "/.cache/deepin/deepin-music/single").toStdString();
+    std::string path = ("/home/" + userName + "/.cache/deepin/deepin-music/").toStdString();
+    QDir tdir(path.c_str());
+    if (!tdir.exists()) {
+        bool ret =  tdir.mkpath(path.c_str());
+        MusicSettings::setOption("base.play.showFlag", 0);
+        qDebug() << ret ;
+    }
+
+    path += "single";
     int fd = open(path.c_str(), O_WRONLY | O_CREAT, 0644);
     int flock = lockf(fd, F_TLOCK, 0);
+
     if (fd == -1) {
         perror("open lockfile/n");
         return false;
@@ -96,8 +106,28 @@ bool checkOnly()
 
 int main(int argc, char *argv[])
 {
+    DApplication app(argc, argv);
+
+    /*---Player instance init---*/
+    app.loadTranslator();
+    MusicSettings::init();
+    MainFrame mainframe;
+    MusicApp *music = new MusicApp(&mainframe);
+
+    auto showflag = MusicSettings::value("base.play.showFlag").toBool();
+    music->initUI(showflag);
+
+    QTimer::singleShot(20, nullptr, [ = ]() {
+        music->initConnection(showflag);
+        /*----创建语音dbus-----*/
+        createSpeechDbus();
+        DLogManager::registerConsoleAppender();
+        DLogManager::registerFileAppender();
+        DApplication::loadDXcbPlugin();
+        DApplicationSettings saveTheme;
+    });
+
     setenv("PULSE_PROP_media.role", "music", 1);
-//    DApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 #ifdef SNAP_APP
     DStandardPaths::setMode(DStandardPaths::Snap);
 #endif
@@ -106,11 +136,8 @@ int main(int argc, char *argv[])
     DWIDGET_INIT_RESOURCE();
     QCoreApplication::addLibraryPath(".");
 #endif
-    DApplication::loadDXcbPlugin();
 
-    DApplication app(argc, argv);
     app.setAttribute(Qt::AA_UseHighDpiPixmaps);
-//    app.setAttribute(Qt::AA_EnableHighDpiScaling);
     app.setOrganizationName("deepin");
 
     app.setApplicationName("deepin-music");
@@ -121,29 +148,17 @@ int main(int argc, char *argv[])
     //app.setStyle("chameleon");
 
 
-    DLogManager::registerConsoleAppender();
-    DLogManager::registerFileAppender();
-
     QCommandLineParser parser;
     parser.setApplicationDescription("Deepin music player.");
     parser.addHelpOption();
     parser.addVersionOption();
     parser.addPositionalArgument("file", "Music file path");
     parser.process(app);
-    createSpeechDbus();//创建语音dbus
     // handle open file
     QString toOpenFile;
     if (parser.positionalArguments().length() > 0) {
         toOpenFile = parser.positionalArguments().first();
     }
-
-    app.loadTranslator();
-
-    /*
-     MUST setApplicationDisplayName before DMainWindow create
-     app.setApplicationDisplayName(QObject::tr("Music"));
-     app.setWindowIcon(QIcon(":/common/image/deepin-music.svg"));
-    */
 
     QIcon icon = QIcon::fromTheme("deepin-music");
     app.setProductIcon(icon);
@@ -177,16 +192,6 @@ int main(int argc, char *argv[])
         }
         return 0;
     }
-    MusicSettings::init();
-
-    DApplicationSettings saveTheme;
-
-    /*-DMainWindow must create on main function, so it can deconstruction before QApplication-*/
-
-    MainFrame mainframe;
-    MusicApp *music = new MusicApp(&mainframe);
-    music->initUI();
-    /*---Player instance init---*/
 
     int count = parser.positionalArguments().length();
     if (count > 1) {
@@ -194,7 +199,6 @@ int main(int argc, char *argv[])
         files.removeFirst();
         music->onStartImport(files);
     }
-    music->initConnection();
 
     if (!toOpenFile.isEmpty()) {
         auto fi = QFileInfo(toOpenFile);

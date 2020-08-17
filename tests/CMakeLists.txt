@@ -10,6 +10,8 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 
+set(ISTEST "1")#单元测试标志
+
 # 添加gocv覆盖率文件的输出
 set(CMAKE_CXX_FLAGS "-g -fprofile-arcs -ftest-coverage")
 
@@ -50,12 +52,14 @@ find_package(PkgConfig REQUIRED)
 include_directories(${PROJECT_BINARY_DIR})
 include_directories(${PROJECT_SOURCE_DIR})
 
-set(QtModule Core Gui Widgets Svg Multimedia Xml Network Sql DBus)
+if(ISTEST MATCHES "1")
+    set(QtModule Core Gui Widgets Svg Multimedia Xml Network Sql DBus Test)
+else()
+    set(QtModule Core Gui Widgets Svg Multimedia Xml Network Sql DBus)
+endif()
 
 #先查找到这些qt相关的模块以供链接使用
 find_package(Qt5 REQUIRED ${QtModule})
-
-set(ISTEST "1")#单元测试标志
 
 add_subdirectory(../music build)
 add_subdirectory(googletest)

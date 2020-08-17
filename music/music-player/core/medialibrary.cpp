@@ -54,18 +54,20 @@ class MediaLibraryPrivate
 public:
     MediaLibraryPrivate(MediaLibrary *parent) : q_ptr(parent)
     {
-        losslessSuffixs.insert("flac", true);
-        losslessSuffixs.insert("ape", true);
-        losslessSuffixs.insert("wav", true);
+        QTimer::singleShot(200, nullptr, [ = ]() {
+            losslessSuffixs.insert("flac", true);
+            losslessSuffixs.insert("ape", true);
+            losslessSuffixs.insert("wav", true);
 
-        auto suffixList = Player::instance()->supportedSuffixList();
-        for (auto suffix : suffixList) {
-            supportedSuffixs.insert(suffix, true);
-        }
+            auto suffixList = Player::instance()->supportedSuffixList();
+            for (auto suffix : suffixList) {
+                supportedSuffixs.insert(suffix, true);
+            }
 
 #ifdef SUPPORT_INOTIFY
-        watcher = new InotifyEngine;
+            watcher = new InotifyEngine;
 #endif
+        });
     }
 
     MetaPtr createMeta(const QFileInfo &fileInfo);
@@ -87,10 +89,6 @@ public:
 #ifdef SUPPORT_INOTIFY
         watcher->addPaths(dirs.keys());
 #endif
-
-        //        for (auto meta : metas) {
-        //            qDebug() << meta->title;
-        //        }
     }
 
 private:
@@ -111,7 +109,6 @@ MetaPtr MediaLibraryPrivate::createMeta(const QFileInfo &fileinfo)
     if (metas.contains(hash)) {
         return metas.value(hash);
     }
-
     auto meta = MetaPtr(new MediaMeta);
     meta->hash = hash;
     MetaDetector::updateMetaFromLocalfile(meta.data(), fileinfo);
