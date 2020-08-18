@@ -467,7 +467,7 @@ MetaPtr Playlist::removeOneMusic(const MetaPtr meta)
         qCritical() << "Cannot remove empty id" << meta->hash << meta->title;
         return MetaPtr();
     }
-    if (id() == AlbumMusicListID ) {
+    if (id() == AlbumMusicListID) {
         QString albumStr = meta->album;
         if (albumStr.isEmpty()) {
             albumStr = tr("Unknown album");
@@ -846,6 +846,9 @@ void Playlist::playMusicTypeToMeta(QString name, QStringList sortMetas)
             qDebug() << "skip dump music " << meta->hash << meta->localPath;
             continue;
         }
+
+        if (meta == nullptr)
+            return ;
 
         newMetalist << meta;
         playlistMeta.sortMetas << meta->hash;
