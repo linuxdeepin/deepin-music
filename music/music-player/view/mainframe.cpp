@@ -615,6 +615,8 @@ void MainFramePrivate::togglePlaylist(bool visible)
     } else {
         showPlaylistView();
         titlebarwidget->setSearchEnable(true);
+
+        playListWidget->setFocus();
     }
 }
 
@@ -834,6 +836,8 @@ void MainFrame::postInitUI()
     Q_D(MainFrame);
 
     d->postInitUI();
+
+    focusPlayList();
 
     auto playAction = new QAction(tr("Play/Pause"), this);
     auto prevAction = new QAction(tr("Previous"), this);
@@ -1099,6 +1103,11 @@ void MainFrame::binding(Presenter *presenter)
         d->footer->onMediaLibraryClean();
     });
 
+    connect(d->playListWidget, &PlayListWidget::btPlayList,
+    this, [ = ]() {
+        Q_EMIT  d->footer->focusButton();
+    });
+
     connect(presenter, &Presenter::scanFinished,
     this, [ = ](const QString & /*jobid*/, int mediaCount) {
         if (0 == mediaCount) {
@@ -1192,6 +1201,11 @@ void MainFrame::binding(Presenter *presenter)
     connect(d->playListWidget, &PlayListWidget::showInfoDialog,
     this, [ = ](const MetaPtr meta) {
         d->showInfoDialog(meta);
+    });
+
+    connect(d->playListWidget, &PlayListWidget::btPlayList,
+    this, [ = ]() {
+        Q_EMIT  d->footer->focusButton();
     });
 
     connect(d->playListWidget, &PlayListWidget::playall,

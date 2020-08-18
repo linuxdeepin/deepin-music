@@ -228,6 +228,20 @@ QPixmap PlayListView::getAlbumPixmap() const
     return d->sidebarPixmap;
 }
 
+QStandardItem *PlayListView::item(int row, int column) const
+{
+    Q_D(const PlayListView);
+
+    return  d->model->item(row, column);
+}
+
+void PlayListView::setCurrentItem(QStandardItem *item)
+{
+    Q_D( PlayListView);
+
+    setCurrentIndex(d->model->indexFromItem(item));
+}
+
 int PlayListView::rowCount()
 {
     Q_D(const PlayListView);

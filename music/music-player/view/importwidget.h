@@ -45,6 +45,10 @@ public slots:
     void showImportHint();
 
     void slotTheme(int type);
+
+protected:
+    bool eventFilter(QObject *o, QEvent *e) Q_DECL_OVERRIDE;
+
 protected:
     virtual void dragEnterEvent(QDragEnterEvent *event) Q_DECL_OVERRIDE;
     virtual void dragMoveEvent(QDragMoveEvent *event) Q_DECL_OVERRIDE;

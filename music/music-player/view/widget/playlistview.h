@@ -66,6 +66,9 @@ public:
     QPixmap getSidebarPixmap() const;
     QPixmap getAlbumPixmap() const;
 
+    QStandardItem *item(int row, int column) const;
+    void setCurrentItem(QStandardItem *item);
+
     int rowCount();
     QString firstHash();
 public slots:
