@@ -110,6 +110,8 @@ int main(int argc, char *argv[])
 
     /*---Player instance init---*/
     app.loadTranslator();
+    DApplication::loadDXcbPlugin();
+
     MusicSettings::init();
     MainFrame mainframe;
     MusicApp *music = new MusicApp(&mainframe);
@@ -123,7 +125,6 @@ int main(int argc, char *argv[])
         createSpeechDbus();
         DLogManager::registerConsoleAppender();
         DLogManager::registerFileAppender();
-        DApplication::loadDXcbPlugin();
         DApplicationSettings saveTheme;
     });
 
