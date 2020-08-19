@@ -834,7 +834,9 @@ void Playlist::playMusicTypeToMeta(QString name, QStringList sortMetas)
     for (auto meta : playMusicTypePtrListData.metas) {
         if (name.isEmpty() || name == meta->name) {
             for (auto hashCode : meta->playlistMeta.sortMetas) {
-                mlist << meta->playlistMeta.metas[hashCode];
+                if (meta->playlistMeta.metas[hashCode] != nullptr) {
+                    mlist << meta->playlistMeta.metas[hashCode];
+                }
             }
         }
     }
@@ -846,9 +848,6 @@ void Playlist::playMusicTypeToMeta(QString name, QStringList sortMetas)
             qDebug() << "skip dump music " << meta->hash << meta->localPath;
             continue;
         }
-
-        if (meta == nullptr)
-            return ;
 
         newMetalist << meta;
         playlistMeta.sortMetas << meta->hash;
