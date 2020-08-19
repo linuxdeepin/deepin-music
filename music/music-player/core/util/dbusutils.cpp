@@ -24,6 +24,8 @@ QVariant DBusUtils::readDBusProperty(const QString &service, const QString &path
                               QDBusConnection::sessionBus());
     if (!ainterface.isValid()) {
         qDebug() << qPrintable(QDBusConnection::sessionBus().lastError().message());
+        //cause dead lock if no unlock here,
+        mutex.unlock();
         QVariant v(0) ;
         return  v;
     }
