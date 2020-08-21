@@ -123,6 +123,10 @@ PlayListView::PlayListView(bool searchFlag, bool isPlayList, QWidget *parent)
     connect(this, &PlayListView::modelMake, m_ModelMake, &ModelMake::onModelMake, Qt::QueuedConnection);
     connect(m_ModelMake, &ModelMake::addMeta, this, &PlayListView::onAddMeta, Qt::QueuedConnection);
     connect(m_ModelMake, &ModelMake::hideEmptyHits, this, [ = ](bool a) {
+        if (d->playMetaPtrList.isEmpty()) {
+            //emit got none data
+            emit getSearchData(false);
+        }
         Q_EMIT hideEmptyHits(a);
     });
 }
@@ -237,7 +241,7 @@ QStandardItem *PlayListView::item(int row, int column) const
 
 void PlayListView::setCurrentItem(QStandardItem *item)
 {
-    Q_D( PlayListView);
+    Q_D(PlayListView);
 
     setCurrentIndex(d->model->indexFromItem(item));
 }
@@ -264,8 +268,15 @@ QString PlayListView::firstHash()
 void PlayListView::onAddMeta(QString playListId, const MetaPtr meta)
 {
     Q_D(PlayListView);
-//    qDebug() << "PlayListView::onAddMeta:" << meta->title;
+    if (playlist().isNull()) {
+        return;
+    }
     if (playListId == playlist()->id()) {
+        //first time to get here
+        if (d->playMetaPtrList.isEmpty()) {
+            //emit data ready
+            emit getSearchData(true);
+        }
         d->addMedia(meta);
         d->playMetaPtrList.append(meta);
     }
@@ -337,7 +348,7 @@ void PlayListView::onLocate(const MetaPtr meta)
     setCurrentIndex(index);
 }
 
-void PlayListView::onMusiclistChanged(PlaylistPtr playlist)
+bool PlayListView::onMusiclistChanged(PlaylistPtr playlist)
 {
     Q_D(PlayListView);
     if (playlist.isNull()) {
@@ -345,7 +356,7 @@ void PlayListView::onMusiclistChanged(PlaylistPtr playlist)
         d->model->removeRows(0, d->model->rowCount());
         d->playMetaPtrList.clear();
         d->model->setPlaylist(nullptr);
-        return;
+        return false;
     }
     if (playlist->searchStr().isEmpty() && playlist == d->model->playlist()
             && playlist->allmusic().size() == rowCount()) {
@@ -359,7 +370,7 @@ void PlayListView::onMusiclistChanged(PlaylistPtr playlist)
             }
         }
         if (flag)
-            return;
+            return  false;
     }
 
     setUpdatesEnabled(false);
@@ -375,7 +386,7 @@ void PlayListView::onMusiclistChanged(PlaylistPtr playlist)
     setUpdatesEnabled(true);
     setModel(d->model);
     d->model->setPlaylist(playlist);
-    //updateScrollbar();
+    return true;
 }
 
 void PlayListView::keyPressEvent(QKeyEvent *event)
@@ -915,6 +926,6 @@ void ModelMake::onModelMake(PlaylistPtr playlist, QString searchStr)
         }
         count ++;
     }
-    if (count > 0)
-        Q_EMIT hideEmptyHits(false);
+
+    Q_EMIT hideEmptyHits(!(count > 0));
 }
