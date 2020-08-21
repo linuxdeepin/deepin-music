@@ -25,6 +25,7 @@
 
 #include <QFile>
 #include <QFileInfo>
+#include <QDir>
 #include <qsettingbackend.h>
 #include "util/global.h"
 #include "util/threadpool.h"
@@ -41,7 +42,7 @@ MusicSettings::MusicSettings(QObject *parent) :
 
 MusicSettings::~MusicSettings()
 {
-    qDebug() << "destory";
+
 }
 
 void MusicSettings::init()
