@@ -1873,32 +1873,34 @@ void MusicListDataWidget::retResult(QString searchText, QList<PlaylistPtr> resul
             d->tabWidget->setCurrentIndex(0);
         }
 
+        //asynchronous data
+        connect(d->songListView, &PlayListView::getSearchData,
+        this, [ = ](bool ret) {
+            if (ret) {
+                d->updateFlag = true;
+                if (CurIndex == 0) {
+                    d->initData(MusicPlaylists, false, search);
+                    tabwidgetInfo(MusicPlaylists);
+                }
+                if (CurIndex == 1) {
+                    d->initData(ArtistPlaylists, false, search);
+                    tabwidgetInfo(ArtistPlaylists);
+                }
+                if (CurIndex == 2) {
+                    d->initData(AlbumPlaylists, false, search);
+                    tabwidgetInfo(AlbumPlaylists);
+                }
+                d->tabWidget->setCurrentIndex(CurIndex);
+            } else {
+                d->initData(retdata, false, "noSearchResults");
+            }
+        });
+
         /*---------Search without result------*/
         if (d->songListView->rowCount() == 0 && d->singerListView->rowCount() == 0 && d->albListView->rowCount() == 0) {
-            //asynchronous data
-            connect(d->songListView, &PlayListView::getSearchData,
-            this, [ = ](bool ret) {
-                if (ret) {
-                    d->updateFlag = true;
-                    if (CurIndex == 0) {
-                        d->initData(MusicPlaylists, false, search);
-                        tabwidgetInfo(MusicPlaylists);
-                    }
-                    if (CurIndex == 1) {
-                        d->initData(ArtistPlaylists, false, search);
-                        tabwidgetInfo(ArtistPlaylists);
-                    }
-                    if (CurIndex == 2) {
-                        d->initData(AlbumPlaylists, false, search);
-                        tabwidgetInfo(AlbumPlaylists);
-                    }
-                    d->tabWidget->setCurrentIndex(CurIndex);
-                } else {
-                    d->initData(retdata, false, "noSearchResults");
-                }
-            });
-            if (!flagasync)
+            if (!flagasync) {
                 d->initData(retdata, false, "noSearchResults");
+            }
             return;
         }
 

@@ -1441,7 +1441,7 @@ void MainFrame::binding(Presenter *presenter)
     //add Shortcut
     QShortcut *muteShortcut = new QShortcut(this);
     muteShortcut->setKey(QKeySequence(QLatin1String("M")));
-    connect(muteShortcut, &QShortcut::activated, presenter, &Presenter::onToggleMute);
+    connect(muteShortcut, &QShortcut::activated, presenter, &Presenter::onLocalToggleMute);
 
     connect(presenter, &Presenter::hidewaveformScale, d->footer, &Footer::hidewaveform);
 

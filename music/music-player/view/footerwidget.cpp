@@ -208,8 +208,6 @@ void FooterPrivate::initConnection()
         Q_EMIT q->localToggleMute();
     });
 
-
-
     q->connect(volSlider, &SoundVolume::volumeChanged, q, [ = ](int vol) {
         q->onVolumeChanged(vol);
         if (m_Mute) {
@@ -1362,6 +1360,8 @@ void Footer::onMutedChanged(bool muted)
     }
     MusicSettings::setOption("base.play.volume", d->m_Volume);
     MusicSettings::setOption("base.play.mute", d->m_Mute);
+    //sync mute to slider
+    d->volSlider->syncMute(d->m_Mute);
 }
 
 void Footer::onLocalMutedChanged(int type)
@@ -1392,6 +1392,9 @@ void Footer::onLocalMutedChanged(int type)
     d->volumeMonitoring.syncLocalFlag();
     //emit mute state
     Q_EMIT localMuteStat(d->m_Mute);
+
+    //sync mute to slider
+    d->volSlider->syncMute(d->m_Mute);
 }
 
 void Footer::onModeChange(int mode)

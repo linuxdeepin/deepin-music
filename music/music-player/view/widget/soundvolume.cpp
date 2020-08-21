@@ -89,6 +89,7 @@ SoundVolume::SoundVolume(QWidget *parent) : QWidget(parent), d_ptr(new SoundVolu
     d->volSlider->setMouseWheelEnabled(true);
 
     d->sound = new SoundPixmapButton();
+    //d->sound->setShortcut(QKeySequence(QLatin1String("M")));
     d->sound->setFixedSize(30, 30);
     d->sound->setIconSize(QSize(30, 30));
 
@@ -191,6 +192,15 @@ void SoundVolume::volumeIcon()
             d->sound->setIcon(QPixmap(":/mpimage/light/checked/mute_checked.svg"));
         }
     }
+}
+
+void SoundVolume::syncMute(bool mute)
+{
+    Q_D(SoundVolume);
+    d->volMute = mute;
+    volumeIcon();
+
+    Q_UNUSED(mute)
 }
 
 void SoundVolume::deleyHide()
