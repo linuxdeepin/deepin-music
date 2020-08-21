@@ -524,7 +524,6 @@ void MainFramePrivate::resiveistView()
 void MainFramePrivate:: slideToImportView()
 {
     //Q_Q(MainFrame);
-
     titlebarwidget->setSearchEnable(false);
     newSonglistAction->setDisabled(true);
     footer->setLyricButtonChecked(false);
@@ -559,7 +558,6 @@ void MainFramePrivate:: slideToMusicListView(bool keepPlaylist)
 {
     Q_UNUSED(keepPlaylist)
     Q_Q(MainFrame);
-
     titlebarwidget->setSearchEnable(true);
     newSonglistAction->setDisabled(false);
     footer->setLyricButtonChecked(false);
@@ -578,9 +576,10 @@ void MainFramePrivate:: slideToMusicListView(bool keepPlaylist)
     //disableControl(AnimationDelay);
     currentWidget = musicListWidget;
     titlebar->raise();
+    titlebarwidget->setEnabled(true);
+    titlebarwidget->raise();
     footer->show();
     footer->raise();
-
     footer->setFocus();
     updateViewname("");
 }
@@ -1441,7 +1440,7 @@ void MainFrame::binding(Presenter *presenter)
     //add Shortcut
     QShortcut *muteShortcut = new QShortcut(this);
     muteShortcut->setKey(QKeySequence(QLatin1String("M")));
-    connect(muteShortcut, &QShortcut::activated, presenter, &Presenter::onToggleMute);
+    connect(muteShortcut, &QShortcut::activated, presenter, &Presenter::onLocalToggleMute);
 
     connect(presenter, &Presenter::hidewaveformScale, d->footer, &Footer::hidewaveform);
 

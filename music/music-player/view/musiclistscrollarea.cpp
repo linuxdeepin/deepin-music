@@ -55,7 +55,7 @@ MusicListScrollArea::MusicListScrollArea(QWidget *parent) : DScrollArea(parent)
 
     QWidget *widget = new QWidget(this);
     setWidget(widget);
-
+    widget->setFixedWidth(220);
     auto musicLayout = new QVBoxLayout(widget);
     musicLayout->setContentsMargins(10, 5, 10, 5);
     musicLayout->setSpacing(0);

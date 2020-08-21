@@ -336,7 +336,6 @@ void MusicListView::changePicture(QPixmap pixmap, QPixmap albumPixmap)
             viewItemAction->setIcon(playingIcon);
             actionList.append(viewItemAction);
             curItem->setActionList(Qt::RightEdge, actionList);
-
         }
         update();
     }
