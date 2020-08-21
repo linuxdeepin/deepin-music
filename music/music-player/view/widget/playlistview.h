@@ -66,6 +66,9 @@ public:
     QPixmap getSidebarPixmap() const;
     QPixmap getAlbumPixmap() const;
 
+    QStandardItem *item(int row, int column) const;
+    void setCurrentItem(QStandardItem *item);
+
     int rowCount();
     QString firstHash();
 public slots:
@@ -87,9 +90,9 @@ signals:
     void removeMetasFavourite(const MetaPtrList  &metalist);
     void modelMake(PlaylistPtr playlist, QString searchStr);
     void hideEmptyHits(bool ishide);
-
+    void getSearchData(bool isvalid); //get search data
 public:
-    void onMusiclistChanged(PlaylistPtr playlist);
+    bool onMusiclistChanged(PlaylistPtr playlist);
     void onMusicListAdded(const MetaPtrList metalist);
     void onMusicListRemoved(const MetaPtrList metalist);
     void onMusicError(const MetaPtr meta, int error);

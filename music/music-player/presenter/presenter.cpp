@@ -951,6 +951,9 @@ void Presenter::onMusiclistRemove(PlaylistPtr playlist, const MetaPtrList metali
     MetaPtr next;
     bool t_isLastMeta = false;
 
+
+    qDebug() << "----playlistID-----" << playlist->id();
+
     //检查当前播放的是否包含最后一首
     if (playinglist != nullptr) {
         for (auto meta : metalist) {
@@ -986,7 +989,8 @@ void Presenter::onMusiclistRemove(PlaylistPtr playlist, const MetaPtrList metali
         MediaDatabase::instance()->removeMediaMetaList(metalist);
         d->library->removeMediaMetaList(metalist);
 
-    } else if (playlist->id() == AlbumMusicListID || playlist->id() == ArtistMusicListID) {
+    } else if (playlist->id() == AlbumMusicListID || playlist->id() == ArtistMusicListID ||
+               playlist->id() == "albumResult" || playlist->id() == "artistResult") {   //搜索结果专辑和演唱者删除和音乐库一致
         auto curPlaylist = d->playlistMgr->playlist(AllMusicListID);
         for (auto &autoPlaylist : allplaylist()) {
             auto meta =  autoPlaylist->removeMusicList(metalist);
@@ -1021,8 +1025,10 @@ void Presenter::onMusiclistRemove(PlaylistPtr playlist, const MetaPtrList metali
 
     /*-----Judge the condition to remove the song playback switch -----*/
     for (auto &meta : metalist) {
-        if (d->player->isActiveMeta(meta) && (playinglist == playlist || playlist->id() == AllMusicListID
-                                              || playlist->id() == AlbumMusicListID  || playlist->id() == ArtistMusicListID)) {
+        if (d->player->isActiveMeta(meta) &&
+                (playinglist == playlist || playlist->id() == AllMusicListID ||
+                 playlist->id() == AlbumMusicListID  || playlist->id() == ArtistMusicListID ||
+                 playlist->id() == "albumResult" || playlist->id() == "artistResult")) {
             if (playinglist->isEmpty() || t_isLastMeta || next.isNull()) {
                 onMusicStop(playinglist, next);
             } else {

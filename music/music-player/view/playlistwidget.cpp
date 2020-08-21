@@ -267,8 +267,12 @@ PlayListWidget::PlayListWidget(QWidget *parent) :
     d->btClearAll->setPalette(playAllPalette);
     d->btClearAll->setObjectName("PlayListPlayAll");
     d->btClearAll->setText(tr("Empty"));
-    d->btClearAll->setFocusPolicy(Qt::NoFocus);
     d->btClearAll->setFixedHeight(30);
+
+    d->btClearAll->setFocusPolicy(Qt::TabFocus);
+    d->btClearAll->setDefault(true);
+    d->btClearAll->installEventFilter(this);
+    this->installEventFilter(this);
 
     d->emptyHits = new DLabel(this);
     d->emptyHits->setObjectName("PlayListEmptyHits");
@@ -281,6 +285,8 @@ PlayListWidget::PlayListWidget(QWidget *parent) :
 
     d->playListView = new PlayListView(false, true);
     d->playListView->hide();
+    d->playListView->setFocusPolicy(Qt::StrongFocus);
+    d->playListView->installEventFilter(this);
 
     layout->addWidget(d->actionBar);
     layout->addWidget(d->playListView);
@@ -337,6 +343,74 @@ PlaylistPtr PlayListWidget::curPlaylist()
 {
     Q_D(PlayListWidget);
     return d->playListView->playlist();
+}
+
+bool PlayListWidget::eventFilter(QObject *o, QEvent *e)
+{
+    Q_D(PlayListWidget);
+
+    if (e->type() == QEvent::KeyPress) {
+        QKeyEvent *event = static_cast<QKeyEvent *>(e);
+        if (event->key() == Qt::Key_Escape) {
+
+            Q_EMIT btPlayList();
+        }
+    }
+
+    if (o == d->playListView) {
+        if (e->type() == QEvent::KeyPress) {
+            QKeyEvent *event = static_cast<QKeyEvent *>(e);
+            if ((event->modifiers() == Qt::ControlModifier) && (event->key() == Qt::Key_M)) {
+
+                int rowIndex = d->playListView->currentIndex().row();
+                int row = 40 * rowIndex;
+                QPoint pos;
+
+                if (row > 300) {
+                    QPoint posm(300, 65);
+                    pos = posm;
+                } else {
+                    QPoint posm(300, row);
+                    pos = posm;
+                }
+
+                Q_EMIT requestCustomContextMenu(pos, 0);
+
+            } else if (event->key() == Qt::Key_Escape) {
+
+            }
+        } else if (e->type() == QEvent::FocusIn) {
+
+            int rowIndex = d->playListView->currentIndex().row();
+            if (rowIndex == -1) {
+                auto index = d->playListView->item(0, 0);
+                d->playListView->setCurrentItem(index);
+            }
+
+        } else if (e->type() == QEvent::FocusOut) {
+
+            int rowIndex = d->playListView->currentIndex().row();
+            if (rowIndex == 0) {
+                //    d->playListView->clearSelection();
+            }
+        }
+    } else if (o == d->btClearAll) {
+
+        if (e->type() == QEvent::KeyPress) {
+            QKeyEvent *event = static_cast<QKeyEvent *>(e);
+            if (event->key() == Qt::Key_Escape) {
+
+            }
+        } else  if (e->type() == QEvent::FocusIn) {
+            auto index = d->playListView->item(-1, 0);
+            d->playListView->setCurrentItem(index);
+
+        } else if (e->type() == QEvent::FocusOut) {
+
+        }
+    }
+
+    return QWidget::eventFilter(o, e);
 }
 
 void PlayListWidget::dragEnterEvent(QDragEnterEvent *event)

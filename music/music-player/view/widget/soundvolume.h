@@ -51,8 +51,7 @@ public slots:
     void setRadius(int radius);
     void setBorderColor(QColor borderColor);
     void volumeIcon();
-
-
+    void syncMute(bool mute);
     void slotTheme(int type);
 protected:
     virtual void showEvent(QShowEvent *event) Q_DECL_OVERRIDE;

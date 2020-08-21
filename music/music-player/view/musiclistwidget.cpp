@@ -78,6 +78,22 @@ MusicListWidget::MusicListWidget(QWidget *parent) : DWidget(parent)
     connect(this, &MusicListWidget::seaResult,
             m_dataListView,  &MusicListDataWidget::retResult);
 
+    connect(m_dataListView, &MusicListDataWidget::changeFocus, this, [ = ](QString type) {
+
+        if (type == "AllMusicListID") {
+            m_customizeListview->clearSelection();
+            int rowIndex = m_dataBaseListview->currentIndex().row();
+            if (rowIndex == -1) {
+                auto index = m_dataBaseListview->item(2, 0);
+                m_dataBaseListview->setCurrentItem(index);
+            }
+        } else if (type == "btlistMode") {
+
+            auto index = m_dataBaseListview->item(-1, 0);
+            m_dataBaseListview->setCurrentItem(index);
+        }
+    });
+
     connect(this, &MusicListWidget::seaResult, this, [ = ]() {
         m_customizeListview->clearSelected();
         m_customizeListview->closeAllPersistentEditor();
@@ -105,7 +121,7 @@ MusicListWidget::MusicListWidget(QWidget *parent) : DWidget(parent)
             curPtr->setSearchStr("");
             Q_EMIT selectedPlaylistChange(curPtr);
         }
-        m_dataBaseListview->setFocus();
+//        m_dataBaseListview->setFocus();
     });
     connect(m_dataBaseListview, &MusicListView::currentChanged,
     this, [ = ](const QModelIndex & current, const QModelIndex & previous) {
@@ -118,7 +134,7 @@ MusicListWidget::MusicListWidget(QWidget *parent) : DWidget(parent)
             curPtr->setSearchStr("");
             Q_EMIT selectedPlaylistChange(curPtr);
         }
-        m_dataBaseListview->setFocus();
+//        m_dataBaseListview->setFocus();
     });
     connect(m_dataBaseListview, &MusicListView::customResort,
     this, [ = ](const QStringList & uuids) {
@@ -163,7 +179,7 @@ MusicListWidget::MusicListWidget(QWidget *parent) : DWidget(parent)
             curPtr->setSearchStr("");
             Q_EMIT selectedPlaylistChange(curPtr);
         }
-        m_customizeListview->setFocus();
+//        m_customizeListview->setFocus();
     });
     connect(m_customizeListview, &MusicListView::currentChanged,
     this, [ = ](const QModelIndex & current, const QModelIndex & previous) {
@@ -177,7 +193,7 @@ MusicListWidget::MusicListWidget(QWidget *parent) : DWidget(parent)
             curPtr->setSearchStr("");
             Q_EMIT selectedPlaylistChange(curPtr);
         }
-        m_customizeListview->setFocus();
+//        m_customizeListview->setFocus();
     });
     connect(m_customizeListview, &MusicListView::removeAllList,
     this, [ = ](const MetaPtr meta) {
@@ -236,7 +252,7 @@ MusicListWidget::MusicListWidget(QWidget *parent) : DWidget(parent)
     //musiclistdatawidget
     connect(m_dataListView, &MusicListDataWidget::playall,
     this, [ = ](PlaylistPtr playlist) {
-//        Q_EMIT this->selectPlaylist(playlist);
+
         Q_EMIT this->playall(playlist);
     });
     connect(m_dataListView, &MusicListDataWidget::playMedia,

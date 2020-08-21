@@ -170,6 +170,12 @@ void FooterPrivate::initConnection()
         q->onTogglePlayButton();
     });
 
+    q->connect(q, &Footer::focusButton, q, [ = ]() {
+
+        Q_EMIT btPlayList->click();
+    });
+
+
     q->connect(btPrev, &DPushButton::released, q, [ = ]() {
         Q_EMIT q->prev(activingPlaylist, activingMeta);
     });
@@ -201,8 +207,6 @@ void FooterPrivate::initConnection()
     q->connect(volSlider, &SoundVolume::volumeMute, q, [ = ]() {
         Q_EMIT q->localToggleMute();
     });
-
-
 
     q->connect(volSlider, &SoundVolume::volumeChanged, q, [ = ](int vol) {
         q->onVolumeChanged(vol);
@@ -495,14 +499,17 @@ Footer::Footer(QWidget *parent) :
     d->btFavorite->hide();
     d->btLyric->hide();
 
-    d->btPrev->setFocusPolicy(Qt::NoFocus);
-    d->btPlay->setFocusPolicy(Qt::NoFocus);
-    d->btNext->setFocusPolicy(Qt::NoFocus);
-    d->btFavorite->setFocusPolicy(Qt::NoFocus);
-    d->btLyric->setFocusPolicy(Qt::NoFocus);
-    d->btPlayMode ->setFocusPolicy(Qt::NoFocus);
-    d->btSound->setFocusPolicy(Qt::NoFocus);
-    d->btPlayList->setFocusPolicy(Qt::NoFocus);
+
+    d->btFavorite->setFocusPolicy(Qt::TabFocus);
+    d->btFavorite->setDefault(true);
+    d->btLyric->setFocusPolicy(Qt::TabFocus);
+    d->btLyric->setDefault(true);
+    d->btPlayMode ->setFocusPolicy(Qt::TabFocus);
+    d->btPlayMode->setDefault(true);
+    d->btSound->setFocusPolicy(Qt::TabFocus);
+    d->btSound->setDefault(true);
+    d->btPlayList->setFocusPolicy(Qt::TabFocus);
+    d->btPlayList->setDefault(true);
 
     d->btPrev->setDisabled(true);
     d->btNext->setDisabled(true);
@@ -1353,6 +1360,8 @@ void Footer::onMutedChanged(bool muted)
     }
     MusicSettings::setOption("base.play.volume", d->m_Volume);
     MusicSettings::setOption("base.play.mute", d->m_Mute);
+    //sync mute to slider
+    d->volSlider->syncMute(d->m_Mute);
 }
 
 void Footer::onLocalMutedChanged(int type)
@@ -1383,6 +1392,9 @@ void Footer::onLocalMutedChanged(int type)
     d->volumeMonitoring.syncLocalFlag();
     //emit mute state
     Q_EMIT localMuteStat(d->m_Mute);
+
+    //sync mute to slider
+    d->volSlider->syncMute(d->m_Mute);
 }
 
 void Footer::onModeChange(int mode)
