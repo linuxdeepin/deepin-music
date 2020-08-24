@@ -82,7 +82,14 @@ int main(int argc, char *argv[])
     DWIDGET_INIT_RESOURCE();
     QCoreApplication::addLibraryPath(".");
 #endif
-    DApplication::loadDXcbPlugin();
+
+    auto e = QProcessEnvironment::systemEnvironment();
+    QString XDG_SESSION_TYPE = e.value(QStringLiteral("XDG_SESSION_TYPE"));
+    QString WAYLAND_DISPLAY = e.value(QStringLiteral("WAYLAND_DISPLAY"));
+
+    if (XDG_SESSION_TYPE != QLatin1String("wayland") && !WAYLAND_DISPLAY.contains(QLatin1String("wayland"), Qt::CaseInsensitive)) {
+        DApplication::loadDXcbPlugin();
+    }
 
     DApplication app(argc, argv);
     app.setAttribute(Qt::AA_UseHighDpiPixmaps);
@@ -91,7 +98,7 @@ int main(int argc, char *argv[])
 
     app.setApplicationName("deepin-music");
     //app.setApplicationVersion(DApplication::buildVersion("3.1"));
-    const QDate buildDate = QLocale( QLocale::English ).toDate( QString(__DATE__).replace("  ", " 0"), "MMM dd yyyy");
+    const QDate buildDate = QLocale(QLocale::English).toDate(QString(__DATE__).replace("  ", " 0"), "MMM dd yyyy");
     QString t_date = buildDate.toString("MMdd");
     // Version Time
     app.setApplicationVersion(DApplication::buildVersion(t_date));
