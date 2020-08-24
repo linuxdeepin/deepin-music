@@ -198,17 +198,8 @@ bool MusicListScrollArea::eventFilter(QObject *o, QEvent *e)
                 QPoint pos(120, row);
                 m_dataBaseListview->showContextMenu(pos);
             }
-        } else if (e->type() == QEvent::FocusIn) {
-            int rowIndex = m_dataBaseListview->currentIndex().row();
-            if (rowIndex == -1) {
-                auto index = m_dataBaseListview->item(0, 0);
-                m_dataBaseListview->setCurrentItem(index);
-            }
-
-        } else if (e->type() == QEvent::FocusOut) {
-
-            // m_dataBaseListview->clearSelection();
         }
+        // Tab焦点进入事件和点击事件冲突，保留点击事件设置焦点
     }
 
     if (o == m_customizeListview) {
@@ -231,18 +222,8 @@ bool MusicListScrollArea::eventFilter(QObject *o, QEvent *e)
 
                 m_customizeListview->showContextMenu(pos);
             }
-        } else if (e->type() == QEvent::FocusIn) {
-
-            int rowIndex = m_customizeListview->currentIndex().row();
-            if (rowIndex == -1) {
-                auto index = m_customizeListview->item(0, 0);
-                m_customizeListview->setCurrentItem(index);
-            }
-
-        } else if (e->type() == QEvent::FocusOut) {
-
-            //  m_customizeListview->clearSelection();
         }
+        // Tab焦点进入事件和点击事件冲突，保留点击事件设置焦点
     }
 
     if (o == m_addListBtn) {
