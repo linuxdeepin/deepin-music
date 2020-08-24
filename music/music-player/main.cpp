@@ -33,6 +33,7 @@
 #include <DApplicationSettings>
 #include <DExportedInterface>
 #include <metadetector.h>
+#include <DStandardPaths>
 
 #include <sys/types.h>
 #include <sys/stat.h>
