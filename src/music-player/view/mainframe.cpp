@@ -1494,7 +1494,7 @@ void MainFrame::setCoverBackground(QString coverBackground)
 void MainFrame::onSelectImportDirectory()
 {
     Q_D(const MainFrame);
-    DFileDialog fileDlg(this);
+    DFileDialog fileDlg;
 
     QString lastImportPath = d->getLastImportPath();
 
@@ -1512,7 +1512,7 @@ void MainFrame::onSelectImportDirectory()
 void MainFrame::onSelectImportFiles()
 {
     Q_D(const MainFrame);
-    DFileDialog fileDlg(this);
+    DFileDialog fileDlg;
 
     QString lastImportPath = d->getLastImportPath();
 
