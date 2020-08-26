@@ -37,7 +37,7 @@ class PlayerPrivate;
 class Player : public QObject, public DMusic::DSingleton<Player>
 {
     Q_OBJECT
-
+    Q_PROPERTY(double fadeInOutFactor READ fadeInOutFactor WRITE setFadeInOutFactor NOTIFY fadeInOutFactorChanged)
 public:
     enum PlaybackStatus {
         InvalidPlaybackStatus = -1,
