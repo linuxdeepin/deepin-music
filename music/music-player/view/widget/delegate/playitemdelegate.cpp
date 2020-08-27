@@ -455,7 +455,7 @@ void PlayItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
 
     int rowCount = listview->model()->rowCount();
     auto rowCountSize = QString::number(rowCount).size();
-    rowCountSize = qMax(rowCountSize, 2);
+    rowCountSize = qMax(rowCountSize, 3);
 
     for (int col = 0; col < ColumnButt; ++col) {
         auto flag = alignmentFlag(col);

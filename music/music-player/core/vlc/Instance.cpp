@@ -7,7 +7,7 @@
 #include "Enums.h"
 #include "Error.h"
 #include "Instance.h"
-
+#include "core/vlc/vlcdynamicinstance.h"
 
 
 
@@ -34,10 +34,9 @@ void logCallback(void *data,
 
     message.prepend("VlcInstance  libvlc: ");
     switch (level) {
-    case Vlc::ErrorLevel:{
+    case Vlc::ErrorLevel: {
         qCritical(message.toUtf8().data(), NULL);
-        if(message.contains("cannot write"))
-        {
+        if (message.contains("cannot write")) {
             /*****************************************
              *vlc write error. we need to stop
              * player then start it
@@ -57,6 +56,14 @@ void logCallback(void *data,
     }
 }
 
+typedef libvlc_instance_t *(*vlc_new_function)(int, const char *const *);
+typedef void (*vlc_set_user_agent_function)(libvlc_instance_t *, const char *, const char *);
+typedef void (*vlc_set_app_id_function)(libvlc_instance_t *, const char *, const char *, const char *);
+typedef void (*vlc_log_set_function)(libvlc_instance_t *, libvlc_log_cb, void *);
+typedef void (*vlc_release_function)(libvlc_instance_t *);
+typedef const char *(*vlc_get_changeset_function)(void);
+typedef const char *(*vlc_get_compiler_function)(void);
+typedef const char *(*vlc_get_version_function)(void);
 VlcInstance::VlcInstance(const QStringList &args,
                          QObject *parent)
     : QObject(parent),
@@ -65,17 +72,14 @@ VlcInstance::VlcInstance(const QStringList &args,
       _logLevel(Vlc::ErrorLevel)
 {
     Q_UNUSED(args)
-// Convert arguments to required format
+    vlc_new_function vlc_new = (vlc_new_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("libvlc_new");
+    vlc_set_user_agent_function vlc_set_user_agent = (vlc_set_user_agent_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("libvlc_set_user_agent");
+    vlc_set_app_id_function vlc_set_app_id = (vlc_set_app_id_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("libvlc_set_app_id");
+    vlc_log_set_function vlc_log_set = (vlc_log_set_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("libvlc_log_set");
 
-//    char *argv[args.count()];
-//    for (int i = 0; i < args.count(); ++i)
-//        argv[i] = (char *)qstrdup(args.at(i).toUtf8().data());
-
-    // Create new libvlc instance
-//    _vlcInstance = libvlc_new(args.count(), argv);
-    _vlcInstance = libvlc_new(0, nullptr);
-    libvlc_set_user_agent(_vlcInstance, Global::getAppName().toStdString().c_str(), "");//name
-    libvlc_set_app_id(_vlcInstance, "", "", "deepin-music");//icon
+    _vlcInstance = vlc_new(0, nullptr);
+    vlc_set_user_agent(_vlcInstance, Global::getAppName().toStdString().c_str(), "");//name
+    vlc_set_app_id(_vlcInstance, "", "", "deepin-music");//icon
 
     qRegisterMetaType<Vlc::Meta>("Vlc::Meta");
     qRegisterMetaType<Vlc::State>("Vlc::State");
@@ -84,7 +88,7 @@ VlcInstance::VlcInstance(const QStringList &args,
 
     // Check if instance is running
     if (_vlcInstance) {
-        libvlc_log_set(_vlcInstance, logCallback, this);
+        vlc_log_set(_vlcInstance, logCallback, this);
         _status = true;
         qDebug() << "Using libvlc version:" << version();
     } else {
@@ -95,7 +99,8 @@ VlcInstance::VlcInstance(const QStringList &args,
 VlcInstance::~VlcInstance()
 {
     if (_status && _vlcInstance) {
-        libvlc_release(_vlcInstance);
+        vlc_release_function vlc_release = (vlc_release_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("libvlc_release");
+        vlc_release(_vlcInstance);
     }
 }
 
@@ -119,48 +124,11 @@ void VlcInstance::setLogLevel(Vlc::LogLevel level)
     _logLevel = level;
 }
 
-//QString VlcInstance::libVersion()
-//{
-//    QString version;
-//#if defined(LIBVLCQT_VERSION)
-//    version.append(QString(LIBVLCQT_VERSION));
-//#else
-//    version.append(QString("Unknown"));
-//#endif //LIBVLCQT_VERSION
-
-//#if defined(LIBVLCQT_VERSION_VCS)
-//    if (QString(LIBVLCQT_VERSION_VCS) != "0" && QString(LIBVLCQT_VERSION_VCS) != "") {
-//        version.append("-" + QString(LIBVLCQT_VERSION_VCS));
-//    }
-//#endif //LIBVLCQT_VERSION
-
-//    return version;
-//}
-
-//int VlcInstance::libVersionMajor()
-//{
-//    int version = -1;
-//#if defined(LIBVLCQT_VERSION_MAJOR)
-//    version = LIBVLCQT_VERSION_MAJOR;
-//#endif //LIBVLCQT_VERSION
-
-//    return version;
-//}
-
-//int VlcInstance::libVersionMinor()
-//{
-//    int version = -1;
-//#if defined(LIBVLCQT_VERSION_MINOR)
-//    version = LIBVLCQT_VERSION_MINOR;
-//#endif //LIBVLCQT_VERSION
-
-//    return version;
-//}
-
 QString VlcInstance::changeset()
 {
     // Returns libvlc changeset
-    return QString(libvlc_get_changeset());
+    vlc_get_changeset_function vlc_get_changeset = (vlc_get_changeset_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("libvlc_get_changeset");
+    return QString(vlc_get_changeset());
 }
 
 void VlcInstance::catchPulseError(int err)
@@ -172,67 +140,13 @@ void VlcInstance::catchPulseError(int err)
 QString VlcInstance::compiler()
 {
     // Returns libvlc compiler version
-    return QString(libvlc_get_compiler());
+    vlc_get_compiler_function vlc_get_compiler = (vlc_get_compiler_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("libvlc_get_compiler");
+    return QString(vlc_get_compiler());
 }
 
 QString VlcInstance::version()
 {
     // Returns libvlc version
-    return QString(libvlc_get_version());
+    vlc_get_version_function vlc_get_version = (vlc_get_version_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("libvlc_get_version");
+    return QString(vlc_get_version());
 }
-
-
-//void VlcInstance::setAppId(const QString &id,
-//                           const QString &version,
-//                           const QString &icon)
-//{
-//    libvlc_set_app_id(_vlcInstance, id.toUtf8().data(), version.toUtf8().data(), icon.toUtf8().data());
-//}
-
-//QList<VlcModuleDescription *> VlcInstance::audioFilterList() const
-//{
-//    libvlc_module_description_t *original = libvlc_audio_filter_list_get(_vlcInstance);
-//    if (original == NULL) {
-//        return QList<VlcModuleDescription *>(); // LCOV_EXCL_LINE
-//    }
-
-//    libvlc_module_description_t *list = original;
-//    QList<VlcModuleDescription *> audioFilters;
-//    do {
-//        VlcModuleDescription *module = new VlcModuleDescription(VlcModuleDescription::AudioFilter, list->psz_name);
-//        module->setLongName(list->psz_longname);
-//        module->setShortName(list->psz_shortname);
-//        module->setHelp(list->psz_help);
-//        audioFilters << module;
-
-//        list = list->p_next;
-//    } while (list->p_next);
-
-//    libvlc_module_description_list_release(original);
-
-//    return audioFilters;
-//}
-
-//QList<VlcModuleDescription *> VlcInstance::videoFilterList() const
-//{
-//    libvlc_module_description_t *original = libvlc_video_filter_list_get(_vlcInstance);
-//    if (original == NULL) {
-//        return QList<VlcModuleDescription *>(); // LCOV_EXCL_LINE
-//    }
-
-//    libvlc_module_description_t *list = original;
-//    QList<VlcModuleDescription *> videoFilters;
-//    do {
-//        VlcModuleDescription *module = new VlcModuleDescription(VlcModuleDescription::VideoFilter, list->psz_name);
-//        module->setLongName(list->psz_longname);
-//        module->setShortName(list->psz_shortname);
-//        module->setHelp(list->psz_help);
-//        videoFilters << module;
-
-//        list = list->p_next;
-//    } while (list->p_next);
-
-//    libvlc_module_description_list_release(original);
-
-//    return videoFilters;
-//}

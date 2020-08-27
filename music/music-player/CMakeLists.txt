@@ -60,8 +60,10 @@ find_package(PkgConfig REQUIRED)
 pkg_check_modules(Dtk REQUIRED IMPORTED_TARGET dtkwidget)
 pkg_check_modules(Dtk REQUIRED IMPORTED_TARGET dtkcore)
 pkg_check_modules(Dtk REQUIRED IMPORTED_TARGET dtkgui)
-pkg_check_modules(AV REQUIRED IMPORTED_TARGET libavutil libavcodec
-    libavformat libcue taglib libvlc )
+#pkg_check_modules(AV REQUIRED IMPORTED_TARGET libavutil libavcodec
+#    libavformat libcue taglib)
+
+pkg_check_modules(AV REQUIRED IMPORTED_TARGET libcue taglib)
 
 set(AllQRC
     ./resource/resource.qrc
@@ -93,10 +95,11 @@ target_include_directories(${CMD_NAME} PUBLIC  ${PROJECT_INCLUDE} )
 
 #将工程与这些模块链接起来
 qt5_use_modules(${CMD_NAME} ${QtModule})
-#X11 Xext Xtst
+#X11 Xext Xtst  Qt5::Concurrent
 set(TARGET_LIBS X11 Xext Qt5::Widgets Qt5::Network Qt5::Core Qt5::Gui Qt5::X11Extras
-    Qt5::DBus Qt5::Sql Qt5::Svg Qt5::Multimedia Qt5::Xml PkgConfig::AV PkgConfig::Dtk icui18n
-    mpris-qt5  dbusextended-qt5  mpris-qt5  dmusic vlccore)
+    Qt5::DBus  Qt5::Sql Qt5::Svg Qt5::Multimedia Qt5::Xml PkgConfig::AV PkgConfig::Dtk icui18n
+    mpris-qt5 dbusextended-qt5 dmusic)
+
 LINK_DIRECTORIES(${CMAKE_BINARY_DIR}/music/libdmusic/
         ${CMAKE_BINARY_DIR}/music/vendor/dbusextended-qt/src/
         ${CMAKE_BINARY_DIR}/music/vendor/mpris-qt/src/)

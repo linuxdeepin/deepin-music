@@ -15,8 +15,8 @@ aux_source_directory(. allSourcelib)
 aux_source_directory(net allSourcelib)
 aux_source_directory(util allSourcelib)
 
-#add_library(${CMD_NAME} SHARED ${allSourcelib})
-add_library(${CMD_NAME} STATIC ${allSourcelib})
+add_library(${CMD_NAME} SHARED ${allSourcelib})
+#add_library(${CMD_NAME} STATIC ${allSourcelib})
 set_target_properties(dmusic PROPERTIES VERSION 1.0.0 SOVERSION 1.0)
 
 #使用第三方库需要用到的一个包
@@ -38,4 +38,3 @@ qt5_use_modules(${CMD_NAME} ${QtModule})
 find_package(KF5Codecs)
 target_link_libraries(${CMD_NAME} KF5::Codecs)
 install(TARGETS ${CMD_NAME} DESTINATION ${CMAKE_INSTALL_LIBDIR})
-

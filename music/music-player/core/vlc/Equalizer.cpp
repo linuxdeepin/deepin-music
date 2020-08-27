@@ -5,23 +5,42 @@
 #include "Equalizer.h"
 #include "error.h"
 #include "MediaPlayer.h"
+#include "core/vlc/vlcdynamicinstance.h"
+
+typedef libvlc_equalizer_t *(*vlc_audio_equalizer_new_function)(void);
+typedef void (*vlc_audio_equalizer_release_function)(libvlc_equalizer_t *);
+typedef float (*vlc_audio_equalizer_get_amp_at_index_function)(libvlc_equalizer_t *, unsigned);
+typedef unsigned(*vlc_audio_equalizer_get_band_count_function)(void);
+typedef float (*vlc_audio_equalizer_get_band_frequency_function)(unsigned);
+typedef float (*vlc_audio_equalizer_get_preamp_function)(libvlc_equalizer_t *);
+typedef unsigned(*vlc_audio_equalizer_get_preset_count_function)(void);
+typedef const char *(*vlc_audio_equalizer_get_preset_name_function)(unsigned);
+typedef libvlc_equalizer_t *(*vlc_audio_equalizer_new_from_preset_function)(unsigned);
+typedef int (*vlc_audio_equalizer_set_amp_at_index_function)(libvlc_equalizer_t *, float, unsigned);
+typedef int (*vlc_media_player_set_equalizer_function)(libvlc_media_player_t *, libvlc_equalizer_t *);
+typedef int (*vlc_audio_equalizer_set_preamp_function)(libvlc_equalizer_t *, float);
 
 VlcEqualizer::VlcEqualizer(VlcMediaPlayer *vlcMediaPlayer)
     : QObject(vlcMediaPlayer),
-      _vlcMediaPlayer(vlcMediaPlayer),
-      _vlcEqualizer(libvlc_audio_equalizer_new()) {}
+      _vlcMediaPlayer(vlcMediaPlayer)
+{
+    vlc_audio_equalizer_new_function vlc_audio_equalizer_new = (vlc_audio_equalizer_new_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("libvlc_audio_equalizer_new");
+    _vlcEqualizer = vlc_audio_equalizer_new();
+}
 
 VlcEqualizer::~VlcEqualizer()
 {
     if (_vlcEqualizer) {
-        libvlc_audio_equalizer_release(_vlcEqualizer);
+        vlc_audio_equalizer_release_function vlc_audio_equalizer_release = (vlc_audio_equalizer_release_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("libvlc_audio_equalizer_release");
+        vlc_audio_equalizer_release(_vlcEqualizer);
     }
 }
 
 float VlcEqualizer::amplificationForBandAt(uint bandIndex) const
 {
     if (_vlcEqualizer) {
-        float ret = libvlc_audio_equalizer_get_amp_at_index(_vlcEqualizer, bandIndex);
+        vlc_audio_equalizer_get_amp_at_index_function vlc_audio_equalizer_get_amp_at_index = (vlc_audio_equalizer_get_amp_at_index_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("libvlc_audio_equalizer_get_amp_at_index");
+        float ret = vlc_audio_equalizer_get_amp_at_index(_vlcEqualizer, bandIndex);
         if (!std::isnan(ret)) {
             return ret;
         }
@@ -32,7 +51,8 @@ float VlcEqualizer::amplificationForBandAt(uint bandIndex) const
 uint VlcEqualizer::bandCount() const
 {
     if (_vlcEqualizer) {
-        return libvlc_audio_equalizer_get_band_count();
+        vlc_audio_equalizer_get_band_count_function vlc_audio_equalizer_get_band_count = (vlc_audio_equalizer_get_band_count_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("libvlc_audio_equalizer_get_band_count");
+        return vlc_audio_equalizer_get_band_count();
     } else {
         return 0;
     }
@@ -41,7 +61,8 @@ uint VlcEqualizer::bandCount() const
 float VlcEqualizer::bandFrequency(uint bandIndex) const
 {
     if (_vlcEqualizer) {
-        return libvlc_audio_equalizer_get_band_frequency(bandIndex);
+        vlc_audio_equalizer_get_band_frequency_function vlc_audio_equalizer_get_band_frequency = (vlc_audio_equalizer_get_band_frequency_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("libvlc_audio_equalizer_get_band_frequency");
+        return vlc_audio_equalizer_get_band_frequency(bandIndex);
     } else {
         return -1.0;
     }
@@ -50,7 +71,8 @@ float VlcEqualizer::bandFrequency(uint bandIndex) const
 float VlcEqualizer::preamplification() const
 {
     if (_vlcEqualizer) {
-        return libvlc_audio_equalizer_get_preamp(_vlcEqualizer);
+        vlc_audio_equalizer_get_preamp_function vlc_audio_equalizer_get_preamp = (vlc_audio_equalizer_get_preamp_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("libvlc_audio_equalizer_get_preamp");
+        return vlc_audio_equalizer_get_preamp(_vlcEqualizer);
     } else {
         return 0.0;
     }
@@ -58,12 +80,14 @@ float VlcEqualizer::preamplification() const
 
 uint VlcEqualizer::presetCount() const
 {
-    return libvlc_audio_equalizer_get_preset_count();
+    vlc_audio_equalizer_get_preset_count_function vlc_audio_equalizer_get_preset_count = (vlc_audio_equalizer_get_preset_count_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("libvlc_audio_equalizer_get_preset_count");
+    return vlc_audio_equalizer_get_preset_count();
 }
 
 QString VlcEqualizer::presetNameAt(uint index) const
 {
-    const char *name = libvlc_audio_equalizer_get_preset_name(index);
+    vlc_audio_equalizer_get_preset_name_function vlc_audio_equalizer_get_preset_name = (vlc_audio_equalizer_get_preset_name_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("libvlc_audio_equalizer_get_preset_name");
+    const char *name = vlc_audio_equalizer_get_preset_name(index);
     if (name == NULL) {
         return QString();
     } else {
@@ -74,19 +98,20 @@ QString VlcEqualizer::presetNameAt(uint index) const
 void VlcEqualizer::loadFromPreset(uint index)
 {
     if (_vlcEqualizer) {
-        libvlc_audio_equalizer_release(_vlcEqualizer);
+        vlc_audio_equalizer_release_function vlc_audio_equalizer_release = (vlc_audio_equalizer_release_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("libvlc_audio_equalizer_release");
+        vlc_audio_equalizer_release(_vlcEqualizer);
     }
     //18：The custom mode
     if (index < 18) {
-        _vlcEqualizer = libvlc_audio_equalizer_new_from_preset(index);
+        vlc_audio_equalizer_new_from_preset_function vlc_audio_equalizer_new_from_preset = (vlc_audio_equalizer_new_from_preset_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("libvlc_audio_equalizer_new_from_preset");
+        _vlcEqualizer = vlc_audio_equalizer_new_from_preset(index);
         if (_vlcEqualizer) {
             emit presetLoaded();
         }
     } else {
-        _vlcEqualizer = libvlc_audio_equalizer_new();
+        vlc_audio_equalizer_new_function vlc_audio_equalizer_new = (vlc_audio_equalizer_new_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("libvlc_audio_equalizer_new");
+        _vlcEqualizer = vlc_audio_equalizer_new();
     }
-//    VlcError::showErrmsg();
-
 }
 
 void VlcEqualizer::setAmplificationForBandAt(float amp, uint bandIndex)
@@ -94,17 +119,19 @@ void VlcEqualizer::setAmplificationForBandAt(float amp, uint bandIndex)
     if (!_vlcEqualizer) {
         return;
     }
-    libvlc_audio_equalizer_set_amp_at_index(_vlcEqualizer, amp, bandIndex);
-    libvlc_media_player_set_equalizer(_vlcMediaPlayer->core(), _vlcEqualizer);
-//    VlcError::showErrmsg();
+    vlc_audio_equalizer_set_amp_at_index_function vlc_audio_equalizer_set_amp_at_index = (vlc_audio_equalizer_set_amp_at_index_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("libvlc_audio_equalizer_set_amp_at_index");
+    vlc_media_player_set_equalizer_function vlc_media_player_set_equalizer = (vlc_media_player_set_equalizer_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("libvlc_media_player_set_equalizer");
+    vlc_audio_equalizer_set_amp_at_index(_vlcEqualizer, amp, bandIndex);
+    vlc_media_player_set_equalizer(_vlcMediaPlayer->core(), _vlcEqualizer);
 }
 
 void VlcEqualizer::setEnabled(bool enabled)
 {
-    if (enabled && _vlcEqualizer != NULL) {
-        libvlc_media_player_set_equalizer(_vlcMediaPlayer->core(), _vlcEqualizer);
+    vlc_media_player_set_equalizer_function vlc_media_player_set_equalizer = (vlc_media_player_set_equalizer_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("libvlc_media_player_set_equalizer");
+    if (enabled && _vlcEqualizer != nullptr) {
+        vlc_media_player_set_equalizer(_vlcMediaPlayer->core(), _vlcEqualizer);
     } else {
-        libvlc_media_player_set_equalizer(_vlcMediaPlayer->core(), NULL);
+        vlc_media_player_set_equalizer(_vlcMediaPlayer->core(), nullptr);
     }
 }
 
@@ -113,7 +140,8 @@ void VlcEqualizer::setPreamplification(float value)
     if (!_vlcEqualizer) {
         return;
     }
-    libvlc_audio_equalizer_set_preamp(_vlcEqualizer, value);
-    libvlc_media_player_set_equalizer(_vlcMediaPlayer->core(), _vlcEqualizer);
-//    VlcError::showErrmsg();
+    vlc_media_player_set_equalizer_function vlc_media_player_set_equalizer = (vlc_media_player_set_equalizer_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("libvlc_media_player_set_equalizer");
+    vlc_audio_equalizer_set_preamp_function vlc_audio_equalizer_set_preamp = (vlc_audio_equalizer_set_preamp_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("libvlc_audio_equalizer_set_preamp");
+    vlc_audio_equalizer_set_preamp(_vlcEqualizer, value);
+    vlc_media_player_set_equalizer(_vlcMediaPlayer->core(), _vlcEqualizer);
 }
