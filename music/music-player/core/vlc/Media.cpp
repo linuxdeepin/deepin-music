@@ -8,7 +8,27 @@
 #include "Error.h"
 #include "Instance.h"
 #include "Media.h"
-//#include "Stats.h"
+
+#include "core/vlc/vlcdynamicinstance.h"
+
+typedef libvlc_media_t *(*vlc_media_duplicate_function)(libvlc_media_t *);
+typedef void (*vlc_media_release_function)(libvlc_media_t *);
+typedef libvlc_media_t *(*vlc_media_new_path_function)(libvlc_instance_t *, const char *);
+typedef libvlc_media_t *(*vlc_media_new_location_function)(libvlc_instance_t *, const char *);
+typedef libvlc_event_manager_t *(*vlc_media_event_manager_function)(libvlc_media_t *);
+typedef int (*vlc_event_attach_function)(libvlc_event_manager_t *,
+                                         libvlc_event_type_t,
+                                         libvlc_callback_t,
+                                         void *);
+typedef int (*vlc_event_detach_function)(libvlc_event_manager_t *,
+                                         libvlc_event_type_t,
+                                         libvlc_callback_t,
+                                         void *);
+typedef int (*vlc_media_is_parsed_function)(libvlc_media_t *);
+typedef void (*vlc_media_parse_async_function)(libvlc_media_t *);
+typedef libvlc_state_t (*vlc_media_get_state_function)(libvlc_media_t *);
+typedef libvlc_time_t (*vlc_media_get_duration_function)(libvlc_media_t *);
+typedef void (*vlc_media_add_option_function)(libvlc_media_t *, const char *);
 
 VlcMedia::VlcMedia(const QString &location,
                    bool localFile,
@@ -28,10 +48,12 @@ VlcMedia::VlcMedia(const QString &location,
 VlcMedia::VlcMedia(libvlc_media_t *media)
 {
     // Create a new libvlc media descriptor from existing one
-    _vlcMedia = libvlc_media_duplicate(media);
+    vlc_media_duplicate_function vlc_media_duplicate = (vlc_media_duplicate_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("libvlc_media_duplicate");
+    _vlcMedia = vlc_media_duplicate(media);
 
     VlcError::showErrmsg();
 }
+
 VlcMedia::VlcMedia()
 {
 
@@ -40,8 +62,8 @@ VlcMedia::VlcMedia()
 VlcMedia::~VlcMedia()
 {
     removeCoreConnections();
-
-    libvlc_media_release(_vlcMedia);
+    vlc_media_release_function vlc_media_release = (vlc_media_release_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("libvlc_media_release");
+    vlc_media_release(_vlcMedia);
 
     VlcError::showErrmsg();
 }
@@ -61,12 +83,16 @@ void VlcMedia::initMedia(const QString &location,
         l = QDir::toNativeSeparators(l);
 
     // Create a new libvlc media descriptor from location
-    if (localFile)
-        _vlcMedia = libvlc_media_new_path(instance->core(), l.toUtf8().data());
-    else
-        _vlcMedia = libvlc_media_new_location(instance->core(), l.toUtf8().data());
+    vlc_media_new_path_function vlc_media_new_path = (vlc_media_new_path_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("libvlc_media_new_path");
+    vlc_media_new_location_function vlc_media_new_location = (vlc_media_new_location_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("libvlc_media_new_location");
+    vlc_media_event_manager_function vlc_media_event_manager = (vlc_media_event_manager_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("libvlc_media_event_manager");
 
-    _vlcEvents = libvlc_media_event_manager(_vlcMedia);
+    if (localFile)
+        _vlcMedia = vlc_media_new_path(instance->core(), l.toUtf8().data());
+    else
+        _vlcMedia = vlc_media_new_location(instance->core(), l.toUtf8().data());
+
+    _vlcEvents = vlc_media_event_manager(_vlcMedia);
 
     createCoreConnections();
 
@@ -83,8 +109,9 @@ void VlcMedia::createCoreConnections()
          << libvlc_MediaFreed
          << libvlc_MediaStateChanged;
 
+    vlc_event_attach_function vlc_event_attach = (vlc_event_attach_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("libvlc_event_attach");
     foreach (const libvlc_event_e &event, list) {
-        libvlc_event_attach(_vlcEvents, event, libvlc_callback, this);
+        vlc_event_attach(_vlcEvents, event, libvlc_callback, this);
     }
 }
 
@@ -98,14 +125,16 @@ void VlcMedia::removeCoreConnections()
          << libvlc_MediaFreed
          << libvlc_MediaStateChanged;
 
+    vlc_event_detach_function vlc_event_detach = (vlc_event_detach_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("libvlc_event_detach");
     foreach (const libvlc_event_e &event, list) {
-        libvlc_event_detach(_vlcEvents, event, libvlc_callback, this);
+        vlc_event_detach(_vlcEvents, event, libvlc_callback, this);
     }
 }
 
 bool VlcMedia::parsed() const
 {
-    int parsed = libvlc_media_is_parsed(_vlcMedia);
+    vlc_media_is_parsed_function vlc_media_is_parsed = (vlc_media_is_parsed_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("libvlc_media_is_parsed");
+    int parsed = vlc_media_is_parsed(_vlcMedia);
 
     VlcError::showErrmsg();
 
@@ -114,7 +143,8 @@ bool VlcMedia::parsed() const
 
 void VlcMedia::parse()
 {
-    libvlc_media_parse_async(_vlcMedia);
+    vlc_media_parse_async_function  vlc_media_parse_async = (vlc_media_parse_async_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("libvlc_media_parse_async");
+    vlc_media_parse_async(_vlcMedia);
 
     VlcError::showErrmsg();
 }
@@ -124,36 +154,11 @@ QString VlcMedia::currentLocation() const
     return _currentLocation;
 }
 
-//VlcStats *VlcMedia::getStats()
-//{
-//    libvlc_media_stats_t *coreStats = new libvlc_media_stats_t;
-
-//    VlcStats *stats = new VlcStats;
-//    stats->valid = libvlc_media_get_stats(_vlcMedia, coreStats);
-
-//    stats->read_bytes = coreStats->i_read_bytes;
-//    stats->input_bitrate = coreStats->f_input_bitrate;
-//    stats->demux_read_bytes = coreStats->i_demux_read_bytes;
-//    stats->demux_bitrate = coreStats->f_demux_bitrate;
-//    stats->demux_corrupted = coreStats->i_demux_corrupted;
-//    stats->demux_discontinuity = coreStats->i_demux_discontinuity;
-//    stats->decoded_video = coreStats->i_decoded_video;
-//    stats->decoded_audio = coreStats->i_decoded_audio;
-//    stats->displayed_pictures = coreStats->i_displayed_pictures;
-//    stats->lost_pictures = coreStats->i_lost_pictures;
-//    stats->played_abuffers = coreStats->i_played_abuffers;
-//    stats->lost_abuffers = coreStats->i_lost_abuffers;
-//    stats->sent_packets = coreStats->i_sent_packets;
-//    stats->sent_bytes = coreStats->i_sent_bytes;
-//    stats->send_bitrate = coreStats->f_send_bitrate;
-
-//    return stats;
-//}
-
 Vlc::State VlcMedia::state() const
 {
     libvlc_state_t state;
-    state = libvlc_media_get_state(_vlcMedia);
+    vlc_media_get_state_function vlc_media_get_state = (vlc_media_get_state_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("libvlc_media_get_state");
+    state = vlc_media_get_state(_vlcMedia);
 
     VlcError::showErrmsg();
 
@@ -162,7 +167,8 @@ Vlc::State VlcMedia::state() const
 
 qint64 VlcMedia::duration() const
 {
-    libvlc_time_t duration = libvlc_media_get_duration(_vlcMedia);
+    vlc_media_get_duration_function vlc_media_get_duration = (vlc_media_get_duration_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("libvlc_media_get_duration");
+    libvlc_time_t duration = vlc_media_get_duration(_vlcMedia);
 
     VlcError::showErrmsg();
 
@@ -318,15 +324,17 @@ void VlcMedia::setProgram(int program)
 
 void VlcMedia::setOption(const QString &option)
 {
-    libvlc_media_add_option(_vlcMedia, option.toUtf8().data());
+    vlc_media_add_option_function vlc_media_add_option = (vlc_media_add_option_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("libvlc_media_add_option");
+    vlc_media_add_option(_vlcMedia, option.toUtf8().data());
 
     VlcError::showErrmsg();
 }
 
 void VlcMedia::setOptions(const QStringList &options)
 {
+    vlc_media_add_option_function vlc_media_add_option = (vlc_media_add_option_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("libvlc_media_add_option");
     foreach (const QString &option, options) {
-        libvlc_media_add_option(_vlcMedia, option.toUtf8().data());
+        vlc_media_add_option(_vlcMedia, option.toUtf8().data());
     }
 
     VlcError::showErrmsg();

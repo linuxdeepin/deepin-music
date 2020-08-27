@@ -8,6 +8,7 @@
 #include "Audio.h"
 #include "Error.h"
 #include "MediaPlayer.h"
+#include "core/vlc/vlcdynamicinstance.h"
 
 /*!
     \private
@@ -43,31 +44,51 @@ public:
         Q_UNUSED(oldVal);
 
         VlcAudio *core = static_cast<VlcAudio *>(data);
-        if(oldVal.b_bool != newVal.b_bool)
+        if (oldVal.b_bool != newVal.b_bool)
             emit core->muteChanged(newVal.b_bool);
         return VLC_SUCCESS;
     }
 };
 
+typedef int (*vlc_get_mute_function)(libvlc_media_player_t *);
+typedef int (*vlc_audio_set_volume_function)(libvlc_media_player_t *, int);
+typedef int (*vlc_audio_set_track_function)(libvlc_media_player_t *, int);
+typedef void (*vlc_audio_toggle_mute_function)(libvlc_media_player_t *);
+typedef void (*vlc_audio_set_mute_function)(libvlc_media_player_t *, int);
+typedef int (*vlc_audio_get_track_function)(libvlc_media_player_t *);
+typedef int (*vlc_audio_get_track_count_function)(libvlc_media_player_t *);
+typedef libvlc_track_description_t *(*vlc_audio_get_track_description_function)(libvlc_media_player_t *);
+typedef void (*vlc_track_description_list_release_function)(libvlc_track_description_t *);
+typedef int (*vlc_audio_get_volume_function)(libvlc_media_player_t *);
+typedef int (*vlc_audio_get_channel_function)(libvlc_media_player_t *);
+typedef int (*vlc_audio_set_channel_function)(libvlc_media_player_t *, int);
+
+typedef void (*var_AddCallback_function)(vlc_object_t *, const char *, vlc_callback_t, void *);
+typedef void (*var_DelCallback_function)(vlc_object_t *, const char *, vlc_callback_t, void *);
+
 VlcAudio::VlcAudio(VlcMediaPlayer *player)
     : QObject(player),
       _vlcMediaPlayer(player->core())
 {
-    var_AddCallback((vlc_object_t *)_vlcMediaPlayer, "volume", VlcAudioCallbackHelper::volumeCallback, this);
-    var_AddCallback((vlc_object_t *)_vlcMediaPlayer, "mute", VlcAudioCallbackHelper::muteCallback, this);
+    var_AddCallback_function AddCallback = (var_AddCallback_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("var_AddCallback");
+    AddCallback((vlc_object_t *)_vlcMediaPlayer, "volume", VlcAudioCallbackHelper::volumeCallback, this);
+    AddCallback((vlc_object_t *)_vlcMediaPlayer, "mute", VlcAudioCallbackHelper::muteCallback, this);
+    getMute();
 }
 
 VlcAudio::~VlcAudio()
 {
-    var_DelCallback((vlc_object_t *)_vlcMediaPlayer, "volume", VlcAudioCallbackHelper::volumeCallback, this);
-    var_DelCallback((vlc_object_t *)_vlcMediaPlayer, "mute", VlcAudioCallbackHelper::muteCallback, this);
+    var_DelCallback_function DelCallback = (var_DelCallback_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("var_DelCallback");
+    DelCallback((vlc_object_t *)_vlcMediaPlayer, "volume", VlcAudioCallbackHelper::volumeCallback, this);
+    DelCallback((vlc_object_t *)_vlcMediaPlayer, "mute", VlcAudioCallbackHelper::muteCallback, this);
 }
 
 bool VlcAudio::getMute() const
 {
     bool mute = false;
     if (_vlcMediaPlayer) {
-        mute = libvlc_audio_get_mute(_vlcMediaPlayer);
+        vlc_get_mute_function vlc_get_mute = (vlc_get_mute_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("libvlc_audio_get_mute");
+        mute = vlc_get_mute(_vlcMediaPlayer);
         VlcError::showErrmsg();
     }
 
@@ -79,7 +100,8 @@ void VlcAudio::setVolume(int volume)
     if (_vlcMediaPlayer) {
         // Don't change if volume is the same
         if (volume != VlcAudio::volume()) {
-            libvlc_audio_set_volume(_vlcMediaPlayer, volume);
+            vlc_audio_set_volume_function vlc_get_mute = (vlc_audio_set_volume_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("libvlc_audio_set_volume");
+            vlc_get_mute(_vlcMediaPlayer, volume);
             VlcError::showErrmsg();
         }
     }
@@ -88,7 +110,8 @@ void VlcAudio::setVolume(int volume)
 void VlcAudio::setTrack(int track)
 {
     if (_vlcMediaPlayer) {
-        libvlc_audio_set_track(_vlcMediaPlayer, track);
+        vlc_audio_set_track_function vlc_audio_set_track = (vlc_audio_set_track_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("libvlc_audio_set_track");
+        vlc_audio_set_track(_vlcMediaPlayer, track);
         VlcError::showErrmsg();
     }
 }
@@ -96,7 +119,8 @@ void VlcAudio::setTrack(int track)
 bool VlcAudio::toggleMute() const
 {
     if (_vlcMediaPlayer) {
-        libvlc_audio_toggle_mute(_vlcMediaPlayer);
+        vlc_audio_toggle_mute_function vlc_audio_toggle_mute = (vlc_audio_toggle_mute_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("libvlc_audio_toggle_mute");
+        vlc_audio_toggle_mute(_vlcMediaPlayer);
         VlcError::showErrmsg();
     }
 
@@ -106,7 +130,8 @@ bool VlcAudio::toggleMute() const
 void VlcAudio::setMute(bool mute) const
 {
     if (_vlcMediaPlayer && mute != getMute()) {
-        libvlc_audio_set_mute(_vlcMediaPlayer, mute);
+        vlc_audio_set_mute_function vlc_audio_set_mute = (vlc_audio_set_mute_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("libvlc_audio_set_mute");
+        vlc_audio_set_mute(_vlcMediaPlayer, mute);
         VlcError::showErrmsg();
     }
 }
@@ -115,7 +140,8 @@ int VlcAudio::track() const
 {
     int track = -1;
     if (_vlcMediaPlayer) {
-        track = libvlc_audio_get_track(_vlcMediaPlayer);
+        vlc_audio_get_track_function vlc_audio_get_track = (vlc_audio_get_track_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("libvlc_audio_get_track");
+        track = vlc_audio_get_track(_vlcMediaPlayer);
         VlcError::showErrmsg();
     }
 
@@ -126,7 +152,8 @@ int VlcAudio::trackCount() const
 {
     int count = -1;
     if (_vlcMediaPlayer) {
-        count = libvlc_audio_get_track_count(_vlcMediaPlayer);
+        vlc_audio_get_track_count_function vlc_audio_get_track_count = (vlc_audio_get_track_count_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("libvlc_audio_get_track_count");
+        count = vlc_audio_get_track_count(_vlcMediaPlayer);
         VlcError::showErrmsg();
     }
 
@@ -139,7 +166,8 @@ QStringList VlcAudio::trackDescription() const
 
     if (_vlcMediaPlayer) {
         libvlc_track_description_t *desc;
-        desc = libvlc_audio_get_track_description(_vlcMediaPlayer);
+        vlc_audio_get_track_description_function vlc_audio_get_track_description = (vlc_audio_get_track_description_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("libvlc_audio_get_track_description");
+        desc = vlc_audio_get_track_description(_vlcMediaPlayer);
         VlcError::showErrmsg();
 
         descriptions << QString().fromUtf8(desc->psz_name);
@@ -160,7 +188,8 @@ QList<int> VlcAudio::trackIds() const
 
     if (_vlcMediaPlayer) {
         libvlc_track_description_t *desc;
-        desc = libvlc_audio_get_track_description(_vlcMediaPlayer);
+        vlc_audio_get_track_description_function vlc_audio_get_track_description = (vlc_audio_get_track_description_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("libvlc_audio_get_track_description");
+        desc = vlc_audio_get_track_description(_vlcMediaPlayer);
         VlcError::showErrmsg();
 
         ids << desc->i_id;
@@ -181,7 +210,8 @@ QMap<int, QString> VlcAudio::tracks() const
 
     if (_vlcMediaPlayer) {
         libvlc_track_description_t *desc, *first;
-        first = desc = libvlc_audio_get_track_description(_vlcMediaPlayer);
+        vlc_audio_get_track_description_function vlc_audio_get_track_description = (vlc_audio_get_track_description_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("libvlc_audio_get_track_description");
+        first = desc = vlc_audio_get_track_description(_vlcMediaPlayer);
         VlcError::showErrmsg();
 
         if (desc != nullptr) {
@@ -192,7 +222,8 @@ QMap<int, QString> VlcAudio::tracks() const
                     tracks.insert(desc->i_id, QString().fromUtf8(desc->psz_name));
                 }
             }
-            libvlc_track_description_list_release(first);
+            vlc_track_description_list_release_function vlc_track_description_list_release = (vlc_track_description_list_release_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("libvlc_track_description_list_release");
+            vlc_track_description_list_release(first);
         }
     }
 
@@ -203,7 +234,8 @@ int VlcAudio::volume() const
 {
     int volume = -1;
     if (_vlcMediaPlayer) {
-        volume = libvlc_audio_get_volume(_vlcMediaPlayer);
+        vlc_audio_get_volume_function  vlc_audio_get_volume = (vlc_audio_get_volume_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("libvlc_audio_get_volume");
+        volume = vlc_audio_get_volume(_vlcMediaPlayer);
         VlcError::showErrmsg();
     }
 
@@ -214,7 +246,8 @@ Vlc::AudioChannel VlcAudio::channel() const
 {
     Vlc::AudioChannel channel = Vlc::AudioChannelError;
     if (_vlcMediaPlayer) {
-        channel = Vlc::AudioChannel(libvlc_audio_get_channel(_vlcMediaPlayer));
+        vlc_audio_get_channel_function  vlc_audio_get_channel = (vlc_audio_get_channel_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("libvlc_audio_get_volume");
+        channel = Vlc::AudioChannel(vlc_audio_get_channel(_vlcMediaPlayer));
         VlcError::showErrmsg();
     }
 
@@ -226,7 +259,8 @@ void VlcAudio::setChannel(Vlc::AudioChannel channel)
     if (_vlcMediaPlayer) {
         // Don't change if channel is the same
         if (channel != VlcAudio::channel()) {
-            libvlc_audio_set_channel(_vlcMediaPlayer, channel);
+            vlc_audio_set_channel_function vlc_audio_set_channel = (vlc_audio_set_channel_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("libvlc_audio_set_channel");
+            vlc_audio_set_channel(_vlcMediaPlayer, channel);
             VlcError::showErrmsg();
         }
     }
