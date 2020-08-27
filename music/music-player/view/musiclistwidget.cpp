@@ -121,7 +121,7 @@ MusicListWidget::MusicListWidget(QWidget *parent) : DWidget(parent)
             curPtr->setSearchStr("");
             Q_EMIT selectedPlaylistChange(curPtr);
         }
-//        m_dataBaseListview->setFocus();
+        m_dataBaseListview->setFocus();           //快捷键生效，需要设置焦点
     });
     connect(m_dataBaseListview, &MusicListView::currentChanged,
     this, [ = ](const QModelIndex & current, const QModelIndex & previous) {
@@ -134,7 +134,7 @@ MusicListWidget::MusicListWidget(QWidget *parent) : DWidget(parent)
             curPtr->setSearchStr("");
             Q_EMIT selectedPlaylistChange(curPtr);
         }
-//        m_dataBaseListview->setFocus();
+        m_dataBaseListview->setFocus();          //快捷键生效，需要设置焦点
     });
     connect(m_dataBaseListview, &MusicListView::customResort,
     this, [ = ](const QStringList & uuids) {
@@ -179,7 +179,7 @@ MusicListWidget::MusicListWidget(QWidget *parent) : DWidget(parent)
             curPtr->setSearchStr("");
             Q_EMIT selectedPlaylistChange(curPtr);
         }
-//        m_customizeListview->setFocus();
+        m_customizeListview->setFocus();         //快捷键生效，需要设置焦点
     });
     connect(m_customizeListview, &MusicListView::currentChanged,
     this, [ = ](const QModelIndex & current, const QModelIndex & previous) {
@@ -193,7 +193,7 @@ MusicListWidget::MusicListWidget(QWidget *parent) : DWidget(parent)
             curPtr->setSearchStr("");
             Q_EMIT selectedPlaylistChange(curPtr);
         }
-//        m_customizeListview->setFocus();
+        m_customizeListview->setFocus();         //快捷键生效，需要设置焦点
     });
     connect(m_customizeListview, &MusicListView::removeAllList,
     this, [ = ](const MetaPtr meta) {

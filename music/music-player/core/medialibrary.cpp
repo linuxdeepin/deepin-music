@@ -46,8 +46,34 @@ extern "C" {
 
 #include "player.h"
 #include "mediadatabase.h"
+#include "core/vlc/vlcdynamicinstance.h"
 
 const static int ScanCacheSize = 5000;
+
+typedef AVFormatContext *(*format_alloc_context_function)(void);
+typedef int (*format_open_input_function)(AVFormatContext **, const char *, AVInputFormat *, AVDictionary **);
+typedef void (*format_free_context_function)(AVFormatContext *);
+typedef int (*format_find_stream_info_function)(AVFormatContext *, AVDictionary **);
+typedef int (*find_best_stream_function)(AVFormatContext *,
+                                         enum AVMediaType,
+                                         int,
+                                         int,
+                                         AVCodec **,
+                                         int);
+typedef void (*format_close_input_function)(AVFormatContext **);
+typedef AVCodecContext *(*codec_alloc_context3_function)(const AVCodec *);
+typedef int (*codec_parameters_to_context_function)(AVCodecContext *,
+                                                    const AVCodecParameters *);
+typedef AVCodec *(*codec_find_decoder_function)(enum AVCodecID);
+typedef int (*codec_open2_function)(AVCodecContext *, const AVCodec *, AVDictionary **);
+typedef AVPacket *(*packet_alloc_function)(void);
+typedef AVFrame *(*frame_alloc_function)(void);
+typedef int (*read_frame_function)(AVFormatContext *, AVPacket *);
+typedef void (*packet_unref_function)(AVPacket *);
+typedef void (*frame_free_function)(AVFrame **);
+typedef int (*codec_close_function)(AVCodecContext *);
+typedef int (*codec_send_packet_function)(AVCodecContext *, const AVPacket *);
+typedef int (*codec_receive_frame_function)(AVCodecContext *, AVFrame *);
 
 class MediaLibraryPrivate
 {
@@ -146,59 +172,79 @@ MetaPtr MediaLibraryPrivate::importMeta(const QString &filepath,
         return MetaPtr();
     }
 
-    AVFormatContext *pFormatCtx = avformat_alloc_context();
-    avformat_open_input(&pFormatCtx, filepath.toStdString().c_str(), nullptr, nullptr);
+    format_alloc_context_function format_alloc_context = (format_alloc_context_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("avformat_alloc_context", true);
+    format_open_input_function format_open_input = (format_open_input_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("avformat_open_input", true);
+    format_free_context_function format_free_context = (format_free_context_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("avformat_free_context", true);
+    format_find_stream_info_function format_find_stream_info = (format_find_stream_info_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("avformat_find_stream_info", true);
+    find_best_stream_function find_best_stream = (find_best_stream_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("av_find_best_stream", true);
+    format_close_input_function format_close_input = (format_close_input_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("avformat_close_input", true);
+    codec_alloc_context3_function codec_alloc_context3 = (codec_alloc_context3_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("avcodec_alloc_context3", true);
+    codec_parameters_to_context_function codec_parameters_to_context = (codec_parameters_to_context_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("avcodec_parameters_to_context", true);
+    codec_find_decoder_function codec_find_decoder = (codec_find_decoder_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("avcodec_find_decoder", true);
+    codec_open2_function codec_open2 = (codec_open2_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("avcodec_open2", true);
+    packet_alloc_function packet_alloc = (packet_alloc_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("av_packet_alloc", true);
+    frame_alloc_function frame_alloc = (frame_alloc_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("av_frame_alloc", true);
+    read_frame_function read_frame = (read_frame_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("av_read_frame", true);
+
+    packet_unref_function packet_unref = (packet_unref_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("av_packet_unref", true);
+    frame_free_function frame_free = (frame_free_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("av_frame_free", true);
+    codec_close_function codec_close = (codec_close_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("avcodec_close", true);
+    codec_send_packet_function codec_send_packet = (codec_send_packet_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("avcodec_send_packet", true);
+    codec_receive_frame_function codec_receive_frame = (codec_receive_frame_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("avcodec_receive_frame", true);
+
+    AVFormatContext *pFormatCtx = format_alloc_context();
+    format_open_input(&pFormatCtx, filepath.toStdString().c_str(), nullptr, nullptr);
 
     if (pFormatCtx == nullptr) {
-        avformat_free_context(pFormatCtx);
+        format_free_context(pFormatCtx);
         return MetaPtr();
     }
 
-    if (avformat_find_stream_info(pFormatCtx, nullptr) < 0) {
-        avformat_free_context(pFormatCtx);
+    if (format_find_stream_info(pFormatCtx, nullptr) < 0) {
+        format_free_context(pFormatCtx);
         return MetaPtr();
     }
 
     int audio_stream_index = -1;
-    audio_stream_index = av_find_best_stream(pFormatCtx, AVMEDIA_TYPE_AUDIO, -1, -1, nullptr, 0);
+    audio_stream_index = find_best_stream(pFormatCtx, AVMEDIA_TYPE_AUDIO, -1, -1, nullptr, 0);
 
     if (audio_stream_index < 0) {
-        avformat_close_input(&pFormatCtx);
-        avformat_free_context(pFormatCtx);
+        format_close_input(&pFormatCtx);
+        format_free_context(pFormatCtx);
         return MetaPtr();
     }
 
     AVStream *in_stream = pFormatCtx->streams[audio_stream_index];
     AVCodecParameters *in_codecpar = in_stream->codecpar;
 
-    AVCodecContext *pCodecCtx = avcodec_alloc_context3(nullptr);
-    avcodec_parameters_to_context(pCodecCtx, in_codecpar);
+    AVCodecContext *pCodecCtx = codec_alloc_context3(nullptr);
+    codec_parameters_to_context(pCodecCtx, in_codecpar);
 
-    AVCodec *pCodec = avcodec_find_decoder(pCodecCtx->codec_id);
-    avcodec_open2(pCodecCtx, pCodec, nullptr);
+    AVCodec *pCodec = codec_find_decoder(pCodecCtx->codec_id);
+    codec_open2(pCodecCtx, pCodec, nullptr);
 
-    AVPacket *packet = av_packet_alloc();
-    AVFrame *frame = av_frame_alloc();
+    AVPacket *packet = packet_alloc();
+    AVFrame *frame = frame_alloc();
 
     int readCount = 0;
     int sendCount = 0;
     int receiveCount = 0;
 
-    while (av_read_frame(pFormatCtx, packet) >= 0) {
+    while (read_frame(pFormatCtx, packet) >= 0) {
         if (packet->stream_index == audio_stream_index) {
             int ret;
-            ret = avcodec_send_packet(pCodecCtx, packet);
-            av_packet_unref(packet);
+            ret = codec_send_packet(pCodecCtx, packet);
+            packet_unref(packet);
             if (ret != 0) {
                 sendCount++;
             }
 
-            ret = avcodec_receive_frame(pCodecCtx, frame);
+            ret = codec_receive_frame(pCodecCtx, frame);
             if (ret != 0) {
                 receiveCount++;
             }
         }
-        av_packet_unref(packet);
+        packet_unref(packet);
 
         if (readCount++ > 300) {
             break ;
@@ -224,20 +270,20 @@ MetaPtr MediaLibraryPrivate::importMeta(const QString &filepath,
     }
 
     if (invalidFile) {
-        av_packet_unref(packet);
-        av_frame_free(&frame);
-        avcodec_close(pCodecCtx);
-        avformat_close_input(&pFormatCtx);
-        avformat_free_context(pFormatCtx);
+        packet_unref(packet);
+        frame_free(&frame);
+        codec_close(pCodecCtx);
+        format_close_input(&pFormatCtx);
+        format_free_context(pFormatCtx);
 
         return MetaPtr();
     }
 
-    av_packet_unref(packet);
-    av_frame_free(&frame);
-    avcodec_close(pCodecCtx);
-    avformat_close_input(&pFormatCtx);
-    avformat_free_context(pFormatCtx);
+    packet_unref(packet);
+    frame_free(&frame);
+    codec_close(pCodecCtx);
+    format_close_input(&pFormatCtx);
+    format_free_context(pFormatCtx);
 
     auto hash = DMusic::filepathHash(filepath);
     if (MediaLibrary::instance()->contains(hash)) {

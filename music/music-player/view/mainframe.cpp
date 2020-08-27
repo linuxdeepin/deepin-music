@@ -341,14 +341,22 @@ void MainFramePrivate::initUI(bool showLoading)
 
     centralWidget = new QWidget(q);
     contentLayout = new QStackedLayout(centralWidget);
-    contentLayout->setContentsMargins(20, 20, 20, 0);
-    contentLayout->setMargin(0);
-    contentLayout->setSpacing(0);
+    contentLayout->setContentsMargins(0, 0, 0, 0);
     q->setCentralWidget(centralWidget);
+
+    // contentLayout->setContentsMargins(20, 20, 20, 0);
+    // contentLayout->setMargin(0);
+    // contentLayout->setSpacing(0);
 
     if (showLoading) {
         musicListWidget = new MusicListWidget;
+        musicListWidget->setContentsMargins(0, titlebar->height(), 0, FooterHeight + 10);
         contentLayout->addWidget(musicListWidget);
+        contentLayout->addWidget(titlebar);
+        footer = new Footer(q);
+        footer->enableControl(false);
+        contentLayout->addWidget(footer);
+        footer->show();
     } else {
         importWidget = new ImportWidget;
         contentLayout->addWidget(importWidget);
@@ -363,26 +371,26 @@ void MainFramePrivate::postInitUI()
     if (importWidget == nullptr) {
         importWidget = new ImportWidget;
         contentLayout->addWidget(importWidget);
-        contentLayout->addWidget(titlebar);
     }
 
     bool showID = false;
     if (musicListWidget == nullptr) {
         musicListWidget = new MusicListWidget;
+        musicListWidget->setContentsMargins(0, titlebar->height(), 0, FooterHeight + 10);
         contentLayout->addWidget(musicListWidget);
+
+        footer = new Footer(q);
+        footer->enableControl(false);
+        contentLayout->addWidget(footer);
+        footer->hide();
         showID = true;
     }
 
+    searchResult = new SearchResult(q);
+    titlebarwidget->setResultWidget(searchResult);
+
     loadWidget = new LoadWidget(q);
-    musicListWidget->setContentsMargins(0, titlebar->height(), 0, FooterHeight + 10);
-
-    footer = new Footer(q);
-    footer->enableControl(false);
-
     contentLayout->addWidget(loadWidget);
-    contentLayout->addWidget(footer);
-
-    footer->hide();
     infoDialog = new InfoDialog(q);
 
     int themeType = DGuiApplicationHelper::instance()->themeType();
@@ -776,10 +784,9 @@ MainFrame::MainFrame(QWidget *parent) :
 
     Q_D(MainFrame);
     d->titlebarwidget = new TitlebarWidget(this);
+    // d->searchResult = new SearchResult(this);
+    // d->titlebarwidget->setResultWidget(d->searchResult);
 
-    d->searchResult = new SearchResult(this);
-//    d->searchResult->show();
-    d->titlebarwidget->setResultWidget(d->searchResult);
     d->titlebarwidget->setEnabled(false);
     d->titlebarwidget->show();
 
@@ -969,8 +976,6 @@ void MainFrame::binding(Presenter *presenter)
             this, &MainFrame::onSelectImportFiles);
     connect(d->importWidget, &ImportWidget::importSelectFiles,
     this, [ = ](const QStringList & urllist) {
-        d->titlebarwidget->setSearchEnable(true);
-        d->titlebarwidget->setEnabled(true);
         d->importWidget->showWaitHint();
         Q_EMIT importSelectFiles(urllist, nullptr);
     });
@@ -1548,8 +1553,6 @@ void MainFrame::onSelectImportDirectory()
     if (DFileDialog::Accepted == fileDlg.exec()) {
         d->importWidget->showWaitHint();
         MusicSettings::setOption("base.play.last_import_path",  fileDlg.directory().path());
-        d->titlebarwidget->setEnabled(true);
-        d->titlebarwidget->setSearchEnable(true);
         Q_EMIT importSelectFiles(fileDlg.selectedFiles(), nullptr);
     }
 }
@@ -1574,8 +1577,6 @@ void MainFrame::onSelectImportFiles()
     if (DFileDialog::Accepted == fileDlg.exec()) {
         d->importWidget->showWaitHint();
         MusicSettings::setOption("base.play.last_import_path",  fileDlg.directory().path());
-        d->titlebarwidget->setEnabled(true);
-        d->titlebarwidget->setSearchEnable(true);
         Q_EMIT importSelectFiles(fileDlg.selectedFiles(), d->musicListWidget->curPlaylist());
     }
 }

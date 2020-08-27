@@ -714,6 +714,13 @@ void Player::pause()
         d->fadeOutAnimation->setEndValue(0.1000);
         d->fadeOutAnimation->setDuration(sFadeInOutAnimationDuration);
         d->fadeOutAnimation->start();
+        connect(d->fadeOutAnimation, &QPropertyAnimation::finished,
+        this, [ = ]() {
+            d->qvplayer->pause();
+            QTimer::singleShot(50, this, [ = ]() {
+                setFadeInOutFactor(1.0);
+            });
+        });
     } else {
         d->qvplayer->pause();
         setFadeInOutFactor(1.0);

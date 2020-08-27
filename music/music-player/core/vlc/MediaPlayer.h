@@ -57,12 +57,6 @@ public:
     */
     VlcAudio *audio() const;
 
-    /*!
-        \brief Returns video manager object.
-        \return video manager (VlcVideo *)
-    */
-//    VlcVideo *video() const;
-
 #if LIBVLC_VERSION >= 0x020200
     /*!
         \brief Returns equalizer object.
