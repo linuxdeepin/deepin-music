@@ -763,7 +763,7 @@ void Presenter::postAction(bool showFlag)
 
     if (!isMetaLibClear) {
         MusicSettings::setOption("base.play.showFlag", 1);
-        Q_EMIT showMusicList(allplaylist);
+        // Q_EMIT showMusicList(allplaylist);
     }
 
     if (!showFlag) {
