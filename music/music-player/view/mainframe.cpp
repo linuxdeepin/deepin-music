@@ -785,8 +785,8 @@ MainFrame::MainFrame(QWidget *parent) :
     d->titlebarwidget = new TitlebarWidget(this);
 
     d->searchResult = new SearchResult(this);
-//    d->searchResult->show();
     d->titlebarwidget->setResultWidget(d->searchResult);
+
     d->titlebarwidget->setEnabled(false);
     d->titlebarwidget->show();
 

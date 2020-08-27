@@ -762,6 +762,7 @@ void Presenter::postAction(bool showFlag)
     d->player->setFadeInOut(fadeInOut);
 
     if (!isMetaLibClear) {
+        MusicSettings::setOption("base.play.showFlag", 1);
         Q_EMIT showMusicList(allplaylist);
     }
 
