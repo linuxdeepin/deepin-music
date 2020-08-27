@@ -386,10 +386,11 @@ void MainFramePrivate::postInitUI()
         showID = true;
     }
 
+    searchResult = new SearchResult(q);
+    titlebarwidget->setResultWidget(searchResult);
+
     loadWidget = new LoadWidget(q);
-
     contentLayout->addWidget(loadWidget);
-
     infoDialog = new InfoDialog(q);
 
     int themeType = DGuiApplicationHelper::instance()->themeType();
@@ -783,9 +784,8 @@ MainFrame::MainFrame(QWidget *parent) :
 
     Q_D(MainFrame);
     d->titlebarwidget = new TitlebarWidget(this);
-
-    d->searchResult = new SearchResult(this);
-    d->titlebarwidget->setResultWidget(d->searchResult);
+    // d->searchResult = new SearchResult(this);
+    // d->titlebarwidget->setResultWidget(d->searchResult);
 
     d->titlebarwidget->setEnabled(false);
     d->titlebarwidget->show();
