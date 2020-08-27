@@ -84,9 +84,7 @@ if (NOT (${CMAKE_BUILD_TYPE} MATCHES "Debug"))
 endif ()
 qt5_add_translation(${translate})
 
-file(GLOB INCLUDE_HEADER "./../interface/*.h"
-    "./../libdmusic/*.h")
-
+file(GLOB INCLUDE_HEADER "./../interface/*.h")
 
 add_executable(${CMD_NAME} ${QRC_FILES} ${allSource} ${INCLUDE_HEADER} ${Translate1} ${mainSource})
 
