@@ -893,10 +893,8 @@ void Footer::onMusicPlayed(PlaylistPtr playlist, const MetaPtr meta)
         coverImage = cover.copy((cover.width() - imageWidth) / 2, 0, imageWidth, imageheight);
     }
 
+    d->activingMeta = meta;
     refreshBackground();
-//    d->forwardWidget->setSourceImage(coverImage);
-//    blurBackground()->setSourceImage(coverImage);
-    //d->waveform->onAudioBuffer(MetaDetector::getMetaData(meta->localPath));
 
     this->enableControl(true);
     d->title->show();
@@ -906,8 +904,7 @@ void Footer::onMusicPlayed(PlaylistPtr playlist, const MetaPtr meta)
     d->btFavorite->show();
     d->btLyric->show();
 
-    //d->activingPlaylist = playlist;
-    d->activingMeta = meta;
+
 
     if (d->activingPlaylist != nullptr) {
         if (d->activingPlaylist->allmusic().isEmpty()) {
@@ -1459,12 +1456,6 @@ void Footer::resizeEvent(QResizeEvent *event)
     Q_D(Footer);
     DWidget::resizeEvent(event);
 
-    //auto fix = progressExtentHeight();
-    //auto center = rect().marginsRemoved(QMargins(0, fix, 0, 0)).center() - d->ctlWidget->rect().center();
-
-    //d->ctlWidget->move(center);
-    //d->ctlWidget->raise();
-
     QImage cover(d->defaultCover);
     if (d->activingMeta != nullptr) {
         auto coverData = MetaSearchService::coverData(d->activingMeta);
@@ -1487,5 +1478,4 @@ void Footer::resizeEvent(QResizeEvent *event)
         coverImage.fill(QColor(255, 255, 255));
     }
     d->forwardWidget->setSourceImage(coverImage);
-//    blurBackground()->setSourceImage(coverImage);
 }
