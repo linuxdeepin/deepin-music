@@ -96,13 +96,13 @@ MusicListScrollArea::MusicListScrollArea(QWidget *parent) : DScrollArea(parent)
     m_dataBaseListview->setEditTriggers(QAbstractItemView::NoEditTriggers);
     m_dataBaseListview->setFixedHeight(162);
 
-    m_dataBaseListview->setFocusPolicy(Qt::TabFocus);
+    // m_dataBaseListview->setFocusPolicy(Qt::TabFocus);   //使用默认设置焦点方式
     m_dataBaseListview->installEventFilter(this);
 
     m_customizeListview = new MusicListView;
     musicLayout->setContentsMargins(0, 0, 0, 0);
 
-    m_customizeListview->setFocusPolicy(Qt::TabFocus);
+    // m_customizeListview->setFocusPolicy(Qt::TabFocus);
     m_customizeListview->installEventFilter(this);
 
     musicLayout->addWidget(dataBaseLabel, 0, Qt::AlignVCenter);
