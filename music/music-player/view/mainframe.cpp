@@ -399,9 +399,8 @@ void MainFramePrivate::postInitUI()
     m_SpeechCenter = nullptr/*SpeechCenter::getInstance()*/;
     m_VlcMediaPlayer = Player::instance()->core();
 
-    newSonglistAction->setDisabled(true);
+    // 界面刷新一次，使能禁用只设置一次
     playListWidget = footer->getPlayListWidget();
-
     lyricWidget = new MUsicLyricWidget;
     lyricWidget->setContentsMargins(0, titlebar->height(), 0, FooterHeight + 10);
 
