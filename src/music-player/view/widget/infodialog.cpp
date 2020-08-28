@@ -26,6 +26,7 @@
 #include <QGridLayout>
 #include <QFileInfo>
 #include <QTimer>
+#include <QProcessEnvironment>
 #include <QScrollArea>
 
 #include <DApplication>
@@ -88,11 +89,19 @@ void InfoDialogPrivate::initUI()
     layout->setSpacing(0);
     layout->setContentsMargins(10, 50, 10, 10);
 
-    closeBt = new DWindowCloseButton( q);
+    closeBt = new DWindowCloseButton(q);
     closeBt->setFocusPolicy(Qt::NoFocus);
     closeBt->setFixedSize(50, 50);
     closeBt->setIconSize(QSize(50, 50));
     closeBt->move(q->width() - 50, 0);
+    //hide close button when wayland protocol
+    auto e = QProcessEnvironment::systemEnvironment();
+    QString XDG_SESSION_TYPE = e.value(QStringLiteral("XDG_SESSION_TYPE"));
+    QString WAYLAND_DISPLAY = e.value(QStringLiteral("WAYLAND_DISPLAY"));
+
+    if (XDG_SESSION_TYPE == QLatin1String("wayland") || WAYLAND_DISPLAY.contains(QLatin1String("wayland"), Qt::CaseInsensitive)) {
+        closeBt->hide();
+    }
 
     cover = new Cover(q);
     cover->setContentsMargins(0, 0, 0, 0);
@@ -129,7 +138,7 @@ void InfoDialogPrivate::initUI()
     layout->addSpacing(10);
     layout->addWidget(infoGridFrame);
 
-    basicinfo = new DLabel("   " + InfoDialog::tr("Basic info"),q);
+    basicinfo = new DLabel("   " + InfoDialog::tr("Basic info"), q);
 
     basicinfo->setForegroundRole(DPalette::Text);
     basicinfo->setFixedWidth(300);
@@ -183,15 +192,15 @@ void InfoDialogPrivate::initUI()
     infoLayout->addLayout(infogridLayout);
 
     q->connect(closeBt, &MusicImageButton::clicked, q, &DAbstractDialog::hide);
-    q->connect(qApp, &QGuiApplication::fontChanged, q, [ = ](const QFont &font) {
+    q->connect(qApp, &QGuiApplication::fontChanged, q, [ = ](const QFont & font) {
         QFontMetrics fm(font);
-        for (int i = 0; i < keyList.size();i++) {
+        for (int i = 0; i < keyList.size(); i++) {
 
             int w = keyList.at(0)->width();
             int value_w = 300 - w;
             valueList.at(i)->setFixedWidth(value_w - 20);
         }
-        if ( meta->size > 1.0){
+        if (meta->size > 1.0) {
             q->updateInfo(meta);
         }
     });
@@ -247,7 +256,7 @@ void InfoDialog::updateInfo(const MetaPtr meta)
             QString str = geteElidedText(d->valueList.value(i)->font(), infoValues.value(i), d->valueList.value(i)->width());
             d->valueList.value(i)->setText(str);
             QFontMetrics fontWidth(d->valueList.value(i)->font());
-            QRect rec = fontWidth.boundingRect( d->valueList.value(i)->text());
+            QRect rec = fontWidth.boundingRect(d->valueList.value(i)->text());
             d->valueList.value(i)->setFixedHeight(rec.height());
         } else {
             QFontMetrics fontWidth(d->valueList.value(i)->font());
@@ -257,15 +266,15 @@ void InfoDialog::updateInfo(const MetaPtr meta)
                 d->DoubleElements = true;
                 QString str = geteElidedText(d->valueList.value(i)->font(), infoValues.value(i), d->valueList.value(i)->width() * 3 / 2);
                 d->valueList.value(i)->setText(str);
-                QRect rec = fontWidth.boundingRect( d->valueList.value(i)->text());
+                QRect rec = fontWidth.boundingRect(d->valueList.value(i)->text());
                 d->valueList.value(i)->setFixedHeight(2 * rec.height());
 
             } else {
                 d->DoubleElements = false;
                 //QString str = geteElidedText(d->valueList.value(i)->font(), infoValues.value(i), d->valueList.value(i)->width() / 2);
                 d->valueList.value(i)->setText(infoValues.value(i));
-                QRect rec = fontWidth.boundingRect( d->valueList.value(i)->text());
-                d->valueList.value(i)->setFixedHeight( rec.height());
+                QRect rec = fontWidth.boundingRect(d->valueList.value(i)->text());
+                d->valueList.value(i)->setFixedHeight(rec.height());
             }
         }
 
@@ -291,9 +300,9 @@ void InfoDialog::updateInfo(const MetaPtr meta)
     }
 
     int h = 0;//one Label Height
-    for (int i = 0;i < d->valueList.size(); i++) {
+    for (int i = 0; i < d->valueList.size(); i++) {
         h = d->valueList.value(i)->height();
-        if(h != 0)
+        if (h != 0)
             break;
     }
     int title_height = d->title->height();

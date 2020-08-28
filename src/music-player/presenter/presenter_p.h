@@ -55,6 +55,7 @@ public:
     MediaLibrary        *library        = nullptr;
     MusicSettings         *settings       = nullptr;
     Transfer            *transfer       = nullptr;
+    QTimer              *pdbusinterval  = nullptr;
     MetaBufferDetector  *metaBufferDetector = nullptr;
 
     Presenter *q_ptr;
