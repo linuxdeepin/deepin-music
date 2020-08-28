@@ -116,6 +116,12 @@ void PresenterPrivate::initBackend()
 
     settings = MusicSettings::instance();
 
+    pdbusinterval =  new QTimer;
+    connect(pdbusinterval, &QTimer::timeout,
+    this, [ = ]() {
+        pdbusinterval->stop();
+    });
+
     library = MediaLibrary::instance();
     library->init();
     ThreadPool::instance()->moveToNewThread(MediaLibrary::instance());
@@ -1739,8 +1745,6 @@ void Presenter::onRemoveMetasFavourite(const MetaPtrList metalist)
 void Presenter::onChangeProgress(qint64 value, qint64 range)
 {
     Q_D(Presenter);
-
-    /*-----setIOPosition------*/
     if (range <= 0)
         return;
     if (value > range) {
@@ -1748,10 +1752,21 @@ void Presenter::onChangeProgress(qint64 value, qint64 range)
         return;
     }
 
-    //qDebug() << value << "-" << range;
+    auto position = value * d->player->duration() / range;
+    d->player->setPosition(position);
+}
 
-//    d->player->setIOPosition(value, range);
+void Presenter::onChangePosition(qint64 value, qint64 range)
+{
+    Q_D(Presenter);
 
+    if (range <= 0)
+        return;
+
+    if (value > range) {
+        onMusicNext(d->player->activePlaylist(), d->player->activeMeta());
+        return;
+    }
     auto position = value * d->player->duration() / range;
     d->player->setPosition(position);
 }
@@ -2223,7 +2238,17 @@ void Presenter::initMpris(MprisPlayer *mprisPlayer)
 
     connect(mprisPlayer, &MprisPlayer::seekRequested,
     this, [ = ](qlonglong offset) {
+        if (!d->pdbusinterval->isActive()) {
+            d->pdbusinterval->start(50);
+        } else
+            return;
         this->onChangeProgress(d->player->position() + offset, d->player->duration());
+    });
+
+    connect(mprisPlayer, &MprisPlayer::setPositionRequested,
+    this, [ = ](const QDBusObjectPath & trackId, qlonglong offset) {
+        Q_UNUSED(trackId)
+        onChangePosition(offset, d->player->duration());
     });
 
     connect(mprisPlayer, &MprisPlayer::stopRequested,
@@ -2244,16 +2269,34 @@ void Presenter::initMpris(MprisPlayer *mprisPlayer)
             return;
         }
 
+        if (!d->pdbusinterval->isActive()) {
+            d->pdbusinterval->start(50);
+        } else
+            return;
+        /************************************************************
+         * if no song in music,do not import songs when dbus msg comes
+         * ***********************************************************/
+        if (d->playlistMgr->playlist(AllMusicListID)->length() == 0) {
+            return;
+        }
+
         if (d->player->status() == Player::Paused) {
             onMusicResume(player->activePlaylist(), player->activeMeta());
         } else {
-            onMusicPlay(player->activePlaylist(), player->activeMeta());
+            if (d->player->status() != Player::Playing) {
+                onMusicPlay(player->activePlaylist(), player->activeMeta());
+            }
         }
         mprisPlayer->setPlaybackStatus(Mpris::Playing);
     });
 
     connect(mprisPlayer, &MprisPlayer::pauseRequested,
     this, [ = ]() {
+        if (d->player->activePlaylist().isNull() &&  d->player != nullptr) {
+            d->player->pauseNow();
+            return;
+        }
+
         if (d->player->activePlaylist().isNull() &&  d->player != nullptr) {
             d->player->pauseNow();
             return;
@@ -2269,6 +2312,16 @@ void Presenter::initMpris(MprisPlayer *mprisPlayer)
             return;
         }
 
+        if (!d->pdbusinterval->isActive()) {
+            d->pdbusinterval->start(50);
+        } else
+            return;
+        /************************************************************
+         * if no song in music,do not play songs when dbus msg comes
+         * ***********************************************************/
+        if (d->playlistMgr->playlist(AllMusicListID)->length() == 0) {
+            return;
+        }
         onMusicNext(player->activePlaylist(), player->activeMeta());
         mprisPlayer->setPlaybackStatus(Mpris::Playing);
     });
@@ -2279,6 +2332,16 @@ void Presenter::initMpris(MprisPlayer *mprisPlayer)
             return;
         }
 
+        if (!d->pdbusinterval->isActive()) {
+            d->pdbusinterval->start(50);
+        } else
+            return;
+        /************************************************************
+         * if no song in music,do not play songs when dbus msg comes
+         * ***********************************************************/
+        if (d->playlistMgr->playlist(AllMusicListID)->length() == 0) {
+            return;
+        }
         onMusicPrev(player->activePlaylist(), player->activeMeta());
         mprisPlayer->setPlaybackStatus(Mpris::Playing);
     });
