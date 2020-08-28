@@ -29,6 +29,8 @@
 #include <QProcess>
 #include <QApplication>
 #include <QStandardPaths>
+#include <QTimer>
+
 #include <DDialog>
 #include <DSettingsOption>
 #include <DDesktopServices>
@@ -126,6 +128,12 @@ void PresenterPrivate::initBackend()
     }, Qt::QueuedConnection);
 
     settings = MusicSettings::instance();
+
+    pdbusinterval =  new QTimer;
+    connect(pdbusinterval, &QTimer::timeout,
+    this, [ = ]() {
+        pdbusinterval->stop();
+    });
 
     currentPlaylist = playlistMgr->playlist(AllMusicListID);
     PlaylistPtr albumPlaylist = playlistMgr->playlist(AlbumMusicListID);
@@ -2254,6 +2262,10 @@ void Presenter::initMpris(MprisPlayer *mprisPlayer)
 
     connect(mprisPlayer, &MprisPlayer::seekRequested,
     this, [ = ](qlonglong offset) {
+        if (!d->pdbusinterval->isActive()) {
+            d->pdbusinterval->start(50);
+        } else
+            return;
         this->onChangeProgress(d->player->position() + offset, d->player->duration());
     });
 
@@ -2275,16 +2287,35 @@ void Presenter::initMpris(MprisPlayer *mprisPlayer)
             return;
         }
 
+        if (!d->pdbusinterval->isActive()) {
+            d->pdbusinterval->start(50);
+        } else
+            return;
+        /************************************************************
+         * if no song in music,do not import songs when dbus msg comes
+         * ***********************************************************/
+        if (d->playlistMgr->playlist(AllMusicListID)->length() == 0) {
+            return;
+        }
+
         if (d->player->status() == Player::Paused) {
             onMusicResume(player->activePlaylist(), player->activeMeta());
         } else {
-            onMusicPlay(player->activePlaylist(), player->activeMeta());
+            if (d->player->status() != Player::Playing) {
+                onMusicPlay(player->activePlaylist(), player->activeMeta());
+            }
         }
         mprisPlayer->setPlaybackStatus(Mpris::Playing);
     });
 
     connect(mprisPlayer, &MprisPlayer::pauseRequested,
     this, [ = ]() {
+
+        if (!d->pdbusinterval->isActive()) {
+            d->pdbusinterval->start(50);
+        } else
+            return;
+
         if (d->player->activePlaylist().isNull() &&  d->player != nullptr) {
             d->player->pauseNow();
             return;
@@ -2299,7 +2330,16 @@ void Presenter::initMpris(MprisPlayer *mprisPlayer)
         if (d->player->activePlaylist().isNull()) {
             return;
         }
-
+        if (!d->pdbusinterval->isActive()) {
+            d->pdbusinterval->start(50);
+        } else
+            return;
+        /************************************************************
+         * if no song in music,do not play songs when dbus msg comes
+         * ***********************************************************/
+        if (d->playlistMgr->playlist(AllMusicListID)->length() == 0) {
+            return;
+        }
         onMusicNext(player->activePlaylist(), player->activeMeta());
         mprisPlayer->setPlaybackStatus(Mpris::Playing);
     });
@@ -2310,6 +2350,16 @@ void Presenter::initMpris(MprisPlayer *mprisPlayer)
             return;
         }
 
+        if (!d->pdbusinterval->isActive()) {
+            d->pdbusinterval->start(50);
+        } else
+            return;
+        /************************************************************
+         * if no song in music,do not play songs when dbus msg comes
+         * ***********************************************************/
+        if (d->playlistMgr->playlist(AllMusicListID)->length() == 0) {
+            return;
+        }
         onMusicPrev(player->activePlaylist(), player->activeMeta());
         mprisPlayer->setPlaybackStatus(Mpris::Playing);
     });
@@ -2317,8 +2367,6 @@ void Presenter::initMpris(MprisPlayer *mprisPlayer)
     connect(mprisPlayer, &MprisPlayer::volumeRequested,
     this, [ = ](double volume) {
         Q_UNUSED(volume)
-//        onVolumeChanged(volume * 100);
-//        Q_EMIT this->volumeChanged(volume * 100);
     });
 
     connect(d, &PresenterPrivate::updateMprisVolume,

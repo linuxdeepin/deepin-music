@@ -149,11 +149,6 @@ QUrl MetaSearchService::lyricUrl(const MetaPtr meta)
 
 QByteArray MetaSearchService::coverData(const MetaPtr meta)
 {
-//    Q_ASSERT(!meta.isNull());
-//    QFile coverFile(cacheCoverPath(meta));
-//    if (coverFile.open(QIODevice::ReadOnly)) {
-//        return coverFile.readAll();
-//    }
     QByteArray byteArray;
     if (meta) {
         byteArray = meta->getCoverData(Global::cacheDir());

@@ -96,7 +96,7 @@ public:
     void showLyricView();
     void hideLyricView();
     void showPlaylistView();
-    void hidePlaylistView();
+    void hidePlaylistView(bool outer = false); //outer button
     void resiveistView();
     void slideToMusicListView(bool keepPlaylist);
     void disableControl(int delay = 350);
@@ -127,7 +127,6 @@ public:
 
     DWidget             *currentWidget          = nullptr;
     InfoDialog          *infoDialog             = nullptr;
-//    DSettingsDialog     *configDialog           = nullptr;
 
     QAction             *newSonglistAction      = nullptr;
     QAction             *colorModeAction        = nullptr;
@@ -138,6 +137,7 @@ public:
 
     QPoint              m_LastMousePos;
     QTimer              *timer                  = nullptr;
+    QTimer              *animationTimer         = nullptr;
     int                 playingCount            = 0;
 
     QShortcut           *volumeUpShortcut       = nullptr;
@@ -332,7 +332,7 @@ void MainFramePrivate::initMenu()
             Q_EMIT q->addPlaylist(true);
     });
 }
-#include<QTimer>
+
 void MainFramePrivate::initUI(bool showLoading)
 {
     Q_Q(MainFrame);
@@ -399,9 +399,8 @@ void MainFramePrivate::postInitUI()
     m_SpeechCenter = nullptr/*SpeechCenter::getInstance()*/;
     m_VlcMediaPlayer = Player::instance()->core();
 
-    newSonglistAction->setDisabled(true);
+    // 界面刷新一次，使能禁用只设置一次
     playListWidget = footer->getPlayListWidget();
-
     lyricWidget = new MUsicLyricWidget;
     lyricWidget->setContentsMargins(0, titlebar->height(), 0, FooterHeight + 10);
 
@@ -411,6 +410,8 @@ void MainFramePrivate::postInitUI()
     timer = new QTimer(q);
     q->connect(timer, SIGNAL(timeout()), q, SLOT(changePicture()));
 
+    animationTimer = new QTimer(q); //animation timer
+    animationTimer->setSingleShot(true);
 //    titlebarwidget->setSearchEnable(false);  //界面只刷新一次
     footer->setFocus();
     updateSize(q->size());
@@ -456,6 +457,7 @@ void MainFramePrivate::showPlaylistView()
     if (footer->height() > 80) {
         return;
     }
+
     QRect start(5,  height - 86,
                 width - 10, 80);
     QRect end(5,  height - 429,
@@ -471,14 +473,23 @@ void MainFramePrivate::showPlaylistView()
     titlebar->raise();
     footer->raise();
     //footer->setPlaylistButtonChecked(true);
-
 }
 
-void MainFramePrivate::hidePlaylistView()
+void MainFramePrivate::hidePlaylistView(bool outer)
 {
     if (footer->height() <= 80) {
         return;
     }
+
+    //to forbid outer mult click
+    if (outer) {
+        if (!animationTimer->isActive()) {
+            animationTimer->start(AnimationDelay);
+        } else {
+            return;
+        }
+    }
+
     QRect start(5,  height - 429,
                 width - 10, 423);
     QRect end(5,  height - 86,
@@ -1690,8 +1701,7 @@ bool MainFrame::eventFilter(QObject *obj, QEvent *e)
             auto geometry = d->footer->geometry().marginsAdded(QMargins(0, 0, 40, 40));
             if (!geometry.contains(mousePos)) {
                 DUtil::TimerSingleShot(50, [this]() {
-                    //this->d_func()->setPlayListVisible(false);
-                    this->d_func()->hidePlaylistView();
+                    this->d_func()->hidePlaylistView(true);
                 });
             }
         }
