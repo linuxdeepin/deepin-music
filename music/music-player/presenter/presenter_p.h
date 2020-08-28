@@ -24,7 +24,7 @@
 #include "../core/playlist.h"
 #include "../core/musicsettings.h"
 #include "searchmeta.h"
-
+class QTimer;
 class Presenter;
 class MetaSearchService;
 class PlaylistManager;
@@ -56,6 +56,7 @@ public:
     MediaLibrary        *library        = nullptr;
     MusicSettings         *settings       = nullptr;
     Transfer            *transfer       = nullptr;
+    QTimer              *pdbusinterval  = nullptr; //to forbid mult times dbus invoke
     MetaBufferDetector  *metaBufferDetector = nullptr;
 
     Presenter *q_ptr;
