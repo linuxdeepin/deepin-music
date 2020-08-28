@@ -411,7 +411,7 @@ void MainFramePrivate::postInitUI()
     timer = new QTimer(q);
     q->connect(timer, SIGNAL(timeout()), q, SLOT(changePicture()));
 
-    titlebarwidget->setSearchEnable(false);
+//    titlebarwidget->setSearchEnable(false);  //界面只刷新一次
     footer->setFocus();
     updateSize(q->size());
     infoDialog->move(q->pos().x() + q->size().width() / 2 - infoDialog->width() / 2, q->pos().y() + titlebar->height());
