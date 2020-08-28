@@ -399,9 +399,8 @@ void MainFramePrivate::postInitUI()
     m_SpeechCenter = nullptr/*SpeechCenter::getInstance()*/;
     m_VlcMediaPlayer = Player::instance()->core();
 
-    newSonglistAction->setDisabled(true);
+    // 界面刷新一次，使能禁用只设置一次
     playListWidget = footer->getPlayListWidget();
-
     lyricWidget = new MUsicLyricWidget;
     lyricWidget->setContentsMargins(0, titlebar->height(), 0, FooterHeight + 10);
 
@@ -411,7 +410,6 @@ void MainFramePrivate::postInitUI()
     timer = new QTimer(q);
     q->connect(timer, SIGNAL(timeout()), q, SLOT(changePicture()));
 
-//    titlebarwidget->setSearchEnable(false);  //界面只刷新一次
     footer->setFocus();
     updateSize(q->size());
     infoDialog->move(q->pos().x() + q->size().width() / 2 - infoDialog->width() / 2, q->pos().y() + titlebar->height());
