@@ -29,6 +29,7 @@ pkg_check_modules(3rd_lib REQUIRED
 target_include_directories(${CMD_NAME} PUBLIC ${3rd_lib_INCLUDE_DIRS})
 
 #将第三方库链接进来(注意 *_LIBRARIES)
+target_link_libraries(${CMD_NAME} icui18n)
 target_link_libraries(${CMD_NAME} ${3rd_lib_LIBRARIES})
 
 qt5_use_modules(${CMD_NAME} ${QtModule})

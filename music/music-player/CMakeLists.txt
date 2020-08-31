@@ -104,8 +104,6 @@ LINK_DIRECTORIES(${CMAKE_BINARY_DIR}/music/libdmusic/
 
 
 #将第三方库链接进来(注意 *_LIBRARIES)
-find_package(KF5Codecs)
-target_link_libraries(${CMD_NAME} KF5::Codecs)
 target_link_libraries(${CMD_NAME} ${TARGET_LIBS} )
 
 if(ISTEST MATCHES "1")
@@ -121,4 +119,3 @@ install(FILES ${PROJECT_SOURCE_DIR}/music/music-player/data/deepin-music.desktop
 
 install(FILES ${PROJECT_SOURCE_DIR}/music/music-player/resource/theme/common/image/deepin-music.svg
     DESTINATION share/icons/hicolor/scalable/apps)
-
