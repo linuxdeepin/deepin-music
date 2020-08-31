@@ -209,13 +209,12 @@ void FooterPrivate::initConnection()
     });
 
     q->connect(volSlider, &SoundVolume::volumeChanged, q, [ = ](int vol) {
-        q->onVolumeChanged(vol);
+        q->onLocalVolumeChanged(vol);
         if (m_Mute) {
             m_Mute = false;
             Q_EMIT q->toggleMute();
         }
         m_Volume = vol;
-        Q_EMIT q->volumeChanged(vol);
     });
 
     q->connect(q, &Footer::mouseMoving, q, [ = ](Qt::MouseButton) {
@@ -777,14 +776,14 @@ bool Footer::eventFilter(QObject *obj, QEvent *event)
             if (vol > 100) {
                 vol = 100;
             }
-            onVolumeChanged(vol);
+            onLocalVolumeChanged(vol);
             Q_EMIT this->volumeChanged(d->volSlider->volume());
         } else {
             auto vol = d->volSlider->volume() - Player::VolumeStep;
             if (vol < 0) {
                 vol = 0;
             }
-            onVolumeChanged(vol);
+            onLocalVolumeChanged(vol);
             Q_EMIT this->volumeChanged(d->volSlider->volume());
         }
         return true;
@@ -1310,6 +1309,15 @@ void Footer::onCoverChanged(const MetaPtr meta, const DMusic::SearchMeta &, cons
 void Footer::onVolumeChanged(int volume)
 {
     Q_D(Footer);
+    //need to sync volume to dbus
+    if (d->volumeMonitoring.needSyncLocalFlag(1)) {
+//        QTimer::singleShot(50, [ = ]() {
+        d->volumeMonitoring.stop();
+        d->volumeMonitoring.timeoutSlot();
+        d->volumeMonitoring.start();
+//        });
+//        return;
+    }
     QString status = "mid";
     if (volume > 77) {
         status = "high";
@@ -1328,6 +1336,35 @@ void Footer::onVolumeChanged(int volume)
     MusicSettings::setOption("base.play.volume", d->m_Volume);
     MusicSettings::setOption("base.play.mute", d->m_Mute);
     d->volSlider->onVolumeChanged(volume);
+}
+
+void Footer::onLocalVolumeChanged(int volume)
+{
+    Q_D(Footer);
+    QString status = "mid";
+    if (volume > 77) {
+        status = "high";
+    } else if (volume > 33) {
+        status = "mid";
+    } else {
+        status = "low";
+    }
+
+    if (d->m_Mute) {
+        d->updateQssProperty(d->btSound, "volume", "mute");
+    } else {
+        d->updateQssProperty(d->btSound, "volume", status);
+    }
+    d->m_Volume = volume;
+    MusicSettings::setOption("base.play.volume", d->m_Volume);
+    MusicSettings::setOption("base.play.mute", d->m_Mute);
+    d->volSlider->onVolumeChanged(volume);
+
+    Q_EMIT volumeChanged(volume);
+    //set sync state
+    if (d->volumeMonitoring.readSinkInputValid() != 0) {
+        d->volumeMonitoring.syncLocalFlag(1);
+    }
 }
 
 void Footer::onMutedChanged(bool muted)
@@ -1397,7 +1434,6 @@ void Footer::onLocalMutedChanged(int type)
 void Footer::onModeChange(int mode)
 {
     Q_D(Footer);
-
     qDebug() << "change play mode to" << mode;
     if (d->mode == mode) {
         return;

@@ -66,7 +66,6 @@ static QMap<QString, bool>  sSupportedSuffix;
 static QStringList          sSupportedSuffixList;
 static QStringList          sSupportedFiterList;
 static QStringList          sSupportedMimeTypes;
-QMutex playerMutex;
 
 static const int sFadeInOutAnimationDuration = 900; //ms
 
@@ -146,12 +145,12 @@ public:
     {
         /*-------AudioPlayer-------*/
 //        QtConcurrent::run([ = ] {
-//        playerMutex.lock();
+//
         qvinstance = new VlcInstance(VlcCommon::args(), nullptr);
         qvplayer = new VlcMediaPlayer(qvinstance);
         qvplayer->equalizer()->setPreamplification(12);
         qvmedia = new VlcMedia();
-//        playerMutex.unlock();
+//
 //        });
     }
 
@@ -193,8 +192,6 @@ public:
     QPropertyAnimation  *fadeInAnimation    = nullptr;
     QPropertyAnimation  *fadeOutAnimation   = nullptr;
 
-//    QFileSystemWatcher  fileSystemWatcher;
-
     Player *q_ptr;
     Q_DECLARE_PUBLIC(Player)
 };
@@ -202,8 +199,6 @@ public:
 void PlayerPrivate::initConnection()
 {
     Q_Q(Player);
-    playerMutex.lock();
-    playerMutex.unlock();
     q->connect(qvplayer, &VlcMediaPlayer::timeChanged,
     q, [ = ](qint64 position) {
         if (activeMeta.isNull()) {
@@ -284,11 +279,12 @@ void PlayerPrivate::initConnection()
 
     q->connect(qvplayer->audio(), &VlcAudio::volumeChanged,
     q, [ = ](int volume) {
-        if (fadeInOutFactor < 1.0) {
-            return;
-        }
-        if (volume >= 0)
-            Q_EMIT q->volumeChanged(volume);
+        Q_UNUSED(volume)
+//        if (fadeInOutFactor < 1.0) {
+//            return;
+//        }
+//        if (volume >= 0)
+//            Q_EMIT q->volumeChanged(volume);
     });
 
 
@@ -319,8 +315,8 @@ void PlayerPrivate::initConnection()
 void PlayerPrivate::selectNext(const MetaPtr info, Player::PlaybackMode mode)
 {
     Q_Q(Player);
-    playerMutex.lock();
-    playerMutex.unlock();
+
+
     if (!curPlaylist || curPlaylist->isEmpty()) {
         return;
     }
@@ -385,8 +381,8 @@ void PlayerPrivate::selectNext(const MetaPtr info, Player::PlaybackMode mode)
 void PlayerPrivate::selectPrev(const MetaPtr info, Player::PlaybackMode mode)
 {
     Q_Q(Player);
-    playerMutex.lock();
-    playerMutex.unlock();
+
+
     if (!curPlaylist || curPlaylist->isEmpty()) {
         return;
     }
@@ -443,16 +439,12 @@ void PlayerPrivate::selectPrev(const MetaPtr info, Player::PlaybackMode mode)
 
 Player::Player(QObject *parent) : QObject(parent), d_ptr(new PlayerPrivate(this))
 {
-    playerMutex.lock();
-    playerMutex.unlock();
     initMiniTypes();
 }
 
 void Player::init()
 {
     Q_D(Player);
-    playerMutex.lock();
-    playerMutex.unlock();
     qRegisterMetaType<Player::Error>();
     qRegisterMetaType<Player::PlaybackStatus>();
 
@@ -478,8 +470,6 @@ Player::~Player()
 {
     qDebug() << "destroy Player";
     Q_D(Player);
-    playerMutex.lock();
-    playerMutex.unlock();
     delete d->qvmedia;
     delete d->qvplayer;
     delete d->qvinstance;
@@ -497,8 +487,8 @@ void Player::loadMedia(PlaylistPtr playlist, const MetaPtr meta)
              << DMusic::lengthString(meta->offset) << "/"
              << DMusic::lengthString(meta->length);
     Q_D(Player);
-    playerMutex.lock();
-    playerMutex.unlock();
+
+
     d->activeMeta = meta;
     if (playlist->id() != PlayMusicListID)
         d->activePlaylist = playlist;
@@ -527,8 +517,6 @@ void Player::loadMedia(PlaylistPtr playlist, const MetaPtr meta)
 void Player::playMeta(PlaylistPtr playlist, const MetaPtr meta)
 {
     Q_D(Player);
-    playerMutex.lock();
-    playerMutex.unlock();
     if (QFileInfo(meta->localPath).dir().isEmpty()) {
         Q_EMIT mediaError(playlist, meta, Player::ResourceError);
         return ;
@@ -598,8 +586,6 @@ void Player::playMeta(PlaylistPtr playlist, const MetaPtr meta)
 void Player::resume(PlaylistPtr playlist, const MetaPtr meta)
 {
     Q_D(Player);
-    playerMutex.lock();
-    playerMutex.unlock();
     if (meta == nullptr) {
         return;
     }
@@ -657,9 +643,6 @@ void Player::playNextMeta(PlaylistPtr playlist, const MetaPtr meta)
 {
     Q_UNUSED(playlist)
     Q_D(Player);
-    playerMutex.lock();
-    playerMutex.unlock();
-
     setPlayOnLoaded(true);
     if (d->mode == RepeatSingle) {
         d->selectNext(meta, RepeatAll);
@@ -682,8 +665,8 @@ void Player::playPrevMusic(PlaylistPtr playlist, const MetaPtr meta)
 {
     Q_UNUSED(playlist)
     Q_D(Player);
-    playerMutex.lock();
-    playerMutex.unlock();
+
+
 //    Q_ASSERT(playlist == d->activePlaylist);
 
     setPlayOnLoaded(true);
@@ -697,9 +680,6 @@ void Player::playPrevMusic(PlaylistPtr playlist, const MetaPtr meta)
 void Player::pause()
 {
     Q_D(Player);
-    playerMutex.lock();
-    playerMutex.unlock();
-
     /*--------suspend--------*/
 //    d->ioPlayer->suspend();
 
@@ -730,16 +710,16 @@ void Player::pause()
 void Player::pauseNow()
 {
     Q_D(Player);
-    playerMutex.lock();
-    playerMutex.unlock();
+
+
     d->qvplayer->pause();
 }
 
 void Player::stop()
 {
     Q_D(Player);
-    playerMutex.lock();
-    playerMutex.unlock();
+
+
 
     d->qvplayer->pause();
     d->activeMeta.clear(); //清除当前播放音乐；
@@ -825,8 +805,6 @@ Player::PlaybackMode Player::mode() const
 
 bool Player::muted()
 {
-    //Q_D(const Player);
-    //return d->qplayer->isMuted();
     return this->isMusicMuted();
 }
 
@@ -881,16 +859,12 @@ void Player::setPosition(qlonglong position)
 void Player::setMode(Player::PlaybackMode mode)
 {
     Q_D(Player);
-    playerMutex.lock();
-    playerMutex.unlock();
     d->mode = mode;
 }
 
 void Player::setVolume(int volume)
 {
     Q_D(Player);
-    playerMutex.lock();
-    playerMutex.unlock();
     if (volume > 100) {
         volume = 100;
     }
@@ -944,10 +918,7 @@ void Player::setDbusMuted(bool muted)
 void Player::setFadeInOutFactor(double fadeInOutFactor)
 {
     Q_D(Player);
-    playerMutex.lock();
-    playerMutex.unlock();
     d->fadeInOutFactor = fadeInOutFactor;
-
     d->qvplayer->equalizer()->blockSignals(true);
     d->qvplayer->equalizer()->setPreamplification(static_cast<float>(12 * d->fadeInOutFactor));
     d->qvplayer->equalizer()->blockSignals(false);
@@ -968,7 +939,6 @@ void Player::setPlayOnLoaded(bool playOnLoaded)
 void Player::musicFileMiss()
 {
     Q_D(Player);
-
     /*--------Remove the usb flash drive, the music is invalid-------*/
     if (d->activeMeta != nullptr && access(d->activeMeta->localPath.toStdString().c_str(), F_OK) != 0 && (!d->activePlaylist->allmusic().isEmpty())) {
         stop();
@@ -1009,34 +979,24 @@ void Player::setEqualizer(bool enabled, int curIndex, QList<int> indexbaud)
 void Player::setEqualizerEnable(bool enable)
 {
     Q_D(Player);
-    playerMutex.lock();
-    playerMutex.unlock();
     d->qvplayer->equalizer()->setEnabled(enable);
 }
 
 void Player::setEqualizerpre(int val)
 {
     Q_D(Player);
-    playerMutex.lock();
-    playerMutex.unlock();
-//    qDebug() << "setEqualizerpre" << val ;
     d->qvplayer->equalizer()->setPreamplification(val);
 }
 
 void Player::setEqualizerbauds(int index, int val)
 {
     Q_D(Player);
-    playerMutex.lock();
-    playerMutex.unlock();
-//    qDebug() << "setEqualizerbauds" << index << val;
     d->qvplayer->equalizer()->setAmplificationForBandAt(uint(val), uint(index));
 }
 
 void Player::setEqualizerCurMode(int curIndex)
 {
     Q_D(Player);
-    playerMutex.lock();
-    playerMutex.unlock();
     //非自定义模式时
     if (curIndex != 0) {
         d->qvplayer->equalizer()->loadFromPreset(uint(curIndex - 1));
@@ -1066,10 +1026,7 @@ bool Player::isValidDbusMute()
 void Player::readSinkInputPath()
 {
     Q_D(Player);
-    playerMutex.lock();
-    playerMutex.unlock();
-//    if (!d->sinkInputPath.isEmpty())
-//        return;
+
     QVariant v = DBusUtils::readDBusProperty("com.deepin.daemon.Audio", "/com/deepin/daemon/Audio",
                                              "com.deepin.daemon.Audio", "SinkInputs");
 
@@ -1077,11 +1034,8 @@ void Player::readSinkInputPath()
         return;
 
     QList<QDBusObjectPath> allSinkInputsList = v.value<QList<QDBusObjectPath> >();
-//    qDebug() << "allSinkInputsListSize: " << allSinkInputsList.size();
 
     for (auto curPath : allSinkInputsList) {
-//        qDebug() << "path: " << curPath.path();
-
         QVariant nameV = DBusUtils::readDBusProperty("com.deepin.daemon.Audio", curPath.path(),
                                                      "com.deepin.daemon.Audio.SinkInput", "Name");
 
@@ -1099,10 +1053,7 @@ bool Player::setMusicVolume(double volume)
         volume = 1.000;
     }
     Q_D(Player);
-    playerMutex.lock();
-    playerMutex.unlock();
     readSinkInputPath();
-
     if (!d->sinkInputPath.isEmpty()) {
         QDBusInterface ainterface("com.deepin.daemon.Audio", d->sinkInputPath,
                                   "com.deepin.daemon.Audio.SinkInput",
@@ -1124,8 +1075,6 @@ bool Player::setMusicVolume(double volume)
 bool Player::setMusicMuted(bool muted)
 {
     Q_D(Player);
-    playerMutex.lock();
-    playerMutex.unlock();
     readSinkInputPath();
     if (!d->sinkInputPath.isEmpty()) {
         QDBusInterface ainterface("com.deepin.daemon.Audio", d->sinkInputPath,
@@ -1146,10 +1095,7 @@ bool Player::setMusicMuted(bool muted)
 bool Player::isMusicMuted()
 {
     Q_D(Player);
-    playerMutex.lock();
-    playerMutex.unlock();
     readSinkInputPath();
-
     if (!d->sinkInputPath.isEmpty()) {
         QVariant MuteV = DBusUtils::readDBusProperty("com.deepin.daemon.Audio", d->sinkInputPath,
                                                      "com.deepin.daemon.Audio.SinkInput", "Mute");
@@ -1168,7 +1114,6 @@ bool Player::isDevValid()
 {
     Q_D(Player);
     readSinkInputPath();
-
     if (!d->sinkInputPath.isEmpty()) {
         QVariant MuteV = DBusUtils::readDBusProperty("com.deepin.daemon.Audio", d->sinkInputPath,
                                                      "com.deepin.daemon.Audio.SinkInput", "Mute");

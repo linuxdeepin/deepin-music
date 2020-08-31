@@ -34,14 +34,28 @@ public:
     void start();
     void stop();
 
-    bool needSyncLocalFlag();
+    /**
+     * @brief needSyncLocalFlag sync flag
+     * @param type 0:mute , 1:volume  default 0
+     * @return
+     */
+    bool needSyncLocalFlag(int type = 0);
+    /**
+     * @brief readSinkInputValid if we can read sink input of dbus
+     * @return -1:invalid ,0:valid
+     */
+    int readSinkInputValid();
 signals:
     void volumeChanged(int volume);
     void muteChanged(bool mute);
 
 public slots:
     void timeoutSlot();
-    void syncLocalFlag();
+    /**
+     * @brief syncLocalFlag set sync flag
+     * @param type 0:mute , 1:volume  default 0
+     */
+    void syncLocalFlag(int type = 0);
 private:
     QScopedPointer<VolumeMonitoringPrivate> d_ptr;
     Q_DECLARE_PRIVATE_D(qGetPtrHelper(d_ptr), VolumeMonitoring)

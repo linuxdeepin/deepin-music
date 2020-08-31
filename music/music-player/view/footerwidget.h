@@ -98,6 +98,12 @@ public slots:
     void onProgressChanged(qint64 value, qint64 duration, qint64 coefficient);
     void onCoverChanged(const MetaPtr meta, const DMusic::SearchMeta &, const QByteArray &coverData);
     void onVolumeChanged(int volume);
+    /**
+     * @brief onLocalVolumeChanged to resolve no reponse for local operation \
+     * when music state is stoped.
+     * @param volume music volume
+     */
+    void onLocalVolumeChanged(int volume);
     void onMutedChanged(bool muted);
     /**************************************
      * slots local mute ,type: 0 volume,1 mute
