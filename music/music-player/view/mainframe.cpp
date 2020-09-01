@@ -41,6 +41,8 @@
 #include <DImageButton>
 #include <DFileDialog>
 #include <DHiDPIHelper>
+#include <DMessageManager>
+#include <DFloatingMessage>
 
 #include <unistd.h>
 
@@ -145,7 +147,7 @@ public:
     QShortcut           *nextShortcut           = nullptr;
     QShortcut           *playPauseShortcut      = nullptr;
     QShortcut           *previousShortcut       = nullptr;
-
+    QWidget             *m_pwidget              = nullptr;
     int                 width                   = 0;
     int                 height                  = 0;
     bool                first                   = true;
@@ -362,6 +364,8 @@ void MainFramePrivate::initUI(bool showLoading)
         contentLayout->addWidget(importWidget);
         contentLayout->addWidget(titlebar);
     }
+
+    m_pwidget = new QWidget(q);
 }
 
 void MainFramePrivate::postInitUI()
@@ -1010,32 +1014,21 @@ void MainFrame::binding(Presenter *presenter)
             }
         }
 
-        if (playlist->id() != AlbumMusicListID && playlist->id() != ArtistMusicListID
-                && playlist->id() != PlayMusicListID)
-            this->sendMessage(icon, text);
+        QWidget *content = d->m_pwidget->findChild<QWidget *>("_d_message_float_deepin_music");
+        if (content && !content->isHidden())
+            return;
+        d->m_pwidget->setAttribute(Qt::WA_TransparentForMouseEvents);
+        d->m_pwidget->setFixedHeight(this->height() - 80);
+        d->m_pwidget->setFixedWidth(this->width());
+        d->m_pwidget->move(0, 0);
 
-        QWidget *content = this->findChild<QWidget *>("_d_message_manager_content");
-        if (nullptr != content)
-            content->setContentsMargins(0, 0, 0, 90);
+        DFloatingMessage *pDFloatingMessage = new DFloatingMessage(DFloatingMessage::MessageType::TransientType, d->m_pwidget);
+        pDFloatingMessage->setObjectName("_d_message_float_deepin_music");
+        pDFloatingMessage->setBlurBackgroundEnabled(true);
+        pDFloatingMessage->setMessage(text);
+        pDFloatingMessage->setIcon(icon);
+        DMessageManager::instance()->sendMessage(d->m_pwidget, pDFloatingMessage);
     });
-
-
-//    connect(presenter, &Presenter::showMusicList,
-//    this, [ = ](PlaylistPtr playlist) {
-//        auto current = d->currentWidget ? d->currentWidget : d->importWidget;
-
-//        d->musicListWidget->resize(current->size());
-//        d->musicListWidget->show();
-//        d->currentWidget = d->musicListWidget;
-//        d->importWidget->hide();
-//        d->playListWidget->onMusiclistChanged(playlist);
-//        d->musicListWidget->onMusiclistChanged(playlist);
-//        d->disableControl(false);
-
-//        d->titlebarwidget->setEnabled(true);
-//        d->titlebarwidget->setSearchEnable(true);
-//        d->newSonglistAction->setEnabled(true);
-//    });
 
     connect(presenter, &Presenter::coverSearchFinished,
     this, [ = ](const MetaPtr, const DMusic::SearchMeta &, const QByteArray & coverData) {

@@ -32,7 +32,7 @@ if (CMAKE_HOST_SYSTEM_PROCESSOR MATCHES "mips64")
     SET(CMAKE_EXE_LINKER_FLAGS  "-pie")
 else()
     SET(CMAKE_CXX_FLAGS "$ENV{CXXFLAGS} -O3 -Wl,--as-need -fPIE")
-    SET(CMAKE_C_FLAGS "$ENV{CFLAGS} -O3 -Wl,-as-need -fPIE")
+    SET(CMAKE_C_FLAGS "$ENV{CFLAGS} -O3 -Wl,--as-need -fPIE")
     SET(CMAKE_EXE_LINKER_FLAGS  "-pie")
 endif()
 

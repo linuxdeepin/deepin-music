@@ -413,24 +413,7 @@ void MprisPlayerAdaptor::SetPosition(const QDBusObjectPath &TrackId, qlonglong P
         return;
     }
 
-//    QVariantMap metadata = player->metadata();
-//    QVariant trackId = metadata[Mpris::metadataToString(Mpris::TrackId)];
-//    QVariant length = metadata[Mpris::metadataToString(Mpris::Length)];
-//    if (!trackId.isValid() || !length.isValid()) {
-//        return;
-//    }
-
-//    if (trackId.value<QDBusObjectPath>() != TrackId) {
-//        player->sendErrorReply(QDBusError::InvalidArgs, QStringLiteral("Wanted to move to position but the TrackId is not the current one."));
-//        return;
-//    }
-
-//    if (Position > length.toLongLong()) {
-//        player->sendErrorReply(QDBusError::InvalidArgs, QStringLiteral("Wanted to move to position but the position is off range."));
-//        return;
-//    }
-
-    emit player->seekRequested(Position);
+    emit player->setPositionRequested(TrackId, Position);
 }
 
 void MprisPlayerAdaptor::Stop()

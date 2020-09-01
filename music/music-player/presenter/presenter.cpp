@@ -1785,12 +1785,21 @@ void Presenter::onChangeProgress(qint64 value, qint64 range)
         return;
     }
 
-    /*-----setIOPosition------*/
+    auto position = value * d->player->duration() / range;
+    d->player->setPosition(position);
+}
 
-    //qDebug() << value << "-" << range;
+void Presenter::onChangePosition(qint64 value, qint64 range)
+{
+    Q_D(Presenter);
 
-//    d->player->setIOPosition(value, range);
+    if (range <= 0) //ignore
+        return;
 
+    if (value > range) { //play next music if beyond the range
+        onMusicNext(d->player->activePlaylist(), d->player->activeMeta());
+        return;
+    }
     auto position = value * d->player->duration() / range;
     d->player->setPosition(position);
 }
@@ -2267,6 +2276,16 @@ void Presenter::initMpris(MprisPlayer *mprisPlayer)
         } else
             return;
         this->onChangeProgress(d->player->position() + offset, d->player->duration());
+    });
+
+    connect(mprisPlayer, &MprisPlayer::setPositionRequested,
+    this, [ = ](const QDBusObjectPath & trackId, qlonglong offset) {
+        Q_UNUSED(trackId)
+        if (!d->pdbusinterval->isActive()) {
+            d->pdbusinterval->start(50);
+        } else
+            return;
+        onChangePosition(offset, d->player->duration());
     });
 
     connect(mprisPlayer, &MprisPlayer::stopRequested,

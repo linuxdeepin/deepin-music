@@ -165,6 +165,7 @@ public slots:
     void onRemoveMetasFavourite(const MetaPtrList metalist);
 
     void onChangeProgress(qint64 value, qint64 range);
+    void onChangePosition(qint64 value, qint64 range); //dbus set positon
     void onVolumeChanged(int volume);
     void onPlayModeChanged(int mode);
     void onToggleMute();
