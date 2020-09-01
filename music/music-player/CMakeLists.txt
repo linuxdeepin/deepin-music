@@ -74,15 +74,20 @@ set(AllQRC
 
 qt5_add_resources(QRC_FILES ${AllQRC})
 
-file(GLOB TS LIST_DIRECTORIES false ./translations/${CMD_NAME}*.ts)
-set_source_files_properties(${TS}
-    PROPERTIES OUTPUT_LOCATION ${PROJECT_SOURCE_DIR}/music/music-player/translations)
-set(translate ${PROJECT_SOURCE_DIR}/music/music-player/translations)
+# 设置不删除生成的文件夹内容文件（设置此项是为了翻译后的文件不被删除）
+set_directory_properties(PROPERTIES CLEAN_NO_CUSTOM 1)
 
-if (NOT (${CMAKE_BUILD_TYPE} MATCHES "Debug"))
-    qt5_create_translation(Translate1 ${allSource} ${TS})
-endif ()
-qt5_add_translation(${translate})
+set(TS
+    translations/${CMD_NAME}.ts
+    translations/${CMD_NAME}_zh_CN.ts
+    translations/${CMD_NAME}_en_US.ts
+    )
+
+qt5_create_translation(Translate1 ${allSource} ${TS} OPTIONS)
+
+qt5_add_translation(${TS})
+
+set_source_files_properties(${qmfiles} PROPERTIES OUTPUT_LOCATION "translations")
 
 file(GLOB INCLUDE_HEADER "./../interface/*.h")
 
@@ -111,9 +116,10 @@ if(ISTEST MATCHES "1")
 endif()
 
 install(TARGETS ${CMD_NAME} DESTINATION bin)
-install(DIRECTORY ${PROJECT_SOURCE_DIR}/music/music-player/translations
-    DESTINATION share/${CMD_NAME}
-    FILES_MATCHING PATTERN "*.qm")
+#install(DIRECTORY ${PROJECT_SOURCE_DIR}/music/music-player/translations
+#    DESTINATION share/${CMD_NAME}
+#    FILES_MATCHING PATTERN "*.qm")
+install(FILES ${Translate1} DESTINATION share/${CMD_NAME})
 install(FILES ${PROJECT_SOURCE_DIR}/music/music-player/data/deepin-music.desktop
     DESTINATION share/applications)
 

@@ -405,7 +405,7 @@ void MusicListWidget::onCurrentChanged(PlaylistPtr playlist)
             auto *item = m_dataBaseListview->item(i);
             auto curPlaylist = m_dataBaseListview->playlistPtr(item);
             if (playlist == curPlaylist) {
-                Q_EMIT selectedPlaylistChange(curPlaylist);
+//                Q_EMIT selectedPlaylistChange(curPlaylist);
                 m_dataBaseListview->setCurPlaylist(item);
                 m_customizeListview->setCurPlaylist(nullptr);
             }
@@ -414,7 +414,7 @@ void MusicListWidget::onCurrentChanged(PlaylistPtr playlist)
             auto *item = m_customizeListview->item(i);
             auto curPlaylist = m_customizeListview->playlistPtr(item);
             if (playlist == curPlaylist) {
-                Q_EMIT selectedPlaylistChange(curPlaylist);
+//                Q_EMIT selectedPlaylistChange(curPlaylist);
                 m_customizeListview->setCurPlaylist(item);
                 m_dataBaseListview->setCurPlaylist(nullptr);
             }

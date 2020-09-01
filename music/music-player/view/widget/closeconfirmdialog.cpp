@@ -99,7 +99,7 @@ CloseConfirmDialog::CloseConfirmDialog(QWidget *parent) :
 //    this->addContent(groupLabel, Qt::AlignLeft);
 
 
-    this->setTitle(tr("Please select your operation"));
+    this->setTitle(tr("Please choose your action"));
     this->addContent(d->exitBt, Qt::AlignLeft);
     this->addContent(miniBt, Qt::AlignLeft);
     this->addContent(d->remember, Qt::AlignLeft);
