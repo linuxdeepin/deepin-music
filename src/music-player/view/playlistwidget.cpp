@@ -145,20 +145,57 @@ void PlayListWidgetPrivate::initConntion()
     q->connect(&inotifyFiles, &InotifyFiles::fileChanged,
     q, [ = ](const QStringList  & files) {
         auto allMetas = playListView->playlist()->allmusic();
+        int allCount = allMetas.size();
+        int missCount = 0;
+
         if (!allMetas.isEmpty()) {
             MetaPtrList  metalist;
             for (auto file : files) {
                 for (int i = 0; i < allMetas.size(); i++) {
                     if (file == allMetas[i]->localPath) {
                         metalist.append(allMetas[i]);
+                        missCount++;
                         allMetas.removeAt(i);
-                        break;
+                        //break;
                     }
                 }
             }
+
+            if (allCount == missCount) {
+                if(allCount == 1)
+                    Q_EMIT q->fileRemoved(playListView->playlist() ,metalist.at(0), 1);
+                else{
+                    for(MetaPtr meta : metalist)
+                    {
+                         if(meta == playListView->activingMeta())
+                         {
+                             Q_EMIT q->fileRemoved(playListView->playlist() ,metalist.at(0), 1);
+                         }
+                    }
+                }
+                Q_EMIT q->musiclistRemove(playListView->playlist(), playListView->playlist()->allmusic());
+            }else if (missCount > 0){
+                /***************************************************************
+                 * stop current music
+                 * *************************************************************/
+                Q_EMIT q->musiclistRemove(playListView->playlist(), metalist);
+                /****************************************************************
+                 * emit file not found
+                 * 1 = Player::ResourceError
+                 * ***************************************************************/
+                for(MetaPtr meta : metalist)
+                {
+                     if(meta == playListView->activingMeta())
+                     {
+                         Q_EMIT q->fileRemoved(playListView->playlist() ,metalist.at(0), 1);
+                     }
+                }
+            }
+
             if (!metalist.isEmpty()) {
                 playListView->playlist()->removeMusicList(metalist);
             }
+
         }
         Q_EMIT q->musicFileMiss();
     });
@@ -335,7 +372,7 @@ void PlayListWidget::dropEvent(QDropEvent *event)
 
 void PlayListWidget::resizeEvent(QResizeEvent *event)
 {
-    Q_D(PlayListWidget);
+    //Q_D(PlayListWidget);
     DWidget::resizeEvent(event);
 }
 

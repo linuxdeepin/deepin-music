@@ -26,6 +26,12 @@ DESTDIR     = $$BUILD_DIST/bin
     }
 #}
 
+LIBS += -L$$BUILD_DIST/lib -lvlc
+LIBS += -L$$BUILD_DIST/lib -lvlccore
+
+INCLUDEPATH += /usr/include/vlc
+INCLUDEPATH += /usr/include/vlc/plugins
+
 INCLUDEPATH += $$PWD/view/helper
 INCLUDEPATH += $$PWD/core
 
@@ -112,7 +118,16 @@ SOURCES += \
     core/AudioBufferDevice.cpp \
     core/AudioPlayer.cpp \
     speech/exportedinterface.cpp \
-    speech/speechCenter.cpp
+    speech/speechCenter.cpp \
+    core/vlc/Audio.cpp \
+    core/vlc/Common.cpp \
+    core/vlc/Enums.cpp \
+    core/vlc/Error.cpp \
+    core/vlc/Instance.cpp \
+    core/vlc/Media.cpp \
+    core/vlc/MediaPlayer.cpp \
+    core/vlc/Equalizer.cpp \
+    view/widget/dequalizerdialog.cpp
 
 HEADERS += \
     musicapp.h \
@@ -199,7 +214,16 @@ HEADERS += \
     core/AudioBufferDevice.h \
     core/AudioPlayer.h \
     speech/exportedinterface.h \
-    speech/speechCenter.h
+    speech/speechCenter.h \
+    core/vlc/Audio.h \
+    core/vlc/Common.h \
+    core/vlc/Enums.h \
+    core/vlc/Error.h \
+    core/vlc/Instance.h \
+    core/vlc/Media.h \
+    core/vlc/MediaPlayer.h \
+    core/vlc/Equalizer.h \
+    view/widget/dequalizerdialog.h
 
 RESOURCES += \
     resource/theme/theme.qrc \

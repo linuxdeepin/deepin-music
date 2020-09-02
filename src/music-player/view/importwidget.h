@@ -32,7 +32,7 @@ class ImportWidget : public DFrame
     Q_OBJECT
 public:
     explicit ImportWidget(QWidget *parent = Q_NULLPTR);
-    ~ImportWidget();
+    ~ImportWidget() override;
 
 signals:
     void scanMusicDirectory();

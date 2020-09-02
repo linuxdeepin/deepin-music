@@ -24,6 +24,7 @@
 #include <QDebug>
 #include <QVBoxLayout>
 #include <QFocusEvent>
+#include <QScrollBar>
 
 #include <DListWidget>
 #include <DLabel>
@@ -102,6 +103,13 @@ MusicListScrollArea::MusicListScrollArea(QWidget *parent) : DScrollArea(parent)
 
     int themeType = DGuiApplicationHelper::instance()->themeType();
     slotTheme(themeType);
+
+    connect(verticalScrollBar(), &QScrollBar::rangeChanged, this, [=]() {
+        if (m_customizeListview->getSizeChangedFlag()) {
+            this->verticalScrollBar()->setValue(this->verticalScrollBar()->maximum());
+            m_customizeListview->setSizeChangedFlag(false);
+        }
+    });
 }
 
 MusicListView *MusicListScrollArea::getDBMusicListView()
@@ -161,6 +169,7 @@ void MusicListScrollArea::slotTheme(int type)
 
 void MusicListScrollArea::changePicture(QPixmap pixmap, QPixmap albumPixmap, QPixmap sidebarPixmap)
 {
+    Q_UNUSED(albumPixmap)
     m_dataBaseListview->changePicture(pixmap, sidebarPixmap);
     m_customizeListview->changePicture(pixmap, sidebarPixmap);
 }

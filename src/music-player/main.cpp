@@ -34,11 +34,6 @@
 #include <DExportedInterface>
 #include <metadetector.h>
 
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <fcntl.h>
-#include <unistd.h>
-
 #include "view/mainframe.h"
 #include "core/mediadatabase.h"
 #include "core/medialibrary.h"
@@ -75,22 +70,6 @@ void createSpeechDbus()
 
 }
 
-bool checkOnly()
-{
-    QString userName = QDir::homePath().section("/", -1, -1);
-    std::string path = ("/home/" + userName + "/.cache/deepin/deepin-music/single").toStdString();
-    int fd = open (path.c_str(), O_WRONLY | O_CREAT, 0644);
-    int flock = lockf(fd, F_TLOCK, 0 );
-    if (fd == -1) {
-        perror("open lockfile/n");
-        return false;
-    }
-    if (flock == -1) {
-        perror("lock file error/n");
-        return false;
-    }
-    return true;
-}
 
 int main(int argc, char *argv[])
 {
@@ -146,7 +125,17 @@ int main(int argc, char *argv[])
     QIcon icon = QIcon::fromTheme("deepin-music");
     app.setProductIcon(icon);
 
-    if (!app.setSingleInstance("deepinmusic") ||!checkOnly()) {
+    QString userName = QDir::homePath().section("/", -1, -1);
+
+    auto *sharedMemory = new QSharedMemory(userName + QString("-deepinmusicsingle"));
+    volatile int i = 2;
+    while (i--) {
+        if (sharedMemory->attach(QSharedMemory::ReadOnly)) {
+            sharedMemory->detach();
+        }
+    }
+
+    if (!app.setSingleInstance("deepinmusic") || !sharedMemory->create(1)) {
         qDebug() << "another deepin music has started";
         for (auto curStr : parser.positionalArguments()) {
             if (!curStr.isEmpty()) {
@@ -173,6 +162,7 @@ int main(int argc, char *argv[])
         iface.asyncCall("Raise");
         exit(0);
     }
+
     MusicSettings::init();
 
     DApplicationSettings saveTheme;
@@ -184,12 +174,6 @@ int main(int argc, char *argv[])
     music->initUI();
     /*---Player instance init---*/
 
-    int count = parser.positionalArguments().length();
-    if (count > 1) {
-        QStringList files = parser.positionalArguments();
-        files.removeFirst();
-        music->onStartImport(files);
-    }
     music->initConnection();
 
     if (!toOpenFile.isEmpty()) {
@@ -207,6 +191,7 @@ int main(int argc, char *argv[])
     });
 
     app.setQuitOnLastWindowClosed(false);
+
 
     QObject::connect(DGuiApplicationHelper::instance(), &DGuiApplicationHelper::themeTypeChanged,
                      &mainframe, &MainFrame::slotTheme);

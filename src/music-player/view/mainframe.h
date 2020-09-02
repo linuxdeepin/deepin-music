@@ -40,6 +40,8 @@ public:
 
     void bindSpeechConnect(Presenter *presenter);
 
+    void bindEqualizerConnect(Presenter *presenter);
+
     void focusPlayList();
     QString coverBackground() const;
 
@@ -50,13 +52,13 @@ signals:
     void triggerShortcutAction(const QString &optKey);
     void fadeInOut();
     void exit();
+    void savePosition();
 
 public slots:
     void updateUI();
     void setCoverBackground(QString coverBackground);
     void onSelectImportDirectory();
     void onSelectImportFiles();
-    void onClickedImportFiles(QStringList files);
     void slotTheme(int type);
     void changePicture();
     void onViewShortcut();

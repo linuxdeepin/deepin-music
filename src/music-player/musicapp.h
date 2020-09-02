@@ -39,10 +39,6 @@ public:
     void initConnection();
     void show();
     void quit();
-    void onStartImport(QStringList files);
-public:
-signals:
-    void sigStartImport(QStringList files);
 
 private:
     QScopedPointer<MusicAppPrivate> d_ptr;

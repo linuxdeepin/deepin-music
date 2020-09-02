@@ -182,7 +182,7 @@ void MusicListDataDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
             //设置模糊
             QImage t_image = icon.pixmap(rect.width(), rect.height()).toImage();
             qreal t_ratio = t_image.devicePixelRatioF();
-            curFillSize = curFillSize * t_ratio;
+            curFillSize = static_cast<int>( curFillSize * t_ratio);
 
             t_image  = t_image.copy(0, rect.height() - curFillSize, t_image.width(), curFillSize);
             QTransform old_transform = painter->transform();
@@ -238,7 +238,7 @@ void MusicListDataDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
             //设置模糊
             QImage t_image = icon.pixmap(rect.width(), rect.height()).toImage();
             qreal t_ratio = t_image.devicePixelRatioF();
-            curFillSize = curFillSize * t_ratio;
+            curFillSize = static_cast<int>( curFillSize * t_ratio);
 
             t_image  = t_image.copy(0, rect.height() - curFillSize, t_image.width(), curFillSize);
             QTransform old_transform = painter->transform();
@@ -297,7 +297,7 @@ void MusicListDataDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
         if ((option.state & QStyle::State_MouseOver) && !playFlag) {
             if (!playlistPtr->playingStatus() || !playFlag ) {
                 QImage t_image = icon.pixmap(rect.width(), rect.height()).toImage();
-                qreal t_ratio = t_image.devicePixelRatioF();
+                int t_ratio = static_cast<int>(t_image.devicePixelRatioF());
                 QRect t_imageRect(rect.width() / 2 - 25, rect.height() / 2 - 25, 50 * t_ratio, 50 * t_ratio);
                 t_image  = t_image.copy(t_imageRect);
                 QRect t_hoverRect(rect.x() + 50, rect.y() + 36, 50 * t_ratio, 50 * t_ratio);
@@ -470,8 +470,8 @@ void MusicListDataDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
                     QRect t_ratioRect;
                     t_ratioRect.setX(0);
                     t_ratioRect.setY(0);
-                    t_ratioRect.setWidth(icon.width() / t_ratio);
-                    t_ratioRect.setHeight(icon.height() / t_ratio);
+                    t_ratioRect.setWidth(static_cast<int>(icon.width() / t_ratio));
+                    t_ratioRect.setHeight(static_cast<int>(icon.height() / t_ratio));
                     auto iconRect = QRectF(centerF.x() - t_ratioRect.width() / 2,
                                            centerF.y() - t_ratioRect.height() / 2,
                                            t_ratioRect.width(), t_ratioRect.height());
@@ -559,8 +559,8 @@ void MusicListDataDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
                 QRect t_ratioRect;
                 t_ratioRect.setX(0);
                 t_ratioRect.setY(0);
-                t_ratioRect.setWidth(icon.width() / t_ratio);
-                t_ratioRect.setHeight(icon.height() / t_ratio);
+                t_ratioRect.setWidth(static_cast<int>(icon.width() / t_ratio));
+                t_ratioRect.setHeight(static_cast<int>(icon.height() / t_ratio));
                 auto iconRect = QRectF(centerF.x() - t_ratioRect.width() / 2,
                                        centerF.y() - t_ratioRect.height() / 2,
                                        t_ratioRect.width(), t_ratioRect.height());
@@ -615,7 +615,7 @@ void MusicListDataDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
             //day
             QRect dayRect(w, option.rect.y(), tailwidth - 20, option.rect.height());
             painter->setFont(font11);
-            QString dayStr = QDateTime::fromMSecsSinceEpoch(PlayMusicTypePtr->timestamp / (qint64)1000).toString("yyyy-MM-dd");
+            QString dayStr = QDateTime::fromMSecsSinceEpoch(PlayMusicTypePtr->timestamp / static_cast<qint64>(1000)).toString("yyyy-MM-dd");
             painter->drawText(dayRect, Qt::AlignRight | Qt::AlignVCenter, dayStr);
         }
 
@@ -628,7 +628,7 @@ QSize MusicListDataDelegate::sizeHint(const QStyleOptionViewItem &option,
 {
     auto listview = qobject_cast<const MusicListDataView *>(option.widget);
     if (listview->viewMode() == QListView::IconMode) {
-        return QSize(150,150);
+        return QSize(150, 150);
     }
     return QStyledItemDelegate::sizeHint(option, index);
 }
@@ -681,8 +681,8 @@ bool MusicListDataDelegate::editorEvent(QEvent *event, QAbstractItemModel *model
             t_imageClipPath.closeSubpath();
             auto fillPolygon = t_imageClipPath.toFillPolygon();
 
-            QMouseEvent *pressEvent = static_cast<QMouseEvent *>(event);
-            QPointF pressPos = pressEvent->pos();
+            //QMouseEvent *pressEvent = static_cast<QMouseEvent *>(event);
+            //QPointF pressPos = pressEvent->pos();
             Q_EMIT hoverPress(index);
         }
         return false;

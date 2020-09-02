@@ -42,11 +42,14 @@
 #include <DFileDialog>
 #include <DHiDPIHelper>
 
+#include <unistd.h>
+
 #include "../speech/speechCenter.h"
 #include "../presenter/presenter.h"
 #include "../core/metasearchservice.h"
 #include "../core/musicsettings.h"
 #include "../core/player.h"
+#include "../core/util/global.h"
 #include "../musicapp.h"
 
 #include "widget/titlebarwidget.h"
@@ -54,6 +57,7 @@
 #include "widget/searchresult.h"
 #include "widget/closeconfirmdialog.h"
 #include "helper/widgethellper.h"
+#include "widget/dequalizerdialog.h"
 
 #include "importwidget.h"
 #include "playlistwidget.h"
@@ -106,6 +110,8 @@ public:
     //! ui: show info dialog
     void showInfoDialog(const MetaPtr meta);
 
+    VlcMediaPlayer      *m_VlcMediaPlayer       = nullptr;
+    DequalizerDialog    *equalizerDialog        = nullptr;
     SpeechCenter        *m_SpeechCenter         = nullptr;
     DWidget             *centralWidget          = nullptr;
     QStackedLayout      *contentLayout          = nullptr;
@@ -148,7 +154,7 @@ public:
 };
 void MainFramePrivate::setTheme(int type)
 {
-    Q_Q(MainFrame);
+    //Q_Q(MainFrame);
     if (type == 0) {
         type = DGuiApplicationHelper::instance()->themeType();
     }
@@ -171,7 +177,6 @@ void MainFramePrivate::setTheme(int type)
 void MainFramePrivate::initMenu()
 {
     Q_Q(MainFrame);
-
     newSonglistAction = new QAction(MainFrame::tr("Add playlist"), q);
     newSonglistAction->setEnabled(false);
     q->connect(newSonglistAction, &QAction::triggered, q, [ = ](bool) {
@@ -188,6 +193,14 @@ void MainFramePrivate::initMenu()
         q->onSelectImportFiles();
     });
 
+    auto equalizer = new QAction(MainFrame::tr("Equalizer"), q);
+    equalizerDialog = new DequalizerDialog(q);
+    q->connect(equalizer, &QAction::triggered, q, [ = ](bool) {
+        Dtk::Widget::moveToCenter(equalizerDialog);
+        equalizerDialog->exec();
+        MusicSettings::sync();
+    });
+
     auto settings = new QAction(MainFrame::tr("Settings"), q);
     q->connect(settings, &QAction::triggered, q, [ = ](bool) {
         DSettingsDialog *configDialog = new DSettingsDialog(q);
@@ -196,9 +209,17 @@ void MainFramePrivate::initMenu()
 
         Dtk::Widget::moveToCenter(configDialog);
 
+        auto curAskCloseAction = MusicSettings::value("base.close.ask_close_action").toBool();
+        auto curLastPlaylist = MusicSettings::value("base.play.last_playlist").toString();
+        auto curLastMeta = MusicSettings::value("base.play.last_meta").toString();
+        auto curLastPosition = MusicSettings::value("base.play.last_position").toInt();
         configDialog->exec();
         delete configDialog;
         MusicSettings::sync();
+        MusicSettings::setOption("base.close.ask_close_action", curAskCloseAction);
+        MusicSettings::setOption("base.play.last_playlist", curLastPlaylist);
+        MusicSettings::setOption("base.play.last_meta", curLastMeta);
+        MusicSettings::setOption("base.play.last_position", curLastPosition);
 
         auto play_pauseStr = MusicSettings::value("shortcuts.all.play_pause").toString();
         if (play_pauseStr.isEmpty())
@@ -260,7 +281,7 @@ void MainFramePrivate::initMenu()
     titleMenu->addAction(newSonglistAction);
     titleMenu->addAction(addmusicfiles);
     titleMenu->addSeparator();
-
+    titleMenu->addAction(equalizer);
     titleMenu->addAction(settings);
     titleMenu->addSeparator();
 
@@ -316,7 +337,7 @@ void MainFramePrivate::initUI(bool showLoading)
 {
     showLoading = true;
     Q_Q(MainFrame);
-    q->setMinimumSize(QSize(945, 600));
+    q->setMinimumSize(QSize(900, 600));
     q->setFocusPolicy(Qt::ClickFocus);
 
     //titlebar->setBackgroundTransparent(true);
@@ -355,6 +376,7 @@ void MainFramePrivate::initUI(bool showLoading)
     infoDialog->setThemeType(themeType);
     infoDialog->hide();
     m_SpeechCenter = SpeechCenter::getInstance();
+    m_VlcMediaPlayer = Player::instance()->core();
 #if 0
     footer->show();
 #endif
@@ -427,14 +449,14 @@ void MainFramePrivate::showPlaylistView()
     if (footer->height() > 80) {
         return;
     }
-    QRect start ( 5,  height - 86,
-                  width - 10, 80);
-    QRect end ( 5,  height - 429,
-                width - 10, 423);
-    QRect start1 ( 0, 0,
-                   width - 10, 0);
-    QRect end1 ( 0,  0,
-                 width - 10, 349);
+    QRect start(5,  height - 86,
+                width - 10, 80);
+    QRect end(5,  height - 429,
+              width - 10, 423);
+    QRect start1(0, 0,
+                 width - 10, 0);
+    QRect end1(0,  0,
+               width - 10, 349);
     WidgetHelper::slideEdgeWidget2(
         playListWidget, start1, end1, AnimationDelay, true);
     WidgetHelper::slideEdgeWidget(
@@ -450,15 +472,15 @@ void MainFramePrivate::hidePlaylistView()
     if (footer->height() <= 80) {
         return;
     }
-    QRect start ( 5,  height - 429,
-                  width - 10, 423);
-    QRect end ( 5,  height - 86,
-                width - 10, 80);
+    QRect start(5,  height - 429,
+                width - 10, 423);
+    QRect end(5,  height - 86,
+              width - 10, 80);
 
-    QRect start1 ( 0,  0,
-                   width - 10, 349);
-    QRect end1 ( 0, 0,
-                 width - 10, 0);
+    QRect start1(0,  0,
+                 width - 10, 349);
+    QRect end1(0, 0,
+               width - 10, 0);
     WidgetHelper::slideEdgeWidget2(
         playListWidget, start1, end1, AnimationDelay, false);
     WidgetHelper::slideEdgeWidget(
@@ -475,25 +497,25 @@ void MainFramePrivate::resiveistView()
         return ;
     }
     if (playListWidget->isVisible()) {
-        QRect start1 ( 0, 0,
-                       width - 10, 349);
-        QRect end1 ( 0,  0,
+        QRect start1(0, 0,
                      width - 10, 349);
+        QRect end1(0,  0,
+                   width - 10, 349);
         WidgetHelper::slideEdgeWidget2(
             playListWidget, start1, end1, AnimationDelay, true);
-        QRect rect ( 5,  height - 429,
-                     width - 10, 423);
+        QRect rect(5,  height - 429,
+                   width - 10, 423);
         WidgetHelper::slideEdgeWidget(
             footer, playListWidget, rect, rect, 10, true);
     } else {
-        QRect start1 ( 0,  0,
-                       width - 10, 0);
-        QRect end1 ( 0, 0,
+        QRect start1(0,  0,
                      width - 10, 0);
+        QRect end1(0, 0,
+                   width - 10, 0);
         WidgetHelper::slideEdgeWidget2(
             playListWidget, start1, end1, AnimationDelay, false);
-        QRect rect ( 5,  height - 86,
-                     width - 10, 80);
+        QRect rect(5,  height - 86,
+                   width - 10, 80);
         WidgetHelper::slideEdgeWidget(
             footer, playListWidget, rect, rect, 10, false);
     }
@@ -535,6 +557,7 @@ void MainFramePrivate:: slideToImportView()
 
 void MainFramePrivate:: slideToMusicListView(bool keepPlaylist)
 {
+    Q_UNUSED(keepPlaylist)
     Q_Q(MainFrame);
 
     titlebarwidget->setSearchEnable(true);
@@ -728,7 +751,7 @@ MainFrame::MainFrame(QWidget *parent) :
     DMainWindow(parent), dd_ptr(new MainFramePrivate(this))
 {
     setObjectName("MainFrame");
-
+    Global::setAppName(tr("Music"));
     QString descriptionText = MainFrame::tr("Music is a local music player with beautiful design and simple functions.");
     QString acknowledgementLink = "https://www.deepin.org/acknowledgments/deepin-music#thanks";
     qApp->setProductName(QApplication::tr("Music"));
@@ -778,10 +801,12 @@ MainFrame::MainFrame(QWidget *parent) :
 
 MainFrame::~MainFrame()
 {
+    Q_D(MainFrame);
     Q_EMIT exit();
     MusicSettings::sync();
     MusicSettings::setOption("base.play.state", int(windowState()));
     MusicSettings::setOption("base.play.geometry", saveGeometry());
+    delete d->equalizerDialog;
 }
 
 void MainFrame::initUI(bool showLoading)
@@ -977,10 +1002,22 @@ void MainFrame::binding(Presenter *presenter)
         d->timer->stop();
     });
 
+    /************************************************
+     * handl the case where file does not exsit
+     * ***********************************************/
+    connect(d->playListWidget, &PlayListWidget::fileRemoved,
+            presenter, &Presenter::notifyMusciError);
     connect(presenter, &Presenter::notifyMusciError,
     this, [ = ](PlaylistPtr playlist, const MetaPtr  meta, int /*error*/) {
+        Q_UNUSED(playlist)
+        QList<DDialog *> ql = this->findChildren<DDialog *>("uniqueinvaliddailog");
+        if (ql.size() > 0) {
+            if (!ql.first()->isHidden())
+                return ;
+        }
 
         Dtk::Widget::DDialog warnDlg(this);
+        warnDlg.setObjectName("uniqueinvaliddailog");
         warnDlg.setIcon(QIcon::fromTheme("deepin-music"));
         warnDlg.setTextFormat(Qt::RichText);
         warnDlg.setTitle(tr("File is invalid or does not exist, load failed"));
@@ -992,7 +1029,10 @@ void MainFrame::binding(Presenter *presenter)
             if (curPlaylist->canNext()) {
                 bool existFlag = false;
                 for (auto curMeta : curPlaylist->allmusic()) {
-                    if (!curMeta->invalid || QFile::exists(curMeta->localPath)) {
+                    if (!curMeta->invalid || access(curMeta->localPath.toStdString().c_str(),F_OK) == 0) {
+                        if (QFileInfo(curMeta->localPath).dir().isEmpty()) {
+                            continue;
+                        }
                         Q_EMIT presenter->playNext(curPlaylist, meta);
                         existFlag = true;
                         break;
@@ -1020,8 +1060,15 @@ void MainFrame::binding(Presenter *presenter)
     connect(presenter, &Presenter::scanFinished,
     this, [ = ](const QString & /*jobid*/, int mediaCount) {
         if (0 == mediaCount) {
+            QList<DDialog *> ql = this->findChildren<DDialog *>("uniquewarndailog");
+            if (ql.size() > 0) {
+                if (!ql.first()->isHidden())
+                    return ;
+            }
+
             QString message = QString(tr("Import failed, no valid music file found"));
             Dtk::Widget::DDialog warnDlg(this);
+            warnDlg.setObjectName("uniquewarndailog");
             warnDlg.setIcon(QIcon::fromTheme("deepin-music"));
             warnDlg.setTextFormat(Qt::AutoText);
             warnDlg.setTitle(message);
@@ -1045,6 +1092,8 @@ void MainFrame::binding(Presenter *presenter)
 
     connect(presenter, &Presenter::musicPaused,
     this, [ = ](PlaylistPtr playlist, const MetaPtr meta) {
+        Q_UNUSED(playlist)
+        Q_UNUSED(meta)
         d->timer->stop();
     });
 
@@ -1204,12 +1253,19 @@ void MainFrame::binding(Presenter *presenter)
             presenter, &Presenter::onVolumeChanged);
     connect(d->footer,  &Footer::toggleMute,
             presenter, &Presenter::onToggleMute);
+    /***************************************
+     * local toggle
+     * *************************************/
+    connect(d->footer,  &Footer::localToggleMute,
+            presenter, &Presenter::onLocalToggleMute);
     connect(d->footer,  &Footer::modeChanged,
             presenter, &Presenter::onPlayModeChanged);
     connect(d->footer,  &Footer::toggleFavourite,
             presenter, &Presenter::onToggleFavourite);
     connect(d->footer, &Footer::pause,
     this, [ = ](PlaylistPtr playlist, const MetaPtr meta) {
+        Q_UNUSED(playlist)
+        Q_UNUSED(meta)
         d->timer->stop();
     });
 
@@ -1240,12 +1296,17 @@ void MainFrame::binding(Presenter *presenter)
             d->footer,  &Footer::onVolumeChanged);
     connect(presenter, &Presenter::mutedChanged,
             d->footer,  &Footer::onMutedChanged);
+    connect(presenter, &Presenter::localMutedChanged,
+            d->footer,  &Footer::onLocalMutedChanged);
     connect(presenter, &Presenter::musicError,
             d->footer,  &Footer::onMusicError);
     connect(presenter, &Presenter::audioBufferProbed,
             d->footer,  &Footer::audioBufferProbed);
     connect(presenter, &Presenter::metaBuffer,
             d->footer,  &Footer::metaBuffer);
+
+    connect(d->footer, &Footer::localMuteStat,
+            presenter,  &Presenter::localMuteChanged);
 
     // musiclist
     connect(presenter, &Presenter::playlistAdded,
@@ -1324,7 +1385,11 @@ void MainFrame::binding(Presenter *presenter)
     muteShortcut->setKey(QKeySequence(QLatin1String("M")));
     connect(muteShortcut, &QShortcut::activated, presenter, &Presenter::onToggleMute);
 
+    connect(presenter, &Presenter::hidewaveformScale, d->footer, &Footer::hidewaveform);
+
     bindSpeechConnect(presenter);
+
+    bindEqualizerConnect(presenter);
 }
 
 //绑定语音处理信号
@@ -1365,6 +1430,19 @@ void MainFrame::bindSpeechConnect(Presenter *presenter)
     //语音返回信号
     connect(presenter, &Presenter::sigSpeedResult,
             d->m_SpeechCenter, &SpeechCenter::onSpeedResult);
+}
+//绑定均衡器处理信号
+void MainFrame::bindEqualizerConnect(Presenter *presenter)
+{
+    Q_D(const MainFrame);
+    connect(d->equalizerDialog, &DequalizerDialog::setEqualizerEnable,
+            presenter, &Presenter::setEqualizerEnable);
+    connect(d->equalizerDialog, &DequalizerDialog::setEqualizerpre,
+            presenter, &Presenter::setEqualizerpre);
+    connect(d->equalizerDialog, &DequalizerDialog::setEqualizerbauds,
+            presenter, &Presenter::setEqualizerbauds);
+    connect(d->equalizerDialog, &DequalizerDialog::setEqualizerIndex,
+            presenter, &Presenter::setEqualizerCurMode);
 }
 
 void MainFrame::focusPlayList()
@@ -1439,12 +1517,6 @@ void MainFrame::onSelectImportFiles()
         MusicSettings::setOption("base.play.last_import_path",  fileDlg.directory().path());
         Q_EMIT importSelectFiles(fileDlg.selectedFiles(), d->musicListWidget->curPlaylist());
     }
-}
-
-void MainFrame::onClickedImportFiles(QStringList files )
-{
-    Q_D(const MainFrame);
-    Q_EMIT importSelectFiles(files, nullptr);
 }
 
 void MainFrame::slotTheme(int type)
@@ -1588,6 +1660,7 @@ void MainFrame::resizeEvent(QResizeEvent *e)
 
 void MainFrame::closeEvent(QCloseEvent *event)
 {
+    Q_D(const MainFrame);
     auto askCloseAction = MusicSettings::value("base.close.ask_close_action").toBool();
     if (askCloseAction) {
         CloseConfirmDialog ccd(this);
@@ -1621,7 +1694,7 @@ void MainFrame::closeEvent(QCloseEvent *event)
 
 void MainFrame::paintEvent(QPaintEvent *e)
 {
-    Q_D(MainFrame);
+    //Q_D(MainFrame);
     QPainter p(this);
 
     DMainWindow::paintEvent(e);

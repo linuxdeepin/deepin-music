@@ -28,12 +28,36 @@
 #include <QDebug>
 #include <QDir>
 #include <QThread>
-
+#include "util/global.h"
 #include <mediameta.h>
+
+
+bool MediaDatabaseWriter::createConnection()
+{
+    QDir cacheDir(Global::cacheDir());
+    if (!cacheDir.exists()) {
+        cacheDir.mkpath(".");
+    }
+    QString cachePath = Global::cacheDir() + "/mediameta.sqlite";
+    db = QSqlDatabase::addDatabase("QSQLITE", "writer");
+    db.setDatabaseName(cachePath);
+
+    if (!db.open()) {
+        qCritical() << db.lastError()
+                    << Global::cacheDir()
+                    << cachePath;
+        return false;
+    }
+    return true;
+}
+
+void MediaDatabaseWriter::initDataBase()
+{
+    createConnection();
+}
 
 MediaDatabaseWriter::MediaDatabaseWriter(QObject *parent) : QObject(parent)
 {
-
 }
 
 void MediaDatabaseWriter::addMediaMetaList(const MetaPtrList metalist)
@@ -43,13 +67,13 @@ void MediaDatabaseWriter::addMediaMetaList(const MetaPtrList metalist)
         QThread::msleep(1);
         addMediaMeta(meta);
     }
-    QSqlDatabase::database().commit();
+    db.commit();
 }
 
 void MediaDatabaseWriter::updateMediaMeta(const MetaPtr meta)
 {
     qDebug() << "updateMediaMeta begin";
-    QSqlQuery query;
+    QSqlQuery query(QSqlDatabase::database("writer"));
 
     query.prepare("UPDATE musicNew set "
                   "invalid=:invalid, length=:length, search_id=:search_id, "
@@ -95,7 +119,7 @@ void MediaDatabaseWriter::updateMediaMetaList(const MetaPtrList metalist)
 
 void MediaDatabaseWriter::removeMediaMeta(const MetaPtr meta)
 {
-    QSqlQuery query;
+    QSqlQuery query(QSqlDatabase::database("writer"));
     QString sqlstring;
 
     sqlstring = QString("DELETE FROM musicNew WHERE hash = '%1'").arg(meta->hash);
@@ -112,13 +136,13 @@ void MediaDatabaseWriter::removeMediaMetaList(const MetaPtrList metalist)
         QThread::msleep(1);
         removeMediaMeta(meta);
     }
-    QSqlDatabase::database().commit();
+    db.commit();
 }
 
 
 void MediaDatabaseWriter::addMediaMeta(const MetaPtr meta)
 {
-    QSqlQuery query;
+    QSqlQuery query(QSqlDatabase::database("writer"));
 
     query.prepare("INSERT INTO musicNew ("
                   "hash, timestamp, title, artist, album, "
@@ -165,7 +189,7 @@ void MediaDatabaseWriter::insertMusic(const MetaPtr meta,
                                       const PlaylistMeta &playlistMeta)
 {
 //    qDebug() << "insertMusic begin";
-    QSqlQuery query;
+    QSqlQuery query(QSqlDatabase::database("writer"));
     QString sqlstring = QString("INSERT INTO playlist_%1 "
                                 "(music_id, playlist_id, sort_id) "
                                 "SELECT :music_id, :playlist_id, :sort_id "
@@ -192,7 +216,7 @@ void MediaDatabaseWriter::insertMusicList(const MetaPtrList metalist, const Play
         QThread::msleep(1);
         insertMusic(meta, playlistMeta);
     }
-    QSqlDatabase::database().commit();
+    db.commit();
 //    qDebug() << "insertMusicList end";
 }
 

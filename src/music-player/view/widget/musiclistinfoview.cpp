@@ -78,7 +78,7 @@ MusicListInfoView::MusicListInfoView(QWidget *parent)
     QColor BackgroundColor("#FFFFFF");
     palette.setColor(DPalette::Background, BackgroundColor);
     setPalette(palette);
-    setIconSize( QSize(36, 36) );
+    setIconSize(QSize(36, 36));
 //    setGridSize( QSize(36, 36) );
     d->model = new MusiclistInfomodel(0, 1, this);
     setModel(d->model);
@@ -403,6 +403,9 @@ void MusicListInfoView::keyboardSearch(const QString &search)
 
 void MusicListInfoViewPrivate::addMedia(const MetaPtr meta)
 {
+    if (meta == nullptr) {
+        return;
+    }
     QStandardItem *newItem = new QStandardItem;
     QPixmap cover(":/common/image/cover_max.svg");
     auto coverData = MetaSearchService::coverData(meta);
@@ -624,12 +627,12 @@ void MusicListInfoView::showContextMenu(const QPoint &pos,
 
     if (deleteAction) {
         connect(deleteAction, &QAction::triggered, this, [ = ](bool) {
-            bool containsCue = false;
+            //bool containsCue = false;
             MetaPtrList metalist;
             for (auto index : selection->selectedRows()) {
                 auto meta = d->model->meta(index);
                 if (!meta->cuePath.isEmpty()) {
-                    containsCue = true;
+                    //containsCue = true;
                 }
                 metalist << meta;
             }
@@ -659,7 +662,7 @@ void MusicListInfoView::showContextMenu(const QPoint &pos,
                 warnDlg.addContent(t_infoLabel, Qt::AlignHCenter);
                 warnDlg.addSpacing(20);
             }
-
+#if 0
             if (containsCue && false) {
 //                warnDlg.setTitle(tr("Are you sure you want to delete the selected %1 songs?").arg(metalist.length()));
 //                warnDlg.setMessage(tr("The song files contained will also be deleted"));
@@ -673,6 +676,7 @@ void MusicListInfoView::showContextMenu(const QPoint &pos,
                 warnDlg.addContent(t_infoLabel, Qt::AlignHCenter);
                 warnDlg.addSpacing(20);
             }
+#endif
             auto coverPixmap =  QPixmap::fromImage(WidgetHelper::cropRect(cover, QSize(64, 64)));
 
             warnDlg.setIcon(QIcon::fromTheme("deepin-music"));

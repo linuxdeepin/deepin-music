@@ -44,6 +44,7 @@ void MusicTitleImageWidget::setThemeType(int type)
 
 void MusicTitleImageWidget::paintEvent(QPaintEvent *event)
 {
+    Q_UNUSED(event)
     QPainter painter(this);
     painter.setRenderHints(QPainter::Antialiasing | QPainter::HighQualityAntialiasing | QPainter::SmoothPixmapTransform);
 
@@ -52,13 +53,13 @@ void MusicTitleImageWidget::paintEvent(QPaintEvent *event)
     int cornerSize = 20;
     int arcR = cornerSize / 2;
     path.moveTo(rect.left() + arcR, rect.top());
-    path.arcTo(rect.left(), rect.top(), cornerSize, cornerSize, 90.0f, 90.0f);
+    path.arcTo(rect.left(), rect.top(), cornerSize, cornerSize, 90.0, 90.0);
 
     path.lineTo(rect.left(), rect.bottom());
     path.lineTo(rect.right(), rect.bottom());
 
     path.lineTo(rect.right(), rect.top() + arcR);
-    path.arcTo(rect.right() - cornerSize, rect.top(), cornerSize, cornerSize, 0.0f, 90.0f);
+    path.arcTo(rect.right() - cornerSize, rect.top(), cornerSize, cornerSize, 0.0, 90.0);
 
     path.lineTo(rect.top(), rect.left());
 //    QPainterPath path;
@@ -68,10 +69,10 @@ void MusicTitleImageWidget::paintEvent(QPaintEvent *event)
     painter.setClipPath(path);
 
     double windowScale = (width() * 1.0) / height();
-    int imageWidth = image.height() * windowScale;
+    int imageWidth = static_cast<int>(image.height() * windowScale);
     QPixmap coverImage;
     if (imageWidth > image.width()) {
-        int imageheight = image.width() / windowScale;
+        int imageheight = static_cast<int>(image.width() / windowScale);
         coverImage = image.copy(0, (image.height() - imageheight) / 2, image.width(), imageheight);
     } else {
         int imageheight = image.height();

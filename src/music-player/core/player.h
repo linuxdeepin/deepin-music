@@ -30,6 +30,7 @@
 
 #include <util/singleton.h>
 #include "playlist.h"
+#include "vlc/MediaPlayer.h"
 
 class QAudioBuffer;
 class PlayerPrivate;
@@ -90,7 +91,7 @@ public:
 
     static const int VolumeStep = 10;
 
-    explicit Player(QObject *parent = 0);
+    explicit Player(QObject *parent = nullptr);
     ~Player();
 
 public:
@@ -106,6 +107,8 @@ public:
     void pause();
     void pauseNow();
     void stop();
+
+    VlcMediaPlayer *core();
     PlaybackStatus status();
 
     bool isActiveMeta(MetaPtr meta) const;
@@ -164,6 +167,10 @@ signals:
     void volumeChanged(int volume);
     void modeChanged(PlaybackMode mode);
     void mutedChanged(bool muted);
+    /************************************************
+     * local mute operation
+     * *********************************************/
+    void localMutedChanged();
     void durationChanged(qint64 duration);
     void fadeInOutFactorChanged(double fadeInOutFactor);
     void fadeInOutChanged(bool fadeInOut);
@@ -183,24 +190,42 @@ public slots:
 //    void setMinimumRate(double minimumRate);
 //    void setPlaybackStatus(PlaybackStatus playbackStatus);
     void setPosition(qlonglong position);
-    void setIOPosition(qint64 value, qint64 range);
+//    void setIOPosition(qint64 value, qint64 range);
 
     void setMode(PlaybackMode mode);
 //    void setRate(double rate);
 //    void setShuffle(bool shuffle);
     void setVolume(int volume);
     void setMuted(bool muted);
+    /*********************
+     * local mute
+     * *********************/
+    void setLocalMuted(bool muted);
+    /*********************
+     * to dbus mute
+     * *********************/
+    void setDbusMuted(bool muted = false);
+
     void setFadeInOutFactor(double fadeInOutFactor);
     void setFadeInOut(bool fadeInOut);
     void setPlayOnLoaded(bool playOnLoaded);
     void musicFileMiss();
-
+    void setEqualizer(bool enabled, int curIndex, QList<int> indexbaud);
+    void setEqualizerEnable(bool enable);
+    void setEqualizerpre(int val);
+    void setEqualizerbauds(int index, int val);
+    void setEqualizerCurMode(int curIndex);
+    /***********************************************
+     * if player stat is stop state or
+     * device does not start
+     * **********************************/
+    bool isValidDbusMute();
 private:
     void readSinkInputPath();
     bool setMusicVolume(double volume);
     bool setMusicMuted(bool muted);
     bool isMusicMuted();
-
+    bool isDevValid();
 private:
     friend class DMusic::DSingleton<Player>;
     QScopedPointer<PlayerPrivate> d_ptr;

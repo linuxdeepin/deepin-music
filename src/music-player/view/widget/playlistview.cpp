@@ -163,13 +163,13 @@ void PlayListView::setPlaying(const MetaPtr meta)
 void PlayListView::setViewModeFlag(QListView::ViewMode mode)
 {
     if (mode == QListView::IconMode) {
-        setIconSize( QSize(150, 150) );
-        setGridSize( QSize(-1, -1) );
+        setIconSize(QSize(150, 150));
+        setGridSize(QSize(-1, -1));
         setSpacing(20);
         setViewportMargins(-10, -10, -35, 10);
     } else {
-        setIconSize( QSize(36, 36) );
-        setGridSize( QSize(-1, -1) );
+        setIconSize(QSize(36, 36));
+        setGridSize(QSize(-1, -1));
         setSpacing(0);
         setViewportMargins(0, 0, 8, 0);
     }
@@ -484,6 +484,8 @@ void PlayListViewPrivate::addMedia(const MetaPtr meta)
     if (coverData.length() > 0) {
         cover = QPixmap::fromImage(QImage::fromData(coverData));
     }
+    if (cover.width() > 160 || cover.height() > 160)
+        cover = cover.scaled(QSize(160, 160));
     QIcon icon = QIcon(cover);
     newItem->setIcon(icon);
     model->appendRow(newItem);

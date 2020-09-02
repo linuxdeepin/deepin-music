@@ -52,7 +52,10 @@ public:
 
     QString currentStr();
 
+public:
+    void paintEvent(QPaintEvent *event) Q_DECL_OVERRIDE;
     virtual void leaveEvent(QEvent *event) Q_DECL_OVERRIDE;
+
 signals:
     void locateMusic(const QString &hash);
     void searchText(const QString  id, const QString &text);
@@ -83,6 +86,7 @@ private:
     MusicSearchListview *m_AlbumView    = nullptr;
     int                 m_CurrentIndex  = -1;
     int                 m_Count         = 0;
+    int                 m_Theme         = 0;
     QVBoxLayout         *vlayout        = nullptr;
     QVBoxLayout         *vlayout1       = nullptr;
     QVBoxLayout         *vlayout2       = nullptr;

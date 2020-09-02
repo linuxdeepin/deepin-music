@@ -10,7 +10,7 @@ class AbstractWheelWidget : public DWidget
     Q_OBJECT
 
 public:
-    AbstractWheelWidget(bool touch, QWidget *parent = 0);
+    AbstractWheelWidget(bool touch, QWidget *parent = nullptr);
     virtual ~AbstractWheelWidget();
 
     int currentIndex() const;
@@ -48,7 +48,7 @@ class LyricLabel : public AbstractWheelWidget
     Q_OBJECT
 
 public:
-    LyricLabel(bool touch, QWidget *parent = 0);
+    LyricLabel(bool touch, QWidget *parent = nullptr);
 
 
     void getFromFile(QString dir);

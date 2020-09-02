@@ -187,6 +187,72 @@
                     ]
                 }
             ]
+        },
+        {
+            "key": "equalizer",
+            "name": "Equalizer",
+            "reset": false,
+            "hide": true,
+            "groups": [
+                {
+                    "key": "all",
+                    "name": "All",
+                    "options": [
+                        {
+                            "key": "switch",
+                            "default": false
+                        },
+                        {
+                            "key": "curEffect",
+                            "default": 0
+                        },
+                        {
+                            "key": "baud_pre",
+                            "default": 12
+                        },
+                        {
+                            "key": "baud_60",
+                            "default": 0
+                        },
+                        {
+                            "key": "baud_170",
+                            "default": 0
+                        },
+                        {
+                            "key": "baud_310",
+                            "default": 0
+                        },
+                        {
+                            "key": "baud_600",
+                            "default": 0
+                        },
+                        {
+                            "key": "baud_1K",
+                            "default": 0
+                        },
+                        {
+                            "key": "baud_3K",
+                            "default": 0
+                        },
+                        {
+                            "key": "baud_6K",
+                            "default": 0
+                        },
+                        {
+                            "key": "baud_12K",
+                            "default": 0
+                        },
+                        {
+                            "key": "baud_14K",
+                            "default": 0
+                        },
+                        {
+                            "key": "baud_16K",
+                            "default": 0
+                        }
+                    ]
+                }
+            ]
         }
     ]
 }
