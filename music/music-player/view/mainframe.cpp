@@ -1014,9 +1014,11 @@ void MainFrame::binding(Presenter *presenter)
             }
         }
 
-        QWidget *content = d->m_pwidget->findChild<QWidget *>("_d_message_float_deepin_music");
-        if (content && !content->isHidden())
-            return;
+        QList<QWidget *>content = d->m_pwidget->findChildren<QWidget *>("_d_message_float_deepin_music");
+        if (content.size() > 0) {
+            delete content.first();
+        }
+
         d->m_pwidget->setAttribute(Qt::WA_TransparentForMouseEvents);
         d->m_pwidget->setFixedHeight(this->height() - 80);
         d->m_pwidget->setFixedWidth(this->width());
