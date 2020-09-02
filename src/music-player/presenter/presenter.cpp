@@ -140,7 +140,7 @@ void PresenterPrivate::initBackend()
     player->setCurPlaylist(playlistMgr->playlist(PlayMusicListID));
 
     connect(this, &PresenterPrivate::play,
-    this, [ = ](PlaylistPtr playlist, const MetaPtr meta) {
+    this, [ = ](PlaylistPtr playlist, const MetaPtr meta, bool dbus) {
         auto curPlaylist = player->curPlaylist();
         if (curPlaylist->id() != playlist->id()) {
             auto curAllMetas = playlist->allmusic();
@@ -170,9 +170,16 @@ void PresenterPrivate::initBackend()
                 }
             }
             if (!same) {
-                curPlaylist->removeMusicList(curPlaylist->allmusic());
+                if (!dbus)
+                    curPlaylist->removeMusicList(curPlaylist->allmusic());
                 this->thread()->msleep(50);
-                curPlaylist->appendMusicList(curAllMetas);
+                if (!dbus) {
+                    curPlaylist->appendMusicList(curAllMetas);
+                } else {
+                    MetaPtrList mlist;
+                    mlist.append(meta);
+                    curPlaylist->appendMusicList(mlist);
+                }
             }
         } else {
             auto curPlaylist = player->curPlaylist();
@@ -777,7 +784,8 @@ void Presenter::openUri(const QUrl &uri)
     onAddMetaToPlaylist(list, metas);
     Q_EMIT MediaLibrary::instance()->meidaFileImported(AllMusicListID, metas);
 
-    onSyncMusicPlay(list, metas.first());
+//    onSyncMusicPlay(list, metas.first(), true);
+    onMusicPlay(list, metas.first(), true); //invoke onMusicPlay instead of onSyncMusicPlay
     onCurrentPlaylistChanged(list);
 }
 
@@ -1552,7 +1560,7 @@ void Presenter::onPlaylistAdd(bool edit)
     Q_EMIT playlistAdded(d->playlistMgr->playlist(info.uuid), edit);
 }
 
-void Presenter::onMusicPlay(PlaylistPtr playlist,  const MetaPtr meta)
+void Presenter::onMusicPlay(PlaylistPtr playlist,  const MetaPtr meta, bool dbus)
 {
     Q_D(Presenter);
 
@@ -1606,7 +1614,7 @@ void Presenter::onMusicPlay(PlaylistPtr playlist,  const MetaPtr meta)
         if (!curList.isNull())
             curList->setPlayingStatus(true);
     }
-    Q_EMIT d->play(playlist, toPlayMeta);
+    Q_EMIT d->play(playlist, toPlayMeta, dbus);
 }
 
 void Presenter::onMusicPause(PlaylistPtr playlist, const MetaPtr info)
