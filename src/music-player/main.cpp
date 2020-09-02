@@ -89,6 +89,8 @@ int main(int argc, char *argv[])
 
     if (XDG_SESSION_TYPE != QLatin1String("wayland") && !WAYLAND_DISPLAY.contains(QLatin1String("wayland"), Qt::CaseInsensitive)) {
         DApplication::loadDXcbPlugin();
+    } else {
+        qputenv("QT_WAYLAND_SHELL_INTEGRATION", "kwayland-shell"); //add wayland parameter
     }
 
     DApplication app(argc, argv);
