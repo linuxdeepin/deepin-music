@@ -488,7 +488,7 @@ void MainFramePrivate::hidePlaylistView(bool outer)
     //to forbid outer mult click
     if (outer) {
         if (!animationTimer->isActive()) {
-            animationTimer->start(AnimationDelay);
+            animationTimer->start(AnimationDelay + 50);
         } else {
             return;
         }
