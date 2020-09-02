@@ -75,7 +75,7 @@ set(AllQRC
 qt5_add_resources(QRC_FILES ${AllQRC})
 
 # 设置不删除生成的文件夹内容文件（设置此项是为了翻译后的文件不被删除）
-#set_directory_properties(PROPERTIES CLEAN_NO_CUSTOM 1)
+set_directory_properties(PROPERTIES CLEAN_NO_CUSTOM 1)
 
 #set(TS
 #    translations/${CMD_NAME}.ts

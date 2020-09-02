@@ -366,103 +366,103 @@
 <context>
     <name>MainFrame</name>
     <message>
-        <location filename="../view/mainframe.cpp" line="204"/>
+        <location filename="../view/mainframe.cpp" line="206"/>
         <source>Settings</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="271"/>
-        <location filename="../view/mainframe.cpp" line="862"/>
+        <location filename="../view/mainframe.cpp" line="273"/>
+        <location filename="../view/mainframe.cpp" line="866"/>
         <source>Exit</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="263"/>
+        <location filename="../view/mainframe.cpp" line="265"/>
         <source>Dark theme</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="196"/>
+        <location filename="../view/mainframe.cpp" line="198"/>
         <source>Equalizer</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="859"/>
+        <location filename="../view/mainframe.cpp" line="863"/>
         <source>Play/Pause</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="860"/>
+        <location filename="../view/mainframe.cpp" line="864"/>
         <source>Previous</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="1580"/>
+        <location filename="../view/mainframe.cpp" line="1573"/>
         <source>All music</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="1084"/>
-        <location filename="../view/mainframe.cpp" line="1140"/>
+        <location filename="../view/mainframe.cpp" line="1077"/>
+        <location filename="../view/mainframe.cpp" line="1133"/>
         <source>OK</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="180"/>
+        <location filename="../view/mainframe.cpp" line="182"/>
         <source>Add playlist</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="191"/>
+        <location filename="../view/mainframe.cpp" line="193"/>
         <source>Add music</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="787"/>
+        <location filename="../view/mainframe.cpp" line="791"/>
         <source>Music is a local music player with beautiful design and simple functions.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="786"/>
-        <location filename="../view/mainframe.cpp" line="794"/>
-        <location filename="../view/mainframe.cpp" line="806"/>
-        <location filename="../view/mainframe.cpp" line="873"/>
-        <location filename="../view/mainframe.cpp" line="1437"/>
+        <location filename="../view/mainframe.cpp" line="790"/>
+        <location filename="../view/mainframe.cpp" line="798"/>
+        <location filename="../view/mainframe.cpp" line="810"/>
+        <location filename="../view/mainframe.cpp" line="877"/>
+        <location filename="../view/mainframe.cpp" line="1430"/>
         <source>Music</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="1000"/>
+        <location filename="../view/mainframe.cpp" line="1004"/>
         <source>Successfully added to &quot;%1&quot;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="1004"/>
+        <location filename="../view/mainframe.cpp" line="1008"/>
         <source>Already added to the playlist</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="1007"/>
+        <location filename="../view/mainframe.cpp" line="1011"/>
         <source>1 song added</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="1009"/>
+        <location filename="../view/mainframe.cpp" line="1013"/>
         <source>%1 songs added</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="1083"/>
+        <location filename="../view/mainframe.cpp" line="1076"/>
         <source>File is invalid or does not exist, load failed</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="1134"/>
+        <location filename="../view/mainframe.cpp" line="1127"/>
         <source>Import failed, no valid music file found</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="861"/>
+        <location filename="../view/mainframe.cpp" line="865"/>
         <source>Next</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1058,7 +1058,7 @@
 <context>
     <name>QApplication</name>
     <message>
-        <location filename="../view/mainframe.cpp" line="789"/>
+        <location filename="../view/mainframe.cpp" line="793"/>
         <source>Music</source>
         <translation type="unfinished"></translation>
     </message>
