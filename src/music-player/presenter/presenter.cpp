@@ -1549,7 +1549,7 @@ void Presenter::onMusicPlay(PlaylistPtr playlist,  const MetaPtr meta)
     /****************************************************************
      * deal with cd ejecting while Optical drive is still connecting.
      * **************************************************************/
-    if (QFileInfo(meta->localPath).dir().isEmpty()) {
+    if (!meta.isNull() && QFileInfo(meta->localPath).dir().isEmpty()) {
         Q_EMIT d->player->mediaError(playlist, meta, Player::ResourceError);
         return ;
     }
@@ -1629,7 +1629,7 @@ void Presenter::onMusicResume(PlaylistPtr playlist, const MetaPtr info)
     /****************************************************************
      * deal with cd ejecting while Optical drive is still connecting.
      * **************************************************************/
-    if (QFileInfo(info->localPath).dir().isEmpty()) {
+    if (!info.isNull() && QFileInfo(info->localPath).dir().isEmpty()) {
         Q_EMIT d->player->mediaError(playlist, info, Player::ResourceError);
         return ;
     }
@@ -1765,10 +1765,9 @@ void Presenter::onPlayModeChanged(int mode)
 void Presenter::onToggleMute()
 {
     Q_D(Presenter);
-    if(d->player->status() == Player::Paused ||
-       d->player->status() == Player::Playing )
-    {
-        if(d->player->isValidDbusMute())
+    if (d->player->status() == Player::Paused ||
+            d->player->status() == Player::Playing) {
+        if (d->player->isValidDbusMute())
             d->player->setMuted(!d->player->muted());
 
         if (d->player->muted()) {
@@ -1776,7 +1775,7 @@ void Presenter::onToggleMute()
         } else {
             Q_EMIT d->updateMprisVolume(d->player->volume());
         }
-    }else{
+    } else {
         //local toggle
         Q_EMIT localMutedChanged(0);
     }
@@ -1785,10 +1784,9 @@ void Presenter::onToggleMute()
 void Presenter::onLocalToggleMute()
 {
     Q_D(Presenter);
-    if(d->player->isValidDbusMute())
-    {
+    if (d->player->isValidDbusMute()) {
         d->player->setMuted(!d->player->muted());
-    }else{
+    } else {
         Q_EMIT localMutedChanged(1);
     }
 }
@@ -2126,7 +2124,7 @@ void Presenter::setEqualizerCurMode(int curIndex)
 
 void Presenter::localMuteChanged(bool mute)
 {
-   Q_D(Presenter);
+    Q_D(Presenter);
     d->player->setLocalMuted(mute);
 }
 
