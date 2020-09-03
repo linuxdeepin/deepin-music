@@ -93,7 +93,7 @@ MusicListView::MusicListView(QWidget *parent) : DListView(parent)
         }
         if (state() != EditingState) {
             auto curStandardItem = dynamic_cast<DStandardItem *>(model->itemFromIndex(current));
-            QString name = curStandardItem->data().toString();
+            QString name = curStandardItem->data(Qt::UserRole + 10).toString();
             if (name != AlbumMusicListID && name != ArtistMusicListID && name != AllMusicListID && name != FavMusicListID) {
                 curStandardItem->setIcon(QIcon::fromTheme("music_famousballad"));
             }
@@ -179,13 +179,13 @@ void MusicListView::addMusicList(PlaylistPtr playlist, bool addFlag)
     auto item = new DStandardItem(icon, displayName);
 
     if (playlist->id() == AlbumMusicListID) {
-        item->setData(AlbumMusicListID);
+        item->setData(AlbumMusicListID, Qt::UserRole + 10);
     } else if (playlist->id() == ArtistMusicListID) {
-        item->setData(ArtistMusicListID);
+        item->setData(ArtistMusicListID, Qt::UserRole + 10);
     } else if (playlist->id() == AllMusicListID) {
-        item->setData(AllMusicListID);
+        item->setData(AllMusicListID, Qt::UserRole + 10);
     } else if (playlist->id() == FavMusicListID) {
-        item->setData(FavMusicListID);
+        item->setData(FavMusicListID, Qt::UserRole + 10);
     }
 
     auto itemFont = item->font();
