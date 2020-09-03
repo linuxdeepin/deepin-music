@@ -1016,7 +1016,7 @@ void MainFrame::binding(Presenter *presenter)
 
         QList<QWidget *>content = d->m_pwidget->findChildren<QWidget *>("_d_message_float_deepin_music");
         if (content.size() > 0) {
-            delete content.first();
+            content.first()->deleteLater(); //auto delete
         }
 
         d->m_pwidget->setAttribute(Qt::WA_TransparentForMouseEvents);
@@ -1029,6 +1029,7 @@ void MainFrame::binding(Presenter *presenter)
         pDFloatingMessage->setBlurBackgroundEnabled(true);
         pDFloatingMessage->setMessage(text);
         pDFloatingMessage->setIcon(icon);
+        pDFloatingMessage->setDuration(2000); //set 2000ms to display it
         DMessageManager::instance()->sendMessage(d->m_pwidget, pDFloatingMessage);
     });
 
