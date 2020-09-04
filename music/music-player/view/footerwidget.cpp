@@ -1334,7 +1334,8 @@ void Footer::onVolumeChanged(int volume)
     }
     d->m_Volume = volume;
     MusicSettings::setOption("base.play.volume", d->m_Volume);
-    MusicSettings::setOption("base.play.mute", d->m_Mute);
+    // 音量变化为0，不设置为静音
+    // MusicSettings::setOption("base.play.mute", d->m_Mute);
     d->volSlider->onVolumeChanged(volume);
 }
 

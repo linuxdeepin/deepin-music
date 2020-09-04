@@ -489,7 +489,7 @@ void DequalizerDialogPrivate::initUI()
         slider->installEventFilter(q);       //安装事件过滤器
         slider->setEnabled(switchflag);
     }
-    if (curEffect != 0 ) {
+    if (curEffect != 0) {
         q->showCurMode(AllbaudTypes.at(curEffect - 1));
         mcombox->setCurrentIndex(curEffect);
     } else {
@@ -570,7 +570,7 @@ void DequalizerDialog::initConnection()
     for (DSlider *slider : findChildren<DSlider *>()) {
         connect(slider, &DSlider::sliderReleased, [ = ]() {
             d->changeflag = true;
-            if (d->mcombox->currentIndex() != 0 ) {
+            if (d->mcombox->currentIndex() != 0) {
                 d->mcombox->setCurrentIndex(0);
             }
             int value = slider->value();
@@ -579,9 +579,8 @@ void DequalizerDialog::initConnection()
 
         connect(slider, &DSlider::valueChanged, [ = ](int value) {
             d->saveBtn->setEnabled(true);
-            if (!d->changeflag) {
-                return ;
-            }
+
+            // 音乐模式切换到自定义模式，应该进行值的变化显示
             d->SliderOneEntry(slider, value);
         });
     }
@@ -618,7 +617,7 @@ void DequalizerDialog::showCustom()
 
     for (DSlider *slider : findChildren<DSlider *>()) {
         int indexbaud = d->settings->value("equalizer.all." + slider->objectName()).toInt();
-        slider->setValue(indexbaud );
+        slider->setValue(indexbaud);
         selectSlider(slider, "");
     }
     d->settings->setOption("equalizer.all.curEffect", 0);
