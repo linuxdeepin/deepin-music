@@ -919,8 +919,11 @@ void MainFrame::quickBinding(Presenter *presenter)
     this, [ = ](PlaylistPtr playlist) {
         d->musicListWidget->show();
         d->currentWidget = d->musicListWidget;
-
         d->musicListWidget->onMusiclistChanged(playlist);
+
+        if (d->importWidget) {
+            d->importWidget->hide();
+        }
 
         if (d->playListWidget) {
             d->playListWidget->onMusiclistChanged(playlist);

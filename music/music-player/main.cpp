@@ -74,7 +74,6 @@ void createSpeechDbus()
     mSpeech->registerAction("21", "faverite");
     mSpeech->registerAction("22", "unfaverite");
     mSpeech->registerAction("23", "set play mode");
-
 }
 
 bool checkOnly()
@@ -180,7 +179,6 @@ int main(int argc, char *argv[])
     DApplicationSettings saveTheme;
 
     /*---Player instance init---*/
-    MusicSettings::init();
     MainFrame mainframe;
     MusicApp *music = new MusicApp(&mainframe);
 
