@@ -123,7 +123,10 @@ void MusicSearchListDelegate::paint(QPainter *painter, const QStyleOptionViewIte
         textColor = QColor("#000000");
     }
 
-    lightColor = QColor("#3768FF");
+    DPalette pa = option.palette;
+    QBrush selectBrush = pa.brush(QPalette::Active, DPalette:: Highlight);
+    QColor selectColor = selectBrush.color();
+    lightColor = selectColor;
 
     //绘制选中状态
     if (option.state & QStyle::State_MouseOver) {
@@ -224,7 +227,7 @@ void MusicSearchListDelegate::paint(QPainter *painter, const QStyleOptionViewIte
         cursor.endEditBlock();
 
         QAbstractTextDocumentLayout::PaintContext paintContext;
-        QRect textRect(32, option.rect.y(), 287, 24);
+        QRect textRect(32, option.rect.y() + 3, 287, 24);
         painter->save();
         painter->translate(textRect.topLeft());
         painter->setClipRect(textRect.translated(-textRect.topLeft()));
@@ -237,7 +240,7 @@ void MusicSearchListDelegate::paint(QPainter *painter, const QStyleOptionViewIte
         QPixmap image;
         image.loadFromData(playMusicTypePtr->icon);
         painter->save();
-        QRect imageRect(32, index.row() * 34 + 2, 24, 24);
+        QRect imageRect(32, index.row() * 35 + 4, 24, 24);
         if (playlistPtr->id() == ArtistCandListID) {
             QPainterPath clipPath;
             clipPath.addEllipse(imageRect.adjusted(0, 0, 0, 0));
@@ -292,7 +295,7 @@ void MusicSearchListDelegate::paint(QPainter *painter, const QStyleOptionViewIte
         cursor.endEditBlock();
 
         QAbstractTextDocumentLayout::PaintContext paintContext;
-        QRect textRect(61, option.rect.y(), 251, 24);
+        QRect textRect(61, option.rect.y() + 2, 251, 24);
         painter->save();
         painter->translate(textRect.topLeft());
         painter->setClipRect(textRect.translated(-textRect.topLeft()));
@@ -305,8 +308,7 @@ QSize MusicSearchListDelegate::sizeHint(const QStyleOptionViewItem &option, cons
 {
     Q_UNUSED(option)
     Q_UNUSED(index)
-    //return QStyledItemDelegate::sizeHint(option, index);
-    return QSize(30, 30);
+    return QSize(350, 34);
 }
 
 QWidget *MusicSearchListDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const
