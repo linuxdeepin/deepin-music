@@ -116,7 +116,8 @@ public:
     int             m_type = 1;
 
     bool            btPlayingStatus = false;
-
+    QTimer         *m_timer; //to avoid mul-repeat click
+    uint32_t        m_calcClick = 0;
     VolumeMonitoring         volumeMonitoring;
     int             m_Volume = 0;
     int             m_Mute = 0;
@@ -167,7 +168,16 @@ void FooterPrivate::initConnection()
     });
 
     q->connect(btPlay, &DPushButton::released, q, [ = ]() {
-        q->onTogglePlayButton();
+        //remember last operation in a period to avoid mult-repeat click
+        if (!m_timer->isActive())
+            m_timer->start(100);
+        m_calcClick += 1;
+        q->connect(m_timer, &QTimer::timeout, q, [ = ]() {
+            if (m_calcClick % 2 != 0)
+                q->onTogglePlayButton();
+            m_calcClick = 0;
+        });
+
     });
 
     q->connect(q, &Footer::focusButton, q, [ = ]() {
@@ -297,6 +307,9 @@ Footer::Footer(QWidget *parent) :
 //    d->title->setPalette(titlePl);
 
     d->title->setForegroundRole(DPalette::BrightText);
+
+    d->m_timer = new QTimer(this);
+    d->m_timer->setSingleShot(true);//to avoid call timer once more
 
     d->artist = new Label;
     auto artistFont = d->artist->font();
