@@ -181,8 +181,6 @@ void FooterPrivate::initConnection()
         q->connect(m_timer, &QTimer::timeout, q, [ = ]() {
             if (m_calcClick % 2 != 0)
                 q->onTogglePlayButton();
-
-            m_timer->stop();
             m_calcClick = 0;
         });
     });
@@ -301,6 +299,7 @@ Footer::Footer(QWidget *parent) :
 //    d->title->setPalette(titlePl);
 
     d->m_timer = new QTimer(this);
+    d->m_timer->setSingleShot(true);
     d->title->setForegroundRole(DPalette::BrightText);
 
     d->artist = new Label;
