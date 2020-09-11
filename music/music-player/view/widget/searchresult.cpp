@@ -50,10 +50,10 @@ SearchResult::SearchResult(QWidget *parent) : DBlurEffectWidget(parent)
     vlayout3 = new QVBoxLayout();
     vlayout = new QVBoxLayout();
 
-    vlayout->setContentsMargins(0, 0, 0, 10);
-    vlayout1->setSpacing(2);
-    vlayout2->setSpacing(2);
-    vlayout3->setSpacing(2);
+    vlayout->setContentsMargins(0, 0, 0, 18);
+    vlayout1->setSpacing(1);
+    vlayout2->setSpacing(1);
+    vlayout3->setSpacing(1);
     vlayout->setSpacing(0);
     setLayout(vlayout);
 
@@ -61,7 +61,7 @@ SearchResult::SearchResult(QWidget *parent) : DBlurEffectWidget(parent)
     m_MusicLabel = new DLabel(tr("Music"), this);
     m_MusicLabel->setFont(labelFont);
     m_MusicLabel->setPalette(labelPalette);
-    m_MusicLabel->setContentsMargins(32, 8, 0, 0);
+    m_MusicLabel->setContentsMargins(32, 4, 0, 0);
     m_MusicLabel->adjustSize();
 
     m_MusicView = new MusicSearchListview(this);
