@@ -259,9 +259,7 @@ void PlayerPrivate::initConnection()
             break;
         }
         case Vlc::Ended: {
-            if (qvplayer->time() != 0) {
-                selectNext(activeMeta, mode);
-            }
+            selectNext(activeMeta, mode);//just sync with Vlc::Ended
             break;
         }
         case Vlc::Error: {
