@@ -2400,6 +2400,7 @@ void Presenter::initMpris(MprisPlayer *mprisPlayer)
     connect(this, &Presenter::musicStoped,
     this, [ = ]() {
         mprisPlayer->setPlaybackStatus(Mpris::Stopped);
+        mprisPlayer->setMetadata(QVariantMap());
     });
 
     connect(d->player, &Player::playbackStatusChanged,

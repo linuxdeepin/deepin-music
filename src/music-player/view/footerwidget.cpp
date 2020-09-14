@@ -117,7 +117,6 @@ public:
 
     bool            btPlayingStatus = false;
     QTimer         *m_timer; //to avoid mul-repeat click
-    uint32_t        m_calcClick = 0;
     VolumeMonitoring         volumeMonitoring;
     int             m_Volume = 0;
     int             m_Mute = 0;
@@ -174,15 +173,12 @@ void FooterPrivate::initConnection()
     });
 
     q->connect(btPlay, &DPushButton::released, q, [ = ]() {
-        //remember last operation in a period to avoid mult-repeat click
+        //play once in a period time to avoid mult-repeat click
         if (!m_timer->isActive())
-            m_timer->start(100);
-        m_calcClick += 1;
-        q->connect(m_timer, &QTimer::timeout, q, [ = ]() {
-            if (m_calcClick % 2 != 0)
-                q->onTogglePlayButton();
-            m_calcClick = 0;
-        });
+        {
+            m_timer->start(200);
+            q->onTogglePlayButton();
+        }
     });
 
     q->connect(btPrev, &DPushButton::released, q, [ = ]() {
