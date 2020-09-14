@@ -23,6 +23,7 @@
 
 #include <QDebug>
 #include <QPainter>
+#include <QPainterPath>
 #include <QGraphicsDropShadowEffect>
 
 static auto borderPenWidth = 1.0;

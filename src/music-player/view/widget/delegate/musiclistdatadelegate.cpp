@@ -22,6 +22,7 @@
 #include "musiclistdatadelegate.h"
 
 #include <QPainter>
+#include <QPainterPath>
 #include <QDebug>
 #include <QDate>
 #include <QEvent>

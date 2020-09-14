@@ -6,6 +6,7 @@ load(dtk_translation)
 
 QT       += core gui widgets svg multimedia multimediawidgets xml network sql dbus
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+LIBS	+= -lKF5Codecs
 
 TEMPLATE    = app
 TARGET      = $$APP_TARGET
