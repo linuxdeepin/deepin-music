@@ -181,7 +181,7 @@ void PlayListItem::mouseDoubleClickEvent(QMouseEvent *event)
 //        m_titleedit->setCursorPosition(m_titleedit->text().length());
     });
 }
-
+#if 0
 void PlayListItem::onDelete()
 {
     QString message = QString(tr("Are you sure you want to delete this playlist?"));
@@ -198,6 +198,7 @@ void PlayListItem::onDelete()
     }
     Q_EMIT this->remove();
 }
+#endif
 
 void PlayListItem::onRename()
 {

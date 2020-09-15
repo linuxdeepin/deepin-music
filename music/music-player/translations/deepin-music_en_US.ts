@@ -43,136 +43,136 @@
     <message>
         <location filename="../view/widget/dequalizerdialog.cpp" line="112"/>
         <source>Custom</source>
-        <translation type="unfinished">Custom</translation>
+        <translation>Custom</translation>
     </message>
     <message>
         <location filename="../view/widget/dequalizerdialog.cpp" line="114"/>
         <source>Classical</source>
-        <translation type="unfinished"></translation>
+        <translation>Classical</translation>
     </message>
     <message>
         <location filename="../view/widget/dequalizerdialog.cpp" line="115"/>
         <source>Club</source>
-        <translation type="unfinished"></translation>
+        <translation>Club</translation>
     </message>
     <message>
         <location filename="../view/widget/dequalizerdialog.cpp" line="116"/>
         <source>Dance</source>
-        <translation type="unfinished"></translation>
+        <translation>Dance</translation>
     </message>
     <message>
         <location filename="../view/widget/dequalizerdialog.cpp" line="120"/>
         <source>Headphones</source>
-        <translation type="unfinished"></translation>
+        <translation>Headphones</translation>
     </message>
     <message>
         <location filename="../view/widget/dequalizerdialog.cpp" line="113"/>
         <source>Monophony</source>
-        <translation type="unfinished"></translation>
+        <translation>Monophony</translation>
     </message>
     <message>
         <location filename="../view/widget/dequalizerdialog.cpp" line="117"/>
         <source>Full Bass</source>
-        <translation type="unfinished"></translation>
+        <translation>Full Bass</translation>
     </message>
     <message>
         <location filename="../view/widget/dequalizerdialog.cpp" line="118"/>
         <source>Full Bass and Treble</source>
-        <translation type="unfinished"></translation>
+        <translation>Full Bass and Treble</translation>
     </message>
     <message>
         <location filename="../view/widget/dequalizerdialog.cpp" line="119"/>
         <source>Full Treble</source>
-        <translation type="unfinished"></translation>
+        <translation>Full Treble</translation>
     </message>
     <message>
         <location filename="../view/widget/dequalizerdialog.cpp" line="121"/>
         <source>Hall</source>
-        <translation type="unfinished"></translation>
+        <translation>Hall</translation>
     </message>
     <message>
         <location filename="../view/widget/dequalizerdialog.cpp" line="122"/>
         <source>Live</source>
-        <translation type="unfinished"></translation>
+        <translation>Live</translation>
     </message>
     <message>
         <location filename="../view/widget/dequalizerdialog.cpp" line="123"/>
         <source>Party</source>
-        <translation type="unfinished"></translation>
+        <translation>Party</translation>
     </message>
     <message>
         <location filename="../view/widget/dequalizerdialog.cpp" line="124"/>
         <source>Pop</source>
-        <translation type="unfinished"></translation>
+        <translation>Pop</translation>
     </message>
     <message>
         <location filename="../view/widget/dequalizerdialog.cpp" line="125"/>
         <source>Reggae</source>
-        <translation type="unfinished"></translation>
+        <translation>Reggae</translation>
     </message>
     <message>
         <location filename="../view/widget/dequalizerdialog.cpp" line="126"/>
         <source>Rock</source>
-        <translation type="unfinished"></translation>
+        <translation>Rock</translation>
     </message>
     <message>
         <location filename="../view/widget/dequalizerdialog.cpp" line="127"/>
         <source>Ska</source>
-        <translation type="unfinished"></translation>
+        <translation>Ska</translation>
     </message>
     <message>
         <location filename="../view/widget/dequalizerdialog.cpp" line="128"/>
         <source>Soft</source>
-        <translation type="unfinished"></translation>
+        <translation>Soft</translation>
     </message>
     <message>
         <location filename="../view/widget/dequalizerdialog.cpp" line="129"/>
         <source>Soft Rock</source>
-        <translation type="unfinished"></translation>
+        <translation>Soft Rock</translation>
     </message>
     <message>
         <location filename="../view/widget/dequalizerdialog.cpp" line="194"/>
         <location filename="../view/widget/dequalizerdialog.cpp" line="655"/>
         <source>ON</source>
-        <translation type="unfinished"></translation>
+        <translation>ON</translation>
     </message>
     <message>
         <location filename="../view/widget/dequalizerdialog.cpp" line="196"/>
         <location filename="../view/widget/dequalizerdialog.cpp" line="653"/>
         <source>OFF</source>
-        <translation type="unfinished"></translation>
+        <translation>OFF</translation>
     </message>
     <message>
         <location filename="../view/widget/dequalizerdialog.cpp" line="550"/>
         <location filename="../view/widget/dequalizerdialog.cpp" line="551"/>
         <source>Sound Effects Saved</source>
-        <translation type="unfinished"></translation>
+        <translation>Sound Effects Saved</translation>
     </message>
     <message>
         <location filename="../view/widget/dequalizerdialog.cpp" line="130"/>
         <source>Techno</source>
-        <translation type="unfinished"></translation>
+        <translation>Techno</translation>
     </message>
     <message>
         <location filename="../view/widget/dequalizerdialog.cpp" line="187"/>
         <location filename="../view/widget/dequalizerdialog.cpp" line="448"/>
         <source>Equalizer</source>
-        <translation type="unfinished"></translation>
+        <translation>Equalizer</translation>
     </message>
     <message>
         <location filename="../view/widget/dequalizerdialog.cpp" line="213"/>
         <source>Save</source>
-        <translation type="unfinished"></translation>
+        <translation>Save</translation>
     </message>
     <message>
         <location filename="../view/widget/dequalizerdialog.cpp" line="224"/>
         <source>Preamplifier</source>
-        <translation type="unfinished"></translation>
+        <translation>Preamplifier</translation>
     </message>
     <message>
         <location filename="../view/widget/dequalizerdialog.cpp" line="337"/>
         <source>Restore Defaults</source>
-        <translation type="unfinished">Restore Defaults</translation>
+        <translation>Restore Defaults</translation>
     </message>
 </context>
 <context>
@@ -364,7 +364,7 @@
     <message>
         <location filename="../view/musiclyricwidget.cpp" line="120"/>
         <source>No lyrics yet</source>
-        <translation type="unfinished"></translation>
+        <translation>No lyrics yet</translation>
     </message>
 </context>
 <context>
@@ -382,7 +382,7 @@
     <message>
         <location filename="../view/mainframe.cpp" line="198"/>
         <source>Equalizer</source>
-        <translation type="unfinished"></translation>
+        <translation>Equalizer</translation>
     </message>
     <message>
         <location filename="../view/mainframe.cpp" line="206"/>
@@ -900,7 +900,7 @@
     <message>
         <location filename="../view/widget/playlistview.cpp" line="644"/>
         <source>Remove from play queue</source>
-        <translation type="unfinished"></translation>
+        <translation>Remove from play queue</translation>
     </message>
     <message>
         <location filename="../view/widget/playlistview.cpp" line="648"/>
