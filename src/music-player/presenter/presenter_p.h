@@ -24,6 +24,7 @@
 #include "../core/playlist.h"
 #include "../core/musicsettings.h"
 #include "searchmeta.h"
+#include <QTimer>
 
 class Presenter;
 class MetaSearchService;
