@@ -114,7 +114,11 @@ SoundVolume::SoundVolume(QWidget *parent) : QWidget(parent), d_ptr(new SoundVolu
 
     connect(d->volSlider, &DSlider::valueChanged,
     this, [ = ](int volume) {
-        d->volMute = false;
+        if (volume == 0) {
+            d->volMute = true;
+        } else {
+            d->volMute = false;
+        }
         volumeIcon();
 
         Q_EMIT volumeChanged(volume);

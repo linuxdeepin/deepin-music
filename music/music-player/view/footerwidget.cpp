@@ -168,8 +168,7 @@ void FooterPrivate::initConnection()
 
     q->connect(btPlay, &DPushButton::released, q, [ = ]() {
         //play once in a period time to avoid mult-repeat click
-        if (!m_timer->isActive())
-        {
+        if (!m_timer->isActive()) {
             m_timer->start(200);
             q->onTogglePlayButton();
         }
@@ -1319,12 +1318,9 @@ void Footer::onVolumeChanged(int volume)
     Q_D(Footer);
     //need to sync volume to dbus
     if (d->volumeMonitoring.needSyncLocalFlag(1)) {
-//        QTimer::singleShot(50, [ = ]() {
         d->volumeMonitoring.stop();
         d->volumeMonitoring.timeoutSlot();
         d->volumeMonitoring.start();
-//        });
-//        return;
     }
     QString status = "mid";
     if (volume > 77) {
@@ -1335,15 +1331,15 @@ void Footer::onVolumeChanged(int volume)
         status = "low";
     }
 
-    if (d->m_Mute) {
+    if (d->m_Mute || volume == 0) {
         d->updateQssProperty(d->btSound, "volume", "mute");
     } else {
         d->updateQssProperty(d->btSound, "volume", status);
     }
     d->m_Volume = volume;
     MusicSettings::setOption("base.play.volume", d->m_Volume);
-    // 音量变化为0，不设置为静音
-    // MusicSettings::setOption("base.play.mute", d->m_Mute);
+    // 音量变化为0，设置为静音
+    MusicSettings::setOption("base.play.mute", d->m_Mute);
     d->volSlider->onVolumeChanged(volume);
 }
 
@@ -1364,6 +1360,11 @@ void Footer::onLocalVolumeChanged(int volume)
     } else {
         d->updateQssProperty(d->btSound, "volume", status);
     }
+
+    if (volume == 0) {
+        d->updateQssProperty(d->btSound, "volume", "mute");
+    }
+
     d->m_Volume = volume;
     MusicSettings::setOption("base.play.volume", d->m_Volume);
     MusicSettings::setOption("base.play.mute", d->m_Mute);

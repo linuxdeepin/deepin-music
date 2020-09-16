@@ -89,6 +89,7 @@ MusicListView::MusicListView(QWidget *parent) : DListView(parent)
         Q_UNUSED(previous)
         if (current.row() < 0 || current.row() >= allPlaylists.size()) {
             this->clearSelected();
+            pixmapState = false;
             return ;
         }
         if (state() != EditingState) {
@@ -103,8 +104,10 @@ MusicListView::MusicListView(QWidget *parent) : DListView(parent)
         auto indexes = this->selectedIndexes();
         if (playingItem != nullptr && current == playingItem->index()) {
             auto mdata = allPlaylists.at(current.row());
-            if (mdata->playing() != nullptr)
+            if (mdata->playing() != nullptr) {
                 curPixmap = QPixmap(":/mpimage/light/music_withe_sidebar/music1.svg");
+                pixmapState = true;
+            }
         }
         if (playingItem != nullptr) {
             auto curItem = dynamic_cast<DStandardItem *>(playingItem);
@@ -237,7 +240,14 @@ void MusicListView::setCurPlaylist(QStandardItem *item)
     auto curItem = dynamic_cast<DStandardItem *>(item);
     playingItem = curItem;
     if (curItem) {
-        QIcon playingIcon(playingPixmap);
+        QIcon playingIcon;
+        if (pixmapState) {
+            QIcon icon(defaultPixmap);
+            playingIcon = icon;
+        } else {
+            QIcon icon(playingPixmap);
+            playingIcon = icon;
+        }
         playingIcon.actualSize(QSize(20, 20));
 
         DViewItemActionList itemActionList = curItem->actionList(Qt::RightEdge);
