@@ -23,8 +23,8 @@ set(PROJECT_INCLUDE ./
     ./../vendor/mpris-qt/src
     ./../vendor/dbusextended-qt/src)
 
-include_directories(/usr/include/libdtk-5.2.0/DWidget)
-include_directories(/usr/include/libdtk-5.2.0/DCore)
+#include_directories(/usr/include/libdtk-5.2.0/DWidget)
+#include_directories(/usr/include/libdtk-5.2.0/DCore)
 include_directories(/usr/include/vlc)
 include_directories(/usr/include/vlc/plugins)
 include_directories(./../interface)
@@ -91,7 +91,7 @@ set_source_files_properties(${TS}
 set(translate ${PROJECT_SOURCE_DIR}/music/music-player/translations)
 
 if (NOT (${CMAKE_BUILD_TYPE} MATCHES "Debug"))
-    qt5_create_translation(Translate1 ${allSource} ${TS})
+    qt5_create_translation(Translate1 ${allSource} ${TS} OPTIONS -source-language en_US -no-obsolete)
 endif ()
 qt5_add_translation(${translate})
 

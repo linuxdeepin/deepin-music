@@ -135,19 +135,22 @@
                     "hide": false,
                     "options": [
                         {
-                            "key": "ask_close_action",
-                            "hide": true,
-                            "default": true
-                        },
-                        {
                             "key": "close_action",
                             "name": " ",
                             "type": "radiogroup",
                             "items": [
                                 "Minimize to system tray",
-                                "Exit Music"
+                                "Exit"
                             ],
                             "default": 0
+                        },
+                        {
+                            "key": "ask_close_action",
+                            "name": " ",
+                            "hide": true,
+                            "type": "checkbox",
+                            "text": "Ask me always",
+                            "default": true
                         }
                     ]
                 }

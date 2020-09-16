@@ -1,21 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="sl">
+<TS version="2.1" language="sl_SI" sourcelanguage="en_US">
 <context>
     <name>CloseConfirmDialog</name>
     <message>
-        <source>Please select your operation</source>
-        <translation type="vanished">Prosim, izberite vašo operacijo</translation>
-    </message>
-    <message>
         <location filename="../view/widget/closeconfirmdialog.cpp" line="72"/>
         <source>Exit</source>
-        <translation>Izhod</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/widget/closeconfirmdialog.cpp" line="74"/>
         <source>Minimize to system tray</source>
-        <translation>Pomanjšaj v statusno vrstico</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/widget/closeconfirmdialog.cpp" line="82"/>
@@ -30,16 +26,12 @@
     <message>
         <location filename="../view/widget/closeconfirmdialog.cpp" line="110"/>
         <source>Cancel</source>
-        <translation>Prekliči</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/widget/closeconfirmdialog.cpp" line="111"/>
         <source>Confirm</source>
         <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>OK</source>
-        <translation type="vanished">V redu</translation>
     </message>
 </context>
 <context>
@@ -47,7 +39,12 @@
     <message>
         <location filename="../view/widget/dequalizerdialog.cpp" line="112"/>
         <source>Custom</source>
-        <translation type="unfinished">Po meri</translation>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../view/widget/dequalizerdialog.cpp" line="113"/>
+        <source>Monophony</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/widget/dequalizerdialog.cpp" line="114"/>
@@ -65,16 +62,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/widget/dequalizerdialog.cpp" line="120"/>
-        <source>Headphones</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../view/widget/dequalizerdialog.cpp" line="113"/>
-        <source>Monophony</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <location filename="../view/widget/dequalizerdialog.cpp" line="117"/>
         <source>Full Bass</source>
         <translation type="unfinished"></translation>
@@ -87,6 +74,11 @@
     <message>
         <location filename="../view/widget/dequalizerdialog.cpp" line="119"/>
         <source>Full Treble</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../view/widget/dequalizerdialog.cpp" line="120"/>
+        <source>Headphones</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -135,6 +127,17 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../view/widget/dequalizerdialog.cpp" line="130"/>
+        <source>Techno</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../view/widget/dequalizerdialog.cpp" line="187"/>
+        <location filename="../view/widget/dequalizerdialog.cpp" line="448"/>
+        <source>Equalizer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="../view/widget/dequalizerdialog.cpp" line="194"/>
         <location filename="../view/widget/dequalizerdialog.cpp" line="654"/>
         <source>ON</source>
@@ -144,23 +147,6 @@
         <location filename="../view/widget/dequalizerdialog.cpp" line="196"/>
         <location filename="../view/widget/dequalizerdialog.cpp" line="652"/>
         <source>OFF</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../view/widget/dequalizerdialog.cpp" line="550"/>
-        <location filename="../view/widget/dequalizerdialog.cpp" line="551"/>
-        <source>Sound Effects Saved</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../view/widget/dequalizerdialog.cpp" line="130"/>
-        <source>Techno</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../view/widget/dequalizerdialog.cpp" line="187"/>
-        <location filename="../view/widget/dequalizerdialog.cpp" line="448"/>
-        <source>Equalizer</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -176,35 +162,58 @@
     <message>
         <location filename="../view/widget/dequalizerdialog.cpp" line="337"/>
         <source>Restore Defaults</source>
-        <translation type="unfinished">Obnovi privzeto</translation>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../view/widget/dequalizerdialog.cpp" line="550"/>
+        <location filename="../view/widget/dequalizerdialog.cpp" line="551"/>
+        <source>Sound Effects Saved</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>Footer</name>
     <message>
+        <location filename="../view/footerwidget.cpp" line="298"/>
+        <source>Unknown Title</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../view/footerwidget.cpp" line="317"/>
+        <location filename="../view/footerwidget.cpp" line="879"/>
+        <location filename="../view/footerwidget.cpp" line="1488"/>
+        <source>Unknown artist</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="../view/footerwidget.cpp" line="424"/>
         <source>Previous</source>
-        <translation>Predhodni</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/footerwidget.cpp" line="425"/>
         <source>Next</source>
-        <translation>Naslednji</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/footerwidget.cpp" line="426"/>
         <source>Play/Pause</source>
-        <translation>Predvajaj/premor</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/footerwidget.cpp" line="427"/>
         <source>Favorite</source>
-        <translation>Priljubljena</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/footerwidget.cpp" line="428"/>
         <source>Lyrics</source>
-        <translation>Besedila pesmi</translation>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../view/footerwidget.cpp" line="429"/>
+        <source>Play Mode</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/footerwidget.cpp" line="430"/>
@@ -212,48 +221,23 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/footerwidget.cpp" line="298"/>
-        <source>Unknown Title</source>
-        <translation>Neznan naslov</translation>
-    </message>
-    <message>
-        <location filename="../view/footerwidget.cpp" line="317"/>
-        <location filename="../view/footerwidget.cpp" line="879"/>
-        <location filename="../view/footerwidget.cpp" line="1488"/>
-        <source>Unknown artist</source>
-        <translation>Neznan izvajalec</translation>
-    </message>
-    <message>
-        <location filename="../view/footerwidget.cpp" line="429"/>
-        <source>Play Mode</source>
-        <translation>Način predvajanja</translation>
-    </message>
-    <message>
-        <source>Playlist</source>
-        <translation type="vanished">Seznam predvajanja</translation>
-    </message>
-    <message>
         <location filename="../view/footerwidget.cpp" line="1462"/>
         <source>List Loop</source>
-        <translation>Zanka seznamov</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/footerwidget.cpp" line="1465"/>
         <source>Single Loop</source>
-        <translation>Enojna zanka</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/footerwidget.cpp" line="1468"/>
         <source>Shuffle</source>
-        <translation>Mešanje</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>ImportWidget</name>
-    <message>
-        <source>Add folder</source>
-        <translation type="vanished">Dodaj mapo</translation>
-    </message>
     <message>
         <location filename="../view/importwidget.cpp" line="86"/>
         <source>Open Folder</source>
@@ -268,7 +252,7 @@
         <location filename="../view/importwidget.cpp" line="109"/>
         <location filename="../view/importwidget.cpp" line="168"/>
         <source>Scan</source>
-        <translation>Pregled</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/importwidget.cpp" line="110"/>
@@ -277,66 +261,62 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>%1 music directory or drag &amp; drop music file to add music</source>
-        <translation type="vanished">%1 glasbeni direktorij ali povlecite in spustite glasbeno datoteko, da dodate glasbo</translation>
-    </message>
-    <message>
         <location filename="../view/importwidget.cpp" line="159"/>
         <source>Loading music, please wait...</source>
-        <translation>Nalagam glasbo, prosim počakajte ...</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>InfoDialog</name>
-    <message>
-        <location filename="../view/widget/infodialog.cpp" line="149"/>
-        <source>Title:</source>
-        <translation>Naslov:</translation>
-    </message>
-    <message>
-        <location filename="../view/widget/infodialog.cpp" line="149"/>
-        <source>Artist:</source>
-        <translation>Izvajalec:</translation>
-    </message>
-    <message>
-        <location filename="../view/widget/infodialog.cpp" line="150"/>
-        <source>Album:</source>
-        <translation>Album:</translation>
-    </message>
-    <message>
-        <location filename="../view/widget/infodialog.cpp" line="150"/>
-        <source>Type:</source>
-        <translation>Vrsta:</translation>
-    </message>
-    <message>
-        <location filename="../view/widget/infodialog.cpp" line="152"/>
-        <source>Path:</source>
-        <translation>Pot:</translation>
-    </message>
-    <message>
-        <location filename="../view/widget/infodialog.cpp" line="238"/>
-        <source>Unknown artist</source>
-        <translation>Neznan izvajalec</translation>
-    </message>
-    <message>
-        <location filename="../view/widget/infodialog.cpp" line="239"/>
-        <source>Unknown album</source>
-        <translation>Neznan album</translation>
-    </message>
-    <message>
-        <location filename="../view/widget/infodialog.cpp" line="151"/>
-        <source>Size:</source>
-        <translation>Velikost:</translation>
-    </message>
     <message>
         <location filename="../view/widget/infodialog.cpp" line="132"/>
         <source>Basic info</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../view/widget/infodialog.cpp" line="149"/>
+        <source>Title:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../view/widget/infodialog.cpp" line="149"/>
+        <source>Artist:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../view/widget/infodialog.cpp" line="150"/>
+        <source>Album:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../view/widget/infodialog.cpp" line="150"/>
+        <source>Type:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../view/widget/infodialog.cpp" line="151"/>
+        <source>Size:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="../view/widget/infodialog.cpp" line="151"/>
         <source>Duration:</source>
-        <translation>Čas trajanja:</translation>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../view/widget/infodialog.cpp" line="152"/>
+        <source>Path:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../view/widget/infodialog.cpp" line="238"/>
+        <source>Unknown artist</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../view/widget/infodialog.cpp" line="239"/>
+        <source>Unknown album</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -344,7 +324,7 @@
     <message>
         <location filename="../view/loadwidget.cpp" line="42"/>
         <source>Loading...</source>
-        <translation>Nalagam...</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -357,22 +337,22 @@
     <message>
         <location filename="../view/lyricwidget.cpp" line="170"/>
         <source>Title</source>
-        <translation>Naslov</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/lyricwidget.cpp" line="175"/>
         <source>Artist</source>
-        <translation>Izvajalec</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/lyricwidget.cpp" line="180"/>
         <source>Search</source>
-        <translation>Išči</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/lyricwidget.cpp" line="215"/>
         <source>Back</source>
-        <translation>Nazaj</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -385,63 +365,6 @@
 </context>
 <context>
     <name>MainFrame</name>
-    <message>
-        <source>New playlist</source>
-        <translation type="vanished">Nov seznam predvajanja</translation>
-    </message>
-    <message>
-        <location filename="../view/mainframe.cpp" line="206"/>
-        <source>Settings</source>
-        <translation>Nastavitve</translation>
-    </message>
-    <message>
-        <location filename="../view/mainframe.cpp" line="273"/>
-        <location filename="../view/mainframe.cpp" line="866"/>
-        <source>Exit</source>
-        <translation>Izhod</translation>
-    </message>
-    <message>
-        <source>Add folder</source>
-        <translation type="vanished">Dodaj mapo</translation>
-    </message>
-    <message>
-        <source>Add file</source>
-        <translation type="vanished">Dodaj datoteko</translation>
-    </message>
-    <message>
-        <location filename="../view/mainframe.cpp" line="265"/>
-        <source>Dark theme</source>
-        <translation>Temna tema</translation>
-    </message>
-    <message>
-        <location filename="../view/mainframe.cpp" line="863"/>
-        <source>Play/Pause</source>
-        <translation>Predvajaj/premor</translation>
-    </message>
-    <message>
-        <location filename="../view/mainframe.cpp" line="864"/>
-        <source>Previous</source>
-        <translation>Predhodni</translation>
-    </message>
-    <message>
-        <source>Invalid or non-existent file</source>
-        <translation type="vanished">Neveljavna ali neobstoječa datoteka</translation>
-    </message>
-    <message>
-        <source>Failed to import, no vaild music file found!</source>
-        <translation type="vanished">Uvoz ni uspel, ni veljavne glasbene datoteke!</translation>
-    </message>
-    <message>
-        <location filename="../view/mainframe.cpp" line="1579"/>
-        <source>All music</source>
-        <translation>Vsa glasba</translation>
-    </message>
-    <message>
-        <location filename="../view/mainframe.cpp" line="1083"/>
-        <location filename="../view/mainframe.cpp" line="1139"/>
-        <source>OK</source>
-        <translation>V redu</translation>
-    </message>
     <message>
         <location filename="../view/mainframe.cpp" line="182"/>
         <source>Add playlist</source>
@@ -458,8 +381,19 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="791"/>
-        <source>Music is a local music player with beautiful design and simple functions.</source>
+        <location filename="../view/mainframe.cpp" line="206"/>
+        <source>Settings</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../view/mainframe.cpp" line="265"/>
+        <source>Dark theme</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../view/mainframe.cpp" line="273"/>
+        <location filename="../view/mainframe.cpp" line="866"/>
+        <source>Exit</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -472,9 +406,29 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../view/mainframe.cpp" line="791"/>
+        <source>Music is a local music player with beautiful design and simple functions.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../view/mainframe.cpp" line="863"/>
+        <source>Play/Pause</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../view/mainframe.cpp" line="864"/>
+        <source>Previous</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../view/mainframe.cpp" line="865"/>
+        <source>Next</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="../view/mainframe.cpp" line="1007"/>
         <source>Successfully added to &quot;%1&quot;</source>
-        <translation>Uspešno dodano v &quot;%1&quot;</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/mainframe.cpp" line="1011"/>
@@ -497,14 +451,20 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../view/mainframe.cpp" line="1083"/>
+        <location filename="../view/mainframe.cpp" line="1139"/>
+        <source>OK</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="../view/mainframe.cpp" line="1133"/>
         <source>Import failed, no valid music file found</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="865"/>
-        <source>Next</source>
-        <translation>Naslednji</translation>
+        <location filename="../view/mainframe.cpp" line="1579"/>
+        <source>All music</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -597,6 +557,13 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../view/musiclistdatawidget.cpp" line="404"/>
+        <location filename="../view/musiclistdatawidget.cpp" line="1359"/>
+        <location filename="../view/musiclistdatawidget.cpp" line="1571"/>
+        <source>Search Results</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="../view/musiclistdatawidget.cpp" line="967"/>
         <location filename="../view/musiclistdatawidget.cpp" line="982"/>
         <location filename="../view/musiclistdatawidget.cpp" line="997"/>
@@ -609,7 +576,7 @@
         <location filename="../view/musiclistdatawidget.cpp" line="1148"/>
         <location filename="../view/musiclistdatawidget.cpp" line="1564"/>
         <source>All Music</source>
-        <translation type="unfinished">Vsa glasba</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/musiclistdatawidget.cpp" line="1054"/>
@@ -619,7 +586,7 @@
         <location filename="../view/musiclistdatawidget.cpp" line="1091"/>
         <location filename="../view/musiclistdatawidget.cpp" line="1100"/>
         <source>Time added</source>
-        <translation type="unfinished">Dodan čas</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/musiclistdatawidget.cpp" line="1055"/>
@@ -635,18 +602,23 @@
         <location filename="../view/musiclistdatawidget.cpp" line="1092"/>
         <location filename="../view/musiclistdatawidget.cpp" line="1102"/>
         <source>Artist</source>
-        <translation type="unfinished">Izvajalec</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/musiclistdatawidget.cpp" line="1073"/>
         <location filename="../view/musiclistdatawidget.cpp" line="1101"/>
         <source>Title</source>
-        <translation type="unfinished">Naslov</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/musiclistdatawidget.cpp" line="1130"/>
         <source>Play All</source>
-        <translation type="unfinished">Predvajaj vse</translation>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../view/musiclistdatawidget.cpp" line="1232"/>
+        <source>Songs</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/musiclistdatawidget.cpp" line="1233"/>
@@ -661,24 +633,12 @@
     <message>
         <location filename="../view/musiclistdatawidget.cpp" line="1269"/>
         <source>Custom</source>
-        <translation type="unfinished">Po meri</translation>
-    </message>
-    <message>
-        <location filename="../view/musiclistdatawidget.cpp" line="404"/>
-        <location filename="../view/musiclistdatawidget.cpp" line="1359"/>
-        <location filename="../view/musiclistdatawidget.cpp" line="1571"/>
-        <source>Search Results</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../view/musiclistdatawidget.cpp" line="1232"/>
-        <source>Songs</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/musiclistdatawidget.cpp" line="1619"/>
         <source>No result found</source>
-        <translation type="unfinished">Ni rezultatov iskanja</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -686,20 +646,16 @@
     <message>
         <location filename="../view/widget/musiclistdialog.cpp" line="126"/>
         <source>Play All</source>
-        <translation type="unfinished">Predvajaj vse</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/widget/musiclistdialog.cpp" line="139"/>
         <source>Shuffle</source>
-        <translation type="unfinished">Mešanje</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>MusicListInfoView</name>
-    <message>
-        <source>New playlist</source>
-        <translation type="obsolete">Nov seznam predvajanja</translation>
-    </message>
     <message>
         <location filename="../view/widget/musiclistinfoview.cpp" line="455"/>
         <source>Play queue</source>
@@ -718,38 +674,38 @@
     <message>
         <location filename="../view/widget/musiclistinfoview.cpp" line="527"/>
         <source>Play</source>
-        <translation type="unfinished">Predvajaj</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/widget/musiclistinfoview.cpp" line="530"/>
         <source>Add to playlist</source>
-        <translation type="unfinished">Dodaj na seznam predvajanja</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/widget/musiclistinfoview.cpp" line="535"/>
         <source>Display in file manager</source>
-        <translation type="unfinished">Prikaži v upravitelju datotek</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/widget/musiclistinfoview.cpp" line="538"/>
         <source>Remove from playlist</source>
-        <translation type="unfinished">Odstrani s seznama predvajanja</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/widget/musiclistinfoview.cpp" line="539"/>
         <source>Delete from local disk</source>
-        <translation type="unfinished">Izbriši z lokalnega diska</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/widget/musiclistinfoview.cpp" line="560"/>
         <source>Song info</source>
-        <translation type="unfinished">Informacije o pesmi</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/widget/musiclistinfoview.cpp" line="608"/>
         <location filename="../view/widget/musiclistinfoview.cpp" line="639"/>
         <source>Cancel</source>
-        <translation type="unfinished">Prekliči</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/widget/musiclistinfoview.cpp" line="609"/>
@@ -769,7 +725,7 @@
     <message>
         <location filename="../view/widget/musiclistinfoview.cpp" line="640"/>
         <source>Delete</source>
-        <translation type="unfinished">Izbriši</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/widget/musiclistinfoview.cpp" line="649"/>
@@ -799,12 +755,12 @@
     <message>
         <location filename="../view/widget/musiclistitem.cpp" line="184"/>
         <source>Cancel</source>
-        <translation type="unfinished">Prekliči</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/widget/musiclistitem.cpp" line="185"/>
         <source>Delete</source>
-        <translation type="unfinished">Izbriši</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -823,40 +779,6 @@
 <context>
     <name>MusicListView</name>
     <message>
-        <source>New playlist</source>
-        <translation type="vanished">Nov seznam predvajanja</translation>
-    </message>
-    <message>
-        <location filename="../view/widget/musiclistview.cpp" line="531"/>
-        <location filename="../view/widget/musiclistview.cpp" line="549"/>
-        <source>Play</source>
-        <translation>Predvajaj</translation>
-    </message>
-    <message>
-        <source>Add to playlist</source>
-        <translation type="vanished">Dodaj na seznam predvajanja</translation>
-    </message>
-    <message>
-        <source>Display in file manager</source>
-        <translation type="vanished">Prikaži v upravitelju datotek</translation>
-    </message>
-    <message>
-        <source>Song info</source>
-        <translation type="vanished">Informacije o pesmi</translation>
-    </message>
-    <message>
-        <source>Remove from playlist</source>
-        <translation type="vanished">Odstrani s seznama predvajanja</translation>
-    </message>
-    <message>
-        <source>Delete from local disk</source>
-        <translation type="vanished">Izbriši z lokalnega diska</translation>
-    </message>
-    <message>
-        <source>Encoding</source>
-        <translation type="vanished">Encoding</translation>
-    </message>
-    <message>
         <location filename="../view/widget/musiclistview.cpp" line="175"/>
         <source>My Favorites</source>
         <translation type="unfinished"></translation>
@@ -871,7 +793,7 @@
         <location filename="../view/widget/musiclistview.cpp" line="413"/>
         <location filename="../view/widget/musiclistview.cpp" line="566"/>
         <source>Cancel</source>
-        <translation>Prekliči</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="414"/>
@@ -879,7 +801,7 @@
         <location filename="../view/widget/musiclistview.cpp" line="558"/>
         <location filename="../view/widget/musiclistview.cpp" line="567"/>
         <source>Delete</source>
-        <translation>Izbriši</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="528"/>
@@ -888,82 +810,29 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistview.cpp" line="537"/>
-        <location filename="../view/widget/musiclistview.cpp" line="555"/>
-        <source>Rename</source>
-        <translation type="unfinished">Preimenuj</translation>
-    </message>
-    <message>
-        <source>Deleting the current song will also delete the song files contained</source>
-        <translation type="vanished">Izbris te pesmi bo povzročil tudi izbris vseh datotek, ki jih vsebuje</translation>
-    </message>
-    <message>
-        <source>Unknown artist</source>
-        <translation type="vanished">Neznan izvajalec</translation>
-    </message>
-    <message>
-        <source>Unknown album</source>
-        <translation type="vanished">Neznan album</translation>
-    </message>
-</context>
-<context>
-    <name>MusicListWidget</name>
-    <message>
-        <source>No Music</source>
-        <translation type="vanished">Ni glasbe</translation>
-    </message>
-    <message>
-        <source>No result found</source>
-        <translation type="vanished">Ni rezultatov iskanja</translation>
-    </message>
-    <message>
-        <source>Play All</source>
-        <translation type="vanished">Predvajaj vse</translation>
-    </message>
-    <message>
-        <source>Time added</source>
-        <translation type="vanished">Dodan čas</translation>
-    </message>
-    <message>
-        <source>Title</source>
-        <translation type="vanished">Naslov</translation>
-    </message>
-    <message>
-        <source>Artist</source>
-        <translation type="vanished">Izvajalec</translation>
-    </message>
-    <message>
-        <source>Album name</source>
-        <translation type="vanished">Ime albuma</translation>
-    </message>
-    <message>
-        <source>Custom</source>
-        <translation type="vanished">Po meri</translation>
-    </message>
-</context>
-<context>
-    <name>PlayListItem</name>
-    <message>
-        <location filename="../view/widget/playlistitem.cpp" line="187"/>
-        <source>Are you sure you want to delete this playlist?</source>
+        <location filename="../view/widget/musiclistview.cpp" line="531"/>
+        <location filename="../view/widget/musiclistview.cpp" line="549"/>
+        <source>Play</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/widget/playlistitem.cpp" line="194"/>
-        <source>Delete</source>
-        <translation>Izbriši</translation>
-    </message>
-    <message>
-        <location filename="../view/widget/playlistitem.cpp" line="193"/>
-        <source>Cancel</source>
-        <translation>Prekliči</translation>
+        <location filename="../view/widget/musiclistview.cpp" line="537"/>
+        <location filename="../view/widget/musiclistview.cpp" line="555"/>
+        <source>Rename</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>PlayListView</name>
     <message>
-        <source>New playlist</source>
-        <translation type="obsolete">Nov seznam predvajanja</translation>
+        <location filename="../view/widget/delegate/playitemdelegate.cpp" line="519"/>
+        <source>Unknown artist</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../view/widget/delegate/playitemdelegate.cpp" line="531"/>
+        <source>Unknown album</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/widget/playlistview.cpp" line="542"/>
@@ -973,11 +842,17 @@
     <message>
         <location filename="../view/widget/playlistview.cpp" line="550"/>
         <source>My favorites</source>
-        <translation type="unfinished">Priljubljene</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/widget/playlistview.cpp" line="566"/>
         <source>Add to new playlist</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../view/widget/playlistview.cpp" line="619"/>
+        <location filename="../view/widget/playlistview.cpp" line="629"/>
+        <source>Play</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -986,25 +861,14 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/widget/playlistview.cpp" line="619"/>
-        <location filename="../view/widget/playlistview.cpp" line="629"/>
-        <source>Play</source>
-        <translation>Predvajaj</translation>
-    </message>
-    <message>
         <location filename="../view/widget/playlistview.cpp" line="635"/>
         <source>Add to playlist</source>
-        <translation type="unfinished">Dodaj na seznam predvajanja</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/widget/playlistview.cpp" line="640"/>
         <source>Display in file manager</source>
-        <translation type="unfinished">Prikaži v upravitelju datotek</translation>
-    </message>
-    <message>
-        <location filename="../view/widget/playlistview.cpp" line="646"/>
-        <source>Remove from playlist</source>
-        <translation type="unfinished">Odstrani s seznama predvajanja</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/widget/playlistview.cpp" line="644"/>
@@ -1012,25 +876,30 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../view/widget/playlistview.cpp" line="646"/>
+        <source>Remove from playlist</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="../view/widget/playlistview.cpp" line="648"/>
         <source>Delete from local disk</source>
-        <translation type="unfinished">Izbriši z lokalnega diska</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/widget/playlistview.cpp" line="686"/>
         <source>Encoding</source>
-        <translation type="unfinished">Encoding</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/widget/playlistview.cpp" line="690"/>
         <source>Song info</source>
-        <translation type="unfinished">Informacije o pesmi</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/widget/playlistview.cpp" line="746"/>
         <location filename="../view/widget/playlistview.cpp" line="777"/>
         <source>Cancel</source>
-        <translation type="unfinished">Prekliči</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/widget/playlistview.cpp" line="747"/>
@@ -1045,6 +914,11 @@
     <message>
         <location filename="../view/widget/playlistview.cpp" line="753"/>
         <source>Are you sure you want to remove the selected %1 songs?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../view/widget/playlistview.cpp" line="778"/>
+        <source>Delete</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1063,25 +937,6 @@
         <location filename="../view/widget/playlistview.cpp" line="807"/>
         <source>The song files contained will also be deleted</source>
         <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Rename</source>
-        <translation type="vanished">Preimenuj</translation>
-    </message>
-    <message>
-        <location filename="../view/widget/playlistview.cpp" line="778"/>
-        <source>Delete</source>
-        <translation>Izbriši</translation>
-    </message>
-    <message>
-        <location filename="../view/widget/delegate/playitemdelegate.cpp" line="519"/>
-        <source>Unknown artist</source>
-        <translation type="unfinished">Neznan izvajalec</translation>
-    </message>
-    <message>
-        <location filename="../view/widget/delegate/playitemdelegate.cpp" line="531"/>
-        <source>Unknown album</source>
-        <translation type="unfinished">Neznan album</translation>
     </message>
 </context>
 <context>
@@ -1124,14 +979,14 @@
         <location filename="../core/playlist.cpp" line="473"/>
         <location filename="../core/playlist.cpp" line="764"/>
         <source>Unknown album</source>
-        <translation type="unfinished">Neznan album</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../core/playlist.cpp" line="486"/>
         <location filename="../core/playlist.cpp" line="768"/>
         <location filename="../core/playlist.cpp" line="799"/>
         <source>Unknown artist</source>
-        <translation type="unfinished">Neznan izvajalec</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1139,11 +994,7 @@
     <message>
         <location filename="../core/playlistmanager.cpp" line="88"/>
         <source>New playlist</source>
-        <translation>Nov seznam predvajanja</translation>
-    </message>
-    <message>
-        <source>Artist</source>
-        <translation type="obsolete">Izvajalec</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../core/playlistmanager.cpp" line="172"/>
@@ -1163,22 +1014,22 @@
         <location filename="../core/playlistmanager.cpp" line="184"/>
         <location filename="../core/playlistmanager.cpp" line="208"/>
         <source>All Music</source>
-        <translation>Vsa glasba</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../core/playlistmanager.cpp" line="190"/>
         <source>My favorites</source>
-        <translation>Priljubljene</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../core/playlistmanager.cpp" line="196"/>
         <source>Search result</source>
-        <translation>Rezultati iskanja</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../core/playlistmanager.cpp" line="202"/>
         <source>Play</source>
-        <translation type="unfinished">Predvajaj</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../core/playlistmanager.cpp" line="226"/>
@@ -1187,18 +1038,7 @@
     </message>
 </context>
 <context>
-    <name>PlaylistWidget</name>
-    <message>
-        <source>New playlist</source>
-        <translation type="vanished">Nov seznam predvajanja</translation>
-    </message>
-</context>
-<context>
     <name>QApplication</name>
-    <message>
-        <source>Deepin Music</source>
-        <translation type="vanished">Deepin glasbeni predvajalnik</translation>
-    </message>
     <message>
         <location filename="../view/mainframe.cpp" line="793"/>
         <source>Music</source>
@@ -1208,87 +1048,84 @@
 <context>
     <name>QObject</name>
     <message>
-        <source>Deepin Music</source>
-        <translation type="vanished">Glasba Deepin</translation>
-    </message>
-    <message>
         <location filename="../view/widget/settingsdialog.cpp" line="26"/>
         <source>Minimize to system tray</source>
-        <translation>Pomanjšaj v statusno vrstico</translation>
-    </message>
-    <message>
-        <source>Exit Deepin Music</source>
-        <translation type="vanished">Izhod iz Glasbe Deepin</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="27"/>
-        <source>Exit Music</source>
+        <source>Exit</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="28"/>
-        <source>Autoplay</source>
-        <translation>Samodejno predvajanje</translation>
+        <source>Ask me always</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="29"/>
-        <source>Enable fade in/out</source>
+        <source>Autoplay</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="30"/>
-        <source>Remember playback position</source>
-        <translation>Zapomni si položaj predvajane vsebine</translation>
+        <source>Enable fade in/out</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="31"/>
-        <source>Close Main Window</source>
-        <translation>Zapri glavno okno</translation>
+        <source>Remember playback position</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="32"/>
-        <source>Basic</source>
-        <translation>Osnove</translation>
+        <source>Close Main Window</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="33"/>
-        <source>Play</source>
-        <translation>Predvajaj</translation>
+        <source>Basic</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="34"/>
-        <source>Shortcuts</source>
-        <translation>Bližnjice</translation>
+        <source>Play</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="35"/>
-        <source>Restore Defaults</source>
-        <translation>Obnovi privzeto</translation>
+        <source>Shortcuts</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="36"/>
-        <source>Next</source>
-        <translation>Naslednji</translation>
+        <source>Restore Defaults</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="37"/>
-        <source>Play/Pause</source>
-        <translation>Predvajaj/premor</translation>
+        <source>Next</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="38"/>
-        <source>Previous</source>
-        <translation>Predhodni</translation>
+        <source>Play/Pause</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="39"/>
-        <source>Volume down</source>
-        <translation>Tišje</translation>
+        <source>Previous</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="40"/>
+        <source>Volume down</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../view/widget/settingsdialog.cpp" line="41"/>
         <source>Volume up</source>
-        <translation>Glasneje</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1301,25 +1138,21 @@
     <message>
         <location filename="../view/widget/searchlyricswidget.cpp" line="117"/>
         <source>Title</source>
-        <translation type="unfinished">Naslov</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/widget/searchlyricswidget.cpp" line="118"/>
         <source>Artist</source>
-        <translation type="unfinished">Izvajalec</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/widget/searchlyricswidget.cpp" line="121"/>
         <source>Search</source>
-        <translation type="unfinished">Išči</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>SearchResult</name>
-    <message>
-        <source>Search &quot;%1&quot; in Deepin Music</source>
-        <translation type="vanished">Išči &quot;%1&quot; v Glasbi Deepin</translation>
-    </message>
     <message>
         <location filename="../view/widget/searchresult.cpp" line="61"/>
         <source>Music</source>
@@ -1341,7 +1174,7 @@
     <message>
         <location filename="../view/shortcut.cpp" line="30"/>
         <source>Play</source>
-        <translation type="unfinished">Predvajaj</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/shortcut.cpp" line="31"/>
@@ -1356,22 +1189,22 @@
     <message>
         <location filename="../view/shortcut.cpp" line="33"/>
         <source>Settings</source>
-        <translation type="unfinished">Nastavitve</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/shortcut.cpp" line="39"/>
         <source>Play/Pause</source>
-        <translation type="unfinished">Predvajaj/premor</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/shortcut.cpp" line="39"/>
         <source>Previous</source>
-        <translation type="unfinished">Predhodni</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/shortcut.cpp" line="39"/>
         <source>Next</source>
-        <translation type="unfinished">Naslednji</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/shortcut.cpp" line="39"/>
@@ -1391,7 +1224,7 @@
     <message>
         <location filename="../view/shortcut.cpp" line="41"/>
         <source>Favorite</source>
-        <translation type="unfinished">Priljubljena</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/shortcut.cpp" line="41"/>
@@ -1401,12 +1234,12 @@
     <message>
         <location filename="../view/shortcut.cpp" line="41"/>
         <source>Song info</source>
-        <translation type="unfinished">Informacije o pesmi</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/shortcut.cpp" line="43"/>
         <source>New playlist</source>
-        <translation type="unfinished">Nov seznam predvajanja</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/shortcut.cpp" line="43"/>
@@ -1421,7 +1254,7 @@
     <message>
         <location filename="../view/shortcut.cpp" line="43"/>
         <source>Remove from playlist</source>
-        <translation type="unfinished">Odstrani s seznama predvajanja</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/shortcut.cpp" line="46"/>
@@ -1439,7 +1272,7 @@
     <message>
         <location filename="../view/widget/titlebarwidget.cpp" line="81"/>
         <source>Search</source>
-        <translation>Išči</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 </TS>
