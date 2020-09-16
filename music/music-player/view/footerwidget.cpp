@@ -1333,9 +1333,15 @@ void Footer::onVolumeChanged(int volume)
 
     if (d->m_Mute || volume == 0) {
         d->updateQssProperty(d->btSound, "volume", "mute");
+        d->volSlider->syncMute(true);
     } else {
         d->updateQssProperty(d->btSound, "volume", status);
     }
+
+    if (!d->m_Mute && volume > 0) {
+        d->volSlider->syncMute(false);
+    }
+
     d->m_Volume = volume;
     MusicSettings::setOption("base.play.volume", d->m_Volume);
     // 音量变化为0，设置为静音
