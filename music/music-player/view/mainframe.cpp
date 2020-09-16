@@ -211,14 +211,14 @@ void MainFramePrivate::initMenu()
 
         Dtk::Widget::moveToCenter(configDialog);
 
-        auto curAskCloseAction = MusicSettings::value("base.close.ask_close_action").toBool();
+        auto curAskCloseAction = MusicSettings::value("base.close.is_close").toBool();
         auto curLastPlaylist = MusicSettings::value("base.play.last_playlist").toString();
         auto curLastMeta = MusicSettings::value("base.play.last_meta").toString();
         auto curLastPosition = MusicSettings::value("base.play.last_position").toInt();
         configDialog->exec();
         delete configDialog;
         MusicSettings::sync();
-        MusicSettings::setOption("base.close.ask_close_action", curAskCloseAction);
+        MusicSettings::setOption("base.close.is_close", curAskCloseAction);
         MusicSettings::setOption("base.play.last_playlist", curLastPlaylist);
         MusicSettings::setOption("base.play.last_meta", curLastMeta);
         MusicSettings::setOption("base.play.last_position", curLastPosition);
@@ -1738,8 +1738,19 @@ void MainFrame::resizeEvent(QResizeEvent *e)
 
 void MainFrame::closeEvent(QCloseEvent *event)
 {
-    auto askCloseAction = MusicSettings::value("base.close.ask_close_action").toBool();
-    if (askCloseAction) {
+    auto askCloseAction = MusicSettings::value("base.close.close_action").toInt();
+    switch (askCloseAction) {
+    case 0: {
+        MusicSettings::setOption("base.close.is_close", false);
+        break;
+    }
+    case 1: {
+        MusicSettings::setOption("base.play.state", int(windowState()));
+        MusicSettings::setOption("base.play.geometry", saveGeometry());
+        MusicSettings::setOption("base.close.is_close", true);
+        break;
+    }
+    case 2: {
         CloseConfirmDialog ccd(this);
         // fix close style
         auto titlebarBt = titlebar()->findChild<QWidget *>("DTitlebarDWindowCloseButton");
@@ -1749,23 +1760,26 @@ void MainFrame::closeEvent(QCloseEvent *event)
         }
 
         auto clickedButtonIndex = ccd.exec();
-        qDebug() << "clickedButtonIndex:" << clickedButtonIndex;
         // 1 is confirm button
         if (1 != clickedButtonIndex) {
-            // fix button style
             event->ignore();
             return;
         }
-        MusicSettings::setOption("base.close.ask_close_action", !ccd.isRemember());
-        MusicSettings::setOption("base.close.close_action", ccd.closeAction());
+        if (ccd.isRemember()) {
+            MusicSettings::setOption("base.close.close_action", ccd.closeAction());
+        }
+        if (ccd.closeAction() == 1) {
+            MusicSettings::setOption("base.close.is_close", true);
+        } else {
+            MusicSettings::setOption("base.close.is_close", false);
+        }
+
+        break;
+    }
+    default:
+        break;
     }
 
-    auto closeAction = MusicSettings::value("base.close.close_action").toInt();
-    if (CloseConfirmDialog::QuitOnClose == closeAction) {
-        MusicSettings::setOption("base.play.state", int(windowState()));
-        MusicSettings::setOption("base.play.geometry", saveGeometry());
-        DMainWindow::closeEvent(event);
-    }
     DMainWindow::closeEvent(event);
 }
 

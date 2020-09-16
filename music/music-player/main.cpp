@@ -206,8 +206,8 @@ int main(int argc, char *argv[])
 
     app.connect(&app, &QApplication::lastWindowClosed,
     &mainframe, [ & ]() {
-        auto quit = MusicSettings::value("base.close.close_action").toInt();
-        if (quit == 1) {
+        auto quit = MusicSettings::value("base.close.is_close").toBool();
+        if (quit) {
             music->quit();
         }
     });

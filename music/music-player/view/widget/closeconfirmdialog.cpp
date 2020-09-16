@@ -110,7 +110,7 @@ CloseConfirmDialog::CloseConfirmDialog(QWidget *parent) :
     addButton(tr("Cancel"), false, ButtonNormal);
     addButton(tr("Confirm"), true, ButtonRecommend);
 
-    d->remember->setChecked(!MusicSettings::value("base.close.ask_close_action").toBool());
+    d->remember->setChecked(false);
     if (QuitOnClose == MusicSettings::value("base.close.close_action").toInt()) {
         d->exitBt->setChecked(true);
     } else {
@@ -134,5 +134,5 @@ bool CloseConfirmDialog::isRemember() const
 int CloseConfirmDialog::closeAction() const
 {
     Q_D(const CloseConfirmDialog);
-    return d->exitBt->isChecked() ? QuitOnClose : MiniOnClose;
+    return d->exitBt->isChecked() ?  QuitOnClose : MiniOnClose;
 }

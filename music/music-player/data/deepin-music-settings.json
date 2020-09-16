@@ -140,17 +140,18 @@
                             "type": "radiogroup",
                             "items": [
                                 "Minimize to system tray",
-                                "Exit"
+                                "Exit",
+                                "Ask me always"
                             ],
                             "default": 0
                         },
                         {
-                            "key": "ask_close_action",
+                            "key": "is_close",
                             "name": " ",
                             "hide": true,
                             "type": "checkbox",
-                            "text": "Ask me always",
-                            "default": true
+                            "text": " ",
+                            "default": false
                         }
                     ]
                 }
