@@ -1780,6 +1780,7 @@ void MainFrame::closeEvent(QCloseEvent *event)
         break;
     }
 
+    this->setFocus();
     DMainWindow::closeEvent(event);
 }
 
