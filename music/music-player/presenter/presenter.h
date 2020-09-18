@@ -59,6 +59,8 @@ public:
     void handleQuit();
     void openUri(const QUrl &uri);
     void removeListSame(QStringList *list);
+    //get playmanager pointer
+    void initPlayManager();
 
     QList<PlaylistPtr > allplaylist();
     PlaylistPtr playlist(const QString &id);

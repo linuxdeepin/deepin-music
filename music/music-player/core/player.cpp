@@ -37,7 +37,6 @@
 #include <QThread>
 #include <QFileInfo>
 #include <QDir>
-//#include <QtConcurrent>
 #include <QTimer>
 #include <QMutex>
 #include <DRecentManager>
@@ -63,7 +62,7 @@
 DCORE_USE_NAMESPACE
 
 static QMap<QString, bool>  sSupportedSuffix;
-static QStringList          sSupportedSuffixList;
+QStringList          sSupportedSuffixList;
 static QStringList          sSupportedFiterList;
 static QStringList          sSupportedMimeTypes;
 
@@ -143,15 +142,13 @@ class PlayerPrivate
 public:
     PlayerPrivate(Player *parent) : q_ptr(parent)
     {
-        /*-------AudioPlayer-------*/
-//        QtConcurrent::run([ = ] {
-//
         qvinstance = new VlcInstance(VlcCommon::args(), nullptr);
         qvplayer = new VlcMediaPlayer(qvinstance);
         qvplayer->equalizer()->setPreamplification(12);
         qvmedia = new VlcMedia();
-//
-//        });
+
+        qvplayer->equalizer()->setEnabled(true);
+        initConnection();
     }
 
     void initConnection();
@@ -320,7 +317,7 @@ void PlayerPrivate::selectNext(const MetaPtr info, Player::PlaybackMode mode)
     }
     MetaPtr cinfo = info;
     if (cinfo == nullptr) {
-        for (int i = 0; i < curPlaylist->allmusic().size(); ++i) {
+        for (int i = 0; i < curPlaylist->musicCount(); ++i) {
             cinfo = curPlaylist->music(i);
             if (cinfo != nullptr)
                 break;
@@ -345,7 +342,7 @@ void PlayerPrivate::selectNext(const MetaPtr info, Player::PlaybackMode mode)
         }
         if (curMeta->invalid && !invalidFlag) {
             int curNum = 0;
-            while (curNum < curPlaylist->allmusic().size()) {
+            while (curNum < curPlaylist->musicCount()) {
                 curMeta = curPlaylist->next(curMeta);
                 if (!curMeta->invalid)
                     break;
@@ -403,7 +400,7 @@ void PlayerPrivate::selectPrev(const MetaPtr info, Player::PlaybackMode mode)
         }
         if (curMeta->invalid && !invalidFlag) {
             int curNum = 0;
-            while (curNum < curPlaylist->allmusic().size()) {
+            while (curNum < curPlaylist->musicCount()) {
                 curMeta = curPlaylist->prev(curMeta);
                 if (!curMeta->invalid || QFile::exists(curMeta->localPath))
                     break;
@@ -437,7 +434,7 @@ void PlayerPrivate::selectPrev(const MetaPtr info, Player::PlaybackMode mode)
 
 Player::Player(QObject *parent) : QObject(parent), d_ptr(new PlayerPrivate(this))
 {
-    initMiniTypes();
+    //initMiniTypes();
 }
 
 void Player::init()
@@ -449,7 +446,7 @@ void Player::init()
     d->fadeOutAnimation = new QPropertyAnimation(this, "fadeInOutFactor");
     d->fadeInAnimation = new QPropertyAnimation(this, "fadeInOutFactor");
 
-    d->initConnection();
+    //d->initConnection();
 }
 
 void Player::setActivePlaylist(PlaylistPtr playlist)

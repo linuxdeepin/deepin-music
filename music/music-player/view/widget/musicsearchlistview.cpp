@@ -120,7 +120,7 @@ void MusicSearchListview::onMusiclistChanged(QString text, PlaylistPtr playlist)
     Q_D(MusicSearchListview);
 
     if (playlist.isNull()) {
-        qWarning() << "can not change to emptry playlist";
+        qWarning() << "can not change to empty playlist";
         return;
     }
     d->searchText = text;
@@ -245,7 +245,7 @@ void MusicSearchListview::updateList()
     Q_D(MusicSearchListview);
     PlaylistPtr playlist = d->model->playlist();
     if (playlist.isNull()) {
-        qWarning() << "can not change to emptry playlist";
+        qWarning() << "can not change to empty playlist";
         return;
     }
 

@@ -68,6 +68,8 @@
 #include "loadwidget.h"
 #include "musiclistwidget.h"
 #include "shortcut.h"
+#include "playlistmanager.h"
+
 #include <DSettingsDialog>
 #include <DMessageManager>
 #include <QShortcut>
@@ -112,7 +114,6 @@ public:
     //! ui: show info dialog
     void showInfoDialog(const MetaPtr meta);
 
-    VlcMediaPlayer      *m_VlcMediaPlayer       = nullptr;
     DequalizerDialog    *equalizerDialog        = nullptr;
     SpeechCenter        *m_SpeechCenter         = nullptr;
     DWidget             *centralWidget          = nullptr;
@@ -185,11 +186,6 @@ void MainFramePrivate::initMenu()
         Q_EMIT q->addPlaylist(true);
     });
 
-    //    auto addmusic = new QAction(MainFrame::tr("Add folder"), q);
-    //    q->connect(addmusic, &QAction::triggered, q, [ = ](bool) {
-    //        q->onSelectImportDirectory();
-    //    });
-
     auto addmusicfiles = new QAction(MainFrame::tr("Add music"), q);
     q->connect(addmusicfiles, &QAction::triggered, q, [ = ](bool) {
         q->onSelectImportFiles();
@@ -206,7 +202,6 @@ void MainFramePrivate::initMenu()
     auto settings = new QAction(MainFrame::tr("Settings"), q);
     q->connect(settings, &QAction::triggered, q, [ = ](bool) {
         DSettingsDialog *configDialog = new DSettingsDialog(q);
-        // configDialog->setProperty("_d_QSSThemename", "dark");
         configDialog->updateSettings(MusicSettings::settings());
 
         Dtk::Widget::moveToCenter(configDialog);
@@ -346,10 +341,6 @@ void MainFramePrivate::initUI(bool showLoading)
     contentLayout->setContentsMargins(0, 0, 0, 0);
     q->setCentralWidget(centralWidget);
 
-    // contentLayout->setContentsMargins(20, 20, 20, 0);
-    // contentLayout->setMargin(0);
-    // contentLayout->setSpacing(0);
-
     if (showLoading) {
         musicListWidget = new MusicListWidget;
         musicListWidget->setContentsMargins(0, titlebar->height(), 0, FooterHeight + 10);
@@ -401,7 +392,6 @@ void MainFramePrivate::postInitUI()
     infoDialog->setThemeType(themeType);
     infoDialog->hide();
     m_SpeechCenter = nullptr/*SpeechCenter::getInstance()*/;
-    m_VlcMediaPlayer = Player::instance()->core();
 
     // 界面刷新一次，使能禁用只设置一次
     playListWidget = footer->getPlayListWidget();
@@ -416,10 +406,10 @@ void MainFramePrivate::postInitUI()
 
     animationTimer = new QTimer(q); //animation timer
     animationTimer->setSingleShot(true);
-//    titlebarwidget->setSearchEnable(false);  //界面只刷新一次
     footer->setFocus();
     updateSize(q->size());
-    infoDialog->move(q->pos().x() + q->size().width() / 2 - infoDialog->width() / 2, q->pos().y() + titlebar->height());
+    //why should we move this?
+    //infoDialog->move(q->pos().x() + q->size().width() / 2 - infoDialog->width() / 2, q->pos().y() + titlebar->height());
 
     if (showID) {
         contentLayout->setCurrentIndex(0);
@@ -554,17 +544,14 @@ void MainFramePrivate:: slideToImportView()
     if (importWidget->isVisible()) {
         importWidget->showImportHint();
         footer->enableControl(false);
-        // importWidget->raise();
         return;
     }
 
-    //setPlayListVisible(false);
     playListWidget->hide();
     auto current = currentWidget ? currentWidget : playListWidget;
     importWidget->showImportHint();
     footer->enableControl(false);
     importWidget->setFixedSize(current->size());
-    qDebug() << "show importWidget" << current << importWidget;
 
     WidgetHelper::slideRight2LeftWidget(
         current, importWidget, AnimationDelay);
@@ -596,7 +583,6 @@ void MainFramePrivate:: slideToMusicListView(bool keepPlaylist)
     WidgetHelper::slideTop2BottomWidget(
         current, musicListWidget, AnimationDelay);
     q->update();
-    //disableControl(AnimationDelay);
     currentWidget = musicListWidget;
     titlebar->raise();
     titlebarwidget->setEnabled(true);
@@ -913,43 +899,9 @@ void MainFrame::postInitUI()
     });
 }
 
-void MainFrame::quickBinding(Presenter *presenter)
-{
-    Q_D(MainFrame);
-
-    connect(presenter, &Presenter::showMusicList,
-    this, [ = ](PlaylistPtr playlist) {
-        d->musicListWidget->show();
-        d->currentWidget = d->musicListWidget;
-        d->musicListWidget->onMusiclistChanged(playlist);
-
-        if (d->importWidget) {
-            d->importWidget->hide();
-        }
-
-        if (d->playListWidget) {
-            d->playListWidget->onMusiclistChanged(playlist);
-            d->disableControl(false);
-        }
-
-        if (d->titlebarwidget) {
-            d->titlebarwidget->setEnabled(true);
-            d->titlebarwidget->setSearchEnable(true);
-        }
-
-        if (d->newSonglistAction) {
-            d->newSonglistAction->setEnabled(true);
-        }
-    });
-
-    connect(presenter, &Presenter::playlistAdded,
-            d->musicListWidget,  &MusicListWidget::onPlaylistAdded);
-}
-
 void MainFrame::binding(Presenter *presenter)
 {
     Q_D(MainFrame);
-
 
     d->playListWidget->setCurPlaylist(presenter->playlist(PlayMusicListID));
     d->footer->setCurPlaylist(presenter->playlist(PlayMusicListID));
@@ -1113,7 +1065,6 @@ void MainFrame::binding(Presenter *presenter)
 
     connect(presenter, &Presenter::metaLibraryClean,
     this, [ = ]() {
-        MusicSettings::setOption("base.play.showFlag", 0);
         d->slideToImportView();
         d->titlebarwidget->clearSearch();
         d->footer->onMediaLibraryClean();
@@ -1379,9 +1330,6 @@ void MainFrame::binding(Presenter *presenter)
     connect(d->footer, &Footer::localMuteStat,
             presenter,  &Presenter::localMuteChanged);
 
-    // musiclist
-//    connect(presenter, &Presenter::playlistAdded,
-//            d->musicListWidget,  &MusicListWidget::onPlaylistAdded);
     connect(presenter, &Presenter::musicPlayed,
             d->musicListWidget,  &MusicListWidget::onMusicPlayed);
     connect(presenter, &Presenter::currentMusicListChanged,
@@ -1461,6 +1409,9 @@ void MainFrame::binding(Presenter *presenter)
 
     connect(presenter, &Presenter::hidewaveformScale, d->footer, &Footer::hidewaveform);
 
+    connect(presenter, &Presenter::playlistAdded,
+            d->musicListWidget,  &MusicListWidget::onPlaylistAdded);
+
     bindSpeechConnect(presenter);
 
     bindEqualizerConnect(presenter);
@@ -1517,6 +1468,29 @@ void MainFrame::bindEqualizerConnect(Presenter *presenter)
             presenter, &Presenter::setEqualizerbauds);
     connect(d->equalizerDialog, &DequalizerDialog::setEqualizerIndex,
             presenter, &Presenter::setEqualizerCurMode);
+}
+
+void MainFrame::initAllData()
+{
+    Q_D(MainFrame);
+    d->musicListWidget->show();
+    d->currentWidget = d->musicListWidget;
+    //we need reload music when ui gets ready
+    d->musicListWidget->onMusiclistChanged(PlaylistManager::instance()->playlist(AllMusicListID));
+    if (d->playListWidget) {
+        d->playListWidget->onMusiclistChanged(PlaylistManager::instance()->playlist(PlayMusicListID));
+        d->playListWidget->hide();
+        d->disableControl(false);
+    }
+
+    if (d->titlebarwidget) {
+        d->titlebarwidget->setEnabled(true);
+        d->titlebarwidget->setSearchEnable(true);
+    }
+
+    if (d->newSonglistAction) {
+        d->newSonglistAction->setEnabled(true);
+    }
 }
 
 void MainFrame::focusPlayList()
@@ -1595,7 +1569,6 @@ void MainFrame::onSelectImportFiles()
 
 void MainFrame::onClickedImportFiles(QStringList files)
 {
-//    /Q_D(const MainFrame);
     Q_EMIT importSelectFiles(files, nullptr);
 }
 
@@ -1688,7 +1661,6 @@ bool MainFrame::eventFilter(QObject *obj, QEvent *e)
                     scmodifiers == keyModifiers &&
                     key == sckey
                     && !ke->isAutoRepeat()) {
-                //qDebug() << "match " << optkey << ke->count() << ke->isAutoRepeat();
                 Q_EMIT  triggerShortcutAction(optkey);
                 return true;
             }
@@ -1712,7 +1684,6 @@ bool MainFrame::eventFilter(QObject *obj, QEvent *e)
         QMouseEvent *me = static_cast<QMouseEvent *>(e);
         if (obj->objectName() == this->objectName() || this->objectName() + "Window" == obj->objectName()) {
             QPoint mousePos = me->pos();
-            //            qDebug() << "lyricView checkHiddenSearch" << me->pos() << QCursor::pos() << obj;
             d->lyricWidget->checkHiddenSearch(mousePos);
         }
     }
@@ -1749,7 +1720,6 @@ void MainFrame::closeEvent(QCloseEvent *event)
         }
 
         auto clickedButtonIndex = ccd.exec();
-        qDebug() << "clickedButtonIndex:" << clickedButtonIndex;
         // 1 is confirm button
         if (1 != clickedButtonIndex) {
             // fix button style
@@ -1769,11 +1739,11 @@ void MainFrame::closeEvent(QCloseEvent *event)
     DMainWindow::closeEvent(event);
 }
 
-void MainFrame::paintEvent(QPaintEvent *e)
-{
-    //Q_D(MainFrame);
-    QPainter p(this);
+//void MainFrame::paintEvent(QPaintEvent *e)
+//{
+//    //Q_D(MainFrame);
+//    QPainter p(this);
 
-    DMainWindow::paintEvent(e);
-}
+//    DMainWindow::paintEvent(e);
+//}
 

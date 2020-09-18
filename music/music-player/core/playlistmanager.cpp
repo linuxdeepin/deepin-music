@@ -43,12 +43,11 @@ const QString ArtistResultListID    = "artistResult";
 const QString SearchMusicListID     = "search";
 const QString NewMusicListID        = "new";
 
-static PlaylistMeta emptyInfo;
 
 class PlaylistManagerPrivate
 {
 public:
-    PlaylistManagerPrivate(PlaylistManager *parent) : q_ptr(parent) {}
+    PlaylistManagerPrivate(PlaylistManager *parent) : q_ptr(parent) ,initTag(-1){}
 
     inline uint indexUUID(const QString &uuid)
     {
@@ -57,6 +56,7 @@ public:
 
     QStringList                 sortUUIDs;
     QMap<QString, PlaylistPtr>  playlists;
+    qint32 initTag;
 
     PlaylistManager *q_ptr;
     Q_DECLARE_PUBLIC(PlaylistManager)
@@ -108,9 +108,13 @@ void PlaylistManager::load()
 
     for (auto &playlistmeta : MediaDatabase::instance()->allPlaylistMeta()) {
         PlaylistPtr emptylist(new Playlist(playlistmeta));
-        emptylist->load();
+        if(playlistmeta.uuid == AllMusicListID) //only load allmusic page when start
+        {
+            QStringList str ;
+            QMap<int, QString> tmap = MediaDatabase::instance()->getInitData(str);
+            emptylist->load(tmap ,str);
+        }
         insertPlaylist(playlistmeta.uuid, emptylist);
-
         d->sortUUIDs << playlistmeta.uuid;      //读取数据库的数据，直接进行排序
     }
 
@@ -243,11 +247,25 @@ void PlaylistManager::load()
     QSqlDatabase::database().commit();
 }
 
+void PlaylistManager::loadLeftPlayList()
+{
+    /**********************************************************
+     * to make music start faster, we choose to load data of
+     * other pages when UI has already displayed
+     * ******************************************************/
+    for (auto &playlistmeta : MediaDatabase::instance()->allPlaylistMeta()) {
+        if(playlistmeta.uuid == AllMusicListID)
+            continue;
+        QStringList str ;
+        QMap<int, QString> tmap = MediaDatabase::instance()->getInitData(playlistmeta.uuid ,str);
+        PlaylistPtr pptr =  playlist(playlistmeta.uuid);
+        pptr->load(tmap , str);
+    }
+}
+
 void PlaylistManager::saveSortOrder()
 {
     Q_D(PlaylistManager);
-
-    qDebug() << d->sortUUIDs;
 
     for (int sortID = 0; sortID < d->sortUUIDs.length(); ++sortID) {
         auto uuid = d->sortUUIDs.value(sortID);
@@ -258,6 +276,16 @@ void PlaylistManager::saveSortOrder()
         if (! query.exec()) {
             qDebug() << query.lastError();
         }
+    }
+}
+
+void PlaylistManager::initLoad()
+{
+    Q_D(PlaylistManager);
+    if(d->initTag) //just init once
+    {
+        emit paintLoad(true);
+        d->initTag = 0;
     }
 }
 

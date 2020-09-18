@@ -45,6 +45,22 @@ public:
     //! sync query interface
     static QStringList allPlaylistDisplayName();
     QList<PlaylistMeta> allPlaylistMeta();
+    /**
+     * @brief getInitData 获取主页面初始数据
+     * @param struuid  主页面的id
+     * @param strlist  重复数据
+     * @return  所有非重复数据
+     */
+    QMap<int, QString> getInitData(QStringList &strlist);
+
+    /**
+     * @brief getInitData 获取页面的所有数据
+     * @param struuid  页面的id
+     * @param strlist  重复数据
+     * @return  所有非重复数据
+     */
+    QMap<int, QString> getInitData(const QString& struuid ,QStringList &strlist);
+
     bool playlistExist(const QString &uuid);
 
 signals:

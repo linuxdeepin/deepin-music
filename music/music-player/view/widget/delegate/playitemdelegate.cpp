@@ -33,20 +33,13 @@
 
 #include "../playlistview.h"
 #include "core/medialibrary.h"
+#include "playlistmanager.h"
 
 DWIDGET_USE_NAMESPACE
 
 const int PlayItemLeftMargin = 15;
 const int PlayItemRightMargin = 20;
 const int PlayItemNumberMargin = 10;
-
-//static inline QString numberString(int row, const QStyleOptionViewItem &option)
-//{
-//    auto listview = qobject_cast<const MusicListView *>(option.widget);
-//    auto itemCount = listview->model()->rowCount();
-//    auto itemCountString = QString("%1").arg(itemCount);
-//    return QString("%1").arg(int(row), itemCountString.length(), 10, QChar('0'));
-//}
 
 static inline int pixel2point(int pixel)
 {
@@ -213,14 +206,18 @@ static inline QRect colRect(int col, const QStyleOptionViewItem &option)
     return option.rect.marginsRemoved(QMargins(0, 0, 0, 0));
 }
 
-
+static int ft = -1;
 void PlayItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option,
                              const QModelIndex &index) const
 {
+    if(ft){
+        //load data finished ,start to load left components
+        //but this function just excute once
+        PlaylistManager::instance()->initLoad();
+        ft = 0;
+    }
     auto listview = qobject_cast<const PlayListView *>(option.widget);
     if (listview->viewMode() == QListView::IconMode) {
-        //QStyledItemDelegate::paint(painter, option, index);
-
         auto hash = index.data().toString();
         auto meta = MediaLibrary::instance()->meta(hash);
         if (meta.isNull())
@@ -232,11 +229,6 @@ void PlayItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
         painter->setRenderHint(QPainter::SmoothPixmapTransform);
 
         auto background = option.palette.background();
-
-        if (option.state & QStyle::State_Selected) {
-//            background = option.palette.highlight();
-        }
-
         painter->fillRect(option.rect, background);
 
         //绘制阴影

@@ -111,7 +111,7 @@ static const QString DatabaseUUID = "0fcbd091-2356-161c-9026-f49779f9c71c40";
 int databaseVersion()
 {
     QSqlQuery query;
-    query.prepare("SELECT version FROM info where uuid = :uuid;");
+    query.prepare("SELECT version FROM info where uuid = :uuid");
     query.bindValue(":uuid", DatabaseUUID);
     if (!query.exec()) {
         qWarning() << query.lastError();
@@ -251,16 +251,15 @@ MediaDatabase::MediaDatabase(QObject *parent) : QObject(parent)
 void MediaDatabase::init()
 {
     createConnection();
-    margeDatabase();
-
     // sqlite must run in one thread!!!
     m_writer = new MediaDatabaseWriter;
-    ThreadPool::instance()->moveToNewThread(m_writer);//将读写耗时操作放到子线程操作
-    connect(this, &MediaDatabase::initWrter,
-            m_writer, &MediaDatabaseWriter::initDataBase);
-    Q_EMIT initWrter();
-    bind();
+//    ThreadPool::instance()->moveToNewThread(m_writer);//将读写耗时操作放到子线程操作
+//    connect(this, &MediaDatabase::initWrter,
+//            m_writer, &MediaDatabaseWriter::initDataBase);
+//    Q_EMIT initWrter();
+    m_writer->initDataBase();
 
+    bind();
 
     QSqlDatabase::database().transaction();
     PlaylistMeta playlistMeta;
@@ -429,6 +428,50 @@ QList<PlaylistMeta> MediaDatabase::allPlaylistMeta()
         list << playlistMeta;
     }
     return list;
+}
+
+QMap<int, QString> MediaDatabase::getInitData(QStringList &strlist)
+{
+    QSqlQuery query;
+    query.prepare(QString("SELECT music_id, sort_id FROM playlist_all"));
+    if (!query.exec()) {
+        qWarning() << query.lastError();
+        return QMap<int, QString>();
+    }
+
+    QMap<int, QString> sort;
+    while (query.next()) {
+        auto musicID = query.value(0).toString();
+        auto sortID = query.value(1).toInt();
+        if (!sort.contains(sortID)) {
+            sort.insert(sortID, musicID);
+        } else {
+            strlist << musicID;
+        }
+    }
+    return sort;
+}
+
+QMap<int, QString>  MediaDatabase::getInitData(const QString &struuid ,QStringList& strlist)
+{
+    QSqlQuery query;
+    query.prepare(QString("SELECT music_id, sort_id FROM playlist_%1 ").arg(struuid));
+    if (!query.exec()) {
+        qWarning() << query.lastError();
+        return QMap<int, QString>();
+    }
+
+    QMap<int, QString> sort;
+    while (query.next()) {
+        auto musicID = query.value(0).toString();
+        auto sortID = query.value(1).toInt();
+        if (!sort.contains(sortID)) {
+            sort.insert(sortID, musicID);
+        } else {
+            strlist << musicID;
+        }
+    }
+    return sort;
 }
 
 static MetaPtrList searchTitle(const QString &queryString)

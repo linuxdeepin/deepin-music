@@ -35,12 +35,13 @@ public:
     MusicApp(MainFrame *frame, QObject *parent = nullptr);
     ~MusicApp();
 
-    void initUI(bool showFlag);
-    void initConnection(bool showFlag);
+    void initUI(bool bshow);
+
     void show();
     void quit();
     void onStartImport(QStringList files);
-public:
+public slots:
+    void initConnection(bool show);
 signals:
     void sigStartImport(QStringList files);
 

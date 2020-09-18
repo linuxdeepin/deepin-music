@@ -44,11 +44,12 @@
 #include "widget/musicimagebutton.h"
 
 #include "util/pinyinsearch.h"
-
 #include "widget/playlistview.h"
 #include "widget/musiclistdataview.h"
 #include "widget/ddropdown.h"
 #include "widget/musicimagebutton.h"
+#include "playlistmanager.h"
+
 #include <malloc.h>
 
 DWIDGET_USE_NAMESPACE
@@ -1156,10 +1157,6 @@ MusicListDataWidget::MusicListDataWidget(QWidget *parent) :
     d->infoLabel->setPalette(infoLabelPalette);
     d->infoLabel->setForegroundRole(DPalette::ButtonText);
 
-//    d->btIconMode = new MusicImageButton(":/mpimage/light/normal/picture_list_normal.svg",
-//                                         ":/mpimage/light/hover/picture_list_hover.svg",
-//                                         ":/mpimage/light/press/picture_list_press.svg",
-//                                         ":/mpimage/light/active/picture_list_active.svg");
     d->btIconMode = new DToolButton;
     d->btIconMode->setFixedSize(36, 36);
     d->btIconMode->setObjectName("MusicListDataWidgetIconMode");
@@ -1214,17 +1211,7 @@ MusicListDataWidget::MusicListDataWidget(QWidget *parent) :
     emptyLayout->addWidget(d->emptySearchHits, 0, Qt::AlignCenter);
     emptyLayout->addStretch(100);
 
-    d->albumListView = new MusicListDataView;
-    d->artistListView = new MusicListDataView;
-    d->musicListView = new PlayListView(true, false);
-    d->musicListView->hide();
-
-    d->musicListView->setFocusPolicy(Qt::StrongFocus);
-    d->musicListView->installEventFilter(this);
-
-    layout->setContentsMargins(0, 1, 0, 0);
-
-    /*---------------tabWidget----------------*/
+    /*---------------tabWidget----------------*/ //for search
     d->tabWidget = new DTabWidget();
     d->songListView     = new PlayListView(true, false);
     d->singerListView   = new MusicListDataView();
@@ -1237,6 +1224,21 @@ MusicListDataWidget::MusicListDataWidget(QWidget *parent) :
     d->songListView->hide();
     d->singerListView->hide();
     d->albListView->hide();
+
+    /**************main play list*******************/
+    d->albumListView = new MusicListDataView;
+    d->artistListView = new MusicListDataView;
+    d->musicListView = new PlayListView(true, false);
+    PlaylistPtr ptr = PlaylistManager::instance()->playlist(AllMusicListID);
+    if(!ptr->isEmpty()){
+        onMusiclistChanged(ptr);
+    }
+    d->musicListView->show();
+
+    d->musicListView->setFocusPolicy(Qt::StrongFocus);
+    d->musicListView->installEventFilter(this);
+
+    layout->setContentsMargins(0, 1, 0, 0);
 
     layout->addWidget(d->actionBar, 0, Qt::AlignTop);
     layout->addLayout(emptyLayout, 0);
@@ -1502,7 +1504,7 @@ void MusicListDataWidget::onSearchText(QString str)
 {
     Q_D(MusicListDataWidget);
     if (d->curPlaylist.isNull()) {
-        qWarning() << "can not change to emptry playlist";
+        qWarning() << "can not change to empty playlist";
         return;
     }
 
@@ -1512,7 +1514,7 @@ void MusicListDataWidget::onSearchText(QString str)
 void MusicListDataWidget::selectMusiclistChanged(PlaylistPtr playlist)
 {
     if (playlist.isNull()) {
-        qWarning() << "can not change to emptry playlist";
+        qWarning() << "can not change to empty playlist";
         return;
     }
 
@@ -1526,7 +1528,7 @@ void MusicListDataWidget::selectMusiclistChanged(PlaylistPtr playlist)
 void MusicListDataWidget::onMusiclistChanged(PlaylistPtr playlist)
 {
     if (playlist.isNull()) {
-        qWarning() << "can not change to emptry playlist";
+        qWarning() << "can not change to empty playlist";
         return;
     }
 

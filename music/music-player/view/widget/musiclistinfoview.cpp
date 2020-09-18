@@ -303,7 +303,7 @@ void MusicListInfoView::onMusiclistChanged(PlaylistPtr playlist, const QString n
     Q_D(MusicListInfoView);
 
     if (playlist.isNull()) {
-        qWarning() << "can not change to emptry playlist";
+        qWarning() << "can not change to empty playlist";
         return;
     }
 

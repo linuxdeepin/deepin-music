@@ -75,25 +75,24 @@ typedef int (*codec_close_function)(AVCodecContext *);
 typedef int (*codec_send_packet_function)(AVCodecContext *, const AVPacket *);
 typedef int (*codec_receive_frame_function)(AVCodecContext *, AVFrame *);
 
+extern  void  initMiniTypes();
+extern  QStringList sSupportedSuffixList;
 class MediaLibraryPrivate
 {
 public:
     MediaLibraryPrivate(MediaLibrary *parent) : q_ptr(parent)
     {
-        QTimer::singleShot(200, nullptr, [ = ]() {
-            losslessSuffixs.insert("flac", true);
-            losslessSuffixs.insert("ape", true);
-            losslessSuffixs.insert("wav", true);
-
-            auto suffixList = Player::instance()->supportedSuffixList();
-            for (auto suffix : suffixList) {
-                supportedSuffixs.insert(suffix, true);
-            }
-
+        losslessSuffixs.insert("flac", true);
+        losslessSuffixs.insert("ape", true);
+        losslessSuffixs.insert("wav", true);
+        initMiniTypes();
+        QStringList suflist = sSupportedSuffixList;
+        for (auto suffix : suflist) {
+            supportedSuffixs.insert(suffix, true);
+        }
 #ifdef SUPPORT_INOTIFY
             watcher = new InotifyEngine;
 #endif
-        });
     }
 
     MetaPtr createMeta(const QFileInfo &fileInfo);
@@ -105,11 +104,8 @@ public:
     void startMonitor()
     {
         auto metalist = MediaDatabase::instance()->allmetas();
-        QMap<QString, QString> dirs;
         for (auto &meta : metalist) {
-            QFileInfo metafi(meta.localPath);
             metas.insert(meta.hash, MetaPtr(new MediaMeta(meta)));
-            dirs.insert(metafi.absolutePath(), metafi.absolutePath());
         }
 
 #ifdef SUPPORT_INOTIFY
@@ -382,7 +378,6 @@ void MediaLibrary::init()
 {
     Q_D(MediaLibrary);
     d->startMonitor();
-    MetaDetector::init();
 }
 
 void MediaLibrary::removeMediaMetaList(const MetaPtrList metalist)

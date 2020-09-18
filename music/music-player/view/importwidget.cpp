@@ -80,7 +80,6 @@ ImportWidget::ImportWidget(QWidget *parent) : DFrame(parent), d_ptr(new ImportWi
     QColor sbcolor("#000000");
     sbcolor.setAlphaF(0);
     pl.setColor(DPalette::Shadow, sbcolor);
-//    d->importButton->setPalette(pl);
     d->importButton->setObjectName("ImportViewImportButton");
     d->importButton->setFixedSize(302, 36);
     d->importButton->setText(tr("Open Folder"));
@@ -90,7 +89,6 @@ ImportWidget::ImportWidget(QWidget *parent) : DFrame(parent), d_ptr(new ImportWi
 
     d->addMusicButton = new DPushButton;
     d->addMusicButton->setFont(importButtonFont);
-//    d->addMusicButton->setPalette(pl);
     d->addMusicButton->setObjectName("ImportViewImportButton");
     d->addMusicButton->setFixedSize(302, 36);
     d->addMusicButton->setText(tr("Add Music"));
@@ -137,12 +135,8 @@ ImportWidget::ImportWidget(QWidget *parent) : DFrame(parent), d_ptr(new ImportWi
         showWaitHint();
         Q_EMIT this->scanMusicDirectory();
     });
-//    bool themeFlag = false;
-//    int themeType = MusicSettings::value("base.play.theme").toInt(&themeFlag);
-//    if (!themeFlag)
-//        themeType = 1;
-    int themeType = DGuiApplicationHelper::instance()->themeType();
-    slotTheme(themeType);
+
+    slotTheme(DGuiApplicationHelper::instance()->themeType());
 }
 
 ImportWidget::~ImportWidget()
@@ -253,15 +247,9 @@ void ImportWidget::slotTheme(int type)
         QColor sbcolor("#000000");
         sbcolor.setAlphaF(0);
         pl.setColor(DPalette::Shadow, sbcolor);
-//        d->importButton->setPalette(pl);
-
-//        d->addMusicButton->setPalette(pl);
-
         QPalette pa = d->text->palette();
         pa.setColor(QPalette::WindowText, "#777777");
-//        d->text->setPalette(pa);
         d->text->setForegroundRole(QPalette::WindowText);
-//        d->text->setForegroundRole(DPalette::TextTips);
     } else {
         rStr = "dark";
         auto pl = d->importButton->palette();
@@ -271,15 +259,9 @@ void ImportWidget::slotTheme(int type)
         QColor sbcolor("#0091FF");
         sbcolor.setAlphaF(0.1);
         pl.setColor(DPalette::Shadow, sbcolor);
-//        d->importButton->setPalette(pl);
-
-//        d->addMusicButton->setPalette(pl);
-
         QPalette pa = d->text->palette();
         pa.setColor(QPalette::WindowText, "#798190");
-//        d->text->setPalette(pa);
         d->text->setForegroundRole(QPalette::WindowText);
-//        d->text->setForegroundRole(DPalette::TextTips);
     }
     d->logo->setPixmap(DHiDPIHelper::loadNxPixmap(QString(":/mpimage/%1/import_music.svg").arg(rStr)));
 }

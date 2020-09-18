@@ -270,6 +270,11 @@ MetaPtrList Playlist::allmusic() const
     return mlist;
 }
 
+int Playlist::musicCount()
+{
+    return playlistMeta.sortMetas.size();
+}
+
 PlayMusicTypePtrList Playlist::playMusicTypePtrList() const
 {
     PlayMusicTypePtrList mlist;
@@ -331,27 +336,10 @@ void Playlist::appendMusicTypePtrListData(PlayMusicTypePtr musicTypePtr)
 }
 
 
-void Playlist::load()
+void Playlist::load(const QMap<int, QString>& sortmap ,const QStringList& lst)
 {
-    QMap<int, QString> sortHashs;
-
-    QSqlQuery query;
-    query.prepare(QString("SELECT music_id, sort_id FROM playlist_%1").arg(playlistMeta.uuid));
-    if (!query.exec()) {
-        qWarning() << query.lastError();
-        return;
-    }
-
-    QStringList toAppendMusicHashs;
-    while (query.next()) {
-        auto musicID = query.value(0).toString();
-        auto sortID = query.value(1).toInt();
-        if (!sortHashs.contains(sortID)) {
-            sortHashs.insert(sortID, musicID);
-        } else {
-            toAppendMusicHashs << musicID;
-        }
-    }
+    QMap<int, QString> sortHashs = sortmap ;
+    QStringList toAppendMusicHashs = lst;
 
     // remove invalid meta
     auto sortIDs = sortHashs.keys();
@@ -362,7 +350,6 @@ void Playlist::load()
         playlistMeta.sortMetas << sortHashs.value(sortID);
     }
     playlistMeta.sortMetas << toAppendMusicHashs;
-
 
     QStringList toRemoveMusicHashs;
     for (auto hash : playlistMeta.sortMetas) {
@@ -388,7 +375,7 @@ void Playlist::load()
         for (auto i = 0; i < playlistMeta.sortMetas.length(); ++i) {
             hashIndexs.insert(playlistMeta.sortMetas.value(i), i);
         }
-        this->saveSort(hashIndexs);
+        saveSort(hashIndexs);  //should i give up sort ?
     }
 }
 
@@ -422,7 +409,6 @@ void Playlist::appendMusicList(const MetaPtrList metalist)
         newMetalist << meta;
         playlistMeta.sortMetas << meta->hash;
         playlistMeta.metas.insert(meta->hash, meta);
-        MusicSettings::setOption("base.play.showFlag", 1);
     }
 
     Q_EMIT MediaDatabase::instance()->insertMusicList(newMetalist, this->playlistMeta);

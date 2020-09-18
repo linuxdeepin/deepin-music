@@ -23,11 +23,12 @@
 
 #include <QObject>
 #include <QScopedPointer>
+#include <util/singleton.h>
 
 #include "playlist.h"
 
 class PlaylistManagerPrivate;
-class PlaylistManager : public QObject
+class PlaylistManager : public QObject, public DMusic::DSingleton<PlaylistManager>
 {
     Q_OBJECT
 public:
@@ -44,12 +45,20 @@ public:
     void onCustomResort(QStringList uuids);
 
     void load();
+    /**
+     * @brief reloadPlayList  load data to left playlist
+     */
+    void loadLeftPlayList();
     void saveSortOrder();
 
+    //init once
+    void initLoad();
 signals:
     void musiclistAdded(PlaylistPtr playlist, const MetaPtrList metalist);
     void musiclistRemoved(PlaylistPtr playlist, const MetaPtrList metalist);
     void playlistRemove(PlaylistPtr playlist);
+
+    void paintLoad(bool b); //load after paint ready
 
 private:
     void insertPlaylist(const QString &id, PlaylistPtr);

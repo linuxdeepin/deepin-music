@@ -35,13 +35,19 @@ public:
     ~MainFrame() Q_DECL_OVERRIDE;
 
     void initUI(bool showLoading);
+
     void postInitUI();
+
     void binding(Presenter *presenter);
-    void quickBinding(Presenter *presenter);
 
     void bindSpeechConnect(Presenter *presenter);
 
     void bindEqualizerConnect(Presenter *presenter);
+
+    /**
+     * @brief initAllData 初始加载所有数据
+     */
+    void initAllData();
 
     void focusPlayList();
     QString coverBackground() const;
@@ -70,7 +76,7 @@ protected:
     virtual bool eventFilter(QObject *obj, QEvent *e) Q_DECL_OVERRIDE;
     virtual void resizeEvent(QResizeEvent *e) Q_DECL_OVERRIDE;
     virtual void closeEvent(QCloseEvent *event) Q_DECL_OVERRIDE;
-    virtual void paintEvent(QPaintEvent *e) Q_DECL_OVERRIDE;
+    //virtual void paintEvent(QPaintEvent *e) Q_DECL_OVERRIDE;
 
 private:
     QScopedPointer<MainFramePrivate> dd_ptr;
