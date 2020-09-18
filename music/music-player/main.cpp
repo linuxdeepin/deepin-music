@@ -105,13 +105,13 @@ bool checkOnly()
 
 int main(int argc, char *argv[])
 {
+    setenv("PULSE_PROP_media.role", "music", 1); //set music role
     DApplication app(argc, argv);
     app.setAttribute(Qt::AA_UseHighDpiPixmaps);
     app.setOrganizationName("deepin");
     app.setApplicationName("deepin-music");
     app.loadTranslator();
     MusicSettings::init();
-    qDebug() << "hj paint0:"<<QTime::currentTime().msec();
     QTime t;
     t.start();
     PlaylistManager::instance();
@@ -129,8 +129,6 @@ int main(int argc, char *argv[])
     createSpeechDbus();
     DLogManager::registerConsoleAppender();
     DLogManager::registerFileAppender();
-
-    setenv("PULSE_PROP_media.role", "music", 1);
 #ifdef SNAP_APP
     DStandardPaths::setMode(DStandardPaths::Snap);
 #endif
