@@ -161,6 +161,7 @@ MetaPtr MediaLibraryPrivate::importMeta(const QString &filepath,
             fileInfo.suffix().toLower() != "m4a" &&
             fileInfo.suffix().toLower() != "aac" &&
             fileInfo.suffix().toLower() != "ape" &&
+            fileInfo.suffix().toLower() != "ac3" &&
             fileInfo.suffix().toLower() != "amr"
        ) {
         cuelist << DMusic::CueParserPtr(new DMusic::CueParser(filepath));

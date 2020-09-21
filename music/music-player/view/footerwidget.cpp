@@ -204,8 +204,21 @@ void FooterPrivate::initConnection()
     q->connect(btSound, &DPushButton::pressed, q, [ = ]() {
         // Q_EMIT q->localToggleMute();
 
-        auto hintWidget = btSound->property("HintWidget").value<QWidget *>();
-        hintFilter->showHitsFor(btSound, hintWidget);
+        if (volSlider->isVisible()) {
+            volSlider->hide();
+        } else {
+
+            auto centerPos = btSound->mapToGlobal(btSound->rect().center());
+            volSlider->show();
+            volSlider->adjustSize();
+            auto sz = volSlider->size();
+            centerPos.setX(centerPos.x()  - sz.width() / 2);
+            centerPos.setY(centerPos.y() - 32 - sz.height());
+            centerPos = volSlider->mapFromGlobal(centerPos);
+            centerPos = volSlider->mapToParent(centerPos);
+            volSlider->move(centerPos);
+            volSlider->raise();
+        }
     });
 
     q->connect(volSlider, &SoundVolume::volumeMute, q, [ = ]() {
@@ -419,7 +432,7 @@ Footer::Footer(QWidget *parent) :
     d->hoverShadowFilter = new HoverShadowFilter;
     d->title->installEventFilter(d->hoverShadowFilter);
 
-    d->btSound->installEventFilter(this);
+    // d->btSound->installEventFilter(this);
     d->installTipHint(d->btPrev, tr("Previous"));
     d->installTipHint(d->btNext, tr("Next"));
     d->installTipHint(d->btPlay, tr("Play/Pause"));
@@ -440,7 +453,7 @@ Footer::Footer(QWidget *parent) :
     d->volSlider->hide();
     d->volSlider->setProperty("DelayHide", true);
     d->volSlider->setProperty("NoDelayShow", true);
-    d->installHint(d->btSound, d->volSlider);
+    // d->installHint(d->btSound, d->volSlider);
 
     auto musicMetaLayout = new QVBoxLayout;
     musicMetaLayout->setContentsMargins(0, 0, 0, 0);
