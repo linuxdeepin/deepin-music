@@ -60,6 +60,8 @@ find_package(PkgConfig REQUIRED)
 pkg_check_modules(Dtk REQUIRED IMPORTED_TARGET dtkwidget)
 pkg_check_modules(Dtk REQUIRED IMPORTED_TARGET dtkcore)
 pkg_check_modules(Dtk REQUIRED IMPORTED_TARGET dtkgui)
+pkg_check_modules(qgsettings REQUIRED IMPORTED_TARGET gsettings-qt)
+
 #pkg_check_modules(AV REQUIRED IMPORTED_TARGET libavutil libavcodec
 #    libavformat libcue taglib)
 
@@ -106,7 +108,7 @@ target_include_directories(${CMD_NAME} PUBLIC  ${PROJECT_INCLUDE} )
 qt5_use_modules(${CMD_NAME} ${QtModule})
 #X11 Xext Xtst  Qt5::Concurrent
 set(TARGET_LIBS X11 Xext Qt5::Widgets Qt5::Network Qt5::Core Qt5::Gui Qt5::X11Extras
-    Qt5::DBus  Qt5::Sql Qt5::Svg Qt5::Multimedia Qt5::Xml PkgConfig::AV PkgConfig::Dtk icui18n
+    Qt5::DBus  Qt5::Sql Qt5::Svg Qt5::Multimedia Qt5::Xml PkgConfig::AV PkgConfig::Dtk PkgConfig::qgsettings icui18n
     mpris-qt5 dbusextended-qt5 dmusic)
 
 LINK_DIRECTORIES(${CMAKE_BINARY_DIR}/music/libdmusic/
