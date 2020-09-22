@@ -168,6 +168,7 @@ public:
     bool mute           = false; // unused
     QString sinkInputPath;
 
+    int  startSameMusic   = 1; //双击启动是否同一首歌
     Player::PlaybackMode    mode    = Player::RepeatAll;
     Player::PlaybackStatus  status  = Player::InvalidPlaybackStatus;
 
@@ -624,8 +625,7 @@ Player::~Player()
     qDebug() << "Player destroyed";
 }
 
-
-void Player::loadMedia(PlaylistPtr playlist, const MetaPtr meta)
+void Player::loadMedia(PlaylistPtr playlist, const MetaPtr meta, int position)
 {
     qDebug() << "loadMedia"
              << meta->title
@@ -636,24 +636,91 @@ void Player::loadMedia(PlaylistPtr playlist, const MetaPtr meta)
     if (playlist->id() != PlayMusicListID)
         d->activePlaylist = playlist;
 
-    //int volume = -1;
+    int volume = -1;
     d->qvplayer->blockSignals(true);
     d->isamr = true;
     d->qvmedia->initMedia(meta->localPath, true, d->qvinstance);
     d->qvplayer->open(d->qvmedia);
-    //volume = d->qvplayer->audio()->volume();
+
+    volume = d->qvplayer->audio()->volume();
     d->qvplayer->play();
     d->qvplayer->audio()->setMute(true);
 
 
     if (!d->activePlaylist.isNull())
         d->activePlaylist->play(meta);
-    QTimer::singleShot(100, this, [ = ]() {//为了记录进度条生效，在加载的时候让音乐播放100ms
-        d->qvplayer->pause();
-        d->qvplayer->blockSignals(false);
-        if (!d->activePlaylist.isNull())
-            d->activePlaylist->play(meta);
-    });
+
+    if (position == 0) { //do not care process
+        QTimer::singleShot(100, this, [ = ]() {//为了记录进度条生效，在加载的时候让音乐播放100ms
+            d->qvplayer->pause();
+            if (volume == 0) {
+                d->qvplayer->audio()->setVolume(100);
+            } else {
+                d->qvplayer->audio()->setVolume(volume);
+            }
+            d->qvplayer->blockSignals(false);
+            if (!d->activePlaylist.isNull())
+                d->activePlaylist->play(meta);
+
+            switch (d->startSameMusic) {
+            case 1:
+                d->qvplayer->setPosition(position); //set position
+                emit readyToResume();
+                break;
+            case 2:
+                emit playerReady();
+                break;
+            case 3:
+                d->qvplayer->setPosition(position); //set position
+                emit playerReady(); //the same music
+                break;
+            default:
+                d->qvplayer->setPosition(position); //set position
+                emit readyToResume();
+                break;
+            }
+            if (!d->activePlaylist.isNull())
+                d->activePlaylist->play(meta);
+        });
+    } else {
+        QTimer *pt = new QTimer;
+        pt->setProperty("calc", 0);
+        pt->start(150);
+
+        connect(pt, &QTimer::timeout, this, [ = ]() {
+            int timestamp = pt->property("calc").toInt();
+            timestamp += pt->interval();
+            pt->setProperty("calc", timestamp);
+
+            if (timestamp >= 1000) {
+                d->qvplayer->pause();
+                if (volume == 0) {
+                    d->qvplayer->audio()->setVolume(100);
+                } else {
+                    d->qvplayer->audio()->setVolume(volume);
+                }
+                d->qvplayer->blockSignals(false);
+                if (!d->activePlaylist.isNull())
+                    d->activePlaylist->play(meta);
+
+                d->canPlay = true;
+                switch (d->startSameMusic) {
+                case 1:
+                    emit readyToResume();
+                    break;
+                case 2:
+                case 3:
+                    emit playerReady();
+                    break;
+                default:
+                    emit readyToResume();
+                    break;
+                }
+                pt->stop();
+                pt->deleteLater();
+            }
+        });
+    }
 }
 
 void Player::playMeta(PlaylistPtr playlist, const MetaPtr pmeta)
@@ -1349,4 +1416,22 @@ bool Player::isDevValid()
     }
 
     return false;
+}
+
+bool Player::isReady()
+{
+    Q_D(Player);
+    return d->canPlay;
+}
+
+void Player::setReady(bool ready)
+{
+    Q_D(Player);
+    d->canPlay = ready;
+}
+
+void Player::setDoubleClickStartType(int start)
+{
+    Q_D(Player);
+    d->startSameMusic = start;
 }

@@ -705,7 +705,7 @@ void Presenter::postAction()
 
             d->player->setPlayOnLoaded(false);
             d->player->setFadeInOut(false);
-            d->player->loadMedia(lastPlaylist, lastMeta);
+            d->player->loadMedia(lastPlaylist, lastMeta, position);
             d->metaBufferDetector->onBufferDetector(lastMeta->localPath, lastMeta->hash);
             QTimer::singleShot(150, [ = ]() {//延迟150ms是为了在加载的时候，音乐播放100ms后再设置进度
                 d->player->setPosition(position);
@@ -725,33 +725,33 @@ void Presenter::postAction()
         MusicSettings::sync();
         openUri(QUrl(toOpenUri));
     } else {
-        if (d->settings->value("base.play.auto_play").toBool() && !curPlaylist->isEmpty() && !lastPlaylist->isEmpty() && !isMetaLibClear) {
-            qDebug() << lastPlaylist->id() << lastPlaylist->displayName();
-            if (d->settings->value("base.play.remember_progress").toBool() && !isMetaLibClear) {
-                onCurrentPlaylistChanged(lastPlaylist);
+        connect(d->player, &Player::readyToResume, this, [ = ]() {
+            if (d->settings->value("base.play.auto_play").toBool() && !curPlaylist->isEmpty() && !lastPlaylist->isEmpty() && !isMetaLibClear) {
+                qDebug() << lastPlaylist->id() << lastPlaylist->displayName();
+                if (d->settings->value("base.play.remember_progress").toBool() && !isMetaLibClear) {
+                    onCurrentPlaylistChanged(lastPlaylist);
+                    QTimer::singleShot(50, [ = ]() {
+                        onMusicResume(lastPlaylist, lastMeta);
+                    });
+                } else {
+                    d->lastPlayPosition = 0;
+                    onCurrentPlaylistChanged(lastPlaylist);
+                    Q_EMIT locateMusic(lastPlaylist, lastMeta);
+                    d->notifyMusicPlayed(lastPlaylist, lastMeta);
 
-                //                d->player->setPosition(position);
-                QTimer::singleShot(200, [ = ]() {//200ms播放是为了在加载播放的100ms结束，150ms设置播放进度后再播放。
-                    onMusicResume(lastPlaylist, lastMeta);
-                });
+                    d->player->setPlayOnLoaded(false);
+                    d->player->setFadeInOut(false);
+                    d->player->loadMedia(lastPlaylist, lastMeta);
 
+                    QTimer::singleShot(50, [ = ]() {
+                        onMusicResume(lastPlaylist, lastMeta);
+                    });
+                }
             } else {
-                d->lastPlayPosition = 0;
-                onCurrentPlaylistChanged(lastPlaylist);
-                Q_EMIT locateMusic(lastPlaylist, lastMeta);
-                d->notifyMusicPlayed(lastPlaylist, lastMeta);
-
-                d->player->setPlayOnLoaded(false);
-                d->player->setFadeInOut(false);
-                d->player->loadMedia(lastPlaylist, lastMeta);
-
-                QTimer::singleShot(200, [ = ]() {//200ms播放是为了在加载播放的100ms结束，150ms设置播放进度后再播放。
-                    onMusicResume(lastPlaylist, lastMeta);
-                });
+                Q_EMIT d->pause();
+                d->player->setReady();
             }
-        } else {
-            Q_EMIT d->pause();
-        }
+        });
     }
 
     auto fadeInOut = d->settings->value("base.play.fade_in_out").toBool();
@@ -778,15 +778,51 @@ void Presenter::openUri(const QUrl &uri)
     auto metas = MediaLibrary::instance()->importFile(localfile);
     if (0 == metas.length()) {
         qCritical() << "openUriRequested" << uri;
-        return;
+        Q_EMIT scanFinished(localfile, 0);
+        return ;
     }
     auto list = d->playlistMgr->playlist(AllMusicListID);
     onAddMetaToPlaylist(list, metas);
     Q_EMIT MediaLibrary::instance()->meidaFileImported(AllMusicListID, metas);
 
-//    onSyncMusicPlay(list, metas.first(), true);
-    onMusicPlay(list, metas.first(), true); //invoke onMusicPlay instead of onSyncMusicPlay
-    onCurrentPlaylistChanged(list);
+    if (!d->player->isReady() && d->player->status() != Player::Stopped) {
+        //do not use last meta
+        MetaPtr curMeta = d->player->activeMeta();
+        bool bsame = false;
+        //last_meta maybe null
+        if (curMeta.isNull()) {
+            d->player->setDoubleClickStartType(2);
+        } else {
+            if (curMeta->hash == metas.first()->hash) {
+                bsame = true;
+                d->player->setDoubleClickStartType(3);
+            } else {
+                d->player->setDoubleClickStartType(2);
+            }
+        }
+        connect(d->player, &Player::playerReady,
+        this, [ = ]() {
+            d->player->setReady();
+            QTimer::singleShot(50, [ = ]() {
+                if (bsame) {
+                    onMusicResume(list, metas.first());
+                } else {
+                    d->syncPlayerResult = true;
+                    d->continueErrorCount = 0;
+                    d->syncPlayerMeta = metas.first();
+                    onMusicPlay(list, metas.first(), true);
+                    //onSyncMusicPlay(list, metas.first(), true);
+                }
+            });
+        });
+    } else {
+        d->syncPlayerResult = true;
+        d->continueErrorCount = 0;
+        d->syncPlayerMeta = metas.first();
+        onMusicPlay(list, metas.first(), true);
+        //onSyncMusicPlay(list, metas.first(), true);
+        d->player->setReady();
+    }
 }
 
 void Presenter::onSyncMusicPlay(PlaylistPtr playlist, const MetaPtr meta)

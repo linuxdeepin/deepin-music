@@ -99,7 +99,7 @@ public:
 
     void setActivePlaylist(PlaylistPtr playlist);
     void setCurPlaylist(PlaylistPtr curPlaylist);
-    void loadMedia(PlaylistPtr playlist, const MetaPtr meta);
+    void loadMedia(PlaylistPtr playlist, const MetaPtr meta, int position = 0);
     void playMeta(PlaylistPtr playlist, const MetaPtr meta);
     void resume(PlaylistPtr playlist, const MetaPtr meta);
     void playNextMeta(PlaylistPtr playlist, const MetaPtr meta);
@@ -119,11 +119,16 @@ public:
     QStringList supportedFilterStringList()const;
     QStringList supportedSuffixList()const;
     QStringList supportedMimeTypes() const;
+    bool isReady();                                 // if player does not start,do not invoke playmeta
+    void setReady(bool ready = true);               // set ready to music
+    void setDoubleClickStartType(int start = 1);    // set double clicke start type
 
 signals:
     void mediaUpdate(PlaylistPtr playlist, const MetaPtr meta);
     void mediaPlayed(PlaylistPtr playlist, const MetaPtr meta);
     void mediaError(PlaylistPtr playlist, const MetaPtr meta, Player::Error error);
+    void readyToResume();                           // player ready & setposition ready
+    void playerReady();                             // notify presenter player is ready
 
 public:
     bool canControl() const;
