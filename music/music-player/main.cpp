@@ -107,7 +107,6 @@ int main(int argc, char *argv[])
 {
     setenv("PULSE_PROP_media.role", "music", 1);
 
-    DApplication::loadDXcbPlugin();
     DApplication app(argc, argv);
 
 #ifdef SNAP_APP

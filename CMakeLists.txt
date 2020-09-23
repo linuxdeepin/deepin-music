@@ -45,7 +45,7 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 include_directories(${PROJECT_BINARY_DIR})
 include_directories(${PROJECT_SOURCE_DIR})
 #Multimediawidgets是否已使用？
-set(QtModule Core Gui Widgets Svg Multimedia Xml Network Sql DBus)
+set(QtModule Core Gui Widgets Svg Multimedia Xml Sql DBus)
 #configure_file
 #先查找到这些qt相关的模块以供链接使用
 find_package(Qt5 REQUIRED ${QtModule})

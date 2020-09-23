@@ -76,7 +76,7 @@ public:
 void MetaSearchService::init()
 {
     Q_D(MetaSearchService);
-    d->m_geese  =  new DMusic::Net::Geese(this);
+    //d->m_geese  =  new DMusic::Net::Geese(this);
     QDir cacheDir(Global::cacheDir() + "/lyric");
     if (!cacheDir.exists()) {
         cacheDir.mkpath(".");
@@ -228,38 +228,38 @@ void MetaSearchService::onChangeMetaCache(const MetaPtr meta, const DMusic::Sear
 {
     Q_D(MetaSearchService);
     qDebug() << "change" << search.album.coverUrl << search.id;
-    connect(d->m_geese->getGoose(search.album.coverUrl), &DMusic::Net::Goose::arrive,
-    this, [ = ](int errCode, const QByteArray & coverData) {
-        qDebug() << "onChangeMetaCache received: " << errCode << coverData.length();
-        if (coverData.length() > 0) {
-            QFile coverFile(cacheCoverPath(meta));
-            coverFile.open(QIODevice::WriteOnly);
-            coverFile.write(coverData);
-            coverFile.close();
-        }
-        Q_EMIT coverSearchFinished(meta, search, coverData);
-    });
+//    connect(d->m_geese->getGoose(search.album.coverUrl), &DMusic::Net::Goose::arrive,
+//    this, [ = ](int errCode, const QByteArray & coverData) {
+//        qDebug() << "onChangeMetaCache received: " << errCode << coverData.length();
+//        if (coverData.length() > 0) {
+//            QFile coverFile(cacheCoverPath(meta));
+//            coverFile.open(QIODevice::WriteOnly);
+//            coverFile.write(coverData);
+//            coverFile.close();
+//        }
+//        Q_EMIT coverSearchFinished(meta, search, coverData);
+//    });
 
     // TODO: call plugin to do this
     QString lyricUrl = QLatin1String("http://music.163.com/api/song/lyric?os=pc&id=%1&lv=-1&kv=-1&tv=-1");
     lyricUrl = lyricUrl.arg(QString(search.id).remove("netease_"));
-    connect(d->m_geese->getGoose(lyricUrl), &DMusic::Net::Goose::arrive,
-    this, [ = ](int errCode, const QByteArray & data) {
-        qDebug() << "onChangeMetaCache received: " << errCode << data.length();
-        auto document = QJsonDocument::fromJson(data);
-        auto lrc = document.object().value("lrc").toObject();
-        auto lrcData =  lrc.value("lyric").toString().toUtf8();
+//    connect(d->m_geese->getGoose(lyricUrl), &DMusic::Net::Goose::arrive,
+//    this, [ = ](int errCode, const QByteArray & data) {
+//        qDebug() << "onChangeMetaCache received: " << errCode << data.length();
+//        auto document = QJsonDocument::fromJson(data);
+//        auto lrc = document.object().value("lrc").toObject();
+//        auto lrcData =  lrc.value("lyric").toString().toUtf8();
 
-        if (lrcData.length() <= 0) {
-            lrcData = "                           ";
-        }
+//        if (lrcData.length() <= 0) {
+//            lrcData = "                           ";
+//        }
 
-        QFile lyricFile(cacheLyricPath(meta));
-        lyricFile.open(QIODevice::WriteOnly);
-        lyricFile.write(lrcData);
-        lyricFile.close();
+//        QFile lyricFile(cacheLyricPath(meta));
+//        lyricFile.open(QIODevice::WriteOnly);
+//        lyricFile.write(lrcData);
+//        lyricFile.close();
 
-        Q_EMIT lyricSearchFinished(meta, search, lrcData);
-    });
+//        Q_EMIT lyricSearchFinished(meta, search, lrcData);
+//    });
 
 }
