@@ -259,7 +259,7 @@ void PlayerPrivate::initConnection()
             break;
         }
         case Vlc::Ended: {
-            selectNext(activeMeta, mode);//just sync with Vlc::Ended
+            //selectNext(activeMeta, mode);//just sync with Vlc::Ended
             break;
         }
         case Vlc::Error: {
@@ -275,14 +275,11 @@ void PlayerPrivate::initConnection()
         }
     });
 
-    q->connect(qvplayer->audio(), &VlcAudio::volumeChanged,
-    q, [ = ](int volume) {
-        Q_UNUSED(volume)
-//        if (fadeInOutFactor < 1.0) {
-//            return;
-//        }
-//        if (volume >= 0)
-//            Q_EMIT q->volumeChanged(volume);
+
+
+    q->connect(qvplayer, &VlcMediaPlayer::end,
+    q, [ = ]() {
+        selectNext(activeMeta, mode);//just sync with Vlc::Ended
     });
 
 
