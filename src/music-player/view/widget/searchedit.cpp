@@ -135,6 +135,10 @@ void SearchEdit::onFocusOut()
 void SearchEdit::onTextChanged()
 {
     auto alltext = this->text();
+
+    //设置光标
+    lineEdit()->setCursorPosition(lineEdit()->cursorPosition());
+
     if (alltext == "")
         Q_EMIT searchAborted();
 

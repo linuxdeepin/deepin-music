@@ -879,20 +879,24 @@ void MainFrame::postInitUI()
     });
     connect(trayIcon, &QSystemTrayIcon::activated,
     this, [ = ](QSystemTrayIcon::ActivationReason reason) {
+
         if (QSystemTrayIcon::Trigger == reason) {
             if (isVisible()) {
                 if (isMinimized()) {
+                    this->setFocus();
                     showNormal();
-                    // when window flags changed, should call hide and show
-                    hide();
-                    show();
+                    activateWindow();
                 } else {
                     showMinimized();
+                    hide();
                 }
             } else {
+                this->setFocus();
                 showNormal();
+                activateWindow();
             }
         }
+
     });
 }
 
