@@ -899,10 +899,12 @@ void MainFrame::postInitUI()
         if (QSystemTrayIcon::Trigger == reason) {
             if (isVisible()) {
                 if (isMinimized()) {
+                    this->setFocus();
                     showNormal();
                     activateWindow();
                 } else {
                     showMinimized();
+                    hide();
                 }
             } else {
                 this->setFocus();
