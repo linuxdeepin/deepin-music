@@ -315,7 +315,7 @@ void PlayerPrivate::initConnection()
             break;
         }
         case Vlc::Ended: {
-            selectNext(activeMeta, mode); //just sync with Vlc::Ended
+            //selectNext(activeMeta, mode); //just sync with Vlc::Ended
             break;
         }
         case Vlc::Error: {
@@ -340,6 +340,10 @@ void PlayerPrivate::initConnection()
             Q_EMIT q->volumeChanged(volume);
     });
 
+    q->connect(qvplayer, &VlcMediaPlayer::end,
+    q, [ = ]() {
+        selectNext(activeMeta, mode); //just sync with Vlc::Ended
+    });
 
     q->connect(qvplayer->audio(), &VlcAudio::muteChanged,
     q, [ = ](bool mute) {

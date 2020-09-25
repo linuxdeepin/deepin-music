@@ -338,7 +338,7 @@ void VlcMediaPlayer::libvlc_callback(const libvlc_event_t *event,
         emit core->backward();
         break;
     case libvlc_MediaPlayerEndReached:
-        emit core->end();
+        emit core->end(); //play end
         break;
     case libvlc_MediaPlayerEncounteredError:
         emit core->error();
