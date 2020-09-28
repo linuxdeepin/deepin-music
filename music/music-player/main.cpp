@@ -112,8 +112,6 @@ int main(int argc, char *argv[])
     app.setApplicationName("deepin-music");
     app.loadTranslator();
     MusicSettings::init();
-    QTime t;
-    t.start();
     PlaylistManager::instance();
     MediaDatabase::instance()->init();
     MediaLibrary::instance()->init();
@@ -209,6 +207,5 @@ int main(int argc, char *argv[])
     app.setQuitOnLastWindowClosed(false);
     QObject::connect(DGuiApplicationHelper::instance(), &DGuiApplicationHelper::themeTypeChanged,
                      &mainframe, &MainFrame::slotTheme);
-    qDebug()<<"----------------take all time:" <<t.elapsed();
     return app.exec();
 }
