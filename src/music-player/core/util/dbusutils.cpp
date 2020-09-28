@@ -25,6 +25,7 @@ QVariant DBusUtils::readDBusProperty(const QString &service, const QString &path
     if (!ainterface.isValid()) {
         qDebug() << qPrintable(QDBusConnection::sessionBus().lastError().message());
         QVariant v(0) ;
+        mutex.unlock();
         return  v;
     }
     //调用远程的value方法
