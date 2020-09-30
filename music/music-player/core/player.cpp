@@ -20,8 +20,6 @@
  */
 
 #include "player.h"
-#include "AudioBufferDevice.h"
-#include "AudioPlayer.h"
 
 #include <QDebug>
 #include <QTimer>

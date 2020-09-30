@@ -31,7 +31,7 @@
 #include <DPalette>
 #include <DApplicationHelper>
 
-#include "musiclistviewitem.h"
+//#include "usiclistviewitem.h"
 #include "./model/musiclistmodel.h"
 #include "playlistview.h"
 

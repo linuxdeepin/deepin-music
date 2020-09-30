@@ -198,12 +198,6 @@ void dumpGeometry(const QByteArray &geometry)
            >> maximized
            >> fullScreen;
 
-//    qDebug() << "restore geometry:" << restoredFrameGeometry
-//             << restoredNormalGeometry
-//             << restoredScreenNumber
-//             << maximized
-//             << fullScreen;
-
     if (majorVersion > 1) {
         stream >> restoredScreenWidth;
     }

@@ -37,7 +37,7 @@
 #include "../core/playlist.h"
 #include "../core/musicsettings.h"
 #include "widget/musiclistview.h"
-#include "widget/musiclistviewitem.h"
+//#include "widget/musiclistviewitem.h"
 #include "musiclistdatawidget.h"
 #include "widget/musicimagebutton.h"
 #include <DGuiApplicationHelper>

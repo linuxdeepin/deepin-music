@@ -61,7 +61,7 @@ signals:
     void playall(PlaylistPtr playlist);
 
 public slots:
-//    void onDelete();
+    void onDelete();
     void onRename();
 
     void setPlayingIcon(QString playingIcon)

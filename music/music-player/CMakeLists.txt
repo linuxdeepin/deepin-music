@@ -39,7 +39,9 @@ if(ISTEST MATCHES "1")
     message("tests start！")
     file(GLOB mainSource
         ./musicapp.cpp
-        ../../tests/*.cpp)
+        ../../tests/*.cpp
+        ../../tests/speech/*.cpp
+        ../../tests/presenter/*.cpp)
 else()
     aux_source_directory(./ allSource)
 endif()
@@ -100,6 +102,46 @@ qt5_add_translation(${translate})
 file(GLOB INCLUDE_HEADER "./../interface/*.h")
 
 add_executable(${CMD_NAME} ${QRC_FILES} ${allSource} ${INCLUDE_HEADER} ${Translate1} ${mainSource})
+
+#添加覆盖率命令
+if(ISTEST MATCHES "1")
+    add_test(${CMD_NAME} COMMAND ${CMD_NAME})
+
+    add_custom_target(test
+        COMMAND mkdir -p coverageResult
+        WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
+    message(${CMAKE_BINARY_DIR})
+
+    add_custom_command(TARGET test
+        COMMAND echo "=================== CREAT LCOV REPROT BEGIN ===================="
+    #1.清理原先的gcov信息
+    COMMAND lcov --directory ./CMakeFiles/${CMD_NAME}.dir --zerocounters
+    COMMAND lcov --directory ./CMakeFiles/${CMD_NAME}.dir --zerocounters
+    COMMAND ./build/music-player/${CMD_NAME}
+
+    #2.收集gcov信息到.info文件中
+    COMMAND lcov --directory . --capture --output-file ./coverageResult/${CMD_NAME}_Coverage.info
+
+    #3.过滤一些我们不感兴趣的文件的覆盖率信息
+    COMMAND echo " =================== do filter begin ==================== "
+    COMMAND lcov --remove ./coverageResult/${CMD_NAME}_Coverage.info
+    '*/${CMD_NAME}_autogen/*' '*/${CMD_NAME}_autogen/*' '*/usr/include/*' '*/tests/*' '*/googletest/*'
+    -o ./coverageResult/${CMD_NAME}_Coverage.info
+    COMMAND echo " =================== do filter end ==================== "
+
+    #3.将.info信息生成报告到reprot文件夹中
+    COMMAND genhtml -o ./coverageResult/report ./coverageResult/${CMD_NAME}_Coverage.info
+
+    COMMAND echo " =================== CREAT LCOV REPROT END ==================== "
+
+    COMMAND echo " Coverage files have been output to ${CMAKE_BINARY_DIR}/coverageResult/report "
+
+    COMMAND nohup x-www-browser ${CMAKE_BINARY_DIR}/coverageResult/report/index.html &
+
+    WORKING_DIRECTORY ${CMAKE_BINARY_DIR} )
+
+    add_dependencies(test ${CMD_NAME})
+endif()
 
 #添加第三方库的所有文件夹路径到工程中来(注意 *_INCLUDE_DIRS)
 target_include_directories(${CMD_NAME} PUBLIC  ${PROJECT_INCLUDE} )

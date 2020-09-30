@@ -170,6 +170,8 @@ QStringList VlcAudio::trackDescription() const
         desc = vlc_audio_get_track_description(_vlcMediaPlayer);
         VlcError::showErrmsg();
 
+        if(!desc)
+            return descriptions;
         descriptions << QString().fromUtf8(desc->psz_name);
         if (trackCount() > 1) {
             for (int i = 1; i < trackCount(); i++) {
@@ -192,6 +194,8 @@ QList<int> VlcAudio::trackIds() const
         desc = vlc_audio_get_track_description(_vlcMediaPlayer);
         VlcError::showErrmsg();
 
+        if(!desc)
+            return ids;
         ids << desc->i_id;
         if (trackCount() > 1) {
             for (int i = 1; i < trackCount(); i++) {
