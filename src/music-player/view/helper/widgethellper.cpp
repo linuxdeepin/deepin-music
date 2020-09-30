@@ -31,10 +31,14 @@
 #include <QPainter>
 #include <QWidget>
 #include <QStyleFactory>
+#include <DApplication>
 
 QT_BEGIN_NAMESPACE
 extern Q_WIDGETS_EXPORT void qt_blurImage(QPainter *p, QImage &blurImage, qreal radius, bool quality, bool alphaOnly, int transposed = 0);
 QT_END_NAMESPACE
+
+using namespace Dtk::Core;
+using namespace Dtk::Widget;
 
 namespace WidgetHelper {
 
@@ -231,7 +235,15 @@ void slideTop2BottomWidget(QWidget *top, QWidget *bottom, int delay)
     bottom->setGraphicsEffect(bottomOpacity);
     bottomOpacity->setOpacity(0);
 
-    QPropertyAnimation *animation3 = new QPropertyAnimation(bottomOpacity, "opacity");
+    QPropertyAnimation *animation3 =  nullptr;
+    if(DApplication::isDXcbPlatform())
+    {
+        animation3 = new QPropertyAnimation(bottomOpacity, "opacity");
+    }else {
+        animation3 = new QPropertyAnimation(bottom, "opacity");
+    }
+
+
     animation3->setEasingCurve(QEasingCurve::InCubic);
     animation3->setDuration(delay);
     animation3->setStartValue(0.0);
