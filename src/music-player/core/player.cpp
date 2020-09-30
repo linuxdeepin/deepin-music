@@ -140,17 +140,10 @@ class PlayerPrivate
 public:
     PlayerPrivate(Player *parent) : q_ptr(parent)
     {
-//        qplayer = new QMediaPlayer();
-//        qplayer->setVolume(100);
-//        qProbe = new QAudioProbe();
-        /*-------AudioPlayer-------*/
-//        ioPlayer  =  new AudioPlayer();
-
         qvinstance = new VlcInstance(VlcCommon::args(), nullptr);
         qvplayer = new VlcMediaPlayer(qvinstance);
         qvplayer->equalizer()->setPreamplification(12);
         qvmedia = new VlcMedia();
-//        qvplayer->audio()->setVolume(100);
     }
 
     void initConnection();
@@ -171,13 +164,6 @@ public:
     int  startSameMusic   = 1; //双击启动是否同一首歌
     Player::PlaybackMode    mode    = Player::RepeatAll;
     Player::PlaybackStatus  status  = Player::InvalidPlaybackStatus;
-
-
-//    QMediaPlayer    *qplayer;
-//    QAudioProbe     *qProbe;
-    /*-------ioPlayer----------*/
-//    AudioPlayer  *ioPlayer;
-//    qint64 ioDuration = 0;
 
 
     VlcInstance *qvinstance;
@@ -640,15 +626,15 @@ void Player::loadMedia(PlaylistPtr playlist, const MetaPtr meta, int position)
     if (playlist->id() != PlayMusicListID)
         d->activePlaylist = playlist;
 
-    int volume = -1;
     d->qvplayer->blockSignals(true);
     d->isamr = true;
     d->qvmedia->initMedia(meta->localPath, true, d->qvinstance);
     d->qvplayer->open(d->qvmedia);
 
-    volume = d->qvplayer->audio()->volume();
+    d->qvplayer->equalizer()->setPreamplification(0.0001f);
     d->qvplayer->play();
     d->qvplayer->audio()->setMute(true);
+
 
 
     if (!d->activePlaylist.isNull())
@@ -657,11 +643,7 @@ void Player::loadMedia(PlaylistPtr playlist, const MetaPtr meta, int position)
     if (position == 0) { //do not care process
         QTimer::singleShot(100, this, [ = ]() {//为了记录进度条生效，在加载的时候让音乐播放100ms
             d->qvplayer->pause();
-            if (volume == 0) {
-                d->qvplayer->audio()->setVolume(100);
-            } else {
-                d->qvplayer->audio()->setVolume(volume);
-            }
+
             d->qvplayer->blockSignals(false);
             if (!d->activePlaylist.isNull())
                 d->activePlaylist->play(meta);
@@ -685,6 +667,8 @@ void Player::loadMedia(PlaylistPtr playlist, const MetaPtr meta, int position)
             }
             if (!d->activePlaylist.isNull())
                 d->activePlaylist->play(meta);
+
+            d->qvplayer->equalizer()->setPreamplification(12.0000f);
         });
     } else {
         QTimer *pt = new QTimer;
@@ -698,11 +682,7 @@ void Player::loadMedia(PlaylistPtr playlist, const MetaPtr meta, int position)
 
             if (timestamp >= 1000) {
                 d->qvplayer->pause();
-                if (volume == 0) {
-                    d->qvplayer->audio()->setVolume(100);
-                } else {
-                    d->qvplayer->audio()->setVolume(volume);
-                }
+
                 d->qvplayer->blockSignals(false);
                 if (!d->activePlaylist.isNull())
                     d->activePlaylist->play(meta);
