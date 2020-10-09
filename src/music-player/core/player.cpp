@@ -635,8 +635,6 @@ void Player::loadMedia(PlaylistPtr playlist, const MetaPtr meta, int position)
     d->qvplayer->play();
     d->qvplayer->audio()->setMute(true);
 
-
-
     if (!d->activePlaylist.isNull())
         d->activePlaylist->play(meta);
 
@@ -650,18 +648,18 @@ void Player::loadMedia(PlaylistPtr playlist, const MetaPtr meta, int position)
 
             switch (d->startSameMusic) {
             case 1:
-                d->qvplayer->setPosition(position); //set position
+                setPosition(position); //set position
                 emit readyToResume();
                 break;
             case 2:
                 emit playerReady();
                 break;
             case 3:
-                d->qvplayer->setPosition(position); //set position
+                setPosition(position); //set position
                 emit playerReady(); //the same music
                 break;
             default:
-                d->qvplayer->setPosition(position); //set position
+                setPosition(position); //set position
                 emit readyToResume();
                 break;
             }
@@ -674,11 +672,44 @@ void Player::loadMedia(PlaylistPtr playlist, const MetaPtr meta, int position)
         QTimer *pt = new QTimer;
         pt->setProperty("calc", 0);
         pt->start(150);
-
+        int vol = d->qvplayer->audio()->volume();
         connect(pt, &QTimer::timeout, this, [ = ]() {
             int timestamp = pt->property("calc").toInt();
             timestamp += pt->interval();
             pt->setProperty("calc", timestamp);
+
+            if ( d->qvplayer->seekable()) {
+                if (vol == 0) {
+                    d->qvplayer->audio()->setVolume(100);
+                } else {
+                    d->qvplayer->audio()->setVolume(vol);
+                }
+                d->qvplayer->blockSignals(false);
+                if (!d->activePlaylist.isNull())
+                    d->activePlaylist->play(meta);
+
+                d->canPlay = true;
+                switch (d->startSameMusic) {
+                case 1:
+                    setPosition(position); //set position
+                    emit readyToResume();
+                    break;
+                case 2:
+                    emit playerReady();
+                    break;
+                case 3:
+                    setPosition(position); //set position
+                    emit playerReady(); //the same music
+                    break;
+                default:
+                    setPosition(position); //set position
+                    emit readyToResume();
+                    break;
+                }
+                d->qvplayer->pause();
+                pt->stop();
+                pt->deleteLater();
+            }
 
             if (timestamp >= 1000) {
                 d->qvplayer->pause();
@@ -690,13 +721,16 @@ void Player::loadMedia(PlaylistPtr playlist, const MetaPtr meta, int position)
                 d->canPlay = true;
                 switch (d->startSameMusic) {
                 case 1:
+                    setPosition(position); //set position
                     emit readyToResume();
                     break;
                 case 2:
                 case 3:
+                    setPosition(position); //set position
                     emit playerReady();
                     break;
                 default:
+                    setPosition(position); //set position
                     emit readyToResume();
                     break;
                 }

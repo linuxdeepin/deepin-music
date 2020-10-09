@@ -233,16 +233,16 @@ void slideTop2BottomWidget(QWidget *top, QWidget *bottom, int delay)
 
     auto bottomOpacity = new QGraphicsOpacityEffect(bottom);
     bottom->setGraphicsEffect(bottomOpacity);
-    bottomOpacity->setOpacity(0);
 
     QPropertyAnimation *animation3 =  nullptr;
     if(DApplication::isDXcbPlatform())
     {
+        bottomOpacity->setOpacity(0);
         animation3 = new QPropertyAnimation(bottomOpacity, "opacity");
     }else {
+        bottomOpacity->setOpacity(1);
         animation3 = new QPropertyAnimation(bottom, "opacity");
     }
-
 
     animation3->setEasingCurve(QEasingCurve::InCubic);
     animation3->setDuration(delay);

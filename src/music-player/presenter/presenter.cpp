@@ -667,7 +667,6 @@ void Presenter::postAction()
     }
 
     auto lastMeta = lastPlaylist->first();
-    auto position = 0;
     auto isMetaLibClear = MediaLibrary::instance()->isEmpty();
     isMetaLibClear |= allplaylist->isEmpty();
 
@@ -693,7 +692,7 @@ void Presenter::postAction()
         }
 
         if (!lastMeta.isNull()) {
-            position = 0;
+            int position = 0;
             if (d->settings->value("base.play.remember_progress").toBool()) {
                 position = d->settings->value("base.play.last_position").toInt();
             }
@@ -707,9 +706,6 @@ void Presenter::postAction()
             d->player->setFadeInOut(false);
             d->player->loadMedia(lastPlaylist, lastMeta, position);
             d->metaBufferDetector->onBufferDetector(lastMeta->localPath, lastMeta->hash);
-            QTimer::singleShot(150, [ = ]() {//延迟150ms是为了在加载的时候，音乐播放100ms后再设置进度
-                d->player->setPosition(position);
-            });
 
             Q_EMIT musicPaused(lastPlaylist, lastMeta);
             if (d->lyricService) {
