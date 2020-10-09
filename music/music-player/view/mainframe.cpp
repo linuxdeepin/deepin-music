@@ -453,6 +453,7 @@ void MainFramePrivate::hideLyricView()
     footer->setLyricButtonChecked(false);
     footer->raise();
 
+    currentWidget = musicListWidget; //remember current window
     updateViewname(s_PropertyViewnameLyric);
 }
 
