@@ -28,6 +28,8 @@
 #include <QMouseEvent>
 #include <QWheelEvent>
 #include <QStackedLayout>
+#include <QDBusInterface>
+#include <QDBusReply>
 
 #include <DHiDPIHelper>
 #include <DPushButton>
@@ -36,6 +38,7 @@
 #include <DPalette>
 #include <DButtonBox>
 #include <DToolTip>
+#include <DApplication>
 
 #include <metadetector.h>
 
@@ -61,6 +64,9 @@
 #include "widget/musicboxbutton.h"
 #include "widget/tooltips.h"
 
+using namespace Dtk::Core;
+using namespace Dtk::Widget;
+
 static const char *sPropertyFavourite         = "fav";
 static const char *sPropertyPlayStatus        = "playstatus";
 
@@ -82,6 +88,8 @@ public:
     void installTipHint(QWidget *w, const QString &hintstr);
     void installHint(QWidget *w, QWidget *hint);
     void initConnection();
+    //pangu customization: standby until music play end
+    void screenStandby(bool isStandby);
 
     DBlurEffectWidget *forwardWidget = nullptr;
     Label           *title      = nullptr;
@@ -120,6 +128,8 @@ public:
     VolumeMonitoring         volumeMonitoring;
     int             m_Volume = 0;
     int             m_Mute = 0;
+    uint32_t        lastCookie = 0;
+    bool            isWayland = false;
     Footer *q_ptr;
     Q_DECLARE_PUBLIC(Footer)
 };
@@ -174,8 +184,7 @@ void FooterPrivate::initConnection()
 
     q->connect(btPlay, &DPushButton::released, q, [ = ]() {
         //play once in a period time to avoid mult-repeat click
-        if (!m_timer->isActive())
-        {
+        if (!m_timer->isActive()) {
             m_timer->start(200);
             q->onTogglePlayButton();
         }
@@ -229,6 +238,42 @@ void FooterPrivate::initConnection()
     q->connect(&volumeMonitoring, &VolumeMonitoring::muteChanged, q, [ = ](bool mute) {
         q->onMutedChanged(mute);
     });
+
+    if (DApplication::isDXcbPlatform())
+        isWayland = false;
+    else
+        isWayland = true;
+}
+
+void FooterPrivate::screenStandby(bool isStandby)
+{
+    if (!isWayland)
+        return;
+    if (isStandby) {
+        if (lastCookie > 0) {
+            QDBusInterface iface("org.freedesktop.ScreenSaver",
+                                 "/org/freedesktop/ScreenSaver",
+                                 "org.freedesktop.ScreenSaver");
+            iface.call("UnInhibit", lastCookie);
+            lastCookie = 0;
+        }
+        QDBusInterface iface("org.freedesktop.ScreenSaver",
+                             "/org/freedesktop/ScreenSaver",
+                             "org.freedesktop.ScreenSaver");
+        QDBusReply<uint32_t> reply = iface.call("Inhibit", "deepin-movie", "playing in fullscreen");
+
+        if (reply.isValid()) {
+            lastCookie = reply.value();
+        }
+    } else {
+        if (lastCookie > 0) {
+            QDBusInterface iface("org.freedesktop.ScreenSaver",
+                                 "/org/freedesktop/ScreenSaver",
+                                 "org.freedesktop.ScreenSaver");
+            iface.call("UnInhibit", lastCookie);
+            lastCookie = 0;
+        }
+    }
 }
 
 Footer::Footer(QWidget *parent) :
@@ -545,7 +590,10 @@ Footer::Footer(QWidget *parent) :
 
 Footer::~Footer()
 {
-
+    Q_D(Footer);
+    if (d->lastCookie > 0) {
+        d->screenStandby(false);
+    }
 }
 
 void Footer::setCurPlaylist(PlaylistPtr playlist)
@@ -938,7 +986,8 @@ void Footer::onMusicPlayed(PlaylistPtr playlist, const MetaPtr meta)
         }
 
         d->btPlayingStatus = true;
-    } else {
+        d->screenStandby(true);
+    } /*else {
         if (d->m_type == 1) {
             d->btPlay->setPropertyPic(":/mpimage/light/normal/play_normal.svg",
                                       ":/mpimage/light/normal/play_normal.svg",
@@ -952,7 +1001,7 @@ void Footer::onMusicPlayed(PlaylistPtr playlist, const MetaPtr meta)
         }
 
         d->btPlayingStatus = false;
-    }
+    }*/
 }
 
 void Footer::onMusicError(PlaylistPtr playlist, const MetaPtr meta, int error)
@@ -986,6 +1035,7 @@ void Footer::onMusicError(PlaylistPtr playlist, const MetaPtr meta, int error)
         //d->btPlay->setIcon(DHiDPIHelper::loadNxPixmap(":/mpimage/dark/normal/play_normal.svg"));
     }
     d->btPlayingStatus = false;
+    d->screenStandby(false);
 }
 
 void Footer::onMusicPause(PlaylistPtr playlist, const MetaPtr meta)
@@ -1008,6 +1058,7 @@ void Footer::onMusicPause(PlaylistPtr playlist, const MetaPtr meta)
                                   ":/mpimage/dark/press/play_press.svg");
     }
     d->btPlayingStatus = false;
+    d->screenStandby(false);
 
     if (d->activingPlaylist != nullptr) {
         if (d->activingPlaylist->allmusic().isEmpty()) {
@@ -1056,6 +1107,7 @@ void Footer::onMusicStoped(PlaylistPtr playlist, const MetaPtr meta)
                                   ":/mpimage/dark/press/play_press.svg");
     }
     d->btPlayingStatus = false;
+    d->screenStandby(false);
 
     if (d->activingPlaylist != nullptr) {
         if (d->activingPlaylist->allmusic().isEmpty()) {
