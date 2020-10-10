@@ -169,7 +169,6 @@ public:
     VlcInstance *qvinstance;
     VlcMedia *qvmedia;
     VlcMediaPlayer *qvplayer;
-    bool isamr = false;
 
     PlaylistPtr     activePlaylist;
     PlaylistPtr     curPlaylist;
@@ -627,11 +626,9 @@ void Player::loadMedia(PlaylistPtr playlist, const MetaPtr meta, int position)
         d->activePlaylist = playlist;
 
     d->qvplayer->blockSignals(true);
-    d->isamr = true;
     d->qvmedia->initMedia(meta->localPath, true, d->qvinstance);
     d->qvplayer->open(d->qvmedia);
 
-    d->qvplayer->equalizer()->setPreamplification(0.0001f);
     d->qvplayer->play();
     d->qvplayer->audio()->setMute(true);
 
@@ -665,25 +662,18 @@ void Player::loadMedia(PlaylistPtr playlist, const MetaPtr meta, int position)
             }
             if (!d->activePlaylist.isNull())
                 d->activePlaylist->play(meta);
-
-            d->qvplayer->equalizer()->setPreamplification(12.0000f);
         });
     } else {
         QTimer *pt = new QTimer;
         pt->setProperty("calc", 0);
         pt->start(150);
-        int vol = d->qvplayer->audio()->volume();
+
         connect(pt, &QTimer::timeout, this, [ = ]() {
             int timestamp = pt->property("calc").toInt();
             timestamp += pt->interval();
             pt->setProperty("calc", timestamp);
 
             if ( d->qvplayer->seekable()) {
-                if (vol == 0) {
-                    d->qvplayer->audio()->setVolume(100);
-                } else {
-                    d->qvplayer->audio()->setVolume(vol);
-                }
                 d->qvplayer->blockSignals(false);
                 if (!d->activePlaylist.isNull())
                     d->activePlaylist->play(meta);
@@ -782,7 +772,6 @@ void Player::playMeta(PlaylistPtr playlist, const MetaPtr pmeta)
 //    d->qplayer->setMedia(QMediaContent(QUrl::fromLocalFile(curMeta->localPath)));
 //    d->qplayer->setPosition(curMeta->offset);
 
-    d->isamr = true;
     d->qvmedia->initMedia(curMeta->localPath, true, d->qvinstance);
     d->qvplayer->open(d->qvmedia);
     d->qvplayer->setTime(curMeta->offset);
