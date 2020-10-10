@@ -879,24 +879,27 @@ void MainFrame::postInitUI()
     });
     connect(trayIcon, &QSystemTrayIcon::activated,
     this, [ = ](QSystemTrayIcon::ActivationReason reason) {
-
         if (QSystemTrayIcon::Trigger == reason) {
             if (isVisible()) {
                 if (isMinimized()) {
-                    this->setFocus();
-                    showNormal();
-                    activateWindow();
+                    if (isFullScreen()) {
+                        hide();
+                        showFullScreen();
+                    } else {
+                        this->titlebar()->setFocus();
+                        showNormal();
+                        activateWindow();
+                    }
                 } else {
                     showMinimized();
                     hide();
                 }
             } else {
-                this->setFocus();
+                this->titlebar()->setFocus();
                 showNormal();
                 activateWindow();
             }
         }
-
     });
 }
 
