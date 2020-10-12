@@ -33,19 +33,19 @@ typedef void (*vlc_media_add_option_function)(libvlc_media_t *, const char *);
 VlcMedia::VlcMedia(const QString &location,
                    bool localFile,
                    VlcInstance *instance)
-    : QObject(instance)
+    : QObject(instance),_vlcEvents(nullptr)
 {
     initMedia(location, localFile, instance);
 }
 
 VlcMedia::VlcMedia(const QString &location,
                    VlcInstance *instance)
-    : QObject(instance)
+    : QObject(instance),_vlcEvents(nullptr)
 {
     initMedia(location, false, instance);
 }
 
-VlcMedia::VlcMedia(libvlc_media_t *media)
+VlcMedia::VlcMedia(libvlc_media_t *media):_vlcEvents(nullptr)
 {
     // Create a new libvlc media descriptor from existing one
     vlc_media_duplicate_function vlc_media_duplicate = (vlc_media_duplicate_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("libvlc_media_duplicate");
@@ -54,7 +54,7 @@ VlcMedia::VlcMedia(libvlc_media_t *media)
     VlcError::showErrmsg();
 }
 
-VlcMedia::VlcMedia()
+VlcMedia::VlcMedia():_vlcEvents(nullptr) ,_vlcMedia(nullptr)
 {
 
 }

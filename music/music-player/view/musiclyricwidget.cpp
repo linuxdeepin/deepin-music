@@ -75,7 +75,7 @@ public:
 
     QImage              backgroundimage;
 
-    DBlurEffectWidget *backgroundW;
+    DBlurEffectWidget *backgroundW = nullptr;
     MUsicLyricWidget *q_ptr;
     Q_DECLARE_PUBLIC(MUsicLyricWidget)
 };

@@ -116,7 +116,7 @@ public:
     int             m_type = 1;
 
     bool            btPlayingStatus = false;
-    QTimer         *m_timer; //to avoid mul-repeat click
+    QTimer         *m_timer = nullptr; //to avoid mul-repeat click
     VolumeMonitoring         volumeMonitoring;
     int             m_Volume = 0;
     int             m_Mute = 0;

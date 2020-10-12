@@ -244,7 +244,7 @@ void margeDatabase()
     }
 }
 
-MediaDatabase::MediaDatabase(QObject *parent) : QObject(parent)
+MediaDatabase::MediaDatabase(QObject *parent) : QObject(parent) ,m_writer(nullptr)
 {
 }
 

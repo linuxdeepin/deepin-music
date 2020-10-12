@@ -50,7 +50,7 @@ public:
         shadowImg = shadowImg.copy(5, 5, shadowImg.width() - 10, shadowImg.height() - 10);
     }
 
-    QWidget *parentWidget;
+    QWidget *parentWidget = nullptr;
     QPixmap playing = DHiDPIHelper::loadNxPixmap(":/common/image/jumpto_playing_normal.svg");
 //    QString playingIcon = ":/mpimage/light/music1.svg";
 //    QString highlightPlayingIcon = ":/mpimage/light/music1.svg";

@@ -30,7 +30,7 @@ class LyricLineDelegatePrivate
 public:
     explicit LyricLineDelegatePrivate(LyricLineDelegate *parent): q_ptr(parent) {}
 
-    QWidget *parentWidget;
+    QWidget *parentWidget = nullptr;
 
     LyricLineDelegate *q_ptr;
     Q_DECLARE_PUBLIC(LyricLineDelegate)

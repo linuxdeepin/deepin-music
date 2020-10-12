@@ -46,7 +46,7 @@ public:
     QLabel                  *text = nullptr;
     DPushButton             *importButton = nullptr;
     DPushButton             *addMusicButton = nullptr;
-    QLabel                  *logo;
+    QLabel                  *logo = nullptr;
     ImportWidget *q_ptr;
     Q_DECLARE_PUBLIC(ImportWidget)
 };
