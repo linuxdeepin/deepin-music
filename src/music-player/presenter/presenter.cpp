@@ -566,6 +566,9 @@ void Presenter::prepareData()
             d->notifyMusicPlayed(playlist, meta);
             d->requestMetaSearch(meta);
             d->metaBufferDetector->onBufferDetector(meta->localPath, meta->hash);
+            // 设置播放状态
+            if (!d->player->isReady())
+                d->player->setReady();
         }
     });
 
