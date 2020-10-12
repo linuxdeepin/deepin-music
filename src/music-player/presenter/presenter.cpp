@@ -117,6 +117,7 @@ void PresenterPrivate::initBackend()
     settings = MusicSettings::instance();
 
     pdbusinterval =  new QTimer;
+    pdbusinterval->setTimerType(Qt::PreciseTimer);
     connect(pdbusinterval, &QTimer::timeout,
     this, [ = ]() {
         pdbusinterval->stop();
@@ -2279,7 +2280,7 @@ void Presenter::initMpris(MprisPlayer *mprisPlayer)
     connect(mprisPlayer, &MprisPlayer::seekRequested,
     this, [ = ](qlonglong offset) {
         if (!d->pdbusinterval->isActive()) {
-            d->pdbusinterval->start(50);
+            d->pdbusinterval->start(150);
         } else
             return;
         this->onChangeProgress(d->player->position() + offset, d->player->duration());
@@ -2310,7 +2311,7 @@ void Presenter::initMpris(MprisPlayer *mprisPlayer)
         }
 
         if (!d->pdbusinterval->isActive()) {
-            d->pdbusinterval->start(50);
+            d->pdbusinterval->start(150);
         } else
             return;
         /************************************************************
@@ -2353,7 +2354,7 @@ void Presenter::initMpris(MprisPlayer *mprisPlayer)
         }
 
         if (!d->pdbusinterval->isActive()) {
-            d->pdbusinterval->start(50);
+            d->pdbusinterval->start(150);
         } else
             return;
         /************************************************************
@@ -2373,7 +2374,7 @@ void Presenter::initMpris(MprisPlayer *mprisPlayer)
         }
 
         if (!d->pdbusinterval->isActive()) {
-            d->pdbusinterval->start(50);
+            d->pdbusinterval->start(150);
         } else
             return;
         /************************************************************
