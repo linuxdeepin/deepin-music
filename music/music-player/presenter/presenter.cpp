@@ -676,7 +676,6 @@ void Presenter::postAction(bool showFlag)
     }
 
     auto lastMeta = lastPlaylist->first();
-    auto position = 0;
     auto isMetaLibClear = MediaLibrary::instance()->isEmpty();
     isMetaLibClear |= allplaylist->isEmpty();
 
@@ -705,7 +704,7 @@ void Presenter::postAction(bool showFlag)
         }
 
         if (!lastMeta.isNull()) {
-            position = 0;
+            int position = 0;
             if (d->settings->value("base.play.remember_progress").toBool()) {
                 position = d->settings->value("base.play.last_position").toInt();
             }
@@ -1551,14 +1550,14 @@ void Presenter::onExitSearch()
     }
 }
 
-void Presenter::onLocateMusicAtAll(const QString &hash)
-{
-    Q_D(Presenter);
-    auto allList = d->playlistMgr->playlist(AllMusicListID);
-    d->currentPlaylist = allList;
-    Q_EMIT locateMusic(allList, allList->music(hash));
-    //    onMusicPlay(allList, allList->music(hash));
-}
+//void Presenter::onLocateMusicAtAll(const QString &hash)
+//{
+//    Q_D(Presenter);
+//    auto allList = d->playlistMgr->playlist(AllMusicListID);
+//    d->currentPlaylist = allList;
+//    Q_EMIT locateMusic(allList, allList->music(hash));
+//    //    onMusicPlay(allList, allList->music(hash));
+//}
 
 void Presenter::onChangeSearchMetaCache(const MetaPtr meta, const DMusic::SearchMeta &search)
 {

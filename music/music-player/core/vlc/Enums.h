@@ -280,19 +280,19 @@ public:
         \brief Audio outputs strings
         \return audio outputs strings (QStringList)
     */
-    static QStringList audioOutput();
+    //static QStringList audioOutput();
 
     /*!
         \brief Audio outputs strings in readable form
         \return audio outputs strings (QStringList)
     */
-    static QStringList audioOutputHuman();
+    //static QStringList audioOutputHuman();
 
     /*!
         \brief Deinterlacing modes strings
         \return deinterlacing strings (QStringList)
     */
-    static QStringList deinterlacing();
+    //static QStringList deinterlacing();
 
     /*!
         \brief Mux strings
@@ -310,7 +310,7 @@ public:
         \brief Aspect and crop ratios strings in readable form
         \return ratios strings (QStringList)
     */
-    static QStringList ratioHuman();
+    //static QStringList ratioHuman();
 
     /*!
         \brief Aspect and crop ratios converter to QSizeF
@@ -335,13 +335,13 @@ public:
         \brief Video outputs strings
         \return video outputs strings (QStringList)
     */
-    static QStringList videoOutput();
+    //static QStringList videoOutput();
 
     /*!
         \brief Video outputs strings in readable form
         \return video outputs strings (QStringList)
     */
-    static QStringList videoOutputHuman();
+    //static QStringList videoOutputHuman();
 };
 
 #endif // VLCQT_ENUMS_H_

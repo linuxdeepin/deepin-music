@@ -38,7 +38,6 @@
 #include <DDialog>
 #include <DApplication>
 #include <DTitlebar>
-#include <DImageButton>
 #include <DFileDialog>
 #include <DHiDPIHelper>
 #include <DMessageManager>
@@ -85,7 +84,7 @@ using namespace Dtk::Widget;
 class MainFramePrivate
 {
 public:
-    MainFramePrivate(MainFrame *parent) : q_ptr(parent) {}
+    explicit MainFramePrivate(MainFrame *parent) : q_ptr(parent) {}
 
     void initUI(bool showLoading);
     void postInitUI();
@@ -105,7 +104,7 @@ public:
     void updateSize(QSize newSize);
     void updateViewname(const QString &vm);
     void updateTitlebarViewname(const QString &vm);
-    void overrideTitlebarStyle();
+    //void overrideTitlebarStyle();
     const QString getLastImportPath() const;
     void startTimer();
 
@@ -123,7 +122,7 @@ public:
     ImportWidget        *importWidget           = nullptr;
     LoadWidget          *loadWidget             = nullptr;
     PlayListWidget      *playListWidget         = nullptr;
-    MUsicLyricWidget    *lyricWidget            = nullptr;
+    MusicLyricWidget    *lyricWidget            = nullptr;
     Footer              *footer                 = nullptr;
     MusicListWidget     *musicListWidget        = nullptr;
 
@@ -405,7 +404,7 @@ void MainFramePrivate::postInitUI()
 
     // 界面刷新一次，使能禁用只设置一次
     playListWidget = footer->getPlayListWidget();
-    lyricWidget = new MUsicLyricWidget;
+    lyricWidget = new MusicLyricWidget;
     lyricWidget->setContentsMargins(0, titlebar->height(), 0, FooterHeight + 10);
 
     contentLayout->setContentsMargins(0, 0, 0, 0);
@@ -739,23 +738,23 @@ void MainFramePrivate::updateTitlebarViewname(const QString &vm)
     }
 }
 
-void MainFramePrivate::overrideTitlebarStyle()
-{
-    titlebar->setObjectName("Titlebar");
+//void MainFramePrivate::overrideTitlebarStyle()
+//{
+//    titlebar->setObjectName("Titlebar");
 
-    QStringList objNames;
-    objNames  << "DTitlebarDWindowMinButton"
-              << "DTitlebarDWindowMaxButton"
-              << "DTitlebarDWindowCloseButton"
-              << "DTitlebarDWindowOptionButton";
+//    QStringList objNames;
+//    objNames  << "DTitlebarDWindowMinButton"
+//              << "DTitlebarDWindowMaxButton"
+//              << "DTitlebarDWindowCloseButton"
+//              << "DTitlebarDWindowOptionButton";
 
-    for (auto &objname : objNames) {
-        auto titlebarBt = titlebar->findChild<QWidget *>(objname);
-        if (!titlebarBt) {
-            continue;
-        }
-    }
-}
+//    for (auto &objname : objNames) {
+//        auto titlebarBt = titlebar->findChild<QWidget *>(objname);
+//        if (!titlebarBt) {
+//            continue;
+//        }
+//    }
+//}
 
 const QString MainFramePrivate::getLastImportPath() const
 {
@@ -1285,21 +1284,21 @@ void MainFrame::binding(Presenter *presenter)
             d->playListWidget,  &PlayListWidget::onLocate);
 
     connect(presenter, &Presenter::progrossChanged,
-            d->lyricWidget, &MUsicLyricWidget::onProgressChanged);
+            d->lyricWidget, &MusicLyricWidget::onProgressChanged);
     connect(presenter, &Presenter::musicPlayed,
-            d->lyricWidget, &MUsicLyricWidget::onMusicPlayed);
+            d->lyricWidget, &MusicLyricWidget::onMusicPlayed);
     connect(presenter, &Presenter::coverSearchFinished,
-            d->lyricWidget, &MUsicLyricWidget::onCoverChanged);
+            d->lyricWidget, &MusicLyricWidget::onCoverChanged);
     connect(presenter, &Presenter::lyricSearchFinished,
-            d->lyricWidget, &MUsicLyricWidget::onLyricChanged);
+            d->lyricWidget, &MusicLyricWidget::onLyricChanged);
     connect(presenter, &Presenter::contextSearchFinished,
-            d->lyricWidget, &MUsicLyricWidget::onContextSearchFinished);
+            d->lyricWidget, &MusicLyricWidget::onContextSearchFinished);
     connect(presenter, &Presenter::musicStoped,
-            d->lyricWidget,  &MUsicLyricWidget::onMusicStop);
+            d->lyricWidget,  &MusicLyricWidget::onMusicStop);
 
-    connect(d->lyricWidget,  &MUsicLyricWidget::requestContextSearch,
+    connect(d->lyricWidget,  &MusicLyricWidget::requestContextSearch,
             presenter, &Presenter::requestContextSearch);
-    connect(d->lyricWidget, &MUsicLyricWidget::changeMetaCache,
+    connect(d->lyricWidget, &MusicLyricWidget::changeMetaCache,
             presenter, &Presenter::onChangeSearchMetaCache);
 
 
@@ -1761,11 +1760,11 @@ void MainFrame::closeEvent(QCloseEvent *event)
     case 2: {
         CloseConfirmDialog ccd(this);
         // fix close style
-        auto titlebarBt = titlebar()->findChild<QWidget *>("DTitlebarDWindowCloseButton");
-        auto closeBt = qobject_cast<DImageButton *>(titlebarBt);
-        if (closeBt) {
-            closeBt->setState(DImageButton::Normal);
-        }
+//        auto titlebarBt = titlebar()->findChild<QWidget *>("DTitlebarDWindowCloseButton");
+//        auto closeBt = qobject_cast<DImageButton *>(titlebarBt);
+//        if (closeBt) {
+//            closeBt->setState(DImageButton::Normal);
+//        }
 
         auto clickedButtonIndex = ccd.exec();
         // 1 is confirm button

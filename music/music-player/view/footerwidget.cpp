@@ -76,7 +76,7 @@ DGUI_USE_NAMESPACE
 class FooterPrivate
 {
 public:
-    FooterPrivate(Footer *parent) : q_ptr(parent)
+    explicit FooterPrivate(Footer *parent) : q_ptr(parent)
     {
         hintFilter = new HintFilter;
     }
@@ -123,7 +123,7 @@ public:
     int             m_type = 1;
 
     bool            btPlayingStatus = false;
-    QTimer         *m_timer; //to avoid mul-repeat click
+    QTimer         *m_timer = nullptr; //to avoid mul-repeat click
     VolumeMonitoring         volumeMonitoring;
     int             m_Volume = 0;
     int             m_Mute = 0;
@@ -740,34 +740,34 @@ void Footer::showPlayListWidget(int width, int height, bool changFlag)
         }
     }
 }
-void Footer::setSize(int width, int height, bool changFlag)
-{
-    Q_D(Footer);
-    if (changFlag) {
-        if (d->showPlaylistFlag) {
-            d->playListWidget->hide();
-            setFixedSize(width - 10, 80);
-            move(5, height - 86);
-            resize(width - 10, 80);
-        } else {
-            d->playListWidget->show();
-            setFixedSize(width - 10, 423);
-            move(5, height - 429);
-            resize(width - 10, 423);
-        }
-        d->showPlaylistFlag = (!d->showPlaylistFlag);
-    } else {
-        if (d->showPlaylistFlag) {
-            setFixedSize(width - 10, 423);
-            move(5, height - 429);
-            resize(width - 10, 423);
-        } else {
-            setFixedSize(width - 10, 80);
-            move(5, height - 86);
-            resize(width - 10, 80);
-        }
-    }
-}
+//void Footer::setSize(int width, int height, bool changFlag)
+//{
+//    Q_D(Footer);
+//    if (changFlag) {
+//        if (d->showPlaylistFlag) {
+//            d->playListWidget->hide();
+//            setFixedSize(width - 10, 80);
+//            move(5, height - 86);
+//            resize(width - 10, 80);
+//        } else {
+//            d->playListWidget->show();
+//            setFixedSize(width - 10, 423);
+//            move(5, height - 429);
+//            resize(width - 10, 423);
+//        }
+//        d->showPlaylistFlag = (!d->showPlaylistFlag);
+//    } else {
+//        if (d->showPlaylistFlag) {
+//            setFixedSize(width - 10, 423);
+//            move(5, height - 429);
+//            resize(width - 10, 423);
+//        } else {
+//            setFixedSize(width - 10, 80);
+//            move(5, height - 86);
+//            resize(width - 10, 80);
+//        }
+//    }
+//}
 
 bool Footer::getShowPlayListFlag()
 {
@@ -832,8 +832,8 @@ void Footer::mouseReleaseEvent(QMouseEvent *event)
 void Footer::mouseMoveEvent(QMouseEvent *event)
 {
     Q_D(Footer);
-    Qt::MouseButton button = event->buttons() & Qt::LeftButton ? Qt::LeftButton : Qt::NoButton;
-    if (d->enableMove && d->enableMove && event->buttons() == Qt::LeftButton) {
+    Qt::MouseButton button = (event->buttons() & Qt::LeftButton) ? Qt::LeftButton : Qt::NoButton;
+    if (d->enableMove && event->buttons() == Qt::LeftButton) {
         Q_EMIT mouseMoving(button);
         DWidget::mouseMoveEvent(event);
     }

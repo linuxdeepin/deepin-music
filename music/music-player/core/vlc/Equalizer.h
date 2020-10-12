@@ -43,7 +43,7 @@ public:
         \brief Get the number of distinct frequency bands for an equalizer.
         \return number of frequency bands
      */
-    uint bandCount() const;
+    //uint bandCount() const;
 
     /*!
         \brief Get a particular equalizer band frequency.
@@ -53,7 +53,7 @@ public:
         \param bandIndex index of the band, counting from zero
         \return equalizer band frequency (Hz), or -1 if there is no such band
      */
-    float bandFrequency(uint bandIndex) const;
+    //float bandFrequency(uint bandIndex) const;
 
     /*!
         \brief Get the current pre-amplification value from an equalizer.
@@ -65,7 +65,7 @@ public:
         \brief Get the number of equalizer presets.
         \return number of presets
      */
-    uint presetCount() const;
+    //uint presetCount() const;
 
     /*!
         \brief Get the name of a particular equalizer preset.
@@ -75,7 +75,7 @@ public:
         \param index index of the preset, counting from zero
         \return preset name, or an empty string if there is no such preset
      */
-    QString presetNameAt(uint index) const;
+    //QString presetNameAt(uint index) const;
 
 public slots:
     /*!

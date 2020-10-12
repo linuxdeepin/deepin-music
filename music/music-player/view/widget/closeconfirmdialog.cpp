@@ -37,7 +37,7 @@ DWIDGET_USE_NAMESPACE
 class CloseConfirmDialogPrivate
 {
 public:
-    CloseConfirmDialogPrivate(CloseConfirmDialog *parent) : q_ptr(parent) {}
+    explicit CloseConfirmDialogPrivate(CloseConfirmDialog *parent) : q_ptr(parent) {}
 
     DRadioButton    *exitBt     = Q_NULLPTR;
     DCheckBox       *remember   = Q_NULLPTR;

@@ -64,7 +64,7 @@ bool HoverFilter::eventFilter(QObject *obj, QEvent *event)
 class HintFilterPrivate
 {
 public:
-    HintFilterPrivate(HintFilter *parent) : q_ptr(parent) {}
+    explicit HintFilterPrivate(HintFilter *parent) : q_ptr(parent) {}
 
     void showHint(QWidget *hint);
 

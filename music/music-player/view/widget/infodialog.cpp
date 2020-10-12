@@ -53,7 +53,7 @@ static const int CoverSize = 142;
 class InfoDialogPrivate
 {
 public:
-    InfoDialogPrivate(InfoDialog *parent) : q_ptr(parent) {}
+    explicit InfoDialogPrivate(InfoDialog *parent) : q_ptr(parent) {}
 
     void initUI();
     void initConnection();

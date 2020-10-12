@@ -53,9 +53,8 @@ static const QString defaultLyric = "No Lyric";
 class LyricWidgetPrivate
 {
 public:
-    LyricWidgetPrivate(LyricWidget *parent): q_ptr(parent) {}
+    explicit LyricWidgetPrivate(LyricWidget *parent): q_ptr(parent) {}
 
-    bool checkSearchMeta();
     void adjustLyric();
     void setLyricLines(QString lines);
     void showCover();
@@ -83,11 +82,6 @@ public:
     LyricWidget *q_ptr;
     Q_DECLARE_PUBLIC(LyricWidget)
 };
-
-bool LyricWidgetPrivate::checkSearchMeta()
-{
-    return true;
-}
 
 void LyricWidgetPrivate::adjustLyric()
 {

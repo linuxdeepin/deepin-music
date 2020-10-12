@@ -32,7 +32,7 @@ public:
         This does nothing.
 
     */
-    Q_DECL_DEPRECATED static void clearerr();
+    //Q_DECL_DEPRECATED static void clearerr();
 };
 
 #endif // VLCQT_ERROR_H_

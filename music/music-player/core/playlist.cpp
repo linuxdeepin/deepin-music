@@ -54,8 +54,8 @@ const MetaPtr Playlist::prev(const MetaPtr meta) const
     if (0 == playlistMeta.sortMetas.length() || meta.isNull()) {
         return MetaPtr();
     }
-    auto index = playlistMeta.sortMetas.indexOf(meta->hash);
-    auto prev = (index + playlistMeta.sortMetas.length() - 1) % playlistMeta.sortMetas.length();
+    int index = playlistMeta.sortMetas.indexOf(meta->hash);
+    int prev = (index + playlistMeta.sortMetas.length() - 1) % playlistMeta.sortMetas.length();
     return playlistMeta.metas.value(playlistMeta.sortMetas.at(prev));
 }
 
@@ -519,11 +519,11 @@ MetaPtr Playlist::removeOneMusic(const MetaPtr meta)
     return nextMeta;
 }
 
-inline bool startWithHanzi(const QString &text)
-{
-    const QVector<uint> list = text.toUcs4();
-    return !list.isEmpty() && list.first() >= 0x4e00 && list.first() <= 0x9fbf;
-}
+//inline bool startWithHanzi(const QString &text)
+//{
+//    const QVector<uint> list = text.toUcs4();
+//    return !list.isEmpty() && list.first() >= 0x4e00 && list.first() <= 0x9fbf;
+//}
 
 bool lessCompareByString(const QString &str1, const QString &str2)
 {

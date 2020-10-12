@@ -31,39 +31,39 @@ QStringList Vlc::audioCodec()
     return list;
 }
 
-QStringList Vlc::audioOutput()
-{
-    QStringList list;
-    list << "default";
+//QStringList Vlc::audioOutput()
+//{
+//    QStringList list;
+//    list << "default";
 
-    return list;
-}
+//    return list;
+//}
 
-QStringList Vlc::audioOutputHuman()
-{
-    QStringList list;
-    list << "default";
+//QStringList Vlc::audioOutputHuman()
+//{
+//    QStringList list;
+//    list << "default";
 
-    return list;
-}
+//    return list;
+//}
 
-QStringList Vlc::deinterlacing()
-{
-    QStringList list;
-    list << ""
-         << "discard"
-         << "blend"
-         << "man"
-         << "bob"
-         << "linear"
-         << "x"
-         << "yadif"
-         << "yadif2x"
-         << "phosphor"
-         << "ivtc";
+//QStringList Vlc::deinterlacing()
+//{
+//    QStringList list;
+//    list << ""
+//         << "discard"
+//         << "blend"
+//         << "man"
+//         << "bob"
+//         << "linear"
+//         << "x"
+//         << "yadif"
+//         << "yadif2x"
+//         << "phosphor"
+//         << "ivtc";
 
-    return list;
-}
+//    return list;
+//}
 
 QStringList Vlc::mux()
 {
@@ -96,24 +96,24 @@ QStringList Vlc::ratio()
     return list;
 }
 
-QStringList Vlc::ratioHuman()
-{
-    QStringList list;
-    list << ""
-         << ""
-         << "16:9"
-         << "16:10"
-         << "1.85:1"
-         << "2.21:1"
-         << "2.35:1"
-         << "2.39:1"
-         << "4:3"
-         << "5:4"
-         << "5:3"
-         << "1:1";
+//QStringList Vlc::ratioHuman()
+//{
+//    QStringList list;
+//    list << ""
+//         << ""
+//         << "16:9"
+//         << "16:10"
+//         << "1.85:1"
+//         << "2.21:1"
+//         << "2.35:1"
+//         << "2.39:1"
+//         << "4:3"
+//         << "5:4"
+//         << "5:3"
+//         << "1:1";
 
-    return list;
-}
+//    return list;
+//}
 
 QSizeF Vlc::ratioSize(const Vlc::Ratio &ratio)
 {
@@ -189,38 +189,38 @@ QStringList Vlc::videoCodec()
     return list;
 }
 
-QStringList Vlc::videoOutput()
-{
-    QStringList list;
-    list << "default";
+//QStringList Vlc::videoOutput()
+//{
+//    QStringList list;
+//    list << "default";
 
-#if defined(Q_OS_LINUX)
-    list << "x11"
-         << "xvideo"
-         << "glx";
-#elif defined(Q_OS_WIN32)
-    list << "directx"
-         << "direct3d"
-         << "opengl";
-#endif
+//#if defined(Q_OS_LINUX)
+//    list << "x11"
+//         << "xvideo"
+//         << "glx";
+//#elif defined(Q_OS_WIN32)
+//    list << "directx"
+//         << "direct3d"
+//         << "opengl";
+//#endif
 
-    return list;
-}
+//    return list;
+//}
 
-QStringList Vlc::videoOutputHuman()
-{
-    QStringList list;
-    list << "default";
+//QStringList Vlc::videoOutputHuman()
+//{
+//    QStringList list;
+//    list << "default";
 
-#if defined(Q_OS_LINUX)
-    list << "X11"
-         << "XVideo"
-         << "OpenGL";
-#elif defined(Q_OS_WIN32)
-    list << "DirectX"
-         << "Direct3D"
-         << "OpenGL";
-#endif
+//#if defined(Q_OS_LINUX)
+//    list << "X11"
+//         << "XVideo"
+//         << "OpenGL";
+//#elif defined(Q_OS_WIN32)
+//    list << "DirectX"
+//         << "Direct3D"
+//         << "OpenGL";
+//#endif
 
-    return list;
-}
+//    return list;
+//}

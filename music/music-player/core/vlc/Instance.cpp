@@ -119,17 +119,17 @@ Vlc::LogLevel VlcInstance::logLevel() const
     return _logLevel;
 }
 
-void VlcInstance::setLogLevel(Vlc::LogLevel level)
-{
-    _logLevel = level;
-}
+//void VlcInstance::setLogLevel(Vlc::LogLevel level)
+//{
+//    _logLevel = level;
+//}
 
-QString VlcInstance::changeset()
-{
-    // Returns libvlc changeset
-    vlc_get_changeset_function vlc_get_changeset = (vlc_get_changeset_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("libvlc_get_changeset");
-    return QString(vlc_get_changeset());
-}
+//QString VlcInstance::changeset()
+//{
+//    // Returns libvlc changeset
+//    vlc_get_changeset_function vlc_get_changeset = (vlc_get_changeset_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("libvlc_get_changeset");
+//    return QString(vlc_get_changeset());
+//}
 
 void VlcInstance::catchPulseError(int err)
 {
@@ -137,12 +137,12 @@ void VlcInstance::catchPulseError(int err)
     emit sendErrorOccour(0);
 }
 
-QString VlcInstance::compiler()
-{
-    // Returns libvlc compiler version
-    vlc_get_compiler_function vlc_get_compiler = (vlc_get_compiler_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("libvlc_get_compiler");
-    return QString(vlc_get_compiler());
-}
+//QString VlcInstance::compiler()
+//{
+//    // Returns libvlc compiler version
+//    vlc_get_compiler_function vlc_get_compiler = (vlc_get_compiler_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("libvlc_get_compiler");
+//    return QString(vlc_get_compiler());
+//}
 
 QString VlcInstance::version()
 {

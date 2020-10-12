@@ -173,7 +173,7 @@ void MusicListView::addMusicList(PlaylistPtr playlist, bool addFlag)
     }
 
     allPlaylists.append(playlist);
-    QString displayName;
+    QString displayName = "";
     if (playlist->id() == FavMusicListID) {
         displayName = tr("My Favorites");
     } else {
@@ -601,29 +601,20 @@ void MusicListView::showContextMenu(const QPoint &pos)
 void MusicListView::slotTheme(int type)
 {
     m_type = type;
-    QString rStr;
-    if (type == 1) {
-        rStr = "light";
-    } else {
-        rStr = "dark";
-    }
-    for (int i = 0; i < model->rowCount(); i++) {
-        for (int i = 0; i < model->rowCount(); i++) {
-            auto curIndex = model->index(i, 0);
-            auto curStandardItem = dynamic_cast<DStandardItem *>(model->itemFromIndex(curIndex));
-            auto curItemRow = curStandardItem->row();
-            if (curItemRow < 0 || curItemRow >= allPlaylists.size())
-                continue;
-            auto playlist = allPlaylists[curStandardItem->row()];
 
-            if (m_type == 1) {
-                curStandardItem->setForeground(QColor("#414D68"));
-            } else {
-                curStandardItem->setForeground(QColor("#C0C6D4"));
-            }
+    for (int i = 0; i < model->rowCount(); i++) {
+        auto curIndex = model->index(i, 0);
+        auto curStandardItem = dynamic_cast<DStandardItem *>(model->itemFromIndex(curIndex));
+        auto curItemRow = curStandardItem->row();
+        if (curItemRow < 0 || curItemRow >= allPlaylists.size())
+            continue;
+
+        if (m_type == 1) {
+            curStandardItem->setForeground(QColor("#414D68"));
+        } else {
+            curStandardItem->setForeground(QColor("#C0C6D4"));
         }
     }
-
 }
 
 void MusicListView::onRename(QStandardItem *item)

@@ -121,10 +121,10 @@ void initMiniTypes()
     }
 }
 
-QStringList Player::supportedFilterStringList() const
-{
-    return sSupportedFiterList;
-}
+//QStringList Player::supportedFilterStringList() const
+//{
+//    return sSupportedFiterList;
+//}
 
 QStringList Player::supportedSuffixList() const
 {
@@ -139,7 +139,7 @@ QStringList Player::supportedMimeTypes() const
 class PlayerPrivate
 {
 public:
-    PlayerPrivate(Player *parent) : q_ptr(parent)
+    explicit PlayerPrivate(Player *parent) : q_ptr(parent)
     {
         /*-------AudioPlayer-------*/
 //        QtConcurrent::run([ = ] {

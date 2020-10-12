@@ -47,7 +47,7 @@ DWIDGET_USE_NAMESPACE
 class MusicListInfoViewPrivate
 {
 public:
-    MusicListInfoViewPrivate(MusicListInfoView *parent): q_ptr(parent) {}
+    explicit MusicListInfoViewPrivate(MusicListInfoView *parent): q_ptr(parent) {}
 
     void addMedia(const MetaPtr meta);
     void removeSelection(QItemSelectionModel *selection);
@@ -409,8 +409,7 @@ void MusicListInfoViewPrivate::addMedia(const MetaPtr meta)
     if (coverData.length() > 0) {
         cover = QPixmap::fromImage(QImage::fromData(coverData));
     }
-    QIcon icon = QIcon(cover);
-    newItem->setIcon(icon);
+    newItem->setIcon(QIcon(cover));
     model->appendRow(newItem);
 
     auto row = model->rowCount() - 1;

@@ -78,7 +78,7 @@ typedef int (*codec_receive_frame_function)(AVCodecContext *, AVFrame *);
 class MediaLibraryPrivate
 {
 public:
-    MediaLibraryPrivate(MediaLibrary *parent) : q_ptr(parent)
+    explicit MediaLibraryPrivate(MediaLibrary *parent) : q_ptr(parent)
     {
         QTimer::singleShot(200, nullptr, [ = ]() {
             losslessSuffixs.insert("flac", true);

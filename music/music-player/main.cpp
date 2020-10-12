@@ -211,6 +211,7 @@ int main(int argc, char *argv[])
         }
     });
 
+
     app.setQuitOnLastWindowClosed(false);
 
     QObject::connect(DGuiApplicationHelper::instance(), &DGuiApplicationHelper::themeTypeChanged,

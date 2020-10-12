@@ -42,10 +42,10 @@ using namespace Dtk::Widget;
 class SoundVolumePrivate
 {
 public:
-    SoundVolumePrivate(SoundVolume *parent) : q_ptr(parent) {}
+    explicit SoundVolumePrivate(SoundVolume *parent) : q_ptr(parent) {}
 
     SoundVolume *q_ptr;
-    DLabel      *lblPersent;
+    DLabel      *lblPersent = nullptr;
     DSlider     *volSlider           = nullptr;
     SoundPixmapButton *sound         = nullptr;
     QBrush      background;

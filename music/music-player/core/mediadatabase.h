@@ -36,11 +36,11 @@ public:
     void init();
 
     //! music meta query interface
-    bool mediaMetaExist(const QString &hash);
+    //bool mediaMetaExist(const QString &hash);
     QList<MediaMeta> allmetas();
-    static MetaPtrList searchMediaTitle(const QString &title, int limit);
-    static MetaPtrList searchMediaMeta(const QString &title, int limit);
-    static MetaPtrList searchMediaPath(const QString &title, int limit);
+    //static MetaPtrList searchMediaTitle(const QString &title, int limit);
+    //static MetaPtrList searchMediaMeta(const QString &title, int limit);
+    //static MetaPtrList searchMediaPath(const QString &title, int limit);
 
     //! sync query interface
     static QStringList allPlaylistDisplayName();

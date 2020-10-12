@@ -52,7 +52,7 @@ public:
     };
     Q_ENUM(PlayStatus)
 public:
-    PlayItemDelegate(QWidget *parent = Q_NULLPTR);
+    explicit PlayItemDelegate(QWidget *parent = Q_NULLPTR);
     ~PlayItemDelegate();
 
 public:

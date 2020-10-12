@@ -46,7 +46,7 @@ signals:
 public slots:
     void onSpeedResult(int action, bool result);
 private:
-    SpeechCenter(QObject *parent = nullptr);
+    explicit SpeechCenter(QObject *parent = nullptr);
 
 private:
     bool playMusicResult        = true;

@@ -30,7 +30,7 @@ class MusicListDataDelegate : public QStyledItemDelegate
     Q_OBJECT
 
 public:
-    MusicListDataDelegate(QWidget *parent = Q_NULLPTR);
+    explicit MusicListDataDelegate(QWidget *parent = Q_NULLPTR);
     ~MusicListDataDelegate() override;
 
     virtual void initStyleOption(QStyleOptionViewItem *option,

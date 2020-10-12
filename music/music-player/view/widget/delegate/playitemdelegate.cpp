@@ -166,11 +166,11 @@ QColor PlayItemDelegatePrivate::foreground(int col, const QStyleOptionViewItem &
     return textColor();
 }
 
-inline int PlayItemDelegatePrivate::timePropertyWidth(const QStyleOptionViewItem &option) const
-{
-    static auto width  = tailPointWidth(option);
-    return width;
-}
+//inline int PlayItemDelegatePrivate::timePropertyWidth(const QStyleOptionViewItem &option) const
+//{
+//    static auto width  = tailPointWidth(option);
+//    return width;
+//}
 
 static inline QFlags<Qt::AlignmentFlag> alignmentFlag(int col)
 {

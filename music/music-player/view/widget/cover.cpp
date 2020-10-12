@@ -30,7 +30,7 @@ static auto borderPenWidth = 1.0;
 class CoverPrivate
 {
 public:
-    CoverPrivate(Cover *parent): q_ptr(parent) {}
+    explicit CoverPrivate(Cover *parent): q_ptr(parent) {}
 
     int     m_radius        = 8;
     QColor  m_borderColor;

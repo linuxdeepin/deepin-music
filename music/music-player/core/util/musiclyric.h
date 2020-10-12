@@ -8,7 +8,7 @@ class MusicLyric
 public:
     MusicLyric();
     void getFromFile(QString dir);
-    void getFromFileOld(QString dir);
+    //void getFromFileOld(QString dir);
     QString getLineAt(int index);
     int getCount();
     int getIndex(qint64 pos);

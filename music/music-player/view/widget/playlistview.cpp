@@ -48,7 +48,7 @@ DWIDGET_USE_NAMESPACE
 class PlayListViewPrivate
 {
 public:
-    PlayListViewPrivate(PlayListView *parent): q_ptr(parent) {}
+    explicit PlayListViewPrivate(PlayListView *parent): q_ptr(parent) {}
 
     void addMedia(const MetaPtr meta);
     void removeSelection(QItemSelectionModel *selection);

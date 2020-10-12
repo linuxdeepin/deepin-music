@@ -107,14 +107,14 @@ void VlcAudio::setVolume(int volume)
     }
 }
 
-void VlcAudio::setTrack(int track)
-{
-    if (_vlcMediaPlayer) {
-        vlc_audio_set_track_function vlc_audio_set_track = (vlc_audio_set_track_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("libvlc_audio_set_track");
-        vlc_audio_set_track(_vlcMediaPlayer, track);
-        VlcError::showErrmsg();
-    }
-}
+//void VlcAudio::setTrack(int track)
+//{
+//    if (_vlcMediaPlayer) {
+//        vlc_audio_set_track_function vlc_audio_set_track = (vlc_audio_set_track_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("libvlc_audio_set_track");
+//        vlc_audio_set_track(_vlcMediaPlayer, track);
+//        VlcError::showErrmsg();
+//    }
+//}
 
 bool VlcAudio::toggleMute() const
 {
@@ -160,53 +160,53 @@ int VlcAudio::trackCount() const
     return count;
 }
 
-QStringList VlcAudio::trackDescription() const
-{
-    QStringList descriptions;
+//QStringList VlcAudio::trackDescription() const
+//{
+//    QStringList descriptions;
 
-    if (_vlcMediaPlayer) {
-        libvlc_track_description_t *desc;
-        vlc_audio_get_track_description_function vlc_audio_get_track_description = (vlc_audio_get_track_description_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("libvlc_audio_get_track_description");
-        desc = vlc_audio_get_track_description(_vlcMediaPlayer);
-        VlcError::showErrmsg();
+//    if (_vlcMediaPlayer) {
+//        libvlc_track_description_t *desc;
+//        vlc_audio_get_track_description_function vlc_audio_get_track_description = (vlc_audio_get_track_description_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("libvlc_audio_get_track_description");
+//        desc = vlc_audio_get_track_description(_vlcMediaPlayer);
+//        VlcError::showErrmsg();
 
-        if(!desc)
-            return descriptions;
-        descriptions << QString().fromUtf8(desc->psz_name);
-        if (trackCount() > 1) {
-            for (int i = 1; i < trackCount(); i++) {
-                desc = desc->p_next;
-                descriptions << QString().fromUtf8(desc->psz_name);
-            }
-        }
-    }
+//        if(!desc)
+//            return descriptions;
+//        descriptions << QString().fromUtf8(desc->psz_name);
+//        if (trackCount() > 1) {
+//            for (int i = 1; i < trackCount(); i++) {
+//                desc = desc->p_next;
+//                descriptions << QString().fromUtf8(desc->psz_name);
+//            }
+//        }
+//    }
 
-    return descriptions;
-}
+//    return descriptions;
+//}
 
-QList<int> VlcAudio::trackIds() const
-{
-    QList<int> ids;
+//QList<int> VlcAudio::trackIds() const
+//{
+//    QList<int> ids;
 
-    if (_vlcMediaPlayer) {
-        libvlc_track_description_t *desc;
-        vlc_audio_get_track_description_function vlc_audio_get_track_description = (vlc_audio_get_track_description_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("libvlc_audio_get_track_description");
-        desc = vlc_audio_get_track_description(_vlcMediaPlayer);
-        VlcError::showErrmsg();
+//    if (_vlcMediaPlayer) {
+//        libvlc_track_description_t *desc;
+//        vlc_audio_get_track_description_function vlc_audio_get_track_description = (vlc_audio_get_track_description_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("libvlc_audio_get_track_description");
+//        desc = vlc_audio_get_track_description(_vlcMediaPlayer);
+//        VlcError::showErrmsg();
 
-        if(!desc)
-            return ids;
-        ids << desc->i_id;
-        if (trackCount() > 1) {
-            for (int i = 1; i < trackCount(); i++) {
-                desc = desc->p_next;
-                ids << desc->i_id;
-            }
-        }
-    }
+//        if(!desc)
+//            return ids;
+//        ids << desc->i_id;
+//        if (trackCount() > 1) {
+//            for (int i = 1; i < trackCount(); i++) {
+//                desc = desc->p_next;
+//                ids << desc->i_id;
+//            }
+//        }
+//    }
 
-    return ids;
-}
+//    return ids;
+//}
 
 QMap<int, QString> VlcAudio::tracks() const
 {

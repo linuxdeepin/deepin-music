@@ -41,12 +41,12 @@ const QString linkTemplate = "<a href='%1'>%2</a>";
 class ImportWidgetPrivate
 {
 public:
-    ImportWidgetPrivate(ImportWidget *parent) : q_ptr(parent) {}
+    explicit ImportWidgetPrivate(ImportWidget *parent) : q_ptr(parent) {}
 
     QLabel                  *text = nullptr;
     DPushButton             *importButton = nullptr;
     DPushButton             *addMusicButton = nullptr;
-    QLabel                  *logo;
+    QLabel                  *logo = nullptr;
     ImportWidget *q_ptr;
     Q_DECLARE_PUBLIC(ImportWidget)
 };

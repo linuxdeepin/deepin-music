@@ -44,7 +44,7 @@ using namespace Dtk::Widget;
 class MusicAppPrivate
 {
 public:
-    MusicAppPrivate(MusicApp *parent) : q_ptr(parent) {}
+    explicit MusicAppPrivate(MusicApp *parent) : q_ptr(parent) {}
 
     void initMpris(const QString &serviceName);
     void triggerShortcutAction(const QString &optKey);

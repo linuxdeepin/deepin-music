@@ -46,7 +46,7 @@ class HintFilter: public QObject
 {
     Q_OBJECT
 public:
-    HintFilter(QObject *parent = nullptr);
+    explicit HintFilter(QObject *parent = nullptr);
     ~HintFilter();
 
     void hideAll();

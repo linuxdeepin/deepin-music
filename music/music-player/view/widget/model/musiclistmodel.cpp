@@ -26,7 +26,7 @@
 class MusiclistModelPrivate
 {
 public:
-    MusiclistModelPrivate(MusiclistModel *parent) : q_ptr(parent) {}
+    explicit MusiclistModelPrivate(MusiclistModel *parent) : q_ptr(parent) {}
 
     MusiclistModel *q_ptr;
     Q_DECLARE_PUBLIC(MusiclistModel)

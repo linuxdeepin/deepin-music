@@ -195,7 +195,7 @@ public slots:
     void onSearchText(const QString &id, const QString &text);
     void onSearchCand(const QString text);//查询候选项
     void onExitSearch();
-    void onLocateMusicAtAll(const QString &hash);
+    //void onLocateMusicAtAll(const QString &hash);
     void onChangeSearchMetaCache(const MetaPtr meta, const DMusic::SearchMeta &search);
 
     void onScanMusicDirectory();
