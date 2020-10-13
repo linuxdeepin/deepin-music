@@ -936,10 +936,8 @@ void Footer::onMusicPlayed(PlaylistPtr playlist, const MetaPtr meta)
         coverImage = cover.copy((cover.width() - imageWidth) / 2, 0, imageWidth, imageheight);
     }
 
+    d->activingMeta = meta; //refresh sync
     refreshBackground();
-//    d->forwardWidget->setSourceImage(coverImage);
-//    blurBackground()->setSourceImage(coverImage);
-    //d->waveform->onAudioBuffer(MetaDetector::getMetaData(meta->localPath));
 
     this->enableControl(true);
     d->title->show();
@@ -948,9 +946,6 @@ void Footer::onMusicPlayed(PlaylistPtr playlist, const MetaPtr meta)
     d->btNext->show();
     d->btFavorite->show();
     d->btLyric->show();
-
-    //d->activingPlaylist = playlist;
-    d->activingMeta = meta;
 
     if (d->activingPlaylist != nullptr) {
         if (d->activingPlaylist->allmusic().isEmpty()) {

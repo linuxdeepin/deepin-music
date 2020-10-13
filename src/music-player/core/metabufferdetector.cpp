@@ -133,7 +133,6 @@ void MetaBufferDetector::run()
 
     QVector<float> curData;
     bool flag = false;
-    int readCount = 0;
     while (av_read_frame(pFormatCtx, packet) >= 0) {
         //stop detector
         if (d->stopFlag && curData.size() > 100) {
@@ -179,10 +178,6 @@ void MetaBufferDetector::run()
                         }
                     }
                 }
-            }
-
-            if (readCount++ > 1000) {
-                break ;
             }
         }
         av_packet_unref(packet);
