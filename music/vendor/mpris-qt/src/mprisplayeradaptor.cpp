@@ -243,20 +243,13 @@ void MprisPlayerAdaptor::OpenUri(const QString &Uri)
         return;
     }
 
-    //must use original url. warn:do not use local file  hj 2020/7/21
     QUrl url(Uri, QUrl::StrictMode);
     if (!url.isValid()) {
         player->sendErrorReply(QDBusError::InvalidArgs, QStringLiteral("Wanted to open an url but the url is invalid."));
     }
 
     if (!player->supportedUriSchemes().contains(url.scheme())) {
-        //compatible the file that has not scheme   hj 2020/7/21
-        QUrl lurl = QUrl::fromLocalFile(Uri);
-        if (!lurl.isLocalFile()) {
-            player->sendErrorReply(QDBusError::NotSupported, QStringLiteral("Wanted to open an url but the scheme is not supported."));
-        } else {
-            url = lurl;
-        }
+        player->sendErrorReply(QDBusError::NotSupported, QStringLiteral("Wanted to open an url but the scheme is not supported."));
     }
 
     QMimeDatabase db;
@@ -385,24 +378,23 @@ void MprisPlayerAdaptor::Seek(qlonglong Offset)
         return;
     }
 
-//    if (Offset < 0) {
-//        emit player->seekRequested(Offset);
-//        return;
-//    }
+    if (Offset < 0) {
+        emit player->seekRequested(Offset);
+        return;
+    }
 
-//    QVariantMap metadata = player->metadata();
-//    QVariant length = metadata[Mpris::metadataToString(Mpris::Length)];
-//    if (length.isValid() && (player->position() + Offset) > length.toLongLong()) {
-//        emit player->nextRequested();
-//        return;
-//    }
+    QVariantMap metadata = player->metadata();
+    QVariant length = metadata[Mpris::metadataToString(Mpris::Length)];
+    if (length.isValid() && (player->position() + Offset) > length.toLongLong()) {
+        emit player->nextRequested();
+        return;
+    }
 
     emit player->seekRequested(Offset);
 }
 
 void MprisPlayerAdaptor::SetPosition(const QDBusObjectPath &TrackId, qlonglong Position)
 {
-    Q_UNUSED(TrackId)
     MprisPlayer *const player = static_cast<MprisPlayer *>(parent());
     if (!player->canControl()) {
         player->sendErrorReply(QDBusError::NotSupported, QStringLiteral("Wanted to move to position but it is not supported."));
@@ -410,6 +402,23 @@ void MprisPlayerAdaptor::SetPosition(const QDBusObjectPath &TrackId, qlonglong P
     }
 
     if (!player->canSeek()) {
+        return;
+    }
+
+    QVariantMap metadata = player->metadata();
+    QVariant trackId = metadata[Mpris::metadataToString(Mpris::TrackId)];
+    QVariant length = metadata[Mpris::metadataToString(Mpris::Length)];
+    if (!trackId.isValid() || !length.isValid()) {
+        return;
+    }
+
+    if (trackId.value<QDBusObjectPath>() != TrackId) {
+        player->sendErrorReply(QDBusError::InvalidArgs, QStringLiteral("Wanted to move to position but the TrackId is not the current one."));
+        return;
+    }
+
+    if (Position > length.toLongLong()) {
+        player->sendErrorReply(QDBusError::InvalidArgs, QStringLiteral("Wanted to move to position but the position is off range."));
         return;
     }
 

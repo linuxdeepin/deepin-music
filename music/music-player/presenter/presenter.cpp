@@ -2235,12 +2235,14 @@ void Presenter::initMpris(MprisPlayer *mprisPlayer)
         // TODO: support mpris playlist
         Q_UNUSED(playlist);
 
+        QString trackIdMpris("/org/mpris/MediaPlayer2");
         QVariantMap metadata;
         metadata.insert(Mpris::metadataToString(Mpris::Title), meta->title);
         metadata.insert(Mpris::metadataToString(Mpris::Artist), meta->artist);
         metadata.insert(Mpris::metadataToString(Mpris::Album), meta->album);
-        metadata.insert(Mpris::metadataToString(Mpris::Length), meta->length / 1000);
+        metadata.insert(Mpris::metadataToString(Mpris::Length), meta->length);
         metadata.insert(Mpris::metadataToString(Mpris::ArtUrl), meta->coverUrl);
+        metadata.insert(Mpris::metadataToString(Mpris::TrackId), trackIdMpris);
 
         //mprisPlayer->setCanSeek(true);
         mprisPlayer->setMetadata(metadata);
