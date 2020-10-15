@@ -111,6 +111,15 @@ public slots:
      */
     void setPreamplification(float value);
 
+    /**
+     * Set a new amplification value for a particular equalizer frequency band.
+     *
+     * The new equalizer settings are subsequently applied to a media player by invoking
+     * libvlc_media_player_set_equalizer().
+     */
+
+    float preamplification();
+
 signals:
     /*!
         \brief Emitted when preset is loaded

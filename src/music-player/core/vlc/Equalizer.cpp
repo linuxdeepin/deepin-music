@@ -117,3 +117,12 @@ void VlcEqualizer::setPreamplification(float value)
     libvlc_media_player_set_equalizer(_vlcMediaPlayer->core(), _vlcEqualizer);
 //    VlcError::showErrmsg();
 }
+
+float VlcEqualizer::preamplification()
+{
+    // float libvlc_audio_equalizer_get_preamp( libvlc_equalizer_t *p_equalizer );
+
+    return libvlc_audio_equalizer_get_preamp(_vlcEqualizer);
+}
+
+

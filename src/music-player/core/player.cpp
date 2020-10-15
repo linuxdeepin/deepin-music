@@ -630,7 +630,12 @@ void Player::loadMedia(PlaylistPtr playlist, const MetaPtr meta, int position)
     d->qvplayer->open(d->qvmedia);
 
     d->qvplayer->play();
-    d->qvplayer->audio()->setMute(true);
+    // d->qvplayer->audio()->setMute(true);
+
+    float volEqualizer =  d->qvplayer->equalizer()->preamplification();
+
+    d->qvplayer->equalizer()->setPreamplification(0.1f);
+
 
     if (!d->activePlaylist.isNull())
         d->activePlaylist->play(meta);
@@ -662,6 +667,8 @@ void Player::loadMedia(PlaylistPtr playlist, const MetaPtr meta, int position)
             }
             if (!d->activePlaylist.isNull())
                 d->activePlaylist->play(meta);
+
+            d->qvplayer->equalizer()->setPreamplification(volEqualizer);
         });
     } else {
         QTimer *pt = new QTimer;
@@ -673,7 +680,7 @@ void Player::loadMedia(PlaylistPtr playlist, const MetaPtr meta, int position)
             timestamp += pt->interval();
             pt->setProperty("calc", timestamp);
 
-            if ( d->qvplayer->seekable()) {
+            if (d->qvplayer->seekable()) {
                 d->qvplayer->blockSignals(false);
                 if (!d->activePlaylist.isNull())
                     d->activePlaylist->play(meta);
@@ -727,6 +734,7 @@ void Player::loadMedia(PlaylistPtr playlist, const MetaPtr meta, int position)
                 pt->stop();
                 pt->deleteLater();
             }
+            d->qvplayer->equalizer()->setPreamplification(volEqualizer);
         });
     }
 }
