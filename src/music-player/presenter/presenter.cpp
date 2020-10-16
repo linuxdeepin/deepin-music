@@ -2226,9 +2226,9 @@ void Presenter::onSleepWhenTaking(bool sleep)
     }else{ //设置状态
         if(d->m_sleep.vlcState == Player::Playing)
         {
-            QTimer::singleShot(50, [ = ]() {
+             QTimer::singleShot(2000, [ = ]() {
                 togglePaly(); //播放
-            });
+             });
         }
     }
 
