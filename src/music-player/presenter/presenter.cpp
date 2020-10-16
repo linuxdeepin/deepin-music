@@ -29,6 +29,8 @@
 #include <QProcess>
 #include <QApplication>
 #include <QStandardPaths>
+#include <QDBusInterface>
+#include <QFileSystemWatcher>
 
 #include <DSettingsOption>
 #include <DDesktopServices>
@@ -49,6 +51,8 @@
 #include "../core/pluginmanager.h"
 #include "../core/util/threadpool.h"
 #include "../core/metabufferdetector.h"
+#include "sleepwatcher.h"
+
 
 using namespace DMusic;
 
@@ -87,11 +91,21 @@ PresenterPrivate::PresenterPrivate(Presenter *parent)
 
 }
 
+const QString strStatePath = "/sys/power/state";
 void PresenterPrivate::initBackend()
 {
     Q_Q(Presenter);
 
     MetaDetector::init();
+
+    m_pDBus = new QDBusInterface("org.freedesktop.login1","/org/freedesktop/login1",
+                                           "org.freedesktop.login1.Manager",QDBusConnection::systemBus());
+
+    connect(m_pDBus, SIGNAL(PrepareForSleep(bool)), q, SLOT(onSleepWhenTaking(bool)));
+
+    sleepwatcher * w =  new sleepwatcher(strStatePath);
+    connect(w, SIGNAL(filechanged(bool)), q, SLOT(onSleepWhenTaking(bool)));
+    w->start();
 
     auto pm = PluginManager::instance();
     connect(this, &PresenterPrivate::requestInitPlugin,
@@ -634,7 +648,7 @@ void Presenter::postAction()
 
     auto mute = d->settings->value("base.play.mute").toBool();
     d->player->setMuted(mute);
-    Q_EMIT this->mutedChanged(mute);
+    //Q_EMIT this->mutedChanged(mute);
 
     auto playmode = d->settings->value("base.play.playmode").toInt();
     d->player->setMode(static_cast<Player::PlaybackMode>(playmode));
@@ -2195,6 +2209,46 @@ void Presenter::localMuteChanged(bool mute)
 {
     Q_D(Presenter);
     d->player->setLocalMuted(mute);
+}
+
+void Presenter::onSleepWhenTaking(bool sleep)
+{
+    Q_D(Presenter);
+    Q_UNUSED(sleep)
+    qDebug() << "onSleepWhenTaking:"<<d->m_sleep.isSleep;
+    //d->m_sleep.isSleep = sleep;
+    if(!d->m_sleep.isSleep) //休眠记录状态
+    {
+        d->m_sleep.vlcState = d->player->status();
+        //如果播放，设置暂停
+        if(d->m_sleep.vlcState == Player::Playing)
+           pause();
+    }else{ //设置状态
+        if(d->m_sleep.vlcState == Player::Playing)
+        {
+            QTimer::singleShot(50, [ = ]() {
+                togglePaly(); //播放
+            });
+        }
+    }
+
+    d->m_sleep.isSleep = !d->m_sleep.isSleep;
+//    if(d->m_sleep.isSleep = !d->m_sleep.isSleep)
+//    {
+//        qDebug() << "hj---onSleepWhenTaking:"<<sleep;
+//        d->m_sleep.isSleep = sleep;
+//        if(!d->m_sleep.isSleep) //休眠记录状态
+//        {
+//            d->m_sleep.vlcState = d->player->status();
+//            //如果播放，设置暂停
+//            if(d->m_sleep.vlcState == Player::Playing)
+//                d->player->pause();
+//        }else{ //设置状态
+//            if(d->m_sleep.vlcState == Player::Playing)
+//                togglePaly(); //播放
+//        }
+
+//    }
 }
 
 void Presenter::onScanMusicDirectory()

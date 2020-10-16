@@ -128,8 +128,10 @@ SOURCES += \
     core/vlc/Media.cpp \
     core/vlc/MediaPlayer.cpp \
     core/vlc/Equalizer.cpp \
-    view/widget/dequalizerdialog.cpp
-
+    view/widget/dequalizerdialog.cpp \
+    core/inotify/event_queue.c \
+    core/inotify/inotify_utils.c \
+    sleepwatcher.cpp
 HEADERS += \
     musicapp.h \
     core/util/lyric.h \
@@ -224,7 +226,10 @@ HEADERS += \
     core/vlc/Media.h \
     core/vlc/MediaPlayer.h \
     core/vlc/Equalizer.h \
-    view/widget/dequalizerdialog.h
+    view/widget/dequalizerdialog.h \
+    core/inotify/event_queue.h \
+    core/inotify/inotify_utils.h \
+    sleepwatcher.h
 
 RESOURCES += \
     resource/theme/theme.qrc \

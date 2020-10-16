@@ -33,9 +33,16 @@ class Player;
 class MediaLibrary;
 class MetaBufferDetector;
 class Transfer;
+class QDBusInterface;
 class PresenterPrivate: public QObject
 {
     Q_OBJECT
+
+    struct sleepStruct
+    {
+        bool isSleep = false; //false：未休眠or休眠唤醒 ，true：休眠
+        int vlcState = 0;
+    };
 public:
     PresenterPrivate(Presenter *parent = nullptr);
 
@@ -58,7 +65,8 @@ public:
     Transfer            *transfer       = nullptr;
     QTimer              *pdbusinterval  = nullptr;
     MetaBufferDetector  *metaBufferDetector = nullptr;
-
+    QDBusInterface      *m_pDBus        = nullptr;//接收休眠信号
+    sleepStruct m_sleep; //保存休眠信息及播放状态
     Presenter *q_ptr;
     Q_DECLARE_PUBLIC(Presenter)
 

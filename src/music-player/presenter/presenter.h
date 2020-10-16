@@ -229,6 +229,13 @@ public slots:
      * ***********************************************/
     void localMuteChanged(bool mute);
 
+    /**
+     * @brief onSleepWhenTaking 响应休眠dbus
+     * @param sleep 是否休眠
+     */
+    void onSleepWhenTaking(bool sleep);
+
+
 private:
     bool containsStr(QString searchText, QString text);
     QScopedPointer<PresenterPrivate> d_ptr;
