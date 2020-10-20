@@ -40,10 +40,6 @@ extern "C" {
 #include <mediameta.h>
 #include <metadetector.h>
 
-#ifdef SUPPORT_INOTIFY
-#include "util/inotifyengine.h"
-#endif
-
 #include "player.h"
 #include "mediadatabase.h"
 
@@ -63,9 +59,9 @@ public:
             supportedSuffixs.insert(suffix, true);
         }
 
-#ifdef SUPPORT_INOTIFY
-        watcher = new InotifyEngine;
-#endif
+//#ifdef SUPPORT_INOTIFY
+//        watcher = new InotifyEngine;
+//#endif
     }
 
     MetaPtr createMeta(const QFileInfo &fileInfo);
@@ -84,9 +80,9 @@ public:
             dirs.insert(metafi.absolutePath(), metafi.absolutePath());
         }
 
-#ifdef SUPPORT_INOTIFY
-        watcher->addPaths(dirs.keys());
-#endif
+//#ifdef SUPPORT_INOTIFY
+//        watcher->addPaths(dirs.keys());
+//#endif
 
         //        for (auto meta : metas) {
         //            qDebug() << meta->title;
@@ -98,9 +94,9 @@ private:
     QHash<QString, bool>    supportedSuffixs;
     QMap<QString, MetaPtr>  metas;
 
-#ifdef SUPPORT_INOTIFY
-    InotifyEngine  *watcher;
-#endif
+//#ifdef SUPPORT_INOTIFY
+//    InotifyEngine  *watcher;
+//#endif
     MediaLibrary *q_ptr;
     Q_DECLARE_PUBLIC(MediaLibrary)
 };
@@ -142,9 +138,9 @@ MetaPtr MediaLibraryPrivate::importMeta(const QString &filepath,
        ) {
         cuelist << DMusic::CueParserPtr(new DMusic::CueParser(filepath));
         // TODO: check cue invalid
-#ifdef SUPPORT_INOTIFY
-        watcher->addPath(fileInfo.absolutePath());
-#endif
+//#ifdef SUPPORT_INOTIFY
+//        watcher->addPath(fileInfo.absolutePath());
+//#endif
         qWarning() << "skip" << suffix << filepath;
         return MetaPtr();
     }
@@ -261,9 +257,9 @@ MetaPtr MediaLibraryPrivate::importMeta(const QString &filepath,
     }
 
     metas.insert(meta->hash, meta);
-#ifdef SUPPORT_INOTIFY
-    watcher->addPath(fileInfo.absolutePath());
-#endif
+//#ifdef SUPPORT_INOTIFY
+//    watcher->addPath(fileInfo.absolutePath());
+//#endif
     return meta;
 }
 
@@ -322,9 +318,9 @@ MetaPtrList MediaLibrary::importFile(const QString &filepath)
 
     for (auto &key : losslessMetaCache.keys()) {
         auto losslessMeta = losslessMetaCache.value(key);
-#ifdef SUPPORT_INOTIFY
-        d->watcher->addPath(losslessMeta->localPath);
-#endif
+//#ifdef SUPPORT_INOTIFY
+//        d->watcher->addPath(losslessMeta->localPath);
+//#endif
         metaList << losslessMeta;
         d->metas.insert(losslessMeta->hash, losslessMeta);
     }
@@ -423,9 +419,9 @@ void MediaLibrary::importMedias(const QString &jobid, const QStringList &urllist
     for (auto &key : losslessMetaCache.keys()) {
         auto losslessMeta = losslessMetaCache.value(key);
 
-#ifdef SUPPORT_INOTIFY
-        d->watcher->addPath(losslessMeta->localPath);
-#endif
+//#ifdef SUPPORT_INOTIFY
+//        d->watcher->addPath(losslessMeta->localPath);
+//#endif
         metaCache << losslessMeta;
 
         d->metas.insert(losslessMeta->hash, losslessMeta);

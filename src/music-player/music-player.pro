@@ -238,11 +238,9 @@ RESOURCES += \
     icons/icons.qrc
 
 unix{
-SOURCES += \
-    core/util/inotifyengine.cpp
+SOURCES +=
 
-HEADERS += \
-    core/util/inotifyengine.h
+HEADERS +=
 }
 
 TRANSLATIONS += $$PWD/translations/$${TARGET}.ts \
