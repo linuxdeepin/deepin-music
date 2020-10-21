@@ -1,6 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS>
-<TS version="2.1" language="hr" sourcelanguage="en_US">
+<?xml version="1.0" ?><!DOCTYPE TS><TS language="hr" sourcelanguage="en_US" version="2.1">
 <context>
     <name>CloseConfirmDialog</name>
     <message>
@@ -11,7 +9,7 @@
     <message>
         <location filename="../view/widget/closeconfirmdialog.cpp" line="74"/>
         <source>Minimize to system tray</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../view/widget/closeconfirmdialog.cpp" line="82"/>
@@ -21,7 +19,7 @@
     <message>
         <location filename="../view/widget/closeconfirmdialog.cpp" line="102"/>
         <source>Please choose your action</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../view/widget/closeconfirmdialog.cpp" line="110"/>
@@ -44,7 +42,7 @@
     <message>
         <location filename="../view/widget/dequalizerdialog.cpp" line="113"/>
         <source>Monophony</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../view/widget/dequalizerdialog.cpp" line="114"/>
@@ -84,7 +82,7 @@
     <message>
         <location filename="../view/widget/dequalizerdialog.cpp" line="121"/>
         <source>Hall</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../view/widget/dequalizerdialog.cpp" line="122"/>
@@ -129,7 +127,7 @@
     <message>
         <location filename="../view/widget/dequalizerdialog.cpp" line="130"/>
         <source>Techno</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../view/widget/dequalizerdialog.cpp" line="187"/>
@@ -141,13 +139,13 @@
         <location filename="../view/widget/dequalizerdialog.cpp" line="194"/>
         <location filename="../view/widget/dequalizerdialog.cpp" line="654"/>
         <source>ON</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../view/widget/dequalizerdialog.cpp" line="196"/>
         <location filename="../view/widget/dequalizerdialog.cpp" line="652"/>
         <source>OFF</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../view/widget/dequalizerdialog.cpp" line="213"/>
@@ -168,7 +166,7 @@
         <location filename="../view/widget/dequalizerdialog.cpp" line="550"/>
         <location filename="../view/widget/dequalizerdialog.cpp" line="551"/>
         <source>Sound Effects Saved</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -218,17 +216,17 @@
     <message>
         <location filename="../view/footerwidget.cpp" line="430"/>
         <source>Play Queue</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../view/footerwidget.cpp" line="1462"/>
         <source>List Loop</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../view/footerwidget.cpp" line="1465"/>
         <source>Single Loop</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../view/footerwidget.cpp" line="1468"/>
@@ -258,7 +256,7 @@
         <location filename="../view/importwidget.cpp" line="110"/>
         <location filename="../view/importwidget.cpp" line="169"/>
         <source>%1 music directory or drag music files here</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../view/importwidget.cpp" line="159"/>
@@ -408,7 +406,7 @@
     <message>
         <location filename="../view/mainframe.cpp" line="791"/>
         <source>Music is a local music player with beautiful design and simple functions.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../view/mainframe.cpp" line="863"/>
@@ -659,7 +657,7 @@
     <message>
         <location filename="../view/widget/musiclistinfoview.cpp" line="455"/>
         <source>Play queue</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../view/widget/musiclistinfoview.cpp" line="480"/>
@@ -742,7 +740,7 @@
         <location filename="../view/widget/musiclistinfoview.cpp" line="657"/>
         <location filename="../view/widget/musiclistinfoview.cpp" line="671"/>
         <source>The song files contained will also be deleted</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -837,7 +835,7 @@
     <message>
         <location filename="../view/widget/playlistview.cpp" line="542"/>
         <source>Play queue</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../view/widget/playlistview.cpp" line="550"/>
@@ -873,7 +871,7 @@
     <message>
         <location filename="../view/widget/playlistview.cpp" line="644"/>
         <source>Remove from play queue</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../view/widget/playlistview.cpp" line="646"/>
@@ -936,7 +934,7 @@
         <location filename="../view/widget/playlistview.cpp" line="795"/>
         <location filename="../view/widget/playlistview.cpp" line="807"/>
         <source>The song files contained will also be deleted</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -955,7 +953,7 @@
     <message>
         <location filename="../view/playlistwidget.cpp" line="242"/>
         <source>Play Queue</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../view/playlistwidget.cpp" line="269"/>
@@ -1050,7 +1048,7 @@
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="26"/>
         <source>Minimize to system tray</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="27"/>
@@ -1070,7 +1068,7 @@
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="30"/>
         <source>Enable fade in/out</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="31"/>
@@ -1229,7 +1227,7 @@
     <message>
         <location filename="../view/shortcut.cpp" line="41"/>
         <source>Unfavorite</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../view/shortcut.cpp" line="41"/>

@@ -1,6 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS>
-<TS version="2.1" language="zh_TW" sourcelanguage="en_US">
+<?xml version="1.0" ?><!DOCTYPE TS><TS language="zh_TW" sourcelanguage="en_US" version="2.1">
 <context>
     <name>CloseConfirmDialog</name>
     <message>
@@ -1199,12 +1197,12 @@
     <message>
         <location filename="../view/shortcut.cpp" line="39"/>
         <source>Previous</source>
-        <translation>上一部</translation>
+        <translation>上一曲</translation>
     </message>
     <message>
         <location filename="../view/shortcut.cpp" line="39"/>
         <source>Next</source>
-        <translation>下一個</translation>
+        <translation>下一曲</translation>
     </message>
     <message>
         <location filename="../view/shortcut.cpp" line="39"/>

@@ -1,6 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS>
-<TS version="2.1" language="hu" sourcelanguage="en_US">
+<?xml version="1.0" ?><!DOCTYPE TS><TS language="hu" sourcelanguage="en_US" version="2.1">
 <context>
     <name>CloseConfirmDialog</name>
     <message>
@@ -11,12 +9,12 @@
     <message>
         <location filename="../view/widget/closeconfirmdialog.cpp" line="74"/>
         <source>Minimize to system tray</source>
-        <translation>Tálcára</translation>
+        <translation>Kicsinyítés a rendszer tálcára</translation>
     </message>
     <message>
         <location filename="../view/widget/closeconfirmdialog.cpp" line="82"/>
         <source>Do not ask again</source>
-        <translation>Ne kérdezzen rá megint.</translation>
+        <translation>Ne kérdezze újra</translation>
     </message>
     <message>
         <location filename="../view/widget/closeconfirmdialog.cpp" line="102"/>
@@ -26,7 +24,7 @@
     <message>
         <location filename="../view/widget/closeconfirmdialog.cpp" line="110"/>
         <source>Cancel</source>
-        <translation>Mégse</translation>
+        <translation>Mégsem</translation>
     </message>
     <message>
         <location filename="../view/widget/closeconfirmdialog.cpp" line="111"/>
@@ -69,12 +67,12 @@
     <message>
         <location filename="../view/widget/dequalizerdialog.cpp" line="118"/>
         <source>Full Bass and Treble</source>
-        <translation>Teljes basszus és Magashangszín</translation>
+        <translation>Teljes basszus és Magas hangszín</translation>
     </message>
     <message>
         <location filename="../view/widget/dequalizerdialog.cpp" line="119"/>
         <source>Full Treble</source>
-        <translation>Teljes Magashangszín</translation>
+        <translation>Teljes Magas hangszín</translation>
     </message>
     <message>
         <location filename="../view/widget/dequalizerdialog.cpp" line="120"/>
@@ -176,14 +174,14 @@
     <message>
         <location filename="../view/footerwidget.cpp" line="298"/>
         <source>Unknown Title</source>
-        <translation>Ismeretlen zene-cím</translation>
+        <translation>Ismeretlen Cím</translation>
     </message>
     <message>
         <location filename="../view/footerwidget.cpp" line="317"/>
         <location filename="../view/footerwidget.cpp" line="879"/>
         <location filename="../view/footerwidget.cpp" line="1488"/>
         <source>Unknown artist</source>
-        <translation>Ismeretlen előadó</translation>
+        <translation>Ismeretlen Előadó</translation>
     </message>
     <message>
         <location filename="../view/footerwidget.cpp" line="424"/>
@@ -203,12 +201,12 @@
     <message>
         <location filename="../view/footerwidget.cpp" line="427"/>
         <source>Favorite</source>
-        <translation>Kedvencek</translation>
+        <translation>Kedvenc</translation>
     </message>
     <message>
         <location filename="../view/footerwidget.cpp" line="428"/>
         <source>Lyrics</source>
-        <translation>Zeneszöveg</translation>
+        <translation>Dalszöveg</translation>
     </message>
     <message>
         <location filename="../view/footerwidget.cpp" line="429"/>
@@ -223,17 +221,17 @@
     <message>
         <location filename="../view/footerwidget.cpp" line="1462"/>
         <source>List Loop</source>
-        <translation>Újrajátszás listáról</translation>
+        <translation>Lista ismétlése</translation>
     </message>
     <message>
         <location filename="../view/footerwidget.cpp" line="1465"/>
         <source>Single Loop</source>
-        <translation>Újra játszás</translation>
+        <translation>Egy ismétlése</translation>
     </message>
     <message>
         <location filename="../view/footerwidget.cpp" line="1468"/>
         <source>Shuffle</source>
-        <translation>Keverés</translation>
+        <translation>Véletlenszerű lejátszás</translation>
     </message>
 </context>
 <context>
@@ -258,12 +256,12 @@
         <location filename="../view/importwidget.cpp" line="110"/>
         <location filename="../view/importwidget.cpp" line="169"/>
         <source>%1 music directory or drag music files here</source>
-        <translation>%1 zenekönyvtár vagy húzzon ide zenefájlokat</translation>
+        <translation>A %1 zenekönyvtár megnyitása, vagy húzzon ide zenefájlokat</translation>
     </message>
     <message>
         <location filename="../view/importwidget.cpp" line="159"/>
         <source>Loading music, please wait...</source>
-        <translation>Zene betöltés, várjunk....</translation>
+        <translation>Zene betöltése, kérjük várjon...</translation>
     </message>
 </context>
 <context>
@@ -311,12 +309,12 @@
     <message>
         <location filename="../view/widget/infodialog.cpp" line="238"/>
         <source>Unknown artist</source>
-        <translation>Ismeretlen előadó</translation>
+        <translation>Ismeretlen Előadó</translation>
     </message>
     <message>
         <location filename="../view/widget/infodialog.cpp" line="239"/>
         <source>Unknown album</source>
-        <translation>Ismeretlen album</translation>
+        <translation>Ismeretlen Album</translation>
     </message>
 </context>
 <context>
@@ -324,7 +322,7 @@
     <message>
         <location filename="../view/loadwidget.cpp" line="42"/>
         <source>Loading...</source>
-        <translation>Betöltés</translation>
+        <translation>Betöltés...</translation>
     </message>
 </context>
 <context>
@@ -368,7 +366,7 @@
     <message>
         <location filename="../view/mainframe.cpp" line="182"/>
         <source>Add playlist</source>
-        <translation>Hozzáadás a lejátszási listához</translation>
+        <translation>Lejátszási lista létrehozása</translation>
     </message>
     <message>
         <location filename="../view/mainframe.cpp" line="193"/>
@@ -459,7 +457,7 @@
     <message>
         <location filename="../view/mainframe.cpp" line="1133"/>
         <source>Import failed, no valid music file found</source>
-        <translation>Importálás sikertelen, nem található érvényes zenefájl</translation>
+        <translation>Az importálás sikertelen, nem található érvényes zenefájl</translation>
     </message>
     <message>
         <location filename="../view/mainframe.cpp" line="1579"/>
@@ -569,14 +567,14 @@
         <location filename="../view/musiclistdatawidget.cpp" line="997"/>
         <location filename="../view/musiclistdatawidget.cpp" line="1199"/>
         <source>No search results</source>
-        <translation>Nincs találat</translation>
+        <translation>Nincs keresési eredmény</translation>
     </message>
     <message>
         <location filename="../view/musiclistdatawidget.cpp" line="1047"/>
         <location filename="../view/musiclistdatawidget.cpp" line="1148"/>
         <location filename="../view/musiclistdatawidget.cpp" line="1564"/>
         <source>All Music</source>
-        <translation>Összes zeneszám</translation>
+        <translation>Összes zene</translation>
     </message>
     <message>
         <location filename="../view/musiclistdatawidget.cpp" line="1054"/>
@@ -586,7 +584,7 @@
         <location filename="../view/musiclistdatawidget.cpp" line="1091"/>
         <location filename="../view/musiclistdatawidget.cpp" line="1100"/>
         <source>Time added</source>
-        <translation>Idő hozzáadva</translation>
+        <translation>Hozzáadási idő</translation>
     </message>
     <message>
         <location filename="../view/musiclistdatawidget.cpp" line="1055"/>
@@ -651,7 +649,7 @@
     <message>
         <location filename="../view/widget/musiclistdialog.cpp" line="139"/>
         <source>Shuffle</source>
-        <translation>Keverés</translation>
+        <translation>Véletlenszerű lejátszás</translation>
     </message>
 </context>
 <context>
@@ -659,7 +657,7 @@
     <message>
         <location filename="../view/widget/musiclistinfoview.cpp" line="455"/>
         <source>Play queue</source>
-        <translation>Lejátszás sorrendben</translation>
+        <translation>Lejátszási sor</translation>
     </message>
     <message>
         <location filename="../view/widget/musiclistinfoview.cpp" line="480"/>
@@ -679,17 +677,17 @@
     <message>
         <location filename="../view/widget/musiclistinfoview.cpp" line="530"/>
         <source>Add to playlist</source>
-        <translation>Hozzáadás a lejátszólistához</translation>
+        <translation>Hozzáadás a lejátszási listához</translation>
     </message>
     <message>
         <location filename="../view/widget/musiclistinfoview.cpp" line="535"/>
         <source>Display in file manager</source>
-        <translation>Megjelenítés fájlkezelőben</translation>
+        <translation>Megjelenítés a fájlkezelőben</translation>
     </message>
     <message>
         <location filename="../view/widget/musiclistinfoview.cpp" line="538"/>
         <source>Remove from playlist</source>
-        <translation>Éltávoltás a lejátszási listából </translation>
+        <translation>Éltávoltás a lejátszási listáról</translation>
     </message>
     <message>
         <location filename="../view/widget/musiclistinfoview.cpp" line="539"/>
@@ -699,7 +697,7 @@
     <message>
         <location filename="../view/widget/musiclistinfoview.cpp" line="560"/>
         <source>Song info</source>
-        <translation>Zeneszám információ</translation>
+        <translation>Dal információ</translation>
     </message>
     <message>
         <location filename="../view/widget/musiclistinfoview.cpp" line="608"/>
@@ -715,12 +713,12 @@
     <message>
         <location filename="../view/widget/musiclistinfoview.cpp" line="613"/>
         <source>Are you sure you want to remove %1?</source>
-        <translation>Biztosan el kívánja távolítani %1-t?</translation>
+        <translation>Biztosan el kívánja távolítani a %1-t?</translation>
     </message>
     <message>
         <location filename="../view/widget/musiclistinfoview.cpp" line="615"/>
         <source>Are you sure you want to remove the selected %1 songs?</source>
-        <translation>Biztosan el kívánja távolítani a kijelölt %1 dalokat?</translation>
+        <translation>Biztosan el kívánja távolítani a kijelölt %1 dalok?</translation>
     </message>
     <message>
         <location filename="../view/widget/musiclistinfoview.cpp" line="640"/>
@@ -730,19 +728,19 @@
     <message>
         <location filename="../view/widget/musiclistinfoview.cpp" line="649"/>
         <source>Are you sure you want to delete %1?</source>
-        <translation>Biztos, hogy törölni akarod %1 ?</translation>
+        <translation>Biztos, hogy törölni akarja a %1-t?</translation>
     </message>
     <message>
         <location filename="../view/widget/musiclistinfoview.cpp" line="656"/>
         <location filename="../view/widget/musiclistinfoview.cpp" line="670"/>
         <source>Are you sure you want to delete the selected %1 songs?</source>
-        <translation>Biztos, hogy törölni akarod a kiválasztott %1 zenét?</translation>
+        <translation>Biztos, hogy törölni akarja a kiválasztott %1 dalokat?</translation>
     </message>
     <message>
         <location filename="../view/widget/musiclistinfoview.cpp" line="657"/>
         <location filename="../view/widget/musiclistinfoview.cpp" line="671"/>
         <source>The song files contained will also be deleted</source>
-        <translation>A tartalmazott zenefájlok szintén törlődnek</translation>
+        <translation>A dalfájlok is törlődnek</translation>
     </message>
 </context>
 <context>
@@ -750,7 +748,7 @@
     <message>
         <location filename="../view/widget/musiclistitem.cpp" line="178"/>
         <source>Are you sure you want to delete this playlist?</source>
-        <translation>Biztos, hogy tötölni akarod ezt a lejátszási listát?</translation>
+        <translation>Biztos, hogy törölni akarja ezt a lejátszási listát?</translation>
     </message>
     <message>
         <location filename="../view/widget/musiclistitem.cpp" line="184"/>
@@ -768,7 +766,7 @@
     <message>
         <location filename="../view/musiclistscrollarea.cpp" line="65"/>
         <source>Library</source>
-        <translation>Gyűjtemény</translation>
+        <translation>Mappa</translation>
     </message>
     <message>
         <location filename="../view/musiclistscrollarea.cpp" line="76"/>
@@ -787,13 +785,13 @@
         <location filename="../view/widget/musiclistview.cpp" line="406"/>
         <location filename="../view/widget/musiclistview.cpp" line="559"/>
         <source>Are you sure you want to delete this playlist?</source>
-        <translation>Biztos, hogy tötölni akarod ezt a lejátszási listát?</translation>
+        <translation>Biztos, hogy törölni akarja ezt a lejátszási listát?</translation>
     </message>
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="413"/>
         <location filename="../view/widget/musiclistview.cpp" line="566"/>
         <source>Cancel</source>
-        <translation>Mégse</translation>
+        <translation>Mégsem</translation>
     </message>
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="414"/>
@@ -827,12 +825,12 @@
     <message>
         <location filename="../view/widget/delegate/playitemdelegate.cpp" line="519"/>
         <source>Unknown artist</source>
-        <translation>Ismeretlen előadó</translation>
+        <translation>Ismeretlen Előadó</translation>
     </message>
     <message>
         <location filename="../view/widget/delegate/playitemdelegate.cpp" line="531"/>
         <source>Unknown album</source>
-        <translation>Ismeretlen album</translation>
+        <translation>Ismeretlen Album</translation>
     </message>
     <message>
         <location filename="../view/widget/playlistview.cpp" line="542"/>
@@ -863,22 +861,22 @@
     <message>
         <location filename="../view/widget/playlistview.cpp" line="635"/>
         <source>Add to playlist</source>
-        <translation>Hozzáadás a lejátszólistához</translation>
+        <translation>Hozzáadás a lejátszási listához</translation>
     </message>
     <message>
         <location filename="../view/widget/playlistview.cpp" line="640"/>
         <source>Display in file manager</source>
-        <translation>Megjelenítés fájlkezelőben</translation>
+        <translation>Megjelenítés a fájlkezelőben</translation>
     </message>
     <message>
         <location filename="../view/widget/playlistview.cpp" line="644"/>
         <source>Remove from play queue</source>
-        <translation>Eltávolítás a lejátszási listából</translation>
+        <translation>Eltávolítás a lejátszási sorból</translation>
     </message>
     <message>
         <location filename="../view/widget/playlistview.cpp" line="646"/>
         <source>Remove from playlist</source>
-        <translation>Éltávoltás a lejátszási listából </translation>
+        <translation>Éltávoltás a lejátszási listáról </translation>
     </message>
     <message>
         <location filename="../view/widget/playlistview.cpp" line="648"/>
@@ -893,7 +891,7 @@
     <message>
         <location filename="../view/widget/playlistview.cpp" line="690"/>
         <source>Song info</source>
-        <translation>Zeneszám információ</translation>
+        <translation>Dal információ</translation>
     </message>
     <message>
         <location filename="../view/widget/playlistview.cpp" line="746"/>
@@ -909,7 +907,7 @@
     <message>
         <location filename="../view/widget/playlistview.cpp" line="751"/>
         <source>Are you sure you want to remove %1?</source>
-        <translation>Biztosan el kívánja távolítani %1-t?</translation>
+        <translation>Biztosan el kívánja távolítani a %1-t?</translation>
     </message>
     <message>
         <location filename="../view/widget/playlistview.cpp" line="753"/>
@@ -924,19 +922,19 @@
     <message>
         <location filename="../view/widget/playlistview.cpp" line="787"/>
         <source>Are you sure you want to delete %1?</source>
-        <translation>Biztos, hogy törölni akarod %1 ?</translation>
+        <translation>Biztos, hogy törölni akarja a %1-t?</translation>
     </message>
     <message>
         <location filename="../view/widget/playlistview.cpp" line="794"/>
         <location filename="../view/widget/playlistview.cpp" line="806"/>
         <source>Are you sure you want to delete the selected %1 songs?</source>
-        <translation>Biztos, hogy törölni akarod a kiválasztott %1 zenét?</translation>
+        <translation>Biztos, hogy törölni akarja a kiválasztott %1 dalokat?</translation>
     </message>
     <message>
         <location filename="../view/widget/playlistview.cpp" line="795"/>
         <location filename="../view/widget/playlistview.cpp" line="807"/>
         <source>The song files contained will also be deleted</source>
-        <translation>A tartalmazott zenefájlok szintén törlődnek</translation>
+        <translation>A dalfájlok is törlődnek</translation>
     </message>
 </context>
 <context>
@@ -950,12 +948,12 @@
     <message>
         <location filename="../view/playlistwidget.cpp" line="208"/>
         <source>No search results</source>
-        <translation>Nincs találat</translation>
+        <translation>Nincs keresési eredmény</translation>
     </message>
     <message>
         <location filename="../view/playlistwidget.cpp" line="242"/>
         <source>Play Queue</source>
-        <translation>Lejátszás sorrendben</translation>
+        <translation>Lejátszási sor</translation>
     </message>
     <message>
         <location filename="../view/playlistwidget.cpp" line="269"/>
@@ -979,14 +977,14 @@
         <location filename="../core/playlist.cpp" line="473"/>
         <location filename="../core/playlist.cpp" line="764"/>
         <source>Unknown album</source>
-        <translation>Ismeretlen album</translation>
+        <translation>Ismeretlen Album</translation>
     </message>
     <message>
         <location filename="../core/playlist.cpp" line="486"/>
         <location filename="../core/playlist.cpp" line="768"/>
         <location filename="../core/playlist.cpp" line="799"/>
         <source>Unknown artist</source>
-        <translation>Ismeretlen előadó</translation>
+        <translation>Ismeretlen Előadó</translation>
     </message>
 </context>
 <context>
@@ -1014,7 +1012,7 @@
         <location filename="../core/playlistmanager.cpp" line="184"/>
         <location filename="../core/playlistmanager.cpp" line="208"/>
         <source>All Music</source>
-        <translation>Összes zeneszám</translation>
+        <translation>Összes zene</translation>
     </message>
     <message>
         <location filename="../core/playlistmanager.cpp" line="190"/>
@@ -1050,7 +1048,7 @@
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="26"/>
         <source>Minimize to system tray</source>
-        <translation>Tálcára</translation>
+        <translation>Kicsinyítés a rendszer tálcára</translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="27"/>
@@ -1100,7 +1098,7 @@
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="36"/>
         <source>Restore Defaults</source>
-        <translation>Alaphelyzetbe állítás</translation>
+        <translation>Alapértelmezések visszaállítása</translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="37"/>
@@ -1229,12 +1227,12 @@
     <message>
         <location filename="../view/shortcut.cpp" line="41"/>
         <source>Unfavorite</source>
-        <translation>Eltávolítás a kedvenceim közül</translation>
+        <translation>Eltávolítás a kedvencekből</translation>
     </message>
     <message>
         <location filename="../view/shortcut.cpp" line="41"/>
         <source>Song info</source>
-        <translation>Zeneszám információ</translation>
+        <translation>Dal információ</translation>
     </message>
     <message>
         <location filename="../view/shortcut.cpp" line="43"/>
@@ -1244,7 +1242,7 @@
     <message>
         <location filename="../view/shortcut.cpp" line="43"/>
         <source>Add music</source>
-        <translation>Zeneszám hozzáadása</translation>
+        <translation>Zene hozzáadása</translation>
     </message>
     <message>
         <location filename="../view/shortcut.cpp" line="43"/>
@@ -1254,7 +1252,7 @@
     <message>
         <location filename="../view/shortcut.cpp" line="43"/>
         <source>Remove from playlist</source>
-        <translation>Éltávoltás a lejátszási listából </translation>
+        <translation>Éltávoltás a lejátszási listáról </translation>
     </message>
     <message>
         <location filename="../view/shortcut.cpp" line="46"/>
@@ -1264,7 +1262,7 @@
     <message>
         <location filename="../view/shortcut.cpp" line="47"/>
         <source>Display shortcuts</source>
-        <translation>Parancsikonok megjelenítése</translation>
+        <translation>Gyorsbillentyűk megjelenítése</translation>
     </message>
 </context>
 <context>
