@@ -1,6 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS>
-<TS version="2.1" language="fr" sourcelanguage="en_US">
+<?xml version="1.0" ?><!DOCTYPE TS><TS language="fr" sourcelanguage="en_US" version="2.1">
 <context>
     <name>CloseConfirmDialog</name>
     <message>
@@ -21,7 +19,7 @@
     <message>
         <location filename="../view/widget/closeconfirmdialog.cpp" line="102"/>
         <source>Please choose your action</source>
-        <translation type="unfinished"></translation>
+        <translation>Veuillez faire votre choix</translation>
     </message>
     <message>
         <location filename="../view/widget/closeconfirmdialog.cpp" line="110"/>
@@ -44,7 +42,7 @@
     <message>
         <location filename="../view/widget/dequalizerdialog.cpp" line="113"/>
         <source>Monophony</source>
-        <translation>Monophonie</translation>
+        <translation>Mono</translation>
     </message>
     <message>
         <location filename="../view/widget/dequalizerdialog.cpp" line="114"/>
@@ -218,7 +216,7 @@
     <message>
         <location filename="../view/footerwidget.cpp" line="430"/>
         <source>Play Queue</source>
-        <translation>Lire la file d&apos;attente</translation>
+        <translation>Lire la liste</translation>
     </message>
     <message>
         <location filename="../view/footerwidget.cpp" line="1462"/>
@@ -252,13 +250,13 @@
         <location filename="../view/importwidget.cpp" line="109"/>
         <location filename="../view/importwidget.cpp" line="168"/>
         <source>Scan</source>
-        <translation>Numériser</translation>
+        <translation>Rechercher </translation>
     </message>
     <message>
         <location filename="../view/importwidget.cpp" line="110"/>
         <location filename="../view/importwidget.cpp" line="169"/>
         <source>%1 music directory or drag music files here</source>
-        <translation>%1 répertoire musical ou faites glisser les fichiers musicaux ici</translation>
+        <translation>%1 dans le dossier de musique ou glisser les fichiers musicaux ici</translation>
     </message>
     <message>
         <location filename="../view/importwidget.cpp" line="159"/>
@@ -276,37 +274,37 @@
     <message>
         <location filename="../view/widget/infodialog.cpp" line="149"/>
         <source>Title:</source>
-        <translation>Titre&#xa0;:</translation>
+        <translation>Titre:</translation>
     </message>
     <message>
         <location filename="../view/widget/infodialog.cpp" line="149"/>
         <source>Artist:</source>
-        <translation>Artiste&#xa0;:</translation>
+        <translation>Artiste:</translation>
     </message>
     <message>
         <location filename="../view/widget/infodialog.cpp" line="150"/>
         <source>Album:</source>
-        <translation>Album&#xa0;:</translation>
+        <translation>Album:</translation>
     </message>
     <message>
         <location filename="../view/widget/infodialog.cpp" line="150"/>
         <source>Type:</source>
-        <translation>Type&#xa0;:</translation>
+        <translation>Type:</translation>
     </message>
     <message>
         <location filename="../view/widget/infodialog.cpp" line="151"/>
         <source>Size:</source>
-        <translation>Taille&#xa0;:</translation>
+        <translation>Taille:</translation>
     </message>
     <message>
         <location filename="../view/widget/infodialog.cpp" line="151"/>
         <source>Duration:</source>
-        <translation>Durée&#xa0;:</translation>
+        <translation>Durée:</translation>
     </message>
     <message>
         <location filename="../view/widget/infodialog.cpp" line="152"/>
         <source>Path:</source>
-        <translation>Chemin&#xa0;:</translation>
+        <translation>Chemin:</translation>
     </message>
     <message>
         <location filename="../view/widget/infodialog.cpp" line="238"/>
@@ -373,7 +371,7 @@
     <message>
         <location filename="../view/mainframe.cpp" line="193"/>
         <source>Add music</source>
-        <translation>Ajouter Musique</translation>
+        <translation>Ajouter de la musique</translation>
     </message>
     <message>
         <location filename="../view/mainframe.cpp" line="198"/>

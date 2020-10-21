@@ -1,6 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS>
-<TS version="2.1" language="zh_HK" sourcelanguage="en_US">
+<?xml version="1.0" ?><!DOCTYPE TS><TS language="zh_HK" sourcelanguage="en_US" version="2.1">
 <context>
     <name>CloseConfirmDialog</name>
     <message>
@@ -11,7 +9,7 @@
     <message>
         <location filename="../view/widget/closeconfirmdialog.cpp" line="74"/>
         <source>Minimize to system tray</source>
-        <translation>縮小到工作列</translation>
+        <translation>最小化到系統托盤</translation>
     </message>
     <message>
         <location filename="../view/widget/closeconfirmdialog.cpp" line="82"/>
@@ -193,7 +191,7 @@
     <message>
         <location filename="../view/footerwidget.cpp" line="425"/>
         <source>Next</source>
-        <translation>下一步</translation>
+        <translation>下一首</translation>
     </message>
     <message>
         <location filename="../view/footerwidget.cpp" line="426"/>
@@ -423,7 +421,7 @@
     <message>
         <location filename="../view/mainframe.cpp" line="865"/>
         <source>Next</source>
-        <translation>下一步</translation>
+        <translation>下一首</translation>
     </message>
     <message>
         <location filename="../view/mainframe.cpp" line="1007"/>
@@ -1019,7 +1017,7 @@
     <message>
         <location filename="../core/playlistmanager.cpp" line="190"/>
         <source>My favorites</source>
-        <translation>我的最愛</translation>
+        <translation>我的收藏</translation>
     </message>
     <message>
         <location filename="../core/playlistmanager.cpp" line="196"/>
@@ -1105,7 +1103,7 @@
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="37"/>
         <source>Next</source>
-        <translation>下一步</translation>
+        <translation>下一首</translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="38"/>
@@ -1204,7 +1202,7 @@
     <message>
         <location filename="../view/shortcut.cpp" line="39"/>
         <source>Next</source>
-        <translation>下一步</translation>
+        <translation>下一首</translation>
     </message>
     <message>
         <location filename="../view/shortcut.cpp" line="39"/>
