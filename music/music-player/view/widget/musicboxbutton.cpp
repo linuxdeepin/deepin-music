@@ -243,12 +243,19 @@ void MusicBoxButton::mousePressEvent(QMouseEvent *event)
         }
     }
 
-
-    QIcon icon;
-    icon.addFile(curPicPath);
-
-    this->setIconSize(QSize(36, 36));
-    this->setIcon(icon);
+    this->setIconSize(QSize(24, 24));
+    QString strsplit = curPicPath.right(curPicPath.toLocal8Bit().length() - curPicPath.lastIndexOf('/') - 1);
+    strsplit =  strsplit.left(strsplit.lastIndexOf('.'));
+    //setIcon(QIcon(QIcon::fromTheme(strsplit, QIcon(curPicPath))));
+    if (strsplit.compare("play_press") == 0) {
+        setIcon(DStyle::SP_MediaPlay);
+    } else if (strsplit.compare("suspend_press") == 0) {
+        setIcon(DStyle::SP_MediaPause);
+    } else if (strsplit.compare("next_press") == 0) {
+        setIcon(DStyle::SP_MediaSkipBackward);
+    } else if (strsplit.compare("last_press") == 0) {
+        setIcon(DStyle::SP_MediaSkipForward);
+    }
     DButtonBoxButton::mousePressEvent(event);
 }
 
@@ -298,4 +305,5 @@ void MusicBoxButton::mouseReleaseEvent(QMouseEvent *event)
     this->setIconSize(QSize(36, 36));
     this->setIcon(icon);
     DButtonBoxButton::mouseReleaseEvent(event);
+    DButtonBoxButton::update();
 }

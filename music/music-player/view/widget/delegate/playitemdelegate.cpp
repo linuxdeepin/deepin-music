@@ -24,6 +24,7 @@
 
 #include <QDebug>
 #include <QFont>
+#include <DGuiApplicationHelper>
 #include <QPainter>
 #include <QStandardItemModel>
 
@@ -302,7 +303,7 @@ void PlayItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
         font.setPixelSize(11);
         QFontMetrics extraNameFm(font);
         painter->setFont(font);
-        nameColor.setAlphaF(0.6);
+        nameColor.setAlphaF(1.0);
         painter->setPen(nameColor);
         QRect extraNameFillRect(option.rect.x(), startHeight + fillAllHeight / 2, 99, fm.height());
         extraNameFillRect.adjust(8, 0, -7, 0);
@@ -410,7 +411,9 @@ void PlayItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
 
     auto activeMeta = listview->activingMeta();
     if (!activeMeta.isNull() && activeMeta->hash == meta->hash) {
-        nameColor = QColor("#2CA7F8");
+        
+		nameColor = QColor(DGuiApplicationHelper::instance()->applicationPalette().highlight().color());
+		
         otherColor = QColor("#2CA7F8");
         font14.setFamily("SourceHanSansSC");
         font14.setWeight(QFont::Medium);
@@ -466,7 +469,7 @@ void PlayItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
             auto *listview = qobject_cast<PlayListView *>(const_cast<QWidget *>(option.widget));
             // Fixme:
             if (!meta.isNull() && meta->invalid) {
-                auto sz = QSizeF(15, 15);
+                auto sz = QSizeF(20, 20);
                 auto icon = QIcon(":/mpimage/light/warning.svg").pixmap(sz.toSize());
                 auto centerF = QRectF(rect).center();
                 auto iconRect = QRectF(centerF.x() - sz.width() / 2,
@@ -513,7 +516,7 @@ void PlayItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
             break;
         }
         case Artist: {
-            painter->setPen(otherColor);
+            painter->setPen(nameColor);
             painter->setFont(font11);
             auto str = meta->artist.isEmpty() ?
                        PlayListView::tr("Unknown artist") :
@@ -525,7 +528,7 @@ void PlayItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
             break;
         }
         case Album: {
-            painter->setPen(otherColor);
+            painter->setPen(nameColor);
             painter->setFont(font11);
             auto str = meta->album.isEmpty() ?
                        PlayListView::tr("Unknown album") :
@@ -537,7 +540,7 @@ void PlayItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
             break;
         }
         case Length:
-            painter->setPen(otherColor);
+            painter->setPen(nameColor);
             painter->setFont(font11);
             painter->drawText(rect, static_cast<int>(flag), DMusic::lengthString(meta->length));
             break;
