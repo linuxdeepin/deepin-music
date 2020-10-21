@@ -28,6 +28,7 @@
 #include <QVariant>
 
 #include <DPushButton>
+#include <DIconButton>
 
 DWIDGET_USE_NAMESPACE
 
@@ -54,6 +55,10 @@ public:
 
     void setTransparent(bool flag);
     void setAutoChecked(bool flag);
+    /***********************************
+     * set press or release status value
+     * ********************************/
+    void setStatus(char stat);
 
 protected:
     void paintEvent(QPaintEvent *event) Q_DECL_OVERRIDE;

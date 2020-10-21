@@ -26,10 +26,12 @@
 #include <QDate>
 #include <QEvent>
 #include <QMouseEvent>
+#include <DGuiApplicationHelper>
 
 #include <DHiDPIHelper>
 
 #include "../musiclistdataview.h"
+#include "core/medialibrary.h"
 
 QT_BEGIN_NAMESPACE
 extern Q_WIDGETS_EXPORT void qt_blurImage(QPainter *p, QImage &blurImage, qreal radius, bool quality, bool alphaOnly, int transposed = 0);
@@ -195,9 +197,9 @@ void MusicListDataDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
             //draw playing
             if (playFlag) {
                 if (option.state & QStyle::State_MouseOver) {
-                    painter->drawPixmap(QRect(rect.x() + 60, rect.y() + 88, 40, 40), d->hoverSuspendImg);
+                    painter->drawPixmap(QRect(rect.x() + 56, rect.y() + 82, 36, 36), d->hoverSuspendImg);
                 } else {
-                    painter->drawPixmap(QRect(rect.x() + 64, rect.y() + 96, 22, 18), listview->getAlbumPixmap());
+                    painter->drawPixmap(QRect(rect.x() + 64, rect.y() + 92, 22, 18), listview->getAlbumPixmap());
                 }
             }
 
@@ -251,9 +253,9 @@ void MusicListDataDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
             //draw playing
             if (playFlag) {
                 if (option.state & QStyle::State_MouseOver) {
-                    painter->drawPixmap(QRect(rect.x() + 60, rect.y() + 88, 40, 40), d->hoverSuspendImg);
+                    painter->drawPixmap(QRect(rect.x() + 56, rect.y() + 82, 36, 36), d->hoverSuspendImg);
                 } else {
-                    painter->drawPixmap(QRect(rect.x() + 64, rect.y() + 96, 22, 18), listview->getAlbumPixmap());
+                    painter->drawPixmap(QRect(rect.x() + 64, rect.y() + 92, 22, 18), listview->getAlbumPixmap());
                 }
             }
 
@@ -432,7 +434,8 @@ void MusicListDataDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
                     nameColor = option.palette.highlightedText().color();
                     otherColor = option.palette.highlightedText().color();
                 } else {
-                    nameColor = QColor("#2CA7F8");
+                    //nameColor = QColor("#2CA7F8");
+                    nameColor = QColor(DGuiApplicationHelper::instance()->applicationPalette().highlight().color());
                     otherColor = QColor("#2CA7F8");
                 }
                 font14.setFamily("SourceHanSansSC");
@@ -511,7 +514,7 @@ void MusicListDataDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
                 infoStr = QString("   ") + tr("%1 songs").arg(sortMetasSize);
             }
 
-            painter->setPen(otherColor);
+            painter->setPen(nameColor);
             painter->setFont(font11);
             QRect rect(w, option.rect.y(), tailwidth - 20, option.rect.height());
             painter->drawText(rect, Qt::AlignRight | Qt::AlignVCenter, infoStr);
@@ -544,7 +547,7 @@ void MusicListDataDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
                     nameColor = option.palette.highlightedText().color();
                     otherColor = option.palette.highlightedText().color();
                 } else {
-                    nameColor = QColor("#2CA7F8");
+                    nameColor = QColor(DGuiApplicationHelper::instance()->applicationPalette().highlight().color());
                     otherColor = QColor("#2CA7F8");
                 }
                 font14.setFamily("SourceHanSansSC");
@@ -589,7 +592,7 @@ void MusicListDataDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
             auto nameText = songsFm.elidedText(PlayMusicTypePtr->name, Qt::ElideMiddle, nameRect.width());
             painter->drawText(nameRect, Qt::AlignLeft | Qt::AlignVCenter, nameText);
 
-            painter->setPen(otherColor);
+            painter->setPen(nameColor);
             //extraname
             QRect extraRect(50 + w / 2, option.rect.y(), w / 4 - 20, option.rect.height());
             painter->setFont(font11);
