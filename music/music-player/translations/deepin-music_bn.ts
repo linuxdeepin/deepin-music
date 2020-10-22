@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="bn">
+<TS version="2.1" language="bn_BD" sourcelanguage="en_US">
 <context>
     <name>CloseConfirmDialog</name>
     <message>
         <location filename="../view/widget/closeconfirmdialog.cpp" line="72"/>
         <source>Exit</source>
-        <translation>বের হয়ে যান</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/widget/closeconfirmdialog.cpp" line="74"/>
@@ -26,16 +26,12 @@
     <message>
         <location filename="../view/widget/closeconfirmdialog.cpp" line="110"/>
         <source>Cancel</source>
-        <translation>বাতিল</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/widget/closeconfirmdialog.cpp" line="111"/>
         <source>Confirm</source>
         <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>OK</source>
-        <translation type="vanished">ঠিক আছে</translation>
     </message>
 </context>
 <context>
@@ -43,7 +39,12 @@
     <message>
         <location filename="../view/widget/dequalizerdialog.cpp" line="112"/>
         <source>Custom</source>
-        <translation type="unfinished">প্রথা</translation>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../view/widget/dequalizerdialog.cpp" line="113"/>
+        <source>Monophony</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/widget/dequalizerdialog.cpp" line="114"/>
@@ -61,16 +62,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/widget/dequalizerdialog.cpp" line="120"/>
-        <source>Headphones</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../view/widget/dequalizerdialog.cpp" line="113"/>
-        <source>Monophony</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <location filename="../view/widget/dequalizerdialog.cpp" line="117"/>
         <source>Full Bass</source>
         <translation type="unfinished"></translation>
@@ -83,6 +74,11 @@
     <message>
         <location filename="../view/widget/dequalizerdialog.cpp" line="119"/>
         <source>Full Treble</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../view/widget/dequalizerdialog.cpp" line="120"/>
+        <source>Headphones</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -131,6 +127,17 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../view/widget/dequalizerdialog.cpp" line="130"/>
+        <source>Techno</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../view/widget/dequalizerdialog.cpp" line="187"/>
+        <location filename="../view/widget/dequalizerdialog.cpp" line="448"/>
+        <source>Equalizer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="../view/widget/dequalizerdialog.cpp" line="194"/>
         <location filename="../view/widget/dequalizerdialog.cpp" line="654"/>
         <source>ON</source>
@@ -140,23 +147,6 @@
         <location filename="../view/widget/dequalizerdialog.cpp" line="196"/>
         <location filename="../view/widget/dequalizerdialog.cpp" line="652"/>
         <source>OFF</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../view/widget/dequalizerdialog.cpp" line="550"/>
-        <location filename="../view/widget/dequalizerdialog.cpp" line="551"/>
-        <source>Sound Effects Saved</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../view/widget/dequalizerdialog.cpp" line="130"/>
-        <source>Techno</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../view/widget/dequalizerdialog.cpp" line="187"/>
-        <location filename="../view/widget/dequalizerdialog.cpp" line="448"/>
-        <source>Equalizer</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -172,41 +162,17 @@
     <message>
         <location filename="../view/widget/dequalizerdialog.cpp" line="337"/>
         <source>Restore Defaults</source>
-        <translation type="unfinished">পূর্বনির্ধারিত জিনিসে ফিরে যান</translation>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../view/widget/dequalizerdialog.cpp" line="550"/>
+        <location filename="../view/widget/dequalizerdialog.cpp" line="551"/>
+        <source>Sound Effects Saved</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>Footer</name>
-    <message>
-        <location filename="../view/footerwidget.cpp" line="424"/>
-        <source>Previous</source>
-        <translation>পূর্ববর্তীটি </translation>
-    </message>
-    <message>
-        <location filename="../view/footerwidget.cpp" line="425"/>
-        <source>Next</source>
-        <translation>পরবর্তী</translation>
-    </message>
-    <message>
-        <location filename="../view/footerwidget.cpp" line="426"/>
-        <source>Play/Pause</source>
-        <translation>চালান/থামুন</translation>
-    </message>
-    <message>
-        <location filename="../view/footerwidget.cpp" line="427"/>
-        <source>Favorite</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../view/footerwidget.cpp" line="428"/>
-        <source>Lyrics</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../view/footerwidget.cpp" line="430"/>
-        <source>Play Queue</source>
-        <translation type="unfinished"></translation>
-    </message>
     <message>
         <location filename="../view/footerwidget.cpp" line="298"/>
         <source>Unknown Title</source>
@@ -220,23 +186,49 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/footerwidget.cpp" line="429"/>
-        <source>Play Mode</source>
-        <translation>চালানোর ধরণ</translation>
+        <location filename="../view/footerwidget.cpp" line="424"/>
+        <source>Previous</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Playlist</source>
-        <translation type="vanished">চালানোর তালিকা</translation>
+        <location filename="../view/footerwidget.cpp" line="425"/>
+        <source>Next</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../view/footerwidget.cpp" line="426"/>
+        <source>Play/Pause</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../view/footerwidget.cpp" line="427"/>
+        <source>Favorite</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../view/footerwidget.cpp" line="428"/>
+        <source>Lyrics</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../view/footerwidget.cpp" line="429"/>
+        <source>Play Mode</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../view/footerwidget.cpp" line="430"/>
+        <source>Play Queue</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/footerwidget.cpp" line="1462"/>
         <source>List Loop</source>
-        <translation>সম্পূর্ণ তালিকা ঘুড়ুন</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/footerwidget.cpp" line="1465"/>
         <source>Single Loop</source>
-        <translation>একবার ঘুড়বেন</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/footerwidget.cpp" line="1468"/>
@@ -277,6 +269,11 @@
 <context>
     <name>InfoDialog</name>
     <message>
+        <location filename="../view/widget/infodialog.cpp" line="132"/>
+        <source>Basic info</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="../view/widget/infodialog.cpp" line="149"/>
         <source>Title:</source>
         <translation type="unfinished"></translation>
@@ -294,7 +291,17 @@
     <message>
         <location filename="../view/widget/infodialog.cpp" line="150"/>
         <source>Type:</source>
-        <translation>ধরণ:</translation>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../view/widget/infodialog.cpp" line="151"/>
+        <source>Size:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../view/widget/infodialog.cpp" line="151"/>
+        <source>Duration:</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/widget/infodialog.cpp" line="152"/>
@@ -311,28 +318,13 @@
         <source>Unknown album</source>
         <translation type="unfinished"></translation>
     </message>
-    <message>
-        <location filename="../view/widget/infodialog.cpp" line="151"/>
-        <source>Size:</source>
-        <translation>আকার:</translation>
-    </message>
-    <message>
-        <location filename="../view/widget/infodialog.cpp" line="132"/>
-        <source>Basic info</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../view/widget/infodialog.cpp" line="151"/>
-        <source>Duration:</source>
-        <translation>সময়কালঃ</translation>
-    </message>
 </context>
 <context>
     <name>LoadWidget</name>
     <message>
         <location filename="../view/loadwidget.cpp" line="42"/>
         <source>Loading...</source>
-        <translation>লোড হচ্ছে...</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -355,12 +347,12 @@
     <message>
         <location filename="../view/lyricwidget.cpp" line="180"/>
         <source>Search</source>
-        <translation>খুঁজুন</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/lyricwidget.cpp" line="215"/>
         <source>Back</source>
-        <translation>ফিরে যান</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -374,48 +366,6 @@
 <context>
     <name>MainFrame</name>
     <message>
-        <location filename="../view/mainframe.cpp" line="206"/>
-        <source>Settings</source>
-        <translation>সেটিংস</translation>
-    </message>
-    <message>
-        <location filename="../view/mainframe.cpp" line="273"/>
-        <location filename="../view/mainframe.cpp" line="866"/>
-        <source>Exit</source>
-        <translation>বের হয়ে যান</translation>
-    </message>
-    <message>
-        <location filename="../view/mainframe.cpp" line="265"/>
-        <source>Dark theme</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../view/mainframe.cpp" line="198"/>
-        <source>Equalizer</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../view/mainframe.cpp" line="863"/>
-        <source>Play/Pause</source>
-        <translation>চালান/থামুন</translation>
-    </message>
-    <message>
-        <location filename="../view/mainframe.cpp" line="864"/>
-        <source>Previous</source>
-        <translation>পূর্ববর্তীটি </translation>
-    </message>
-    <message>
-        <location filename="../view/mainframe.cpp" line="1579"/>
-        <source>All music</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../view/mainframe.cpp" line="1083"/>
-        <location filename="../view/mainframe.cpp" line="1139"/>
-        <source>OK</source>
-        <translation>ঠিক আছে</translation>
-    </message>
-    <message>
         <location filename="../view/mainframe.cpp" line="182"/>
         <source>Add playlist</source>
         <translation type="unfinished"></translation>
@@ -426,8 +376,24 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="791"/>
-        <source>Music is a local music player with beautiful design and simple functions.</source>
+        <location filename="../view/mainframe.cpp" line="198"/>
+        <source>Equalizer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../view/mainframe.cpp" line="206"/>
+        <source>Settings</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../view/mainframe.cpp" line="265"/>
+        <source>Dark theme</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../view/mainframe.cpp" line="273"/>
+        <location filename="../view/mainframe.cpp" line="866"/>
+        <source>Exit</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -437,6 +403,26 @@
         <location filename="../view/mainframe.cpp" line="877"/>
         <location filename="../view/mainframe.cpp" line="1436"/>
         <source>Music</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../view/mainframe.cpp" line="791"/>
+        <source>Music is a local music player with beautiful design and simple functions.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../view/mainframe.cpp" line="863"/>
+        <source>Play/Pause</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../view/mainframe.cpp" line="864"/>
+        <source>Previous</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../view/mainframe.cpp" line="865"/>
+        <source>Next</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -465,14 +451,20 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../view/mainframe.cpp" line="1083"/>
+        <location filename="../view/mainframe.cpp" line="1139"/>
+        <source>OK</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="../view/mainframe.cpp" line="1133"/>
         <source>Import failed, no valid music file found</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="865"/>
-        <source>Next</source>
-        <translation>পরবর্তী</translation>
+        <location filename="../view/mainframe.cpp" line="1579"/>
+        <source>All music</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -565,6 +557,13 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../view/musiclistdatawidget.cpp" line="404"/>
+        <location filename="../view/musiclistdatawidget.cpp" line="1359"/>
+        <location filename="../view/musiclistdatawidget.cpp" line="1571"/>
+        <source>Search Results</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="../view/musiclistdatawidget.cpp" line="967"/>
         <location filename="../view/musiclistdatawidget.cpp" line="982"/>
         <location filename="../view/musiclistdatawidget.cpp" line="997"/>
@@ -617,6 +616,11 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../view/musiclistdatawidget.cpp" line="1232"/>
+        <source>Songs</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="../view/musiclistdatawidget.cpp" line="1233"/>
         <source>Artists</source>
         <translation type="unfinished"></translation>
@@ -629,18 +633,6 @@
     <message>
         <location filename="../view/musiclistdatawidget.cpp" line="1269"/>
         <source>Custom</source>
-        <translation type="unfinished">প্রথা</translation>
-    </message>
-    <message>
-        <location filename="../view/musiclistdatawidget.cpp" line="404"/>
-        <location filename="../view/musiclistdatawidget.cpp" line="1359"/>
-        <location filename="../view/musiclistdatawidget.cpp" line="1571"/>
-        <source>Search Results</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../view/musiclistdatawidget.cpp" line="1232"/>
-        <source>Songs</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -682,7 +674,7 @@
     <message>
         <location filename="../view/widget/musiclistinfoview.cpp" line="527"/>
         <source>Play</source>
-        <translation type="unfinished">চালু করুন</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/widget/musiclistinfoview.cpp" line="530"/>
@@ -692,7 +684,7 @@
     <message>
         <location filename="../view/widget/musiclistinfoview.cpp" line="535"/>
         <source>Display in file manager</source>
-        <translation type="unfinished">ফাইল ম্যানেজার দেখান</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/widget/musiclistinfoview.cpp" line="538"/>
@@ -713,7 +705,7 @@
         <location filename="../view/widget/musiclistinfoview.cpp" line="608"/>
         <location filename="../view/widget/musiclistinfoview.cpp" line="639"/>
         <source>Cancel</source>
-        <translation type="unfinished">বাতিল</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/widget/musiclistinfoview.cpp" line="609"/>
@@ -733,7 +725,7 @@
     <message>
         <location filename="../view/widget/musiclistinfoview.cpp" line="640"/>
         <source>Delete</source>
-        <translation type="unfinished">মুছে ফেলুন</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/widget/musiclistinfoview.cpp" line="649"/>
@@ -763,12 +755,12 @@
     <message>
         <location filename="../view/widget/musiclistitem.cpp" line="184"/>
         <source>Cancel</source>
-        <translation type="unfinished">বাতিল</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/widget/musiclistitem.cpp" line="185"/>
         <source>Delete</source>
-        <translation type="unfinished">মুছে ফেলুন</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -787,16 +779,6 @@
 <context>
     <name>MusicListView</name>
     <message>
-        <location filename="../view/widget/musiclistview.cpp" line="531"/>
-        <location filename="../view/widget/musiclistview.cpp" line="549"/>
-        <source>Play</source>
-        <translation>চালু করুন</translation>
-    </message>
-    <message>
-        <source>Display in file manager</source>
-        <translation type="vanished">ফাইল ম্যানেজার দেখান</translation>
-    </message>
-    <message>
         <location filename="../view/widget/musiclistview.cpp" line="175"/>
         <source>My Favorites</source>
         <translation type="unfinished"></translation>
@@ -811,7 +793,7 @@
         <location filename="../view/widget/musiclistview.cpp" line="413"/>
         <location filename="../view/widget/musiclistview.cpp" line="566"/>
         <source>Cancel</source>
-        <translation>বাতিল</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="414"/>
@@ -819,12 +801,18 @@
         <location filename="../view/widget/musiclistview.cpp" line="558"/>
         <location filename="../view/widget/musiclistview.cpp" line="567"/>
         <source>Delete</source>
-        <translation>মুছে ফেলুন</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="528"/>
         <location filename="../view/widget/musiclistview.cpp" line="552"/>
         <source>Pause</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../view/widget/musiclistview.cpp" line="531"/>
+        <location filename="../view/widget/musiclistview.cpp" line="549"/>
+        <source>Play</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -835,32 +823,17 @@
     </message>
 </context>
 <context>
-    <name>MusicListWidget</name>
+    <name>PlayListView</name>
     <message>
-        <source>Custom</source>
-        <translation type="vanished">প্রথা</translation>
-    </message>
-</context>
-<context>
-    <name>PlayListItem</name>
-    <message>
-        <location filename="../view/widget/playlistitem.cpp" line="187"/>
-        <source>Are you sure you want to delete this playlist?</source>
+        <location filename="../view/widget/delegate/playitemdelegate.cpp" line="519"/>
+        <source>Unknown artist</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/widget/playlistitem.cpp" line="194"/>
-        <source>Delete</source>
-        <translation>মুছে ফেলুন</translation>
+        <location filename="../view/widget/delegate/playitemdelegate.cpp" line="531"/>
+        <source>Unknown album</source>
+        <translation type="unfinished"></translation>
     </message>
-    <message>
-        <location filename="../view/widget/playlistitem.cpp" line="193"/>
-        <source>Cancel</source>
-        <translation>বাতিল</translation>
-    </message>
-</context>
-<context>
-    <name>PlayListView</name>
     <message>
         <location filename="../view/widget/playlistview.cpp" line="542"/>
         <source>Play queue</source>
@@ -877,15 +850,15 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/widget/playlistview.cpp" line="624"/>
-        <source>Pause</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <location filename="../view/widget/playlistview.cpp" line="619"/>
         <location filename="../view/widget/playlistview.cpp" line="629"/>
         <source>Play</source>
-        <translation>চালু করুন</translation>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../view/widget/playlistview.cpp" line="624"/>
+        <source>Pause</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/widget/playlistview.cpp" line="635"/>
@@ -895,7 +868,7 @@
     <message>
         <location filename="../view/widget/playlistview.cpp" line="640"/>
         <source>Display in file manager</source>
-        <translation type="unfinished">ফাইল ম্যানেজার দেখান</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/widget/playlistview.cpp" line="644"/>
@@ -926,7 +899,7 @@
         <location filename="../view/widget/playlistview.cpp" line="746"/>
         <location filename="../view/widget/playlistview.cpp" line="777"/>
         <source>Cancel</source>
-        <translation type="unfinished">বাতিল</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/widget/playlistview.cpp" line="747"/>
@@ -944,6 +917,11 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../view/widget/playlistview.cpp" line="778"/>
+        <source>Delete</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="../view/widget/playlistview.cpp" line="787"/>
         <source>Are you sure you want to delete %1?</source>
         <translation type="unfinished"></translation>
@@ -958,21 +936,6 @@
         <location filename="../view/widget/playlistview.cpp" line="795"/>
         <location filename="../view/widget/playlistview.cpp" line="807"/>
         <source>The song files contained will also be deleted</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../view/widget/playlistview.cpp" line="778"/>
-        <source>Delete</source>
-        <translation>মুছে ফেলুন</translation>
-    </message>
-    <message>
-        <location filename="../view/widget/delegate/playitemdelegate.cpp" line="519"/>
-        <source>Unknown artist</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../view/widget/delegate/playitemdelegate.cpp" line="531"/>
-        <source>Unknown album</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -1066,7 +1029,7 @@
     <message>
         <location filename="../core/playlistmanager.cpp" line="202"/>
         <source>Play</source>
-        <translation type="unfinished">চালু করুন</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../core/playlistmanager.cpp" line="226"/>
@@ -1077,10 +1040,6 @@
 <context>
     <name>QApplication</name>
     <message>
-        <source>Deepin Music</source>
-        <translation type="vanished">ডিপিন মিউজিক</translation>
-    </message>
-    <message>
         <location filename="../view/mainframe.cpp" line="793"/>
         <source>Music</source>
         <translation type="unfinished"></translation>
@@ -1089,84 +1048,84 @@
 <context>
     <name>QObject</name>
     <message>
-        <source>Deepin Music</source>
-        <translation type="vanished">ডিপিন মিউজিক</translation>
-    </message>
-    <message>
         <location filename="../view/widget/settingsdialog.cpp" line="26"/>
         <source>Minimize to system tray</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="27"/>
-        <source>Exit Music</source>
+        <source>Exit</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="28"/>
-        <source>Autoplay</source>
+        <source>Ask me always</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="29"/>
-        <source>Enable fade in/out</source>
+        <source>Autoplay</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="30"/>
-        <source>Remember playback position</source>
-        <translation>সর্বশেষ চালানো অবস্থা মনে রাখুন</translation>
+        <source>Enable fade in/out</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="31"/>
-        <source>Close Main Window</source>
+        <source>Remember playback position</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="32"/>
-        <source>Basic</source>
-        <translation>প্রাথমিক</translation>
+        <source>Close Main Window</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="33"/>
-        <source>Play</source>
-        <translation>চালু করুন</translation>
+        <source>Basic</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="34"/>
-        <source>Shortcuts</source>
-        <translation>
-শর্টকাট</translation>
+        <source>Play</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="35"/>
-        <source>Restore Defaults</source>
-        <translation>পূর্বনির্ধারিত জিনিসে ফিরে যান</translation>
+        <source>Shortcuts</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="36"/>
-        <source>Next</source>
-        <translation>পরবর্তী</translation>
+        <source>Restore Defaults</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="37"/>
-        <source>Play/Pause</source>
-        <translation>চালান/থামুন</translation>
+        <source>Next</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="38"/>
-        <source>Previous</source>
-        <translation>পূর্ববর্তীটি </translation>
+        <source>Play/Pause</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="39"/>
-        <source>Volume down</source>
-        <translation>শব্দ কমান</translation>
+        <source>Previous</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="40"/>
+        <source>Volume down</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../view/widget/settingsdialog.cpp" line="41"/>
         <source>Volume up</source>
-        <translation>শব্দ বাড়ান</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1189,7 +1148,7 @@
     <message>
         <location filename="../view/widget/searchlyricswidget.cpp" line="121"/>
         <source>Search</source>
-        <translation type="unfinished">খুঁজুন</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1215,7 +1174,7 @@
     <message>
         <location filename="../view/shortcut.cpp" line="30"/>
         <source>Play</source>
-        <translation type="unfinished">চালু করুন</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/shortcut.cpp" line="31"/>
@@ -1230,22 +1189,22 @@
     <message>
         <location filename="../view/shortcut.cpp" line="33"/>
         <source>Settings</source>
-        <translation type="unfinished">সেটিংস</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/shortcut.cpp" line="39"/>
         <source>Play/Pause</source>
-        <translation type="unfinished">চালান/থামুন</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/shortcut.cpp" line="39"/>
         <source>Previous</source>
-        <translation type="unfinished">পূর্ববর্তীটি </translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/shortcut.cpp" line="39"/>
         <source>Next</source>
-        <translation type="unfinished">পরবর্তী</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/shortcut.cpp" line="39"/>
@@ -1313,7 +1272,7 @@
     <message>
         <location filename="../view/widget/titlebarwidget.cpp" line="81"/>
         <source>Search</source>
-        <translation>খুঁজুন</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 </TS>

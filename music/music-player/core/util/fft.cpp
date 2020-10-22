@@ -5,7 +5,7 @@ static const double pi = 3.1415926535898;
 
 void CFFT::process(complex<float> *Data, int Log2N, int sign)
 {
-    int i, j, step, length;
+    int i, j, length;
     complex<float> wn, temp, deltawn;
     length = 1 << Log2N;
     for (i = 0; i < length; i += 2) {
@@ -15,7 +15,7 @@ void CFFT::process(complex<float> *Data, int Log2N, int sign)
     }
     for (i = 2; i <= Log2N; i++) {
         wn = 1;
-        step = 1 << i;
+        int step = 1 << i;
         deltawn = complex<double>(cos(2.0 * pi / step), sin(sign * 2.0 * pi / step));
         for (j = 0; j < step / 2; j++) {
             for (i = 0; i < length / step; i++) {

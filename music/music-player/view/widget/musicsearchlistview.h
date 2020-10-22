@@ -53,7 +53,7 @@ public:
     QPixmap getSidebarPixmap() const;
     QPixmap getAlbumPixmap() const;
     void updateList();
-    void keyChoice();
+    //void keyChoice();
 
     void setViewModeFlag(QListView::ViewMode mode);
 

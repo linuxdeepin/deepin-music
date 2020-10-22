@@ -37,11 +37,9 @@
 #include "../core/playlist.h"
 #include "../core/musicsettings.h"
 #include "widget/musiclistview.h"
-#include "widget/musiclistviewitem.h"
+//#include "widget/musiclistviewitem.h"
 #include "musiclistdatawidget.h"
 #include "widget/musicimagebutton.h"
-#include "playlistmanager.h"
-
 #include <DGuiApplicationHelper>
 
 MusicListScrollArea::MusicListScrollArea(QWidget *parent) : DScrollArea(parent)
@@ -95,21 +93,17 @@ MusicListScrollArea::MusicListScrollArea(QWidget *parent) : DScrollArea(parent)
     customizeLayout->addWidget(m_addListBtn, 0, Qt::AlignBottom);
 
     m_dataBaseListview = new MusicListView;
+    m_dataBaseListview->initPerformanceDataBase();
     m_dataBaseListview->setEditTriggers(QAbstractItemView::NoEditTriggers);
     m_dataBaseListview->setFixedHeight(162);
 
-    //init database left view
-    for (PlaylistPtr  plistptr :PlaylistManager::instance()->allplaylist()) {
-        if (plistptr->id() == AlbumMusicListID || plistptr->id() == ArtistMusicListID ||
-                plistptr->id() == AllMusicListID || plistptr->id() == FavMusicListID) {
-            m_dataBaseListview->addMusicList(plistptr);
-        }
-    }
-
+    // m_dataBaseListview->setFocusPolicy(Qt::TabFocus);   //使用默认设置焦点方式
     m_dataBaseListview->installEventFilter(this);
 
     m_customizeListview = new MusicListView;
     musicLayout->setContentsMargins(0, 0, 0, 0);
+
+    // m_customizeListview->setFocusPolicy(Qt::TabFocus);
     m_customizeListview->installEventFilter(this);
 
     musicLayout->addWidget(dataBaseLabel, 0, Qt::AlignVCenter);

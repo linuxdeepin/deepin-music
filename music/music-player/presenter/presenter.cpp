@@ -89,11 +89,35 @@ PresenterPrivate::PresenterPrivate(Presenter *parent)
 
 }
 
+void PresenterPrivate::quickReadSql()
+{
+    MediaDatabase::instance()->init();
+    ThreadPool::instance()->moveToNewThread(MediaDatabase::instance());
+    qDebug() << "TRACE:" << "database init finished";
+
+    library = MediaLibrary::instance();
+    library->init();
+    ThreadPool::instance()->moveToNewThread(MediaLibrary::instance());
+    qDebug() << "TRACE:" << "library init finished";
+
+    playlistMgr = new PlaylistManager;
+    playlistMgr->load();
+    qDebug() << "TRACE:" << "playlistMgr init finished";
+}
+
 void PresenterPrivate::initBackend()
 {
     Q_Q(Presenter);
 
+    MetaDetector::init();
+
+    auto pm = PluginManager::instance();
+    connect(this, &PresenterPrivate::requestInitPlugin,
+            pm, &PluginManager::init);
+    ThreadPool::instance()->moveToNewThread(pm);
+
     player = Player::instance();
+    qDebug() << "TRACE:" << "player init finished";
     connect(player, &Player::audioBufferProbed, q, [ = ](const QAudioBuffer & buffer) {
         Q_EMIT q->audioBufferProbed(buffer);
     });
@@ -326,6 +350,45 @@ void PresenterPrivate::initBackend()
     });
     connect(this, &PresenterPrivate::pause, player, &Player::pause);
     connect(this, &PresenterPrivate::stop, player, &Player::stop);
+
+    connect(pm, &PluginManager::onPluginLoaded,
+    this, [ = ](const QString & objectName, DMusic::Plugin::PluginInterface * instance) {
+        if (instance && instance->pluginType() == DMusic::Plugin::PluginType::TypeMetaSearchEngine) {
+            qDebug() << "load plugins" << objectName;
+            lyricService = MetaSearchService::instance();
+            qDebug() << "TRACE:" << "lyricService init finished";
+            lyricService->init();
+
+            connect(lyricService, &MetaSearchService::coverSearchFinished,
+            this, [ = ](const MetaPtr meta, const DMusic::SearchMeta & search, const QByteArray & coverData) {
+                if (search.id != meta->searchID) {
+                    meta->searchID = search.id;
+                    meta->updateSearchIndex();
+                    Q_EMIT MediaDatabase::instance()->updateMediaMeta(meta);
+                }
+                meta->coverUrl = MetaSearchService::coverUrl(meta);
+                Q_EMIT q->coverSearchFinished(meta, search, coverData);
+            });
+
+            connect(this, &PresenterPrivate::requestMetaSearch,
+                    lyricService, &MetaSearchService::searchMeta);
+            connect(this, &PresenterPrivate::requestChangeMetaCache,
+                    lyricService, &MetaSearchService::onChangeMetaCache);
+            connect(lyricService, &MetaSearchService::lyricSearchFinished,
+                    q, &Presenter::lyricSearchFinished);
+            connect(lyricService, &MetaSearchService::contextSearchFinished,
+                    q, &Presenter::contextSearchFinished);
+            connect(q, &Presenter::requestContextSearch,
+                    lyricService, &MetaSearchService::searchContext);
+
+            ThreadPool::instance()->moveToNewThread(MetaSearchService::instance());
+
+            auto activeMeta = Player::instance()->activeMeta();
+            if (activeMeta) {
+                Q_EMIT requestMetaSearch(activeMeta);
+            }
+        }
+    });
 }
 
 void PresenterPrivate::notifyMusicPlayed(PlaylistPtr playlist, const MetaPtr meta)
@@ -337,6 +400,7 @@ void PresenterPrivate::notifyMusicPlayed(PlaylistPtr playlist, const MetaPtr met
 
     MetaPtr favInfo(meta);
     favInfo->favourite = playlistMgr->playlist(FavMusicListID)->contains(meta);
+    //    qDebug() << FavMusicListID << meta->title << favInfo->favourite;
     Q_EMIT q->musicPlayed(playlist, favInfo);
 }
 
@@ -363,6 +427,7 @@ bool Presenter::containsStr(QString searchText, QString text)
                 }
                 curTextListStr += mText;
             }
+//            curTextListStr = QString(curTextListStr.remove(" "));
             if (curTextListStr.contains(searchText, Qt::CaseInsensitive)) {
                 return true;
             }
@@ -401,10 +466,12 @@ void Presenter::handleQuit()
 void Presenter::prepareData()
 {
     Q_D(Presenter);
-    d->library = MediaLibrary::instance();
-    d->library->init();
+
+    d->quickReadSql();
+    Q_EMIT dataLoaded();
 
     d->initBackend();
+    qDebug() << "TRACE:" << "initBackend finished";
     d->transfer = new Transfer();
     ThreadPool::instance()->moveToNewThread(d->transfer);
     connect(d->library, &MediaLibrary::meidaFileImported,
@@ -448,6 +515,7 @@ void Presenter::prepareData()
 
     connect(d->library, &MediaLibrary::scanFinished,
     this, [ = ](const QString & playlistId, int mediaCount) {
+        qDebug() << "scanFinished";
         if (d->playlistMgr->playlist(AllMusicListID)->isEmpty()) {
             qDebug() << "scanFinished: meta library clean";
             Q_EMIT metaLibraryClean();
@@ -463,8 +531,11 @@ void Presenter::prepareData()
     connect(d->transfer, &Transfer::musicListAdded,
             this, &Presenter::musicListAdded, Qt::UniqueConnection);
 
+
+
     connect(d->playlistMgr, &PlaylistManager::musiclistRemoved,
     this, [ = ](PlaylistPtr playlist, const MetaPtrList metalist) {
+        //qDebug() << playlist << playlist->id();
         Q_EMIT musicListRemoved(playlist, metalist);
     });
 
@@ -478,6 +549,8 @@ void Presenter::prepareData()
             this, &Presenter::volumeChanged);
     connect(d->player, &Player::mutedChanged,
             this, &Presenter::mutedChanged);
+//    connect(d->player, &Player::localMutedChanged,
+//            this, &Presenter::localMutedChanged);
 
     connect(this, &Presenter::musicFileMiss,
             d->player, &Player::musicFileMiss);
@@ -546,6 +619,9 @@ void Presenter::prepareData()
 void Presenter::quickLoad()
 {
     Q_D(Presenter);
+
+    Q_EMIT showMusicList(d->playlistMgr->playlist(AllMusicListID));
+
     // Add playlist
     for (auto playlist : d->playlistMgr->allplaylist()) {
         Q_EMIT playlistAdded(playlist);
@@ -600,7 +676,6 @@ void Presenter::postAction(bool showFlag)
     }
 
     auto lastMeta = lastPlaylist->first();
-    auto position = 0;
     auto isMetaLibClear = MediaLibrary::instance()->isEmpty();
     isMetaLibClear |= allplaylist->isEmpty();
 
@@ -629,7 +704,7 @@ void Presenter::postAction(bool showFlag)
         }
 
         if (!lastMeta.isNull()) {
-            position = 0;
+            int position = 0;
             if (d->settings->value("base.play.remember_progress").toBool()) {
                 position = d->settings->value("base.play.last_position").toInt();
             }
@@ -692,6 +767,13 @@ void Presenter::postAction(bool showFlag)
 
     auto fadeInOut = d->settings->value("base.play.fade_in_out").toBool();
     d->player->setFadeInOut(fadeInOut);
+
+    if (!isMetaLibClear) {
+        MusicSettings::setOption("base.play.showFlag", 1);
+        if (!showFlag) {
+            Q_EMIT showMusicList(allplaylist);
+        }
+    }
 
     if (!showFlag) {
         // Add playlist
@@ -879,6 +961,9 @@ void Presenter::onMusiclistRemove(PlaylistPtr playlist, const MetaPtrList metali
     MetaPtr next;
     bool t_isLastMeta = false;
 
+
+    qDebug() << "----playlistID-----" << playlist->id();
+
     //检查当前播放的是否包含最后一首
     if (playinglist != nullptr) {
         for (auto meta : metalist) {
@@ -962,7 +1047,8 @@ void Presenter::onMusiclistRemove(PlaylistPtr playlist, const MetaPtrList metali
         }
     }
 
-    if (playlist->musicCount() == 0 &&  playlist->id() != "play") {
+    if (playlist->allmusic().size() == 0 &&  playlist->id() != "play") {
+
         qDebug() << "Presenter::onMusiclistRemove Q_EMIT 3";
         Q_EMIT musicListClear();
     }
@@ -1153,12 +1239,6 @@ void Presenter::removeListSame(QStringList *list)
             }
         }
     }
-}
-
-void Presenter::initPlayManager()
-{
-    Q_D(Presenter);
-    d->playlistMgr = PlaylistManager::instance();
 }
 
 void Presenter::onSearchText(const QString &id, const QString &text)
@@ -1461,25 +1541,29 @@ void Presenter::onSearchCand(const QString text)
 
 void Presenter::onExitSearch()
 {
+    qDebug() << "exit search";
     Q_D(Presenter);
+    qDebug() << d->playlistBeforeSearch;
     if (!d->playlistBeforeSearch.isNull()) {
         d->currentPlaylist = d->playlistBeforeSearch;
         Q_EMIT this->currentMusicListChanged(d->playlistBeforeSearch);
     }
 }
 
-void Presenter::onLocateMusicAtAll(const QString &hash)
-{
-    Q_D(Presenter);
-    auto allList = d->playlistMgr->playlist(AllMusicListID);
-    d->currentPlaylist = allList;
-    Q_EMIT locateMusic(allList, allList->music(hash));
-}
+//void Presenter::onLocateMusicAtAll(const QString &hash)
+//{
+//    Q_D(Presenter);
+//    auto allList = d->playlistMgr->playlist(AllMusicListID);
+//    d->currentPlaylist = allList;
+//    Q_EMIT locateMusic(allList, allList->music(hash));
+//    //    onMusicPlay(allList, allList->music(hash));
+//}
 
 void Presenter::onChangeSearchMetaCache(const MetaPtr meta, const DMusic::SearchMeta &search)
 {
     Q_D(Presenter);
     if (meta->searchID != search.id) {
+        qDebug() << "update search id " << search.id;
         meta->searchID = search.id;
         meta->updateSearchIndex();
         Q_EMIT MediaDatabase::instance()->updateMediaMeta(meta);
@@ -1813,7 +1897,7 @@ void Presenter::onPlayall(PlaylistPtr playlist)
         QString name = PlayMusicTypePtr->name;
 
         if (curPlaylist.isNull()) {
-            qWarning() << "can not player empty playlist";
+            qWarning() << "can not player emptry playlist";
             return;
         }
 
@@ -1857,9 +1941,12 @@ void Presenter::onResort(PlaylistPtr playlist, int sortType)
 void Presenter::onImportFiles(const QStringList &filelist, PlaylistPtr playlist)
 {
     Q_D(Presenter);
+    //PlaylistPtr playlist = d->currentPlaylist;
     PlaylistPtr curPlaylist = playlist;
+    //bool flag = false;
     if (playlist == nullptr) {
         curPlaylist = d->playlistMgr->playlist(AllMusicListID);
+        //flag = true;
     }
     requestImportPaths(curPlaylist, filelist);
     auto curPlayerlist = d->player->curPlaylist();
@@ -1867,6 +1954,7 @@ void Presenter::onImportFiles(const QStringList &filelist, PlaylistPtr playlist)
         d->player->setActivePlaylist(curPlaylist);
     }
     curPlayerlist->appendMusicList(curPlaylist->allmusic());
+    return;
 }
 
 void Presenter::onSpeechPlayMusic(const QString music)
@@ -1886,6 +1974,7 @@ void Presenter::onSpeechPlayMusic(const QString music)
     }
     if (find) {
         curPlayList->reset(musicMetaDataList);
+//        d->player->setActivePlaylist(curPlayList);
         onSyncMusicPlay(curPlayList, playMetaData);
         Q_EMIT sigSpeedResult(1, true);
     } else {
@@ -1955,7 +2044,7 @@ void Presenter::onSpeechPlayFaverite()
     PlaylistPtr curPlayList = d->playlistMgr->playlist(PlayMusicListID);
     MetaPtrList musicMetaDataList;
     MetaPtr playMetaData;
-    if (musicList->musicCount() == 0) {
+    if (musicList->allmusic().size() == 0) {
         Q_EMIT sigSpeedResult(4, false);
     } else {
         playMetaData = musicList->allmusic().first();
@@ -1999,7 +2088,7 @@ void Presenter::onSpeechPlayRadom()
     PlaylistPtr curPlayList  = d->playlistMgr->playlist(PlayMusicListID);
     MetaPtrList musicMetaDataList;
     MetaPtr playMetaData;
-    int count = musicList->musicCount();
+    int count = musicList->allmusic().size();
     if (count == 0) {
         Q_EMIT sigSpeedResult(6, false);
     } else {
@@ -2064,6 +2153,7 @@ void Presenter::onSpeechsetMode(const int mode)
 void Presenter::setEqualizer(bool enabled, int curIndex, QList<int> indexbaud)
 {
     Q_D(Presenter);
+//    qDebug() << "read equalizer config:" << enabled << "curIndex:" << curIndex << "indexbaud:" << indexbaud;
     d->player->setEqualizer(enabled, curIndex, indexbaud);
 }
 //使能
@@ -2100,6 +2190,7 @@ void Presenter::localMuteChanged(bool mute)
 void Presenter::onScanMusicDirectory()
 {
     auto musicDir =  QStandardPaths::standardLocations(QStandardPaths::MusicLocation);
+    qWarning() << "scan" << musicDir;
     PlaylistPtr playlist = nullptr;
     onImportFiles(musicDir, playlist);
 
@@ -2144,12 +2235,14 @@ void Presenter::initMpris(MprisPlayer *mprisPlayer)
         // TODO: support mpris playlist
         Q_UNUSED(playlist);
 
+        QString trackIdMpris("/org/mpris/MediaPlayer2");
         QVariantMap metadata;
         metadata.insert(Mpris::metadataToString(Mpris::Title), meta->title);
         metadata.insert(Mpris::metadataToString(Mpris::Artist), meta->artist);
         metadata.insert(Mpris::metadataToString(Mpris::Album), meta->album);
-        metadata.insert(Mpris::metadataToString(Mpris::Length), meta->length / 1000);
+        metadata.insert(Mpris::metadataToString(Mpris::Length), meta->length);
         metadata.insert(Mpris::metadataToString(Mpris::ArtUrl), meta->coverUrl);
+        metadata.insert(Mpris::metadataToString(Mpris::TrackId), trackIdMpris);
 
         //mprisPlayer->setCanSeek(true);
         mprisPlayer->setMetadata(metadata);

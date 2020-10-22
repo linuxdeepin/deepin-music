@@ -70,7 +70,7 @@ DWIDGET_USE_NAMESPACE
 class DequalizerDialogPrivate
 {
 public:
-    DequalizerDialogPrivate(DequalizerDialog *parent) : q_ptr(parent) {}
+    explicit DequalizerDialogPrivate(DequalizerDialog *parent) : q_ptr(parent) {}
     void readConfig();
     void initUI();
     void SliderOneEntry(DSlider *slider, int value);

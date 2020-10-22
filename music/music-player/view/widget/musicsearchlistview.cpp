@@ -31,7 +31,7 @@ DWIDGET_USE_NAMESPACE
 class MusicSearchListviewPrivate
 {
 public:
-    MusicSearchListviewPrivate(MusicSearchListview *parent): q_ptr(parent) {}
+    explicit MusicSearchListviewPrivate(MusicSearchListview *parent): q_ptr(parent) {}
     void addItem(const QString str);
 
     MusicSearchListModel        *model        = nullptr;
@@ -120,7 +120,7 @@ void MusicSearchListview::onMusiclistChanged(QString text, PlaylistPtr playlist)
     Q_D(MusicSearchListview);
 
     if (playlist.isNull()) {
-        qWarning() << "can not change to empty playlist";
+        qWarning() << "can not change to emptry playlist";
         return;
     }
     d->searchText = text;
@@ -245,7 +245,7 @@ void MusicSearchListview::updateList()
     Q_D(MusicSearchListview);
     PlaylistPtr playlist = d->model->playlist();
     if (playlist.isNull()) {
-        qWarning() << "can not change to empty playlist";
+        qWarning() << "can not change to emptry playlist";
         return;
     }
 
@@ -264,14 +264,14 @@ void MusicSearchListview::updateList()
     }
 }
 
-void MusicSearchListview::keyChoice()
-{
-    Q_D(MusicSearchListview);
-    qDebug() << "cle down" << endl;
+//void MusicSearchListview::keyChoice()
+//{
+//    Q_D(MusicSearchListview);
+//    qDebug() << "cle down" << endl;
 
-    QModelIndex indexFromList = d->model->index(1, 0);//取model
-    this->setCurrentIndex(indexFromList);
-}
+//    QModelIndex indexFromList = d->model->index(1, 0);//取model
+//    this->setCurrentIndex(indexFromList);
+//}
 
 
 void MusicSearchListview::setViewModeFlag(QListView::ViewMode mode)

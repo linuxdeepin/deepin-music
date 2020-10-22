@@ -37,7 +37,7 @@
 #include "../core/playlist.h"
 #include "../core/musicsettings.h"
 #include "widget/musiclistview.h"
-#include "widget/musiclistviewitem.h"
+//#include "widget/musiclistviewitem.h"
 #include "musiclistdatawidget.h"
 #include "widget/musicimagebutton.h"
 #include "musiclistscrollarea.h"
@@ -67,7 +67,7 @@ MusicListWidget::MusicListWidget(QWidget *parent) : DWidget(parent)
 
     m_dataBaseListview = leftFrame->getDBMusicListView();
     m_customizeListview = leftFrame->getCustomMusicListView();
-    m_dataListView = new MusicListDataWidget; //get data as soon as possible
+    m_dataListView = new MusicListDataWidget;
 
     layout->addWidget(leftFrame, 0);
     layout->addWidget(m_dataListView, 100);
@@ -106,6 +106,8 @@ MusicListWidget::MusicListWidget(QWidget *parent) : DWidget(parent)
             m_dataListView,  &MusicListDataWidget::CloseSearch);
 
     connect(m_addListBtn, &DPushButton::clicked, this, [ = ](bool /*checked*/) {
+        qDebug() << "addPlaylist(true);";
+        addFlag = true;
         Q_EMIT this->addPlaylist(true);
     });
 
@@ -370,11 +372,24 @@ void MusicListWidget::onPlaylistAdded(PlaylistPtr playlist, bool newflag)
 
     if (playlist->id() == AlbumMusicListID || playlist->id() == ArtistMusicListID ||
             playlist->id() == AllMusicListID || playlist->id() == FavMusicListID) {
-        return; //ignore change for these pages
+        m_dataBaseListview->addMusicList(playlist);
     } else {
         m_customizeListview->closeAllPersistentEditor();
         m_customizeListview->addMusicList(playlist, newflag);
+        addFlag = false;
     }
+//    auto item = new MusicListViewItem(playlist);
+//    if (playlist->id() == AlbumMusicListID || playlist->id() == ArtistMusicListID ||
+//            playlist->id() == AllMusicListID || playlist->id() == FavMusicListID ) {
+//        m_dataBaseListview->addItem(item);
+//    } else {
+//        m_customizeListview->addItem(item);
+//        if (addFlag) {
+//            m_customizeListview->clearSelection();
+//            m_customizeListview->openPersistentEditor(item);
+//        }
+//        addFlag = false;
+//    }
     if (playlist->playing())
         m_dataListView->onMusiclistChanged(playlist);
 }
@@ -382,10 +397,15 @@ void MusicListWidget::onPlaylistAdded(PlaylistPtr playlist, bool newflag)
 void MusicListWidget::onCurrentChanged(PlaylistPtr playlist)
 {
     if (playlist->id() != SearchMusicListID) {
+        if (playlist) {
+//            m_dataBaseListview->clearSelection();
+//            m_customizeListview->clearSelection();
+        }
         for (int i = 0; i < m_dataBaseListview->count(); ++i) {
             auto *item = m_dataBaseListview->item(i);
             auto curPlaylist = m_dataBaseListview->playlistPtr(item);
             if (playlist == curPlaylist) {
+//                Q_EMIT selectedPlaylistChange(curPlaylist);
                 m_dataBaseListview->setCurPlaylist(item);
                 m_customizeListview->setCurPlaylist(nullptr);
             }
@@ -394,6 +414,7 @@ void MusicListWidget::onCurrentChanged(PlaylistPtr playlist)
             auto *item = m_customizeListview->item(i);
             auto curPlaylist = m_customizeListview->playlistPtr(item);
             if (playlist == curPlaylist) {
+//                Q_EMIT selectedPlaylistChange(curPlaylist);
                 m_customizeListview->setCurPlaylist(item);
                 m_dataBaseListview->setCurPlaylist(nullptr);
             }
@@ -421,6 +442,14 @@ void MusicListWidget::onMusicListRemoved(PlaylistPtr playlist, const MetaPtrList
     Q_UNUSED(metalist)
 
     m_dataListView->onMusicListRemoved(playlist, metalist);
+    if (playlist->id() == PlayMusicListID && playlist->allmusic().isEmpty()) {
+//        m_dataBaseListview->setCurPlaylist(nullptr);
+//        m_customizeListview->setCurPlaylist(nullptr);
+    }
+
+//    m_dataBaseListview->setCurPlaylist(nullptr);
+//    m_customizeListview->setCurPlaylist(nullptr);
+
 }
 
 void MusicListWidget::onMusiclistUpdate()

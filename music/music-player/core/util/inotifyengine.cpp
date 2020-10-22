@@ -190,8 +190,8 @@ bool InotifyEngine::watchDirectory(QDir &dir)
 
     d->m_descriptors.insert(filepath, wd);
     d->m_paths.insert(wd, filepath);
-    if (isDir) {
-        d->m_dirs.insert(filepath, QDir(filepath));
-    }
+
+    d->m_dirs.insert(filepath, QDir(filepath));
+
     return false;
 }

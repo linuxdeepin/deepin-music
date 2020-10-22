@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="pt_BR">
+<TS version="2.1" language="pt_BR" sourcelanguage="en_US">
 <context>
     <name>CloseConfirmDialog</name>
     <message>
@@ -24,10 +24,6 @@
         <translation>Selecione uma ação</translation>
     </message>
     <message>
-        <source>Please select your operation</source>
-        <translation type="vanished">Selecionar operação</translation>
-    </message>
-    <message>
         <location filename="../view/widget/closeconfirmdialog.cpp" line="110"/>
         <source>Cancel</source>
         <translation>Cancelar</translation>
@@ -46,6 +42,11 @@
         <translation>Personalizado</translation>
     </message>
     <message>
+        <location filename="../view/widget/dequalizerdialog.cpp" line="113"/>
+        <source>Monophony</source>
+        <translation>Monofonia</translation>
+    </message>
+    <message>
         <location filename="../view/widget/dequalizerdialog.cpp" line="114"/>
         <source>Classical</source>
         <translation>Clássico</translation>
@@ -61,16 +62,6 @@
         <translation>Dança</translation>
     </message>
     <message>
-        <location filename="../view/widget/dequalizerdialog.cpp" line="120"/>
-        <source>Headphones</source>
-        <translation>Fones de Ouvido</translation>
-    </message>
-    <message>
-        <location filename="../view/widget/dequalizerdialog.cpp" line="113"/>
-        <source>Monophony</source>
-        <translation>Monofonia</translation>
-    </message>
-    <message>
         <location filename="../view/widget/dequalizerdialog.cpp" line="117"/>
         <source>Full Bass</source>
         <translation>Baixo Completo</translation>
@@ -84,6 +75,11 @@
         <location filename="../view/widget/dequalizerdialog.cpp" line="119"/>
         <source>Full Treble</source>
         <translation>Agudo Completo</translation>
+    </message>
+    <message>
+        <location filename="../view/widget/dequalizerdialog.cpp" line="120"/>
+        <source>Headphones</source>
+        <translation>Fones de Ouvido</translation>
     </message>
     <message>
         <location filename="../view/widget/dequalizerdialog.cpp" line="121"/>
@@ -131,6 +127,17 @@
         <translation>Soft Rock</translation>
     </message>
     <message>
+        <location filename="../view/widget/dequalizerdialog.cpp" line="130"/>
+        <source>Techno</source>
+        <translation>Techno</translation>
+    </message>
+    <message>
+        <location filename="../view/widget/dequalizerdialog.cpp" line="187"/>
+        <location filename="../view/widget/dequalizerdialog.cpp" line="448"/>
+        <source>Equalizer</source>
+        <translation>Equalizador</translation>
+    </message>
+    <message>
         <location filename="../view/widget/dequalizerdialog.cpp" line="194"/>
         <location filename="../view/widget/dequalizerdialog.cpp" line="654"/>
         <source>ON</source>
@@ -141,23 +148,6 @@
         <location filename="../view/widget/dequalizerdialog.cpp" line="652"/>
         <source>OFF</source>
         <translation>DESLIGADO</translation>
-    </message>
-    <message>
-        <location filename="../view/widget/dequalizerdialog.cpp" line="550"/>
-        <location filename="../view/widget/dequalizerdialog.cpp" line="551"/>
-        <source>Sound Effects Saved</source>
-        <translation>Efeitos Sonoros Salvos</translation>
-    </message>
-    <message>
-        <location filename="../view/widget/dequalizerdialog.cpp" line="130"/>
-        <source>Techno</source>
-        <translation>Techno</translation>
-    </message>
-    <message>
-        <location filename="../view/widget/dequalizerdialog.cpp" line="187"/>
-        <location filename="../view/widget/dequalizerdialog.cpp" line="448"/>
-        <source>Equalizer</source>
-        <translation>Equalizador</translation>
     </message>
     <message>
         <location filename="../view/widget/dequalizerdialog.cpp" line="213"/>
@@ -173,6 +163,12 @@
         <location filename="../view/widget/dequalizerdialog.cpp" line="337"/>
         <source>Restore Defaults</source>
         <translation>Restaurar Padrões</translation>
+    </message>
+    <message>
+        <location filename="../view/widget/dequalizerdialog.cpp" line="550"/>
+        <location filename="../view/widget/dequalizerdialog.cpp" line="551"/>
+        <source>Sound Effects Saved</source>
+        <translation>Efeitos Sonoros Salvos</translation>
     </message>
 </context>
 <context>
@@ -401,11 +397,6 @@
         <translation>Sair</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="791"/>
-        <source>Music is a local music player with beautiful design and simple functions.</source>
-        <translation>O Música é um player de música local com um design bonito e funções simples.</translation>
-    </message>
-    <message>
         <location filename="../view/mainframe.cpp" line="790"/>
         <location filename="../view/mainframe.cpp" line="798"/>
         <location filename="../view/mainframe.cpp" line="810"/>
@@ -413,6 +404,11 @@
         <location filename="../view/mainframe.cpp" line="1436"/>
         <source>Music</source>
         <translation>Música</translation>
+    </message>
+    <message>
+        <location filename="../view/mainframe.cpp" line="791"/>
+        <source>Music is a local music player with beautiful design and simple functions.</source>
+        <translation>O Música é um player de música local com um design bonito e funções simples.</translation>
     </message>
     <message>
         <location filename="../view/mainframe.cpp" line="863"/>
@@ -561,6 +557,13 @@
         <translation>%1 músicas</translation>
     </message>
     <message>
+        <location filename="../view/musiclistdatawidget.cpp" line="404"/>
+        <location filename="../view/musiclistdatawidget.cpp" line="1359"/>
+        <location filename="../view/musiclistdatawidget.cpp" line="1571"/>
+        <source>Search Results</source>
+        <translation>Resultados da Pesquisa</translation>
+    </message>
+    <message>
         <location filename="../view/musiclistdatawidget.cpp" line="967"/>
         <location filename="../view/musiclistdatawidget.cpp" line="982"/>
         <location filename="../view/musiclistdatawidget.cpp" line="997"/>
@@ -613,6 +616,11 @@
         <translation>Reproduzir Tudo</translation>
     </message>
     <message>
+        <location filename="../view/musiclistdatawidget.cpp" line="1232"/>
+        <source>Songs</source>
+        <translation>Músicas</translation>
+    </message>
+    <message>
         <location filename="../view/musiclistdatawidget.cpp" line="1233"/>
         <source>Artists</source>
         <translation>Artistas</translation>
@@ -626,18 +634,6 @@
         <location filename="../view/musiclistdatawidget.cpp" line="1269"/>
         <source>Custom</source>
         <translation>Personalizado</translation>
-    </message>
-    <message>
-        <location filename="../view/musiclistdatawidget.cpp" line="404"/>
-        <location filename="../view/musiclistdatawidget.cpp" line="1359"/>
-        <location filename="../view/musiclistdatawidget.cpp" line="1571"/>
-        <source>Search Results</source>
-        <translation>Resultados da Pesquisa</translation>
-    </message>
-    <message>
-        <location filename="../view/musiclistdatawidget.cpp" line="1232"/>
-        <source>Songs</source>
-        <translation>Músicas</translation>
     </message>
     <message>
         <location filename="../view/musiclistdatawidget.cpp" line="1619"/>
@@ -827,24 +823,6 @@
     </message>
 </context>
 <context>
-    <name>PlayListItem</name>
-    <message>
-        <location filename="../view/widget/playlistitem.cpp" line="187"/>
-        <source>Are you sure you want to delete this playlist?</source>
-        <translation>Excluir esta lista de reprodução?</translation>
-    </message>
-    <message>
-        <location filename="../view/widget/playlistitem.cpp" line="193"/>
-        <source>Cancel</source>
-        <translation>Cancelar</translation>
-    </message>
-    <message>
-        <location filename="../view/widget/playlistitem.cpp" line="194"/>
-        <source>Delete</source>
-        <translation>Excluir</translation>
-    </message>
-</context>
-<context>
     <name>PlayListView</name>
     <message>
         <location filename="../view/widget/delegate/playitemdelegate.cpp" line="519"/>
@@ -872,15 +850,15 @@
         <translation>Adicionar à uma nova lista de reprodução</translation>
     </message>
     <message>
-        <location filename="../view/widget/playlistview.cpp" line="624"/>
-        <source>Pause</source>
-        <translation>Pausar</translation>
-    </message>
-    <message>
         <location filename="../view/widget/playlistview.cpp" line="619"/>
         <location filename="../view/widget/playlistview.cpp" line="629"/>
         <source>Play</source>
         <translation>Reproduzir</translation>
+    </message>
+    <message>
+        <location filename="../view/widget/playlistview.cpp" line="624"/>
+        <source>Pause</source>
+        <translation>Pausar</translation>
     </message>
     <message>
         <location filename="../view/widget/playlistview.cpp" line="635"/>
@@ -893,14 +871,14 @@
         <translation>Exibir no Gerenciador de Arquivos</translation>
     </message>
     <message>
-        <location filename="../view/widget/playlistview.cpp" line="646"/>
-        <source>Remove from playlist</source>
-        <translation>Remover da lista de reprodução</translation>
-    </message>
-    <message>
         <location filename="../view/widget/playlistview.cpp" line="644"/>
         <source>Remove from play queue</source>
         <translation>Remover da fila de reprodução</translation>
+    </message>
+    <message>
+        <location filename="../view/widget/playlistview.cpp" line="646"/>
+        <source>Remove from playlist</source>
+        <translation>Remover da lista de reprodução</translation>
     </message>
     <message>
         <location filename="../view/widget/playlistview.cpp" line="648"/>
@@ -1076,71 +1054,76 @@
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="27"/>
-        <source>Exit Music</source>
+        <source>Exit</source>
         <translation>Sair</translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="28"/>
+        <source>Ask me always</source>
+        <translation>Sempre perguntar</translation>
+    </message>
+    <message>
+        <location filename="../view/widget/settingsdialog.cpp" line="29"/>
         <source>Autoplay</source>
         <translation>Reprodução automática</translation>
     </message>
     <message>
-        <location filename="../view/widget/settingsdialog.cpp" line="29"/>
+        <location filename="../view/widget/settingsdialog.cpp" line="30"/>
         <source>Enable fade in/out</source>
         <translation>Transição gradual</translation>
     </message>
     <message>
-        <location filename="../view/widget/settingsdialog.cpp" line="30"/>
+        <location filename="../view/widget/settingsdialog.cpp" line="31"/>
         <source>Remember playback position</source>
         <translation>Lembrar a posição da última reprodução</translation>
     </message>
     <message>
-        <location filename="../view/widget/settingsdialog.cpp" line="31"/>
+        <location filename="../view/widget/settingsdialog.cpp" line="32"/>
         <source>Close Main Window</source>
         <translation>Fechar Janela</translation>
     </message>
     <message>
-        <location filename="../view/widget/settingsdialog.cpp" line="32"/>
+        <location filename="../view/widget/settingsdialog.cpp" line="33"/>
         <source>Basic</source>
         <translation>Básico</translation>
     </message>
     <message>
-        <location filename="../view/widget/settingsdialog.cpp" line="33"/>
+        <location filename="../view/widget/settingsdialog.cpp" line="34"/>
         <source>Play</source>
         <translation>Reproduzir</translation>
     </message>
     <message>
-        <location filename="../view/widget/settingsdialog.cpp" line="34"/>
+        <location filename="../view/widget/settingsdialog.cpp" line="35"/>
         <source>Shortcuts</source>
         <translation>Atalhos</translation>
     </message>
     <message>
-        <location filename="../view/widget/settingsdialog.cpp" line="35"/>
+        <location filename="../view/widget/settingsdialog.cpp" line="36"/>
         <source>Restore Defaults</source>
         <translation>Restaurar Padrões</translation>
     </message>
     <message>
-        <location filename="../view/widget/settingsdialog.cpp" line="36"/>
+        <location filename="../view/widget/settingsdialog.cpp" line="37"/>
         <source>Next</source>
         <translation>Próximo</translation>
     </message>
     <message>
-        <location filename="../view/widget/settingsdialog.cpp" line="37"/>
+        <location filename="../view/widget/settingsdialog.cpp" line="38"/>
         <source>Play/Pause</source>
         <translation>Reproduzir/Pausar</translation>
     </message>
     <message>
-        <location filename="../view/widget/settingsdialog.cpp" line="38"/>
+        <location filename="../view/widget/settingsdialog.cpp" line="39"/>
         <source>Previous</source>
         <translation>Anterior</translation>
     </message>
     <message>
-        <location filename="../view/widget/settingsdialog.cpp" line="39"/>
+        <location filename="../view/widget/settingsdialog.cpp" line="40"/>
         <source>Volume down</source>
         <translation>Reduzir volume</translation>
     </message>
     <message>
-        <location filename="../view/widget/settingsdialog.cpp" line="40"/>
+        <location filename="../view/widget/settingsdialog.cpp" line="41"/>
         <source>Volume up</source>
         <translation>Aumentar volume</translation>
     </message>

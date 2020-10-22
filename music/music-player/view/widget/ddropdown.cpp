@@ -32,7 +32,7 @@
 class DDropdownPrivate
 {
 public:
-    DDropdownPrivate(DDropdown *parent) : q_ptr(parent) {}
+    explicit DDropdownPrivate(DDropdown *parent) : q_ptr(parent) {}
 
     DMenu            *menu       = nullptr;
     DLabel           *text       = nullptr;

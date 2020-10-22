@@ -45,7 +45,7 @@ public:
     explicit MusicInfoItemDelegatePrivate(MusicInfoItemDelegate *parent = nullptr);
 
     inline QColor foreground(int col, const QStyleOptionViewItem &option) const;
-    inline int timePropertyWidth(const QStyleOptionViewItem &option) const;
+    //inline int timePropertyWidth(const QStyleOptionViewItem &option) const;
 
     QColor textColor() const;
     QColor titleColor() const;

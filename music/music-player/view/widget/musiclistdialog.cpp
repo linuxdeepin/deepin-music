@@ -44,7 +44,7 @@ DWIDGET_USE_NAMESPACE
 class MusicListDialogPrivate
 {
 public:
-    MusicListDialogPrivate(MusicListDialog *parent) : q_ptr(parent) {}
+    explicit MusicListDialogPrivate(MusicListDialog *parent) : q_ptr(parent) {}
 
     void initUI();
     void initConnection();

@@ -52,7 +52,7 @@
 #include "core/util/global.h"
 #include "musicapp.h"
 #include "speech/exportedinterface.h"
-#include "playlistmanager.h"
+#include "databaseservice.h"
 
 using namespace Dtk::Core;
 using namespace Dtk::Widget;
@@ -85,6 +85,7 @@ bool checkOnly()
     QDir tdir(path.c_str());
     if (!tdir.exists()) {
         bool ret =  tdir.mkpath(path.c_str());
+        MusicSettings::setOption("base.play.showFlag", 0);
         qDebug() << ret ;
     }
 
@@ -105,28 +106,10 @@ bool checkOnly()
 
 int main(int argc, char *argv[])
 {
-    setenv("PULSE_PROP_media.role", "music", 1); //set music role
+    setenv("PULSE_PROP_media.role", "music", 1);
+
     DApplication app(argc, argv);
-    app.setAttribute(Qt::AA_UseHighDpiPixmaps);
-    app.setOrganizationName("deepin");
-    app.setApplicationName("deepin-music");
-    app.loadTranslator();
-    MusicSettings::init();
-    PlaylistManager::instance();
-    MediaDatabase::instance()->init();
-    MediaLibrary::instance()->init();
-    PlaylistManager::instance()->load();
 
-    MainFrame mainframe;
-    MusicApp *music = new MusicApp(&mainframe);
-    //must set after setApplicationName,before initUI()
-    DApplicationSettings saveTheme;
-    bool epd = PlaylistManager::instance()->playlist(AllMusicListID)->isEmpty();
-    music->initUI(!epd);
-
-    createSpeechDbus();
-    DLogManager::registerConsoleAppender();
-    DLogManager::registerFileAppender();
 #ifdef SNAP_APP
     DStandardPaths::setMode(DStandardPaths::Snap);
 #endif
@@ -136,8 +119,15 @@ int main(int argc, char *argv[])
     QCoreApplication::addLibraryPath(".");
 #endif
 
+    app.setAttribute(Qt::AA_UseHighDpiPixmaps);
+    app.setOrganizationName("deepin");
+    app.setApplicationName("deepin-music");
     // Version Time
     app.setApplicationVersion(DApplication::buildVersion(VERSION));
+
+    DLogManager::registerConsoleAppender();
+    DLogManager::registerFileAppender();
+
     QCommandLineParser parser;
     parser.setApplicationDescription("Deepin music player.");
     parser.addHelpOption();
@@ -149,6 +139,8 @@ int main(int argc, char *argv[])
     if (parser.positionalArguments().length() > 0) {
         toOpenFile = parser.positionalArguments().first();
     }
+
+    app.loadTranslator();
 
     QIcon icon = QIcon::fromTheme("deepin-music");
     app.setProductIcon(icon);
@@ -183,6 +175,20 @@ int main(int argc, char *argv[])
         return 0;
     }
 
+    MusicSettings::init();
+    DApplicationSettings saveTheme;
+
+    /*---Player instance init---*/
+    MainFrame mainframe;
+    MusicApp *music = new MusicApp(&mainframe);
+
+    auto showflag = MusicSettings::value("base.play.showFlag").toBool();
+    music->initUI(showflag);
+
+    music->initConnection(showflag);
+    /*----创建语音dbus-----*/
+    createSpeechDbus();
+
     int count = parser.positionalArguments().length();
     if (count > 1) {
         QStringList files = parser.positionalArguments();
@@ -198,14 +204,17 @@ int main(int argc, char *argv[])
 
     app.connect(&app, &QApplication::lastWindowClosed,
     &mainframe, [ & ]() {
-        auto quit = MusicSettings::value("base.close.close_action").toInt();
-        if (quit == 1) {
+        auto quit = MusicSettings::value("base.close.is_close").toBool();
+        if (quit) {
             music->quit();
         }
     });
 
+
     app.setQuitOnLastWindowClosed(false);
+
     QObject::connect(DGuiApplicationHelper::instance(), &DGuiApplicationHelper::themeTypeChanged,
                      &mainframe, &MainFrame::slotTheme);
+
     return app.exec();
 }

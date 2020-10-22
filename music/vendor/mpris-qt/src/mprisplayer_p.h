@@ -76,7 +76,7 @@ class MprisRootAdaptor: public QDBusAbstractAdaptor
                 "  </interface>\n"
                 "")
 public:
-    MprisRootAdaptor(MprisPlayer *parent);
+    explicit MprisRootAdaptor(MprisPlayer *parent);
     virtual ~MprisRootAdaptor();
 
 public: // PROPERTIES
@@ -179,7 +179,7 @@ class MprisPlayerAdaptor: public QDBusAbstractAdaptor
                 "")
 
 public:
-    MprisPlayerAdaptor(MprisPlayer *parent);
+    explicit MprisPlayerAdaptor(MprisPlayer *parent);
     virtual ~MprisPlayerAdaptor();
 
 public: // PROPERTIES

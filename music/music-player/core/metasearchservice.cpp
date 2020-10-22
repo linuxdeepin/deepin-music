@@ -62,7 +62,7 @@ inline QString cacheCoverPath(const QString &searchID)
 class MetaSearchServicePrivate
 {
 public:
-    MetaSearchServicePrivate(MetaSearchService *parent) : q_ptr(parent) {}
+    explicit MetaSearchServicePrivate(MetaSearchService *parent) : q_ptr(parent) {}
 
     int searchCacheLyric(const MetaPtr meta);
     int searchCacheCover(const MetaPtr meta);
@@ -142,10 +142,10 @@ QUrl MetaSearchService::coverUrl(const MetaPtr meta)
     return QUrl::fromLocalFile(cacheCoverPath(meta));
 }
 
-QUrl MetaSearchService::lyricUrl(const MetaPtr meta)
-{
-    return QUrl::fromLocalFile(cacheLyricPath(meta));
-}
+//QUrl MetaSearchService::lyricUrl(const MetaPtr meta)
+//{
+//    return QUrl::fromLocalFile(cacheLyricPath(meta));
+//}
 
 QByteArray MetaSearchService::coverData(const MetaPtr meta)
 {

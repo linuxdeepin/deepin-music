@@ -24,6 +24,11 @@ struct lyric {
     QString path;
     lyric()
     {
+        initParams();
+    }
+
+    void initParams()
+    {
         lyricsName = "null";
         singerName = "null";
         duration = "null";
@@ -35,7 +40,7 @@ class SearchLyricsWidget : public DFloatingWidget
     Q_OBJECT
 
 public:
-    SearchLyricsWidget(QString path, QWidget *parent = nullptr);
+    explicit SearchLyricsWidget(QString path, QWidget *parent = nullptr);
 
     void setSearchDir(QString dir)
     {

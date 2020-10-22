@@ -49,7 +49,7 @@ DGUI_USE_NAMESPACE
 class PlayListWidgetPrivate
 {
 public:
-    PlayListWidgetPrivate(PlayListWidget *parent) : q_ptr(parent) {}
+    explicit PlayListWidgetPrivate(PlayListWidget *parent) : q_ptr(parent) {}
 
     void initData(PlaylistPtr playlist);
     void initConntion();
@@ -148,8 +148,8 @@ void PlayListWidgetPrivate::initConntion()
     q, [ = ](const QStringList  & files) {
         auto allMetas = playListView->playlist()->allmusic();
         int allCount = allMetas.size();
-        int missCount = 0;
         if (!allMetas.isEmpty()) {
+            int missCount = 0;
             MetaPtrList  metalist;
             for (auto file : files) {
                 for (int i = 0; i < allMetas.size(); i++) {
@@ -216,6 +216,7 @@ PlayListWidget::PlayListWidget(QWidget *parent) :
 {
     Q_D(PlayListWidget);
 
+//    setFixedHeight(314);
     setAcceptDrops(true);
 
     auto layout = new QHBoxLayout(this);
@@ -231,6 +232,7 @@ PlayListWidget::PlayListWidget(QWidget *parent) :
     actionBarLayout->setSpacing(0);
 
     d->titleLabel = new DLabel();
+    //d->titleLabel->setFixedHeight(36);
     auto titleFont = d->titleLabel->font();
     titleFont.setFamily("SourceHanSansSC");
     titleFont.setWeight(QFont::Medium);
@@ -241,6 +243,7 @@ PlayListWidget::PlayListWidget(QWidget *parent) :
     d->titleLabel->setForegroundRole(DPalette::BrightText);
 
     d->infoLabel = new DLabel();
+    //d->infoLabel->setFixedHeight(25);
     auto infoFont = d->infoLabel->font();
     infoFont.setFamily("SourceHanSansSC");
     infoFont.setWeight(QFont::Medium);
@@ -309,7 +312,8 @@ void PlayListWidget::updateInfo(PlaylistPtr playlist)
     Q_D(PlayListWidget);
 
     QString infoStr;
-    int sortMetasSize = playlist->musicCount();
+    int sortMetasSize = playlist->allmusic().size();
+    //int sortMetasSize = d->playListView->rowCount();
     if (sortMetasSize == 0) {
         infoStr = tr("No songs");
     } else if (sortMetasSize == 1) {
@@ -451,7 +455,7 @@ void PlayListWidget::onMusicPlayed(PlaylistPtr playlist, const MetaPtr meta)
     Q_D(PlayListWidget);
 
     if (d->playListView->rowCount() == 0 || playlist != d->playListView->playlist() ||
-            playlist->musicCount()  != d->playListView->rowCount() ||
+            playlist->allmusic().size() != d->playListView->rowCount() ||
             playlist->first()->hash != d->playListView->firstHash())
         d->initData(playlist);
 
@@ -492,7 +496,7 @@ void PlayListWidget::onMusicListRemoved(PlaylistPtr playlist, const MetaPtrList 
     if (playlist.isNull())
         return;
 
-    if (playlist != d->playListView->playlist() && d->playListView->rowCount() !=  playlist->musicCount()) {
+    if (playlist != d->playListView->playlist() && d->playListView->rowCount() != playlist->allmusic().size()) {
         return;
     }
 
@@ -517,9 +521,16 @@ void PlayListWidget::onMusicListAdded(PlaylistPtr playlist, const MetaPtrList me
         return;
     }
 
-    if (playlist != d->playListView->playlist() && d->playListView->rowCount() != playlist->musicCount()) {
+    if (playlist != d->playListView->playlist() && d->playListView->rowCount() != playlist->allmusic().size()) {
         return;
     }
+//    MetaPtrList curMetalist;
+//    for (auto curMeta : metalist) {
+//        if (!playlist->contains(curMeta))
+//            curMetalist.append(curMeta);
+//    }
+//    if (curMetalist.isEmpty())
+//        return;
 
     d->playListView->onMusicListAdded(metalist);
     d->showEmptyHits(metalist.length() == 0);
@@ -538,7 +549,7 @@ void PlayListWidget::onLocate(PlaylistPtr playlist, const MetaPtr meta)
 void PlayListWidget::onMusiclistChanged(PlaylistPtr playlist)
 {
     if (playlist.isNull()) {
-        qWarning() << "can not change to empty playlist";
+        qWarning() << "can not change to emptry playlist";
         return;
     }
 

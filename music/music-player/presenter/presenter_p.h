@@ -36,9 +36,10 @@ class PresenterPrivate: public QObject
 {
     Q_OBJECT
 public:
-    PresenterPrivate(Presenter *parent = nullptr);
+    explicit PresenterPrivate(Presenter *parent = nullptr);
 
     void initBackend();
+    void quickReadSql();
     void notifyMusicPlayed(PlaylistPtr playlist, const MetaPtr meta);
 
     PlaylistPtr         playlistBeforeSearch;

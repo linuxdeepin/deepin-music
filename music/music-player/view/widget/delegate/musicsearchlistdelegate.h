@@ -27,7 +27,7 @@ class MusicSearchListDelegate : public QStyledItemDelegate
 {
     Q_OBJECT
 public:
-    MusicSearchListDelegate(QWidget *parent = Q_NULLPTR);
+    explicit MusicSearchListDelegate(QWidget *parent = Q_NULLPTR);
     ~MusicSearchListDelegate() override;
 
 
@@ -49,7 +49,7 @@ protected:
 
     void setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const override;
 private:
-    QString getElidedText(QFont font, QString str, int MaxWidth);
+    //QString getElidedText(QFont font, QString str, int MaxWidth);
     QScopedPointer<MusicSearchListDelegatePrivate> d_ptr;
     Q_DECLARE_PRIVATE_D(qGetPtrHelper(d_ptr), MusicSearchListDelegate)
 };

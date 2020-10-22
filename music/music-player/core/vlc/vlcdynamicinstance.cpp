@@ -115,11 +115,11 @@ QString VlcDynamicInstance::libPath(const QString &strlib)
     dir.setPath(path);
     QStringList list = dir.entryList(QStringList() << (strlib + "*"), QDir::NoDotAndDotDot | QDir::Files); //filter name with strlib
     if (list.contains(strlib)) {
-        return strlib;
+        return path+"/"+strlib;
     } else {
         list.sort();
     }
 
     Q_ASSERT(list.size() > 0);
-    return list.last();
+    return path+"/"+list.last();
 }

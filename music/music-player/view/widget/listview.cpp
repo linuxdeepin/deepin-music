@@ -26,7 +26,7 @@
 class ListViewPrivate
 {
 public:
-    ListViewPrivate(ListView *parent) : q_ptr(parent) {}
+    explicit ListViewPrivate(ListView *parent) : q_ptr(parent) {}
 
     void checkScrollbarSize();
 
@@ -79,11 +79,11 @@ ListView::~ListView()
 
 }
 
-void ListView::updateScrollbar()
-{
-    Q_D(ListView);
-    d->checkScrollbarSize();
-}
+//void ListView::updateScrollbar()
+//{
+//    Q_D(ListView);
+//    d->checkScrollbarSize();
+//}
 
 void ListView::wheelEvent(QWheelEvent *event)
 {

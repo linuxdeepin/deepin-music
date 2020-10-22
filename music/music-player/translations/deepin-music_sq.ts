@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="sq">
+<TS version="2.1" language="sq" sourcelanguage="en_US">
 <context>
     <name>CloseConfirmDialog</name>
     <message>
@@ -24,10 +24,6 @@
         <translation>Ju lutemi, zgjidhni veprimin tuaj</translation>
     </message>
     <message>
-        <source>Please select your operation</source>
-        <translation type="vanished">Ju lutemi, përzgjidhni veprimin tuaj</translation>
-    </message>
-    <message>
         <location filename="../view/widget/closeconfirmdialog.cpp" line="110"/>
         <source>Cancel</source>
         <translation>Anuloje</translation>
@@ -46,6 +42,11 @@
         <translation>Vetjake</translation>
     </message>
     <message>
+        <location filename="../view/widget/dequalizerdialog.cpp" line="113"/>
+        <source>Monophony</source>
+        <translation>Monofoni</translation>
+    </message>
+    <message>
         <location filename="../view/widget/dequalizerdialog.cpp" line="114"/>
         <source>Classical</source>
         <translation>Klasike</translation>
@@ -61,16 +62,6 @@
         <translation>Vallëzim</translation>
     </message>
     <message>
-        <location filename="../view/widget/dequalizerdialog.cpp" line="120"/>
-        <source>Headphones</source>
-        <translation>Kufje</translation>
-    </message>
-    <message>
-        <location filename="../view/widget/dequalizerdialog.cpp" line="113"/>
-        <source>Monophony</source>
-        <translation>Monofoni</translation>
-    </message>
-    <message>
         <location filename="../view/widget/dequalizerdialog.cpp" line="117"/>
         <source>Full Bass</source>
         <translation>Bas i Plotë</translation>
@@ -84,6 +75,11 @@
         <location filename="../view/widget/dequalizerdialog.cpp" line="119"/>
         <source>Full Treble</source>
         <translation>Trebël i Plotë</translation>
+    </message>
+    <message>
+        <location filename="../view/widget/dequalizerdialog.cpp" line="120"/>
+        <source>Headphones</source>
+        <translation>Kufje</translation>
     </message>
     <message>
         <location filename="../view/widget/dequalizerdialog.cpp" line="121"/>
@@ -131,6 +127,17 @@
         <translation>Soft Rock</translation>
     </message>
     <message>
+        <location filename="../view/widget/dequalizerdialog.cpp" line="130"/>
+        <source>Techno</source>
+        <translation>Techno</translation>
+    </message>
+    <message>
+        <location filename="../view/widget/dequalizerdialog.cpp" line="187"/>
+        <location filename="../view/widget/dequalizerdialog.cpp" line="448"/>
+        <source>Equalizer</source>
+        <translation>Ekualizator</translation>
+    </message>
+    <message>
         <location filename="../view/widget/dequalizerdialog.cpp" line="194"/>
         <location filename="../view/widget/dequalizerdialog.cpp" line="654"/>
         <source>ON</source>
@@ -141,23 +148,6 @@
         <location filename="../view/widget/dequalizerdialog.cpp" line="652"/>
         <source>OFF</source>
         <translation>OFF</translation>
-    </message>
-    <message>
-        <location filename="../view/widget/dequalizerdialog.cpp" line="550"/>
-        <location filename="../view/widget/dequalizerdialog.cpp" line="551"/>
-        <source>Sound Effects Saved</source>
-        <translation>Efektet Zanore u Ruajtën</translation>
-    </message>
-    <message>
-        <location filename="../view/widget/dequalizerdialog.cpp" line="130"/>
-        <source>Techno</source>
-        <translation>Techno</translation>
-    </message>
-    <message>
-        <location filename="../view/widget/dequalizerdialog.cpp" line="187"/>
-        <location filename="../view/widget/dequalizerdialog.cpp" line="448"/>
-        <source>Equalizer</source>
-        <translation>Ekualizator</translation>
     </message>
     <message>
         <location filename="../view/widget/dequalizerdialog.cpp" line="213"/>
@@ -173,6 +163,12 @@
         <location filename="../view/widget/dequalizerdialog.cpp" line="337"/>
         <source>Restore Defaults</source>
         <translation>Rikthe Parazgjedhjet</translation>
+    </message>
+    <message>
+        <location filename="../view/widget/dequalizerdialog.cpp" line="550"/>
+        <location filename="../view/widget/dequalizerdialog.cpp" line="551"/>
+        <source>Sound Effects Saved</source>
+        <translation>Efektet Zanore u Ruajtën</translation>
     </message>
 </context>
 <context>
@@ -401,11 +397,6 @@
         <translation>Dil</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="791"/>
-        <source>Music is a local music player with beautiful design and simple functions.</source>
-        <translation>Muzika është një lojtës lokal muzike me konceptim të hijshëm dhe funksione të thjeshta.</translation>
-    </message>
-    <message>
         <location filename="../view/mainframe.cpp" line="790"/>
         <location filename="../view/mainframe.cpp" line="798"/>
         <location filename="../view/mainframe.cpp" line="810"/>
@@ -413,6 +404,11 @@
         <location filename="../view/mainframe.cpp" line="1436"/>
         <source>Music</source>
         <translation>Muzikë</translation>
+    </message>
+    <message>
+        <location filename="../view/mainframe.cpp" line="791"/>
+        <source>Music is a local music player with beautiful design and simple functions.</source>
+        <translation>Muzika është një lojtës lokal muzike me konceptim të hijshëm dhe funksione të thjeshta.</translation>
     </message>
     <message>
         <location filename="../view/mainframe.cpp" line="863"/>
@@ -561,6 +557,13 @@
         <translation>%1 këngë</translation>
     </message>
     <message>
+        <location filename="../view/musiclistdatawidget.cpp" line="404"/>
+        <location filename="../view/musiclistdatawidget.cpp" line="1359"/>
+        <location filename="../view/musiclistdatawidget.cpp" line="1571"/>
+        <source>Search Results</source>
+        <translation>Përfundime Kërkimi</translation>
+    </message>
+    <message>
         <location filename="../view/musiclistdatawidget.cpp" line="967"/>
         <location filename="../view/musiclistdatawidget.cpp" line="982"/>
         <location filename="../view/musiclistdatawidget.cpp" line="997"/>
@@ -613,6 +616,11 @@
         <translation>Luaji Krejt</translation>
     </message>
     <message>
+        <location filename="../view/musiclistdatawidget.cpp" line="1232"/>
+        <source>Songs</source>
+        <translation>Këngë</translation>
+    </message>
+    <message>
         <location filename="../view/musiclistdatawidget.cpp" line="1233"/>
         <source>Artists</source>
         <translation>Artistë</translation>
@@ -626,18 +634,6 @@
         <location filename="../view/musiclistdatawidget.cpp" line="1269"/>
         <source>Custom</source>
         <translation>Vetjake</translation>
-    </message>
-    <message>
-        <location filename="../view/musiclistdatawidget.cpp" line="404"/>
-        <location filename="../view/musiclistdatawidget.cpp" line="1359"/>
-        <location filename="../view/musiclistdatawidget.cpp" line="1571"/>
-        <source>Search Results</source>
-        <translation>Përfundime Kërkimi</translation>
-    </message>
-    <message>
-        <location filename="../view/musiclistdatawidget.cpp" line="1232"/>
-        <source>Songs</source>
-        <translation>Këngë</translation>
     </message>
     <message>
         <location filename="../view/musiclistdatawidget.cpp" line="1619"/>
@@ -827,24 +823,6 @@
     </message>
 </context>
 <context>
-    <name>PlayListItem</name>
-    <message>
-        <location filename="../view/widget/playlistitem.cpp" line="187"/>
-        <source>Are you sure you want to delete this playlist?</source>
-        <translation>Jeni i sigurt se doni të fshihet kjo luajlistë?</translation>
-    </message>
-    <message>
-        <location filename="../view/widget/playlistitem.cpp" line="193"/>
-        <source>Cancel</source>
-        <translation>Anuloje</translation>
-    </message>
-    <message>
-        <location filename="../view/widget/playlistitem.cpp" line="194"/>
-        <source>Delete</source>
-        <translation>Fshije</translation>
-    </message>
-</context>
-<context>
     <name>PlayListView</name>
     <message>
         <location filename="../view/widget/delegate/playitemdelegate.cpp" line="519"/>
@@ -872,15 +850,15 @@
         <translation>Shtoje në luajlistë të re</translation>
     </message>
     <message>
-        <location filename="../view/widget/playlistview.cpp" line="624"/>
-        <source>Pause</source>
-        <translation>Pushoje</translation>
-    </message>
-    <message>
         <location filename="../view/widget/playlistview.cpp" line="619"/>
         <location filename="../view/widget/playlistview.cpp" line="629"/>
         <source>Play</source>
         <translation>Luaje</translation>
+    </message>
+    <message>
+        <location filename="../view/widget/playlistview.cpp" line="624"/>
+        <source>Pause</source>
+        <translation>Pushoje</translation>
     </message>
     <message>
         <location filename="../view/widget/playlistview.cpp" line="635"/>
@@ -893,14 +871,14 @@
         <translation>Shfaqe në përgjegjës kartelash</translation>
     </message>
     <message>
-        <location filename="../view/widget/playlistview.cpp" line="646"/>
-        <source>Remove from playlist</source>
-        <translation>Hiqe prej luajliste</translation>
-    </message>
-    <message>
         <location filename="../view/widget/playlistview.cpp" line="644"/>
         <source>Remove from play queue</source>
         <translation>Hiqe prej radhës së lojës</translation>
+    </message>
+    <message>
+        <location filename="../view/widget/playlistview.cpp" line="646"/>
+        <source>Remove from playlist</source>
+        <translation>Hiqe prej luajliste</translation>
     </message>
     <message>
         <location filename="../view/widget/playlistview.cpp" line="648"/>
@@ -1076,71 +1054,76 @@
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="27"/>
-        <source>Exit Music</source>
-        <translation>Dil Nga Muzika</translation>
+        <source>Exit</source>
+        <translation>Dil</translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="28"/>
+        <source>Ask me always</source>
+        <translation>Pyetmë përherë</translation>
+    </message>
+    <message>
+        <location filename="../view/widget/settingsdialog.cpp" line="29"/>
         <source>Autoplay</source>
         <translation>Vetëluaje</translation>
     </message>
     <message>
-        <location filename="../view/widget/settingsdialog.cpp" line="29"/>
+        <location filename="../view/widget/settingsdialog.cpp" line="30"/>
         <source>Enable fade in/out</source>
         <translation>Aktivizo fade in/out</translation>
     </message>
     <message>
-        <location filename="../view/widget/settingsdialog.cpp" line="30"/>
+        <location filename="../view/widget/settingsdialog.cpp" line="31"/>
         <source>Remember playback position</source>
         <translation>Mba mend pozicion luajtjeje</translation>
     </message>
     <message>
-        <location filename="../view/widget/settingsdialog.cpp" line="31"/>
+        <location filename="../view/widget/settingsdialog.cpp" line="32"/>
         <source>Close Main Window</source>
         <translation>Mbylle Dritaren Kryesore</translation>
     </message>
     <message>
-        <location filename="../view/widget/settingsdialog.cpp" line="32"/>
+        <location filename="../view/widget/settingsdialog.cpp" line="33"/>
         <source>Basic</source>
         <translation>Elementare</translation>
     </message>
     <message>
-        <location filename="../view/widget/settingsdialog.cpp" line="33"/>
+        <location filename="../view/widget/settingsdialog.cpp" line="34"/>
         <source>Play</source>
         <translation>Luaje</translation>
     </message>
     <message>
-        <location filename="../view/widget/settingsdialog.cpp" line="34"/>
+        <location filename="../view/widget/settingsdialog.cpp" line="35"/>
         <source>Shortcuts</source>
         <translation>Shkurtore</translation>
     </message>
     <message>
-        <location filename="../view/widget/settingsdialog.cpp" line="35"/>
+        <location filename="../view/widget/settingsdialog.cpp" line="36"/>
         <source>Restore Defaults</source>
         <translation>Rikthe Parazgjedhjet</translation>
     </message>
     <message>
-        <location filename="../view/widget/settingsdialog.cpp" line="36"/>
+        <location filename="../view/widget/settingsdialog.cpp" line="37"/>
         <source>Next</source>
         <translation>Pasuesja</translation>
     </message>
     <message>
-        <location filename="../view/widget/settingsdialog.cpp" line="37"/>
+        <location filename="../view/widget/settingsdialog.cpp" line="38"/>
         <source>Play/Pause</source>
         <translation>Luaje/Pushoje</translation>
     </message>
     <message>
-        <location filename="../view/widget/settingsdialog.cpp" line="38"/>
+        <location filename="../view/widget/settingsdialog.cpp" line="39"/>
         <source>Previous</source>
         <translation>E mëprashmja</translation>
     </message>
     <message>
-        <location filename="../view/widget/settingsdialog.cpp" line="39"/>
+        <location filename="../view/widget/settingsdialog.cpp" line="40"/>
         <source>Volume down</source>
         <translation>Ule volumin</translation>
     </message>
     <message>
-        <location filename="../view/widget/settingsdialog.cpp" line="40"/>
+        <location filename="../view/widget/settingsdialog.cpp" line="41"/>
         <source>Volume up</source>
         <translation>Ngrije volumin</translation>
     </message>

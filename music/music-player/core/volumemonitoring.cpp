@@ -35,7 +35,7 @@ static const int timerInterval = 100;//轮巡Debus音量的周期
 class VolumeMonitoringPrivate
 {
 public:
-    VolumeMonitoringPrivate(VolumeMonitoring *parent) : q_ptr(parent) {}
+    explicit VolumeMonitoringPrivate(VolumeMonitoring *parent) : q_ptr(parent) {}
 
     QTimer            timer;
     int oldVolume = 0;

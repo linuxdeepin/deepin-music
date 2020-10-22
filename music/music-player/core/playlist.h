@@ -111,7 +111,6 @@ public:
     bool isLast(const MetaPtr meta) const;
     bool contains(const MetaPtr meta) const;
     MetaPtrList allmusic() const;
-    int musicCount(); //get size of all data
     PlayMusicTypePtrList playMusicTypePtrList() const;
 
     void play(const MetaPtr meta);
@@ -143,7 +142,7 @@ public slots:
     void sortPlayMusicTypePtrListData(int sortType);
 
 public:
-    void load(const QMap<int, QString>& sortmap ,const QStringList& lst); //params from database
+    void load();
 
 signals:
     void musiclistAdded(const MetaPtrList metalist);

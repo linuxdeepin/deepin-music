@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="ko">
+<TS version="2.1" language="ko" sourcelanguage="en_US">
 <context>
     <name>CloseConfirmDialog</name>
     <message>
@@ -24,10 +24,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Please select your operation</source>
-        <translation type="vanished">작업을 선택하십시오</translation>
-    </message>
-    <message>
         <location filename="../view/widget/closeconfirmdialog.cpp" line="110"/>
         <source>Cancel</source>
         <translation>취소</translation>
@@ -46,6 +42,11 @@
         <translation>사용자 지정</translation>
     </message>
     <message>
+        <location filename="../view/widget/dequalizerdialog.cpp" line="113"/>
+        <source>Monophony</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="../view/widget/dequalizerdialog.cpp" line="114"/>
         <source>Classical</source>
         <translation>클래식</translation>
@@ -61,16 +62,6 @@
         <translation>춤</translation>
     </message>
     <message>
-        <location filename="../view/widget/dequalizerdialog.cpp" line="120"/>
-        <source>Headphones</source>
-        <translation>헤드폰</translation>
-    </message>
-    <message>
-        <location filename="../view/widget/dequalizerdialog.cpp" line="113"/>
-        <source>Monophony</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <location filename="../view/widget/dequalizerdialog.cpp" line="117"/>
         <source>Full Bass</source>
         <translation>풀 베이스</translation>
@@ -84,6 +75,11 @@
         <location filename="../view/widget/dequalizerdialog.cpp" line="119"/>
         <source>Full Treble</source>
         <translation>완전한 최고 음역</translation>
+    </message>
+    <message>
+        <location filename="../view/widget/dequalizerdialog.cpp" line="120"/>
+        <source>Headphones</source>
+        <translation>헤드폰</translation>
     </message>
     <message>
         <location filename="../view/widget/dequalizerdialog.cpp" line="121"/>
@@ -131,6 +127,17 @@
         <translation>소프트 록(Soft Rock)</translation>
     </message>
     <message>
+        <location filename="../view/widget/dequalizerdialog.cpp" line="130"/>
+        <source>Techno</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../view/widget/dequalizerdialog.cpp" line="187"/>
+        <location filename="../view/widget/dequalizerdialog.cpp" line="448"/>
+        <source>Equalizer</source>
+        <translation>이퀄라이저</translation>
+    </message>
+    <message>
         <location filename="../view/widget/dequalizerdialog.cpp" line="194"/>
         <location filename="../view/widget/dequalizerdialog.cpp" line="654"/>
         <source>ON</source>
@@ -141,23 +148,6 @@
         <location filename="../view/widget/dequalizerdialog.cpp" line="652"/>
         <source>OFF</source>
         <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../view/widget/dequalizerdialog.cpp" line="550"/>
-        <location filename="../view/widget/dequalizerdialog.cpp" line="551"/>
-        <source>Sound Effects Saved</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../view/widget/dequalizerdialog.cpp" line="130"/>
-        <source>Techno</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../view/widget/dequalizerdialog.cpp" line="187"/>
-        <location filename="../view/widget/dequalizerdialog.cpp" line="448"/>
-        <source>Equalizer</source>
-        <translation>이퀄라이저</translation>
     </message>
     <message>
         <location filename="../view/widget/dequalizerdialog.cpp" line="213"/>
@@ -173,6 +163,12 @@
         <location filename="../view/widget/dequalizerdialog.cpp" line="337"/>
         <source>Restore Defaults</source>
         <translation>기본값 복원</translation>
+    </message>
+    <message>
+        <location filename="../view/widget/dequalizerdialog.cpp" line="550"/>
+        <location filename="../view/widget/dequalizerdialog.cpp" line="551"/>
+        <source>Sound Effects Saved</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -401,11 +397,6 @@
         <translation>종료</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="791"/>
-        <source>Music is a local music player with beautiful design and simple functions.</source>
-        <translation>음악은 아름다운 디자인과 간단한 기능을 갖춘 음악 플레이어입니다.</translation>
-    </message>
-    <message>
         <location filename="../view/mainframe.cpp" line="790"/>
         <location filename="../view/mainframe.cpp" line="798"/>
         <location filename="../view/mainframe.cpp" line="810"/>
@@ -413,6 +404,11 @@
         <location filename="../view/mainframe.cpp" line="1436"/>
         <source>Music</source>
         <translation>음악</translation>
+    </message>
+    <message>
+        <location filename="../view/mainframe.cpp" line="791"/>
+        <source>Music is a local music player with beautiful design and simple functions.</source>
+        <translation>음악은 아름다운 디자인과 간단한 기능을 갖춘 음악 플레이어입니다.</translation>
     </message>
     <message>
         <location filename="../view/mainframe.cpp" line="863"/>
@@ -561,6 +557,13 @@
         <translation>노래 %1곡</translation>
     </message>
     <message>
+        <location filename="../view/musiclistdatawidget.cpp" line="404"/>
+        <location filename="../view/musiclistdatawidget.cpp" line="1359"/>
+        <location filename="../view/musiclistdatawidget.cpp" line="1571"/>
+        <source>Search Results</source>
+        <translation>검색 결과</translation>
+    </message>
+    <message>
         <location filename="../view/musiclistdatawidget.cpp" line="967"/>
         <location filename="../view/musiclistdatawidget.cpp" line="982"/>
         <location filename="../view/musiclistdatawidget.cpp" line="997"/>
@@ -613,6 +616,11 @@
         <translation>모두 재생 </translation>
     </message>
     <message>
+        <location filename="../view/musiclistdatawidget.cpp" line="1232"/>
+        <source>Songs</source>
+        <translation>노래</translation>
+    </message>
+    <message>
         <location filename="../view/musiclistdatawidget.cpp" line="1233"/>
         <source>Artists</source>
         <translation>아티스트</translation>
@@ -626,18 +634,6 @@
         <location filename="../view/musiclistdatawidget.cpp" line="1269"/>
         <source>Custom</source>
         <translation>사용자 지정</translation>
-    </message>
-    <message>
-        <location filename="../view/musiclistdatawidget.cpp" line="404"/>
-        <location filename="../view/musiclistdatawidget.cpp" line="1359"/>
-        <location filename="../view/musiclistdatawidget.cpp" line="1571"/>
-        <source>Search Results</source>
-        <translation>검색 결과</translation>
-    </message>
-    <message>
-        <location filename="../view/musiclistdatawidget.cpp" line="1232"/>
-        <source>Songs</source>
-        <translation>노래</translation>
     </message>
     <message>
         <location filename="../view/musiclistdatawidget.cpp" line="1619"/>
@@ -827,24 +823,6 @@
     </message>
 </context>
 <context>
-    <name>PlayListItem</name>
-    <message>
-        <location filename="../view/widget/playlistitem.cpp" line="187"/>
-        <source>Are you sure you want to delete this playlist?</source>
-        <translation>이 재생 목록을 삭제하시겠습니까?</translation>
-    </message>
-    <message>
-        <location filename="../view/widget/playlistitem.cpp" line="193"/>
-        <source>Cancel</source>
-        <translation>취소</translation>
-    </message>
-    <message>
-        <location filename="../view/widget/playlistitem.cpp" line="194"/>
-        <source>Delete</source>
-        <translation>삭제</translation>
-    </message>
-</context>
-<context>
     <name>PlayListView</name>
     <message>
         <location filename="../view/widget/delegate/playitemdelegate.cpp" line="519"/>
@@ -872,15 +850,15 @@
         <translation>새 재생 목록에 추가</translation>
     </message>
     <message>
-        <location filename="../view/widget/playlistview.cpp" line="624"/>
-        <source>Pause</source>
-        <translation>일시정지</translation>
-    </message>
-    <message>
         <location filename="../view/widget/playlistview.cpp" line="619"/>
         <location filename="../view/widget/playlistview.cpp" line="629"/>
         <source>Play</source>
         <translation>재생</translation>
+    </message>
+    <message>
+        <location filename="../view/widget/playlistview.cpp" line="624"/>
+        <source>Pause</source>
+        <translation>일시정지</translation>
     </message>
     <message>
         <location filename="../view/widget/playlistview.cpp" line="635"/>
@@ -893,14 +871,14 @@
         <translation>파일 관리자로 열기</translation>
     </message>
     <message>
-        <location filename="../view/widget/playlistview.cpp" line="646"/>
-        <source>Remove from playlist</source>
-        <translation>재생 목록에서 제거</translation>
-    </message>
-    <message>
         <location filename="../view/widget/playlistview.cpp" line="644"/>
         <source>Remove from play queue</source>
         <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../view/widget/playlistview.cpp" line="646"/>
+        <source>Remove from playlist</source>
+        <translation>재생 목록에서 제거</translation>
     </message>
     <message>
         <location filename="../view/widget/playlistview.cpp" line="648"/>
@@ -1076,71 +1054,76 @@
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="27"/>
-        <source>Exit Music</source>
-        <translation>음악 종료</translation>
+        <source>Exit</source>
+        <translation>나가기</translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="28"/>
+        <source>Ask me always</source>
+        <translation>항상 묻기</translation>
+    </message>
+    <message>
+        <location filename="../view/widget/settingsdialog.cpp" line="29"/>
         <source>Autoplay</source>
         <translation>자동 재생</translation>
     </message>
     <message>
-        <location filename="../view/widget/settingsdialog.cpp" line="29"/>
+        <location filename="../view/widget/settingsdialog.cpp" line="30"/>
         <source>Enable fade in/out</source>
         <translation>페이드 인/아웃 활성화</translation>
     </message>
     <message>
-        <location filename="../view/widget/settingsdialog.cpp" line="30"/>
+        <location filename="../view/widget/settingsdialog.cpp" line="31"/>
         <source>Remember playback position</source>
         <translation>재생 위치 기억</translation>
     </message>
     <message>
-        <location filename="../view/widget/settingsdialog.cpp" line="31"/>
+        <location filename="../view/widget/settingsdialog.cpp" line="32"/>
         <source>Close Main Window</source>
         <translation>창 닫기</translation>
     </message>
     <message>
-        <location filename="../view/widget/settingsdialog.cpp" line="32"/>
+        <location filename="../view/widget/settingsdialog.cpp" line="33"/>
         <source>Basic</source>
         <translation>기본 설정</translation>
     </message>
     <message>
-        <location filename="../view/widget/settingsdialog.cpp" line="33"/>
+        <location filename="../view/widget/settingsdialog.cpp" line="34"/>
         <source>Play</source>
         <translation>재생 설정</translation>
     </message>
     <message>
-        <location filename="../view/widget/settingsdialog.cpp" line="34"/>
+        <location filename="../view/widget/settingsdialog.cpp" line="35"/>
         <source>Shortcuts</source>
         <translation>단축키</translation>
     </message>
     <message>
-        <location filename="../view/widget/settingsdialog.cpp" line="35"/>
+        <location filename="../view/widget/settingsdialog.cpp" line="36"/>
         <source>Restore Defaults</source>
         <translation>기본값 복원</translation>
     </message>
     <message>
-        <location filename="../view/widget/settingsdialog.cpp" line="36"/>
+        <location filename="../view/widget/settingsdialog.cpp" line="37"/>
         <source>Next</source>
         <translation>다음</translation>
     </message>
     <message>
-        <location filename="../view/widget/settingsdialog.cpp" line="37"/>
+        <location filename="../view/widget/settingsdialog.cpp" line="38"/>
         <source>Play/Pause</source>
         <translation>재생/일시정지</translation>
     </message>
     <message>
-        <location filename="../view/widget/settingsdialog.cpp" line="38"/>
+        <location filename="../view/widget/settingsdialog.cpp" line="39"/>
         <source>Previous</source>
         <translation>이전</translation>
     </message>
     <message>
-        <location filename="../view/widget/settingsdialog.cpp" line="39"/>
+        <location filename="../view/widget/settingsdialog.cpp" line="40"/>
         <source>Volume down</source>
         <translation>볼륨 낮추기</translation>
     </message>
     <message>
-        <location filename="../view/widget/settingsdialog.cpp" line="40"/>
+        <location filename="../view/widget/settingsdialog.cpp" line="41"/>
         <source>Volume up</source>
         <translation>볼륨 높이기</translation>
     </message>

@@ -142,10 +142,10 @@ void Waveform::paintEvent(QPaintEvent *)
     painter.restore();
 }
 
-void Waveform::clearWave()
-{
-    sampleList.clear();
-}
+//void Waveform::clearWave()
+//{
+//    sampleList.clear();
+//}
 
 void Waveform::onAudioBuffer(const QVector<float> &allData, const QString &hash)
 {
@@ -154,8 +154,7 @@ void Waveform::onAudioBuffer(const QVector<float> &allData, const QString &hash)
     if (!allData.isEmpty()) {
         float max = allData.first();
         for (auto data : allData) {
-            if (max < data)
-                max = data;
+            max = qMax(max ,data);
         }
         for (int i = 0; i < allData.size(); ++i) {
             t_allData.append(qAbs(allData[i] / max));

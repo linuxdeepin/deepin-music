@@ -38,18 +38,18 @@
 #include "core/util/threadpool.h"
 #include "presenter/presenter.h"
 #include "view/mainframe.h"
-#include "playlistmanager.h"
 
 using namespace Dtk::Widget;
 
 class MusicAppPrivate
 {
 public:
-    MusicAppPrivate(MusicApp *parent) : q_ptr(parent) {}
+    explicit MusicAppPrivate(MusicApp *parent) : q_ptr(parent) {}
 
     void initMpris(const QString &serviceName);
     void triggerShortcutAction(const QString &optKey);
     void onDataPrepared();
+    void quickPrepared();
     void onQuit();
     void onRaise();
 
@@ -81,6 +81,7 @@ void MusicAppPrivate::initMpris(const QString &serviceName)
     mprisPlayer->setCanGoNext(true);
     mprisPlayer->setCanGoPrevious(true);
     mprisPlayer->setCanPause(true);
+    mprisPlayer->setCanSeek(true);
 
     q->connect(mprisPlayer, &MprisPlayer::quitRequested, q, [ = ]() {
         onQuit();
@@ -111,15 +112,29 @@ void MusicAppPrivate::triggerShortcutAction(const QString &optKey)
     }
 }
 
+void MusicAppPrivate::quickPrepared()
+{
+    playerFrame->quickBinding(presenter);
+}
+
 void MusicAppPrivate::onDataPrepared()
 {
     Q_Q(MusicApp);
+    //qDebug() << "TRACE:" << "data prepared";
+
     playerFrame->postInitUI();
+    playerFrame->binding(presenter);
     qApp->installEventFilter(playerFrame);
+    playerFrame->connect(playerFrame, &MainFrame::triggerShortcutAction,
+    q, [ = ](const QString & optKey) {
+        this->triggerShortcutAction(optKey);
+    });
 }
 
 void MusicAppPrivate::onQuit()
 {
+//    presenter->deleteLater();
+//    playerFrame->deleteLater();
     playerFrame->close();
 }
 
@@ -139,9 +154,6 @@ MusicApp::MusicApp(MainFrame *frame, QObject *parent)
     d->playerFrame = frame;
 
     connect(d->playerFrame, &MainFrame::requitQuit, this, &MusicApp::quit);
-    connect(PlaylistManager::instance(), &PlaylistManager::paintLoad,
-                     this, &MusicApp::initConnection);
-    connect(this, &MusicApp::sigStartImport, d->playerFrame, &MainFrame::onClickedImportFiles);
 }
 
 MusicApp::~MusicApp()
@@ -196,10 +208,11 @@ void MusicApp::show()
 {
     Q_D(MusicApp);
     auto geometry = MusicSettings::value("base.play.geometry").toByteArray();
+    //qDebug() << "restore state:" << state;
     dumpGeometry(geometry);
 
     d->playerFrame->resize(QSize(1070, 680));
-    //d->playerFrame->show();
+    d->playerFrame->show();
     Dtk::Widget::moveToCenter(d->playerFrame);
     if (geometry.isEmpty()) {
         d->playerFrame->resize(QSize(1070, 680));
@@ -215,6 +228,10 @@ void MusicApp::show()
 
 void MusicApp::quit()
 {
+    //Q_D(MusicApp);
+//    d->presenter->handleQuit();
+    qDebug() << "sync config start";
+//    MusicSettings::sync();
 #ifdef Q_OS_LINUX
     sync();
 #endif
@@ -228,47 +245,42 @@ void MusicApp::onStartImport(QStringList files)
     d->m_Files = files;
 }
 
-void MusicApp::initUI(bool bshow)
+void MusicApp::initUI(bool showFlag)
 {
     Q_D(MusicApp);
-    d->playerFrame->initUI(bshow);
+    d->playerFrame->initUI(showFlag);
     show();
-
-    if(!bshow)
-        PlaylistManager::instance()->initLoad();
 }
 
-void MusicApp::initConnection(bool show)
+void MusicApp::initConnection(bool showFlag)
 {
     Q_D(MusicApp);
-    Q_UNUSED(show)
-   //singleShot can wait to excute until main loop load UI completely
-   QTimer::singleShot(1,this ,[ = ](){
-        d->onDataPrepared();
-        bool bs = PlaylistManager::instance()->playlist(AllMusicListID)->isEmpty();
-        d->presenter = new Presenter;
-        //add presenter to thread
-        auto pt = ThreadPool::instance()->newThread();
-        d->presenter->moveToThread(pt);
-        pt->start(); //thread must be started
-        d->presenter->initPlayManager();
-        d->presenter->prepareData();
-        d->playerFrame->binding(d->presenter);
-        Player::instance()->init();
 
-        //re-query database for other page songs
-        if (!bs || d->m_Files.size()>0) { //normal or start from file
+    d->presenter = new Presenter;
+    auto presenterWork = ThreadPool::instance()->newThread();
+    d->presenter->moveToThread(presenterWork);
+    connect(presenterWork, &QThread::started, d->presenter, &Presenter::prepareData);
+    connect(this, &MusicApp::sigStartImport, d->playerFrame, &MainFrame::onClickedImportFiles);
+    connect(d->presenter, &Presenter::dataLoaded, this, [ = ]() {
+        if (showFlag) {
+            d->quickPrepared();
             d->presenter->quickLoad();
-            //load left data,include playlist and all left data
-            PlaylistManager::instance()->loadLeftPlayList();
-            d->playerFrame->initAllData();
         }
-        d->initMpris("DeepinMusic");
-        d->presenter->postAction(!bs);
-        if (d->m_Files.size() > 0) {
-            emit sigStartImport(d->m_Files);
-            d->m_Files.clear();
-        }
-   });
+        QTimer::singleShot(200, nullptr, [ = ]() {
+            d->initMpris("DeepinMusic");
+            d->onDataPrepared();
+            if (!showFlag) {
+                d->quickPrepared();
+            }
+            d->presenter->postAction(showFlag);
+            Player::instance()->init();
+            if (d->m_Files.size() > 0) {
+                emit sigStartImport(d->m_Files);
+                d->m_Files.clear();
+            }
+        });
+    });
+
+    presenterWork->start();
 }
 

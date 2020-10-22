@@ -49,7 +49,7 @@ public:
     template <class T>
     static QVector<qreal> getBufferLevels(const T *buffer, int frames, int channels);
 
-    void clearWave();
+    //void clearWave();
 
     void updateScaleSize();
     void setThemeType(int type);

@@ -82,7 +82,7 @@ public:
         UserRating
     };
 
-    Mpris(QObject *parent = 0);
+    explicit Mpris(QObject *parent = 0);
     ~Mpris();
 
     static QObject *api_factory(QQmlEngine *, QJSEngine *);

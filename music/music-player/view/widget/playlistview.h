@@ -71,6 +71,8 @@ public:
 
     int rowCount();
     QString firstHash();
+    //性能优化歌曲展示专用
+    void initAllSonglist();
 public slots:
     void onAddMeta(QString playListId, const MetaPtr meta);
 

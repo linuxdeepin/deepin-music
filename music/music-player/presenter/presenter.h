@@ -59,8 +59,6 @@ public:
     void handleQuit();
     void openUri(const QUrl &uri);
     void removeListSame(QStringList *list);
-    //get playmanager pointer
-    void initPlayManager();
 
     QList<PlaylistPtr > allplaylist();
     PlaylistPtr playlist(const QString &id);
@@ -197,7 +195,7 @@ public slots:
     void onSearchText(const QString &id, const QString &text);
     void onSearchCand(const QString text);//查询候选项
     void onExitSearch();
-    void onLocateMusicAtAll(const QString &hash);
+    //void onLocateMusicAtAll(const QString &hash);
     void onChangeSearchMetaCache(const MetaPtr meta, const DMusic::SearchMeta &search);
 
     void onScanMusicDirectory();

@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="ja">
+<TS version="2.1" language="ja_JP" sourcelanguage="en_US">
 <context>
     <name>CloseConfirmDialog</name>
     <message>
         <location filename="../view/widget/closeconfirmdialog.cpp" line="72"/>
         <source>Exit</source>
-        <translation>終了</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/widget/closeconfirmdialog.cpp" line="74"/>
@@ -26,16 +26,12 @@
     <message>
         <location filename="../view/widget/closeconfirmdialog.cpp" line="110"/>
         <source>Cancel</source>
-        <translation>キャンセル</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/widget/closeconfirmdialog.cpp" line="111"/>
         <source>Confirm</source>
         <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>OK</source>
-        <translation type="vanished">OK</translation>
     </message>
 </context>
 <context>
@@ -43,7 +39,12 @@
     <message>
         <location filename="../view/widget/dequalizerdialog.cpp" line="112"/>
         <source>Custom</source>
-        <translation type="unfinished">カスタム</translation>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../view/widget/dequalizerdialog.cpp" line="113"/>
+        <source>Monophony</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/widget/dequalizerdialog.cpp" line="114"/>
@@ -61,16 +62,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/widget/dequalizerdialog.cpp" line="120"/>
-        <source>Headphones</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../view/widget/dequalizerdialog.cpp" line="113"/>
-        <source>Monophony</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <location filename="../view/widget/dequalizerdialog.cpp" line="117"/>
         <source>Full Bass</source>
         <translation type="unfinished"></translation>
@@ -83,6 +74,11 @@
     <message>
         <location filename="../view/widget/dequalizerdialog.cpp" line="119"/>
         <source>Full Treble</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../view/widget/dequalizerdialog.cpp" line="120"/>
+        <source>Headphones</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -131,6 +127,17 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../view/widget/dequalizerdialog.cpp" line="130"/>
+        <source>Techno</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../view/widget/dequalizerdialog.cpp" line="187"/>
+        <location filename="../view/widget/dequalizerdialog.cpp" line="448"/>
+        <source>Equalizer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="../view/widget/dequalizerdialog.cpp" line="194"/>
         <location filename="../view/widget/dequalizerdialog.cpp" line="654"/>
         <source>ON</source>
@@ -140,23 +147,6 @@
         <location filename="../view/widget/dequalizerdialog.cpp" line="196"/>
         <location filename="../view/widget/dequalizerdialog.cpp" line="652"/>
         <source>OFF</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../view/widget/dequalizerdialog.cpp" line="550"/>
-        <location filename="../view/widget/dequalizerdialog.cpp" line="551"/>
-        <source>Sound Effects Saved</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../view/widget/dequalizerdialog.cpp" line="130"/>
-        <source>Techno</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../view/widget/dequalizerdialog.cpp" line="187"/>
-        <location filename="../view/widget/dequalizerdialog.cpp" line="448"/>
-        <source>Equalizer</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -174,50 +164,51 @@
         <source>Restore Defaults</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <location filename="../view/widget/dequalizerdialog.cpp" line="550"/>
+        <location filename="../view/widget/dequalizerdialog.cpp" line="551"/>
+        <source>Sound Effects Saved</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>Footer</name>
     <message>
-        <location filename="../view/footerwidget.cpp" line="424"/>
-        <source>Previous</source>
-        <translation>前へ</translation>
-    </message>
-    <message>
-        <location filename="../view/footerwidget.cpp" line="425"/>
-        <source>Next</source>
-        <translation>次へ</translation>
-    </message>
-    <message>
-        <location filename="../view/footerwidget.cpp" line="426"/>
-        <source>Play/Pause</source>
-        <translation>再生・一時停止</translation>
-    </message>
-    <message>
-        <location filename="../view/footerwidget.cpp" line="427"/>
-        <source>Favorite</source>
-        <translation>お気に入り</translation>
-    </message>
-    <message>
-        <location filename="../view/footerwidget.cpp" line="428"/>
-        <source>Lyrics</source>
-        <translation>歌詞</translation>
-    </message>
-    <message>
-        <location filename="../view/footerwidget.cpp" line="430"/>
-        <source>Play Queue</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <location filename="../view/footerwidget.cpp" line="298"/>
         <source>Unknown Title</source>
-        <translation>不明なタイトル</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/footerwidget.cpp" line="317"/>
         <location filename="../view/footerwidget.cpp" line="879"/>
         <location filename="../view/footerwidget.cpp" line="1488"/>
         <source>Unknown artist</source>
-        <translation>不明のアーチスト</translation>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../view/footerwidget.cpp" line="424"/>
+        <source>Previous</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../view/footerwidget.cpp" line="425"/>
+        <source>Next</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../view/footerwidget.cpp" line="426"/>
+        <source>Play/Pause</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../view/footerwidget.cpp" line="427"/>
+        <source>Favorite</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../view/footerwidget.cpp" line="428"/>
+        <source>Lyrics</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/footerwidget.cpp" line="429"/>
@@ -225,8 +216,9 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Playlist</source>
-        <translation type="vanished">プレイリスト</translation>
+        <location filename="../view/footerwidget.cpp" line="430"/>
+        <source>Play Queue</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/footerwidget.cpp" line="1462"/>
@@ -241,15 +233,11 @@
     <message>
         <location filename="../view/footerwidget.cpp" line="1468"/>
         <source>Shuffle</source>
-        <translation>シャッフル</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>ImportWidget</name>
-    <message>
-        <source>Add folder</source>
-        <translation type="vanished">フォルダーを追加</translation>
-    </message>
     <message>
         <location filename="../view/importwidget.cpp" line="86"/>
         <source>Open Folder</source>
@@ -264,7 +252,7 @@
         <location filename="../view/importwidget.cpp" line="109"/>
         <location filename="../view/importwidget.cpp" line="168"/>
         <source>Scan</source>
-        <translation>検索</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/importwidget.cpp" line="110"/>
@@ -275,59 +263,59 @@
     <message>
         <location filename="../view/importwidget.cpp" line="159"/>
         <source>Loading music, please wait...</source>
-        <translation>音楽を読み込んでいます、お待ち下さい...</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>InfoDialog</name>
-    <message>
-        <location filename="../view/widget/infodialog.cpp" line="149"/>
-        <source>Title:</source>
-        <translation>タイトル</translation>
-    </message>
-    <message>
-        <location filename="../view/widget/infodialog.cpp" line="149"/>
-        <source>Artist:</source>
-        <translation>アーティスト:</translation>
-    </message>
-    <message>
-        <location filename="../view/widget/infodialog.cpp" line="150"/>
-        <source>Album:</source>
-        <translation>アルバム</translation>
-    </message>
-    <message>
-        <location filename="../view/widget/infodialog.cpp" line="150"/>
-        <source>Type:</source>
-        <translation>種類:</translation>
-    </message>
-    <message>
-        <location filename="../view/widget/infodialog.cpp" line="152"/>
-        <source>Path:</source>
-        <translation>パス:</translation>
-    </message>
-    <message>
-        <location filename="../view/widget/infodialog.cpp" line="238"/>
-        <source>Unknown artist</source>
-        <translation>不明のアーチスト</translation>
-    </message>
-    <message>
-        <location filename="../view/widget/infodialog.cpp" line="239"/>
-        <source>Unknown album</source>
-        <translation>不明のアルバム</translation>
-    </message>
-    <message>
-        <location filename="../view/widget/infodialog.cpp" line="151"/>
-        <source>Size:</source>
-        <translation>サイズ:</translation>
-    </message>
     <message>
         <location filename="../view/widget/infodialog.cpp" line="132"/>
         <source>Basic info</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../view/widget/infodialog.cpp" line="149"/>
+        <source>Title:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../view/widget/infodialog.cpp" line="149"/>
+        <source>Artist:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../view/widget/infodialog.cpp" line="150"/>
+        <source>Album:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../view/widget/infodialog.cpp" line="150"/>
+        <source>Type:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../view/widget/infodialog.cpp" line="151"/>
+        <source>Size:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="../view/widget/infodialog.cpp" line="151"/>
         <source>Duration:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../view/widget/infodialog.cpp" line="152"/>
+        <source>Path:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../view/widget/infodialog.cpp" line="238"/>
+        <source>Unknown artist</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../view/widget/infodialog.cpp" line="239"/>
+        <source>Unknown album</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -349,22 +337,22 @@
     <message>
         <location filename="../view/lyricwidget.cpp" line="170"/>
         <source>Title</source>
-        <translation>タイトル</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/lyricwidget.cpp" line="175"/>
         <source>Artist</source>
-        <translation>アーティスト</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/lyricwidget.cpp" line="180"/>
         <source>Search</source>
-        <translation>検索</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/lyricwidget.cpp" line="215"/>
         <source>Back</source>
-        <translation>戻る</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -377,51 +365,6 @@
 </context>
 <context>
     <name>MainFrame</name>
-    <message>
-        <location filename="../view/mainframe.cpp" line="206"/>
-        <source>Settings</source>
-        <translation>設定</translation>
-    </message>
-    <message>
-        <location filename="../view/mainframe.cpp" line="273"/>
-        <location filename="../view/mainframe.cpp" line="866"/>
-        <source>Exit</source>
-        <translation>終了</translation>
-    </message>
-    <message>
-        <source>Add folder</source>
-        <translation type="vanished">フォルダーを追加</translation>
-    </message>
-    <message>
-        <source>Add file</source>
-        <translation type="vanished">ファイルの追加</translation>
-    </message>
-    <message>
-        <location filename="../view/mainframe.cpp" line="265"/>
-        <source>Dark theme</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../view/mainframe.cpp" line="863"/>
-        <source>Play/Pause</source>
-        <translation>再生・一時停止</translation>
-    </message>
-    <message>
-        <location filename="../view/mainframe.cpp" line="864"/>
-        <source>Previous</source>
-        <translation>前へ</translation>
-    </message>
-    <message>
-        <location filename="../view/mainframe.cpp" line="1579"/>
-        <source>All music</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../view/mainframe.cpp" line="1083"/>
-        <location filename="../view/mainframe.cpp" line="1139"/>
-        <source>OK</source>
-        <translation>OK</translation>
-    </message>
     <message>
         <location filename="../view/mainframe.cpp" line="182"/>
         <source>Add playlist</source>
@@ -438,8 +381,19 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="791"/>
-        <source>Music is a local music player with beautiful design and simple functions.</source>
+        <location filename="../view/mainframe.cpp" line="206"/>
+        <source>Settings</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../view/mainframe.cpp" line="265"/>
+        <source>Dark theme</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../view/mainframe.cpp" line="273"/>
+        <location filename="../view/mainframe.cpp" line="866"/>
+        <source>Exit</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -449,6 +403,26 @@
         <location filename="../view/mainframe.cpp" line="877"/>
         <location filename="../view/mainframe.cpp" line="1436"/>
         <source>Music</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../view/mainframe.cpp" line="791"/>
+        <source>Music is a local music player with beautiful design and simple functions.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../view/mainframe.cpp" line="863"/>
+        <source>Play/Pause</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../view/mainframe.cpp" line="864"/>
+        <source>Previous</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../view/mainframe.cpp" line="865"/>
+        <source>Next</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -477,14 +451,20 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../view/mainframe.cpp" line="1083"/>
+        <location filename="../view/mainframe.cpp" line="1139"/>
+        <source>OK</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="../view/mainframe.cpp" line="1133"/>
         <source>Import failed, no valid music file found</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="865"/>
-        <source>Next</source>
-        <translation>次へ</translation>
+        <location filename="../view/mainframe.cpp" line="1579"/>
+        <source>All music</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -577,6 +557,13 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../view/musiclistdatawidget.cpp" line="404"/>
+        <location filename="../view/musiclistdatawidget.cpp" line="1359"/>
+        <location filename="../view/musiclistdatawidget.cpp" line="1571"/>
+        <source>Search Results</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="../view/musiclistdatawidget.cpp" line="967"/>
         <location filename="../view/musiclistdatawidget.cpp" line="982"/>
         <location filename="../view/musiclistdatawidget.cpp" line="997"/>
@@ -589,7 +576,7 @@
         <location filename="../view/musiclistdatawidget.cpp" line="1148"/>
         <location filename="../view/musiclistdatawidget.cpp" line="1564"/>
         <source>All Music</source>
-        <translation type="unfinished">全ての音楽</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/musiclistdatawidget.cpp" line="1054"/>
@@ -615,18 +602,23 @@
         <location filename="../view/musiclistdatawidget.cpp" line="1092"/>
         <location filename="../view/musiclistdatawidget.cpp" line="1102"/>
         <source>Artist</source>
-        <translation type="unfinished">アーティスト</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/musiclistdatawidget.cpp" line="1073"/>
         <location filename="../view/musiclistdatawidget.cpp" line="1101"/>
         <source>Title</source>
-        <translation type="unfinished">タイトル</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/musiclistdatawidget.cpp" line="1130"/>
         <source>Play All</source>
-        <translation type="unfinished">すべて再生</translation>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../view/musiclistdatawidget.cpp" line="1232"/>
+        <source>Songs</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/musiclistdatawidget.cpp" line="1233"/>
@@ -641,18 +633,6 @@
     <message>
         <location filename="../view/musiclistdatawidget.cpp" line="1269"/>
         <source>Custom</source>
-        <translation type="unfinished">カスタム</translation>
-    </message>
-    <message>
-        <location filename="../view/musiclistdatawidget.cpp" line="404"/>
-        <location filename="../view/musiclistdatawidget.cpp" line="1359"/>
-        <location filename="../view/musiclistdatawidget.cpp" line="1571"/>
-        <source>Search Results</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../view/musiclistdatawidget.cpp" line="1232"/>
-        <source>Songs</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -666,12 +646,12 @@
     <message>
         <location filename="../view/widget/musiclistdialog.cpp" line="126"/>
         <source>Play All</source>
-        <translation type="unfinished">すべて再生</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/widget/musiclistdialog.cpp" line="139"/>
         <source>Shuffle</source>
-        <translation type="unfinished">シャッフル</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -694,7 +674,7 @@
     <message>
         <location filename="../view/widget/musiclistinfoview.cpp" line="527"/>
         <source>Play</source>
-        <translation type="unfinished">再生</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/widget/musiclistinfoview.cpp" line="530"/>
@@ -709,7 +689,7 @@
     <message>
         <location filename="../view/widget/musiclistinfoview.cpp" line="538"/>
         <source>Remove from playlist</source>
-        <translation type="unfinished">プレイリストから削除</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/widget/musiclistinfoview.cpp" line="539"/>
@@ -719,13 +699,13 @@
     <message>
         <location filename="../view/widget/musiclistinfoview.cpp" line="560"/>
         <source>Song info</source>
-        <translation type="unfinished">音楽情報</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/widget/musiclistinfoview.cpp" line="608"/>
         <location filename="../view/widget/musiclistinfoview.cpp" line="639"/>
         <source>Cancel</source>
-        <translation type="unfinished">キャンセル</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/widget/musiclistinfoview.cpp" line="609"/>
@@ -745,7 +725,7 @@
     <message>
         <location filename="../view/widget/musiclistinfoview.cpp" line="640"/>
         <source>Delete</source>
-        <translation type="unfinished">削除</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/widget/musiclistinfoview.cpp" line="649"/>
@@ -775,12 +755,12 @@
     <message>
         <location filename="../view/widget/musiclistitem.cpp" line="184"/>
         <source>Cancel</source>
-        <translation type="unfinished">キャンセル</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/widget/musiclistitem.cpp" line="185"/>
         <source>Delete</source>
-        <translation type="unfinished">削除</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -799,24 +779,6 @@
 <context>
     <name>MusicListView</name>
     <message>
-        <location filename="../view/widget/musiclistview.cpp" line="531"/>
-        <location filename="../view/widget/musiclistview.cpp" line="549"/>
-        <source>Play</source>
-        <translation>再生</translation>
-    </message>
-    <message>
-        <source>Song info</source>
-        <translation type="vanished">音楽情報</translation>
-    </message>
-    <message>
-        <source>Remove from playlist</source>
-        <translation type="vanished">プレイリストから削除</translation>
-    </message>
-    <message>
-        <source>Encoding</source>
-        <translation type="vanished">エンコーディング</translation>
-    </message>
-    <message>
         <location filename="../view/widget/musiclistview.cpp" line="175"/>
         <source>My Favorites</source>
         <translation type="unfinished"></translation>
@@ -831,7 +793,7 @@
         <location filename="../view/widget/musiclistview.cpp" line="413"/>
         <location filename="../view/widget/musiclistview.cpp" line="566"/>
         <source>Cancel</source>
-        <translation>キャンセル</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="414"/>
@@ -839,7 +801,7 @@
         <location filename="../view/widget/musiclistview.cpp" line="558"/>
         <location filename="../view/widget/musiclistview.cpp" line="567"/>
         <source>Delete</source>
-        <translation>削除</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="528"/>
@@ -848,63 +810,30 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistview.cpp" line="537"/>
-        <location filename="../view/widget/musiclistview.cpp" line="555"/>
-        <source>Rename</source>
-        <translation type="unfinished">名前の変更</translation>
-    </message>
-    <message>
-        <source>Unknown artist</source>
-        <translation type="vanished">不明のアーチスト</translation>
-    </message>
-    <message>
-        <source>Unknown album</source>
-        <translation type="vanished">不明のアルバム</translation>
-    </message>
-</context>
-<context>
-    <name>MusicListWidget</name>
-    <message>
-        <source>No Music</source>
-        <translation type="vanished">音楽は有りません</translation>
-    </message>
-    <message>
-        <source>Play All</source>
-        <translation type="vanished">すべて再生</translation>
-    </message>
-    <message>
-        <source>Title</source>
-        <translation type="vanished">タイトル</translation>
-    </message>
-    <message>
-        <source>Artist</source>
-        <translation type="vanished">アーティスト</translation>
-    </message>
-    <message>
-        <source>Custom</source>
-        <translation type="vanished">カスタム</translation>
-    </message>
-</context>
-<context>
-    <name>PlayListItem</name>
-    <message>
-        <location filename="../view/widget/playlistitem.cpp" line="187"/>
-        <source>Are you sure you want to delete this playlist?</source>
+        <location filename="../view/widget/musiclistview.cpp" line="531"/>
+        <location filename="../view/widget/musiclistview.cpp" line="549"/>
+        <source>Play</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/widget/playlistitem.cpp" line="194"/>
-        <source>Delete</source>
-        <translation>削除</translation>
-    </message>
-    <message>
-        <location filename="../view/widget/playlistitem.cpp" line="193"/>
-        <source>Cancel</source>
-        <translation>キャンセル</translation>
+        <location filename="../view/widget/musiclistview.cpp" line="537"/>
+        <location filename="../view/widget/musiclistview.cpp" line="555"/>
+        <source>Rename</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>PlayListView</name>
+    <message>
+        <location filename="../view/widget/delegate/playitemdelegate.cpp" line="519"/>
+        <source>Unknown artist</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../view/widget/delegate/playitemdelegate.cpp" line="531"/>
+        <source>Unknown album</source>
+        <translation type="unfinished"></translation>
+    </message>
     <message>
         <location filename="../view/widget/playlistview.cpp" line="542"/>
         <source>Play queue</source>
@@ -921,15 +850,15 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/widget/playlistview.cpp" line="624"/>
-        <source>Pause</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <location filename="../view/widget/playlistview.cpp" line="619"/>
         <location filename="../view/widget/playlistview.cpp" line="629"/>
         <source>Play</source>
-        <translation>再生</translation>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../view/widget/playlistview.cpp" line="624"/>
+        <source>Pause</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/widget/playlistview.cpp" line="635"/>
@@ -942,13 +871,13 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/widget/playlistview.cpp" line="646"/>
-        <source>Remove from playlist</source>
-        <translation type="unfinished">プレイリストから削除</translation>
-    </message>
-    <message>
         <location filename="../view/widget/playlistview.cpp" line="644"/>
         <source>Remove from play queue</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../view/widget/playlistview.cpp" line="646"/>
+        <source>Remove from playlist</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -959,18 +888,18 @@
     <message>
         <location filename="../view/widget/playlistview.cpp" line="686"/>
         <source>Encoding</source>
-        <translation type="unfinished">エンコーディング</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/widget/playlistview.cpp" line="690"/>
         <source>Song info</source>
-        <translation type="unfinished">音楽情報</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/widget/playlistview.cpp" line="746"/>
         <location filename="../view/widget/playlistview.cpp" line="777"/>
         <source>Cancel</source>
-        <translation type="unfinished">キャンセル</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/widget/playlistview.cpp" line="747"/>
@@ -985,6 +914,11 @@
     <message>
         <location filename="../view/widget/playlistview.cpp" line="753"/>
         <source>Are you sure you want to remove the selected %1 songs?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../view/widget/playlistview.cpp" line="778"/>
+        <source>Delete</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1003,25 +937,6 @@
         <location filename="../view/widget/playlistview.cpp" line="807"/>
         <source>The song files contained will also be deleted</source>
         <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Rename</source>
-        <translation type="vanished">名前の変更</translation>
-    </message>
-    <message>
-        <location filename="../view/widget/playlistview.cpp" line="778"/>
-        <source>Delete</source>
-        <translation>削除</translation>
-    </message>
-    <message>
-        <location filename="../view/widget/delegate/playitemdelegate.cpp" line="519"/>
-        <source>Unknown artist</source>
-        <translation type="unfinished">不明のアーチスト</translation>
-    </message>
-    <message>
-        <location filename="../view/widget/delegate/playitemdelegate.cpp" line="531"/>
-        <source>Unknown album</source>
-        <translation type="unfinished">不明のアルバム</translation>
     </message>
 </context>
 <context>
@@ -1064,14 +979,14 @@
         <location filename="../core/playlist.cpp" line="473"/>
         <location filename="../core/playlist.cpp" line="764"/>
         <source>Unknown album</source>
-        <translation type="unfinished">不明のアルバム</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../core/playlist.cpp" line="486"/>
         <location filename="../core/playlist.cpp" line="768"/>
         <location filename="../core/playlist.cpp" line="799"/>
         <source>Unknown artist</source>
-        <translation type="unfinished">不明のアーチスト</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1080,10 +995,6 @@
         <location filename="../core/playlistmanager.cpp" line="88"/>
         <source>New playlist</source>
         <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Artist</source>
-        <translation type="obsolete">アーティスト</translation>
     </message>
     <message>
         <location filename="../core/playlistmanager.cpp" line="172"/>
@@ -1103,7 +1014,7 @@
         <location filename="../core/playlistmanager.cpp" line="184"/>
         <location filename="../core/playlistmanager.cpp" line="208"/>
         <source>All Music</source>
-        <translation>全ての音楽</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../core/playlistmanager.cpp" line="190"/>
@@ -1118,7 +1029,7 @@
     <message>
         <location filename="../core/playlistmanager.cpp" line="202"/>
         <source>Play</source>
-        <translation type="unfinished">再生</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../core/playlistmanager.cpp" line="226"/>
@@ -1129,10 +1040,6 @@
 <context>
     <name>QApplication</name>
     <message>
-        <source>Deepin Music</source>
-        <translation type="vanished">Deepin音楽プレイヤー</translation>
-    </message>
-    <message>
         <location filename="../view/mainframe.cpp" line="793"/>
         <source>Music</source>
         <translation type="unfinished"></translation>
@@ -1141,83 +1048,84 @@
 <context>
     <name>QObject</name>
     <message>
-        <source>Deepin Music</source>
-        <translation type="vanished">Deepin Music</translation>
-    </message>
-    <message>
         <location filename="../view/widget/settingsdialog.cpp" line="26"/>
         <source>Minimize to system tray</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="27"/>
-        <source>Exit Music</source>
+        <source>Exit</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="28"/>
-        <source>Autoplay</source>
+        <source>Ask me always</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="29"/>
-        <source>Enable fade in/out</source>
+        <source>Autoplay</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="30"/>
-        <source>Remember playback position</source>
+        <source>Enable fade in/out</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="31"/>
-        <source>Close Main Window</source>
+        <source>Remember playback position</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="32"/>
-        <source>Basic</source>
-        <translation>ベーシック</translation>
+        <source>Close Main Window</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="33"/>
-        <source>Play</source>
-        <translation>再生</translation>
+        <source>Basic</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="34"/>
-        <source>Shortcuts</source>
-        <translation>ショートカット</translation>
+        <source>Play</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="35"/>
-        <source>Restore Defaults</source>
+        <source>Shortcuts</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="36"/>
-        <source>Next</source>
-        <translation>次へ</translation>
+        <source>Restore Defaults</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="37"/>
-        <source>Play/Pause</source>
-        <translation>再生・一時停止</translation>
+        <source>Next</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="38"/>
-        <source>Previous</source>
-        <translation>前へ</translation>
+        <source>Play/Pause</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="39"/>
-        <source>Volume down</source>
-        <translation>音量を下げる</translation>
+        <source>Previous</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="40"/>
+        <source>Volume down</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../view/widget/settingsdialog.cpp" line="41"/>
         <source>Volume up</source>
-        <translation>音量を上げる</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1230,17 +1138,17 @@
     <message>
         <location filename="../view/widget/searchlyricswidget.cpp" line="117"/>
         <source>Title</source>
-        <translation type="unfinished">タイトル</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/widget/searchlyricswidget.cpp" line="118"/>
         <source>Artist</source>
-        <translation type="unfinished">アーティスト</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/widget/searchlyricswidget.cpp" line="121"/>
         <source>Search</source>
-        <translation type="unfinished">検索</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1266,7 +1174,7 @@
     <message>
         <location filename="../view/shortcut.cpp" line="30"/>
         <source>Play</source>
-        <translation type="unfinished">再生</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/shortcut.cpp" line="31"/>
@@ -1281,22 +1189,22 @@
     <message>
         <location filename="../view/shortcut.cpp" line="33"/>
         <source>Settings</source>
-        <translation type="unfinished">設定</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/shortcut.cpp" line="39"/>
         <source>Play/Pause</source>
-        <translation type="unfinished">再生・一時停止</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/shortcut.cpp" line="39"/>
         <source>Previous</source>
-        <translation type="unfinished">前へ</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/shortcut.cpp" line="39"/>
         <source>Next</source>
-        <translation type="unfinished">次へ</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/shortcut.cpp" line="39"/>
@@ -1316,7 +1224,7 @@
     <message>
         <location filename="../view/shortcut.cpp" line="41"/>
         <source>Favorite</source>
-        <translation type="unfinished">お気に入り</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/shortcut.cpp" line="41"/>
@@ -1326,7 +1234,7 @@
     <message>
         <location filename="../view/shortcut.cpp" line="41"/>
         <source>Song info</source>
-        <translation type="unfinished">音楽情報</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/shortcut.cpp" line="43"/>
@@ -1346,7 +1254,7 @@
     <message>
         <location filename="../view/shortcut.cpp" line="43"/>
         <source>Remove from playlist</source>
-        <translation type="unfinished">プレイリストから削除</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/shortcut.cpp" line="46"/>
@@ -1364,7 +1272,7 @@
     <message>
         <location filename="../view/widget/titlebarwidget.cpp" line="81"/>
         <source>Search</source>
-        <translation>検索</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 </TS>

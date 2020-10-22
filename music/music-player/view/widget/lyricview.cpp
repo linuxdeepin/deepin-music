@@ -36,7 +36,7 @@ DWIDGET_USE_NAMESPACE
 class LyricViewPrivate
 {
 public:
-    LyricViewPrivate(LyricView *parent) : q_ptr(parent) {}
+    explicit LyricViewPrivate(LyricView *parent) : q_ptr(parent) {}
 
     LyricLineDelegate   *delegate   = nullptr;
     bool                viewMode    = false;
@@ -83,10 +83,10 @@ bool LyricView::viewMode() const
     return d->viewMode;
 }
 
-int LyricView::optical() const
-{
-    return this->property("id_optical").toInt();
-}
+//int LyricView::optical() const
+//{
+//    return this->property("id_optical").toInt();
+//}
 
 void LyricView::wheelEvent(QWheelEvent *event)
 {

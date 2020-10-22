@@ -72,7 +72,7 @@ class MPRIS_QT_EXPORT MprisPlayer : public QObject,
 
 public:
 
-    MprisPlayer(QObject *parent = 0);
+    explicit MprisPlayer(QObject *parent = 0);
     ~MprisPlayer();
 
 public slots:

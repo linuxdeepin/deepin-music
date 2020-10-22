@@ -47,7 +47,7 @@ DWIDGET_USE_NAMESPACE
 class MusicListDataViewPrivate
 {
 public:
-    MusicListDataViewPrivate(MusicListDataView *parent): q_ptr(parent) {}
+    explicit MusicListDataViewPrivate(MusicListDataView *parent): q_ptr(parent) {}
 
     void addPlayMusicTypePtr(const PlayMusicTypePtr TypePtr);
 
@@ -348,7 +348,7 @@ void MusicListDataView::updateList()
     Q_D(MusicListDataView);
     PlaylistPtr playlist = d->model->playlist();
     if (playlist.isNull()) {
-        qWarning() << "can not change to empty playlist";
+        qWarning() << "can not change to emptry playlist";
         return;
     }
 
@@ -377,7 +377,7 @@ void MusicListDataView::onMusiclistChanged(PlaylistPtr playlist)
     Q_D(MusicListDataView);
 
     if (playlist.isNull()) {
-        qWarning() << "can not change to empty playlist";
+        qWarning() << "can not change to emptry playlist";
         d->model->removeRows(0, d->model->rowCount());
         d->model->setPlaylist(nullptr);
         d->curPlayMusicTypePtrList.clear();

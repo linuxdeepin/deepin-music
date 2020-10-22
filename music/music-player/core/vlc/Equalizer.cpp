@@ -48,25 +48,25 @@ float VlcEqualizer::amplificationForBandAt(uint bandIndex) const
     return -1.0;
 }
 
-uint VlcEqualizer::bandCount() const
-{
-    if (_vlcEqualizer) {
-        vlc_audio_equalizer_get_band_count_function vlc_audio_equalizer_get_band_count = (vlc_audio_equalizer_get_band_count_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("libvlc_audio_equalizer_get_band_count");
-        return vlc_audio_equalizer_get_band_count();
-    } else {
-        return 0;
-    }
-}
+//uint VlcEqualizer::bandCount() const
+//{
+//    if (_vlcEqualizer) {
+//        vlc_audio_equalizer_get_band_count_function vlc_audio_equalizer_get_band_count = (vlc_audio_equalizer_get_band_count_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("libvlc_audio_equalizer_get_band_count");
+//        return vlc_audio_equalizer_get_band_count();
+//    } else {
+//        return 0;
+//    }
+//}
 
-float VlcEqualizer::bandFrequency(uint bandIndex) const
-{
-    if (_vlcEqualizer) {
-        vlc_audio_equalizer_get_band_frequency_function vlc_audio_equalizer_get_band_frequency = (vlc_audio_equalizer_get_band_frequency_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("libvlc_audio_equalizer_get_band_frequency");
-        return vlc_audio_equalizer_get_band_frequency(bandIndex);
-    } else {
-        return -1.0;
-    }
-}
+//float VlcEqualizer::bandFrequency(uint bandIndex) const
+//{
+//    if (_vlcEqualizer) {
+//        vlc_audio_equalizer_get_band_frequency_function vlc_audio_equalizer_get_band_frequency = (vlc_audio_equalizer_get_band_frequency_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("libvlc_audio_equalizer_get_band_frequency");
+//        return vlc_audio_equalizer_get_band_frequency(bandIndex);
+//    } else {
+//        return -1.0;
+//    }
+//}
 
 float VlcEqualizer::preamplification() const
 {
@@ -78,22 +78,22 @@ float VlcEqualizer::preamplification() const
     }
 }
 
-uint VlcEqualizer::presetCount() const
-{
-    vlc_audio_equalizer_get_preset_count_function vlc_audio_equalizer_get_preset_count = (vlc_audio_equalizer_get_preset_count_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("libvlc_audio_equalizer_get_preset_count");
-    return vlc_audio_equalizer_get_preset_count();
-}
+//uint VlcEqualizer::presetCount() const
+//{
+//    vlc_audio_equalizer_get_preset_count_function vlc_audio_equalizer_get_preset_count = (vlc_audio_equalizer_get_preset_count_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("libvlc_audio_equalizer_get_preset_count");
+//    return vlc_audio_equalizer_get_preset_count();
+//}
 
-QString VlcEqualizer::presetNameAt(uint index) const
-{
-    vlc_audio_equalizer_get_preset_name_function vlc_audio_equalizer_get_preset_name = (vlc_audio_equalizer_get_preset_name_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("libvlc_audio_equalizer_get_preset_name");
-    const char *name = vlc_audio_equalizer_get_preset_name(index);
-    if (name == NULL) {
-        return QString();
-    } else {
-        return QString(name);
-    }
-}
+//QString VlcEqualizer::presetNameAt(uint index) const
+//{
+//    vlc_audio_equalizer_get_preset_name_function vlc_audio_equalizer_get_preset_name = (vlc_audio_equalizer_get_preset_name_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("libvlc_audio_equalizer_get_preset_name");
+//    const char *name = vlc_audio_equalizer_get_preset_name(index);
+//    if (name == NULL) {
+//        return QString();
+//    } else {
+//        return QString(name);
+//    }
+//}
 
 void VlcEqualizer::loadFromPreset(uint index)
 {

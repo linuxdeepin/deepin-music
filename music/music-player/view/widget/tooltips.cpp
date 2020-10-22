@@ -45,7 +45,7 @@ DWIDGET_USE_NAMESPACE
 class ToolTipsPrivate
 {
 public:
-    ToolTipsPrivate(ToolTips *parent) : q_ptr(parent) {}
+    explicit ToolTipsPrivate(ToolTips *parent) : q_ptr(parent) {}
 
     void setBackgroundImage(const QPixmap &srcPixmap);
 
@@ -181,34 +181,34 @@ void ToolTips::setBorderColor(QColor borderColor)
     d->borderColor = borderColor;
 }
 
-void ToolTips::pop(QPoint center)
-{
-    //Q_D(ToolTips);
-    this->show();
-    center = center - QPoint(width() / 2, height() / 2);
-    this->move(center);
+//void ToolTips::pop(QPoint center)
+//{
+//    //Q_D(ToolTips);
+//    this->show();
+//    center = center - QPoint(width() / 2, height() / 2);
+//    this->move(center);
 
-//    auto topOpacity = new QGraphicsOpacityEffect(d->m_interFrame);
-//    topOpacity->setOpacity(1);
-//    d->m_interFrame->setGraphicsEffect(topOpacity);
+////    auto topOpacity = new QGraphicsOpacityEffect(d->m_interFrame);
+////    topOpacity->setOpacity(1);
+////    d->m_interFrame->setGraphicsEffect(topOpacity);
 
-//    QPropertyAnimation *animation4 = new QPropertyAnimation(topOpacity, "opacity");
-////    animation4->setEasingCurve(QEasingCurve::InCubic);
-//    animation4->setDuration(2000);
-//    animation4->setStartValue(0);
-//    animation4->setKeyValueAt(0.25, 1);
-//    animation4->setKeyValueAt(0.5, 1);
-//    animation4->setKeyValueAt(0.75, 1);
-//    animation4->setEndValue(0);
-//    animation4->start();
-//    animation4->connect(animation4, &QPropertyAnimation::finished,
-//                        animation4, &QPropertyAnimation::deleteLater);
-//    animation4->connect(animation4, &QPropertyAnimation::finished,
-//    this, [ = ]() {
-//        d->m_interFrame->setGraphicsEffect(nullptr);
-//        this->hide();
-//    });
-}
+////    QPropertyAnimation *animation4 = new QPropertyAnimation(topOpacity, "opacity");
+//////    animation4->setEasingCurve(QEasingCurve::InCubic);
+////    animation4->setDuration(2000);
+////    animation4->setStartValue(0);
+////    animation4->setKeyValueAt(0.25, 1);
+////    animation4->setKeyValueAt(0.5, 1);
+////    animation4->setKeyValueAt(0.75, 1);
+////    animation4->setEndValue(0);
+////    animation4->start();
+////    animation4->connect(animation4, &QPropertyAnimation::finished,
+////                        animation4, &QPropertyAnimation::deleteLater);
+////    animation4->connect(animation4, &QPropertyAnimation::finished,
+////    this, [ = ]() {
+////        d->m_interFrame->setGraphicsEffect(nullptr);
+////        this->hide();
+////    });
+//}
 
 #ifdef _OLD
 void ToolTips::paintEvent(QPaintEvent *)
@@ -216,7 +216,7 @@ void ToolTips::paintEvent(QPaintEvent *)
     Q_D(ToolTips);
 //    QFrame::paintEvent(e);
 //    return;
-    bool outer = true;
+//    bool outer = true;
 
     QPainter painter(this);
     painter.setRenderHints(QPainter::Antialiasing | QPainter::HighQualityAntialiasing);
@@ -250,13 +250,13 @@ void ToolTips::paintEvent(QPaintEvent *)
     QRectF borderRect = QRectF(rect());
     auto borderRadius = radius;
     QMarginsF borderMargin(penWidthf / 2, penWidthf / 2, penWidthf / 2, penWidthf / 2);
-    if (outer) {
-        borderRadius += penWidthf / 2;
-        borderRect = borderRect.marginsAdded(borderMargin).marginsRemoved(shadowMargins);
-    } else {
-        borderRadius -= penWidthf / 2;
-        borderRect = borderRect.marginsRemoved(borderMargin).marginsRemoved(shadowMargins);
-    }
+//    if (outer) {
+    borderRadius += penWidthf / 2;
+    borderRect = borderRect.marginsAdded(borderMargin).marginsRemoved(shadowMargins);
+//    } else {
+//        borderRadius -= penWidthf / 2;
+//        borderRect = borderRect.marginsRemoved(borderMargin).marginsRemoved(shadowMargins);
+//    }
     borderPath.addRoundedRect(borderRect, borderRadius, borderRadius);
     QPen borderPen(borderColor);
     borderPen.setWidthF(penWidthf);
@@ -307,18 +307,18 @@ void ToolTips::resizeEvent(QResizeEvent *ev)
     return QWidget::resizeEvent(ev);
 }
 
-void ToolTips::resetSize(const int maxWidth)
-{
-    Q_D(ToolTips);
-    QFont font = DFontSizeManager::instance()->get(DFontSizeManager::T8);
-    QFontMetrics fm(font);
-    auto w = fm.boundingRect(d->textLable->text()).width();
+//void ToolTips::resetSize(const int maxWidth)
+//{
+//    Q_D(ToolTips);
+//    QFont font = DFontSizeManager::instance()->get(DFontSizeManager::T8);
+//    QFontMetrics fm(font);
+//    auto w = fm.boundingRect(d->textLable->text()).width();
 
-    if (w >= maxWidth - 14) {
-        d->textLable->setWordWrap(true);
-        this->setFixedWidth(maxWidth);
-        d->textLable->setFixedWidth(maxWidth - 14);
-    }
-}
+//    if (w >= maxWidth - 14) {
+//        d->textLable->setWordWrap(true);
+//        this->setFixedWidth(maxWidth);
+//        d->textLable->setFixedWidth(maxWidth - 14);
+//    }
+//}
 
 

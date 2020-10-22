@@ -96,5 +96,6 @@ private:
     MusicListDataWidget   *m_dataListView;
     MusicImageButton      *m_addListBtn;
     MusicListScrollArea   *leftFrame;
+    bool                   addFlag = false;
 };
 

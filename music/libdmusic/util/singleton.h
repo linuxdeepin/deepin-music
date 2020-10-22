@@ -22,8 +22,6 @@
 #pragma once
 #include <memory>
 
-using namespace std;
-
 namespace DMusic {
 
 template <class T>

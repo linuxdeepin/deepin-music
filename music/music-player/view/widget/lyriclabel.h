@@ -53,10 +53,10 @@ public:
 
 
     void getFromFile(QString dir);
-    void paintItem(QPainter *painter, int index, const QRect &rect);
+    void paintItem(QPainter *painter, int index, const QRect &rect) override;
 
-    int itemHeight() const;
-    int itemCount() const;
+    int itemHeight() const override;
+    int itemCount() const override;
 
 signals:
     void changeTo(qint64 pos);
@@ -69,9 +69,9 @@ public slots:
     void slotTheme(int type);
 protected slots:
     void changeToEvent(int index);
-    void changeFont();
-    void changeNormalColor();
-    void changeHightLightColor();
+    //void changeFont();
+    //void changeNormalColor();
+    //void changeHightLightColor();
 
 protected:
     void contextMenuEvent(QContextMenuEvent *event);//右击事件

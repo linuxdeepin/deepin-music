@@ -52,13 +52,14 @@ public:
     };
     Q_ENUM(PlayStatus)
 public:
-    PlayItemDelegate(QWidget *parent = Q_NULLPTR);
+    explicit PlayItemDelegate(QWidget *parent = Q_NULLPTR);
     ~PlayItemDelegate();
 
 public:
     virtual void initStyleOption(QStyleOptionViewItem *option, const QModelIndex &index) const;
-    void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
-    QSize sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const;
+    void performancePaint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index)const;
+    void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index)const override;
+    QSize sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const override;
     QWidget *createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const;
     void setEditorData(QWidget *editor, const QModelIndex &index) const;
     void setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const;

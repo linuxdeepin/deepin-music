@@ -51,11 +51,10 @@ void ThreadPool::moveToNewThread(QObject *obj)
     work->start();
 }
 
-void ThreadPool::manager(QThread *thread)
-{
-//    qDebug() << "manager <<<<<<<" << thread;
-    m_pool.push_back(thread);
-}
+//void ThreadPool::manager(QThread *thread)
+//{
+//    m_pool.push_back(thread);
+//}
 
 void ThreadPool::quitAll()
 {

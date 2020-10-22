@@ -75,13 +75,13 @@ public:
         \brief Get current media object
         \return media object (VlcMedia *)
     */
-    VlcMedia *currentMedia() const;
+    //VlcMedia *currentMedia() const;
 
     /*!
         \brief Get current media core object
         \return media core object (libvlc_media_t *)
     */
-    libvlc_media_t *currentMediaCore();
+    //libvlc_media_t *currentMediaCore();
 
     /*!
         \brief Open media file or stream. Any media should be playable and opened.
@@ -93,7 +93,7 @@ public:
         \brief Just opens the media file or stream, do not starts playing the media.
         \param media object (VlcMedia *)
     */
-    void openOnly(VlcMedia *media);
+    //void openOnly(VlcMedia *media);
 
 public slots:
     /*! \brief Set the movie time (in ms).
@@ -123,7 +123,7 @@ public:
         \brief Get video output status
         \return video output status (const bool)
     */
-    bool hasVout() const;
+    //bool hasVout() const;
 
     /*!
         \brief Get seekable status
@@ -153,13 +153,13 @@ public:
         \brief Get sample aspect ratio for current video track( vlc >= 2.1.0 ).
         \return sample aspect ratio (float)
     */
-    float sampleAspectRatio();
+    //float sampleAspectRatio();
 
     /*!
         \brief Get current media playback rate.
         \return current media playback rate (float)
     */
-    float playbackRate();
+    //float playbackRate();
 
 public slots:
     /*! \brief Set the media position.
@@ -174,7 +174,7 @@ public slots:
 
         \param rate the media playback rate (float)
     */
-    void setPlaybackRate(float rate);
+    //void setPlaybackRate(float rate);
 
     /*!
         \brief Starts playing current media if possible
@@ -189,7 +189,7 @@ public slots:
     /*!
         \brief Toggles pause of the playback of current media if possible
     */
-    void togglePause();
+    //timePropertyWidthvoid togglePause();
 
     /*!
         \brief Resumes the playback of current media if possible

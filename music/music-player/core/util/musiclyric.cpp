@@ -7,7 +7,7 @@
 
 #include "util/basetool.h"
 
-MusicLyric::MusicLyric()
+MusicLyric::MusicLyric():offset(0.00)
 {
 
 }
@@ -16,11 +16,11 @@ int MusicLyric::getIndex(qint64 pos)
 {
     //采用二分查找
     //时间复杂度O(logn)
-    int lt, rt, mid;
+    int lt, rt;
     lt = 0;
     rt = postion.count();
     while (lt < rt - 1) {
-        mid = (lt + rt) >> 1;
+        int mid = (lt + rt) >> 1;
         if (postion[mid] > pos) rt = mid;
         else lt = mid;
     }
@@ -141,75 +141,75 @@ void MusicLyric::getFromFile(QString dir)
 格式："[mm:ss]"或"[mm:ss.fff]"（分钟：秒）。数字必须为非负整数。
 时间标签需位于某行歌词中的句首部分，一行歌词可以包含多个时间标签。
 */
-void MusicLyric::getFromFileOld(QString dir)
-{
-    qDebug() << "Lyric dir:" << dir << endl;
-    this->filedir = dir;
-    //this->offset
-    this->line.clear();
-    this->postion.clear();
-    //先使用暴力的字符串匹配，还不会正则表达式
-    //时间复杂度O(n)
-    QFile file(dir);
-    if (!file.exists()) return;
-    if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
-        return;
-    QTextStream read(&file);
-    QChar ch;
-    bool flag;
-    qint64 mm;
-    double ss;
-    QVector<qint64> muli;
-    QMap<qint64, QString> ans;
-    QMap<qint64, QString>::iterator it;
-    QString sign;
-    QString val;
-    QString str;
-    while (!read.atEnd()) {
-        for (;;) {
-            read >> ch;
-            if (ch == '[' || read.atEnd()) {
-                if (muli.count()) {
-                    for (int i = 0; i < muli.count(); ++i)
-                        ans.insert(muli[i], str);
-                }
-                str = "";
-                muli.clear();
-                break;
-            }
-            str = str + ch;
-        }
-        if (read.atEnd()) break;
-        for (;;) {
-            read >> ch;
-            if (ch == ':' || read.atEnd()) break;
-            sign = sign + ch;
-        }
-        if (read.atEnd()) break;
-        for (;;) {
-            read >> ch;
-            if (ch == ']' || read.atEnd()) {
-                mm = sign.toLongLong(&flag, 10);
-                //判断sign是否是整数
-                if (flag) {
-                    ss = val.toDouble(&flag);
-                    if (flag) {
-                        qint64  curtime = (qint64)(ss * 1000) + mm * 60 * 1000;
-                        muli.push_back(curtime);
-                    }
-                }
-                break;
-            }
-            val = val + ch;
-        }
-        sign = "";
-        val = "";
-    }
-    for (it = ans.begin(); it != ans.end(); ++it) {
-        this->postion.push_back(it.key());
-        this->line.push_back(it.value());
-    }
-}
+//void MusicLyric::getFromFileOld(QString dir)
+//{
+//    qDebug() << "Lyric dir:" << dir << endl;
+//    this->filedir = dir;
+//    //this->offset
+//    this->line.clear();
+//    this->postion.clear();
+//    //先使用暴力的字符串匹配，还不会正则表达式
+//    //时间复杂度O(n)
+//    QFile file(dir);
+//    if (!file.exists()) return;
+//    if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
+//        return;
+//    QTextStream read(&file);
+//    QChar ch;
+//    bool flag;
+//    qint64 mm;
+//    double ss;
+//    QVector<qint64> muli;
+//    QMap<qint64, QString> ans;
+//    QMap<qint64, QString>::iterator it;
+//    QString sign;
+//    QString val;
+//    QString str;
+//    while (!read.atEnd()) {
+//        for (;;) {
+//            read >> ch;
+//            if (ch == '[' || read.atEnd()) {
+//                if (muli.count()) {
+//                    for (int i = 0; i < muli.count(); ++i)
+//                        ans.insert(muli[i], str);
+//                }
+//                str = "";
+//                muli.clear();
+//                break;
+//            }
+//            str = str + ch;
+//        }
+//        if (read.atEnd()) break;
+//        for (;;) {
+//            read >> ch;
+//            if (ch == ':' || read.atEnd()) break;
+//            sign = sign + ch;
+//        }
+//        if (read.atEnd()) break;
+//        for (;;) {
+//            read >> ch;
+//            if (ch == ']' || read.atEnd()) {
+//                mm = sign.toLongLong(&flag, 10);
+//                //判断sign是否是整数
+//                if (flag) {
+//                    ss = val.toDouble(&flag);
+//                    if (flag) {
+//                        qint64  curtime = (qint64)(ss * 1000) + mm * 60 * 1000;
+//                        muli.push_back(curtime);
+//                    }
+//                }
+//                break;
+//            }
+//            val = val + ch;
+//        }
+//        sign = "";
+//        val = "";
+//    }
+//    for (it = ans.begin(); it != ans.end(); ++it) {
+//        this->postion.push_back(it.key());
+//        this->line.push_back(it.value());
+//    }
+//}
 
 bool MusicLyric::getHeadFromFile(QString dir)
 {

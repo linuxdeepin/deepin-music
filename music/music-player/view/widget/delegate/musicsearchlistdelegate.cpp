@@ -326,18 +326,18 @@ void MusicSearchListDelegate::setModelData(QWidget *editor, QAbstractItemModel *
     QStyledItemDelegate::setModelData(editor, model, index);
 }
 
-QString MusicSearchListDelegate::getElidedText(QFont font, QString str, int MaxWidth)
-{
-    if (str.isEmpty()) {
-        return "";
-    }
-    QFontMetrics fontWidth(font);
-    int width = fontWidth.width(str);
-    if (width >= MaxWidth) {
-        //右部显示省略号
-        str = fontWidth.elidedText(str, Qt::ElideRight, MaxWidth);
-    }
-    //返回处理后的字符串
-    return str;
-}
+//QString MusicSearchListDelegate::getElidedText(QFont font, QString str, int MaxWidth)
+//{
+//    if (str.isEmpty()) {
+//        return "";
+//    }
+//    QFontMetrics fontWidth(font);
+//    int width = fontWidth.width(str);
+//    if (width >= MaxWidth) {
+//        //右部显示省略号
+//        str = fontWidth.elidedText(str, Qt::ElideRight, MaxWidth);
+//    }
+//    //返回处理后的字符串
+//    return str;
+//}
 

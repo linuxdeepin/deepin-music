@@ -30,7 +30,7 @@ class LyricLineDelegate : public QStyledItemDelegate
     Q_OBJECT
 
 public:
-    LyricLineDelegate(QWidget *parent = Q_NULLPTR);
+    explicit LyricLineDelegate(QWidget *parent = Q_NULLPTR);
     ~LyricLineDelegate();
 
     virtual void initStyleOption(QStyleOptionViewItem *option,

@@ -30,7 +30,7 @@
 class SearchMetaItemPrivate
 {
 public:
-    SearchMetaItemPrivate(SearchMetaItem *parent) : q_ptr(parent) {}
+    explicit SearchMetaItemPrivate(SearchMetaItem *parent) : q_ptr(parent) {}
 
     DLabel      *metaTitle   = nullptr;
     DLabel      *metaArtist  = nullptr;

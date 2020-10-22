@@ -55,7 +55,7 @@ public slots:
         \brief Set current audio track.
         \param track new audio track (int)
     */
-    void setTrack(int track);
+    //void setTrack(int track);
 
     /*!
         \brief Toggle mute state.
@@ -92,13 +92,13 @@ public:
         \brief Get the description of available audio tracks.
         \return list with description of available audio tracks (const QStringList)
     */
-    QStringList trackDescription() const;
+    //QStringList trackDescription() const;
 
     /*!
         \brief Get the ids of available audio tracks.
         \return list with ids of available audio tracks (const QList<int>)
     */
-    QList<int> trackIds() const;
+    //trackDescriptionQList<int> trackIds() const;
 
     /*!
         \brief Get available audio tracks.

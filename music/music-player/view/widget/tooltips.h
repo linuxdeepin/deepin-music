@@ -20,7 +20,7 @@ public:
                       QWidget *parent = nullptr);
     ~ToolTips() override;
 
-    void pop(QPoint center);
+    //void pop(QPoint center);
 
     int radius() const;
     QColor borderColor() const;
@@ -38,7 +38,7 @@ protected:
     virtual void resizeEvent(QResizeEvent *ev) Q_DECL_OVERRIDE;
 
 public:
-    void resetSize(const int maxWidth);
+    //void resetSize(const int maxWidth);
 
 private:
     QScopedPointer<ToolTipsPrivate> d_ptr;

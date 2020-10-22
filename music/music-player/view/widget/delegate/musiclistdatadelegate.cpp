@@ -50,7 +50,7 @@ public:
         shadowImg = shadowImg.copy(5, 5, shadowImg.width() - 10, shadowImg.height() - 10);
     }
 
-    QWidget *parentWidget;
+    QWidget *parentWidget = nullptr;
     QPixmap playing = DHiDPIHelper::loadNxPixmap(":/common/image/jumpto_playing_normal.svg");
 //    QString playingIcon = ":/mpimage/light/music1.svg";
 //    QString highlightPlayingIcon = ":/mpimage/light/music1.svg";
@@ -294,7 +294,7 @@ void MusicListDataDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
             t_fillBrush = QBrush(QColor(128, 128, 128, 90));
         }
 
-        if ((option.state & QStyle::State_MouseOver) && !playFlag) {
+        if ((option.state & QStyle::State_MouseOver) /*&& !playFlag*/) {
             if (!playlistPtr->playingStatus() || !playFlag ) {
                 QImage t_image = icon.pixmap(rect.width(), rect.height()).toImage();
                 int t_ratio = static_cast<int>(t_image.devicePixelRatioF());

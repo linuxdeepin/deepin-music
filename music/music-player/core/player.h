@@ -89,7 +89,7 @@ public:
     MetaPtr activeMeta() const;
     PlaylistPtr curPlaylist() const;
     PlaylistPtr activePlaylist() const;
-    QStringList supportedFilterStringList()const;
+    //QStringList supportedFilterStringList()const;
     QStringList supportedSuffixList()const;
     QStringList supportedMimeTypes() const;
 

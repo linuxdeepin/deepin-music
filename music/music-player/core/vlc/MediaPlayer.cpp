@@ -154,16 +154,16 @@ void VlcMediaPlayer::removeCoreConnections()
     }
 }
 
-bool VlcMediaPlayer::hasVout() const
-{
-    bool status = false;
-    if (_vlcMediaPlayer) {
-        vlc_media_player_has_vout_function vlc_media_player_has_vout = (vlc_media_player_has_vout_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("libvlc_media_player_has_vout");
-        status = vlc_media_player_has_vout(_vlcMediaPlayer);
-    }
+//bool VlcMediaPlayer::hasVout() const
+//{
+//    bool status = false;
+//    if (_vlcMediaPlayer) {
+//        vlc_media_player_has_vout_function vlc_media_player_has_vout = (vlc_media_player_has_vout_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("libvlc_media_player_has_vout");
+//        status = vlc_media_player_has_vout(_vlcMediaPlayer);
+//    }
 
-    return status;
-}
+//    return status;
+//}
 
 int VlcMediaPlayer::length() const
 {
@@ -175,20 +175,20 @@ int VlcMediaPlayer::length() const
     return length;
 }
 
-VlcMedia *VlcMediaPlayer::currentMedia() const
-{
-    return _media;
-}
+//VlcMedia *VlcMediaPlayer::currentMedia() const
+//{
+//    return _media;
+//}
 
-libvlc_media_t *VlcMediaPlayer::currentMediaCore()
-{
-    vlc_media_player_get_media_function vlc_media_player_get_media = (vlc_media_player_get_media_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("libvlc_media_player_get_media");
-    libvlc_media_t *media = vlc_media_player_get_media(_vlcMediaPlayer);
+//libvlc_media_t *VlcMediaPlayer::currentMediaCore()
+//{
+//    vlc_media_player_get_media_function vlc_media_player_get_media = (vlc_media_player_get_media_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("libvlc_media_player_get_media");
+//    libvlc_media_t *media = vlc_media_player_get_media(_vlcMediaPlayer);
 
-    VlcError::showErrmsg();
+//    VlcError::showErrmsg();
 
-    return media;
-}
+//    return media;
+//}
 
 void VlcMediaPlayer::open(VlcMedia *media)
 {
@@ -199,14 +199,14 @@ void VlcMediaPlayer::open(VlcMedia *media)
     VlcError::showErrmsg();
 }
 
-void VlcMediaPlayer::openOnly(VlcMedia *media)
-{
-    _media = media;
-    vlc_media_player_set_media_function vlc_media_player_set_media = (vlc_media_player_set_media_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("libvlc_media_player_set_media");
-    vlc_media_player_set_media(_vlcMediaPlayer, media->core());
+//void VlcMediaPlayer::openOnly(VlcMedia *media)
+//{
+//    _media = media;
+//    vlc_media_player_set_media_function vlc_media_player_set_media = (vlc_media_player_set_media_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("libvlc_media_player_set_media");
+//    vlc_media_player_set_media(_vlcMediaPlayer, media->core());
 
-    VlcError::showErrmsg();
-}
+//    VlcError::showErrmsg();
+//}
 
 void VlcMediaPlayer::play()
 {
@@ -230,17 +230,17 @@ void VlcMediaPlayer::pause()
     VlcError::showErrmsg();
 }
 
-void VlcMediaPlayer::togglePause()
-{
-    if (!_vlcMediaPlayer)
-        return;
-    vlc_media_player_can_pause_function vlc_media_player_can_pause = (vlc_media_player_can_pause_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("libvlc_media_player_can_pause");
-    vlc_media_player_pause_function vlc_media_player_pause = (vlc_media_player_pause_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("libvlc_media_player_pause");
-    if (vlc_media_player_can_pause(_vlcMediaPlayer))
-        vlc_media_player_pause(_vlcMediaPlayer);
+//void VlcMediaPlayer::togglePause()
+//{
+//    if (!_vlcMediaPlayer)
+//        return;
+//    vlc_media_player_can_pause_function vlc_media_player_can_pause = (vlc_media_player_can_pause_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("libvlc_media_player_can_pause");
+//    vlc_media_player_pause_function vlc_media_player_pause = (vlc_media_player_pause_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("libvlc_media_player_pause");
+//    if (vlc_media_player_can_pause(_vlcMediaPlayer))
+//        vlc_media_player_pause(_vlcMediaPlayer);
 
-    VlcError::showErrmsg();
-}
+//    VlcError::showErrmsg();
+//}
 
 void VlcMediaPlayer::resume()
 {
@@ -363,7 +363,7 @@ void VlcMediaPlayer::libvlc_callback(const libvlc_event_t *event,
         emit core->backward();
         break;
     case libvlc_MediaPlayerEndReached:
-        emit core->end();
+        emit core->end(); //play end
         break;
     case libvlc_MediaPlayerEncounteredError:
         emit core->error();
@@ -410,35 +410,7 @@ float VlcMediaPlayer::position()
     return vlc_media_player_get_position(_vlcMediaPlayer);
 }
 
-float VlcMediaPlayer::sampleAspectRatio()
-{
-    if (!_vlcMediaPlayer)
-        return 0.0;
-#if LIBVLC_VERSION >= 0x020100
-    float sar = 0.0;
 
-    libvlc_media_track_t **tracks;
-    unsigned tracksCount;
-    vlc_media_tracks_get_function vlc_media_tracks_get = (vlc_media_tracks_get_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("libvlc_media_tracks_get");
-    tracksCount = vlc_media_tracks_get(_media->core(), &tracks);
-    if (tracksCount > 0) {
-        for (unsigned i = 0; i < tracksCount; i++) {
-            libvlc_media_track_t *track = tracks[i];
-            if (track->i_type == libvlc_track_video && track->i_id == 0) {
-                libvlc_video_track_t *videoTrack = track->video;
-                if (videoTrack->i_sar_num > 0)
-                    sar = (float)videoTrack->i_sar_den / (float)videoTrack->i_sar_num;
-            }
-        }
-        vlc_media_tracks_release_function vlc_media_tracks_release = (vlc_media_tracks_release_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("libvlc_media_tracks_release");
-        vlc_media_tracks_release(tracks, tracksCount);
-    }
-
-    return sar;
-#else
-    return 1.0;
-#endif // LIBVLC_VERSION >= 0x020100
-}
 
 void VlcMediaPlayer::setPosition(float pos)
 {
@@ -448,18 +420,18 @@ void VlcMediaPlayer::setPosition(float pos)
     VlcError::showErrmsg();
 }
 
-void VlcMediaPlayer::setPlaybackRate(float rate)
-{
-    vlc_media_player_set_rate_function vlc_media_player_set_rate = (vlc_media_player_set_rate_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("libvlc_media_player_set_rate");
-    vlc_media_player_set_rate(_vlcMediaPlayer, rate);
+//void VlcMediaPlayer::setPlaybackRate(float rate)
+//{
+//    vlc_media_player_set_rate_function vlc_media_player_set_rate = (vlc_media_player_set_rate_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("libvlc_media_player_set_rate");
+//    vlc_media_player_set_rate(_vlcMediaPlayer, rate);
 
-    VlcError::showErrmsg();
-}
+//    VlcError::showErrmsg();
+//}
 
-float VlcMediaPlayer::playbackRate()
-{
-    if (!_vlcMediaPlayer)
-        return -1;
-    vlc_media_player_get_rate_function vlc_media_player_get_rate = (vlc_media_player_get_rate_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("libvlc_media_player_get_rate");
-    return vlc_media_player_get_rate(_vlcMediaPlayer);
-}
+//float VlcMediaPlayer::playbackRate()
+//{
+//    if (!_vlcMediaPlayer)
+//        return -1;
+//    vlc_media_player_get_rate_function vlc_media_player_get_rate = (vlc_media_player_get_rate_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("libvlc_media_player_get_rate");
+//    return vlc_media_player_get_rate(_vlcMediaPlayer);
+//}
