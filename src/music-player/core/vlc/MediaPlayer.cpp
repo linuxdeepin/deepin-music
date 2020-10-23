@@ -160,6 +160,7 @@ void VlcMediaPlayer::open(VlcMedia *media)
     _media = media;
     libvlc_media_player_set_media(_vlcMediaPlayer, media->core());
 
+    libvlc_media_release(media->core()); //reduce ref
     VlcError::showErrmsg();
 }
 
