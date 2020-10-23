@@ -23,8 +23,8 @@ set(PROJECT_INCLUDE ./
     ./../vendor/mpris-qt/src
     ./../vendor/dbusextended-qt/src)
 
-include_directories(/usr/include/libdtk-5.2.0/DWidget)
-include_directories(/usr/include/libdtk-5.2.0/DCore)
+#include_directories(/usr/include/libdtk-5.2.0/DWidget)
+#include_directories(/usr/include/libdtk-5.2.0/DCore)
 include_directories(/usr/include/vlc)
 include_directories(/usr/include/vlc/plugins)
 include_directories(./../interface)
@@ -39,7 +39,9 @@ if(ISTEST MATCHES "1")
     message("tests start！")
     file(GLOB mainSource
         ./musicapp.cpp
-        ../../tests/*.cpp)
+        ../../tests/*.cpp
+        ../../tests/speech/*.cpp
+        ../../tests/presenter/*.cpp)
 else()
     aux_source_directory(./ allSource)
 endif()
@@ -60,6 +62,8 @@ find_package(PkgConfig REQUIRED)
 pkg_check_modules(Dtk REQUIRED IMPORTED_TARGET dtkwidget)
 pkg_check_modules(Dtk REQUIRED IMPORTED_TARGET dtkcore)
 pkg_check_modules(Dtk REQUIRED IMPORTED_TARGET dtkgui)
+pkg_check_modules(qgsettings REQUIRED IMPORTED_TARGET gsettings-qt)
+
 #pkg_check_modules(AV REQUIRED IMPORTED_TARGET libavutil libavcodec
 #    libavformat libcue taglib)
 
@@ -91,7 +95,7 @@ set_source_files_properties(${TS}
 set(translate ${PROJECT_SOURCE_DIR}/music/music-player/translations)
 
 if (NOT (${CMAKE_BUILD_TYPE} MATCHES "Debug"))
-    qt5_create_translation(Translate1 ${allSource} ${TS})
+    qt5_create_translation(Translate1 ${allSource} ${TS} OPTIONS -source-language en_US -no-obsolete)
 endif ()
 qt5_add_translation(${translate})
 
@@ -99,14 +103,54 @@ file(GLOB INCLUDE_HEADER "./../interface/*.h")
 
 add_executable(${CMD_NAME} ${QRC_FILES} ${allSource} ${INCLUDE_HEADER} ${Translate1} ${mainSource})
 
+#添加覆盖率命令
+if(ISTEST MATCHES "1")
+    add_test(${CMD_NAME} COMMAND ${CMD_NAME})
+
+    add_custom_target(test
+        COMMAND mkdir -p coverageResult
+        WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
+    message(${CMAKE_BINARY_DIR})
+
+    add_custom_command(TARGET test
+        COMMAND echo "=================== CREAT LCOV REPROT BEGIN ===================="
+    #1.清理原先的gcov信息
+    COMMAND lcov --directory ./CMakeFiles/${CMD_NAME}.dir --zerocounters
+    COMMAND lcov --directory ./CMakeFiles/${CMD_NAME}.dir --zerocounters
+    COMMAND ./build/music-player/${CMD_NAME}
+
+    #2.收集gcov信息到.info文件中
+    COMMAND lcov --directory . --capture --output-file ./coverageResult/${CMD_NAME}_Coverage.info
+
+    #3.过滤一些我们不感兴趣的文件的覆盖率信息
+    COMMAND echo " =================== do filter begin ==================== "
+    COMMAND lcov --remove ./coverageResult/${CMD_NAME}_Coverage.info
+    '*/${CMD_NAME}_autogen/*' '*/${CMD_NAME}_autogen/*' '*/usr/include/*' '*/tests/*' '*/googletest/*'
+    -o ./coverageResult/${CMD_NAME}_Coverage.info
+    COMMAND echo " =================== do filter end ==================== "
+
+    #3.将.info信息生成报告到reprot文件夹中
+    COMMAND genhtml -o ./coverageResult/report ./coverageResult/${CMD_NAME}_Coverage.info
+
+    COMMAND echo " =================== CREAT LCOV REPROT END ==================== "
+
+    COMMAND echo " Coverage files have been output to ${CMAKE_BINARY_DIR}/coverageResult/report "
+
+    COMMAND nohup x-www-browser ${CMAKE_BINARY_DIR}/coverageResult/report/index.html &
+
+    WORKING_DIRECTORY ${CMAKE_BINARY_DIR} )
+
+    add_dependencies(test ${CMD_NAME})
+endif()
+
 #添加第三方库的所有文件夹路径到工程中来(注意 *_INCLUDE_DIRS)
 target_include_directories(${CMD_NAME} PUBLIC  ${PROJECT_INCLUDE} )
 
 #将工程与这些模块链接起来
 qt5_use_modules(${CMD_NAME} ${QtModule})
-#X11 Xext Xtst  Qt5::Concurrent
-set(TARGET_LIBS X11 Xext Qt5::Widgets Qt5::Network Qt5::Core Qt5::Gui Qt5::X11Extras
-    Qt5::DBus  Qt5::Sql Qt5::Svg Qt5::Multimedia Qt5::Xml PkgConfig::AV PkgConfig::Dtk icui18n
+
+set(TARGET_LIBS Qt5::Widgets Qt5::Core Qt5::Gui Qt5::DBus  Qt5::Sql Qt5::Multimedia Qt5::Xml
+     PkgConfig::AV PkgConfig::Dtk PkgConfig::qgsettings icui18n
     mpris-qt5 dbusextended-qt5 dmusic)
 
 LINK_DIRECTORIES(${CMAKE_BINARY_DIR}/music/libdmusic/

@@ -676,7 +676,6 @@ void Presenter::postAction(bool showFlag)
     }
 
     auto lastMeta = lastPlaylist->first();
-    auto position = 0;
     auto isMetaLibClear = MediaLibrary::instance()->isEmpty();
     isMetaLibClear |= allplaylist->isEmpty();
 
@@ -705,7 +704,7 @@ void Presenter::postAction(bool showFlag)
         }
 
         if (!lastMeta.isNull()) {
-            position = 0;
+            int position = 0;
             if (d->settings->value("base.play.remember_progress").toBool()) {
                 position = d->settings->value("base.play.last_position").toInt();
             }
@@ -771,7 +770,9 @@ void Presenter::postAction(bool showFlag)
 
     if (!isMetaLibClear) {
         MusicSettings::setOption("base.play.showFlag", 1);
-        // Q_EMIT showMusicList(allplaylist);
+        if (!showFlag) {
+            Q_EMIT showMusicList(allplaylist);
+        }
     }
 
     if (!showFlag) {
@@ -1549,14 +1550,14 @@ void Presenter::onExitSearch()
     }
 }
 
-void Presenter::onLocateMusicAtAll(const QString &hash)
-{
-    Q_D(Presenter);
-    auto allList = d->playlistMgr->playlist(AllMusicListID);
-    d->currentPlaylist = allList;
-    Q_EMIT locateMusic(allList, allList->music(hash));
-    //    onMusicPlay(allList, allList->music(hash));
-}
+//void Presenter::onLocateMusicAtAll(const QString &hash)
+//{
+//    Q_D(Presenter);
+//    auto allList = d->playlistMgr->playlist(AllMusicListID);
+//    d->currentPlaylist = allList;
+//    Q_EMIT locateMusic(allList, allList->music(hash));
+//    //    onMusicPlay(allList, allList->music(hash));
+//}
 
 void Presenter::onChangeSearchMetaCache(const MetaPtr meta, const DMusic::SearchMeta &search)
 {
@@ -2234,12 +2235,14 @@ void Presenter::initMpris(MprisPlayer *mprisPlayer)
         // TODO: support mpris playlist
         Q_UNUSED(playlist);
 
+        QString trackIdMpris("/org/mpris/MediaPlayer2");
         QVariantMap metadata;
         metadata.insert(Mpris::metadataToString(Mpris::Title), meta->title);
         metadata.insert(Mpris::metadataToString(Mpris::Artist), meta->artist);
         metadata.insert(Mpris::metadataToString(Mpris::Album), meta->album);
-        metadata.insert(Mpris::metadataToString(Mpris::Length), meta->length / 1000);
+        metadata.insert(Mpris::metadataToString(Mpris::Length), meta->length);
         metadata.insert(Mpris::metadataToString(Mpris::ArtUrl), meta->coverUrl);
+        metadata.insert(Mpris::metadataToString(Mpris::TrackId), trackIdMpris);
 
         //mprisPlayer->setCanSeek(true);
         mprisPlayer->setMetadata(metadata);
@@ -2427,6 +2430,7 @@ void Presenter::initMpris(MprisPlayer *mprisPlayer)
     connect(this, &Presenter::musicStoped,
     this, [ = ]() {
         mprisPlayer->setPlaybackStatus(Mpris::Stopped);
+        mprisPlayer->setMetadata(QVariantMap()); //set empty data when music stoped
     });
 
     connect(d->player, &Player::playbackStatusChanged,

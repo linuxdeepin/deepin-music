@@ -38,7 +38,6 @@
 #include <DDialog>
 #include <DApplication>
 #include <DTitlebar>
-#include <DImageButton>
 #include <DFileDialog>
 #include <DHiDPIHelper>
 #include <DMessageManager>
@@ -85,7 +84,7 @@ using namespace Dtk::Widget;
 class MainFramePrivate
 {
 public:
-    MainFramePrivate(MainFrame *parent) : q_ptr(parent) {}
+    explicit MainFramePrivate(MainFrame *parent) : q_ptr(parent) {}
 
     void initUI(bool showLoading);
     void postInitUI();
@@ -105,7 +104,7 @@ public:
     void updateSize(QSize newSize);
     void updateViewname(const QString &vm);
     void updateTitlebarViewname(const QString &vm);
-    void overrideTitlebarStyle();
+    //void overrideTitlebarStyle();
     const QString getLastImportPath() const;
     void startTimer();
 
@@ -123,7 +122,7 @@ public:
     ImportWidget        *importWidget           = nullptr;
     LoadWidget          *loadWidget             = nullptr;
     PlayListWidget      *playListWidget         = nullptr;
-    MUsicLyricWidget    *lyricWidget            = nullptr;
+    MusicLyricWidget    *lyricWidget            = nullptr;
     Footer              *footer                 = nullptr;
     MusicListWidget     *musicListWidget        = nullptr;
 
@@ -211,14 +210,14 @@ void MainFramePrivate::initMenu()
 
         Dtk::Widget::moveToCenter(configDialog);
 
-        auto curAskCloseAction = MusicSettings::value("base.close.ask_close_action").toBool();
+        auto curAskCloseAction = MusicSettings::value("base.close.is_close").toBool();
         auto curLastPlaylist = MusicSettings::value("base.play.last_playlist").toString();
         auto curLastMeta = MusicSettings::value("base.play.last_meta").toString();
         auto curLastPosition = MusicSettings::value("base.play.last_position").toInt();
         configDialog->exec();
         delete configDialog;
         MusicSettings::sync();
-        MusicSettings::setOption("base.close.ask_close_action", curAskCloseAction);
+        MusicSettings::setOption("base.close.is_close", curAskCloseAction);
         MusicSettings::setOption("base.play.last_playlist", curLastPlaylist);
         MusicSettings::setOption("base.play.last_meta", curLastMeta);
         MusicSettings::setOption("base.play.last_position", curLastPosition);
@@ -405,7 +404,7 @@ void MainFramePrivate::postInitUI()
 
     // 界面刷新一次，使能禁用只设置一次
     playListWidget = footer->getPlayListWidget();
-    lyricWidget = new MUsicLyricWidget;
+    lyricWidget = new MusicLyricWidget;
     lyricWidget->setContentsMargins(0, titlebar->height(), 0, FooterHeight + 10);
 
     contentLayout->setContentsMargins(0, 0, 0, 0);
@@ -453,6 +452,7 @@ void MainFramePrivate::hideLyricView()
     footer->setLyricButtonChecked(false);
     footer->raise();
 
+    currentWidget = musicListWidget; //remember current window
     updateViewname(s_PropertyViewnameLyric);
 }
 
@@ -738,23 +738,23 @@ void MainFramePrivate::updateTitlebarViewname(const QString &vm)
     }
 }
 
-void MainFramePrivate::overrideTitlebarStyle()
-{
-    titlebar->setObjectName("Titlebar");
+//void MainFramePrivate::overrideTitlebarStyle()
+//{
+//    titlebar->setObjectName("Titlebar");
 
-    QStringList objNames;
-    objNames  << "DTitlebarDWindowMinButton"
-              << "DTitlebarDWindowMaxButton"
-              << "DTitlebarDWindowCloseButton"
-              << "DTitlebarDWindowOptionButton";
+//    QStringList objNames;
+//    objNames  << "DTitlebarDWindowMinButton"
+//              << "DTitlebarDWindowMaxButton"
+//              << "DTitlebarDWindowCloseButton"
+//              << "DTitlebarDWindowOptionButton";
 
-    for (auto &objname : objNames) {
-        auto titlebarBt = titlebar->findChild<QWidget *>(objname);
-        if (!titlebarBt) {
-            continue;
-        }
-    }
-}
+//    for (auto &objname : objNames) {
+//        auto titlebarBt = titlebar->findChild<QWidget *>(objname);
+//        if (!titlebarBt) {
+//            continue;
+//        }
+//    }
+//}
 
 const QString MainFramePrivate::getLastImportPath() const
 {
@@ -899,13 +899,22 @@ void MainFrame::postInitUI()
         if (QSystemTrayIcon::Trigger == reason) {
             if (isVisible()) {
                 if (isMinimized()) {
-                    showNormal();
-                    activateWindow();
+                    if (isFullScreen()) {
+                        hide();
+                        showFullScreen();
+                    } else {
+                        this->titlebar()->setFocus();
+                        showNormal();
+                        activateWindow();
+                    }
                 } else {
                     showMinimized();
+                    hide();
                 }
             } else {
+                this->titlebar()->setFocus();
                 showNormal();
+                activateWindow();
             }
         }
     });
@@ -919,8 +928,11 @@ void MainFrame::quickBinding(Presenter *presenter)
     this, [ = ](PlaylistPtr playlist) {
         d->musicListWidget->show();
         d->currentWidget = d->musicListWidget;
-
         d->musicListWidget->onMusiclistChanged(playlist);
+
+        if (d->importWidget) {
+            d->importWidget->hide();
+        }
 
         if (d->playListWidget) {
             d->playListWidget->onMusiclistChanged(playlist);
@@ -1076,9 +1088,11 @@ void MainFrame::binding(Presenter *presenter)
         warnDlg.setObjectName("uniqueinvaliddailog");
         warnDlg.setIcon(QIcon::fromTheme("deepin-music"));
         warnDlg.setTextFormat(Qt::RichText);
-        warnDlg.setTitle(tr("File is invalid or does not exist, load failed"));
-        warnDlg.addButtons(QStringList() << tr("OK"));
-        warnDlg.setDefaultButton(0);
+        //warnDlg.setTitle(tr("File is invalid or does not exist, load failed"));
+        warnDlg.setMessage(tr("File is invalid or does not exist, load failed"));
+        //warnDlg.addButtons(QStringList() << tr("OK"));
+        warnDlg.addButton(tr("OK"), true, Dtk::Widget::DDialog::ButtonNormal);
+        //warnDlg.setDefaultButton(0);
 
         if (0 == warnDlg.exec()) {
             auto curPlaylist = d->playListWidget->curPlaylist();
@@ -1129,12 +1143,13 @@ void MainFrame::binding(Presenter *presenter)
             }
             QString message = QString(tr("Import failed, no valid music file found"));
             Dtk::Widget::DDialog warnDlg(this);
+            warnDlg.setTextFormat(Qt::RichText);
             warnDlg.setObjectName("uniquewarndailog");
             warnDlg.setIcon(QIcon::fromTheme("deepin-music"));
-            warnDlg.setTextFormat(Qt::AutoText);
-            warnDlg.setTitle(message);
-            warnDlg.addButtons(QStringList() << tr("OK"));
-            warnDlg.setDefaultButton(0);
+            //warnDlg.setTitle(message);
+            warnDlg.setMessage(message);
+            warnDlg.addButton(tr("OK"), true, Dtk::Widget::DDialog::ButtonNormal);
+            //warnDlg.setDefaultButton(0);
             if (0 == warnDlg.exec()) {
                 return;
             }
@@ -1272,21 +1287,21 @@ void MainFrame::binding(Presenter *presenter)
             d->playListWidget,  &PlayListWidget::onLocate);
 
     connect(presenter, &Presenter::progrossChanged,
-            d->lyricWidget, &MUsicLyricWidget::onProgressChanged);
+            d->lyricWidget, &MusicLyricWidget::onProgressChanged);
     connect(presenter, &Presenter::musicPlayed,
-            d->lyricWidget, &MUsicLyricWidget::onMusicPlayed);
+            d->lyricWidget, &MusicLyricWidget::onMusicPlayed);
     connect(presenter, &Presenter::coverSearchFinished,
-            d->lyricWidget, &MUsicLyricWidget::onCoverChanged);
+            d->lyricWidget, &MusicLyricWidget::onCoverChanged);
     connect(presenter, &Presenter::lyricSearchFinished,
-            d->lyricWidget, &MUsicLyricWidget::onLyricChanged);
+            d->lyricWidget, &MusicLyricWidget::onLyricChanged);
     connect(presenter, &Presenter::contextSearchFinished,
-            d->lyricWidget, &MUsicLyricWidget::onContextSearchFinished);
+            d->lyricWidget, &MusicLyricWidget::onContextSearchFinished);
     connect(presenter, &Presenter::musicStoped,
-            d->lyricWidget,  &MUsicLyricWidget::onMusicStop);
+            d->lyricWidget,  &MusicLyricWidget::onMusicStop);
 
-    connect(d->lyricWidget,  &MUsicLyricWidget::requestContextSearch,
+    connect(d->lyricWidget,  &MusicLyricWidget::requestContextSearch,
             presenter, &Presenter::requestContextSearch);
-    connect(d->lyricWidget, &MUsicLyricWidget::changeMetaCache,
+    connect(d->lyricWidget, &MusicLyricWidget::changeMetaCache,
             presenter, &Presenter::onChangeSearchMetaCache);
 
 
@@ -1733,34 +1748,49 @@ void MainFrame::resizeEvent(QResizeEvent *e)
 
 void MainFrame::closeEvent(QCloseEvent *event)
 {
-    auto askCloseAction = MusicSettings::value("base.close.ask_close_action").toBool();
-    if (askCloseAction) {
+    auto askCloseAction = MusicSettings::value("base.close.close_action").toInt();
+    switch (askCloseAction) {
+    case 0: {
+        MusicSettings::setOption("base.close.is_close", false);
+        break;
+    }
+    case 1: {
+        MusicSettings::setOption("base.play.state", int(windowState()));
+        MusicSettings::setOption("base.play.geometry", saveGeometry());
+        MusicSettings::setOption("base.close.is_close", true);
+        break;
+    }
+    case 2: {
         CloseConfirmDialog ccd(this);
         // fix close style
-        auto titlebarBt = titlebar()->findChild<QWidget *>("DTitlebarDWindowCloseButton");
-        auto closeBt = qobject_cast<DImageButton *>(titlebarBt);
-        if (closeBt) {
-            closeBt->setState(DImageButton::Normal);
-        }
+//        auto titlebarBt = titlebar()->findChild<QWidget *>("DTitlebarDWindowCloseButton");
+//        auto closeBt = qobject_cast<DImageButton *>(titlebarBt);
+//        if (closeBt) {
+//            closeBt->setState(DImageButton::Normal);
+//        }
 
         auto clickedButtonIndex = ccd.exec();
-        qDebug() << "clickedButtonIndex:" << clickedButtonIndex;
         // 1 is confirm button
         if (1 != clickedButtonIndex) {
-            // fix button style
             event->ignore();
             return;
         }
-        MusicSettings::setOption("base.close.ask_close_action", !ccd.isRemember());
-        MusicSettings::setOption("base.close.close_action", ccd.closeAction());
+        if (ccd.isRemember()) {
+            MusicSettings::setOption("base.close.close_action", ccd.closeAction());
+        }
+        if (ccd.closeAction() == 1) {
+            MusicSettings::setOption("base.close.is_close", true);
+        } else {
+            MusicSettings::setOption("base.close.is_close", false);
+        }
+
+        break;
+    }
+    default:
+        break;
     }
 
-    auto closeAction = MusicSettings::value("base.close.close_action").toInt();
-    if (CloseConfirmDialog::QuitOnClose == closeAction) {
-        MusicSettings::setOption("base.play.state", int(windowState()));
-        MusicSettings::setOption("base.play.geometry", saveGeometry());
-        DMainWindow::closeEvent(event);
-    }
+    this->setFocus();
     DMainWindow::closeEvent(event);
 }
 

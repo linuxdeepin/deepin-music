@@ -27,7 +27,7 @@
 class MusiclistInfomodelPrivate
 {
 public:
-    MusiclistInfomodelPrivate(MusiclistInfomodel *parent) : q_ptr(parent) {}
+    explicit MusiclistInfomodelPrivate(MusiclistInfomodel *parent) : q_ptr(parent) {}
 
     PlaylistPtr playlist;
 

@@ -28,6 +28,9 @@
 #include <QMouseEvent>
 #include <QWheelEvent>
 #include <QStackedLayout>
+#include <QDBusInterface>
+#include <QDBusReply>
+#include <QGSettings>
 
 #include <DHiDPIHelper>
 #include <DPushButton>
@@ -73,7 +76,7 @@ DGUI_USE_NAMESPACE
 class FooterPrivate
 {
 public:
-    FooterPrivate(Footer *parent) : q_ptr(parent)
+    explicit FooterPrivate(Footer *parent) : q_ptr(parent)
     {
         hintFilter = new HintFilter;
     }
@@ -82,6 +85,9 @@ public:
     void installTipHint(QWidget *w, const QString &hintstr);
     void installHint(QWidget *w, QWidget *hint);
     void initConnection();
+    //pangu customization: standby until music play end
+    void screenStandby(bool isStandby);
+    bool getStandbyParam();
 
     DBlurEffectWidget *forwardWidget = nullptr;
     Label           *title      = nullptr;
@@ -101,6 +107,7 @@ public:
     Waveform          *waveform   = nullptr;
     PlayListWidget    *playListWidget         = nullptr;
     bool              showPlaylistFlag        = false;
+    bool              isPangu                 = false;
 
     HintFilter          *hintFilter         = nullptr;
     HoverShadowFilter   *hoverShadowFilter  = nullptr;
@@ -116,10 +123,11 @@ public:
     int             m_type = 1;
 
     bool            btPlayingStatus = false;
-
+    QTimer         *m_timer = nullptr; //to avoid mul-repeat click
     VolumeMonitoring         volumeMonitoring;
     int             m_Volume = 0;
     int             m_Mute = 0;
+    uint32_t        lastCookie = 0;
     Footer *q_ptr;
     Q_DECLARE_PUBLIC(Footer)
 };
@@ -167,7 +175,11 @@ void FooterPrivate::initConnection()
     });
 
     q->connect(btPlay, &DPushButton::released, q, [ = ]() {
-        q->onTogglePlayButton();
+        //play once in a period time to avoid mult-repeat click
+        if (!m_timer->isActive()) {
+            m_timer->start(200);
+            q->onTogglePlayButton();
+        }
     });
 
     q->connect(q, &Footer::focusButton, q, [ = ]() {
@@ -200,8 +212,21 @@ void FooterPrivate::initConnection()
     q->connect(btSound, &DPushButton::pressed, q, [ = ]() {
         // Q_EMIT q->localToggleMute();
 
-        auto hintWidget = btSound->property("HintWidget").value<QWidget *>();
-        hintFilter->showHitsFor(btSound, hintWidget);
+        if (volSlider->isVisible()) {
+            volSlider->hide();
+        } else {
+
+            auto centerPos = btSound->mapToGlobal(btSound->rect().center());
+            volSlider->show();
+            volSlider->adjustSize();
+            auto sz = volSlider->size();
+            centerPos.setX(centerPos.x()  - sz.width() / 2);
+            centerPos.setY(centerPos.y() - 32 - sz.height());
+            centerPos = volSlider->mapFromGlobal(centerPos);
+            centerPos = volSlider->mapToParent(centerPos);
+            volSlider->move(centerPos);
+            volSlider->raise();
+        }
     });
 
     q->connect(volSlider, &SoundVolume::volumeMute, q, [ = ]() {
@@ -231,6 +256,52 @@ void FooterPrivate::initConnection()
     q->connect(&volumeMonitoring, &VolumeMonitoring::muteChanged, q, [ = ](bool mute) {
         q->onMutedChanged(mute);
     });
+
+    isPangu =  getStandbyParam();
+}
+
+void FooterPrivate::screenStandby(bool isStandby)
+{
+    if (!isPangu)   //not pangu,return
+        return;
+    if (isStandby) {
+        if (lastCookie > 0) {
+            QDBusInterface iface("org.freedesktop.ScreenSaver",
+                                 "/org/freedesktop/ScreenSaver",
+                                 "org.freedesktop.ScreenSaver");
+            iface.call("UnInhibit", lastCookie);
+            lastCookie = 0;
+        }
+        QDBusInterface iface("org.freedesktop.ScreenSaver",
+                             "/org/freedesktop/ScreenSaver",
+                             "org.freedesktop.ScreenSaver");
+        QDBusReply<uint32_t> reply = iface.call("Inhibit", "deepin-movie", "playing in fullscreen");
+
+        if (reply.isValid()) {
+            lastCookie = reply.value();
+        }
+    } else {
+        if (lastCookie > 0) {
+            QDBusInterface iface("org.freedesktop.ScreenSaver",
+                                 "/org/freedesktop/ScreenSaver",
+                                 "org.freedesktop.ScreenSaver");
+            iface.call("UnInhibit", lastCookie);
+            lastCookie = 0;
+        }
+    }
+}
+
+bool FooterPrivate::getStandbyParam()
+{
+    if (QGSettings::isSchemaInstalled("com.deepin.music")) {
+        QGSettings setting("com.deepin.music", "/com/deepin/music/");
+        QStringList list = setting.keys();
+        if (list.contains("autoSleep")
+                && setting.get("auto-sleep").toBool()) {
+            return true;
+        }
+    }
+    return false;
 }
 
 Footer::Footer(QWidget *parent) :
@@ -297,6 +368,9 @@ Footer::Footer(QWidget *parent) :
 //    d->title->setPalette(titlePl);
 
     d->title->setForegroundRole(DPalette::BrightText);
+
+    d->m_timer = new QTimer(this);
+    d->m_timer->setSingleShot(true);//to avoid call timer once more
 
     d->artist = new Label;
     auto artistFont = d->artist->font();
@@ -412,7 +486,7 @@ Footer::Footer(QWidget *parent) :
     d->hoverShadowFilter = new HoverShadowFilter;
     d->title->installEventFilter(d->hoverShadowFilter);
 
-    d->btSound->installEventFilter(this);
+    // d->btSound->installEventFilter(this);
     d->installTipHint(d->btPrev, tr("Previous"));
     d->installTipHint(d->btNext, tr("Next"));
     d->installTipHint(d->btPlay, tr("Play/Pause"));
@@ -433,7 +507,7 @@ Footer::Footer(QWidget *parent) :
     d->volSlider->hide();
     d->volSlider->setProperty("DelayHide", true);
     d->volSlider->setProperty("NoDelayShow", true);
-    d->installHint(d->btSound, d->volSlider);
+    // d->installHint(d->btSound, d->volSlider);
 
     auto musicMetaLayout = new QVBoxLayout;
     musicMetaLayout->setContentsMargins(0, 0, 0, 0);
@@ -549,7 +623,10 @@ Footer::Footer(QWidget *parent) :
 
 Footer::~Footer()
 {
-
+    Q_D(Footer);
+    if (d->lastCookie > 0) {
+        d->screenStandby(false);
+    }
 }
 
 void Footer::setCurPlaylist(PlaylistPtr playlist)
@@ -663,34 +740,34 @@ void Footer::showPlayListWidget(int width, int height, bool changFlag)
         }
     }
 }
-void Footer::setSize(int width, int height, bool changFlag)
-{
-    Q_D(Footer);
-    if (changFlag) {
-        if (d->showPlaylistFlag) {
-            d->playListWidget->hide();
-            setFixedSize(width - 10, 80);
-            move(5, height - 86);
-            resize(width - 10, 80);
-        } else {
-            d->playListWidget->show();
-            setFixedSize(width - 10, 423);
-            move(5, height - 429);
-            resize(width - 10, 423);
-        }
-        d->showPlaylistFlag = (!d->showPlaylistFlag);
-    } else {
-        if (d->showPlaylistFlag) {
-            setFixedSize(width - 10, 423);
-            move(5, height - 429);
-            resize(width - 10, 423);
-        } else {
-            setFixedSize(width - 10, 80);
-            move(5, height - 86);
-            resize(width - 10, 80);
-        }
-    }
-}
+//void Footer::setSize(int width, int height, bool changFlag)
+//{
+//    Q_D(Footer);
+//    if (changFlag) {
+//        if (d->showPlaylistFlag) {
+//            d->playListWidget->hide();
+//            setFixedSize(width - 10, 80);
+//            move(5, height - 86);
+//            resize(width - 10, 80);
+//        } else {
+//            d->playListWidget->show();
+//            setFixedSize(width - 10, 423);
+//            move(5, height - 429);
+//            resize(width - 10, 423);
+//        }
+//        d->showPlaylistFlag = (!d->showPlaylistFlag);
+//    } else {
+//        if (d->showPlaylistFlag) {
+//            setFixedSize(width - 10, 423);
+//            move(5, height - 429);
+//            resize(width - 10, 423);
+//        } else {
+//            setFixedSize(width - 10, 80);
+//            move(5, height - 86);
+//            resize(width - 10, 80);
+//        }
+//    }
+//}
 
 bool Footer::getShowPlayListFlag()
 {
@@ -755,8 +832,8 @@ void Footer::mouseReleaseEvent(QMouseEvent *event)
 void Footer::mouseMoveEvent(QMouseEvent *event)
 {
     Q_D(Footer);
-    Qt::MouseButton button = event->buttons() & Qt::LeftButton ? Qt::LeftButton : Qt::NoButton;
-    if (d->enableMove && d->enableMove && event->buttons() == Qt::LeftButton) {
+    Qt::MouseButton button = (event->buttons() & Qt::LeftButton) ? Qt::LeftButton : Qt::NoButton;
+    if (d->enableMove && event->buttons() == Qt::LeftButton) {
         Q_EMIT mouseMoving(button);
         DWidget::mouseMoveEvent(event);
     }
@@ -939,7 +1016,8 @@ void Footer::onMusicPlayed(PlaylistPtr playlist, const MetaPtr meta)
         }
 
         d->btPlayingStatus = true;
-    } else {
+        d->screenStandby(true);
+    } /*else {
         if (d->m_type == 1) {
             d->btPlay->setPropertyPic(":/mpimage/light/normal/play_normal.svg",
                                       ":/mpimage/light/normal/play_normal.svg",
@@ -953,7 +1031,7 @@ void Footer::onMusicPlayed(PlaylistPtr playlist, const MetaPtr meta)
         }
 
         d->btPlayingStatus = false;
-    }
+    }*/
 }
 
 void Footer::onMusicError(PlaylistPtr playlist, const MetaPtr meta, int error)
@@ -987,6 +1065,7 @@ void Footer::onMusicError(PlaylistPtr playlist, const MetaPtr meta, int error)
         //d->btPlay->setIcon(DHiDPIHelper::loadNxPixmap(":/mpimage/dark/normal/play_normal.svg"));
     }
     d->btPlayingStatus = false;
+    d->screenStandby(false);
 }
 
 void Footer::onMusicPause(PlaylistPtr playlist, const MetaPtr meta)
@@ -1009,6 +1088,7 @@ void Footer::onMusicPause(PlaylistPtr playlist, const MetaPtr meta)
                                   ":/mpimage/dark/press/play_press.svg");
     }
     d->btPlayingStatus = false;
+    d->screenStandby(false);
 
     if (d->activingPlaylist != nullptr) {
         if (d->activingPlaylist->allmusic().isEmpty()) {
@@ -1057,6 +1137,7 @@ void Footer::onMusicStoped(PlaylistPtr playlist, const MetaPtr meta)
                                   ":/mpimage/dark/press/play_press.svg");
     }
     d->btPlayingStatus = false;
+    d->screenStandby(false);
 
     if (d->activingPlaylist != nullptr) {
         if (d->activingPlaylist->allmusic().isEmpty()) {
@@ -1311,12 +1392,9 @@ void Footer::onVolumeChanged(int volume)
     Q_D(Footer);
     //need to sync volume to dbus
     if (d->volumeMonitoring.needSyncLocalFlag(1)) {
-//        QTimer::singleShot(50, [ = ]() {
         d->volumeMonitoring.stop();
         d->volumeMonitoring.timeoutSlot();
         d->volumeMonitoring.start();
-//        });
-//        return;
     }
     QString status = "mid";
     if (volume > 77) {
@@ -1327,13 +1405,20 @@ void Footer::onVolumeChanged(int volume)
         status = "low";
     }
 
-    if (d->m_Mute) {
+    if (d->m_Mute || volume == 0) {
         d->updateQssProperty(d->btSound, "volume", "mute");
+        d->volSlider->syncMute(true);
     } else {
         d->updateQssProperty(d->btSound, "volume", status);
     }
+
+    if (!d->m_Mute && volume > 0) {
+        d->volSlider->syncMute(false);
+    }
+
     d->m_Volume = volume;
     MusicSettings::setOption("base.play.volume", d->m_Volume);
+    // 音量变化为0，设置为静音
     MusicSettings::setOption("base.play.mute", d->m_Mute);
     d->volSlider->onVolumeChanged(volume);
 }
@@ -1355,6 +1440,11 @@ void Footer::onLocalVolumeChanged(int volume)
     } else {
         d->updateQssProperty(d->btSound, "volume", status);
     }
+
+    if (volume == 0) {
+        d->updateQssProperty(d->btSound, "volume", "mute");
+    }
+
     d->m_Volume = volume;
     MusicSettings::setOption("base.play.volume", d->m_Volume);
     MusicSettings::setOption("base.play.mute", d->m_Mute);

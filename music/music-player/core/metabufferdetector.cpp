@@ -75,7 +75,7 @@ typedef int (*codec_receive_frame_function)(AVCodecContext *, AVFrame *);
 class MetaBufferDetectorPrivate
 {
 public:
-    MetaBufferDetectorPrivate(MetaBufferDetector *parent) : q_ptr(parent) {}
+    explicit MetaBufferDetectorPrivate(MetaBufferDetector *parent) : q_ptr(parent) {}
     QString           curPath;
     QString           curHash;
     QVector<float>    listData;

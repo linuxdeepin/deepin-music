@@ -7,7 +7,7 @@ Build-Depends: debhelper, cmake, pkg-config, qttools5-dev-tools,
  libqt5x11extras5-dev, libdtkcore5-bin, 
  libqt5sql5-sqlite, libxtst-dev,
  libtag1-dev, libicu-dev, libcue-dev,
- libavutil-dev, libavformat-dev, libavcodec-dev,
+ libavutil-dev, libavformat-dev, libavcodec-dev, libgsettings-qt-dev,
  libdtkgui-dev,libdtkwidget-dev,libkf5codecs-dev, libvlc-dev,libvlccore-dev
 Standards-Version: 3.9.8
 Homepage: http://www.deepin.org/

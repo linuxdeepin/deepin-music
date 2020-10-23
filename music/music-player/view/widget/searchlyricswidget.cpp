@@ -279,11 +279,11 @@ void SearchLyricsWidget::searchLyrics()
             if (ti.indexOf(m_keyWord->text()) != -1) {
                 if (m_singer->text() != "") {
                     QString ar;
-                    for (int i = 0; i < 5; ++i) {
-                        ar = lyc.getLineAt(i);
+                    for (int j = 0; j < 5; ++j) {
+                        ar = lyc.getLineAt(j);
                         if (ar.indexOf(m_singer->text()) != -1) {
                             right = true;
-                            singerIndex = i;
+                            singerIndex = j;
                         }
                     }
                 } else {
@@ -293,11 +293,11 @@ void SearchLyricsWidget::searchLyrics()
         } else {
             if (m_singer->text() != "") {
                 QString ar;
-                for (int i = 0; i < 5; ++i) {
-                    ar = lyc.getLineAt(i);
+                for (int k = 0; k < 5; ++k) {
+                    ar = lyc.getLineAt(k);
                     if (ar.indexOf(m_singer->text()) != -1) {
                         right = true;
-                        singerIndex = i;
+                        singerIndex = k;
                     }
                 }
             }
@@ -323,8 +323,8 @@ void SearchLyricsWidget::searchLyrics()
                     lycr.singerName = singerLine;
                 }
             } else {
-                for (int i = 0; i < 5; ++i) {
-                    QString singerLine = lyc.getLineAt(i);
+                for (int y = 0; y < 5; ++y) {
+                    QString singerLine = lyc.getLineAt(y);
                     if (singerLine.indexOf("[ar:") != -1) {
                         QString name = singerLine.split(":").last();
                         name.chop(2);

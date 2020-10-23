@@ -91,7 +91,8 @@ private:
     QPixmap              playingPixmap;
     QPixmap              albumPixmap;
     QPixmap              defaultPixmap;
-    int                  m_type = 1;
-    bool m_sizeChangedFlag = false;
+    int                  m_type             = 1;
+    bool                m_sizeChangedFlag   = false;
+    bool                pixmapState         = false;
 };
 

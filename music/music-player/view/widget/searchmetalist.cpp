@@ -24,7 +24,7 @@
 class SearchMetaListPrivate
 {
 public:
-    SearchMetaListPrivate(SearchMetaList *parent) : q_ptr(parent) {}
+    explicit SearchMetaListPrivate(SearchMetaList *parent) : q_ptr(parent) {}
 
     SearchMetaList *q_ptr;
     Q_DECLARE_PUBLIC(SearchMetaList)

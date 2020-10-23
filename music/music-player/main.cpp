@@ -74,7 +74,6 @@ void createSpeechDbus()
     mSpeech->registerAction("21", "faverite");
     mSpeech->registerAction("22", "unfaverite");
     mSpeech->registerAction("23", "set play mode");
-
 }
 
 bool checkOnly()
@@ -106,29 +105,10 @@ bool checkOnly()
 
 int main(int argc, char *argv[])
 {
+    setenv("PULSE_PROP_media.role", "music", 1);
+
     DApplication app(argc, argv);
 
-    /*---Player instance init---*/
-    app.loadTranslator();
-    DApplication::loadDXcbPlugin();
-
-    MusicSettings::init();
-    MainFrame mainframe;
-    MusicApp *music = new MusicApp(&mainframe);
-
-    auto showflag = MusicSettings::value("base.play.showFlag").toBool();
-    music->initUI(showflag);
-
-    QTimer::singleShot(20, nullptr, [ = ]() {
-        music->initConnection(showflag);
-        /*----创建语音dbus-----*/
-        createSpeechDbus();
-        DLogManager::registerConsoleAppender();
-        DLogManager::registerFileAppender();
-        DApplicationSettings saveTheme;
-    });
-
-    setenv("PULSE_PROP_media.role", "music", 1);
 #ifdef SNAP_APP
     DStandardPaths::setMode(DStandardPaths::Snap);
 #endif
@@ -140,14 +120,12 @@ int main(int argc, char *argv[])
 
     app.setAttribute(Qt::AA_UseHighDpiPixmaps);
     app.setOrganizationName("deepin");
-
     app.setApplicationName("deepin-music");
-//    const QDate buildDate = QLocale( QLocale::English ).toDate( QString(__DATE__).replace("  ", " 0"), "MMM dd yyyy");
-//    QString t_date = buildDate.toString("MMdd");
     // Version Time
     app.setApplicationVersion(DApplication::buildVersion(VERSION));
-    //app.setStyle("chameleon");
 
+    DLogManager::registerConsoleAppender();
+    DLogManager::registerFileAppender();
 
     QCommandLineParser parser;
     parser.setApplicationDescription("Deepin music player.");
@@ -160,6 +138,8 @@ int main(int argc, char *argv[])
     if (parser.positionalArguments().length() > 0) {
         toOpenFile = parser.positionalArguments().first();
     }
+
+    app.loadTranslator();
 
     QIcon icon = QIcon::fromTheme("deepin-music");
     app.setProductIcon(icon);
@@ -194,6 +174,22 @@ int main(int argc, char *argv[])
         return 0;
     }
 
+    MusicSettings::init();
+    DApplicationSettings saveTheme;
+
+    /*---Player instance init---*/
+    MainFrame mainframe;
+    MusicApp *music = new MusicApp(&mainframe);
+
+    auto showflag = MusicSettings::value("base.play.showFlag").toBool();
+    music->initUI(showflag);
+
+    QTimer::singleShot(20, nullptr, [ = ]() {
+        music->initConnection(showflag);
+        /*----创建语音dbus-----*/
+        createSpeechDbus();
+    });
+
     int count = parser.positionalArguments().length();
     if (count > 1) {
         QStringList files = parser.positionalArguments();
@@ -209,11 +205,12 @@ int main(int argc, char *argv[])
 
     app.connect(&app, &QApplication::lastWindowClosed,
     &mainframe, [ & ]() {
-        auto quit = MusicSettings::value("base.close.close_action").toInt();
-        if (quit == 1) {
+        auto quit = MusicSettings::value("base.close.is_close").toBool();
+        if (quit) {
             music->quit();
         }
     });
+
 
     app.setQuitOnLastWindowClosed(false);
 

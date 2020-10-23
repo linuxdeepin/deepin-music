@@ -66,7 +66,7 @@ namespace DMusic {
 class CueParserPrivate
 {
 public:
-    CueParserPrivate(CueParser *parent) : q_ptr(parent) {}
+    explicit CueParserPrivate(CueParser *parent) : q_ptr(parent) {}
 
     void parseCue(const QByteArray &data, QByteArray codeName);
 

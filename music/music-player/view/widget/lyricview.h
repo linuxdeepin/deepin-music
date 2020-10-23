@@ -35,7 +35,7 @@ public:
     ~LyricView() override;
 
     bool viewMode() const;
-    int optical() const;
+    //int optical() const;
 
     virtual void wheelEvent(QWheelEvent *event) Q_DECL_OVERRIDE;
 

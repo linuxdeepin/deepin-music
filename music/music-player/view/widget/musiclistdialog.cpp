@@ -44,7 +44,7 @@ DWIDGET_USE_NAMESPACE
 class MusicListDialogPrivate
 {
 public:
-    MusicListDialogPrivate(MusicListDialog *parent) : q_ptr(parent) {}
+    explicit MusicListDialogPrivate(MusicListDialog *parent) : q_ptr(parent) {}
 
     void initUI();
     void initConnection();
@@ -331,8 +331,9 @@ void MusicListDialog::setPlayMusicData(PlaylistPtr playlist, PlayMusicTypePtr pl
         titleFont.setPixelSize(36);
         d->infoLabel->hide();
     }
-    d->titleLabel->setFont(titleFont);
+    DFontSizeManager::instance()->bind(d->titleLabel, DFontSizeManager::T3, QFont::DemiBold);
     d->infoLabel->setFont(infoFont);
+    d->titleLabel->setForegroundRole(DPalette::TextTitle);
 
     QString name = playMusicType->name;
     for (auto meta : playlist->playMusicTypePtrList()) {

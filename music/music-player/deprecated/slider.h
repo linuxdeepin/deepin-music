@@ -31,7 +31,7 @@ class Slider : public DSlider
 {
     Q_OBJECT
 public:
-    explicit Slider(Qt::Orientation orientation, QWidget *parent = Q_NULLPTR);
+    Slider(Qt::Orientation orientation, QWidget *parent = Q_NULLPTR);
     ~Slider() Q_DECL_OVERRIDE;
 
 Q_SIGNALS:

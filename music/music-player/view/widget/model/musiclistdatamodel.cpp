@@ -27,7 +27,7 @@
 class MusicListDataModelPrivate
 {
 public:
-    MusicListDataModelPrivate(MusicListDataModel *parent) : q_ptr(parent) {}
+    explicit MusicListDataModelPrivate(MusicListDataModel *parent) : q_ptr(parent) {}
 
     PlaylistPtr playlist;
 

@@ -38,7 +38,7 @@ public:
     QString newDisplayName();
 
     QList<PlaylistPtr > allplaylist();
-    PlaylistPtr playlist(const QString &id);
+    PlaylistPtr playlist(const QString &id) ;
 
     PlaylistPtr addPlaylist(const PlaylistMeta &listinfo);
     void onCustomResort(QStringList uuids);

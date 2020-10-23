@@ -31,4 +31,4 @@ void VlcError::showErrmsg()
     }
 }
 
-void VlcError::clearerr() {}
+//void VlcError::clearerr() {}

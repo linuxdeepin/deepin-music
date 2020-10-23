@@ -246,6 +246,11 @@ void margeDatabase()
 
 MediaDatabase::MediaDatabase(QObject *parent) : QObject(parent)
 {
+    // sqlite must run in one thread!!!
+    m_writer = new MediaDatabaseWriter;
+    ThreadPool::instance()->moveToNewThread(m_writer);//将读写耗时操作放到子线程操作
+    connect(this, &MediaDatabase::initWrter,
+            m_writer, &MediaDatabaseWriter::initDataBase);
 }
 
 void MediaDatabase::init()
@@ -253,14 +258,8 @@ void MediaDatabase::init()
     createConnection();
     margeDatabase();
 
-    // sqlite must run in one thread!!!
-    m_writer = new MediaDatabaseWriter;
-    ThreadPool::instance()->moveToNewThread(m_writer);//将读写耗时操作放到子线程操作
-    connect(this, &MediaDatabase::initWrter,
-            m_writer, &MediaDatabaseWriter::initDataBase);
     Q_EMIT initWrter();
     bind();
-
 
     QSqlDatabase::database().transaction();
     PlaylistMeta playlistMeta;
@@ -454,55 +453,55 @@ static MetaPtrList searchTitle(const QString &queryString)
     return metalist;
 }
 
-MetaPtrList MediaDatabase::searchMediaTitle(const QString &title, int limit)
-{
-    qDebug() << "search title" << title;
-    auto matchReg = QString("\"%%1%\" ").arg(title);
-    QString queryString = QString("SELECT hash, localpath, title, artist, album, "
-                                  "filetype, track, offset, length, size, "
-                                  "timestamp, invalid "
-                                  "FROM music WHERE "
-                                  "title LIKE  " + matchReg +
-                                  "OR py_title LIKE  " + matchReg +
-                                  "OR py_title_short LIKE  " + matchReg +
-                                  "LIMIT " + QString("%1").arg(limit));
+//MetaPtrList MediaDatabase::searchMediaTitle(const QString &title, int limit)
+//{
+//    qDebug() << "search title" << title;
+//    auto matchReg = QString("\"%%1%\" ").arg(title);
+//    QString queryString = QString("SELECT hash, localpath, title, artist, album, "
+//                                  "filetype, track, offset, length, size, "
+//                                  "timestamp, invalid "
+//                                  "FROM music WHERE "
+//                                  "title LIKE  " + matchReg +
+//                                  "OR py_title LIKE  " + matchReg +
+//                                  "OR py_title_short LIKE  " + matchReg +
+//                                  "LIMIT " + QString("%1").arg(limit));
 
-    return searchTitle(queryString);
-}
+//    return searchTitle(queryString);
+//}
 
-MetaPtrList MediaDatabase::searchMediaMeta(const QString &title, int limit)
-{
-    auto matchReg = QString("\"%%1%\" ").arg(title);
-    QString queryString = QString("SELECT hash, localpath, title, artist, album, "
-                                  "filetype, track, offset, length, size, "
-                                  "timestamp, invalid "
-                                  "FROM music WHERE "
-                                  "title LIKE  " + matchReg +
-                                  "OR py_title LIKE  " + matchReg +
-                                  "OR py_title_short LIKE  " + matchReg +
-                                  "OR py_artist LIKE  " + matchReg +
-                                  "OR py_artist_short LIKE  " + matchReg +
-                                  "OR py_album LIKE  " + matchReg +
-                                  "OR py_album_short LIKE  " + matchReg +
-                                  "OR artist LIKE " + matchReg +
-                                  "OR album LIKE " + matchReg +
-                                  "LIMIT " + QString("%1").arg(limit));
+//MetaPtrList MediaDatabase::searchMediaMeta(const QString &title, int limit)
+//{
+//    auto matchReg = QString("\"%%1%\" ").arg(title);
+//    QString queryString = QString("SELECT hash, localpath, title, artist, album, "
+//                                  "filetype, track, offset, length, size, "
+//                                  "timestamp, invalid "
+//                                  "FROM music WHERE "
+//                                  "title LIKE  " + matchReg +
+//                                  "OR py_title LIKE  " + matchReg +
+//                                  "OR py_title_short LIKE  " + matchReg +
+//                                  "OR py_artist LIKE  " + matchReg +
+//                                  "OR py_artist_short LIKE  " + matchReg +
+//                                  "OR py_album LIKE  " + matchReg +
+//                                  "OR py_album_short LIKE  " + matchReg +
+//                                  "OR artist LIKE " + matchReg +
+//                                  "OR album LIKE " + matchReg +
+//                                  "LIMIT " + QString("%1").arg(limit));
 
-    return searchTitle(queryString);
-}
+//    return searchTitle(queryString);
+//}
 
-MetaPtrList MediaDatabase::searchMediaPath(const QString &path, int limit)
-{
-    auto matchReg = QString("\"%%1%\" ").arg(path);
-    QString queryString = QString("SELECT hash, localpath, title, artist, album, "
-                                  "filetype, track, offset, length, size, timestamp "
-                                  "FROM music WHERE "
-                                  "localpath LIKE  " + matchReg +
-                                  "OR cuepath LIKE  " + matchReg +
-                                  "LIMIT " + QString("%1").arg(limit));
+//MetaPtrList MediaDatabase::searchMediaPath(const QString &path, int limit)
+//{
+//    auto matchReg = QString("\"%%1%\" ").arg(path);
+//    QString queryString = QString("SELECT hash, localpath, title, artist, album, "
+//                                  "filetype, track, offset, length, size, timestamp "
+//                                  "FROM music WHERE "
+//                                  "localpath LIKE  " + matchReg +
+//                                  "OR cuepath LIKE  " + matchReg +
+//                                  "LIMIT " + QString("%1").arg(limit));
 
-    return searchTitle(queryString);
-}
+//    return searchTitle(queryString);
+//}
 
 void MediaDatabase::addPlaylist(const PlaylistMeta &playlistMeta)
 {
@@ -607,19 +606,19 @@ bool MediaDatabase::playlistExist(const QString &uuid)
     return query.value(0).toInt() > 0;
 }
 
-bool MediaDatabase::mediaMetaExist(const QString &hash)
-{
-    QSqlQuery query;
-    query.prepare("SELECT COUNT(*) FROM music where hash = :hash");
-    query.bindValue(":hash", hash);
+//bool MediaDatabase::mediaMetaExist(const QString &hash)
+//{
+//    QSqlQuery query;
+//    query.prepare("SELECT COUNT(*) FROM music where hash = :hash");
+//    query.bindValue(":hash", hash);
 
-    if (!query.exec()) {
-        qWarning() << query.lastError();
-        return false;
-    }
-    query.first();
-    return query.value(0).toInt() > 0;
-}
+//    if (!query.exec()) {
+//        qWarning() << query.lastError();
+//        return false;
+//    }
+//    query.first();
+//    return query.value(0).toInt() > 0;
+//}
 
 QList<MediaMeta> MediaDatabase::allmetas()
 {

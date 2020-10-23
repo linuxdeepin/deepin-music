@@ -31,7 +31,7 @@ DWIDGET_USE_NAMESPACE
 class MusicSearchListviewPrivate
 {
 public:
-    MusicSearchListviewPrivate(MusicSearchListview *parent): q_ptr(parent) {}
+    explicit MusicSearchListviewPrivate(MusicSearchListview *parent): q_ptr(parent) {}
     void addItem(const QString str);
 
     MusicSearchListModel        *model        = nullptr;
@@ -264,14 +264,14 @@ void MusicSearchListview::updateList()
     }
 }
 
-void MusicSearchListview::keyChoice()
-{
-    Q_D(MusicSearchListview);
-    qDebug() << "cle down" << endl;
+//void MusicSearchListview::keyChoice()
+//{
+//    Q_D(MusicSearchListview);
+//    qDebug() << "cle down" << endl;
 
-    QModelIndex indexFromList = d->model->index(1, 0);//取model
-    this->setCurrentIndex(indexFromList);
-}
+//    QModelIndex indexFromList = d->model->index(1, 0);//取model
+//    this->setCurrentIndex(indexFromList);
+//}
 
 
 void MusicSearchListview::setViewModeFlag(QListView::ViewMode mode)

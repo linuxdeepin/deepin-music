@@ -39,7 +39,7 @@ public:
     ~MetaSearchService();
 
     static QUrl coverUrl(const MetaPtr meta);
-    static QUrl lyricUrl(const MetaPtr meta);
+    //static QUrl lyricUrl(const MetaPtr meta);
     static QByteArray coverData(const MetaPtr meta);
     static QByteArray lyricData(const MetaPtr meta);
 

@@ -2,6 +2,9 @@
 #include <QCoreApplication>
 #include <QTest>
 
+#include <QObject>
+#include <QScopedPointer>
+#include <util/singleton.h>
 
 #include <gtest/gtest.h>
 #include <gmock/gmock-matchers.h>
@@ -11,16 +14,10 @@
 #include "musicapp.h"
 #include "mainframe.h"
 #include "core/musicsettings.h"
+#include "presenter.h"
 
 using namespace Dtk::Core;
 using namespace Dtk::Widget;
-
-//int main(int argc, char *argv[])
-//{
-//    QApplication a(argc, argv);
-//    return RUN_ALL_TESTS();
-//    //return a.exec();
-//}
 
 #define QMYTEST_MAIN(TestObject) \
     QT_BEGIN_NAMESPACE \
@@ -33,7 +30,8 @@ using namespace Dtk::Widget;
         MusicSettings* settings = MusicSettings::instance(); \
         MusicSettings::init(); \
         MusicSettings::sync(); \
-        MusicApp *w = QTestMain::getMainwindow(); \
+        QTestMain::getMainwindow(); \
+        Q_UNUSED(settings); \
         app.setSingleInstance("deepinmusic"); \
         QTEST_DISABLE_KEYPAD_NAVIGATION \
         QTEST_ADD_GPU_BLACKLIST_SUPPORT \
@@ -41,7 +39,7 @@ using namespace Dtk::Widget;
         QTEST_SET_MAIN_SOURCE_PATH \
         RUN_ALL_TESTS();\
         return QTest::qExec(&tc, argc, argv); \
-    }
+    } \
 
 class QTestMain : public QObject
 {
@@ -52,7 +50,6 @@ public:
     ~QTestMain();
 
     static MusicApp *getMainwindow();
-
 private slots:
 //    void initTestCase();
 //    void cleanupTestCase();
@@ -129,12 +126,37 @@ void QTestMain::testGui_data()
 
 MusicApp *QTestMain::getMainwindow()
 {
+    MusicSettings::init();
     MainFrame *frame = new MainFrame;
+//    frame->setCoverBackground("");
+//    frame->onSelectImportDirectory();
+//    frame->onSelectImportFiles();
+//    frame->onViewShortcut();
+    frame->slotTheme(1);
     static MusicApp *w = new MusicApp(frame);
-    w->initUI();
-    w->initConnection();
+    auto showflag = MusicSettings::value("base.play.showFlag").toBool();
+
+    frame->initUI(true);
+    frame->triggerShortcutAction("shortcuts.all.volume_up");
+    frame->triggerShortcutAction("shortcuts.all.volume_down");
+    frame->triggerShortcutAction("shortcuts.all.next");
+    frame->triggerShortcutAction("shortcuts.all.play_pause");
+    frame->triggerShortcutAction("shortcuts.all.previous");
+    w->initConnection(showflag);
+    w->initUI(true);
+    QStringList list1;
+    list1 << "1" << "2";
+    w->onStartImport(list1);
+
+    QStringList list;
+    list << "/usr/share/music/bensound-sunny.mp3";
+    Q_EMIT w->sigStartImport(list);
+    w->show();
+    //testSig_data();
+//    w->quit();
     return w;
 }
+
 
 QMYTEST_MAIN(QTestMain)
 

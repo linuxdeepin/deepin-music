@@ -44,7 +44,7 @@ using namespace Dtk::Widget;
 class MusicAppPrivate
 {
 public:
-    MusicAppPrivate(MusicApp *parent) : q_ptr(parent) {}
+    explicit MusicAppPrivate(MusicApp *parent) : q_ptr(parent) {}
 
     void initMpris(const QString &serviceName);
     void triggerShortcutAction(const QString &optKey);
@@ -81,6 +81,7 @@ void MusicAppPrivate::initMpris(const QString &serviceName)
     mprisPlayer->setCanGoNext(true);
     mprisPlayer->setCanGoPrevious(true);
     mprisPlayer->setCanPause(true);
+    mprisPlayer->setCanSeek(true);
 
     q->connect(mprisPlayer, &MprisPlayer::quitRequested, q, [ = ]() {
         onQuit();
@@ -197,12 +198,6 @@ void dumpGeometry(const QByteArray &geometry)
            >> restoredScreenNumber
            >> maximized
            >> fullScreen;
-
-//    qDebug() << "restore geometry:" << restoredFrameGeometry
-//             << restoredNormalGeometry
-//             << restoredScreenNumber
-//             << maximized
-//             << fullScreen;
 
     if (majorVersion > 1) {
         stream >> restoredScreenWidth;

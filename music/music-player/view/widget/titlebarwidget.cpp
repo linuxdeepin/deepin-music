@@ -40,9 +40,7 @@ DWIDGET_USE_NAMESPACE
 class TitlebarWidgetPrivate
 {
 public:
-    TitlebarWidgetPrivate(TitlebarWidget *parent) : q_ptr(parent) {}
-
-    void fixSearchPosition();
+    explicit TitlebarWidgetPrivate(TitlebarWidget *parent) : q_ptr(parent) {}
 
     SearchEdit  *search = nullptr;
 
@@ -167,13 +165,3 @@ void TitlebarWidget::resizeEvent(QResizeEvent *event)
     DWidget::resizeEvent(event);
 }
 
-void TitlebarWidgetPrivate::fixSearchPosition()
-{
-    //Q_Q(TitlebarWidget);
-    //auto fixSize = QPoint(search->width() / 2, search->height() / 2);
-    // auto fixPos = q->geometry().center() - fixSize;
-    // search->setGeometry(fixPos.x(), fixPos.y(),
-    //                    search->width(), search->height());
-
-    //qDebug() << fixPos << search->size() << search->parent();
-}

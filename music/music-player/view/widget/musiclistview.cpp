@@ -31,7 +31,7 @@
 #include <DPalette>
 #include <DApplicationHelper>
 
-#include "musiclistviewitem.h"
+//#include "usiclistviewitem.h"
 #include "./model/musiclistmodel.h"
 #include "playlistview.h"
 
@@ -89,11 +89,12 @@ MusicListView::MusicListView(QWidget *parent) : DListView(parent)
         Q_UNUSED(previous)
         if (current.row() < 0 || current.row() >= allPlaylists.size()) {
             this->clearSelected();
+            pixmapState = false;
             return ;
         }
         if (state() != EditingState) {
             auto curStandardItem = dynamic_cast<DStandardItem *>(model->itemFromIndex(current));
-            QString name = curStandardItem->data().toString();
+            QString name = curStandardItem->data(Qt::UserRole + 10).toString();
             if (name != AlbumMusicListID && name != ArtistMusicListID && name != AllMusicListID && name != FavMusicListID) {
                 curStandardItem->setIcon(QIcon::fromTheme("music_famousballad"));
             }
@@ -103,8 +104,10 @@ MusicListView::MusicListView(QWidget *parent) : DListView(parent)
         auto indexes = this->selectedIndexes();
         if (playingItem != nullptr && current == playingItem->index()) {
             auto mdata = allPlaylists.at(current.row());
-            if (mdata->playing() != nullptr)
+            if (mdata->playing() != nullptr) {
                 curPixmap = QPixmap(":/mpimage/light/music_withe_sidebar/music1.svg");
+                pixmapState = true;
+            }
         }
         if (playingItem != nullptr) {
             auto curItem = dynamic_cast<DStandardItem *>(playingItem);
@@ -170,7 +173,7 @@ void MusicListView::addMusicList(PlaylistPtr playlist, bool addFlag)
     }
 
     allPlaylists.append(playlist);
-    QString displayName;
+    QString displayName = "";
     if (playlist->id() == FavMusicListID) {
         displayName = tr("My Favorites");
     } else {
@@ -179,13 +182,13 @@ void MusicListView::addMusicList(PlaylistPtr playlist, bool addFlag)
     auto item = new DStandardItem(icon, displayName);
 
     if (playlist->id() == AlbumMusicListID) {
-        item->setData(AlbumMusicListID);
+        item->setData(AlbumMusicListID, Qt::UserRole + 10);
     } else if (playlist->id() == ArtistMusicListID) {
-        item->setData(ArtistMusicListID);
+        item->setData(ArtistMusicListID, Qt::UserRole + 10);
     } else if (playlist->id() == AllMusicListID) {
-        item->setData(AllMusicListID);
+        item->setData(AllMusicListID, Qt::UserRole + 10);
     } else if (playlist->id() == FavMusicListID) {
-        item->setData(FavMusicListID);
+        item->setData(FavMusicListID, Qt::UserRole + 10);
     }
 
     auto itemFont = item->font();
@@ -237,7 +240,14 @@ void MusicListView::setCurPlaylist(QStandardItem *item)
     auto curItem = dynamic_cast<DStandardItem *>(item);
     playingItem = curItem;
     if (curItem) {
-        QIcon playingIcon(playingPixmap);
+        QIcon playingIcon;
+        if (pixmapState) {
+            QIcon icon(defaultPixmap);
+            playingIcon = icon;
+        } else {
+            QIcon icon(playingPixmap);
+            playingIcon = icon;
+        }
         playingIcon.actualSize(QSize(20, 20));
 
         DViewItemActionList itemActionList = curItem->actionList(Qt::RightEdge);
@@ -591,29 +601,20 @@ void MusicListView::showContextMenu(const QPoint &pos)
 void MusicListView::slotTheme(int type)
 {
     m_type = type;
-    QString rStr;
-    if (type == 1) {
-        rStr = "light";
-    } else {
-        rStr = "dark";
-    }
-    for (int i = 0; i < model->rowCount(); i++) {
-        for (int i = 0; i < model->rowCount(); i++) {
-            auto curIndex = model->index(i, 0);
-            auto curStandardItem = dynamic_cast<DStandardItem *>(model->itemFromIndex(curIndex));
-            auto curItemRow = curStandardItem->row();
-            if (curItemRow < 0 || curItemRow >= allPlaylists.size())
-                continue;
-            auto playlist = allPlaylists[curStandardItem->row()];
 
-            if (m_type == 1) {
-                curStandardItem->setForeground(QColor("#414D68"));
-            } else {
-                curStandardItem->setForeground(QColor("#C0C6D4"));
-            }
+    for (int i = 0; i < model->rowCount(); i++) {
+        auto curIndex = model->index(i, 0);
+        auto curStandardItem = dynamic_cast<DStandardItem *>(model->itemFromIndex(curIndex));
+        auto curItemRow = curStandardItem->row();
+        if (curItemRow < 0 || curItemRow >= allPlaylists.size())
+            continue;
+
+        if (m_type == 1) {
+            curStandardItem->setForeground(QColor("#414D68"));
+        } else {
+            curStandardItem->setForeground(QColor("#C0C6D4"));
         }
     }
-
 }
 
 void MusicListView::onRename(QStandardItem *item)

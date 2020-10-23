@@ -49,7 +49,7 @@ DGUI_USE_NAMESPACE
 class PlayListWidgetPrivate
 {
 public:
-    PlayListWidgetPrivate(PlayListWidget *parent) : q_ptr(parent) {}
+    explicit PlayListWidgetPrivate(PlayListWidget *parent) : q_ptr(parent) {}
 
     void initData(PlaylistPtr playlist);
     void initConntion();
@@ -148,8 +148,8 @@ void PlayListWidgetPrivate::initConntion()
     q, [ = ](const QStringList  & files) {
         auto allMetas = playListView->playlist()->allmusic();
         int allCount = allMetas.size();
-        int missCount = 0;
         if (!allMetas.isEmpty()) {
+            int missCount = 0;
             MetaPtrList  metalist;
             for (auto file : files) {
                 for (int i = 0; i < allMetas.size(); i++) {

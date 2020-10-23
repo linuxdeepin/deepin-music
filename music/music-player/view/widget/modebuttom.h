@@ -33,7 +33,7 @@ class ModeButton : public DPushButton
 
 public:
     explicit ModeButton(QWidget *parent = Q_NULLPTR);
-
+    ~ModeButton(){};
     void setModeIcons(const QStringList &modeIcons, const QStringList &pressIcons = QStringList());
     int mode() const;
     void setTransparent(bool flag);

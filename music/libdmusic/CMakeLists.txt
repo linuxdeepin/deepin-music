@@ -8,11 +8,11 @@ cmake_minimum_required(VERSION 3.10)
 
 #文件夹包含
 include_directories(.)
-include_directories(net)
+#include_directories(net)
 include_directories(util)
 
 aux_source_directory(. allSourcelib)
-aux_source_directory(net allSourcelib)
+#aux_source_directory(net allSourcelib)
 aux_source_directory(util allSourcelib)
 
 add_library(${CMD_NAME} STATIC ${allSourcelib})

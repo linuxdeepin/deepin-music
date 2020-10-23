@@ -37,7 +37,7 @@ DWIDGET_USE_NAMESPACE
 class CloseConfirmDialogPrivate
 {
 public:
-    CloseConfirmDialogPrivate(CloseConfirmDialog *parent) : q_ptr(parent) {}
+    explicit CloseConfirmDialogPrivate(CloseConfirmDialog *parent) : q_ptr(parent) {}
 
     DRadioButton    *exitBt     = Q_NULLPTR;
     DCheckBox       *remember   = Q_NULLPTR;
@@ -75,8 +75,8 @@ CloseConfirmDialog::CloseConfirmDialog(QWidget *parent) :
     miniBt->setObjectName("CloseConfirmDialogMini");
     auto vbox = new QHBoxLayout;
     vbox->setContentsMargins(0, 0, 0, 0);
-    vbox->addWidget(d->exitBt);
     vbox->addWidget(miniBt);
+    vbox->addWidget(d->exitBt);
     actionSelectionGroup->setLayout(vbox);
 
     d->remember = new DCheckBox(tr("Do not ask again"));
@@ -100,8 +100,8 @@ CloseConfirmDialog::CloseConfirmDialog(QWidget *parent) :
 
 
     this->setTitle(tr("Please choose your action"));
-    this->addContent(d->exitBt, Qt::AlignLeft);
     this->addContent(miniBt, Qt::AlignLeft);
+    this->addContent(d->exitBt, Qt::AlignLeft);
     this->addContent(d->remember, Qt::AlignLeft);
 
     setIcon(QIcon::fromTheme("deepin-music"));
@@ -110,7 +110,7 @@ CloseConfirmDialog::CloseConfirmDialog(QWidget *parent) :
     addButton(tr("Cancel"), false, ButtonNormal);
     addButton(tr("Confirm"), true, ButtonRecommend);
 
-    d->remember->setChecked(!MusicSettings::value("base.close.ask_close_action").toBool());
+    d->remember->setChecked(false);
     if (QuitOnClose == MusicSettings::value("base.close.close_action").toInt()) {
         d->exitBt->setChecked(true);
     } else {
@@ -134,5 +134,5 @@ bool CloseConfirmDialog::isRemember() const
 int CloseConfirmDialog::closeAction() const
 {
     Q_D(const CloseConfirmDialog);
-    return d->exitBt->isChecked() ? QuitOnClose : MiniOnClose;
+    return d->exitBt->isChecked() ?  QuitOnClose : MiniOnClose;
 }

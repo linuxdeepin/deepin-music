@@ -30,15 +30,15 @@
 
 DWIDGET_USE_NAMESPACE
 
-class MUsicLyricWidgetPrivate;
-class MUsicLyricWidget : public DWidget
+class MusicLyricWidgetPrivate;
+class MusicLyricWidget : public DWidget
 {
     Q_OBJECT
     Q_PROPERTY(QString defaultCover READ defaultCover WRITE setDefaultCover)
 
 public:
-    explicit MUsicLyricWidget(QWidget *parent = Q_NULLPTR);
-    ~MUsicLyricWidget() override;
+    explicit MusicLyricWidget(QWidget *parent = Q_NULLPTR);
+    ~MusicLyricWidget() override;
 
     void updateUI();
     QString defaultCover() const;
@@ -78,6 +78,6 @@ protected:
 
 private:
     QHBoxLayout *m_leftLayout;
-    QScopedPointer<MUsicLyricWidgetPrivate> d_ptr;
-    Q_DECLARE_PRIVATE_D(qGetPtrHelper(d_ptr), MUsicLyricWidget)
+    QScopedPointer<MusicLyricWidgetPrivate> d_ptr;
+    Q_DECLARE_PRIVATE_D(qGetPtrHelper(d_ptr), MusicLyricWidget)
 };

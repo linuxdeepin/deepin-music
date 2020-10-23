@@ -393,90 +393,90 @@ QByteArray MetaDetector::getCoverData(const QString &path, const QString &tmpPat
     return byteArray;
 }
 
-QVector<float> MetaDetector::getMetaData(const QString &path)
-{
-    QVector<float> curData;
-    if (path.isEmpty())
-        return curData;
-    format_alloc_context_function format_alloc_context = (format_alloc_context_function)FfmpegDynamicInstance::VlcFunctionInstance()->resolveSymbol("avformat_alloc_context", true);
-    format_open_input_function format_open_input = (format_open_input_function)FfmpegDynamicInstance::VlcFunctionInstance()->resolveSymbol("avformat_open_input", true);
-    format_find_stream_info_function format_find_stream_info = (format_find_stream_info_function)FfmpegDynamicInstance::VlcFunctionInstance()->resolveSymbol("avformat_find_stream_info", true);
-    find_best_stream_function find_best_stream = (find_best_stream_function)FfmpegDynamicInstance::VlcFunctionInstance()->resolveSymbol("av_find_best_stream", true);
-    codec_alloc_context3_function codec_alloc_context3 = (codec_alloc_context3_function)FfmpegDynamicInstance::VlcFunctionInstance()->resolveSymbol("avcodec_alloc_context3", true);
-    codec_parameters_to_context_function codec_parameters_to_context = (codec_parameters_to_context_function)FfmpegDynamicInstance::VlcFunctionInstance()->resolveSymbol("avcodec_parameters_to_context", true);
-    codec_find_decoder_function codec_find_decoder = (codec_find_decoder_function)FfmpegDynamicInstance::VlcFunctionInstance()->resolveSymbol("avcodec_find_decoder", true);
-    codec_open2_function codec_open2 = (codec_open2_function)FfmpegDynamicInstance::VlcFunctionInstance()->resolveSymbol("avcodec_open2", true);
-    packet_alloc_function packet_alloc = (packet_alloc_function)FfmpegDynamicInstance::VlcFunctionInstance()->resolveSymbol("av_packet_alloc", true);
-    frame_alloc_function frame_alloc = (frame_alloc_function)FfmpegDynamicInstance::VlcFunctionInstance()->resolveSymbol("av_frame_alloc", true);
-    read_frame_function read_frame = (read_frame_function)FfmpegDynamicInstance::VlcFunctionInstance()->resolveSymbol("av_read_frame", true);
-    codec_send_packet_function codec_send_packet = (codec_send_packet_function)FfmpegDynamicInstance::VlcFunctionInstance()->resolveSymbol("avcodec_send_packet", true);
-    packet_unref_function packet_unref = (packet_unref_function)FfmpegDynamicInstance::VlcFunctionInstance()->resolveSymbol("av_packet_unref", true);
-    codec_receive_frame_function codec_receive_frame = (codec_receive_frame_function)FfmpegDynamicInstance::VlcFunctionInstance()->resolveSymbol("avcodec_receive_frame", true);
-    frame_free_function frame_free = (frame_free_function)FfmpegDynamicInstance::VlcFunctionInstance()->resolveSymbol("av_frame_free", true);
-    codec_close_function codec_close = (codec_close_function)FfmpegDynamicInstance::VlcFunctionInstance()->resolveSymbol("avcodec_close", true);
-    format_close_input_function format_close_input = (format_close_input_function)FfmpegDynamicInstance::VlcFunctionInstance()->resolveSymbol("avformat_close_input", true);
-    format_free_context_function format_free_context = (format_free_context_function)FfmpegDynamicInstance::VlcFunctionInstance()->resolveSymbol("avformat_free_context", true);
+//QVector<float> MetaDetector::getMetaData(const QString &path)
+//{
+//    QVector<float> curData;
+//    if (path.isEmpty())
+//        return curData;
+//    format_alloc_context_function format_alloc_context = (format_alloc_context_function)FfmpegDynamicInstance::VlcFunctionInstance()->resolveSymbol("avformat_alloc_context", true);
+//    format_open_input_function format_open_input = (format_open_input_function)FfmpegDynamicInstance::VlcFunctionInstance()->resolveSymbol("avformat_open_input", true);
+//    format_find_stream_info_function format_find_stream_info = (format_find_stream_info_function)FfmpegDynamicInstance::VlcFunctionInstance()->resolveSymbol("avformat_find_stream_info", true);
+//    find_best_stream_function find_best_stream = (find_best_stream_function)FfmpegDynamicInstance::VlcFunctionInstance()->resolveSymbol("av_find_best_stream", true);
+//    codec_alloc_context3_function codec_alloc_context3 = (codec_alloc_context3_function)FfmpegDynamicInstance::VlcFunctionInstance()->resolveSymbol("avcodec_alloc_context3", true);
+//    codec_parameters_to_context_function codec_parameters_to_context = (codec_parameters_to_context_function)FfmpegDynamicInstance::VlcFunctionInstance()->resolveSymbol("avcodec_parameters_to_context", true);
+//    codec_find_decoder_function codec_find_decoder = (codec_find_decoder_function)FfmpegDynamicInstance::VlcFunctionInstance()->resolveSymbol("avcodec_find_decoder", true);
+//    codec_open2_function codec_open2 = (codec_open2_function)FfmpegDynamicInstance::VlcFunctionInstance()->resolveSymbol("avcodec_open2", true);
+//    packet_alloc_function packet_alloc = (packet_alloc_function)FfmpegDynamicInstance::VlcFunctionInstance()->resolveSymbol("av_packet_alloc", true);
+//    frame_alloc_function frame_alloc = (frame_alloc_function)FfmpegDynamicInstance::VlcFunctionInstance()->resolveSymbol("av_frame_alloc", true);
+//    read_frame_function read_frame = (read_frame_function)FfmpegDynamicInstance::VlcFunctionInstance()->resolveSymbol("av_read_frame", true);
+//    codec_send_packet_function codec_send_packet = (codec_send_packet_function)FfmpegDynamicInstance::VlcFunctionInstance()->resolveSymbol("avcodec_send_packet", true);
+//    packet_unref_function packet_unref = (packet_unref_function)FfmpegDynamicInstance::VlcFunctionInstance()->resolveSymbol("av_packet_unref", true);
+//    codec_receive_frame_function codec_receive_frame = (codec_receive_frame_function)FfmpegDynamicInstance::VlcFunctionInstance()->resolveSymbol("avcodec_receive_frame", true);
+//    frame_free_function frame_free = (frame_free_function)FfmpegDynamicInstance::VlcFunctionInstance()->resolveSymbol("av_frame_free", true);
+//    codec_close_function codec_close = (codec_close_function)FfmpegDynamicInstance::VlcFunctionInstance()->resolveSymbol("avcodec_close", true);
+//    format_close_input_function format_close_input = (format_close_input_function)FfmpegDynamicInstance::VlcFunctionInstance()->resolveSymbol("avformat_close_input", true);
+//    format_free_context_function format_free_context = (format_free_context_function)FfmpegDynamicInstance::VlcFunctionInstance()->resolveSymbol("avformat_free_context", true);
 
-    AVFormatContext *pFormatCtx = format_alloc_context();
-    format_open_input(&pFormatCtx, path.toStdString().c_str(), nullptr, nullptr);
+//    AVFormatContext *pFormatCtx = format_alloc_context();
+//    format_open_input(&pFormatCtx, path.toStdString().c_str(), nullptr, nullptr);
 
-    if (pFormatCtx == nullptr)
-        return curData;
+//    if (pFormatCtx == nullptr)
+//        return curData;
 
-    format_find_stream_info(pFormatCtx, nullptr);
+//    format_find_stream_info(pFormatCtx, nullptr);
 
-    int audio_stream_index = -1;
-    audio_stream_index = find_best_stream(pFormatCtx, AVMEDIA_TYPE_AUDIO, -1, -1, nullptr, 0);
-    if (audio_stream_index < 0)
-        return curData;
+//    int audio_stream_index = -1;
+//    audio_stream_index = find_best_stream(pFormatCtx, AVMEDIA_TYPE_AUDIO, -1, -1, nullptr, 0);
+//    if (audio_stream_index < 0)
+//        return curData;
 
-    AVStream *in_stream = pFormatCtx->streams[audio_stream_index];
-    AVCodecParameters *in_codecpar = in_stream->codecpar;
+//    AVStream *in_stream = pFormatCtx->streams[audio_stream_index];
+//    AVCodecParameters *in_codecpar = in_stream->codecpar;
 
-    AVCodecContext *pCodecCtx = codec_alloc_context3(nullptr);
-    codec_parameters_to_context(pCodecCtx, in_codecpar);
+//    AVCodecContext *pCodecCtx = codec_alloc_context3(nullptr);
+//    codec_parameters_to_context(pCodecCtx, in_codecpar);
 
-    AVCodec *pCodec = codec_find_decoder(pCodecCtx->codec_id);
-    codec_open2(pCodecCtx, pCodec, nullptr);
+//    AVCodec *pCodec = codec_find_decoder(pCodecCtx->codec_id);
+//    codec_open2(pCodecCtx, pCodec, nullptr);
 
-    AVPacket *packet = packet_alloc();
-    AVFrame *frame = frame_alloc();
+//    AVPacket *packet = packet_alloc();
+//    AVFrame *frame = frame_alloc();
 
-    while (read_frame(pFormatCtx, packet) >= 0) {
-        if (packet->stream_index == audio_stream_index) {
+//    while (read_frame(pFormatCtx, packet) >= 0) {
+//        if (packet->stream_index == audio_stream_index) {
 
-            int state;
-            state = codec_send_packet(pCodecCtx, packet);
-            packet_unref(packet);
-            if (state != 0) {
-                continue;
-            }
+//            int state;
+//            state = codec_send_packet(pCodecCtx, packet);
+//            packet_unref(packet);
+//            if (state != 0) {
+//                continue;
+//            }
 
-            state = codec_receive_frame(pCodecCtx, frame);
-            if (state == 0) {
+//            state = codec_receive_frame(pCodecCtx, frame);
+//            if (state == 0) {
 
-                quint8 *ptr = frame->extended_data[0];
-                if (path.endsWith(".ape") || path.endsWith(".APE")) {
-                    for (int i = 0; i < frame->linesize[0]; i++) {
-                        auto  valDate = ((ptr[i]) << 16 | (ptr[i + 1]));
-                        curData.append(valDate + qrand());
-                    }
-                } else {
-                    for (int i = 0; i < frame->linesize[0]; i += 1024) {
-                        auto  valDate = ((ptr[i]) << 16 | (ptr[i + 1]));
-                        curData.append(valDate);
-                    }
-                }
-            }
-        }
-        packet_unref(packet);
-    }
+//                quint8 *ptr = frame->extended_data[0];
+//                if (path.endsWith(".ape") || path.endsWith(".APE")) {
+//                    for (int i = 0; i < frame->linesize[0]; i++) {
+//                        auto  valDate = ((ptr[i]) << 16 | (ptr[i + 1]));
+//                        curData.append(valDate + qrand());
+//                    }
+//                } else {
+//                    for (int i = 0; i < frame->linesize[0]; i += 1024) {
+//                        auto  valDate = ((ptr[i]) << 16 | (ptr[i + 1]));
+//                        curData.append(valDate);
+//                    }
+//                }
+//            }
+//        }
+//        packet_unref(packet);
+//    }
 
-    packet_unref(packet);
-    frame_free(&frame);
-    codec_close(pCodecCtx);
-    format_close_input(&pFormatCtx);
-    format_free_context(pFormatCtx);
+//    packet_unref(packet);
+//    frame_free(&frame);
+//    codec_close(pCodecCtx);
+//    format_close_input(&pFormatCtx);
+//    format_free_context(pFormatCtx);
 
-    return curData;
-}
+//    return curData;
+//}

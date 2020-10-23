@@ -54,10 +54,10 @@ DGUI_USE_NAMESPACE
 //static const int LyricLineHeight = 40;
 static const QString defaultLyric = "No Lyric";
 
-class MUsicLyricWidgetPrivate
+class MusicLyricWidgetPrivate
 {
 public:
-    MUsicLyricWidgetPrivate(MUsicLyricWidget *parent): q_ptr(parent) {}
+    explicit MusicLyricWidgetPrivate(MusicLyricWidget *parent): q_ptr(parent) {}
 
     MetaPtr             activingMeta;
 
@@ -75,15 +75,15 @@ public:
 
     QImage              backgroundimage;
 
-    DBlurEffectWidget *backgroundW;
-    MUsicLyricWidget *q_ptr;
-    Q_DECLARE_PUBLIC(MUsicLyricWidget)
+    DBlurEffectWidget *backgroundW = nullptr;
+    MusicLyricWidget *q_ptr;
+    Q_DECLARE_PUBLIC(MusicLyricWidget)
 };
 
-MUsicLyricWidget::MUsicLyricWidget(QWidget *parent)
-    : DWidget(parent), d_ptr(new MUsicLyricWidgetPrivate(this))
+MusicLyricWidget::MusicLyricWidget(QWidget *parent)
+    : DWidget(parent), d_ptr(new MusicLyricWidgetPrivate(this))
 {
-    Q_D(MUsicLyricWidget);
+    Q_D(MusicLyricWidget);
 
     setAutoFillBackground(true);
     auto palette = this->palette();
@@ -152,18 +152,18 @@ MUsicLyricWidget::MUsicLyricWidget(QWidget *parent)
     int themeType = DGuiApplicationHelper::instance()->themeType();
     slotTheme(themeType);
 
-    connect(d->serachbt, &DPushButton::clicked, this, &MUsicLyricWidget::onsearchBt);
-    connect(d->searchLyricsWidget, &SearchLyricsWidget::lyricPath, this, &MUsicLyricWidget::slotonsearchresult);
+    connect(d->serachbt, &DPushButton::clicked, this, &MusicLyricWidget::onsearchBt);
+    connect(d->searchLyricsWidget, &SearchLyricsWidget::lyricPath, this, &MusicLyricWidget::slotonsearchresult);
 }
 
-MUsicLyricWidget::~MUsicLyricWidget()
+MusicLyricWidget::~MusicLyricWidget()
 {
 
 }
 
-void MUsicLyricWidget::updateUI()
+void MusicLyricWidget::updateUI()
 {
-    Q_D(MUsicLyricWidget);
+    Q_D(MusicLyricWidget);
     d->m_cover->setCoverPixmap(QPixmap(d->defaultCover));
     QImage cover(d->defaultCover);
 
@@ -182,22 +182,22 @@ void MUsicLyricWidget::updateUI()
     d->backgroundimage = cover;
 }
 
-QString MUsicLyricWidget::defaultCover() const
+QString MusicLyricWidget::defaultCover() const
 {
-    Q_D(const MUsicLyricWidget);
+    Q_D(const MusicLyricWidget);
     return d->defaultCover;
 }
 
-void MUsicLyricWidget::checkHiddenSearch(QPoint mousePos)
+void MusicLyricWidget::checkHiddenSearch(QPoint mousePos)
 {
     Q_UNUSED(mousePos)
-    //Q_D(MUsicLyricWidget);
+    //Q_D(MusicLyricWidget);
 
 }
 
-void MUsicLyricWidget::resizeEvent(QResizeEvent *event)
+void MusicLyricWidget::resizeEvent(QResizeEvent *event)
 {
-    Q_D(MUsicLyricWidget);
+    Q_D(MusicLyricWidget);
     QImage cover(d->backgroundimage);
 
     //cut image
@@ -216,18 +216,18 @@ void MUsicLyricWidget::resizeEvent(QResizeEvent *event)
     QWidget::resizeEvent(event);
 }
 
-void MUsicLyricWidget::mousePressEvent(QMouseEvent *event)
+void MusicLyricWidget::mousePressEvent(QMouseEvent *event)
 {
-    Q_D(MUsicLyricWidget);
+    Q_D(MusicLyricWidget);
     if (d->serachflag && !d->searchLyricsWidget->rect().contains(event->pos())) {
         onsearchBt();
     }
     QWidget::mousePressEvent(event);
 }
 
-void MUsicLyricWidget::onMusicPlayed(PlaylistPtr playlist, const MetaPtr meta)
+void MusicLyricWidget::onMusicPlayed(PlaylistPtr playlist, const MetaPtr meta)
 {
-    Q_D(MUsicLyricWidget);
+    Q_D(MusicLyricWidget);
     Q_UNUSED(playlist);
     d->activingMeta = meta;
 
@@ -268,10 +268,10 @@ void MUsicLyricWidget::onMusicPlayed(PlaylistPtr playlist, const MetaPtr meta)
     d->backgroundW->update();
 }
 
-void MUsicLyricWidget::onMusicStop(PlaylistPtr playlist, const MetaPtr meta)
+void MusicLyricWidget::onMusicStop(PlaylistPtr playlist, const MetaPtr meta)
 {
     Q_UNUSED(playlist)
-    Q_D(MUsicLyricWidget);
+    Q_D(MusicLyricWidget);
 
     QImage cover(d->defaultCover);
     auto coverData = MetaSearchService::coverData(meta);
@@ -299,27 +299,27 @@ void MUsicLyricWidget::onMusicStop(PlaylistPtr playlist, const MetaPtr meta)
     d->lyricview->getFromFile("clearLyric");
 }
 
-void MUsicLyricWidget::onProgressChanged(qint64 value, qint64 /*length*/)
+void MusicLyricWidget::onProgressChanged(qint64 value, qint64 /*length*/)
 {
-    Q_D(MUsicLyricWidget);
+    Q_D(MusicLyricWidget);
 
     d->lyricview->postionChanged(value);
 }
 
-void MUsicLyricWidget::onLyricChanged(const MetaPtr meta, const DMusic::SearchMeta &search,  const QByteArray &lyricData)
+void MusicLyricWidget::onLyricChanged(const MetaPtr meta, const DMusic::SearchMeta &search,  const QByteArray &lyricData)
 {
     Q_UNUSED(search)
     Q_UNUSED(lyricData)
-    Q_D(MUsicLyricWidget);
+    Q_D(MusicLyricWidget);
     if (d->activingMeta != meta) {
         return;
     }
 }
 
-void MUsicLyricWidget::onCoverChanged(const MetaPtr meta,  const DMusic::SearchMeta &search, const QByteArray &coverData)
+void MusicLyricWidget::onCoverChanged(const MetaPtr meta,  const DMusic::SearchMeta &search, const QByteArray &coverData)
 {
     Q_UNUSED(search)
-    Q_D(MUsicLyricWidget);
+    Q_D(MusicLyricWidget);
     if (d->activingMeta != meta) {
         return;
     }
@@ -347,15 +347,15 @@ void MUsicLyricWidget::onCoverChanged(const MetaPtr meta,  const DMusic::SearchM
     d->backgroundW->update();
 }
 
-void MUsicLyricWidget::setDefaultCover(QString defaultCover)
+void MusicLyricWidget::setDefaultCover(QString defaultCover)
 {
-    Q_D(MUsicLyricWidget);
+    Q_D(MusicLyricWidget);
     d->defaultCover = defaultCover;
 }
 
-void MUsicLyricWidget::onUpdateMetaCodec(const MetaPtr /*meta*/)
+void MusicLyricWidget::onUpdateMetaCodec(const MetaPtr /*meta*/)
 {
-    //Q_D(MUsicLyricWidget);
+    //Q_D(MusicLyricWidget);
 
 //    if (d->m_playingMusic == meta) {
 //        d->m_playingMusic.title = meta.title;
@@ -364,9 +364,9 @@ void MUsicLyricWidget::onUpdateMetaCodec(const MetaPtr /*meta*/)
     //    }
 }
 
-void MUsicLyricWidget::onsearchBt()
+void MusicLyricWidget::onsearchBt()
 {
-    Q_D(MUsicLyricWidget);
+    Q_D(MusicLyricWidget);
     d->serachflag = !d->serachflag;
     if (d->serachflag) {
         d->serachbt->setProperty("typeName", false);
@@ -388,15 +388,15 @@ void MUsicLyricWidget::onsearchBt()
     d->serachbt->update();
 }
 
-void MUsicLyricWidget::slotonsearchresult(QString path)
+void MusicLyricWidget::slotonsearchresult(QString path)
 {
-    Q_D(MUsicLyricWidget);
+    Q_D(MusicLyricWidget);
     d->lyricview->getFromFile(path);
 }
 
-void MUsicLyricWidget::slotTheme(int type)
+void MusicLyricWidget::slotTheme(int type)
 {
-    Q_D(MUsicLyricWidget);
+    Q_D(MusicLyricWidget);
 
     if (type == 0)
         type = DGuiApplicationHelper::instance()->themeType();
@@ -433,9 +433,9 @@ void MUsicLyricWidget::slotTheme(int type)
     d->lyricview->slotTheme(type);
 }
 
-void MUsicLyricWidget::onContextSearchFinished(const QString &context, const QList<DMusic::SearchMeta> &metalist)
+void MusicLyricWidget::onContextSearchFinished(const QString &context, const QList<DMusic::SearchMeta> &metalist)
 {
-    //Q_D(MUsicLyricWidget);
+    //Q_D(MusicLyricWidget);
 
     //TODO: check context
     Q_UNUSED(context);

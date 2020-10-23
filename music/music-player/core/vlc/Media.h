@@ -35,7 +35,7 @@ public:
         \param localFile true, if media is local file (bool)
         \param instance main libvlc instance (VlcInstance *)
     */
-    explicit VlcMedia(const QString &location,
+    VlcMedia(const QString &location,
                       bool localFile,
                       VlcInstance *instance);
 
@@ -48,10 +48,10 @@ public:
         \param location remote location of the media (QString)
         \param instance main libvlc instance (VlcInstance *)
     */
-    explicit VlcMedia(const QString &location,
+    VlcMedia(const QString &location,
                       VlcInstance *instance);
 
-    explicit VlcMedia();
+    VlcMedia();
 
     /*!
         \brief VlcMedia constructor.
@@ -60,7 +60,7 @@ public:
 
         \param media libvlc media item (libvlc_media_t *)
     */
-    VlcMedia(libvlc_media_t *media);
+    explicit VlcMedia(libvlc_media_t *media);
 
     /*!
         \brief VlcMedia destructor
@@ -80,7 +80,7 @@ public:
 
         \return parsed status (const bool)
     */
-    bool parsed() const;
+    //bool parsed() const;
 
     /*!
         \brief Parse media information
@@ -90,14 +90,14 @@ public:
 
         \see parsedChanged
     */
-    void parse();
+    //void parse();
 
     /*!
         \brief Current media location
 
         \return QString media location
     */
-    QString currentLocation() const;
+    //QString currentLocation() const;
 
     /*!
         \brief Get media stats
@@ -188,9 +188,9 @@ public:
         \param mux output mux (Vlc::Mux)
         \return QString output file
     */
-    QString merge(const QString &name,
-                  const QString &path,
-                  const Vlc::Mux &mux);
+//    QString merge(const QString &name,
+//                  const QString &path,
+//                  const Vlc::Mux &mux);
 
     /*!
         \brief Record
@@ -271,7 +271,7 @@ public:
         \brief Set media options
         \param options media options (QStringList)
     */
-    void setOptions(const QStringList &options);
+    //void setOptions(const QStringList &options);
 
     void initMedia(const QString &location,
                    bool localFile,

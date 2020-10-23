@@ -50,10 +50,10 @@ SearchResult::SearchResult(QWidget *parent) : DBlurEffectWidget(parent)
     vlayout3 = new QVBoxLayout();
     vlayout = new QVBoxLayout();
 
-    vlayout->setContentsMargins(0, 0, 0, 0);
-    vlayout1->setSpacing(2);
-    vlayout2->setSpacing(2);
-    vlayout3->setSpacing(2);
+    vlayout->setContentsMargins(0, 8, 0, 18);
+    // vlayout1->setSpacing(1);
+    // vlayout2->setSpacing(1);
+    // vlayout3->setSpacing(1);
     vlayout->setSpacing(0);
     setLayout(vlayout);
 
@@ -61,7 +61,7 @@ SearchResult::SearchResult(QWidget *parent) : DBlurEffectWidget(parent)
     m_MusicLabel = new DLabel(tr("Music"), this);
     m_MusicLabel->setFont(labelFont);
     m_MusicLabel->setPalette(labelPalette);
-    m_MusicLabel->setContentsMargins(32, 8, 0, 4);
+    m_MusicLabel->setContentsMargins(32, 4, 0, 0);
     m_MusicLabel->adjustSize();
 
     m_MusicView = new MusicSearchListview(this);
@@ -72,14 +72,13 @@ SearchResult::SearchResult(QWidget *parent) : DBlurEffectWidget(parent)
     //分割线1
     s_ArtistLine = new DHorizontalLine;
     s_ArtistLine->setFixedSize(380, 20);
-    s_ArtistLine->setContentsMargins(-32, 0, 0, 0);
     s_ArtistLine->setLineWidth(2);
 
     //演唱者
     m_ArtistLabel = new DLabel(tr("Artists"), this);
     m_ArtistLabel->setFont(labelFont);
     m_ArtistLabel->setPalette(labelPalette);
-    m_ArtistLabel->setContentsMargins(32, 0, 0, 8);
+    m_ArtistLabel->setContentsMargins(32, 0, 0, 0);
     m_ArtistLabel->adjustSize();
 
     m_ArtistView = new MusicSearchListview(this);
@@ -95,7 +94,7 @@ SearchResult::SearchResult(QWidget *parent) : DBlurEffectWidget(parent)
     m_AblumLabel = new DLabel(tr("Albums"), this);
     m_AblumLabel->setFont(labelFont);
     m_AblumLabel->setPalette(labelPalette);
-    m_AblumLabel->setContentsMargins(32, 0, 0, 8);
+    m_AblumLabel->setContentsMargins(32, 0, 0, 0);
     m_AblumLabel->adjustSize();
 
     m_AlbumView = new MusicSearchListview(this);
@@ -285,11 +284,6 @@ void SearchResult::selectDown()
 QString SearchResult::currentStr()
 {
     QString str;
-
-    //    auto index = m_MusicView->currentIndex();
-    //    if (index.isValid()) {
-    //        str = m_MusicModel->stringList()[index.row()];
-    //    }
 
     return str;
 }

@@ -54,7 +54,7 @@ public:
         \param level desired log level
         \see Vlc::LogLevel
     */
-    void setLogLevel(Vlc::LogLevel level);
+    //void setLogLevel(Vlc::LogLevel level);
 
 //    static QString libVersion();
 
@@ -74,13 +74,13 @@ public:
         \brief libvlc compiler info
         \return a string containing the compiler version (QString)
     */
-    static QString compiler();
+    //static QString compiler();
 
     /*!
         \brief libvlc changeset info
         \return a string containing the changeset (QString)
     */
-    static QString changeset();
+    //static QString changeset();
 
     /*!
         \brief Sets the application name.

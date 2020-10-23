@@ -20,8 +20,6 @@
  */
 
 #include "player.h"
-#include "AudioBufferDevice.h"
-#include "AudioPlayer.h"
 
 #include <QDebug>
 #include <QTimer>
@@ -123,10 +121,10 @@ void initMiniTypes()
     }
 }
 
-QStringList Player::supportedFilterStringList() const
-{
-    return sSupportedFiterList;
-}
+//QStringList Player::supportedFilterStringList() const
+//{
+//    return sSupportedFiterList;
+//}
 
 QStringList Player::supportedSuffixList() const
 {
@@ -141,7 +139,7 @@ QStringList Player::supportedMimeTypes() const
 class PlayerPrivate
 {
 public:
-    PlayerPrivate(Player *parent) : q_ptr(parent)
+    explicit PlayerPrivate(Player *parent) : q_ptr(parent)
     {
         /*-------AudioPlayer-------*/
 //        QtConcurrent::run([ = ] {
@@ -259,9 +257,7 @@ void PlayerPrivate::initConnection()
             break;
         }
         case Vlc::Ended: {
-            if (qvplayer->time() != 0) {
-                selectNext(activeMeta, mode);
-            }
+            //selectNext(activeMeta, mode);//just sync with Vlc::Ended
             break;
         }
         case Vlc::Error: {
@@ -277,14 +273,11 @@ void PlayerPrivate::initConnection()
         }
     });
 
-    q->connect(qvplayer->audio(), &VlcAudio::volumeChanged,
-    q, [ = ](int volume) {
-        Q_UNUSED(volume)
-//        if (fadeInOutFactor < 1.0) {
-//            return;
-//        }
-//        if (volume >= 0)
-//            Q_EMIT q->volumeChanged(volume);
+
+
+    q->connect(qvplayer, &VlcMediaPlayer::end,
+    q, [ = ]() {
+        selectNext(activeMeta, mode);//just sync with Vlc::Ended
     });
 
 

@@ -34,7 +34,7 @@ public:
 
     QThread *newThread();
     void moveToNewThread(QObject *obj);
-    void manager(QThread *thread);
+    //void manager(QThread *thread);
     void quitAll();
 
 private:

@@ -81,7 +81,7 @@ class MPRIS_QT_EXPORT MprisManager : public QObject
 
 public:
 
-    MprisManager(QObject *parent = 0);
+    explicit MprisManager(QObject *parent = 0);
     ~MprisManager();
 
     // Mpris2 Root Interface

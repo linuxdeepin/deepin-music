@@ -47,7 +47,7 @@ DWIDGET_USE_NAMESPACE
 class MusicListDataViewPrivate
 {
 public:
-    MusicListDataViewPrivate(MusicListDataView *parent): q_ptr(parent) {}
+    explicit MusicListDataViewPrivate(MusicListDataView *parent): q_ptr(parent) {}
 
     void addPlayMusicTypePtr(const PlayMusicTypePtr TypePtr);
 

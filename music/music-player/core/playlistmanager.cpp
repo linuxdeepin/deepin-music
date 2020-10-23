@@ -48,12 +48,12 @@ static PlaylistMeta emptyInfo;
 class PlaylistManagerPrivate
 {
 public:
-    PlaylistManagerPrivate(PlaylistManager *parent) : q_ptr(parent) {}
+    explicit PlaylistManagerPrivate(PlaylistManager *parent) : q_ptr(parent) {}
 
-    inline uint indexUUID(const QString &uuid)
-    {
-        return static_cast<uint>(sortUUIDs.indexOf(uuid));
-    }
+//    inline uint indexUUID(const QString &uuid)
+//    {
+//        return static_cast<uint>(sortUUIDs.indexOf(uuid));
+//    }
 
     QStringList                 sortUUIDs;
     QMap<QString, PlaylistPtr>  playlists;

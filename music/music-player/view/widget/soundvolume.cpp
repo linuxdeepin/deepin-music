@@ -42,10 +42,10 @@ using namespace Dtk::Widget;
 class SoundVolumePrivate
 {
 public:
-    SoundVolumePrivate(SoundVolume *parent) : q_ptr(parent) {}
+    explicit SoundVolumePrivate(SoundVolume *parent) : q_ptr(parent) {}
 
     SoundVolume *q_ptr;
-    DLabel      *lblPersent;
+    DLabel      *lblPersent = nullptr;
     DSlider     *volSlider           = nullptr;
     SoundPixmapButton *sound         = nullptr;
     QBrush      background;
@@ -114,7 +114,11 @@ SoundVolume::SoundVolume(QWidget *parent) : QWidget(parent), d_ptr(new SoundVolu
 
     connect(d->volSlider, &DSlider::valueChanged,
     this, [ = ](int volume) {
-        d->volMute = false;
+        if (volume == 0) {
+            d->volMute = true;
+        } else {
+            d->volMute = false;
+        }
         volumeIcon();
 
         Q_EMIT volumeChanged(volume);

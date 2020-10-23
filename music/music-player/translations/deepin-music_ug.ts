@@ -1,6 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS>
-<TS version="2.1" language="ug">
+<?xml version="1.0" ?><!DOCTYPE TS><TS language="ug" sourcelanguage="en_US" version="2.1">
 <context>
     <name>CloseConfirmDialog</name>
     <message>
@@ -20,8 +18,8 @@
     </message>
     <message>
         <location filename="../view/widget/closeconfirmdialog.cpp" line="102"/>
-        <source>Please select your operation</source>
-        <translation>مەشغۇلاتىڭىزنى تاللاڭ</translation>
+        <source>Please choose your action</source>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../view/widget/closeconfirmdialog.cpp" line="110"/>
@@ -39,199 +37,199 @@
     <message>
         <location filename="../view/widget/dequalizerdialog.cpp" line="112"/>
         <source>Custom</source>
-        <translation type="unfinished">ئادەت</translation>
-    </message>
-    <message>
-        <location filename="../view/widget/dequalizerdialog.cpp" line="114"/>
-        <source>Classical</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../view/widget/dequalizerdialog.cpp" line="115"/>
-        <source>Club</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../view/widget/dequalizerdialog.cpp" line="116"/>
-        <source>Dance</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../view/widget/dequalizerdialog.cpp" line="120"/>
-        <source>Headphones</source>
-        <translation type="unfinished"></translation>
+        <translation>ئادەت</translation>
     </message>
     <message>
         <location filename="../view/widget/dequalizerdialog.cpp" line="113"/>
         <source>Monophony</source>
-        <translation type="unfinished"></translation>
+        <translation>تاق ئاۋاز</translation>
+    </message>
+    <message>
+        <location filename="../view/widget/dequalizerdialog.cpp" line="114"/>
+        <source>Classical</source>
+        <translation>كىلاسسىك</translation>
+    </message>
+    <message>
+        <location filename="../view/widget/dequalizerdialog.cpp" line="115"/>
+        <source>Club</source>
+        <translation>كۇلۇب</translation>
+    </message>
+    <message>
+        <location filename="../view/widget/dequalizerdialog.cpp" line="116"/>
+        <source>Dance</source>
+        <translation>ئۇسۇل</translation>
     </message>
     <message>
         <location filename="../view/widget/dequalizerdialog.cpp" line="117"/>
         <source>Full Bass</source>
-        <translation type="unfinished"></translation>
+        <translation>تولۇق تۆۋەن ئاۋاز</translation>
     </message>
     <message>
         <location filename="../view/widget/dequalizerdialog.cpp" line="118"/>
         <source>Full Bass and Treble</source>
-        <translation type="unfinished"></translation>
+        <translation>يۇقرى تۆۋەن ئاۋاز</translation>
     </message>
     <message>
         <location filename="../view/widget/dequalizerdialog.cpp" line="119"/>
         <source>Full Treble</source>
-        <translation type="unfinished"></translation>
+        <translation>پۈتۈن يۇقرى ئاۋاز</translation>
+    </message>
+    <message>
+        <location filename="../view/widget/dequalizerdialog.cpp" line="120"/>
+        <source>Headphones</source>
+        <translation>تىڭشىغۇچلار</translation>
     </message>
     <message>
         <location filename="../view/widget/dequalizerdialog.cpp" line="121"/>
         <source>Hall</source>
-        <translation type="unfinished"></translation>
+        <translation>زال</translation>
     </message>
     <message>
         <location filename="../view/widget/dequalizerdialog.cpp" line="122"/>
         <source>Live</source>
-        <translation type="unfinished"></translation>
+        <translation>جانلىق</translation>
     </message>
     <message>
         <location filename="../view/widget/dequalizerdialog.cpp" line="123"/>
         <source>Party</source>
-        <translation type="unfinished"></translation>
+        <translation>يىغىلىش</translation>
     </message>
     <message>
         <location filename="../view/widget/dequalizerdialog.cpp" line="124"/>
         <source>Pop</source>
-        <translation type="unfinished"></translation>
+        <translation>مودا</translation>
     </message>
     <message>
         <location filename="../view/widget/dequalizerdialog.cpp" line="125"/>
         <source>Reggae</source>
-        <translation type="unfinished"></translation>
+        <translation>رېگگا</translation>
     </message>
     <message>
         <location filename="../view/widget/dequalizerdialog.cpp" line="126"/>
         <source>Rock</source>
-        <translation type="unfinished"></translation>
+        <translation>روك</translation>
     </message>
     <message>
         <location filename="../view/widget/dequalizerdialog.cpp" line="127"/>
         <source>Ska</source>
-        <translation type="unfinished"></translation>
+        <translation>سىكا</translation>
     </message>
     <message>
         <location filename="../view/widget/dequalizerdialog.cpp" line="128"/>
         <source>Soft</source>
-        <translation type="unfinished"></translation>
+        <translation>يۇمشاق</translation>
     </message>
     <message>
         <location filename="../view/widget/dequalizerdialog.cpp" line="129"/>
         <source>Soft Rock</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../view/widget/dequalizerdialog.cpp" line="194"/>
-        <location filename="../view/widget/dequalizerdialog.cpp" line="655"/>
-        <source>ON</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../view/widget/dequalizerdialog.cpp" line="196"/>
-        <location filename="../view/widget/dequalizerdialog.cpp" line="653"/>
-        <source>OFF</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../view/widget/dequalizerdialog.cpp" line="550"/>
-        <location filename="../view/widget/dequalizerdialog.cpp" line="551"/>
-        <source>Sound Effects Saved</source>
-        <translation type="unfinished"></translation>
+        <translation>يۇمشاق روك</translation>
     </message>
     <message>
         <location filename="../view/widget/dequalizerdialog.cpp" line="130"/>
         <source>Techno</source>
-        <translation type="unfinished"></translation>
+        <translation>تېخنىك</translation>
     </message>
     <message>
         <location filename="../view/widget/dequalizerdialog.cpp" line="187"/>
         <location filename="../view/widget/dequalizerdialog.cpp" line="448"/>
         <source>Equalizer</source>
-        <translation type="unfinished"></translation>
+        <translation>مۇۋازىنېتور</translation>
+    </message>
+    <message>
+        <location filename="../view/widget/dequalizerdialog.cpp" line="194"/>
+        <location filename="../view/widget/dequalizerdialog.cpp" line="654"/>
+        <source>ON</source>
+        <translation>ئوچۇق</translation>
+    </message>
+    <message>
+        <location filename="../view/widget/dequalizerdialog.cpp" line="196"/>
+        <location filename="../view/widget/dequalizerdialog.cpp" line="652"/>
+        <source>OFF</source>
+        <translation>ئېتىك</translation>
     </message>
     <message>
         <location filename="../view/widget/dequalizerdialog.cpp" line="213"/>
         <source>Save</source>
-        <translation type="unfinished"></translation>
+        <translation>ساقلاش</translation>
     </message>
     <message>
         <location filename="../view/widget/dequalizerdialog.cpp" line="224"/>
         <source>Preamplifier</source>
-        <translation type="unfinished"></translation>
+        <translation>ئالدى چوڭايتقۇ</translation>
     </message>
     <message>
         <location filename="../view/widget/dequalizerdialog.cpp" line="337"/>
         <source>Restore Defaults</source>
-        <translation type="unfinished">سۈكۈتتىكى ھالىتىگە قايتۇرۇش</translation>
+        <translation>سۈكۈتتىكى ھالىتىگە قايتۇرۇش</translation>
+    </message>
+    <message>
+        <location filename="../view/widget/dequalizerdialog.cpp" line="550"/>
+        <location filename="../view/widget/dequalizerdialog.cpp" line="551"/>
+        <source>Sound Effects Saved</source>
+        <translation>ئاۋاز ئۈنۈمى ساقلاندى</translation>
     </message>
 </context>
 <context>
     <name>Footer</name>
     <message>
-        <location filename="../view/footerwidget.cpp" line="286"/>
+        <location filename="../view/footerwidget.cpp" line="298"/>
         <source>Unknown Title</source>
         <translation>تېمىسى نامەلۇم</translation>
     </message>
     <message>
-        <location filename="../view/footerwidget.cpp" line="302"/>
-        <location filename="../view/footerwidget.cpp" line="860"/>
-        <location filename="../view/footerwidget.cpp" line="1430"/>
+        <location filename="../view/footerwidget.cpp" line="317"/>
+        <location filename="../view/footerwidget.cpp" line="879"/>
+        <location filename="../view/footerwidget.cpp" line="1488"/>
         <source>Unknown artist</source>
         <translation>نامەلۇم سەنئەتچى</translation>
     </message>
     <message>
-        <location filename="../view/footerwidget.cpp" line="408"/>
+        <location filename="../view/footerwidget.cpp" line="424"/>
         <source>Previous</source>
         <translation>ئالدىنقى</translation>
     </message>
     <message>
-        <location filename="../view/footerwidget.cpp" line="409"/>
+        <location filename="../view/footerwidget.cpp" line="425"/>
         <source>Next</source>
         <translation>كېيىنكى </translation>
     </message>
     <message>
-        <location filename="../view/footerwidget.cpp" line="410"/>
+        <location filename="../view/footerwidget.cpp" line="426"/>
         <source>Play/Pause</source>
         <translation>قويۇش\توختۇتۇش</translation>
     </message>
     <message>
-        <location filename="../view/footerwidget.cpp" line="411"/>
+        <location filename="../view/footerwidget.cpp" line="427"/>
         <source>Favorite</source>
         <translation>ياقتۇرغانلىرىم</translation>
     </message>
     <message>
-        <location filename="../view/footerwidget.cpp" line="412"/>
+        <location filename="../view/footerwidget.cpp" line="428"/>
         <source>Lyrics</source>
         <translation>ناخشا تېكىستى</translation>
     </message>
     <message>
-        <location filename="../view/footerwidget.cpp" line="413"/>
+        <location filename="../view/footerwidget.cpp" line="429"/>
         <source>Play Mode</source>
         <translation>قويۇش ھالىتى</translation>
     </message>
     <message>
-        <location filename="../view/footerwidget.cpp" line="414"/>
+        <location filename="../view/footerwidget.cpp" line="430"/>
         <source>Play Queue</source>
         <translation>قويۇش تەرتىپى</translation>
     </message>
     <message>
-        <location filename="../view/footerwidget.cpp" line="1404"/>
+        <location filename="../view/footerwidget.cpp" line="1462"/>
         <source>List Loop</source>
         <translation>ھالقىسىمان تىزىملىك</translation>
     </message>
     <message>
-        <location filename="../view/footerwidget.cpp" line="1407"/>
+        <location filename="../view/footerwidget.cpp" line="1465"/>
         <source>Single Loop</source>
         <translation>تاق تىزىملىك</translation>
     </message>
     <message>
-        <location filename="../view/footerwidget.cpp" line="1410"/>
+        <location filename="../view/footerwidget.cpp" line="1468"/>
         <source>Shuffle</source>
         <translation>ئۆزگەرتىش</translation>
     </message>
@@ -241,27 +239,27 @@
     <message>
         <location filename="../view/importwidget.cpp" line="86"/>
         <source>Open Folder</source>
-        <translation type="unfinished"></translation>
+        <translation>قىسقۇچنى ئېچىش</translation>
     </message>
     <message>
-        <location filename="../view/importwidget.cpp" line="94"/>
+        <location filename="../view/importwidget.cpp" line="96"/>
         <source>Add Music</source>
-        <translation type="unfinished"></translation>
+        <translation>مۇزىكا قوشۇش</translation>
     </message>
     <message>
-        <location filename="../view/importwidget.cpp" line="105"/>
-        <location filename="../view/importwidget.cpp" line="162"/>
+        <location filename="../view/importwidget.cpp" line="109"/>
+        <location filename="../view/importwidget.cpp" line="168"/>
         <source>Scan</source>
         <translation>سايىلەش</translation>
     </message>
     <message>
-        <location filename="../view/importwidget.cpp" line="106"/>
-        <location filename="../view/importwidget.cpp" line="163"/>
+        <location filename="../view/importwidget.cpp" line="110"/>
+        <location filename="../view/importwidget.cpp" line="169"/>
         <source>%1 music directory or drag music files here</source>
         <translation>% 1 مۇزىكا مۇندەرىجىسى ياكى مۇزىكا ھۆججەتلىرىنى بۇ يەرگە سۆرەپ كىرىۋاتىدۇ</translation>
     </message>
     <message>
-        <location filename="../view/importwidget.cpp" line="153"/>
+        <location filename="../view/importwidget.cpp" line="159"/>
         <source>Loading music, please wait...</source>
         <translation>مۇزىكا قۇشۇلىۋاتىدۇ،سەل ساقلاڭ...</translation>
     </message>
@@ -360,109 +358,109 @@
     <message>
         <location filename="../view/musiclyricwidget.cpp" line="120"/>
         <source>No lyrics yet</source>
-        <translation type="unfinished"></translation>
+        <translation>لىرىكىلار يوق</translation>
     </message>
 </context>
 <context>
     <name>MainFrame</name>
     <message>
-        <location filename="../view/mainframe.cpp" line="180"/>
+        <location filename="../view/mainframe.cpp" line="182"/>
         <source>Add playlist</source>
         <translation>قويۇش تىزىملىكىگە قوشۇش</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="191"/>
+        <location filename="../view/mainframe.cpp" line="193"/>
         <source>Add music</source>
         <translation>مۇزىكا قوشۇش</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="196"/>
+        <location filename="../view/mainframe.cpp" line="198"/>
         <source>Equalizer</source>
-        <translation type="unfinished"></translation>
+        <translation>مۇۋازىنېتور</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="204"/>
+        <location filename="../view/mainframe.cpp" line="206"/>
         <source>Settings</source>
         <translation>تەڭشەك</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="263"/>
+        <location filename="../view/mainframe.cpp" line="265"/>
         <source>Dark theme</source>
         <translation>قاراڭغۇ تېما</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="271"/>
-        <location filename="../view/mainframe.cpp" line="840"/>
+        <location filename="../view/mainframe.cpp" line="273"/>
+        <location filename="../view/mainframe.cpp" line="866"/>
         <source>Exit</source>
         <translation>چېكىنىش</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="763"/>
-        <source>Music is a local music player with beautiful design and simple functions.</source>
-        <translation>مۇزىكا گۈزەل لايىھىلەش ۋە ئاددىي ئىقتىدارغا ئىگە يەرلىك مۇزىكا قويغۇچ.</translation>
-    </message>
-    <message>
-        <location filename="../view/mainframe.cpp" line="762"/>
-        <location filename="../view/mainframe.cpp" line="770"/>
-        <location filename="../view/mainframe.cpp" line="783"/>
-        <location filename="../view/mainframe.cpp" line="851"/>
-        <location filename="../view/mainframe.cpp" line="1374"/>
+        <location filename="../view/mainframe.cpp" line="790"/>
+        <location filename="../view/mainframe.cpp" line="798"/>
+        <location filename="../view/mainframe.cpp" line="810"/>
+        <location filename="../view/mainframe.cpp" line="877"/>
+        <location filename="../view/mainframe.cpp" line="1436"/>
         <source>Music</source>
         <translation>مۇزىكا</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="837"/>
+        <location filename="../view/mainframe.cpp" line="791"/>
+        <source>Music is a local music player with beautiful design and simple functions.</source>
+        <translation>مۇزىكا گۈزەل لايىھىلەش ۋە ئاددىي ئىقتىدارغا ئىگە يەرلىك مۇزىكا قويغۇچ.</translation>
+    </message>
+    <message>
+        <location filename="../view/mainframe.cpp" line="863"/>
         <source>Play/Pause</source>
         <translation>قويۇش\توختۇتۇش</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="838"/>
+        <location filename="../view/mainframe.cpp" line="864"/>
         <source>Previous</source>
         <translation>ئالدىنقى</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="839"/>
+        <location filename="../view/mainframe.cpp" line="865"/>
         <source>Next</source>
         <translation>كېيىنكى </translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="948"/>
+        <location filename="../view/mainframe.cpp" line="1007"/>
         <source>Successfully added to &quot;%1&quot;</source>
         <translation>مۇۋەپپەقىيەتلىك ھالدا &quot;% 1&quot; گە قوشۇلدى</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="952"/>
+        <location filename="../view/mainframe.cpp" line="1011"/>
         <source>Already added to the playlist</source>
         <translation>قويۇش تىزىملىكىگە بۇرۇنلا قوشۇلغان</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="955"/>
+        <location filename="../view/mainframe.cpp" line="1014"/>
         <source>1 song added</source>
         <translation>1 ناخشا قوشۇلدى</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="957"/>
+        <location filename="../view/mainframe.cpp" line="1016"/>
         <source>%1 songs added</source>
         <translation>% 1 ناخشا قوشۇلدى</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="1031"/>
+        <location filename="../view/mainframe.cpp" line="1082"/>
         <source>File is invalid or does not exist, load failed</source>
         <translation>ھۆججەت ئىناۋەتسىز ياكى مەۋجۇت ئەمەس ،قوشۇش مەغلۇپ بولدى</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="1032"/>
-        <location filename="../view/mainframe.cpp" line="1082"/>
+        <location filename="../view/mainframe.cpp" line="1083"/>
+        <location filename="../view/mainframe.cpp" line="1139"/>
         <source>OK</source>
         <translation>تامام</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="1076"/>
+        <location filename="../view/mainframe.cpp" line="1133"/>
         <source>Import failed, no valid music file found</source>
         <translation>ئەكىرىش مەغلۇپ بولدى ، ئۈنۈملۈك مۇزىكا ھۆججىتى تېپىلمىدى</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="1517"/>
+        <location filename="../view/mainframe.cpp" line="1579"/>
         <source>All music</source>
         <translation>ھەممە ناخشىلار</translation>
     </message>
@@ -494,10 +492,10 @@
         <location filename="../view/musiclistdatawidget.cpp" line="152"/>
         <location filename="../view/musiclistdatawidget.cpp" line="198"/>
         <location filename="../view/musiclistdatawidget.cpp" line="237"/>
-        <location filename="../view/musiclistdatawidget.cpp" line="968"/>
-        <location filename="../view/musiclistdatawidget.cpp" line="983"/>
-        <location filename="../view/musiclistdatawidget.cpp" line="998"/>
-        <location filename="../view/musiclistdatawidget.cpp" line="1201"/>
+        <location filename="../view/musiclistdatawidget.cpp" line="965"/>
+        <location filename="../view/musiclistdatawidget.cpp" line="980"/>
+        <location filename="../view/musiclistdatawidget.cpp" line="995"/>
+        <location filename="../view/musiclistdatawidget.cpp" line="1198"/>
         <location filename="../view/musiclistdatawidget.cpp" line="1396"/>
         <location filename="../view/musiclistdatawidget.cpp" line="1442"/>
         <location filename="../view/musiclistdatawidget.cpp" line="1482"/>
@@ -557,83 +555,83 @@
         <translation>% 1 ناخشا</translation>
     </message>
     <message>
-        <location filename="../view/musiclistdatawidget.cpp" line="970"/>
-        <location filename="../view/musiclistdatawidget.cpp" line="985"/>
-        <location filename="../view/musiclistdatawidget.cpp" line="1000"/>
-        <location filename="../view/musiclistdatawidget.cpp" line="1202"/>
+        <location filename="../view/musiclistdatawidget.cpp" line="404"/>
+        <location filename="../view/musiclistdatawidget.cpp" line="1359"/>
+        <location filename="../view/musiclistdatawidget.cpp" line="1571"/>
+        <source>Search Results</source>
+        <translation>ئىزدەش نەتىجىسى</translation>
+    </message>
+    <message>
+        <location filename="../view/musiclistdatawidget.cpp" line="967"/>
+        <location filename="../view/musiclistdatawidget.cpp" line="982"/>
+        <location filename="../view/musiclistdatawidget.cpp" line="997"/>
+        <location filename="../view/musiclistdatawidget.cpp" line="1199"/>
         <source>No search results</source>
         <translation>ھېچقانداق ئىزدەش نەتىجىسى تىپىلمىدى</translation>
     </message>
     <message>
-        <location filename="../view/musiclistdatawidget.cpp" line="1050"/>
-        <location filename="../view/musiclistdatawidget.cpp" line="1147"/>
+        <location filename="../view/musiclistdatawidget.cpp" line="1047"/>
+        <location filename="../view/musiclistdatawidget.cpp" line="1148"/>
         <location filename="../view/musiclistdatawidget.cpp" line="1564"/>
         <source>All Music</source>
         <translation>ھەممە ناخشىلار</translation>
     </message>
     <message>
-        <location filename="../view/musiclistdatawidget.cpp" line="1057"/>
-        <location filename="../view/musiclistdatawidget.cpp" line="1066"/>
-        <location filename="../view/musiclistdatawidget.cpp" line="1075"/>
-        <location filename="../view/musiclistdatawidget.cpp" line="1085"/>
-        <location filename="../view/musiclistdatawidget.cpp" line="1094"/>
-        <location filename="../view/musiclistdatawidget.cpp" line="1103"/>
+        <location filename="../view/musiclistdatawidget.cpp" line="1054"/>
+        <location filename="../view/musiclistdatawidget.cpp" line="1063"/>
+        <location filename="../view/musiclistdatawidget.cpp" line="1072"/>
+        <location filename="../view/musiclistdatawidget.cpp" line="1082"/>
+        <location filename="../view/musiclistdatawidget.cpp" line="1091"/>
+        <location filename="../view/musiclistdatawidget.cpp" line="1100"/>
         <source>Time added</source>
         <translation>ۋاقىت قوشۇش</translation>
     </message>
     <message>
-        <location filename="../view/musiclistdatawidget.cpp" line="1058"/>
-        <location filename="../view/musiclistdatawidget.cpp" line="1078"/>
-        <location filename="../view/musiclistdatawidget.cpp" line="1086"/>
-        <location filename="../view/musiclistdatawidget.cpp" line="1106"/>
+        <location filename="../view/musiclistdatawidget.cpp" line="1055"/>
+        <location filename="../view/musiclistdatawidget.cpp" line="1075"/>
+        <location filename="../view/musiclistdatawidget.cpp" line="1083"/>
+        <location filename="../view/musiclistdatawidget.cpp" line="1103"/>
         <source>Album</source>
         <translation>پىلاستىنكا</translation>
     </message>
     <message>
-        <location filename="../view/musiclistdatawidget.cpp" line="1067"/>
-        <location filename="../view/musiclistdatawidget.cpp" line="1077"/>
-        <location filename="../view/musiclistdatawidget.cpp" line="1095"/>
-        <location filename="../view/musiclistdatawidget.cpp" line="1105"/>
+        <location filename="../view/musiclistdatawidget.cpp" line="1064"/>
+        <location filename="../view/musiclistdatawidget.cpp" line="1074"/>
+        <location filename="../view/musiclistdatawidget.cpp" line="1092"/>
+        <location filename="../view/musiclistdatawidget.cpp" line="1102"/>
         <source>Artist</source>
         <translation>سەنئەتكار</translation>
     </message>
     <message>
-        <location filename="../view/musiclistdatawidget.cpp" line="1076"/>
-        <location filename="../view/musiclistdatawidget.cpp" line="1104"/>
+        <location filename="../view/musiclistdatawidget.cpp" line="1073"/>
+        <location filename="../view/musiclistdatawidget.cpp" line="1101"/>
         <source>Title</source>
         <translation>تېما</translation>
     </message>
     <message>
-        <location filename="../view/musiclistdatawidget.cpp" line="1133"/>
+        <location filename="../view/musiclistdatawidget.cpp" line="1130"/>
         <source>Play All</source>
         <translation>ھەممىسىنى قويۇش</translation>
     </message>
     <message>
+        <location filename="../view/musiclistdatawidget.cpp" line="1232"/>
+        <source>Songs</source>
+        <translation>ناخشىلار</translation>
+    </message>
+    <message>
         <location filename="../view/musiclistdatawidget.cpp" line="1233"/>
         <source>Artists</source>
-        <translation type="unfinished">سەنئەتكار</translation>
+        <translation>ئارتىسلار</translation>
     </message>
     <message>
         <location filename="../view/musiclistdatawidget.cpp" line="1234"/>
         <source>Albums</source>
-        <translation type="unfinished">پىلاستىنكا</translation>
+        <translation>ئالبۇملار</translation>
     </message>
     <message>
         <location filename="../view/musiclistdatawidget.cpp" line="1269"/>
         <source>Custom</source>
         <translation>ئادەت</translation>
-    </message>
-    <message>
-        <location filename="../view/musiclistdatawidget.cpp" line="408"/>
-        <location filename="../view/musiclistdatawidget.cpp" line="1359"/>
-        <location filename="../view/musiclistdatawidget.cpp" line="1571"/>
-        <source>Search Results</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../view/musiclistdatawidget.cpp" line="1232"/>
-        <source>Songs</source>
-        <translation type="unfinished">ناخشا</translation>
     </message>
     <message>
         <location filename="../view/musiclistdatawidget.cpp" line="1619"/>
@@ -659,12 +657,12 @@
     <message>
         <location filename="../view/widget/musiclistinfoview.cpp" line="455"/>
         <source>Play queue</source>
-        <translation type="unfinished"></translation>
+        <translation>قويغۇچ ئۆچرىتى</translation>
     </message>
     <message>
         <location filename="../view/widget/musiclistinfoview.cpp" line="480"/>
         <source>Add to new playlist</source>
-        <translation type="unfinished"></translation>
+        <translation>يىڭى قويۇلمىلار تىزىملىكى</translation>
     </message>
     <message>
         <location filename="../view/widget/musiclistinfoview.cpp" line="525"/>
@@ -710,17 +708,17 @@
     <message>
         <location filename="../view/widget/musiclistinfoview.cpp" line="609"/>
         <source>Remove</source>
-        <translation type="unfinished"></translation>
+        <translation>چىقىرىۋېتىش</translation>
     </message>
     <message>
         <location filename="../view/widget/musiclistinfoview.cpp" line="613"/>
         <source>Are you sure you want to remove %1?</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 نى ئۆچۈرمەكچىمۇ؟</translation>
     </message>
     <message>
         <location filename="../view/widget/musiclistinfoview.cpp" line="615"/>
         <source>Are you sure you want to remove the selected %1 songs?</source>
-        <translation type="unfinished"></translation>
+        <translation>تاللانغان%1 ناخشىنى ئۆچۈرمەكچىمۇ؟</translation>
     </message>
     <message>
         <location filename="../view/widget/musiclistinfoview.cpp" line="640"/>
@@ -779,65 +777,47 @@
 <context>
     <name>MusicListView</name>
     <message>
-        <location filename="../view/widget/musiclistview.cpp" line="172"/>
+        <location filename="../view/widget/musiclistview.cpp" line="175"/>
         <source>My Favorites</source>
-        <translation type="unfinished"></translation>
+        <translation>ياقتۇرغانلىرىم</translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistview.cpp" line="393"/>
-        <location filename="../view/widget/musiclistview.cpp" line="542"/>
+        <location filename="../view/widget/musiclistview.cpp" line="406"/>
+        <location filename="../view/widget/musiclistview.cpp" line="559"/>
         <source>Are you sure you want to delete this playlist?</source>
         <translation>بۇ تىزىملىكنى ئۆچۈرمەكچىمۇ؟</translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistview.cpp" line="400"/>
-        <location filename="../view/widget/musiclistview.cpp" line="549"/>
+        <location filename="../view/widget/musiclistview.cpp" line="413"/>
+        <location filename="../view/widget/musiclistview.cpp" line="566"/>
         <source>Cancel</source>
         <translation>بىكار قىلىش</translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistview.cpp" line="401"/>
-        <location filename="../view/widget/musiclistview.cpp" line="521"/>
-        <location filename="../view/widget/musiclistview.cpp" line="541"/>
-        <location filename="../view/widget/musiclistview.cpp" line="550"/>
+        <location filename="../view/widget/musiclistview.cpp" line="414"/>
+        <location filename="../view/widget/musiclistview.cpp" line="538"/>
+        <location filename="../view/widget/musiclistview.cpp" line="558"/>
+        <location filename="../view/widget/musiclistview.cpp" line="567"/>
         <source>Delete</source>
         <translation>ئۆچۈرۈش</translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistview.cpp" line="511"/>
-        <location filename="../view/widget/musiclistview.cpp" line="535"/>
+        <location filename="../view/widget/musiclistview.cpp" line="528"/>
+        <location filename="../view/widget/musiclistview.cpp" line="552"/>
         <source>Pause</source>
         <translation>تورمۇزلاش</translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistview.cpp" line="514"/>
-        <location filename="../view/widget/musiclistview.cpp" line="532"/>
+        <location filename="../view/widget/musiclistview.cpp" line="531"/>
+        <location filename="../view/widget/musiclistview.cpp" line="549"/>
         <source>Play</source>
         <translation>قويۇش</translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistview.cpp" line="520"/>
-        <location filename="../view/widget/musiclistview.cpp" line="538"/>
+        <location filename="../view/widget/musiclistview.cpp" line="537"/>
+        <location filename="../view/widget/musiclistview.cpp" line="555"/>
         <source>Rename</source>
         <translation>قايتا ئىسىم قويۇش</translation>
-    </message>
-</context>
-<context>
-    <name>PlayListItem</name>
-    <message>
-        <location filename="../view/widget/playlistitem.cpp" line="187"/>
-        <source>Are you sure you want to delete this playlist?</source>
-        <translation type="unfinished">بۇ تىزىملىكنى ئۆچۈرمەكچىمۇ؟</translation>
-    </message>
-    <message>
-        <location filename="../view/widget/playlistitem.cpp" line="193"/>
-        <source>Cancel</source>
-        <translation type="unfinished">بىكار قىلىش</translation>
-    </message>
-    <message>
-        <location filename="../view/widget/playlistitem.cpp" line="194"/>
-        <source>Delete</source>
-        <translation type="unfinished">ئۆچۈرۈش</translation>
     </message>
 </context>
 <context>
@@ -853,106 +833,106 @@
         <translation>نامەلۇم ئالبۇم</translation>
     </message>
     <message>
-        <location filename="../view/widget/playlistview.cpp" line="522"/>
+        <location filename="../view/widget/playlistview.cpp" line="542"/>
         <source>Play queue</source>
-        <translation type="unfinished"></translation>
+        <translation>قويغۇچ ئۆچرىتى</translation>
     </message>
     <message>
-        <location filename="../view/widget/playlistview.cpp" line="530"/>
+        <location filename="../view/widget/playlistview.cpp" line="550"/>
         <source>My favorites</source>
-        <translation type="unfinished">مىنىڭ ياقتۇرغانلىرىم</translation>
+        <translation>ياقتۇرغانلىرىم</translation>
     </message>
     <message>
-        <location filename="../view/widget/playlistview.cpp" line="546"/>
+        <location filename="../view/widget/playlistview.cpp" line="566"/>
         <source>Add to new playlist</source>
-        <translation type="unfinished"></translation>
+        <translation>يىڭى قويۇلمىلار تىزىملىكى</translation>
     </message>
     <message>
-        <location filename="../view/widget/playlistview.cpp" line="604"/>
-        <source>Pause</source>
-        <translation>تورمۇزلاش</translation>
-    </message>
-    <message>
-        <location filename="../view/widget/playlistview.cpp" line="599"/>
-        <location filename="../view/widget/playlistview.cpp" line="609"/>
+        <location filename="../view/widget/playlistview.cpp" line="619"/>
+        <location filename="../view/widget/playlistview.cpp" line="629"/>
         <source>Play</source>
         <translation>قويۇش</translation>
     </message>
     <message>
-        <location filename="../view/widget/playlistview.cpp" line="615"/>
+        <location filename="../view/widget/playlistview.cpp" line="624"/>
+        <source>Pause</source>
+        <translation>تورمۇزلاش</translation>
+    </message>
+    <message>
+        <location filename="../view/widget/playlistview.cpp" line="635"/>
         <source>Add to playlist</source>
         <translation>قويۇش تىزىملىكىگە قوشۇڭ</translation>
     </message>
     <message>
-        <location filename="../view/widget/playlistview.cpp" line="620"/>
+        <location filename="../view/widget/playlistview.cpp" line="640"/>
         <source>Display in file manager</source>
         <translation>ھۆججەت باشقۇرغۇچتا كۆرسىتىلىدۇ</translation>
     </message>
     <message>
-        <location filename="../view/widget/playlistview.cpp" line="626"/>
+        <location filename="../view/widget/playlistview.cpp" line="644"/>
+        <source>Remove from play queue</source>
+        <translation>قويغۇچ ئۆچرىتىدىن چىقىرۋىتىش</translation>
+    </message>
+    <message>
+        <location filename="../view/widget/playlistview.cpp" line="646"/>
         <source>Remove from playlist</source>
         <translation>قويۇش تىزىملىكىدىن ئۆچۈرۈڭ</translation>
     </message>
     <message>
-        <location filename="../view/widget/playlistview.cpp" line="624"/>
-        <source>Remove from play queue</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../view/widget/playlistview.cpp" line="628"/>
+        <location filename="../view/widget/playlistview.cpp" line="648"/>
         <source>Delete from local disk</source>
         <translation>يەرلىك دىسكىدىن ئۆچۈرۈڭ</translation>
     </message>
     <message>
-        <location filename="../view/widget/playlistview.cpp" line="666"/>
+        <location filename="../view/widget/playlistview.cpp" line="686"/>
         <source>Encoding</source>
         <translation>كودلاش</translation>
     </message>
     <message>
-        <location filename="../view/widget/playlistview.cpp" line="670"/>
+        <location filename="../view/widget/playlistview.cpp" line="690"/>
         <source>Song info</source>
         <translation>ناخشا ئۇچۇرى</translation>
     </message>
     <message>
-        <location filename="../view/widget/playlistview.cpp" line="726"/>
-        <location filename="../view/widget/playlistview.cpp" line="757"/>
+        <location filename="../view/widget/playlistview.cpp" line="746"/>
+        <location filename="../view/widget/playlistview.cpp" line="777"/>
         <source>Cancel</source>
         <translation>بىكار قىلىش</translation>
     </message>
     <message>
-        <location filename="../view/widget/playlistview.cpp" line="727"/>
+        <location filename="../view/widget/playlistview.cpp" line="747"/>
         <source>Remove</source>
-        <translation type="unfinished"></translation>
+        <translation>چىقىرىۋېتىش</translation>
     </message>
     <message>
-        <location filename="../view/widget/playlistview.cpp" line="731"/>
+        <location filename="../view/widget/playlistview.cpp" line="751"/>
         <source>Are you sure you want to remove %1?</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 نى ئۆچۈرمەكچىمۇ؟</translation>
     </message>
     <message>
-        <location filename="../view/widget/playlistview.cpp" line="733"/>
+        <location filename="../view/widget/playlistview.cpp" line="753"/>
         <source>Are you sure you want to remove the selected %1 songs?</source>
-        <translation type="unfinished"></translation>
+        <translation>تاللانغان%1 ناخشىنى ئۆچۈرمەكچىمۇ؟</translation>
     </message>
     <message>
-        <location filename="../view/widget/playlistview.cpp" line="758"/>
+        <location filename="../view/widget/playlistview.cpp" line="778"/>
         <source>Delete</source>
         <translation>ئۆچۈرۈش</translation>
     </message>
     <message>
-        <location filename="../view/widget/playlistview.cpp" line="767"/>
+        <location filename="../view/widget/playlistview.cpp" line="787"/>
         <source>Are you sure you want to delete %1?</source>
         <translation>% 1 نى ئۆچۈرمەكچىمۇ؟</translation>
     </message>
     <message>
-        <location filename="../view/widget/playlistview.cpp" line="774"/>
-        <location filename="../view/widget/playlistview.cpp" line="786"/>
+        <location filename="../view/widget/playlistview.cpp" line="794"/>
+        <location filename="../view/widget/playlistview.cpp" line="806"/>
         <source>Are you sure you want to delete the selected %1 songs?</source>
         <translation>تاللانغان% 1 ناخشىنى ئۆچۈرمەكچىمۇ؟</translation>
     </message>
     <message>
-        <location filename="../view/widget/playlistview.cpp" line="775"/>
-        <location filename="../view/widget/playlistview.cpp" line="787"/>
+        <location filename="../view/widget/playlistview.cpp" line="795"/>
+        <location filename="../view/widget/playlistview.cpp" line="807"/>
         <source>The song files contained will also be deleted</source>
         <translation>مەزمۇندىكى ناخشا ھۆججەتلىرىمۇ ئۆچۈرۈلىدۇ</translation>
     </message>
@@ -960,33 +940,33 @@
 <context>
     <name>PlayListWidget</name>
     <message>
-        <location filename="../view/playlistwidget.cpp" line="204"/>
-        <location filename="../view/playlistwidget.cpp" line="308"/>
+        <location filename="../view/playlistwidget.cpp" line="206"/>
+        <location filename="../view/playlistwidget.cpp" line="318"/>
         <source>No songs</source>
         <translation>ناخشا يوق</translation>
     </message>
     <message>
-        <location filename="../view/playlistwidget.cpp" line="206"/>
+        <location filename="../view/playlistwidget.cpp" line="208"/>
         <source>No search results</source>
         <translation>ھېچقانداق ئىزدەش نەتىجىسى تىپىلمىدى</translation>
     </message>
     <message>
-        <location filename="../view/playlistwidget.cpp" line="240"/>
+        <location filename="../view/playlistwidget.cpp" line="242"/>
         <source>Play Queue</source>
         <translation>قويۇش تەرتىپى</translation>
     </message>
     <message>
-        <location filename="../view/playlistwidget.cpp" line="267"/>
+        <location filename="../view/playlistwidget.cpp" line="269"/>
         <source>Empty</source>
         <translation>قۇرۇق</translation>
     </message>
     <message>
-        <location filename="../view/playlistwidget.cpp" line="310"/>
+        <location filename="../view/playlistwidget.cpp" line="320"/>
         <source>1 song</source>
         <translation>1 ناخشا</translation>
     </message>
     <message>
-        <location filename="../view/playlistwidget.cpp" line="312"/>
+        <location filename="../view/playlistwidget.cpp" line="322"/>
         <source>%1 songs</source>
         <translation>% 1 ناخشا</translation>
     </message>
@@ -994,15 +974,15 @@
 <context>
     <name>Playlist</name>
     <message>
-        <location filename="../core/playlist.cpp" line="471"/>
-        <location filename="../core/playlist.cpp" line="762"/>
+        <location filename="../core/playlist.cpp" line="473"/>
+        <location filename="../core/playlist.cpp" line="764"/>
         <source>Unknown album</source>
         <translation>نامەلۇم ئالبۇم</translation>
     </message>
     <message>
-        <location filename="../core/playlist.cpp" line="484"/>
-        <location filename="../core/playlist.cpp" line="766"/>
-        <location filename="../core/playlist.cpp" line="797"/>
+        <location filename="../core/playlist.cpp" line="486"/>
+        <location filename="../core/playlist.cpp" line="768"/>
+        <location filename="../core/playlist.cpp" line="799"/>
         <source>Unknown artist</source>
         <translation>نامەلۇم سەنئەتچى</translation>
     </message>
@@ -1015,50 +995,50 @@
         <translation>يېڭى قويۇش تىزىملىكى</translation>
     </message>
     <message>
-        <location filename="../core/playlistmanager.cpp" line="166"/>
-        <location filename="../core/playlistmanager.cpp" line="208"/>
-        <location filename="../core/playlistmanager.cpp" line="226"/>
+        <location filename="../core/playlistmanager.cpp" line="172"/>
+        <location filename="../core/playlistmanager.cpp" line="214"/>
+        <location filename="../core/playlistmanager.cpp" line="232"/>
         <source>Albums</source>
         <translation>پىلاستىنكا</translation>
     </message>
     <message>
-        <location filename="../core/playlistmanager.cpp" line="172"/>
-        <location filename="../core/playlistmanager.cpp" line="214"/>
-        <location filename="../core/playlistmanager.cpp" line="232"/>
+        <location filename="../core/playlistmanager.cpp" line="178"/>
+        <location filename="../core/playlistmanager.cpp" line="220"/>
+        <location filename="../core/playlistmanager.cpp" line="238"/>
         <source>Artists</source>
         <translation>سەنئەتكار</translation>
     </message>
     <message>
-        <location filename="../core/playlistmanager.cpp" line="178"/>
-        <location filename="../core/playlistmanager.cpp" line="202"/>
+        <location filename="../core/playlistmanager.cpp" line="184"/>
+        <location filename="../core/playlistmanager.cpp" line="208"/>
         <source>All Music</source>
         <translation>ھەممە ناخشىلار</translation>
     </message>
     <message>
-        <location filename="../core/playlistmanager.cpp" line="184"/>
+        <location filename="../core/playlistmanager.cpp" line="190"/>
         <source>My favorites</source>
         <translation>مىنىڭ ياقتۇرغانلىرىم</translation>
     </message>
     <message>
-        <location filename="../core/playlistmanager.cpp" line="190"/>
+        <location filename="../core/playlistmanager.cpp" line="196"/>
         <source>Search result</source>
         <translation>ئىزدەش نەتىجىسى</translation>
     </message>
     <message>
-        <location filename="../core/playlistmanager.cpp" line="196"/>
+        <location filename="../core/playlistmanager.cpp" line="202"/>
         <source>Play</source>
         <translation>قويۇش</translation>
     </message>
     <message>
-        <location filename="../core/playlistmanager.cpp" line="220"/>
+        <location filename="../core/playlistmanager.cpp" line="226"/>
         <source>Music</source>
-        <translation type="unfinished">مۇزىكا</translation>
+        <translation>مۇزىكا</translation>
     </message>
 </context>
 <context>
     <name>QApplication</name>
     <message>
-        <location filename="../view/mainframe.cpp" line="765"/>
+        <location filename="../view/mainframe.cpp" line="793"/>
         <source>Music</source>
         <translation>مۇزىكا</translation>
     </message>
@@ -1072,71 +1052,76 @@
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="27"/>
-        <source>Exit Music</source>
-        <translation>مۇزىكىدىن چېكىنىش</translation>
+        <source>Exit</source>
+        <translation>چېكىنىش</translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="28"/>
+        <source>Ask me always</source>
+        <translation>دائىم جەزملەشتۈرسۇن</translation>
+    </message>
+    <message>
+        <location filename="../view/widget/settingsdialog.cpp" line="29"/>
         <source>Autoplay</source>
         <translation>ئاپتۇماتىك قويۇش</translation>
     </message>
     <message>
-        <location filename="../view/widget/settingsdialog.cpp" line="29"/>
+        <location filename="../view/widget/settingsdialog.cpp" line="30"/>
         <source>Enable fade in/out</source>
         <translation>ئاقما ئېقىم قوزغۇتۇش</translation>
     </message>
     <message>
-        <location filename="../view/widget/settingsdialog.cpp" line="30"/>
+        <location filename="../view/widget/settingsdialog.cpp" line="31"/>
         <source>Remember playback position</source>
         <translation>قويۇش ئورنىنى ئەستە تۇتۇش</translation>
     </message>
     <message>
-        <location filename="../view/widget/settingsdialog.cpp" line="31"/>
+        <location filename="../view/widget/settingsdialog.cpp" line="32"/>
         <source>Close Main Window</source>
         <translation>نۆۋەتتىكى كۆزنەكنى تاقاش</translation>
     </message>
     <message>
-        <location filename="../view/widget/settingsdialog.cpp" line="32"/>
+        <location filename="../view/widget/settingsdialog.cpp" line="33"/>
         <source>Basic</source>
         <translation>ئاساسىي ئۇچۇر</translation>
     </message>
     <message>
-        <location filename="../view/widget/settingsdialog.cpp" line="33"/>
+        <location filename="../view/widget/settingsdialog.cpp" line="34"/>
         <source>Play</source>
         <translation>قويۇش</translation>
     </message>
     <message>
-        <location filename="../view/widget/settingsdialog.cpp" line="34"/>
+        <location filename="../view/widget/settingsdialog.cpp" line="35"/>
         <source>Shortcuts</source>
         <translation>تىزلەتمە كۇنۇپكىلار</translation>
     </message>
     <message>
-        <location filename="../view/widget/settingsdialog.cpp" line="35"/>
+        <location filename="../view/widget/settingsdialog.cpp" line="36"/>
         <source>Restore Defaults</source>
         <translation>سۈكۈتتىكى ھالىتىگە قايتۇرۇش</translation>
     </message>
     <message>
-        <location filename="../view/widget/settingsdialog.cpp" line="36"/>
+        <location filename="../view/widget/settingsdialog.cpp" line="37"/>
         <source>Next</source>
         <translation>كېيىنكى </translation>
     </message>
     <message>
-        <location filename="../view/widget/settingsdialog.cpp" line="37"/>
+        <location filename="../view/widget/settingsdialog.cpp" line="38"/>
         <source>Play/Pause</source>
         <translation>قويۇش\توختۇتۇش</translation>
     </message>
     <message>
-        <location filename="../view/widget/settingsdialog.cpp" line="38"/>
+        <location filename="../view/widget/settingsdialog.cpp" line="39"/>
         <source>Previous</source>
         <translation>ئالدىنقى</translation>
     </message>
     <message>
-        <location filename="../view/widget/settingsdialog.cpp" line="39"/>
+        <location filename="../view/widget/settingsdialog.cpp" line="40"/>
         <source>Volume down</source>
         <translation>تۆۋەن ئاۋاز</translation>
     </message>
     <message>
-        <location filename="../view/widget/settingsdialog.cpp" line="40"/>
+        <location filename="../view/widget/settingsdialog.cpp" line="41"/>
         <source>Volume up</source>
         <translation>يۇقىرى ئاۋاز</translation>
     </message>
@@ -1169,17 +1154,17 @@
     <message>
         <location filename="../view/widget/searchresult.cpp" line="61"/>
         <source>Music</source>
-        <translation type="unfinished">مۇزىكا</translation>
+        <translation>مۇزىكا</translation>
     </message>
     <message>
-        <location filename="../view/widget/searchresult.cpp" line="79"/>
+        <location filename="../view/widget/searchresult.cpp" line="78"/>
         <source>Artists</source>
-        <translation type="unfinished">سەنئەتكار</translation>
+        <translation>ئارتىسلار</translation>
     </message>
     <message>
-        <location filename="../view/widget/searchresult.cpp" line="95"/>
+        <location filename="../view/widget/searchresult.cpp" line="94"/>
         <source>Albums</source>
-        <translation type="unfinished">پىلاستىنكا</translation>
+        <translation>ئالبۇملار</translation>
     </message>
 </context>
 <context>
@@ -1205,77 +1190,77 @@
         <translation>تەڭشەك</translation>
     </message>
     <message>
-        <location filename="../view/shortcut.cpp" line="40"/>
+        <location filename="../view/shortcut.cpp" line="39"/>
         <source>Play/Pause</source>
         <translation>قويۇش\توختۇتۇش</translation>
     </message>
     <message>
-        <location filename="../view/shortcut.cpp" line="41"/>
+        <location filename="../view/shortcut.cpp" line="39"/>
         <source>Previous</source>
         <translation>ئالدىنقى</translation>
     </message>
     <message>
-        <location filename="../view/shortcut.cpp" line="42"/>
+        <location filename="../view/shortcut.cpp" line="39"/>
         <source>Next</source>
         <translation>كېيىنكى </translation>
     </message>
     <message>
-        <location filename="../view/shortcut.cpp" line="43"/>
+        <location filename="../view/shortcut.cpp" line="39"/>
         <source>Volume Up</source>
         <translation>يۇقىرى ئاۋاز</translation>
     </message>
     <message>
-        <location filename="../view/shortcut.cpp" line="44"/>
+        <location filename="../view/shortcut.cpp" line="39"/>
         <source>Volume Down</source>
         <translation>تۆۋەن ئاۋاز</translation>
     </message>
     <message>
-        <location filename="../view/shortcut.cpp" line="45"/>
+        <location filename="../view/shortcut.cpp" line="39"/>
         <source>Mute</source>
         <translation>ئاۋازسىز</translation>
     </message>
     <message>
-        <location filename="../view/shortcut.cpp" line="48"/>
+        <location filename="../view/shortcut.cpp" line="41"/>
         <source>Favorite</source>
         <translation>ياقتۇرغانلىرىم</translation>
     </message>
     <message>
-        <location filename="../view/shortcut.cpp" line="49"/>
+        <location filename="../view/shortcut.cpp" line="41"/>
         <source>Unfavorite</source>
         <translation>ياقتۇرمىغانلار</translation>
     </message>
     <message>
-        <location filename="../view/shortcut.cpp" line="50"/>
+        <location filename="../view/shortcut.cpp" line="41"/>
         <source>Song info</source>
         <translation>ناخشا ئۇچۇرى</translation>
     </message>
     <message>
-        <location filename="../view/shortcut.cpp" line="53"/>
+        <location filename="../view/shortcut.cpp" line="43"/>
         <source>New playlist</source>
         <translation>يېڭى قويۇش تىزىملىكى</translation>
     </message>
     <message>
-        <location filename="../view/shortcut.cpp" line="54"/>
+        <location filename="../view/shortcut.cpp" line="43"/>
         <source>Add music</source>
         <translation>مۇزىكا قوشۇش</translation>
     </message>
     <message>
-        <location filename="../view/shortcut.cpp" line="55"/>
+        <location filename="../view/shortcut.cpp" line="43"/>
         <source>Rename playlist</source>
         <translation>قويۇش تىزىملىكىنىڭ نامىنى ئۆزگەرتىش</translation>
     </message>
     <message>
-        <location filename="../view/shortcut.cpp" line="56"/>
+        <location filename="../view/shortcut.cpp" line="43"/>
         <source>Remove from playlist</source>
         <translation>قويۇش تىزىملىكىدىن ئۆچۈرۈڭ</translation>
     </message>
     <message>
-        <location filename="../view/shortcut.cpp" line="59"/>
+        <location filename="../view/shortcut.cpp" line="46"/>
         <source>Help</source>
         <translation>ياردەم</translation>
     </message>
     <message>
-        <location filename="../view/shortcut.cpp" line="60"/>
+        <location filename="../view/shortcut.cpp" line="47"/>
         <source>Display shortcuts</source>
         <translation>تېزلەتمە كۆرسىتىش</translation>
     </message>
