@@ -54,8 +54,8 @@ const MetaPtr Playlist::prev(const MetaPtr meta) const
     if (0 == playlistMeta.sortMetas.length() || meta.isNull()) {
         return MetaPtr();
     }
-    int index = playlistMeta.sortMetas.indexOf(meta->hash);
-    int prev = (index + playlistMeta.sortMetas.length() - 1) % playlistMeta.sortMetas.length();
+
+    int prev = (playlistMeta.sortMetas.indexOf(meta->hash) + playlistMeta.sortMetas.length() - 1) % playlistMeta.sortMetas.length();
     return playlistMeta.metas.value(playlistMeta.sortMetas.at(prev));
 }
 
@@ -64,8 +64,7 @@ const MetaPtr Playlist::next(const MetaPtr meta) const
     if (0 == playlistMeta.sortMetas.length() || meta.isNull()) {
         return MetaPtr();
     }
-    auto index = playlistMeta.sortMetas.indexOf(meta->hash);
-    auto prev = (index + 1) % playlistMeta.sortMetas.length();
+    auto prev = (playlistMeta.sortMetas.indexOf(meta->hash) + 1) % playlistMeta.sortMetas.length();
     return playlistMeta.metas.value(playlistMeta.sortMetas.at(prev));
 }
 
