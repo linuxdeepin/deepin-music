@@ -495,7 +495,7 @@ void Player::loadMedia(PlaylistPtr playlist, const MetaPtr meta)
     d->qvplayer->open(d->qvmedia);
     //volume = d->qvplayer->audio()->volume();
     d->qvplayer->play();
-    d->qvplayer->audio()->setMute(true);
+    // d->qvplayer->audio()->setMute(true);
 
 
     if (!d->activePlaylist.isNull())
