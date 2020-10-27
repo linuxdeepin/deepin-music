@@ -1,6 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS>
-<TS version="2.1" language="sq" sourcelanguage="en_US">
+<?xml version="1.0" ?><!DOCTYPE TS><TS language="sq" sourcelanguage="en_US" version="2.1">
 <context>
     <name>CloseConfirmDialog</name>
     <message>
@@ -94,7 +92,7 @@
     <message>
         <location filename="../view/widget/dequalizerdialog.cpp" line="123"/>
         <source>Party</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../view/widget/dequalizerdialog.cpp" line="124"/>

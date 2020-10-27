@@ -50,10 +50,10 @@ SearchResult::SearchResult(QWidget *parent) : DBlurEffectWidget(parent)
     vlayout3 = new QVBoxLayout();
     vlayout = new QVBoxLayout();
 
-    vlayout->setContentsMargins(0, 0, 0, 18);
-    vlayout1->setSpacing(1);
-    vlayout2->setSpacing(1);
-    vlayout3->setSpacing(1);
+    vlayout->setContentsMargins(0, 8, 0, 18);
+    // vlayout1->setSpacing(1);
+    // vlayout2->setSpacing(1);
+    // vlayout3->setSpacing(1);
     vlayout->setSpacing(0);
     setLayout(vlayout);
 

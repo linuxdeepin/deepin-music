@@ -1,6 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS>
-<TS version="2.1" language="it" sourcelanguage="en_US">
+<?xml version="1.0" ?><!DOCTYPE TS><TS language="it" sourcelanguage="en_US" version="2.1">
 <context>
     <name>CloseConfirmDialog</name>
     <message>
@@ -21,7 +19,7 @@
     <message>
         <location filename="../view/widget/closeconfirmdialog.cpp" line="102"/>
         <source>Please choose your action</source>
-        <translation type="unfinished"></translation>
+        <translation>Seleziona un&apos;operazione</translation>
     </message>
     <message>
         <location filename="../view/widget/closeconfirmdialog.cpp" line="110"/>

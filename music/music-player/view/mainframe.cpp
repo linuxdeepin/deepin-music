@@ -1088,9 +1088,11 @@ void MainFrame::binding(Presenter *presenter)
         warnDlg.setObjectName("uniqueinvaliddailog");
         warnDlg.setIcon(QIcon::fromTheme("deepin-music"));
         warnDlg.setTextFormat(Qt::RichText);
-        warnDlg.setTitle(tr("File is invalid or does not exist, load failed"));
-        warnDlg.addButtons(QStringList() << tr("OK"));
-        warnDlg.setDefaultButton(0);
+        //warnDlg.setTitle(tr("File is invalid or does not exist, load failed"));
+        warnDlg.setMessage(tr("File is invalid or does not exist, load failed"));
+        //warnDlg.addButtons(QStringList() << tr("OK"));
+        warnDlg.addButton(tr("OK"), true, Dtk::Widget::DDialog::ButtonNormal);
+        //warnDlg.setDefaultButton(0);
 
         if (0 == warnDlg.exec()) {
             auto curPlaylist = d->playListWidget->curPlaylist();
@@ -1141,12 +1143,13 @@ void MainFrame::binding(Presenter *presenter)
             }
             QString message = QString(tr("Import failed, no valid music file found"));
             Dtk::Widget::DDialog warnDlg(this);
+            warnDlg.setTextFormat(Qt::RichText);
             warnDlg.setObjectName("uniquewarndailog");
             warnDlg.setIcon(QIcon::fromTheme("deepin-music"));
-            warnDlg.setTextFormat(Qt::AutoText);
-            warnDlg.setTitle(message);
-            warnDlg.addButtons(QStringList() << tr("OK"));
-            warnDlg.setDefaultButton(0);
+            //warnDlg.setTitle(message);
+            warnDlg.setMessage(message);
+            warnDlg.addButton(tr("OK"), true, Dtk::Widget::DDialog::ButtonNormal);
+            //warnDlg.setDefaultButton(0);
             if (0 == warnDlg.exec()) {
                 return;
             }

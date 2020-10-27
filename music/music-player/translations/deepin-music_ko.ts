@@ -1,6 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS>
-<TS version="2.1" language="ko" sourcelanguage="en_US">
+<?xml version="1.0" ?><!DOCTYPE TS><TS language="ko" sourcelanguage="en_US" version="2.1">
 <context>
     <name>CloseConfirmDialog</name>
     <message>
@@ -21,7 +19,7 @@
     <message>
         <location filename="../view/widget/closeconfirmdialog.cpp" line="102"/>
         <source>Please choose your action</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../view/widget/closeconfirmdialog.cpp" line="110"/>
@@ -44,7 +42,7 @@
     <message>
         <location filename="../view/widget/dequalizerdialog.cpp" line="113"/>
         <source>Monophony</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../view/widget/dequalizerdialog.cpp" line="114"/>
@@ -84,7 +82,7 @@
     <message>
         <location filename="../view/widget/dequalizerdialog.cpp" line="121"/>
         <source>Hall</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../view/widget/dequalizerdialog.cpp" line="122"/>
@@ -129,7 +127,7 @@
     <message>
         <location filename="../view/widget/dequalizerdialog.cpp" line="130"/>
         <source>Techno</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../view/widget/dequalizerdialog.cpp" line="187"/>
@@ -141,13 +139,13 @@
         <location filename="../view/widget/dequalizerdialog.cpp" line="194"/>
         <location filename="../view/widget/dequalizerdialog.cpp" line="654"/>
         <source>ON</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../view/widget/dequalizerdialog.cpp" line="196"/>
         <location filename="../view/widget/dequalizerdialog.cpp" line="652"/>
         <source>OFF</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../view/widget/dequalizerdialog.cpp" line="213"/>
@@ -157,7 +155,7 @@
     <message>
         <location filename="../view/widget/dequalizerdialog.cpp" line="224"/>
         <source>Preamplifier</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../view/widget/dequalizerdialog.cpp" line="337"/>
@@ -168,7 +166,7 @@
         <location filename="../view/widget/dequalizerdialog.cpp" line="550"/>
         <location filename="../view/widget/dequalizerdialog.cpp" line="551"/>
         <source>Sound Effects Saved</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -360,7 +358,7 @@
     <message>
         <location filename="../view/musiclyricwidget.cpp" line="120"/>
         <source>No lyrics yet</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -873,7 +871,7 @@
     <message>
         <location filename="../view/widget/playlistview.cpp" line="644"/>
         <source>Remove from play queue</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../view/widget/playlistview.cpp" line="646"/>

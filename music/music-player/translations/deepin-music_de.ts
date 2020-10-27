@@ -1,6 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS>
-<TS version="2.1" language="de" sourcelanguage="en_US">
+<?xml version="1.0" ?><!DOCTYPE TS><TS language="de" sourcelanguage="en_US" version="2.1">
 <context>
     <name>CloseConfirmDialog</name>
     <message>
@@ -21,7 +19,7 @@
     <message>
         <location filename="../view/widget/closeconfirmdialog.cpp" line="102"/>
         <source>Please choose your action</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../view/widget/closeconfirmdialog.cpp" line="110"/>
@@ -84,7 +82,7 @@
     <message>
         <location filename="../view/widget/dequalizerdialog.cpp" line="121"/>
         <source>Hall</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../view/widget/dequalizerdialog.cpp" line="122"/>
@@ -324,7 +322,7 @@
     <message>
         <location filename="../view/loadwidget.cpp" line="42"/>
         <source>Loading...</source>
-        <translation>Ladevorgang...</translation>
+        <translation>Wird geladen ...</translation>
     </message>
 </context>
 <context>
@@ -873,7 +871,7 @@
     <message>
         <location filename="../view/widget/playlistview.cpp" line="644"/>
         <source>Remove from play queue</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../view/widget/playlistview.cpp" line="646"/>

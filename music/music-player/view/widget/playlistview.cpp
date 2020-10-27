@@ -118,8 +118,10 @@ PlayListView::PlayListView(bool searchFlag, bool isPlayList, QWidget *parent)
         MetaPtr meta = d->model->meta(index);
         if (meta == playlist()->playing()) {
             Q_EMIT resume(meta);
+            qDebug() << "-------resume";
         } else {
             Q_EMIT playMedia(meta);
+            qDebug() << "-------playMedia";
         }
     });
     m_ModelMake = new ModelMake();

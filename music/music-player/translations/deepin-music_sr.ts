@@ -1,6 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS>
-<TS version="2.1" language="sr" sourcelanguage="en_US">
+<?xml version="1.0" ?><!DOCTYPE TS><TS language="sr" sourcelanguage="en_US" version="2.1">
 <context>
     <name>CloseConfirmDialog</name>
     <message>
@@ -59,7 +57,7 @@
     <message>
         <location filename="../view/widget/dequalizerdialog.cpp" line="116"/>
         <source>Dance</source>
-        <translation>Денс</translation>
+        <translation>Плес</translation>
     </message>
     <message>
         <location filename="../view/widget/dequalizerdialog.cpp" line="117"/>
@@ -135,19 +133,19 @@
         <location filename="../view/widget/dequalizerdialog.cpp" line="187"/>
         <location filename="../view/widget/dequalizerdialog.cpp" line="448"/>
         <source>Equalizer</source>
-        <translation>Еквилајзер</translation>
+        <translation>Еквилизатор</translation>
     </message>
     <message>
         <location filename="../view/widget/dequalizerdialog.cpp" line="194"/>
         <location filename="../view/widget/dequalizerdialog.cpp" line="654"/>
         <source>ON</source>
-        <translation>Укључи</translation>
+        <translation>Укљ.</translation>
     </message>
     <message>
         <location filename="../view/widget/dequalizerdialog.cpp" line="196"/>
         <location filename="../view/widget/dequalizerdialog.cpp" line="652"/>
         <source>OFF</source>
-        <translation>Искључи</translation>
+        <translation>Иск.</translation>
     </message>
     <message>
         <location filename="../view/widget/dequalizerdialog.cpp" line="213"/>
@@ -157,7 +155,7 @@
     <message>
         <location filename="../view/widget/dequalizerdialog.cpp" line="224"/>
         <source>Preamplifier</source>
-        <translation>Предпојачало</translation>
+        <translation>Претпојачало</translation>
     </message>
     <message>
         <location filename="../view/widget/dequalizerdialog.cpp" line="337"/>
@@ -378,7 +376,7 @@
     <message>
         <location filename="../view/mainframe.cpp" line="198"/>
         <source>Equalizer</source>
-        <translation>Еквилајзер</translation>
+        <translation>Еквилизатор</translation>
     </message>
     <message>
         <location filename="../view/mainframe.cpp" line="206"/>
@@ -448,7 +446,7 @@
     <message>
         <location filename="../view/mainframe.cpp" line="1082"/>
         <source>File is invalid or does not exist, load failed</source>
-        <translation>Датотека је неважећа или не постоји, учитавање неуспешно</translation>
+        <translation>Датотека је неважећа или не постоји, неуспешно учитавање</translation>
     </message>
     <message>
         <location filename="../view/mainframe.cpp" line="1083"/>
@@ -768,7 +766,7 @@
     <message>
         <location filename="../view/musiclistscrollarea.cpp" line="65"/>
         <source>Library</source>
-        <translation>Библиотека</translation>
+        <translation>Фонотека</translation>
     </message>
     <message>
         <location filename="../view/musiclistscrollarea.cpp" line="76"/>

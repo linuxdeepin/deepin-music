@@ -61,6 +61,8 @@ public:
     void initData(PlaylistPtr playlist, bool selectFlag = false, QString searchStr = "");
     int updateInfo();
     void initConntion();
+    void initTabConntion();
+    void initalbumListView();
     void showEmptyHits();
 
     DLabel              *emptyHits      = nullptr;
@@ -88,6 +90,7 @@ public:
     PlaylistPtr         curPlaylist     = nullptr;
     PlaylistPtr         selectPlaylist  = nullptr;
     QVBoxLayout         *mainVBoxLayout = nullptr;
+    int                 themeType       = -1;
 
     bool                updateFlag         = false;
 
@@ -311,60 +314,7 @@ void MusicListDataWidgetPrivate::initData(PlaylistPtr playlist, bool selectFlag,
         if (albumListView) {
             albumListView->show();
         } else {
-            albumListView = new MusicListDataView;
-            albumListView->hide();
-            mainVBoxLayout->addWidget(albumListView, 100);
-
-            q->connect(albumListView, &MusicListDataView::requestCustomContextMenu,
-            q, [ = ](const QPoint & pos) {
-                Q_EMIT q->requestCustomContextMenu(pos, 2);
-            });
-
-            q->connect(albumListView, &MusicListDataView::playMedia,
-            q, [ = ](const MetaPtr meta) {
-                PlaylistPtr curPlayList = albumListView->playlist();
-                curPlayList->play(meta);
-                Q_EMIT q->playMedia(albumListView->playlist(), meta);
-            });
-            q->connect(albumListView, &MusicListDataView::resume,
-            q, [ = ](const MetaPtr meta) {
-                PlaylistPtr curPlayList = albumListView->playlist();
-                Q_EMIT q->resume(albumListView->playlist(), meta);
-            });
-
-            q->connect(albumListView, &MusicListDataView::pause,
-            q, [ = ](PlaylistPtr playlist, const MetaPtr meta) {
-                Q_EMIT q->pause(playlist, meta);
-            });
-
-            q->connect(albumListView, &MusicListDataView::addToPlaylist,
-            q, [ = ](PlaylistPtr playlist, const MetaPtrList  & metalist) {
-                Q_EMIT q->addToPlaylist(playlist, metalist);
-            });
-
-            q->connect(albumListView, &MusicListDataView::musiclistRemove,
-            q, [ = ](const MetaPtrList  & metalist) {
-                Q_EMIT q->musiclistRemove(albumListView->playlist(), metalist);
-            });
-
-            q->connect(albumListView, &MusicListDataView::musiclistDelete,
-            q, [ = ](const MetaPtrList  & metalist) {
-                Q_EMIT q->musiclistDelete(albumListView->playlist(), metalist);
-            });
-
-            q->connect(albumListView, &MusicListDataView::modeChanged,
-            q, [ = ](int mode) {
-                Q_EMIT q->modeChanged(mode);
-            });
-
-            q->connect(albumListView, &MusicListDataView::addMetasFavourite,
-            q, [ = ](const MetaPtrList  & metalist) {
-                Q_EMIT q->addMetasFavourite(metalist);
-            });
-            q->connect(albumListView, &MusicListDataView::removeMetasFavourite,
-            q, [ = ](const MetaPtrList  & metalist) {
-                Q_EMIT q->removeMetasFavourite(metalist);
-            });
+            initalbumListView();
         }
 
         if (artistListView) {
@@ -413,6 +363,7 @@ void MusicListDataWidgetPrivate::initData(PlaylistPtr playlist, bool selectFlag,
             artistListView = new MusicListDataView;
             mainVBoxLayout->addWidget(artistListView, 100);
             artistListView->show();
+            artistListView->setThemeType(themeType);
 
             q->connect(artistListView, &MusicListDataView::requestCustomContextMenu,
             q, [ = ](const QPoint & pos) {
@@ -504,169 +455,8 @@ void MusicListDataWidgetPrivate::initData(PlaylistPtr playlist, bool selectFlag,
             tabWidget->show();
         } else {
             q->initTabWidget();
-            //song
-            q->connect(songListView, &PlayListView::playMedia,
-            q, [ = ](const MetaPtr meta) {
-                PlaylistPtr curPlayList = songListView->playlist();
-                curPlayList->play(meta);
-                Q_EMIT q->playMedia(songListView->playlist(), meta);
-            });
-
-            q->connect(songListView, &PlayListView::resume,
-            q, [ = ](const MetaPtr meta) {
-                PlaylistPtr curPlayList = songListView->playlist();
-                Q_EMIT q->resume(songListView->playlist(), meta);
-            });
-
-            q->connect(songListView, &PlayListView::pause,
-            q, [ = ](const MetaPtr meta) {
-                Q_EMIT q->pause(songListView->playlist(), meta);
-            });
-
-            q->connect(songListView, &PlayListView::requestCustomContextMenu,
-            q, [ = ](const QPoint & pos) {
-                Q_EMIT q->requestCustomContextMenu(pos, 4);
-            });
-            q->connect(songListView, &PlayListView::addToPlaylist,
-            q, [ = ](PlaylistPtr playlist, const MetaPtrList  metalist) {
-                Q_EMIT q->addToPlaylist(playlist, metalist);
-            });
-            q->connect(songListView, &PlayListView::removeMusicList,
-            q, [ = ](const MetaPtrList  & metalist) {
-                Q_EMIT q->musiclistRemove(songListView->playlist(), metalist);
-            });
-            q->connect(songListView, &PlayListView::deleteMusicList,
-            q, [ = ](const MetaPtrList  & metalist) {
-                Q_EMIT q->musiclistDelete(songListView->playlist(), metalist);
-            });
-            q->connect(songListView, &PlayListView::showInfoDialog,
-            q, [ = ](const MetaPtr meta) {
-                Q_EMIT q->showInfoDialog(meta);
-            });
-            q->connect(songListView, &PlayListView::updateMetaCodec,
-            q, [ = ](const QString & preTitle, const QString & preArtist, const QString & preAlbum, const MetaPtr  meta) {
-                Q_EMIT q->updateMetaCodec(preTitle, preArtist, preAlbum, meta);
-            });
-            q->connect(songListView, &PlayListView::addMetasFavourite,
-            q, [ = ](const MetaPtrList  & metalist) {
-                Q_EMIT q->addMetasFavourite(metalist);
-            });
-            q->connect(songListView, &PlayListView::removeMetasFavourite,
-            q, [ = ](const MetaPtrList  & metalist) {
-                Q_EMIT q->removeMetasFavourite(metalist);
-            });
-            q->connect(songListView, &PlayListView::pause,
-            q, [ = ](const MetaPtr meta) {
-                Q_EMIT q->pause(songListView->playlist(), meta);
-            });
-            //singer
-            q->connect(singerListView, &MusicListDataView::requestCustomContextMenu,
-            q, [ = ](const QPoint & pos) {
-                Q_EMIT q->requestCustomContextMenu(pos, 6);
-            });
-
-            q->connect(singerListView, &MusicListDataView::playMedia,
-            q, [ = ](const MetaPtr meta) {
-                PlaylistPtr curPlayList = singerListView->playlist();
-                curPlayList->play(meta);
-                Q_EMIT q->playMedia(singerListView->playlist(), meta);
-            });
-
-            q->connect(singerListView, &MusicListDataView::resume,
-            q, [ = ](const MetaPtr meta) {
-                PlaylistPtr curPlayList = singerListView->playlist();
-                Q_EMIT q->resume(singerListView->playlist(), meta);
-            });
-
-            q->connect(singerListView, &MusicListDataView::pause,
-            q, [ = ](PlaylistPtr playlist, const MetaPtr meta) {
-                Q_EMIT q->pause(playlist, meta);
-            });
-
-            q->connect(singerListView, &MusicListDataView::addToPlaylist,
-            q, [ = ](PlaylistPtr playlist, const MetaPtrList  & metalist) {
-                Q_EMIT q->addToPlaylist(playlist, metalist);
-            });
-
-            q->connect(singerListView, &MusicListDataView::musiclistRemove,
-            q, [ = ](const MetaPtrList  & metalist) {
-                Q_EMIT q->musiclistRemove(singerListView->playlist(), metalist);
-            });
-
-            q->connect(singerListView, &MusicListDataView::musiclistDelete,
-            q, [ = ](const MetaPtrList  & metalist) {
-                Q_EMIT q->musiclistDelete(singerListView->playlist(), metalist);
-            });
-
-            q->connect(singerListView, &MusicListDataView::modeChanged,
-            q, [ = ](int mode) {
-                Q_EMIT q->modeChanged(mode);
-            });
-
-            q->connect(singerListView, &MusicListDataView::addMetasFavourite,
-            q, [ = ](const MetaPtrList  & metalist) {
-                Q_EMIT q->addMetasFavourite(metalist);
-            });
-            q->connect(singerListView, &MusicListDataView::removeMetasFavourite,
-            q, [ = ](const MetaPtrList  & metalist) {
-                Q_EMIT q->removeMetasFavourite(metalist);
-            });
-
-            //alb
-            q->connect(albListView, &MusicListDataView::requestCustomContextMenu,
-            q, [ = ](const QPoint & pos) {
-                Q_EMIT q->requestCustomContextMenu(pos, 5);
-            });
-
-            q->connect(albListView, &MusicListDataView::playMedia,
-            q, [ = ](const MetaPtr meta) {
-                PlaylistPtr curPlayList = albListView->playlist();
-                curPlayList->play(meta);
-                Q_EMIT q->playMedia(albListView->playlist(), meta);
-            });
-            q->connect(albListView, &MusicListDataView::resume,
-            q, [ = ](const MetaPtr meta) {
-                PlaylistPtr curPlayList = albListView->playlist();
-                Q_EMIT q->resume(albListView->playlist(), meta);
-            });
-
-            q->connect(albListView, &MusicListDataView::pause,
-            q, [ = ](PlaylistPtr playlist, const MetaPtr meta) {
-                Q_EMIT q->pause(playlist, meta);
-            });
-
-            q->connect(albListView, &MusicListDataView::addToPlaylist,
-            q, [ = ](PlaylistPtr playlist, const MetaPtrList  & metalist) {
-                Q_EMIT q->addToPlaylist(playlist, metalist);
-            });
-
-            q->connect(albListView, &MusicListDataView::musiclistRemove,
-            q, [ = ](const MetaPtrList  & metalist) {
-                Q_EMIT q->musiclistRemove(albListView->playlist(), metalist);
-            });
-
-            q->connect(albListView, &MusicListDataView::musiclistDelete,
-            q, [ = ](const MetaPtrList  & metalist) {
-                Q_EMIT q->musiclistDelete(albListView->playlist(), metalist);
-            });
-
-            q->connect(albListView, &MusicListDataView::modeChanged,
-            q, [ = ](int mode) {
-                Q_EMIT q->modeChanged(mode);
-            });
-
-            q->connect(albListView, &MusicListDataView::addMetasFavourite,
-            q, [ = ](const MetaPtrList  & metalist) {
-                Q_EMIT q->addMetasFavourite(metalist);
-            });
-            q->connect(albListView, &MusicListDataView::removeMetasFavourite,
-            q, [ = ](const MetaPtrList  & metalist) {
-                Q_EMIT q->removeMetasFavourite(metalist);
-            });
-
-            //tab
-            q->connect(tabWidget, &DTabWidget::tabBarClicked,
-                       q, &MusicListDataWidget::resultTabwidget);
+            initTabConntion();
+            qDebug() << "--------initTabWidget";
         }
 
         if (updateFlag == true) {
@@ -763,6 +553,235 @@ void MusicListDataWidgetPrivate::initData(PlaylistPtr playlist, bool selectFlag,
 
         musicListView->onMusiclistChanged(playlist);
     }
+}
+
+void MusicListDataWidgetPrivate::initTabConntion()
+{
+    Q_Q(MusicListDataWidget);
+    //song
+    q->connect(songListView, &PlayListView::playMedia,
+    q, [ = ](const MetaPtr meta) {
+        qDebug() << "--------playMedia2";
+        PlaylistPtr curPlayList = songListView->playlist();
+        curPlayList->play(meta);
+        Q_EMIT q->playMedia(songListView->playlist(), meta);
+    });
+
+    q->connect(songListView, &PlayListView::resume,
+    q, [ = ](const MetaPtr meta) {
+        PlaylistPtr curPlayList = songListView->playlist();
+        Q_EMIT q->resume(songListView->playlist(), meta);
+    });
+
+    q->connect(songListView, &PlayListView::pause,
+    q, [ = ](const MetaPtr meta) {
+        Q_EMIT q->pause(songListView->playlist(), meta);
+    });
+
+    q->connect(songListView, &PlayListView::requestCustomContextMenu,
+    q, [ = ](const QPoint & pos) {
+        Q_EMIT q->requestCustomContextMenu(pos, 4);
+    });
+    q->connect(songListView, &PlayListView::addToPlaylist,
+    q, [ = ](PlaylistPtr playlist, const MetaPtrList  metalist) {
+        Q_EMIT q->addToPlaylist(playlist, metalist);
+    });
+    q->connect(songListView, &PlayListView::removeMusicList,
+    q, [ = ](const MetaPtrList  & metalist) {
+        Q_EMIT q->musiclistRemove(songListView->playlist(), metalist);
+    });
+    q->connect(songListView, &PlayListView::deleteMusicList,
+    q, [ = ](const MetaPtrList  & metalist) {
+        Q_EMIT q->musiclistDelete(songListView->playlist(), metalist);
+    });
+    q->connect(songListView, &PlayListView::showInfoDialog,
+    q, [ = ](const MetaPtr meta) {
+        Q_EMIT q->showInfoDialog(meta);
+    });
+    q->connect(songListView, &PlayListView::updateMetaCodec,
+    q, [ = ](const QString & preTitle, const QString & preArtist, const QString & preAlbum, const MetaPtr  meta) {
+        Q_EMIT q->updateMetaCodec(preTitle, preArtist, preAlbum, meta);
+    });
+    q->connect(songListView, &PlayListView::addMetasFavourite,
+    q, [ = ](const MetaPtrList  & metalist) {
+        Q_EMIT q->addMetasFavourite(metalist);
+    });
+    q->connect(songListView, &PlayListView::removeMetasFavourite,
+    q, [ = ](const MetaPtrList  & metalist) {
+        Q_EMIT q->removeMetasFavourite(metalist);
+    });
+    q->connect(songListView, &PlayListView::pause,
+    q, [ = ](const MetaPtr meta) {
+        Q_EMIT q->pause(songListView->playlist(), meta);
+    });
+    //singer
+    q->connect(singerListView, &MusicListDataView::requestCustomContextMenu,
+    q, [ = ](const QPoint & pos) {
+        Q_EMIT q->requestCustomContextMenu(pos, 6);
+    });
+
+    q->connect(singerListView, &MusicListDataView::playMedia,
+    q, [ = ](const MetaPtr meta) {
+        PlaylistPtr curPlayList = singerListView->playlist();
+        curPlayList->play(meta);
+        Q_EMIT q->playMedia(singerListView->playlist(), meta);
+    });
+
+    q->connect(singerListView, &MusicListDataView::resume,
+    q, [ = ](const MetaPtr meta) {
+        PlaylistPtr curPlayList = singerListView->playlist();
+        Q_EMIT q->resume(singerListView->playlist(), meta);
+    });
+
+    q->connect(singerListView, &MusicListDataView::pause,
+    q, [ = ](PlaylistPtr playlist, const MetaPtr meta) {
+        Q_EMIT q->pause(playlist, meta);
+    });
+
+    q->connect(singerListView, &MusicListDataView::addToPlaylist,
+    q, [ = ](PlaylistPtr playlist, const MetaPtrList  & metalist) {
+        Q_EMIT q->addToPlaylist(playlist, metalist);
+    });
+
+    q->connect(singerListView, &MusicListDataView::musiclistRemove,
+    q, [ = ](const MetaPtrList  & metalist) {
+        Q_EMIT q->musiclistRemove(singerListView->playlist(), metalist);
+    });
+
+    q->connect(singerListView, &MusicListDataView::musiclistDelete,
+    q, [ = ](const MetaPtrList  & metalist) {
+        Q_EMIT q->musiclistDelete(singerListView->playlist(), metalist);
+    });
+
+    q->connect(singerListView, &MusicListDataView::modeChanged,
+    q, [ = ](int mode) {
+        Q_EMIT q->modeChanged(mode);
+    });
+
+    q->connect(singerListView, &MusicListDataView::addMetasFavourite,
+    q, [ = ](const MetaPtrList  & metalist) {
+        Q_EMIT q->addMetasFavourite(metalist);
+    });
+    q->connect(singerListView, &MusicListDataView::removeMetasFavourite,
+    q, [ = ](const MetaPtrList  & metalist) {
+        Q_EMIT q->removeMetasFavourite(metalist);
+    });
+
+    //alb
+    q->connect(albListView, &MusicListDataView::requestCustomContextMenu,
+    q, [ = ](const QPoint & pos) {
+        Q_EMIT q->requestCustomContextMenu(pos, 5);
+    });
+
+    q->connect(albListView, &MusicListDataView::playMedia,
+    q, [ = ](const MetaPtr meta) {
+        PlaylistPtr curPlayList = albListView->playlist();
+        curPlayList->play(meta);
+        Q_EMIT q->playMedia(albListView->playlist(), meta);
+    });
+    q->connect(albListView, &MusicListDataView::resume,
+    q, [ = ](const MetaPtr meta) {
+        PlaylistPtr curPlayList = albListView->playlist();
+        Q_EMIT q->resume(albListView->playlist(), meta);
+    });
+
+    q->connect(albListView, &MusicListDataView::pause,
+    q, [ = ](PlaylistPtr playlist, const MetaPtr meta) {
+        Q_EMIT q->pause(playlist, meta);
+    });
+
+    q->connect(albListView, &MusicListDataView::addToPlaylist,
+    q, [ = ](PlaylistPtr playlist, const MetaPtrList  & metalist) {
+        Q_EMIT q->addToPlaylist(playlist, metalist);
+    });
+
+    q->connect(albListView, &MusicListDataView::musiclistRemove,
+    q, [ = ](const MetaPtrList  & metalist) {
+        Q_EMIT q->musiclistRemove(albListView->playlist(), metalist);
+    });
+
+    q->connect(albListView, &MusicListDataView::musiclistDelete,
+    q, [ = ](const MetaPtrList  & metalist) {
+        Q_EMIT q->musiclistDelete(albListView->playlist(), metalist);
+    });
+
+    q->connect(albListView, &MusicListDataView::modeChanged,
+    q, [ = ](int mode) {
+        Q_EMIT q->modeChanged(mode);
+    });
+
+    q->connect(albListView, &MusicListDataView::addMetasFavourite,
+    q, [ = ](const MetaPtrList  & metalist) {
+        Q_EMIT q->addMetasFavourite(metalist);
+    });
+    q->connect(albListView, &MusicListDataView::removeMetasFavourite,
+    q, [ = ](const MetaPtrList  & metalist) {
+        Q_EMIT q->removeMetasFavourite(metalist);
+    });
+
+    //tab
+    q->connect(tabWidget, &DTabWidget::tabBarClicked,
+               q, &MusicListDataWidget::resultTabwidget);
+}
+
+void MusicListDataWidgetPrivate::initalbumListView()
+{
+    Q_Q(MusicListDataWidget);
+    albumListView = new MusicListDataView;
+    albumListView->show();
+    albumListView->setThemeType(themeType);
+    mainVBoxLayout->addWidget(albumListView, 100);
+
+    q->connect(albumListView, &MusicListDataView::requestCustomContextMenu,
+    q, [ = ](const QPoint & pos) {
+        Q_EMIT q->requestCustomContextMenu(pos, 2);
+    });
+
+    q->connect(albumListView, &MusicListDataView::playMedia,
+    q, [ = ](const MetaPtr meta) {
+        PlaylistPtr curPlayList = albumListView->playlist();
+        curPlayList->play(meta);
+        Q_EMIT q->playMedia(albumListView->playlist(), meta);
+    });
+    q->connect(albumListView, &MusicListDataView::resume,
+    q, [ = ](const MetaPtr meta) {
+        PlaylistPtr curPlayList = albumListView->playlist();
+        Q_EMIT q->resume(albumListView->playlist(), meta);
+    });
+
+    q->connect(albumListView, &MusicListDataView::pause,
+    q, [ = ](PlaylistPtr playlist, const MetaPtr meta) {
+        Q_EMIT q->pause(playlist, meta);
+    });
+
+    q->connect(albumListView, &MusicListDataView::addToPlaylist,
+    q, [ = ](PlaylistPtr playlist, const MetaPtrList  & metalist) {
+        Q_EMIT q->addToPlaylist(playlist, metalist);
+    });
+
+    q->connect(albumListView, &MusicListDataView::musiclistRemove,
+    q, [ = ](const MetaPtrList  & metalist) {
+        Q_EMIT q->musiclistRemove(albumListView->playlist(), metalist);
+    });
+
+    q->connect(albumListView, &MusicListDataView::musiclistDelete,
+    q, [ = ](const MetaPtrList  & metalist) {
+        Q_EMIT q->musiclistDelete(albumListView->playlist(), metalist);
+    });
+
+    q->connect(albumListView, &MusicListDataView::modeChanged,
+    q, [ = ](int mode) {
+        Q_EMIT q->modeChanged(mode);
+    });
+
+    q->connect(albumListView, &MusicListDataView::addMetasFavourite,
+    q, [ = ](const MetaPtrList  & metalist) {
+        Q_EMIT q->addMetasFavourite(metalist);
+    });
+    q->connect(albumListView, &MusicListDataView::removeMetasFavourite,
+    q, [ = ](const MetaPtrList  & metalist) {
+        Q_EMIT q->removeMetasFavourite(metalist);
+    });
 }
 
 void MusicListDataWidgetPrivate::initConntion()
@@ -1601,6 +1620,10 @@ void MusicListDataWidget::initTabWidget()
         d->tabWidget->setDocumentMode(true);
         d->tabWidget->show();
         d->mainVBoxLayout->addWidget(d->tabWidget, 100);
+        d->initTabConntion();
+        d->songListView->setThemeType(d->themeType);
+        d->singerListView->setThemeType(d->themeType);
+        d->albListView->setThemeType(d->themeType);
     }
 }
 
@@ -1791,6 +1814,7 @@ void MusicListDataWidget::onMusicPlayed(PlaylistPtr playlist, const MetaPtr Meta
 void MusicListDataWidget::slotTheme(int type)
 {
     Q_D(MusicListDataWidget);
+    d->themeType = type;
     QString rStr;
     if (type == 1) {
         rStr = "light";
