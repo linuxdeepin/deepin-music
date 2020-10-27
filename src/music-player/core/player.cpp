@@ -626,16 +626,20 @@ void Player::loadMedia(PlaylistPtr playlist, const MetaPtr meta, int position)
         d->activePlaylist = playlist;
 
     d->qvplayer->blockSignals(true);
-    d->qvmedia->initMedia(meta->localPath, true, d->qvinstance);
+
+    QString curPath = Global::cacheDir();
+    QString toPath = QString("%1/images/%2.mp3").arg(curPath).arg(meta->hash);
+    if (!QFile::exists(toPath)) {
+        Q_EMIT Player::instance()->addApeTask(meta->localPath, meta->hash);
+        toPath = meta->localPath;
+    }
+
+    d->qvmedia->initMedia(toPath, true, d->qvinstance);
     d->qvplayer->open(d->qvmedia);
 
     d->qvplayer->play();
-    // d->qvplayer->audio()->setMute(true);
-
     float volEqualizer =  d->qvplayer->equalizer()->preamplification();
-
     d->qvplayer->equalizer()->setPreamplification(0.1f);
-
 
     if (!d->activePlaylist.isNull())
         d->activePlaylist->play(meta);
@@ -773,14 +777,18 @@ void Player::playMeta(PlaylistPtr playlist, const MetaPtr pmeta)
     if (!playlist.isNull() && playlist->id() != PlayMusicListID)
         d->activePlaylist = playlist;
 
-//    if (d->activePlaylist.isNull())
-//        return;
-
     d->activeMeta = curMeta;
-//    d->qplayer->setMedia(QMediaContent(QUrl::fromLocalFile(curMeta->localPath)));
-//    d->qplayer->setPosition(curMeta->offset);
 
-    d->qvmedia->initMedia(curMeta->localPath, true, d->qvinstance);
+    QString curPath = Global::cacheDir();
+    QString toPath = QString("%1/images/%2.mp3").arg(curPath).arg(curMeta->hash);
+    if (!QFile::exists(toPath)) {
+        Q_EMIT Player::instance()->addApeTask(meta->localPath, meta->hash);
+        toPath = curMeta->localPath;
+    }
+
+    qDebug() << "------toPath-------" << toPath;
+
+    d->qvmedia->initMedia(toPath, true, d->qvinstance);
     d->qvplayer->open(d->qvmedia);
     d->qvplayer->setTime(curMeta->offset);
     d->qvplayer->play();
@@ -850,7 +858,15 @@ void Player::resume(PlaylistPtr playlist, const MetaPtr pmeta)
      * ****************************************************************************************/
     if (d->qvplayer->state() == Vlc::Stopped  || (!isDevValid() &&  d->qvplayer->time() == 0)) {
         //reopen data
-        d->qvmedia->initMedia(meta->localPath, true, d->qvinstance);
+
+        QString curPath = Global::cacheDir();
+        QString toPath = QString("%1/images/%2.mp3").arg(curPath).arg(meta->hash);
+        if (!QFile::exists(toPath)) {
+            Q_EMIT Player::instance()->addApeTask(meta->localPath, meta->hash);
+            toPath = meta->localPath;
+        }
+
+        d->qvmedia->initMedia(toPath, true, d->qvinstance);
         d->qvplayer->open(d->qvmedia);
         d->qvplayer->setTime(meta->offset);
     }

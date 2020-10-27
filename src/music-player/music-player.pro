@@ -131,7 +131,8 @@ SOURCES += \
     view/widget/dequalizerdialog.cpp \
     core/inotify/event_queue.c \
     core/inotify/inotify_utils.c \
-    sleepwatcher.cpp
+    sleepwatcher.cpp \
+    core/util/convertthread.cpp
 HEADERS += \
     musicapp.h \
     core/util/lyric.h \
@@ -229,7 +230,8 @@ HEADERS += \
     view/widget/dequalizerdialog.h \
     core/inotify/event_queue.h \
     core/inotify/inotify_utils.h \
-    sleepwatcher.h
+    sleepwatcher.h \
+    core/util/convertthread.h
 
 RESOURCES += \
     resource/theme/theme.qrc \

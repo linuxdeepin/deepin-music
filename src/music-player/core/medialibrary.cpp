@@ -41,6 +41,7 @@ extern "C" {
 #include <metadetector.h>
 
 #include "player.h"
+#include "util/global.h"
 #include "mediadatabase.h"
 
 const static int ScanCacheSize = 5000;
@@ -245,7 +246,11 @@ MetaPtr MediaLibraryPrivate::importMeta(const QString &filepath,
         qDebug() << "exit" << hash << MediaLibrary::instance()->meta(hash);
         return MediaLibrary::instance()->meta(hash);
     }
+
     auto meta = createMeta(fileInfo);
+    if (fileInfo.suffix().toLower() == "ape") {
+        Q_EMIT Player::instance()->addApeTask(filepath, meta->hash);
+    }
 
     if (meta->length == 0)
         return MetaPtr();

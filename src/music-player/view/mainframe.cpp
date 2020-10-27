@@ -51,6 +51,7 @@
 #include "../core/player.h"
 #include "../core/util/global.h"
 #include "../musicapp.h"
+#include "../core/util/convertthread.h"
 
 #include "widget/titlebarwidget.h"
 #include "widget/infodialog.h"
@@ -812,6 +813,19 @@ MainFrame::MainFrame(QWidget *parent) :
             showNormal();
         } else {
             showMaximized();
+        }
+    });
+
+    //convert thread init
+    convertThread *converThd = new convertThread;
+    connect(this, &MainFrame::exit, converThd, &convertThread::exitToCheckFile);
+    connect(Player::instance(), &Player::addApeTask, this, [ = ](QString path, QString name) {
+        QFileInfo fileInfo(path);
+        if (fileInfo.suffix().toLower() == "ape") {
+            converThd->addApeandAmr(path, name);
+            if (!converThd->isRunning()) {
+                converThd->start();
+            }
         }
     });
 }
