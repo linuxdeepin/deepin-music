@@ -196,6 +196,7 @@ public slots:
 //    void setMinimumRate(double minimumRate);
 //    void setPlaybackStatus(PlaybackStatus playbackStatus);
     void setPosition(qlonglong position);
+    void setPositionFloat(float position);
 //    void setIOPosition(qint64 value, qint64 range);
 
     void setMode(PlaybackMode mode);

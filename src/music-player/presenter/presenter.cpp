@@ -98,12 +98,12 @@ void PresenterPrivate::initBackend()
 
     MetaDetector::init();
 
-    m_pDBus = new QDBusInterface("org.freedesktop.login1","/org/freedesktop/login1",
-                                           "org.freedesktop.login1.Manager",QDBusConnection::systemBus());
+    m_pDBus = new QDBusInterface("org.freedesktop.login1", "/org/freedesktop/login1",
+                                 "org.freedesktop.login1.Manager", QDBusConnection::systemBus());
 
     connect(m_pDBus, SIGNAL(PrepareForSleep(bool)), q, SLOT(onSleepWhenTaking(bool)));
 
-    sleepwatcher * w =  new sleepwatcher(strStatePath);
+    sleepwatcher *w =  new sleepwatcher(strStatePath);
     connect(w, SIGNAL(filechanged(bool)), q, SLOT(onSleepWhenTaking(bool)));
     w->start();
 
@@ -1810,8 +1810,8 @@ void Presenter::onChangeProgress(qint64 value, qint64 range)
         return;
     }
 
-    auto position = value * d->player->duration() / range;
-    d->player->setPosition(position);
+    float position = static_cast<float>(value) / range;
+    d->player->setPositionFloat(position);
 }
 
 void Presenter::onChangePosition(qint64 value, qint64 range)
@@ -2215,20 +2215,18 @@ void Presenter::onSleepWhenTaking(bool sleep)
 {
     Q_D(Presenter);
     Q_UNUSED(sleep)
-    qDebug() << "onSleepWhenTaking:"<<d->m_sleep.isSleep;
+    qDebug() << "onSleepWhenTaking:" << d->m_sleep.isSleep;
     //d->m_sleep.isSleep = sleep;
-    if(!d->m_sleep.isSleep) //休眠记录状态
-    {
+    if (!d->m_sleep.isSleep) { //休眠记录状态
         d->m_sleep.vlcState = d->player->status();
         //如果播放，设置暂停
-        if(d->m_sleep.vlcState == Player::Playing)
-           pause();
-    }else{ //设置状态
-        if(d->m_sleep.vlcState == Player::Playing)
-        {
-             QTimer::singleShot(2000, [ = ]() {
+        if (d->m_sleep.vlcState == Player::Playing)
+            pause();
+    } else { //设置状态
+        if (d->m_sleep.vlcState == Player::Playing) {
+            QTimer::singleShot(2000, [ = ]() {
                 togglePaly(); //播放
-             });
+            });
         }
     }
 

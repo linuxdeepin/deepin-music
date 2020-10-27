@@ -1137,6 +1137,21 @@ void Player::setPosition(qlonglong position)
     }
 }
 
+void Player::setPositionFloat(float position)
+{
+    Q_D(const Player);
+
+    if (d->activeMeta.isNull()) {
+        return;
+    }
+
+    if (d->qvplayer->length() == d->activeMeta->length) {
+        return d->qvplayer->setTimeFloat(position, d->activeMeta->length);
+    } else {
+        d->qvplayer->setTimeFloat(position + d->activeMeta->offset, d->activeMeta->length);
+    }
+}
+
 void Player::setMode(Player::PlaybackMode mode)
 {
     Q_D(Player);

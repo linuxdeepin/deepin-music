@@ -109,6 +109,7 @@ public slots:
         \param time the movie time (in ms) (int)
     */
     void setTime(qint64 time);
+    void setTimeFloat(float time, qint64 musicLength);
 
 public:
     /*!
