@@ -894,7 +894,7 @@ void MainFrame::postInitUI()
     connect(trayIcon, &QSystemTrayIcon::activated,
     this, [ = ](QSystemTrayIcon::ActivationReason reason) {
         if (QSystemTrayIcon::Trigger == reason) {
-            if (isVisible()) {
+            if (isVisible() || !isActiveWindow()) {
                 if (isMinimized()) {
                     if (isFullScreen()) {
                         hide();
