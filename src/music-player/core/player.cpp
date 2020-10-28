@@ -37,6 +37,7 @@
 #include <QThread>
 #include <QFileInfo>
 #include <QDir>
+#include <QProcess>
 
 #include <DRecentManager>
 
@@ -780,15 +781,25 @@ void Player::playMeta(PlaylistPtr playlist, const MetaPtr pmeta)
     d->activeMeta = curMeta;
 
     QString curPath = Global::cacheDir();
-    QString toPath = QString("%1/images/%2.mp3").arg(curPath).arg(curMeta->hash);
-    if (!QFile::exists(toPath)) {
-        Q_EMIT Player::instance()->addApeTask(meta->localPath, meta->hash);
-        toPath = curMeta->localPath;
+    QString mediaPath = QString("%1/images/%2.mp3").arg(curPath).arg(curMeta->hash);
+    if (!QFile::exists(mediaPath)) {
+        QFileInfo fileInfo(meta->localPath);
+        if (fileInfo.suffix().toLower() == "ape") {
+            QString curPath = Global::cacheDir();
+            QString toPath = QString("%1/images/%2.mp3").arg(curPath).arg(meta->hash);
+            if (QFile::exists(toPath)) {
+                QFile::remove(toPath);
+            }
+            QString fromPath = QString("%1/.tmp1.ape").arg(curPath);
+            QFile::remove(fromPath);
+            QFile file(meta->localPath);
+            file.link(fromPath);
+            QString program = QString("ffmpeg -i %1  -ac 1 -ab 32 -ar 24000 %2").arg(fromPath).arg(toPath);
+            QProcess::execute(program);
+        }
     }
 
-    qDebug() << "------toPath-------" << toPath;
-
-    d->qvmedia->initMedia(toPath, true, d->qvinstance);
+    d->qvmedia->initMedia(mediaPath, true, d->qvinstance);
     d->qvplayer->open(d->qvmedia);
     d->qvplayer->setTime(curMeta->offset);
     d->qvplayer->play();

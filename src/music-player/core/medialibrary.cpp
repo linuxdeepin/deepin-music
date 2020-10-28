@@ -248,8 +248,13 @@ MetaPtr MediaLibraryPrivate::importMeta(const QString &filepath,
     }
 
     auto meta = createMeta(fileInfo);
+
     if (fileInfo.suffix().toLower() == "ape") {
-        Q_EMIT Player::instance()->addApeTask(filepath, meta->hash);
+        QString curPath = Global::cacheDir();
+        QString toPath = QString("%1/images/%2.mp3").arg(curPath).arg(meta->hash);
+        if (!QFile::exists(toPath)) {
+            Q_EMIT Player::instance()->addApeTask(filepath, meta->hash);
+        }
     }
 
     if (meta->length == 0)
