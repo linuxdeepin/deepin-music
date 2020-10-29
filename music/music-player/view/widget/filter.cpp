@@ -124,7 +124,8 @@ HintFilter::HintFilter(QObject *parent)  : QObject(parent), d_ptr(new HintFilter
 
 HintFilter::~HintFilter()
 {
-
+    Q_D(HintFilter);
+    delete  d->delayShowTimer;
 }
 
 void HintFilter::hideAll()

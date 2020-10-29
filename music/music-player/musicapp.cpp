@@ -32,11 +32,13 @@
 #include <DApplication>
 #include <DWidgetUtil>
 #include <DSettingsOption>
+#include <QDBusConnection>
 
 #include "core/player.h"
 #include "core/musicsettings.h"
 #include "core/util/threadpool.h"
 #include "presenter/presenter.h"
+#include "speech/exportedinterface.h"
 #include "view/mainframe.h"
 
 using namespace Dtk::Widget;
@@ -52,9 +54,11 @@ public:
     void quickPrepared();
     void onQuit();
     void onRaise();
+    void createSpeechDbus();
 
     Presenter       *presenter      = nullptr;
     MainFrame       *playerFrame    = nullptr;
+    ExportedInterface *mSpeech      = nullptr;
     QStringList     m_Files;
     MusicApp *q_ptr;
     Q_DECLARE_PUBLIC(MusicApp)
@@ -147,6 +151,27 @@ void MusicAppPrivate::onRaise()
     playerFrame->activateWindow();
 }
 
+void MusicAppPrivate::createSpeechDbus()
+{
+    QDBusConnection::sessionBus().registerService("com.deepin.musicSpeech");
+    mSpeech = new ExportedInterface(nullptr);
+    mSpeech->registerAction("1", "playmusic");
+    mSpeech->registerAction("2", "play artist");
+    mSpeech->registerAction("3", "play artist song");
+    mSpeech->registerAction("4", "play faverite");
+    mSpeech->registerAction("5", "play custom ");
+    mSpeech->registerAction("6", "play radom");
+    mSpeech->registerAction("11", "pause");
+    mSpeech->registerAction("12", "stop");
+    mSpeech->registerAction("13", "resume");
+    mSpeech->registerAction("14", "previous");
+    mSpeech->registerAction("15", "next");
+    mSpeech->registerAction("21", "faverite");
+    mSpeech->registerAction("22", "unfaverite");
+    mSpeech->registerAction("23", "set play mode");
+}
+
+
 MusicApp::MusicApp(MainFrame *frame, QObject *parent)
     : QObject(parent), d_ptr(new MusicAppPrivate(this))
 {
@@ -158,6 +183,8 @@ MusicApp::MusicApp(MainFrame *frame, QObject *parent)
 
 MusicApp::~MusicApp()
 {
+    Q_D(MusicApp);
+    delete  d->mSpeech;
 }
 
 void dumpGeometry(const QByteArray &geometry)
@@ -282,5 +309,8 @@ void MusicApp::initConnection(bool showFlag)
     });
 
     presenterWork->start();
+
+    /*----创建语音dbus-----*/
+    d->createSpeechDbus();
 }
 

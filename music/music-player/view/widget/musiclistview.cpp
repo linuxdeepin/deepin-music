@@ -267,7 +267,7 @@ void MusicListView::setCurPlaylist(QStandardItem *item)
     DViewItemActionList  clearActionList;
     QIcon playingIcon;
     playingIcon.actualSize(QSize(20, 20));
-    auto viewItemAction = new DViewItemAction(Qt::AlignCenter);
+    DViewItemAction *viewItemAction = new DViewItemAction(Qt::AlignCenter);
     viewItemAction->setIcon(playingIcon);
     clearActionList.append(viewItemAction);
     for (int i = 0; i < model->rowCount(); i++) {
@@ -281,6 +281,7 @@ void MusicListView::setCurPlaylist(QStandardItem *item)
     }
     //setCurrentItem(item);
     update();
+    delete viewItemAction;
 }
 
 void MusicListView::closeAllPersistentEditor()

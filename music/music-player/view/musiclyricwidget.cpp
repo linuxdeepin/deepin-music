@@ -102,8 +102,8 @@ MusicLyricWidget::MusicLyricWidget(QWidget *parent)
     layout->setContentsMargins(20, 20, 20, 20);
 
     auto musicDir =  QStandardPaths::standardLocations(QStandardPaths::MusicLocation);
-    d->searchLyricsWidget = new SearchLyricsWidget(musicDir.first());
-    d->searchLyricsWidget->hide();
+//    d->searchLyricsWidget = new SearchLyricsWidget(musicDir.first());
+//    d->searchLyricsWidget->hide();
 
     d->m_cover = new Cover;
     d->m_cover->setFixedSize(200, 200);
@@ -112,7 +112,7 @@ MusicLyricWidget::MusicLyricWidget(QWidget *parent)
     m_leftLayout = new QHBoxLayout();
     m_leftLayout->setContentsMargins(120, 0, 140, 0);
     m_leftLayout->addWidget(d->m_cover, Qt::AlignLeft | Qt::AlignVCenter);
-    m_leftLayout->addWidget(d->searchLyricsWidget);
+//    m_leftLayout->addWidget(d->searchLyricsWidget);
 
     d->lyricview = new LyricLabel(false, this);
     d->nolyric = new DLabel();
@@ -153,7 +153,7 @@ MusicLyricWidget::MusicLyricWidget(QWidget *parent)
     slotTheme(themeType);
 
     connect(d->serachbt, &DPushButton::clicked, this, &MusicLyricWidget::onsearchBt);
-    connect(d->searchLyricsWidget, &SearchLyricsWidget::lyricPath, this, &MusicLyricWidget::slotonsearchresult);
+//    connect(d->searchLyricsWidget, &SearchLyricsWidget::lyricPath, this, &MusicLyricWidget::slotonsearchresult);
 }
 
 MusicLyricWidget::~MusicLyricWidget()
@@ -219,9 +219,9 @@ void MusicLyricWidget::resizeEvent(QResizeEvent *event)
 void MusicLyricWidget::mousePressEvent(QMouseEvent *event)
 {
     Q_D(MusicLyricWidget);
-    if (d->serachflag && !d->searchLyricsWidget->rect().contains(event->pos())) {
-        onsearchBt();
-    }
+//    if (d->serachflag && !d->searchLyricsWidget->rect().contains(event->pos())) {
+//        onsearchBt();
+//    }
     QWidget::mousePressEvent(event);
 }
 
@@ -242,7 +242,7 @@ void MusicLyricWidget::onMusicPlayed(PlaylistPtr playlist, const MetaPtr meta)
         d->lyricview->show();
     }
     d->lyricview->getFromFile(lrcPath);
-    d->searchLyricsWidget->setSearchDir(fileInfo.dir().path() + QDir::separator());
+//    d->searchLyricsWidget->setSearchDir(fileInfo.dir().path() + QDir::separator());
 
     QImage cover(d->defaultCover);
     auto coverData = MetaSearchService::coverData(meta);
@@ -371,18 +371,18 @@ void MusicLyricWidget::onsearchBt()
     if (d->serachflag) {
         d->serachbt->setProperty("typeName", false);
         d->m_cover->hide();
-        d->searchLyricsWidget->show();
-        if (d->activingMeta != nullptr) {
-            d->searchLyricsWidget->setDefault(d->activingMeta->title, d->activingMeta->artist);
-        } else {
-            d->searchLyricsWidget->setDefault("", "");
-        }
+//        d->searchLyricsWidget->show();
+//        if (d->activingMeta != nullptr) {
+//            d->searchLyricsWidget->setDefault(d->activingMeta->title, d->activingMeta->artist);
+//        } else {
+//            d->searchLyricsWidget->setDefault("", "");
+//        }
 
         m_leftLayout->setContentsMargins(51, 21, 51, 19);
     } else {
         d->serachbt->setProperty("typeName", true);
         d->m_cover->show();
-        d->searchLyricsWidget->hide();
+//        d->searchLyricsWidget->hide();
         m_leftLayout->setContentsMargins(120, 190, 140, 160);
     }
     d->serachbt->update();
@@ -429,7 +429,7 @@ void MusicLyricWidget::slotTheme(int type)
                                 QString(":/mpimage/%1/normal/back_normal.svg").arg(rStr),
                                 QString(":/mpimage/%1/normal/back_normal.svg").arg(rStr));
 
-    d->searchLyricsWidget->setThemeType(type);
+//    d->searchLyricsWidget->setThemeType(type);
     d->lyricview->slotTheme(type);
 }
 

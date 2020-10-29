@@ -115,10 +115,10 @@ ToolTips::ToolTips(const QString &text, QWidget *parent)
 
     adjustSize();
 
-    auto *bodyShadow = new QGraphicsDropShadowEffect;
-    bodyShadow->setBlurRadius(10.0);
-    bodyShadow->setColor(QColor(0, 0, 0, 25/*0.1 * 255*/));
-    bodyShadow->setOffset(0, 2.0);
+//    auto *bodyShadow = new QGraphicsDropShadowEffect;
+//    bodyShadow->setBlurRadius(10.0);
+//    bodyShadow->setColor(QColor(0, 0, 0, 25/*0.1 * 255*/));
+//    bodyShadow->setOffset(0, 2.0);
 //    this->setGraphicsEffect(bodyShadow);
     hide();
 //    d->textLable->hide();
