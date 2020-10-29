@@ -624,6 +624,10 @@ Footer::Footer(QWidget *parent) :
 Footer::~Footer()
 {
     Q_D(Footer);
+
+    delete d->hintFilter;
+    delete  d->hoverShadowFilter;
+    delete d->btNext;
     if (d->lastCookie > 0) {
         d->screenStandby(false);
     }

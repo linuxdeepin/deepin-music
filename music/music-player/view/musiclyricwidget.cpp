@@ -114,7 +114,7 @@ MusicLyricWidget::MusicLyricWidget(QWidget *parent)
     m_leftLayout->addWidget(d->m_cover, Qt::AlignLeft | Qt::AlignVCenter);
     m_leftLayout->addWidget(d->searchLyricsWidget);
 
-    d->lyricview = new LyricLabel(false);
+    d->lyricview = new LyricLabel(false, this);
     d->nolyric = new DLabel();
     d->nolyric->setAlignment(Qt::AlignCenter);
     d->nolyric->setText(tr("No lyrics yet"));

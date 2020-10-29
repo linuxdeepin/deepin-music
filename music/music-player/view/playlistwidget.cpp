@@ -305,6 +305,7 @@ PlayListWidget::PlayListWidget(QWidget *parent) :
 
 PlayListWidget::~PlayListWidget()
 {
+
 }
 
 void PlayListWidget::updateInfo(PlaylistPtr playlist)

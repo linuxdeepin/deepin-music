@@ -227,7 +227,8 @@ MusicListDataView::MusicListDataView(QWidget *parent)
 
 MusicListDataView::~MusicListDataView()
 {
-
+    Q_D(const MusicListDataView);
+    delete  d->delegate;
 }
 
 PlaylistPtr MusicListDataView::playlist() const

@@ -133,7 +133,7 @@ PlayListView::PlayListView(bool searchFlag, bool isPlayList, QWidget *parent)
 
 PlayListView::~PlayListView()
 {
-
+    delete m_ModelMake;
 }
 
 MetaPtr PlayListView::activingMeta() const

@@ -7,7 +7,12 @@
 
 #include "util/basetool.h"
 
-MusicLyric::MusicLyric():offset(0.00)
+MusicLyric::MusicLyric(): offset(0.00)
+{
+
+}
+
+MusicLyric::~MusicLyric()
 {
 
 }
