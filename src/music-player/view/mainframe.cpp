@@ -387,9 +387,7 @@ void MainFramePrivate::initUI(bool showLoading)
     infoDialog->hide();
     m_SpeechCenter = SpeechCenter::getInstance();
     m_VlcMediaPlayer = Player::instance()->core();
-#if 0
-    footer->show();
-#endif
+
 }
 
 void MainFramePrivate::postInitUI()
@@ -895,7 +893,7 @@ void MainFrame::postInitUI()
     this, [ = ](QSystemTrayIcon::ActivationReason reason) {
         if (QSystemTrayIcon::Trigger == reason) {
             if (isVisible()) {
-                if (isMinimized() || !isActiveWindow()) {
+                if (isMinimized()) {
                     if (isFullScreen()) {
                         hide();
                         showFullScreen();
@@ -907,6 +905,11 @@ void MainFrame::postInitUI()
                 } else {
                     showMinimized();
                     hide();
+                    if (!isActiveWindow()) {
+                        this->titlebar()->setFocus();
+                        showNormal();
+                        activateWindow();
+                    }
                 }
             } else {
                 this->titlebar()->setFocus();
