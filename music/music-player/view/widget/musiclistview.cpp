@@ -147,9 +147,13 @@ MusicListView::~MusicListView()
 
 void MusicListView::addMusicList(PlaylistPtr playlist, bool addFlag)
 {
-    if (DataBaseService::getInstance()->m_isPerformance) {
+    if (DataBaseService::getInstance()->m_isPerformance && m_isDataBase) {
         model->clear();
         DataBaseService::getInstance()->m_isPerformance = false;
+    }
+    if (DataBaseService::getInstance()->m_isSonglistPerformance && m_isSongList) {
+        model->clear();
+        DataBaseService::getInstance()->m_isSonglistPerformance = false;
     }
     if (playlist == nullptr)
         return;
@@ -373,6 +377,7 @@ bool MusicListView::getSizeChangedFlag()
 
 void MusicListView::initPerformanceDataBase()
 {
+    m_isDataBase = true;
     QString rStr;
     if (m_type == 1) {
         rStr = "light";
@@ -409,6 +414,7 @@ void MusicListView::initPerformanceDataBase()
 
 void MusicListView::initPerformanceSonglist()
 {
+    m_isSongList = true;
     QList<DataBaseService::PlaylistData> list = DataBaseService::getInstance()->allPlaylistMeta();
     QString rStr;
     if (m_type == 1) {

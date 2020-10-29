@@ -64,14 +64,13 @@ MusicListWidget::MusicListWidget(QWidget *parent) : DWidget(parent)
     leftFrame->setPalette(leftFramePalette);
 
     m_addListBtn = leftFrame->getAddButton();
-
     m_dataBaseListview = leftFrame->getDBMusicListView();
     m_customizeListview = leftFrame->getCustomMusicListView();
+
     m_dataListView = new MusicListDataWidget;
 
     layout->addWidget(leftFrame, 0);
     layout->addWidget(m_dataListView, 100);
-
     int themeType = DGuiApplicationHelper::instance()->themeType();
     slotTheme(themeType);
 

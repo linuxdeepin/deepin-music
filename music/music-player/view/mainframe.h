@@ -35,6 +35,7 @@ public:
     ~MainFrame() Q_DECL_OVERRIDE;
 
     void initUI(bool showLoading);
+    void initMenu();
     void postInitUI();
     void binding(Presenter *presenter);
     void quickBinding(Presenter *presenter);
@@ -71,6 +72,7 @@ protected:
     virtual void resizeEvent(QResizeEvent *e) Q_DECL_OVERRIDE;
     virtual void closeEvent(QCloseEvent *event) Q_DECL_OVERRIDE;
     virtual void paintEvent(QPaintEvent *e) Q_DECL_OVERRIDE;
+    virtual void showEvent(QShowEvent *e) Q_DECL_OVERRIDE;
 
 private:
     QScopedPointer<MainFramePrivate> dd_ptr;

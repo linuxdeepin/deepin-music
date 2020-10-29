@@ -57,6 +57,7 @@ private:
     bool createConnection();
 public:
     bool m_isPerformance = true;
+    bool m_isSonglistPerformance = true;
     QMap<QString, MediaMeta> m_MediaMetaMap;
     bool m_couldClear = false;
 private:

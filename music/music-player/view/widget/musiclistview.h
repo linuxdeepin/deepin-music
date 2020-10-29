@@ -98,5 +98,7 @@ private:
     int                  m_type             = 1;
     bool                m_sizeChangedFlag   = false;
     bool                pixmapState         = false;
+    bool m_isDataBase = false;
+    bool m_isSongList = false;
 };
 

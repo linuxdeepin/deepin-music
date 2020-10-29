@@ -1097,7 +1097,6 @@ MusicListDataWidget::MusicListDataWidget(QWidget *parent) :
     DWidget(parent), d_ptr(new MusicListDataWidgetPrivate(this))
 {
     Q_D(MusicListDataWidget);
-
     setObjectName("MusicListDataWidget");
     setAcceptDrops(true);
 
@@ -1312,7 +1311,9 @@ MusicListDataWidget::MusicListDataWidget(QWidget *parent) :
     d->musicListView = new PlayListView(true, false);
 //    d->musicListView->hide();
     d->musicListView->initAllSonglist();
-    d->musicListView->show();
+    int count = d->musicListView->getMusicCount();
+    d->infoLabel->setText(QString("   ") + MusicListDataWidget::tr("%1 songs").arg(count));
+//    d->musicListView->show();
 
     d->musicListView->setFocusPolicy(Qt::StrongFocus);
     d->musicListView->installEventFilter(this);

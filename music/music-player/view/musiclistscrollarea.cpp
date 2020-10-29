@@ -99,10 +99,9 @@ MusicListScrollArea::MusicListScrollArea(QWidget *parent) : DScrollArea(parent)
 
     // m_dataBaseListview->setFocusPolicy(Qt::TabFocus);   //使用默认设置焦点方式
     m_dataBaseListview->installEventFilter(this);
-
     m_customizeListview = new MusicListView;
     musicLayout->setContentsMargins(0, 0, 0, 0);
-
+    m_customizeListview->initPerformanceSonglist();
     // m_customizeListview->setFocusPolicy(Qt::TabFocus);
     m_customizeListview->installEventFilter(this);
 

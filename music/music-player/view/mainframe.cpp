@@ -345,9 +345,6 @@ void MainFramePrivate::initUI(bool showLoading)
     contentLayout->setContentsMargins(0, 0, 0, 0);
     q->setCentralWidget(centralWidget);
 
-    // contentLayout->setContentsMargins(20, 20, 20, 0);
-    // contentLayout->setMargin(0);
-    // contentLayout->setSpacing(0);
 
     if (showLoading) {
         musicListWidget = new MusicListWidget;
@@ -388,7 +385,6 @@ void MainFramePrivate::postInitUI()
         footer->hide();
         showID = true;
     }
-
     searchResult = new SearchResult(q);
     titlebarwidget->setResultWidget(searchResult);
 
@@ -798,12 +794,11 @@ MainFrame::MainFrame(QWidget *parent) :
     this->setWindowTitle(tr("Music"));
 
     Q_D(MainFrame);
-    d->titlebarwidget = new TitlebarWidget(this);
-    // d->searchResult = new SearchResult(this);
-    // d->titlebarwidget->setResultWidget(d->searchResult);
 
+    d->titlebarwidget = new TitlebarWidget(this);
     d->titlebarwidget->setEnabled(false);
-    d->titlebarwidget->show();
+//    d->titlebarwidget->show();
+
 
     d->titlebar = titlebar();
     d->titlebar->setFixedHeight(50);
@@ -813,6 +808,38 @@ MainFrame::MainFrame(QWidget *parent) :
     d->titlebar->setCustomWidget(d->titlebarwidget);
     d->titlebar->layout()->setAlignment(d->titlebarwidget, Qt::AlignCenter);
     d->titlebar->resize(width(), 50);
+}
+
+MainFrame::~MainFrame()
+{
+    Q_D(MainFrame);
+    Q_EMIT exit();
+    MusicSettings::sync();
+    MusicSettings::setOption("base.play.state", saveState());
+    MusicSettings::setOption("base.play.geometry", saveGeometry());
+    delete d->equalizerDialog;
+}
+
+void MainFrame::initUI(bool showLoading)
+{
+    Q_D(MainFrame);
+
+    d->initUI(showLoading);
+//    d->initMenu();
+}
+
+void MainFrame::initMenu()
+{
+    Q_D(MainFrame);
+    d->initMenu();
+}
+
+void MainFrame::postInitUI()
+{
+    Q_D(MainFrame);
+
+    d->postInitUI();
+
     QShortcut *viewshortcut = new QShortcut(this);
     viewshortcut->setKey(QKeySequence(QLatin1String("Ctrl+Shift+/")));
     connect(viewshortcut, SIGNAL(activated()), this, SLOT(onViewShortcut()));
@@ -832,31 +859,6 @@ MainFrame::MainFrame(QWidget *parent) :
             showMaximized();
         }
     });
-}
-
-MainFrame::~MainFrame()
-{
-    Q_D(MainFrame);
-    Q_EMIT exit();
-    MusicSettings::sync();
-    MusicSettings::setOption("base.play.state", saveState());
-    MusicSettings::setOption("base.play.geometry", saveGeometry());
-    delete d->equalizerDialog;
-}
-
-void MainFrame::initUI(bool showLoading)
-{
-    Q_D(MainFrame);
-
-    d->initUI(showLoading);
-    d->initMenu();
-}
-
-void MainFrame::postInitUI()
-{
-    Q_D(MainFrame);
-
-    d->postInitUI();
 
     focusPlayList();
 
@@ -1800,5 +1802,11 @@ void MainFrame::paintEvent(QPaintEvent *e)
     QPainter p(this);
 
     DMainWindow::paintEvent(e);
+}
+
+void MainFrame::showEvent(QShowEvent *e)
+{
+//    qDebug() << "zy------MainFrame::showEvent";
+//    qDebug() << "zy------MainFrame::showEvent = " << QDateTime::currentDateTime().toString("hh:mm:ss.zzz");
 }
 

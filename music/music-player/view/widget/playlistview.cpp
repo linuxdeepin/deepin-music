@@ -277,6 +277,12 @@ void PlayListView::initAllSonglist()
     d->initAllSonglist();
 }
 
+int PlayListView::getMusicCount()
+{
+    Q_D(PlayListView);
+    return d->model->rowCount();
+}
+
 void PlayListView::onAddMeta(QString playListId, const MetaPtr meta)
 {
     Q_D(PlayListView);
