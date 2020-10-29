@@ -818,7 +818,7 @@ MainFrame::MainFrame(QWidget *parent) :
 
     //convert thread init
     convertThread *converThd = new convertThread;
-    connect(this, &MainFrame::exit, converThd, &convertThread::exitToCheckFile);
+
     connect(Player::instance(), &Player::addApeTask, this, [ = ](QString path, QString name) {
         QFileInfo fileInfo(path);
         if (fileInfo.suffix().toLower() == "ape") {

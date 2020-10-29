@@ -51,10 +51,6 @@ protected:
 signals:
 
 public slots:
-    /**
-     * @brief exitToCheckFile 停止标志,且删除正在写的文件
-     */
-    void exitToCheckFile();
 
 private:
     QList<musicInfo> m_infos;

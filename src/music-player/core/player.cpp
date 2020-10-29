@@ -45,6 +45,7 @@
 #include "util/dbusutils.h"
 #include "util/global.h"
 #include <unistd.h>
+#include <QApplication>
 
 #include <vlc/vlc.h>
 #include "vlc/Audio.h"
@@ -747,6 +748,9 @@ void Player::loadMedia(PlaylistPtr playlist, const MetaPtr meta, int position)
 void Player::playMeta(PlaylistPtr playlist, const MetaPtr pmeta)
 {
     Q_D(Player);
+
+    d->qvplayer->stop();
+
     MetaPtr meta = pmeta;
     if (meta == nullptr) {
         if (playlist == nullptr || playlist->isEmpty())
@@ -759,9 +763,7 @@ void Player::playMeta(PlaylistPtr playlist, const MetaPtr pmeta)
         return ;
     }
 
-    /*************************
-     * mute to dbus
-     * ***********************/
+    // mute to dbus
     setDbusMuted();
 
     MetaPtr curMeta = meta;
@@ -780,26 +782,34 @@ void Player::playMeta(PlaylistPtr playlist, const MetaPtr pmeta)
 
     d->activeMeta = curMeta;
 
+    if (!d->activePlaylist.isNull()) {
+        Q_EMIT mediaPlayed(d->activePlaylist, d->activeMeta);
+    } else {
+        Q_EMIT mediaPlayed(d->curPlaylist, d->activeMeta);
+    }
+
+    QString playPath =  meta->localPath;
     QString curPath = Global::cacheDir();
-    QString mediaPath = QString("%1/images/%2.mp3").arg(curPath).arg(curMeta->hash);
-    if (!QFile::exists(mediaPath)) {
+    QString toPath = QString("%1/images/%2.mp3").arg(curPath).arg(curMeta->hash);
+
+    if (!QFile::exists(toPath)) {
         QFileInfo fileInfo(meta->localPath);
         if (fileInfo.suffix().toLower() == "ape") {
-            QString curPath = Global::cacheDir();
-            QString toPath = QString("%1/images/%2.mp3").arg(curPath).arg(meta->hash);
-            if (QFile::exists(toPath)) {
-                QFile::remove(toPath);
-            }
+            QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
             QString fromPath = QString("%1/.tmp1.ape").arg(curPath);
             QFile::remove(fromPath);
             QFile file(meta->localPath);
             file.link(fromPath);
             QString program = QString("ffmpeg -i %1  -ac 1 -ab 32 -ar 24000 %2").arg(fromPath).arg(toPath);
             QProcess::execute(program);
+            QApplication::restoreOverrideCursor();
+            playPath = toPath;
         }
+    } else {
+        playPath = toPath;
     }
 
-    d->qvmedia->initMedia(mediaPath, true, d->qvinstance);
+    d->qvmedia->initMedia(playPath, true, d->qvinstance);
     d->qvplayer->open(d->qvmedia);
     d->qvplayer->setTime(curMeta->offset);
     d->qvplayer->play();
@@ -812,12 +822,6 @@ void Player::playMeta(PlaylistPtr playlist, const MetaPtr pmeta)
     data.appName = Global::getAppName();
     data.appExec = "deepin-music";
     DRecentManager::addItem(curMeta->localPath, data);
-
-    if (!d->activePlaylist.isNull()) {
-        Q_EMIT mediaPlayed(d->activePlaylist, d->activeMeta);
-    } else {
-        Q_EMIT mediaPlayed(d->curPlaylist, d->activeMeta);
-    }
 
     if (d->firstPlayOnLoad == true) {
         d->firstPlayOnLoad = false;
