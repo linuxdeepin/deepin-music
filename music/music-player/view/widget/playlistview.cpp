@@ -133,7 +133,7 @@ PlayListView::PlayListView(bool searchFlag, bool isPlayList, QWidget *parent)
 
 PlayListView::~PlayListView()
 {
-
+    delete m_ModelMake;
 }
 
 MetaPtr PlayListView::activingMeta() const
@@ -255,14 +255,8 @@ int PlayListView::rowCount()
 QString PlayListView::firstHash()
 {
     Q_D(const PlayListView);
-    QString hashStr;
 
-    if (d->model->rowCount() > 0) {
-        auto index = d->model->index(0, 0);
-        hashStr = d->model->data(index).toString();
-    }
-
-    return hashStr;
+    return d->model->rowCount() > 0 ? d->model->data(d->model->index(0, 0)).toString() : QString();
 }
 
 void PlayListView::onAddMeta(QString playListId, const MetaPtr meta)
@@ -293,10 +287,8 @@ void PlayListView::onMusicListRemoved(const MetaPtrList metalist)
             continue;
         }
 
-//        for (int i = 0; i < d->model->rowCount(); ++i) {
         for (int i = 0; i < d->playMetaPtrList.size(); ++i) {
-            auto index = d->model->index(i, 0);
-            auto itemHash = d->model->data(index).toString();
+            auto itemHash = d->model->data(d->model->index(i, 0)).toString();
             if (itemHash == meta->hash) {
                 d->model->removeRow(i);
             }
@@ -334,18 +326,18 @@ void PlayListView::onLocate(const MetaPtr meta)
 {
     if (meta == nullptr)
         return;
-    QModelIndex index = findIndex(meta);
-    if (!index.isValid()) {
+
+    if (!findIndex(meta).isValid()) {
         return;
     }
 
     clearSelection();
 
     auto viewRect = QRect(QPoint(0, 0), size());
-    if (!viewRect.intersects(visualRect(index))) {
-        scrollTo(index, PlayListView::PositionAtCenter);
+    if (!viewRect.intersects(visualRect(findIndex(meta)))) {
+        scrollTo(findIndex(meta), PlayListView::PositionAtCenter);
     }
-    setCurrentIndex(index);
+    setCurrentIndex(findIndex(meta));
 }
 
 bool PlayListView::onMusiclistChanged(PlaylistPtr playlist)
@@ -403,11 +395,10 @@ void PlayListView::keyPressEvent(QKeyEvent *event)
         case Qt::Key_Return: {
             QItemSelectionModel *selection = this->selectionModel();
             if (!selection->selectedRows().isEmpty()) {
-                auto index = selection->selectedRows().first();
-                if (d->model->meta(index) == playlist()->playing()) {
-                    Q_EMIT resume(d->model->meta(index));
+                if (d->model->meta(selection->selectedRows().first()) == playlist()->playing()) {
+                    Q_EMIT resume(d->model->meta(selection->selectedRows().first()));
                 } else {
-                    Q_EMIT playMedia(d->model->meta(index));
+                    Q_EMIT playMedia(d->model->meta(selection->selectedRows().first()));
                 }
             }
         }
@@ -427,8 +418,7 @@ void PlayListView::keyPressEvent(QKeyEvent *event)
             if (selection->selectedRows().length() <= 0) {
                 return;
             }
-            auto index = selection->selectedRows().first();
-            auto meta = d->model->meta(index);
+            auto meta = d->model->meta(selection->selectedRows().first());
             Q_EMIT showInfoDialog(meta);
             break;
         }
@@ -495,13 +485,11 @@ void PlayListViewPrivate::addMedia(const MetaPtr meta)
     }
     if (cover.width() > 160 || cover.height() > 160)
         cover = cover.scaled(QSize(160, 160));
-    QIcon icon = QIcon(cover);
-    newItem->setIcon(icon);
+    newItem->setIcon(QIcon(cover));
     model->appendRow(newItem);
 
     auto row = model->rowCount() - 1;
-    QModelIndex index = model->index(row, 0, QModelIndex());
-    model->setData(index, meta->hash);
+    model->setData(model->index(row, 0, QModelIndex()), meta->hash);
 }
 
 void PlayListViewPrivate::removeSelection(QItemSelectionModel *selection)
@@ -548,18 +536,15 @@ void PlayListView::showContextMenu(const QPoint &pos,
     if (selectedPlaylist != favPlaylist || this->playlist()->id() == "musicResult") {
         //        auto act = playlistMenu.addAction(favPlaylist->displayName());
         auto act = playlistMenu.addAction(tr("My favorites"));
-        bool flag = true;
+        act->setEnabled(false);
         for (auto &index : selection->selectedRows()) {
             auto meta = d->model->meta(index);
             if (!favPlaylist->contains(meta)) {
-                flag = false;
+                act->setEnabled(true);
+                break;
             }
         }
-        if (flag == true) {
-            act->setEnabled(false);
-        } else {
-            act->setEnabled(true);
-        }
+
         act->setData(QVariant::fromValue(favPlaylist));
         playlistMenu.addSeparator();
     }
@@ -651,8 +636,7 @@ void PlayListView::showContextMenu(const QPoint &pos,
 
     DMenu textCodecMenu;
     if (singleSelect) {
-        auto index = selection->selectedRows().first();
-        auto meta = d->model->meta(index);
+        auto meta = d->model->meta(selection->selectedRows().first());
         QList<QByteArray> codecList = DMusic::detectMetaEncodings(meta);
 
         if (!codecList.contains("UTF-8")) {
@@ -706,26 +690,23 @@ void PlayListView::showContextMenu(const QPoint &pos,
 
     if (playAction) {
         connect(playAction, &QAction::triggered, this, [ = ](bool) {
-            auto index = selection->selectedRows().first();
-            if (d->model->meta(index) == playlist()->playing()) {
-                Q_EMIT resume(d->model->meta(index));
+            if (d->model->meta(selection->selectedRows().first()) == playlist()->playing()) {
+                Q_EMIT resume(d->model->meta(selection->selectedRows().first()));
             } else {
-                Q_EMIT playMedia(d->model->meta(index));
+                Q_EMIT playMedia(d->model->meta(selection->selectedRows().first()));
             }
         });
     }
 
     if (pauseAction) {
         connect(pauseAction, &QAction::triggered, this, [ = ](bool) {
-            auto index = selection->selectedRows().first();
-            Q_EMIT pause(d->model->meta(index));
+            Q_EMIT pause(d->model->meta(selection->selectedRows().first()));
         });
     }
 
     if (displayAction) {
         connect(displayAction, &QAction::triggered, this, [ = ](bool) {
-            auto index = selection->selectedRows().first();
-            auto meta = d->model->meta(index);
+            auto meta = d->model->meta(selection->selectedRows().first());
             auto dirUrl = QUrl::fromLocalFile(meta->localPath);
             Dtk::Widget::DDesktopServices::showFileItem(dirUrl);
         });
@@ -820,8 +801,7 @@ void PlayListView::showContextMenu(const QPoint &pos,
 
     if (songAction) {
         connect(songAction, &QAction::triggered, this, [ = ](bool) {
-            auto index = selection->selectedRows().first();
-            auto meta = d->model->meta(index);
+            auto meta = d->model->meta(selection->selectedRows().first());
             Q_EMIT showInfoDialog(meta);
         });
     }
@@ -856,8 +836,7 @@ void PlayListView::startDrag(Qt::DropActions supportedActions)
 
     QMap<QString, int> hashIndexs;
     for (int i = 0; i < d->model->rowCount(); ++i) {
-        auto index = d->model->index(i, 0);
-        auto hash = d->model->data(index).toString();
+        auto hash = d->model->data(d->model->index(i, 0)).toString();
         Q_ASSERT(!hash.isEmpty());
         hashIndexs.insert(hash, i);
     }
@@ -867,8 +846,7 @@ void PlayListView::startDrag(Qt::DropActions supportedActions)
     QItemSelection selection;
     for (auto meta : list) {
         if (!meta.isNull()) {
-            auto index = this->findIndex(meta);
-            selection.append(QItemSelectionRange(index));
+            selection.append(QItemSelectionRange(findIndex(meta)));
         }
     }
     if (!selection.isEmpty()) {

@@ -51,6 +51,15 @@ LyricLabel::LyricLabel(bool touch, QWidget *parent)
     //setMinimumWidth(600);
 }
 
+LyricLabel::~LyricLabel()
+{
+    delete  lyric;
+    delete  lyricFont;
+    delete  lyricNormal;
+    delete  lyricHighlight;
+}
+
+
 void LyricLabel::getFromFile(QString dir)
 {
     lyric->getFromFile(dir);

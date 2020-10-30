@@ -125,6 +125,13 @@ SearchResult::SearchResult(QWidget *parent) : DBlurEffectWidget(parent)
     connect(m_AlbumView, &MusicSearchListview::sigSearchClear, this, &SearchResult::clearKeyState);
 }
 
+SearchResult::~SearchResult()
+{
+    delete m_MusicView;
+    delete m_ArtistView;
+    delete m_AlbumView;
+}
+
 void SearchResult::autoResize()
 {
     int rowCount = m_MusicView->rowCount();

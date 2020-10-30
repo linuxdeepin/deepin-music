@@ -50,6 +50,8 @@ class LyricLabel : public AbstractWheelWidget
 
 public:
     LyricLabel(bool touch, QWidget *parent = nullptr);
+    ~LyricLabel();
+
 
 
     void getFromFile(QString dir);

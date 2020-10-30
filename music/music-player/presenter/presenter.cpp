@@ -773,6 +773,8 @@ void Presenter::postAction(bool showFlag)
         if (!showFlag) {
             Q_EMIT showMusicList(allplaylist);
         }
+    } else {
+        Q_EMIT metaLibraryClean();
     }
 
     if (!showFlag) {

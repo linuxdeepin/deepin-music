@@ -137,11 +137,11 @@ MusicApp *QTestMain::getMainwindow()
     auto showflag = MusicSettings::value("base.play.showFlag").toBool();
 
     frame->initUI(true);
-    frame->triggerShortcutAction("shortcuts.all.volume_up");
-    frame->triggerShortcutAction("shortcuts.all.volume_down");
-    frame->triggerShortcutAction("shortcuts.all.next");
-    frame->triggerShortcutAction("shortcuts.all.play_pause");
-    frame->triggerShortcutAction("shortcuts.all.previous");
+    Q_EMIT frame->triggerShortcutAction("shortcuts.all.volume_up");
+    Q_EMIT frame->triggerShortcutAction("shortcuts.all.volume_down");
+    Q_EMIT frame->triggerShortcutAction("shortcuts.all.next");
+    Q_EMIT frame->triggerShortcutAction("shortcuts.all.play_pause");
+    Q_EMIT frame->triggerShortcutAction("shortcuts.all.previous");
     w->initConnection(showflag);
     w->initUI(true);
     QStringList list1;
@@ -150,7 +150,7 @@ MusicApp *QTestMain::getMainwindow()
 
     QStringList list;
     list << "/usr/share/music/bensound-sunny.mp3";
-    Q_EMIT w->sigStartImport(list);
+//    Q_EMIT w->sigStartImport(list);
     w->show();
     //testSig_data();
 //    w->quit();

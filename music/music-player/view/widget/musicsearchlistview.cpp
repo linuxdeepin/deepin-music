@@ -68,7 +68,7 @@ MusicSearchListview::MusicSearchListview(QWidget *parent)
 
     d->model = new MusicSearchListModel(3, 3, this);
     setModel(d->model);
-    d->delegate = new MusicSearchListDelegate;
+    d->delegate = new MusicSearchListDelegate(this);
     setItemDelegate(d->delegate);
     setViewportMargins(0, 0, 8, 0);
 

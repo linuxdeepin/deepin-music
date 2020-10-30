@@ -153,6 +153,10 @@ set(TARGET_LIBS Qt5::Widgets Qt5::Core Qt5::Gui Qt5::DBus  Qt5::Sql Qt5::Multime
      PkgConfig::AV PkgConfig::Dtk PkgConfig::qgsettings icui18n
     mpris-qt5 dbusextended-qt5 dmusic)
 
+#set(CMAKE_CXX_FLAGS "-fsanitize=undefined,address,leak -fno-omit-frame-pointer")
+#set(CMAKE_C_FLAGS "-fsanitize=undefined,address,leak -fno-omit-frame-pointer")
+#set(CMAKE_Ｌ_FLAGS "-fsanitize=undefined,address,leak -fno-omit-frame-pointer")
+
 LINK_DIRECTORIES(${CMAKE_BINARY_DIR}/music/libdmusic/
         ${CMAKE_BINARY_DIR}/music/vendor/dbusextended-qt/src/
         ${CMAKE_BINARY_DIR}/music/vendor/mpris-qt/src/)

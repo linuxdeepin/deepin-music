@@ -842,6 +842,7 @@ MainFrame::~MainFrame()
     MusicSettings::setOption("base.play.state", saveState());
     MusicSettings::setOption("base.play.geometry", saveGeometry());
     delete d->equalizerDialog;
+    delete  d->footer;
 }
 
 void MainFrame::initUI(bool showLoading)

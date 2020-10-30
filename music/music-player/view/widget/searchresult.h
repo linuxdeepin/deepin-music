@@ -43,6 +43,7 @@ class SearchResult : public DBlurEffectWidget
     Q_OBJECT
 public:
     explicit SearchResult(QWidget *parent = Q_NULLPTR);
+    ~SearchResult();
     void autoResize();
 
     void setSearchString(const QString &str);

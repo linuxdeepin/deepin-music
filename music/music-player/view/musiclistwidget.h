@@ -39,6 +39,7 @@ class MusicListWidget : public DWidget
     Q_OBJECT
 public:
     explicit MusicListWidget(QWidget *parent = Q_NULLPTR);
+    ~MusicListWidget();
     //void initData(QList<PlaylistPtr > playlists, PlaylistPtr last);
 
     PlaylistPtr curPlaylist();

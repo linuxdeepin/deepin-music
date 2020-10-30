@@ -313,6 +313,11 @@ MusicListWidget::MusicListWidget(QWidget *parent) : DWidget(parent)
     });
 }
 
+MusicListWidget::~MusicListWidget()
+{
+    delete m_dataListView;
+}
+
 PlaylistPtr MusicListWidget::curPlaylist()
 {
     PlaylistPtr curPlaylist = nullptr;

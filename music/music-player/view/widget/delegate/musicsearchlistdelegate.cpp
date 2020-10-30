@@ -63,7 +63,7 @@ public:
 
 MusicSearchListDelegate::MusicSearchListDelegate(QWidget *parent)
     : QStyledItemDelegate(parent)
-    , d_ptr(new MusicSearchListDelegatePrivate(this))
+//    , d_ptr(new MusicSearchListDelegatePrivate(this))
 {
 
 }

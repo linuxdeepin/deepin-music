@@ -108,6 +108,7 @@ private:
     DSlider     *slider_16K           = nullptr;
     DPushButton *btn_default          = nullptr;
     DFloatingMessage *saveMessage     = nullptr;
+    CustomTabStyle  *tabStyle        = nullptr;
 
     QStringList    effect_type        =  { DequalizerDialog::tr("Custom")
                                            , DequalizerDialog::tr("Monophony")
@@ -446,7 +447,8 @@ void DequalizerDialogPrivate::initUI()
     mtabwidget->setDocumentMode(true);
     mtabwidget->resize(720, 463);
     mtabwidget->addTab(mequalizer, DequalizerDialog::tr("Equalizer"));
-    mtabwidget->tabBar()->setStyle(new CustomTabStyle);
+    tabStyle = new CustomTabStyle;
+    mtabwidget->tabBar()->setStyle(tabStyle);
     mtabwidget->tabBar()->setContentsMargins(10, 0, 10, 0);
 
     auto mTitlebar = new DTitlebar(q);
@@ -559,6 +561,7 @@ DequalizerDialog::~DequalizerDialog()
 {
     Q_D(DequalizerDialog);
     delete d->saveMessage;
+    delete d->tabStyle;
 }
 
 void DequalizerDialog::initConnection()

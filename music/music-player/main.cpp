@@ -56,26 +56,6 @@
 using namespace Dtk::Core;
 using namespace Dtk::Widget;
 
-void createSpeechDbus()
-{
-    QDBusConnection::sessionBus().registerService("com.deepin.musicSpeech");
-    ExportedInterface *mSpeech = new ExportedInterface(nullptr);
-    mSpeech->registerAction("1", "playmusic");
-    mSpeech->registerAction("2", "play artist");
-    mSpeech->registerAction("3", "play artist song");
-    mSpeech->registerAction("4", "play faverite");
-    mSpeech->registerAction("5", "play custom ");
-    mSpeech->registerAction("6", "play radom");
-    mSpeech->registerAction("11", "pause");
-    mSpeech->registerAction("12", "stop");
-    mSpeech->registerAction("13", "resume");
-    mSpeech->registerAction("14", "previous");
-    mSpeech->registerAction("15", "next");
-    mSpeech->registerAction("21", "faverite");
-    mSpeech->registerAction("22", "unfaverite");
-    mSpeech->registerAction("23", "set play mode");
-}
-
 bool checkOnly()
 {
     //single
@@ -186,8 +166,6 @@ int main(int argc, char *argv[])
 
     QTimer::singleShot(20, nullptr, [ = ]() {
         music->initConnection(showflag);
-        /*----创建语音dbus-----*/
-        createSpeechDbus();
     });
 
     int count = parser.positionalArguments().length();
