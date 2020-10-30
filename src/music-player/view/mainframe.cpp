@@ -31,6 +31,7 @@
 #include <QPainter>
 #include <QSystemTrayIcon>
 #include <QTimer>
+#include <QDBusInterface>
 
 #include <DUtil>
 #include <DWidgetUtil>
@@ -52,6 +53,7 @@
 #include "../core/util/global.h"
 #include "../musicapp.h"
 #include "../core/util/convertthread.h"
+#include "./util/dbusutils.h"
 
 #include "widget/titlebarwidget.h"
 #include "widget/infodialog.h"
@@ -116,6 +118,8 @@ public:
 
     //! ui: show info dialog
     void showInfoDialog(const MetaPtr meta);
+
+    bool showWindowfromDBus();
 
     VlcMediaPlayer      *m_VlcMediaPlayer       = nullptr;
     DequalizerDialog    *equalizerDialog        = nullptr;
@@ -763,6 +767,39 @@ void MainFramePrivate::showInfoDialog(const MetaPtr meta)
     infoDialog->updateInfo(meta);
 }
 
+bool MainFramePrivate::showWindowfromDBus()
+{
+    QVariant v = DBusUtils::readDBusProperty("com.deepin.dde.daemon.Dock", "/com/deepin/dde/daemon/Dock",
+                                             "com.deepin.dde.daemon.Dock", "Entries");
+
+    if (!v.isValid())
+        return false;
+
+    QList<QDBusObjectPath> allSinkInputsList = v.value<QList<QDBusObjectPath> >();
+
+    QString entryPath;
+    for (auto curPath : allSinkInputsList) {
+        QVariant nameV = DBusUtils::readDBusProperty("com.deepin.dde.daemon.Dock", curPath.path(),
+                                                     "com.deepin.dde.daemon.Dock.Entry", "Name");
+
+        if (!nameV.isValid() || nameV != Global::getAppName())
+            continue;
+
+        entryPath = curPath.path();
+        break;
+    }
+
+    QDBusInterface ainterface("com.deepin.dde.daemon.Dock", entryPath,
+                              "com.deepin.dde.daemon.Dock.Entry",
+                              QDBusConnection::sessionBus());
+    if (!ainterface.isValid()) {
+        return false;
+    }
+    ainterface.call(QLatin1String("Activate"), 1);
+
+    return true;
+}
+
 MainFrame::MainFrame(QWidget *parent) :
     DMainWindow(parent), dd_ptr(new MainFramePrivate(this))
 {
@@ -893,23 +930,30 @@ void MainFrame::postInitUI()
     this, [ = ](QSystemTrayIcon::ActivationReason reason) {
         if (QSystemTrayIcon::Trigger == reason) {
             if (isVisible()) {
-                if (isMinimized()) {
+                if (isMinimized() || !isActiveWindow()) {
                     if (isFullScreen()) {
                         hide();
                         showFullScreen();
                     } else {
                         this->titlebar()->setFocus();
-                        showNormal();
-                        activateWindow();
+
+                        auto e = QProcessEnvironment::systemEnvironment();
+                        QString XDG_SESSION_TYPE = e.value(QStringLiteral("XDG_SESSION_TYPE"));
+                        QString WAYLAND_DISPLAY = e.value(QStringLiteral("WAYLAND_DISPLAY"));
+
+                        if (XDG_SESSION_TYPE != QLatin1String("wayland") && !WAYLAND_DISPLAY.contains(QLatin1String("wayland"), Qt::CaseInsensitive)) {
+                            showNormal();
+                            activateWindow();
+                        } else {
+                            if (!d->showWindowfromDBus()) {
+                                showNormal();
+                                activateWindow();
+                            }
+                        }
                     }
                 } else {
                     showMinimized();
                     hide();
-                    if (!isActiveWindow()) {
-                        this->titlebar()->setFocus();
-                        showNormal();
-                        activateWindow();
-                    }
                 }
             } else {
                 this->titlebar()->setFocus();
