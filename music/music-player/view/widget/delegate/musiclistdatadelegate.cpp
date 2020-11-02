@@ -248,9 +248,9 @@ void MusicListDataDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
             //draw playing
             if (playFlag) {
                 if (option.state & QStyle::State_MouseOver) {
-                    painter->drawPixmap(QRect(rect.x() + 56, rect.y() + 82, 36, 36), d->hoverSuspendImg);
+                    painter->drawPixmap(QRect(rect.x() + 56, rect.y() + 72, 36, 36), d->hoverSuspendImg);
                 } else {
-                    painter->drawPixmap(QRect(rect.x() + 64, rect.y() + 92, 22, 18), listview->getAlbumPixmap());
+                    painter->drawPixmap(QRect(rect.x() + 64, rect.y() + 82, 22, 18), listview->getAlbumPixmap());
                 }
             }
 
