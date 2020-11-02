@@ -42,11 +42,11 @@ public:
 
 signals:
     void searchText(const QString &id, const QString &text);
-    void searchCand (const QString &text);
+    void searchCand(const QString &text);
     void locateMusic(const QString &hash);
 
 public slots:
-    void onFocusIn();
+    //void onFocusIn();
     void onFocusOut();
     void onTextChanged();
     void onReturnPressed();

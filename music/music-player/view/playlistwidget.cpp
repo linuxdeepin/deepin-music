@@ -384,8 +384,8 @@ bool PlayListWidget::eventFilter(QObject *o, QEvent *e)
 
             int rowIndex = d->playListView->currentIndex().row();
             if (rowIndex == -1) {
-                auto index = d->playListView->item(0, 0);
-                d->playListView->setCurrentItem(index);
+                auto idx = d->playListView->item(0, 0);
+                d->playListView->setCurrentItem(idx);
             }
 
         } else if (e->type() == QEvent::FocusOut) {
@@ -403,8 +403,8 @@ bool PlayListWidget::eventFilter(QObject *o, QEvent *e)
 
             }
         } else  if (e->type() == QEvent::FocusIn) {
-            auto index = d->playListView->item(-1, 0);
-            d->playListView->setCurrentItem(index);
+            auto idx = d->playListView->item(-1, 0);
+            d->playListView->setCurrentItem(idx);
 
         } else if (e->type() == QEvent::FocusOut) {
 
@@ -464,8 +464,8 @@ void PlayListWidget::onMusicPlayed(PlaylistPtr playlist, const MetaPtr meta)
         return;
     }
 
-    QModelIndex index = d->playListView->findIndex(meta);
-    if (!index.isValid()) {
+    QModelIndex idx = d->playListView->findIndex(meta);
+    if (!idx.isValid()) {
         return;
     }
 
@@ -476,8 +476,8 @@ void PlayListWidget::onMusicPlayed(PlaylistPtr playlist, const MetaPtr meta)
     }
 
     d->playListView->clearSelection();
-    d->playListView->setCurrentIndex(index);
-    d->playListView->scrollTo(index);
+    d->playListView->setCurrentIndex(idx);
+    d->playListView->scrollTo(idx);
     d->playListView->update();
 }
 

@@ -118,11 +118,11 @@ MusicListView::MusicListView(QWidget *parent) : DListView(parent)
             if (!actionList.isEmpty()) {
                 actionList.first()->setIcon(playingIcon);
             } else {
-                DViewItemActionList  actionList;
+                DViewItemActionList  actList;
                 auto viewItemAction = new DViewItemAction(Qt::AlignCenter);
                 viewItemAction->setIcon(playingIcon);
-                actionList.append(viewItemAction);
-                curItem->setActionList(Qt::RightEdge, actionList);
+                actList.append(viewItemAction);
+                curItem->setActionList(Qt::RightEdge, actList);
 
             }
             update();
@@ -154,32 +154,32 @@ void MusicListView::addMusicList(PlaylistPtr playlist, bool addFlag)
     } else {
         rStr = "dark";
     }
-    QIcon icon(QString(":/mpimage/%1/normal/famous_ballad_normal.svg").arg(rStr));
+    QIcon itemicon(QString(":/mpimage/%1/normal/famous_ballad_normal.svg").arg(rStr));
     if (playlist->id() == AlbumMusicListID) {
 //        icon = QIcon(QString(":/mpimage/%1/normal/album_normal.svg").arg(rStr));
-        icon = QIcon::fromTheme("music_album");
+        itemicon = QIcon::fromTheme("music_album");
     } else if (playlist->id() == ArtistMusicListID) {
 //        icon = QIcon(QString(":/mpimage/%1/normal/singer_normal.svg").arg(rStr));
-        icon = QIcon::fromTheme("music_singer");
+        itemicon = QIcon::fromTheme("music_singer");
     } else if (playlist->id() == AllMusicListID) {
 //        icon = QIcon(QString(":/mpimage/%1/normal/all_music_normal.svg").arg(rStr));
-        icon = QIcon::fromTheme("music_allmusic");
+        itemicon = QIcon::fromTheme("music_allmusic");
     } else if (playlist->id() == FavMusicListID) {
 //        icon = QIcon(QString(":/mpimage/%1/normal/my_collection_normal.svg").arg(rStr));
-        icon = QIcon::fromTheme("music_mycollection");
+        itemicon = QIcon::fromTheme("music_mycollection");
     } else {
 //        icon = QIcon(QString(":/mpimage/%1/normal/famous_ballad_normal.svg").arg(rStr));
-        icon = QIcon::fromTheme("music_famousballad");
+        itemicon = QIcon::fromTheme("music_famousballad");
     }
 
     allPlaylists.append(playlist);
-    QString displayName = "";
+    QString dspName = "";
     if (playlist->id() == FavMusicListID) {
-        displayName = tr("My Favorites");
+        dspName = tr("My Favorites");
     } else {
-        displayName = playlist->displayName();
+        dspName = playlist->displayName();
     }
-    auto item = new DStandardItem(icon, displayName);
+    auto item = new DStandardItem(itemicon, dspName);
 
     if (playlist->id() == AlbumMusicListID) {
         item->setData(AlbumMusicListID, Qt::UserRole + 10);
@@ -242,11 +242,9 @@ void MusicListView::setCurPlaylist(QStandardItem *item)
     if (curItem) {
         QIcon playingIcon;
         if (pixmapState) {
-            QIcon icon(defaultPixmap);
-            playingIcon = icon;
+            playingIcon = defaultPixmap;
         } else {
-            QIcon icon(playingPixmap);
-            playingIcon = icon;
+            playingIcon = playingPixmap;
         }
         playingIcon.actualSize(QSize(20, 20));
 
@@ -303,9 +301,9 @@ void MusicListView::clearSelected()
             //delete
             QIcon playingIcon(QPixmap(":/mpimage/light/music1.svg"));
             playingIcon.actualSize(QSize(20, 20));
-            DViewItemActionList actionList = curItem->actionList(Qt::RightEdge);
-            if (!actionList.isEmpty()) {
-                actionList.first()->setIcon(playingIcon);
+            DViewItemActionList curActList = curItem->actionList(Qt::RightEdge);
+            if (!curActList.isEmpty()) {
+                curActList.first()->setIcon(playingIcon);
             } else {
                 DViewItemActionList  actionList;
                 auto viewItemAction = new DViewItemAction(Qt::AlignCenter);
@@ -338,9 +336,9 @@ void MusicListView::changePicture(QPixmap pixmap, QPixmap albumPixmap)
         //delete
         QIcon playingIcon(curPixmap);
         playingIcon.actualSize(QSize(20, 20));
-        DViewItemActionList actionList = curItem->actionList(Qt::RightEdge);
-        if (!actionList.isEmpty()) {
-            actionList.first()->setIcon(playingIcon);
+        DViewItemActionList curActList = curItem->actionList(Qt::RightEdge);
+        if (!curActList.isEmpty()) {
+            curActList.first()->setIcon(playingIcon);
         } else {
             DViewItemActionList  actionList;
             auto viewItemAction = new DViewItemAction(Qt::AlignCenter);
@@ -464,8 +462,8 @@ void MusicListView::dragEnterEvent(QDragEnterEvent *event)
 
 void MusicListView::dragMoveEvent(QDragMoveEvent *event)
 {
-    auto index = indexAt(event->pos());
-    if (index.isValid() && (event->mimeData()->hasFormat("text/uri-list")  || event->mimeData()->hasFormat("application/x-qabstractitemmodeldatalist"))) {
+    QModelIndex idx = indexAt(event->pos());
+    if (idx.isValid() && (event->mimeData()->hasFormat("text/uri-list")  || event->mimeData()->hasFormat("application/x-qabstractitemmodeldatalist"))) {
         qDebug() << "acceptProposedAction" << event;
         event->setDropAction(Qt::CopyAction);
         event->acceptProposedAction();
@@ -476,11 +474,11 @@ void MusicListView::dragMoveEvent(QDragMoveEvent *event)
 
 void MusicListView::dropEvent(QDropEvent *event)
 {
-    auto index = indexAt(event->pos());
-    if (!index.isValid())
+    QModelIndex idx = indexAt(event->pos());
+    if (!idx.isValid())
         return;
 
-    auto t_playlistPtr = playlistPtr(index);
+    PlaylistPtr t_playlistPtr = playlistPtr(idx);
     if (t_playlistPtr == nullptr || (!event->mimeData()->hasFormat("text/uri-list") && !event->mimeData()->hasFormat("application/x-qabstractitemmodeldatalist"))) {
         return;
     }
@@ -499,9 +497,9 @@ void MusicListView::dropEvent(QDropEvent *event)
         auto *source = qobject_cast<PlayListView *>(event->source());
         if (source != nullptr) {
             MetaPtrList metalist;
-            for (auto index : source->selectionModel()->selectedIndexes()) {
-                if (index.row() >= 0 && index.row() < source->playMetaPtrList().size()) {
-                    auto meta = source->playMetaPtrList()[index.row()];
+            for (auto ids : source->selectionModel()->selectedIndexes()) {
+                if (ids.row() >= 0 && ids.row() < source->playMetaPtrList().size()) {
+                    auto meta = source->playMetaPtrList()[ids.row()];
                     metalist.append(meta);
                 }
             }
@@ -516,11 +514,11 @@ void MusicListView::dropEvent(QDropEvent *event)
 
 void MusicListView::showContextMenu(const QPoint &pos)
 {
-    auto index = indexAt(pos);
-    if (!index.isValid())
+    QModelIndex idx = indexAt(pos);
+    if (!idx.isValid())
         return;
 
-    auto item = model->itemFromIndex(index);
+    auto item = model->itemFromIndex(idx);
     if (!item) {
         return;
     }
@@ -564,7 +562,7 @@ void MusicListView::showContextMenu(const QPoint &pos)
             Q_EMIT pause(m_data, m_data->playing());
         }
         if (action->text() == tr("Rename")) {
-            edit(index);
+            edit(idx);
         }
         if (action->text() == tr("Delete")) {
             QString message = QString(tr("Are you sure you want to delete this playlist?"));
@@ -577,9 +575,8 @@ void MusicListView::showContextMenu(const QPoint &pos)
             warnDlg.addButton(tr("Cancel"), false, Dtk::Widget::DDialog::ButtonNormal);
             warnDlg.addButton(tr("Delete"), true, Dtk::Widget::DDialog::ButtonWarning);
             if (1 == warnDlg.exec()) {
-                int t_index = item->row();
                 model->removeRow(item->row());
-                allPlaylists.removeAt(t_index);
+                allPlaylists.removeAt(item->row());
                 if (item == playingItem)
                     playingItem = nullptr;
 

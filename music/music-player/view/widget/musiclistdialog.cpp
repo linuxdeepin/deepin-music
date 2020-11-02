@@ -39,6 +39,12 @@
 #include "infodialog.h"
 #include "musictitleimage.h"
 
+static QString strplaymusic = "";
+bool find_play_name(PlayMusicTypePtr ptr)
+{
+    return ptr->name == strplaymusic;
+}
+
 DWIDGET_USE_NAMESPACE
 
 class MusicListDialogPrivate
@@ -335,23 +341,21 @@ void MusicListDialog::setPlayMusicData(PlaylistPtr playlist, PlayMusicTypePtr pl
     d->infoLabel->setFont(infoFont);
     d->titleLabel->setForegroundRole(DPalette::TextTitle);
 
-    QString name = playMusicType->name;
-    for (auto meta : playlist->playMusicTypePtrList()) {
-        if (meta->name == name) {
-            if (!meta->icon.isEmpty()) {
-                QPixmap pixmap = QPixmap::fromImage(QImage::fromData(meta->icon));
-                pixmap = pixmap.scaled(480, 130, Qt::KeepAspectRatioByExpanding);
-                d->titleFrame->setPixmap(pixmap);
-            } else {
-                QPixmap pixmap = DHiDPIHelper::loadNxPixmap(":/common/image/cover_max.svg");
-                pixmap = pixmap.scaled(480, 130, Qt::KeepAspectRatioByExpanding);
-                d->titleFrame->setPixmap(pixmap);
-            }
-            break;
+    strplaymusic = playMusicType->name;
+    QList<PlayMusicTypePtr>::iterator playitr = std::find_if(playlist->playMusicTypePtrList().begin(), playlist->playMusicTypePtrList().end(), find_play_name);
+    if (playitr != playlist->playMusicTypePtrList().end()) {
+        if (!(*playitr)->icon.isEmpty()) {
+            QPixmap pixmap = QPixmap::fromImage(QImage::fromData((*playitr)->icon));
+            pixmap = pixmap.scaled(480, 130, Qt::KeepAspectRatioByExpanding);
+            d->titleFrame->setPixmap(pixmap);
+        } else {
+            QPixmap pixmap = DHiDPIHelper::loadNxPixmap(":/common/image/cover_max.svg");
+            pixmap = pixmap.scaled(480, 130, Qt::KeepAspectRatioByExpanding);
+            d->titleFrame->setPixmap(pixmap);
         }
     }
 
-    d->musicListInfoView->onMusiclistChanged(playlist, name);
+    d->musicListInfoView->onMusiclistChanged(playlist, strplaymusic);
 }
 
 void MusicListDialog::setPlaying(const MetaPtr Meta)

@@ -81,7 +81,7 @@ protected:
     virtual void dragEnterEvent(QDragEnterEvent *event) Q_DECL_OVERRIDE;
     virtual void startDrag(Qt::DropActions supportedActions) Q_DECL_OVERRIDE;
     virtual void keyPressEvent(QKeyEvent *event) Q_DECL_OVERRIDE;
-    virtual void keyboardSearch(const QString &search) Q_DECL_OVERRIDE;
+    //virtual void keyboardSearch(const QString &search) Q_DECL_OVERRIDE;
 
 private:
     QScopedPointer<MusicListInfoViewPrivate> d_ptr;

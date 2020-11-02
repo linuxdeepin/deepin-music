@@ -102,14 +102,14 @@ void MusicSearchListDelegate::paint(QPainter *painter, const QStyleOptionViewIte
     if (playlistPtr == nullptr) {
         return;
     }
-    auto playMusicTypePtrList = listview->playMusicTypePtrList();
+    auto pmtlist = listview->playMusicTypePtrList();
     auto metaPtrList = listview->playMetaList();
     if (playlistPtr->id() == MusicCandListID) {
         if (index.row() >= metaPtrList.size()) {
             return;
         }
     } else {
-        if (index.row() >= playMusicTypePtrList.size()) {
+        if (index.row() >= pmtlist.size()) {
             return;
         }
     }
@@ -236,7 +236,7 @@ void MusicSearchListDelegate::paint(QPainter *painter, const QStyleOptionViewIte
         painter->restore();
 
     } else {
-        auto playMusicTypePtr = playMusicTypePtrList[index.row()];
+        auto playMusicTypePtr = pmtlist[index.row()];
         /***********************绘制图片***************************/
         QPixmap image;
         image.loadFromData(playMusicTypePtr->icon);

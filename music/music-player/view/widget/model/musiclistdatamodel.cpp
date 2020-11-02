@@ -69,10 +69,10 @@ bool MusicListDataModel::setData(const QModelIndex &index, const QVariant &value
     return QStandardItemModel::setData(index, value, role);
 }
 
-Qt::DropActions MusicListDataModel::supportedDropActions() const
-{
-    return Qt::CopyAction | Qt::MoveAction;
-}
+//Qt::DropActions MusicListDataModel::supportedDropActions() const
+//{
+//    return Qt::CopyAction | Qt::MoveAction;
+//}
 
 Qt::ItemFlags MusicListDataModel::flags(const QModelIndex &index) const
 {

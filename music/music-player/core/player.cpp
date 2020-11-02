@@ -35,7 +35,6 @@
 #include <QThread>
 #include <QFileInfo>
 #include <QDir>
-//#include <QtConcurrent>
 #include <QTimer>
 #include <QMutex>
 #include <DRecentManager>
@@ -121,11 +120,6 @@ void initMiniTypes()
     }
 }
 
-//QStringList Player::supportedFilterStringList() const
-//{
-//    return sSupportedFiterList;
-//}
-
 QStringList Player::supportedSuffixList() const
 {
     return sSupportedSuffixList;
@@ -142,14 +136,10 @@ public:
     explicit PlayerPrivate(Player *parent) : q_ptr(parent)
     {
         /*-------AudioPlayer-------*/
-//        QtConcurrent::run([ = ] {
-//
         qvinstance = new VlcInstance(VlcCommon::args(), nullptr);
         qvplayer = new VlcMediaPlayer(qvinstance);
         qvplayer->equalizer()->setPreamplification(12);
         qvmedia = new VlcMedia();
-//
-//        });
     }
 
     void initConnection();
@@ -262,9 +252,9 @@ void PlayerPrivate::initConnection()
         }
         case Vlc::Error: {
             if (!activeMeta.isNull() /*&& !QFile::exists(activeMeta->localPath)*/) {
-                MetaPtrList removeMusicList;
-                removeMusicList.append(activeMeta);
-                curPlaylist->removeMusicList(removeMusicList);
+                MetaPtrList rmlist;
+                rmlist.append(activeMeta);
+                curPlaylist->removeMusicList(rmlist);
                 Q_EMIT q->mediaError(activePlaylist, activeMeta, Player::ResourceError);
             }
             break;
@@ -321,16 +311,14 @@ void PlayerPrivate::selectNext(const MetaPtr info, Player::PlaybackMode mode)
                 break;
         }
     }
-    bool invalidFlag = cinfo->invalid;
-    if (invalidFlag) {
-        for (auto curMeta : curPlaylist->allmusic()) {
-            if (!curMeta->invalid) {
-                invalidFlag = false;
-                break;
-            }
-        }
+    bool invalidFlag = true;
+    if (cinfo->invalid) {
+        invalidFlag = std::any_of(curPlaylist->allmusic().begin(),  curPlaylist->allmusic().end(), [](MetaPtr  ptr) {
+            return ptr->invalid == false;
+        });
+    } else {
+        invalidFlag = cinfo->invalid;
     }
-
 
     switch (mode) {
     case Player::RepeatAll: {
@@ -380,14 +368,13 @@ void PlayerPrivate::selectPrev(const MetaPtr info, Player::PlaybackMode mode)
         return;
     }
 
-    bool invalidFlag = info->invalid;
-    if (invalidFlag) {
-        for (auto curMeta : curPlaylist->allmusic()) {
-            if (!curMeta->invalid) {
-                invalidFlag = false;
-                break;
-            }
-        }
+    bool invalidFlag = true;
+    if (info->invalid) {
+        invalidFlag = std::any_of(curPlaylist->allmusic().begin(),  curPlaylist->allmusic().end(), [](MetaPtr  ptr) {
+            return ptr->invalid == false;
+        });
+    } else {
+        invalidFlag = info->invalid;
     }
 
     switch (mode) {

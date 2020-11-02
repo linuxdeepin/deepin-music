@@ -114,15 +114,15 @@ void SearchEdit::searchText3(QString id, QString text)
     setText(m_Text);
 }
 
-void SearchEdit::onFocusIn()
-{
-    setText("");
-    m_CurrentId = "";
-    m_result->adjustSize();
-    auto pos = this->mapToGlobal(QPoint(0, this->height() + 2));
-    m_result->show();
-    m_result->move(pos);
-}
+//void SearchEdit::onFocusIn()
+//{
+//    setText("");
+//    m_CurrentId = "";
+//    m_result->adjustSize();
+//    auto pos = this->mapToGlobal(QPoint(0, this->height() + 2));
+//    m_result->show();
+//    m_result->move(pos);
+//}
 
 void SearchEdit::onFocusOut()
 {

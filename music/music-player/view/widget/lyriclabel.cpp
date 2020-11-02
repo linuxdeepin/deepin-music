@@ -157,11 +157,11 @@ void LyricLabel::postionChanged(qint64 pos)
         this->scrollTo(index);
 }
 
-void LyricLabel::setPostion(qint64 pos)
-{
-    int index = lyric->getIndex(pos);
-    this->setCurrentIndex(index);
-}
+//void LyricLabel::setPostion(qint64 pos)
+//{
+//    int index = lyric->getIndex(pos);
+//    this->setCurrentIndex(index);
+//}
 
 void LyricLabel::slotTheme(int type)
 {
@@ -205,11 +205,11 @@ void LyricLabel::changeToEvent(int index)
 //    *lyricHighlight =  QColorDialog::getColor(*lyricHighlight, this);
 //}
 
-void LyricLabel::contextMenuEvent(QContextMenuEvent *event)
-{
-    Q_UNUSED(event)
-    emit rightClicked();
-}
+//void LyricLabel::contextMenuEvent(QContextMenuEvent *event)
+//{
+//    Q_UNUSED(event)
+//    emit rightClicked();
+//}
 
 void LyricLabel::enterEvent(QEvent *e)
 {

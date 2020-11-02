@@ -84,13 +84,10 @@ MusicListWidget::MusicListWidget(QWidget *parent) : DWidget(parent)
             m_customizeListview->clearSelection();
             int rowIndex = m_dataBaseListview->currentIndex().row();
             if (rowIndex == -1) {
-                auto index = m_dataBaseListview->item(2, 0);
-                m_dataBaseListview->setCurrentItem(index);
+                m_dataBaseListview->setCurrentItem(m_dataBaseListview->item(2, 0));
             }
         } else if (type == "btlistMode") {
-
-            auto index = m_dataBaseListview->item(-1, 0);
-            m_dataBaseListview->setCurrentItem(index);
+            m_dataBaseListview->setCurrentItem(m_dataBaseListview->item(-1, 0));
         }
     });
 
@@ -112,8 +109,8 @@ MusicListWidget::MusicListWidget(QWidget *parent) : DWidget(parent)
     });
 
     connect(m_dataBaseListview, &MusicListView::pressed,
-    this, [ = ](const QModelIndex & index) {
-        auto curPtr = m_dataBaseListview->playlistPtr(index);
+    this, [ = ](const QModelIndex & idx) {
+        auto curPtr = m_dataBaseListview->playlistPtr(idx);
         if (curPtr != nullptr) {
             m_customizeListview->clearSelected();
             m_customizeListview->closeAllPersistentEditor();
@@ -169,8 +166,8 @@ MusicListWidget::MusicListWidget(QWidget *parent) : DWidget(parent)
     });
 
     connect(m_customizeListview, &MusicListView::pressed,
-    this, [ = ](const QModelIndex & index) {
-        auto curPtr = m_customizeListview->playlistPtr(index);
+    this, [ = ](const QModelIndex & idx) {
+        auto curPtr = m_customizeListview->playlistPtr(idx);
         if (curPtr != nullptr) {
             m_dataBaseListview->clearSelected();
             m_dataBaseListview->closeAllPersistentEditor();

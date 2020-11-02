@@ -1575,11 +1575,11 @@ void Footer::onUpdateMetaCodec(const QString &preTitle, const QString &preArtist
     }
 }
 
-void Footer::setDefaultCover(QString defaultCover)
-{
-    Q_D(Footer);
-    d->defaultCover = defaultCover;
-}
+//void Footer::setDefaultCover(QString defaultCover)
+//{
+//    Q_D(Footer);
+//    d->defaultCover = defaultCover;
+//}
 
 void Footer::resizeEvent(QResizeEvent *event)
 {

@@ -76,17 +76,17 @@ int Cover::radius() const
     return  d->m_radius ;
 }
 
-QColor Cover::borderColor() const
-{
-    Q_D(const Cover);
-    return  d->m_borderColor ;
-}
+//QColor Cover::borderColor() const
+//{
+//    Q_D(const Cover);
+//    return  d->m_borderColor ;
+//}
 
-QColor Cover::shadowColor() const
-{
-    Q_D(const Cover);
-    return  d->m_shadowColor ;
-}
+//QColor Cover::shadowColor() const
+//{
+//    Q_D(const Cover);
+//    return  d->m_shadowColor ;
+//}
 
 void Cover::paintEvent(QPaintEvent *)
 {
@@ -186,14 +186,14 @@ void Cover::setRadius(int radius)
     d->m_radius = radius;
 }
 
-void Cover::setBorderColor(QColor borderColor)
-{
-    Q_D(Cover);
-    d->m_borderColor = borderColor;
-}
+//void Cover::setBorderColor(QColor borderColor)
+//{
+//    Q_D(Cover);
+//    d->m_borderColor = borderColor;
+//}
 
-void Cover::setShadowColor(QColor shadowColor)
-{
-    Q_D(Cover);
-    d->m_shadowColor = shadowColor;
-}
+//void Cover::setShadowColor(QColor shadowColor)
+//{
+//    Q_D(Cover);
+//    d->m_shadowColor = shadowColor;
+//}

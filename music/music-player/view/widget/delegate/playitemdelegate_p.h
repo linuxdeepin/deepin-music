@@ -30,14 +30,14 @@ class PlayItemDelegate;
 class PlayItemDelegatePrivate : public QWidget
 {
     Q_OBJECT
-    Q_PROPERTY(QColor textColor READ textColor WRITE setTextColor)
-    Q_PROPERTY(QColor titleColor READ titleColor WRITE setTitleColor)
-    Q_PROPERTY(QColor highlightText READ highlightText WRITE setHighlightText)
-    Q_PROPERTY(QColor background READ background WRITE setBackground)
-    Q_PROPERTY(QColor alternateBackground READ alternateBackground WRITE setAlternateBackground)
-    Q_PROPERTY(QColor highlightedBackground READ highlightedBackground WRITE setHighlightedBackground)
-    Q_PROPERTY(QString playingIcon READ playingIcon WRITE setPlayingIcon)
-    Q_PROPERTY(QString highlightPlayingIcon READ highlightPlayingIcon WRITE setHighlightPlayingIcon)
+//    Q_PROPERTY(QColor textColor READ textColor WRITE setTextColor)
+//    Q_PROPERTY(QColor titleColor READ titleColor WRITE setTitleColor)
+//    Q_PROPERTY(QColor highlightText READ highlightText WRITE setHighlightText)
+//    Q_PROPERTY(QColor background READ background WRITE setBackground)
+//    Q_PROPERTY(QColor alternateBackground READ alternateBackground WRITE setAlternateBackground)
+//    Q_PROPERTY(QColor highlightedBackground READ highlightedBackground WRITE setHighlightedBackground)
+//    Q_PROPERTY(QString playingIcon READ playingIcon WRITE setPlayingIcon)
+//    Q_PROPERTY(QString highlightPlayingIcon READ highlightPlayingIcon WRITE setHighlightPlayingIcon)
 
 public:
     int                                 tialWidth = -1;
@@ -51,20 +51,20 @@ public:
     QColor titleColor() const;
     QColor highlightText() const;
     QColor background() const;
-    QColor alternateBackground() const;
-    QColor highlightedBackground() const;
+    //QColor alternateBackground() const;
+    //QColor highlightedBackground() const;
     QString playingIcon() const;
-    QString highlightPlayingIcon() const;
+    //QString highlightPlayingIcon() const;
 
 public slots:
-    void setTextColor(QColor textColor);
-    void setTitleColor(QColor titleColor);
-    void setHighlightText(QColor highlightText);
-    void setBackground(QColor background);
-    void setAlternateBackground(QColor alternateBackground);
-    void setHighlightedBackground(QColor highlightedBackground);
-    void setPlayingIcon(QString playingIcon);
-    void setHighlightPlayingIcon(QString highlightPlayingIcon);
+//    void setTextColor(QColor textColor);
+//    void setTitleColor(QColor titleColor);
+//    void setHighlightText(QColor highlightText);
+//    void setBackground(QColor background);
+//    void setAlternateBackground(QColor alternateBackground);
+//    void setHighlightedBackground(QColor highlightedBackground);
+//    void setPlayingIcon(QString playingIcon);
+//    void setHighlightPlayingIcon(QString highlightPlayingIcon);
 
 private:
     QColor m_textColor;

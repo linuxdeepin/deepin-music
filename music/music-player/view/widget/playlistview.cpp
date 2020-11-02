@@ -110,8 +110,8 @@ PlayListView::PlayListView(bool searchFlag, bool isPlayList, QWidget *parent)
             this, &PlayListView::requestCustomContextMenu);
 
     connect(this, &PlayListView::doubleClicked,
-    this, [ = ](const QModelIndex & index) {
-        MetaPtr meta = d->model->meta(index);
+    this, [ = ](const QModelIndex & idx) {
+        MetaPtr meta = d->model->meta(idx);
         if (meta == playlist()->playing()) {
             Q_EMIT resume(meta);
         } else {
@@ -370,11 +370,7 @@ bool PlayListView::onMusiclistChanged(PlaylistPtr playlist)
     d->model->removeRows(0, d->model->rowCount());
     d->playMetaPtrList.clear();
 
-    QString searchStr = playlist->searchStr();
-    if (!d->searchFlag)
-        searchStr.clear();
-
-    Q_EMIT modelMake(playlist, searchStr);
+    Q_EMIT modelMake(playlist, !d->searchFlag ? QString() : playlist->searchStr());
     setUpdatesEnabled(true);
     setModel(d->model);
     d->model->setPlaylist(playlist);
@@ -423,38 +419,7 @@ void PlayListView::keyPressEvent(QKeyEvent *event)
             break;
         }
         break;
-    //    case Qt::ControlModifier:
-    //        switch (event->key()) {
-    //        case Qt::Key_K:
-    //            QItemSelectionModel *selection = this->selectionModel();
-    //            if (selection->selectedRows().length() > 0) {
-    //                MetaPtrList metalist;
-    //                for (auto index : selection->selectedRows()) {
-    //                    auto meta = d->model->meta(index);
-    //                    metalist << meta;
-    //                }
-    //                if (!metalist.isEmpty())
-    //                    Q_EMIT addMetasFavourite(metalist);
-    //            }
-    //            break;
-    //        }
-    //        break;
-    //    case Qt::ControlModifier | Qt::ShiftModifier:
-    //        switch (event->key()) {
-    //        case Qt::Key_K:
-    //            QItemSelectionModel *selection = this->selectionModel();
-    //            if (selection->selectedRows().length() > 0) {
-    //                MetaPtrList metalist;
-    //                for (auto index : selection->selectedRows()) {
-    //                    auto meta = d->model->meta(index);
-    //                    metalist << meta;
-    //                }
-    //                if (!metalist.isEmpty())
-    //                    Q_EMIT removeMetasFavourite(metalist);
-    //            }
-    //            break;
-    //        }
-    //        break;
+
     default:
         break;
     }
@@ -462,13 +427,13 @@ void PlayListView::keyPressEvent(QKeyEvent *event)
     QAbstractItemView::keyPressEvent(event);
 }
 
-void PlayListView::keyboardSearch(const QString &search)
-{
-    Q_UNUSED(search);
-    // Disable keyborad serach
-    //    qDebug() << search;
-    //    QAbstractItemView::keyboardSearch(search);
-}
+//void PlayListView::keyboardSearch(const QString &search)
+//{
+//    Q_UNUSED(search);
+//    // Disable keyborad serach
+//    //    qDebug() << search;
+//    //    QAbstractItemView::keyboardSearch(search);
+//}
 
 void PlayListViewPrivate::addMedia(const MetaPtr meta)
 {
@@ -498,8 +463,8 @@ void PlayListViewPrivate::removeSelection(QItemSelectionModel *selection)
     Q_Q(PlayListView);
 
     MetaPtrList metalist;
-    for (auto index : selection->selectedRows()) {
-        auto meta = model->meta(index);
+    for (QModelIndex idx : selection->selectedRows()) {
+        auto meta = model->meta(idx);
         metalist << meta;
     }
     Q_EMIT q->removeMusicList(metalist);
@@ -537,9 +502,8 @@ void PlayListView::showContextMenu(const QPoint &pos,
         //        auto act = playlistMenu.addAction(favPlaylist->displayName());
         auto act = playlistMenu.addAction(tr("My favorites"));
         act->setEnabled(false);
-        for (auto &index : selection->selectedRows()) {
-            auto meta = d->model->meta(index);
-            if (!favPlaylist->contains(meta)) {
+        for (QModelIndex &idx : selection->selectedRows()) {
+            if (!favPlaylist->contains(d->model->meta(idx))) {
                 act->setEnabled(true);
                 break;
             }
@@ -579,8 +543,8 @@ void PlayListView::showContextMenu(const QPoint &pos,
         auto playlist = action->data().value<PlaylistPtr >();
         qDebug() << playlist;
         MetaPtrList metalist;
-        for (auto &index : selection->selectedRows()) {
-            auto meta = d->model->meta(index);
+        for (QModelIndex idx : selection->selectedRows()) {
+            auto meta = d->model->meta(idx);
             if (!meta.isNull()) {
                 metalist << meta;
             }
@@ -715,8 +679,8 @@ void PlayListView::showContextMenu(const QPoint &pos,
     if (removeAction) {
         connect(removeAction, &QAction::triggered, this, [ = ](bool) {
             MetaPtrList metalist;
-            for (auto index : selection->selectedRows()) {
-                auto meta = d->model->meta(index);
+            for (QModelIndex idx : selection->selectedRows()) {
+                auto meta = d->model->meta(idx);
                 metalist << meta;
             }
             if (metalist.isEmpty())
@@ -745,8 +709,8 @@ void PlayListView::showContextMenu(const QPoint &pos,
         connect(deleteAction, &QAction::triggered, this, [ = ](bool) {
             bool containsCue = false;
             MetaPtrList metalist;
-            for (auto index : selection->selectedRows()) {
-                auto meta = d->model->meta(index);
+            for (QModelIndex idx : selection->selectedRows()) {
+                auto meta = d->model->meta(idx);
                 if (!meta->cuePath.isEmpty()) {
                     containsCue = true;
                 }
@@ -824,8 +788,8 @@ void PlayListView::startDrag(Qt::DropActions supportedActions)
     Q_D(PlayListView);
 
     MetaPtrList list;
-    for (auto index : selectionModel()->selectedIndexes()) {
-        list << d->model->meta(index);
+    for (QModelIndex idx : selectionModel()->selectedIndexes()) {
+        list << d->model->meta(idx);
     }
 
     if (!selectionModel()->selectedIndexes().isEmpty())
@@ -874,7 +838,7 @@ void ModelMake::onModelMake(PlaylistPtr playlist, QString searchStr)
             break;
         }
     }
-    MetaPtr meta;
+
     QString id = playlist->id();
     int count = 0;
     for (auto meta : playlist->allmusic()) {

@@ -430,28 +430,28 @@ QList<PlaylistMeta> MediaDatabase::allPlaylistMeta()
     return list;
 }
 
-static MetaPtrList searchTitle(const QString &queryString)
-{
-    MetaPtrList metalist;
+//static MetaPtrList searchTitle(const QString &queryString)
+//{
+//    MetaPtrList metalist;
 
-    QSqlQuery query;
-    query.prepare(queryString);
-    if (! query.exec()) {
-        qCritical() << query.lastError();
-        return metalist;
-    }
+//    QSqlQuery query;
+//    query.prepare(queryString);
+//    if (! query.exec()) {
+//        qCritical() << query.lastError();
+//        return metalist;
+//    }
 
-    while (query.next()) {
-        auto hash = query.value(0).toString();
-        auto meta = MediaLibrary::instance()->meta(hash);
-        if (meta.isNull()) {
-            continue;
-        }
-        metalist << meta;
-    }
+//    while (query.next()) {
+//        auto hash = query.value(0).toString();
+//        auto meta = MediaLibrary::instance()->meta(hash);
+//        if (meta.isNull()) {
+//            continue;
+//        }
+//        metalist << meta;
+//    }
 
-    return metalist;
-}
+//    return metalist;
+//}
 
 //MetaPtrList MediaDatabase::searchMediaTitle(const QString &title, int limit)
 //{

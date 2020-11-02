@@ -66,9 +66,9 @@ Transfer::~Transfer()
 
 void Transfer::onMusicListAdded(PlaylistPtr playlist, const MetaPtrList metalist)
 {
-    int length = metalist.length();
+    int len = metalist.length();
     MetaPtrList slice;
-    for (int i = 0; i < length; i++) {
+    for (int i = 0; i < len; i++) {
         auto meta = metalist.at(i);
         slice << meta;
         if (i % 30 == 0) {
@@ -145,8 +145,8 @@ void PresenterPrivate::initBackend()
 
     connect(this, &PresenterPrivate::play,
     this, [ = ](PlaylistPtr playlist, const MetaPtr meta) {
-        auto curPlaylist = player->curPlaylist();
-        if (curPlaylist->id() != playlist->id()) {
+        auto curPlist = player->curPlaylist();
+        if (curPlist->id() != playlist->id()) {
             auto curAllMetas = playlist->allmusic();
             for (int i = curAllMetas.size() - 1; i >= 0; i--) {
                 if (meta == curAllMetas[i])
@@ -157,7 +157,7 @@ void PresenterPrivate::initBackend()
                     curAllMetas[i]->invalid = false;
                 }
             }
-            auto allMsics = curPlaylist->allmusic();
+            auto allMsics = curPlist->allmusic();
             bool same = true;
             if (allMsics.size() != curAllMetas.size()) {
                 same = false;
@@ -174,13 +174,13 @@ void PresenterPrivate::initBackend()
                 }
             }
             if (!same) {
-                curPlaylist->removeMusicList(curPlaylist->allmusic());
+                curPlist->removeMusicList(curPlist->allmusic());
                 this->thread()->msleep(50);
-                curPlaylist->appendMusicList(curAllMetas);
+                curPlist->appendMusicList(curAllMetas);
             }
         } else {
-            auto curPlaylist = player->curPlaylist();
-            auto curAllMetas = curPlaylist->allmusic();
+            auto curp = player->curPlaylist();
+            auto curAllMetas = curp->allmusic();
             MetaPtrList curRemoveMetas;
             for (int i = curAllMetas.size() - 1; i >= 0; i--) {
                 if (curAllMetas[i]->invalid && !QFile::exists(curAllMetas[i]->localPath))
@@ -190,15 +190,15 @@ void PresenterPrivate::initBackend()
                 }
             }
             if (!curRemoveMetas.isEmpty()) {
-                curPlaylist->removeMusicList(curRemoveMetas);
+                curp->removeMusicList(curRemoveMetas);
             }
         }
         player->playMeta(playlist, meta);
     });
     connect(this, &PresenterPrivate::resume,
     this, [ = ](PlaylistPtr playlist, const MetaPtr meta) {
-        auto curPlaylist = player->curPlaylist();
-        if (curPlaylist->id() != playlist->id()) {
+        auto curPlist = player->curPlaylist();
+        if (curPlist->id() != playlist->id()) {
             auto curAllMetas = playlist->allmusic();
             for (int i = curAllMetas.size() - 1; i >= 0; i--) {
                 if (meta == curAllMetas[i])
@@ -209,7 +209,7 @@ void PresenterPrivate::initBackend()
                     curAllMetas[i]->invalid = false;
                 }
             }
-            auto allMsics = curPlaylist->allmusic();
+            auto allMsics = curPlist->allmusic();
             bool same = true;
             if (allMsics.size() != curAllMetas.size()) {
                 same = false;
@@ -226,12 +226,12 @@ void PresenterPrivate::initBackend()
                 }
             }
             if (!same) {
-                curPlaylist->removeMusicList(curPlaylist->allmusic());
-                curPlaylist->appendMusicList(curAllMetas);
+                curPlist->removeMusicList(curPlist->allmusic());
+                curPlist->appendMusicList(curAllMetas);
             }
         } else {
-            auto curPlaylist = player->curPlaylist();
-            auto curAllMetas = curPlaylist->allmusic();
+            auto curp = player->curPlaylist();
+            auto curAllMetas = curp->allmusic();
             MetaPtrList curRemoveMetas;
             for (int i = curAllMetas.size() - 1; i >= 0; i--) {
                 if (curAllMetas[i]->invalid && !QFile::exists(curAllMetas[i]->localPath))
@@ -241,15 +241,15 @@ void PresenterPrivate::initBackend()
                 }
             }
             if (!curRemoveMetas.isEmpty()) {
-                curPlaylist->removeMusicList(curRemoveMetas);
+                curp->removeMusicList(curRemoveMetas);
             }
         }
         player->resume(playlist, meta);
     });
     connect(this, &PresenterPrivate::playNext,
     this, [ = ](PlaylistPtr playlist, const MetaPtr meta) {
-        auto curPlaylist = player->curPlaylist();
-        if (curPlaylist->id() != playlist->id()) {
+        auto curPlist = player->curPlaylist();
+        if (curPlist->id() != playlist->id()) {
             auto curAllMetas = playlist->allmusic();
             for (int i = curAllMetas.size() - 1; i >= 0; i--) {
                 if (meta == curAllMetas[i])
@@ -260,7 +260,7 @@ void PresenterPrivate::initBackend()
                     curAllMetas[i]->invalid = false;
                 }
             }
-            auto allMsics = curPlaylist->allmusic();
+            auto allMsics = curPlist->allmusic();
             bool same = true;
             if (allMsics.size() != curAllMetas.size()) {
                 same = false;
@@ -277,12 +277,12 @@ void PresenterPrivate::initBackend()
                 }
             }
             if (!same) {
-                curPlaylist->removeMusicList(curPlaylist->allmusic());
-                curPlaylist->appendMusicList(curAllMetas);
+                curPlist->removeMusicList(curPlist->allmusic());
+                curPlist->appendMusicList(curAllMetas);
             }
         } else {
-            auto curPlaylist = player->curPlaylist();
-            auto curAllMetas = curPlaylist->allmusic();
+            auto curp = player->curPlaylist();
+            auto curAllMetas = curp->allmusic();
             MetaPtrList curRemoveMetas;
             for (int i = curAllMetas.size() - 1; i >= 0; i--) {
                 if (curAllMetas[i]->invalid && !QFile::exists(curAllMetas[i]->localPath))
@@ -292,15 +292,15 @@ void PresenterPrivate::initBackend()
                 }
             }
             if (!curRemoveMetas.isEmpty()) {
-                curPlaylist->removeMusicList(curRemoveMetas);
+                curp->removeMusicList(curRemoveMetas);
             }
         }
         player->playNextMeta(playlist, meta);
     });
     connect(this, &PresenterPrivate::playPrev,
     this, [ = ](PlaylistPtr playlist, const MetaPtr meta) {
-        auto curPlaylist = player->curPlaylist();
-        if (curPlaylist->id() != playlist->id()) {
+        auto curPlist = player->curPlaylist();
+        if (curPlist->id() != playlist->id()) {
             auto curAllMetas = playlist->allmusic();
             for (int i = curAllMetas.size() - 1; i >= 0; i--) {
                 if (meta == curAllMetas[i])
@@ -311,7 +311,7 @@ void PresenterPrivate::initBackend()
                     curAllMetas[i]->invalid = false;
                 }
             }
-            auto allMsics = curPlaylist->allmusic();
+            auto allMsics = curPlist->allmusic();
             bool same = true;
             if (allMsics.size() != curAllMetas.size()) {
                 same = false;
@@ -328,12 +328,12 @@ void PresenterPrivate::initBackend()
                 }
             }
             if (!same) {
-                curPlaylist->removeMusicList(curPlaylist->allmusic());
-                curPlaylist->appendMusicList(curAllMetas);
+                curPlist->removeMusicList(curPlist->allmusic());
+                curPlist->appendMusicList(curAllMetas);
             }
         } else {
-            auto curPlaylist = player->curPlaylist();
-            auto curAllMetas = curPlaylist->allmusic();
+            auto curp = player->curPlaylist();
+            auto curAllMetas = curp->allmusic();
             MetaPtrList curRemoveMetas;
             for (int i = curAllMetas.size() - 1; i >= 0; i--) {
                 if (curAllMetas[i]->invalid && !QFile::exists(curAllMetas[i]->localPath))
@@ -343,7 +343,7 @@ void PresenterPrivate::initBackend()
                 }
             }
             if (!curRemoveMetas.isEmpty()) {
-                curPlaylist->removeMusicList(curRemoveMetas);
+                curp->removeMusicList(curRemoveMetas);
             }
         }
         player->playPrevMusic(playlist, meta);
@@ -487,16 +487,16 @@ void Presenter::prepareData()
             allplaylist->appendMusicList(metalist);
         }
         auto allMetas = playlist->allmusic();
-        int count = 0;
+        int cnt = 0;
         for (auto meta : metalist) {
-            for (auto curMeta : allMetas) {
-                if (curMeta->hash == meta->hash) {
-                    count++;
-                    break;
-                }
-            }
+            static QString &mhash = meta->hash;
+            bool rt = (std::any_of(metalist.begin(),  metalist.end(), [](MetaPtr  ptr) {
+                return ptr->hash == mhash;
+            }));
+            if (rt)
+                cnt++;
         }
-        Q_EMIT notifyAddToPlaylist(playlist, metalist, count);
+        Q_EMIT notifyAddToPlaylist(playlist, metalist, cnt);
 
         playlist->appendMusicList(metalist);
         PlaylistPtr allplaylist = d->playlistMgr->playlist(AllMusicListID);
@@ -739,7 +739,7 @@ void Presenter::postAction(bool showFlag)
         connect(d->player, &Player::readyToResume, this, [ = ]() {
             if (d->settings->value("base.play.auto_play").toBool() && !curPlaylist->isEmpty() && !lastPlaylist->isEmpty() && !isMetaLibClear) {
                 qDebug() << lastPlaylist->id() << lastPlaylist->displayName();
-                if (d->settings->value("base.play.remember_progress").toBool() && !isMetaLibClear) {
+                if (d->settings->value("base.play.remember_progress").toBool()) {
                     onCurrentPlaylistChanged(lastPlaylist);
                     QTimer::singleShot(200, [ = ]() {//200ms播放是为了在加载播放的100ms结束，150ms设置播放进度后再播放。
                         onMusicResume(lastPlaylist, lastMeta);
@@ -960,7 +960,7 @@ void Presenter::onMusiclistRemove(PlaylistPtr playlist, const MetaPtrList metali
     if (playlist == nullptr)
         return;
     auto playinglist = d->player->curPlaylist();
-    MetaPtr next;
+    MetaPtr nextMeta;
     bool t_isLastMeta = false;
 
 
@@ -981,7 +981,7 @@ void Presenter::onMusiclistRemove(PlaylistPtr playlist, const MetaPtrList metali
         for (auto &playlist : allplaylist()) {
             auto meta =  playlist->removeMusicList(metalist);
             if (playlist == playinglist) {
-                next = meta;
+                nextMeta = meta;
             }
         }
 
@@ -989,7 +989,7 @@ void Presenter::onMusiclistRemove(PlaylistPtr playlist, const MetaPtrList metali
         if (playlist->isEmpty()  && playinglist->allmusic().isEmpty()) {
 
             qDebug() << "meta library clean";
-            onMusicStop(playlist, next);
+            onMusicStop(playlist, nextMeta);
             if (d->playlistMgr->playlist(AllMusicListID)->isEmpty()) {
 
                 qDebug() << "Presenter::onMusiclistRemove Q_EMIT 1";
@@ -1007,13 +1007,13 @@ void Presenter::onMusiclistRemove(PlaylistPtr playlist, const MetaPtrList metali
         for (auto &autoPlaylist : allplaylist()) {
             auto meta =  autoPlaylist->removeMusicList(metalist);
             if (autoPlaylist == playinglist) {
-                next = meta;
+                nextMeta = meta;
             }
         }
 
         if (curPlaylist->isEmpty()) {
             qDebug() << "meta library clean";
-            onMusicStop(playlist, next);
+            onMusicStop(playlist, nextMeta);
             if (d->playlistMgr->playlist(AllMusicListID)->isEmpty()) {
                 qDebug() << "Presenter::onMusiclistRemove Q_EMIT 2";
                 Q_EMIT metaLibraryClean();
@@ -1023,16 +1023,16 @@ void Presenter::onMusiclistRemove(PlaylistPtr playlist, const MetaPtrList metali
         MediaDatabase::instance()->removeMediaMetaList(metalist);
         d->library->removeMediaMetaList(metalist);
     } else if (playlist->id() == PlayMusicListID) {
-        next = playlist->removeMusicList(metalist);
+        nextMeta = playlist->removeMusicList(metalist);
         if (playlist->isEmpty()) {
             qDebug() << "meta library clean";
-            onMusicStop(playlist, next);
+            onMusicStop(playlist, nextMeta);
             d->settings->setOption("base.play.last_meta", "");
             if (!d->player->activePlaylist().isNull())
                 d->player->activePlaylist()->play(nullptr);
         }
     } else {
-        next = playlist->removeMusicList(metalist);
+        nextMeta = playlist->removeMusicList(metalist);
     }
 
     /*-----Judge the condition to remove the song playback switch -----*/
@@ -1041,10 +1041,10 @@ void Presenter::onMusiclistRemove(PlaylistPtr playlist, const MetaPtrList metali
                 (playinglist == playlist || playlist->id() == AllMusicListID ||
                  playlist->id() == AlbumMusicListID  || playlist->id() == ArtistMusicListID ||
                  playlist->id() == "albumResult" || playlist->id() == "artistResult")) {
-            if (playinglist->isEmpty() || t_isLastMeta || next.isNull()) {
-                onMusicStop(playinglist, next);
+            if (playinglist->isEmpty() || t_isLastMeta || nextMeta.isNull()) {
+                onMusicStop(playinglist, nextMeta);
             } else {
-                onMusicPlay(playinglist, next);
+                onMusicPlay(playinglist, nextMeta);
             }
         }
     }
@@ -1061,7 +1061,7 @@ void Presenter::onMusiclistDelete(PlaylistPtr playlist, const MetaPtrList metali
     Q_D(Presenter);
 
     // find next music
-    MetaPtr next;
+    MetaPtr nextMeta;
     bool t_isLastMeta = false;
     auto playinglist = d->player->curPlaylist();
 
@@ -1075,7 +1075,7 @@ void Presenter::onMusiclistDelete(PlaylistPtr playlist, const MetaPtrList metali
     for (auto &playlist : allplaylist()) {
         auto meta = playlist->removeMusicList(metalist);
         if (playlist == playinglist) {
-            next = meta;
+            nextMeta = meta;
         }
     }
     if (playinglist->isEmpty()) {
@@ -1097,9 +1097,9 @@ void Presenter::onMusiclistDelete(PlaylistPtr playlist, const MetaPtrList metali
         if (d->player->activeMeta() &&
                 (meta->hash == d->player->activeMeta()->hash)) {
             if (playinglist->isEmpty() || t_isLastMeta) {
-                onMusicStop(playinglist, next);
+                onMusicStop(playinglist, nextMeta);
             } else {
-                onMusicPlay(playinglist, next);
+                onMusicPlay(playinglist, nextMeta);
             }
         }
 
@@ -1145,20 +1145,17 @@ void Presenter::onAddToPlaylist(PlaylistPtr playlist,
         modifiedPlaylist = d->playlistMgr->addPlaylist(info);
         Q_EMIT playlistAdded(d->playlistMgr->playlist(info.uuid), true);
     } else {
-        //bool existFlag = true;
         auto allMetas = modifiedPlaylist->allmusic();
-        int count = 0;
+        int cnt = 0;
         for (auto meta : metalist) {
-            //bool curExistFlag = false;
-            for (auto curMeta : allMetas) {
-                if (curMeta->hash == meta->hash) {
-                    count++;
-                    break;
-                }
-            }
-
+            static QString &ahash = meta->hash;
+            bool rt = (std::any_of(allMetas.begin(),  allMetas.end(), [](MetaPtr  ptr) {
+                return ptr->hash == ahash;
+            }));
+            if (rt)
+                cnt++;
         }
-        Q_EMIT notifyAddToPlaylist(modifiedPlaylist, metalist, count);
+        Q_EMIT notifyAddToPlaylist(modifiedPlaylist, metalist, cnt);
     }
 
     if (d->playlistMgr->playlist(modifiedPlaylist->id()).isNull()) {
@@ -1758,17 +1755,18 @@ void Presenter::onAddMetasFavourite(const MetaPtrList metalist)
     Q_D(Presenter);
     auto favMusicList = d->playlistMgr->playlist(FavMusicListID);
     auto favAllMetas = favMusicList->allmusic();
-    int count = 0;
+    int cnt = 0;
     for (auto meta : metalist) {
-        for (auto fMeta : favAllMetas) {
-            if (meta->hash == fMeta->hash) {
-                count++;
-                break;
-            }
-        }
+        static QString &ahash = meta->hash;
+        bool rt = (std::any_of(favAllMetas.begin(),  favAllMetas.end(), [](MetaPtr  ptr) {
+            return ptr->hash == ahash;
+        }));
+        if (rt)
+            cnt++;
+
     }
     d->playlistMgr->playlist(FavMusicListID)->appendMusicList(metalist);
-    Q_EMIT notifyAddToPlaylist(d->playlistMgr->playlist(FavMusicListID), metalist, count);
+    Q_EMIT notifyAddToPlaylist(d->playlistMgr->playlist(FavMusicListID), metalist, cnt);
 }
 
 void Presenter::onRemoveMetasFavourite(const MetaPtrList metalist)
@@ -1859,6 +1857,9 @@ void Presenter::onFadeInOut()
     d->player->setFadeInOut(fadeInOut);
 }
 
+
+static QString strPreArtist = "";
+bool isSameName(const PlayMusicTypePtr ptr) {return ptr->name == strPreArtist;}
 void Presenter::onUpdateMetaCodec(const QString &preTitle, const QString &preArtist, const QString &preAlbum, const MetaPtr meta)
 {
     Q_D(Presenter);
@@ -1868,21 +1869,19 @@ void Presenter::onUpdateMetaCodec(const QString &preTitle, const QString &preArt
 
     if ((!preArtist.isEmpty() && preArtist != meta->artist) || (!preAlbum.isEmpty() && preAlbum != meta->album)) {
         auto artistPlaylist = d->playlistMgr->playlist(ArtistMusicListID);
-        auto artistTypePtrList = artistPlaylist->playMusicTypePtrList();
-        for (auto curType : artistTypePtrList) {
-            if (curType->name == preArtist) {
-                curType->name = meta->artist;
-                break;
-            }
-        }
         auto albumPlaylist = d->playlistMgr->playlist(AlbumMusicListID);
+        auto artistTypePtrList = artistPlaylist->playMusicTypePtrList();
         auto albumTypePtrList = albumPlaylist->playMusicTypePtrList();
-        for (auto curType : albumTypePtrList) {
-            if (curType->name == preAlbum) {
-                curType->name = meta->album;
-                curType->extraName = meta->artist;
-                break;
-            }
+        strPreArtist = preArtist;
+        QList<PlayMusicTypePtr>::iterator artitr = std::find_if(artistTypePtrList.begin(), artistTypePtrList.end(), isSameName);
+        if (artitr != artistTypePtrList.end())
+            (*artitr)->name = meta->artist;
+
+        strPreArtist = preAlbum;
+        QList<PlayMusicTypePtr>::iterator albumitr = std::find_if(albumTypePtrList.begin(), albumTypePtrList.end(), isSameName);
+        if (albumitr != albumTypePtrList.end()) {
+            (*albumitr)->name = meta->album;
+            (*albumitr)->extraName = meta->artist;
         }
     }
 }
@@ -1894,8 +1893,8 @@ void Presenter::onPlayall(PlaylistPtr playlist)
     if (playlist->id() == AlbumMusicListID || playlist->id() == ArtistMusicListID) {
 
         PlaylistPtr curPlaylist = playlist;
-        auto playMusicTypePtrList = curPlaylist->playMusicTypePtrList();
-        auto PlayMusicTypePtr = playMusicTypePtrList[0];
+        auto musictplist = curPlaylist->playMusicTypePtrList();
+        auto PlayMusicTypePtr = musictplist[0];
         QString name = PlayMusicTypePtr->name;
 
         if (curPlaylist.isNull()) {
@@ -2094,8 +2093,8 @@ void Presenter::onSpeechPlayRadom()
     if (count == 0) {
         Q_EMIT sigSpeedResult(6, false);
     } else {
-        int index = qrand() % count;
-        playMetaData = musicList->allmusic().at(index);
+        int idx = qrand() % count;
+        playMetaData = musicList->allmusic().at(idx);
         musicMetaDataList.append(playMetaData);
         curPlayList->reset(musicMetaDataList);
         onSyncMusicPlay(curPlayList, playMetaData);

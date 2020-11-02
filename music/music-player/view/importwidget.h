@@ -50,10 +50,10 @@ protected:
     bool eventFilter(QObject *o, QEvent *e) Q_DECL_OVERRIDE;
 
 protected:
-    virtual void dragEnterEvent(QDragEnterEvent *event) Q_DECL_OVERRIDE;
-    virtual void dragMoveEvent(QDragMoveEvent *event) Q_DECL_OVERRIDE;
-    virtual void dragLeaveEvent(QDragLeaveEvent *event) Q_DECL_OVERRIDE;
-    virtual void dropEvent(QDropEvent *event) Q_DECL_OVERRIDE;
+    void dragEnterEvent(QDragEnterEvent *event) Q_DECL_OVERRIDE;
+    void dragMoveEvent(QDragMoveEvent *event) Q_DECL_OVERRIDE;
+    void dragLeaveEvent(QDragLeaveEvent *event) Q_DECL_OVERRIDE;
+    void dropEvent(QDropEvent *event) Q_DECL_OVERRIDE;
 
 private:
     QScopedPointer<ImportWidgetPrivate> d_ptr;

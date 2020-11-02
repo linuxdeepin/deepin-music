@@ -56,8 +56,7 @@ void MusicSearchListviewPrivate::addItem(const QString str)
     model->appendRow(newItem);
 
     auto row = model->rowCount() - 1;
-    QModelIndex index = model->index(row, 0, QModelIndex());
-    model->setData(index, str);
+    model->setData(model->index(row, 0, QModelIndex()), str);
 }
 
 
@@ -127,9 +126,9 @@ void MusicSearchListview::onMusiclistChanged(QString text, PlaylistPtr playlist)
     setUpdatesEnabled(false);
     d->model->removeRows(0, d->model->rowCount());
 
-    QString searchStr = playlist->searchStr();
+    QString strsh = playlist->searchStr();
     bool chineseFlag = false;
-    for (auto ch : searchStr) {
+    for (QChar ch : strsh) {
         if (DMusic::PinyinSearch::isChinese(ch)) {
             chineseFlag = true;
             break;
@@ -144,25 +143,25 @@ void MusicSearchListview::onMusiclistChanged(QString text, PlaylistPtr playlist)
     } else {
         d->searchMusicTypePtrList.clear();
         for (auto meta : playlist->playMusicTypePtrList()) {
-            if (searchStr.isEmpty()) {
+            if (strsh.isEmpty()) {
                 d->addItem(meta->name);
                 d->searchMusicTypePtrList.append(meta);
             } else {
                 if (chineseFlag) {
-                    if (meta->name.contains(searchStr, Qt::CaseInsensitive)) {
+                    if (meta->name.contains(strsh, Qt::CaseInsensitive)) {
                         d->addItem(meta->name);
                         d->searchMusicTypePtrList.append(meta);
                     }
                 } else {
                     if (playlist->searchStr().size() == 1) {
                         auto curTextList = DMusic::PinyinSearch::simpleChineseSplit(meta->name);
-                        if (!curTextList.isEmpty() && curTextList.first().contains(searchStr, Qt::CaseInsensitive)) {
+                        if (!curTextList.isEmpty() && curTextList.first().contains(strsh, Qt::CaseInsensitive)) {
                             d->addItem(meta->name);
                             d->searchMusicTypePtrList.append(meta);
                         }
                     } else {
                         auto curTextList = DMusic::PinyinSearch::simpleChineseSplit(meta->name);
-                        if (!curTextList.isEmpty() && curTextList.join("").contains(searchStr, Qt::CaseInsensitive)) {
+                        if (!curTextList.isEmpty() && curTextList.join("").contains(strsh, Qt::CaseInsensitive)) {
                             d->addItem(meta->name);
                             d->searchMusicTypePtrList.append(meta);
                         }
@@ -255,9 +254,7 @@ void MusicSearchListview::updateList()
     }
 
     for (int i = d->model->rowCount() - 1; i >= 0; --i) {
-        auto index = d->model->index(i, 0);
-        auto itemName = d->model->data(index).toString();
-        if (!allStr.contains(itemName)) {
+        if (!allStr.contains(d->model->data(d->model->index(i, 0)).toString())) {
             d->searchMusicTypePtrList.removeAt(i);
             d->model->removeRow(i);
         }

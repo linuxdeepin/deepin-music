@@ -33,8 +33,6 @@ public:
     explicit MetaBufferDetector(QObject *parent = Q_NULLPTR);
     ~MetaBufferDetector();
 
-    void run();
-
 public slots:
     void onBufferDetector(const QString &path, const QString &hash);
     void onClearBufferDetector();
@@ -42,9 +40,10 @@ public slots:
 signals:
     void metaBuffer(const QVector<float> &buffer, const QString &hash);
 
+protected:
+    void run() override;
 private:
     void resample(const QVector<float> &buffer, const QString &hash);
-
 private:
     QScopedPointer<MetaBufferDetectorPrivate> d_ptr;
     Q_DECLARE_PRIVATE_D(qGetPtrHelper(d_ptr), MetaBufferDetector)

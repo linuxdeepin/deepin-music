@@ -164,11 +164,11 @@ QColor ToolTips::borderColor() const
     return d->borderColor;
 }
 
-void ToolTips::setBackground(QBrush background)
-{
-    Q_D(ToolTips);
-    d->background = background;
-}
+//void ToolTips::setBackground(QBrush background)
+//{
+//    Q_D(ToolTips);
+//    d->background = background;
+//}
 
 void ToolTips::setRadius(int radius)
 {
@@ -176,11 +176,11 @@ void ToolTips::setRadius(int radius)
     d->radius = radius;
 }
 
-void ToolTips::setBorderColor(QColor borderColor)
-{
-    Q_D(ToolTips);
-    d->borderColor = borderColor;
-}
+//void ToolTips::setBorderColor(QColor borderColor)
+//{
+//    Q_D(ToolTips);
+//    d->borderColor = borderColor;
+//}
 
 //void ToolTips::pop(QPoint center)
 //{

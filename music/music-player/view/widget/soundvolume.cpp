@@ -163,11 +163,11 @@ QColor SoundVolume::borderColor() const
     return d->borderColor;
 }
 
-void SoundVolume::setBackground(QBrush background)
-{
-    Q_D(SoundVolume);
-    d->background = background;
-}
+//void SoundVolume::setBackground(QBrush background)
+//{
+//    Q_D(SoundVolume);
+//    d->background = background;
+//}
 
 void SoundVolume::setRadius(int radius)
 {
@@ -175,11 +175,11 @@ void SoundVolume::setRadius(int radius)
     d->radius = radius;
 }
 
-void SoundVolume::setBorderColor(QColor borderColor)
-{
-    Q_D(SoundVolume);
-    d->borderColor = borderColor;
-}
+//void SoundVolume::setBorderColor(QColor borderColor)
+//{
+//    Q_D(SoundVolume);
+//    d->borderColor = borderColor;
+//}
 
 void SoundVolume::volumeIcon()
 {

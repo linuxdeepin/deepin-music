@@ -134,10 +134,10 @@ void LyricWidgetPrivate::setLyricLines(QString str)
     m_model->setStringList(lyric);
     lyricview->setModel(m_model);
 
-    QModelIndex index = m_model->index(emptyLineOffset, 0, lyricview->rootIndex());
+    QModelIndex idx = m_model->index(emptyLineOffset, 0, lyricview->rootIndex());
     lyricview->selectionModel()->clearSelection();
-    lyricview->selectionModel()->select(index, QItemSelectionModel::Select);
-    lyricview->scrollTo(index, QListView::PositionAtCenter);
+    lyricview->selectionModel()->select(idx, QItemSelectionModel::Select);
+    lyricview->scrollTo(idx, QListView::PositionAtCenter);
 }
 
 LyricWidget::LyricWidget(QWidget *parent)
@@ -456,12 +456,12 @@ void LyricWidget::onProgressChanged(qint64 value, qint64 /*length*/)
         }
     }
 
-    QModelIndex index = d->m_model->index(d->emptyLineOffset + i - 1, 0, d->lyricview->rootIndex());
+    QModelIndex idx = d->m_model->index(d->emptyLineOffset + i - 1, 0, d->lyricview->rootIndex());
     d->lyricview->selectionModel()->clearSelection();
-    d->lyricview->selectionModel()->select(index, QItemSelectionModel::Select);
+    d->lyricview->selectionModel()->select(idx, QItemSelectionModel::Select);
 
     if (!d->lyricview->viewMode()) {
-        d->lyricview->scrollTo(index, QListView::PositionAtCenter);
+        d->lyricview->scrollTo(idx, QListView::PositionAtCenter);
     }
 }
 
@@ -494,12 +494,12 @@ void LyricWidget::onCoverChanged(const MetaPtr meta,  const DMusic::SearchMeta &
     d->m_cover->update();
 }
 
-void LyricWidget::setDefaultCover(QString defaultCover)
-{
-    Q_D(LyricWidget);
-//    qDebug() << "set" << defaultCover;
-    d->defaultCover = defaultCover;
-}
+//void LyricWidget::setDefaultCover(QString defaultCover)
+//{
+//    Q_D(LyricWidget);
+////    qDebug() << "set" << defaultCover;
+//    d->defaultCover = defaultCover;
+//}
 
 void LyricWidget::onUpdateMetaCodec(const MetaPtr /*meta*/)
 {
@@ -518,11 +518,11 @@ void LyricWidget::onUpdateMetaCodec(const MetaPtr /*meta*/)
 
 //}
 
-void LyricWidget::setBackgroundColor(QColor backgroundColor)
-{
-    Q_D(LyricWidget);
-    d->backgroundColor = backgroundColor;
-}
+//void LyricWidget::setBackgroundColor(QColor backgroundColor)
+//{
+//    Q_D(LyricWidget);
+//    d->backgroundColor = backgroundColor;
+//}
 
 void LyricWidget::onContextSearchFinished(const QString &context, const QList<DMusic::SearchMeta> &metalist)
 {

@@ -55,13 +55,13 @@ static inline int pixel2point(int pixel)
     return pixel * 96 / 72;
 }
 
-inline int headerPointWidth(const QStyleOptionViewItem &option, const QModelIndex &index)
-{
-    QFont measuringFont(option.font);
-    QFontMetrics fm(measuringFont);
-    auto headerWith = fm.width(QString("%1").arg(index.row()));
-    return pixel2point(headerWith) + PlayItemLeftMargin + PlayItemNumberMargin;
-}
+//inline int headerPointWidth(const QStyleOptionViewItem &option, const QModelIndex &index)
+//{
+//    QFont measuringFont(option.font);
+//    QFontMetrics fm(measuringFont);
+//    auto headerWith = fm.width(QString("%1").arg(index.row()));
+//    return pixel2point(headerWith) + PlayItemLeftMargin + PlayItemNumberMargin;
+//}
 
 inline int tailPointWidth(const QStyleOptionViewItem &option)
 {
@@ -94,58 +94,58 @@ QColor PlayItemDelegatePrivate::background() const
 {
     return m_background;
 }
-QColor PlayItemDelegatePrivate::alternateBackground() const
-{
-    return m_alternateBackground;
-}
-QColor PlayItemDelegatePrivate::highlightedBackground() const
-{
-    return m_highlightedBackground;
-}
+//QColor PlayItemDelegatePrivate::alternateBackground() const
+//{
+//    return m_alternateBackground;
+//}
+//QColor PlayItemDelegatePrivate::highlightedBackground() const
+//{
+//    return m_highlightedBackground;
+//}
 
 QString PlayItemDelegatePrivate::playingIcon() const
 {
     return m_aimationPrefix;
 }
 
-QString PlayItemDelegatePrivate::highlightPlayingIcon() const
-{
-    return  m_highlightPlayingIcon;
-}
-void PlayItemDelegatePrivate::setTextColor(QColor textColor)
-{
-    m_textColor = textColor;
-}
-void PlayItemDelegatePrivate::setTitleColor(QColor numberColor)
-{
-    m_numberColor = numberColor;
-}
-void PlayItemDelegatePrivate::setHighlightText(QColor highlightText)
-{
-    m_highlightText = highlightText;
-}
-void PlayItemDelegatePrivate::setBackground(QColor background)
-{
-    m_background = background;
-}
-void PlayItemDelegatePrivate::setAlternateBackground(QColor alternateBackground)
-{
-    m_alternateBackground = alternateBackground;
-}
-void PlayItemDelegatePrivate::setHighlightedBackground(QColor highlightedBackground)
-{
-    m_highlightedBackground = highlightedBackground;
-}
+//QString PlayItemDelegatePrivate::highlightPlayingIcon() const
+//{
+//    return  m_highlightPlayingIcon;
+//}
+//void PlayItemDelegatePrivate::setTextColor(QColor textColor)
+//{
+//    m_textColor = textColor;
+//}
+//void PlayItemDelegatePrivate::setTitleColor(QColor numberColor)
+//{
+//    m_numberColor = numberColor;
+//}
+//void PlayItemDelegatePrivate::setHighlightText(QColor highlightText)
+//{
+//    m_highlightText = highlightText;
+//}
+//void PlayItemDelegatePrivate::setBackground(QColor background)
+//{
+//    m_background = background;
+//}
+//void PlayItemDelegatePrivate::setAlternateBackground(QColor alternateBackground)
+//{
+//    m_alternateBackground = alternateBackground;
+//}
+//void PlayItemDelegatePrivate::setHighlightedBackground(QColor highlightedBackground)
+//{
+//    m_highlightedBackground = highlightedBackground;
+//}
 
-void PlayItemDelegatePrivate::setPlayingIcon(QString playingIcon)
-{
-    m_aimationPrefix = playingIcon;
-}
+//void PlayItemDelegatePrivate::setPlayingIcon(QString playingIcon)
+//{
+//    m_aimationPrefix = playingIcon;
+//}
 
-void PlayItemDelegatePrivate::setHighlightPlayingIcon(QString highlightPlayingIcon)
-{
-    m_highlightPlayingIcon = highlightPlayingIcon;
-}
+//void PlayItemDelegatePrivate::setHighlightPlayingIcon(QString highlightPlayingIcon)
+//{
+//    m_highlightPlayingIcon = highlightPlayingIcon;
+//}
 
 QColor PlayItemDelegatePrivate::foreground(int col, const QStyleOptionViewItem &option) const
 {
@@ -257,17 +257,17 @@ void PlayItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
         painter->setClipPath(roundRectPath);
 
         //绘制专辑图片
-        auto icon = option.icon;
+        auto opticon = option.icon;
         auto value = index.data(Qt::DecorationRole);
         if (value.type() == QVariant::Icon) {
-            icon = qvariant_cast<QIcon>(value);
+            opticon = qvariant_cast<QIcon>(value);
         }
         QRect pixmapRect(option.rect.x(), option.rect.y(), 150, 150);
         painter->save();
         QPainterPath roundPixmapRectPath;
         roundPixmapRectPath.addRoundRect(pixmapRect, 10, 10);
         painter->setClipPath(roundPixmapRectPath);
-        painter->drawPixmap(pixmapRect, icon.pixmap(option.rect.width(), option.rect.width()));
+        painter->drawPixmap(pixmapRect, opticon.pixmap(option.rect.width(), option.rect.width()));
 
         //绘制图片上添加描边
         painter->save();
@@ -412,7 +412,7 @@ void PlayItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
 
     auto activeMeta = listview->activingMeta();
     if (!activeMeta.isNull() && activeMeta->hash == meta->hash) {
-		 nameColor = QColor(DGuiApplicationHelper::instance()->applicationPalette().highlight().color());
+        nameColor = QColor(DGuiApplicationHelper::instance()->applicationPalette().highlight().color());
         otherColor = QColor("#2CA7F8");
         font14.setFamily("SourceHanSansSC");
         font14.setWeight(QFont::Medium);
@@ -465,35 +465,34 @@ void PlayItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
         switch (col) {
         case Number: {
             painter->setPen(otherColor);
-            auto *listview = qobject_cast<PlayListView *>(const_cast<QWidget *>(option.widget));
-            // Fixme:
+            auto *pview = qobject_cast<PlayListView *>(const_cast<QWidget *>(option.widget));
             if (!meta.isNull() && meta->invalid) {
                 auto sz = QSizeF(20, 20);
-                auto icon = QIcon(":/mpimage/light/warning.svg").pixmap(sz.toSize());
+                auto warnicon = QIcon(":/mpimage/light/warning.svg").pixmap(sz.toSize());
                 auto centerF = QRectF(rect).center();
                 auto iconRect = QRectF(centerF.x() - sz.width() / 2,
                                        centerF.y() - sz.height() / 2,
                                        sz.width(), sz.height());
-                painter->drawPixmap(iconRect, icon, QRectF());
+                painter->drawPixmap(iconRect, warnicon, QRectF());
                 break;
             }
 
             if (!activeMeta.isNull() && activeMeta->hash == meta->hash) {
-                auto icon = listview->getPlayPixmap();
+                auto playicon = pview->getPlayPixmap();
                 if (option.state & QStyle::State_Selected) {
-                    icon = listview->getAlbumPixmap();
+                    playicon = pview->getAlbumPixmap();
                 }
                 auto centerF = QRectF(rect).center();
-                qreal t_ratio = icon.devicePixelRatioF();
+                qreal t_ratio = playicon.devicePixelRatioF();
                 QRect t_ratioRect;
                 t_ratioRect.setX(0);
                 t_ratioRect.setY(0);
-                t_ratioRect.setWidth(static_cast<int>(icon.width() / t_ratio));
-                t_ratioRect.setHeight(static_cast<int>(icon.height() / t_ratio));
+                t_ratioRect.setWidth(static_cast<int>(playicon.width() / t_ratio));
+                t_ratioRect.setHeight(static_cast<int>(playicon.height() / t_ratio));
                 auto iconRect = QRectF(centerF.x() - t_ratioRect.width() / 2,
                                        centerF.y() - t_ratioRect.height() / 2,
                                        t_ratioRect.width(), t_ratioRect.height());
-                painter->drawPixmap(iconRect.toRect(), icon);
+                painter->drawPixmap(iconRect.toRect(), playicon);
 
             } else {
                 painter->setFont(font11);

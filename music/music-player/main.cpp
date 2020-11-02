@@ -118,11 +118,9 @@ int main(int argc, char *argv[])
     if (parser.positionalArguments().length() > 0) {
         toOpenFile = parser.positionalArguments().first();
     }
-
     app.loadTranslator();
 
-    QIcon icon = QIcon::fromTheme("deepin-music");
-    app.setProductIcon(icon);
+    app.setProductIcon(QIcon::fromTheme("deepin-music"));
 
     if (!app.setSingleInstance("deepinmusic") || !checkOnly()) {
         qDebug() << "another deepin music has started";
@@ -159,20 +157,19 @@ int main(int argc, char *argv[])
 
     /*---Player instance init---*/
     MainFrame mainframe;
-    MusicApp *music = new MusicApp(&mainframe);
+    MusicApp *mapp = new MusicApp(&mainframe);
 
     auto showflag = MusicSettings::value("base.play.showFlag").toBool();
-    music->initUI(showflag);
+    mapp->initUI(showflag);
 
     QTimer::singleShot(20, nullptr, [ = ]() {
-        music->initConnection(showflag);
+        mapp->initConnection(showflag);
     });
 
-    int count = parser.positionalArguments().length();
-    if (count > 1) {
+    if (parser.positionalArguments().length() > 1) {
         QStringList files = parser.positionalArguments();
         files.removeFirst();
-        music->onStartImport(files);
+        mapp->onStartImport(files);
     }
 
     if (!toOpenFile.isEmpty()) {
@@ -185,10 +182,9 @@ int main(int argc, char *argv[])
     &mainframe, [ & ]() {
         auto quit = MusicSettings::value("base.close.is_close").toBool();
         if (quit) {
-            music->quit();
+            mapp->quit();
         }
     });
-
 
     app.setQuitOnLastWindowClosed(false);
 
