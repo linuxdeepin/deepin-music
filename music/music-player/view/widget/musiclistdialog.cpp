@@ -147,6 +147,7 @@ void MusicListDialogPrivate::initUI()
     btLayout->addStretch(100);
 
 //    titleLayout->addWidget(closeBt, 0, Qt::AlignTop | Qt::AlignRight);
+    titleLabel->setContentsMargins(0, 8, 0, 0);
     titleLayout->addWidget(titleLabel, 0, Qt::AlignTop);
     titleLayout->addWidget(infoLabel, 0, Qt::AlignTop);
     titleLayout->addLayout(btLayout, Qt::AlignTop);
