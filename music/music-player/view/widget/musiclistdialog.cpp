@@ -108,6 +108,9 @@ void MusicListDialogPrivate::initUI()
     infoLabel = new DLabel();
     infoLabel->setForegroundRole(DPalette::BrightText);
 
+    auto textLayout = new QVBoxLayout(titleFrame);
+    textLayout->setSpacing(0);
+    textLayout->setContentsMargins(0, 5, 0, 5);
 
     auto btLayout = new QHBoxLayout(titleFrame);
     btLayout->setSpacing(0);
@@ -147,10 +150,11 @@ void MusicListDialogPrivate::initUI()
     btLayout->addStretch(100);
 
 //    titleLayout->addWidget(closeBt, 0, Qt::AlignTop | Qt::AlignRight);
-    titleLabel->setContentsMargins(0, 8, 0, 0);
-    titleLayout->addWidget(titleLabel, 0, Qt::AlignTop);
-    titleLayout->addWidget(infoLabel, 0, Qt::AlignTop);
-    titleLayout->addLayout(btLayout, Qt::AlignTop);
+    titleLabel->setContentsMargins(0, 0, 0, 0);
+    textLayout->addWidget(titleLabel, 0, Qt::AlignVCenter);
+    textLayout->addWidget(infoLabel, 0, Qt::AlignVCenter);
+    titleLayout->addLayout(textLayout, 1);
+    titleLayout->addLayout(btLayout, 0);
 
     closeLayout->addLayout(titleLayout);
     closeLayout->addWidget(closeBt, 0, Qt::AlignTop | Qt::AlignRight);
@@ -334,6 +338,7 @@ void MusicListDialog::setPlayMusicData(PlaylistPtr playlist, PlayMusicTypePtr pl
     }
     DFontSizeManager::instance()->bind(d->titleLabel, DFontSizeManager::T3, QFont::DemiBold);
     d->infoLabel->setFont(infoFont);
+    DFontSizeManager::instance()->bind(d->infoLabel, DFontSizeManager::T5, QFont::Normal);
     d->titleLabel->setForegroundRole(DPalette::TextTitle);
 
     QString name = playMusicType->name;
