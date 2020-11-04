@@ -71,7 +71,7 @@ SearchResult::SearchResult(QWidget *parent) : DBlurEffectWidget(parent)
 
     //分割线1
     s_ArtistLine = new DHorizontalLine;
-    s_ArtistLine->setFixedSize(380, 20);
+    // s_ArtistLine->setFixedSize(380, 20);
     s_ArtistLine->setLineWidth(2);
 
     //演唱者
@@ -87,7 +87,7 @@ SearchResult::SearchResult(QWidget *parent) : DBlurEffectWidget(parent)
 
     //分割线2
     s_AblumLine = new DHorizontalLine;
-    s_AblumLine->setFixedSize(380, 20);
+    // s_AblumLine->setFixedSize(380, 20);
     s_AblumLine->setLineWidth(2);
 
     //专辑

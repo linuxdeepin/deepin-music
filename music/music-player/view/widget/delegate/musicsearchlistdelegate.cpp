@@ -240,7 +240,7 @@ void MusicSearchListDelegate::paint(QPainter *painter, const QStyleOptionViewIte
         QPixmap image;
         image.loadFromData(playMusicTypePtr->icon);
         painter->save();
-        QRect imageRect(32, index.row() * 35 + 4, 24, 24);
+        QRect imageRect(32, index.row() * 35 + 5, 24, 24);
         if (playlistPtr->id() == ArtistCandListID) {
             QPainterPath clipPath;
             clipPath.addEllipse(imageRect.adjusted(0, 0, 0, 0));

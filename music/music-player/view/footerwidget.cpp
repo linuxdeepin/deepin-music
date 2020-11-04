@@ -252,7 +252,18 @@ void FooterPrivate::initConnection()
             m_Mute = false;
             Q_EMIT q->toggleMute();
         }
+
         m_Volume = vol;
+
+        if (m_Volume > 77) {
+            btSound->setIcon(QIcon::fromTheme("volume"));
+        } else if (m_Volume > 33) {
+            btSound->setIcon(QIcon::fromTheme("volume_mid"));
+        } else {
+            btSound->setIcon(QIcon::fromTheme("volume_low"));
+        }
+
+
     });
 
     q->connect(q, &Footer::mouseMoving, q, [ = ](Qt::MouseButton) {
@@ -1122,7 +1133,7 @@ void Footer::onMusicPause(PlaylistPtr playlist, const MetaPtr meta)
         } else if (d->activingPlaylist->allmusic().size() == 1) {
             d->btPrev->setDisabled(true);
             d->btNext->setDisabled(true);
-            d->btFavorite->setDisabled(true);
+            d->btFavorite->setDisabled(false);
             d->btPlay->setDisabled(false);
         } else {
             d->btPrev->setDisabled(false);
@@ -1173,7 +1184,7 @@ void Footer::onMusicStoped(PlaylistPtr playlist, const MetaPtr meta)
         } else if (d->activingPlaylist->allmusic().size() == 1) {
             d->btPrev->setDisabled(true);
             d->btNext->setDisabled(true);
-            d->btFavorite->setDisabled(true);
+            d->btFavorite->setDisabled(false);
             d->btPlay->setDisabled(false);
         } else {
             d->btPrev->setDisabled(false);
@@ -1429,14 +1440,23 @@ void Footer::onVolumeChanged(int volume)
     QString status = "mid";
     if (volume > 77) {
         status = "high";
+        d->btSound->setIcon(QIcon::fromTheme("volume"));
+
     } else if (volume > 33) {
         status = "mid";
+        d->btSound->setIcon(QIcon::fromTheme("volume_mid"));
+
     } else {
         status = "low";
+
+        d->btSound->setIcon(QIcon::fromTheme("volume_low"));
     }
+
+
 
     if (d->m_Mute || volume == 0) {
         d->updateQssProperty(d->btSound, "volume", "mute");
+        d->btSound->setIcon(QIcon::fromTheme("mute"));
         d->volSlider->syncMute(true);
     } else {
         d->updateQssProperty(d->btSound, "volume", status);
@@ -1459,14 +1479,21 @@ void Footer::onLocalVolumeChanged(int volume)
     QString status = "mid";
     if (volume > 77) {
         status = "high";
+
+        d->btSound->setIcon(QIcon::fromTheme("volume"));
     } else if (volume > 33) {
         status = "mid";
+
+        d->btSound->setIcon(QIcon::fromTheme("volume_mid"));
     } else {
         status = "low";
+
+        d->btSound->setIcon(QIcon::fromTheme("volume_low"));
     }
 
     if (d->m_Mute) {
         d->updateQssProperty(d->btSound, "volume", "mute");
+        d->btSound->setIcon(QIcon::fromTheme("mute"));
     } else {
         d->updateQssProperty(d->btSound, "volume", status);
     }
@@ -1498,18 +1525,22 @@ void Footer::onMutedChanged(bool muted)
     }
     d->m_Mute = muted;
     if (muted) {
-        d->updateQssProperty(d->btSound, "volume", "mute");
+        // d->updateQssProperty(d->btSound, "volume", "mute");
+        d->btSound->setIcon(QIcon::fromTheme("mute"));
     } else {
         QString status = "mid";
         if (d->m_Volume > 77) {
             status = "high";
+            d->btSound->setIcon(QIcon::fromTheme("volume"));
         } else if (d->m_Volume > 33) {
             status = "mid";
+            d->btSound->setIcon(QIcon::fromTheme("volume_mid"));
         } else {
             status = "low";
+            d->btSound->setIcon(QIcon::fromTheme("volume_low"));
         }
 
-        d->updateQssProperty(d->btSound, "volume", status);
+        // d->updateQssProperty(d->btSound, "volume", status);
         d->volSlider->onVolumeChanged(d->m_Volume);
     }
     MusicSettings::setOption("base.play.volume", d->m_Volume);
