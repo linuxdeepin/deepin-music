@@ -1,14 +1,8 @@
-#定义需要的cmake版本
-#cmake_minimum_required(VERSION 3.10)
-
 if(ISTEST MATCHES "1")
     set(CMD_NAME deepin-music-test)
 else()
     set(CMD_NAME deepin-music)
 endif()
-
-#可执行文件路径
-#set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/music/dist/bin)
 
 #cmake属性
 set(CMAKE_CXX_STANDARD 14)
@@ -21,10 +15,9 @@ set(CMAKE_AUTOUIC ON)
 set(PROJECT_INCLUDE ./
     ./../vendor
     ./../vendor/mpris-qt/src
-    ./../vendor/dbusextended-qt/src)
+    ./../vendor/dbusextended-qt/src
+    ./../interface)
 
-#include_directories(/usr/include/libdtk-5.2.0/DWidget)
-#include_directories(/usr/include/libdtk-5.2.0/DCore)
 include_directories(/usr/include/vlc)
 include_directories(/usr/include/vlc/plugins)
 include_directories(./../interface)
@@ -63,10 +56,6 @@ pkg_check_modules(Dtk REQUIRED IMPORTED_TARGET dtkwidget)
 pkg_check_modules(Dtk REQUIRED IMPORTED_TARGET dtkcore)
 pkg_check_modules(Dtk REQUIRED IMPORTED_TARGET dtkgui)
 pkg_check_modules(qgsettings REQUIRED IMPORTED_TARGET gsettings-qt)
-
-#pkg_check_modules(AV REQUIRED IMPORTED_TARGET libavutil libavcodec
-#    libavformat libcue taglib)
-
 pkg_check_modules(AV REQUIRED IMPORTED_TARGET libcue taglib)
 
 set(AllQRC
@@ -81,14 +70,6 @@ qt5_add_resources(QRC_FILES ${AllQRC})
 # 设置不删除生成的文件夹内容文件（设置此项是为了翻译后的文件不被删除）
 set_directory_properties(PROPERTIES CLEAN_NO_CUSTOM 1)
 
-#set(TS
-#    translations/${CMD_NAME}.ts
-#    translations/${CMD_NAME}_zh_CN.ts
-#    translations/${CMD_NAME}_en_US.ts
-#    )
-
-#set_source_files_properties(${qmfiles} PROPERTIES OUTPUT_LOCATION "translations")
-
 file(GLOB TS LIST_DIRECTORIES false ./translations/${CMD_NAME}*.ts)
 set_source_files_properties(${TS}
     PROPERTIES OUTPUT_LOCATION ${PROJECT_SOURCE_DIR}/music/music-player/translations)
@@ -98,8 +79,6 @@ if (NOT (${CMAKE_BUILD_TYPE} MATCHES "Debug"))
     qt5_create_translation(Translate1 ${allSource} ${TS} OPTIONS -source-language en_US -no-obsolete)
 endif ()
 qt5_add_translation(${translate})
-
-file(GLOB INCLUDE_HEADER "./../interface/*.h")
 
 add_executable(${CMD_NAME} ${QRC_FILES} ${allSource} ${INCLUDE_HEADER} ${Translate1} ${mainSource})
 
@@ -153,9 +132,11 @@ set(TARGET_LIBS Qt5::Widgets Qt5::Core Qt5::Gui Qt5::DBus  Qt5::Sql Qt5::Multime
      PkgConfig::AV PkgConfig::Dtk PkgConfig::qgsettings icui18n
     mpris-qt5 dbusextended-qt5 dmusic)
 
-#set(CMAKE_CXX_FLAGS "-fsanitize=undefined,address,leak -fno-omit-frame-pointer")
-#set(CMAKE_C_FLAGS "-fsanitize=undefined,address,leak -fno-omit-frame-pointer")
-#set(CMAKE_Ｌ_FLAGS "-fsanitize=undefined,address,leak -fno-omit-frame-pointer")
+if(SANITIZER_CHECK MATCHES on)
+    set(CMAKE_CXX_FLAGS "-fsanitize=undefined,address,leak -fno-omit-frame-pointer")
+    set(CMAKE_C_FLAGS "-fsanitize=undefined,address,leak -fno-omit-frame-pointer")
+    set(CMAKE_Ｌ_FLAGS "-fsanitize=undefined,address,leak -fno-omit-frame-pointer")
+endif()
 
 LINK_DIRECTORIES(${CMAKE_BINARY_DIR}/music/libdmusic/
         ${CMAKE_BINARY_DIR}/music/vendor/dbusextended-qt/src/
@@ -173,9 +154,9 @@ install(TARGETS ${CMD_NAME} DESTINATION bin)
 install(DIRECTORY ${PROJECT_SOURCE_DIR}/music/music-player/translations
     DESTINATION share/${CMD_NAME}
     FILES_MATCHING PATTERN "*.qm")
-#install(FILES ${Translate1} DESTINATION share/${CMD_NAME})
 install(FILES ${PROJECT_SOURCE_DIR}/music/music-player/data/deepin-music.desktop
     DESTINATION share/applications)
 
 install(FILES ${PROJECT_SOURCE_DIR}/music/music-player/resource/theme/common/image/deepin-music.svg
     DESTINATION share/icons/hicolor/scalable/apps)
+

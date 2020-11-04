@@ -26,8 +26,8 @@
 #include <QImage>
 
 #include <util/singleton.h>
-#include <mediameta.h>
-#include <searchmeta.h>
+#include "mediameta.h"
+#include "searchmeta.h"
 
 class MetaSearchServicePrivate;
 class MetaSearchService : public QObject, public DMusic::DSingleton<MetaSearchService>

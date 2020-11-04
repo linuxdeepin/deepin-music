@@ -1,4 +1,4 @@
-#定义需要的cmake版本
+#cmake版本
 cmake_minimum_required(VERSION 3.0)
 
 project(music)
@@ -13,10 +13,10 @@ set(CMAKE_AUTOUIC ON)
 option(USE_DXCB "integration with dxcb platform plugin" OFF)
 option(DMR_DEBUG "turn on debug output" off)
 option(DTK_DMAN_PORTAL "turn on dman portal support" off)
+option(SANITIZER_CHECK "use sanitizer to check memory leak" off)
 
 execute_process(COMMAND uname -m OUTPUT_VARIABLE MACH
     ERROR_QUIET OUTPUT_STRIP_TRAILING_WHITESPACE)
-
 
 if (CMAKE_BUILD_TYPE STREQUAL "Debug")
     set(DMR_DEBUG on)
@@ -44,9 +44,7 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 include_directories(${PROJECT_BINARY_DIR})
 include_directories(${PROJECT_SOURCE_DIR})
-#Multimediawidgets是否已使用？
 set(QtModule Core Gui Widgets Multimedia Xml Sql DBus)
-#configure_file
 #先查找到这些qt相关的模块以供链接使用
 find_package(Qt5 REQUIRED ${QtModule})
 
