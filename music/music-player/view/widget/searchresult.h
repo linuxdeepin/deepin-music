@@ -87,9 +87,6 @@ private:
     int                 m_CurrentIndex  = -1;
     int                 m_Count         = 0;
     QVBoxLayout         *vlayout        = nullptr;
-    QVBoxLayout         *vlayout1       = nullptr;
-    QVBoxLayout         *vlayout2       = nullptr;
-    QVBoxLayout         *vlayout3       = nullptr;
 };
 
 
