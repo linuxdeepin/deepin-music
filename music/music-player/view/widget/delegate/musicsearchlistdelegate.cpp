@@ -102,14 +102,14 @@ void MusicSearchListDelegate::paint(QPainter *painter, const QStyleOptionViewIte
     if (playlistPtr == nullptr) {
         return;
     }
-    auto pmtlist = listview->playMusicTypePtrList();
+    auto playMusicTypePtrList = listview->playMusicTypePtrList();
     auto metaPtrList = listview->playMetaList();
     if (playlistPtr->id() == MusicCandListID) {
         if (index.row() >= metaPtrList.size()) {
             return;
         }
     } else {
-        if (index.row() >= pmtlist.size()) {
+        if (index.row() >= playMusicTypePtrList.size()) {
             return;
         }
     }
@@ -236,12 +236,15 @@ void MusicSearchListDelegate::paint(QPainter *painter, const QStyleOptionViewIte
         painter->restore();
 
     } else {
-        auto playMusicTypePtr = pmtlist[index.row()];
+        auto playMusicTypePtr = playMusicTypePtrList[index.row()];
         /***********************绘制图片***************************/
         QPixmap image;
         image.loadFromData(playMusicTypePtr->icon);
+        if (image.isNull()) {
+            image = QPixmap(":/common/image/cover_max.svg");
+        }
         painter->save();
-        QRect imageRect(32, index.row() * 35 + 4, 24, 24);
+        QRect imageRect(32, index.row() * 34 + 5, 24, 24);
         if (playlistPtr->id() == ArtistCandListID) {
             QPainterPath clipPath;
             clipPath.addEllipse(imageRect.adjusted(0, 0, 0, 0));

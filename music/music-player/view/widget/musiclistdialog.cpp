@@ -114,6 +114,9 @@ void MusicListDialogPrivate::initUI()
     infoLabel = new DLabel();
     infoLabel->setForegroundRole(DPalette::BrightText);
 
+    auto textLayout = new QVBoxLayout(titleFrame);
+    textLayout->setSpacing(0);
+    textLayout->setContentsMargins(0, 5, 0, 5);
 
     auto btLayout = new QHBoxLayout(titleFrame);
     btLayout->setSpacing(0);
@@ -153,10 +156,11 @@ void MusicListDialogPrivate::initUI()
     btLayout->addStretch(100);
 
 //    titleLayout->addWidget(closeBt, 0, Qt::AlignTop | Qt::AlignRight);
-    titleLabel->setContentsMargins(0, 8, 0, 0);
-    titleLayout->addWidget(titleLabel, 0, Qt::AlignTop);
-    titleLayout->addWidget(infoLabel, 0, Qt::AlignTop);
-    titleLayout->addLayout(btLayout, Qt::AlignTop);
+    titleLabel->setContentsMargins(0, 0, 0, 0);
+    textLayout->addWidget(titleLabel, 0, Qt::AlignVCenter);
+    textLayout->addWidget(infoLabel, 0, Qt::AlignVCenter);
+    titleLayout->addLayout(textLayout, 1);
+    titleLayout->addLayout(btLayout, 0);
 
     closeLayout->addLayout(titleLayout);
     closeLayout->addWidget(closeBt, 0, Qt::AlignTop | Qt::AlignRight);
@@ -340,23 +344,26 @@ void MusicListDialog::setPlayMusicData(PlaylistPtr playlist, PlayMusicTypePtr pl
     }
     DFontSizeManager::instance()->bind(d->titleLabel, DFontSizeManager::T3, QFont::DemiBold);
     d->infoLabel->setFont(infoFont);
+    DFontSizeManager::instance()->bind(d->infoLabel, DFontSizeManager::T5, QFont::Normal);
     d->titleLabel->setForegroundRole(DPalette::TextTitle);
 
-    strplaymusic = playMusicType->name;
-    QList<PlayMusicTypePtr>::iterator playitr = std::find_if(playlist->playMusicTypePtrList().begin(), playlist->playMusicTypePtrList().end(), find_play_name);
-    if (playitr != playlist->playMusicTypePtrList().end()) {
-        if (!(*playitr)->icon.isEmpty()) {
-            QPixmap pixmap = QPixmap::fromImage(QImage::fromData((*playitr)->icon));
-            pixmap = pixmap.scaled(480, 130, Qt::KeepAspectRatioByExpanding);
-            d->titleFrame->setPixmap(pixmap);
-        } else {
-            QPixmap pixmap = DHiDPIHelper::loadNxPixmap(":/common/image/cover_max.svg");
-            pixmap = pixmap.scaled(480, 130, Qt::KeepAspectRatioByExpanding);
-            d->titleFrame->setPixmap(pixmap);
+    QString name = playMusicType->name;
+    for (auto meta : playlist->playMusicTypePtrList()) {
+        if (meta->name == name) {
+            if (!meta->icon.isEmpty()) {
+                QPixmap pixmap = QPixmap::fromImage(QImage::fromData(meta->icon));
+                pixmap = pixmap.scaled(480, 130, Qt::KeepAspectRatioByExpanding);
+                d->titleFrame->setPixmap(pixmap);
+            } else {
+                QPixmap pixmap = DHiDPIHelper::loadNxPixmap(":/common/image/cover_max.svg");
+                pixmap = pixmap.scaled(480, 130, Qt::KeepAspectRatioByExpanding);
+                d->titleFrame->setPixmap(pixmap);
+            }
+            break;
         }
     }
 
-    d->musicListInfoView->onMusiclistChanged(playlist, strplaymusic);
+    d->musicListInfoView->onMusiclistChanged(playlist, name);
 }
 
 void MusicListDialog::setPlaying(const MetaPtr Meta)
