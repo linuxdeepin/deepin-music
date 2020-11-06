@@ -1003,7 +1003,7 @@ void Footer::onMusicListRemoved(PlaylistPtr playlist, const MetaPtrList metalist
             d->btPrev->setDisabled(true);
             d->btNext->setDisabled(true);
             d->btFavorite->setDisabled(true);
-
+            d->btFavorite->setIcon(QIcon::fromTheme("dcc_collection"));
         } else if (d->activingPlaylist->allmusic().size() == 1) {
             d->btPrev->setDisabled(true);
             d->btNext->setDisabled(true);
