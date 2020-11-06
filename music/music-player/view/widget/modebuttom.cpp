@@ -121,7 +121,7 @@ void ModeButton::paintEvent(QPaintEvent *event)
     painter.setRenderHint(QPainter::HighQualityAntialiasing);
     painter.setRenderHint(QPainter::SmoothPixmapTransform);
 
-    int pixmapWidth = static_cast<int>( pixmap.rect().width() / devicePixelRatioF());
+    int pixmapWidth = static_cast<int>(pixmap.rect().width() / devicePixelRatioF());
     int pixmapHeight = static_cast<int>(pixmap.rect().height() / devicePixelRatioF());
     QRect pixmapRect((rect().width() - pixmapWidth) / 2, (rect().height() - pixmapHeight) / 2, pixmapWidth, pixmapHeight);
     pixmapRect = pixmapRect.intersected(rect());

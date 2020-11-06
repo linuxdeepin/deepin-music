@@ -31,7 +31,7 @@ class ExportedInterface : public Dtk::Core::DUtil::DExportedInterface
 //    Q_Ob
 public:
     explicit ExportedInterface(QObject *parent = nullptr);
-    QVariant invoke(const QString &action, const QString &parameters) const;
+    QVariant invoke(const QString &action, const QString &parameters) const override;
 private:
     QObject  *m_object;
     SpeechCenter *m_SpeechCenter;

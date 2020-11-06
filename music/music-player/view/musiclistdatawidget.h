@@ -36,7 +36,7 @@ public:
     explicit MusicListDataWidget(QWidget *parent = Q_NULLPTR);
     ~MusicListDataWidget() override;
 
-    void setCustomSortType(PlaylistPtr playlist);
+    //void setCustomSortType(PlaylistPtr playlist);
     void tabwidgetInfo(PlaylistPtr infoPlaylist);
     PlaylistPtr curPlaylist();
 

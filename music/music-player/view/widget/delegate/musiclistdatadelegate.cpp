@@ -92,18 +92,12 @@ void MusicListDataDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
 
     auto listview = qobject_cast<const MusicListDataView *>(option.widget);
     PlaylistPtr playlistPtr = listview->playlist();
-    auto playMusicTypePtrList = listview->playMusicTypePtrList();
-    if (index.row() >= playMusicTypePtrList.size()) {
+    auto mtylist = listview->playMusicTypePtrList();
+    if (index.row() >= mtylist.size()) {
         return;
     }
-    auto PlayMusicTypePtr = playMusicTypePtrList[index.row()];
-
-//    if (listview->playing() != nullptr && listview->playing()->album != PlayMusicTypePtr->name){
-//        return
-//    }
-
+    auto PlayMusicTypePtr = mtylist[index.row()];
     if (listview->viewMode() == QListView::IconMode) {
-        //QStyledItemDelegate::paint(painter, option, index);
         painter->save();
         painter->setRenderHint(QPainter::Antialiasing);
         painter->setRenderHint(QPainter::HighQualityAntialiasing);
@@ -142,13 +136,13 @@ void MusicListDataDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
         roundRectPath.addRoundRect(rect, 10, 10);
         painter->setClipPath(roundRectPath);
 
-        auto icon = option.icon;
+        auto opticon = option.icon;
         auto value = index.data(Qt::DecorationRole);
         if (value.type() == QVariant::Icon) {
-            icon = qvariant_cast<QIcon>(value);
+            opticon = qvariant_cast<QIcon>(value);
         }
 
-        painter->drawPixmap(rect, icon.pixmap(rect.width(), rect.width()));
+        painter->drawPixmap(rect, opticon.pixmap(rect.width(), rect.width()));
 
 
         //draw border
@@ -183,9 +177,9 @@ void MusicListDataDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
                 curFillSize = 64;
             }
             //设置模糊
-            QImage t_image = icon.pixmap(rect.width(), rect.height()).toImage();
+            QImage t_image = opticon.pixmap(rect.width(), rect.height()).toImage();
             qreal t_ratio = t_image.devicePixelRatioF();
-            curFillSize = static_cast<int>( curFillSize * t_ratio);
+            curFillSize = static_cast<int>(curFillSize * t_ratio);
 
             t_image  = t_image.copy(0, rect.height() - curFillSize, t_image.width(), curFillSize);
             QTransform old_transform = painter->transform();
@@ -239,9 +233,9 @@ void MusicListDataDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
             }
 
             //设置模糊
-            QImage t_image = icon.pixmap(rect.width(), rect.height()).toImage();
+            QImage t_image = opticon.pixmap(rect.width(), rect.height()).toImage();
             qreal t_ratio = t_image.devicePixelRatioF();
-            curFillSize = static_cast<int>( curFillSize * t_ratio);
+            curFillSize = static_cast<int>(curFillSize * t_ratio);
 
             t_image  = t_image.copy(0, rect.height() - curFillSize, t_image.width(), curFillSize);
             QTransform old_transform = painter->transform();
@@ -254,9 +248,9 @@ void MusicListDataDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
             //draw playing
             if (playFlag) {
                 if (option.state & QStyle::State_MouseOver) {
-                    painter->drawPixmap(QRect(rect.x() + 56, rect.y() + 82, 36, 36), d->hoverSuspendImg);
+                    painter->drawPixmap(QRect(rect.x() + 56, rect.y() + 72, 36, 36), d->hoverSuspendImg);
                 } else {
-                    painter->drawPixmap(QRect(rect.x() + 64, rect.y() + 92, 22, 18), listview->getAlbumPixmap());
+                    painter->drawPixmap(QRect(rect.x() + 64, rect.y() + 82, 22, 18), listview->getAlbumPixmap());
                 }
             }
 
@@ -298,8 +292,8 @@ void MusicListDataDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
         }
 
         if ((option.state & QStyle::State_MouseOver) /*&& !playFlag*/) {
-            if (!playlistPtr->playingStatus() || !playFlag ) {
-                QImage t_image = icon.pixmap(rect.width(), rect.height()).toImage();
+            if (!playlistPtr->playingStatus() || !playFlag) {
+                QImage t_image = opticon.pixmap(rect.width(), rect.height()).toImage();
                 int t_ratio = static_cast<int>(t_image.devicePixelRatioF());
                 QRect t_imageRect(rect.width() / 2 - 25, rect.height() / 2 - 25, 50 * t_ratio, 50 * t_ratio);
                 t_image  = t_image.copy(t_imageRect);
@@ -320,7 +314,6 @@ void MusicListDataDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
                 t_hoverPlayImg.setDevicePixelRatio(option.widget->devicePixelRatioF());
                 //            t_hoverRect.adjust(0, 0, -7 * t_ratio, -7 * t_ratio);
                 QRect t_pixMapRect(rect.x() + 53, rect.y() + 40, 43, 43);
-                QIcon icon(t_hoverPlayImg);
                 painter->drawPixmap(t_pixMapRect, t_hoverPlayImg);
             } /*else {
                 QPixmap t_hoverPlayImg(d->hoverSuspendImg);
@@ -358,7 +351,7 @@ void MusicListDataDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
         //auto background = baseColor;
 
         int lrWidth = 10;
-        if (!(option.state & QStyle::State_Selected) && !(option.state & QStyle::State_MouseOver) ) {
+        if (!(option.state & QStyle::State_Selected) && !(option.state & QStyle::State_MouseOver)) {
             painter->save();
             painter->setPen(Qt::NoPen);
             painter->setBrush(background);
@@ -452,34 +445,34 @@ void MusicListDataDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
             if (playlistPtr->searchStr().isEmpty()) {
                 if (!playingFlag) {
                     QRect numRect(lrWidth + 10, option.rect.y() + 3, 32, 32);
-                    auto icon = option.icon;
+                    auto opticon = option.icon;
                     auto value = index.data(Qt::DecorationRole);
                     if (value.type() == QVariant::Icon) {
-                        icon = qvariant_cast<QIcon>(value);
+                        opticon = qvariant_cast<QIcon>(value);
                     }
                     painter->save();
-                    QPainterPath clipPath;
-                    clipPath.addEllipse(numRect.adjusted(4, 4, -4, -4));
-                    painter->setClipPath(clipPath);
-                    painter->drawPixmap(numRect, icon.pixmap(numRect.width(), numRect.width()));
+                    QPainterPath clip;
+                    clip.addEllipse(numRect.adjusted(4, 4, -4, -4));
+                    painter->setClipPath(clip);
+                    painter->drawPixmap(numRect, opticon.pixmap(numRect.width(), numRect.width()));
                     painter->restore();
                 } else {
                     QRect numRect(lrWidth + 10, option.rect.y(), 40, option.rect.height());
-                    auto icon = listview->getPlayPixmap();
+                    auto playicon = listview->getPlayPixmap();
                     if (option.state & QStyle::State_Selected) {
-                        icon = listview->getSidebarPixmap();
+                        playicon = listview->getSidebarPixmap();
                     }
-                    qreal t_ratio = icon.devicePixelRatioF();
+                    qreal t_ratio = playicon.devicePixelRatioF();
                     auto centerF = numRect.center();
                     QRect t_ratioRect;
                     t_ratioRect.setX(0);
                     t_ratioRect.setY(0);
-                    t_ratioRect.setWidth(static_cast<int>(icon.width() / t_ratio));
-                    t_ratioRect.setHeight(static_cast<int>(icon.height() / t_ratio));
+                    t_ratioRect.setWidth(static_cast<int>(playicon.width() / t_ratio));
+                    t_ratioRect.setHeight(static_cast<int>(playicon.height() / t_ratio));
                     auto iconRect = QRectF(centerF.x() - t_ratioRect.width() / 2,
                                            centerF.y() - t_ratioRect.height() / 2,
                                            t_ratioRect.width(), t_ratioRect.height());
-                    painter->drawPixmap(iconRect.toRect(), icon);
+                    painter->drawPixmap(iconRect.toRect(), playicon);
                 }
 
             } else {
@@ -554,21 +547,21 @@ void MusicListDataDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
                 font14.setFamily("SourceHanSansSC");
                 font14.setWeight(QFont::Medium);
                 QRect numRect(lrWidth, option.rect.y(), 40, option.rect.height());
-                auto icon = listview->getPlayPixmap();
+                auto playicon = listview->getPlayPixmap();
                 if (option.state & QStyle::State_Selected) {
-                    icon = listview->getSidebarPixmap();
+                    playicon = listview->getSidebarPixmap();
                 }
-                qreal t_ratio = icon.devicePixelRatioF();
+                qreal t_ratio = playicon.devicePixelRatioF();
                 auto centerF = numRect.center();
                 QRect t_ratioRect;
                 t_ratioRect.setX(0);
                 t_ratioRect.setY(0);
-                t_ratioRect.setWidth(static_cast<int>(icon.width() / t_ratio));
-                t_ratioRect.setHeight(static_cast<int>(icon.height() / t_ratio));
+                t_ratioRect.setWidth(static_cast<int>(playicon.width() / t_ratio));
+                t_ratioRect.setHeight(static_cast<int>(playicon.height() / t_ratio));
                 auto iconRect = QRectF(centerF.x() - t_ratioRect.width() / 2,
                                        centerF.y() - t_ratioRect.height() / 2,
                                        t_ratioRect.width(), t_ratioRect.height());
-                painter->drawPixmap(iconRect.toRect(), icon);
+                painter->drawPixmap(iconRect.toRect(), playicon);
             } else {
                 if (option.state & QStyle::State_Selected) {
                     nameColor = option.palette.highlightedText().color();
@@ -679,7 +672,7 @@ bool MusicListDataDelegate::editorEvent(QEvent *event, QAbstractItemModel *model
             if (fillPolygon.containsPoint(pressPos, Qt::OddEvenFill))
                 Q_EMIT hoverPress(index);
         } else {
-            QRect t_hoverRect (rect.x() + 64, rect.y() + 96, 22, 18);
+            QRect t_hoverRect(rect.x() + 64, rect.y() + 96, 22, 18);
             QPainterPath t_imageClipPath;
             t_imageClipPath.addEllipse(QRect(rect.x() + 64, rect.y() + 96, 25, 25));
             t_imageClipPath.closeSubpath();

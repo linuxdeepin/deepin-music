@@ -198,10 +198,10 @@ void PlaylistManager::load()
         search->setDisplayName(searchName);
     }
 
-    auto play = playlist(PlayMusicListID);
+    auto playptr = playlist(PlayMusicListID);
     auto playName = tr("Play");
-    if (!play.isNull() && play->displayName() != playName) {
-        play->setDisplayName(playName);
+    if (!playptr.isNull() && playptr->displayName() != playName) {
+        playptr->setDisplayName(playName);
     }
 
     auto musicCand = playlist(MusicCandListID);
@@ -249,12 +249,11 @@ void PlaylistManager::saveSortOrder()
 
     qDebug() << d->sortUUIDs;
 
-    for (int sortID = 0; sortID < d->sortUUIDs.length(); ++sortID) {
-        auto uuid = d->sortUUIDs.value(sortID);
+    for (int sid = 0; sid < d->sortUUIDs.length(); ++sid) {
         QSqlQuery query;
         query.prepare(QString("UPDATE playlist SET sort_id = :sort_id WHERE uuid = :uuid; "));
-        query.bindValue(":sort_id", sortID);
-        query.bindValue(":uuid", uuid);
+        query.bindValue(":sort_id", sid);
+        query.bindValue(":uuid", d->sortUUIDs.value(sid));
         if (! query.exec()) {
             qDebug() << query.lastError();
         }
@@ -292,8 +291,8 @@ void PlaylistManager::onCustomResort(QStringList uuids)
     uuids.push_front(playlist(SearchMusicListID)->id());
 
     d->sortUUIDs.clear();
-    for (auto sortID = 0; sortID < uuids.length(); ++sortID) {
-        d->sortUUIDs << uuids.value(sortID);
+    for (auto sid = 0; sid < uuids.length(); ++sid) {
+        d->sortUUIDs << uuids.value(sid);
     }
 
     QSqlDatabase::database().transaction();

@@ -139,8 +139,7 @@ MetaPtr MusicListInfoView::firstMeta() const
     Q_D(const MusicListInfoView);
     MetaPtr curMeta = nullptr;
     for (int i = 0; i < d->model->rowCount(); ++i) {
-        auto index = d->model->index(i, 0);
-        MetaPtr meta = d->model->meta(index);
+        MetaPtr meta = d->model->meta(d->model->index(i, 0));
         if (!meta->invalid) {
             curMeta = meta;
             break;
@@ -204,9 +203,9 @@ void MusicListInfoView::setPlayPixmap(QPixmap pixmap, QPixmap sidebarPixmap)
     Q_D(MusicListInfoView);
     d->playingPixmap = pixmap;
     d->sidebarPixmap = sidebarPixmap;
-    auto index = d->model->findIndex(d->playing);
-    if (index.isValid())
-        update(index);
+    auto idx = d->model->findIndex(d->playing);
+    if (idx.isValid())
+        update(idx);
 
     viewport()->update();
 }
@@ -228,8 +227,8 @@ QStringList MusicListInfoView::allMetaNames() const
     Q_D(const MusicListInfoView);
     QStringList allMetaNames;
     for (int i = 0; i < d->model->rowCount(); ++i) {
-        auto index = d->model->index(i, 0);
-        auto hash = d->model->data(index).toString();
+        auto idx = d->model->index(i, 0);
+        auto hash = d->model->data(idx).toString();
         if (!hash.isEmpty()) {
             allMetaNames.append(hash);
         }
@@ -248,8 +247,7 @@ void MusicListInfoView::onMusicListRemoved(const MetaPtrList metalist)
         }
 
         for (int i = 0; i < d->model->rowCount(); ++i) {
-            auto index = d->model->index(i, 0);
-            auto itemHash = d->model->data(index).toString();
+            auto itemHash = d->model->data(d->model->index(i, 0)).toString();
             if (itemHash == meta->hash) {
                 d->model->removeRow(i);
             }
@@ -262,15 +260,6 @@ void MusicListInfoView::onMusicListRemoved(const MetaPtrList metalist)
 void MusicListInfoView::onMusicError(const MetaPtr meta, int /*error*/)
 {
     Q_ASSERT(!meta.isNull());
-//    Q_D(MusicListInfoView);
-
-//    qDebug() << error;
-//    QModelIndex index = findIndex(meta);
-
-//    auto indexData = index.data().value<MetaPtr>();
-//    indexData.invalid = (error != 0);
-//    d->m_model->setData(index, QVariant::fromValue<MetaPtr>(indexData));
-
     update();
 }
 
@@ -284,18 +273,18 @@ void MusicListInfoView::onMusicListAdded(const MetaPtrList metalist)
 
 void MusicListInfoView::onLocate(const MetaPtr meta)
 {
-    QModelIndex index = findIndex(meta);
-    if (!index.isValid()) {
+    QModelIndex idx = findIndex(meta);
+    if (!idx.isValid()) {
         return;
     }
 
     clearSelection();
 
     auto viewRect = QRect(QPoint(0, 0), size());
-    if (!viewRect.intersects(visualRect(index))) {
-        scrollTo(index, MusicListInfoView::PositionAtCenter);
+    if (!viewRect.intersects(visualRect(idx))) {
+        scrollTo(idx, MusicListInfoView::PositionAtCenter);
     }
-    setCurrentIndex(index);
+    setCurrentIndex(idx);
 }
 
 void MusicListInfoView::onMusiclistChanged(PlaylistPtr playlist, const QString name)
@@ -348,8 +337,7 @@ void MusicListInfoView::keyPressEvent(QKeyEvent *event)
             if (selection->selectedRows().length() <= 0) {
                 return;
             }
-            auto index = selection->selectedRows().first();
-            auto meta = d->model->meta(index);
+            auto meta = d->model->meta(selection->selectedRows().first());
             Q_EMIT showInfoDialog(meta);
             break;
         }
@@ -393,13 +381,13 @@ void MusicListInfoView::keyPressEvent(QKeyEvent *event)
     QAbstractItemView::keyPressEvent(event);
 }
 
-void MusicListInfoView::keyboardSearch(const QString &search)
-{
-    Q_UNUSED(search);
-// Disable keyborad serach
-//    qDebug() << search;
-//    QAbstractItemView::keyboardSearch(search);
-}
+//void MusicListInfoView::keyboardSearch(const QString &search)
+//{
+//    Q_UNUSED(search);
+//// Disable keyborad serach
+////    qDebug() << search;
+////    QAbstractItemView::keyboardSearch(search);
+//}
 
 void MusicListInfoViewPrivate::addMedia(const MetaPtr meta)
 {
@@ -413,8 +401,7 @@ void MusicListInfoViewPrivate::addMedia(const MetaPtr meta)
     model->appendRow(newItem);
 
     auto row = model->rowCount() - 1;
-    QModelIndex index = model->index(row, 0, QModelIndex());
-    model->setData(index, meta->hash);
+    model->setData(model->index(row, 0, QModelIndex()), meta->hash);
 }
 
 void MusicListInfoViewPrivate::removeSelection(QItemSelectionModel *selection)
@@ -423,9 +410,8 @@ void MusicListInfoViewPrivate::removeSelection(QItemSelectionModel *selection)
     Q_Q(MusicListInfoView);
 
     MetaPtrList metalist;
-    for (auto index : selection->selectedRows()) {
-        auto meta = model->meta(index);
-        metalist << meta;
+    for (QModelIndex idx : selection->selectedRows()) {
+        metalist << model->meta(idx);
     }
     Q_EMIT q->removeMusicList(metalist);
 }
@@ -462,9 +448,8 @@ void MusicListInfoView::showContextMenu(const QPoint &pos,
         auto act = playlistMenu.addAction(favPlaylist->displayName());
         act->setData(QVariant::fromValue(favPlaylist));
         bool flag = true;
-        for (auto &index : selection->selectedRows()) {
-            auto meta = d->model->meta(index);
-            if (!favPlaylist->contains(meta)) {
+        for (QModelIndex &idx : selection->selectedRows()) {
+            if (!favPlaylist->contains(d->model->meta(idx))) {
                 flag = false;
             }
         }
@@ -477,9 +462,6 @@ void MusicListInfoView::showContextMenu(const QPoint &pos,
     }
 
     auto createPlaylist = playlistMenu.addAction(tr("Add to new playlist"));
-//    auto font = createPlaylist->font();
-//    font.setWeight(QFont::DemiBold);
-//    createPlaylist->setFont(font);
     createPlaylist->setData(newvar);
     playlistMenu.addSeparator();
 
@@ -502,10 +484,9 @@ void MusicListInfoView::showContextMenu(const QPoint &pos,
 
     connect(&playlistMenu, &DMenu::triggered, this, [ = ](QAction * action) {
         auto playlist = action->data().value<PlaylistPtr >();
-        qDebug() << playlist;
         MetaPtrList metalist;
-        for (auto &index : selection->selectedRows()) {
-            auto meta = d->model->meta(index);
+        for (QModelIndex &idx : selection->selectedRows()) {
+            auto meta = d->model->meta(idx);
             if (!meta.isNull()) {
                 metalist << meta;
             }
@@ -541,52 +522,41 @@ void MusicListInfoView::showContextMenu(const QPoint &pos,
 
     DMenu textCodecMenu;
     if (singleSelect) {
-        auto index = selection->selectedRows().first();
-        auto meta = d->model->meta(index);
-        QList<QByteArray> codecList = DMusic::detectMetaEncodings(meta);
-//        codecList << "utf-8" ;
-        for (auto codec : codecList) {
+        auto meta = d->model->meta(selection->selectedRows().first());
+        QList<QByteArray> codecList = DMusic::detectMetaEncodings(meta);;
+        for (QByteArray codec : codecList) {
             auto act = textCodecMenu.addAction(codec);
-            act->setData(QVariant::fromValue(codec));
+            act->setData(QVariant::fromValue(textCodecMenu.addAction(codec)));
         }
-
-//        if (codecList.length() > 1) {
-//            myMenu.addSeparator();
-//            myMenu.addAction(tr("Encoding"))->setMenu(&textCodecMenu);
-//        }
 
         myMenu.addSeparator();
         songAction = myMenu.addAction(tr("Song info"));
 
         connect(&textCodecMenu, &DMenu::triggered, this, [ = ](QAction * action) {
-            auto codec = action->data().toByteArray();
-            meta->updateCodec(codec);
+            meta->updateCodec(action->data().toByteArray());
             Q_EMIT updateMetaCodec(meta);
         });
     }
 
     if (playAction) {
         connect(playAction, &QAction::triggered, this, [ = ](bool) {
-            auto index = selection->selectedRows().first();
-            if (d->model->meta(index) == playlist()->playing()) {
-                Q_EMIT resume(d->model->meta(index));
+            if (d->model->meta(selection->selectedRows().first()) == playlist()->playing()) {
+                Q_EMIT resume(d->model->meta(selection->selectedRows().first()));
             } else {
-                Q_EMIT playMedia(d->model->meta(index));
+                Q_EMIT playMedia(d->model->meta(selection->selectedRows().first()));
             }
         });
     }
 
     if (pauseAction) {
         connect(pauseAction, &QAction::triggered, this, [ = ](bool) {
-            auto index = selection->selectedRows().first();
-            Q_EMIT pause(d->model->meta(index));
+            Q_EMIT pause(d->model->meta(selection->selectedRows().first()));
         });
     }
 
     if (displayAction) {
         connect(displayAction, &QAction::triggered, this, [ = ](bool) {
-            auto index = selection->selectedRows().first();
-            auto meta = d->model->meta(index);
+            auto meta = d->model->meta(selection->selectedRows().first());
             auto dirUrl = QUrl::fromLocalFile(meta->localPath);
             Dtk::Widget::DDesktopServices::showFileItem(dirUrl);
         });
@@ -595,8 +565,8 @@ void MusicListInfoView::showContextMenu(const QPoint &pos,
     if (removeAction) {
         connect(removeAction, &QAction::triggered, this, [ = ](bool) {
             MetaPtrList metalist;
-            for (auto index : selection->selectedRows()) {
-                auto meta = d->model->meta(index);
+            for (QModelIndex idx : selection->selectedRows()) {
+                auto meta = d->model->meta(idx);
                 metalist << meta;
             }
             if (metalist.isEmpty())
@@ -623,13 +593,9 @@ void MusicListInfoView::showContextMenu(const QPoint &pos,
 
     if (deleteAction) {
         connect(deleteAction, &QAction::triggered, this, [ = ](bool) {
-            //bool containsCue = false;
             MetaPtrList metalist;
-            for (auto index : selection->selectedRows()) {
-                auto meta = d->model->meta(index);
-                if (!meta->cuePath.isEmpty()) {
-                    //containsCue = true;
-                }
+            for (QModelIndex idx : selection->selectedRows()) {
+                auto meta = d->model->meta(idx);
                 metalist << meta;
             }
 
@@ -684,8 +650,7 @@ void MusicListInfoView::showContextMenu(const QPoint &pos,
 
     if (songAction) {
         connect(songAction, &QAction::triggered, this, [ = ](bool) {
-            auto index = selection->selectedRows().first();
-            auto meta = d->model->meta(index);
+            auto meta = d->model->meta(selection->selectedRows().first());
             Q_EMIT showInfoDialog(meta);
         });
     }
@@ -703,8 +668,8 @@ void MusicListInfoView::startDrag(Qt::DropActions supportedActions)
     Q_D(MusicListInfoView);
 
     MetaPtrList list;
-    for (auto index : selectionModel()->selectedIndexes()) {
-        list << d->model->meta(index);
+    for (QModelIndex idx : selectionModel()->selectedIndexes()) {
+        list << d->model->meta(idx);
     }
 
     setAutoScroll(false);
@@ -713,8 +678,7 @@ void MusicListInfoView::startDrag(Qt::DropActions supportedActions)
 
     QMap<QString, int> hashIndexs;
     for (int i = 0; i < d->model->rowCount(); ++i) {
-        auto index = d->model->index(i, 0);
-        auto hash = d->model->data(index).toString();
+        auto hash = d->model->data(d->model->index(i, 0)).toString();
         Q_ASSERT(!hash.isEmpty());
         hashIndexs.insert(hash, i);
     }
@@ -724,8 +688,7 @@ void MusicListInfoView::startDrag(Qt::DropActions supportedActions)
     QItemSelection selection;
     for (auto meta : list) {
         if (!meta.isNull()) {
-            auto index = this->findIndex(meta);
-            selection.append(QItemSelectionRange(index));
+            selection.append(QItemSelectionRange(findIndex(meta)));
         }
     }
     if (!selection.isEmpty()) {

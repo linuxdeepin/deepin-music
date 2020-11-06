@@ -1,18 +1,12 @@
 #工程名
-#project(dmusic)
 set(CMD_NAME dmusic)
 cmake_minimum_required(VERSION 3.10)
 
-#文件路径
-#set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/../dist/lib)
-
 #文件夹包含
 include_directories(.)
-#include_directories(net)
 include_directories(util)
 
 aux_source_directory(. allSourcelib)
-#aux_source_directory(net allSourcelib)
 aux_source_directory(util allSourcelib)
 
 add_library(${CMD_NAME} STATIC ${allSourcelib})
@@ -21,7 +15,6 @@ set_target_properties(dmusic PROPERTIES VERSION 1.0.0 SOVERSION 1.0)
 #使用第三方库需要用到的一个包
 find_package(PkgConfig REQUIRED)
 
-#检查第三方库(这里检查了名字为dtkwidget的库和名字为dtkgui的库)，然后取名3rd_lib
 pkg_check_modules(3rd_lib REQUIRED
         dtkwidget dtkgui
         )

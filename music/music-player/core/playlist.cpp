@@ -64,8 +64,8 @@ const MetaPtr Playlist::next(const MetaPtr meta) const
     if (0 == playlistMeta.sortMetas.length() || meta.isNull()) {
         return MetaPtr();
     }
-    auto prev = (playlistMeta.sortMetas.indexOf(meta->hash) + 1) % playlistMeta.sortMetas.length();
-    return playlistMeta.metas.value(playlistMeta.sortMetas.at(prev));
+    auto prevMete = (playlistMeta.sortMetas.indexOf(meta->hash) + 1) % playlistMeta.sortMetas.length();
+    return playlistMeta.metas.value(playlistMeta.sortMetas.at(prevMete));
 }
 
 const MetaPtrList shuffle(MetaPtrList &&musiclist, int seed)
@@ -344,9 +344,9 @@ void Playlist::load()
     QStringList toAppendMusicHashs;
     while (query.next()) {
         auto musicID = query.value(0).toString();
-        auto sortID = query.value(1).toInt();
-        if (!sortHashs.contains(sortID)) {
-            sortHashs.insert(sortID, musicID);
+        auto sid = query.value(1).toInt();
+        if (!sortHashs.contains(sid)) {
+            sortHashs.insert(sid, musicID);
         } else {
             toAppendMusicHashs << musicID;
         }
@@ -357,8 +357,8 @@ void Playlist::load()
     qSort(sortIDs.begin(), sortIDs.end());
 
     playlistMeta.sortMetas.clear();
-    for (auto sortID : sortIDs) {
-        playlistMeta.sortMetas << sortHashs.value(sortID);
+    for (auto sid : sortIDs) {
+        playlistMeta.sortMetas << sortHashs.value(sid);
     }
     playlistMeta.sortMetas << toAppendMusicHashs;
 
@@ -447,14 +447,14 @@ void Playlist::updateMeta(const MetaPtr meta)
 
 MetaPtr Playlist::removeMusicList(const MetaPtrList metalist)
 {
-    MetaPtr next;
+    MetaPtr nt;
     QSqlDatabase::database().transaction();
-    for (auto &meta : metalist) {
-        next = removeOneMusic(meta);
+    foreach (auto &meta, metalist) {
+        nt = removeOneMusic(meta);
     }
     QSqlDatabase::database().commit();
     Q_EMIT musiclistRemoved(metalist);
-    return next;
+    return nt;
 }
 
 MetaPtr Playlist::removeOneMusic(const MetaPtr meta)
@@ -642,7 +642,6 @@ LessThanFunctionPtr getSortFunction(Playlist::SortType sortType, Playlist::Order
         }
         break;
     }
-    qCritical() << "show not sort by invalid typr" << sortType << orderType;
     return &lessThanTitle;
 }
 
@@ -704,18 +703,17 @@ void Playlist::resort()
         collator.setNumericMode(true);
         collator.setCaseSensitivity(Qt::CaseInsensitive);
 
-        auto sortType = static_cast<Playlist::SortType>(playlistMeta.sortType);
+        auto st = static_cast<Playlist::SortType>(playlistMeta.sortType);
         auto orderType = static_cast<Playlist::OrderType>(playlistMeta.orderType);
-        if (sortType != Playlist::SortByCustom) {
+        if (st != Playlist::SortByCustom) {
             QList<MetaPtr> sortList;
 
             for (auto id : playlistMeta.metas.keys()) {
-                //        qDebug() << playlistMeta.metas.value(id) << id;
                 sortList << playlistMeta.metas.value(id);
             }
 
             qSort(sortList.begin(), sortList.end(),
-                  getSortFunction(sortType, orderType));
+                  getSortFunction(st, orderType));
 
             QMap<QString, int> hashIndexs;
             for (auto i = 0; i < sortList.length(); ++i) {

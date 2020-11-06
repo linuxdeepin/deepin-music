@@ -53,7 +53,7 @@ public:
 //    Q_INVOKABLE virtual bool hasChildren(const QModelIndex &parent = QModelIndex()) const;
 //    bool dropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent);
     virtual bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole) Q_DECL_OVERRIDE;
-    virtual Qt::DropActions supportedDropActions() const Q_DECL_OVERRIDE;
+    //virtual Qt::DropActions supportedDropActions() const Q_DECL_OVERRIDE;
     virtual Qt::ItemFlags flags(const QModelIndex &index) const Q_DECL_OVERRIDE;
 
 private:

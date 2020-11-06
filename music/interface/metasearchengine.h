@@ -24,8 +24,8 @@
 #include <QObject>
 #include "plugininterface.h"
 
-#include <mediameta.h>
-#include <searchmeta.h>
+#include "mediameta.h"
+#include "searchmeta.h"
 
 class MediaMeta;
 

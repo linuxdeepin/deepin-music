@@ -93,10 +93,10 @@
 #include "playlist.h"
 #include "pluginmanager.h"
 #include "fft.h"
-//#include "inotifyengine.h"
 #include "inotifyfiles.h"
 #include "lyric.h"
 #include "musiclyric.h"
+#include "widget/waveform.h"
 
 #include <vlc/vlc.h>
 #include "vlc/Audio.h"
@@ -133,6 +133,7 @@
 
 MetaPtr globMetaPtr(new MediaMeta());
 
+
 int sum(int a, int b)
 {
     return a + b;
@@ -161,12 +162,13 @@ TEST(SearchEdit, isNull)
     SearchEdit *a = new  SearchEdit() ;
     SearchResult *b = new SearchResult;
     a->setResultWidget(b);
-    a->onFocusIn();
+    PlaylistPtr playl;
+    //b->onSearchCand("a", playl);
     a->onFocusOut();
     a->onTextChanged();
     a->onReturnPressed();
-    bool isNull = a->curPlaylistPtr().isNull();
-    ASSERT_TRUE(isNull);
+    a->curPlaylistPtr().isNull();
+    //ASSERT_TRUE(isNull);
 }
 
 TEST(Cover, setcolor)
@@ -174,18 +176,10 @@ TEST(Cover, setcolor)
     Cover *a = new  Cover() ;
     QPixmap pix;
     QColor color(255, 255, 255);
-    a->setBorderColor(color);
-    a->setShadowColor(color);
     a->radius();
-    a->borderColor();
-    a->shadowColor();
     a->setCoverPixmap(pix);
     a->setRadius(1);
     ASSERT_EQ(1, a->radius());
-    ASSERT_EQ(color, a->borderColor());
-    ASSERT_EQ(color, a->shadowColor());
-//    delete  a;
-//    a = nullptr;
 }
 
 TEST(InfoDialog, isRunning4)
@@ -259,19 +253,8 @@ TEST(MusicInfoItemDelegatePrivate, setcolor)
     a->titleColor();
     a->highlightText();
     a->background();
-    a->alternateBackground();
-    a->highlightedBackground();
     a->playingIcon();
-    a->highlightPlayingIcon();
     QColor color(255, 255, 255);
-    a->setTextColor(color);
-    a->setTitleColor(color);
-    a->setHighlightText(color);
-    a->setBackground(color);
-    a->setAlternateBackground(color);
-    a->setHighlightedBackground(color);
-    a->setPlayingIcon("aaa");
-    a->setHighlightPlayingIcon("a");
     ASSERT_EQ(color, a->textColor()) << " set color success";
 }
 
@@ -308,19 +291,8 @@ TEST(PlayItemDelegatePrivate, setcolor)
     a->titleColor();
     a->highlightText();
     a->background();
-    a->alternateBackground();
-    a->highlightedBackground();
     a->playingIcon();
-    a->highlightPlayingIcon();
     QColor color(255, 255, 255);
-    a->setTextColor(color);
-    a->setTitleColor(color);
-    a->setHighlightText(color);
-    a->setBackground(color);
-    a->setAlternateBackground(color);
-    a->setHighlightedBackground(color);
-    a->setPlayingIcon("s");
-    a->setHighlightPlayingIcon("s");
     ASSERT_EQ(color, a->textColor()) << " set color success";
 }
 
@@ -366,14 +338,27 @@ TEST(ListView, isRunning18)
 
 TEST(LyricLabel, isRunning19)
 {
-    LyricLabel *a = new  LyricLabel(true) ;
-    a->getFromFile("/home/zhangyong/Music/123.lrc");
-    QPainter painter;
-    QRect r1(100, 200, 11, 16);
-    a->paintItem(&painter, 1, r1);
-    a->itemCount();
-    a->setPostion(0);
-    a->update();
+    QWidget *w = new QWidget;
+    w->setFixedSize(500, 600);
+    LyricLabel *a = new  LyricLabel(true, w) ;
+    a->getFromFile("123.lrc");
+    QPainter *p = new QPainter(a);
+    QRect rt(QPoint(20, 20), QPoint(40, 40));
+    //a->paintEvent(nullptr);
+    a->setCurrentIndex(2);
+    a->currentIndex();
+    a->paintItem(p, 0, rt);
+//    a->paintItem(p, 1, rt);
+    a->event(new QScrollPrepareEvent(QPoint(20, 20)));
+    a->event(new QScrollEvent(QPoint(20, 20), QPoint(24, 20), QScrollEvent::ScrollStarted));
+    a->event(new QWheelEvent(QPointF(10, 30), 1,
+                             Qt::RightButton, Qt::ControlModifier));
+    a->event(new QWheelEvent(QPointF(10, 30), 125,
+                             Qt::RightButton, Qt::ControlModifier));
+    a->event(new QEvent(QEvent::MouseButtonPress));
+    a->event(new QEvent(QEvent::None));
+    int height = a->itemHeight();
+    ASSERT_TRUE(height > 0);
 }
 
 TEST(LyricView, viewMode)
@@ -381,8 +366,6 @@ TEST(LyricView, viewMode)
     LyricView *a = new  LyricView() ;
     QWheelEvent event(a->pos(), 1, Qt::MouseButtons(Qt::MouseButtonMask), Qt::KeyboardModifier::NoModifier);
     QApplication::sendEvent(a, &event);
-//    a->optical();
-    a->viewMode();
     ASSERT_FALSE(a->viewMode());
 }
 
@@ -436,25 +419,20 @@ TEST(MusicSearchListModel, isRunning25)
 extern void margeDatabase();
 TEST(PlaylistModel, findmusic)
 {
-//    MediaDatabase::instance()->init();
     auto metalist = MediaDatabase::instance()->allmetas();
     margeDatabase();
-//    MediaDatabase::instance()->searchMediaTitle("a", 1);
-//    MediaDatabase::instance()->searchMediaMeta("a", 1);
-//    MediaDatabase::instance()->searchMediaPath("/usr/share/music/", 1);
     PlaylistMeta all;
     MediaDatabase::instance()->addPlaylist(all);
     MediaDatabase::instance()->updatePlaylist(all);
     MediaDatabase::instance()->removePlaylist(all);
     MediaDatabase::instance()->deleteMusic(globMetaPtr, all);
     MediaDatabase::instance()->playlistExist("all");
-//    MediaDatabase::instance()->mediaMetaExist("all");
+
     MediaMeta *meta = new MediaMeta();
     if (metalist.isEmpty()) {
         meta->hash = "music";
     } else
         *meta = metalist.at(0);
-//    QSharedPointer<MediaMeta> ptr(meta);
     PlaylistModel *a = new  PlaylistModel() ;
     PlaylistModel *b = new  PlaylistModel(1, 1, nullptr) ;
     Q_UNUSED(b);
@@ -465,8 +443,6 @@ TEST(PlaylistModel, findmusic)
     //datastream
     QDataStream steam;
     steam << (static_cast<void>(QDataStream()), MetaPtr(meta));
-    //steam>> (QDataStream(),ptr);
-//    a->findIndex(ptr);
 }
 
 TEST(MusicBoxButton, boxbutton)
@@ -631,7 +607,6 @@ TEST(MusicSearchListview, isRunning34)
     a->getSidebarPixmap();
     a->getAlbumPixmap();
     a->updateList();
-//    a->keyChoice();
 }
 TEST(ModelMake, isRunning35)
 {
@@ -660,7 +635,6 @@ TEST(SearchEdit, isRunning37)
     SearchResult *b = new SearchResult();
     a->curPlaylistPtr();
     a->setResultWidget(b);
-    a->onFocusIn();
     a->onFocusOut();
     a->onTextChanged();
     a->onReturnPressed();
@@ -733,9 +707,22 @@ TEST(WaveformScale, isRunning41)
     WaveformScale *a = new  WaveformScale();
     a->show();
     a->setValue(1);
+
     a->move(0, 0);
     a->adjustSize();
     a->update();
+
+    a->hide();
+    class  wfs : public WaveformScale
+    {
+    public:
+        void paintEvent(QPaintEvent *event) Q_DECL_OVERRIDE {
+            WaveformScale::paintEvent(event);
+        }
+    };
+
+    wfs w;
+    w.paintEvent(nullptr);
 }
 
 TEST(ImportWidget, isRunning43)
@@ -758,7 +745,6 @@ TEST(LyricWidget, isRunning45)
     a->updateUI();
     a->defaultCover();
     a->backgroundColor();
-    a->setDefaultCover("a");
     a->onProgressChanged(1, 1);
     PlaylistMeta playlist;
     PlaylistPtr playlist1(new Playlist(playlist));
@@ -766,11 +752,10 @@ TEST(LyricWidget, isRunning45)
     a->onMusicStop(playlist1, globMetaPtr);
     DMusic::SearchMeta sea;
     DMusic::SearchMeta sea1("1");
-    QString lyr = "home/zhangyong/Music/123.lrc";
+    QString lyr = "123.lrc";
     a->onLyricChanged(globMetaPtr, sea, lyr.toUtf8());
     a->onCoverChanged(globMetaPtr, sea, lyr.toUtf8());
     QColor color(255, 255, 255, 0);
-    a->setBackgroundColor(color);
     a->onUpdateMetaCodec(globMetaPtr);
     a->setGeometry(10, 10, 100, 100);
     a->adjustSize();
@@ -793,17 +778,16 @@ TEST(PlayListWidget, isRunning48)
     a->slotTheme(1);
 }
 
-//TEST(MUsicLyricWidget, isRunning49)
-//{
-//    MUsicLyricWidget *a = new  MUsicLyricWidget() ;
-//    a->updateUI();
-//    a->defaultCover();
-//    a->slotTheme(1);
-//    a->onProgressChanged(1, 1);
-//    a->setDefaultCover("a");
-//    a->onsearchBt();
-//    a->slotonsearchresult("a");
-//}
+TEST(MUsicLyricWidget, isRunning49)
+{
+    MusicLyricWidget *a = new  MusicLyricWidget() ;
+    a->updateUI();
+    a->defaultCover();
+    a->slotTheme(1);
+    a->onProgressChanged(1, 1);
+    a->onsearchBt();
+}
+
 
 TEST(MediaMeta, metabase)
 {
@@ -855,8 +839,9 @@ TEST(MetaDetector, metadata)
 
 TEST(BaseTool, basetool)
 {
-    QString xml = "/home/zhangyong/Music/123.xml";
-    QString lrc = "/home/zhangyong/Music/123.lrc";
+    QString xml = "123.xml";
+//    QString path = "/usr/share/music/bensound-sunny.mp3";
+    QString lrc = "123.lrc";
     QFile fin(lrc);
     if (fin.open(QIODevice::ReadOnly)) {
         QByteArray data = fin.readAll();
@@ -938,7 +923,7 @@ TEST(MetaBufferDetector, metabuf)
     MetaBufferDetector *buf = new MetaBufferDetector;
     buf->onBufferDetector(path, hash);
     buf->onClearBufferDetector();
-    buf->run();
+    buf->start();
     QTest::qWait(30);
 }
 
@@ -962,7 +947,6 @@ TEST(MetaSearchService, metaservice)
     lyricService->coverData(globMetaPtr);
     lyricService->lyricData(globMetaPtr);
     lyricService->coverUrl(globMetaPtr);
-//    lyricService->lyricUrl(globMetaPtr);
     lyricService->searchMeta(globMetaPtr);
 }
 
@@ -977,7 +961,6 @@ TEST(Player, play)
     Player::instance()->activeMeta();
     Player::instance()->curPlaylist();
     Player::instance()->activePlaylist();
-//    Player::instance()->supportedFilterStringList();
     Player::instance()->supportedSuffixList();
     Player::instance()->supportedMimeTypes();
     Player::instance()->canControl();
@@ -1017,15 +1000,18 @@ extern bool moreThanArtist(const MetaPtr v1, const MetaPtr v2);
 extern bool moreThanAblum(const MetaPtr v1, const MetaPtr v2);
 TEST(Playlist, playlist)
 {
+    globMetaPtr->hash = "all";
     PlaylistMeta meta;
-    meta.uuid = "z";
+    meta.uuid = "all";
     meta.displayName = "music";
+    meta.sortID = 1;
     MediaMeta *meta2 = new MediaMeta();
     meta2->hash = "music";
     meta2->length = 1;
     MetaPtr meta1(meta2);
     Playlist *list = new Playlist(meta);
     list->load();
+    list->updateMeta(globMetaPtr);
     list->prev(globMetaPtr);
     list->prev(meta1);
     list->id();
@@ -1064,7 +1050,6 @@ TEST(Playlist, playlist)
     list->isLast(globMetaPtr);
     list->reset(list->allmusic());
     list->appendMusicList(list->allmusic());
-    list->updateMeta(globMetaPtr);
     list->removeMusicList(list->allmusic());
     list->removeOneMusic(globMetaPtr);
     list->removeOneMusic(meta1);
@@ -1104,26 +1089,6 @@ TEST(PluginManager, plugin)
     plu->init();
 }
 
-//TEST(CFFT, fft)
-//{
-//    complex<float> *sample;
-//    sample = new complex<float>[100];
-//    int log2N = static_cast<int>(log2(100 - 1) + 1);
-//    CFFT::process(sample, log2N, -1);
-//    ASSERT_TRUE(sample != nullptr);
-//}
-
-//TEST(InotifyEngine, inottify)
-//{
-//    InotifyEngine *inotify = new InotifyEngine;
-//    QString path = "/usr/share/music/bensound-sunny.mp3";
-//    QStringList list;
-//    list << path;
-//    inotify->addPath(path);
-//    inotify->addPaths(list);
-//    Q_EMIT inotify->fileRemoved(path);
-//}
-
 TEST(InotifyFiles, inofile)
 {
     QString path = "/usr/share/music/bensound-sunny.mp3";
@@ -1139,9 +1104,11 @@ TEST(InotifyFiles, inofile)
 
 TEST(Lyric, lyric)
 {
-    QString path = "/usr/zhangyong/Music/123.lrc";
+
     QString lyc = "[00:03.71]";
     Lyric ly = parseLrc(lyc);
+    QString path = "123.lrc";
+    ly = parseLrc(path);
     ASSERT_FALSE(ly.hasTime);
 }
 
@@ -1158,10 +1125,8 @@ TEST(ThreadPool, thread)
 TEST(MusicLyric, mly)
 {
     MusicLyric *mly = new MusicLyric;
-    QString path = "/home/zhangyong/Music/123.lrc";
+    QString path = "123.lrc";
     mly->getFromFile(path);
-//    QString linestr = mly->getLineAt(0);
-//    mly->getFromFileOld(path);
     mly->getCount();
     mly->getIndex(2);
     mly->getPostion(2);
@@ -1173,21 +1138,15 @@ DCORE_USE_NAMESPACE
 TEST(VlcAudio, vlcaud)
 {
     VlcInstance *instance = new VlcInstance(VlcCommon::args(), nullptr);
-    VlcCommon::setPluginPath("");
     instance->status();
     instance->logLevel();
     VlcMediaPlayer *player = new VlcMediaPlayer(instance);
     player->equalizer()->setPreamplification(12);
     player->equalizer();
     player->audio();
-//    player->hasVout();
     player->length();
-//    player->currentMedia();
     VlcMedia *vmedia = new VlcMedia("/usr/share/music/bensound-sunny.mp3", true, instance);
     vmedia->initMedia("/usr/share/music/bensound-sunny.mp3", true, instance);
-//    vmedia->parse();
-//    vmedia->parsed();
-//    vmedia->currentLocation();
     QString path = "/usr/share/music/";
     QString name = "bensound-sunny.mp3";
     Vlc::Mux m = Vlc::TS;
@@ -1196,70 +1155,54 @@ TEST(VlcAudio, vlcaud)
     vmedia->record(name, path, m, ac, vc, false);
     vmedia->record(name, path, m, false);
     vmedia->record(name, path, m, ac, vc, 1, 1, 1, false);
-    vmedia->setProgram(2);
     vmedia->setOption("mp3");
-//    vmedia->setOptions(QStringList() << "1" << "2");
 
     VlcAudio *audio = new VlcAudio(player);
     audio->setVolume(50);
-//    audio->setTrack(1);
     audio->toggleMute();
-    audio->setChannel(Vlc::AudioChannel::RStereo);
     audio->setMute(true);
     audio->track();
     audio->getMute();
     audio->volume();
-//    QStringList list = audio->trackDescription();
-//    QList<int> li = audio->trackIds();
-    QMap<int, QString> map1 = audio->tracks();
-    audio->channel();
 
     player->play();
 
+    QTest::qWait(200);
     VolumeMonitoring vot(nullptr);
     vot.needSyncLocalFlag();
-    vot.syncLocalFlag(true);
+    vot.syncLocalFlag(1);
+    vot.syncLocalFlag(0);
     vot.start();
     vot.readSinkInputValid();
     vot.timeoutSlot();
+    vot.stop();
+
     player->pause();
     player->setTime(10000);
     player->resume();
-    player->seekable();
-//    player->togglePause();
     player->core();
     player->state();
     player->setPosition(5000);
     player->position();
-    float rate = 1;
-//    player->setPlaybackRate(rate);
-//    rate = player->playbackRate();
     vmedia->core();
-//    vmedia->currentLocation();
-
     vmedia->state();
     vmedia->duplicate("ssssstx", "/usr/share/music/bensound-sunny.mp3", Vlc::TS);
-//    vmedia->merge("ssssstx", "/usr/share/music/bensound-sunny.mp3", Vlc::TS);
     ASSERT_TRUE(audio->getMute());
-
-    //player->deleteLater();
-    //instance->deleteLater();
 }
 
 TEST(VLC, vlc)
 {
     Vlc *vlc = new Vlc;
     vlc->audioCodec();
-//    vlc->audioOutput();
-//    vlc->audioOutputHuman();
-//    vlc->deinterlacing();
+
     vlc->mux();
     vlc->ratio();
-//    vlc->ratioHuman();
     vlc->scale();
     vlc->videoCodec();
-//    vlc->videoOutput();
-//    vlc->videoOutputHuman();
+    vlc->mux();
+    vlc->ratio();
+    vlc->scale();
+    vlc->videoCodec();
     QStringList list = vlc->logLevel();
     ASSERT_EQ("debug", list.at(0));
 }
@@ -1277,6 +1220,8 @@ TEST(widgethelper, helper)
     QImage image("");
     QWidget *widget1 = new QWidget;
     QWidget *widget2 = new QWidget;
+    widget2->hide();
+    widget1->hide();
     WidgetHelper::blurImage(image, 1);
     WidgetHelper::cropRect(image, QSize(1, 1));
     WidgetHelper::coverPixmap(" ", QSize(1, 1));
@@ -1499,6 +1444,7 @@ TEST(MprisPlayer, player)
 TEST(DBusUtils, utils)
 {
     DBusUtils *dbus = new DBusUtils;
+    dbus->readDBusProperty("com.deepin.daemon.Audio", "/com/deepin/daemon/Audio", "com.deepin.daemon.Audio", "SinkInputs");
     Q_UNUSED(dbus)
 }
 
@@ -1508,7 +1454,6 @@ TEST(Footer, footer)
     foot->setLyricButtonChecked(true);
     foot->setPlaylistButtonChecked(true);
     foot->showPlayListWidget(1, 1, true);
-//    foot->setSize(1, 1, true);
     foot->refreshBackground();
     foot->hidewaveform();
     foot->toggleLyricView();
@@ -1516,3 +1461,12 @@ TEST(Footer, footer)
     foot->update();
 //    QTest::qWait(200);
 }
+
+TEST(Waveform, waf)
+{
+    Waveform wafm(Qt::Horizontal, new QWidget(), nullptr);
+    QByteArray  ba("0100000010101111000010101111010101010110");
+    //wafm.onAudioBufferProbed(new QAudioBuffer());
+
+}
+

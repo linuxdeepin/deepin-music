@@ -338,8 +338,8 @@ MetaPtrList MediaLibrary::importFile(const QString &filepath)
         losslessMetaCache.remove(cue->mediaFilepath());
         metaList += cue->metalist();
         // insert to library
-        for (auto meta : cue->metalist()) {
-            d->metas.insert(meta->hash, meta);
+        for (auto mt : cue->metalist()) {
+            d->metas.insert(mt->hash, mt);
         }
     }
 

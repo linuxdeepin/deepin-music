@@ -23,8 +23,8 @@ public:
         \param args libvlc arguments (QStringList)
         \param parent Instance's parent object (QObject *)
     */
-    explicit VlcInstance(const QStringList &args,
-                         QObject *parent = NULL);
+    VlcInstance(const QStringList &args,
+                QObject *parent = NULL);
 
     /*!
         VlcInstance destructor

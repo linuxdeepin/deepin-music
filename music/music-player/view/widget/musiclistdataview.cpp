@@ -72,16 +72,16 @@ public:
 void MusicListDataViewPrivate::addPlayMusicTypePtr(const PlayMusicTypePtr TypePtr)
 {
     QStandardItem *newItem = new QStandardItem;
-    QIcon icon(defaultCover);
+    QIcon dticon(defaultCover);
     if (!TypePtr->icon.isEmpty()) {
-        icon = QIcon(QPixmap::fromImage(QImage::fromData(TypePtr->icon).scaled(170, 170, Qt::IgnoreAspectRatio, Qt::SmoothTransformation)));
+        dticon = QIcon(QPixmap::fromImage(QImage::fromData(TypePtr->icon).scaled(170, 170, Qt::IgnoreAspectRatio, Qt::SmoothTransformation)));
     }
-    newItem->setIcon(icon);
+    newItem->setIcon(dticon);
     model->appendRow(newItem);
 
     auto row = model->rowCount() - 1;
-    QModelIndex index = model->index(row, 0, QModelIndex());
-    model->setData(index, TypePtr->name);
+    QModelIndex idx = model->index(row, 0, QModelIndex());
+    model->setData(idx, TypePtr->name);
 }
 
 
@@ -117,12 +117,12 @@ MusicListDataView::MusicListDataView(QWidget *parent)
     this, [ = ](const QModelIndex & index) {
         PlaylistPtr curPlaylist = d->model->playlist();
 
-        auto playMusicTypePtrList = curPlaylist->playMusicTypePtrList();
-        if (index.row() >= playMusicTypePtrList.size()) {
+        auto pmtlist = curPlaylist->playMusicTypePtrList();
+        if (index.row() >= pmtlist.size()) {
             return;
         }
 
-        auto PlayMusicTypePtr = playMusicTypePtrList[index.row()];
+        auto PlayMusicTypePtr = pmtlist[index.row()];
         d->musciListDialog->setPlayMusicData(curPlaylist, PlayMusicTypePtr);
         d->musciListDialog->setPlaying(playing());
         d->musciListDialog->exec();
@@ -130,11 +130,11 @@ MusicListDataView::MusicListDataView(QWidget *parent)
 
     connect(d->delegate, &MusicListDataDelegate::hoverPress, this, [ = ](const QModelIndex & index) {
         PlaylistPtr curPlaylist = d->model->playlist();
-        auto playMusicTypePtrList = curPlaylist->playMusicTypePtrList();
-        if (index.row() >= playMusicTypePtrList.size()) {
+        auto pmtlist = curPlaylist->playMusicTypePtrList();
+        if (index.row() >= pmtlist.size()) {
             return;
         }
-        auto PlayMusicTypePtr = playMusicTypePtrList[index.row()];
+        auto PlayMusicTypePtr = pmtlist[index.row()];
         playlist()->playMusicTypeToMeta(PlayMusicTypePtr->name);
 
         if (curPlaylist->id() == ArtistResultListID
@@ -359,8 +359,7 @@ void MusicListDataView::updateList()
     }
 
     for (int i = d->model->rowCount() - 1; i >= 0; --i) {
-        auto index = d->model->index(i, 0);
-        auto itemName = d->model->data(index).toString();
+        auto itemName = d->model->data(d->model->index(i, 0)).toString();
         if (!allStr.contains(itemName)) {
             d->curPlayMusicTypePtrList.removeAt(i);
             d->model->removeRow(i);
@@ -388,9 +387,9 @@ void MusicListDataView::onMusiclistChanged(PlaylistPtr playlist)
     setUpdatesEnabled(false);
     d->model->removeRows(0, d->model->rowCount());
 
-    QString searchStr = playlist->searchStr();
+    QString strsh = playlist->searchStr();
     bool chineseFlag = false;
-    for (auto ch : searchStr) {
+    for (auto ch : strsh) {
         if (DMusic::PinyinSearch::isChinese(ch)) {
             chineseFlag = true;
             break;
@@ -398,25 +397,25 @@ void MusicListDataView::onMusiclistChanged(PlaylistPtr playlist)
     }
     d->curPlayMusicTypePtrList.clear();
     for (auto meta : playlist->playMusicTypePtrList()) {
-        if (searchStr.isEmpty()) {
+        if (strsh.isEmpty()) {
             d->addPlayMusicTypePtr(meta);
             d->curPlayMusicTypePtrList.append(meta);
         } else {
             if (chineseFlag) {
-                if (meta->name.contains(searchStr, Qt::CaseInsensitive)) {
+                if (meta->name.contains(strsh, Qt::CaseInsensitive)) {
                     d->addPlayMusicTypePtr(meta);
                     d->curPlayMusicTypePtrList.append(meta);
                 }
             } else {
                 if (playlist->searchStr().size() == 1) {
                     auto curTextList = DMusic::PinyinSearch::simpleChineseSplit(meta->name);
-                    if (!curTextList.isEmpty() && curTextList.first().contains(searchStr, Qt::CaseInsensitive)) {
+                    if (!curTextList.isEmpty() && curTextList.first().contains(strsh, Qt::CaseInsensitive)) {
                         d->addPlayMusicTypePtr(meta);
                         d->curPlayMusicTypePtrList.append(meta);
                     }
                 } else {
                     auto curTextList = DMusic::PinyinSearch::simpleChineseSplit(meta->name);
-                    if (!curTextList.isEmpty() && curTextList.join("").contains(searchStr, Qt::CaseInsensitive)) {
+                    if (!curTextList.isEmpty() && curTextList.join("").contains(strsh, Qt::CaseInsensitive)) {
                         d->addPlayMusicTypePtr(meta);
                         d->curPlayMusicTypePtrList.append(meta);
                     }

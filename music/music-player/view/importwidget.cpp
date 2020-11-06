@@ -214,14 +214,14 @@ void ImportWidget::dragEnterEvent(QDragEnterEvent *event)
     DFrame::dragEnterEvent(event);
 }
 
-void ImportWidget::dragMoveEvent(QDragMoveEvent *)
+void ImportWidget::dragMoveEvent(QDragMoveEvent *e)
 {
-
+    DFrame::dragMoveEvent(e);
 }
 
-void ImportWidget::dragLeaveEvent(QDragLeaveEvent *)
+void ImportWidget::dragLeaveEvent(QDragLeaveEvent *e)
 {
-
+    DFrame::dragLeaveEvent(e);
 }
 
 void ImportWidget::dropEvent(QDropEvent *event)

@@ -75,4 +75,5 @@ signals:
     void playPrev(PlaylistPtr playlist, const MetaPtr info);
     void stop();
     void pause();
+    void dbusPause();
 };

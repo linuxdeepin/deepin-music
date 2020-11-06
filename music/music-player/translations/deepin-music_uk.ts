@@ -621,11 +621,6 @@
         <translation>Альбоми</translation>
     </message>
     <message>
-        <location filename="../view/musiclistdatawidget.cpp" line="1269"/>
-        <source>Custom</source>
-        <translation>Користувацький</translation>
-    </message>
-    <message>
         <location filename="../view/musiclistdatawidget.cpp" line="1619"/>
         <source>No result found</source>
         <translation>Нічого не знайдено</translation>
@@ -647,90 +642,90 @@
 <context>
     <name>MusicListInfoView</name>
     <message>
-        <location filename="../view/widget/musiclistinfoview.cpp" line="454"/>
+        <location filename="../view/widget/musiclistinfoview.cpp" line="440"/>
         <source>Play queue</source>
         <translation>Відтворити чергу</translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistinfoview.cpp" line="479"/>
+        <location filename="../view/widget/musiclistinfoview.cpp" line="464"/>
         <source>Add to new playlist</source>
         <translation>Додати у новий список відтворення</translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistinfoview.cpp" line="524"/>
+        <location filename="../view/widget/musiclistinfoview.cpp" line="505"/>
         <source>Pause</source>
         <translation>Пауза</translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistinfoview.cpp" line="526"/>
+        <location filename="../view/widget/musiclistinfoview.cpp" line="507"/>
         <source>Play</source>
         <translation>Відтворити</translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistinfoview.cpp" line="529"/>
+        <location filename="../view/widget/musiclistinfoview.cpp" line="510"/>
         <source>Add to playlist</source>
         <translation>Додати у плейлист</translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistinfoview.cpp" line="534"/>
+        <location filename="../view/widget/musiclistinfoview.cpp" line="515"/>
         <source>Display in file manager</source>
         <translation>Відобразити у файловому менеджері</translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistinfoview.cpp" line="537"/>
+        <location filename="../view/widget/musiclistinfoview.cpp" line="518"/>
         <source>Remove from playlist</source>
         <translation>Видалити з плейлисту</translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistinfoview.cpp" line="538"/>
+        <location filename="../view/widget/musiclistinfoview.cpp" line="519"/>
         <source>Delete from local disk</source>
         <translation>Видалити з локального диску</translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistinfoview.cpp" line="559"/>
+        <location filename="../view/widget/musiclistinfoview.cpp" line="533"/>
         <source>Song info</source>
         <translation>Інформація про пісню</translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistinfoview.cpp" line="607"/>
-        <location filename="../view/widget/musiclistinfoview.cpp" line="638"/>
+        <location filename="../view/widget/musiclistinfoview.cpp" line="577"/>
+        <location filename="../view/widget/musiclistinfoview.cpp" line="604"/>
         <source>Cancel</source>
         <translation>Скасувати</translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistinfoview.cpp" line="608"/>
+        <location filename="../view/widget/musiclistinfoview.cpp" line="578"/>
         <source>Remove</source>
         <translation>Видалити</translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistinfoview.cpp" line="612"/>
+        <location filename="../view/widget/musiclistinfoview.cpp" line="582"/>
         <source>Are you sure you want to remove %1?</source>
         <translation>Ви впевнені, що хочете видалити %1?</translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistinfoview.cpp" line="614"/>
+        <location filename="../view/widget/musiclistinfoview.cpp" line="584"/>
         <source>Are you sure you want to remove the selected %1 songs?</source>
         <translation>Ви впевнені, що хочете видалити вибрані %1 пісні?</translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistinfoview.cpp" line="639"/>
+        <location filename="../view/widget/musiclistinfoview.cpp" line="605"/>
         <source>Delete</source>
         <translation>Вилучити</translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistinfoview.cpp" line="648"/>
+        <location filename="../view/widget/musiclistinfoview.cpp" line="614"/>
         <source>Are you sure you want to delete %1?</source>
         <translation>Ви впевнені, що хочете видалити %1?</translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistinfoview.cpp" line="655"/>
-        <location filename="../view/widget/musiclistinfoview.cpp" line="669"/>
+        <location filename="../view/widget/musiclistinfoview.cpp" line="621"/>
+        <location filename="../view/widget/musiclistinfoview.cpp" line="635"/>
         <source>Are you sure you want to delete the selected %1 songs?</source>
         <translation>Ви впевнені, що хочете видалити вибрані %1 пісні?</translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistinfoview.cpp" line="656"/>
-        <location filename="../view/widget/musiclistinfoview.cpp" line="670"/>
+        <location filename="../view/widget/musiclistinfoview.cpp" line="622"/>
+        <location filename="../view/widget/musiclistinfoview.cpp" line="636"/>
         <source>The song files contained will also be deleted</source>
         <translation>Файли пісень, які там зберігаються, також буде вилучено.</translation>
     </message>
@@ -815,106 +810,106 @@
         <translation>Невідомий альбом</translation>
     </message>
     <message>
-        <location filename="../view/widget/playlistview.cpp" line="530"/>
+        <location filename="../view/widget/playlistview.cpp" line="495"/>
         <source>Play queue</source>
         <translation>Відтворити чергу</translation>
     </message>
     <message>
-        <location filename="../view/widget/playlistview.cpp" line="538"/>
+        <location filename="../view/widget/playlistview.cpp" line="503"/>
         <source>My favorites</source>
         <translation>Мої улюблені</translation>
     </message>
     <message>
-        <location filename="../view/widget/playlistview.cpp" line="551"/>
+        <location filename="../view/widget/playlistview.cpp" line="516"/>
         <source>Add to new playlist</source>
         <translation>Додати у новий список відтворення</translation>
     </message>
     <message>
-        <location filename="../view/widget/playlistview.cpp" line="604"/>
-        <location filename="../view/widget/playlistview.cpp" line="614"/>
+        <location filename="../view/widget/playlistview.cpp" line="569"/>
+        <location filename="../view/widget/playlistview.cpp" line="579"/>
         <source>Play</source>
         <translation>Відтворити</translation>
     </message>
     <message>
-        <location filename="../view/widget/playlistview.cpp" line="609"/>
+        <location filename="../view/widget/playlistview.cpp" line="574"/>
         <source>Pause</source>
         <translation>Пауза</translation>
     </message>
     <message>
-        <location filename="../view/widget/playlistview.cpp" line="620"/>
+        <location filename="../view/widget/playlistview.cpp" line="585"/>
         <source>Add to playlist</source>
         <translation>Додати у плейлист</translation>
     </message>
     <message>
-        <location filename="../view/widget/playlistview.cpp" line="625"/>
+        <location filename="../view/widget/playlistview.cpp" line="590"/>
         <source>Display in file manager</source>
         <translation>Відобразити у файловому менеджері</translation>
     </message>
     <message>
-        <location filename="../view/widget/playlistview.cpp" line="629"/>
+        <location filename="../view/widget/playlistview.cpp" line="594"/>
         <source>Remove from play queue</source>
         <translation>Видалити з черги відтворення</translation>
     </message>
     <message>
-        <location filename="../view/widget/playlistview.cpp" line="631"/>
+        <location filename="../view/widget/playlistview.cpp" line="596"/>
         <source>Remove from playlist</source>
         <translation>Видалити з плейлисту</translation>
     </message>
     <message>
-        <location filename="../view/widget/playlistview.cpp" line="633"/>
+        <location filename="../view/widget/playlistview.cpp" line="598"/>
         <source>Delete from local disk</source>
         <translation>Видалити з локального диску</translation>
     </message>
     <message>
-        <location filename="../view/widget/playlistview.cpp" line="670"/>
+        <location filename="../view/widget/playlistview.cpp" line="635"/>
         <source>Encoding</source>
         <translation>Кодування</translation>
     </message>
     <message>
-        <location filename="../view/widget/playlistview.cpp" line="674"/>
+        <location filename="../view/widget/playlistview.cpp" line="639"/>
         <source>Song info</source>
         <translation>Інформація про пісню</translation>
     </message>
     <message>
-        <location filename="../view/widget/playlistview.cpp" line="727"/>
-        <location filename="../view/widget/playlistview.cpp" line="758"/>
+        <location filename="../view/widget/playlistview.cpp" line="692"/>
+        <location filename="../view/widget/playlistview.cpp" line="723"/>
         <source>Cancel</source>
         <translation>Скасувати</translation>
     </message>
     <message>
-        <location filename="../view/widget/playlistview.cpp" line="728"/>
+        <location filename="../view/widget/playlistview.cpp" line="693"/>
         <source>Remove</source>
         <translation>Видалити</translation>
     </message>
     <message>
-        <location filename="../view/widget/playlistview.cpp" line="732"/>
+        <location filename="../view/widget/playlistview.cpp" line="697"/>
         <source>Are you sure you want to remove %1?</source>
         <translation>Ви впевнені, що хочете видалити %1?</translation>
     </message>
     <message>
-        <location filename="../view/widget/playlistview.cpp" line="734"/>
+        <location filename="../view/widget/playlistview.cpp" line="699"/>
         <source>Are you sure you want to remove the selected %1 songs?</source>
         <translation>Ви впевнені, що хочете видалити вибрані %1 пісні?</translation>
     </message>
     <message>
-        <location filename="../view/widget/playlistview.cpp" line="759"/>
+        <location filename="../view/widget/playlistview.cpp" line="724"/>
         <source>Delete</source>
         <translation>Видалити</translation>
     </message>
     <message>
-        <location filename="../view/widget/playlistview.cpp" line="768"/>
+        <location filename="../view/widget/playlistview.cpp" line="733"/>
         <source>Are you sure you want to delete %1?</source>
         <translation>Ви впевнені, що хочете видалити %1?</translation>
     </message>
     <message>
-        <location filename="../view/widget/playlistview.cpp" line="775"/>
-        <location filename="../view/widget/playlistview.cpp" line="787"/>
+        <location filename="../view/widget/playlistview.cpp" line="740"/>
+        <location filename="../view/widget/playlistview.cpp" line="752"/>
         <source>Are you sure you want to delete the selected %1 songs?</source>
         <translation>Ви впевнені, що хочете видалити вибрані %1 пісні?</translation>
     </message>
     <message>
-        <location filename="../view/widget/playlistview.cpp" line="776"/>
-        <location filename="../view/widget/playlistview.cpp" line="788"/>
+        <location filename="../view/widget/playlistview.cpp" line="741"/>
+        <location filename="../view/widget/playlistview.cpp" line="753"/>
         <source>The song files contained will also be deleted</source>
         <translation>Файли пісень, які там зберігаються, також буде вилучено.</translation>
     </message>
@@ -957,14 +952,14 @@
     <name>Playlist</name>
     <message>
         <location filename="../core/playlist.cpp" line="472"/>
-        <location filename="../core/playlist.cpp" line="763"/>
+        <location filename="../core/playlist.cpp" line="762"/>
         <source>Unknown album</source>
         <translation>Невідомий альбом</translation>
     </message>
     <message>
         <location filename="../core/playlist.cpp" line="485"/>
-        <location filename="../core/playlist.cpp" line="767"/>
-        <location filename="../core/playlist.cpp" line="798"/>
+        <location filename="../core/playlist.cpp" line="766"/>
+        <location filename="../core/playlist.cpp" line="797"/>
         <source>Unknown artist</source>
         <translation>Невідомий виконавець</translation>
     </message>

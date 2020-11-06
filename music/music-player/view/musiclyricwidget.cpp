@@ -347,22 +347,11 @@ void MusicLyricWidget::onCoverChanged(const MetaPtr meta,  const DMusic::SearchM
     d->backgroundW->update();
 }
 
-void MusicLyricWidget::setDefaultCover(QString defaultCover)
-{
-    Q_D(MusicLyricWidget);
-    d->defaultCover = defaultCover;
-}
-
-void MusicLyricWidget::onUpdateMetaCodec(const MetaPtr /*meta*/)
-{
-    //Q_D(MusicLyricWidget);
-
-//    if (d->m_playingMusic == meta) {
-//        d->m_playingMusic.title = meta.title;
-//        d->m_playingMusic.artist = meta.artist;
-//        d->m_playingMusic.album = meta.album;
-    //    }
-}
+//void MusicLyricWidget::setDefaultCover(QString defaultCover)
+//{
+//    Q_D(MusicLyricWidget);
+//    d->defaultCover = defaultCover;
+//}
 
 void MusicLyricWidget::onsearchBt()
 {
@@ -388,11 +377,11 @@ void MusicLyricWidget::onsearchBt()
     d->serachbt->update();
 }
 
-void MusicLyricWidget::slotonsearchresult(QString path)
-{
-    Q_D(MusicLyricWidget);
-    d->lyricview->getFromFile(path);
-}
+//void MusicLyricWidget::slotonsearchresult(QString path)
+//{
+//    Q_D(MusicLyricWidget);
+//    d->lyricview->getFromFile(path);
+//}
 
 void MusicLyricWidget::slotTheme(int type)
 {

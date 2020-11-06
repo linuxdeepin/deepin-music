@@ -96,9 +96,6 @@ MetaBufferDetector::~MetaBufferDetector()
 {
     Q_D(MetaBufferDetector);
     d->stopFlag = true;
-    while (isRunning()) {
-
-    }
 }
 
 void MetaBufferDetector::run()

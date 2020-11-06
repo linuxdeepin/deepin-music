@@ -38,6 +38,12 @@ SearchResult::SearchResult(QWidget *parent) : DBlurEffectWidget(parent)
     labelFont.setPointSize(DFontSizeManager::T9);
     QPalette labelPalette;
     labelPalette.setColor(QPalette::WindowText, QColor("#414D68 "));
+
+    //背景颜色和透明度
+    auto effect = QColor("#f9f9f9");
+    effect.setAlpha(240);
+    setMaskColor(effect);
+
     //设置圆角
     setBlurRectXRadius(18);
     setBlurRectYRadius(18);
@@ -45,41 +51,33 @@ SearchResult::SearchResult(QWidget *parent) : DBlurEffectWidget(parent)
     setBlurEnabled(true);
     setMode(DBlurEffectWidget::GaussianBlur);
 
-    vlayout1 = new QVBoxLayout();
-    vlayout2 = new QVBoxLayout();
-    vlayout3 = new QVBoxLayout();
-    vlayout = new QVBoxLayout();
-
+    vlayout = new QVBoxLayout(this);
     vlayout->setContentsMargins(0, 8, 0, 18);
-    // vlayout1->setSpacing(1);
-    // vlayout2->setSpacing(1);
-    // vlayout3->setSpacing(1);
     vlayout->setSpacing(0);
-    setLayout(vlayout);
+    this->setLayout(vlayout);
 
     //音乐
     m_MusicLabel = new DLabel(tr("Music"), this);
+    m_MusicLabel->setFixedHeight(34);
     m_MusicLabel->setFont(labelFont);
     m_MusicLabel->setPalette(labelPalette);
-    m_MusicLabel->setContentsMargins(32, 4, 0, 0);
-    m_MusicLabel->adjustSize();
+    m_MusicLabel->setContentsMargins(32, 0, 0, 0);
 
     m_MusicView = new MusicSearchListview(this);
     m_MusicView->setObjectName("SearchMusicView");
     m_MusicView->setMinimumWidth(380);
 
-
     //分割线1
     s_ArtistLine = new DHorizontalLine;
-    s_ArtistLine->setFixedSize(380, 20);
+    s_ArtistLine->setFrameShadow(DHorizontalLine::Raised);
     s_ArtistLine->setLineWidth(2);
 
     //演唱者
     m_ArtistLabel = new DLabel(tr("Artists"), this);
+    m_ArtistLabel->setFixedHeight(34);
     m_ArtistLabel->setFont(labelFont);
     m_ArtistLabel->setPalette(labelPalette);
     m_ArtistLabel->setContentsMargins(32, 0, 0, 0);
-    m_ArtistLabel->adjustSize();
 
     m_ArtistView = new MusicSearchListview(this);
     m_ArtistView->setObjectName("SearchArtistView");
@@ -87,32 +85,29 @@ SearchResult::SearchResult(QWidget *parent) : DBlurEffectWidget(parent)
 
     //分割线2
     s_AblumLine = new DHorizontalLine;
-    s_AblumLine->setFixedSize(380, 20);
+    s_AblumLine->setFrameShadow(DHorizontalLine::Raised);
     s_AblumLine->setLineWidth(2);
 
     //专辑
     m_AblumLabel = new DLabel(tr("Albums"), this);
+    m_AblumLabel->setFixedHeight(34);
     m_AblumLabel->setFont(labelFont);
     m_AblumLabel->setPalette(labelPalette);
     m_AblumLabel->setContentsMargins(32, 0, 0, 0);
-    m_AblumLabel->adjustSize();
 
     m_AlbumView = new MusicSearchListview(this);
     m_AlbumView->setObjectName("SearchAlbumView");
     m_AlbumView->setMinimumWidth(380);
 
-    vlayout1->addWidget(m_MusicLabel);
-    vlayout1->addWidget(m_MusicView);
-    vlayout2->addWidget(m_ArtistLabel);
-    vlayout2->addWidget(m_ArtistView);
-    vlayout3->addWidget(m_AblumLabel);
-    vlayout3->addWidget(m_AlbumView);
-    vlayout->addLayout(vlayout1);
+    vlayout->addWidget(m_MusicLabel, 1);
+    vlayout->addWidget(m_MusicView, 0);
     vlayout->addWidget(s_ArtistLine);
-    vlayout->addLayout(vlayout2);
+    vlayout->addWidget(m_ArtistLabel, 1);
+    vlayout->addWidget(m_ArtistView, 0);
     vlayout->addWidget(s_AblumLine);
-    vlayout->addLayout(vlayout3);
-
+    vlayout->addWidget(m_AblumLabel, 1);
+    vlayout->addWidget(m_AlbumView, 0);
+    vlayout->addStretch(100);
 
     int themeType = DGuiApplicationHelper::instance()->themeType();
     slotTheme(themeType);
@@ -141,19 +136,16 @@ void SearchResult::autoResize()
     int ablumHeight     = 0;
 
     m_MusicView->setFixedHeight(rowCount * 34);
-    m_MusicView->adjustSize();
     m_MusicView->raise();
     musicHeight = (rowCount == 0 ? 0 : (rowCount + 1) * 34);
 
     rowCount = m_ArtistView->rowCount();
     m_ArtistView->setFixedHeight(rowCount * 34);
-    m_ArtistView->adjustSize();
     m_ArtistView->raise();
     artistHeight = (rowCount == 0 ? 0 : (rowCount + 1) * 34);
 
     rowCount = m_AlbumView->rowCount();
     m_AlbumView->setFixedHeight(rowCount * 34);
-    m_AlbumView->adjustSize();
     m_AlbumView->raise();
     ablumHeight = (rowCount == 0 ? 0 : (rowCount + 1) * 34);
 
@@ -162,7 +154,6 @@ void SearchResult::autoResize()
         m_MusicLabel->hide();
         m_MusicView->hide();
         s_ArtistLine->hide();
-        s_AblumLine->hide();
     } else {
         m_MusicLabel->show();
         m_MusicView->show();
@@ -181,7 +172,6 @@ void SearchResult::autoResize()
         s_AblumLine->show();
     }
 
-
     if (m_AlbumView->rowCount() == 0) {
         m_AblumLabel->hide();
         m_AlbumView->hide();
@@ -197,11 +187,16 @@ void SearchResult::autoResize()
         hide();
     }
 
-    setFixedHeight(musicHeight
-                   + artistHeight
-                   + ablumHeight
-                   + 10
-                  );
+    int total = 0;
+    total += m_MusicLabel->isVisible() ? m_MusicLabel->height() : 0;
+    total += m_MusicView->isVisible() ? m_MusicView->height() : 0;
+    total += s_ArtistLine->isVisible() ? s_ArtistLine->height() : 0;
+    total += m_ArtistLabel->isVisible() ? m_ArtistLabel->height() : 0;
+    total += m_ArtistView->isVisible() ? m_ArtistView->height() : 0;
+    total += s_AblumLine->isVisible() ? s_AblumLine->height() : 0;
+    total += m_AblumLabel->isVisible() ? m_AblumLabel->height() : 0;
+    total += m_AlbumView->isVisible() ? m_AlbumView->height() : 0;
+    setFixedHeight(total + 26);
 }
 
 void SearchResult::setSearchString(const QString &str)

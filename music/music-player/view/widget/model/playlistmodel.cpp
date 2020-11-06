@@ -73,17 +73,13 @@ QModelIndex PlaylistModel::findIndex(const MetaPtr meta)
         auto row = d->playlist->index(meta->hash);
         auto itemIndex = this->index(row, 0);
 
-        auto itemHash = data(itemIndex).toString();
-        if (itemHash == meta->hash) {
+        if (data(itemIndex).toString() == meta->hash) {
             return itemIndex;
         }
 
-        qCritical() << "search index failed" << meta->hash << itemHash;
-
         for (int i = 0; i < rowCount(); ++i) {
             itemIndex = index(i, 0);
-            auto itemHash = data(itemIndex).toString();
-            if (itemHash == meta->hash) {
+            if (data(itemIndex).toString() == meta->hash) {
                 return itemIndex;
             }
         }
@@ -103,11 +99,11 @@ MetaPtr PlaylistModel::meta(const QModelIndex &index, int role) const
     return MediaLibrary::instance()->meta(hash);
 }
 
-Qt::DropActions PlaylistModel::supportedDropActions() const
-{
-//    return QAbstractItemModel::supportedDropActions();
-    return /*Qt::CopyAction | */Qt::IgnoreAction;
-}
+//Qt::DropActions PlaylistModel::supportedDropActions() const
+//{
+////    return QAbstractItemModel::supportedDropActions();
+//    return /*Qt::CopyAction | */Qt::IgnoreAction;
+//}
 
 Qt::ItemFlags PlaylistModel::flags(const QModelIndex &index) const
 {

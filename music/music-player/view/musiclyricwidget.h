@@ -34,7 +34,7 @@ class MusicLyricWidgetPrivate;
 class MusicLyricWidget : public DWidget
 {
     Q_OBJECT
-    Q_PROPERTY(QString defaultCover READ defaultCover WRITE setDefaultCover)
+    //Q_PROPERTY(QString defaultCover READ defaultCover WRITE setDefaultCover)
 
 public:
     explicit MusicLyricWidget(QWidget *parent = Q_NULLPTR);
@@ -64,11 +64,10 @@ public slots:
     void onContextSearchFinished(const QString &context,
                                  const QList<DMusic::SearchMeta> &metalist);
 
-    void setDefaultCover(QString defaultCover);
-    void onUpdateMetaCodec(const MetaPtr meta);
+    //void setDefaultCover(QString defaultCover);
 
     void onsearchBt();
-    void slotonsearchresult(QString path);
+    //void slotonsearchresult(QString path);
 
     void slotTheme(int type);
 

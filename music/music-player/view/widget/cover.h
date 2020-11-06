@@ -28,22 +28,22 @@ class Cover : public Label
 {
     Q_OBJECT
     Q_PROPERTY(int radius READ radius WRITE setRadius)
-    Q_PROPERTY(QColor borderColor READ borderColor WRITE setBorderColor)
-    Q_PROPERTY(QColor shadowColor READ shadowColor WRITE setShadowColor NOTIFY shadowColorChanged)
+//    Q_PROPERTY(QColor borderColor READ borderColor WRITE setBorderColor)
+//    Q_PROPERTY(QColor shadowColor READ shadowColor WRITE setShadowColor NOTIFY shadowColorChanged)
 
 public:
     explicit Cover(QWidget *parent = Q_NULLPTR);
     ~Cover() override;
 
     int radius() const;
-    QColor borderColor() const;
-    QColor shadowColor() const;
+//    QColor borderColor() const;
+//    QColor shadowColor() const;
 
 public slots:
     void setCoverPixmap(const QPixmap &pixmap);
     void setRadius(int radius);
-    void setBorderColor(QColor borderColor);
-    void setShadowColor(QColor shadowColor);
+    //void setBorderColor(QColor borderColor);
+    // void setShadowColor(QColor shadowColor);
 
 signals:
     void shadowColorChanged(QColor shadowColor);

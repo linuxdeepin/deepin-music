@@ -81,6 +81,15 @@ static const int BlurRadius = 25;
 
 using namespace Dtk::Widget;
 
+
+bool find_play_meta(MetaPtr ptr)
+{
+    if (!ptr->invalid || access(ptr->localPath.toStdString().c_str(), F_OK) == 0) {
+        return !(QFileInfo(ptr->localPath).dir().isEmpty());
+    }
+    return false;
+}
+
 class MainFramePrivate
 {
 public:
@@ -1010,11 +1019,10 @@ void MainFrame::binding(Presenter *presenter)
 
     connect(presenter, &Presenter::notifyAddToPlaylist,
     this, [ = ](PlaylistPtr playlist, const MetaPtrList metaPtrList, int count) {
-        auto icon = QIcon(":/common/image/notify_success_new.svg");
         QFontMetrics fm(font());
-        auto displayName = fm.elidedText(playlist->displayName(), Qt::ElideMiddle, 300);
+        auto strdispName = fm.elidedText(playlist->displayName(), Qt::ElideMiddle, 300);
 
-        auto text = tr("Successfully added to \"%1\"").arg(displayName);
+        auto text = tr("Successfully added to \"%1\"").arg(strdispName);
         int curCount = metaPtrList.size() - count;
         if (count > 0) {
             if (metaPtrList.size() == 1 || curCount == 0)
@@ -1041,7 +1049,7 @@ void MainFrame::binding(Presenter *presenter)
         pDFloatingMessage->setObjectName("_d_message_float_deepin_music");
         pDFloatingMessage->setBlurBackgroundEnabled(true);
         pDFloatingMessage->setMessage(text);
-        pDFloatingMessage->setIcon(icon);
+        pDFloatingMessage->setIcon(QIcon(":/common/image/notify_success_new.svg"));
         pDFloatingMessage->setDuration(2000); //set 2000ms to display it
         DMessageManager::instance()->sendMessage(d->m_pwidget, pDFloatingMessage);
     });
@@ -1096,20 +1104,12 @@ void MainFrame::binding(Presenter *presenter)
         //warnDlg.setDefaultButton(0);
 
         if (0 == warnDlg.exec()) {
-            auto curPlaylist = d->playListWidget->curPlaylist();
-            if (curPlaylist->canNext()) {
-                bool existFlag = false;
-                for (auto curMeta : curPlaylist->allmusic()) {
-                    if (!curMeta->invalid || access(curMeta->localPath.toStdString().c_str(), F_OK) == 0) {
-                        if (QFileInfo(curMeta->localPath).dir().isEmpty()) {
-                            continue;
-                        }
-                        Q_EMIT presenter->playNext(curPlaylist, meta);
-                        existFlag = true;
-                        break;
-                    }
-                }
-                if (!existFlag) {
+            auto curPt = d->playListWidget->curPlaylist();
+            curPt->allmusic();
+            if (curPt->canNext()) {
+                QList<MetaPtr>::iterator playitr = std::find_if(curPt->allmusic().begin(), curPt->allmusic().end(), find_play_meta); //c++ style
+                if (playitr != curPt->allmusic().end()) {
+                    Q_EMIT presenter->playNext(curPt, meta);
                     d->timer->stop();
                 }
             } else {

@@ -37,7 +37,7 @@ class FooterPrivate;
 class Footer : public DFloatingWidget
 {
     Q_OBJECT
-    Q_PROPERTY(QString defaultCover READ defaultCover WRITE setDefaultCover)
+    //Q_PROPERTY(QString defaultCover READ defaultCover WRITE setDefaultCover)
 
 public:
     explicit Footer(QWidget *parent = nullptr);
@@ -111,7 +111,7 @@ public slots:
     void onLocalMutedChanged(int type);
     void onModeChange(int mode);
     void onUpdateMetaCodec(const QString &preTitle, const QString &preArtist, const QString &preAlbum, const MetaPtr meta);
-    void setDefaultCover(QString defaultCover);
+    //void setDefaultCover(QString defaultCover);
     void onMediaLibraryClean();
     void slotTheme(int type);
     void onTogglePlayButton();

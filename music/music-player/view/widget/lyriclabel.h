@@ -67,7 +67,7 @@ signals:
 
 public slots:
     void postionChanged(qint64 pos);
-    void setPostion(qint64 pos);
+    //void setPostion(qint64 pos);
     void slotTheme(int type);
 protected slots:
     void changeToEvent(int index);
@@ -76,7 +76,7 @@ protected slots:
     //void changeHightLightColor();
 
 protected:
-    void contextMenuEvent(QContextMenuEvent *event);//右击事件
+    //void contextMenuEvent(QContextMenuEvent *event) Q_DECL_OVERRIDE;//右击事件
     void enterEvent(QEvent *e);
 
 protected:
