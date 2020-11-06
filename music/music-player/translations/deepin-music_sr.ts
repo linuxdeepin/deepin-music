@@ -37,136 +37,136 @@
 <context>
     <name>DequalizerDialog</name>
     <message>
-        <location filename="../view/widget/dequalizerdialog.cpp" line="113"/>
+        <location filename="../view/widget/dequalizerdialog.cpp" line="112"/>
         <source>Custom</source>
         <translation>Прилагођено</translation>
     </message>
     <message>
-        <location filename="../view/widget/dequalizerdialog.cpp" line="114"/>
+        <location filename="../view/widget/dequalizerdialog.cpp" line="113"/>
         <source>Monophony</source>
         <translation>Монофонија</translation>
     </message>
     <message>
-        <location filename="../view/widget/dequalizerdialog.cpp" line="115"/>
+        <location filename="../view/widget/dequalizerdialog.cpp" line="114"/>
         <source>Classical</source>
         <translation>Класика</translation>
     </message>
     <message>
-        <location filename="../view/widget/dequalizerdialog.cpp" line="116"/>
+        <location filename="../view/widget/dequalizerdialog.cpp" line="115"/>
         <source>Club</source>
         <translation>Клуб</translation>
     </message>
     <message>
-        <location filename="../view/widget/dequalizerdialog.cpp" line="117"/>
+        <location filename="../view/widget/dequalizerdialog.cpp" line="116"/>
         <source>Dance</source>
         <translation>Плес</translation>
     </message>
     <message>
-        <location filename="../view/widget/dequalizerdialog.cpp" line="118"/>
+        <location filename="../view/widget/dequalizerdialog.cpp" line="117"/>
         <source>Full Bass</source>
         <translation>Пун бас</translation>
     </message>
     <message>
-        <location filename="../view/widget/dequalizerdialog.cpp" line="119"/>
+        <location filename="../view/widget/dequalizerdialog.cpp" line="118"/>
         <source>Full Bass and Treble</source>
         <translation>Пун бас и високи тонови</translation>
     </message>
     <message>
-        <location filename="../view/widget/dequalizerdialog.cpp" line="120"/>
+        <location filename="../view/widget/dequalizerdialog.cpp" line="119"/>
         <source>Full Treble</source>
         <translation>Пуни високи тонови</translation>
     </message>
     <message>
-        <location filename="../view/widget/dequalizerdialog.cpp" line="121"/>
+        <location filename="../view/widget/dequalizerdialog.cpp" line="120"/>
         <source>Headphones</source>
         <translation>Слушалице</translation>
     </message>
     <message>
-        <location filename="../view/widget/dequalizerdialog.cpp" line="122"/>
+        <location filename="../view/widget/dequalizerdialog.cpp" line="121"/>
         <source>Hall</source>
         <translation>Дворана</translation>
     </message>
     <message>
-        <location filename="../view/widget/dequalizerdialog.cpp" line="123"/>
+        <location filename="../view/widget/dequalizerdialog.cpp" line="122"/>
         <source>Live</source>
         <translation>Уживо</translation>
     </message>
     <message>
-        <location filename="../view/widget/dequalizerdialog.cpp" line="124"/>
+        <location filename="../view/widget/dequalizerdialog.cpp" line="123"/>
         <source>Party</source>
         <translation>Журка</translation>
     </message>
     <message>
-        <location filename="../view/widget/dequalizerdialog.cpp" line="125"/>
+        <location filename="../view/widget/dequalizerdialog.cpp" line="124"/>
         <source>Pop</source>
         <translation>Поп</translation>
     </message>
     <message>
-        <location filename="../view/widget/dequalizerdialog.cpp" line="126"/>
+        <location filename="../view/widget/dequalizerdialog.cpp" line="125"/>
         <source>Reggae</source>
         <translation>Реге</translation>
     </message>
     <message>
-        <location filename="../view/widget/dequalizerdialog.cpp" line="127"/>
+        <location filename="../view/widget/dequalizerdialog.cpp" line="126"/>
         <source>Rock</source>
         <translation>Рок</translation>
     </message>
     <message>
-        <location filename="../view/widget/dequalizerdialog.cpp" line="128"/>
+        <location filename="../view/widget/dequalizerdialog.cpp" line="127"/>
         <source>Ska</source>
         <translation>Ска</translation>
     </message>
     <message>
-        <location filename="../view/widget/dequalizerdialog.cpp" line="129"/>
+        <location filename="../view/widget/dequalizerdialog.cpp" line="128"/>
         <source>Soft</source>
         <translation>Меко</translation>
     </message>
     <message>
-        <location filename="../view/widget/dequalizerdialog.cpp" line="130"/>
+        <location filename="../view/widget/dequalizerdialog.cpp" line="129"/>
         <source>Soft Rock</source>
         <translation>Лагани рок</translation>
     </message>
     <message>
-        <location filename="../view/widget/dequalizerdialog.cpp" line="131"/>
+        <location filename="../view/widget/dequalizerdialog.cpp" line="130"/>
         <source>Techno</source>
         <translation>Техно</translation>
     </message>
     <message>
-        <location filename="../view/widget/dequalizerdialog.cpp" line="188"/>
-        <location filename="../view/widget/dequalizerdialog.cpp" line="449"/>
+        <location filename="../view/widget/dequalizerdialog.cpp" line="187"/>
+        <location filename="../view/widget/dequalizerdialog.cpp" line="448"/>
         <source>Equalizer</source>
         <translation>Еквилизатор</translation>
     </message>
     <message>
-        <location filename="../view/widget/dequalizerdialog.cpp" line="195"/>
-        <location filename="../view/widget/dequalizerdialog.cpp" line="657"/>
+        <location filename="../view/widget/dequalizerdialog.cpp" line="194"/>
+        <location filename="../view/widget/dequalizerdialog.cpp" line="654"/>
         <source>ON</source>
         <translation>Укљ.</translation>
     </message>
     <message>
-        <location filename="../view/widget/dequalizerdialog.cpp" line="197"/>
-        <location filename="../view/widget/dequalizerdialog.cpp" line="655"/>
+        <location filename="../view/widget/dequalizerdialog.cpp" line="196"/>
+        <location filename="../view/widget/dequalizerdialog.cpp" line="652"/>
         <source>OFF</source>
         <translation>Иск.</translation>
     </message>
     <message>
-        <location filename="../view/widget/dequalizerdialog.cpp" line="214"/>
+        <location filename="../view/widget/dequalizerdialog.cpp" line="213"/>
         <source>Save</source>
         <translation>Сачувај</translation>
     </message>
     <message>
-        <location filename="../view/widget/dequalizerdialog.cpp" line="225"/>
+        <location filename="../view/widget/dequalizerdialog.cpp" line="224"/>
         <source>Preamplifier</source>
         <translation>Претпојачало</translation>
     </message>
     <message>
-        <location filename="../view/widget/dequalizerdialog.cpp" line="338"/>
+        <location filename="../view/widget/dequalizerdialog.cpp" line="337"/>
         <source>Restore Defaults</source>
         <translation>Врати Подразумевано</translation>
     </message>
     <message>
-        <location filename="../view/widget/dequalizerdialog.cpp" line="552"/>
-        <location filename="../view/widget/dequalizerdialog.cpp" line="553"/>
+        <location filename="../view/widget/dequalizerdialog.cpp" line="550"/>
+        <location filename="../view/widget/dequalizerdialog.cpp" line="551"/>
         <source>Sound Effects Saved</source>
         <translation>Звучни ефекти су сачувани</translation>
     </message>
@@ -174,64 +174,64 @@
 <context>
     <name>Footer</name>
     <message>
-        <location filename="../view/footerwidget.cpp" line="364"/>
+        <location filename="../view/footerwidget.cpp" line="342"/>
         <source>Unknown Title</source>
         <translation>Непознат наслов</translation>
     </message>
     <message>
-        <location filename="../view/footerwidget.cpp" line="383"/>
-        <location filename="../view/footerwidget.cpp" line="952"/>
-        <location filename="../view/footerwidget.cpp" line="1573"/>
+        <location filename="../view/footerwidget.cpp" line="361"/>
+        <location filename="../view/footerwidget.cpp" line="975"/>
+        <location filename="../view/footerwidget.cpp" line="1642"/>
         <source>Unknown artist</source>
         <translation>Непознат извођач</translation>
     </message>
     <message>
-        <location filename="../view/footerwidget.cpp" line="490"/>
+        <location filename="../view/footerwidget.cpp" line="513"/>
         <source>Previous</source>
         <translation>Претходно</translation>
     </message>
     <message>
-        <location filename="../view/footerwidget.cpp" line="491"/>
+        <location filename="../view/footerwidget.cpp" line="514"/>
         <source>Next</source>
         <translation>Следеће</translation>
     </message>
     <message>
-        <location filename="../view/footerwidget.cpp" line="492"/>
+        <location filename="../view/footerwidget.cpp" line="515"/>
         <source>Play/Pause</source>
         <translation>Пусти/Паузирај</translation>
     </message>
     <message>
-        <location filename="../view/footerwidget.cpp" line="493"/>
+        <location filename="../view/footerwidget.cpp" line="516"/>
         <source>Favorite</source>
         <translation>Омиљено</translation>
     </message>
     <message>
-        <location filename="../view/footerwidget.cpp" line="494"/>
+        <location filename="../view/footerwidget.cpp" line="517"/>
         <source>Lyrics</source>
         <translation>Текст</translation>
     </message>
     <message>
-        <location filename="../view/footerwidget.cpp" line="495"/>
+        <location filename="../view/footerwidget.cpp" line="518"/>
         <source>Play Mode</source>
         <translation>Режим пуштања</translation>
     </message>
     <message>
-        <location filename="../view/footerwidget.cpp" line="496"/>
+        <location filename="../view/footerwidget.cpp" line="519"/>
         <source>Play Queue</source>
         <translation>Редослед</translation>
     </message>
     <message>
-        <location filename="../view/footerwidget.cpp" line="1547"/>
+        <location filename="../view/footerwidget.cpp" line="1616"/>
         <source>List Loop</source>
         <translation>Понављање листе</translation>
     </message>
     <message>
-        <location filename="../view/footerwidget.cpp" line="1550"/>
+        <location filename="../view/footerwidget.cpp" line="1619"/>
         <source>Single Loop</source>
         <translation>Понављање нумере</translation>
     </message>
     <message>
-        <location filename="../view/footerwidget.cpp" line="1553"/>
+        <location filename="../view/footerwidget.cpp" line="1622"/>
         <source>Shuffle</source>
         <translation>Насумично</translation>
     </message>
@@ -330,61 +330,69 @@
 <context>
     <name>LyricWidget</name>
     <message>
-        <location filename="../view/lyricwidget.cpp" line="161"/>
+        <location filename="../view/lyricwidget.cpp" line="166"/>
         <source>Find lyrics</source>
         <translation>Пронађи текст</translation>
     </message>
     <message>
-        <location filename="../view/lyricwidget.cpp" line="165"/>
+        <location filename="../view/lyricwidget.cpp" line="170"/>
         <source>Title</source>
         <translation>Наслов</translation>
     </message>
     <message>
-        <location filename="../view/lyricwidget.cpp" line="170"/>
+        <location filename="../view/lyricwidget.cpp" line="175"/>
         <source>Artist</source>
         <translation>Извођач</translation>
     </message>
     <message>
-        <location filename="../view/lyricwidget.cpp" line="175"/>
+        <location filename="../view/lyricwidget.cpp" line="180"/>
         <source>Search</source>
         <translation>Претражи</translation>
     </message>
     <message>
-        <location filename="../view/lyricwidget.cpp" line="210"/>
+        <location filename="../view/lyricwidget.cpp" line="215"/>
         <source>Back</source>
         <translation>Назад</translation>
     </message>
 </context>
 <context>
+    <name>MUsicLyricWidget</name>
+    <message>
+        <location filename="../view/musiclyricwidget.cpp" line="120"/>
+        <source>No lyrics yet</source>
+        <translation>Тренутно нема текста</translation>
+    </message>
+</context>
+<context>
     <name>MainFrame</name>
     <message>
-        <location filename="../view/mainframe.cpp" line="181"/>
+        <location filename="../view/mainframe.cpp" line="182"/>
         <source>Add playlist</source>
         <translation>Додај листу пуштања</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="192"/>
+        <location filename="../view/mainframe.cpp" line="193"/>
         <source>Add music</source>
         <translation>Додај музику</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="197"/>
+        <location filename="../view/mainframe.cpp" line="198"/>
         <source>Equalizer</source>
         <translation>Еквилизатор</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="205"/>
+        <location filename="../view/mainframe.cpp" line="206"/>
         <source>Settings</source>
         <translation>Подешавања</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="264"/>
+        <location filename="../view/mainframe.cpp" line="265"/>
         <source>Dark theme</source>
         <translation>Тамна тема</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="272"/>
-        <location filename="../view/mainframe.cpp" line="867"/>
+        <location filename="../view/mainframe.cpp" line="273"/>
+        <location filename="../view/mainframe.cpp" line="866"/>
         <source>Exit</source>
         <translation>Изађи</translation>
     </message>
@@ -392,7 +400,7 @@
         <location filename="../view/mainframe.cpp" line="790"/>
         <location filename="../view/mainframe.cpp" line="798"/>
         <location filename="../view/mainframe.cpp" line="810"/>
-        <location filename="../view/mainframe.cpp" line="878"/>
+        <location filename="../view/mainframe.cpp" line="877"/>
         <location filename="../view/mainframe.cpp" line="1449"/>
         <source>Music</source>
         <translation>Музика</translation>
@@ -403,47 +411,47 @@
         <translation>Музика је локални пуштач музике лепог дизајна са једноставним функцијама.</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="864"/>
+        <location filename="../view/mainframe.cpp" line="863"/>
         <source>Play/Pause</source>
         <translation>Пусти/Паузирај</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="865"/>
+        <location filename="../view/mainframe.cpp" line="864"/>
         <source>Previous</source>
         <translation>Претходно</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="866"/>
+        <location filename="../view/mainframe.cpp" line="865"/>
         <source>Next</source>
         <translation>Следеће</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="1017"/>
+        <location filename="../view/mainframe.cpp" line="1016"/>
         <source>Successfully added to &quot;%1&quot;</source>
         <translation>Успешно додато у &quot;%1&quot;</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="1021"/>
+        <location filename="../view/mainframe.cpp" line="1020"/>
         <source>Already added to the playlist</source>
         <translation>Већ додато листи пуштања</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="1024"/>
+        <location filename="../view/mainframe.cpp" line="1023"/>
         <source>1 song added</source>
         <translation>1 нумера додато</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="1026"/>
+        <location filename="../view/mainframe.cpp" line="1025"/>
         <source>%1 songs added</source>
         <translation>%1 нумера/е додато</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="1093"/>
+        <location filename="../view/mainframe.cpp" line="1092"/>
         <source>File is invalid or does not exist, load failed</source>
         <translation>Датотека је неважећа или не постоји, неуспешно учитавање</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="1095"/>
+        <location filename="../view/mainframe.cpp" line="1094"/>
         <location filename="../view/mainframe.cpp" line="1152"/>
         <source>OK</source>
         <translation>У реду</translation>
@@ -462,20 +470,20 @@
 <context>
     <name>MusicListDataDelegate</name>
     <message>
-        <location filename="../view/widget/delegate/musiclistdatadelegate.cpp" line="511"/>
-        <location filename="../view/widget/delegate/musiclistdatadelegate.cpp" line="607"/>
+        <location filename="../view/widget/delegate/musiclistdatadelegate.cpp" line="510"/>
+        <location filename="../view/widget/delegate/musiclistdatadelegate.cpp" line="606"/>
         <source>No songs</source>
         <translation>Нема нумера</translation>
     </message>
     <message>
-        <location filename="../view/widget/delegate/musiclistdatadelegate.cpp" line="513"/>
-        <location filename="../view/widget/delegate/musiclistdatadelegate.cpp" line="609"/>
+        <location filename="../view/widget/delegate/musiclistdatadelegate.cpp" line="512"/>
+        <location filename="../view/widget/delegate/musiclistdatadelegate.cpp" line="608"/>
         <source>1 song</source>
         <translation>1 нумера</translation>
     </message>
     <message>
-        <location filename="../view/widget/delegate/musiclistdatadelegate.cpp" line="515"/>
-        <location filename="../view/widget/delegate/musiclistdatadelegate.cpp" line="611"/>
+        <location filename="../view/widget/delegate/musiclistdatadelegate.cpp" line="514"/>
+        <location filename="../view/widget/delegate/musiclistdatadelegate.cpp" line="610"/>
         <source>%1 songs</source>
         <translation>   %1 нумера/е</translation>
     </message>
@@ -503,7 +511,9 @@
         <translation>1 албум - 1 нумера</translation>
     </message>
     <message>
+        <location filename="../view/musiclistdatawidget.cpp" line="156"/>
         <location filename="../view/musiclistdatawidget.cpp" line="158"/>
+        <location filename="../view/musiclistdatawidget.cpp" line="1400"/>
         <location filename="../view/musiclistdatawidget.cpp" line="1402"/>
         <source>%1 album - %2 songs</source>
         <translation>   %1 албум - %2 нумера/е</translation>
@@ -621,6 +631,11 @@
         <translation>Албуми</translation>
     </message>
     <message>
+        <location filename="../view/musiclistdatawidget.cpp" line="1269"/>
+        <source>Custom</source>
+        <translation>Прилагођено</translation>
+    </message>
+    <message>
         <location filename="../view/musiclistdatawidget.cpp" line="1619"/>
         <source>No result found</source>
         <translation>Није пронађен ниједан резултат</translation>
@@ -629,12 +644,12 @@
 <context>
     <name>MusicListDialog</name>
     <message>
-        <location filename="../view/widget/musiclistdialog.cpp" line="126"/>
+        <location filename="../view/widget/musiclistdialog.cpp" line="129"/>
         <source>Play All</source>
         <translation>Пусти све</translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistdialog.cpp" line="139"/>
+        <location filename="../view/widget/musiclistdialog.cpp" line="142"/>
         <source>Shuffle</source>
         <translation>Насумично</translation>
     </message>
@@ -642,92 +657,110 @@
 <context>
     <name>MusicListInfoView</name>
     <message>
-        <location filename="../view/widget/musiclistinfoview.cpp" line="440"/>
+        <location filename="../view/widget/musiclistinfoview.cpp" line="455"/>
         <source>Play queue</source>
         <translation>Редослед пуштања</translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistinfoview.cpp" line="464"/>
+        <location filename="../view/widget/musiclistinfoview.cpp" line="480"/>
         <source>Add to new playlist</source>
         <translation>Додај у нову листу</translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistinfoview.cpp" line="505"/>
+        <location filename="../view/widget/musiclistinfoview.cpp" line="525"/>
         <source>Pause</source>
         <translation>Паузирај</translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistinfoview.cpp" line="507"/>
+        <location filename="../view/widget/musiclistinfoview.cpp" line="527"/>
         <source>Play</source>
         <translation>Пусти</translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistinfoview.cpp" line="510"/>
+        <location filename="../view/widget/musiclistinfoview.cpp" line="530"/>
         <source>Add to playlist</source>
         <translation>Додај у листу пуштања</translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistinfoview.cpp" line="515"/>
+        <location filename="../view/widget/musiclistinfoview.cpp" line="535"/>
         <source>Display in file manager</source>
         <translation>Прикажи у управнику података</translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistinfoview.cpp" line="518"/>
+        <location filename="../view/widget/musiclistinfoview.cpp" line="538"/>
         <source>Remove from playlist</source>
         <translation>Уклони из листе пуштања</translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistinfoview.cpp" line="519"/>
+        <location filename="../view/widget/musiclistinfoview.cpp" line="539"/>
         <source>Delete from local disk</source>
         <translation>Обриши са диска</translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistinfoview.cpp" line="533"/>
+        <location filename="../view/widget/musiclistinfoview.cpp" line="560"/>
         <source>Song info</source>
         <translation>Подаци о нумери</translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistinfoview.cpp" line="577"/>
-        <location filename="../view/widget/musiclistinfoview.cpp" line="604"/>
+        <location filename="../view/widget/musiclistinfoview.cpp" line="608"/>
+        <location filename="../view/widget/musiclistinfoview.cpp" line="639"/>
         <source>Cancel</source>
         <translation>Откажи</translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistinfoview.cpp" line="578"/>
+        <location filename="../view/widget/musiclistinfoview.cpp" line="609"/>
         <source>Remove</source>
         <translation>Уклони</translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistinfoview.cpp" line="582"/>
+        <location filename="../view/widget/musiclistinfoview.cpp" line="613"/>
         <source>Are you sure you want to remove %1?</source>
         <translation>Заиста желите да уклоните %1?</translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistinfoview.cpp" line="584"/>
+        <location filename="../view/widget/musiclistinfoview.cpp" line="615"/>
         <source>Are you sure you want to remove the selected %1 songs?</source>
         <translation>Заиста желите да уклоните %1 изабране/их нумере/а?</translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistinfoview.cpp" line="605"/>
+        <location filename="../view/widget/musiclistinfoview.cpp" line="640"/>
         <source>Delete</source>
         <translation>Обриши</translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistinfoview.cpp" line="614"/>
+        <location filename="../view/widget/musiclistinfoview.cpp" line="649"/>
         <source>Are you sure you want to delete %1?</source>
         <translation>Заиста желите да обришете %1?</translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistinfoview.cpp" line="621"/>
-        <location filename="../view/widget/musiclistinfoview.cpp" line="635"/>
+        <location filename="../view/widget/musiclistinfoview.cpp" line="656"/>
+        <location filename="../view/widget/musiclistinfoview.cpp" line="670"/>
         <source>Are you sure you want to delete the selected %1 songs?</source>
         <translation>Заиста желите да обришете %1 нумере/а?</translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistinfoview.cpp" line="622"/>
-        <location filename="../view/widget/musiclistinfoview.cpp" line="636"/>
+        <location filename="../view/widget/musiclistinfoview.cpp" line="657"/>
+        <location filename="../view/widget/musiclistinfoview.cpp" line="671"/>
         <source>The song files contained will also be deleted</source>
         <translation>Припадајуће датотеке нумера ће такође бити обрисане</translation>
+    </message>
+</context>
+<context>
+    <name>MusicListItem</name>
+    <message>
+        <location filename="../view/widget/musiclistitem.cpp" line="178"/>
+        <source>Are you sure you want to delete this playlist?</source>
+        <translation>Заиста желите да обришете листу пуштања?</translation>
+    </message>
+    <message>
+        <location filename="../view/widget/musiclistitem.cpp" line="184"/>
+        <source>Cancel</source>
+        <translation>Откажи</translation>
+    </message>
+    <message>
+        <location filename="../view/widget/musiclistitem.cpp" line="185"/>
+        <source>Delete</source>
+        <translation>Обриши</translation>
     </message>
 </context>
 <context>
@@ -751,165 +784,157 @@
         <translation>Моје омиљено</translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistview.cpp" line="417"/>
-        <location filename="../view/widget/musiclistview.cpp" line="570"/>
+        <location filename="../view/widget/musiclistview.cpp" line="416"/>
+        <location filename="../view/widget/musiclistview.cpp" line="569"/>
         <source>Are you sure you want to delete this playlist?</source>
         <translation>Заиста желите да обришете листу пуштања?</translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistview.cpp" line="424"/>
-        <location filename="../view/widget/musiclistview.cpp" line="577"/>
+        <location filename="../view/widget/musiclistview.cpp" line="423"/>
+        <location filename="../view/widget/musiclistview.cpp" line="576"/>
         <source>Cancel</source>
         <translation>Откажи</translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistview.cpp" line="425"/>
-        <location filename="../view/widget/musiclistview.cpp" line="549"/>
-        <location filename="../view/widget/musiclistview.cpp" line="569"/>
-        <location filename="../view/widget/musiclistview.cpp" line="578"/>
+        <location filename="../view/widget/musiclistview.cpp" line="424"/>
+        <location filename="../view/widget/musiclistview.cpp" line="548"/>
+        <location filename="../view/widget/musiclistview.cpp" line="568"/>
+        <location filename="../view/widget/musiclistview.cpp" line="577"/>
         <source>Delete</source>
         <translation>Обриши</translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistview.cpp" line="539"/>
-        <location filename="../view/widget/musiclistview.cpp" line="563"/>
+        <location filename="../view/widget/musiclistview.cpp" line="538"/>
+        <location filename="../view/widget/musiclistview.cpp" line="562"/>
         <source>Pause</source>
         <translation>Паузирај</translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistview.cpp" line="542"/>
-        <location filename="../view/widget/musiclistview.cpp" line="560"/>
+        <location filename="../view/widget/musiclistview.cpp" line="541"/>
+        <location filename="../view/widget/musiclistview.cpp" line="559"/>
         <source>Play</source>
         <translation>Пусти</translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistview.cpp" line="548"/>
-        <location filename="../view/widget/musiclistview.cpp" line="566"/>
+        <location filename="../view/widget/musiclistview.cpp" line="547"/>
+        <location filename="../view/widget/musiclistview.cpp" line="565"/>
         <source>Rename</source>
         <translation>Преименуј</translation>
     </message>
 </context>
 <context>
-    <name>MusicLyricWidget</name>
-    <message>
-        <location filename="../view/musiclyricwidget.cpp" line="120"/>
-        <source>No lyrics yet</source>
-        <translation type="unfinished">Тренутно нема текста</translation>
-    </message>
-</context>
-<context>
     <name>PlayListView</name>
     <message>
-        <location filename="../view/widget/delegate/playitemdelegate.cpp" line="521"/>
+        <location filename="../view/widget/delegate/playitemdelegate.cpp" line="522"/>
         <source>Unknown artist</source>
         <translation>Непознат извођач</translation>
     </message>
     <message>
-        <location filename="../view/widget/delegate/playitemdelegate.cpp" line="533"/>
+        <location filename="../view/widget/delegate/playitemdelegate.cpp" line="534"/>
         <source>Unknown album</source>
         <translation>Непознат албум</translation>
     </message>
     <message>
-        <location filename="../view/widget/playlistview.cpp" line="495"/>
+        <location filename="../view/widget/playlistview.cpp" line="542"/>
         <source>Play queue</source>
         <translation>Редослед пуштања</translation>
     </message>
     <message>
-        <location filename="../view/widget/playlistview.cpp" line="503"/>
+        <location filename="../view/widget/playlistview.cpp" line="550"/>
         <source>My favorites</source>
         <translation>Моје омиљено</translation>
     </message>
     <message>
-        <location filename="../view/widget/playlistview.cpp" line="516"/>
+        <location filename="../view/widget/playlistview.cpp" line="566"/>
         <source>Add to new playlist</source>
         <translation>Додај у нову листу</translation>
     </message>
     <message>
-        <location filename="../view/widget/playlistview.cpp" line="569"/>
-        <location filename="../view/widget/playlistview.cpp" line="579"/>
+        <location filename="../view/widget/playlistview.cpp" line="619"/>
+        <location filename="../view/widget/playlistview.cpp" line="629"/>
         <source>Play</source>
         <translation>Пусти</translation>
     </message>
     <message>
-        <location filename="../view/widget/playlistview.cpp" line="574"/>
+        <location filename="../view/widget/playlistview.cpp" line="624"/>
         <source>Pause</source>
         <translation>Паузирај</translation>
     </message>
     <message>
-        <location filename="../view/widget/playlistview.cpp" line="585"/>
+        <location filename="../view/widget/playlistview.cpp" line="635"/>
         <source>Add to playlist</source>
         <translation>Додај у листу пуштања</translation>
     </message>
     <message>
-        <location filename="../view/widget/playlistview.cpp" line="590"/>
+        <location filename="../view/widget/playlistview.cpp" line="640"/>
         <source>Display in file manager</source>
         <translation>Прикажи у управнику података</translation>
     </message>
     <message>
-        <location filename="../view/widget/playlistview.cpp" line="594"/>
+        <location filename="../view/widget/playlistview.cpp" line="644"/>
         <source>Remove from play queue</source>
         <translation>Уклони из редоследа пуштања</translation>
     </message>
     <message>
-        <location filename="../view/widget/playlistview.cpp" line="596"/>
+        <location filename="../view/widget/playlistview.cpp" line="646"/>
         <source>Remove from playlist</source>
         <translation>Уклони из листе пуштања</translation>
     </message>
     <message>
-        <location filename="../view/widget/playlistview.cpp" line="598"/>
+        <location filename="../view/widget/playlistview.cpp" line="648"/>
         <source>Delete from local disk</source>
         <translation>Обриши са диска</translation>
     </message>
     <message>
-        <location filename="../view/widget/playlistview.cpp" line="635"/>
+        <location filename="../view/widget/playlistview.cpp" line="686"/>
         <source>Encoding</source>
         <translation>Кодирање</translation>
     </message>
     <message>
-        <location filename="../view/widget/playlistview.cpp" line="639"/>
+        <location filename="../view/widget/playlistview.cpp" line="690"/>
         <source>Song info</source>
         <translation>Подаци о нумери</translation>
     </message>
     <message>
-        <location filename="../view/widget/playlistview.cpp" line="692"/>
-        <location filename="../view/widget/playlistview.cpp" line="723"/>
+        <location filename="../view/widget/playlistview.cpp" line="746"/>
+        <location filename="../view/widget/playlistview.cpp" line="777"/>
         <source>Cancel</source>
         <translation>Откажи</translation>
     </message>
     <message>
-        <location filename="../view/widget/playlistview.cpp" line="693"/>
+        <location filename="../view/widget/playlistview.cpp" line="747"/>
         <source>Remove</source>
         <translation>Уклони</translation>
     </message>
     <message>
-        <location filename="../view/widget/playlistview.cpp" line="697"/>
+        <location filename="../view/widget/playlistview.cpp" line="751"/>
         <source>Are you sure you want to remove %1?</source>
         <translation>Заиста желите да уклоните %1?</translation>
     </message>
     <message>
-        <location filename="../view/widget/playlistview.cpp" line="699"/>
+        <location filename="../view/widget/playlistview.cpp" line="753"/>
         <source>Are you sure you want to remove the selected %1 songs?</source>
         <translation>Заиста желите да уклоните %1 изабране/их нумере/а?</translation>
     </message>
     <message>
-        <location filename="../view/widget/playlistview.cpp" line="724"/>
+        <location filename="../view/widget/playlistview.cpp" line="778"/>
         <source>Delete</source>
         <translation>Обриши</translation>
     </message>
     <message>
-        <location filename="../view/widget/playlistview.cpp" line="733"/>
+        <location filename="../view/widget/playlistview.cpp" line="787"/>
         <source>Are you sure you want to delete %1?</source>
         <translation>Заиста желите да обришете %1?</translation>
     </message>
     <message>
-        <location filename="../view/widget/playlistview.cpp" line="740"/>
-        <location filename="../view/widget/playlistview.cpp" line="752"/>
+        <location filename="../view/widget/playlistview.cpp" line="794"/>
+        <location filename="../view/widget/playlistview.cpp" line="806"/>
         <source>Are you sure you want to delete the selected %1 songs?</source>
         <translation>Заиста желите да обришете %1 нумере/а?</translation>
     </message>
     <message>
-        <location filename="../view/widget/playlistview.cpp" line="741"/>
-        <location filename="../view/widget/playlistview.cpp" line="753"/>
+        <location filename="../view/widget/playlistview.cpp" line="795"/>
+        <location filename="../view/widget/playlistview.cpp" line="807"/>
         <source>The song files contained will also be deleted</source>
         <translation>Припадајуће датотеке нумера ће такође бити обрисане</translation>
     </message>
@@ -918,7 +943,7 @@
     <name>PlayListWidget</name>
     <message>
         <location filename="../view/playlistwidget.cpp" line="206"/>
-        <location filename="../view/playlistwidget.cpp" line="319"/>
+        <location filename="../view/playlistwidget.cpp" line="318"/>
         <source>No songs</source>
         <translation>Нема нумера</translation>
     </message>
@@ -938,12 +963,12 @@
         <translation>Испразни</translation>
     </message>
     <message>
-        <location filename="../view/playlistwidget.cpp" line="321"/>
+        <location filename="../view/playlistwidget.cpp" line="320"/>
         <source>1 song</source>
         <translation>1 нумера</translation>
     </message>
     <message>
-        <location filename="../view/playlistwidget.cpp" line="323"/>
+        <location filename="../view/playlistwidget.cpp" line="322"/>
         <source>%1 songs</source>
         <translation>   %1 нумера/е</translation>
     </message>
@@ -951,15 +976,15 @@
 <context>
     <name>Playlist</name>
     <message>
-        <location filename="../core/playlist.cpp" line="472"/>
-        <location filename="../core/playlist.cpp" line="762"/>
+        <location filename="../core/playlist.cpp" line="473"/>
+        <location filename="../core/playlist.cpp" line="764"/>
         <source>Unknown album</source>
         <translation>Непознат албум</translation>
     </message>
     <message>
-        <location filename="../core/playlist.cpp" line="485"/>
-        <location filename="../core/playlist.cpp" line="766"/>
-        <location filename="../core/playlist.cpp" line="797"/>
+        <location filename="../core/playlist.cpp" line="486"/>
+        <location filename="../core/playlist.cpp" line="768"/>
+        <location filename="../core/playlist.cpp" line="799"/>
         <source>Unknown artist</source>
         <translation>Непознат извођач</translation>
     </message>
@@ -1021,6 +1046,89 @@
     </message>
 </context>
 <context>
+    <name>QObject</name>
+    <message>
+        <location filename="../view/widget/settingsdialog.cpp" line="26"/>
+        <source>Minimize to system tray</source>
+        <translation>Спусти у системску касету</translation>
+    </message>
+    <message>
+        <location filename="../view/widget/settingsdialog.cpp" line="27"/>
+        <source>Exit</source>
+        <translation>Изађи</translation>
+    </message>
+    <message>
+        <location filename="../view/widget/settingsdialog.cpp" line="28"/>
+        <source>Ask me always</source>
+        <translation>Увек ме питај</translation>
+    </message>
+    <message>
+        <location filename="../view/widget/settingsdialog.cpp" line="29"/>
+        <source>Autoplay</source>
+        <translation>Аутоматски пуштај</translation>
+    </message>
+    <message>
+        <location filename="../view/widget/settingsdialog.cpp" line="30"/>
+        <source>Enable fade in/out</source>
+        <translation>Прелазно утишавање</translation>
+    </message>
+    <message>
+        <location filename="../view/widget/settingsdialog.cpp" line="31"/>
+        <source>Remember playback position</source>
+        <translation>Запамти позицију репродукције</translation>
+    </message>
+    <message>
+        <location filename="../view/widget/settingsdialog.cpp" line="32"/>
+        <source>Close Main Window</source>
+        <translation>Затварање главног прозора</translation>
+    </message>
+    <message>
+        <location filename="../view/widget/settingsdialog.cpp" line="33"/>
+        <source>Basic</source>
+        <translation>Основно</translation>
+    </message>
+    <message>
+        <location filename="../view/widget/settingsdialog.cpp" line="34"/>
+        <source>Play</source>
+        <translation>Репродукција</translation>
+    </message>
+    <message>
+        <location filename="../view/widget/settingsdialog.cpp" line="35"/>
+        <source>Shortcuts</source>
+        <translation>Пречице</translation>
+    </message>
+    <message>
+        <location filename="../view/widget/settingsdialog.cpp" line="36"/>
+        <source>Restore Defaults</source>
+        <translation>Врати Подразумевано</translation>
+    </message>
+    <message>
+        <location filename="../view/widget/settingsdialog.cpp" line="37"/>
+        <source>Next</source>
+        <translation>Следеће</translation>
+    </message>
+    <message>
+        <location filename="../view/widget/settingsdialog.cpp" line="38"/>
+        <source>Play/Pause</source>
+        <translation>Пусти/Паузирај</translation>
+    </message>
+    <message>
+        <location filename="../view/widget/settingsdialog.cpp" line="39"/>
+        <source>Previous</source>
+        <translation>Претходно</translation>
+    </message>
+    <message>
+        <location filename="../view/widget/settingsdialog.cpp" line="40"/>
+        <source>Volume down</source>
+        <translation>Утишај</translation>
+    </message>
+    <message>
+        <location filename="../view/widget/settingsdialog.cpp" line="41"/>
+        <source>Volume up</source>
+        <translation>Појачај</translation>
+    </message>
+</context>
+<context>
     <name>SearchLyricsWidget</name>
     <message>
         <location filename="../view/widget/searchlyricswidget.cpp" line="107"/>
@@ -1046,17 +1154,17 @@
 <context>
     <name>SearchResult</name>
     <message>
-        <location filename="../view/widget/searchresult.cpp" line="61"/>
+        <location filename="../view/widget/searchresult.cpp" line="60"/>
         <source>Music</source>
         <translation>Музика</translation>
     </message>
     <message>
-        <location filename="../view/widget/searchresult.cpp" line="78"/>
+        <location filename="../view/widget/searchresult.cpp" line="76"/>
         <source>Artists</source>
         <translation>Извођачи</translation>
     </message>
     <message>
-        <location filename="../view/widget/searchresult.cpp" line="94"/>
+        <location filename="../view/widget/searchresult.cpp" line="92"/>
         <source>Albums</source>
         <translation>Албуми</translation>
     </message>
@@ -1162,7 +1270,7 @@
 <context>
     <name>TitlebarWidget</name>
     <message>
-        <location filename="../view/widget/titlebarwidget.cpp" line="79"/>
+        <location filename="../view/widget/titlebarwidget.cpp" line="81"/>
         <source>Search</source>
         <translation>Претражи</translation>
     </message>

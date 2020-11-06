@@ -37,136 +37,136 @@
 <context>
     <name>DequalizerDialog</name>
     <message>
-        <location filename="../view/widget/dequalizerdialog.cpp" line="113"/>
+        <location filename="../view/widget/dequalizerdialog.cpp" line="112"/>
         <source>Custom</source>
         <translation>Vlastní</translation>
     </message>
     <message>
-        <location filename="../view/widget/dequalizerdialog.cpp" line="114"/>
+        <location filename="../view/widget/dequalizerdialog.cpp" line="113"/>
         <source>Monophony</source>
         <translation>Monofonní</translation>
     </message>
     <message>
-        <location filename="../view/widget/dequalizerdialog.cpp" line="115"/>
+        <location filename="../view/widget/dequalizerdialog.cpp" line="114"/>
         <source>Classical</source>
         <translation>Klasická</translation>
     </message>
     <message>
-        <location filename="../view/widget/dequalizerdialog.cpp" line="116"/>
+        <location filename="../view/widget/dequalizerdialog.cpp" line="115"/>
         <source>Club</source>
         <translation>Klub</translation>
     </message>
     <message>
-        <location filename="../view/widget/dequalizerdialog.cpp" line="117"/>
+        <location filename="../view/widget/dequalizerdialog.cpp" line="116"/>
         <source>Dance</source>
         <translation>Taneční</translation>
     </message>
     <message>
-        <location filename="../view/widget/dequalizerdialog.cpp" line="118"/>
+        <location filename="../view/widget/dequalizerdialog.cpp" line="117"/>
         <source>Full Bass</source>
         <translation>Plné hloubky</translation>
     </message>
     <message>
-        <location filename="../view/widget/dequalizerdialog.cpp" line="119"/>
+        <location filename="../view/widget/dequalizerdialog.cpp" line="118"/>
         <source>Full Bass and Treble</source>
         <translation>Plné hloubky a výšky</translation>
     </message>
     <message>
-        <location filename="../view/widget/dequalizerdialog.cpp" line="120"/>
+        <location filename="../view/widget/dequalizerdialog.cpp" line="119"/>
         <source>Full Treble</source>
         <translation>Plné výšky</translation>
     </message>
     <message>
-        <location filename="../view/widget/dequalizerdialog.cpp" line="121"/>
+        <location filename="../view/widget/dequalizerdialog.cpp" line="120"/>
         <source>Headphones</source>
         <translation>Sluchátka</translation>
     </message>
     <message>
-        <location filename="../view/widget/dequalizerdialog.cpp" line="122"/>
+        <location filename="../view/widget/dequalizerdialog.cpp" line="121"/>
         <source>Hall</source>
         <translation>Hala</translation>
     </message>
     <message>
-        <location filename="../view/widget/dequalizerdialog.cpp" line="123"/>
+        <location filename="../view/widget/dequalizerdialog.cpp" line="122"/>
         <source>Live</source>
         <translation>Live</translation>
     </message>
     <message>
-        <location filename="../view/widget/dequalizerdialog.cpp" line="124"/>
+        <location filename="../view/widget/dequalizerdialog.cpp" line="123"/>
         <source>Party</source>
         <translation>Večírek</translation>
     </message>
     <message>
-        <location filename="../view/widget/dequalizerdialog.cpp" line="125"/>
+        <location filename="../view/widget/dequalizerdialog.cpp" line="124"/>
         <source>Pop</source>
         <translation>Pop</translation>
     </message>
     <message>
-        <location filename="../view/widget/dequalizerdialog.cpp" line="126"/>
+        <location filename="../view/widget/dequalizerdialog.cpp" line="125"/>
         <source>Reggae</source>
         <translation>Reggae</translation>
     </message>
     <message>
-        <location filename="../view/widget/dequalizerdialog.cpp" line="127"/>
+        <location filename="../view/widget/dequalizerdialog.cpp" line="126"/>
         <source>Rock</source>
         <translation>Rock</translation>
     </message>
     <message>
-        <location filename="../view/widget/dequalizerdialog.cpp" line="128"/>
+        <location filename="../view/widget/dequalizerdialog.cpp" line="127"/>
         <source>Ska</source>
         <translation>Ska</translation>
     </message>
     <message>
-        <location filename="../view/widget/dequalizerdialog.cpp" line="129"/>
+        <location filename="../view/widget/dequalizerdialog.cpp" line="128"/>
         <source>Soft</source>
         <translation>Soft</translation>
     </message>
     <message>
-        <location filename="../view/widget/dequalizerdialog.cpp" line="130"/>
+        <location filename="../view/widget/dequalizerdialog.cpp" line="129"/>
         <source>Soft Rock</source>
         <translation>Soft Rock</translation>
     </message>
     <message>
-        <location filename="../view/widget/dequalizerdialog.cpp" line="131"/>
+        <location filename="../view/widget/dequalizerdialog.cpp" line="130"/>
         <source>Techno</source>
         <translation>Techno</translation>
     </message>
     <message>
-        <location filename="../view/widget/dequalizerdialog.cpp" line="188"/>
-        <location filename="../view/widget/dequalizerdialog.cpp" line="449"/>
+        <location filename="../view/widget/dequalizerdialog.cpp" line="187"/>
+        <location filename="../view/widget/dequalizerdialog.cpp" line="448"/>
         <source>Equalizer</source>
         <translation>Ekvalizér</translation>
     </message>
     <message>
-        <location filename="../view/widget/dequalizerdialog.cpp" line="195"/>
-        <location filename="../view/widget/dequalizerdialog.cpp" line="657"/>
+        <location filename="../view/widget/dequalizerdialog.cpp" line="194"/>
+        <location filename="../view/widget/dequalizerdialog.cpp" line="654"/>
         <source>ON</source>
         <translation>ZAP.</translation>
     </message>
     <message>
-        <location filename="../view/widget/dequalizerdialog.cpp" line="197"/>
-        <location filename="../view/widget/dequalizerdialog.cpp" line="655"/>
+        <location filename="../view/widget/dequalizerdialog.cpp" line="196"/>
+        <location filename="../view/widget/dequalizerdialog.cpp" line="652"/>
         <source>OFF</source>
         <translation>VYP.</translation>
     </message>
     <message>
-        <location filename="../view/widget/dequalizerdialog.cpp" line="214"/>
+        <location filename="../view/widget/dequalizerdialog.cpp" line="213"/>
         <source>Save</source>
         <translation>Uložit</translation>
     </message>
     <message>
-        <location filename="../view/widget/dequalizerdialog.cpp" line="225"/>
+        <location filename="../view/widget/dequalizerdialog.cpp" line="224"/>
         <source>Preamplifier</source>
         <translation>Předzesilovač</translation>
     </message>
     <message>
-        <location filename="../view/widget/dequalizerdialog.cpp" line="338"/>
+        <location filename="../view/widget/dequalizerdialog.cpp" line="337"/>
         <source>Restore Defaults</source>
         <translation>Vrátit na výchozí hodnoty</translation>
     </message>
     <message>
-        <location filename="../view/widget/dequalizerdialog.cpp" line="552"/>
-        <location filename="../view/widget/dequalizerdialog.cpp" line="553"/>
+        <location filename="../view/widget/dequalizerdialog.cpp" line="550"/>
+        <location filename="../view/widget/dequalizerdialog.cpp" line="551"/>
         <source>Sound Effects Saved</source>
         <translation>Zvukové efekty uloženy</translation>
     </message>
@@ -174,64 +174,64 @@
 <context>
     <name>Footer</name>
     <message>
-        <location filename="../view/footerwidget.cpp" line="364"/>
+        <location filename="../view/footerwidget.cpp" line="342"/>
         <source>Unknown Title</source>
         <translation>Neznámý název</translation>
     </message>
     <message>
-        <location filename="../view/footerwidget.cpp" line="383"/>
-        <location filename="../view/footerwidget.cpp" line="952"/>
-        <location filename="../view/footerwidget.cpp" line="1573"/>
+        <location filename="../view/footerwidget.cpp" line="361"/>
+        <location filename="../view/footerwidget.cpp" line="975"/>
+        <location filename="../view/footerwidget.cpp" line="1642"/>
         <source>Unknown artist</source>
         <translation>Neznámý umělec</translation>
     </message>
     <message>
-        <location filename="../view/footerwidget.cpp" line="490"/>
+        <location filename="../view/footerwidget.cpp" line="513"/>
         <source>Previous</source>
         <translation>Předchozí</translation>
     </message>
     <message>
-        <location filename="../view/footerwidget.cpp" line="491"/>
+        <location filename="../view/footerwidget.cpp" line="514"/>
         <source>Next</source>
         <translation>Další</translation>
     </message>
     <message>
-        <location filename="../view/footerwidget.cpp" line="492"/>
+        <location filename="../view/footerwidget.cpp" line="515"/>
         <source>Play/Pause</source>
         <translation>Přehrát/Pozastavit</translation>
     </message>
     <message>
-        <location filename="../view/footerwidget.cpp" line="493"/>
+        <location filename="../view/footerwidget.cpp" line="516"/>
         <source>Favorite</source>
         <translation>Oblíbené</translation>
     </message>
     <message>
-        <location filename="../view/footerwidget.cpp" line="494"/>
+        <location filename="../view/footerwidget.cpp" line="517"/>
         <source>Lyrics</source>
         <translation>Text písně</translation>
     </message>
     <message>
-        <location filename="../view/footerwidget.cpp" line="495"/>
+        <location filename="../view/footerwidget.cpp" line="518"/>
         <source>Play Mode</source>
         <translation>Režim přehrávání</translation>
     </message>
     <message>
-        <location filename="../view/footerwidget.cpp" line="496"/>
+        <location filename="../view/footerwidget.cpp" line="519"/>
         <source>Play Queue</source>
         <translation>Přehrát frontu</translation>
     </message>
     <message>
-        <location filename="../view/footerwidget.cpp" line="1547"/>
+        <location filename="../view/footerwidget.cpp" line="1616"/>
         <source>List Loop</source>
         <translation>Smyčka nad seznamem</translation>
     </message>
     <message>
-        <location filename="../view/footerwidget.cpp" line="1550"/>
+        <location filename="../view/footerwidget.cpp" line="1619"/>
         <source>Single Loop</source>
         <translation>Jediná smyčka</translation>
     </message>
     <message>
-        <location filename="../view/footerwidget.cpp" line="1553"/>
+        <location filename="../view/footerwidget.cpp" line="1622"/>
         <source>Shuffle</source>
         <translation>Zamíchat</translation>
     </message>
@@ -330,61 +330,69 @@
 <context>
     <name>LyricWidget</name>
     <message>
-        <location filename="../view/lyricwidget.cpp" line="161"/>
+        <location filename="../view/lyricwidget.cpp" line="166"/>
         <source>Find lyrics</source>
         <translation>Najít text písně</translation>
     </message>
     <message>
-        <location filename="../view/lyricwidget.cpp" line="165"/>
+        <location filename="../view/lyricwidget.cpp" line="170"/>
         <source>Title</source>
         <translation>Název</translation>
     </message>
     <message>
-        <location filename="../view/lyricwidget.cpp" line="170"/>
+        <location filename="../view/lyricwidget.cpp" line="175"/>
         <source>Artist</source>
         <translation>Umělec</translation>
     </message>
     <message>
-        <location filename="../view/lyricwidget.cpp" line="175"/>
+        <location filename="../view/lyricwidget.cpp" line="180"/>
         <source>Search</source>
         <translation>Hledat</translation>
     </message>
     <message>
-        <location filename="../view/lyricwidget.cpp" line="210"/>
+        <location filename="../view/lyricwidget.cpp" line="215"/>
         <source>Back</source>
         <translation>Zpět</translation>
     </message>
 </context>
 <context>
+    <name>MUsicLyricWidget</name>
+    <message>
+        <location filename="../view/musiclyricwidget.cpp" line="120"/>
+        <source>No lyrics yet</source>
+        <translation>Zatím žádné texty písní</translation>
+    </message>
+</context>
+<context>
     <name>MainFrame</name>
     <message>
-        <location filename="../view/mainframe.cpp" line="181"/>
+        <location filename="../view/mainframe.cpp" line="182"/>
         <source>Add playlist</source>
         <translation>Nový seznam skladeb</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="192"/>
+        <location filename="../view/mainframe.cpp" line="193"/>
         <source>Add music</source>
         <translation>Přidat hudbu</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="197"/>
+        <location filename="../view/mainframe.cpp" line="198"/>
         <source>Equalizer</source>
         <translation>Ekvalizér</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="205"/>
+        <location filename="../view/mainframe.cpp" line="206"/>
         <source>Settings</source>
         <translation>Nastavení</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="264"/>
+        <location filename="../view/mainframe.cpp" line="265"/>
         <source>Dark theme</source>
         <translation>Tmavý vzhled</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="272"/>
-        <location filename="../view/mainframe.cpp" line="867"/>
+        <location filename="../view/mainframe.cpp" line="273"/>
+        <location filename="../view/mainframe.cpp" line="866"/>
         <source>Exit</source>
         <translation>Ukončit</translation>
     </message>
@@ -392,7 +400,7 @@
         <location filename="../view/mainframe.cpp" line="790"/>
         <location filename="../view/mainframe.cpp" line="798"/>
         <location filename="../view/mainframe.cpp" line="810"/>
-        <location filename="../view/mainframe.cpp" line="878"/>
+        <location filename="../view/mainframe.cpp" line="877"/>
         <location filename="../view/mainframe.cpp" line="1449"/>
         <source>Music</source>
         <translation>Hudba</translation>
@@ -403,47 +411,47 @@
         <translation>Hudba je pěkný přehrávač hudby na místním disku s jednoduchými funkcemi.</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="864"/>
+        <location filename="../view/mainframe.cpp" line="863"/>
         <source>Play/Pause</source>
         <translation>Přehrát/Pozastavit</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="865"/>
+        <location filename="../view/mainframe.cpp" line="864"/>
         <source>Previous</source>
         <translation>Předchozí</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="866"/>
+        <location filename="../view/mainframe.cpp" line="865"/>
         <source>Next</source>
         <translation>Další</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="1017"/>
+        <location filename="../view/mainframe.cpp" line="1016"/>
         <source>Successfully added to &quot;%1&quot;</source>
         <translation>Úspěšně přidáno do „%1“</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="1021"/>
+        <location filename="../view/mainframe.cpp" line="1020"/>
         <source>Already added to the playlist</source>
         <translation>Už přidáno do seznamu skladeb</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="1024"/>
+        <location filename="../view/mainframe.cpp" line="1023"/>
         <source>1 song added</source>
         <translation>1 skladba přidána</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="1026"/>
+        <location filename="../view/mainframe.cpp" line="1025"/>
         <source>%1 songs added</source>
         <translation>%1 skladeb přidáno</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="1093"/>
+        <location filename="../view/mainframe.cpp" line="1092"/>
         <source>File is invalid or does not exist, load failed</source>
         <translation>Soubor je neplatný nebo neexistuje. Nepodařilo se nahrát!</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="1095"/>
+        <location filename="../view/mainframe.cpp" line="1094"/>
         <location filename="../view/mainframe.cpp" line="1152"/>
         <source>OK</source>
         <translation>OK</translation>
@@ -462,20 +470,20 @@
 <context>
     <name>MusicListDataDelegate</name>
     <message>
-        <location filename="../view/widget/delegate/musiclistdatadelegate.cpp" line="511"/>
-        <location filename="../view/widget/delegate/musiclistdatadelegate.cpp" line="607"/>
+        <location filename="../view/widget/delegate/musiclistdatadelegate.cpp" line="510"/>
+        <location filename="../view/widget/delegate/musiclistdatadelegate.cpp" line="606"/>
         <source>No songs</source>
         <translation>Žádné písně</translation>
     </message>
     <message>
-        <location filename="../view/widget/delegate/musiclistdatadelegate.cpp" line="513"/>
-        <location filename="../view/widget/delegate/musiclistdatadelegate.cpp" line="609"/>
+        <location filename="../view/widget/delegate/musiclistdatadelegate.cpp" line="512"/>
+        <location filename="../view/widget/delegate/musiclistdatadelegate.cpp" line="608"/>
         <source>1 song</source>
         <translation>1 píseň</translation>
     </message>
     <message>
-        <location filename="../view/widget/delegate/musiclistdatadelegate.cpp" line="515"/>
-        <location filename="../view/widget/delegate/musiclistdatadelegate.cpp" line="611"/>
+        <location filename="../view/widget/delegate/musiclistdatadelegate.cpp" line="514"/>
+        <location filename="../view/widget/delegate/musiclistdatadelegate.cpp" line="610"/>
         <source>%1 songs</source>
         <translation>%1 skladeb</translation>
     </message>
@@ -503,7 +511,9 @@
         <translation>1 album - 1 skladba</translation>
     </message>
     <message>
+        <location filename="../view/musiclistdatawidget.cpp" line="156"/>
         <location filename="../view/musiclistdatawidget.cpp" line="158"/>
+        <location filename="../view/musiclistdatawidget.cpp" line="1400"/>
         <location filename="../view/musiclistdatawidget.cpp" line="1402"/>
         <source>%1 album - %2 songs</source>
         <translation>%1 album - %2 skladeb</translation>
@@ -621,6 +631,11 @@
         <translation>Alba</translation>
     </message>
     <message>
+        <location filename="../view/musiclistdatawidget.cpp" line="1269"/>
+        <source>Custom</source>
+        <translation>Vlastní</translation>
+    </message>
+    <message>
         <location filename="../view/musiclistdatawidget.cpp" line="1619"/>
         <source>No result found</source>
         <translation>Nenalezen žádný výsledek</translation>
@@ -629,12 +644,12 @@
 <context>
     <name>MusicListDialog</name>
     <message>
-        <location filename="../view/widget/musiclistdialog.cpp" line="126"/>
+        <location filename="../view/widget/musiclistdialog.cpp" line="129"/>
         <source>Play All</source>
         <translation>Přehrát vše</translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistdialog.cpp" line="139"/>
+        <location filename="../view/widget/musiclistdialog.cpp" line="142"/>
         <source>Shuffle</source>
         <translation>Zamíchat</translation>
     </message>
@@ -642,92 +657,110 @@
 <context>
     <name>MusicListInfoView</name>
     <message>
-        <location filename="../view/widget/musiclistinfoview.cpp" line="440"/>
+        <location filename="../view/widget/musiclistinfoview.cpp" line="455"/>
         <source>Play queue</source>
         <translation>Fronta přehrávání</translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistinfoview.cpp" line="464"/>
+        <location filename="../view/widget/musiclistinfoview.cpp" line="480"/>
         <source>Add to new playlist</source>
         <translation>Přidat na nový seznam skladeb</translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistinfoview.cpp" line="505"/>
+        <location filename="../view/widget/musiclistinfoview.cpp" line="525"/>
         <source>Pause</source>
         <translation>Pozastavit</translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistinfoview.cpp" line="507"/>
+        <location filename="../view/widget/musiclistinfoview.cpp" line="527"/>
         <source>Play</source>
         <translation>Přehrát</translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistinfoview.cpp" line="510"/>
+        <location filename="../view/widget/musiclistinfoview.cpp" line="530"/>
         <source>Add to playlist</source>
         <translation>Přidat do seznamu skladeb</translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistinfoview.cpp" line="515"/>
+        <location filename="../view/widget/musiclistinfoview.cpp" line="535"/>
         <source>Display in file manager</source>
         <translation>Zobrazit ve správci souborů</translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistinfoview.cpp" line="518"/>
+        <location filename="../view/widget/musiclistinfoview.cpp" line="538"/>
         <source>Remove from playlist</source>
         <translation>Odstranit ze seznamu skladeb</translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistinfoview.cpp" line="519"/>
+        <location filename="../view/widget/musiclistinfoview.cpp" line="539"/>
         <source>Delete from local disk</source>
         <translation>Smazat z místního disku</translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistinfoview.cpp" line="533"/>
+        <location filename="../view/widget/musiclistinfoview.cpp" line="560"/>
         <source>Song info</source>
         <translation>Údaje o písni</translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistinfoview.cpp" line="577"/>
-        <location filename="../view/widget/musiclistinfoview.cpp" line="604"/>
+        <location filename="../view/widget/musiclistinfoview.cpp" line="608"/>
+        <location filename="../view/widget/musiclistinfoview.cpp" line="639"/>
         <source>Cancel</source>
         <translation>Zrušit</translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistinfoview.cpp" line="578"/>
+        <location filename="../view/widget/musiclistinfoview.cpp" line="609"/>
         <source>Remove</source>
         <translation>Odstranit</translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistinfoview.cpp" line="582"/>
+        <location filename="../view/widget/musiclistinfoview.cpp" line="613"/>
         <source>Are you sure you want to remove %1?</source>
         <translation>Opravdu je chcete odstranit %1?</translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistinfoview.cpp" line="584"/>
+        <location filename="../view/widget/musiclistinfoview.cpp" line="615"/>
         <source>Are you sure you want to remove the selected %1 songs?</source>
         <translation>Opravdu chcete smazat vybraných %1 skladeb?</translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistinfoview.cpp" line="605"/>
+        <location filename="../view/widget/musiclistinfoview.cpp" line="640"/>
         <source>Delete</source>
         <translation>Smazat</translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistinfoview.cpp" line="614"/>
+        <location filename="../view/widget/musiclistinfoview.cpp" line="649"/>
         <source>Are you sure you want to delete %1?</source>
         <translation>Opravdu je chcete smazat %1?</translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistinfoview.cpp" line="621"/>
-        <location filename="../view/widget/musiclistinfoview.cpp" line="635"/>
+        <location filename="../view/widget/musiclistinfoview.cpp" line="656"/>
+        <location filename="../view/widget/musiclistinfoview.cpp" line="670"/>
         <source>Are you sure you want to delete the selected %1 songs?</source>
         <translation>Opravdu chcete smazat vybraných %1 písní?</translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistinfoview.cpp" line="622"/>
-        <location filename="../view/widget/musiclistinfoview.cpp" line="636"/>
+        <location filename="../view/widget/musiclistinfoview.cpp" line="657"/>
+        <location filename="../view/widget/musiclistinfoview.cpp" line="671"/>
         <source>The song files contained will also be deleted</source>
         <translation>Zahrnuté soubory s písněmi budou smazány také</translation>
+    </message>
+</context>
+<context>
+    <name>MusicListItem</name>
+    <message>
+        <location filename="../view/widget/musiclistitem.cpp" line="178"/>
+        <source>Are you sure you want to delete this playlist?</source>
+        <translation>Opravdu chcete smazat tento seznam skladeb?</translation>
+    </message>
+    <message>
+        <location filename="../view/widget/musiclistitem.cpp" line="184"/>
+        <source>Cancel</source>
+        <translation>Zrušit</translation>
+    </message>
+    <message>
+        <location filename="../view/widget/musiclistitem.cpp" line="185"/>
+        <source>Delete</source>
+        <translation>Smazat</translation>
     </message>
 </context>
 <context>
@@ -751,165 +784,157 @@
         <translation>Moje oblíbené</translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistview.cpp" line="417"/>
-        <location filename="../view/widget/musiclistview.cpp" line="570"/>
+        <location filename="../view/widget/musiclistview.cpp" line="416"/>
+        <location filename="../view/widget/musiclistview.cpp" line="569"/>
         <source>Are you sure you want to delete this playlist?</source>
         <translation>Opravdu chcete smazat tento seznam skladeb?</translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistview.cpp" line="424"/>
-        <location filename="../view/widget/musiclistview.cpp" line="577"/>
+        <location filename="../view/widget/musiclistview.cpp" line="423"/>
+        <location filename="../view/widget/musiclistview.cpp" line="576"/>
         <source>Cancel</source>
         <translation>Zrušit</translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistview.cpp" line="425"/>
-        <location filename="../view/widget/musiclistview.cpp" line="549"/>
-        <location filename="../view/widget/musiclistview.cpp" line="569"/>
-        <location filename="../view/widget/musiclistview.cpp" line="578"/>
+        <location filename="../view/widget/musiclistview.cpp" line="424"/>
+        <location filename="../view/widget/musiclistview.cpp" line="548"/>
+        <location filename="../view/widget/musiclistview.cpp" line="568"/>
+        <location filename="../view/widget/musiclistview.cpp" line="577"/>
         <source>Delete</source>
         <translation>Smazat</translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistview.cpp" line="539"/>
-        <location filename="../view/widget/musiclistview.cpp" line="563"/>
+        <location filename="../view/widget/musiclistview.cpp" line="538"/>
+        <location filename="../view/widget/musiclistview.cpp" line="562"/>
         <source>Pause</source>
         <translation>Pozastavit</translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistview.cpp" line="542"/>
-        <location filename="../view/widget/musiclistview.cpp" line="560"/>
+        <location filename="../view/widget/musiclistview.cpp" line="541"/>
+        <location filename="../view/widget/musiclistview.cpp" line="559"/>
         <source>Play</source>
         <translation>Přehrát</translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistview.cpp" line="548"/>
-        <location filename="../view/widget/musiclistview.cpp" line="566"/>
+        <location filename="../view/widget/musiclistview.cpp" line="547"/>
+        <location filename="../view/widget/musiclistview.cpp" line="565"/>
         <source>Rename</source>
         <translation>Přejmenovat</translation>
     </message>
 </context>
 <context>
-    <name>MusicLyricWidget</name>
-    <message>
-        <location filename="../view/musiclyricwidget.cpp" line="120"/>
-        <source>No lyrics yet</source>
-        <translation type="unfinished">Zatím žádné texty písní</translation>
-    </message>
-</context>
-<context>
     <name>PlayListView</name>
     <message>
-        <location filename="../view/widget/delegate/playitemdelegate.cpp" line="521"/>
+        <location filename="../view/widget/delegate/playitemdelegate.cpp" line="522"/>
         <source>Unknown artist</source>
         <translation>Neznámý umělec</translation>
     </message>
     <message>
-        <location filename="../view/widget/delegate/playitemdelegate.cpp" line="533"/>
+        <location filename="../view/widget/delegate/playitemdelegate.cpp" line="534"/>
         <source>Unknown album</source>
         <translation>Neznámé album</translation>
     </message>
     <message>
-        <location filename="../view/widget/playlistview.cpp" line="495"/>
+        <location filename="../view/widget/playlistview.cpp" line="542"/>
         <source>Play queue</source>
         <translation>Fronta přehrávání</translation>
     </message>
     <message>
-        <location filename="../view/widget/playlistview.cpp" line="503"/>
+        <location filename="../view/widget/playlistview.cpp" line="550"/>
         <source>My favorites</source>
         <translation>Moje oblíbené</translation>
     </message>
     <message>
-        <location filename="../view/widget/playlistview.cpp" line="516"/>
+        <location filename="../view/widget/playlistview.cpp" line="566"/>
         <source>Add to new playlist</source>
         <translation>Přidat na nový seznam skladeb</translation>
     </message>
     <message>
-        <location filename="../view/widget/playlistview.cpp" line="569"/>
-        <location filename="../view/widget/playlistview.cpp" line="579"/>
+        <location filename="../view/widget/playlistview.cpp" line="619"/>
+        <location filename="../view/widget/playlistview.cpp" line="629"/>
         <source>Play</source>
         <translation>Přehrát</translation>
     </message>
     <message>
-        <location filename="../view/widget/playlistview.cpp" line="574"/>
+        <location filename="../view/widget/playlistview.cpp" line="624"/>
         <source>Pause</source>
         <translation>Pozastavit</translation>
     </message>
     <message>
-        <location filename="../view/widget/playlistview.cpp" line="585"/>
+        <location filename="../view/widget/playlistview.cpp" line="635"/>
         <source>Add to playlist</source>
         <translation>Přidat do seznamu skladeb</translation>
     </message>
     <message>
-        <location filename="../view/widget/playlistview.cpp" line="590"/>
+        <location filename="../view/widget/playlistview.cpp" line="640"/>
         <source>Display in file manager</source>
         <translation>Zobrazit ve správci souborů</translation>
     </message>
     <message>
-        <location filename="../view/widget/playlistview.cpp" line="594"/>
+        <location filename="../view/widget/playlistview.cpp" line="644"/>
         <source>Remove from play queue</source>
         <translation>Odstranit z fronty pro přehrávání</translation>
     </message>
     <message>
-        <location filename="../view/widget/playlistview.cpp" line="596"/>
+        <location filename="../view/widget/playlistview.cpp" line="646"/>
         <source>Remove from playlist</source>
         <translation>Odstranit ze seznamu skladeb</translation>
     </message>
     <message>
-        <location filename="../view/widget/playlistview.cpp" line="598"/>
+        <location filename="../view/widget/playlistview.cpp" line="648"/>
         <source>Delete from local disk</source>
         <translation>Smazat z místního disku</translation>
     </message>
     <message>
-        <location filename="../view/widget/playlistview.cpp" line="635"/>
+        <location filename="../view/widget/playlistview.cpp" line="686"/>
         <source>Encoding</source>
         <translation>Kódování</translation>
     </message>
     <message>
-        <location filename="../view/widget/playlistview.cpp" line="639"/>
+        <location filename="../view/widget/playlistview.cpp" line="690"/>
         <source>Song info</source>
         <translation>Údaje o písni</translation>
     </message>
     <message>
-        <location filename="../view/widget/playlistview.cpp" line="692"/>
-        <location filename="../view/widget/playlistview.cpp" line="723"/>
+        <location filename="../view/widget/playlistview.cpp" line="746"/>
+        <location filename="../view/widget/playlistview.cpp" line="777"/>
         <source>Cancel</source>
         <translation>Zrušit</translation>
     </message>
     <message>
-        <location filename="../view/widget/playlistview.cpp" line="693"/>
+        <location filename="../view/widget/playlistview.cpp" line="747"/>
         <source>Remove</source>
         <translation>Odstranit</translation>
     </message>
     <message>
-        <location filename="../view/widget/playlistview.cpp" line="697"/>
+        <location filename="../view/widget/playlistview.cpp" line="751"/>
         <source>Are you sure you want to remove %1?</source>
         <translation>Opravdu je chcete odstranit %1?</translation>
     </message>
     <message>
-        <location filename="../view/widget/playlistview.cpp" line="699"/>
+        <location filename="../view/widget/playlistview.cpp" line="753"/>
         <source>Are you sure you want to remove the selected %1 songs?</source>
         <translation>Opravdu chcete smazat vybraných %1 skladeb?</translation>
     </message>
     <message>
-        <location filename="../view/widget/playlistview.cpp" line="724"/>
+        <location filename="../view/widget/playlistview.cpp" line="778"/>
         <source>Delete</source>
         <translation>Smazat</translation>
     </message>
     <message>
-        <location filename="../view/widget/playlistview.cpp" line="733"/>
+        <location filename="../view/widget/playlistview.cpp" line="787"/>
         <source>Are you sure you want to delete %1?</source>
         <translation>Opravdu je chcete smazat %1?</translation>
     </message>
     <message>
-        <location filename="../view/widget/playlistview.cpp" line="740"/>
-        <location filename="../view/widget/playlistview.cpp" line="752"/>
+        <location filename="../view/widget/playlistview.cpp" line="794"/>
+        <location filename="../view/widget/playlistview.cpp" line="806"/>
         <source>Are you sure you want to delete the selected %1 songs?</source>
         <translation>Opravdu chcete smazat vybraných %1 skladeb?</translation>
     </message>
     <message>
-        <location filename="../view/widget/playlistview.cpp" line="741"/>
-        <location filename="../view/widget/playlistview.cpp" line="753"/>
+        <location filename="../view/widget/playlistview.cpp" line="795"/>
+        <location filename="../view/widget/playlistview.cpp" line="807"/>
         <source>The song files contained will also be deleted</source>
         <translation>Zahrnuté soubory s písněmi budou smazány také</translation>
     </message>
@@ -918,7 +943,7 @@
     <name>PlayListWidget</name>
     <message>
         <location filename="../view/playlistwidget.cpp" line="206"/>
-        <location filename="../view/playlistwidget.cpp" line="319"/>
+        <location filename="../view/playlistwidget.cpp" line="318"/>
         <source>No songs</source>
         <translation>Žádné písně</translation>
     </message>
@@ -938,12 +963,12 @@
         <translation>Prázdný</translation>
     </message>
     <message>
-        <location filename="../view/playlistwidget.cpp" line="321"/>
+        <location filename="../view/playlistwidget.cpp" line="320"/>
         <source>1 song</source>
         <translation>1 píseň</translation>
     </message>
     <message>
-        <location filename="../view/playlistwidget.cpp" line="323"/>
+        <location filename="../view/playlistwidget.cpp" line="322"/>
         <source>%1 songs</source>
         <translation>%1 písní</translation>
     </message>
@@ -951,15 +976,15 @@
 <context>
     <name>Playlist</name>
     <message>
-        <location filename="../core/playlist.cpp" line="472"/>
-        <location filename="../core/playlist.cpp" line="762"/>
+        <location filename="../core/playlist.cpp" line="473"/>
+        <location filename="../core/playlist.cpp" line="764"/>
         <source>Unknown album</source>
         <translation>Neznámé album</translation>
     </message>
     <message>
-        <location filename="../core/playlist.cpp" line="485"/>
-        <location filename="../core/playlist.cpp" line="766"/>
-        <location filename="../core/playlist.cpp" line="797"/>
+        <location filename="../core/playlist.cpp" line="486"/>
+        <location filename="../core/playlist.cpp" line="768"/>
+        <location filename="../core/playlist.cpp" line="799"/>
         <source>Unknown artist</source>
         <translation>Neznámý umělec</translation>
     </message>
@@ -1021,6 +1046,89 @@
     </message>
 </context>
 <context>
+    <name>QObject</name>
+    <message>
+        <location filename="../view/widget/settingsdialog.cpp" line="26"/>
+        <source>Minimize to system tray</source>
+        <translation>Minimalizovat do oznamovací oblasti panelu</translation>
+    </message>
+    <message>
+        <location filename="../view/widget/settingsdialog.cpp" line="27"/>
+        <source>Exit</source>
+        <translation>Ukončit</translation>
+    </message>
+    <message>
+        <location filename="../view/widget/settingsdialog.cpp" line="28"/>
+        <source>Ask me always</source>
+        <translation>Vždy se dotázat</translation>
+    </message>
+    <message>
+        <location filename="../view/widget/settingsdialog.cpp" line="29"/>
+        <source>Autoplay</source>
+        <translation>Automatické přehrávání</translation>
+    </message>
+    <message>
+        <location filename="../view/widget/settingsdialog.cpp" line="30"/>
+        <source>Enable fade in/out</source>
+        <translation>Zapnout postupné zesílení/zeslabení</translation>
+    </message>
+    <message>
+        <location filename="../view/widget/settingsdialog.cpp" line="31"/>
+        <source>Remember playback position</source>
+        <translation>Zapamatovat si polohu přehrávání</translation>
+    </message>
+    <message>
+        <location filename="../view/widget/settingsdialog.cpp" line="32"/>
+        <source>Close Main Window</source>
+        <translation>Zavřít hlavní okno</translation>
+    </message>
+    <message>
+        <location filename="../view/widget/settingsdialog.cpp" line="33"/>
+        <source>Basic</source>
+        <translation>Základní</translation>
+    </message>
+    <message>
+        <location filename="../view/widget/settingsdialog.cpp" line="34"/>
+        <source>Play</source>
+        <translation>Přehrát</translation>
+    </message>
+    <message>
+        <location filename="../view/widget/settingsdialog.cpp" line="35"/>
+        <source>Shortcuts</source>
+        <translation>Klávesové zkratky</translation>
+    </message>
+    <message>
+        <location filename="../view/widget/settingsdialog.cpp" line="36"/>
+        <source>Restore Defaults</source>
+        <translation>Obnovit výchozí</translation>
+    </message>
+    <message>
+        <location filename="../view/widget/settingsdialog.cpp" line="37"/>
+        <source>Next</source>
+        <translation>Další</translation>
+    </message>
+    <message>
+        <location filename="../view/widget/settingsdialog.cpp" line="38"/>
+        <source>Play/Pause</source>
+        <translation>Přehrát/Pozastavit</translation>
+    </message>
+    <message>
+        <location filename="../view/widget/settingsdialog.cpp" line="39"/>
+        <source>Previous</source>
+        <translation>Předchozí</translation>
+    </message>
+    <message>
+        <location filename="../view/widget/settingsdialog.cpp" line="40"/>
+        <source>Volume down</source>
+        <translation>Tišeji</translation>
+    </message>
+    <message>
+        <location filename="../view/widget/settingsdialog.cpp" line="41"/>
+        <source>Volume up</source>
+        <translation>Hlasitěji</translation>
+    </message>
+</context>
+<context>
     <name>SearchLyricsWidget</name>
     <message>
         <location filename="../view/widget/searchlyricswidget.cpp" line="107"/>
@@ -1046,17 +1154,17 @@
 <context>
     <name>SearchResult</name>
     <message>
-        <location filename="../view/widget/searchresult.cpp" line="61"/>
+        <location filename="../view/widget/searchresult.cpp" line="60"/>
         <source>Music</source>
         <translation>Hudba</translation>
     </message>
     <message>
-        <location filename="../view/widget/searchresult.cpp" line="78"/>
+        <location filename="../view/widget/searchresult.cpp" line="76"/>
         <source>Artists</source>
         <translation>Umělců</translation>
     </message>
     <message>
-        <location filename="../view/widget/searchresult.cpp" line="94"/>
+        <location filename="../view/widget/searchresult.cpp" line="92"/>
         <source>Albums</source>
         <translation>Alba</translation>
     </message>
@@ -1162,7 +1270,7 @@
 <context>
     <name>TitlebarWidget</name>
     <message>
-        <location filename="../view/widget/titlebarwidget.cpp" line="79"/>
+        <location filename="../view/widget/titlebarwidget.cpp" line="81"/>
         <source>Search</source>
         <translation>Hledat</translation>
     </message>
