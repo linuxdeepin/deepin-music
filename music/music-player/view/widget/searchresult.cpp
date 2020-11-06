@@ -38,6 +38,12 @@ SearchResult::SearchResult(QWidget *parent) : DBlurEffectWidget(parent)
     labelFont.setPointSize(DFontSizeManager::T9);
     QPalette labelPalette;
     labelPalette.setColor(QPalette::WindowText, QColor("#414D68 "));
+
+    //背景颜色和透明度
+    auto effect = QColor("#f9f9f9");
+    effect.setAlpha(240);
+    setMaskColor(effect);
+
     //设置圆角
     setBlurRectXRadius(18);
     setBlurRectYRadius(18);
