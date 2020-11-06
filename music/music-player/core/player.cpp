@@ -552,13 +552,13 @@ void Player::playMeta(PlaylistPtr playlist, const MetaPtr meta)
     }
 
     d->fadeOutAnimation->stop();
-
+    setFadeInOutFactor(1.0);
     if (d->fadeInOut && d->fadeInAnimation->state() != QPropertyAnimation::Running) {
         qDebug() << "start fade in";
         d->fadeInAnimation->setEasingCurve(QEasingCurve::InCubic);
         d->fadeInAnimation->setStartValue(0.10000);
         d->fadeInAnimation->setEndValue(1.0000);
-        d->fadeInAnimation->setDuration(sFadeInOutAnimationDuration);
+        d->fadeInAnimation->setDuration(sFadeInOutAnimationDuration / 2);
         d->fadeInAnimation->start();
     }
 }
@@ -599,18 +599,19 @@ void Player::resume(PlaylistPtr playlist, const MetaPtr meta)
     if (d->curPlaylist != nullptr)
         d->curPlaylist->play(meta);
     setPlayOnLoaded(true);
+    setFadeInOutFactor(1.0);
     //增大音乐自动开始播放时间，给setposition留足空间
     QTimer::singleShot(100, this, [ = ]() {
+        if (d->fadeInOut && d->fadeInAnimation->state() != QPropertyAnimation::Running) {
+            d->fadeInAnimation->setEasingCurve(QEasingCurve::InCubic);
+            d->fadeInAnimation->setStartValue(0.1000);
+            d->fadeInAnimation->setEndValue(1.0000);
+            d->fadeInAnimation->setDuration(sFadeInOutAnimationDuration / 2);
+            d->fadeInAnimation->start();
+        }
+
         d->qvplayer->play();
     });
-
-    if (d->fadeInOut && d->fadeInAnimation->state() != QPropertyAnimation::Running) {
-        d->fadeInAnimation->setEasingCurve(QEasingCurve::InCubic);
-        d->fadeInAnimation->setStartValue(0.1000);
-        d->fadeInAnimation->setEndValue(1.0000);
-        d->fadeInAnimation->setDuration(sFadeInOutAnimationDuration);
-        d->fadeInAnimation->start();
-    }
 
     if (!d->activePlaylist.isNull() && d->activePlaylist->contains(d->activeMeta)) {
         Q_EMIT mediaPlayed(d->activePlaylist, d->activeMeta);
@@ -661,14 +662,11 @@ void Player::pause()
 {
     Q_D(Player);
     /*--------suspend--------*/
-//    d->ioPlayer->suspend();
-
     if (d->fadeInAnimation) {
         d->fadeInAnimation->stop();
     }
-
+    setFadeInOutFactor(1.0);
     if (d->fadeInOut && d->fadeOutAnimation->state() != QPropertyAnimation::Running) {
-
         d->fadeOutAnimation->setEasingCurve(QEasingCurve::OutCubic);
         d->fadeOutAnimation->setStartValue(1.0000);
         d->fadeOutAnimation->setEndValue(0.1000);
@@ -676,14 +674,14 @@ void Player::pause()
         d->fadeOutAnimation->start();
         connect(d->fadeOutAnimation, &QPropertyAnimation::finished,
         this, [ = ]() {
-            d->qvplayer->pause();
-            QTimer::singleShot(50, this, [ = ]() {
+            QTimer::singleShot(sFadeInOutAnimationDuration, this, [ = ]() { //out lower sound
                 setFadeInOutFactor(1.0);
+                d->qvplayer->pause();
             });
         });
     } else {
-        d->qvplayer->pause();
         setFadeInOutFactor(1.0);
+        d->qvplayer->pause();
     }
 }
 
