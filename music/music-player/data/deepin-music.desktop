@@ -10,6 +10,7 @@ Type=Application
 StartupNotify=false
 X-Deepin-ManualID=deepin-music
 X-Deepin-Vendor=deepin
+X-Deepin-TurboType=dtkwidget
 
 # Translations:
 # Do not manually modify!
