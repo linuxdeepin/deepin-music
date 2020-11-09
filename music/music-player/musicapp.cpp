@@ -255,10 +255,7 @@ void MusicApp::show()
 
 void MusicApp::quit()
 {
-    //Q_D(MusicApp);
-//    d->presenter->handleQuit();
     qDebug() << "sync config start";
-//    MusicSettings::sync();
 #ifdef Q_OS_LINUX
     sync();
 #endif
