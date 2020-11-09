@@ -39,7 +39,7 @@
 #include <fcntl.h>
 #include <unistd.h>
 
-#include "config.h"
+//#include "config.h"
 
 #include "view/mainframe.h"
 #include "core/mediadatabase.h"
@@ -132,8 +132,11 @@ int main(int argc, char *argv[])
     app->setOrganizationName("deepin");
     app->setApplicationName("deepin-music");
     // Version Time
-    app->setApplicationVersion(DApplication::buildVersion(VERSION));
-
+#ifdef CVERSION
+    QString verstr(CVERSION);
+//    app->setApplicationVersion(DApplication::buildVersion(verstr));
+    app->setApplicationVersion(verstr);
+#endif
     DLogManager::registerConsoleAppender();
     DLogManager::registerFileAppender();
 

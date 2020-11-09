@@ -37,6 +37,7 @@ else()
     SET(CMAKE_EXE_LINKER_FLAGS  "-pie")
 endif()
 
+add_compile_definitions(CVERSION="${CVERSION}")
 set(CMAKE_EXPORT_COMPILE_COMMANDS on)
 
 find_package(PkgConfig REQUIRED)
