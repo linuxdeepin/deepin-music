@@ -28,6 +28,9 @@
 #include <QMouseEvent>
 #include <QWheelEvent>
 #include <QStackedLayout>
+#include <QDBusInterface>
+#include <QDBusReply>
+#include <QGSettings>
 
 #include <DHiDPIHelper>
 #include <DPushButton>
@@ -83,6 +86,9 @@ public:
     void installTipHint(QWidget *w, const QString &hintstr);
     void installHint(QWidget *w, QWidget *hint);
     void initConnection();
+    //customization: standby until music play end
+    void screenStandby(bool isStandby);
+    bool getStandbyParam();
 
     DBlurEffectWidget *forwardWidget = nullptr;
     Label           *title      = nullptr;
@@ -123,6 +129,7 @@ public:
     int             mode            = -1;
     bool            enableMove      = false;
     bool            favFlag         = false;
+    bool            isPangu         = false;
 
     int             m_type = 1;
 
@@ -131,6 +138,7 @@ public:
     VolumeMonitoring         volumeMonitoring;
     int             m_Volume = 0;
     int             m_Mute = 0;
+    uint32_t        lastCookie = 0;
     Footer *q_ptr;
     Q_DECLARE_PUBLIC(Footer)
 };
@@ -280,6 +288,51 @@ void FooterPrivate::initConnection()
     q->connect(&volumeMonitoring, &VolumeMonitoring::muteChanged, q, [ = ](bool mute) {
         q->onMutedChanged(mute);
     });
+    isPangu =  getStandbyParam();
+}
+
+void FooterPrivate::screenStandby(bool isStandby)
+{
+    if (!isPangu)   //not pangu,return
+        return;
+    if (isStandby) {
+        if (lastCookie > 0) {
+            QDBusInterface iface("org.freedesktop.ScreenSaver",
+                                 "/org/freedesktop/ScreenSaver",
+                                 "org.freedesktop.ScreenSaver");
+            iface.call("UnInhibit", lastCookie);
+            lastCookie = 0;
+        }
+        QDBusInterface iface("org.freedesktop.ScreenSaver",
+                             "/org/freedesktop/ScreenSaver",
+                             "org.freedesktop.ScreenSaver");
+        QDBusReply<uint32_t> reply = iface.call("Inhibit", "deepin-movie", "playing in fullscreen");
+
+        if (reply.isValid()) {
+            lastCookie = reply.value();
+        }
+    } else {
+        if (lastCookie > 0) {
+            QDBusInterface iface("org.freedesktop.ScreenSaver",
+                                 "/org/freedesktop/ScreenSaver",
+                                 "org.freedesktop.ScreenSaver");
+            iface.call("UnInhibit", lastCookie);
+            lastCookie = 0;
+        }
+    }
+}
+
+bool FooterPrivate::getStandbyParam()
+{
+    if (QGSettings::isSchemaInstalled("com.deepin.music")) {
+        QGSettings setting("com.deepin.music", "/com/deepin/music/");
+        QStringList list = setting.keys();
+        if (list.contains("autoSleep")
+                && setting.get("auto-sleep").toBool()) {
+            return true;
+        }
+    }
+    return false;
 }
 
 Footer::Footer(QWidget *parent) :
@@ -646,7 +699,10 @@ Footer::Footer(QWidget *parent) :
 
 Footer::~Footer()
 {
-
+    Q_D(Footer);
+    if (d->lastCookie > 0) {
+        d->screenStandby(false);
+    }
 }
 
 void Footer::setCurPlaylist(PlaylistPtr playlist)
@@ -1053,20 +1109,7 @@ void Footer::onMusicPlayed(PlaylistPtr playlist, const MetaPtr meta)
         }
 
         d->btPlayingStatus = true;
-    } else {
-        if (d->m_type == 1) {
-            d->btPlay->setPropertyPic(":/mpimage/light/normal/play_normal.svg",
-                                      ":/mpimage/light/normal/play_normal.svg",
-                                      ":/mpimage/light/press/play_press.svg");
-            //d->btPlay->setIcon(DHiDPIHelper::loadNxPixmap(":/mpimage/light/normal/play_normal.svg"));
-        } else {
-            d->btPlay->setPropertyPic(":/mpimage/dark/normal/play_normal.svg",
-                                      ":/mpimage/dark/normal/play_normal.svg",
-                                      ":/mpimage/dark/press/play_press.svg");
-            //d->btPlay->setIcon(DHiDPIHelper::loadNxPixmap(":/mpimage/dark/normal/play_normal.svg"));
-        }
-
-        d->btPlayingStatus = false;
+        d->screenStandby(true);
     }
 }
 
@@ -1101,6 +1144,7 @@ void Footer::onMusicError(PlaylistPtr playlist, const MetaPtr meta, int error)
         //d->btPlay->setIcon(DHiDPIHelper::loadNxPixmap(":/mpimage/dark/normal/play_normal.svg"));
     }
     d->btPlayingStatus = false;
+    d->screenStandby(false);
 }
 
 void Footer::onMusicPause(PlaylistPtr playlist, const MetaPtr meta)
@@ -1123,6 +1167,7 @@ void Footer::onMusicPause(PlaylistPtr playlist, const MetaPtr meta)
                                   ":/mpimage/dark/press/play_press.svg");
     }
     d->btPlayingStatus = false;
+    d->screenStandby(false);
 
     if (d->activingPlaylist != nullptr) {
         if (d->activingPlaylist->allmusic().isEmpty()) {
@@ -1175,6 +1220,7 @@ void Footer::onMusicStoped(PlaylistPtr playlist, const MetaPtr meta)
                                   ":/mpimage/dark/press/play_press.svg");
     }
     d->btPlayingStatus = false;
+    d->screenStandby(false);
 
     if (d->activingPlaylist != nullptr) {
         if (d->activingPlaylist->allmusic().isEmpty()) {
