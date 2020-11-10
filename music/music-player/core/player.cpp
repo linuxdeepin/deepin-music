@@ -566,8 +566,9 @@ void Player::playMeta(PlaylistPtr playlist, const MetaPtr meta)
         });
     }
 
-    d->fadeOutAnimation->stop();
-
+    if (d->fadeInOut)
+        d->fadeOutAnimation->stop();
+    setFadeInOutFactor(d->fadeInOut ? 0.0 : 1.0); //fade in ,set 0.0
     if (d->fadeInOut && d->fadeInAnimation->state() != QPropertyAnimation::Running) {
         qDebug() << "start fade in";
         d->fadeInAnimation->setEasingCurve(QEasingCurve::InCubic);
@@ -601,11 +602,6 @@ void Player::resume(PlaylistPtr playlist, const MetaPtr meta)
         d->qvplayer->setTime(meta->offset);
     }
 
-    if (d->fadeOutAnimation) {
-        setFadeInOutFactor(1.0);
-        d->fadeOutAnimation->stop();
-    }
-
     qDebug() << "resume top";
     if (playlist == d->activePlaylist && d->qvplayer->state() == Vlc::Playing && meta->hash == d->activeMeta->hash)
         return;
@@ -619,6 +615,9 @@ void Player::resume(PlaylistPtr playlist, const MetaPtr meta)
         d->qvplayer->play();
     });
 
+    if (d->fadeInOut) //if fadeInOut ,stop
+        d->fadeOutAnimation->stop();
+    setFadeInOutFactor(d->fadeInOut ? 0.0 : 1.0);//fade in ,set 0.0
     if (d->fadeInOut && d->fadeInAnimation->state() != QPropertyAnimation::Running) {
         d->fadeInAnimation->setEasingCurve(QEasingCurve::InCubic);
         d->fadeInAnimation->setStartValue(0.1000);
@@ -676,12 +675,10 @@ void Player::pause()
 {
     Q_D(Player);
     /*--------suspend--------*/
-//    d->ioPlayer->suspend();
-
-    if (d->fadeInAnimation) {
+    if (d->fadeInOut)
         d->fadeInAnimation->stop();
-    }
 
+    setFadeInOutFactor(1.0);
     if (d->fadeInOut && d->fadeOutAnimation->state() != QPropertyAnimation::Running) {
 
         d->fadeOutAnimation->setEasingCurve(QEasingCurve::OutCubic);
@@ -691,8 +688,8 @@ void Player::pause()
         d->fadeOutAnimation->start();
         connect(d->fadeOutAnimation, &QPropertyAnimation::finished,
         this, [ = ]() {
-            d->qvplayer->pause();
-            QTimer::singleShot(50, this, [ = ]() {
+            QTimer::singleShot(sFadeInOutAnimationDuration, this, [ = ]() { //
+                d->qvplayer->pause();
                 setFadeInOutFactor(1.0);
             });
         });
