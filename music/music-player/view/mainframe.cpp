@@ -849,6 +849,12 @@ void MainFrame::initUI(bool showLoading)
     Q_D(MainFrame);
 
     d->initUI(showLoading);
+//    d->initMenu();
+}
+
+void MainFrame::initMenu()
+{
+    Q_D(MainFrame);
     d->initMenu();
 }
 

@@ -40,6 +40,8 @@ public:
     void tabwidgetInfo(PlaylistPtr infoPlaylist);
     PlaylistPtr curPlaylist();
 
+    void initTabWidget();
+
 public slots:
     void onSearchText(QString str);
     void selectMusiclistChanged(PlaylistPtr playlist);

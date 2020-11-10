@@ -113,11 +113,11 @@ int main(int argc, char *argv[])
     setenv("PULSE_PROP_media.role", "music", 1);
 
 //    DApplication::loadDXcbPlugin();
-#if (DTK_VERSION < DTK_VERSION_CHECK(5, 4, 0, 0))
-    DApplication *app = new DApplication(argc, argv);
-#else
+//#if (DTK_VERSION < DTK_VERSION_CHECK(5, 4, 0, 0))
+//    DApplication *app = new DApplication(argc, argv);
+//#else
     DApplication *app = DApplication::globalApplication(argc, argv);
-#endif
+//#endif
 
 #ifdef SNAP_APP
     DStandardPaths::setMode(DStandardPaths::Snap);

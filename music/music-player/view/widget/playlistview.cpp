@@ -42,6 +42,8 @@
 
 #include "delegate/playitemdelegate.h"
 #include "model/playlistmodel.h"
+#include "databaseservice.h"
+#include "global.h"
 
 DWIDGET_USE_NAMESPACE
 
@@ -52,6 +54,7 @@ public:
 
     void addMedia(const MetaPtr meta);
     void removeSelection(QItemSelectionModel *selection);
+    void initAllSonglist();
 
     PlaylistModel      *model        = nullptr;
     PlayItemDelegate   *delegate     = nullptr;
@@ -77,6 +80,7 @@ PlayListView::PlayListView(bool searchFlag, bool isPlayList, QWidget *parent)
 
     d->searchFlag = searchFlag;
     d->model = new PlaylistModel(0, 1, this);
+    d->model->clear();
     setModel(d->model);
 
     d->delegate = new PlayItemDelegate;
@@ -114,8 +118,10 @@ PlayListView::PlayListView(bool searchFlag, bool isPlayList, QWidget *parent)
         MetaPtr meta = d->model->meta(index);
         if (meta == playlist()->playing()) {
             Q_EMIT resume(meta);
+            qDebug() << "-------resume";
         } else {
             Q_EMIT playMedia(meta);
+            qDebug() << "-------playMedia";
         }
     });
     m_ModelMake = new ModelMake();
@@ -265,6 +271,18 @@ QString PlayListView::firstHash()
     return hashStr;
 }
 
+void PlayListView::initAllSonglist()
+{
+    Q_D(PlayListView);
+    d->initAllSonglist();
+}
+
+int PlayListView::getMusicCount()
+{
+    Q_D(PlayListView);
+    return d->model->rowCount();
+}
+
 void PlayListView::onAddMeta(QString playListId, const MetaPtr meta)
 {
     Q_D(PlayListView);
@@ -375,8 +393,10 @@ bool PlayListView::onMusiclistChanged(PlaylistPtr playlist)
 
     setUpdatesEnabled(false);
     setModel(nullptr);
-    d->model->removeRows(0, d->model->rowCount());
-    d->playMetaPtrList.clear();
+    if (DataBaseService::getInstance()->m_couldClear) {
+        d->model->removeRows(0, d->model->rowCount());
+        d->playMetaPtrList.clear();
+    }
 
     QString searchStr = playlist->searchStr();
     if (!d->searchFlag)
@@ -480,8 +500,36 @@ void PlayListView::keyboardSearch(const QString &search)
     //    QAbstractItemView::keyboardSearch(search);
 }
 
+void PlayListViewPrivate::initAllSonglist()
+{
+    QList<MediaMeta> list = DataBaseService::getInstance()->allMusicInfos();
+
+    for (int i = 0; i < list.size(); i++) {
+        QStandardItem *newItem = new QStandardItem;
+
+        QString imagesDirPath = Global::cacheDir() + "/images/" + list.at(i).hash + ".jpg";
+        QFileInfo file(imagesDirPath);
+        QIcon icon;
+        if (file.exists()) {
+            icon = QIcon(imagesDirPath);
+        } else {
+            icon = QIcon(":/common/image/cover_max.svg");
+        }
+        newItem->setIcon(icon);
+        model->appendRow(newItem);
+
+        auto row = model->rowCount() - 1;
+        QModelIndex index = model->index(row, 0, QModelIndex());
+
+        model->setData(index, list.at(i).hash);
+    }
+    int count = model->rowCount();
+    qDebug() << "------count = " << count;
+}
+int static addCount = 0;
 void PlayListViewPrivate::addMedia(const MetaPtr meta)
 {
+    int count = model->rowCount();
     for (int i = 0; i < model->rowCount(); ++i) {
         auto hash = model->data(model->index(i, 0)).toString();
         if (hash == meta->hash)
@@ -498,6 +546,11 @@ void PlayListViewPrivate::addMedia(const MetaPtr meta)
     QIcon icon = QIcon(cover);
     newItem->setIcon(icon);
     model->appendRow(newItem);
+    addCount++;
+    if (addCount >= 12 || addCount >= DataBaseService::getInstance()->allMusicInfos().size()) {
+        DataBaseService::getInstance()->m_couldClear = true;
+        addCount = 0;
+    }
 
     auto row = model->rowCount() - 1;
     QModelIndex index = model->index(row, 0, QModelIndex());

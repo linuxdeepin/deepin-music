@@ -217,11 +217,9 @@ void MusicApp::show()
     dumpGeometry(geometry);
 
     d->playerFrame->resize(QSize(1070, 680));
-    d->playerFrame->show();
     Dtk::Widget::moveToCenter(d->playerFrame);
     if (geometry.isEmpty()) {
         d->playerFrame->resize(QSize(1070, 680));
-        d->playerFrame->show();
         Dtk::Widget::moveToCenter(d->playerFrame);
     } else {
         d->playerFrame->restoreGeometry(geometry);
@@ -254,6 +252,7 @@ void MusicApp::initUI(bool showFlag)
 {
     Q_D(MusicApp);
     d->playerFrame->initUI(showFlag);
+    d->playerFrame->initMenu();
     show();
 }
 

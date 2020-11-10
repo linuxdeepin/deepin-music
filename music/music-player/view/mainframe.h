@@ -35,6 +35,7 @@ public:
     ~MainFrame() Q_DECL_OVERRIDE;
 
     void initUI(bool showLoading);
+    void initMenu();
     void postInitUI();
     void binding(Presenter *presenter);
     void quickBinding(Presenter *presenter);

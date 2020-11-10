@@ -55,6 +55,10 @@ public:
 
     void setSizeChangedFlag(bool flag);
     bool getSizeChangedFlag();
+    //性能优化音乐库专用
+    void initPerformanceDataBase();
+    //性能优化歌单专用
+    void initPerformanceSonglist();
 
 public slots:
     void slotTheme(int type);
@@ -94,5 +98,7 @@ private:
     int                  m_type             = 1;
     bool                m_sizeChangedFlag   = false;
     bool                pixmapState         = false;
+    bool m_isDataBase = false;
+    bool m_isSongList = false;
 };
 

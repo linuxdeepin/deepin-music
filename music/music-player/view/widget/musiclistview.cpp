@@ -34,6 +34,7 @@
 #include "musiclistviewitem.h"
 #include "./model/musiclistmodel.h"
 #include "playlistview.h"
+#include "databaseservice.h"
 
 DGUI_USE_NAMESPACE
 
@@ -146,6 +147,14 @@ MusicListView::~MusicListView()
 
 void MusicListView::addMusicList(PlaylistPtr playlist, bool addFlag)
 {
+    if (DataBaseService::getInstance()->m_isPerformance && m_isDataBase) {
+        model->clear();
+        DataBaseService::getInstance()->m_isPerformance = false;
+    }
+    if (DataBaseService::getInstance()->m_isSonglistPerformance && m_isSongList) {
+        model->clear();
+        DataBaseService::getInstance()->m_isSonglistPerformance = false;
+    }
     if (playlist == nullptr)
         return;
     QString rStr;
@@ -173,7 +182,7 @@ void MusicListView::addMusicList(PlaylistPtr playlist, bool addFlag)
     }
 
     allPlaylists.append(playlist);
-    QString displayName;
+    QString displayName = "";
     if (playlist->id() == FavMusicListID) {
         displayName = tr("My Favorites");
     } else {
@@ -364,6 +373,78 @@ void MusicListView::setSizeChangedFlag(bool flag)
 bool MusicListView::getSizeChangedFlag()
 {
     return m_sizeChangedFlag;
+}
+
+void MusicListView::initPerformanceDataBase()
+{
+    m_isDataBase = true;
+    QString rStr;
+    if (m_type == 1) {
+        rStr = "light";
+    } else {
+        rStr = "dark";
+    }
+
+    QString displayName = tr("专辑");
+    auto item = new DStandardItem(QIcon::fromTheme("music_album"), displayName);
+    auto itemFont = item->font();
+    itemFont.setPixelSize(14);
+    item->setFont(itemFont);
+    if (m_type == 1) {
+        item->setForeground(QColor("#414D68"));
+    } else {
+        item->setForeground(QColor("#C0C6D4"));
+    }
+    model->appendRow(item);
+
+    displayName = tr("演唱者");
+    item = new DStandardItem(QIcon::fromTheme("music_singer"), displayName);
+    model->appendRow(item);
+
+    displayName = tr("所有音乐");
+    item = new DStandardItem(QIcon::fromTheme("music_allmusic"), displayName);
+    model->appendRow(item);
+
+    displayName = tr("我的收藏");
+    item = new DStandardItem(QIcon::fromTheme("music_mycollection"), displayName);
+    model->appendRow(item);
+
+    setMinimumHeight(model->rowCount() * 40);
+}
+
+void MusicListView::initPerformanceSonglist()
+{
+    m_isSongList = true;
+    QList<DataBaseService::PlaylistData> list = DataBaseService::getInstance()->allPlaylistMeta();
+    QString rStr;
+    if (m_type == 1) {
+        rStr = "light";
+    } else {
+        rStr = "dark";
+    }
+
+    for (int i = 0; i < list.size(); i++) {
+        DataBaseService::PlaylistData data = list.at(i);
+        if (data.uuid == "album" || data.uuid == "artist" || data.uuid == "all" || data.uuid == "fav" ||
+                data.uuid == "play" || data.uuid == "musicCand" || data.uuid == "albumCand" || data.uuid == "artistCand" ||
+                data.uuid == "musicResult" || data.uuid == "albumResult" || data.uuid == "artistResult" ||
+                data.uuid == "search") {
+            continue;
+        }
+        QString displayName = data.displayName;
+        auto item = new DStandardItem(QIcon::fromTheme("music_famousballad"), displayName);
+        auto itemFont = item->font();
+        itemFont.setPixelSize(14);
+        item->setFont(itemFont);
+        if (m_type == 1) {
+            item->setForeground(QColor("#414D68"));
+        } else {
+            item->setForeground(QColor("#C0C6D4"));
+        }
+        model->appendRow(item);
+    }
+
+    setMinimumHeight(model->rowCount() * 40);
 }
 
 //void MusicListView::startDrag(Qt::DropActions supportedActions)
@@ -601,29 +682,20 @@ void MusicListView::showContextMenu(const QPoint &pos)
 void MusicListView::slotTheme(int type)
 {
     m_type = type;
-    QString rStr;
-    if (type == 1) {
-        rStr = "light";
-    } else {
-        rStr = "dark";
-    }
-    for (int i = 0; i < model->rowCount(); i++) {
-        for (int i = 0; i < model->rowCount(); i++) {
-            auto curIndex = model->index(i, 0);
-            auto curStandardItem = dynamic_cast<DStandardItem *>(model->itemFromIndex(curIndex));
-            auto curItemRow = curStandardItem->row();
-            if (curItemRow < 0 || curItemRow >= allPlaylists.size())
-                continue;
-            auto playlist = allPlaylists[curStandardItem->row()];
 
-            if (m_type == 1) {
-                curStandardItem->setForeground(QColor("#414D68"));
-            } else {
-                curStandardItem->setForeground(QColor("#C0C6D4"));
-            }
+    for (int i = 0; i < model->rowCount(); i++) {
+        auto curIndex = model->index(i, 0);
+        auto curStandardItem = dynamic_cast<DStandardItem *>(model->itemFromIndex(curIndex));
+        auto curItemRow = curStandardItem->row();
+        if (curItemRow < 0 || curItemRow >= allPlaylists.size())
+            continue;
+
+        if (m_type == 1) {
+            curStandardItem->setForeground(QColor("#414D68"));
+        } else {
+            curStandardItem->setForeground(QColor("#C0C6D4"));
         }
     }
-
 }
 
 void MusicListView::onRename(QStandardItem *item)
