@@ -52,7 +52,7 @@ public slots:
     void changePicture(QPixmap pixmap, QPixmap sidebarPixmap, QPixmap albumPixmap);
     void retResult(QString searchText, QList<PlaylistPtr> resultlist);
     void resultTabwidget(int index);
-
+    void setCustomSortType(PlaylistPtr playlist);
     void CloseSearch();
     void onCustomContextMenuRequest(const QPoint &pos,
                                     PlaylistPtr selectedlist,

@@ -251,7 +251,9 @@ int MusicListDataWidgetPrivate::updateInfo()
 
 void MusicListDataWidgetPrivate::initData(PlaylistPtr playlist, bool selectFlag, QString searchStr)
 {
-    //Q_Q(MusicListDataWidget);
+    Q_Q(MusicListDataWidget);
+
+    DDropdown *t_curDropdown = nullptr;
 
     if (searchStr == "noSearchResults") {
         actionBar->hide();
@@ -303,6 +305,8 @@ void MusicListDataWidgetPrivate::initData(PlaylistPtr playlist, bool selectFlag,
         musicListView->hide();
         tabWidget->hide();
 
+        t_curDropdown = albumDropdown;
+
         if (albumListView->viewMode() == QListView::IconMode) {
             btIconMode->setChecked(true);
             btlistMode->setChecked(false);
@@ -334,6 +338,8 @@ void MusicListDataWidgetPrivate::initData(PlaylistPtr playlist, bool selectFlag,
         artistListView->show();
         musicListView->hide();
         tabWidget->hide();
+
+        t_curDropdown = artistDropdown;
 
         if (artistListView->viewMode() == QListView::IconMode) {
             btIconMode->setChecked(true);
@@ -424,7 +430,7 @@ void MusicListDataWidgetPrivate::initData(PlaylistPtr playlist, bool selectFlag,
         musicListView->show();
         tabWidget->hide();
 
-        //t_curDropdown = musicDropdown;
+        t_curDropdown = musicDropdown;
 
         if (musicListView->viewMode() != (playlist->viewMode())) {
             musicListView->setViewModeFlag(static_cast<QListView::ViewMode>(playlist->viewMode()));
@@ -439,6 +445,16 @@ void MusicListDataWidgetPrivate::initData(PlaylistPtr playlist, bool selectFlag,
         }
 
         musicListView->onMusiclistChanged(playlist);
+    }
+
+    if (playlist->sortType() == Playlist::SortByCustom) {
+        q->setCustomSortType(playlist);
+    } else {
+        for (auto action : t_curDropdown->actions()) {
+            if (action->data().toInt() == playlist->sortType()) {
+                t_curDropdown->setCurrentAction(action);
+            }
+        }
     }
 }
 
@@ -1253,21 +1269,21 @@ MusicListDataWidget::~MusicListDataWidget()
 {
 }
 
-//void MusicListDataWidget::setCustomSortType(PlaylistPtr playlist)
-//{
-//    Q_D(MusicListDataWidget);
+void MusicListDataWidget::setCustomSortType(PlaylistPtr playlist)
+{
+    Q_D(MusicListDataWidget);
 
-//    DDropdown *t_curDropdown = nullptr;
-//    if (playlist->id() == AlbumMusicListID) {
-//        t_curDropdown = d->albumDropdown;
-//    } else if (playlist->id() == ArtistMusicListID) {
-//        t_curDropdown = d->artistDropdown;
-//    } else {
-//        t_curDropdown = d->musicDropdown;
-//    }
-//    t_curDropdown->setCurrentAction(nullptr);
-//    t_curDropdown->setText(tr("Custom"));
-//}
+    DDropdown *t_curDropdown = nullptr;
+    if (playlist->id() == AlbumMusicListID) {
+        t_curDropdown = d->albumDropdown;
+    } else if (playlist->id() == ArtistMusicListID) {
+        t_curDropdown = d->artistDropdown;
+    } else {
+        t_curDropdown = d->musicDropdown;
+    }
+    t_curDropdown->setCurrentAction(nullptr);
+    t_curDropdown->setText(tr("Custom"));
+}
 
 void MusicListDataWidget::resultTabwidget(int index)
 {
