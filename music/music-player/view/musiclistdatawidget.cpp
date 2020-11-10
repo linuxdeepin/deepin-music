@@ -257,6 +257,8 @@ void MusicListDataWidgetPrivate::initData(PlaylistPtr playlist, bool selectFlag,
 {
     Q_Q(MusicListDataWidget);
 
+    DDropdown *t_curDropdown = nullptr;
+
     if (searchStr == "noSearchResults") {
         actionBar->hide();
         if (albumListView) {
@@ -311,6 +313,8 @@ void MusicListDataWidgetPrivate::initData(PlaylistPtr playlist, bool selectFlag,
         artistSearchDropdown->hide();
         musicSearchDropdown->hide();
 
+        t_curDropdown = albumDropdown;
+
         if (albumListView) {
             albumListView->show();
         } else {
@@ -356,6 +360,8 @@ void MusicListDataWidgetPrivate::initData(PlaylistPtr playlist, bool selectFlag,
         albumSearchDropdown->hide();
         artistSearchDropdown->hide();
         musicSearchDropdown->hide();
+
+        t_curDropdown = artistDropdown;
 
         if (artistListView) {
             artistListView->show();
@@ -532,12 +538,12 @@ void MusicListDataWidgetPrivate::initData(PlaylistPtr playlist, bool selectFlag,
         artistSearchDropdown->hide();
         musicSearchDropdown->hide();
 
+        t_curDropdown = musicDropdown;
+
         musicListView->show();
         if (tabWidget) {
             tabWidget->hide();
         }
-
-        //t_curDropdown = musicDropdown;
 
         if (musicListView->viewMode() != (playlist->viewMode())) {
             musicListView->setViewModeFlag(static_cast<QListView::ViewMode>(playlist->viewMode()));
@@ -552,6 +558,16 @@ void MusicListDataWidgetPrivate::initData(PlaylistPtr playlist, bool selectFlag,
         }
 
         musicListView->onMusiclistChanged(playlist);
+    }
+
+    if (playlist->sortType() == Playlist::SortByCustom) {
+        q->setCustomSortType(playlist);
+    } else {
+        for (auto action : t_curDropdown->actions()) {
+            if (action->data().toInt() == playlist->sortType()) {
+                t_curDropdown->setCurrentAction(action);
+            }
+        }
     }
 }
 
