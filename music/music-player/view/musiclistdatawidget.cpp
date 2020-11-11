@@ -560,6 +560,9 @@ void MusicListDataWidgetPrivate::initData(PlaylistPtr playlist, bool selectFlag,
         musicListView->onMusiclistChanged(playlist);
     }
 
+    if (t_curDropdown == nullptr) //判断空指针
+        return ;
+
     if (playlist->sortType() == Playlist::SortByCustom) {
         q->setCustomSortType(playlist);
     } else {
