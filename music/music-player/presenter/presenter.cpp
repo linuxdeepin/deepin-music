@@ -760,7 +760,7 @@ void Presenter::postAction(bool showFlag)
                     });
                 }
             } else {
-                Q_EMIT d->pause();
+                Q_EMIT d->dbusPause();
             }
         });
     }
@@ -2422,7 +2422,7 @@ void Presenter::initMpris(MprisPlayer *mprisPlayer)
     /*********************************************
      *  set dbus PlaybackStatus as pause state
      * *******************************************/
-    connect(d, &PresenterPrivate::pause,
+    connect(d, &PresenterPrivate::dbusPause,
     this, [ = ]() {
         mprisPlayer->setPlaybackStatus(Mpris::Paused);
     });

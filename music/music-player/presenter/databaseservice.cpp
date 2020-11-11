@@ -57,20 +57,38 @@ QList<MediaMeta> DataBaseService::allMusicInfos()
     if (m_MediaMeta.size() > 0) {
         return m_MediaMeta;
     } else {
+        QSqlQuery queryNew;
+        QList<QString> allHash;
+        QVariantList removeHash;
+        QString queryStringAll = QString("select music_id from playlist_all");
+
+        queryNew.prepare(queryStringAll);
+        if (!queryNew.exec()) {
+            qCritical() << queryNew.lastError();
+        }
+
+        while (queryNew.next()) {
+            allHash << queryNew.value(0).toString();
+        }
+
         QString queryStringNew = QString("SELECT hash, localpath, title, artist, album, "
                                          "filetype, track, offset, length, size, "
                                          "timestamp, invalid, search_id, cuepath, "
                                          "lyricPath, codec "
                                          "FROM musicNew");
-        QSqlQuery queryNew;
+
         queryNew.prepare(queryStringNew);
         if (! queryNew.exec()) {
             qCritical() << queryNew.lastError();
             return m_MediaMeta;
         }
 
-        int i = 0;
         while (queryNew.next()) {
+            QString musicHash = queryNew.value(0).toString();
+            if (!allHash.contains(musicHash)) {
+                removeHash.append(musicHash);
+                continue;
+            }
             MediaMeta meta;
             meta.hash = queryNew.value(0).toString();
             meta.localPath = queryNew.value(1).toString();
@@ -90,6 +108,17 @@ QList<MediaMeta> DataBaseService::allMusicInfos()
             meta.codec = queryNew.value(15).toString();
             m_MediaMeta << meta;
             m_MediaMetaMap[meta.hash] = meta;
+        }
+
+        if (removeHash.size() > 0) {
+            //remove from musicNew
+            for (QVariant var : removeHash) {
+                QString queryStringRemove = QString("delete from musicNew where hash=%1").arg(var.toString());
+                queryNew.prepare(queryStringRemove);
+                if (!queryNew.exec()) {
+                    qCritical() << queryNew.lastError();
+                }
+            }
         }
     }
     return m_MediaMeta;

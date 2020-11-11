@@ -244,7 +244,7 @@ void margeDatabase()
     }
 }
 
-MediaDatabase::MediaDatabase(QObject *parent) : QObject(parent) ,m_writer(nullptr)
+MediaDatabase::MediaDatabase(QObject *parent) : QObject(parent), m_writer(nullptr)
 {
 }
 
@@ -624,39 +624,68 @@ bool MediaDatabase::mediaMetaExist(const QString &hash)
 QList<MediaMeta> MediaDatabase::allmetas()
 {
     QList<MediaMeta> metalist;
+    QList<QString> allhash;
+    QVariantList removeHash;
+    QSqlQuery querysql;
+    QString queryStringAll = QString("select music_id from playlist_all");
+
+    querysql.prepare(queryStringAll);
+    if (!querysql.exec()) {
+        qCritical() << querysql.lastError();
+        return metalist;
+    }
+
+    while (querysql.next()) {
+        allhash << querysql.value(0).toString();
+    }
+
     QString queryStringNew = QString("SELECT hash, localpath, title, artist, album, "
                                      "filetype, track, offset, length, size, "
                                      "timestamp, invalid, search_id, cuepath, "
                                      "lyricPath, codec "
                                      "FROM musicNew");
-
-    QSqlQuery queryNew;
-
-    queryNew.prepare(queryStringNew);
-    if (! queryNew.exec()) {
-        qCritical() << queryNew.lastError();
+    querysql.prepare(queryStringNew);
+    if (! querysql.exec()) {
+        qCritical() << querysql.lastError();
         return metalist;
     }
 
-    while (queryNew.next()) {
+    while (querysql.next()) {
+        QString musicHash = querysql.value(0).toString();
+        if (!allhash.contains(musicHash)) {
+            removeHash.append(musicHash);
+            continue;
+        }
+
         MediaMeta meta;
-        meta.hash = queryNew.value(0).toString();
-        meta.localPath = queryNew.value(1).toString();
-        meta.title = queryNew.value(2).toString();
-        meta.artist = queryNew.value(3).toString();
-        meta.album = queryNew.value(4).toString();
-        meta.filetype = queryNew.value(5).toString();
-        meta.track = queryNew.value(6).toLongLong();
-        meta.offset = queryNew.value(7).toLongLong();
-        meta.length = queryNew.value(8).toLongLong();
-        meta.size = queryNew.value(9).toLongLong();
-        meta.timestamp = queryNew.value(10).toLongLong();
-        meta.invalid = queryNew.value(11).toBool();
-        meta.searchID = queryNew.value(12).toString();
-        meta.cuePath = queryNew.value(13).toString();
-        meta.lyricPath = queryNew.value(14).toString();
-        meta.codec = queryNew.value(15).toString();
+        meta.hash = querysql.value(0).toString();
+        meta.localPath = querysql.value(1).toString();
+        meta.title = querysql.value(2).toString();
+        meta.artist = querysql.value(3).toString();
+        meta.album = querysql.value(4).toString();
+        meta.filetype = querysql.value(5).toString();
+        meta.track = querysql.value(6).toLongLong();
+        meta.offset = querysql.value(7).toLongLong();
+        meta.length = querysql.value(8).toLongLong();
+        meta.size = querysql.value(9).toLongLong();
+        meta.timestamp = querysql.value(10).toLongLong();
+        meta.invalid = querysql.value(11).toBool();
+        meta.searchID = querysql.value(12).toString();
+        meta.cuePath = querysql.value(13).toString();
+        meta.lyricPath = querysql.value(14).toString();
+        meta.codec = querysql.value(15).toString();
         metalist << meta;
+    }
+
+    if (removeHash.size() > 0) {
+        //remove from musicNew
+        for (QVariant var : removeHash) {
+            QString queryStringRemove = QString("delete from musicNew where hash=%1").arg(var.toString());
+            querysql.prepare(queryStringRemove);
+            if (!querysql.exec()) {
+                qCritical() << querysql.lastError();
+            }
+        }
     }
 
     return metalist;
