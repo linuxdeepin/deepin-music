@@ -174,7 +174,7 @@ bool HintFilter::eventFilter(QObject *obj, QEvent *event)
                 d->hintWidget->hide();
                 d->delayShowTimer->stop();
             } else {
-                QMetaObject::invokeMethod(d->hintWidget, "deleyHide", Qt::DirectConnection);
+                QMetaObject::invokeMethod(d->hintWidget, "delayHide", Qt::DirectConnection);
             }
 
         }

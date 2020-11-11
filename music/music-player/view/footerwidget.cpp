@@ -250,6 +250,10 @@ void FooterPrivate::initConnection()
         }
     });
 
+    q->connect(volSlider, &SoundVolume::delayAutoHide, q, [ = ]() {
+        btSound->setChecked(false);
+    });
+
     q->connect(volSlider, &SoundVolume::volumeMute, q, [ = ]() {
         Q_EMIT q->localToggleMute();
     });

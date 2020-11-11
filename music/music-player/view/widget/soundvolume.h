@@ -43,9 +43,10 @@ public:
 signals:
     void volumeChanged(int volume);
     void volumeMute();
+    void delayAutoHide();
 
 public slots:
-    void deleyHide();
+    void delayHide();
     void onVolumeChanged(int volume);
     void setBackground(QBrush background);
     void setRadius(int radius);

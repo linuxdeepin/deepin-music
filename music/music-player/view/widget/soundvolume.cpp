@@ -207,7 +207,7 @@ void SoundVolume::syncMute(bool mute)
     Q_UNUSED(mute)
 }
 
-void SoundVolume::deleyHide()
+void SoundVolume::delayHide()
 {
     Q_D(SoundVolume);
     d->mouseIn = false;
@@ -215,6 +215,7 @@ void SoundVolume::deleyHide()
         Q_D(SoundVolume);
         if (!d->mouseIn) {
             hide();
+            Q_EMIT delayAutoHide();
         }
     });
 }
@@ -246,7 +247,7 @@ void SoundVolume::leaveEvent(QEvent *event)
 {
     Q_D(SoundVolume);
     d->mouseIn = false;
-    deleyHide();
+    delayHide();
     QWidget::leaveEvent(event);
 }
 

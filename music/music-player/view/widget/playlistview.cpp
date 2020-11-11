@@ -735,7 +735,7 @@ void PlayListView::showContextMenu(const QPoint &pos,
             act->setData(QVariant::fromValue(codec));
         }
 
-        if (codecList.length() > 1) {
+        if (codecList.length() >= 1) { //show Encoding action
             myMenu.addSeparator();
             myMenu.addAction(tr("Encoding"))->setMenu(&textCodecMenu);
         }
