@@ -684,14 +684,13 @@ void Player::pause()
         d->fadeOutAnimation->setEasingCurve(QEasingCurve::OutCubic);
         d->fadeOutAnimation->setStartValue(1.0000);
         d->fadeOutAnimation->setEndValue(0.1000);
-        d->fadeOutAnimation->setDuration(sFadeInOutAnimationDuration);
+        d->fadeOutAnimation->setDuration(sFadeInOutAnimationDuration * 2);
         d->fadeOutAnimation->start();
         connect(d->fadeOutAnimation, &QPropertyAnimation::finished,
         this, [ = ]() {
-            QTimer::singleShot(sFadeInOutAnimationDuration, this, [ = ]() { //
-                d->qvplayer->pause();
-                setFadeInOutFactor(1.0);
-            });
+            //do not use QTimer
+            d->qvplayer->pause();
+            setFadeInOutFactor(1.0);
         });
     } else {
         d->qvplayer->pause();
