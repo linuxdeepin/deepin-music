@@ -503,7 +503,7 @@ void PlayListView::keyboardSearch(const QString &search)
 void PlayListViewPrivate::initAllSonglist()
 {
     QList<MediaMeta> list = DataBaseService::getInstance()->allMusicInfos();
-
+    int addCount = 0;
     for (int i = 0; i < list.size(); i++) {
         QStandardItem *newItem = new QStandardItem;
 
@@ -517,6 +517,11 @@ void PlayListViewPrivate::initAllSonglist()
         }
         newItem->setIcon(icon);
         model->appendRow(newItem);
+        addCount++;
+        if (addCount >= 12 || addCount >= DataBaseService::getInstance()->allMusicInfos().size()) {
+            DataBaseService::getInstance()->m_couldClear = true;
+            addCount = 0;
+        }
 
         auto row = model->rowCount() - 1;
         QModelIndex index = model->index(row, 0, QModelIndex());
@@ -526,7 +531,7 @@ void PlayListViewPrivate::initAllSonglist()
     int count = model->rowCount();
     qDebug() << "------count = " << count;
 }
-int static addCount = 0;
+
 void PlayListViewPrivate::addMedia(const MetaPtr meta)
 {
     int count = model->rowCount();
@@ -546,11 +551,6 @@ void PlayListViewPrivate::addMedia(const MetaPtr meta)
     QIcon icon = QIcon(cover);
     newItem->setIcon(icon);
     model->appendRow(newItem);
-    addCount++;
-    if (addCount >= 12 || addCount >= DataBaseService::getInstance()->allMusicInfos().size()) {
-        DataBaseService::getInstance()->m_couldClear = true;
-        addCount = 0;
-    }
 
     auto row = model->rowCount() - 1;
     QModelIndex index = model->index(row, 0, QModelIndex());
