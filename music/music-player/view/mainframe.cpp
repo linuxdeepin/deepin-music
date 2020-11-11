@@ -803,7 +803,7 @@ MainFrame::MainFrame(QWidget *parent) :
     // d->titlebarwidget->setResultWidget(d->searchResult);
 
     d->titlebarwidget->setEnabled(false);
-    d->titlebarwidget->show();
+//    d->titlebarwidget->show();
 
     d->titlebar = titlebar();
     d->titlebar->setFixedHeight(50);
@@ -813,25 +813,6 @@ MainFrame::MainFrame(QWidget *parent) :
     d->titlebar->setCustomWidget(d->titlebarwidget);
     d->titlebar->layout()->setAlignment(d->titlebarwidget, Qt::AlignCenter);
     d->titlebar->resize(width(), 50);
-    QShortcut *viewshortcut = new QShortcut(this);
-    viewshortcut->setKey(QKeySequence(QLatin1String("Ctrl+Shift+/")));
-    connect(viewshortcut, SIGNAL(activated()), this, SLOT(onViewShortcut()));
-
-    QShortcut *searchShortcut = new QShortcut(this);
-    searchShortcut->setKey(QKeySequence(QLatin1String("Ctrl+F")));
-    connect(searchShortcut, &QShortcut::activated, this, [ = ]() {
-        d->titlebarwidget->setEditStatus();
-    });
-
-    QShortcut *windowShortcut = new QShortcut(this);
-    windowShortcut->setKey(QKeySequence(QLatin1String("Ctrl+Alt+F")));
-    connect(windowShortcut, &QShortcut::activated, this, [ = ]() {
-        if (windowState() == Qt::WindowMaximized) {
-            showNormal();
-        } else {
-            showMaximized();
-        }
-    });
 }
 
 MainFrame::~MainFrame()
@@ -863,6 +844,26 @@ void MainFrame::postInitUI()
     Q_D(MainFrame);
 
     d->postInitUI();
+
+    QShortcut *viewshortcut = new QShortcut(this);
+    viewshortcut->setKey(QKeySequence(QLatin1String("Ctrl+Shift+/")));
+    connect(viewshortcut, SIGNAL(activated()), this, SLOT(onViewShortcut()));
+
+    QShortcut *searchShortcut = new QShortcut(this);
+    searchShortcut->setKey(QKeySequence(QLatin1String("Ctrl+F")));
+    connect(searchShortcut, &QShortcut::activated, this, [ = ]() {
+        d->titlebarwidget->setEditStatus();
+    });
+
+    QShortcut *windowShortcut = new QShortcut(this);
+    windowShortcut->setKey(QKeySequence(QLatin1String("Ctrl+Alt+F")));
+    connect(windowShortcut, &QShortcut::activated, this, [ = ]() {
+        if (windowState() == Qt::WindowMaximized) {
+            showNormal();
+        } else {
+            showMaximized();
+        }
+    });
 
     focusPlayList();
 

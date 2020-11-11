@@ -111,8 +111,6 @@ bool checkOnly()
 int main(int argc, char *argv[])
 {
     setenv("PULSE_PROP_media.role", "music", 1);
-
-//    DApplication::loadDXcbPlugin();
 #if (DTK_VERSION < DTK_VERSION_CHECK(5, 4, 0, 0))
     DApplication *app = new DApplication(argc, argv);
 #else
@@ -193,15 +191,11 @@ int main(int argc, char *argv[])
     /*---Player instance init---*/
     MainFrame mainframe;
     MusicApp *music = new MusicApp(&mainframe);
-
     auto showflag = MusicSettings::value("base.play.showFlag").toBool();
     music->initUI(showflag);
-
-    QTimer::singleShot(20, nullptr, [ = ]() {
-        music->initConnection(showflag);
-        /*----创建语音dbus-----*/
-        createSpeechDbus();
-    });
+    music->initConnection(showflag);
+//    /*----创建语音dbus-----*/
+//    createSpeechDbus();
 
     int count = parser.positionalArguments().length();
     if (count > 1) {
@@ -230,6 +224,5 @@ int main(int argc, char *argv[])
                      &mainframe, &MainFrame::slotTheme);
     Dtk::Core::DVtableHook::overrideVfptrFun(app, &DApplication::handleQuitAction,
                                              &mainframe, &MainFrame::closeFromMenu);
-
     return app->exec();
 }
