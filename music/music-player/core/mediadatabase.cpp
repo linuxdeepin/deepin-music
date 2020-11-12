@@ -51,7 +51,7 @@ static bool createConnection()
         return false;
     }
 
-    QSqlQuery query;
+    QSqlQuery query(db);
     query.exec("CREATE TABLE IF NOT EXISTS music (hash TEXT primary key not null, "
                "timestamp INTEGER,"
                "title VARCHAR(256), artist VARCHAR(256), "
@@ -253,6 +253,14 @@ void MediaDatabase::init()
     createConnection();
     margeDatabase();
 
+    QDir cacheDir(Global::cacheDir());
+    if (!cacheDir.exists()) {
+        cacheDir.mkpath(".");
+    }
+    QString cachePath = Global::cacheDir() + "/mediameta.sqlite";
+    QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE", "mediabase");
+    db.setDatabaseName(cachePath);
+
     // sqlite must run in one thread!!!
     m_writer = new MediaDatabaseWriter;
     ThreadPool::instance()->moveToNewThread(m_writer);//将读写耗时操作放到子线程操作
@@ -390,7 +398,7 @@ void MediaDatabase::init()
 QStringList MediaDatabase::allPlaylistDisplayName()
 {
     QStringList list;
-    QSqlQuery query;
+    QSqlQuery query(QSqlDatabase::database("mediabase"));
     query.prepare("SELECT displayname FROM playlist");
 
     if (!query.exec()) {
@@ -407,7 +415,7 @@ QStringList MediaDatabase::allPlaylistDisplayName()
 QList<PlaylistMeta> MediaDatabase::allPlaylistMeta()
 {
     QList<PlaylistMeta> list;
-    QSqlQuery query;
+    QSqlQuery query(QSqlDatabase::database("mediabase"));
     query.prepare("SELECT uuid, displayname, icon, readonly, hide, "
                   "sort_type, order_type, sort_id FROM playlist");
 
@@ -435,7 +443,7 @@ static MetaPtrList searchTitle(const QString &queryString)
 {
     MetaPtrList metalist;
 
-    QSqlQuery query;
+    QSqlQuery query(QSqlDatabase::database("mediabase"));
     query.prepare(queryString);
     if (! query.exec()) {
         qCritical() << query.lastError();
@@ -506,7 +514,7 @@ MetaPtrList MediaDatabase::searchMediaPath(const QString &path, int limit)
 
 void MediaDatabase::addPlaylist(const PlaylistMeta &playlistMeta)
 {
-    QSqlQuery query;
+    QSqlQuery query(QSqlDatabase::database("mediabase"));
     query.prepare("INSERT INTO playlist ("
                   "uuid, displayname, icon, readonly, hide, "
                   "sort_type, order_type, sort_id "
@@ -541,7 +549,7 @@ void MediaDatabase::addPlaylist(const PlaylistMeta &playlistMeta)
 
 void MediaDatabase::updatePlaylist(const PlaylistMeta &playlistMeta)
 {
-    QSqlQuery query;
+    QSqlQuery query(QSqlDatabase::database("mediabase"));
     query.prepare("UPDATE playlist "
                   "SET displayname = :displayname, icon = :icon, "
                   "readonly = :readonly, hide = :hide, "
@@ -564,7 +572,7 @@ void MediaDatabase::updatePlaylist(const PlaylistMeta &playlistMeta)
 
 void MediaDatabase::removePlaylist(const PlaylistMeta &playlistMeta)
 {
-    QSqlQuery query;
+    QSqlQuery query(QSqlDatabase::database("mediabase"));
     QString sqlstring = QString("DROP TABLE IF EXISTS playlist_%1").arg(playlistMeta.uuid);
     if (! query.exec(sqlstring)) {
         qWarning() << query.lastError();
@@ -584,7 +592,7 @@ void MediaDatabase::deleteMusic(const MetaPtr meta, const PlaylistMeta &playlist
         return;
     }
 
-    QSqlQuery query;
+    QSqlQuery query(QSqlDatabase::database("mediabase"));
     QString sqlstring = QString("DELETE FROM playlist_%1 WHERE music_id = '%2'")
                         .arg(playlistMeta.uuid).arg(meta->hash);
     if (! query.exec(sqlstring)) {
@@ -595,7 +603,7 @@ void MediaDatabase::deleteMusic(const MetaPtr meta, const PlaylistMeta &playlist
 
 bool MediaDatabase::playlistExist(const QString &uuid)
 {
-    QSqlQuery query;
+    QSqlQuery query(QSqlDatabase::database("mediabase"));
     query.prepare("SELECT COUNT(*) FROM playlist where uuid = :uuid");
     query.bindValue(":uuid", uuid);
 
@@ -609,7 +617,7 @@ bool MediaDatabase::playlistExist(const QString &uuid)
 
 bool MediaDatabase::mediaMetaExist(const QString &hash)
 {
-    QSqlQuery query;
+    QSqlQuery query(QSqlDatabase::database("mediabase"));
     query.prepare("SELECT COUNT(*) FROM music where hash = :hash");
     query.bindValue(":hash", hash);
 
@@ -626,7 +634,7 @@ QList<MediaMeta> MediaDatabase::allmetas()
     QList<MediaMeta> metalist;
     QList<QString> allhash;
     QVariantList removeHash;
-    QSqlQuery querysql;
+    QSqlQuery querysql(QSqlDatabase::database("mediabase"));
     QString queryStringAll = QString("select music_id from playlist_all");
 
     querysql.prepare(queryStringAll);

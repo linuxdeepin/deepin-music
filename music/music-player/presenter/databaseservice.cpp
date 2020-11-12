@@ -57,7 +57,7 @@ QList<MediaMeta> DataBaseService::allMusicInfos()
     if (m_MediaMeta.size() > 0) {
         return m_MediaMeta;
     } else {
-        QSqlQuery queryNew;
+        QSqlQuery queryNew(QSqlDatabase::database("database"));
         QList<QString> allHash;
         QVariantList removeHash;
         QString queryStringAll = QString("select music_id from playlist_all");
@@ -130,7 +130,7 @@ QList<DataBaseService::PlaylistData> DataBaseService::allPlaylistMeta()
         return m_PlaylistMeta;
     } else {
         m_PlaylistMeta.clear();
-        QSqlQuery query;
+        QSqlQuery query(QSqlDatabase::database("database"));
         query.prepare("SELECT uuid, displayname, icon, readonly, hide, "
                       "sort_type, order_type, sort_id FROM playlist");
 
@@ -162,7 +162,7 @@ bool DataBaseService::createConnection()
         cacheDir.mkpath(".");
     }
     QString cachePath = Global::cacheDir() + "/mediameta.sqlite";
-    QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
+    QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE", "database");
 //    db = QSqlDatabase::addDatabase("QSQLITE", "writer");
     db.setDatabaseName(cachePath);
 
