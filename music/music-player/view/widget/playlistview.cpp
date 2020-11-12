@@ -398,6 +398,7 @@ bool PlayListView::onMusiclistChanged(PlaylistPtr playlist)
         d->model->removeRows(0, d->model->rowCount());
         d->playMetaPtrList.clear();
     }
+    DataBaseService::getInstance()->m_couldClear = true;
 
     QString searchStr = playlist->searchStr();
     if (!d->searchFlag)
@@ -546,12 +547,6 @@ void PlayListViewPrivate::addMedia(const MetaPtr meta)
     QIcon icon = QIcon(cover);
     newItem->setIcon(icon);
     model->appendRow(newItem);
-
-    addCount++;
-    if (addCount >= 12 || addCount >= DataBaseService::getInstance()->allMusicInfos().size()) {
-        DataBaseService::getInstance()->m_couldClear = true;
-        addCount = 0;
-    }
 
     auto row = model->rowCount() - 1;
     QModelIndex index = model->index(row, 0, QModelIndex());
