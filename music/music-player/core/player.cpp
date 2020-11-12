@@ -566,17 +566,17 @@ void Player::playMeta(PlaylistPtr playlist, const MetaPtr meta)
         });
     }
 
-    if (d->fadeInOut)
-        d->fadeOutAnimation->stop();
-    setFadeInOutFactor(d->fadeInOut ? 0.0 : 1.0); //fade in ,set 0.0
-    if (d->fadeInOut && d->fadeInAnimation->state() != QPropertyAnimation::Running) {
-        qDebug() << "start fade in";
-        d->fadeInAnimation->setEasingCurve(QEasingCurve::InCubic);
-        d->fadeInAnimation->setStartValue(0.10000);
-        d->fadeInAnimation->setEndValue(1.0000);
-        d->fadeInAnimation->setDuration(sFadeInOutAnimationDuration);
-        d->fadeInAnimation->start();
-    }
+//    if (d->fadeInOut)
+//        d->fadeOutAnimation->stop();
+//    setFadeInOutFactor(d->fadeInOut ? 0.0 : 1.0); //fade in ,set 0.0
+//    if (d->fadeInOut && d->fadeInAnimation->state() != QPropertyAnimation::Running) {
+//        qDebug() << "start fade in";
+//        d->fadeInAnimation->setEasingCurve(QEasingCurve::InCubic);
+//        d->fadeInAnimation->setStartValue(0.10000);
+//        d->fadeInAnimation->setEndValue(1.0000);
+//        d->fadeInAnimation->setDuration(sFadeInOutAnimationDuration);
+//        d->fadeInAnimation->start();
+//    }
 }
 
 void Player::resume(PlaylistPtr playlist, const MetaPtr meta)
