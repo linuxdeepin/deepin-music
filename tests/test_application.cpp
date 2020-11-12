@@ -347,7 +347,7 @@ TEST(LyricLabel, isRunning19)
     //a->paintEvent(nullptr);
     a->setCurrentIndex(2);
     a->currentIndex();
-    a->paintItem(p, 0, rt);
+    //a->paintItem(p, 0, rt);
 //    a->paintItem(p, 1, rt);
     a->event(new QScrollPrepareEvent(QPoint(20, 20)));
     a->event(new QScrollEvent(QPoint(20, 20), QPoint(24, 20), QScrollEvent::ScrollStarted));
@@ -395,25 +395,33 @@ TEST(MusicListDataModel, isRunning22)
     PlaylistPtr playlist;
     a->setPlaylist(playlist);
     a->playlist();
+    a->flags(QModelIndex());
     ASSERT_TRUE(a->playlist() == nullptr);
 }
 
 TEST(MusiclistInfomodel, isRunning23)
 {
     MusiclistInfomodel *a = new  MusiclistInfomodel() ;
+    PlaylistPtr playlist;
+    a->setPlaylist(playlist);
     a->playlist();
+    a->flags(QModelIndex());
 }
 
 TEST(MusiclistModel, isRunning24)
 {
     MusiclistModel *a = new  MusiclistModel() ;
+    PlaylistPtr playlist;
+    a->flags(QModelIndex());
     Q_UNUSED(a)
 }
 
 TEST(MusicSearchListModel, isRunning25)
 {
     MusicSearchListModel *a = new  MusicSearchListModel() ;
+    a->setPlaylist(PlaylistPtr());
     a->playlist();
+    a->flags(QModelIndex());
 }
 
 extern void margeDatabase();
@@ -857,7 +865,10 @@ extern qint64 timeframe2mtime(long frame);
 TEST(CueParser, cue)
 {
     QString path = "/usr/share/music/bensound-sunny.mp3";
+    QString path2 = "/usr/share/sounds/alsa/Noise.wav";
+
     DMusic::CueParser *cue = new DMusic::CueParser(path, "UTF-8");
+    DMusic::CueParser *cue2 = new DMusic::CueParser(path2, "");
     cue->metalist();
     QString str = cue->mediaFilepath();
     QString str1 = cue->cueFilepath();
@@ -937,7 +948,7 @@ TEST(MetaSearchService, metaservice)
 //    cacheLyricPath(globMetaPtr);
     cacheCoverPath(globMetaPtr);
 //    cacheLyricPth("");
-    cacheCoverPath("");
+    //cacheCoverPath("");
 
     PluginManager *plu = new PluginManager;
     plu->init();
