@@ -19,6 +19,7 @@
 
 #include <QDebug>
 #include <QPainter>
+#include <QPainterPath>
 #include <QRect>
 #include <QPainterPath>
 
