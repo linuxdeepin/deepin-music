@@ -30,4 +30,3 @@ qt5_use_modules(${CMD_NAME} ${QtModule})
 #单独查找KCodecs包
 find_package(KF5Codecs)
 target_link_libraries(${CMD_NAME} KF5::Codecs)
-install(TARGETS ${CMD_NAME} DESTINATION ${CMAKE_INSTALL_LIBDIR})

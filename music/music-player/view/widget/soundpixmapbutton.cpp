@@ -55,4 +55,3 @@ void SoundPixmapButton::paintEvent(QPaintEvent *event)
 #endif
     painter.restore();
 }
-
