@@ -2,22 +2,48 @@ Source: deepin-music
 Section: sound
 Priority: extra
 Maintainer: Deepin Packages Builder <packages@deepin.com>
-Build-Depends: debhelper, cmake, pkg-config, qttools5-dev-tools,
- libqt5svg5-dev, qtmultimedia5-dev, qttools5-dev,
- libqt5x11extras5-dev, libdtkcore5-bin, 
- libqt5sql5-sqlite, libxtst-dev,
- libtag1-dev, libicu-dev, libcue-dev,
- libavutil-dev, libavformat-dev, libavcodec-dev, libgsettings-qt-dev,
- libdtkgui-dev,libdtkwidget-dev,libkf5codecs-dev, libvlc-dev,libvlccore-dev
+Build-Depends:
+ cmake,
+ debhelper,
+ libavutil-dev,
+ libavcodec-dev,
+ libavformat-dev,
+ libcue-dev,
+ libdtkcore5-bin,
+ libdtkgui-dev,
+ libdtkwidget-dev,
+ libdbusextended-qt5-dev,
+ libgsettings-qt-dev,
+ libicu-dev,
+ libkf5codecs-dev,
+ libmpris-qt5-dev,
+ libtag1-dev,
+ libqt5svg5-dev,
+ libqt5x11extras5-dev,
+ libqt5sql5-sqlite,
+ libxtst-dev,
+ libvlc-dev,
+ libvlccore-dev,
+ pkg-config,
+ qtmultimedia5-dev,
+ qttools5-dev,
+ qttools5-dev-tools
 Standards-Version: 3.9.8
 Homepage: http://www.deepin.org/
 
 Package: deepin-music
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends},
- gstreamer1.0-libav, gstreamer1.0-plugins-base, gstreamer1.0-plugins-good,
- gstreamer1.0-plugins-bad, gstreamer1.0-plugins-ugly, gstreamer1.0-pulseaudio,
- libqt5sql5-sqlite, libqt5multimedia5-plugins, gstreamer1.0-fluendo-mp3,
- gvfs-bin,vlc-plugin-base
+ gstreamer1.0-fluendo-mp3,
+ gstreamer1.0-libav,
+ gstreamer1.0-plugins-base,
+ gstreamer1.0-plugins-good,
+ gstreamer1.0-plugins-bad,
+ gstreamer1.0-plugins-ugly,
+ gstreamer1.0-pulseaudio,
+ gvfs-bin,
+ libqt5sql5-sqlite,
+ libqt5multimedia5-plugins,
+ vlc-plugin-base
 Description: Music software for UOS
  Music is a local music player with beautiful design and simple functions.

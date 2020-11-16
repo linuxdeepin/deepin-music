@@ -13,5 +13,4 @@ find_package(Qt5LinguistTools)
 include(GNUInstallDirs)
 
 add_subdirectory(libdmusic)
-add_subdirectory(vendor)
 add_subdirectory(music-player)

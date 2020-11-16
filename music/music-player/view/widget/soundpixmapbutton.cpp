@@ -20,6 +20,7 @@
 #include <QDebug>
 #include <QPainter>
 #include <QRect>
+#include <QPainterPath>
 
 SoundPixmapButton::SoundPixmapButton(QWidget *parent)
     : DPushButton(parent)
@@ -54,4 +55,3 @@ void SoundPixmapButton::paintEvent(QPaintEvent *event)
 #endif
     painter.restore();
 }
-

@@ -13,13 +13,8 @@ set(CMAKE_AUTOUIC ON)
 
 #文件夹包含
 set(PROJECT_INCLUDE ./
-    ./../vendor
-    ./../vendor/mpris-qt/src
-    ./../vendor/dbusextended-qt/src
     ./../interface)
 
-include_directories(/usr/include/vlc)
-include_directories(/usr/include/vlc/plugins)
 include_directories(./../interface)
 include_directories(./../libdmusic)
 include_directories(./core)
@@ -57,6 +52,9 @@ pkg_check_modules(Dtk REQUIRED IMPORTED_TARGET dtkcore)
 pkg_check_modules(Dtk REQUIRED IMPORTED_TARGET dtkgui)
 pkg_check_modules(qgsettings REQUIRED IMPORTED_TARGET gsettings-qt)
 pkg_check_modules(AV REQUIRED IMPORTED_TARGET libcue taglib)
+pkg_check_modules(MPRIS REQUIRED IMPORTED_TARGET mpris-qt5)
+pkg_check_modules(DBusextended REQUIRED IMPORTED_TARGET dbusextended-qt5)
+pkg_check_modules(VLC REQUIRED IMPORTED_TARGET vlc-plugin)
 
 set(AllQRC
     ./resource/resource.qrc
@@ -130,7 +128,7 @@ qt5_use_modules(${CMD_NAME} ${QtModule})
 
 set(TARGET_LIBS Qt5::Widgets Qt5::Core Qt5::Gui Qt5::DBus  Qt5::Sql Qt5::Multimedia Qt5::Xml
      PkgConfig::AV PkgConfig::Dtk PkgConfig::qgsettings icui18n
-    mpris-qt5 dbusextended-qt5 dmusic)
+    PkgConfig::MPRIS PkgConfig::DBusextended PkgConfig::VLC dmusic)
 
 if(SANITIZER_CHECK MATCHES on)
     set(CMAKE_CXX_FLAGS "-fsanitize=undefined,address,leak -fno-omit-frame-pointer")
@@ -138,10 +136,7 @@ if(SANITIZER_CHECK MATCHES on)
     set(CMAKE_Ｌ_FLAGS "-fsanitize=undefined,address,leak -fno-omit-frame-pointer")
 endif()
 
-LINK_DIRECTORIES(${CMAKE_BINARY_DIR}/music/libdmusic/
-        ${CMAKE_BINARY_DIR}/music/vendor/dbusextended-qt/src/
-        ${CMAKE_BINARY_DIR}/music/vendor/mpris-qt/src/)
-
+LINK_DIRECTORIES(${CMAKE_BINARY_DIR}/music/libdmusic/)
 
 #将第三方库链接进来(注意 *_LIBRARIES)
 target_link_libraries(${CMD_NAME} ${TARGET_LIBS} )
@@ -159,4 +154,3 @@ install(FILES ${PROJECT_SOURCE_DIR}/music/music-player/data/deepin-music.desktop
 
 install(FILES ${PROJECT_SOURCE_DIR}/music/music-player/resource/theme/common/image/deepin-music.svg
     DESTINATION share/icons/hicolor/scalable/apps)
-
