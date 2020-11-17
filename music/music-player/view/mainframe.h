@@ -65,6 +65,7 @@ public slots:
     void slotTheme(int type);
     void changePicture();
     void onViewShortcut();
+    void closeFromMenu();
 protected:
     virtual void enterEvent(QEvent *event) Q_DECL_OVERRIDE;
     virtual bool eventFilter(QObject *obj, QEvent *e) Q_DECL_OVERRIDE;
