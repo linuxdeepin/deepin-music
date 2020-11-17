@@ -1671,6 +1671,11 @@ void MainFrame::onViewShortcut()
     connect(shortcutViewProc, SIGNAL(finished(int)), shortcutViewProc, SLOT(deleteLater()));
 }
 
+void MainFrame::closeFromMenu()
+{
+    close();
+}
+
 bool MainFrame::eventFilter(QObject *obj, QEvent *e)
 {
     Q_D(const MainFrame);

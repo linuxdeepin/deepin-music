@@ -28,7 +28,7 @@
 
 #include <DLog>
 #include <DStandardPaths>
-#include <DApplication>
+//#include <DApplication>
 #include <DGuiApplicationHelper>
 #include <DApplicationSettings>
 #include <DExportedInterface>
@@ -52,6 +52,11 @@
 #include "core/util/global.h"
 #include "musicapp.h"
 #include "speech/exportedinterface.h"
+
+#include <DVtableHook>
+#define protected public
+#include <DApplication>
+#undef protected
 
 using namespace Dtk::Core;
 using namespace Dtk::Widget;
@@ -87,7 +92,11 @@ int main(int argc, char *argv[])
 {
     setenv("PULSE_PROP_media.role", "music", 1);
 
-    DApplication app(argc, argv);
+#if (DTK_VERSION < DTK_VERSION_CHECK(5, 4, 0, 0))
+    DApplication *app = new DApplication(argc, argv);
+#else
+    DApplication *app = DApplication::globalApplication(argc, argv);
+#endif
 
 #ifdef SNAP_APP
     DStandardPaths::setMode(DStandardPaths::Snap);
@@ -98,11 +107,11 @@ int main(int argc, char *argv[])
     QCoreApplication::addLibraryPath(".");
 #endif
 
-    app.setAttribute(Qt::AA_UseHighDpiPixmaps);
-    app.setOrganizationName("deepin");
-    app.setApplicationName("deepin-music");
+    app->setAttribute(Qt::AA_UseHighDpiPixmaps);
+    app->setOrganizationName("deepin");
+    app->setApplicationName("deepin-music");
     // Version Time
-    app.setApplicationVersion(DApplication::buildVersion(VERSION));
+    app->setApplicationVersion(DApplication::buildVersion(VERSION));
 
     DLogManager::registerConsoleAppender();
     DLogManager::registerFileAppender();
@@ -112,17 +121,17 @@ int main(int argc, char *argv[])
     parser.addHelpOption();
     parser.addVersionOption();
     parser.addPositionalArgument("file", "Music file path");
-    parser.process(app);
+    parser.process(*app);
     // handle open file
     QString toOpenFile;
     if (parser.positionalArguments().length() > 0) {
         toOpenFile = parser.positionalArguments().first();
     }
-    app.loadTranslator();
+    app->loadTranslator();
 
-    app.setProductIcon(QIcon::fromTheme("deepin-music"));
+    app->setProductIcon(QIcon::fromTheme("deepin-music"));
 
-    if (!app.setSingleInstance("deepinmusic") || !checkOnly()) {
+    if (!app->setSingleInstance("deepinmusic") || !checkOnly()) {
         qDebug() << "another deepin music has started";
         for (auto curStr : parser.positionalArguments()) {
             if (!curStr.isEmpty()) {
@@ -178,7 +187,7 @@ int main(int argc, char *argv[])
         MusicSettings::setOption("base.play.to_open_uri", url.toString());
     }
 
-    app.connect(&app, &QApplication::lastWindowClosed,
+    app->connect(app, &QApplication::lastWindowClosed,
     &mainframe, [ & ]() {
         auto quit = MusicSettings::value("base.close.is_close").toBool();
         if (quit) {
@@ -186,10 +195,11 @@ int main(int argc, char *argv[])
         }
     });
 
-    app.setQuitOnLastWindowClosed(false);
+    app->setQuitOnLastWindowClosed(false);
 
     QObject::connect(DGuiApplicationHelper::instance(), &DGuiApplicationHelper::themeTypeChanged,
                      &mainframe, &MainFrame::slotTheme);
-
-    return app.exec();
+    Dtk::Core::DVtableHook::overrideVfptrFun(app, &DApplication::handleQuitAction,
+                                             &mainframe, &MainFrame::closeFromMenu);
+    return app->exec();
 }
