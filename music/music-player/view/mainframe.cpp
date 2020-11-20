@@ -70,6 +70,7 @@
 #include <DSettingsDialog>
 #include <DMessageManager>
 #include <QShortcut>
+#include "ac-desktop-define.h"
 DWIDGET_USE_NAMESPACE
 
 const QString s_PropertyViewname = "viewname";
@@ -350,6 +351,8 @@ void MainFramePrivate::initUI(bool showLoading)
     q->setFocusPolicy(Qt::ClickFocus);
 
     centralWidget = new QWidget(q);
+    AC_SET_OBJECT_NAME(centralWidget, AC_centralWidget);
+    AC_SET_ACCESSIBLE_NAME(centralWidget, AC_centralWidget);
     contentLayout = new QStackedLayout(centralWidget);
     contentLayout->setContentsMargins(0, 0, 0, 0);
     q->setCentralWidget(centralWidget);
@@ -795,7 +798,8 @@ void MainFramePrivate::showInfoDialog(const MetaPtr meta)
 MainFrame::MainFrame(QWidget *parent) :
     DMainWindow(parent), dd_ptr(new MainFramePrivate(this))
 {
-    setObjectName("MainFrame");
+    AC_SET_OBJECT_NAME(this, AC_MainFrame);
+    AC_SET_ACCESSIBLE_NAME(this, AC_MainFrame);
     Global::setAppName(tr("Music"));
     QString descriptionText = MainFrame::tr("Music is a local music player with beautiful design and simple functions.");
     QString acknowledgementLink = "https://www.deepin.org/acknowledgments/deepin-music#thanks";

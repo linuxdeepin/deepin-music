@@ -4,6 +4,8 @@
 #include <QDebug>
 #include <QAction>
 #include <QProcess>
+#include <QMimeData>
+#include <QAudioBuffer>
 #include <QStackedLayout>
 #include <QStandardPaths>
 #include <QApplication>
@@ -15,6 +17,9 @@
 #include <QTestEventList>
 #include <QPointF>
 #include <QWheelEvent>
+#include <QMouseEvent>
+#include <QPaintEvent>
+#include <QEvent>
 #include <QTest>
 
 #include <DUtil>
@@ -86,6 +91,17 @@
 #include "util/cueparser.h"
 #include "util/encodingdetector.h"
 #include "util/pinyinsearch.h"
+#include "util/basetool.h"
+
+#include "view/musiclistdatawidget.h"
+#include "view/musiclistscrollarea.h"
+#include "view/musiclistwidget.h"
+#include "view/helper/widgethellper.h"
+#include "view/widget/musictitleimage.h"
+#include "view/widget/searchlyricswidget.h"
+#include "view/widget/searchmetalist.h"
+#include "view/widget/soundpixmapbutton.h"
+
 #include "core/mediadatabasewriter.h"
 #include "metabufferdetector.h"
 #include "metasearchservice.h"
@@ -114,8 +130,6 @@
 #include "mpris.h"
 #include "mprismanager.h"
 #include "mpriscontroller.h"
-#include "mpriscontroller_p.h"
-#include "mprisplayer_p.h"
 #include "mprisplayer.h"
 #include "speech/speechCenter.h"
 #include "speech/exportedinterface.h"
@@ -150,10 +164,29 @@ TEST(Application, volume)
 //    ASSERT_EQ(20, a->radius());
     a->setRadius(5);
 //    ASSERT_EQ(5, a->radius());
+    a->radius();
     a->deleyHide();
+    a->borderColor();
     a->onVolumeChanged(10);
     a->adjustSize();
     a->update();
+    a->syncMute(false);
+    a->syncMute(true);
+    a->slotTheme(0);
+    a->slotTheme(1);
+
+    QEnterEvent event(QPointF(0, 0), QPointF(0, 0), QPointF(0, 0));
+    QApplication::sendEvent(a, &event);
+
+    QEvent event1(QEvent::Leave);
+    QApplication::sendEvent(a, &event1);
+
+    QEvent event2(QEvent::Wheel);
+    QApplication::sendEvent(a, &event2);
+
+    QPaintEvent paintEvent(QRect(0, 0, 0, 0));
+    QApplication::sendEvent(a, &paintEvent);
+
     ASSERT_EQ(10, a->volume());
 }
 
@@ -168,6 +201,13 @@ TEST(SearchEdit, isNull)
     a->onTextChanged();
     a->onReturnPressed();
     a->curPlaylistPtr().isNull();
+
+    b->selectDown();
+    b->currentStr();
+    b->selectPlaylist(PlaylistPtr());
+    b->slotTheme(0);
+    b->slotTheme(1);
+    b->clearKeyState();
     //ASSERT_TRUE(isNull);
 }
 
@@ -179,6 +219,10 @@ TEST(Cover, setcolor)
     a->radius();
     a->setCoverPixmap(pix);
     a->setRadius(1);
+
+    QPaintEvent event(QRect(0, 0, 0, 0));
+    QApplication::sendEvent(a, &event);
+
     ASSERT_EQ(1, a->radius());
 }
 
@@ -200,6 +244,14 @@ TEST(DDropdown, setStr)
     a->actions();
     a->setText(str);
     a->setCurrentAction(0);
+    Q_EMIT a->requestContextMenu();
+
+    QEvent event(QEvent::Leave);
+    QApplication::sendEvent(a, &event);
+
+    QMouseEvent mouseEvent(QMouseEvent::MouseButtonRelease, QPointF(), Qt::MouseButton::LeftButton,
+                           Qt::MouseButtons(Qt::MouseButtonMask), Qt::KeyboardModifier::NoModifier);
+    QApplication::sendEvent(a, &mouseEvent);
     ASSERT_EQ(str, a->status());
 }
 
@@ -227,6 +279,9 @@ TEST(MusicInfoItemDelegate, isRunning7)
     QWidget wid;
     a->createEditor(&wid, option, index);
     a->setEditorData(&wid, index);
+    a->sizeHint(QStyleOptionViewItem(), QModelIndex());
+    a->initStyleOption(new QStyleOptionViewItem(), QModelIndex());
+    a->~MusicInfoItemDelegate();
 }
 
 TEST(MusicListDataDelegate, isRunning8)
@@ -281,6 +336,8 @@ TEST(PlayItemDelegate, isRunning12)
     QWidget wid;
     a->createEditor(&wid, option, index);
     a->setEditorData(&wid, index);
+    a->initStyleOption(new QStyleOptionViewItem(), QModelIndex());
+    a->~PlayItemDelegate();
     Q_UNUSED(a)
 }
 
@@ -299,6 +356,9 @@ TEST(PlayItemDelegatePrivate, setcolor)
 TEST(CloseConfirmDialog, isRunning14)
 {
     CloseConfirmDialog *a = new  CloseConfirmDialog() ;
+    a->isRemember();
+    a->closeAction();
+    a->~CloseConfirmDialog();
     Q_UNUSED(a)
 }
 
@@ -314,6 +374,8 @@ TEST(HoverFilter, isRunning16)
     HoverShadowFilter *b = new HoverShadowFilter();
     HintFilter *c = new HintFilter();
     c->hideAll();
+    c->showHitsFor(nullptr, nullptr);
+    HoverShadowFilter *d = new HoverShadowFilter(nullptr);
     Q_UNUSED(a)
     ASSERT_FALSE(b == nullptr);
 }
@@ -322,6 +384,10 @@ TEST(Label, isRunning17)
 {
     Label *a = new  Label() ;
     Label *b = new Label("asd", nullptr);
+    QMouseEvent mouseEvent(QMouseEvent::MouseButtonPress, QPointF(), Qt::MouseButton::LeftButton,
+                           Qt::MouseButtons(Qt::MouseButtonMask), Qt::KeyboardModifier::NoModifier);
+    QApplication::sendEvent(a, &mouseEvent);
+    a->~Label();
     Q_UNUSED(a)
     ASSERT_FALSE(b == nullptr);
 }
@@ -333,39 +399,56 @@ TEST(ListView, isRunning18)
     event.addMouseClick(Qt::MouseButton::LeftButton);
     event.simulate(a);
     event.clear();
+
+    QResizeEvent event1(QSize(0, 0), QSize(0, 0));
+    QApplication::sendEvent(a, &event1);
+
+    QEvent event2(QEvent::Wheel);
+    QApplication::sendEvent(a, &event2);
+
+    a->~ListView();
     Q_UNUSED(a)
 }
 
 TEST(LyricLabel, isRunning19)
 {
-    QWidget *w = new QWidget;
-    w->setFixedSize(500, 600);
-    LyricLabel *a = new  LyricLabel(true, w) ;
-    a->getFromFile("123.lrc");
-    QPainter *p = new QPainter(a);
-    QRect rt(QPoint(20, 20), QPoint(40, 40));
-    //a->paintEvent(nullptr);
-    a->setCurrentIndex(2);
-    a->currentIndex();
-    //a->paintItem(p, 0, rt);
-//    a->paintItem(p, 1, rt);
-    a->event(new QScrollPrepareEvent(QPoint(20, 20)));
-    a->event(new QScrollEvent(QPoint(20, 20), QPoint(24, 20), QScrollEvent::ScrollStarted));
-    a->event(new QWheelEvent(QPointF(10, 30), 1,
-                             Qt::RightButton, Qt::ControlModifier));
-    a->event(new QWheelEvent(QPointF(10, 30), 125,
-                             Qt::RightButton, Qt::ControlModifier));
-    a->event(new QEvent(QEvent::MouseButtonPress));
-    a->event(new QEvent(QEvent::None));
-    int height = a->itemHeight();
-    ASSERT_TRUE(height > 0);
+//    QWidget *w = new QWidget;
+//    w->setFixedSize(500, 600);
+//    LyricLabel *a = new  LyricLabel(true, w) ;
+//    a->getFromFile("123.lrc");
+//    QPainter *p = new QPainter(a);
+//    QRect rt(QPoint(20, 20), QPoint(40, 40));
+//    //a->paintEvent(nullptr);
+//    a->setCurrentIndex(2);
+//    a->currentIndex();
+//    //a->paintItem(p, 0, rt);
+////    a->paintItem(p, 1, rt);
+//    a->event(new QScrollPrepareEvent(QPoint(20, 20)));
+//    a->event(new QScrollEvent(QPoint(20, 20), QPoint(24, 20), QScrollEvent::ScrollStarted));
+//    a->event(new QWheelEvent(QPointF(10, 30), 1,
+//                             Qt::RightButton, Qt::ControlModifier));
+//    a->event(new QWheelEvent(QPointF(10, 30), 125,
+//                             Qt::RightButton, Qt::ControlModifier));
+//    a->event(new QEvent(QEvent::MouseButtonPress));
+//    a->event(new QEvent(QEvent::None));
+//    int height = a->itemHeight();
+//    ASSERT_TRUE(height > 0);
+
+    LyricLabel ll(false);
+    ll.itemHeight();
+    ll.itemHeight();
+    ll.postionChanged(0);
+    ll.slotTheme(0);
+    ll.slotTheme(1);
 }
 
 TEST(LyricView, viewMode)
 {
     LyricView *a = new  LyricView() ;
+    a->viewMode();
     QWheelEvent event(a->pos(), 1, Qt::MouseButtons(Qt::MouseButtonMask), Qt::KeyboardModifier::NoModifier);
     QApplication::sendEvent(a, &event);
+    a->~LyricView();
     ASSERT_FALSE(a->viewMode());
 }
 
@@ -386,6 +469,20 @@ TEST(ModeButton, mode)
     a->setTransparent(true);
     a->setMode(1);
     a->update();
+
+    QPaintEvent event(QRect(0, 0, 0, 0));
+    QApplication::sendEvent(a, &event);
+
+    QMouseEvent mouseEvent(QMouseEvent::MouseButtonPress, QPointF(), Qt::MouseButton::LeftButton,
+                           Qt::MouseButtons(Qt::MouseButtonMask), Qt::KeyboardModifier::NoModifier);
+    QApplication::sendEvent(a, &mouseEvent);
+
+    QMouseEvent mouseEvent1(QMouseEvent::MouseButtonRelease, QPointF(), Qt::MouseButton::LeftButton,
+                            Qt::MouseButtons(Qt::MouseButtonMask), Qt::KeyboardModifier::NoModifier);
+    QApplication::sendEvent(a, &mouseEvent1);
+
+    a->~ModeButton();
+
     ASSERT_EQ(1, a->mode());
 }
 
@@ -405,6 +502,9 @@ TEST(MusiclistInfomodel, isRunning23)
     PlaylistPtr playlist;
     a->setPlaylist(playlist);
     a->playlist();
+    a->findIndex(MetaPtr());
+    a->setData(QModelIndex(), QVariant());
+    a->meta(QModelIndex());
     a->flags(QModelIndex());
 }
 
@@ -418,10 +518,14 @@ TEST(MusiclistModel, isRunning24)
 
 TEST(MusicSearchListModel, isRunning25)
 {
-    MusicSearchListModel *a = new  MusicSearchListModel() ;
-    a->setPlaylist(PlaylistPtr());
-    a->playlist();
-    a->flags(QModelIndex());
+    MusicSearchListModel m(nullptr);
+    m.setData(QModelIndex(), QVariant());
+    m.flags(QModelIndex());
+
+//    MusicSearchListModel *a = new  MusicSearchListModel() ;
+//    a->setPlaylist(PlaylistPtr());
+//    a->playlist();
+//    a->flags(QModelIndex());
 }
 
 extern void margeDatabase();
@@ -439,14 +543,16 @@ TEST(PlaylistModel, findmusic)
     MediaMeta *meta = new MediaMeta();
     if (metalist.isEmpty()) {
         meta->hash = "music";
-    } else
+    } else {
         *meta = metalist.at(0);
+    }
     PlaylistModel *a = new  PlaylistModel() ;
     PlaylistModel *b = new  PlaylistModel(1, 1, nullptr) ;
     Q_UNUSED(b);
     QModelIndex index;
     a->meta(index);
     a->playlist();
+    a->setData(QModelIndex(), QVariant());
 
     //datastream
     QDataStream steam;
@@ -492,6 +598,8 @@ TEST(MusicIconButton, IconButton)
     b->setPropertyPic(":/mpimage/light/normal/play_normal.svg",
                       ":/mpimage/light/normal/play_normal.svg",
                       ":/mpimage/light/press/play_press.svg");
+    b->setPropertyPic("", "", "", "", "", "");
+    b->setStatus('1');
     a->show();
     QPoint point = a->pos();
     QTestEventList e;
@@ -515,6 +623,10 @@ TEST(MusicImageButton, isRunning30)
     a->setPropertyPic("", "", "", "");
     a->setTransparent(true);
     a->setAutoChecked(true);
+
+    QPaintEvent event(QRect(0, 0, 0, 0));
+    QApplication::sendEvent(a, &event);
+
     a->show();
     QPoint point = a->pos();
     QTestEventList e;
@@ -534,7 +646,7 @@ TEST(MusicListDataView, isRunning31)
     a->setViewModeFlag(QListView::ViewMode::ListMode);
     a->playing();
     a->hoverin();
-//    a->playingState();
+    a->setViewModeFlag(QListView::ViewMode());
     a->playMusicTypePtrList();
     a->setThemeType(1);
     a->getThemeType();
@@ -542,6 +654,12 @@ TEST(MusicListDataView, isRunning31)
     a->getSidebarPixmap();
     a->getAlbumPixmap();
     a->updateList();
+    a->onMusiclistChanged(PlaylistPtr());
+
+    QMouseEvent mouseEvent(QMouseEvent::MouseButtonPress, QPointF(), Qt::MouseButton::LeftButton,
+                           Qt::MouseButtons(Qt::MouseButtonMask), Qt::KeyboardModifier::NoModifier);
+    QApplication::sendEvent(a, &mouseEvent);
+
     ASSERT_EQ(0, a->rowCount());
 //    ASSERT_EQ(0, a->listSize());
 }
@@ -568,11 +686,17 @@ TEST(MusicListInfoView, isRunning33)
     a->getPlayPixmap();
     a->getSidebarPixmap();
     a->allMetaNames();
+    a->onMusicListAdded(MetaPtrList());
     QTestEventList e;
     e.addKeyPress(Qt::Key_A, Qt::NoModifier);
     e.addKeyPress(Qt::Key_A, Qt::ShiftModifier);
     e.addKeyPress(Qt::Key_A, Qt::ControlModifier);
     e.simulate(a);
+
+    const QMimeData *md = new QMimeData();
+    QDragEnterEvent event(QPoint(), Qt::DropActions(), md, Qt::MouseButtons(Qt::MouseButtonMask), Qt::KeyboardModifier::NoModifier);
+    QApplication::sendEvent(a, &event);
+
     ASSERT_TRUE(a != nullptr);
 }
 
@@ -585,6 +709,19 @@ TEST(MusicListView, listview)
     view->adjustHeight();
     view->getSizeChangedFlag();
     view->setSizeChangedFlag(false);
+    view->playlistPtr(QModelIndex());
+    view->clearSelected();
+    view->changePicture(QPixmap(), QPixmap());
+    view->showContextMenu(QPoint());
+    Q_EMIT view->currentChanged(QModelIndex(), QModelIndex());
+    Q_EMIT view->pressed(QModelIndex());
+
+    const QMimeData *md = new QMimeData();
+    QDragEnterEvent event(QPoint(), Qt::DropActions(), md, Qt::MouseButtons(Qt::MouseButtonMask), Qt::KeyboardModifier::NoModifier);
+    QApplication::sendEvent(view, &event);
+
+    QDragMoveEvent event1(QPoint(), Qt::DropActions(), md, Qt::MouseButtons(Qt::MouseButtonMask), Qt::KeyboardModifier::NoModifier);
+    QApplication::sendEvent(view, &event1);
 
     QPoint point = view->pos();
     QTestEventList e;
@@ -615,6 +752,7 @@ TEST(MusicSearchListview, isRunning34)
     a->getSidebarPixmap();
     a->getAlbumPixmap();
     a->updateList();
+    a->SearchClear();
 }
 TEST(ModelMake, isRunning35)
 {
@@ -630,11 +768,24 @@ TEST(ModelMake, isRunning35)
     b->getAlbumPixmap();
     b->rowCount();
     b->firstHash();
+
+    QMouseEvent mouseEvent(QMouseEvent::MouseMove, QPointF(), Qt::MouseButton::LeftButton,
+                           Qt::MouseButtons(Qt::MouseButtonMask), Qt::KeyboardModifier::NoModifier);
+    QApplication::sendEvent(b, &mouseEvent);
+
+    const QMimeData *mb = new QMimeData();
+    QDragEnterEvent dragEvent(QPoint(), Qt::DropActions(), mb, Qt::MouseButtons(Qt::MouseButtonMask), Qt::KeyboardModifier::NoModifier);
+    QApplication::sendEvent(a, &dragEvent);
+
+    a->~ModelMake();
+
     Q_UNUSED(a)
 }
 TEST(PushButton, isRunning36)
 {
-    PushButton *a = new  PushButton() ;
+    PushButton *a = new  PushButton();
+    QEnterEvent event(QPointF(0, 0), QPointF(0, 0), QPointF(0, 0));
+    QApplication::sendEvent(a, &event);
     Q_UNUSED(a)
 }
 TEST(SearchEdit, isRunning37)
@@ -646,6 +797,11 @@ TEST(SearchEdit, isRunning37)
     a->onFocusOut();
     a->onTextChanged();
     a->onReturnPressed();
+
+    Q_EMIT a->focusChanged(false);
+    Q_EMIT a->focusChanged(true);
+    Q_EMIT a->cursorPositionChanged(2, 0);
+
     QTestEventList e;
     e.addKeyPress(Qt::Key_Up, Qt::NoModifier);
     e.addKeyPress(Qt::Key_Down, Qt::NoModifier);
@@ -706,7 +862,13 @@ TEST(ToolTips, isRunning40)
     a->background();
     a->setText("");
     a->setRadius(1);
-    QPoint p = a->pos();
+
+    QPaintEvent event(QRect(0, 0, 0, 0));
+    QApplication::sendEvent(a, &event);
+
+    QResizeEvent event2(QSize(0, 0), QSize(0, 0));
+    QApplication::sendEvent(a, &event2);
+
 //    a->pop(p);
 }
 
@@ -739,6 +901,17 @@ TEST(ImportWidget, isRunning43)
     a->showWaitHint();
     a->showImportHint();
     a->slotTheme(1);
+    a->slotTheme(0);
+
+    const QMimeData *b = new QMimeData();
+    QDragEnterEvent event(QPoint(), Qt::DropActions(), b, Qt::MouseButtons(Qt::MouseButtonMask), Qt::KeyboardModifier::NoModifier);
+    QApplication::sendEvent(a, &event);
+
+    QDragMoveEvent event1(QPoint(), Qt::DropActions(), b, Qt::MouseButtons(Qt::MouseButtonMask), Qt::KeyboardModifier::NoModifier);
+    QApplication::sendEvent(a, &event1);
+
+    QDragLeaveEvent event2;
+    QApplication::sendEvent(a, &event2);
 }
 
 TEST(LoadWidget, isRunning44)
@@ -767,6 +940,17 @@ TEST(LyricWidget, isRunning45)
     a->onUpdateMetaCodec(globMetaPtr);
     a->setGeometry(10, 10, 100, 100);
     a->adjustSize();
+    DMusic::SearchMeta sm;
+    QByteArray ba;
+    a->onLyricChanged(MetaPtr(), sm, ba);
+    a->onContextSearchFinished("", QList<DMusic::SearchMeta>());
+
+    QPaintEvent event(QRect(0, 0, 0, 0));
+    QApplication::sendEvent(a, &event);
+
+    QResizeEvent event1(QSize(0, 0), QSize(0, 0));
+    QApplication::sendEvent(a, &event1);
+
 }
 
 TEST(Shortcut, isRunning47)
@@ -792,8 +976,10 @@ TEST(MUsicLyricWidget, isRunning49)
     a->updateUI();
     a->defaultCover();
     a->slotTheme(1);
+    a->slotTheme(2);
     a->onProgressChanged(1, 1);
     a->onsearchBt();
+    a->onCoverChanged(MetaPtr(), DMusic::SearchMeta(), QByteArray());
 }
 
 
@@ -810,6 +996,9 @@ TEST(MediaMeta, metabase)
     DMusic::sizeString(1025);
     DMusic::sizeString(1024 * 1024 * 2);
     DMusic::sizeString(1024 * 1024 * 1024 * 2);
+    QDataStream sd;
+    MetaPtr mp;
+    sd >> mp;
     ASSERT_FALSE(meta->getCoverData("/usr/bin") != "");
 }
 
@@ -922,6 +1111,8 @@ TEST(MediaLibrary, medialib)
     bool v = MediaLibrary::instance()->isEmpty();
     MediaLibrary::instance()->importFile(path);
     MediaLibrary::instance()->importMedias("all", list);
+    MediaLibrary::instance()->isEmpty();
+
 //    QTestEventList e;
 //    e.addKeyPress(Qt::Key_Enter, Qt::NoModifier);
     ASSERT_FALSE(v);
@@ -994,11 +1185,18 @@ TEST(Player, play)
     Player::instance()->setFadeInOut(false);
     Player::instance()->setPlayOnLoaded(false);
     Player::instance()->musicFileMiss();
+    Player::instance()->isValidDbusMute();
     Player::instance()->setEqualizerEnable(true);
     Player::instance()->setEqualizerpre(1);
     Player::instance()->setEqualizerbauds(1, 1);
     Player::instance()->setEqualizerCurMode(1);
-    Player::instance()->isValidDbusMute();
+    Player::instance()->setEqualizerEnable(false);
+    Player::instance()->setActivePlaylist(PlaylistPtr());
+    Player::instance()->setEqualizerpre(1);
+    Player::instance()->setEqualizerbauds(1, 1);
+    Player::instance()->playNextMeta();
+    Player::instance()->stop();
+    Player::instance()->playNextMeta(PlaylistPtr(), MetaPtr());
 //    PlaylistPtr playlist;
 //    Player::instance()->playPrevMusic(playlist, globMetaPtr);
     ASSERT_FALSE(Player::instance() == nullptr);
@@ -1131,6 +1329,7 @@ TEST(ThreadPool, thread)
     th->moveToNewThread(lab);
 //    th->manager(q);
     th->quitAll();
+    th->~ThreadPool();
 }
 
 TEST(MusicLyric, mly)
@@ -1142,6 +1341,10 @@ TEST(MusicLyric, mly)
     mly->getIndex(2);
     mly->getPostion(2);
     mly->getHeadFromFile(path);
+    mly->~MusicLyric();
+
+    LrcElement a, b;
+    if (a < b);
 }
 
 //vlc
@@ -1198,6 +1401,7 @@ TEST(VlcAudio, vlcaud)
     vmedia->core();
     vmedia->state();
     vmedia->duplicate("ssssstx", "/usr/share/music/bensound-sunny.mp3", Vlc::TS);
+    audio->~VlcAudio();
     ASSERT_TRUE(audio->getMute());
 }
 
@@ -1214,6 +1418,18 @@ TEST(VLC, vlc)
     vlc->ratio();
     vlc->scale();
     vlc->videoCodec();
+    vlc->ratioSize(Vlc::Ratio::R_16_9);
+    vlc->ratioSize(Vlc::Ratio::R_16_10);
+    vlc->ratioSize(Vlc::Ratio::R_185_100);
+    vlc->ratioSize(Vlc::Ratio::R_221_100);
+    vlc->ratioSize(Vlc::Ratio::R_235_100);
+    vlc->ratioSize(Vlc::Ratio::R_239_100);
+    vlc->ratioSize(Vlc::Ratio::R_4_3);
+    vlc->ratioSize(Vlc::Ratio::R_5_4);
+    vlc->ratioSize(Vlc::Ratio::R_5_3);
+    vlc->ratioSize(Vlc::Ratio::R_1_1);
+    vlc->ratioSize(Vlc::Ratio::R_4_3);
+    vlc->ratioSize(Vlc::Ratio::Original);
     QStringList list = vlc->logLevel();
     ASSERT_EQ("debug", list.at(0));
 }
@@ -1348,58 +1564,58 @@ TEST(MprisController, control)
 //    ASSERT_EQ(control->volume(), 1);
 }
 
-TEST(MprisRootInterface, rootinterface)
-{
-    QDBusConnection con = QDBusConnection::sessionBus();
-    MprisRootInterface *interface = new MprisRootInterface(" ", " ", con) ;
-    interface->canQuit();
-    interface->canRaise();
-    interface->canSetFullscreen();
-    interface->desktopEntry();
-    interface->fullscreen();
-    interface->setFullscreen(false);
-    interface->hasTrackList();
-    interface->identity();
-    interface->supportedMimeTypes();
-    interface->supportedUriSchemes();
-    interface->Raise();
-    interface->Quit();
+//TEST(MprisRootInterface, rootinterface)
+//{
+//    QDBusConnection con = QDBusConnection::sessionBus();
+//    MprisRootInterface *interface = new MprisRootInterface(" ", " ", con) ;
+//    interface->canQuit();
+//    interface->canRaise();
+//    interface->canSetFullscreen();
+//    interface->desktopEntry();
+//    interface->fullscreen();
+//    interface->setFullscreen(false);
+//    interface->hasTrackList();
+//    interface->identity();
+//    interface->supportedMimeTypes();
+//    interface->supportedUriSchemes();
+//    interface->Raise();
+//    interface->Quit();
 
-    MprisPlayerInterface *playinter = new MprisPlayerInterface(" ", " ", con);
-    playinter->staticInterfaceName();
-    playinter->canControl();
-    playinter->canGoNext();
-    playinter->canGoPrevious();
+//    MprisPlayerInterface *playinter = new MprisPlayerInterface(" ", " ", con);
+//    playinter->staticInterfaceName();
+//    playinter->canControl();
+//    playinter->canGoNext();
+//    playinter->canGoPrevious();
 
-    playinter->canPause();
-    playinter->canPlay();
-    playinter->canSeek();
-    playinter->loopStatus();
-    playinter->setLoopStatus("");
-    playinter->maximumRate();
-    playinter->metadata();
-    playinter->minimumRate();
-    playinter->playbackStatus();
+//    playinter->canPause();
+//    playinter->canPlay();
+//    playinter->canSeek();
+//    playinter->loopStatus();
+//    playinter->setLoopStatus("");
+//    playinter->maximumRate();
+//    playinter->metadata();
+//    playinter->minimumRate();
+//    playinter->playbackStatus();
 
-    playinter->position();
-    playinter->rate();
-    playinter->setRate(1);
-    playinter->shuffle();
+//    playinter->position();
+//    playinter->rate();
+//    playinter->setRate(1);
+//    playinter->shuffle();
 
-    playinter->setShuffle(false);
-    playinter->volume();
-    playinter->setVolume(false);
-    playinter->Next();
-    playinter->OpenUri("");
+//    playinter->setShuffle(false);
+//    playinter->volume();
+//    playinter->setVolume(false);
+//    playinter->Next();
+//    playinter->OpenUri("");
 
-    playinter->Pause();
-    playinter->Play();
-    playinter->PlayPause();
-    playinter->Previous();
-    playinter->Seek(1);
-//    playinter->SetPosition();
-    playinter->Stop();
-}
+//    playinter->Pause();
+//    playinter->Play();
+//    playinter->PlayPause();
+//    playinter->Previous();
+//    playinter->Seek(1);
+////    playinter->SetPosition();
+//    playinter->Stop();
+//}
 
 TEST(MprisPlayer, player)
 {
@@ -1470,14 +1686,408 @@ TEST(Footer, footer)
     foot->toggleLyricView();
     foot->adjustSize();
     foot->update();
-//    QTest::qWait(200);
+    foot->onMediaLibraryClean();
+    foot->slotTheme(1);
+    foot->onVolumeChanged(78);
+    foot->onVolumeChanged(34);
+    foot->onVolumeChanged(10);
+    foot->onLocalVolumeChanged(0);
+    foot->onLocalMutedChanged(true);
+    foot->onLocalMutedChanged(false);
+    foot->enableControl(false);
+    foot->enableControl(true);
+    foot->setViewname("123");
+    foot->defaultCover();
+    foot->setLyricButtonChecked(true);
+    foot->setLyricButtonChecked(false);
+    foot->setPlaylistButtonChecked(true);
+    foot->setPlaylistButtonChecked(false);
+    foot->getPlayListWidget();
+    foot->showPlayListWidget(0, 0, true);
+    foot->showPlayListWidget(0, 0, false);
+    foot->getShowPlayListFlag();
+    foot->refreshBackground();
+    foot->hidewaveform();
+
+    PlaylistPtr plp;
+    MetaPtrList mpl;
+    MetaPtr mp;
+    DMusic::SearchMeta sm;
+    QByteArray cd;
+
+
+    foot->onMusicListAdded(plp, mpl);
+    foot->onMusicListRemoved(plp, mpl);
+    foot->onMusicPlayed(plp, mp);
+    foot->onMusicError(plp, mp, 0);
+    foot->onMusicError(plp, mp, 1);
+    foot->onMusicPause(plp, mp);
+    foot->onMusicStoped(plp, mp);
+    foot->onProgressChanged(0, 0, 0);
+    foot->onCoverChanged(mp, sm, cd);
+
+    foot->onLocalVolumeChanged(78);
+    foot->onLocalVolumeChanged(34);
+    foot->onLocalVolumeChanged(10);
+    foot->onMutedChanged(false);
+    foot->onMutedChanged(true);
+    foot->onLocalMutedChanged(false);
+    foot->onLocalMutedChanged(true);
+    foot->onModeChange(0);
+    foot->onModeChange(1);
+    foot->onModeChange(2);
+    foot->onMutedChanged(34);
+    foot->onLocalMutedChanged(0);
+    foot->onLocalMutedChanged(1);
+    foot->onUpdateMetaCodec("", "", "", mp);
+    foot->onMediaLibraryClean();
+    foot->slotTheme(0);
+    foot->slotTheme(1);
+    foot->onMediaLibraryClean();
+    foot->slotTheme(1);
+    QByteArray ba;
+    foot->onCoverChanged(MetaPtr(), sm, ba);
+
+    QMouseEvent mouseEvent(QMouseEvent::MouseButtonPress, QPointF(), Qt::MouseButton::LeftButton,
+                           Qt::MouseButtons(Qt::MouseButtonMask), Qt::KeyboardModifier::NoModifier);
+    QApplication::sendEvent(foot, &mouseEvent);
+
+    QMouseEvent mouseEvent1(QMouseEvent::MouseButtonRelease, QPointF(), Qt::MouseButton::LeftButton,
+                            Qt::MouseButtons(Qt::MouseButtonMask), Qt::KeyboardModifier::NoModifier);
+    QApplication::sendEvent(foot, &mouseEvent1);
+
+    QMouseEvent mouseEvent2(QMouseEvent::MouseMove, QPointF(), Qt::MouseButton::LeftButton,
+                            Qt::MouseButtons(Qt::MouseButtonMask), Qt::KeyboardModifier::NoModifier);
+    QApplication::sendEvent(foot, &mouseEvent2);
 }
 
 TEST(Waveform, waf)
 {
     Waveform wafm(Qt::Horizontal, new QWidget(), nullptr);
-    QByteArray  ba("0100000010101111000010101111010101010110");
-    //wafm.onAudioBufferProbed(new QAudioBuffer());
+    QAudioBuffer ab;
+    wafm.onAudioBufferProbed(ab);
+    wafm.getBufferLevels(ab);
+    wafm.getPeakValue(QAudioFormat());
+    wafm.onProgressChanged(0, 0, 0);
+    wafm.updateScaleSize();
+    wafm.setThemeType(0);
+    wafm.setThemeType(1);
+    wafm.clearBufferAudio("");
+    wafm.hidewaveformScale();
+
+
+    QMouseEvent mouseEvent(QMouseEvent::MouseButtonPress, QPointF(), Qt::MouseButton::LeftButton,
+                           Qt::MouseButtons(Qt::MouseButtonMask), Qt::KeyboardModifier::NoModifier);
+    QApplication::sendEvent(&wafm, &mouseEvent);
+
+    QMouseEvent mouseEvent1(QMouseEvent::MouseButtonRelease, QPointF(), Qt::MouseButton::LeftButton,
+                            Qt::MouseButtons(Qt::MouseButtonMask), Qt::KeyboardModifier::NoModifier);
+    QApplication::sendEvent(&wafm, &mouseEvent1);
+
+    QMouseEvent mouseEvent2(QMouseEvent::MouseMove, QPointF(), Qt::MouseButton::LeftButton,
+                            Qt::MouseButtons(Qt::MouseButtonMask), Qt::KeyboardModifier::NoModifier);
+    QApplication::sendEvent(&wafm, &mouseEvent2);
+
+    QEnterEvent enterEvent(QPointF(0, 0), QPointF(0, 0), QPointF(0, 0));
+    QApplication::sendEvent(&wafm, &enterEvent);
+
+    QEvent event(QEvent::Leave);
+    QApplication::sendEvent(&wafm, &event);
+
+    QResizeEvent resizeEvent(QSize(0, 0), QSize(0, 0));
+    QApplication::sendEvent(&wafm, &resizeEvent);
 
 }
+
+TEST(basetool, basetool)
+{
+    QByteArray ba;
+    BaseTool::detectEncode(ba, "");
+}
+
+TEST(CFFT, CFFT)
+{
+    complex<float> a[10];
+    CFFT::process(a, 0, 1);
+}
+
+TEST(VlcEqualizer, vlcEqualizer)
+{
+    VlcEqualizer *ve = new VlcEqualizer(nullptr);
+    ve->~VlcEqualizer();
+}
+
+TEST(VlcInstance, vlcInstance)
+{
+    VlcInstance vi(QStringList(), nullptr);
+    vi.status();
+    vi.logLevel();
+//    vi.~VlcInstance();
+}
+
+TEST(VlcMedia, vlcMedia)
+{
+    VlcInstance vi(QStringList(), nullptr);
+    VlcMedia vm("", false, &vi);
+    VlcMedia vm1("", &vi);
+    vm.initMedia("", false, &vi);
+//    vm.~VlcMedia();
+//    Vlc::Mux mux;
+//    Vlc::AudioCodec ac;
+//    Vlc::VideoCodec vc;
+//    vm.duplicate("", "", mux, ac, vc);
+}
+
+TEST(VlcMediaPlayer, vlcMediaPlayer)
+{
+    VlcInstance vi(QStringList(), nullptr);
+    VlcMediaPlayer vmp(&vi);
+    vmp.audio();
+    vmp.equalizer();
+    vmp.length();
+//    vmp.~VlcMediaPlayer();
+}
+
+TEST(Presenter, presenter)
+{
+    Presenter pst;
+//    pst.onSyncMusicPlay(PlaylistPtr(), MetaPtr());
+//    pst.onSyncMusicResume(PlaylistPtr(), MetaPtr());
+    pst.onSyncMusicPrev(PlaylistPtr(), MetaPtr());
+    pst.onSyncMusicNext(PlaylistPtr(), MetaPtr());
+//    pst.allplaylist();
+//    pst.playlist("");
+//    pst.volumeUp();
+//    pst.volumeDown();
+//    pst.next();
+//    pst.prev();
+//    pst.onHandleQuit();
+//    pst.requestImportPaths(PlaylistPtr(), QStringList());
+    pst.onMusiclistRemove(PlaylistPtr(), MetaPtrList());
+//    pst.onMusiclistDelete(PlaylistPtr(), MetaPtrList());
+//    pst.onAddToPlaylist(PlaylistPtr(), MetaPtrList());
+//    pst.onAddMetaToPlaylist(PlaylistPtr(), MetaPtrList());
+//    pst.onCurrentPlaylistChanged(PlaylistPtr());
+//    pst.onCustomResort(QStringList());
+    QStringList *sl = new QStringList;
+    sl->push_back("1");
+    pst.removeListSame(sl);
+//    pst.onSearchText("", "");
+//    pst.onSearchCand("");
+    pst.onExitSearch();
+//    DMusic::SearchMeta sm;
+//    pst.onChangeSearchMetaCache(MetaPtr(), sm);
+//    pst.onPlaylistAdd(false);
+//    pst.onPlaylistAdd(true);
+//    pst.onMusicPlay(PlaylistPtr(), MetaPtr());
+//    pst.onMusicPause(PlaylistPtr(), MetaPtr());
+//    pst.onMusicPauseNow(PlaylistPtr(), MetaPtr());
+//    pst.onMusicResume(PlaylistPtr(), MetaPtr());
+//    pst.onMusicStop(PlaylistPtr(), MetaPtr());
+    pst.onMusicPrev(PlaylistPtr(), MetaPtr());
+    pst.onMusicNext(PlaylistPtr(), MetaPtr());
+//    pst.onToggleFavourite(MetaPtr());
+//    pst.onAddMetasFavourite(MetaPtrList());
+//    pst.onRemoveMetasFavourite(MetaPtrList());
+//    pst.onChangeProgress(2, 1);
+    pst.onChangeProgress(2, -1);
+//    pst.onChangePosition(2, 1);
+    pst.onChangePosition(2, -1);
+//    pst.onVolumeChanged(0);
+//    pst.onPlayModeChanged(0);
+//    pst.onToggleMute();
+//    pst.onLocalToggleMute();
+//    pst.onFadeInOut();
+    pst.onUpdateMetaCodec("", "", "", MetaPtr());
+//    pst.onPlayall(PlaylistPtr());
+//    pst.onResort(PlaylistPtr(), 0);
+//    pst.onImportFiles(QStringList(), PlaylistPtr());
+//    pst.onSpeechPlayArtist("");
+//    pst.onSpeechPlayArtistMusic("", "");
+//    pst.onSpeechPlayFaverite();
+//    pst.onSpeechPlayCustom("");
+//    pst.onSpeechPlayRadom();
+//    pst.onSpeechPause();
+//    pst.onSpeechResume();
+//    pst.onSpeechPrevious();
+//    pst.onSpeechNext();
+//    pst.onSpeechFavorite();
+//    pst.onSpeechunFaverite();
+//    pst.onSpeechsetMode(0);
+//    pst.setEqualizer(false, 0, QList<int>());
+//    pst.setEqualizer(false, 1, QList<int>());
+//    pst.setEqualizer(true, 0, QList<int>());
+//    pst.setEqualizer(true, 1, QList<int>());
+//    pst.setEqualizerEnable(false);
+//    pst.setEqualizerEnable(true);
+//    pst.setEqualizerpre(1);
+//    pst.setEqualizerCurMode(1);
+//    pst.localMuteChanged(false);
+//    pst.localMuteChanged(true);
+//    pst.onScanMusicDirectory();
+    pst.initMpris(nullptr);
+}
+
+TEST(MainFrame, mainFrame)
+{
+    MainFrame mf;
+    mf.initUI(false);
+    mf.initUI(true);
+    mf.postInitUI();
+    mf.setCoverBackground("");
+//    mf.onSelectImportDirectory();
+//    mf.onSelectImportFiles();
+//    mf.onClickedImportFiles(QStringList());
+    mf.slotTheme(0);
+    mf.slotTheme(1);
+    mf.changePicture();
+    mf.onViewShortcut();
+
+    QPaintEvent event(QRect(0, 0, 0, 0));
+    QApplication::sendEvent(&mf, &event);
+}
+
+TEST(MusicListDataWidget, musicListDataWidget)
+{
+    MusicListDataWidget mldw;
+    mldw.resultTabwidget(0);
+    mldw.resultTabwidget(1);
+    mldw.resultTabwidget(2);
+
+    mldw.tabwidgetInfo(nullptr);
+    mldw.tabwidgetInfo(PlaylistPtr());
+    mldw.curPlaylist();
+    mldw.onSearchText("");
+    mldw.selectMusiclistChanged(nullptr);
+    mldw.selectMusiclistChanged(PlaylistPtr());
+//    mldw.onMusiclistUpdate();
+//    mldw.retResult("", QList<PlaylistPtr>());
+//    mldw.retResult("123", QList<PlaylistPtr>());
+    mldw.CloseSearch();
+    mldw.onCustomContextMenuRequest(QPoint(1, 2), PlaylistPtr(), PlaylistPtr(), QList<PlaylistPtr>(), 0);
+    mldw.onCustomContextMenuRequest(QPoint(1, 2), PlaylistPtr(), PlaylistPtr(), QList<PlaylistPtr>(), 1);
+    mldw.onCustomContextMenuRequest(QPoint(1, 2), PlaylistPtr(), PlaylistPtr(), QList<PlaylistPtr>(), 2);
+    mldw.onCustomContextMenuRequest(QPoint(1, 2), PlaylistPtr(), PlaylistPtr(), QList<PlaylistPtr>(), 3);
+    mldw.onCustomContextMenuRequest(QPoint(1, 2), PlaylistPtr(), PlaylistPtr(), QList<PlaylistPtr>(), 4);
+    mldw.onCustomContextMenuRequest(QPoint(1, 2), PlaylistPtr(), PlaylistPtr(), QList<PlaylistPtr>(), 5);
+    mldw.onCustomContextMenuRequest(QPoint(1, 2), PlaylistPtr(), PlaylistPtr(), QList<PlaylistPtr>(), 6);
+    mldw.onCustomContextMenuRequest(QPoint(1, 2), PlaylistPtr(), PlaylistPtr(), QList<PlaylistPtr>(), 7);
+    ActionBar abar(nullptr);
+
+    QMouseEvent mouseEvent(QMouseEvent::MouseButtonPress, QPointF(), Qt::MouseButton::LeftButton,
+                           Qt::MouseButtons(Qt::MouseButtonMask), Qt::KeyboardModifier::NoModifier);
+    QApplication::sendEvent(&mldw, &mouseEvent);
+
+    QMouseEvent mouseEvent1(QMouseEvent::MouseMove, QPointF(), Qt::MouseButton::LeftButton,
+                            Qt::MouseButtons(Qt::MouseButtonMask), Qt::KeyboardModifier::NoModifier);
+    QApplication::sendEvent(&mldw, &mouseEvent1);
+}
+
+TEST(MusicListScrollArea, musicListScrollArea)
+{
+    MusicListScrollArea msa;
+    msa.slotTheme(0);
+    msa.slotTheme(2);
+}
+
+TEST(MusicListWidget, musicListWidget)
+{
+    MusicListWidget mw;
+    mw.onSearchText("");
+//    mw.onMusicPlayed(PlaylistPtr(), MetaPtr());
+    mw.onPlaylistAdded(PlaylistPtr(), false);
+    mw.onPlaylistAdded(nullptr, false);
+    mw.onPlaylistAdded(PlaylistPtr(), true);
+    mw.onPlaylistAdded(nullptr, true);
+    mw.onMusiclistChanged(PlaylistPtr());
+    mw.slotTheme(0);
+    mw.slotTheme(1);
+    mw.slotTheme(2);
+}
+
+TEST(PlayListWidget, playListWidget)
+{
+    PlayListWidget plw;
+    plw.onMusicListRemoved(PlaylistPtr(), MetaPtrList());
+    plw.onMusicError(PlaylistPtr(), MetaPtr(), 0);
+//    plw.onMusicListAdded(PlaylistPtr(), MetaPtrList());
+    plw.onLocate(PlaylistPtr(), MetaPtr());
+    plw.slotTheme(0);
+    plw.slotTheme(1);
+    plw.slotTheme(2);
+    plw.changePicture(QPixmap(), QPixmap(), QPixmap());
+
+    QResizeEvent event(QSize(0, 0), QSize(0, 0));
+    QApplication::sendEvent(&plw, &event);
+
+}
+
+TEST(WidgetHelper, widgetHelper)
+{
+    WidgetHelper::slideEdgeWidget(nullptr, nullptr, QRect(), QRect(), 0);
+    WidgetHelper::slideEdgeWidget2(nullptr, QRect(), QRect(), 0);
+}
+
+TEST(DequalizerDialog, dequalizerDialog)
+{
+    DequalizerDialog dd;
+    dd.showCustom();
+    int a = 0;
+    dd.showCurMode(&a);
+    dd.checkedChanged(false);
+    dd.checkedChanged(true);
+    dd.setDefaultClicked();
+}
+
+TEST(MusicApp, musicApp)
+{
+    MainFrame mf;
+    MusicApp ma(&mf);
+    ma.onStartImport(QStringList());
+    ma.initUI(true);
+    ma.initUI(false);
+    ma.quit();
+}
+
+TEST(AbstractWheelWidget, abstractWheelWidget)
+{
+    LyricLabel l(false);
+    l.AbstractWheelWidget::paintEvent(new QPaintEvent(QRect(0, 0, 0, 0)));
+//    l.AbstractWheelWidget::event(new QEvent(QEvent::ScrollPrepare));
+    l.AbstractWheelWidget::event(new QEvent(QEvent::Scroll));
+//    l.AbstractWheelWidget::event(new QEvent(QEvent::Wheel));
+    l.AbstractWheelWidget::event(new QEvent(QEvent::MouseButtonPress));
+    l.AbstractWheelWidget::event(new QEvent(QEvent::MouseButtonRelease));
+}
+
+TEST(MusicTitleImageWidget, musicTitleImageWidget)
+{
+    MusicTitleImageWidget mtiw;
+
+    QPaintEvent event(QRect(0, 0, 0, 0));
+    QApplication::sendEvent(&mtiw, &event);
+}
+
+TEST(SearchLyricsWidget, searchLyricsWidget)
+{
+    SearchLyricsWidget slw("");
+    slw.searchLyrics();
+}
+
+TEST(SearchMetaList, searchMetaList)
+{
+    SearchMetaList sml;
+}
+
+TEST(SoundPixmapButton, soundPixmapButton)
+{
+    SoundPixmapButton spb;
+    QPaintEvent event(QRect(0, 0, 0, 0));
+    QApplication::sendEvent(&spb, &event);
+}
+
+
+
+
+
 

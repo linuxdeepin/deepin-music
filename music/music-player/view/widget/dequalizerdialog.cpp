@@ -19,6 +19,7 @@
 #include <vlc/Audio.h>
 #include <vlc/Equalizer.h>
 #include <vlc/MediaPlayer.h>
+#include "ac-desktop-define.h"
 
 
 class CustomTabStyle : public QProxyStyle
@@ -199,6 +200,8 @@ void DequalizerDialogPrivate::initUI()
 
     mswitchBtn = new DSwitchButton(q);
     mswitchBtn->resize(50, 20);
+    AC_SET_OBJECT_NAME(mswitchBtn, AC_switchBtn);
+    AC_SET_ACCESSIBLE_NAME(mswitchBtn, AC_switchBtn);
 //    //设置底色
 //    DPalette sw;
 //    sw.setColor(DPalette::Button,QColor("#000000"));
@@ -207,18 +210,23 @@ void DequalizerDialogPrivate::initUI()
     mcombox = new DComboBox(q);
     mcombox->setMinimumSize(240, 36);
     mcombox->addItems(effect_type);
+    AC_SET_OBJECT_NAME(mcombox, AC_effectCombox);
+    AC_SET_ACCESSIBLE_NAME(mcombox, AC_effectCombox);
 
 
     saveBtn = new DPushButton(q);
     saveBtn->setMinimumSize(110, 36);
     saveBtn->setText(DequalizerDialog::tr("Save"));
+    AC_SET_OBJECT_NAME(saveBtn, AC_saveBtn);
+    AC_SET_ACCESSIBLE_NAME(saveBtn, AC_saveBtn);
 
     lb_baud_pre = new DLabel(q);
     lb_baud_pre->setMaximumWidth(20);
     lb_baud_pre->setMinimumHeight(22);
     lb_baud_pre->setAlignment(Qt::AlignCenter);
     slider_pre = new DSlider(Qt::Vertical);
-    slider_pre->setObjectName("baud_pre");
+    AC_SET_OBJECT_NAME(slider_pre, AC_baud_pre);
+    AC_SET_ACCESSIBLE_NAME(slider_pre, AC_baud_pre);
     slider_pre->setMinimum(-20);
     slider_pre->setMaximum(20);
     slider_pre->setPageStep(1);
@@ -230,7 +238,8 @@ void DequalizerDialogPrivate::initUI()
     lb_baud_60->setMinimumHeight(22);
     lb_baud_60->setAlignment(Qt::AlignCenter);
     slider_60 = new DSlider(Qt::Vertical);
-    slider_60->setObjectName("baud_60");
+    AC_SET_OBJECT_NAME(slider_60, AC_slider_60);
+    AC_SET_ACCESSIBLE_NAME(slider_60, AC_slider_60);
     slider_60->setMinimum(-20);
     slider_60->setMaximum(20);
     slider_60->setPageStep(1);
@@ -241,7 +250,8 @@ void DequalizerDialogPrivate::initUI()
     lb_baud_170->setMinimumHeight(22);
     lb_baud_170->setAlignment(Qt::AlignCenter);
     slider_170 = new DSlider(Qt::Vertical);
-    slider_170->setObjectName("baud_170");
+    AC_SET_OBJECT_NAME(slider_170, AC_slider_170);
+    AC_SET_ACCESSIBLE_NAME(slider_170, AC_slider_170);
     slider_170->setMinimum(-20);
     slider_170->setMaximum(20);
     slider_170->setPageStep(1);
@@ -252,7 +262,8 @@ void DequalizerDialogPrivate::initUI()
     lb_baud_310->setMinimumHeight(22);
     lb_baud_310->setAlignment(Qt::AlignCenter);
     slider_310 = new DSlider(Qt::Vertical);
-    slider_310->setObjectName("baud_310");
+    AC_SET_OBJECT_NAME(slider_310, AC_slider_310);
+    AC_SET_ACCESSIBLE_NAME(slider_310, AC_slider_310);
     slider_310->setMinimum(-20);
     slider_310->setMaximum(20);
     slider_310->setPageStep(1);
@@ -263,7 +274,8 @@ void DequalizerDialogPrivate::initUI()
     lb_baud_600->setMinimumHeight(22);
     lb_baud_600->setAlignment(Qt::AlignCenter);
     slider_600 = new DSlider(Qt::Vertical);
-    slider_600->setObjectName("baud_600");
+    AC_SET_OBJECT_NAME(slider_600, AC_slider_600);
+    AC_SET_ACCESSIBLE_NAME(slider_600, AC_slider_600);
     slider_600->setMinimum(-20);
     slider_600->setMaximum(20);
     slider_600->setPageStep(1);
@@ -274,7 +286,8 @@ void DequalizerDialogPrivate::initUI()
     lb_baud_1K->setMinimumHeight(22);
     lb_baud_1K->setAlignment(Qt::AlignCenter);
     slider_1K = new DSlider(Qt::Vertical);
-    slider_1K->setObjectName("baud_1K");
+    AC_SET_OBJECT_NAME(slider_1K, AC_slider_1K);
+    AC_SET_ACCESSIBLE_NAME(slider_1K, AC_slider_1K);
     slider_1K->setMinimum(-20);
     slider_1K->setMaximum(20);
     slider_1K->setPageStep(1);
@@ -285,7 +298,8 @@ void DequalizerDialogPrivate::initUI()
     lb_baud_3K->setMinimumHeight(22);
     lb_baud_3K->setAlignment(Qt::AlignCenter);
     slider_3K = new DSlider(Qt::Vertical);
-    slider_3K->setObjectName("baud_3K");
+    AC_SET_OBJECT_NAME(slider_3K, AC_slider_3K);
+    AC_SET_ACCESSIBLE_NAME(slider_3K, AC_slider_3K);
     slider_3K->setMinimum(-20);
     slider_3K->setMaximum(20);
     slider_3K->setPageStep(1);
@@ -296,7 +310,8 @@ void DequalizerDialogPrivate::initUI()
     lb_baud_6K->setMinimumHeight(22);
     lb_baud_6K->setAlignment(Qt::AlignCenter);
     slider_6K = new DSlider(Qt::Vertical);
-    slider_6K->setObjectName("baud_6K");
+    AC_SET_OBJECT_NAME(slider_6K, AC_slider_6K);
+    AC_SET_ACCESSIBLE_NAME(slider_6K, AC_slider_6K);
     slider_6K->setMinimum(-20);
     slider_6K->setMaximum(20);
     slider_6K->setPageStep(1);
@@ -307,7 +322,8 @@ void DequalizerDialogPrivate::initUI()
     lb_baud_12K->setMinimumHeight(22);
     lb_baud_12K->setAlignment(Qt::AlignCenter);
     slider_12K = new DSlider(Qt::Vertical);
-    slider_12K->setObjectName("baud_12K");
+    AC_SET_OBJECT_NAME(slider_12K, AC_slider_12K);
+    AC_SET_ACCESSIBLE_NAME(slider_12K, AC_slider_12K);
     slider_12K->setMinimum(-20);
     slider_12K->setMaximum(20);
     slider_12K->setPageStep(1);
@@ -318,7 +334,8 @@ void DequalizerDialogPrivate::initUI()
     lb_baud_14K->setMinimumHeight(22);
     lb_baud_14K->setAlignment(Qt::AlignCenter);
     slider_14K = new DSlider(Qt::Vertical);
-    slider_14K->setObjectName("baud_14K");
+    AC_SET_OBJECT_NAME(slider_14K, AC_slider_14K);
+    AC_SET_ACCESSIBLE_NAME(slider_14K, AC_slider_14K);
     slider_14K->setMinimum(-20);
     slider_14K->setMaximum(20);
     slider_14K->setPageStep(1);
@@ -329,7 +346,8 @@ void DequalizerDialogPrivate::initUI()
     lb_baud_16K->setMinimumHeight(22);
     lb_baud_16K->setAlignment(Qt::AlignCenter);
     slider_16K = new DSlider(Qt::Vertical);
-    slider_16K->setObjectName("baud_16K");
+    AC_SET_OBJECT_NAME(slider_16K, AC_slider_16K);
+    AC_SET_ACCESSIBLE_NAME(slider_16K, AC_slider_16K);
     slider_16K->setMinimum(-20);
     slider_16K->setMaximum(20);
     slider_16K->setPageStep(1);
@@ -337,6 +355,8 @@ void DequalizerDialogPrivate::initUI()
 
     btn_default = new DPushButton(DequalizerDialog::tr("Restore Defaults"));
     btn_default->setMinimumSize(240, 36);
+    AC_SET_OBJECT_NAME(btn_default, AC_Restore);
+    AC_SET_ACCESSIBLE_NAME(btn_default, AC_Restore);
 
     auto vlayout0  = new QVBoxLayout;
     auto vlayout1  = new QVBoxLayout;
@@ -418,6 +438,8 @@ void DequalizerDialogPrivate::initUI()
     slWidget->setMinimumHeight(264);
     slWidget->setLayout(hlayout);
     slWidget->setContentsMargins(10, 10, 9, 20);
+    AC_SET_OBJECT_NAME(slWidget, AC_slWidget);
+    AC_SET_ACCESSIBLE_NAME(slWidget, AC_slWidget);
 
     auto vlay  = new QVBoxLayout;
     //第一行
@@ -440,8 +462,12 @@ void DequalizerDialogPrivate::initUI()
     auto mequalizer = new DWidget(q);
     mequalizer->resize(537, 393);
     mequalizer->setLayout(vlay);
+    AC_SET_OBJECT_NAME(mequalizer, AC_mequalizer);
+    AC_SET_ACCESSIBLE_NAME(mequalizer, AC_mequalizer);
 
     auto mtabwidget = new DTabWidget;
+    AC_SET_OBJECT_NAME(mtabwidget, AC_mtabwidget);
+    AC_SET_ACCESSIBLE_NAME(mtabwidget, AC_mtabwidget);
     mtabwidget->setTabPosition(QTabWidget::West);
     mtabwidget->setAutoFillBackground(true);
     mtabwidget->setDocumentMode(true);
@@ -454,6 +480,8 @@ void DequalizerDialogPrivate::initUI()
     auto mTitlebar = new DTitlebar(q);
     mTitlebar->setTitle("");
     mTitlebar->resize(720, 50);
+    AC_SET_OBJECT_NAME(mTitlebar, AC_mTitlebar);
+    AC_SET_ACCESSIBLE_NAME(mTitlebar, AC_mTitlebar);
 
     //垂直布局TabWidget和TitleBar
     auto  mlayout = new QVBoxLayout;
@@ -540,6 +568,8 @@ DequalizerDialog::DequalizerDialog(QWidget *parent):
     DAbstractDialog(parent), d_ptr(new DequalizerDialogPrivate(this))
 {
     Q_D(DequalizerDialog);
+    AC_SET_OBJECT_NAME(this, AC_Dequalizer);
+    AC_SET_ACCESSIBLE_NAME(this, AC_Dequalizer);
     d->readConfig();
     d->initUI();
     initConnection();

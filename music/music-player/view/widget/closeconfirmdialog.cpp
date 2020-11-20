@@ -31,6 +31,7 @@
 #include <DRadioButton>
 
 #include "core/musicsettings.h"
+#include "ac-desktop-define.h"
 
 DWIDGET_USE_NAMESPACE
 
@@ -50,7 +51,8 @@ CloseConfirmDialog::CloseConfirmDialog(QWidget *parent) :
     Dtk::Widget::DDialog(parent), d_ptr(new CloseConfirmDialogPrivate(this))
 {
     Q_D(CloseConfirmDialog);
-
+    AC_SET_OBJECT_NAME(this, AC_CloseConfirmDialog);
+    AC_SET_ACCESSIBLE_NAME(this, AC_CloseConfirmDialog);
     auto contentFrame = new DWidget;
     auto contentLayout = new QVBoxLayout(contentFrame);
     contentLayout->setSpacing(0);

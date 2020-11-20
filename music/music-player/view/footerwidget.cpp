@@ -64,6 +64,7 @@
 #include "playlistwidget.h"
 #include "widget/musicboxbutton.h"
 #include "widget/tooltips.h"
+#include "ac-desktop-define.h"
 
 static const char *sPropertyFavourite         = "fav";
 static const char *sPropertyPlayStatus        = "playstatus";
@@ -343,7 +344,8 @@ Footer::Footer(QWidget *parent) :
 
     //setFixedHeight(70);
     setFocusPolicy(Qt::ClickFocus);
-    setObjectName("Footer");
+    AC_SET_OBJECT_NAME(this, AC_Footer);
+    AC_SET_ACCESSIBLE_NAME(this, AC_Footer);
     this->setBlurBackgroundEnabled(true);
 
 //    this->blurBackground()->setBlurRectXRadius(18);
@@ -355,6 +357,8 @@ Footer::Footer(QWidget *parent) :
     this->blurBackground()->setMaskColor(backMaskColor);
 
     d->forwardWidget = new DBlurEffectWidget(this);
+    AC_SET_OBJECT_NAME(d->forwardWidget, AC_forwardWidget);
+    AC_SET_ACCESSIBLE_NAME(d->forwardWidget, AC_forwardWidget);
 //    d->forwardWidget->setBlurBackgroundEnabled(true);
     d->forwardWidget->setBlurRectXRadius(18);
     d->forwardWidget->setBlurRectYRadius(18);
@@ -375,12 +379,15 @@ Footer::Footer(QWidget *parent) :
     mainVBoxlayout->setContentsMargins(10, 0, 0, 10);
 
     auto downWidget = new DWidget();
+    AC_SET_OBJECT_NAME(downWidget, AC_downWidget);
+    AC_SET_ACCESSIBLE_NAME(downWidget, AC_downWidget);
     auto layout = new QHBoxLayout(downWidget);
     layout->setContentsMargins(0, 0, 10, 0);
 //    layout->setSpacing(10);
 
     d->btCover = new MusicPixmapButton();
-    d->btCover->setObjectName("FooterCoverHover");
+    AC_SET_OBJECT_NAME(d->btCover, AC_btCover);
+    AC_SET_ACCESSIBLE_NAME(d->btCover, AC_btCover);
     d->btCover->setFixedSize(50, 50);
     d->btCover->setIconSize(QSize(50, 50));
 
@@ -425,6 +432,8 @@ Footer::Footer(QWidget *parent) :
                                    ":/mpimage/light/normal/play_normal.svg",
                                    ":/mpimage/light/press/play_press.svg");
     //d->btPlay->setIcon(DHiDPIHelper::loadNxPixmap(":/mpimage/light/normal/play_normal.svg"));
+    AC_SET_OBJECT_NAME(d->btPlay, AC_Play);
+    AC_SET_ACCESSIBLE_NAME(d->btPlay, AC_Play);
     d->btPlay->setIconSize(QSize(36, 36));
     d->btPlay->setFixedSize(40, 50);
 
@@ -433,7 +442,8 @@ Footer::Footer(QWidget *parent) :
                                    ":/mpimage/light/press/last_press.svg");
     //d->btPrev->setIcon(DHiDPIHelper::loadNxPixmap(":/mpimage/light/normal/last_normal.svg"));
     d->btPrev->setIconSize(QSize(36, 36));
-    d->btPrev->setObjectName("FooterActionPrev");
+    AC_SET_OBJECT_NAME(d->btPrev, AC_Prev);
+    AC_SET_ACCESSIBLE_NAME(d->btPrev, AC_Prev);
     d->btPrev->setFixedSize(40, 50);
 
     d->btNext = new MusicBoxButton("", ":/mpimage/light/normal/next_normal.svg",
@@ -441,13 +451,15 @@ Footer::Footer(QWidget *parent) :
                                    ":/mpimage/light/press/next_press.svg");
     //d->btNext->setIcon(DHiDPIHelper::loadNxPixmap(":/mpimage/light/normal/next_normal.svg"));
     d->btNext->setIconSize(QSize(36, 36));
-    d->btNext->setObjectName("FooterActionNext");
+    AC_SET_OBJECT_NAME(d->btNext, AC_Next);
+    AC_SET_ACCESSIBLE_NAME(d->btNext, AC_Next);
     d->btNext->setFixedSize(40, 50);
 
     //添加收藏按钮
     d->btFavorite = new DIconButton(this);
     d->btFavorite->setIcon(QIcon::fromTheme("dcc_collection"));
-    d->btFavorite->setObjectName("FooterActionFavorite");
+    AC_SET_OBJECT_NAME(d->btFavorite, AC_Favorite);
+    AC_SET_ACCESSIBLE_NAME(d->btFavorite, AC_Favorite);
     d->btFavorite->setShortcut(QKeySequence::fromString("."));
     d->btFavorite->setFixedSize(50, 50);
     d->btFavorite->setIconSize(QSize(36, 36));
@@ -455,7 +467,8 @@ Footer::Footer(QWidget *parent) :
     //添加歌词按钮
     d->btLyric = new DIconButton(this);
     d->btLyric->setIcon(QIcon::fromTheme("lyric"));
-    d->btLyric->setObjectName("FooterActionLyric");
+    AC_SET_OBJECT_NAME(d->btLyric, AC_Lyric);
+    AC_SET_ACCESSIBLE_NAME(d->btLyric, AC_Lyric);
     d->btLyric->setFixedSize(50, 50);
     d->btLyric->setIconSize(QSize(36, 36));
     d->btLyric->setCheckable(true);
@@ -463,14 +476,16 @@ Footer::Footer(QWidget *parent) :
     //添加播放模式
     d->btPlayMode = new DIconButton(this);
     d->btPlayMode->setIcon(QIcon::fromTheme("sequential_loop"));
-    d->btPlayMode->setObjectName("FooterActionPlayMode");
+    AC_SET_OBJECT_NAME(d->btPlayMode, AC_PlayMode);
+    AC_SET_ACCESSIBLE_NAME(d->btPlayMode, AC_PlayMode);
     d->btPlayMode->setFixedSize(50, 50);
     d->btPlayMode->setIconSize(QSize(36, 36));
     // mainHBoxlayout->addWidget(m_btPlayMode, 0);
     //添加音量调节按钮
     d->btSound = new DIconButton(this);
     d->btSound->setIcon(QIcon::fromTheme("volume_mid"));
-    d->btSound->setObjectName("FooterActionSound");
+    AC_SET_OBJECT_NAME(d->btSound, AC_Sound);
+    AC_SET_ACCESSIBLE_NAME(d->btSound, AC_Sound);
     d->btSound->setFixedSize(50, 50);
     d->btSound->setProperty("volume", "mid");
     d->btSound->setCheckable(true);
@@ -479,7 +494,8 @@ Footer::Footer(QWidget *parent) :
     //添加歌曲列表按钮
     d->btPlayList = new DIconButton(this);
     d->btPlayList->setIcon(QIcon::fromTheme("playlist"));
-    d->btPlayList->setObjectName("FooterActionPlayList");
+    AC_SET_OBJECT_NAME(d->btPlayList, AC_PlayList);
+    AC_SET_ACCESSIBLE_NAME(d->btPlayList, AC_PlayList);
     d->btPlayList->setFixedSize(50, 50);
     d->btPlayList->setCheckable(true);
     d->btPlayList->setIconSize(QSize(36, 36));
@@ -607,6 +623,8 @@ Footer::Footer(QWidget *parent) :
     allCtlButtons.append(d->btPlay);
     allCtlButtons.append(d->btNext);
     d->ctlWidget->setButtonList(allCtlButtons, false);
+    AC_SET_OBJECT_NAME(d->ctlWidget, AC_ctlWidget);
+    AC_SET_ACCESSIBLE_NAME(d->ctlWidget, AC_ctlWidget);
 
     d->waveform = new Waveform(Qt::Horizontal, static_cast<QWidget *>(parent), this);
     d->waveform->setMinimum(0);
@@ -615,6 +633,8 @@ Footer::Footer(QWidget *parent) :
     d->waveform->adjustSize();
 
     auto actWidget = new QWidget;
+    AC_SET_OBJECT_NAME(actWidget, AC_actWidget);
+    AC_SET_ACCESSIBLE_NAME(actWidget, AC_actWidget);
     auto actLayout = new QHBoxLayout(actWidget);
     actLayout->setMargin(0);
 //    actLayout->setSpacing(10);
