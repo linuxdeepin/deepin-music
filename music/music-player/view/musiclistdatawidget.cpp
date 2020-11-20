@@ -50,6 +50,7 @@
 #include "widget/ddropdown.h"
 #include "widget/musicimagebutton.h"
 #include <malloc.h>
+#include "ac-desktop-define.h"
 
 DWIDGET_USE_NAMESPACE
 
@@ -1024,8 +1025,8 @@ MusicListDataWidget::MusicListDataWidget(QWidget *parent) :
     DWidget(parent), d_ptr(new MusicListDataWidgetPrivate(this))
 {
     Q_D(MusicListDataWidget);
-
-    setObjectName("MusicListDataWidget");
+    AC_SET_OBJECT_NAME(this, AC_MusicListDataWidget);
+    AC_SET_ACCESSIBLE_NAME(this, AC_MusicListDataWidget);
     setAcceptDrops(true);
 
     setAutoFillBackground(true);
@@ -1041,7 +1042,8 @@ MusicListDataWidget::MusicListDataWidget(QWidget *parent) :
 
     d->actionBar = new ActionBar;
     d->actionBar->setFixedHeight(80);
-    d->actionBar->setObjectName("MusicListDataActionBar");
+    AC_SET_OBJECT_NAME(d->actionBar, AC_actionBar);
+    AC_SET_ACCESSIBLE_NAME(d->actionBar, AC_actionBar);
 
     auto actionBarLayout = new QVBoxLayout(d->actionBar);
     actionBarLayout->setContentsMargins(10, 3, 8, 0);
@@ -1066,7 +1068,8 @@ MusicListDataWidget::MusicListDataWidget(QWidget *parent) :
     d->albumDropdown = new DDropdown;
     d->albumDropdown->setFixedHeight(28);
     d->albumDropdown->setMinimumWidth(130);
-    d->albumDropdown->setObjectName("MusicListAlbumDataSort");
+    AC_SET_OBJECT_NAME(d->albumDropdown, AC_albumDropdown);
+    AC_SET_ACCESSIBLE_NAME(d->albumDropdown, AC_albumDropdown);
     d->albumDropdown->addAction(tr("Time added"), QVariant::fromValue<Playlist::SortType>(Playlist::SortByAddTime));
     d->albumDropdown->addAction(tr("Album"), QVariant::fromValue<Playlist::SortType>(Playlist::SortByTitle));
     d->albumDropdown->setCurrentAction();
@@ -1075,7 +1078,8 @@ MusicListDataWidget::MusicListDataWidget(QWidget *parent) :
     d->artistDropdown = new DDropdown;
     d->artistDropdown->setFixedHeight(28);
     d->artistDropdown->setMinimumWidth(130);
-    d->artistDropdown->setObjectName("MusicListArtistDataSort");
+    AC_SET_OBJECT_NAME(d->artistDropdown, AC_artistDropdown);
+    AC_SET_ACCESSIBLE_NAME(d->artistDropdown, AC_artistDropdown);
     d->artistDropdown->addAction(tr("Time added"), QVariant::fromValue<Playlist::SortType>(Playlist::SortByAddTime));
     d->artistDropdown->addAction(tr("Artist"), QVariant::fromValue<Playlist::SortType>(Playlist::SortByArtist));
     d->artistDropdown->setCurrentAction();
@@ -1084,7 +1088,8 @@ MusicListDataWidget::MusicListDataWidget(QWidget *parent) :
     d->musicDropdown = new DDropdown;
     d->musicDropdown->setFixedHeight(28);
     d->musicDropdown->setMinimumWidth(130);
-    d->musicDropdown->setObjectName("MusicListMusicDataSort");
+    AC_SET_OBJECT_NAME(d->musicDropdown, AC_musicDropdown);
+    AC_SET_ACCESSIBLE_NAME(d->musicDropdown, AC_musicDropdown);
     d->musicDropdown->addAction(tr("Time added"), QVariant::fromValue<Playlist::SortType>(Playlist::SortByAddTime));
     d->musicDropdown->addAction(tr("Title"), QVariant::fromValue<Playlist::SortType>(Playlist::SortByTitle));
     d->musicDropdown->addAction(tr("Artist"), QVariant::fromValue<Playlist::SortType>(Playlist::SortByArtist));
@@ -1142,7 +1147,8 @@ MusicListDataWidget::MusicListDataWidget(QWidget *parent) :
     playAllPalette.setColor(DPalette::Light, QColor("#ED5656"));
     d->btPlayAll->setPalette(playAllPalette);
     d->btPlayAll->setIcon(QIcon(":/mpimage/light/normal/play_all_normal.svg"));
-    d->btPlayAll->setObjectName("MusicListDataPlayAll");
+    AC_SET_OBJECT_NAME(d->btPlayAll, AC_btPlayAll);
+    AC_SET_ACCESSIBLE_NAME(d->btPlayAll, AC_btPlayAll);
     d->btPlayAll->setText(tr("Play All"));
 //    d->btPlayAll->setFixedWidth(93);
     d->btPlayAll->setFixedHeight(30);
@@ -1178,7 +1184,8 @@ MusicListDataWidget::MusicListDataWidget(QWidget *parent) :
 //                                         ":/mpimage/light/active/picture_list_active.svg");
     d->btIconMode = new DToolButton;
     d->btIconMode->setFixedSize(36, 36);
-    d->btIconMode->setObjectName("MusicListDataWidgetIconMode");
+    AC_SET_OBJECT_NAME(d->btIconMode, AC_btIconMode);
+    AC_SET_ACCESSIBLE_NAME(d->btIconMode, AC_btIconMode);
     d->btIconMode->setCheckable(true);
     d->btIconMode->setChecked(false);
 
@@ -1187,7 +1194,8 @@ MusicListDataWidget::MusicListDataWidget(QWidget *parent) :
 
     d->btlistMode = new DToolButton;
     d->btlistMode->setFixedSize(36, 36);
-    d->btlistMode->setObjectName("MusicListDataWidgetListMode");
+    AC_SET_OBJECT_NAME(d->btlistMode, AC_btlistMode);
+    AC_SET_ACCESSIBLE_NAME(d->btlistMode, AC_btlistMode);
     d->btlistMode->setCheckable(true);
     d->btlistMode->setChecked(false);
 

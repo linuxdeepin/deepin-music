@@ -52,6 +52,7 @@
 #include "core/util/global.h"
 #include "musicapp.h"
 #include "speech/exportedinterface.h"
+#include "acobjectlist.h"
 
 #include <DVtableHook>
 #define protected public
@@ -108,6 +109,7 @@ int main(int argc, char *argv[])
 #endif
 
     app->setAttribute(Qt::AA_UseHighDpiPixmaps);
+    QAccessible::installFactory(accessibleFactory);
     app->setOrganizationName("deepin");
     app->setApplicationName("deepin-music");
     // Version Time

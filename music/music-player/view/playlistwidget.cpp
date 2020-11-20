@@ -42,6 +42,7 @@
 #include "../core/util/threadpool.h"
 #include "widget/playlistview.h"
 #include "widget/ddropdown.h"
+#include "ac-desktop-define.h"
 
 DWIDGET_USE_NAMESPACE
 DGUI_USE_NAMESPACE
@@ -265,7 +266,8 @@ PlayListWidget::PlayListWidget(QWidget *parent) :
     playAllPalette.setColor(DPalette::Dark, QColor(Qt::darkGray));
     playAllPalette.setColor(DPalette::Light, QColor(Qt::darkGray));
     d->btClearAll->setPalette(playAllPalette);
-    d->btClearAll->setObjectName("PlayListPlayAll");
+    AC_SET_OBJECT_NAME(d->btClearAll, AC_btClearAll);
+    AC_SET_ACCESSIBLE_NAME(d->btClearAll, AC_btClearAll);
     d->btClearAll->setText(tr("Empty"));
     d->btClearAll->setFixedHeight(30);
 

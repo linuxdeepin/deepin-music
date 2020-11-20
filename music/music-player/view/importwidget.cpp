@@ -34,6 +34,7 @@
 #include <DGuiApplicationHelper>
 
 #include "musicsettings.h"
+#include "ac-desktop-define.h"
 DGUI_USE_NAMESPACE
 
 const QString linkTemplate = "<a href='%1'>%2</a>";
@@ -54,7 +55,8 @@ public:
 ImportWidget::ImportWidget(QWidget *parent) : DFrame(parent), d_ptr(new ImportWidgetPrivate(this))
 {
     Q_D(ImportWidget);
-    setObjectName("ImportWidget");
+    AC_SET_OBJECT_NAME(this, AC_ImportWidget);
+    AC_SET_ACCESSIBLE_NAME(this, AC_ImportWidget);
 
     setAcceptDrops(true);
     setAutoFillBackground(true);
@@ -81,7 +83,8 @@ ImportWidget::ImportWidget(QWidget *parent) : DFrame(parent), d_ptr(new ImportWi
     sbcolor.setAlphaF(0);
     pl.setColor(DPalette::Shadow, sbcolor);
 //    d->importButton->setPalette(pl);
-    d->importButton->setObjectName("ImportViewImportButton");
+    AC_SET_OBJECT_NAME(d->importButton, AC_importButton);
+    AC_SET_ACCESSIBLE_NAME(d->importButton, AC_importButton);
     d->importButton->setFixedSize(302, 36);
     d->importButton->setText(tr("Open Folder"));
     d->importButton->setFocusPolicy(Qt::TabFocus);
@@ -91,12 +94,13 @@ ImportWidget::ImportWidget(QWidget *parent) : DFrame(parent), d_ptr(new ImportWi
     d->addMusicButton = new DPushButton;
     d->addMusicButton->setFont(importButtonFont);
 //    d->addMusicButton->setPalette(pl);
-    d->addMusicButton->setObjectName("ImportViewImportButton");
     d->addMusicButton->setFixedSize(302, 36);
     d->addMusicButton->setText(tr("Add Music"));
     d->addMusicButton->setFocusPolicy(Qt::TabFocus);
     d->addMusicButton->setDefault(true);
     d->addMusicButton->installEventFilter(this);
+    AC_SET_OBJECT_NAME(d->addMusicButton, AC_addMusicButton);
+    AC_SET_ACCESSIBLE_NAME(d->addMusicButton, AC_addMusicButton);
 
     d->text = new QLabel;
     d->text->setObjectName("ImportViewText");

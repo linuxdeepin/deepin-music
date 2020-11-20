@@ -41,9 +41,12 @@
 #include "musiclistdatawidget.h"
 #include "widget/musicimagebutton.h"
 #include <DGuiApplicationHelper>
+#include "ac-desktop-define.h"
 
 MusicListScrollArea::MusicListScrollArea(QWidget *parent) : DScrollArea(parent)
 {
+    AC_SET_OBJECT_NAME(this, AC_MusicListScrollArea);
+    AC_SET_ACCESSIBLE_NAME(this, AC_MusicListScrollArea);
     setFrameShape(QFrame::NoFrame);
     setFixedWidth(220);
     setWidgetResizable(true);
@@ -55,6 +58,8 @@ MusicListScrollArea::MusicListScrollArea(QWidget *parent) : DScrollArea(parent)
 
     QWidget *widget = new QWidget(this);
     setWidget(widget);
+    AC_SET_OBJECT_NAME(widget, AC_libraryWidget);
+    AC_SET_ACCESSIBLE_NAME(widget, AC_libraryWidget);
     widget->setFixedWidth(220);
     auto musicLayout = new QVBoxLayout(widget);
     musicLayout->setContentsMargins(10, 5, 10, 5);
@@ -63,7 +68,8 @@ MusicListScrollArea::MusicListScrollArea(QWidget *parent) : DScrollArea(parent)
     dataBaseLabel = new DLabel;
     dataBaseLabel->setFixedHeight(40);
     dataBaseLabel->setText(tr("Library"));
-    dataBaseLabel->setObjectName("MusicListScrollAreaDataBase");
+    AC_SET_OBJECT_NAME(dataBaseLabel, AC_dataBaseLabel);
+    AC_SET_ACCESSIBLE_NAME(dataBaseLabel, AC_dataBaseLabel);
     dataBaseLabel->setMargin(10);
     auto dataBaseLabelFont = dataBaseLabel->font();
     dataBaseLabelFont.setFamily("SourceHanSansSC");
@@ -74,7 +80,8 @@ MusicListScrollArea::MusicListScrollArea(QWidget *parent) : DScrollArea(parent)
     customizeLabel = new DLabel;
     customizeLabel->setFixedHeight(40);
     customizeLabel->setText(tr("Playlists"));
-    customizeLabel->setObjectName("MusicListScrollAreaCustomizeLabel");
+    AC_SET_OBJECT_NAME(customizeLabel, AC_customizeLabel);
+    AC_SET_ACCESSIBLE_NAME(customizeLabel, AC_customizeLabel);
     customizeLabel->setMargin(10);
     customizeLabel->setFont(dataBaseLabelFont);
 
@@ -82,9 +89,10 @@ MusicListScrollArea::MusicListScrollArea(QWidget *parent) : DScrollArea(parent)
                                         ":/mpimage/light/hover/add_hover.svg",
                                         ":/mpimage/light/press/add_press.svg");
     m_addListBtn->setFixedSize(37, 37);
-
     m_addListBtn->setFocusPolicy(Qt::TabFocus);
     m_addListBtn->installEventFilter(this);
+    AC_SET_OBJECT_NAME(m_addListBtn, AC_addListBtn);
+    AC_SET_ACCESSIBLE_NAME(m_addListBtn, AC_addListBtn);
 
     auto customizeLayout = new QHBoxLayout(widget);
     customizeLayout->setContentsMargins(0, 0, 5, 0);
@@ -95,6 +103,8 @@ MusicListScrollArea::MusicListScrollArea(QWidget *parent) : DScrollArea(parent)
     m_dataBaseListview = new MusicListView;
     m_dataBaseListview->setEditTriggers(QAbstractItemView::NoEditTriggers);
     m_dataBaseListview->setFixedHeight(162);
+    AC_SET_OBJECT_NAME(m_dataBaseListview, AC_dataBaseListview);
+    AC_SET_ACCESSIBLE_NAME(m_dataBaseListview, AC_dataBaseListview);
 
     // m_dataBaseListview->setFocusPolicy(Qt::TabFocus);   //使用默认设置焦点方式
     m_dataBaseListview->installEventFilter(this);
@@ -104,6 +114,9 @@ MusicListScrollArea::MusicListScrollArea(QWidget *parent) : DScrollArea(parent)
 
     // m_customizeListview->setFocusPolicy(Qt::TabFocus);
     m_customizeListview->installEventFilter(this);
+    AC_SET_OBJECT_NAME(m_customizeListview, AC_customizeListview);
+    AC_SET_ACCESSIBLE_NAME(m_customizeListview, AC_customizeListview);
+
 
     musicLayout->addWidget(dataBaseLabel, 0, Qt::AlignVCenter);
     musicLayout->addWidget(m_dataBaseListview, 0, Qt::AlignTop);

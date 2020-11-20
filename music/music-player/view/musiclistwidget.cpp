@@ -41,10 +41,12 @@
 #include "musiclistdatawidget.h"
 #include "widget/musicimagebutton.h"
 #include "musiclistscrollarea.h"
+#include "ac-desktop-define.h"
 
 MusicListWidget::MusicListWidget(QWidget *parent) : DWidget(parent)
 {
-    setObjectName("MusicListWidget");
+    AC_SET_OBJECT_NAME(this, AC_MusicListWidget);
+    AC_SET_ACCESSIBLE_NAME(this, AC_MusicListWidget);
 
     setAutoFillBackground(true);
     auto palette = this->palette();
