@@ -87,7 +87,7 @@ public:
     void installTipHint(QWidget *w, const QString &hintstr);
     void installHint(QWidget *w, QWidget *hint);
     void initConnection();
-    //pangu customization: standby until music play end
+    //customization: standby until music play end
     void screenStandby(bool isStandby);
     bool getStandbyParam();
 
@@ -118,7 +118,7 @@ public:
     Waveform          *waveform   = nullptr;
     PlayListWidget    *playListWidget         = nullptr;
     bool              showPlaylistFlag        = false;
-    bool              isPangu                 = false;
+    bool              isPG                 = false;
 
     HintFilter          *hintFilter         = nullptr;
     HoverShadowFilter   *hoverShadowFilter  = nullptr;
@@ -290,12 +290,12 @@ void FooterPrivate::initConnection()
         q->onMutedChanged(mute);
     });
 
-    isPangu =  getStandbyParam();
+    isPG =  getStandbyParam();
 }
 
 void FooterPrivate::screenStandby(bool isStandby)
 {
-    if (!isPangu)   //not pangu,return
+    if (!isPG)   //return
         return;
     if (isStandby) {
         if (lastCookie > 0) {
