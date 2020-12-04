@@ -309,6 +309,7 @@ void FooterWidget::initUI(QWidget *parent)
             this, &FooterWidget::slotMediaMetaChanged);
 
     connect(m_btFavorite, &DIconButton::clicked, this, &FooterWidget::slotFavoriteClick);
+    connect(CommonService::getInstance(), &CommonService::favoriteMusic, this, &FooterWidget::favoriteMusic);
 }
 
 void FooterWidget::initShortcut()
@@ -457,17 +458,21 @@ void FooterWidget::slotPreClick(bool click)
 void FooterWidget::slotFavoriteClick(bool click)
 {
     Q_UNUSED(click)
-    DataBaseService::getInstance()->favoriteMusic(Player::instance()->activeMeta());
+    favoriteMusic(Player::instance()->activeMeta());
+}
+
+void FooterWidget::favoriteMusic(const MediaMeta meta)
+{
+    DataBaseService::getInstance()->favoriteMusic(meta);
 
     if (CommonService::getInstance()->getPlayClassification() == CommonService::PlayClassification::Music_My_Collection)
         emit CommonService::getInstance()->switchToView(FavType, "fav");
 
-    if (m_btFavorite->property("isFav").toBool()) {
+
+    if (DataBaseService::getInstance()->favoriteExist(Player::instance()->activeMeta())) {
         m_btFavorite->setIcon(QIcon::fromTheme("collection1_press"));
-        m_btFavorite->setProperty("isFav", false);
     } else {
         m_btFavorite->setIcon(QIcon::fromTheme("dcc_collection"));
-        m_btFavorite->setProperty("isFav", true);
     }
 }
 
@@ -515,10 +520,8 @@ void FooterWidget::slotMediaMetaChanged()
     m_metaBufferDetector->onBufferDetector(meta.localPath, meta.hash);
 
     if (DataBaseService::getInstance()->favoriteExist(Player::instance()->activeMeta())) {
-        m_btFavorite->setProperty("isFav", false);
         m_btFavorite->setIcon(QIcon::fromTheme("collection1_press"));
     } else {
-        m_btFavorite->setProperty("isFav", true);
         m_btFavorite->setIcon(QIcon::fromTheme("dcc_collection"));
     }
 }

@@ -86,6 +86,7 @@ public slots:
     //删除单个歌单中的歌曲
     void slotRemoveSingleSong(const QString &struuid);
     //右键菜单响应
+    void slotPlayMusic();           //播放音乐
     void slotAddToFavSongList();    //添加收藏
     void slotAddToCustomSongList(); //添加到其他歌单
     void slotOpenInFileManager();   //在文件管理起查看

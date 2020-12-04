@@ -51,6 +51,8 @@
 #include "metadetector.h"
 #include "infodialog.h"
 
+#include "ac-desktop-define.h"
+
 DWIDGET_USE_NAMESPACE
 bool moreThanTimestamp(MediaMeta v1, MediaMeta v2)
 {
@@ -131,7 +133,6 @@ PlayListView::PlayListView(QString hash, bool isPlayList, QWidget *parent)
 
     connect(DataBaseService::getInstance(), &DataBaseService::sigRmvSong,
             this, &PlayListView::slotRemoveSingleSong);
-
 }
 
 PlayListView::~PlayListView()
@@ -604,10 +605,17 @@ void PlayListView::slotRemoveSingleSong(const QString &struuid)
     //todo.. mm
 }
 
+void PlayListView::slotPlayMusic()
+{
+    slotOnDoubleClicked(this->currentIndex());
+}
+
 void PlayListView::showDetailInfoDlg()
 {
     if (!m_pInfoDlg) {
         m_pInfoDlg = new InfoDialog(this);
+        AC_SET_OBJECT_NAME(m_pInfoDlg, AC_infoDialog);
+        AC_SET_ACCESSIBLE_NAME(m_pInfoDlg, AC_infoDialog);
     }
 
     QModelIndex mindex =  this->currentIndex();
@@ -618,7 +626,8 @@ void PlayListView::showDetailInfoDlg()
 
 void PlayListView::slotAddToFavSongList()
 {
-
+    MediaMeta meta = this->currentIndex().data(Qt::UserRole).value<MediaMeta>();
+    emit CommonService::getInstance()->favoriteMusic(meta);
 }
 
 void PlayListView::slotAddToCustomSongList()
@@ -661,6 +670,58 @@ void PlayListView::slotRmvFromSongList()
 void PlayListView::slotDelFromLocal()
 {
 
+    bool containsCue = false;
+    QList<MediaMeta> metas;
+    QModelIndexList mindexlist =  this->selectedIndexes();
+    for (QModelIndex mindex : mindexlist) {
+        MediaMeta imt = mindex.data(Qt::UserRole).value<MediaMeta>();
+        metas.append(imt);
+    }
+
+    Dtk::Widget::DDialog warnDlg(this);
+    warnDlg.setTextFormat(Qt::RichText);
+    warnDlg.addButton(tr("Cancel"), true, Dtk::Widget::DDialog::ButtonNormal);
+    int deleteFlag = warnDlg.addButton(tr("Delete"), false, Dtk::Widget::DDialog::ButtonWarning);
+
+    auto cover = QImage(QString(":/common/image/del_notify.svg"));
+    if (1 == metas.length()) {
+        auto meta = metas.first();
+//        auto coverData = MetaSearchService::coverData(meta);
+//        if (coverData.length() > 0) {
+//            cover = QImage::fromData(coverData);
+//        }
+        warnDlg.setMessage(QString(tr("Are you sure you want to delete %1?")).arg(meta.title));
+    } else {
+        //                warnDlg.setTitle(QString(tr("Are you sure you want to delete the selected %1 songs?")).arg(metalist.length()));
+        DLabel *t_titleLabel = new DLabel(this);
+        t_titleLabel->setForegroundRole(DPalette::TextTitle);
+        DLabel *t_infoLabel = new DLabel(this);
+        t_infoLabel->setForegroundRole(DPalette::TextTips);
+        t_titleLabel->setText(tr("Are you sure you want to delete the selected %1 songs?").arg(metas.length()));
+        t_infoLabel->setText(tr("The song files contained will also be deleted"));
+        warnDlg.addContent(t_titleLabel, Qt::AlignHCenter);
+        warnDlg.addContent(t_infoLabel, Qt::AlignHCenter);
+        warnDlg.addSpacing(20);
+    }
+
+    if (containsCue && false) {
+        DLabel *t_titleLabel = new DLabel(this);
+        t_titleLabel->setForegroundRole(DPalette::TextTitle);
+        DLabel *t_infoLabel = new DLabel(this);
+        t_infoLabel->setForegroundRole(DPalette::TextTips);
+        t_titleLabel->setText(tr("Are you sure you want to delete the selected %1 songs?").arg(metas.length()));
+        t_infoLabel->setText(tr("The song files contained will also be deleted"));
+        warnDlg.addContent(t_titleLabel, Qt::AlignHCenter);
+        warnDlg.addContent(t_infoLabel, Qt::AlignHCenter);
+        warnDlg.addSpacing(20);
+    }
+//    auto coverPixmap =  QPixmap::fromImage(WidgetHelper::cropRect(cover, QSize(64, 64)));
+
+    warnDlg.setIcon(QIcon::fromTheme("deepin-music"));
+    // todo..
+    if (deleteFlag == warnDlg.exec()) {
+//        slotRmvFromSongList();
+    }
 }
 
 void PlayListView::slotSetCoding()
@@ -759,7 +820,10 @@ void PlayListView::contextMenuEvent(QContextMenuEvent *event)
     DMenu textCodecMenu; //coding of song information
     QAction *actrmv = nullptr; //remove action
     QAction *actdel = nullptr;
-    playlistMenu.addAction(tr("My favorites"))->setData(QVariant("fav")); //uuid:"fav"
+    QAction *actfav = new QAction(tr("My favorites"));
+    connect(actfav, &QAction::triggered, this, &PlayListView::slotAddToFavSongList);
+    actfav->setData(QVariant("fav"));
+    playlistMenu.addAction(actfav); //uuid:"fav"
     playlistMenu.addSeparator();
     playlistMenu.addAction(tr("Add to new playlist"))->setData(QVariant());//set empty to new a song list view
     playlistMenu.addSeparator();
@@ -780,8 +844,10 @@ void PlayListView::contextMenuEvent(QContextMenuEvent *event)
         QAction *actplay = nullptr;
         if (imt.hash != mt.hash) { //not the same with the playing one
             actplay = allMusicMenu.addAction(tr("Play"));
+            connect(actplay, &QAction::triggered, this, &PlayListView::slotPlayMusic);
         } else {
             actplay = allMusicMenu.addAction(tr("Pause"));
+            connect(actplay, &QAction::triggered, Player::instance(), &Player::pause);
         }
         if (imt.invalid)
             actplay->setEnabled(false);
@@ -836,6 +902,7 @@ void PlayListView::contextMenuEvent(QContextMenuEvent *event)
     }
 
     connect(actrmv, SIGNAL(triggered()), this, SLOT(slotRmvFromSongList()));
+    connect(actdel, SIGNAL(triggered()), this, SLOT(slotDelFromLocal()));
 
     allMusicMenu.exec(globalPos);
 }

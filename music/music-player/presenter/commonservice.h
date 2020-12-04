@@ -52,6 +52,8 @@ signals:
     void playStatueChanged(PlayClassification classification, PlayMode mode, QString songlistName);  //status
     //hashOrSearchword为hash值或者搜索关键词
     void switchToView(ListPageSwitchType switchtype, QString hashOrSearchword); //switch to playlist view,
+    // 收藏音乐
+    void favoriteMusic(const MediaMeta meta);
 private:
 
 private:
