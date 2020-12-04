@@ -5,8 +5,6 @@
 
 #include <QtCore/QObject>
 #include <QtCore/QString>
-#include <QtCore/QTimer>
-
 #include <QtGui/qwindowdefs.h>
 
 #include "Enums.h"
@@ -129,7 +127,7 @@ public:
         \brief Get seekable status
         \return seekable status (const bool)
     */
-    //bool seekable() const;
+    bool seekable() const;
 
     /*!
         \brief Get current player state.
@@ -335,10 +333,6 @@ private:
     VlcAudio *_vlcAudio;
     VlcVideo *_vlcVideo;
     VlcEqualizer *_vlcEqualizer;
-
-
-    QTimer   timer;
-
 };
 
 #endif // VLCQT_MEDIAPLAYER_H_

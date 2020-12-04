@@ -57,7 +57,7 @@ public:
     explicit Geese(QObject *parent = nullptr);
     ~Geese();
 
-    //Goose *getGoose(QUrl url);
+    Goose *getGoose(QUrl url);
     Goose *postGoose(const QUrl &url, const QByteArray &data);
 
     void setRawHeader(const QByteArray &headerName, const QByteArray &value);

@@ -70,7 +70,7 @@ public:
 
     void parseCue(const QByteArray &data, QByteArray codeName);
 
-    MetaPtrList    metalist;
+    QList<MediaMeta>    metalist;
     QString        mediaFilepath;
     QString        cueFilepath;
 
@@ -115,10 +115,10 @@ void CueParserPrivate::parseCue(const QByteArray &data,  QByteArray codeName)
 
     QFileInfo cueFi(cueFilepath);
     for (int i = 0; i < ival; ++i) {
-        auto meta = MetaPtr(new MediaMeta);
-        meta->track = i + 1;
+        MediaMeta meta;
+        meta.track = i + 1;
         Track *track;
-        track = cd_get_track(cd, int(meta->track));
+        track = cd_get_track(cd, int(meta.track));
         if (nullptr == track) {
             continue;
         }
@@ -127,28 +127,28 @@ void CueParserPrivate::parseCue(const QByteArray &data,  QByteArray codeName)
         if (nullptr == val) {
             continue;
         }
-        meta->localPath = cueFi.path() + "/" + val;
-        meta->cuePath = cueFilepath;
+        meta.localPath = cueFi.path() + "/" + val;
+        meta.cuePath = cueFilepath;
 
-        if (!fileMetaCache.contains(meta->localPath)) {
-            QFileInfo media(meta->localPath);
+        if (!fileMetaCache.contains(meta.localPath)) {
+            QFileInfo media(meta.localPath);
 //            if (media.exists()) {
             auto mediaMeta = MediaMeta::fromLocalFile(media);
-            fileMetaCache.insert(meta->localPath, mediaMeta);
-            fileExist.insert(meta->localPath, media.exists());
+            fileMetaCache.insert(meta.localPath, mediaMeta);
+            fileExist.insert(meta.localPath, media.exists());
 //            }
         }
 
-        if (!fileExist.value(meta->localPath)) {
+        if (!fileExist.value(meta.localPath)) {
             continue;
         }
 
         auto trackPath = QString("%1.%2").arg(cueFilepath).arg(i + 1);
         auto hash = DMusic::filepathHash(trackPath);
-        meta->hash = hash;
+        meta.hash = hash;
 
         // TODO: maybe multi
-        mediaFilepath = meta->localPath;
+        mediaFilepath = meta.localPath;
 
         cdtext = track_get_cdtext(track);
         if (nullptr == cdtext) {
@@ -156,32 +156,32 @@ void CueParserPrivate::parseCue(const QByteArray &data,  QByteArray codeName)
         }
 
         val = cdtext_get(PTI_TITLE, cdtext);
-        meta->title = val;
+        meta.title = val;
 
         val = cdtext_get(PTI_PERFORMER, cdtext);
-        meta->artist = val;
-        meta->album = album;
+        meta.singer = val;
+        meta.album = album;
 
-        meta->offset = timeframe2mtime(track_get_start(track));
-        meta->length = timeframe2mtime(track_get_length(track));
+        meta.offset = timeframe2mtime(track_get_start(track));
+        meta.length = timeframe2mtime(track_get_length(track));
 
         // TODO: hack track must < 1000
-        auto cueMediaMeta = fileMetaCache.value(meta->localPath);
-        meta->timestamp = cueMediaMeta.timestamp + meta->track;
-        meta->filetype = cueMediaMeta.filetype;
-        meta->size = cueMediaMeta.size;
+        auto cueMediaMeta = fileMetaCache.value(meta.localPath);
+        meta.timestamp = cueMediaMeta.timestamp + meta.track;
+        meta.filetype = cueMediaMeta.filetype;
+        meta.size = cueMediaMeta.size;
 
-        meta->updateSearchIndex();
+        meta.updateSearchIndex();
 
         // TODO: fix last len
-        if (meta->track == ival && meta->length <= 0) {
+        if (meta.track == ival && meta.length <= 0) {
             auto total = cueMediaMeta.length;
-            if (total > meta->offset) {
-                meta->length = total - meta->offset;
+            if (total > meta.offset) {
+                meta.length = total - meta.offset;
             }
         }
 
-        meta->filetype = cueMediaMeta.filetype;
+        meta.filetype = cueMediaMeta.filetype;
         metalist << meta;
     }
 
@@ -212,7 +212,7 @@ CueParser::~CueParser()
 
 }
 
-MetaPtrList CueParser::metalist() const
+QList<MediaMeta> CueParser::metalist() const
 {
     Q_D(const CueParser);
     return d->metalist;

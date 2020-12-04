@@ -25,15 +25,18 @@
 #include <QVariantMap>
 #include <QScopedPointer>
 #include <QMediaContent>
+#include <QPropertyAnimation>
+#include <QPixmap>
+#include <QIcon>
 
-#include <Mpris>
+#include <MprisPlayer>
+#include <mediameta.h>
 
 #include <util/singleton.h>
-#include "playlist.h"
 #include "vlc/MediaPlayer.h"
 
 class QAudioBuffer;
-class PlayerPrivate;
+class MprisPlayer;
 class Player : public QObject, public DMusic::DSingleton<Player>
 {
     Q_OBJECT
@@ -47,9 +50,10 @@ public:
     };
 
     enum PlaybackMode {
-        RepeatAll = 0,
-        RepeatSingle = 1,
-        Shuffle = 2,
+        RepeatNull = -1,
+        RepeatAll,
+        RepeatSingle,
+        Shuffle,
     };
 
     enum Error {
@@ -66,38 +70,63 @@ public:
 
     explicit Player(QObject *parent = nullptr);
     ~Player();
+    //zy---begin
+public:
+    void playMeta(MediaMeta meta);
+    void pause();
+    void resume();
+    void pauseNow();
+    void playPreMeta();
+    void playNextMeta();
 
+    // 清除播放列表
+    void clearPlayList();
+    // 添加播放歌曲
+    void playListAppendMeta(MediaMeta meta);
+    // 设置播放列表
+    void setPlayList(QList<MediaMeta> list);
+    // 获取播放列表
+    QList<MediaMeta> *getPlayList();
+    //获取dbus实例
+    MprisPlayer *getMpris() const;
+    //当前播放playlist的hash
+    void setCurrentPlayListHash(QString hash);
+    QString getCurrentPlayListHash();
+
+    PlaybackStatus status();
+    MediaMeta activeMeta();
+    QIcon playingIcon();
+signals:
+    // 播放状态改变
+    void signalPlaybackStatusChanged(Player::PlaybackStatus playbackStatus);
+    // 播放音乐改变
+    void signalMediaMetaChanged();
+    // 播放状态动态图改变
+    void signalUpdatePlayingIcon();
+    // 播放列表改变
+    void signalPlayListChanged();
+public slots:
+    void changePicture();
+    void setVolume(int volume);
+    void setMuted(bool muted);
+private:
+    void setActiveMeta(const MediaMeta &meta);
+private:
+    QTimer         *m_timer = nullptr;
+    QIcon           m_playingIcon;
+    int             m_playingCount = 0;
+    QString         m_currentPlayListHash;//当前正在播放的playlist的hash
+    PlaybackMode    m_mode    = Player::RepeatAll;//循环播放模式
+    //zy--end
 public:
     void init();
-
-    void setActivePlaylist(PlaylistPtr playlist);
-    void setCurPlaylist(PlaylistPtr curPlaylist);
-    void loadMedia(PlaylistPtr playlist, const MetaPtr meta);
-    void playMeta(PlaylistPtr playlist, const MetaPtr meta);
-    void resume(PlaylistPtr playlist, const MetaPtr meta);
-    void playNextMeta(PlaylistPtr playlist, const MetaPtr meta);
-    void playNextMeta();
-    void playPrevMusic(PlaylistPtr playlist, const MetaPtr meta);
-    void pause();
-    void pauseNow();
     void stop();
 
     VlcMediaPlayer *core();
-    PlaybackStatus status();
-
-    bool isActiveMeta(MetaPtr meta) const;
-    MetaPtr activeMeta() const;
-    PlaylistPtr curPlaylist() const;
-    PlaylistPtr activePlaylist() const;
-    //QStringList supportedFilterStringList()const;
     QStringList supportedSuffixList()const;
     QStringList supportedMimeTypes() const;
 
 signals:
-    void mediaUpdate(PlaylistPtr playlist, const MetaPtr meta);
-    void mediaPlayed(PlaylistPtr playlist, const MetaPtr meta);
-    void mediaError(PlaylistPtr playlist, const MetaPtr meta, Player::Error error);
-
     void readyToResume();
 
 public:
@@ -113,7 +142,6 @@ public:
 
 signals:
     void canControlChanged(bool canControl);
-    void playbackStatusChanged(Player::PlaybackStatus playbackStatus);
     void positionChanged(qlonglong position, qlonglong length, qint64 coefficient);
     void sliderReleased(qint64 value);
 
@@ -134,8 +162,6 @@ public slots:
     void setCanControl(bool canControl);
     void setPosition(qlonglong position);
     void setMode(PlaybackMode mode);
-    void setVolume(int volume);
-    void setMuted(bool muted);
     /*********************
      * local mute
      * *********************/
@@ -164,12 +190,44 @@ private:
     bool setMusicMuted(bool muted);
     bool isMusicMuted();
     bool isDevValid();
-private:
+    void initConnection();
+    void initMpris();//dbus interface
+
     friend class DMusic::DSingleton<Player>;
-    QScopedPointer<PlayerPrivate> d_ptr;
-    Q_DECLARE_PRIVATE_D(qGetPtrHelper(d_ptr), Player)
+    //begin
+    MediaMeta m_ActiveMeta;
+    QList<MediaMeta> m_MetaList;
+    //end
+
+    // player property
+    bool m_canControl     = true;
+    bool m_canGoNext      = false;
+    bool m_canGoPrevious  = false;
+    bool m_canPause       = false;
+    bool m_canPlay        = false;
+    bool m_canSeek        = false;
+    bool m_shuffle        = false;
+    bool m_mute           = false; // unused
+    QString m_sinkInputPath;
+
+    VlcInstance             *m_qvinstance;
+    VlcMedia                *m_qvmedia;
+    VlcMediaPlayer          *m_qvplayer;
+//    MetaPtr                 m_activeMeta;
+
+    int             m_volume      = 50.0;
+    bool            m_playOnLoad  = true;
+    bool            m_firstPlayOnLoad  = true; //外部双击打开处理一次
+    bool            m_fadeInOut   = true;
+    bool            m_isamr = false;
+    double          m_fadeInOutFactor     = 1.0;
+    qlonglong       m_m_position          = 0;//只能用于判断音乐是否正常结束
+
+    MprisPlayer     *m_pMpris = nullptr;    //音乐dbus接口
+
+    QPropertyAnimation  *m_fadeInAnimation    = nullptr;
+    QPropertyAnimation  *m_fadeOutAnimation   = nullptr;
 };
 
 Q_DECLARE_METATYPE(Player::Error)
 Q_DECLARE_METATYPE(Player::PlaybackStatus)
-

@@ -18,19 +18,18 @@
 #include <DMainWindow>
 #include <QAction>
 
-#include "../view/widget/titlebarwidget.h"
-#include "../view/widget/infodialog.h"
-#include "../view/widget/searchresult.h"
-#include "../view/widget/closeconfirmdialog.h"
-#include "../view/helper/widgethellper.h"
-#include "../view/widget/dequalizerdialog.h"
+#include "titlebarwidget.h"
+//#include "../view/widget/infodialog.h"
+#include "searchresult.h"
+//#include "closeconfirmdialog.h"
+//#include "dequalizerdialog.h"
 
-#include "../view/importwidget.h"
-#include "../view/playlistwidget.h"
-#include "../view/musiclyricwidget.h"
-#include "../view/footerwidget.h"
-#include "../view/loadwidget.h"
-#include "../view/musiclistwidget.h"
+//#include "importwidget.h"
+#include "playlistwidget.h"
+#include "musiclyricwidget.h"
+#include "footerwidget.h"
+//#include "loadwidget.h"
+//#include "musiclistwidget.h"
 
 
 DWIDGET_USE_NAMESPACE
@@ -43,7 +42,7 @@ SET_BUTTON_ACCESSIBLE(QPushButton, m_w->objectName())
 SET_SLIDER_ACCESSIBLE(DMainWindow, m_w->objectName())
 SET_SLIDER_ACCESSIBLE(QListWidget, m_w->objectName())
 SET_FORM_ACCESSIBLE(DTitlebar, m_w->objectName())
-SET_FORM_ACCESSIBLE(QMenu, m_w->objectName())
+//SET_FORM_ACCESSIBLE(QMenu, m_w->objectName())
 
 QAccessibleInterface *accessibleFactory(const QString &classname, QObject *object)
 {
@@ -56,7 +55,7 @@ QAccessibleInterface *accessibleFactory(const QString &classname, QObject *objec
     USE_ACCESSIBLE(classname, DMainWindow);
     USE_ACCESSIBLE(classname, QListWidget);
     USE_ACCESSIBLE(classname, DTitlebar);
-    USE_ACCESSIBLE(classname, QMenu);
+    //USE_ACCESSIBLE(classname, QMenu);
 
     return interface;
 }

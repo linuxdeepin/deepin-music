@@ -174,64 +174,64 @@
 <context>
     <name>Footer</name>
     <message>
-        <location filename="../view/footerwidget.cpp" line="342"/>
+        <location filename="../view/footerwidget.cpp" line="298"/>
         <source>Unknown Title</source>
         <translation>Titl dizanv</translation>
     </message>
     <message>
-        <location filename="../view/footerwidget.cpp" line="361"/>
-        <location filename="../view/footerwidget.cpp" line="975"/>
-        <location filename="../view/footerwidget.cpp" line="1642"/>
+        <location filename="../view/footerwidget.cpp" line="317"/>
+        <location filename="../view/footerwidget.cpp" line="879"/>
+        <location filename="../view/footerwidget.cpp" line="1488"/>
         <source>Unknown artist</source>
         <translation>Arzour dianav</translation>
     </message>
     <message>
-        <location filename="../view/footerwidget.cpp" line="513"/>
+        <location filename="../view/footerwidget.cpp" line="424"/>
         <source>Previous</source>
         <translation>Kent</translation>
     </message>
     <message>
-        <location filename="../view/footerwidget.cpp" line="514"/>
+        <location filename="../view/footerwidget.cpp" line="425"/>
         <source>Next</source>
         <translation>Da-heul</translation>
     </message>
     <message>
-        <location filename="../view/footerwidget.cpp" line="515"/>
+        <location filename="../view/footerwidget.cpp" line="426"/>
         <source>Play/Pause</source>
         <translation>Lenn/Ehanañ</translation>
     </message>
     <message>
-        <location filename="../view/footerwidget.cpp" line="516"/>
+        <location filename="../view/footerwidget.cpp" line="427"/>
         <source>Favorite</source>
         <translation>Muiañ-karet</translation>
     </message>
     <message>
-        <location filename="../view/footerwidget.cpp" line="517"/>
+        <location filename="../view/footerwidget.cpp" line="428"/>
         <source>Lyrics</source>
         <translation>Komzoù</translation>
     </message>
     <message>
-        <location filename="../view/footerwidget.cpp" line="518"/>
+        <location filename="../view/footerwidget.cpp" line="429"/>
         <source>Play Mode</source>
         <translation>Mod-lenn</translation>
     </message>
     <message>
-        <location filename="../view/footerwidget.cpp" line="519"/>
+        <location filename="../view/footerwidget.cpp" line="430"/>
         <source>Play Queue</source>
         <translation>Lenn ar steudad-c&apos;hortoz</translation>
     </message>
     <message>
-        <location filename="../view/footerwidget.cpp" line="1616"/>
+        <location filename="../view/footerwidget.cpp" line="1462"/>
         <source>List Loop</source>
         <translation>Roll-lenn e bouklenn</translation>
     </message>
     <message>
-        <location filename="../view/footerwidget.cpp" line="1619"/>
+        <location filename="../view/footerwidget.cpp" line="1465"/>
         <source>Single Loop</source>
         <translation>Lenn e bouklenn</translation>
     </message>
     <message>
-        <location filename="../view/footerwidget.cpp" line="1622"/>
+        <location filename="../view/footerwidget.cpp" line="1468"/>
         <source>Shuffle</source>
         <translation>Dre-zegouezh</translation>
     </message>
@@ -401,7 +401,7 @@
         <location filename="../view/mainframe.cpp" line="798"/>
         <location filename="../view/mainframe.cpp" line="810"/>
         <location filename="../view/mainframe.cpp" line="877"/>
-        <location filename="../view/mainframe.cpp" line="1449"/>
+        <location filename="../view/mainframe.cpp" line="1436"/>
         <source>Music</source>
         <translation>Sonerezh</translation>
     </message>
@@ -426,43 +426,43 @@
         <translation>Da-heul</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="1016"/>
+        <location filename="../view/mainframe.cpp" line="1007"/>
         <source>Successfully added to &quot;%1&quot;</source>
         <translation>Ouzhpennet gant berzh da &quot;%1&quot;</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="1020"/>
+        <location filename="../view/mainframe.cpp" line="1011"/>
         <source>Already added to the playlist</source>
         <translation>Ouzhpennet endeo d&apos;ar roll-lenn</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="1023"/>
+        <location filename="../view/mainframe.cpp" line="1014"/>
         <source>1 song added</source>
         <translation>1 ganaouenn ouzhpennet</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="1025"/>
+        <location filename="../view/mainframe.cpp" line="1016"/>
         <source>%1 songs added</source>
         <translation>%1 a ganaouennoù ouzhpennet</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="1092"/>
+        <location filename="../view/mainframe.cpp" line="1082"/>
         <source>File is invalid or does not exist, load failed</source>
         <translation>Neket reizh ar restr pe n&apos;eus ket anezhi, ar prantad-kargañ a zo chomet sac&apos;het</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="1094"/>
-        <location filename="../view/mainframe.cpp" line="1152"/>
+        <location filename="../view/mainframe.cpp" line="1083"/>
+        <location filename="../view/mainframe.cpp" line="1139"/>
         <source>OK</source>
         <translation>Mat eo</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="1145"/>
+        <location filename="../view/mainframe.cpp" line="1133"/>
         <source>Import failed, no valid music file found</source>
         <translation>C&apos;hwitet ez eus bet war an emporzhiañ, n&apos;eus bet kavet restr sonerezhel ebet</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="1592"/>
+        <location filename="../view/mainframe.cpp" line="1579"/>
         <source>All music</source>
         <translation>Ar sonerezh a-bezh</translation>
     </message>
@@ -470,20 +470,20 @@
 <context>
     <name>MusicListDataDelegate</name>
     <message>
-        <location filename="../view/widget/delegate/musiclistdatadelegate.cpp" line="510"/>
-        <location filename="../view/widget/delegate/musiclistdatadelegate.cpp" line="606"/>
+        <location filename="../view/widget/delegate/musiclistdatadelegate.cpp" line="507"/>
+        <location filename="../view/widget/delegate/musiclistdatadelegate.cpp" line="603"/>
         <source>No songs</source>
         <translation>Kanaouenn ebet</translation>
     </message>
     <message>
-        <location filename="../view/widget/delegate/musiclistdatadelegate.cpp" line="512"/>
-        <location filename="../view/widget/delegate/musiclistdatadelegate.cpp" line="608"/>
+        <location filename="../view/widget/delegate/musiclistdatadelegate.cpp" line="509"/>
+        <location filename="../view/widget/delegate/musiclistdatadelegate.cpp" line="605"/>
         <source>1 song</source>
         <translation>1 ganaouenn</translation>
     </message>
     <message>
-        <location filename="../view/widget/delegate/musiclistdatadelegate.cpp" line="514"/>
-        <location filename="../view/widget/delegate/musiclistdatadelegate.cpp" line="610"/>
+        <location filename="../view/widget/delegate/musiclistdatadelegate.cpp" line="511"/>
+        <location filename="../view/widget/delegate/musiclistdatadelegate.cpp" line="607"/>
         <source>%1 songs</source>
         <translation>%1 a ganaouennoù</translation>
     </message>
@@ -644,12 +644,12 @@
 <context>
     <name>MusicListDialog</name>
     <message>
-        <location filename="../view/widget/musiclistdialog.cpp" line="129"/>
+        <location filename="../view/widget/musiclistdialog.cpp" line="126"/>
         <source>Play All</source>
         <translation>Lenn pep-tra</translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistdialog.cpp" line="142"/>
+        <location filename="../view/widget/musiclistdialog.cpp" line="139"/>
         <source>Shuffle</source>
         <translation>Dre-zegouezh</translation>
     </message>
@@ -779,45 +779,45 @@
 <context>
     <name>MusicListView</name>
     <message>
-        <location filename="../view/widget/musiclistview.cpp" line="178"/>
+        <location filename="../view/widget/musiclistview.cpp" line="175"/>
         <source>My Favorites</source>
         <translation>Ma re muiañ-karet</translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistview.cpp" line="416"/>
-        <location filename="../view/widget/musiclistview.cpp" line="569"/>
+        <location filename="../view/widget/musiclistview.cpp" line="406"/>
+        <location filename="../view/widget/musiclistview.cpp" line="559"/>
         <source>Are you sure you want to delete this playlist?</source>
         <translation>Ha fellout a ra deoc&apos;h dilemel ar roll-lenn-mañ?</translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistview.cpp" line="423"/>
-        <location filename="../view/widget/musiclistview.cpp" line="576"/>
+        <location filename="../view/widget/musiclistview.cpp" line="413"/>
+        <location filename="../view/widget/musiclistview.cpp" line="566"/>
         <source>Cancel</source>
         <translation>Nullañ</translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistview.cpp" line="424"/>
-        <location filename="../view/widget/musiclistview.cpp" line="548"/>
-        <location filename="../view/widget/musiclistview.cpp" line="568"/>
-        <location filename="../view/widget/musiclistview.cpp" line="577"/>
+        <location filename="../view/widget/musiclistview.cpp" line="414"/>
+        <location filename="../view/widget/musiclistview.cpp" line="538"/>
+        <location filename="../view/widget/musiclistview.cpp" line="558"/>
+        <location filename="../view/widget/musiclistview.cpp" line="567"/>
         <source>Delete</source>
         <translation>Dilemel</translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistview.cpp" line="538"/>
-        <location filename="../view/widget/musiclistview.cpp" line="562"/>
+        <location filename="../view/widget/musiclistview.cpp" line="528"/>
+        <location filename="../view/widget/musiclistview.cpp" line="552"/>
         <source>Pause</source>
         <translation>Ehanet</translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistview.cpp" line="541"/>
-        <location filename="../view/widget/musiclistview.cpp" line="559"/>
+        <location filename="../view/widget/musiclistview.cpp" line="531"/>
+        <location filename="../view/widget/musiclistview.cpp" line="549"/>
         <source>Play</source>
         <translation>Lenn</translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistview.cpp" line="547"/>
-        <location filename="../view/widget/musiclistview.cpp" line="565"/>
+        <location filename="../view/widget/musiclistview.cpp" line="537"/>
+        <location filename="../view/widget/musiclistview.cpp" line="555"/>
         <source>Rename</source>
         <translation>Adenvel</translation>
     </message>
@@ -825,12 +825,12 @@
 <context>
     <name>PlayListView</name>
     <message>
-        <location filename="../view/widget/delegate/playitemdelegate.cpp" line="522"/>
+        <location filename="../view/widget/delegate/playitemdelegate.cpp" line="519"/>
         <source>Unknown artist</source>
         <translation>Arzour dianav</translation>
     </message>
     <message>
-        <location filename="../view/widget/delegate/playitemdelegate.cpp" line="534"/>
+        <location filename="../view/widget/delegate/playitemdelegate.cpp" line="531"/>
         <source>Unknown album</source>
         <translation>Albom dianav</translation>
     </message>
@@ -1154,17 +1154,17 @@
 <context>
     <name>SearchResult</name>
     <message>
-        <location filename="../view/widget/searchresult.cpp" line="60"/>
+        <location filename="../view/widget/searchresult.cpp" line="61"/>
         <source>Music</source>
         <translation>Sonerezh</translation>
     </message>
     <message>
-        <location filename="../view/widget/searchresult.cpp" line="76"/>
+        <location filename="../view/widget/searchresult.cpp" line="78"/>
         <source>Artists</source>
         <translation>Arzourien</translation>
     </message>
     <message>
-        <location filename="../view/widget/searchresult.cpp" line="92"/>
+        <location filename="../view/widget/searchresult.cpp" line="94"/>
         <source>Albums</source>
         <translation>Albomoù</translation>
     </message>

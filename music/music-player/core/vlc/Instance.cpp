@@ -96,7 +96,6 @@ VlcInstance::VlcInstance(const QStringList &args,
     }
 }
 
-
 VlcInstance::~VlcInstance()
 {
     if (_status && _vlcInstance) {

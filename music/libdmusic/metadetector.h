@@ -33,12 +33,14 @@ class LIBDMUSICSHARED_EXPORT MetaDetector
 public:
     static void init();
 
-    static QList<QByteArray> detectEncodings(const MetaPtr meta);
+    static QList<QByteArray> detectEncodings(const MediaMeta meta);
     static QList<QByteArray> detectEncodings(const QByteArray &rawData);
 
-    static void updateCueFileTagCodec(MediaMeta *meta, const QFileInfo &, const QByteArray &codec);
-    static void updateMediaFileTagCodec(MediaMeta *meta, const QByteArray &codec, bool forceEncode);
-    static void updateMetaFromLocalfile(MediaMeta *meta, const QFileInfo &fileInfo);
-    static QByteArray getCoverData(const QString &path, const QString &tmpPath, const QString &hash);
+    static void updateCueFileTagCodec(MediaMeta meta, const QFileInfo &, const QByteArray &codec);
+
+    static MediaMeta updateMetaFromLocalfile(MediaMeta meta, const QFileInfo &fileInfo);
+    static MediaMeta updateMediaFileTagCodec(MediaMeta meta, const QByteArray &codecName, bool forceEncode);
+
+    static void getCoverData(const QString &path, const QString &tmpPath, const QString &hash);
     //static QVector<float> getMetaData(const QString &path);
 };

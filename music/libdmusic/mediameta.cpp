@@ -36,7 +36,7 @@ void MediaMeta::updateSearchIndex()
         this->pinyinTitle += str;
         this->pinyinTitleShort += str.at(0);
     }
-    for (auto &str : PinyinSearch::simpleChineseSplit(this->artist)) {
+    for (auto &str : PinyinSearch::simpleChineseSplit(this->singer)) {
         this->pinyinArtist += str;
         this->pinyinArtistShort += str.at(0);
     }
@@ -50,26 +50,30 @@ void MediaMeta::updateCodec(const QByteArray &codec)
 {
     QFileInfo cueFi(this->cuePath);
     if (cueFi.exists()) {
-        MetaDetector::updateCueFileTagCodec(this, cueFi, codec);
+        MetaDetector::updateCueFileTagCodec(*this, cueFi, codec);
     } else {
-        MetaDetector::updateMediaFileTagCodec(this, codec, true);
+        MetaDetector::updateMediaFileTagCodec(*this, codec, true);
     }
 }
 
-QByteArray MediaMeta::getCoverData(const QString &tmpPath)
+void MediaMeta::getCoverData(const QString &tmpPath)
 {
-    if (!loadCover) {
-        coverData = MetaDetector::getCoverData(localPath, tmpPath, hash);
+    //如果当前音乐没被解析过才继续解析
+    if (hasimage) {
+        //如果当前图片没有被加到缓存
+//        if (!loadCover) {
+//        coverData = MetaDetector::getCoverData(localPath, tmpPath, hash);
+//        }
+//        loadCover = true;
+        MetaDetector::getCoverData(localPath, tmpPath, hash);
     }
-    loadCover = true;
-    return coverData;
 }
 
 MediaMeta MediaMeta::fromLocalFile(const QFileInfo &fileInfo)
 {
     MediaMeta meta;
     meta.hash = filepathHash(fileInfo.absoluteFilePath());
-    MetaDetector::updateMetaFromLocalfile((&meta), fileInfo);
+    MetaDetector::updateMetaFromLocalfile(meta, fileInfo);
     return  meta;
 }
 
@@ -114,7 +118,7 @@ QString sizeString(qint64 sizeByte)
     return text;
 }
 
-QList<QByteArray> detectMetaEncodings(MetaPtr meta)
+QList<QByteArray> detectMetaEncodings(MediaMeta meta)
 {
     return  MetaDetector::detectEncodings(meta);
 }

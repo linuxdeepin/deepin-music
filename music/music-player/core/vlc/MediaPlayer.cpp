@@ -280,19 +280,19 @@ void VlcMediaPlayer::setTime(qint64 time)
     VlcError::showErrmsg();
 }
 
-//bool VlcMediaPlayer::seekable() const
-//{
-//    vlc_media_player_get_media_function vlc_media_player_get_media = (vlc_media_player_get_media_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("libvlc_media_player_get_media");
-//    if (!vlc_media_player_get_media(_vlcMediaPlayer))
-//        return false;
+bool VlcMediaPlayer::seekable() const
+{
+    vlc_media_player_get_media_function vlc_media_player_get_media = (vlc_media_player_get_media_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("libvlc_media_player_get_media");
+    if (!vlc_media_player_get_media(_vlcMediaPlayer))
+        return false;
 
-//    vlc_media_player_is_seekable_function vlc_media_player_is_seekable = (vlc_media_player_is_seekable_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("libvlc_media_player_is_seekable");
-//    bool seekable = vlc_media_player_is_seekable(_vlcMediaPlayer);
+    vlc_media_player_is_seekable_function vlc_media_player_is_seekable = (vlc_media_player_is_seekable_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("libvlc_media_player_is_seekable");
+    bool seekable = vlc_media_player_is_seekable(_vlcMediaPlayer);
 
-//    VlcError::showErrmsg();
+    VlcError::showErrmsg();
 
-//    return seekable;
-//}
+    return seekable;
+}
 
 Vlc::State VlcMediaPlayer::state() const
 {

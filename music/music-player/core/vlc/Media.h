@@ -36,8 +36,8 @@ public:
         \param instance main libvlc instance (VlcInstance *)
     */
     VlcMedia(const QString &location,
-             bool localFile,
-             VlcInstance *instance);
+                      bool localFile,
+                      VlcInstance *instance);
 
     /*!
         \brief VlcMedia constructor.
@@ -49,7 +49,7 @@ public:
         \param instance main libvlc instance (VlcInstance *)
     */
     VlcMedia(const QString &location,
-             VlcInstance *instance);
+                      VlcInstance *instance);
 
     VlcMedia();
 
@@ -259,7 +259,7 @@ public:
         \brief Set program
         \param program program PID (int)
     */
-    //void setProgram(int program);
+    void setProgram(int program);
 
     /*!
         \brief Set media option

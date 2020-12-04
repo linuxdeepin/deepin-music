@@ -24,8 +24,7 @@
 #include <QSharedPointer>
 #include "../mediameta.h"
 
-namespace DMusic
-{
+namespace DMusic {
 
 class CueParserPrivate;
 class LIBDMUSICSHARED_EXPORT CueParser
@@ -35,7 +34,7 @@ public:
     explicit CueParser(const QString &filepath, QByteArray codeName);
     ~CueParser();
 
-    MetaPtrList metalist() const;
+    QList<MediaMeta> metalist() const;
     QString     mediaFilepath() const;
     QString     cueFilepath() const;
 

@@ -7,7 +7,6 @@ class MusicLyric
 {
 public:
     MusicLyric();
-    ~MusicLyric();
     void getFromFile(QString dir);
     //void getFromFileOld(QString dir);
     QString getLineAt(int index);

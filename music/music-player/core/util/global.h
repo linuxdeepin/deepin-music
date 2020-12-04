@@ -30,5 +30,4 @@ public:
     static QString cacheDir();
     static void setAppName(QString name);
     static QString getAppName();
-
 };

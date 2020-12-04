@@ -28,8 +28,7 @@
 
 #include <DLog>
 #include <DStandardPaths>
-//#include <DApplication>
-#include <DGuiApplicationHelper>
+#include <DApplication>
 #include <DApplicationSettings>
 #include <DExportedInterface>
 #include <metadetector.h>
@@ -41,63 +40,29 @@
 
 #include "config.h"
 
-#include "view/mainframe.h"
-#include "core/mediadatabase.h"
-#include "core/medialibrary.h"
-#include "core/metasearchservice.h"
 #include "core/player.h"
-#include "core/pluginmanager.h"
 #include "core/musicsettings.h"
 #include "core/util/threadpool.h"
 #include "core/util/global.h"
-#include "musicapp.h"
 #include "speech/exportedinterface.h"
+#include "databaseservice.h"
 #include "acobjectlist.h"
 
-#include <DVtableHook>
-#define protected public
-#include <DApplication>
-#undef protected
+#include "mainframe.h"
 
 using namespace Dtk::Core;
 using namespace Dtk::Widget;
 
-bool checkOnly()
-{
-    //single
-    QString userName = QDir::homePath().section("/", -1, -1);
-    std::string path = ("/home/" + userName + "/.cache/deepin/deepin-music/").toStdString();
-    QDir tdir(path.c_str());
-    if (!tdir.exists()) {
-        bool ret =  tdir.mkpath(path.c_str());
-        MusicSettings::setOption("base.play.showFlag", 0);
-        qDebug() << ret ;
-    }
+void createSpeechDbus();
 
-    path += "single";
-    int fd = open(path.c_str(), O_WRONLY | O_CREAT, 0644);
-    int flock = lockf(fd, F_TLOCK, 0);
-
-    if (fd == -1) {
-        perror("open lockfile/n");
-        return false;
-    }
-    if (flock == -1) {
-        perror("lock file error/n");
-        return false;
-    }
-    return true;
-}
+bool checkOnly();
 
 int main(int argc, char *argv[])
 {
+    qDebug() << "zy------main " << QTime::currentTime().toString("hh:mm:ss.zzz");
     setenv("PULSE_PROP_media.role", "music", 1);
 
-#if (DTK_VERSION < DTK_VERSION_CHECK(5, 4, 0, 0))
-    DApplication *app = new DApplication(argc, argv);
-#else
-    DApplication *app = DApplication::globalApplication(argc, argv);
-#endif
+    DApplication app(argc, argv);
 
 #ifdef SNAP_APP
     DStandardPaths::setMode(DStandardPaths::Snap);
@@ -108,12 +73,12 @@ int main(int argc, char *argv[])
     QCoreApplication::addLibraryPath(".");
 #endif
 
-    app->setAttribute(Qt::AA_UseHighDpiPixmaps);
+    app.setAttribute(Qt::AA_UseHighDpiPixmaps);
     QAccessible::installFactory(accessibleFactory);
-    app->setOrganizationName("deepin");
-    app->setApplicationName("deepin-music");
+    app.setOrganizationName("deepin");
+    app.setApplicationName("deepin-music");
     // Version Time
-    app->setApplicationVersion(DApplication::buildVersion(VERSION));
+    app.setApplicationVersion(DApplication::buildVersion(VERSION));
 
     DLogManager::registerConsoleAppender();
     DLogManager::registerFileAppender();
@@ -123,17 +88,19 @@ int main(int argc, char *argv[])
     parser.addHelpOption();
     parser.addVersionOption();
     parser.addPositionalArgument("file", "Music file path");
-    parser.process(*app);
+    parser.process(app);
     // handle open file
     QString toOpenFile;
     if (parser.positionalArguments().length() > 0) {
         toOpenFile = parser.positionalArguments().first();
     }
-    app->loadTranslator();
 
-    app->setProductIcon(QIcon::fromTheme("deepin-music"));
+    app.loadTranslator();
 
-    if (!app->setSingleInstance("deepinmusic") || !checkOnly()) {
+    QIcon icon = QIcon::fromTheme("deepin-music");
+    app.setProductIcon(icon);
+
+    if (!app.setSingleInstance("deepinmusic") || !checkOnly()) {
         qDebug() << "another deepin music has started";
         for (auto curStr : parser.positionalArguments()) {
             if (!curStr.isEmpty()) {
@@ -165,22 +132,19 @@ int main(int argc, char *argv[])
 
     MusicSettings::init();
     DApplicationSettings saveTheme;
-
     /*---Player instance init---*/
     MainFrame mainframe;
-    MusicApp *mapp = new MusicApp(&mainframe);
+    int musicCount = DataBaseService::getInstance()->allMusicInfosCount();
+    mainframe.initUI(musicCount > 0 ? true : false);
+    mainframe.show();
 
-    auto showflag = MusicSettings::value("base.play.showFlag").toBool();
-    mapp->initUI(showflag);
+    createSpeechDbus();
 
-    QTimer::singleShot(20, nullptr, [ = ]() {
-        mapp->initConnection(showflag);
-    });
-
-    if (parser.positionalArguments().length() > 1) {
+    int count = parser.positionalArguments().length();
+    if (count > 1) {
         QStringList files = parser.positionalArguments();
         files.removeFirst();
-        mapp->onStartImport(files);
+//        music->onStartImport(files);
     }
 
     if (!toOpenFile.isEmpty()) {
@@ -189,19 +153,60 @@ int main(int argc, char *argv[])
         MusicSettings::setOption("base.play.to_open_uri", url.toString());
     }
 
-    app->connect(app, &QApplication::lastWindowClosed,
-    &mainframe, [ & ]() {
-        auto quit = MusicSettings::value("base.close.is_close").toBool();
-        if (quit) {
-            mapp->quit();
-        }
-    });
+//    app.connect(&app, &QApplication::lastWindowClosed,
+//    &mainframe, [ & ]() {
+//        auto quit = MusicSettings::value("base.close.is_close").toBool();
+//        if (quit) {
+//            music->quit();
+//        }
+//    });
 
-    app->setQuitOnLastWindowClosed(false);
+    app.setQuitOnLastWindowClosed(false);
+    return app.exec();
+}
 
-    QObject::connect(DGuiApplicationHelper::instance(), &DGuiApplicationHelper::themeTypeChanged,
-                     &mainframe, &MainFrame::slotTheme);
-    Dtk::Core::DVtableHook::overrideVfptrFun(app, &DApplication::handleQuitAction,
-                                             &mainframe, &MainFrame::closeFromMenu);
-    return app->exec();
+bool checkOnly()
+{
+    //single
+    QString userName = QDir::homePath().section("/", -1, -1);
+    std::string path = ("/home/" + userName + "/.cache/deepin/deepin-music/").toStdString();
+    QDir tdir(path.c_str());
+    if (!tdir.exists()) {
+        bool ret =  tdir.mkpath(path.c_str());
+        qDebug() << ret ;
+    }
+
+    path += "single";
+    int fd = open(path.c_str(), O_WRONLY | O_CREAT, 0644);
+    int flock = lockf(fd, F_TLOCK, 0);
+
+    if (fd == -1) {
+        perror("open lockfile/n");
+        return false;
+    }
+    if (flock == -1) {
+        perror("lock file error/n");
+        return false;
+    }
+    return true;
+}
+
+void createSpeechDbus()
+{
+    QDBusConnection::sessionBus().registerService("com.deepin.musicSpeech");
+    ExportedInterface *mSpeech = new ExportedInterface(nullptr);
+    mSpeech->registerAction("1", "playmusic");
+    mSpeech->registerAction("2", "play artist");
+    mSpeech->registerAction("3", "play artist song");
+    mSpeech->registerAction("4", "play faverite");
+    mSpeech->registerAction("5", "play custom ");
+    mSpeech->registerAction("6", "play radom");
+    mSpeech->registerAction("11", "pause");
+    mSpeech->registerAction("12", "stop");
+    mSpeech->registerAction("13", "resume");
+    mSpeech->registerAction("14", "previous");
+    mSpeech->registerAction("15", "next");
+    mSpeech->registerAction("21", "faverite");
+    mSpeech->registerAction("22", "unfaverite");
+    mSpeech->registerAction("23", "set play mode");
 }

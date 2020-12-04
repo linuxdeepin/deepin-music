@@ -45,7 +45,7 @@ VlcMedia::VlcMedia(const QString &location,
     initMedia(location, false, instance);
 }
 
-VlcMedia::VlcMedia(libvlc_media_t *media): _vlcEvents(nullptr)
+VlcMedia::VlcMedia(libvlc_media_t *media):_vlcEvents(nullptr)
 {
     // Create a new libvlc media descriptor from existing one
     vlc_media_duplicate_function vlc_media_duplicate = (vlc_media_duplicate_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("libvlc_media_duplicate");
@@ -316,11 +316,11 @@ QString VlcMedia::record(const QString &name,
     return l + "." + Vlc::mux()[mux];
 }
 
-//void VlcMedia::setProgram(int program)
-//{
-//    QString option = "program=%1";
-//    setOption(option.arg(program));
-//}
+void VlcMedia::setProgram(int program)
+{
+    QString option = "program=%1";
+    setOption(option.arg(program));
+}
 
 void VlcMedia::setOption(const QString &option)
 {

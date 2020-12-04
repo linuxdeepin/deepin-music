@@ -28,6 +28,7 @@
 #include <QVariant>
 #include <QSharedPointer>
 #include <QUrl>
+#include <QIcon>
 
 class QFileInfo;
 
@@ -38,7 +39,7 @@ public:
     QString localPath;
     QString cuePath;
     QString title;
-    QString artist;
+    QString singer;
     QString album;
     QString lyricPath;
 
@@ -63,8 +64,9 @@ public:
     QString searchID;
     QUrl    coverUrl;
 
-    QByteArray coverData;
+//    QByteArray coverData;
 
+    bool    hasimage = true;
     bool    favourite   = false;
     bool    invalid     = false;
     bool    loadCover   = false;
@@ -75,44 +77,60 @@ public:
 public:
     void updateSearchIndex();
     void updateCodec(const QByteArray &codec);
-    QByteArray getCoverData(const QString &tmpPath);
+    void getCoverData(const QString &tmpPath);
 
     static MediaMeta fromLocalFile(const QFileInfo &fileInfo);
 };
 
-typedef QSharedPointer<MediaMeta>   MetaPtr;
-typedef QList<MetaPtr>              MetaPtrList;
+struct AlbumInfo {
+    QString albumName;
+    QString singer;
+    QMap<QString, MediaMeta> musicinfos;
+    qint64 timestamp = 0;
+};
 
-inline  QDataStream &operator<<(QDataStream &dataStream, const MetaPtr &objectA)
-{
-    auto ptr = objectA.data();
-    auto ptrval = reinterpret_cast<qulonglong>(ptr);
-    auto var = QVariant::fromValue(ptrval);
-    dataStream << var;
-    return  dataStream;
-}
+struct SingerInfo {
+    QString singerName;
+    qint64 timestamp = 0;
+    QMap<QString, MediaMeta> musicinfos;
+};
 
-inline QDataStream &operator>>(QDataStream &dataStream, MetaPtr &objectA)
-{
-    QVariant var;
-    dataStream >> var;
-    qulonglong ptrval = var.toULongLong();
-    auto ptr = reinterpret_cast<MediaMeta *>(ptrval);
-    objectA = MetaPtr(ptr);
-    return dataStream;
-}
+struct customInfo {
+    int sortId;
+    QString songPath;
+};
+
+enum SearchType {
+    none = 0,
+    SearchMusic,
+    SearchSinger,
+    SearchAlbum,
+    SearchIcon
+};
+
+// 左侧按钮选择的页面
+enum ListPageSwitchType {
+    NullType,
+    AlbumType,          //专辑
+    SingerType,         //歌手
+    AllSongListType,    //所有歌曲
+    FavType,            //收藏
+    CustomType,         //自定义歌单
+    SearchMusicResultType,     //搜索歌曲结果
+    SearchSingerResultType,    //搜索歌手结果
+    SearchAlbumResultType      //搜索专辑结果
+};
 
 Q_DECLARE_METATYPE(MediaMeta)
-Q_DECLARE_METATYPE(MetaPtr)
-Q_DECLARE_METATYPE(MetaPtrList)
+Q_DECLARE_METATYPE(AlbumInfo)
+Q_DECLARE_METATYPE(SingerInfo)
+Q_DECLARE_METATYPE(ListPageSwitchType)
 
 namespace DMusic {
 
 QString LIBDMUSICSHARED_EXPORT filepathHash(const QString &filepath);
 QString LIBDMUSICSHARED_EXPORT sizeString(qint64 sizeByte);
 QString LIBDMUSICSHARED_EXPORT lengthString(qint64 length);
-QList<QByteArray> LIBDMUSICSHARED_EXPORT detectMetaEncodings(MetaPtr meta);
-
 }
 
 

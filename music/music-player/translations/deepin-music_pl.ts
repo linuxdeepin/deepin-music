@@ -21,7 +21,7 @@
     <message>
         <location filename="../view/widget/closeconfirmdialog.cpp" line="102"/>
         <source>Please choose your action</source>
-        <translation>Wybierz działanie</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/widget/closeconfirmdialog.cpp" line="110"/>
@@ -174,64 +174,64 @@
 <context>
     <name>Footer</name>
     <message>
-        <location filename="../view/footerwidget.cpp" line="342"/>
+        <location filename="../view/footerwidget.cpp" line="298"/>
         <source>Unknown Title</source>
         <translation>Nieznany tytuł</translation>
     </message>
     <message>
-        <location filename="../view/footerwidget.cpp" line="361"/>
-        <location filename="../view/footerwidget.cpp" line="975"/>
-        <location filename="../view/footerwidget.cpp" line="1642"/>
+        <location filename="../view/footerwidget.cpp" line="317"/>
+        <location filename="../view/footerwidget.cpp" line="879"/>
+        <location filename="../view/footerwidget.cpp" line="1488"/>
         <source>Unknown artist</source>
         <translation>Nieznany wykonawca</translation>
     </message>
     <message>
-        <location filename="../view/footerwidget.cpp" line="513"/>
+        <location filename="../view/footerwidget.cpp" line="424"/>
         <source>Previous</source>
         <translation>Poprzedni</translation>
     </message>
     <message>
-        <location filename="../view/footerwidget.cpp" line="514"/>
+        <location filename="../view/footerwidget.cpp" line="425"/>
         <source>Next</source>
         <translation>Następny</translation>
     </message>
     <message>
-        <location filename="../view/footerwidget.cpp" line="515"/>
+        <location filename="../view/footerwidget.cpp" line="426"/>
         <source>Play/Pause</source>
         <translation>Odtwórz/Wstrzymaj</translation>
     </message>
     <message>
-        <location filename="../view/footerwidget.cpp" line="516"/>
+        <location filename="../view/footerwidget.cpp" line="427"/>
         <source>Favorite</source>
         <translation>Ulubione</translation>
     </message>
     <message>
-        <location filename="../view/footerwidget.cpp" line="517"/>
+        <location filename="../view/footerwidget.cpp" line="428"/>
         <source>Lyrics</source>
         <translation>Tekst piosenki</translation>
     </message>
     <message>
-        <location filename="../view/footerwidget.cpp" line="518"/>
+        <location filename="../view/footerwidget.cpp" line="429"/>
         <source>Play Mode</source>
         <translation>Tryb odtwarzania</translation>
     </message>
     <message>
-        <location filename="../view/footerwidget.cpp" line="519"/>
+        <location filename="../view/footerwidget.cpp" line="430"/>
         <source>Play Queue</source>
         <translation>Kolejka odtwarzania</translation>
     </message>
     <message>
-        <location filename="../view/footerwidget.cpp" line="1616"/>
+        <location filename="../view/footerwidget.cpp" line="1462"/>
         <source>List Loop</source>
         <translation>Pętla listy</translation>
     </message>
     <message>
-        <location filename="../view/footerwidget.cpp" line="1619"/>
+        <location filename="../view/footerwidget.cpp" line="1465"/>
         <source>Single Loop</source>
         <translation>Pojedyncza pętla</translation>
     </message>
     <message>
-        <location filename="../view/footerwidget.cpp" line="1622"/>
+        <location filename="../view/footerwidget.cpp" line="1468"/>
         <source>Shuffle</source>
         <translation>Przetasuj</translation>
     </message>
@@ -401,7 +401,7 @@
         <location filename="../view/mainframe.cpp" line="798"/>
         <location filename="../view/mainframe.cpp" line="810"/>
         <location filename="../view/mainframe.cpp" line="877"/>
-        <location filename="../view/mainframe.cpp" line="1449"/>
+        <location filename="../view/mainframe.cpp" line="1436"/>
         <source>Music</source>
         <translation>Muzyka</translation>
     </message>
@@ -426,43 +426,43 @@
         <translation>Następny</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="1016"/>
+        <location filename="../view/mainframe.cpp" line="1007"/>
         <source>Successfully added to &quot;%1&quot;</source>
         <translation>Pomyślnie dodano do &quot;%1&quot;</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="1020"/>
+        <location filename="../view/mainframe.cpp" line="1011"/>
         <source>Already added to the playlist</source>
         <translation>Już dodany do listy odtwarzania</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="1023"/>
+        <location filename="../view/mainframe.cpp" line="1014"/>
         <source>1 song added</source>
         <translation>Dodano 1 utwór</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="1025"/>
+        <location filename="../view/mainframe.cpp" line="1016"/>
         <source>%1 songs added</source>
         <translation>Dodano %1 utwory</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="1092"/>
+        <location filename="../view/mainframe.cpp" line="1082"/>
         <source>File is invalid or does not exist, load failed</source>
         <translation>Plik jest nieprawidłowy lub nie istnieje, ładowanie nie powiodło się</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="1094"/>
-        <location filename="../view/mainframe.cpp" line="1152"/>
+        <location filename="../view/mainframe.cpp" line="1083"/>
+        <location filename="../view/mainframe.cpp" line="1139"/>
         <source>OK</source>
         <translation>OK</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="1145"/>
+        <location filename="../view/mainframe.cpp" line="1133"/>
         <source>Import failed, no valid music file found</source>
         <translation>Import nie powiódł się, nie znaleziono prawidłowego pliku muzycznego</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="1592"/>
+        <location filename="../view/mainframe.cpp" line="1579"/>
         <source>All music</source>
         <translation>Cała muzyka</translation>
     </message>
@@ -470,20 +470,20 @@
 <context>
     <name>MusicListDataDelegate</name>
     <message>
-        <location filename="../view/widget/delegate/musiclistdatadelegate.cpp" line="510"/>
-        <location filename="../view/widget/delegate/musiclistdatadelegate.cpp" line="606"/>
+        <location filename="../view/widget/delegate/musiclistdatadelegate.cpp" line="507"/>
+        <location filename="../view/widget/delegate/musiclistdatadelegate.cpp" line="603"/>
         <source>No songs</source>
         <translation>Brak utworów</translation>
     </message>
     <message>
-        <location filename="../view/widget/delegate/musiclistdatadelegate.cpp" line="512"/>
-        <location filename="../view/widget/delegate/musiclistdatadelegate.cpp" line="608"/>
+        <location filename="../view/widget/delegate/musiclistdatadelegate.cpp" line="509"/>
+        <location filename="../view/widget/delegate/musiclistdatadelegate.cpp" line="605"/>
         <source>1 song</source>
         <translation>1 utwór</translation>
     </message>
     <message>
-        <location filename="../view/widget/delegate/musiclistdatadelegate.cpp" line="514"/>
-        <location filename="../view/widget/delegate/musiclistdatadelegate.cpp" line="610"/>
+        <location filename="../view/widget/delegate/musiclistdatadelegate.cpp" line="511"/>
+        <location filename="../view/widget/delegate/musiclistdatadelegate.cpp" line="607"/>
         <source>%1 songs</source>
         <translation>%1 utwory</translation>
     </message>
@@ -644,12 +644,12 @@
 <context>
     <name>MusicListDialog</name>
     <message>
-        <location filename="../view/widget/musiclistdialog.cpp" line="129"/>
+        <location filename="../view/widget/musiclistdialog.cpp" line="126"/>
         <source>Play All</source>
         <translation>Odtwórz wszystko</translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistdialog.cpp" line="142"/>
+        <location filename="../view/widget/musiclistdialog.cpp" line="139"/>
         <source>Shuffle</source>
         <translation>Przetasuj</translation>
     </message>
@@ -779,45 +779,45 @@
 <context>
     <name>MusicListView</name>
     <message>
-        <location filename="../view/widget/musiclistview.cpp" line="178"/>
+        <location filename="../view/widget/musiclistview.cpp" line="175"/>
         <source>My Favorites</source>
         <translation>Moje ulubione</translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistview.cpp" line="416"/>
-        <location filename="../view/widget/musiclistview.cpp" line="569"/>
+        <location filename="../view/widget/musiclistview.cpp" line="406"/>
+        <location filename="../view/widget/musiclistview.cpp" line="559"/>
         <source>Are you sure you want to delete this playlist?</source>
         <translation>Czy na pewno chcesz usunąć tę listę odtwarzania?</translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistview.cpp" line="423"/>
-        <location filename="../view/widget/musiclistview.cpp" line="576"/>
+        <location filename="../view/widget/musiclistview.cpp" line="413"/>
+        <location filename="../view/widget/musiclistview.cpp" line="566"/>
         <source>Cancel</source>
         <translation>Anuluj</translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistview.cpp" line="424"/>
-        <location filename="../view/widget/musiclistview.cpp" line="548"/>
-        <location filename="../view/widget/musiclistview.cpp" line="568"/>
-        <location filename="../view/widget/musiclistview.cpp" line="577"/>
+        <location filename="../view/widget/musiclistview.cpp" line="414"/>
+        <location filename="../view/widget/musiclistview.cpp" line="538"/>
+        <location filename="../view/widget/musiclistview.cpp" line="558"/>
+        <location filename="../view/widget/musiclistview.cpp" line="567"/>
         <source>Delete</source>
         <translation>Usuń</translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistview.cpp" line="538"/>
-        <location filename="../view/widget/musiclistview.cpp" line="562"/>
+        <location filename="../view/widget/musiclistview.cpp" line="528"/>
+        <location filename="../view/widget/musiclistview.cpp" line="552"/>
         <source>Pause</source>
         <translation>Wstrzymaj</translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistview.cpp" line="541"/>
-        <location filename="../view/widget/musiclistview.cpp" line="559"/>
+        <location filename="../view/widget/musiclistview.cpp" line="531"/>
+        <location filename="../view/widget/musiclistview.cpp" line="549"/>
         <source>Play</source>
         <translation>Odtwórz</translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistview.cpp" line="547"/>
-        <location filename="../view/widget/musiclistview.cpp" line="565"/>
+        <location filename="../view/widget/musiclistview.cpp" line="537"/>
+        <location filename="../view/widget/musiclistview.cpp" line="555"/>
         <source>Rename</source>
         <translation>Zmień nazwę</translation>
     </message>
@@ -825,12 +825,12 @@
 <context>
     <name>PlayListView</name>
     <message>
-        <location filename="../view/widget/delegate/playitemdelegate.cpp" line="522"/>
+        <location filename="../view/widget/delegate/playitemdelegate.cpp" line="519"/>
         <source>Unknown artist</source>
         <translation>Nieznany wykonawca</translation>
     </message>
     <message>
-        <location filename="../view/widget/delegate/playitemdelegate.cpp" line="534"/>
+        <location filename="../view/widget/delegate/playitemdelegate.cpp" line="531"/>
         <source>Unknown album</source>
         <translation>Nieznany album</translation>
     </message>
@@ -1154,17 +1154,17 @@
 <context>
     <name>SearchResult</name>
     <message>
-        <location filename="../view/widget/searchresult.cpp" line="60"/>
+        <location filename="../view/widget/searchresult.cpp" line="61"/>
         <source>Music</source>
         <translation>Muzyka</translation>
     </message>
     <message>
-        <location filename="../view/widget/searchresult.cpp" line="76"/>
+        <location filename="../view/widget/searchresult.cpp" line="78"/>
         <source>Artists</source>
         <translation>Artyści</translation>
     </message>
     <message>
-        <location filename="../view/widget/searchresult.cpp" line="92"/>
+        <location filename="../view/widget/searchresult.cpp" line="94"/>
         <source>Albums</source>
         <translation>Albumy</translation>
     </message>
