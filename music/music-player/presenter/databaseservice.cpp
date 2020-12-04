@@ -198,7 +198,6 @@ QList<MediaMeta> DataBaseService::customizeMusicInfos(const QString &hash)
         }
     }
 
-
     qDebug() << "\n--------------- " << medialist.count() << " -----------------"
              << " Func:" << __FUNCTION__  << " Line:" << __LINE__ ;
 
@@ -475,6 +474,28 @@ QList<DataBaseService::PlaylistData> DataBaseService::allPlaylistMeta()
             m_PlaylistMeta << playlistMeta;
         }
         return m_PlaylistMeta;
+    }
+}
+
+void DataBaseService::addMeta2Playlist(QString uuid, const QList<MediaMeta> &metas)
+{
+    for (MediaMeta meta : metas) {
+        QSqlQuery query(m_db);
+        QString sqlstring = QString("INSERT INTO playlist_%1 "
+                                    "(music_id, playlist_id, sort_id) "
+                                    "SELECT :music_id, :playlist_id, :sort_id "
+                                    "WHERE NOT EXISTS("
+                                    "SELECT * FROM playlist_%1 "
+                                    "WHERE music_id = :music_id)").arg(uuid);
+        query.prepare(sqlstring);
+        query.bindValue(":playlist_id", uuid);
+        query.bindValue(":music_id", meta.hash);
+        query.bindValue(":sort_id", 0);
+
+        if (! query.exec()) {
+            qCritical() << query.lastError() << sqlstring;
+            return;
+        }
     }
 }
 

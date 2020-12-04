@@ -44,9 +44,6 @@ public:
 
     QStandardItem *item(int row, int column) const;
     void setCurrentItem(QStandardItem *item);
-
-    int rowCount();
-    QString firstHash();
     //性能优化歌曲展示专用
     void initAllSonglist(QString hash);
     //歌单&收藏页面
@@ -61,7 +58,6 @@ public:
     QList<MediaMeta> getSonglistInListview();
 
     QPixmap getSidebarPixmap();
-    QPixmap getAlbumPixmap()const;
     //zy---begin
     QPixmap getPlayPixmap(bool isSelect = false);
     void playListChange();

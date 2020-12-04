@@ -155,23 +155,6 @@ void PlayListView::setCurrentItem(QStandardItem *item)
     setCurrentIndex(m_model->indexFromItem(item));
 }
 
-int PlayListView::rowCount()
-{
-    return m_model->rowCount();
-}
-
-QString PlayListView::firstHash()
-{
-    QString hashStr;
-
-    if (m_model->rowCount() > 0) {
-        auto index = m_model->index(0, 0);
-        hashStr = m_model->data(index).toString();
-    }
-
-    return hashStr;
-}
-
 void PlayListView::initAllSonglist(QString hash)
 {
     m_currentHash = hash;
@@ -357,14 +340,6 @@ QPixmap PlayListView::getSidebarPixmap()
         m_sidebarPixmap = QPixmap(":/mpimage/light/music_withe_sidebar/music1.svg");
     }
     return m_sidebarPixmap;
-}
-
-QPixmap PlayListView::getAlbumPixmap() const
-{
-//    if (m_albumPixmap.isNull()) {
-//        m_albumPixmap = QPixmap(":/mpimage/light/music_white_album_cover/music1.svg");
-//    }
-    return m_albumPixmap;
 }
 
 QPixmap PlayListView::getPlayPixmap(bool isSelect)
@@ -632,7 +607,15 @@ void PlayListView::slotAddToFavSongList()
 
 void PlayListView::slotAddToCustomSongList()
 {
-
+    QAction *obj =   dynamic_cast<QAction *>(sender());
+    QString songlistHash = obj->data().value<QString>();
+    QList<MediaMeta> metas;
+    QModelIndexList mindexlist =  this->selectedIndexes();
+    for (QModelIndex mindex : mindexlist) {
+        MediaMeta imt = mindex.data(Qt::UserRole).value<MediaMeta>();
+        metas.append(imt);
+    }
+    DataBaseService::getInstance()->addMeta2Playlist(songlistHash, metas);
 }
 
 void PlayListView::slotOpenInFileManager()
@@ -834,6 +817,7 @@ void PlayListView::contextMenuEvent(QContextMenuEvent *event)
         if (m_currentHash != pd.uuid) { //filter itself
             QAction *pact = playlistMenu.addAction(pd.displayName);
             pact->setData(QVariant(pd.uuid)); //to know which custom view to reach
+            connect(pact, SIGNAL(triggered()), this, SLOT(slotAddToCustomSongList()));
         }
     }
 
