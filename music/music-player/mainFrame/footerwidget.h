@@ -54,6 +54,8 @@ public:
     void slotTheme(int type);
     void initShortcut(); //we can wait to init until frame has displayed
     void updateShortcut();
+    //加载波形图
+    void slotLoadDetector(const QString &hash);
 private:
     void initUI(QWidget *parent = nullptr);
     /**

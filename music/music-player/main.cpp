@@ -137,7 +137,7 @@ int main(int argc, char *argv[])
     int musicCount = DataBaseService::getInstance()->allMusicInfosCount();
     mainframe.initUI(musicCount > 0 ? true : false);
     mainframe.show();
-
+    mainframe.autoStartToPlay();
     createSpeechDbus();
 
     int count = parser.positionalArguments().length();

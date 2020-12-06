@@ -92,10 +92,13 @@ public:
     //当前播放playlist的hash
     void setCurrentPlayListHash(QString hash);
     QString getCurrentPlayListHash();
-
     PlaybackStatus status();
     MediaMeta activeMeta();
     QIcon playingIcon();
+    //启动加载歌曲进度
+    void loadMediaProgress(const QString &path);
+    //设置当前歌曲
+    void setActiveMeta(const MediaMeta &meta);
 signals:
     // 播放状态改变
     void signalPlaybackStatusChanged(Player::PlaybackStatus playbackStatus);
@@ -105,12 +108,12 @@ signals:
     void signalUpdatePlayingIcon();
     // 播放列表改变
     void signalPlayListChanged();
+    // 加载波形图数据
+    void signalLoadDetector(const QString &hash);
 public slots:
     void changePicture();
     void setVolume(int volume);
     void setMuted(bool muted);
-private:
-    void setActiveMeta(const MediaMeta &meta);
 private:
     QTimer         *m_timer = nullptr;
     QIcon           m_playingIcon;

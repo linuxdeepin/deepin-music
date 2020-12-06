@@ -71,7 +71,7 @@ public:
     bool                 deleteMetaFromAllMusic(const QStringList &metaHash);
     bool                 allMusicInfosRemoveOne(QString hash, bool removeFromLocal);
     int                  allMusicInfosCount();                         //歌曲数量
-
+    MediaMeta            getMusicInfoByHash(const QString &hash);      //通过hash值获取单个歌曲的信息
     //专辑
     QList<AlbumInfo> allAlbumInfos();
     //演唱者

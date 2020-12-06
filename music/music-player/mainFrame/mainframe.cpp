@@ -208,6 +208,40 @@ void MainFrame::initMenuAndShortcut()
     connect(windowShortcut, SIGNAL(activated()), this, SLOT(slotShortCutTriggered()));
 }
 
+void MainFrame::autoStartToPlay()
+{
+    auto lastMeta = MusicSettings::value("base.play.last_meta").toString();
+    if (!lastMeta.isEmpty()) {
+        bool bremb = MusicSettings::value("base.play.remember_progress").toBool();
+        auto lastplaypage = MusicSettings::value("base.play.last_playlist").toString(); //上一次的页面
+        bool bautoplay = MusicSettings::value("base.play.auto_play").toBool();
+        MediaMeta medmeta = DataBaseService::getInstance()->getMusicInfoByHash(lastMeta);
+        if (medmeta.localPath.isEmpty())
+            return;
+        if (bremb) {
+            Player::instance()->setActiveMeta(medmeta);
+            //加载进度
+            Player::instance()->loadMediaProgress(medmeta.localPath);
+            //设置进度
+            QTimer::singleShot(150, [ = ]() {
+                Player::instance()->setPosition(MusicSettings::value("base.play.last_position").toInt());
+            });
+            //加载波形图数据
+            m_footer->slotLoadDetector(lastMeta);
+            //通知设置当前页面
+            Player::instance()->setCurrentPlayListHash(lastplaypage);
+        }
+        //自动播放处理
+        if (bautoplay) {
+            QTimer::singleShot(200, [ = ]() {
+                slotAutoPlay(bremb);
+            });
+        }
+    } else {
+        //位置信息和自动播放都不做处理
+    }
+}
+
 void MainFrame::slotTheme(DGuiApplicationHelper::ColorType themeType)
 {
     if (m_musicContentWidget != nullptr) {
@@ -355,6 +389,21 @@ void MainFrame::slotAllMusicCleared()
     m_footer->hide();
     m_importWidget->showImportHint();
     m_importWidget->showAnimationToLeft(this->size());
+}
+
+void MainFrame::slotAutoPlay(bool bremb)
+{
+    qDebug() << "slotAutoPlay=========";
+    auto lastMeta = MusicSettings::value("base.play.last_meta").toString();
+    if (bremb)
+        Player::instance()->resume();
+    else {
+        MediaMeta mt = DataBaseService::getInstance()->getMusicInfoByHash(lastMeta);
+        if (!mt.localPath.isEmpty())
+            Player::instance()->playMeta(mt);
+        else
+            qDebug() << __FUNCTION__ << " at line:" << __LINE__ << " localPath is empty.";
+    }
 }
 
 void MainFrame::showEvent(QShowEvent *event)

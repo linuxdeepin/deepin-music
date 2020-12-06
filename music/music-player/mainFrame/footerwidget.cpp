@@ -310,6 +310,7 @@ void FooterWidget::initUI(QWidget *parent)
 
     connect(m_btFavorite, &DIconButton::clicked, this, &FooterWidget::slotFavoriteClick);
     connect(CommonService::getInstance(), &CommonService::favoriteMusic, this, &FooterWidget::favoriteMusic);
+
 }
 
 void FooterWidget::initShortcut()
@@ -617,6 +618,18 @@ void FooterWidget::slotShortCutTriggered()
         Player::instance()->setMuted(true);
         m_volSlider->syncMute(true);
     }
+}
+
+void FooterWidget::slotLoadDetector(const QString &hash)
+{
+    //查找hash对应路径
+    MediaMeta mt = DataBaseService::getInstance()->getMusicInfoByHash(hash);
+    if (mt.localPath.isEmpty())
+        return;
+    if (m_metaBufferDetector)
+        m_metaBufferDetector->onBufferDetector(mt.localPath, mt.hash);
+    else
+        qDebug() << __FUNCTION__ << " at line:" << __LINE__ << " m_metaBufferDetector is not initailized";
 }
 
 void FooterWidget::slotPlaylistClick(bool click)

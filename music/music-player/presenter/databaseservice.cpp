@@ -175,6 +175,18 @@ int DataBaseService::allMusicInfosCount()
     return count;
 }
 
+MediaMeta DataBaseService::getMusicInfoByHash(const QString &hash)
+{
+    MediaMeta medMeta;
+    for (MediaMeta meta : m_AllMediaMeta) {
+        if (meta.hash == hash) {
+            medMeta = meta;
+            break;
+        }
+    }
+    return medMeta;
+}
+
 QList<AlbumInfo> DataBaseService::allAlbumInfos()
 {
     m_AllAlbumInfo.clear();

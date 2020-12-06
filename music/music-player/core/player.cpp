@@ -821,6 +821,22 @@ void Player::initMpris()
     m_pMpris->setCanSeek(true);
 }
 
+void Player::loadMediaProgress(const QString &path)
+{
+    qDebug() << __FUNCTION__ << " at line:" << __LINE__ << " initialize path:" << path;
+    m_qvplayer->blockSignals(true);
+
+    m_qvmedia->initMedia(path, true, m_qvinstance);
+    m_qvplayer->open(m_qvmedia);
+    m_qvplayer->play();
+    QTimer::singleShot(100, this, [ = ]() {//为了记录进度条生效，在加载的时候让音乐播放100ms
+        m_qvplayer->pause();
+
+        m_qvplayer->blockSignals(false);
+        //emit readyToResume();
+    });
+}
+
 void Player::changePicture()
 {
     //切换播放状态动态图

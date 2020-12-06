@@ -48,6 +48,8 @@ public:
 
     void initUI(bool showLoading);
     MusicContentWidget *getMusicContentWidget();
+    //启动自动播放和进度条设置
+    void autoStartToPlay();
 private:
     /**
      * @brief initMenuAndShortCut
@@ -62,6 +64,7 @@ private slots:
     void slotMenuTriggered(QAction *action);
     void slotSwitchTheme();
     void slotAllMusicCleared();//所有歌曲被删除
+    void slotAutoPlay(bool bremb);//延迟自动播放
 protected:
     virtual void showEvent(QShowEvent *event) Q_DECL_OVERRIDE;
     virtual void enterEvent(QEvent *event) Q_DECL_OVERRIDE;
