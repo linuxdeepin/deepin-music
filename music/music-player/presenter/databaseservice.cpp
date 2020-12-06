@@ -31,6 +31,7 @@
 #include "mediameta.h"
 #include "dboperate.h"
 #include "medialibrary.h"
+#include "player.h"
 static const QString DatabaseUUID = "0fcbd091-2356-161c-9026-f49779f9c71c40";
 
 int databaseVersionNew();
@@ -102,17 +103,25 @@ QList<MediaMeta> DataBaseService::allMusicInfos()
     return m_AllMediaMeta;
 }
 
-void DataBaseService::allMusicInfosRemoveOne(QString hash)
+bool DataBaseService::allMusicInfosRemoveOne(QString hash, bool removeFromLocal)
 {
     QSqlQuery query;
     QString strsql = QString("DELETE FROM musicNew WHERE hash='%1'").arg(hash);
     query.prepare(strsql);
-    if (!query.exec())
+    if (!query.exec()) {
         qWarning() << query.lastError();
+        return false;
+    }
 
     emit sigRmvSong(hash);
     for (int i = 0; i < m_AllMediaMeta.size(); i++) {
         if (m_AllMediaMeta.at(i).hash == hash) {
+            if (removeFromLocal) {
+                QFile info(m_AllMediaMeta.at(i).localPath);
+                if (info.exists()) {
+                    info.remove();
+                }
+            }
             m_AllMediaMeta.removeAt(i);
             break;
         }
@@ -121,6 +130,7 @@ void DataBaseService::allMusicInfosRemoveOne(QString hash)
     if (allMusicInfosCount() <= 0) {
         emit sigAllMusicCleared();
     }
+    return true;
 }
 
 int DataBaseService::allMusicInfosCount()
@@ -199,7 +209,8 @@ QList<SingerInfo> DataBaseService::allSingerInfos()
 
 QList<MediaMeta> DataBaseService::customizeMusicInfos(const QString &hash)
 {
-    if (m_AllMediaMeta.count() == 0) {
+    qDebug() << "---DataBaseService::customizeMusicInfos hash = " << hash;
+    if (m_AllMediaMeta.count() <= 0) {
         allMusicInfos();
     }
 
@@ -246,23 +257,36 @@ QList<DataBaseService::PlaylistData> DataBaseService::getCustomSongList()
     return customlist;
 }
 
-void DataBaseService::removeSelectedSongs(const QString &curpage, const QStringList &musichashlist)
+void DataBaseService::removeSelectedSongs(const QString &curpage, const QStringList &musichashlist, bool removeFromLocal)
 {
     QSqlQuery query;
 //    qDebug() << "---DataBaseService::removeSelectedSongs-" << curpage << " hashlist=" << hashlist;
 
+    //todo..   未考虑正在播放的文件
     for (QString strhash : musichashlist) {
         QString strsql;
         if (curpage == "all") { //remove from musicNew
-            allMusicInfosRemoveOne(strhash);
+            allMusicInfosRemoveOne(strhash, removeFromLocal);
         }
         //remove form playlist
         else {
             strsql = QString("DELETE FROM playlist_%1 WHERE music_id='%2'").arg(curpage).arg(strhash);
             query.prepare(strsql);
-            if (query.exec())
+            if (query.exec()) {
                 emit sigRmvSong(strhash);
-            else
+                if (removeFromLocal) {
+                    for (int i = 0; i < m_AllMediaMeta.size(); i++) {
+                        if (m_AllMediaMeta.at(i).hash == strhash) {
+                            QFile info(m_AllMediaMeta.at(i).localPath);
+                            if (info.exists()) {
+                                info.remove();
+                            }
+                            m_AllMediaMeta.removeAt(i);
+                            break;
+                        }
+                    }
+                }
+            } else
                 qWarning() << query.lastError();
         }
     }

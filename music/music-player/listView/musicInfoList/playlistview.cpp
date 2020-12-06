@@ -646,20 +646,20 @@ void PlayListView::slotRmvFromSongList()
     //get data
     strlist << smap.values();
 
-    //remove from db
+    //todo.. remove from db
     if (!m_IsPlayList)
-        DataBaseService::getInstance()->removeSelectedSongs(m_currentHash, strlist);
+        DataBaseService::getInstance()->removeSelectedSongs(m_currentHash, strlist, false);
 }
 
 void PlayListView::slotDelFromLocal()
 {
-
-    bool containsCue = false;
     QList<MediaMeta> metas;
     QModelIndexList mindexlist =  this->selectedIndexes();
+    QStringList strlist;
     for (QModelIndex mindex : mindexlist) {
         MediaMeta imt = mindex.data(Qt::UserRole).value<MediaMeta>();
         metas.append(imt);
+        strlist << imt.hash;
     }
 
     Dtk::Widget::DDialog warnDlg(this);
@@ -670,10 +670,6 @@ void PlayListView::slotDelFromLocal()
     auto cover = QImage(QString(":/common/image/del_notify.svg"));
     if (1 == metas.length()) {
         auto meta = metas.first();
-//        auto coverData = MetaSearchService::coverData(meta);
-//        if (coverData.length() > 0) {
-//            cover = QImage::fromData(coverData);
-//        }
         warnDlg.setMessage(QString(tr("Are you sure you want to delete %1?")).arg(meta.title));
     } else {
         //                warnDlg.setTitle(QString(tr("Are you sure you want to delete the selected %1 songs?")).arg(metalist.length()));
@@ -688,23 +684,10 @@ void PlayListView::slotDelFromLocal()
         warnDlg.addSpacing(20);
     }
 
-    if (containsCue && false) {
-        DLabel *t_titleLabel = new DLabel(this);
-        t_titleLabel->setForegroundRole(DPalette::TextTitle);
-        DLabel *t_infoLabel = new DLabel(this);
-        t_infoLabel->setForegroundRole(DPalette::TextTips);
-        t_titleLabel->setText(tr("Are you sure you want to delete the selected %1 songs?").arg(metas.length()));
-        t_infoLabel->setText(tr("The song files contained will also be deleted"));
-        warnDlg.addContent(t_titleLabel, Qt::AlignHCenter);
-        warnDlg.addContent(t_infoLabel, Qt::AlignHCenter);
-        warnDlg.addSpacing(20);
-    }
-//    auto coverPixmap =  QPixmap::fromImage(WidgetHelper::cropRect(cover, QSize(64, 64)));
-
     warnDlg.setIcon(QIcon::fromTheme("deepin-music"));
-    // todo..
     if (deleteFlag == warnDlg.exec()) {
-//        slotRmvFromSongList();
+        if (!m_IsPlayList)
+            DataBaseService::getInstance()->removeSelectedSongs(m_currentHash, strlist, true);
     }
 }
 

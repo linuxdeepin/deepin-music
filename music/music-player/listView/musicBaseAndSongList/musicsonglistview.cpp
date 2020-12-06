@@ -176,6 +176,7 @@ void MusicSongListView::addNewSongList()
     info.displayName = displayName;
     info.sortID = DataBaseService::getInstance()->getPlaylistMaxSortid();
     DataBaseService::getInstance()->addPlaylist(info);
+    item->setData(info.uuid, Qt::UserRole); //covert to hash
     //切换listpage
     emit CommonService::getInstance()->switchToView(CustomType, info.uuid);
 }

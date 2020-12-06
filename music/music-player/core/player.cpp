@@ -368,7 +368,6 @@ void Player::stop()
 {
     m_qvplayer->pause();
     setActiveMeta(MediaMeta());//清除当前播放音乐；
-//    m_activeMeta.clear(); //清除当前播放音乐；
     m_qvplayer->stop();
 }
 VlcMediaPlayer *Player::core()
