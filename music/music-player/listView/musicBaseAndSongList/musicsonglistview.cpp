@@ -82,6 +82,8 @@ MusicSongListView::MusicSongListView(QWidget *parent) : DListView(parent)
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
     setContextMenuPolicy(Qt::CustomContextMenu);
+    connect(this, &MusicSongListView::customContextMenuRequested,
+            this, &MusicSongListView::showContextMenu);
 
     init();
 
@@ -123,7 +125,7 @@ void MusicSongListView::init()
         itemFont.setPixelSize(14);
         item->setFont(itemFont);
 
-        item->setData(data.uuid, Qt::UserRole); //covert to hash
+        item->setData(data.uuid, Qt::UserRole);
         if (m_type == 1) {
             item->setForeground(QColor("#414D68"));
         } else {
@@ -139,6 +141,45 @@ void MusicSongListView::init()
     m_newItemShortcut->setKey(QKeySequence(QLatin1String("Ctrl+Shift+N")));
     connect(m_newItemShortcut, SIGNAL(activated()), this, SLOT(addNewSongList()));
     connect(CommonService::getInstance(), &CommonService::addNewSongList, this, &MusicSongListView::addNewSongList);
+}
+
+void MusicSongListView::showContextMenu(const QPoint &pos)
+{
+    auto index = indexAt(pos);
+    if (!index.isValid())
+        return;
+
+    auto item = model->itemFromIndex(index);
+    if (!item) {
+        return;
+    }
+
+    QPoint globalPos = this->mapToGlobal(pos);
+
+
+    DMenu menu;
+    connect(&menu, &DMenu::triggered, this, &MusicSongListView::slotMenuTriggered);
+
+    QAction *playact = nullptr;
+    QAction *pauseact = nullptr;
+
+    QString hash = index.data(Qt::UserRole).value<QString>();
+    emit CommonService::getInstance()->switchToView(ListPageSwitchType::CustomType, hash);
+
+    if (hash == Player::instance()->getCurrentPlayListHash() && Player::instance()->status() == Player::Playing) {
+        pauseact = menu.addAction(tr("Pause"));
+        pauseact->setDisabled(0 == DataBaseService::getInstance()->customizeMusicInfos(hash).size());
+    } else {
+        playact = menu.addAction(tr("Play"));
+        playact->setDisabled(0 == DataBaseService::getInstance()->customizeMusicInfos(hash).size());
+    }
+
+    if (hash != "album" || hash != "artist" || hash != "all" || hash != "fav") {
+        menu.addAction(tr("Rename"));
+        menu.addAction(tr("Delete"));
+    }
+
+    menu.exec(globalPos);
 }
 
 void MusicSongListView::addNewSongList()
@@ -229,6 +270,37 @@ void MusicSongListView::slotUpdatePlayingIcon()
         }
     }
     update();
+}
+
+void MusicSongListView::slotMenuTriggered(QAction *action)
+{
+    QModelIndex index = this->currentIndex();
+    if (!index.isValid())
+        return;
+
+    if (action->text() == tr("Play")) {
+        emit CommonService::getInstance()->playAllMusic();
+    } else if (action->text() == tr("Pause")) {
+        Player::instance()->pause();
+    } else if (action->text() == tr("Rename")) {
+        edit(index);
+    } else if (action->text() == tr("Delete")) {
+        QString message = QString(tr("Are you sure you want to delete this playlist?"));
+
+        DDialog warnDlg(this);
+        warnDlg.setIcon(QIcon::fromTheme("deepin-music"));
+        warnDlg.setTextFormat(Qt::AutoText);
+        warnDlg.setTitle(message);
+        warnDlg.addSpacing(20);
+        warnDlg.addButton(tr("Cancel"), false, Dtk::Widget::DDialog::ButtonNormal);
+        warnDlg.addButton(tr("Delete"), true, Dtk::Widget::DDialog::ButtonWarning);
+        if (1 == warnDlg.exec()) {
+            QStandardItem *item = model->itemFromIndex(index);
+            model->removeRow(item->row());
+
+//            setMinimumHeight(model->rowCount() * 40);
+        }
+    }
 }
 
 void MusicSongListView::mousePressEvent(QMouseEvent *event)

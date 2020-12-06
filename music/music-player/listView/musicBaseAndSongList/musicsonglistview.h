@@ -37,6 +37,7 @@ public:
     ~MusicSongListView() override;
 
     void init();
+    void showContextMenu(const QPoint &pos);
 
 public slots:
     void slotTheme(int type);
@@ -44,6 +45,7 @@ public slots:
     //add a new play list
     void addNewSongList();
     void slotUpdatePlayingIcon();
+    void slotMenuTriggered(QAction *action);
 signals:
     void sigAddNewSongList();
 
@@ -64,7 +66,6 @@ private:
     //    QList<PlaylistPtr >  allPlaylists;
     MusicBaseAndSonglistModel *model = nullptr;
     DStyledItemDelegate  *delegate        = nullptr;
-    QStandardItem        *playingItem     = nullptr;
     //QStandardItem      *m_currentitem = nullptr;
     QPixmap              playingPixmap;
     QPixmap              albumPixmap;

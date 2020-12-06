@@ -225,7 +225,7 @@ bool MusicListScrollArea::eventFilter(QObject *o, QEvent *e)
                 int row = 40 * rowIndex;
 
                 QPoint pos(120, row);
-//                m_dataBaseListview->showContextMenu(pos);
+                m_dataBaseListview->showContextMenu(pos);
             }
         }
         // Tab焦点进入事件和点击事件冲突，保留点击事件设置焦点
@@ -249,7 +249,7 @@ bool MusicListScrollArea::eventFilter(QObject *o, QEvent *e)
                     pos = posm;
                 }
 
-//                m_customizeListview->showContextMenu(pos);
+                m_customizeListview->showContextMenu(pos);
             }
         }
         // Tab焦点进入事件和点击事件冲突，保留点击事件设置焦点

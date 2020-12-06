@@ -37,9 +37,11 @@ public:
     ~MusicBaseListView() override;
 
     void init();
+    void showContextMenu(const QPoint &pos);
 public slots:
     void slotTheme(int type);
     void slotUpdatePlayingIcon();
+    void slotMenuTriggered(QAction *action);
 
 signals:
 
@@ -54,6 +56,7 @@ protected:
 
 private:
     void SetAttrRecur(QDomElement elem, QString strtagname, QString strattr, QString strattrval);
+    void setActionDisabled(const QString &hash, QAction *act);
 private:
     //    QList<PlaylistPtr >  allPlaylists;
     MusicBaseAndSonglistModel *model = nullptr;

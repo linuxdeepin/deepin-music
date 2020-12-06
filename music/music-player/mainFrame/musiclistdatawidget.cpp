@@ -65,6 +65,7 @@ MusicListDataWidget::MusicListDataWidget(QWidget *parent) :
 {
     this->initUI();
     connect(CommonService::getInstance(), &CommonService::switchToView, this, &MusicListDataWidget::viewChanged);
+    connect(CommonService::getInstance(), &CommonService::playAllMusic, this, &MusicListDataWidget::onPlayAllClicked);
     connect(DataBaseService::getInstance(), &DataBaseService::sigImportFinished,
             this, &MusicListDataWidget::slotImportFinished);
 }

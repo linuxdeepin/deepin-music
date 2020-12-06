@@ -42,6 +42,8 @@ signals:
     void favoriteMusic(const MediaMeta meta);
     // 添加新的歌曲清单
     void addNewSongList();
+    // 右键菜单播放所有音乐
+    void playAllMusic();
 private:
 
 private:

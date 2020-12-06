@@ -35,6 +35,7 @@
 #include <QSvgRenderer>
 #include <QPainter>
 
+#include "databaseservice.h"
 #include "commonservice.h"
 #include "musicbaseandsonglistmodel.h"
 #include "mediameta.h"
@@ -79,6 +80,8 @@ MusicBaseListView::MusicBaseListView(QWidget *parent) : DListView(parent)
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
     setContextMenuPolicy(Qt::CustomContextMenu);
+    connect(this, &MusicBaseListView::customContextMenuRequested,
+            this, &MusicBaseListView::showContextMenu);
 
 //    connect(this, &MusicBaseListView::triggerEdit,
 //    this, [ = ](const QModelIndex & index) {
@@ -161,6 +164,42 @@ void MusicBaseListView::init()
     setMinimumHeight(model->rowCount() * 40);
 }
 
+void MusicBaseListView::showContextMenu(const QPoint &pos)
+{
+    auto index = indexAt(pos);
+    if (!index.isValid())
+        return;
+
+    auto item = model->itemFromIndex(index);
+    if (!item) {
+        return;
+    }
+
+    QPoint globalPos = this->mapToGlobal(pos);
+
+
+    DMenu menu;
+    connect(&menu, &DMenu::triggered, this, &MusicBaseListView::slotMenuTriggered);
+
+    QAction *playact = nullptr;
+    QAction *pauseact = nullptr;
+
+    ListPageSwitchType type = index.data(Qt::UserRole).value<ListPageSwitchType>();
+
+    QString hash = index.data(Qt::UserRole + 2).value<QString>();
+    emit CommonService::getInstance()->switchToView(type, "");
+
+    if (hash == Player::instance()->getCurrentPlayListHash() && Player::instance()->status() == Player::Playing) {
+        pauseact = menu.addAction(tr("Pause"));
+        setActionDisabled(hash, pauseact);
+    } else {
+        playact = menu.addAction(tr("Play"));
+        setActionDisabled(hash, playact);
+    }
+
+    menu.exec(globalPos);
+}
+
 void MusicBaseListView::mousePressEvent(QMouseEvent *event)
 {
     DListView::mousePressEvent(event);
@@ -201,6 +240,19 @@ void MusicBaseListView::SetAttrRecur(QDomElement elem, QString strtagname, QStri
             continue;
         }
         this->SetAttrRecur(elem.childNodes().at(i).toElement(), strtagname, strattr, strattrval);
+    }
+}
+
+void MusicBaseListView::setActionDisabled(const QString &hash, QAction *act)
+{
+    if (hash == "album") {
+        act->setDisabled(0 == DataBaseService::getInstance()->allAlbumInfos().size());
+    } else if (hash == "artist") {
+        act->setDisabled(0 == DataBaseService::getInstance()->allSingerInfos().size());
+    } else if (hash == "all") {
+        act->setDisabled(0 == DataBaseService::getInstance()->allMusicInfos().size());
+    } else if (hash == "fav") {
+        act->setDisabled(0 == DataBaseService::getInstance()->customizeMusicInfos("fav").size());
     }
 }
 
@@ -251,6 +303,15 @@ void MusicBaseListView::slotUpdatePlayingIcon()
         }
     }
     update();
+}
+
+void MusicBaseListView::slotMenuTriggered(QAction *action)
+{
+    if (action->text() == tr("Play")) {
+        emit CommonService::getInstance()->playAllMusic();
+    } else if (action->text() == tr("Pause")) {
+        Player::instance()->pause();
+    }
 }
 
 void MusicBaseListView::slotTheme(int type)

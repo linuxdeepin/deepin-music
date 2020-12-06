@@ -58,6 +58,7 @@
 #include "importwidget.h"
 #include "ac-desktop-define.h"
 #include "databaseservice.h"
+#include "commonservice.h"
 #include "shortcut.h"
 #include "dequalizerdialog.h"
 DWIDGET_USE_NAMESPACE
@@ -296,8 +297,7 @@ void MainFrame::slotMenuTriggered(QAction *action)
     Q_ASSERT(action);
 
     if (action == m_newSonglistAction) {
-        //todo..
-        DataBaseService::getInstance();
+        CommonService::getInstance()->addNewSongList();
     }
 
     if (action == m_addMusicFiles) {
