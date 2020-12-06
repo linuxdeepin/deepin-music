@@ -35,10 +35,12 @@ class MusicContentWidget : public DWidget
     Q_OBJECT
 public:
     explicit MusicContentWidget(QWidget *parent = Q_NULLPTR);
-    // 控件显示动画,向上移动
+    // 向上移动显示
     void showAnimationToUp(const QSize &size);
-    // 控件显示动画,向下移动
+    // 向下移动显示
     void showAnimationToDown(const QSize &size);
+    // 向左移动隐藏
+    void closeAnimationToLeft(const QSize &size);
     // 控件关闭动画
     void closeAnimation(const QSize &size);
 public slots:

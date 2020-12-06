@@ -86,9 +86,6 @@ void MusicContentWidget::showAnimationToUp(const QSize &size)
 
     animation->connect(animation, &QPropertyAnimation::finished,
                        animation, &QPropertyAnimation::deleteLater);
-    animation->connect(animation, &QPropertyAnimation::finished,
-                       this, &MusicContentWidget::hide);
-
     this->resize(size);
     this->show();
 
@@ -106,8 +103,26 @@ void MusicContentWidget::showAnimationToDown(const QSize &size)
 
     animation->connect(animation, &QPropertyAnimation::finished,
                        animation, &QPropertyAnimation::deleteLater);
+
     this->resize(size);
     this->show();
+    animation->start();
+}
+
+void MusicContentWidget::closeAnimationToLeft(const QSize &size)
+{
+    QPropertyAnimation *animation = new QPropertyAnimation(this, "pos");
+
+    animation->setDuration(200);
+    animation->setEasingCurve(QEasingCurve::InCurve);
+    animation->setStartValue(QPoint(0, 50));
+    animation->setEndValue(QPoint(-size.width(), 50));
+
+    animation->connect(animation, &QPropertyAnimation::finished,
+                       animation, &QPropertyAnimation::deleteLater);
+    animation->connect(animation, &QPropertyAnimation::finished,
+                       this, &MusicContentWidget::hide);
+    this->resize(size);
 
     animation->start();
 }

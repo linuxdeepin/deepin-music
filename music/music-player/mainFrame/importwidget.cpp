@@ -150,6 +150,23 @@ void ImportWidget::closeAnimationToDown(const QSize &size)
     animation->start();
 }
 
+void ImportWidget::showAnimationToLeft(const QSize &size)
+{
+    this->resize(size);
+    this->show();
+
+    QPropertyAnimation *animation = new QPropertyAnimation(this, "pos");
+    animation->setEasingCurve(QEasingCurve::InCurve);
+    animation->setDuration(AnimationDelay);
+    animation->setStartValue(QPoint(size.width(), 0));
+    animation->setEndValue(QPoint(0, 0));
+
+    animation->connect(animation, &QPropertyAnimation::finished,
+                       animation, &QPropertyAnimation::deleteLater);
+    this->show();
+    animation->start();
+}
+
 const QString ImportWidget::getLastImportPath() const
 {
     QString lastImportPath = MusicSettings::value("base.play.last_import_path").toString();

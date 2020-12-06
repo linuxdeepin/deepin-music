@@ -68,6 +68,7 @@ public:
 
     //所有歌曲信息
     QList<MediaMeta>     allMusicInfos();
+    void                 allMusicInfosRemoveOne(QString hash);
     int                  allMusicInfosCount();                         //歌曲数量
 
     //专辑
@@ -76,7 +77,7 @@ public:
     QList<SingerInfo> allSingerInfos();
 
     //删除歌单所选歌曲
-    void removeSelectedSongs(const QString &curpage, const QStringList &hashlist);
+    void removeSelectedSongs(const QString &curpage, const QStringList &musichashlist);
     //删除播放历史歌曲
     void removeHistorySelectedSong(const QStringList &hashlist);
 

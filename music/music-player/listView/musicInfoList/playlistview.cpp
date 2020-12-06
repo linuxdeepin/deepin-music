@@ -890,7 +890,11 @@ void PlayListView::contextMenuEvent(QContextMenuEvent *event)
         connect(&textCodecMenu, &QMenu::triggered, this, &PlayListView::onSetCodecClicked);
     } else {
         allMusicMenu.addAction(tr("Add to playlist"))->setMenu(&playlistMenu);
-        actrmv = allMusicMenu.addAction(tr("Remove from play queue"));
+        if (m_IsPlayList) {
+            actrmv = allMusicMenu.addAction(tr("Remove from play queue"));
+        } else {
+            actrmv = allMusicMenu.addAction(tr("Remove from playlist"));
+        }
         actdel = allMusicMenu.addAction(tr("Delete from local disk"));
     }
 

@@ -102,6 +102,27 @@ QList<MediaMeta> DataBaseService::allMusicInfos()
     return m_AllMediaMeta;
 }
 
+void DataBaseService::allMusicInfosRemoveOne(QString hash)
+{
+    QSqlQuery query;
+    QString strsql = QString("DELETE FROM musicNew WHERE hash='%1'").arg(hash);
+    query.prepare(strsql);
+    if (!query.exec())
+        qWarning() << query.lastError();
+
+    emit sigRmvSong(hash);
+    for (int i = 0; i < m_AllMediaMeta.size(); i++) {
+        if (m_AllMediaMeta.at(i).hash == hash) {
+            m_AllMediaMeta.removeAt(i);
+            break;
+        }
+    }
+
+    if (allMusicInfosCount() <= 0) {
+        emit sigAllMusicCleared();
+    }
+}
+
 int DataBaseService::allMusicInfosCount()
 {
     int count = 0;
@@ -225,30 +246,25 @@ QList<DataBaseService::PlaylistData> DataBaseService::customSongList()
     return customlist;
 }
 
-void DataBaseService::removeSelectedSongs(const QString &curpage, const QStringList &hashlist)
+void DataBaseService::removeSelectedSongs(const QString &curpage, const QStringList &musichashlist)
 {
     QSqlQuery query;
-    qDebug() << "----------" << curpage << "============" << hashlist;
+//    qDebug() << "---DataBaseService::removeSelectedSongs-" << curpage << " hashlist=" << hashlist;
 
-    for (QString strhash : hashlist) {
+    for (QString strhash : musichashlist) {
         QString strsql;
         if (curpage == "all") { //remove from musicNew
-            strsql = QString("DELETE FROM musicNew WHERE hash='%1'").arg(strhash);
-            query.prepare(strsql);
-            if (!query.exec())
-                qWarning() << query.lastError();
+            allMusicInfosRemoveOne(strhash);
         }
         //remove form playlist
-        strsql = QString("DELETE FROM playlist_%1 WHERE music_id='%2'").arg(curpage).arg(strhash);
-        query.prepare(strsql);
-        if (query.exec())
-            emit sigRmvSong(strhash);
-        else
-            qWarning() << query.lastError();
-    }
-
-    if (allMusicInfosCount() <= 0) {
-        emit sigAllMusicCleared();
+        else {
+            strsql = QString("DELETE FROM playlist_%1 WHERE music_id='%2'").arg(curpage).arg(strhash);
+            query.prepare(strsql);
+            if (query.exec())
+                emit sigRmvSong(strhash);
+            else
+                qWarning() << query.lastError();
+        }
     }
 }
 

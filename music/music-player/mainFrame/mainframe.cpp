@@ -144,7 +144,7 @@ void MainFrame::initUI(bool showLoading)
     initMenuAndShortcut();
 
     connect(DataBaseService::getInstance(), &DataBaseService::sigAllMusicCleared,
-            m_musicLyricWidget, &MusicLyricWidget::onCoverChanged);
+            this, &MainFrame::slotAllMusicCleared);
 }
 
 MusicContentWidget *MainFrame::getMusicContentWidget()
@@ -342,6 +342,11 @@ void MainFrame::slotSwitchTheme()
 void MainFrame::slotAllMusicCleared()
 {
     qDebug() << "MainFrame::slotAllMusicCleared";
+    // 导入界面显示与关闭动画
+    m_musicContentWidget->closeAnimationToLeft(this->size() - QSize(0, m_footer->height() + titlebar()->height() + 5));
+    m_footer->hide();
+    m_importWidget->showImportHint();
+    m_importWidget->showAnimationToLeft(this->size());
 }
 
 void MainFrame::showEvent(QShowEvent *event)

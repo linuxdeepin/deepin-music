@@ -36,8 +36,10 @@ public:
     explicit ImportWidget(QWidget *parent = Q_NULLPTR);
     ~ImportWidget() override;
 
-    // 控件关闭动画
+    // 向下移动隐藏
     void closeAnimationToDown(const QSize &size);
+    // 向左移动显示
+    void showAnimationToLeft(const QSize &size);
 
     const QString getLastImportPath() const;
 signals:
