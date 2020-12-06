@@ -56,6 +56,7 @@
 #include "vlc/Media.h"
 #include "vlc/MediaPlayer.h"
 #include "vlc/Equalizer.h"
+#include "databaseservice.h"
 
 #include "core/musicsettings.h"
 #include <DPushButton>
@@ -132,7 +133,6 @@ void Player::playMeta(MediaMeta meta)
          * ***********************/
         setDbusMuted();
         //    m_activeMeta = curMeta;
-        m_isamr = true;
         m_qvmedia->initMedia(meta.localPath, true, m_qvinstance);
         m_qvplayer->open(m_qvmedia);
         m_qvplayer->setTime(meta.offset);
@@ -357,6 +357,12 @@ MprisPlayer *Player::getMpris() const
 void Player::setCurrentPlayListHash(QString hash)
 {
     m_currentPlayListHash = hash;
+    m_MetaList.clear();
+    if (hash == "all") {
+        m_MetaList = DataBaseService::getInstance()->allMusicInfos();
+    } else {
+        m_MetaList = DataBaseService::getInstance()->customizeMusicInfos(hash);
+    }
 }
 
 QString Player::getCurrentPlayListHash()

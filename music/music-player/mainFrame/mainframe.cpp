@@ -61,6 +61,7 @@
 #include "commonservice.h"
 #include "shortcut.h"
 #include "dequalizerdialog.h"
+#include "closeconfirmdialog.h"
 DWIDGET_USE_NAMESPACE
 
 const QString s_PropertyViewname = "viewname";
@@ -206,6 +207,68 @@ void MainFrame::initMenuAndShortcut()
     connect(viewshortcut, SIGNAL(activated()), this, SLOT(slotShortCutTriggered()));
     connect(searchShortcut, SIGNAL(activated()), this, SLOT(slotShortCutTriggered()));
     connect(windowShortcut, SIGNAL(activated()), this, SLOT(slotShortCutTriggered()));
+
+    //初始化托盘
+    auto playAction = new QAction(tr("Play/Pause"), this);
+    auto prevAction = new QAction(tr("Previous"), this);
+    auto nextAction = new QAction(tr("Next"), this);
+    auto quitAction = new QAction(tr("Exit"), this);
+
+    auto trayIconMenu = new DMenu(this);
+    trayIconMenu->addAction(playAction);
+    trayIconMenu->addAction(prevAction);
+    trayIconMenu->addAction(nextAction);
+    trayIconMenu->addSeparator();
+    trayIconMenu->addAction(quitAction);
+
+    auto trayIcon = new QSystemTrayIcon(this);
+    trayIcon->setIcon(QIcon::fromTheme("deepin-music"));
+    trayIcon->setToolTip(tr("Music"));
+    trayIcon->setContextMenu(trayIconMenu);
+    trayIcon->show();
+
+    connect(playAction, &QAction::triggered,
+    this, [ = ]() {
+        m_footer->slotPlayClick(true);
+    });
+    connect(prevAction, &QAction::triggered,
+    this, [ = ]() {
+        m_footer->slotPreClick(true);
+    });
+    connect(nextAction, &QAction::triggered,
+    this, [ = ]() {
+        m_footer->slotNextClick(true);
+    });
+    connect(quitAction, &QAction::triggered,
+    this, [ = ]() {
+        sync();
+        qApp->quit();
+    });
+
+    connect(trayIcon, &QSystemTrayIcon::activated,
+    this, [ = ](QSystemTrayIcon::ActivationReason reason) {
+        if (QSystemTrayIcon::Trigger == reason) {
+            if (isVisible()) {
+                if (isMinimized()) {
+                    if (isFullScreen()) {
+                        hide();
+                        showFullScreen();
+                    } else {
+                        this->titlebar()->setFocus();
+                        showNormal();
+                        activateWindow();
+                    }
+                } else {
+                    showMinimized();
+                    hide();
+                }
+            } else {
+                this->titlebar()->setFocus();
+                showNormal();
+                activateWindow();
+            }
+        }
+    });
 }
 
 void MainFrame::autoStartToPlay()
@@ -537,22 +600,22 @@ void MainFrame::closeEvent(QCloseEvent *event)
         break;
     }
     case 2: {
-//        CloseConfirmDialog ccd(this);
+        CloseConfirmDialog ccd(this);
 
-//        auto clickedButtonIndex = ccd.exec();
-//        // 1 is confirm button
-//        if (1 != clickedButtonIndex) {
-//            event->ignore();
-//            return;
-//        }
-//        if (ccd.isRemember()) {
-//            MusicSettings::setOption("base.close.close_action", ccd.closeAction());
-//        }
-//        if (ccd.closeAction() == 1) {
-//            MusicSettings::setOption("base.close.is_close", true);
-//        } else {
-//            MusicSettings::setOption("base.close.is_close", false);
-//        }
+        auto clickedButtonIndex = ccd.exec();
+        // 1 is confirm button
+        if (1 != clickedButtonIndex) {
+            event->ignore();
+            return;
+        }
+        if (ccd.isRemember()) {
+            MusicSettings::setOption("base.close.close_action", ccd.closeAction());
+        }
+        if (ccd.closeAction() == 1) {
+            MusicSettings::setOption("base.close.is_close", true);
+        } else {
+            MusicSettings::setOption("base.close.is_close", false);
+        }
         break;
     }
     default:
@@ -560,7 +623,7 @@ void MainFrame::closeEvent(QCloseEvent *event)
     }
 
     this->setFocus();
-    qApp->quit();
-//    DMainWindow::closeEvent(event);
+    //qApp->quit();
+    DMainWindow::closeEvent(event);
 }
 

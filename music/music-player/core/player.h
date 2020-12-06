@@ -108,8 +108,6 @@ signals:
     void signalUpdatePlayingIcon();
     // 播放列表改变
     void signalPlayListChanged();
-    // 加载波形图数据
-    void signalLoadDetector(const QString &hash);
 public slots:
     void changePicture();
     void setVolume(int volume);
@@ -220,8 +218,7 @@ private:
     int             m_volume      = 50.0;
     bool            m_playOnLoad  = true;
     bool            m_firstPlayOnLoad  = true; //外部双击打开处理一次
-    bool            m_fadeInOut   = true;
-    bool            m_isamr = false;
+    bool            m_fadeInOut   = false;
     double          m_fadeInOutFactor     = 1.0;
     qlonglong       m_m_position          = 0;//只能用于判断音乐是否正常结束
 
