@@ -97,7 +97,9 @@ void MusicListDataWidget::viewChanged(ListPageSwitchType switchtype, const QStri
         m_albumListView->setAlbumListData(DataBaseService::getInstance()->allAlbumInfos()); //set album data
         m_albumListView->setViewModeFlag(m_albumListView->getViewMode());
         m_pCenterWidget->setCurrentWidget(m_albumListView);
-        m_preIndex = m_pCenterWidget->currentIndex();
+//        m_preIndex = m_pCenterWidget->currentIndex();
+        m_preHash = "album";
+        m_preSwitchtype = AlbumType;
         m_titleLabel->setText(DataBaseService::getInstance()->getPlaylistNameByUUID("album"));
         refreshModeBtn(m_albumListView->viewMode());
         refreshInfoLabel("album");
@@ -113,7 +115,9 @@ void MusicListDataWidget::viewChanged(ListPageSwitchType switchtype, const QStri
         m_singerListView->setSingerListData(DataBaseService::getInstance()->allSingerInfos()); //set singer data
         m_singerListView->setViewModeFlag(m_singerListView->getViewMode());
         m_pCenterWidget->setCurrentWidget(m_singerListView);
-        m_preIndex = m_pCenterWidget->currentIndex();
+//        m_preIndex = m_pCenterWidget->currentIndex();
+        m_preHash = "artist";
+        m_preSwitchtype = SingerType;
         m_titleLabel->setText(DataBaseService::getInstance()->getPlaylistNameByUUID("artist"));
         refreshModeBtn(m_singerListView->viewMode());
         refreshInfoLabel("artist");
@@ -127,7 +131,9 @@ void MusicListDataWidget::viewChanged(ListPageSwitchType switchtype, const QStri
         refreshModeBtn(m_musicListView->getViewMode());
         refreshInfoLabel("all");
         m_pCenterWidget->setCurrentWidget(m_musicListView);
-        m_preIndex = m_pCenterWidget->currentIndex();
+//        m_preIndex = m_pCenterWidget->currentIndex();
+        m_preHash = "all";
+        m_preSwitchtype = AllSongListType;
         refreshSortAction();
         break;
     }
@@ -137,7 +143,9 @@ void MusicListDataWidget::viewChanged(ListPageSwitchType switchtype, const QStri
         m_titleLabel->setText(DataBaseService::getInstance()->getPlaylistNameByUUID("fav"));
         m_musicListView->setViewModeFlag("fav", m_musicListView->getViewMode());
         m_pCenterWidget->setCurrentWidget(m_musicListView);
-        m_preIndex = m_pCenterWidget->currentIndex();
+//        m_preIndex = m_pCenterWidget->currentIndex();
+        m_preHash = "fav";
+        m_preSwitchtype = FavType;
         refreshModeBtn(m_musicListView->getViewMode());
         refreshInfoLabel("fav");
         break;
@@ -148,7 +156,9 @@ void MusicListDataWidget::viewChanged(ListPageSwitchType switchtype, const QStri
         m_titleLabel->setText(DataBaseService::getInstance()->getPlaylistNameByUUID(hashOrSearchword));
         m_musicListView->setViewModeFlag(hashOrSearchword, m_musicListView->getViewMode());
         m_pCenterWidget->setCurrentWidget(m_musicListView);
-        m_preIndex = m_pCenterWidget->currentIndex();
+//        m_preIndex = m_pCenterWidget->currentIndex();
+        m_preHash = hashOrSearchword;
+        m_preSwitchtype = CustomType;
         refreshModeBtn(m_musicListView->getViewMode());
         refreshInfoLabel(hashOrSearchword);
         break;
@@ -157,21 +167,30 @@ void MusicListDataWidget::viewChanged(ListPageSwitchType switchtype, const QStri
     case SearchSingerResultType:
     case SearchAlbumResultType: {
         //搜索歌曲结果
-        m_preIndex = m_pCenterWidget->currentIndex();
+//        m_preIndex = m_pCenterWidget->currentIndex();
         if (!m_SearchResultTabWidget) {
             m_SearchResultTabWidget = new SearchResultTabWidget(this);
             m_pCenterWidget->addWidget(m_SearchResultTabWidget);
+            connect(m_SearchResultTabWidget, &SearchResultTabWidget::sigSearchTypeChanged, this, &MusicListDataWidget::refreshInfoLabel);
         }
         m_pCenterWidget->setCurrentWidget(m_SearchResultTabWidget);
-        m_preIndex = m_pCenterWidget->currentIndex();
+//        m_preIndex = m_pCenterWidget->currentIndex();
         m_titleLabel->setText(tr("Search Results"));
         m_SearchResultTabWidget->refreshListview(switchtype, hashOrSearchword);
+        if (switchtype == SearchMusicResultType) {
+            refreshInfoLabel("musicResult");
+        } else if (switchtype == SearchSingerResultType) {
+            refreshInfoLabel("artistResult");
+        } else if (switchtype == SearchAlbumResultType) {
+            refreshInfoLabel("albumResult");
+        }
         refreshSortAction();
         return;
     }
     default:
-        m_pCenterWidget->setCurrentIndex(m_preIndex);
-        refreshSortAction();
+//        m_pCenterWidget->setCurrentIndex(m_preIndex);
+        viewChanged(m_preSwitchtype, m_preHash);
+//        refreshSortAction();
         return;
     }
 
@@ -677,9 +696,15 @@ void MusicListDataWidget::refreshInfoLabel(QString hash)
     int albumCount = 0;
     int singerCount = 0;
     int songCount = 0;
-    if (hash == "album") {
-        albumCount = DataBaseService::getInstance()->allAlbumInfos().size();
-        songCount = DataBaseService::getInstance()->allMusicInfos().size();
+    if (hash == "album" || hash == "albumResult") {
+        if (hash == "albumResult") {
+            songCount = m_SearchResultTabWidget->getMusicCount();
+            albumCount = m_SearchResultTabWidget->getAlbumCount();
+        } else {
+            albumCount = DataBaseService::getInstance()->allAlbumInfos().size();
+            songCount = DataBaseService::getInstance()->allMusicInfos().size();
+        }
+
         if (songCount == 0) {
             countStr = QString("   ") + MusicListDataWidget::tr("No songs");
         } else if (songCount == 1) {
@@ -691,9 +716,14 @@ void MusicListDataWidget::refreshInfoLabel(QString hash)
                 countStr = QString("   ") + MusicListDataWidget::tr("%1 albums - %2 songs").arg(albumCount).arg(songCount);
             }
         }
-    } else if (hash == "artist") {
-        singerCount = DataBaseService::getInstance()->allSingerInfos().size();
-        songCount = DataBaseService::getInstance()->allMusicInfos().size();
+    } else if (hash == "artist" || hash == "artistResult") {
+        if (hash == "artistResult") {
+            songCount = m_SearchResultTabWidget->getMusicCount();
+            singerCount = m_SearchResultTabWidget->getSingerCount();
+        } else {
+            singerCount = DataBaseService::getInstance()->allSingerInfos().size();
+            songCount = DataBaseService::getInstance()->allMusicInfos().size();
+        }
         if (songCount == 0) {
             countStr = QString("   ") + MusicListDataWidget::tr("No songs");
         } else if (songCount == 1) {
@@ -705,8 +735,12 @@ void MusicListDataWidget::refreshInfoLabel(QString hash)
                 countStr = QString("   ") + MusicListDataWidget::tr("%1 artists - %2 songs").arg(singerCount).arg(songCount);
             }
         }
-    } else if (hash == "all") {
-        songCount = DataBaseService::getInstance()->allMusicInfos().size();
+    } else if (hash == "all" || hash == "musicResult") {
+        if (hash == "musicResult") {
+            songCount = m_SearchResultTabWidget->getMusicCount();
+        } else {
+            songCount = DataBaseService::getInstance()->allMusicInfos().size();
+        }
         if (0 == songCount) {
             countStr = QString("   ") + MusicListDataWidget::tr("No songs");
         } else if (1 == songCount) {
@@ -714,6 +748,8 @@ void MusicListDataWidget::refreshInfoLabel(QString hash)
         } else {
             countStr = QString("   ") + MusicListDataWidget::tr("%1 songs").arg(songCount);
         }
+    } else if (hash == "musicResult") {
+
     } else {
         //自定义歌单一定有hash
         if (hash.isEmpty()) {

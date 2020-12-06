@@ -125,18 +125,24 @@ void SearchResultTabWidget::refreshListview(ListPageSwitchType switchtype, QStri
         m_musicListView->resetSonglistByStr(searchword);
         m_singerListView->resetSingerListDataBySongName(m_musicListView->getAllSongListData());
         m_albumListView->resetAlbumListDataBySongName(m_musicListView->getAllSongListData());
+        emit sigSearchTypeChanged("musicResult");
+        qDebug() << "musicResult";
     } else if (switchtype == SearchSingerResultType) {
         setLabelChecked(m_singer);
         m_StackedWidget->setCurrentWidget(m_singerListView);
         m_singerListView->resetSingerListDataByStr(searchword);
         m_musicListView->resetSonglistBySinger(m_singerListView->getSingerListData());
         m_albumListView->resetAlbumListDataBySinger(m_singerListView->getSingerListData());
+        emit sigSearchTypeChanged("artistResult");
+        qDebug() << "artistResult";
     } else if (switchtype == SearchAlbumResultType) {
         setLabelChecked(m_album);
         m_StackedWidget->setCurrentWidget(m_albumListView);
         m_albumListView->resetAlbumListDataByStr(searchword);
         m_musicListView->resetSonglistByAlbum(m_albumListView->getAlbumListData());
         m_singerListView->resetSingerListDataByAlbum(m_albumListView->getAlbumListData());
+        emit sigSearchTypeChanged("albumResult");
+        qDebug() << "albumResult";
     }
 }
 
@@ -149,6 +155,33 @@ void SearchResultTabWidget::setViewMode(QListView::ViewMode mode)
     } else if (m_StackedWidget->currentWidget() == m_singerListView) {
         m_singerListView->setViewMode(mode);
     }
+}
+
+int SearchResultTabWidget::getMusicCount()
+{
+    int count = 0;
+    if (m_musicListView) {
+        count = m_musicListView->count();
+    }
+    return count;
+}
+
+int SearchResultTabWidget::getAlbumCount()
+{
+    int count = 0;
+    if (m_albumListView) {
+        count = m_albumListView->count();
+    }
+    return count;
+}
+
+int SearchResultTabWidget::getSingerCount()
+{
+    int count = 0;
+    if (m_singerListView) {
+        count = m_singerListView->count();
+    }
+    return count;
 }
 
 void SearchResultTabWidget::showEvent(QShowEvent *event)
@@ -167,12 +200,15 @@ void SearchResultTabWidget::mousePressEvent(QMouseEvent *event)
     if (m_music->geometry().contains(event->pos())) {
         qDebug() << "zy------m_music clicked";
         setLabelChecked(m_music);
+        emit sigSearchTypeChanged("musicResult");
     } else if (m_singer->geometry().contains(event->pos())) {
         qDebug() << "zy------m_singer clicked";
         setLabelChecked(m_singer);
+        emit sigSearchTypeChanged("artistResult");
     } else if (m_album->geometry().contains(event->pos())) {
         qDebug() << "zy------m_album clicked";
         setLabelChecked(m_album);
+        emit sigSearchTypeChanged("albumResult");
     }
     DWidget::mousePressEvent(event);
 }

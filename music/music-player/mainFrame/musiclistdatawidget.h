@@ -52,6 +52,8 @@ public slots:
     void switchViewModel();
     void slotSortChange(QAction *action);
     void slotImportFinished();
+    //刷新各列表数量信息
+    void refreshInfoLabel(QString hash);
 protected:
     bool eventFilter(QObject *o, QEvent *e) Q_DECL_OVERRIDE;
 protected:
@@ -72,8 +74,6 @@ private:
     void initemptyHits(QVBoxLayout *layout);
     //刷新显示模式按钮check状态
     void refreshModeBtn(DListView::ViewMode mode);
-    //刷新各列表数量信息
-    void refreshInfoLabel(QString hash);
     //刷新当前排序菜单
     void refreshSortAction();
 private:
@@ -97,8 +97,10 @@ private:
     PlayListView        *m_musicListView  = nullptr; //all music view
     QAction             *m_customAction    = nullptr;
     bool                m_updateFlag       = false;
-    int                 m_preIndex = 0;//记录前一次显示，当清除搜索时回到上一页面
+//    int                 m_preIndex = 0;//记录前一次显示，当清除搜索时回到上一页面
     QString             m_currentHash;
+    ListPageSwitchType  m_preSwitchtype = AllSongListType;
+    QString             m_preHash = "all";//记录前一次显示，当清除搜索时回到上一页面
 };
 
 class ActionBar : public DWidget

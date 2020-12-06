@@ -42,9 +42,13 @@ public:
 
     void refreshListview(ListPageSwitchType switchtype, QString searchword);
     void setViewMode(DListView::ViewMode mode);
+    int  getMusicCount();
+    int  getAlbumCount();
+    int  getSingerCount();
 public slots:
 
 signals:
+    void sigSearchTypeChanged(QString hash);
 
 protected:
     virtual void showEvent(QShowEvent *event) Q_DECL_OVERRIDE;

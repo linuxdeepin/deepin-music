@@ -64,13 +64,18 @@ SearchEdit::SearchEdit(QWidget *parent) : DSearchEdit(parent)
             }
         }
     });
-//    connect(this, &SearchEdit::cursorPositionChanged,
-//    this, [ = ](int index1, int index2) {
+    connect(this, &SearchEdit::cursorPositionChanged,
+    this, [ = ](int index1, int index2) {
+//        qDebug() << "index1 = " << index1 << " index2 = " << index2;
 //        if (index1 > 0 && index2 == 0) {
-////            clearEdit();
-//            Q_EMIT searchAborted();
+//            clearEdit();
 //        }
-//    });
+        auto alltext = this->text();
+        if (alltext.isEmpty()) {
+            //清除搜索时，回退到上一次界面
+            emit CommonService::getInstance()->switchToView(NullType, "");
+        }
+    });
 }
 
 void SearchEdit::setResultWidget(SearchResult *result)
@@ -173,6 +178,6 @@ void SearchEdit::onReturnPressed()
         }
     }
     m_result->hide();
-    emit CommonService::getInstance()->switchToView(SearchMusicResultType, text);
+    emit CommonService::getInstance()->switchToView(SearchMusicResultType, "musicResult");
 }
 
