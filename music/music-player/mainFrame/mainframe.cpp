@@ -142,6 +142,9 @@ void MainFrame::initUI(bool showLoading)
 
     /*---------------menu&shortcut-------------------*/
     initMenuAndShortcut();
+
+    connect(DataBaseService::getInstance(), &DataBaseService::sigAllMusicCleared,
+            m_musicLyricWidget, &MusicLyricWidget::onCoverChanged);
 }
 
 MusicContentWidget *MainFrame::getMusicContentWidget()
@@ -248,7 +251,7 @@ void MainFrame::slotShortCutTriggered()
     Q_ASSERT(objCut);
 
     if (objCut == addmusicfilesShortcut) {
-        m_importWidget->slotImportButtonClicked(); //open filedialog
+        m_importWidget->slotImportPathButtonClicked(); //open filedialog
     }
 
     if (objCut == viewshortcut) {
@@ -290,7 +293,7 @@ void MainFrame::slotMenuTriggered(QAction *action)
     }
 
     if (action == m_addMusicFiles) {
-        m_importWidget->slotImportButtonClicked();
+        m_importWidget->slotImportPathButtonClicked();
     }
 
     if (action == m_equalizer) {
@@ -334,6 +337,11 @@ void MainFrame::slotMenuTriggered(QAction *action)
 void MainFrame::slotSwitchTheme()
 {
     MusicSettings::setOption("base.play.theme", DGuiApplicationHelper::instance()->themeType());
+}
+
+void MainFrame::slotAllMusicCleared()
+{
+    qDebug() << "MainFrame::slotAllMusicCleared";
 }
 
 void MainFrame::showEvent(QShowEvent *event)

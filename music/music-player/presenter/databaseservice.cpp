@@ -246,6 +246,10 @@ void DataBaseService::removeSelectedSongs(const QString &curpage, const QStringL
         else
             qWarning() << query.lastError();
     }
+
+    if (allMusicInfosCount() <= 0) {
+        emit sigAllMusicCleared();
+    }
 }
 
 void DataBaseService::removeHistorySelectedSong(const QStringList &hashlist)

@@ -42,7 +42,6 @@ public:
     const QString getLastImportPath() const;
 signals:
     void scanMusicDirectory();
-    void importFiles();
     void selectImportDirectory();
     void importSelectFiles(const QStringList &urllist);
 
@@ -50,7 +49,8 @@ public slots:
     void showWaitHint();
     void showImportHint();
     void slotLinkActivated(const QString &link);
-    void slotImportButtonClicked();
+    void slotAddMusicButtonClicked();
+    void slotImportPathButtonClicked();
 
     void slotTheme(int type);
 
@@ -65,7 +65,7 @@ protected:
 
 private:
     QLabel                  *m_text = nullptr;
-    DPushButton             *m_importButton = nullptr;
+    DPushButton             *m_importPathButton = nullptr;
     DPushButton             *m_addMusicButton = nullptr;
     QLabel                  *m_logo = nullptr;
 };

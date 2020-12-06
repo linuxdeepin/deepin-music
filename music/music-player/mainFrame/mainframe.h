@@ -61,6 +61,7 @@ private slots:
     void slotShortCutTriggered();
     void slotMenuTriggered(QAction *action);
     void slotSwitchTheme();
+    void slotAllMusicCleared();//所有歌曲被删除
 protected:
     virtual void showEvent(QShowEvent *event) Q_DECL_OVERRIDE;
     virtual void enterEvent(QEvent *event) Q_DECL_OVERRIDE;

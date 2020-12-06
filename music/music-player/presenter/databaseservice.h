@@ -107,8 +107,9 @@ public slots:
     void slotGetAllMediaMetaFromThread(QList<MediaMeta> allMediaMeta);
     void slotGetMetaFromThread(MediaMeta meta);
     void slotImportFinished();//收到子线程导入结束通知
-    void slotCreatOneCoverImg(MediaMeta meta);//收到图片加载完信号
+    void slotCreatOneCoverImg(MediaMeta meta);//收到子线程一张图片加载完信号
 signals:
+    void sigAllMusicCleared();//所有歌曲被清空
     void sigGetAllMediaMeta();
     void sigImportMedias(const QStringList &urllist);//发送给子线程执行
     void sigCreatCoverImg(const QList<MediaMeta> &metas);//发送给子线程执行创建图片

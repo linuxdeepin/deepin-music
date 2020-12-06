@@ -37,7 +37,7 @@
 
 #include "musicsettings.h"
 #include "databaseservice.h"
-
+#include "player.h"
 #include "ac-desktop-define.h"
 DGUI_USE_NAMESPACE
 
@@ -59,13 +59,13 @@ ImportWidget::ImportWidget(QWidget *parent) : DFrame(parent)
     m_logo->setObjectName("ImportViewLogo");
     m_logo->setPixmap(DHiDPIHelper::loadNxPixmap(":/mpimage/light/import_music.svg"));
 
-    m_importButton = new DPushButton;
-    auto importButtonFont = m_importButton->font();
+    m_importPathButton = new DPushButton;
+    auto importButtonFont = m_importPathButton->font();
     importButtonFont.setFamily("SourceHanSansSC");
     importButtonFont.setWeight(QFont::Normal);
     importButtonFont.setPixelSize(14);
-    m_importButton->setFont(importButtonFont);
-    auto pl = m_importButton->palette();
+    m_importPathButton->setFont(importButtonFont);
+    auto pl = m_importPathButton->palette();
     pl.setColor(DPalette::Dark, QColor("#0098FF"));
     pl.setColor(DPalette::Light, QColor("#25B7FF"));
     pl.setColor(DPalette::ButtonText, QColor("#FFFFFF"));
@@ -73,12 +73,12 @@ ImportWidget::ImportWidget(QWidget *parent) : DFrame(parent)
     sbcolor.setAlphaF(0);
     pl.setColor(DPalette::Shadow, sbcolor);
 //    d->importButton->setPalette(pl);
-    m_importButton->setObjectName("ImportViewImportButton");
-    m_importButton->setFixedSize(302, 36);
-    m_importButton->setText(tr("Open Folder"));
-    m_importButton->setFocusPolicy(Qt::TabFocus);
-    m_importButton->setDefault(true);
-    m_importButton->installEventFilter(this);
+    m_importPathButton->setObjectName("ImportViewImportButton");
+    m_importPathButton->setFixedSize(302, 36);
+    m_importPathButton->setText(tr("Open Folder"));
+    m_importPathButton->setFocusPolicy(Qt::TabFocus);
+    m_importPathButton->setDefault(true);
+    m_importPathButton->installEventFilter(this);
 
     m_addMusicButton = new DPushButton;
     m_addMusicButton->setFont(importButtonFont);
@@ -109,7 +109,7 @@ ImportWidget::ImportWidget(QWidget *parent) : DFrame(parent)
     layout->addSpacing(20);
     layout->addWidget(m_addMusicButton, 0, Qt::AlignCenter);
     layout->addSpacing(10);
-    layout->addWidget(m_importButton, 0, Qt::AlignCenter);
+    layout->addWidget(m_importPathButton, 0, Qt::AlignCenter);
     layout->addSpacing(10);
     layout->addWidget(m_text, 0, Qt::AlignCenter);
     layout->addStretch();
@@ -118,12 +118,8 @@ ImportWidget::ImportWidget(QWidget *parent) : DFrame(parent)
     AC_SET_OBJECT_NAME(m_text, AC_importLinkText);
     AC_SET_ACCESSIBLE_NAME(m_text, AC_importLinkText);
 
-    connect(m_addMusicButton, &DPushButton::clicked,
-    this, [ = ] {
-        Q_EMIT this->importFiles();
-    });
-
-    connect(m_importButton, &DPushButton::clicked, this,  &ImportWidget::slotImportButtonClicked);
+    connect(m_addMusicButton, &DPushButton::clicked, this,  &ImportWidget::slotAddMusicButtonClicked);
+    connect(m_importPathButton, &DPushButton::clicked, this,  &ImportWidget::slotImportPathButtonClicked);
 
     connect(m_text, &DLabel::linkActivated, this, &ImportWidget::slotLinkActivated);
 
@@ -172,8 +168,8 @@ const QString ImportWidget::getLastImportPath() const
 
 void ImportWidget::showImportHint()
 {
-    m_importButton->setDisabled(false);
-    m_importButton->show();
+    m_importPathButton->setDisabled(false);
+    m_importPathButton->show();
     m_addMusicButton->show();
     QString linkText = QString(linkTemplate).arg(tr("Scan")).arg(tr("Scan"));
     m_text->setText(tr("%1 music directory or drag music files here").arg(linkText));
@@ -187,7 +183,26 @@ void ImportWidget::slotLinkActivated(const QString &link)
     DataBaseService::getInstance()->importMedias(musicDir);
 }
 
-void ImportWidget::slotImportButtonClicked()
+void ImportWidget::slotAddMusicButtonClicked()
+{
+    DFileDialog fileDlg(this);
+    QString lastImportPath = getLastImportPath();
+    fileDlg.setDirectory(lastImportPath);
+    QString selfilter = tr("All music") + (" (%1)");
+    selfilter = selfilter.arg(Player::instance()->supportedSuffixList().join(" "));
+    fileDlg.setViewMode(DFileDialog::Detail);
+    fileDlg.setFileMode(DFileDialog::ExistingFiles);
+    fileDlg.setOption(DFileDialog::HideNameFilterDetails);
+    fileDlg.setNameFilter(selfilter);
+    fileDlg.selectNameFilter(selfilter);
+    if (DFileDialog::Accepted == fileDlg.exec()) {
+        showWaitHint();
+        MusicSettings::setOption("base.play.last_import_path",  fileDlg.directory().path());
+        DataBaseService::getInstance()->importMedias(fileDlg.selectedFiles());
+    }
+}
+
+void ImportWidget::slotImportPathButtonClicked()
 {
     DFileDialog fileDlg(this);
     QString lastImportPath = getLastImportPath();
@@ -274,7 +289,7 @@ void ImportWidget::slotTheme(int type)
     QString rStr;
     if (type == 1) {
         rStr = "light";
-        auto pl = m_importButton->palette();
+        auto pl = m_importPathButton->palette();
         pl.setColor(DPalette::Dark, QColor("#0098FF"));
         pl.setColor(DPalette::Light, QColor("#25B7FF"));
         pl.setColor(DPalette::ButtonText, QColor("#FFFFFF"));
@@ -292,7 +307,7 @@ void ImportWidget::slotTheme(int type)
 //        d->text->setForegroundRole(DPalette::TextTips);
     } else {
         rStr = "dark";
-        auto pl = m_importButton->palette();
+        auto pl = m_importPathButton->palette();
         pl.setColor(DPalette::Dark, QColor("#0056C1"));
         pl.setColor(DPalette::Light, QColor("#004C9C"));
         pl.setColor(DPalette::ButtonText, QColor("#B8D3FF"));
@@ -314,8 +329,8 @@ void ImportWidget::slotTheme(int type)
 
 void ImportWidget::showWaitHint()
 {
-    m_importButton->setDisabled(true);
-    m_importButton->hide();
+    m_importPathButton->setDisabled(true);
+    m_importPathButton->hide();
     m_addMusicButton->hide();
     m_text->setText(tr("Loading music, please wait..."));
 }
