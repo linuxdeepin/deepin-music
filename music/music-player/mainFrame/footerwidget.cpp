@@ -465,9 +465,8 @@ void FooterWidget::favoriteMusic(const MediaMeta meta)
 {
     DataBaseService::getInstance()->favoriteMusic(meta);
 
-    if (CommonService::getInstance()->getPlayClassification() == CommonService::PlayClassification::Music_My_Collection)
+    if (CommonService::getInstance()->getListPageSwitchType() == ListPageSwitchType::FavType)
         emit CommonService::getInstance()->switchToView(FavType, "fav");
-
 
     if (DataBaseService::getInstance()->favoriteExist(Player::instance()->activeMeta())) {
         m_btFavorite->setIcon(QIcon::fromTheme("collection1_press"));

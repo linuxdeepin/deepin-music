@@ -32,11 +32,9 @@ CommonService *CommonService::getInstance()
     return instance;
 }
 
-void CommonService::setPlayStatue(CommonService::PlayClassification classification, CommonService::PlayMode mode)
+void CommonService::setListPageSwitchType(ListPageSwitchType lpst)
 {
-    m_PlayClassification = classification;
-    m_PlayMode = mode;
-    emit playStatueChanged(m_PlayClassification, m_PlayMode, "");
+    listPageSwitchType = lpst;
 }
 
 CommonService::CommonService()
@@ -44,9 +42,9 @@ CommonService::CommonService()
 
 }
 
-CommonService::PlayClassification CommonService::getPlayClassification() const
+ListPageSwitchType CommonService::getListPageSwitchType() const
 {
-    return m_PlayClassification;
+    return listPageSwitchType;
 }
 
 bool CommonService::containsStr(QString searchText, QString text)

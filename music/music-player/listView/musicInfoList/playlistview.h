@@ -55,7 +55,7 @@ public:
     //展示歌手的歌曲
     void resetSonglistBySinger(const QList<SingerInfo> &singerInfos);
     //获取展示中的歌曲列表
-    QList<MediaMeta> getSonglistInListview();
+    QList<MediaMeta> getAllSongListData();
 
     QPixmap getSidebarPixmap();
     //zy---begin

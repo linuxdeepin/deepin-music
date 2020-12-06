@@ -47,6 +47,7 @@ public:
     void showEmptyHits();
 public slots:
     void slotTheme(int type);
+    // 左侧菜单切换ListView
     void viewChanged(ListPageSwitchType switchtype, const QString &hashOrSearchword);
     void switchViewModel();
     void slotSortChange(QAction *action);
@@ -56,6 +57,10 @@ protected:
 protected:
     virtual void dragEnterEvent(QDragEnterEvent *event) Q_DECL_OVERRIDE;
     virtual void dropEvent(QDropEvent *event) Q_DECL_OVERRIDE;
+
+private slots:
+    // 播放所有歌曲
+    void onPlayAllClicked();
 private:
     void initUI();
     void initTitle(QHBoxLayout *layout);

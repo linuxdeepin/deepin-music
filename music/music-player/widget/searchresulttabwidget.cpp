@@ -123,8 +123,8 @@ void SearchResultTabWidget::refreshListview(ListPageSwitchType switchtype, QStri
         setLabelChecked(m_music);
         m_StackedWidget->setCurrentWidget(m_musicListView);
         m_musicListView->resetSonglistByStr(searchword);
-        m_singerListView->resetSingerListDataBySongName(m_musicListView->getSonglistInListview());
-        m_albumListView->resetAlbumListDataBySongName(m_musicListView->getSonglistInListview());
+        m_singerListView->resetSingerListDataBySongName(m_musicListView->getAllSongListData());
+        m_albumListView->resetAlbumListDataBySongName(m_musicListView->getAllSongListData());
     } else if (switchtype == SearchSingerResultType) {
         setLabelChecked(m_singer);
         m_StackedWidget->setCurrentWidget(m_singerListView);

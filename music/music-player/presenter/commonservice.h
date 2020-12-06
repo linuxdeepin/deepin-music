@@ -30,27 +30,13 @@ class CommonService : public QObject
 {
     Q_OBJECT
 public:
-    enum PlayClassification {
-        Music_Null,
-        Music_Album,
-        Music_Artist,
-        Music_All_Music,
-        Music_My_Collection,
-        Music_Songlist,
-    };
-    enum PlayMode {
-        playing,
-        suspend,      //暂停
-    };
-public:
     static CommonService *getInstance();
-    void setPlayStatue(PlayClassification classification, PlayMode mode);
-    PlayClassification getPlayClassification() const;
+    void setListPageSwitchType(ListPageSwitchType lpst);
+    ListPageSwitchType getListPageSwitchType() const;
 
     bool containsStr(QString searchText, QString text);
 signals:
-    void playStatueChanged(PlayClassification classification, PlayMode mode, QString songlistName);  //status
-    //hashOrSearchword为hash值或者搜索关键词
+    // hashOrSearchword为hash值或者搜索关键词
     void switchToView(ListPageSwitchType switchtype, QString hashOrSearchword); //switch to playlist view,
     // 收藏音乐
     void favoriteMusic(const MediaMeta meta);
@@ -59,7 +45,6 @@ private:
 private:
     CommonService();
     static CommonService *instance;
-    PlayClassification m_PlayClassification;
-    PlayMode m_PlayMode;
+    ListPageSwitchType listPageSwitchType = ListPageSwitchType::AllSongListType;
 };
 #endif // COMMONSERVICE_H

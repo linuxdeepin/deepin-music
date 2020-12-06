@@ -323,7 +323,7 @@ void PlayListView::resetSonglistBySinger(const QList<SingerInfo> &singerInfos)
     }
 }
 
-QList<MediaMeta> PlayListView::getSonglistInListview()
+QList<MediaMeta> PlayListView::getAllSongListData()
 {
     QList<MediaMeta> list;
     for (int i = 0; i < m_model->rowCount(); i++) {
@@ -406,7 +406,7 @@ DataBaseService::ListSortType PlayListView::getSortType()
 void PlayListView::setSortType(DataBaseService::ListSortType sortType)
 {
     DataBaseService::getInstance()->updatePlaylistSortType(sortType, m_currentHash);
-    QList<MediaMeta> mediaMetas = getSonglistInListview();
+    QList<MediaMeta> mediaMetas = getAllSongListData();
     if (sortType == DataBaseService::SortByAddTime) {
         qSort(mediaMetas.begin(), mediaMetas.end(), moreThanTimestamp);
     } else if (sortType == DataBaseService::SortByTitle) {

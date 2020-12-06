@@ -56,6 +56,7 @@
 #include "ac-desktop-define.h"
 #include "databaseservice.h"
 #include "infodialog.h"
+#include "player.h"
 
 DWIDGET_USE_NAMESPACE
 
@@ -90,13 +91,12 @@ void MusicListDataWidget::slotTheme(int type)
     }
 }
 
+// 左侧菜单切换ListView
 void MusicListDataWidget::viewChanged(ListPageSwitchType switchtype, const QString &hashOrSearchword)
 {
-    CommonService::getInstance()->setPlayStatue(CommonService::PlayClassification(switchtype), CommonService::PlayMode::playing);
-    //use stacked widget to initial and change current view
-    ListPageSwitchType st = static_cast<ListPageSwitchType>(switchtype);
+    CommonService::getInstance()->setListPageSwitchType(switchtype);
     qDebug() << "------MusicListDataWidget::viewChanged switchtype = " << switchtype;
-    switch (st) {
+    switch (switchtype) {
     case AlbumType: {
         if (!m_albumListView) { // alloc
             m_albumListView = new AlbumListView("album", this);
@@ -332,6 +332,69 @@ void MusicListDataWidget::dropEvent(QDropEvent *event)
     //    }
 }
 
+void MusicListDataWidget::onPlayAllClicked()
+{
+    switch (CommonService::getInstance()->getListPageSwitchType()) {
+    case AlbumType:
+        // 清空播放队列
+        Player::instance()->clearPlayList();
+        // 添加到播放列表
+        Player::instance()->setPlayList(DataBaseService::getInstance()->allMusicInfos());
+
+        // 设置第一首播放音乐
+        if (m_albumListView->getAlbumListData().size() > 0 &&
+                m_albumListView->getAlbumListData().first().musicinfos.size() > 0) {
+            Player::instance()->playMeta(m_albumListView->getAlbumListData().first().musicinfos.first());
+        }
+
+        // 通知播放队列改变
+        Player::instance()->setCurrentPlayListHash(m_currentHash);
+        emit Player::instance()->signalPlayListChanged();
+
+        break;
+    case SingerType:
+        // 清空播放队列
+        Player::instance()->clearPlayList();
+        // 添加到播放列表
+        Player::instance()->setPlayList(DataBaseService::getInstance()->allMusicInfos());
+
+        // 设置第一首播放音乐
+        if (m_singerListView->getSingerListData().size() > 0 &&
+                m_singerListView->getSingerListData().first().musicinfos.size() > 0) {
+            Player::instance()->playMeta(m_singerListView->getSingerListData().first().musicinfos.first());
+        }
+
+        // 通知播放队列改变
+        Player::instance()->setCurrentPlayListHash(m_currentHash);
+        emit Player::instance()->signalPlayListChanged();
+
+        break;
+    // 同下共用
+    case AllSongListType:
+    // 同下共用
+    case FavType:
+    case CustomType:
+        // 清空播放队列
+        Player::instance()->clearPlayList();
+        // 添加到播放列表
+        for (auto meta : m_musicListView->getAllSongListData()) {
+            Player::instance()->playListAppendMeta(meta);
+        }
+
+        // 设置第一首播放音乐
+        if (m_musicListView->getAllSongListData().size() > 0) {
+            Player::instance()->playMeta(m_musicListView->getAllSongListData().first());
+        }
+
+        // 通知播放队列改变
+        Player::instance()->setCurrentPlayListHash(m_currentHash);
+        emit Player::instance()->signalPlayListChanged();
+        break;
+    default:
+        break;
+    }
+}
+
 void MusicListDataWidget::initUI()
 {
     setObjectName("MusicListDataWidget");
@@ -531,6 +594,8 @@ void MusicListDataWidget::initBtPlayAll(QHBoxLayout *layout)
     m_btPlayAll->setDefault(true);
     m_btPlayAll->installEventFilter(this);
     layout->addWidget(m_btPlayAll, 0, Qt::AlignVCenter);
+
+    connect(m_btPlayAll, &DPushButton::clicked, this, &MusicListDataWidget::onPlayAllClicked);
 }
 
 void MusicListDataWidget::initCountLabelAndListMode(QHBoxLayout *layout)
