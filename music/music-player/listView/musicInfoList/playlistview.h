@@ -90,6 +90,9 @@ public slots:
     void slotDelFromLocal();        //从本地删除
     void slotSetCoding();           //设置编码方式
     void showDetailInfoDlg();       //查看歌曲信息
+
+    // 设置音乐编码
+    void onSetCodecClicked(QAction *action);
 private:
     void insertRow(int row, MediaMeta meta);
     //zy---end
@@ -99,6 +102,7 @@ signals:
     void getSearchData(bool isvalid); //get search data
 public:
     bool getIsPlayList() const;
+    void reflushItemMediaMeta(const MediaMeta &meta);
 
 protected:
     virtual void mouseMoveEvent(QMouseEvent *event) Q_DECL_OVERRIDE;

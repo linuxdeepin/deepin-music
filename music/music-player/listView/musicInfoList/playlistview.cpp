@@ -647,7 +647,8 @@ void PlayListView::slotRmvFromSongList()
     strlist << smap.values();
 
     //remove from db
-    DataBaseService::getInstance()->removeSelectedSongs(m_currentHash, strlist);
+    if (!m_IsPlayList)
+        DataBaseService::getInstance()->removeSelectedSongs(m_currentHash, strlist);
 }
 
 void PlayListView::slotDelFromLocal()
@@ -839,7 +840,11 @@ void PlayListView::contextMenuEvent(QContextMenuEvent *event)
         allMusicMenu.addAction(tr("Add to playlist"))->setMenu(&playlistMenu);
         allMusicMenu.addSeparator();
         QAction *actdisplay = allMusicMenu.addAction(tr("Display in file manager"));
-        actrmv = allMusicMenu.addAction(tr("Remove from play queue"));
+        if (m_IsPlayList) {
+            actrmv = allMusicMenu.addAction(tr("Remove from play queue"));
+        } else {
+            actrmv = allMusicMenu.addAction(tr("Remove from playlist"));
+        }
         actdel = allMusicMenu.addAction(tr("Delete from local disk"));
 
         allMusicMenu.addSeparator();
@@ -861,11 +866,14 @@ void PlayListView::contextMenuEvent(QContextMenuEvent *event)
 
         for (auto codec : codecList) {
             auto act = textCodecMenu.addAction(codec);
+            act->setParent(&textCodecMenu);
             act->setCheckable(true);
 
             if (codec == imt.codec) {
                 act->setChecked(true);
             }
+
+            act->setData(QVariant::fromValue(codec));
         }
 
         if (codecList.length() >= 1) {
@@ -879,6 +887,7 @@ void PlayListView::contextMenuEvent(QContextMenuEvent *event)
         //connnect
         connect(actdisplay, SIGNAL(triggered()), this, SLOT(slotOpenInFileManager()));
         connect(actsonginfo, SIGNAL(triggered()), this, SLOT(showDetailInfoDlg()));
+        connect(&textCodecMenu, &QMenu::triggered, this, &PlayListView::onSetCodecClicked);
     } else {
         allMusicMenu.addAction(tr("Add to playlist"))->setMenu(&playlistMenu);
         actrmv = allMusicMenu.addAction(tr("Remove from play queue"));
@@ -896,6 +905,37 @@ bool PlayListView::getIsPlayList() const
     return m_IsPlayList;
 }
 
+void PlayListView::reflushItemMediaMeta(const MediaMeta &meta)
+{
+    for (int i = 0; i <  m_model->rowCount(); i++) {
+        QModelIndex curIndex = m_model->index(i, 0);
+        MediaMeta metaTemp = curIndex.data(Qt::UserRole).value<MediaMeta>();
+
+        if (meta.hash == metaTemp.hash) {
+            QVariant mediaMeta;
+            mediaMeta.setValue(meta);
+            m_model->setData(curIndex, mediaMeta, Qt::UserRole);
+            break;
+        }
+    }
+}
+
+void PlayListView::onSetCodecClicked(QAction *action)
+{
+    QItemSelectionModel *selection = selectionModel();
+    if (selection->selectedRows().size() > 0) {
+        QModelIndex curIndex = selection->selectedRows().at(0);
+        MediaMeta meta = curIndex.data(Qt::UserRole).value<MediaMeta>();
+
+        qDebug() << action->data().toByteArray();
+        meta.codec = action->data().toByteArray();
+        meta.updateCodec(action->data().toByteArray());
+
+        reflushItemMediaMeta(meta);
+
+        // todo..
+    }
+}
 
 void PlayListView::mouseMoveEvent(QMouseEvent *event)
 {
