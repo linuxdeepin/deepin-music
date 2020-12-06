@@ -446,7 +446,7 @@ void FooterWidget::slotCoverClick(bool click)
 void FooterWidget::slotNextClick(bool click)
 {
     Q_UNUSED(click)
-    Player::instance()->playNextMeta();
+    Player::instance()->playNextMeta(false);
 }
 
 void FooterWidget::slotPreClick(bool click)
@@ -602,7 +602,7 @@ void FooterWidget::slotShortCutTriggered()
     }
 
     if (objCut == nextShortcut) {
-        Player::instance()->playNextMeta();
+        Player::instance()->playNextMeta(false);
     }
 
     if (objCut == playPauseShortcut) { //pause

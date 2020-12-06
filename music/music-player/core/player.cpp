@@ -277,10 +277,9 @@ void Player::playPreMeta()
     }
 }
 
-void Player::playNextMeta()
+void Player::playNextMeta(bool isAuto)
 {
     if (m_MetaList.size() > 0) {
-        //播放模式todo
         int index = 0;
         for (int i = 0; i < m_MetaList.size(); i++) {
             if (m_MetaList.at(i).hash == m_ActiveMeta.hash) {
@@ -288,15 +287,23 @@ void Player::playNextMeta()
                 break;
             }
         }
-        qDebug() << "1---index = " << index;
-        //根据播放模式确定下一首
+
         switch (m_mode) {
-        case RepeatAll:
-        case RepeatSingle: {
+        case RepeatAll: {
             if (index == (m_MetaList.size() - 1)) {
                 index = 0;
             } else {
                 index++;
+            }
+            break;
+        }
+        case RepeatSingle: {
+            if (!isAuto) {
+                if (index == (m_MetaList.size() - 1)) {
+                    index = 0;
+                } else {
+                    index++;
+                }
             }
             break;
         }
@@ -316,6 +323,7 @@ void Player::playNextMeta()
             break;
         }
         }
+
         setActiveMeta(m_MetaList.at(index));
         playMeta(m_ActiveMeta);
     }
@@ -777,7 +785,7 @@ void Player::initConnection()
 
     connect(m_qvplayer, &VlcMediaPlayer::end,
     this, [ = ]() {
-        playNextMeta();//just sync with Vlc::Ended
+        playNextMeta(true);//just sync with Vlc::Ended
     });
 
 

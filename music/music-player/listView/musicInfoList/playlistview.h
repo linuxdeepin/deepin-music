@@ -91,8 +91,10 @@ public slots:
     void slotSetCoding();           //设置编码方式
     void showDetailInfoDlg();       //查看歌曲信息
 
-    // 设置音乐编码
-    void onSetCodecClicked(QAction *action);
+    // 右键菜单设置音乐编码
+    void slotTextCodecMenuClicked(QAction *action);
+    // 右键菜单添加到歌单
+    void slotPlaylistMenuClicked(QAction *action);
 private:
     void insertRow(int row, MediaMeta meta);
     //zy---end

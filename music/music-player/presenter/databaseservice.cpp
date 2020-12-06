@@ -225,7 +225,7 @@ QList<MediaMeta> DataBaseService::customizeMusicInfos(const QString &hash)
     return medialist;
 }
 
-QList<DataBaseService::PlaylistData> DataBaseService::customSongList()
+QList<DataBaseService::PlaylistData> DataBaseService::getCustomSongList()
 {
     QList<DataBaseService::PlaylistData> customlist;
     QSqlQuery query;
@@ -497,7 +497,7 @@ QList<DataBaseService::PlaylistData> DataBaseService::allPlaylistMeta()
     }
 }
 
-void DataBaseService::addMeta2Playlist(QString uuid, const QList<MediaMeta> &metas)
+void DataBaseService::addMetaToPlaylist(QString uuid, const QList<MediaMeta> &metas)
 {
     for (MediaMeta meta : metas) {
         QSqlQuery query(m_db);

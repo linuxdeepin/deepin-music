@@ -615,7 +615,7 @@ void PlayListView::slotAddToCustomSongList()
         MediaMeta imt = mindex.data(Qt::UserRole).value<MediaMeta>();
         metas.append(imt);
     }
-    DataBaseService::getInstance()->addMeta2Playlist(songlistHash, metas);
+    DataBaseService::getInstance()->addMetaToPlaylist(songlistHash, metas);
 }
 
 void PlayListView::slotOpenInFileManager()
@@ -802,18 +802,18 @@ void PlayListView::contextMenuEvent(QContextMenuEvent *event)
     DMenu allMusicMenu;//first level menu
     DMenu playlistMenu;//second level menu
     DMenu textCodecMenu; //coding of song information
-    QAction *actrmv = nullptr; //remove action
-    QAction *actdel = nullptr;
-    QAction *actfav = new QAction(tr("My favorites"));
-    connect(actfav, &QAction::triggered, this, &PlayListView::slotAddToFavSongList);
-    actfav->setData(QVariant("fav"));
-    playlistMenu.addAction(actfav); //uuid:"fav"
+    QAction *actRmv = nullptr; //remove action
+    QAction *actDel = nullptr;
+
+    QAction *actFav = playlistMenu.addAction(tr("My favorites"));
+    actFav->setData("fav");
+
     playlistMenu.addSeparator();
-    playlistMenu.addAction(tr("Add to new playlist"))->setData(QVariant());//set empty to new a song list view
+    playlistMenu.addAction(tr("Add to new playlist"))->setData("song list");
     playlistMenu.addSeparator();
 
     //add custom playlist to second menu
-    QList<DataBaseService::PlaylistData> strplaylist = DataBaseService::getInstance()->customSongList();
+    QList<DataBaseService::PlaylistData> strplaylist = DataBaseService::getInstance()->getCustomSongList();
     for (DataBaseService::PlaylistData pd : strplaylist) {
         if (m_currentHash != pd.uuid) { //filter itself
             QAction *pact = playlistMenu.addAction(pd.displayName);
@@ -841,11 +841,11 @@ void PlayListView::contextMenuEvent(QContextMenuEvent *event)
         allMusicMenu.addSeparator();
         QAction *actdisplay = allMusicMenu.addAction(tr("Display in file manager"));
         if (m_IsPlayList) {
-            actrmv = allMusicMenu.addAction(tr("Remove from play queue"));
+            actRmv = allMusicMenu.addAction(tr("Remove from play queue"));
         } else {
-            actrmv = allMusicMenu.addAction(tr("Remove from playlist"));
+            actRmv = allMusicMenu.addAction(tr("Remove from playlist"));
         }
-        actdel = allMusicMenu.addAction(tr("Delete from local disk"));
+        actDel = allMusicMenu.addAction(tr("Delete from local disk"));
 
         allMusicMenu.addSeparator();
 
@@ -887,19 +887,20 @@ void PlayListView::contextMenuEvent(QContextMenuEvent *event)
         //connnect
         connect(actdisplay, SIGNAL(triggered()), this, SLOT(slotOpenInFileManager()));
         connect(actsonginfo, SIGNAL(triggered()), this, SLOT(showDetailInfoDlg()));
-        connect(&textCodecMenu, &QMenu::triggered, this, &PlayListView::onSetCodecClicked);
+        connect(&textCodecMenu, &QMenu::triggered, this, &PlayListView::slotTextCodecMenuClicked);
+        connect(&playlistMenu, &QMenu::triggered, this, &PlayListView::slotPlaylistMenuClicked);
     } else {
         allMusicMenu.addAction(tr("Add to playlist"))->setMenu(&playlistMenu);
         if (m_IsPlayList) {
-            actrmv = allMusicMenu.addAction(tr("Remove from play queue"));
+            actRmv = allMusicMenu.addAction(tr("Remove from play queue"));
         } else {
-            actrmv = allMusicMenu.addAction(tr("Remove from playlist"));
+            actRmv = allMusicMenu.addAction(tr("Remove from playlist"));
         }
-        actdel = allMusicMenu.addAction(tr("Delete from local disk"));
+        actDel = allMusicMenu.addAction(tr("Delete from local disk"));
     }
 
-    connect(actrmv, SIGNAL(triggered()), this, SLOT(slotRmvFromSongList()));
-    connect(actdel, SIGNAL(triggered()), this, SLOT(slotDelFromLocal()));
+    connect(actRmv, SIGNAL(triggered()), this, SLOT(slotRmvFromSongList()));
+    connect(actDel, SIGNAL(triggered()), this, SLOT(slotDelFromLocal()));
 
     allMusicMenu.exec(globalPos);
 }
@@ -924,7 +925,7 @@ void PlayListView::reflushItemMediaMeta(const MediaMeta &meta)
     }
 }
 
-void PlayListView::onSetCodecClicked(QAction *action)
+void PlayListView::slotTextCodecMenuClicked(QAction *action)
 {
     QItemSelectionModel *selection = selectionModel();
     if (selection->selectedRows().size() > 0) {
@@ -938,6 +939,26 @@ void PlayListView::onSetCodecClicked(QAction *action)
         reflushItemMediaMeta(meta);
 
         // todo..
+    }
+}
+
+void PlayListView::slotPlaylistMenuClicked(QAction *action)
+{
+    qDebug() << action->data().toString();
+    QString actionText = action->data().toString();
+    if (actionText == "fav")
+        slotAddToFavSongList();
+    else if (actionText == "song list") {
+        emit CommonService::getInstance()->addNewSongList();
+
+        QItemSelectionModel *selection = selectionModel();
+        if (selection->selectedRows().size() > 0) {
+            QModelIndex curIndex = selection->selectedRows().at(0);
+            MediaMeta meta = curIndex.data(Qt::UserRole).value<MediaMeta>();
+
+            QList<MediaMeta> metaList = {meta};
+            DataBaseService::getInstance()->addMetaToPlaylist(DataBaseService::getInstance()->getCustomSongList().last().uuid, metaList);
+        }
     }
 }
 

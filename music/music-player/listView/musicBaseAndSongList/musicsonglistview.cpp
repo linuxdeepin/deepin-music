@@ -137,10 +137,11 @@ void MusicSongListView::init()
     //add short cut
     m_newItemShortcut = new QShortcut(this);
     m_newItemShortcut->setKey(QKeySequence(QLatin1String("Ctrl+Shift+N")));
-    connect(m_newItemShortcut, SIGNAL(activated()), this, SLOT(newPlayList()));
+    connect(m_newItemShortcut, SIGNAL(activated()), this, SLOT(addNewSongList()));
+    connect(CommonService::getInstance(), &CommonService::addNewSongList, this, &MusicSongListView::addNewSongList);
 }
 
-void MusicSongListView::newPlayList()
+void MusicSongListView::addNewSongList()
 {
     //close editor
     for (int i = 0; i < model->rowCount(); i++) {

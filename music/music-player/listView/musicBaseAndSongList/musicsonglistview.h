@@ -42,7 +42,7 @@ public slots:
     void slotTheme(int type);
 
     //add a new play list
-    void newPlayList();
+    void addNewSongList();
     void slotUpdatePlayingIcon();
 signals:
 

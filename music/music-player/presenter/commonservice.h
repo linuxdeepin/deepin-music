@@ -40,6 +40,8 @@ signals:
     void switchToView(ListPageSwitchType switchtype, QString hashOrSearchword); //switch to playlist view,
     // 收藏音乐
     void favoriteMusic(const MediaMeta meta);
+    // 添加新的歌曲清单
+    void addNewSongList();
 private:
 
 private:

@@ -118,7 +118,7 @@ MusicListScrollArea::MusicListScrollArea(QWidget *parent) : DScrollArea(parent)
 
     slotTheme(DGuiApplicationHelper::instance()->themeType());
 
-    connect(m_addListBtn, SIGNAL(clicked()), m_customizeListview, SLOT(newPlayList()));
+    connect(m_addListBtn, SIGNAL(clicked()), m_customizeListview, SLOT(addNewSongList()));
 //    connect(verticalScrollBar(), &QScrollBar::rangeChanged, this, [ = ]() {
 //        if (m_customizeListview->getSizeChangedFlag()) {
 //            this->verticalScrollBar()->setValue(this->verticalScrollBar()->maximum());

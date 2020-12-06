@@ -77,7 +77,7 @@ public:
     void resume();
     void pauseNow();
     void playPreMeta();
-    void playNextMeta();
+    void playNextMeta(bool isAuto);
 
     // 清除播放列表
     void clearPlayList();

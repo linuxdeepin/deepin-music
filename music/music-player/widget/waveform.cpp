@@ -592,7 +592,7 @@ void Waveform::updatePlayerPos(int value)
     int range = this->maximum() - this->minimum();
     Q_ASSERT(range != 0);
     if (value >= range) {
-        Player::instance()->playNextMeta();
+        Player::instance()->playNextMeta(true);
     } else {
         long long position = value * Player::instance()->duration() / range;
         Player::instance()->setPosition(position);
@@ -605,7 +605,7 @@ void Waveform::isPlayNextMeta(int value)
     Q_ASSERT(range != 0);
 
     if (value >= range) {
-        Player::instance()->playNextMeta();
+        Player::instance()->playNextMeta(true);
     }
 }
 
