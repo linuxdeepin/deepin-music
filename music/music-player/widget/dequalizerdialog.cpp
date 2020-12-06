@@ -522,6 +522,8 @@ void DequalizerDialog::initConnection()
 
     connect(this->saveBtn, &DPushButton::clicked, [ = ]() {
         for (DSlider *slider : findChildren<DSlider *>()) {
+            if (slider)
+                continue;
             this->settings->setOption("equalizer.all." + slider->objectName(), slider->value());
         }
         this->settings->setOption("equalizer.all.curEffect", 0);
@@ -609,6 +611,8 @@ void DequalizerDialog::setDefaultClicked()
 //        Q_EMIT setEqualizerEnable(false);
         this->settings->setOption("equalizer.all.curEffect", 1);
         for (DSlider *slider : findChildren<DSlider *>()) {
+            if (slider == nullptr)
+                continue;
             if (slider == this->slider_pre) {
                 this->settings->setOption("equalizer.all." + slider->objectName(), 12);
             } else {
