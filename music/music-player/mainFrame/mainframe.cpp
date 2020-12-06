@@ -82,8 +82,8 @@ MainFrame::MainFrame()
     this->setWindowTitle(tr("Music"));
 
     m_titlebarwidget = new TitlebarWidget(this);
-    m_SearchResult = new SearchResult(this);
-    m_titlebarwidget->setResultWidget(m_SearchResult);
+    m_searchResult = new SearchResult(this);
+    m_titlebarwidget->setResultWidget(m_searchResult);
 
     m_titlebar = new DTitlebar(this);
     m_titlebar->setFixedHeight(50);
@@ -214,6 +214,14 @@ void MainFrame::slotTheme(DGuiApplicationHelper::ColorType themeType)
     }
     if (m_footer != nullptr) {
         m_footer->slotTheme(themeType);
+    }
+
+    if (m_musicLyricWidget) {
+        m_musicLyricWidget->slotTheme(themeType);
+    }
+
+    if (m_searchResult) {
+        m_searchResult->slotTheme(themeType);
     }
 }
 

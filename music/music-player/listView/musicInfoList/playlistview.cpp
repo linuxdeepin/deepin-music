@@ -140,6 +140,11 @@ PlayListView::~PlayListView()
 
 }
 
+void PlayListView::setThemeType(int type)
+{
+    m_themeType = type;
+}
+
 int PlayListView::getThemeType() const
 {
     return m_themeType;

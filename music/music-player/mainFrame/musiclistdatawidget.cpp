@@ -78,19 +78,6 @@ void MusicListDataWidget::showEmptyHits()
 
 }
 
-void MusicListDataWidget::slotTheme(int type)
-{
-    if (m_musicListView) {
-        m_musicListView->slotTheme(type);
-    }
-    if (m_albumListView) {
-        m_albumListView->setThemeType(type);
-    }
-    if (m_singerListView) {
-        m_singerListView->setThemeType(type);
-    }
-}
-
 // 左侧菜单切换ListView
 void MusicListDataWidget::viewChanged(ListPageSwitchType switchtype, const QString &hashOrSearchword)
 {
@@ -779,83 +766,75 @@ void MusicListDataWidget::refreshSortAction()
     }
 }
 
-//void MusicListDataWidget::slotTheme(int type)
-//{
-//    QString rStr;
-//    if (type == 1) {
-//        rStr = "light";
-//    } else {
-//        rStr = "dark";
-//    }
-//    if (type == 1) {
-//        auto palette = this->palette();
-//        QColor background("#FFFFFF");
-//        background.setAlphaF(0.1);
-//        palette.setColor(DPalette::Background, background);
-//        setPalette(palette);
+void MusicListDataWidget::slotTheme(int type)
+{
+    if (type == 1) {
+        auto palette = this->palette();
+        QColor background("#FFFFFF");
+        background.setAlphaF(0.1);
+        palette.setColor(DPalette::Background, background);
+        setPalette(palette);
 
-//        auto emptyHitsPalette = d->emptyHits->palette();
-//        QColor titleLabelPaletteColor("#000000");
-//        titleLabelPaletteColor.setAlphaF(0.3);
-//        emptyHitsPalette.setColor(QPalette::WindowText, titleLabelPaletteColor);
-//        d->emptyHits->setPalette(emptyHitsPalette);
-//        d->emptyHits->setForegroundRole(QPalette::WindowText);
+        auto emptyHitsPalette = m_emptyHits->palette();
+        QColor titleLabelPaletteColor("#000000");
+        titleLabelPaletteColor.setAlphaF(0.3);
+        emptyHitsPalette.setColor(QPalette::WindowText, titleLabelPaletteColor);
+        m_emptyHits->setPalette(emptyHitsPalette);
+        m_emptyHits->setForegroundRole(QPalette::WindowText);
 
-//        d->emptySearchHits->setPalette(emptyHitsPalette);
-//        d->emptySearchHits->setForegroundRole(QPalette::WindowText);
+        auto playAllPalette = m_btPlayAll->palette();
+        playAllPalette.setColor(DPalette::ButtonText, Qt::white);
+        playAllPalette.setColor(DPalette::Light, QColor("#FD5E5E"));
+        playAllPalette.setColor(DPalette::Dark, QColor("#ED5656"));
+        m_btPlayAll->setPalette(playAllPalette);
 
-//        auto playAllPalette = d->btPlayAll->palette();
-//        playAllPalette.setColor(DPalette::ButtonText, Qt::white);
-//        playAllPalette.setColor(DPalette::Light, QColor("#FD5E5E"));
-//        playAllPalette.setColor(DPalette::Dark, QColor("#ED5656"));
-//        d->btPlayAll->setPalette(playAllPalette);
+        auto infoLabelPalette = m_infoLabel->palette();
+        QColor infoLabelColor = infoLabelPalette.color(DPalette::BrightText);
+        infoLabelColor.setAlphaF(0.7);
+        infoLabelPalette.setColor(DPalette::ButtonText, infoLabelColor);
+        m_infoLabel->setPalette(infoLabelPalette);
+    } else {
+        auto palette = this->palette();
+        QColor background("#252525");
+        palette.setColor(DPalette::Background, background);
+        setPalette(palette);
 
-//        auto infoLabelPalette = d->infoLabel->palette();
-//        QColor infoLabelColor = infoLabelPalette.color(DPalette::BrightText);
-//        infoLabelColor.setAlphaF(0.7);
-//        infoLabelPalette.setColor(DPalette::ButtonText, infoLabelColor);
-//        d->infoLabel->setPalette(infoLabelPalette);
-//    } else {
-//        auto palette = this->palette();
-//        QColor background("#252525");
-//        palette.setColor(DPalette::Background, background);
-//        setPalette(palette);
+        auto emptyHitsPalette = m_emptyHits->palette();
+        QColor titleLabelPaletteColor("#C0C6D4");
+        titleLabelPaletteColor.setAlphaF(0.4);
+        emptyHitsPalette.setColor(QPalette::WindowText, titleLabelPaletteColor);
+        m_emptyHits->setPalette(emptyHitsPalette);
+        m_emptyHits->setForegroundRole(QPalette::WindowText);
 
-//        auto emptyHitsPalette = d->emptyHits->palette();
-//        QColor titleLabelPaletteColor("#C0C6D4");
-//        titleLabelPaletteColor.setAlphaF(0.4);
-//        emptyHitsPalette.setColor(QPalette::WindowText, titleLabelPaletteColor);
-//        d->emptyHits->setPalette(emptyHitsPalette);
-//        d->emptyHits->setForegroundRole(QPalette::WindowText);
 
-//        d->emptySearchHits->setPalette(emptyHitsPalette);
-//        d->emptySearchHits->setForegroundRole(QPalette::WindowText);
+        auto playAllPalette = m_btPlayAll->palette();
+        playAllPalette.setColor(DPalette::ButtonText, "#FFFFFF");
+        playAllPalette.setColor(DPalette::Light, QColor("#DA2D2D"));
+        playAllPalette.setColor(DPalette::Dark, QColor("#A51B1B"));
+        m_btPlayAll->setPalette(playAllPalette);
 
-//        auto playAllPalette = d->btPlayAll->palette();
-//        playAllPalette.setColor(DPalette::ButtonText, "#FFFFFF");
-//        playAllPalette.setColor(DPalette::Light, QColor("#DA2D2D"));
-//        playAllPalette.setColor(DPalette::Dark, QColor("#A51B1B"));
-//        d->btPlayAll->setPalette(playAllPalette);
+        auto infoLabelPalette = m_infoLabel->palette();
+        QColor infoLabelColor = infoLabelPalette.color(DPalette::BrightText);
+        infoLabelColor.setAlphaF(0.7);
+        infoLabelPalette.setColor(DPalette::ButtonText, infoLabelColor);
+        m_infoLabel->setPalette(infoLabelPalette);
+    }
 
-//        auto infoLabelPalette = d->infoLabel->palette();
-//        QColor infoLabelColor = infoLabelPalette.color(DPalette::BrightText);
-//        infoLabelColor.setAlphaF(0.7);
-//        infoLabelPalette.setColor(DPalette::ButtonText, infoLabelColor);
-//        d->infoLabel->setPalette(infoLabelPalette);
-//    }
+    m_btIconMode->setIcon(QIcon::fromTheme("picture_list_texts"));
+    m_btIconMode->setIconSize(QSize(36, 36));
+    m_btlistMode->setIcon(QIcon::fromTheme("text_list_texts"));
+    m_btlistMode->setIconSize(QSize(36, 36));
 
-//    d->btIconMode->setIcon(QIcon::fromTheme("picture_list_texts"));
-//    d->btIconMode->setIconSize(QSize(36, 36));
-//    d->btlistMode->setIcon(QIcon::fromTheme("text_list_texts"));
-//    d->btlistMode->setIconSize(QSize(36, 36));
-//    d->albumListView->setThemeType(type);
-//    d->artistListView->setThemeType(type);
-//    d->musicListView->setThemeType(type);
-//    /*----------tabwidget-------------*/
-//    d->songListView->setThemeType(type);
-//    d->singerListView->setThemeType(type);
-//    d->albListView->setThemeType(type);
-//}
+    if (m_musicListView) {
+        m_musicListView->slotTheme(type);
+    }
+    if (m_albumListView) {
+        m_albumListView->setThemeType(type);
+    }
+    if (m_singerListView) {
+        m_singerListView->setThemeType(type);
+    }
+}
 
 ActionBar::ActionBar(QWidget *parent)
 {

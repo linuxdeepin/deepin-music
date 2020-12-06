@@ -47,6 +47,9 @@ signals:
     void requestCustomContextMenu(const QPoint &pos, char type);
     void musicFileMiss();
     void btPlayList();
+
+private slots:
+    void slotClearAllClicked();
 protected:
     bool eventFilter(QObject *o, QEvent *e) Q_DECL_OVERRIDE;
 

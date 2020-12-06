@@ -631,6 +631,7 @@ void FooterWidget::slotPlaylistClick(bool click)
     }
     if (m_playListWidget == nullptr) {
         m_playListWidget = new PlayListWidget(this);
+        m_playListWidget->slotTheme(m_slotTheme);
         // 初始化播放列表数据
         m_playListWidget->slotPlayListChanged();
         connect(Player::instance(), &Player::signalPlayListChanged, m_playListWidget, &PlayListWidget::slotPlayListChanged);
@@ -742,6 +743,8 @@ void FooterWidget::refreshBackground()
 
 void FooterWidget::slotTheme(int type)
 {
+    m_slotTheme = type;
+
     QString rStr;
     if (type == 1) {
         QColor backMaskColor(255, 255, 255, 140);
@@ -826,6 +829,9 @@ void FooterWidget::slotTheme(int type)
         m_btPlayList->setPalette(pa);
     }
 
-
+    m_waveform->setThemeType(type);
     m_volSlider->slotTheme(type);
+
+    if (m_playListWidget)
+        m_playListWidget->slotTheme(type);
 }

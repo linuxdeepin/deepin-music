@@ -143,6 +143,8 @@ PlayListWidget::PlayListWidget(QWidget *parent) :
 
 //    m_inotifyFiles.start();
 //    ThreadPool::instance()->moveToNewThread(&m_inotifyFiles);
+
+    connect(m_btClearAll, &DPushButton::clicked, this, &PlayListWidget::slotClearAllClicked);
 }
 
 PlayListWidget::~PlayListWidget()
@@ -301,11 +303,18 @@ void PlayListWidget::slotTheme(int type)
         pl.setColor(DPalette::Shadow, sbcolor);
         m_btClearAll->setPalette(pl);
     }
-//    m_playListView->setThemeType(type);
+
+    m_playListView->setThemeType(type);
 }
 
 void PlayListWidget::changePicture(QPixmap pixmap, QPixmap sidebarPixmap, QPixmap albumPixmap)
 {
 //    m_playListView->setPlayPixmap(pixmap, sidebarPixmap, albumPixmap);
+}
+
+void PlayListWidget::slotClearAllClicked()
+{
+    Player::instance()->clearPlayList();
+    emit Player::instance()->signalPlayListChanged();
 }
 

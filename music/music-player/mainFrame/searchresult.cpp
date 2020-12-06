@@ -344,9 +344,9 @@ void SearchResult::slotTheme(int type)
     m_MusicLabel->setPalette(labelPalette);
     m_ArtistLabel->setPalette(labelPalette);
     m_AblumLabel->setPalette(labelPalette);
-//    m_MusicView->setThemeType(type);
-//    m_AlbumView->setThemeType(type);
-//    m_ArtistView->setThemeType(type);
+    m_MusicView->setThemeType(type);
+    m_AlbumView->setThemeType(type);
+    m_SingerView->setThemeType(type);
 }
 
 void SearchResult::itemClicked(QModelIndex index)

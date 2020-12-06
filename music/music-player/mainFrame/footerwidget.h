@@ -98,6 +98,8 @@ protected:
     virtual void mouseMoveEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
 //    virtual bool eventFilter(QObject *obj, QEvent *event) Q_DECL_OVERRIDE;
 private:
+    int m_slotTheme = 0;
+
     DBlurEffectWidget *m_forwardWidget = nullptr;
 
     DToolButton  *m_btPlay     = nullptr;

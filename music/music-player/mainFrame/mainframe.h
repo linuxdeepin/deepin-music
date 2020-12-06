@@ -76,7 +76,7 @@ private:
     TitlebarWidget      *m_titlebarwidget = nullptr;
     FooterWidget        *m_footer = nullptr;
     MusicContentWidget  *m_musicContentWidget = nullptr;
-    SearchResult        *m_SearchResult = nullptr;
+    SearchResult        *m_searchResult = nullptr;
     MusicLyricWidget    *m_musicLyricWidget = nullptr;
     ImportWidget        *m_importWidget = nullptr;
     DequalizerDialog    *m_dequalizerDialog = nullptr;

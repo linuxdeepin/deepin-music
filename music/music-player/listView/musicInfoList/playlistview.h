@@ -40,6 +40,7 @@ public:
     explicit PlayListView(QString hash, bool isPlayList, QWidget *parent = Q_NULLPTR);
     ~PlayListView() override;
 
+    void setThemeType(int type);
     int getThemeType() const;
 
     QStandardItem *item(int row, int column) const;
