@@ -589,6 +589,24 @@ int DataBaseService::getPlaylistSortType(QString uuid)
     return 0;
 }
 
+void DataBaseService::updateMetaCodec(const MediaMeta &meta)
+{
+    QSqlQuery query;
+    query.prepare(QString("UPDATE musicNew set codec='%1' WHERE hash='%2'").arg(meta.codec).arg(meta.hash));
+    if (!query.exec()) {
+        qWarning() << query.lastError();
+        return ;
+    }
+    //update mm
+    for (MediaMeta &mt : m_AllMediaMeta) {
+        if (mt.hash == meta.hash) {
+            mt.codec = meta.codec;
+            mt.updateCodec(mt.codec.toUtf8());
+            break;
+        }
+    }
+}
+
 //void DataBaseService::updatePlaylistOrderType(int type, QString uuid)
 //{
 //    QSqlQuery query(m_db);

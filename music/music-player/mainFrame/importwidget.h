@@ -53,7 +53,7 @@ public slots:
     void slotLinkActivated(const QString &link);
     void slotAddMusicButtonClicked();
     void slotImportPathButtonClicked();
-
+    void slotImportFormDbus(const QUrl &url); //右键菜单打开音乐
     void slotTheme(int type);
 
 protected:

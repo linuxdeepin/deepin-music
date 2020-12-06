@@ -105,6 +105,7 @@ public:
     int                  getPlaylistSortType(QString uuid);                //获取歌单排序类型
 //    void                 updatePlaylistOrderType(int type, QString uuid);  //更新歌单显示类型，list，icon，未使用框架QListView::ViewMode
 //    int                  getPlaylistOrderType(QString uuid);               //获取歌单QListView::ViewMode
+    void                 updateMetaCodec(const MediaMeta &meta);             //更新歌曲的编码方式
 public slots:
     void slotGetAllMediaMetaFromThread(QList<MediaMeta> allMediaMeta);
     void slotGetMetaFromThread(MediaMeta meta);

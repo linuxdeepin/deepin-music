@@ -696,10 +696,6 @@ void PlayListView::slotDelFromLocal()
     }
 }
 
-void PlayListView::slotSetCoding()
-{
-
-}
 
 void PlayListView::insertRow(int row, MediaMeta meta)
 {
@@ -923,10 +919,13 @@ void PlayListView::slotTextCodecMenuClicked(QAction *action)
         qDebug() << action->data().toByteArray();
         meta.codec = action->data().toByteArray();
         meta.updateCodec(action->data().toByteArray());
+        //reflushItemMediaMeta(meta);
+        QVariant varmeta;
+        varmeta.setValue(meta);
+        m_model->setData(curIndex, varmeta, Qt::UserRole);
 
-        reflushItemMediaMeta(meta);
-
-        // todo..
+        //restore to db
+        DataBaseService::getInstance()->updateMetaCodec(meta);
     }
 }
 

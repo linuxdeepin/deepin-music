@@ -192,7 +192,6 @@ private:
     bool isDevValid();
     void initConnection();
     void initMpris();//dbus interface
-
     friend class DMusic::DSingleton<Player>;
     //begin
     MediaMeta m_ActiveMeta;

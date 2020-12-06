@@ -89,7 +89,6 @@ public slots:
     void slotOpenInFileManager();   //在文件管理起查看
     void slotRmvFromSongList();     //从歌单移出
     void slotDelFromLocal();        //从本地删除
-    void slotSetCoding();           //设置编码方式
     void showDetailInfoDlg();       //查看歌曲信息
 
     // 右键菜单设置音乐编码

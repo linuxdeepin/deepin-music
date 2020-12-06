@@ -120,8 +120,13 @@ ImportWidget::ImportWidget(QWidget *parent) : DFrame(parent)
 
     connect(m_addMusicButton, &DPushButton::clicked, this,  &ImportWidget::slotAddMusicButtonClicked);
     connect(m_importPathButton, &DPushButton::clicked, this,  &ImportWidget::slotImportPathButtonClicked);
+    //connect()
 
     connect(m_text, &DLabel::linkActivated, this, &ImportWidget::slotLinkActivated);
+
+
+    //connection
+    connect(Player::instance()->getMpris(), &MprisPlayer::openUriRequested, this, &ImportWidget::slotImportFormDbus);  //open file form dbus
 
     int themeType = DGuiApplicationHelper::instance()->themeType();
     slotTheme(themeType);
@@ -231,6 +236,12 @@ void ImportWidget::slotImportPathButtonClicked()
         MusicSettings::setOption("base.play.last_import_path",  fileDlg.directory().path());
         DataBaseService::getInstance()->importMedias(fileDlg.selectedFiles());
     }
+}
+
+void ImportWidget::slotImportFormDbus(const QUrl &url)
+{
+    QString path = url.toLocalFile();
+    DataBaseService::getInstance()->importMedias(QStringList() << path);
 }
 
 bool ImportWidget::eventFilter(QObject *o, QEvent *e)
