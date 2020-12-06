@@ -68,6 +68,7 @@ public:
 
     //所有歌曲信息
     QList<MediaMeta>     allMusicInfos();
+    bool                 deleteMetaFromAllMusic(const QStringList &metaHash);
     bool                 allMusicInfosRemoveOne(QString hash, bool removeFromLocal);
     int                  allMusicInfosCount();                         //歌曲数量
 
@@ -93,6 +94,7 @@ public:
     // 音乐是否收藏
     bool favoriteExist(const MediaMeta meta);
     //歌单相关
+    bool                 deleteMetaFromPlaylist(QString uuid, const QStringList &metaHash);
     QString              getPlaylistNameByUUID(QString uuid);
     uint                 getPlaylistMaxSortid();
     QList<PlaylistData>  getCustomSongList(); //获取自定义歌单

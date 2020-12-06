@@ -309,7 +309,7 @@ void ImportWidget::dropEvent(QDropEvent *event)
     }
 
     if (!localpaths.isEmpty()) {
-        Q_EMIT importSelectFiles(localpaths);
+        DataBaseService::getInstance()->importMedias(localpaths);
     }
 }
 void ImportWidget::slotTheme(int type)

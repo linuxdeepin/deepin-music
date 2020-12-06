@@ -113,6 +113,9 @@ protected:
     virtual void keyPressEvent(QKeyEvent *event) Q_DECL_OVERRIDE;
     virtual void keyboardSearch(const QString &search) Q_DECL_OVERRIDE;
     void contextMenuEvent(QContextMenuEvent *event) Q_DECL_OVERRIDE;
+
+    void dragMoveEvent(QDragMoveEvent *event) Q_DECL_OVERRIDE;
+    void dropEvent(QDropEvent *event) Q_DECL_OVERRIDE;
 private:
     PlaylistModel           *m_model        = nullptr;
     PlayItemDelegate        *m_delegate     = nullptr;

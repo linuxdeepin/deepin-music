@@ -315,9 +315,9 @@ void MusicListDataWidget::dropEvent(QDropEvent *event)
         localpaths << url.toLocalFile();
     }
 
-//    if (!localpaths.isEmpty() && !d->curPlaylist.isNull()) {
-//        Q_EMIT importSelectFiles(d->curPlaylist, localpaths);
-    //    }
+    if (!localpaths.isEmpty()) {
+        DataBaseService::getInstance()->importMedias(localpaths);
+    }
 }
 
 void MusicListDataWidget::onPlayAllClicked()
@@ -405,7 +405,6 @@ void MusicListDataWidget::initUI()
     m_actionBar->setObjectName("MusicListDataActionBar");
     layout->addWidget(m_actionBar, 0);
     m_pCenterWidget = new QStackedWidget(this);
-//    m_pCenterWidget->setStyleSheet("background-color:red;");
     layout->addWidget(m_pCenterWidget, 1);
 
     //action layout
@@ -436,11 +435,14 @@ void MusicListDataWidget::initUI()
     initemptyHits(layout);
 
     m_musicListView = new PlayListView("all", false); //all music
+//    m_musicListView->setStyleSheet("background-color:blue;");
 
     AC_SET_OBJECT_NAME(m_musicListView, AC_PlayListView);
     AC_SET_ACCESSIBLE_NAME(m_musicListView, AC_PlayListView);
     m_musicListView->initAllSonglist("all");
+    m_musicListView->setFocusPolicy(Qt::StrongFocus);
     m_pCenterWidget->addWidget(m_musicListView);
+//    m_pCenterWidget->setMouseTracking(true);
     m_pCenterWidget->setCurrentWidget(m_musicListView);
     refreshInfoLabel("all");
     refreshSortAction();

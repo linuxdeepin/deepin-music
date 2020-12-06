@@ -31,6 +31,7 @@
 #include <QStandardItemModel>
 #include <QVariant>
 #include <QShortcut>
+#include <QMimeData>
 
 #include <DDialog>
 #include <DDesktopServices>
@@ -90,13 +91,22 @@ PlayListView::PlayListView(QString hash, bool isPlayList, QWidget *parent)
 
     setUniformItemSizes(true);
 
+//    setDragEnabled(true);
+//    viewport()->setAcceptDrops(true);
+//    setDropIndicatorShown(true);
+//    setDragDropOverwriteMode(false);
+//    setDefaultDropAction(Qt::MoveAction);
+//    setDragDropMode(QAbstractItemView::DragOnly);
+//    setDragEnabled(true);
+
+    setAcceptDrops(true);
+    viewport()->setAcceptDrops(true);
+//    this->setStyleSheet("background-color:blue;");
     setDragEnabled(true);
-    //viewport()->setAcceptDrops(true);
     setDropIndicatorShown(true);
-    setDragDropOverwriteMode(false);
+    setDragDropMode(QAbstractItemView::DragDrop);
     setDefaultDropAction(Qt::MoveAction);
-    setDragDropMode(QAbstractItemView::DragOnly);
-    setDragEnabled(true);
+
     setMovement(QListView::Free);
     //默认QListView::ListMode
     setViewModeFlag(m_currentHash, QListView::ListMode);
@@ -889,6 +899,58 @@ void PlayListView::contextMenuEvent(QContextMenuEvent *event)
     allMusicMenu.exec(globalPos);
 }
 
+void PlayListView::dragMoveEvent(QDragMoveEvent *event)
+{
+    auto index = indexAt(event->pos());
+    if (index.isValid() && (event->mimeData()->hasFormat("text/uri-list")  || event->mimeData()->hasFormat("application/x-qabstractitemmodeldatalist"))) {
+        qDebug() << "acceptProposedAction" << event;
+        event->setDropAction(Qt::CopyAction);
+        event->acceptProposedAction();
+    } else {
+        DListView::dragMoveEvent(event);
+    }
+}
+
+void PlayListView::dropEvent(QDropEvent *event)
+{
+    auto index = indexAt(event->pos());
+    if (!index.isValid())
+        return;
+
+    if ((!event->mimeData()->hasFormat("text/uri-list") && !event->mimeData()->hasFormat("application/x-qabstractitemmodeldatalist"))) {
+        return;
+    }
+
+    if (event->mimeData()->hasFormat("text/uri-list")) {
+        auto urls = event->mimeData()->urls();
+        QStringList localpaths;
+        for (auto &url : urls) {
+            localpaths << url.toLocalFile();
+        }
+
+        if (!localpaths.isEmpty()) {
+//            Q_EMIT importSelectFiles(t_playlistPtr, localpaths);
+            DataBaseService::getInstance()->importMedias(localpaths);
+        }
+    } else {
+//        auto *source = qobject_cast<PlayListView *>(event->source());
+//        if (source != nullptr) {
+//            MetaPtrList metalist;
+//            for (auto index : source->selectionModel()->selectedIndexes()) {
+//                if (index.row() >= 0 && index.row() < source->playMetaPtrList().size()) {
+//                    auto meta = source->playMetaPtrList()[index.row()];
+//                    metalist.append(meta);
+//                }
+//            }
+
+//            if (!metalist.isEmpty())
+//                Q_EMIT addToPlaylist(t_playlistPtr, metalist);
+//        }
+    }
+
+    DListView::dropEvent(event);
+}
+
 bool PlayListView::getIsPlayList() const
 {
     return m_IsPlayList;
@@ -962,7 +1024,13 @@ void PlayListView::mouseMoveEvent(QMouseEvent *event)
 
 void PlayListView::dragEnterEvent(QDragEnterEvent *event)
 {
-    DListView::dragEnterEvent(event);
+    auto t_formats = event->mimeData()->formats();
+    qDebug() << t_formats;
+    if (event->mimeData()->hasFormat("text/uri-list") || event->mimeData()->hasFormat("application/x-qabstractitemmodeldatalist")) {
+        qDebug() << "acceptProposedAction" << event;
+        event->setDropAction(Qt::CopyAction);
+        event->acceptProposedAction();
+    }
 }
 
 void PlayListView::startDrag(Qt::DropActions supportedActions)

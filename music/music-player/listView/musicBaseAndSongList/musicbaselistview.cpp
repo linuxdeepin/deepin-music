@@ -40,6 +40,7 @@
 #include "musicbaseandsonglistmodel.h"
 #include "mediameta.h"
 #include "player.h"
+#include "databaseservice.h"
 
 DGUI_USE_NAMESPACE
 
@@ -226,6 +227,46 @@ void MusicBaseListView::dragMoveEvent(QDragMoveEvent *event)
     } else {
         DListView::dragMoveEvent(event);
     }
+}
+
+void MusicBaseListView::dropEvent(QDropEvent *event)
+{
+//    auto index = indexAt(event->pos());
+//    if (!index.isValid())
+//        return;
+
+//    auto t_playlistPtr = playlistPtr(index);
+    if (/*t_playlistPtr == nullptr || */(!event->mimeData()->hasFormat("text/uri-list") && !event->mimeData()->hasFormat("application/x-qabstractitemmodeldatalist"))) {
+        return;
+    }
+
+    if (event->mimeData()->hasFormat("text/uri-list")) {
+        auto urls = event->mimeData()->urls();
+        QStringList localpaths;
+        for (auto &url : urls) {
+            localpaths << url.toLocalFile();
+        }
+
+        if (!localpaths.isEmpty()) {
+            DataBaseService::getInstance()->importMedias(localpaths);
+        }
+    } else {
+//        auto *source = qobject_cast<PlayListView *>(event->source());
+//        if (source != nullptr) {
+//            MetaPtrList metalist;
+//            for (auto index : source->selectionModel()->selectedIndexes()) {
+//                if (index.row() >= 0 && index.row() < source->playMetaPtrList().size()) {
+//                    auto meta = source->playMetaPtrList()[index.row()];
+//                    metalist.append(meta);
+//                }
+//            }
+
+//            if (!metalist.isEmpty())
+//                Q_EMIT addToPlaylist(t_playlistPtr, metalist);
+//        }
+    }
+
+    DListView::dropEvent(event);
 }
 
 void MusicBaseListView::SetAttrRecur(QDomElement elem, QString strtagname, QString strattr, QString strattrval)

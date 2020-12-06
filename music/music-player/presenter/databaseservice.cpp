@@ -103,6 +103,28 @@ QList<MediaMeta> DataBaseService::allMusicInfos()
     return m_AllMediaMeta;
 }
 
+bool DataBaseService::deleteMetaFromAllMusic(const QStringList &metaHash)
+{
+    QSqlQuery query(m_db);
+    QString strsql;
+    for (QString hash : metaHash) {
+        strsql = QString("DELETE FROM musicNew WHERE hash='%1'").arg(hash);
+        query.prepare(strsql);
+        if (! query.exec()) {
+            qCritical() << query.lastError() << strsql;
+        } else {
+            for (int i = 0; i < m_AllMediaMeta.size(); i++) {
+                if (m_AllMediaMeta.at(i).hash == hash) {
+                    m_AllMediaMeta.removeAt(i);
+                    break;
+                }
+            }
+            emit sigRmvSong(hash);
+        }
+    }
+    return true;
+}
+
 bool DataBaseService::allMusicInfosRemoveOne(QString hash, bool removeFromLocal)
 {
     QSqlQuery query;
@@ -263,6 +285,18 @@ void DataBaseService::removeSelectedSongs(const QString &curpage, const QStringL
 //    qDebug() << "---DataBaseService::removeSelectedSongs-" << curpage << " hashlist=" << hashlist;
 
     //todo..   未考虑正在播放的文件
+    if (curpage == "all") {
+        //遍历所有歌单,包含我的收藏
+        for (PlaylistData playlist : m_PlaylistMeta) {
+            deleteMetaFromPlaylist(playlist.uuid, musichashlist);
+        }
+        deleteMetaFromPlaylist("fav", musichashlist);
+    }
+    if (curpage != "all" && removeFromLocal) {
+        //遍历musicNew
+        deleteMetaFromAllMusic(musichashlist);
+    }
+
     for (QString strhash : musichashlist) {
         QString strsql;
         if (curpage == "all") { //remove from musicNew
@@ -446,6 +480,21 @@ bool DataBaseService::favoriteExist(const MediaMeta meta)
     }
 
     return ret;
+}
+
+bool DataBaseService::deleteMetaFromPlaylist(QString uuid, const QStringList &metaHash)
+{
+    QSqlQuery query(m_db);
+    QString strsql;
+    for (QString hash : metaHash) {
+        strsql = QString("DELETE FROM playlist_%1 WHERE music_id='%2'").arg(uuid).arg(hash);
+        query.prepare(strsql);
+        if (! query.exec()) {
+            qCritical() << query.lastError() << strsql;
+        }
+        emit sigRmvSong(hash);
+    }
+    return true;
 }
 
 void DataBaseService::slotGetAllMediaMetaFromThread(QList<MediaMeta> allMediaMeta)

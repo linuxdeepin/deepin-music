@@ -55,9 +55,4 @@ Qt::ItemFlags PlaylistModel::flags(const QModelIndex &index) const
 {
     Qt::ItemFlags defaultFlags = QAbstractItemModel::flags(index);
     return Qt::ItemIsDragEnabled | defaultFlags;
-//    if (index.isValid()) {
-//        return Qt::ItemIsDragEnabled | defaultFlags;
-//    } else {
-//        return Qt::ItemIsDropEnabled | defaultFlags;
-//    }
 }
