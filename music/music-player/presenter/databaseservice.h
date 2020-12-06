@@ -101,6 +101,7 @@ public:
     QList<PlaylistData>  allPlaylistMeta();                                //歌单信息
     void                 addMetaToPlaylist(QString uuid, const QList<MediaMeta> &metas);  //添加歌曲到自定义歌单
     void                 updatePlaylistSortType(int type, QString uuid);   //更新歌单排序类型，如按歌手，时间排序
+    void                 updatePlaylistDisplayName(QString displayname, QString uuid);   //更新歌单名称
     int                  getPlaylistSortType(QString uuid);                //获取歌单排序类型
 //    void                 updatePlaylistOrderType(int type, QString uuid);  //更新歌单显示类型，list，icon，未使用框架QListView::ViewMode
 //    int                  getPlaylistOrderType(QString uuid);               //获取歌单QListView::ViewMode

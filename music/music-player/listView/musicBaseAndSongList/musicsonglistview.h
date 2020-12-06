@@ -45,10 +45,12 @@ public slots:
     void addNewSongList();
     void slotUpdatePlayingIcon();
 signals:
+    void sigAddNewSongList();
 
 protected:
 //    virtual void startDrag(Qt::DropActions supportedActions) Q_DECL_OVERRIDE;
     void mousePressEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
+    void closeEditor(QWidget *editor, QAbstractItemDelegate::EndEditHint hint) Q_DECL_OVERRIDE;
 
 //    void keyPressEvent(QKeyEvent *event) Q_DECL_OVERRIDE;
     void dragEnterEvent(QDragEnterEvent *event) Q_DECL_OVERRIDE;

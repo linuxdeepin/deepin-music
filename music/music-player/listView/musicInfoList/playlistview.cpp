@@ -876,7 +876,6 @@ void PlayListView::contextMenuEvent(QContextMenuEvent *event)
         connect(actdisplay, SIGNAL(triggered()), this, SLOT(slotOpenInFileManager()));
         connect(actsonginfo, SIGNAL(triggered()), this, SLOT(showDetailInfoDlg()));
         connect(&textCodecMenu, &QMenu::triggered, this, &PlayListView::slotTextCodecMenuClicked);
-        connect(&playlistMenu, &QMenu::triggered, this, &PlayListView::slotPlaylistMenuClicked);
     } else {
         allMusicMenu.addAction(tr("Add to playlist"))->setMenu(&playlistMenu);
         if (m_IsPlayList) {
@@ -889,6 +888,7 @@ void PlayListView::contextMenuEvent(QContextMenuEvent *event)
 
     connect(actRmv, SIGNAL(triggered()), this, SLOT(slotRmvFromSongList()));
     connect(actDel, SIGNAL(triggered()), this, SLOT(slotDelFromLocal()));
+    connect(&playlistMenu, &QMenu::triggered, this, &PlayListView::slotPlaylistMenuClicked);
 
     allMusicMenu.exec(globalPos);
 }
@@ -937,15 +937,21 @@ void PlayListView::slotPlaylistMenuClicked(QAction *action)
     if (actionText == "fav")
         slotAddToFavSongList();
     else if (actionText == "song list") {
+        QItemSelectionModel *selection = selectionModel();
+        QList<MediaMeta> metaList;
+        for (int i = 0; i < selection->selectedRows().size(); i++) {
+            QModelIndex curIndex = selection->selectedRows().at(i);
+            MediaMeta meta = curIndex.data(Qt::UserRole).value<MediaMeta>();
+            metaList.append(meta);
+        }
+
         emit CommonService::getInstance()->addNewSongList();
 
-        QItemSelectionModel *selection = selectionModel();
-        if (selection->selectedRows().size() > 0) {
-            QModelIndex curIndex = selection->selectedRows().at(0);
-            MediaMeta meta = curIndex.data(Qt::UserRole).value<MediaMeta>();
-
-            QList<MediaMeta> metaList = {meta};
-            DataBaseService::getInstance()->addMetaToPlaylist(DataBaseService::getInstance()->getCustomSongList().last().uuid, metaList);
+        if (metaList.size() > 0) {
+            QString songlistUuid = DataBaseService::getInstance()->getCustomSongList().last().uuid;
+            DataBaseService::getInstance()->addMetaToPlaylist(songlistUuid, metaList);
+            //刷新
+            emit CommonService::getInstance()->switchToView(CustomType, songlistUuid);
         }
     }
 }

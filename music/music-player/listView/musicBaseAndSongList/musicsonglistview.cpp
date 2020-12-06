@@ -163,6 +163,7 @@ void MusicSongListView::addNewSongList()
         item->setForeground(QColor("#C0C6D4"));
     }
     model->appendRow(item);
+    emit sigAddNewSongList();
     setMinimumHeight(model->rowCount() * 40);
     setCurrentIndex(model->indexFromItem(item));
     edit(model->indexFromItem(item));
@@ -233,6 +234,16 @@ void MusicSongListView::slotUpdatePlayingIcon()
 void MusicSongListView::mousePressEvent(QMouseEvent *event)
 {
     DListView::mousePressEvent(event);
+}
+
+void MusicSongListView::closeEditor(QWidget *editor, QAbstractItemDelegate::EndEditHint hint)
+{
+    DListView::closeEditor(editor, hint);
+    QModelIndex current = currentIndex();
+
+    auto curStandardItem = dynamic_cast<DStandardItem *>(model->itemFromIndex(current));
+    QString uuid = current.data(Qt::UserRole).value<QString>();
+    DataBaseService::getInstance()->updatePlaylistDisplayName(curStandardItem->text(), uuid);
 }
 
 void MusicSongListView::dragEnterEvent(QDragEnterEvent *event)

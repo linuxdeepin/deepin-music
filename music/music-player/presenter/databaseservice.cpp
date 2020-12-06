@@ -538,7 +538,6 @@ void DataBaseService::addMetaToPlaylist(QString uuid, const QList<MediaMeta> &me
 
         if (! query.exec()) {
             qCritical() << query.lastError() << sqlstring;
-            return;
         }
     }
 }
@@ -551,6 +550,21 @@ void DataBaseService::updatePlaylistSortType(int type, QString uuid)
                   "WHERE uuid = :uuid;");
     query.bindValue(":uuid", uuid);
     query.bindValue(":sort_type", type);
+
+    if (! query.exec()) {
+        qWarning() << query.lastError();
+        return;
+    }
+}
+
+void DataBaseService::updatePlaylistDisplayName(QString displayname, QString uuid)
+{
+    QSqlQuery query(m_db);
+    query.prepare("UPDATE playlist "
+                  "SET displayname = :displayname "
+                  "WHERE uuid = :uuid;");
+    query.bindValue(":uuid", uuid);
+    query.bindValue(":displayname", displayname);
 
     if (! query.exec()) {
         qWarning() << query.lastError();

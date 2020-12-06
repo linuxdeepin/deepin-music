@@ -119,6 +119,8 @@ MusicListScrollArea::MusicListScrollArea(QWidget *parent) : DScrollArea(parent)
     slotTheme(DGuiApplicationHelper::instance()->themeType());
 
     connect(m_addListBtn, SIGNAL(clicked()), m_customizeListview, SLOT(addNewSongList()));
+
+
 //    connect(verticalScrollBar(), &QScrollBar::rangeChanged, this, [ = ]() {
 //        if (m_customizeListview->getSizeChangedFlag()) {
 //            this->verticalScrollBar()->setValue(this->verticalScrollBar()->maximum());
@@ -128,6 +130,8 @@ MusicListScrollArea::MusicListScrollArea(QWidget *parent) : DScrollArea(parent)
 
     connect(m_dataBaseListview, &QAbstractItemView::clicked, this, &MusicListScrollArea::slotListViewClicked);
     connect(m_customizeListview, &QAbstractItemView::clicked, this, &MusicListScrollArea::slotListViewClicked);
+    connect(m_customizeListview, &MusicSongListView::sigAddNewSongList, this, &MusicListScrollArea::slotAddNewSongList);
+
 }
 
 MusicBaseListView *MusicListScrollArea::getDBMusicListView()
@@ -201,6 +205,11 @@ void MusicListScrollArea::slotListViewClicked(const QModelIndex &index)
     } else if (listview == m_customizeListview) {
         m_dataBaseListview->clearSelection();
     }
+}
+
+void MusicListScrollArea::slotAddNewSongList()
+{
+    m_dataBaseListview->clearSelection();
 }
 
 
