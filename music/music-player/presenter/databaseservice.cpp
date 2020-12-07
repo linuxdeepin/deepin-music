@@ -363,12 +363,19 @@ QSqlDatabase DataBaseService::getDatabase()
     return m_db;
 }
 
-void DataBaseService::importMedias(const QStringList &urllist)
+void DataBaseService::importMedias(QString importHash, const QStringList &urllist)
 {
+    m_importHash = importHash;
     qDebug() << "------DataBaseService::importMedias " << urllist;
     qDebug() << "------DataBaseService::importMedias  currentThread = " << QThread::currentThread();
     m_loadMediaMeta.clear();
     emit sigImportMedias(urllist);
+    m_Importing = true;
+}
+
+bool DataBaseService::getImportStatu()
+{
+    return m_Importing;
 }
 
 QList<MediaMeta> DataBaseService::getNewLoadMusicInfos()
@@ -518,11 +525,17 @@ void DataBaseService::slotGetAllMediaMetaFromThread(QList<MediaMeta> allMediaMet
 void DataBaseService::slotGetMetaFromThread(MediaMeta meta)
 {
     addMediaMeta(meta);
+    if (m_importHash != "all") {
+        QList<MediaMeta> metas;
+        metas.append(meta);
+        addMetaToPlaylist(m_importHash, metas);
+    }
 }
 
 void DataBaseService::slotImportFinished()
 {
-    emit sigImportFinished();
+    emit sigImportFinished(m_importHash);
+    m_Importing = false;
     //数据加载完后再加载图片
     emit sigCreatCoverImg(m_AllMediaMeta);
 }

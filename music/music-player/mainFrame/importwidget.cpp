@@ -202,7 +202,7 @@ void ImportWidget::slotLinkActivated(const QString &link)
     Q_UNUSED(link)
     showWaitHint();
     QStringList musicDir =  QStandardPaths::standardLocations(QStandardPaths::MusicLocation);
-    DataBaseService::getInstance()->importMedias(musicDir);
+    DataBaseService::getInstance()->importMedias("all", musicDir);
 }
 
 void ImportWidget::slotAddMusicButtonClicked()
@@ -220,7 +220,7 @@ void ImportWidget::slotAddMusicButtonClicked()
     if (DFileDialog::Accepted == fileDlg.exec()) {
         showWaitHint();
         MusicSettings::setOption("base.play.last_import_path",  fileDlg.directory().path());
-        DataBaseService::getInstance()->importMedias(fileDlg.selectedFiles());
+        DataBaseService::getInstance()->importMedias("all", fileDlg.selectedFiles());
     }
 }
 
@@ -234,14 +234,14 @@ void ImportWidget::slotImportPathButtonClicked()
     if (DFileDialog::Accepted == fileDlg.exec()) {
         showWaitHint();
         MusicSettings::setOption("base.play.last_import_path",  fileDlg.directory().path());
-        DataBaseService::getInstance()->importMedias(fileDlg.selectedFiles());
+        DataBaseService::getInstance()->importMedias("all", fileDlg.selectedFiles());
     }
 }
 
 void ImportWidget::slotImportFormDbus(const QUrl &url)
 {
     QString path = url.toLocalFile();
-    DataBaseService::getInstance()->importMedias(QStringList() << path);
+    DataBaseService::getInstance()->importMedias("all", QStringList() << path);
 }
 
 bool ImportWidget::eventFilter(QObject *o, QEvent *e)
@@ -309,7 +309,7 @@ void ImportWidget::dropEvent(QDropEvent *event)
     }
 
     if (!localpaths.isEmpty()) {
-        DataBaseService::getInstance()->importMedias(localpaths);
+        DataBaseService::getInstance()->importMedias("all", localpaths);
     }
 }
 void ImportWidget::slotTheme(int type)

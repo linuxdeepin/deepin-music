@@ -41,6 +41,7 @@
 #include "mediameta.h"
 #include "player.h"
 #include "databaseservice.h"
+#include "playlistview.h"
 
 DGUI_USE_NAMESPACE
 
@@ -231,9 +232,10 @@ void MusicBaseListView::dragMoveEvent(QDragMoveEvent *event)
 
 void MusicBaseListView::dropEvent(QDropEvent *event)
 {
-//    auto index = indexAt(event->pos());
-//    if (!index.isValid())
-//        return;
+    QModelIndex index = indexAt(event->pos());
+    if (!index.isValid())
+        return;
+    QString hash = index.data(Qt::UserRole + 2).value<QString>();
 
 //    auto t_playlistPtr = playlistPtr(index);
     if (/*t_playlistPtr == nullptr || */(!event->mimeData()->hasFormat("text/uri-list") && !event->mimeData()->hasFormat("application/x-qabstractitemmodeldatalist"))) {
@@ -248,22 +250,27 @@ void MusicBaseListView::dropEvent(QDropEvent *event)
         }
 
         if (!localpaths.isEmpty()) {
-            DataBaseService::getInstance()->importMedias(localpaths);
+            if (hash == "fav") {
+                DataBaseService::getInstance()->importMedias(hash, localpaths);
+            } else {
+                DataBaseService::getInstance()->importMedias("all", localpaths);
+            }
         }
     } else {
-//        auto *source = qobject_cast<PlayListView *>(event->source());
-//        if (source != nullptr) {
-//            MetaPtrList metalist;
-//            for (auto index : source->selectionModel()->selectedIndexes()) {
-//                if (index.row() >= 0 && index.row() < source->playMetaPtrList().size()) {
-//                    auto meta = source->playMetaPtrList()[index.row()];
-//                    metalist.append(meta);
-//                }
-//            }
+        auto *source = qobject_cast<PlayListView *>(event->source());
+        if (source != nullptr) {
+            QList<MediaMeta> metas;
+            for (auto index : source->selectionModel()->selectedIndexes()) {
+                MediaMeta imt = index.data(Qt::UserRole).value<MediaMeta>();
+                metas.append(imt);
+            }
 
-//            if (!metalist.isEmpty())
-//                Q_EMIT addToPlaylist(t_playlistPtr, metalist);
-//        }
+            if (!metas.isEmpty()) {
+                if (hash != "album" || hash != "all" || hash != "artist") {
+                    DataBaseService::getInstance()->addMetaToPlaylist(hash, metas);
+                }
+            }
+        }
     }
 
     DListView::dropEvent(event);

@@ -111,6 +111,7 @@ enum SearchType {
 // 左侧按钮选择的页面
 enum ListPageSwitchType {
     NullType,
+    PreType,            //上一个类型
     AlbumType,          //专辑
     SingerType,         //歌手
     AllSongListType,    //所有歌曲

@@ -508,10 +508,10 @@ void PlayListView::slotUpdatePlayingIcon()
     this->update();
 }
 
-void PlayListView::slotImportFinished()
+void PlayListView::slotImportFinished(QString hash)
 {
     //只刷新全部歌曲列表
-    if (m_currentHash != "all") {
+    if (m_currentHash != hash) {
         return;
     }
     QList<MediaMeta> list = DataBaseService::getInstance()->getNewLoadMusicInfos();
@@ -909,7 +909,7 @@ void PlayListView::contextMenuEvent(QContextMenuEvent *event)
 void PlayListView::dragMoveEvent(QDragMoveEvent *event)
 {
     auto index = indexAt(event->pos());
-    if (index.isValid() && (event->mimeData()->hasFormat("text/uri-list")  || event->mimeData()->hasFormat("application/x-qabstractitemmodeldatalist"))) {
+    if (/*index.isValid() && */(event->mimeData()->hasFormat("text/uri-list")  || event->mimeData()->hasFormat("application/x-qabstractitemmodeldatalist"))) {
         qDebug() << "acceptProposedAction" << event;
         event->setDropAction(Qt::CopyAction);
         event->acceptProposedAction();
@@ -920,10 +920,6 @@ void PlayListView::dragMoveEvent(QDragMoveEvent *event)
 
 void PlayListView::dropEvent(QDropEvent *event)
 {
-    auto index = indexAt(event->pos());
-    if (!index.isValid())
-        return;
-
     if ((!event->mimeData()->hasFormat("text/uri-list") && !event->mimeData()->hasFormat("application/x-qabstractitemmodeldatalist"))) {
         return;
     }
@@ -936,23 +932,8 @@ void PlayListView::dropEvent(QDropEvent *event)
         }
 
         if (!localpaths.isEmpty()) {
-//            Q_EMIT importSelectFiles(t_playlistPtr, localpaths);
-            DataBaseService::getInstance()->importMedias(localpaths);
+            DataBaseService::getInstance()->importMedias(m_currentHash, localpaths);
         }
-    } else {
-//        auto *source = qobject_cast<PlayListView *>(event->source());
-//        if (source != nullptr) {
-//            MetaPtrList metalist;
-//            for (auto index : source->selectionModel()->selectedIndexes()) {
-//                if (index.row() >= 0 && index.row() < source->playMetaPtrList().size()) {
-//                    auto meta = source->playMetaPtrList()[index.row()];
-//                    metalist.append(meta);
-//                }
-//            }
-
-//            if (!metalist.isEmpty())
-//                Q_EMIT addToPlaylist(t_playlistPtr, metalist);
-//        }
     }
 
     DListView::dropEvent(event);
@@ -1042,36 +1023,21 @@ void PlayListView::dragEnterEvent(QDragEnterEvent *event)
 
 void PlayListView::startDrag(Qt::DropActions supportedActions)
 {
-//    MetaPtrList list;
-//    for (auto index : selectionModel()->selectedIndexes()) {
-//        list << m_model->meta(index);
-//    }
+    QItemSelection selection;
 
-//    if (!selectionModel()->selectedIndexes().isEmpty())
-//        scrollTo(selectionModel()->selectedIndexes().first());
-//    setAutoScroll(false);
-//    DListView::startDrag(supportedActions);
-//    setAutoScroll(true);
+    QList<MediaMeta> list;
+    for (QModelIndex index : selectionModel()->selectedIndexes()) {
+        selection.append(QItemSelectionRange(index));
+    }
 
-//    QMap<QString, int> hashIndexs;
-//    for (int i = 0; i < d->model->rowCount(); ++i) {
-//        auto index = d->model->index(i, 0);
-//        auto hash = d->model->data(index).toString();
-//        Q_ASSERT(!hash.isEmpty());
-//        hashIndexs.insert(hash, i);
-//    }
-//    d->model->playlist()->saveSort(hashIndexs);
-//    Q_EMIT customSort();
+    if (!selectionModel()->selectedIndexes().isEmpty())
+        scrollTo(selectionModel()->selectedIndexes().first());
+    setAutoScroll(false);
+    DListView::startDrag(supportedActions);
+    setAutoScroll(true);
 
-//    QItemSelection selection;
-//    for (auto meta : list) {
-//        if (!meta.isNull()) {
-//            auto index = this->findIndex(meta);
-//            selection.append(QItemSelectionRange(index));
-//        }
-//    }
-//    if (!selection.isEmpty()) {
-//        selectionModel()->select(selection, QItemSelectionModel::Select);
-//    }
+    if (!selection.isEmpty()) {
+        selectionModel()->select(selection, QItemSelectionModel::Select);
+    }
 }
 

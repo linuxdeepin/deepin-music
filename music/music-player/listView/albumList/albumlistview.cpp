@@ -27,6 +27,7 @@
 #include <QFileInfo>
 #include <QResizeEvent>
 #include <QStandardItemModel>
+#include <QMimeData>
 
 #include <DMenu>
 #include <DDialog>
@@ -42,6 +43,7 @@
 #include "musiclistdialog.h"
 #include "ac-desktop-define.h"
 #include "global.h"
+#include "playlistview.h"
 
 DWIDGET_USE_NAMESPACE
 
@@ -320,6 +322,50 @@ void AlbumListView::slotCoverUpdate(const MediaMeta &meta)
             break;
         }
     }
+}
+
+void AlbumListView::dragEnterEvent(QDragEnterEvent *event)
+{
+    auto t_formats = event->mimeData()->formats();
+    qDebug() << t_formats;
+    if (event->mimeData()->hasFormat("text/uri-list") || event->mimeData()->hasFormat("application/x-qabstractitemmodeldatalist")) {
+        qDebug() << "acceptProposedAction" << event;
+        event->setDropAction(Qt::CopyAction);
+        event->acceptProposedAction();
+    }
+}
+
+void AlbumListView::dragMoveEvent(QDragMoveEvent *event)
+{
+    auto index = indexAt(event->pos());
+    if (/*index.isValid() && */(event->mimeData()->hasFormat("text/uri-list")  || event->mimeData()->hasFormat("application/x-qabstractitemmodeldatalist"))) {
+        qDebug() << "acceptProposedAction" << event;
+        event->setDropAction(Qt::CopyAction);
+        event->acceptProposedAction();
+    } else {
+        DListView::dragMoveEvent(event);
+    }
+}
+
+void AlbumListView::dropEvent(QDropEvent *event)
+{
+    if ((!event->mimeData()->hasFormat("text/uri-list") && !event->mimeData()->hasFormat("application/x-qabstractitemmodeldatalist"))) {
+        return;
+    }
+
+    if (event->mimeData()->hasFormat("text/uri-list")) {
+        auto urls = event->mimeData()->urls();
+        QStringList localpaths;
+        for (auto &url : urls) {
+            localpaths << url.toLocalFile();
+        }
+
+        if (!localpaths.isEmpty()) {
+            DataBaseService::getInstance()->importMedias("all", localpaths);
+        }
+    }
+
+    DListView::dropEvent(event);
 }
 
 DataBaseService::ListSortType AlbumListView::getSortType()

@@ -187,14 +187,14 @@ void MusicListDataWidget::viewChanged(ListPageSwitchType switchtype, const QStri
         refreshSortAction();
         return;
     }
-    default:
-//        m_pCenterWidget->setCurrentIndex(m_preIndex);
+    case PreType: {
         viewChanged(m_preSwitchtype, m_preHash);
-//        refreshSortAction();
+        break;
+    }
+    default:
+        refreshSortAction();
         return;
     }
-
-//    m_pCenterWidget->setCurrentWidget(m_musicListView);
 }
 
 void MusicListDataWidget::switchViewModel()
@@ -335,7 +335,7 @@ void MusicListDataWidget::dropEvent(QDropEvent *event)
     }
 
     if (!localpaths.isEmpty()) {
-        DataBaseService::getInstance()->importMedias(localpaths);
+        DataBaseService::getInstance()->importMedias(m_currentHash, localpaths);
     }
 }
 

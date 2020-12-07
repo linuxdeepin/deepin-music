@@ -85,7 +85,8 @@ public:
     void getAllMediaMetasInThread();
 
     //导入
-    void                 importMedias(const QStringList &urllist);
+    void                 importMedias(QString importHash, const QStringList &urllist);
+    bool                 getImportStatu();           //获取导入状态，true正在导入，false没有导入，空闲
     void                 addMediaMeta(const MediaMeta &meta);
     QList<MediaMeta>     getNewLoadMusicInfos();                          //获取新导入文件
 
@@ -118,7 +119,7 @@ signals:
     void sigGetAllMediaMeta();
     void sigImportMedias(const QStringList &urllist);//发送给子线程执行
     void sigCreatCoverImg(const QList<MediaMeta> &metas);//发送给子线程执行创建图片
-    void sigImportFinished();//导入结束，通知主界面
+    void sigImportFinished(QString hash);//导入结束，通知主界面
     void sigCoverUpdate(const MediaMeta &meta);//封面图片刷新
     void sigRmvSong(const QString &str);//发送删除歌曲通知消息，动态显示
 private:
@@ -139,6 +140,8 @@ private:
     QList<MediaMeta> m_AllFavourite;
 
     QList<MediaMeta> m_loadMediaMeta;  //新加载的歌曲文件
+    bool             m_Importing = false;
+    QString          m_importHash;
 };
 
 Q_DECLARE_METATYPE(DataBaseService::ListSortType)

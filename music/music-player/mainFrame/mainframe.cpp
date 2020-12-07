@@ -597,6 +597,7 @@ void MainFrame::closeEvent(QCloseEvent *event)
         MusicSettings::setOption("base.play.state", int(windowState()));
         MusicSettings::setOption("base.play.geometry", saveGeometry());
         MusicSettings::setOption("base.close.is_close", true);
+        qApp->quit();
         break;
     }
     case 2: {
@@ -613,6 +614,7 @@ void MainFrame::closeEvent(QCloseEvent *event)
         }
         if (ccd.closeAction() == 1) {
             MusicSettings::setOption("base.close.is_close", true);
+            qApp->quit();
         } else {
             MusicSettings::setOption("base.close.is_close", false);
         }
@@ -623,7 +625,6 @@ void MainFrame::closeEvent(QCloseEvent *event)
     }
 
     this->setFocus();
-    //qApp->quit();
     DMainWindow::closeEvent(event);
 }
 

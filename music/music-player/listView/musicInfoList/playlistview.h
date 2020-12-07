@@ -76,7 +76,7 @@ public slots:
     void slotOnDoubleClicked(const QModelIndex &index);
     void slotUpdatePlayingIcon();
 
-    void slotImportFinished();//新导入文件
+    void slotImportFinished(QString hash);//新导入文件
     void slotCoverUpdate(const MediaMeta &meta);//封面图片刷新
     void slotTheme(int type);
 

@@ -80,7 +80,10 @@ signals:
 private slots:
     void onDoubleClicked(const QModelIndex &index);
     void slotCoverUpdate(const MediaMeta &meta);
-
+protected:
+    void dragEnterEvent(QDragEnterEvent *event) Q_DECL_OVERRIDE;
+    void dragMoveEvent(QDragMoveEvent *event) Q_DECL_OVERRIDE;
+    void dropEvent(QDropEvent *event) Q_DECL_OVERRIDE;
 private:
     int                     musicTheme     = 1; //light theme
     AlbumDataModel          *albumModel    = nullptr;
