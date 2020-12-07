@@ -84,6 +84,7 @@ public:
 
 struct AlbumInfo {
     QString albumName;
+    QString pinyinAlbum;
     QString singer;
     QMap<QString, MediaMeta> musicinfos;
     qint64 timestamp = 0;
@@ -91,6 +92,7 @@ struct AlbumInfo {
 
 struct SingerInfo {
     QString singerName;
+    QString pinyinSinger;
     qint64 timestamp = 0;
     QMap<QString, MediaMeta> musicinfos;
 };

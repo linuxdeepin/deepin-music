@@ -54,14 +54,7 @@ bool moreThanTimestamp(SingerInfo v1, SingerInfo v2)
 
 bool moreThanSinger(SingerInfo v1, SingerInfo v2)
 {
-    QString singerName1 = v1.singerName;
-    QStringList curTextList = DMusic::PinyinSearch::simpleChineseSplit(singerName1);
-    singerName1 = curTextList.join("");
-
-    QString singerName2 = v2.singerName;
-    curTextList = DMusic::PinyinSearch::simpleChineseSplit(singerName2);
-    singerName2 = curTextList.join("");
-    return v1.singerName < v2.singerName;
+    return v1.pinyinSinger < v2.pinyinSinger;
 }
 
 SingerListView::SingerListView(QString hash, QWidget *parent)

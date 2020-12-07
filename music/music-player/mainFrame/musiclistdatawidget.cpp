@@ -68,6 +68,8 @@ MusicListDataWidget::MusicListDataWidget(QWidget *parent) :
     connect(CommonService::getInstance(), &CommonService::playAllMusic, this, &MusicListDataWidget::onPlayAllClicked);
     connect(DataBaseService::getInstance(), &DataBaseService::sigImportFinished,
             this, &MusicListDataWidget::slotImportFinished);
+    connect(DataBaseService::getInstance(), &DataBaseService::sigRmvSong,
+            this, &MusicListDataWidget::slotRemoveSingleSong);
 }
 
 MusicListDataWidget::~MusicListDataWidget()
@@ -765,6 +767,16 @@ void MusicListDataWidget::refreshInfoLabel(QString hash)
         }
     }
     m_infoLabel->setText(countStr);
+}
+
+void MusicListDataWidget::slotRemoveSingleSong()
+{
+    refreshInfoLabel(m_currentHash);
+    if (m_pCenterWidget->currentWidget() == m_albumListView) {
+        m_albumListView->setAlbumListData(DataBaseService::getInstance()->allAlbumInfos()); //set album data
+    } else if (m_pCenterWidget->currentWidget() == m_singerListView) {
+        m_singerListView->setSingerListData(DataBaseService::getInstance()->allSingerInfos());
+    }
 }
 
 void MusicListDataWidget::refreshSortAction()

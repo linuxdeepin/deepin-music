@@ -205,6 +205,7 @@ QList<AlbumInfo> DataBaseService::allAlbumInfos()
         }
         if (!isContainedInAlbum) {
             AlbumInfo albumNew;
+            albumNew.pinyinAlbum = meta.pinyinAlbum;
             albumNew.albumName = meta.album;
             albumNew.singer = meta.singer;
             albumNew.musicinfos[meta.hash] = meta;
@@ -233,6 +234,7 @@ QList<SingerInfo> DataBaseService::allSingerInfos()
         }
         if (!isContainedInSinger) {
             SingerInfo singer;
+            singer.pinyinSinger = meta.pinyinArtist;
             singer.singerName = meta.singer;
             singer.musicinfos[meta.hash] = meta;
             m_AllSingerInfo.append(singer);
@@ -506,12 +508,19 @@ bool DataBaseService::deleteMetaFromPlaylist(QString uuid, const QStringList &me
     QSqlQuery query(m_db);
     QString strsql;
     for (QString hash : metaHash) {
-        strsql = QString("DELETE FROM playlist_%1 WHERE music_id='%2'").arg(uuid).arg(hash);
-        query.prepare(strsql);
-        if (! query.exec()) {
-            qCritical() << query.lastError() << strsql;
+        QString sqlIsExists = QString("select music_id from playlist_%1 where music_id = '%2'").arg(uuid).arg(hash);
+        if (query.exec(sqlIsExists)) {
+            if (query.next()) {
+                strsql = QString("DELETE FROM playlist_%1 WHERE music_id='%2'").arg(uuid).arg(hash);
+                query.prepare(strsql);
+                if (! query.exec()) {
+                    qCritical() << query.lastError() << strsql;
+                }
+                emit sigRmvSong(hash);
+            }
+        } else {
+            qCritical() << query.lastError() << sqlIsExists;
         }
-        emit sigRmvSong(hash);
     }
     return true;
 }

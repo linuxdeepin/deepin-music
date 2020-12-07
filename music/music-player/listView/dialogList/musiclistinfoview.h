@@ -30,7 +30,7 @@ DWIDGET_USE_NAMESPACE
 
 #include <QString>
 
-class MusicListInfoView : public QListView
+class MusicListInfoView : public DListView
 {
     Q_OBJECT
 public:
@@ -71,6 +71,8 @@ public slots:
     void slotRemoveSongListActionClicked(bool checked = false);
     // 右键菜单从本地删除
     void slotDeleteLocalActionClicked(bool checked = false);
+
+    void slotRemoveSingleSong(QString hash);
 
 protected:
     virtual void dragEnterEvent(QDragEnterEvent *event) Q_DECL_OVERRIDE;

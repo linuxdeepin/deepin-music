@@ -54,14 +54,7 @@ bool moreThanTimestamp(AlbumInfo v1, AlbumInfo v2)
 
 bool moreThanTitle(const AlbumInfo v1, const AlbumInfo v2)
 {
-    QString albumName1 = v1.albumName;
-    QStringList curTextList = DMusic::PinyinSearch::simpleChineseSplit(albumName1);
-    albumName1 = curTextList.join("");
-
-    QString albumName2 = v2.albumName;
-    curTextList = DMusic::PinyinSearch::simpleChineseSplit(albumName2);
-    albumName2 = curTextList.join("");
-    return v1.albumName < v2.albumName;
+    return v1.pinyinAlbum < v2.pinyinAlbum;
 }
 
 AlbumListView::AlbumListView(QString hash, QWidget *parent)

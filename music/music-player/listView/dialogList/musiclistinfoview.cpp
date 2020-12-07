@@ -40,11 +40,12 @@
 #include "player.h"
 #include "global.h"
 #include "databaseservice.h"
+#include "commonservice.h"
 
 DWIDGET_USE_NAMESPACE
 
 MusicListInfoView::MusicListInfoView(const QString &hash, QWidget *parent)
-    : QListView(parent)
+    : DListView(parent)
     , m_hash(hash)
 {
     setFrameShape(QFrame::NoFrame);
@@ -87,6 +88,8 @@ MusicListInfoView::MusicListInfoView(const QString &hash, QWidget *parent)
 
     connect(Player::instance(), SIGNAL(signalUpdatePlayingIcon()),
             this, SLOT(slotUpdatePlayingIcon()), Qt::DirectConnection);
+    connect(DataBaseService::getInstance(), &DataBaseService::sigRmvSong,
+            this, &MusicListInfoView::slotRemoveSingleSong);
 }
 
 MusicListInfoView::~MusicListInfoView()
@@ -242,6 +245,7 @@ void MusicListInfoView::showContextMenu(const QPoint &pos)
     QList<DataBaseService::PlaylistData> strplaylist = DataBaseService::getInstance()->getCustomSongList();
     for (DataBaseService::PlaylistData pd : strplaylist) {
         QAction *pact = playListMenu.addAction(pd.displayName);
+        pact->setData(QVariant(pd.uuid)); //to know which custom view to reach
 //        pact->setData(QVariant(pd.uuid));
 //        connect(pact, SIGNAL(triggered()), this, SLOT(slotAddToCustomSongList()));
     }
@@ -296,6 +300,27 @@ void MusicListInfoView::showContextMenu(const QPoint &pos)
 void MusicListInfoView::slotPlayListMenuClicked(QAction *action)
 {
     qDebug() << action;
+
+    QString songlistHash = action->data().value<QString>();
+
+    QItemSelectionModel *selection = selectionModel();
+    QList<MediaMeta> metaList;
+    for (int i = 0; i < selection->selectedRows().size(); i++) {
+        QModelIndex curIndex = selection->selectedRows().at(i);
+        MediaMeta meta = curIndex.data(Qt::UserRole).value<MediaMeta>();
+        metaList.append(meta);
+    }
+
+    if (songlistHash == "song list") {
+        emit CommonService::getInstance()->addNewSongList();
+
+        if (metaList.size() > 0) {
+            QString songlistUuid = DataBaseService::getInstance()->getCustomSongList().last().uuid;
+            DataBaseService::getInstance()->addMetaToPlaylist(songlistUuid, metaList);
+        }
+    } else {
+        DataBaseService::getInstance()->addMetaToPlaylist(songlistHash, metaList);
+    }
 }
 
 void MusicListInfoView::slotPlayActionClicked(bool checked)
@@ -334,84 +359,82 @@ void MusicListInfoView::slotMusicInfoActionClicked(bool checked)
 void MusicListInfoView::slotRemoveSongListActionClicked(bool checked)
 {
     Q_UNUSED(checked)
+    QModelIndexList modellist = selectionModel()->selectedRows();
+    if (modellist.size() == 0)
+        return;
 
-//    MetaPtrList metalist;
-//    for (auto index : selection->selectedRows()) {
-//        auto meta = d->model->meta(index);
-//        metalist << meta;
-//    }
-//    if (metalist.isEmpty())
-//        return ;
+    QMap<int, QString> smap;
+    QStringList strlist;
+    for (QModelIndex mindex : modellist) {
+        MediaMeta imt = mindex.data(Qt::UserRole).value<MediaMeta>();
+        smap.insert(mindex.row(), imt.hash);
+    }
+    //sort by sort type
+    //qSort(smap.keys().begin(), smap.keys().end());
 
-//    Dtk::Widget::DDialog warnDlg(this);
-//    warnDlg.setTextFormat(Qt::RichText);
-//    warnDlg.addButton(tr("Cancel"), true, Dtk::Widget::DDialog::ButtonNormal);
-//    int deleteFlag = warnDlg.addButton(tr("Remove"), false, Dtk::Widget::DDialog::ButtonWarning);
+    //get data
+    strlist << smap.values();
 
-//    if (1 == metalist.length()) {
-//        auto meta = metalist.first();
-//        warnDlg.setMessage(QString(tr("Are you sure you want to remove %1?")).arg(meta->title));
-//    } else {
-//        warnDlg.setMessage(QString(tr("Are you sure you want to remove the selected %1 songs?").arg(metalist.length())));
-//    }
-
-//    warnDlg.setIcon(QIcon::fromTheme("deepin-music"));
-//    if (deleteFlag == warnDlg.exec()) {
-//        d->removeSelection(selection);
-//    }
+    //remove from db
+    DataBaseService::getInstance()->removeSelectedSongs("all", strlist, false);
 }
 
 void MusicListInfoView::slotDeleteLocalActionClicked(bool checked)
 {
     Q_UNUSED(checked)
 
-    QStringList metaList;
-    metaList.append(m_currMeta.hash);
-
+    QList<MediaMeta> metas;
+    QModelIndexList mindexlist =  this->selectedIndexes();
+    QStringList strlist;
+    for (QModelIndex mindex : mindexlist) {
+        MediaMeta imt = mindex.data(Qt::UserRole).value<MediaMeta>();
+        metas.append(imt);
+        strlist << imt.hash;
+    }
 
     Dtk::Widget::DDialog warnDlg(this);
     warnDlg.setTextFormat(Qt::RichText);
-    warnDlg.addButton(tr("Cancel"), true, Dtk::Widget::DDialog::ButtonWarning);
-    warnDlg.addButton(tr("Delete"), false, Dtk::Widget::DDialog::ButtonNormal);
+    warnDlg.addButton(tr("Cancel"), true, Dtk::Widget::DDialog::ButtonNormal);
+    int deleteFlag = warnDlg.addButton(tr("Delete"), false, Dtk::Widget::DDialog::ButtonWarning);
 
     auto cover = QImage(QString(":/common/image/del_notify.svg"));
-    MediaMeta meta = this->currentIndex().data(Qt::UserRole).value<MediaMeta>();
-    //            QByteArray coverData = meta.getCoverData("12");
-    //            if (coverData.length() > 0) {
-    //                cover = QImage::fromData(coverData);
-    //            }
-    warnDlg.setMessage(QString(tr("Are you sure you want to delete %1?")).arg(meta.title));
+    if (1 == metas.length()) {
+        auto meta = metas.first();
+        warnDlg.setMessage(QString(tr("Are you sure you want to delete %1?")).arg(meta.title));
+    } else {
+        //                warnDlg.setTitle(QString(tr("Are you sure you want to delete the selected %1 songs?")).arg(metalist.length()));
+        DLabel *t_titleLabel = new DLabel(this);
+        t_titleLabel->setForegroundRole(DPalette::TextTitle);
+        DLabel *t_infoLabel = new DLabel(this);
+        t_infoLabel->setForegroundRole(DPalette::TextTips);
+        t_titleLabel->setText(tr("Are you sure you want to delete the selected %1 songs?").arg(metas.length()));
+        t_infoLabel->setText(tr("The song files contained will also be deleted"));
+        warnDlg.addContent(t_titleLabel, Qt::AlignHCenter);
+        warnDlg.addContent(t_infoLabel, Qt::AlignHCenter);
+        warnDlg.addSpacing(20);
+    }
 
     warnDlg.setIcon(QIcon::fromTheme("deepin-music"));
-    if (1 == warnDlg.exec()) {
-        DataBaseService::getInstance()->removeSelectedSongs(m_hash, metaList, true);
+    if (deleteFlag == warnDlg.exec()) {
+        DataBaseService::getInstance()->removeSelectedSongs("all", strlist, true);
     }
 }
 
-//void MusicListInfoView::onMusiclistChanged(PlaylistPtr playlist, const QString name)
-//{
-//    Q_D(MusicListInfoView);
-
-//    if (playlist.isNull()) {
-//        qWarning() << "can not change to emptry playlist";
-//        return;
-//    }
-
-//    d->curName     = name;
-
-//    d->model->removeRows(0, d->model->rowCount());
-//    for (auto TypePtr : playlist->playMusicTypePtrList()) {
-//        if (TypePtr->name == name) {
-//            for (auto metaHash : TypePtr->playlistMeta.sortMetas) {
-//                if (TypePtr->playlistMeta.metas.contains(metaHash))
-//                    d->addMedia(TypePtr->playlistMeta.metas[metaHash]);
-//            }
-//        }
-//    }
-
-//    d->model->setPlaylist(playlist);
-//    //updateScrollbar();
-//}
+void MusicListInfoView::slotRemoveSingleSong(QString hash)
+{
+    qDebug() << "---hash = " << hash;
+    int row =  m_model->rowCount();
+    for (int i = 0; i < row; i++) {
+        QModelIndex mindex = m_model->index(i, 0, QModelIndex());
+        MediaMeta meta = mindex.data(Qt::UserRole).value<MediaMeta>();
+        if (meta.hash == hash) {
+            this->removeItem(i);
+            m_model->removeRow(row);
+            this->viewport()->update();
+            break;
+        }
+    }
+}
 
 void MusicListInfoView::keyPressEvent(QKeyEvent *event)
 {
