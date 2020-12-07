@@ -34,7 +34,7 @@ class MusicListInfoView : public QListView
 {
     Q_OBJECT
 public:
-    explicit MusicListInfoView(const QString &hash, QWidget *parent = Q_NULLPTR);
+    explicit MusicListInfoView(const QString &m_hash, QWidget *parent = Q_NULLPTR);
     ~MusicListInfoView() override;
 
 //    QString curName() const;
@@ -56,6 +56,22 @@ public:
 //    void onMusiclistChanged(PlaylistPtr playlist, const QString name);
     void showContextMenu(const QPoint &pos);
 
+public slots:
+    // 右键菜单添加到歌单
+    void slotPlayListMenuClicked(QAction *action);
+    // 右键菜单播放
+    void slotPlayActionClicked(bool checked = false);
+    // 右键菜单暂停
+    void slotPauseActionClicked(bool checked = false);
+    // 右键菜单文件管理显示
+    void slotFileManagementShowClicked(bool checked = false);
+    // 右键菜单歌曲信息点击
+    void slotMusicInfoActionClicked(bool checked = false);
+    // 右键菜单从歌单删除
+    void slotRemoveSongListActionClicked(bool checked = false);
+    // 右键菜单从本地删除
+    void slotDeleteLocalActionClicked(bool checked = false);
+
 protected:
     virtual void dragEnterEvent(QDragEnterEvent *event) Q_DECL_OVERRIDE;
     virtual void startDrag(Qt::DropActions supportedActions) Q_DECL_OVERRIDE;
@@ -68,6 +84,8 @@ private:
 
 private:
     QString m_hash;
+    // 当前选中的歌曲
+    MediaMeta m_currMeta;
     MusiclistInfomodel      *m_model        = nullptr;
     MusicInfoItemDelegate   *delegate     = nullptr;
     int                     themeType     = 1;
