@@ -36,13 +36,16 @@
 #include <DScrollBar>
 #include <DLabel>
 
+#include "infodialog.h"
 #include "player.h"
 #include "global.h"
+#include "databaseservice.h"
 
 DWIDGET_USE_NAMESPACE
 
-MusicListInfoView::MusicListInfoView(QWidget *parent)
+MusicListInfoView::MusicListInfoView(const QString &hash, QWidget *parent)
     : QListView(parent)
+    , hash(hash)
 {
     setFrameShape(QFrame::NoFrame);
 
@@ -78,7 +81,7 @@ MusicListInfoView::MusicListInfoView(QWidget *parent)
     setSelectionBehavior(QAbstractItemView::SelectRows);
     setContextMenuPolicy(Qt::CustomContextMenu);
     connect(this, &MusicListInfoView::customContextMenuRequested,
-            this, &MusicListInfoView::requestCustomContextMenu);
+            this, &MusicListInfoView::showContextMenu);
 
     connect(this, &MusicListInfoView::doubleClicked, this, &MusicListInfoView::onDoubleClicked);
 }
@@ -167,17 +170,17 @@ QPixmap MusicListInfoView::getSidebarPixmap() const
     return sidebarPixmap;
 }
 
-QStringList MusicListInfoView::allMetaNames() const
+QList<MediaMeta> MusicListInfoView::getMusicListData() const
 {
+    QList<MediaMeta> musicList;
     QStringList allMetaNames;
     for (int i = 0; i < m_model->rowCount(); ++i) {
         auto index = m_model->index(i, 0);
-        auto hash = m_model->data(index).toString();
-        if (!hash.isEmpty()) {
-            allMetaNames.append(hash);
-        }
+        MediaMeta meta = index.data(Qt::UserRole).value<MediaMeta>();
+        musicList.append(meta);
     }
-    return allMetaNames;
+
+    return musicList;
 }
 
 void MusicListInfoView::setMusicListView(QMap<QString, MediaMeta> musicinfos)
@@ -186,6 +189,206 @@ void MusicListInfoView::setMusicListView(QMap<QString, MediaMeta> musicinfos)
     for (auto item : musicinfos) {
         addMedia(item);
     }
+}
+
+void MusicListInfoView::showContextMenu(const QPoint &pos)
+{
+    QItemSelectionModel *selection = this->selectionModel();
+
+    if (selection->selectedRows().length() <= 0) {
+        return;
+    }
+
+    QPoint globalPos = this->mapToGlobal(pos);
+
+    DMenu playlistMenu;
+//    auto newvar = QVariant::fromValue(PlaylistPtr());
+
+//    PlaylistPtr curPlaylist = nullptr;
+//    for (auto playlist : newPlaylists) {
+//        if (playlist->id() == PlayMusicListID) {
+//            curPlaylist = playlist;
+//            auto act = playlistMenu.addAction(tr("Play queue"));
+//            act->setData(QVariant::fromValue(curPlaylist));
+//            playlistMenu.addSeparator();
+//            break;
+//        }
+//    }
+
+//    if (selectedPlaylist != favPlaylist) {
+//        auto act = playlistMenu.addAction(favPlaylist->displayName());
+//        act->setData(QVariant::fromValue(favPlaylist));
+//        bool flag = true;
+//        for (auto &index : selection->selectedRows()) {
+//            auto meta = d->model->meta(index);
+//            if (!favPlaylist->contains(meta)) {
+//                flag = false;
+//            }
+//        }
+//        if (flag == true) {
+//            act->setEnabled(false);
+//        } else {
+//            act->setEnabled(true);
+//        }
+//        playlistMenu.addSeparator();
+//    }
+
+    auto createPlaylist = playlistMenu.addAction(tr("Add to new playlist"));
+////    auto font = createPlaylist->font();
+////    font.setWeight(QFont::DemiBold);
+////    createPlaylist->setFont(font);
+//    createPlaylist->setData(newvar);
+//    playlistMenu.addSeparator();
+
+//    for (auto playlist : newPlaylists) {
+//        if (playlist == nullptr)
+//            continue;
+//        if (playlist->id() == PlayMusicListID) {
+//            curPlaylist = playlist;
+//            continue;
+//        }
+//        QFont font(playlistMenu.font());
+//        QFontMetrics fm(font);
+//        auto text = fm.elidedText(QString(playlist->displayName().replace("&", "&&")),
+//                                  Qt::ElideMiddle, 160);
+//        auto act = playlistMenu.addAction(text);
+//        act->setData(QVariant::fromValue(playlist));
+//    }
+
+//    playlistMenu.addSeparator();
+
+//    connect(&playlistMenu, &DMenu::triggered, this, [ = ](QAction * action) {
+//        auto playlist = action->data().value<PlaylistPtr >();
+//        qDebug() << playlist;
+//        MetaPtrList metalist;
+//        for (auto &index : selection->selectedRows()) {
+//            auto meta = d->model->meta(index);
+//            if (!meta.isNull()) {
+//                metalist << meta;
+//            }
+//        }
+//        Q_EMIT addToPlaylist(playlist, metalist);
+//    });
+
+//    bool singleSelect = (1 == selection->selectedRows().length());
+
+    DMenu myMenu;
+    QAction *playAction = nullptr;
+    QAction *pauseAction = nullptr;
+
+    MediaMeta meta = this->currentIndex().data(Qt::UserRole).value<MediaMeta>();
+    if (meta.hash == Player::instance()->activeMeta().hash && Player::instance()->status() == Player::Playing) {
+        pauseAction = myMenu.addAction(tr("Pause"));
+    } else {
+        playAction = myMenu.addAction(tr("Play"));
+    }
+
+    myMenu.addAction(tr("Add to playlist"))->setMenu(&playlistMenu);
+    myMenu.addSeparator();
+
+    QAction *displayAction = nullptr;
+    displayAction = myMenu.addAction(tr("Display in file manager"));
+
+    auto removeAction = myMenu.addAction(tr("Remove from playlist"));
+    auto deleteAction = myMenu.addAction(tr("Delete from local disk"));
+
+    QAction *songAction = nullptr;
+
+//        if (codecList.length() > 1) {
+//            myMenu.addSeparator();
+//            myMenu.addAction(tr("Encoding"))->setMenu(&textCodecMenu);
+//        }
+
+    myMenu.addSeparator();
+    songAction = myMenu.addAction(tr("Song info"));
+
+    if (playAction) {
+        connect(playAction, &QAction::triggered, this, [ = ](bool) {
+            if (meta.hash == Player::instance()->activeMeta().hash) {
+                Player::instance()->resume();
+            } else {
+                Player::instance()->playMeta(meta);
+            }
+        });
+    }
+
+    if (pauseAction) {
+        connect(pauseAction, &QAction::triggered, this, [ = ](bool) {
+            Player::instance()->pause();
+        });
+    }
+
+    if (displayAction) {
+        connect(displayAction, &QAction::triggered, this, [ = ](bool) {
+            auto dirUrl = QUrl::fromLocalFile(meta.localPath);
+            Dtk::Widget::DDesktopServices::showFileItem(dirUrl);
+        });
+    }
+
+    if (removeAction) {
+        connect(removeAction, &QAction::triggered, this, [ = ](bool) {
+//            MetaPtrList metalist;
+//            for (auto index : selection->selectedRows()) {
+//                auto meta = d->model->meta(index);
+//                metalist << meta;
+//            }
+//            if (metalist.isEmpty())
+//                return ;
+
+//            Dtk::Widget::DDialog warnDlg(this);
+//            warnDlg.setTextFormat(Qt::RichText);
+//            warnDlg.addButton(tr("Cancel"), true, Dtk::Widget::DDialog::ButtonNormal);
+//            int deleteFlag = warnDlg.addButton(tr("Remove"), false, Dtk::Widget::DDialog::ButtonWarning);
+
+//            if (1 == metalist.length()) {
+//                auto meta = metalist.first();
+//                warnDlg.setMessage(QString(tr("Are you sure you want to remove %1?")).arg(meta->title));
+//            } else {
+//                warnDlg.setMessage(QString(tr("Are you sure you want to remove the selected %1 songs?").arg(metalist.length())));
+//            }
+
+//            warnDlg.setIcon(QIcon::fromTheme("deepin-music"));
+//            if (deleteFlag == warnDlg.exec()) {
+//                d->removeSelection(selection);
+//            }
+        });
+    }
+
+    if (deleteAction) {
+        connect(deleteAction, &QAction::triggered, this, [ = ](bool) {
+            QStringList metaList;
+            metaList.append(meta.hash);
+
+
+            Dtk::Widget::DDialog warnDlg(this);
+            warnDlg.setTextFormat(Qt::RichText);
+            warnDlg.addButton(tr("Cancel"), true, Dtk::Widget::DDialog::ButtonWarning);
+            warnDlg.addButton(tr("Delete"), false, Dtk::Widget::DDialog::ButtonNormal);
+
+            auto cover = QImage(QString(":/common/image/del_notify.svg"));
+            MediaMeta meta = this->currentIndex().data(Qt::UserRole).value<MediaMeta>();
+//            QByteArray coverData = meta.getCoverData("12");
+//            if (coverData.length() > 0) {
+//                cover = QImage::fromData(coverData);
+//            }
+            warnDlg.setMessage(QString(tr("Are you sure you want to delete %1?")).arg(meta.title));
+
+            warnDlg.setIcon(QIcon::fromTheme("deepin-music"));
+            if (1 == warnDlg.exec()) {
+                DataBaseService::getInstance()->removeSelectedSongs(hash, metaList, true);
+            }
+        });
+    }
+
+    if (songAction) {
+        connect(songAction, &QAction::triggered, this, [ = ](bool) {
+            InfoDialog infoDialog;
+            infoDialog.updateInfo(meta);
+            infoDialog.exec();
+        });
+    }
+
+    myMenu.exec(globalPos);
 }
 
 //void MusicListInfoView::onMusiclistChanged(PlaylistPtr playlist, const QString name)

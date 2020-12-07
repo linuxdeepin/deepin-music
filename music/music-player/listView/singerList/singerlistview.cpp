@@ -83,7 +83,7 @@ SingerListView::SingerListView(QString hash, QWidget *parent)
     setBatchSize(2000);
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
-    musicListDialog = new MusicListDialog(this);
+    musicListDialog = new MusicListDialog("artist", this);
     AC_SET_OBJECT_NAME(musicListDialog, AC_musicListDialogSinger);
     AC_SET_ACCESSIBLE_NAME(musicListDialog, AC_musicListDialogSinger);
 

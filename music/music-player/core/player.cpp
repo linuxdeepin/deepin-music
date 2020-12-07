@@ -339,7 +339,7 @@ void Player::playListAppendMeta(MediaMeta meta)
     m_MetaList.append(meta);
 }
 
-void Player::setPlayList(QList<MediaMeta> list)
+void Player::setPlayList(const QList<MediaMeta> &list)
 {
     m_MetaList = list;
 }

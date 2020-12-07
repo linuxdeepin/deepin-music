@@ -82,7 +82,7 @@ AlbumListView::AlbumListView(QString hash, QWidget *parent)
     setBatchSize(2000);
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
-    musciListDialog = new MusicListDialog(this);
+    musciListDialog = new MusicListDialog("album", this);
     AC_SET_OBJECT_NAME(musciListDialog, AC_musicListDialogAlbum);
     AC_SET_ACCESSIBLE_NAME(musciListDialog, AC_musicListDialogAlbum);
 

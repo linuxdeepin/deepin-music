@@ -23,6 +23,7 @@
 
 #include <QObject>
 #include "mediameta.h"
+#include "player.h"
 /*
 * @bref: CManagerAttributeService 用于中转单选或者多选属性展示与设置
 */
@@ -44,6 +45,8 @@ signals:
     void addNewSongList();
     // 右键菜单播放所有音乐
     void playAllMusic();
+    // 设置播放模式
+    void setPlayModel(Player::PlaybackMode playModel);
 private:
 
 private:

@@ -34,9 +34,11 @@
 #include <DHiDPIHelper>
 
 #include "global.h"
+#include "commonservice.h"
 #include "dialogList/musiclistinfoview.h"
 #include "musicimagebutton.h"
 #include "ac-desktop-define.h"
+#include "player.h"
 
 DWIDGET_USE_NAMESPACE
 
@@ -135,7 +137,7 @@ void MusicListDialog::initUI()
     AC_SET_OBJECT_NAME(m_closeBt, AC_musicListDialogCloseBt);
     AC_SET_ACCESSIBLE_NAME(m_closeBt, AC_musicListDialogCloseBt);
 
-    m_musicListInfoView = new MusicListInfoView;
+    m_musicListInfoView = new MusicListInfoView(hash);
 
     layout->addWidget(m_titleImage, 0, Qt::AlignTop | Qt::AlignCenter);
     layout->addWidget(m_musicListInfoView);
@@ -146,11 +148,14 @@ void MusicListDialog::initUI()
 //    infoDialog = new InfoDialog(q);
 //    infoDialog->hide();
 
+    connect(m_btPlayAll, &DPushButton::pressed, this, &MusicListDialog::slotPlayAllClicked);
+    connect(m_btRandomPlay, &DPushButton::pressed, this, &MusicListDialog::slotPlayRandomClicked);
     connect(m_closeBt, &MusicImageButton::pressed, this, &DAbstractDialog::close);
 }
 
-MusicListDialog::MusicListDialog(QWidget *parent)
+MusicListDialog::MusicListDialog(const QString &hash, QWidget *parent)
     : DAbstractDialog(parent)
+    , hash(hash)
 {
     resize(500, 500);
 
@@ -161,11 +166,6 @@ MusicListDialog::~MusicListDialog()
 {
 
 }
-
-//void MusicListDialog::showContextMenu(const QPoint &pos, PlaylistPtr selectedPlaylist, PlaylistPtr favPlaylist, QList<PlaylistPtr> newPlaylists)
-//{
-//    musicListInfoView->showContextMenu(pos, selectedPlaylist, favPlaylist, newPlaylists);
-//}
 
 void MusicListDialog::setThemeType(int type)
 {
@@ -290,6 +290,33 @@ void MusicListDialog::flushDialog(QMap<QString, MediaMeta> musicinfos, int isAlb
         setTitleImage(img);
 
         m_musicListInfoView->setMusicListView(musicinfos);
+    }
+}
+
+void MusicListDialog::slotPlayAllClicked()
+{
+    QList<MediaMeta> musicList = m_musicListInfoView->getMusicListData();
+    if (musicList.size() > 0) {
+        Player::instance()->setPlayList(musicList);
+        Player::instance()->playMeta(musicList.first());
+
+        emit CommonService::getInstance()->setPlayModel(Player::RepeatAll);
+
+        Player::instance()->setCurrentPlayListHash(hash);
+        emit Player::instance()->signalPlayListChanged();
+    }
+}
+
+void MusicListDialog::slotPlayRandomClicked()
+{
+    QList<MediaMeta> musicList = m_musicListInfoView->getMusicListData();
+    if (musicList.size() > 0) {
+        Player::instance()->setPlayList(musicList);
+        emit CommonService::getInstance()->setPlayModel(Player::Shuffle);
+        Player::instance()->playNextMeta(false);
+
+        Player::instance()->setCurrentPlayListHash(hash);
+        emit Player::instance()->signalPlayListChanged();
     }
 }
 

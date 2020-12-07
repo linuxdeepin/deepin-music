@@ -43,18 +43,16 @@ class MusicListDialog : public DAbstractDialog
     Q_OBJECT
 
 public:
-    explicit MusicListDialog(QWidget *parent = Q_NULLPTR);
+    explicit MusicListDialog(const QString &hash, QWidget *parent = Q_NULLPTR);
     ~MusicListDialog();
-
-//    void showContextMenu(const QPoint &pos,
-//                         PlaylistPtr selectedPlaylist,
-//                         PlaylistPtr favPlaylist,
-//                         QList<PlaylistPtr > newPlaylists);
 
     void setThemeType(int type);
 
     // 更新Dialog UI信息
     void flushDialog(QMap<QString, MediaMeta> musicinfos, int isAlbumDialog);
+public slots:
+    void slotPlayAllClicked();
+    void slotPlayRandomClicked();
 
 private:
     void setTitleImage(QPixmap &img);
@@ -62,6 +60,8 @@ private:
 private:
     // 当前主题
     int m_themeType = 1;
+    // 专辑或则演唱者的hash
+    QString hash;
 
     DLabel                             *m_titleImage          = nullptr;
     DLabel                             *m_titleLabel          = nullptr;

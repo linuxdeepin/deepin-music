@@ -34,7 +34,7 @@ class MusicListInfoView : public QListView
 {
     Q_OBJECT
 public:
-    explicit MusicListInfoView(QWidget *parent = Q_NULLPTR);
+    explicit MusicListInfoView(const QString &hash, QWidget *parent = Q_NULLPTR);
     ~MusicListInfoView() override;
 
 //    QString curName() const;
@@ -45,20 +45,15 @@ public:
     QPixmap getPlayPixmap() const;
     QPixmap getSidebarPixmap() const;
 
-    QStringList allMetaNames() const;
+    QList<MediaMeta> getMusicListData() const;
 
 signals:
-//    void addToPlaylist(PlaylistPtr playlist, const MetaPtrList &metalist);
-    void requestCustomContextMenu(const QPoint &pos);
     void customSort();
 
 public:
     void setMusicListView(QMap<QString, MediaMeta> musicinfos);
 //    void onMusiclistChanged(PlaylistPtr playlist, const QString name);
-//    void showContextMenu(const QPoint &pos,
-//                         PlaylistPtr selectedPlaylist,
-//                         PlaylistPtr favPlaylist,
-//                         QList<PlaylistPtr > newPlaylists);
+    void showContextMenu(const QPoint &pos);
 
 protected:
     virtual void dragEnterEvent(QDragEnterEvent *event) Q_DECL_OVERRIDE;
@@ -71,6 +66,7 @@ private:
     void onDoubleClicked(const QModelIndex &index);
 
 private:
+    QString hash;
     MusiclistInfomodel      *m_model        = nullptr;
     MusicInfoItemDelegate   *delegate     = nullptr;
     int                     themeType     = 1;

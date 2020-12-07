@@ -86,6 +86,8 @@ public slots:
     void slotPlaybackStatusChanged(Player::PlaybackStatus statue);
     void slotMediaMetaChanged();
 
+    void setPlayModel(Player::PlaybackMode playModel);
+
     //音量变化
     void onVolumeChanged();
 

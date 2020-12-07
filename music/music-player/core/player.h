@@ -84,7 +84,7 @@ public:
     // 添加播放歌曲
     void playListAppendMeta(MediaMeta meta);
     // 设置播放列表
-    void setPlayList(QList<MediaMeta> list);
+    void setPlayList(const QList<MediaMeta> &list);
     // 获取播放列表
     QList<MediaMeta> *getPlayList();
     //获取dbus实例

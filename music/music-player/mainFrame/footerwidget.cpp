@@ -309,8 +309,9 @@ void FooterWidget::initUI(QWidget *parent)
             this, &FooterWidget::slotMediaMetaChanged);
 
     connect(m_btFavorite, &DIconButton::clicked, this, &FooterWidget::slotFavoriteClick);
-    connect(CommonService::getInstance(), &CommonService::favoriteMusic, this, &FooterWidget::favoriteMusic);
 
+    connect(CommonService::getInstance(), &CommonService::favoriteMusic, this, &FooterWidget::favoriteMusic);
+    connect(CommonService::getInstance(), &CommonService::setPlayModel, this, &FooterWidget::setPlayModel);
 }
 
 void FooterWidget::initShortcut()
@@ -419,22 +420,7 @@ void FooterWidget::slotPlayModeClick(bool click)
     if (++playModel == 3)
         playModel = 0;
 
-    switch (playModel) {
-    case 0:
-        m_btPlayMode->setIcon(QIcon::fromTheme("sequential_loop"));
-        break;
-    case 1:
-        m_btPlayMode->setIcon(QIcon::fromTheme("single_tune_circulation"));
-        break;
-    case 2:
-        m_btPlayMode->setIcon(QIcon::fromTheme("cross_cycling"));
-        break;
-    default:
-        break;
-    }
-
-    m_btPlayMode->setProperty("playModel", QVariant(playModel));
-    Player::instance()->setMode(static_cast<Player::PlaybackMode>(playModel));
+    setPlayModel(static_cast<Player::PlaybackMode>(playModel));
 }
 
 void FooterWidget::slotCoverClick(bool click)
@@ -524,6 +510,26 @@ void FooterWidget::slotMediaMetaChanged()
     } else {
         m_btFavorite->setIcon(QIcon::fromTheme("dcc_collection"));
     }
+}
+
+void FooterWidget::setPlayModel(Player::PlaybackMode playModel)
+{
+    switch (playModel) {
+    case 0:
+        m_btPlayMode->setIcon(QIcon::fromTheme("sequential_loop"));
+        break;
+    case 1:
+        m_btPlayMode->setIcon(QIcon::fromTheme("single_tune_circulation"));
+        break;
+    case 2:
+        m_btPlayMode->setIcon(QIcon::fromTheme("cross_cycling"));
+        break;
+    default:
+        break;
+    }
+
+    m_btPlayMode->setProperty("playModel", QVariant(playModel));
+    Player::instance()->setMode(static_cast<Player::PlaybackMode>(playModel));
 }
 
 void FooterWidget::onVolumeChanged() //from dbus set
