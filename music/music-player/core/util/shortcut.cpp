@@ -45,8 +45,8 @@ Shortcut::Shortcut(QObject *parent) : QObject(parent)
                       ShortcutItem(tr("Mute"),   "M");
 
     group2.groupItems <<
-                      ShortcutItem(tr("Favorite"), "Ctrl+K") <<
-                      ShortcutItem(tr("Unfavorite"),  "Ctrl+Shift+K") <<
+                      ShortcutItem(tr("Favorite"), ".") <<
+                      ShortcutItem(tr("Unfavorite"),  ".") <<
                       ShortcutItem(tr("Song info"),   "Ctrl+I");
 
     group3.groupItems <<

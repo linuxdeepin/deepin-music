@@ -125,6 +125,8 @@ private:
     QMap<QString, QListView::ViewMode> m_viewModeMap;
     InfoDialog          *m_pInfoDlg = nullptr; //详细信息窗口
     QShortcut           *m_pDetailShortcut = nullptr;//详细信息快捷键
+    QShortcut           *m_pRmvSongsShortcut = nullptr;//移出歌单快捷键
+    //QShortcut           *m_pShowMenuShortcut = nullptr;//显示菜单快捷键
 
     QPixmap m_sidebarPixmap;
     const QPixmap m_albumPixmap = QPixmap(":/mpimage/light/music_white_album_cover/music1.svg");

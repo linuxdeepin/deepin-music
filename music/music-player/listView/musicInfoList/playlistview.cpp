@@ -129,6 +129,13 @@ PlayListView::PlayListView(QString hash, bool isPlayList, QWidget *parent)
     m_pDetailShortcut = new QShortcut(this);
     m_pDetailShortcut->setKey(QKeySequence(QLatin1String("Ctrl+I")));
     connect(m_pDetailShortcut, SIGNAL(activated()), this, SLOT(showDetailInfoDlg()));
+    //快捷移出歌单
+    m_pRmvSongsShortcut = new QShortcut(this);
+    m_pRmvSongsShortcut->setKey(QKeySequence(QLatin1String("Delete")));
+    connect(m_pRmvSongsShortcut, SIGNAL(activated()), this, SLOT(slotRmvFromSongList()));
+    //快捷显示菜单
+//    m_pShowMenuShortcut = new QShortcut(this);
+//    m_pShowMenuShortcut->setKey(QKeySequence(QLatin1String("Alt+M")));
 
     connect(this, SIGNAL(doubleClicked(const QModelIndex &)), this, SLOT(slotOnDoubleClicked(const QModelIndex &)));
 
