@@ -387,7 +387,7 @@ void FooterWidget::updateShortcut()
 //设置播放按钮播放图标
 void FooterWidget::setPlayProperty(Player::PlaybackStatus status)
 {
-    m_btPlay->setProperty("playstatue", status);
+    m_btPlay->setProperty("playstatus", status);
     if (status == Player::PlaybackStatus::Playing) {
         m_btPlay->setIcon(QIcon::fromTheme("suspend"));
     } else {
@@ -398,11 +398,10 @@ void FooterWidget::setPlayProperty(Player::PlaybackStatus status)
 void FooterWidget::slotPlayClick(bool click)
 {
     Q_UNUSED(click)
-    Player::PlaybackStatus statue = m_btPlay->property("playstatue").value<Player::PlaybackStatus>();
-    if (statue == Player::PlaybackStatus::Playing) {
+    Player::PlaybackStatus status = m_btPlay->property("playstatus").value<Player::PlaybackStatus>();
+    if (status == Player::PlaybackStatus::Playing) {
         Player::instance()->pause();
-    } else if (statue == Player::PlaybackStatus::Paused) {
-//        m_btPlay->setIcon(QIcon::fromTheme("music_play"));
+    } else if (status == Player::PlaybackStatus::Paused) {
         Player::instance()->resume();
     }
 }

@@ -58,6 +58,7 @@ Waveform::Waveform(Qt::Orientation orientation, QWidget *widget, QWidget *parent
 //    });
 
     connect(Player::instance(), &Player::positionChanged, this, &Waveform::onProgressChanged);
+    connect(Player::instance(), &Player::signalMediaStop, this, &Waveform::clearBufferAudio);
 }
 
 void Waveform::paintEvent(QPaintEvent *)

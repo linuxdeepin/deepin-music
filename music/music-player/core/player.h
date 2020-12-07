@@ -78,9 +78,10 @@ public:
     void pauseNow();
     void playPreMeta();
     void playNextMeta(bool isAuto);
-
     // 清除播放列表
     void clearPlayList();
+    // 移出播放列表中的歌曲
+    void playRmvMeta(const QStringList &metalist);
     // 添加播放歌曲
     void playListAppendMeta(MediaMeta meta);
     // 设置播放列表
@@ -99,6 +100,8 @@ public:
     void loadMediaProgress(const QString &path);
     //设置当前歌曲
     void setActiveMeta(const MediaMeta &meta);
+    //播放列表中第一首歌，当音乐处于停止状态时
+    void forcePlayMeta();
 signals:
     // 播放状态改变
     void signalPlaybackStatusChanged(Player::PlaybackStatus playbackStatus);
@@ -108,6 +111,9 @@ signals:
     void signalUpdatePlayingIcon();
     // 播放列表改变
     void signalPlayListChanged();
+    // 当前歌曲删除或无效停止播放
+    void signalMediaStop(const QString &activeHah);
+
 public slots:
     void changePicture();
     void setVolume(int volume);

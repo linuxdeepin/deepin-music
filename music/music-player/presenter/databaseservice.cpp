@@ -375,7 +375,7 @@ void DataBaseService::importMedias(QString importHash, const QStringList &urllis
     m_Importing = true;
 }
 
-bool DataBaseService::getImportStatu()
+bool DataBaseService::getImportStatus()
 {
     return m_Importing;
 }
@@ -547,6 +547,8 @@ void DataBaseService::slotImportFinished()
     m_Importing = false;
     //数据加载完后再加载图片
     emit sigCreatCoverImg(m_AllMediaMeta);
+    //启动加载数据完成后直接播放第一首歌
+    emit sigPlayFromFileMaganager();
 }
 
 void DataBaseService::slotCreatOneCoverImg(MediaMeta meta)

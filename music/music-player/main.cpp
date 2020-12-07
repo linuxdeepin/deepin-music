@@ -83,6 +83,7 @@ int main(int argc, char *argv[])
     DLogManager::registerConsoleAppender();
     DLogManager::registerFileAppender();
 
+
     QCommandLineParser parser;
     parser.setApplicationDescription("Deepin music player.");
     parser.addHelpOption();
@@ -90,11 +91,20 @@ int main(int argc, char *argv[])
     parser.addPositionalArgument("file", "Music file path");
     parser.process(app);
     // handle open file
-    QString toOpenFile;
+    QStringList OpenFilePaths;
     if (parser.positionalArguments().length() > 0) {
-        toOpenFile = parser.positionalArguments().first();
+        OpenFilePaths = parser.positionalArguments();
     }
 
+    MusicSettings::init();
+    if (!OpenFilePaths.isEmpty()) {
+        auto fi = QFileInfo(OpenFilePaths.at(0));
+        auto url = QUrl::fromLocalFile(fi.absoluteFilePath());
+        MusicSettings::setOption("base.play.to_open_uri", url.toString());
+        DataBaseService::getInstance()->importMedias("all", OpenFilePaths); //导入数据库
+    } else {
+        MusicSettings::setOption("base.play.to_open_uri", QString());
+    }
     app.loadTranslator();
 
     QIcon icon = QIcon::fromTheme("deepin-music");
@@ -130,7 +140,7 @@ int main(int argc, char *argv[])
         return 0;
     }
 
-    MusicSettings::init();
+
     DApplicationSettings saveTheme;
     /*---Player instance init---*/
     MainFrame mainframe;
@@ -139,19 +149,6 @@ int main(int argc, char *argv[])
     mainframe.show();
     mainframe.autoStartToPlay();
     createSpeechDbus();
-
-    int count = parser.positionalArguments().length();
-    if (count > 1) {
-        QStringList files = parser.positionalArguments();
-        files.removeFirst();
-//        music->onStartImport(files);
-    }
-
-    if (!toOpenFile.isEmpty()) {
-        auto fi = QFileInfo(toOpenFile);
-        auto url = QUrl::fromLocalFile(fi.absoluteFilePath());
-        MusicSettings::setOption("base.play.to_open_uri", url.toString());
-    }
 
 //    app.connect(&app, &QApplication::lastWindowClosed,
 //    &mainframe, [ & ]() {

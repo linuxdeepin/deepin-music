@@ -273,11 +273,26 @@ void MainFrame::initMenuAndShortcut()
 
 void MainFrame::autoStartToPlay()
 {
+    QUrl strOpenUrl = MusicSettings::value("base.play.to_open_uri").toString();
+    auto lastplaypage = MusicSettings::value("base.play.last_playlist").toString(); //上一次的页面
+    if (!strOpenUrl.isEmpty()) {
+        //通知设置当前页面
+        Player::instance()->setCurrentPlayListHash(lastplaypage, true);
+        qDebug() << "lastplaypage:========" << lastplaypage;
+        //设置当前歌曲文件
+        m_firstPlaySong = strOpenUrl.toLocalFile();
+        connect(DataBaseService::getInstance(), &DataBaseService::sigPlayFromFileMaganager, this, &MainFrame::slotPlayFromFileMaganager);
+        MusicSettings::setOption("base.play.to_open_uri", "");
+        MusicSettings::sync();
+        return ;
+    }
     auto lastMeta = MusicSettings::value("base.play.last_meta").toString();
     if (!lastMeta.isEmpty()) {
         bool bremb = MusicSettings::value("base.play.remember_progress").toBool();
-        auto lastplaypage = MusicSettings::value("base.play.last_playlist").toString(); //上一次的页面
         bool bautoplay = MusicSettings::value("base.play.auto_play").toBool();
+        //通知设置当前页面&查询数据
+        Player::instance()->setCurrentPlayListHash(lastplaypage, true);
+        //获取上一次的歌曲信息
         MediaMeta medmeta = DataBaseService::getInstance()->getMusicInfoByHash(lastMeta);
         if (medmeta.localPath.isEmpty())
             return;
@@ -291,17 +306,14 @@ void MainFrame::autoStartToPlay()
             });
             //加载波形图数据
             m_footer->slotLoadDetector(lastMeta);
-            //通知设置当前页面
-            Player::instance()->setCurrentPlayListHash(lastplaypage, true);
         }
+
         //自动播放处理
         if (bautoplay) {
             QTimer::singleShot(200, [ = ]() {
                 slotAutoPlay(bremb);
             });
         }
-    } else {
-        //位置信息和自动播放都不做处理
     }
 }
 
@@ -469,6 +481,21 @@ void MainFrame::slotAutoPlay(bool bremb)
     }
 }
 
+void MainFrame::slotPlayFromFileMaganager()
+{
+    qDebug() << "----------openUrl:" << m_firstPlaySong << "all size:" << DataBaseService::getInstance()->allMusicInfosCount();
+    //通过路径查询歌曲信息，
+    auto localfile = m_firstPlaySong;
+    MediaMeta mt = DataBaseService::getInstance()->getMusicInfoByHash(DMusic::filepathHash(m_firstPlaySong));
+    if (mt.localPath.isEmpty()) {
+        //未导入到数据库
+        qCritical() << "fail to start from file manager";
+        return;
+    }
+    qDebug() << "----------playMeta:" << mt.localPath;
+    Player::instance()->playMeta(mt);
+}
+
 void MainFrame::showEvent(QShowEvent *event)
 {
     Q_UNUSED(event)
@@ -624,6 +651,7 @@ void MainFrame::closeEvent(QCloseEvent *event)
         break;
     }
 
+    MusicSettings::setOption("base.play.last_position", Player::instance()->position());
     this->setFocus();
     DMainWindow::closeEvent(event);
 }

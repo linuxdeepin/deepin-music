@@ -86,7 +86,7 @@ public:
 
     //导入
     void                 importMedias(QString importHash, const QStringList &urllist);
-    bool                 getImportStatu();           //获取导入状态，true正在导入，false没有导入，空闲
+    bool                 getImportStatus();           //获取导入状态，true正在导入，false没有导入，空闲
     void                 addMediaMeta(const MediaMeta &meta);
     QList<MediaMeta>     getNewLoadMusicInfos();                          //获取新导入文件
 
@@ -122,6 +122,7 @@ signals:
     void sigImportFinished(QString hash);//导入结束，通知主界面
     void sigCoverUpdate(const MediaMeta &meta);//封面图片刷新
     void sigRmvSong(const QString &str);//发送删除歌曲通知消息，动态显示
+    void sigPlayFromFileMaganager();  //文管启动加载数据完成后直接播放歌曲
 private:
     bool createConnection();
     bool playlistExist(const QString &uuid);

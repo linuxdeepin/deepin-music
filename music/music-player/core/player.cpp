@@ -158,6 +158,7 @@ void Player::playMeta(MediaMeta meta)
 void Player::resume()
 {
     if (m_ActiveMeta.localPath.isEmpty()) {
+        Player::instance()->forcePlayMeta();//播放列表第一首歌
         return;
     }
 
@@ -333,6 +334,25 @@ void Player::clearPlayList()
     m_MetaList.clear();
 }
 
+void Player::playRmvMeta(const QStringList &metalist)
+{
+    for (QString str : metalist) {
+        for (int i = 0 ; i < m_MetaList.size() ; i++)
+            if (m_MetaList[i].hash == str) {
+                m_MetaList.removeAt(i);
+                //如果有当前歌曲，停止播放
+                if (m_ActiveMeta.hash == str) {
+                    if (m_currentPlayListHash == "all")
+                        stop();
+                    else
+                        emit signalUpdatePlayingIcon(); //当前播放列表波浪图已失效，转到主页面
+                }
+
+                break;
+            }
+    }
+}
+
 void Player::playListAppendMeta(MediaMeta meta)
 {
     m_MetaList.append(meta);
@@ -374,15 +394,17 @@ QString Player::getCurrentPlayListHash()
 
 void Player::stop()
 {
+    //play停止后，发送清空当前波形图的信号
+    emit signalMediaStop("");//不用当前的参数
     m_qvplayer->pause();
     setActiveMeta(MediaMeta());//清除当前播放音乐；
     m_qvplayer->stop();
 }
+
 VlcMediaPlayer *Player::core()
 {
     return m_qvplayer;
 }
-
 
 Player::PlaybackStatus Player::status()
 {
@@ -505,6 +527,16 @@ void Player::setMuted(bool mute)
 void Player::setActiveMeta(const MediaMeta &meta)
 {
     m_ActiveMeta = meta;
+    //保存上一次播放的歌曲
+    MusicSettings::setOption("base.play.last_meta", meta.hash);
+}
+
+void Player::forcePlayMeta()
+{
+    qDebug() << "forcePlayMeta in";
+    if (m_MetaList.size() == 0)
+        return;
+    playMeta(m_MetaList.first());
 }
 
 void Player::setLocalMuted(bool muted)

@@ -662,6 +662,9 @@ void PlayListView::slotRmvFromSongList()
     //todo.. remove from db
     if (!m_IsPlayList)
         DataBaseService::getInstance()->removeSelectedSongs(m_currentHash, strlist, false);
+
+    //更新player中缓存的歌曲信息，如果存在正在播放的歌曲，停止播放
+    Player::instance()->playRmvMeta(strlist);
 }
 
 void PlayListView::slotDelFromLocal()

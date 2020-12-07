@@ -55,6 +55,7 @@ private:
      * @brief initMenuAndShortCut
      */
     void initMenuAndShortcut();
+
 private slots:
     void slotTheme(DGuiApplicationHelper::ColorType themeType);
     void slotSearchEditFoucusIn();
@@ -65,6 +66,8 @@ private slots:
     void slotSwitchTheme();
     void slotAllMusicCleared();//所有歌曲被删除
     void slotAutoPlay(bool bremb);//延迟自动播放
+    //文管打开文件
+    void slotPlayFromFileMaganager();
 protected:
     virtual void showEvent(QShowEvent *event) Q_DECL_OVERRIDE;
     virtual void enterEvent(QEvent *event) Q_DECL_OVERRIDE;
@@ -90,7 +93,7 @@ private:
     //QAction             *m_colorModeAction      = nullptr;
     //QAction             *m_exit                 = nullptr;
     QAction             *m_settings             = nullptr;
-
+    QString             m_firstPlaySong = "";
     //short cut
     QShortcut           *addmusicfilesShortcut = nullptr;
     QShortcut           *viewshortcut = nullptr;
