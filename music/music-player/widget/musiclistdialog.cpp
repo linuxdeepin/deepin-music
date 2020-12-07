@@ -302,7 +302,7 @@ void MusicListDialog::slotPlayAllClicked()
 
         emit CommonService::getInstance()->setPlayModel(Player::RepeatAll);
 
-        Player::instance()->setCurrentPlayListHash(hash);
+        Player::instance()->setCurrentPlayListHash(hash, false);
         emit Player::instance()->signalPlayListChanged();
     }
 }
@@ -315,7 +315,7 @@ void MusicListDialog::slotPlayRandomClicked()
         emit CommonService::getInstance()->setPlayModel(Player::Shuffle);
         Player::instance()->playNextMeta(false);
 
-        Player::instance()->setCurrentPlayListHash(hash);
+        Player::instance()->setCurrentPlayListHash(hash, false);
         emit Player::instance()->signalPlayListChanged();
     }
 }

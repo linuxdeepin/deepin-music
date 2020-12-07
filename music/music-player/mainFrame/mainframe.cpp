@@ -292,7 +292,7 @@ void MainFrame::autoStartToPlay()
             //加载波形图数据
             m_footer->slotLoadDetector(lastMeta);
             //通知设置当前页面
-            Player::instance()->setCurrentPlayListHash(lastplaypage);
+            Player::instance()->setCurrentPlayListHash(lastplaypage, true);
         }
         //自动播放处理
         if (bautoplay) {

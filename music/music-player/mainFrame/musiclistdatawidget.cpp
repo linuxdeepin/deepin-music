@@ -355,7 +355,7 @@ void MusicListDataWidget::onPlayAllClicked()
         }
 
         // 通知播放队列改变
-        Player::instance()->setCurrentPlayListHash(m_currentHash);
+        Player::instance()->setCurrentPlayListHash(m_currentHash, false);
         emit Player::instance()->signalPlayListChanged();
 
         break;
@@ -372,7 +372,7 @@ void MusicListDataWidget::onPlayAllClicked()
         }
 
         // 通知播放队列改变
-        Player::instance()->setCurrentPlayListHash(m_currentHash);
+        Player::instance()->setCurrentPlayListHash(m_currentHash, false);
         emit Player::instance()->signalPlayListChanged();
 
         break;
@@ -394,7 +394,7 @@ void MusicListDataWidget::onPlayAllClicked()
         }
 
         // 通知播放队列改变
-        Player::instance()->setCurrentPlayListHash(m_currentHash);
+        Player::instance()->setCurrentPlayListHash(m_currentHash, false);
         emit Player::instance()->signalPlayListChanged();
         break;
     default:

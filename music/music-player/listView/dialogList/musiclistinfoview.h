@@ -42,14 +42,15 @@ public:
     int getThemeType() const;
 
     void setPlayPixmap(QPixmap pixmap, QPixmap sidebarPixmap);
-    QPixmap getPlayPixmap() const;
     QPixmap getSidebarPixmap() const;
 
+    QPixmap getPlayPixmap(bool isSelect = false);
     QList<MediaMeta> getMusicListData() const;
 
+public slots:
+    void slotUpdatePlayingIcon();
 signals:
     void customSort();
-
 public:
     void setMusicListView(QMap<QString, MediaMeta> musicinfos);
 //    void onMusiclistChanged(PlaylistPtr playlist, const QString name);
@@ -66,7 +67,7 @@ private:
     void onDoubleClicked(const QModelIndex &index);
 
 private:
-    QString hash;
+    QString m_hash;
     MusiclistInfomodel      *m_model        = nullptr;
     MusicInfoItemDelegate   *delegate     = nullptr;
     int                     themeType     = 1;

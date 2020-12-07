@@ -25,7 +25,9 @@
 #include <QFont>
 #include <QPainter>
 #include <QStandardItemModel>
+#include <QFileInfo>
 
+#include <DGuiApplicationHelper>
 #include <musicmeta.h>
 
 #include "musiclistinfoview.h"
@@ -199,6 +201,7 @@ void MusicInfoItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
 {
     auto listview = qobject_cast<const MusicListInfoView *>(option.widget);
     MediaMeta meta = index.data(Qt::UserRole).value<MediaMeta>();
+    MediaMeta activeMeta = Player::instance()->activeMeta();
 
     painter->save();
 
@@ -237,15 +240,16 @@ void MusicInfoItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
 //        return;
 //    }
 
-    QColor nameColor("#090909"), otherColor("#797979");
+    QColor nameColor("#090909"), otherColor("#000000");
+    otherColor.setAlphaF(0.5);
     if (listview->getThemeType() == 2) {
         nameColor = QColor("#C0C6D4");
         otherColor = QColor("#C0C6D4");
+        otherColor.setAlphaF(0.6);
     }
 
-    auto activeMeta = Player::instance()->activeMeta();
-    if (&activeMeta == &meta) {
-        nameColor = QColor("#2CA7F8");
+    if (activeMeta.hash == meta.hash) {
+        nameColor = QColor(DGuiApplicationHelper::instance()->applicationPalette().highlight().color());
         otherColor = QColor("#2CA7F8");
         otherColor.setAlphaF(0.5);
         font14.setFamily("SourceHanSansSC");
@@ -317,7 +321,9 @@ void MusicInfoItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
         case Number: {
             // Fixme:
             painter->setPen(otherColor);
-            if (meta.invalid) {
+            auto *listview2 = qobject_cast<MusicListInfoView *>(const_cast<QWidget *>(option.widget));
+            QFileInfo info(meta.localPath);
+            if (!info.exists()) {
                 auto sz = QSizeF(15, 15);
                 auto icon = QIcon(":/mpimage/light/warning.svg").pixmap(sz.toSize());
                 auto centerF = QRectF(rect).center();
@@ -328,11 +334,8 @@ void MusicInfoItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
                 break;
             }
 
-            if (&activeMeta == &meta) {
-                auto icon = listview->getPlayPixmap();
-                if (option.state & QStyle::State_Selected) {
-                    icon = listview->getSidebarPixmap();
-                }
+            if (activeMeta.hash == meta.hash) {
+                QPixmap icon = listview2->getPlayPixmap(option.state & QStyle::State_Selected);
                 qreal t_ratio = icon.devicePixelRatioF();
                 QRect t_ratioRect;
                 t_ratioRect.setX(0);
@@ -365,7 +368,7 @@ void MusicInfoItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
             break;
         }
         case Length:
-            painter->setPen(otherColor);
+            painter->setPen(nameColor);
             painter->setFont(font11);
             painter->drawText(rect, static_cast<int>(flag), DMusic::lengthString(meta.length));
             break;

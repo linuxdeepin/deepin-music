@@ -90,7 +90,7 @@ public:
     //获取dbus实例
     MprisPlayer *getMpris() const;
     //当前播放playlist的hash
-    void setCurrentPlayListHash(QString hash);
+    void setCurrentPlayListHash(QString hash, bool reloadMetaList); //reloadMetaList为true表示需要更新播放列表
     QString getCurrentPlayListHash();
     PlaybackStatus status();
     MediaMeta activeMeta();
@@ -114,7 +114,7 @@ public slots:
     void setMuted(bool muted);
 private:
     QTimer         *m_timer = nullptr;
-    QIcon           m_playingIcon;
+    QIcon           m_playingIcon = QIcon::fromTheme("music_play1");
     int             m_playingCount = 0;
     QString         m_currentPlayListHash;//当前正在播放的playlist的hash
     PlaybackMode    m_mode    = Player::RepeatAll;//循环播放模式

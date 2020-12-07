@@ -83,7 +83,6 @@ Player::Player(QObject *parent) : QObject(parent)
     m_qvplayer = new VlcMediaPlayer(m_qvinstance);
     m_qvplayer->equalizer()->setPreamplification(12);
     m_qvmedia = new VlcMedia();
-    m_playingIcon = QIcon();
     initMiniTypes();
     init();
 }
@@ -354,15 +353,18 @@ MprisPlayer *Player::getMpris() const
     return m_pMpris;
 }
 
-void Player::setCurrentPlayListHash(QString hash)
+void Player::setCurrentPlayListHash(QString hash, bool reloadMetaList)
 {
     m_currentPlayListHash = hash;
-    m_MetaList.clear();
-    if (hash == "all") {
-        m_MetaList = DataBaseService::getInstance()->allMusicInfos();
-    } else {
-        m_MetaList = DataBaseService::getInstance()->customizeMusicInfos(hash);
+    if (reloadMetaList) {
+        m_MetaList.clear();
+        if (hash == "all") {
+            m_MetaList = DataBaseService::getInstance()->allMusicInfos();
+        } else {
+            m_MetaList = DataBaseService::getInstance()->customizeMusicInfos(hash);
+        }
     }
+    emit signalUpdatePlayingIcon();
 }
 
 QString Player::getCurrentPlayListHash()

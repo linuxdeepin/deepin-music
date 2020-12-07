@@ -45,7 +45,7 @@ DWIDGET_USE_NAMESPACE
 
 MusicListInfoView::MusicListInfoView(const QString &hash, QWidget *parent)
     : QListView(parent)
-    , hash(hash)
+    , m_hash(hash)
 {
     setFrameShape(QFrame::NoFrame);
 
@@ -84,6 +84,9 @@ MusicListInfoView::MusicListInfoView(const QString &hash, QWidget *parent)
             this, &MusicListInfoView::showContextMenu);
 
     connect(this, &MusicListInfoView::doubleClicked, this, &MusicListInfoView::onDoubleClicked);
+
+    connect(Player::instance(), SIGNAL(signalUpdatePlayingIcon()),
+            this, SLOT(slotUpdatePlayingIcon()), Qt::DirectConnection);
 }
 
 MusicListInfoView::~MusicListInfoView()
@@ -160,14 +163,25 @@ void MusicListInfoView::setPlayPixmap(QPixmap pixmap, QPixmap sidebarPixmap)
     viewport()->update();
 }
 
-QPixmap MusicListInfoView::getPlayPixmap() const
-{
-    return playingPixmap;
-}
-
 QPixmap MusicListInfoView::getSidebarPixmap() const
 {
     return sidebarPixmap;
+}
+
+QPixmap MusicListInfoView::getPlayPixmap(bool isSelect)
+{
+    QPixmap playingPixmap = QPixmap(QSize(20, 20));
+    playingPixmap.fill(Qt::transparent);
+    QPainter painter(&playingPixmap);
+    DTK_NAMESPACE::Gui::DPalette pa;// = this->palette();
+    if (isSelect) {
+        painter.setPen(QColor(Qt::white));
+    } else {
+        painter.setPen(pa.color(QPalette::Active, DTK_NAMESPACE::Gui::DPalette::Highlight));
+    }
+    Player::instance()->playingIcon().paint(&painter, QRect(0, 0, 20, 20), Qt::AlignCenter, QIcon::Active, QIcon::On);
+    update();
+    return playingPixmap;
 }
 
 QList<MediaMeta> MusicListInfoView::getMusicListData() const
@@ -181,6 +195,11 @@ QList<MediaMeta> MusicListInfoView::getMusicListData() const
     }
 
     return musicList;
+}
+
+void MusicListInfoView::slotUpdatePlayingIcon()
+{
+    this->viewport()->update();
 }
 
 void MusicListInfoView::setMusicListView(QMap<QString, MediaMeta> musicinfos)
@@ -375,7 +394,7 @@ void MusicListInfoView::showContextMenu(const QPoint &pos)
 
             warnDlg.setIcon(QIcon::fromTheme("deepin-music"));
             if (1 == warnDlg.exec()) {
-                DataBaseService::getInstance()->removeSelectedSongs(hash, metaList, true);
+                DataBaseService::getInstance()->removeSelectedSongs(m_hash, metaList, true);
             }
         });
     }
@@ -517,6 +536,7 @@ void MusicListInfoView::onDoubleClicked(const QModelIndex &index)
     MediaMeta meta = index.data(Qt::UserRole).value<MediaMeta>();
 
     Player::instance()->playMeta(meta);
+    Player::instance()->setCurrentPlayListHash(m_hash, false);
 }
 
 void MusicListInfoView::dragEnterEvent(QDragEnterEvent *event)

@@ -91,17 +91,8 @@ PlayListView::PlayListView(QString hash, bool isPlayList, QWidget *parent)
 
     setUniformItemSizes(true);
 
-//    setDragEnabled(true);
-//    viewport()->setAcceptDrops(true);
-//    setDropIndicatorShown(true);
-//    setDragDropOverwriteMode(false);
-//    setDefaultDropAction(Qt::MoveAction);
-//    setDragDropMode(QAbstractItemView::DragOnly);
-//    setDragEnabled(true);
-
     setAcceptDrops(true);
     viewport()->setAcceptDrops(true);
-//    this->setStyleSheet("background-color:blue;");
     setDragEnabled(true);
     setDropIndicatorShown(true);
     setDragDropMode(QAbstractItemView::DragDrop);
@@ -499,7 +490,7 @@ void PlayListView::slotOnDoubleClicked(const QModelIndex &index)
 
         emit Player::instance()->signalPlayListChanged();
         //设置当前播放playlist的hash
-        Player::instance()->setCurrentPlayListHash(m_currentHash);
+        Player::instance()->setCurrentPlayListHash(m_currentHash, false);
     }
 }
 
