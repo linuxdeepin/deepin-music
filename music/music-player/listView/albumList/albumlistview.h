@@ -58,7 +58,6 @@ public:
 
     MediaMeta playing() const;
     MediaMeta hoverin() const;
-    bool  playingState()const;
 
     void setThemeType(int type);
     int getThemeType() const;
@@ -66,8 +65,7 @@ public:
     void setPlayPixmap(QPixmap pixmap, QPixmap sidebarPixmap, QPixmap albumPixmap);
     QPixmap getPlayPixmap() const;
     QPixmap getSidebarPixmap() const;
-    QPixmap getAlbumPixmap() const;
-
+    QPixmap getPlayPixmap(bool isSelect = false);
     void updateList();
 
     //排序
@@ -92,7 +90,6 @@ private:
     MediaMeta                 hoverinMeta;
     QPixmap                 playingPix = QPixmap(":/mpimage/light/music1.svg");
     QPixmap                 sidebarPix = QPixmap(":/mpimage/light/music_withe_sidebar/music1.svg");
-    QPixmap                 albumPix   = QPixmap(":/mpimage/light/music_white_album_cover/music1.svg");
     MusicListDialog        *musciListDialog = nullptr;
     QList<AlbumInfo>        m_albumInfoList; //all album data
     QString                 m_hash;

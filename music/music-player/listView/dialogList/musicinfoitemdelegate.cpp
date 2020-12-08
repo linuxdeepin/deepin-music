@@ -199,7 +199,7 @@ static inline QRect colRect(int col, const QStyleOptionViewItem &option)
 void MusicInfoItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option,
                                   const QModelIndex &index) const
 {
-    auto listview = qobject_cast<const MusicListInfoView *>(option.widget);
+    MusicListInfoView *listview = qobject_cast<MusicListInfoView *>(const_cast<QWidget *>(option.widget));
     MediaMeta meta = index.data(Qt::UserRole).value<MediaMeta>();
     MediaMeta activeMeta = Player::instance()->activeMeta();
 
@@ -321,7 +321,7 @@ void MusicInfoItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
         case Number: {
             // Fixme:
             painter->setPen(otherColor);
-            auto *listview2 = qobject_cast<MusicListInfoView *>(const_cast<QWidget *>(option.widget));
+//            auto *listview2 = qobject_cast<MusicListInfoView *>(const_cast<QWidget *>(option.widget));
             QFileInfo info(meta.localPath);
             if (!info.exists()) {
                 auto sz = QSizeF(15, 15);
@@ -335,7 +335,10 @@ void MusicInfoItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
             }
 
             if (activeMeta.hash == meta.hash) {
-                QPixmap icon = listview2->getPlayPixmap(option.state & QStyle::State_Selected);
+                QPixmap icon;
+                if (listview) {
+                    icon = listview->getPlayPixmap(option.state & QStyle::State_Selected);
+                }
                 qreal t_ratio = icon.devicePixelRatioF();
                 QRect t_ratioRect;
                 t_ratioRect.setX(0);
@@ -385,25 +388,7 @@ QSize MusicInfoItemDelegate::sizeHint(const QStyleOptionViewItem &option,
 //    Q_D(const MusicInfoItemDelegate);
 
     auto baseSize = QStyledItemDelegate::sizeHint(option, index);
-    return  QSize(baseSize.width() / 5, baseSize.height());
-//    auto headerWidth = headerPointWidth(option, index);
-//    auto headerWidth = 17 + 10 + 10 + 4;
-//    auto tialWidth = d->timePropertyWidth(option);
-//    auto w = option.widget->width() - headerWidth - tialWidth;
-//    Q_ASSERT(w > 0);
-//    switch (index.column()) {
-//    case 0:
-//        return  QSize(headerWidth, baseSize.height());
-//    case 1:
-//        return  QSize(w / 2, baseSize.height());
-//    case 2:
-//    case 3:
-//        return  QSize(w / 4, baseSize.height());
-//    case 4:
-//        return  QSize(tialWidth, baseSize.height());
-//    }
-
-//    return baseSize;
+    return  QSize(baseSize.width() / 5, 36);
 }
 
 void MusicInfoItemDelegate::setModelData(QWidget *editor, QAbstractItemModel *model,

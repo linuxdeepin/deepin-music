@@ -97,29 +97,37 @@ bool SingerDataDelegate::editorEvent(QEvent *event, QAbstractItemModel *model, c
     int borderWidth = 10;
     QRect rect = option.rect.adjusted(borderWidth, borderWidth, -borderWidth, -borderWidth);
     if (index.isValid() && listview->viewMode() == QListView::IconMode && event->type() == QEvent::MouseButtonPress) {
-        //todo
-//        if (!listview->playingState()) {
-//            QRect t_hoverRect(rect.x() + 50, rect.y() + 36, 50, 50);
+        SingerInfo singertmp = index.data(Qt::UserRole).value<SingerInfo>();
+        bool playFlag = singertmp.musicinfos.keys().contains(Player::instance()->activeMeta().hash);
+        Player::PlaybackStatus playStatue = Player::instance()->status();
+        if (playFlag) {
+            if (playStatue == Player::Playing) {
+                Player::instance()->pause();
+            } else if (playStatue == Player::Paused) {
+                Player::instance()->resume();
+            }
+        } else {
+            QRect t_hoverRect(rect.x() + 50, rect.y() + 36, 50, 50);
 
-//            QPainterPath t_imageClipPath;
-//            t_imageClipPath.addEllipse(QRect(rect.x() + 50, rect.y() + 36, 50, 50));
-//            t_imageClipPath.closeSubpath();
-//            auto fillPolygon = t_imageClipPath.toFillPolygon();
+            QPainterPath t_imageClipPath;
+            t_imageClipPath.addEllipse(QRect(rect.x() + 50, rect.y() + 36, 50, 50));
+            t_imageClipPath.closeSubpath();
+            auto fillPolygon = t_imageClipPath.toFillPolygon();
 
-//            QMouseEvent *pressEvent = static_cast<QMouseEvent *>(event);
-//            QPointF pressPos = pressEvent->pos();
+            QMouseEvent *pressEvent = static_cast<QMouseEvent *>(event);
+            QPointF pressPos = pressEvent->pos();
 
-//            if (fillPolygon.containsPoint(pressPos, Qt::OddEvenFill))
-//                Q_EMIT hoverPress(index);
-//        } else {
-//            QRect t_hoverRect(rect.x() + 64, rect.y() + 96, 22, 18);
-//            QPainterPath t_imageClipPath;
-//            t_imageClipPath.addEllipse(QRect(rect.x() + 64, rect.y() + 96, 25, 25));
-//            t_imageClipPath.closeSubpath();
-//            auto fillPolygon = t_imageClipPath.toFillPolygon();
-
-//            Q_EMIT hoverPress(index);
-//        }
+            if (fillPolygon.containsPoint(pressPos, Qt::OddEvenFill)) {
+                if (singertmp.musicinfos.values().size() > 0) {
+                    emit CommonService::getInstance()->setPlayModel(Player::RepeatAll);
+                    Player::instance()->setCurrentPlayListHash("album", false);
+                    Player::instance()->setPlayList(singertmp.musicinfos.values());
+                    Player::instance()->playMeta(singertmp.musicinfos.values().first());
+                    emit Player::instance()->signalPlayListChanged();
+                }
+            }
+        }
+        return false;
         return false;
     }
     return QStyledItemDelegate::editorEvent(event, model, option, index);
@@ -128,16 +136,14 @@ bool SingerDataDelegate::editorEvent(QEvent *event, QAbstractItemModel *model, c
 void SingerDataDelegate::drawIconMode(QPainter &painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
     auto listview = qobject_cast<const SingerListView *>(option.widget);
-    auto singertmp = index.data(Qt::UserRole).value<SingerInfo>();
+    SingerInfo singertmp = index.data(Qt::UserRole).value<SingerInfo>();
 
-    painter.save();
     painter.setRenderHint(QPainter::Antialiasing);
     painter.setRenderHint(QPainter::HighQualityAntialiasing);
     painter.setRenderHint(QPainter::SmoothPixmapTransform);
 
     auto background = option.palette.background();
     painter.fillRect(option.rect, background);
-    painter.restore();
     //绘制阴影
     QRect shadowRect(option.rect.x() - 10, option.rect.y(), 158, 158);
     QPainterPath roundRectShadowPath;
@@ -171,7 +177,8 @@ void SingerDataDelegate::drawIconMode(QPainter &painter, const QStyleOptionViewI
     painter.drawRoundRect(rect/*.adjusted(1, 1, -1, 1)*/, 10, 10);
     painter.restore();
 
-    bool playFlag = true;
+    bool playFlag = singertmp.musicinfos.keys().contains(Player::instance()->activeMeta().hash);
+    Player::PlaybackStatus playStatue = Player::instance()->status();
 
     QColor fillColor(0, 0, 0);
     fillColor.setAlphaF(0.3);
@@ -179,19 +186,14 @@ void SingerDataDelegate::drawIconMode(QPainter &painter, const QStyleOptionViewI
         fillColor = "#000000";
         fillColor.setAlphaF(0.3);
     }
-    int startHeight = rect.y() + rect.height() - 46;
-    int fillAllHeight = 46;
+    int startHeight = rect.y() + rect.height() - 56;
+    int fillAllHeight = 36;
     int curFillSize = fillAllHeight;
     QRect fillBlurRect(rect.x(), rect.y() + rect.height() - fillAllHeight, rect.width(), fillAllHeight);
-//todo
-//        if (listview->playing() != nullptr
-//                && listview->playingState()) {
-//            playFlag = true;
-//        }
 
-    if (playFlag) {
-        fillBlurRect = QRect(rect.x(), rect.y() + rect.height() - 80, rect.width(), 86);
-        curFillSize = 80;
+    if (playFlag && (playStatue == Player::Playing)) {
+        fillBlurRect = QRect(rect.x(), rect.y() + rect.height() - 70, rect.width(), 76);
+        curFillSize = 70;
     }
 
     //设置模糊
@@ -208,13 +210,17 @@ void SingerDataDelegate::drawIconMode(QPainter &painter, const QStyleOptionViewI
     painter.fillRect(fillBlurRect, fillColor);
 
     //draw playing
-    if (playFlag) {
+    auto *listview2 = qobject_cast<SingerListView *>(const_cast<QWidget *>(option.widget));
+    if (playFlag && playStatue == Player::Playing) {
         if (option.state & QStyle::State_MouseOver) {
-            painter.drawPixmap(QRect(rect.x() + 56, rect.y() + 72, 36, 36), hoverSuspendImg);
+            painter.drawPixmap(QRect(rect.x() + 56, rect.y() + 82, 36, 36), hoverSuspendImg);
         } else {
-            painter.drawPixmap(QRect(rect.x() + 64, rect.y() + 82, 22, 18), listview->getAlbumPixmap());
+            if (listview2) {
+                painter.drawPixmap(QRect(rect.x() + 64, rect.y() + 92, 22, 18), listview2->getPlayPixmap(true));
+            }
         }
     }
+
 
     QRect fillRect(rect.x(), startHeight, rect.width(), fillAllHeight);
 
@@ -223,7 +229,7 @@ void SingerDataDelegate::drawIconMode(QPainter &painter, const QStyleOptionViewI
     painter.setFont(font);
     QFontMetrics fm(font);
 
-    QRect nameFillRect(rect.x(), startHeight + 2, rect.width(), fillAllHeight / 2);
+    QRect nameFillRect(rect.x(), startHeight + 26, rect.width(), fillAllHeight / 2);
     nameFillRect.adjust(8, 0, -7, 0);
     auto nameText = fm.elidedText(singertmp.singerName.isEmpty() ? SingerListView::tr("Unknown artist") : singertmp.singerName, Qt::ElideMiddle, nameFillRect.width());
     painter.setPen(Qt::white);
@@ -246,7 +252,7 @@ void SingerDataDelegate::drawIconMode(QPainter &painter, const QStyleOptionViewI
         t_fillBrush = QBrush(QColor(128, 128, 128, 90));
     }
 
-    if ((option.state & QStyle::State_MouseOver) && !playFlag) {
+    if ((option.state & QStyle::State_MouseOver) && (playStatue != Player::Playing)) {
         QImage t_image = opticon.pixmap(rect.width(), rect.height()).toImage();
         int t_ratio = static_cast<int>(t_image.devicePixelRatioF());
         QRect t_imageRect(rect.width() / 2 - 25, rect.height() / 2 - 25, 50 * t_ratio, 50 * t_ratio);
@@ -264,11 +270,11 @@ void SingerDataDelegate::drawIconMode(QPainter &painter, const QStyleOptionViewI
         painter.setTransform(old_transform);
         painter.fillRect(t_hoverRect, fillColor);
 
-//        QPixmap t_hoverPlayImg(hoverPlayImg);
-//        t_hoverPlayImg.setDevicePixelRatio(option.widget->devicePixelRatioF());
-//        //            t_hoverRect.adjust(0, 0, -7 * t_ratio, -7 * t_ratio);
-//        QRect t_pixMapRect(rect.x() + 53, rect.y() + 40, 43, 43);
-//        painter.drawPixmap(t_pixMapRect, t_hoverPlayImg);
+        QPixmap t_hoverPlayImg(hoverPlayImg);
+        t_hoverPlayImg.setDevicePixelRatio(option.widget->devicePixelRatioF());
+        //            t_hoverRect.adjust(0, 0, -7 * t_ratio, -7 * t_ratio);
+        QRect t_pixMapRect(rect.x() + 53, rect.y() + 40, 43, 43);
+        painter.drawPixmap(t_pixMapRect, t_hoverPlayImg);
     }
 
 //    painter.fillRect(option.rect, t_fillBrush);
@@ -400,10 +406,10 @@ void SingerDataDelegate::drawListMode(QPainter &painter, const QStyleOptionViewI
 
 SingerDataDelegate::SingerDataDelegate(QWidget *parent): QStyledItemDelegate(parent)
 {
-    hoverPlayImg = DHiDPIHelper::loadNxPixmap(":/mpimage/dark/hover/play_hover.svg");
-    hoverSuspendImg = DHiDPIHelper::loadNxPixmap(":/mpimage/dark/hover/suspend_hover.svg");
-    shadowImg = DHiDPIHelper::loadNxPixmap(":/mpimage/light/shadow.svg");
-    shadowImg = shadowImg.copy(5, 5, shadowImg.width() - 10, shadowImg.height() - 10);
+    hoverPlayImg = DHiDPIHelper::loadNxPixmap(":/icons/deepin/builtin/actions/play_hover_36px.svg");
+    hoverSuspendImg = DHiDPIHelper::loadNxPixmap(":/icons/deepin/builtin/actions/suspend_hover_36px.svg");
+    shadowImg = DHiDPIHelper::loadNxPixmap(":/icons/deepin/builtin/actions/shadow_176px.svg");
+//    shadowImg = shadowImg.copy(5, 5, shadowImg.width() - 10, shadowImg.height() - 10);
 }
 
 SingerDataDelegate::~SingerDataDelegate()

@@ -267,7 +267,6 @@ void AlbumListView::setPlayPixmap(QPixmap pixmap, QPixmap sidebarPixmap, QPixmap
 //        musciListDialog->setPlayPixmap(pixmap, sidebarPixmap);
     playingPix = pixmap;
     sidebarPix = sidebarPixmap;
-    albumPix = albumPixmap;
     update();
 }
 
@@ -281,9 +280,20 @@ QPixmap AlbumListView::getSidebarPixmap() const
     return sidebarPix;
 }
 
-QPixmap AlbumListView::getAlbumPixmap() const
+QPixmap AlbumListView::getPlayPixmap(bool isSelect)
 {
-    return albumPix;
+    QPixmap playingPixmap = QPixmap(QSize(20, 20));
+    playingPixmap.fill(Qt::transparent);
+    QPainter painter(&playingPixmap);
+    DTK_NAMESPACE::Gui::DPalette pa;// = this->palette();
+    if (isSelect) {
+        painter.setPen(QColor(Qt::white));
+    } else {
+        painter.setPen(pa.color(QPalette::Active, DTK_NAMESPACE::Gui::DPalette::Highlight));
+    }
+    Player::instance()->playingIcon().paint(&painter, QRect(0, 0, 20, 20), Qt::AlignCenter, QIcon::Active, QIcon::On);
+    update();
+    return playingPixmap;
 }
 
 void AlbumListView::onDoubleClicked(const QModelIndex &index)

@@ -147,6 +147,5 @@
         <file>mpimage/light/checked/volume_low_checked.svg</file>
         <file>mpimage/dark/checked/volume_mid_checked.svg</file>
         <file>mpimage/dark/checked/volume_low_checked.svg</file>
-        <file>mpimage/light/shadow.svg</file>
     </qresource>
 </RCC>

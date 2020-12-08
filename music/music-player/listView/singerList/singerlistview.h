@@ -68,7 +68,7 @@ public:
     void setPlayPixmap(QPixmap pixmap, QPixmap sidebarPixmap, QPixmap albumPixmap);
     QPixmap getPlayPixmap() const;
     QPixmap getSidebarPixmap() const;
-    QPixmap getAlbumPixmap() const;
+    QPixmap getPlayPixmap(bool isSelect = false);
 
     void updateList();
 
@@ -92,7 +92,6 @@ private:
     MusicListDialog        *musicListDialog = nullptr;
     QPixmap                 playingPix = QPixmap(":/mpimage/light/music1.svg");
     QPixmap                 sidebarPix = QPixmap(":/mpimage/light/music_withe_sidebar/music1.svg");
-    QPixmap                 albumPix   = QPixmap(":/mpimage/light/music_white_album_cover/music1.svg");
     QList<SingerInfo>        m_singerInfoList; //singer data
     QString                  m_hash;
     QListView::ViewMode      m_viewModel = QListView::ListMode;

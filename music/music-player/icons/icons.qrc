@@ -28,5 +28,8 @@
         <file>texts/music_play2_20px.svg</file>
         <file>texts/music_play3_20px.svg</file>
         <file>texts/music_play4_20px.svg</file>
+        <file>actions/shadow_176px.svg</file>
+        <file>actions/suspend_hover_36px.svg</file>
+        <file>actions/play_hover_36px.svg</file>
     </qresource>
 </RCC>

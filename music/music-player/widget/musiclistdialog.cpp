@@ -297,12 +297,10 @@ void MusicListDialog::slotPlayAllClicked()
 {
     QList<MediaMeta> musicList = m_musicListInfoView->getMusicListData();
     if (musicList.size() > 0) {
+        emit CommonService::getInstance()->setPlayModel(Player::RepeatAll);
+        Player::instance()->setCurrentPlayListHash(hash, false);
         Player::instance()->setPlayList(musicList);
         Player::instance()->playMeta(musicList.first());
-
-        emit CommonService::getInstance()->setPlayModel(Player::RepeatAll);
-
-        Player::instance()->setCurrentPlayListHash(hash, false);
         emit Player::instance()->signalPlayListChanged();
     }
 }
