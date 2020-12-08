@@ -539,8 +539,8 @@ void MusicListInfoView::onDoubleClicked(const QModelIndex &index)
 {
     MediaMeta meta = index.data(Qt::UserRole).value<MediaMeta>();
 
-    Player::instance()->playMeta(meta);
     Player::instance()->setCurrentPlayListHash(m_hash, false);
+    Player::instance()->playMeta(meta);
 }
 
 void MusicListInfoView::dragEnterEvent(QDragEnterEvent *event)

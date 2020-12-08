@@ -350,16 +350,15 @@ void MusicListDataWidget::onPlayAllClicked()
         // 添加到播放列表
         Player::instance()->setPlayList(DataBaseService::getInstance()->allMusicInfos());
 
+        // 通知播放队列改变
+        Player::instance()->setCurrentPlayListHash(m_currentHash, false);
+        emit Player::instance()->signalPlayListChanged();
+
         // 设置第一首播放音乐
         if (m_albumListView->getAlbumListData().size() > 0 &&
                 m_albumListView->getAlbumListData().first().musicinfos.size() > 0) {
             Player::instance()->playMeta(m_albumListView->getAlbumListData().first().musicinfos.first());
         }
-
-        // 通知播放队列改变
-        Player::instance()->setCurrentPlayListHash(m_currentHash, false);
-        emit Player::instance()->signalPlayListChanged();
-
         break;
     case SingerType:
         // 清空播放队列
@@ -367,16 +366,15 @@ void MusicListDataWidget::onPlayAllClicked()
         // 添加到播放列表
         Player::instance()->setPlayList(DataBaseService::getInstance()->allMusicInfos());
 
+        // 通知播放队列改变
+        Player::instance()->setCurrentPlayListHash(m_currentHash, false);
+        emit Player::instance()->signalPlayListChanged();
+
         // 设置第一首播放音乐
         if (m_singerListView->getSingerListData().size() > 0 &&
                 m_singerListView->getSingerListData().first().musicinfos.size() > 0) {
             Player::instance()->playMeta(m_singerListView->getSingerListData().first().musicinfos.first());
         }
-
-        // 通知播放队列改变
-        Player::instance()->setCurrentPlayListHash(m_currentHash, false);
-        emit Player::instance()->signalPlayListChanged();
-
         break;
     // 同下共用
     case AllSongListType:
@@ -390,14 +388,14 @@ void MusicListDataWidget::onPlayAllClicked()
             Player::instance()->playListAppendMeta(meta);
         }
 
+        // 通知播放队列改变
+        Player::instance()->setCurrentPlayListHash(m_currentHash, false);
+        emit Player::instance()->signalPlayListChanged();
+
         // 设置第一首播放音乐
         if (m_musicListView->getAllSongListData().size() > 0) {
             Player::instance()->playMeta(m_musicListView->getAllSongListData().first());
         }
-
-        // 通知播放队列改变
-        Player::instance()->setCurrentPlayListHash(m_currentHash, false);
-        emit Player::instance()->signalPlayListChanged();
         break;
     default:
         break;

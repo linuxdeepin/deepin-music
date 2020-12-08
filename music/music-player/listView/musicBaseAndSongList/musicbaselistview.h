@@ -24,6 +24,7 @@
 #include <DListView>
 #include <QDomElement>
 
+#include "commonservice.h"
 DWIDGET_USE_NAMESPACE
 
 class MusicBaseAndSonglistModel;
@@ -42,7 +43,7 @@ public slots:
     void slotTheme(int type);
     void slotUpdatePlayingIcon();
     void slotMenuTriggered(QAction *action);
-
+    void viewChanged(ListPageSwitchType switchtype, QString hashOrSearchword);
 signals:
 
 protected:

@@ -89,7 +89,7 @@ public slots:
     void setPlayModel(Player::PlaybackMode playModel);
 
     //音量变化
-    void onVolumeChanged();
+    void onVolumeChanged(double volume);
 
     void slotDelayAutoHide();
     //快捷键响应

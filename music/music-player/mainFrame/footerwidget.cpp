@@ -342,7 +342,7 @@ void FooterWidget::initShortcut()
     connect(previousShortcut, SIGNAL(activated()), this, SLOT(slotShortCutTriggered()));
     connect(muteShortcut, SIGNAL(activated()), this, SLOT(slotShortCutTriggered()));
     //dbus
-    connect(Player::instance()->getMpris(), SIGNAL(volumeChanged()), this, SLOT(onVolumeChanged()));
+    connect(Player::instance()->getMpris(), SIGNAL(volumeRequested(double)), this, SLOT(onVolumeChanged(double)));
 }
 
 void FooterWidget::updateShortcut()
@@ -531,7 +531,7 @@ void FooterWidget::setPlayModel(Player::PlaybackMode playModel)
     Player::instance()->setMode(static_cast<Player::PlaybackMode>(playModel));
 }
 
-void FooterWidget::onVolumeChanged() //from dbus set
+void FooterWidget::onVolumeChanged(double volume) //from dbus set
 {
     //need to sync volume to dbus
 //    if (d->volumeMonitoring.needSyncLocalFlag(1)) {
@@ -540,14 +540,14 @@ void FooterWidget::onVolumeChanged() //from dbus set
 //        d->volumeMonitoring.start();
 //    }
     //get dbus volume
-    double mprivol = Player::instance()->getMpris()->volume();
-    int volume = int(mprivol * 100);
+    int curVolume = int(volume * 100);
+    Player::instance()->setVolume(curVolume);
     QString status = "mid";
-    if (volume > 77) {
+    if (curVolume > 77) {
         status = "high";
         m_btSound->setIcon(QIcon::fromTheme("volume"));
 
-    } else if (volume > 33) {
+    } else if (curVolume > 33) {
         status = "mid";
         m_btSound->setIcon(QIcon::fromTheme("volume_mid"));
 
@@ -556,7 +556,7 @@ void FooterWidget::onVolumeChanged() //from dbus set
         m_btSound->setIcon(QIcon::fromTheme("volume_low"));
     }
 
-    if (m_mute || volume == 0) {
+    if (m_mute || curVolume == 0) {
         m_btSound->setProperty("volume", "mute");
         m_btSound->update();
         m_btSound->setIcon(QIcon::fromTheme("mute"));
@@ -566,15 +566,15 @@ void FooterWidget::onVolumeChanged() //from dbus set
         m_btSound->update();
     }
 
-    if (!m_mute && volume > 0) {
+    if (!m_mute && curVolume > 0) {
         m_volSlider->syncMute(false);
     }
 
     //m_Volume = volume;
-    MusicSettings::setOption("base.play.volume", volume);
+    MusicSettings::setOption("base.play.volume", curVolume);
     // 音量变化为0，设置为静音
     MusicSettings::setOption("base.play.mute", m_mute);
-    m_volSlider->setVolumeFromExternal(volume);
+    m_volSlider->setVolumeFromExternal(curVolume);
 }
 
 void FooterWidget::slotDelayAutoHide()

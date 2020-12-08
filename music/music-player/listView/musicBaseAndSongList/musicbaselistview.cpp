@@ -100,6 +100,7 @@ MusicBaseListView::MusicBaseListView(QWidget *parent) : DListView(parent)
 
     connect(Player::instance(), SIGNAL(signalUpdatePlayingIcon()),
             this, SLOT(slotUpdatePlayingIcon()), Qt::DirectConnection);
+    connect(CommonService::getInstance(), &CommonService::switchToView, this, &MusicBaseListView::viewChanged);
 }
 
 MusicBaseListView::~MusicBaseListView()
@@ -359,6 +360,21 @@ void MusicBaseListView::slotMenuTriggered(QAction *action)
         emit CommonService::getInstance()->playAllMusic();
     } else if (action->text() == tr("Pause")) {
         Player::instance()->pause();
+    }
+}
+
+void MusicBaseListView::viewChanged(ListPageSwitchType switchtype, QString hashOrSearchword)
+{
+    Q_UNUSED(hashOrSearchword)
+    if (switchtype == AllSongListType) {
+        for (int i = 0; i <  model->rowCount(); i++) {
+            QModelIndex curIndex = model->index(i, 0);
+            QString metaTemp = curIndex.data(Qt::UserRole + 2).value<QString>();
+            if (metaTemp == "all") {
+                this->setCurrentIndex(curIndex);
+                break;
+            }
+        }
     }
 }
 

@@ -38,6 +38,7 @@
 #include <QUuid>
 #include "mediameta.h"
 
+#include "musicsettings.h"
 #include "commonservice.h"
 #include "musicbaseandsonglistmodel.h"
 #include "databaseservice.h"
@@ -301,6 +302,14 @@ void MusicSongListView::slotMenuTriggered(QAction *action)
             QStandardItem *item = model->itemFromIndex(index);
             model->removeRow(item->row());
             DataBaseService::getInstance()->deletePlaylist(hash);
+            //切换到所有音乐界面
+            emit CommonService::getInstance()->switchToView(AllSongListType, "all");
+            //清除选中状态
+            this->clearSelection();
+            //设置所有音乐播放状态
+            Player::instance()->setCurrentPlayListHash("all", false);
+            //记忆播放歌单
+            MusicSettings::setOption("base.play.last_playlist", "all");
         }
     }
 }

@@ -477,7 +477,6 @@ void PlayListView::slotOnDoubleClicked(const QModelIndex &index)
     //todo检查文件是否存在
     MediaMeta itemMeta = index.data(Qt::UserRole).value<MediaMeta>();
     qDebug() << "------" << itemMeta.hash;
-    Player::instance()->playMeta(itemMeta);
 
     if (!m_IsPlayList) {
         //设置新的播放列表
@@ -492,6 +491,7 @@ void PlayListView::slotOnDoubleClicked(const QModelIndex &index)
         //设置当前播放playlist的hash
         Player::instance()->setCurrentPlayListHash(m_currentHash, false);
     }
+    Player::instance()->playMeta(itemMeta);
 }
 
 void PlayListView::slotUpdatePlayingIcon()

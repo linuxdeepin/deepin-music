@@ -370,7 +370,7 @@ void Player::playRmvMeta(const QStringList &metalist)
         setActiveMeta(m_MetaList.at(index));
         playMeta(m_ActiveMeta);
         for (QString str : metalist) {
-            for (int i = 0 ; i < m_MetaList.size() ; i++) {
+            for (int i = (m_MetaList.size() - 1) ; i >= 0 ; i--) {
                 if (m_MetaList[i].hash == str) {
                     m_MetaList.removeAt(i);
                     break;
@@ -560,6 +560,7 @@ void Player::setActiveMeta(const MediaMeta &meta)
     m_ActiveMeta = meta;
     //保存上一次播放的歌曲
     MusicSettings::setOption("base.play.last_meta", meta.hash);
+    MusicSettings::setOption("base.play.last_playlist", m_currentPlayListHash);
 }
 
 void Player::forcePlayMeta()
@@ -733,6 +734,7 @@ bool Player::setMusicVolume(double volume)
         if (qFuzzyCompare(volume, 0.0))
             ainterface.call(QLatin1String("SetMute"), true);
     }
+    m_pMpris->setVolume(volume);
 
     return false;
 }
@@ -890,6 +892,70 @@ void Player::initMpris()
     m_pMpris->setCanGoPrevious(true);
     m_pMpris->setCanPause(true);
     m_pMpris->setCanSeek(true);
+
+    connect(this, &Player::signalPlaybackStatusChanged,
+    this, [ = ](Player::PlaybackStatus playbackStatus) {
+        switch (playbackStatus) {
+        case Player::InvalidPlaybackStatus:
+        case Player::Stopped:
+            m_pMpris->setPlaybackStatus(Mpris::Stopped);
+            break;
+        case Player::Playing:
+            m_pMpris->setPlaybackStatus(Mpris::Playing);
+            break;
+        case Player::Paused:
+            m_pMpris->setPlaybackStatus(Mpris::Paused);
+            break;
+        }
+    });
+
+    connect(m_pMpris, &MprisPlayer::seekRequested,
+    this, [ = ](qlonglong offset) {
+        setPosition(position() + offset);
+    });
+
+    connect(m_pMpris, &MprisPlayer::setPositionRequested,
+    this, [ = ](const QDBusObjectPath & trackId, qlonglong offset) {
+        Q_UNUSED(trackId)
+        setPosition(offset);
+    });
+
+    connect(m_pMpris, &MprisPlayer::stopRequested,
+    this, [ = ]() {
+        stop();
+        m_pMpris->setPlaybackStatus(Mpris::Stopped);
+        m_pMpris->setMetadata(QVariantMap());
+    });
+
+    connect(m_pMpris, &MprisPlayer::playRequested,
+    this, [ = ]() {
+        if (status() == Player::Paused) {
+            resume();
+        } else {
+            if (status() != Player::Playing) {
+                playMeta(activeMeta());
+            }
+        }
+        m_pMpris->setPlaybackStatus(Mpris::Playing);
+    });
+
+    connect(m_pMpris, &MprisPlayer::pauseRequested,
+    this, [ = ]() {
+        pauseNow();
+        m_pMpris->setPlaybackStatus(Mpris::Paused);
+    });
+
+    connect(m_pMpris, &MprisPlayer::nextRequested,
+    this, [ = ]() {
+        playNextMeta(true);
+        m_pMpris->setPlaybackStatus(Mpris::Playing);
+    });
+
+    connect(m_pMpris, &MprisPlayer::previousRequested,
+    this, [ = ]() {
+        playPreMeta();
+        m_pMpris->setPlaybackStatus(Mpris::Playing);
+    });
 }
 
 void Player::loadMediaProgress(const QString &path)
