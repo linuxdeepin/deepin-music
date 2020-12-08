@@ -72,7 +72,7 @@ public slots:
     // 右键菜单从本地删除
     void slotDeleteLocalActionClicked(bool checked = false);
 
-    void slotRemoveSingleSong(QString hash);
+    void slotRemoveSingleSong(const QString &listHash, const QString &musicHash);
 
 protected:
     virtual void dragEnterEvent(QDragEnterEvent *event) Q_DECL_OVERRIDE;

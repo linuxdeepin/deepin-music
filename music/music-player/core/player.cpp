@@ -336,20 +336,51 @@ void Player::clearPlayList()
 
 void Player::playRmvMeta(const QStringList &metalist)
 {
-    for (QString str : metalist) {
-        for (int i = 0 ; i < m_MetaList.size() ; i++)
-            if (m_MetaList[i].hash == str) {
-                m_MetaList.removeAt(i);
-                //如果有当前歌曲，停止播放
-                if (m_ActiveMeta.hash == str) {
-                    if (m_currentPlayListHash == "all")
-                        stop();
-                    else
-                        emit signalUpdatePlayingIcon(); //当前播放列表波浪图已失效，转到主页面
-                }
+    qDebug() << "----playRmvMeta m_MetaList.size() = " << m_MetaList.size();
+    int index = 0;
+    QString nextPlayHash;
+    for (int i = 0; i < m_MetaList.size(); i++) {
+        if (m_MetaList.at(i).hash == m_ActiveMeta.hash) {
+            index = i;
+            break;
+        }
+    }
 
+    if (metalist.contains(m_ActiveMeta.hash)) {
+        stop();
+        for (QString str : metalist) {
+            if (index < m_MetaList.size() && metalist.contains(m_MetaList.at(index).hash)) {
+                if (index == (m_MetaList.size() - 1)) {
+                    stop();
+                    for (QString str : metalist) {
+                        for (int i = 0 ; i < m_MetaList.size() ; i++) {
+                            if (m_MetaList[i].hash == str) {
+                                m_MetaList.removeAt(i);
+                                break;
+                            }
+                        }
+                    }
+                    return;
+                }
+                index++;
+            } else {
                 break;
             }
+        }
+        setActiveMeta(m_MetaList.at(index));
+        playMeta(m_ActiveMeta);
+        for (QString str : metalist) {
+            for (int i = 0 ; i < m_MetaList.size() ; i++) {
+                if (m_MetaList[i].hash == str) {
+                    m_MetaList.removeAt(i);
+                    break;
+                }
+            }
+        }
+    }
+
+    if (m_MetaList.size() == 0) {
+        stop();
     }
 }
 

@@ -769,8 +769,10 @@ void MusicListDataWidget::refreshInfoLabel(QString hash)
     m_infoLabel->setText(countStr);
 }
 
-void MusicListDataWidget::slotRemoveSingleSong()
+void MusicListDataWidget::slotRemoveSingleSong(const QString &listHash, const QString &musicHash)
 {
+    Q_UNUSED(listHash)
+    Q_UNUSED(musicHash)
     refreshInfoLabel(m_currentHash);
     if (m_pCenterWidget->currentWidget() == m_albumListView) {
         m_albumListView->setAlbumListData(DataBaseService::getInstance()->allAlbumInfos()); //set album data

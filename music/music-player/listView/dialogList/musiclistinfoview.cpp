@@ -420,14 +420,17 @@ void MusicListInfoView::slotDeleteLocalActionClicked(bool checked)
     }
 }
 
-void MusicListInfoView::slotRemoveSingleSong(QString hash)
+void MusicListInfoView::slotRemoveSingleSong(const QString &listHash, const QString &musicHash)
 {
-    qDebug() << "---hash = " << hash;
+    if (listHash != "all") {
+        return;
+    }
+    qDebug() << "---hash = " << musicHash;
     int row =  m_model->rowCount();
     for (int i = 0; i < row; i++) {
         QModelIndex mindex = m_model->index(i, 0, QModelIndex());
         MediaMeta meta = mindex.data(Qt::UserRole).value<MediaMeta>();
-        if (meta.hash == hash) {
+        if (meta.hash == musicHash) {
             this->removeItem(i);
             m_model->removeRow(row);
             this->viewport()->update();

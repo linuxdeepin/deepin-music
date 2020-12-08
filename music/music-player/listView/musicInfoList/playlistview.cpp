@@ -577,13 +577,16 @@ void PlayListView::slotTheme(int type)
     m_themeType = type;
 }
 
-void PlayListView::slotRemoveSingleSong(const QString &struuid)
+void PlayListView::slotRemoveSingleSong(const QString &listHash, const QString &musicHash)
 {
+    if (listHash != m_currentHash) {
+        return;
+    }
     int row =  m_model->rowCount();
     for (int i = 0; i < row; i++) {
         QModelIndex mindex = m_model->index(i, 0, QModelIndex());
         MediaMeta meta = mindex.data(Qt::UserRole).value<MediaMeta>();
-        if (meta.hash == struuid) {
+        if (meta.hash == musicHash) {
             this->removeItem(i);
             m_model->removeRow(row);
             update();
@@ -664,7 +667,9 @@ void PlayListView::slotRmvFromSongList()
         DataBaseService::getInstance()->removeSelectedSongs(m_currentHash, strlist, false);
 
     //更新player中缓存的歌曲信息，如果存在正在播放的歌曲，停止播放
-    Player::instance()->playRmvMeta(strlist);
+    if (m_currentHash == "all") {
+        Player::instance()->playRmvMeta(strlist);
+    }
 }
 
 void PlayListView::slotDelFromLocal()

@@ -67,8 +67,7 @@ public:
 
     //所有歌曲信息
     QList<MediaMeta>     allMusicInfos();
-    bool                 deleteMetaFromAllMusic(const QStringList &metaHash);
-    bool                 allMusicInfosRemoveOne(QString hash, bool removeFromLocal);
+    bool                 deleteMetaFromAllMusic(const QStringList &metaHash, bool removeFromLocal);
     int                  allMusicInfosCount();                         //歌曲数量
     MediaMeta            getMusicInfoByHash(const QString &hash);      //通过hash值获取单个歌曲的信息
     //专辑
@@ -121,7 +120,7 @@ signals:
     void sigCreatCoverImg(const QList<MediaMeta> &metas);//发送给子线程执行创建图片
     void sigImportFinished(QString hash);//导入结束，通知主界面
     void sigCoverUpdate(const MediaMeta &meta);//封面图片刷新
-    void sigRmvSong(const QString &str);//发送删除歌曲通知消息，动态显示
+    void sigRmvSong(const QString &listHash, const QString &musicHash); //发送删除歌曲通知消息，动态显示
     void sigPlayFromFileMaganager();  //文管启动加载数据完成后直接播放歌曲
 private:
     bool createConnection();
