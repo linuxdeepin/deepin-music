@@ -175,7 +175,6 @@ qt5_use_modules(${CMD_NAME} ${QtModule})
 set(TARGET_LIBS Qt5::Widgets Qt5::Core Qt5::Gui Qt5::DBus  Qt5::Sql Qt5::Svg Qt5::Multimedia Qt5::Xml
      PkgConfig::AV PkgConfig::Dtk PkgConfig::qgsettings icui18n
     PkgConfig::MPRIS PkgConfig::DBusextended dmusic)
-
 LINK_DIRECTORIES(${CMAKE_BINARY_DIR}/music/libdmusic/)
 
 

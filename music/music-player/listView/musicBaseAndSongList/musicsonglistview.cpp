@@ -296,10 +296,11 @@ void MusicSongListView::slotMenuTriggered(QAction *action)
         warnDlg.addButton(tr("Cancel"), false, Dtk::Widget::DDialog::ButtonNormal);
         warnDlg.addButton(tr("Delete"), true, Dtk::Widget::DDialog::ButtonWarning);
         if (1 == warnDlg.exec()) {
+            QString hash = index.data(Qt::UserRole).value<QString>();
+
             QStandardItem *item = model->itemFromIndex(index);
             model->removeRow(item->row());
-
-//            setMinimumHeight(model->rowCount() * 40);
+            DataBaseService::getInstance()->deletePlaylist(hash);
         }
     }
 }

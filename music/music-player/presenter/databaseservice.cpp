@@ -468,6 +468,22 @@ void DataBaseService::addPlaylist(const DataBaseService::PlaylistData &playlistM
     }
 }
 
+void DataBaseService::deletePlaylist(const QString &hash)
+{
+    QSqlQuery query(m_db);
+    QString sqlstring = QString("DROP TABLE IF EXISTS playlist_%1").arg(hash);
+    if (! query.exec(sqlstring)) {
+        qWarning() << query.lastError();
+        return;
+    }
+
+    sqlstring = QString("DELETE FROM playlist WHERE uuid = '%1'").arg(hash);
+    if (! query.exec(sqlstring)) {
+        qWarning() << query.lastError();
+        return;
+    }
+}
+
 void DataBaseService::favoriteMusic(const MediaMeta meta)
 {
     QSqlQuery query(m_db);

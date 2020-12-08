@@ -42,7 +42,6 @@ public:
 
         QStringList              sortMetas;
 
-//        QMap<QString, int>       invalidMetas;
         int     sortType    = 0;
         int     orderType   = 0;
 
@@ -101,6 +100,7 @@ public:
     QList<PlaylistData>  getCustomSongList(); //获取自定义歌单
     QList<MediaMeta>     customizeMusicInfos(const QString &hash);         //获取歌单歌曲&获取收藏歌曲
     void                 addPlaylist(const PlaylistData &playlistMeta);    //添加一个歌单
+    void                 deletePlaylist(const QString &hash);              //删除一个歌单
     QList<PlaylistData>  allPlaylistMeta();                                //歌单信息
     void                 addMetaToPlaylist(QString uuid, const QList<MediaMeta> &metas);  //添加歌曲到自定义歌单
     void                 updatePlaylistSortType(int type, QString uuid);   //更新歌单排序类型，如按歌手，时间排序

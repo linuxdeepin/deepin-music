@@ -69,7 +69,7 @@ TEST(Application, playListView)
 
 
     QTest::qWait(500);
-    plv->slotSetCoding();
+//    plv->slotSetCoding();
     QTest::qWait(1000);
     plv->slotOpenInFileManager();
     QTest::qWait(1000);
