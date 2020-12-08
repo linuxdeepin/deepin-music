@@ -677,25 +677,34 @@ void PlayListView::slotRmvFromSongList()
     if (modellist.size() == 0)
         return;
 
-    QMap<int, QString> smap;
-    QStringList strlist;
+    QStringList metaList;
     for (QModelIndex mindex : modellist) {
         MediaMeta imt = mindex.data(Qt::UserRole).value<MediaMeta>();
-        smap.insert(mindex.row(), imt.hash);
+        metaList << imt.hash;
     }
-    //sort by sort type
-    //qSort(smap.keys().begin(), smap.keys().end());
 
-    //get data
-    strlist << smap.values();
+    Dtk::Widget::DDialog warnDlg(this);
+    warnDlg.setTextFormat(Qt::RichText);
+    warnDlg.addButton(tr("Cancel"), true, Dtk::Widget::DDialog::ButtonNormal);
+    int deleteFlag = warnDlg.addButton(tr("Remove"), false, Dtk::Widget::DDialog::ButtonWarning);
 
-    //todo.. remove from db
-    if (!m_IsPlayList)
-        DataBaseService::getInstance()->removeSelectedSongs(m_currentHash, strlist, false);
+    MediaMeta meta = modellist.first().data(Qt::UserRole).value<MediaMeta>();
+    if (1 == metaList.length()) {
+        warnDlg.setMessage(QString(tr("Are you sure you want to remove %1?")).arg(meta.title));
+    } else {
+        warnDlg.setMessage(QString(tr("Are you sure you want to remove the selected %1 songs?").arg(metaList.size())));
+    }
 
-    //更新player中缓存的歌曲信息，如果存在正在播放的歌曲，停止播放
-    if (m_currentHash == "all") {
-        Player::instance()->playRmvMeta(strlist);
+    warnDlg.setIcon(QIcon::fromTheme("deepin-music"));
+    if (deleteFlag == warnDlg.exec()) {
+        //数据库中删除时有信号通知刷新界面
+        if (!m_IsPlayList)
+            DataBaseService::getInstance()->removeSelectedSongs(m_currentHash, metaList, false);
+
+        // 更新player中缓存的歌曲信息，如果存在正在播放的歌曲，停止播放
+        if (m_currentHash == "all") {
+            Player::instance()->playRmvMeta(metaList);
+        }
     }
 }
 

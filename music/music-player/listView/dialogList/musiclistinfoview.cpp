@@ -363,20 +363,28 @@ void MusicListInfoView::slotRemoveSongListActionClicked(bool checked)
     if (modellist.size() == 0)
         return;
 
-    QMap<int, QString> smap;
-    QStringList strlist;
+    QStringList metaList;
     for (QModelIndex mindex : modellist) {
         MediaMeta imt = mindex.data(Qt::UserRole).value<MediaMeta>();
-        smap.insert(mindex.row(), imt.hash);
+        metaList << imt.hash;
     }
-    //sort by sort type
-    //qSort(smap.keys().begin(), smap.keys().end());
 
-    //get data
-    strlist << smap.values();
+    Dtk::Widget::DDialog warnDlg(this);
+    warnDlg.setTextFormat(Qt::RichText);
+    warnDlg.addButton(tr("Cancel"), true, Dtk::Widget::DDialog::ButtonNormal);
+    int deleteFlag = warnDlg.addButton(tr("Remove"), false, Dtk::Widget::DDialog::ButtonWarning);
 
-    //remove from db
-    DataBaseService::getInstance()->removeSelectedSongs("all", strlist, false);
+    MediaMeta meta = modellist.first().data(Qt::UserRole).value<MediaMeta>();
+    if (1 == metaList.length()) {
+        warnDlg.setMessage(QString(tr("Are you sure you want to remove %1?")).arg(meta.title));
+    } else {
+        warnDlg.setMessage(QString(tr("Are you sure you want to remove the selected %1 songs?").arg(metaList.size())));
+    }
+
+    warnDlg.setIcon(QIcon::fromTheme("deepin-music"));
+    if (deleteFlag == warnDlg.exec()) {
+        DataBaseService::getInstance()->removeSelectedSongs("all", metaList, false);
+    }
 }
 
 void MusicListInfoView::slotDeleteLocalActionClicked(bool checked)
