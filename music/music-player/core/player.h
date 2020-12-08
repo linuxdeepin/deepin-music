@@ -102,6 +102,9 @@ public:
     void setActiveMeta(const MediaMeta &meta);
     //播放列表中第一首歌，当音乐处于停止状态时
     void forcePlayMeta();
+    //初始化均衡器配置
+    void initEqualizerCfg();
+
 signals:
     // 播放状态改变
     void signalPlaybackStatusChanged(Player::PlaybackStatus playbackStatus);

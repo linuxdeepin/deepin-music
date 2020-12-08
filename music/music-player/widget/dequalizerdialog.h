@@ -111,9 +111,6 @@ private:
                                          };
     QList<int> BaudList;
 
-    MusicSettings   *settings         = nullptr;
-
-
     bool    switchflag               = false;
     bool    changeflag                = false;
     int     curEffect                 = 0;

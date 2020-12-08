@@ -571,6 +571,33 @@ void Player::forcePlayMeta()
     playMeta(m_MetaList.first());
 }
 
+void Player::initEqualizerCfg()
+{
+    setEqualizerEnable(true);
+    //读取均衡器使能开关配置
+    auto eqSwitch = MusicSettings::value("equalizer.all.switch").toBool();
+    //自定义频率
+    QList<int > allBauds;
+    allBauds.clear();
+    allBauds.append(MusicSettings::value("equalizer.all.baud_pre").toInt());
+    allBauds.append(MusicSettings::value("equalizer.all.baud_60").toInt());
+    allBauds.append(MusicSettings::value("equalizer.all.baud_170").toInt());
+    allBauds.append(MusicSettings::value("equalizer.all.baud_310").toInt());
+    allBauds.append(MusicSettings::value("equalizer.all.baud_600").toInt());
+    allBauds.append(MusicSettings::value("equalizer.all.baud_1K").toInt());
+    allBauds.append(MusicSettings::value("equalizer.all.baud_3K").toInt());
+    allBauds.append(MusicSettings::value("equalizer.all.baud_6K").toInt());
+    allBauds.append(MusicSettings::value("equalizer.all.baud_12K").toInt());
+    allBauds.append(MusicSettings::value("equalizer.all.baud_14K").toInt());
+    allBauds.append(MusicSettings::value("equalizer.all.baud_16K").toInt());
+    //载入当前设置音效
+    auto eqCurEffect = MusicSettings::value("equalizer.all.curEffect").toInt();
+
+    if (eqSwitch) {
+        setEqualizer(eqSwitch, eqCurEffect, allBauds);
+    }
+}
+
 void Player::setLocalMuted(bool muted)
 {
     m_qvplayer->audio()->setMute(muted);

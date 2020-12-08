@@ -416,7 +416,17 @@ void MainFrame::slotMenuTriggered(QAction *action)
     if (action == m_equalizer) {
         if (m_dequalizerDialog == nullptr) {
             m_dequalizerDialog = new DequalizerDialog(this);
+            connect(m_dequalizerDialog, &DequalizerDialog::setEqualizerEnable,
+                    Player::instance(), &Player::setEqualizerEnable);
+            connect(m_dequalizerDialog, &DequalizerDialog::setEqualizerpre,
+                    Player::instance(), &Player::setEqualizerpre);
+            connect(m_dequalizerDialog, &DequalizerDialog::setEqualizerbauds,
+                    Player::instance(), &Player::setEqualizerbauds);
+            connect(m_dequalizerDialog, &DequalizerDialog::setEqualizerIndex,
+                    Player::instance(), &Player::setEqualizerCurMode);
         }
+        //配置均衡器参数
+        Player::instance()->initEqualizerCfg();
         Dtk::Widget::moveToCenter(m_dequalizerDialog);
         m_dequalizerDialog->exec();
         MusicSettings::sync();

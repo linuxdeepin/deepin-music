@@ -80,8 +80,8 @@ public:
 void DequalizerDialog::readConfig()
 {
 //    Q_Q(DequalizerDialog);
-    switchflag = settings->value("equalizer.all.switch").toBool();
-    curEffect   = settings->value("equalizer.all.curEffect").toInt();
+    switchflag = MusicSettings::value("equalizer.all.switch").toBool();
+    curEffect   = MusicSettings::value("equalizer.all.curEffect").toInt();
 
 }
 
@@ -524,9 +524,9 @@ void DequalizerDialog::initConnection()
         for (DSlider *slider : findChildren<DSlider *>()) {
             if (slider)
                 continue;
-            this->settings->setOption("equalizer.all." + slider->objectName(), slider->value());
+            MusicSettings::setOption("equalizer.all." + slider->objectName(), slider->value());
         }
-        this->settings->setOption("equalizer.all.curEffect", 0);
+        MusicSettings::setOption("equalizer.all.curEffect", 0);
         this->saveMessage->show();
     });
 
@@ -538,7 +538,7 @@ void DequalizerDialog::initConnection()
             this->changeflag = false;
             showCurMode(this->AllbaudTypes.at(index - 1));
             Q_EMIT setEqualizerIndex(index);
-            this->settings->setOption("equalizer.all.curEffect", index);
+            MusicSettings::setOption("equalizer.all.curEffect", index);
         }
     });
     connect(this->btn_default, &DPushButton::clicked, this, &DequalizerDialog::setDefaultClicked);
@@ -552,11 +552,11 @@ void DequalizerDialog::showCustom()
     }
 
     for (DSlider *slider : findChildren<DSlider *>()) {
-        int indexbaud = this->settings->value("equalizer.all." + slider->objectName()).toInt();
+        int indexbaud = MusicSettings::value("equalizer.all." + slider->objectName()).toInt();
         slider->setValue(indexbaud);
         selectSlider(slider, "");
     }
-    this->settings->setOption("equalizer.all.curEffect", 0);
+    MusicSettings::setOption("equalizer.all.curEffect", 0);
 }
 
 //显示非自定义模式
@@ -590,15 +590,15 @@ void DequalizerDialog::checkedChanged(bool checked)
         showCurMode(this->flat_bauds);
         this->mcombox->setCurrentIndex(1);
         Q_EMIT setEqualizerIndex(1);
-        this->settings->setOption("equalizer.all.curEffect", 1);
+        MusicSettings::setOption("equalizer.all.curEffect", 1);
     } else {
         Q_EMIT setEqualizerIndex(1);
-        this->settings->setOption("equalizer.all.curEffect", 1);
+        MusicSettings::setOption("equalizer.all.curEffect", 1);
     }
     this->mcombox->setEnabled(checked);
     this->saveBtn->setEnabled(false);
 //    Q_EMIT setEqualizerEnable(checked);
-    this->settings->setOption("equalizer.all.switch", checked);
+    MusicSettings::setOption("equalizer.all.switch", checked);
 }
 
 //恢复默认
@@ -608,15 +608,12 @@ void DequalizerDialog::setDefaultClicked()
         showCurMode(this->flat_bauds);
         this->mswitchBtn->setChecked(false);
         this->mcombox->setCurrentIndex(1);
-//        Q_EMIT setEqualizerEnable(false);
-        this->settings->setOption("equalizer.all.curEffect", 1);
+        MusicSettings::setOption("equalizer.all.curEffect", 1);
         for (DSlider *slider : findChildren<DSlider *>()) {
-            if (slider == nullptr)
-                continue;
             if (slider == this->slider_pre) {
-                this->settings->setOption("equalizer.all." + slider->objectName(), 12);
+                MusicSettings::setOption("equalizer.all." + slider->objectName(), 12);
             } else {
-                this->settings->setOption("equalizer.all." + slider->objectName(), 0);
+                MusicSettings::setOption("equalizer.all." + slider->objectName(), 0);
             }
         }
     }
