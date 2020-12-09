@@ -37,7 +37,7 @@ class PlayListView : public DListView
 {
     Q_OBJECT
 public:
-    explicit PlayListView(QString hash, bool isPlayList, QWidget *parent = Q_NULLPTR);
+    explicit PlayListView(QString hash, bool isPlayQueue, QWidget *parent = Q_NULLPTR);
     ~PlayListView() override;
 
     void setThemeType(int type);
@@ -91,6 +91,7 @@ public slots:
     void slotRmvFromSongList();     //从歌单移出
     void slotDelFromLocal();        //从本地删除
     void showDetailInfoDlg();       //查看歌曲信息
+    void slotPlayQueueMetaRemove(QString metaHash);//播放队列中歌曲被删除
 
     // 右键菜单设置音乐编码
     void slotTextCodecMenuClicked(QAction *action);
@@ -104,7 +105,7 @@ signals:
     void hideEmptyHits(bool ishide);
     void getSearchData(bool isvalid); //get search data
 public:
-    bool getIsPlayList() const;
+    bool getIsPlayQueue() const;
     void reflushItemMediaMeta(const MediaMeta &meta);
 
 protected:
@@ -121,7 +122,7 @@ private:
     PlaylistModel           *m_model        = nullptr;
     PlayItemDelegate        *m_delegate     = nullptr;
     int                      m_themeType    = 1;
-    bool                     m_IsPlayList;
+    bool                     m_IsPlayQueue;
     QString                  m_currentHash; //根据hash区分所有，收藏与自定义歌单
     QMap<QString, QListView::ViewMode> m_viewModeMap;
     InfoDialog          *m_pInfoDlg = nullptr; //详细信息窗口

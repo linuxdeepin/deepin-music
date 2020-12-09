@@ -355,6 +355,7 @@ void Player::playRmvMeta(const QStringList &metalist)
                     for (QString str : metalist) {
                         for (int i = 0 ; i < m_MetaList.size() ; i++) {
                             if (m_MetaList[i].hash == str) {
+                                emit signalPlayQueueMetaRemove(str);
                                 m_MetaList.removeAt(i);
                                 break;
                             }
@@ -372,6 +373,7 @@ void Player::playRmvMeta(const QStringList &metalist)
         for (QString str : metalist) {
             for (int i = (m_MetaList.size() - 1) ; i >= 0 ; i--) {
                 if (m_MetaList[i].hash == str) {
+                    emit signalPlayQueueMetaRemove(str);
                     m_MetaList.removeAt(i);
                     break;
                 }

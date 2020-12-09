@@ -75,10 +75,10 @@ bool moreThanAblum(const MediaMeta v1, const MediaMeta v2)
     return v1.pinyinAlbum < v2.pinyinAlbum;
 }
 
-PlayListView::PlayListView(QString hash, bool isPlayList, QWidget *parent)
+PlayListView::PlayListView(QString hash, bool isPlayQueue, QWidget *parent)
     : DListView(parent)
 {
-    m_IsPlayList = isPlayList;
+    m_IsPlayQueue = isPlayQueue;
     m_currentHash = hash.isEmpty() ? "all" : hash;
     setObjectName("PlayListView");
 
@@ -132,6 +132,8 @@ PlayListView::PlayListView(QString hash, bool isPlayList, QWidget *parent)
 
     connect(Player::instance(), SIGNAL(signalUpdatePlayingIcon()),
             this, SLOT(slotUpdatePlayingIcon()), Qt::DirectConnection);
+    connect(Player::instance(), &Player::signalPlayQueueMetaRemove,
+            this, &PlayListView::slotPlayQueueMetaRemove);
 
     connect(DataBaseService::getInstance(), &DataBaseService::sigImportFinished,
             this, &PlayListView::slotImportFinished);
@@ -478,7 +480,7 @@ void PlayListView::slotOnDoubleClicked(const QModelIndex &index)
     MediaMeta itemMeta = index.data(Qt::UserRole).value<MediaMeta>();
     qDebug() << "------" << itemMeta.hash;
 
-    if (!m_IsPlayList) {
+    if (!m_IsPlayQueue) {
         //设置新的播放列表
         Player::instance()->clearPlayList();
         for (int i = 0; i < m_model->rowCount(); i++) {
@@ -596,7 +598,6 @@ void PlayListView::slotRemoveSingleSong(const QString &listHash, const QString &
             break;
         }
     }
-    //todo.. mm
 }
 
 void PlayListView::slotPlayMusic()
@@ -616,6 +617,24 @@ void PlayListView::showDetailInfoDlg()
     MediaMeta meta = mindex.data(Qt::UserRole).value<MediaMeta>();
     m_pInfoDlg->updateInfo(meta);
     m_pInfoDlg->show();
+}
+
+void PlayListView::slotPlayQueueMetaRemove(QString metaHash)
+{
+    if (!m_IsPlayQueue) {
+        return;
+    }
+    int row =  m_model->rowCount();
+    for (int i = 0; i < row; i++) {
+        QModelIndex mindex = m_model->index(i, 0, QModelIndex());
+        MediaMeta meta = mindex.data(Qt::UserRole).value<MediaMeta>();
+        if (meta.hash == metaHash) {
+            this->removeItem(i);
+            m_model->removeRow(row);
+            update();
+            break;
+        }
+    }
 }
 
 void PlayListView::slotAddToFavSongList()
@@ -701,11 +720,13 @@ void PlayListView::slotRmvFromSongList()
     warnDlg.setIcon(QIcon::fromTheme("deepin-music"));
     if (deleteFlag == warnDlg.exec()) {
         //数据库中删除时有信号通知刷新界面
-        if (!m_IsPlayList)
+        if (!m_IsPlayQueue) {
             DataBaseService::getInstance()->removeSelectedSongs(m_currentHash, metaList, false);
-
-        // 更新player中缓存的歌曲信息，如果存在正在播放的歌曲，停止播放
-        if (m_currentHash == "all") {
+            // 更新player中缓存的歌曲信息，如果存在正在播放的歌曲，停止播放
+            if (m_currentHash == "all") {
+                Player::instance()->playRmvMeta(metaList);
+            }
+        } else {
             Player::instance()->playRmvMeta(metaList);
         }
     }
@@ -746,8 +767,7 @@ void PlayListView::slotDelFromLocal()
 
     warnDlg.setIcon(QIcon::fromTheme("deepin-music"));
     if (deleteFlag == warnDlg.exec()) {
-        if (!m_IsPlayList)
-            DataBaseService::getInstance()->removeSelectedSongs(m_currentHash, strlist, true);
+        DataBaseService::getInstance()->removeSelectedSongs("all", strlist, true);
         // 更新player中缓存的歌曲信息，如果存在正在播放的歌曲，停止播放
         Player::instance()->playRmvMeta(strlist);
     }
@@ -889,7 +909,7 @@ void PlayListView::contextMenuEvent(QContextMenuEvent *event)
         allMusicMenu.addAction(tr("Add to playlist"))->setMenu(&playlistMenu);
         allMusicMenu.addSeparator();
         QAction *actdisplay = allMusicMenu.addAction(tr("Display in file manager"));
-        if (m_IsPlayList) {
+        if (m_IsPlayQueue) {
             actRmv = allMusicMenu.addAction(tr("Remove from play queue"));
         } else {
             actRmv = allMusicMenu.addAction(tr("Remove from playlist"));
@@ -952,7 +972,7 @@ void PlayListView::contextMenuEvent(QContextMenuEvent *event)
         }
 
         allMusicMenu.addAction(tr("Add to playlist"))->setMenu(&playlistMenu);
-        if (m_IsPlayList) {
+        if (m_IsPlayQueue) {
             actRmv = allMusicMenu.addAction(tr("Remove from play queue"));
         } else {
             actRmv = allMusicMenu.addAction(tr("Remove from playlist"));
@@ -1000,9 +1020,9 @@ void PlayListView::dropEvent(QDropEvent *event)
     DListView::dropEvent(event);
 }
 
-bool PlayListView::getIsPlayList() const
+bool PlayListView::getIsPlayQueue() const
 {
-    return m_IsPlayList;
+    return m_IsPlayQueue;
 }
 
 void PlayListView::reflushItemMediaMeta(const MediaMeta &meta)
