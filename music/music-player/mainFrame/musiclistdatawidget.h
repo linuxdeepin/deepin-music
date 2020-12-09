@@ -76,7 +76,7 @@ private:
     //刷新显示模式按钮check状态
     void refreshModeBtn(DListView::ViewMode mode);
     //刷新当前排序菜单
-    void refreshSortAction();
+    void refreshSortAction(QString hash = "");
 private:
     DWidget             *m_contentWidget   = nullptr;
     QStackedWidget      *m_pStackedWidget  = nullptr;

@@ -245,6 +245,8 @@ void MusicListDataWidget::slotSortChange(QAction *action)
         m_albumListView->update();
     } else if (m_pStackedWidget->currentWidget() == m_singerListView) {
         m_singerListView->setSortType(sortType);
+    } else if (m_pStackedWidget->currentWidget() == m_SearchResultTabWidget) {
+        m_SearchResultTabWidget->setSortType(sortType);
     }
 }
 
@@ -717,6 +719,7 @@ void MusicListDataWidget::refreshInfoLabel(QString hash)
             songCount = m_SearchResultTabWidget->getMusicCount();
             albumCount = m_SearchResultTabWidget->getAlbumCount();
             showEmptyHits(songCount);
+            refreshSortAction("albumResult");
         } else {
             albumCount = DataBaseService::getInstance()->allAlbumInfos().size();
             songCount = DataBaseService::getInstance()->allMusicInfos().size();
@@ -738,6 +741,7 @@ void MusicListDataWidget::refreshInfoLabel(QString hash)
             songCount = m_SearchResultTabWidget->getMusicCount();
             singerCount = m_SearchResultTabWidget->getSingerCount();
             showEmptyHits(songCount);
+            refreshSortAction("artistResult");
         } else {
             singerCount = DataBaseService::getInstance()->allSingerInfos().size();
             songCount = DataBaseService::getInstance()->allMusicInfos().size();
@@ -757,6 +761,7 @@ void MusicListDataWidget::refreshInfoLabel(QString hash)
         if (hash == "musicResult") {
             songCount = m_SearchResultTabWidget->getMusicCount();
             showEmptyHits(songCount);
+            refreshSortAction("musicResult");
         } else {
             songCount = DataBaseService::getInstance()->allMusicInfos().size();
         }
@@ -767,9 +772,7 @@ void MusicListDataWidget::refreshInfoLabel(QString hash)
         } else {
             countStr = QString("   ") + MusicListDataWidget::tr("%1 songs").arg(songCount);
         }
-    } else if (hash == "musicResult") {
-
-    } else {
+    } else  {
         //自定义歌单一定有hash
         if (hash.isEmpty()) {
             return;
@@ -798,38 +801,41 @@ void MusicListDataWidget::slotRemoveSingleSong(const QString &listHash, const QS
     }
 }
 
-void MusicListDataWidget::refreshSortAction()
+void MusicListDataWidget::refreshSortAction(QString hash)
 {
-    if (m_pStackedWidget->currentWidget() == m_musicListView) {
+    if (m_pStackedWidget->currentWidget() == m_musicListView ||
+            (hash == "musicResult")) {
         m_musicDropdown->setVisible(true);
         m_albumDropdown->setVisible(false);
         m_artistDropdown->setVisible(false);
         for (int i = 0; i < m_musicDropdown->actions().size(); i++) {
             QAction *action = m_musicDropdown->actions().at(i);
             DataBaseService::ListSortType sortType = action->data().value<DataBaseService::ListSortType>();
-            if (sortType == m_musicListView->getSortType()) {
+            if (sortType == (hash == "musicResult" ? m_SearchResultTabWidget->getSortType() : m_musicListView->getSortType())) {
                 m_musicDropdown->setCurrentAction(action);
             }
         }
-    } else if (m_pStackedWidget->currentWidget() == m_albumListView) {
+    } else if (m_pStackedWidget->currentWidget() == m_albumListView ||
+               (hash == "albumResult")) {
         m_musicDropdown->setVisible(false);
         m_albumDropdown->setVisible(true);
         m_artistDropdown->setVisible(false);
         for (int i = 0; i < m_albumDropdown->actions().size(); i++) {
             QAction *action = m_albumDropdown->actions().at(i);
             DataBaseService::ListSortType sortType = action->data().value<DataBaseService::ListSortType>();
-            if (sortType == m_albumListView->getSortType()) {
+            if (sortType == (hash == "albumResult" ? m_SearchResultTabWidget->getSortType() : m_albumListView->getSortType())) {
                 m_albumDropdown->setCurrentAction(action);
             }
         }
-    } else if (m_pStackedWidget->currentWidget() == m_singerListView) {
+    } else if (m_pStackedWidget->currentWidget() == m_singerListView ||
+               (hash == "artistResult")) {
         m_musicDropdown->setVisible(false);
         m_albumDropdown->setVisible(false);
         m_artistDropdown->setVisible(true);
         for (int i = 0; i < m_artistDropdown->actions().size(); i++) {
             QAction *action = m_artistDropdown->actions().at(i);
             DataBaseService::ListSortType sortType = action->data().value<DataBaseService::ListSortType>();
-            if (sortType == m_singerListView->getSortType()) {
+            if (sortType == (hash == "artistResult" ? m_SearchResultTabWidget->getSortType() : m_singerListView->getSortType())) {
                 m_artistDropdown->setCurrentAction(action);
             }
         }

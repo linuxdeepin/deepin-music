@@ -252,7 +252,7 @@ void SingerDataDelegate::drawIconMode(QPainter &painter, const QStyleOptionViewI
         t_fillBrush = QBrush(QColor(128, 128, 128, 90));
     }
 
-    if ((option.state & QStyle::State_MouseOver) && (playStatue != Player::Playing)) {
+    if ((option.state & QStyle::State_MouseOver) && (!playFlag || (playFlag && playStatue == Player::Paused))) {
         QImage t_image = opticon.pixmap(rect.width(), rect.height()).toImage();
         int t_ratio = static_cast<int>(t_image.devicePixelRatioF());
         QRect t_imageRect(rect.width() / 2 - 25, rect.height() / 2 - 25, 50 * t_ratio, 50 * t_ratio);

@@ -26,6 +26,7 @@
 #include <DHorizontalLine>
 #include <DListView>
 #include "mediameta.h"
+#include "databaseservice.h"
 
 DWIDGET_USE_NAMESPACE
 class Label;
@@ -42,12 +43,16 @@ public:
 
     void refreshListview(ListPageSwitchType switchtype, QString searchword);
     void setViewMode(DListView::ViewMode mode);
+    void setSortType(DataBaseService::ListSortType sortType);
+    //排序
+    DataBaseService::ListSortType getSortType();
     int  getMusicCount();
     int  getAlbumCount();
     int  getSingerCount();
 public slots:
 
 signals:
+    //通知主界面搜索结果tab切换，设计排序与数量显示
     void sigSearchTypeChanged(QString hash);
 
 protected:

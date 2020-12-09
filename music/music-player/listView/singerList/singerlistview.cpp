@@ -147,6 +147,22 @@ void SingerListView::resetSingerListDataByStr(const QString &searchWord)
             continue;
         }
         QStandardItem *pItem = new QStandardItem;
+        //设置icon
+        bool iconExists = false;
+        for (int i = 0; i < meta.musicinfos.values().size(); i++) {
+            MediaMeta metaBind = meta.musicinfos.values().at(i);
+            QString imagesDirPath = Global::cacheDir() + "/images/" + metaBind.hash + ".jpg";
+            QFileInfo file(imagesDirPath);
+            QIcon icon;
+            if (file.exists()) {
+                pItem->setIcon(QIcon(imagesDirPath));
+                iconExists = true;
+                break;
+            }
+        }
+        if (!iconExists) {
+            pItem->setIcon(m_defaultIcon);
+        }
         singerModel->appendRow(pItem);
         auto row = singerModel->rowCount() - 1;
         QModelIndex idx = singerModel->index(row, 0, QModelIndex());
@@ -175,6 +191,22 @@ void SingerListView::resetSingerListDataBySongName(const QList<MediaMeta> &media
             continue;
         }
         QStandardItem *pItem = new QStandardItem;
+        //设置icon
+        bool iconExists = false;
+        for (int i = 0; i < singerInfo.musicinfos.values().size(); i++) {
+            MediaMeta metaBind = singerInfo.musicinfos.values().at(i);
+            QString imagesDirPath = Global::cacheDir() + "/images/" + metaBind.hash + ".jpg";
+            QFileInfo file(imagesDirPath);
+            QIcon icon;
+            if (file.exists()) {
+                pItem->setIcon(QIcon(imagesDirPath));
+                iconExists = true;
+                break;
+            }
+        }
+        if (!iconExists) {
+            pItem->setIcon(m_defaultIcon);
+        }
         singerModel->appendRow(pItem);
         auto row = singerModel->rowCount() - 1;
         QModelIndex idx = singerModel->index(row, 0, QModelIndex());
@@ -203,6 +235,22 @@ void SingerListView::resetSingerListDataByAlbum(const QList<AlbumInfo> &albumInf
             continue;
         }
         QStandardItem *pItem = new QStandardItem;
+        //设置icon
+        bool iconExists = false;
+        for (int i = 0; i < singerInfo.musicinfos.values().size(); i++) {
+            MediaMeta metaBind = singerInfo.musicinfos.values().at(i);
+            QString imagesDirPath = Global::cacheDir() + "/images/" + metaBind.hash + ".jpg";
+            QFileInfo file(imagesDirPath);
+            QIcon icon;
+            if (file.exists()) {
+                pItem->setIcon(QIcon(imagesDirPath));
+                iconExists = true;
+                break;
+            }
+        }
+        if (!iconExists) {
+            pItem->setIcon(m_defaultIcon);
+        }
         singerModel->appendRow(pItem);
         auto row = singerModel->rowCount() - 1;
         QModelIndex idx = singerModel->index(row, 0, QModelIndex());
@@ -303,6 +351,22 @@ void SingerListView::setSortType(DataBaseService::ListSortType sortType)
     singerModel->clear();
     for (SingerInfo meta : m_singerInfoList) {
         QStandardItem *pItem = new QStandardItem;
+        //设置icon
+        bool iconExists = false;
+        for (int i = 0; i < meta.musicinfos.values().size(); i++) {
+            MediaMeta metaBind = meta.musicinfos.values().at(i);
+            QString imagesDirPath = Global::cacheDir() + "/images/" + metaBind.hash + ".jpg";
+            QFileInfo file(imagesDirPath);
+            QIcon icon;
+            if (file.exists()) {
+                pItem->setIcon(QIcon(imagesDirPath));
+                iconExists = true;
+                break;
+            }
+        }
+        if (!iconExists) {
+            pItem->setIcon(m_defaultIcon);
+        }
         singerModel->appendRow(pItem);
         auto row = singerModel->rowCount() - 1;
         QModelIndex idx = singerModel->index(row, 0, QModelIndex());

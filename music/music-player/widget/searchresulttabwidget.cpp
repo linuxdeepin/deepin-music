@@ -157,6 +157,28 @@ void SearchResultTabWidget::setViewMode(QListView::ViewMode mode)
     }
 }
 
+void SearchResultTabWidget::setSortType(DataBaseService::ListSortType sortType)
+{
+    if (m_StackedWidget->currentWidget() == m_musicListView) {
+        m_musicListView->setSortType(sortType);
+    } else if (m_StackedWidget->currentWidget() == m_albumListView) {
+        m_albumListView->setSortType(sortType);
+    } else if (m_StackedWidget->currentWidget() == m_singerListView) {
+        m_singerListView->setSortType(sortType);
+    }
+}
+
+DataBaseService::ListSortType SearchResultTabWidget::getSortType()
+{
+    if (m_StackedWidget->currentWidget() == m_musicListView) {
+        return m_musicListView->getSortType();
+    } else if (m_StackedWidget->currentWidget() == m_albumListView) {
+        return m_albumListView->getSortType();
+    } else if (m_StackedWidget->currentWidget() == m_singerListView) {
+        return m_singerListView->getSortType();
+    }
+}
+
 int SearchResultTabWidget::getMusicCount()
 {
     int count = 0;
