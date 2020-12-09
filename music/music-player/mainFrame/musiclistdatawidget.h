@@ -44,7 +44,7 @@ class MusicListDataWidget : public DWidget
 public:
     explicit MusicListDataWidget(QWidget *parent = Q_NULLPTR);
     ~MusicListDataWidget() override;
-    void showEmptyHits();
+    void showEmptyHits(int count);
 public slots:
     void slotTheme(int type);
     // 左侧菜单切换ListView
@@ -78,7 +78,8 @@ private:
     //刷新当前排序菜单
     void refreshSortAction();
 private:
-    QStackedWidget      *m_pCenterWidget   = nullptr;
+    DWidget             *m_contentWidget   = nullptr;
+    QStackedWidget      *m_pStackedWidget  = nullptr;
     DLabel              *m_emptyHits       = nullptr;
     ActionBar           *m_actionBar       = nullptr;
     DLabel              *m_titleLabel      = nullptr;

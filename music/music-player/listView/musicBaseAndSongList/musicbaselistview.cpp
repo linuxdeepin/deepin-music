@@ -146,7 +146,7 @@ void MusicBaseListView::init()
     item->setData("album", Qt::UserRole + 2);
     model->appendRow(item);
 
-    displayName = tr("Artist");
+    displayName = tr("Artists");
     item = new DStandardItem(QIcon::fromTheme("music_singer"), displayName);
     item->setData(ListPageSwitchType::SingerType, Qt::UserRole);
     item->setData("artist", Qt::UserRole + 2);

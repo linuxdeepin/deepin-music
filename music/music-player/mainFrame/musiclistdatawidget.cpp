@@ -76,9 +76,15 @@ MusicListDataWidget::~MusicListDataWidget()
 {
 }
 
-void MusicListDataWidget::showEmptyHits()
+void MusicListDataWidget::showEmptyHits(int count)
 {
-
+    if (count > 0) {
+        m_contentWidget->show();
+        m_emptyHits->hide();
+    } else {
+        m_contentWidget->hide();
+        m_emptyHits->show();
+    }
 }
 
 // 左侧菜单切换ListView
@@ -91,14 +97,14 @@ void MusicListDataWidget::viewChanged(ListPageSwitchType switchtype, const QStri
         if (!m_albumListView) { // alloc
             m_albumListView = new AlbumListView("album", this);
             m_albumListView->setThemeType(m_musicListView->getThemeType());
-            m_pCenterWidget->addWidget(m_albumListView);
+            m_pStackedWidget->addWidget(m_albumListView);
 
             AC_SET_OBJECT_NAME(m_albumListView, AC_albumListView);
             AC_SET_ACCESSIBLE_NAME(m_albumListView, AC_albumListView);
         }
         m_albumListView->setAlbumListData(DataBaseService::getInstance()->allAlbumInfos()); //set album data
         m_albumListView->setViewModeFlag(m_albumListView->getViewMode());
-        m_pCenterWidget->setCurrentWidget(m_albumListView);
+        m_pStackedWidget->setCurrentWidget(m_albumListView);
 //        m_preIndex = m_pCenterWidget->currentIndex();
         m_preHash = "album";
         m_preSwitchtype = AlbumType;
@@ -112,11 +118,11 @@ void MusicListDataWidget::viewChanged(ListPageSwitchType switchtype, const QStri
         if (!m_singerListView) {
             m_singerListView = new SingerListView("artist", this);
             m_singerListView->setThemeType(m_musicListView->getThemeType());
-            m_pCenterWidget->addWidget(m_singerListView);
+            m_pStackedWidget->addWidget(m_singerListView);
         }
         m_singerListView->setSingerListData(DataBaseService::getInstance()->allSingerInfos()); //set singer data
         m_singerListView->setViewModeFlag(m_singerListView->getViewMode());
-        m_pCenterWidget->setCurrentWidget(m_singerListView);
+        m_pStackedWidget->setCurrentWidget(m_singerListView);
 //        m_preIndex = m_pCenterWidget->currentIndex();
         m_preHash = "artist";
         m_preSwitchtype = SingerType;
@@ -132,7 +138,7 @@ void MusicListDataWidget::viewChanged(ListPageSwitchType switchtype, const QStri
         m_musicListView->setViewModeFlag("all", m_musicListView->getViewMode());
         refreshModeBtn(m_musicListView->getViewMode());
         refreshInfoLabel("all");
-        m_pCenterWidget->setCurrentWidget(m_musicListView);
+        m_pStackedWidget->setCurrentWidget(m_musicListView);
 //        m_preIndex = m_pCenterWidget->currentIndex();
         m_preHash = "all";
         m_preSwitchtype = AllSongListType;
@@ -144,7 +150,7 @@ void MusicListDataWidget::viewChanged(ListPageSwitchType switchtype, const QStri
         m_musicListView->initCostomSonglist("fav");
         m_titleLabel->setText(DataBaseService::getInstance()->getPlaylistNameByUUID("fav"));
         m_musicListView->setViewModeFlag("fav", m_musicListView->getViewMode());
-        m_pCenterWidget->setCurrentWidget(m_musicListView);
+        m_pStackedWidget->setCurrentWidget(m_musicListView);
 //        m_preIndex = m_pCenterWidget->currentIndex();
         m_preHash = "fav";
         m_preSwitchtype = FavType;
@@ -157,7 +163,7 @@ void MusicListDataWidget::viewChanged(ListPageSwitchType switchtype, const QStri
         m_musicListView->initCostomSonglist(hashOrSearchword);
         m_titleLabel->setText(DataBaseService::getInstance()->getPlaylistNameByUUID(hashOrSearchword));
         m_musicListView->setViewModeFlag(hashOrSearchword, m_musicListView->getViewMode());
-        m_pCenterWidget->setCurrentWidget(m_musicListView);
+        m_pStackedWidget->setCurrentWidget(m_musicListView);
 //        m_preIndex = m_pCenterWidget->currentIndex();
         m_preHash = hashOrSearchword;
         m_preSwitchtype = CustomType;
@@ -172,10 +178,10 @@ void MusicListDataWidget::viewChanged(ListPageSwitchType switchtype, const QStri
 //        m_preIndex = m_pCenterWidget->currentIndex();
         if (!m_SearchResultTabWidget) {
             m_SearchResultTabWidget = new SearchResultTabWidget(this);
-            m_pCenterWidget->addWidget(m_SearchResultTabWidget);
+            m_pStackedWidget->addWidget(m_SearchResultTabWidget);
             connect(m_SearchResultTabWidget, &SearchResultTabWidget::sigSearchTypeChanged, this, &MusicListDataWidget::refreshInfoLabel);
         }
-        m_pCenterWidget->setCurrentWidget(m_SearchResultTabWidget);
+        m_pStackedWidget->setCurrentWidget(m_SearchResultTabWidget);
 //        m_preIndex = m_pCenterWidget->currentIndex();
         m_titleLabel->setText(tr("Search Results"));
         m_SearchResultTabWidget->refreshListview(switchtype, hashOrSearchword);
@@ -191,6 +197,8 @@ void MusicListDataWidget::viewChanged(ListPageSwitchType switchtype, const QStri
     }
     case PreType: {
         viewChanged(m_preSwitchtype, m_preHash);
+        //任意非0数，隐藏无搜索结果界面
+        showEmptyHits(1);
         break;
     }
     default:
@@ -205,16 +213,16 @@ void MusicListDataWidget::switchViewModel()
     if (!ptb)
         return;
 
-    if (m_pCenterWidget->currentWidget() == m_albumListView) {
+    if (m_pStackedWidget->currentWidget() == m_albumListView) {
         m_albumListView->setViewModeFlag(ptb == m_btIconMode ?
                                          DListView::IconMode : DListView::ListMode);
-    } else if (m_pCenterWidget->currentWidget() == m_singerListView) {
+    } else if (m_pStackedWidget->currentWidget() == m_singerListView) {
         m_singerListView->setViewModeFlag(ptb == m_btIconMode ?
                                           DListView::IconMode : DListView::ListMode);
-    } else if (m_pCenterWidget->currentWidget() == m_musicListView) {
+    } else if (m_pStackedWidget->currentWidget() == m_musicListView) {
         m_musicListView->setViewModeFlag(m_musicListView->getCurrentHash(), ptb == m_btIconMode ?
                                          DListView::IconMode : DListView::ListMode);
-    } else if (m_pCenterWidget->currentWidget() == m_SearchResultTabWidget) {
+    } else if (m_pStackedWidget->currentWidget() == m_SearchResultTabWidget) {
         m_SearchResultTabWidget->setViewMode(m_btIconMode ?
                                              DListView::IconMode : DListView::ListMode);
     }
@@ -230,12 +238,12 @@ void MusicListDataWidget::slotSortChange(QAction *action)
         return;
     ptb->setCurrentAction(action);
     DataBaseService::ListSortType sortType = action->data().value<DataBaseService::ListSortType>();
-    if (m_pCenterWidget->currentWidget() == m_musicListView) {
+    if (m_pStackedWidget->currentWidget() == m_musicListView) {
         m_musicListView->setSortType(sortType);
-    } else if (m_pCenterWidget->currentWidget() == m_albumListView) {
+    } else if (m_pStackedWidget->currentWidget() == m_albumListView) {
         m_albumListView->setSortType(sortType);
         m_albumListView->update();
-    } else if (m_pCenterWidget->currentWidget() == m_singerListView) {
+    } else if (m_pStackedWidget->currentWidget() == m_singerListView) {
         m_singerListView->setSortType(sortType);
     }
 }
@@ -415,7 +423,15 @@ void MusicListDataWidget::initUI()
     palette.setColor(DPalette::Background, background);
     setPalette(palette);
 
-    auto layout = new QVBoxLayout(this);
+    //用来和搜索时无结果的时候做切换，老代码里所有控件写visible太冗长
+    auto layoutContent = new QVBoxLayout(this);
+    layoutContent->setContentsMargins(0, 0, 0, 0);
+    layoutContent->setSpacing(0);
+    m_contentWidget = new DWidget(this);
+    m_contentWidget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    layoutContent->addWidget(m_contentWidget, 1);
+
+    auto layout = new QVBoxLayout(m_contentWidget);
     layout->setContentsMargins(0, 0, 0, 0);
     layout->setSpacing(0);
     //action widget
@@ -423,8 +439,8 @@ void MusicListDataWidget::initUI()
     m_actionBar->setFixedHeight(80);
     m_actionBar->setObjectName("MusicListDataActionBar");
     layout->addWidget(m_actionBar, 0);
-    m_pCenterWidget = new QStackedWidget(this);
-    layout->addWidget(m_pCenterWidget, 1);
+    m_pStackedWidget = new QStackedWidget(this);
+    layout->addWidget(m_pStackedWidget, 1);
 
     //action layout
     QVBoxLayout *actionBarLayout = new QVBoxLayout(m_actionBar);
@@ -451,7 +467,7 @@ void MusicListDataWidget::initUI()
     //初始化数量标签和icon mode
     initCountLabelAndListMode(actionInfoBarLayout);
     //初始化搜索结果为空时的标签
-    initemptyHits(layout);
+    initemptyHits(layoutContent);
 
     m_musicListView = new PlayListView("all", false); //all music
 //    m_musicListView->setStyleSheet("background-color:blue;");
@@ -460,9 +476,9 @@ void MusicListDataWidget::initUI()
     AC_SET_ACCESSIBLE_NAME(m_musicListView, AC_PlayListView);
     m_musicListView->initAllSonglist("all");
     m_musicListView->setFocusPolicy(Qt::StrongFocus);
-    m_pCenterWidget->addWidget(m_musicListView);
+    m_pStackedWidget->addWidget(m_musicListView);
 //    m_pCenterWidget->setMouseTracking(true);
-    m_pCenterWidget->setCurrentWidget(m_musicListView);
+    m_pStackedWidget->setCurrentWidget(m_musicListView);
     refreshInfoLabel("all");
     refreshSortAction();
 
@@ -700,6 +716,7 @@ void MusicListDataWidget::refreshInfoLabel(QString hash)
         if (hash == "albumResult") {
             songCount = m_SearchResultTabWidget->getMusicCount();
             albumCount = m_SearchResultTabWidget->getAlbumCount();
+            showEmptyHits(songCount);
         } else {
             albumCount = DataBaseService::getInstance()->allAlbumInfos().size();
             songCount = DataBaseService::getInstance()->allMusicInfos().size();
@@ -720,6 +737,7 @@ void MusicListDataWidget::refreshInfoLabel(QString hash)
         if (hash == "artistResult") {
             songCount = m_SearchResultTabWidget->getMusicCount();
             singerCount = m_SearchResultTabWidget->getSingerCount();
+            showEmptyHits(songCount);
         } else {
             singerCount = DataBaseService::getInstance()->allSingerInfos().size();
             songCount = DataBaseService::getInstance()->allMusicInfos().size();
@@ -738,6 +756,7 @@ void MusicListDataWidget::refreshInfoLabel(QString hash)
     } else if (hash == "all" || hash == "musicResult") {
         if (hash == "musicResult") {
             songCount = m_SearchResultTabWidget->getMusicCount();
+            showEmptyHits(songCount);
         } else {
             songCount = DataBaseService::getInstance()->allMusicInfos().size();
         }
@@ -772,16 +791,16 @@ void MusicListDataWidget::slotRemoveSingleSong(const QString &listHash, const QS
     Q_UNUSED(listHash)
     Q_UNUSED(musicHash)
     refreshInfoLabel(m_currentHash);
-    if (m_pCenterWidget->currentWidget() == m_albumListView) {
+    if (m_pStackedWidget->currentWidget() == m_albumListView) {
         m_albumListView->setAlbumListData(DataBaseService::getInstance()->allAlbumInfos()); //set album data
-    } else if (m_pCenterWidget->currentWidget() == m_singerListView) {
+    } else if (m_pStackedWidget->currentWidget() == m_singerListView) {
         m_singerListView->setSingerListData(DataBaseService::getInstance()->allSingerInfos());
     }
 }
 
 void MusicListDataWidget::refreshSortAction()
 {
-    if (m_pCenterWidget->currentWidget() == m_musicListView) {
+    if (m_pStackedWidget->currentWidget() == m_musicListView) {
         m_musicDropdown->setVisible(true);
         m_albumDropdown->setVisible(false);
         m_artistDropdown->setVisible(false);
@@ -792,7 +811,7 @@ void MusicListDataWidget::refreshSortAction()
                 m_musicDropdown->setCurrentAction(action);
             }
         }
-    } else if (m_pCenterWidget->currentWidget() == m_albumListView) {
+    } else if (m_pStackedWidget->currentWidget() == m_albumListView) {
         m_musicDropdown->setVisible(false);
         m_albumDropdown->setVisible(true);
         m_artistDropdown->setVisible(false);
@@ -803,7 +822,7 @@ void MusicListDataWidget::refreshSortAction()
                 m_albumDropdown->setCurrentAction(action);
             }
         }
-    } else if (m_pCenterWidget->currentWidget() == m_singerListView) {
+    } else if (m_pStackedWidget->currentWidget() == m_singerListView) {
         m_musicDropdown->setVisible(false);
         m_albumDropdown->setVisible(false);
         m_artistDropdown->setVisible(true);

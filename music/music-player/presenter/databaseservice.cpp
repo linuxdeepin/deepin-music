@@ -849,7 +849,7 @@ void DataBaseService::initPlaylistTable()
     QSqlDatabase::database().transaction();
     PlaylistData playlistMeta;
     playlistMeta.uuid = "album";
-    playlistMeta.displayName = "Album";
+    playlistMeta.displayName = "Albums";
     playlistMeta.icon = "album";
     playlistMeta.readonly = true;
     playlistMeta.hide = false;
@@ -859,7 +859,7 @@ void DataBaseService::initPlaylistTable()
     }
 
     playlistMeta.uuid = "artist";
-    playlistMeta.displayName = "Artist";
+    playlistMeta.displayName = "Artists";
     playlistMeta.icon = "artist";
     playlistMeta.readonly = true;
     playlistMeta.hide = false;

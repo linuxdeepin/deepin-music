@@ -210,6 +210,19 @@ void Player::resume()
         m_fadeInAnimation->setDuration(sFadeInOutAnimationDuration);
         m_fadeInAnimation->start();
     }
+
+    QVariantMap metadata;
+    metadata.insert(Mpris::metadataToString(Mpris::Title), m_ActiveMeta.title);
+    metadata.insert(Mpris::metadataToString(Mpris::Artist), m_ActiveMeta.singer);
+    metadata.insert(Mpris::metadataToString(Mpris::Album), m_ActiveMeta.album);
+    metadata.insert(Mpris::metadataToString(Mpris::Length), m_ActiveMeta.length);
+    metadata.insert(Mpris::metadataToString(Mpris::ArtUrl), m_ActiveMeta.coverUrl);
+
+    //mprisPlayer->setCanSeek(true);
+    m_pMpris->setMetadata(metadata);
+    m_pMpris->setLoopStatus(Mpris::Playlist);
+    m_pMpris->setPlaybackStatus(Mpris::Stopped);
+    m_pMpris->setVolume(double(this->volume()) / 100.0);
 }
 
 void Player::pause()
