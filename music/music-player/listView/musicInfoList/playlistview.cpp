@@ -527,16 +527,19 @@ void PlayListView::slotImportFinished(QString hash)
                 } else if (sortType == DataBaseService::ListSortType::SortByTitle) {
                     if (addMeta.pinyinTitle <= meta.pinyinTitle) {
                         insertRow(rowIndex, addMeta);
+                        isInserted = true;
                         break;
                     }
                 } else if (sortType == DataBaseService::ListSortType::SortBySinger) {
                     if (addMeta.pinyinArtist <= meta.pinyinArtist) {
                         insertRow(rowIndex, addMeta);
+                        isInserted = true;
                         break;
                     }
                 } else if (sortType == DataBaseService::ListSortType::SortByAblum) {
                     if (addMeta.pinyinAlbum <= meta.pinyinAlbum) {
                         insertRow(rowIndex, addMeta);
+                        isInserted = true;
                         break;
                     }
                 }
@@ -745,6 +748,8 @@ void PlayListView::slotDelFromLocal()
     if (deleteFlag == warnDlg.exec()) {
         if (!m_IsPlayList)
             DataBaseService::getInstance()->removeSelectedSongs(m_currentHash, strlist, true);
+        // 更新player中缓存的歌曲信息，如果存在正在播放的歌曲，停止播放
+        Player::instance()->playRmvMeta(strlist);
     }
 }
 

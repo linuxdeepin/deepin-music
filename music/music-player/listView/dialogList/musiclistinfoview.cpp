@@ -384,6 +384,8 @@ void MusicListInfoView::slotRemoveSongListActionClicked(bool checked)
     warnDlg.setIcon(QIcon::fromTheme("deepin-music"));
     if (deleteFlag == warnDlg.exec()) {
         DataBaseService::getInstance()->removeSelectedSongs("all", metaList, false);
+        // 更新player中缓存的歌曲信息，如果存在正在播放的歌曲，停止播放
+        Player::instance()->playRmvMeta(metaList);
     }
 }
 
@@ -425,6 +427,7 @@ void MusicListInfoView::slotDeleteLocalActionClicked(bool checked)
     warnDlg.setIcon(QIcon::fromTheme("deepin-music"));
     if (deleteFlag == warnDlg.exec()) {
         DataBaseService::getInstance()->removeSelectedSongs("all", strlist, true);
+        Player::instance()->playRmvMeta(strlist);
     }
 }
 
