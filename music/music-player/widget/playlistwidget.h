@@ -50,6 +50,8 @@ signals:
 
 private slots:
     void slotClearAllClicked();
+    //刷新歌曲数量
+    void slotUpdateItemCount();
 protected:
     bool eventFilter(QObject *o, QEvent *e) Q_DECL_OVERRIDE;
 

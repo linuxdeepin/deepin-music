@@ -145,6 +145,7 @@ PlayListWidget::PlayListWidget(QWidget *parent) :
 //    ThreadPool::instance()->moveToNewThread(&m_inotifyFiles);
 
     connect(m_btClearAll, &DPushButton::clicked, this, &PlayListWidget::slotClearAllClicked);
+    connect(m_playListView, &PlayListView::rowCountChanged, this, &PlayListWidget::slotUpdateItemCount);
 }
 
 PlayListWidget::~PlayListWidget()
@@ -316,5 +317,19 @@ void PlayListWidget::slotClearAllClicked()
 {
     Player::instance()->clearPlayList();
     emit Player::instance()->signalPlayListChanged();
+}
+
+void PlayListWidget::slotUpdateItemCount()
+{
+    QString infoStr;
+    int inum = m_playListView->model()->rowCount();
+    if (inum == 0) {
+        infoStr = tr("No songs");
+    } else if (inum == 1) {
+        infoStr = tr("1 song");
+    } else {
+        infoStr = tr("%1 songs").arg(inum);
+    }
+    m_infoLabel->setText(infoStr);
 }
 
