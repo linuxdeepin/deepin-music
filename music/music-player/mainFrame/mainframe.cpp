@@ -257,6 +257,8 @@ void MainFrame::initMenuAndShortcut()
                         this->titlebar()->setFocus();
                         showNormal();
                         activateWindow();
+                        auto geometry = MusicSettings::value("base.play.geometry").toByteArray();
+                        this->restoreGeometry(geometry);
                     }
                 } else {
                     showMinimized();
@@ -628,6 +630,7 @@ void MainFrame::closeEvent(QCloseEvent *event)
     switch (askCloseAction) {
     case 0: {
         MusicSettings::setOption("base.close.is_close", false);
+        MusicSettings::setOption("base.play.geometry", saveGeometry());
         break;
     }
     case 1: {
