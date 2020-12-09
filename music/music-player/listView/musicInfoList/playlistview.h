@@ -80,23 +80,34 @@ public slots:
     void slotCoverUpdate(const MediaMeta &meta);//封面图片刷新
     void slotTheme(int type);
 
-    //删除单个歌单中的歌曲
+    // 删除单个歌单中的歌曲
     void slotRemoveSingleSong(const QString &listHash, const QString &musicHash);
-    //右键菜单响应
-    void slotAddToFavSongList();    //添加收藏
-    void slotAddToNewSongList();    //添加到新歌单
-    void slotPlayMusic();           //播放音乐
-    void slotAddToCustomSongList(); //添加到其他歌单
-    void slotOpenInFileManager();   //在文件管理起查看
-    void slotRmvFromSongList();     //从歌单移出
-    void slotDelFromLocal();        //从本地删除
-    void showDetailInfoDlg();       //查看歌曲信息
-    void slotPlayQueueMetaRemove(QString metaHash);//播放队列中歌曲被删除
-
+    ///右键菜单响应begin
+    // 添加到播放队列
+    void slotAddToPlayQueue();
+    // 添加收藏
+    void slotAddToFavSongList(const QString songName);
+    // 添加到新歌单
+    void slotAddToNewSongList(const QString songName);
+    // 播放音乐
+    void slotPlayMusic();
+    // 添加到其他歌单
+    void slotAddToCustomSongList();
+    // 在文件管理起查看
+    void slotOpenInFileManager();
+    // 从歌单移出
+    void slotRmvFromSongList();
+    // 从本地删除
+    void slotDelFromLocal();
+    // 查看歌曲信息
+    void showDetailInfoDlg();
+    // 播放队列中歌曲被删除
+    void slotPlayQueueMetaRemove(QString metaHash);
     // 右键菜单设置音乐编码
     void slotTextCodecMenuClicked(QAction *action);
     // 右键菜单添加到歌单
     void slotPlaylistMenuClicked(QAction *action);
+    ///右键菜单响应end
 private:
     void insertRow(int row, MediaMeta meta);
     //zy---end

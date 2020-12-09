@@ -83,7 +83,7 @@ public:
     // 移出播放列表中的歌曲
     void playRmvMeta(const QStringList &metalist);
     // 添加播放歌曲
-    void playListAppendMeta(MediaMeta meta);
+    void playListAppendMeta(const MediaMeta &meta);
     // 设置播放列表
     void setPlayList(const QList<MediaMeta> &list);
     // 获取播放列表

@@ -39,14 +39,16 @@ public:
 signals:
     // hashOrSearchword为hash值或者搜索关键词
     void switchToView(ListPageSwitchType switchtype, QString hashOrSearchword); //switch to playlist view,
-    // 收藏音乐
-    void favoriteMusic(const MediaMeta meta);
+    // 刷新收藏按钮图标
+    void fluashFavoriteBtnIco();
     // 添加新的歌曲清单
     void addNewSongList();
     // 右键菜单播放所有音乐
     void playAllMusic();
     // 设置播放模式
     void setPlayModel(Player::PlaybackMode playModel);
+    // 弹窗消息
+    void showPopupMessage(const QString &songListName, int selectCount, int insertCount);
 private:
 
 private:

@@ -79,8 +79,8 @@ public slots:
     void slotNextClick(bool click);
     void slotPreClick(bool click);
     void slotFavoriteClick(bool click);
-    // 收藏音乐
-    void favoriteMusic(const MediaMeta meta);
+    // 刷新收藏按钮图标
+    void fluashFavoriteBtnIco();
     // 点击音量按钮
     void slotSoundClick(bool click);
     void slotPlaybackStatusChanged(Player::PlaybackStatus statue);

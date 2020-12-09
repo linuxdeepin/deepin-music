@@ -50,8 +50,9 @@ public:
     MusicContentWidget *getMusicContentWidget();
     // 启动自动播放和进度条设置
     void autoStartToPlay();
+public slots:
     // 显示弹窗消息
-    void showMessage(const QString &msg);
+    void showPopupMessage(const QString &songListName, int selectCount, int insertCount);
 private:
     /**
      * @brief initMenuAndShortCut
@@ -103,9 +104,6 @@ private:
     QShortcut           *viewshortcut = nullptr;
     QShortcut           *searchShortcut = nullptr;
     QShortcut           *windowShortcut = nullptr;
-
-    QWidget             *m_pwidget = nullptr;
-
 };
 
 //extern const QString s_PropertyViewname;

@@ -309,7 +309,7 @@ void FooterWidget::initUI(QWidget *parent)
 
     connect(m_btFavorite, &DIconButton::clicked, this, &FooterWidget::slotFavoriteClick);
 
-    connect(CommonService::getInstance(), &CommonService::favoriteMusic, this, &FooterWidget::favoriteMusic);
+    connect(CommonService::getInstance(), &CommonService::fluashFavoriteBtnIco, this, &FooterWidget::fluashFavoriteBtnIco);
     connect(CommonService::getInstance(), &CommonService::setPlayModel, this, &FooterWidget::setPlayModel);
     //dbus
     connect(Player::instance()->getMpris(), SIGNAL(volumeRequested(double)), this, SLOT(onDbusVolumeChanged(double)));
@@ -446,13 +446,16 @@ void FooterWidget::slotPreClick(bool click)
 void FooterWidget::slotFavoriteClick(bool click)
 {
     Q_UNUSED(click)
-    favoriteMusic(Player::instance()->activeMeta());
+    bool isFavorite = DataBaseService::getInstance()->favoriteMusic(Player::instance()->activeMeta());
+    fluashFavoriteBtnIco();
+
+    if (isFavorite)
+        CommonService::getInstance()->showPopupMessage(
+            DataBaseService::getInstance()->getPlaylistNameByUUID("fav"), 1, 1);
 }
 
-void FooterWidget::favoriteMusic(const MediaMeta meta)
+void FooterWidget::fluashFavoriteBtnIco()
 {
-    DataBaseService::getInstance()->favoriteMusic(meta);
-
     if (CommonService::getInstance()->getListPageSwitchType() == ListPageSwitchType::FavType)
         emit CommonService::getInstance()->switchToView(FavType, "fav");
 

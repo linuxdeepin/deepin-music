@@ -223,7 +223,6 @@ void MusicBaseListView::dragMoveEvent(QDragMoveEvent *event)
 {
     auto index = indexAt(event->pos());
     if (index.isValid() && (event->mimeData()->hasFormat("text/uri-list")  || event->mimeData()->hasFormat("application/x-qabstractitemmodeldatalist"))) {
-        qDebug() << "acceptProposedAction" << event;
         event->setDropAction(Qt::CopyAction);
         event->acceptProposedAction();
     } else {
@@ -267,8 +266,9 @@ void MusicBaseListView::dropEvent(QDropEvent *event)
             }
 
             if (!metas.isEmpty()) {
-                if (hash != "album" || hash != "all" || hash != "artist") {
-                    DataBaseService::getInstance()->addMetaToPlaylist(hash, metas);
+                if (hash == "fav") {
+                    int insertCount = DataBaseService::getInstance()->addMetaToPlaylist(hash, metas);
+                    CommonService::getInstance()->showPopupMessage(model->itemFromIndex(index)->text(), metas.size(), insertCount);
                 }
             }
         }

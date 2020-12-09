@@ -80,6 +80,16 @@ public:
     void getCoverData(const QString &tmpPath);
 
     static MediaMeta fromLocalFile(const QFileInfo &fileInfo);
+
+private:
+    friend bool operator == (const MediaMeta &meta1, const MediaMeta &meta2)
+    {
+        if (meta1.hash == meta2.hash) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 };
 
 struct AlbumInfo {

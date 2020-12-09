@@ -102,6 +102,8 @@ MainFrame::MainFrame()
                      this, &MainFrame::slotSearchEditFoucusIn);
     QObject::connect(DataBaseService::getInstance(), &DataBaseService::sigImportFinished,
                      this, &MainFrame::slotImportFinished);
+    QObject::connect(CommonService::getInstance(), &CommonService::showPopupMessage,
+                     this, &MainFrame::showPopupMessage);
 }
 
 MainFrame::~MainFrame()
@@ -317,6 +319,32 @@ void MainFrame::autoStartToPlay()
             });
         }
     }
+}
+
+void MainFrame::showPopupMessage(const QString &songListName, int selectCount, int insertCount)
+{
+    QFontMetrics fm(font());
+    QString name = fm.elidedText(songListName, Qt::ElideMiddle, 300);
+
+    auto text = tr("Successfully added to \"%1\"").arg(name);
+    if (selectCount - insertCount > 0) {
+        if (selectCount == 1 || insertCount == 0)
+            text = tr("Already added to the playlist");
+        else {
+            if (insertCount == 1)
+                text = tr("1 song added");
+            else
+                text = tr("%1 songs added").arg(insertCount);
+        }
+    }
+
+    auto icon = QIcon(":/common/image/notify_success_new.svg");
+    DFloatingMessage *pDFloatingMessage = new DFloatingMessage(DFloatingMessage::MessageType::TransientType, m_musicContentWidget);
+    pDFloatingMessage->setBlurBackgroundEnabled(true);
+    pDFloatingMessage->setMessage(text);
+    pDFloatingMessage->setIcon(icon);
+    pDFloatingMessage->setDuration(2000);
+    DMessageManager::instance()->sendMessage(m_musicContentWidget, pDFloatingMessage);
 }
 
 void MainFrame::slotTheme(DGuiApplicationHelper::ColorType themeType)

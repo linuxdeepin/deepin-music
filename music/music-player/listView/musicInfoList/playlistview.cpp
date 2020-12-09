@@ -503,6 +503,9 @@ void PlayListView::slotUpdatePlayingIcon()
 
 void PlayListView::slotImportFinished(QString hash)
 {
+    emit CommonService::getInstance()->showPopupMessage(
+        DataBaseService::getInstance()->getPlaylistNameByUUID("all"), 1, 1);
+
     //只刷新全部歌曲列表
     if (m_currentHash != hash) {
         return;
@@ -600,6 +603,17 @@ void PlayListView::slotRemoveSingleSong(const QString &listHash, const QString &
     }
 }
 
+void PlayListView::slotAddToPlayQueue()
+{
+    QItemSelectionModel *selection = selectionModel();
+    for (int i = 0; i < selection->selectedRows().size(); i++) {
+        QModelIndex curIndex = selection->selectedRows().at(i);
+        Player::instance()->playListAppendMeta(curIndex.data(Qt::UserRole).value<MediaMeta>());
+    }
+
+    Player::instance()->signalPlayListChanged();
+}
+
 void PlayListView::slotPlayMusic()
 {
     slotOnDoubleClicked(this->currentIndex());
@@ -637,20 +651,21 @@ void PlayListView::slotPlayQueueMetaRemove(QString metaHash)
     }
 }
 
-void PlayListView::slotAddToFavSongList()
+void PlayListView::slotAddToFavSongList(const QString songName)
 {
+    QList<MediaMeta> listMeta;
     QItemSelectionModel *selection = selectionModel();
     for (int i = 0; i < selection->selectedRows().size(); i++) {
         QModelIndex curIndex = selection->selectedRows().at(i);
-        MediaMeta currMeta = curIndex.data(Qt::UserRole).value<MediaMeta>();
-
-        if (!DataBaseService::getInstance()->favoriteExist(currMeta)) {
-            emit CommonService::getInstance()->favoriteMusic(currMeta);
-        }
+        listMeta << curIndex.data(Qt::UserRole).value<MediaMeta>();
     }
+
+    int insertCount = DataBaseService::getInstance()->addMetaToPlaylist("fav", listMeta);
+    CommonService::getInstance()->showPopupMessage(songName, selection->selectedRows().size(), insertCount);
+    emit CommonService::getInstance()->fluashFavoriteBtnIco();
 }
 
-void PlayListView::slotAddToNewSongList()
+void PlayListView::slotAddToNewSongList(const QString songName)
 {
     QItemSelectionModel *selection = selectionModel();
     QList<MediaMeta> metaList;
@@ -663,8 +678,10 @@ void PlayListView::slotAddToNewSongList()
     emit CommonService::getInstance()->addNewSongList();
 
     if (metaList.size() > 0) {
-        QString songlistUuid = DataBaseService::getInstance()->getCustomSongList().last().uuid;
-        DataBaseService::getInstance()->addMetaToPlaylist(songlistUuid, metaList);
+        QList<DataBaseService::PlaylistData> customSongList = DataBaseService::getInstance()->getCustomSongList();
+        QString songlistUuid = customSongList.last().uuid;
+        int insertCount = DataBaseService::getInstance()->addMetaToPlaylist(songlistUuid, metaList);
+        CommonService::getInstance()->showPopupMessage(songName, metaList.size(), insertCount);
         //刷新
         emit CommonService::getInstance()->switchToView(CustomType, songlistUuid);
     }
@@ -680,7 +697,9 @@ void PlayListView::slotAddToCustomSongList()
         MediaMeta imt = mindex.data(Qt::UserRole).value<MediaMeta>();
         metas.append(imt);
     }
-    DataBaseService::getInstance()->addMetaToPlaylist(songlistHash, metas);
+
+    int insertCount = DataBaseService::getInstance()->addMetaToPlaylist(songlistHash, metas);
+    CommonService::getInstance()->showPopupMessage(obj->text(), metas.size(), insertCount);
 }
 
 void PlayListView::slotOpenInFileManager()
@@ -866,6 +885,10 @@ void PlayListView::contextMenuEvent(QContextMenuEvent *event)
     QAction *actRmv = nullptr; //remove action
     QAction *actDel = nullptr;
 
+    if (!m_IsPlayQueue) {
+        playlistMenu.addAction(tr("Play queue"))->setData("play queue");
+        playlistMenu.addSeparator();
+    }
     QAction *actFav = playlistMenu.addAction(tr("My favorites"));
     actFav->setData("fav");
 
@@ -991,7 +1014,6 @@ void PlayListView::dragMoveEvent(QDragMoveEvent *event)
 {
     auto index = indexAt(event->pos());
     if (/*index.isValid() && */(event->mimeData()->hasFormat("text/uri-list")  || event->mimeData()->hasFormat("application/x-qabstractitemmodeldatalist"))) {
-        qDebug() << "acceptProposedAction" << event;
         event->setDropAction(Qt::CopyAction);
         event->acceptProposedAction();
     } else {
@@ -1064,9 +1086,11 @@ void PlayListView::slotPlaylistMenuClicked(QAction *action)
 {
     QString actionText = action->data().toString();
     if (actionText == "fav") {
-        slotAddToFavSongList();
+        slotAddToFavSongList(action->text());
     } else if (actionText == "song list") {
-        slotAddToNewSongList();
+        slotAddToNewSongList(action->text());
+    } else if (actionText == "play queue") {
+        slotAddToPlayQueue();
     }
 }
 
@@ -1078,9 +1102,7 @@ void PlayListView::mouseMoveEvent(QMouseEvent *event)
 void PlayListView::dragEnterEvent(QDragEnterEvent *event)
 {
     auto t_formats = event->mimeData()->formats();
-    qDebug() << t_formats;
     if (event->mimeData()->hasFormat("text/uri-list") || event->mimeData()->hasFormat("application/x-qabstractitemmodeldatalist")) {
-        qDebug() << "acceptProposedAction" << event;
         event->setDropAction(Qt::CopyAction);
         event->acceptProposedAction();
     }
@@ -1090,7 +1112,6 @@ void PlayListView::startDrag(Qt::DropActions supportedActions)
 {
     QItemSelection selection;
 
-    QList<MediaMeta> list;
     for (QModelIndex index : selectionModel()->selectedIndexes()) {
         selection.append(QItemSelectionRange(index));
     }

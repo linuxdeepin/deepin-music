@@ -332,9 +332,7 @@ void MusicSongListView::closeEditor(QWidget *editor, QAbstractItemDelegate::EndE
 void MusicSongListView::dragEnterEvent(QDragEnterEvent *event)
 {
     auto t_formats = event->mimeData()->formats();
-    qDebug() << t_formats;
     if (event->mimeData()->hasFormat("text/uri-list") || event->mimeData()->hasFormat("application/x-qabstractitemmodeldatalist")) {
-        qDebug() << "acceptProposedAction" << event;
         event->setDropAction(Qt::CopyAction);
         event->acceptProposedAction();
     }
@@ -344,7 +342,6 @@ void MusicSongListView::dragMoveEvent(QDragMoveEvent *event)
 {
     auto index = indexAt(event->pos());
     if (index.isValid() && (event->mimeData()->hasFormat("text/uri-list")  || event->mimeData()->hasFormat("application/x-qabstractitemmodeldatalist"))) {
-        qDebug() << "acceptProposedAction" << event;
         event->setDropAction(Qt::CopyAction);
         event->acceptProposedAction();
     } else {
@@ -375,7 +372,7 @@ void MusicSongListView::dropEvent(QDropEvent *event)
             DataBaseService::getInstance()->importMedias(hash, localpaths);
         }
     } else {
-        auto *source = qobject_cast<PlayListView *>(event->source());
+        PlayListView *source = qobject_cast<PlayListView *>(event->source());
         if (source != nullptr) {
             QList<MediaMeta> metas;
             for (auto index : source->selectionModel()->selectedIndexes()) {
@@ -384,7 +381,8 @@ void MusicSongListView::dropEvent(QDropEvent *event)
             }
 
             if (!metas.isEmpty()) {
-                DataBaseService::getInstance()->addMetaToPlaylist(hash, metas);
+                int insertCount = DataBaseService::getInstance()->addMetaToPlaylist(hash, metas);
+                CommonService::getInstance()->showPopupMessage(model->itemFromIndex(index)->text(), metas.size(), insertCount);
             }
         }
     }

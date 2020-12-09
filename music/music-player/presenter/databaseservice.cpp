@@ -255,9 +255,6 @@ QList<MediaMeta> DataBaseService::customizeMusicInfos(const QString &hash)
         }
     }
 
-    qDebug() << "\n--------------- " << medialist.count() << " -----------------"
-             << " Func:" << __FUNCTION__  << " Line:" << __LINE__ ;
-
     return medialist;
 }
 
@@ -442,8 +439,9 @@ void DataBaseService::deletePlaylist(const QString &hash)
     }
 }
 
-void DataBaseService::favoriteMusic(const MediaMeta meta)
+bool DataBaseService::favoriteMusic(const MediaMeta meta)
 {
+    bool ret = false;
     QSqlQuery query(m_db);
 
     if (favoriteExist(meta)) {
@@ -454,9 +452,14 @@ void DataBaseService::favoriteMusic(const MediaMeta meta)
     } else {
         QString sqlInsert = QString("insert into playlist_fav values('%1', 'fav', 0)").arg(meta.hash);
 
-        if (!query.exec(sqlInsert))
+        if (!query.exec(sqlInsert)) {
             qCritical() << query.lastError() << sqlInsert;
+        } else {
+            ret = true;
+        }
     }
+
+    return ret;
 }
 
 bool DataBaseService::favoriteExist(const MediaMeta meta)
@@ -580,25 +583,38 @@ QList<DataBaseService::PlaylistData> DataBaseService::allPlaylistMeta()
     }
 }
 
-void DataBaseService::addMetaToPlaylist(QString uuid, const QList<MediaMeta> &metas)
+int DataBaseService::addMetaToPlaylist(QString uuid, const QList<MediaMeta> &metas)
 {
+    int insert_count = 0;
+
     for (MediaMeta meta : metas) {
         QSqlQuery query(m_db);
-        QString sqlstring = QString("INSERT INTO playlist_%1 "
-                                    "(music_id, playlist_id, sort_id) "
-                                    "SELECT :music_id, :playlist_id, :sort_id "
-                                    "WHERE NOT EXISTS("
-                                    "SELECT * FROM playlist_%1 "
-                                    "WHERE music_id = :music_id)").arg(uuid);
-        query.prepare(sqlstring);
-        query.bindValue(":playlist_id", uuid);
+        QString sqlStr = QString("SELECT * FROM playlist_%1 WHERE music_id = :music_id").arg(uuid);
+        query.prepare(sqlStr);
         query.bindValue(":music_id", meta.hash);
-        query.bindValue(":sort_id", 0);
 
-        if (! query.exec()) {
-            qCritical() << query.lastError() << sqlstring;
+        if (query.exec()) {
+            if (!query.next()) {
+                sqlStr = QString("INSERT INTO playlist_%1 "
+                                 "(music_id, playlist_id, sort_id) "
+                                 "SELECT :music_id, :playlist_id, :sort_id ").arg(uuid);
+
+                query.prepare(sqlStr);
+                query.bindValue(":playlist_id", uuid);
+                query.bindValue(":music_id", meta.hash);
+                query.bindValue(":sort_id", 0);
+                if (query.exec()) {
+                    insert_count++;
+                } else {
+                    qCritical() << query.lastError() << sqlStr;
+                }
+            }
+        } else {
+            qCritical() << query.lastError() << sqlStr;
         }
     }
+
+    return insert_count;
 }
 
 void DataBaseService::updatePlaylistSortType(int type, QString uuid)

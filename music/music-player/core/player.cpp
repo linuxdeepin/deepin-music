@@ -399,9 +399,10 @@ void Player::playRmvMeta(const QStringList &metalist)
     }
 }
 
-void Player::playListAppendMeta(MediaMeta meta)
+void Player::playListAppendMeta(const MediaMeta &meta)
 {
-    m_MetaList.append(meta);
+    if (!m_MetaList.contains(meta))
+        m_MetaList.append(meta);
 }
 
 void Player::setPlayList(const QList<MediaMeta> &list)
