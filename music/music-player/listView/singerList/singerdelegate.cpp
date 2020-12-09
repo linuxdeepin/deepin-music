@@ -276,10 +276,7 @@ void SingerDataDelegate::drawIconMode(QPainter &painter, const QStyleOptionViewI
         QRect t_pixMapRect(rect.x() + 53, rect.y() + 40, 43, 43);
         painter.drawPixmap(t_pixMapRect, t_hoverPlayImg);
     }
-
-//    painter.fillRect(option.rect, t_fillBrush);
-
-//    painter.restore();
+    painter.fillRect(option.rect, t_fillBrush);
 }
 
 void SingerDataDelegate::drawListMode(QPainter &painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
