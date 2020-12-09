@@ -152,6 +152,19 @@ void Player::playMeta(MediaMeta meta)
             m_fadeInAnimation->setDuration(sFadeInOutAnimationDuration);
             m_fadeInAnimation->start();
         }
+
+        QVariantMap metadata;
+        metadata.insert(Mpris::metadataToString(Mpris::Title), meta.title);
+        metadata.insert(Mpris::metadataToString(Mpris::Artist), meta.singer);
+        metadata.insert(Mpris::metadataToString(Mpris::Album), meta.album);
+        metadata.insert(Mpris::metadataToString(Mpris::Length), meta.length);
+        metadata.insert(Mpris::metadataToString(Mpris::ArtUrl), meta.coverUrl);
+
+        //mprisPlayer->setCanSeek(true);
+        m_pMpris->setMetadata(metadata);
+        m_pMpris->setLoopStatus(Mpris::Playlist);
+        m_pMpris->setPlaybackStatus(Mpris::Stopped);
+        m_pMpris->setVolume(double(this->volume()) / 100.0);
     }
 }
 
@@ -432,6 +445,9 @@ void Player::stop()
     m_qvplayer->pause();
     setActiveMeta(MediaMeta());//清除当前播放音乐；
     m_qvplayer->stop();
+
+    QVariantMap metadata;
+    m_pMpris->setMetadata(metadata);
 }
 
 VlcMediaPlayer *Player::core()
