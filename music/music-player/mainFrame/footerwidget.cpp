@@ -83,7 +83,6 @@ FooterWidget::FooterWidget(QWidget *parent) :
     this->blurBackground()->setMaskColor(backMaskColor);
     initUI(parent);
     slotTheme(DGuiApplicationHelper::instance()->themeType());
-
     initShortcut();
 }
 
@@ -312,6 +311,11 @@ void FooterWidget::initUI(QWidget *parent)
 
     connect(CommonService::getInstance(), &CommonService::favoriteMusic, this, &FooterWidget::favoriteMusic);
     connect(CommonService::getInstance(), &CommonService::setPlayModel, this, &FooterWidget::setPlayModel);
+    //dbus
+    connect(Player::instance()->getMpris(), SIGNAL(volumeRequested(double)), this, SLOT(onDbusVolumeChanged(double)));
+    connect(m_volSlider, &SoundVolume::sigvolumeChanged, this, &FooterWidget::slotSliderVolumeChanged);
+    connect(Player::instance(), &Player::mutedChanged, this, &FooterWidget::slotSliderVolumeChanged);
+
 }
 
 void FooterWidget::initShortcut()
@@ -341,8 +345,6 @@ void FooterWidget::initShortcut()
     connect(nextShortcut, SIGNAL(activated()), this, SLOT(slotShortCutTriggered()));
     connect(previousShortcut, SIGNAL(activated()), this, SLOT(slotShortCutTriggered()));
     connect(muteShortcut, SIGNAL(activated()), this, SLOT(slotShortCutTriggered()));
-    //dbus
-    connect(Player::instance()->getMpris(), SIGNAL(volumeRequested(double)), this, SLOT(onVolumeChanged(double)));
 }
 
 void FooterWidget::updateShortcut()
@@ -531,7 +533,7 @@ void FooterWidget::setPlayModel(Player::PlaybackMode playModel)
     Player::instance()->setMode(static_cast<Player::PlaybackMode>(playModel));
 }
 
-void FooterWidget::onVolumeChanged(double volume) //from dbus set
+void FooterWidget::onDbusVolumeChanged(double volume) //from dbus set
 {
     //need to sync volume to dbus
 //    if (d->volumeMonitoring.needSyncLocalFlag(1)) {
@@ -541,40 +543,39 @@ void FooterWidget::onVolumeChanged(double volume) //from dbus set
 //    }
     //get dbus volume
     int curVolume = int(volume * 100);
-    Player::instance()->setVolume(curVolume);
-    QString status = "mid";
-    if (curVolume > 77) {
-        status = "high";
-        m_btSound->setIcon(QIcon::fromTheme("volume"));
+    m_volSlider->setVolumeFromExternal(curVolume);
+}
 
-    } else if (curVolume > 33) {
-        status = "mid";
-        m_btSound->setIcon(QIcon::fromTheme("volume_mid"));
+void FooterWidget::slotSliderVolumeChanged(int volume)
+{
+    Q_UNUSED(volume)
+    bool mute = Player::instance()->muted();
+    slotMutedChanged(mute);
+}
 
-    } else {
-        status = "low";
-        m_btSound->setIcon(QIcon::fromTheme("volume_low"));
-    }
-
-    if (m_mute || curVolume == 0) {
+void FooterWidget::slotMutedChanged(bool mute)
+{
+    int volume = Player::instance()->volume();
+    if (mute || volume == 0) {
         m_btSound->setProperty("volume", "mute");
         m_btSound->update();
         m_btSound->setIcon(QIcon::fromTheme("mute"));
         m_volSlider->syncMute(true);
     } else {
+        QString status = "mid";
+        if (volume > 77) {
+            status = "high";
+            m_btSound->setIcon(QIcon::fromTheme("volume"));
+        } else if (volume > 33) {
+            status = "mid";
+            m_btSound->setIcon(QIcon::fromTheme("volume_mid"));
+        } else {
+            status = "low";
+            m_btSound->setIcon(QIcon::fromTheme("volume_low"));
+        }
         m_btSound->setProperty("volume", status);
         m_btSound->update();
     }
-
-    if (!m_mute && curVolume > 0) {
-        m_volSlider->syncMute(false);
-    }
-
-    //m_Volume = volume;
-    MusicSettings::setOption("base.play.volume", curVolume);
-    // 音量变化为0，设置为静音
-    MusicSettings::setOption("base.play.mute", m_mute);
-    m_volSlider->setVolumeFromExternal(curVolume);
 }
 
 void FooterWidget::slotDelayAutoHide()

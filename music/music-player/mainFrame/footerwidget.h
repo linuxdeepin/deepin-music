@@ -89,7 +89,9 @@ public slots:
     void setPlayModel(Player::PlaybackMode playModel);
 
     //音量变化
-    void onVolumeChanged(double volume);
+    void onDbusVolumeChanged(double volume);
+    void slotSliderVolumeChanged(int volume);
+    void slotMutedChanged(bool mute);
 
     void slotDelayAutoHide();
     //快捷键响应
@@ -127,7 +129,6 @@ private:
     QShortcut           *playPauseShortcut      = nullptr;
     QShortcut           *previousShortcut       = nullptr;
     QShortcut           *muteShortcut = nullptr;
-    int     m_mute = false;
 
     SoundVolume       *m_volSlider  = nullptr;
     DBackgroundGroup   *m_ctlWidget  = nullptr;

@@ -50,6 +50,7 @@ public:
     void setVolumeFromExternal(int vol);
 signals:
     void delayAutoHide();
+    void sigvolumeChanged(int volume);
 
 public slots:
     void delayHide();
@@ -84,8 +85,6 @@ private:
     int         m_radius      = 20;
     bool        m_mouseIn     = false;
     int         m_sThemeType  = 0;
-    bool        m_volMute     = false;
-
 };
 
 

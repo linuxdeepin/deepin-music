@@ -77,7 +77,6 @@ SoundVolume::SoundVolume(QWidget *parent)
     m_btSound->setFixedSize(30, 30);
     m_btSound->setIconSize(QSize(30, 30));
 
-    m_volMute = MusicSettings::value("base.play.mute").toBool();
     volumeIcon();
 
     layout->addStretch();
@@ -117,17 +116,7 @@ QBrush SoundVolume::background() const
 
 void SoundVolume::setVolumeFromExternal(int vol)
 {
-    if (vol == 0) {
-        m_volMute = true;
-    } else {
-        m_volMute = false;
-    }
-    volumeIcon();
-
-    m_lblPersent->setText(QString::number(vol) + QString("%"));
-    m_volSlider->blockSignals(true);
     m_volSlider->setValue(vol);
-    m_volSlider->blockSignals(false);
 }
 
 int SoundVolume::radius() const
@@ -157,18 +146,25 @@ void SoundVolume::setBorderColor(QColor borderColor)
 
 void SoundVolume::volumeIcon()
 {
-    if (!m_volMute) {
-        m_btSound->setIcon(QIcon::fromTheme("volume_low"));
-    } else {
+    bool mute = Player::instance()->muted();
+    int volume = Player::instance()->volume();
+    qDebug() << "---mute = " << volume << "  ---volume = " << volume;
+    if (mute || volume == 0) {
         m_btSound->setIcon(QIcon::fromTheme("mute"));
+    } else {
+        if (volume > 77) {
+            m_btSound->setIcon(QIcon::fromTheme("volume"));
+        } else if (volume > 33) {
+            m_btSound->setIcon(QIcon::fromTheme("volume_mid"));
+        } else {
+            m_btSound->setIcon(QIcon::fromTheme("volume_low"));
+        }
     }
 }
 
 void SoundVolume::syncMute(bool mute)
 {
-    m_volMute = mute;
     volumeIcon();
-
     Q_UNUSED(mute)
 }
 
@@ -185,25 +181,32 @@ void SoundVolume::delayHide()
 
 void SoundVolume::slotSetVolume(int volume)
 {
+    bool preVolMute = Player::instance()->muted();
+    bool muteToSet = false;
     if (volume == 0) {
-        m_volMute = true;
+        muteToSet = true;
     } else {
-        m_volMute = false;
+        muteToSet = false;
     }
-    volumeIcon();
+    //设置是否静音并刷新按钮图标
+    if (preVolMute) {
+        Player::instance()->setMuted(muteToSet);
+        MusicSettings::setOption("base.play.mute", muteToSet);
+    }
 
     Player::instance()->setVolume(volume); //system volume
+    MusicSettings::setOption("base.play.volume", volume);
+    emit sigvolumeChanged(volume);
     Player::instance()->getMpris()->setVolume(static_cast<double>(volume) / 100);
-
+    volumeIcon();
     m_lblPersent->setText(QString::number(volume) + QString("%"));
-    m_volSlider->blockSignals(true);
-    m_volSlider->setValue(volume);
-    m_volSlider->blockSignals(false);
 }
 
 void SoundVolume::showEvent(QShowEvent *event)
 {
     m_mouseIn = true;
+    int volume = Player::instance()->volume();
+    m_lblPersent->setText(QString::number(volume) + QString("%"));
     QWidget::showEvent(event);
 }
 
@@ -302,8 +305,8 @@ void SoundVolume::slotTheme(int type)
 
 void SoundVolume::slotSoundClick()
 {
-    m_volMute = !m_volMute;
+    bool mute = Player::instance()->muted();
+    Player::instance()->setMuted(!mute);
     volumeIcon();
-    Player::instance()->setMuted(m_volMute);
-    MusicSettings::setOption("base.play.mute", m_volMute);
+    MusicSettings::setOption("base.play.mute", !mute);
 }

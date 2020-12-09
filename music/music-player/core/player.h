@@ -118,7 +118,8 @@ signals:
     void signalMediaStop(const QString &activeHah);
     // 播放列表中歌曲被删除
     void signalPlayQueueMetaRemove(const QString &metaHash);
-
+    // 静音状态改变
+    void mutedChanged(bool muted);
 public slots:
     void changePicture();
     void setVolume(int volume);
@@ -129,6 +130,7 @@ private:
     int             m_playingCount = 0;
     QString         m_currentPlayListHash;//当前正在播放的playlist的hash
     PlaybackMode    m_mode    = Player::RepeatAll;//循环播放模式
+    int             m_volume      = 50.0;
     //zy--end
 public:
     void init();
@@ -159,7 +161,6 @@ signals:
 
     void volumeChanged(int volume);
     void modeChanged(PlaybackMode mode);
-    void mutedChanged(bool muted);
     /************************************************
      * local mute operation
      * *********************************************/
@@ -226,7 +227,6 @@ private:
     VlcMediaPlayer          *m_qvplayer;
 //    MetaPtr                 m_activeMeta;
 
-    int             m_volume      = 50.0;
     bool            m_playOnLoad  = true;
     bool            m_firstPlayOnLoad  = true; //外部双击打开处理一次
     bool            m_fadeInOut   = false;

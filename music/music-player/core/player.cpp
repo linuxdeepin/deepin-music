@@ -96,8 +96,8 @@ void Player::init()
     m_fadeInAnimation = new QPropertyAnimation(this, "fadeInOutFactor");
 
     initConnection();
-
     initMpris();
+    m_volume = MusicSettings::value("base.play.volume").toInt();
 }
 
 QStringList Player::supportedSuffixList() const
@@ -797,7 +797,7 @@ bool Player::setMusicMuted(bool muted)
 
         //调用设置音量
         ainterface.call(QLatin1String("SetMute"), muted);
-        Q_EMIT mutedChanged(muted);
+        emit mutedChanged(muted);
     }
 
     return false;
@@ -909,7 +909,7 @@ void Player::initConnection()
     connect(m_qvplayer->audio(), &VlcAudio::muteChanged,
     this, [ = ](bool mute) {
         if (isDevValid()) {
-            Q_EMIT mutedChanged(mute);
+            emit mutedChanged(mute);
         } else {
             qDebug() << "device does not start";
         }
