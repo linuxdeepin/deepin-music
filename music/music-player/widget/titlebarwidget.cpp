@@ -54,7 +54,6 @@ TitlebarWidget::TitlebarWidget(QWidget *parent) :
     m_search->setObjectName("TitleSearch");
     m_search->setFixedWidth(354);
     m_search->setPlaceHolder(tr("Search"));
-    m_search->clear();
     layout->addWidget(m_search, Qt::AlignCenter);
     QObject::connect(m_search, &SearchEdit::sigFoucusIn,
                      this, &TitlebarWidget::slotSearchEditFoucusIn);

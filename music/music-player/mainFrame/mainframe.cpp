@@ -118,6 +118,8 @@ void MainFrame::initUI(bool showLoading)
     this->setMinimumSize(QSize(900, 600));
     this->setFocusPolicy(Qt::ClickFocus);
 
+    m_titlebarwidget->setEnabled(showLoading);
+
 //    m_centralWidget = new QWidget(this);
 //    m_contentLayout = new QStackedLayout(m_centralWidget);
 //    m_contentLayout->setContentsMargins(0, 0, 0, 5);
@@ -391,6 +393,7 @@ void MainFrame::slotImportFinished()
         m_footer->show();
         m_importWidget->closeAnimationToDown(this->size());
     }
+    m_titlebarwidget->setEnabled(true);
 }
 
 void MainFrame::slotShortCutTriggered()
@@ -504,6 +507,7 @@ void MainFrame::slotAllMusicCleared()
     m_footer->hide();
     m_importWidget->showImportHint();
     m_importWidget->showAnimationToLeft(this->size());
+    m_titlebarwidget->setEnabled(false);
 }
 
 void MainFrame::slotAutoPlay(bool bremb)
