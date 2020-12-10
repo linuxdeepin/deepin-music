@@ -148,11 +148,6 @@ void MainFrame::initUI(bool showLoading)
 
     m_titlebarwidget->setEnabled(showLoading);
 
-//    m_centralWidget = new QWidget(this);
-//    m_contentLayout = new QStackedLayout(m_centralWidget);
-//    m_contentLayout->setContentsMargins(0, 0, 0, 5);
-//    this->setCentralWidget(m_centralWidget);
-
     m_musicContentWidget = new MusicContentWidget(this);
     m_musicContentWidget->setVisible(showLoading);
 
@@ -176,6 +171,7 @@ void MainFrame::initUI(bool showLoading)
 
     /*---------------menu&shortcut-------------------*/
     initMenuAndShortcut();
+    m_newSonglistAction->setEnabled(showLoading);
 
     connect(DataBaseService::getInstance(), &DataBaseService::sigAllMusicCleared,
             this, &MainFrame::slotAllMusicCleared);
@@ -422,6 +418,7 @@ void MainFrame::slotImportFinished()
         m_importWidget->closeAnimationToDown(this->size());
     }
     m_titlebarwidget->setEnabled(true);
+    m_newSonglistAction->setEnabled(true);
 }
 
 void MainFrame::slotShortCutTriggered()
@@ -536,6 +533,7 @@ void MainFrame::slotAllMusicCleared()
     m_importWidget->showImportHint();
     m_importWidget->showAnimationToLeft(this->size());
     m_titlebarwidget->setEnabled(false);
+    m_newSonglistAction->setEnabled(false);
 }
 
 void MainFrame::slotAutoPlay(bool bremb)
