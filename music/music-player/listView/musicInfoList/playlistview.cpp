@@ -918,9 +918,10 @@ void PlayListView::contextMenuEvent(QContextMenuEvent *event)
             actFav->setEnabled(false);
         }
 
-        QAction *actplay = nullptr;
         // 播放或则暂停按钮
-        if (currMeta.hash != Player::instance()->activeMeta().hash) {
+        QAction *actplay = nullptr;
+        if (currMeta.hash != Player::instance()->activeMeta().hash ||
+                Player::instance()->status() != Player::Playing) {
             actplay = allMusicMenu.addAction(tr("Play"));
             connect(actplay, &QAction::triggered, this, &PlayListView::slotPlayMusic);
         } else {
