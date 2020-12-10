@@ -522,8 +522,6 @@ void DequalizerDialog::initConnection()
 
     connect(this->saveBtn, &DPushButton::clicked, [ = ]() {
         for (DSlider *slider : findChildren<DSlider *>()) {
-            if (slider)
-                continue;
             MusicSettings::setOption("equalizer.all." + slider->objectName(), slider->value());
         }
         MusicSettings::setOption("equalizer.all.curEffect", 0);
