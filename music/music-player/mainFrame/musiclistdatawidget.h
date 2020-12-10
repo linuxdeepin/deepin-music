@@ -55,6 +55,7 @@ public slots:
     //刷新各列表数量信息
     void refreshInfoLabel(QString hash);
     void slotRemoveSingleSong(const QString &listHash, const QString &musicHash);//删除了一首音乐
+    void slotPlaylistNameUpdate(const QString &listHash);
 protected:
     bool eventFilter(QObject *o, QEvent *e) Q_DECL_OVERRIDE;
 protected:

@@ -70,6 +70,8 @@ MusicListDataWidget::MusicListDataWidget(QWidget *parent) :
             this, &MusicListDataWidget::slotImportFinished);
     connect(DataBaseService::getInstance(), &DataBaseService::sigRmvSong,
             this, &MusicListDataWidget::slotRemoveSingleSong);
+    connect(DataBaseService::getInstance(), &DataBaseService::sigPlaylistNameUpdate,
+            this, &MusicListDataWidget::slotPlaylistNameUpdate);
 }
 
 MusicListDataWidget::~MusicListDataWidget()
@@ -816,6 +818,14 @@ void MusicListDataWidget::slotRemoveSingleSong(const QString &listHash, const QS
     } else if (m_pStackedWidget->currentWidget() == m_singerListView) {
         m_singerListView->setSingerListData(DataBaseService::getInstance()->allSingerInfos());
     }
+}
+
+void MusicListDataWidget::slotPlaylistNameUpdate(const QString &listHash)
+{
+    if (m_currentHash != listHash) {
+        return;
+    }
+    m_titleLabel->setText(DataBaseService::getInstance()->getPlaylistNameByUUID(m_currentHash));
 }
 
 void MusicListDataWidget::refreshSortAction(QString hash)

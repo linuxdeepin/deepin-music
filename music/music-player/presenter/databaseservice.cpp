@@ -645,6 +645,15 @@ void DataBaseService::updatePlaylistDisplayName(QString displayname, QString uui
         qWarning() << query.lastError();
         return;
     }
+    for (int i = 0; i < m_PlaylistMeta.size(); i++) {
+        if (m_PlaylistMeta.at(i).uuid == uuid) {
+            PlaylistData data = m_PlaylistMeta.at(i);
+            data.displayName = displayname;
+            m_PlaylistMeta.replace(i, data);
+            break;
+        }
+    }
+    emit sigPlaylistNameUpdate(uuid);
 }
 
 int DataBaseService::getPlaylistSortType(QString uuid)
