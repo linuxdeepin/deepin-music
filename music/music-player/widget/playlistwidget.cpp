@@ -51,16 +51,6 @@ DGUI_USE_NAMESPACE
 
 static const int AnimationDelay = 400;
 
-void PlayListWidget::initConntion()
-{
-//    connect(m_btClearAll, &DPushButton::clicked,
-//    this, [ = ](bool) {
-//        if (m_playListView->playlist()) {
-//            Q_EMIT musiclistRemove(m_playListView->playlist(), m_playListView->playlist()->allmusic());
-//        }
-    //    });
-}
-
 void PlayListWidget::showAnimation(const QSize &size)
 {
 //    int height = 0;
@@ -185,8 +175,6 @@ PlayListWidget::PlayListWidget(QWidget *parent) :
     layout->addWidget(m_emptyHits, 0, Qt::AlignCenter);
     //show scroll bar
     layout->addSpacing(12);
-
-    initConntion();
 
 //    m_inotifyFiles.start();
 //    ThreadPool::instance()->moveToNewThread(&m_inotifyFiles);

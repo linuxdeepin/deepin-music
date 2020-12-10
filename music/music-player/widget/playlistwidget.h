@@ -35,7 +35,6 @@ public:
     explicit PlayListWidget(QWidget *parent = Q_NULLPTR);
     ~PlayListWidget() override;
 
-    void initConntion();
     void showAnimation(const QSize &size);
     void closeAnimation(const QSize &size);
 //    void showEmptyHits(bool empty);

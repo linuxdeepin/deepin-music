@@ -357,7 +357,11 @@ void Player::playNextMeta(bool isAuto)
 
 void Player::clearPlayList()
 {
-    m_MetaList.clear();
+    QStringList list;
+    for (MediaMeta meta : m_MetaList) {
+        list << meta.hash;
+    }
+    playRmvMeta(list);
 }
 
 void Player::playRmvMeta(const QStringList &metalist)
