@@ -548,9 +548,12 @@ void MusicListInfoView::addMedia(MediaMeta meta)
 
 void MusicListInfoView::onDoubleClicked(const QModelIndex &index)
 {
-    MediaMeta meta = index.data(Qt::UserRole).value<MediaMeta>();
-
+    Player::instance()->clearPlayList();
+    Player::instance()->setPlayList(getMusicListData());
     Player::instance()->setCurrentPlayListHash(m_hash, false);
+    emit Player::instance()->signalPlayListChanged();
+
+    MediaMeta meta = index.data(Qt::UserRole).value<MediaMeta>();
     Player::instance()->playMeta(meta);
 }
 

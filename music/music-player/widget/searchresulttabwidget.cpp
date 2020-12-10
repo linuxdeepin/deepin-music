@@ -123,8 +123,8 @@ void SearchResultTabWidget::refreshListview(ListPageSwitchType switchtype, QStri
         setLabelChecked(m_music);
         m_StackedWidget->setCurrentWidget(m_musicListView);
         m_musicListView->resetSonglistByStr(searchword);
-        m_singerListView->resetSingerListDataBySongName(m_musicListView->getAllSongListData());
-        m_albumListView->resetAlbumListDataBySongName(m_musicListView->getAllSongListData());
+        m_singerListView->resetSingerListDataBySongName(m_musicListView->getMusicListData());
+        m_albumListView->resetAlbumListDataBySongName(m_musicListView->getMusicListData());
         emit sigSearchTypeChanged("musicResult");
         qDebug() << "musicResult";
     } else if (switchtype == SearchSingerResultType) {
@@ -208,7 +208,7 @@ int SearchResultTabWidget::getSingerCount()
 
 QList<MediaMeta> SearchResultTabWidget::getMusicLiseData()
 {
-    return m_musicListView->getAllSongListData();
+    return m_musicListView->getMusicListData();
 }
 
 void SearchResultTabWidget::showEvent(QShowEvent *event)

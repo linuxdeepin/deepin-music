@@ -338,7 +338,7 @@ void PlayListView::resetSonglistBySinger(const QList<SingerInfo> &singerInfos)
     }
 }
 
-QList<MediaMeta> PlayListView::getAllSongListData()
+QList<MediaMeta> PlayListView::getMusicListData()
 {
     QList<MediaMeta> list;
     for (int i = 0; i < m_model->rowCount(); i++) {
@@ -421,7 +421,7 @@ DataBaseService::ListSortType PlayListView::getSortType()
 void PlayListView::setSortType(DataBaseService::ListSortType sortType)
 {
     DataBaseService::getInstance()->updatePlaylistSortType(sortType, m_currentHash);
-    QList<MediaMeta> mediaMetas = getAllSongListData();
+    QList<MediaMeta> mediaMetas = getMusicListData();
     if (sortType == DataBaseService::SortByAddTime) {
         qSort(mediaMetas.begin(), mediaMetas.end(), moreThanTimestamp);
     } else if (sortType == DataBaseService::SortByTitle) {
@@ -481,16 +481,12 @@ void PlayListView::slotOnDoubleClicked(const QModelIndex &index)
     qDebug() << "------" << itemMeta.hash;
 
     if (!m_IsPlayQueue) {
-        //设置新的播放列表
+        // 设置新的播放列表
         Player::instance()->clearPlayList();
-        for (int i = 0; i < m_model->rowCount(); i++) {
-            QModelIndex index = m_model->index(i, 0);
-            MediaMeta meta = index.data(Qt::UserRole).value<MediaMeta>();
-            Player::instance()->playListAppendMeta(meta);
-        }
-
+        Player::instance()->setPlayList(getMusicListData());
+        // 通知播放队列列表改变
         emit Player::instance()->signalPlayListChanged();
-        //设置当前播放playlist的hash
+        // 设置当前播放playlist的hash
         Player::instance()->setCurrentPlayListHash(m_currentHash, false);
     }
     Player::instance()->playMeta(itemMeta);
