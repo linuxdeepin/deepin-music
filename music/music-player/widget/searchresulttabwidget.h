@@ -49,6 +49,7 @@ public:
     int  getMusicCount();
     int  getAlbumCount();
     int  getSingerCount();
+    QList<MediaMeta> getMusicLiseData();
 public slots:
 
 signals:

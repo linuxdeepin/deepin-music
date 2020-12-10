@@ -365,9 +365,8 @@ void MusicListDataWidget::onPlayAllClicked()
         emit Player::instance()->signalPlayListChanged();
 
         // 设置第一首播放音乐
-        if (m_albumListView->getAlbumListData().size() > 0 &&
-                m_albumListView->getAlbumListData().first().musicinfos.size() > 0) {
-            Player::instance()->playMeta(m_albumListView->getAlbumListData().first().musicinfos.first());
+        if (Player::instance()->getPlayList()->size() > 0) {
+            Player::instance()->playMeta(Player::instance()->getPlayList()->first());
         }
         break;
     case SingerType:
@@ -381,9 +380,8 @@ void MusicListDataWidget::onPlayAllClicked()
         emit Player::instance()->signalPlayListChanged();
 
         // 设置第一首播放音乐
-        if (m_singerListView->getSingerListData().size() > 0 &&
-                m_singerListView->getSingerListData().first().musicinfos.size() > 0) {
-            Player::instance()->playMeta(m_singerListView->getSingerListData().first().musicinfos.first());
+        if (Player::instance()->getPlayList()->size() > 0) {
+            Player::instance()->playMeta(Player::instance()->getPlayList()->first());
         }
         break;
     // 同下共用
@@ -403,8 +401,27 @@ void MusicListDataWidget::onPlayAllClicked()
         emit Player::instance()->signalPlayListChanged();
 
         // 设置第一首播放音乐
-        if (m_musicListView->getAllSongListData().size() > 0) {
-            Player::instance()->playMeta(m_musicListView->getAllSongListData().first());
+        if (Player::instance()->getPlayList()->size() > 0) {
+            Player::instance()->playMeta(Player::instance()->getPlayList()->first());
+        }
+        break;
+    case SearchMusicResultType:
+    case SearchSingerResultType:
+    case SearchAlbumResultType:
+        // 清空播放队列
+        Player::instance()->clearPlayList();
+        // 添加到播放列表
+        for (auto meta : m_SearchResultTabWidget->getMusicLiseData()) {
+            Player::instance()->playListAppendMeta(meta);
+        }
+
+        // 通知播放队列改变
+        Player::instance()->setCurrentPlayListHash(m_currentHash, false);
+        emit Player::instance()->signalPlayListChanged();
+
+        // 设置第一首播放音乐
+        if (Player::instance()->getPlayList()->size() > 0) {
+            Player::instance()->playMeta(Player::instance()->getPlayList()->first());
         }
         break;
     default:

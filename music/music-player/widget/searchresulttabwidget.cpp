@@ -206,6 +206,11 @@ int SearchResultTabWidget::getSingerCount()
     return count;
 }
 
+QList<MediaMeta> SearchResultTabWidget::getMusicLiseData()
+{
+    return m_musicListView->getAllSongListData();
+}
+
 void SearchResultTabWidget::showEvent(QShowEvent *event)
 {
     m_musicRect = m_music->rect();
