@@ -583,7 +583,7 @@ void PlayListView::slotTheme(int type)
 
 void PlayListView::slotRemoveSingleSong(const QString &listHash, const QString &musicHash)
 {
-    if (listHash != m_currentHash) {
+    if (!m_IsPlayQueue &&  listHash != m_currentHash) {
         return;
     }
     int row =  m_model->rowCount();

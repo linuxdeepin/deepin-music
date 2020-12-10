@@ -104,6 +104,34 @@ MainFrame::MainFrame()
                      this, &MainFrame::slotImportFinished);
     QObject::connect(CommonService::getInstance(), &CommonService::showPopupMessage,
                      this, &MainFrame::showPopupMessage);
+
+    connect(Player::instance()->getMpris(), &MprisPlayer::quitRequested, this, [ = ]() {
+        sync();
+        qApp->quit();
+    });
+    connect(Player::instance()->getMpris(), &MprisPlayer::raiseRequested, this, [ = ]() {
+        if (isVisible()) {
+            if (isMinimized()) {
+                if (isFullScreen()) {
+                    hide();
+                    showFullScreen();
+                } else {
+                    this->titlebar()->setFocus();
+                    showNormal();
+                    activateWindow();
+                    auto geometry = MusicSettings::value("base.play.geometry").toByteArray();
+                    this->restoreGeometry(geometry);
+                }
+            } else {
+                showMinimized();
+                hide();
+            }
+        } else {
+            this->titlebar()->setFocus();
+            showNormal();
+            activateWindow();
+        }
+    });
 }
 
 MainFrame::~MainFrame()
