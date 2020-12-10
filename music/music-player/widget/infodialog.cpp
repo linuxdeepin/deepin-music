@@ -67,7 +67,7 @@ QImage cropRect(const QImage &image, QSize sz)
 
 void InfoDialog::initUI()
 {
-    setObjectName("InfoDialog");
+    setObjectName("infoDialog");
     setFixedSize(320, 500);
     setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Expanding);
 

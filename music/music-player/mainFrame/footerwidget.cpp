@@ -74,7 +74,7 @@ FooterWidget::FooterWidget(QWidget *parent) :
     DFloatingWidget(parent)
 {
     setFocusPolicy(Qt::ClickFocus);
-    setObjectName("Footer");
+    setObjectName("FooterWidget");
     this->setBlurBackgroundEnabled(true);
     this->blurBackground()->setRadius(30);
     this->blurBackground()->setBlurEnabled(true);
@@ -397,6 +397,11 @@ void FooterWidget::setPlayProperty(Player::PlaybackStatus status)
     }
 }
 
+void FooterWidget::slotPlayQueueAutoHidden()
+{
+    m_btPlayList->setChecked(false);
+}
+
 void FooterWidget::slotPlayClick(bool click)
 {
     Q_UNUSED(click)
@@ -654,46 +659,25 @@ void FooterWidget::slotPlaylistClick(bool click)
     if (m_playListWidget == nullptr) {
         m_playListWidget = new PlayListWidget(this);
         m_playListWidget->slotTheme(m_slotTheme);
-        // 初始化播放列表数据
-        m_playListWidget->slotPlayListChanged();
-        connect(Player::instance(), &Player::signalPlayListChanged, m_playListWidget, &PlayListWidget::slotPlayListChanged);
-        m_playListWidget->hide();
+
+        connect(m_playListWidget, &PlayListWidget::signalAutoHidden, this, &FooterWidget::slotPlayQueueAutoHidden);
     }
 
-    if (m_playListWidget->isHidden()) {
-        QRect start2(0, height - 85, width, 80);
-        QRect end2(0, height - 450, width, 445);
-        QPropertyAnimation *animation2 = new QPropertyAnimation(this, "geometry");
-        animation2->setEasingCurve(QEasingCurve::InCurve);
-        animation2->setDuration(AnimationDelay);
-        animation2->setStartValue(start2);
-        animation2->setEndValue(end2);
-        animation2->start();
-        m_playListWidget->show();
-        animation2->connect(animation2, &QPropertyAnimation::finished,
-                            animation2, &QPropertyAnimation::deleteLater);
-
-        m_forwardWidget->setSourceImage(QImage());
-    } else if (m_playListWidget->isVisible()) {
-        QRect start2(0, height - 85, width, 80);
-        QRect end2(0, height - 450, width, 445);
-        QPropertyAnimation *animation2 = new QPropertyAnimation(this, "geometry");
-        animation2->setEasingCurve(QEasingCurve::InCurve);
-        animation2->setDuration(AnimationDelay);
-        animation2->setStartValue(end2);
-        animation2->setEndValue(start2);
-        animation2->start();
-        animation2->connect(animation2, &QPropertyAnimation::finished,
-                            animation2, &QPropertyAnimation::deleteLater);
-        animation2->connect(animation2, &QPropertyAnimation::finished, m_playListWidget, [ = ]() {
-            m_playListWidget->hide();
-            refreshBackground();
-        });
+    QWidget *parent = static_cast<QWidget *>(this->parent());
+    if (parent) {
+        if (m_playListWidget->isHidden()) {
+            m_playListWidget->showAnimation(parent->size());
+            m_forwardWidget->setSourceImage(QImage());
+        } else {
+            m_playListWidget->closeAnimation(parent->size());
+        }
     }
 }
 
 void FooterWidget::showEvent(QShowEvent *event)
 {
+    Q_UNUSED(event)
+
     if (m_playListWidget) {
         m_playListWidget->setFixedWidth(width());
     }
@@ -701,23 +685,6 @@ void FooterWidget::showEvent(QShowEvent *event)
         m_forwardWidget->setGeometry(6, height() - 75, width() - 12, 70);
     }
 }
-
-void FooterWidget::mousePressEvent(QMouseEvent *event)
-{
-}
-
-void FooterWidget::mouseReleaseEvent(QMouseEvent *event)
-{
-}
-
-void FooterWidget::mouseMoveEvent(QMouseEvent *event)
-{
-}
-
-//bool FooterWidget::eventFilter(QObject *obj, QEvent *event)
-//{
-//    return true;
-//}
 
 void FooterWidget::resizeEvent(QResizeEvent *event)
 {

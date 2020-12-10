@@ -66,6 +66,8 @@ private:
 signals:
     void lyricClicked();
 public slots:
+    // 播放队列自动收起
+    void slotPlayQueueAutoHidden();
     // 点击播放按钮
     void slotPlayClick(bool click);
     // 点击播放列表按钮
@@ -99,10 +101,6 @@ public slots:
 protected:
     virtual void showEvent(QShowEvent *event) Q_DECL_OVERRIDE;
     virtual void resizeEvent(QResizeEvent *event) Q_DECL_OVERRIDE;
-    virtual void mousePressEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
-    virtual void mouseReleaseEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
-    virtual void mouseMoveEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
-//    virtual bool eventFilter(QObject *obj, QEvent *event) Q_DECL_OVERRIDE;
 private:
     int m_slotTheme = 0;
 

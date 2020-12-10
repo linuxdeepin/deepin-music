@@ -725,6 +725,7 @@ void PlayListView::slotRmvFromSongList()
     }
 
     Dtk::Widget::DDialog warnDlg(this);
+    warnDlg.setObjectName("MessageBox");
     warnDlg.setTextFormat(Qt::RichText);
     warnDlg.addButton(tr("Cancel"), true, Dtk::Widget::DDialog::ButtonNormal);
     int deleteFlag = warnDlg.addButton(tr("Remove"), false, Dtk::Widget::DDialog::ButtonWarning);
@@ -763,6 +764,7 @@ void PlayListView::slotDelFromLocal()
     }
 
     Dtk::Widget::DDialog warnDlg(this);
+    warnDlg.setObjectName("MessageBox");
     warnDlg.setTextFormat(Qt::RichText);
     warnDlg.addButton(tr("Cancel"), true, Dtk::Widget::DDialog::ButtonNormal);
     int deleteFlag = warnDlg.addButton(tr("Delete"), false, Dtk::Widget::DDialog::ButtonWarning);

@@ -35,6 +35,7 @@
 #include <DPalette>
 #include <DGuiApplicationHelper>
 #include <DFontSizeManager>
+#include <QApplication>
 
 #include "../core/music.h"
 #include "../core/musicsettings.h"
@@ -43,9 +44,12 @@
 #include "playlistview.h"
 #include "widget/ddropdown.h"
 #include "../core/player.h"
+#include "footerwidget.h"
 
 DWIDGET_USE_NAMESPACE
 DGUI_USE_NAMESPACE
+
+static const int AnimationDelay = 400;
 
 void PlayListWidget::initConntion()
 {
@@ -54,7 +58,53 @@ void PlayListWidget::initConntion()
 //        if (m_playListView->playlist()) {
 //            Q_EMIT musiclistRemove(m_playListView->playlist(), m_playListView->playlist()->allmusic());
 //        }
-//    });
+    //    });
+}
+
+void PlayListWidget::showAnimation(const QSize &size)
+{
+//    int height = 0;
+//    int width = 0;
+//    if (static_cast<QWidget *>(parent())) {
+//        height = static_cast<QWidget *>(parent()->parent())->height();
+//        width = static_cast<QWidget *>(parent()->parent())->width();
+//    }
+
+    rectAnimationSize = size;
+
+    QRect start2(0, rectAnimationSize.height() - 85, rectAnimationSize.width(), 80);
+    QRect end2(0, rectAnimationSize.height() - 450, rectAnimationSize.width(), 445);
+    QPropertyAnimation *animation2 = new QPropertyAnimation(parent(), "geometry");
+    animation2->setEasingCurve(QEasingCurve::InCurve);
+    animation2->setDuration(AnimationDelay);
+    animation2->setStartValue(start2);
+    animation2->setEndValue(end2);
+    animation2->start();
+    this->show();
+    animation2->connect(animation2, &QPropertyAnimation::finished,
+                        animation2, &QPropertyAnimation::deleteLater);
+}
+
+void PlayListWidget::closeAnimation(const QSize &size)
+{
+    rectAnimationSize = size;
+
+    QRect start2(0, rectAnimationSize.height() - 85, rectAnimationSize.width(), 80);
+    QRect end2(0, rectAnimationSize.height() - 450, rectAnimationSize.width(), 445);
+    QPropertyAnimation *animation2 = new QPropertyAnimation(parent(), "geometry");
+    animation2->setEasingCurve(QEasingCurve::InCurve);
+    animation2->setDuration(AnimationDelay);
+    animation2->setStartValue(end2);
+    animation2->setEndValue(start2);
+    animation2->start();
+    animation2->connect(animation2, &QPropertyAnimation::finished,
+                        animation2, &QPropertyAnimation::deleteLater);
+    animation2->connect(animation2, &QPropertyAnimation::finished, this, [ = ]() {
+        this->hide();
+        static_cast<FooterWidget *>(parent())->refreshBackground();
+    });
+
+    emit signalAutoHidden();
 }
 
 void PlayListWidget::slotPlayListChanged()
@@ -113,8 +163,8 @@ PlayListWidget::PlayListWidget(QWidget *parent) :
 
     m_btClearAll->setFocusPolicy(Qt::TabFocus);
     m_btClearAll->setDefault(true);
-    m_btClearAll->installEventFilter(this);
-    this->installEventFilter(this);
+//    m_btClearAll->installEventFilter(this);
+//    this->installEventFilter(this);
 
     m_emptyHits = new DLabel(this);
     m_emptyHits->setObjectName("PlayListEmptyHits");
@@ -128,7 +178,7 @@ PlayListWidget::PlayListWidget(QWidget *parent) :
     m_playListView = new PlayListView("play", true);
     m_playListView->show();
     m_playListView->setFocusPolicy(Qt::StrongFocus);
-    m_playListView->installEventFilter(this);
+//    m_playListView->installEventFilter(this);
 
     layout->addWidget(m_actionBar, 0);
     layout->addWidget(m_playListView, 1);
@@ -138,89 +188,20 @@ PlayListWidget::PlayListWidget(QWidget *parent) :
 
     initConntion();
 
-    int themeType = DGuiApplicationHelper::instance()->themeType();
-    slotTheme(themeType);
-
 //    m_inotifyFiles.start();
 //    ThreadPool::instance()->moveToNewThread(&m_inotifyFiles);
 
     connect(m_btClearAll, &DPushButton::clicked, this, &PlayListWidget::slotClearAllClicked);
     connect(m_playListView, &PlayListView::rowCountChanged, this, &PlayListWidget::slotUpdateItemCount);
+    // 初始化播放列表数据
+    this->slotPlayListChanged();
+    connect(Player::instance(), &Player::signalPlayListChanged, this, &PlayListWidget::slotPlayListChanged);
+    connect(qApp, &QApplication::focusChanged, this, &PlayListWidget::autoHidden);
+    this->hide();
 }
 
 PlayListWidget::~PlayListWidget()
 {
-}
-
-bool PlayListWidget::eventFilter(QObject *o, QEvent *e)
-{
-    if (e->type() == QEvent::KeyPress) {
-        QKeyEvent *event = static_cast<QKeyEvent *>(e);
-        if (event->key() == Qt::Key_Escape) {
-
-            Q_EMIT btPlayList();
-        }
-    }
-
-    if (o == m_playListView) {
-        if (e->type() == QEvent::KeyPress) {
-            QKeyEvent *event = static_cast<QKeyEvent *>(e);
-            if ((event->modifiers() == Qt::ControlModifier) && (event->key() == Qt::Key_M)) {
-
-                int rowIndex = m_playListView->currentIndex().row();
-                int row = 40 * rowIndex;
-                QPoint pos;
-
-                if (row > 300) {
-                    QPoint posm(300, 65);
-                    pos = posm;
-                } else {
-                    QPoint posm(300, row);
-                    pos = posm;
-                }
-
-                Q_EMIT requestCustomContextMenu(pos, 0);
-
-            } else if (event->key() == Qt::Key_Escape) {
-
-            }
-        } else if (e->type() == QEvent::FocusIn) {
-
-            int rowIndex = m_playListView->currentIndex().row();
-            if (rowIndex == -1) {
-                auto index = m_playListView->item(0, 0);
-                m_playListView->setCurrentItem(index);
-            }
-
-        } else if (e->type() == QEvent::FocusOut) {
-
-            int rowIndex = m_playListView->currentIndex().row();
-            if (rowIndex == 0) {
-                //    d->playListView->clearSelection();
-            }
-        }
-    } else if (o == m_btClearAll) {
-
-        if (e->type() == QEvent::KeyPress) {
-            QKeyEvent *event = static_cast<QKeyEvent *>(e);
-            if (event->key() == Qt::Key_Escape) {
-
-            }
-        } else  if (e->type() == QEvent::FocusIn) {
-            auto index = m_playListView->item(-1, 0);
-            m_playListView->setCurrentItem(index);
-
-        } else if (e->type() == QEvent::FocusOut) {
-
-        }
-    }
-
-    return QWidget::eventFilter(o, e);
-}
-
-void PlayListWidget::showEvent(QShowEvent *event)
-{
-    qDebug() << "zy------PlayListWidget::showEvent width = " << width();
 }
 
 void PlayListWidget::dragEnterEvent(QDragEnterEvent *event)
@@ -308,11 +289,6 @@ void PlayListWidget::slotTheme(int type)
     m_playListView->setThemeType(type);
 }
 
-void PlayListWidget::changePicture(QPixmap pixmap, QPixmap sidebarPixmap, QPixmap albumPixmap)
-{
-//    m_playListView->setPlayPixmap(pixmap, sidebarPixmap, albumPixmap);
-}
-
 void PlayListWidget::slotClearAllClicked()
 {
     Player::instance()->clearPlayList();
@@ -331,5 +307,27 @@ void PlayListWidget::slotUpdateItemCount()
         infoStr = tr("%1 songs").arg(inum);
     }
     m_infoLabel->setText(infoStr);
+}
+
+void PlayListWidget::autoHidden(QWidget *old, QWidget *now)
+{
+    if (old && now) {
+        if (now->objectName() == "infoDialog" || now->objectName() == "InfoTitle" ||
+                now->objectName() == "MainFrame" || now->objectName() == "MessageBox")  {
+        } else {
+            PlayListView *playListQueue = static_cast<PlayListView *>(now);
+            if (playListQueue && playListQueue->objectName() == "PlayListView") {
+                if (!playListQueue->getIsPlayQueue()) {
+                    if (!this->isHidden())
+                        closeAnimation(rectAnimationSize);
+                }
+            } else {
+                if (now->objectName() != "FooterWidget") {
+                    if (!this->isHidden())
+                        closeAnimation(rectAnimationSize);
+                }
+            }
+        }
+    }
 }
 

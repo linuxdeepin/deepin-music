@@ -36,27 +36,29 @@ public:
     ~PlayListWidget() override;
 
     void initConntion();
+    void showAnimation(const QSize &size);
+    void closeAnimation(const QSize &size);
 //    void showEmptyHits(bool empty);
+
 public slots:
     void slotPlayListChanged();
 
     void slotTheme(int type);
-    void changePicture(QPixmap pixmap, QPixmap sidebarPixmap, QPixmap albumPixmap);
 
 signals:
-    void requestCustomContextMenu(const QPoint &pos, char type);
-    void musicFileMiss();
-    void btPlayList();
+    void signalAutoHidden();
+//    void requestCustomContextMenu(const QPoint &pos, char type);
+//    void musicFileMiss();
+//    void btPlayList();
 
 private slots:
     void slotClearAllClicked();
     //刷新歌曲数量
     void slotUpdateItemCount();
-protected:
-    bool eventFilter(QObject *o, QEvent *e) Q_DECL_OVERRIDE;
+    // 自动收起
+    void autoHidden(QWidget *old, QWidget *now);
 
 protected:
-    virtual void showEvent(QShowEvent *event) Q_DECL_OVERRIDE;
     virtual void dragEnterEvent(QDragEnterEvent *event) Q_DECL_OVERRIDE;
 //    virtual void dragMoveEvent(QDragMoveEvent *event) Q_DECL_OVERRIDE;
 //    virtual void dragLeaveEvent(QDragLeaveEvent *event) Q_DECL_OVERRIDE;
@@ -64,6 +66,9 @@ protected:
     virtual void resizeEvent(QResizeEvent *event) Q_DECL_OVERRIDE;
 
 private:
+    // 播放队列收缩动画大小
+    QSize rectAnimationSize;
+
     DLabel              *m_titleLabel     = nullptr;
     DLabel              *m_infoLabel      = nullptr;
     DLabel              *m_emptyHits      = nullptr;

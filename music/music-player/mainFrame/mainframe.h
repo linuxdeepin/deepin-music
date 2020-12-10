@@ -76,13 +76,10 @@ private slots:
 protected:
     virtual void showEvent(QShowEvent *event) Q_DECL_OVERRIDE;
     virtual void enterEvent(QEvent *event) Q_DECL_OVERRIDE;
-//    virtual bool eventFilter(QObject *obj, QEvent *e) Q_DECL_OVERRIDE;
     virtual void resizeEvent(QResizeEvent *e) Q_DECL_OVERRIDE;
     virtual void closeEvent(QCloseEvent *event) Q_DECL_OVERRIDE;
 //    virtual void paintEvent(QPaintEvent *e) Q_DECL_OVERRIDE;
 private:
-    DWidget             *m_centralWidget = nullptr;
-    QStackedLayout      *m_contentLayout = nullptr;
     DTitlebar           *m_titlebar = nullptr;
     TitlebarWidget      *m_titlebarwidget = nullptr;
     FooterWidget        *m_footer = nullptr;
