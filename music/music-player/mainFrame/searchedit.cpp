@@ -110,10 +110,10 @@ void SearchEdit::onFocusIn()
         m_result->setFixedWidth(this->width());
     }
 //    m_result->adjustSize();
-    auto pos = this->mapToGlobal(QPoint(0, this->height() + 2));
-    m_result->show();
-    m_result->raise();
-    m_result->move(pos);
+//    auto pos = this->mapToGlobal(QPoint(0, this->height() + 2));
+//    m_result->show();
+//    m_result->raise();
+//    m_result->move(pos);
 }
 
 void SearchEdit::onTextChanged()
@@ -147,6 +147,9 @@ void SearchEdit::onTextChanged()
     if (text.length() >= 1) {
         m_result->setListviewSearchString(text);
         m_result->show();
+//        auto pos = this->mapToGlobal(QPoint(0, this->height() + 2));
+//        m_result->move(pos);
+
         // parent is MainFrame
         QRect rect = this->rect();
         QPoint bottomLeft = rect.bottomLeft();
@@ -167,15 +170,15 @@ void SearchEdit::onReturnPressed()
     auto text = QString(this->text()).remove("\r").remove("\n");
     if (text.length() == 0)
         return;
-    int i = text.size();
-    for (; i > 0; i--) {
-        QChar index = text.back();
-        if (index == ' ') {
-            text.remove(text.size() - 1, 1);
-        } else {
-            break;
-        }
-    }
+//    int i = text.size();
+//    for (; i > 0; i--) {
+//        QChar index = text.back();
+//        if (index == ' ') {
+//            text.remove(text.size() - 1, 1);
+//        } else {
+//            break;
+//        }
+//    }
     m_result->hide();
     emit CommonService::getInstance()->switchToView(SearchMusicResultType, text);
 }
