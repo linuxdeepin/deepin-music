@@ -96,6 +96,24 @@ MusicSongListView::MusicSongListView(QWidget *parent) : DListView(parent)
 
     connect(Player::instance(), SIGNAL(signalUpdatePlayingIcon()),
             this, SLOT(slotUpdatePlayingIcon()), Qt::DirectConnection);
+
+    connect(this, &MusicSongListView::triggerEdit,
+    this, [ = ](const QModelIndex & index) {
+        if (DGuiApplicationHelper::instance()->themeType() == 1) {
+            auto curStandardItem = dynamic_cast<DStandardItem *>(model->itemFromIndex(index));
+            curStandardItem->setIcon(QIcon(QString(":/mpimage/light/normal/famous_ballad_normal.svg")));
+        }
+    });
+
+    connect(this, &MusicSongListView::currentChanged,
+    this, [ = ](const QModelIndex & current, const QModelIndex & previous) {
+        Q_UNUSED(previous)
+        if (state() != EditingState) {
+            auto curStandardItem = dynamic_cast<DStandardItem *>(model->itemFromIndex(current));
+            QString name = curStandardItem->data(Qt::UserRole + 10).toString();
+            curStandardItem->setIcon(QIcon::fromTheme("music_famousballad"));
+        }
+    });
 }
 
 MusicSongListView::~MusicSongListView()
@@ -327,6 +345,8 @@ void MusicSongListView::closeEditor(QWidget *editor, QAbstractItemDelegate::EndE
     auto curStandardItem = dynamic_cast<DStandardItem *>(model->itemFromIndex(current));
     QString uuid = current.data(Qt::UserRole).value<QString>();
     DataBaseService::getInstance()->updatePlaylistDisplayName(curStandardItem->text(), uuid);
+
+    curStandardItem->setIcon(QIcon::fromTheme("music_famousballad"));
 }
 
 void MusicSongListView::dragEnterEvent(QDragEnterEvent *event)

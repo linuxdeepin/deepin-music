@@ -314,6 +314,9 @@ void FooterWidget::initUI(QWidget *parent)
     //dbus
     connect(Player::instance()->getMpris(), SIGNAL(volumeRequested(double)), this, SLOT(onDbusVolumeChanged(double)));
     connect(m_volSlider, &SoundVolume::sigvolumeChanged, this, &FooterWidget::slotSliderVolumeChanged);
+    connect(m_volSlider, &SoundVolume::delayAutoHide, this, [ = ]() {
+        m_btSound->setChecked(false);
+    });
     connect(Player::instance(), &Player::mutedChanged, this, &FooterWidget::slotSliderVolumeChanged);
 
 }

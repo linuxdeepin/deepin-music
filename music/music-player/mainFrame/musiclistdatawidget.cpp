@@ -158,7 +158,9 @@ void MusicListDataWidget::viewChanged(ListPageSwitchType switchtype, const QStri
     case CustomType: {
         refreshSortAction();
         m_musicListView->initCostomSonglist(hashOrSearchword);
-        m_titleLabel->setText(DataBaseService::getInstance()->getPlaylistNameByUUID(hashOrSearchword));
+        QFontMetrics titleFm(m_titleLabel->font());
+        auto text = titleFm.elidedText(DataBaseService::getInstance()->getPlaylistNameByUUID(hashOrSearchword), Qt::ElideRight, 300);
+        m_titleLabel->setText(text);
         m_musicListView->setViewModeFlag(hashOrSearchword, m_musicListView->getViewMode());
         m_pStackedWidget->setCurrentWidget(m_musicListView);
         m_preHash = hashOrSearchword;
@@ -788,7 +790,9 @@ void MusicListDataWidget::slotPlaylistNameUpdate(const QString &listHash)
     if (m_currentHash != listHash) {
         return;
     }
-    m_titleLabel->setText(DataBaseService::getInstance()->getPlaylistNameByUUID(m_currentHash));
+    QFontMetrics titleFm(m_titleLabel->font());
+    auto text = titleFm.elidedText(DataBaseService::getInstance()->getPlaylistNameByUUID(m_currentHash), Qt::ElideRight, 300);
+    m_titleLabel->setText(text);
 }
 
 void MusicListDataWidget::refreshSortAction(QString hash)
