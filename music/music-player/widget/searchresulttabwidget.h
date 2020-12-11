@@ -48,9 +48,11 @@ public:
     DataBaseService::ListSortType getSortType();
     //显示模式
     QListView::ViewMode getViewMode();
-    int  getMusicCount();
+    int  getMusicCountByMusic();
     int  getAlbumCount();
+    int  getMusicCountByAlbum();
     int  getSingerCount();
+    int  getMusicCountBySinger();
     QList<MediaMeta> getMusicLiseData();
 
     void setCurrentPage(ListPageSwitchType type);

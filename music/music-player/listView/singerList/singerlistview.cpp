@@ -139,13 +139,15 @@ QList<SingerInfo> SingerListView::getSingerListData() const
 
 void SingerListView::resetSingerListDataByStr(const QString &searchWord)
 {
-    m_singerInfoList = DataBaseService::getInstance()->allSingerInfos();
+    QList<SingerInfo> singerInfoList = DataBaseService::getInstance()->allSingerInfos();
 
     singerModel->clear();
-    for (SingerInfo meta : m_singerInfoList) {
+    m_singerInfoList.clear();
+    for (SingerInfo meta : singerInfoList) {
         if (!CommonService::getInstance()->containsStr(searchWord, meta.singerName)) {
             continue;
         }
+        m_singerInfoList.append(meta);
         QStandardItem *pItem = new QStandardItem;
         //设置icon
         bool iconExists = false;
@@ -222,7 +224,7 @@ void SingerListView::resetSingerListDataByAlbum(const QList<AlbumInfo> &albumInf
 
     m_singerInfoList.clear();
     singerModel->clear();
-    for (SingerInfo singerInfo : m_singerInfoList) {
+    for (SingerInfo singerInfo : singerInfos) {
         bool isSingerContainSong = false;
         for (AlbumInfo albumInfo : albumInfos) {
             if (CommonService::getInstance()->containsStr(albumInfo.singer, singerInfo.singerName)) {
@@ -260,9 +262,13 @@ void SingerListView::resetSingerListDataByAlbum(const QList<AlbumInfo> &albumInf
     }
 }
 
-int SingerListView::rowCount()
+int SingerListView::getMusicCount()
 {
-    return  singerModel->rowCount();
+    int count = 0;
+    for (SingerInfo info : m_singerInfoList) {
+        count += info.musicinfos.size();
+    }
+    return count;
 }
 
 void SingerListView::setViewModeFlag(QListView::ViewMode mode)

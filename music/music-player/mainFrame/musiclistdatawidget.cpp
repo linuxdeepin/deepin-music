@@ -691,7 +691,7 @@ void MusicListDataWidget::refreshInfoLabel(QString hash)
     int songCount = 0;
     if (hash == "album" || hash == "albumResult") {
         if (hash == "albumResult") {
-            songCount = m_SearchResultTabWidget->getMusicCount();
+            songCount = m_SearchResultTabWidget->getMusicCountByAlbum();
             albumCount = m_SearchResultTabWidget->getAlbumCount();
             showEmptyHits(songCount);
             refreshSortAction("albumResult");
@@ -713,7 +713,7 @@ void MusicListDataWidget::refreshInfoLabel(QString hash)
         }
     } else if (hash == "artist" || hash == "artistResult") {
         if (hash == "artistResult") {
-            songCount = m_SearchResultTabWidget->getMusicCount();
+            songCount = m_SearchResultTabWidget->getMusicCountBySinger();
             singerCount = m_SearchResultTabWidget->getSingerCount();
             showEmptyHits(songCount);
             refreshSortAction("artistResult");
@@ -734,7 +734,7 @@ void MusicListDataWidget::refreshInfoLabel(QString hash)
         }
     } else if (hash == "all" || hash == "musicResult") {
         if (hash == "musicResult") {
-            songCount = m_SearchResultTabWidget->getMusicCount();
+            songCount = m_SearchResultTabWidget->getMusicCountByMusic();
             showEmptyHits(songCount);
             refreshSortAction("musicResult");
         } else {

@@ -55,7 +55,8 @@ public:
     void resetSingerListDataBySongName(const QList<MediaMeta> &mediaMetas);
     //展示包含列表中专辑相关的歌手
     void resetSingerListDataByAlbum(const QList<AlbumInfo> &albumInfos);
-    int rowCount();
+
+    int getMusicCount();
 
     void setViewModeFlag(QListView::ViewMode mode);
     QListView::ViewMode getViewMode();

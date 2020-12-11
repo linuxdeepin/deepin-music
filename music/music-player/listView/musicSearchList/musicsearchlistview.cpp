@@ -43,10 +43,9 @@ MusicSearchListview::MusicSearchListview(QWidget *parent)
     m_delegate = new MusicSearchListDelegate(this);
     setItemDelegate(m_delegate);
     setViewportMargins(0, 0, 8, 0);
-
     setUniformItemSizes(true);
 
-    setViewModeFlag(QListView::ListMode);
+    setViewMode(QListView::ListMode);
     setResizeMode(QListView::Adjust);
     setMovement(QListView::Static);
     setLayoutMode(QListView::Batched);
@@ -262,17 +261,17 @@ QPixmap MusicSearchListview::getAlbumPixmap() const
     return m_albumPixmap;
 }
 
-void MusicSearchListview::setViewModeFlag(QListView::ViewMode mode)
-{
-    if (mode == QListView::IconMode) {
-        setIconSize(QSize(170, 170));
-        setGridSize(QSize(170, 170));
-    } else {
-        setIconSize(QSize(36, 36));
-        setGridSize(QSize(-1, -1));
-    }
-    setViewMode(mode);
-}
+//void MusicSearchListview::setViewModeFlag(QListView::ViewMode mode)
+//{
+//    if (mode == QListView::IconMode) {
+//        setIconSize(QSize(170, 170));
+//        setGridSize(QSize(170, 170));
+//    } else {
+//        setIconSize(QSize(36, 36));
+//        setGridSize(QSize(-1, -1));
+//    }
+//    setViewMode(mode);
+//}
 
 void MusicSearchListview::addItem(const QString str)
 {

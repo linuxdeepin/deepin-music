@@ -193,7 +193,7 @@ QListView::ViewMode SearchResultTabWidget::getViewMode()
     return QListView::IconMode;
 }
 
-int SearchResultTabWidget::getMusicCount()
+int SearchResultTabWidget::getMusicCountByMusic()
 {
     int count = 0;
     if (m_musicListView) {
@@ -206,18 +206,28 @@ int SearchResultTabWidget::getAlbumCount()
 {
     int count = 0;
     if (m_albumListView) {
-        count = m_albumListView->count();
+        count = m_albumListView->getAlbumListData().size();
     }
     return count;
+}
+
+int SearchResultTabWidget::getMusicCountByAlbum()
+{
+    return m_albumListView->getMusicCount();
 }
 
 int SearchResultTabWidget::getSingerCount()
 {
     int count = 0;
     if (m_singerListView) {
-        count = m_singerListView->count();
+        count = m_singerListView->getSingerListData().size();
     }
     return count;
+}
+
+int SearchResultTabWidget::getMusicCountBySinger()
+{
+    return m_singerListView->getMusicCount();
 }
 
 QList<MediaMeta> SearchResultTabWidget::getMusicLiseData()

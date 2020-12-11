@@ -51,7 +51,7 @@ public:
 
     QList<AlbumInfo> getAlbumListData() const;
 
-    int rowCount();
+    int getMusicCount();
 
     void setViewModeFlag(QListView::ViewMode mode);
     QListView::ViewMode getViewMode();

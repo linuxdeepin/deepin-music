@@ -283,6 +283,7 @@ void PlayListView::resetSonglistByAlbum(const QList<AlbumInfo> &albuminfos)
         }
     }
 
+    m_model->clear();
     for (int i = 0; i < list.size(); i++) {
         QStandardItem *newItem = new QStandardItem;
         QString imagesDirPath = Global::cacheDir() + "/images/" + list.at(i).hash + ".jpg";
@@ -315,6 +316,7 @@ void PlayListView::resetSonglistBySinger(const QList<SingerInfo> &singerInfos)
         }
     }
 
+    m_model->clear();
     for (int i = 0; i < list.size(); i++) {
         QStandardItem *newItem = new QStandardItem;
         QString imagesDirPath = Global::cacheDir() + "/images/" + list.at(i).hash + ".jpg";

@@ -130,14 +130,15 @@ void AlbumListView::setAlbumListData(const QList<AlbumInfo> &listinfo)
 
 void AlbumListView::resetAlbumListDataByStr(const QString &searchWord)
 {
-    m_albumInfoList.clear();
-    m_albumInfoList = DataBaseService::getInstance()->allAlbumInfos();
+    QList<AlbumInfo> albumInfoList = DataBaseService::getInstance()->allAlbumInfos();
 
+    m_albumInfoList.clear();
     this->albumModel->clear();
-    for (AlbumInfo albumInfo : m_albumInfoList) {
+    for (AlbumInfo albumInfo : albumInfoList) {
         if (!CommonService::getInstance()->containsStr(searchWord, albumInfo.albumName)) {
             continue;
         }
+        m_albumInfoList.append(albumInfo);
         QStandardItem *pItem = new QStandardItem;
         //设置icon
         bool iconExists = false;
@@ -261,9 +262,13 @@ QList<AlbumInfo> AlbumListView::getAlbumListData() const
     return m_albumInfoList;
 }
 
-int AlbumListView::rowCount()
+int AlbumListView::getMusicCount()
 {
-    return  albumModel->rowCount();
+    int count = 0;
+    for (AlbumInfo info : m_albumInfoList) {
+        count += info.musicinfos.size();
+    }
+    return count;
 }
 
 void AlbumListView::setViewModeFlag(QListView::ViewMode mode)

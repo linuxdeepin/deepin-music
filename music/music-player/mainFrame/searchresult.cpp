@@ -140,7 +140,8 @@ SearchResult::~SearchResult()
 void SearchResult::autoResize()
 {
     this->show();
-
+    int lineHeight = 0;
+    int lineShowCount = 0;
     if (m_MusicView->rowCount() == 0) {
         m_MusicLabel->hide();
         m_MusicView->hide();
@@ -150,6 +151,7 @@ void SearchResult::autoResize()
         m_MusicView->show();
         s_ArtistLine->show();
         s_AblumLine->show();
+        lineShowCount++;
         m_MusicView->setFixedHeight(m_MusicView->rowCount() * 34);
     }
 
@@ -161,6 +163,7 @@ void SearchResult::autoResize()
         m_ArtistLabel->show();
         m_SingerView->show();
         s_AblumLine->show();
+        lineShowCount++;
         m_SingerView->setFixedHeight(m_SingerView->rowCount() * 34);
     }
 
@@ -172,18 +175,23 @@ void SearchResult::autoResize()
         s_AblumLine->show();
         m_AblumLabel->show();
         m_AlbumView->show();
+        lineShowCount++;
         m_AlbumView->setFixedHeight(m_AlbumView->rowCount() * 34);
     }
 
+    if (lineShowCount > 0) {
+        lineHeight = 2 * (lineShowCount - 1);
+    }
     int total = 0;
     total += m_MusicLabel->isVisible() ? m_MusicLabel->height() : 0;
     total += m_MusicView->isVisible() ? m_MusicView->height() : 0;
-    total += s_ArtistLine->isVisible() ? s_ArtistLine->height() : 0;
+//    total += s_ArtistLine->isVisible() ? s_ArtistLine->height() : 0;
     total += m_ArtistLabel->isVisible() ? m_ArtistLabel->height() : 0;
     total += m_SingerView->isVisible() ? m_SingerView->height() : 0;
-    total += s_AblumLine->isVisible() ? s_AblumLine->height() : 0;
+//    total += s_AblumLine->isVisible() ? s_AblumLine->height() : 0;
     total += m_AblumLabel->isVisible() ? m_AblumLabel->height() : 0;
     total += m_AlbumView->isVisible() ? m_AlbumView->height() : 0;
+    total += lineHeight;
     if (m_MusicView->isHidden() && m_SingerView->isHidden() && m_AlbumView->isHidden()) {
         setFixedHeight(total);
     } else {

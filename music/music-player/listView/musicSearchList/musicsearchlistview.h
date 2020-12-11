@@ -58,7 +58,7 @@ public:
     void updateList();
     //void keyChoice();
 
-    void setViewModeFlag(QListView::ViewMode mode);
+//    void setViewModeFlag(QListView::ViewMode mode);
     void addItem(const QString str);
 
 signals:

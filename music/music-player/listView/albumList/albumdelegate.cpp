@@ -436,7 +436,7 @@ void AlbumDataDelegate::drawListMode(QPainter &painter, const QStyleOptionViewIt
     painter.drawText(extraRect, Qt::AlignLeft | Qt::AlignVCenter, extraText);
 
     //songs
-    int sortMetasSize = rowCount;
+    int sortMetasSize = albumTmp.musicinfos.size();
     QString infoStr;
     if (sortMetasSize == 0) {
         infoStr = QString("   ") + tr("No songs");
