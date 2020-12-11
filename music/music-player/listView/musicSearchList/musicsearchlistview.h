@@ -78,6 +78,7 @@ private:
     int                         m_themeType     = 1;
     int                         m_CurrentIndex = -1;
     QString                     m_defaultCover = ":/images/logo.svg";
+    QPixmap                     m_defaultIcon = QPixmap(":/icons/deepin/builtin/actions/cover_max_200px.svg");
     QPixmap                     m_playingPixmap = QPixmap(":/images/logo.svg");
     QPixmap                     m_sidebarPixmap = QPixmap(":/images/logo.svg");
     QPixmap                     m_albumPixmap   = QPixmap(":/images/logo.svg");

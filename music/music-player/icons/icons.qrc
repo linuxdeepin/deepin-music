@@ -31,5 +31,7 @@
         <file>actions/shadow_176px.svg</file>
         <file>actions/suspend_hover_36px.svg</file>
         <file>actions/play_hover_36px.svg</file>
+        <file>actions/cover_min_40px.svg</file>
+        <file>actions/cover_max_200px.svg</file>
     </qresource>
 </RCC>

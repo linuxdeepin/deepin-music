@@ -24,6 +24,8 @@
 #include "musicsearchlistdelegate.h"
 
 #include <QDebug>
+#include <QFileInfo>
+
 #include "util/pinyinsearch.h"
 #include "util/global.h"
 #include "databaseservice.h"
@@ -133,9 +135,25 @@ void MusicSearchListview::setSearchText(QString text)
             if (singer.musicinfos.values().size() > 0) {
                 QVariant IconMeta;
                 QString imagesDirPath = Global::cacheDir() + "/images/" + singer.musicinfos.values().at(0).hash + ".jpg";
-                QPixmap icon(imagesDirPath);
-                IconMeta.setValue(icon);
-                m_model->setData(index, IconMeta, Qt::UserRole + SearchType::SearchIcon);
+                //设置icon
+                bool iconExists = false;
+                for (int i = 0; i < singer.musicinfos.values().size(); i++) {
+                    MediaMeta metaBind = singer.musicinfos.values().at(i);
+                    QString imagesDirPath = Global::cacheDir() + "/images/" + metaBind.hash + ".jpg";
+                    QFileInfo file(imagesDirPath);
+                    QIcon icon;
+                    if (file.exists()) {
+                        QPixmap icon(imagesDirPath);
+                        IconMeta.setValue(icon);
+                        m_model->setData(index, IconMeta, Qt::UserRole + SearchType::SearchIcon);
+                        iconExists = true;
+                        break;
+                    }
+                }
+                if (!iconExists) {
+                    IconMeta.setValue(m_defaultIcon);
+                    m_model->setData(index, IconMeta, Qt::UserRole + SearchType::SearchIcon);
+                }
             }
         }
     } else if (m_SearchType == SearchType::SearchAlbum) {
@@ -165,10 +183,28 @@ void MusicSearchListview::setSearchText(QString text)
             if (album.musicinfos.values().size() > 0) {
                 QVariant IconMeta;
                 QString imagesDirPath = Global::cacheDir() + "/images/" + album.musicinfos.values().at(0).hash + ".jpg";
-                QPixmap icon(imagesDirPath);
-                IconMeta.setValue(icon);
-                m_model->setData(index, IconMeta, Qt::UserRole + SearchType::SearchIcon);
+                //设置icon
+                bool iconExists = false;
+                for (int i = 0; i < album.musicinfos.values().size(); i++) {
+                    MediaMeta metaBind = album.musicinfos.values().at(i);
+                    QString imagesDirPath = Global::cacheDir() + "/images/" + metaBind.hash + ".jpg";
+                    QFileInfo file(imagesDirPath);
+                    QIcon icon;
+                    if (file.exists()) {
+                        QPixmap icon(imagesDirPath);
+                        IconMeta.setValue(icon);
+                        m_model->setData(index, IconMeta, Qt::UserRole + SearchType::SearchIcon);
+                        iconExists = true;
+                        break;
+                    }
+                }
+                if (!iconExists) {
+                    IconMeta.setValue(m_defaultIcon);
+                    m_model->setData(index, IconMeta, Qt::UserRole + SearchType::SearchIcon);
+                }
             }
+
+
         }
     }
 }

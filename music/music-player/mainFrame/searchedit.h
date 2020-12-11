@@ -51,6 +51,6 @@ private:
 //    void searchText3(QString id, QString text);
     SearchResult    *m_result = nullptr;
     QString         m_CurrentId;
-    QString         m_Text;
-    QString         m_LastText;
+//    QString         m_Text;
+//    QString         m_LastText;
 };

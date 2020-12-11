@@ -66,10 +66,8 @@ SearchEdit::SearchEdit(QWidget *parent) : DSearchEdit(parent)
     });
     connect(this, &SearchEdit::cursorPositionChanged,
     this, [ = ](int index1, int index2) {
-//        qDebug() << "index1 = " << index1 << " index2 = " << index2;
-//        if (index1 > 0 && index2 == 0) {
-//            clearEdit();
-//        }
+        Q_UNUSED(index1)
+        Q_UNUSED(index2)
         auto alltext = this->text();
         if (alltext.isEmpty()) {
             //清除搜索时，回退到上一次界面
@@ -122,6 +120,7 @@ void SearchEdit::onTextChanged()
 {
     auto alltext = this->text();
     if (alltext.isEmpty()) {
+        m_result->hide();
         //清除搜索时，回退到上一次界面
         emit CommonService::getInstance()->switchToView(PreType, "");
         return;
@@ -134,17 +133,17 @@ void SearchEdit::onTextChanged()
 
     if (this->text().size() == 0) {
         m_result->hide();
-        m_LastText = "";
+//        m_LastText = "";
         return;
     }
-    if (m_Text == this->text()) {
-        return;
-    }
+//    if (m_Text == this->text()) {
+//        return;
+//    }
     m_CurrentId = "";
-    if (m_LastText == text) {
-        return;
-    }
-    m_LastText = text;
+//    if (m_LastText == text) {
+//        return;
+//    }
+//    m_LastText = text;
     if (text.length() >= 1) {
         m_result->setListviewSearchString(text);
         m_result->show();
