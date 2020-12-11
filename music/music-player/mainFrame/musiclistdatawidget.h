@@ -54,6 +54,8 @@ public slots:
     void slotImportFinished();
     //刷新各列表数量信息
     void refreshInfoLabel(QString hash);
+    //刷新显示模式按钮check状态
+    void refreshModeBtnByHash(QString hash);
     void slotRemoveSingleSong(const QString &listHash, const QString &musicHash);//删除了一首音乐
     void slotPlaylistNameUpdate(const QString &listHash);
 protected:

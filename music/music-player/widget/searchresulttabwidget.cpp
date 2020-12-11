@@ -101,9 +101,11 @@ SearchResultTabWidget::SearchResultTabWidget(QWidget *parent) :
     m_StackedWidget->addWidget(m_musicListView);
 
     m_singerListView = new SingerListView("artistResult", this);
+    m_singerListView->setViewModeFlag(m_singerListView->getViewMode());
     m_StackedWidget->addWidget(m_singerListView);
 
     m_albumListView = new AlbumListView("albumResult", this);
+    m_albumListView->setViewModeFlag(m_albumListView->getViewMode());
     m_StackedWidget->addWidget(m_albumListView);
 
     m_LineWidget = new LineWidget(this);
@@ -151,9 +153,9 @@ void SearchResultTabWidget::setViewMode(QListView::ViewMode mode)
     if (m_StackedWidget->currentWidget() == m_musicListView) {
         m_musicListView->setViewModeFlag("musicResult", mode);
     } else if (m_StackedWidget->currentWidget() == m_albumListView) {
-        m_albumListView->setViewMode(mode);
+        m_albumListView->setViewModeFlag(mode);
     } else if (m_StackedWidget->currentWidget() == m_singerListView) {
-        m_singerListView->setViewMode(mode);
+        m_singerListView->setViewModeFlag(mode);
     }
 }
 
@@ -177,6 +179,18 @@ DataBaseService::ListSortType SearchResultTabWidget::getSortType()
     } else if (m_StackedWidget->currentWidget() == m_singerListView) {
         return m_singerListView->getSortType();
     }
+}
+
+QListView::ViewMode SearchResultTabWidget::getViewMode()
+{
+    if (m_StackedWidget->currentWidget() == m_musicListView) {
+        return m_musicListView->getViewMode();
+    } else if (m_StackedWidget->currentWidget() == m_albumListView) {
+        return m_albumListView->getViewMode();
+    } else if (m_StackedWidget->currentWidget() == m_singerListView) {
+        return m_singerListView->getViewMode();
+    }
+    return QListView::IconMode;
 }
 
 int SearchResultTabWidget::getMusicCount()

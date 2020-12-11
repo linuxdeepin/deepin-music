@@ -100,14 +100,12 @@ void MusicListDataWidget::viewChanged(ListPageSwitchType switchtype, const QStri
             m_albumListView = new AlbumListView("album", this);
             m_albumListView->setThemeType(m_musicListView->getThemeType());
             m_pStackedWidget->addWidget(m_albumListView);
-
             AC_SET_OBJECT_NAME(m_albumListView, AC_albumListView);
             AC_SET_ACCESSIBLE_NAME(m_albumListView, AC_albumListView);
         }
         m_albumListView->setAlbumListData(DataBaseService::getInstance()->allAlbumInfos()); //set album data
         m_albumListView->setViewModeFlag(m_albumListView->getViewMode());
         m_pStackedWidget->setCurrentWidget(m_albumListView);
-//        m_preIndex = m_pCenterWidget->currentIndex();
         m_preHash = "album";
         m_preSwitchtype = AlbumType;
         m_titleLabel->setText(DataBaseService::getInstance()->getPlaylistNameByUUID("album"));
@@ -125,7 +123,6 @@ void MusicListDataWidget::viewChanged(ListPageSwitchType switchtype, const QStri
         m_singerListView->setSingerListData(DataBaseService::getInstance()->allSingerInfos()); //set singer data
         m_singerListView->setViewModeFlag(m_singerListView->getViewMode());
         m_pStackedWidget->setCurrentWidget(m_singerListView);
-//        m_preIndex = m_pCenterWidget->currentIndex();
         m_preHash = "artist";
         m_preSwitchtype = SingerType;
         m_titleLabel->setText(DataBaseService::getInstance()->getPlaylistNameByUUID("artist"));
@@ -141,7 +138,6 @@ void MusicListDataWidget::viewChanged(ListPageSwitchType switchtype, const QStri
         refreshModeBtn(m_musicListView->getViewMode());
         refreshInfoLabel("all");
         m_pStackedWidget->setCurrentWidget(m_musicListView);
-//        m_preIndex = m_pCenterWidget->currentIndex();
         m_preHash = "all";
         m_preSwitchtype = AllSongListType;
         refreshSortAction();
@@ -153,7 +149,6 @@ void MusicListDataWidget::viewChanged(ListPageSwitchType switchtype, const QStri
         m_titleLabel->setText(DataBaseService::getInstance()->getPlaylistNameByUUID("fav"));
         m_musicListView->setViewModeFlag("fav", m_musicListView->getViewMode());
         m_pStackedWidget->setCurrentWidget(m_musicListView);
-//        m_preIndex = m_pCenterWidget->currentIndex();
         m_preHash = "fav";
         m_preSwitchtype = FavType;
         refreshModeBtn(m_musicListView->getViewMode());
@@ -166,7 +161,6 @@ void MusicListDataWidget::viewChanged(ListPageSwitchType switchtype, const QStri
         m_titleLabel->setText(DataBaseService::getInstance()->getPlaylistNameByUUID(hashOrSearchword));
         m_musicListView->setViewModeFlag(hashOrSearchword, m_musicListView->getViewMode());
         m_pStackedWidget->setCurrentWidget(m_musicListView);
-//        m_preIndex = m_pCenterWidget->currentIndex();
         m_preHash = hashOrSearchword;
         m_preSwitchtype = CustomType;
         refreshModeBtn(m_musicListView->getViewMode());
@@ -177,14 +171,15 @@ void MusicListDataWidget::viewChanged(ListPageSwitchType switchtype, const QStri
     case SearchSingerResultType:
     case SearchAlbumResultType: {
         //搜索歌曲结果
-//        m_preIndex = m_pCenterWidget->currentIndex();
         if (!m_SearchResultTabWidget) {
             m_SearchResultTabWidget = new SearchResultTabWidget(this);
             m_pStackedWidget->addWidget(m_SearchResultTabWidget);
-            connect(m_SearchResultTabWidget, &SearchResultTabWidget::sigSearchTypeChanged, this, &MusicListDataWidget::refreshInfoLabel);
+            connect(m_SearchResultTabWidget, &SearchResultTabWidget::sigSearchTypeChanged,
+                    this, &MusicListDataWidget::refreshInfoLabel);
+            connect(m_SearchResultTabWidget, &SearchResultTabWidget::sigSearchTypeChanged,
+                    this, &MusicListDataWidget::refreshModeBtnByHash);
         }
         m_pStackedWidget->setCurrentWidget(m_SearchResultTabWidget);
-//        m_preIndex = m_pCenterWidget->currentIndex();
         m_titleLabel->setText(tr("Search Results"));
         m_SearchResultTabWidget->refreshListview(switchtype, hashOrSearchword);
         if (switchtype == SearchMusicResultType) {
@@ -194,6 +189,7 @@ void MusicListDataWidget::viewChanged(ListPageSwitchType switchtype, const QStri
         } else if (switchtype == SearchAlbumResultType) {
             refreshInfoLabel("albumResult");
         }
+        refreshModeBtn(m_SearchResultTabWidget->getViewMode());
         refreshSortAction();
         return;
     }
@@ -225,7 +221,7 @@ void MusicListDataWidget::switchViewModel()
         m_musicListView->setViewModeFlag(m_musicListView->getCurrentHash(), ptb == m_btIconMode ?
                                          DListView::IconMode : DListView::ListMode);
     } else if (m_pStackedWidget->currentWidget() == m_SearchResultTabWidget) {
-        m_SearchResultTabWidget->setViewMode(m_btIconMode ?
+        m_SearchResultTabWidget->setViewMode(ptb == m_btIconMode ?
                                              DListView::IconMode : DListView::ListMode);
     }
 
@@ -575,47 +571,6 @@ void MusicListDataWidget::initMusicAction(QHBoxLayout *layout)
     AC_SET_ACCESSIBLE_NAME(m_musicDropdown, AC_musicDropdown);
 }
 
-//void MusicListDataWidget::initAlbumSearchAction(QHBoxLayout *layout)
-//{
-//    m_albumSearchDropdown = new DDropdown;
-//    m_albumSearchDropdown->setFixedHeight(28);
-//    m_albumSearchDropdown->setMinimumWidth(130);
-//    m_albumSearchDropdown->setObjectName("MusicListAlbumDataSort");
-//    m_albumSearchDropdown->addAction(tr("Time added"), QVariant::fromValue<Playlist::SortType>(Playlist::SortByAddTime));
-//    m_albumSearchDropdown->addAction(tr("Album"), QVariant::fromValue<Playlist::SortType>(Playlist::SortByTitle));
-//    m_albumSearchDropdown->setCurrentAction();
-//    m_albumSearchDropdown->hide();
-//    layout->addWidget(m_albumSearchDropdown, 0, Qt::AlignRight | Qt::AlignBottom);
-//}
-
-//void MusicListDataWidget::initArtistSearchAction(QHBoxLayout *layout)
-//{
-//    m_artistSearchDropdown = new DDropdown;
-//    m_artistSearchDropdown->setFixedHeight(28);
-//    m_artistSearchDropdown->setMinimumWidth(130);
-//    m_artistSearchDropdown->setObjectName("MusicListArtistDataSort");
-//    m_artistSearchDropdown->addAction(tr("Time added"), QVariant::fromValue<Playlist::SortType>(Playlist::SortByAddTime));
-//    m_artistSearchDropdown->addAction(tr("Artist"), QVariant::fromValue<Playlist::SortType>(Playlist::SortByArtist));
-//    m_artistSearchDropdown->setCurrentAction();
-//    m_artistSearchDropdown->hide();
-//    layout->addWidget(m_artistSearchDropdown, 0, Qt::AlignRight | Qt::AlignBottom);
-//}
-
-//void MusicListDataWidget::initMusicSearchAction(QHBoxLayout *layout)
-//{
-//    m_musicSearchDropdown = new DDropdown;
-//    m_musicSearchDropdown->setFixedHeight(28);
-//    m_musicSearchDropdown->setMinimumWidth(130);
-//    m_musicSearchDropdown->setObjectName("MusicListMusicDataSort");
-//    m_musicSearchDropdown->addAction(tr("Time added"), QVariant::fromValue<Playlist::SortType>(Playlist::SortByAddTime));
-//    m_musicSearchDropdown->addAction(tr("Title"), QVariant::fromValue<Playlist::SortType>(Playlist::SortByTitle));
-//    m_musicSearchDropdown->addAction(tr("Artist"), QVariant::fromValue<Playlist::SortType>(Playlist::SortByArtist));
-//    m_musicSearchDropdown->addAction(tr("Album"), QVariant::fromValue<Playlist::SortType>(Playlist::SortByAblum));
-//    m_musicSearchDropdown->setCurrentAction();
-//    m_musicSearchDropdown->hide();
-//    layout->addWidget(m_musicSearchDropdown, 0, Qt::AlignRight | Qt::AlignBottom);
-//}
-
 void MusicListDataWidget::initBtPlayAll(QHBoxLayout *layout)
 {
     m_btPlayAll = new DPushButton;
@@ -806,6 +761,13 @@ void MusicListDataWidget::refreshInfoLabel(QString hash)
         }
     }
     m_infoLabel->setText(countStr);
+}
+
+void MusicListDataWidget::refreshModeBtnByHash(QString hash)
+{
+    if (hash == "albumResult" || hash == "artistResult" || hash == "musicResult") {
+        refreshModeBtn(m_SearchResultTabWidget->getViewMode());
+    }
 }
 
 void MusicListDataWidget::slotRemoveSingleSong(const QString &listHash, const QString &musicHash)

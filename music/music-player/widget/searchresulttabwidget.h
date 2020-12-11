@@ -46,6 +46,8 @@ public:
     void setSortType(DataBaseService::ListSortType sortType);
     //排序
     DataBaseService::ListSortType getSortType();
+    //显示模式
+    QListView::ViewMode getViewMode();
     int  getMusicCount();
     int  getAlbumCount();
     int  getSingerCount();
