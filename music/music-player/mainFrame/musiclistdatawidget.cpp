@@ -182,6 +182,7 @@ void MusicListDataWidget::viewChanged(ListPageSwitchType switchtype, const QStri
         m_pStackedWidget->setCurrentWidget(m_SearchResultTabWidget);
         m_titleLabel->setText(tr("Search Results"));
         m_SearchResultTabWidget->refreshListview(switchtype, hashOrSearchword);
+        m_SearchResultTabWidget->setCurrentPage(switchtype);
         if (switchtype == SearchMusicResultType) {
             refreshInfoLabel("musicResult");
         } else if (switchtype == SearchSingerResultType) {

@@ -24,6 +24,7 @@
 #include <DScrollArea>
 #include <DLabel>
 
+#include "mediameta.h"
 DWIDGET_USE_NAMESPACE
 
 class MusicBaseListView;
@@ -48,6 +49,8 @@ public slots:
 
     void slotListViewClicked(const QModelIndex &index);
     void slotAddNewSongList();
+    // 切换到搜索结果界面
+    void viewChanged(ListPageSwitchType switchtype, const QString &hashOrSearchword);
 protected:
     bool eventFilter(QObject *o, QEvent *e) Q_DECL_OVERRIDE;
 

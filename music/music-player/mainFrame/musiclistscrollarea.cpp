@@ -131,7 +131,7 @@ MusicListScrollArea::MusicListScrollArea(QWidget *parent) : DScrollArea(parent)
     connect(m_dataBaseListview, &QAbstractItemView::clicked, this, &MusicListScrollArea::slotListViewClicked);
     connect(m_customizeListview, &QAbstractItemView::clicked, this, &MusicListScrollArea::slotListViewClicked);
     connect(m_customizeListview, &MusicSongListView::sigAddNewSongList, this, &MusicListScrollArea::slotAddNewSongList);
-
+    connect(CommonService::getInstance(), &CommonService::switchToView, this, &MusicListScrollArea::viewChanged);
 }
 
 MusicBaseListView *MusicListScrollArea::getDBMusicListView()
@@ -210,6 +210,23 @@ void MusicListScrollArea::slotListViewClicked(const QModelIndex &index)
 void MusicListScrollArea::slotAddNewSongList()
 {
     m_dataBaseListview->clearSelection();
+}
+
+void MusicListScrollArea::viewChanged(ListPageSwitchType switchtype, const QString &hashOrSearchword)
+{
+    Q_UNUSED(hashOrSearchword)
+    switch (switchtype) {
+    case SearchMusicResultType:
+    case SearchSingerResultType:
+    case SearchAlbumResultType: {
+        //搜索歌曲结果页面，清空选中
+        m_customizeListview->clearSelection();
+        m_dataBaseListview->clearSelection();
+        return;
+    }
+    default:
+        return;
+    }
 }
 
 

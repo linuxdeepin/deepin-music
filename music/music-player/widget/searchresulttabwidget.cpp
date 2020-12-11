@@ -225,6 +225,23 @@ QList<MediaMeta> SearchResultTabWidget::getMusicLiseData()
     return m_musicListView->getMusicListData();
 }
 
+void SearchResultTabWidget::setCurrentPage(ListPageSwitchType type)
+{
+    if (type == SearchMusicResultType) {
+        if (m_musicListView) {
+            m_StackedWidget->setCurrentWidget(m_musicListView);
+        }
+    } else if (type == SearchSingerResultType) {
+        if (m_singerListView) {
+            m_StackedWidget->setCurrentWidget(m_singerListView);
+        }
+    } else if (type == SearchAlbumResultType) {
+        if (m_albumListView) {
+            m_StackedWidget->setCurrentWidget(m_albumListView);
+        }
+    }
+}
+
 void SearchResultTabWidget::showEvent(QShowEvent *event)
 {
     m_musicRect = m_music->rect();
