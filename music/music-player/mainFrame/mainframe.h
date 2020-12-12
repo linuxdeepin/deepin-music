@@ -74,11 +74,11 @@ private slots:
     // 文管打开文件
     void slotPlayFromFileMaganager();
 protected:
-    virtual void showEvent(QShowEvent *event) Q_DECL_OVERRIDE;
-    virtual void enterEvent(QEvent *event) Q_DECL_OVERRIDE;
-    virtual void resizeEvent(QResizeEvent *e) Q_DECL_OVERRIDE;
-    virtual void closeEvent(QCloseEvent *event) Q_DECL_OVERRIDE;
-//    virtual void paintEvent(QPaintEvent *e) Q_DECL_OVERRIDE;
+    void showEvent(QShowEvent *event) Q_DECL_OVERRIDE;
+    //void enterEvent(QEvent *event) Q_DECL_OVERRIDE;
+    void resizeEvent(QResizeEvent *e) Q_DECL_OVERRIDE;
+    void closeEvent(QCloseEvent *event) Q_DECL_OVERRIDE;
+    void hideEvent(QHideEvent *event) Q_DECL_OVERRIDE;
 private:
     DTitlebar           *m_titlebar = nullptr;
     TitlebarWidget      *m_titlebarwidget = nullptr;

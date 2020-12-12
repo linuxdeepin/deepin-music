@@ -108,7 +108,7 @@ void MusicListDataWidget::viewChanged(ListPageSwitchType switchtype, const QStri
         m_pStackedWidget->setCurrentWidget(m_albumListView);
         m_preHash = "album";
         m_preSwitchtype = AlbumType;
-        m_titleLabel->setText(DataBaseService::getInstance()->getPlaylistNameByUUID("album"));
+        m_titleLabel->setText(getPageTitle(DataBaseService::getInstance()->getPlaylistNameByUUID("album")));
         refreshModeBtn(m_albumListView->viewMode());
         refreshInfoLabel("album");
         refreshSortAction();
@@ -125,7 +125,7 @@ void MusicListDataWidget::viewChanged(ListPageSwitchType switchtype, const QStri
         m_pStackedWidget->setCurrentWidget(m_singerListView);
         m_preHash = "artist";
         m_preSwitchtype = SingerType;
-        m_titleLabel->setText(DataBaseService::getInstance()->getPlaylistNameByUUID("artist"));
+        m_titleLabel->setText(getPageTitle(DataBaseService::getInstance()->getPlaylistNameByUUID("artist")));
         refreshModeBtn(m_singerListView->viewMode());
         refreshInfoLabel("artist");
         refreshSortAction();
@@ -133,7 +133,7 @@ void MusicListDataWidget::viewChanged(ListPageSwitchType switchtype, const QStri
     }
     case AllSongListType: {
         m_musicListView->initAllSonglist("all");
-        m_titleLabel->setText(DataBaseService::getInstance()->getPlaylistNameByUUID("all"));
+        m_titleLabel->setText(getPageTitle(DataBaseService::getInstance()->getPlaylistNameByUUID("all")));
         m_musicListView->setViewModeFlag("all", m_musicListView->getViewMode());
         refreshModeBtn(m_musicListView->getViewMode());
         refreshInfoLabel("all");
@@ -146,7 +146,7 @@ void MusicListDataWidget::viewChanged(ListPageSwitchType switchtype, const QStri
     case FavType: {
         refreshSortAction();
         m_musicListView->initCostomSonglist("fav");
-        m_titleLabel->setText(DataBaseService::getInstance()->getPlaylistNameByUUID("fav"));
+        m_titleLabel->setText(m_musicListView->getFavName());
         m_musicListView->setViewModeFlag("fav", m_musicListView->getViewMode());
         m_pStackedWidget->setCurrentWidget(m_musicListView);
         m_preHash = "fav";
@@ -160,6 +160,7 @@ void MusicListDataWidget::viewChanged(ListPageSwitchType switchtype, const QStri
         m_musicListView->initCostomSonglist(hashOrSearchword);
         QFontMetrics titleFm(m_titleLabel->font());
         auto text = titleFm.elidedText(DataBaseService::getInstance()->getPlaylistNameByUUID(hashOrSearchword), Qt::ElideRight, 300);
+
         m_titleLabel->setText(text);
         m_musicListView->setViewModeFlag(hashOrSearchword, m_musicListView->getViewMode());
         m_pStackedWidget->setCurrentWidget(m_musicListView);
@@ -834,6 +835,18 @@ void MusicListDataWidget::refreshSortAction(QString hash)
             }
         }
     }
+}
+
+QString MusicListDataWidget::getPageTitle(const QString &title)
+{
+    if (title == "Albums")
+        return tr("Album");
+    else if (title == "Artists")
+        return tr("Artist");
+    else if (title == "All Music")
+        return tr("All Music");
+    else
+        return "";
 }
 
 void MusicListDataWidget::slotTheme(int type)

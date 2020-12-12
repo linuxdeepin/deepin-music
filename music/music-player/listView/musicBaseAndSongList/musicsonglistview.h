@@ -44,6 +44,8 @@ public slots:
 
     //add a new play list
     void addNewSongList();
+    //删除歌单
+    void rmvSongList();
     void slotUpdatePlayingIcon();
     void slotMenuTriggered(QAction *action);
 signals:
@@ -56,11 +58,10 @@ protected:
     void mousePressEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
     void closeEditor(QWidget *editor, QAbstractItemDelegate::EndEditHint hint) Q_DECL_OVERRIDE;
 
-//    void keyPressEvent(QKeyEvent *event) Q_DECL_OVERRIDE;
+//    void keyPressEvent(QKeyEvent *event) Q_DECL_OVERRIDE; //考虑该接口实现delete快捷操作
     void dragEnterEvent(QDragEnterEvent *event) Q_DECL_OVERRIDE;
     void dragMoveEvent(QDragMoveEvent *event) Q_DECL_OVERRIDE;
     void dropEvent(QDropEvent *event) Q_DECL_OVERRIDE;
-
 private:
     void SetAttrRecur(QDomElement elem, QString strtagname, QString strattr, QString strattrval);
     QString newDisplayName();

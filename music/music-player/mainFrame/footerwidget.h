@@ -43,6 +43,7 @@ class Waveform;
 class PlayListWidget;
 class MetaBufferDetector;
 class QShortcut;
+class HintFilter;
 class FooterWidget : public DFloatingWidget
 {
     Q_OBJECT
@@ -58,11 +59,8 @@ public:
     void slotLoadDetector(const QString &hash);
 private:
     void initUI(QWidget *parent = nullptr);
-    /**
-     * @brief initShortCut
-     */
     void setPlayProperty(Player::PlaybackStatus status);
-
+    void installTipHint(QWidget *widget, const QString &hintstr);
 signals:
     void lyricClicked();
 public slots:
@@ -132,5 +130,6 @@ private:
     DBackgroundGroup   *m_ctlWidget  = nullptr;
     PlayListWidget    *m_playListWidget = nullptr;
     MetaBufferDetector  *m_metaBufferDetector = nullptr;
+    HintFilter          *m_hintFilter = nullptr;
 };
 

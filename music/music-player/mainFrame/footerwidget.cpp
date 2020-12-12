@@ -60,6 +60,8 @@
 #include "playlistwidget.h"
 #include "databaseservice.h"
 #include "ac-desktop-define.h"
+#include "tooltips.h"
+#include "filter.h"
 
 static const QString sPlayStatusValuePlaying    = "playing";
 static const QString sPlayStatusValuePause      = "pause";
@@ -291,7 +293,15 @@ void FooterWidget::initUI(QWidget *parent)
     connect(m_metaBufferDetector, SIGNAL(metaBuffer(const QVector<float> &, const QString &)),
             m_waveform, SLOT(onAudioBuffer(const QVector<float> &, const QString &)));
 
-//    connect(m_metaBufferDetector, SIGNAL(metaBuffer(bool)), this, SLOT(slotPlaylistClick(bool)));
+    //设置提示框
+    m_hintFilter =  new HintFilter(this);
+    installTipHint(m_btPrev, tr("Previous"));
+    installTipHint(m_btNext, tr("Next"));
+    installTipHint(m_btPlay, tr("Play/Pause"));
+    installTipHint(m_btFavorite, tr("Favorite"));
+    installTipHint(m_btLyric, tr("Lyrics"));
+    installTipHint(m_btPlayMode, tr("Play Mode"));
+    installTipHint(m_btPlayList, tr("Play Queue"));
 
     connect(m_btPlayList, SIGNAL(clicked(bool)), this, SLOT(slotPlaylistClick(bool)));
     connect(m_btLyric, SIGNAL(clicked(bool)), this, SLOT(slotLrcClick(bool)));
@@ -319,6 +329,16 @@ void FooterWidget::initUI(QWidget *parent)
     });
     connect(Player::instance(), &Player::mutedChanged, this, &FooterWidget::slotSliderVolumeChanged);
 
+}
+
+void FooterWidget::installTipHint(QWidget *widget, const QString &hintstr)
+{
+    auto hintWidget = new ToolTips("", parentWidget()); //parentWidget()= mainframe
+    hintWidget->hide();
+    hintWidget->setText(hintstr);
+    hintWidget->setFixedHeight(32);
+    widget->setProperty("HintWidget", QVariant::fromValue<QWidget *>(hintWidget));
+    widget->installEventFilter(m_hintFilter);
 }
 
 void FooterWidget::initShortcut()
@@ -430,6 +450,9 @@ void FooterWidget::slotPlayModeClick(bool click)
         playModel = 0;
 
     setPlayModel(static_cast<Player::PlaybackMode>(playModel));
+    //更换提示框
+    auto hintWidget = m_btPlayMode->property("HintWidget").value<QWidget *>();
+    m_hintFilter->showHitsFor(m_btPlayMode, hintWidget);
 }
 
 void FooterWidget::slotCoverClick(bool click)

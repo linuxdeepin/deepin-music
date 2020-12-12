@@ -71,7 +71,8 @@ public:
     //排序
     DataBaseService::ListSortType getSortType();
     void setSortType(DataBaseService::ListSortType sortType);
-
+    //获取收藏名字
+    QString getFavName();
 public slots:
     void slotOnDoubleClicked(const QModelIndex &index);
     void slotUpdatePlayingIcon();

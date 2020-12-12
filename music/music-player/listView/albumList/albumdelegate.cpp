@@ -21,6 +21,7 @@
 
 #include "albumdelegate.h"
 #include "albumlistview.h"
+#include "singerlistview.h"
 #include "core/medialibrary.h"
 #include "global.h"
 #include "player.h"
@@ -245,7 +246,7 @@ void AlbumDataDelegate::drawIconMode(QPainter &painter, const QStyleOptionViewIt
     painter.setFont(font);
     QRect extraNameFillRect(rect.x(), startHeight + fillAllHeight / 2 + 1, rect.width(), fillAllHeight / 2);
     extraNameFillRect.adjust(8, 0, -7, 0);
-    auto extraNameText = extraNameFm.elidedText(albumTmp.singer, Qt::ElideMiddle, extraNameFillRect.width());
+    auto extraNameText = extraNameFm.elidedText(albumTmp.singer.isEmpty() ? SingerListView::tr("Unknown artist") : albumTmp.singer, Qt::ElideMiddle, extraNameFillRect.width());
     painter.setPen(Qt::white);
     painter.drawText(extraNameFillRect, Qt::AlignLeft | Qt::AlignTop, extraNameText);
 
@@ -432,7 +433,7 @@ void AlbumDataDelegate::drawListMode(QPainter &painter, const QStyleOptionViewIt
     //extraname
     QRect extraRect(50 + w / 2, option.rect.y(), w / 4 - 20, option.rect.height());
     painter.setFont(font11);
-    auto extraText = songsFm.elidedText(albumTmp.singer, Qt::ElideMiddle, extraRect.width());
+    auto extraText = songsFm.elidedText(albumTmp.singer.isEmpty() ? SingerListView::tr("Unknown artist") : albumTmp.singer, Qt::ElideMiddle, extraRect.width());
     painter.drawText(extraRect, Qt::AlignLeft | Qt::AlignVCenter, extraText);
 
     //songs

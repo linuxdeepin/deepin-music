@@ -109,7 +109,9 @@ MusicSongListView::MusicSongListView(QWidget *parent) : DListView(parent)
     this, [ = ](const QModelIndex & current, const QModelIndex & previous) {
         Q_UNUSED(previous)
         if (state() != EditingState) {
-            auto curStandardItem = dynamic_cast<DStandardItem *>(model->itemFromIndex(current));
+            DStandardItem *curStandardItem = dynamic_cast<DStandardItem *>(model->itemFromIndex(current));
+            if (!curStandardItem) //最后一个自定义歌单删除，curStandardItem为空
+                return ;
             QString name = curStandardItem->data(Qt::UserRole + 10).toString();
             curStandardItem->setIcon(QIcon::fromTheme("music_famousballad"));
         }
@@ -243,6 +245,35 @@ void MusicSongListView::addNewSongList()
     emit CommonService::getInstance()->switchToView(CustomType, info.uuid);
 }
 
+void MusicSongListView::rmvSongList()
+{
+    QModelIndex index = this->currentIndex();
+    QString message = QString(tr("Are you sure you want to delete this playlist?"));
+
+    DDialog warnDlg(this);
+    warnDlg.setIcon(QIcon::fromTheme("deepin-music"));
+    warnDlg.setTextFormat(Qt::AutoText);
+    warnDlg.setTitle(message);
+    warnDlg.addSpacing(20);
+    warnDlg.addButton(tr("Cancel"), false, Dtk::Widget::DDialog::ButtonNormal);
+    warnDlg.addButton(tr("Delete"), true, Dtk::Widget::DDialog::ButtonWarning);
+    if (1 == warnDlg.exec()) {
+        QString hash = index.data(Qt::UserRole).value<QString>();
+
+        QStandardItem *item = model->itemFromIndex(index);
+        model->removeRow(item->row());
+        DataBaseService::getInstance()->deletePlaylist(hash);
+        //切换到所有音乐界面
+        emit CommonService::getInstance()->switchToView(AllSongListType, "all");
+        //清除选中状态
+        this->clearSelection();
+        //设置所有音乐播放状态
+        Player::instance()->setCurrentPlayListHash("all", false);
+        //记忆播放歌单
+        MusicSettings::setOption("base.play.last_playlist", "all");
+    }
+}
+
 void MusicSongListView::slotUpdatePlayingIcon()
 {
     for (int i = 0; i < model->rowCount(); i++) {
@@ -305,30 +336,7 @@ void MusicSongListView::slotMenuTriggered(QAction *action)
     } else if (action->text() == tr("Rename")) {
         edit(index);
     } else if (action->text() == tr("Delete")) {
-        QString message = QString(tr("Are you sure you want to delete this playlist?"));
-
-        DDialog warnDlg(this);
-        warnDlg.setIcon(QIcon::fromTheme("deepin-music"));
-        warnDlg.setTextFormat(Qt::AutoText);
-        warnDlg.setTitle(message);
-        warnDlg.addSpacing(20);
-        warnDlg.addButton(tr("Cancel"), false, Dtk::Widget::DDialog::ButtonNormal);
-        warnDlg.addButton(tr("Delete"), true, Dtk::Widget::DDialog::ButtonWarning);
-        if (1 == warnDlg.exec()) {
-            QString hash = index.data(Qt::UserRole).value<QString>();
-
-            QStandardItem *item = model->itemFromIndex(index);
-            model->removeRow(item->row());
-            DataBaseService::getInstance()->deletePlaylist(hash);
-            //切换到所有音乐界面
-            emit CommonService::getInstance()->switchToView(AllSongListType, "all");
-            //清除选中状态
-            this->clearSelection();
-            //设置所有音乐播放状态
-            Player::instance()->setCurrentPlayListHash("all", false);
-            //记忆播放歌单
-            MusicSettings::setOption("base.play.last_playlist", "all");
-        }
+        rmvSongList();
     }
 }
 
@@ -340,13 +348,26 @@ void MusicSongListView::mousePressEvent(QMouseEvent *event)
 void MusicSongListView::closeEditor(QWidget *editor, QAbstractItemDelegate::EndEditHint hint)
 {
     DListView::closeEditor(editor, hint);
-    QModelIndex current = currentIndex();
+    DStandardItem *curItem = dynamic_cast<DStandardItem *>(model->itemFromIndex(currentIndex()));
+    if (!curItem)
+        return;
+    QString uuid = currentIndex().data(Qt::UserRole).value<QString>();
+    //去重
+    for (int i = 0; i < model->rowCount() ; ++i) {
+        DStandardItem *tmpItem = dynamic_cast<DStandardItem *>(model->itemFromIndex(model->index(i, 0)));
+        if (curItem->text().isEmpty() || (curItem->row() != tmpItem->row() && curItem->text() == tmpItem->text())) {
+            QList<DataBaseService::PlaylistData> plist = DataBaseService::getInstance()->getCustomSongList();
+            for (DataBaseService::PlaylistData data : plist) {
+                if (uuid == data.uuid)
+                    curItem->setText(data.displayName);//还原歌单名
+            }
+            curItem->setIcon(QIcon::fromTheme("music_famousballad"));
+            return;
+        }
+    }
 
-    auto curStandardItem = dynamic_cast<DStandardItem *>(model->itemFromIndex(current));
-    QString uuid = current.data(Qt::UserRole).value<QString>();
-    DataBaseService::getInstance()->updatePlaylistDisplayName(curStandardItem->text(), uuid);
-
-    curStandardItem->setIcon(QIcon::fromTheme("music_famousballad"));
+    DataBaseService::getInstance()->updatePlaylistDisplayName(curItem->text(), uuid);
+    curItem->setIcon(QIcon::fromTheme("music_famousballad"));
 }
 
 void MusicSongListView::dragEnterEvent(QDragEnterEvent *event)

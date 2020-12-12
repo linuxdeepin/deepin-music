@@ -63,7 +63,6 @@ protected:
 protected:
     virtual void dragEnterEvent(QDragEnterEvent *event) Q_DECL_OVERRIDE;
     virtual void dropEvent(QDropEvent *event) Q_DECL_OVERRIDE;
-
 private slots:
     // 播放所有歌曲
     void onPlayAllClicked();
@@ -80,6 +79,8 @@ private:
     void refreshModeBtn(DListView::ViewMode mode);
     //刷新当前排序菜单
     void refreshSortAction(QString hash = "");
+    //获取当前页面标题
+    QString getPageTitle(const QString &title);
 private:
     DWidget             *m_contentWidget   = nullptr;
     QStackedWidget      *m_pStackedWidget  = nullptr;

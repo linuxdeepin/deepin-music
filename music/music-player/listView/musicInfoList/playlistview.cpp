@@ -459,6 +459,11 @@ void PlayListView::setSortType(DataBaseService::ListSortType sortType)
     }
 }
 
+QString PlayListView::getFavName()
+{
+    return tr("My favorites");
+}
+
 void PlayListView::setViewModeFlag(QString hash, QListView::ViewMode mode)
 {
     m_viewModeMap[hash] = mode;

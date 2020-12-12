@@ -606,7 +606,7 @@ void Player::setActiveMeta(const MediaMeta &meta)
     m_ActiveMeta = meta;
     //保存上一次播放的歌曲
     MusicSettings::setOption("base.play.last_meta", meta.hash);
-    MusicSettings::setOption("base.play.last_playlist", m_currentPlayListHash);
+    MusicSettings::setOption("base.play.last_playlist", m_currentPlayListHash.isEmpty() ? "all" : m_currentPlayListHash);
 }
 
 void Player::forcePlayMeta()
@@ -1034,14 +1034,16 @@ void Player::initMpris()
 void Player::loadMediaProgress(const QString &path)
 {
     qDebug() << __FUNCTION__ << " at line:" << __LINE__ << " initialize path:" << path;
-    m_qvplayer->blockSignals(true);
+    QFileInfo info(path);
+    if (!info.exists())
+        return;
 
+    m_qvplayer->blockSignals(true);
     m_qvmedia->initMedia(path, true, m_qvinstance);
     m_qvplayer->open(m_qvmedia);
     m_qvplayer->play();
     QTimer::singleShot(100, this, [ = ]() {//为了记录进度条生效，在加载的时候让音乐播放100ms
         m_qvplayer->pause();
-
         m_qvplayer->blockSignals(false);
         //emit readyToResume();
     });

@@ -122,9 +122,6 @@ MainFrame::MainFrame()
                     auto geometry = MusicSettings::value("base.play.geometry").toByteArray();
                     this->restoreGeometry(geometry);
                 }
-            } else {
-                showMinimized();
-                hide();
             }
         } else {
             this->titlebar()->setFocus();
@@ -137,8 +134,8 @@ MainFrame::MainFrame()
 MainFrame::~MainFrame()
 {
     MusicSettings::sync();
-    MusicSettings::setOption("base.play.state", saveState());
-    MusicSettings::setOption("base.play.geometry", saveGeometry());
+    //MusicSettings::setOption("base.play.state", saveState());
+    MusicSettings::setOption("base.play.geometry", QByteArray()); //退出不记录位置信息，还原默认大小和位置
 }
 
 void MainFrame::initUI(bool showLoading)
@@ -572,56 +569,47 @@ void MainFrame::showEvent(QShowEvent *event)
     auto geometry = MusicSettings::value("base.play.geometry").toByteArray();
 
     if (geometry.size() < 4) {
-        this->setMinimumSize(QSize(900, 600));
-        MusicSettings::setOption("base.play.geometry", saveGeometry());
-        geometry = MusicSettings::value("base.play.geometry").toByteArray();
-    }
-    QDataStream stream(geometry);
-    stream.setVersion(QDataStream::Qt_4_0);
-
-    const quint32 magicNumber = 0x1D9D0CB;
-    quint32 storedMagicNumber;
-    stream >> storedMagicNumber;
-    if (storedMagicNumber != magicNumber) {
-        return;
-    }
-
-    const quint16 currentMajorVersion = 2;
-    quint16 majorVersion = 0;
-    quint16 minorVersion = 0;
-
-    stream >> majorVersion >> minorVersion;
-
-    if (majorVersion > currentMajorVersion) {
-        return;
-    }
-
-    QRect restoredFrameGeometry;
-    QRect restoredNormalGeometry;
-    qint32 restoredScreenNumber;
-    quint8 maximized;
-    quint8 fullScreen;
-    qint32 restoredScreenWidth = 0;
-
-    stream >> restoredFrameGeometry
-           >> restoredNormalGeometry
-           >> restoredScreenNumber
-           >> maximized
-           >> fullScreen;
-
-    if (majorVersion > 1) {
-        stream >> restoredScreenWidth;
-    }
-
-    this->resize(QSize(1070, 680));
-//    this->show();
-    Dtk::Widget::moveToCenter(this);
-    if (geometry.isEmpty()) {
-        this->resize(QSize(1070, 680));
+        this->setMinimumSize(QSize(1070, 680));
+        this->resize(QSize(1070, 680));  //初次直接显示默认窗口
         Dtk::Widget::moveToCenter(this);
     } else {
+        QDataStream stream(geometry); //仅在程序运行期间生效
+        stream.setVersion(QDataStream::Qt_4_0);
+
+        const quint32 magicNumber = 0x1D9D0CB;
+        quint32 storedMagicNumber;
+        stream >> storedMagicNumber;
+        if (storedMagicNumber != magicNumber) {
+            return;
+        }
+
+        const quint16 currentMajorVersion = 2;
+        quint16 majorVersion = 0;
+        quint16 minorVersion = 0;
+
+        stream >> majorVersion >> minorVersion;
+
+        if (majorVersion > currentMajorVersion) {
+            return;
+        }
+
+        QRect restoredFrameGeometry;
+        QRect restoredNormalGeometry;
+        qint32 restoredScreenNumber;
+        quint8 maximized;
+        quint8 fullScreen;
+        qint32 restoredScreenWidth = 0;
+
+        stream >> restoredFrameGeometry
+               >> restoredNormalGeometry
+               >> restoredScreenNumber
+               >> maximized
+               >> fullScreen;
+
+        if (majorVersion > 1) {
+            stream >> restoredScreenWidth;
+        }
         this->restoreGeometry(geometry);
-        this->restoreState(MusicSettings::value("base.play.state").toByteArray());
     }
     this->setFocus();
     qDebug() << "zy------MainWindow::showEvent " << QTime::currentTime().toString("hh:mm:ss.zzz");
@@ -636,10 +624,10 @@ void MainFrame::showEvent(QShowEvent *event)
     }
 }
 
-void MainFrame::enterEvent(QEvent *event)
-{
+//void MainFrame::enterEvent(QEvent *event)
+//{
 
-}
+//}
 
 void MainFrame::resizeEvent(QResizeEvent *e)
 {
@@ -688,12 +676,10 @@ void MainFrame::closeEvent(QCloseEvent *event)
     switch (askCloseAction) {
     case 0: {
         MusicSettings::setOption("base.close.is_close", false);
-        MusicSettings::setOption("base.play.geometry", saveGeometry());
         break;
     }
     case 1: {
         MusicSettings::setOption("base.play.state", int(windowState()));
-        MusicSettings::setOption("base.play.geometry", saveGeometry());
         MusicSettings::setOption("base.close.is_close", true);
         qApp->quit();
         break;
@@ -725,5 +711,12 @@ void MainFrame::closeEvent(QCloseEvent *event)
     MusicSettings::setOption("base.play.last_position", Player::instance()->position());
     this->setFocus();
     DMainWindow::closeEvent(event);
+}
+
+void MainFrame::hideEvent(QHideEvent *event)
+{
+    //用于最小化时保存窗口位置信息,note：托盘到最小化或者退出程序也会触发该事件
+    DMainWindow::hideEvent(event);
+    MusicSettings::setOption("base.play.geometry", saveGeometry());
 }
 
