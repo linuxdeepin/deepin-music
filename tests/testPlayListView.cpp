@@ -40,7 +40,7 @@ TEST(Application, playListView)
     event.clear();
     // 执行右键菜单
     QTest::qWait(500);
-    plv->slotAddToFavSongList();
+//    plv->slotAddToFavSongList();
     QTest::qWait(500);
     plv->slotAddToCustomSongList();
     QTest::qWait(500);

@@ -57,6 +57,8 @@ private slots:
 //    void initTestCase();
 //    void cleanupTestCase();
 
+    void testGTest();
+
     void testQString_data();
     void testQString();
 
@@ -74,6 +76,15 @@ QTestMain::QTestMain()
 QTestMain::~QTestMain()
 {
 
+}
+
+void QTestMain::testGTest()
+{
+    testing::GTEST_FLAG(output) = "xml:./report/report_deepin-music.xml";
+    testing::InitGoogleTest();
+    int ret = RUN_ALL_TESTS();
+    Q_UNUSED(ret)
+//    __sanitizer_set_report_path("asan_deepin-music.log");//内存检测输出
 }
 
 void QTestMain::testQString_data()
