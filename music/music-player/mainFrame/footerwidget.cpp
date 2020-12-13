@@ -535,8 +535,12 @@ void FooterWidget::slotMediaMetaChanged()
         m_btCover->setIcon(QIcon::fromTheme("info_cover"));
     }
     refreshBackground();
-    m_title->setText(meta.title.isEmpty() ? tr("Unknown Title") : meta.title);
-    m_artist->setText(meta.singer.isEmpty() ? tr("Unknown artist") : meta.singer);
+    QFontMetrics fm(m_title->font());
+    QString titleText = fm.elidedText(meta.title, Qt::ElideMiddle, m_title->maximumWidth());
+    m_title->setText(titleText.isEmpty() ? tr("Unknown Title") : titleText);
+    QFontMetrics singerFm(m_artist->font());
+    QString singerText = singerFm.elidedText(meta.singer, Qt::ElideMiddle, m_artist->maximumWidth());
+    m_artist->setText(singerText.isEmpty() ? tr("Unknown artist") : singerText);
     m_metaBufferDetector->onClearBufferDetector();
     m_metaBufferDetector->onBufferDetector(meta.localPath, meta.hash);
 
