@@ -487,16 +487,24 @@ void PlayListView::slotOnDoubleClicked(const QModelIndex &index)
     MediaMeta itemMeta = index.data(Qt::UserRole).value<MediaMeta>();
     qDebug() << "------" << itemMeta.hash;
 
-    if (!m_IsPlayQueue) {
-        // 设置新的播放列表
-        Player::instance()->clearPlayList();
-        Player::instance()->setPlayList(getMusicListData());
-        // 通知播放队列列表改变
-        emit Player::instance()->signalPlayListChanged();
-        // 设置当前播放playlist的hash
-        Player::instance()->setCurrentPlayListHash(m_currentHash, false);
+    if (Player::instance()->activeMeta().hash == itemMeta.hash) {
+        if (Player::instance()->status() == Player::Paused) {
+            Player::instance()->resume();
+        } else if (Player::instance()->status() == Player::Stopped) {
+            Player::instance()->playMeta(itemMeta);
+        }
+    } else {
+        if (!m_IsPlayQueue) {
+            // 设置新的播放列表
+            Player::instance()->clearPlayList();
+            Player::instance()->setPlayList(getMusicListData());
+            // 通知播放队列列表改变
+            emit Player::instance()->signalPlayListChanged();
+            // 设置当前播放playlist的hash
+            Player::instance()->setCurrentPlayListHash(m_currentHash, false);
+        }
+        Player::instance()->playMeta(itemMeta);
     }
-    Player::instance()->playMeta(itemMeta);
 }
 
 void PlayListView::slotUpdatePlayingIcon()
