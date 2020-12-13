@@ -328,7 +328,7 @@ void FooterWidget::initUI(QWidget *parent)
         m_btSound->setChecked(false);
     });
     connect(Player::instance(), &Player::mutedChanged, this, &FooterWidget::slotSliderVolumeChanged);
-
+    connect(DataBaseService::getInstance(), &DataBaseService::sigFavSongRemove, this, &FooterWidget::fluashFavoriteBtnIco);
 }
 
 void FooterWidget::installTipHint(QWidget *widget, const QString &hintstr)

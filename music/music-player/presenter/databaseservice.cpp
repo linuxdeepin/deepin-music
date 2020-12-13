@@ -493,6 +493,9 @@ bool DataBaseService::deleteMetaFromPlaylist(QString uuid, const QStringList &me
                 if (! query.exec()) {
                     qCritical() << query.lastError() << strsql;
                 }
+                if (uuid == "fav") {
+                    emit sigFavSongRemove(hash);
+                }
                 emit sigRmvSong(uuid, hash);
             }
         } else {

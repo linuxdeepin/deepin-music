@@ -121,6 +121,7 @@ signals:
     void sigImportFinished(QString hash);//导入结束，通知主界面
     void sigCoverUpdate(const MediaMeta &meta);//封面图片刷新
     void sigRmvSong(const QString &listHash, const QString &musicHash); //发送删除歌曲通知消息，动态显示
+    void sigFavSongRemove(const QString &musicHash); //收藏中的歌曲被删除，动态显示
     void sigPlayFromFileMaganager();  //文管启动加载数据完成后直接播放歌曲
     void sigPlaylistNameUpdate(QString hash);     //歌单名称改变
 private:
