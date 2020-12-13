@@ -905,7 +905,9 @@ void PlayListView::contextMenuEvent(QContextMenuEvent *event)
     QList<DataBaseService::PlaylistData> strplaylist = DataBaseService::getInstance()->getCustomSongList();
     for (DataBaseService::PlaylistData pd : strplaylist) {
         if (m_currentHash != pd.uuid) { //filter itself
-            QAction *pact = playlistMenu.addAction(pd.displayName);
+            QFontMetrics titleFm(actFav->font());
+            QString text = titleFm.elidedText(pd.displayName, Qt::ElideMiddle, 170);
+            QAction *pact = playlistMenu.addAction(text);
             pact->setData(QVariant(pd.uuid)); //to know which custom view to reach
             connect(pact, SIGNAL(triggered()), this, SLOT(slotAddToCustomSongList()));
         }

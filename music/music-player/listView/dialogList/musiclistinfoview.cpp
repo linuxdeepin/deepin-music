@@ -244,7 +244,9 @@ void MusicListInfoView::showContextMenu(const QPoint &pos)
     // 添加自定义歌单到Menu
     QList<DataBaseService::PlaylistData> strplaylist = DataBaseService::getInstance()->getCustomSongList();
     for (DataBaseService::PlaylistData pd : strplaylist) {
-        QAction *pact = playListMenu.addAction(pd.displayName);
+        QFontMetrics titleFm(actFav->font());
+        QString text = titleFm.elidedText(pd.displayName, Qt::ElideMiddle, 170);
+        QAction *pact = playListMenu.addAction(text);
         pact->setData(QVariant(pd.uuid)); //to know which custom view to reach
 //        pact->setData(QVariant(pd.uuid));
 //        connect(pact, SIGNAL(triggered()), this, SLOT(slotAddToCustomSongList()));
