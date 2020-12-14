@@ -377,7 +377,8 @@ void SingerDataDelegate::drawListMode(QPainter &painter, const QStyleOptionViewI
     painter.setPen(nameColor);
     QRect nameRect(60, option.rect.y(), w / 2 - 20, option.rect.height());
     painter.setFont(font14);
-    auto nameText = songsFm.elidedText(singertmp.singerName.isEmpty() ? SingerListView::tr("Unknown artist") : singertmp.singerName, Qt::ElideMiddle, nameRect.width());
+    auto nameText = songsFm.elidedText(singertmp.singerName.isEmpty() ? SingerListView::tr("Unknown artist") :
+                                       singertmp.singerName, Qt::ElideMiddle, nameRect.width());
     painter.drawText(nameRect, Qt::AlignLeft | Qt::AlignVCenter, nameText);
 
     painter.setPen(nameColor);
@@ -393,11 +394,12 @@ void SingerDataDelegate::drawListMode(QPainter &painter, const QStyleOptionViewI
         infoStr = QString("   ") + tr("%1 songs").arg(sortMetasSize);
     }
     painter.save();
-    QFont measuringFont(font11);
-    auto tailwidth2 = pixel2point(songsFm.width(infoStr)) + PlayItemRightMargin  + 20;
-
-    QRect songsRect(option.rect.width() - tailwidth2/*60 + w / 2 + w / 4*/, option.rect.y(), w / 4 - 20, option.rect.height());
-    painter.drawText(songsRect, Qt::AlignLeft | Qt::AlignVCenter, infoStr);
+    painter.setFont(font11);
+    QFontMetrics measuringFont(font11);
+    int strwidth = pixel2point(measuringFont.width(infoStr));
+    QRect songsRect(option.rect.width() - tailwidth/*60 + w / 2 + w / 4*/, option.rect.y(), w / 4 - 20, option.rect.height());
+    QString countText = songsFm.elidedText(infoStr, Qt::ElideMiddle, strwidth);
+    painter.drawText(songsRect, Qt::AlignLeft | Qt::AlignVCenter, countText);
     painter.restore();
 }
 
