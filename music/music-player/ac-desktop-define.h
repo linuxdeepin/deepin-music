@@ -106,6 +106,7 @@
 #define AC_configDialog               QObject::tr("configDialog")
 #define AC_infoDialog                 QObject::tr("infoDialog")
 #define AC_musicListDialogCloseBt     QObject::tr("musicListDialogCloseBt")
+#define AC_MessageBox                 QObject::tr("messageBox")
 
 
 #endif // DESKTOP_ACCESSIBLE_UI_DEFINE_H

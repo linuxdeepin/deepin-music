@@ -41,7 +41,6 @@ using namespace Dtk::Widget;
         QTEST_ADD_GPU_BLACKLIST_SUPPORT \
         TestObject tc; \
         QTEST_SET_MAIN_SOURCE_PATH \
-        RUN_ALL_TESTS(); \
         return QTest::qExec(&tc, argc, argv); \
     } \
 

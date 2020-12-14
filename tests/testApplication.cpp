@@ -99,36 +99,55 @@
 
 TEST(Application, deleteAllMusic)
 {
-//    // 删除所有音乐
-//    TEST_CASE_NAME("deleteAllMusic")
+    // 删除所有音乐
+    TEST_CASE_NAME("deleteAllMusic")
 
 
-//    QTest::qWait(500);
-//    MainFrame *w = Application::getInstance()->getMainWindow();
-//    MusicBaseListView *baseListView = w->findChild<MusicBaseListView *>(AC_dataBaseListview);
+    QTest::qWait(500);
+    MainFrame *w = Application::getInstance()->getMainWindow();
+    MusicBaseListView *baseListView = w->findChild<MusicBaseListView *>(AC_dataBaseListview);
 
 
-//    // 点击所有音乐
-//    QPoint pos = QPoint(130, 100);
-//    QTestEventList event;
-//    event.addMouseMove(pos);
-//    event.addMouseClick(Qt::MouseButton::LeftButton, Qt::NoModifier, pos, 100);
-//    event.simulate(baseListView->viewport());
-//    event.clear();
+    // 点击所有音乐
+    QPoint pos = QPoint(130, 100);
+    QTestEventList event;
+    event.addMouseMove(pos);
+    event.addMouseClick(Qt::MouseButton::LeftButton, Qt::NoModifier, pos, 100);
+    event.simulate(baseListView->viewport());
+    event.clear();
 
 
-//    // 双击list
-//    pos = QPoint(20, 20);
-//    PlayListView *plv = w->findChild<PlayListView *>(AC_PlayListView);
-//    event.addMouseMove(pos);
-//    event.addKeyClick(Qt::Key_A, Qt::ControlModifier, 100);
-//    event.simulate(plv->viewport());
-//    event.clear();
 
-//    // 清空ListView
-//    plv->slotRmvFromSongList();
+    // dialog list 点击
+    QTest::qWait(500);
+    QTimer::singleShot(1500, w, [ = ]() {
+        // 清空ListView
+        QTest::qWait(500);
+        DDialog *messageBox = w->findChild<DDialog *>("MessageBox");
+        if (messageBox) {
+            QPoint pos = QPoint(130, 150);
+            QTestEventList event;
+            event.addMouseMove(pos);
+            event.addKeyClick(Qt::Key::Key_Tab, Qt::NoModifier, 100);
+            event.addKeyClick(Qt::Key::Key_Tab, Qt::NoModifier, 100);
+            event.addKeyClick(Qt::Key::Key_Tab, Qt::NoModifier, 100);
+            event.addKeyClick(Qt::Key::Key_Tab, Qt::NoModifier, 100);
+            event.addKeyClick(Qt::Key::Key_Enter, Qt::NoModifier, 500);
+            event.simulate(messageBox);
+            event.clear();
+        }
+    });
 
-//    QTest::qWait(500);
+    // 双击list
+    pos = QPoint(20, 20);
+    PlayListView *plv = w->findChild<PlayListView *>(AC_PlayListView);
+    event.addMouseMove(pos);
+    event.addKeyClick(Qt::Key_A, Qt::ControlModifier, 100);
+    event.simulate(plv->viewport());
+    event.clear();
+    plv->slotRmvFromSongList();
+
+    QTest::qWait(500);
 }
 
 
@@ -169,11 +188,25 @@ TEST(Application, copyMusicToMusicDir)
     // 拷贝音乐文件夹到系统音乐文件夹下
     TEST_CASE_NAME("copyMusicToMusicDir")
 
+    QDir dir;
+    dir.cd("../testmusic");
+    // 启动方式不同，路径不同
+    if (!dir.path().contains("testmusic")) {
+        dir.setPath("../../../tests/testmusic");
+    }
+
     QStringList stringList = QStandardPaths::standardLocations(QStandardPaths::MusicLocation);
     if (stringList.size() > 0) {
         stringList[0].append("/歌曲");
-        copyDirFiles("/home/helin/Desktop/歌曲", stringList[0]);
+
+        QDir deleteDir(stringList[0]);
+        deleteDir.removeRecursively();
+
+        QTest::qWait(500);
+        copyDirFiles(dir.path(), stringList[0]);
     }
+
+    QTest::qWait(500);
 }
 
 TEST(Application, importLinkText)
@@ -188,140 +221,12 @@ TEST(Application, importLinkText)
     QTest::qWait(1000);
 }
 
-TEST(Application, musicListDialog)
-{
-    TEST_CASE_NAME("musicListDialog")
-
-    QTest::qWait(1000);
-    MainFrame *w = Application::getInstance()->getMainWindow();
-    MusicBaseListView *baseListView = w->findChild<MusicBaseListView *>(AC_dataBaseListview);
-
-
-    QTest::qWait(500);
-    // 点击专辑
-    QPoint pos = QPoint(130, 20);
-    QTestEventList event;
-    event.addMouseMove(pos);
-    event.addMouseClick(Qt::MouseButton::LeftButton, Qt::NoModifier, pos, 100);
-    event.simulate(baseListView->viewport());
-    event.clear();
-
-    // dialog list 点击
-    QTest::qWait(500);
-    QTimer::singleShot(1500, w, [ = ]() {
-        MusicListInfoView *mliv = w->findChild<MusicListInfoView *>(AC_musicListInfoView);
-        MusicListDialog *mld = w->findChild<MusicListDialog *>(AC_musicListDialogAlbum);
-        mld->setThemeType(0);
-
-        MusicImageButton *closeBt = w->findChild<MusicImageButton *>(AC_musicListDialogCloseBt);
-        QTestEventList event;
-        QPoint pos(20, 20);
-        event.addMouseMove(pos);
-        event.addMouseMove(QPoint(-10, -10));
-        event.simulate(closeBt);
-        event.clear();
-
-        pos = QPoint(130, 20);
-        event.addMouseMove(pos);
-        event.addMouseClick(Qt::MouseButton::LeftButton, Qt::NoModifier, pos, 100);
-        event.addMousePress(Qt::MouseButton::LeftButton, Qt::NoModifier, pos, 100);
-        event.addMouseDClick(Qt::MouseButton::LeftButton, Qt::NoModifier, pos, 100);
-        event.simulate(mliv->viewport());
-        event.clear();
-
-        QTest::qWait(500);
-
-
-        closeBt->setTransparent(0);
-        closeBt->setTransparent(1);
-
-        closeBt->setAutoChecked(0);
-        closeBt->setAutoChecked(1);
-
-
-        event.addMouseMove(QPoint(20, 20));
-        event.addMouseClick(Qt::MouseButton::LeftButton, Qt::NoModifier, QPoint(20, 20), 100);
-        event.simulate(closeBt);
-        event.clear();
-        mld->setThemeType(1);
-    });
-
-    // 双击list
-    pos = QPoint(20, 20);
-    AlbumListView *alv = w->findChild<AlbumListView *>(AC_albumListView);
-    event.addMouseMove(pos);
-    event.addMouseClick(Qt::MouseButton::LeftButton, Qt::NoModifier, pos, 100);
-    event.addMousePress(Qt::MouseButton::LeftButton, Qt::NoModifier, pos, 100);
-    event.addMouseDClick(Qt::MouseButton::LeftButton, Qt::NoModifier, pos, 100);
-    event.simulate(alv->viewport());
-    event.clear();
-
-    QTest::qWait(2000);
-}
-
-TEST(Application, musicListDialg_1)
-{
-    TEST_CASE_NAME("musicListDialg_1")
-
-    MainFrame *w = Application::getInstance()->getMainWindow();
-    MusicBaseListView *baseListView = w->findChild<MusicBaseListView *>(AC_dataBaseListview);
-    QTest::qWait(500);
-    // 点击专辑
-    QPoint pos(130, 20);
-    QTestEventList event;
-    event.addMouseMove(pos);
-    event.addMouseClick(Qt::MouseButton::LeftButton, Qt::NoModifier, pos, 100);
-    event.simulate(baseListView->viewport());
-    event.clear();
-
-
-
-    // dialog list 点击
-    QTest::qWait(500);
-    QTimer::singleShot(1500, w, [ = ]() {
-        MusicListDialog *mld = w->findChild<MusicListDialog *>(AC_musicListDialogAlbum);
-        MusicListInfoView *mliv = w->findChild<MusicListInfoView *>(AC_musicListInfoView);
-
-        QPoint pos(130, 20);
-        QTestEventList event;
-        event.addMouseMove(pos);
-        event.addMouseClick(Qt::MouseButton::LeftButton, Qt::NoModifier, pos, 100);
-        event.addMousePress(Qt::MouseButton::LeftButton, Qt::NoModifier, pos, 100);
-        event.addMouseDClick(Qt::MouseButton::LeftButton, Qt::NoModifier, pos, 100);
-        event.simulate(mliv->viewport());
-        event.clear();
-
-
-        QTest::qWait(500);
-        event.addKeyPress(Qt::Key::Key_0, Qt::ShiftModifier, 100);
-        event.simulate(mliv->viewport());
-        event.clear();
-
-        QTest::qWait(500);
-        event.addKeyPress(Qt::Key::Key_0, Qt::ControlModifier, 100);
-        event.simulate(mliv->viewport());
-        event.clear();
-
-        QTest::qWait(500);
-
-        mld->close();
-    });
-
-    // 双击list
-    pos = QPoint(20, 20);
-    AlbumListView *alv = w->findChild<AlbumListView *>(AC_albumListView);
-    event.addMouseMove(pos);
-    event.addMouseClick(Qt::MouseButton::LeftButton, Qt::NoModifier, pos, 100);
-    event.addMousePress(Qt::MouseButton::LeftButton, Qt::NoModifier, pos, 100);
-    event.addMouseDClick(Qt::MouseButton::LeftButton, Qt::NoModifier, pos, 100);
-    event.simulate(alv->viewport());
-    event.clear();
-    QTest::qWait(2000);
-}
-
 TEST(Application, viewChanged)
 {
     TEST_CASE_NAME("viewChanged")
+
+    qDebug() << "--------------- " << "123" << " -----------------"
+             << " Func:" << __FUNCTION__  << " Line:" << __LINE__ ;
 
     MainFrame *w = Application::getInstance()->getMainWindow();
     MusicBaseListView *baseListView = w->findChild<MusicBaseListView *>(AC_dataBaseListview);

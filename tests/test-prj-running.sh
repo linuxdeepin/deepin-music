@@ -18,6 +18,6 @@ mv index.html cov_deepin-music.html
 cd ..
 mkdir report
 cd report
-cp ./../../tests/build/report/report_deepian-music.xml ./
+cp ./../../tests/build/report/report_deepin-music.xml ./
 
 exit 0
