@@ -367,6 +367,11 @@ void Player::clearPlayList()
 void Player::playRmvMeta(const QStringList &metalist)
 {
     qDebug() << "----playRmvMeta m_MetaList.size() = " << m_MetaList.size();
+
+    if (m_MetaList.size() == 0) {
+        return;
+    }
+
     int index = 0;
     QString nextPlayHash;
     for (int i = 0; i < m_MetaList.size(); i++) {

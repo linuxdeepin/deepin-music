@@ -105,11 +105,15 @@ MainFrame::MainFrame()
     QObject::connect(CommonService::getInstance(), &CommonService::showPopupMessage,
                      this, &MainFrame::showPopupMessage);
 
+    connect(DataBaseService::getInstance(), &DataBaseService::sigPlayFromFileMaganager,
+            this, &MainFrame::slotPlayFromFileMaganager);
+
     connect(Player::instance()->getMpris(), &MprisPlayer::quitRequested, this, [ = ]() {
         sync();
         qApp->quit();
     });
     connect(Player::instance()->getMpris(), &MprisPlayer::raiseRequested, this, [ = ]() {
+        qDebug() << "raiseRequested=============";
         if (isVisible()) {
             if (isMinimized()) {
                 if (isFullScreen()) {
@@ -300,17 +304,13 @@ void MainFrame::initMenuAndShortcut()
 
 void MainFrame::autoStartToPlay()
 {
-    QUrl strOpenUrl = MusicSettings::value("base.play.to_open_uri").toString();
+    QString strOpenPath = DataBaseService::getInstance()->getFirstSong();
+    qDebug() << "autoStartToPlay:========" << strOpenPath;
     auto lastplaypage = MusicSettings::value("base.play.last_playlist").toString(); //上一次的页面
-    if (!strOpenUrl.isEmpty()) {
+    if (!strOpenPath.isEmpty()) {
         //通知设置当前页面
         Player::instance()->setCurrentPlayListHash(lastplaypage, true);
         qDebug() << "lastplaypage:========" << lastplaypage;
-        //设置当前歌曲文件
-        m_firstPlaySong = strOpenUrl.toLocalFile();
-        connect(DataBaseService::getInstance(), &DataBaseService::sigPlayFromFileMaganager, this, &MainFrame::slotPlayFromFileMaganager);
-        MusicSettings::setOption("base.play.to_open_uri", "");
-        MusicSettings::sync();
         return ;
     }
     auto lastMeta = MusicSettings::value("base.play.last_meta").toString();
@@ -349,7 +349,7 @@ void MainFrame::showPopupMessage(const QString &songListName, int selectCount, i
     QFontMetrics fm(font());
     QString name = fm.elidedText(songListName, Qt::ElideMiddle, 300);
 
-    auto text = tr("Successfully added to \"%1\"").arg(name);
+    auto text = tr("Successfully added to \"%1\"").arg(name); //need translation
     if (selectCount - insertCount > 0) {
         if (selectCount == 1 || insertCount == 0)
             text = tr("Already added to the playlist");
@@ -361,8 +361,15 @@ void MainFrame::showPopupMessage(const QString &songListName, int selectCount, i
         }
     }
 
+    QList<QWidget *> content = m_musicContentWidget->findChildren<QWidget *>("_d_message_float_deepin_music");
+    if (content.size() > 0) {
+        content.first()->deleteLater(); //auto delete
+    }
+    if (content.size() >= 2)
+        return;
     auto icon = QIcon(":/common/image/notify_success_new.svg");
     DFloatingMessage *pDFloatingMessage = new DFloatingMessage(DFloatingMessage::MessageType::TransientType, m_musicContentWidget);
+    pDFloatingMessage->setObjectName("_d_message_float_deepin_music");
     pDFloatingMessage->setBlurBackgroundEnabled(true);
     pDFloatingMessage->setMessage(text);
     pDFloatingMessage->setIcon(icon);
@@ -550,10 +557,12 @@ void MainFrame::slotAutoPlay(bool bremb)
 
 void MainFrame::slotPlayFromFileMaganager()
 {
-    qDebug() << "----------openUrl:" << m_firstPlaySong << "all size:" << DataBaseService::getInstance()->allMusicInfosCount();
+    QString path = DataBaseService::getInstance()->getFirstSong();;
+    qDebug() << "----------openUrl:" << path << "all size:" << DataBaseService::getInstance()->allMusicInfosCount();
+    if (path.isEmpty())
+        return;
     //通过路径查询歌曲信息，
-    auto localfile = m_firstPlaySong;
-    MediaMeta mt = DataBaseService::getInstance()->getMusicInfoByHash(DMusic::filepathHash(m_firstPlaySong));
+    MediaMeta mt = DataBaseService::getInstance()->getMusicInfoByHash(DMusic::filepathHash(path));
     if (mt.localPath.isEmpty()) {
         //未导入到数据库
         qCritical() << "fail to start from file manager";
@@ -718,5 +727,6 @@ void MainFrame::hideEvent(QHideEvent *event)
     //用于最小化时保存窗口位置信息,note：托盘到最小化或者退出程序也会触发该事件
     DMainWindow::hideEvent(event);
     MusicSettings::setOption("base.play.geometry", saveGeometry());
+    qDebug() << "hideEvent=============";
 }
 

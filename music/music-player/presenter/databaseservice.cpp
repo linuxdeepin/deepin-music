@@ -323,7 +323,7 @@ QSqlDatabase DataBaseService::getDatabase()
 void DataBaseService::importMedias(QString importHash, const QStringList &urllist)
 {
     m_importHash = importHash;
-    qDebug() << "------DataBaseService::importMedias " << urllist;
+    qDebug() << "------DataBaseService::importMedias " << urllist.size();
     qDebug() << "------DataBaseService::importMedias  currentThread = " << QThread::currentThread();
     m_loadMediaMeta.clear();
     emit sigImportMedias(urllist);
@@ -692,6 +692,19 @@ void DataBaseService::updateMetaCodec(const MediaMeta &meta)
             break;
         }
     }
+}
+
+void DataBaseService::setFirstSong(const QString &strurl)
+{
+    qDebug() << "setFirstSong----------" << strurl;
+    m_firstSonsg = strurl;
+}
+
+QString DataBaseService::getFirstSong()
+{
+    QString strurl = m_firstSonsg;
+    m_loadMediaMeta.clear();
+    return strurl;
 }
 
 //void DataBaseService::updatePlaylistOrderType(int type, QString uuid)

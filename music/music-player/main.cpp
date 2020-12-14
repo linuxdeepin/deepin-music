@@ -90,6 +90,10 @@ int main(int argc, char *argv[])
     parser.addVersionOption();
     parser.addPositionalArgument("file", "Music file path");
     parser.process(app);
+
+    QIcon icon = QIcon::fromTheme("deepin-music");
+    app.setProductIcon(icon);
+
     // handle open file
     QStringList OpenFilePaths;
     if (parser.positionalArguments().length() > 0) {
@@ -100,15 +104,10 @@ int main(int argc, char *argv[])
     if (!OpenFilePaths.isEmpty()) {
         auto fi = QFileInfo(OpenFilePaths.at(0));
         auto url = QUrl::fromLocalFile(fi.absoluteFilePath());
-        MusicSettings::setOption("base.play.to_open_uri", url.toString());
+        DataBaseService::getInstance()->setFirstSong(url.toLocalFile());
         DataBaseService::getInstance()->importMedias("all", OpenFilePaths); //导入数据库
-    } else {
-        MusicSettings::setOption("base.play.to_open_uri", QString());
     }
     app.loadTranslator();
-
-    QIcon icon = QIcon::fromTheme("deepin-music");
-    app.setProductIcon(icon);
 
     if (!app.setSingleInstance("deepinmusic") || !checkOnly()) {
         qDebug() << "another deepin music has started";
@@ -139,7 +138,6 @@ int main(int argc, char *argv[])
         }
         return 0;
     }
-
 
     DApplicationSettings saveTheme;
     /*---Player instance init---*/

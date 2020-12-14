@@ -108,6 +108,8 @@ public:
 //    void                 updatePlaylistOrderType(int type, QString uuid);  //更新歌单显示类型，list，icon，未使用框架QListView::ViewMode
 //    int                  getPlaylistOrderType(QString uuid);               //获取歌单QListView::ViewMode
     void                 updateMetaCodec(const MediaMeta &meta);             //更新歌曲的编码方式
+    void                 setFirstSong(const QString &strurl);                //设置从文管导入后播放的第一首歌曲
+    QString              getFirstSong();                                     //从文管导入后播放的第一首歌曲
 public slots:
     void slotGetAllMediaMetaFromThread(QList<MediaMeta> allMediaMeta);
     void slotGetMetaFromThread(MediaMeta meta);
@@ -144,6 +146,7 @@ private:
     QList<MediaMeta> m_loadMediaMeta;  //新加载的歌曲文件
     bool             m_Importing = false;
     QString          m_importHash;
+    QString          m_firstSonsg = "";  //文管导入的第一首歌
 };
 
 Q_DECLARE_METATYPE(DataBaseService::ListSortType)

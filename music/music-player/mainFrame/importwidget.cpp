@@ -241,6 +241,7 @@ void ImportWidget::slotImportPathButtonClicked()
 void ImportWidget::slotImportFormDbus(const QUrl &url)
 {
     QString path = url.toLocalFile();
+    DataBaseService::getInstance()->setFirstSong(path);
     DataBaseService::getInstance()->importMedias("all", QStringList() << path);
 }
 
