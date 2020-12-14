@@ -267,7 +267,7 @@ void InfoDialog::updateInfo(const MediaMeta meta)
             coverimg = QImage(Global::cacheDir() + "/images/" + meta.hash + ".jpg");
             coverPixmap = QPixmap::fromImage(cropRect(coverimg, QSize(pixmapSize, pixmapSize)));
         } else {
-            coverPixmap = QIcon(":/common/image/info_cover.svg").pixmap(QSize(pixmapSize, pixmapSize));
+            coverPixmap = QIcon(":/icons/deepin/builtin/actions/cover_max_200px.svg").pixmap(QSize(pixmapSize, pixmapSize));
         }
         coverPixmap.setDevicePixelRatio(cover->devicePixelRatioF());
         cover->setCoverPixmap(coverPixmap);
