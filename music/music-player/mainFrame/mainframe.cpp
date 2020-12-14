@@ -163,8 +163,6 @@ void MainFrame::initUI(bool showLoading)
     m_musicLyricWidget = new MusicLyricWidget(this);
     m_musicLyricWidget->hide();
 
-    connect(Player::instance(), &Player::signalMediaMetaChanged,
-            m_musicLyricWidget, &MusicLyricWidget::onCoverChanged);
     AC_SET_OBJECT_NAME(m_musicLyricWidget, AC_musicLyricWidget);
     AC_SET_ACCESSIBLE_NAME(m_musicLyricWidget, AC_musicLyricWidget);
 

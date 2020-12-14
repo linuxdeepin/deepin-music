@@ -65,19 +65,6 @@ MusicLyricWidget::MusicLyricWidget(QWidget *parent)
     palette.setColor(DPalette::Background, QColor("#F8F8F8"));
     setPalette(palette);
 
-    m_backgroundW = new DBlurEffectWidget(this);
-//    d->backgroundW->setBlurEnabled(true);
-//    d->backgroundW->setMode(DBlurEffectWidget::GaussianBlur);
-
-    auto mainlayout = new QHBoxLayout(this);
-    mainlayout->setMargin(0);
-    mainlayout->setSpacing(0);
-
-    auto layout = new QHBoxLayout();
-    layout->setContentsMargins(20, 20, 20, 20);
-
-    auto musicDir =  QStandardPaths::standardLocations(QStandardPaths::MusicLocation);
-
     m_cover = new Cover;
     m_cover->setFixedSize(200, 200);
     m_cover->setObjectName("LyricCover");
@@ -94,7 +81,6 @@ MusicLyricWidget::MusicLyricWidget(QWidget *parent)
     nolyr.setColor(QPalette::WindowText, QColor(85, 85, 85, 102));
     m_nolyric->setPalette(nolyr);
 
-    auto searchlayout = new QVBoxLayout();
     m_serachbt = new MusicImageButton(":/mpimage/light/normal/search_normal.svg",
                                       ":/mpimage/light/normal/search_normal.svg",
                                       ":/mpimage/light/normal/search_normal.svg");
@@ -105,22 +91,25 @@ MusicLyricWidget::MusicLyricWidget(QWidget *parent)
     m_serachbt->setFixedSize(48, 48);
     m_serachbt->hide();
 
-    searchlayout->addWidget(m_serachbt);
-    searchlayout->addStretch();
-    searchlayout->setContentsMargins(58, 18, 34, 484);
 
+    QHBoxLayout *layout = new QHBoxLayout(this);
+    layout->setContentsMargins(20, 20, 20, 150);
     layout->addLayout(m_leftLayout, 0);
     layout->addWidget(m_lyricview, 10);
     layout->addWidget(m_nolyric, 10);
     m_nolyric->hide();
-    layout->addLayout(searchlayout, 0);
 
+    m_backgroundW = new DBlurEffectWidget(this);
+//    d->backgroundW->setBlurEnabled(true);
+//    d->backgroundW->setMode(DBlurEffectWidget::GaussianBlur);
     m_backgroundW->setLayout(layout);
-    mainlayout->addWidget(m_backgroundW);
-//    bool themeFlag = false;
-//    int themeType = MusicSettings::value("base.play.theme").toInt(&themeFlag);
-//    if (!themeFlag)
-//        themeType = 1;
+
+    QHBoxLayout *mainLayout = new QHBoxLayout(this);
+    mainLayout->setMargin(0);
+    mainLayout->setSpacing(0);
+    mainLayout->addWidget(m_backgroundW);
+    this->setLayout(mainLayout);
+
     int themeType = DGuiApplicationHelper::instance()->themeType();
     slotTheme(themeType);
 
@@ -143,12 +132,20 @@ MusicLyricWidget::~MusicLyricWidget()
 
 void MusicLyricWidget::updateUI()
 {
-    m_cover->setCoverPixmap(QPixmap(m_defaultCover));
-    QImage cover(m_defaultCover);
+    MediaMeta meta = Player::instance()->activeMeta();
+    QFileInfo coverInfo(Global::cacheDir() + "/images/" + meta.hash + ".jpg");
+    QImage cover;
+    if (coverInfo.exists()) {
+        cover = QImage(Global::cacheDir() + "/images/" + meta.hash + ".jpg");
+    } else {
+        cover = m_defaultImage;
+    }
+    m_cover->setCoverPixmap(QPixmap::fromImage(cover));
+    m_cover->update();
 
     //cut image
     double windowScale = (width() * 1.0) / height();
-    int imageWidth = static_cast<int>(cover.height() * windowScale) ;
+    int imageWidth = static_cast<int>(cover.height() * windowScale);
     QImage coverImage;
     if (imageWidth > cover.width()) {
         int imageheight = static_cast<int>(cover.width() / windowScale);
@@ -157,8 +154,9 @@ void MusicLyricWidget::updateUI()
         int imageheight = cover.height();
         coverImage = cover.copy((cover.width() - imageWidth) / 2, 0, imageWidth, imageheight);
     }
+
     m_backgroundW->setSourceImage(coverImage);
-    m_backgroundimage = cover;
+    m_backgroundW->update();
 }
 
 void MusicLyricWidget::showAnimation(const QSize &size)
@@ -208,27 +206,12 @@ QString MusicLyricWidget::defaultCover() const
 void MusicLyricWidget::checkHiddenSearch(QPoint mousePos)
 {
     Q_UNUSED(mousePos)
-    //Q_D(MUsicLyricWidget);
 
 }
 
 void MusicLyricWidget::resizeEvent(QResizeEvent *event)
 {
-    QImage cover(m_backgroundimage);
-
-    //cut image
-    double windowScale = (width() * 1.0) / height();
-    int imageWidth = static_cast<int>(cover.height() * windowScale);
-    QImage coverImage;
-    if (imageWidth > cover.width()) {
-        int imageheight = static_cast<int>(cover.width() / windowScale);
-        coverImage = cover.copy(0, (cover.height() - imageheight) / 2, cover.width(), imageheight);
-    } else {
-        int imageheight = cover.height();
-        coverImage = cover.copy((cover.width() - imageWidth) / 2, 0, imageWidth, imageheight);
-    }
-    m_backgroundW->setSourceImage(coverImage);
-    m_backgroundW->update();
+    updateUI();
     QWidget::resizeEvent(event);
 }
 
@@ -262,30 +245,7 @@ void MusicLyricWidget::onMusicPlayed()
 
 void MusicLyricWidget::onCoverChanged()
 {
-    MediaMeta meta = Player::instance()->activeMeta();
-    QFileInfo coverInfo(Global::cacheDir() + "/images/" + meta.hash + ".jpg");
-    QImage cover;
-    if (coverInfo.exists()) {
-        cover = QImage(Global::cacheDir() + "/images/" + meta.hash + ".jpg");
-    } else {
-        cover = m_defaultImage;
-    }
-    m_cover->setCoverPixmap(QPixmap::fromImage(cover));
-    m_cover->update();
-
-    //cut image
-    double windowScale = (width() * 1.0) / height();
-    int imageWidth = static_cast<int>(cover.height() * windowScale);
-    QImage coverImage;
-    if (imageWidth > cover.width()) {
-        int imageheight = static_cast<int>(cover.width() / windowScale);
-        coverImage = cover.copy(0, (cover.height() - imageheight) / 2, cover.width(), imageheight);
-    } else {
-        int imageheight = cover.height();
-        coverImage = cover.copy((cover.width() - imageWidth) / 2, 0, imageWidth, imageheight);
-    }
-    m_backgroundW->setSourceImage(coverImage);
-    m_backgroundW->update();
+    this->updateUI();
 }
 
 void MusicLyricWidget::setDefaultCover(QString defaultCover)

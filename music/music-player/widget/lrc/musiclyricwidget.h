@@ -84,7 +84,6 @@ private:
     MusicImageButton    *m_serachbt = nullptr;
     QString              m_defaultCover = ":/common/image/cover_max.svg";
     bool                 m_serachflag = false;
-    QImage               m_backgroundimage;
     DBlurEffectWidget   *m_backgroundW = nullptr;
     QImage               m_defaultImage = QImage(":/common/image/cover_max.svg");
 };
