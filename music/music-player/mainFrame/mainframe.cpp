@@ -388,7 +388,7 @@ void MainFrame::slotTheme(DGuiApplicationHelper::ColorType themeType)
     }
 
     if (m_searchResult) {
-        m_searchResult->slotTheme(themeType);
+        m_searchResult->setThemeType(themeType);
     }
 }
 

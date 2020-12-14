@@ -33,6 +33,7 @@
 #include <DDialog>
 #include <DDesktopServices>
 #include <DScrollBar>
+#include <DGuiApplicationHelper>
 
 #include "util/pinyinsearch.h"
 
@@ -89,6 +90,11 @@ AlbumListView::AlbumListView(QString hash, QWidget *parent)
 
     connect(DataBaseService::getInstance(), &DataBaseService::sigCoverUpdate,
             this, &AlbumListView::slotCoverUpdate);
+
+    QObject::connect(DGuiApplicationHelper::instance(), &DGuiApplicationHelper::themeTypeChanged,
+                     this, &AlbumListView::setThemeType);
+
+    setThemeType(DGuiApplicationHelper::instance()->themeType());
 }
 
 AlbumListView::~AlbumListView()

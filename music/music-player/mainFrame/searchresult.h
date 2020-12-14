@@ -65,7 +65,7 @@ signals:
 
 public slots:
     void onReturnPressed();
-    void slotTheme(int type);
+    void setThemeType(int type);
     void itemClicked(QModelIndex);
     void getSearchStr();
     void clearKeyState();

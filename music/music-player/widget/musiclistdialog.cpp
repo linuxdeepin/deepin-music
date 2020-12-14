@@ -246,7 +246,6 @@ void MusicListDialog::setThemeType(int type)
     }
     m_btPlayAll->setIcon(QIcon(QString(":/mpimage/light/normal/play_all_normal.svg").arg(rStr)));
     m_btRandomPlay->setIcon(QIcon(QString(":/mpimage/light/normal/random_play_normal.svg").arg(rStr)));
-    m_musicListInfoView->setThemeType(type);
 //    infoDialog->setThemeType(type);
 }
 

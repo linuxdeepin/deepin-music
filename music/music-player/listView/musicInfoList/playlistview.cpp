@@ -112,8 +112,6 @@ PlayListView::PlayListView(QString hash, bool isPlayQueue, QWidget *parent)
     setEditTriggers(QAbstractItemView::NoEditTriggers);
     setSelectionBehavior(QAbstractItemView::SelectRows);
 
-    slotTheme(DGuiApplicationHelper::instance()->themeType());
-
     setContextMenuPolicy(Qt::DefaultContextMenu);
 
     //detail shortcut
@@ -143,6 +141,11 @@ PlayListView::PlayListView(QString hash, bool isPlayQueue, QWidget *parent)
 
     connect(DataBaseService::getInstance(), &DataBaseService::sigRmvSong,
             this, &PlayListView::slotRemoveSingleSong);
+
+    QObject::connect(DGuiApplicationHelper::instance(), &DGuiApplicationHelper::themeTypeChanged,
+                     this, &PlayListView::setThemeType);
+
+    setThemeType(DGuiApplicationHelper::instance()->themeType());
 }
 
 PlayListView::~PlayListView()

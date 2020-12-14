@@ -25,6 +25,7 @@
 
 #include <QDebug>
 #include <QFileInfo>
+#include <DGuiApplicationHelper>
 
 #include "util/pinyinsearch.h"
 #include "util/global.h"
@@ -55,6 +56,11 @@ MusicSearchListview::MusicSearchListview(QWidget *parent)
 
     connect(m_delegate, &MusicSearchListDelegate::SearchClear, this, &MusicSearchListview::SearchClear);
     connect(this, SIGNAL(clicked(const QModelIndex &)), this, SLOT(slotOnClicked(const QModelIndex &)));
+
+    QObject::connect(DGuiApplicationHelper::instance(), &DGuiApplicationHelper::themeTypeChanged,
+                     this, &MusicSearchListview::setThemeType);
+
+    setThemeType(DGuiApplicationHelper::instance()->themeType());
 }
 
 

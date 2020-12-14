@@ -35,6 +35,7 @@
 #include <DDesktopServices>
 #include <DScrollBar>
 #include <DLabel>
+#include <DGuiApplicationHelper>
 
 #include "infodialog.h"
 #include "player.h"
@@ -90,6 +91,12 @@ MusicListInfoView::MusicListInfoView(const QString &hash, QWidget *parent)
             this, SLOT(slotUpdatePlayingIcon()), Qt::DirectConnection);
     connect(DataBaseService::getInstance(), &DataBaseService::sigRmvSong,
             this, &MusicListInfoView::slotRemoveSingleSong);
+
+
+    QObject::connect(DGuiApplicationHelper::instance(), &DGuiApplicationHelper::themeTypeChanged,
+                     this, &MusicListInfoView::setThemeType);
+
+    setThemeType(DGuiApplicationHelper::instance()->themeType());
 }
 
 MusicListInfoView::~MusicListInfoView()

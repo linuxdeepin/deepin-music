@@ -907,16 +907,6 @@ void MusicListDataWidget::slotTheme(int type)
     m_btIconMode->setIconSize(QSize(36, 36));
     m_btlistMode->setIcon(QIcon::fromTheme("text_list_texts"));
     m_btlistMode->setIconSize(QSize(36, 36));
-
-    if (m_musicListView) {
-        m_musicListView->slotTheme(type);
-    }
-    if (m_albumListView) {
-        m_albumListView->setThemeType(type);
-    }
-    if (m_singerListView) {
-        m_singerListView->setThemeType(type);
-    }
 }
 
 ActionBar::ActionBar(QWidget *parent)

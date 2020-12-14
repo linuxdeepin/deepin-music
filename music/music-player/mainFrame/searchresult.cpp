@@ -121,8 +121,11 @@ SearchResult::SearchResult(QWidget *parent) : DBlurEffectWidget(parent)
     vlayout->addWidget(m_AlbumView, 0);
     vlayout->addStretch(100);
 
-    int themeType = DGuiApplicationHelper::instance()->themeType();
-    slotTheme(themeType);
+
+    QObject::connect(DGuiApplicationHelper::instance(), &DGuiApplicationHelper::themeTypeChanged,
+                     this, &SearchResult::setThemeType);
+
+    setThemeType(DGuiApplicationHelper::instance()->themeType());
 //    connect(m_MusicView, &MusicSearchListview::clicked, this, &SearchResult::itemClicked);
 //    connect(m_ArtistView, &MusicSearchListview::clicked, this, &SearchResult::itemClicked);
 //    connect(m_AlbumView, &MusicSearchListview::clicked, this, &SearchResult::itemClicked);
@@ -351,7 +354,7 @@ void SearchResult::onReturnPressed()
     }
 }
 
-void SearchResult::slotTheme(int type)
+void SearchResult::setThemeType(int type)
 {
     QPalette labelPalette;
     if (type == 2) {
@@ -362,9 +365,6 @@ void SearchResult::slotTheme(int type)
     m_MusicLabel->setPalette(labelPalette);
     m_ArtistLabel->setPalette(labelPalette);
     m_AblumLabel->setPalette(labelPalette);
-    m_MusicView->setThemeType(type);
-    m_AlbumView->setThemeType(type);
-    m_SingerView->setThemeType(type);
 }
 
 void SearchResult::itemClicked(QModelIndex index)

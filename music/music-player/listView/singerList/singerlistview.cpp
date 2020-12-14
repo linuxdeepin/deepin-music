@@ -33,6 +33,7 @@
 #include <DDialog>
 #include <DDesktopServices>
 #include <DScrollBar>
+#include <DGuiApplicationHelper>
 
 #include "util/pinyinsearch.h"
 
@@ -88,6 +89,11 @@ SingerListView::SingerListView(QString hash, QWidget *parent)
 
     connect(DataBaseService::getInstance(), &DataBaseService::sigCoverUpdate,
             this, &SingerListView::slotCoverUpdate);
+
+    QObject::connect(DGuiApplicationHelper::instance(), &DGuiApplicationHelper::themeTypeChanged,
+                     this, &SingerListView::setThemeType);
+
+    setThemeType(DGuiApplicationHelper::instance()->themeType());
 }
 
 SingerListView::~SingerListView()
