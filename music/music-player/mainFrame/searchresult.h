@@ -52,6 +52,7 @@ public:
 
     void selectUp();
     void selectDown();
+    int  getCurrentIndex();
 
     QString currentStr();
 
@@ -61,9 +62,6 @@ public:
 
 signals:
     void locateMusic(const QString &hash);
-    void searchText(const QString  id, const QString &text);
-    void searchText2(const QString  id, const QString &text);
-    void searchText3(const QString  id, const QString &text);
 
 public slots:
     void onReturnPressed();

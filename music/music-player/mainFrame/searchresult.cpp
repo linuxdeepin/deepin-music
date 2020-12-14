@@ -305,6 +305,11 @@ void SearchResult::selectDown()
     getSearchStr();
 }
 
+int SearchResult::getCurrentIndex()
+{
+    return m_CurrentIndex;
+}
+
 QString SearchResult::currentStr()
 {
     QString str;
@@ -336,9 +341,14 @@ void SearchResult::leaveEvent(QEvent *event)
 
 void SearchResult::onReturnPressed()
 {
-    //    auto hashlist = m_MusicModel->property("hashlist").toStringList();
-    //    auto selectedRow = m_MusicView->currentIndex().row();
-    //    Q_EMIT locateMusic(hashlist.value(selectedRow));
+    qDebug() << "------SearchResult::onReturnPressed";
+    if (m_MusicView->getIndexInt() >= 0) {
+        m_MusicView->onReturnPressed();
+    } else if (m_AlbumView->getIndexInt() >= 0) {
+        m_AlbumView->onReturnPressed();
+    } else if (m_SingerView->getIndexInt() >= 0) {
+        m_SingerView->onReturnPressed();
+    }
 }
 
 void SearchResult::slotTheme(int type)

@@ -238,6 +238,17 @@ void MusicSearchListview::setCurrentIndexInt(int row)
     m_CurrentIndex = row;
 }
 
+QString MusicSearchListview::getCurrentIndexText(int row)
+{
+    QString currentIndexText;
+    if (row >= 0 && row < this->rowCount()) {
+        QModelIndex index = m_model->index(row, 0, QModelIndex());
+        MediaMeta mediaMeta = index.data(Qt::UserRole + SearchType::SearchMusic).value<MediaMeta>();
+        currentIndexText = mediaMeta.title;
+    }
+    return currentIndexText;
+}
+
 void MusicSearchListview::setPlayPixmap(QPixmap pixmap, QPixmap sidebarPixmap, QPixmap albumPixmap)
 {
     m_playingPixmap = pixmap;
@@ -309,6 +320,12 @@ void MusicSearchListview::slotOnClicked(const QModelIndex &index)
             m_SearchResultWidget->setLineEditSearchString(albumInfo.albumName);
         }
     }
+}
+
+void MusicSearchListview::onReturnPressed()
+{
+    qDebug() << "------MusicSearchListview::onReturnPressed";
+    slotOnClicked(m_model->index(m_CurrentIndex, 0));
 }
 
 

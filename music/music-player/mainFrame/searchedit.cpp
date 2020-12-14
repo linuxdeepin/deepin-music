@@ -165,20 +165,14 @@ void SearchEdit::onTextChanged()
 
 void SearchEdit::onReturnPressed()
 {
-    if (!m_result->currentStr().isEmpty())
-        setText(m_result->currentStr());
+    if (m_result->getCurrentIndex() >= 0) {
+        m_result->onReturnPressed();
+        m_result->hide();
+        return;
+    }
     auto text = QString(this->text()).remove("\r").remove("\n");
     if (text.length() == 0)
         return;
-//    int i = text.size();
-//    for (; i > 0; i--) {
-//        QChar index = text.back();
-//        if (index == ' ') {
-//            text.remove(text.size() - 1, 1);
-//        } else {
-//            break;
-//        }
-//    }
     m_result->hide();
     emit CommonService::getInstance()->switchToView(SearchMusicResultType, text);
 }

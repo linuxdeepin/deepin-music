@@ -49,7 +49,8 @@ public:
     int getThemeType() const;
     QString getSearchText()const;
 
-    void setCurrentIndexInt(int row);
+    void    setCurrentIndexInt(int row);
+    QString getCurrentIndexText(int row);
 
     void setPlayPixmap(QPixmap pixmap, QPixmap sidebarPixmap, QPixmap albumPixmap);
     QPixmap getPlayPixmap() const;
@@ -67,6 +68,7 @@ signals:
 public slots:
     void SearchClear();
     void slotOnClicked(const QModelIndex &index);
+    void onReturnPressed();
 protected:
     virtual void mouseMoveEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
 public:
