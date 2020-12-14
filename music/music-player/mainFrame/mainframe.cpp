@@ -117,7 +117,6 @@ MainFrame::MainFrame()
         if (isVisible()) {
             if (isMinimized()) {
                 if (isFullScreen()) {
-                    hide();
                     showFullScreen();
                 } else {
                     this->titlebar()->setFocus();
@@ -278,7 +277,6 @@ void MainFrame::initMenuAndShortcut()
             if (isVisible()) {
                 if (isMinimized()) {
                     if (isFullScreen()) {
-                        hide();
                         showFullScreen();
                     } else {
                         this->titlebar()->setFocus();
@@ -289,7 +287,6 @@ void MainFrame::initMenuAndShortcut()
                     }
                 } else {
                     showMinimized();
-                    hide();
                 }
             } else {
                 this->titlebar()->setFocus();
