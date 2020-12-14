@@ -55,12 +55,14 @@ public:
     void slotTheme(int type);
     void initShortcut(); //we can wait to init until frame has displayed
     void updateShortcut();
-    //加载波形图
+    // 加载波形图
     void slotLoadDetector(const QString &hash);
 private:
     void initUI(QWidget *parent = nullptr);
     void setPlayProperty(Player::PlaybackStatus status);
     void installTipHint(QWidget *widget, const QString &hintstr);
+    // 移动音量控件到合适的位置
+    void moveVolSlider();
 signals:
     void lyricClicked();
 public slots:
@@ -88,13 +90,13 @@ public slots:
 
     void setPlayModel(Player::PlaybackMode playModel);
 
-    //音量变化
+    // 音量变化
     void onDbusVolumeChanged(double volume);
     void slotSliderVolumeChanged(int volume);
     void slotMutedChanged(bool mute);
 
     void slotDelayAutoHide();
-    //快捷键响应
+    // 快捷键响应
     void slotShortCutTriggered();
 protected:
     virtual void showEvent(QShowEvent *event) Q_DECL_OVERRIDE;
@@ -118,7 +120,7 @@ private:
     DIconButton     *m_btSound    = nullptr;
     DIconButton     *m_btPlayList = nullptr;
 
-    //short cut on footer
+    // short cut on footer
     QShortcut           *volUpShortcut       = nullptr;
     QShortcut           *volDownShortcut     = nullptr;
     QShortcut           *nextShortcut           = nullptr;

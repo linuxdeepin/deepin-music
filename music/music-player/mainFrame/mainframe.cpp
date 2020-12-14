@@ -359,12 +359,14 @@ void MainFrame::showPopupMessage(const QString &songListName, int selectCount, i
         }
     }
 
-    QList<QWidget *> content = m_musicContentWidget->findChildren<QWidget *>("_d_message_float_deepin_music");
-    if (content.size() > 0) {
-        content.first()->deleteLater(); //auto delete
+    // 确保弹窗只显示一条
+    QList<QWidget *> oldMsgList = m_musicContentWidget->findChildren<QWidget *>("_d_message_float_deepin_music");
+    if (oldMsgList.size() > 0) {
+        oldMsgList.first()->deleteLater(); // auto delete
     }
-    if (content.size() >= 2)
+    if (oldMsgList.size() >= 2)
         return;
+
     auto icon = QIcon(":/common/image/notify_success_new.svg");
     DFloatingMessage *pDFloatingMessage = new DFloatingMessage(DFloatingMessage::MessageType::TransientType, m_musicContentWidget);
     pDFloatingMessage->setObjectName("_d_message_float_deepin_music");

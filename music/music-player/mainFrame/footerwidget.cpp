@@ -341,6 +341,18 @@ void FooterWidget::installTipHint(QWidget *widget, const QString &hintstr)
     widget->installEventFilter(m_hintFilter);
 }
 
+void FooterWidget::moveVolSlider()
+{
+    QPoint centerPos = m_btSound->mapToGlobal(m_btSound->rect().center());
+    m_volSlider->adjustSize();
+    auto sz = m_volSlider->size();
+    centerPos.setX(centerPos.x()  - sz.width() / 2);
+    centerPos.setY(centerPos.y() - 32 - sz.height());
+    centerPos = m_volSlider->mapFromGlobal(centerPos);
+    centerPos = m_volSlider->mapToParent(centerPos);
+    m_volSlider->move(centerPos);
+}
+
 void FooterWidget::initShortcut()
 {
     playPauseShortcut = new QShortcut(this);
@@ -503,15 +515,8 @@ void FooterWidget::slotSoundClick(bool click)
     if (m_volSlider->isVisible()) {
         m_volSlider->hide();
     } else {
-        auto centerPos = m_btSound->mapToGlobal(m_btSound->rect().center());
+        moveVolSlider();
         m_volSlider->show();
-        m_volSlider->adjustSize();
-        auto sz = m_volSlider->size();
-        centerPos.setX(centerPos.x()  - sz.width() / 2);
-        centerPos.setY(centerPos.y() - 32 - sz.height());
-        centerPos = m_volSlider->mapFromGlobal(centerPos);
-        centerPos = m_volSlider->mapToParent(centerPos);
-        m_volSlider->move(centerPos);
         m_volSlider->raise();
     }
 }
@@ -724,6 +729,9 @@ void FooterWidget::resizeEvent(QResizeEvent *event)
     if (m_playListWidget) {
         m_playListWidget->setGeometry(0, 0, width(), height() - 80);
     }
+
+    moveVolSlider();
+
     DWidget::resizeEvent(event);
 }
 
