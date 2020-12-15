@@ -104,6 +104,8 @@ private:
     QShortcut           *viewshortcut = nullptr;
     QShortcut           *searchShortcut = nullptr;
     QShortcut           *windowShortcut = nullptr;
+    //window geometry
+    QByteArray          m_geometryBa = QByteArray();
 };
 
 //extern const QString s_PropertyViewname;

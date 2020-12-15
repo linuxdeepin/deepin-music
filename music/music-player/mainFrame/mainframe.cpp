@@ -123,8 +123,7 @@ MainFrame::MainFrame()
                     this->titlebar()->setFocus();
                     showNormal();
                     activateWindow();
-                    auto geometry = MusicSettings::value("base.play.geometry").toByteArray();
-                    this->restoreGeometry(geometry);
+                    this->restoreGeometry(m_geometryBa);
                 }
             }
         } else {
@@ -137,9 +136,6 @@ MainFrame::MainFrame()
 
 MainFrame::~MainFrame()
 {
-    MusicSettings::sync();
-    //MusicSettings::setOption("base.play.state", saveState());
-    MusicSettings::setOption("base.play.geometry", QByteArray()); //退出不记录位置信息，还原默认大小和位置
 }
 
 void MainFrame::initUI(bool showLoading)
@@ -283,8 +279,7 @@ void MainFrame::initMenuAndShortcut()
                         this->titlebar()->setFocus();
                         showNormal();
                         activateWindow();
-                        auto geometry = MusicSettings::value("base.play.geometry").toByteArray();
-                        this->restoreGeometry(geometry);
+                        this->restoreGeometry(m_geometryBa);
                     }
                 } else {
                     showMinimized();
@@ -573,14 +568,12 @@ void MainFrame::slotPlayFromFileMaganager()
 void MainFrame::showEvent(QShowEvent *event)
 {
     Q_UNUSED(event)
-    auto geometry = MusicSettings::value("base.play.geometry").toByteArray();
-
-    if (geometry.size() < 4) {
+    if (m_geometryBa.isEmpty()) {//初次直接显示默认窗口
         this->setMinimumSize(QSize(1070, 680));
-        this->resize(QSize(1070, 680));  //初次直接显示默认窗口
+        this->resize(QSize(1070, 680));
         Dtk::Widget::moveToCenter(this);
     } else {
-        QDataStream stream(geometry); //仅在程序运行期间生效
+        QDataStream stream(m_geometryBa); //仅在程序运行期间生效
         stream.setVersion(QDataStream::Qt_4_0);
 
         const quint32 magicNumber = 0x1D9D0CB;
@@ -616,7 +609,7 @@ void MainFrame::showEvent(QShowEvent *event)
         if (majorVersion > 1) {
             stream >> restoredScreenWidth;
         }
-        this->restoreGeometry(geometry);
+        restoreGeometry(m_geometryBa);
     }
     this->setFocus();
     qDebug() << "zy------MainWindow::showEvent " << QTime::currentTime().toString("hh:mm:ss.zzz");
@@ -724,7 +717,7 @@ void MainFrame::hideEvent(QHideEvent *event)
 {
     //用于最小化时保存窗口位置信息,note：托盘到最小化或者退出程序也会触发该事件
     DMainWindow::hideEvent(event);
-    MusicSettings::setOption("base.play.geometry", saveGeometry());
+    m_geometryBa = saveGeometry();
     qDebug() << "hideEvent=============";
 }
 
