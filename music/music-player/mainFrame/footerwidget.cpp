@@ -163,6 +163,7 @@ void FooterWidget::initUI(QWidget *parent)
     groupHlayout->addWidget(m_btPlay);
     groupHlayout->addWidget(m_btNext);
     mainHBoxlayout->addWidget(m_ctlWidget, 0);
+
     //添加封面按钮
     m_btCover = new MusicPixmapButton(this);
     m_btCover->setIcon(QIcon::fromTheme("info_cover"));
@@ -258,12 +259,11 @@ void FooterWidget::initUI(QWidget *parent)
     AC_SET_ACCESSIBLE_NAME(m_btPlayMode, AC_PlayMode);
     //添加音量调节按钮
     m_btSound = new DIconButton(this);
-    m_btSound->setIcon(QIcon::fromTheme("volume_mid"));
     m_btSound->setObjectName("FooterActionSound");
     m_btSound->setFixedSize(50, 50);
-    m_btSound->setProperty("volume", "mid");
     m_btSound->setCheckable(true);
     m_btSound->setIconSize(QSize(36, 36));
+
     mainHBoxlayout->addWidget(m_btSound, 0);
 
     AC_SET_OBJECT_NAME(m_btSound, AC_Sound);
@@ -322,13 +322,16 @@ void FooterWidget::initUI(QWidget *parent)
     connect(CommonService::getInstance(), &CommonService::setPlayModel, this, &FooterWidget::setPlayModel);
     connect(CommonService::getInstance(), &CommonService::signalPlayQueueClosed, this, &FooterWidget::slotFlushBackground);
     //dbus
-    connect(Player::instance()->getMpris(), SIGNAL(volumeRequested(double)), this, SLOT(onDbusVolumeChanged(double)));
-    connect(m_volSlider, &SoundVolume::sigvolumeChanged, this, &FooterWidget::slotSliderVolumeChanged);
+    connect(Player::instance()->getMpris(), SIGNAL(volumeRequested(double)), this, SLOT(slotDbusVolumeChanged(double)));
     connect(m_volSlider, &SoundVolume::delayAutoHide, this, [ = ]() {
         m_btSound->setChecked(false);
     });
-    connect(Player::instance(), &Player::mutedChanged, this, &FooterWidget::slotSliderVolumeChanged);
+
+    connect(Player::instance(), &Player::volumeChanged, this, &FooterWidget::slotFlushSoundIcon);
+    connect(Player::instance(), &Player::mutedChanged, this, &FooterWidget::slotFlushSoundIcon);
     connect(DataBaseService::getInstance(), &DataBaseService::sigFavSongRemove, this, &FooterWidget::fluashFavoriteBtnIco);
+
+    slotFlushSoundIcon();
 }
 
 void FooterWidget::installTipHint(QWidget *widget, const QString &hintstr)
@@ -576,7 +579,8 @@ void FooterWidget::setPlayModel(Player::PlaybackMode playModel)
     Player::instance()->setMode(static_cast<Player::PlaybackMode>(playModel));
 }
 
-void FooterWidget::onDbusVolumeChanged(double volume)   //from dbus set
+// Dbus
+void FooterWidget::slotDbusVolumeChanged(double volume)
 {
     //need to sync volume to dbus
 //    if (d->volumeMonitoring.needSyncLocalFlag(1)) {
@@ -586,14 +590,7 @@ void FooterWidget::onDbusVolumeChanged(double volume)   //from dbus set
 //    }
     //get dbus volume
     int curVolume = int(volume * 100);
-    m_volSlider->setVolumeFromExternal(curVolume);
-}
-
-void FooterWidget::slotSliderVolumeChanged(int volume)
-{
-    Q_UNUSED(volume)
-    bool mute = Player::instance()->muted();
-    slotMutedChanged(mute);
+    m_volSlider->setVolume(curVolume);
 }
 
 void FooterWidget::slotPlayQueueClick(bool click)
@@ -610,29 +607,23 @@ void FooterWidget::slotPlayQueueClick(bool click)
     }
 }
 
-void FooterWidget::slotMutedChanged(bool mute)
+void FooterWidget::slotFlushSoundIcon()
 {
-    int volume = Player::instance()->volume();
-    if (mute || volume == 0) {
-        m_btSound->setProperty("volume", "mute");
-        m_btSound->update();
+    int volume = Player::instance()->getVolume();
+
+    if (Player::instance()->getMuted() || volume == 0) {
         m_btSound->setIcon(QIcon::fromTheme("mute"));
-        m_volSlider->syncMute(true);
     } else {
-        QString status = "mid";
         if (volume > 77) {
-            status = "high";
             m_btSound->setIcon(QIcon::fromTheme("volume"));
         } else if (volume > 33) {
-            status = "mid";
             m_btSound->setIcon(QIcon::fromTheme("volume_mid"));
         } else {
-            status = "low";
             m_btSound->setIcon(QIcon::fromTheme("volume_low"));
         }
-        m_btSound->setProperty("volume", status);
-        m_btSound->update();
     }
+
+    m_btSound->update();
 }
 
 void FooterWidget::slotDelayAutoHide()
@@ -647,7 +638,7 @@ void FooterWidget::slotShortCutTriggered()
 
     if (objCut == volUpShortcut) {
         //dbus volume up
-        int volup = Player::instance()->volume() + VolumeStep;
+        int volup = Player::instance()->getVolume() + VolumeStep;
         if (volup > 100)//max volume
             volup = 100;
         Player::instance()->setVolume(volup); //system volume
@@ -657,7 +648,7 @@ void FooterWidget::slotShortCutTriggered()
 
     if (objCut == volDownShortcut) {
         //dbus volume up
-        int voldown = Player::instance()->volume() - VolumeStep;
+        int voldown = Player::instance()->getVolume() - VolumeStep;
         if (voldown < 0)//mini volume
             voldown = 0;
         Player::instance()->setVolume(voldown); //system volume
@@ -678,8 +669,9 @@ void FooterWidget::slotShortCutTriggered()
     }
 
     if (objCut == muteShortcut) {
-        Player::instance()->setMuted(true);
-        m_volSlider->syncMute(true);
+        bool mute = Player::instance()->getMuted();
+        Player::instance()->setMuted(!mute);
+        m_volSlider->flushVolumeIcon();
     }
 }
 

@@ -49,38 +49,36 @@ SoundVolume::SoundVolume(QWidget *parent)
     layout->setSpacing(0);
 
 
-    m_lblPersent = new DLabel(this);
-    auto titleFont = m_lblPersent->font();
+    m_volPersent = new DLabel(this);
+    auto titleFont = m_volPersent->font();
     titleFont.setFamily("SourceHanSansSC");
     titleFont.setWeight(QFont::Medium);
     titleFont.setPixelSize(14);
-    m_lblPersent->setFont(titleFont);
-    m_lblPersent->setText("100%");
+    m_volPersent->setFont(titleFont);
+    m_volPersent->setText("100%");
 
-    m_volSlider = new DSlider(Qt::Vertical);
-    m_volSlider->setMinimum(0);
-    m_volSlider->setMaximum(100);
-    m_volSlider->slider()->setSingleStep(Player::VolumeStep);
-    m_volSlider->setValue(50);
-    m_volSlider->slider()->setFixedHeight(120);
-    m_volSlider->setFixedWidth(24);
-    m_volSlider->setIconSize(QSize(15, 15));
-    m_volSlider->setMouseWheelEnabled(true);
-
-    AC_SET_OBJECT_NAME(m_volSlider, AC_DSlider);
-    AC_SET_ACCESSIBLE_NAME(m_volSlider, AC_DSlider);
-
-//    m_btSound = new SoundPixmapButton();
     m_btSound = new DToolButton();
     m_btSound->setIcon(QIcon::fromTheme("volume_low"));
     //d->sound->setShortcut(QKeySequence(QLatin1String("M")));
     m_btSound->setFixedSize(30, 30);
     m_btSound->setIconSize(QSize(30, 30));
 
-    volumeIcon();
+    m_volSlider = new DSlider(Qt::Vertical);
+    m_volSlider->setMinimum(0);
+    m_volSlider->setMaximum(100);
+    m_volSlider->slider()->setSingleStep(Player::VolumeStep);
+    m_volSlider->slider()->setFixedHeight(120);
+    m_volSlider->setFixedWidth(24);
+    m_volSlider->setIconSize(QSize(15, 15));
+    m_volSlider->setMouseWheelEnabled(true);
+    connect(m_volSlider, &DSlider::valueChanged, this, &SoundVolume::slotSetVolume);
+    m_volSlider->setValue(Player::instance()->getVolume());
+
+    AC_SET_OBJECT_NAME(m_volSlider, AC_DSlider);
+    AC_SET_ACCESSIBLE_NAME(m_volSlider, AC_DSlider);
 
     layout->addStretch();
-    layout->addWidget(m_lblPersent, 0, Qt::AlignTop | Qt::AlignHCenter);
+    layout->addWidget(m_volPersent, 0, Qt::AlignTop | Qt::AlignHCenter);
     layout->addWidget(m_volSlider, 0, Qt::AlignCenter);
     layout->addWidget(m_btSound, 0, Qt::AlignHCenter);
     layout->addStretch();
@@ -92,11 +90,8 @@ SoundVolume::SoundVolume(QWidget *parent)
     bodyShadow->setOffset(0, 2.0);
     this->setGraphicsEffect(bodyShadow);
 
-//    connect(d->volSlider, &DSlider::valueChanged,
-//            this, &SoundVolume::volumeChanged);
-
-    connect(m_volSlider, &DSlider::valueChanged, this, &SoundVolume::slotSetVolume);
     connect(m_btSound, &DToolButton::pressed, this, &SoundVolume::slotSoundClick);
+    connect(Player::instance(), &Player::mutedChanged, this, &SoundVolume::flushVolumeIcon);
 }
 
 SoundVolume::~SoundVolume()
@@ -114,9 +109,9 @@ QBrush SoundVolume::background() const
     return m_background;
 }
 
-void SoundVolume::setVolumeFromExternal(int vol)
+void SoundVolume::setVolume(int value)
 {
-    m_volSlider->setValue(vol);
+    m_volSlider->setValue(value);
 }
 
 int SoundVolume::radius() const
@@ -144,12 +139,11 @@ void SoundVolume::setBorderColor(QColor borderColor)
     m_borderColor = borderColor;
 }
 
-void SoundVolume::volumeIcon()
+void SoundVolume::flushVolumeIcon()
 {
-    bool mute = Player::instance()->muted();
-    int volume = Player::instance()->volume();
-    qDebug() << "---mute = " << volume << "  ---volume = " << volume;
-    if (mute || volume == 0) {
+    int volume = Player::instance()->getVolume();
+
+    if (Player::instance()->getMuted() || volume == 0) {
         m_btSound->setIcon(QIcon::fromTheme("mute"));
     } else {
         if (volume > 77) {
@@ -160,12 +154,6 @@ void SoundVolume::volumeIcon()
             m_btSound->setIcon(QIcon::fromTheme("volume_low"));
         }
     }
-}
-
-void SoundVolume::syncMute(bool mute)
-{
-    volumeIcon();
-    Q_UNUSED(mute)
 }
 
 void SoundVolume::delayHide()
@@ -181,32 +169,33 @@ void SoundVolume::delayHide()
 
 void SoundVolume::slotSetVolume(int volume)
 {
-    bool preVolMute = Player::instance()->muted();
+    updateUI(volume);
+}
+
+void SoundVolume::updateUI(int volume)
+{
     bool muteToSet = false;
     if (volume == 0) {
         muteToSet = true;
     } else {
         muteToSet = false;
     }
-    //设置是否静音并刷新按钮图标
-    if (preVolMute) {
+
+    // 设置是否静音并刷新按钮图标
+    if (Player::instance()->getMuted()) {
         Player::instance()->setMuted(muteToSet);
-        MusicSettings::setOption("base.play.mute", muteToSet);
     }
 
-    Player::instance()->setVolume(volume); //system volume
-    MusicSettings::setOption("base.play.volume", volume);
-    emit sigvolumeChanged(volume);
-    Player::instance()->getMpris()->setVolume(static_cast<double>(volume) / 100);
-    volumeIcon();
-    m_lblPersent->setText(QString::number(volume) + QString("%"));
+    Player::instance()->setVolume(volume);
+
+    flushVolumeIcon();
+    m_volPersent->setText(QString::number(volume) + QString("%"));
 }
 
 void SoundVolume::showEvent(QShowEvent *event)
 {
     m_mouseIn = true;
-    int volume = Player::instance()->volume();
-    m_lblPersent->setText(QString::number(volume) + QString("%"));
+    flushVolumeIcon();
     QWidget::showEvent(event);
 }
 
@@ -305,8 +294,7 @@ void SoundVolume::slotTheme(int type)
 
 void SoundVolume::slotSoundClick()
 {
-    bool mute = Player::instance()->muted();
+    bool mute = Player::instance()->getMuted();
     Player::instance()->setMuted(!mute);
-    volumeIcon();
-    MusicSettings::setOption("base.play.mute", !mute);
+    flushVolumeIcon();
 }

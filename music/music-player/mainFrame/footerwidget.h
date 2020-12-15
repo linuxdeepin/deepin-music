@@ -91,10 +91,9 @@ public slots:
 
     void setPlayModel(Player::PlaybackMode playModel);
 
-    // 音量变化
-    void onDbusVolumeChanged(double volume);
-    void slotSliderVolumeChanged(int volume);
-    void slotMutedChanged(bool mute);
+    // Dbug音量变化通知
+    void slotDbusVolumeChanged(double volume);
+    void slotFlushSoundIcon();
 
     void slotDelayAutoHide();
     // 快捷键响应

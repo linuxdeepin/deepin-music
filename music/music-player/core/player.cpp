@@ -161,10 +161,10 @@ void Player::playMeta(MediaMeta meta)
         metadata.insert(Mpris::metadataToString(Mpris::ArtUrl), meta.coverUrl);
 
         //mprisPlayer->setCanSeek(true);
-        m_pMpris->setMetadata(metadata);
-        m_pMpris->setLoopStatus(Mpris::Playlist);
-        m_pMpris->setPlaybackStatus(Mpris::Stopped);
-        m_pMpris->setVolume(double(this->volume()) / 100.0);
+        m_mpris->setMetadata(metadata);
+        m_mpris->setLoopStatus(Mpris::Playlist);
+        m_mpris->setPlaybackStatus(Mpris::Stopped);
+        m_mpris->setVolume(double(this->getVolume()) / 100.0);
     }
 }
 
@@ -219,10 +219,10 @@ void Player::resume()
     metadata.insert(Mpris::metadataToString(Mpris::ArtUrl), m_ActiveMeta.coverUrl);
 
     //mprisPlayer->setCanSeek(true);
-    m_pMpris->setMetadata(metadata);
-    m_pMpris->setLoopStatus(Mpris::Playlist);
-    m_pMpris->setPlaybackStatus(Mpris::Stopped);
-    m_pMpris->setVolume(double(this->volume()) / 100.0);
+    m_mpris->setMetadata(metadata);
+    m_mpris->setLoopStatus(Mpris::Playlist);
+    m_mpris->setPlaybackStatus(Mpris::Stopped);
+    m_mpris->setVolume(double(this->getVolume()) / 100.0);
 }
 
 void Player::pause()
@@ -449,7 +449,7 @@ QList<MediaMeta> *Player::getPlayList()
 
 MprisPlayer *Player::getMpris() const
 {
-    return m_pMpris;
+    return m_mpris;
 }
 
 void Player::setCurrentPlayListHash(QString hash, bool reloadMetaList)
@@ -480,7 +480,7 @@ void Player::stop()
     m_qvplayer->stop();
 
     QVariantMap metadata;
-    m_pMpris->setMetadata(metadata);
+    m_mpris->setMetadata(metadata);
 }
 
 VlcMediaPlayer *Player::core()
@@ -526,7 +526,7 @@ qlonglong Player::position() const
     return m_qvplayer->time();
 }
 
-int Player::volume() const
+int Player::getVolume() const
 {
     return static_cast<int>(m_volume);
 }
@@ -536,7 +536,7 @@ Player::PlaybackMode Player::mode() const
     return  m_mode;
 }
 
-bool Player::muted()
+bool Player::getMuted()
 {
     return this->isMusicMuted();
 }
@@ -596,9 +596,14 @@ void Player::setVolume(int volume)
     if (volume < 0) {
         volume = 0;
     }
-    m_volume = volume;
 
-    setMusicVolume((volume + 0.1) / 100.0);//设置到dbus的音量必须大1，设置才会生效
+    m_volume = volume;
+    MusicSettings::setOption("base.play.volume", volume);
+    m_mpris->setVolume(static_cast<double>(volume) / 100);
+
+    // 设置到dbus的音量必须大1，设置才会生效
+    setMusicVolume((volume + 0.1) / 100.0);
+    emit volumeChanged();
 }
 
 void Player::setMuted(bool mute)
@@ -812,7 +817,7 @@ bool Player::setMusicVolume(double volume)
         if (qFuzzyCompare(volume, 0.0))
             ainterface.call(QLatin1String("SetMute"), true);
     }
-    m_pMpris->setVolume(volume);
+    m_mpris->setVolume(volume);
 
     return false;
 }
@@ -829,8 +834,9 @@ bool Player::setMusicMuted(bool muted)
         }
 
         //调用设置音量
+        MusicSettings::setOption("base.play.mute", muted);
         ainterface.call(QLatin1String("SetMute"), muted);
-        emit mutedChanged(muted);
+        emit mutedChanged();
     }
 
     return false;
@@ -942,7 +948,7 @@ void Player::initConnection()
     connect(m_qvplayer->audio(), &VlcAudio::muteChanged,
     this, [ = ](bool mute) {
         if (isDevValid()) {
-            emit mutedChanged(mute);
+            emit mutedChanged();
         } else {
             qDebug() << "device does not start";
         }
@@ -951,61 +957,61 @@ void Player::initConnection()
 
 void Player::initMpris()
 {
-    m_pMpris =  new MprisPlayer();
-    m_pMpris->setServiceName("DeepinMusic");
+    m_mpris =  new MprisPlayer();
+    m_mpris->setServiceName("DeepinMusic");
 
-    m_pMpris->setSupportedMimeTypes(supportedMimeTypes());
-    m_pMpris->setSupportedUriSchemes(QStringList() << "file");
-    m_pMpris->setCanQuit(true);
-    m_pMpris->setCanRaise(true);
-    m_pMpris->setCanSetFullscreen(false);
-    m_pMpris->setHasTrackList(true);
+    m_mpris->setSupportedMimeTypes(supportedMimeTypes());
+    m_mpris->setSupportedUriSchemes(QStringList() << "file");
+    m_mpris->setCanQuit(true);
+    m_mpris->setCanRaise(true);
+    m_mpris->setCanSetFullscreen(false);
+    m_mpris->setHasTrackList(true);
     // setDesktopEntry: see https://specifications.freedesktop.org/mpris-spec/latest/Media_Player.html#Property:DesktopEntry for more
-    m_pMpris->setDesktopEntry("deepin-music");
-    m_pMpris->setIdentity("Deepin Music Player");
+    m_mpris->setDesktopEntry("deepin-music");
+    m_mpris->setIdentity("Deepin Music Player");
 
-    m_pMpris->setCanControl(true);
-    m_pMpris->setCanPlay(true);
-    m_pMpris->setCanGoNext(true);
-    m_pMpris->setCanGoPrevious(true);
-    m_pMpris->setCanPause(true);
-    m_pMpris->setCanSeek(true);
+    m_mpris->setCanControl(true);
+    m_mpris->setCanPlay(true);
+    m_mpris->setCanGoNext(true);
+    m_mpris->setCanGoPrevious(true);
+    m_mpris->setCanPause(true);
+    m_mpris->setCanSeek(true);
 
     connect(this, &Player::signalPlaybackStatusChanged,
     this, [ = ](Player::PlaybackStatus playbackStatus) {
         switch (playbackStatus) {
         case Player::InvalidPlaybackStatus:
         case Player::Stopped:
-            m_pMpris->setPlaybackStatus(Mpris::Stopped);
+            m_mpris->setPlaybackStatus(Mpris::Stopped);
             break;
         case Player::Playing:
-            m_pMpris->setPlaybackStatus(Mpris::Playing);
+            m_mpris->setPlaybackStatus(Mpris::Playing);
             break;
         case Player::Paused:
-            m_pMpris->setPlaybackStatus(Mpris::Paused);
+            m_mpris->setPlaybackStatus(Mpris::Paused);
             break;
         }
     });
 
-    connect(m_pMpris, &MprisPlayer::seekRequested,
+    connect(m_mpris, &MprisPlayer::seekRequested,
     this, [ = ](qlonglong offset) {
         setPosition(position() + offset);
     });
 
-    connect(m_pMpris, &MprisPlayer::setPositionRequested,
+    connect(m_mpris, &MprisPlayer::setPositionRequested,
     this, [ = ](const QDBusObjectPath & trackId, qlonglong offset) {
         Q_UNUSED(trackId)
         setPosition(offset);
     });
 
-    connect(m_pMpris, &MprisPlayer::stopRequested,
+    connect(m_mpris, &MprisPlayer::stopRequested,
     this, [ = ]() {
         stop();
-        m_pMpris->setPlaybackStatus(Mpris::Stopped);
-        m_pMpris->setMetadata(QVariantMap());
+        m_mpris->setPlaybackStatus(Mpris::Stopped);
+        m_mpris->setMetadata(QVariantMap());
     });
 
-    connect(m_pMpris, &MprisPlayer::playRequested,
+    connect(m_mpris, &MprisPlayer::playRequested,
     this, [ = ]() {
         if (status() == Player::Paused) {
             resume();
@@ -1014,25 +1020,25 @@ void Player::initMpris()
                 playMeta(activeMeta());
             }
         }
-        m_pMpris->setPlaybackStatus(Mpris::Playing);
+        m_mpris->setPlaybackStatus(Mpris::Playing);
     });
 
-    connect(m_pMpris, &MprisPlayer::pauseRequested,
+    connect(m_mpris, &MprisPlayer::pauseRequested,
     this, [ = ]() {
         pauseNow();
-        m_pMpris->setPlaybackStatus(Mpris::Paused);
+        m_mpris->setPlaybackStatus(Mpris::Paused);
     });
 
-    connect(m_pMpris, &MprisPlayer::nextRequested,
+    connect(m_mpris, &MprisPlayer::nextRequested,
     this, [ = ]() {
         playNextMeta(true);
-        m_pMpris->setPlaybackStatus(Mpris::Playing);
+        m_mpris->setPlaybackStatus(Mpris::Playing);
     });
 
-    connect(m_pMpris, &MprisPlayer::previousRequested,
+    connect(m_mpris, &MprisPlayer::previousRequested,
     this, [ = ]() {
         playPreMeta();
-        m_pMpris->setPlaybackStatus(Mpris::Playing);
+        m_mpris->setPlaybackStatus(Mpris::Playing);
     });
 }
 

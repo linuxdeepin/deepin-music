@@ -47,18 +47,16 @@ public:
     QColor borderColor() const;
     QBrush background() const;
 
-    void setVolumeFromExternal(int vol);
+    void setVolume(int value);
+    void flushVolumeIcon();
 signals:
     void delayAutoHide();
-    void sigvolumeChanged(int volume);
 
 public slots:
     void delayHide();
     void setBackground(QBrush background);
     void setRadius(int radius);
     void setBorderColor(QColor borderColor);
-    void volumeIcon();
-    void syncMute(bool mute);
     void slotTheme(int type);
     void slotSoundClick();
 protected:
@@ -71,10 +69,13 @@ protected:
 private slots:
     void slotSetVolume(int volume);
 private:
+    // 更新控件UI
+    void updateUI(int volume);
+private:
 //    QScopedPointer<SoundVolumePrivate> d_ptr;
 
 
-    DLabel      *m_lblPersent = nullptr;
+    DLabel      *m_volPersent = nullptr;
     DSlider     *m_volSlider           = nullptr;
 //    SoundPixmapButton *m_btSound         = nullptr;
     DToolButton       *m_btSound         = nullptr;

@@ -88,22 +88,26 @@ public:
     void setPlayList(const QList<MediaMeta> &list);
     // 获取播放列表
     QList<MediaMeta> *getPlayList();
-    //获取dbus实例
+    // 获取dbus实例
     MprisPlayer *getMpris() const;
-    //当前播放playlist的hash
+    // 当前播放playlist的hash
     void setCurrentPlayListHash(QString hash, bool reloadMetaList); //reloadMetaList为true表示需要更新播放列表
     QString getCurrentPlayListHash();
     PlaybackStatus status();
     MediaMeta activeMeta();
     QIcon playingIcon();
-    //启动加载歌曲进度
+    // 启动加载歌曲进度
     void loadMediaProgress(const QString &path);
-    //设置当前歌曲
+    // 设置当前歌曲
     void setActiveMeta(const MediaMeta &meta);
-    //播放列表中第一首歌，当音乐处于停止状态时
+    // 播放列表中第一首歌，当音乐处于停止状态时
     void forcePlayMeta();
-    //初始化均衡器配置
+    // 初始化均衡器配置
     void initEqualizerCfg();
+    // 获取音量状态
+    bool getMuted();
+    // 获取音量大小
+    int getVolume() const;
 
 signals:
     // 播放状态改变
@@ -119,7 +123,9 @@ signals:
     // 播放列表中歌曲被删除
     void signalPlayQueueMetaRemove(const QString &metaHash);
     // 静音状态改变
-    void mutedChanged(bool muted);
+    void mutedChanged();
+    // 音量数值改变
+    void volumeChanged();
 public slots:
     void changePicture();
     void setVolume(int volume);
@@ -146,9 +152,7 @@ signals:
 public:
     bool canControl() const;
     qlonglong position() const;
-    int volume() const;
     PlaybackMode mode() const;
-    bool muted();
     qint64 duration() const;
     double fadeInOutFactor() const;
     bool fadeInOut() const;
@@ -159,7 +163,6 @@ signals:
     void positionChanged(qlonglong position, qlonglong length, qint64 coefficient);
     void sliderReleased(qint64 value);
 
-    void volumeChanged(int volume);
     void modeChanged(PlaybackMode mode);
     /************************************************
      * local mute operation
@@ -233,7 +236,7 @@ private:
     double          m_fadeInOutFactor     = 1.0;
     qlonglong       m_m_position          = 0;//只能用于判断音乐是否正常结束
 
-    MprisPlayer     *m_pMpris = nullptr;    //音乐dbus接口
+    MprisPlayer     *m_mpris = nullptr;    //音乐dbus接口
 
     QPropertyAnimation  *m_fadeInAnimation    = nullptr;
     QPropertyAnimation  *m_fadeOutAnimation   = nullptr;
