@@ -19,7 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "playlistwidget.h"
+#include "playqueuewidget.h"
 
 #include <QDebug>
 #include <QAction>
@@ -45,93 +45,28 @@
 #include "widget/ddropdown.h"
 #include "../core/player.h"
 #include "footerwidget.h"
+#include "commonservice.h"
+#include "mainframe.h"
 
 DWIDGET_USE_NAMESPACE
 DGUI_USE_NAMESPACE
 
 static const int AnimationDelay = 400;
 
-void PlayListWidget::showAnimation(const QSize &size)
+
+PlayQueueWidget::PlayQueueWidget(QWidget *parent) :
+    DFloatingWidget(parent)
 {
-//    int height = 0;
-//    int width = 0;
-//    if (static_cast<QWidget *>(parent())) {
-//        height = static_cast<QWidget *>(parent()->parent())->height();
-//        width = static_cast<QWidget *>(parent()->parent())->width();
-//    }
-
-    rectAnimationSize = size;
-
-    QRect start2(0, rectAnimationSize.height() - 85, rectAnimationSize.width(), 80);
-    QRect end2(0, rectAnimationSize.height() - 450, rectAnimationSize.width(), 445);
-    QPropertyAnimation *animation2 = new QPropertyAnimation(parent(), "geometry");
-    animation2->setEasingCurve(QEasingCurve::InCurve);
-    animation2->setDuration(AnimationDelay);
-    animation2->setStartValue(start2);
-    animation2->setEndValue(end2);
-    animation2->start();
-    this->show();
-    animation2->connect(animation2, &QPropertyAnimation::finished,
-                        animation2, &QPropertyAnimation::deleteLater);
-}
-
-void PlayListWidget::closeAnimation(const QSize &size)
-{
-    rectAnimationSize = size;
-
-    QRect start2(0, rectAnimationSize.height() - 85, rectAnimationSize.width(), 80);
-    QRect end2(0, rectAnimationSize.height() - 450, rectAnimationSize.width(), 445);
-    QPropertyAnimation *animation2 = new QPropertyAnimation(parent(), "geometry");
-    animation2->setEasingCurve(QEasingCurve::InCurve);
-    animation2->setDuration(AnimationDelay);
-    animation2->setStartValue(end2);
-    animation2->setEndValue(start2);
-    animation2->start();
-    animation2->connect(animation2, &QPropertyAnimation::finished,
-                        animation2, &QPropertyAnimation::deleteLater);
-    animation2->connect(animation2, &QPropertyAnimation::finished, this, [ = ]() {
-        this->hide();
-        static_cast<FooterWidget *>(parent())->refreshBackground();
-    });
-
-    emit signalAutoHidden();
-}
-
-void PlayListWidget::slotPlayListChanged()
-{
-    m_playListView->playListChange();
-}
-
-//void PlayListWidget::showEmptyHits(bool empty)
-//{
-//    auto playlist = playListView->playlist();
-//    if (playlist.isNull() || playlist->id() != SearchMusicListID) {
-//        emptyHits->setText(PlayListWidget::tr("No songs"));
-//    } else {
-//        emptyHits->setText(PlayListWidget::tr("No search results"));
-//    }
-//    playListView->setVisible(!empty);
-//    emptyHits->setVisible(empty);
-//}
-
-PlayListWidget::PlayListWidget(QWidget *parent) :
-    DWidget(parent)
-{
-//    setFixedHeight(314);
-//    this->setStyleSheet("background-color:red;");
     setAcceptDrops(true);
 
-    auto layout = new QHBoxLayout(this);
-    layout->setContentsMargins(0, 30, 0, 0);
-    layout->setSpacing(0);
+    this->setBlurBackgroundEnabled(true);
+    this->blurBackground()->setRadius(30);
+    this->blurBackground()->setBlurEnabled(true);
+    this->blurBackground()->setMode(DBlurEffectWidget::GaussianBlur);
 
     m_actionBar = new DWidget;
     m_actionBar->setFixedWidth(200);
     m_actionBar->setObjectName("PlayListActionBar");
-
-    auto actionBarLayout = new QVBoxLayout(m_actionBar);
-    actionBarLayout->setContentsMargins(36, 0, 8, 0);
-    actionBarLayout->setSpacing(0);
 
     m_titleLabel = new DLabel();
     DFontSizeManager::instance()->bind(m_titleLabel, DFontSizeManager::T3);
@@ -160,6 +95,10 @@ PlayListWidget::PlayListWidget(QWidget *parent) :
     m_emptyHits->setObjectName("PlayListEmptyHits");
     m_emptyHits->hide();
 
+
+    QVBoxLayout *actionBarLayout = new QVBoxLayout(m_actionBar);
+    actionBarLayout->setContentsMargins(36, 0, 8, 0);
+    actionBarLayout->setSpacing(0);
     actionBarLayout->addWidget(m_titleLabel);
     actionBarLayout->addWidget(m_infoLabel);
     actionBarLayout->addWidget(m_btClearAll, 0, Qt::AlignLeft);
@@ -170,29 +109,74 @@ PlayListWidget::PlayListWidget(QWidget *parent) :
     m_playListView->setFocusPolicy(Qt::StrongFocus);
 //    m_playListView->installEventFilter(this);
 
-    layout->addWidget(m_actionBar, 0);
-    layout->addWidget(m_playListView, 1);
-    layout->addWidget(m_emptyHits, 0, Qt::AlignCenter);
-    //show scroll bar
-    layout->addSpacing(12);
+    QHBoxLayout *mainLayout = new QHBoxLayout(this);
+    mainLayout->setSpacing(0);
+    mainLayout->addWidget(m_actionBar, 0);
+    mainLayout->addWidget(m_playListView, 1);
+    mainLayout->addWidget(m_emptyHits, 0, Qt::AlignCenter);
+    mainLayout->addSpacing(12);
+    mainLayout->setContentsMargins(0, 30, 0, 70);
 
-//    m_inotifyFiles.start();
-//    ThreadPool::instance()->moveToNewThread(&m_inotifyFiles);
-
-    connect(m_btClearAll, &DPushButton::clicked, this, &PlayListWidget::slotClearAllClicked);
-    connect(m_playListView, &PlayListView::rowCountChanged, this, &PlayListWidget::slotUpdateItemCount);
+    connect(m_btClearAll, &DPushButton::clicked, this, &PlayQueueWidget::slotClearAllClicked);
+    connect(m_playListView, &PlayListView::rowCountChanged, this, &PlayQueueWidget::slotUpdateItemCount);
     // 初始化播放列表数据
     this->slotPlayListChanged();
-    connect(Player::instance(), &Player::signalPlayListChanged, this, &PlayListWidget::slotPlayListChanged);
-    connect(qApp, &QApplication::focusChanged, this, &PlayListWidget::autoHidden);
+    connect(Player::instance(), &Player::signalPlayListChanged, this, &PlayQueueWidget::slotPlayListChanged);
+    connect(qApp, &QApplication::focusChanged, this, &PlayQueueWidget::autoHidden);
+
+    QObject::connect(DGuiApplicationHelper::instance(), &DGuiApplicationHelper::themeTypeChanged,
+                     this, &PlayQueueWidget::setThemeType);
+
+    setThemeType(DGuiApplicationHelper::instance()->themeType());
+
     this->hide();
 }
 
-PlayListWidget::~PlayListWidget()
+void PlayQueueWidget::showAnimation(const QSize &size)
+{
+    QRect start2(0, size.height() - 85, size.width(), 80);
+    QRect end2(0, size.height() - 450, size.width(), 445);
+    QPropertyAnimation *animation2 = new QPropertyAnimation(this, "geometry");
+    animation2->setEasingCurve(QEasingCurve::InCurve);
+    animation2->setDuration(AnimationDelay);
+    animation2->setStartValue(start2);
+    animation2->setEndValue(end2);
+    animation2->start();
+    this->show();
+    animation2->connect(animation2, &QPropertyAnimation::finished,
+                        animation2, &QPropertyAnimation::deleteLater);
+}
+
+void PlayQueueWidget::closeAnimation(const QSize &size)
+{
+    QRect start2(0, size.height() - 85, size.width(), 80);
+    QRect end2(0, size.height() - 450, size.width(), 445);
+    QPropertyAnimation *animation2 = new QPropertyAnimation(this, "geometry");
+    animation2->setEasingCurve(QEasingCurve::InCurve);
+    animation2->setDuration(AnimationDelay);
+    animation2->setStartValue(end2);
+    animation2->setEndValue(start2);
+    animation2->start();
+    animation2->connect(animation2, &QPropertyAnimation::finished,
+                        animation2, &QPropertyAnimation::deleteLater);
+    animation2->connect(animation2, &QPropertyAnimation::finished, this, [ = ]() {
+        this->hide();
+        emit CommonService::getInstance()->signalPlayQueueClosed();
+    });
+
+    emit signalAutoHidden();
+}
+
+void PlayQueueWidget::slotPlayListChanged()
+{
+    m_playListView->playListChange();
+}
+
+PlayQueueWidget::~PlayQueueWidget()
 {
 }
 
-void PlayListWidget::dragEnterEvent(QDragEnterEvent *event)
+void PlayQueueWidget::dragEnterEvent(QDragEnterEvent *event)
 {
     DWidget::dragEnterEvent(event);
     if (event->mimeData()->hasFormat("text/uri-list")) {
@@ -203,7 +187,7 @@ void PlayListWidget::dragEnterEvent(QDragEnterEvent *event)
     }
 }
 
-void PlayListWidget::dropEvent(QDropEvent *event)
+void PlayQueueWidget::dropEvent(QDropEvent *event)
 {
     DWidget::dropEvent(event);
 
@@ -222,17 +206,18 @@ void PlayListWidget::dropEvent(QDropEvent *event)
 //    }
 }
 
-void PlayListWidget::resizeEvent(QResizeEvent *event)
+void PlayQueueWidget::resizeEvent(QResizeEvent *event)
 {
     //Q_D(PlayListWidget);
     DWidget::resizeEvent(event);
 }
 
-void PlayListWidget::slotTheme(int type)
+void PlayQueueWidget::setThemeType(int type)
 {
-    if (type == 0)
-        type = DGuiApplicationHelper::instance()->themeType();
     if (type == 1) {
+        QColor backMaskColor(255, 255, 255, 180);
+        this->blurBackground()->setMaskColor(backMaskColor);
+
 //        auto titleLabelPalette = d->infoLabel->palette();
 //        titleLabelPalette.setColor(DPalette::ButtonText, ("#000000"));
 //        d->titleLabel->setPalette(titleLabelPalette);
@@ -253,6 +238,9 @@ void PlayListWidget::slotTheme(int type)
         pl.setColor(DPalette::Shadow, sbcolor);
         m_btClearAll->setPalette(pl);
     } else {
+        QColor backMaskColor(37, 37, 37, 140);
+        this->blurBackground()->setMaskColor(backMaskColor);
+
 //        auto titleLabelPalette = d->infoLabel->palette();
 //        titleLabelPalette.setColor(DPalette::ButtonText, ("#FFFFFF"));
 //        d->titleLabel->setPalette(titleLabelPalette);
@@ -277,13 +265,13 @@ void PlayListWidget::slotTheme(int type)
     m_playListView->setThemeType(type);
 }
 
-void PlayListWidget::slotClearAllClicked()
+void PlayQueueWidget::slotClearAllClicked()
 {
     Player::instance()->clearPlayList();
     emit Player::instance()->signalPlayListChanged();
 }
 
-void PlayListWidget::slotUpdateItemCount()
+void PlayQueueWidget::slotUpdateItemCount()
 {
     QString infoStr;
     int inum = m_playListView->model()->rowCount();
@@ -297,7 +285,7 @@ void PlayListWidget::slotUpdateItemCount()
     m_infoLabel->setText(infoStr);
 }
 
-void PlayListWidget::autoHidden(QWidget *old, QWidget *now)
+void PlayQueueWidget::autoHidden(QWidget *old, QWidget *now)
 {
     if (old && now) {
         if (now->objectName() == "infoDialog" || now->objectName() == "InfoTitle" ||
@@ -306,13 +294,21 @@ void PlayListWidget::autoHidden(QWidget *old, QWidget *now)
             PlayListView *playListQueue = static_cast<PlayListView *>(now);
             if (playListQueue && playListQueue->objectName() == "PlayListView") {
                 if (!playListQueue->getIsPlayQueue()) {
-                    if (!this->isHidden())
-                        closeAnimation(rectAnimationSize);
+                    if (!this->isHidden()) {
+                        QWidget *parent = static_cast<QWidget *>(this->parent());
+                        if (parent) {
+                            closeAnimation(parent->size());
+                        }
+                    }
                 }
             } else {
                 if (now->objectName() != "FooterWidget") {
-                    if (!this->isHidden())
-                        closeAnimation(rectAnimationSize);
+                    if (!this->isHidden()) {
+                        QWidget *parent = static_cast<QWidget *>(this->parent());
+                        if (parent) {
+                            closeAnimation(parent->size());
+                        }
+                    }
                 }
             }
         }

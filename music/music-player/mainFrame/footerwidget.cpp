@@ -57,11 +57,11 @@
 #include "widget/musicpixmapbutton.h"
 #include "widget/waveform.h"
 #include "widget/soundvolume.h"
-#include "playlistwidget.h"
 #include "databaseservice.h"
 #include "ac-desktop-define.h"
 #include "tooltips.h"
 #include "filter.h"
+#include "mainframe.h"
 
 static const QString sPlayStatusValuePlaying    = "playing";
 static const QString sPlayStatusValuePause      = "pause";
@@ -107,7 +107,7 @@ void FooterWidget::initUI(QWidget *parent)
     m_forwardWidget->setMode(DBlurEffectWidget::GaussianBlur);
     QColor maskColor(255, 255, 255, 76);
     m_forwardWidget->setMaskColor(maskColor);
-    refreshBackground();
+    slotFlushBackground();
 
 //    this->layout()->addWidget(m_forwardWidget);
 
@@ -269,16 +269,16 @@ void FooterWidget::initUI(QWidget *parent)
     AC_SET_OBJECT_NAME(m_btSound, AC_Sound);
     AC_SET_ACCESSIBLE_NAME(m_btSound, AC_Sound);
     //添加歌曲列表按钮
-    m_btPlayList = new DIconButton(this);
-    m_btPlayList->setIcon(QIcon::fromTheme("playlist"));
-    m_btPlayList->setObjectName("FooterActionPlayList");
-    m_btPlayList->setFixedSize(50, 50);
-    m_btPlayList->setCheckable(true);
-    m_btPlayList->setIconSize(QSize(36, 36));
-    mainHBoxlayout->addWidget(m_btPlayList, 0);
+    m_btPlayQueue = new DIconButton(this);
+    m_btPlayQueue->setIcon(QIcon::fromTheme("playlist"));
+    m_btPlayQueue->setObjectName("FooterActionPlayList");
+    m_btPlayQueue->setFixedSize(50, 50);
+    m_btPlayQueue->setCheckable(true);
+    m_btPlayQueue->setIconSize(QSize(36, 36));
+    mainHBoxlayout->addWidget(m_btPlayQueue, 0);
 
-    AC_SET_OBJECT_NAME(m_btPlayList, AC_PlayList);
-    AC_SET_ACCESSIBLE_NAME(m_btPlayList, AC_PlayList);
+    AC_SET_OBJECT_NAME(m_btPlayQueue, AC_PlayList);
+    AC_SET_ACCESSIBLE_NAME(m_btPlayQueue, AC_PlayList);
 
     // 音量控件
     m_volSlider = new SoundVolume(this->parentWidget());
@@ -301,9 +301,9 @@ void FooterWidget::initUI(QWidget *parent)
     installTipHint(m_btFavorite, tr("Favorite"));
     installTipHint(m_btLyric, tr("Lyrics"));
     installTipHint(m_btPlayMode, tr("Play Mode"));
-    installTipHint(m_btPlayList, tr("Play Queue"));
+    installTipHint(m_btPlayQueue, tr("Play Queue"));
 
-    connect(m_btPlayList, SIGNAL(clicked(bool)), this, SLOT(slotPlaylistClick(bool)));
+    connect(m_btPlayQueue, SIGNAL(clicked(bool)), this, SLOT(slotPlayQueueClick(bool)));
     connect(m_btLyric, SIGNAL(clicked(bool)), this, SLOT(slotLrcClick(bool)));
     connect(m_btPlayMode, SIGNAL(clicked(bool)), this, SLOT(slotPlayModeClick(bool)));
     connect(m_btCover, SIGNAL(clicked(bool)), this, SLOT(slotCoverClick(bool)));
@@ -311,16 +311,16 @@ void FooterWidget::initUI(QWidget *parent)
     connect(m_btNext, SIGNAL(clicked(bool)), this, SLOT(slotNextClick(bool)));
     connect(m_btPrev, SIGNAL(clicked(bool)), this, SLOT(slotPreClick(bool)));
     connect(m_btSound, &DIconButton::clicked, this, &FooterWidget::slotSoundClick);
+    connect(m_btFavorite, &DIconButton::clicked, this, &FooterWidget::slotFavoriteClick);
 
     connect(Player::instance(), &Player::signalPlaybackStatusChanged,
             this, &FooterWidget::slotPlaybackStatusChanged);
     connect(Player::instance(), &Player::signalMediaMetaChanged,
             this, &FooterWidget::slotMediaMetaChanged);
 
-    connect(m_btFavorite, &DIconButton::clicked, this, &FooterWidget::slotFavoriteClick);
-
     connect(CommonService::getInstance(), &CommonService::fluashFavoriteBtnIco, this, &FooterWidget::fluashFavoriteBtnIco);
     connect(CommonService::getInstance(), &CommonService::setPlayModel, this, &FooterWidget::setPlayModel);
+    connect(CommonService::getInstance(), &CommonService::signalPlayQueueClosed, this, &FooterWidget::slotFlushBackground);
     //dbus
     connect(Player::instance()->getMpris(), SIGNAL(volumeRequested(double)), this, SLOT(onDbusVolumeChanged(double)));
     connect(m_volSlider, &SoundVolume::sigvolumeChanged, this, &FooterWidget::slotSliderVolumeChanged);
@@ -434,7 +434,7 @@ void FooterWidget::setPlayProperty(Player::PlaybackStatus status)
 
 void FooterWidget::slotPlayQueueAutoHidden()
 {
-    m_btPlayList->setChecked(false);
+    m_btPlayQueue->setChecked(false);
 }
 
 void FooterWidget::slotPlayClick(bool click)
@@ -539,7 +539,7 @@ void FooterWidget::slotMediaMetaChanged()
     } else {
         m_btCover->setIcon(QIcon::fromTheme("info_cover"));
     }
-    refreshBackground();
+    slotFlushBackground();
     QFontMetrics fm(m_title->font());
     QString titleText = fm.elidedText(meta.title, Qt::ElideMiddle, m_title->maximumWidth());
     m_title->setText(titleText.isEmpty() ? tr("Unknown Title") : titleText);
@@ -576,7 +576,7 @@ void FooterWidget::setPlayModel(Player::PlaybackMode playModel)
     Player::instance()->setMode(static_cast<Player::PlaybackMode>(playModel));
 }
 
-void FooterWidget::onDbusVolumeChanged(double volume) //from dbus set
+void FooterWidget::onDbusVolumeChanged(double volume)   //from dbus set
 {
     //need to sync volume to dbus
 //    if (d->volumeMonitoring.needSyncLocalFlag(1)) {
@@ -594,6 +594,20 @@ void FooterWidget::slotSliderVolumeChanged(int volume)
     Q_UNUSED(volume)
     bool mute = Player::instance()->muted();
     slotMutedChanged(mute);
+}
+
+void FooterWidget::slotPlayQueueClick(bool click)
+{
+    Q_UNUSED(click)
+
+    if (!this->isHidden()) {
+        m_forwardWidget->setSourceImage(QImage());
+    }
+
+    MainFrame *mainFree =  static_cast<MainFrame *>(parent());
+    if (mainFree) {
+        mainFree->playQueueAnimation();
+    }
 }
 
 void FooterWidget::slotMutedChanged(bool mute)
@@ -681,53 +695,10 @@ void FooterWidget::slotLoadDetector(const QString &hash)
         qDebug() << __FUNCTION__ << " at line:" << __LINE__ << " m_metaBufferDetector is not initailized";
 }
 
-void FooterWidget::slotPlaylistClick(bool click)
-{
-    Q_UNUSED(click)
-    qDebug() << "zy------FooterWidget::onPlaylistClick";
-    int height = 0;
-    int width = 0;
-    if (static_cast<QWidget *>(parent())) {
-        height = static_cast<QWidget *>(parent())->height();
-        width = static_cast<QWidget *>(parent())->width();
-    }
-    if (m_playListWidget == nullptr) {
-        m_playListWidget = new PlayListWidget(this);
-        m_playListWidget->slotTheme(m_slotTheme);
-
-        connect(m_playListWidget, &PlayListWidget::signalAutoHidden, this, &FooterWidget::slotPlayQueueAutoHidden);
-    }
-
-    QWidget *parent = static_cast<QWidget *>(this->parent());
-    if (parent) {
-        if (m_playListWidget->isHidden()) {
-            m_playListWidget->showAnimation(parent->size());
-            m_forwardWidget->setSourceImage(QImage());
-        } else {
-            m_playListWidget->closeAnimation(parent->size());
-        }
-    }
-}
-
-void FooterWidget::showEvent(QShowEvent *event)
-{
-    Q_UNUSED(event)
-
-    if (m_playListWidget) {
-        m_playListWidget->setFixedWidth(width());
-    }
-    if (m_forwardWidget) {
-        m_forwardWidget->setGeometry(6, height() - 75, width() - 12, 70);
-    }
-}
-
 void FooterWidget::resizeEvent(QResizeEvent *event)
 {
     if (m_forwardWidget) {
         m_forwardWidget->setGeometry(6, height() - 75, width() - 12, 70);
-    }
-    if (m_playListWidget) {
-        m_playListWidget->setGeometry(0, 0, width(), height() - 80);
     }
 
     moveVolSlider();
@@ -735,7 +706,7 @@ void FooterWidget::resizeEvent(QResizeEvent *event)
     DWidget::resizeEvent(event);
 }
 
-void FooterWidget::refreshBackground()
+void FooterWidget::slotFlushBackground()
 {
     QImage cover = QImage(":/icons/deepin/builtin/actions/info_cover_142px.svg");
     QString imagesDirPath = Global::cacheDir() + "/images/" + Player::instance()->activeMeta().hash + ".jpg";
@@ -744,15 +715,11 @@ void FooterWidget::refreshBackground()
         cover = QImage(Global::cacheDir() + "/images/" + Player::instance()->activeMeta().hash + ".jpg");
     }
 
-    //cut image
-//    qDebug() << "-------cover.width() = " << cover.width();
     double windowScale = (width() * 1.0) / height();
-
-//    qDebug() << "-------windowScale = " << windowScale;
     int imageWidth = static_cast<int>(cover.height() * windowScale);
-//    qDebug() << "-------imageWidth = " << imageWidth;
     QImage coverImage;
-    if (m_playListWidget && m_playListWidget->isVisible()) {
+
+    if (m_btPlayQueue && m_btPlayQueue->isChecked()) {
         coverImage.fill(QColor(255, 255, 255));
     } else {
         if (imageWidth > cover.width()) {
@@ -812,10 +779,10 @@ void FooterWidget::slotTheme(int type)
         pa.setColor(DPalette::Dark, QColor("#FFFFFF"));
         m_btSound->setPalette(pa);
 
-        pa = m_btPlayList->palette();
+        pa = m_btPlayQueue->palette();
         pa.setColor(DPalette::Light, QColor("#FFFFFF"));
         pa.setColor(DPalette::Dark, QColor("#FFFFFF"));
-        m_btPlayList->setPalette(pa);
+        m_btPlayQueue->setPalette(pa);
     } else {
         QColor backMaskColor(37, 37, 37, 140);
         blurBackground()->setMaskColor(backMaskColor);
@@ -850,15 +817,12 @@ void FooterWidget::slotTheme(int type)
         pa.setColor(DPalette::Dark, QColor("#444444"));
         m_btSound->setPalette(pa);
 
-        pa = m_btPlayList->palette();
+        pa = m_btPlayQueue->palette();
         pa.setColor(DPalette::Light, QColor("#444444"));
         pa.setColor(DPalette::Dark, QColor("#444444"));
-        m_btPlayList->setPalette(pa);
+        m_btPlayQueue->setPalette(pa);
     }
 
     m_waveform->setThemeType(type);
     m_volSlider->slotTheme(type);
-
-    if (m_playListWidget)
-        m_playListWidget->slotTheme(type);
 }

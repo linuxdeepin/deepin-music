@@ -62,6 +62,7 @@
 #include "shortcut.h"
 #include "dequalizerdialog.h"
 #include "closeconfirmdialog.h"
+#include "playqueuewidget.h"
 DWIDGET_USE_NAMESPACE
 
 const QString s_PropertyViewname = "viewname";
@@ -151,9 +152,9 @@ void MainFrame::initUI(bool showLoading)
     m_musicContentWidget = new MusicContentWidget(this);
     m_musicContentWidget->setVisible(showLoading);
 
-    m_footer = new FooterWidget(this);
-    m_footer->setVisible(showLoading);
-    connect(m_footer, SIGNAL(lyricClicked()), this, SLOT(slotLyricClicked()));
+    m_footerWidget = new FooterWidget(this);
+    m_footerWidget->setVisible(showLoading);
+    connect(m_footerWidget, SIGNAL(lyricClicked()), this, SLOT(slotLyricClicked()));
 
     m_importWidget = new ImportWidget(this);
     m_importWidget->setVisible(!showLoading);
@@ -255,15 +256,15 @@ void MainFrame::initMenuAndShortcut()
 
     connect(playAction, &QAction::triggered,
     this, [ = ]() {
-        m_footer->slotPlayClick(true);
+        m_footerWidget->slotPlayClick(true);
     });
     connect(prevAction, &QAction::triggered,
     this, [ = ]() {
-        m_footer->slotPreClick(true);
+        m_footerWidget->slotPreClick(true);
     });
     connect(nextAction, &QAction::triggered,
     this, [ = ]() {
-        m_footer->slotNextClick(true);
+        m_footerWidget->slotNextClick(true);
     });
     connect(quitAction, &QAction::triggered,
     this, [ = ]() {
@@ -327,7 +328,7 @@ void MainFrame::autoStartToPlay()
                 Player::instance()->setPosition(MusicSettings::value("base.play.last_position").toInt());
             });
             //加载波形图数据
-            m_footer->slotLoadDetector(lastMeta);
+            m_footerWidget->slotLoadDetector(lastMeta);
         }
 
         //自动播放处理
@@ -379,8 +380,8 @@ void MainFrame::slotTheme(DGuiApplicationHelper::ColorType themeType)
     if (m_musicContentWidget != nullptr) {
         m_musicContentWidget->slotTheme(themeType);
     }
-    if (m_footer != nullptr) {
-        m_footer->slotTheme(themeType);
+    if (m_footerWidget != nullptr) {
+        m_footerWidget->slotTheme(themeType);
     }
 
     if (m_musicLyricWidget) {
@@ -402,10 +403,10 @@ void MainFrame::slotLyricClicked()
     // 歌词控件显示与关闭动画
     if (m_musicLyricWidget->isHidden()) {
         m_musicLyricWidget->showAnimation(this->size());
-        m_musicContentWidget->showAnimationToUp(this->size() - QSize(0, m_footer->height() + titlebar()->height() + 5));
+        m_musicContentWidget->showAnimationToUp(this->size() - QSize(0, m_footerWidget->height() + titlebar()->height() + 5));
     } else {
         m_musicLyricWidget->closeAnimation(this->size());
-        m_musicContentWidget->closeAnimation(this->size() - QSize(0, m_footer->height() + titlebar()->height() + 5));
+        m_musicContentWidget->closeAnimation(this->size() - QSize(0, m_footerWidget->height() + titlebar()->height() + 5));
     }
 }
 
@@ -414,8 +415,8 @@ void MainFrame::slotImportFinished()
     // 导入界面显示与关闭动画
     if (m_importWidget->isVisible()) {
         m_musicContentWidget->show();
-        m_musicContentWidget->showAnimationToDown(this->size() - QSize(0, m_footer->height() + titlebar()->height() + 5));
-        m_footer->show();
+        m_musicContentWidget->showAnimationToDown(this->size() - QSize(0, m_footerWidget->height() + titlebar()->height() + 5));
+        m_footerWidget->show();
         m_importWidget->closeAnimationToDown(this->size());
     }
     m_titlebarwidget->setEnabled(true);
@@ -514,7 +515,7 @@ void MainFrame::slotMenuTriggered(QAction *action)
         MusicSettings::setOption("base.play.last_position", curLastPosition);
 
         //update shortcut
-        m_footer->updateShortcut();
+        m_footerWidget->updateShortcut();
         //update fade
         Player::instance()->setFadeInOut(MusicSettings::value("base.play.fade_in_out").toBool());
     }
@@ -529,8 +530,8 @@ void MainFrame::slotAllMusicCleared()
 {
     qDebug() << "MainFrame::slotAllMusicCleared";
     // 导入界面显示与关闭动画
-    m_musicContentWidget->closeAnimationToLeft(this->size() - QSize(0, m_footer->height() + titlebar()->height() + 5));
-    m_footer->hide();
+    m_musicContentWidget->closeAnimationToLeft(this->size() - QSize(0, m_footerWidget->height() + titlebar()->height() + 5));
+    m_footerWidget->hide();
     m_importWidget->showImportHint();
     m_importWidget->showAnimationToLeft(this->size());
     m_titlebarwidget->setEnabled(false);
@@ -619,21 +620,16 @@ void MainFrame::showEvent(QShowEvent *event)
     }
     this->setFocus();
     qDebug() << "zy------MainWindow::showEvent " << QTime::currentTime().toString("hh:mm:ss.zzz");
-    if (m_footer) {
-        m_footer->setGeometry(0, height() - 85, width(), 80);
+    if (m_footerWidget) {
+        m_footerWidget->setGeometry(0, height() - 85, width(), 80);
     }
     if (m_musicContentWidget) {
-        m_musicContentWidget->setGeometry(0, 50, width(), height() - m_footer->height() - titlebar()->height() - 5);
+        m_musicContentWidget->setGeometry(0, 50, width(), height() - m_footerWidget->height() - titlebar()->height() - 5);
     }
     if (m_importWidget) {
         m_importWidget->setGeometry(0, 50, width(), height() - titlebar()->height());
     }
 }
-
-//void MainFrame::enterEvent(QEvent *event)
-//{
-
-//}
 
 void MainFrame::resizeEvent(QResizeEvent *e)
 {
@@ -664,11 +660,16 @@ void MainFrame::resizeEvent(QResizeEvent *e)
 //        musicListWidget->setFixedSize(newSize);
 //    }
 
-    if (m_footer) {
-        m_footer->setGeometry(0, height() - 85, width(), 80);
+    if (m_footerWidget) {
+        m_footerWidget->setGeometry(0, height() - 85, width(), 80);
     }
     if (m_musicContentWidget) {
-        m_musicContentWidget->setGeometry(0, 50, width(), height() - m_footer->height() - titlebar()->height() - 5);
+        m_musicContentWidget->setGeometry(0, 50, width(), height() - m_footerWidget->height() - titlebar()->height() - 5);
+    }
+
+    if (m_playQueueWidget) {
+        m_playQueueWidget->setGeometry(0, m_footerWidget->y() - m_playQueueWidget->height() + m_footerWidget->height(),
+                                       width(), m_playQueueWidget->height());
     }
 
 //    if (!d->originCoverImage.isNull()) {
@@ -726,4 +727,27 @@ void MainFrame::hideEvent(QHideEvent *event)
     MusicSettings::setOption("base.play.geometry", saveGeometry());
     qDebug() << "hideEvent=============";
 }
+
+void MainFrame::playQueueAnimation()
+{
+    if (m_playQueueWidget == nullptr) {
+        m_playQueueWidget = new PlayQueueWidget(this);
+        m_footerWidget->setGeometry(0, height() - 85, width(), 80);
+        // 设置播放队列再footer下面
+        m_playQueueWidget->raise();
+        m_footerWidget->raise();
+
+        connect(m_playQueueWidget, &PlayQueueWidget::signalAutoHidden, m_footerWidget, &FooterWidget::slotPlayQueueAutoHidden);
+    }
+
+    if (m_playQueueWidget->isHidden()) {
+        m_playQueueWidget->showAnimation(this->size());
+    } else {
+        m_playQueueWidget->closeAnimation(this->size());
+    }
+}
+
+
+
+
 

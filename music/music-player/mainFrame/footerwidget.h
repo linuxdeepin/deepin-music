@@ -40,7 +40,6 @@ class Label;
 class SoundVolume;
 class MusicPixmapButton;
 class Waveform;
-class PlayListWidget;
 class MetaBufferDetector;
 class QShortcut;
 class HintFilter;
@@ -51,7 +50,6 @@ public:
     explicit FooterWidget(QWidget *parent = nullptr);
     ~FooterWidget() override;
 
-    void refreshBackground();
     void slotTheme(int type);
     // we can wait to init until frame has displayed
     void initShortcut();
@@ -67,12 +65,14 @@ private:
 signals:
     void lyricClicked();
 public slots:
+    // 刷新footer背景
+    void slotFlushBackground();
     // 播放队列自动收起
     void slotPlayQueueAutoHidden();
     // 点击播放按钮
     void slotPlayClick(bool click);
     // 点击播放列表按钮
-    void slotPlaylistClick(bool click);
+    void slotPlayQueueClick(bool click);
     // 点击歌词按钮
     void slotLrcClick(bool click);
     // 点击模仿模式按钮
@@ -100,7 +100,6 @@ public slots:
     // 快捷键响应
     void slotShortCutTriggered();
 protected:
-    virtual void showEvent(QShowEvent *event) Q_DECL_OVERRIDE;
     virtual void resizeEvent(QResizeEvent *event) Q_DECL_OVERRIDE;
 private:
     int m_slotTheme = 0;
@@ -119,7 +118,7 @@ private:
     DIconButton     *m_btLyric    = nullptr;
     DIconButton     *m_btPlayMode = nullptr;
     DIconButton     *m_btSound    = nullptr;
-    DIconButton     *m_btPlayList = nullptr;
+    DIconButton     *m_btPlayQueue = nullptr;
 
     // short cut on footer
     QShortcut           *volUpShortcut       = nullptr;
@@ -131,7 +130,6 @@ private:
 
     SoundVolume       *m_volSlider  = nullptr;
     DBackgroundGroup   *m_ctlWidget  = nullptr;
-    PlayListWidget    *m_playListWidget = nullptr;
     MetaBufferDetector  *m_metaBufferDetector = nullptr;
     HintFilter          *m_hintFilter = nullptr;
 };

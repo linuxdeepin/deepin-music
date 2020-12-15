@@ -25,7 +25,6 @@
 //#include "dequalizerdialog.h"
 
 //#include "importwidget.h"
-#include "playlistwidget.h"
 #include "musiclyricwidget.h"
 #include "footerwidget.h"
 //#include "loadwidget.h"

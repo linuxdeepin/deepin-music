@@ -23,32 +23,30 @@
 
 #include <DWidget>
 #include <DLabel>
+#include <DFloatingWidget>
 
 DWIDGET_USE_NAMESPACE
 
 class PlayListView;
 class InotifyFiles;
-class PlayListWidget : public DWidget
+class PlayQueueWidget : public DFloatingWidget
 {
     Q_OBJECT
 public:
-    explicit PlayListWidget(QWidget *parent = Q_NULLPTR);
-    ~PlayListWidget() override;
+    explicit PlayQueueWidget(QWidget *parent = Q_NULLPTR);
+    ~PlayQueueWidget() override;
 
     void showAnimation(const QSize &size);
     void closeAnimation(const QSize &size);
-//    void showEmptyHits(bool empty);
 
 public slots:
     void slotPlayListChanged();
 
-    void slotTheme(int type);
+    void setThemeType(int type);
 
 signals:
     void signalAutoHidden();
 //    void requestCustomContextMenu(const QPoint &pos, char type);
-//    void musicFileMiss();
-//    void btPlayList();
 
 private slots:
     void slotClearAllClicked();
@@ -65,9 +63,6 @@ protected:
     virtual void resizeEvent(QResizeEvent *event) Q_DECL_OVERRIDE;
 
 private:
-    // 播放队列收缩动画大小
-    QSize rectAnimationSize;
-
     DLabel              *m_titleLabel     = nullptr;
     DLabel              *m_infoLabel      = nullptr;
     DLabel              *m_emptyHits      = nullptr;

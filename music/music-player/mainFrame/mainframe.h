@@ -39,6 +39,7 @@ class MusicLyricWidget;
 class ImportWidget;
 class QShortcut;
 class DequalizerDialog;
+class PlayQueueWidget;
 class MainFrame : public DMainWindow
 {
     Q_OBJECT
@@ -50,6 +51,8 @@ public:
     MusicContentWidget *getMusicContentWidget();
     // 启动自动播放和进度条设置
     void autoStartToPlay();
+    // 播放列表显示与关闭
+    void playQueueAnimation();
 public slots:
     // 显示弹窗消息
     void showPopupMessage(const QString &songListName, int selectCount, int insertCount);
@@ -75,19 +78,19 @@ private slots:
     void slotPlayFromFileMaganager();
 protected:
     void showEvent(QShowEvent *event) Q_DECL_OVERRIDE;
-    //void enterEvent(QEvent *event) Q_DECL_OVERRIDE;
     void resizeEvent(QResizeEvent *e) Q_DECL_OVERRIDE;
     void closeEvent(QCloseEvent *event) Q_DECL_OVERRIDE;
     void hideEvent(QHideEvent *event) Q_DECL_OVERRIDE;
 private:
     DTitlebar           *m_titlebar = nullptr;
     TitlebarWidget      *m_titlebarwidget = nullptr;
-    FooterWidget        *m_footer = nullptr;
+    FooterWidget        *m_footerWidget = nullptr;
     MusicContentWidget  *m_musicContentWidget = nullptr;
     SearchResult        *m_searchResult = nullptr;
     MusicLyricWidget    *m_musicLyricWidget = nullptr;
     ImportWidget        *m_importWidget = nullptr;
     DequalizerDialog    *m_dequalizerDialog = nullptr;
+    PlayQueueWidget      *m_playQueueWidget = nullptr;
     //mainframe action
     QAction             *m_newSonglistAction    = nullptr;
     QAction             *m_addMusicFiles        = nullptr;

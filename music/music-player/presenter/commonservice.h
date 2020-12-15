@@ -49,6 +49,8 @@ signals:
     void setPlayModel(Player::PlaybackMode playModel);
     // 弹窗消息
     void showPopupMessage(const QString &songListName, int selectCount, int insertCount);
+    // 播放队列关闭动画播放完毕，刷新背景
+    void signalPlayQueueClosed();
 private:
 
 private:
