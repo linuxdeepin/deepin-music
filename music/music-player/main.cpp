@@ -102,10 +102,19 @@ int main(int argc, char *argv[])
 
     MusicSettings::init();
     if (!OpenFilePaths.isEmpty()) {
-        auto fi = QFileInfo(OpenFilePaths.at(0));
-        auto url = QUrl::fromLocalFile(fi.absoluteFilePath());
-        DataBaseService::getInstance()->setFirstSong(url.toLocalFile());
-        DataBaseService::getInstance()->importMedias("all", OpenFilePaths); //导入数据库
+        QStringList strList;
+        for (QString str : OpenFilePaths) {
+            QUrl url = QUrl(str);
+            if (url.toLocalFile().isEmpty()) {
+                strList.append(str);
+            } else {
+                strList.append(url.toLocalFile());
+            }
+        }
+        if (strList.size() > 0) {
+            DataBaseService::getInstance()->setFirstSong(strList.at(0));
+            DataBaseService::getInstance()->importMedias("all", strList); //导入数据库
+        }
     }
     app.loadTranslator();
 
@@ -113,15 +122,18 @@ int main(int argc, char *argv[])
         qDebug() << "another deepin music has started";
         for (auto curStr : parser.positionalArguments()) {
             if (!curStr.isEmpty()) {
-                QFileInfo fi(curStr);
-                QUrl url = QUrl::fromLocalFile(fi.absoluteFilePath());
+                QUrl url = QUrl(curStr);//::fromLocalFile(fi.absoluteFilePath());
                 while (true) {
                     QDBusInterface iface("org.mpris.MediaPlayer2.DeepinMusic",
                                          "/org/mpris/MediaPlayer2",
                                          "org.mpris.MediaPlayer2.Player",
                                          QDBusConnection::sessionBus());
                     if (iface.isValid()) {
-                        iface.asyncCall("OpenUri", url.toString());
+                        if (url.toLocalFile().isEmpty()) {
+                            iface.asyncCall("OpenUri", curStr);
+                        } else {
+                            iface.asyncCall("OpenUri", url.toLocalFile());
+                        }
                         break;
                     }
                 }
