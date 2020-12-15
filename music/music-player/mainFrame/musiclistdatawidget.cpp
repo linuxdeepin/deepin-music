@@ -257,6 +257,11 @@ void MusicListDataWidget::slotImportFinished()
     qDebug() << "---MusicListDataWidget::slotImportFinished m_currentHash = " << m_currentHash;
     if (m_currentHash == "all" || m_currentHash == "album" || m_currentHash == "artist") {
         refreshInfoLabel(m_currentHash);
+        if (m_albumListView && m_pStackedWidget->currentWidget() == m_albumListView) {
+            m_albumListView->setAlbumListData(DataBaseService::getInstance()->allAlbumInfos()); //set album data
+        } else if (m_singerListView && m_pStackedWidget->currentWidget() == m_singerListView) {
+            m_singerListView->setSingerListData(DataBaseService::getInstance()->allSingerInfos()); //set singer data
+        }
     }
 }
 

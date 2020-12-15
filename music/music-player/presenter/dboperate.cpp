@@ -103,12 +103,24 @@ void DBOperate::slotImportMedias(const QStringList &urllist)
                 QString  strtp = it.next();
                 MediaMeta mediaMeta = m_mediaLibrary->creatMediaMeta(strtp);
                 mediaMeta.updateSearchIndex();
+                if (mediaMeta.album.isEmpty()) {
+                    mediaMeta.album = tr("Unknown album");
+                }
+                if (mediaMeta.singer.isEmpty()) {
+                    mediaMeta.singer = tr("Unknown artist");
+                }
                 emit sigImportMetaFromThread(mediaMeta);
             }
         } else {
             QString strtp = filepath;
             MediaMeta mediaMeta = m_mediaLibrary->creatMediaMeta(strtp);
             mediaMeta.updateSearchIndex();
+            if (mediaMeta.album.isEmpty()) {
+                mediaMeta.album = tr("Unknown album");
+            }
+            if (mediaMeta.singer.isEmpty()) {
+                mediaMeta.singer = tr("Unknown artist");
+            }
             emit sigImportMetaFromThread(mediaMeta);
         }
     }
