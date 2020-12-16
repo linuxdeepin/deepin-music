@@ -65,7 +65,7 @@ MusicListDataWidget::MusicListDataWidget(QWidget *parent) :
 {
     this->initUI();
     connect(CommonService::getInstance(), &CommonService::signalSwitchToView, this, &MusicListDataWidget::slotViewChanged);
-    connect(CommonService::getInstance(), &CommonService::signalPlayAllMusic, this, &MusicListDataWidget::onPlayAllClicked);
+    connect(CommonService::getInstance(), &CommonService::signalPlayAllMusic, this, &MusicListDataWidget::slotPlayAllClicked);
     connect(DataBaseService::getInstance(), &DataBaseService::signalImportFinished,
             this, &MusicListDataWidget::slotImportFinished);
     connect(DataBaseService::getInstance(), &DataBaseService::signalRmvSong,
@@ -92,6 +92,9 @@ void MusicListDataWidget::showEmptyHits(int count)
 // 左侧菜单切换ListView
 void MusicListDataWidget::slotViewChanged(ListPageSwitchType switchtype, const QString &hashOrSearchword)
 {
+    // 任意非0数，隐藏无搜索结果界面
+    showEmptyHits(1);
+
     CommonService::getInstance()->setListPageSwitchType(switchtype);
     qDebug() << "------MusicListDataWidget::viewChanged switchtype = " << switchtype;
     switch (switchtype) {
@@ -112,7 +115,7 @@ void MusicListDataWidget::slotViewChanged(ListPageSwitchType switchtype, const Q
         refreshModeBtn(m_albumListView->viewMode());
         refreshInfoLabel("album");
         refreshSortAction();
-        return;
+        break;
     }
     case SingerType: {
         if (!m_singerListView) {
@@ -129,7 +132,7 @@ void MusicListDataWidget::slotViewChanged(ListPageSwitchType switchtype, const Q
         refreshModeBtn(m_singerListView->viewMode());
         refreshInfoLabel("artist");
         refreshSortAction();
-        return;
+        break;
     }
     case AllSongListType: {
         m_musicListView->initAllSonglist("all");
@@ -195,17 +198,15 @@ void MusicListDataWidget::slotViewChanged(ListPageSwitchType switchtype, const Q
         }
         refreshModeBtn(m_searchResultTabWidget->getViewMode());
         refreshSortAction();
-        return;
+        break;
     }
     case PreType: {
         slotViewChanged(m_preSwitchtype, m_preHash);
-        // 任意非0数，隐藏无搜索结果界面
-        showEmptyHits(1);
         break;
     }
     default:
         refreshSortAction();
-        return;
+        break;
     }
 }
 
@@ -358,7 +359,7 @@ void MusicListDataWidget::dropEvent(QDropEvent *event)
     }
 }
 
-void MusicListDataWidget::onPlayAllClicked()
+void MusicListDataWidget::slotPlayAllClicked()
 {
     switch (CommonService::getInstance()->getListPageSwitchType()) {
     case AlbumType:
@@ -605,7 +606,7 @@ void MusicListDataWidget::initBtPlayAll(QHBoxLayout *layout)
     m_btPlayAll->installEventFilter(this);
     layout->addWidget(m_btPlayAll, 0, Qt::AlignVCenter);
 
-    connect(m_btPlayAll, &DPushButton::clicked, this, &MusicListDataWidget::onPlayAllClicked);
+    connect(m_btPlayAll, &DPushButton::clicked, this, &MusicListDataWidget::slotPlayAllClicked);
 }
 
 void MusicListDataWidget::initCountLabelAndListMode(QHBoxLayout *layout)

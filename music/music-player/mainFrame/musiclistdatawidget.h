@@ -66,7 +66,7 @@ protected:
     virtual void dropEvent(QDropEvent *event) Q_DECL_OVERRIDE;
 private slots:
     // 播放所有歌曲
-    void onPlayAllClicked();
+    void slotPlayAllClicked();
 private:
     void initUI();
     void initTitle(QHBoxLayout *layout);

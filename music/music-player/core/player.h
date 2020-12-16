@@ -87,8 +87,8 @@ public:
     QList<MediaMeta> *getPlayList();
     // 获取dbus实例
     MprisPlayer *getMpris() const;
-    // 当前播放playlist的hash
-    void setCurrentPlayListHash(QString hash, bool reloadMetaList); //reloadMetaList为true表示需要更新播放列表
+    // 当前播放playlist的hash, reloadMetaList为true表示需要更新播放列表
+    void setCurrentPlayListHash(QString hash, bool reloadMetaList);
     QString getCurrentPlayListHash();
     PlaybackStatus status();
     MediaMeta getActiveMeta();
