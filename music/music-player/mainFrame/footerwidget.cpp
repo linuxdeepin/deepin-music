@@ -348,9 +348,9 @@ void FooterWidget::moveVolSlider()
 {
     QPoint centerPos = m_btSound->mapToGlobal(m_btSound->rect().center());
     m_volSlider->adjustSize();
-    auto sz = m_volSlider->size();
+    QSize sz = m_volSlider->size();
     centerPos.setX(centerPos.x()  - sz.width() / 2);
-    centerPos.setY(centerPos.y() - 32 - sz.height());
+    centerPos.setY(centerPos.y() - 35 - sz.height());
     centerPos = m_volSlider->mapFromGlobal(centerPos);
     centerPos = m_volSlider->mapToParent(centerPos);
     m_volSlider->move(centerPos);
@@ -816,5 +816,4 @@ void FooterWidget::slotTheme(int type)
     }
 
     m_waveform->setThemeType(type);
-    m_volSlider->slotTheme(type);
 }

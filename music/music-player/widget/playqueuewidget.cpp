@@ -92,8 +92,9 @@ PlayQueueWidget::PlayQueueWidget(QWidget *parent) :
 //    this->installEventFilter(this);
 
     m_emptyHits = new DLabel(this);
+    m_emptyHits->setText(tr("No songs"));
     m_emptyHits->setObjectName("PlayListEmptyHits");
-    m_emptyHits->hide();
+    m_emptyHits->setVisible(false);
 
 
     QVBoxLayout *actionBarLayout = new QVBoxLayout(m_actionBar);
@@ -105,7 +106,6 @@ PlayQueueWidget::PlayQueueWidget(QWidget *parent) :
     actionBarLayout->addStretch();
 
     m_playListView = new PlayListView("play", true);
-    m_playListView->show();
     m_playListView->setFocusPolicy(Qt::StrongFocus);
 //    m_playListView->installEventFilter(this);
 
@@ -123,6 +123,9 @@ PlayQueueWidget::PlayQueueWidget(QWidget *parent) :
     this->slotPlayListChanged();
     connect(Player::getInstance(), &Player::signalPlayListChanged, this, &PlayQueueWidget::slotPlayListChanged);
     connect(qApp, &QApplication::focusChanged, this, &PlayQueueWidget::autoHidden);
+
+    connect(DataBaseService::getInstance(), &DataBaseService::signalAllMusicCleared,
+            this, &PlayQueueWidget::slotAllMusicCleared);
 
     QObject::connect(DGuiApplicationHelper::instance(), &DGuiApplicationHelper::themeTypeChanged,
                      this, &PlayQueueWidget::setThemeType);
@@ -170,6 +173,14 @@ void PlayQueueWidget::closeAnimation(const QSize &size)
 void PlayQueueWidget::slotPlayListChanged()
 {
     m_playListView->playListChange();
+
+    if (m_playListView->getMusicListData().size() == 0) {
+        m_emptyHits->setVisible(true);
+        m_playListView->setVisible(false);
+    } else {
+        m_emptyHits->setVisible(false);
+        m_playListView->setVisible(true);
+    }
 }
 
 PlayQueueWidget::~PlayQueueWidget()
@@ -312,6 +323,18 @@ void PlayQueueWidget::autoHidden(QWidget *old, QWidget *now)
                 }
             }
         }
+    }
+}
+
+// 解决进入导入界面播放队列未收起Bug
+void PlayQueueWidget::slotAllMusicCleared()
+{
+    QWidget *parent = static_cast<QWidget *>(this->parent());
+    if (parent) {
+        this->setGeometry(0, parent->height() - 85, parent->width(), 80);
+        emit CommonService::getInstance()->signalPlayQueueClosed();
+        emit signalAutoHidden();
+        this->hide();
     }
 }
 

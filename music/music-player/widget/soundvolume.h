@@ -35,17 +35,11 @@ using namespace Dtk::Widget;
 class SoundVolume : public QWidget
 {
     Q_OBJECT
-    Q_PROPERTY(int radius READ radius WRITE setRadius)
-    Q_PROPERTY(QBrush background READ background WRITE setBackground)
-    Q_PROPERTY(QColor borderColor READ borderColor WRITE setBorderColor)
 public:
     explicit SoundVolume(QWidget *parent = nullptr);
     ~SoundVolume() override;
 
     int volume() const;
-    int radius() const;
-    QColor borderColor() const;
-    QBrush background() const;
 
     void setVolume(int value);
     void flushVolumeIcon();
@@ -54,10 +48,7 @@ signals:
 
 public slots:
     void delayHide();
-    void setBackground(QBrush background);
-    void setRadius(int radius);
-    void setBorderColor(QColor borderColor);
-    void slotTheme(int type);
+    void setThemeType(int type);
     void slotSoundClick();
 protected:
     virtual void showEvent(QShowEvent *event) Q_DECL_OVERRIDE;
@@ -71,6 +62,8 @@ private slots:
 private:
     // 更新控件UI
     void updateUI(int volume);
+    // 初始化背景
+    void initBgImage();
 private:
 //    QScopedPointer<SoundVolumePrivate> d_ptr;
 
@@ -79,13 +72,9 @@ private:
     DSlider     *m_volSlider           = nullptr;
 //    SoundPixmapButton *m_btSound         = nullptr;
     DToolButton       *m_btSound         = nullptr;
+    QPixmap bgImage;
 
-    QBrush      m_background;
-    QColor      m_borderColor = QColor(0, 0, 0,  255 * 2 / 10);
-
-    int         m_radius      = 20;
     bool        m_mouseIn     = false;
-    int         m_sThemeType  = 0;
 };
 
 

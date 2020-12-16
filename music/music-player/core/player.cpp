@@ -113,7 +113,6 @@ QStringList Player::supportedMimeTypes() const
 Player::~Player()
 {
     qDebug() << "destroy Player";
-    delete m_qvmedia;
     delete m_qvplayer;
     delete m_qvinstance;
     delete m_fadeOutAnimation;
@@ -392,6 +391,10 @@ void Player::playRmvMeta(const QStringList &metalist)
                             if (m_MetaList[i].hash == str) {
                                 emit signalPlayQueueMetaRemove(str);
                                 m_MetaList.removeAt(i);
+
+                                if (m_MetaList.size() == 0) {
+                                    emit signalPlayListChanged();
+                                }
                                 break;
                             }
                         }
@@ -428,6 +431,7 @@ void Player::playRmvMeta(const QStringList &metalist)
 
     if (m_MetaList.size() == 0) {
         stop();
+        emit signalPlayListChanged();
     }
 }
 

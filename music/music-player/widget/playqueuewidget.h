@@ -54,6 +54,8 @@ private slots:
     void slotUpdateItemCount();
     // 自动收起
     void autoHidden(QWidget *old, QWidget *now);
+    // 返回导入界面，收起播放队列
+    void slotAllMusicCleared();
 
 protected:
     virtual void dragEnterEvent(QDragEnterEvent *event) Q_DECL_OVERRIDE;
