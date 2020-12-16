@@ -866,28 +866,22 @@ void PlayListView::insertRow(int row, MediaMeta meta)
 
 void PlayListView::keyPressEvent(QKeyEvent *event)
 {
-//    switch (event->modifiers()) {
-//    case Qt::NoModifier:
-//        switch (event->key()) {
-//        case Qt::Key_Delete: {
-//            QItemSelectionModel *selection = this->selectionModel();
-//            d->removeSelection(selection);
-//        }
-//        break;
-//        case Qt::Key_Return: {
-//            QItemSelectionModel *selection = this->selectionModel();
-//            if (!selection->selectedRows().isEmpty()) {
-//                auto index = selection->selectedRows().first();
-//                if (d->model->meta(index) == playlist()->playing()) {
-//                    Q_EMIT resume(d->model->meta(index));
-//                } else {
-//                    Q_EMIT playMedia(d->model->meta(index));
-//                }
-//            }
-//        }
-//        break;
-//        }
-//        break;
+    switch (event->modifiers()) {
+    case Qt::NoModifier:
+        if (event->key() == Qt::Key_Return) {
+            QItemSelectionModel *selection = this->selectionModel();
+            if (!selection->selectedRows().isEmpty()) {
+                QModelIndex index = selection->selectedRows().first();
+
+                MediaMeta meta = index.data(Qt::UserRole).value<MediaMeta>();
+                if (Player::getInstance()->getActiveMeta() == meta) {
+                    Player::getInstance()->resume();
+                } else {
+                    Player::getInstance()->playMeta(meta);
+                }
+            }
+        }
+        break;
 //    case Qt::ShiftModifier:
 //        switch (event->key()) {
 //        case Qt::Key_Delete:
@@ -907,9 +901,9 @@ void PlayListView::keyPressEvent(QKeyEvent *event)
 //            break;
 //        }
 //        break;
-//    default:
-//        break;
-//    }
+    default:
+        break;
+    }
 
     QAbstractItemView::keyPressEvent(event);
 }
