@@ -151,7 +151,7 @@ void PlayItemDelegate::drawIconMode(QPainter &painter, const QStyleOptionViewIte
 {
     auto listview = qobject_cast<const PlayListView *>(option.widget);
 
-    MediaMeta activeMeta = Player::instance()->activeMeta();
+    MediaMeta activeMeta = Player::getInstance()->getActiveMeta();
     MediaMeta meta = index.data(Qt::UserRole).value<MediaMeta>();
 
     painter.setRenderHint(QPainter::Antialiasing);
@@ -323,7 +323,7 @@ void PlayItemDelegate::drawListMode(QPainter &painter, const QStyleOptionViewIte
 //        qWarning() << msg;
 //        return;
 //    }
-    MediaMeta activeMeta = Player::instance()->activeMeta();
+    MediaMeta activeMeta = Player::getInstance()->getActiveMeta();
     MediaMeta itemMeta = index.data(Qt::UserRole).value<MediaMeta>();
     if (activeMeta.hash == itemMeta.hash) {
         nameColor = QColor(DGuiApplicationHelper::instance()->applicationPalette().highlight().color());

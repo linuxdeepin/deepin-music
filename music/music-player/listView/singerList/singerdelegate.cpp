@@ -98,13 +98,13 @@ bool SingerDataDelegate::editorEvent(QEvent *event, QAbstractItemModel *model, c
     QRect rect = option.rect.adjusted(borderWidth, borderWidth, -borderWidth, -borderWidth);
     if (index.isValid() && listview->viewMode() == QListView::IconMode && event->type() == QEvent::MouseButtonPress) {
         SingerInfo singertmp = index.data(Qt::UserRole).value<SingerInfo>();
-        bool playFlag = singertmp.musicinfos.keys().contains(Player::instance()->activeMeta().hash);
-        Player::PlaybackStatus playStatue = Player::instance()->status();
+        bool playFlag = singertmp.musicinfos.keys().contains(Player::getInstance()->getActiveMeta().hash);
+        Player::PlaybackStatus playStatue = Player::getInstance()->status();
         if (playFlag) {
             if (playStatue == Player::Playing) {
-                Player::instance()->pause();
+                Player::getInstance()->pause();
             } else if (playStatue == Player::Paused) {
-                Player::instance()->resume();
+                Player::getInstance()->resume();
             }
         } else {
             QRect t_hoverRect(rect.x() + 50, rect.y() + 36, 50, 50);
@@ -119,11 +119,11 @@ bool SingerDataDelegate::editorEvent(QEvent *event, QAbstractItemModel *model, c
 
             if (fillPolygon.containsPoint(pressPos, Qt::OddEvenFill)) {
                 if (singertmp.musicinfos.values().size() > 0) {
-                    emit CommonService::getInstance()->setPlayModel(Player::RepeatAll);
-                    Player::instance()->setCurrentPlayListHash("album", false);
-                    Player::instance()->setPlayList(singertmp.musicinfos.values());
-                    Player::instance()->playMeta(singertmp.musicinfos.values().first());
-                    emit Player::instance()->signalPlayListChanged();
+                    emit CommonService::getInstance()->signalSetPlayModel(Player::RepeatAll);
+                    Player::getInstance()->setCurrentPlayListHash("album", false);
+                    Player::getInstance()->setPlayList(singertmp.musicinfos.values());
+                    Player::getInstance()->playMeta(singertmp.musicinfos.values().first());
+                    emit Player::getInstance()->signalPlayListChanged();
                 }
             }
         }
@@ -177,8 +177,8 @@ void SingerDataDelegate::drawIconMode(QPainter &painter, const QStyleOptionViewI
     painter.drawRoundRect(rect/*.adjusted(1, 1, -1, 1)*/, 10, 10);
     painter.restore();
 
-    bool playFlag = singertmp.musicinfos.keys().contains(Player::instance()->activeMeta().hash);
-    Player::PlaybackStatus playStatue = Player::instance()->status();
+    bool playFlag = singertmp.musicinfos.keys().contains(Player::getInstance()->getActiveMeta().hash);
+    Player::PlaybackStatus playStatue = Player::getInstance()->status();
 
     QColor fillColor(0, 0, 0);
     fillColor.setAlphaF(0.3);

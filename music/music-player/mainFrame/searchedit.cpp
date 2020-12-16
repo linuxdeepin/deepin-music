@@ -71,7 +71,7 @@ SearchEdit::SearchEdit(QWidget *parent) : DSearchEdit(parent)
         auto alltext = this->text();
         if (alltext.isEmpty()) {
             //清除搜索时，回退到上一次界面
-            emit CommonService::getInstance()->switchToView(PreType, "");
+            emit CommonService::getInstance()->signalSwitchToView(PreType, "");
         }
     });
 }
@@ -122,7 +122,7 @@ void SearchEdit::onTextChanged()
     if (alltext.isEmpty()) {
         m_result->hide();
         //清除搜索时，回退到上一次界面
-        emit CommonService::getInstance()->switchToView(PreType, "");
+        emit CommonService::getInstance()->signalSwitchToView(PreType, "");
         return;
     }
 
@@ -174,6 +174,6 @@ void SearchEdit::onReturnPressed()
     if (text.length() == 0)
         return;
     m_result->hide();
-    emit CommonService::getInstance()->switchToView(SearchMusicResultType, text);
+    emit CommonService::getInstance()->signalSwitchToView(SearchMusicResultType, text);
 }
 

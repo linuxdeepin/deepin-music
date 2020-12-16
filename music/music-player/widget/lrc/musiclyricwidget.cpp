@@ -115,13 +115,13 @@ MusicLyricWidget::MusicLyricWidget(QWidget *parent)
 
     connect(m_serachbt, &DPushButton::clicked, this, &MusicLyricWidget::onsearchBt);
 
-    connect(Player::instance(), &Player::signalMediaMetaChanged,
+    connect(Player::getInstance(), &Player::signalMediaMetaChanged,
             this, &MusicLyricWidget::onCoverChanged);
 
-    connect(Player::instance(), &Player::signalMediaMetaChanged,
+    connect(Player::getInstance(), &Player::signalMediaMetaChanged,
             this, &MusicLyricWidget::onMusicPlayed);
 
-    connect(Player::instance(), &Player::positionChanged,
+    connect(Player::getInstance(), &Player::positionChanged,
             this, &MusicLyricWidget::onProgressChanged);
 }
 
@@ -132,7 +132,7 @@ MusicLyricWidget::~MusicLyricWidget()
 
 void MusicLyricWidget::updateUI()
 {
-    MediaMeta meta = Player::instance()->activeMeta();
+    MediaMeta meta = Player::getInstance()->getActiveMeta();
     QFileInfo coverInfo(Global::cacheDir() + "/images/" + meta.hash + ".jpg");
     QImage cover;
     if (coverInfo.exists()) {
@@ -230,7 +230,7 @@ void MusicLyricWidget::onProgressChanged(qint64 value, qint64 /*length*/)
 
 void MusicLyricWidget::onMusicPlayed()
 {
-    QFileInfo fileInfo(Player::instance()->activeMeta().localPath);
+    QFileInfo fileInfo(Player::getInstance()->getActiveMeta().localPath);
     QString lrcPath = fileInfo.dir().path() + QDir::separator() + fileInfo.completeBaseName() + ".lrc";
     QFile file(lrcPath);
     if (!file.exists()) {

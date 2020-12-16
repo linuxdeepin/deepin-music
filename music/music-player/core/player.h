@@ -32,7 +32,7 @@
 #include <MprisPlayer>
 #include <mediameta.h>
 
-#include <util/singleton.h>
+#include "util/singleton.h"
 #include "vlc/MediaPlayer.h"
 
 class QAudioBuffer;
@@ -67,10 +67,7 @@ public:
     };
 
     static const int VolumeStep = 10;
-
-    explicit Player(QObject *parent = nullptr);
-    ~Player();
-    //zy---begin
+    // zy---begin
 public:
     void playMeta(MediaMeta meta);
     void pause();
@@ -94,7 +91,7 @@ public:
     void setCurrentPlayListHash(QString hash, bool reloadMetaList); //reloadMetaList为true表示需要更新播放列表
     QString getCurrentPlayListHash();
     PlaybackStatus status();
-    MediaMeta activeMeta();
+    MediaMeta getActiveMeta();
     QIcon playingIcon();
     // 启动加载歌曲进度
     void loadMediaProgress(const QString &path);
@@ -123,9 +120,9 @@ signals:
     // 播放列表中歌曲被删除
     void signalPlayQueueMetaRemove(const QString &metaHash);
     // 静音状态改变
-    void mutedChanged();
+    void signalMutedChanged();
     // 音量数值改变
-    void volumeChanged();
+    void signalVolumeChanged();
 public slots:
     void changePicture();
     void setVolume(int volume);
@@ -134,10 +131,12 @@ private:
     QTimer         *m_timer = nullptr;
     QIcon           m_playingIcon = QIcon::fromTheme("music_play1");
     int             m_playingCount = 0;
-    QString         m_currentPlayListHash;//当前正在播放的playlist的hash
-    PlaybackMode    m_mode    = Player::RepeatAll;//循环播放模式
+    // 当前正在播放的playlist的hash
+    QString         m_currentPlayListHash;
+    // 循环播放模式
+    PlaybackMode    m_mode    = Player::RepeatAll;
     int             m_volume      = 50.0;
-    //zy--end
+    // zy--end
 public:
     void init();
     void stop();
@@ -201,6 +200,10 @@ public slots:
      * **********************************/
     bool isValidDbusMute();
 private:
+    explicit Player(QObject *parent = nullptr);
+    ~Player();
+    friend class DMusic::DSingleton<Player>;
+private:
     void readSinkInputPath();
     bool setMusicVolume(double volume);
     bool setMusicMuted(bool muted);
@@ -208,11 +211,10 @@ private:
     bool isDevValid();
     void initConnection();
     void initMpris();//dbus interface
-    friend class DMusic::DSingleton<Player>;
-    //begin
+    // begin
     MediaMeta m_ActiveMeta;
     QList<MediaMeta> m_MetaList;
-    //end
+    // end
 
     // player property
     bool m_canControl     = true;
@@ -228,15 +230,16 @@ private:
     VlcInstance             *m_qvinstance;
     VlcMedia                *m_qvmedia;
     VlcMediaPlayer          *m_qvplayer;
-//    MetaPtr                 m_activeMeta;
 
     bool            m_playOnLoad  = true;
-    bool            m_firstPlayOnLoad  = true; //外部双击打开处理一次
+    // 外部双击打开处理一次
+    bool            m_firstPlayOnLoad  = true;
     bool            m_fadeInOut   = false;
     double          m_fadeInOutFactor     = 1.0;
-    qlonglong       m_m_position          = 0;//只能用于判断音乐是否正常结束
-
-    MprisPlayer     *m_mpris = nullptr;    //音乐dbus接口
+    // 只能用于判断音乐是否正常结束
+    qlonglong       m_m_position          = 0;
+    // 音乐dbus接口
+    MprisPlayer     *m_mpris = nullptr;
 
     QPropertyAnimation  *m_fadeInAnimation    = nullptr;
     QPropertyAnimation  *m_fadeOutAnimation   = nullptr;

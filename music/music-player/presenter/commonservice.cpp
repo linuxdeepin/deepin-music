@@ -23,15 +23,6 @@
 #include "util/pinyinsearch.h"
 #include "util/global.h"
 
-CommonService *CommonService::instance = nullptr;
-CommonService *CommonService::getInstance()
-{
-    if (nullptr == instance) {
-        instance = new CommonService();
-    }
-    return instance;
-}
-
 void CommonService::setListPageSwitchType(ListPageSwitchType lpst)
 {
     listPageSwitchType = lpst;

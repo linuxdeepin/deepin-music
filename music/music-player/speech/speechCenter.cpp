@@ -8,12 +8,6 @@ enum class PLAYMODE {
     radom              = 3   //随机播放
 };
 
-SpeechCenter *SpeechCenter::getInstance()
-{
-    static SpeechCenter mInstance;
-    return &mInstance;
-}
-
 SpeechCenter::SpeechCenter(QObject *parent) : QObject(parent)
 {
 

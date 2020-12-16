@@ -83,7 +83,7 @@ public slots:
     void slotPreClick(bool click);
     void slotFavoriteClick(bool click);
     // 刷新收藏按钮图标
-    void fluashFavoriteBtnIco();
+    void fluashFavoriteBtnIcon();
     // 点击音量按钮
     void slotSoundClick(bool click);
     void slotPlaybackStatusChanged(Player::PlaybackStatus statue);

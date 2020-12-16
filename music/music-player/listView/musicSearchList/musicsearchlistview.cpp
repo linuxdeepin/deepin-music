@@ -309,19 +309,19 @@ void MusicSearchListview::slotOnClicked(const QModelIndex &index)
 {
     if (m_SearchType == SearchType::SearchMusic) {
         MediaMeta mediaMeta = index.data(Qt::UserRole + SearchType::SearchMusic).value<MediaMeta>();
-        emit CommonService::getInstance()->switchToView(SearchMusicResultType, mediaMeta.title);
+        emit CommonService::getInstance()->signalSwitchToView(SearchMusicResultType, mediaMeta.title);
         if (m_SearchResultWidget) {
             m_SearchResultWidget->setLineEditSearchString(mediaMeta.title);
         }
     } else if (m_SearchType == SearchType::SearchSinger) {
         SingerInfo singerInfo = index.data(Qt::UserRole + SearchType::SearchSinger).value<SingerInfo>();
-        emit CommonService::getInstance()->switchToView(SearchSingerResultType, singerInfo.singerName);
+        emit CommonService::getInstance()->signalSwitchToView(SearchSingerResultType, singerInfo.singerName);
         if (m_SearchResultWidget) {
             m_SearchResultWidget->setLineEditSearchString(singerInfo.singerName);
         }
     } else if (m_SearchType == SearchType::SearchAlbum) {
         AlbumInfo albumInfo = index.data(Qt::UserRole + SearchType::SearchAlbum).value<AlbumInfo>();
-        emit CommonService::getInstance()->switchToView(SearchAlbumResultType, albumInfo.albumName);
+        emit CommonService::getInstance()->signalSwitchToView(SearchAlbumResultType, albumInfo.albumName);
         if (m_SearchResultWidget) {
             m_SearchResultWidget->setLineEditSearchString(albumInfo.albumName);
         }

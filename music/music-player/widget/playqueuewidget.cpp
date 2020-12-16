@@ -121,7 +121,7 @@ PlayQueueWidget::PlayQueueWidget(QWidget *parent) :
     connect(m_playListView, &PlayListView::rowCountChanged, this, &PlayQueueWidget::slotUpdateItemCount);
     // 初始化播放列表数据
     this->slotPlayListChanged();
-    connect(Player::instance(), &Player::signalPlayListChanged, this, &PlayQueueWidget::slotPlayListChanged);
+    connect(Player::getInstance(), &Player::signalPlayListChanged, this, &PlayQueueWidget::slotPlayListChanged);
     connect(qApp, &QApplication::focusChanged, this, &PlayQueueWidget::autoHidden);
 
     QObject::connect(DGuiApplicationHelper::instance(), &DGuiApplicationHelper::themeTypeChanged,
@@ -267,8 +267,8 @@ void PlayQueueWidget::setThemeType(int type)
 
 void PlayQueueWidget::slotClearAllClicked()
 {
-    Player::instance()->clearPlayList();
-    emit Player::instance()->signalPlayListChanged();
+    Player::getInstance()->clearPlayList();
+    emit Player::getInstance()->signalPlayListChanged();
 }
 
 void PlayQueueWidget::slotUpdateItemCount()

@@ -313,23 +313,23 @@ void FooterWidget::initUI(QWidget *parent)
     connect(m_btSound, &DIconButton::clicked, this, &FooterWidget::slotSoundClick);
     connect(m_btFavorite, &DIconButton::clicked, this, &FooterWidget::slotFavoriteClick);
 
-    connect(Player::instance(), &Player::signalPlaybackStatusChanged,
+    connect(Player::getInstance(), &Player::signalPlaybackStatusChanged,
             this, &FooterWidget::slotPlaybackStatusChanged);
-    connect(Player::instance(), &Player::signalMediaMetaChanged,
+    connect(Player::getInstance(), &Player::signalMediaMetaChanged,
             this, &FooterWidget::slotMediaMetaChanged);
 
-    connect(CommonService::getInstance(), &CommonService::fluashFavoriteBtnIco, this, &FooterWidget::fluashFavoriteBtnIco);
-    connect(CommonService::getInstance(), &CommonService::setPlayModel, this, &FooterWidget::setPlayModel);
+    connect(CommonService::getInstance(), &CommonService::signalFluashFavoriteBtnIcon, this, &FooterWidget::fluashFavoriteBtnIcon);
+    connect(CommonService::getInstance(), &CommonService::signalSetPlayModel, this, &FooterWidget::setPlayModel);
     connect(CommonService::getInstance(), &CommonService::signalPlayQueueClosed, this, &FooterWidget::slotFlushBackground);
     //dbus
-    connect(Player::instance()->getMpris(), SIGNAL(volumeRequested(double)), this, SLOT(slotDbusVolumeChanged(double)));
+    connect(Player::getInstance()->getMpris(), SIGNAL(volumeRequested(double)), this, SLOT(slotDbusVolumeChanged(double)));
     connect(m_volSlider, &SoundVolume::delayAutoHide, this, [ = ]() {
         m_btSound->setChecked(false);
     });
 
-    connect(Player::instance(), &Player::volumeChanged, this, &FooterWidget::slotFlushSoundIcon);
-    connect(Player::instance(), &Player::mutedChanged, this, &FooterWidget::slotFlushSoundIcon);
-    connect(DataBaseService::getInstance(), &DataBaseService::sigFavSongRemove, this, &FooterWidget::fluashFavoriteBtnIco);
+    connect(Player::getInstance(), &Player::signalVolumeChanged, this, &FooterWidget::slotFlushSoundIcon);
+    connect(Player::getInstance(), &Player::signalMutedChanged, this, &FooterWidget::slotFlushSoundIcon);
+    connect(DataBaseService::getInstance(), &DataBaseService::signalFavSongRemove, this, &FooterWidget::fluashFavoriteBtnIcon);
 
     slotFlushSoundIcon();
 }
@@ -445,9 +445,9 @@ void FooterWidget::slotPlayClick(bool click)
     Q_UNUSED(click)
     Player::PlaybackStatus status = m_btPlay->property("playstatus").value<Player::PlaybackStatus>();
     if (status == Player::PlaybackStatus::Playing) {
-        Player::instance()->pause();
+        Player::getInstance()->pause();
     } else if (status == Player::PlaybackStatus::Paused) {
-        Player::instance()->resume();
+        Player::getInstance()->resume();
     }
 }
 
@@ -480,32 +480,32 @@ void FooterWidget::slotCoverClick(bool click)
 void FooterWidget::slotNextClick(bool click)
 {
     Q_UNUSED(click)
-    Player::instance()->playNextMeta(false);
+    Player::getInstance()->playNextMeta(false);
 }
 
 void FooterWidget::slotPreClick(bool click)
 {
     Q_UNUSED(click)
-    Player::instance()->playPreMeta();
+    Player::getInstance()->playPreMeta();
 }
 
 void FooterWidget::slotFavoriteClick(bool click)
 {
     Q_UNUSED(click)
-    bool isFavorite = DataBaseService::getInstance()->favoriteMusic(Player::instance()->activeMeta());
-    fluashFavoriteBtnIco();
+    bool isFavorite = DataBaseService::getInstance()->favoriteMusic(Player::getInstance()->getActiveMeta());
+    fluashFavoriteBtnIcon();
 
     if (isFavorite)
-        CommonService::getInstance()->showPopupMessage(
+        emit CommonService::getInstance()->signalShowPopupMessage(
             DataBaseService::getInstance()->getPlaylistNameByUUID("fav"), 1, 1);
 }
 
-void FooterWidget::fluashFavoriteBtnIco()
+void FooterWidget::fluashFavoriteBtnIcon()
 {
     if (CommonService::getInstance()->getListPageSwitchType() == ListPageSwitchType::FavType)
-        emit CommonService::getInstance()->switchToView(FavType, "fav");
+        emit CommonService::getInstance()->signalSwitchToView(FavType, "fav");
 
-    if (DataBaseService::getInstance()->favoriteExist(Player::instance()->activeMeta())) {
+    if (DataBaseService::getInstance()->favoriteExist(Player::getInstance()->getActiveMeta())) {
         m_btFavorite->setIcon(QIcon::fromTheme("collection1_press"));
     } else {
         m_btFavorite->setIcon(QIcon::fromTheme("dcc_collection"));
@@ -531,7 +531,7 @@ void FooterWidget::slotPlaybackStatusChanged(Player::PlaybackStatus statue)
 
 void FooterWidget::slotMediaMetaChanged()
 {
-    MediaMeta meta = Player::instance()->activeMeta();
+    MediaMeta meta = Player::getInstance()->getActiveMeta();
     //替换封面按钮与背景图片
     QString imagesDirPath = Global::cacheDir() + "/images/" + meta.hash + ".jpg";
     QFileInfo file(imagesDirPath);
@@ -552,7 +552,7 @@ void FooterWidget::slotMediaMetaChanged()
     m_metaBufferDetector->onClearBufferDetector();
     m_metaBufferDetector->onBufferDetector(meta.localPath, meta.hash);
 
-    if (DataBaseService::getInstance()->favoriteExist(Player::instance()->activeMeta())) {
+    if (DataBaseService::getInstance()->favoriteExist(Player::getInstance()->getActiveMeta())) {
         m_btFavorite->setIcon(QIcon::fromTheme("collection1_press"));
     } else {
         m_btFavorite->setIcon(QIcon::fromTheme("dcc_collection"));
@@ -576,7 +576,7 @@ void FooterWidget::setPlayModel(Player::PlaybackMode playModel)
     }
 
     m_btPlayMode->setProperty("playModel", QVariant(playModel));
-    Player::instance()->setMode(static_cast<Player::PlaybackMode>(playModel));
+    Player::getInstance()->setMode(static_cast<Player::PlaybackMode>(playModel));
 }
 
 // Dbus
@@ -609,9 +609,9 @@ void FooterWidget::slotPlayQueueClick(bool click)
 
 void FooterWidget::slotFlushSoundIcon()
 {
-    int volume = Player::instance()->getVolume();
+    int volume = Player::getInstance()->getVolume();
 
-    if (Player::instance()->getMuted() || volume == 0) {
+    if (Player::getInstance()->getMuted() || volume == 0) {
         m_btSound->setIcon(QIcon::fromTheme("mute"));
     } else {
         if (volume > 77) {
@@ -638,26 +638,26 @@ void FooterWidget::slotShortCutTriggered()
 
     if (objCut == volUpShortcut) {
         //dbus volume up
-        int volup = Player::instance()->getVolume() + VolumeStep;
+        int volup = Player::getInstance()->getVolume() + VolumeStep;
         if (volup > 100)//max volume
             volup = 100;
-        Player::instance()->setVolume(volup); //system volume
+        Player::getInstance()->setVolume(volup); //system volume
 
-        Player::instance()->getMpris()->setVolume(static_cast<double>(volup) / 100);
+        Player::getInstance()->getMpris()->setVolume(static_cast<double>(volup) / 100);
     }
 
     if (objCut == volDownShortcut) {
         //dbus volume up
-        int voldown = Player::instance()->getVolume() - VolumeStep;
+        int voldown = Player::getInstance()->getVolume() - VolumeStep;
         if (voldown < 0)//mini volume
             voldown = 0;
-        Player::instance()->setVolume(voldown); //system volume
+        Player::getInstance()->setVolume(voldown); //system volume
 
-        Player::instance()->getMpris()->setVolume(static_cast<double>(voldown) / 100);
+        Player::getInstance()->getMpris()->setVolume(static_cast<double>(voldown) / 100);
     }
 
     if (objCut == nextShortcut) {
-        Player::instance()->playNextMeta(false);
+        Player::getInstance()->playNextMeta(false);
     }
 
     if (objCut == playPauseShortcut) { //pause
@@ -665,12 +665,12 @@ void FooterWidget::slotShortCutTriggered()
     }
 
     if (objCut == previousShortcut) {
-        Player::instance()->playPreMeta();
+        Player::getInstance()->playPreMeta();
     }
 
     if (objCut == muteShortcut) {
-        bool mute = Player::instance()->getMuted();
-        Player::instance()->setMuted(!mute);
+        bool mute = Player::getInstance()->getMuted();
+        Player::getInstance()->setMuted(!mute);
         m_volSlider->flushVolumeIcon();
     }
 }
@@ -701,10 +701,10 @@ void FooterWidget::resizeEvent(QResizeEvent *event)
 void FooterWidget::slotFlushBackground()
 {
     QImage cover = QImage(":/icons/deepin/builtin/actions/info_cover_142px.svg");
-    QString imagesDirPath = Global::cacheDir() + "/images/" + Player::instance()->activeMeta().hash + ".jpg";
+    QString imagesDirPath = Global::cacheDir() + "/images/" + Player::getInstance()->getActiveMeta().hash + ".jpg";
     QFileInfo file(imagesDirPath);
     if (file.exists()) {
-        cover = QImage(Global::cacheDir() + "/images/" + Player::instance()->activeMeta().hash + ".jpg");
+        cover = QImage(Global::cacheDir() + "/images/" + Player::getInstance()->getActiveMeta().hash + ".jpg");
     }
 
     double windowScale = (width() * 1.0) / height();

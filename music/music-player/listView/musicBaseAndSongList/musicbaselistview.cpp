@@ -95,12 +95,12 @@ MusicBaseListView::MusicBaseListView(QWidget *parent) : DListView(parent)
     init();
     connect(this, &MusicBaseListView::clicked, this, [](QModelIndex midx) {
         ListPageSwitchType type = midx.data(Qt::UserRole).value<ListPageSwitchType>();
-        emit CommonService::getInstance()->switchToView(type, "");
+        emit CommonService::getInstance()->signalSwitchToView(type, "");
     });
 
-    connect(Player::instance(), SIGNAL(signalUpdatePlayingIcon()),
-            this, SLOT(slotUpdatePlayingIcon()), Qt::DirectConnection);
-    connect(CommonService::getInstance(), &CommonService::switchToView, this, &MusicBaseListView::viewChanged);
+    connect(Player::getInstance(), &Player::signalUpdatePlayingIcon,
+            this, &MusicBaseListView::slotUpdatePlayingIcon, Qt::DirectConnection);
+    connect(CommonService::getInstance(), &CommonService::signalSwitchToView, this, &MusicBaseListView::viewChanged);
 }
 
 MusicBaseListView::~MusicBaseListView()
@@ -190,9 +190,9 @@ void MusicBaseListView::showContextMenu(const QPoint &pos)
     ListPageSwitchType type = index.data(Qt::UserRole).value<ListPageSwitchType>();
 
     QString hash = index.data(Qt::UserRole + 2).value<QString>();
-    emit CommonService::getInstance()->switchToView(type, "");
+    emit CommonService::getInstance()->signalSwitchToView(type, "");
 
-    if (hash == Player::instance()->getCurrentPlayListHash() && Player::instance()->status() == Player::Playing) {
+    if (hash == Player::getInstance()->getCurrentPlayListHash() && Player::getInstance()->status() == Player::Playing) {
         pauseact = menu.addAction(tr("Pause"));
         setActionDisabled(hash, pauseact);
     } else {
@@ -268,7 +268,8 @@ void MusicBaseListView::dropEvent(QDropEvent *event)
             if (!metas.isEmpty()) {
                 if (hash == "fav") {
                     int insertCount = DataBaseService::getInstance()->addMetaToPlaylist(hash, metas);
-                    CommonService::getInstance()->showPopupMessage(model->itemFromIndex(index)->text(), metas.size(), insertCount);
+                    emit CommonService::getInstance()->signalFluashFavoriteBtnIcon();
+                    emit CommonService::getInstance()->signalShowPopupMessage(model->itemFromIndex(index)->text(), metas.size(), insertCount);
                 }
             }
         }
@@ -314,7 +315,7 @@ void MusicBaseListView::slotUpdatePlayingIcon()
             continue;
         }
         QString hash = index.data(Qt::UserRole + 2).value<QString>();
-        if (hash == Player::instance()->getCurrentPlayListHash()) {
+        if (hash == Player::getInstance()->getCurrentPlayListHash()) {
             QPixmap playingPixmap = QPixmap(QSize(20, 20));
             playingPixmap.fill(Qt::transparent);
             QPainter painter(&playingPixmap);
@@ -324,7 +325,7 @@ void MusicBaseListView::slotUpdatePlayingIcon()
             } else {
                 painter.setPen(pa.color(QPalette::Active, DTK_NAMESPACE::Gui::DPalette::Highlight));
             }
-            Player::instance()->playingIcon().paint(&painter, QRect(0, 0, 20, 20), Qt::AlignCenter, QIcon::Active, QIcon::On);
+            Player::getInstance()->playingIcon().paint(&painter, QRect(0, 0, 20, 20), Qt::AlignCenter, QIcon::Active, QIcon::On);
 
             QIcon playingIcon(playingPixmap);
             DViewItemActionList actionList = item->actionList(Qt::RightEdge);
@@ -357,9 +358,9 @@ void MusicBaseListView::slotUpdatePlayingIcon()
 void MusicBaseListView::slotMenuTriggered(QAction *action)
 {
     if (action->text() == tr("Play")) {
-        emit CommonService::getInstance()->playAllMusic();
+        emit CommonService::getInstance()->signalPlayAllMusic();
     } else if (action->text() == tr("Pause")) {
-        Player::instance()->pause();
+        Player::getInstance()->pause();
     }
 }
 

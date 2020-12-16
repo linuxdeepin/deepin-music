@@ -106,13 +106,13 @@ bool AlbumDataDelegate::editorEvent(QEvent *event, QAbstractItemModel *model, co
     if (index.isValid() && listview->viewMode() == QListView::IconMode && event->type() == QEvent::MouseButtonPress) {
         //todo
         AlbumInfo albumTmp = index.data(Qt::UserRole).value<AlbumInfo>();
-        bool playFlag = albumTmp.musicinfos.keys().contains(Player::instance()->activeMeta().hash);
-        Player::PlaybackStatus playStatue = Player::instance()->status();
+        bool playFlag = albumTmp.musicinfos.keys().contains(Player::getInstance()->getActiveMeta().hash);
+        Player::PlaybackStatus playStatue = Player::getInstance()->status();
         if (playFlag) {
             if (playStatue == Player::Playing) {
-                Player::instance()->pause();
+                Player::getInstance()->pause();
             } else if (playStatue == Player::Paused) {
-                Player::instance()->resume();
+                Player::getInstance()->resume();
             }
         } else {
             QRect t_hoverRect(rect.x() + 50, rect.y() + 36, 50, 50);
@@ -127,11 +127,11 @@ bool AlbumDataDelegate::editorEvent(QEvent *event, QAbstractItemModel *model, co
 
             if (fillPolygon.containsPoint(pressPos, Qt::OddEvenFill)) {
                 if (albumTmp.musicinfos.values().size() > 0) {
-                    emit CommonService::getInstance()->setPlayModel(Player::RepeatAll);
-                    Player::instance()->setCurrentPlayListHash("album", false);
-                    Player::instance()->setPlayList(albumTmp.musicinfos.values());
-                    Player::instance()->playMeta(albumTmp.musicinfos.values().first());
-                    emit Player::instance()->signalPlayListChanged();
+                    emit CommonService::getInstance()->signalSetPlayModel(Player::RepeatAll);
+                    Player::getInstance()->setCurrentPlayListHash("album", false);
+                    Player::getInstance()->setPlayList(albumTmp.musicinfos.values());
+                    Player::getInstance()->playMeta(albumTmp.musicinfos.values().first());
+                    emit Player::getInstance()->signalPlayListChanged();
                 }
             }
         }
@@ -184,8 +184,8 @@ void AlbumDataDelegate::drawIconMode(QPainter &painter, const QStyleOptionViewIt
     painter.drawRoundRect(rect/*.adjusted(1, 1, -1, 1)*/, 10, 10);
     painter.restore();
 
-    bool playFlag = albumTmp.musicinfos.keys().contains(Player::instance()->activeMeta().hash);
-    Player::PlaybackStatus playStatue = Player::instance()->status();
+    bool playFlag = albumTmp.musicinfos.keys().contains(Player::getInstance()->getActiveMeta().hash);
+    Player::PlaybackStatus playStatue = Player::getInstance()->status();
 
     QColor fillColor(0, 0, 0);
     fillColor.setAlphaF(0.3);
@@ -372,7 +372,7 @@ void AlbumDataDelegate::drawListMode(QPainter &painter, const QStyleOptionViewIt
     auto w = option.rect.width() - 0 - tailwidth;
 
     auto *listview2 = qobject_cast<AlbumListView *>(const_cast<QWidget *>(option.widget));
-    bool playFlag = albumTmp.musicinfos.keys().contains(Player::instance()->activeMeta().hash);
+    bool playFlag = albumTmp.musicinfos.keys().contains(Player::getInstance()->getActiveMeta().hash);
     //num
     if (playFlag) {
         QPixmap playicon;

@@ -28,19 +28,17 @@ template <class T>
 class DSingleton
 {
 public:
-    static inline T *instance()
+    static inline T *getInstance()
     {
-        static T  *_instance = new T;
-        return _instance;
+        static T instance;
+        return &instance;
     }
 
 protected:
     DSingleton(void) {}
     ~DSingleton(void) {}
-    DSingleton &operator= (const DSingleton &)
-    {
-        return *this;
-    }
+    DSingleton(const DSingleton &) = delete;
+    DSingleton &operator= (const DSingleton &) = delete;
 };
 
 }

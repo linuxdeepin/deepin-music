@@ -87,9 +87,9 @@ MusicListInfoView::MusicListInfoView(const QString &hash, QWidget *parent)
 
     connect(this, &MusicListInfoView::doubleClicked, this, &MusicListInfoView::onDoubleClicked);
 
-    connect(Player::instance(), SIGNAL(signalUpdatePlayingIcon()),
-            this, SLOT(slotUpdatePlayingIcon()), Qt::DirectConnection);
-    connect(DataBaseService::getInstance(), &DataBaseService::sigRmvSong,
+    connect(Player::getInstance(), &Player::signalUpdatePlayingIcon,
+            this, &MusicListInfoView::slotUpdatePlayingIcon, Qt::DirectConnection);
+    connect(DataBaseService::getInstance(), &DataBaseService::signalRmvSong,
             this, &MusicListInfoView::slotRemoveSingleSong);
 
 
@@ -189,7 +189,7 @@ QPixmap MusicListInfoView::getPlayPixmap(bool isSelect)
     } else {
         painter.setPen(pa.color(QPalette::Active, DTK_NAMESPACE::Gui::DPalette::Highlight));
     }
-    Player::instance()->playingIcon().paint(&painter, QRect(0, 0, 20, 20), Qt::AlignCenter, QIcon::Active, QIcon::On);
+    Player::getInstance()->playingIcon().paint(&painter, QRect(0, 0, 20, 20), Qt::AlignCenter, QIcon::Active, QIcon::On);
     update();
     return playingPixmap;
 }
@@ -264,7 +264,7 @@ void MusicListInfoView::showContextMenu(const QPoint &pos)
     QAction *playAction = nullptr;
     QAction *pauseAction = nullptr;
 
-    if (m_currMeta.hash == Player::instance()->activeMeta().hash && Player::instance()->status() == Player::Playing) {
+    if (m_currMeta.hash == Player::getInstance()->getActiveMeta().hash && Player::getInstance()->status() == Player::Playing) {
         pauseAction = mainMenu.addAction(tr("Pause"));
     } else {
         playAction = mainMenu.addAction(tr("Play"));
@@ -321,7 +321,7 @@ void MusicListInfoView::slotPlayListMenuClicked(QAction *action)
     }
 
     if (songlistHash == "song list") {
-        emit CommonService::getInstance()->addNewSongList();
+        emit CommonService::getInstance()->signalAddNewSongList();
 
         if (metaList.size() > 0) {
             QString songlistUuid = DataBaseService::getInstance()->getCustomSongList().last().uuid;
@@ -336,10 +336,10 @@ void MusicListInfoView::slotPlayActionClicked(bool checked)
 {
     Q_UNUSED(checked)
 
-    if (m_currMeta.hash == Player::instance()->activeMeta().hash) {
-        Player::instance()->resume();
+    if (m_currMeta.hash == Player::getInstance()->getActiveMeta().hash) {
+        Player::getInstance()->resume();
     } else {
-        Player::instance()->playMeta(m_currMeta);
+        Player::getInstance()->playMeta(m_currMeta);
     }
 }
 
@@ -347,7 +347,7 @@ void MusicListInfoView::slotPauseActionClicked(bool checked)
 {
     Q_UNUSED(checked)
 
-    Player::instance()->pause();
+    Player::getInstance()->pause();
 }
 
 void MusicListInfoView::slotFileManagementShowClicked(bool checked)
@@ -394,7 +394,7 @@ void MusicListInfoView::slotRemoveSongListActionClicked(bool checked)
     if (deleteFlag == warnDlg.exec()) {
         DataBaseService::getInstance()->removeSelectedSongs("all", metaList, false);
         // 更新player中缓存的歌曲信息，如果存在正在播放的歌曲，停止播放
-        Player::instance()->playRmvMeta(metaList);
+        Player::getInstance()->playRmvMeta(metaList);
     }
 }
 
@@ -436,7 +436,7 @@ void MusicListInfoView::slotDeleteLocalActionClicked(bool checked)
     warnDlg.setIcon(QIcon::fromTheme("deepin-music"));
     if (deleteFlag == warnDlg.exec()) {
         DataBaseService::getInstance()->removeSelectedSongs("all", strlist, true);
-        Player::instance()->playRmvMeta(strlist);
+        Player::getInstance()->playRmvMeta(strlist);
     }
 }
 
@@ -557,13 +557,13 @@ void MusicListInfoView::addMedia(MediaMeta meta)
 
 void MusicListInfoView::onDoubleClicked(const QModelIndex &index)
 {
-    Player::instance()->clearPlayList();
-    Player::instance()->setPlayList(getMusicListData());
-    Player::instance()->setCurrentPlayListHash(m_hash, false);
-    emit Player::instance()->signalPlayListChanged();
+    Player::getInstance()->clearPlayList();
+    Player::getInstance()->setPlayList(getMusicListData());
+    Player::getInstance()->setCurrentPlayListHash(m_hash, false);
+    emit Player::getInstance()->signalPlayListChanged();
 
     MediaMeta meta = index.data(Qt::UserRole).value<MediaMeta>();
-    Player::instance()->playMeta(meta);
+    Player::getInstance()->playMeta(meta);
 }
 
 void MusicListInfoView::dragEnterEvent(QDragEnterEvent *event)

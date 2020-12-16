@@ -57,8 +57,8 @@ Waveform::Waveform(Qt::Orientation orientation, QWidget *widget, QWidget *parent
 //        Q_EMIT progrossChanged(position, duration, coefficient);
 //    });
 
-    connect(Player::instance(), &Player::positionChanged, this, &Waveform::onProgressChanged);
-    connect(Player::instance(), &Player::signalMediaStop, this, &Waveform::clearBufferAudio);
+    connect(Player::getInstance(), &Player::positionChanged, this, &Waveform::onProgressChanged);
+    connect(Player::getInstance(), &Player::signalMediaStop, this, &Waveform::clearBufferAudio);
 }
 
 void Waveform::paintEvent(QPaintEvent *)
@@ -593,10 +593,10 @@ void Waveform::updatePlayerPos(int value)
     int range = this->maximum() - this->minimum();
     Q_ASSERT(range != 0);
     if (value >= range) {
-        Player::instance()->playNextMeta(true);
+        Player::getInstance()->playNextMeta(true);
     } else {
-        long long position = value * Player::instance()->duration() / range;
-        Player::instance()->setPosition(position);
+        long long position = value * Player::getInstance()->duration() / range;
+        Player::getInstance()->setPosition(position);
     }
 }
 
@@ -606,7 +606,7 @@ void Waveform::isPlayNextMeta(int value)
     Q_ASSERT(range != 0);
 
     if (value >= range) {
-        Player::instance()->playNextMeta(true);
+        Player::getInstance()->playNextMeta(true);
     }
 }
 

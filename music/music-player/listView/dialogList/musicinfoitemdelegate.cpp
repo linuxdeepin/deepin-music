@@ -201,7 +201,7 @@ void MusicInfoItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
 {
     MusicListInfoView *listview = qobject_cast<MusicListInfoView *>(const_cast<QWidget *>(option.widget));
     MediaMeta meta = index.data(Qt::UserRole).value<MediaMeta>();
-    MediaMeta activeMeta = Player::instance()->activeMeta();
+    MediaMeta activeMeta = Player::getInstance()->getActiveMeta();
 
     painter->save();
 

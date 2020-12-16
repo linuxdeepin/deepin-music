@@ -87,7 +87,7 @@ SingerListView::SingerListView(QString hash, QWidget *parent)
     setSelectionMode(QListView::ExtendedSelection);
     setSelectionBehavior(QAbstractItemView::SelectRows);
 
-    connect(DataBaseService::getInstance(), &DataBaseService::sigCoverUpdate,
+    connect(DataBaseService::getInstance(), &DataBaseService::signalCoverUpdate,
             this, &SingerListView::slotCoverUpdate);
 
     QObject::connect(DGuiApplicationHelper::instance(), &DGuiApplicationHelper::themeTypeChanged,
@@ -340,7 +340,7 @@ QPixmap SingerListView::getPlayPixmap(bool isSelect)
     } else {
         painter.setPen(pa.color(QPalette::Active, DTK_NAMESPACE::Gui::DPalette::Highlight));
     }
-    Player::instance()->playingIcon().paint(&painter, QRect(0, 0, 20, 20), Qt::AlignCenter, QIcon::Active, QIcon::On);
+    Player::getInstance()->playingIcon().paint(&painter, QRect(0, 0, 20, 20), Qt::AlignCenter, QIcon::Active, QIcon::On);
     update();
     return playingPixmap;
 }

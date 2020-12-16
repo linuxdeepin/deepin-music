@@ -91,11 +91,11 @@ MusicSongListView::MusicSongListView(QWidget *parent) : DListView(parent)
 
     connect(this, &MusicSongListView::clicked, this, [](QModelIndex midx) {
         qDebug() << "customize midx.row()" << midx.row();
-        emit CommonService::getInstance()->switchToView(CustomType, midx.data(Qt::UserRole).toString());
+        emit CommonService::getInstance()->signalSwitchToView(CustomType, midx.data(Qt::UserRole).toString());
     });
 
-    connect(Player::instance(), SIGNAL(signalUpdatePlayingIcon()),
-            this, SLOT(slotUpdatePlayingIcon()), Qt::DirectConnection);
+    connect(Player::getInstance(), &Player::signalUpdatePlayingIcon,
+            this, &MusicSongListView::slotUpdatePlayingIcon, Qt::DirectConnection);
 
     connect(this, &MusicSongListView::triggerEdit,
     this, [ = ](const QModelIndex & index) {
@@ -162,7 +162,7 @@ void MusicSongListView::init()
     m_newItemShortcut = new QShortcut(this);
     m_newItemShortcut->setKey(QKeySequence(QLatin1String("Ctrl+Shift+N")));
     connect(m_newItemShortcut, SIGNAL(activated()), this, SLOT(addNewSongList()));
-    connect(CommonService::getInstance(), &CommonService::addNewSongList, this, &MusicSongListView::addNewSongList);
+    connect(CommonService::getInstance(), &CommonService::signalAddNewSongList, this, &MusicSongListView::addNewSongList);
 }
 
 void MusicSongListView::showContextMenu(const QPoint &pos)
@@ -186,9 +186,9 @@ void MusicSongListView::showContextMenu(const QPoint &pos)
     QAction *pauseact = nullptr;
 
     QString hash = index.data(Qt::UserRole).value<QString>();
-    emit CommonService::getInstance()->switchToView(ListPageSwitchType::CustomType, hash);
+    emit CommonService::getInstance()->signalSwitchToView(ListPageSwitchType::CustomType, hash);
 
-    if (hash == Player::instance()->getCurrentPlayListHash() && Player::instance()->status() == Player::Playing) {
+    if (hash == Player::getInstance()->getCurrentPlayListHash() && Player::getInstance()->status() == Player::Playing) {
         pauseact = menu.addAction(tr("Pause"));
         pauseact->setDisabled(0 == DataBaseService::getInstance()->customizeMusicInfos(hash).size());
     } else {
@@ -242,7 +242,7 @@ void MusicSongListView::addNewSongList()
     DataBaseService::getInstance()->addPlaylist(info);
     item->setData(info.uuid, Qt::UserRole); //covert to hash
     //切换listpage
-    emit CommonService::getInstance()->switchToView(CustomType, info.uuid);
+    emit CommonService::getInstance()->signalSwitchToView(CustomType, info.uuid);
 }
 
 void MusicSongListView::rmvSongList()
@@ -264,11 +264,11 @@ void MusicSongListView::rmvSongList()
         model->removeRow(item->row());
         DataBaseService::getInstance()->deletePlaylist(hash);
         //切换到所有音乐界面
-        emit CommonService::getInstance()->switchToView(AllSongListType, "all");
+        emit CommonService::getInstance()->signalSwitchToView(AllSongListType, "all");
         //清除选中状态
         this->clearSelection();
         //设置所有音乐播放状态
-        Player::instance()->setCurrentPlayListHash("all", false);
+        Player::getInstance()->setCurrentPlayListHash("all", false);
         //记忆播放歌单
         MusicSettings::setOption("base.play.last_playlist", "all");
     }
@@ -283,7 +283,7 @@ void MusicSongListView::slotUpdatePlayingIcon()
             continue;
         }
         QString hash = index.data(Qt::UserRole).value<QString>();
-        if (hash == Player::instance()->getCurrentPlayListHash()) {
+        if (hash == Player::getInstance()->getCurrentPlayListHash()) {
             QPixmap playingPixmap = QPixmap(QSize(20, 20));
             playingPixmap.fill(Qt::transparent);
             QPainter painter(&playingPixmap);
@@ -293,7 +293,7 @@ void MusicSongListView::slotUpdatePlayingIcon()
             } else {
                 painter.setPen(pa.color(QPalette::Active, DTK_NAMESPACE::Gui::DPalette::Highlight));
             }
-            Player::instance()->playingIcon().paint(&painter, QRect(0, 0, 20, 20), Qt::AlignCenter, QIcon::Active, QIcon::On);
+            Player::getInstance()->playingIcon().paint(&painter, QRect(0, 0, 20, 20), Qt::AlignCenter, QIcon::Active, QIcon::On);
 
             QIcon playingIcon(playingPixmap);
             DViewItemActionList actionList = item->actionList(Qt::RightEdge);
@@ -330,9 +330,9 @@ void MusicSongListView::slotMenuTriggered(QAction *action)
         return;
 
     if (action->text() == tr("Play")) {
-        emit CommonService::getInstance()->playAllMusic();
+        emit CommonService::getInstance()->signalPlayAllMusic();
     } else if (action->text() == tr("Pause")) {
-        Player::instance()->pause();
+        Player::getInstance()->pause();
     } else if (action->text() == tr("Rename")) {
         edit(index);
     } else if (action->text() == tr("Delete")) {
@@ -423,7 +423,7 @@ void MusicSongListView::dropEvent(QDropEvent *event)
 
             if (!metas.isEmpty()) {
                 int insertCount = DataBaseService::getInstance()->addMetaToPlaylist(hash, metas);
-                CommonService::getInstance()->showPopupMessage(model->itemFromIndex(index)->text(), metas.size(), insertCount);
+                CommonService::getInstance()->signalShowPopupMessage(model->itemFromIndex(index)->text(), metas.size(), insertCount);
             }
         }
     }

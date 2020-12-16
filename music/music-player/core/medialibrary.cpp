@@ -77,7 +77,7 @@ typedef int (*codec_receive_frame_function)(AVCodecContext *, AVFrame *);
 
 MediaLibrary::MediaLibrary(QObject *parent) : QObject(parent)
 {
-    auto suffixList = Player::instance()->supportedSuffixList();
+    auto suffixList = Player::getInstance()->supportedSuffixList();
     for (auto suffix : suffixList) {
         m_supportedSuffixs.insert(suffix, true);
     }

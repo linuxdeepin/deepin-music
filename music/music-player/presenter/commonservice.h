@@ -24,38 +24,38 @@
 #include <QObject>
 #include "mediameta.h"
 #include "player.h"
-/*
+#include "util/singleton.h"
+
+/**
 * @bref: CManagerAttributeService 用于中转单选或者多选属性展示与设置
 */
-class CommonService : public QObject
+class CommonService : public QObject, public DMusic::DSingleton<CommonService>
 {
     Q_OBJECT
 public:
-    static CommonService *getInstance();
     void setListPageSwitchType(ListPageSwitchType lpst);
     ListPageSwitchType getListPageSwitchType() const;
 
     bool containsStr(QString searchText, QString text);
 signals:
     // hashOrSearchword为hash值或者搜索关键词
-    void switchToView(ListPageSwitchType switchtype, QString hashOrSearchword); //switch to playlist view,
+    void signalSwitchToView(ListPageSwitchType switchtype, QString hashOrSearchword); //switch to playlist view,
     // 刷新收藏按钮图标
-    void fluashFavoriteBtnIco();
+    void signalFluashFavoriteBtnIcon();
     // 添加新的歌曲清单
-    void addNewSongList();
+    void signalAddNewSongList();
     // 右键菜单播放所有音乐
-    void playAllMusic();
+    void signalPlayAllMusic();
     // 设置播放模式
-    void setPlayModel(Player::PlaybackMode playModel);
+    void signalSetPlayModel(Player::PlaybackMode playModel);
     // 弹窗消息
-    void showPopupMessage(const QString &songListName, int selectCount, int insertCount);
+    void signalShowPopupMessage(const QString &songListName, int selectCount, int insertCount);
     // 播放队列关闭动画播放完毕，刷新背景
     void signalPlayQueueClosed();
 private:
-
+    explicit CommonService();
+    friend class DMusic::DSingleton<CommonService>;
 private:
-    CommonService();
-    static CommonService *instance;
     ListPageSwitchType listPageSwitchType = ListPageSwitchType::AllSongListType;
 };
 #endif // COMMONSERVICE_H

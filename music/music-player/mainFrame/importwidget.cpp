@@ -126,7 +126,7 @@ ImportWidget::ImportWidget(QWidget *parent) : DFrame(parent)
 
 
     //connection
-    connect(Player::instance()->getMpris(), &MprisPlayer::openUriRequested, this, &ImportWidget::slotImportFormDbus);  //open file form dbus
+    connect(Player::getInstance()->getMpris(), &MprisPlayer::openUriRequested, this, &ImportWidget::slotImportFormDbus);  //open file form dbus
 
     int themeType = DGuiApplicationHelper::instance()->themeType();
     slotTheme(themeType);
@@ -211,7 +211,7 @@ void ImportWidget::slotAddMusicButtonClicked()
     QString lastImportPath = getLastImportPath();
     fileDlg.setDirectory(lastImportPath);
     QString selfilter = tr("All music") + (" (%1)");
-    selfilter = selfilter.arg(Player::instance()->supportedSuffixList().join(" "));
+    selfilter = selfilter.arg(Player::getInstance()->supportedSuffixList().join(" "));
     fileDlg.setViewMode(DFileDialog::Detail);
     fileDlg.setFileMode(DFileDialog::ExistingFiles);
     fileDlg.setOption(DFileDialog::HideNameFilterDetails);

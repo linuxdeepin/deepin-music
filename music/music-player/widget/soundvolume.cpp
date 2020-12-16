@@ -72,7 +72,7 @@ SoundVolume::SoundVolume(QWidget *parent)
     m_volSlider->setIconSize(QSize(15, 15));
     m_volSlider->setMouseWheelEnabled(true);
     connect(m_volSlider, &DSlider::valueChanged, this, &SoundVolume::slotSetVolume);
-    m_volSlider->setValue(Player::instance()->getVolume());
+    m_volSlider->setValue(Player::getInstance()->getVolume());
 
     AC_SET_OBJECT_NAME(m_volSlider, AC_DSlider);
     AC_SET_ACCESSIBLE_NAME(m_volSlider, AC_DSlider);
@@ -91,7 +91,7 @@ SoundVolume::SoundVolume(QWidget *parent)
     this->setGraphicsEffect(bodyShadow);
 
     connect(m_btSound, &DToolButton::pressed, this, &SoundVolume::slotSoundClick);
-    connect(Player::instance(), &Player::mutedChanged, this, &SoundVolume::flushVolumeIcon);
+    connect(Player::getInstance(), &Player::signalMutedChanged, this, &SoundVolume::flushVolumeIcon);
 }
 
 SoundVolume::~SoundVolume()
@@ -141,9 +141,9 @@ void SoundVolume::setBorderColor(QColor borderColor)
 
 void SoundVolume::flushVolumeIcon()
 {
-    int volume = Player::instance()->getVolume();
+    int volume = Player::getInstance()->getVolume();
 
-    if (Player::instance()->getMuted() || volume == 0) {
+    if (Player::getInstance()->getMuted() || volume == 0) {
         m_btSound->setIcon(QIcon::fromTheme("mute"));
     } else {
         if (volume > 77) {
@@ -182,11 +182,11 @@ void SoundVolume::updateUI(int volume)
     }
 
     // 设置是否静音并刷新按钮图标
-    if (Player::instance()->getMuted()) {
-        Player::instance()->setMuted(muteToSet);
+    if (Player::getInstance()->getMuted()) {
+        Player::getInstance()->setMuted(muteToSet);
     }
 
-    Player::instance()->setVolume(volume);
+    Player::getInstance()->setVolume(volume);
 
     flushVolumeIcon();
     m_volPersent->setText(QString::number(volume) + QString("%"));
@@ -294,7 +294,7 @@ void SoundVolume::slotTheme(int type)
 
 void SoundVolume::slotSoundClick()
 {
-    bool mute = Player::instance()->getMuted();
-    Player::instance()->setMuted(!mute);
+    bool mute = Player::getInstance()->getMuted();
+    Player::getInstance()->setMuted(!mute);
     flushVolumeIcon();
 }

@@ -296,11 +296,11 @@ void MusicListDialog::slotPlayAllClicked()
 {
     QList<MediaMeta> musicList = m_musicListInfoView->getMusicListData();
     if (musicList.size() > 0) {
-        emit CommonService::getInstance()->setPlayModel(Player::RepeatAll);
-        Player::instance()->setCurrentPlayListHash(hash, false);
-        Player::instance()->setPlayList(musicList);
-        Player::instance()->playMeta(musicList.first());
-        emit Player::instance()->signalPlayListChanged();
+        emit CommonService::getInstance()->signalSetPlayModel(Player::RepeatAll);
+        Player::getInstance()->setCurrentPlayListHash(hash, false);
+        Player::getInstance()->setPlayList(musicList);
+        Player::getInstance()->playMeta(musicList.first());
+        emit Player::getInstance()->signalPlayListChanged();
     }
 }
 
@@ -308,12 +308,12 @@ void MusicListDialog::slotPlayRandomClicked()
 {
     QList<MediaMeta> musicList = m_musicListInfoView->getMusicListData();
     if (musicList.size() > 0) {
-        Player::instance()->setPlayList(musicList);
-        emit CommonService::getInstance()->setPlayModel(Player::Shuffle);
-        Player::instance()->playNextMeta(false);
+        Player::getInstance()->setPlayList(musicList);
+        emit CommonService::getInstance()->signalSetPlayModel(Player::Shuffle);
+        Player::getInstance()->playNextMeta(false);
 
-        Player::instance()->setCurrentPlayListHash(hash, false);
-        emit Player::instance()->signalPlayListChanged();
+        Player::getInstance()->setCurrentPlayListHash(hash, false);
+        emit Player::getInstance()->signalPlayListChanged();
     }
 }
 

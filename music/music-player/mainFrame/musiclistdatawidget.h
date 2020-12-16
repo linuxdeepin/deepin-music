@@ -48,15 +48,16 @@ public:
 public slots:
     void slotTheme(int type);
     // 左侧菜单切换ListView
-    void viewChanged(ListPageSwitchType switchtype, const QString &hashOrSearchword);
+    void slotViewChanged(ListPageSwitchType switchtype, const QString &hashOrSearchword);
     void switchViewModel();
     void slotSortChange(QAction *action);
     void slotImportFinished();
-    //刷新各列表数量信息
+    // 刷新各列表数量信息
     void refreshInfoLabel(QString hash);
-    //刷新显示模式按钮check状态
+    // 刷新显示模式按钮check状态
     void refreshModeBtnByHash(QString hash);
-    void slotRemoveSingleSong(const QString &listHash, const QString &musicHash);//删除了一首音乐
+    // 删除了一首音乐
+    void slotRemoveSingleSong(const QString &listHash, const QString &musicHash);
     void slotPlaylistNameUpdate(const QString &listHash);
 protected:
     bool eventFilter(QObject *o, QEvent *e) Q_DECL_OVERRIDE;
@@ -75,11 +76,11 @@ private:
     void initBtPlayAll(QHBoxLayout *layout);
     void initCountLabelAndListMode(QHBoxLayout *layout);
     void initemptyHits(QVBoxLayout *layout);
-    //刷新显示模式按钮check状态
+    // 刷新显示模式按钮check状态
     void refreshModeBtn(DListView::ViewMode mode);
-    //刷新当前排序菜单
+    // 刷新当前排序菜单
     void refreshSortAction(QString hash = "");
-    //获取当前页面标题
+    // 获取当前页面标题
     QString getPageTitle(const QString &title);
 private:
     DWidget             *m_contentWidget   = nullptr;
@@ -90,17 +91,16 @@ private:
     DDropdown           *m_albumDropdown   = nullptr;
     DDropdown           *m_artistDropdown  = nullptr;
     DDropdown           *m_musicDropdown   = nullptr;
-    SearchResultTabWidget *m_SearchResultTabWidget = nullptr;
     DPushButton         *m_btPlayAll       = nullptr;
     DLabel              *m_infoLabel       = nullptr;
     DToolButton         *m_btIconMode      = nullptr;
     DToolButton         *m_btlistMode      = nullptr;
 
-//    MusicListDataView   *albumListView  = nullptr;
-//    MusicListDataView   *artistListView = nullptr;
-    AlbumListView       *m_albumListView  = nullptr; //album view
-    SingerListView      *m_singerListView = nullptr; //singer view
-    PlayListView        *m_musicListView  = nullptr; //all music view
+    AlbumListView       *m_albumListView  = nullptr;
+    SingerListView      *m_singerListView = nullptr;
+    PlayListView        *m_musicListView  = nullptr;
+    SearchResultTabWidget *m_searchResultTabWidget = nullptr;
+
     QAction             *m_customAction    = nullptr;
     bool                m_updateFlag       = false;
 //    int                 m_preIndex = 0;//记录前一次显示，当清除搜索时回到上一页面

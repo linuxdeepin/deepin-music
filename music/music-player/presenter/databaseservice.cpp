@@ -46,14 +46,6 @@ typedef void (*MargeFunctionn)();
 
 void margeDatabaseNew();
 
-DataBaseService *DataBaseService::instance = nullptr;
-DataBaseService *DataBaseService::getInstance()
-{
-    if (nullptr == instance) {
-        instance = new DataBaseService();
-    }
-    return instance;
-}
 
 QList<MediaMeta> DataBaseService::allMusicInfos()
 {
@@ -125,12 +117,12 @@ bool DataBaseService::deleteMetaFromAllMusic(const QStringList &metaHash, bool r
                     break;
                 }
             }
-            emit sigRmvSong("all", hash);
+            emit signalRmvSong("all", hash);
         }
     }
 
     if (allMusicInfosCount() <= 0) {
-        emit sigAllMusicCleared();
+        emit signalAllMusicCleared();
     }
 
     //遍历所有歌单,包含我的收藏
@@ -302,7 +294,7 @@ void DataBaseService::removeHistorySelectedSong(const QStringList &hashlist)
 
 void DataBaseService::getAllMediaMetasInThread()
 {
-    emit sigGetAllMediaMeta();
+    emit signalGetAllMediaMeta();
 }
 
 QSqlDatabase DataBaseService::getDatabase()
@@ -326,7 +318,7 @@ void DataBaseService::importMedias(QString importHash, const QStringList &urllis
     qDebug() << "------DataBaseService::importMedias " << urllist.size();
     qDebug() << "------DataBaseService::importMedias  currentThread = " << QThread::currentThread();
     m_loadMediaMeta.clear();
-    emit sigImportMedias(urllist);
+    emit signalImportMedias(urllist);
     m_Importing = true;
 }
 
@@ -494,9 +486,9 @@ bool DataBaseService::deleteMetaFromPlaylist(QString uuid, const QStringList &me
                     qCritical() << query.lastError() << strsql;
                 }
                 if (uuid == "fav") {
-                    emit sigFavSongRemove(hash);
+                    emit signalFavSongRemove(hash);
                 }
-                emit sigRmvSong(uuid, hash);
+                emit signalRmvSong(uuid, hash);
             }
         } else {
             qCritical() << query.lastError() << sqlIsExists;
@@ -523,12 +515,12 @@ void DataBaseService::slotGetMetaFromThread(MediaMeta meta)
 
 void DataBaseService::slotImportFinished()
 {
-    emit sigImportFinished(m_importHash);
+    emit signalImportFinished(m_importHash);
     m_Importing = false;
     //数据加载完后再加载图片
-    emit sigCreatCoverImg(m_AllMediaMeta);
+    emit signalCreatCoverImg(m_AllMediaMeta);
     //启动加载数据完成后直接播放第一首歌
-    emit sigPlayFromFileMaganager();
+    emit signalPlayFromFileMaganager();
 }
 
 void DataBaseService::slotCreatOneCoverImg(MediaMeta meta)
@@ -549,7 +541,7 @@ void DataBaseService::slotCreatOneCoverImg(MediaMeta meta)
             MediaMeta metaTemp = m_AllMediaMeta.at(i);
             metaTemp.hasimage = meta.hasimage;
             m_AllMediaMeta.replace(i, metaTemp);
-            emit sigCoverUpdate(metaTemp);
+            emit signalCoverUpdate(metaTemp);
             break;
         }
     }
@@ -656,7 +648,7 @@ void DataBaseService::updatePlaylistDisplayName(QString displayname, QString uui
             break;
         }
     }
-    emit sigPlaylistNameUpdate(uuid);
+    emit signalPlaylistNameUpdate(uuid);
 }
 
 int DataBaseService::getPlaylistSortType(QString uuid)
@@ -1013,23 +1005,29 @@ DataBaseService::DataBaseService()
 //    qRegisterMetaType<DBImgInfoList>("DBImgInfoList");
 //    qRegisterMetaType<QMap<QString, MediaMeta>>("QMap<QString, MediaMeta>");
 
-    QThread *workerThread = new QThread(this);
-    DBOperate *worker = new DBOperate(workerThread);
-    worker->moveToThread(workerThread);
-    connect(this, SIGNAL(sigGetAllMediaMeta()), worker, SLOT(slotGetAllMediaMeta()));
+    m_workerThread = new QThread(this);
+    DBOperate *worker = new DBOperate(m_workerThread);
+    worker->moveToThread(m_workerThread);
+    connect(this, SIGNAL(signalGetAllMediaMeta()), worker, SLOT(slotGetAllMediaMeta()));
     connect(worker, &DBOperate::sigGetAllMediaMetaFromThread, this,
             &DataBaseService::slotGetAllMediaMetaFromThread, Qt::ConnectionType::DirectConnection);
 
     //发送信号给子线程导入数据
-    connect(this, SIGNAL(sigImportMedias(const QStringList &)), worker, SLOT(slotImportMedias(const QStringList &)));
+    connect(this, SIGNAL(signalImportMedias(const QStringList &)), worker, SLOT(slotImportMedias(const QStringList &)));
     //加载图片
-    connect(this, SIGNAL(sigCreatCoverImg(const QList<MediaMeta> &)), worker, SLOT(slotCreatCoverImg(const QList<MediaMeta> &)));
+    connect(this, SIGNAL(signalCreatCoverImg(const QList<MediaMeta> &)), worker, SLOT(slotCreatCoverImg(const QList<MediaMeta> &)));
 
     connect(worker, &DBOperate::sigImportMetaFromThread, this, &DataBaseService::slotGetMetaFromThread);
     connect(worker, &DBOperate::sigImportFinished, this, &DataBaseService::slotImportFinished);
     connect(worker, &DBOperate::sigCreatOneCoverImg, this, &DataBaseService::slotCreatOneCoverImg);
 
-    workerThread->start();
+    m_workerThread->start();
+}
+
+DataBaseService::~DataBaseService()
+{
+    m_workerThread->quit();
+    m_workerThread->wait();
 }
 
 void margeDatabaseNew()

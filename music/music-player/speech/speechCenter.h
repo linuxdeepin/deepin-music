@@ -1,13 +1,13 @@
 #ifndef SPEECHCENTER_H
 #define SPEECHCENTER_H
 
+#include "util/singleton.h"
+
 #include <QObject>
 
-class SpeechCenter : public QObject
+class SpeechCenter : public QObject, public DMusic::DSingleton<SpeechCenter>
 {
     Q_OBJECT
-public:
-    static SpeechCenter *getInstance();
 public:
     bool playMusic(QString music);
     bool playArtist(QString artist);
@@ -47,6 +47,7 @@ public slots:
     void onSpeedResult(int action, bool result);
 private:
     explicit SpeechCenter(QObject *parent = nullptr);
+    friend class DMusic::DSingleton<SpeechCenter>;
 
 private:
     bool playMusicResult        = true;

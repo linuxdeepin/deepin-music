@@ -171,7 +171,7 @@ void Player::playMeta(MediaMeta meta)
 void Player::resume()
 {
     if (m_ActiveMeta.localPath.isEmpty()) {
-        Player::instance()->forcePlayMeta();//播放列表第一首歌
+        Player::getInstance()->forcePlayMeta();//播放列表第一首歌
         return;
     }
 
@@ -503,7 +503,7 @@ Player::PlaybackStatus Player::status()
     }
 }
 
-MediaMeta Player::activeMeta()
+MediaMeta Player::getActiveMeta()
 {
     return m_ActiveMeta;
 }
@@ -603,7 +603,7 @@ void Player::setVolume(int volume)
 
     // 设置到dbus的音量必须大1，设置才会生效
     setMusicVolume((volume + 0.1) / 100.0);
-    emit volumeChanged();
+    emit signalVolumeChanged();
 }
 
 void Player::setMuted(bool mute)
@@ -836,7 +836,7 @@ bool Player::setMusicMuted(bool muted)
         //调用设置音量
         MusicSettings::setOption("base.play.mute", muted);
         ainterface.call(QLatin1String("SetMute"), muted);
-        emit mutedChanged();
+        emit signalMutedChanged();
     }
 
     return false;
@@ -948,7 +948,7 @@ void Player::initConnection()
     connect(m_qvplayer->audio(), &VlcAudio::muteChanged,
     this, [ = ](bool mute) {
         if (isDevValid()) {
-            emit mutedChanged();
+            emit signalMutedChanged();
         } else {
             qDebug() << "device does not start";
         }
@@ -1017,7 +1017,7 @@ void Player::initMpris()
             resume();
         } else {
             if (status() != Player::Playing) {
-                playMeta(activeMeta());
+                playMeta(getActiveMeta());
             }
         }
         m_mpris->setPlaybackStatus(Mpris::Playing);

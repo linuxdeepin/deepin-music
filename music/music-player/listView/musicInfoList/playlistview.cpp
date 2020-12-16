@@ -128,18 +128,18 @@ PlayListView::PlayListView(QString hash, bool isPlayQueue, QWidget *parent)
 
     connect(this, SIGNAL(doubleClicked(const QModelIndex &)), this, SLOT(slotOnDoubleClicked(const QModelIndex &)));
 
-    connect(Player::instance(), SIGNAL(signalUpdatePlayingIcon()),
-            this, SLOT(slotUpdatePlayingIcon()), Qt::DirectConnection);
-    connect(Player::instance(), &Player::signalPlayQueueMetaRemove,
+    connect(Player::getInstance(), &Player::signalUpdatePlayingIcon,
+            this, &PlayListView::slotUpdatePlayingIcon, Qt::DirectConnection);
+    connect(Player::getInstance(), &Player::signalPlayQueueMetaRemove,
             this, &PlayListView::slotPlayQueueMetaRemove);
 
-    connect(DataBaseService::getInstance(), &DataBaseService::sigImportFinished,
+    connect(DataBaseService::getInstance(), &DataBaseService::signalImportFinished,
             this, &PlayListView::slotImportFinished);
 
-    connect(DataBaseService::getInstance(), &DataBaseService::sigCoverUpdate,
+    connect(DataBaseService::getInstance(), &DataBaseService::signalCoverUpdate,
             this, &PlayListView::slotCoverUpdate);
 
-    connect(DataBaseService::getInstance(), &DataBaseService::sigRmvSong,
+    connect(DataBaseService::getInstance(), &DataBaseService::signalRmvSong,
             this, &PlayListView::slotRemoveSingleSong);
 
     QObject::connect(DGuiApplicationHelper::instance(), &DGuiApplicationHelper::themeTypeChanged,
@@ -373,7 +373,7 @@ QPixmap PlayListView::getPlayPixmap(bool isSelect)
     } else {
         painter.setPen(pa.color(QPalette::Active, DTK_NAMESPACE::Gui::DPalette::Highlight));
     }
-    Player::instance()->playingIcon().paint(&painter, QRect(0, 0, 20, 20), Qt::AlignCenter, QIcon::Active, QIcon::On);
+    Player::getInstance()->playingIcon().paint(&painter, QRect(0, 0, 20, 20), Qt::AlignCenter, QIcon::Active, QIcon::On);
     update();
     return playingPixmap;
 }
@@ -385,7 +385,7 @@ void PlayListView::playListChange()
     setAutoScroll(false);
 
     m_model->clear();
-    for (auto meta : *Player::instance()->getPlayList()) {
+    for (auto meta : *Player::getInstance()->getPlayList()) {
         QStandardItem *newItem = new QStandardItem;
         m_model->appendRow(newItem);
         auto row = m_model->rowCount() - 1;
@@ -490,23 +490,23 @@ void PlayListView::slotOnDoubleClicked(const QModelIndex &index)
     MediaMeta itemMeta = index.data(Qt::UserRole).value<MediaMeta>();
     qDebug() << "------" << itemMeta.hash;
 
-    if (Player::instance()->activeMeta().hash == itemMeta.hash) {
-        if (Player::instance()->status() == Player::Paused) {
-            Player::instance()->resume();
-        } else if (Player::instance()->status() == Player::Stopped) {
-            Player::instance()->playMeta(itemMeta);
+    if (Player::getInstance()->getActiveMeta().hash == itemMeta.hash) {
+        if (Player::getInstance()->status() == Player::Paused) {
+            Player::getInstance()->resume();
+        } else if (Player::getInstance()->status() == Player::Stopped) {
+            Player::getInstance()->playMeta(itemMeta);
         }
     } else {
         if (!m_IsPlayQueue) {
             // 设置新的播放列表
-            Player::instance()->clearPlayList();
-            Player::instance()->setPlayList(getMusicListData());
+            Player::getInstance()->clearPlayList();
+            Player::getInstance()->setPlayList(getMusicListData());
             // 通知播放队列列表改变
-            emit Player::instance()->signalPlayListChanged();
+            emit Player::getInstance()->signalPlayListChanged();
             // 设置当前播放playlist的hash
-            Player::instance()->setCurrentPlayListHash(m_currentHash, false);
+            Player::getInstance()->setCurrentPlayListHash(m_currentHash, false);
         }
-        Player::instance()->playMeta(itemMeta);
+        Player::getInstance()->playMeta(itemMeta);
     }
 }
 
@@ -517,7 +517,7 @@ void PlayListView::slotUpdatePlayingIcon()
 
 void PlayListView::slotImportFinished(QString hash)
 {
-    emit CommonService::getInstance()->showPopupMessage(
+    emit CommonService::getInstance()->signalShowPopupMessage(
         DataBaseService::getInstance()->getPlaylistNameByUUID("all"), 1, 1);
 
     //只刷新全部歌曲列表
@@ -622,10 +622,10 @@ void PlayListView::slotAddToPlayQueue()
     QItemSelectionModel *selection = selectionModel();
     for (int i = 0; i < selection->selectedRows().size(); i++) {
         QModelIndex curIndex = selection->selectedRows().at(i);
-        Player::instance()->playListAppendMeta(curIndex.data(Qt::UserRole).value<MediaMeta>());
+        Player::getInstance()->playListAppendMeta(curIndex.data(Qt::UserRole).value<MediaMeta>());
     }
 
-    Player::instance()->signalPlayListChanged();
+    Player::getInstance()->signalPlayListChanged();
 }
 
 void PlayListView::slotPlayMusic()
@@ -675,8 +675,8 @@ void PlayListView::slotAddToFavSongList(const QString songName)
     }
 
     int insertCount = DataBaseService::getInstance()->addMetaToPlaylist("fav", listMeta);
-    CommonService::getInstance()->showPopupMessage(songName, selection->selectedRows().size(), insertCount);
-    emit CommonService::getInstance()->fluashFavoriteBtnIco();
+    CommonService::getInstance()->signalShowPopupMessage(songName, selection->selectedRows().size(), insertCount);
+    emit CommonService::getInstance()->signalFluashFavoriteBtnIcon();
 }
 
 void PlayListView::slotAddToNewSongList(const QString songName)
@@ -689,15 +689,15 @@ void PlayListView::slotAddToNewSongList(const QString songName)
         metaList.append(meta);
     }
 
-    emit CommonService::getInstance()->addNewSongList();
+    emit CommonService::getInstance()->signalAddNewSongList();
 
     if (metaList.size() > 0) {
         QList<DataBaseService::PlaylistData> customSongList = DataBaseService::getInstance()->getCustomSongList();
         QString songlistUuid = customSongList.last().uuid;
         int insertCount = DataBaseService::getInstance()->addMetaToPlaylist(songlistUuid, metaList);
-        CommonService::getInstance()->showPopupMessage(songName, metaList.size(), insertCount);
+        CommonService::getInstance()->signalShowPopupMessage(songName, metaList.size(), insertCount);
         //刷新
-        emit CommonService::getInstance()->switchToView(CustomType, songlistUuid);
+        emit CommonService::getInstance()->signalSwitchToView(CustomType, songlistUuid);
     }
 }
 
@@ -713,7 +713,7 @@ void PlayListView::slotAddToCustomSongList()
     }
 
     int insertCount = DataBaseService::getInstance()->addMetaToPlaylist(songlistHash, metas);
-    CommonService::getInstance()->showPopupMessage(obj->text(), metas.size(), insertCount);
+    CommonService::getInstance()->signalShowPopupMessage(obj->text(), metas.size(), insertCount);
 }
 
 void PlayListView::slotOpenInFileManager()
@@ -758,10 +758,10 @@ void PlayListView::slotRmvFromSongList()
             DataBaseService::getInstance()->removeSelectedSongs(m_currentHash, metaList, false);
             // 更新player中缓存的歌曲信息，如果存在正在播放的歌曲，停止播放
             if (m_currentHash == "all") {
-                Player::instance()->playRmvMeta(metaList);
+                Player::getInstance()->playRmvMeta(metaList);
             }
         } else {
-            Player::instance()->playRmvMeta(metaList);
+            Player::getInstance()->playRmvMeta(metaList);
         }
     }
 }
@@ -804,7 +804,7 @@ void PlayListView::slotDelFromLocal()
     if (deleteFlag == warnDlg.exec()) {
         DataBaseService::getInstance()->removeSelectedSongs("all", strlist, true);
         // 更新player中缓存的歌曲信息，如果存在正在播放的歌曲，停止播放
-        Player::instance()->playRmvMeta(strlist);
+        Player::getInstance()->playRmvMeta(strlist);
     }
 }
 
@@ -936,13 +936,13 @@ void PlayListView::contextMenuEvent(QContextMenuEvent *event)
 
         // 播放或则暂停按钮
         QAction *actplay = nullptr;
-        if (currMeta.hash != Player::instance()->activeMeta().hash ||
-                Player::instance()->status() != Player::Playing) {
+        if (currMeta.hash != Player::getInstance()->getActiveMeta().hash ||
+                Player::getInstance()->status() != Player::Playing) {
             actplay = allMusicMenu.addAction(tr("Play"));
             connect(actplay, &QAction::triggered, this, &PlayListView::slotPlayMusic);
         } else {
             actplay = allMusicMenu.addAction(tr("Pause"));
-            connect(actplay, &QAction::triggered, Player::instance(), &Player::pause);
+            connect(actplay, &QAction::triggered, Player::getInstance(), &Player::pause);
         }
 
         if (currMeta.invalid)

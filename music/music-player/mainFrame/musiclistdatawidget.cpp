@@ -64,13 +64,13 @@ MusicListDataWidget::MusicListDataWidget(QWidget *parent) :
     DWidget(parent)
 {
     this->initUI();
-    connect(CommonService::getInstance(), &CommonService::switchToView, this, &MusicListDataWidget::viewChanged);
-    connect(CommonService::getInstance(), &CommonService::playAllMusic, this, &MusicListDataWidget::onPlayAllClicked);
-    connect(DataBaseService::getInstance(), &DataBaseService::sigImportFinished,
+    connect(CommonService::getInstance(), &CommonService::signalSwitchToView, this, &MusicListDataWidget::slotViewChanged);
+    connect(CommonService::getInstance(), &CommonService::signalPlayAllMusic, this, &MusicListDataWidget::onPlayAllClicked);
+    connect(DataBaseService::getInstance(), &DataBaseService::signalImportFinished,
             this, &MusicListDataWidget::slotImportFinished);
-    connect(DataBaseService::getInstance(), &DataBaseService::sigRmvSong,
+    connect(DataBaseService::getInstance(), &DataBaseService::signalRmvSong,
             this, &MusicListDataWidget::slotRemoveSingleSong);
-    connect(DataBaseService::getInstance(), &DataBaseService::sigPlaylistNameUpdate,
+    connect(DataBaseService::getInstance(), &DataBaseService::signalPlaylistNameUpdate,
             this, &MusicListDataWidget::slotPlaylistNameUpdate);
 }
 
@@ -90,7 +90,7 @@ void MusicListDataWidget::showEmptyHits(int count)
 }
 
 // 左侧菜单切换ListView
-void MusicListDataWidget::viewChanged(ListPageSwitchType switchtype, const QString &hashOrSearchword)
+void MusicListDataWidget::slotViewChanged(ListPageSwitchType switchtype, const QString &hashOrSearchword)
 {
     CommonService::getInstance()->setListPageSwitchType(switchtype);
     qDebug() << "------MusicListDataWidget::viewChanged switchtype = " << switchtype;
@@ -173,19 +173,19 @@ void MusicListDataWidget::viewChanged(ListPageSwitchType switchtype, const QStri
     case SearchMusicResultType:
     case SearchSingerResultType:
     case SearchAlbumResultType: {
-        //搜索歌曲结果
-        if (!m_SearchResultTabWidget) {
-            m_SearchResultTabWidget = new SearchResultTabWidget(this);
-            m_pStackedWidget->addWidget(m_SearchResultTabWidget);
-            connect(m_SearchResultTabWidget, &SearchResultTabWidget::sigSearchTypeChanged,
+        // 搜索歌曲结果
+        if (!m_searchResultTabWidget) {
+            m_searchResultTabWidget = new SearchResultTabWidget(this);
+            m_pStackedWidget->addWidget(m_searchResultTabWidget);
+            connect(m_searchResultTabWidget, &SearchResultTabWidget::sigSearchTypeChanged,
                     this, &MusicListDataWidget::refreshInfoLabel);
-            connect(m_SearchResultTabWidget, &SearchResultTabWidget::sigSearchTypeChanged,
+            connect(m_searchResultTabWidget, &SearchResultTabWidget::sigSearchTypeChanged,
                     this, &MusicListDataWidget::refreshModeBtnByHash);
         }
-        m_pStackedWidget->setCurrentWidget(m_SearchResultTabWidget);
+        m_pStackedWidget->setCurrentWidget(m_searchResultTabWidget);
         m_titleLabel->setText(tr("Search Results"));
-        m_SearchResultTabWidget->refreshListview(switchtype, hashOrSearchword);
-        m_SearchResultTabWidget->setCurrentPage(switchtype);
+        m_searchResultTabWidget->refreshListview(switchtype, hashOrSearchword);
+        m_searchResultTabWidget->setCurrentPage(switchtype);
         if (switchtype == SearchMusicResultType) {
             refreshInfoLabel("musicResult");
         } else if (switchtype == SearchSingerResultType) {
@@ -193,13 +193,13 @@ void MusicListDataWidget::viewChanged(ListPageSwitchType switchtype, const QStri
         } else if (switchtype == SearchAlbumResultType) {
             refreshInfoLabel("albumResult");
         }
-        refreshModeBtn(m_SearchResultTabWidget->getViewMode());
+        refreshModeBtn(m_searchResultTabWidget->getViewMode());
         refreshSortAction();
         return;
     }
     case PreType: {
-        viewChanged(m_preSwitchtype, m_preHash);
-        //任意非0数，隐藏无搜索结果界面
+        slotViewChanged(m_preSwitchtype, m_preHash);
+        // 任意非0数，隐藏无搜索结果界面
         showEmptyHits(1);
         break;
     }
@@ -224,8 +224,8 @@ void MusicListDataWidget::switchViewModel()
     } else if (m_pStackedWidget->currentWidget() == m_musicListView) {
         m_musicListView->setViewModeFlag(m_musicListView->getCurrentHash(), ptb == m_btIconMode ?
                                          DListView::IconMode : DListView::ListMode);
-    } else if (m_pStackedWidget->currentWidget() == m_SearchResultTabWidget) {
-        m_SearchResultTabWidget->setViewMode(ptb == m_btIconMode ?
+    } else if (m_pStackedWidget->currentWidget() == m_searchResultTabWidget) {
+        m_searchResultTabWidget->setViewMode(ptb == m_btIconMode ?
                                              DListView::IconMode : DListView::ListMode);
     }
 
@@ -247,8 +247,8 @@ void MusicListDataWidget::slotSortChange(QAction *action)
         m_albumListView->update();
     } else if (m_pStackedWidget->currentWidget() == m_singerListView) {
         m_singerListView->setSortType(sortType);
-    } else if (m_pStackedWidget->currentWidget() == m_SearchResultTabWidget) {
-        m_SearchResultTabWidget->setSortType(sortType);
+    } else if (m_pStackedWidget->currentWidget() == m_searchResultTabWidget) {
+        m_searchResultTabWidget->setSortType(sortType);
     }
 }
 
@@ -363,32 +363,32 @@ void MusicListDataWidget::onPlayAllClicked()
     switch (CommonService::getInstance()->getListPageSwitchType()) {
     case AlbumType:
         // 清空播放队列
-        Player::instance()->clearPlayList();
+        Player::getInstance()->clearPlayList();
         // 添加到播放列表
-        Player::instance()->setPlayList(DataBaseService::getInstance()->allMusicInfos());
+        Player::getInstance()->setPlayList(DataBaseService::getInstance()->allMusicInfos());
 
         // 通知播放队列改变
-        Player::instance()->setCurrentPlayListHash(m_currentHash, false);
-        emit Player::instance()->signalPlayListChanged();
+        Player::getInstance()->setCurrentPlayListHash(m_currentHash, false);
+        emit Player::getInstance()->signalPlayListChanged();
 
         // 设置第一首播放音乐
-        if (Player::instance()->getPlayList()->size() > 0) {
-            Player::instance()->playMeta(Player::instance()->getPlayList()->first());
+        if (Player::getInstance()->getPlayList()->size() > 0) {
+            Player::getInstance()->playMeta(Player::getInstance()->getPlayList()->first());
         }
         break;
     case SingerType:
         // 清空播放队列
-        Player::instance()->clearPlayList();
+        Player::getInstance()->clearPlayList();
         // 添加到播放列表
-        Player::instance()->setPlayList(DataBaseService::getInstance()->allMusicInfos());
+        Player::getInstance()->setPlayList(DataBaseService::getInstance()->allMusicInfos());
 
         // 通知播放队列改变
-        Player::instance()->setCurrentPlayListHash(m_currentHash, false);
-        emit Player::instance()->signalPlayListChanged();
+        Player::getInstance()->setCurrentPlayListHash(m_currentHash, false);
+        emit Player::getInstance()->signalPlayListChanged();
 
         // 设置第一首播放音乐
-        if (Player::instance()->getPlayList()->size() > 0) {
-            Player::instance()->playMeta(Player::instance()->getPlayList()->first());
+        if (Player::getInstance()->getPlayList()->size() > 0) {
+            Player::getInstance()->playMeta(Player::getInstance()->getPlayList()->first());
         }
         break;
     // 同下共用
@@ -397,38 +397,38 @@ void MusicListDataWidget::onPlayAllClicked()
     case FavType:
     case CustomType:
         // 清空播放队列
-        Player::instance()->clearPlayList();
+        Player::getInstance()->clearPlayList();
         // 添加到播放列表
         for (auto meta : m_musicListView->getMusicListData()) {
-            Player::instance()->playListAppendMeta(meta);
+            Player::getInstance()->playListAppendMeta(meta);
         }
 
         // 通知播放队列改变
-        Player::instance()->setCurrentPlayListHash(m_currentHash, false);
-        emit Player::instance()->signalPlayListChanged();
+        Player::getInstance()->setCurrentPlayListHash(m_currentHash, false);
+        emit Player::getInstance()->signalPlayListChanged();
 
         // 设置第一首播放音乐
-        if (Player::instance()->getPlayList()->size() > 0) {
-            Player::instance()->playMeta(Player::instance()->getPlayList()->first());
+        if (Player::getInstance()->getPlayList()->size() > 0) {
+            Player::getInstance()->playMeta(Player::getInstance()->getPlayList()->first());
         }
         break;
     case SearchMusicResultType:
     case SearchSingerResultType:
     case SearchAlbumResultType:
         // 清空播放队列
-        Player::instance()->clearPlayList();
+        Player::getInstance()->clearPlayList();
         // 添加到播放列表
-        for (auto meta : m_SearchResultTabWidget->getMusicLiseData()) {
-            Player::instance()->playListAppendMeta(meta);
+        for (auto meta : m_searchResultTabWidget->getMusicLiseData()) {
+            Player::getInstance()->playListAppendMeta(meta);
         }
 
         // 通知播放队列改变
-        Player::instance()->setCurrentPlayListHash(m_currentHash, false);
-        emit Player::instance()->signalPlayListChanged();
+        Player::getInstance()->setCurrentPlayListHash(m_currentHash, false);
+        emit Player::getInstance()->signalPlayListChanged();
 
         // 设置第一首播放音乐
-        if (Player::instance()->getPlayList()->size() > 0) {
-            Player::instance()->playMeta(Player::instance()->getPlayList()->first());
+        if (Player::getInstance()->getPlayList()->size() > 0) {
+            Player::getInstance()->playMeta(Player::getInstance()->getPlayList()->first());
         }
         break;
     default:
@@ -699,8 +699,8 @@ void MusicListDataWidget::refreshInfoLabel(QString hash)
     int songCount = 0;
     if (hash == "album" || hash == "albumResult") {
         if (hash == "albumResult") {
-            songCount = m_SearchResultTabWidget->getMusicCountByAlbum();
-            albumCount = m_SearchResultTabWidget->getAlbumCount();
+            songCount = m_searchResultTabWidget->getMusicCountByAlbum();
+            albumCount = m_searchResultTabWidget->getAlbumCount();
             showEmptyHits(songCount);
             refreshSortAction("albumResult");
         } else {
@@ -721,8 +721,8 @@ void MusicListDataWidget::refreshInfoLabel(QString hash)
         }
     } else if (hash == "artist" || hash == "artistResult") {
         if (hash == "artistResult") {
-            songCount = m_SearchResultTabWidget->getMusicCountBySinger();
-            singerCount = m_SearchResultTabWidget->getSingerCount();
+            songCount = m_searchResultTabWidget->getMusicCountBySinger();
+            singerCount = m_searchResultTabWidget->getSingerCount();
             showEmptyHits(songCount);
             refreshSortAction("artistResult");
         } else {
@@ -742,7 +742,7 @@ void MusicListDataWidget::refreshInfoLabel(QString hash)
         }
     } else if (hash == "all" || hash == "musicResult") {
         if (hash == "musicResult") {
-            songCount = m_SearchResultTabWidget->getMusicCountByMusic();
+            songCount = m_searchResultTabWidget->getMusicCountByMusic();
             showEmptyHits(songCount);
             refreshSortAction("musicResult");
         } else {
@@ -775,7 +775,7 @@ void MusicListDataWidget::refreshInfoLabel(QString hash)
 void MusicListDataWidget::refreshModeBtnByHash(QString hash)
 {
     if (hash == "albumResult" || hash == "artistResult" || hash == "musicResult") {
-        refreshModeBtn(m_SearchResultTabWidget->getViewMode());
+        refreshModeBtn(m_searchResultTabWidget->getViewMode());
     }
 }
 
@@ -811,7 +811,7 @@ void MusicListDataWidget::refreshSortAction(QString hash)
         for (int i = 0; i < m_musicDropdown->actions().size(); i++) {
             QAction *action = m_musicDropdown->actions().at(i);
             DataBaseService::ListSortType sortType = action->data().value<DataBaseService::ListSortType>();
-            if (sortType == (hash == "musicResult" ? m_SearchResultTabWidget->getSortType() : m_musicListView->getSortType())) {
+            if (sortType == (hash == "musicResult" ? m_searchResultTabWidget->getSortType() : m_musicListView->getSortType())) {
                 m_musicDropdown->setCurrentAction(action);
             }
         }
@@ -823,7 +823,7 @@ void MusicListDataWidget::refreshSortAction(QString hash)
         for (int i = 0; i < m_albumDropdown->actions().size(); i++) {
             QAction *action = m_albumDropdown->actions().at(i);
             DataBaseService::ListSortType sortType = action->data().value<DataBaseService::ListSortType>();
-            if (sortType == (hash == "albumResult" ? m_SearchResultTabWidget->getSortType() : m_albumListView->getSortType())) {
+            if (sortType == (hash == "albumResult" ? m_searchResultTabWidget->getSortType() : m_albumListView->getSortType())) {
                 m_albumDropdown->setCurrentAction(action);
             }
         }
@@ -835,7 +835,7 @@ void MusicListDataWidget::refreshSortAction(QString hash)
         for (int i = 0; i < m_artistDropdown->actions().size(); i++) {
             QAction *action = m_artistDropdown->actions().at(i);
             DataBaseService::ListSortType sortType = action->data().value<DataBaseService::ListSortType>();
-            if (sortType == (hash == "artistResult" ? m_SearchResultTabWidget->getSortType() : m_singerListView->getSortType())) {
+            if (sortType == (hash == "artistResult" ? m_searchResultTabWidget->getSortType() : m_singerListView->getSortType())) {
                 m_artistDropdown->setCurrentAction(action);
             }
         }

@@ -91,7 +91,7 @@ void DBOperate::slotImportMedias(const QStringList &urllist)
 {
     qDebug() << "------DBOperate::slotImportMedias  currentThread = " << QThread::currentThread();
     if (m_mediaLibrary == nullptr) {
-        m_mediaLibrary = MediaLibrary::instance();
+        m_mediaLibrary = MediaLibrary::getInstance();
         m_mediaLibrary->init();
     }
     for (auto &filepath : urllist) {

@@ -97,23 +97,23 @@ MainFrame::MainFrame()
     m_titlebar->layout()->setAlignment(m_titlebarwidget, Qt::AlignCenter);
     m_titlebar->resize(width(), 50);
 
-    QObject::connect(DGuiApplicationHelper::instance(), &DGuiApplicationHelper::themeTypeChanged,
-                     this, &MainFrame::slotTheme);
-    QObject::connect(m_titlebarwidget, &TitlebarWidget::sigSearchEditFoucusIn,
-                     this, &MainFrame::slotSearchEditFoucusIn);
-    QObject::connect(DataBaseService::getInstance(), &DataBaseService::sigImportFinished,
-                     this, &MainFrame::slotImportFinished);
-    QObject::connect(CommonService::getInstance(), &CommonService::showPopupMessage,
-                     this, &MainFrame::showPopupMessage);
+    connect(DGuiApplicationHelper::instance(), &DGuiApplicationHelper::themeTypeChanged,
+            this, &MainFrame::slotTheme);
+    connect(m_titlebarwidget, &TitlebarWidget::sigSearchEditFoucusIn,
+            this, &MainFrame::slotSearchEditFoucusIn);
+    connect(DataBaseService::getInstance(), &DataBaseService::signalImportFinished,
+            this, &MainFrame::slotImportFinished);
+    connect(CommonService::getInstance(), &CommonService::signalShowPopupMessage,
+            this, &MainFrame::showPopupMessage);
 
-    connect(DataBaseService::getInstance(), &DataBaseService::sigPlayFromFileMaganager,
+    connect(DataBaseService::getInstance(), &DataBaseService::signalPlayFromFileMaganager,
             this, &MainFrame::slotPlayFromFileMaganager);
 
-    connect(Player::instance()->getMpris(), &MprisPlayer::quitRequested, this, [ = ]() {
+    connect(Player::getInstance()->getMpris(), &MprisPlayer::quitRequested, this, [ = ]() {
         sync();
         qApp->quit();
     });
-    connect(Player::instance()->getMpris(), &MprisPlayer::raiseRequested, this, [ = ]() {
+    connect(Player::getInstance()->getMpris(), &MprisPlayer::raiseRequested, this, [ = ]() {
         qDebug() << "raiseRequested=============";
         if (isVisible()) {
             if (isMinimized()) {
@@ -168,7 +168,7 @@ void MainFrame::initUI(bool showLoading)
     initMenuAndShortcut();
     m_newSonglistAction->setEnabled(showLoading);
 
-    connect(DataBaseService::getInstance(), &DataBaseService::sigAllMusicCleared,
+    connect(DataBaseService::getInstance(), &DataBaseService::signalAllMusicCleared,
             this, &MainFrame::slotAllMusicCleared);
 }
 
@@ -300,7 +300,7 @@ void MainFrame::autoStartToPlay()
     auto lastplaypage = MusicSettings::value("base.play.last_playlist").toString(); //上一次的页面
     if (!strOpenPath.isEmpty()) {
         //通知设置当前页面
-        Player::instance()->setCurrentPlayListHash(lastplaypage, true);
+        Player::getInstance()->setCurrentPlayListHash(lastplaypage, true);
         qDebug() << "lastplaypage:========" << lastplaypage;
         return ;
     }
@@ -309,18 +309,18 @@ void MainFrame::autoStartToPlay()
         bool bremb = MusicSettings::value("base.play.remember_progress").toBool();
         bool bautoplay = MusicSettings::value("base.play.auto_play").toBool();
         //通知设置当前页面&查询数据
-        Player::instance()->setCurrentPlayListHash(lastplaypage, true);
+        Player::getInstance()->setCurrentPlayListHash(lastplaypage, true);
         //获取上一次的歌曲信息
         MediaMeta medmeta = DataBaseService::getInstance()->getMusicInfoByHash(lastMeta);
         if (medmeta.localPath.isEmpty())
             return;
         if (bremb) {
-            Player::instance()->setActiveMeta(medmeta);
+            Player::getInstance()->setActiveMeta(medmeta);
             //加载进度
-            Player::instance()->loadMediaProgress(medmeta.localPath);
+            Player::getInstance()->loadMediaProgress(medmeta.localPath);
             //设置进度
             QTimer::singleShot(150, [ = ]() {
-                Player::instance()->setPosition(MusicSettings::value("base.play.last_position").toInt());
+                Player::getInstance()->setPosition(MusicSettings::value("base.play.last_position").toInt());
             });
             //加载波形图数据
             m_footerWidget->slotLoadDetector(lastMeta);
@@ -461,7 +461,7 @@ void MainFrame::slotMenuTriggered(QAction *action)
     Q_ASSERT(action);
 
     if (action == m_newSonglistAction) {
-        CommonService::getInstance()->addNewSongList();
+        emit CommonService::getInstance()->signalAddNewSongList();
     }
 
     if (action == m_addMusicFiles) {
@@ -472,16 +472,16 @@ void MainFrame::slotMenuTriggered(QAction *action)
         if (m_dequalizerDialog == nullptr) {
             m_dequalizerDialog = new DequalizerDialog(this);
             connect(m_dequalizerDialog, &DequalizerDialog::setEqualizerEnable,
-                    Player::instance(), &Player::setEqualizerEnable);
+                    Player::getInstance(), &Player::setEqualizerEnable);
             connect(m_dequalizerDialog, &DequalizerDialog::setEqualizerpre,
-                    Player::instance(), &Player::setEqualizerpre);
+                    Player::getInstance(), &Player::setEqualizerpre);
             connect(m_dequalizerDialog, &DequalizerDialog::setEqualizerbauds,
-                    Player::instance(), &Player::setEqualizerbauds);
+                    Player::getInstance(), &Player::setEqualizerbauds);
             connect(m_dequalizerDialog, &DequalizerDialog::setEqualizerIndex,
-                    Player::instance(), &Player::setEqualizerCurMode);
+                    Player::getInstance(), &Player::setEqualizerCurMode);
         }
         //配置均衡器参数
-        Player::instance()->initEqualizerCfg();
+        Player::getInstance()->initEqualizerCfg();
         Dtk::Widget::moveToCenter(m_dequalizerDialog);
         m_dequalizerDialog->exec();
         MusicSettings::sync();
@@ -512,7 +512,7 @@ void MainFrame::slotMenuTriggered(QAction *action)
         //update shortcut
         m_footerWidget->updateShortcut();
         //update fade
-        Player::instance()->setFadeInOut(MusicSettings::value("base.play.fade_in_out").toBool());
+        Player::getInstance()->setFadeInOut(MusicSettings::value("base.play.fade_in_out").toBool());
     }
 }
 
@@ -538,11 +538,11 @@ void MainFrame::slotAutoPlay(bool bremb)
     qDebug() << "slotAutoPlay=========";
     auto lastMeta = MusicSettings::value("base.play.last_meta").toString();
     if (bremb)
-        Player::instance()->resume();
+        Player::getInstance()->resume();
     else {
         MediaMeta mt = DataBaseService::getInstance()->getMusicInfoByHash(lastMeta);
         if (!mt.localPath.isEmpty())
-            Player::instance()->playMeta(mt);
+            Player::getInstance()->playMeta(mt);
         else
             qDebug() << __FUNCTION__ << " at line:" << __LINE__ << " localPath is empty.";
     }
@@ -562,7 +562,7 @@ void MainFrame::slotPlayFromFileMaganager()
         return;
     }
     qDebug() << "----------playMeta:" << mt.localPath;
-    Player::instance()->playMeta(mt);
+    Player::getInstance()->playMeta(mt);
 }
 
 void MainFrame::showEvent(QShowEvent *event)
@@ -708,7 +708,7 @@ void MainFrame::closeEvent(QCloseEvent *event)
         break;
     }
 
-    MusicSettings::setOption("base.play.last_position", Player::instance()->position());
+    MusicSettings::setOption("base.play.last_position", Player::getInstance()->position());
     this->setFocus();
     DMainWindow::closeEvent(event);
 }
