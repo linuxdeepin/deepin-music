@@ -871,6 +871,7 @@ void DataBaseService::initPlaylistTable()
     playlistMeta.readonly = true;
     playlistMeta.hide = false;
     playlistMeta.sortID = 1;
+    playlistMeta.sortType = SortByAddTimeASC;
     if (!playlistExist("album")) {
         addPlaylist(playlistMeta);
     }

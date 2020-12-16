@@ -47,15 +47,25 @@
 #include "ac-desktop-define.h"
 
 DWIDGET_USE_NAMESPACE
-
-bool moreThanTimestamp(SingerInfo v1, SingerInfo v2)
+// 升序
+bool moreThanTimestampASC(SingerInfo v1, SingerInfo v2)
 {
     return v1.timestamp < v2.timestamp;
 }
 
-bool moreThanSinger(SingerInfo v1, SingerInfo v2)
+bool moreThanSingerASC(SingerInfo v1, SingerInfo v2)
 {
     return v1.pinyinSinger < v2.pinyinSinger;
+}
+// 降序
+bool moreThanTimestampDES(SingerInfo v1, SingerInfo v2)
+{
+    return v1.timestamp > v2.timestamp;
+}
+
+bool moreThanSingerDES(SingerInfo v1, SingerInfo v2)
+{
+    return v1.pinyinSinger > v2.pinyinSinger;
 }
 
 SingerListView::SingerListView(QString hash, QWidget *parent)
@@ -107,34 +117,9 @@ void SingerListView::setSingerListData(const QList<SingerInfo> &listinfo)
     setUpdatesEnabled(false);
     singerModel->removeRows(0, singerModel->rowCount());
 
-    for (SingerInfo singerInfo : listinfo) {
-        QStandardItem *pItem = new QStandardItem;
-
-        //设置icon
-        bool iconExists = false;
-        for (int i = 0; i < singerInfo.musicinfos.values().size(); i++) {
-            MediaMeta metaBind = singerInfo.musicinfos.values().at(i);
-            QString imagesDirPath = Global::cacheDir() + "/images/" + metaBind.hash + ".jpg";
-            QFileInfo file(imagesDirPath);
-            QIcon icon;
-            if (file.exists()) {
-                pItem->setIcon(QIcon(imagesDirPath));
-                iconExists = true;
-                break;
-            }
-        }
-        if (!iconExists) {
-            pItem->setIcon(m_defaultIcon);
-        }
-
-        singerModel->appendRow(pItem);
-        auto row = singerModel->rowCount() - 1;
-        QModelIndex idx = singerModel->index(row, 0, QModelIndex());
-        QVariant singerval;
-        singerval.setValue(singerInfo);
-        singerModel->setData(idx, singerval, Qt::UserRole);
-    }
-
+    QList<SingerInfo> albumInfos = getSingerListData();
+    DataBaseService::ListSortType sortType = getSortType();
+    this->setDataBySortType(albumInfos, sortType);
     setUpdatesEnabled(true);
 }
 
@@ -146,6 +131,27 @@ QList<SingerInfo> SingerListView::getSingerListData() const
 void SingerListView::resetSingerListDataByStr(const QString &searchWord)
 {
     QList<SingerInfo> singerInfoList = DataBaseService::getInstance()->allSingerInfos();
+    DataBaseService::ListSortType sortType = getSortType();
+    switch (sortType) {
+    case DataBaseService::SortByAddTimeASC: {
+        qSort(singerInfoList.begin(), singerInfoList.end(), moreThanTimestampASC);
+        break;
+    }
+    case DataBaseService::SortBySingerASC: {
+        qSort(singerInfoList.begin(), singerInfoList.end(), moreThanSingerASC);
+        break;
+    }
+    case DataBaseService::SortByAddTimeDES: {
+        qSort(singerInfoList.begin(), singerInfoList.end(), moreThanTimestampDES);
+        break;
+    }
+    case DataBaseService::SortBySingerDES: {
+        qSort(singerInfoList.begin(), singerInfoList.end(), moreThanSingerDES);
+        break;
+    }
+    default:
+        break;
+    }
 
     singerModel->clear();
     m_singerInfoList.clear();
@@ -183,6 +189,27 @@ void SingerListView::resetSingerListDataByStr(const QString &searchWord)
 void SingerListView::resetSingerListDataBySongName(const QList<MediaMeta> &mediaMetas)
 {
     QList<SingerInfo> singerInfos = DataBaseService::getInstance()->allSingerInfos();
+    DataBaseService::ListSortType sortType = getSortType();
+    switch (sortType) {
+    case DataBaseService::SortByAddTimeASC: {
+        qSort(singerInfos.begin(), singerInfos.end(), moreThanTimestampASC);
+        break;
+    }
+    case DataBaseService::SortBySingerASC: {
+        qSort(singerInfos.begin(), singerInfos.end(), moreThanSingerASC);
+        break;
+    }
+    case DataBaseService::SortByAddTimeDES: {
+        qSort(singerInfos.begin(), singerInfos.end(), moreThanTimestampDES);
+        break;
+    }
+    case DataBaseService::SortBySingerDES: {
+        qSort(singerInfos.begin(), singerInfos.end(), moreThanSingerDES);
+        break;
+    }
+    default:
+        break;
+    }
 
     m_singerInfoList.clear();
     singerModel->clear();
@@ -227,6 +254,27 @@ void SingerListView::resetSingerListDataBySongName(const QList<MediaMeta> &media
 void SingerListView::resetSingerListDataByAlbum(const QList<AlbumInfo> &albumInfos)
 {
     QList<SingerInfo> singerInfos = DataBaseService::getInstance()->allSingerInfos();
+    DataBaseService::ListSortType sortType = getSortType();
+    switch (sortType) {
+    case DataBaseService::SortByAddTimeASC: {
+        qSort(singerInfos.begin(), singerInfos.end(), moreThanTimestampASC);
+        break;
+    }
+    case DataBaseService::SortBySingerASC: {
+        qSort(singerInfos.begin(), singerInfos.end(), moreThanSingerASC);
+        break;
+    }
+    case DataBaseService::SortByAddTimeDES: {
+        qSort(singerInfos.begin(), singerInfos.end(), moreThanTimestampDES);
+        break;
+    }
+    case DataBaseService::SortBySingerDES: {
+        qSort(singerInfos.begin(), singerInfos.end(), moreThanSingerDES);
+        break;
+    }
+    default:
+        break;
+    }
 
     m_singerInfoList.clear();
     singerModel->clear();
@@ -354,14 +402,58 @@ DataBaseService::ListSortType SingerListView::getSortType()
 
 void SingerListView::setSortType(DataBaseService::ListSortType sortType)
 {
-    DataBaseService::getInstance()->updatePlaylistSortType(sortType, m_hash);
-    if (sortType == DataBaseService::SortByAddTime) {
-        qSort(m_singerInfoList.begin(), m_singerInfoList.end(), moreThanTimestamp);
-    } else if (sortType == DataBaseService::SortBySinger) {
-        qSort(m_singerInfoList.begin(), m_singerInfoList.end(), moreThanSinger);
+    // 倒序
+    switch (sortType) {
+    case DataBaseService::SortByAddTime: {
+        if (getSortType() == DataBaseService::SortByAddTimeASC) {
+            sortType = DataBaseService::SortByAddTimeDES;
+        } else {
+            sortType = DataBaseService::SortByAddTimeASC;
+        }
+        break;
     }
+    case DataBaseService::SortBySinger: {
+        if (getSortType() == DataBaseService::SortBySingerASC) {
+            sortType = DataBaseService::SortBySingerDES;
+        } else {
+            sortType = DataBaseService::SortBySingerASC;
+        }
+        break;
+    }
+    default:
+        sortType = DataBaseService::SortByAddTimeASC;
+        break;
+    }
+
+    DataBaseService::getInstance()->updatePlaylistSortType(sortType, m_hash);
+    this->setDataBySortType(m_singerInfoList, sortType);
+}
+
+void SingerListView::setDataBySortType(QList<SingerInfo> &singerInfos, DataBaseService::ListSortType sortType)
+{
+    switch (sortType) {
+    case DataBaseService::SortByAddTimeASC: {
+        qSort(singerInfos.begin(), singerInfos.end(), moreThanTimestampASC);
+        break;
+    }
+    case DataBaseService::SortBySingerASC: {
+        qSort(singerInfos.begin(), singerInfos.end(), moreThanSingerASC);
+        break;
+    }
+    case DataBaseService::SortByAddTimeDES: {
+        qSort(singerInfos.begin(), singerInfos.end(), moreThanTimestampDES);
+        break;
+    }
+    case DataBaseService::SortBySingerDES: {
+        qSort(singerInfos.begin(), singerInfos.end(), moreThanSingerDES);
+        break;
+    }
+    default:
+        break;
+    }
+
     singerModel->clear();
-    for (SingerInfo meta : m_singerInfoList) {
+    for (SingerInfo meta : singerInfos) {
         QStandardItem *pItem = new QStandardItem;
         //设置icon
         bool iconExists = false;

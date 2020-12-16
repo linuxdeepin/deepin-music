@@ -47,15 +47,25 @@
 #include "playlistview.h"
 
 DWIDGET_USE_NAMESPACE
-
-bool moreThanTimestamp(AlbumInfo v1, AlbumInfo v2)
+// 升序
+bool moreThanTimestampASC(AlbumInfo v1, AlbumInfo v2)
 {
     return v1.timestamp < v2.timestamp;
 }
 
-bool moreThanTitle(const AlbumInfo v1, const AlbumInfo v2)
+bool moreThanTitleASC(const AlbumInfo v1, const AlbumInfo v2)
 {
     return v1.pinyinAlbum < v2.pinyinAlbum;
+}
+// 降序
+bool moreThanTimestampDES(AlbumInfo v1, AlbumInfo v2)
+{
+    return v1.timestamp > v2.timestamp;
+}
+
+bool moreThanTitleDES(const AlbumInfo v1, const AlbumInfo v2)
+{
+    return v1.pinyinAlbum > v2.pinyinAlbum;
 }
 
 AlbumListView::AlbumListView(QString hash, QWidget *parent)
@@ -107,31 +117,8 @@ void AlbumListView::setAlbumListData(const QList<AlbumInfo> &listinfo)
     m_albumInfoList = listinfo;
     albumModel->clear();
 
-    for (AlbumInfo albuminfo : m_albumInfoList) {
-        QStandardItem *pItem = new QStandardItem;
-        //设置icon
-        bool iconExists = false;
-        for (int i = 0; i < albuminfo.musicinfos.values().size(); i++) {
-            MediaMeta metaBind = albuminfo.musicinfos.values().at(i);
-            QString imagesDirPath = Global::cacheDir() + "/images/" + metaBind.hash + ".jpg";
-            QFileInfo file(imagesDirPath);
-            QIcon icon;
-            if (file.exists()) {
-                pItem->setIcon(QIcon(imagesDirPath));
-                iconExists = true;
-                break;
-            }
-        }
-        if (!iconExists) {
-            pItem->setIcon(m_defaultIcon);
-        }
-        albumModel->appendRow(pItem);
-        auto row = albumModel->rowCount() - 1;
-        QModelIndex idx = albumModel->index(row, 0, QModelIndex());
-        QVariant albumval;
-        albumval.setValue(albuminfo);
-        albumModel->setData(idx, albumval, Qt::UserRole);
-    }
+    DataBaseService::ListSortType sortType = getSortType();
+    this->setDataBySortType(m_albumInfoList, sortType);
 }
 
 void AlbumListView::resetAlbumListDataByStr(const QString &searchWord)
@@ -140,6 +127,27 @@ void AlbumListView::resetAlbumListDataByStr(const QString &searchWord)
 
     m_albumInfoList.clear();
     this->albumModel->clear();
+    DataBaseService::ListSortType sortType = getSortType();
+    switch (sortType) {
+    case DataBaseService::SortByAddTimeASC: {
+        qSort(albumInfoList.begin(), albumInfoList.end(), moreThanTimestampASC);
+        break;
+    }
+    case DataBaseService::SortByTitleASC: {
+        qSort(albumInfoList.begin(), albumInfoList.end(), moreThanTitleASC);
+        break;
+    }
+    case DataBaseService::SortByAddTimeDES: {
+        qSort(albumInfoList.begin(), albumInfoList.end(), moreThanTimestampDES);
+        break;
+    }
+    case DataBaseService::SortByTitleDES: {
+        qSort(albumInfoList.begin(), albumInfoList.end(), moreThanTitleDES);
+        break;
+    }
+    default:
+        break;
+    }
     for (AlbumInfo albumInfo : albumInfoList) {
         if (!CommonService::getInstance()->containsStr(searchWord, albumInfo.albumName)) {
             continue;
@@ -176,6 +184,27 @@ void AlbumListView::resetAlbumListDataBySongName(const QList<MediaMeta> &mediaMe
     QList<AlbumInfo> albumInfoList = DataBaseService::getInstance()->allAlbumInfos();
     m_albumInfoList.clear();
     this->albumModel->clear();
+    DataBaseService::ListSortType sortType = getSortType();
+    switch (sortType) {
+    case DataBaseService::SortByAddTimeASC: {
+        qSort(albumInfoList.begin(), albumInfoList.end(), moreThanTimestampASC);
+        break;
+    }
+    case DataBaseService::SortByTitleASC: {
+        qSort(albumInfoList.begin(), albumInfoList.end(), moreThanTitleASC);
+        break;
+    }
+    case DataBaseService::SortByAddTimeDES: {
+        qSort(albumInfoList.begin(), albumInfoList.end(), moreThanTimestampDES);
+        break;
+    }
+    case DataBaseService::SortByTitleDES: {
+        qSort(albumInfoList.begin(), albumInfoList.end(), moreThanTitleDES);
+        break;
+    }
+    default:
+        break;
+    }
     for (AlbumInfo albumInfo : albumInfoList) {
         bool isAlbumContainSong = false;
         for (MediaMeta albumMeta : albumInfo.musicinfos.values()) {
@@ -225,6 +254,27 @@ void AlbumListView::resetAlbumListDataBySinger(const QList<SingerInfo> &singerIn
     m_albumInfoList.clear();
 
     this->albumModel->clear();
+    DataBaseService::ListSortType sortType = getSortType();
+    switch (sortType) {
+    case DataBaseService::SortByAddTimeASC: {
+        qSort(albumInfoList.begin(), albumInfoList.end(), moreThanTimestampASC);
+        break;
+    }
+    case DataBaseService::SortByTitleASC: {
+        qSort(albumInfoList.begin(), albumInfoList.end(), moreThanTitleASC);
+        break;
+    }
+    case DataBaseService::SortByAddTimeDES: {
+        qSort(albumInfoList.begin(), albumInfoList.end(), moreThanTimestampDES);
+        break;
+    }
+    case DataBaseService::SortByTitleDES: {
+        qSort(albumInfoList.begin(), albumInfoList.end(), moreThanTitleDES);
+        break;
+    }
+    default:
+        break;
+    }
     for (AlbumInfo albumInfo : albumInfoList) {
         bool isAlbumContainSong = false;
         for (SingerInfo singerInfo : singerInfos) {
@@ -439,14 +489,59 @@ DataBaseService::ListSortType AlbumListView::getSortType()
 
 void AlbumListView::setSortType(DataBaseService::ListSortType sortType)
 {
-    DataBaseService::getInstance()->updatePlaylistSortType(sortType, m_hash);
-    if (sortType == DataBaseService::SortByAddTime) {
-        qSort(m_albumInfoList.begin(), m_albumInfoList.end(), moreThanTimestamp);
-    } else if (sortType == DataBaseService::SortByTitle) {
-        qSort(m_albumInfoList.begin(), m_albumInfoList.end(), moreThanTitle);
+    // 倒序
+    switch (sortType) {
+    case DataBaseService::SortByAddTime: {
+        if (getSortType() == DataBaseService::SortByAddTimeASC) {
+            sortType = DataBaseService::SortByAddTimeDES;
+        } else {
+            sortType = DataBaseService::SortByAddTimeASC;
+        }
+        break;
     }
+    case DataBaseService::SortByTitle: {
+        if (getSortType() == DataBaseService::SortByTitleASC) {
+            sortType = DataBaseService::SortByTitleDES;
+        } else {
+            sortType = DataBaseService::SortByTitleASC;
+        }
+        break;
+    }
+    default:
+        sortType = DataBaseService::SortByAddTimeASC;
+        break;
+    }
+
+    DataBaseService::getInstance()->updatePlaylistSortType(sortType, m_hash);
+    QList<AlbumInfo> albumInfos = getAlbumListData();
+    this->setDataBySortType(albumInfos, sortType);
+}
+
+void AlbumListView::setDataBySortType(QList<AlbumInfo> &albumInfos, DataBaseService::ListSortType sortType)
+{
+    switch (sortType) {
+    case DataBaseService::SortByAddTimeASC: {
+        qSort(albumInfos.begin(), albumInfos.end(), moreThanTimestampASC);
+        break;
+    }
+    case DataBaseService::SortByTitleASC: {
+        qSort(albumInfos.begin(), albumInfos.end(), moreThanTitleASC);
+        break;
+    }
+    case DataBaseService::SortByAddTimeDES: {
+        qSort(albumInfos.begin(), albumInfos.end(), moreThanTimestampDES);
+        break;
+    }
+    case DataBaseService::SortByTitleDES: {
+        qSort(albumInfos.begin(), albumInfos.end(), moreThanTitleDES);
+        break;
+    }
+    default:
+        break;
+    }
+
     albumModel->removeRows(0, albumModel->rowCount());
-    for (AlbumInfo meta : m_albumInfoList) {
+    for (AlbumInfo meta : albumInfos) {
         QStandardItem *pItem = new QStandardItem();
         //设置icon
         bool iconExists = false;
@@ -471,6 +566,4 @@ void AlbumListView::setSortType(DataBaseService::ListSortType sortType)
         albumval.setValue(meta);
         albumModel->setData(idx, albumval, Qt::UserRole);
     }
-    int count = albumModel->rowCount();
-    qDebug() << count;
 }

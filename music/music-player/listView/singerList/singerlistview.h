@@ -76,6 +76,8 @@ public:
     //排序
     DataBaseService::ListSortType getSortType();
     void setSortType(DataBaseService::ListSortType sortType);
+    // 根据排序添加数据
+    void setDataBySortType(QList<SingerInfo> &singerInfos, DataBaseService::ListSortType sortType);
 signals:
     void requestCustomContextMenu(const QPoint &pos);
     void modeChanged(int);

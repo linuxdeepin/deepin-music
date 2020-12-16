@@ -55,24 +55,45 @@
 #include "ac-desktop-define.h"
 
 DWIDGET_USE_NAMESPACE
-bool moreThanTimestamp(MediaMeta v1, MediaMeta v2)
+// 升序
+bool moreThanTimestampASC(MediaMeta v1, MediaMeta v2)
 {
     return v1.timestamp < v2.timestamp;
 }
 
-bool moreThanTitle(const MediaMeta v1, const MediaMeta v2)
+bool moreThanTitleASC(const MediaMeta v1, const MediaMeta v2)
 {
     return v1.pinyinTitle < v2.pinyinTitle;
 }
 
-bool moreThanSinger(MediaMeta v1, MediaMeta v2)
+bool moreThanSingerASC(MediaMeta v1, MediaMeta v2)
 {
     return v1.pinyinArtist < v2.pinyinArtist;
 }
 
-bool moreThanAblum(const MediaMeta v1, const MediaMeta v2)
+bool moreThanAblumASC(const MediaMeta v1, const MediaMeta v2)
 {
     return v1.pinyinAlbum < v2.pinyinAlbum;
+}
+// 降序
+bool moreThanTimestampDES(MediaMeta v1, MediaMeta v2)
+{
+    return v1.timestamp > v2.timestamp;
+}
+
+bool moreThanTitleDES(const MediaMeta v1, const MediaMeta v2)
+{
+    return v1.pinyinTitle > v2.pinyinTitle;
+}
+
+bool moreThanSingerDES(MediaMeta v1, MediaMeta v2)
+{
+    return v1.pinyinArtist > v2.pinyinArtist;
+}
+
+bool moreThanAblumDES(const MediaMeta v1, const MediaMeta v2)
+{
+    return v1.pinyinAlbum > v2.pinyinAlbum;
 }
 
 PlayListView::PlayListView(QString hash, bool isPlayQueue, QWidget *parent)
@@ -180,14 +201,160 @@ void PlayListView::initAllSonglist(QString hash)
     QList<MediaMeta> mediaMetas = DataBaseService::getInstance()->allMusicInfos();
 
     DataBaseService::ListSortType sortType = getSortType();
-    if (sortType == DataBaseService::SortByAddTime) {
-        qSort(mediaMetas.begin(), mediaMetas.end(), moreThanTimestamp);
-    } else if (sortType == DataBaseService::SortByTitle) {
-        qSort(mediaMetas.begin(), mediaMetas.end(), moreThanTitle);
-    } else if (sortType == DataBaseService::SortBySinger) {
-        qSort(mediaMetas.begin(), mediaMetas.end(), moreThanSinger);
-    } else if (sortType == DataBaseService::SortByAblum) {
-        qSort(mediaMetas.begin(), mediaMetas.end(), moreThanAblum);
+    this->setDataBySortType(mediaMetas, sortType);
+}
+
+void PlayListView::initCostomSonglist(const QString &hash)
+{
+    m_currentHash = hash;
+    m_model->clear();
+    QList<MediaMeta> mediaMetas = DataBaseService::getInstance()->customizeMusicInfos(hash);
+
+    DataBaseService::ListSortType sortType = getSortType();
+    this->setDataBySortType(mediaMetas, sortType);
+}
+
+void PlayListView::resetSonglistByStr(const QString &searchWord)
+{
+    m_model->clear();
+    QList<MediaMeta> mediaMetas = DataBaseService::getInstance()->allMusicInfos();
+
+    DataBaseService::ListSortType sortType = getSortType();
+    switch (sortType) {
+    case DataBaseService::SortByAddTimeASC: {
+        qSort(mediaMetas.begin(), mediaMetas.end(), moreThanTimestampASC);
+        break;
+    }
+    case DataBaseService::SortByTitleASC: {
+        qSort(mediaMetas.begin(), mediaMetas.end(), moreThanTitleASC);
+        break;
+    }
+    case DataBaseService::SortBySingerASC: {
+        qSort(mediaMetas.begin(), mediaMetas.end(), moreThanSingerASC);
+        break;
+    }
+    case DataBaseService::SortByAblumASC: {
+        qSort(mediaMetas.begin(), mediaMetas.end(), moreThanAblumASC);
+        break;
+    }
+    case DataBaseService::SortByAddTimeDES: {
+        qSort(mediaMetas.begin(), mediaMetas.end(), moreThanTimestampDES);
+        break;
+    }
+    case DataBaseService::SortByTitleDES: {
+        qSort(mediaMetas.begin(), mediaMetas.end(), moreThanTitleDES);
+        break;
+    }
+    case DataBaseService::SortBySingerDES: {
+        qSort(mediaMetas.begin(), mediaMetas.end(), moreThanSingerDES);
+        break;
+    }
+    case DataBaseService::SortByAblumDES: {
+        qSort(mediaMetas.begin(), mediaMetas.end(), moreThanAblumDES);
+        break;
+    }
+    default:
+        break;
+    }
+    for (int i = 0; i < mediaMetas.size(); i++) {
+        if (!CommonService::getInstance()->containsStr(searchWord, mediaMetas.at(i).title)) {
+            continue;
+        }
+        QStandardItem *newItem = new QStandardItem;
+
+        QString imagesDirPath = Global::cacheDir() + "/images/" + mediaMetas.at(i).hash + ".jpg";
+        QFileInfo file(imagesDirPath);
+        QIcon icon;
+        if (file.exists()) {
+            icon = QIcon(imagesDirPath);
+        } else {
+            icon = QIcon(":/common/image/cover_max.svg");
+        }
+        newItem->setIcon(icon);
+        m_model->appendRow(newItem);
+
+        auto row = m_model->rowCount() - 1;
+        QModelIndex index = m_model->index(row, 0, QModelIndex());
+
+        QVariant mediaMeta;//
+        MediaMeta meta = mediaMetas.at(i);
+        mediaMeta.setValue(meta);
+        m_model->setData(index, mediaMeta, Qt::UserRole);
+    }
+}
+
+void PlayListView::resetSonglistByAlbum(const QList<AlbumInfo> &albuminfos)
+{
+    QList<MediaMeta> mediaMetas;
+    for (AlbumInfo albuminfo : albuminfos) {
+        for (MediaMeta meta : albuminfo.musicinfos.values()) {
+            mediaMetas.append(meta);
+        }
+    }
+    DataBaseService::ListSortType sortType = getSortType();
+    this->setDataBySortType(mediaMetas, sortType);
+}
+
+void PlayListView::resetSonglistBySinger(const QList<SingerInfo> &singerInfos)
+{
+    QList<MediaMeta> mediaMetas;
+    for (SingerInfo singerInfo : singerInfos) {
+        for (MediaMeta meta : singerInfo.musicinfos.values()) {
+            mediaMetas.append(meta);
+        }
+    }
+    DataBaseService::ListSortType sortType = getSortType();
+    this->setDataBySortType(mediaMetas, sortType);
+}
+
+QList<MediaMeta> PlayListView::getMusicListData()
+{
+    QList<MediaMeta> list;
+    for (int i = 0; i < m_model->rowCount(); i++) {
+        QModelIndex idx = m_model->index(i, 0, QModelIndex());
+        MediaMeta meta = idx.data(Qt::UserRole).value<MediaMeta>();
+        list.append(meta);
+    }
+    return list;
+}
+
+void PlayListView::setDataBySortType(QList<MediaMeta> &mediaMetas, DataBaseService::ListSortType sortType)
+{
+    switch (sortType) {
+    case DataBaseService::SortByAddTimeASC: {
+        qSort(mediaMetas.begin(), mediaMetas.end(), moreThanTimestampASC);
+        break;
+    }
+    case DataBaseService::SortByTitleASC: {
+        qSort(mediaMetas.begin(), mediaMetas.end(), moreThanTitleASC);
+        break;
+    }
+    case DataBaseService::SortBySingerASC: {
+        qSort(mediaMetas.begin(), mediaMetas.end(), moreThanSingerASC);
+        break;
+    }
+    case DataBaseService::SortByAblumASC: {
+        qSort(mediaMetas.begin(), mediaMetas.end(), moreThanAblumASC);
+        break;
+    }
+    case DataBaseService::SortByAddTimeDES: {
+        qSort(mediaMetas.begin(), mediaMetas.end(), moreThanTimestampDES);
+        break;
+    }
+    case DataBaseService::SortByTitleDES: {
+        qSort(mediaMetas.begin(), mediaMetas.end(), moreThanTitleDES);
+        break;
+    }
+    case DataBaseService::SortBySingerDES: {
+        qSort(mediaMetas.begin(), mediaMetas.end(), moreThanSingerDES);
+        break;
+    }
+    case DataBaseService::SortByAblumDES: {
+        qSort(mediaMetas.begin(), mediaMetas.end(), moreThanAblumDES);
+        break;
+    }
+    default:
+        break;
     }
 
     m_model->clear();
@@ -213,145 +380,6 @@ void PlayListView::initAllSonglist(QString hash)
         mediaMeta.setValue(meta);
         m_model->setData(index, mediaMeta, Qt::UserRole);
     }
-}
-
-void PlayListView::initCostomSonglist(const QString &hash)
-{
-    m_currentHash = hash;
-    m_model->clear();
-    QList<MediaMeta> list = DataBaseService::getInstance()->customizeMusicInfos(hash);
-
-    for (int i = 0; i < list.size(); i++) {
-        QStandardItem *newItem = new QStandardItem;
-
-        QString imagesDirPath = Global::cacheDir() + "/images/" + list.at(i).hash + ".jpg";
-        QFileInfo file(imagesDirPath);
-        QIcon icon;
-        if (file.exists()) {
-            icon = QIcon(imagesDirPath);
-        } else {
-            icon = QIcon(":/common/image/cover_max.svg");
-        }
-        newItem->setIcon(icon);
-        m_model->appendRow(newItem);
-
-        auto row = m_model->rowCount() - 1;
-        QModelIndex index = m_model->index(row, 0, QModelIndex());
-
-        QVariant mediaMeta;
-        MediaMeta meta = list.at(i);
-        mediaMeta.setValue(meta);
-        m_model->setData(index, mediaMeta, Qt::UserRole);
-    }
-}
-
-void PlayListView::resetSonglistByStr(const QString &searchWord)
-{
-    m_model->clear();
-    QList<MediaMeta> list = DataBaseService::getInstance()->allMusicInfos();
-
-    for (int i = 0; i < list.size(); i++) {
-        if (!CommonService::getInstance()->containsStr(searchWord, list.at(i).title)) {
-            continue;
-        }
-        QStandardItem *newItem = new QStandardItem;
-
-        QString imagesDirPath = Global::cacheDir() + "/images/" + list.at(i).hash + ".jpg";
-        QFileInfo file(imagesDirPath);
-        QIcon icon;
-        if (file.exists()) {
-            icon = QIcon(imagesDirPath);
-        } else {
-            icon = QIcon(":/common/image/cover_max.svg");
-        }
-        newItem->setIcon(icon);
-        m_model->appendRow(newItem);
-
-        auto row = m_model->rowCount() - 1;
-        QModelIndex index = m_model->index(row, 0, QModelIndex());
-
-        QVariant mediaMeta;//
-        MediaMeta meta = list.at(i);
-        mediaMeta.setValue(meta);
-        m_model->setData(index, mediaMeta, Qt::UserRole);
-    }
-}
-
-void PlayListView::resetSonglistByAlbum(const QList<AlbumInfo> &albuminfos)
-{
-    QList<MediaMeta> list;
-    for (AlbumInfo albuminfo : albuminfos) {
-        for (MediaMeta meta : albuminfo.musicinfos.values()) {
-            list.append(meta);
-        }
-    }
-
-    m_model->clear();
-    for (int i = 0; i < list.size(); i++) {
-        QStandardItem *newItem = new QStandardItem;
-        QString imagesDirPath = Global::cacheDir() + "/images/" + list.at(i).hash + ".jpg";
-        QFileInfo file(imagesDirPath);
-        QIcon icon;
-        if (file.exists()) {
-            icon = QIcon(imagesDirPath);
-        } else {
-            icon = QIcon(":/common/image/cover_max.svg");
-        }
-        newItem->setIcon(icon);
-        m_model->appendRow(newItem);
-
-        auto row = m_model->rowCount() - 1;
-        QModelIndex index = m_model->index(row, 0, QModelIndex());
-
-        QVariant mediaMeta;//
-        MediaMeta meta = list.at(i);
-        mediaMeta.setValue(meta);
-        m_model->setData(index, mediaMeta, Qt::UserRole);
-    }
-}
-
-void PlayListView::resetSonglistBySinger(const QList<SingerInfo> &singerInfos)
-{
-    QList<MediaMeta> list;
-    for (SingerInfo singerInfo : singerInfos) {
-        for (MediaMeta meta : singerInfo.musicinfos.values()) {
-            list.append(meta);
-        }
-    }
-
-    m_model->clear();
-    for (int i = 0; i < list.size(); i++) {
-        QStandardItem *newItem = new QStandardItem;
-        QString imagesDirPath = Global::cacheDir() + "/images/" + list.at(i).hash + ".jpg";
-        QFileInfo file(imagesDirPath);
-        QIcon icon;
-        if (file.exists()) {
-            icon = QIcon(imagesDirPath);
-        } else {
-            icon = QIcon(":/common/image/cover_max.svg");
-        }
-        newItem->setIcon(icon);
-        m_model->appendRow(newItem);
-
-        auto row = m_model->rowCount() - 1;
-        QModelIndex index = m_model->index(row, 0, QModelIndex());
-
-        QVariant mediaMeta;//
-        MediaMeta meta = list.at(i);
-        mediaMeta.setValue(meta);
-        m_model->setData(index, mediaMeta, Qt::UserRole);
-    }
-}
-
-QList<MediaMeta> PlayListView::getMusicListData()
-{
-    QList<MediaMeta> list;
-    for (int i = 0; i < m_model->rowCount(); i++) {
-        QModelIndex idx = m_model->index(i, 0, QModelIndex());
-        MediaMeta meta = idx.data(Qt::UserRole).value<MediaMeta>();
-        list.append(meta);
-    }
-    return list;
 }
 
 QPixmap PlayListView::getSidebarPixmap()
@@ -425,41 +453,48 @@ DataBaseService::ListSortType PlayListView::getSortType()
 
 void PlayListView::setSortType(DataBaseService::ListSortType sortType)
 {
+    // 倒序
+    switch (sortType) {
+    case DataBaseService::SortByAddTime: {
+        if (getSortType() == DataBaseService::SortByAddTimeASC) {
+            sortType = DataBaseService::SortByAddTimeDES;
+        } else {
+            sortType = DataBaseService::SortByAddTimeASC;
+        }
+        break;
+    }
+    case DataBaseService::SortByTitle: {
+        if (getSortType() == DataBaseService::SortByTitleASC) {
+            sortType = DataBaseService::SortByTitleDES;
+        } else {
+            sortType = DataBaseService::SortByTitleASC;
+        }
+        break;
+    }
+    case DataBaseService::SortBySinger: {
+        if (getSortType() == DataBaseService::SortBySingerASC) {
+            sortType = DataBaseService::SortBySingerDES;
+        } else {
+            sortType = DataBaseService::SortBySingerASC;
+        }
+        break;
+    }
+    case DataBaseService::SortByAblum: {
+        if (getSortType() == DataBaseService::SortByAblumASC) {
+            sortType = DataBaseService::SortByAblumDES;
+        } else {
+            sortType = DataBaseService::SortByAblumASC;
+        }
+        break;
+    }
+    default:
+        sortType = DataBaseService::SortByAddTimeASC;
+        break;
+    }
+
     DataBaseService::getInstance()->updatePlaylistSortType(sortType, m_currentHash);
     QList<MediaMeta> mediaMetas = getMusicListData();
-    if (sortType == DataBaseService::SortByAddTime) {
-        qSort(mediaMetas.begin(), mediaMetas.end(), moreThanTimestamp);
-    } else if (sortType == DataBaseService::SortByTitle) {
-        qSort(mediaMetas.begin(), mediaMetas.end(), moreThanTitle);
-    } else if (sortType == DataBaseService::SortBySinger) {
-        qSort(mediaMetas.begin(), mediaMetas.end(), moreThanSinger);
-    } else if (sortType == DataBaseService::SortByAblum) {
-        qSort(mediaMetas.begin(), mediaMetas.end(), moreThanAblum);
-    }
-
-    m_model->clear();
-    for (int i = 0; i < mediaMetas.size(); i++) {
-        QStandardItem *newItem = new QStandardItem;
-
-        QString imagesDirPath = Global::cacheDir() + "/images/" + mediaMetas.at(i).hash + ".jpg";
-        QFileInfo file(imagesDirPath);
-        QIcon icon;
-        if (file.exists()) {
-            icon = QIcon(imagesDirPath);
-        } else {
-            icon = QIcon(":/common/image/cover_max.svg");
-        }
-        newItem->setIcon(icon);
-        m_model->appendRow(newItem);
-
-        auto row = m_model->rowCount() - 1;
-        QModelIndex index = m_model->index(row, 0, QModelIndex());
-
-        QVariant mediaMeta;
-        MediaMeta meta = mediaMetas.at(i);
-        mediaMeta.setValue(meta);
-        m_model->setData(index, mediaMeta, Qt::UserRole);
-    }
+    this->setDataBySortType(mediaMetas, sortType);
 }
 
 QString PlayListView::getFavName()
@@ -564,7 +599,7 @@ void PlayListView::slotImportFinished(QString hash)
                 }
             }
             if (!isInserted) {
-                insertRow(m_model->rowCount() - 1, addMeta);
+                insertRow(m_model->rowCount(), addMeta);
             }
         }
     }
@@ -808,7 +843,6 @@ void PlayListView::slotDelFromLocal()
     }
 }
 
-
 void PlayListView::insertRow(int row, MediaMeta meta)
 {
     QStandardItem *newItem = new QStandardItem;
@@ -1032,7 +1066,7 @@ void PlayListView::contextMenuEvent(QContextMenuEvent *event)
 void PlayListView::dragMoveEvent(QDragMoveEvent *event)
 {
     auto index = indexAt(event->pos());
-    if (/*index.isValid() && */(event->mimeData()->hasFormat("text/uri-list")  || event->mimeData()->hasFormat("application/x-qabstractitemmodeldatalist"))) {
+    if (/*index.isValid() && */(event->mimeData()->hasFormat("text/uri-list"))) {
         event->setDropAction(Qt::CopyAction);
         event->acceptProposedAction();
     } else {
@@ -1042,7 +1076,7 @@ void PlayListView::dragMoveEvent(QDragMoveEvent *event)
 
 void PlayListView::dropEvent(QDropEvent *event)
 {
-    if ((!event->mimeData()->hasFormat("text/uri-list") && !event->mimeData()->hasFormat("application/x-qabstractitemmodeldatalist"))) {
+    if ((!event->mimeData()->hasFormat("text/uri-list"))) {
         return;
     }
 

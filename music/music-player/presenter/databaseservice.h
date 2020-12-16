@@ -62,6 +62,16 @@ public:
         SortBySinger,
         SortByAblum,
         SortByCustom,
+        SortByAddTimeASC,
+        SortByTitleASC,
+        SortBySingerASC,
+        SortByAblumASC,
+        SortByCustomASC,
+        SortByAddTimeDES,
+        SortByTitleDES,
+        SortBySingerDES,
+        SortByAblumDES,
+        SortByCustomDES,
     };
 public:
     QSqlDatabase            getDatabase();
