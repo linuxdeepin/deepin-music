@@ -88,6 +88,7 @@ MusicSongListView::MusicSongListView(QWidget *parent) : DListView(parent)
             this, &MusicSongListView::showContextMenu);
 
     init();
+    initShortcut();
 
     connect(this, &MusicSongListView::clicked, this, [](QModelIndex midx) {
         qDebug() << "customize midx.row()" << midx.row();
@@ -116,6 +117,8 @@ MusicSongListView::MusicSongListView(QWidget *parent) : DListView(parent)
             curStandardItem->setIcon(QIcon::fromTheme("music_famousballad"));
         }
     });
+
+    connect(CommonService::getInstance(), &CommonService::signalAddNewSongList, this, &MusicSongListView::addNewSongList);
 }
 
 MusicSongListView::~MusicSongListView()
@@ -157,12 +160,6 @@ void MusicSongListView::init()
     }
 
     setMinimumHeight(model->rowCount() * 40);
-
-    //add short cut
-    m_newItemShortcut = new QShortcut(this);
-    m_newItemShortcut->setKey(QKeySequence(QLatin1String("Ctrl+Shift+N")));
-    connect(m_newItemShortcut, SIGNAL(activated()), this, SLOT(addNewSongList()));
-    connect(CommonService::getInstance(), &CommonService::signalAddNewSongList, this, &MusicSongListView::addNewSongList);
 }
 
 void MusicSongListView::showContextMenu(const QPoint &pos)
@@ -242,36 +239,40 @@ void MusicSongListView::addNewSongList()
     info.sortType = DataBaseService::SortByAddTimeASC;
     DataBaseService::getInstance()->addPlaylist(info);
     item->setData(info.uuid, Qt::UserRole); //covert to hash
-    //切换listpage
+    // 切换listpage
     emit CommonService::getInstance()->signalSwitchToView(CustomType, info.uuid);
 }
 
 void MusicSongListView::rmvSongList()
 {
     QModelIndex index = this->currentIndex();
-    QString message = QString(tr("Are you sure you want to delete this playlist?"));
+    if (index.row() >= 0) {
+        QString message = QString(tr("Are you sure you want to delete this playlist?"));
 
-    DDialog warnDlg(this);
-    warnDlg.setIcon(QIcon::fromTheme("deepin-music"));
-    warnDlg.setTextFormat(Qt::AutoText);
-    warnDlg.setTitle(message);
-    warnDlg.addSpacing(20);
-    warnDlg.addButton(tr("Cancel"), false, Dtk::Widget::DDialog::ButtonNormal);
-    warnDlg.addButton(tr("Delete"), true, Dtk::Widget::DDialog::ButtonWarning);
-    if (1 == warnDlg.exec()) {
-        QString hash = index.data(Qt::UserRole).value<QString>();
+        DDialog warnDlg(this);
+        warnDlg.setIcon(QIcon::fromTheme("deepin-music"));
+        warnDlg.setTextFormat(Qt::AutoText);
+        warnDlg.setTitle(message);
+        warnDlg.addSpacing(20);
+        warnDlg.addButton(tr("Cancel"), false, Dtk::Widget::DDialog::ButtonNormal);
+        warnDlg.addButton(tr("Delete"), true, Dtk::Widget::DDialog::ButtonWarning);
+        if (1 == warnDlg.exec()) {
+            QString hash = index.data(Qt::UserRole).value<QString>();
 
-        QStandardItem *item = model->itemFromIndex(index);
-        model->removeRow(item->row());
-        DataBaseService::getInstance()->deletePlaylist(hash);
-        //切换到所有音乐界面
-        emit CommonService::getInstance()->signalSwitchToView(AllSongListType, "all");
-        //清除选中状态
-        this->clearSelection();
-        //设置所有音乐播放状态
-        Player::getInstance()->setCurrentPlayListHash("all", false);
-        //记忆播放歌单
-        MusicSettings::setOption("base.play.last_playlist", "all");
+            QStandardItem *item = model->itemFromIndex(index);
+            model->removeRow(item->row());
+            // 清除选中，防止连续点击delete删除
+            this->setCurrentIndex(QModelIndex());
+            DataBaseService::getInstance()->deletePlaylist(hash);
+            // 切换到所有音乐界面
+            emit CommonService::getInstance()->signalSwitchToView(AllSongListType, "all");
+            // 清除选中状态
+            this->clearSelection();
+            // 设置所有音乐播放状态
+            Player::getInstance()->setCurrentPlayListHash("all", false);
+            // 记忆播放歌单
+            MusicSettings::setOption("base.play.last_playlist", "all");
+        }
     }
 }
 
@@ -371,6 +372,13 @@ void MusicSongListView::closeEditor(QWidget *editor, QAbstractItemDelegate::EndE
     curItem->setIcon(QIcon::fromTheme("music_famousballad"));
 }
 
+void MusicSongListView::keyReleaseEvent(QKeyEvent *event)
+{
+    if (event->key() == Qt::Key_Delete) {
+        rmvSongList();
+    }
+}
+
 void MusicSongListView::dragEnterEvent(QDragEnterEvent *event)
 {
     auto t_formats = event->mimeData()->formats();
@@ -430,6 +438,13 @@ void MusicSongListView::dropEvent(QDropEvent *event)
     }
 
     DListView::dropEvent(event);
+}
+
+void MusicSongListView::initShortcut()
+{
+    m_newItemShortcut = new QShortcut(this);
+    m_newItemShortcut->setKey(QKeySequence(QLatin1String("Ctrl+Shift+N")));
+    connect(m_newItemShortcut, &QShortcut::activated, this, &MusicSongListView::addNewSongList);
 }
 
 void MusicSongListView::SetAttrRecur(QDomElement elem, QString strtagname, QString strattr, QString strattrval)
