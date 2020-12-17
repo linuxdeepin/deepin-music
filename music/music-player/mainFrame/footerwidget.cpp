@@ -633,27 +633,23 @@ void FooterWidget::slotDelayAutoHide()
 
 void FooterWidget::slotShortCutTriggered()
 {
-    QShortcut *objCut =   dynamic_cast<QShortcut *>(sender()) ;
+    QShortcut *objCut = dynamic_cast<QShortcut *>(sender()) ;
     Q_ASSERT(objCut);
 
     if (objCut == volUpShortcut) {
-        //dbus volume up
         int volup = Player::getInstance()->getVolume() + VolumeStep;
-        if (volup > 100)//max volume
+        if (volup > 100)
             volup = 100;
-        Player::getInstance()->setVolume(volup); //system volume
 
-        Player::getInstance()->getMpris()->setVolume(static_cast<double>(volup) / 100);
+        m_volSlider->setVolume(volup);
     }
 
     if (objCut == volDownShortcut) {
-        //dbus volume up
         int voldown = Player::getInstance()->getVolume() - VolumeStep;
-        if (voldown < 0)//mini volume
+        if (voldown < 0)
             voldown = 0;
-        Player::getInstance()->setVolume(voldown); //system volume
 
-        Player::getInstance()->getMpris()->setVolume(static_cast<double>(voldown) / 100);
+        m_volSlider->setVolume(voldown);
     }
 
     if (objCut == nextShortcut) {

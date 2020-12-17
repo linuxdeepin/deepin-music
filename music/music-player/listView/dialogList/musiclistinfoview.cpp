@@ -329,6 +329,10 @@ void MusicListInfoView::slotPlayListMenuClicked(QAction *action)
         }
     } else {
         DataBaseService::getInstance()->addMetaToPlaylist(songlistHash, metaList);
+
+        if (songlistHash == "fav") {
+            emit CommonService::getInstance()->signalFluashFavoriteBtnIcon();
+        }
     }
 }
 
