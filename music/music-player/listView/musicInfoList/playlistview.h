@@ -116,8 +116,10 @@ public slots:
 
 private:
     void insertRow(int row, MediaMeta meta);
-    //zy---end
+    bool isContain(QString hash);
 signals:
+    bool musicResultListCountChanged(QString hash);
+    //zy---end
     void customSort();
     void hideEmptyHits(bool ishide);
     void getSearchData(bool isvalid); //get search data

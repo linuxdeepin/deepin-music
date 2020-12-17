@@ -112,6 +112,8 @@ SearchResultTabWidget::SearchResultTabWidget(QWidget *parent) :
     m_LineWidget = new LineWidget(this);
     m_LineWidget->setFixedSize(43, 2);
     m_LineWidget->hide();
+    connect(m_musicListView, &PlayListView::musicResultListCountChanged,
+            this, &SearchResultTabWidget::sigSearchTypeChanged);
 }
 
 SearchResultTabWidget::~SearchResultTabWidget()

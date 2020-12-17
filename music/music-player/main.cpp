@@ -162,14 +162,6 @@ int main(int argc, char *argv[])
     mainframe.autoStartToPlay();
     createSpeechDbus();
 
-//    app.connect(&app, &QApplication::lastWindowClosed,
-//    &mainframe, [ & ]() {
-//        auto quit = MusicSettings::value("base.close.is_close").toBool();
-//        if (quit) {
-//            music->quit();
-//        }
-//    });
-
     app.setQuitOnLastWindowClosed(false);
     return app.exec();
 }

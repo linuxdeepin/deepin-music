@@ -414,6 +414,8 @@ void MainFrame::slotImportFinished()
     if (m_importWidget->isVisible()) {
         m_musicContentWidget->show();
         m_musicContentWidget->showAnimationToDown(this->size() - QSize(0, m_footerWidget->height() + titlebar()->height() + 5));
+        // 切换到所有音乐界面
+        emit CommonService::getInstance()->signalSwitchToView(AllSongListType, "all");
         m_footerWidget->show();
         m_importWidget->closeAnimationToDown(this->size());
     }

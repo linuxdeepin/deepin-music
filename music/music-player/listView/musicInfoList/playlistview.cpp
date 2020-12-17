@@ -600,6 +600,11 @@ void PlayListView::slotImportFinished(QString hash)
             for (int rowIndex = 0; rowIndex < m_model->rowCount(); rowIndex++) {
                 QModelIndex index = m_model->index(rowIndex, 0, QModelIndex());
                 MediaMeta meta = index.data(Qt::UserRole).value<MediaMeta>();
+                //如果已经存在，则不加入
+                if (isContain(meta.hash)) {
+                    isInserted = true;
+                    break;
+                }
                 if (sortType == DataBaseService::ListSortType::SortByAddTime) {
                     if (addMeta.timestamp <= meta.timestamp) {
                         insertRow(rowIndex, addMeta);
@@ -664,18 +669,21 @@ void PlayListView::slotTheme(int type)
 
 void PlayListView::slotRemoveSingleSong(const QString &listHash, const QString &musicHash)
 {
-    if (!m_IsPlayQueue &&  listHash != m_currentHash) {
-        return;
-    }
-    int row =  m_model->rowCount();
-    for (int i = 0; i < row; i++) {
-        QModelIndex mindex = m_model->index(i, 0, QModelIndex());
-        MediaMeta meta = mindex.data(Qt::UserRole).value<MediaMeta>();
-        if (meta.hash == musicHash) {
-            this->removeItem(i);
-            m_model->removeRow(row);
-            update();
-            break;
+    if (listHash == "all" || listHash == m_currentHash) {
+        int row =  m_model->rowCount();
+        for (int i = 0; i < row; i++) {
+            QModelIndex mindex = m_model->index(i, 0, QModelIndex());
+            MediaMeta meta = mindex.data(Qt::UserRole).value<MediaMeta>();
+            if (meta.hash == musicHash) {
+                this->removeItem(i);
+                m_model->removeRow(row);
+                //搜索结果中删除，刷新数量显示
+                if (m_currentHash == "musicResult") {
+                    emit musicResultListCountChanged("musicResult");
+                }
+                update();
+                break;
+            }
         }
     }
 }
@@ -818,12 +826,18 @@ void PlayListView::slotRmvFromSongList()
     if (deleteFlag == warnDlg.exec()) {
         //数据库中删除时有信号通知刷新界面
         if (!m_IsPlayQueue) {
-            DataBaseService::getInstance()->removeSelectedSongs(m_currentHash, metaList, false);
+            if (m_currentHash == "musicResult") {
+                //搜索结果中删除，等同与所有音乐中删除
+                DataBaseService::getInstance()->removeSelectedSongs("all", metaList, false);
+            } else {
+                DataBaseService::getInstance()->removeSelectedSongs(m_currentHash, metaList, false);
+            }
             // 更新player中缓存的歌曲信息，如果存在正在播放的歌曲，停止播放
             if (m_currentHash == "all") {
                 Player::getInstance()->playRmvMeta(metaList);
             }
         } else {
+            DataBaseService::getInstance()->removeSelectedSongs("all", metaList, false);
             Player::getInstance()->playRmvMeta(metaList);
         }
     }
@@ -890,6 +904,21 @@ void PlayListView::insertRow(int row, MediaMeta meta)
     QVariant mediaMeta;
     mediaMeta.setValue(meta);
     m_model->setData(index, mediaMeta, Qt::UserRole);
+}
+
+bool PlayListView::isContain(QString hash)
+{
+    bool bIsContain = false;
+    int row =  m_model->rowCount();
+    for (int i = 0; i < row; i++) {
+        QModelIndex mindex = m_model->index(i, 0, QModelIndex());
+        MediaMeta meta = mindex.data(Qt::UserRole).value<MediaMeta>();
+        if (meta.hash == hash) {
+            bIsContain = true;
+            break;
+        }
+    }
+    return bIsContain;
 }
 
 void PlayListView::keyPressEvent(QKeyEvent *event)
