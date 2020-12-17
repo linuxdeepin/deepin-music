@@ -356,7 +356,7 @@ void Waveform::onProgressChanged(qint64 value, qint64 duration, qint64 coefficie
     auto progress = 0;
     if (0 != duration) {
         progress = static_cast<int>(length * value / duration);
-        isPlayNextMeta(progress);
+        //isPlayNextMeta(progress);
     }
 
     if (signalsBlocked()) {
@@ -592,9 +592,7 @@ void Waveform::updatePlayerPos(int value)
 {
     int range = this->maximum() - this->minimum();
     Q_ASSERT(range != 0);
-    if (value >= range) {
-        Player::getInstance()->playNextMeta(true);
-    } else {
+    if (value <= range) {
         long long position = value * Player::getInstance()->duration() / range;
         Player::getInstance()->setPosition(position);
     }
@@ -605,9 +603,9 @@ void Waveform::isPlayNextMeta(int value)
     int range = this->maximum() - this->minimum();
     Q_ASSERT(range != 0);
 
-    if (value >= range) {
-        Player::getInstance()->playNextMeta(true);
-    }
+//    if (value >= range) {
+//        Player::getInstance()->playNextMeta(true);
+//    }
 }
 
 

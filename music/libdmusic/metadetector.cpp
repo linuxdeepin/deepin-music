@@ -103,7 +103,7 @@ QList<QByteArray> MetaDetector::detectEncodings(const QByteArray &rawData)
     return DMusic::EncodingDetector::detectEncodings(rawData);;
 }
 
-void MetaDetector::updateCueFileTagCodec(MediaMeta meta, const QFileInfo &/*cueFi*/, const QByteArray &codec)
+void MetaDetector::updateCueFileTagCodec(MediaMeta &meta, const QFileInfo &/*cueFi*/, const QByteArray &codec)
 {
     DMusic::CueParser cueParser(meta.cuePath, codec);
     // TODO: parse may be failed for diff code
@@ -192,7 +192,7 @@ MediaMeta MetaDetector::updateMetaFromLocalfile(MediaMeta meta, const QFileInfo 
     return meta;
 }
 
-MediaMeta MetaDetector::updateMediaFileTagCodec(MediaMeta meta, const QByteArray &codecName, bool forceEncode)
+MediaMeta MetaDetector::updateMediaFileTagCodec(MediaMeta &meta, const QByteArray &codecName, bool forceEncode)
 {
     if (meta.localPath.isEmpty()) {
         qCritical() << "meta localPath is empty:" << meta.title << meta.hash;

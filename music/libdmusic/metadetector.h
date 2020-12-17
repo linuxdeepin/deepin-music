@@ -36,10 +36,10 @@ public:
     static QList<QByteArray> detectEncodings(const MediaMeta meta);
     static QList<QByteArray> detectEncodings(const QByteArray &rawData);
 
-    static void updateCueFileTagCodec(MediaMeta meta, const QFileInfo &, const QByteArray &codec);
+    static void updateCueFileTagCodec(MediaMeta &meta, const QFileInfo &, const QByteArray &codec);
 
     static MediaMeta updateMetaFromLocalfile(MediaMeta meta, const QFileInfo &fileInfo);
-    static MediaMeta updateMediaFileTagCodec(MediaMeta meta, const QByteArray &codecName, bool forceEncode);
+    static MediaMeta updateMediaFileTagCodec(MediaMeta &meta, const QByteArray &codecName, bool forceEncode);
 
     static void getCoverData(const QString &path, const QString &tmpPath, const QString &hash);
     //static QVector<float> getMetaData(const QString &path);

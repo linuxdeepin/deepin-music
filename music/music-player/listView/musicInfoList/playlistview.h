@@ -75,6 +75,8 @@ public:
     void setSortType(DataBaseService::ListSortType sortType);
     //获取收藏名字
     QString getFavName();
+    //弹出错误提示框，并播放下一首
+    void showErrorDlg();
 public slots:
     void slotOnDoubleClicked(const QModelIndex &index);
     void slotUpdatePlayingIcon();
@@ -111,6 +113,7 @@ public slots:
     // 右键菜单添加到歌单
     void slotPlaylistMenuClicked(QAction *action);
     ///右键菜单响应end
+
 private:
     void insertRow(int row, MediaMeta meta);
     //zy---end

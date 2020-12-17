@@ -98,6 +98,7 @@ void Player::init()
     initConnection();
     initMpris();
     m_volume = MusicSettings::value("base.play.volume").toInt();
+    setFadeInOut(MusicSettings::value("base.play.fade_in_out").toBool());
 }
 
 QStringList Player::supportedSuffixList() const
@@ -124,6 +125,11 @@ Player::~Player()
 void Player::playMeta(MediaMeta meta)
 {
     if (meta.hash != "") {
+        if (!QFileInfo(meta.localPath).exists()) {
+            //文件不存在提示  todo..
+            signalPlaybackStatusChanged(Player::Paused);
+            return;
+        }
         m_ActiveMeta = meta;
         setActiveMeta(meta);
         /*************************
@@ -134,23 +140,15 @@ void Player::playMeta(MediaMeta meta)
         m_qvmedia->initMedia(meta.localPath, true, m_qvinstance);
         m_qvplayer->open(m_qvmedia);
         m_qvplayer->setTime(meta.offset);
-        m_qvplayer->play();
-        //    emit playbackStatusChanged(status());
+        //增大音乐自动开始播放时间，给setposition留足空间
+        QTimer::singleShot(100, this, [ = ]() {
+            m_qvplayer->play();
+        });
 
         DRecentData data;
         data.appName = Global::getAppName();
         data.appExec = "deepin-music";
         DRecentManager::addItem(meta.localPath, data);
-
-        m_fadeOutAnimation->stop();
-        if (m_fadeInOut && m_fadeInAnimation->state() != QPropertyAnimation::Running) {
-            qDebug() << "start fade in";
-            m_fadeInAnimation->setEasingCurve(QEasingCurve::InCubic);
-            m_fadeInAnimation->setStartValue(0.10000);
-            m_fadeInAnimation->setEndValue(1.0000);
-            m_fadeInAnimation->setDuration(sFadeInOutAnimationDuration);
-            m_fadeInAnimation->start();
-        }
 
         QVariantMap metadata;
         metadata.insert(Mpris::metadataToString(Mpris::Title), meta.title);
@@ -164,6 +162,12 @@ void Player::playMeta(MediaMeta meta)
         m_mpris->setLoopStatus(Mpris::Playlist);
         m_mpris->setPlaybackStatus(Mpris::Stopped);
         m_mpris->setVolume(double(this->getVolume()) / 100.0);
+
+        //设置音乐播放
+        signalPlaybackStatusChanged(Player::Playing);
+    } else {
+        //设置音乐播放
+        signalPlaybackStatusChanged(Player::Paused);
     }
 }
 
@@ -174,10 +178,9 @@ void Player::resume()
         return;
     }
 
-//    if (QFileInfo(meta->localPath).dir().isEmpty()) {
-//        Q_EMIT mediaError(playlist, meta, Player::ResourceError);
-//        return ;
-//    }
+    if (QFileInfo(m_ActiveMeta.localPath).dir().isEmpty()) {//光盘弹出时，有可能歌曲路径还在，不需要再播放。
+        return ;
+    }
 
     /*****************************************************************************************
      * 1.audio service dbus not start
@@ -190,17 +193,16 @@ void Player::resume()
         m_qvplayer->setTime(m_ActiveMeta.offset);
     }
 
-    if (m_fadeOutAnimation) {
-        setFadeInOutFactor(1.0);
+    if (m_fadeInOut) {
+        setFadeInOutFactor(0.1);
         m_fadeOutAnimation->stop();
     }
 
     qDebug() << "resume top";
     //增大音乐自动开始播放时间，给setposition留足空间
-//    QTimer::singleShot(100, this, [ = ]() {
-    m_qvplayer->play();
-//    emit playbackStatusChanged(status());
-//    });
+    QTimer::singleShot(100, this, [ = ]() {
+        m_qvplayer->play();
+    });
 
     if (m_fadeInOut && m_fadeInAnimation->state() != QPropertyAnimation::Running) {
         m_fadeInAnimation->setEasingCurve(QEasingCurve::InCubic);
@@ -222,40 +224,43 @@ void Player::resume()
     m_mpris->setLoopStatus(Mpris::Playlist);
     m_mpris->setPlaybackStatus(Mpris::Stopped);
     m_mpris->setVolume(double(this->getVolume()) / 100.0);
+
+    //设置音乐播放
+    signalPlaybackStatusChanged(Player::Playing);
 }
 
 void Player::pause()
 {
     /*--------suspend--------*/
-//    d->ioPlayer->suspend();
-
-    if (m_fadeInAnimation) {
+    if (m_fadeInOut) {
         m_fadeInAnimation->stop();
     }
 
     if (m_fadeInOut && m_fadeOutAnimation->state() != QPropertyAnimation::Running) {
-
         m_fadeOutAnimation->setEasingCurve(QEasingCurve::OutCubic);
         m_fadeOutAnimation->setStartValue(1.0000);
         m_fadeOutAnimation->setEndValue(0.1000);
-        m_fadeOutAnimation->setDuration(sFadeInOutAnimationDuration);
+        m_fadeOutAnimation->setDuration(sFadeInOutAnimationDuration * 2);
         m_fadeOutAnimation->start();
         connect(m_fadeOutAnimation, &QPropertyAnimation::finished,
         this, [ = ]() {
             m_qvplayer->pause();
-            QTimer::singleShot(50, this, [ = ]() {
-                setFadeInOutFactor(1.0);
-            });
+            setFadeInOutFactor(1.0);
         });
     } else {
         m_qvplayer->pause();
         setFadeInOutFactor(1.0);
     }
+
+    //设置音乐播放
+    signalPlaybackStatusChanged(Player::Paused);
 }
 
 void Player::pauseNow()
 {
     m_qvplayer->pause();
+    //设置音乐播放
+    signalPlaybackStatusChanged(Player::Paused);
 }
 
 void Player::playPreMeta()
@@ -890,7 +895,6 @@ void Player::initConnection()
     this, [ = ](Vlc::State status) {
 
         switch (status) {
-
         case Vlc::Idle: {
             /**************************************
              * if settings is mute ,then setmute to dbus
@@ -908,14 +912,14 @@ void Player::initConnection()
             break;
         }
         case Vlc::Playing: {
-            emit signalPlaybackStatusChanged(Player::Playing);
+            //emit signalPlaybackStatusChanged(Player::Playing);
             if (!m_timer->isActive()) {
                 m_timer->start();
             }
             break;
         }
         case Vlc::Paused: {
-            emit signalPlaybackStatusChanged(Player::Paused);
+            //emit signalPlaybackStatusChanged(Player::Paused);
             m_timer->stop();
             break;
         }

@@ -502,6 +502,27 @@ QString PlayListView::getFavName()
     return tr("My favorites");
 }
 
+void PlayListView::showErrorDlg()
+{
+    QList<DDialog *> ql = this->findChildren<DDialog *>("uniqueinvaliddailog");
+    if (ql.size() > 0) {
+        if (!ql.first()->isHidden())
+            return ;
+    }
+
+    Dtk::Widget::DDialog warnDlg(this);
+    warnDlg.setObjectName("uniqueinvaliddailog");
+    warnDlg.setIcon(QIcon::fromTheme("deepin-music"));
+    warnDlg.setTextFormat(Qt::RichText);
+    warnDlg.setTitle(tr("File is invalid or does not exist, load failed"));
+    warnDlg.addButtons(QStringList() << tr("OK"));
+    warnDlg.setDefaultButton(0);
+    if (0 == warnDlg.exec()) {
+        //播放下一首
+        Player::getInstance()->playNextMeta(true);
+    }
+}
+
 void PlayListView::setViewModeFlag(QString hash, QListView::ViewMode mode)
 {
     m_viewModeMap[hash] = mode;
@@ -524,6 +545,13 @@ void PlayListView::slotOnDoubleClicked(const QModelIndex &index)
     //todo检查文件是否存在
     MediaMeta itemMeta = index.data(Qt::UserRole).value<MediaMeta>();
     qDebug() << "------" << itemMeta.hash;
+    if (!QFileInfo(itemMeta.localPath).exists()) {
+        //停止当前的歌曲
+        Player::getInstance()->stop();
+        //弹出提示框
+        showErrorDlg();
+        return;
+    }
 
     if (Player::getInstance()->getActiveMeta().hash == itemMeta.hash) {
         if (Player::getInstance()->status() == Player::Paused) {
@@ -1119,7 +1147,6 @@ void PlayListView::slotTextCodecMenuClicked(QAction *action)
         qDebug() << action->data().toByteArray();
         meta.codec = action->data().toByteArray();
         meta.updateCodec(action->data().toByteArray());
-        //reflushItemMediaMeta(meta);
         QVariant varmeta;
         varmeta.setValue(meta);
         m_model->setData(curIndex, varmeta, Qt::UserRole);

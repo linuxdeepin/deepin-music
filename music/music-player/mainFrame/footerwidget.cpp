@@ -33,6 +33,7 @@
 #include <QFrame>
 #include <QShortcut>
 #include <QFileInfo>
+#include <QTimer>
 
 #include <DHiDPIHelper>
 #include <DPushButton>
@@ -86,6 +87,9 @@ FooterWidget::FooterWidget(QWidget *parent) :
     initUI(parent);
     slotTheme(DGuiApplicationHelper::instance()->themeType());
     initShortcut();
+    m_limitRepeatClick = new QTimer(this);
+    m_limitRepeatClick->setSingleShot(true);
+    m_limitRepeatClick->setInterval(200);
 }
 
 FooterWidget::~FooterWidget()
@@ -132,8 +136,7 @@ void FooterWidget::initUI(QWidget *parent)
 
 //    m_btPlay = new DButtonBoxButton(QIcon::fromTheme("music_play"), "", this);
     m_btPlay = new DToolButton(this);
-    setPlayProperty(Player::PlaybackStatus::Paused);
-//    m_btPlay->setIcon(QIcon::fromTheme("music_play"));
+    m_btPlay->setIcon(QIcon::fromTheme("music_play"));
     m_btPlay->setIconSize(QSize(36, 36));
     m_btPlay->setFixedSize(40, 50);
 
@@ -427,7 +430,6 @@ void FooterWidget::updateShortcut()
 //设置播放按钮播放图标
 void FooterWidget::setPlayProperty(Player::PlaybackStatus status)
 {
-    m_btPlay->setProperty("playstatus", status);
     if (status == Player::PlaybackStatus::Playing) {
         m_btPlay->setIcon(QIcon::fromTheme("suspend"));
     } else {
@@ -443,11 +445,18 @@ void FooterWidget::slotPlayQueueAutoHidden()
 void FooterWidget::slotPlayClick(bool click)
 {
     Q_UNUSED(click)
-    Player::PlaybackStatus status = m_btPlay->property("playstatus").value<Player::PlaybackStatus>();
-    if (status == Player::PlaybackStatus::Playing) {
+    //限制用户反复点击
+    if (!m_limitRepeatClick->isActive()) {
+        m_limitRepeatClick->start(200);
+    } else
+        return;
+
+    if (Player::getInstance()->status() == Player::PlaybackStatus::Playing) {
         Player::getInstance()->pause();
-    } else if (status == Player::PlaybackStatus::Paused) {
+        //setPlayProperty(Player::PlaybackStatus::Paused);
+    } else if (Player::getInstance()->status() == Player::PlaybackStatus::Paused) {
         Player::getInstance()->resume();
+        //setPlayProperty(Player::PlaybackStatus::Playing);
     }
 }
 
@@ -524,9 +533,9 @@ void FooterWidget::slotSoundClick(bool click)
     }
 }
 
-void FooterWidget::slotPlaybackStatusChanged(Player::PlaybackStatus statue)
+void FooterWidget::slotPlaybackStatusChanged(Player::PlaybackStatus status)
 {
-    setPlayProperty(statue);
+    setPlayProperty(status);
 }
 
 void FooterWidget::slotMediaMetaChanged()

@@ -43,6 +43,7 @@ class Waveform;
 class MetaBufferDetector;
 class QShortcut;
 class HintFilter;
+class QTimer;
 class FooterWidget : public DFloatingWidget
 {
     Q_OBJECT
@@ -127,9 +128,11 @@ private:
     QShortcut           *previousShortcut       = nullptr;
     QShortcut           *muteShortcut = nullptr;
 
-    SoundVolume       *m_volSlider  = nullptr;
+    SoundVolume        *m_volSlider  = nullptr;
     DBackgroundGroup   *m_ctlWidget  = nullptr;
     MetaBufferDetector  *m_metaBufferDetector = nullptr;
     HintFilter          *m_hintFilter = nullptr;
+
+    QTimer             *m_limitRepeatClick = nullptr;
 };
 
