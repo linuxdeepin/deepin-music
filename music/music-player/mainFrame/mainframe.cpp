@@ -97,8 +97,6 @@ MainFrame::MainFrame()
     m_titlebar->layout()->setAlignment(m_titlebarwidget, Qt::AlignCenter);
     m_titlebar->resize(width(), 50);
 
-    connect(DGuiApplicationHelper::instance(), &DGuiApplicationHelper::themeTypeChanged,
-            this, &MainFrame::slotTheme);
     connect(m_titlebarwidget, &TitlebarWidget::sigSearchEditFoucusIn,
             this, &MainFrame::slotSearchEditFoucusIn);
     connect(DataBaseService::getInstance(), &DataBaseService::signalImportFinished,
@@ -173,6 +171,11 @@ void MainFrame::initUI(bool showLoading)
 
     connect(DataBaseService::getInstance(), &DataBaseService::signalAllMusicCleared,
             this, &MainFrame::slotAllMusicCleared);
+
+    connect(DGuiApplicationHelper::instance(), &DGuiApplicationHelper::themeTypeChanged,
+            this, &MainFrame::setThemeType);
+
+    setThemeType(DGuiApplicationHelper::instance()->themeType());
 }
 
 MusicContentWidget *MainFrame::getMusicContentWidget()
@@ -373,21 +376,13 @@ void MainFrame::showPopupMessage(const QString &songListName, int selectCount, i
     DMessageManager::instance()->sendMessage(m_musicContentWidget, pDFloatingMessage);
 }
 
-void MainFrame::slotTheme(DGuiApplicationHelper::ColorType themeType)
+void MainFrame::setThemeType(DGuiApplicationHelper::ColorType themeType)
 {
     if (m_musicContentWidget != nullptr) {
         m_musicContentWidget->slotTheme(themeType);
     }
     if (m_footerWidget != nullptr) {
         m_footerWidget->slotTheme(themeType);
-    }
-
-    if (m_musicLyricWidget) {
-        m_musicLyricWidget->slotTheme(themeType);
-    }
-
-    if (m_searchResult) {
-        m_searchResult->setThemeType(themeType);
     }
 }
 

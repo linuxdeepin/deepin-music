@@ -46,7 +46,8 @@ static constexpr int AnimationDelay = 200; //ms
 
 ImportWidget::ImportWidget(QWidget *parent) : DFrame(parent)
 {
-    setObjectName("ImportWidget");
+    AC_SET_OBJECT_NAME(this, AC_ImportWidget);
+    AC_SET_ACCESSIBLE_NAME(this, AC_ImportWidget);
 
     setAcceptDrops(true);
     setAutoFillBackground(true);
@@ -117,10 +118,13 @@ ImportWidget::ImportWidget(QWidget *parent) : DFrame(parent)
 
     AC_SET_OBJECT_NAME(m_text, AC_importLinkText);
     AC_SET_ACCESSIBLE_NAME(m_text, AC_importLinkText);
+    AC_SET_OBJECT_NAME(m_importPathButton, AC_importButton);
+    AC_SET_ACCESSIBLE_NAME(m_importPathButton, AC_importButton);
+    AC_SET_OBJECT_NAME(m_addMusicButton, AC_addMusicButton);
+    AC_SET_ACCESSIBLE_NAME(m_addMusicButton, AC_addMusicButton);
 
     connect(m_addMusicButton, &DPushButton::clicked, this,  &ImportWidget::slotAddMusicButtonClicked);
     connect(m_importPathButton, &DPushButton::clicked, this,  &ImportWidget::slotImportPathButtonClicked);
-    //connect()
 
     connect(m_text, &DLabel::linkActivated, this, &ImportWidget::slotLinkActivated);
 
@@ -128,8 +132,11 @@ ImportWidget::ImportWidget(QWidget *parent) : DFrame(parent)
     //connection
     connect(Player::getInstance()->getMpris(), &MprisPlayer::openUriRequested, this, &ImportWidget::slotImportFormDbus);  //open file form dbus
 
-    int themeType = DGuiApplicationHelper::instance()->themeType();
-    slotTheme(themeType);
+
+    connect(DGuiApplicationHelper::instance(), &DGuiApplicationHelper::themeTypeChanged,
+            this, &ImportWidget::setThemeType);
+
+    setThemeType(DGuiApplicationHelper::instance()->themeType());
 }
 
 ImportWidget::~ImportWidget()
@@ -217,6 +224,7 @@ void ImportWidget::slotAddMusicButtonClicked()
     fileDlg.setOption(DFileDialog::HideNameFilterDetails);
     fileDlg.setNameFilter(selfilter);
     fileDlg.selectNameFilter(selfilter);
+    fileDlg.setObjectName("fileDialog");
     if (DFileDialog::Accepted == fileDlg.exec()) {
         showWaitHint();
         MusicSettings::setOption("base.play.last_import_path",  fileDlg.directory().path());
@@ -231,6 +239,9 @@ void ImportWidget::slotImportPathButtonClicked()
     fileDlg.setDirectory(lastImportPath);
     fileDlg.setViewMode(DFileDialog::Detail);
     fileDlg.setFileMode(DFileDialog::Directory);
+    fileDlg.setObjectName("fileDialog");
+
+
     if (DFileDialog::Accepted == fileDlg.exec()) {
         showWaitHint();
         MusicSettings::setOption("base.play.last_import_path",  fileDlg.directory().path());
@@ -292,16 +303,6 @@ void ImportWidget::dragEnterEvent(QDragEnterEvent *event)
     DFrame::dragEnterEvent(event);
 }
 
-void ImportWidget::dragMoveEvent(QDragMoveEvent *)
-{
-
-}
-
-void ImportWidget::dragLeaveEvent(QDragLeaveEvent *)
-{
-
-}
-
 void ImportWidget::dropEvent(QDropEvent *event)
 {
     if (!event->mimeData()->hasFormat("text/uri-list")) {
@@ -318,7 +319,7 @@ void ImportWidget::dropEvent(QDropEvent *event)
         DataBaseService::getInstance()->importMedias("all", localpaths);
     }
 }
-void ImportWidget::slotTheme(int type)
+void ImportWidget::setThemeType(int type)
 {
     QString rStr;
     if (type == 1) {

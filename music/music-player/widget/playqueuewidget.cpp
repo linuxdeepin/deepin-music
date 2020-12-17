@@ -127,8 +127,8 @@ PlayQueueWidget::PlayQueueWidget(QWidget *parent) :
     connect(DataBaseService::getInstance(), &DataBaseService::signalAllMusicCleared,
             this, &PlayQueueWidget::slotAllMusicCleared);
 
-    QObject::connect(DGuiApplicationHelper::instance(), &DGuiApplicationHelper::themeTypeChanged,
-                     this, &PlayQueueWidget::setThemeType);
+    connect(DGuiApplicationHelper::instance(), &DGuiApplicationHelper::themeTypeChanged,
+            this, &PlayQueueWidget::setThemeType);
 
     setThemeType(DGuiApplicationHelper::instance()->themeType());
 

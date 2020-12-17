@@ -43,20 +43,20 @@ class Waveform : public DSlider
 public:
     Waveform(Qt::Orientation orientation, QWidget *widget, QWidget *parent = nullptr);
 
-    static qreal getPeakValue(const QAudioFormat &format);
-    static QVector<qreal> getBufferLevels(const QAudioBuffer &buffer);
+//    static qreal getPeakValue(const QAudioFormat &format);
+//    static QVector<qreal> getBufferLevels(const QAudioBuffer &buffer);
 
-    template <class T>
-    static QVector<qreal> getBufferLevels(const T *buffer, int frames, int channels);
+//    template <class T>
+//    static QVector<qreal> getBufferLevels(const T *buffer, int frames, int channels);
 
     //void clearWave();
 
     void updateScaleSize();
     void setThemeType(int type);
-    void hidewaveformScale();
+//    void hidewaveformScale();
 
 public slots:
-    void onAudioBufferProbed(const QAudioBuffer &buffer);
+//    void onAudioBufferProbed(const QAudioBuffer &buffer);
     void onProgressChanged(qint64 value, qint64 duration, qint64 coefficient);
     void onAudioBuffer(const QVector<float> &allData, const QString &hash);
     void clearBufferAudio(const QString &hash = "");

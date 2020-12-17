@@ -7,9 +7,8 @@
 #include <QApplication>
 #include <QFontDialog>
 #include <QColorDialog>
-#include <QPalette>
-
 #include <DPalette>
+#include <DGuiApplicationHelper>
 
 #include "../../core/util/musiclyric.h"
 #include "../../core/musicsettings.h"
@@ -39,6 +38,13 @@ LyricLabel::LyricLabel(bool touch, QWidget *parent)
     connect(this, SIGNAL(changeTo(int)), this, SLOT(changeToEvent(int)));
 
     m_FadeFlag = MusicSettings::value("base.play.fade_in_out").toBool();
+
+
+    connect(DGuiApplicationHelper::instance(), &DGuiApplicationHelper::themeTypeChanged,
+            this, &LyricLabel::setThemeType);
+
+    setThemeType(DGuiApplicationHelper::instance()->themeType());
+
     /* MyMenu *menu = new MyMenu(this);
      QAction *selectLyric = new QAction("关联本地歌词", menu);
      QAction *fontSelect = new QAction("字体设置", menu);
@@ -154,7 +160,7 @@ void LyricLabel::postionChanged(qint64 pos)
         this->scrollTo(index);
 }
 
-void LyricLabel::slotTheme(int type)
+void LyricLabel::setThemeType(int type)
 {
     m_themetype = type;
     if (type == 1) {
@@ -184,16 +190,6 @@ void LyricLabel::changeFont()
         // the user canceled the dialog; font is set to the initial value
         lyricFont = new QFont("宋体", 12, QFont::Bold);
     }
-}
-
-void LyricLabel::changeNormalColor()
-{
-    *lyricNormal =  QColorDialog::getColor(*lyricNormal, this);
-}
-
-void LyricLabel::changeHightLightColor()
-{
-    *lyricHighlight =  QColorDialog::getColor(*lyricHighlight, this);
 }
 
 void LyricLabel::contextMenuEvent(QContextMenuEvent *event)

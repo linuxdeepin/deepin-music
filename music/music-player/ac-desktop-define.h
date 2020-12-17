@@ -11,7 +11,7 @@
 #include <QObject>
 
 
-//#define SELECT_CASE "playListView"
+#define SELECT_CASE "musicListDialg"
 
 #ifdef SELECT_CASE
 #define TEST_CASE_NAME(testName) if(testName != SELECT_CASE) return;
@@ -107,6 +107,7 @@
 #define AC_infoDialog                 QObject::tr("infoDialog")
 #define AC_musicListDialogCloseBt     QObject::tr("musicListDialogCloseBt")
 #define AC_MessageBox                 QObject::tr("messageBox")
+#define AC_FileDialog                 QObject::tr("fileDialog")
 
 
 #endif // DESKTOP_ACCESSIBLE_UI_DEFINE_H

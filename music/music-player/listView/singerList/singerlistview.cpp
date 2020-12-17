@@ -100,8 +100,8 @@ SingerListView::SingerListView(QString hash, QWidget *parent)
     connect(DataBaseService::getInstance(), &DataBaseService::signalCoverUpdate,
             this, &SingerListView::slotCoverUpdate);
 
-    QObject::connect(DGuiApplicationHelper::instance(), &DGuiApplicationHelper::themeTypeChanged,
-                     this, &SingerListView::setThemeType);
+    connect(DGuiApplicationHelper::instance(), &DGuiApplicationHelper::themeTypeChanged,
+            this, &SingerListView::setThemeType);
 
     setThemeType(DGuiApplicationHelper::instance()->themeType());
 }

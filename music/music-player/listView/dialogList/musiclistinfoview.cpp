@@ -93,8 +93,8 @@ MusicListInfoView::MusicListInfoView(const QString &hash, QWidget *parent)
             this, &MusicListInfoView::slotRemoveSingleSong);
 
 
-    QObject::connect(DGuiApplicationHelper::instance(), &DGuiApplicationHelper::themeTypeChanged,
-                     this, &MusicListInfoView::setThemeType);
+    connect(DGuiApplicationHelper::instance(), &DGuiApplicationHelper::themeTypeChanged,
+            this, &MusicListInfoView::setThemeType);
 
     setThemeType(DGuiApplicationHelper::instance()->themeType());
 }

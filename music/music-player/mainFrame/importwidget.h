@@ -54,15 +54,13 @@ public slots:
     void slotAddMusicButtonClicked();
     void slotImportPathButtonClicked();
     void slotImportFormDbus(const QUrl &url); //右键菜单打开音乐
-    void slotTheme(int type);
+    void setThemeType(int type);
 
 protected:
     bool eventFilter(QObject *o, QEvent *e) Q_DECL_OVERRIDE;
 
 protected:
     virtual void dragEnterEvent(QDragEnterEvent *event) Q_DECL_OVERRIDE;
-    virtual void dragMoveEvent(QDragMoveEvent *event) Q_DECL_OVERRIDE;
-    virtual void dragLeaveEvent(QDragLeaveEvent *event) Q_DECL_OVERRIDE;
     virtual void dropEvent(QDropEvent *event) Q_DECL_OVERRIDE;
 
 private:

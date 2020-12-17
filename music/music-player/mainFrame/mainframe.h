@@ -63,7 +63,7 @@ private:
     void initMenuAndShortcut();
 
 private slots:
-    void slotTheme(DGuiApplicationHelper::ColorType themeType);
+    void setThemeType(DGuiApplicationHelper::ColorType themeType);
     void slotSearchEditFoucusIn();
     void slotLyricClicked();
     void slotImportFinished();

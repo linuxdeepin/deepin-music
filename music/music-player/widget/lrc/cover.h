@@ -27,32 +27,23 @@ class CoverPrivate;
 class Cover : public Label
 {
     Q_OBJECT
-    Q_PROPERTY(int radius READ radius WRITE setRadius)
-    Q_PROPERTY(QColor borderColor READ borderColor WRITE setBorderColor)
-    Q_PROPERTY(QColor shadowColor READ shadowColor WRITE setShadowColor NOTIFY shadowColorChanged)
-
 public:
     explicit Cover(QWidget *parent = Q_NULLPTR);
     ~Cover() override;
 
-    int radius() const;
-    QColor borderColor() const;
-    QColor shadowColor() const;
-
 public slots:
     void setCoverPixmap(const QPixmap &pixmap);
-    void setRadius(int radius);
-    void setBorderColor(QColor borderColor);
-    void setShadowColor(QColor shadowColor);
-
-signals:
-    void shadowColorChanged(QColor shadowColor);
 
 protected:
     virtual void paintEvent(QPaintEvent *e) Q_DECL_OVERRIDE;
 
 private:
-    QScopedPointer<CoverPrivate> d_ptr;
-    Q_DECLARE_PRIVATE_D(qGetPtrHelper(d_ptr), Cover)
+
+    int m_radius = 8;
+    QColor  m_borderColor;
+    QColor  m_shadowColor;
+    QPixmap m_Background;
+
+    QMarginsF outterMargins;
 };
 

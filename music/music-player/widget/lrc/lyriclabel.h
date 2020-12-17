@@ -65,12 +65,10 @@ signals:
 
 public slots:
     void postionChanged(qint64 pos);
-    void slotTheme(int type);
+    void setThemeType(int type);
 protected slots:
     void changeToEvent(int index);
     void changeFont();
-    void changeNormalColor();
-    void changeHightLightColor();
 
 protected:
     void contextMenuEvent(QContextMenuEvent *event);//右击事件

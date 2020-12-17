@@ -38,7 +38,6 @@ class MusicImageButton;
 class MusicLyricWidget : public DWidget
 {
     Q_OBJECT
-    Q_PROPERTY(QString defaultCover READ defaultCover WRITE setDefaultCover)
 
 public:
     explicit MusicLyricWidget(QWidget *parent = Q_NULLPTR);
@@ -50,7 +49,6 @@ public:
     // 控件关闭动画
     void closeAnimation(const QSize &size);
     QString defaultCover() const;
-    void checkHiddenSearch(QPoint mousePos);
 
 
 signals:
@@ -62,26 +60,16 @@ public slots:
     void onMusicPlayed();
     void onCoverChanged();
 
-    void onContextSearchFinished(const QString &context,
-                                 const QList<DMusic::SearchMeta> &metalist);
-
-    void setDefaultCover(QString defaultCover);
-
-    void onsearchBt();
-    void slotonsearchresult(QString path);
-
-    void slotTheme(int type);
+    void setThemeType(int type);
 
 protected:
     virtual void resizeEvent(QResizeEvent *event) Q_DECL_OVERRIDE;
-    virtual void mousePressEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
 
 private:
     QHBoxLayout *m_leftLayout;
     Cover               *m_cover              = nullptr;
     LyricLabel          *m_lyricview            = nullptr;
     DLabel              *m_nolyric              = nullptr;
-    MusicImageButton    *m_serachbt = nullptr;
     QString              m_defaultCover = ":/common/image/cover_max.svg";
     bool                 m_serachflag = false;
     DBlurEffectWidget   *m_backgroundW = nullptr;

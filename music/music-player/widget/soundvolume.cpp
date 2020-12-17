@@ -33,7 +33,6 @@
 #include <DHiDPIHelper>
 
 #include "player.h"
-#include "widget/soundpixmapbutton.h"
 #include "musicsettings.h"
 
 #include "ac-desktop-define.h"
@@ -96,8 +95,8 @@ SoundVolume::SoundVolume(QWidget *parent)
     connect(Player::getInstance(), &Player::signalMutedChanged, this, &SoundVolume::flushVolumeIcon);
 
 
-    QObject::connect(DGuiApplicationHelper::instance(), &DGuiApplicationHelper::themeTypeChanged,
-                     this, &SoundVolume::setThemeType);
+    connect(DGuiApplicationHelper::instance(), &DGuiApplicationHelper::themeTypeChanged,
+            this, &SoundVolume::setThemeType);
 
     setThemeType(DGuiApplicationHelper::instance()->themeType());
 }

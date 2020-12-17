@@ -27,31 +27,14 @@
 
 static auto borderPenWidth = 1.0;
 
-class CoverPrivate
-{
-public:
-    CoverPrivate(Cover *parent): q_ptr(parent) {}
-
-    int     m_radius        = 8;
-    QColor  m_borderColor;
-    QColor  m_shadowColor;
-    QPixmap m_Background;
-
-    QMarginsF outterMargins = QMarginsF(borderPenWidth, borderPenWidth, borderPenWidth, borderPenWidth);
-
-    Cover *q_ptr;
-    Q_DECLARE_PUBLIC(Cover)
-};
-
 Cover::Cover(QWidget *parent)
-    : Label("", parent), d_ptr(new CoverPrivate(this))
+    : Label("", parent)
 {
-    Q_D(Cover);
-
     QWidget::setAttribute(Qt::WA_TranslucentBackground, true);
-    d->m_borderColor = QColor(0, 0, 0);
-    d->m_borderColor.setAlphaF(0.08);
-    d->m_shadowColor = QColor(0, 255, 0, 126);
+    m_borderColor = QColor(0, 0, 0);
+    m_borderColor.setAlphaF(0.08);
+    m_shadowColor = QColor(0, 255, 0, 126);
+    outterMargins = QMarginsF(borderPenWidth, borderPenWidth, borderPenWidth, borderPenWidth);
 
 //    QGraphicsDropShadowEffect *bodyShadow = new QGraphicsDropShadowEffect;
 //    bodyShadow->setBlurRadius(4.0);
@@ -69,32 +52,12 @@ Cover::~Cover()
 
 }
 
-int Cover::radius() const
-{
-    Q_D(const Cover);
-    return  d->m_radius ;
-}
-
-QColor Cover::borderColor() const
-{
-    Q_D(const Cover);
-    return  d->m_borderColor ;
-}
-
-QColor Cover::shadowColor() const
-{
-    Q_D(const Cover);
-    return  d->m_shadowColor ;
-}
-
 void Cover::paintEvent(QPaintEvent *)
 {
-    Q_D(const Cover);
-
     QPainter painter(this);
     painter.setRenderHints(QPainter::Antialiasing | QPainter::HighQualityAntialiasing | QPainter::SmoothPixmapTransform);
-    auto radius = d->m_radius;
-    auto innerBorderColor = d->m_borderColor;
+    auto radius = m_radius;
+    auto innerBorderColor = m_borderColor;
     //auto outerBorderColor = d->m_shadowColor;
     auto backgroundColor = QColor(255, 255, 255, 255);
     //auto penWidthf = borderPenWidth;
@@ -106,10 +69,10 @@ void Cover::paintEvent(QPaintEvent *)
     backgroundPath.addRoundedRect(backgroundRect, radius, radius);
     painter.setClipPath(backgroundPath);
     painter.setPen(Qt::NoPen);
-    if (d->m_Background.isNull()) {
+    if (m_Background.isNull()) {
         painter.fillPath(backgroundPath, backgroundColor);
     } else {
-        painter.drawPixmap(backgroundRect, d->m_Background);
+        painter.drawPixmap(backgroundRect, m_Background);
     }
 
     painter.setBrush(Qt::NoBrush);
@@ -118,8 +81,6 @@ void Cover::paintEvent(QPaintEvent *)
     painter.setPen(BorderPen);
     painter.drawRoundedRect(backgroundRect, radius, radius); //画矩形
 
-
-    return;
     // draw border
 //    QPainterPath innerBorderPath;
 //    QRectF borderRect = QRectF(rect()).marginsRemoved(d->outterMargins);
@@ -146,11 +107,10 @@ void Cover::paintEvent(QPaintEvent *)
 
 void Cover::setCoverPixmap(const QPixmap &pixmap)
 {
-    Q_D(Cover);
-    int radius = d->m_radius;
+    int radius = m_radius;
 
     auto ratio = this->devicePixelRatioF();
-    auto coverRect = QRectF(rect()).marginsRemoved(d->outterMargins);
+    auto coverRect = QRectF(rect()).marginsRemoved(outterMargins);
     auto sz = coverRect.size().toSize() * ratio;
 
     QPixmap backgroundPixmap = pixmap.scaled(sz, Qt::KeepAspectRatioByExpanding);
@@ -176,23 +136,5 @@ void Cover::setCoverPixmap(const QPixmap &pixmap)
     painter.setCompositionMode(QPainter::CompositionMode_DestinationOver);
     painter.end();
 
-    d->m_Background = QPixmap::fromImage(resultImage);
-}
-
-void Cover::setRadius(int radius)
-{
-    Q_D(Cover);
-    d->m_radius = radius;
-}
-
-void Cover::setBorderColor(QColor borderColor)
-{
-    Q_D(Cover);
-    d->m_borderColor = borderColor;
-}
-
-void Cover::setShadowColor(QColor shadowColor)
-{
-    Q_D(Cover);
-    d->m_shadowColor = shadowColor;
+    m_Background = QPixmap::fromImage(resultImage);
 }

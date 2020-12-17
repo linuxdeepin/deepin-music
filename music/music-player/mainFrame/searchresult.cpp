@@ -122,8 +122,8 @@ SearchResult::SearchResult(QWidget *parent) : DBlurEffectWidget(parent)
     vlayout->addStretch(100);
 
 
-    QObject::connect(DGuiApplicationHelper::instance(), &DGuiApplicationHelper::themeTypeChanged,
-                     this, &SearchResult::setThemeType);
+    connect(DGuiApplicationHelper::instance(), &DGuiApplicationHelper::themeTypeChanged,
+            this, &SearchResult::setThemeType);
 
     setThemeType(DGuiApplicationHelper::instance()->themeType());
 //    connect(m_MusicView, &MusicSearchListview::clicked, this, &SearchResult::itemClicked);

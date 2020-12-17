@@ -101,8 +101,8 @@ AlbumListView::AlbumListView(QString hash, QWidget *parent)
     connect(DataBaseService::getInstance(), &DataBaseService::signalCoverUpdate,
             this, &AlbumListView::slotCoverUpdate);
 
-    QObject::connect(DGuiApplicationHelper::instance(), &DGuiApplicationHelper::themeTypeChanged,
-                     this, &AlbumListView::setThemeType);
+    connect(DGuiApplicationHelper::instance(), &DGuiApplicationHelper::themeTypeChanged,
+            this, &AlbumListView::setThemeType);
 
     setThemeType(DGuiApplicationHelper::instance()->themeType());
 }

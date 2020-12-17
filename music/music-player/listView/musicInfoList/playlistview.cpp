@@ -163,8 +163,8 @@ PlayListView::PlayListView(QString hash, bool isPlayQueue, QWidget *parent)
     connect(DataBaseService::getInstance(), &DataBaseService::signalRmvSong,
             this, &PlayListView::slotRemoveSingleSong);
 
-    QObject::connect(DGuiApplicationHelper::instance(), &DGuiApplicationHelper::themeTypeChanged,
-                     this, &PlayListView::setThemeType);
+    connect(DGuiApplicationHelper::instance(), &DGuiApplicationHelper::themeTypeChanged,
+            this, &PlayListView::setThemeType);
 
     setThemeType(DGuiApplicationHelper::instance()->themeType());
 }
