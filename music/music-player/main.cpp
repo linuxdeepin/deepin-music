@@ -123,6 +123,8 @@ int main(int argc, char *argv[])
         for (auto curStr : parser.positionalArguments()) {
             if (!curStr.isEmpty()) {
                 QUrl url = QUrl(curStr);//::fromLocalFile(fi.absoluteFilePath());
+                qDebug() << __FUNCTION__ << "toString = " << url.toString();
+                qDebug() << __FUNCTION__ << "toLocalFile = " << url.toLocalFile();
                 while (true) {
                     QDBusInterface iface("org.mpris.MediaPlayer2.DeepinMusic",
                                          "/org/mpris/MediaPlayer2",

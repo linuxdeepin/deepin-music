@@ -125,6 +125,9 @@ MainFrame::MainFrame()
                     activateWindow();
                     this->restoreGeometry(m_geometryBa);
                 }
+            } else {
+                raise();
+                activateWindow();
             }
         } else {
             this->titlebar()->setFocus();
