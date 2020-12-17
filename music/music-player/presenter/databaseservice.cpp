@@ -218,6 +218,7 @@ QList<SingerInfo> DataBaseService::allSingerInfos()
             singer.pinyinSinger = meta.pinyinArtist;
             singer.singerName = meta.singer;
             singer.musicinfos[meta.hash] = meta;
+            singer.timestamp = meta.timestamp;
             m_AllSingerInfo.append(singer);
         }
     }

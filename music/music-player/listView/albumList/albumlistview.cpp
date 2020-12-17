@@ -50,22 +50,22 @@ DWIDGET_USE_NAMESPACE
 // 升序
 bool moreThanTimestampASC(AlbumInfo v1, AlbumInfo v2)
 {
-    return v1.timestamp < v2.timestamp;
+    return v1.timestamp <= v2.timestamp;
 }
 
 bool moreThanTitleASC(const AlbumInfo v1, const AlbumInfo v2)
 {
-    return v1.pinyinAlbum < v2.pinyinAlbum;
+    return v1.pinyinAlbum <= v2.pinyinAlbum;
 }
 // 降序
 bool moreThanTimestampDES(AlbumInfo v1, AlbumInfo v2)
 {
-    return v1.timestamp > v2.timestamp;
+    return v1.timestamp >= v2.timestamp;
 }
 
 bool moreThanTitleDES(const AlbumInfo v1, const AlbumInfo v2)
 {
-    return v1.pinyinAlbum > v2.pinyinAlbum;
+    return v1.pinyinAlbum >= v2.pinyinAlbum;
 }
 
 AlbumListView::AlbumListView(QString hash, QWidget *parent)

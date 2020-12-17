@@ -424,7 +424,7 @@ void MainFrame::slotShortCutTriggered()
     Q_ASSERT(objCut);
 
     if (objCut == addmusicfilesShortcut) {
-        m_importWidget->slotImportPathButtonClicked(); //open filedialog
+        m_importWidget->slotAddMusicButtonClicked(); //open filedialog
     }
 
     if (objCut == viewshortcut) {
@@ -465,7 +465,7 @@ void MainFrame::slotMenuTriggered(QAction *action)
     }
 
     if (action == m_addMusicFiles) {
-        m_importWidget->slotImportPathButtonClicked();
+        m_importWidget->slotAddMusicButtonClicked();
     }
 
     if (action == m_equalizer) {

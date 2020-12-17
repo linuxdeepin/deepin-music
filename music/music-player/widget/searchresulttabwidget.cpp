@@ -58,6 +58,7 @@ SearchResultTabWidget::SearchResultTabWidget(QWidget *parent) :
 
     QHBoxLayout *hLayout = new QHBoxLayout();
     hLayout->setContentsMargins(17, 0, 0, 0);
+    hLayout->setSpacing(25);
     vlayout->addLayout(hLayout);
 
     //音乐
@@ -109,7 +110,7 @@ SearchResultTabWidget::SearchResultTabWidget(QWidget *parent) :
     m_StackedWidget->addWidget(m_albumListView);
 
     m_LineWidget = new LineWidget(this);
-    m_LineWidget->setFixedSize(42, 2);
+    m_LineWidget->setFixedSize(43, 2);
     m_LineWidget->hide();
 }
 

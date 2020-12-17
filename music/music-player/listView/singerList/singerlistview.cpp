@@ -50,22 +50,22 @@ DWIDGET_USE_NAMESPACE
 // 升序
 bool moreThanTimestampASC(SingerInfo v1, SingerInfo v2)
 {
-    return v1.timestamp < v2.timestamp;
+    return v1.timestamp <= v2.timestamp;
 }
 
 bool moreThanSingerASC(SingerInfo v1, SingerInfo v2)
 {
-    return v1.pinyinSinger < v2.pinyinSinger;
+    return v1.pinyinSinger <= v2.pinyinSinger;
 }
 // 降序
 bool moreThanTimestampDES(SingerInfo v1, SingerInfo v2)
 {
-    return v1.timestamp > v2.timestamp;
+    return v1.timestamp >= v2.timestamp;
 }
 
 bool moreThanSingerDES(SingerInfo v1, SingerInfo v2)
 {
-    return v1.pinyinSinger > v2.pinyinSinger;
+    return v1.pinyinSinger >= v2.pinyinSinger;
 }
 
 SingerListView::SingerListView(QString hash, QWidget *parent)

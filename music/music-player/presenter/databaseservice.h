@@ -57,11 +57,6 @@ public:
 
     enum ListSortType {
         SortByNull = -1,
-        SortByAddTime,
-        SortByTitle,
-        SortBySinger,
-        SortByAblum,
-        SortByCustom,
         SortByAddTimeASC,
         SortByTitleASC,
         SortBySingerASC,
@@ -72,6 +67,11 @@ public:
         SortBySingerDES,
         SortByAblumDES,
         SortByCustomDES,
+        SortByAddTime,
+        SortByTitle,
+        SortBySinger,
+        SortByAblum,
+        SortByCustom,
     };
 public:
     QSqlDatabase            getDatabase();
