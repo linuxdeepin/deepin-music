@@ -52,7 +52,6 @@ extern "C" {
 #include <unicode/ucnv.h>
 
 #include "util/encodingdetector.h"
-#include "util/cueparser.h"
 #include "util/pinyinsearch.h"
 #include "ffmpegdynamicinstance.h"
 
@@ -105,15 +104,15 @@ QList<QByteArray> MetaDetector::detectEncodings(const QByteArray &rawData)
 
 void MetaDetector::updateCueFileTagCodec(MediaMeta &meta, const QFileInfo &/*cueFi*/, const QByteArray &codec)
 {
-    DMusic::CueParser cueParser(meta.cuePath, codec);
-    // TODO: parse may be failed for diff code
-    for (auto cueMeta : cueParser.metalist()) {
-        if (meta.hash == cueMeta.hash) {
-            meta.title = cueMeta.title;
-            meta.singer = cueMeta.singer;
-            meta.album = cueMeta.album;
-        }
-    }
+//    DMusic::CueParser cueParser(meta.cuePath, codec);
+//    // TODO: parse may be failed for diff code
+//    for (auto cueMeta : cueParser.metalist()) {
+//        if (meta.hash == cueMeta.hash) {
+//            meta.title = cueMeta.title;
+//            meta.singer = cueMeta.singer;
+//            meta.album = cueMeta.album;
+//        }
+//    }
 }
 
 QList<QByteArray> MetaDetector::detectEncodings(const MediaMeta meta)

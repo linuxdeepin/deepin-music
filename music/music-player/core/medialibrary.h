@@ -25,7 +25,6 @@
 #include <QScopedPointer>
 
 #include <mediameta.h>
-#include <util/cueparser.h>
 
 #include "util/singleton.h"
 

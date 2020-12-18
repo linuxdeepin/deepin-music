@@ -42,7 +42,6 @@
 
 #include "core/player.h"
 #include "core/musicsettings.h"
-#include "core/util/threadpool.h"
 #include "core/util/global.h"
 #include "speech/exportedinterface.h"
 #include "databaseservice.h"

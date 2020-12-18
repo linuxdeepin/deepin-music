@@ -47,7 +47,6 @@
 
 #include <metadetector.h>
 #include "../core/musicsettings.h"
-#include "../core/util/threadpool.h"
 #include "metabufferdetector.h"
 
 #include "../presenter/commonservice.h"

@@ -304,7 +304,7 @@ public:
         \brief Aspect and crop ratios strings
         \return ratios strings (QStringList)
     */
-    static QStringList ratio();
+//    static QStringList ratio();
 
     /*!
         \brief Aspect and crop ratios strings in readable form
@@ -317,13 +317,13 @@ public:
         \param ratio aspect or crop ratio (Vlc::Ratio)
         \return two-dimensional object using floating point precision (QSizeF)
     */
-    static QSizeF ratioSize(const Vlc::Ratio &ratio);
+//    static QSizeF ratioSize(const Vlc::Ratio &ratio);
 
     /*!
         \brief Scale floats
         \return scale floats (QList<float>)
     */
-    static QList<float> scale();
+//    static QList<float> scale();
 
     /*!
         \brief Video codecs strings

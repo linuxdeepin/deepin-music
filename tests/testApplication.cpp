@@ -43,7 +43,6 @@
 #include "metadetector.h"
 #include "net/geese.h"
 #include "util/basetool.h"
-#include "util/cueparser.h"
 #include "util/encodingdetector.h"
 #include "util/pinyinsearch.h"
 #include "metabufferdetector.h"
@@ -71,7 +70,7 @@
 #include "mprisplayer.h"
 #include "speech/speechCenter.h"
 #include "speech/exportedinterface.h"
-#include "threadpool.h"
+//#include "threadpool.h"
 #include "vlc/vlcdynamicinstance.h"
 #include "dbusutils.h"
 #include "footerwidget.h"
@@ -100,7 +99,7 @@
 TEST(Application, deleteAllMusic)
 {
     // 删除所有音乐
-    TEST_CASE_NAME("deleteAllMusic")
+    TEST_CASE_NAME("other")
 
     MainFrame *w = Application::getInstance()->getMainWindow();
     MusicBaseListView *baseListView = w->findChild<MusicBaseListView *>(AC_dataBaseListview);
@@ -199,7 +198,7 @@ bool copyDirFiles(const QString &fromDir, const QString &toDir)
 TEST(Application, copyMusicToMusicDir)
 {
     // 拷贝音乐文件夹到系统音乐文件夹下
-    TEST_CASE_NAME("copyMusicToMusicDir")
+    TEST_CASE_NAME("other")
 
     QDir dir;
     dir.cd("../resource");
@@ -225,7 +224,7 @@ TEST(Application, copyMusicToMusicDir)
 TEST(Application, importLinkText)
 {
     // 扫描歌曲
-    TEST_CASE_NAME("importLinkText")
+    TEST_CASE_NAME("other")
 
     QTest::qWait(100);
     MainFrame *w = Application::getInstance()->getMainWindow();

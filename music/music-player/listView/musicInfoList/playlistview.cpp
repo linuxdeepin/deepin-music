@@ -38,7 +38,6 @@
 #include <DScrollBar>
 #include <DGuiApplicationHelper>
 #include <DLabel>
-#include "util/threadpool.h"
 #include "util/pinyinsearch.h"
 
 #include "playitemdelegate.h"

@@ -8,6 +8,8 @@
 #include <QTimer>
 #include <infodialog.h>
 #include <DApplication>
+#include <QDBusInterface>
+#include <QDBusPendingCall>
 
 #include "ac-desktop-define.h"
 
@@ -175,5 +177,49 @@ TEST(Application, shortCut)
     QTest::qWait(100);
 }
 
+
+TEST(Application, other)
+{
+    TEST_CASE_NAME("other")
+    MainFrame *w = Application::getInstance()->getMainWindow();
+    MusicBaseListView *baseListView = w->findChild<MusicBaseListView *>(AC_dataBaseListview);
+
+    QPoint pos = QPoint(130, 30);
+    QTestEventList event;
+    // 点击所有音乐
+    QTest::qWait(100);
+    pos = QPoint(130, 100);
+    event.addMouseMove(pos);
+    event.addMouseClick(Qt::MouseButton::LeftButton, Qt::NoModifier, pos, 10);
+    event.simulate(baseListView->viewport());
+    event.clear();
+
+    // 双击list
+    pos = QPoint(20, 120);
+    PlayListView *plv = w->findChild<PlayListView *>(AC_PlayListView);
+    event.addMouseMove(pos);
+    event.addMouseClick(Qt::MouseButton::LeftButton, Qt::NoModifier, pos, 10);
+    event.addMousePress(Qt::MouseButton::LeftButton, Qt::NoModifier, pos, 10);
+    event.addMouseDClick(Qt::MouseButton::LeftButton, Qt::NoModifier, pos, 10);
+    event.simulate(plv->viewport());
+    event.clear();
+
+    QTest::qWait(500);
+    emit Player::getInstance()->getMpris()->pauseRequested();
+
+    QTest::qWait(500);
+    emit Player::getInstance()->getMpris()->playRequested();
+
+    QTest::qWait(500);
+    emit Player::getInstance()->getMpris()->previousRequested();
+
+    QTest::qWait(500);
+    emit Player::getInstance()->getMpris()->nextRequested();
+
+    QTest::qWait(500);
+    Player::getInstance()->loadMediaProgress(Player::getInstance()->getActiveMeta().localPath);
+
+    QTest::qWait(500);
+}
 
 

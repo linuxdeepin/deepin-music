@@ -35,9 +35,9 @@ public:
         \param localFile true, if media is local file (bool)
         \param instance main libvlc instance (VlcInstance *)
     */
-    VlcMedia(const QString &location,
-                      bool localFile,
-                      VlcInstance *instance);
+//    VlcMedia(const QString &location,
+//             bool localFile,
+//             VlcInstance *instance);
 
     /*!
         \brief VlcMedia constructor.
@@ -48,8 +48,8 @@ public:
         \param location remote location of the media (QString)
         \param instance main libvlc instance (VlcInstance *)
     */
-    VlcMedia(const QString &location,
-                      VlcInstance *instance);
+//    VlcMedia(const QString &location,
+//             VlcInstance *instance);
 
     VlcMedia();
 
@@ -60,7 +60,7 @@ public:
 
         \param media libvlc media item (libvlc_media_t *)
     */
-    explicit VlcMedia(libvlc_media_t *media);
+//    explicit VlcMedia(libvlc_media_t *media);
 
     /*!
         \brief VlcMedia destructor
@@ -116,7 +116,7 @@ public:
         \brief Get media duration
         \return duration
     */
-    qint64 duration() const;
+//    qint64 duration() const;
 
     /*!
         \brief Duplicate (provided for convenience)
@@ -129,9 +129,9 @@ public:
         \return QString output file
         \sa record()
     */
-    QString duplicate(const QString &name,
-                      const QString &path,
-                      const Vlc::Mux &mux);
+//    QString duplicate(const QString &name,
+//                      const QString &path,
+//                      const Vlc::Mux &mux);
 
     /*!
         \brief Duplicate (provided for convenience)
@@ -146,11 +146,11 @@ public:
         \return QString output file
         \sa record()
     */
-    QString duplicate(const QString &name,
-                      const QString &path,
-                      const Vlc::Mux &mux,
-                      const Vlc::AudioCodec &audioCodec,
-                      const Vlc::VideoCodec &videoCodec);
+//    QString duplicate(const QString &name,
+//                      const QString &path,
+//                      const Vlc::Mux &mux,
+//                      const Vlc::AudioCodec &audioCodec,
+//                      const Vlc::VideoCodec &videoCodec);
 
     /*!
         \brief Duplicate (provided for convenience)
@@ -169,14 +169,14 @@ public:
         \return QString output file
         \sa record()
     */
-    QString duplicate(const QString &name,
-                      const QString &path,
-                      const Vlc::Mux &mux,
-                      const Vlc::AudioCodec &audioCodec,
-                      const Vlc::VideoCodec &videoCodec,
-                      int bitrate,
-                      int fps,
-                      int scale);
+//    QString duplicate(const QString &name,
+//                      const QString &path,
+//                      const Vlc::Mux &mux,
+//                      const Vlc::AudioCodec &audioCodec,
+//                      const Vlc::VideoCodec &videoCodec,
+//                      int bitrate,
+//                      int fps,
+//                      int scale);
 
     /*!
         \brief Merge
@@ -203,10 +203,10 @@ public:
         \param duplicate also duplicate on screen (bool)
         \return QString output file
     */
-    QString record(const QString &name,
-                   const QString &path,
-                   const Vlc::Mux &mux,
-                   bool duplicate = false);
+//    QString record(const QString &name,
+//                   const QString &path,
+//                   const Vlc::Mux &mux,
+//                   bool duplicate = false);
 
     /*!
         \brief Record
@@ -221,12 +221,12 @@ public:
         \param duplicate also duplicate on screen (bool)
         \return QString output file
     */
-    QString record(const QString &name,
-                   const QString &path,
-                   const Vlc::Mux &mux,
-                   const Vlc::AudioCodec &audioCodec,
-                   const Vlc::VideoCodec &videoCodec,
-                   bool duplicate = false);
+//    QString record(const QString &name,
+//                   const QString &path,
+//                   const Vlc::Mux &mux,
+//                   const Vlc::AudioCodec &audioCodec,
+//                   const Vlc::VideoCodec &videoCodec,
+//                   bool duplicate = false);
 
     /*!
         \brief Record
@@ -245,27 +245,27 @@ public:
         \param duplicate also duplicate on screen (bool)
         \return QString output file
     */
-    QString record(const QString &name,
-                   const QString &path,
-                   const Vlc::Mux &mux,
-                   const Vlc::AudioCodec &audioCodec,
-                   const Vlc::VideoCodec &videoCodec,
-                   int bitrate,
-                   int fps,
-                   int scale,
-                   bool duplicate = false);
+//    QString record(const QString &name,
+//                   const QString &path,
+//                   const Vlc::Mux &mux,
+//                   const Vlc::AudioCodec &audioCodec,
+//                   const Vlc::VideoCodec &videoCodec,
+//                   int bitrate,
+//                   int fps,
+//                   int scale,
+//                   bool duplicate = false);
 
     /*!
         \brief Set program
         \param program program PID (int)
     */
-    void setProgram(int program);
+//    void setProgram(int program);
 
     /*!
         \brief Set media option
         \param option media option (QString)
     */
-    void setOption(const QString &option);
+//    void setOption(const QString &option);
 
     /*!
         \brief Set media options

@@ -67,7 +67,7 @@ public slots:
         \brief Set audio channel.
         \param channel new audio channel
     */
-    void setChannel(Vlc::AudioChannel channel);
+//    void setChannel(Vlc::AudioChannel channel);
 
     /*!
         \brief Set mute state.
@@ -80,13 +80,13 @@ public:
         \brief Get current audio track.
         \return the number of current audio track, or -1 if none (const int)
     */
-    int track() const;
+//    int track() const;
 
     /*!
         \brief Get number of available audio tracks.
         \return the number of available audio tracks, or -1 if unavailable (const int)
     */
-    int trackCount() const;
+//    int trackCount() const;
 
     /*!
         \brief Get the description of available audio tracks.
@@ -104,7 +104,7 @@ public:
         \brief Get available audio tracks.
         \return dictionary with available audio tracks (const QMap<int, QString>)
     */
-    QMap<int, QString> tracks() const;
+//    QMap<int, QString> tracks() const;
 
     /*!
         \brief Get current audio level.
@@ -116,7 +116,7 @@ public:
         \brief Get audio channel.
         \return current audio channel, -1 if error
     */
-    Vlc::AudioChannel channel() const;
+//    Vlc::AudioChannel channel() const;
 
 signals:
     /*!

@@ -28,7 +28,6 @@
 #include <QDir>
 #include <qsettingbackend.h>
 #include "util/global.h"
-#include "util/threadpool.h"
 
 #include <QDebug>
 

@@ -36,7 +36,6 @@ extern "C" {
 #endif // __cplusplus
 //#endif // DISABLE_LIBAV
 
-#include <util/cueparser.h>
 #include <mediameta.h>
 #include <metadetector.h>
 

@@ -30,29 +30,29 @@ typedef libvlc_state_t (*vlc_media_get_state_function)(libvlc_media_t *);
 typedef libvlc_time_t (*vlc_media_get_duration_function)(libvlc_media_t *);
 typedef void (*vlc_media_add_option_function)(libvlc_media_t *, const char *);
 
-VlcMedia::VlcMedia(const QString &location,
-                   bool localFile,
-                   VlcInstance *instance)
-    : QObject(instance)
-{
-    initMedia(location, localFile, instance);
-}
+//VlcMedia::VlcMedia(const QString &location,
+//                   bool localFile,
+//                   VlcInstance *instance)
+//    : QObject(instance)
+//{
+//    initMedia(location, localFile, instance);
+//}
 
-VlcMedia::VlcMedia(const QString &location,
-                   VlcInstance *instance)
-    : QObject(instance)
-{
-    initMedia(location, false, instance);
-}
+//VlcMedia::VlcMedia(const QString &location,
+//                   VlcInstance *instance)
+//    : QObject(instance)
+//{
+//    initMedia(location, false, instance);
+//}
 
-VlcMedia::VlcMedia(libvlc_media_t *media):_vlcEvents(nullptr)
-{
-    // Create a new libvlc media descriptor from existing one
-    vlc_media_duplicate_function vlc_media_duplicate = (vlc_media_duplicate_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("libvlc_media_duplicate");
-    _vlcMedia = vlc_media_duplicate(media);
+//VlcMedia::VlcMedia(libvlc_media_t *media):_vlcEvents(nullptr)
+//{
+//    // Create a new libvlc media descriptor from existing one
+//    vlc_media_duplicate_function vlc_media_duplicate = (vlc_media_duplicate_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("libvlc_media_duplicate");
+//    _vlcMedia = vlc_media_duplicate(media);
 
-    VlcError::showErrmsg();
-}
+//    VlcError::showErrmsg();
+//}
 
 VlcMedia::VlcMedia()
 {
@@ -165,43 +165,43 @@ Vlc::State VlcMedia::state() const
     return Vlc::State(state);
 }
 
-qint64 VlcMedia::duration() const
-{
-    vlc_media_get_duration_function vlc_media_get_duration = (vlc_media_get_duration_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("libvlc_media_get_duration");
-    libvlc_time_t duration = vlc_media_get_duration(_vlcMedia);
+//qint64 VlcMedia::duration() const
+//{
+//    vlc_media_get_duration_function vlc_media_get_duration = (vlc_media_get_duration_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("libvlc_media_get_duration");
+//    libvlc_time_t duration = vlc_media_get_duration(_vlcMedia);
 
-    VlcError::showErrmsg();
+//    VlcError::showErrmsg();
 
-    return duration;
-}
+//    return duration;
+//}
 
-QString VlcMedia::duplicate(const QString &name,
-                            const QString &path,
-                            const Vlc::Mux &mux)
-{
-    return record(name, path, mux, true);
-}
+//QString VlcMedia::duplicate(const QString &name,
+//                            const QString &path,
+//                            const Vlc::Mux &mux)
+//{
+//    return record(name, path, mux, true);
+//}
 
-QString VlcMedia::duplicate(const QString &name,
-                            const QString &path,
-                            const Vlc::Mux &mux,
-                            const Vlc::AudioCodec &audioCodec,
-                            const Vlc::VideoCodec &videoCodec)
-{
-    return record(name, path, mux, audioCodec, videoCodec, true);
-}
+//QString VlcMedia::duplicate(const QString &name,
+//                            const QString &path,
+//                            const Vlc::Mux &mux,
+//                            const Vlc::AudioCodec &audioCodec,
+//                            const Vlc::VideoCodec &videoCodec)
+//{
+//    return record(name, path, mux, audioCodec, videoCodec, true);
+//}
 
-QString VlcMedia::duplicate(const QString &name,
-                            const QString &path,
-                            const Vlc::Mux &mux,
-                            const Vlc::AudioCodec &audioCodec,
-                            const Vlc::VideoCodec &videoCodec,
-                            int bitrate,
-                            int fps,
-                            int scale)
-{
-    return record(name, path, mux, audioCodec, videoCodec, bitrate, fps, scale, true);
-}
+//QString VlcMedia::duplicate(const QString &name,
+//                            const QString &path,
+//                            const Vlc::Mux &mux,
+//                            const Vlc::AudioCodec &audioCodec,
+//                            const Vlc::VideoCodec &videoCodec,
+//                            int bitrate,
+//                            int fps,
+//                            int scale)
+//{
+//    return record(name, path, mux, audioCodec, videoCodec, bitrate, fps, scale, true);
+//}
 
 //QString VlcMedia::merge(const QString &name,
 //                        const QString &path,
@@ -225,110 +225,110 @@ QString VlcMedia::duplicate(const QString &name,
 //    return l + "." + Vlc::mux()[mux];
 //}
 
-QString VlcMedia::record(const QString &name,
-                         const QString &path,
-                         const Vlc::Mux &mux,
-                         bool duplicate)
-{
-    QString option1, option2, parameters;
-    QString l = QDir::toNativeSeparators(path + "/" + name);
+//QString VlcMedia::record(const QString &name,
+//                         const QString &path,
+//                         const Vlc::Mux &mux,
+//                         bool duplicate)
+//{
+//    QString option1, option2, parameters;
+//    QString l = QDir::toNativeSeparators(path + "/" + name);
 
-    parameters = "std{access=file,mux=%1,dst='%2'}";
-    parameters = parameters.arg(Vlc::mux()[mux], l + "." + Vlc::mux()[mux]);
+//    parameters = "std{access=file,mux=%1,dst='%2'}";
+//    parameters = parameters.arg(Vlc::mux()[mux], l + "." + Vlc::mux()[mux]);
 
-    if (duplicate) {
-        option2 = ":sout=#duplicate{dst=display,dst=\"%1\"}";
-    } else {
-        option2 = ":sout=#%1";
-    }
+//    if (duplicate) {
+//        option2 = ":sout=#duplicate{dst=display,dst=\"%1\"}";
+//    } else {
+//        option2 = ":sout=#%1";
+//    }
 
-    option1 = ":sout-all";
-    option2 = option2.arg(parameters);
+//    option1 = ":sout-all";
+//    option2 = option2.arg(parameters);
 
-    setOption(option1);
-    setOption(option2);
+//    setOption(option1);
+//    setOption(option2);
 
-    VlcError::showErrmsg();
+//    VlcError::showErrmsg();
 
-    return l + "." + Vlc::mux()[mux];
-}
+//    return l + "." + Vlc::mux()[mux];
+//}
 
-QString VlcMedia::record(const QString &name,
-                         const QString &path,
-                         const Vlc::Mux &mux,
-                         const Vlc::AudioCodec &audioCodec,
-                         const Vlc::VideoCodec &videoCodec,
-                         bool duplicate)
-{
-    QString option1, option2, parameters;
-    QString l = QDir::toNativeSeparators(path + "/" + name);
+//QString VlcMedia::record(const QString &name,
+//                         const QString &path,
+//                         const Vlc::Mux &mux,
+//                         const Vlc::AudioCodec &audioCodec,
+//                         const Vlc::VideoCodec &videoCodec,
+//                         bool duplicate)
+//{
+//    QString option1, option2, parameters;
+//    QString l = QDir::toNativeSeparators(path + "/" + name);
 
-    parameters = "transcode{vcodec=%1,acodec=%2}:std{access=file,mux=%3,dst='%4'}";
-    parameters = parameters.arg(Vlc::videoCodec()[videoCodec], Vlc::audioCodec()[audioCodec], Vlc::mux()[mux], l + "." + Vlc::mux()[mux]);
+//    parameters = "transcode{vcodec=%1,acodec=%2}:std{access=file,mux=%3,dst='%4'}";
+//    parameters = parameters.arg(Vlc::videoCodec()[videoCodec], Vlc::audioCodec()[audioCodec], Vlc::mux()[mux], l + "." + Vlc::mux()[mux]);
 
-    if (duplicate) {
-        option2 = ":sout=#duplicate{dst=display,dst=\"%1\"}";
-    } else {
-        option2 = ":sout=#%1";
-    }
+//    if (duplicate) {
+//        option2 = ":sout=#duplicate{dst=display,dst=\"%1\"}";
+//    } else {
+//        option2 = ":sout=#%1";
+//    }
 
-    option1 = ":sout-all";
-    option2 = option2.arg(parameters);
+//    option1 = ":sout-all";
+//    option2 = option2.arg(parameters);
 
-    setOption(option1);
-    setOption(option2);
+//    setOption(option1);
+//    setOption(option2);
 
-    VlcError::showErrmsg();
+//    VlcError::showErrmsg();
 
-    return l + "." + Vlc::mux()[mux];
-}
+//    return l + "." + Vlc::mux()[mux];
+//}
 
-QString VlcMedia::record(const QString &name,
-                         const QString &path,
-                         const Vlc::Mux &mux,
-                         const Vlc::AudioCodec &audioCodec,
-                         const Vlc::VideoCodec &videoCodec,
-                         int bitrate,
-                         int fps,
-                         int scale,
-                         bool duplicate)
-{
-    QString option1, option2, parameters;
-    QString l = QDir::toNativeSeparators(path + "/" + name);
+//QString VlcMedia::record(const QString &name,
+//                         const QString &path,
+//                         const Vlc::Mux &mux,
+//                         const Vlc::AudioCodec &audioCodec,
+//                         const Vlc::VideoCodec &videoCodec,
+//                         int bitrate,
+//                         int fps,
+//                         int scale,
+//                         bool duplicate)
+//{
+//    QString option1, option2, parameters;
+//    QString l = QDir::toNativeSeparators(path + "/" + name);
 
-    parameters = "transcode{vcodec=%1,vb=%2,fps=%3,scale=%4,acodec=%5}:std{access=file,mux=%6,dst='%7'}";
-    parameters = parameters.arg(Vlc::videoCodec()[videoCodec], QString::number(bitrate), QString::number(fps), QString::number(scale), Vlc::audioCodec()[audioCodec], Vlc::mux()[mux], l + "." + Vlc::mux()[mux]);
+//    parameters = "transcode{vcodec=%1,vb=%2,fps=%3,scale=%4,acodec=%5}:std{access=file,mux=%6,dst='%7'}";
+//    parameters = parameters.arg(Vlc::videoCodec()[videoCodec], QString::number(bitrate), QString::number(fps), QString::number(scale), Vlc::audioCodec()[audioCodec], Vlc::mux()[mux], l + "." + Vlc::mux()[mux]);
 
-    if (duplicate) {
-        option2 = ":sout=#duplicate{dst=display,dst=\"%1\"}";
-    } else {
-        option2 = ":sout=#%1";
-    }
+//    if (duplicate) {
+//        option2 = ":sout=#duplicate{dst=display,dst=\"%1\"}";
+//    } else {
+//        option2 = ":sout=#%1";
+//    }
 
-    option1 = ":sout-all";
-    option2 = option2.arg(parameters);
+//    option1 = ":sout-all";
+//    option2 = option2.arg(parameters);
 
-    setOption(option1);
-    setOption(option2);
+//    setOption(option1);
+//    setOption(option2);
 
-    VlcError::showErrmsg();
+//    VlcError::showErrmsg();
 
-    return l + "." + Vlc::mux()[mux];
-}
+//    return l + "." + Vlc::mux()[mux];
+//}
 
-void VlcMedia::setProgram(int program)
-{
-    QString option = "program=%1";
-    setOption(option.arg(program));
-}
+//void VlcMedia::setProgram(int program)
+//{
+//    QString option = "program=%1";
+//    setOption(option.arg(program));
+//}
 
-void VlcMedia::setOption(const QString &option)
-{
-    vlc_media_add_option_function vlc_media_add_option = (vlc_media_add_option_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("libvlc_media_add_option");
-    vlc_media_add_option(_vlcMedia, option.toUtf8().data());
+//void VlcMedia::setOption(const QString &option)
+//{
+//    vlc_media_add_option_function vlc_media_add_option = (vlc_media_add_option_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("libvlc_media_add_option");
+//    vlc_media_add_option(_vlcMedia, option.toUtf8().data());
 
-    VlcError::showErrmsg();
-}
+//    VlcError::showErrmsg();
+//}
 
 //void VlcMedia::setOptions(const QStringList &options)
 //{

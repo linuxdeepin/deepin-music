@@ -40,7 +40,6 @@
 #include "../core/music.h"
 #include "../core/musicsettings.h"
 #include "../core/util/inotifyfiles.h"
-#include "../core/util/threadpool.h"
 #include "playlistview.h"
 #include "widget/ddropdown.h"
 #include "../core/player.h"
