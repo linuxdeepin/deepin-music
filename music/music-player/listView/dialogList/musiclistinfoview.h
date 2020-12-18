@@ -42,7 +42,7 @@ public:
     int getThemeType() const;
 
     void setPlayPixmap(QPixmap pixmap, QPixmap sidebarPixmap);
-    QPixmap getSidebarPixmap() const;
+//    QPixmap getSidebarPixmap() const;
 
     QPixmap getPlayPixmap(bool isSelect = false);
     QList<MediaMeta> getMusicListData() const;

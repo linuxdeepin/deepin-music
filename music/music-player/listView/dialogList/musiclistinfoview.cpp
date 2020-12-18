@@ -42,6 +42,7 @@
 #include "global.h"
 #include "databaseservice.h"
 #include "commonservice.h"
+#include "ac-desktop-define.h"
 
 DWIDGET_USE_NAMESPACE
 
@@ -173,10 +174,10 @@ void MusicListInfoView::setPlayPixmap(QPixmap pixmap, QPixmap sidebarPixmap)
     viewport()->update();
 }
 
-QPixmap MusicListInfoView::getSidebarPixmap() const
-{
-    return sidebarPixmap;
-}
+//QPixmap MusicListInfoView::getSidebarPixmap() const
+//{
+//    return sidebarPixmap;
+//}
 
 QPixmap MusicListInfoView::getPlayPixmap(bool isSelect)
 {
@@ -364,7 +365,8 @@ void MusicListInfoView::slotMusicInfoActionClicked(bool checked)
 {
     Q_UNUSED(checked)
 
-    InfoDialog infoDialog;
+    InfoDialog infoDialog(this);
+    infoDialog.setObjectName(AC_infoDialog);
     infoDialog.updateInfo(m_currMeta);
     infoDialog.exec();
 }
@@ -394,6 +396,7 @@ void MusicListInfoView::slotRemoveSongListActionClicked(bool checked)
         warnDlg.setMessage(QString(tr("Are you sure you want to remove the selected %1 songs?").arg(metaList.size())));
     }
 
+    warnDlg.setObjectName(AC_MessageBox);
     warnDlg.setIcon(QIcon::fromTheme("deepin-music"));
     if (deleteFlag == warnDlg.exec()) {
         DataBaseService::getInstance()->removeSelectedSongs("all", metaList, false);
