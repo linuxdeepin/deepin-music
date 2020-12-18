@@ -99,7 +99,7 @@ MusicBaseListView::MusicBaseListView(QWidget *parent) : DListView(parent)
     });
 
     connect(Player::getInstance(), &Player::signalUpdatePlayingIcon,
-            this, &MusicBaseListView::slotUpdatePlayingIcon, Qt::DirectConnection);
+            this, &MusicBaseListView::slotUpdatePlayingIcon);
     connect(CommonService::getInstance(), &CommonService::signalSwitchToView, this, &MusicBaseListView::viewChanged);
 }
 

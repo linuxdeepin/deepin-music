@@ -150,7 +150,7 @@ PlayListView::PlayListView(QString hash, bool isPlayQueue, QWidget *parent)
     connect(this, SIGNAL(doubleClicked(const QModelIndex &)), this, SLOT(slotOnDoubleClicked(const QModelIndex &)));
 
     connect(Player::getInstance(), &Player::signalUpdatePlayingIcon,
-            this, &PlayListView::slotUpdatePlayingIcon, Qt::DirectConnection);
+            this, &PlayListView::slotUpdatePlayingIcon);
     connect(Player::getInstance(), &Player::signalPlayQueueMetaRemove,
             this, &PlayListView::slotPlayQueueMetaRemove);
 

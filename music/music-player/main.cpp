@@ -62,7 +62,11 @@ int main(int argc, char *argv[])
     qDebug() << "zy------main " << QTime::currentTime().toString("hh:mm:ss.zzz");
     setenv("PULSE_PROP_media.role", "music", 1);
 
-    DApplication app(argc, argv);
+#if (DTK_VERSION < DTK_VERSION_CHECK(5, 4, 0, 0))
+    DApplication *app = new DApplication(argc, argv);
+#else
+    DApplication *app = DApplication::globalApplication(argc, argv);
+#endif
 
 #ifdef SNAP_APP
     DStandardPaths::setMode(DStandardPaths::Snap);
@@ -73,12 +77,12 @@ int main(int argc, char *argv[])
     QCoreApplication::addLibraryPath(".");
 #endif
 
-    app.setAttribute(Qt::AA_UseHighDpiPixmaps);
+    app->setAttribute(Qt::AA_UseHighDpiPixmaps);
     QAccessible::installFactory(accessibleFactory);
-    app.setOrganizationName("deepin");
-    app.setApplicationName("deepin-music");
+    app->setOrganizationName("deepin");
+    app->setApplicationName("deepin-music");
     // Version Time
-    app.setApplicationVersion(DApplication::buildVersion(VERSION));
+    app->setApplicationVersion(DApplication::buildVersion(VERSION));
 
     DLogManager::registerConsoleAppender();
     DLogManager::registerFileAppender();
@@ -89,10 +93,10 @@ int main(int argc, char *argv[])
     parser.addHelpOption();
     parser.addVersionOption();
     parser.addPositionalArgument("file", "Music file path");
-    parser.process(app);
+    parser.process(*app);
 
     QIcon icon = QIcon::fromTheme("deepin-music");
-    app.setProductIcon(icon);
+    app->setProductIcon(icon);
 
     // handle open file
     QStringList OpenFilePaths;
@@ -101,6 +105,7 @@ int main(int argc, char *argv[])
     }
 
     MusicSettings::init();
+    Player::getInstance();
     if (!OpenFilePaths.isEmpty()) {
         QStringList strList;
         for (QString str : OpenFilePaths) {
@@ -116,9 +121,9 @@ int main(int argc, char *argv[])
             DataBaseService::getInstance()->importMedias("all", strList); //导入数据库
         }
     }
-    app.loadTranslator();
+    app->loadTranslator();
 
-    if (!app.setSingleInstance("deepinmusic") || !checkOnly()) {
+    if (!app->setSingleInstance("deepinmusic") || !checkOnly()) {
         qDebug() << "another deepin music has started";
         for (auto curStr : parser.positionalArguments()) {
             if (!curStr.isEmpty()) {
@@ -162,8 +167,8 @@ int main(int argc, char *argv[])
     mainframe.autoStartToPlay();
     createSpeechDbus();
 
-    app.setQuitOnLastWindowClosed(false);
-    return app.exec();
+    app->setQuitOnLastWindowClosed(false);
+    return app->exec();
 }
 
 bool checkOnly()

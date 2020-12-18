@@ -999,7 +999,6 @@ DataBaseService::DataBaseService()
     m_workerThread = new QThread(this);
     DBOperate *worker = new DBOperate(m_workerThread);
     worker->moveToThread(m_workerThread);
-
     //发送信号给子线程导入数据
     connect(this, SIGNAL(signalImportMedias(const QStringList &)), worker, SLOT(slotImportMedias(const QStringList &)));
     //加载图片

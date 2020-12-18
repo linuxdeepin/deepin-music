@@ -96,7 +96,7 @@ MusicSongListView::MusicSongListView(QWidget *parent) : DListView(parent)
     });
 
     connect(Player::getInstance(), &Player::signalUpdatePlayingIcon,
-            this, &MusicSongListView::slotUpdatePlayingIcon, Qt::DirectConnection);
+            this, &MusicSongListView::slotUpdatePlayingIcon);
 
     connect(this, &MusicSongListView::triggerEdit,
     this, [ = ](const QModelIndex & index) {

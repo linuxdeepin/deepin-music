@@ -150,9 +150,9 @@ signals:
 
 public:
     bool canControl() const;
-    qlonglong position() const;
+    qlonglong position();
     PlaybackMode mode() const;
-    qint64 duration() const;
+    qint64 duration();
     double fadeInOutFactor() const;
     bool fadeInOut() const;
     bool playOnLoaded() const;
@@ -209,9 +209,9 @@ private:
     bool setMusicMuted(bool muted);
     bool isMusicMuted();
     bool isDevValid();
-    void initConnection();
-    void initMpris();//dbus interface
     // begin
+    void initVlc();
+    void initMpris();//dbus interface
     MediaMeta m_ActiveMeta;
     QList<MediaMeta> m_MetaList;
     // end
@@ -227,9 +227,9 @@ private:
     bool m_mute           = false; // unused
     QString m_sinkInputPath;
 
-    VlcInstance             *m_qvinstance;
-    VlcMedia                *m_qvmedia;
-    VlcMediaPlayer          *m_qvplayer;
+    VlcInstance             *m_qvinstance = nullptr;
+    VlcMedia                *m_qvmedia = nullptr;
+    VlcMediaPlayer          *m_qvplayer = nullptr;
 
     bool            m_playOnLoad  = true;
     // 外部双击打开处理一次

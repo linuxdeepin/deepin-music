@@ -53,6 +53,9 @@ void DBOperate::slotImportMedias(const QStringList &urllist)
         m_mediaLibrary->init();
     }
     for (auto &filepath : urllist) {
+        if (filepath.isEmpty()) {
+            continue;
+        }
         QFileInfo fileInfo(filepath);
         if (fileInfo.isDir()) {
             QDirIterator it(filepath, m_mediaLibrary->getSupportedSuffixs().keys(),
