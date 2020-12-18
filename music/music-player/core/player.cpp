@@ -685,21 +685,21 @@ void Player::initEqualizerCfg()
     }
 }
 
-void Player::setLocalMuted(bool muted)
-{
-    m_qvplayer->audio()->setMute(muted);
-    if (isValidDbusMute()) {
-        QDBusInterface ainterface("com.deepin.daemon.Audio", m_sinkInputPath,
-                                  "com.deepin.daemon.Audio.SinkInput",
-                                  QDBusConnection::sessionBus());
-        if (!ainterface.isValid()) {
-            return ;
-        }
+//void Player::setLocalMuted(bool muted)
+//{
+//    m_qvplayer->audio()->setMute(muted);
+//    if (isValidDbusMute()) {
+//        QDBusInterface ainterface("com.deepin.daemon.Audio", m_sinkInputPath,
+//                                  "com.deepin.daemon.Audio.SinkInput",
+//                                  QDBusConnection::sessionBus());
+//        if (!ainterface.isValid()) {
+//            return ;
+//        }
 
-        //调用设置音量
-        ainterface.call(QLatin1String("SetMute"), muted);
-    }
-}
+//        //调用设置音量
+//        ainterface.call(QLatin1String("SetMute"), muted);
+//    }
+//}
 
 void Player::setDbusMuted(bool muted)
 {

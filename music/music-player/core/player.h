@@ -180,7 +180,7 @@ public slots:
     /*********************
      * local mute
      * *********************/
-    void setLocalMuted(bool muted);
+//    void setLocalMuted(bool muted);
     /*********************
      * to dbus mute
      * *********************/

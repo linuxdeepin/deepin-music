@@ -205,6 +205,9 @@ TEST(Application, other)
     event.clear();
 
     QTest::qWait(500);
+    emit Player::getInstance()->getMpris()->playRequested();
+
+    QTest::qWait(500);
     emit Player::getInstance()->getMpris()->pauseRequested();
 
     QTest::qWait(500);

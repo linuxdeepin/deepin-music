@@ -116,25 +116,25 @@ void VlcAudio::setVolume(int volume)
 //    }
 //}
 
-bool VlcAudio::toggleMute() const
-{
-    if (_vlcMediaPlayer) {
-        vlc_audio_toggle_mute_function vlc_audio_toggle_mute = (vlc_audio_toggle_mute_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("libvlc_audio_toggle_mute");
-        vlc_audio_toggle_mute(_vlcMediaPlayer);
-        VlcError::showErrmsg();
-    }
+//bool VlcAudio::toggleMute() const
+//{
+//    if (_vlcMediaPlayer) {
+//        vlc_audio_toggle_mute_function vlc_audio_toggle_mute = (vlc_audio_toggle_mute_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("libvlc_audio_toggle_mute");
+//        vlc_audio_toggle_mute(_vlcMediaPlayer);
+//        VlcError::showErrmsg();
+//    }
 
-    return getMute();
-}
+//    return getMute();
+//}
 
-void VlcAudio::setMute(bool mute) const
-{
-    if (_vlcMediaPlayer && mute != getMute()) {
-        vlc_audio_set_mute_function vlc_audio_set_mute = (vlc_audio_set_mute_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("libvlc_audio_set_mute");
-        vlc_audio_set_mute(_vlcMediaPlayer, mute);
-        VlcError::showErrmsg();
-    }
-}
+//void VlcAudio::setMute(bool mute) const
+//{
+//    if (_vlcMediaPlayer && mute != getMute()) {
+//        vlc_audio_set_mute_function vlc_audio_set_mute = (vlc_audio_set_mute_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("libvlc_audio_set_mute");
+//        vlc_audio_set_mute(_vlcMediaPlayer, mute);
+//        VlcError::showErrmsg();
+//    }
+//}
 
 //int VlcAudio::track() const
 //{

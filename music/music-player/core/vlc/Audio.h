@@ -61,7 +61,7 @@ public slots:
         \brief Toggle mute state.
         \return new mute state (const bool)
     */
-    bool toggleMute() const;
+//    bool toggleMute() const;
 
     /*!
         \brief Set audio channel.
@@ -73,7 +73,7 @@ public slots:
         \brief Set mute state.
         \param mute mute state (bool)
     */
-    void setMute(bool mute) const;
+//    void setMute(bool mute) const;
 
 public:
     /*!
