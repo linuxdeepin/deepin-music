@@ -255,6 +255,9 @@ void ImportWidget::slotImportFormDbus(const QUrl &url)
     qDebug() << __FUNCTION__ << "toLocalFile = " << url.toLocalFile();
     QString path = url.toLocalFile();
     if (path.isEmpty()) {
+        path = url.toString();
+    }
+    if (path.isEmpty()) {
         return;
     }
     DataBaseService::getInstance()->setFirstSong(path);

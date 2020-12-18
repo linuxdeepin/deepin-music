@@ -563,6 +563,9 @@ void MainFrame::slotPlayFromFileMaganager()
     }
     qDebug() << "----------playMeta:" << mt.localPath;
     Player::getInstance()->playMeta(mt);
+    Player::getInstance()->setCurrentPlayListHash("all", true);
+    // 通知播放队列列表改变
+    emit Player::getInstance()->signalPlayListChanged();
 }
 
 void MainFrame::showEvent(QShowEvent *event)

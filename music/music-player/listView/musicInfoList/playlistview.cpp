@@ -873,7 +873,7 @@ void PlayListView::slotRmvFromSongList()
                 Player::getInstance()->playRmvMeta(metaList);
             }
         } else {
-            DataBaseService::getInstance()->removeSelectedSongs("all", metaList, false);
+//            DataBaseService::getInstance()->removeSelectedSongs("all", metaList, false);
             Player::getInstance()->playRmvMeta(metaList);
         }
     }
