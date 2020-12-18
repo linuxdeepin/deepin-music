@@ -74,6 +74,7 @@ SingerListView::SingerListView(QString hash, QWidget *parent)
     setObjectName("SingerListView");
     m_hash = hash;
     singerModel = new SingerDataModel(0, 1, this);
+
     signerDelegate = new SingerDataDelegate;
     setModel(singerModel);
     setItemDelegate(signerDelegate);

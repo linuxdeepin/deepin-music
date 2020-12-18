@@ -27,7 +27,6 @@ class SingerDataModel : public QStandardItemModel
 {
     Q_OBJECT
 public:
-    explicit SingerDataModel(QObject *parent = nullptr);
     SingerDataModel(int rows, int columns, QObject *parent = Q_NULLPTR);
     ~SingerDataModel() override;
 

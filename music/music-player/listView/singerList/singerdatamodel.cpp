@@ -21,13 +21,6 @@
 
 #include "singerdatamodel.h"
 
-
-SingerDataModel::SingerDataModel(QObject *parent) :
-    QStandardItemModel(parent)
-{
-
-}
-
 SingerDataModel::SingerDataModel(int rows, int columns, QObject *parent):
     QStandardItemModel(rows, columns, parent)
 {

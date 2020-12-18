@@ -21,12 +21,6 @@
 #include "musicsearchlistmodel.h"
 #include <QDebug>
 
-MusicSearchListModel::MusicSearchListModel(QObject *parent) :
-    QStandardItemModel(parent)
-{
-
-}
-
 MusicSearchListModel::MusicSearchListModel(int rows, int columns, QObject *parent):
     QStandardItemModel(rows, columns, parent)
 {

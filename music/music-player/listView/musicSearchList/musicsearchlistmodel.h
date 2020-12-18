@@ -27,7 +27,6 @@ class MusicSearchListModel : public QStandardItemModel
 {
     Q_OBJECT
 public:
-    explicit MusicSearchListModel(QObject *parent = nullptr);
     MusicSearchListModel(int rows, int columns, QObject *parent = Q_NULLPTR);
     ~MusicSearchListModel() override;
 

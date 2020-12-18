@@ -1,5 +1,7 @@
 #!/bin/bash
 
+rm -rf ${HOME}/.cache/deepin/deepin-music/*
+
 mkdir build
 cd build
 cmake ..

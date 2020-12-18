@@ -23,12 +23,6 @@
 
 #include <QDebug>
 
-PlaylistModel::PlaylistModel(QObject *parent) :
-    QStandardItemModel(parent)
-{
-
-}
-
 PlaylistModel::PlaylistModel(int rows, int columns, QObject *parent):
     QStandardItemModel(rows, columns, parent)
 {

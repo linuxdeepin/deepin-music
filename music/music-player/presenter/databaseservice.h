@@ -93,8 +93,6 @@ public:
     // 删除播放历史歌曲
     void removeHistorySelectedSong(const QStringList &hashlist);
 
-    void getAllMediaMetasInThread();
-
     // 导入
     void                 importMedias(QString importHash, const QStringList &urllist);
     // 获取导入状态，true正在导入，false没有导入，空闲
@@ -140,7 +138,6 @@ public:
     // 从文管导入后播放的第一首歌曲
     QString              getFirstSong();
 public slots:
-    void slotGetAllMediaMetaFromThread(QList<MediaMeta> allMediaMeta);
     void slotGetMetaFromThread(MediaMeta meta);
     // 收到子线程导入结束通知
     void slotImportFinished();

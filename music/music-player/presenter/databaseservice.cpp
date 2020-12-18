@@ -293,11 +293,6 @@ void DataBaseService::removeHistorySelectedSong(const QStringList &hashlist)
     //todo..
 }
 
-void DataBaseService::getAllMediaMetasInThread()
-{
-    emit signalGetAllMediaMeta();
-}
-
 QSqlDatabase DataBaseService::getDatabase()
 {
     if (!m_db.open()) {
@@ -496,12 +491,6 @@ bool DataBaseService::deleteMetaFromPlaylist(QString uuid, const QStringList &me
         }
     }
     return true;
-}
-
-void DataBaseService::slotGetAllMediaMetaFromThread(QList<MediaMeta> allMediaMeta)
-{
-    qDebug() << "zy------DataBaseService::slotGetAllMediaMetaFromThread " << QTime::currentTime().toString("hh:mm:ss.zzz");
-    m_AllMediaMeta = allMediaMeta;
 }
 
 void DataBaseService::slotGetMetaFromThread(MediaMeta meta)
@@ -1010,9 +999,6 @@ DataBaseService::DataBaseService()
     m_workerThread = new QThread(this);
     DBOperate *worker = new DBOperate(m_workerThread);
     worker->moveToThread(m_workerThread);
-    connect(this, SIGNAL(signalGetAllMediaMeta()), worker, SLOT(slotGetAllMediaMeta()));
-    connect(worker, &DBOperate::sigGetAllMediaMetaFromThread, this,
-            &DataBaseService::slotGetAllMediaMetaFromThread, Qt::ConnectionType::DirectConnection);
 
     //发送信号给子线程导入数据
     connect(this, SIGNAL(signalImportMedias(const QStringList &)), worker, SLOT(slotImportMedias(const QStringList &)));

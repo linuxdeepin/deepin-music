@@ -105,15 +105,30 @@ TEST(Application, deleteAllMusic)
     MainFrame *w = Application::getInstance()->getMainWindow();
     MusicBaseListView *baseListView = w->findChild<MusicBaseListView *>(AC_dataBaseListview);
 
-
-    // 点击所有音乐
-    QPoint pos = QPoint(130, 100);
+    // 点击专辑
+    QPoint pos = QPoint(130, 30);
     QTestEventList event;
     event.addMouseMove(pos);
     event.addMouseClick(Qt::MouseButton::LeftButton, Qt::NoModifier, pos, 10);
     event.simulate(baseListView->viewport());
     event.clear();
 
+    // 点击歌手
+    QTest::qWait(100);
+    pos = QPoint(130, 65);
+    event.addMouseMove(pos);
+    event.addMouseClick(Qt::MouseButton::LeftButton, Qt::NoModifier, pos, 10);
+    event.simulate(baseListView->viewport());
+    event.clear();
+
+
+    // 点击所有音乐
+    QTest::qWait(100);
+    pos = QPoint(130, 100);
+    event.addMouseMove(pos);
+    event.addMouseClick(Qt::MouseButton::LeftButton, Qt::NoModifier, pos, 10);
+    event.simulate(baseListView->viewport());
+    event.clear();
 
 
     // dialog list 点击
@@ -424,27 +439,154 @@ TEST(Application, iconModeChanged)
 
     MainFrame *w = Application::getInstance()->getMainWindow();
 
-
     MusicBaseListView *baseListView = w->findChild<MusicBaseListView *>(AC_dataBaseListview);
-    QTest::qWait(50);
-    QPoint pos = QPoint(20, 100);
+    DToolButton *iconModeBtn = w->findChild<DToolButton *>(AC_btIconMode);
+    PlayListView *plv = w->findChild<PlayListView *>(AC_PlayListView);
+
+    QTest::qWait(500);
+    QPoint pos = QPoint(20, 120);
     QTestEventList event;
-    //点击所有歌曲
+
+    // 点击所有音乐
+    QTest::qWait(50);
+    pos.setY(100);
     event.addMouseMove(pos);
     event.addMouseClick(Qt::MouseButton::LeftButton, Qt::NoModifier, pos, 10);
     event.simulate(baseListView->viewport());
     event.clear();
 
-    QTest::qWait(50);
     // 双击list
-    PlayListView *plv = w->findChild<PlayListView *>(AC_PlayListView);
+    pos = QPoint(20, 120);
+    event.addMouseMove(pos);
+    event.addMouseClick(Qt::MouseButton::LeftButton, Qt::NoModifier, pos, 100);
+    event.addMousePress(Qt::MouseButton::LeftButton, Qt::NoModifier, pos, 100);
+    event.addMouseDClick(Qt::MouseButton::LeftButton, Qt::NoModifier, pos, 100);
+    event.simulate(plv->viewport());
+    event.clear();
+
+
+    // 点击专辑
+    QTest::qWait(500);
+    pos = QPoint(20, 15);
+    event.addMouseMove(pos);
+    event.addMouseClick(Qt::MouseButton::LeftButton, Qt::NoModifier, pos, 10);
+    event.simulate(baseListView->viewport());
+    event.clear();
+
+    // icon模式
+    pos = QPoint(20, 20);
+    event.addMouseMove(pos);
+    event.addMouseClick(Qt::MouseButton::LeftButton, Qt::NoModifier, pos, 10);
+    event.simulate(iconModeBtn);
+    event.clear();
+
+    // 双击icon播放
+    QTest::qWait(500);
+    pos.setY(100);
+    event.addMouseMove(pos);
+    event.simulate(plv->viewport());
+    event.clear();
+
+    Player::getInstance()->pause();
+
+    QTest::qWait(500);
+    pos.setY(-10);
+    event.addMouseMove(pos);
+    event.simulate(plv->viewport());
+    event.clear();
+
+    Player::getInstance()->resume();
+
+    QTest::qWait(500);
+    pos.setY(100);
+    event.addMouseMove(pos);
+    event.simulate(plv->viewport());
+    event.clear();
+    QTest::qWait(500);
+
+
+
+    // 点击歌手
+    pos = QPoint(20, 50);
+    event.addMouseMove(pos);
+    event.addMouseClick(Qt::MouseButton::LeftButton, Qt::NoModifier, pos, 10);
+    event.simulate(baseListView->viewport());
+    event.clear();
+
+    // icon模式
+    QTest::qWait(50);
+    pos = QPoint(20, 20);
+    event.addMouseMove(pos);
+    event.addMouseClick(Qt::MouseButton::LeftButton, Qt::NoModifier, pos, 10);
+    event.simulate(iconModeBtn);
+    event.clear();
+
+    // 双击icon播放
+
+    QTest::qWait(500);
+    pos.setY(100);
+    event.addMouseMove(pos);
+    event.simulate(plv->viewport());
+    event.clear();
+
+    Player::getInstance()->pause();
+
+    QTest::qWait(500);
+    pos.setY(-10);
+    event.addMouseMove(pos);
+    event.simulate(plv->viewport());
+    event.clear();
+
+    Player::getInstance()->resume();
+
+    QTest::qWait(500);
+    pos.setY(100);
+    event.addMouseMove(pos);
+    event.simulate(plv->viewport());
+    event.clear();
+
+
+
+    // 点击所有音乐
+    QTest::qWait(500);
     pos.setY(100);
     event.addMouseMove(pos);
     event.addMouseClick(Qt::MouseButton::LeftButton, Qt::NoModifier, pos, 10);
-    event.addMousePress(Qt::MouseButton::LeftButton, Qt::NoModifier, pos, 10);
-    event.addMouseDClick(Qt::MouseButton::LeftButton, Qt::NoModifier, pos, 10);
+    event.simulate(baseListView->viewport());
+    event.clear();
+
+    // icon模式
+    QTest::qWait(50);
+    pos = QPoint(20, 20);
+    event.addMouseMove(pos);
+    event.addMouseClick(Qt::MouseButton::LeftButton, Qt::NoModifier, pos, 10);
+    event.simulate(iconModeBtn);
+    event.clear();
+
+    // 双击icon播放
+
+    QTest::qWait(500);
+    pos.setY(100);
+    event.addMouseMove(pos);
     event.simulate(plv->viewport());
     event.clear();
+
+    Player::getInstance()->pause();
+
+    QTest::qWait(500);
+    pos.setY(-10);
+    event.addMouseMove(pos);
+    event.simulate(plv->viewport());
+    event.clear();
+
+    Player::getInstance()->resume();
+
+    QTest::qWait(500);
+    pos.setY(100);
+    event.addMouseMove(pos);
+    event.simulate(plv->viewport());
+    event.clear();
+
 
     QTest::qWait(500);
 }

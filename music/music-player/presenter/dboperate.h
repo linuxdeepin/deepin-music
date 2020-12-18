@@ -33,14 +33,12 @@ public:
     explicit DBOperate(QObject *parent = nullptr);
     ~DBOperate();
 public slots:
-    void     slotGetAllMediaMeta();
     void     setThreadShouldStop();
     void     slotImportMedias(const QStringList &urllist);
     void     slotCreatCoverImg(const QList<MediaMeta> &metas);
 private:
 
 signals:
-    void     sigGetAllMediaMetaFromThread(QList<MediaMeta> allMediaMeta);
     void     fileIsNotExist(QString imagepath);
 
     void     sigImportMetaFromThread(MediaMeta meta);

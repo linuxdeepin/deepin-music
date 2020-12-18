@@ -41,48 +41,6 @@ DBOperate::~DBOperate()
 
 }
 
-void DBOperate::slotGetAllMediaMeta()
-{
-    QTime t;
-    t.start();
-    QList<MediaMeta> allMediaMeta;
-    QString queryStringNew = QString("SELECT hash, localpath, title, artist, album, "
-                                     "filetype, track, offset, length, size, "
-                                     "timestamp, invalid, search_id, cuepath, "
-                                     "lyricPath, codec "
-                                     "FROM musicNew");
-    QSqlQuery queryNew(DataBaseService::getInstance()->getDatabase());
-    queryNew.prepare(queryStringNew);
-    if (! queryNew.exec()) {
-        qCritical() << queryNew.lastError();
-        emit sigGetAllMediaMetaFromThread(allMediaMeta);
-    }
-
-    while (queryNew.next()) {
-        MediaMeta meta;
-        meta.hash = queryNew.value(0).toString();
-        meta.localPath = queryNew.value(1).toString();
-        meta.title = queryNew.value(2).toString();
-        meta.singer = queryNew.value(3).toString();
-        meta.album = queryNew.value(4).toString();
-        meta.filetype = queryNew.value(5).toString();
-        meta.track = queryNew.value(6).toLongLong();
-        meta.offset = queryNew.value(7).toLongLong();
-        meta.length = queryNew.value(8).toLongLong();
-        meta.size = queryNew.value(9).toLongLong();
-        meta.timestamp = queryNew.value(10).toLongLong();
-        meta.invalid = queryNew.value(11).toBool();
-        meta.searchID = queryNew.value(12).toString();
-        meta.cuePath = queryNew.value(13).toString();
-        meta.lyricPath = queryNew.value(14).toString();
-        meta.codec = queryNew.value(15).toString();
-        allMediaMeta << meta;
-    }
-    qDebug() << "zy------emit sigGetAllMediaMetaFromThread t = " << t.elapsed() <<
-             " " << QTime::currentTime().toString("hh:mm:ss.zzz");
-    emit sigGetAllMediaMetaFromThread(allMediaMeta);
-}
-
 void DBOperate::setThreadShouldStop()
 {
 }
