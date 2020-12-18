@@ -102,14 +102,7 @@ QStringList Player::supportedMimeTypes() const
 
 Player::~Player()
 {
-    qDebug() << "destroy Player";
-    if (m_fadeOutAnimation) {
-        delete m_fadeOutAnimation;
-    }
-    if (m_fadeInAnimation) {
-        delete m_fadeInAnimation;
-    }
-    qDebug() << "Player destroyed";
+
 }
 
 void Player::playMeta(MediaMeta meta)

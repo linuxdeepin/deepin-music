@@ -40,7 +40,7 @@ public:
     void init();
     void showContextMenu(const QPoint &pos);
 public slots:
-    void slotTheme(int type);
+    void setThemeType(int type);
     void slotUpdatePlayingIcon();
     void slotMenuTriggered(QAction *action);
     void viewChanged(ListPageSwitchType switchtype, QString hashOrSearchword);
@@ -67,7 +67,6 @@ private:
     QPixmap              playingPixmap;
     QPixmap              albumPixmap;
     QPixmap              defaultPixmap;
-    int                  m_type             = 1;
     bool                m_sizeChangedFlag   = false;
     bool                pixmapState         = false;
 };

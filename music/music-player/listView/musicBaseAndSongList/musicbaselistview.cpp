@@ -101,6 +101,12 @@ MusicBaseListView::MusicBaseListView(QWidget *parent) : DListView(parent)
     connect(Player::getInstance(), &Player::signalUpdatePlayingIcon,
             this, &MusicBaseListView::slotUpdatePlayingIcon);
     connect(CommonService::getInstance(), &CommonService::signalSwitchToView, this, &MusicBaseListView::viewChanged);
+
+
+    connect(DGuiApplicationHelper::instance(), &DGuiApplicationHelper::themeTypeChanged,
+            this, &MusicBaseListView::setThemeType);
+
+    setThemeType(DGuiApplicationHelper::instance()->themeType());
 }
 
 MusicBaseListView::~MusicBaseListView()
@@ -126,7 +132,7 @@ void SetSVGBackColor1(QDomElement elem, QString strtagname, QString strattr, QSt
 void MusicBaseListView::init()
 {
     QString rStr;
-    if (m_type == 1) {
+    if (DGuiApplicationHelper::instance()->themeType() == 1) {
         rStr = "light";
     } else {
         rStr = "dark";
@@ -137,7 +143,7 @@ void MusicBaseListView::init()
     auto itemFont = item->font();
     itemFont.setPixelSize(14);
     item->setFont(itemFont);
-    if (m_type == 1) {
+    if (DGuiApplicationHelper::instance()->themeType() == 1) {
         item->setForeground(QColor("#414D68"));
     } else {
         item->setForeground(QColor("#C0C6D4"));
@@ -379,18 +385,16 @@ void MusicBaseListView::viewChanged(ListPageSwitchType switchtype, QString hashO
     }
 }
 
-void MusicBaseListView::slotTheme(int type)
+void MusicBaseListView::setThemeType(int type)
 {
-    m_type = type;
-
     for (int i = 0; i < model->rowCount(); i++) {
         auto curIndex = model->index(i, 0);
         auto curStandardItem = dynamic_cast<DStandardItem *>(model->itemFromIndex(curIndex));
-        auto curItemRow = curStandardItem->row();
+//        auto curItemRow = curStandardItem->row();
 //        if (curItemRow < 0 || curItemRow >= allPlaylists.size())
 //            continue;
 
-        if (m_type == 1) {
+        if (type == 1) {
             curStandardItem->setForeground(QColor("#414D68"));
         } else {
             curStandardItem->setForeground(QColor("#C0C6D4"));

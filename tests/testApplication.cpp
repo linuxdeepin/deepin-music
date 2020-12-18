@@ -260,6 +260,7 @@ TEST(Application, viewChanged)
         emit albumDropdown->triggered(*item);
         QTest::qWait(50);
         emit albumDropdown->triggered(*item);
+        QTest::qWait(50);
     }
 
     // icon模式
@@ -275,6 +276,7 @@ TEST(Application, viewChanged)
         emit albumDropdown->triggered(*item);
         QTest::qWait(50);
         emit albumDropdown->triggered(*item);
+        QTest::qWait(50);
     }
 
     QTest::qWait(50);
@@ -284,8 +286,6 @@ TEST(Application, viewChanged)
     event.addMouseClick(Qt::MouseButton::LeftButton, Qt::NoModifier, pos, 10);
     event.simulate(iconListBtn);
     event.clear();
-
-
 
     // 点击歌手
     QTest::qWait(50);
@@ -303,6 +303,7 @@ TEST(Application, viewChanged)
         emit artistDropdown->triggered(*item);
         QTest::qWait(50);
         emit artistDropdown->triggered(*item);
+        QTest::qWait(50);
     }
 
     // icon模式
@@ -318,6 +319,7 @@ TEST(Application, viewChanged)
         emit artistDropdown->triggered(*item);
         QTest::qWait(50);
         emit artistDropdown->triggered(*item);
+        QTest::qWait(50);
     }
 
     QTest::qWait(50);
@@ -344,6 +346,7 @@ TEST(Application, viewChanged)
         emit allMusicDropdown->triggered(*item);
         QTest::qWait(50);
         emit allMusicDropdown->triggered(*item);
+        QTest::qWait(50);
     }
 
     // icon模式
@@ -359,6 +362,7 @@ TEST(Application, viewChanged)
         emit allMusicDropdown->triggered(*item);
         QTest::qWait(50);
         emit allMusicDropdown->triggered(*item);
+        QTest::qWait(50);
     }
 
     QTest::qWait(50);
@@ -383,6 +387,7 @@ TEST(Application, viewChanged)
         emit allMusicDropdown->triggered(*item);
         QTest::qWait(50);
         emit allMusicDropdown->triggered(*item);
+        QTest::qWait(50);
     }
 
     // icon模式
@@ -398,6 +403,7 @@ TEST(Application, viewChanged)
         emit allMusicDropdown->triggered(*item);
         QTest::qWait(50);
         emit allMusicDropdown->triggered(*item);
+        QTest::qWait(50);
     }
 
     QTest::qWait(50);
@@ -831,6 +837,8 @@ TEST(Application, searchKey)
     event5.addKeyPress(Qt::Key::Key_Enter, Qt::NoModifier, 50);
     event5.simulate(se);
     event5.clear();
+
+
 
     QTest::qWait(100);
 }

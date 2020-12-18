@@ -40,7 +40,7 @@ public:
     void showContextMenu(const QPoint &pos);
 
 public slots:
-    void slotTheme(int type);
+    void setThemeType(int type);
 
     // 新建歌单
     void addNewSongList();
@@ -77,7 +77,6 @@ private:
     QPixmap              defaultPixmap;
     // 新建歌单快捷键
     QShortcut           *m_newItemShortcut = nullptr;
-    int                 m_type             = 1;
     bool                pixmapState         = false;
 };
 

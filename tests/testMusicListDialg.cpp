@@ -71,7 +71,7 @@ TEST(Application, musicListDialg)
     event.simulate(alv->viewport());
     event.clear();
 
-    QTest::qWait(1000);
+    QTest::qWait(500);
 }
 
 

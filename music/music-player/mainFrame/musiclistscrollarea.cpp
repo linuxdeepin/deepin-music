@@ -108,13 +108,13 @@ MusicListScrollArea::MusicListScrollArea(QWidget *parent) : DScrollArea(parent)
 
     // m_customizeListview->setFocusPolicy(Qt::TabFocus);
     m_customizeListview->installEventFilter(this);
-    AC_SET_OBJECT_NAME(m_customizeListview, AC_customizeListview);
-    AC_SET_ACCESSIBLE_NAME(m_customizeListview, AC_customizeListview);
 
     musicLayout->addWidget(dataBaseLabel, 0, Qt::AlignVCenter);
     musicLayout->addWidget(m_dataBaseListview, 0, Qt::AlignTop);
     musicLayout->addLayout(customizeLayout);
     musicLayout->addWidget(m_customizeListview);
+    AC_SET_OBJECT_NAME(m_customizeListview, AC_customizeListview);
+    AC_SET_ACCESSIBLE_NAME(m_customizeListview, AC_customizeListview);
 
     slotTheme(DGuiApplicationHelper::instance()->themeType());
 
@@ -184,9 +184,6 @@ void MusicListScrollArea::slotTheme(int type)
                                      ":/mpimage/dark/hover/add_hover.svg",
                                      ":/mpimage/dark/press/add_press.svg");
     }
-
-    m_dataBaseListview->slotTheme(type);
-    m_customizeListview->slotTheme(type);
 }
 
 void MusicListScrollArea::changePicture(QPixmap pixmap, QPixmap albumPixmap, QPixmap sidebarPixmap)

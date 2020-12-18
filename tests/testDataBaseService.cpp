@@ -26,20 +26,23 @@ TEST(Application, dataBaseService)
 {
     TEST_CASE_NAME("dataBaseService")
 
-//    MainFrame *w = Application::getInstance()->getMainWindow();
+    MainFrame *w = Application::getInstance()->getMainWindow();
 //    MusicBaseListView *baseListView = w->findChild<MusicBaseListView *>(AC_dataBaseListview);
 
-//    QTest::qWait(500);
-////    // todo
-////    DataBaseService::getInstance()->customSongList();
-////    DataBaseService::getInstance()->allMusicInfosCount();
-////    DataBaseService::getInstance()->getDatabase();
-////    DataBaseService::getInstance()->slotGetAllMediaMetaFromThread((QList<MediaMeta>()));
+    QTest::qWait(50);
 
-//    emit DataBaseService::getInstance()->sigGetAllMediaMeta();
-//    emit DataBaseService::getInstance()->sigImportMedias(QStringList());
-//    emit DataBaseService::getInstance()->sigImportFinished("all");
-//    QTest::qWait(500);
+    DataBaseService::getInstance()->getMusicInfoByHash("all");
+    DataBaseService::getInstance()->getCustomSongList();
+    DataBaseService::getInstance()->getDatabase();
+    DataBaseService::getInstance()->getImportStatus();
+
+    QList<MediaMeta> metaList;
+    metaList.append(MediaMeta());
+    DataBaseService::getInstance()->addMetaToPlaylist("all", metaList);
+    DataBaseService::getInstance()->updateMetaCodec(MediaMeta());
+    DataBaseService::getInstance()->setFirstSong("");
+
+    QTest::qWait(50);
 }
 
 

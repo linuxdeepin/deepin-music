@@ -44,6 +44,7 @@
 #include "databaseservice.h"
 #include "player.h"
 #include "playlistview.h"
+#include "ac-desktop-define.h"
 
 DGUI_USE_NAMESPACE
 
@@ -119,6 +120,12 @@ MusicSongListView::MusicSongListView(QWidget *parent) : DListView(parent)
     });
 
     connect(CommonService::getInstance(), &CommonService::signalAddNewSongList, this, &MusicSongListView::addNewSongList);
+
+
+    connect(DGuiApplicationHelper::instance(), &DGuiApplicationHelper::themeTypeChanged,
+            this, &MusicSongListView::setThemeType);
+
+    setThemeType(DGuiApplicationHelper::instance()->themeType());
 }
 
 MusicSongListView::~MusicSongListView()
@@ -129,12 +136,6 @@ MusicSongListView::~MusicSongListView()
 void MusicSongListView::init()
 {
     QList<DataBaseService::PlaylistData> list = DataBaseService::getInstance()->allPlaylistMeta();
-    QString rStr;
-    if (m_type == 1) {
-        rStr = "light";
-    } else {
-        rStr = "dark";
-    }
 
     for (int i = 0; i < list.size(); i++) {
         DataBaseService::PlaylistData data = list.at(i);
@@ -151,7 +152,7 @@ void MusicSongListView::init()
         item->setFont(itemFont);
 
         item->setData(data.uuid, Qt::UserRole);
-        if (m_type == 1) {
+        if (DGuiApplicationHelper::instance()->themeType() == 1) {
             item->setForeground(QColor("#414D68"));
         } else {
             item->setForeground(QColor("#C0C6D4"));
@@ -217,7 +218,7 @@ void MusicSongListView::addNewSongList()
     auto itemFont = item->font();
     itemFont.setPixelSize(14);
     item->setFont(itemFont);
-    if (m_type == 1) {
+    if (DGuiApplicationHelper::instance()->themeType() == 1) {
         item->setForeground(QColor("#414D68"));
     } else {
         item->setForeground(QColor("#C0C6D4"));
@@ -256,6 +257,7 @@ void MusicSongListView::rmvSongList()
         warnDlg.addSpacing(20);
         warnDlg.addButton(tr("Cancel"), false, Dtk::Widget::DDialog::ButtonNormal);
         warnDlg.addButton(tr("Delete"), true, Dtk::Widget::DDialog::ButtonWarning);
+        warnDlg.setObjectName(AC_MessageBox);
         if (1 == warnDlg.exec()) {
             QString hash = index.data(Qt::UserRole).value<QString>();
 
@@ -484,18 +486,16 @@ QString MusicSongListView::newDisplayName()
     return QString("%1 %2").arg(temp).arg(i);
 }
 
-void MusicSongListView::slotTheme(int type)
+void MusicSongListView::setThemeType(int type)
 {
-    m_type = type;
-
     for (int i = 0; i < model->rowCount(); i++) {
         auto curIndex = model->index(i, 0);
         auto curStandardItem = dynamic_cast<DStandardItem *>(model->itemFromIndex(curIndex));
-        auto curItemRow = curStandardItem->row();
+//        auto curItemRow = curStandardItem->row();
 //        if (curItemRow < 0 || curItemRow >= allPlaylists.size())
 //            continue;
 
-        if (m_type == 1) {
+        if (type == 1) {
             curStandardItem->setForeground(QColor("#414D68"));
         } else {
             curStandardItem->setForeground(QColor("#C0C6D4"));

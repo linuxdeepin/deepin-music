@@ -40,6 +40,7 @@
 #include "musiclistdatawidget.h"
 //#include "widget/musicimagebutton.h"
 #include "musiclistscrollarea.h"
+#include "ac-desktop-define.h"
 
 static constexpr int AnimationDelay = 400; //ms
 
@@ -63,6 +64,8 @@ MusicContentWidget::MusicContentWidget(QWidget *parent) : DWidget(parent)
     auto leftFramePalette = leftFrame->palette();
     leftFramePalette.setColor(DPalette::Background, QColor("#FFFFFF"));
     leftFrame->setPalette(leftFramePalette);
+    AC_SET_OBJECT_NAME(leftFrame, AC_MusicListScrollArea);
+    AC_SET_ACCESSIBLE_NAME(leftFrame, AC_MusicListScrollArea);
 
 //    m_addListBtn = leftFrame->getAddButton();
 
