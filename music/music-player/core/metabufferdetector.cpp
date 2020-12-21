@@ -89,16 +89,10 @@ public:
 MetaBufferDetector::MetaBufferDetector(QObject *parent)
     : QThread(parent), d_ptr(new MetaBufferDetectorPrivate(this))
 {
-
 }
 
 MetaBufferDetector::~MetaBufferDetector()
 {
-    Q_D(MetaBufferDetector);
-    d->stopFlag = true;
-    while (isRunning()) {
-
-    }
 }
 
 void MetaBufferDetector::run()
@@ -108,22 +102,6 @@ void MetaBufferDetector::run()
     QString hash = d->curHash;
     if (path.isEmpty())
         return;
-#if 0
-    QFileInfo fileInfo(path);
-    if (fileInfo.suffix() == "ape") {
-        QString curPath = Global::configPath();
-        QString toPath = QString("%1/.tmp.ape.mp3").arg(curPath);
-        if (QFile::exists(toPath)) {
-            QFile::remove(toPath);
-        }
-        QString fromPath = QString("%1/.tmp.ape").arg(curPath);
-        QFile file(path);
-        file.link(fromPath);
-        QString program = QString("ffmpeg -i %1 -ac 1 -ab 32 -ar 24000 %2/.tmp.ape.mp3").arg(fromPath).arg(curPath);
-        QProcess::execute(program);
-        path = toPath;
-    }
-#endif
     format_alloc_context_function format_alloc_context = (format_alloc_context_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("avformat_alloc_context", true);
     format_open_input_function format_open_input = (format_open_input_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("avformat_open_input", true);
     format_free_context_function format_free_context = (format_free_context_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("avformat_free_context", true);
@@ -179,7 +157,7 @@ void MetaBufferDetector::run()
     AVFrame *frame = frame_alloc();
 
     QVector<float> curData;
-    bool flag = false;
+
     while (read_frame(pFormatCtx, packet) >= 0) {
         //stop detector
         if (d->stopFlag && curData.size() > 100) {
@@ -195,39 +173,31 @@ void MetaBufferDetector::run()
             return;
         }
 
-        if (!flag && curData.size() > 100) {
-            resample(curData, hash);
-            flag = true;
-        }
+        if (packet->stream_index == audio_stream_index) {
+            int state;
+            state = codec_send_packet(pCodecCtx, packet);
+            packet_unref(packet);
+            if (state != 0) {
+                continue;
+            }
 
-        while (read_frame(pFormatCtx, packet) >= 0) {
-            if (packet->stream_index == audio_stream_index) {
-                int state;
-                state = codec_send_packet(pCodecCtx, packet);
-                packet_unref(packet);
-                if (state != 0) {
-                    continue;
-                }
+            state = codec_receive_frame(pCodecCtx, frame);
+            if (state == 0) {
 
-                state = codec_receive_frame(pCodecCtx, frame);
-                if (state == 0) {
-
-                    quint8 *ptr = frame->extended_data[0];
-                    if (path.endsWith(".ape") || path.endsWith(".APE")) {
-                        for (int i = 0; i < frame->linesize[0]; i++) {
-                            auto  valDate = ((ptr[i]) << 16 | (ptr[i + 1]));
-                            curData.append(valDate + qrand());
-                        }
-                    } else {
-                        for (int i = 0; i < frame->linesize[0]; i += 1024) {
-                            auto  valDate = ((ptr[i]) << 16 | (ptr[i + 1]));
-                            curData.append(valDate);
-                        }
+                quint8 *ptr = frame->extended_data[0];
+                if (path.endsWith(".ape") || path.endsWith(".APE")) {
+                    for (int i = 0; (i + 1) < frame->linesize[0]; i++) {
+                        auto  valDate = ((ptr[i]) << 16 | (ptr[i + 1]));
+                        curData.append(valDate + qrand());
+                    }
+                } else {
+                    for (int i = 0; (i + 1) < frame->linesize[0]; i += 1024) {
+                        auto  valDate = ((ptr[i]) << 16 | (ptr[i + 1]));
+                        curData.append(valDate);
                     }
                 }
             }
         }
-        packet_unref(packet);
     }
 
     packet_unref(packet);
@@ -235,7 +205,6 @@ void MetaBufferDetector::run()
     codec_close(pCodecCtx);
     format_close_input(&pFormatCtx);
     format_free_context(pFormatCtx);
-
     resample(curData, hash);
 }
 

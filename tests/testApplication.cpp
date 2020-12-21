@@ -48,7 +48,6 @@
 #include "metabufferdetector.h"
 #include "player.h"
 #include "fft.h"
-#include "inotifyfiles.h"
 #include "musiclyric.h"
 #include "lyriclabel.h"
 

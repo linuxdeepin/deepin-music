@@ -82,7 +82,7 @@ void QTestMain::testGTest()
 {
     testing::GTEST_FLAG(output) = "xml:./report/report_deepin-music.xml";
     testing::InitGoogleTest();
-    __sanitizer_set_report_path("asan_deepin-music.log");//内存检测输出
+//    __sanitizer_set_report_path("asan_deepin-music.log");//内存检测输出
     int ret = RUN_ALL_TESTS();
     Q_UNUSED(ret)
 }

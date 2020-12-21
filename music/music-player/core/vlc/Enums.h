@@ -268,13 +268,13 @@ public:
         \brief Log level strings
         \return log level strings (QStringList)
     */
-    static QStringList logLevel();
+//    static QStringList logLevel();
 
     /*!
         \brief Audio codecs strings
         \return audio codecs strings (QStringList)
     */
-    static QStringList audioCodec();
+//    static QStringList audioCodec();
 
     /*!
         \brief Audio outputs strings
@@ -298,7 +298,7 @@ public:
         \brief Mux strings
         \return mux strings (QStringList)
     */
-    static QStringList mux();
+//    static QStringList mux();
 
     /*!
         \brief Aspect and crop ratios strings
@@ -329,7 +329,7 @@ public:
         \brief Video codecs strings
         \return video codecs strings (QStringList)
     */
-    static QStringList videoCodec();
+//    static QStringList videoCodec();
 
     /*!
         \brief Video outputs strings

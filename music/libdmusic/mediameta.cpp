@@ -118,9 +118,4 @@ QString sizeString(qint64 sizeByte)
     return text;
 }
 
-QList<QByteArray> detectMetaEncodings(MediaMeta meta)
-{
-    return  MetaDetector::detectEncodings(meta);
-}
-
 }

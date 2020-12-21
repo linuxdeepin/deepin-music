@@ -78,9 +78,9 @@ VlcAudio::VlcAudio(VlcMediaPlayer *player)
 
 VlcAudio::~VlcAudio()
 {
-    var_DelCallback_function DelCallback = (var_DelCallback_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("var_DelCallback");
-    DelCallback((vlc_object_t *)_vlcMediaPlayer, "volume", VlcAudioCallbackHelper::volumeCallback, this);
-    DelCallback((vlc_object_t *)_vlcMediaPlayer, "mute", VlcAudioCallbackHelper::muteCallback, this);
+//    var_DelCallback_function DelCallback = (var_DelCallback_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("var_DelCallback");
+//    DelCallback((vlc_object_t *)_vlcMediaPlayer, "volume", VlcAudioCallbackHelper::volumeCallback, this);
+//    DelCallback((vlc_object_t *)_vlcMediaPlayer, "mute", VlcAudioCallbackHelper::muteCallback, this);
 }
 
 bool VlcAudio::getMute() const

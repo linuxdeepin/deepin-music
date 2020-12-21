@@ -197,8 +197,8 @@ install(FILES ${PROJECT_SOURCE_DIR}/music/music-player/resource/theme/common/ima
     DESTINATION share/icons/hicolor/scalable/apps)
 
 
-set(CMAKE_CXX_FLAGS "-fsanitize=undefined,address,leak -fno-omit-frame-pointer -g -O1 -fprofile-arcs -ftest-coverage")
-set(CMAKE_C_FLAGS "-fsanitize=undefined,address,leak -fno-omit-frame-pointer -g -O1 -fprofile-arcs -ftest-coverage")
-set(CMAKE_Ｌ_FLAGS "-fsanitize=undefined,address,leak -fno-omit-frame-pointer -g -O1 -fprofile-arcs -ftest-coverage")
-set(CMAKE_EXE_LINKER_FLAGS    "-fsanitize=undefined,address,leak -lgcov")
+#set(CMAKE_CXX_FLAGS "-fsanitize=undefined,address,leak -fno-omit-frame-pointer -g -O1 -fprofile-arcs -ftest-coverage")
+#set(CMAKE_C_FLAGS "-fsanitize=undefined,address,leak -fno-omit-frame-pointer -g -O1 -fprofile-arcs -ftest-coverage")
+#set(CMAKE_Ｌ_FLAGS "-fsanitize=undefined,address,leak -fno-omit-frame-pointer -g -O1 -fprofile-arcs -ftest-coverage")
+#set(CMAKE_EXE_LINKER_FLAGS    "-fsanitize=undefined,address,leak -lgcov")
 

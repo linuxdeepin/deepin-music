@@ -5,31 +5,31 @@
 Vlc::Vlc(QObject *parent)
     : QObject(parent) {}
 
-QStringList Vlc::logLevel()
-{
-    QStringList list;
-    list << "debug"
-         << "debug"
-         << "notice"
-         << "warning"
-         << "error"
-         << "disabled";
+//QStringList Vlc::logLevel()
+//{
+//    QStringList list;
+//    list << "debug"
+//         << "debug"
+//         << "notice"
+//         << "warning"
+//         << "error"
+//         << "disabled";
 
-    return list;
-}
+//    return list;
+//}
 
-QStringList Vlc::audioCodec()
-{
-    QStringList list;
-    list << "none"
-         << "mpga"
-         << "mp3"
-         << "mp4a"
-         << "vorb"
-         << "flac";
+//QStringList Vlc::audioCodec()
+//{
+//    QStringList list;
+//    list << "none"
+//         << "mpga"
+//         << "mp3"
+//         << "mp4a"
+//         << "vorb"
+//         << "flac";
 
-    return list;
-}
+//    return list;
+//}
 
 //QStringList Vlc::audioOutput()
 //{
@@ -65,17 +65,17 @@ QStringList Vlc::audioCodec()
 //    return list;
 //}
 
-QStringList Vlc::mux()
-{
-    QStringList list;
-    list << "ts"
-         << "ps"
-         << "mp4"
-         << "ogg"
-         << "avi";
+//QStringList Vlc::mux()
+//{
+//    QStringList list;
+//    list << "ts"
+//         << "ps"
+//         << "mp4"
+//         << "ogg"
+//         << "avi";
 
-    return list;
-}
+//    return list;
+//}
 
 //QStringList Vlc::ratio()
 //{
@@ -177,17 +177,17 @@ QStringList Vlc::mux()
 //    return list;
 //}
 
-QStringList Vlc::videoCodec()
-{
-    QStringList list;
-    list << "none"
-         << "mpgv"
-         << "mp4v"
-         << "h264"
-         << "theora";
+//QStringList Vlc::videoCodec()
+//{
+//    QStringList list;
+//    list << "none"
+//         << "mpgv"
+//         << "mp4v"
+//         << "h264"
+//         << "theora";
 
-    return list;
-}
+//    return list;
+//}
 
 //QStringList Vlc::videoOutput()
 //{

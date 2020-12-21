@@ -216,11 +216,21 @@ TEST(Application, other)
     QTest::qWait(500);
     emit Player::getInstance()->getMpris()->previousRequested();
 
+    Player::getInstance()->setMode(Player::Shuffle);
+    QTest::qWait(500);
+    emit Player::getInstance()->getMpris()->nextRequested();
+
+    Player::getInstance()->setMode(Player::RepeatNull);
     QTest::qWait(500);
     emit Player::getInstance()->getMpris()->nextRequested();
 
     QTest::qWait(500);
     Player::getInstance()->loadMediaProgress(Player::getInstance()->getActiveMeta().localPath);
+
+    MediaMeta meta = Player::getInstance()->getActiveMeta();
+    Player::getInstance()->stop();
+    Player::getInstance()->setActiveMeta(meta);
+    Player::getInstance()->resume();
 
     QTest::qWait(500);
 }

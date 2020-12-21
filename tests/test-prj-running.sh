@@ -22,7 +22,7 @@ mkdir report
 cd report
 cp ./../../tests/build/report/report_deepin-music.xml ./
 
-cd ..
-cp ./../tests/build/asan_deepin-music.log* ./
+#cd ..
+#cp ./../tests/build/asan_deepin-music.log* ./
 
 exit 0

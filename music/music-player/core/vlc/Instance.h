@@ -41,7 +41,7 @@ public:
         \brief Returns libvlc initialisation status.
         \return libvlc status (bool)
     */
-    bool status() const;
+//    bool status() const;
 
     /*!
         \brief Returns current log level (default Vlc::ErrorLevel)
