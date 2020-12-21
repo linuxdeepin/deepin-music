@@ -244,39 +244,39 @@ void MusicSearchListview::setCurrentIndexInt(int row)
     m_CurrentIndex = row;
 }
 
-QString MusicSearchListview::getCurrentIndexText(int row)
-{
-    QString currentIndexText;
-    if (row >= 0 && row < this->rowCount()) {
-        QModelIndex index = m_model->index(row, 0, QModelIndex());
-        MediaMeta mediaMeta = index.data(Qt::UserRole + SearchType::SearchMusic).value<MediaMeta>();
-        currentIndexText = mediaMeta.title;
-    }
-    return currentIndexText;
-}
+//QString MusicSearchListview::getCurrentIndexText(int row)
+//{
+//    QString currentIndexText;
+//    if (row >= 0 && row < this->rowCount()) {
+//        QModelIndex index = m_model->index(row, 0, QModelIndex());
+//        MediaMeta mediaMeta = index.data(Qt::UserRole + SearchType::SearchMusic).value<MediaMeta>();
+//        currentIndexText = mediaMeta.title;
+//    }
+//    return currentIndexText;
+//}
 
-void MusicSearchListview::setPlayPixmap(QPixmap pixmap, QPixmap sidebarPixmap, QPixmap albumPixmap)
-{
-    m_playingPixmap = pixmap;
-    m_sidebarPixmap = sidebarPixmap;
-    m_albumPixmap = albumPixmap;
-    update();
-}
+//void MusicSearchListview::setPlayPixmap(QPixmap pixmap, QPixmap sidebarPixmap, QPixmap albumPixmap)
+//{
+//    m_playingPixmap = pixmap;
+//    m_sidebarPixmap = sidebarPixmap;
+//    m_albumPixmap = albumPixmap;
+//    update();
+//}
 
-QPixmap MusicSearchListview::getPlayPixmap() const
-{
-    return m_playingPixmap;
-}
+//QPixmap MusicSearchListview::getPlayPixmap() const
+//{
+//    return m_playingPixmap;
+//}
 
-QPixmap MusicSearchListview::getSidebarPixmap() const
-{
-    return m_sidebarPixmap;
-}
+//QPixmap MusicSearchListview::getSidebarPixmap() const
+//{
+//    return m_sidebarPixmap;
+//}
 
-QPixmap MusicSearchListview::getAlbumPixmap() const
-{
-    return m_albumPixmap;
-}
+//QPixmap MusicSearchListview::getAlbumPixmap() const
+//{
+//    return m_albumPixmap;
+//}
 
 //void MusicSearchListview::setViewModeFlag(QListView::ViewMode mode)
 //{
@@ -290,15 +290,15 @@ QPixmap MusicSearchListview::getAlbumPixmap() const
 //    setViewMode(mode);
 //}
 
-void MusicSearchListview::addItem(const QString str)
-{
-    QStandardItem *newItem = new QStandardItem;
-    m_model->appendRow(newItem);
+//void MusicSearchListview::addItem(const QString str)
+//{
+//    QStandardItem *newItem = new QStandardItem;
+//    m_model->appendRow(newItem);
 
-    auto row = m_model->rowCount() - 1;
-    QModelIndex index = m_model->index(row, 0, QModelIndex());
-    m_model->setData(index, str);
-}
+//    auto row = m_model->rowCount() - 1;
+//    QModelIndex index = m_model->index(row, 0, QModelIndex());
+//    m_model->setData(index, str);
+//}
 
 void MusicSearchListview::SearchClear()
 {

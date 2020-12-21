@@ -12,6 +12,7 @@
 #include <infodialog.h>
 #include <DApplication>
 #include <QDBusInterface>
+#include <DToolButton>
 #include <QDBusPendingCall>
 
 #include "ac-desktop-define.h"
@@ -57,6 +58,47 @@ TEST(Application, albumListView)
 
     QDropEvent e(pos, Qt::IgnoreAction, &mimedata, Qt::LeftButton, Qt::NoModifier);
     qApp->sendEvent(alv->viewport(), &e);
+
+    QTest::qWait(100);
+}
+
+TEST(Application, albumDataDelegate)
+{
+    TEST_CASE_NAME("albumListViewDelegate")
+
+    MainFrame *w = Application::getInstance()->getMainWindow();
+    MusicBaseListView *baseListView = w->findChild<MusicBaseListView *>(AC_dataBaseListview);
+    DToolButton *iconModeBtn = w->findChild<DToolButton *>(AC_btIconMode);
+
+    // 点击专辑
+    QPoint pos = QPoint(130, 30);
+    QTestEventList event;
+    event.addMouseMove(pos);
+    event.addMouseClick(Qt::MouseButton::LeftButton, Qt::NoModifier, pos, 10);
+    event.simulate(baseListView->viewport());
+    event.clear();
+
+    QTest::qWait(100);
+    AlbumListView *alv = w->findChild<AlbumListView *>(AC_albumListView);
+
+
+    QTest::qWait(50);
+    pos = QPoint(20, 20);
+    event.addMouseMove(pos);
+    event.addMouseClick(Qt::MouseButton::LeftButton, Qt::NoModifier, pos, 10);
+    event.simulate(iconModeBtn);
+    event.clear();
+
+//    QEvent event1(QEvent::MouseButtonPress);
+//    QStyleOptionViewItem option;
+//    option.init(alv);
+
+//    QAbstractItemDelegate *itemDelegate = alv->itemDelegate(alv->model()->index(0, 0));
+//    if (itemDelegate) {
+//        if (alv->model()) {
+//            itemDelegate->editorEvent(&event1, alv->model(), option, alv->model()->index(0, 0));
+//        }
+//    }
 
     QTest::qWait(100);
 }

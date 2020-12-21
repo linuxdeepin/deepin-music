@@ -32,7 +32,6 @@
 
 #include "widget/ddropdown.h"
 #include "widget/label.h"
-#include "widget/musicimagebutton.h"
 #include "widget/titlebarwidget.h"
 #include "widget/waveformscale.h"
 //#include "../music-player/view/footerwidget.h"

@@ -50,17 +50,17 @@ public:
     QString getSearchText()const;
 
     void    setCurrentIndexInt(int row);
-    QString getCurrentIndexText(int row);
+//    QString getCurrentIndexText(int row);
 
-    void setPlayPixmap(QPixmap pixmap, QPixmap sidebarPixmap, QPixmap albumPixmap);
-    QPixmap getPlayPixmap() const;
-    QPixmap getSidebarPixmap() const;
-    QPixmap getAlbumPixmap() const;
-    void updateList();
+//    void setPlayPixmap(QPixmap pixmap, QPixmap sidebarPixmap, QPixmap albumPixmap);
+//    QPixmap getPlayPixmap() const;
+//    QPixmap getSidebarPixmap() const;
+//    QPixmap getAlbumPixmap() const;
+//    void updateList();
     //void keyChoice();
 
 //    void setViewModeFlag(QListView::ViewMode mode);
-    void addItem(const QString str);
+//    void addItem(const QString str);
 
 signals:
     void sigSearchClear();
@@ -81,9 +81,9 @@ private:
     int                         m_CurrentIndex = -1;
     QString                     m_defaultCover = ":/images/logo.svg";
     QPixmap                     m_defaultIcon = QPixmap(":/icons/deepin/builtin/actions/cover_max_200px.svg");
-    QPixmap                     m_playingPixmap = QPixmap(":/images/logo.svg");
-    QPixmap                     m_sidebarPixmap = QPixmap(":/images/logo.svg");
-    QPixmap                     m_albumPixmap   = QPixmap(":/images/logo.svg");
+//    QPixmap                     m_playingPixmap = QPixmap(":/images/logo.svg");
+//    QPixmap                     m_sidebarPixmap = QPixmap(":/images/logo.svg");
+//    QPixmap                     m_albumPixmap   = QPixmap(":/images/logo.svg");
 
     QList<MediaMeta> m_MediaMetas;
     QList<AlbumInfo> m_AlbumInfos;

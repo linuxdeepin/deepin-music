@@ -43,7 +43,6 @@
 #include "util/pinyinsearch.h"
 
 #include "widget/ddropdown.h"
-#include "widget/musicimagebutton.h"
 #include "listView/musicInfoList/playlistview.h"
 #include "widget/searchresulttabwidget.h"
 

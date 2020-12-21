@@ -27,7 +27,6 @@ class AlbumDataModel : public QStandardItemModel
 {
     Q_OBJECT
 public:
-    explicit AlbumDataModel(QObject *parent = nullptr);
     AlbumDataModel(int rows, int columns, QObject *parent = Q_NULLPTR);
     ~AlbumDataModel();
 

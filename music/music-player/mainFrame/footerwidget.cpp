@@ -53,7 +53,6 @@
 #include "util/global.h"
 
 #include "widget/label.h"
-#include "widget/musicimagebutton.h"
 #include "widget/musicpixmapbutton.h"
 #include "widget/waveform.h"
 #include "widget/soundvolume.h"

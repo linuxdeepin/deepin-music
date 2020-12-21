@@ -27,6 +27,7 @@
 #include <QFileInfo>
 #include <QScrollArea>
 
+#include <DGuiApplicationHelper>
 #include <DApplication>
 #include "dplatformwindowhandle.h"
 #include "dblureffectwidget.h"
@@ -41,7 +42,6 @@
 #include <dwindowclosebutton.h>
 
 #include "cover.h"
-#include "musicimagebutton.h"
 #include "global.h"
 
 DWIDGET_USE_NAMESPACE
@@ -169,7 +169,7 @@ void InfoDialog::initUI()
     infoLayout->addWidget(basicinfo);
     infoLayout->addLayout(infogridLayout);
 
-    connect(closeBt, &MusicImageButton::clicked, this, &DAbstractDialog::hide);
+    connect(closeBt, &DIconButton::clicked, this, &DAbstractDialog::hide);
     connect(qApp, &QGuiApplication::fontChanged, this, [ = ](const QFont & font) {
         QFontMetrics fm(font);
         for (int i = 0; i < keyList.size(); i++) {
@@ -182,6 +182,12 @@ void InfoDialog::initUI()
             updateInfo(meta);
         }
     });
+
+    connect(DGuiApplicationHelper::instance(), &DGuiApplicationHelper::themeTypeChanged,
+            this, &InfoDialog::setThemeType);
+
+    setThemeType(DGuiApplicationHelper::instance()->themeType());
+
     updateInfo(meta);
 }
 
@@ -295,10 +301,7 @@ void InfoDialog::updateInfo(const MediaMeta meta)
 
 void InfoDialog::setThemeType(int type)
 {
-    QString rStr;
     if (type == 1) {
-        rStr = "light";
-
         DPalette framePl = this->palette();
         QColor frameColor("#F7F7F7");
         frameColor.setAlphaF(0.8);
@@ -316,8 +319,6 @@ void InfoDialog::setThemeType(int type)
         infoGridFrame->setPalette(pl);
         infoGridFrame->setBackgroundRole(DPalette::Window);
     } else {
-        rStr = "dark";
-
         DPalette framePl = this->palette();
         QColor frameColor("#191919");
         frameColor.setAlphaF(0.8);

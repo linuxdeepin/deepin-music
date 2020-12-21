@@ -272,20 +272,20 @@ QSize MusicSearchListDelegate::sizeHint(const QStyleOptionViewItem &option, cons
     return QSize(350, 34);
 }
 
-QWidget *MusicSearchListDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const
-{
-    return QStyledItemDelegate::createEditor(parent, option, index);
-}
+//QWidget *MusicSearchListDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const
+//{
+//    return QStyledItemDelegate::createEditor(parent, option, index);
+//}
 
-void MusicSearchListDelegate::setEditorData(QWidget *editor, const QModelIndex &index) const
-{
-    QStyledItemDelegate::setEditorData(editor, index);
-}
+//void MusicSearchListDelegate::setEditorData(QWidget *editor, const QModelIndex &index) const
+//{
+//    QStyledItemDelegate::setEditorData(editor, index);
+//}
 
-void MusicSearchListDelegate::setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const
-{
-    QStyledItemDelegate::setModelData(editor, model, index);
-}
+//void MusicSearchListDelegate::setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const
+//{
+//    QStyledItemDelegate::setModelData(editor, model, index);
+//}
 
 //QString MusicSearchListDelegate::getElidedText(QFont font, QString str, int MaxWidth)
 //{

@@ -51,7 +51,7 @@ protected:
 
 private:
     MusicListDataWidget   *m_listDataWidget;
-    MusicImageButton      *m_addListBtn;
+//    MusicImageButton      *m_addListBtn;
     MusicListScrollArea   *leftFrame;
     bool                   addFlag = false;
 };

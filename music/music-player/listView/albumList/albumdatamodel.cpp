@@ -21,13 +21,6 @@
 
 #include "albumdatamodel.h"
 
-
-AlbumDataModel::AlbumDataModel(QObject *parent) :
-    QStandardItemModel(parent)
-{
-
-}
-
 AlbumDataModel::AlbumDataModel(int rows, int columns, QObject *parent):
     QStandardItemModel(rows, columns, parent)
 {

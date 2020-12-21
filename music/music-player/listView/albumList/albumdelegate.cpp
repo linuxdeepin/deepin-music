@@ -76,27 +76,27 @@ QSize AlbumDataDelegate::sizeHint(const QStyleOptionViewItem &option,
     }
 }
 
-QWidget *AlbumDataDelegate::createEditor(QWidget *parent,
-                                         const QStyleOptionViewItem &option,
-                                         const QModelIndex &index) const
+//QWidget *AlbumDataDelegate::createEditor(QWidget *parent,
+//                                         const QStyleOptionViewItem &option,
+//                                         const QModelIndex &index) const
 
-{
-    return QStyledItemDelegate::createEditor(parent, option, index);
-}
+//{
+//    return QStyledItemDelegate::createEditor(parent, option, index);
+//}
 
-void AlbumDataDelegate::setEditorData(QWidget *editor,
-                                      const QModelIndex &index) const
-{
+//void AlbumDataDelegate::setEditorData(QWidget *editor,
+//                                      const QModelIndex &index) const
+//{
 
-    QStyledItemDelegate::setEditorData(editor, index);
+//    QStyledItemDelegate::setEditorData(editor, index);
 
-}
+//}
 
-void AlbumDataDelegate::setModelData(QWidget *editor, QAbstractItemModel *model,
-                                     const QModelIndex &index) const
-{
-    QStyledItemDelegate::setModelData(editor, model, index);
-}
+//void AlbumDataDelegate::setModelData(QWidget *editor, QAbstractItemModel *model,
+//                                     const QModelIndex &index) const
+//{
+//    QStyledItemDelegate::setModelData(editor, model, index);
+//}
 
 bool AlbumDataDelegate::editorEvent(QEvent *event, QAbstractItemModel *model, const QStyleOptionViewItem &option, const QModelIndex &index)
 {

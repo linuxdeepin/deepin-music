@@ -54,15 +54,15 @@ public:
     explicit PlayItemDelegate(QWidget *parent = Q_NULLPTR);
     ~PlayItemDelegate();
 private:
-    QColor foreground(int col, const QStyleOptionViewItem &option) const;
+//    QColor foreground(int col, const QStyleOptionViewItem &option) const;
 public:
     virtual void initStyleOption(QStyleOptionViewItem *option, const QModelIndex &index) const;
 //    void performancePaint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index)const;
     void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index)const override;
     QSize sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const override;
-    QWidget *createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const;
-    void setEditorData(QWidget *editor, const QModelIndex &index) const;
-    void setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const;
+//    QWidget *createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const;
+//    void setEditorData(QWidget *editor, const QModelIndex &index) const;
+//    void setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const;
 private:
     void drawIconMode(QPainter &painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
     void drawListMode(QPainter &painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;

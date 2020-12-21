@@ -36,7 +36,6 @@
 #include "global.h"
 #include "commonservice.h"
 #include "dialogList/musiclistinfoview.h"
-#include "musicimagebutton.h"
 #include "ac-desktop-define.h"
 #include "player.h"
 
@@ -71,11 +70,11 @@ void MusicListDialog::initUI()
     titleLayout->setSpacing(0);
     titleLayout->setContentsMargins(28, 10, 0, 18);
 
-    m_closeBt = new MusicImageButton(":/mpimage/light/normal/close_round normal.svg",
-                                     ":/mpimage/light/hover/close_round hover.svg",
-                                     ":/mpimage/light/press/close_round press.svg");
+    m_closeBt = new DIconButton(this);
+    m_closeBt->setIcon(QIcon::fromTheme("text_close_round"));
+    m_closeBt->setEnabledCircle(true);
+    m_closeBt->setIconSize(QSize(20, 20));
     m_closeBt->setFixedSize(24, 24);
-    m_closeBt->setFocusPolicy(Qt::NoFocus);
 
     m_titleLabel = new DLabel();
     m_titleLabel->setForegroundRole(DPalette::BrightText);
@@ -150,7 +149,7 @@ void MusicListDialog::initUI()
 
     connect(m_btPlayAll, &DPushButton::pressed, this, &MusicListDialog::slotPlayAllClicked);
     connect(m_btRandomPlay, &DPushButton::pressed, this, &MusicListDialog::slotPlayRandomClicked);
-    connect(m_closeBt, &MusicImageButton::pressed, this, &DAbstractDialog::close);
+    connect(m_closeBt, &DIconButton::pressed, this, &DAbstractDialog::close);
 }
 
 MusicListDialog::MusicListDialog(const QString &hash, QWidget *parent)

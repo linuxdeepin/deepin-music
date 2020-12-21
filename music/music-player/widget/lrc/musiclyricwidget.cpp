@@ -45,7 +45,6 @@
 //#include "widget/searchmetalist.h"
 //#include "widget/searchmetaitem.h"
 #include "lyriclabel.h"
-#include "widget/musicimagebutton.h"
 #include "musicsettings.h"
 #include <DGuiApplicationHelper>
 #include <DBlurEffectWidget>

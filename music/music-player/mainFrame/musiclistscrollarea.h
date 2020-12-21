@@ -23,6 +23,7 @@
 
 #include <DScrollArea>
 #include <DLabel>
+#include <DIconButton>
 
 #include "mediameta.h"
 DWIDGET_USE_NAMESPACE
@@ -41,7 +42,7 @@ public:
 
     MusicBaseListView *getDBMusicListView();
     MusicSongListView *getCustomMusicListView();
-    MusicImageButton *getAddButton();
+    DIconButton *getAddButton();
 
 public slots:
     void slotTheme(int type);
@@ -60,7 +61,7 @@ protected:
 private:
     MusicBaseListView *m_dataBaseListview = nullptr;
     MusicSongListView *m_customizeListview = nullptr;
-    MusicImageButton      *m_addListBtn;
+    DIconButton      *m_addListBtn;
     DLabel                *dataBaseLabel;
     DLabel                *customizeLabel;
 };

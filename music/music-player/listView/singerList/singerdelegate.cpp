@@ -69,27 +69,27 @@ QSize SingerDataDelegate::sizeHint(const QStyleOptionViewItem &option,
     }
 }
 
-QWidget *SingerDataDelegate::createEditor(QWidget *parent,
-                                          const QStyleOptionViewItem &option,
-                                          const QModelIndex &index) const
+//QWidget *SingerDataDelegate::createEditor(QWidget *parent,
+//                                          const QStyleOptionViewItem &option,
+//                                          const QModelIndex &index) const
 
-{
-    return QStyledItemDelegate::createEditor(parent, option, index);
-}
+//{
+//    return QStyledItemDelegate::createEditor(parent, option, index);
+//}
 
-void SingerDataDelegate::setEditorData(QWidget *editor,
-                                       const QModelIndex &index) const
-{
+//void SingerDataDelegate::setEditorData(QWidget *editor,
+//                                       const QModelIndex &index) const
+//{
 
-    QStyledItemDelegate::setEditorData(editor, index);
+//    QStyledItemDelegate::setEditorData(editor, index);
 
-}
+//}
 
-void SingerDataDelegate::setModelData(QWidget *editor, QAbstractItemModel *model,
-                                      const QModelIndex &index) const
-{
-    QStyledItemDelegate::setModelData(editor, model, index);
-}
+//void SingerDataDelegate::setModelData(QWidget *editor, QAbstractItemModel *model,
+//                                      const QModelIndex &index) const
+//{
+//    QStyledItemDelegate::setModelData(editor, model, index);
+//}
 
 bool SingerDataDelegate::editorEvent(QEvent *event, QAbstractItemModel *model, const QStyleOptionViewItem &option, const QModelIndex &index)
 {

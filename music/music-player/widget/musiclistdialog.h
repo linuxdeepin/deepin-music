@@ -35,6 +35,7 @@ class MusicListInfoView;
 #include <DPushButton>
 #include <QVBoxLayout>
 #include <QGridLayout>
+#include <DIconButton>
 
 
 
@@ -69,7 +70,7 @@ private:
     DPushButton                        *m_btPlayAll           = nullptr;
     DPushButton                        *m_btRandomPlay        = nullptr;
     InfoDialog                         *m_infoDialog          = nullptr;
-    MusicImageButton                   *m_closeBt             = nullptr;
+    DIconButton                        *m_closeBt             = nullptr;
     MusicListInfoView                  *m_musicListInfoView   = nullptr;
 };
 

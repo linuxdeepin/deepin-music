@@ -127,25 +127,25 @@ QSize PlayItemDelegate::sizeHint(const QStyleOptionViewItem &option,
     }
 }
 
-QWidget *PlayItemDelegate::createEditor(QWidget *parent,
-                                        const QStyleOptionViewItem &option,
-                                        const QModelIndex &index) const
+//QWidget *PlayItemDelegate::createEditor(QWidget *parent,
+//                                        const QStyleOptionViewItem &option,
+//                                        const QModelIndex &index) const
 
-{
-    return QStyledItemDelegate::createEditor(parent, option, index);
-}
+//{
+//    return QStyledItemDelegate::createEditor(parent, option, index);
+//}
 
-void PlayItemDelegate::setEditorData(QWidget *editor,
-                                     const QModelIndex &index) const
-{
-    QStyledItemDelegate::setEditorData(editor, index);
-}
+//void PlayItemDelegate::setEditorData(QWidget *editor,
+//                                     const QModelIndex &index) const
+//{
+//    QStyledItemDelegate::setEditorData(editor, index);
+//}
 
-void PlayItemDelegate::setModelData(QWidget *editor, QAbstractItemModel *model,
-                                    const QModelIndex &index) const
-{
-    QStyledItemDelegate::setModelData(editor, model, index);
-}
+//void PlayItemDelegate::setModelData(QWidget *editor, QAbstractItemModel *model,
+//                                    const QModelIndex &index) const
+//{
+//    QStyledItemDelegate::setModelData(editor, model, index);
+//}
 
 void PlayItemDelegate::drawIconMode(QPainter &painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
@@ -467,26 +467,26 @@ PlayItemDelegate::~PlayItemDelegate()
 {
 }
 
-QColor PlayItemDelegate::foreground(int col, const QStyleOptionViewItem &option) const
-{
-    if (option.state & QStyle::State_Selected) {
-        return m_highlightText;
-    }
+//QColor PlayItemDelegate::foreground(int col, const QStyleOptionViewItem &option) const
+//{
+//    if (option.state & QStyle::State_Selected) {
+//        return m_highlightText;
+//    }
 
-    auto emCol = static_cast<PlayItemDelegate::MusicColumn>(col);
-    switch (emCol) {
-    case PlayItemDelegate::Number:
-    case PlayItemDelegate::Artist:
-    case PlayItemDelegate::Album:
-    case PlayItemDelegate::Length:
-        return m_textColor;
-    case PlayItemDelegate::Title:
-        return m_numberColor;
-    case PlayItemDelegate::ColumnButt:
-        break;
-    }
-    return m_textColor;
-}
+//    auto emCol = static_cast<PlayItemDelegate::MusicColumn>(col);
+//    switch (emCol) {
+//    case PlayItemDelegate::Number:
+//    case PlayItemDelegate::Artist:
+//    case PlayItemDelegate::Album:
+//    case PlayItemDelegate::Length:
+//        return m_textColor;
+//    case PlayItemDelegate::Title:
+//        return m_numberColor;
+//    case PlayItemDelegate::ColumnButt:
+//        break;
+//    }
+//    return m_textColor;
+//}
 
 void PlayItemDelegate::initStyleOption(QStyleOptionViewItem *option, const QModelIndex &index) const
 {

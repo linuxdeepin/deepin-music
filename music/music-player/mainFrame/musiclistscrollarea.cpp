@@ -39,7 +39,6 @@
 //#include "widget/musiclistview.h"
 #include "listView/musicBaseAndSongList/musicbaselistview.h"
 #include "listView/musicBaseAndSongList/musicsonglistview.h"
-#include "widget/musicimagebutton.h"
 #include "commonservice.h"
 #include <DGuiApplicationHelper>
 #include "ac-desktop-define.h"
@@ -80,10 +79,11 @@ MusicListScrollArea::MusicListScrollArea(QWidget *parent) : DScrollArea(parent)
     customizeLabel->setMargin(10);
     customizeLabel->setFont(dataBaseLabelFont);
 
-    m_addListBtn = new MusicImageButton(":/mpimage/light/normal/add_normal.svg",
-                                        ":/mpimage/light/hover/add_hover.svg",
-                                        ":/mpimage/light/press/add_press.svg");
-    m_addListBtn->setFixedSize(37, 37);
+    m_addListBtn = new DIconButton(this);
+    m_addListBtn->setIcon(QIcon::fromTheme("text_add"));
+    m_addListBtn->setEnabledCircle(true);
+    m_addListBtn->setIconSize(QSize(20, 20));
+    m_addListBtn->setFixedSize(26, 26);
 
     m_addListBtn->setFocusPolicy(Qt::TabFocus);
     m_addListBtn->installEventFilter(this);
@@ -92,7 +92,7 @@ MusicListScrollArea::MusicListScrollArea(QWidget *parent) : DScrollArea(parent)
     customizeLayout->setContentsMargins(0, 0, 5, 0);
     customizeLayout->addWidget(customizeLabel, 100, Qt::AlignLeft);
     customizeLayout->addStretch();
-    customizeLayout->addWidget(m_addListBtn, 0, Qt::AlignBottom);
+    customizeLayout->addWidget(m_addListBtn, 0, Qt::AlignRight);
 
     m_dataBaseListview = new MusicBaseListView;
     m_dataBaseListview->setEditTriggers(QAbstractItemView::NoEditTriggers);
@@ -144,7 +144,7 @@ MusicSongListView *MusicListScrollArea::getCustomMusicListView()
     return m_customizeListview;
 }
 
-MusicImageButton *MusicListScrollArea::getAddButton()
+DIconButton *MusicListScrollArea::getAddButton()
 {
     return m_addListBtn;
 }
@@ -164,10 +164,6 @@ void MusicListScrollArea::slotTheme(int type)
         dataBaseLabelPalette.setColor(DPalette::WindowText, WindowTextColor);
         dataBaseLabel->setPalette(dataBaseLabelPalette);
         customizeLabel->setPalette(dataBaseLabelPalette);
-
-        m_addListBtn->setPropertyPic(":/mpimage/light/normal/add_normal.svg",
-                                     ":/mpimage/light/hover/add_hover.svg",
-                                     ":/mpimage/light/press/add_press.svg");
     } else {
         auto leftFramePalette = palette();
         leftFramePalette.setColor(DPalette::Background, QColor("#232323"));
@@ -179,10 +175,6 @@ void MusicListScrollArea::slotTheme(int type)
         dataBaseLabelPalette.setColor(DPalette::WindowText, WindowTextColor);
         dataBaseLabel->setPalette(dataBaseLabelPalette);
         customizeLabel->setPalette(dataBaseLabelPalette);
-
-        m_addListBtn->setPropertyPic(":/mpimage/dark/normal/add_normal.svg",
-                                     ":/mpimage/dark/hover/add_hover.svg",
-                                     ":/mpimage/dark/press/add_press.svg");
     }
 }
 
@@ -278,17 +270,7 @@ bool MusicListScrollArea::eventFilter(QObject *o, QEvent *e)
                 Q_EMIT m_addListBtn->click();
             }
         } else if (e->type() == QEvent::FocusIn) {
-
-            m_addListBtn->setPropertyPic(":/mpimage/light/hover/add_hover.svg",
-                                         ":/mpimage/light/normal/add_normal.svg",
-                                         ":/mpimage/light/press/add_press.svg");
             m_dataBaseListview->clearSelection();
-
-        } else if (e->type() == QEvent::FocusOut) {
-
-            m_addListBtn->setPropertyPic(":/mpimage/light/normal/add_normal.svg",
-                                         ":/mpimage/light/hover/add_hover.svg",
-                                         ":/mpimage/light/press/add_press.svg");
         }
     }
 

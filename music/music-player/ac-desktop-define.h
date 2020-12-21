@@ -11,7 +11,7 @@
 #include <QObject>
 
 
-//#define SELECT_CASE "other"
+//#define SELECT_CASE "albumListViewDelegate"
 
 #ifdef SELECT_CASE
 #define TEST_CASE_NAME(testName) if(testName != SELECT_CASE) return;
