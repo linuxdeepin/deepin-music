@@ -122,6 +122,8 @@ void MusicListDataWidget::slotViewChanged(ListPageSwitchType switchtype, const Q
             m_singerListView = new SingerListView("artist", this);
             m_singerListView->setThemeType(m_musicListView->getThemeType());
             m_pStackedWidget->addWidget(m_singerListView);
+            AC_SET_OBJECT_NAME(m_singerListView, AC_singerListView);
+            AC_SET_ACCESSIBLE_NAME(m_singerListView, AC_singerListView);
         }
         m_singerListView->setSingerListData(DataBaseService::getInstance()->allSingerInfos()); //set singer data
         m_singerListView->setViewModeFlag(m_singerListView->getViewMode());

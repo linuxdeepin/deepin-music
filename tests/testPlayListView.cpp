@@ -6,6 +6,8 @@
 #include <QDebug>
 #include <QPoint>
 #include <QTimer>
+#include <QMimeData>
+#include <QStandardPaths>
 #include <infodialog.h>
 #include <DApplication>
 #include <DToolButton>
@@ -27,14 +29,23 @@ TEST(Application, playListView1)
     TEST_CASE_NAME("playListView")
 
     MainFrame *w = Application::getInstance()->getMainWindow();
+    MusicBaseListView *baseListView = w->findChild<MusicBaseListView *>(AC_dataBaseListview);
 
     QTest::qWait(500);
-    QPoint pos = QPoint(20, 120);
+    QPoint pos = QPoint(20, 20);
     QTestEventList event;
 
+    // 点击所有音乐
+    QTest::qWait(50);
+    QPoint pos1(130, 100);
+    event.addMouseMove(pos1);
+    event.addMouseClick(Qt::MouseButton::LeftButton, Qt::NoModifier, pos1, 10);
+    event.simulate(baseListView->viewport());
+    event.clear();
+    QTest::qWait(100);
 
     // 双击list
-    pos = QPoint(20, 120);
+    pos = QPoint(20, 20);
     PlayListView *plv = w->findChild<PlayListView *>(AC_PlayListView);
     event.addMouseMove(pos);
     event.addMouseClick(Qt::MouseButton::LeftButton, Qt::NoModifier, pos, 10);
@@ -45,7 +56,6 @@ TEST(Application, playListView1)
 
     // 点击切换回list模式
     QTest::qWait(50);
-    pos = QPoint(20, 20);
     event.addMouseMove(pos);
     event.addMouseClick(Qt::MouseButton::LeftButton, Qt::NoModifier, pos, 10);
     DToolButton *iconListBtn = w->findChild<DToolButton *>(AC_btlistMode);
@@ -63,7 +73,7 @@ TEST(Application, playListView1)
         QTest::qWait(100);
     });
 
-    QContextMenuEvent menuEvent(QContextMenuEvent::Mouse, QPoint(20, 100));
+    QContextMenuEvent menuEvent(QContextMenuEvent::Mouse, QPoint(20, 20));
     qApp->sendEvent(plv->viewport(), &menuEvent);
 
     QTest::qWait(100);
@@ -77,11 +87,11 @@ TEST(Application, playListView2)
     MainFrame *w = Application::getInstance()->getMainWindow();
 
     QTest::qWait(500);
-    QPoint pos = QPoint(20, 120);
+    QPoint pos = QPoint(20, 20);
     QTestEventList event;
 
     // 双击list
-    pos = QPoint(20, 120);
+    pos = QPoint(20, 20);
     PlayListView *plv = w->findChild<PlayListView *>(AC_PlayListView);
     event.addMouseMove(pos);
     event.addMouseClick(Qt::MouseButton::LeftButton, Qt::NoModifier, pos, 10);
@@ -114,7 +124,7 @@ TEST(Application, playListView2)
         QTest::qWait(100);
     });
 
-    QContextMenuEvent menuEvent(QContextMenuEvent::Mouse, QPoint(20, 100));
+    QContextMenuEvent menuEvent(QContextMenuEvent::Mouse, QPoint(20, 20));
     qApp->sendEvent(plv->viewport(), &menuEvent);
 
     QTest::qWait(1000);
@@ -128,11 +138,10 @@ TEST(Application, playListView3)
     MainFrame *w = Application::getInstance()->getMainWindow();
 
     QTest::qWait(500);
-    QPoint pos = QPoint(20, 120);
+    QPoint pos = QPoint(20, 20);
     QTestEventList event;
 
     // 双击list
-    pos = QPoint(20, 120);
     PlayListView *plv = w->findChild<PlayListView *>(AC_PlayListView);
     event.addMouseMove(pos);
     event.addMouseClick(Qt::MouseButton::LeftButton, Qt::NoModifier, pos, 10);
@@ -159,7 +168,7 @@ TEST(Application, playListView3)
         QTest::qWait(100);
     });
 
-    QContextMenuEvent menuEvent(QContextMenuEvent::Mouse, QPoint(20, 100));
+    QContextMenuEvent menuEvent(QContextMenuEvent::Mouse, QPoint(20, 20));
     qApp->sendEvent(plv->viewport(), &menuEvent);
 
     QTest::qWait(1000);
@@ -173,11 +182,10 @@ TEST(Application, playListView4)
     MainFrame *w = Application::getInstance()->getMainWindow();
 
     QTest::qWait(500);
-    QPoint pos = QPoint(20, 120);
+    QPoint pos = QPoint(20, 20);
     QTestEventList event;
 
     // 双击list
-    pos = QPoint(20, 120);
     PlayListView *plv = w->findChild<PlayListView *>(AC_PlayListView);
     event.addMouseMove(pos);
     event.addMouseClick(Qt::MouseButton::LeftButton, Qt::NoModifier, pos, 10);
@@ -205,7 +213,7 @@ TEST(Application, playListView4)
         QTest::qWait(100);
     });
 
-    QContextMenuEvent menuEvent(QContextMenuEvent::Mouse, QPoint(20, 100));
+    QContextMenuEvent menuEvent(QContextMenuEvent::Mouse, QPoint(20, 20));
     qApp->sendEvent(plv->viewport(), &menuEvent);
 
     QTest::qWait(1000);
@@ -220,11 +228,10 @@ TEST(Application, playListView5)
     MusicBaseListView *baseListView = w->findChild<MusicBaseListView *>(AC_dataBaseListview);
 
     QTest::qWait(500);
-    QPoint pos = QPoint(20, 120);
+    QPoint pos = QPoint(20, 20);
     QTestEventList event;
 
     // 双击list
-    pos = QPoint(20, 120);
     PlayListView *plv = w->findChild<PlayListView *>(AC_PlayListView);
     event.addMouseMove(pos);
     event.addMouseClick(Qt::MouseButton::LeftButton, Qt::NoModifier, pos, 10);
@@ -253,7 +260,7 @@ TEST(Application, playListView5)
         QTest::qWait(100);
     });
 
-    QContextMenuEvent menuEvent(QContextMenuEvent::Mouse, QPoint(20, 100));
+    QContextMenuEvent menuEvent(QContextMenuEvent::Mouse, QPoint(20, 20));
     qApp->sendEvent(plv->viewport(), &menuEvent);
 
     QTest::qWait(1000);
@@ -268,7 +275,7 @@ TEST(Application, playListView6)
     MusicBaseListView *baseListView = w->findChild<MusicBaseListView *>(AC_dataBaseListview);
 
     QTest::qWait(500);
-    QPoint pos = QPoint(20, 120);
+    QPoint pos = QPoint(20, 20);
     QTestEventList event;
 
     // 点击所有音乐
@@ -281,7 +288,7 @@ TEST(Application, playListView6)
     QTest::qWait(50);
 
     // 双击list
-    pos = QPoint(20, 120);
+    pos = QPoint(20, 20);
     PlayListView *plv = w->findChild<PlayListView *>(AC_PlayListView);
     event.addMouseMove(pos);
     event.addMouseClick(Qt::MouseButton::LeftButton, Qt::NoModifier, pos, 10);
@@ -311,7 +318,7 @@ TEST(Application, playListView6)
     });
 
     QTest::qWait(50);
-    QContextMenuEvent menuEvent(QContextMenuEvent::Mouse, QPoint(20, 100));
+    QContextMenuEvent menuEvent(QContextMenuEvent::Mouse, QPoint(20, 20));
     qApp->sendEvent(plv->viewport(), &menuEvent);
 
     QTest::qWait(1000);
@@ -326,7 +333,7 @@ TEST(Application, playListView7)
     MusicBaseListView *baseListView = w->findChild<MusicBaseListView *>(AC_dataBaseListview);
 
     QTest::qWait(500);
-    QPoint pos = QPoint(20, 120);
+    QPoint pos = QPoint(20, 20);
     QTestEventList event;
 
     // 点击所有音乐
@@ -339,7 +346,6 @@ TEST(Application, playListView7)
     QTest::qWait(50);
 
     // 双击list
-    pos = QPoint(20, 120);
     PlayListView *plv = w->findChild<PlayListView *>(AC_PlayListView);
     event.addMouseMove(pos);
     event.addMouseClick(Qt::MouseButton::LeftButton, Qt::NoModifier, pos, 10);
@@ -376,7 +382,7 @@ TEST(Application, playListView7)
         QTest::qWait(100);
     });
 
-    QContextMenuEvent menuEvent(QContextMenuEvent::Mouse, QPoint(20, 100));
+    QContextMenuEvent menuEvent(QContextMenuEvent::Mouse, QPoint(20, 20));
     qApp->sendEvent(plv->viewport(), &menuEvent);
 
     QTest::qWait(1000);
@@ -391,7 +397,7 @@ TEST(Application, playListView8)
     MusicBaseListView *baseListView = w->findChild<MusicBaseListView *>(AC_dataBaseListview);
 
     QTest::qWait(500);
-    QPoint pos = QPoint(20, 120);
+    QPoint pos = QPoint(20, 20);
     QTestEventList event;
 
     // 点击所有音乐
@@ -442,7 +448,7 @@ TEST(Application, playListView8)
         QTest::qWait(100);
     });
 
-    QContextMenuEvent menuEvent(QContextMenuEvent::Mouse, QPoint(20, 100));
+    QContextMenuEvent menuEvent(QContextMenuEvent::Mouse, QPoint(20, 20));
     qApp->sendEvent(plv->viewport(), &menuEvent);
 
     QTest::qWait(1000);
@@ -456,11 +462,10 @@ TEST(Application, playListView9)
     MainFrame *w = Application::getInstance()->getMainWindow();
 
     QTest::qWait(500);
-    QPoint pos = QPoint(20, 120);
+    QPoint pos = QPoint(20, 20);
     QTestEventList event;
 
     // 双击list
-    pos = QPoint(20, 20);
     PlayListView *plv = w->findChild<PlayListView *>(AC_PlayListView);
     event.addMouseMove(pos);
     event.addMouseClick(Qt::MouseButton::LeftButton, Qt::NoModifier, pos, 10);
@@ -491,7 +496,7 @@ TEST(Application, playListView9)
         QTest::qWait(100);
     });
 
-    QContextMenuEvent menuEvent(QContextMenuEvent::Mouse, QPoint(20, 100));
+    QContextMenuEvent menuEvent(QContextMenuEvent::Mouse, QPoint(20, 20));
     qApp->sendEvent(plv->viewport(), &menuEvent);
 
     QTest::qWait(1000);
@@ -505,11 +510,10 @@ TEST(Application, playListView10)
     MainFrame *w = Application::getInstance()->getMainWindow();
 
     QTest::qWait(500);
-    QPoint pos = QPoint(20, 120);
+    QPoint pos = QPoint(20, 20);
     QTestEventList event;
 
     // 双击list
-    pos = QPoint(20, 20);
     PlayListView *plv = w->findChild<PlayListView *>(AC_PlayListView);
     event.addMouseMove(pos);
     event.addMouseClick(Qt::MouseButton::LeftButton, Qt::NoModifier, pos, 10);
@@ -538,8 +542,47 @@ TEST(Application, playListView10)
         info->close();
     });
 
-    QContextMenuEvent menuEvent(QContextMenuEvent::Mouse, QPoint(20, 100));
+    QContextMenuEvent menuEvent(QContextMenuEvent::Mouse, QPoint(20, 20));
     qApp->sendEvent(plv->viewport(), &menuEvent);
 
     QTest::qWait(1000);
+}
+
+TEST(Application, playListViewDrag)
+{
+    TEST_CASE_NAME("playListViewDrag")
+
+    MainFrame *w = Application::getInstance()->getMainWindow();
+    PlayListView *plv = w->findChild<PlayListView *>(AC_PlayListView);
+
+    // 双击list
+    QPoint pos = QPoint(20, 20);
+    QTestEventList event;
+    event.addMouseMove(pos);
+    event.addMouseClick(Qt::MouseButton::LeftButton, Qt::NoModifier, pos, 10);
+    event.addMousePress(Qt::MouseButton::LeftButton, Qt::NoModifier, pos, 10);
+    event.addMouseDClick(Qt::MouseButton::LeftButton, Qt::NoModifier, pos, 10);
+    event.simulate(plv->viewport());
+    event.clear();
+
+
+    QMimeData mimedata;
+    QList<QUrl> li;
+    QString lastImportPath =  QStandardPaths::standardLocations(QStandardPaths::MusicLocation).first();
+    lastImportPath += "/歌曲/004.mp3";
+    li.append(QUrl(lastImportPath));
+    mimedata.setUrls(li);
+
+    pos = QPoint(130, 130);
+
+    QDragEnterEvent eEnter(pos, Qt::IgnoreAction, &mimedata, Qt::LeftButton, Qt::NoModifier);
+    qApp->sendEvent(plv->viewport(), &eEnter);
+
+    QDragMoveEvent eMove(pos, Qt::IgnoreAction, &mimedata, Qt::LeftButton, Qt::NoModifier);
+    qApp->sendEvent(plv->viewport(), &eMove);
+
+    QDropEvent e(pos, Qt::IgnoreAction, &mimedata, Qt::LeftButton, Qt::NoModifier);
+    qApp->sendEvent(plv->viewport(), &e);
+
+    QTest::qWait(100);
 }

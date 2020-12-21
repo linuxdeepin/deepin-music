@@ -835,24 +835,6 @@ TEST(Application, iconModeChanged)
     QPoint pos = QPoint(20, 120);
     QTestEventList event;
 
-    // 点击所有音乐
-    QTest::qWait(50);
-    pos.setY(100);
-    event.addMouseMove(pos);
-    event.addMouseClick(Qt::MouseButton::LeftButton, Qt::NoModifier, pos, 10);
-    event.simulate(baseListView->viewport());
-    event.clear();
-
-    // 双击list
-    pos = QPoint(20, 120);
-    event.addMouseMove(pos);
-    event.addMouseClick(Qt::MouseButton::LeftButton, Qt::NoModifier, pos, 100);
-    event.addMousePress(Qt::MouseButton::LeftButton, Qt::NoModifier, pos, 100);
-    event.addMouseDClick(Qt::MouseButton::LeftButton, Qt::NoModifier, pos, 100);
-    event.simulate(plv->viewport());
-    event.clear();
-
-
     // 点击专辑
     QTest::qWait(500);
     pos = QPoint(20, 15);
@@ -872,10 +854,11 @@ TEST(Application, iconModeChanged)
     QTest::qWait(500);
     pos.setY(100);
     event.addMouseMove(pos);
+    event.addMouseClick(Qt::MouseButton::LeftButton, Qt::NoModifier, pos, 10);
     event.simulate(plv->viewport());
     event.clear();
 
-    Player::getInstance()->pause();
+    Player::getInstance()->resume();
 
     QTest::qWait(500);
     pos.setY(-10);
@@ -883,7 +866,7 @@ TEST(Application, iconModeChanged)
     event.simulate(plv->viewport());
     event.clear();
 
-    Player::getInstance()->resume();
+    Player::getInstance()->pause();
 
     QTest::qWait(500);
     pos.setY(100);

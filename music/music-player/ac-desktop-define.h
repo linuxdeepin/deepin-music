@@ -91,6 +91,7 @@
 #define AC_Dequalizer                 QObject::tr("Dequalizer")
 #define AC_PlayListView               QObject::tr("playListView")
 #define AC_albumListView              QObject::tr("albumListView")
+#define AC_singerListView             QObject::tr("singerListView")
 #define AC_musicListInfoView          QObject::tr("musicListInfoView")
 #define AC_Search                     QObject::tr("search")
 #define AC_musicLyricWidget           QObject::tr("musicLyricWidget")

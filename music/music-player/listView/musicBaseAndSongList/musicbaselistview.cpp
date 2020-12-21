@@ -131,13 +131,6 @@ void SetSVGBackColor1(QDomElement elem, QString strtagname, QString strattr, QSt
 
 void MusicBaseListView::init()
 {
-    QString rStr;
-    if (DGuiApplicationHelper::instance()->themeType() == 1) {
-        rStr = "light";
-    } else {
-        rStr = "dark";
-    }
-
     QString displayName = tr("Albums");
     auto item = new DStandardItem(QIcon::fromTheme("music_album"), displayName);
     auto itemFont = item->font();
