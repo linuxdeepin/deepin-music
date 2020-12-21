@@ -74,7 +74,6 @@ ImportWidget::ImportWidget(QWidget *parent) : DFrame(parent)
     sbcolor.setAlphaF(0);
     pl.setColor(DPalette::Shadow, sbcolor);
 //    d->importButton->setPalette(pl);
-    m_importPathButton->setObjectName("ImportViewImportButton");
     m_importPathButton->setFixedSize(302, 36);
     m_importPathButton->setText(tr("Open Folder"));
     m_importPathButton->setFocusPolicy(Qt::TabFocus);
@@ -84,7 +83,6 @@ ImportWidget::ImportWidget(QWidget *parent) : DFrame(parent)
     m_addMusicButton = new DPushButton;
     m_addMusicButton->setFont(importButtonFont);
 //    d->addMusicButton->setPalette(pl);
-    m_addMusicButton->setObjectName("ImportViewImportButton");
     m_addMusicButton->setFixedSize(302, 36);
     m_addMusicButton->setText(tr("Add Music"));
     m_addMusicButton->setFocusPolicy(Qt::TabFocus);
@@ -224,7 +222,7 @@ void ImportWidget::slotAddMusicButtonClicked()
     fileDlg.setOption(DFileDialog::HideNameFilterDetails);
     fileDlg.setNameFilter(selfilter);
     fileDlg.selectNameFilter(selfilter);
-    fileDlg.setObjectName("fileDialog");
+    fileDlg.setObjectName("fileDialogAdd");
     if (DFileDialog::Accepted == fileDlg.exec()) {
         showWaitHint();
         MusicSettings::setOption("base.play.last_import_path",  fileDlg.directory().path());
@@ -239,9 +237,7 @@ void ImportWidget::slotImportPathButtonClicked()
     fileDlg.setDirectory(lastImportPath);
     fileDlg.setViewMode(DFileDialog::Detail);
     fileDlg.setFileMode(DFileDialog::Directory);
-    fileDlg.setObjectName("fileDialog");
-
-
+    fileDlg.setObjectName("fileDialogImport");
     if (DFileDialog::Accepted == fileDlg.exec()) {
         showWaitHint();
         MusicSettings::setOption("base.play.last_import_path",  fileDlg.directory().path());

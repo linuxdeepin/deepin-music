@@ -9,22 +9,22 @@ class SpeechCenter : public QObject, public DMusic::DSingleton<SpeechCenter>
 {
     Q_OBJECT
 public:
-    bool playMusic(QString music);
-    bool playArtist(QString artist);
-    bool playArtistMusic(QString artist, QString music);
-    bool playFaverite();
-    bool playCustom(QString listName);
-    bool playRadom();
+//    bool playMusic(QString music);
+//    bool playArtist(QString artist);
+//    bool playArtistMusic(QString artist, QString music);
+//    bool playFaverite();
+//    bool playCustom(QString listName);
+//    bool playRadom();
 
-    bool pause();
-    bool stop();
-    bool resume();
-    bool previous();
-    bool next();
+//    bool pause();
+//    bool stop();
+//    bool resume();
+//    bool previous();
+//    bool next();
 
-    bool favorite();
-    bool unFaverite();
-    bool setMode(int mode);
+//    bool favorite();
+//    bool unFaverite();
+//    bool setMode(int mode);
 
 signals:
     void sigPlayMusic(QString music);
@@ -44,7 +44,7 @@ signals:
     void sigUnFaverite();
     void sigSetMode(int mode);
 public slots:
-    void onSpeedResult(int action, bool result);
+//    void onSpeedResult(int action, bool result);
 private:
     explicit SpeechCenter(QObject *parent = nullptr);
     friend class DMusic::DSingleton<SpeechCenter>;

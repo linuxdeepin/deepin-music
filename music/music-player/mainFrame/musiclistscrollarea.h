@@ -40,10 +40,6 @@ class MusicListScrollArea : public DScrollArea
 public:
     explicit MusicListScrollArea(QWidget *parent = Q_NULLPTR);
 
-    MusicBaseListView *getDBMusicListView();
-    MusicSongListView *getCustomMusicListView();
-    DIconButton *getAddButton();
-
 public slots:
     void slotTheme(int type);
     void changePicture(QPixmap pixmap, QPixmap albumPixmap, QPixmap sidebarPixmap);

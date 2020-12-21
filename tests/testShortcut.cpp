@@ -233,6 +233,13 @@ TEST(Application, other)
     Player::getInstance()->resume();
 
     QTest::qWait(500);
+    emit Player::getInstance()->getMpris()->raiseRequested();
+
+    w->autoStartToPlay();
+//    mainfram里的autoStartToPlay直接调
+
+
+    QTest::qWait(500);
 }
 
 

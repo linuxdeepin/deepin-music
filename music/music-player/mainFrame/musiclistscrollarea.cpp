@@ -134,21 +134,6 @@ MusicListScrollArea::MusicListScrollArea(QWidget *parent) : DScrollArea(parent)
     connect(CommonService::getInstance(), &CommonService::signalSwitchToView, this, &MusicListScrollArea::viewChanged);
 }
 
-MusicBaseListView *MusicListScrollArea::getDBMusicListView()
-{
-    return m_dataBaseListview;
-}
-
-MusicSongListView *MusicListScrollArea::getCustomMusicListView()
-{
-    return m_customizeListview;
-}
-
-DIconButton *MusicListScrollArea::getAddButton()
-{
-    return m_addListBtn;
-}
-
 void MusicListScrollArea::slotTheme(int type)
 {
     if (type == 0)

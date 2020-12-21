@@ -67,13 +67,11 @@ MusicContentWidget::MusicContentWidget(QWidget *parent) : DWidget(parent)
     AC_SET_OBJECT_NAME(leftFrame, AC_MusicListScrollArea);
     AC_SET_ACCESSIBLE_NAME(leftFrame, AC_MusicListScrollArea);
 
-//    m_addListBtn = leftFrame->getAddButton();
-
-//    m_dataBaseListview = leftFrame->getDBMusicListView();
-//    m_customizeListview = leftFrame->getCustomMusicListView();
     m_listDataWidget = new MusicListDataWidget;
     layout->addWidget(leftFrame, 0);
     layout->addWidget(m_listDataWidget, 100);
+    AC_SET_OBJECT_NAME(m_listDataWidget, AC_MusicListDataWidget);
+    AC_SET_ACCESSIBLE_NAME(m_listDataWidget, AC_MusicListDataWidget);
 
     slotTheme(DGuiApplicationHelper::instance()->themeType());
 }

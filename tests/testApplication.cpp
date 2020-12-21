@@ -18,6 +18,7 @@
 #include <QTest>
 
 #include <DUtil>
+#include <QMimeData>
 #include <DWidgetUtil>
 #include <DAboutDialog>
 #include <DDialog>
@@ -105,15 +106,6 @@ TEST(Application, deleteAllMusic)
 
     QPoint pos = QPoint(130, 30);
     QTestEventList event;
-
-
-//    // 点击歌手
-//    QTest::qWait(100);
-//    pos = QPoint(130, 65);
-//    event.addMouseMove(pos);
-//    event.addMouseClick(Qt::MouseButton::LeftButton, Qt::NoModifier, pos, 10);
-//    event.simulate(baseListView->viewport());
-//    event.clear();
 
     // 点击专辑
     pos = QPoint(130, 30);
@@ -1170,6 +1162,8 @@ TEST(Application, searchKey)
     event3.addKeyPress(Qt::Key::Key_Down, Qt::NoModifier, 50);
     event3.addKeyPress(Qt::Key::Key_Down, Qt::NoModifier, 50);
     event3.addKeyPress(Qt::Key::Key_Down, Qt::NoModifier, 50);
+    event3.addKeyPress(Qt::Key::Key_Up, Qt::NoModifier, 50);
+    event3.addKeyPress(Qt::Key::Key_Down, Qt::NoModifier, 50);
     event3.addKeyPress(Qt::Key::Key_Enter, Qt::NoModifier, 50);
     event3.simulate(se);
     event3.clear();
@@ -1542,6 +1536,40 @@ TEST(Application, dDropdown)
     event.addMouseMove(QPoint(-10, -10));
     event.simulate(act);
     event.clear();
+}
+
+TEST(Application, musicListDataWidgetDropEvent)
+{
+    TEST_CASE_NAME("musicListDataWidgetDropEvent")
+    MainFrame *w = Application::getInstance()->getMainWindow();
+
+    PlayListView *plv = w->findChild<PlayListView *>(AC_PlayListView);
+    MusicListDataWidget *mldw = w->findChild<MusicListDataWidget *>(AC_MusicListDataWidget);
+
+    // 双击list
+    QPoint pos = QPoint(20, 20);
+    QTestEventList event;
+    event.addMouseMove(pos);
+    event.addMouseClick(Qt::MouseButton::LeftButton, Qt::NoModifier, pos, 10);
+    event.addMousePress(Qt::MouseButton::LeftButton, Qt::NoModifier, pos, 10);
+    event.addMouseDClick(Qt::MouseButton::LeftButton, Qt::NoModifier, pos, 10);
+    event.simulate(plv->viewport());
+    event.clear();
+
+    // musicListDataWidget DropEvent
+    QMimeData mimedata;
+    QList<QUrl> li;
+    QString lastImportPath =  QStandardPaths::standardLocations(QStandardPaths::MusicLocation).first();
+    lastImportPath += "/歌曲/004.mp3";
+    li.append(QUrl(lastImportPath));
+    mimedata.setUrls(li);
+
+    pos = QPoint(130, 130);
+
+    QDropEvent e(pos, Qt::IgnoreAction, &mimedata, Qt::LeftButton, Qt::NoModifier);
+    qApp->sendEvent(mldw, &e);
+
+    QTest::qWait(100);
 }
 
 TEST(Application, end)
