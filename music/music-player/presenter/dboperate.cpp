@@ -52,6 +52,7 @@ void DBOperate::slotImportMedias(const QStringList &urllist)
         m_mediaLibrary = MediaLibrary::getInstance();
         m_mediaLibrary->init();
     }
+    int importFailCount = 0;
     for (auto &filepath : urllist) {
         if (filepath.isEmpty()) {
             continue;
@@ -63,6 +64,25 @@ void DBOperate::slotImportMedias(const QStringList &urllist)
             while (it.hasNext()) {
                 QString  strtp = it.next();
                 MediaMeta mediaMeta = m_mediaLibrary->creatMediaMeta(strtp);
+                if (mediaMeta.length <= 0) {
+                    importFailCount++;
+                } else {
+                    mediaMeta.updateSearchIndex();
+                    if (mediaMeta.album.isEmpty()) {
+                        mediaMeta.album = tr("Unknown album");
+                    }
+                    if (mediaMeta.singer.isEmpty()) {
+                        mediaMeta.singer = tr("Unknown artist");
+                    }
+                    emit sigImportMetaFromThread(mediaMeta);
+                }
+            }
+        } else {
+            QString strtp = filepath;
+            MediaMeta mediaMeta = m_mediaLibrary->creatMediaMeta(strtp);
+            if (mediaMeta.length <= 0) {
+                importFailCount++;
+            } else {
                 mediaMeta.updateSearchIndex();
                 if (mediaMeta.album.isEmpty()) {
                     mediaMeta.album = tr("Unknown album");
@@ -72,21 +92,16 @@ void DBOperate::slotImportMedias(const QStringList &urllist)
                 }
                 emit sigImportMetaFromThread(mediaMeta);
             }
-        } else {
-            QString strtp = filepath;
-            MediaMeta mediaMeta = m_mediaLibrary->creatMediaMeta(strtp);
-            mediaMeta.updateSearchIndex();
-            if (mediaMeta.album.isEmpty()) {
-                mediaMeta.album = tr("Unknown album");
-            }
-            if (mediaMeta.singer.isEmpty()) {
-                mediaMeta.singer = tr("Unknown artist");
-            }
-            emit sigImportMetaFromThread(mediaMeta);
         }
     }
 
-    emit sigImportFinished();
+    if (importFailCount == urllist.size()) {
+        // 全部导入失败提示导入失败
+        emit sigImportFailed();
+    } else {
+        // 只要有一个导入成功就提示导入成功
+        emit sigImportFinished();
+    }
 }
 
 void DBOperate::slotCreatCoverImg(const QList<MediaMeta> &metas)

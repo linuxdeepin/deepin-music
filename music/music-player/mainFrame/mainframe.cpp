@@ -99,8 +99,12 @@ MainFrame::MainFrame()
 
     connect(m_titlebarwidget, &TitlebarWidget::sigSearchEditFoucusIn,
             this, &MainFrame::slotSearchEditFoucusIn);
+    // 导入成功
     connect(DataBaseService::getInstance(), &DataBaseService::signalImportFinished,
             this, &MainFrame::slotImportFinished);
+    // 导入失败
+    connect(DataBaseService::getInstance(), &DataBaseService::signalImportFailed,
+            this, &MainFrame::slotImportFailed);
     connect(CommonService::getInstance(), &CommonService::signalShowPopupMessage,
             this, &MainFrame::showPopupMessage);
 
@@ -416,6 +420,22 @@ void MainFrame::slotImportFinished()
     }
     m_titlebarwidget->setEnabled(true);
     m_newSonglistAction->setEnabled(true);
+}
+
+void MainFrame::slotImportFailed()
+{
+    QString message = QString(tr("Import failed, no valid music file found"));
+    Dtk::Widget::DDialog warnDlg(this);
+    warnDlg.setTextFormat(Qt::RichText);
+    warnDlg.setObjectName("uniquewarndailog");
+    warnDlg.setIcon(QIcon::fromTheme("deepin-music"));
+    //warnDlg.setTitle(message);
+    warnDlg.setMessage(message);
+    warnDlg.addButton(tr("OK"), true, Dtk::Widget::DDialog::ButtonNormal);
+    //warnDlg.setDefaultButton(0);
+    if (0 == warnDlg.exec()) {
+        return;
+    }
 }
 
 void MainFrame::slotShortCutTriggered()

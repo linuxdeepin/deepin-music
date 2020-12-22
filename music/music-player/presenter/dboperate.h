@@ -42,7 +42,10 @@ signals:
     void     fileIsNotExist(QString imagepath);
 
     void     sigImportMetaFromThread(MediaMeta meta);
+    // 导入成功结束
     void     sigImportFinished();
+    // 导入失败，含不支持的文件
+    void     sigImportFailed();
     void     sigCreatOneCoverImg(MediaMeta meta);
 public:
 private:

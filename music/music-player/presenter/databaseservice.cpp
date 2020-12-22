@@ -1006,6 +1006,7 @@ DataBaseService::DataBaseService()
 
     connect(worker, &DBOperate::sigImportMetaFromThread, this, &DataBaseService::slotGetMetaFromThread);
     connect(worker, &DBOperate::sigImportFinished, this, &DataBaseService::slotImportFinished);
+    connect(worker, &DBOperate::sigImportFailed, this, &DataBaseService::signalImportFailed);
     connect(worker, &DBOperate::sigCreatOneCoverImg, this, &DataBaseService::slotCreatOneCoverImg);
 
     m_workerThread->start();

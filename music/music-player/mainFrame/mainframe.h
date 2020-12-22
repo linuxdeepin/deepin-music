@@ -67,6 +67,7 @@ private slots:
     void slotSearchEditFoucusIn();
     void slotLyricClicked();
     void slotImportFinished();
+    void slotImportFailed();
     void slotShortCutTriggered();
     void slotMenuTriggered(QAction *action);
     void slotSwitchTheme();

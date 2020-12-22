@@ -153,6 +153,8 @@ signals:
     void signalCreatCoverImg(const QList<MediaMeta> &metas);
     // 导入结束，通知主界面
     void signalImportFinished(QString hash);
+    // 导入失败，有不支持的文件
+    void signalImportFailed();
     // 封面图片刷新
     void signalCoverUpdate(const MediaMeta &meta);
     // 发送删除歌曲通知消息，动态显示
