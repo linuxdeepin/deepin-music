@@ -856,7 +856,7 @@ void DataBaseService::initPlaylistTable()
     QSqlDatabase::database().transaction();
     PlaylistData playlistMeta;
     playlistMeta.uuid = "album";
-    playlistMeta.displayName = "Albums";
+    playlistMeta.displayName = tr("Albums");
     playlistMeta.icon = "album";
     playlistMeta.readonly = true;
     playlistMeta.hide = false;
@@ -867,7 +867,7 @@ void DataBaseService::initPlaylistTable()
     }
 
     playlistMeta.uuid = "artist";
-    playlistMeta.displayName = "Artists";
+    playlistMeta.displayName = tr("Artists");
     playlistMeta.icon = "artist";
     playlistMeta.readonly = true;
     playlistMeta.hide = false;
@@ -877,7 +877,7 @@ void DataBaseService::initPlaylistTable()
     }
 
     playlistMeta.uuid = "all";
-    playlistMeta.displayName = "All Music";
+    playlistMeta.displayName = tr("All Music");
     playlistMeta.icon = "all";
     playlistMeta.readonly = true;
     playlistMeta.hide = false;
@@ -886,7 +886,7 @@ void DataBaseService::initPlaylistTable()
         addPlaylist(playlistMeta);
     }
 
-    playlistMeta.displayName = "My favorites";
+    playlistMeta.displayName = tr("My Favorites");
     playlistMeta.uuid = "fav";
     playlistMeta.icon = "fav";
     playlistMeta.readonly = true;

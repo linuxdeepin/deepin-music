@@ -110,7 +110,7 @@ void MusicListDataWidget::slotViewChanged(ListPageSwitchType switchtype, const Q
         m_pStackedWidget->setCurrentWidget(m_albumListView);
         m_preHash = "album";
         m_preSwitchtype = AlbumType;
-        m_titleLabel->setText(getPageTitle(DataBaseService::getInstance()->getPlaylistNameByUUID("album")));
+        m_titleLabel->setText(DataBaseService::getInstance()->getPlaylistNameByUUID("album"));
         refreshModeBtn(m_albumListView->viewMode());
         refreshInfoLabel("album");
         refreshSortAction();
@@ -129,7 +129,7 @@ void MusicListDataWidget::slotViewChanged(ListPageSwitchType switchtype, const Q
         m_pStackedWidget->setCurrentWidget(m_singerListView);
         m_preHash = "artist";
         m_preSwitchtype = SingerType;
-        m_titleLabel->setText(getPageTitle(DataBaseService::getInstance()->getPlaylistNameByUUID("artist")));
+        m_titleLabel->setText(DataBaseService::getInstance()->getPlaylistNameByUUID("artist"));
         refreshModeBtn(m_singerListView->viewMode());
         refreshInfoLabel("artist");
         refreshSortAction();
@@ -137,7 +137,7 @@ void MusicListDataWidget::slotViewChanged(ListPageSwitchType switchtype, const Q
     }
     case AllSongListType: {
         m_musicListView->initAllSonglist("all");
-        m_titleLabel->setText(getPageTitle(DataBaseService::getInstance()->getPlaylistNameByUUID("all")));
+        m_titleLabel->setText(DataBaseService::getInstance()->getPlaylistNameByUUID("all"));
         m_musicListView->setViewModeFlag("all", m_musicListView->getViewMode());
         refreshModeBtn(m_musicListView->getViewMode());
         refreshInfoLabel("all");
@@ -842,18 +842,6 @@ void MusicListDataWidget::refreshSortAction(QString hash)
             }
         }
     }
-}
-
-QString MusicListDataWidget::getPageTitle(const QString &title)
-{
-    if (title == "Albums")
-        return tr("Album");
-    else if (title == "Artists")
-        return tr("Artist");
-    else if (title == "All Music")
-        return tr("All Music");
-    else
-        return "";
 }
 
 void MusicListDataWidget::slotTheme(int type)

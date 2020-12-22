@@ -157,7 +157,7 @@ void MusicBaseListView::init()
     item->setData("all", Qt::UserRole + 2);
     model->appendRow(item);
 
-    displayName = tr("My favorites");
+    displayName = tr("My Favorites");
     item = new DStandardItem(QIcon::fromTheme("music_mycollection"), displayName);
     item->setData(ListPageSwitchType::FavType, Qt::UserRole);
     item->setData("fav", Qt::UserRole + 2);
