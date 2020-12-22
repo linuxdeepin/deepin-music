@@ -62,21 +62,21 @@ SearchResultTabWidget::SearchResultTabWidget(QWidget *parent) :
     vlayout->addLayout(hLayout);
 
     //音乐
-    m_music = new Label(tr("歌曲"), this);
+    m_music = new Label(tr("Songs"), this);
     m_music->setFixedSize(42, 20);
     m_music->setAlignment(Qt::AlignCenter);
     DFontSizeManager::instance()->bind(m_music, DFontSizeManager::T6);
     m_music->setEnabled(false);
     hLayout->addWidget(m_music);
     //歌手
-    m_singer = new Label(tr("演唱者"), this);
+    m_singer = new Label(tr("Artists"), this);
     m_singer->setFixedSize(42, 20);
     m_singer->setAlignment(Qt::AlignCenter);
     DFontSizeManager::instance()->bind(m_singer, DFontSizeManager::T6);
     m_singer->setEnabled(false);
     hLayout->addWidget(m_singer);
     //专辑
-    m_album = new Label(tr("专辑"), this);
+    m_album = new Label(tr("Albums"), this);
     m_album->setFixedSize(42, 20);
     m_album->setAlignment(Qt::AlignCenter);
     DFontSizeManager::instance()->bind(m_album, DFontSizeManager::T6);

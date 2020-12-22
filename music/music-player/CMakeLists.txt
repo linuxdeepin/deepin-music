@@ -185,14 +185,17 @@ if(ISTEST MATCHES "1")
     target_link_libraries(${CMD_NAME} gmock gmock_main gtest gtest_main)
 endif()
 
+# ------------------------------- install script -------------------------------
 install(TARGETS ${CMD_NAME} DESTINATION bin)
+# install Translation files:
 install(DIRECTORY ${PROJECT_SOURCE_DIR}/music/music-player/translations
     DESTINATION share/${CMD_NAME}
     FILES_MATCHING PATTERN "*.qm")
 #install(FILES ${Translate1} DESTINATION share/${CMD_NAME})
+# install Desktop icon
 install(FILES ${PROJECT_SOURCE_DIR}/music/music-player/data/deepin-music.desktop
     DESTINATION share/applications)
-
+# install Manual App icon
 install(FILES ${PROJECT_SOURCE_DIR}/music/music-player/resource/theme/common/image/deepin-music.svg
     DESTINATION share/icons/hicolor/scalable/apps)
 
