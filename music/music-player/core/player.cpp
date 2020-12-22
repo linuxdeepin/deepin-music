@@ -660,6 +660,9 @@ void Player::forcePlayMeta()
 
 void Player::initEqualizerCfg()
 {
+    if (m_qvinstance == nullptr || m_qvplayer == nullptr || m_qvmedia == nullptr) {
+        initVlc();
+    }
     setEqualizerEnable(true);
     //读取均衡器使能开关配置
     auto eqSwitch = MusicSettings::value("equalizer.all.switch").toBool();
@@ -719,6 +722,9 @@ void Player::setDbusMuted(bool muted)
 
 void Player::setFadeInOutFactor(double fadeInOutFactor)
 {
+    if (m_qvinstance == nullptr || m_qvplayer == nullptr || m_qvmedia == nullptr) {
+        initVlc();
+    }
     m_fadeInOutFactor = fadeInOutFactor;
     m_qvplayer->equalizer()->blockSignals(true);
     m_qvplayer->equalizer()->setPreamplification(static_cast<float>(12 * m_fadeInOutFactor));
@@ -741,6 +747,9 @@ void Player::musicFileMiss()
 
 void Player::setEqualizer(bool enabled, int curIndex, QList<int> indexbaud)
 {
+    if (m_qvinstance == nullptr || m_qvplayer == nullptr || m_qvmedia == nullptr) {
+        initVlc();
+    }
     if (enabled) {
         //非自定义模式时
         if (curIndex > 0) {
@@ -766,21 +775,33 @@ void Player::setEqualizer(bool enabled, int curIndex, QList<int> indexbaud)
 
 void Player::setEqualizerEnable(bool enable)
 {
+    if (m_qvinstance == nullptr || m_qvplayer == nullptr || m_qvmedia == nullptr) {
+        initVlc();
+    }
     m_qvplayer->equalizer()->setEnabled(enable);
 }
 
 void Player::setEqualizerpre(int val)
 {
+    if (m_qvinstance == nullptr || m_qvplayer == nullptr || m_qvmedia == nullptr) {
+        initVlc();
+    }
     m_qvplayer->equalizer()->setPreamplification(val);
 }
 
 void Player::setEqualizerbauds(int index, int val)
 {
+    if (m_qvinstance == nullptr || m_qvplayer == nullptr || m_qvmedia == nullptr) {
+        initVlc();
+    }
     m_qvplayer->equalizer()->setAmplificationForBandAt(uint(val), uint(index));
 }
 
 void Player::setEqualizerCurMode(int curIndex)
 {
+    if (m_qvinstance == nullptr || m_qvplayer == nullptr || m_qvmedia == nullptr) {
+        initVlc();
+    }
     //非自定义模式时
     if (curIndex != 0) {
         m_qvplayer->equalizer()->loadFromPreset(uint(curIndex - 1));

@@ -89,26 +89,7 @@ private:
     DFloatingMessage *saveMessage     = nullptr;
     CustomTabStyle  *tabStyle        = nullptr;
 
-    QStringList    effect_type        =  { DequalizerDialog::tr("Custom")
-                                           , DequalizerDialog::tr("Monophony")
-                                           , DequalizerDialog::tr("Classical")
-                                           , DequalizerDialog::tr("Club")
-                                           , DequalizerDialog::tr("Dance")
-                                           , DequalizerDialog::tr("Full Bass")
-                                           , DequalizerDialog::tr("Full Bass and Treble")
-                                           , DequalizerDialog::tr("Full Treble")
-                                           , DequalizerDialog::tr("Headphones")
-                                           , DequalizerDialog::tr("Hall")
-                                           , DequalizerDialog::tr("Live")
-                                           , DequalizerDialog::tr("Party")
-                                           , DequalizerDialog::tr("Pop")
-                                           , DequalizerDialog::tr("Reggae")
-                                           , DequalizerDialog::tr("Rock")
-                                           , DequalizerDialog::tr("Ska")
-                                           , DequalizerDialog::tr("Soft")
-                                           , DequalizerDialog::tr("Soft Rock")
-                                           , DequalizerDialog::tr("Techno")
-                                         };
+    QStringList    effect_type;
     QList<int> BaudList;
 
     bool    switchflag               = false;

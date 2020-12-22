@@ -490,6 +490,25 @@ DequalizerDialog::DequalizerDialog(QWidget *parent):
     this->saveMessage->setDuration(2000);
     this->saveMessage->move(width() / 2 - 80, height() - 70);
     this->saveMessage->hide();
+    effect_type << DequalizerDialog::tr("Custom")
+                << DequalizerDialog::tr("Monophony")
+                << DequalizerDialog::tr("Classical")
+                << DequalizerDialog::tr("Club")
+                << DequalizerDialog::tr("Dance")
+                << DequalizerDialog::tr("Full Bass")
+                << DequalizerDialog::tr("Full Bass and Treble")
+                << DequalizerDialog::tr("Full Treble")
+                << DequalizerDialog::tr("Headphones")
+                << DequalizerDialog::tr("Hall")
+                << DequalizerDialog::tr("Live")
+                << DequalizerDialog::tr("Party")
+                << DequalizerDialog::tr("Pop")
+                << DequalizerDialog::tr("Reggae")
+                << DequalizerDialog::tr("Rock")
+                << DequalizerDialog::tr("Ska")
+                << DequalizerDialog::tr("Soft")
+                << DequalizerDialog::tr("Soft Rock")
+                << DequalizerDialog::tr("Techno");
 }
 
 DequalizerDialog::~DequalizerDialog()
