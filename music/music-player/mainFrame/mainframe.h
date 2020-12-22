@@ -91,7 +91,8 @@ private:
     MusicLyricWidget    *m_musicLyricWidget = nullptr;
     ImportWidget        *m_importWidget = nullptr;
     DequalizerDialog    *m_dequalizerDialog = nullptr;
-    PlayQueueWidget      *m_playQueueWidget = nullptr;
+    PlayQueueWidget     *m_playQueueWidget = nullptr;
+    DWidget             *m_popupMessage = nullptr;
     //mainframe action
     QAction             *m_newSonglistAction    = nullptr;
     QAction             *m_addMusicFiles        = nullptr;

@@ -362,22 +362,31 @@ void MainFrame::showPopupMessage(const QString &songListName, int selectCount, i
         }
     }
 
+    if (m_popupMessage == nullptr) {
+        m_popupMessage = new DWidget(this);
+        m_popupMessage->setAttribute(Qt::WA_TransparentForMouseEvents);
+        m_popupMessage->setVisible(true);
+        m_popupMessage->move(0, 0);
+    }
+
     // 确保弹窗只显示一条
-    QList<QWidget *> oldMsgList = m_musicContentWidget->findChildren<QWidget *>("_d_message_float_deepin_music");
+    QList<QWidget *> oldMsgList = m_popupMessage->findChildren<QWidget *>("_d_message_float_deepin_music");
     if (oldMsgList.size() > 0) {
         oldMsgList.first()->deleteLater(); // auto delete
     }
     if (oldMsgList.size() >= 2)
         return;
 
-    auto icon = QIcon(":/common/image/notify_success_new.svg");
-    DFloatingMessage *pDFloatingMessage = new DFloatingMessage(DFloatingMessage::MessageType::TransientType, m_musicContentWidget);
+    QIcon icon = QIcon(":/common/image/notify_success_new.svg");
+    DFloatingMessage *pDFloatingMessage = new DFloatingMessage(DFloatingMessage::MessageType::TransientType, m_popupMessage);
     pDFloatingMessage->setObjectName("_d_message_float_deepin_music");
     pDFloatingMessage->setBlurBackgroundEnabled(true);
     pDFloatingMessage->setMessage(text);
     pDFloatingMessage->setIcon(icon);
     pDFloatingMessage->setDuration(2000);
-    DMessageManager::instance()->sendMessage(m_musicContentWidget, pDFloatingMessage);
+    m_popupMessage->resize(this->width(), this->height() - m_footerWidget->height());
+    m_popupMessage->raise();
+    DMessageManager::instance()->sendMessage(m_popupMessage, pDFloatingMessage);
 }
 
 void MainFrame::setThemeType(DGuiApplicationHelper::ColorType themeType)
@@ -688,9 +697,9 @@ void MainFrame::resizeEvent(QResizeEvent *e)
                                        width(), m_playQueueWidget->height());
     }
 
-//    if (!d->originCoverImage.isNull()) {
-//        d->currentCoverImage = WidgetHelper::cropRect(d->originCoverImage, size());
-//    }
+    if (m_popupMessage) {
+        m_popupMessage->resize(this->width(), this->height() - m_footerWidget->height());
+    }
 }
 
 void MainFrame::closeEvent(QCloseEvent *event)
