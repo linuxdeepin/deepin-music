@@ -253,7 +253,7 @@ void MusicListInfoView::showContextMenu(const QPoint &pos)
     QList<DataBaseService::PlaylistData> strplaylist = DataBaseService::getInstance()->getCustomSongList();
     for (DataBaseService::PlaylistData pd : strplaylist) {
         QFontMetrics titleFm(actFav->font());
-        QString text = titleFm.elidedText(pd.displayName, Qt::ElideMiddle, 170);
+        QString text = titleFm.elidedText(QString(pd.displayName.replace("&", "&&")), Qt::ElideMiddle, 170);
         QAction *pact = playListMenu.addAction(text);
         pact->setData(QVariant(pd.uuid)); //to know which custom view to reach
 //        pact->setData(QVariant(pd.uuid));

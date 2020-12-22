@@ -1037,7 +1037,7 @@ void PlayListView::contextMenuEvent(QContextMenuEvent *event)
     for (DataBaseService::PlaylistData pd : strplaylist) {
         if (m_currentHash != pd.uuid) { //filter itself
             QFontMetrics titleFm(actFav->font());
-            QString text = titleFm.elidedText(pd.displayName, Qt::ElideMiddle, 170);
+            QString text = titleFm.elidedText(QString(pd.displayName.replace("&", "&&")), Qt::ElideMiddle, 170);
             QAction *pact = playlistMenu.addAction(text);
             pact->setData(QVariant(pd.uuid)); //to know which custom view to reach
             connect(pact, SIGNAL(triggered()), this, SLOT(slotAddToCustomSongList()));
