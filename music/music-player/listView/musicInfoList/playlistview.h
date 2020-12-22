@@ -115,6 +115,8 @@ public slots:
     ///右键菜单响应end
 
 private:
+    // 播放音乐相关处理
+    void playMusic(const MediaMeta &meta);
     void insertRow(int row, MediaMeta meta);
     bool isContain(QString hash);
 signals:

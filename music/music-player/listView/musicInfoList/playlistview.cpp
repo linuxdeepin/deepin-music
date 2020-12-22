@@ -549,27 +549,10 @@ void PlayListView::slotOnDoubleClicked(const QModelIndex &index)
         Player::getInstance()->stop();
         //弹出提示框
         showErrorDlg();
-        return;
+    } else {
+        playMusic(itemMeta);
     }
 
-    if (Player::getInstance()->getActiveMeta().hash == itemMeta.hash) {
-        if (Player::getInstance()->status() == Player::Paused) {
-            Player::getInstance()->resume();
-        } else if (Player::getInstance()->status() == Player::Stopped) {
-            Player::getInstance()->playMeta(itemMeta);
-        }
-    } else {
-        if (!m_IsPlayQueue) {
-            // 设置新的播放列表
-            Player::getInstance()->clearPlayList();
-            Player::getInstance()->setPlayList(getMusicListData());
-            // 通知播放队列列表改变
-            emit Player::getInstance()->signalPlayListChanged();
-            // 设置当前播放playlist的hash
-            Player::getInstance()->setCurrentPlayListHash(m_currentHash, false);
-        }
-        Player::getInstance()->playMeta(itemMeta);
-    }
 }
 
 void PlayListView::slotUpdatePlayingIcon()
@@ -965,13 +948,9 @@ void PlayListView::keyPressEvent(QKeyEvent *event)
             QItemSelectionModel *selection = this->selectionModel();
             if (!selection->selectedRows().isEmpty()) {
                 QModelIndex index = selection->selectedRows().first();
-
                 MediaMeta meta = index.data(Qt::UserRole).value<MediaMeta>();
-                if (Player::getInstance()->getActiveMeta() == meta) {
-                    Player::getInstance()->resume();
-                } else {
-                    Player::getInstance()->playMeta(meta);
-                }
+
+                playMusic(meta);
             }
             break;
         }
@@ -1235,6 +1214,28 @@ void PlayListView::slotPlaylistMenuClicked(QAction *action)
         slotAddToNewSongList(action->text());
     } else if (actionText == "play queue") {
         slotAddToPlayQueue();
+    }
+}
+
+void PlayListView::playMusic(const MediaMeta &meta)
+{
+    if (Player::getInstance()->getActiveMeta().hash == meta.hash) {
+        if (Player::getInstance()->status() == Player::Paused) {
+            Player::getInstance()->resume();
+        } else if (Player::getInstance()->status() == Player::Stopped) {
+            Player::getInstance()->playMeta(meta);
+        }
+    } else {
+        if (!m_IsPlayQueue) {
+            // 设置新的播放列表
+            Player::getInstance()->clearPlayList();
+            Player::getInstance()->setPlayList(getMusicListData());
+            // 通知播放队列列表改变
+            emit Player::getInstance()->signalPlayListChanged();
+            // 设置当前播放playlist的hash
+            Player::getInstance()->setCurrentPlayListHash(m_currentHash, false);
+        }
+        Player::getInstance()->playMeta(meta);
     }
 }
 
