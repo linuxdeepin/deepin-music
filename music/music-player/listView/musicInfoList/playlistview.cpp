@@ -138,11 +138,11 @@ PlayListView::PlayListView(QString hash, bool isPlayQueue, QWidget *parent)
     m_pDetailShortcut = new QShortcut(this);
     m_pDetailShortcut->setKey(QKeySequence(QLatin1String("Ctrl+I")));
     connect(m_pDetailShortcut, SIGNAL(activated()), this, SLOT(showDetailInfoDlg()));
-    //快捷移出歌单
-    m_pRmvSongsShortcut = new QShortcut(this);
-    m_pRmvSongsShortcut->setKey(QKeySequence(QLatin1String("Delete")));
-    connect(m_pRmvSongsShortcut, SIGNAL(activated()), this, SLOT(slotRmvFromSongList()));
-    //快捷显示菜单
+//    //快捷移出歌单
+//    m_pRmvSongsShortcut = new QShortcut(this);
+//    m_pRmvSongsShortcut->setKey(QKeySequence(QLatin1String("Delete")));
+//    connect(m_pRmvSongsShortcut, SIGNAL(activated()), this, SLOT(slotRmvFromSongList()));
+//    //快捷显示菜单
 //    m_pShowMenuShortcut = new QShortcut(this);
 //    m_pShowMenuShortcut->setKey(QKeySequence(QLatin1String("Alt+M")));
 
@@ -960,7 +960,8 @@ void PlayListView::keyPressEvent(QKeyEvent *event)
 {
     switch (event->modifiers()) {
     case Qt::NoModifier:
-        if (event->key() == Qt::Key_Return) {
+        switch (event->key()) {
+        case Qt::Key_Return: {
             QItemSelectionModel *selection = this->selectionModel();
             if (!selection->selectedRows().isEmpty()) {
                 QModelIndex index = selection->selectedRows().first();
@@ -972,6 +973,11 @@ void PlayListView::keyPressEvent(QKeyEvent *event)
                     Player::getInstance()->playMeta(meta);
                 }
             }
+            break;
+        }
+        case Qt::Key_Delete: {
+            slotRmvFromSongList();
+        }
         }
         break;
 //    case Qt::ShiftModifier:

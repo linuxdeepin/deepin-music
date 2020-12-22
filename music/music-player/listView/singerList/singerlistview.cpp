@@ -105,28 +105,35 @@ SingerListView::SingerListView(QString hash, QWidget *parent)
             this, &SingerListView::setThemeType);
 
     setThemeType(DGuiApplicationHelper::instance()->themeType());
+
+    // 歌曲删除
+    connect(DataBaseService::getInstance(), &DataBaseService::signalRmvSong,
+            this, &SingerListView::slotRemoveSingleSong);
 }
 
 SingerListView::~SingerListView()
 {
 }
 
-void SingerListView::setSingerListData(const QList<SingerInfo> &listinfo)
+void SingerListView::setSingerListData(QList<SingerInfo> &&listinfo)
 {
-    m_singerInfoList.clear();
-    m_singerInfoList = listinfo;
     setUpdatesEnabled(false);
-    singerModel->removeRows(0, singerModel->rowCount());
+    singerModel->clear();
 
-    QList<SingerInfo> albumInfos = getSingerListData();
     DataBaseService::ListSortType sortType = getSortType();
-    this->setDataBySortType(albumInfos, sortType);
+    this->setDataBySortType(listinfo, sortType);
     setUpdatesEnabled(true);
 }
 
 QList<SingerInfo> SingerListView::getSingerListData() const
 {
-    return m_singerInfoList;
+    QList<SingerInfo> list;
+    for (int i = 0; i < singerModel->rowCount(); i++) {
+        QModelIndex idx = singerModel->index(i, 0, QModelIndex());
+        SingerInfo singerTmp = idx.data(Qt::UserRole).value<SingerInfo>();
+        list.append(singerTmp);
+    }
+    return list;
 }
 
 void SingerListView::resetSingerListDataByStr(const QString &searchWord)
@@ -155,12 +162,10 @@ void SingerListView::resetSingerListDataByStr(const QString &searchWord)
     }
 
     singerModel->clear();
-    m_singerInfoList.clear();
     for (SingerInfo meta : singerInfoList) {
         if (!CommonService::getInstance()->containsStr(searchWord, meta.singerName)) {
             continue;
         }
-        m_singerInfoList.append(meta);
         QStandardItem *pItem = new QStandardItem;
         //设置icon
         bool iconExists = false;
@@ -212,14 +217,12 @@ void SingerListView::resetSingerListDataBySongName(const QList<MediaMeta> &media
         break;
     }
 
-    m_singerInfoList.clear();
     singerModel->clear();
     for (SingerInfo singerInfo : singerInfos) {
         bool isSingerContainSong = false;
         for (MediaMeta meta : mediaMetas) {
             if (CommonService::getInstance()->containsStr(meta.singer, singerInfo.singerName)) {
                 isSingerContainSong = true;
-                m_singerInfoList.append(singerInfo);
                 break;
             }
         }
@@ -277,14 +280,12 @@ void SingerListView::resetSingerListDataByAlbum(const QList<AlbumInfo> &albumInf
         break;
     }
 
-    m_singerInfoList.clear();
     singerModel->clear();
     for (SingerInfo singerInfo : singerInfos) {
         bool isSingerContainSong = false;
         for (AlbumInfo albumInfo : albumInfos) {
             if (CommonService::getInstance()->containsStr(albumInfo.singer, singerInfo.singerName)) {
                 isSingerContainSong = true;
-                m_singerInfoList.append(singerInfo);
                 break;
             }
         }
@@ -320,7 +321,7 @@ void SingerListView::resetSingerListDataByAlbum(const QList<AlbumInfo> &albumInf
 int SingerListView::getMusicCount()
 {
     int count = 0;
-    for (SingerInfo info : m_singerInfoList) {
+    for (SingerInfo info : getSingerListData()) {
         count += info.musicinfos.size();
     }
     return count;
@@ -427,7 +428,8 @@ void SingerListView::setSortType(DataBaseService::ListSortType sortType)
     }
 
     DataBaseService::getInstance()->updatePlaylistSortType(sortType, m_hash);
-    this->setDataBySortType(m_singerInfoList, sortType);
+    QList<SingerInfo> singerInfos = getSingerListData();
+    this->setDataBySortType(singerInfos, sortType);
 }
 
 void SingerListView::setDataBySortType(QList<SingerInfo> &singerInfos, DataBaseService::ListSortType sortType)
@@ -478,6 +480,26 @@ void SingerListView::setDataBySortType(QList<SingerInfo> &singerInfos, DataBaseS
         QVariant singerval;
         singerval.setValue(meta);
         singerModel->setData(idx, singerval, Qt::UserRole);
+    }
+}
+
+void SingerListView::slotRemoveSingleSong(const QString &listHash, const QString &musicHash)
+{
+    if (listHash != "all") {
+        return;
+    }
+    for (int i = 0; i < singerModel->rowCount(); i++) {
+        QModelIndex idx = singerModel->index(i, 0, QModelIndex());
+        SingerInfo singerTmp = idx.data(Qt::UserRole).value<SingerInfo>();
+
+        if (singerTmp.musicinfos.contains(musicHash)) {
+            singerTmp.musicinfos.remove(musicHash);
+
+            QVariant singerVal;
+            singerVal.setValue(singerTmp);
+            singerModel->setData(idx, singerVal, Qt::UserRole);
+            break;
+        }
     }
 }
 

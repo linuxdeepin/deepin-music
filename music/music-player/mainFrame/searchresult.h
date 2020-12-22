@@ -84,6 +84,6 @@ private:
     int                 m_CurrentIndex  = -1;
     int                 m_Count         = 0;
     QVBoxLayout         *vlayout        = nullptr;
-    SearchEdit          *m_SearchEdit   = nullptr;
+    SearchEdit          *m_searchEdit   = nullptr;
 };
 #endif // SEARCHRESULTLIST_H

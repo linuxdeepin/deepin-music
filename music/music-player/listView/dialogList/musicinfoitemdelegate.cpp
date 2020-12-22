@@ -223,7 +223,7 @@ void MusicInfoItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
     alternateBaseColor.setAlphaF(0.02);
     QColor selecteColor("#000000");
     selecteColor.setAlphaF(0.20);
-    if (listview->getThemeType() == 2) {
+    if (DGuiApplicationHelper::instance()->themeType() == 2) {
         baseColor = QColor("#000000");
         baseColor.setAlphaF(0.05);
         alternateBaseColor = QColor("#FFFFFF");
@@ -242,7 +242,7 @@ void MusicInfoItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
 
     QColor nameColor("#090909"), otherColor("#000000");
     otherColor.setAlphaF(0.5);
-    if (listview->getThemeType() == 2) {
+    if (DGuiApplicationHelper::instance()->themeType() == 2) {
         nameColor = QColor("#C0C6D4");
         otherColor = QColor("#C0C6D4");
         otherColor.setAlphaF(0.6);
@@ -385,10 +385,8 @@ void MusicInfoItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
 QSize MusicInfoItemDelegate::sizeHint(const QStyleOptionViewItem &option,
                                       const QModelIndex &index) const
 {
-//    Q_D(const MusicInfoItemDelegate);
-
-    auto baseSize = QStyledItemDelegate::sizeHint(option, index);
-    return  QSize(baseSize.width() / 5, 36);
+    MusicListInfoView *listview = qobject_cast<MusicListInfoView *>(const_cast<QWidget *>(option.widget));
+    return  QSize(listview->width(), 36);
 }
 
 void MusicInfoItemDelegate::setModelData(QWidget *editor, QAbstractItemModel *model,

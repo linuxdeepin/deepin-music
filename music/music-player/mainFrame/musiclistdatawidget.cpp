@@ -786,11 +786,6 @@ void MusicListDataWidget::slotRemoveSingleSong(const QString &listHash, const QS
     Q_UNUSED(listHash)
     Q_UNUSED(musicHash)
     refreshInfoLabel(m_currentHash);
-    if (m_pStackedWidget->currentWidget() == m_albumListView) {
-        m_albumListView->setAlbumListData(DataBaseService::getInstance()->allAlbumInfos()); //set album data
-    } else if (m_pStackedWidget->currentWidget() == m_singerListView) {
-        m_singerListView->setSingerListData(DataBaseService::getInstance()->allSingerInfos());
-    }
 }
 
 void MusicListDataWidget::slotPlaylistNameUpdate(const QString &listHash)

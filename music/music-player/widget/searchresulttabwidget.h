@@ -41,6 +41,7 @@ public:
     explicit SearchResultTabWidget(QWidget *parent = nullptr);
     ~SearchResultTabWidget();
 
+    void refreshListview();
     void refreshListview(ListPageSwitchType switchtype, QString searchword);
     void setViewMode(DListView::ViewMode mode);
     void setSortType(DataBaseService::ListSortType sortType);

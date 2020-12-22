@@ -43,7 +43,7 @@ public:
      * @brief setSingerListData set singer data from DataBaseService to delegate
      * @param listinfo all singer data
      */
-    void setSingerListData(const QList<SingerInfo> &listinfo);
+    void setSingerListData(QList<SingerInfo> &&listinfo);
     /**
      * @brief getSingerListData get all singer data
      * @return container of all singer
@@ -78,6 +78,9 @@ public:
     void setSortType(DataBaseService::ListSortType sortType);
     // 根据排序添加数据
     void setDataBySortType(QList<SingerInfo> &singerInfos, DataBaseService::ListSortType sortType);
+public slots:
+    // 歌曲删除
+    void slotRemoveSingleSong(const QString &listHash, const QString &musicHash);
 signals:
     void requestCustomContextMenu(const QPoint &pos);
     void modeChanged(int);
@@ -95,7 +98,6 @@ private:
     MusicListDialog        *musicListDialog = nullptr;
     QPixmap                 playingPix = QPixmap(":/mpimage/light/music1.svg");
     QPixmap                 sidebarPix = QPixmap(":/mpimage/light/music_withe_sidebar/music1.svg");
-    QList<SingerInfo>        m_singerInfoList; //singer data
     QString                  m_hash;
     QListView::ViewMode      m_viewModel = QListView::ListMode;
     QIcon                   m_defaultIcon = QIcon(":/common/image/cover_max.svg");

@@ -25,15 +25,11 @@
 #include <QDebug>
 #include <DPushButton>
 #include <QStringListModel>
-
 #include <DListView>
 #include <DApplicationHelper>
+
 #include "searchedit.h"
-
 #include "ac-desktop-define.h"
-
-//#include "pushbutton.h"
-
 
 SearchResult::SearchResult(QWidget *parent) : DBlurEffectWidget(parent)
 {
@@ -121,7 +117,6 @@ SearchResult::SearchResult(QWidget *parent) : DBlurEffectWidget(parent)
     vlayout->addWidget(m_AlbumView, 0);
     vlayout->addStretch(100);
 
-
     connect(DGuiApplicationHelper::instance(), &DGuiApplicationHelper::themeTypeChanged,
             this, &SearchResult::setThemeType);
 
@@ -204,7 +199,7 @@ void SearchResult::autoResize()
 
 void SearchResult::setSearchEdit(SearchEdit *edit)
 {
-    m_SearchEdit = edit;
+    m_searchEdit = edit;
 }
 
 void SearchResult::setListviewSearchString(const QString &str)
@@ -222,10 +217,10 @@ void SearchResult::setListviewSearchString(const QString &str)
 
 void SearchResult::setLineEditSearchString(const QString &str)
 {
-    if (m_SearchEdit) {
-        m_SearchEdit->blockSignals(true);
-        m_SearchEdit->setText(str);
-        m_SearchEdit->blockSignals(false);
+    if (m_searchEdit) {
+        m_searchEdit->blockSignals(true);
+        m_searchEdit->setText(str);
+        m_searchEdit->blockSignals(false);
     }
 }
 
@@ -425,6 +420,4 @@ void SearchResult::clearKeyState()
 //    m_ArtistView->update();
 //    m_AlbumView->update();
 }
-
-
 

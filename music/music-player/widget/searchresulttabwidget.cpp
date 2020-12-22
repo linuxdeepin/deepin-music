@@ -124,26 +124,31 @@ void SearchResultTabWidget::refreshListview(ListPageSwitchType switchtype, QStri
 {
     m_switchtype = switchtype;
     m_searchWord = searchword;
-    if (switchtype == SearchMusicResultType) {
+    refreshListview();
+}
+
+void SearchResultTabWidget::refreshListview()
+{
+    if (m_switchtype == SearchMusicResultType) {
         setLabelChecked(m_music);
         m_StackedWidget->setCurrentWidget(m_musicListView);
-        m_musicListView->resetSonglistByStr(searchword);
+        m_musicListView->resetSonglistByStr(m_searchWord);
         m_singerListView->resetSingerListDataBySongName(m_musicListView->getMusicListData());
         m_albumListView->resetAlbumListDataBySongName(m_musicListView->getMusicListData());
         emit sigSearchTypeChanged("musicResult");
         qDebug() << "musicResult";
-    } else if (switchtype == SearchSingerResultType) {
+    } else if (m_switchtype == SearchSingerResultType) {
         setLabelChecked(m_singer);
         m_StackedWidget->setCurrentWidget(m_singerListView);
-        m_singerListView->resetSingerListDataByStr(searchword);
+        m_singerListView->resetSingerListDataByStr(m_searchWord);
         m_musicListView->resetSonglistBySinger(m_singerListView->getSingerListData());
         m_albumListView->resetAlbumListDataBySinger(m_singerListView->getSingerListData());
         emit sigSearchTypeChanged("artistResult");
         qDebug() << "artistResult";
-    } else if (switchtype == SearchAlbumResultType) {
+    } else if (m_switchtype == SearchAlbumResultType) {
         setLabelChecked(m_album);
         m_StackedWidget->setCurrentWidget(m_albumListView);
-        m_albumListView->resetAlbumListDataByStr(searchword);
+        m_albumListView->resetAlbumListDataByStr(m_searchWord);
         m_musicListView->resetSonglistByAlbum(m_albumListView->getAlbumListData());
         m_singerListView->resetSingerListDataByAlbum(m_albumListView->getAlbumListData());
         emit sigSearchTypeChanged("albumResult");

@@ -37,10 +37,6 @@ public:
     explicit MusicListInfoView(const QString &m_hash, QWidget *parent = Q_NULLPTR);
     ~MusicListInfoView() override;
 
-//    QString curName() const;
-    void setThemeType(int type);
-    int getThemeType() const;
-
     void setPlayPixmap(QPixmap pixmap, QPixmap sidebarPixmap);
 //    QPixmap getSidebarPixmap() const;
 
@@ -90,11 +86,8 @@ private:
     MediaMeta m_currMeta;
     MusiclistInfomodel      *m_model        = nullptr;
     MusicInfoItemDelegate   *delegate     = nullptr;
-    int                     themeType     = 1;
 
     QString                  curName      = "";
-
-//    MetaPtr                 playing       = nullptr;
     QPixmap                 playingPixmap = QPixmap(":/mpimage/light/music1.svg");
     QPixmap                 sidebarPixmap = QPixmap(":/mpimage/light/music_withe_sidebar/music1.svg");
     QIcon                   m_icon = QIcon(":/common/image/info_cover.svg");

@@ -105,27 +105,26 @@ AlbumListView::AlbumListView(QString hash, QWidget *parent)
             this, &AlbumListView::setThemeType);
 
     setThemeType(DGuiApplicationHelper::instance()->themeType());
+    // 歌曲删除
+    connect(DataBaseService::getInstance(), &DataBaseService::signalRmvSong,
+            this, &AlbumListView::slotRemoveSingleSong);
 }
 
 AlbumListView::~AlbumListView()
 {
 }
 
-void AlbumListView::setAlbumListData(const QList<AlbumInfo> &listinfo)
+void AlbumListView::setAlbumListData(QList<AlbumInfo> &&listinfo)
 {
-    m_albumInfoList.clear();
-    m_albumInfoList = listinfo;
     albumModel->clear();
-
     DataBaseService::ListSortType sortType = getSortType();
-    this->setDataBySortType(m_albumInfoList, sortType);
+    this->setDataBySortType(listinfo, sortType);
 }
 
 void AlbumListView::resetAlbumListDataByStr(const QString &searchWord)
 {
     QList<AlbumInfo> albumInfoList = DataBaseService::getInstance()->allAlbumInfos();
 
-    m_albumInfoList.clear();
     this->albumModel->clear();
     DataBaseService::ListSortType sortType = getSortType();
     switch (sortType) {
@@ -152,7 +151,6 @@ void AlbumListView::resetAlbumListDataByStr(const QString &searchWord)
         if (!CommonService::getInstance()->containsStr(searchWord, albumInfo.albumName)) {
             continue;
         }
-        m_albumInfoList.append(albumInfo);
         QStandardItem *pItem = new QStandardItem;
         //设置icon
         bool iconExists = false;
@@ -182,7 +180,6 @@ void AlbumListView::resetAlbumListDataByStr(const QString &searchWord)
 void AlbumListView::resetAlbumListDataBySongName(const QList<MediaMeta> &mediaMetas)
 {
     QList<AlbumInfo> albumInfoList = DataBaseService::getInstance()->allAlbumInfos();
-    m_albumInfoList.clear();
     this->albumModel->clear();
     DataBaseService::ListSortType sortType = getSortType();
     switch (sortType) {
@@ -211,7 +208,6 @@ void AlbumListView::resetAlbumListDataBySongName(const QList<MediaMeta> &mediaMe
             for (MediaMeta listMeta : mediaMetas) {
                 if (albumMeta.hash == listMeta.hash) {
                     isAlbumContainSong = true;
-                    m_albumInfoList.append(albumInfo);
                     break;
                 }
             }
@@ -251,7 +247,6 @@ void AlbumListView::resetAlbumListDataBySongName(const QList<MediaMeta> &mediaMe
 void AlbumListView::resetAlbumListDataBySinger(const QList<SingerInfo> &singerInfos)
 {
     QList<AlbumInfo> albumInfoList = DataBaseService::getInstance()->allAlbumInfos();
-    m_albumInfoList.clear();
 
     this->albumModel->clear();
     DataBaseService::ListSortType sortType = getSortType();
@@ -280,7 +275,6 @@ void AlbumListView::resetAlbumListDataBySinger(const QList<SingerInfo> &singerIn
         for (SingerInfo singerInfo : singerInfos) {
             if (CommonService::getInstance()->containsStr(singerInfo.singerName, albumInfo.singer)) {
                 isAlbumContainSong = true;
-                m_albumInfoList.append(albumInfo);
                 break;
             }
         }
@@ -315,13 +309,20 @@ void AlbumListView::resetAlbumListDataBySinger(const QList<SingerInfo> &singerIn
 
 QList<AlbumInfo> AlbumListView::getAlbumListData() const
 {
-    return m_albumInfoList;
+    QList<AlbumInfo> list;
+    for (int i = 0; i < albumModel->rowCount(); i++) {
+        QModelIndex idx = albumModel->index(i, 0, QModelIndex());
+        AlbumInfo albumTmp = idx.data(Qt::UserRole).value<AlbumInfo>();
+        list.append(albumTmp);
+    }
+    return list;
 }
 
 int AlbumListView::getMusicCount()
 {
+    QList<AlbumInfo> albumInfoList = getAlbumListData();
     int count = 0;
-    for (AlbumInfo info : m_albumInfoList) {
+    for (AlbumInfo info : albumInfoList) {
         count += info.musicinfos.size();
     }
     return count;
@@ -436,6 +437,26 @@ void AlbumListView::slotCoverUpdate(const MediaMeta &meta)
     }
 }
 
+void AlbumListView::slotRemoveSingleSong(const QString &listHash, const QString &musicHash)
+{
+    if (listHash != "all") {
+        return;
+    }
+    for (int i = 0; i < albumModel->rowCount(); i++) {
+        QModelIndex idx = albumModel->index(i, 0, QModelIndex());
+        AlbumInfo albumTmp = idx.data(Qt::UserRole).value<AlbumInfo>();
+
+        if (albumTmp.musicinfos.contains(musicHash)) {
+            albumTmp.musicinfos.remove(musicHash);
+
+            QVariant albumval;
+            albumval.setValue(albumTmp);
+            albumModel->setData(idx, albumval, Qt::UserRole);
+            break;
+        }
+    }
+}
+
 void AlbumListView::dragEnterEvent(QDragEnterEvent *event)
 {
     auto t_formats = event->mimeData()->formats();
@@ -449,7 +470,6 @@ void AlbumListView::dragEnterEvent(QDragEnterEvent *event)
 
 void AlbumListView::dragMoveEvent(QDragMoveEvent *event)
 {
-    auto index = indexAt(event->pos());
     if (/*index.isValid() && */(event->mimeData()->hasFormat("text/uri-list")  || event->mimeData()->hasFormat("application/x-qabstractitemmodeldatalist"))) {
         qDebug() << "acceptProposedAction" << event;
         event->setDropAction(Qt::CopyAction);

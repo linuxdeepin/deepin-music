@@ -92,75 +92,11 @@ MusicListInfoView::MusicListInfoView(const QString &hash, QWidget *parent)
             this, &MusicListInfoView::slotUpdatePlayingIcon, Qt::DirectConnection);
     connect(DataBaseService::getInstance(), &DataBaseService::signalRmvSong,
             this, &MusicListInfoView::slotRemoveSingleSong);
-
-
-    connect(DGuiApplicationHelper::instance(), &DGuiApplicationHelper::themeTypeChanged,
-            this, &MusicListInfoView::setThemeType);
-
-    setThemeType(DGuiApplicationHelper::instance()->themeType());
 }
 
 MusicListInfoView::~MusicListInfoView()
 {
 
-}
-
-//MetaPtr MusicListInfoView::activingMeta() const
-//{
-//    Q_D(const MusicListInfoView);
-
-//    if (d->model->playlist().isNull()) {
-//        return MetaPtr();
-//    }
-
-//    return d->model->playlist()->playing();
-//}
-
-//MetaPtr MusicListInfoView::firstMeta() const
-//{
-//    MetaPtr curMeta = nullptr;
-//    for (int i = 0; i < m_model->rowCount(); ++i) {
-//        auto index = m_model->index(i, 0);
-//        MetaPtr meta = m_model->meta(index);
-//        if (!meta->invalid) {
-//            curMeta = meta;
-//            break;
-//        } else {
-//            if (QFile::exists(meta->localPath)) {
-//                curMeta = meta;
-//                break;
-//            }
-//        }
-//    }
-//    return curMeta;
-//}
-
-//PlaylistPtr MusicListInfoView::playlist() const
-//{
-//    Q_D(const MusicListInfoView);
-//    return d->model->playlist();
-//}
-
-
-//QString MusicListInfoView::curName() const
-//{
-//    Q_D(const MusicListInfoView);
-//    return d->curName;
-//}
-
-//MetaPtr MusicListInfoView::playing() const
-//{
-//    return playing;
-//}
-
-void MusicListInfoView::setThemeType(int type)
-{
-    themeType = type;
-}
-
-int MusicListInfoView::getThemeType() const
-{
-    return themeType;
 }
 
 void MusicListInfoView::setPlayPixmap(QPixmap pixmap, QPixmap sidebarPixmap)
@@ -472,8 +408,7 @@ void MusicListInfoView::keyPressEvent(QKeyEvent *event)
     case Qt::NoModifier:
         switch (event->key()) {
         case Qt::Key_Delete:
-            QItemSelectionModel *selection = this->selectionModel();
-//            removeSelection(selection);
+            slotRemoveSongListActionClicked();
             break;
         }
         break;

@@ -41,7 +41,7 @@ public:
      * @brief setAlbumListData set album data from DataBaseService to delegate
      * @param listinfo all album data
      */
-    void setAlbumListData(const QList<AlbumInfo> &listinfo);
+    void setAlbumListData(QList<AlbumInfo> &&listinfo);
     //展示专辑名包含str的专辑
     void resetAlbumListDataByStr(const QString &searchWord);
     //展示包含列表中歌曲的专辑
@@ -80,6 +80,7 @@ signals:
 private slots:
     void onDoubleClicked(const QModelIndex &index);
     void slotCoverUpdate(const MediaMeta &meta);
+    void slotRemoveSingleSong(const QString &listHash, const QString &musicHash);
 protected:
     void dragEnterEvent(QDragEnterEvent *event) Q_DECL_OVERRIDE;
     void dragMoveEvent(QDragMoveEvent *event) Q_DECL_OVERRIDE;
@@ -93,7 +94,6 @@ private:
     QPixmap                 playingPix = QPixmap(":/mpimage/light/music1.svg");
     QPixmap                 sidebarPix = QPixmap(":/mpimage/light/music_withe_sidebar/music1.svg");
     MusicListDialog        *musciListDialog = nullptr;
-    QList<AlbumInfo>        m_albumInfoList; //all album data
     QString                 m_hash;
     QListView::ViewMode     m_viewModel = QListView::ListMode;
     QIcon                   m_defaultIcon = QIcon(":/common/image/cover_max.svg");
