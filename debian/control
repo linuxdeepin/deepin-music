@@ -27,7 +27,8 @@ Build-Depends:
  pkg-config,
  qtmultimedia5-dev,
  qttools5-dev,
- qttools5-dev-tools
+ qttools5-dev-tools,
+ libdframeworkdbus-dev
 Standards-Version: 3.9.8
 Homepage: http://www.deepin.org/
 

@@ -100,6 +100,101 @@
 <context>
     <name>DequalizerDialog</name>
     <message>
+        <location filename="../widget/dequalizerdialog.cpp" line="493"/>
+        <source>Custom</source>
+        <translation>مخصص</translation>
+    </message>
+    <message>
+        <location filename="../widget/dequalizerdialog.cpp" line="494"/>
+        <source>Monophony</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../widget/dequalizerdialog.cpp" line="495"/>
+        <source>Classical</source>
+        <translation> تقليدي</translation>
+    </message>
+    <message>
+        <location filename="../widget/dequalizerdialog.cpp" line="496"/>
+        <source>Club</source>
+        <translation>نادي</translation>
+    </message>
+    <message>
+        <location filename="../widget/dequalizerdialog.cpp" line="497"/>
+        <source>Dance</source>
+        <translation>رقص</translation>
+    </message>
+    <message>
+        <location filename="../widget/dequalizerdialog.cpp" line="498"/>
+        <source>Full Bass</source>
+        <translation>صوت عميق كامل</translation>
+    </message>
+    <message>
+        <location filename="../widget/dequalizerdialog.cpp" line="499"/>
+        <source>Full Bass and Treble</source>
+        <translation>صوت عميق كامل وثلاثي</translation>
+    </message>
+    <message>
+        <location filename="../widget/dequalizerdialog.cpp" line="500"/>
+        <source>Full Treble</source>
+        <translation>ثلاثي كامل</translation>
+    </message>
+    <message>
+        <location filename="../widget/dequalizerdialog.cpp" line="501"/>
+        <source>Headphones</source>
+        <translation>السماعات</translation>
+    </message>
+    <message>
+        <location filename="../widget/dequalizerdialog.cpp" line="502"/>
+        <source>Hall</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../widget/dequalizerdialog.cpp" line="503"/>
+        <source>Live</source>
+        <translation>مباشر</translation>
+    </message>
+    <message>
+        <location filename="../widget/dequalizerdialog.cpp" line="504"/>
+        <source>Party</source>
+        <translation>جزئي</translation>
+    </message>
+    <message>
+        <location filename="../widget/dequalizerdialog.cpp" line="505"/>
+        <source>Pop</source>
+        <translation>بوب</translation>
+    </message>
+    <message>
+        <location filename="../widget/dequalizerdialog.cpp" line="506"/>
+        <source>Reggae</source>
+        <translation>ريغي</translation>
+    </message>
+    <message>
+        <location filename="../widget/dequalizerdialog.cpp" line="507"/>
+        <source>Rock</source>
+        <translation>روك</translation>
+    </message>
+    <message>
+        <location filename="../widget/dequalizerdialog.cpp" line="508"/>
+        <source>Ska</source>
+        <translation>سكا</translation>
+    </message>
+    <message>
+        <location filename="../widget/dequalizerdialog.cpp" line="509"/>
+        <source>Soft</source>
+        <translation>هادئ</translation>
+    </message>
+    <message>
+        <location filename="../widget/dequalizerdialog.cpp" line="510"/>
+        <source>Soft Rock</source>
+        <translation>روك هادئ</translation>
+    </message>
+    <message>
+        <location filename="../widget/dequalizerdialog.cpp" line="511"/>
+        <source>Techno</source>
+        <translation>Tec</translation>
+    </message>
+    <message>
         <location filename="../widget/dequalizerdialog.cpp" line="96"/>
         <location filename="../widget/dequalizerdialog.cpp" line="382"/>
         <source>Equalizer</source>
@@ -107,13 +202,13 @@
     </message>
     <message>
         <location filename="../widget/dequalizerdialog.cpp" line="103"/>
-        <location filename="../widget/dequalizerdialog.cpp" line="586"/>
+        <location filename="../widget/dequalizerdialog.cpp" line="605"/>
         <source>ON</source>
         <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../widget/dequalizerdialog.cpp" line="105"/>
-        <location filename="../widget/dequalizerdialog.cpp" line="584"/>
+        <location filename="../widget/dequalizerdialog.cpp" line="603"/>
         <source>OFF</source>
         <translation type="unfinished"/>
     </message>
@@ -280,19 +375,6 @@
 <context>
     <name>MainFrame</name>
     <message>
-        <location filename="../mainFrame/mainframe.cpp" line="77"/>
-        <location filename="../mainFrame/mainframe.cpp" line="85"/>
-        <location filename="../mainFrame/mainframe.cpp" line="93"/>
-        <location filename="../mainFrame/mainframe.cpp" line="259"/>
-        <source>Music</source>
-        <translation>موسيقى</translation>
-    </message>
-    <message>
-        <location filename="../mainFrame/mainframe.cpp" line="78"/>
-        <source>Music is a local music player with beautiful design and simple functions.</source>
-        <translation>موسيقى: هو مشغّل مقاطع صوتية محلي مع تصميم جميل ووظائف بسيطة.</translation>
-    </message>
-    <message>
         <location filename="../mainFrame/mainframe.cpp" line="193"/>
         <source>Add playlist</source>
         <translation>أضف قائمة تشغيل</translation>
@@ -322,6 +404,19 @@
         <location filename="../mainFrame/mainframe.cpp" line="248"/>
         <source>Exit</source>
         <translation>خروج</translation>
+    </message>
+    <message>
+        <location filename="../mainFrame/mainframe.cpp" line="77"/>
+        <location filename="../mainFrame/mainframe.cpp" line="85"/>
+        <location filename="../mainFrame/mainframe.cpp" line="93"/>
+        <location filename="../mainFrame/mainframe.cpp" line="259"/>
+        <source>Music</source>
+        <translation>موسيقى</translation>
+    </message>
+    <message>
+        <location filename="../mainFrame/mainframe.cpp" line="78"/>
+        <source>Music is a local music player with beautiful design and simple functions.</source>
+        <translation>موسيقى: هو مشغّل مقاطع صوتية محلي مع تصميم جميل ووظائف بسيطة.</translation>
     </message>
     <message>
         <location filename="../mainFrame/mainframe.cpp" line="245"/>
@@ -359,14 +454,14 @@
         <translation>تم إضافة %1 مقاطع صوتية</translation>
     </message>
     <message>
-        <location filename="../mainFrame/mainframe.cpp" line="427"/>
-        <source>Import failed, no valid music file found</source>
-        <translation>فشل الاستيراد، لم يتم إيجاد مقطع صوتي صالح</translation>
-    </message>
-    <message>
-        <location filename="../mainFrame/mainframe.cpp" line="434"/>
+        <location filename="../mainFrame/mainframe.cpp" line="443"/>
         <source>OK</source>
         <translation>موافق</translation>
+    </message>
+    <message>
+        <location filename="../mainFrame/mainframe.cpp" line="436"/>
+        <source>Import failed, no valid music file found</source>
+        <translation>فشل الاستيراد، لم يتم إيجاد مقطع صوتي صالح</translation>
     </message>
 </context>
 <context>
@@ -406,51 +501,6 @@
 </context>
 <context>
     <name>MusicListDataWidget</name>
-    <message>
-        <location filename="../mainFrame/musiclistdatawidget.cpp" line="190"/>
-        <source>Search Results</source>
-        <translation>نتائج البحث</translation>
-    </message>
-    <message>
-        <location filename="../mainFrame/musiclistdatawidget.cpp" line="527"/>
-        <location filename="../mainFrame/musiclistdatawidget.cpp" line="617"/>
-        <source>All Music</source>
-        <translation>كل المقاطع الصوتية</translation>
-    </message>
-    <message>
-        <location filename="../mainFrame/musiclistdatawidget.cpp" line="539"/>
-        <location filename="../mainFrame/musiclistdatawidget.cpp" line="556"/>
-        <location filename="../mainFrame/musiclistdatawidget.cpp" line="573"/>
-        <source>Time added</source>
-        <translation>وقت الاضافة</translation>
-    </message>
-    <message>
-        <location filename="../mainFrame/musiclistdatawidget.cpp" line="540"/>
-        <location filename="../mainFrame/musiclistdatawidget.cpp" line="576"/>
-        <source>Album</source>
-        <translation>الألبوم</translation>
-    </message>
-    <message>
-        <location filename="../mainFrame/musiclistdatawidget.cpp" line="557"/>
-        <location filename="../mainFrame/musiclistdatawidget.cpp" line="575"/>
-        <source>Artist</source>
-        <translation>فنان</translation>
-    </message>
-    <message>
-        <location filename="../mainFrame/musiclistdatawidget.cpp" line="574"/>
-        <source>Title</source>
-        <translation>عنوان</translation>
-    </message>
-    <message>
-        <location filename="../mainFrame/musiclistdatawidget.cpp" line="595"/>
-        <source>Play All</source>
-        <translation>تشغيل الكل</translation>
-    </message>
-    <message>
-        <location filename="../mainFrame/musiclistdatawidget.cpp" line="675"/>
-        <source>No search results</source>
-        <translation>لا توجد نتائج للبحث</translation>
-    </message>
     <message>
         <location filename="../mainFrame/musiclistdatawidget.cpp" line="714"/>
         <location filename="../mainFrame/musiclistdatawidget.cpp" line="735"/>
@@ -501,6 +551,51 @@
         <source>%1 songs</source>
         <translation>%1 مقاطع صوتية</translation>
     </message>
+    <message>
+        <location filename="../mainFrame/musiclistdatawidget.cpp" line="190"/>
+        <source>Search Results</source>
+        <translation>نتائج البحث</translation>
+    </message>
+    <message>
+        <location filename="../mainFrame/musiclistdatawidget.cpp" line="675"/>
+        <source>No search results</source>
+        <translation>لا توجد نتائج للبحث</translation>
+    </message>
+    <message>
+        <location filename="../mainFrame/musiclistdatawidget.cpp" line="527"/>
+        <location filename="../mainFrame/musiclistdatawidget.cpp" line="617"/>
+        <source>All Music</source>
+        <translation>كل المقاطع الصوتية</translation>
+    </message>
+    <message>
+        <location filename="../mainFrame/musiclistdatawidget.cpp" line="539"/>
+        <location filename="../mainFrame/musiclistdatawidget.cpp" line="556"/>
+        <location filename="../mainFrame/musiclistdatawidget.cpp" line="573"/>
+        <source>Time added</source>
+        <translation>وقت الاضافة</translation>
+    </message>
+    <message>
+        <location filename="../mainFrame/musiclistdatawidget.cpp" line="540"/>
+        <location filename="../mainFrame/musiclistdatawidget.cpp" line="576"/>
+        <source>Album</source>
+        <translation>الألبوم</translation>
+    </message>
+    <message>
+        <location filename="../mainFrame/musiclistdatawidget.cpp" line="557"/>
+        <location filename="../mainFrame/musiclistdatawidget.cpp" line="575"/>
+        <source>Artist</source>
+        <translation>فنان</translation>
+    </message>
+    <message>
+        <location filename="../mainFrame/musiclistdatawidget.cpp" line="574"/>
+        <source>Title</source>
+        <translation>عنوان</translation>
+    </message>
+    <message>
+        <location filename="../mainFrame/musiclistdatawidget.cpp" line="595"/>
+        <source>Play All</source>
+        <translation>تشغيل الكل</translation>
+    </message>
 </context>
 <context>
     <name>MusicListDialog</name>
@@ -518,88 +613,88 @@
 <context>
     <name>MusicListInfoView</name>
     <message>
-        <location filename="../listView/dialogList/musiclistinfoview.cpp" line="239"/>
+        <location filename="../listView/dialogList/musiclistinfoview.cpp" line="175"/>
         <source>My favorites</source>
         <translation>مفضلاتي</translation>
     </message>
     <message>
-        <location filename="../listView/dialogList/musiclistinfoview.cpp" line="249"/>
+        <location filename="../listView/dialogList/musiclistinfoview.cpp" line="185"/>
         <source>Add to new playlist</source>
         <translation>إضافة إلى قائمة تشغيل جديدة</translation>
     </message>
     <message>
-        <location filename="../listView/dialogList/musiclistinfoview.cpp" line="269"/>
+        <location filename="../listView/dialogList/musiclistinfoview.cpp" line="205"/>
         <source>Pause</source>
         <translation>إيقاف مؤقت</translation>
     </message>
     <message>
-        <location filename="../listView/dialogList/musiclistinfoview.cpp" line="271"/>
+        <location filename="../listView/dialogList/musiclistinfoview.cpp" line="207"/>
         <source>Play</source>
         <translation>تشغيل</translation>
     </message>
     <message>
-        <location filename="../listView/dialogList/musiclistinfoview.cpp" line="274"/>
+        <location filename="../listView/dialogList/musiclistinfoview.cpp" line="210"/>
         <source>Add to playlist</source>
         <translation>إضافة إلى قائمة التشغيل</translation>
     </message>
     <message>
-        <location filename="../listView/dialogList/musiclistinfoview.cpp" line="278"/>
+        <location filename="../listView/dialogList/musiclistinfoview.cpp" line="214"/>
         <source>Display in file manager</source>
         <translation>عرض في مدير الملفات</translation>
     </message>
     <message>
-        <location filename="../listView/dialogList/musiclistinfoview.cpp" line="281"/>
+        <location filename="../listView/dialogList/musiclistinfoview.cpp" line="217"/>
         <source>Remove from playlist</source>
         <translation>إزالة من قائمة التشغيل</translation>
     </message>
     <message>
-        <location filename="../listView/dialogList/musiclistinfoview.cpp" line="283"/>
+        <location filename="../listView/dialogList/musiclistinfoview.cpp" line="219"/>
         <source>Delete from local disk</source>
         <translation>حذف من القرص المحلي</translation>
     </message>
     <message>
-        <location filename="../listView/dialogList/musiclistinfoview.cpp" line="286"/>
+        <location filename="../listView/dialogList/musiclistinfoview.cpp" line="222"/>
         <source>Song info</source>
         <translation>معلومات الاغنية</translation>
     </message>
     <message>
-        <location filename="../listView/dialogList/musiclistinfoview.cpp" line="389"/>
-        <location filename="../listView/dialogList/musiclistinfoview.cpp" line="423"/>
+        <location filename="../listView/dialogList/musiclistinfoview.cpp" line="325"/>
+        <location filename="../listView/dialogList/musiclistinfoview.cpp" line="359"/>
         <source>Cancel</source>
         <translation>إلغاء</translation>
     </message>
     <message>
-        <location filename="../listView/dialogList/musiclistinfoview.cpp" line="390"/>
+        <location filename="../listView/dialogList/musiclistinfoview.cpp" line="326"/>
         <source>Remove</source>
         <translation>إزالة</translation>
     </message>
     <message>
-        <location filename="../listView/dialogList/musiclistinfoview.cpp" line="394"/>
+        <location filename="../listView/dialogList/musiclistinfoview.cpp" line="330"/>
         <source>Are you sure you want to remove %1?</source>
         <translation>هل أنت متأكد من حذف %1؟</translation>
     </message>
     <message>
-        <location filename="../listView/dialogList/musiclistinfoview.cpp" line="396"/>
+        <location filename="../listView/dialogList/musiclistinfoview.cpp" line="332"/>
         <source>Are you sure you want to remove the selected %1 songs?</source>
         <translation>هل أنت متأكد من حذف المقاطع الصوتية الـ %1 المحددة؟</translation>
     </message>
     <message>
-        <location filename="../listView/dialogList/musiclistinfoview.cpp" line="424"/>
+        <location filename="../listView/dialogList/musiclistinfoview.cpp" line="360"/>
         <source>Delete</source>
         <translation>حذف</translation>
     </message>
     <message>
-        <location filename="../listView/dialogList/musiclistinfoview.cpp" line="429"/>
+        <location filename="../listView/dialogList/musiclistinfoview.cpp" line="365"/>
         <source>Are you sure you want to delete %1?</source>
         <translation>هل أنت متأكد من حذف %1؟</translation>
     </message>
     <message>
-        <location filename="../listView/dialogList/musiclistinfoview.cpp" line="436"/>
+        <location filename="../listView/dialogList/musiclistinfoview.cpp" line="372"/>
         <source>Are you sure you want to delete the selected %1 songs?</source>
         <translation>هل أنت متأكد من حذف الأغاني %1 المختارة؟</translation>
     </message>
     <message>
-        <location filename="../listView/dialogList/musiclistinfoview.cpp" line="437"/>
+        <location filename="../listView/dialogList/musiclistinfoview.cpp" line="373"/>
         <source>The song files contained will also be deleted</source>
         <translation>سيتم أيضًا حذف المقاطع الصوتية الموجودة</translation>
     </message>
@@ -671,8 +766,23 @@
 <context>
     <name>PlayListView</name>
     <message>
+        <location filename="../listView/musicInfoList/playitemdelegate.cpp" line="424"/>
+        <source>Unknown artist</source>
+        <translation>فنان غير معروف</translation>
+    </message>
+    <message>
+        <location filename="../listView/musicInfoList/playitemdelegate.cpp" line="436"/>
+        <source>Unknown album</source>
+        <translation>ألبوم غير معروف</translation>
+    </message>
+    <message>
+        <location filename="../listView/musicInfoList/playlistview.cpp" line="1010"/>
+        <source>Play queue</source>
+        <translation>تشغيل المقاطع بالترتيب</translation>
+    </message>
+    <message>
         <location filename="../listView/musicInfoList/playlistview.cpp" line="501"/>
-        <location filename="../listView/musicInfoList/playlistview.cpp" line="1028"/>
+        <location filename="../listView/musicInfoList/playlistview.cpp" line="1013"/>
         <source>My favorites</source>
         <translation>مفضلاتي</translation>
     </message>
@@ -687,114 +797,99 @@
         <translation>موافق</translation>
     </message>
     <message>
-        <location filename="../listView/musicInfoList/playlistview.cpp" line="850"/>
-        <location filename="../listView/musicInfoList/playlistview.cpp" line="895"/>
-        <source>Cancel</source>
-        <translation>إلغاء</translation>
-    </message>
-    <message>
-        <location filename="../listView/musicInfoList/playlistview.cpp" line="851"/>
-        <source>Remove</source>
-        <translation>إزالة</translation>
-    </message>
-    <message>
-        <location filename="../listView/musicInfoList/playlistview.cpp" line="855"/>
-        <source>Are you sure you want to remove %1?</source>
-        <translation>هل أنت متأكد من حذف %1؟</translation>
-    </message>
-    <message>
-        <location filename="../listView/musicInfoList/playlistview.cpp" line="857"/>
-        <source>Are you sure you want to remove the selected %1 songs?</source>
-        <translation>هل أنت متأكد من حذف المقاطع الصوتية الـ %1 المحددة؟</translation>
-    </message>
-    <message>
-        <location filename="../listView/musicInfoList/playlistview.cpp" line="896"/>
-        <source>Delete</source>
-        <translation>حذف</translation>
-    </message>
-    <message>
-        <location filename="../listView/musicInfoList/playlistview.cpp" line="901"/>
-        <source>Are you sure you want to delete %1?</source>
-        <translation>هل أنت متأكد من حذف %1؟</translation>
-    </message>
-    <message>
-        <location filename="../listView/musicInfoList/playlistview.cpp" line="908"/>
-        <source>Are you sure you want to delete the selected %1 songs?</source>
-        <translation>هل أنت متأكد من حذف الأغاني %1 المختارة؟</translation>
-    </message>
-    <message>
-        <location filename="../listView/musicInfoList/playlistview.cpp" line="909"/>
-        <source>The song files contained will also be deleted</source>
-        <translation>سيتم أيضًا حذف المقاطع الصوتية الموجودة</translation>
-    </message>
-    <message>
-        <location filename="../listView/musicInfoList/playlistview.cpp" line="1025"/>
-        <source>Play queue</source>
-        <translation>تشغيل المقاطع بالترتيب</translation>
-    </message>
-    <message>
-        <location filename="../listView/musicInfoList/playlistview.cpp" line="1032"/>
+        <location filename="../listView/musicInfoList/playlistview.cpp" line="1017"/>
         <source>Add to new playlist</source>
         <translation>إضافة إلى قائمة تشغيل جديدة</translation>
     </message>
     <message>
-        <location filename="../listView/musicInfoList/playlistview.cpp" line="1061"/>
+        <location filename="../listView/musicInfoList/playlistview.cpp" line="1046"/>
         <source>Play</source>
         <translation>تشغيل</translation>
     </message>
     <message>
-        <location filename="../listView/musicInfoList/playlistview.cpp" line="1064"/>
+        <location filename="../listView/musicInfoList/playlistview.cpp" line="1049"/>
         <source>Pause</source>
         <translation>إيقاف مؤقت</translation>
     </message>
     <message>
-        <location filename="../listView/musicInfoList/playlistview.cpp" line="1071"/>
-        <location filename="../listView/musicInfoList/playlistview.cpp" line="1136"/>
+        <location filename="../listView/musicInfoList/playlistview.cpp" line="1056"/>
+        <location filename="../listView/musicInfoList/playlistview.cpp" line="1121"/>
         <source>Add to playlist</source>
         <translation>إضافة إلى قائمة التشغيل</translation>
     </message>
     <message>
-        <location filename="../listView/musicInfoList/playlistview.cpp" line="1073"/>
+        <location filename="../listView/musicInfoList/playlistview.cpp" line="1058"/>
         <source>Display in file manager</source>
         <translation>عرض في مدير الملفات</translation>
     </message>
     <message>
-        <location filename="../listView/musicInfoList/playlistview.cpp" line="1075"/>
-        <location filename="../listView/musicInfoList/playlistview.cpp" line="1138"/>
+        <location filename="../listView/musicInfoList/playlistview.cpp" line="1060"/>
+        <location filename="../listView/musicInfoList/playlistview.cpp" line="1123"/>
         <source>Remove from play queue</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../listView/musicInfoList/playlistview.cpp" line="1077"/>
-        <location filename="../listView/musicInfoList/playlistview.cpp" line="1140"/>
+        <location filename="../listView/musicInfoList/playlistview.cpp" line="1062"/>
+        <location filename="../listView/musicInfoList/playlistview.cpp" line="1125"/>
         <source>Remove from playlist</source>
         <translation>إزالة من قائمة التشغيل</translation>
     </message>
     <message>
-        <location filename="../listView/musicInfoList/playlistview.cpp" line="1079"/>
-        <location filename="../listView/musicInfoList/playlistview.cpp" line="1142"/>
+        <location filename="../listView/musicInfoList/playlistview.cpp" line="1064"/>
+        <location filename="../listView/musicInfoList/playlistview.cpp" line="1127"/>
         <source>Delete from local disk</source>
         <translation>حذف من القرص المحلي</translation>
     </message>
     <message>
-        <location filename="../listView/musicInfoList/playlistview.cpp" line="1112"/>
+        <location filename="../listView/musicInfoList/playlistview.cpp" line="1097"/>
         <source>Encoding</source>
         <translation>الترميز</translation>
     </message>
     <message>
-        <location filename="../listView/musicInfoList/playlistview.cpp" line="1116"/>
+        <location filename="../listView/musicInfoList/playlistview.cpp" line="1101"/>
         <source>Song info</source>
         <translation>معلومات الاغنية</translation>
     </message>
     <message>
-        <location filename="../listView/musicInfoList/playitemdelegate.cpp" line="424"/>
-        <source>Unknown artist</source>
-        <translation>فنان غير معروف</translation>
+        <location filename="../listView/musicInfoList/playlistview.cpp" line="833"/>
+        <location filename="../listView/musicInfoList/playlistview.cpp" line="878"/>
+        <source>Cancel</source>
+        <translation>إلغاء</translation>
     </message>
     <message>
-        <location filename="../listView/musicInfoList/playitemdelegate.cpp" line="436"/>
-        <source>Unknown album</source>
-        <translation>ألبوم غير معروف</translation>
+        <location filename="../listView/musicInfoList/playlistview.cpp" line="834"/>
+        <source>Remove</source>
+        <translation>إزالة</translation>
+    </message>
+    <message>
+        <location filename="../listView/musicInfoList/playlistview.cpp" line="838"/>
+        <source>Are you sure you want to remove %1?</source>
+        <translation>هل أنت متأكد من حذف %1؟</translation>
+    </message>
+    <message>
+        <location filename="../listView/musicInfoList/playlistview.cpp" line="840"/>
+        <source>Are you sure you want to remove the selected %1 songs?</source>
+        <translation>هل أنت متأكد من حذف المقاطع الصوتية الـ %1 المحددة؟</translation>
+    </message>
+    <message>
+        <location filename="../listView/musicInfoList/playlistview.cpp" line="879"/>
+        <source>Delete</source>
+        <translation>حذف</translation>
+    </message>
+    <message>
+        <location filename="../listView/musicInfoList/playlistview.cpp" line="884"/>
+        <source>Are you sure you want to delete %1?</source>
+        <translation>هل أنت متأكد من حذف %1؟</translation>
+    </message>
+    <message>
+        <location filename="../listView/musicInfoList/playlistview.cpp" line="891"/>
+        <source>Are you sure you want to delete the selected %1 songs?</source>
+        <translation>هل أنت متأكد من حذف الأغاني %1 المختارة؟</translation>
+    </message>
+    <message>
+        <location filename="../listView/musicInfoList/playlistview.cpp" line="892"/>
+        <source>The song files contained will also be deleted</source>
+        <translation>سيتم أيضًا حذف المقاطع الصوتية الموجودة</translation>
     </message>
 </context>
 <context>
@@ -837,17 +932,17 @@
 <context>
     <name>SearchResult</name>
     <message>
-        <location filename="../mainFrame/searchresult.cpp" line="57"/>
+        <location filename="../mainFrame/searchresult.cpp" line="53"/>
         <source>Music</source>
         <translation>موسيقى</translation>
     </message>
     <message>
-        <location filename="../mainFrame/searchresult.cpp" line="78"/>
+        <location filename="../mainFrame/searchresult.cpp" line="74"/>
         <source>Artists</source>
         <translation>الفنّانين</translation>
     </message>
     <message>
-        <location filename="../mainFrame/searchresult.cpp" line="99"/>
+        <location filename="../mainFrame/searchresult.cpp" line="95"/>
         <source>Albums</source>
         <translation>الإلبومات</translation>
     </message>

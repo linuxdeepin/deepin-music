@@ -9,7 +9,7 @@ class SpeechCenter : public QObject, public DMusic::DSingleton<SpeechCenter>
 {
     Q_OBJECT
 public:
-//    bool playMusic(QString music);
+    bool playMusic(QString music);
 //    bool playArtist(QString artist);
 //    bool playArtistMusic(QString artist, QString music);
 //    bool playFaverite();

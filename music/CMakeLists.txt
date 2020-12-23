@@ -19,3 +19,4 @@ include(GNUInstallDirs)
 
 add_subdirectory(libdmusic)
 add_subdirectory(music-player)
+add_subdirectory(libmusic-plugin)

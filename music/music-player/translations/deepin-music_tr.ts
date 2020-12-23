@@ -100,6 +100,101 @@
 <context>
     <name>DequalizerDialog</name>
     <message>
+        <location filename="../widget/dequalizerdialog.cpp" line="493"/>
+        <source>Custom</source>
+        <translation>Özel</translation>
+    </message>
+    <message>
+        <location filename="../widget/dequalizerdialog.cpp" line="494"/>
+        <source>Monophony</source>
+        <translation>Monophony</translation>
+    </message>
+    <message>
+        <location filename="../widget/dequalizerdialog.cpp" line="495"/>
+        <source>Classical</source>
+        <translation>Klasik</translation>
+    </message>
+    <message>
+        <location filename="../widget/dequalizerdialog.cpp" line="496"/>
+        <source>Club</source>
+        <translation>Klüp</translation>
+    </message>
+    <message>
+        <location filename="../widget/dequalizerdialog.cpp" line="497"/>
+        <source>Dance</source>
+        <translation>Dans</translation>
+    </message>
+    <message>
+        <location filename="../widget/dequalizerdialog.cpp" line="498"/>
+        <source>Full Bass</source>
+        <translation>Full Bass</translation>
+    </message>
+    <message>
+        <location filename="../widget/dequalizerdialog.cpp" line="499"/>
+        <source>Full Bass and Treble</source>
+        <translation>Full Bass ve Tiz</translation>
+    </message>
+    <message>
+        <location filename="../widget/dequalizerdialog.cpp" line="500"/>
+        <source>Full Treble</source>
+        <translation>Full Tiz</translation>
+    </message>
+    <message>
+        <location filename="../widget/dequalizerdialog.cpp" line="501"/>
+        <source>Headphones</source>
+        <translation>Kulaklık</translation>
+    </message>
+    <message>
+        <location filename="../widget/dequalizerdialog.cpp" line="502"/>
+        <source>Hall</source>
+        <translation>Salon</translation>
+    </message>
+    <message>
+        <location filename="../widget/dequalizerdialog.cpp" line="503"/>
+        <source>Live</source>
+        <translation>Canlı</translation>
+    </message>
+    <message>
+        <location filename="../widget/dequalizerdialog.cpp" line="504"/>
+        <source>Party</source>
+        <translation>Parti</translation>
+    </message>
+    <message>
+        <location filename="../widget/dequalizerdialog.cpp" line="505"/>
+        <source>Pop</source>
+        <translation>Pop</translation>
+    </message>
+    <message>
+        <location filename="../widget/dequalizerdialog.cpp" line="506"/>
+        <source>Reggae</source>
+        <translation>Reggae</translation>
+    </message>
+    <message>
+        <location filename="../widget/dequalizerdialog.cpp" line="507"/>
+        <source>Rock</source>
+        <translation>Rock</translation>
+    </message>
+    <message>
+        <location filename="../widget/dequalizerdialog.cpp" line="508"/>
+        <source>Ska</source>
+        <translation>Ska</translation>
+    </message>
+    <message>
+        <location filename="../widget/dequalizerdialog.cpp" line="509"/>
+        <source>Soft</source>
+        <translation>Yumuşak</translation>
+    </message>
+    <message>
+        <location filename="../widget/dequalizerdialog.cpp" line="510"/>
+        <source>Soft Rock</source>
+        <translation>Soft Rock</translation>
+    </message>
+    <message>
+        <location filename="../widget/dequalizerdialog.cpp" line="511"/>
+        <source>Techno</source>
+        <translation>Tekno</translation>
+    </message>
+    <message>
         <location filename="../widget/dequalizerdialog.cpp" line="96"/>
         <location filename="../widget/dequalizerdialog.cpp" line="382"/>
         <source>Equalizer</source>
@@ -107,13 +202,13 @@
     </message>
     <message>
         <location filename="../widget/dequalizerdialog.cpp" line="103"/>
-        <location filename="../widget/dequalizerdialog.cpp" line="586"/>
+        <location filename="../widget/dequalizerdialog.cpp" line="605"/>
         <source>ON</source>
         <translation>AÇIK</translation>
     </message>
     <message>
         <location filename="../widget/dequalizerdialog.cpp" line="105"/>
-        <location filename="../widget/dequalizerdialog.cpp" line="584"/>
+        <location filename="../widget/dequalizerdialog.cpp" line="603"/>
         <source>OFF</source>
         <translation>KAPALI</translation>
     </message>
@@ -280,19 +375,6 @@
 <context>
     <name>MainFrame</name>
     <message>
-        <location filename="../mainFrame/mainframe.cpp" line="77"/>
-        <location filename="../mainFrame/mainframe.cpp" line="85"/>
-        <location filename="../mainFrame/mainframe.cpp" line="93"/>
-        <location filename="../mainFrame/mainframe.cpp" line="259"/>
-        <source>Music</source>
-        <translation>Müzik</translation>
-    </message>
-    <message>
-        <location filename="../mainFrame/mainframe.cpp" line="78"/>
-        <source>Music is a local music player with beautiful design and simple functions.</source>
-        <translation>Müzik, hoş tasarımı ve basit işlevleri olan sade bir müzik çalardır.</translation>
-    </message>
-    <message>
         <location filename="../mainFrame/mainframe.cpp" line="193"/>
         <source>Add playlist</source>
         <translation>Oynatma listesi ekle</translation>
@@ -322,6 +404,19 @@
         <location filename="../mainFrame/mainframe.cpp" line="248"/>
         <source>Exit</source>
         <translation>Çıkış</translation>
+    </message>
+    <message>
+        <location filename="../mainFrame/mainframe.cpp" line="77"/>
+        <location filename="../mainFrame/mainframe.cpp" line="85"/>
+        <location filename="../mainFrame/mainframe.cpp" line="93"/>
+        <location filename="../mainFrame/mainframe.cpp" line="259"/>
+        <source>Music</source>
+        <translation>Müzik</translation>
+    </message>
+    <message>
+        <location filename="../mainFrame/mainframe.cpp" line="78"/>
+        <source>Music is a local music player with beautiful design and simple functions.</source>
+        <translation>Müzik, hoş tasarımı ve basit işlevleri olan sade bir müzik çalardır.</translation>
     </message>
     <message>
         <location filename="../mainFrame/mainframe.cpp" line="245"/>
@@ -359,14 +454,14 @@
         <translation>%1 parça eklendi</translation>
     </message>
     <message>
-        <location filename="../mainFrame/mainframe.cpp" line="427"/>
-        <source>Import failed, no valid music file found</source>
-        <translation>İçe aktarılamadı, geçerli müzik dosyası bulunamadı</translation>
-    </message>
-    <message>
-        <location filename="../mainFrame/mainframe.cpp" line="434"/>
+        <location filename="../mainFrame/mainframe.cpp" line="443"/>
         <source>OK</source>
         <translation>Tamam</translation>
+    </message>
+    <message>
+        <location filename="../mainFrame/mainframe.cpp" line="436"/>
+        <source>Import failed, no valid music file found</source>
+        <translation>İçe aktarılamadı, geçerli müzik dosyası bulunamadı</translation>
     </message>
 </context>
 <context>
@@ -406,51 +501,6 @@
 </context>
 <context>
     <name>MusicListDataWidget</name>
-    <message>
-        <location filename="../mainFrame/musiclistdatawidget.cpp" line="190"/>
-        <source>Search Results</source>
-        <translation>Arama Sonuçları</translation>
-    </message>
-    <message>
-        <location filename="../mainFrame/musiclistdatawidget.cpp" line="527"/>
-        <location filename="../mainFrame/musiclistdatawidget.cpp" line="617"/>
-        <source>All Music</source>
-        <translation>Tüm Müzikler</translation>
-    </message>
-    <message>
-        <location filename="../mainFrame/musiclistdatawidget.cpp" line="539"/>
-        <location filename="../mainFrame/musiclistdatawidget.cpp" line="556"/>
-        <location filename="../mainFrame/musiclistdatawidget.cpp" line="573"/>
-        <source>Time added</source>
-        <translation>Zaman eklendi</translation>
-    </message>
-    <message>
-        <location filename="../mainFrame/musiclistdatawidget.cpp" line="540"/>
-        <location filename="../mainFrame/musiclistdatawidget.cpp" line="576"/>
-        <source>Album</source>
-        <translation>Albüm</translation>
-    </message>
-    <message>
-        <location filename="../mainFrame/musiclistdatawidget.cpp" line="557"/>
-        <location filename="../mainFrame/musiclistdatawidget.cpp" line="575"/>
-        <source>Artist</source>
-        <translation>Sanatçı</translation>
-    </message>
-    <message>
-        <location filename="../mainFrame/musiclistdatawidget.cpp" line="574"/>
-        <source>Title</source>
-        <translation>Başlık</translation>
-    </message>
-    <message>
-        <location filename="../mainFrame/musiclistdatawidget.cpp" line="595"/>
-        <source>Play All</source>
-        <translation>Tümünü Oynat</translation>
-    </message>
-    <message>
-        <location filename="../mainFrame/musiclistdatawidget.cpp" line="675"/>
-        <source>No search results</source>
-        <translation>Arama sonucu bulunamadı</translation>
-    </message>
     <message>
         <location filename="../mainFrame/musiclistdatawidget.cpp" line="714"/>
         <location filename="../mainFrame/musiclistdatawidget.cpp" line="735"/>
@@ -501,6 +551,51 @@
         <source>%1 songs</source>
         <translation>%1 parça</translation>
     </message>
+    <message>
+        <location filename="../mainFrame/musiclistdatawidget.cpp" line="190"/>
+        <source>Search Results</source>
+        <translation>Arama Sonuçları</translation>
+    </message>
+    <message>
+        <location filename="../mainFrame/musiclistdatawidget.cpp" line="675"/>
+        <source>No search results</source>
+        <translation>Arama sonucu bulunamadı</translation>
+    </message>
+    <message>
+        <location filename="../mainFrame/musiclistdatawidget.cpp" line="527"/>
+        <location filename="../mainFrame/musiclistdatawidget.cpp" line="617"/>
+        <source>All Music</source>
+        <translation>Tüm Müzikler</translation>
+    </message>
+    <message>
+        <location filename="../mainFrame/musiclistdatawidget.cpp" line="539"/>
+        <location filename="../mainFrame/musiclistdatawidget.cpp" line="556"/>
+        <location filename="../mainFrame/musiclistdatawidget.cpp" line="573"/>
+        <source>Time added</source>
+        <translation>Zaman eklendi</translation>
+    </message>
+    <message>
+        <location filename="../mainFrame/musiclistdatawidget.cpp" line="540"/>
+        <location filename="../mainFrame/musiclistdatawidget.cpp" line="576"/>
+        <source>Album</source>
+        <translation>Albüm</translation>
+    </message>
+    <message>
+        <location filename="../mainFrame/musiclistdatawidget.cpp" line="557"/>
+        <location filename="../mainFrame/musiclistdatawidget.cpp" line="575"/>
+        <source>Artist</source>
+        <translation>Sanatçı</translation>
+    </message>
+    <message>
+        <location filename="../mainFrame/musiclistdatawidget.cpp" line="574"/>
+        <source>Title</source>
+        <translation>Başlık</translation>
+    </message>
+    <message>
+        <location filename="../mainFrame/musiclistdatawidget.cpp" line="595"/>
+        <source>Play All</source>
+        <translation>Tümünü Oynat</translation>
+    </message>
 </context>
 <context>
     <name>MusicListDialog</name>
@@ -518,88 +613,88 @@
 <context>
     <name>MusicListInfoView</name>
     <message>
-        <location filename="../listView/dialogList/musiclistinfoview.cpp" line="239"/>
+        <location filename="../listView/dialogList/musiclistinfoview.cpp" line="175"/>
         <source>My favorites</source>
         <translation>Sık kullandıklarım</translation>
     </message>
     <message>
-        <location filename="../listView/dialogList/musiclistinfoview.cpp" line="249"/>
+        <location filename="../listView/dialogList/musiclistinfoview.cpp" line="185"/>
         <source>Add to new playlist</source>
         <translation>Yeni oynatma listesine ekle</translation>
     </message>
     <message>
-        <location filename="../listView/dialogList/musiclistinfoview.cpp" line="269"/>
+        <location filename="../listView/dialogList/musiclistinfoview.cpp" line="205"/>
         <source>Pause</source>
         <translation>Duraklat</translation>
     </message>
     <message>
-        <location filename="../listView/dialogList/musiclistinfoview.cpp" line="271"/>
+        <location filename="../listView/dialogList/musiclistinfoview.cpp" line="207"/>
         <source>Play</source>
         <translation>Oynat</translation>
     </message>
     <message>
-        <location filename="../listView/dialogList/musiclistinfoview.cpp" line="274"/>
+        <location filename="../listView/dialogList/musiclistinfoview.cpp" line="210"/>
         <source>Add to playlist</source>
         <translation>Oynatma listesine ekle</translation>
     </message>
     <message>
-        <location filename="../listView/dialogList/musiclistinfoview.cpp" line="278"/>
+        <location filename="../listView/dialogList/musiclistinfoview.cpp" line="214"/>
         <source>Display in file manager</source>
         <translation>Dosya yöneticisinde görüntüle</translation>
     </message>
     <message>
-        <location filename="../listView/dialogList/musiclistinfoview.cpp" line="281"/>
+        <location filename="../listView/dialogList/musiclistinfoview.cpp" line="217"/>
         <source>Remove from playlist</source>
         <translation>Oynatma listesinden kaldır</translation>
     </message>
     <message>
-        <location filename="../listView/dialogList/musiclistinfoview.cpp" line="283"/>
+        <location filename="../listView/dialogList/musiclistinfoview.cpp" line="219"/>
         <source>Delete from local disk</source>
         <translation>Yerel diskten sil</translation>
     </message>
     <message>
-        <location filename="../listView/dialogList/musiclistinfoview.cpp" line="286"/>
+        <location filename="../listView/dialogList/musiclistinfoview.cpp" line="222"/>
         <source>Song info</source>
         <translation>Parça bilgileri</translation>
     </message>
     <message>
-        <location filename="../listView/dialogList/musiclistinfoview.cpp" line="389"/>
-        <location filename="../listView/dialogList/musiclistinfoview.cpp" line="423"/>
+        <location filename="../listView/dialogList/musiclistinfoview.cpp" line="325"/>
+        <location filename="../listView/dialogList/musiclistinfoview.cpp" line="359"/>
         <source>Cancel</source>
         <translation>İptal</translation>
     </message>
     <message>
-        <location filename="../listView/dialogList/musiclistinfoview.cpp" line="390"/>
+        <location filename="../listView/dialogList/musiclistinfoview.cpp" line="326"/>
         <source>Remove</source>
         <translation>Kaldır</translation>
     </message>
     <message>
-        <location filename="../listView/dialogList/musiclistinfoview.cpp" line="394"/>
+        <location filename="../listView/dialogList/musiclistinfoview.cpp" line="330"/>
         <source>Are you sure you want to remove %1?</source>
         <translation>Kaldırmak istediğinizden emin misiniz %1?</translation>
     </message>
     <message>
-        <location filename="../listView/dialogList/musiclistinfoview.cpp" line="396"/>
+        <location filename="../listView/dialogList/musiclistinfoview.cpp" line="332"/>
         <source>Are you sure you want to remove the selected %1 songs?</source>
         <translation>Seçilen %1 parçayı kaldırmak istediğinizden emin misiniz?</translation>
     </message>
     <message>
-        <location filename="../listView/dialogList/musiclistinfoview.cpp" line="424"/>
+        <location filename="../listView/dialogList/musiclistinfoview.cpp" line="360"/>
         <source>Delete</source>
         <translation>Sil</translation>
     </message>
     <message>
-        <location filename="../listView/dialogList/musiclistinfoview.cpp" line="429"/>
+        <location filename="../listView/dialogList/musiclistinfoview.cpp" line="365"/>
         <source>Are you sure you want to delete %1?</source>
         <translation>%1 ögesini silmek istediğinize emin misiniz?</translation>
     </message>
     <message>
-        <location filename="../listView/dialogList/musiclistinfoview.cpp" line="436"/>
+        <location filename="../listView/dialogList/musiclistinfoview.cpp" line="372"/>
         <source>Are you sure you want to delete the selected %1 songs?</source>
         <translation>%1 seçili parçayı silmek istediğinize emin misiniz?</translation>
     </message>
     <message>
-        <location filename="../listView/dialogList/musiclistinfoview.cpp" line="437"/>
+        <location filename="../listView/dialogList/musiclistinfoview.cpp" line="373"/>
         <source>The song files contained will also be deleted</source>
         <translation>Parça dosyalarının içeriği de silinecek</translation>
     </message>
@@ -671,8 +766,23 @@
 <context>
     <name>PlayListView</name>
     <message>
+        <location filename="../listView/musicInfoList/playitemdelegate.cpp" line="424"/>
+        <source>Unknown artist</source>
+        <translation>Bilinmeyen sanatçı</translation>
+    </message>
+    <message>
+        <location filename="../listView/musicInfoList/playitemdelegate.cpp" line="436"/>
+        <source>Unknown album</source>
+        <translation>Bilinmeyen albüm</translation>
+    </message>
+    <message>
+        <location filename="../listView/musicInfoList/playlistview.cpp" line="1010"/>
+        <source>Play queue</source>
+        <translation>Oynatma sırası</translation>
+    </message>
+    <message>
         <location filename="../listView/musicInfoList/playlistview.cpp" line="501"/>
-        <location filename="../listView/musicInfoList/playlistview.cpp" line="1028"/>
+        <location filename="../listView/musicInfoList/playlistview.cpp" line="1013"/>
         <source>My favorites</source>
         <translation>Sık kullandıklarım</translation>
     </message>
@@ -687,114 +797,99 @@
         <translation>Tamam</translation>
     </message>
     <message>
-        <location filename="../listView/musicInfoList/playlistview.cpp" line="850"/>
-        <location filename="../listView/musicInfoList/playlistview.cpp" line="895"/>
-        <source>Cancel</source>
-        <translation>İptal</translation>
-    </message>
-    <message>
-        <location filename="../listView/musicInfoList/playlistview.cpp" line="851"/>
-        <source>Remove</source>
-        <translation>Kaldır</translation>
-    </message>
-    <message>
-        <location filename="../listView/musicInfoList/playlistview.cpp" line="855"/>
-        <source>Are you sure you want to remove %1?</source>
-        <translation>Kaldırmak istediğinizden emin misiniz %1?</translation>
-    </message>
-    <message>
-        <location filename="../listView/musicInfoList/playlistview.cpp" line="857"/>
-        <source>Are you sure you want to remove the selected %1 songs?</source>
-        <translation>Seçilen %1 parçayı kaldırmak istediğinizden emin misiniz?</translation>
-    </message>
-    <message>
-        <location filename="../listView/musicInfoList/playlistview.cpp" line="896"/>
-        <source>Delete</source>
-        <translation>Sil</translation>
-    </message>
-    <message>
-        <location filename="../listView/musicInfoList/playlistview.cpp" line="901"/>
-        <source>Are you sure you want to delete %1?</source>
-        <translation>%1 ögesini silmek istediğinize emin misiniz?</translation>
-    </message>
-    <message>
-        <location filename="../listView/musicInfoList/playlistview.cpp" line="908"/>
-        <source>Are you sure you want to delete the selected %1 songs?</source>
-        <translation>%1 seçili parçayı silmek istediğinize emin misiniz?</translation>
-    </message>
-    <message>
-        <location filename="../listView/musicInfoList/playlistview.cpp" line="909"/>
-        <source>The song files contained will also be deleted</source>
-        <translation>Parça dosyalarının içeriği de silinecek</translation>
-    </message>
-    <message>
-        <location filename="../listView/musicInfoList/playlistview.cpp" line="1025"/>
-        <source>Play queue</source>
-        <translation>Oynatma sırası</translation>
-    </message>
-    <message>
-        <location filename="../listView/musicInfoList/playlistview.cpp" line="1032"/>
+        <location filename="../listView/musicInfoList/playlistview.cpp" line="1017"/>
         <source>Add to new playlist</source>
         <translation>Yeni oynatma listesine ekle</translation>
     </message>
     <message>
-        <location filename="../listView/musicInfoList/playlistview.cpp" line="1061"/>
+        <location filename="../listView/musicInfoList/playlistview.cpp" line="1046"/>
         <source>Play</source>
         <translation>Oynat</translation>
     </message>
     <message>
-        <location filename="../listView/musicInfoList/playlistview.cpp" line="1064"/>
+        <location filename="../listView/musicInfoList/playlistview.cpp" line="1049"/>
         <source>Pause</source>
         <translation>Duraklat</translation>
     </message>
     <message>
-        <location filename="../listView/musicInfoList/playlistview.cpp" line="1071"/>
-        <location filename="../listView/musicInfoList/playlistview.cpp" line="1136"/>
+        <location filename="../listView/musicInfoList/playlistview.cpp" line="1056"/>
+        <location filename="../listView/musicInfoList/playlistview.cpp" line="1121"/>
         <source>Add to playlist</source>
         <translation>Oynatma listesine ekle</translation>
     </message>
     <message>
-        <location filename="../listView/musicInfoList/playlistview.cpp" line="1073"/>
+        <location filename="../listView/musicInfoList/playlistview.cpp" line="1058"/>
         <source>Display in file manager</source>
         <translation>Dosya yöneticisinde görüntüle</translation>
     </message>
     <message>
-        <location filename="../listView/musicInfoList/playlistview.cpp" line="1075"/>
-        <location filename="../listView/musicInfoList/playlistview.cpp" line="1138"/>
+        <location filename="../listView/musicInfoList/playlistview.cpp" line="1060"/>
+        <location filename="../listView/musicInfoList/playlistview.cpp" line="1123"/>
         <source>Remove from play queue</source>
         <translation>Oynatma kuyruğundan kaldır</translation>
     </message>
     <message>
-        <location filename="../listView/musicInfoList/playlistview.cpp" line="1077"/>
-        <location filename="../listView/musicInfoList/playlistview.cpp" line="1140"/>
+        <location filename="../listView/musicInfoList/playlistview.cpp" line="1062"/>
+        <location filename="../listView/musicInfoList/playlistview.cpp" line="1125"/>
         <source>Remove from playlist</source>
         <translation>Oynatma listesinden kaldır</translation>
     </message>
     <message>
-        <location filename="../listView/musicInfoList/playlistview.cpp" line="1079"/>
-        <location filename="../listView/musicInfoList/playlistview.cpp" line="1142"/>
+        <location filename="../listView/musicInfoList/playlistview.cpp" line="1064"/>
+        <location filename="../listView/musicInfoList/playlistview.cpp" line="1127"/>
         <source>Delete from local disk</source>
         <translation>Yerel diskten sil</translation>
     </message>
     <message>
-        <location filename="../listView/musicInfoList/playlistview.cpp" line="1112"/>
+        <location filename="../listView/musicInfoList/playlistview.cpp" line="1097"/>
         <source>Encoding</source>
         <translation>Kodlama</translation>
     </message>
     <message>
-        <location filename="../listView/musicInfoList/playlistview.cpp" line="1116"/>
+        <location filename="../listView/musicInfoList/playlistview.cpp" line="1101"/>
         <source>Song info</source>
         <translation>Parça bilgileri</translation>
     </message>
     <message>
-        <location filename="../listView/musicInfoList/playitemdelegate.cpp" line="424"/>
-        <source>Unknown artist</source>
-        <translation>Bilinmeyen sanatçı</translation>
+        <location filename="../listView/musicInfoList/playlistview.cpp" line="833"/>
+        <location filename="../listView/musicInfoList/playlistview.cpp" line="878"/>
+        <source>Cancel</source>
+        <translation>İptal</translation>
     </message>
     <message>
-        <location filename="../listView/musicInfoList/playitemdelegate.cpp" line="436"/>
-        <source>Unknown album</source>
-        <translation>Bilinmeyen albüm</translation>
+        <location filename="../listView/musicInfoList/playlistview.cpp" line="834"/>
+        <source>Remove</source>
+        <translation>Kaldır</translation>
+    </message>
+    <message>
+        <location filename="../listView/musicInfoList/playlistview.cpp" line="838"/>
+        <source>Are you sure you want to remove %1?</source>
+        <translation>Kaldırmak istediğinizden emin misiniz %1?</translation>
+    </message>
+    <message>
+        <location filename="../listView/musicInfoList/playlistview.cpp" line="840"/>
+        <source>Are you sure you want to remove the selected %1 songs?</source>
+        <translation>Seçilen %1 parçayı kaldırmak istediğinizden emin misiniz?</translation>
+    </message>
+    <message>
+        <location filename="../listView/musicInfoList/playlistview.cpp" line="879"/>
+        <source>Delete</source>
+        <translation>Sil</translation>
+    </message>
+    <message>
+        <location filename="../listView/musicInfoList/playlistview.cpp" line="884"/>
+        <source>Are you sure you want to delete %1?</source>
+        <translation>%1 ögesini silmek istediğinize emin misiniz?</translation>
+    </message>
+    <message>
+        <location filename="../listView/musicInfoList/playlistview.cpp" line="891"/>
+        <source>Are you sure you want to delete the selected %1 songs?</source>
+        <translation>%1 seçili parçayı silmek istediğinize emin misiniz?</translation>
+    </message>
+    <message>
+        <location filename="../listView/musicInfoList/playlistview.cpp" line="892"/>
+        <source>The song files contained will also be deleted</source>
+        <translation>Parça dosyalarının içeriği de silinecek</translation>
     </message>
 </context>
 <context>
@@ -837,17 +932,17 @@
 <context>
     <name>SearchResult</name>
     <message>
-        <location filename="../mainFrame/searchresult.cpp" line="57"/>
+        <location filename="../mainFrame/searchresult.cpp" line="53"/>
         <source>Music</source>
         <translation>Müzik</translation>
     </message>
     <message>
-        <location filename="../mainFrame/searchresult.cpp" line="78"/>
+        <location filename="../mainFrame/searchresult.cpp" line="74"/>
         <source>Artists</source>
         <translation>Sanatçılar</translation>
     </message>
     <message>
-        <location filename="../mainFrame/searchresult.cpp" line="99"/>
+        <location filename="../mainFrame/searchresult.cpp" line="95"/>
         <source>Albums</source>
         <translation>Albümler</translation>
     </message>

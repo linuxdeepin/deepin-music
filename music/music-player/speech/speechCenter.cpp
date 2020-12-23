@@ -13,12 +13,12 @@ SpeechCenter::SpeechCenter(QObject *parent) : QObject(parent)
 
 }
 
-//bool SpeechCenter::playMusic(QString music)
-//{
-//    qDebug() << "-----playMusic:" << music;
-//    Q_EMIT sigPlayMusic(music);
-//    return playMusicResult;
-//}
+bool SpeechCenter::playMusic(QString music)
+{
+    qDebug() << "-----playMusic:" << music;
+    Q_EMIT sigPlayMusic(music);
+    return playMusicResult;
+}
 
 //bool SpeechCenter::playArtist(QString artist)
 //{
