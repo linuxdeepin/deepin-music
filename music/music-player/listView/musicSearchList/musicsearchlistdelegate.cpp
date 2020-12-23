@@ -39,8 +39,8 @@ QT_END_NAMESPACE
 
 MusicSearchListDelegate::MusicSearchListDelegate(QWidget *parent)
     : QStyledItemDelegate(parent)
+    , m_shadowImg(DHiDPIHelper::loadNxPixmap(":/mpimage/light/shadow.svg"))
 {
-    m_shadowImg = DHiDPIHelper::loadNxPixmap(":/mpimage/light/shadow.svg");
 }
 
 MusicSearchListDelegate::~MusicSearchListDelegate()

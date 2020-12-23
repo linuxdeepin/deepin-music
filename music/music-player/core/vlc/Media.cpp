@@ -56,7 +56,8 @@ typedef void (*vlc_media_add_option_function)(libvlc_media_t *, const char *);
 
 VlcMedia::VlcMedia()
 {
-
+    _vlcMedia = nullptr;
+    _vlcEvents = nullptr;
 }
 
 VlcMedia::~VlcMedia()

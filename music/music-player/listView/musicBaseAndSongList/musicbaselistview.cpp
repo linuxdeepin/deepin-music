@@ -231,10 +231,10 @@ void MusicBaseListView::dragMoveEvent(QDragMoveEvent *event)
 
 void MusicBaseListView::dropEvent(QDropEvent *event)
 {
-    QModelIndex index = indexAt(event->pos());
-    if (!index.isValid())
+    QModelIndex indexDrop = indexAt(event->pos());
+    if (!indexDrop.isValid())
         return;
-    QString hash = index.data(Qt::UserRole + 2).value<QString>();
+    QString hash = indexDrop.data(Qt::UserRole + 2).value<QString>();
 
 //    auto t_playlistPtr = playlistPtr(index);
     if (/*t_playlistPtr == nullptr || */(!event->mimeData()->hasFormat("text/uri-list") && !event->mimeData()->hasFormat("application/x-qabstractitemmodeldatalist"))) {
@@ -268,7 +268,7 @@ void MusicBaseListView::dropEvent(QDropEvent *event)
                 if (hash == "fav") {
                     int insertCount = DataBaseService::getInstance()->addMetaToPlaylist(hash, metas);
                     emit CommonService::getInstance()->signalFluashFavoriteBtnIcon();
-                    emit CommonService::getInstance()->signalShowPopupMessage(model->itemFromIndex(index)->text(), metas.size(), insertCount);
+                    emit CommonService::getInstance()->signalShowPopupMessage(model->itemFromIndex(indexDrop)->text(), metas.size(), insertCount);
                 }
             }
         }
@@ -331,7 +331,7 @@ void MusicBaseListView::slotUpdatePlayingIcon()
             if (!actionList.isEmpty()) {
                 actionList.first()->setIcon(playingIcon);
             } else {
-                DViewItemActionList  actionList;
+                actionList.clear();
                 auto viewItemAction = new DViewItemAction(Qt::AlignCenter, QSize(20, 20));
                 viewItemAction->setIcon(playingIcon);
                 actionList.append(viewItemAction);
@@ -343,7 +343,7 @@ void MusicBaseListView::slotUpdatePlayingIcon()
             if (!actionList.isEmpty()) {
                 actionList.first()->setIcon(playingIcon);
             } else {
-                DViewItemActionList  actionList;
+                actionList.clear();
                 auto viewItemAction = new DViewItemAction(Qt::AlignCenter, QSize(20, 20));
                 viewItemAction->setIcon(playingIcon);
                 actionList.append(viewItemAction);

@@ -78,7 +78,9 @@ public:
     // 清除播放列表
     void clearPlayList();
     // 移出播放列表中的歌曲
-    void playRmvMeta(const QStringList &metalist);
+    void playRmvMeta(const QStringList &metalistToDel);
+    // 直接删除，不考虑逻辑
+    void removeMeta(const QStringList &metalistToDel);
     // 添加播放歌曲
     void playListAppendMeta(const MediaMeta &meta);
     // 设置播放列表

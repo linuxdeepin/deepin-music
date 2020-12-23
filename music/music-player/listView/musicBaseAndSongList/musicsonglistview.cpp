@@ -304,7 +304,7 @@ void MusicSongListView::slotUpdatePlayingIcon()
             if (!actionList.isEmpty()) {
                 actionList.first()->setIcon(playingIcon);
             } else {
-                DViewItemActionList  actionList;
+                actionList.clear();
                 auto viewItemAction = new DViewItemAction(Qt::AlignCenter, QSize(20, 20));
                 viewItemAction->setIcon(playingIcon);
                 actionList.append(viewItemAction);
@@ -316,7 +316,7 @@ void MusicSongListView::slotUpdatePlayingIcon()
             if (!actionList.isEmpty()) {
                 actionList.first()->setIcon(playingIcon);
             } else {
-                DViewItemActionList  actionList;
+                actionList.clear();
                 auto viewItemAction = new DViewItemAction(Qt::AlignCenter, QSize(20, 20));
                 viewItemAction->setIcon(playingIcon);
                 actionList.append(viewItemAction);
@@ -403,10 +403,10 @@ void MusicSongListView::dragMoveEvent(QDragMoveEvent *event)
 
 void MusicSongListView::dropEvent(QDropEvent *event)
 {
-    QModelIndex index = indexAt(event->pos());
-    if (!index.isValid())
+    QModelIndex indexDrop = indexAt(event->pos());
+    if (!indexDrop.isValid())
         return;
-    QString hash = index.data(Qt::UserRole).value<QString>();
+    QString hash = indexDrop.data(Qt::UserRole).value<QString>();
 
     //    auto t_playlistPtr = playlistPtr(index);
     if (/*t_playlistPtr == nullptr || */(!event->mimeData()->hasFormat("text/uri-list") && !event->mimeData()->hasFormat("application/x-qabstractitemmodeldatalist"))) {
@@ -434,7 +434,7 @@ void MusicSongListView::dropEvent(QDropEvent *event)
 
             if (!metas.isEmpty()) {
                 int insertCount = DataBaseService::getInstance()->addMetaToPlaylist(hash, metas);
-                CommonService::getInstance()->signalShowPopupMessage(model->itemFromIndex(index)->text(), metas.size(), insertCount);
+                CommonService::getInstance()->signalShowPopupMessage(model->itemFromIndex(indexDrop)->text(), metas.size(), insertCount);
             }
         }
     }

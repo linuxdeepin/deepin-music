@@ -696,10 +696,10 @@ void MusicListDataWidget::refreshInfoLabel(QString hash)
 {
     m_currentHash = hash;
     QString countStr;
-    int albumCount = 0;
     int singerCount = 0;
     int songCount = 0;
     if (hash == "album" || hash == "albumResult") {
+        int albumCount = 0;
         if (hash == "albumResult") {
             songCount = m_searchResultTabWidget->getMusicCountByAlbum();
             albumCount = m_searchResultTabWidget->getAlbumCount();

@@ -366,7 +366,7 @@ void PlayItemDelegate::drawListMode(QPainter &painter, const QStyleOptionViewIte
         switch (col) {
         case Number: {
             painter.setPen(otherColor);
-            auto *listview = qobject_cast<PlayListView *>(const_cast<QWidget *>(option.widget));
+            PlayListView *playListView = qobject_cast<PlayListView *>(const_cast<QWidget *>(option.widget));
             // Fixme:
             QFileInfo info(itemMeta.localPath);
             if (!info.exists()) {
@@ -381,7 +381,7 @@ void PlayItemDelegate::drawListMode(QPainter &painter, const QStyleOptionViewIte
             }
             //绘制播放动态图
             if (activeMeta.hash == itemMeta.hash) {
-                QPixmap icon = listview->getPlayPixmap(option.state & QStyle::State_Selected);
+                QPixmap icon = playListView->getPlayPixmap(option.state & QStyle::State_Selected);
                 //Player::instance()->playingPixmap(option.state & QStyle::State_Selected);
 //                if (option.state & QStyle::State_Selected) {
 //                    icon = Player::instance()->selectPlayingPixmap();

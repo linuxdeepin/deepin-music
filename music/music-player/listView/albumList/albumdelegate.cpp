@@ -204,15 +204,15 @@ void AlbumDataDelegate::drawIconMode(QPainter &painter, const QStyleOptionViewIt
     }
 
     //设置模糊
-    QImage t_image = opticon.pixmap(rect.width(), rect.height()).toImage();
-    qreal t_ratio = t_image.devicePixelRatioF();
-    curFillSize = static_cast<int>(curFillSize * t_ratio);
+    QImage t_imageBlur = opticon.pixmap(rect.width(), rect.height()).toImage();
+    qreal t_ratioBlur = t_imageBlur.devicePixelRatioF();
+    curFillSize = static_cast<int>(curFillSize * t_ratioBlur);
 
-    t_image  = t_image.copy(0, rect.height() - curFillSize, t_image.width(), curFillSize);
-    QTransform old_transform = painter.transform();
+    t_imageBlur  = t_imageBlur.copy(0, rect.height() - curFillSize, t_imageBlur.width(), curFillSize);
+    QTransform old_transformBlur = painter.transform();
     painter.translate(fillBlurRect.topLeft());
-    qt_blurImage(&painter, t_image, 35, false, false);
-    painter.setTransform(old_transform);
+    qt_blurImage(&painter, t_imageBlur, 35, false, false);
+    painter.setTransform(old_transformBlur);
     //设置模糊
     painter.fillRect(fillBlurRect, fillColor);
 
@@ -262,7 +262,7 @@ void AlbumDataDelegate::drawIconMode(QPainter &painter, const QStyleOptionViewIt
         t_fillBrush = QBrush(QColor(128, 128, 128, 90));
     }
 
-    if ((option.state & QStyle::State_MouseOver)  && (!playFlag || (playFlag && playStatue == Player::Paused))) {
+    if ((option.state & QStyle::State_MouseOver)  && (!playFlag || (playStatue == Player::Paused))) {
         QImage t_image = opticon.pixmap(rect.width(), rect.height()).toImage();
         int t_ratio = static_cast<int>(t_image.devicePixelRatioF());
         QRect t_imageRect(rect.width() / 2 - 25, rect.height() / 2 - 25, 50 * t_ratio, 50 * t_ratio);
@@ -461,9 +461,9 @@ void AlbumDataDelegate::drawListMode(QPainter &painter, const QStyleOptionViewIt
 }
 
 AlbumDataDelegate::AlbumDataDelegate(QWidget *parent): QStyledItemDelegate(parent)
+    , hoverPlayImg(DHiDPIHelper::loadNxPixmap(":/icons/deepin/builtin/actions/play_hover_36px.svg"))
+    , hoverSuspendImg(DHiDPIHelper::loadNxPixmap(":/icons/deepin/builtin/actions/suspend_hover_36px.svg"))
 {
-    hoverPlayImg = DHiDPIHelper::loadNxPixmap(":/icons/deepin/builtin/actions/play_hover_36px.svg");
-    hoverSuspendImg = DHiDPIHelper::loadNxPixmap(":/icons/deepin/builtin/actions/suspend_hover_36px.svg");
     shadowImg = DHiDPIHelper::loadNxPixmap(":/icons/deepin/builtin/actions/shadow_176px.svg");
     shadowImg = shadowImg.copy(5, 5, shadowImg.width() - 10, shadowImg.height() - 10);
 }

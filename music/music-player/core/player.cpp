@@ -369,12 +369,11 @@ void Player::clearPlayList()
     playRmvMeta(list);
 }
 
-void Player::playRmvMeta(const QStringList &metalist)
+void Player::playRmvMeta(const QStringList &metalistToDel)
 {
     if (m_qvinstance == nullptr || m_qvplayer == nullptr || m_qvmedia == nullptr) {
         initVlc();
     }
-    qDebug() << "----playRmvMeta m_MetaList.size() = " << m_MetaList.size();
 
     if (m_MetaList.size() == 0) {
         return;
@@ -389,55 +388,43 @@ void Player::playRmvMeta(const QStringList &metalist)
         }
     }
 
-    if (metalist.contains(m_ActiveMeta.hash)) {
+    // 如果要删除的包含了正在播放的歌曲则停止播放
+    if (metalistToDel.contains(m_ActiveMeta.hash)) {
         stop();
-        for (QString str : metalist) {
-            if (index < m_MetaList.size() && metalist.contains(m_MetaList.at(index).hash)) {
+        for (int i = 0; i < m_MetaList.size(); i++) {
+            if (index < m_MetaList.size() && metalistToDel.contains(m_MetaList.at(index).hash)) {
+                // 当前播放是最后一首，直接遍历删除
                 if (index == (m_MetaList.size() - 1)) {
-                    stop();
-                    for (QString str : metalist) {
-                        for (int i = 0 ; i < m_MetaList.size() ; i++) {
-                            if (m_MetaList[i].hash == str) {
-                                emit signalPlayQueueMetaRemove(str);
-                                m_MetaList.removeAt(i);
-
-                                if (m_MetaList.size() == 0) {
-                                    emit signalPlayListChanged();
-                                }
-                                break;
-                            }
-                        }
-                    }
-                    return;
+                    removeMeta(metalistToDel);
+                    break;
+                } else {
+                    index++;
                 }
-                index++;
             } else {
+                setActiveMeta(m_MetaList.at(index));
+                playMeta(m_ActiveMeta);
+                // 播放下一首，删除其他所有
+                removeMeta(metalistToDel);
                 break;
             }
         }
-        setActiveMeta(m_MetaList.at(index));
-        playMeta(m_ActiveMeta);
-        for (QString str : metalist) {
-            for (int i = (m_MetaList.size() - 1) ; i >= 0 ; i--) {
-                if (m_MetaList[i].hash == str) {
-                    emit signalPlayQueueMetaRemove(str);
-                    m_MetaList.removeAt(i);
-                    break;
-                }
-            }
-        }
     } else {
-        for (QString str : metalist) {
-            for (int i = (m_MetaList.size() - 1); i >= 0 ; i--) {
-                if (m_MetaList[i].hash == str) {
-                    emit signalPlayQueueMetaRemove(str);
-                    m_MetaList.removeAt(i);
-                    break;
-                }
+        // 不包含正在播放的歌曲，直接删除
+        removeMeta(metalistToDel);
+    }
+}
+
+void Player::removeMeta(const QStringList &metalistToDel)
+{
+    for (QString delstr : metalistToDel) {
+        for (int i = (m_MetaList.size() - 1); i >= 0 ; i--) {
+            if (m_MetaList[i].hash == delstr) {
+                emit signalPlayQueueMetaRemove(delstr);
+                m_MetaList.removeAt(i);
+                break;
             }
         }
     }
-
     if (m_MetaList.size() == 0) {
         stop();
         emit signalPlayListChanged();

@@ -37,8 +37,8 @@
 
 MusicSearchListview::MusicSearchListview(QWidget *parent)
     : DListView(parent)
+    , m_SearchType(SearchType::none)
 {
-    m_SearchType = SearchType::none;
     m_model = new MusicSearchListModel(3, 3, this);
     setModel(m_model);
     m_delegate = new MusicSearchListDelegate(this);
@@ -139,14 +139,12 @@ void MusicSearchListview::setSearchText(QString text)
 
             if (singer.musicinfos.values().size() > 0) {
                 QVariant IconMeta;
-                QString imagesDirPath = Global::cacheDir() + "/images/" + singer.musicinfos.values().at(0).hash + ".jpg";
                 //设置icon
                 bool iconExists = false;
                 for (int i = 0; i < singer.musicinfos.values().size(); i++) {
                     MediaMeta metaBind = singer.musicinfos.values().at(i);
                     QString imagesDirPath = Global::cacheDir() + "/images/" + metaBind.hash + ".jpg";
                     QFileInfo file(imagesDirPath);
-                    QIcon icon;
                     if (file.exists()) {
                         QPixmap icon(imagesDirPath);
                         IconMeta.setValue(icon);
@@ -187,14 +185,12 @@ void MusicSearchListview::setSearchText(QString text)
 
             if (album.musicinfos.values().size() > 0) {
                 QVariant IconMeta;
-                QString imagesDirPath = Global::cacheDir() + "/images/" + album.musicinfos.values().at(0).hash + ".jpg";
                 //设置icon
                 bool iconExists = false;
                 for (int i = 0; i < album.musicinfos.values().size(); i++) {
                     MediaMeta metaBind = album.musicinfos.values().at(i);
                     QString imagesDirPath = Global::cacheDir() + "/images/" + metaBind.hash + ".jpg";
                     QFileInfo file(imagesDirPath);
-                    QIcon icon;
                     if (file.exists()) {
                         QPixmap icon(imagesDirPath);
                         IconMeta.setValue(icon);

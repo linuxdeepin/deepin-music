@@ -475,21 +475,6 @@ DequalizerDialog::DequalizerDialog(QWidget *parent):
 {
     AC_SET_OBJECT_NAME(this, AC_Dequalizer);
     AC_SET_ACCESSIBLE_NAME(this, AC_Dequalizer);
-    this->readConfig();
-    this->initUI();
-    initConnection();
-    QFont font;
-    font.setPixelSize(13);
-    QFontMetrics fm(font);
-    this->saveMessage  = new DFloatingMessage(DFloatingMessage::TransientType, this);
-    this->saveMessage->setFont(font);
-    this->saveMessage->setIcon(QIcon(":/common/image/notify_success_new.svg"));
-    this->saveMessage->setMessage(tr("Sound Effects Saved"));
-    int Minwid = fm.width(tr("Sound Effects Saved")) + 70;
-    this->saveMessage->setMinimumSize(Minwid, 60);
-    this->saveMessage->setDuration(2000);
-    this->saveMessage->move(width() / 2 - 80, height() - 70);
-    this->saveMessage->hide();
     effect_type << DequalizerDialog::tr("Custom")
                 << DequalizerDialog::tr("Monophony")
                 << DequalizerDialog::tr("Classical")
@@ -509,6 +494,21 @@ DequalizerDialog::DequalizerDialog(QWidget *parent):
                 << DequalizerDialog::tr("Soft")
                 << DequalizerDialog::tr("Soft Rock")
                 << DequalizerDialog::tr("Techno");
+    this->readConfig();
+    this->initUI();
+    initConnection();
+    QFont font;
+    font.setPixelSize(13);
+    QFontMetrics fm(font);
+    this->saveMessage  = new DFloatingMessage(DFloatingMessage::TransientType, this);
+    this->saveMessage->setFont(font);
+    this->saveMessage->setIcon(QIcon(":/common/image/notify_success_new.svg"));
+    this->saveMessage->setMessage(tr("Sound Effects Saved"));
+    int Minwid = fm.width(tr("Sound Effects Saved")) + 70;
+    this->saveMessage->setMinimumSize(Minwid, 60);
+    this->saveMessage->setDuration(2000);
+    this->saveMessage->move(width() / 2 - 80, height() - 70);
+    this->saveMessage->hide();
 }
 
 DequalizerDialog::~DequalizerDialog()

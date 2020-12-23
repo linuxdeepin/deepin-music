@@ -97,9 +97,9 @@ bool moreThanAblumDES(const MediaMeta v1, const MediaMeta v2)
 
 PlayListView::PlayListView(QString hash, bool isPlayQueue, QWidget *parent)
     : DListView(parent)
+    , m_currentHash(hash.isEmpty() ? "all" : hash)
 {
     m_IsPlayQueue = isPlayQueue;
-    m_currentHash = hash.isEmpty() ? "all" : hash;
     setObjectName("PlayListView");
 
     m_model = new PlaylistModel(0, 1, this);

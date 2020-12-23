@@ -171,9 +171,8 @@ MediaMeta DataBaseService::getMusicInfoByHash(const QString &hash)
 QList<AlbumInfo> DataBaseService::allAlbumInfos()
 {
     m_AllAlbumInfo.clear();
-    bool isContainedInAlbum = false;
     for (MediaMeta &meta : m_AllMediaMeta) {
-        isContainedInAlbum = false;
+        bool isContainedInAlbum = false;
         for (AlbumInfo &album : m_AllAlbumInfo) {
             if (album.albumName == meta.album) {
                 album.musicinfos[meta.hash] = meta;
@@ -200,9 +199,8 @@ QList<AlbumInfo> DataBaseService::allAlbumInfos()
 QList<SingerInfo> DataBaseService::allSingerInfos()
 {
     m_AllSingerInfo.clear();
-    bool isContainedInSinger = false;
     for (MediaMeta &meta : m_AllMediaMeta) {
-        isContainedInSinger = false;
+        bool isContainedInSinger = false;
         for (SingerInfo &singer : m_AllSingerInfo) {
             if (singer.singerName == meta.singer) {
                 singer.musicinfos[meta.hash] = meta;
