@@ -29,6 +29,7 @@
 #include <DToolButton>
 #include <DIconButton>
 #include <DBackgroundGroup>
+#include <QShortcut>
 
 #include "player.h"
 #include <searchmeta.h>
@@ -41,7 +42,6 @@ class SoundVolume;
 class MusicPixmapButton;
 class Waveform;
 class MetaBufferDetector;
-class QShortcut;
 class HintFilter;
 class QTimer;
 class FooterWidget : public DFloatingWidget
@@ -52,8 +52,6 @@ public:
     ~FooterWidget() override;
 
     void slotTheme(int type);
-    // we can wait to init until frame has displayed
-    void initShortcut();
     void updateShortcut();
     // 加载波形图
     void slotLoadDetector(const QString &hash);
@@ -63,6 +61,8 @@ private:
     void installTipHint(QWidget *widget, const QString &hintstr);
     // 移动音量控件到合适的位置
     void moveVolSlider();
+    // we can wait to init until frame has displayed
+    void initShortcut();
 signals:
     void lyricClicked();
 public slots:
@@ -96,7 +96,7 @@ public slots:
     void slotDbusVolumeChanged(double volume);
     void slotFlushSoundIcon();
 
-    void slotDelayAutoHide();
+    //void slotDelayAutoHide();
     // 快捷键响应
     void slotShortCutTriggered();
 protected:
@@ -121,8 +121,8 @@ private:
     DIconButton     *m_btPlayQueue = nullptr;
 
     // short cut on footer
-    QShortcut           *volUpShortcut       = nullptr;
-    QShortcut           *volDownShortcut     = nullptr;
+    QShortcut           *volUpShortcut          = nullptr;
+    QShortcut           *volDownShortcut        = nullptr;
     QShortcut           *nextShortcut           = nullptr;
     QShortcut           *playPauseShortcut      = nullptr;
     QShortcut           *previousShortcut       = nullptr;

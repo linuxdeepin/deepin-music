@@ -33,12 +33,12 @@ DWIDGET_USE_NAMESPACE
 class DDropdown : public DWidget
 {
     Q_OBJECT
-    Q_PROPERTY(QString status READ getStatus WRITE setStatus NOTIFY statusChanged)
+    //Q_PROPERTY(QString status READ getStatus WRITE setStatus NOTIFY statusChanged)
 public:
     explicit DDropdown(QWidget *parent = Q_NULLPTR);
     ~DDropdown();
 
-    QString getStatus() const;
+    //QString getStatus() const;
     QList<QAction *> actions() const;
 
 signals:

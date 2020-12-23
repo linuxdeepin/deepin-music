@@ -39,7 +39,7 @@ signals:
     void sigFoucusIn();
 
 public slots:
-    void onFocusIn();
+    //void onFocusIn();
     void onTextChanged();
     void onReturnPressed();
 

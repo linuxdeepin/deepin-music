@@ -87,10 +87,10 @@ DDropdown::~DDropdown()
 
 }
 
-QString DDropdown::getStatus() const
-{
-    return status;
-}
+//QString DDropdown::getStatus() const
+//{
+//    return status;
+//}
 
 QList<QAction *> DDropdown::actions() const
 {

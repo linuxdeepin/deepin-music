@@ -34,17 +34,41 @@
 #include "player.h"
 static const QString DatabaseUUID = "0fcbd091-2356-161c-9026-f49779f9c71c40";
 
-int databaseVersionNew();
+//int databaseVersionNew();
 
-int updateDatabaseVersionNew(int version);
+//int updateDatabaseVersionNew(int version);
 
-void megrateToVserionNew_0();
+//void megrateToVserionNew_0();
 
-void megrateToVserionNew_1();
+//void megrateToVserionNew_1();
 
 typedef void (*MargeFunctionn)();
 
-void margeDatabaseNew();
+
+static  QString strcmpuuid = "";
+static  QString strcmphash = "";
+static  QString strcmpSingerName = "";
+static  QString strcmpAlbumName = "";
+
+bool compareUuid(const DataBaseService::PlaylistData &data)
+{
+    return data.uuid == strcmpuuid;
+}
+
+bool compareHash(const MediaMeta &data)
+{
+    return data.hash == strcmphash;
+}
+
+bool compareSingerName(const SingerInfo &data)
+{
+    return data.singerName == strcmpSingerName;
+}
+
+bool compareAlbumName(const AlbumInfo &data)
+{
+    return data.albumName == strcmpAlbumName;
+}
 
 
 QList<MediaMeta> DataBaseService::allMusicInfos()
@@ -159,11 +183,10 @@ int DataBaseService::allMusicInfosCount()
 MediaMeta DataBaseService::getMusicInfoByHash(const QString &hash)
 {
     MediaMeta medMeta;
-    for (MediaMeta meta : m_AllMediaMeta) {
-        if (meta.hash == hash) {
-            medMeta = meta;
-            break;
-        }
+    strcmphash = hash;
+    QList<MediaMeta>::iterator itr = std::find_if(m_AllMediaMeta.begin(), m_AllMediaMeta.end(), compareHash);
+    if (itr != m_AllMediaMeta.end()) {
+        medMeta = *itr;
     }
     return medMeta;
 }
@@ -172,18 +195,14 @@ QList<AlbumInfo> DataBaseService::allAlbumInfos()
 {
     m_AllAlbumInfo.clear();
     for (MediaMeta &meta : m_AllMediaMeta) {
-        bool isContainedInAlbum = false;
-        for (AlbumInfo &album : m_AllAlbumInfo) {
-            if (album.albumName == meta.album) {
-                album.musicinfos[meta.hash] = meta;
-                isContainedInAlbum = true;
-                if (meta.timestamp < album.timestamp) {
-                    album.timestamp = meta.timestamp;
-                }
-                break;
+        strcmpAlbumName = meta.album;
+        QList<AlbumInfo>::iterator itr = std::find_if(m_AllAlbumInfo.begin(), m_AllAlbumInfo.end(), compareAlbumName);
+        if (itr != m_AllAlbumInfo.end()) {
+            itr->musicinfos[meta.hash] = meta;
+            if (meta.timestamp < itr->timestamp) {
+                itr->timestamp = meta.timestamp;
             }
-        }
-        if (!isContainedInAlbum) {
+        } else {
             AlbumInfo albumNew;
             albumNew.pinyinAlbum = meta.pinyinAlbum;
             albumNew.albumName = meta.album;
@@ -200,18 +219,14 @@ QList<SingerInfo> DataBaseService::allSingerInfos()
 {
     m_AllSingerInfo.clear();
     for (MediaMeta &meta : m_AllMediaMeta) {
-        bool isContainedInSinger = false;
-        for (SingerInfo &singer : m_AllSingerInfo) {
-            if (singer.singerName == meta.singer) {
-                singer.musicinfos[meta.hash] = meta;
-                isContainedInSinger = true;
-                if (meta.timestamp < singer.timestamp) {
-                    singer.timestamp = meta.timestamp;
-                }
-                break;
+        strcmpSingerName = meta.singer;
+        QList<SingerInfo>::iterator itr = std::find_if(m_AllSingerInfo.begin(), m_AllSingerInfo.end(), compareSingerName);
+        if (itr != m_AllSingerInfo.end()) {
+            itr->musicinfos[meta.hash] = meta;
+            if (meta.timestamp < itr->timestamp) {
+                itr->timestamp = meta.timestamp;
             }
-        }
-        if (!isContainedInSinger) {
+        } else {
             SingerInfo singer;
             singer.pinyinSinger = meta.pinyinArtist;
             singer.singerName = meta.singer;
@@ -286,25 +301,21 @@ void DataBaseService::removeSelectedSongs(const QString &curpage, const QStringL
     }
 }
 
-void DataBaseService::removeHistorySelectedSong(const QStringList &hashlist)
-{
-    //todo..
-}
 
-QSqlDatabase DataBaseService::getDatabase()
-{
-    if (!m_db.open()) {
-        QString cachePath = Global::cacheDir() + "/mediameta.sqlite";
-        m_db = QSqlDatabase::addDatabase("QSQLITE");
-        m_db.setDatabaseName(cachePath);
-        qDebug() << "zy------Open database error:" << m_db.lastError();
-        if (!m_db.open()) {
-            qDebug() << "zy------Open database error:" << m_db.lastError();
-            return QSqlDatabase();
-        }
-    }
-    return m_db;
-}
+//QSqlDatabase DataBaseService::getDatabase()
+//{
+//    if (!m_db.open()) {
+//        QString cachePath = Global::cacheDir() + "/mediameta.sqlite";
+//        m_db = QSqlDatabase::addDatabase("QSQLITE");
+//        m_db.setDatabaseName(cachePath);
+//        qDebug() << "zy------Open database error:" << m_db.lastError();
+//        if (!m_db.open()) {
+//            qDebug() << "zy------Open database error:" << m_db.lastError();
+//            return QSqlDatabase();
+//        }
+//    }
+//    return m_db;
+//}
 
 void DataBaseService::importMedias(QString importHash, const QStringList &urllist)
 {
@@ -316,10 +327,10 @@ void DataBaseService::importMedias(QString importHash, const QStringList &urllis
     m_Importing = true;
 }
 
-bool DataBaseService::getImportStatus()
-{
-    return m_Importing;
-}
+//bool DataBaseService::getImportStatus()
+//{
+//    return m_Importing;
+//}
 
 QList<MediaMeta> DataBaseService::getNewLoadMusicInfos()
 {
@@ -664,13 +675,12 @@ void DataBaseService::updateMetaCodec(const MediaMeta &meta)
         qWarning() << query.lastError();
         return ;
     }
+    strcmphash = meta.hash;
     //update mm
-    for (MediaMeta &mt : m_AllMediaMeta) {
-        if (mt.hash == meta.hash) {
-            mt.codec = meta.codec;
-            mt.updateCodec(mt.codec.toUtf8());
-            break;
-        }
+    QList<MediaMeta>::iterator itr = std::find_if(m_AllMediaMeta.begin(), m_AllMediaMeta.end(), compareHash);
+    if (itr != m_AllMediaMeta.end()) {
+        itr->codec = meta.codec;
+        itr->updateCodec(itr->codec.toUtf8());
     }
 }
 
@@ -717,21 +727,22 @@ QString DataBaseService::getFirstSong()
 //        return order_type;
 //    }
 //    return 0;
-//}
+//}l
 
 QString DataBaseService::getPlaylistNameByUUID(QString uuid)
 {
     if (m_PlaylistMeta.size() <= 0) {
         allPlaylistMeta();
     }
-    QString name;
-    for (PlaylistData &playlistData : m_PlaylistMeta) {
-        if (playlistData.uuid == uuid) {
-            name = playlistData.displayName;
-            break;
-        }
+
+    strcmpuuid = uuid;
+    QList<PlaylistData>::iterator itr = std::find_if(m_PlaylistMeta.begin(), m_PlaylistMeta.end(), compareUuid);
+    if (itr != m_PlaylistMeta.end()) {
+        qDebug() << "switch to " << itr->displayName;
+        return itr->displayName;
     }
-    return name;
+
+    return QString();
 }
 
 uint DataBaseService::getPlaylistMaxSortid()
@@ -982,7 +993,7 @@ DataBaseService::DataBaseService()
     m_PlaylistMeta.clear();
     m_AllMediaMeta.clear();
     createConnection();
-//    margeDatabaseNew();
+    //margeDatabaseNew();
 
     qRegisterMetaType<QList<MediaMeta>>("QList<MediaMeta>");
     qRegisterMetaType<QVector<float>>("QVector<float>");
@@ -1016,136 +1027,136 @@ DataBaseService::~DataBaseService()
     m_workerThread->wait();
 }
 
-void margeDatabaseNew()
-{
-    QMap<int, MargeFunctionn> margeFuncs;
-    margeFuncs.insert(0, megrateToVserionNew_0);
-    margeFuncs.insert(1, megrateToVserionNew_1);
+//void margeDatabaseNew()
+//{
+//    QMap<int, MargeFunctionn> margeFuncs;
+//    margeFuncs.insert(0, megrateToVserionNew_0);
+//    margeFuncs.insert(1, megrateToVserionNew_1);
 
-    int currentVersion = databaseVersionNew();
+//    int currentVersion = databaseVersionNew();
 
-    QList<int> sortVer = margeFuncs.keys();
-    qSort(sortVer.begin(), sortVer.end());
+//    QList<int> sortVer = margeFuncs.keys();
+//    qSort(sortVer.begin(), sortVer.end());
 
-    for (auto ver : sortVer) {
-        if (ver > currentVersion) {
-            margeFuncs.value(ver)();
-        }
-    }
-}
+//    for (auto ver : sortVer) {
+//        if (ver > currentVersion) {
+//            margeFuncs.value(ver)();
+//        }
+//    }
+//}
 
-void megrateToVserionNew_1()
-{
-    // FIXME: remove old
-    QSqlDatabase::database().transaction();
-    QSqlQuery query;
+//void megrateToVserionNew_1()
+//{
+//    // FIXME: remove old
+//    QSqlDatabase::database().transaction();
+//    QSqlQuery query;
 
-    query.prepare("ALTER TABLE playlist ADD COLUMN sort_id INTEGER(32);");
-    if (!query.exec()) {
-        qWarning() << "sql upgrade with error:" << query.lastError().type();
-    }
+//    query.prepare("ALTER TABLE playlist ADD COLUMN sort_id INTEGER(32);");
+//    if (!query.exec()) {
+//        qWarning() << "sql upgrade with error:" << query.lastError().type();
+//    }
 
-    updateDatabaseVersionNew(1);
-    QSqlDatabase::database().commit();
-}
+//    updateDatabaseVersionNew(1);
+//    QSqlDatabase::database().commit();
+//}
 
-void megrateToVserionNew_0()
-{
-    // FIXME: remove old
-    QSqlDatabase::database().transaction();
-    QSqlQuery query;
-    qWarning() << "sql upgrade with error:" << query.lastError().type();
-    query.prepare("ALTER TABLE music ADD COLUMN cuepath VARCHAR(4096);");
-    if (!query.exec()) {
-        qWarning() << "sql upgrade with error:" << query.lastError().type();
-    }
+//void megrateToVserionNew_0()
+//{
+//    // FIXME: remove old
+//    QSqlDatabase::database().transaction();
+//    QSqlQuery query;
+//    qWarning() << "sql upgrade with error:" << query.lastError().type();
+//    query.prepare("ALTER TABLE music ADD COLUMN cuepath VARCHAR(4096);");
+//    if (!query.exec()) {
+//        qWarning() << "sql upgrade with error:" << query.lastError().type();
+//    }
 
-    query.prepare("ALTER TABLE music ADD COLUMN invalid INTEGER(32);");
-    if (!query.exec()) {
-        qWarning() << "sql upgrade with error:" << query.lastError().type();
-    }
+//    query.prepare("ALTER TABLE music ADD COLUMN invalid INTEGER(32);");
+//    if (!query.exec()) {
+//        qWarning() << "sql upgrade with error:" << query.lastError().type();
+//    }
 
-    query.prepare("ALTER TABLE music ADD COLUMN search_id VARCHAR(256);");
-    if (!query.exec()) {
-        qWarning() << "sql upgrade with error:" << query.lastError().type();
-    }
+//    query.prepare("ALTER TABLE music ADD COLUMN search_id VARCHAR(256);");
+//    if (!query.exec()) {
+//        qWarning() << "sql upgrade with error:" << query.lastError().type();
+//    }
 
-    query.prepare("ALTER TABLE playlist ADD COLUMN order_type INTEGER(32);");
-    if (!query.exec()) {
-        qWarning() << "sql upgrade with error:" << query.lastError().type();
-    }
+//    query.prepare("ALTER TABLE playlist ADD COLUMN order_type INTEGER(32);");
+//    if (!query.exec()) {
+//        qWarning() << "sql upgrade with error:" << query.lastError().type();
+//    }
 
-    query.prepare("ALTER TABLE playlist ADD COLUMN sort_type INTEGER(32);");
-    if (!query.exec()) {
-        qWarning() << "sql upgrade with error:" << query.lastError().type();
-    }
+//    query.prepare("ALTER TABLE playlist ADD COLUMN sort_type INTEGER(32);");
+//    if (!query.exec()) {
+//        qWarning() << "sql upgrade with error:" << query.lastError().type();
+//    }
 
-    query.prepare("ALTER TABLE playlist ADD COLUMN sort_id INTEGER(32);");
-    if (!query.exec()) {
-        qWarning() << "sql upgrade with error:" << query.lastError().type();
-    }
+//    query.prepare("ALTER TABLE playlist ADD COLUMN sort_id INTEGER(32);");
+//    if (!query.exec()) {
+//        qWarning() << "sql upgrade with error:" << query.lastError().type();
+//    }
 
-    QStringList list;
-    query.prepare("SELECT uuid FROM playlist;");
-    if (!query.exec()) {
-        qWarning() << "sql upgrade with error:" << query.lastError().type();
-    }
-    while (query.next()) {
-        list <<  query.value(0).toString();
-    }
+//    QStringList list;
+//    query.prepare("SELECT uuid FROM playlist;");
+//    if (!query.exec()) {
+//        qWarning() << "sql upgrade with error:" << query.lastError().type();
+//    }
+//    while (query.next()) {
+//        list <<  query.value(0).toString();
+//    }
 
-    for (auto uuid : list) {
-        auto sqlStr = QString("ALTER TABLE playlist_%1  ADD COLUMN sort_id INTEGER(32);").arg(uuid);
-        query.prepare(sqlStr);
-        if (!query.exec()) {
-            qWarning() << "sql upgrade playlist with error:" << query.lastError().type();
-        }
-    }
+//    for (auto uuid : list) {
+//        auto sqlStr = QString("ALTER TABLE playlist_%1  ADD COLUMN sort_id INTEGER(32);").arg(uuid);
+//        query.prepare(sqlStr);
+//        if (!query.exec()) {
+//            qWarning() << "sql upgrade playlist with error:" << query.lastError().type();
+//        }
+//    }
 
-    updateDatabaseVersionNew(0);
-    QSqlDatabase::database().commit();
-}
+//    updateDatabaseVersionNew(0);
+//    QSqlDatabase::database().commit();
+//}
 
-int updateDatabaseVersionNew(int version)
-{
-    QSqlQuery query;
+//int updateDatabaseVersionNew(int version)
+//{
+//    QSqlQuery query;
 
-    query.prepare("INSERT INTO info ("
-                  "uuid, version "
-                  ") "
-                  "VALUES ("
-                  ":uuid, :version "
-                  ")");
-    query.bindValue(":version", version);
-    query.bindValue(":uuid", DatabaseUUID);
-    query.exec();
-    qWarning() << query.lastError();
+//    query.prepare("INSERT INTO info ("
+//                  "uuid, version "
+//                  ") "
+//                  "VALUES ("
+//                  ":uuid, :version "
+//                  ")");
+//    query.bindValue(":version", version);
+//    query.bindValue(":uuid", DatabaseUUID);
+//    query.exec();
+//    qWarning() << query.lastError();
 
-    query.prepare("UPDATE info SET version = :version where uuid = :uuid; ");
-    query.bindValue(":version", version);
-    query.bindValue(":uuid", DatabaseUUID);
+//    query.prepare("UPDATE info SET version = :version where uuid = :uuid; ");
+//    query.bindValue(":version", version);
+//    query.bindValue(":uuid", DatabaseUUID);
 
-    if (!query.exec()) {
-        qWarning() << query.lastError();
-        return -1;
-    }
+//    if (!query.exec()) {
+//        qWarning() << query.lastError();
+//        return -1;
+//    }
 
-    return version;
-}
+//    return version;
+//}
 
-int databaseVersionNew()
-{
-    QSqlQuery query;
-    query.prepare("SELECT version FROM info where uuid = :uuid;");
-    query.bindValue(":uuid", DatabaseUUID);
-    if (!query.exec()) {
-        qWarning() << query.lastError();
-        return -1;
-    }
+//int databaseVersionNew()
+//{
+//    QSqlQuery query;
+//    query.prepare("SELECT version FROM info where uuid = :uuid;");
+//    query.bindValue(":uuid", DatabaseUUID);
+//    if (!query.exec()) {
+//        qWarning() << query.lastError();
+//        return -1;
+//    }
 
-    while (query.next()) {
-        auto version =  query.value(0).toInt();
-        return version;
-    }
-    return -1;
-}
+//    while (query.next()) {
+//        auto version =  query.value(0).toInt();
+//        return version;
+//    }
+//    return -1;
+//}

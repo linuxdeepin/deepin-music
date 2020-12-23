@@ -68,10 +68,14 @@ bool moreThanTitleDES(const AlbumInfo v1, const AlbumInfo v2)
     return v1.pinyinAlbum >= v2.pinyinAlbum;
 }
 
-AlbumListView::AlbumListView(QString hash, QWidget *parent)
-    : DListView(parent)
+int calculateAlbumSize(int index, AlbumInfo info)
 {
-    m_hash = hash;
+    return index + info.musicinfos.size();
+}
+
+AlbumListView::AlbumListView(QString hash, QWidget *parent)
+    : DListView(parent), m_hash(hash)
+{
     setObjectName("AlbumListView");
     albumModel = new AlbumDataModel(0, 1, this);
     albumDelegate = new AlbumDataDelegate;
@@ -203,44 +207,30 @@ void AlbumListView::resetAlbumListDataBySongName(const QList<MediaMeta> &mediaMe
         break;
     }
     for (AlbumInfo albumInfo : albumInfoList) {
-        bool isAlbumContainSong = false;
         for (MediaMeta albumMeta : albumInfo.musicinfos.values()) {
-            for (MediaMeta listMeta : mediaMetas) {
-                if (albumMeta.hash == listMeta.hash) {
-                    isAlbumContainSong = true;
-                    break;
+            static MediaMeta &tmpMeta = albumMeta;
+            bool ret = std::any_of(mediaMetas.begin(), mediaMetas.end(), [](MediaMeta mt) {return mt.hash == tmpMeta.hash;});
+            if (ret) {
+                QStandardItem *pItem = new QStandardItem;
+                //设置icon
+                pItem->setIcon(m_defaultIcon);
+                for (int i = 0; i < albumInfo.musicinfos.values().size(); i++) {
+                    MediaMeta metaBind = albumInfo.musicinfos.values().at(i);
+                    QString imagesDirPath = Global::cacheDir() + "/images/" + metaBind.hash + ".jpg";
+                    QFileInfo file(imagesDirPath);
+                    if (file.exists()) {
+                        pItem->setIcon(QIcon(imagesDirPath));
+                        break;
+                    }
                 }
-            }
-            if (isAlbumContainSong) {
-                break;
-            }
-        }
-        if (!isAlbumContainSong) {
-            continue;
-        }
-        QStandardItem *pItem = new QStandardItem;
-        //设置icon
-        bool iconExists = false;
-        for (int i = 0; i < albumInfo.musicinfos.values().size(); i++) {
-            MediaMeta metaBind = albumInfo.musicinfos.values().at(i);
-            QString imagesDirPath = Global::cacheDir() + "/images/" + metaBind.hash + ".jpg";
-            QFileInfo file(imagesDirPath);
-            QIcon icon;
-            if (file.exists()) {
-                pItem->setIcon(QIcon(imagesDirPath));
-                iconExists = true;
-                break;
+                albumModel->appendRow(pItem);
+                auto row = albumModel->rowCount() - 1;
+                QModelIndex idx = albumModel->index(row, 0, QModelIndex());
+                QVariant albumval;
+                albumval.setValue(albumInfo);
+                albumModel->setData(idx, albumval, Qt::UserRole);
             }
         }
-        if (!iconExists) {
-            pItem->setIcon(m_defaultIcon);
-        }
-        albumModel->appendRow(pItem);
-        auto row = albumModel->rowCount() - 1;
-        QModelIndex idx = albumModel->index(row, 0, QModelIndex());
-        QVariant albumval;
-        albumval.setValue(albumInfo);
-        albumModel->setData(idx, albumval, Qt::UserRole);
     }
 }
 
@@ -271,39 +261,33 @@ void AlbumListView::resetAlbumListDataBySinger(const QList<SingerInfo> &singerIn
         break;
     }
     for (AlbumInfo albumInfo : albumInfoList) {
-        bool isAlbumContainSong = false;
-        for (SingerInfo singerInfo : singerInfos) {
-            if (CommonService::getInstance()->containsStr(singerInfo.singerName, albumInfo.singer)) {
-                isAlbumContainSong = true;
-                break;
+        static AlbumInfo &tmpMeta = albumInfo;
+        bool ret = std::any_of(singerInfos.begin(), singerInfos.end(), [](SingerInfo mt) {return CommonService::getInstance()->containsStr(mt.singerName, tmpMeta.singer);});
+        if (ret) {
+            QStandardItem *pItem = new QStandardItem;
+            //设置icon
+            bool iconExists = false;
+            for (int i = 0; i < albumInfo.musicinfos.values().size(); i++) {
+                MediaMeta metaBind = albumInfo.musicinfos.values().at(i);
+                QString imagesDirPath = Global::cacheDir() + "/images/" + metaBind.hash + ".jpg";
+                QFileInfo file(imagesDirPath);
+                QIcon icon;
+                if (file.exists()) {
+                    pItem->setIcon(QIcon(imagesDirPath));
+                    iconExists = true;
+                    break;
+                }
             }
-        }
-        if (!isAlbumContainSong) {
-            continue;
-        }
-        QStandardItem *pItem = new QStandardItem;
-        //设置icon
-        bool iconExists = false;
-        for (int i = 0; i < albumInfo.musicinfos.values().size(); i++) {
-            MediaMeta metaBind = albumInfo.musicinfos.values().at(i);
-            QString imagesDirPath = Global::cacheDir() + "/images/" + metaBind.hash + ".jpg";
-            QFileInfo file(imagesDirPath);
-            QIcon icon;
-            if (file.exists()) {
-                pItem->setIcon(QIcon(imagesDirPath));
-                iconExists = true;
-                break;
+            if (!iconExists) {
+                pItem->setIcon(m_defaultIcon);
             }
+            albumModel->appendRow(pItem);
+            auto row = albumModel->rowCount() - 1;
+            QModelIndex idx = albumModel->index(row, 0, QModelIndex());
+            QVariant albumval;
+            albumval.setValue(albumInfo);
+            albumModel->setData(idx, albumval, Qt::UserRole);
         }
-        if (!iconExists) {
-            pItem->setIcon(m_defaultIcon);
-        }
-        albumModel->appendRow(pItem);
-        auto row = albumModel->rowCount() - 1;
-        QModelIndex idx = albumModel->index(row, 0, QModelIndex());
-        QVariant albumval;
-        albumval.setValue(albumInfo);
-        albumModel->setData(idx, albumval, Qt::UserRole);
     }
 }
 
@@ -320,12 +304,7 @@ QList<AlbumInfo> AlbumListView::getAlbumListData() const
 
 int AlbumListView::getMusicCount()
 {
-    QList<AlbumInfo> albumInfoList = getAlbumListData();
-    int count = 0;
-    for (AlbumInfo info : albumInfoList) {
-        count += info.musicinfos.size();
-    }
-    return count;
+    return std::accumulate(getAlbumListData().begin(), getAlbumListData().end(), 0, calculateAlbumSize);
 }
 
 void AlbumListView::setViewModeFlag(QListView::ViewMode mode)
@@ -355,10 +334,10 @@ MediaMeta AlbumListView::playing() const
     return playingMeta;
 }
 
-MediaMeta AlbumListView::hoverin() const
-{
-    return hoverinMeta;
-}
+//MediaMeta AlbumListView::hoverin() const
+//{
+//    return hoverinMeta;
+//}
 
 void AlbumListView::setThemeType(int type)
 {
@@ -371,24 +350,24 @@ int AlbumListView::getThemeType() const
     return musicTheme;
 }
 
-void AlbumListView::setPlayPixmap(QPixmap pixmap, QPixmap sidebarPixmap, QPixmap albumPixmap)
-{
-//    if (musciListDialog->isVisible())
-//        musciListDialog->setPlayPixmap(pixmap, sidebarPixmap);
-    playingPix = pixmap;
-    sidebarPix = sidebarPixmap;
-    update();
-}
+//void AlbumListView::setPlayPixmap(QPixmap pixmap, QPixmap sidebarPixmap, QPixmap albumPixmap)
+//{
+////    if (musciListDialog->isVisible())
+////        musciListDialog->setPlayPixmap(pixmap, sidebarPixmap);
+//    playingPix = pixmap;
+//    sidebarPix = sidebarPixmap;
+//    update();
+//}
 
 QPixmap AlbumListView::getPlayPixmap() const
 {
     return playingPix;
 }
 
-QPixmap AlbumListView::getSidebarPixmap() const
-{
-    return sidebarPix;
-}
+//QPixmap AlbumListView::getSidebarPixmap() const
+//{
+//    return sidebarPix;
+//}
 
 QPixmap AlbumListView::getPlayPixmap(bool isSelect)
 {

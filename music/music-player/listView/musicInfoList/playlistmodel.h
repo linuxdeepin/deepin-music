@@ -34,7 +34,7 @@ public:
     ~PlaylistModel() override;
 
     virtual bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole) Q_DECL_OVERRIDE;
-    virtual Qt::DropActions supportedDropActions() const Q_DECL_OVERRIDE;
+    //virtual Qt::DropActions supportedDropActions() const Q_DECL_OVERRIDE;
     virtual Qt::ItemFlags flags(const QModelIndex &index) const Q_DECL_OVERRIDE;
 };
 

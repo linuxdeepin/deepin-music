@@ -39,10 +39,10 @@ bool MusicBaseAndSonglistModel::setData(const QModelIndex &index, const QVariant
     return QStandardItemModel::setData(index, value, role);
 }
 
-Qt::DropActions MusicBaseAndSonglistModel::supportedDropActions() const
-{
-    return Qt::CopyAction;
-}
+//Qt::DropActions MusicBaseAndSonglistModel::supportedDropActions() const
+//{
+//    return Qt::CopyAction;
+//}
 
 Qt::ItemFlags MusicBaseAndSonglistModel::flags(const QModelIndex &index) const
 {

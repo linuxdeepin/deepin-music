@@ -44,7 +44,7 @@ public:
     int getThemeType() const;
 
     QStandardItem *item(int row, int column) const;
-    void setCurrentItem(QStandardItem *item);
+    //void setCurrentItem(QStandardItem *item);
     //性能优化歌曲展示专用
     void initAllSonglist(QString hash);
     //歌单&收藏页面
@@ -60,12 +60,12 @@ public:
     // 根据排序添加数据
     void setDataBySortType(QList<MediaMeta> &mediaMetas, DataBaseService::ListSortType sortType);
 
-    QPixmap getSidebarPixmap();
+    //QPixmap getSidebarPixmap();
     //zy---begin
     QPixmap getPlayPixmap(bool isSelect = false);
     void playListChange();
     //读写当前hash，用来判断当前显示的是什么列表
-    void setCurrentHash(QString hash);
+    //void setCurrentHash(QString hash);
     QString getCurrentHash();
     //读写不同列表显示模式
     void setViewModeFlag(QString hash, QListView::ViewMode mode);
@@ -127,15 +127,15 @@ signals:
     void getSearchData(bool isvalid); //get search data
 public:
     bool getIsPlayQueue() const;
-    void reflushItemMediaMeta(const MediaMeta &meta);
+    //void reflushItemMediaMeta(const MediaMeta &meta);
 
 protected:
     virtual void mouseMoveEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
     virtual void dragEnterEvent(QDragEnterEvent *event) Q_DECL_OVERRIDE;
     virtual void startDrag(Qt::DropActions supportedActions) Q_DECL_OVERRIDE;
     virtual void keyPressEvent(QKeyEvent *event) Q_DECL_OVERRIDE;
-    virtual void keyboardSearch(const QString &search) Q_DECL_OVERRIDE;
-    void contextMenuEvent(QContextMenuEvent *event) Q_DECL_OVERRIDE;
+    //virtual void keyboardSearch(const QString &search) Q_DECL_OVERRIDE;
+    void contextMenuEvent(QContextMenuEvent *event);
 
     void dragMoveEvent(QDragMoveEvent *event) Q_DECL_OVERRIDE;
     void dropEvent(QDropEvent *event) Q_DECL_OVERRIDE;

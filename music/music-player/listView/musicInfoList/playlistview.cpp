@@ -188,10 +188,10 @@ QStandardItem *PlayListView::item(int row, int column) const
     return  m_model->item(row, column);
 }
 
-void PlayListView::setCurrentItem(QStandardItem *item)
-{
-    setCurrentIndex(m_model->indexFromItem(item));
-}
+//void PlayListView::setCurrentItem(QStandardItem *item)
+//{
+//    setCurrentIndex(m_model->indexFromItem(item));
+//}
 
 void PlayListView::initAllSonglist(QString hash)
 {
@@ -381,14 +381,6 @@ void PlayListView::setDataBySortType(QList<MediaMeta> &mediaMetas, DataBaseServi
     }
 }
 
-QPixmap PlayListView::getSidebarPixmap()
-{
-    if (m_sidebarPixmap.isNull()) {
-        m_sidebarPixmap = QPixmap(":/mpimage/light/music_withe_sidebar/music1.svg");
-    }
-    return m_sidebarPixmap;
-}
-
 QPixmap PlayListView::getPlayPixmap(bool isSelect)
 {
     QPixmap playingPixmap = QPixmap(QSize(20, 20));
@@ -425,10 +417,10 @@ void PlayListView::playListChange()
     setUpdatesEnabled(true);
 }
 
-void PlayListView::setCurrentHash(QString hash)
-{
-    m_currentHash = hash;
-}
+//void PlayListView::setCurrentHash(QString hash)
+//{
+//    m_currentHash = hash;
+//}
 
 QString PlayListView::getCurrentHash()
 {
@@ -985,10 +977,10 @@ void PlayListView::keyPressEvent(QKeyEvent *event)
     QAbstractItemView::keyPressEvent(event);
 }
 
-void PlayListView::keyboardSearch(const QString &search)
-{
-    Q_UNUSED(search);
-}
+//void PlayListView::keyboardSearch(const QString &search)
+//{
+//    Q_UNUSED(search);
+//}
 
 void PlayListView::contextMenuEvent(QContextMenuEvent *event)
 {
@@ -1171,20 +1163,20 @@ bool PlayListView::getIsPlayQueue() const
     return m_IsPlayQueue;
 }
 
-void PlayListView::reflushItemMediaMeta(const MediaMeta &meta)
-{
-    for (int i = 0; i <  m_model->rowCount(); i++) {
-        QModelIndex curIndex = m_model->index(i, 0);
-        MediaMeta metaTemp = curIndex.data(Qt::UserRole).value<MediaMeta>();
+//void PlayListView::reflushItemMediaMeta(const MediaMeta &meta)
+//{
+//    for (int i = 0; i <  m_model->rowCount(); i++) {
+//        QModelIndex curIndex = m_model->index(i, 0);
+//        MediaMeta metaTemp = curIndex.data(Qt::UserRole).value<MediaMeta>();
 
-        if (meta.hash == metaTemp.hash) {
-            QVariant mediaMeta;
-            mediaMeta.setValue(meta);
-            m_model->setData(curIndex, mediaMeta, Qt::UserRole);
-            break;
-        }
-    }
-}
+//        if (meta.hash == metaTemp.hash) {
+//            QVariant mediaMeta;
+//            mediaMeta.setValue(meta);
+//            m_model->setData(curIndex, mediaMeta, Qt::UserRole);
+//            break;
+//        }
+//    }
+//}
 
 void PlayListView::slotTextCodecMenuClicked(QAction *action)
 {

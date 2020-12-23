@@ -50,14 +50,7 @@ class LyricLabel : public AbstractWheelWidget
 
 public:
     LyricLabel(bool touch, QWidget *parent = nullptr);
-
-
     void getFromFile(QString dir);
-    void paintItem(QPainter *painter, int index, const QRect &rect);
-
-    int itemHeight() const;
-    int itemCount() const;
-
 signals:
     void changeTo(qint64 pos);
     void rightClicked();
@@ -68,11 +61,14 @@ public slots:
     void setThemeType(int type);
 protected slots:
     void changeToEvent(int index);
-    void changeFont();
+    //void changeFont();
 
 protected:
-    void contextMenuEvent(QContextMenuEvent *event);//右击事件
-    void enterEvent(QEvent *e);
+    void contextMenuEvent(QContextMenuEvent *event) Q_DECL_OVERRIDE;//右击事件
+    void enterEvent(QEvent *e) Q_DECL_OVERRIDE;
+    virtual void paintItem(QPainter *painter, int index, const QRect &rect) override;
+    virtual int itemHeight() const override;
+    virtual int itemCount() const override;
 
 protected:
     MusicLyric *lyric;

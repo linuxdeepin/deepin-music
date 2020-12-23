@@ -54,8 +54,6 @@ public:
     void selectDown();
     int  getCurrentIndex();
 
-    QString currentStr();
-
 public:
     // void paintEvent(QPaintEvent *event) Q_DECL_OVERRIDE;
     virtual void leaveEvent(QEvent *event) Q_DECL_OVERRIDE;
@@ -66,9 +64,9 @@ signals:
 public slots:
     void onReturnPressed();
     void setThemeType(int type);
-    void itemClicked(QModelIndex);
+    //void itemClicked(QModelIndex);
     void getSearchStr();
-    void clearKeyState();
+    //void clearKeyState();
 
 private:
     DLabel *m_MusicLabel;

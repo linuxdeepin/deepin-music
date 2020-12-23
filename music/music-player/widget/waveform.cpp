@@ -29,6 +29,7 @@
 #include <QAudioBuffer>
 #include <QAudioFormat>
 #include <QWidget>
+#include <QPainterPath>
 
 #include "waveform.h"
 #include "waveformscale.h"
@@ -598,14 +599,14 @@ void Waveform::updatePlayerPos(int value)
     }
 }
 
-void Waveform::isPlayNextMeta(int value)
-{
-    int range = this->maximum() - this->minimum();
-    Q_ASSERT(range != 0);
+//void Waveform::isPlayNextMeta(int value)
+//{
+//    int range = this->maximum() - this->minimum();
+//    Q_ASSERT(range != 0);
 
-//    if (value >= range) {
-//        Player::getInstance()->playNextMeta(true);
-//    }
-}
+////    if (value >= range) {
+////        Player::getInstance()->playNextMeta(true);
+////    }
+//}
 
 

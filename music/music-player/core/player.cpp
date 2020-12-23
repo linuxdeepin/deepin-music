@@ -525,10 +525,10 @@ QIcon Player::playingIcon()
 //!
 //! \brief canControl
 //! Always be true
-bool Player::canControl() const
-{
-    return m_canControl;
-}
+//bool Player::canControl() const
+//{
+//    return m_canControl;
+//}
 
 qlonglong Player::position()
 {
@@ -574,10 +574,10 @@ bool Player::fadeInOut() const
     return m_fadeInOut;
 }
 
-bool Player::playOnLoaded() const
-{
-    return m_playOnLoad;
-}
+//bool Player::playOnLoaded() const
+//{
+//    return m_playOnLoad;
+//}
 
 void Player::setCanControl(bool canControl)
 {
@@ -723,14 +723,10 @@ void Player::setFadeInOut(bool fadeInOut)
     m_fadeInOut = fadeInOut;
 }
 
-void Player::setPlayOnLoaded(bool playOnLoaded)
-{
-    m_playOnLoad = playOnLoaded;
-}
-
-void Player::musicFileMiss()
-{
-}
+//void Player::setPlayOnLoaded(bool playOnLoaded)
+//{
+//    m_playOnLoad = playOnLoaded;
+//}
 
 void Player::setEqualizer(bool enabled, int curIndex, QList<int> indexbaud)
 {

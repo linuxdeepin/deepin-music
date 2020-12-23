@@ -187,11 +187,6 @@ void MusicLyricWidget::closeAnimation(const QSize &size)
     animation->start();
 }
 
-QString MusicLyricWidget::defaultCover() const
-{
-    return m_defaultCover;
-}
-
 void MusicLyricWidget::resizeEvent(QResizeEvent *event)
 {
     updateUI();

@@ -391,7 +391,7 @@ void MainFrame::showPopupMessage(const QString &songListName, int selectCount, i
 
 void MainFrame::setThemeType(DGuiApplicationHelper::ColorType themeType)
 {
-    if (m_musicContentWidget != nullptr) {
+    if (getMusicContentWidget()) {
         m_musicContentWidget->slotTheme(themeType);
     }
     if (m_footerWidget != nullptr) {

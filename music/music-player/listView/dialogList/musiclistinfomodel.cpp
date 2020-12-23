@@ -111,11 +111,11 @@ bool MusiclistInfomodel::setData(const QModelIndex &index, const QVariant &value
 //        beginRow = parent.row();
 //}
 
-Qt::DropActions MusiclistInfomodel::supportedDropActions() const
-{
-//    return QAbstractItemModel::supportedDropActions();
-    return /*Qt::CopyAction | */Qt::MoveAction;
-}
+//Qt::DropActions MusiclistInfomodel::supportedDropActions() const
+//{
+////    return QAbstractItemModel::supportedDropActions();
+//    return /*Qt::CopyAction | */Qt::MoveAction;
+//}
 
 Qt::ItemFlags MusiclistInfomodel::flags(const QModelIndex &index) const
 {

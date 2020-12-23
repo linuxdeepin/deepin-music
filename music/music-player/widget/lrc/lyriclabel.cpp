@@ -180,17 +180,17 @@ void LyricLabel::changeToEvent(int index)
     emit changeTo(lyric->getPostion(index));
 }
 
-void LyricLabel::changeFont()
-{
-    bool flag;
-    *lyricFont = QFontDialog::getFont(&flag, *lyricFont, this);
-    if (flag) {
-        // the user clicked OK and font is set to the font the user selected
-    } else {
-        // the user canceled the dialog; font is set to the initial value
-        lyricFont = new QFont("宋体", 12, QFont::Bold);
-    }
-}
+//void LyricLabel::changeFont()
+//{
+//    bool flag;
+//    *lyricFont = QFontDialog::getFont(&flag, *lyricFont, this);
+//    if (flag) {
+//        // the user clicked OK and font is set to the font the user selected
+//    } else {
+//        // the user canceled the dialog; font is set to the initial value
+//        lyricFont = new QFont("宋体", 12, QFont::Bold);
+//    }
+//}
 
 void LyricLabel::contextMenuEvent(QContextMenuEvent *event)
 {

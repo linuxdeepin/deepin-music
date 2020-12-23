@@ -379,6 +379,7 @@ void MusicSongListView::keyReleaseEvent(QKeyEvent *event)
     if (event->key() == Qt::Key_Delete) {
         rmvSongList();
     }
+    DListView::keyReleaseEvent(event);
 }
 
 void MusicSongListView::dragEnterEvent(QDragEnterEvent *event)

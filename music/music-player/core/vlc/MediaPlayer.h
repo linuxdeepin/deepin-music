@@ -127,7 +127,7 @@ public:
         \brief Get seekable status
         \return seekable status (const bool)
     */
-    bool seekable() const;
+    //bool seekable() const;
 
     /*!
         \brief Get current player state.

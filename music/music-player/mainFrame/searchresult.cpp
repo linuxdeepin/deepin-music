@@ -308,12 +308,6 @@ int SearchResult::getCurrentIndex()
     return m_CurrentIndex;
 }
 
-QString SearchResult::currentStr()
-{
-    QString str;
-    return str;
-}
-
 #if 0
 void SearchResult::paintEvent(QPaintEvent *event)
 {
@@ -362,8 +356,8 @@ void SearchResult::setThemeType(int type)
     m_AblumLabel->setPalette(labelPalette);
 }
 
-void SearchResult::itemClicked(QModelIndex index)
-{
+//void SearchResult::itemClicked(QModelIndex index)
+//{
 //    PlaylistPtr playList = dynamic_cast<MusicSearchListview *>(index.model()->parent())->playlist();
 //    QString currentId = playList->id();
 //    int row = index.row();
@@ -378,7 +372,7 @@ void SearchResult::itemClicked(QModelIndex index)
 //        Q_EMIT this->searchText2(ArtistResultListID, playList->playMusicTypePtrList().at(row)->name);
 //    }
 
-}
+//}
 
 //键盘上下选择结果
 void SearchResult::getSearchStr()
@@ -410,14 +404,14 @@ void SearchResult::getSearchStr()
 //    Q_EMIT  this->searchText3(id, text);
 }
 
-void SearchResult::clearKeyState()
-{
-//    m_MusicView->setCurrentIndexInt(-1);
-//    m_AlbumView->setCurrentIndexInt(-1);
-//    m_ArtistView->setCurrentIndexInt(-1);
+//void SearchResult::clearKeyState()
+//{
+////    m_MusicView->setCurrentIndexInt(-1);
+////    m_AlbumView->setCurrentIndexInt(-1);
+////    m_ArtistView->setCurrentIndexInt(-1);
 
-//    m_MusicView->update();
-//    m_ArtistView->update();
-//    m_AlbumView->update();
-}
+////    m_MusicView->update();
+////    m_ArtistView->update();
+////    m_AlbumView->update();
+//}
 

@@ -37,7 +37,7 @@ public:
     explicit MusicListInfoView(const QString &m_hash, QWidget *parent = Q_NULLPTR);
     ~MusicListInfoView() override;
 
-    void setPlayPixmap(QPixmap pixmap, QPixmap sidebarPixmap);
+    //void setPlayPixmap(QPixmap pixmap, QPixmap sidebarPixmap);
 //    QPixmap getSidebarPixmap() const;
 
     QPixmap getPlayPixmap(bool isSelect = false);
@@ -74,7 +74,7 @@ protected:
     virtual void dragEnterEvent(QDragEnterEvent *event) Q_DECL_OVERRIDE;
     virtual void startDrag(Qt::DropActions supportedActions) Q_DECL_OVERRIDE;
     virtual void keyPressEvent(QKeyEvent *event) Q_DECL_OVERRIDE;
-    virtual void keyboardSearch(const QString &search) Q_DECL_OVERRIDE;
+    //virtual void keyboardSearch(const QString &search) Q_DECL_OVERRIDE;
 
 private:
     void addMedia(MediaMeta meta);

@@ -116,21 +116,21 @@ void VlcMedia::createCoreConnections()
     }
 }
 
-void VlcMedia::removeCoreConnections()
-{
-    QList<libvlc_event_e> list;
-    list << libvlc_MediaMetaChanged
-         << libvlc_MediaSubItemAdded
-         << libvlc_MediaDurationChanged
-         << libvlc_MediaParsedChanged
-         << libvlc_MediaFreed
-         << libvlc_MediaStateChanged;
+//void VlcMedia::removeCoreConnections()
+//{
+//    QList<libvlc_event_e> list;
+//    list << libvlc_MediaMetaChanged
+//         << libvlc_MediaSubItemAdded
+//         << libvlc_MediaDurationChanged
+//         << libvlc_MediaParsedChanged
+//         << libvlc_MediaFreed
+//         << libvlc_MediaStateChanged;
 
-    vlc_event_detach_function vlc_event_detach = (vlc_event_detach_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("libvlc_event_detach");
-    foreach (const libvlc_event_e &event, list) {
-        vlc_event_detach(_vlcEvents, event, libvlc_callback, this);
-    }
-}
+//    vlc_event_detach_function vlc_event_detach = (vlc_event_detach_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("libvlc_event_detach");
+//    foreach (const libvlc_event_e &event, list) {
+//        vlc_event_detach(_vlcEvents, event, libvlc_callback, this);
+//    }
+//}
 
 //bool VlcMedia::parsed() const
 //{

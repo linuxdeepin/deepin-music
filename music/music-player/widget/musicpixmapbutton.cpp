@@ -24,6 +24,7 @@
 #include <QDebug>
 #include <QPainter>
 #include <QRect>
+#include <QPainterPath>
 
 MusicPixmapButton::MusicPixmapButton(QWidget *parent)
     : DPushButton(parent)

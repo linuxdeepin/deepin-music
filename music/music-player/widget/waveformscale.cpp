@@ -27,6 +27,7 @@
 #include <QEvent>
 #include <QPaintEvent>
 #include <QPainter>
+#include <QPainterPath>
 
 #include <mediameta.h>
 

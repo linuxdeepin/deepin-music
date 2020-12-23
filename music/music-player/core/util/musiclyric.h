@@ -13,7 +13,7 @@ public:
     int getCount();
     int getIndex(qint64 pos);
     qint64 getPostion(int index);
-    bool getHeadFromFile(QString dir);
+    //bool getHeadFromFile(QString dir);
 
 private:
     QString filedir;

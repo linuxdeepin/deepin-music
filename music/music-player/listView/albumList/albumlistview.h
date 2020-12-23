@@ -57,14 +57,14 @@ public:
     QListView::ViewMode getViewMode();
 
     MediaMeta playing() const;
-    MediaMeta hoverin() const;
+    //MediaMeta hoverin() const;
 
     void setThemeType(int type);
     int getThemeType() const;
 
-    void setPlayPixmap(QPixmap pixmap, QPixmap sidebarPixmap, QPixmap albumPixmap);
+    //void setPlayPixmap(QPixmap pixmap, QPixmap sidebarPixmap, QPixmap albumPixmap);
     QPixmap getPlayPixmap() const;
-    QPixmap getSidebarPixmap() const;
+    //QPixmap getSidebarPixmap() const;
     QPixmap getPlayPixmap(bool isSelect = false);
     void updateList();
 

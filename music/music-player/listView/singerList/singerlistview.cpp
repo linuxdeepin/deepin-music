@@ -68,6 +68,11 @@ bool moreThanSingerDES(SingerInfo v1, SingerInfo v2)
     return v1.pinyinSinger >= v2.pinyinSinger;
 }
 
+int calculateSingerSize(int index, SingerInfo info)
+{
+    return index + info.musicinfos.size();
+}
+
 SingerListView::SingerListView(QString hash, QWidget *parent)
     : DListView(parent)
 {
@@ -219,39 +224,33 @@ void SingerListView::resetSingerListDataBySongName(const QList<MediaMeta> &media
 
     singerModel->clear();
     for (SingerInfo singerInfo : singerInfos) {
-        bool isSingerContainSong = false;
-        for (MediaMeta meta : mediaMetas) {
-            if (CommonService::getInstance()->containsStr(meta.singer, singerInfo.singerName)) {
-                isSingerContainSong = true;
-                break;
+        static SingerInfo &tmpMeta = singerInfo;
+        bool ret = std::any_of(mediaMetas.begin(), mediaMetas.end(), [](MediaMeta mt) {return CommonService::getInstance()->containsStr(mt.singer, tmpMeta.singerName);});
+        if (ret) {
+            QStandardItem *pItem = new QStandardItem;
+            //设置icon
+            bool iconExists = false;
+            for (int i = 0; i < singerInfo.musicinfos.values().size(); i++) {
+                MediaMeta metaBind = singerInfo.musicinfos.values().at(i);
+                QString imagesDirPath = Global::cacheDir() + "/images/" + metaBind.hash + ".jpg";
+                QFileInfo file(imagesDirPath);
+                QIcon icon;
+                if (file.exists()) {
+                    pItem->setIcon(QIcon(imagesDirPath));
+                    iconExists = true;
+                    break;
+                }
             }
-        }
-        if (!isSingerContainSong) {
-            continue;
-        }
-        QStandardItem *pItem = new QStandardItem;
-        //设置icon
-        bool iconExists = false;
-        for (int i = 0; i < singerInfo.musicinfos.values().size(); i++) {
-            MediaMeta metaBind = singerInfo.musicinfos.values().at(i);
-            QString imagesDirPath = Global::cacheDir() + "/images/" + metaBind.hash + ".jpg";
-            QFileInfo file(imagesDirPath);
-            QIcon icon;
-            if (file.exists()) {
-                pItem->setIcon(QIcon(imagesDirPath));
-                iconExists = true;
-                break;
+            if (!iconExists) {
+                pItem->setIcon(m_defaultIcon);
             }
+            singerModel->appendRow(pItem);
+            auto row = singerModel->rowCount() - 1;
+            QModelIndex idx = singerModel->index(row, 0, QModelIndex());
+            QVariant singerval;
+            singerval.setValue(singerInfo);
+            singerModel->setData(idx, singerval, Qt::UserRole);
         }
-        if (!iconExists) {
-            pItem->setIcon(m_defaultIcon);
-        }
-        singerModel->appendRow(pItem);
-        auto row = singerModel->rowCount() - 1;
-        QModelIndex idx = singerModel->index(row, 0, QModelIndex());
-        QVariant singerval;
-        singerval.setValue(singerInfo);
-        singerModel->setData(idx, singerval, Qt::UserRole);
     }
 }
 
@@ -282,49 +281,39 @@ void SingerListView::resetSingerListDataByAlbum(const QList<AlbumInfo> &albumInf
 
     singerModel->clear();
     for (SingerInfo singerInfo : singerInfos) {
-        bool isSingerContainSong = false;
-        for (AlbumInfo albumInfo : albumInfos) {
-            if (CommonService::getInstance()->containsStr(albumInfo.singer, singerInfo.singerName)) {
-                isSingerContainSong = true;
-                break;
+        static SingerInfo &tmpMeta = singerInfo;
+        bool ret = std::any_of(albumInfos.begin(), albumInfos.end(), [](AlbumInfo mt) {return CommonService::getInstance()->containsStr(mt.singer, tmpMeta.singerName);});
+        if (ret) {
+            QStandardItem *pItem = new QStandardItem;
+            //设置icon
+            bool iconExists = false;
+            for (int i = 0; i < singerInfo.musicinfos.values().size(); i++) {
+                MediaMeta metaBind = singerInfo.musicinfos.values().at(i);
+                QString imagesDirPath = Global::cacheDir() + "/images/" + metaBind.hash + ".jpg";
+                QFileInfo file(imagesDirPath);
+                QIcon icon;
+                if (file.exists()) {
+                    pItem->setIcon(QIcon(imagesDirPath));
+                    iconExists = true;
+                    break;
+                }
             }
-        }
-        if (!isSingerContainSong) {
-            continue;
-        }
-        QStandardItem *pItem = new QStandardItem;
-        //设置icon
-        bool iconExists = false;
-        for (int i = 0; i < singerInfo.musicinfos.values().size(); i++) {
-            MediaMeta metaBind = singerInfo.musicinfos.values().at(i);
-            QString imagesDirPath = Global::cacheDir() + "/images/" + metaBind.hash + ".jpg";
-            QFileInfo file(imagesDirPath);
-            QIcon icon;
-            if (file.exists()) {
-                pItem->setIcon(QIcon(imagesDirPath));
-                iconExists = true;
-                break;
+            if (!iconExists) {
+                pItem->setIcon(m_defaultIcon);
             }
+            singerModel->appendRow(pItem);
+            auto row = singerModel->rowCount() - 1;
+            QModelIndex idx = singerModel->index(row, 0, QModelIndex());
+            QVariant singerval;
+            singerval.setValue(singerInfo);
+            singerModel->setData(idx, singerval, Qt::UserRole);
         }
-        if (!iconExists) {
-            pItem->setIcon(m_defaultIcon);
-        }
-        singerModel->appendRow(pItem);
-        auto row = singerModel->rowCount() - 1;
-        QModelIndex idx = singerModel->index(row, 0, QModelIndex());
-        QVariant singerval;
-        singerval.setValue(singerInfo);
-        singerModel->setData(idx, singerval, Qt::UserRole);
     }
 }
 
 int SingerListView::getMusicCount()
 {
-    int count = 0;
-    for (SingerInfo info : getSingerListData()) {
-        count += info.musicinfos.size();
-    }
-    return count;
+    return std::accumulate(getSingerListData().begin(), getSingerListData().end(), 0, calculateSingerSize);
 }
 
 void SingerListView::setViewModeFlag(QListView::ViewMode mode)
@@ -360,24 +349,24 @@ int SingerListView::getThemeType() const
     return musicTheme;
 }
 
-void SingerListView::setPlayPixmap(QPixmap pixmap, QPixmap sidebarPixmap, QPixmap albumPixmap)
-{
-//    if (musciListDialog->isVisible())
-//        musciListDialog->setPlayPixmap(pixmap, sidebarPixmap);
-    playingPix = pixmap;
-    sidebarPix = sidebarPixmap;
-    update();
-}
+//void SingerListView::setPlayPixmap(QPixmap pixmap, QPixmap sidebarPixmap, QPixmap albumPixmap)
+//{
+////    if (musciListDialog->isVisible())
+////        musciListDialog->setPlayPixmap(pixmap, sidebarPixmap);
+//    playingPix = pixmap;
+//    sidebarPix = sidebarPixmap;
+//    update();
+//}
 
 QPixmap SingerListView::getPlayPixmap() const
 {
     return playingPix;
 }
 
-QPixmap SingerListView::getSidebarPixmap() const
-{
-    return sidebarPix;
-}
+//QPixmap SingerListView::getSidebarPixmap() const
+//{
+//    return sidebarPix;
+//}
 
 QPixmap SingerListView::getPlayPixmap(bool isSelect)
 {

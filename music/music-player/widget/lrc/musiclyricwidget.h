@@ -48,8 +48,6 @@ public:
     void showAnimation(const QSize &size);
     // 控件关闭动画
     void closeAnimation(const QSize &size);
-    QString defaultCover() const;
-
 
 signals:
     void toggleLyricView();

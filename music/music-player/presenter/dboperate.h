@@ -33,7 +33,6 @@ public:
     explicit DBOperate(QObject *parent = nullptr);
     ~DBOperate();
 public slots:
-    void     setThreadShouldStop();
     void     slotImportMedias(const QStringList &urllist);
     void     slotCreatCoverImg(const QList<MediaMeta> &metas);
 private:

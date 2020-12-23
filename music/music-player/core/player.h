@@ -151,13 +151,13 @@ signals:
     void readyToResume();
 
 public:
-    bool canControl() const;
+    //bool canControl() const;
     qlonglong position();
     PlaybackMode mode() const;
     qint64 duration();
     double fadeInOutFactor() const;
     bool fadeInOut() const;
-    bool playOnLoaded() const;
+    //bool playOnLoaded() const;
 
 signals:
     void canControlChanged(bool canControl);
@@ -189,8 +189,7 @@ public slots:
     void setDbusMuted(bool muted = false);
     void setFadeInOutFactor(double fadeInOutFactor);
     void setFadeInOut(bool fadeInOut);
-    void setPlayOnLoaded(bool playOnLoaded);
-    void musicFileMiss();
+    //void setPlayOnLoaded(bool playOnLoaded);
     void setEqualizer(bool enabled, int curIndex, QList<int> indexbaud);
     void setEqualizerEnable(bool enable);
     void setEqualizerpre(int val);
@@ -233,7 +232,7 @@ private:
     VlcMedia                *m_qvmedia = nullptr;
     VlcMediaPlayer          *m_qvplayer = nullptr;
 
-    bool            m_playOnLoad  = true;
+    //bool            m_playOnLoad  = true;
     // 外部双击打开处理一次
     bool            m_firstPlayOnLoad  = true;
     bool            m_fadeInOut   = false;

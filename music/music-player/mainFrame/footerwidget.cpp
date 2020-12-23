@@ -65,8 +65,6 @@
 static const QString sPlayStatusValuePlaying    = "playing";
 static const QString sPlayStatusValuePause      = "pause";
 static const QString sPlayStatusValueStop       = "stop";
-
-static const int AnimationDelay = 400; //ms
 static const int VolumeStep = 10;
 
 DGUI_USE_NAMESPACE
@@ -82,9 +80,9 @@ FooterWidget::FooterWidget(QWidget *parent) :
     this->blurBackground()->setMode(DBlurEffectWidget::GaussianBlur);
     QColor backMaskColor(255, 255, 255, 140);
     this->blurBackground()->setMaskColor(backMaskColor);
+    initShortcut();
     initUI(parent);
     slotTheme(DGuiApplicationHelper::instance()->themeType());
-    initShortcut();
     m_limitRepeatClick = new QTimer(this);
     m_limitRepeatClick->setSingleShot(true);
     m_limitRepeatClick->setInterval(200);
@@ -633,10 +631,10 @@ void FooterWidget::slotFlushSoundIcon()
     m_btSound->update();
 }
 
-void FooterWidget::slotDelayAutoHide()
-{
-    m_btSound->setChecked(false);
-}
+//void FooterWidget::slotDelayAutoHide()
+//{
+//    m_btSound->setChecked(false);
+//}
 
 void FooterWidget::slotShortCutTriggered()
 {

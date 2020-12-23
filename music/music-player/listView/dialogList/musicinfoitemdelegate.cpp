@@ -46,13 +46,13 @@ static inline int pixel2point(int pixel)
     return pixel * 96 / 72;
 }
 
-inline int headerPointWidth(const QStyleOptionViewItem &option, const QModelIndex &index)
-{
-    QFont measuringFont(option.font);
-    QFontMetrics fm(measuringFont);
-    auto headerWith = fm.width(QString("%1").arg(index.row()));
-    return pixel2point(headerWith) + PlayItemLeftMargin + PlayItemNumberMargin;
-}
+//inline int headerPointWidth(const QStyleOptionViewItem &option, const QModelIndex &index)
+//{
+//    QFont measuringFont(option.font);
+//    QFontMetrics fm(measuringFont);
+//    auto headerWith = fm.width(QString("%1").arg(index.row()));
+//    return pixel2point(headerWith) + PlayItemLeftMargin + PlayItemNumberMargin;
+//}
 
 inline int tailPointWidth(const QStyleOptionViewItem &option)
 {

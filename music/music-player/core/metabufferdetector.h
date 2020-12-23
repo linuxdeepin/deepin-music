@@ -32,9 +32,6 @@ class LIBDMUSICSHARED_EXPORT MetaBufferDetector : public QThread
 public:
     explicit MetaBufferDetector(QObject *parent = Q_NULLPTR);
     ~MetaBufferDetector();
-
-    void run();
-
 public slots:
     void onBufferDetector(const QString &path, const QString &hash);
     void onClearBufferDetector();
@@ -44,7 +41,7 @@ signals:
 
 private:
     void resample(const QVector<float> &buffer, const QString &hash);
-
+    void run() override;
 private:
     QScopedPointer<MetaBufferDetectorPrivate> d_ptr;
     Q_DECLARE_PRIVATE_D(qGetPtrHelper(d_ptr), MetaBufferDetector)

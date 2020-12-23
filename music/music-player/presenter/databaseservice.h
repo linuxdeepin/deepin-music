@@ -74,7 +74,7 @@ public:
         SortByCustom,
     };
 public:
-    QSqlDatabase            getDatabase();
+    //QSqlDatabase            getDatabase();
 
     // 所有歌曲信息
     QList<MediaMeta>     allMusicInfos();
@@ -90,13 +90,11 @@ public:
 
     // 删除歌单所选歌曲 removeFromLocal:是否从本地删除
     void removeSelectedSongs(const QString &curpage, const QStringList &musichashlist, bool removeFromLocal);
-    // 删除播放历史歌曲
-    void removeHistorySelectedSong(const QStringList &hashlist);
 
     // 导入
     void                 importMedias(QString importHash, const QStringList &urllist);
     // 获取导入状态，true正在导入，false没有导入，空闲
-    bool                 getImportStatus();
+    //bool                 getImportStatus();
     void                 addMediaMeta(const MediaMeta &meta);
     // 获取新导入文件
     QList<MediaMeta>     getNewLoadMusicInfos();

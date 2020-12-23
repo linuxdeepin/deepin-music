@@ -101,20 +101,20 @@ void SearchEdit::keyPressEvent(QKeyEvent *event)
     DSearchEdit::keyPressEvent(event);
 }
 
-void SearchEdit::onFocusIn()
-{
-    setText("");
-    m_CurrentId = "";
-    if (m_result == nullptr) {
-        m_result = new SearchResult();
-        m_result->setFixedWidth(this->width());
-    }
-//    m_result->adjustSize();
-//    auto pos = this->mapToGlobal(QPoint(0, this->height() + 2));
-//    m_result->show();
-//    m_result->raise();
-//    m_result->move(pos);
-}
+//void SearchEdit::onFocusIn()
+//{
+//    setText("");
+//    m_CurrentId = "";
+//    if (m_result == nullptr) {
+//        m_result = new SearchResult();
+//        m_result->setFixedWidth(this->width());
+//    }
+////    m_result->adjustSize();
+////    auto pos = this->mapToGlobal(QPoint(0, this->height() + 2));
+////    m_result->show();
+////    m_result->raise();
+////    m_result->move(pos);
+//}
 
 void SearchEdit::onTextChanged()
 {

@@ -99,16 +99,16 @@ MusicListInfoView::~MusicListInfoView()
 
 }
 
-void MusicListInfoView::setPlayPixmap(QPixmap pixmap, QPixmap sidebarPixmap)
-{
-    playingPixmap = pixmap;
-    sidebarPixmap = sidebarPixmap;
-//    auto index = d->model->findIndex(d->playing);
-//    if (index.isValid())
-//        update(index);
+//void MusicListInfoView::setPlayPixmap(QPixmap pixmap, QPixmap sidebarPixmap)
+//{
+//    playingPixmap = pixmap;
+//    sidebarPixmap = sidebarPixmap;
+////    auto index = d->model->findIndex(d->playing);
+////    if (index.isValid())
+////        update(index);
 
-    viewport()->update();
-}
+//    viewport()->update();
+//}
 
 //QPixmap MusicListInfoView::getSidebarPixmap() const
 //{
@@ -470,13 +470,6 @@ void MusicListInfoView::keyPressEvent(QKeyEvent *event)
     QAbstractItemView::keyPressEvent(event);
 }
 
-void MusicListInfoView::keyboardSearch(const QString &search)
-{
-    Q_UNUSED(search);
-// Disable keyborad serach
-//    qDebug() << search;
-//    QAbstractItemView::keyboardSearch(search);
-}
 
 void MusicListInfoView::addMedia(MediaMeta meta)
 {

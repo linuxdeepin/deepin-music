@@ -40,5 +40,4 @@ protected:
     virtual void mousePressEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
 private:
     bool m_selected = false;
-    int m_themeType;
 };

@@ -28,6 +28,7 @@
 #include <QGraphicsDropShadowEffect>
 #include <QVBoxLayout>
 #include <QIcon>
+#include <QPainterPath>
 
 #include <DUtil>
 #include <DHiDPIHelper>

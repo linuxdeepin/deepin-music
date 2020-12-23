@@ -46,10 +46,10 @@ class HintFilter: public QObject
 {
     Q_OBJECT
 public:
-    HintFilter(QObject *parent = nullptr);
+    explicit HintFilter(QObject *parent = nullptr);
     ~HintFilter();
 
-    void hideAll();
+    //void hideAll();
     bool eventFilter(QObject *obj, QEvent *event);
     void showHitsFor(QWidget *w, QWidget *hint);
 private:

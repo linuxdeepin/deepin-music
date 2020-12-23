@@ -41,10 +41,6 @@ DBOperate::~DBOperate()
 
 }
 
-void DBOperate::setThreadShouldStop()
-{
-}
-
 void DBOperate::slotImportMedias(const QStringList &urllist)
 {
     qDebug() << "------DBOperate::slotImportMedias  currentThread = " << QThread::currentThread();
