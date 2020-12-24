@@ -36,7 +36,7 @@ public:
     void setResultWidget(SearchResult *result);
 public slots:
     void slotSearchEditFoucusIn();
-
+    void slotClearEdit();
 signals:
     void sigSearchEditFoucusIn();
 protected:

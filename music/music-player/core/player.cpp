@@ -110,7 +110,7 @@ void Player::playMeta(MediaMeta meta)
     if (meta.hash != "") {
         if (!QFileInfo(meta.localPath).exists()) {
             //文件不存在提示  todo..
-            signalPlaybackStatusChanged(Player::Paused);
+            emit signalPlaybackStatusChanged(Player::Paused);
             return;
         }
         m_ActiveMeta = meta;
@@ -126,10 +126,7 @@ void Player::playMeta(MediaMeta meta)
         m_qvmedia->initMedia(meta.localPath, true, m_qvinstance);
         m_qvplayer->open(m_qvmedia);
         m_qvplayer->setTime(meta.offset);
-        //增大音乐自动开始播放时间，给setposition留足空间
-        QTimer::singleShot(100, this, [ = ]() {
-            m_qvplayer->play();
-        });
+        m_qvplayer->play();
 
         DRecentData data;
         data.appName = Global::getAppName();
@@ -146,14 +143,14 @@ void Player::playMeta(MediaMeta meta)
         //mprisPlayer->setCanSeek(true);
         m_mpris->setMetadata(metadata);
         m_mpris->setLoopStatus(Mpris::Playlist);
-        m_mpris->setPlaybackStatus(Mpris::Stopped);
+        m_mpris->setPlaybackStatus(Mpris::Playing);
         m_mpris->setVolume(double(this->getVolume()) / 100.0);
 
         //设置音乐播放
-        signalPlaybackStatusChanged(Player::Playing);
+        emit signalPlaybackStatusChanged(Player::Playing);
     } else {
         //设置音乐播放
-        signalPlaybackStatusChanged(Player::Paused);
+        emit signalPlaybackStatusChanged(Player::Paused);
     }
 }
 
@@ -188,11 +185,7 @@ void Player::resume()
     }
 
     qDebug() << "resume top";
-    //增大音乐自动开始播放时间，给setposition留足空间
-    QTimer::singleShot(100, this, [ = ]() {
-        m_qvplayer->play();
-    });
-
+    m_qvplayer->resume();
     if (m_fadeInOut && m_fadeInAnimation->state() != QPropertyAnimation::Running) {
         m_fadeInAnimation->setEasingCurve(QEasingCurve::InCubic);
         m_fadeInAnimation->setStartValue(0.1000);
@@ -211,11 +204,11 @@ void Player::resume()
     //mprisPlayer->setCanSeek(true);
     m_mpris->setMetadata(metadata);
     m_mpris->setLoopStatus(Mpris::Playlist);
-    m_mpris->setPlaybackStatus(Mpris::Stopped);
+    m_mpris->setPlaybackStatus(Mpris::Playing);
     m_mpris->setVolume(double(this->getVolume()) / 100.0);
 
     //设置音乐播放
-    signalPlaybackStatusChanged(Player::Playing);
+    emit signalPlaybackStatusChanged(Player::Playing);
 }
 
 void Player::pause()
@@ -245,7 +238,7 @@ void Player::pause()
     }
 
     //设置音乐播放
-    signalPlaybackStatusChanged(Player::Paused);
+    emit signalPlaybackStatusChanged(Player::Paused);
 }
 
 void Player::pauseNow()
@@ -255,7 +248,7 @@ void Player::pauseNow()
     }
     m_qvplayer->pause();
     //设置音乐播放
-    signalPlaybackStatusChanged(Player::Paused);
+    emit signalPlaybackStatusChanged(Player::Paused);
 }
 
 void Player::playPreMeta()

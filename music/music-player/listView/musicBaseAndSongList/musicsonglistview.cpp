@@ -224,7 +224,6 @@ void MusicSongListView::addNewSongList()
         item->setForeground(QColor("#C0C6D4"));
     }
     model->appendRow(item);
-    emit sigAddNewSongList();
     setMinimumHeight(model->rowCount() * 40);
     setCurrentIndex(model->indexFromItem(item));
     edit(model->indexFromItem(item));
@@ -242,6 +241,9 @@ void MusicSongListView::addNewSongList()
     item->setData(info.uuid, Qt::UserRole); //covert to hash
     // 切换listpage
     emit CommonService::getInstance()->signalSwitchToView(CustomType, info.uuid);
+
+    //主页面清空选择项
+    emit sigAddNewSongList();
 }
 
 void MusicSongListView::rmvSongList()
@@ -275,6 +277,8 @@ void MusicSongListView::rmvSongList()
             // 记忆播放歌单
             MusicSettings::setOption("base.play.last_playlist", "all");
         }
+        //删除消息，让scroll自动刷新
+        emit sigRmvSongList();
     }
 }
 

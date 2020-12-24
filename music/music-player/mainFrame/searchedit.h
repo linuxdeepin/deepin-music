@@ -42,7 +42,6 @@ public slots:
     //void onFocusIn();
     void onTextChanged();
     void onReturnPressed();
-
 protected:
     virtual void keyPressEvent(QKeyEvent *event) Q_DECL_OVERRIDE;
 

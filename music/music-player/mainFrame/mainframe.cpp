@@ -410,9 +410,13 @@ void MainFrame::slotLyricClicked()
     if (m_musicLyricWidget->isHidden()) {
         m_musicLyricWidget->showAnimation(this->size());
         m_musicContentWidget->showAnimationToUp(this->size() - QSize(0, m_footerWidget->height() + titlebar()->height() + 5));
+        //搜索页面使能
+        m_titlebarwidget->setEnabled(false);
     } else {
         m_musicLyricWidget->closeAnimation(this->size());
         m_musicContentWidget->closeAnimation(this->size() - QSize(0, m_footerWidget->height() + titlebar()->height() + 5));
+        //搜索页面使能
+        m_titlebarwidget->setEnabled(true);
     }
 }
 

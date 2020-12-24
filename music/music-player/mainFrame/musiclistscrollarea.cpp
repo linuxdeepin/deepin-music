@@ -120,17 +120,16 @@ MusicListScrollArea::MusicListScrollArea(QWidget *parent) : DScrollArea(parent)
 
     connect(m_addListBtn, SIGNAL(clicked()), m_customizeListview, SLOT(addNewSongList()));
 
-
-//    connect(verticalScrollBar(), &QScrollBar::rangeChanged, this, [ = ]() {
-//        if (m_customizeListview->getSizeChangedFlag()) {
-//            this->verticalScrollBar()->setValue(this->verticalScrollBar()->maximum());
-//            m_customizeListview->setSizeChangedFlag(false);
-//        }
-//    });
+    //达到添加新歌单后滚动条滑到当前新增项
+    connect(verticalScrollBar(), &QScrollBar::rangeChanged, this, [ = ](int min, int max) {
+        Q_UNUSED(min)
+        verticalScrollBar()->setValue(max);
+    });
 
     connect(m_dataBaseListview, &QAbstractItemView::clicked, this, &MusicListScrollArea::slotListViewClicked);
     connect(m_customizeListview, &QAbstractItemView::clicked, this, &MusicListScrollArea::slotListViewClicked);
     connect(m_customizeListview, &MusicSongListView::sigAddNewSongList, this, &MusicListScrollArea::slotAddNewSongList);
+    connect(m_customizeListview, &MusicSongListView::sigRmvSongList, this, &MusicListScrollArea::slotUpdateRange);
     connect(CommonService::getInstance(), &CommonService::signalSwitchToView, this, &MusicListScrollArea::viewChanged);
 }
 
@@ -199,10 +198,16 @@ void MusicListScrollArea::viewChanged(ListPageSwitchType switchtype, const QStri
         return;
     }
     default:
+        emit CommonService::getInstance()->signalClearEdit();//清空搜索栏
         return;
     }
 }
 
+void MusicListScrollArea::slotUpdateRange()
+{
+    verticalScrollBar()->setMaximum(verticalScrollBar()->value() - 40);
+    //verticalScrollBar()->setValue(verticalScrollBar()->minimum());
+}
 
 bool MusicListScrollArea::eventFilter(QObject *o, QEvent *e)
 {

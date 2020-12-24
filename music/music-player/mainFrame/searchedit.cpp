@@ -177,3 +177,4 @@ void SearchEdit::onReturnPressed()
     emit CommonService::getInstance()->signalSwitchToView(SearchMusicResultType, text);
 }
 
+

@@ -50,7 +50,7 @@ public slots:
     void slotMenuTriggered(QAction *action);
 signals:
     void sigAddNewSongList();
-
+    void sigRmvSongList();
     void currentChanged(const QModelIndex &current, const QModelIndex &previous) Q_DECL_OVERRIDE;
 
 protected:

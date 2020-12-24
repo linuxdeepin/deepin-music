@@ -52,6 +52,8 @@ signals:
     void signalShowPopupMessage(const QString &songListName, int selectCount, int insertCount);
     // 播放队列关闭动画播放完毕，刷新背景
     void signalPlayQueueClosed();
+    // 切换歌单时，清空搜索栏
+    void signalClearEdit();
 private:
     explicit CommonService();
     friend class DMusic::DSingleton<CommonService>;

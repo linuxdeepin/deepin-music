@@ -359,6 +359,7 @@ void FooterWidget::initShortcut()
 {
     playPauseShortcut = new QShortcut(this);
     playPauseShortcut->setKey(QKeySequence(MusicSettings::value("shortcuts.all.play_pause").toString()));
+    playPauseShortcut->setAutoRepeat(false);
 
     volUpShortcut = new QShortcut(this);
     volUpShortcut->setKey(QKeySequence(MusicSettings::value("shortcuts.all.volume_up").toString()));
@@ -368,9 +369,11 @@ void FooterWidget::initShortcut()
 
     nextShortcut = new QShortcut(this);
     nextShortcut->setKey(QKeySequence(MusicSettings::value("shortcuts.all.next").toString()));
+    nextShortcut->setAutoRepeat(false);
 
     previousShortcut = new QShortcut(this);
     previousShortcut->setKey(QKeySequence(MusicSettings::value("shortcuts.all.previous").toString()));
+    previousShortcut->setAutoRepeat(false);
 
     muteShortcut = new QShortcut(this);
     muteShortcut->setKey(QKeySequence(QLatin1String("M")));

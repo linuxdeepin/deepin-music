@@ -76,7 +76,7 @@ public slots:
     void slotPlayQueueClick(bool click);
     // 点击歌词按钮
     void slotLrcClick(bool click);
-    // 点击模仿模式按钮
+    // 点击播放模式按钮
     void slotPlayModeClick(bool click);
 
     void slotCoverClick(bool click);

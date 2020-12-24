@@ -36,6 +36,7 @@
 #include "searchedit.h"
 
 #include "ac-desktop-define.h"
+#include "commonservice.h"
 
 DWIDGET_USE_NAMESPACE
 
@@ -57,6 +58,7 @@ TitlebarWidget::TitlebarWidget(QWidget *parent) :
     layout->addWidget(m_search, Qt::AlignCenter);
     QObject::connect(m_search, &SearchEdit::sigFoucusIn,
                      this, &TitlebarWidget::slotSearchEditFoucusIn);
+    connect(CommonService::getInstance(), &CommonService::signalClearEdit, this, &TitlebarWidget::slotClearEdit);
 }
 
 TitlebarWidget::~TitlebarWidget()
@@ -73,6 +75,17 @@ void TitlebarWidget::slotSearchEditFoucusIn()
 {
     //emit sigSearchEditFoucusIn();
     m_search->lineEdit()->setFocus();
+}
+
+void TitlebarWidget::slotClearEdit()
+{
+    if (m_search->text().isEmpty())
+        return;
+    m_search->clear();
+    auto edit = m_search->findChild<QLineEdit *>();
+    if (edit) {
+        QApplication::postEvent(edit, new QFocusEvent(QEvent::FocusOut, Qt::MouseFocusReason));
+    }
 }
 
 void TitlebarWidget::resizeEvent(QResizeEvent *event)
