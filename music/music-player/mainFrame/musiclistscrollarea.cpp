@@ -31,7 +31,6 @@
 #include <DPushButton>
 #include <DFloatingButton>
 #include <DPalette>
-
 #include <DUtil>
 #include <DGuiApplicationHelper>
 
@@ -40,7 +39,6 @@
 #include "listView/musicBaseAndSongList/musicbaselistview.h"
 #include "listView/musicBaseAndSongList/musicsonglistview.h"
 #include "commonservice.h"
-#include <DGuiApplicationHelper>
 #include "ac-desktop-define.h"
 
 MusicListScrollArea::MusicListScrollArea(QWidget *parent) : DScrollArea(parent)
@@ -123,13 +121,14 @@ MusicListScrollArea::MusicListScrollArea(QWidget *parent) : DScrollArea(parent)
     //达到添加新歌单后滚动条滑到当前新增项
     connect(verticalScrollBar(), &QScrollBar::rangeChanged, this, [ = ](int min, int max) {
         Q_UNUSED(min)
-        verticalScrollBar()->setValue(max);
+        if (max > 0 && m_customizeListview->getHeightChangeToMax()) {
+            verticalScrollBar()->setValue(max);
+        }
     });
 
     connect(m_dataBaseListview, &QAbstractItemView::clicked, this, &MusicListScrollArea::slotListViewClicked);
     connect(m_customizeListview, &QAbstractItemView::clicked, this, &MusicListScrollArea::slotListViewClicked);
     connect(m_customizeListview, &MusicSongListView::sigAddNewSongList, this, &MusicListScrollArea::slotAddNewSongList);
-    connect(m_customizeListview, &MusicSongListView::sigRmvSongList, this, &MusicListScrollArea::slotUpdateRange);
     connect(CommonService::getInstance(), &CommonService::signalSwitchToView, this, &MusicListScrollArea::viewChanged);
 }
 
@@ -160,13 +159,6 @@ void MusicListScrollArea::slotTheme(int type)
         dataBaseLabel->setPalette(dataBaseLabelPalette);
         customizeLabel->setPalette(dataBaseLabelPalette);
     }
-}
-
-void MusicListScrollArea::changePicture(QPixmap pixmap, QPixmap albumPixmap, QPixmap sidebarPixmap)
-{
-    Q_UNUSED(albumPixmap)
-//    m_dataBaseListview->changePicture(pixmap, sidebarPixmap);
-    //    m_customizeListview->changePicture(pixmap, sidebarPixmap);
 }
 
 void MusicListScrollArea::slotListViewClicked(const QModelIndex &index)
@@ -201,12 +193,6 @@ void MusicListScrollArea::viewChanged(ListPageSwitchType switchtype, const QStri
         emit CommonService::getInstance()->signalClearEdit();//清空搜索栏
         return;
     }
-}
-
-void MusicListScrollArea::slotUpdateRange()
-{
-    verticalScrollBar()->setMaximum(verticalScrollBar()->value() - 40);
-    //verticalScrollBar()->setValue(verticalScrollBar()->minimum());
 }
 
 bool MusicListScrollArea::eventFilter(QObject *o, QEvent *e)
@@ -269,7 +255,7 @@ bool MusicListScrollArea::eventFilter(QObject *o, QEvent *e)
 
 void MusicListScrollArea::resizeEvent(QResizeEvent *event)
 {
-//    m_customizeListview->adjustHeight();
+    m_customizeListview->adjustHeight();
     DScrollArea::resizeEvent(event);
     sizeHint();
 }

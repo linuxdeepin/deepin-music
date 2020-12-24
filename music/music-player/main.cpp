@@ -43,9 +43,9 @@
 #include "core/player.h"
 #include "core/musicsettings.h"
 #include "core/util/global.h"
-#include "speech/exportedinterface.h"
 #include "databaseservice.h"
 #include "acobjectlist.h"
+#include "speechCenter.h"
 
 #include "mainframe.h"
 
@@ -198,11 +198,16 @@ bool checkOnly()
 
 void createSpeechDbus()
 {
-    QDBusConnection::sessionBus().registerService("com.deepin.musicSpeech");
-    ExportedInterface *mSpeech = new ExportedInterface(nullptr);
-    mSpeech->registerAction("1", "playmusic");
-    mSpeech->registerAction("2", "play artist");
-    mSpeech->registerAction("3", "play artist song");
+    const std::function<QVariant(QString)> handler;
+    SpeechCenter::getInstance();
+    QDBusConnection::sessionBus().registerService("com.deepin.musicSp.eech");
+    Dtk::Core::DUtil::DExportedInterface *mSpeech = new Dtk::Core::DUtil::DExportedInterface(nullptr);
+    // 'playMusic','红颜'
+    mSpeech->registerAction("playMusic", "play Music", SpeechCenter::playMusic);
+    // 'playArtist','华晨宇'
+    mSpeech->registerAction("playArtist", "play Artist", SpeechCenter::playArtist);
+    // 'playArtistMusic','华晨宇:齐天'
+    mSpeech->registerAction("playArtistMusic", "play Artist Music", SpeechCenter::playArtistMusic);
     mSpeech->registerAction("4", "play faverite");
     mSpeech->registerAction("5", "play custom ");
     mSpeech->registerAction("6", "play radom");

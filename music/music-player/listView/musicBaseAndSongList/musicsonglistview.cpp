@@ -202,6 +202,16 @@ void MusicSongListView::showContextMenu(const QPoint &pos)
     menu.exec(globalPos);
 }
 
+void MusicSongListView::adjustHeight()
+{
+    setMinimumHeight(model->rowCount() * 40);
+}
+
+bool MusicSongListView::getHeightChangeToMax()
+{
+    return m_heightChangeToMax;
+}
+
 void MusicSongListView::addNewSongList()
 {
     //close editor
@@ -244,6 +254,8 @@ void MusicSongListView::addNewSongList()
 
     //主页面清空选择项
     emit sigAddNewSongList();
+    m_heightChangeToMax = true;
+    adjustHeight();
 }
 
 void MusicSongListView::rmvSongList()
@@ -278,7 +290,9 @@ void MusicSongListView::rmvSongList()
             MusicSettings::setOption("base.play.last_playlist", "all");
         }
         //删除消息，让scroll自动刷新
-        emit sigRmvSongList();
+//        emit sigRmvSongList();
+        m_heightChangeToMax = false;
+        adjustHeight();
     }
 }
 

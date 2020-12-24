@@ -41,7 +41,6 @@
 #include "medialibrary.h"
 #include "mediameta.h"
 #include "metadetector.h"
-#include "net/geese.h"
 #include "util/basetool.h"
 #include "util/encodingdetector.h"
 #include "util/pinyinsearch.h"
@@ -68,7 +67,6 @@
 #include "mpriscontroller.h"
 #include "mprisplayer.h"
 #include "speech/speechCenter.h"
-#include "speech/exportedinterface.h"
 //#include "threadpool.h"
 #include "vlc/vlcdynamicinstance.h"
 #include "dbusutils.h"
@@ -1097,7 +1095,7 @@ TEST(Application, btPlayList)
     TEST_CASE_NAME("btPlayList")
 
     MainFrame *w = Application::getInstance()->getMainWindow();
-    DIconButton *bt = w->findChild<DIconButton *>(AC_PlayList);
+    DIconButton *bt = w->findChild<DIconButton *>(AC_PlayQueue);
     QTest::qWait(50);
 
     QPoint pos(20, 20);
@@ -1372,7 +1370,7 @@ TEST(Application, viewChangedDark)
     event.simulate(baseListView->viewport());
     event.clear();
 
-    DIconButton *btPlaylist = w->findChild<DIconButton *>(AC_PlayList);
+    DIconButton *btPlaylist = w->findChild<DIconButton *>(AC_PlayQueue);
     QTest::qWait(500);
 
     pos = QPoint(20, 20);

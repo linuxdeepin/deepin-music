@@ -1,8 +1,3 @@
-
-
-
-
-
 #include <gtest/gtest.h>
 #include <gmock/gmock-matchers.h>
 #include "application.h"
@@ -20,7 +15,7 @@
 #include "musicbaselistview.h"
 #include "playlistview.h"
 #include "musicsonglistview.h"
-
+#include "databaseservice.h"
 
 TEST(Application, dataBaseService)
 {
@@ -33,8 +28,8 @@ TEST(Application, dataBaseService)
 
     DataBaseService::getInstance()->getMusicInfoByHash("all");
     DataBaseService::getInstance()->getCustomSongList();
-    DataBaseService::getInstance()->getDatabase();
-    DataBaseService::getInstance()->getImportStatus();
+//    DataBaseService::getInstance()->getDatabase();
+//    DataBaseService::getInstance()->getImportStatus();
 
     QList<MediaMeta> metaList;
     metaList.append(MediaMeta());

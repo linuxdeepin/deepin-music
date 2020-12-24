@@ -9,9 +9,9 @@ class SpeechCenter : public QObject, public DMusic::DSingleton<SpeechCenter>
 {
     Q_OBJECT
 public:
-    bool playMusic(QString music);
-//    bool playArtist(QString artist);
-//    bool playArtistMusic(QString artist, QString music);
+    static QVariant playMusic(QString musicName);
+    static QVariant playArtist(QString artistName);
+    static QVariant playArtistMusic(QString artistAndmusic);
 //    bool playFaverite();
 //    bool playCustom(QString listName);
 //    bool playRadom();
@@ -28,8 +28,6 @@ public:
 
 signals:
     void sigPlayMusic(QString music);
-    void sigPlayArtist(QString artist);
-    void sigPlayArtistMusic(QString artist, QString music);
     void sigPlayFaverite();
     void sigPlayCustom(QString listName);
     void sigPlayRadom();
@@ -51,7 +49,6 @@ private:
 
 private:
     bool playMusicResult        = true;
-    bool playArtistResult       = true;
     bool playArtistMusicResult  = true;
     bool playFaveriteResult     = true;
     bool playCustomResult       = true;

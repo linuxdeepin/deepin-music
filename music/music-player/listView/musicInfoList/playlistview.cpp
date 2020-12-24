@@ -166,6 +166,9 @@ PlayListView::PlayListView(QString hash, bool isPlayQueue, QWidget *parent)
             this, &PlayListView::setThemeType);
 
     setThemeType(DGuiApplicationHelper::instance()->themeType());
+    // 跳转到播放的位置
+    connect(CommonService::getInstance(), &CommonService::sigScrollToCurrentPosition,
+            this, &PlayListView::slotScrollToCurrentPosition);
 }
 
 PlayListView::~PlayListView()
@@ -694,6 +697,26 @@ void PlayListView::slotRemoveSingleSong(const QString &listHash, const QString &
                 update();
                 break;
             }
+        }
+    }
+}
+
+void PlayListView::slotScrollToCurrentPosition(QString songlistHash)
+{
+    qDebug() << __FUNCTION__ << songlistHash;
+    // listmode情况下跳转到播放位置
+    if (songlistHash == "all" && this->viewMode() == QListView::ListMode) {
+        int height = 0;
+        QString currentMetaHash = Player::getInstance()->getActiveMeta().hash;
+        for (int i = 0; i < m_model->rowCount(); i++) {
+            QModelIndex idx = m_model->index(i, 0, QModelIndex());
+            QSize size = m_delegate->sizeHint(QStyleOptionViewItem(), idx);
+            MediaMeta meta = idx.data(Qt::UserRole).value<MediaMeta>();
+            if (meta.hash == currentMetaHash) {
+                this->verticalScrollBar()->setValue(height);
+                break;
+            }
+            height += size.height();
         }
     }
 }

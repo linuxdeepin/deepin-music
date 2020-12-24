@@ -43,7 +43,6 @@
 #include "commonservice.h"
 #include "musiclistdialog.h"
 #include "global.h"
-
 #include "ac-desktop-define.h"
 
 DWIDGET_USE_NAMESPACE
@@ -114,6 +113,10 @@ SingerListView::SingerListView(QString hash, QWidget *parent)
     // 歌曲删除
     connect(DataBaseService::getInstance(), &DataBaseService::signalRmvSong,
             this, &SingerListView::slotRemoveSingleSong);
+
+    // 跳转到播放的位置
+    connect(CommonService::getInstance(), &CommonService::sigScrollToCurrentPosition,
+            this, &SingerListView::slotScrollToCurrentPosition);
 }
 
 SingerListView::~SingerListView()
@@ -492,6 +495,26 @@ void SingerListView::slotRemoveSingleSong(const QString &listHash, const QString
     }
 }
 
+void SingerListView::slotScrollToCurrentPosition(QString songlistHash)
+{
+    qDebug() << __FUNCTION__ << songlistHash;
+    // listmode情况下跳转到播放位置
+    if (songlistHash == "artist" && this->viewMode() == QListView::ListMode) {
+        int height = 0;
+        QString currentMetaHash = Player::getInstance()->getActiveMeta().hash;
+        for (int i = 0; i < singerModel->rowCount(); i++) {
+            QModelIndex idx = singerModel->index(i, 0, QModelIndex());
+            QSize size = signerDelegate->sizeHint(QStyleOptionViewItem(), idx);
+            SingerInfo singerInfo = idx.data(Qt::UserRole).value<SingerInfo>();
+            if (singerInfo.musicinfos.contains(currentMetaHash)) {
+                this->verticalScrollBar()->setValue(height);
+                break;
+            }
+            height += size.height();
+        }
+    }
+}
+
 void SingerListView::onDoubleClicked(const QModelIndex &index)
 {
     SingerInfo signerTmp = index.data(Qt::UserRole).value<SingerInfo>();
@@ -503,9 +526,9 @@ void SingerListView::slotCoverUpdate(const MediaMeta &meta)
 {
     for (int i = 0; i < singerModel->rowCount(); i++) {
         QModelIndex idx = singerModel->index(i, 0, QModelIndex());
-        AlbumInfo albumTmp = idx.data(Qt::UserRole).value<AlbumInfo>();
+        SingerInfo singerInfo = idx.data(Qt::UserRole).value<SingerInfo>();
 
-        if (albumTmp.musicinfos.contains(meta.hash)) {
+        if (singerInfo.musicinfos.contains(meta.hash)) {
             QStandardItem *item = dynamic_cast<QStandardItem *>(singerModel->item(i, 0));
             if (item == nullptr) {
                 break;

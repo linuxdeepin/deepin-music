@@ -1,6 +1,9 @@
 #include "speechCenter.h"
-#include "exportedinterface.h"
+#include "commonservice.h"
+#include "databaseservice.h"
 #include <QDebug>
+#include <QJsonParseError>
+#include <QJsonObject>
 //播放模式定义
 enum class PLAYMODE {
     loop               = 1,  //循环播放
@@ -12,27 +15,60 @@ SpeechCenter::SpeechCenter(QObject *parent) : QObject(parent)
 {
 
 }
-
-bool SpeechCenter::playMusic(QString music)
+//指定歌曲
+QVariant SpeechCenter::playMusic(QString musicName)
 {
-    qDebug() << "-----playMusic:" << music;
-    Q_EMIT sigPlayMusic(music);
-    return playMusicResult;
+    qDebug() << __FUNCTION__ << musicName;
+    //跳转到所有音乐
+    emit CommonService::getInstance()->signalSwitchToView(AllSongListType, "");
+    //查找该歌手
+    QList<MediaMeta> mediaMetas = DataBaseService::getInstance()->allMusicInfos();
+    bool isExit = false;
+    for (MediaMeta mediaMeta : mediaMetas) {
+        if (mediaMeta.title == musicName) {
+            //重置播放队列
+            Player::getInstance()->clearPlayList();
+            Player::getInstance()->setPlayList(mediaMetas);
+            //设置当前播放为所有音乐
+            Player::getInstance()->setCurrentPlayListHash("all", false);
+            Player::getInstance()->playMeta(mediaMeta);
+            emit CommonService::getInstance()->sigScrollToCurrentPosition("all");
+            isExit = true;
+            break;
+        }
+    }
+    return isExit;
+}
+// 指定歌手
+QVariant SpeechCenter::playArtist(QString artistName)
+{
+    qDebug() << __FUNCTION__ << artistName;
+    //跳转到歌手界面
+    emit CommonService::getInstance()->signalSwitchToView(SingerType, "");
+    //查找该歌手
+    QList<SingerInfo> singerInfos = DataBaseService::getInstance()->allSingerInfos();
+    bool isExit = false;
+    for (SingerInfo singerInfo : singerInfos) {
+        if (singerInfo.singerName == artistName && singerInfo.musicinfos.size() > 0) {
+            //重置播放队列
+            Player::getInstance()->clearPlayList();
+            Player::getInstance()->setPlayList(singerInfo.musicinfos.values());
+            //设置当前播放为歌手
+            Player::getInstance()->setCurrentPlayListHash("artist", false);
+            //播放第一首
+            Player::getInstance()->playMeta(singerInfo.musicinfos.values().first());
+            emit CommonService::getInstance()->sigScrollToCurrentPosition("artist");
+            isExit = true;
+            break;
+        }
+    }
+    return isExit;
 }
 
-//bool SpeechCenter::playArtist(QString artist)
-//{
-//    qDebug() << "-----playArtist:" << artist;
-//    Q_EMIT sigPlayArtist(artist);
-//    return playArtistResult;
-//}
-
-//bool SpeechCenter::playArtistMusic(QString artist, QString music)
-//{
+QVariant SpeechCenter::playArtistMusic(QString artistAndmusic)
+{
 //    qDebug() << "-----playArtistMusic artist:" << artist << "Music:" << music;
-//    Q_EMIT sigPlayArtistMusic(artist, music);
-//    return playArtistMusicResult;
-//}
+}
 
 //bool SpeechCenter::playFaverite()
 //{

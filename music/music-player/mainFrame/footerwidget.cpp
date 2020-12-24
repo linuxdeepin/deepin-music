@@ -276,8 +276,8 @@ void FooterWidget::initUI(QWidget *parent)
     m_btPlayQueue->setIconSize(QSize(36, 36));
     mainHBoxlayout->addWidget(m_btPlayQueue, 0);
 
-    AC_SET_OBJECT_NAME(m_btPlayQueue, AC_PlayList);
-    AC_SET_ACCESSIBLE_NAME(m_btPlayQueue, AC_PlayList);
+    AC_SET_OBJECT_NAME(m_btPlayQueue, AC_PlayQueue);
+    AC_SET_ACCESSIBLE_NAME(m_btPlayQueue, AC_PlayQueue);
 
     // 音量控件
     m_volSlider = new SoundVolume(this->parentWidget());
@@ -535,6 +535,12 @@ void FooterWidget::slotSoundClick(bool click)
 void FooterWidget::slotPlaybackStatusChanged(Player::PlaybackStatus status)
 {
     setPlayProperty(status);
+    if (status == Player::PlaybackStatus::Stopped) {
+        Player::getInstance()->getMpris()->setPlaybackStatus(Mpris::Stopped);
+    } else {
+        Player::getInstance()->getMpris()->setPlaybackStatus(status == Player::PlaybackStatus::Playing
+                                                             ? Mpris::Playing : Mpris::Paused);
+    }
 }
 
 void FooterWidget::slotMediaMetaChanged()

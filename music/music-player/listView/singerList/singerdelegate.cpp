@@ -60,8 +60,8 @@ void SingerDataDelegate::paint(QPainter *painter, const QStyleOptionViewItem &op
 QSize SingerDataDelegate::sizeHint(const QStyleOptionViewItem &option,
                                    const QModelIndex &index) const
 {
-    auto listview = qobject_cast<const SingerListView *>(option.widget);
-    if (listview->viewMode() == QListView::IconMode) {
+    auto *listview = qobject_cast<const SingerListView *>(option.widget);
+    if (listview && listview->viewMode() == QListView::IconMode) {
         return QSize(150, 150);
     } else {
         auto baseSize = QStyledItemDelegate::sizeHint(option, index);

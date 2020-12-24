@@ -87,7 +87,9 @@ public slots:
 
     // 删除单个歌单中的歌曲
     void slotRemoveSingleSong(const QString &listHash, const QString &musicHash);
-    ///右键菜单响应begin
+    // 跳转到当前播放歌曲位置
+    void slotScrollToCurrentPosition(QString songlistHash);
+    //右键菜单响应begin
     // 添加到播放队列
     void slotAddToPlayQueue();
     // 添加收藏

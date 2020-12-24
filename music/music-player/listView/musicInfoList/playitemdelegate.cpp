@@ -119,8 +119,8 @@ QSize PlayItemDelegate::sizeHint(const QStyleOptionViewItem &option,
                                  const QModelIndex &index) const
 {
     //Q_D(const PlayItemDelegate);
-    auto listview = qobject_cast<const PlayListView *>(option.widget);
-    if (listview->viewMode() == QListView::IconMode) {
+    auto *listview = qobject_cast<const PlayListView *>(option.widget);
+    if (listview && listview->viewMode() == QListView::IconMode) {
         return QSize(150, 200);
     } else {
         auto baseSize = QStyledItemDelegate::sizeHint(option, index);

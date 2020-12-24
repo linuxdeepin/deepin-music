@@ -31,6 +31,7 @@ using namespace Dtk::Widget;
         app.setAttribute(Qt::AA_UseHighDpiPixmaps); \
         app.setOrganizationName("deepin"); \
         app.setApplicationName("deepin-music"); \
+        app.loadTranslator(); \
         MusicSettings::init(); \
         MainFrame mainframe; \
         auto showflag = MusicSettings::value("base.play.showFlag").toBool(); \

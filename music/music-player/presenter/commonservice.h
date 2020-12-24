@@ -40,6 +40,8 @@ public:
 signals:
     // hashOrSearchword为hash值或者搜索关键词
     void signalSwitchToView(ListPageSwitchType switchtype, QString hashOrSearchword); //switch to playlist view,
+    // 跳转到当前播放的位置,参数为需要跳转的歌单hash
+    void sigScrollToCurrentPosition(QString songlistHash);
     // 刷新收藏按钮图标
     void signalFluashFavoriteBtnIcon();
     // 添加新的歌曲清单

@@ -35,7 +35,6 @@
 
 #include "player.h"
 #include "musicsettings.h"
-
 #include "ac-desktop-define.h"
 
 SoundVolume::SoundVolume(QWidget *parent)

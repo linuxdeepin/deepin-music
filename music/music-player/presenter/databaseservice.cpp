@@ -434,6 +434,12 @@ void DataBaseService::deletePlaylist(const QString &hash)
         qWarning() << query.lastError();
         return;
     }
+    for (int i = 0; 1 < m_PlaylistMeta.size(); i++) {
+        if (m_PlaylistMeta.at(i).uuid == hash) {
+            m_PlaylistMeta.removeAt(i);
+            break;
+        }
+    }
 }
 
 bool DataBaseService::favoriteMusic(const MediaMeta meta)

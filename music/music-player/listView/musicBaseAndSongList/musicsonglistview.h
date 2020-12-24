@@ -38,7 +38,8 @@ public:
 
     void init();
     void showContextMenu(const QPoint &pos);
-
+    void adjustHeight();
+    bool getHeightChangeToMax();
 public slots:
     void setThemeType(int type);
 
@@ -78,5 +79,6 @@ private:
     // 新建歌单快捷键
     QShortcut           *m_newItemShortcut = nullptr;
     bool                pixmapState         = false;
+    bool                m_heightChangeToMax = false;
 };
 

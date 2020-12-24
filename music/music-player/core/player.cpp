@@ -916,7 +916,6 @@ void Player::initVlc()
     //vlc stateChanged
     connect(m_qvmedia, &VlcMedia::stateChanged,
     this, [ = ](Vlc::State status) {
-
         switch (status) {
         case Vlc::Idle: {
             /**************************************
@@ -1049,25 +1048,21 @@ void Player::initMpris()
                 playMeta(getActiveMeta());
             }
         }
-        m_mpris->setPlaybackStatus(Mpris::Playing);
     });
 
     connect(m_mpris, &MprisPlayer::pauseRequested,
     this, [ = ]() {
         pauseNow();
-        m_mpris->setPlaybackStatus(Mpris::Paused);
     });
 
     connect(m_mpris, &MprisPlayer::nextRequested,
     this, [ = ]() {
         playNextMeta(true);
-        m_mpris->setPlaybackStatus(Mpris::Playing);
     });
 
     connect(m_mpris, &MprisPlayer::previousRequested,
     this, [ = ]() {
         playPreMeta();
-        m_mpris->setPlaybackStatus(Mpris::Playing);
     });
 }
 

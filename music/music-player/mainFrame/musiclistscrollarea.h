@@ -42,19 +42,13 @@ public:
 
 public slots:
     void slotTheme(int type);
-    void changePicture(QPixmap pixmap, QPixmap albumPixmap, QPixmap sidebarPixmap);
-
     void slotListViewClicked(const QModelIndex &index);
     void slotAddNewSongList();
     // 切换到搜索结果界面
     void viewChanged(ListPageSwitchType switchtype, const QString &hashOrSearchword);
-
-    void slotUpdateRange();
 protected:
     bool eventFilter(QObject *o, QEvent *e) Q_DECL_OVERRIDE;
-
-protected:
-    virtual void resizeEvent(QResizeEvent *event) Q_DECL_OVERRIDE;
+    void resizeEvent(QResizeEvent *e) Q_DECL_OVERRIDE;
 
 private:
     MusicBaseListView *m_dataBaseListview = nullptr;
