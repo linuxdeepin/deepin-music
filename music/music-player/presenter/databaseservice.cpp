@@ -1012,17 +1012,17 @@ DataBaseService::DataBaseService()
 //    qRegisterMetaType<QMap<QString, MediaMeta>>("QMap<QString, MediaMeta>");
 
     m_workerThread = new QThread(this);
-    DBOperate *worker = new DBOperate(m_workerThread);
-    worker->moveToThread(m_workerThread);
+//    DBOperate *worker = new DBOperate(m_workerThread);
+    m_worker.moveToThread(m_workerThread);
     //发送信号给子线程导入数据
-    connect(this, SIGNAL(signalImportMedias(const QStringList &)), worker, SLOT(slotImportMedias(const QStringList &)));
+    connect(this, SIGNAL(signalImportMedias(const QStringList &)), &m_worker, SLOT(slotImportMedias(const QStringList &)));
     //加载图片
-    connect(this, SIGNAL(signalCreatCoverImg(const QList<MediaMeta> &)), worker, SLOT(slotCreatCoverImg(const QList<MediaMeta> &)));
+    connect(this, SIGNAL(signalCreatCoverImg(const QList<MediaMeta> &)), &m_worker, SLOT(slotCreatCoverImg(const QList<MediaMeta> &)));
 
-    connect(worker, &DBOperate::sigImportMetaFromThread, this, &DataBaseService::slotGetMetaFromThread);
-    connect(worker, &DBOperate::sigImportFinished, this, &DataBaseService::slotImportFinished);
-    connect(worker, &DBOperate::sigImportFailed, this, &DataBaseService::signalImportFailed);
-    connect(worker, &DBOperate::sigCreatOneCoverImg, this, &DataBaseService::slotCreatOneCoverImg);
+    connect(&m_worker, &DBOperate::sigImportMetaFromThread, this, &DataBaseService::slotGetMetaFromThread);
+    connect(&m_worker, &DBOperate::sigImportFinished, this, &DataBaseService::slotImportFinished);
+    connect(&m_worker, &DBOperate::sigImportFailed, this, &DataBaseService::signalImportFailed);
+    connect(&m_worker, &DBOperate::sigCreatOneCoverImg, this, &DataBaseService::slotCreatOneCoverImg);
 
     m_workerThread->start();
 }

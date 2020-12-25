@@ -25,6 +25,7 @@
 #include <QMap>
 #include <QSqlDatabase>
 #include <QModelIndexList>
+#include "dboperate.h"
 
 #include "util/singleton.h"
 
@@ -185,6 +186,7 @@ private:
     QList<SingerInfo> m_AllSingerInfo;
     QList<MediaMeta> m_AllFavourite;
     // 新加载的歌曲文件
+    DBOperate m_worker;
     QList<MediaMeta> m_loadMediaMeta;
     bool             m_Importing = false;
     QString          m_importHash;

@@ -102,7 +102,6 @@ QStringList Player::supportedMimeTypes() const
 
 Player::~Player()
 {
-
 }
 
 void Player::playMeta(MediaMeta meta)
@@ -466,9 +465,6 @@ QString Player::getCurrentPlayListHash()
 
 void Player::stop()
 {
-    if (m_qvinstance == nullptr || m_qvplayer == nullptr || m_qvmedia == nullptr) {
-        initVlc();
-    }
     //play停止后，发送清空当前波形图的信号
     emit signalMediaStop("");//不用当前的参数
     m_qvplayer->pause();

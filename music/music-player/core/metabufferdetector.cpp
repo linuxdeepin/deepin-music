@@ -188,7 +188,7 @@ void MetaBufferDetector::run()
                 if (path.endsWith(".ape") || path.endsWith(".APE")) {
                     for (int i = 0; (i + 1) < frame->linesize[0]; i++) {
                         auto  valDate = ((ptr[i]) << 16 | (ptr[i + 1]));
-                        curData.append(valDate + qrand());
+                        curData.append((float)valDate + qrand());
                     }
                 } else {
                     for (int i = 0; (i + 1) < frame->linesize[0]; i += 1024) {

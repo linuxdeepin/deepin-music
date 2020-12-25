@@ -327,7 +327,7 @@ private:
                                 void *data);
 
     void createCoreConnections();
-    //void removeCoreConnections();
+    void removeCoreConnections();
 
     libvlc_media_t *_vlcMedia;
     libvlc_event_manager_t *_vlcEvents;

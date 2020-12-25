@@ -106,7 +106,7 @@ PlayListView::PlayListView(QString hash, bool isPlayQueue, QWidget *parent)
     m_model->clear();
     setModel(m_model);
 
-    m_delegate = new PlayItemDelegate;
+    m_delegate = new PlayItemDelegate(this);
     setItemDelegate(m_delegate);
 
     setUniformItemSizes(true);

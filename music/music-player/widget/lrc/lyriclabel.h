@@ -2,7 +2,7 @@
 #define LYRICLABEL_H
 
 #include <DWidget>
-
+#include "musiclyric.h"
 DWIDGET_USE_NAMESPACE
 
 class AbstractWheelWidget : public DWidget
@@ -41,7 +41,7 @@ protected:
     int currentWheelNum = 0;
 };
 
-class MusicLyric;
+//class MusicLyric;
 class QFont;
 
 class LyricLabel : public AbstractWheelWidget
@@ -71,10 +71,10 @@ protected:
     virtual int itemCount() const override;
 
 protected:
-    MusicLyric *lyric;
-    QFont *lyricFont;
-    QColor *lyricNormal;
-    QColor *lyricHighlight;
+    MusicLyric lyric;
+    QFont lyricFont;
+    QColor lyricNormal;
+    QColor lyricHighlight;
 };
 
 #endif // LYRICLABEL_H

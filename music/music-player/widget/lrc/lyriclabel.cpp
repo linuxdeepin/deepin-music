@@ -28,13 +28,13 @@ LyricLabel::LyricLabel(bool touch, QWidget *parent)
     AC_SET_OBJECT_NAME(this, AC_lyricview);
     AC_SET_ACCESSIBLE_NAME(this, AC_lyricview);
 
-    lyric = new MusicLyric();
-    lyricFont = new QFont();
-    lyricFont->setFamily("SourceHanSansSC");
-    lyricFont->setWeight(QFont::Normal);
-    lyricFont->setPixelSize(14);
-    lyricNormal = new QColor("#526A7F");
-    lyricHighlight = new QColor("#000000");
+//    lyric = new MusicLyric();
+//    lyricFont = new QFont();
+    lyricFont.setFamily("SourceHanSansSC");
+    lyricFont.setWeight(QFont::Normal);
+    lyricFont.setPixelSize(14);
+    lyricNormal = QColor("#526A7F");
+    lyricHighlight = QColor("#000000");
     connect(this, SIGNAL(changeTo(int)), this, SLOT(changeToEvent(int)));
 
     m_FadeFlag = MusicSettings::value("base.play.fade_in_out").toBool();
@@ -65,15 +65,15 @@ LyricLabel::LyricLabel(bool touch, QWidget *parent)
 
 void LyricLabel::getFromFile(QString dir)
 {
-    lyric->getFromFile(dir);
+    lyric.getFromFile(dir);
     this->update();
 }
 
 void LyricLabel::paintItem(QPainter *painter, int index, const QRect &rect)
 {
     if (index == this->m_currentItem) {
-        painter->setPen(*lyricHighlight);
-        QFont font(*lyricFont);
+        painter->setPen(lyricHighlight);
+        QFont font(lyricFont);
         font.setPixelSize(font.pixelSize() + 1);
         painter->setFont(font);
         QPoint leftpos = rect.bottomLeft();
@@ -91,7 +91,7 @@ void LyricLabel::paintItem(QPainter *painter, int index, const QRect &rect)
 
         painter->setRenderHint(QPainter::Antialiasing, true);
 
-        QColor normalcolor = *lyricHighlight;
+        QColor normalcolor = lyricHighlight;
         normalcolor.setAlphaF(0.5);
         QPen pen(normalcolor, 1, Qt::SolidLine, Qt::SquareCap, Qt::RoundJoin);
 
@@ -107,14 +107,14 @@ void LyricLabel::paintItem(QPainter *painter, int index, const QRect &rect)
     } else {
         QPen pen = painter->pen();
         QColor color = pen.color();
-        color.setRed(lyricNormal->red());
-        color.setGreen(lyricNormal->green());
-        color.setBlue(lyricNormal->blue());
+        color.setRed(lyricNormal.red());
+        color.setGreen(lyricNormal.green());
+        color.setBlue(lyricNormal.blue());
         painter->setPen(color);
-        painter->setFont(*lyricFont);
+        painter->setFont(lyricFont);
     }
-    QFontMetrics fm(*lyricFont);
-    QString lricstr = lyric->getLineAt(index);
+    QFontMetrics fm(lyricFont);
+    QString lricstr = lyric.getLineAt(index);
     QPoint tleftpos = rect.topLeft();
     if (fm.width(lricstr)  > rect.width() - 100) {
 
@@ -132,14 +132,14 @@ void LyricLabel::paintItem(QPainter *painter, int index, const QRect &rect)
         painter->drawText(QRect(tleftpos.x(), tleftpos.y() + rect.height() / 2, rect.width(), rect.height() / 2), Qt::AlignCenter, str2);
 
     } else {
-        painter->drawText(QRect(tleftpos.x(), tleftpos.y(), rect.width(), rect.height() / 2), Qt::AlignCenter, lyric->getLineAt(index));
+        painter->drawText(QRect(tleftpos.x(), tleftpos.y(), rect.width(), rect.height() / 2), Qt::AlignCenter, lyric.getLineAt(index));
     }
 
 }
 
 int LyricLabel::itemHeight() const
 {
-    QFontMetrics fm(*lyricFont);
+    QFontMetrics fm(lyricFont);
     //qDebug() << "itemheight" << fm.height()*2.8;
     //return fm.height() * 1.4;
     return static_cast<int>(fm.height() * 2.8);
@@ -148,14 +148,14 @@ int LyricLabel::itemHeight() const
 
 int LyricLabel::itemCount() const
 {
-    return lyric->getCount();
+    return lyric.getCount();
 }
 
 void LyricLabel::postionChanged(qint64 pos)
 {
     if (this->isScrolled) return;
     pos = pos + 500; //歌词滚动需要500ms
-    int index = lyric->getIndex(pos);
+    int index = lyric.getIndex(pos);
     if (index != m_currentItem)
         this->scrollTo(index);
 }
@@ -166,18 +166,18 @@ void LyricLabel::setThemeType(int type)
     if (type == 1) {
         QColor normalcolor = "#000000";
         normalcolor.setAlphaF(0.5);
-        *lyricNormal =  normalcolor;
-        *lyricHighlight =  QColor("#000000");
+        lyricNormal =  normalcolor;
+        lyricHighlight =  QColor("#000000");
     } else {
-        *lyricNormal =  QColor("#C0C6D4");
-        *lyricHighlight =  QColor("#FFFFFF");
+        lyricNormal =  QColor("#C0C6D4");
+        lyricHighlight =  QColor("#FFFFFF");
     }
     update();
 }
 
 void LyricLabel::changeToEvent(int index)
 {
-    emit changeTo(lyric->getPostion(index));
+    emit changeTo(lyric.getPostion(index));
 }
 
 //void LyricLabel::changeFont()

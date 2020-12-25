@@ -62,7 +62,7 @@ MusicListInfoView::MusicListInfoView(const QString &hash, QWidget *parent)
     m_model = new MusiclistInfomodel(0, 1, this);
     setModel(m_model);
 
-    delegate = new MusicInfoItemDelegate;
+    delegate = new MusicInfoItemDelegate(this);
     setItemDelegate(delegate);
 
     setDragEnabled(true);

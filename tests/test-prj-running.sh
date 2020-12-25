@@ -4,8 +4,18 @@ rm -rf ${HOME}/.cache/deepin/deepin-music/*
 
 mkdir build
 cd build
+cp ../../tests/collection-coverage.sh ./
 cmake ..
-make test -j8
+make -j8
+
+lcov --directory ./CMakeFiles/deepin-music-test.dir --zerocounters
+./build/music-player/deepin-music-test
+#第一次会因为未知原因失败
+./collection-coverage.sh
+sleep 5
+#第一次因为未知原因失败,执行第二次进行收集
+./collection-coverage.sh
+#make test -j8
 
 cd ./../../
 rm -rf ./build-ut
@@ -22,7 +32,7 @@ mkdir report
 cd report
 cp ./../../tests/build/report/report_deepin-music.xml ./
 
-#cd ..
-#cp ./../tests/build/asan_deepin-music.log* ./
+cd ..
+cp ./../tests/build/asan_deepin-music.log* ./asan_deepin-music.log
 
 exit 0

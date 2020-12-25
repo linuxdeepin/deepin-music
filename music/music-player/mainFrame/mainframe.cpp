@@ -258,7 +258,6 @@ void MainFrame::initMenuAndShortcut()
     trayIcon->setIcon(QIcon::fromTheme("deepin-music"));
     trayIcon->setToolTip(tr("Music"));
     trayIcon->setContextMenu(trayIconMenu);
-    trayIcon->show();
 
     connect(playAction, &QAction::triggered,
     this, [ = ]() {

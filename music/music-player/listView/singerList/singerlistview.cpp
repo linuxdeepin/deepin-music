@@ -79,7 +79,7 @@ SingerListView::SingerListView(QString hash, QWidget *parent)
     m_hash = hash;
     singerModel = new SingerDataModel(0, 1, this);
 
-    signerDelegate = new SingerDataDelegate;
+    signerDelegate = new SingerDataDelegate(this);
     setModel(singerModel);
     setItemDelegate(signerDelegate);
     setViewportMargins(0, 0, 8, 0);
@@ -136,10 +136,12 @@ void SingerListView::setSingerListData(QList<SingerInfo> &&listinfo)
 QList<SingerInfo> SingerListView::getSingerListData() const
 {
     QList<SingerInfo> list;
-    for (int i = 0; i < singerModel->rowCount(); i++) {
-        QModelIndex idx = singerModel->index(i, 0, QModelIndex());
-        SingerInfo singerTmp = idx.data(Qt::UserRole).value<SingerInfo>();
-        list.append(singerTmp);
+    if (singerModel) {
+        for (int i = 0; i < singerModel->rowCount(); i++) {
+            QModelIndex idx = singerModel->index(i, 0, QModelIndex());
+            SingerInfo singerTmp = idx.data(Qt::UserRole).value<SingerInfo>();
+            list.append(singerTmp);
+        }
     }
     return list;
 }
@@ -227,9 +229,19 @@ void SingerListView::resetSingerListDataBySongName(const QList<MediaMeta> &media
 
     singerModel->clear();
     for (SingerInfo singerInfo : singerInfos) {
-        static SingerInfo &tmpMeta = singerInfo;
-        bool ret = std::any_of(mediaMetas.begin(), mediaMetas.end(), [](MediaMeta mt) {return CommonService::getInstance()->containsStr(mt.singer, tmpMeta.singerName);});
-        if (ret) {
+//        static SingerInfo &tmpMeta = singerInfo;
+//        QList<MediaMeta> mediaMetasTemp = mediaMetas;
+//        bool ret = std::any_of(mediaMetasTemp.begin(), mediaMetasTemp.end(), [](MediaMeta mt) {
+//            return CommonService::getInstance()->containsStr(mt.singer, tmpMeta.singerName);
+//        });
+        bool isSingerContainSong = false;
+        for (MediaMeta meta : mediaMetas) {
+            if (CommonService::getInstance()->containsStr(meta.singer, singerInfo.singerName)) {
+                isSingerContainSong = true;
+                break;
+            }
+        }
+        if (isSingerContainSong) {
             QStandardItem *pItem = new QStandardItem;
             //设置icon
             bool iconExists = false;
@@ -284,9 +296,16 @@ void SingerListView::resetSingerListDataByAlbum(const QList<AlbumInfo> &albumInf
 
     singerModel->clear();
     for (SingerInfo singerInfo : singerInfos) {
-        static SingerInfo &tmpMeta = singerInfo;
-        bool ret = std::any_of(albumInfos.begin(), albumInfos.end(), [](AlbumInfo mt) {return CommonService::getInstance()->containsStr(mt.singer, tmpMeta.singerName);});
-        if (ret) {
+//        static SingerInfo &tmpMeta = singerInfo;
+//        bool ret = std::any_of(albumInfos.begin(), albumInfos.end(), [](AlbumInfo mt) {return CommonService::getInstance()->containsStr(mt.singer, tmpMeta.singerName);});
+        bool isSingerContainSong = false;
+        for (AlbumInfo albumInfo : albumInfos) {
+            if (CommonService::getInstance()->containsStr(albumInfo.singer, singerInfo.singerName)) {
+                isSingerContainSong = true;
+                break;
+            }
+        }
+        if (isSingerContainSong) {
             QStandardItem *pItem = new QStandardItem;
             //设置icon
             bool iconExists = false;
@@ -316,7 +335,8 @@ void SingerListView::resetSingerListDataByAlbum(const QList<AlbumInfo> &albumInf
 
 int SingerListView::getMusicCount()
 {
-    return std::accumulate(getSingerListData().begin(), getSingerListData().end(), 0, calculateSingerSize);
+    QList<SingerInfo> singerInfos = getSingerListData();
+    return std::accumulate(singerInfos.begin(), singerInfos.end(), 0, calculateSingerSize);
 }
 
 void SingerListView::setViewModeFlag(QListView::ViewMode mode)

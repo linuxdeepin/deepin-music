@@ -78,7 +78,7 @@ AlbumListView::AlbumListView(QString hash, QWidget *parent)
 {
     setObjectName("AlbumListView");
     albumModel = new AlbumDataModel(0, 1, this);
-    albumDelegate = new AlbumDataDelegate;
+    albumDelegate = new AlbumDataDelegate(this);
     setModel(albumModel);
     setItemDelegate(albumDelegate);
     setViewportMargins(0, 0, 8, 0);
@@ -208,9 +208,21 @@ void AlbumListView::resetAlbumListDataBySongName(const QList<MediaMeta> &mediaMe
     }
     for (AlbumInfo albumInfo : albumInfoList) {
         for (MediaMeta albumMeta : albumInfo.musicinfos.values()) {
-            static MediaMeta &tmpMeta = albumMeta;
-            bool ret = std::any_of(mediaMetas.begin(), mediaMetas.end(), [](MediaMeta mt) {return mt.hash == tmpMeta.hash;});
-            if (ret) {
+//            static MediaMeta &tmpMeta = albumMeta;
+//            bool ret = std::any_of(mediaMetas.begin(), mediaMetas.end(), [](MediaMeta mt) {return mt.hash == tmpMeta.hash;});
+            bool isAlbumContainSong = false;
+            for (MediaMeta albumMeta : albumInfo.musicinfos.values()) {
+                for (MediaMeta listMeta : mediaMetas) {
+                    if (albumMeta.hash == listMeta.hash) {
+                        isAlbumContainSong = true;
+                        break;
+                    }
+                }
+                if (isAlbumContainSong) {
+                    break;
+                }
+            }
+            if (isAlbumContainSong) {
                 QStandardItem *pItem = new QStandardItem;
                 //设置icon
                 pItem->setIcon(m_defaultIcon);
@@ -261,9 +273,16 @@ void AlbumListView::resetAlbumListDataBySinger(const QList<SingerInfo> &singerIn
         break;
     }
     for (AlbumInfo albumInfo : albumInfoList) {
-        static AlbumInfo &tmpMeta = albumInfo;
-        bool ret = std::any_of(singerInfos.begin(), singerInfos.end(), [](SingerInfo mt) {return CommonService::getInstance()->containsStr(mt.singerName, tmpMeta.singer);});
-        if (ret) {
+//        static AlbumInfo &tmpMeta = albumInfo;
+//        bool ret = std::any_of(singerInfos.begin(), singerInfos.end(), [](SingerInfo mt) {return CommonService::getInstance()->containsStr(mt.singerName, tmpMeta.singer);});
+        bool isAlbumContainSong = false;
+        for (SingerInfo singerInfo : singerInfos) {
+            if (CommonService::getInstance()->containsStr(singerInfo.singerName, albumInfo.singer)) {
+                isAlbumContainSong = true;
+                break;
+            }
+        }
+        if (isAlbumContainSong) {
             QStandardItem *pItem = new QStandardItem;
             //设置icon
             bool iconExists = false;
@@ -304,7 +323,8 @@ QList<AlbumInfo> AlbumListView::getAlbumListData() const
 
 int AlbumListView::getMusicCount()
 {
-    return std::accumulate(getAlbumListData().begin(), getAlbumListData().end(), 0, calculateAlbumSize);
+    QList<AlbumInfo> albumInfos = getAlbumListData();
+    return std::accumulate(albumInfos.begin(), albumInfos.end(), 0, calculateAlbumSize);
 }
 
 void AlbumListView::setViewModeFlag(QListView::ViewMode mode)

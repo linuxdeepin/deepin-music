@@ -288,8 +288,8 @@ void FooterWidget::initUI(QWidget *parent)
     AC_SET_OBJECT_NAME(m_volSlider, AC_VolSlider);
     AC_SET_ACCESSIBLE_NAME(m_volSlider, AC_VolSlider);
 
-    m_metaBufferDetector = new MetaBufferDetector(nullptr);
-    connect(m_metaBufferDetector, SIGNAL(metaBuffer(const QVector<float> &, const QString &)),
+//    m_metaBufferDetector = new MetaBufferDetector(nullptr);
+    connect(&m_metaBufferDetector, SIGNAL(metaBuffer(const QVector<float> &, const QString &)),
             m_waveform, SLOT(onAudioBuffer(const QVector<float> &, const QString &)));
 
     //设置提示框
@@ -563,8 +563,8 @@ void FooterWidget::slotMediaMetaChanged()
     QFontMetrics singerFm(m_artist->font());
     QString singerText = singerFm.elidedText(meta.singer, Qt::ElideMiddle, m_artist->maximumWidth());
     m_artist->setText(singerText.isEmpty() ? tr("Unknown artist") : singerText);
-    m_metaBufferDetector->onClearBufferDetector();
-    m_metaBufferDetector->onBufferDetector(meta.localPath, meta.hash);
+    m_metaBufferDetector.onClearBufferDetector();
+    m_metaBufferDetector.onBufferDetector(meta.localPath, meta.hash);
 
     if (DataBaseService::getInstance()->favoriteExist(Player::getInstance()->getActiveMeta())) {
         m_btFavorite->setIcon(QIcon::fromTheme("collection1_press"));
@@ -691,10 +691,10 @@ void FooterWidget::slotLoadDetector(const QString &hash)
     MediaMeta mt = DataBaseService::getInstance()->getMusicInfoByHash(hash);
     if (mt.localPath.isEmpty())
         return;
-    if (m_metaBufferDetector)
-        m_metaBufferDetector->onBufferDetector(mt.localPath, mt.hash);
-    else
-        qDebug() << __FUNCTION__ << " at line:" << __LINE__ << " m_metaBufferDetector is not initailized";
+//    if (m_metaBufferDetector)
+    m_metaBufferDetector.onBufferDetector(mt.localPath, mt.hash);
+//    else
+//        qDebug() << __FUNCTION__ << " at line:" << __LINE__ << " m_metaBufferDetector is not initailized";
 }
 
 void FooterWidget::resizeEvent(QResizeEvent *event)

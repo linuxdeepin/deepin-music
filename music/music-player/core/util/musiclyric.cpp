@@ -232,7 +232,7 @@ QString MusicLyric::getLineAt(int index)
     return line[index];
 }
 
-int MusicLyric::getCount()
+int MusicLyric::getCount() const
 {
     return line.count();
 }

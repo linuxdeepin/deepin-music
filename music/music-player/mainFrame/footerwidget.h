@@ -33,6 +33,7 @@
 
 #include "player.h"
 #include <searchmeta.h>
+#include "metabufferdetector.h"
 
 class QAudioBuffer;
 
@@ -41,7 +42,7 @@ class Label;
 class SoundVolume;
 class MusicPixmapButton;
 class Waveform;
-class MetaBufferDetector;
+//class MetaBufferDetector;
 class HintFilter;
 class QTimer;
 class FooterWidget : public DFloatingWidget
@@ -130,7 +131,7 @@ private:
 
     SoundVolume        *m_volSlider  = nullptr;
     DBackgroundGroup   *m_ctlWidget  = nullptr;
-    MetaBufferDetector  *m_metaBufferDetector = nullptr;
+    MetaBufferDetector  m_metaBufferDetector;
     HintFilter          *m_hintFilter = nullptr;
 
     QTimer             *m_limitRepeatClick = nullptr;
