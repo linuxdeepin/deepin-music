@@ -329,6 +329,7 @@ void FooterWidget::initUI(QWidget *parent)
     connect(Player::getInstance(), &Player::signalVolumeChanged, this, &FooterWidget::slotFlushSoundIcon);
     connect(Player::getInstance(), &Player::signalMutedChanged, this, &FooterWidget::slotFlushSoundIcon);
     connect(DataBaseService::getInstance(), &DataBaseService::signalFavSongRemove, this, &FooterWidget::fluashFavoriteBtnIcon);
+    connect(DataBaseService::getInstance(), &DataBaseService::signalFavSongAdd, this, &FooterWidget::fluashFavoriteBtnIconAdd);
 
     slotFlushSoundIcon();
 }
@@ -514,6 +515,18 @@ void FooterWidget::fluashFavoriteBtnIcon()
         emit CommonService::getInstance()->signalSwitchToView(FavType, "fav");
 
     if (DataBaseService::getInstance()->favoriteExist(Player::getInstance()->getActiveMeta())) {
+        m_btFavorite->setIcon(QIcon::fromTheme("collection1_press"));
+    } else {
+        m_btFavorite->setIcon(QIcon::fromTheme("dcc_collection"));
+    }
+}
+
+void FooterWidget::fluashFavoriteBtnIconAdd(QString hash)
+{
+    if (CommonService::getInstance()->getListPageSwitchType() == ListPageSwitchType::FavType)
+        emit CommonService::getInstance()->signalSwitchToView(FavType, "fav");
+
+    if (hash == Player::getInstance()->getActiveMeta().hash) {
         m_btFavorite->setIcon(QIcon::fromTheme("collection1_press"));
     } else {
         m_btFavorite->setIcon(QIcon::fromTheme("dcc_collection"));

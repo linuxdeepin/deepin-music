@@ -54,7 +54,7 @@ public:
     int  getMusicCountByAlbum();
     int  getSingerCount();
     int  getMusicCountBySinger();
-    QList<MediaMeta> getMusicLiseData();
+    QList<MediaMeta> getMusicListData();
 
     void setCurrentPage(ListPageSwitchType type);
 public slots:

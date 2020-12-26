@@ -160,6 +160,8 @@ signals:
     void signalRmvSong(const QString &listHash, const QString &musicHash);
     // 收藏中的歌曲被删除，动态显示
     void signalFavSongRemove(const QString &musicHash);
+    // 收藏中的歌曲被删除，动态显示
+    void signalFavSongAdd(QString musicHash);
     // 文管启动加载数据完成后直接播放歌曲
     void signalPlayFromFileMaganager();
     // 歌单名称改变

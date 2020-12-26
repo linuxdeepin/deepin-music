@@ -420,7 +420,7 @@ void MusicListDataWidget::slotPlayAllClicked()
         // 清空播放队列
         Player::getInstance()->clearPlayList();
         // 添加到播放列表
-        for (auto meta : m_searchResultTabWidget->getMusicLiseData()) {
+        for (auto meta : m_searchResultTabWidget->getMusicListData()) {
             Player::getInstance()->playListAppendMeta(meta);
         }
 

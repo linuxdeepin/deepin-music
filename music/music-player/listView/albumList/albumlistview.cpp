@@ -112,6 +112,9 @@ AlbumListView::AlbumListView(QString hash, QWidget *parent)
     // 歌曲删除
     connect(DataBaseService::getInstance(), &DataBaseService::signalRmvSong,
             this, &AlbumListView::slotRemoveSingleSong);
+    // 跳转到播放的位置
+    connect(CommonService::getInstance(), &CommonService::sigScrollToCurrentPosition,
+            this, &AlbumListView::slotScrollToCurrentPosition);
 }
 
 AlbumListView::~AlbumListView()
@@ -584,5 +587,25 @@ void AlbumListView::setDataBySortType(QList<AlbumInfo> &albumInfos, DataBaseServ
         QVariant albumval;
         albumval.setValue(meta);
         albumModel->setData(idx, albumval, Qt::UserRole);
+    }
+}
+
+void AlbumListView::slotScrollToCurrentPosition(QString songlistHash)
+{
+    qDebug() << __FUNCTION__ << songlistHash;
+    // listmode情况下跳转到播放位置
+    if (songlistHash == "album" && this->viewMode() == QListView::ListMode) {
+        int height = 0;
+        QString currentMetaHash = Player::getInstance()->getActiveMeta().hash;
+        for (int i = 0; i < albumModel->rowCount(); i++) {
+            QModelIndex idx = albumModel->index(i, 0, QModelIndex());
+            QSize size = albumDelegate->sizeHint(QStyleOptionViewItem(), idx);
+            AlbumInfo albumInfo = idx.data(Qt::UserRole).value<AlbumInfo>();
+            if (albumInfo.musicinfos.contains(currentMetaHash)) {
+                this->verticalScrollBar()->setValue(height);
+                break;
+            }
+            height += size.height();
+        }
     }
 }

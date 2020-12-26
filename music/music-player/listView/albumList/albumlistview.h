@@ -76,7 +76,9 @@ public:
 signals:
     void requestCustomContextMenu(const QPoint &pos);
     void modeChanged(int);
-
+public slots:
+    // 跳转到当前播放歌曲位置
+    void slotScrollToCurrentPosition(QString songlistHash);
 private slots:
     void onDoubleClicked(const QModelIndex &index);
     void slotCoverUpdate(const MediaMeta &meta);

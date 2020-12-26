@@ -50,7 +50,7 @@
 #include "util/global.h"
 #include "metadetector.h"
 #include "infodialog.h"
-
+#include "speechCenter.h"
 #include "ac-desktop-define.h"
 
 DWIDGET_USE_NAMESPACE
@@ -359,6 +359,7 @@ void PlayListView::setDataBySortType(QList<MediaMeta> &mediaMetas, DataBaseServi
         break;
     }
 
+    SpeechCenter::getInstance()->setMediaMetas(mediaMetas);
     m_model->clear();
     for (int i = 0; i < mediaMetas.size(); i++) {
         QStandardItem *newItem = new QStandardItem;

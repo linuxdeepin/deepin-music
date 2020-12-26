@@ -39,7 +39,7 @@
 #include "playlistview.h"
 #include "albumlistview.h"
 #include "singerlistview.h"
-
+#include "speechCenter.h"
 #include "ac-desktop-define.h"
 
 DWIDGET_USE_NAMESPACE
@@ -133,10 +133,10 @@ void SearchResultTabWidget::refreshListview()
         setLabelChecked(m_music);
         m_StackedWidget->setCurrentWidget(m_musicListView);
         m_musicListView->resetSonglistByStr(m_searchWord);
+        SpeechCenter::getInstance()->setMediaMetas(m_musicListView->getMusicListData());
         m_singerListView->resetSingerListDataBySongName(m_musicListView->getMusicListData());
         m_albumListView->resetAlbumListDataBySongName(m_musicListView->getMusicListData());
         emit sigSearchTypeChanged("musicResult");
-        qDebug() << "musicResult";
     } else if (m_switchtype == SearchSingerResultType) {
         setLabelChecked(m_singer);
         m_StackedWidget->setCurrentWidget(m_singerListView);
@@ -238,7 +238,7 @@ int SearchResultTabWidget::getMusicCountBySinger()
     return m_singerListView->getMusicCount();
 }
 
-QList<MediaMeta> SearchResultTabWidget::getMusicLiseData()
+QList<MediaMeta> SearchResultTabWidget::getMusicListData()
 {
     return m_musicListView->getMusicListData();
 }

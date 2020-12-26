@@ -605,6 +605,9 @@ int DataBaseService::addMetaToPlaylist(QString uuid, const QList<MediaMeta> &met
                 query.bindValue(":sort_id", 0);
                 if (query.exec()) {
                     insert_count++;
+                    if (uuid == "fav") {
+                        emit signalFavSongRemove(meta.hash);
+                    }
                 } else {
                     qCritical() << query.lastError() << sqlStr;
                 }
