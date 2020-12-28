@@ -728,6 +728,8 @@ void MainFrame::closeEvent(QCloseEvent *event)
     }
     case 2: {
         CloseConfirmDialog ccd(this);
+        ccd.setObjectName(AC_CloseConfirmDialog);
+
 
         auto clickedButtonIndex = ccd.exec();
         // 1 is confirm button

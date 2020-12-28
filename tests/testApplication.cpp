@@ -93,6 +93,7 @@
 #include "musiclistdialog.h"
 #include "dequalizerdialog.h"
 #include "infodialog.h"
+#include "closeconfirmdialog.h"
 
 TEST(Application, deleteAllMusic)
 {
@@ -1388,7 +1389,8 @@ TEST(Application, viewChangedDark)
 
 TEST(Application, dequalizerDialog)
 {
-    TEST_CASE_NAME("dequalizerDialog")
+    TEST_CASE_NAME("settings")
+//    TEST_CASE_NAME("dequalizerDialog")
 
     MainFrame *w = Application::getInstance()->getMainWindow();
     emit DGuiApplicationHelper::instance()->themeTypeChanged(DGuiApplicationHelper::ColorType::DarkType);
@@ -1486,19 +1488,39 @@ TEST(Application, dequalizerDialog)
         QTest::qWait(50);
         slider_16K->setValue(10);
 
-        // combox
+        // 保存均衡器配置
+        QTest::qWait(50);
+        DPushButton *push_save = w->findChild<DPushButton *>(AC_saveBtn);
+        QTestEventList event;
+        event.addMouseMove(QPoint(20, 20), 50);
+        event.addMouseClick(Qt::MouseButton::LeftButton, Qt::NoModifier, QPoint(20, 20), 50);
+        event.simulate(push_save);
+        event.clear();
+        QTest::qWait(300);
+
+        // 默认均衡器配置
+        QTest::qWait(50);
+        DPushButton *push_default = w->findChild<DPushButton *>(AC_Restore);
+        event.addMouseMove(QPoint(20, 20), 50);
+        event.addMouseClick(Qt::MouseButton::LeftButton, Qt::NoModifier, QPoint(20, 20), 50);
+        event.simulate(push_default);
+        event.clear();
+        QTest::qWait(300);
+
+        // 选择均衡器模式
         QTest::qWait(50);
         DComboBox *cbb = w->findChild<DComboBox *>(AC_effectCombox);
         cbb->setCurrentIndex(0);
-        QTest::qWait(50);
+        QTest::qWait(150);
         cbb->setCurrentIndex(4);
-        QTest::qWait(50);
+        QTest::qWait(150);
 
-        QTest::qWait(50);
+        QTest::qWait(200);
         dd->close();
     });
 
     emit menu->triggered(act);
+    QTest::qWait(500);
 }
 
 TEST(Application, settings)
@@ -1511,14 +1533,39 @@ TEST(Application, settings)
     QAction *act = w->findChild<QAction *>(AC_settingsAction);
     DMenu *menu = w->findChild<DMenu *>(AC_titleMenu);
 
+    // 设置窗体
     QTimer::singleShot(1000, w, [ = ]() {
         DSettingsDialog *setting = w->findChild<DSettingsDialog *>(AC_configDialog);
 
-        QTest::qWait(50);
+        QTestEventList event;
+        event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
+        event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
+        event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
+        event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
+        event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
+        event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
+        event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
+        event.simulate(setting);
+        event.clear();
+
+        MusicSettings::setOption("base.close.close_action", 2);
+
+        QTest::qWait(100);
         setting->close();
+        QTest::qWait(100);
+
+        QTimer::singleShot(200, w, [ = ]() {
+            CloseConfirmDialog *ccd = w->findChild<CloseConfirmDialog *>(AC_CloseConfirmDialog);
+            if (ccd) {
+                ccd->close();
+            }
+        });
+
+        w->close();
     });
 
     emit menu->triggered(act);
+    QTest::qWait(500);
 }
 
 TEST(Application, dDropdown)

@@ -17,6 +17,7 @@
 #include "musicbaselistview.h"
 #include "playlistview.h"
 #include "musicsonglistview.h"
+#include "speechCenter.h"
 
 
 TEST(Application, shortCut)
@@ -66,19 +67,25 @@ TEST(Application, shortCut)
     event.simulate(w);
     event.clear();
 
-    // todo 音量增大
+    // 音量增大
     QTest::qWait(50);
     event.addKeyPress(Qt::Key_Up, Qt::ControlModifier | Qt::AltModifier, 10);
     event.simulate(w);
     event.clear();
 
-    // todo 音量减小
+    // 音量减小
     QTest::qWait(50);
     event.addKeyPress(Qt::Key_Down, Qt::ControlModifier | Qt::AltModifier, 10);
     event.simulate(w);
     event.clear();
 
-    // todo 静音
+    // 静音
+    QTest::qWait(50);
+    event.addKeyClick(Qt::Key_M, Qt::NoModifier, 10);
+    event.simulate(w);
+    event.clear();
+
+    // 解除静音
     QTest::qWait(50);
     event.addKeyClick(Qt::Key_M, Qt::NoModifier, 10);
     event.simulate(w);
@@ -238,6 +245,59 @@ TEST(Application, other)
     w->autoStartToPlay();
 //    mainfram里的autoStartToPlay直接调
 
+    QTest::qWait(100);
+}
+
+TEST(Application, other1)
+{
+    TEST_CASE_NAME("other1")
+    MainFrame *w = Application::getInstance()->getMainWindow();
+    MusicBaseListView *baseListView = w->findChild<MusicBaseListView *>(AC_dataBaseListview);
+    QPoint pos = QPoint(130, 30);
+    QTestEventList event;
+    // 点击所有音乐
+    QTest::qWait(100);
+    pos = QPoint(130, 100);
+    event.addMouseMove(pos);
+    event.addMouseClick(Qt::MouseButton::LeftButton, Qt::NoModifier, pos, 10);
+    event.simulate(baseListView->viewport());
+    event.clear();
+
+    // 双击list
+    pos = QPoint(20, 120);
+    PlayListView *plv = w->findChild<PlayListView *>(AC_PlayListView);
+    event.addMouseMove(pos);
+    event.addMouseClick(Qt::MouseButton::LeftButton, Qt::NoModifier, pos, 10);
+    event.addMousePress(Qt::MouseButton::LeftButton, Qt::NoModifier, pos, 10);
+    event.addMouseDClick(Qt::MouseButton::LeftButton, Qt::NoModifier, pos, 10);
+    event.simulate(plv->viewport());
+    event.clear();
+
+
+    QTest::qWait(100);
+    SpeechCenter::getInstance()->playMusic("浮夸");
+    SpeechCenter::getInstance()->playMusic("");
+    SpeechCenter::getInstance()->setMediaMetas(*Player::getInstance()->getPlayList());
+    SpeechCenter::getInstance()->playArtist("华晨宇");
+    SpeechCenter::getInstance()->playArtistMusic("华晨宇:浮夸");
+    SpeechCenter::getInstance()->playArtistMusic("华晨宇");
+    SpeechCenter::getInstance()->playArtistMusic("");
+    SpeechCenter::getInstance()->playAlbum("Unknown album");
+    SpeechCenter::getInstance()->playFaverite("fav");
+    SpeechCenter::getInstance()->playSonglist("New playlist");
+    SpeechCenter::getInstance()->playSonglist("空");
+    SpeechCenter::getInstance()->resume("");
+    SpeechCenter::getInstance()->stop("");
+    SpeechCenter::getInstance()->next("");
+    SpeechCenter::getInstance()->pre("");
+    SpeechCenter::getInstance()->pause("");
+    SpeechCenter::getInstance()->playIndex("100");
+    SpeechCenter::getInstance()->playIndex("1");
+    SpeechCenter::getInstance()->addFaverite("");
+    SpeechCenter::getInstance()->removeFaverite("");
+    SpeechCenter::getInstance()->setMode("0");
+    SpeechCenter::getInstance()->setMode("1");
+    SpeechCenter::getInstance()->setMode("2");
 
     QTest::qWait(500);
 }

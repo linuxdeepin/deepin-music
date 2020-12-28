@@ -11,7 +11,7 @@
 #include <QObject>
 
 
-//#define SELECT_CASE "other"
+//#define SELECT_CASE "other1"
 
 #ifdef SELECT_CASE
 #define TEST_CASE_NAME(testName) if(testName != SELECT_CASE) return;
@@ -67,7 +67,7 @@
 #define AC_customizeListview          "customizeListview"
 //#define AC_MusicListWidget            QObject::tr("MusicListWidget")
 //#define AC_btClearAll                 QObject::tr("btClearAll")
-//#define AC_CloseConfirmDialog         QObject::tr("CloseConfirmDialog")
+#define AC_CloseConfirmDialog         QObject::tr("CloseConfirmDialog")
 #define AC_switchBtn                  "switchBtn"
 #define AC_effectCombox               "effectCombox"
 #define AC_saveBtn                    "saveBtn"
