@@ -419,8 +419,15 @@ void MainFrame::slotLyricClicked()
     }
 }
 
-void MainFrame::slotImportFinished()
+void MainFrame::slotImportFinished(QString hash, int count)
 {
+    Q_UNUSED(hash)
+    if (count <= 0) {
+        if (DataBaseService::getInstance()->allMusicInfos().size() <= 0) {
+            m_importWidget->showImportHint();
+        }
+        return;
+    }
     // 导入界面显示与关闭动画
     if (m_importWidget->isVisible()) {
         m_musicContentWidget->show();

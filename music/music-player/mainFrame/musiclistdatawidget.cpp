@@ -254,8 +254,12 @@ void MusicListDataWidget::slotSortChange(QAction *action)
     }
 }
 
-void MusicListDataWidget::slotImportFinished()
+void MusicListDataWidget::slotImportFinished(QString hash, int count)
 {
+    Q_UNUSED(hash)
+    if (count <= 0) {
+        return;
+    }
     qDebug() << "---MusicListDataWidget::slotImportFinished m_currentHash = " << m_currentHash;
     if (m_currentHash == "all" || m_currentHash == "album" || m_currentHash == "artist") {
         refreshInfoLabel(m_currentHash);

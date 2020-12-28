@@ -42,7 +42,7 @@ signals:
 
     void     sigImportMetaFromThread(MediaMeta meta);
     // 导入成功结束
-    void     sigImportFinished();
+    void     sigImportFinished(int count);
     // 导入失败，含不支持的文件
     void     sigImportFailed();
     void     sigCreatOneCoverImg(MediaMeta meta);

@@ -139,7 +139,7 @@ public:
 public slots:
     void slotGetMetaFromThread(MediaMeta meta);
     // 收到子线程导入结束通知
-    void slotImportFinished();
+    void slotImportFinished(int count);
     // 收到子线程一张图片加载完信号
     void slotCreatOneCoverImg(MediaMeta meta);
 signals:
@@ -151,7 +151,7 @@ signals:
     // 发送给子线程执行创建图片
     void signalCreatCoverImg(const QList<MediaMeta> &metas);
     // 导入结束，通知主界面
-    void signalImportFinished(QString hash);
+    void signalImportFinished(QString hash, int count);
     // 导入失败，有不支持的文件
     void signalImportFailed();
     // 封面图片刷新

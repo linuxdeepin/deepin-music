@@ -518,9 +518,9 @@ void DataBaseService::slotGetMetaFromThread(MediaMeta meta)
     }
 }
 
-void DataBaseService::slotImportFinished()
+void DataBaseService::slotImportFinished(int count)
 {
-    emit signalImportFinished(m_importHash);
+    emit signalImportFinished(m_importHash, count);
     m_Importing = false;
     //数据加载完后再加载图片
     emit signalCreatCoverImg(m_AllMediaMeta);

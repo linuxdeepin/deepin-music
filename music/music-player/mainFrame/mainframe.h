@@ -66,7 +66,7 @@ private slots:
     void setThemeType(DGuiApplicationHelper::ColorType themeType);
     void slotSearchEditFoucusIn();
     void slotLyricClicked();
-    void slotImportFinished();
+    void slotImportFinished(QString hash, int count);
     void slotImportFailed();
     void slotShortCutTriggered();
     void slotMenuTriggered(QAction *action);

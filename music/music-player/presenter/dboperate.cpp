@@ -49,6 +49,7 @@ void DBOperate::slotImportMedias(const QStringList &urllist)
         m_mediaLibrary->init();
     }
     int importFailCount = 0;
+    int importSuccessCount = 0;
     for (auto &filepath : urllist) {
         if (filepath.isEmpty()) {
             continue;
@@ -70,6 +71,7 @@ void DBOperate::slotImportMedias(const QStringList &urllist)
                     if (mediaMeta.singer.isEmpty()) {
                         mediaMeta.singer = tr("Unknown artist");
                     }
+                    importSuccessCount++;
                     emit sigImportMetaFromThread(mediaMeta);
                 }
             }
@@ -86,6 +88,7 @@ void DBOperate::slotImportMedias(const QStringList &urllist)
                 if (mediaMeta.singer.isEmpty()) {
                     mediaMeta.singer = tr("Unknown artist");
                 }
+                importSuccessCount++;
                 emit sigImportMetaFromThread(mediaMeta);
             }
         }
@@ -96,7 +99,7 @@ void DBOperate::slotImportMedias(const QStringList &urllist)
         emit sigImportFailed();
     } else {
         // 只要有一个导入成功就提示导入成功
-        emit sigImportFinished();
+        emit sigImportFinished(importSuccessCount);
     }
 }
 

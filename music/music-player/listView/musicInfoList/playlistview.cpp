@@ -556,8 +556,11 @@ void PlayListView::slotUpdatePlayingIcon()
     this->update();
 }
 
-void PlayListView::slotImportFinished(QString hash)
+void PlayListView::slotImportFinished(QString hash, int count)
 {
+    if (count <= 0) {
+        return;
+    }
     emit CommonService::getInstance()->signalShowPopupMessage(
         DataBaseService::getInstance()->getPlaylistNameByUUID("all"), 1, 1);
 
