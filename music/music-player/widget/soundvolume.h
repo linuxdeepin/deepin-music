@@ -45,7 +45,7 @@ public:
     void flushVolumeIcon();
 signals:
     void delayAutoHide();
-
+    void sigVolumeChanged();//本地音量和静音状态改变，通知footer栏改变图标
 public slots:
     void delayHide();
     void setThemeType(int type);
@@ -65,14 +65,10 @@ private:
     // 初始化背景
     void initBgImage();
 private:
-//    QScopedPointer<SoundVolumePrivate> d_ptr;
-
-
     DLabel      *m_volPersent = nullptr;
     DSlider     *m_volSlider           = nullptr;
-//    SoundPixmapButton *m_btSound         = nullptr;
     DToolButton       *m_btSound         = nullptr;
-    QPixmap bgImage;
+    QPixmap     bgImage;
 
     bool        m_mouseIn     = false;
 };

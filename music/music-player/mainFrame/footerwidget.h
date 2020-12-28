@@ -58,12 +58,13 @@ public:
     void slotLoadDetector(const QString &hash);
 private:
     void initUI(QWidget *parent = nullptr);
-    void setPlayProperty(Player::PlaybackStatus status);
     void installTipHint(QWidget *widget, const QString &hintstr);
     // 移动音量控件到合适的位置
     void moveVolSlider();
     // we can wait to init until frame has displayed
     void initShortcut();
+
+    void setPlayProperty(Player::PlaybackStatus status);
 signals:
     void lyricClicked();
 public slots:

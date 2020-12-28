@@ -322,8 +322,8 @@ void MusicListInfoView::slotRemoveSongListActionClicked(bool checked)
 
     Dtk::Widget::DDialog warnDlg(this);
     warnDlg.setTextFormat(Qt::RichText);
-    warnDlg.addButton(tr("Cancel"), true, Dtk::Widget::DDialog::ButtonNormal);
-    int deleteFlag = warnDlg.addButton(tr("Remove"), false, Dtk::Widget::DDialog::ButtonWarning);
+    warnDlg.addButton(tr("Cancel"), false, Dtk::Widget::DDialog::ButtonNormal);
+    warnDlg.addButton(tr("Remove"), true, Dtk::Widget::DDialog::ButtonWarning);
 
     MediaMeta meta = modellist.first().data(Qt::UserRole).value<MediaMeta>();
     if (1 == metaList.length()) {
@@ -334,7 +334,7 @@ void MusicListInfoView::slotRemoveSongListActionClicked(bool checked)
 
     warnDlg.setObjectName(AC_MessageBox);
     warnDlg.setIcon(QIcon::fromTheme("deepin-music"));
-    if (deleteFlag == warnDlg.exec()) {
+    if (warnDlg.exec()) {
         DataBaseService::getInstance()->removeSelectedSongs("all", metaList, false);
         // 更新player中缓存的歌曲信息，如果存在正在播放的歌曲，停止播放
         Player::getInstance()->playRmvMeta(metaList);

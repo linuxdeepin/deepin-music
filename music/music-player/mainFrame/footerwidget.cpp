@@ -285,6 +285,11 @@ void FooterWidget::initUI(QWidget *parent)
     m_volSlider->setProperty("DelayHide", true);
     m_volSlider->setProperty("NoDelayShow", true);
 
+    //设置静音
+    if (MusicSettings::value("base.play.mute").toBool()) {
+        Player::getInstance()->setMuted(true);
+    }
+
     AC_SET_OBJECT_NAME(m_volSlider, AC_VolSlider);
     AC_SET_ACCESSIBLE_NAME(m_volSlider, AC_VolSlider);
 
@@ -326,8 +331,7 @@ void FooterWidget::initUI(QWidget *parent)
         m_btSound->setChecked(false);
     });
 
-    connect(Player::getInstance(), &Player::signalVolumeChanged, this, &FooterWidget::slotFlushSoundIcon);
-    connect(Player::getInstance(), &Player::signalMutedChanged, this, &FooterWidget::slotFlushSoundIcon);
+    connect(m_volSlider, &SoundVolume::sigVolumeChanged, this, &FooterWidget::slotFlushSoundIcon);
     connect(DataBaseService::getInstance(), &DataBaseService::signalFavSongRemove, this, &FooterWidget::fluashFavoriteBtnIcon);
     connect(DataBaseService::getInstance(), &DataBaseService::signalFavSongAdd, this, &FooterWidget::fluashFavoriteBtnIconAdd);
 
@@ -430,10 +434,10 @@ void FooterWidget::updateShortcut()
 //设置播放按钮播放图标
 void FooterWidget::setPlayProperty(Player::PlaybackStatus status)
 {
-    if (status == Player::PlaybackStatus::Playing) {
-        m_btPlay->setIcon(QIcon::fromTheme("suspend"));
-    } else {
+    if (status != Player::PlaybackStatus::Playing) {
         m_btPlay->setIcon(QIcon::fromTheme("music_play"));
+    } else {
+        m_btPlay->setIcon(QIcon::fromTheme("suspend"));
     }
 }
 
@@ -453,10 +457,10 @@ void FooterWidget::slotPlayClick(bool click)
 
     if (Player::getInstance()->status() == Player::PlaybackStatus::Playing) {
         Player::getInstance()->pause();
-        //setPlayProperty(Player::PlaybackStatus::Paused);
     } else if (Player::getInstance()->status() == Player::PlaybackStatus::Paused) {
         Player::getInstance()->resume();
-        //setPlayProperty(Player::PlaybackStatus::Playing);
+    } else if (Player::getInstance()->status() == Player::PlaybackStatus::Stopped) {
+        Player::getInstance()->forcePlayMeta();
     }
 }
 
@@ -609,12 +613,6 @@ void FooterWidget::setPlayModel(Player::PlaybackMode playModel)
 // Dbus
 void FooterWidget::slotDbusVolumeChanged(double volume)
 {
-    //need to sync volume to dbus
-//    if (d->volumeMonitoring.needSyncLocalFlag(1)) {
-//        d->volumeMonitoring.stop();
-//        d->volumeMonitoring.timeoutSlot();
-//        d->volumeMonitoring.start();
-//    }
     //get dbus volume
     int curVolume = int(volume * 100);
     m_volSlider->setVolume(curVolume);

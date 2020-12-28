@@ -107,18 +107,14 @@ Player::~Player()
 void Player::playMeta(MediaMeta meta)
 {
     if (meta.hash != "") {
-        if (!QFileInfo(meta.localPath).exists()) {
+        if (access(meta.localPath.toStdString().c_str(), R_OK) != 0  ||
+                QFileInfo(m_ActiveMeta.localPath).dir().isEmpty()) {
             //文件不存在提示  todo..
             emit signalPlaybackStatusChanged(Player::Paused);
             return;
         }
         m_ActiveMeta = meta;
         setActiveMeta(meta);
-        /*************************
-         * mute to dbus
-         * ***********************/
-        setDbusMuted();
-        //    m_activeMeta = curMeta;
         if (m_qvinstance == nullptr || m_qvplayer == nullptr || m_qvmedia == nullptr) {
             initVlc();
         }
@@ -126,6 +122,13 @@ void Player::playMeta(MediaMeta meta)
         m_qvplayer->open(m_qvmedia);
         m_qvplayer->setTime(meta.offset);
         m_qvplayer->play();
+
+        /*************************
+         * mute to dbus
+         * ***********************/
+        QTimer::singleShot(100, this, [ = ]() {
+            setDbusMuted();
+        });
 
         DRecentData data;
         data.appName = Global::getAppName();
@@ -158,6 +161,7 @@ void Player::resume()
     if (m_qvinstance == nullptr || m_qvplayer == nullptr || m_qvmedia == nullptr) {
         initVlc();
     }
+
     if (m_ActiveMeta.localPath.isEmpty()) {
         Player::getInstance()->forcePlayMeta();//播放列表第一首歌
         return;
@@ -215,7 +219,7 @@ void Player::pause()
     if (m_qvinstance == nullptr || m_qvplayer == nullptr || m_qvmedia == nullptr) {
         initVlc();
     }
-    /*--------suspend--------*/
+
     if (m_fadeInOut) {
         m_fadeInAnimation->stop();
     }
@@ -473,6 +477,8 @@ void Player::stop()
 
     QVariantMap metadata;
     m_mpris->setMetadata(metadata);
+
+    emit signalPlaybackStatusChanged(Player::Stopped);
 }
 
 VlcMediaPlayer *Player::core()
@@ -539,7 +545,10 @@ Player::PlaybackMode Player::mode() const
 
 bool Player::getMuted()
 {
-    return this->isMusicMuted();
+    if (isDevValid())
+        return isMusicMuted();
+    else
+        return MusicSettings::value("base.play.mute").toBool();
 }
 
 qint64 Player::duration()
@@ -606,6 +615,7 @@ void Player::setVolume(int volume)
 
     m_volume = volume;
     MusicSettings::setOption("base.play.volume", volume);
+    setMuted(volume == 0 ? true : false);
     m_mpris->setVolume(static_cast<double>(volume) / 100);
 
     // 设置到dbus的音量必须大1，设置才会生效
@@ -615,7 +625,10 @@ void Player::setVolume(int volume)
 
 void Player::setMuted(bool mute)
 {
-    setMusicMuted(mute);
+    if (!setMusicMuted(mute))  //audio服务未启动
+        qDebug() << "audio service not started,mute can not be set";
+    //使用本地静音配置
+    MusicSettings::setOption("base.play.mute", mute);
 }
 
 void Player::setActiveMeta(const MediaMeta &meta)
@@ -629,8 +642,11 @@ void Player::setActiveMeta(const MediaMeta &meta)
 void Player::forcePlayMeta()
 {
     qDebug() << "forcePlayMeta in";
-    if (m_MetaList.size() == 0)
-        return;
+    if (m_MetaList.size() == 0) {
+        setCurrentPlayListHash("all", true); //更新所有歌曲页面数据
+        if (m_MetaList.size() == 0)
+            return;
+    }
     playMeta(m_MetaList.first());
 }
 
@@ -664,35 +680,29 @@ void Player::initEqualizerCfg()
     }
 }
 
-//void Player::setLocalMuted(bool muted)
-//{
-//    m_qvplayer->audio()->setMute(muted);
-//    if (isValidDbusMute()) {
-//        QDBusInterface ainterface("com.deepin.daemon.Audio", m_sinkInputPath,
-//                                  "com.deepin.daemon.Audio.SinkInput",
-//                                  QDBusConnection::sessionBus());
-//        if (!ainterface.isValid()) {
-//            return ;
-//        }
-
-//        //调用设置音量
-//        ainterface.call(QLatin1String("SetMute"), muted);
-//    }
-//}
-
 void Player::setDbusMuted(bool muted)
 {
     Q_UNUSED(muted)
-    if (isValidDbusMute()) {
+    bool bvalid = isValidDbusMute();
+    qDebug() << __FUNCTION__ << bvalid;
+    if (bvalid) {
         QDBusInterface ainterface("com.deepin.daemon.Audio", m_sinkInputPath,
                                   "com.deepin.daemon.Audio.SinkInput",
                                   QDBusConnection::sessionBus());
         if (!ainterface.isValid()) {
             return ;
         }
+
         //调用设置音量
-        if (MusicSettings::value("base.play.mute").toBool() !=  m_qvplayer->audio()->getMute())
-            ainterface.call(QLatin1String("SetMute"), MusicSettings::value("base.play.mute").toBool());
+        ainterface.call(QLatin1String("SetVolume"), (m_volume + 0.1) / 100.0, false);
+
+        if (qFuzzyCompare(m_volume, 0.0))
+            ainterface.call(QLatin1String("SetMute"), true);
+
+        //调用设置静音
+        bool localmute = MusicSettings::value("base.play.mute").toBool();
+        if (localmute != isMusicMuted())
+            ainterface.call(QLatin1String("SetMute"), localmute);
     }
 }
 
@@ -826,6 +836,9 @@ bool Player::setMusicVolume(double volume)
     if (volume > 1.0) {
         volume = 1.000;
     }
+
+    m_mpris->setVolume(volume);
+
     readSinkInputPath();
     if (!m_sinkInputPath.isEmpty()) {
         QDBusInterface ainterface("com.deepin.daemon.Audio", m_sinkInputPath,
@@ -840,9 +853,8 @@ bool Player::setMusicVolume(double volume)
 
         if (qFuzzyCompare(volume, 0.0))
             ainterface.call(QLatin1String("SetMute"), true);
+        return true;
     }
-    m_mpris->setVolume(volume);
-
     return false;
 }
 
@@ -861,6 +873,7 @@ bool Player::setMusicMuted(bool muted)
         MusicSettings::setOption("base.play.mute", muted);
         ainterface.call(QLatin1String("SetMute"), muted);
         emit signalMutedChanged();
+        return true;
     }
 
     return false;
@@ -914,11 +927,11 @@ void Player::initVlc()
     this, [ = ](Vlc::State status) {
         switch (status) {
         case Vlc::Idle: {
-            /**************************************
-             * if settings is mute ,then setmute to dbus
-             * ************************************/
-            if (MusicSettings::value("base.play.mute").toBool())
-                setMusicMuted(true);
+//            /**************************************
+//             * if settings is mute ,then setmute to dbus
+//             * ************************************/
+//            if (MusicSettings::value("base.play.mute").toBool())
+//                setMusicMuted(true);
             break;
         }
         case Vlc::Opening: {
@@ -942,7 +955,7 @@ void Player::initVlc()
             break;
         }
         case Vlc::Stopped: {
-            emit signalPlaybackStatusChanged(Player::Stopped);
+            //emit signalPlaybackStatusChanged(Player::Stopped);
             m_timer->stop();
             break;
         }
@@ -969,14 +982,14 @@ void Player::initVlc()
     });
 
 
-    connect(m_qvplayer->audio(), &VlcAudio::muteChanged,
-    this, [ = ](bool mute) {
-        if (isDevValid()) {
-            emit signalMutedChanged();
-        } else {
-            qDebug() << "device does not start";
-        }
-    });
+//    connect(m_qvplayer->audio(), &VlcAudio::muteChanged,
+//    this, [ = ](bool mute) {
+//        if (isDevValid()) {
+//            emit signalMutedChanged();
+//        } else {
+//            qDebug() << "device does not start";
+//        }
+//    });
 }
 
 void Player::initMpris()
@@ -1076,10 +1089,12 @@ void Player::loadMediaProgress(const QString &path)
     m_qvmedia->initMedia(path, true, m_qvinstance);
     m_qvplayer->open(m_qvmedia);
     m_qvplayer->play();
+    float volEqualizer =  m_qvplayer->equalizer()->preamplification();
+    m_qvplayer->equalizer()->setPreamplification(0.1f);
     QTimer::singleShot(100, this, [ = ]() {//为了记录进度条生效，在加载的时候让音乐播放100ms
         m_qvplayer->pause();
         m_qvplayer->blockSignals(false);
-        //emit readyToResume();
+        m_qvplayer->equalizer()->setPreamplification(volEqualizer);
     });
 }
 

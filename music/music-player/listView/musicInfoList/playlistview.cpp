@@ -849,9 +849,8 @@ void PlayListView::slotRmvFromSongList()
     Dtk::Widget::DDialog warnDlg(this);
     warnDlg.setObjectName("MessageBox");
     warnDlg.setTextFormat(Qt::RichText);
-    warnDlg.addButton(tr("Cancel"), true, Dtk::Widget::DDialog::ButtonNormal);
-    int deleteFlag = warnDlg.addButton(tr("Remove"), false, Dtk::Widget::DDialog::ButtonWarning);
-
+    warnDlg.addButton(tr("Cancel"), false, Dtk::Widget::DDialog::ButtonNormal);
+    warnDlg.addButton(tr("Remove"), true, Dtk::Widget::DDialog::ButtonWarning); //index 1
     MediaMeta meta = modellist.first().data(Qt::UserRole).value<MediaMeta>();
     if (1 == metaList.length()) {
         warnDlg.setMessage(QString(tr("Are you sure you want to remove %1?")).arg(meta.title));
@@ -860,7 +859,7 @@ void PlayListView::slotRmvFromSongList()
     }
 
     warnDlg.setIcon(QIcon::fromTheme("deepin-music"));
-    if (deleteFlag == warnDlg.exec()) {
+    if (warnDlg.exec()) { //Remove button
         //数据库中删除时有信号通知刷新界面
         if (!m_IsPlayQueue) {
             if (m_currentHash == "musicResult") {
@@ -874,7 +873,6 @@ void PlayListView::slotRmvFromSongList()
                 Player::getInstance()->playRmvMeta(metaList);
             }
         } else {
-//            DataBaseService::getInstance()->removeSelectedSongs("all", metaList, false);
             Player::getInstance()->playRmvMeta(metaList);
         }
     }

@@ -71,8 +71,9 @@ SoundVolume::SoundVolume(QWidget *parent)
     m_volSlider->setFixedWidth(24);
     m_volSlider->setIconSize(QSize(15, 15));
     m_volSlider->setMouseWheelEnabled(true);
-    connect(m_volSlider, &DSlider::valueChanged, this, &SoundVolume::slotSetVolume);
     m_volSlider->setValue(Player::getInstance()->getVolume());
+    m_volPersent->setText(QString::number(Player::getInstance()->getVolume()) + QString("%"));
+    connect(m_volSlider, &DSlider::valueChanged, this, &SoundVolume::slotSetVolume);
 
     AC_SET_OBJECT_NAME(m_volSlider, AC_DSlider);
     AC_SET_ACCESSIBLE_NAME(m_volSlider, AC_DSlider);
@@ -131,6 +132,8 @@ void SoundVolume::flushVolumeIcon()
             m_btSound->setIcon(QIcon::fromTheme("volume_low"));
         }
     }
+
+    emit sigVolumeChanged();
 }
 
 void SoundVolume::delayHide()
@@ -156,11 +159,6 @@ void SoundVolume::updateUI(int volume)
         muteToSet = true;
     } else {
         muteToSet = false;
-    }
-
-    // 设置是否静音并刷新按钮图标
-    if (Player::getInstance()->getMuted()) {
-        Player::getInstance()->setMuted(muteToSet);
     }
 
     Player::getInstance()->setVolume(volume);
