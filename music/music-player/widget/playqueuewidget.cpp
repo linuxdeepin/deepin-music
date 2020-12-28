@@ -300,7 +300,7 @@ void PlayQueueWidget::autoHidden(QWidget *old, QWidget *now)
         if (now->objectName() == "infoDialog" || now->objectName() == "InfoTitle" ||
                 now->objectName() == "MainFrame" || now->objectName() == "MessageBox")  {
         } else {
-            PlayListView *playListQueue = static_cast<PlayListView *>(now);
+            PlayListView *playListQueue = dynamic_cast<PlayListView *>(now);
             if (playListQueue && playListQueue->objectName() == "PlayListView") {
                 if (!playListQueue->getIsPlayQueue()) {
                     if (!this->isHidden()) {

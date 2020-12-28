@@ -10,7 +10,6 @@
 #include <QString>
 #include <QObject>
 
-
 //#define SELECT_CASE "other1"
 
 #ifdef SELECT_CASE
