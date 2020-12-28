@@ -63,7 +63,7 @@ TEST(Application, testListScroll)
 
 TEST(Application, testListScroll1)
 {
-    TEST_CASE_NAME("testListScroll")
+    TEST_CASE_NAME("testListScroll1")
 
     MainFrame *w = Application::getInstance()->getMainWindow();
     MusicBaseListView *baseListView = w->findChild<MusicBaseListView *>(AC_dataBaseListview);
@@ -104,8 +104,7 @@ TEST(Application, testListScroll1)
 
 TEST(Application, testListScroll2)
 {
-    return;
-    TEST_CASE_NAME("testListScroll")
+    TEST_CASE_NAME("testListScrol2")
 
     MainFrame *w = Application::getInstance()->getMainWindow();
     MusicSongListView *songListView = w->findChild<MusicSongListView *>(AC_customizeListview);
@@ -125,32 +124,40 @@ TEST(Application, testListScroll2)
             QTest::qWait(50);
             QTestEventList event;
             DDialog *messageBox = w->findChild<DDialog *>(AC_MessageBox);
-            event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
-            event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
-            event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
-            event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
-            event.addKeyClick(Qt::Key_Enter, Qt::NoModifier, 50);
-            event.simulate(messageBox);
-            event.clear();
+            if (messageBox) {
+                event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
+                event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
+                event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
+                event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
+                event.addKeyClick(Qt::Key_Enter, Qt::NoModifier, 50);
+                event.simulate(messageBox);
+                event.clear();
+            }
         });
 
         QTestEventList event;
         DMenu *menuWidget = static_cast<DMenu *>(qApp->activePopupWidget());
-        event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
-        event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
-        event.addKeyClick(Qt::Key_Enter, Qt::NoModifier, 50);
-        event.simulate(menuWidget);
-        event.clear();
-        QTest::qWait(100);
+        if (menuWidget) {
+            event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
+            event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
+            event.addKeyClick(Qt::Key_Enter, Qt::NoModifier, 50);
+            event.simulate(menuWidget);
+            event.clear();
+            QTest::qWait(100);
+        }
     });
 
-    QTest::qWait(50);
-    songListView->setFocus();
-    event.addMouseMove(pos);
-    event.addMouseClick(Qt::MouseButton::LeftButton, Qt::NoModifier, pos);
-    event.addKeyClick(Qt::Key_M, Qt::ControlModifier, 10);
-    event.simulate(songListView);
-    event.clear();
+    if (songListView) {
+        QTest::qWait(50);
+//        songListView->setFocus();
+//        event.addMouseMove(pos);
+//        event.addMouseClick(Qt::MouseButton::LeftButton, Qt::NoModifier, pos);
+//        event.addKeyClick(Qt::Key_M, Qt::ControlModifier, 10);
+//        event.simulate(songListView);
+//        event.clear();
+
+        songListView->rmvSongList();
+    }
 
     QTest::qWait(500);
 }

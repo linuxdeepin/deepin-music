@@ -22,26 +22,26 @@
 #pragma once
 
 #include <QObject>
+#include <QTimer>
 #include <QScopedPointer>
 
-class HoverFilter : public QObject
-{
-    Q_OBJECT
-public:
-    explicit HoverFilter(QObject *parent = nullptr);
-    bool eventFilter(QObject *obj, QEvent *event);
-};
+//class HoverFilter : public QObject
+//{
+//    Q_OBJECT
+//public:
+//    explicit HoverFilter(QObject *parent = nullptr);
+//    bool eventFilter(QObject *obj, QEvent *event);
+//};
 
-class HoverShadowFilter : public QObject
-{
-    Q_OBJECT
-public:
-    explicit HoverShadowFilter(QObject *parent = nullptr);
-    bool eventFilter(QObject *obj, QEvent *event);
-};
+//class HoverShadowFilter : public QObject
+//{
+//    Q_OBJECT
+//public:
+//    explicit HoverShadowFilter(QObject *parent = nullptr);
+//    bool eventFilter(QObject *obj, QEvent *event);
+//};
 
 
-class HintFilterPrivate;
 class HintFilter: public QObject
 {
     Q_OBJECT
@@ -52,7 +52,13 @@ public:
     //void hideAll();
     bool eventFilter(QObject *obj, QEvent *event);
     void showHitsFor(QWidget *w, QWidget *hint);
+
 private:
-    QScopedPointer<HintFilterPrivate> d_ptr;
-    Q_DECLARE_PRIVATE_D(qGetPtrHelper(d_ptr), HintFilter)
+    void showHint(QWidget *hint);
+
+private:
+    QTimer  *m_delayShowTimer = nullptr;
+
+    QWidget *m_parentWidget = nullptr;
+    QWidget *m_hintWidget = nullptr;
 };

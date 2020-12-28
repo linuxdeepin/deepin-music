@@ -10,7 +10,7 @@
 #include <QString>
 #include <QObject>
 
-//#define SELECT_CASE "other1"
+//#define SELECT_CASE "shortCut"
 
 #ifdef SELECT_CASE
 #define TEST_CASE_NAME(testName) if(testName != SELECT_CASE) return;

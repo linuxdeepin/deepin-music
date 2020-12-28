@@ -95,10 +95,24 @@
 #include "infodialog.h"
 #include "closeconfirmdialog.h"
 
+TEST(Application, importLinkText)
+{
+    // 扫描歌曲
+    TEST_CASE_NAME("importLinkText")
+
+    QTest::qWait(100);
+    MainFrame *w = Application::getInstance()->getMainWindow();
+    QLabel *ilt = w->findChild<QLabel *>(AC_importLinkText);
+    ilt->linkActivated("");
+    QTest::qWait(500);
+
+    PlayListView *plv = w->findChild<PlayListView *>(AC_PlayListView);
+}
+
 TEST(Application, deleteAllMusic)
 {
     // 删除所有音乐
-    TEST_CASE_NAME("other")
+    TEST_CASE_NAME("deleteAllMusic")
 
     MainFrame *w = Application::getInstance()->getMainWindow();
     MusicBaseListView *baseListView = w->findChild<MusicBaseListView *>(AC_dataBaseListview);
@@ -112,6 +126,7 @@ TEST(Application, deleteAllMusic)
     event.addMouseClick(Qt::MouseButton::LeftButton, Qt::NoModifier, pos, 10);
     event.simulate(baseListView->viewport());
     event.clear();
+    QTest::qWait(100);
 
     // 点击所有音乐
     QTest::qWait(100);
@@ -120,38 +135,64 @@ TEST(Application, deleteAllMusic)
     event.addMouseClick(Qt::MouseButton::LeftButton, Qt::NoModifier, pos, 10);
     event.simulate(baseListView->viewport());
     event.clear();
+    QTest::qWait(100);
 
 
     // dialog list 点击
     QTest::qWait(50);
-    QTimer::singleShot(200, w, [ = ]() {
-        // 清空ListView
-        QTest::qWait(50);
-        DDialog *messageBox = w->findChild<DDialog *>("MessageBox");
-        if (messageBox) {
-            QPoint pos = QPoint(130, 150);
-            QTestEventList event;
-            event.addMouseMove(pos);
-            event.addKeyClick(Qt::Key::Key_Tab, Qt::NoModifier, 10);
-            event.addKeyClick(Qt::Key::Key_Tab, Qt::NoModifier, 10);
-            event.addKeyClick(Qt::Key::Key_Tab, Qt::NoModifier, 10);
-            event.addKeyClick(Qt::Key::Key_Tab, Qt::NoModifier, 10);
-            event.addKeyClick(Qt::Key::Key_Enter, Qt::NoModifier, 50);
-            event.simulate(messageBox);
-            event.clear();
-        }
+    QTimer::singleShot(1000, w, [ = ]() {
+        QTimer::singleShot(1000, w, [ = ]() {
+            // 清空ListView
+            QTest::qWait(50);
+            DDialog *messageBox = w->findChild<DDialog *>("MessageBox");
+            if (messageBox) {
+                QTestEventList event;
+                event.addKeyClick(Qt::Key::Key_Tab, Qt::NoModifier, 50);
+                event.addKeyClick(Qt::Key::Key_Tab, Qt::NoModifier, 50);
+                event.addKeyClick(Qt::Key::Key_Tab, Qt::NoModifier, 50);
+                event.addKeyClick(Qt::Key::Key_Tab, Qt::NoModifier, 50);
+                event.addKeyClick(Qt::Key::Key_Enter, Qt::NoModifier, 50);
+                event.simulate(messageBox);
+                event.clear();
+
+                PlayListView *plv = w->findChild<PlayListView *>(AC_PlayListView);
+                if (plv) {
+                    QList<MediaMeta> metas = DataBaseService::getInstance()->allMusicInfos();
+                    QStringList strlist;
+                    for (MediaMeta item : metas) {
+                        strlist << item.hash;
+                    }
+                    DataBaseService::getInstance()->removeSelectedSongs("all", strlist, true);
+                    Player::getInstance()->playRmvMeta(strlist);
+                }
+            }
+        });
+
+        QTestEventList event;
+        DMenu *menuWidget = static_cast<DMenu *>(qApp->activePopupWidget());
+        event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
+        event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
+        event.addKeyClick(Qt::Key_Enter, Qt::NoModifier, 50);
+        event.addDelay(100);
+        event.simulate(menuWidget);
+        event.clear();
+        QTest::qWait(100);
     });
 
     // 全选
     pos = QPoint(20, 20);
     PlayListView *plv = w->findChild<PlayListView *>(AC_PlayListView);
+
     event.addMouseMove(pos);
     event.addKeyClick(Qt::Key_A, Qt::ControlModifier, 10);
     event.simulate(plv->viewport());
     event.clear();
-    plv->slotDelFromLocal();
 
-    QTest::qWait(500);
+    QTest::qWait(100);
+    QContextMenuEvent menuEvent(QContextMenuEvent::Mouse, QPoint(20, 20));
+    qApp->sendEvent(plv->viewport(), &menuEvent);
+
+    QTest::qWait(1000);
 }
 
 
@@ -213,10 +254,10 @@ TEST(Application, copyMusicToMusicDir)
     QTest::qWait(50);
 }
 
-TEST(Application, importLinkText)
+TEST(Application, importLinkText1)
 {
     // 扫描歌曲
-    TEST_CASE_NAME("other")
+    TEST_CASE_NAME("importLinkText1")
 
     QTest::qWait(100);
     MainFrame *w = Application::getInstance()->getMainWindow();
@@ -594,10 +635,10 @@ TEST(Application, copyMusicToMusicDir1)
     QTest::qWait(50);
 }
 
-TEST(Application, importLinkText1)
+TEST(Application, importLinkText2)
 {
     // 扫描歌曲
-    TEST_CASE_NAME("importLinkText1")
+    TEST_CASE_NAME("importLinkText2")
 
     QTest::qWait(100);
     MainFrame *w = Application::getInstance()->getMainWindow();
@@ -1389,8 +1430,7 @@ TEST(Application, viewChangedDark)
 
 TEST(Application, dequalizerDialog)
 {
-    TEST_CASE_NAME("settings")
-//    TEST_CASE_NAME("dequalizerDialog")
+    TEST_CASE_NAME("dequalizerDialog")
 
     MainFrame *w = Application::getInstance()->getMainWindow();
     emit DGuiApplicationHelper::instance()->themeTypeChanged(DGuiApplicationHelper::ColorType::DarkType);
@@ -1498,15 +1538,6 @@ TEST(Application, dequalizerDialog)
         event.clear();
         QTest::qWait(300);
 
-        // 默认均衡器配置
-        QTest::qWait(50);
-        DPushButton *push_default = w->findChild<DPushButton *>(AC_Restore);
-        event.addMouseMove(QPoint(20, 20), 50);
-        event.addMouseClick(Qt::MouseButton::LeftButton, Qt::NoModifier, QPoint(20, 20), 50);
-        event.simulate(push_default);
-        event.clear();
-        QTest::qWait(300);
-
         // 选择均衡器模式
         QTest::qWait(50);
         DComboBox *cbb = w->findChild<DComboBox *>(AC_effectCombox);
@@ -1515,7 +1546,15 @@ TEST(Application, dequalizerDialog)
         cbb->setCurrentIndex(4);
         QTest::qWait(150);
 
+        // 默认均衡器配置
         QTest::qWait(200);
+        DPushButton *push_default = w->findChild<DPushButton *>(AC_Restore);
+        event.addMouseMove(QPoint(20, 20), 50);
+        event.addMouseClick(Qt::MouseButton::LeftButton, Qt::NoModifier, QPoint(20, 20), 50);
+        event.simulate(push_default);
+        event.clear();
+
+        QTest::qWait(300);
         dd->close();
     });
 

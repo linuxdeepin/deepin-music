@@ -18,6 +18,7 @@
 #include "playlistview.h"
 #include "musicsonglistview.h"
 #include "speechCenter.h"
+#include "shortcut.h"
 
 
 TEST(Application, shortCut)
@@ -180,6 +181,9 @@ TEST(Application, shortCut)
     event.addKeyClick(Qt::Key_Slash, Qt::ControlModifier | Qt::ShiftModifier, 10);
     event.simulate(w);
     event.clear();
+
+    Shortcut sc;
+    sc.toStr();
 
     QTest::qWait(100);
 }

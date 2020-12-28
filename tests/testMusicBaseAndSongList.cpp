@@ -54,10 +54,16 @@ TEST(Application, musicBaseSong1)
     MainFrame *w = Application::getInstance()->getMainWindow();
     MusicSongListView *songListView = w->findChild<MusicSongListView *>(AC_customizeListview);
 
+    // 新建歌单
+    QTestEventList event;
+    QTest::qWait(50);
+    event.addKeyClick(Qt::Key_N, Qt::ControlModifier | Qt::ShiftModifier, 10);
+    event.simulate(w);
+    event.clear();
+
     // 点击自定义列表
     QTest::qWait(100);
     QPoint pos(20, 20);
-    QTestEventList event;
     event.addMouseMove(pos);
     event.addMouseClick(Qt::MouseButton::LeftButton, Qt::NoModifier, pos, 100);
     event.simulate(songListView->viewport());
