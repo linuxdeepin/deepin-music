@@ -562,7 +562,7 @@ void PlayListView::slotImportFinished(QString hash, int count)
         return;
     }
     emit CommonService::getInstance()->signalShowPopupMessage(
-        DataBaseService::getInstance()->getPlaylistNameByUUID("all"), 1, 1);
+        DataBaseService::getInstance()->getPlaylistNameByUUID(hash), 1, 1);
 
     //只刷新全部歌曲列表
     if (m_currentHash != hash) {
@@ -783,7 +783,7 @@ void PlayListView::slotAddToFavSongList(const QString songName)
     }
 
     int insertCount = DataBaseService::getInstance()->addMetaToPlaylist("fav", listMeta);
-    CommonService::getInstance()->signalShowPopupMessage(songName, selection->selectedRows().size(), insertCount);
+    emit CommonService::getInstance()->signalShowPopupMessage(songName, selection->selectedRows().size(), insertCount);
     emit CommonService::getInstance()->signalFluashFavoriteBtnIcon();
 }
 
@@ -821,7 +821,7 @@ void PlayListView::slotAddToCustomSongList()
     }
 
     int insertCount = DataBaseService::getInstance()->addMetaToPlaylist(songlistHash, metas);
-    CommonService::getInstance()->signalShowPopupMessage(obj->text(), metas.size(), insertCount);
+    emit CommonService::getInstance()->signalShowPopupMessage(obj->text(), metas.size(), insertCount);
 }
 
 void PlayListView::slotOpenInFileManager()

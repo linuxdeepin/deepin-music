@@ -378,6 +378,9 @@ void DataBaseService::addMediaMeta(const MediaMeta &meta)
 
     if (! query.exec()) {
         qCritical() << query.lastError();
+        if (m_AllMediaMeta.contains(meta)) {
+            m_loadMediaMeta.append(meta);
+        }
         return;
     }
     m_AllMediaMeta.append(meta);
@@ -606,7 +609,7 @@ int DataBaseService::addMetaToPlaylist(QString uuid, const QList<MediaMeta> &met
                 if (query.exec()) {
                     insert_count++;
                     if (uuid == "fav") {
-                        emit signalFavSongRemove(meta.hash);
+                        emit signalFavSongAdd(meta.hash);
                     }
                 } else {
                     qCritical() << query.lastError() << sqlStr;
