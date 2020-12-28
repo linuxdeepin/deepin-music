@@ -1,7 +1,7 @@
 #!/bin/bash
 
 rm -rf ${HOME}/.cache/deepin/deepin-music/*
-
+rm -rf build
 mkdir build
 cd build
 cp ../../tests/collection-coverage.sh ./
