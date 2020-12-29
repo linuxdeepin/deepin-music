@@ -143,6 +143,8 @@ public slots:
     // 收到子线程一张图片加载完信号
     void slotCreatOneCoverImg(MediaMeta meta);
 signals:
+    // 所有歌曲数量变化
+    void signalAllMusicAddOne(MediaMeta meta);
     // 所有歌曲被清空
     void signalAllMusicCleared();
     void signalGetAllMediaMeta();

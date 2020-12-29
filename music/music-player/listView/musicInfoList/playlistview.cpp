@@ -162,6 +162,9 @@ PlayListView::PlayListView(QString hash, bool isPlayQueue, QWidget *parent)
     connect(DataBaseService::getInstance(), &DataBaseService::signalRmvSong,
             this, &PlayListView::slotRemoveSingleSong);
 
+    connect(DataBaseService::getInstance(), &DataBaseService::signalAllMusicAddOne,
+            this, &PlayListView::slotAllMusicAddOne);
+
     connect(DGuiApplicationHelper::instance(), &DGuiApplicationHelper::themeTypeChanged,
             this, &PlayListView::setThemeType);
 
@@ -701,6 +704,89 @@ void PlayListView::slotRemoveSingleSong(const QString &listHash, const QString &
                 update();
                 break;
             }
+        }
+    }
+}
+
+void PlayListView::slotAllMusicAddOne(MediaMeta addMeta)
+{
+    DataBaseService::ListSortType sortType = getSortType();
+    if (m_model->rowCount() == 0) {
+        insertRow(0, addMeta);
+    } else {
+        bool isInserted = false;
+        for (int rowIndex = 0; rowIndex < m_model->rowCount(); rowIndex++) {
+            isInserted = false;
+            QModelIndex index = m_model->index(rowIndex, 0, QModelIndex());
+            MediaMeta meta = index.data(Qt::UserRole).value<MediaMeta>();
+            //如果已经存在，则不加入
+            if (isContain(addMeta.hash)) {
+                isInserted = true;
+                break;
+            }
+            switch (sortType) {
+            case DataBaseService::SortByAddTimeASC: {
+                if (addMeta.timestamp <= meta.timestamp) {
+                    insertRow(rowIndex, addMeta);
+                    isInserted = true;
+                }
+                break;
+            }
+            case DataBaseService::SortByTitleASC: {
+                if (addMeta.pinyinTitle <= meta.pinyinTitle) {
+                    insertRow(rowIndex, addMeta);
+                    isInserted = true;
+                }
+                break;
+            }
+            case DataBaseService::SortBySingerASC: {
+                if (addMeta.pinyinArtist <= meta.pinyinArtist) {
+                    insertRow(rowIndex, addMeta);
+                    isInserted = true;
+                }
+                break;
+            }
+            case DataBaseService::SortByAblumASC: {
+                if (addMeta.pinyinAlbum <= meta.pinyinAlbum) {
+                    insertRow(rowIndex, addMeta);
+                    isInserted = true;
+                }
+                break;
+            }
+            case DataBaseService::SortByAddTimeDES: {
+                if (addMeta.timestamp >= meta.timestamp) {
+                    insertRow(rowIndex, addMeta);
+                    isInserted = true;
+                }
+                break;
+            }
+            case DataBaseService::SortByTitleDES: {
+                if (addMeta.pinyinTitle >= meta.pinyinTitle) {
+                    insertRow(rowIndex, addMeta);
+                    isInserted = true;
+                }
+                break;
+            }
+            case DataBaseService::SortBySingerDES: {
+                if (addMeta.pinyinArtist >= meta.pinyinArtist) {
+                    insertRow(rowIndex, addMeta);
+                    isInserted = true;
+                }
+                break;
+            }
+            case DataBaseService::SortByAblumDES: {
+                if (addMeta.pinyinAlbum <= meta.pinyinAlbum) {
+                    insertRow(rowIndex, addMeta);
+                    isInserted = true;
+                }
+                break;
+            }
+            default:
+                break;
+            }
+        }
+        if (!isInserted) {
+            insertRow(m_model->rowCount(), addMeta);
         }
     }
 }

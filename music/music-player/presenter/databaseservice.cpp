@@ -514,6 +514,9 @@ bool DataBaseService::deleteMetaFromPlaylist(QString uuid, const QStringList &me
 void DataBaseService::slotGetMetaFromThread(MediaMeta meta)
 {
     addMediaMeta(meta);
+    // 添加到自定义歌单,但是当前页面上你所有音乐,则所有音乐要刷新,添加这个信号
+    // 直接添加到所有音乐的,通过signalImportFinished信号刷新
+    emit signalAllMusicAddOne(meta);
     if (m_importHash != "all") {
         QList<MediaMeta> metas;
         metas.append(meta);
