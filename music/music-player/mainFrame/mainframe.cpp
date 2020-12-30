@@ -443,6 +443,9 @@ void MainFrame::slotImportFinished(QString hash, int count)
 
 void MainFrame::slotImportFailed()
 {
+    if (DataBaseService::getInstance()->allMusicInfos().size() <= 0) {
+        m_importWidget->showImportHint();
+    }
     QString message = QString(tr("Import failed, no valid music file found"));
     Dtk::Widget::DDialog warnDlg(this);
     warnDlg.setTextFormat(Qt::RichText);
