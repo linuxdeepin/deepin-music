@@ -254,10 +254,10 @@ void MainFrame::initMenuAndShortcut()
     trayIconMenu->addSeparator();
     trayIconMenu->addAction(quitAction);
 
-    auto trayIcon = new QSystemTrayIcon(this);
-    trayIcon->setIcon(QIcon::fromTheme("deepin-music"));
-    trayIcon->setToolTip(tr("Music"));
-    trayIcon->setContextMenu(trayIconMenu);
+    m_sysTrayIcon = new QSystemTrayIcon(this);
+    m_sysTrayIcon->setIcon(QIcon::fromTheme("deepin-music"));
+    m_sysTrayIcon->setToolTip(tr("Music"));
+    m_sysTrayIcon->setContextMenu(trayIconMenu);
 
     connect(playAction, &QAction::triggered,
     this, [ = ]() {
@@ -277,7 +277,7 @@ void MainFrame::initMenuAndShortcut()
         qApp->quit();
     });
 
-    connect(trayIcon, &QSystemTrayIcon::activated,
+    connect(m_sysTrayIcon, &QSystemTrayIcon::activated,
     this, [ = ](QSystemTrayIcon::ActivationReason reason) {
         if (QSystemTrayIcon::Trigger == reason) {
             if (isVisible()) {
@@ -765,6 +765,8 @@ void MainFrame::hideEvent(QHideEvent *event)
     //用于最小化时保存窗口位置信息,note：托盘到最小化或者退出程序也会触发该事件
     DMainWindow::hideEvent(event);
     m_geometryBa = saveGeometry();
+    if (m_sysTrayIcon && !m_sysTrayIcon->isVisible())
+        m_sysTrayIcon->show();
     qDebug() << "hideEvent=============";
 }
 

@@ -40,6 +40,7 @@ class ImportWidget;
 class QShortcut;
 class DequalizerDialog;
 class PlayQueueWidget;
+class QSystemTrayIcon;
 class MainFrame : public DMainWindow
 {
     Q_OBJECT
@@ -108,6 +109,8 @@ private:
     QShortcut           *windowShortcut = nullptr;
     //window geometry
     QByteArray          m_geometryBa = QByteArray();
+    //tray icon
+    QSystemTrayIcon *m_sysTrayIcon = nullptr;
 };
 
 //extern const QString s_PropertyViewname;
