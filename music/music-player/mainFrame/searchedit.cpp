@@ -174,7 +174,7 @@ void SearchEdit::onReturnPressed()
     if (text.length() == 0)
         return;
     m_result->hide();
-    emit CommonService::getInstance()->signalSwitchToView(SearchMusicResultType, text);
+    emit CommonService::getInstance()->signalSwitchToView(m_result->getListPageSwitchType(), text);
 }
 
 

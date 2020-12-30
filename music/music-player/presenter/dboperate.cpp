@@ -77,6 +77,9 @@ void DBOperate::slotImportMedias(const QStringList &urllist)
             }
         } else {
             QString strtp = filepath;
+            if (!m_mediaLibrary->getSupportedSuffixs().keys().contains(("*." + fileInfo.suffix()))) {
+                continue;
+            }
             MediaMeta mediaMeta = m_mediaLibrary->creatMediaMeta(strtp);
             if (mediaMeta.length <= 0) {
                 importFailCount++;
@@ -94,12 +97,12 @@ void DBOperate::slotImportMedias(const QStringList &urllist)
         }
     }
 
-    if (importFailCount == urllist.size()) {
-        // 全部导入失败提示导入失败
-        emit sigImportFailed();
-    } else {
+    if (importSuccessCount > 0) {
         // 只要有一个导入成功就提示导入成功
         emit sigImportFinished(importSuccessCount);
+    } else {
+        // 全部导入失败提示导入失败
+        emit sigImportFailed();
     }
 }
 

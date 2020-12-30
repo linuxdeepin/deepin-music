@@ -634,6 +634,7 @@ void Player::setMuted(bool mute)
 void Player::setActiveMeta(const MediaMeta &meta)
 {
     m_ActiveMeta = meta;
+    emit signalMediaMetaChanged(m_ActiveMeta);
     //保存上一次播放的歌曲
     MusicSettings::setOption("base.play.last_meta", meta.hash);
     MusicSettings::setOption("base.play.last_playlist", m_currentPlayListHash.isEmpty() ? "all" : m_currentPlayListHash);
@@ -935,7 +936,7 @@ void Player::initVlc()
             break;
         }
         case Vlc::Opening: {
-            emit signalMediaMetaChanged();
+            emit signalMediaMetaChanged(m_ActiveMeta);
             break;
         }
         case Vlc::Buffering: {
@@ -957,6 +958,7 @@ void Player::initVlc()
         case Vlc::Stopped: {
             //emit signalPlaybackStatusChanged(Player::Stopped);
             m_timer->stop();
+            emit signalMediaMetaChanged(MediaMeta());
             break;
         }
         case Vlc::Ended: {

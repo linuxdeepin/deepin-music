@@ -32,6 +32,7 @@ DWIDGET_USE_NAMESPACE
 #include <DHorizontalLine>
 #include <DBlurEffectWidget>
 #include <QVBoxLayout>
+#include "commonservice.h"
 
 class PushButton;
 class QStringListModel;
@@ -53,7 +54,7 @@ public:
     void selectUp();
     void selectDown();
     int  getCurrentIndex();
-
+    ListPageSwitchType getListPageSwitchType();
 public:
     // void paintEvent(QPaintEvent *event) Q_DECL_OVERRIDE;
     virtual void leaveEvent(QEvent *event) Q_DECL_OVERRIDE;

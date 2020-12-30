@@ -198,8 +198,9 @@ void MusicLyricWidget::onProgressChanged(qint64 value, qint64 /*length*/)
     m_lyricview->postionChanged(value);
 }
 
-void MusicLyricWidget::onMusicPlayed()
+void MusicLyricWidget::onMusicPlayed(MediaMeta meta)
 {
+    Q_UNUSED(meta)
     QFileInfo fileInfo(Player::getInstance()->getActiveMeta().localPath);
     QString lrcPath = fileInfo.dir().path() + QDir::separator() + fileInfo.completeBaseName() + ".lrc";
     QFile file(lrcPath);
@@ -213,8 +214,9 @@ void MusicLyricWidget::onMusicPlayed()
     m_lyricview->getFromFile(lrcPath);
 }
 
-void MusicLyricWidget::onCoverChanged()
+void MusicLyricWidget::onCoverChanged(MediaMeta meta)
 {
+    Q_UNUSED(meta)
     this->updateUI();
 }
 

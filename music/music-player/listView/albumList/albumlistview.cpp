@@ -210,41 +210,39 @@ void AlbumListView::resetAlbumListDataBySongName(const QList<MediaMeta> &mediaMe
         break;
     }
     for (AlbumInfo albumInfo : albumInfoList) {
-        for (MediaMeta albumMeta : albumInfo.musicinfos.values()) {
 //            static MediaMeta &tmpMeta = albumMeta;
 //            bool ret = std::any_of(mediaMetas.begin(), mediaMetas.end(), [](MediaMeta mt) {return mt.hash == tmpMeta.hash;});
-            bool isAlbumContainSong = false;
-            for (MediaMeta albumMeta : albumInfo.musicinfos.values()) {
-                for (MediaMeta listMeta : mediaMetas) {
-                    if (albumMeta.hash == listMeta.hash) {
-                        isAlbumContainSong = true;
-                        break;
-                    }
-                }
-                if (isAlbumContainSong) {
+        bool isAlbumContainSong = false;
+        for (MediaMeta albumMeta : albumInfo.musicinfos.values()) {
+            for (MediaMeta listMeta : mediaMetas) {
+                if (albumMeta.hash == listMeta.hash) {
+                    isAlbumContainSong = true;
                     break;
                 }
             }
             if (isAlbumContainSong) {
-                QStandardItem *pItem = new QStandardItem;
-                //设置icon
-                pItem->setIcon(m_defaultIcon);
-                for (int i = 0; i < albumInfo.musicinfos.values().size(); i++) {
-                    MediaMeta metaBind = albumInfo.musicinfos.values().at(i);
-                    QString imagesDirPath = Global::cacheDir() + "/images/" + metaBind.hash + ".jpg";
-                    QFileInfo file(imagesDirPath);
-                    if (file.exists()) {
-                        pItem->setIcon(QIcon(imagesDirPath));
-                        break;
-                    }
-                }
-                albumModel->appendRow(pItem);
-                auto row = albumModel->rowCount() - 1;
-                QModelIndex idx = albumModel->index(row, 0, QModelIndex());
-                QVariant albumval;
-                albumval.setValue(albumInfo);
-                albumModel->setData(idx, albumval, Qt::UserRole);
+                break;
             }
+        }
+        if (isAlbumContainSong) {
+            QStandardItem *pItem = new QStandardItem;
+            //设置icon
+            pItem->setIcon(m_defaultIcon);
+            for (int i = 0; i < albumInfo.musicinfos.values().size(); i++) {
+                MediaMeta metaBind = albumInfo.musicinfos.values().at(i);
+                QString imagesDirPath = Global::cacheDir() + "/images/" + metaBind.hash + ".jpg";
+                QFileInfo file(imagesDirPath);
+                if (file.exists()) {
+                    pItem->setIcon(QIcon(imagesDirPath));
+                    break;
+                }
+            }
+            albumModel->appendRow(pItem);
+            auto row = albumModel->rowCount() - 1;
+            QModelIndex idx = albumModel->index(row, 0, QModelIndex());
+            QVariant albumval;
+            albumval.setValue(albumInfo);
+            albumModel->setData(idx, albumval, Qt::UserRole);
         }
     }
 }

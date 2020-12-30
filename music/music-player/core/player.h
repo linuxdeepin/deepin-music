@@ -112,7 +112,7 @@ signals:
     // 播放状态改变
     void signalPlaybackStatusChanged(Player::PlaybackStatus playbackStatus);
     // 播放音乐改变
-    void signalMediaMetaChanged();
+    void signalMediaMetaChanged(MediaMeta meta);
     // 播放状态动态图改变
     void signalUpdatePlayingIcon();
     // 播放列表改变

@@ -91,7 +91,7 @@ public slots:
     // 点击音量按钮
     void slotSoundClick(bool click);
     void slotPlaybackStatusChanged(Player::PlaybackStatus statue);
-    void slotMediaMetaChanged();
+    void slotMediaMetaChanged(MediaMeta activeMeta);
 
     void setPlayModel(Player::PlaybackMode playModel);
 

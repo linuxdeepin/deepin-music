@@ -308,6 +308,17 @@ int SearchResult::getCurrentIndex()
     return m_CurrentIndex;
 }
 
+ListPageSwitchType SearchResult::getListPageSwitchType()
+{
+    if (m_MusicView && m_MusicView->rowCount() > 0) {
+        return SearchMusicResultType;
+    } else if (m_SingerView && m_SingerView->rowCount() > 0) {
+        return SearchSingerResultType;
+    } else {
+        return SearchAlbumResultType;
+    }
+}
+
 #if 0
 void SearchResult::paintEvent(QPaintEvent *event)
 {

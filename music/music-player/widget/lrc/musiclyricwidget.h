@@ -29,6 +29,7 @@
 #include <QImage>
 
 #include <searchmeta.h>
+#include "player.h"
 
 DWIDGET_USE_NAMESPACE
 
@@ -55,8 +56,8 @@ signals:
 
 public slots:
     void onProgressChanged(qint64 value, qint64 length);
-    void onMusicPlayed();
-    void onCoverChanged();
+    void onMusicPlayed(MediaMeta meta);
+    void onCoverChanged(MediaMeta meta);
 
     void setThemeType(int type);
 

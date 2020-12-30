@@ -305,6 +305,8 @@ QVariant SpeechCenter::addFaverite(QString musicName)
         int count = DataBaseService::getInstance()->addMetaToPlaylist("fav", listMeta);
         if (count > 0) {
             isExit = true;
+            emit CommonService::getInstance()->signalShowPopupMessage(
+                DataBaseService::getInstance()->getPlaylistNameByUUID("fav"), 1, 1);
         }
     }
     return isExit;
