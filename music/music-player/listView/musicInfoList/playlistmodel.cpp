@@ -39,11 +39,11 @@ bool PlaylistModel::setData(const QModelIndex &index, const QVariant &value, int
     return QStandardItemModel::setData(index, value, role);
 }
 
-//Qt::DropActions PlaylistModel::supportedDropActions() const
-//{
-////    return QAbstractItemModel::supportedDropActions();
-//    return /*Qt::CopyAction | */Qt::IgnoreAction;
-//}
+Qt::DropActions PlaylistModel::supportedDropActions() const
+{
+//    return QAbstractItemModel::supportedDropActions();
+    return /*Qt::CopyAction | */Qt::IgnoreAction;
+}
 
 Qt::ItemFlags PlaylistModel::flags(const QModelIndex &index) const
 {

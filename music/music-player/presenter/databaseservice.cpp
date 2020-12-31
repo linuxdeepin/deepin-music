@@ -1028,10 +1028,10 @@ DataBaseService::DataBaseService()
     //加载图片
     connect(this, SIGNAL(signalCreatCoverImg(const QList<MediaMeta> &)), &m_worker, SLOT(slotCreatCoverImg(const QList<MediaMeta> &)));
 
-    connect(&m_worker, &DBOperate::sigImportMetaFromThread, this, &DataBaseService::slotGetMetaFromThread);
-    connect(&m_worker, &DBOperate::sigImportFinished, this, &DataBaseService::slotImportFinished);
-    connect(&m_worker, &DBOperate::sigImportFailed, this, &DataBaseService::signalImportFailed);
-    connect(&m_worker, &DBOperate::sigCreatOneCoverImg, this, &DataBaseService::slotCreatOneCoverImg);
+    connect(&m_worker, &DBOperate::sigImportMetaFromThread, this, &DataBaseService::slotGetMetaFromThread, Qt::QueuedConnection);
+    connect(&m_worker, &DBOperate::sigImportFinished, this, &DataBaseService::slotImportFinished, Qt::QueuedConnection);
+    connect(&m_worker, &DBOperate::sigImportFailed, this, &DataBaseService::signalImportFailed, Qt::QueuedConnection);
+    connect(&m_worker, &DBOperate::sigCreatOneCoverImg, this, &DataBaseService::slotCreatOneCoverImg, Qt::QueuedConnection);
 
     m_workerThread->start();
 }
