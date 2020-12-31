@@ -32,6 +32,7 @@
 #include "dboperate.h"
 #include "medialibrary.h"
 #include "player.h"
+#include "commonservice.h"
 static const QString DatabaseUUID = "0fcbd091-2356-161c-9026-f49779f9c71c40";
 
 //int databaseVersionNew();
@@ -319,12 +320,18 @@ void DataBaseService::removeSelectedSongs(const QString &curpage, const QStringL
 
 void DataBaseService::importMedias(QString importHash, const QStringList &urllist)
 {
+    // 导入中直接返回，不做处理
+    if (m_importing) {
+        return;
+    }
+    m_successCount = 0;
+    m_exsitCount = 0;
     m_importHash = importHash;
     qDebug() << "------DataBaseService::importMedias " << urllist.size();
     qDebug() << "------DataBaseService::importMedias  currentThread = " << QThread::currentThread();
     m_loadMediaMeta.clear();
     emit signalImportMedias(urllist);
-    m_Importing = true;
+    m_importing = true;
 }
 
 //bool DataBaseService::getImportStatus()
@@ -513,21 +520,39 @@ bool DataBaseService::deleteMetaFromPlaylist(QString uuid, const QStringList &me
 
 void DataBaseService::slotGetMetaFromThread(MediaMeta meta)
 {
-    addMediaMeta(meta);
-    // 添加到自定义歌单,但是当前页面上你所有音乐,则所有音乐要刷新,添加这个信号
-    // 直接添加到所有音乐的,通过signalImportFinished信号刷新
-    emit signalAllMusicAddOne(meta);
-    if (m_importHash != "all") {
-        QList<MediaMeta> metas;
-        metas.append(meta);
-        addMetaToPlaylist(m_importHash, metas);
+    if (!this->isMediaMetaExist(meta.hash)) {
+        addMediaMeta(meta);
+        m_successCount++;
+
+        // 添加到自定义歌单,但是当前页面上你所有音乐,则所有音乐要刷新,添加这个信号
+        // 直接添加到所有音乐的,通过signalImportFinished信号刷新
+        emit signalAllMusicAddOne(meta);
+        if (m_importHash != "all") {
+            QList<MediaMeta> metas;
+            metas.append(meta);
+            addMetaToPlaylist(m_importHash, metas);
+        }
+    } else {
+        m_exsitCount++;
     }
 }
 
-void DataBaseService::slotImportFinished(int count)
+void DataBaseService::slotImportFinished(int failCount)
 {
-    emit signalImportFinished(m_importHash, count);
-    m_Importing = false;
+    Q_UNUSED(failCount)
+    if (m_successCount > 0 || m_exsitCount > 0) {
+        emit signalImportFinished(m_importHash, m_successCount);
+
+        emit CommonService::getInstance()->signalShowPopupMessage(
+            DataBaseService::getInstance()->getPlaylistNameByUUID(m_importHash), m_successCount + m_exsitCount, m_successCount);
+    } else {
+        emit signalImportFailed();
+    }
+
+    m_successCount = 0;
+    m_exsitCount = 0;
+    m_importing = false;
+
     //数据加载完后再加载图片
     emit signalCreatCoverImg(m_AllMediaMeta);
     //启动加载数据完成后直接播放第一首歌
@@ -861,7 +886,7 @@ bool DataBaseService::createConnection()
     return true;
 }
 
-bool DataBaseService::playlistExist(const QString &uuid)
+bool DataBaseService::isPlaylistExist(const QString &uuid)
 {
     QSqlQuery query(m_db);
     query.prepare("SELECT COUNT(*) FROM playlist where uuid = :uuid");
@@ -872,7 +897,26 @@ bool DataBaseService::playlistExist(const QString &uuid)
         return false;
     }
     query.first();
+
     return query.value(0).toInt() > 0;
+}
+
+bool DataBaseService::isMediaMetaExist(const QString &hash)
+{
+    QSqlQuery query(m_db);
+    query.prepare("SELECT COUNT(*) FROM musicNew where hash = :hash");
+    query.bindValue(":hash", hash);
+
+    if (!query.exec()) {
+        qWarning() << query.lastError();
+        return false;
+    }
+
+    if (query.next()) {
+        return query.value(0).toInt() > 0;
+    }
+
+    return false;
 }
 
 void DataBaseService::initPlaylistTable()
@@ -886,7 +930,7 @@ void DataBaseService::initPlaylistTable()
     playlistMeta.hide = false;
     playlistMeta.sortID = 1;
     playlistMeta.sortType = SortByAddTimeASC;
-    if (!playlistExist("album")) {
+    if (!isPlaylistExist("album")) {
         addPlaylist(playlistMeta);
     }
 
@@ -896,7 +940,7 @@ void DataBaseService::initPlaylistTable()
     playlistMeta.readonly = true;
     playlistMeta.hide = false;
     playlistMeta.sortID = 2;
-    if (!playlistExist("artist")) {
+    if (!isPlaylistExist("artist")) {
         addPlaylist(playlistMeta);
     }
 
@@ -906,7 +950,7 @@ void DataBaseService::initPlaylistTable()
     playlistMeta.readonly = true;
     playlistMeta.hide = false;
     playlistMeta.sortID = 3;
-    if (!playlistExist("all")) {
+    if (!isPlaylistExist("all")) {
         addPlaylist(playlistMeta);
     }
 
@@ -916,7 +960,7 @@ void DataBaseService::initPlaylistTable()
     playlistMeta.readonly = true;
     playlistMeta.hide = false;
     playlistMeta.sortID = 4;
-    if (!playlistExist("fav")) {
+    if (!isPlaylistExist("fav")) {
         addPlaylist(playlistMeta);
     }
 
@@ -926,7 +970,7 @@ void DataBaseService::initPlaylistTable()
     playlistMeta.readonly = true;
     playlistMeta.hide = true;
     playlistMeta.sortID = 5;
-    if (!playlistExist("play")) {
+    if (!isPlaylistExist("play")) {
         addPlaylist(playlistMeta);
     }
 
@@ -936,7 +980,7 @@ void DataBaseService::initPlaylistTable()
     playlistMeta.readonly = true;
     playlistMeta.hide = true;
     playlistMeta.sortID = 6;
-    if (!playlistExist("search")) {
+    if (!isPlaylistExist("search")) {
         addPlaylist(playlistMeta);
     }
 
@@ -946,7 +990,7 @@ void DataBaseService::initPlaylistTable()
     playlistMeta.readonly = true;
     playlistMeta.hide = true;
     playlistMeta.sortID = 7;
-    if (!playlistExist("musicCand")) {
+    if (!isPlaylistExist("musicCand")) {
         addPlaylist(playlistMeta);
     }
 
@@ -956,7 +1000,7 @@ void DataBaseService::initPlaylistTable()
     playlistMeta.readonly = true;
     playlistMeta.hide = true;
     playlistMeta.sortID = 8;
-    if (!playlistExist("albumCand")) {
+    if (!isPlaylistExist("albumCand")) {
         addPlaylist(playlistMeta);
     }
 
@@ -966,7 +1010,7 @@ void DataBaseService::initPlaylistTable()
     playlistMeta.readonly = true;
     playlistMeta.hide = true;
     playlistMeta.sortID = 9;
-    if (!playlistExist("artistCand")) {
+    if (!isPlaylistExist("artistCand")) {
         addPlaylist(playlistMeta);
     }
 
@@ -976,7 +1020,7 @@ void DataBaseService::initPlaylistTable()
     playlistMeta.readonly = true;
     playlistMeta.hide = true;
     playlistMeta.sortID = 10;
-    if (!playlistExist("musicResult")) {
+    if (!isPlaylistExist("musicResult")) {
         addPlaylist(playlistMeta);
     }
 
@@ -986,7 +1030,7 @@ void DataBaseService::initPlaylistTable()
     playlistMeta.readonly = true;
     playlistMeta.hide = true;
     playlistMeta.sortID = 11;
-    if (!playlistExist("albumResult")) {
+    if (!isPlaylistExist("albumResult")) {
         addPlaylist(playlistMeta);
     }
 
@@ -996,7 +1040,7 @@ void DataBaseService::initPlaylistTable()
     playlistMeta.readonly = true;
     playlistMeta.hide = true;
     playlistMeta.sortID = 12;
-    if (!playlistExist("artistResult")) {
+    if (!isPlaylistExist("artistResult")) {
         addPlaylist(playlistMeta);
     }
 
@@ -1028,10 +1072,9 @@ DataBaseService::DataBaseService()
     //加载图片
     connect(this, SIGNAL(signalCreatCoverImg(const QList<MediaMeta> &)), &m_worker, SLOT(slotCreatCoverImg(const QList<MediaMeta> &)));
 
-    connect(&m_worker, &DBOperate::sigImportMetaFromThread, this, &DataBaseService::slotGetMetaFromThread, Qt::QueuedConnection);
-    connect(&m_worker, &DBOperate::sigImportFinished, this, &DataBaseService::slotImportFinished, Qt::QueuedConnection);
-    connect(&m_worker, &DBOperate::sigImportFailed, this, &DataBaseService::signalImportFailed, Qt::QueuedConnection);
-    connect(&m_worker, &DBOperate::sigCreatOneCoverImg, this, &DataBaseService::slotCreatOneCoverImg, Qt::QueuedConnection);
+    connect(&m_worker, &DBOperate::sigImportMetaFromThread, this, &DataBaseService::slotGetMetaFromThread);
+    connect(&m_worker, &DBOperate::sigImportFinished, this, &DataBaseService::slotImportFinished);
+    connect(&m_worker, &DBOperate::sigCreatOneCoverImg, this, &DataBaseService::slotCreatOneCoverImg);
 
     m_workerThread->start();
 }

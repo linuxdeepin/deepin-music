@@ -51,7 +51,7 @@ signals:
     // 设置播放模式
     void signalSetPlayModel(Player::PlaybackMode playModel);
     // 弹窗消息
-    void signalShowPopupMessage(const QString &songListName, int selectCount, int insertCount);
+    void signalShowPopupMessage(const QString &songListName, int allCount, int successCount);
     // 播放队列关闭动画播放完毕，刷新背景
     void signalPlayQueueClosed();
     // 切换歌单时，清空搜索栏

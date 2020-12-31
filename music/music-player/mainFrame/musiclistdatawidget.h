@@ -51,7 +51,7 @@ public slots:
     void slotViewChanged(ListPageSwitchType switchtype, const QString &hashOrSearchword);
     void switchViewModel();
     void slotSortChange(QAction *action);
-    void slotImportFinished(QString hash, int count);
+    void slotImportFinished(QString hash, int successCount);
     // 刷新各列表数量信息
     void refreshInfoLabel(QString hash);
     // 刷新显示模式按钮check状态

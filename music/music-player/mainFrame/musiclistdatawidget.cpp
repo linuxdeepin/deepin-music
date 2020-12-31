@@ -254,10 +254,11 @@ void MusicListDataWidget::slotSortChange(QAction *action)
     }
 }
 
-void MusicListDataWidget::slotImportFinished(QString hash, int count)
+void MusicListDataWidget::slotImportFinished(QString hash, int successCount)
 {
     Q_UNUSED(hash)
-    if (count <= 0) {
+
+    if (successCount <= 0) {
         return;
     }
     qDebug() << "---MusicListDataWidget::slotImportFinished m_currentHash = " << m_currentHash;

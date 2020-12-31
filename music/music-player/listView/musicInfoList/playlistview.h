@@ -81,8 +81,10 @@ public slots:
     void slotOnDoubleClicked(const QModelIndex &index);
     void slotUpdatePlayingIcon();
 
-    void slotImportFinished(QString hash, int count); //新导入文件
-    void slotCoverUpdate(const MediaMeta &meta);//封面图片刷新
+    // 新导入文件
+    void slotImportFinished(QString hash, int successCount);
+    // 封面图片刷新
+    void slotCoverUpdate(const MediaMeta &meta);
     void slotTheme(int type);
 
     // 删除单个歌单中的歌曲

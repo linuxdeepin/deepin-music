@@ -419,10 +419,11 @@ void MainFrame::slotLyricClicked()
     }
 }
 
-void MainFrame::slotImportFinished(QString hash, int count)
+void MainFrame::slotImportFinished(QString hash, int successCount)
 {
     Q_UNUSED(hash)
-    if (count <= 0) {
+
+    if (successCount <= 0) {
         if (DataBaseService::getInstance()->allMusicInfos().size() <= 0) {
             m_importWidget->showImportHint();
         }

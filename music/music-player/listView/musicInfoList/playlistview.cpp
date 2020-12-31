@@ -559,13 +559,11 @@ void PlayListView::slotUpdatePlayingIcon()
     this->update();
 }
 
-void PlayListView::slotImportFinished(QString hash, int count)
+void PlayListView::slotImportFinished(QString hash, int successCount)
 {
-    if (count <= 0) {
+    if (successCount <= 0) {
         return;
     }
-    emit CommonService::getInstance()->signalShowPopupMessage(
-        DataBaseService::getInstance()->getPlaylistNameByUUID(hash), 1, 1);
 
     //只刷新全部歌曲列表
     if (m_currentHash != hash) {

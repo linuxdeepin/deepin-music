@@ -139,7 +139,7 @@ public:
 public slots:
     void slotGetMetaFromThread(MediaMeta meta);
     // 收到子线程导入结束通知
-    void slotImportFinished(int count);
+    void slotImportFinished(int failCount);
     // 收到子线程一张图片加载完信号
     void slotCreatOneCoverImg(MediaMeta meta);
 signals:
@@ -152,8 +152,8 @@ signals:
     void signalImportMedias(const QStringList &urllist);
     // 发送给子线程执行创建图片
     void signalCreatCoverImg(const QList<MediaMeta> &metas);
-    // 导入结束，通知主界面
-    void signalImportFinished(QString hash, int count);
+    // 导入结束，通知主界面 allCount:待导入的文件数量   successCount：导入成功的数量
+    void signalImportFinished(QString hash, int successCount);
     // 导入失败，有不支持的文件
     void signalImportFailed();
     // 封面图片刷新
@@ -170,7 +170,8 @@ signals:
     void signalPlaylistNameUpdate(QString hash);
 private:
     bool createConnection();
-    bool playlistExist(const QString &uuid);
+    bool isPlaylistExist(const QString &uuid);
+    bool isMediaMetaExist(const QString &hash);
     // 初始化歌单统计表
     void initPlaylistTable();
 public:
@@ -183,6 +184,10 @@ private:
 private:
     QThread *m_workerThread = nullptr;
     QSqlDatabase m_db;
+    // 导入的歌曲计数
+    int m_successCount = 0;
+    // 存在的歌曲计数
+    int m_exsitCount = 0;
 
     QList<PlaylistData> m_PlaylistMeta;
     QList<MediaMeta> m_AllMediaMeta;
@@ -192,7 +197,7 @@ private:
     // 新加载的歌曲文件
     DBOperate m_worker;
     QList<MediaMeta> m_loadMediaMeta;
-    bool             m_Importing = false;
+    bool             m_importing = false;
     QString          m_importHash;
     // 文管导入的第一首歌
     QString          m_firstSonsg = "";
