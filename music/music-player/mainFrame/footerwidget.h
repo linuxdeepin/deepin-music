@@ -65,6 +65,7 @@ private:
     void initShortcut();
 
     void setPlayProperty(Player::PlaybackStatus status);
+    void resetBtnVisible();
 signals:
     void lyricClicked();
 public slots:

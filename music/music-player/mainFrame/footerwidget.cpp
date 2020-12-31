@@ -336,6 +336,7 @@ void FooterWidget::initUI(QWidget *parent)
     connect(DataBaseService::getInstance(), &DataBaseService::signalFavSongAdd, this, &FooterWidget::fluashFavoriteBtnIconAdd);
 
     slotFlushSoundIcon();
+    resetBtnVisible();
 }
 
 void FooterWidget::installTipHint(QWidget *widget, const QString &hintstr)
@@ -438,6 +439,21 @@ void FooterWidget::setPlayProperty(Player::PlaybackStatus status)
         m_btPlay->setIcon(QIcon::fromTheme("music_play"));
     } else {
         m_btPlay->setIcon(QIcon::fromTheme("suspend"));
+    }
+}
+
+void FooterWidget::resetBtnVisible()
+{
+    if (Player::getInstance()->getActiveMeta().hash.isEmpty()) {
+        m_btFavorite->setVisible(false);
+        m_btLyric->setVisible(false);
+        m_title->setVisible(false);
+        m_artist->setVisible(false);
+    } else {
+        m_btFavorite->setVisible(true);
+        m_btLyric->setVisible(true);
+        m_title->setVisible(true);
+        m_artist->setVisible(true);
     }
 }
 
@@ -564,17 +580,7 @@ void FooterWidget::slotMediaMetaChanged(MediaMeta activeMeta)
 {
     Q_UNUSED(activeMeta)
     MediaMeta meta = Player::getInstance()->getActiveMeta();
-    if (meta.hash.isEmpty()) {
-        m_btFavorite->setVisible(false);
-        m_btLyric->setVisible(false);
-        m_title->setVisible(false);
-        m_artist->setVisible(false);
-    } else {
-        m_btFavorite->setVisible(true);
-        m_btLyric->setVisible(true);
-        m_title->setVisible(true);
-        m_artist->setVisible(true);
-    }
+    resetBtnVisible();
     //替换封面按钮与背景图片
     QString imagesDirPath = Global::cacheDir() + "/images/" + meta.hash + ".jpg";
     QFileInfo file(imagesDirPath);

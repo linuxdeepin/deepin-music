@@ -1,5 +1,5 @@
 #!/bin/bash
-
+QTEST_FUNCTION_TIMEOUT='800000'
 rm -rf ${HOME}/.cache/deepin/deepin-music/*
 rm -rf build
 mkdir build
