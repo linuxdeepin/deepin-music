@@ -10,7 +10,7 @@
 #include <QString>
 #include <QObject>
 
-//#define SELECT_CASE "shortCut"
+//#define SELECT_CASE "musicListDialg7"
 
 #ifdef SELECT_CASE
 #define TEST_CASE_NAME(testName) if(testName != SELECT_CASE) return;
@@ -107,6 +107,7 @@
 #define AC_musicListDialogCloseBt     "musicListDialogCloseBt"
 #define AC_MessageBox                 "messageBox"
 //#define AC_FileDialog                 QObject::tr("fileDialog")
+#define AC_searchResultTabWidget      "searchResultTabWidget"
 
 
 #endif // DESKTOP_ACCESSIBLE_UI_DEFINE_H

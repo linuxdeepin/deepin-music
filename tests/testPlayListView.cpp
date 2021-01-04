@@ -573,6 +573,14 @@ TEST(Application, playListViewDrag)
     li.append(QUrl(lastImportPath));
     mimedata.setUrls(li);
 
+    // 关闭导入失败窗口
+    QTimer::singleShot(500, [ = ]() {
+        DDialog *warnDlg = w->findChild<DDialog *>("uniquewarndailog");
+        if (warnDlg) {
+            warnDlg->close();
+        }
+    });
+
     pos = QPoint(130, 130);
 
     QDragEnterEvent eEnter(pos, Qt::IgnoreAction, &mimedata, Qt::LeftButton, Qt::NoModifier);

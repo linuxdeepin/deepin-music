@@ -36,6 +36,8 @@ TEST(Application, dataBaseService)
     DataBaseService::getInstance()->addMetaToPlaylist("all", metaList);
     DataBaseService::getInstance()->updateMetaCodec(MediaMeta());
     DataBaseService::getInstance()->setFirstSong("");
+    DataBaseService::getInstance()->updatePlaylistDisplayName("新建歌单", "");
+    DataBaseService::getInstance()->signalCoverUpdate(Player::getInstance()->getActiveMeta());
 
     QTest::qWait(50);
 }

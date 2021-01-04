@@ -609,6 +609,206 @@ TEST(Application, musicListDialg4)
     QTest::qWait(1000);
 }
 
+// Dialg窗口
+TEST(Application, musicListDialg5)
+{
+    TEST_CASE_NAME("musicListDialg5")
+
+    MainFrame *w = Application::getInstance()->getMainWindow();
+    MusicBaseListView *baseListView = w->findChild<MusicBaseListView *>(AC_dataBaseListview);
+    QTest::qWait(50);
+    // 点击专辑
+    QPoint pos(130, 20);
+    QTestEventList event;
+    event.addMouseMove(pos);
+    event.addMouseClick(Qt::MouseButton::LeftButton, Qt::NoModifier, pos, 10);
+    event.simulate(baseListView->viewport());
+    event.clear();
+
+    // dialog list 点击
+    QTimer::singleShot(800, w, [ = ]() {
+        QTest::qWait(200);
+        MusicListDialog *mld = w->findChild<MusicListDialog *>(AC_musicListDialogAlbum);
+        MusicListInfoView *mliv = w->findChild<MusicListInfoView *>(AC_musicListInfoView);
+
+        QTestEventList event;
+        event.addMouseMove(pos);
+        event.addMouseClick(Qt::MouseButton::LeftButton, Qt::NoModifier, pos, 100);
+        event.addMousePress(Qt::MouseButton::LeftButton, Qt::NoModifier, pos, 100);
+        event.addMouseDClick(Qt::MouseButton::LeftButton, Qt::NoModifier, pos, 100);
+        event.simulate(mliv->viewport());
+        event.clear();
+        QTest::qWait(100);
+
+        // 歌曲信息
+        QTimer::singleShot(500, w, [ = ]() {
+            QTimer::singleShot(800, w, [ = ]() {
+                InfoDialog *infoDialog = w->findChild<InfoDialog *>(AC_infoDialog);
+                infoDialog->close();
+                QTest::qWait(500);
+                mld->close();
+            });
+            QTestEventList event;
+            DMenu *menuWidget = static_cast<DMenu *>(qApp->activePopupWidget());
+            event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
+            event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
+            event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
+            event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
+            event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
+            event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
+            event.addKeyClick(Qt::Key_Enter, Qt::NoModifier, 50);
+            event.addDelay(100);
+            event.simulate(menuWidget);
+            event.clear();
+            QTest::qWait(100);
+        });
+        QContextMenuEvent menuEvent(QContextMenuEvent::Mouse, QPoint(20, 20));
+        qApp->sendEvent(mliv->viewport(), &menuEvent);
+        QTest::qWait(700);
+    });
+
+    // 双击list
+    pos = QPoint(20, 20);
+    AlbumListView *alv = w->findChild<AlbumListView *>(AC_albumListView);
+    event.addMouseMove(pos);
+    event.addMouseClick(Qt::MouseButton::LeftButton, Qt::NoModifier, pos, 10);
+    event.addMousePress(Qt::MouseButton::LeftButton, Qt::NoModifier, pos, 10);
+    event.addMouseDClick(Qt::MouseButton::LeftButton, Qt::NoModifier, pos, 10);
+    event.simulate(alv->viewport());
+    event.clear();
+
+    QTest::qWait(1000);
+}
+
+// Dialg窗口
+TEST(Application, musicListDialg6)
+{
+    TEST_CASE_NAME("musicListDialg6")
+
+    MainFrame *w = Application::getInstance()->getMainWindow();
+    MusicBaseListView *baseListView = w->findChild<MusicBaseListView *>(AC_dataBaseListview);
+    QTest::qWait(50);
+    // 点击专辑
+    QPoint pos(130, 20);
+    QTestEventList event;
+    event.addMouseMove(pos);
+    event.addMouseClick(Qt::MouseButton::LeftButton, Qt::NoModifier, pos, 10);
+    event.simulate(baseListView->viewport());
+    event.clear();
+
+    // dialog list 点击
+    QTimer::singleShot(800, w, [ = ]() {
+        QTest::qWait(200);
+        MusicListDialog *mld = w->findChild<MusicListDialog *>(AC_musicListDialogAlbum);
+        MusicListInfoView *mliv = w->findChild<MusicListInfoView *>(AC_musicListInfoView);
+
+        QTestEventList event;
+        event.addMouseMove(pos);
+        event.addMouseClick(Qt::MouseButton::LeftButton, Qt::NoModifier, pos, 100);
+        event.addMousePress(Qt::MouseButton::LeftButton, Qt::NoModifier, pos, 100);
+        event.addMouseDClick(Qt::MouseButton::LeftButton, Qt::NoModifier, pos, 100);
+        event.simulate(mliv->viewport());
+        event.clear();
+        QTest::qWait(100);
+
+        QTimer::singleShot(800, w, [ = ]() {
+            QTestEventList event;
+            DDialog *messageBox = w->findChild<DDialog *>(AC_MessageBox);
+            event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
+            event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
+            event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
+            event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
+            event.addKeyClick(Qt::Key_Enter, Qt::NoModifier, 50);
+            event.simulate(messageBox);
+            event.clear();
+            QTest::qWait(500);
+            mld->close();
+        });
+
+        // Dialog KeyPress
+        QKeyEvent keyEvent(QKeyEvent::KeyPress, Qt::Key_Delete, Qt::NoModifier);
+        qApp->sendEvent(mliv->viewport(), &keyEvent);
+
+        QKeyEvent keyEvent1(QKeyEvent::KeyPress, Qt::Key_Delete, Qt::ShiftModifier);
+        qApp->sendEvent(mliv->viewport(), &keyEvent1);
+    });
+
+    // 双击list
+    pos = QPoint(20, 20);
+    AlbumListView *alv = w->findChild<AlbumListView *>(AC_albumListView);
+    event.addMouseMove(pos);
+    event.addMouseClick(Qt::MouseButton::LeftButton, Qt::NoModifier, pos, 10);
+    event.addMousePress(Qt::MouseButton::LeftButton, Qt::NoModifier, pos, 10);
+    event.addMouseDClick(Qt::MouseButton::LeftButton, Qt::NoModifier, pos, 10);
+    event.simulate(alv->viewport());
+    event.clear();
+
+    QTest::qWait(1000);
+}
+
+// Dialg窗口
+TEST(Application, musicListDialg7)
+{
+    TEST_CASE_NAME("musicListDialg7")
+
+    MainFrame *w = Application::getInstance()->getMainWindow();
+    MusicBaseListView *baseListView = w->findChild<MusicBaseListView *>(AC_dataBaseListview);
+    QTest::qWait(50);
+    // 点击专辑
+    QPoint pos(130, 20);
+    QTestEventList event;
+    event.addMouseMove(pos);
+    event.addMouseClick(Qt::MouseButton::LeftButton, Qt::NoModifier, pos, 10);
+    event.simulate(baseListView->viewport());
+    event.clear();
+
+    // dialog list 点击
+    QTimer::singleShot(800, w, [ = ]() {
+        QTest::qWait(200);
+        MusicListDialog *mld = w->findChild<MusicListDialog *>(AC_musicListDialogAlbum);
+        MusicListInfoView *mliv = w->findChild<MusicListInfoView *>(AC_musicListInfoView);
+
+        QTestEventList event;
+        event.addMouseMove(pos);
+        event.addMouseClick(Qt::MouseButton::LeftButton, Qt::NoModifier, pos, 100);
+        event.addMousePress(Qt::MouseButton::LeftButton, Qt::NoModifier, pos, 100);
+        event.addMouseDClick(Qt::MouseButton::LeftButton, Qt::NoModifier, pos, 100);
+        event.simulate(mliv->viewport());
+        event.clear();
+        QTest::qWait(100);
+
+
+        QTimer::singleShot(800, w, [ = ]() {
+            QTestEventList event;
+            DDialog *messageBox = w->findChild<DDialog *>(AC_MessageBox);
+            event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
+            event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
+            event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
+            event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
+            event.addKeyClick(Qt::Key_Enter, Qt::NoModifier, 50);
+            event.simulate(messageBox);
+            event.clear();
+            QTest::qWait(500);
+            mld->close();
+        });
+
+        QKeyEvent keyEvent1(QKeyEvent::KeyPress, Qt::Key_I, Qt::ControlModifier);
+        qApp->sendEvent(mliv->viewport(), &keyEvent1);
+    });
+
+    // 双击list
+    pos = QPoint(20, 20);
+    AlbumListView *alv = w->findChild<AlbumListView *>(AC_albumListView);
+    event.addMouseMove(pos);
+    event.addMouseClick(Qt::MouseButton::LeftButton, Qt::NoModifier, pos, 10);
+    event.addMousePress(Qt::MouseButton::LeftButton, Qt::NoModifier, pos, 10);
+    event.addMouseDClick(Qt::MouseButton::LeftButton, Qt::NoModifier, pos, 10);
+    event.simulate(alv->viewport());
+    event.clear();
+
+    QTest::qWait(1000);
+}
+
 TEST(Application, copyMusicToMusicDir1)
 {
     // 拷贝音乐文件夹到系统音乐文件夹下
@@ -1149,6 +1349,84 @@ TEST(Application, btPlayList)
     event.clear();
 }
 
+TEST(Application, searchSort)
+{
+    TEST_CASE_NAME("searchSort")
+
+    MainFrame *w = Application::getInstance()->getMainWindow();
+    MusicBaseListView *baseListView = w->findChild<MusicBaseListView *>(AC_dataBaseListview);
+
+    // 歌曲搜索
+    QLineEdit *se = w->findChild<QLineEdit *>(AC_Search);
+
+    // 点击所有音乐
+    QTest::qWait(50);
+    QPoint pos1(130, 100);
+    QTestEventList event;
+    event.addMouseMove(pos1);
+    event.addMouseClick(Qt::MouseButton::LeftButton, Qt::NoModifier, pos1, 10);
+    event.simulate(baseListView->viewport());
+    event.clear();
+
+
+    // 搜索a
+    QTest::qWait(50);
+    QPoint pos(100, 20);
+    QTestEventList event1;
+    event1.addMouseMove(pos);
+    event1.addMouseClick(Qt::MouseButton::LeftButton, Qt::NoModifier, pos, 50);
+    event1.addKeyPress(Qt::Key::Key_A, Qt::NoModifier, 100);
+    event1.addKeyPress(Qt::Key::Key_Enter, Qt::NoModifier, 100);
+    event1.simulate(se);
+    event1.clear();
+
+    // list排序
+    QTest::qWait(50);
+    DDropdown *albumDropdown = w->findChild<DDropdown *>(AC_albumDropdown);
+    QList<QAction *> actionList = albumDropdown->actions();
+    for (auto item = actionList.begin(); item != actionList.end(); ++item) {
+        emit albumDropdown->triggered(*item);
+        QTest::qWait(50);
+        emit albumDropdown->triggered(*item);
+        QTest::qWait(50);
+    }
+
+
+    QMouseEvent event2(QEvent::MouseButtonPress, QPointF(85, 15), Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
+
+    SearchResultTabWidget *srtw = w->findChild<SearchResultTabWidget *>(AC_searchResultTabWidget);
+    if (srtw) {
+        qApp->sendEvent(srtw, &event2);
+    }
+
+    // list排序
+    QTest::qWait(50);
+    for (auto item = actionList.begin(); item != actionList.end(); ++item) {
+        emit albumDropdown->triggered(*item);
+        QTest::qWait(50);
+        emit albumDropdown->triggered(*item);
+        QTest::qWait(50);
+    }
+
+
+    QMouseEvent event3(QEvent::MouseButtonPress, QPointF(160, 15), Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
+
+    if (srtw) {
+        qApp->sendEvent(srtw, &event3);
+    }
+
+    // list排序
+    QTest::qWait(50);
+    for (auto item = actionList.begin(); item != actionList.end(); ++item) {
+        emit albumDropdown->triggered(*item);
+        QTest::qWait(50);
+        emit albumDropdown->triggered(*item);
+        QTest::qWait(50);
+    }
+
+    QTest::qWait(100);
+}
+
 TEST(Application, searchKey)
 {
     TEST_CASE_NAME("searchKey")
@@ -1158,6 +1436,7 @@ TEST(Application, searchKey)
 
     // 歌曲搜索
     QLineEdit *se = w->findChild<QLineEdit *>(AC_Search);
+    se->clear();
 
     // 点击所有音乐
     QTest::qWait(50);

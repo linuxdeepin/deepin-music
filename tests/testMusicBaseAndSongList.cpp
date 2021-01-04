@@ -34,7 +34,16 @@ TEST(Application, musicBaseSong)
     li.append(QUrl(lastImportPath));
     mimedata.setUrls(li);
 
+    // 关闭导入失败窗口
+    QTimer::singleShot(500, [ = ]() {
+        DDialog *warnDlg = w->findChild<DDialog *>("uniquewarndailog");
+        if (warnDlg) {
+            warnDlg->close();
+        }
+    });
+
     QPoint pos = QPoint(130, 130);
+
     QDragEnterEvent eEnter(pos, Qt::IgnoreAction, &mimedata, Qt::LeftButton, Qt::NoModifier);
     qApp->sendEvent(baseListView->viewport(), &eEnter);
 
@@ -76,6 +85,14 @@ TEST(Application, musicBaseSong1)
     lastImportPath += "/歌曲/004.mp3";
     li.append(QUrl(lastImportPath));
     mimedata.setUrls(li);
+
+    // 关闭导入失败窗口
+    QTimer::singleShot(500, [ = ]() {
+        DDialog *warnDlg = w->findChild<DDialog *>("uniquewarndailog");
+        if (warnDlg) {
+            warnDlg->close();
+        }
+    });
 
     pos = QPoint(20, 20);
     QDragEnterEvent eEnter(pos, Qt::IgnoreAction, &mimedata, Qt::LeftButton, Qt::NoModifier);

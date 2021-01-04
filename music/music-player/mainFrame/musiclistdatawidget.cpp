@@ -180,6 +180,9 @@ void MusicListDataWidget::slotViewChanged(ListPageSwitchType switchtype, const Q
         // 搜索歌曲结果
         if (!m_searchResultTabWidget) {
             m_searchResultTabWidget = new SearchResultTabWidget(this);
+            AC_SET_OBJECT_NAME(m_searchResultTabWidget, AC_searchResultTabWidget);
+            AC_SET_ACCESSIBLE_NAME(m_searchResultTabWidget, AC_searchResultTabWidget);
+
             m_pStackedWidget->addWidget(m_searchResultTabWidget);
             connect(m_searchResultTabWidget, &SearchResultTabWidget::sigSearchTypeChanged,
                     this, &MusicListDataWidget::refreshInfoLabel);
