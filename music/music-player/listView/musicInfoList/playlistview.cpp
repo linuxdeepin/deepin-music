@@ -95,6 +95,47 @@ bool moreThanAblumDES(const MediaMeta v1, const MediaMeta v2)
     return v1.pinyinAlbum > v2.pinyinAlbum;
 }
 
+// 排序
+void PlayListView::sortList(QList<MediaMeta> &musicInfos, const DataBaseService::ListSortType &sortType)
+{
+    switch (sortType) {
+    case DataBaseService::SortByAddTimeASC: {
+        qSort(musicInfos.begin(), musicInfos.end(), moreThanTimestampASC);
+        break;
+    }
+    case DataBaseService::SortByTitleASC: {
+        qSort(musicInfos.begin(), musicInfos.end(), moreThanTitleASC);
+        break;
+    }
+    case DataBaseService::SortBySingerASC: {
+        qSort(musicInfos.begin(), musicInfos.end(), moreThanSingerASC);
+        break;
+    }
+    case DataBaseService::SortByAblumASC: {
+        qSort(musicInfos.begin(), musicInfos.end(), moreThanAblumASC);
+        break;
+    }
+    case DataBaseService::SortByAddTimeDES: {
+        qSort(musicInfos.begin(), musicInfos.end(), moreThanTimestampDES);
+        break;
+    }
+    case DataBaseService::SortByTitleDES: {
+        qSort(musicInfos.begin(), musicInfos.end(), moreThanTitleDES);
+        break;
+    }
+    case DataBaseService::SortBySingerDES: {
+        qSort(musicInfos.begin(), musicInfos.end(), moreThanSingerDES);
+        break;
+    }
+    case DataBaseService::SortByAblumDES: {
+        qSort(musicInfos.begin(), musicInfos.end(), moreThanAblumDES);
+        break;
+    }
+    default:
+        break;
+    }
+}
+
 PlayListView::PlayListView(QString hash, bool isPlayQueue, QWidget *parent)
     : DListView(parent)
     , m_currentHash(hash.isEmpty() ? "all" : hash)
@@ -225,42 +266,10 @@ void PlayListView::resetSonglistByStr(const QString &searchWord)
     QList<MediaMeta> mediaMetas = DataBaseService::getInstance()->allMusicInfos();
 
     DataBaseService::ListSortType sortType = getSortType();
-    switch (sortType) {
-    case DataBaseService::SortByAddTimeASC: {
-        qSort(mediaMetas.begin(), mediaMetas.end(), moreThanTimestampASC);
-        break;
-    }
-    case DataBaseService::SortByTitleASC: {
-        qSort(mediaMetas.begin(), mediaMetas.end(), moreThanTitleASC);
-        break;
-    }
-    case DataBaseService::SortBySingerASC: {
-        qSort(mediaMetas.begin(), mediaMetas.end(), moreThanSingerASC);
-        break;
-    }
-    case DataBaseService::SortByAblumASC: {
-        qSort(mediaMetas.begin(), mediaMetas.end(), moreThanAblumASC);
-        break;
-    }
-    case DataBaseService::SortByAddTimeDES: {
-        qSort(mediaMetas.begin(), mediaMetas.end(), moreThanTimestampDES);
-        break;
-    }
-    case DataBaseService::SortByTitleDES: {
-        qSort(mediaMetas.begin(), mediaMetas.end(), moreThanTitleDES);
-        break;
-    }
-    case DataBaseService::SortBySingerDES: {
-        qSort(mediaMetas.begin(), mediaMetas.end(), moreThanSingerDES);
-        break;
-    }
-    case DataBaseService::SortByAblumDES: {
-        qSort(mediaMetas.begin(), mediaMetas.end(), moreThanAblumDES);
-        break;
-    }
-    default:
-        break;
-    }
+
+    // 排序
+    sortList(mediaMetas, sortType);
+
     for (int i = 0; i < mediaMetas.size(); i++) {
         if (!CommonService::getInstance()->containsStr(searchWord, mediaMetas.at(i).title)) {
             continue;
@@ -325,42 +334,8 @@ QList<MediaMeta> PlayListView::getMusicListData()
 
 void PlayListView::setDataBySortType(QList<MediaMeta> &mediaMetas, DataBaseService::ListSortType sortType)
 {
-    switch (sortType) {
-    case DataBaseService::SortByAddTimeASC: {
-        qSort(mediaMetas.begin(), mediaMetas.end(), moreThanTimestampASC);
-        break;
-    }
-    case DataBaseService::SortByTitleASC: {
-        qSort(mediaMetas.begin(), mediaMetas.end(), moreThanTitleASC);
-        break;
-    }
-    case DataBaseService::SortBySingerASC: {
-        qSort(mediaMetas.begin(), mediaMetas.end(), moreThanSingerASC);
-        break;
-    }
-    case DataBaseService::SortByAblumASC: {
-        qSort(mediaMetas.begin(), mediaMetas.end(), moreThanAblumASC);
-        break;
-    }
-    case DataBaseService::SortByAddTimeDES: {
-        qSort(mediaMetas.begin(), mediaMetas.end(), moreThanTimestampDES);
-        break;
-    }
-    case DataBaseService::SortByTitleDES: {
-        qSort(mediaMetas.begin(), mediaMetas.end(), moreThanTitleDES);
-        break;
-    }
-    case DataBaseService::SortBySingerDES: {
-        qSort(mediaMetas.begin(), mediaMetas.end(), moreThanSingerDES);
-        break;
-    }
-    case DataBaseService::SortByAblumDES: {
-        qSort(mediaMetas.begin(), mediaMetas.end(), moreThanAblumDES);
-        break;
-    }
-    default:
-        break;
-    }
+    // 排序
+    sortList(mediaMetas, sortType);
 
     SpeechCenter::getInstance()->setMediaMetas(mediaMetas);
     m_model->clear();

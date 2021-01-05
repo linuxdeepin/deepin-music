@@ -125,6 +125,8 @@ private:
     void playMusic(const MediaMeta &meta);
     void insertRow(int row, MediaMeta meta);
     bool isContain(QString hash);
+    // 排序
+    void sortList(QList<MediaMeta> &musicInfos, const DataBaseService::ListSortType &sortType);
 signals:
     bool musicResultListCountChanged(QString hash);
     //zy---end

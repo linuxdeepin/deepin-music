@@ -73,6 +73,31 @@ int calculateAlbumSize(int index, AlbumInfo info)
     return index + info.musicinfos.size();
 }
 
+// 排序
+void AlbumListView::sortList(QList<AlbumInfo> &albumInfos, const DataBaseService::ListSortType &sortType)
+{
+    switch (sortType) {
+    case DataBaseService::SortByAddTimeASC: {
+        qSort(albumInfos.begin(), albumInfos.end(), moreThanTimestampASC);
+        break;
+    }
+    case DataBaseService::SortByTitleASC: {
+        qSort(albumInfos.begin(), albumInfos.end(), moreThanTitleASC);
+        break;
+    }
+    case DataBaseService::SortByAddTimeDES: {
+        qSort(albumInfos.begin(), albumInfos.end(), moreThanTimestampDES);
+        break;
+    }
+    case DataBaseService::SortByTitleDES: {
+        qSort(albumInfos.begin(), albumInfos.end(), moreThanTitleDES);
+        break;
+    }
+    default:
+        break;
+    }
+}
+
 AlbumListView::AlbumListView(QString hash, QWidget *parent)
     : DListView(parent), m_hash(hash)
 {
@@ -134,26 +159,10 @@ void AlbumListView::resetAlbumListDataByStr(const QString &searchWord)
 
     this->albumModel->clear();
     DataBaseService::ListSortType sortType = getSortType();
-    switch (sortType) {
-    case DataBaseService::SortByAddTimeASC: {
-        qSort(albumInfoList.begin(), albumInfoList.end(), moreThanTimestampASC);
-        break;
-    }
-    case DataBaseService::SortByTitleASC: {
-        qSort(albumInfoList.begin(), albumInfoList.end(), moreThanTitleASC);
-        break;
-    }
-    case DataBaseService::SortByAddTimeDES: {
-        qSort(albumInfoList.begin(), albumInfoList.end(), moreThanTimestampDES);
-        break;
-    }
-    case DataBaseService::SortByTitleDES: {
-        qSort(albumInfoList.begin(), albumInfoList.end(), moreThanTitleDES);
-        break;
-    }
-    default:
-        break;
-    }
+
+    // 排序
+    sortList(albumInfoList, sortType);
+
     for (AlbumInfo albumInfo : albumInfoList) {
         if (!CommonService::getInstance()->containsStr(searchWord, albumInfo.albumName)) {
             continue;
@@ -189,26 +198,10 @@ void AlbumListView::resetAlbumListDataBySongName(const QList<MediaMeta> &mediaMe
     QList<AlbumInfo> albumInfoList = DataBaseService::getInstance()->allAlbumInfos();
     this->albumModel->clear();
     DataBaseService::ListSortType sortType = getSortType();
-    switch (sortType) {
-    case DataBaseService::SortByAddTimeASC: {
-        qSort(albumInfoList.begin(), albumInfoList.end(), moreThanTimestampASC);
-        break;
-    }
-    case DataBaseService::SortByTitleASC: {
-        qSort(albumInfoList.begin(), albumInfoList.end(), moreThanTitleASC);
-        break;
-    }
-    case DataBaseService::SortByAddTimeDES: {
-        qSort(albumInfoList.begin(), albumInfoList.end(), moreThanTimestampDES);
-        break;
-    }
-    case DataBaseService::SortByTitleDES: {
-        qSort(albumInfoList.begin(), albumInfoList.end(), moreThanTitleDES);
-        break;
-    }
-    default:
-        break;
-    }
+
+    // 排序
+    sortList(albumInfoList, sortType);
+
     for (AlbumInfo albumInfo : albumInfoList) {
 //            static MediaMeta &tmpMeta = albumMeta;
 //            bool ret = std::any_of(mediaMetas.begin(), mediaMetas.end(), [](MediaMeta mt) {return mt.hash == tmpMeta.hash;});
@@ -253,26 +246,10 @@ void AlbumListView::resetAlbumListDataBySinger(const QList<SingerInfo> &singerIn
 
     this->albumModel->clear();
     DataBaseService::ListSortType sortType = getSortType();
-    switch (sortType) {
-    case DataBaseService::SortByAddTimeASC: {
-        qSort(albumInfoList.begin(), albumInfoList.end(), moreThanTimestampASC);
-        break;
-    }
-    case DataBaseService::SortByTitleASC: {
-        qSort(albumInfoList.begin(), albumInfoList.end(), moreThanTitleASC);
-        break;
-    }
-    case DataBaseService::SortByAddTimeDES: {
-        qSort(albumInfoList.begin(), albumInfoList.end(), moreThanTimestampDES);
-        break;
-    }
-    case DataBaseService::SortByTitleDES: {
-        qSort(albumInfoList.begin(), albumInfoList.end(), moreThanTitleDES);
-        break;
-    }
-    default:
-        break;
-    }
+
+    // 排序
+    sortList(albumInfoList, sortType);
+
     for (AlbumInfo albumInfo : albumInfoList) {
 //        static AlbumInfo &tmpMeta = albumInfo;
 //        bool ret = std::any_of(singerInfos.begin(), singerInfos.end(), [](SingerInfo mt) {return CommonService::getInstance()->containsStr(mt.singerName, tmpMeta.singer);});
@@ -539,26 +516,8 @@ void AlbumListView::setSortType(DataBaseService::ListSortType sortType)
 
 void AlbumListView::setDataBySortType(QList<AlbumInfo> &albumInfos, DataBaseService::ListSortType sortType)
 {
-    switch (sortType) {
-    case DataBaseService::SortByAddTimeASC: {
-        qSort(albumInfos.begin(), albumInfos.end(), moreThanTimestampASC);
-        break;
-    }
-    case DataBaseService::SortByTitleASC: {
-        qSort(albumInfos.begin(), albumInfos.end(), moreThanTitleASC);
-        break;
-    }
-    case DataBaseService::SortByAddTimeDES: {
-        qSort(albumInfos.begin(), albumInfos.end(), moreThanTimestampDES);
-        break;
-    }
-    case DataBaseService::SortByTitleDES: {
-        qSort(albumInfos.begin(), albumInfos.end(), moreThanTitleDES);
-        break;
-    }
-    default:
-        break;
-    }
+    // 排序
+    sortList(albumInfos, sortType);
 
     albumModel->removeRows(0, albumModel->rowCount());
     for (AlbumInfo meta : albumInfos) {

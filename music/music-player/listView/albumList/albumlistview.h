@@ -88,6 +88,9 @@ protected:
     void dragMoveEvent(QDragMoveEvent *event) Q_DECL_OVERRIDE;
     void dropEvent(QDropEvent *event) Q_DECL_OVERRIDE;
 private:
+    // 排序
+    void sortList(QList<AlbumInfo> &albumInfos, const DataBaseService::ListSortType &sortType);
+private:
     int                     musicTheme     = 1; //light theme
     AlbumDataModel          *albumModel    = nullptr;
     AlbumDataDelegate       *albumDelegate = nullptr;

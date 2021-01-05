@@ -72,6 +72,33 @@ int calculateSingerSize(int index, SingerInfo info)
     return index + info.musicinfos.size();
 }
 
+// 排序
+void SingerListView::sortList(QList<SingerInfo> &singerInfos, const DataBaseService::ListSortType &sortType)
+{
+    switch (sortType) {
+    case DataBaseService::SortByAddTimeASC: {
+        qSort(singerInfos.begin(), singerInfos.end(), moreThanTimestampASC);
+        break;
+    }
+    case DataBaseService::SortBySingerASC: {
+        qSort(singerInfos.begin(), singerInfos.end(), moreThanSingerASC);
+        break;
+    }
+    case DataBaseService::SortByAddTimeDES: {
+        qSort(singerInfos.begin(), singerInfos.end(), moreThanTimestampDES);
+        break;
+    }
+    case DataBaseService::SortBySingerDES: {
+        qSort(singerInfos.begin(), singerInfos.end(), moreThanSingerDES);
+        break;
+    }
+    default:
+        break;
+    }
+}
+
+
+
 SingerListView::SingerListView(QString hash, QWidget *parent)
     : DListView(parent)
 {
@@ -148,31 +175,14 @@ QList<SingerInfo> SingerListView::getSingerListData() const
 
 void SingerListView::resetSingerListDataByStr(const QString &searchWord)
 {
-    QList<SingerInfo> singerInfoList = DataBaseService::getInstance()->allSingerInfos();
+    QList<SingerInfo> singerInfos = DataBaseService::getInstance()->allSingerInfos();
     DataBaseService::ListSortType sortType = getSortType();
-    switch (sortType) {
-    case DataBaseService::SortByAddTimeASC: {
-        qSort(singerInfoList.begin(), singerInfoList.end(), moreThanTimestampASC);
-        break;
-    }
-    case DataBaseService::SortBySingerASC: {
-        qSort(singerInfoList.begin(), singerInfoList.end(), moreThanSingerASC);
-        break;
-    }
-    case DataBaseService::SortByAddTimeDES: {
-        qSort(singerInfoList.begin(), singerInfoList.end(), moreThanTimestampDES);
-        break;
-    }
-    case DataBaseService::SortBySingerDES: {
-        qSort(singerInfoList.begin(), singerInfoList.end(), moreThanSingerDES);
-        break;
-    }
-    default:
-        break;
-    }
+
+    // 排序
+    sortList(singerInfos, sortType);
 
     singerModel->clear();
-    for (SingerInfo meta : singerInfoList) {
+    for (SingerInfo meta : singerInfos) {
         if (!CommonService::getInstance()->containsStr(searchWord, meta.singerName)) {
             continue;
         }
@@ -206,26 +216,9 @@ void SingerListView::resetSingerListDataBySongName(const QList<MediaMeta> &media
 {
     QList<SingerInfo> singerInfos = DataBaseService::getInstance()->allSingerInfos();
     DataBaseService::ListSortType sortType = getSortType();
-    switch (sortType) {
-    case DataBaseService::SortByAddTimeASC: {
-        qSort(singerInfos.begin(), singerInfos.end(), moreThanTimestampASC);
-        break;
-    }
-    case DataBaseService::SortBySingerASC: {
-        qSort(singerInfos.begin(), singerInfos.end(), moreThanSingerASC);
-        break;
-    }
-    case DataBaseService::SortByAddTimeDES: {
-        qSort(singerInfos.begin(), singerInfos.end(), moreThanTimestampDES);
-        break;
-    }
-    case DataBaseService::SortBySingerDES: {
-        qSort(singerInfos.begin(), singerInfos.end(), moreThanSingerDES);
-        break;
-    }
-    default:
-        break;
-    }
+
+    // 排序
+    sortList(singerInfos, sortType);
 
     singerModel->clear();
     for (SingerInfo singerInfo : singerInfos) {
@@ -273,26 +266,9 @@ void SingerListView::resetSingerListDataByAlbum(const QList<AlbumInfo> &albumInf
 {
     QList<SingerInfo> singerInfos = DataBaseService::getInstance()->allSingerInfos();
     DataBaseService::ListSortType sortType = getSortType();
-    switch (sortType) {
-    case DataBaseService::SortByAddTimeASC: {
-        qSort(singerInfos.begin(), singerInfos.end(), moreThanTimestampASC);
-        break;
-    }
-    case DataBaseService::SortBySingerASC: {
-        qSort(singerInfos.begin(), singerInfos.end(), moreThanSingerASC);
-        break;
-    }
-    case DataBaseService::SortByAddTimeDES: {
-        qSort(singerInfos.begin(), singerInfos.end(), moreThanTimestampDES);
-        break;
-    }
-    case DataBaseService::SortBySingerDES: {
-        qSort(singerInfos.begin(), singerInfos.end(), moreThanSingerDES);
-        break;
-    }
-    default:
-        break;
-    }
+
+    // 排序
+    sortList(singerInfos, sortType);
 
     singerModel->clear();
     for (SingerInfo singerInfo : singerInfos) {
@@ -446,26 +422,8 @@ void SingerListView::setSortType(DataBaseService::ListSortType sortType)
 
 void SingerListView::setDataBySortType(QList<SingerInfo> &singerInfos, DataBaseService::ListSortType sortType)
 {
-    switch (sortType) {
-    case DataBaseService::SortByAddTimeASC: {
-        qSort(singerInfos.begin(), singerInfos.end(), moreThanTimestampASC);
-        break;
-    }
-    case DataBaseService::SortBySingerASC: {
-        qSort(singerInfos.begin(), singerInfos.end(), moreThanSingerASC);
-        break;
-    }
-    case DataBaseService::SortByAddTimeDES: {
-        qSort(singerInfos.begin(), singerInfos.end(), moreThanTimestampDES);
-        break;
-    }
-    case DataBaseService::SortBySingerDES: {
-        qSort(singerInfos.begin(), singerInfos.end(), moreThanSingerDES);
-        break;
-    }
-    default:
-        break;
-    }
+    // 排序
+    sortList(singerInfos, sortType);
 
     singerModel->clear();
     for (SingerInfo meta : singerInfos) {

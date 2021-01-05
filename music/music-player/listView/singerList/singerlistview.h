@@ -94,6 +94,9 @@ protected:
     void dragMoveEvent(QDragMoveEvent *event) Q_DECL_OVERRIDE;
     void dropEvent(QDropEvent *event) Q_DECL_OVERRIDE;
 private:
+    // 排序
+    void sortList(QList<SingerInfo> &singerInfos, const DataBaseService::ListSortType &sortType);
+private:
     int                     musicTheme      = 1; //light theme
     SingerDataModel         *singerModel    = nullptr;
     SingerDataDelegate      *signerDelegate = nullptr;
