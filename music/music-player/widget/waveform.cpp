@@ -433,8 +433,8 @@ void Waveform::resizeEvent(QResizeEvent *event)
     DSlider::resizeEvent(event);
     if (!spectrumFlag)
         updateAudioBuffer();
-    else
-        powerSpectrum();
+//    else
+//        powerSpectrum();
 }
 
 void Waveform::updateAudioBuffer()
@@ -453,40 +453,40 @@ void Waveform::updateAudioBuffer()
     update();
 }
 
-bool Waveform::powerSpectrum()
-{
-    sampleList.clear();
-    if (reciveSampleList.size() != maxSampleNum)
-        return false;
+//bool Waveform::powerSpectrum()
+//{
+//    sampleList.clear();
+//    if (reciveSampleList.size() != maxSampleNum)
+//        return false;
 
-    complex<float> *sample;
+//    complex<float> *sample;
 
-    sample = new complex<float>[maxSampleNum];
-    for (int i = 0; i < maxSampleNum; i++)
-        sample[i] = complex<float>(reciveSampleList[i]/* / 32768.0*/, 0);
+//    sample = new complex<float>[maxSampleNum];
+//    for (int i = 0; i < maxSampleNum; i++)
+//        sample[i] = complex<float>(reciveSampleList[i]/* / 32768.0*/, 0);
 
-    int log2N = static_cast<int>(log2(maxSampleNum - 1) + 1);
-    int sign = -1;
+//    int log2N = static_cast<int>(log2(maxSampleNum - 1) + 1);
+//    int sign = -1;
 
-    CFFT::process(sample, log2N, sign);
+//    CFFT::process(sample, log2N, sign);
 
-    QVector<float> curSampleListX, curSampleListY;
-    for (int i = 0; i < maxSampleNum; i++) {
-        curSampleListY.append(abs(sample[i]) / static_cast<float>(sqrt(2)) / 2);
-        if (curSampleListY[i] < 0 || curSampleListY[i] > 1)
-            curSampleListY[i] = 0;
-    }
-    curSampleListY = curSampleListY.mid(curSampleListY.size() / 2 - 3, 7);
-    int singleWidth = width() / (curSampleListY.size() - 1);
-    for (int i = 0; i < curSampleListY.size(); i++) {
-        curSampleListX.append(i * singleWidth);
-    }
+//    QVector<float> curSampleListX, curSampleListY;
+//    for (int i = 0; i < maxSampleNum; i++) {
+//        curSampleListY.append(abs(sample[i]) / static_cast<float>(sqrt(2)) / 2);
+//        if (curSampleListY[i] < 0 || curSampleListY[i] > 1)
+//            curSampleListY[i] = 0;
+//    }
+//    curSampleListY = curSampleListY.mid(curSampleListY.size() / 2 - 3, 7);
+//    int singleWidth = width() / (curSampleListY.size() - 1);
+//    for (int i = 0; i < curSampleListY.size(); i++) {
+//        curSampleListX.append(i * singleWidth);
+//    }
 
-    QVector<float> endSampleListX, endSampleListY;
-    spline(curSampleListX, curSampleListY, endSampleListX, sampleList, width() / WAVE_DURATION + 1);
-    delete [] sample;
-    return true;
-}
+//    QVector<float> endSampleListX, endSampleListY;
+//    spline(curSampleListX, curSampleListY, endSampleListX, sampleList, width() / WAVE_DURATION + 1);
+//    delete [] sample;
+//    return true;
+//}
 
 void Waveform::spline(QVector<float> &x, QVector<float> &y, QVector<float> &vx, QVector<float> &vy, int pnt)
 {

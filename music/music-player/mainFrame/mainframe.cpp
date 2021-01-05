@@ -775,6 +775,10 @@ void MainFrame::playQueueAnimation()
 {
     if (m_playQueueWidget == nullptr) {
         m_playQueueWidget = new PlayQueueWidget(this);
+
+        AC_SET_OBJECT_NAME(m_playQueueWidget, AC_PlayQueue);
+        AC_SET_ACCESSIBLE_NAME(m_playQueueWidget, AC_PlayQueue);
+
         m_footerWidget->setGeometry(0, height() - 85, width(), 80);
         // 设置播放队列再footer下面
         m_playQueueWidget->raise();

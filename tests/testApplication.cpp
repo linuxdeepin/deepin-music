@@ -105,8 +105,6 @@ TEST(Application, importLinkText)
     QLabel *ilt = w->findChild<QLabel *>(AC_importLinkText);
     ilt->linkActivated("");
     QTest::qWait(500);
-
-    PlayListView *plv = w->findChild<PlayListView *>(AC_PlayListView);
 }
 
 TEST(Application, deleteAllMusic)
@@ -809,6 +807,59 @@ TEST(Application, musicListDialg7)
     QTest::qWait(1000);
 }
 
+// Dialg 播放所有，随机播放
+TEST(Application, musicListDialg8)
+{
+    TEST_CASE_NAME("musicListDialg8")
+
+    MainFrame *w = Application::getInstance()->getMainWindow();
+    MusicBaseListView *baseListView = w->findChild<MusicBaseListView *>(AC_dataBaseListview);
+    QTest::qWait(50);
+    // 点击专辑
+    QPoint pos(130, 20);
+    QTestEventList event;
+    event.addMouseMove(pos);
+    event.addMouseClick(Qt::MouseButton::LeftButton, Qt::NoModifier, pos, 10);
+    event.simulate(baseListView->viewport());
+    event.clear();
+
+    // dialog list 点击
+    QTimer::singleShot(800, w, [ = ]() {
+        QTest::qWait(200);
+        MusicListDialog *mld = w->findChild<MusicListDialog *>(AC_musicListDialogAlbum);
+        DPushButton *playAll = w->findChild<DPushButton *>(AC_dialogPlayAll);
+        DPushButton *playRandom = w->findChild<DPushButton *>(AC_dialogPlayRandom);
+
+        QTestEventList event;
+        QPoint pos = QPoint(20, 20);
+        event.addMouseMove(pos);
+        event.addMouseClick(Qt::MouseButton::LeftButton, Qt::NoModifier, pos, 100);
+        event.simulate(playAll);
+        event.clear();
+        QTest::qWait(500);
+
+        event.addMouseMove(pos);
+        event.addMouseClick(Qt::MouseButton::LeftButton, Qt::NoModifier, pos, 100);
+        event.simulate(playRandom);
+        event.clear();
+
+        QTest::qWait(1000);
+        mld->close();
+    });
+
+    // 双击list
+    pos = QPoint(20, 20);
+    AlbumListView *alv = w->findChild<AlbumListView *>(AC_albumListView);
+    event.addMouseMove(pos);
+    event.addMouseClick(Qt::MouseButton::LeftButton, Qt::NoModifier, pos, 10);
+    event.addMousePress(Qt::MouseButton::LeftButton, Qt::NoModifier, pos, 10);
+    event.addMouseDClick(Qt::MouseButton::LeftButton, Qt::NoModifier, pos, 10);
+    event.simulate(alv->viewport());
+    event.clear();
+
+    QTest::qWait(1000);
+}
+
 TEST(Application, copyMusicToMusicDir1)
 {
     // 拷贝音乐文件夹到系统音乐文件夹下
@@ -1268,6 +1319,12 @@ TEST(Application, waveform)
     event.addMouseMove(pos);
     event.simulate(wf);
     event.clear();
+
+    QMouseEvent mouseEvent(QEvent::MouseButtonPress, pos, Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
+    qApp->sendEvent(wf, &mouseEvent);
+
+    QMouseEvent mouseMoveEvent(QEvent::MouseMove, pos, Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
+    qApp->sendEvent(wf, &mouseMoveEvent);
 }
 
 TEST(Application, btFavorite)
@@ -1330,6 +1387,14 @@ TEST(Application, btSound)
     QTest::qWait(200);
     sv->setVolume(65);
     QTest::qWait(200);
+
+
+    QWheelEvent wheelEvent(pos, 10, Qt::LeftButton, Qt::NoModifier);
+    qApp->sendEvent(sv, &wheelEvent);
+    QWheelEvent wheelEvent1(pos, -10, Qt::LeftButton, Qt::NoModifier);
+    qApp->sendEvent(sv, &wheelEvent1);
+
+    sv->delayHide();
 }
 
 TEST(Application, btPlayList)
@@ -1641,9 +1706,28 @@ TEST(Application, viewChangedDark)
 
     MusicBaseListView *baseListView = w->findChild<MusicBaseListView *>(AC_dataBaseListview);
     QTest::qWait(500);
+
+
+    // 关闭歌曲信息
+    QTest::qWait(200);
+    QTimer::singleShot(200, w, [ = ]() {
+        QTest::qWait(50);
+        InfoDialog *infoDialog = w->findChild<InfoDialog *>("infoDialog");
+        if (infoDialog) {
+            infoDialog->close();
+        }
+    });
+
+    // 歌曲信息
+    QTest::qWait(50);
+    QTestEventList event;
+    event.addKeyClick(Qt::Key_I, Qt::ControlModifier, 10);
+    event.simulate(w);
+    event.clear();
+
+
     // 点击专辑
     QPoint pos(130, 20);
-    QTestEventList event;
     event.addMouseMove(pos);
     event.addMouseClick(Qt::MouseButton::LeftButton, Qt::NoModifier, pos, 100);
     event.simulate(baseListView->viewport());
@@ -1700,7 +1784,6 @@ TEST(Application, viewChangedDark)
     event.addMouseClick(Qt::MouseButton::LeftButton, Qt::NoModifier, pos, 500);
     event.simulate(btPlaylist);
     event.clear();
-
 
     QTest::qWait(500);
     emit DGuiApplicationHelper::instance()->themeTypeChanged(DGuiApplicationHelper::ColorType::LightType);

@@ -87,6 +87,10 @@ MusicLyricWidget::MusicLyricWidget(QWidget *parent)
     layout->addWidget(m_nolyric, 10);
     m_nolyric->hide();
 
+
+    AC_SET_OBJECT_NAME(m_lyricview, AC_lyricview);
+    AC_SET_ACCESSIBLE_NAME(m_lyricview, AC_lyricview);
+
     m_backgroundW = new DBlurEffectWidget(this);
 //    d->backgroundW->setBlurEnabled(true);
 //    d->backgroundW->setMode(DBlurEffectWidget::GaussianBlur);

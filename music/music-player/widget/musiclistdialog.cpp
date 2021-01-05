@@ -123,6 +123,12 @@ void MusicListDialog::initUI()
     btLayout->addWidget(m_btRandomPlay);
     btLayout->addStretch(100);
 
+    AC_SET_OBJECT_NAME(m_btPlayAll, AC_dialogPlayAll);
+    AC_SET_ACCESSIBLE_NAME(m_btPlayAll, AC_dialogPlayAll);
+    AC_SET_OBJECT_NAME(m_btRandomPlay, AC_dialogPlayRandom);
+    AC_SET_ACCESSIBLE_NAME(m_btRandomPlay, AC_dialogPlayRandom);
+
+
 //    titleLayout->addWidget(closeBt, 0, Qt::AlignTop | Qt::AlignRight);
     m_titleLabel->setContentsMargins(0, 0, 0, 0);
     textLayout->addWidget(m_titleLabel, 0, Qt::AlignVCenter);

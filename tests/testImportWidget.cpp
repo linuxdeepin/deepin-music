@@ -25,10 +25,9 @@
 //#include "musicsettings.h"
 
 
-
+//// 删除所有音乐
 //TEST(Application, importWidget)
 //{
-//    // 删除所有音乐
 //    TEST_CASE_NAME("importWidget")
 
 //    MainFrame *w = Application::getInstance()->getMainWindow();
@@ -96,7 +95,7 @@
 //    QTimer::singleShot(300, w, [ = ]() {
 //        DFileDialog *fileDialog = w->findChild<DFileDialog *>("fileDialogImport");
 //        if (fileDialog) {
-//            QTest::qWait(300);
+//            QTest::qWait(500);
 //            fileDialog->close();
 //        }
 //    });
@@ -108,14 +107,11 @@
 //    event.addMouseClick(Qt::MouseButton::LeftButton, Qt::NoModifier, pos, 10);
 //    event.simulate(importPath);
 //    event.clear();
-
-//    QTest::qWait(1000);
 //}
 
 //TEST(Application, importWidget4)
 //{
 //    TEST_CASE_NAME("importWidget")
-
 //    MainFrame *w = Application::getInstance()->getMainWindow();
 
 //    // fileDialog
@@ -136,7 +132,7 @@
 //    event.simulate(importPath);
 //    event.clear();
 
-//    QTest::qWait(1000);
+//    QTest::qWait(500);
 
 //}
 

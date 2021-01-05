@@ -24,13 +24,16 @@ public:
 
 public slots:
     void setText(const QString text);
+private slots:
+    void setThemeType(int type);
 
 protected:
     virtual void paintEvent(QPaintEvent *) Q_DECL_OVERRIDE;
     void enterEvent(QEvent *e) override;
 private:
 
-    QBrush          background;
+    QPen            m_pen;
+    QBrush          m_brush;
     int             radius              = 8;
     int             shadowWidth         = 20;
     QMargins        shadowMargins       = QMargins(20, 20, 20, 20);

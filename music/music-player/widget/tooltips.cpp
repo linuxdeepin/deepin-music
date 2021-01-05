@@ -54,13 +54,13 @@ ToolTips::ToolTips(const QString &text, QWidget *parent)
     setObjectName("ToolTips");
     setContentsMargins(0, 0, 0, 0);
 
-    auto layout = new QHBoxLayout(this);
+    QHBoxLayout *layout = new QHBoxLayout(this);
     layout->setContentsMargins(7, 4, 7, 4);
     layout->setSpacing(0);
 
     m_interFrame = new QFrame(this);
     m_interFrame->setContentsMargins(0, 0, 0, 0);
-    auto interlayout = new QHBoxLayout(m_interFrame);
+    QHBoxLayout *interlayout = new QHBoxLayout(m_interFrame);
     interlayout->setContentsMargins(0, 0, 0, 0);
     interlayout->setSpacing(5);
 //    auto iconLabel = new QLabel;
@@ -92,7 +92,7 @@ ToolTips::ToolTips(const QString &text, QWidget *parent)
 
     adjustSize();
 
-    auto *bodyShadow = new QGraphicsDropShadowEffect(this);
+    QGraphicsDropShadowEffect *bodyShadow = new QGraphicsDropShadowEffect(this);
     bodyShadow->setBlurRadius(10.0);
     bodyShadow->setColor(QColor(0, 0, 0, 25/*0.1 * 255*/));
     bodyShadow->setOffset(0, 2.0);
@@ -101,6 +101,11 @@ ToolTips::ToolTips(const QString &text, QWidget *parent)
 //    d->textLable->hide();
 
     //setFixedHeight(32);
+
+    connect(DGuiApplicationHelper::instance(), &DGuiApplicationHelper::themeTypeChanged,
+            this, &ToolTips::setThemeType);
+
+    setThemeType(DGuiApplicationHelper::instance()->themeType());
 }
 
 ToolTips::~ToolTips()
@@ -119,6 +124,19 @@ void ToolTips::setText(const QString text)
     textLable->setText(text);
     m_strText = text;
     update();
+}
+
+void ToolTips::setThemeType(int type)
+{
+    if (DGuiApplicationHelper::DarkType == type) {
+        m_pen = QPen(QColor(255, 255, 255, 10));
+        m_brush = QBrush(QBrush(QColor(42, 42, 42, 220)));
+    } else {
+        m_pen = QPen(QColor(0, 0, 0, 10));
+        m_brush = QBrush(QColor(247, 247, 247, 220));
+    }
+
+    this->update();
 }
 
 //void ToolTips::pop(QPoint center)
@@ -164,16 +182,8 @@ void ToolTips::paintEvent(QPaintEvent *)
 //        d->textLable->setPalette(pa_name);
 //    });
 
-    if (DGuiApplicationHelper::LightType == DGuiApplicationHelper::instance()->themeType()) {
-        pt.setPen(QColor(0, 0, 0, 10));
-        pt.setBrush(QBrush(QColor(247, 247, 247, 220)));
-    } else if (DGuiApplicationHelper::DarkType == DGuiApplicationHelper::instance()->themeType()) {
-        pt.setPen(QColor(255, 255, 255, 10));
-        pt.setBrush(QBrush(QColor(42, 42, 42, 220)));
-    } else {
-        pt.setPen(QColor(0, 0, 0, 10));
-        pt.setBrush(QBrush(QColor(247, 247, 247, 220)));
-    }
+    pt.setPen(m_pen);
+    pt.setBrush(m_brush);
 
     QRect rect = this->rect();
     rect.setWidth(rect.width() - 1);

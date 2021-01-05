@@ -9,6 +9,8 @@
 #include <infodialog.h>
 #include <DApplication>
 #include <DIconButton>
+#include <QMimeData>
+#include <QStandardPaths>
 
 #include "ac-desktop-define.h"
 
@@ -95,3 +97,47 @@ TEST(Application, btLyric)
     event2.clear();
     QTest::qWait(500);
 }
+
+
+TEST(Application, lyricView)
+{
+    TEST_CASE_NAME("lyricView")
+
+    MainFrame *w = Application::getInstance()->getMainWindow();
+
+    LyricLabel *lyricView = w->findChild<LyricLabel *>(AC_lyricview);
+
+    QContextMenuEvent menuEvent(QContextMenuEvent::Mouse, QPoint(20, 20));
+    qApp->sendEvent(lyricView, &menuEvent);
+
+    QMimeData mimedata;
+    QList<QUrl> li;
+    QString lastImportPath =  QStandardPaths::standardLocations(QStandardPaths::MusicLocation).first();
+    lastImportPath += "/歌曲/004.mp3";
+    li.append(QUrl(lastImportPath));
+    mimedata.setUrls(li);
+
+    QPoint pos = QPoint(130, 130);
+
+    QDragEnterEvent eEnter(pos, Qt::IgnoreAction, &mimedata, Qt::LeftButton, Qt::NoModifier);
+    qApp->sendEvent(lyricView, &eEnter);
+
+    QDragMoveEvent eMove(pos, Qt::IgnoreAction, &mimedata, Qt::LeftButton, Qt::NoModifier);
+    qApp->sendEvent(lyricView, &eMove);
+
+    QDropEvent e(pos, Qt::IgnoreAction, &mimedata, Qt::LeftButton, Qt::NoModifier);
+    qApp->sendEvent(lyricView, &e);
+
+
+    QScrollEvent scrollEvent(pos, pos, QScrollEvent::ScrollState::ScrollFinished);
+    qApp->sendEvent(lyricView, &scrollEvent);
+
+    QScrollPrepareEvent scrollPrepareEvent(pos);
+    qApp->sendEvent(lyricView, &scrollPrepareEvent);
+
+    QWheelEvent wheelEvent(pos, 10, Qt::LeftButton, Qt::NoModifier);
+    qApp->sendEvent(lyricView, &wheelEvent);
+
+    QTest::qWait(500);
+}
+

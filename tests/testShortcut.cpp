@@ -252,6 +252,18 @@ TEST(Application, other)
     QTest::qWait(100);
 }
 
+TEST(Application, otherImportLinkText1)
+{
+    // 扫描歌曲
+    TEST_CASE_NAME("otherImportLinkText1")
+
+    QTest::qWait(100);
+    MainFrame *w = Application::getInstance()->getMainWindow();
+    QLabel *ilt = w->findChild<QLabel *>(AC_importLinkText);
+    ilt->linkActivated("");
+    QTest::qWait(500);
+}
+
 TEST(Application, other1)
 {
     TEST_CASE_NAME("other1")
@@ -306,4 +318,15 @@ TEST(Application, other1)
     QTest::qWait(500);
 }
 
+TEST(Application, otherImportLinkText2)
+{
+    // 扫描歌曲
+    TEST_CASE_NAME("otherImportLinkText2")
+
+    QTest::qWait(100);
+    MainFrame *w = Application::getInstance()->getMainWindow();
+    QLabel *ilt = w->findChild<QLabel *>(AC_importLinkText);
+    ilt->linkActivated("");
+    QTest::qWait(500);
+}
 

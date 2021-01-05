@@ -71,7 +71,7 @@ protected:
 
 private:
     void updateAudioBuffer();
-    bool powerSpectrum();
+//    bool powerSpectrum();
     void spline(QVector<float> &x, QVector<float> &y, QVector<float> &vx, QVector<float> &vy, int pnt);
     void updatePlayerPos(int value);
     //void isPlayNextMeta(int value);
