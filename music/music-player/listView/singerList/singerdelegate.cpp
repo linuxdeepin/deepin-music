@@ -372,6 +372,10 @@ void SingerDataDelegate::drawListMode(QPainter &painter, const QStyleOptionViewI
     painter.drawPixmap(numRect, icon.pixmap(numRect.width(), numRect.width()));
     painter.restore();
 
+    if (option.state & QStyle::State_Selected) {
+        nameColor = option.palette.highlightedText().color();
+        otherColor = option.palette.highlightedText().color();
+    }
     //name
     painter.setPen(nameColor);
     QRect nameRect(60, option.rect.y(), w / 2 - 20, option.rect.height());
