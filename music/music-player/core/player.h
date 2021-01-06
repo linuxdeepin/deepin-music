@@ -138,6 +138,10 @@ private:
     // 循环播放模式
     PlaybackMode    m_mode    = Player::RepeatAll;
     int             m_volume      = 50.0;
+    QIcon           m_playingIcon1 = QIcon::fromTheme("music_play1");
+    QIcon           m_playingIcon2 = QIcon::fromTheme("music_play2");
+    QIcon           m_playingIcon3 = QIcon::fromTheme("music_play3");
+    QIcon           m_playingIcon4 = QIcon::fromTheme("music_play4");
     // zy--end
 public:
     void init();

@@ -117,17 +117,22 @@ MusicListInfoView::~MusicListInfoView()
 
 QPixmap MusicListInfoView::getPlayPixmap(bool isSelect)
 {
-    QPixmap playingPixmap = QPixmap(QSize(20, 20));
-    playingPixmap.fill(Qt::transparent);
-    QPainter painter(&playingPixmap);
-    DTK_NAMESPACE::Gui::DPalette pa;// = this->palette();
+    QColor color;
     if (isSelect) {
-        painter.setPen(QColor(Qt::white));
+        color = QColor(Qt::white);
     } else {
-        painter.setPen(pa.color(QPalette::Active, DTK_NAMESPACE::Gui::DPalette::Highlight));
+        color = QColor(DGuiApplicationHelper::instance()->applicationPalette().highlight().color());
     }
-    Player::getInstance()->playingIcon().paint(&painter, QRect(0, 0, 20, 20), Qt::AlignCenter, QIcon::Active, QIcon::On);
-    update();
+
+    QImage playingImage = Player::getInstance()->playingIcon().pixmap(QSize(20, 20), QIcon::Active, QIcon::On).toImage();
+    for (int i = 0; i < playingImage.width(); i++) {
+        for (int j = 0; j < playingImage.height(); j++) {
+            if (playingImage.pixelColor(i, j) != QColor(0, 0, 0, 0)) {
+                playingImage.setPixelColor(i, j, color);
+            }
+        }
+    }
+    QPixmap playingPixmap = QPixmap::fromImage(playingImage);
     return playingPixmap;
 }
 

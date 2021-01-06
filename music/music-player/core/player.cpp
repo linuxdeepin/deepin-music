@@ -1107,19 +1107,19 @@ void Player::changePicture()
     m_playingCount = curCount + 1;
     switch (curCount) {
     case 0:
-        m_playingIcon = QIcon::fromTheme("music_play1");
+        m_playingIcon = m_playingIcon1;
         break;
     case 1:
-        m_playingIcon = QIcon::fromTheme("music_play2");
+        m_playingIcon = m_playingIcon2;
         break;
     case 2:
-        m_playingIcon = QIcon::fromTheme("music_play3");
+        m_playingIcon = m_playingIcon3;
         break;
     case 3:
-        m_playingIcon = QIcon::fromTheme("music_play4");
+        m_playingIcon = m_playingIcon4;
         break;
     default:
-        m_playingIcon = QIcon::fromTheme("music_play1");
+        m_playingIcon = m_playingIcon1;
         break;
     }
     emit signalUpdatePlayingIcon();
