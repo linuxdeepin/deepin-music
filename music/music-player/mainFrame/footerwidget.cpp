@@ -497,6 +497,26 @@ void FooterWidget::slotPlayModeClick(bool click)
     //更换提示框
     auto hintWidget = m_btPlayMode->property("HintWidget").value<QWidget *>();
     m_hintFilter->showHitsFor(m_btPlayMode, hintWidget);
+
+    if (hintWidget != nullptr) {
+        auto hintToolTips = static_cast<ToolTips *>(hintWidget);
+        QString playmode;
+        switch (playModel) {
+        default:
+        case 0:
+            playmode = tr("List Loop");
+            break;
+        case 1:
+            playmode = tr("Single Loop");
+            break;
+        case 2:
+            playmode = tr("Shuffle");
+            break;
+        }
+        if (hintToolTips != nullptr) {
+            hintToolTips->setText(playmode);
+        }
+    }
 }
 
 void FooterWidget::slotCoverClick(bool click)
