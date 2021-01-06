@@ -10,7 +10,7 @@
 #include <QString>
 #include <QObject>
 
-//#define SELECT_CASE "importWidget"
+//#define SELECT_CASE "musicListDialg9"
 
 #ifdef SELECT_CASE
 #define TEST_CASE_NAME(testName) if(testName != SELECT_CASE) return;

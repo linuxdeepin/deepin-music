@@ -162,37 +162,45 @@ inline int tailPointWidth(const QStyleOptionViewItem &option)
 
 static inline QFlags<Qt::AlignmentFlag> alignmentFlag(int col)
 {
+    QFlags<Qt::AlignmentFlag> retFlags = (Qt::AlignLeft | Qt::AlignVCenter);
     auto emCol = static_cast<MusicInfoItemDelegate::MusicColumn>(col);
+
     switch (emCol) {
     case MusicInfoItemDelegate::Number:
-        return Qt::AlignCenter;
+        retFlags = Qt::AlignCenter;
+        break;
     case MusicInfoItemDelegate::Title:
-        return (Qt::AlignLeft | Qt::AlignVCenter);
+        retFlags = (Qt::AlignLeft | Qt::AlignVCenter);
+        break;
     case MusicInfoItemDelegate::Length:
-        return (Qt::AlignRight | Qt::AlignVCenter);
-    default:
+        retFlags = (Qt::AlignRight | Qt::AlignVCenter);
         break;
     }
-    return (Qt::AlignLeft | Qt::AlignVCenter);;
+
+    return retFlags;
 }
 
 static inline QRect colRect(int col, const QStyleOptionViewItem &option)
 {
+    QRect retRect = option.rect.marginsRemoved(QMargins(0, 0, 0, 0));
+
     static auto tailwidth  = tailPointWidth(option) + 20;
     auto w = option.rect.width() - 0 - tailwidth;
-
     auto emCol = static_cast<MusicInfoItemDelegate::MusicColumn>(col);
+
     switch (emCol) {
     case MusicInfoItemDelegate::Number:
-        return QRect(10, option.rect.y(), 40, option.rect.height());
+        retRect = QRect(10, option.rect.y(), 40, option.rect.height());
+        break;
     case MusicInfoItemDelegate::Title:
-        return QRect(50, option.rect.y(), w / 2 - 20, option.rect.height());
+        retRect = QRect(50, option.rect.y(), w / 2 - 20, option.rect.height());
+        break;
     case MusicInfoItemDelegate::Length:
-        return QRect(w, option.rect.y(), tailwidth - 20, option.rect.height());
-    default:
+        retRect = QRect(w, option.rect.y(), tailwidth - 20, option.rect.height());
         break;
     }
-    return option.rect.marginsRemoved(QMargins(0, 0, 0, 0));
+
+    return retRect;
 }
 
 

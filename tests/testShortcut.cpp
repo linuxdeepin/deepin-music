@@ -188,6 +188,57 @@ TEST(Application, shortCut)
     QTest::qWait(100);
 }
 
+TEST(Application, shortCut1)
+{
+    TEST_CASE_NAME("shortCut1")
+
+    QTest::qWait(50);
+    MainFrame *w = Application::getInstance()->getMainWindow();
+    MusicBaseListView *baseListView = w->findChild<MusicBaseListView *>(AC_dataBaseListview);
+    QTest::qWait(50);
+    // 点击所有音乐
+    QPoint pos(130, 100);
+    QTestEventList event;
+    event.addMouseMove(pos);
+    event.addMouseClick(Qt::MouseButton::LeftButton, Qt::NoModifier, pos, 10);
+    event.simulate(baseListView->viewport());
+    event.clear();
+
+    // 双击list
+    QTest::qWait(50);
+    pos = QPoint(20, 20);
+    PlayListView *plv = w->findChild<PlayListView *>(AC_PlayListView);
+    event.addMouseMove(pos);
+    event.addMouseClick(Qt::MouseButton::LeftButton, Qt::NoModifier, pos, 10);
+    event.addMousePress(Qt::MouseButton::LeftButton, Qt::NoModifier, pos, 10);
+    event.addMouseDClick(Qt::MouseButton::LeftButton, Qt::NoModifier, pos, 10);
+    event.simulate(plv->viewport());
+    event.clear();
+
+
+    // Ctrl+F
+    QTest::qWait(10);
+    event.addKeyClick(Qt::Key_F, Qt::ControlModifier, 10);
+    event.simulate(w);
+    event.clear();
+    QTest::qWait(10);
+
+    // Ctrl+Alt+F
+    QTest::qWait(10);
+    event.addKeyClick(Qt::Key_F, Qt::ControlModifier | Qt::AltModifier, 10);
+    event.simulate(w);
+    event.clear();
+    QTest::qWait(10);
+
+    // Ctrl+Shift+/
+    QTest::qWait(10);
+    event.addKeyClick(Qt::Key_Slash, Qt::ControlModifier | Qt::ShiftModifier, 10);
+    event.simulate(w);
+    event.clear();
+    QTest::qWait(10);
+
+    QTest::qWait(100);
+}
 
 TEST(Application, other)
 {

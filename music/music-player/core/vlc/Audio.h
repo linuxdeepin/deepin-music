@@ -45,11 +45,11 @@ public:
     bool getMute() const;
 
 public slots:
-    /*!
-        \brief Set current audio level.
-        \param volume new audio level (int)
-    */
-    void setVolume(int volume);
+//    /*!
+//        \brief Set current audio level.
+//        \param volume new audio level (int)
+//    */
+//    void setVolume(int volume);
 
     /*!
         \brief Set current audio track.
@@ -106,11 +106,11 @@ public:
     */
 //    QMap<int, QString> tracks() const;
 
-    /*!
-        \brief Get current audio level.
-        \return current audio level, -1 if media is not playing (const int)
-    */
-    int volume() const;
+//    /*!
+//        \brief Get current audio level.
+//        \return current audio level, -1 if media is not playing (const int)
+//    */
+//    int volume() const;
 
     /*!
         \brief Get audio channel.

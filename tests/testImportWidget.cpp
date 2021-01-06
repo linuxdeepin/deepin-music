@@ -11,6 +11,7 @@
 //#include <DIconButton>
 //#include <QStandardPaths>
 //#include <DPushButton>
+//#define protected public
 //#include <DFileDialog>
 
 //#include "ac-desktop-define.h"
@@ -79,7 +80,7 @@
 //    event.addKeyClick(Qt::Key_A, Qt::ControlModifier, 10);
 //    event.simulate(plv->viewport());
 //    event.clear();
-//    plv->slotDelFromLocal();
+//    plv->slotRmvFromSongList();
 
 //    QTest::qWait(500);
 //}
@@ -96,8 +97,26 @@
 //        DFileDialog *fileDialog = w->findChild<DFileDialog *>("fileDialogImport");
 //        if (fileDialog) {
 //            QTest::qWait(500);
-//            fileDialog->close();
+
+//            QTestEventList event;
+//            QPoint pos(280, 250);
+
+////            event.addMouseMove(pos);
+////            event.addKeyClick(Qt::Key_Enter, Qt::NoModifier);
+////            event.addKeyPress(Qt::Key_Enter, Qt::NoModifier);
+////            event.addKeyRelease(Qt::Key_Enter, Qt::NoModifier);
+//////            event.addMouseClick(Qt::MouseButton::LeftButton, Qt::NoModifier, pos, 10);
+////            event.simulate(fileDialog);
+////            event.clear();
+
+////            QCloseEvent closeEvent;
+////            qApp->sendEvent(fileDialog, &closeEvent);
+
+////            fileDialog->done(0);
+////            fileDialog->~DFileDialog();
 //        }
+//        qDebug() << "\n--------------- " << "进入" << " -----------------"
+//                 << " Func:" << __FUNCTION__  << " Line:" << __LINE__ ;
 //    });
 
 //    DPushButton *importPath = w->findChild<DPushButton *>(AC_importButton);
@@ -107,6 +126,7 @@
 //    event.addMouseClick(Qt::MouseButton::LeftButton, Qt::NoModifier, pos, 10);
 //    event.simulate(importPath);
 //    event.clear();
+
 //}
 
 //TEST(Application, importWidget4)

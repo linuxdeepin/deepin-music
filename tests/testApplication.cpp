@@ -860,6 +860,63 @@ TEST(Application, musicListDialg8)
     QTest::qWait(1000);
 }
 
+TEST(Application, musicListDialg9)
+{
+    TEST_CASE_NAME("musicListDialg9")
+
+    MainFrame *w = Application::getInstance()->getMainWindow();
+    MusicBaseListView *baseListView = w->findChild<MusicBaseListView *>(AC_dataBaseListview);
+
+    // 关闭专辑弹窗
+    QTimer::singleShot(200, w, [ = ]() {
+        QTest::qWait(500);
+        MusicListDialog *mld = w->findChild<MusicListDialog *>(AC_musicListDialogAlbum);
+        MusicListInfoView *mliv = w->findChild<MusicListInfoView *>(AC_musicListInfoView);
+
+        DGuiApplicationHelper::instance()->setThemeType(DGuiApplicationHelper::ColorType::DarkType);
+        emit DGuiApplicationHelper::instance()->themeTypeChanged(DGuiApplicationHelper::ColorType::DarkType);
+
+        if (mliv) {
+            QTestEventList event;
+            QPoint pos = QPoint(20, 20);
+            event.addMouseMove(pos);
+            event.addMouseClick(Qt::MouseButton::LeftButton, Qt::NoModifier, pos, 100);
+            event.addMousePress(Qt::MouseButton::LeftButton, Qt::NoModifier, pos, 100);
+            event.addMouseDClick(Qt::MouseButton::LeftButton, Qt::NoModifier, pos, 100);
+            event.simulate(mliv->viewport());
+            event.clear();
+        }
+
+        QTest::qWait(100);
+        if (mld) {
+            mld->close();
+        }
+
+        DGuiApplicationHelper::instance()->setThemeType(DGuiApplicationHelper::ColorType::LightType);
+        emit DGuiApplicationHelper::instance()->themeTypeChanged(DGuiApplicationHelper::ColorType::LightType);
+        QTest::qWait(500);
+    });
+
+    // 点击专辑
+    QPoint pos(130, 20);
+    QTestEventList event;
+    event.addMouseMove(pos);
+    event.addMouseClick(Qt::MouseButton::LeftButton, Qt::NoModifier, pos, 100);
+    event.simulate(baseListView->viewport());
+    event.clear();
+
+    // 双击list
+    pos = QPoint(20, 20);
+    AlbumListView *alv = w->findChild<AlbumListView *>(AC_albumListView);
+    event.addMouseMove(pos);
+    event.addMouseClick(Qt::MouseButton::LeftButton, Qt::NoModifier, pos, 10);
+    event.addMousePress(Qt::MouseButton::LeftButton, Qt::NoModifier, pos, 10);
+    event.addMouseDClick(Qt::MouseButton::LeftButton, Qt::NoModifier, pos, 10);
+    event.simulate(alv->viewport());
+    event.clear();
+    QTest::qWait(400);
+}
+
 TEST(Application, copyMusicToMusicDir1)
 {
     // 拷贝音乐文件夹到系统音乐文件夹下
@@ -1134,11 +1191,14 @@ TEST(Application, iconModeChanged)
 
     // 双击icon播放
     QTest::qWait(500);
-    pos.setY(100);
+    pos = QPoint(100, 80);
     event.addMouseMove(pos);
     event.addMouseClick(Qt::MouseButton::LeftButton, Qt::NoModifier, pos, 10);
     event.simulate(plv->viewport());
     event.clear();
+
+    QMouseEvent mouseEvent(QEvent::MouseButtonPress, pos, Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
+    qApp->sendEvent(plv, &mouseEvent);
 
     Player::getInstance()->resume();
 
@@ -1701,15 +1761,12 @@ TEST(Application, viewChangedDark)
     TEST_CASE_NAME("viewChangedDark")
 
     MainFrame *w = Application::getInstance()->getMainWindow();
+    DGuiApplicationHelper::instance()->setThemeType(DGuiApplicationHelper::ColorType::DarkType);
     emit DGuiApplicationHelper::instance()->themeTypeChanged(DGuiApplicationHelper::ColorType::DarkType);
-    QTest::qWait(500);
-
     MusicBaseListView *baseListView = w->findChild<MusicBaseListView *>(AC_dataBaseListview);
     QTest::qWait(500);
 
-
     // 关闭歌曲信息
-    QTest::qWait(200);
     QTimer::singleShot(200, w, [ = ]() {
         QTest::qWait(50);
         InfoDialog *infoDialog = w->findChild<InfoDialog *>("infoDialog");
@@ -1719,12 +1776,11 @@ TEST(Application, viewChangedDark)
     });
 
     // 歌曲信息
-    QTest::qWait(50);
     QTestEventList event;
+    QTest::qWait(50);
     event.addKeyClick(Qt::Key_I, Qt::ControlModifier, 10);
     event.simulate(w);
     event.clear();
-
 
     // 点击专辑
     QPoint pos(130, 20);
@@ -1749,8 +1805,6 @@ TEST(Application, viewChangedDark)
     event.addMouseClick(Qt::MouseButton::LeftButton, Qt::NoModifier, pos, 100);
     event.simulate(baseListView->viewport());
     event.clear();
-
-
 
     QTest::qWait(500);
     // 歌手 点击切换到icon模式
@@ -1786,6 +1840,7 @@ TEST(Application, viewChangedDark)
     event.clear();
 
     QTest::qWait(500);
+    DGuiApplicationHelper::instance()->setThemeType(DGuiApplicationHelper::ColorType::LightType);
     emit DGuiApplicationHelper::instance()->themeTypeChanged(DGuiApplicationHelper::ColorType::LightType);
     QTest::qWait(500);
 }
