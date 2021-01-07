@@ -381,6 +381,7 @@ QPixmap PlayListView::getPlayPixmap(bool isSelect)
         }
     }
     QPixmap playingPixmap = QPixmap::fromImage(playingImage);
+    update();
     return playingPixmap;
 }
 

@@ -376,7 +376,7 @@ QPixmap AlbumListView::getPlayPixmap(bool isSelect)
         color = QColor(DGuiApplicationHelper::instance()->applicationPalette().highlight().color());
     }
 
-    QImage playingImage = Player::getInstance()->playingIcon().pixmap(QSize(20, 20), QIcon::Active, QIcon::On).toImage();
+    QImage playingImage = Player::getInstance()->playingIcon().pixmap(QSize(20, 18), QIcon::Active, QIcon::On).toImage();
     for (int i = 0; i < playingImage.width(); i++) {
         for (int j = 0; j < playingImage.height(); j++) {
             if (playingImage.pixelColor(i, j) != QColor(0, 0, 0, 0)) {
@@ -385,6 +385,7 @@ QPixmap AlbumListView::getPlayPixmap(bool isSelect)
         }
     }
     QPixmap playingPixmap = QPixmap::fromImage(playingImage);
+    update();
     return playingPixmap;
 }
 

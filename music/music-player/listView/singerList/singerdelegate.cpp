@@ -205,7 +205,6 @@ void SingerDataDelegate::drawIconMode(QPainter &painter, const QStyleOptionViewI
     painter.translate(fillBlurRect.topLeft());
     qt_blurImage(&painter, t_imageBlur, 35, false, false);
     painter.setTransform(old_transformBlur);
-    //设置模糊
     painter.fillRect(fillBlurRect, fillColor);
 
     //draw playing
@@ -215,7 +214,7 @@ void SingerDataDelegate::drawIconMode(QPainter &painter, const QStyleOptionViewI
             painter.drawPixmap(QRect(rect.x() + 56, rect.y() + 82, 36, 36), hoverSuspendImg);
         } else {
             if (listview2) {
-                painter.drawPixmap(QRect(rect.x() + 64, rect.y() + 92, 22, 18), listview2->getPlayPixmap(true));
+                painter.drawPixmap(QRect(rect.x() + 64, rect.y() + 92, 20, 18), listview2->getPlayPixmap(true));
             }
         }
     }
@@ -228,7 +227,7 @@ void SingerDataDelegate::drawIconMode(QPainter &painter, const QStyleOptionViewI
     painter.setFont(font);
     QFontMetrics fm(font);
 
-    QRect nameFillRect(rect.x(), startHeight + 26, rect.width(), fillAllHeight / 2);
+    QRect nameFillRect(rect.x(), startHeight + 26, rect.width(), 24);
     nameFillRect.adjust(8, 0, -7, 0);
     auto nameText = fm.elidedText(singertmp.singerName.isEmpty() ? SingerListView::tr("Unknown artist") : singertmp.singerName, Qt::ElideMiddle, nameFillRect.width());
     painter.setPen(Qt::white);
@@ -244,7 +243,6 @@ void SingerDataDelegate::drawIconMode(QPainter &painter, const QStyleOptionViewI
     fillColor.setAlphaF(0.3);
     if (listview->getThemeType() == 2) {
         fillColor = "#000000";
-        fillColor.setAlphaF(0.3);
     }
 
     if (option.state & QStyle::State_Selected) {
@@ -252,15 +250,16 @@ void SingerDataDelegate::drawIconMode(QPainter &painter, const QStyleOptionViewI
     }
 
     if ((option.state & QStyle::State_MouseOver) && (!playFlag || playStatue == Player::Paused)) {
+        painter.save();
         QImage t_image = opticon.pixmap(rect.width(), rect.height()).toImage();
         int t_ratio = static_cast<int>(t_image.devicePixelRatioF());
-        QRect t_imageRect(rect.width() / 2 - 25, rect.height() / 2 - 25, 50 * t_ratio, 50 * t_ratio);
+        QRect t_imageRect(rect.width() / 2 - 25, rect.height() / 2 - 25, 60 * t_ratio, 60 * t_ratio);
         t_image  = t_image.copy(t_imageRect);
-        QRect t_hoverRect(rect.x() + 50, rect.y() + 36, 50 * t_ratio, 50 * t_ratio);
+        QRect t_hoverRect(option.rect.x() + 50, option.rect.y() + 36, 50 * t_ratio, 50 * t_ratio);
 
         QTransform old_transform = painter.transform();
         painter.translate(t_hoverRect.topLeft());
-
+        //截取成圆
         QPainterPath t_imageClipPath;
         t_imageClipPath.addEllipse(QRect(0, 0, 50, 50));
         painter.setClipPath(t_imageClipPath);
@@ -274,6 +273,7 @@ void SingerDataDelegate::drawIconMode(QPainter &painter, const QStyleOptionViewI
         //            t_hoverRect.adjust(0, 0, -7 * t_ratio, -7 * t_ratio);
         QRect t_pixMapRect(rect.x() + 53, rect.y() + 40, 43, 43);
         painter.drawPixmap(t_pixMapRect, t_hoverPlayImg);
+        painter.restore();
     }
     painter.fillRect(option.rect, t_fillBrush);
 }

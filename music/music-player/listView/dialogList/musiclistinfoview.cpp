@@ -133,6 +133,7 @@ QPixmap MusicListInfoView::getPlayPixmap(bool isSelect)
         }
     }
     QPixmap playingPixmap = QPixmap::fromImage(playingImage);
+    update();
     return playingPixmap;
 }
 

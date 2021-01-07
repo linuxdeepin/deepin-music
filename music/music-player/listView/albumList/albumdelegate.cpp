@@ -223,7 +223,7 @@ void AlbumDataDelegate::drawIconMode(QPainter &painter, const QStyleOptionViewIt
             painter.drawPixmap(QRect(rect.x() + 56, rect.y() + 72, 36, 36), hoverSuspendImg);
         } else {
             if (listview2) {
-                painter.drawPixmap(QRect(rect.x() + 64, rect.y() + 82, 22, 18), listview2->getPlayPixmap(true));
+                painter.drawPixmap(QRect(rect.x() + 64, rect.y() + 82, 20, 18), listview2->getPlayPixmap(true));
             }
         }
     }
@@ -265,7 +265,7 @@ void AlbumDataDelegate::drawIconMode(QPainter &painter, const QStyleOptionViewIt
     if ((option.state & QStyle::State_MouseOver)  && (!playFlag || (playStatue == Player::Paused))) {
         QImage t_image = opticon.pixmap(rect.width(), rect.height()).toImage();
         int t_ratio = static_cast<int>(t_image.devicePixelRatioF());
-        QRect t_imageRect(rect.width() / 2 - 25, rect.height() / 2 - 25, 50 * t_ratio, 50 * t_ratio);
+        QRect t_imageRect(rect.width() / 2 - 25, rect.height() / 2 - 25, 60 * t_ratio, 60 * t_ratio);
         t_image  = t_image.copy(t_imageRect);
         QRect t_hoverRect(rect.x() + 50, rect.y() + 36, 50 * t_ratio, 50 * t_ratio);
 
