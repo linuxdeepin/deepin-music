@@ -88,6 +88,8 @@ void Player::init()
     initMpris();
     m_volume = MusicSettings::value("base.play.volume").toInt();
     setFadeInOut(MusicSettings::value("base.play.fade_in_out").toBool());
+
+    m_mode = static_cast<PlaybackMode>(MusicSettings::value("base.play.playmode").toInt());
 }
 
 QStringList Player::supportedSuffixList() const
@@ -602,6 +604,7 @@ void Player::setPosition(qlonglong position)
 void Player::setMode(Player::PlaybackMode mode)
 {
     m_mode = mode;
+    MusicSettings::setOption("base.play.playmode", m_mode);
 }
 
 void Player::setVolume(int volume)

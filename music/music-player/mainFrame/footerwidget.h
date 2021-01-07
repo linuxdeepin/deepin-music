@@ -66,6 +66,7 @@ private:
 
     void setPlayProperty(Player::PlaybackStatus status);
     void resetBtnVisible();
+    QString playModeStr(int mode);
 signals:
     void lyricClicked();
 public slots:

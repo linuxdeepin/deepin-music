@@ -70,7 +70,7 @@ SearchResultTabWidget::SearchResultTabWidget(QWidget *parent) :
     hLayout->addWidget(m_music);
     //歌手
     m_singer = new Label(tr("Artists"), this);
-    m_singer->setFixedSize(42, 20);
+    m_singer->resize(static_cast<int>(strlen(reinterpret_cast<char *>(m_singer->text().data()))) * m_singer->font().pointSize(), 20);
     m_singer->setAlignment(Qt::AlignCenter);
     DFontSizeManager::instance()->bind(m_singer, DFontSizeManager::T6);
     m_singer->setEnabled(false);
@@ -296,21 +296,21 @@ void SearchResultTabWidget::setLabelChecked(Label *label)
         m_album->setEnabled(false);
         m_music->setEnabled(true);
         m_LineWidget->show();
-        m_LineWidget->move(m_music->x(), m_music->y() + m_music->height() + 8);
+        m_LineWidget->move((m_music->x() + (m_music->width() - m_LineWidget->width()) / 2), m_singer->y() + m_singer->height() + 8);
         m_StackedWidget->setCurrentWidget(m_musicListView);
     } else if (m_singer == label) {
         m_singer->setEnabled(true);
         m_album->setEnabled(false);
         m_music->setEnabled(false);
         m_LineWidget->show();
-        m_LineWidget->move(m_singer->x(), m_singer->y() + m_singer->height() + 8);
+        m_LineWidget->move((m_singer->x() + (m_singer->width() - m_LineWidget->width()) / 2), m_singer->y() + m_singer->height() + 8);
         m_StackedWidget->setCurrentWidget(m_singerListView);
     } else if (m_album == label) {
         m_singer->setEnabled(false);
         m_album->setEnabled(true);
         m_music->setEnabled(false);
         m_LineWidget->show();
-        m_LineWidget->move(m_album->x(), m_album->y() + m_album->height() + 8);
+        m_LineWidget->move((m_album->x() + (m_album->width() - m_LineWidget->width()) / 2), m_singer->y() + m_singer->height() + 8);
         m_StackedWidget->setCurrentWidget(m_albumListView);
     }
 }

@@ -247,11 +247,25 @@ void FooterWidget::initUI(QWidget *parent)
 
     //添加播放模式
     m_btPlayMode = new DIconButton(this);
-    m_btPlayMode->setIcon(QIcon::fromTheme("sequential_loop"));
+    QString playmode = "sequential_loop";
+    switch (Player::getInstance()->mode()) {
+    case 0:
+        playmode = tr("sequential_loop");
+        break;
+    case 1:
+        playmode = tr("single_tune_circulation");
+        break;
+    case 2:
+        playmode = tr("cross_cycling");
+        break;
+    default:
+        break;
+    }
+    m_btPlayMode->setIcon(QIcon::fromTheme(playmode));
     m_btPlayMode->setObjectName("FooterActionPlayMode");
     m_btPlayMode->setFixedSize(50, 50);
     m_btPlayMode->setIconSize(QSize(36, 36));
-    m_btPlayMode->setProperty("playModel", QVariant(0));
+    m_btPlayMode->setProperty("playModel", QVariant(Player::getInstance()->mode()));
     mainHBoxlayout->addWidget(m_btPlayMode, 0);
 
     AC_SET_OBJECT_NAME(m_btPlayMode, AC_PlayMode);
@@ -304,8 +318,9 @@ void FooterWidget::initUI(QWidget *parent)
     installTipHint(m_btPlay, tr("Play/Pause"));
     installTipHint(m_btFavorite, tr("Favorite"));
     installTipHint(m_btLyric, tr("Lyrics"));
-    installTipHint(m_btPlayMode, tr("Play Mode"));
     installTipHint(m_btPlayQueue, tr("Play Queue"));
+    //设置播放模式提示框
+    installTipHint(m_btPlayMode, playModeStr(Player::getInstance()->mode()));
 
     connect(m_btPlayQueue, SIGNAL(clicked(bool)), this, SLOT(slotPlayQueueClick(bool)));
     connect(m_btLyric, SIGNAL(clicked(bool)), this, SLOT(slotLrcClick(bool)));
@@ -457,6 +472,23 @@ void FooterWidget::resetBtnVisible()
     }
 }
 
+QString FooterWidget::playModeStr(int mode)
+{
+    QString playmode;
+    switch (mode) {
+    case 0:
+        playmode = tr("List Loop");
+        break;
+    case 1:
+        playmode = tr("Single Loop");
+        break;
+    case 2:
+        playmode = tr("Shuffle");
+        break;
+    }
+    return playmode;
+}
+
 void FooterWidget::slotPlayQueueAutoHidden()
 {
     m_btPlayQueue->setChecked(false);
@@ -500,21 +532,8 @@ void FooterWidget::slotPlayModeClick(bool click)
 
     if (hintWidget != nullptr) {
         auto hintToolTips = static_cast<ToolTips *>(hintWidget);
-        QString playmode;
-        switch (playModel) {
-        default:
-        case 0:
-            playmode = tr("List Loop");
-            break;
-        case 1:
-            playmode = tr("Single Loop");
-            break;
-        case 2:
-            playmode = tr("Shuffle");
-            break;
-        }
         if (hintToolTips != nullptr) {
-            hintToolTips->setText(playmode);
+            hintToolTips->setText(playModeStr(playModel));
         }
     }
 }
