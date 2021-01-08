@@ -254,12 +254,14 @@ void MainFrame::initMenuAndShortcut()
     trayIconMenu->addSeparator();
     trayIconMenu->addAction(quitAction);
 
-    m_sysTrayIcon = new QSystemTrayIcon(this);
+    //tray icon
+    auto m_sysTrayIcon = new QSystemTrayIcon(this);
     m_sysTrayIcon->setIcon(QIcon::fromTheme("deepin-music"));
     m_sysTrayIcon->setToolTip(tr("Music"));
     m_sysTrayIcon->setContextMenu(trayIconMenu);
+#ifndef  ENABLE_AUTO_UNIT_TEST
     m_sysTrayIcon->show();
-
+#endif
     connect(playAction, &QAction::triggered,
     this, [ = ]() {
         m_footerWidget->slotPlayClick(true);
@@ -765,8 +767,6 @@ void MainFrame::hideEvent(QHideEvent *event)
     //用于最小化时保存窗口位置信息,note：托盘到最小化或者退出程序也会触发该事件
     DMainWindow::hideEvent(event);
     m_geometryBa = saveGeometry();
-    if (m_sysTrayIcon && !m_sysTrayIcon->isVisible())
-        m_sysTrayIcon->show();
     qDebug() << "hideEvent=============";
 }
 

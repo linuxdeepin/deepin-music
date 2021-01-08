@@ -109,8 +109,6 @@ private:
     QShortcut           *windowShortcut = nullptr;
     //window geometry
     QByteArray          m_geometryBa = QByteArray();
-    //tray icon
-    QSystemTrayIcon *m_sysTrayIcon = nullptr;
 };
 
 //extern const QString s_PropertyViewname;

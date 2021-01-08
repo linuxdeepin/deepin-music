@@ -48,6 +48,7 @@
 #include "speechCenter.h"
 #include <functional>
 #include "mainframe.h"
+#include "util/speechexportbus.h"
 
 using namespace Dtk::Core;
 using namespace Dtk::Widget;
@@ -200,8 +201,8 @@ void createSpeechDbus()
 {
     const std::function<QVariant(QString)> handler;
     SpeechCenter::getInstance();
-    QDBusConnection::sessionBus().registerService("com.deepin.music.Speech");
-    Dtk::Core::DUtil::DExportedInterface *mSpeech = new Dtk::Core::DUtil::DExportedInterface(nullptr);
+
+    SpeechExportBus *mSpeech = new SpeechExportBus(nullptr);
     // 'playMusic','红颜' 显示搜索界面
     // 'playMusic',''       显示所有音乐界面，随机播放
     mSpeech->registerAction("playMusic", "play Music",
