@@ -76,7 +76,7 @@ MusicContentWidget::MusicContentWidget(QWidget *parent) : DWidget(parent)
     slotTheme(DGuiApplicationHelper::instance()->themeType());
 }
 
-void MusicContentWidget::showAnimationToUp(const QSize &size)
+void MusicContentWidget::animationToUp(const QSize &size)
 {
     QPropertyAnimation *animation = new QPropertyAnimation(this, "pos");
 
@@ -87,13 +87,17 @@ void MusicContentWidget::showAnimationToUp(const QSize &size)
 
     animation->connect(animation, &QPropertyAnimation::finished,
                        animation, &QPropertyAnimation::deleteLater);
+    // 防止挡住歌词控件
+    animation->connect(animation, &QPropertyAnimation::finished,
+                       this, &MusicContentWidget::hide);
+
     this->resize(size);
     this->show();
 
     animation->start();
 }
 
-void MusicContentWidget::showAnimationToDown(const QSize &size)
+void MusicContentWidget::animationImportToDown(const QSize &size)
 {
     QPropertyAnimation *animation = new QPropertyAnimation(this, "pos");
 
@@ -110,7 +114,7 @@ void MusicContentWidget::showAnimationToDown(const QSize &size)
     animation->start();
 }
 
-void MusicContentWidget::closeAnimationToLeft(const QSize &size)
+void MusicContentWidget::animationImportToLeft(const QSize &size)
 {
     QPropertyAnimation *animation = new QPropertyAnimation(this, "pos");
 
@@ -128,7 +132,7 @@ void MusicContentWidget::closeAnimationToLeft(const QSize &size)
     animation->start();
 }
 
-void MusicContentWidget::closeAnimation(const QSize &size)
+void MusicContentWidget::animationToDown(const QSize &size)
 {
     this->resize(size);
 

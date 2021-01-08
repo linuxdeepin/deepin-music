@@ -35,14 +35,15 @@ class MusicContentWidget : public DWidget
     Q_OBJECT
 public:
     explicit MusicContentWidget(QWidget *parent = Q_NULLPTR);
-    // 向上移动显示
-    void showAnimationToUp(const QSize &size);
-    // 向下移动显示
-    void showAnimationToDown(const QSize &size);
-    // 向左移动隐藏
-    void closeAnimationToLeft(const QSize &size);
-    // 控件关闭动画
-    void closeAnimation(const QSize &size);
+    // 向上移动动画
+    void animationToUp(const QSize &size);
+    // 向下移动动画
+    void animationToDown(const QSize &size);
+
+    // 导入向下移动动画
+    void animationImportToDown(const QSize &size);
+    // 导入向左移动动画
+    void animationImportToLeft(const QSize &size);
 public slots:
     void slotTheme(DGuiApplicationHelper::ColorType themeType);
 protected:

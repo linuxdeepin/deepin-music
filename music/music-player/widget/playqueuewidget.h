@@ -36,8 +36,8 @@ public:
     explicit PlayQueueWidget(QWidget *parent = Q_NULLPTR);
     ~PlayQueueWidget() override;
 
-    void showAnimation(const QSize &size);
-    void closeAnimation(const QSize &size);
+    void animationToUp(const QSize &size);
+    void animationToDown(const QSize &size);
 
 public slots:
     void slotPlayListChanged();

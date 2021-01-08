@@ -133,34 +133,34 @@ PlayQueueWidget::PlayQueueWidget(QWidget *parent) :
     this->hide();
 }
 
-void PlayQueueWidget::showAnimation(const QSize &size)
+void PlayQueueWidget::animationToUp(const QSize &size)
 {
-    QRect start2(0, size.height() - 85, size.width(), 80);
-    QRect end2(0, size.height() - 450, size.width(), 445);
-    QPropertyAnimation *animation2 = new QPropertyAnimation(this, "geometry");
-    animation2->setEasingCurve(QEasingCurve::InCurve);
-    animation2->setDuration(AnimationDelay);
-    animation2->setStartValue(start2);
-    animation2->setEndValue(end2);
-    animation2->start();
+    QRect start(0, size.height() - 85, size.width(), 80);
+    QRect end(0, size.height() - 450, size.width(), 445);
+    QPropertyAnimation *animation = new QPropertyAnimation(this, "geometry");
+    animation->setEasingCurve(QEasingCurve::InCurve);
+    animation->setDuration(AnimationDelay);
+    animation->setStartValue(start);
+    animation->setEndValue(end);
+    animation->start();
     this->show();
-    animation2->connect(animation2, &QPropertyAnimation::finished,
-                        animation2, &QPropertyAnimation::deleteLater);
+    animation->connect(animation, &QPropertyAnimation::finished,
+                       animation, &QPropertyAnimation::deleteLater);
 }
 
-void PlayQueueWidget::closeAnimation(const QSize &size)
+void PlayQueueWidget::animationToDown(const QSize &size)
 {
-    QRect start2(0, size.height() - 85, size.width(), 80);
-    QRect end2(0, size.height() - 450, size.width(), 445);
-    QPropertyAnimation *animation2 = new QPropertyAnimation(this, "geometry");
-    animation2->setEasingCurve(QEasingCurve::InCurve);
-    animation2->setDuration(AnimationDelay);
-    animation2->setStartValue(end2);
-    animation2->setEndValue(start2);
-    animation2->start();
-    animation2->connect(animation2, &QPropertyAnimation::finished,
-                        animation2, &QPropertyAnimation::deleteLater);
-    animation2->connect(animation2, &QPropertyAnimation::finished, this, [ = ]() {
+    QRect start(0, size.height() - 85, size.width(), 80);
+    QRect end(0, size.height() - 450, size.width(), 445);
+    QPropertyAnimation *animation = new QPropertyAnimation(this, "geometry");
+    animation->setEasingCurve(QEasingCurve::InCurve);
+    animation->setDuration(AnimationDelay);
+    animation->setStartValue(end);
+    animation->setEndValue(start);
+    animation->start();
+    animation->connect(animation, &QPropertyAnimation::finished,
+                       animation, &QPropertyAnimation::deleteLater);
+    animation->connect(animation, &QPropertyAnimation::finished, this, [ = ]() {
         this->hide();
         emit CommonService::getInstance()->signalPlayQueueClosed();
     });
@@ -306,7 +306,7 @@ void PlayQueueWidget::autoHidden(QWidget *old, QWidget *now)
                     if (!this->isHidden()) {
                         QWidget *parent = static_cast<QWidget *>(this->parent());
                         if (parent) {
-                            closeAnimation(parent->size());
+                            animationToDown(parent->size());
                         }
                     }
                 }
@@ -315,7 +315,7 @@ void PlayQueueWidget::autoHidden(QWidget *old, QWidget *now)
                     if (!this->isHidden()) {
                         QWidget *parent = static_cast<QWidget *>(this->parent());
                         if (parent) {
-                            closeAnimation(parent->size());
+                            animationToDown(parent->size());
                         }
                     }
                 }

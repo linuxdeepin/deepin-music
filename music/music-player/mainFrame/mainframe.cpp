@@ -409,12 +409,12 @@ void MainFrame::slotLyricClicked()
     // 歌词控件显示与关闭动画
     if (m_musicLyricWidget->isHidden()) {
         m_musicLyricWidget->showAnimation(this->size());
-        m_musicContentWidget->showAnimationToUp(this->size() - QSize(0, m_footerWidget->height() + titlebar()->height() + 5));
+        m_musicContentWidget->animationToUp(this->size() - QSize(0, m_footerWidget->height() + titlebar()->height() + 5));
         //搜索页面使能
         m_titlebarwidget->setEnabled(false);
     } else {
         m_musicLyricWidget->closeAnimation(this->size());
-        m_musicContentWidget->closeAnimation(this->size() - QSize(0, m_footerWidget->height() + titlebar()->height() + 5));
+        m_musicContentWidget->animationToDown(this->size() - QSize(0, m_footerWidget->height() + titlebar()->height() + 5));
         //搜索页面使能
         m_titlebarwidget->setEnabled(true);
     }
@@ -433,7 +433,7 @@ void MainFrame::slotImportFinished(QString hash, int successCount)
     // 导入界面显示与关闭动画
     if (m_importWidget->isVisible()) {
         m_musicContentWidget->show();
-        m_musicContentWidget->showAnimationToDown(this->size() - QSize(0, m_footerWidget->height() + titlebar()->height() + 5));
+        m_musicContentWidget->animationImportToDown(this->size() - QSize(0, m_footerWidget->height() + titlebar()->height() + 5));
         // 切换到所有音乐界面
         emit CommonService::getInstance()->signalSwitchToView(AllSongListType, "all");
         m_footerWidget->show();
@@ -569,7 +569,7 @@ void MainFrame::slotAllMusicCleared()
 {
     qDebug() << "MainFrame::slotAllMusicCleared";
     // 导入界面显示与关闭动画
-    m_musicContentWidget->closeAnimationToLeft(this->size() - QSize(0, m_footerWidget->height() + titlebar()->height() + 5));
+    m_musicContentWidget->animationImportToLeft(this->size() - QSize(0, m_footerWidget->height() + titlebar()->height() + 5));
     m_footerWidget->hide();
     m_importWidget->showImportHint();
     m_importWidget->showAnimationToLeft(this->size());
@@ -676,8 +676,6 @@ void MainFrame::resizeEvent(QResizeEvent *e)
     DMainWindow::resizeEvent(e);
     QSize newSize = DMainWindow::size();
 
-    m_musicLyricWidget->resize(this->size());
-
 //    if (loadWidget) {
 //        loadWidget->setFixedSize(newSize);
 //        loadWidget->raise();
@@ -695,16 +693,16 @@ void MainFrame::resizeEvent(QResizeEvent *e)
         m_importWidget->setFixedSize(newSize);
     }
 
-//    if (lyricWidget) {
-//        lyricWidget->setFixedSize(newSize);
-//        musicListWidget->setFixedSize(newSize);
-//    }
-
     if (m_footerWidget) {
         m_footerWidget->setGeometry(0, height() - 85, width(), 80);
     }
+
     if (m_musicContentWidget) {
         m_musicContentWidget->setGeometry(0, 50, width(), height() - m_footerWidget->height() - titlebar()->height() - 5);
+    }
+
+    if (m_musicLyricWidget) {
+        m_musicLyricWidget->setGeometry(0, 50, width(), height());
     }
 
     if (m_playQueueWidget) {
@@ -789,9 +787,9 @@ void MainFrame::playQueueAnimation()
     }
 
     if (m_playQueueWidget->isHidden()) {
-        m_playQueueWidget->showAnimation(this->size());
+        m_playQueueWidget->animationToUp(this->size());
     } else {
-        m_playQueueWidget->closeAnimation(this->size());
+        m_playQueueWidget->animationToDown(this->size());
     }
 }
 
