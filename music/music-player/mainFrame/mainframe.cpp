@@ -596,12 +596,13 @@ void MainFrame::slotAutoPlay(bool bremb)
 
 void MainFrame::slotPlayFromFileMaganager()
 {
-    QString path = DataBaseService::getInstance()->getFirstSong();;
+    QString path = DataBaseService::getInstance()->getFirstSong();
     qDebug() << "----------openUrl:" << path << "all size:" << DataBaseService::getInstance()->allMusicInfosCount();
     if (path.isEmpty())
         return;
     //通过路径查询歌曲信息，
     MediaMeta mt = DataBaseService::getInstance()->getMusicInfoByHash(DMusic::filepathHash(path));
+    DataBaseService::getInstance()->setFirstSong("");
     if (mt.localPath.isEmpty()) {
         //未导入到数据库
         qCritical() << "fail to start from file manager";
