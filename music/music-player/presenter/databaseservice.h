@@ -197,7 +197,8 @@ private:
     // 新加载的歌曲文件
     DBOperate m_worker;
     QList<MediaMeta> m_loadMediaMeta;
-    bool             m_importing = false;
+// 不需要这个变量控制导入多次问题
+//    bool             m_importing = false;
     QString          m_importHash;
     // 文管导入的第一首歌
     QString          m_firstSonsg = "";

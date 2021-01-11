@@ -320,10 +320,12 @@ void DataBaseService::removeSelectedSongs(const QString &curpage, const QStringL
 
 void DataBaseService::importMedias(QString importHash, const QStringList &urllist)
 {
-    // 导入中直接返回，不做处理
-    if (m_importing) {
-        return;
-    }
+// bool值判断用来解决重复导入问题，考虑多次导入，
+// 在线程中已由信号槽队列处理，这个值多余了，注释处理
+//    // 导入中直接返回，不做处理
+//    if (m_importing) {
+//        return;
+//    }
     m_successCount = 0;
     m_exsitCount = 0;
     m_importHash = importHash;
@@ -331,7 +333,7 @@ void DataBaseService::importMedias(QString importHash, const QStringList &urllis
     qDebug() << "------DataBaseService::importMedias  currentThread = " << QThread::currentThread();
     m_loadMediaMeta.clear();
     emit signalImportMedias(urllist);
-    m_importing = true;
+//    m_importing = true;
 }
 
 //bool DataBaseService::getImportStatus()
@@ -551,7 +553,7 @@ void DataBaseService::slotImportFinished(int failCount)
 
     m_successCount = 0;
     m_exsitCount = 0;
-    m_importing = false;
+//    m_importing = false;
 
     //数据加载完后再加载图片
     emit signalCreatCoverImg(m_AllMediaMeta);
