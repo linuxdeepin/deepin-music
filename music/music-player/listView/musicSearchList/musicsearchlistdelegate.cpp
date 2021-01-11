@@ -64,9 +64,7 @@ bool MusicSearchListDelegate::editorEvent(QEvent *event, QAbstractItemModel *mod
 
 void MusicSearchListDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
-    //Q_D(const MusicSearchListDelegate);
-
-    /********************设置基础颜色***************************/
+    // 设置基础颜色
     QColor backColor("#FFFFFF");
     backColor.setAlphaF(0.2);
 
@@ -128,17 +126,17 @@ void MusicSearchListDelegate::paint(QPainter *painter, const QStyleOptionViewIte
     painter->setRenderHint(QPainter::Antialiasing);
     painter->setRenderHint(QPainter::HighQualityAntialiasing);
 
-    /***********************设置字体***************************/
+    // 设置字体
     QFont textFont = option.font;
     textFont.setFamily("SourceHanSansSC");
     textFont.setWeight(QFont::Normal);
     textFont.setPixelSize(14);
 
     if (listview->getSearchType() == SearchType::SearchMusic) {
+        // 绘制歌曲
 //        auto metaPtr = metaPtrList[index.row()];
         MediaMeta metaPtr = index.data(Qt::UserRole + SearchType::SearchMusic).value<MediaMeta>();
 
-        /***********************绘制文字***************************/
         QString mtext;
         if (metaPtr.singer.size() == 0) {
             mtext = metaPtr.title;
@@ -156,7 +154,6 @@ void MusicSearchListDelegate::paint(QPainter *painter, const QStyleOptionViewIte
         viewOption.text = "";
         pStyle->drawControl(QStyle::CE_ItemViewItem, &viewOption, painter, viewOption.widget);
 
-
         QTextDocument document;
         document.setPlainText(mtext);
         bool found = false;
@@ -167,11 +164,12 @@ void MusicSearchListDelegate::paint(QPainter *painter, const QStyleOptionViewIte
         QTextCharFormat color_format(highlight_cursor.charFormat());
         color_format.setForeground(lightColor);
 
-        /*-------------LineUnderCursor-------------*/
+        // 搜索字体高亮
         QTextCursor testcursor(&document);
         testcursor.select(QTextCursor::LineUnderCursor);
         QTextCharFormat fmt;
         fmt.setForeground(textColor);
+        fmt.setFont(textFont);
         testcursor.mergeCharFormat(fmt);
         testcursor.clearSelection();
         testcursor.movePosition(QTextCursor::EndOfLine);
@@ -195,7 +193,7 @@ void MusicSearchListDelegate::paint(QPainter *painter, const QStyleOptionViewIte
         painter->restore();
 
     } else {
-        /***********************绘制图片***************************/
+        // 绘制歌手专辑
         QPixmap image;
         QString mtext;
         image = index.data(Qt::UserRole + SearchType::SearchIcon).value<QPixmap>();
@@ -236,11 +234,12 @@ void MusicSearchListDelegate::paint(QPainter *painter, const QStyleOptionViewIte
 
         color_format.setForeground(lightColor);
 
-        /*-------------LineUnderCursor-------------*/
+        // 搜索字体高亮
         QTextCursor testcursor(&document);
         testcursor.select(QTextCursor::LineUnderCursor);
         QTextCharFormat fmt;
         fmt.setForeground(textColor);
+        fmt.setFont(textFont);
         testcursor.mergeCharFormat(fmt);
         testcursor.clearSelection();
         testcursor.movePosition(QTextCursor::EndOfLine);

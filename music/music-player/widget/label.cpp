@@ -37,6 +37,14 @@ Label::~Label()
 {
 }
 
+void Label::resizeEvent(QResizeEvent *event)
+{
+    Q_UNUSED(event)
+
+    // 控件大小改变
+    emit signalSizeChange();
+}
+
 void Label::mousePressEvent(QMouseEvent * /*event*/)
 {
     m_selected = true;

@@ -49,6 +49,11 @@ class FooterWidget : public DFloatingWidget
 {
     Q_OBJECT
 public:
+    // 控件边距
+    static constexpr int Margin = 5;
+    // 控件高度
+    static constexpr int Height = 80;
+public:
     explicit FooterWidget(QWidget *parent = nullptr);
     ~FooterWidget() override;
 

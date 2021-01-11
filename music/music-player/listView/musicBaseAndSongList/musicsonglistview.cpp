@@ -67,7 +67,6 @@ MusicSongListView::MusicSongListView(QWidget *parent) : DListView(parent)
     auto font = this->font();
     font.setFamily("SourceHanSansSC");
     font.setWeight(QFont::Medium);
-    font.setPixelSize(14);
     setFont(font);
 
     setIconSize(QSize(20, 20));
@@ -147,9 +146,6 @@ void MusicSongListView::init()
         }
         QString displayName = data.displayName;
         auto item = new DStandardItem(QIcon::fromTheme("music_famousballad"), displayName);
-        auto itemFont = item->font();
-        itemFont.setPixelSize(14);
-        item->setFont(itemFont);
 
         item->setData(data.uuid, Qt::UserRole);
         if (DGuiApplicationHelper::instance()->themeType() == 1) {
@@ -225,9 +221,6 @@ void MusicSongListView::addNewSongList()
 
     QString displayName = newDisplayName(); //translation? from playlistmanager
     auto item = new DStandardItem(icon, displayName);
-    auto itemFont = item->font();
-    itemFont.setPixelSize(14);
-    item->setFont(itemFont);
     if (DGuiApplicationHelper::instance()->themeType() == 1) {
         item->setForeground(QColor("#414D68"));
     } else {

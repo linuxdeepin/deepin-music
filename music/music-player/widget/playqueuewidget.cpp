@@ -135,8 +135,8 @@ PlayQueueWidget::PlayQueueWidget(QWidget *parent) :
 
 void PlayQueueWidget::animationToUp(const QSize &size)
 {
-    QRect start(0, size.height() - 85, size.width(), 80);
-    QRect end(0, size.height() - 450, size.width(), 445);
+    QRect start(Margin, size.height() - Height - Margin, size.width() - Margin * 2, Height);
+    QRect end(Margin, size.height() - 450, size.width() - Margin * 2, 445);
     QPropertyAnimation *animation = new QPropertyAnimation(this, "geometry");
     animation->setEasingCurve(QEasingCurve::InCurve);
     animation->setDuration(AnimationDelay);
@@ -150,8 +150,8 @@ void PlayQueueWidget::animationToUp(const QSize &size)
 
 void PlayQueueWidget::animationToDown(const QSize &size)
 {
-    QRect start(0, size.height() - 85, size.width(), 80);
-    QRect end(0, size.height() - 450, size.width(), 445);
+    QRect start(Margin, size.height() - Height - Margin, size.width() - Margin * 2, Height);
+    QRect end(Margin, size.height() - 450, size.width() - Margin * 2, 445);
     QPropertyAnimation *animation = new QPropertyAnimation(this, "geometry");
     animation->setEasingCurve(QEasingCurve::InCurve);
     animation->setDuration(AnimationDelay);

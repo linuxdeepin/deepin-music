@@ -133,9 +133,6 @@ void MusicBaseListView::init()
 {
     QString displayName = tr("Albums");
     auto item = new DStandardItem(QIcon::fromTheme("music_album"), displayName);
-    auto itemFont = item->font();
-    itemFont.setPixelSize(14);
-    item->setFont(itemFont);
     if (DGuiApplicationHelper::instance()->themeType() == 1) {
         item->setForeground(QColor("#414D68"));
     } else {

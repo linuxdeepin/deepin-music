@@ -33,6 +33,11 @@ class PlayQueueWidget : public DFloatingWidget
 {
     Q_OBJECT
 public:
+    // 控件边距
+    static constexpr int Margin = 5;
+    // 控件高度
+    static constexpr int Height = 80;
+public:
     explicit PlayQueueWidget(QWidget *parent = Q_NULLPTR);
     ~PlayQueueWidget() override;
 

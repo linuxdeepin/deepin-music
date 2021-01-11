@@ -58,7 +58,8 @@ public:
 
     void setCurrentPage(ListPageSwitchType type);
 public slots:
-
+    // 控件大小改变
+    void slotSizeChange();
 signals:
     //通知主界面搜索结果tab切换，设计排序与数量显示
     void sigSearchTypeChanged(QString hash);

@@ -35,8 +35,11 @@ public:
 
 signals:
     void clicked(bool);
+    // 控件大小改变
+    void signalSizeChange();
 
 protected:
+    virtual void resizeEvent(QResizeEvent *event) Q_DECL_OVERRIDE;
     virtual void mousePressEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
 private:
     bool m_selected = false;

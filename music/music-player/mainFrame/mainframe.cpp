@@ -663,7 +663,8 @@ void MainFrame::showEvent(QShowEvent *event)
     this->setFocus();
     qDebug() << "zy------MainWindow::showEvent " << QTime::currentTime().toString("hh:mm:ss.zzz");
     if (m_footerWidget) {
-        m_footerWidget->setGeometry(0, height() - 85, width(), 80);
+        m_footerWidget->setGeometry(FooterWidget::Margin, height() - FooterWidget::Height - FooterWidget::Margin,
+                                    width() - FooterWidget::Margin * 2, FooterWidget::Height);
     }
     if (m_musicContentWidget) {
         m_musicContentWidget->setGeometry(0, 50, width(), height() - m_footerWidget->height() - titlebar()->height() - 5);
@@ -696,7 +697,8 @@ void MainFrame::resizeEvent(QResizeEvent *e)
     }
 
     if (m_footerWidget) {
-        m_footerWidget->setGeometry(0, height() - 85, width(), 80);
+        m_footerWidget->setGeometry(FooterWidget::Margin, height() - FooterWidget::Height - FooterWidget::Margin,
+                                    width() - FooterWidget::Margin * 2, FooterWidget::Height);
     }
 
     if (m_musicContentWidget) {
@@ -708,8 +710,8 @@ void MainFrame::resizeEvent(QResizeEvent *e)
     }
 
     if (m_playQueueWidget) {
-        m_playQueueWidget->setGeometry(0, m_footerWidget->y() - m_playQueueWidget->height() + m_footerWidget->height(),
-                                       width(), m_playQueueWidget->height());
+        m_playQueueWidget->setGeometry(PlayQueueWidget::Margin, m_footerWidget->y() - m_playQueueWidget->height() + m_footerWidget->height(),
+                                       width() - PlayQueueWidget::Margin * 2, m_playQueueWidget->height());
     }
 
     if (m_popupMessage) {
@@ -778,8 +780,7 @@ void MainFrame::playQueueAnimation()
         AC_SET_OBJECT_NAME(m_playQueueWidget, AC_PlayQueue);
         AC_SET_ACCESSIBLE_NAME(m_playQueueWidget, AC_PlayQueue);
 
-        m_footerWidget->setGeometry(0, height() - 85, width(), 80);
-        // 设置播放队列再footer下面
+        // 设置播放队列在footer下面
         m_playQueueWidget->raise();
         m_footerWidget->raise();
 

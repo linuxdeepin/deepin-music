@@ -63,7 +63,7 @@ SearchResultTabWidget::SearchResultTabWidget(QWidget *parent) :
 
     //音乐
     m_music = new Label(tr("Songs"), this);
-    m_music->setFixedSize(42, 20);
+    m_music->resize(static_cast<int>(strlen(reinterpret_cast<char *>(m_music->text().data()))) * m_music->font().pointSize(), 20);
     m_music->setAlignment(Qt::AlignCenter);
     DFontSizeManager::instance()->bind(m_music, DFontSizeManager::T6);
     m_music->setEnabled(false);
@@ -77,7 +77,7 @@ SearchResultTabWidget::SearchResultTabWidget(QWidget *parent) :
     hLayout->addWidget(m_singer);
     //专辑
     m_album = new Label(tr("Albums"), this);
-    m_album->setFixedSize(42, 20);
+    m_album->resize(static_cast<int>(strlen(reinterpret_cast<char *>(m_album->text().data()))) * m_album->font().pointSize(), 20);
     m_album->setAlignment(Qt::AlignCenter);
     DFontSizeManager::instance()->bind(m_album, DFontSizeManager::T6);
     m_album->setEnabled(false);
@@ -112,8 +112,10 @@ SearchResultTabWidget::SearchResultTabWidget(QWidget *parent) :
     m_LineWidget = new LineWidget(this);
     m_LineWidget->setFixedSize(43, 2);
     m_LineWidget->hide();
+
     connect(m_musicListView, &PlayListView::musicResultListCountChanged,
             this, &SearchResultTabWidget::sigSearchTypeChanged);
+    this->connect(m_music, &Label::signalSizeChange, this, &SearchResultTabWidget::slotSizeChange);
 }
 
 SearchResultTabWidget::~SearchResultTabWidget()
@@ -257,6 +259,17 @@ void SearchResultTabWidget::setCurrentPage(ListPageSwitchType type)
         if (m_albumListView) {
             m_StackedWidget->setCurrentWidget(m_albumListView);
         }
+    }
+}
+
+void SearchResultTabWidget::slotSizeChange()
+{
+    if (m_music->isEnabled()) {
+        m_LineWidget->move((m_music->x() + (m_music->width() - m_LineWidget->width()) / 2), m_singer->y() + m_singer->height() + 8);
+    } else if (m_singer->isEnabled()) {
+        m_LineWidget->move((m_singer->x() + (m_singer->width() - m_LineWidget->width()) / 2), m_singer->y() + m_singer->height() + 8);
+    } else if (m_album->isEnabled()) {
+        m_LineWidget->move((m_album->x() + (m_album->width() - m_LineWidget->width()) / 2), m_singer->y() + m_singer->height() + 8);
     }
 }
 
