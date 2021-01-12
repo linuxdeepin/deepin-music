@@ -383,11 +383,6 @@ void PlayItemDelegate::drawListMode(QPainter &painter, const QStyleOptionViewIte
             //绘制播放动态图
             if (activeMeta.hash == itemMeta.hash) {
                 QPixmap icon = playListView->getPlayPixmap(option.state & QStyle::State_Selected);
-                //Player::instance()->playingPixmap(option.state & QStyle::State_Selected);
-//                if (option.state & QStyle::State_Selected) {
-//                    icon = Player::instance()->selectPlayingPixmap();
-//                }
-
                 auto centerF = QRectF(rect).center();
                 qreal t_ratio = icon.devicePixelRatioF();
                 QRect t_ratioRect;
@@ -401,7 +396,8 @@ void PlayItemDelegate::drawListMode(QPainter &painter, const QStyleOptionViewIte
                 painter.drawPixmap(iconRect.toRect(), icon);
             } else {
                 painter.setFont(font11);
-                auto str = QString("%1").arg(index.row() + 1, rowCountSize, 10, QLatin1Char('0'));
+                // 只显示行号，如总数100,原来显示001修改为显示1
+                auto str = QString::number(index.row() + 1);
                 QFont font(font11);
                 QFontMetrics fm(font);
                 auto text = fm.elidedText(str, Qt::ElideMiddle, rect.width());

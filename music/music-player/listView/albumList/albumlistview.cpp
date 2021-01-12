@@ -392,8 +392,10 @@ QPixmap AlbumListView::getPlayPixmap(bool isSelect)
 void AlbumListView::onDoubleClicked(const QModelIndex &index)
 {
     AlbumInfo albumTmp = index.data(Qt::UserRole).value<AlbumInfo>();
-    musciListDialog->flushDialog(albumTmp.musicinfos, true);
-    musciListDialog->exec();
+    // 修改为二级页面,去掉dialog
+//    musciListDialog->flushDialog(albumTmp.musicinfos, true);
+//    musciListDialog->exec();
+    emit CommonService::getInstance()->signalShowSubSonglist(albumTmp.musicinfos, true);
 }
 
 void AlbumListView::slotCoverUpdate(const MediaMeta &meta)

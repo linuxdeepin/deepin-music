@@ -41,6 +41,8 @@ class QShortcut;
 class DequalizerDialog;
 class PlayQueueWidget;
 class QSystemTrayIcon;
+class SubSonglistWidget;
+class MediaMeta;
 class MainFrame : public DMainWindow
 {
     Q_OBJECT
@@ -65,10 +67,14 @@ private:
 
 private slots:
     void setThemeType(DGuiApplicationHelper::ColorType themeType);
+    // 左上角返回按钮点击
+    void slotLeftClicked();
     void slotSearchEditFoucusIn();
     void slotLyricClicked();
     void slotImportFinished(QString hash, int successCount);
     void slotImportFailed();
+    // 添加新建歌单
+    void slotAddNewSongList();
     void slotShortCutTriggered();
     void slotMenuTriggered(QAction *action);
     void slotSwitchTheme();
@@ -78,6 +84,8 @@ private slots:
     void slotAutoPlay(bool bremb);
     // 文管打开文件
     void slotPlayFromFileMaganager();
+    // 显示二级页面
+    void slotShowSubSonglist(const QMap<QString, MediaMeta> &musicinfos, bool isAlbumDialog);
 protected:
     void showEvent(QShowEvent *event) Q_DECL_OVERRIDE;
     void resizeEvent(QResizeEvent *e) Q_DECL_OVERRIDE;
@@ -85,12 +93,14 @@ protected:
     void hideEvent(QHideEvent *event) Q_DECL_OVERRIDE;
 private:
     DTitlebar           *m_titlebar = nullptr;
+    DPushButton         *m_backBtn = nullptr;
     TitlebarWidget      *m_titlebarwidget = nullptr;
     FooterWidget        *m_footerWidget = nullptr;
     MusicContentWidget  *m_musicContentWidget = nullptr;
     SearchResult        *m_searchResult = nullptr;
     MusicLyricWidget    *m_musicLyricWidget = nullptr;
     ImportWidget        *m_importWidget = nullptr;
+    SubSonglistWidget   *m_subSonglistWidget = nullptr;
     DequalizerDialog    *m_dequalizerDialog = nullptr;
     PlayQueueWidget     *m_playQueueWidget = nullptr;
     DWidget             *m_popupMessage = nullptr;

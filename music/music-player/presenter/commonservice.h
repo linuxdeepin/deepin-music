@@ -56,6 +56,8 @@ signals:
     void signalPlayQueueClosed();
     // 切换歌单时，清空搜索栏
     void signalClearEdit();
+    // 双击专辑或者演唱者，显示二级页面
+    void signalShowSubSonglist(const QMap<QString, MediaMeta> &musicinfos, bool isAlbumDialog);
 private:
     explicit CommonService();
     friend class DMusic::DSingleton<CommonService>;

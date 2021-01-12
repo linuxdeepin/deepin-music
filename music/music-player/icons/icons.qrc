@@ -35,5 +35,6 @@
         <file>actions/cover_max_200px.svg</file>
         <file>texts/text_add_215px.svg</file>
         <file>texts/text_close_round_200px.svg</file>
+        <file>texts/left_arrow_24px.svg</file>
     </qresource>
 </RCC>

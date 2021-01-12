@@ -415,7 +415,8 @@ void AlbumDataDelegate::drawListMode(QPainter &painter, const QStyleOptionViewIt
         painter.setPen(otherColor);
         QRect numRect(lrWidth, option.rect.y(), 40, option.rect.height());
         painter.setFont(font11);
-        auto str = QString("%1").arg(index.row() + 1, rowCountSize, 10, QLatin1Char('0'));
+        // 序号显示由001改为1
+        QString str = QString::number(index.row() + 1);
         QFont font(font11);
         QFontMetrics fm(font);
         auto text = fm.elidedText(str, Qt::ElideMiddle, numRect.width());

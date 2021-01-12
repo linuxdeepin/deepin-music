@@ -502,8 +502,10 @@ void SingerListView::slotScrollToCurrentPosition(QString songlistHash)
 void SingerListView::onDoubleClicked(const QModelIndex &index)
 {
     SingerInfo signerTmp = index.data(Qt::UserRole).value<SingerInfo>();
-    musicListDialog->flushDialog(signerTmp.musicinfos, false);
-    musicListDialog->exec();
+    // 原来的弹框修改为显示二级菜单
+//    musicListDialog->flushDialog(signerTmp.musicinfos, false);
+//    musicListDialog->exec();
+    emit CommonService::getInstance()->signalShowSubSonglist(signerTmp.musicinfos, false);
 }
 
 void SingerListView::slotCoverUpdate(const MediaMeta &meta)

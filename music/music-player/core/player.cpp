@@ -473,9 +473,11 @@ void Player::stop()
 {
     //play停止后，发送清空当前波形图的信号
     emit signalMediaStop("");//不用当前的参数
-    m_qvplayer->pause();
-    setActiveMeta(MediaMeta());//清除当前播放音乐；
-    m_qvplayer->stop();
+    if (m_qvplayer) {
+        m_qvplayer->pause();
+        setActiveMeta(MediaMeta());//清除当前播放音乐；
+        m_qvplayer->stop();
+    }
 
     QVariantMap metadata;
     m_mpris->setMetadata(metadata);

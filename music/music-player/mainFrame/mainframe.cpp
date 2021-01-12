@@ -63,6 +63,7 @@
 #include "dequalizerdialog.h"
 #include "closeconfirmdialog.h"
 #include "playqueuewidget.h"
+#include "subsonglistwidget.h"
 DWIDGET_USE_NAMESPACE
 
 const QString s_PropertyViewname = "viewname";
@@ -95,10 +96,23 @@ MainFrame::MainFrame()
 
     m_titlebar->setCustomWidget(m_titlebarwidget);
     m_titlebar->layout()->setAlignment(m_titlebarwidget, Qt::AlignCenter);
+    m_backBtn = new DPushButton(this);
+    AC_SET_OBJECT_NAME(m_backBtn, AC_titleBarLeft);
+    AC_SET_ACCESSIBLE_NAME(m_backBtn, AC_titleBarLeft);
+    m_backBtn->setVisible(false);
+    m_backBtn->setFixedSize(QSize(36, 36));
+    m_backBtn->setIcon(QIcon::fromTheme("left_arrow"));
+    m_titlebar->addWidget(m_backBtn, Qt::AlignLeft);
     m_titlebar->resize(width(), 50);
+    // 返回按钮点击
+    connect(m_backBtn, &DPushButton::clicked,
+            this, &MainFrame::slotLeftClicked);
 
     connect(m_titlebarwidget, &TitlebarWidget::sigSearchEditFoucusIn,
             this, &MainFrame::slotSearchEditFoucusIn);
+    // 添加自定义歌单
+    connect(CommonService::getInstance(), &CommonService::signalAddNewSongList,
+            this, &MainFrame::slotAddNewSongList);
     // 导入成功
     connect(DataBaseService::getInstance(), &DataBaseService::signalImportFinished,
             this, &MainFrame::slotImportFinished);
@@ -153,13 +167,15 @@ void MainFrame::initUI(bool showLoading)
     m_musicContentWidget = new MusicContentWidget(this);
     m_musicContentWidget->setVisible(showLoading);
 
+    m_subSonglistWidget = new SubSonglistWidget("", this);
+    m_subSonglistWidget->setVisible(false);
+
     m_footerWidget = new FooterWidget(this);
     m_footerWidget->setVisible(showLoading);
     connect(m_footerWidget, SIGNAL(lyricClicked()), this, SLOT(slotLyricClicked()));
 
     m_importWidget = new ImportWidget(this);
     m_importWidget->setVisible(!showLoading);
-
 
     m_musicLyricWidget = new MusicLyricWidget(this);
     m_musicLyricWidget->hide();
@@ -172,6 +188,9 @@ void MainFrame::initUI(bool showLoading)
     /*---------------menu&shortcut-------------------*/
     initMenuAndShortcut();
     m_newSonglistAction->setEnabled(showLoading);
+    // 添加新建歌单
+    connect(CommonService::getInstance(), &CommonService::signalShowSubSonglist,
+            this, &MainFrame::slotShowSubSonglist);
 
     connect(DataBaseService::getInstance(), &DataBaseService::signalAllMusicCleared,
             this, &MainFrame::slotAllMusicCleared);
@@ -401,6 +420,12 @@ void MainFrame::setThemeType(DGuiApplicationHelper::ColorType themeType)
     }
 }
 
+void MainFrame::slotLeftClicked()
+{
+    m_subSonglistWidget->setVisible(false);
+    m_backBtn->setVisible(false);
+}
+
 void MainFrame::slotSearchEditFoucusIn()
 {
     m_titlebarwidget->slotSearchEditFoucusIn();
@@ -462,6 +487,12 @@ void MainFrame::slotImportFailed()
     if (0 == warnDlg.exec()) {
         return;
     }
+}
+
+void MainFrame::slotAddNewSongList()
+{
+    m_backBtn->setVisible(false);
+    m_subSonglistWidget->setVisible(false);
 }
 
 void MainFrame::slotShortCutTriggered()
@@ -615,6 +646,13 @@ void MainFrame::slotPlayFromFileMaganager()
     emit Player::getInstance()->signalPlayListChanged();
 }
 
+void MainFrame::slotShowSubSonglist(const QMap<QString, MediaMeta> &musicinfos, bool isAlbumDialog)
+{
+    m_backBtn->setVisible(true);
+    m_subSonglistWidget->flushDialog(musicinfos, isAlbumDialog);
+    m_subSonglistWidget->setVisible(true);
+}
+
 void MainFrame::showEvent(QShowEvent *event)
 {
     Q_UNUSED(event)
@@ -695,6 +733,10 @@ void MainFrame::resizeEvent(QResizeEvent *e)
 
     if (m_importWidget) {
         m_importWidget->setFixedSize(newSize);
+    }
+
+    if (m_subSonglistWidget) {
+        m_subSonglistWidget->setFixedSize(newSize);
     }
 
     if (m_footerWidget) {

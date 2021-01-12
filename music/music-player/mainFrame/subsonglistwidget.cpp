@@ -19,7 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "musiclistdialog.h"
+#include "subsonglistwidget.h"
 
 #include <QDebug>
 #include <QFileInfo>
@@ -38,10 +38,10 @@
 #include "dialogList/musiclistinfoview.h"
 #include "ac-desktop-define.h"
 #include "player.h"
-
+#include "musiclistdialog.h"
 DWIDGET_USE_NAMESPACE
 
-void MusicListDialog::initUI()
+void SubSonglistWidget::initUI()
 {
     setAutoFillBackground(true);
     auto palette = this->palette();
@@ -49,46 +49,32 @@ void MusicListDialog::initUI()
     palette.setColor(DPalette::Window, BackgroundColor);
     setPalette(palette);
 
-    auto layout = new QVBoxLayout(this);
-    layout->setSpacing(0);
-    layout->setContentsMargins(0, 10, 0, 0);
+    QVBoxLayout *mainLayout = new QVBoxLayout(this);
+    mainLayout->setSpacing(0);
+    mainLayout->setContentsMargins(0, 50, 0, 0);
 
-
-    m_titleImage = new DLabel;
-    m_titleImage->setFixedSize(480, 130);
+    m_titleImage = new QLabel;
     m_titleImage->setForegroundRole(DPalette::BrightText);
-
+    m_titleImage->setFixedHeight(150);
     QPixmap m_bgImage = DHiDPIHelper::loadNxPixmap(":/common/image/cover_max.svg");
     setTitleImage(m_bgImage);
+    mainLayout->addWidget(m_titleImage, 0);
 
-
-    auto closeLayout = new QHBoxLayout(m_titleImage);
-    closeLayout->setSpacing(0);
-    closeLayout->setContentsMargins(0, 5, 5, 0);
-
-    auto titleLayout = new QVBoxLayout(m_titleImage);
-    titleLayout->setSpacing(0);
-    titleLayout->setContentsMargins(28, 10, 0, 18);
-
-    m_closeBt = new DIconButton(this);
-    m_closeBt->setIcon(QIcon::fromTheme("text_close_round"));
-    m_closeBt->setEnabledCircle(true);
-    m_closeBt->setIconSize(QSize(20, 20));
-    m_closeBt->setFixedSize(24, 24);
+    QVBoxLayout *titleLayout = new QVBoxLayout(m_titleImage);
+    titleLayout->setSpacing(5);
+    titleLayout->setContentsMargins(28, 15, 0, 20);
 
     m_titleLabel = new DLabel();
     m_titleLabel->setForegroundRole(DPalette::BrightText);
-
+    titleLayout->addWidget(m_titleLabel, 1);
     m_infoLabel = new DLabel();
     m_infoLabel->setForegroundRole(DPalette::BrightText);
+    titleLayout->addWidget(m_infoLabel, 1);
 
-    auto textLayout = new QVBoxLayout(m_titleImage);
-    textLayout->setSpacing(0);
-    textLayout->setContentsMargins(0, 5, 0, 5);
-
-    auto btLayout = new QHBoxLayout(m_titleImage);
-    btLayout->setSpacing(0);
-    btLayout->setContentsMargins(0, 0, 0, 0);
+    QHBoxLayout *btLayout = new QHBoxLayout(m_titleImage);
+    btLayout->setSpacing(5);
+    btLayout->setContentsMargins(0, 16, 0, 0);
+    titleLayout->addLayout(btLayout, 1);
 
     m_btPlayAll = new DPushButton;
     auto btPlayAllFont = m_btPlayAll->font();
@@ -101,9 +87,10 @@ void MusicListDialog::initUI()
     m_btPlayAll->setPalette(playAllPalette);
     m_btPlayAll->setIcon(QIcon(":/mpimage/light/normal/play_all_normal.svg"));
     m_btPlayAll->setText(MusicListDialog::tr("Play All"));
-    m_btPlayAll->setFixedHeight(30);
     m_btPlayAll->setFocusPolicy(Qt::NoFocus);
     m_btPlayAll->setIconSize(QSize(18, 18));
+    m_btPlayAll->setFixedSize(QSize(100, 30));
+    btLayout->addWidget(m_btPlayAll, 1);
 
     m_btRandomPlay = new DPushButton;
     m_btRandomPlay->setFont(btPlayAllFont);
@@ -114,66 +101,60 @@ void MusicListDialog::initUI()
     m_btRandomPlay->setPalette(randomPlayPalette);
     m_btRandomPlay->setIcon(QIcon(":/mpimage/light/normal/random_play_normal.svg"));
     m_btRandomPlay->setText(MusicListDialog::tr("Shuffle"));
-    m_btRandomPlay->setFixedHeight(30);
     m_btRandomPlay->setFocusPolicy(Qt::NoFocus);
     m_btRandomPlay->setIconSize(QSize(18, 18));
-
-    btLayout->addWidget(m_btPlayAll);
-    btLayout->addSpacing(10);
-    btLayout->addWidget(m_btRandomPlay);
-    btLayout->addStretch(100);
+    m_btRandomPlay->setFixedSize(QSize(100, 30));
+    btLayout->addWidget(m_btRandomPlay, 1);
+    btLayout->addStretch();
 
     AC_SET_OBJECT_NAME(m_btPlayAll, AC_dialogPlayAll);
     AC_SET_ACCESSIBLE_NAME(m_btPlayAll, AC_dialogPlayAll);
     AC_SET_OBJECT_NAME(m_btRandomPlay, AC_dialogPlayRandom);
     AC_SET_ACCESSIBLE_NAME(m_btRandomPlay, AC_dialogPlayRandom);
 
-
-//    titleLayout->addWidget(closeBt, 0, Qt::AlignTop | Qt::AlignRight);
     m_titleLabel->setContentsMargins(0, 0, 0, 0);
-    textLayout->addWidget(m_titleLabel, 0, Qt::AlignVCenter);
-    textLayout->addWidget(m_infoLabel, 0, Qt::AlignVCenter);
-    titleLayout->addLayout(textLayout, 1);
-    titleLayout->addLayout(btLayout, 0);
-
-    closeLayout->addLayout(titleLayout);
-    closeLayout->addWidget(m_closeBt, 0, Qt::AlignTop | Qt::AlignRight);
-
-    AC_SET_OBJECT_NAME(m_closeBt, AC_musicListDialogCloseBt);
-    AC_SET_ACCESSIBLE_NAME(m_closeBt, AC_musicListDialogCloseBt);
 
     m_musicListInfoView = new MusicListInfoView(hash);
+    AC_SET_OBJECT_NAME(m_musicListInfoView, AC_musicListInfoView);
+    AC_SET_ACCESSIBLE_NAME(m_musicListInfoView, AC_musicListInfoView);
+    mainLayout->addWidget(m_musicListInfoView, 1);
+    mainLayout->addStretch();
 
-    layout->addWidget(m_titleImage, 0, Qt::AlignTop | Qt::AlignCenter);
-    layout->addWidget(m_musicListInfoView);
-
-    // 需求改动，这个页面不再使用，标签先注释，后期删除这个文件
-//    AC_SET_OBJECT_NAME(m_musicListInfoView, AC_musicListInfoView);
-//    AC_SET_ACCESSIBLE_NAME(m_musicListInfoView, AC_musicListInfoView);
-
-//    infoDialog = new InfoDialog(q);
-//    infoDialog->hide();
-
-    connect(m_btPlayAll, &DPushButton::pressed, this, &MusicListDialog::slotPlayAllClicked);
-    connect(m_btRandomPlay, &DPushButton::pressed, this, &MusicListDialog::slotPlayRandomClicked);
-    connect(m_closeBt, &DIconButton::pressed, this, &DAbstractDialog::close);
+    connect(m_btPlayAll, &DPushButton::pressed, this, &SubSonglistWidget::slotPlayAllClicked);
+    connect(m_btRandomPlay, &DPushButton::pressed, this, &SubSonglistWidget::slotPlayRandomClicked);
 }
 
-MusicListDialog::MusicListDialog(const QString &hash, QWidget *parent)
-    : DAbstractDialog(parent)
+void SubSonglistWidget::resizeEvent(QResizeEvent *e)
+{
+    m_titleImage->setFixedWidth(this->width());
+
+    QImage img = m_img.scaled(this->width(), 200, Qt::KeepAspectRatioByExpanding).toImage();
+    QPainter pai(&img);
+    pai.setRenderHints(QPainter::Antialiasing | QPainter::HighQualityAntialiasing | QPainter::SmoothPixmapTransform);
+    QColor fillColor("#FFFFFF");
+    fillColor.setAlphaF(0.6);
+    pai.setBrush(fillColor);
+    QRect rect = img.rect();
+    rect.adjust(-5, 0, 5, 0);
+    pai.drawRect(rect);
+    m_titleImage->setPixmap(QPixmap::fromImage(img));
+}
+
+SubSonglistWidget::SubSonglistWidget(const QString &hash, QWidget *parent)
+    : DFrame(parent)
     , hash(hash)
 {
-    resize(500, 500);
-
+    AC_SET_OBJECT_NAME(this, AC_subSonglistWidget);
+    AC_SET_ACCESSIBLE_NAME(this, AC_subSonglistWidget);
     initUI();
 }
 
-MusicListDialog::~MusicListDialog()
+SubSonglistWidget::~SubSonglistWidget()
 {
 
 }
 
-void MusicListDialog::setThemeType(int type)
+void SubSonglistWidget::setThemeType(int type)
 {
     m_themeType = type;
 
@@ -255,7 +236,7 @@ void MusicListDialog::setThemeType(int type)
 //    infoDialog->setThemeType(type);
 }
 
-void MusicListDialog::flushDialog(QMap<QString, MediaMeta> musicinfos, int isAlbumDialog)
+void SubSonglistWidget::flushDialog(QMap<QString, MediaMeta> musicinfos, int isAlbumDialog)
 {
     if (musicinfos.size() > 0) {
         auto titleFont = m_titleLabel->font();
@@ -298,7 +279,7 @@ void MusicListDialog::flushDialog(QMap<QString, MediaMeta> musicinfos, int isAlb
     }
 }
 
-void MusicListDialog::slotPlayAllClicked()
+void SubSonglistWidget::slotPlayAllClicked()
 {
     QList<MediaMeta> musicList = m_musicListInfoView->getMusicListData();
     if (musicList.size() > 0) {
@@ -310,7 +291,7 @@ void MusicListDialog::slotPlayAllClicked()
     }
 }
 
-void MusicListDialog::slotPlayRandomClicked()
+void SubSonglistWidget::slotPlayRandomClicked()
 {
     QList<MediaMeta> musicList = m_musicListInfoView->getMusicListData();
     if (musicList.size() > 0) {
@@ -323,37 +304,22 @@ void MusicListDialog::slotPlayRandomClicked()
     }
 }
 
-void MusicListDialog::setTitleImage(QPixmap &img)
+void SubSonglistWidget::setTitleImage(QPixmap &img)
 {
-    img = img.scaled(480, 130, Qt::KeepAspectRatioByExpanding);
+    m_img = img;
+    img = img.scaled(this->width(), 200, Qt::KeepAspectRatioByExpanding);
 
     QPainter pai(&img);
     pai.setRenderHints(QPainter::Antialiasing | QPainter::HighQualityAntialiasing | QPainter::SmoothPixmapTransform);
 
     QColor fillColor("#FFFFFF");
-    if (m_themeType != 1) {
-        fillColor = QColor("#000000");
-    }
-    fillColor.setAlphaF(0.3);
+    fillColor.setAlphaF(0.6);
     pai.setBrush(fillColor);
-
-    QColor penColor("#000000");
-    penColor.setAlphaF(0.08);
-    QPen pen(penColor, 2);
-    pai.setPen(pen);
-    pai.drawRect(img.rect());
-
-
-    QBitmap bmp(m_titleImage->size());
-    bmp.fill();
-    QPainter p(&bmp);
-    p.setRenderHints(QPainter::Antialiasing | QPainter::HighQualityAntialiasing | QPainter::SmoothPixmapTransform);
-    p.setPen(Qt::NoPen);
-    p.setBrush(Qt::black);
-    p.drawRoundedRect(bmp.rect().adjusted(0, 0, 0, 5), 9, 9);
+    QRect rect = img.rect();
+    rect.adjust(-5, 0, 5, 0);
+    pai.drawRect(rect);
 
     m_titleImage->setPixmap(img);
-    m_titleImage->setMask(bmp);
 }
 
 

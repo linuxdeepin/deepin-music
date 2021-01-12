@@ -10,7 +10,7 @@
 #include <QString>
 #include <QObject>
 
-//#define SELECT_CASE "musicListDialg9"
+//#define SELECT_CASE "musicListDialg8"
 
 #ifdef SELECT_CASE
 #define TEST_CASE_NAME(testName) if(testName != SELECT_CASE) return;
@@ -98,7 +98,7 @@
 #define AC_singerView                 "singerView"
 #define AC_albumView                  "albumtView"
 #define AC_musicListDialogSinger      "musicListDialogSinger"
-#define AC_musicListDialogAlbum       QObject::tr("musicListDialogAlbum")
+#define AC_musicListDialogAlbum       "musicListDialogAlbum"
 #define AC_titleMenu                  "titleMenu"
 #define AC_equalizerAction            "equalizerAction"
 #define AC_settingsAction             "settingsAction"
@@ -110,6 +110,8 @@
 #define AC_searchResultTabWidget      "searchResultTabWidget"
 #define AC_dialogPlayAll              "dialogPlayAll"
 #define AC_dialogPlayRandom           "dialogPlayRandom"
+#define AC_subSonglistWidget          "subSonglistWidget"
+#define AC_titleBarLeft               "titleBarLeft"
 
 
 #endif // DESKTOP_ACCESSIBLE_UI_DEFINE_H

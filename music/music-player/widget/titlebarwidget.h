@@ -43,5 +43,4 @@ protected:
     virtual void resizeEvent(QResizeEvent *event) Q_DECL_OVERRIDE;
 public:
     SearchEdit *m_search;
-
 };

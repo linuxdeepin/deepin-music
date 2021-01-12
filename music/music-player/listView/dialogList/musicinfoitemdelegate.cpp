@@ -241,12 +241,6 @@ void MusicInfoItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
     }
 
     auto hash = index.data().toString();
-//    auto meta = MediaLibrary::instance()->meta(hash);
-//    if (meta.isNull()) {
-//        QString msg = "can not find " + hash;
-//        qWarning() << msg;
-//        return;
-//    }
 
     QColor nameColor("#090909"), otherColor("#000000");
     otherColor.setAlphaF(0.5);
@@ -281,11 +275,6 @@ void MusicInfoItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
     if (option.state & QStyle::State_Selected) {
         painter->save();
         painter->setPen(Qt::NoPen);
-//        QColor selectColor("#000000");
-//        if (listview->getThemeType() == 2) {
-//            selectColor = QColor("#FFFFFF");
-//        }
-//        selectColor.setAlphaF(0.2);
         QColor selectColor(option.palette.highlight().color());
         painter->setBrush(selectColor);
         QRect selecteColorRect = option.rect.adjusted(lrWidth, 0, -lrWidth, 0);
@@ -294,14 +283,7 @@ void MusicInfoItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
 
         nameColor = option.palette.highlightedText().color();
         otherColor = option.palette.highlightedText().color();
-    }/* else if ((index.row() % 2) == 0) {
-        painter->save();
-        painter->setPen(Qt::NoPen);
-        painter->setBrush(alternateBaseColor);
-        QRect selecteColorRect = option.rect.adjusted(5, 0, -5, 0);
-        painter->drawRoundedRect(selecteColorRect, 8, 8);
-        painter->restore();
-    }*/
+    }
 
     if (option.state & QStyle::State_MouseOver) {
         painter->save();
@@ -314,8 +296,6 @@ void MusicInfoItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
         painter->drawRoundedRect(selecteColorRect, 8, 8);
         painter->restore();
     }
-
-    //painter->fillRect(option.rect, background);
 
     int rowCount = listview->model()->rowCount();
     auto rowCountSize = QString::number(rowCount).size();
@@ -361,7 +341,8 @@ void MusicInfoItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
 
             } else {
                 painter->setFont(font11);
-                auto str = QString("%1").arg(index.row() + 1, rowCountSize, 10, QLatin1Char('0'));
+                // 显示由原来的001修改为1
+                QString str = QString::number(index.row() + 1);
                 QFont font(font11);
                 QFontMetrics fm(font);
                 auto text = fm.elidedText(str, Qt::ElideMiddle, rect.width());
