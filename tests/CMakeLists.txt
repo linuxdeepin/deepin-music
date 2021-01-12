@@ -116,4 +116,3 @@ endif()
 find_package(Qt5 REQUIRED ${QtModule})
 
 add_subdirectory(../music build)
-add_subdirectory(googletest)

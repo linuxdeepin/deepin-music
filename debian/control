@@ -4,7 +4,7 @@ Priority: extra
 Maintainer: Deepin Packages Builder <packages@deepin.com>
 Build-Depends: 
  cmake,
- debhelper,
+ debhelper (>= 11),
  libavutil-dev,
  libavcodec-dev,
  libavformat-dev,
@@ -28,9 +28,11 @@ Build-Depends:
  qtmultimedia5-dev,
  qttools5-dev,
  qttools5-dev-tools,
- libdframeworkdbus-dev
-Standards-Version: 3.9.8
+ libdframeworkdbus-dev,
+ libgmock-dev 
+Standards-Version: 4.5.1
 Homepage: http://www.deepin.org/
+
 
 Package: deepin-music
 Architecture: any

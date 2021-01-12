@@ -143,7 +143,8 @@ LINK_DIRECTORIES(${CMAKE_BINARY_DIR}/music/libdmusic/)
 target_link_libraries(${CMD_NAME} ${TARGET_LIBS} )
 
 if(ISTEST MATCHES "1")
-    target_link_libraries(${CMD_NAME} gmock gmock_main gtest gtest_main)
+    set(GTEST_LIBS gmock  gtest)
+    target_link_libraries(${CMD_NAME} ${GTEST_LIBS})
 endif()
 
 # ------------------------------- install script -------------------------------

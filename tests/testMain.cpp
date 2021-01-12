@@ -8,11 +8,9 @@
 
 #include <gtest/gtest.h>
 #include <gmock/gmock-matchers.h>
+#include <AbstractAppender.h>
 #include <DApplication>
-//#include <QApplication>
 
-//#include "musicapp.h"
-//#include "mainframe.h"
 #include "core/musicsettings.h"
 #include "application.h"
 #include "mainframe.h"
@@ -83,7 +81,11 @@ QTestMain::~QTestMain()
 void QTestMain::testGTest()
 {
     testing::GTEST_FLAG(output) = "xml:./report/report_deepin-music.xml";
-    testing::InitGoogleTest();
+    int argc = 1;
+    const auto arg0 = "dummy";
+    char *argv0 = const_cast<char *>(arg0);
+    char **argv = &argv0;
+    testing::InitGoogleTest(&argc, argv);
     int ret = RUN_ALL_TESTS();
     __sanitizer_set_report_path("./asan_deepin-music.log");//内存检测输出
     Player::getInstance()->stop();
