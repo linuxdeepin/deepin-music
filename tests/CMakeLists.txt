@@ -115,4 +115,4 @@ endif()
 #先查找到这些qt相关的模块以供链接使用
 find_package(Qt5 REQUIRED ${QtModule})
 
-add_subdirectory(../music build)
+add_subdirectory(../src build)

@@ -115,8 +115,8 @@ set_directory_properties(PROPERTIES CLEAN_NO_CUSTOM 1)
 
 file(GLOB TS LIST_DIRECTORIES false ./translations/${CMD_NAME}*.ts)
 set_source_files_properties(${TS}
-    PROPERTIES OUTPUT_LOCATION ${PROJECT_SOURCE_DIR}/music/music-player/translations)
-set(translate ${PROJECT_SOURCE_DIR}/music/music-player/translations)
+    PROPERTIES OUTPUT_LOCATION ${PROJECT_SOURCE_DIR}/src/music-player/translations)
+set(translate ${PROJECT_SOURCE_DIR}/src/music-player/translations)
 
 if (NOT (${CMAKE_BUILD_TYPE} MATCHES "Debug"))
     qt5_create_translation(Translate1 ${allSource} ${TS} OPTIONS -source-language en_US -no-obsolete)
@@ -136,7 +136,7 @@ qt5_use_modules(${CMD_NAME} ${QtModule})
 set(TARGET_LIBS Qt5::Widgets Qt5::Core Qt5::Gui Qt5::DBus  Qt5::Sql Qt5::Svg Qt5::Multimedia Qt5::Xml
      PkgConfig::AV PkgConfig::Dtk PkgConfig::qgsettings icui18n
     PkgConfig::MPRIS PkgConfig::DBusextended pthread dmusic)
-LINK_DIRECTORIES(${CMAKE_BINARY_DIR}/music/libdmusic/)
+LINK_DIRECTORIES(${CMAKE_BINARY_DIR}/src/libdmusic/)
 
 
 #将第三方库链接进来(注意 *_LIBRARIES)
@@ -150,13 +150,13 @@ endif()
 # ------------------------------- install script -------------------------------
 install(TARGETS ${CMD_NAME} DESTINATION bin)
 # install Translation files:
-install(DIRECTORY ${PROJECT_SOURCE_DIR}/music/music-player/translations
+install(DIRECTORY ${PROJECT_SOURCE_DIR}/src/music-player/translations
     DESTINATION share/${CMD_NAME}
     FILES_MATCHING PATTERN "*.qm")
 #install(FILES ${Translate1} DESTINATION share/${CMD_NAME})
 # install Desktop icon
-install(FILES ${PROJECT_SOURCE_DIR}/music/music-player/data/deepin-music.desktop
+install(FILES ${PROJECT_SOURCE_DIR}/src/music-player/data/deepin-music.desktop
     DESTINATION share/applications)
 # install Manual App icon
-install(FILES ${PROJECT_SOURCE_DIR}/music/music-player/resource/theme/common/image/deepin-music.svg
+install(FILES ${PROJECT_SOURCE_DIR}/src/music-player/resource/theme/common/image/deepin-music.svg
     DESTINATION share/icons/hicolor/scalable/apps)

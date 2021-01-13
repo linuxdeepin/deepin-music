@@ -53,4 +53,4 @@ find_package(Qt5 REQUIRED ${QtModule})
 
 configure_file(${PROJECT_SOURCE_DIR}/config.h.in ${PROJECT_BINARY_DIR}/config.h @ONLY)
 
-add_subdirectory(music)
+add_subdirectory(src)
