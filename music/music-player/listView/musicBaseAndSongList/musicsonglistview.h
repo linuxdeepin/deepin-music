@@ -23,20 +23,27 @@
 
 #include <DListView>
 #include <QDomElement>
+#include <DLineEdit>
 
 DWIDGET_USE_NAMESPACE
 
 class MusicBaseAndSonglistModel;
 class QShortcut;
-//自定义歌单列表
+// 自定义歌单列表
 class MusicSongListView : public DListView
 {
     Q_OBJECT
 public:
+    // Item高度
+    static constexpr int ItemHeight = 40;
+    // Item编辑状态边距
+    static constexpr int ItemEditMargin = 5;
+    // Icon边长
+    static constexpr int ItemIconSide = 20;
+public:
     explicit MusicSongListView(QWidget *parent = Q_NULLPTR);
     ~MusicSongListView() override;
 
-    void init();
     void showContextMenu(const QPoint &pos);
     void adjustHeight();
     bool getHeightChangeToMax();
@@ -49,15 +56,17 @@ public slots:
     void rmvSongList();
     void slotUpdatePlayingIcon();
     void slotMenuTriggered(QAction *action);
+    void slotCurrentChanged(const QModelIndex &cur, const QModelIndex &pre);
+    void slotDoubleClicked(const QModelIndex &index);
+    // 重命名完成
+    void slotLineEditingFinished();
 signals:
     void sigAddNewSongList();
     void sigRmvSongList();
     void currentChanged(const QModelIndex &current, const QModelIndex &previous) Q_DECL_OVERRIDE;
 
 protected:
-//    virtual void startDrag(Qt::DropActions supportedActions) Q_DECL_OVERRIDE;
-    void mousePressEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
-    void closeEditor(QWidget *editor, QAbstractItemDelegate::EndEditHint hint) Q_DECL_OVERRIDE;
+    void resizeEvent(QResizeEvent *event) Q_DECL_OVERRIDE;
     // 实现delete快捷操作
     void keyReleaseEvent(QKeyEvent *event) Q_DECL_OVERRIDE;
     void dragEnterEvent(QDragEnterEvent *event) Q_DECL_OVERRIDE;
@@ -65,14 +74,21 @@ protected:
     void dropEvent(QDropEvent *event) Q_DECL_OVERRIDE;
 private:
     // 初始化快捷键
+    void init();
+    // 初始化快捷键
     void initShortcut();
+    // 初始化重命名控件
+    void initRenameLineEdit();
     void SetAttrRecur(QDomElement elem, QString strtagname, QString strattr, QString strattrval);
     QString newDisplayName();
+
 private:
-    //    QList<PlaylistPtr >  allPlaylists;
     MusicBaseAndSonglistModel *model = nullptr;
     DStyledItemDelegate  *delegate        = nullptr;
-    //QStandardItem      *m_currentitem = nullptr;
+    // 当前选择的自定义歌单
+    DStandardItem        *m_curItem = nullptr;
+    // 重命名控件
+    DLineEdit            *m_renameLineEdit = nullptr;
     QPixmap              playingPixmap;
     QPixmap              albumPixmap;
     QPixmap              defaultPixmap;

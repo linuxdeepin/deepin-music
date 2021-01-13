@@ -50,6 +50,8 @@ DGUI_USE_NAMESPACE
 
 MusicSongListView::MusicSongListView(QWidget *parent) : DListView(parent)
 {
+    this->setEditTriggers(NoEditTriggers);
+
     model = new MusicBaseAndSonglistModel(this);
     setModel(model);
     delegate = new DStyledItemDelegate(this);
@@ -69,8 +71,8 @@ MusicSongListView::MusicSongListView(QWidget *parent) : DListView(parent)
     font.setWeight(QFont::Medium);
     setFont(font);
 
-    setIconSize(QSize(20, 20));
-    setItemSize(QSize(40, 40));
+    setIconSize(QSize(ItemIconSide, ItemIconSide));
+    setItemSize(QSize(ItemHeight, ItemHeight));
 
     setFrameShape(QFrame::NoFrame);
 
@@ -89,6 +91,7 @@ MusicSongListView::MusicSongListView(QWidget *parent) : DListView(parent)
 
     init();
     initShortcut();
+    initRenameLineEdit();
 
     connect(this, &MusicSongListView::clicked, this, [](QModelIndex midx) {
         qDebug() << "customize midx.row()" << midx.row();
@@ -98,28 +101,10 @@ MusicSongListView::MusicSongListView(QWidget *parent) : DListView(parent)
     connect(Player::getInstance(), &Player::signalUpdatePlayingIcon,
             this, &MusicSongListView::slotUpdatePlayingIcon);
 
-    connect(this, &MusicSongListView::triggerEdit,
-    this, [ = ](const QModelIndex & index) {
-        if (DGuiApplicationHelper::instance()->themeType() == 1) {
-            auto curStandardItem = dynamic_cast<DStandardItem *>(model->itemFromIndex(index));
-            curStandardItem->setIcon(QIcon(QString(":/mpimage/light/normal/famous_ballad_normal.svg")));
-        }
-    });
-
-    connect(this, &MusicSongListView::currentChanged,
-    this, [ = ](const QModelIndex & current, const QModelIndex & previous) {
-        Q_UNUSED(previous)
-        if (state() != EditingState) {
-            DStandardItem *curStandardItem = dynamic_cast<DStandardItem *>(model->itemFromIndex(current));
-            if (!curStandardItem) //最后一个自定义歌单删除，curStandardItem为空
-                return ;
-            QString name = curStandardItem->data(Qt::UserRole + 10).toString();
-            curStandardItem->setIcon(QIcon::fromTheme("music_famousballad"));
-        }
-    });
+    connect(this, &MusicSongListView::doubleClicked, this, &MusicSongListView::slotDoubleClicked);
+    connect(this, &MusicSongListView::currentChanged, this, &MusicSongListView::slotCurrentChanged);
 
     connect(CommonService::getInstance(), &CommonService::signalAddNewSongList, this, &MusicSongListView::addNewSongList);
-
 
     connect(DGuiApplicationHelper::instance(), &DGuiApplicationHelper::themeTypeChanged,
             this, &MusicSongListView::setThemeType);
@@ -145,9 +130,10 @@ void MusicSongListView::init()
             continue;
         }
         QString displayName = data.displayName;
-        auto item = new DStandardItem(QIcon::fromTheme("music_famousballad"), displayName);
+        DStandardItem *item = new DStandardItem(QIcon::fromTheme("music_famousballad"), displayName);
 
         item->setData(data.uuid, Qt::UserRole);
+
         if (DGuiApplicationHelper::instance()->themeType() == 1) {
             item->setForeground(QColor("#414D68"));
         } else {
@@ -156,7 +142,7 @@ void MusicSongListView::init()
         model->appendRow(item);
     }
 
-    setMinimumHeight(model->rowCount() * 40);
+    setMinimumHeight(model->rowCount() * ItemHeight);
 }
 
 void MusicSongListView::showContextMenu(const QPoint &pos)
@@ -200,7 +186,7 @@ void MusicSongListView::showContextMenu(const QPoint &pos)
 
 void MusicSongListView::adjustHeight()
 {
-    setMinimumHeight(model->rowCount() * 40);
+    setMinimumHeight(model->rowCount() * ItemHeight);
 }
 
 bool MusicSongListView::getHeightChangeToMax()
@@ -210,26 +196,28 @@ bool MusicSongListView::getHeightChangeToMax()
 
 void MusicSongListView::addNewSongList()
 {
-    //close editor
-    for (int i = 0; i < model->rowCount(); i++) {
-        auto item = model->index(i, 0);
-        if (this->isPersistentEditorOpen(item))
-            closePersistentEditor(item);
-    }
+// 编辑功能逻辑变更，代码废弃
+//    //close editor
+//    for (int i = 0; i < model->rowCount(); i++) {
+//        auto item = model->index(i, 0);
+//        if (this->isPersistentEditorOpen(item))
+//            closePersistentEditor(item);
+//    }
+
     qDebug() << "new item";
     QIcon icon = QIcon::fromTheme("music_famousballad");
 
     QString displayName = newDisplayName(); //translation? from playlistmanager
-    auto item = new DStandardItem(icon, displayName);
+    DStandardItem *item = new DStandardItem(icon, displayName);
     if (DGuiApplicationHelper::instance()->themeType() == 1) {
         item->setForeground(QColor("#414D68"));
     } else {
         item->setForeground(QColor("#C0C6D4"));
     }
     model->appendRow(item);
-    setMinimumHeight(model->rowCount() * 40);
+    setMinimumHeight(model->rowCount() * ItemHeight);
     setCurrentIndex(model->indexFromItem(item));
-    edit(model->indexFromItem(item));
+    slotDoubleClicked(model->indexFromItem(item));
     scrollToBottom();
 
     //record to db
@@ -299,7 +287,7 @@ void MusicSongListView::slotUpdatePlayingIcon()
         }
         QString hash = index.data(Qt::UserRole).value<QString>();
         if (hash == Player::getInstance()->getCurrentPlayListHash()) {
-            QPixmap playingPixmap = QPixmap(QSize(20, 20));
+            QPixmap playingPixmap = QPixmap(ItemIconSide, ItemIconSide);
             playingPixmap.fill(Qt::transparent);
             QPainter painter(&playingPixmap);
             DTK_NAMESPACE::Gui::DPalette pa;// = this->palette();
@@ -308,7 +296,7 @@ void MusicSongListView::slotUpdatePlayingIcon()
             } else {
                 painter.setPen(pa.color(QPalette::Active, DTK_NAMESPACE::Gui::DPalette::Highlight));
             }
-            Player::getInstance()->playingIcon().paint(&painter, QRect(0, 0, 20, 20), Qt::AlignCenter, QIcon::Active, QIcon::On);
+            Player::getInstance()->playingIcon().paint(&painter, QRect(0, 0, ItemIconSide, ItemIconSide), Qt::AlignCenter, QIcon::Active, QIcon::On);
 
             QIcon playingIcon(playingPixmap);
             DViewItemActionList actionList = item->actionList(Qt::RightEdge);
@@ -316,7 +304,7 @@ void MusicSongListView::slotUpdatePlayingIcon()
                 actionList.first()->setIcon(playingIcon);
             } else {
                 actionList.clear();
-                auto viewItemAction = new DViewItemAction(Qt::AlignCenter, QSize(20, 20));
+                auto viewItemAction = new DViewItemAction(Qt::AlignCenter, QSize(ItemIconSide, ItemIconSide));
                 viewItemAction->setIcon(playingIcon);
                 actionList.append(viewItemAction);
                 dynamic_cast<DStandardItem *>(item)->setActionList(Qt::RightEdge, actionList);
@@ -328,7 +316,7 @@ void MusicSongListView::slotUpdatePlayingIcon()
                 actionList.first()->setIcon(playingIcon);
             } else {
                 actionList.clear();
-                auto viewItemAction = new DViewItemAction(Qt::AlignCenter, QSize(20, 20));
+                auto viewItemAction = new DViewItemAction(Qt::AlignCenter, QSize(ItemIconSide, ItemIconSide));
                 viewItemAction->setIcon(playingIcon);
                 actionList.append(viewItemAction);
                 dynamic_cast<DStandardItem *>(item)->setActionList(Qt::RightEdge, actionList);
@@ -349,40 +337,73 @@ void MusicSongListView::slotMenuTriggered(QAction *action)
     } else if (action->text() == tr("Pause")) {
         Player::getInstance()->pause();
     } else if (action->text() == tr("Rename")) {
-        edit(index);
+        slotDoubleClicked(index);
     } else if (action->text() == tr("Delete")) {
         rmvSongList();
     }
 }
 
-void MusicSongListView::mousePressEvent(QMouseEvent *event)
+void MusicSongListView::slotCurrentChanged(const QModelIndex &cur, const QModelIndex &pre)
 {
-    DListView::mousePressEvent(event);
+    m_curItem = dynamic_cast<DStandardItem *>(model->itemFromIndex(cur));
+    if (m_curItem) {
+        m_curItem->setIcon(QIcon::fromTheme("music_famousballad"));
+    }
+
+    DStandardItem *preStandardItem = dynamic_cast<DStandardItem *>(model->itemFromIndex(pre));
+    if (preStandardItem) {
+        preStandardItem->setIcon(QIcon::fromTheme("music_famousballad"));
+    }
 }
 
-void MusicSongListView::closeEditor(QWidget *editor, QAbstractItemDelegate::EndEditHint hint)
+void MusicSongListView::slotDoubleClicked(const QModelIndex &index)
 {
-    DListView::closeEditor(editor, hint);
-    DStandardItem *curItem = dynamic_cast<DStandardItem *>(model->itemFromIndex(currentIndex()));
-    if (!curItem)
+    m_curItem = dynamic_cast<DStandardItem *>(model->itemFromIndex(index));
+
+    if (!m_curItem)
         return;
-    QString uuid = currentIndex().data(Qt::UserRole).value<QString>();
-    //去重
+
+    m_renameLineEdit->setVisible(true);
+    m_renameLineEdit->move(50, m_curItem->row() * this->sizeHintForIndex(index).height() + ItemEditMargin);
+    m_renameLineEdit->setVisible(true);
+    m_renameLineEdit->lineEdit()->setText(m_curItem->text());
+    m_renameLineEdit->lineEdit()->selectAll();
+    m_renameLineEdit->lineEdit()->setFocus();
+}
+
+void MusicSongListView::slotLineEditingFinished()
+{
+    m_renameLineEdit->setVisible(false);
+
+    if (!m_curItem)
+        return;
+
+    m_curItem->setText(m_renameLineEdit->text());
+    QString uuid = m_curItem->data(Qt::UserRole).value<QString>();
+    // 歌单名去重
     for (int i = 0; i < model->rowCount() ; ++i) {
         DStandardItem *tmpItem = dynamic_cast<DStandardItem *>(model->itemFromIndex(model->index(i, 0)));
-        if (curItem->text().isEmpty() || (curItem->row() != tmpItem->row() && curItem->text() == tmpItem->text())) {
+        if (m_curItem->text().isEmpty() || (m_curItem->row() != tmpItem->row() && m_curItem->text() == tmpItem->text())) {
             QList<DataBaseService::PlaylistData> plist = DataBaseService::getInstance()->getCustomSongList();
             for (DataBaseService::PlaylistData data : plist) {
-                if (uuid == data.uuid)
-                    curItem->setText(data.displayName);//还原歌单名
+                if (uuid == data.uuid) {
+                    m_curItem->setText(data.displayName);// 还原歌单名
+                }
             }
-            curItem->setIcon(QIcon::fromTheme("music_famousballad"));
+            m_curItem->setIcon(QIcon::fromTheme("music_famousballad"));
             return;
         }
     }
 
-    DataBaseService::getInstance()->updatePlaylistDisplayName(curItem->text(), uuid);
-    curItem->setIcon(QIcon::fromTheme("music_famousballad"));
+    DataBaseService::getInstance()->updatePlaylistDisplayName(m_curItem->text(), uuid);
+    m_curItem->setIcon(QIcon::fromTheme("music_famousballad"));
+}
+
+void MusicSongListView::resizeEvent(QResizeEvent *event)
+{
+    Q_UNUSED(event)
+
+    m_renameLineEdit->resize(this->width() - 64, ItemHeight - ItemEditMargin * 2);
 }
 
 void MusicSongListView::keyReleaseEvent(QKeyEvent *event)
@@ -452,6 +473,15 @@ void MusicSongListView::dropEvent(QDropEvent *event)
     }
 
     DListView::dropEvent(event);
+}
+
+void MusicSongListView::initRenameLineEdit()
+{
+    m_renameLineEdit = new DLineEdit(this);
+    m_renameLineEdit->setVisible(false);
+    m_renameLineEdit->setClearButtonEnabled(false);
+
+    connect(m_renameLineEdit, &DLineEdit::editingFinished, this, &MusicSongListView::slotLineEditingFinished);
 }
 
 void MusicSongListView::initShortcut()
