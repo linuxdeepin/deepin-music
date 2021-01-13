@@ -73,8 +73,8 @@ private slots:
     void slotLyricClicked();
     void slotImportFinished(QString hash, int successCount);
     void slotImportFailed();
-    // 添加新建歌单
-    void slotAddNewSongList();
+    // 隐藏二级页面
+    void slotHideSubWidget();
     void slotShortCutTriggered();
     void slotMenuTriggered(QAction *action);
     void slotSwitchTheme();

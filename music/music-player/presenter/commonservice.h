@@ -58,6 +58,8 @@ signals:
     void signalClearEdit();
     // 双击专辑或者演唱者，显示二级页面
     void signalShowSubSonglist(const QMap<QString, MediaMeta> &musicinfos, bool isAlbumDialog);
+    // 隐藏二级页面
+    void signalHideSubSonglist();
 private:
     explicit CommonService();
     friend class DMusic::DSingleton<CommonService>;

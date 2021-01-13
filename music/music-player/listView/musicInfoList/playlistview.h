@@ -89,7 +89,7 @@ public slots:
 
     // 删除单个歌单中的歌曲
     void slotRemoveSingleSong(const QString &listHash, const QString &musicHash);
-    // 删除单个歌单中的歌曲
+    // 增加歌曲
     void slotAllMusicAddOne(MediaMeta addMeta);
     // 跳转到当前播放歌曲位置
     void slotScrollToCurrentPosition(QString songlistHash);

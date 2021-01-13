@@ -31,7 +31,6 @@
 #include "mediameta.h"
 #include "dboperate.h"
 #include "medialibrary.h"
-#include "player.h"
 #include "commonservice.h"
 static const QString DatabaseUUID = "0fcbd091-2356-161c-9026-f49779f9c71c40";
 
@@ -707,6 +706,22 @@ int DataBaseService::getPlaylistSortType(QString uuid)
         return sort_type;
     }
     return 0;
+}
+
+int DataBaseService::getPlaylistSongCount(QString uuid)
+{
+    int count = 0;
+    QString queryString = QString("SELECT count(*) FROM playlist_%1").arg(uuid);
+    QSqlQuery queryNew(m_db);
+    queryNew.prepare(queryString);
+    if (!queryNew.exec()) {
+        qCritical() << queryNew.lastError();
+        count = 0;
+    }
+    while (queryNew.next()) {
+        count = queryNew.value(0).toInt();
+    }
+    return count;
 }
 
 void DataBaseService::updateMetaCodec(const MediaMeta &meta)

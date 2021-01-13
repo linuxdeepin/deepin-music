@@ -403,6 +403,7 @@ void PlayListView::playListChange()
     }
     setAutoScroll(true);
     setUpdatesEnabled(true);
+    update();
 }
 
 //void PlayListView::setCurrentHash(QString hash)
@@ -532,7 +533,6 @@ void PlayListView::slotOnDoubleClicked(const QModelIndex &index)
     } else {
         playMusic(itemMeta);
     }
-
 }
 
 void PlayListView::slotUpdatePlayingIcon()
@@ -830,8 +830,7 @@ void PlayListView::slotPlayQueueMetaRemove(QString metaHash)
         QModelIndex mindex = m_model->index(i, 0, QModelIndex());
         MediaMeta meta = mindex.data(Qt::UserRole).value<MediaMeta>();
         if (meta.hash == metaHash) {
-            this->removeItem(i);
-            m_model->removeRow(row);
+            m_model->removeRow(i);
             update();
             break;
         }
@@ -928,13 +927,13 @@ void PlayListView::slotRmvFromSongList()
         //数据库中删除时有信号通知刷新界面
         if (!m_IsPlayQueue) {
             if (m_currentHash == "musicResult") {
-                //搜索结果中删除，等同与所有音乐中删除
+                //搜索结果中删除，等同于所有音乐中删除
                 DataBaseService::getInstance()->removeSelectedSongs("all", metaList, false);
             } else {
                 DataBaseService::getInstance()->removeSelectedSongs(m_currentHash, metaList, false);
             }
-            // 更新player中缓存的歌曲信息，如果存在正在播放的歌曲，停止播放
-            if (m_currentHash == "all") {
+            // 更新player中缓存的歌曲信息
+            if (m_currentHash == "all" || m_currentHash == Player::getInstance()->getCurrentPlayListHash()) {
                 Player::getInstance()->playRmvMeta(metaList);
             }
         } else {

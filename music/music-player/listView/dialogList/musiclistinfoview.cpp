@@ -342,8 +342,6 @@ void MusicListInfoView::slotRemoveSongListActionClicked(bool checked)
     warnDlg.setIcon(QIcon::fromTheme("deepin-music"));
     if (warnDlg.exec()) {
         DataBaseService::getInstance()->removeSelectedSongs("all", metaList, false);
-        // 更新player中缓存的歌曲信息，如果存在正在播放的歌曲，停止播放
-        Player::getInstance()->playRmvMeta(metaList);
     }
 }
 
@@ -385,12 +383,15 @@ void MusicListInfoView::slotDeleteLocalActionClicked(bool checked)
     warnDlg.setIcon(QIcon::fromTheme("deepin-music"));
     if (deleteFlag == warnDlg.exec()) {
         DataBaseService::getInstance()->removeSelectedSongs("all", strlist, true);
-        Player::getInstance()->playRmvMeta(strlist);
     }
 }
 
 void MusicListInfoView::slotRemoveSingleSong(const QString &listHash, const QString &musicHash)
 {
+    // 当前未显示不做处理
+    if (!this->isVisible()) {
+        return;
+    }
     if (listHash != "all") {
         return;
     }
@@ -405,6 +406,9 @@ void MusicListInfoView::slotRemoveSingleSong(const QString &listHash, const QStr
             this->viewport()->update();
             break;
         }
+    }
+    if (m_model->rowCount() == 0) {
+        emit CommonService::getInstance()->signalHideSubSonglist();
     }
 }
 

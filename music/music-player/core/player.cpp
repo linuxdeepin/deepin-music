@@ -299,7 +299,11 @@ void Player::playPreMeta()
         }
 
         setActiveMeta(m_MetaList.at(index));
-        playMeta(m_ActiveMeta);
+        // 记录切换歌单之前播放状态
+        PlaybackStatus preStatue = status();
+        if (preStatue == Player::PlaybackStatus::Playing) {
+            playMeta(m_ActiveMeta);
+        }
     }
 }
 
@@ -354,7 +358,11 @@ void Player::playNextMeta(bool isAuto)
         }
 
         setActiveMeta(m_MetaList.at(index));
-        playMeta(m_ActiveMeta);
+        // 记录切换歌单之前播放状态
+        PlaybackStatus preStatue = status();
+        if (preStatue == Player::PlaybackStatus::Playing) {
+            playMeta(m_ActiveMeta);
+        }
     }
 }
 
@@ -379,6 +387,8 @@ void Player::playRmvMeta(const QStringList &metalistToDel)
 
     int index = 0;
     QString nextPlayHash;
+    // 记录切换歌单之前播放状态
+    PlaybackStatus preStatue = status();
     for (int i = 0; i < m_MetaList.size(); i++) {
         if (m_MetaList.at(i).hash == m_ActiveMeta.hash) {
             index = i;
@@ -389,23 +399,33 @@ void Player::playRmvMeta(const QStringList &metalistToDel)
     // 如果要删除的包含了正在播放的歌曲则停止播放
     if (metalistToDel.contains(m_ActiveMeta.hash)) {
         stop();
-        for (int i = 0; i < m_MetaList.size(); i++) {
-            if (index < m_MetaList.size() && metalistToDel.contains(m_MetaList.at(index).hash)) {
-                // 当前播放是最后一首，直接遍历删除
-                if (index == (m_MetaList.size() - 1)) {
-                    removeMeta(metalistToDel);
-                    break;
-                } else {
-                    index++;
-                }
-            } else {
-                setActiveMeta(m_MetaList.at(index));
-                playMeta(m_ActiveMeta);
-                // 播放下一首，删除其他所有
-                removeMeta(metalistToDel);
+        MediaMeta metaToPlay;
+        metaToPlay.hash = "";
+        // 从当前播放的位置寻找下一首
+        for (int i = (index + 1); i <= m_MetaList.size(); i++) {
+            if (i == m_MetaList.size()) {
+                i = 0;
+            }
+            if (i == index) {
+                break;
+            }
+            // 如果下一首不在删除队列中，则找到了下一首
+            if (!metalistToDel.contains(m_MetaList.at(i).hash)) {
+                metaToPlay = m_MetaList.at(i);
+                break;
+            }
+            // 防止死循环
+            if (m_MetaList.size() == 1) {
                 break;
             }
         }
+        if (!metaToPlay.hash.isEmpty()) {
+            setActiveMeta(metaToPlay);
+            if (preStatue == Player::PlaybackStatus::Playing) {
+                playMeta(m_ActiveMeta);
+            }
+        }
+        removeMeta(metalistToDel);
     } else {
         // 不包含正在播放的歌曲，直接删除
         removeMeta(metalistToDel);
@@ -423,9 +443,23 @@ void Player::removeMeta(const QStringList &metalistToDel)
             }
         }
     }
+    // 当前播放队列没有数据，应用左侧不显示动态图
     if (m_MetaList.size() == 0) {
         stop();
+        m_currentPlayListHash = "";
         emit signalPlayListChanged();
+        // 刷新动态图图标
+        emit signalUpdatePlayingIcon();
+        MusicSettings::setOption("base.play.last_meta", "");
+        MusicSettings::setOption("base.play.last_playlist", "");
+    } else {
+        if (DataBaseService::getInstance()->getPlaylistSongCount(m_currentPlayListHash) == 0) {
+            m_currentPlayListHash = "all";
+            // 刷新动态图图标
+            emit signalUpdatePlayingIcon();
+            MusicSettings::setOption("base.play.last_meta", m_ActiveMeta.hash);
+            MusicSettings::setOption("base.play.last_playlist", m_currentPlayListHash);
+        }
     }
 }
 
@@ -438,6 +472,11 @@ void Player::playListAppendMeta(const MediaMeta &meta)
 void Player::setPlayList(const QList<MediaMeta> &list)
 {
     m_MetaList = list;
+    // 当前播放队列没有数据，应用左侧不显示动态图
+    if (m_MetaList.size() == 0) {
+        m_currentPlayListHash = "";
+    }
+    emit signalUpdatePlayingIcon();
 }
 
 QList<MediaMeta> *Player::getPlayList()
@@ -460,6 +499,10 @@ void Player::setCurrentPlayListHash(QString hash, bool reloadMetaList)
         } else {
             m_MetaList = DataBaseService::getInstance()->customizeMusicInfos(hash);
         }
+    }
+    // 当前播放队列没有数据，应用左侧不显示动态图
+    if (m_MetaList.size() == 0) {
+        m_currentPlayListHash = "";
     }
     emit signalUpdatePlayingIcon();
 }

@@ -126,6 +126,8 @@ public:
     void                 updatePlaylistDisplayName(QString displayname, QString uuid);
     // 获取歌单排序类型
     int                  getPlaylistSortType(QString uuid);
+    // 获取歌单中歌曲数量
+    int                  getPlaylistSongCount(QString uuid);
 //    // 更新歌单显示类型，list，icon，未使用框架QListView::ViewMode
 //    void                 updatePlaylistOrderType(int type, QString uuid);
 //    // 获取歌单QListView::ViewMode

@@ -111,8 +111,11 @@ MainFrame::MainFrame()
     connect(m_titlebarwidget, &TitlebarWidget::sigSearchEditFoucusIn,
             this, &MainFrame::slotSearchEditFoucusIn);
     // 添加自定义歌单
+    connect(CommonService::getInstance(), &CommonService::signalHideSubSonglist,
+            this, &MainFrame::slotHideSubWidget);
+    // 添加自定义歌单
     connect(CommonService::getInstance(), &CommonService::signalAddNewSongList,
-            this, &MainFrame::slotAddNewSongList);
+            this, &MainFrame::slotHideSubWidget);
     // 导入成功
     connect(DataBaseService::getInstance(), &DataBaseService::signalImportFinished,
             this, &MainFrame::slotImportFinished);
@@ -489,7 +492,7 @@ void MainFrame::slotImportFailed()
     }
 }
 
-void MainFrame::slotAddNewSongList()
+void MainFrame::slotHideSubWidget()
 {
     m_backBtn->setVisible(false);
     m_subSonglistWidget->setVisible(false);

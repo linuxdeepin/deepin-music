@@ -459,16 +459,11 @@ void FooterWidget::setPlayProperty(Player::PlaybackStatus status)
 
 void FooterWidget::resetBtnVisible()
 {
+    // 需求变动，只针对收藏按钮做处理
     if (Player::getInstance()->getActiveMeta().hash.isEmpty()) {
-        m_btFavorite->setVisible(false);
-        m_btLyric->setVisible(false);
-        m_title->setVisible(false);
-        m_artist->setVisible(false);
+        m_btFavorite->setEnabled(false);
     } else {
-        m_btFavorite->setVisible(true);
-        m_btLyric->setVisible(true);
-        m_title->setVisible(true);
-        m_artist->setVisible(true);
+        m_btFavorite->setEnabled(true);
     }
 }
 
@@ -630,6 +625,8 @@ void FooterWidget::slotMediaMetaChanged(MediaMeta activeMeta)
     } else {
         m_btCover->setIcon(QIcon::fromTheme("info_cover"));
     }
+    // 歌曲切换，进度条设置到初始位置
+    m_waveform->setValue(0);
     slotFlushBackground();
     QFontMetrics fm(m_title->font());
     QString titleText = fm.elidedText(meta.title, Qt::ElideMiddle, m_title->maximumWidth());
