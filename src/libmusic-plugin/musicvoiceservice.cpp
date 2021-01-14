@@ -8,7 +8,7 @@ MusicVoiceService::MusicVoiceService()
 
 QString MusicVoiceService::serviceName()
 {
-    return "weather";
+    return "musicX";
 }
 int MusicVoiceService::servicePriority()
 {

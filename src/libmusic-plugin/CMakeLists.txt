@@ -1,5 +1,5 @@
 #工程名
-set(CMD_NAME weather-plugin)
+set(CMD_NAME music-plugin)
 set(CMAKE_INSTALL_VOICE_LIBDIR /usr/lib/deepin-aiassistant/serivce-plugins)
 cmake_minimum_required(VERSION 3.10)
 

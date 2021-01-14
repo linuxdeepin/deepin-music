@@ -631,7 +631,8 @@ TEST(Application, musicListDialg5)
     QTimer::singleShot(500, w, [ = ]() {
         QTimer::singleShot(800, w, [ = ]() {
             InfoDialog *infoDialog = w->findChild<InfoDialog *>(AC_infoDialog);
-            infoDialog->close();
+            if (infoDialog)
+                infoDialog->close();
             QTest::qWait(500);
             emit backBtn->clicked();
         });
