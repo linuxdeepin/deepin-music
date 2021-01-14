@@ -720,7 +720,9 @@ void MainFrame::changeEvent(QEvent *event)
 {
     if (event->type() == QEvent::WindowStateChange) {
         // 窗体状态改变，播放队列收回问题修复
-        m_playQueueWidget->stopAnimation();
+        if (m_playQueueWidget) {
+            m_playQueueWidget->stopAnimation();
+        }
     }
 }
 

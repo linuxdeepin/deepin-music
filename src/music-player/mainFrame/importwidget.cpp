@@ -60,6 +60,10 @@ ImportWidget::ImportWidget(QWidget *parent) : DFrame(parent)
     m_logo->setObjectName("ImportViewLogo");
     m_logo->setPixmap(DHiDPIHelper::loadNxPixmap(":/mpimage/light/import_music.svg"));
 
+    m_waterProgress = new DWaterProgress(this);
+    m_waterProgress->setTextVisible(true);
+    m_waterProgress->setVisible(false);
+
     m_importPathButton = new DPushButton;
     auto importButtonFont = m_importPathButton->font();
     importButtonFont.setFamily("SourceHanSansSC");
@@ -105,6 +109,7 @@ ImportWidget::ImportWidget(QWidget *parent) : DFrame(parent)
     layout->setSpacing(0);
     layout->addStretch();
     layout->addWidget(m_logo, 0, Qt::AlignCenter);
+    layout->addWidget(m_waterProgress, 0, Qt::AlignCenter);
     layout->addSpacing(20);
     layout->addWidget(m_addMusicButton, 0, Qt::AlignCenter);
     layout->addSpacing(10);
@@ -133,6 +138,9 @@ ImportWidget::ImportWidget(QWidget *parent) : DFrame(parent)
 
     connect(DGuiApplicationHelper::instance(), &DGuiApplicationHelper::themeTypeChanged,
             this, &ImportWidget::setThemeType);
+
+    connect(DataBaseService::getInstance(), &DataBaseService::signalImportedPercent,
+            this, &ImportWidget::slotImportedPercent);
 
     setThemeType(DGuiApplicationHelper::instance()->themeType());
 }
@@ -196,6 +204,9 @@ const QString ImportWidget::getLastImportPath() const
 void ImportWidget::showImportHint()
 {
     m_importPathButton->setDisabled(false);
+    m_logo->setVisible(true);
+    m_waterProgress->setVisible(false);
+    m_waterProgress->stop();
     m_importPathButton->show();
     m_addMusicButton->show();
     QString linkText = QString(linkTemplate).arg(tr("Scan")).arg(tr("Scan"));
@@ -361,8 +372,18 @@ void ImportWidget::setThemeType(int type)
     m_logo->setPixmap(DHiDPIHelper::loadNxPixmap(QString(":/mpimage/%1/import_music.svg").arg(rStr)));
 }
 
+void ImportWidget::slotImportedPercent(int percent)
+{
+    if (m_waterProgress->isVisible()) {
+        m_waterProgress->setValue(percent);
+    }
+}
+
 void ImportWidget::showWaitHint()
 {
+    m_logo->setVisible(false);
+    m_waterProgress->setVisible(true);
+    m_waterProgress->start();
     m_importPathButton->setDisabled(true);
     m_importPathButton->hide();
     m_addMusicButton->hide();

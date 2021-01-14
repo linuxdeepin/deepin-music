@@ -25,6 +25,7 @@
 #include <DFrame>
 #include <DPushButton>
 #include <QLabel>
+#include <DWaterProgress>
 
 DWIDGET_USE_NAMESPACE
 
@@ -55,6 +56,8 @@ public slots:
     void slotImportPathButtonClicked();
     void slotImportFormDbus(const QUrl &url); //右键菜单打开音乐
     void setThemeType(int type);
+    // 已导入百分比
+    void slotImportedPercent(int percent);
 
 protected:
     bool eventFilter(QObject *o, QEvent *e) Q_DECL_OVERRIDE;
@@ -68,5 +71,6 @@ private:
     DPushButton             *m_importPathButton = nullptr;
     DPushButton             *m_addMusicButton = nullptr;
     QLabel                  *m_logo = nullptr;
+    DWaterProgress          *m_waterProgress = nullptr;
 };
 

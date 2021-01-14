@@ -550,8 +550,7 @@ void PlayListView::slotImportFinished(QString hash, int successCount)
     if (m_currentHash != hash) {
         return;
     }
-    QList<MediaMeta> list = DataBaseService::getInstance()->getNewLoadMusicInfos();
-    qDebug() << "------PlayListView::slotImportFinished count = " << list.size();
+    QList<MediaMeta> list = DataBaseService::getInstance()->allMusicInfos();
 
     DataBaseService::ListSortType sortType = getSortType();
     for (int i = 0; i < list.size(); i++) {
@@ -674,13 +673,11 @@ void PlayListView::slotRemoveSingleSong(const QString &listHash, const QString &
             QModelIndex mindex = m_model->index(i, 0, QModelIndex());
             MediaMeta meta = mindex.data(Qt::UserRole).value<MediaMeta>();
             if (meta.hash == musicHash) {
-                this->removeItem(i);
-                m_model->removeRow(row);
+                m_model->removeRow(mindex.row());
                 //搜索结果中删除，刷新数量显示
                 if (m_currentHash == "musicResult") {
                     emit musicResultListCountChanged("musicResult");
                 }
-                update();
                 break;
             }
         }
@@ -689,6 +686,9 @@ void PlayListView::slotRemoveSingleSong(const QString &listHash, const QString &
 
 void PlayListView::slotAllMusicAddOne(MediaMeta addMeta)
 {
+    if (!this->isVisible()) {
+        return;
+    }
     DataBaseService::ListSortType sortType = getSortType();
     if (m_model->rowCount() == 0) {
         insertRow(0, addMeta);

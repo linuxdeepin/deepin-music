@@ -83,7 +83,7 @@ QList<MediaMeta> DataBaseService::allMusicInfos()
                                          "lyricPath, codec, py_title, py_artist, py_album "
                                          "FROM musicNew");
 
-        QSqlQuery queryNew;
+        QSqlQuery queryNew(m_db);
         queryNew.prepare(queryStringNew);
         if (! queryNew.exec()) {
             qCritical() << queryNew.lastError();
@@ -287,18 +287,20 @@ QList<DataBaseService::PlaylistData> DataBaseService::getCustomSongList()
 
 void DataBaseService::removeSelectedSongs(const QString &curpage, const QStringList &musichashlist, bool removeFromLocal)
 {
-    //需要从本地删除
-    if (removeFromLocal) {
-        //遍历musicNew
-        deleteMetaFromAllMusic(musichashlist, removeFromLocal);
-    } else {
-        if (curpage == "all") {
-            //遍历musicNew
-            deleteMetaFromAllMusic(musichashlist, removeFromLocal);
-        } else {
-            deleteMetaFromPlaylist(curpage, musichashlist);
-        }
-    }
+    emit sigRemoveSelectedSongs(curpage, musichashlist, removeFromLocal);
+    // 已经放到子线程中处理
+//    //需要从本地删除
+//    if (removeFromLocal) {
+//        //遍历musicNew
+//        deleteMetaFromAllMusic(musichashlist, removeFromLocal);
+//    } else {
+//        if (curpage == "all") {
+//            //遍历musicNew
+//            deleteMetaFromAllMusic(musichashlist, removeFromLocal);
+//        } else {
+//            deleteMetaFromPlaylist(curpage, musichashlist);
+//        }
+//    }
 }
 
 
@@ -325,13 +327,10 @@ void DataBaseService::importMedias(QString importHash, const QStringList &urllis
 //    if (m_importing) {
 //        return;
 //    }
-    m_successCount = 0;
-    m_exsitCount = 0;
     m_importHash = importHash;
     qDebug() << "------DataBaseService::importMedias " << urllist.size();
-    qDebug() << "------DataBaseService::importMedias  currentThread = " << QThread::currentThread();
-    m_loadMediaMeta.clear();
-    emit signalImportMedias(urllist);
+    emit signalImportedPercent(0);
+    emit signalImportMedias(importHash, urllist);
 //    m_importing = true;
 }
 
@@ -339,11 +338,6 @@ void DataBaseService::importMedias(QString importHash, const QStringList &urllis
 //{
 //    return m_Importing;
 //}
-
-QList<MediaMeta> DataBaseService::getNewLoadMusicInfos()
-{
-    return m_loadMediaMeta;
-}
 
 void DataBaseService::addMediaMeta(const MediaMeta &meta)
 {
@@ -386,13 +380,9 @@ void DataBaseService::addMediaMeta(const MediaMeta &meta)
 
     if (! query.exec()) {
         qCritical() << query.lastError();
-        if (m_AllMediaMeta.contains(meta)) {
-            m_loadMediaMeta.append(meta);
-        }
         return;
     }
     m_AllMediaMeta.append(meta);
-    m_loadMediaMeta.append(meta);
 }
 
 void DataBaseService::addPlaylist(const DataBaseService::PlaylistData &playlistMeta)
@@ -521,37 +511,20 @@ bool DataBaseService::deleteMetaFromPlaylist(QString uuid, const QStringList &me
 
 void DataBaseService::slotGetMetaFromThread(MediaMeta meta)
 {
-    if (!this->isMediaMetaExist(meta.hash)) {
-        addMediaMeta(meta);
-        m_successCount++;
-
-        // 添加到自定义歌单,但是当前页面上你所有音乐,则所有音乐要刷新,添加这个信号
-        // 直接添加到所有音乐的,通过signalImportFinished信号刷新
-        emit signalAllMusicAddOne(meta);
-        if (m_importHash != "all") {
-            QList<MediaMeta> metas;
-            metas.append(meta);
-            addMetaToPlaylist(m_importHash, metas);
-        }
-    } else {
-        m_exsitCount++;
-    }
+    m_AllMediaMeta.append(meta);
 }
 
-void DataBaseService::slotImportFinished(int failCount)
+void DataBaseService::slotImportFinished(int failCount, int successCount, int exsitCount)
 {
     Q_UNUSED(failCount)
-    if (m_successCount > 0 || m_exsitCount > 0) {
-        emit signalImportFinished(m_importHash, m_successCount);
+    if (successCount > 0 || exsitCount > 0) {
+        emit signalImportFinished(m_importHash, successCount);
 
         emit CommonService::getInstance()->signalShowPopupMessage(
-            DataBaseService::getInstance()->getPlaylistNameByUUID(m_importHash), m_successCount + m_exsitCount, m_successCount);
+            DataBaseService::getInstance()->getPlaylistNameByUUID(m_importHash), successCount + exsitCount, successCount);
     } else {
         emit signalImportFailed();
     }
-
-    m_successCount = 0;
-    m_exsitCount = 0;
 //    m_importing = false;
 
     //数据加载完后再加载图片
@@ -584,13 +557,32 @@ void DataBaseService::slotCreatOneCoverImg(MediaMeta meta)
     }
 }
 
+void DataBaseService::slotRmvSongThread(const QString &listHash, const QString &musicHash, bool removeFromLocal)
+{
+    if (listHash == "all") {
+        for (int i = 0; i < m_AllMediaMeta.size(); i++) {
+            if (m_AllMediaMeta.at(i).hash == musicHash) {
+                if (removeFromLocal) {
+                    QFile info(m_AllMediaMeta.at(i).localPath);
+                    if (info.exists()) {
+                        info.remove();
+                    }
+                }
+                m_AllMediaMeta.removeAt(i);
+                break;
+            }
+        }
+        emit signalRmvSong("all", musicHash);
+    }
+}
+
 QList<DataBaseService::PlaylistData> DataBaseService::allPlaylistMeta()
 {
     if (m_PlaylistMeta.size() > 0) {
         return m_PlaylistMeta;
     } else {
         m_PlaylistMeta.clear();
-        QSqlQuery query;
+        QSqlQuery query(m_db);
         query.prepare("SELECT uuid, displayname, icon, readonly, hide, "
                       "sort_type, order_type, sort_id FROM playlist");
 
@@ -693,7 +685,7 @@ void DataBaseService::updatePlaylistDisplayName(QString displayname, QString uui
 
 int DataBaseService::getPlaylistSortType(QString uuid)
 {
-    QSqlQuery query;
+    QSqlQuery query(m_db);
     query.prepare("SELECT sort_type FROM playlist where uuid = :uuid;");
     query.bindValue(":uuid", uuid);
     if (!query.exec()) {
@@ -750,7 +742,6 @@ void DataBaseService::setFirstSong(const QString &strurl)
 QString DataBaseService::getFirstSong()
 {
     QString strurl = m_firstSonsg;
-    m_loadMediaMeta.clear();
     return strurl;
 }
 
@@ -1073,31 +1064,41 @@ DataBaseService::DataBaseService()
 
     qRegisterMetaType<QList<MediaMeta>>("QList<MediaMeta>");
     qRegisterMetaType<QVector<float>>("QVector<float>");
-//    qRegisterMetaType<SingerInfo>("SingerInfo");
-//    qRegisterMetaType<AlbumInfo>("AlbumInfo");
-
-//    qRegisterMetaType<ImageDataSt>("ImageDataSt &");
-//    qRegisterMetaType<ImageDataSt>("ImageDataSt");
-//    qRegisterMetaType<DBImgInfoList>("DBImgInfoList");
-//    qRegisterMetaType<QMap<QString, MediaMeta>>("QMap<QString, MediaMeta>");
 
     m_workerThread = new QThread(this);
 //    DBOperate *worker = new DBOperate(m_workerThread);
     m_worker.moveToThread(m_workerThread);
-    //发送信号给子线程导入数据
-    connect(this, SIGNAL(signalImportMedias(const QStringList &)), &m_worker, SLOT(slotImportMedias(const QStringList &)));
-    //加载图片
+    // 发送信号给子线程导入数据
+    connect(this, SIGNAL(signalImportMedias(QString, const QStringList &)),
+            &m_worker, SLOT(slotImportMedias(QString, const QStringList &)));
+    // 发送给子线程删除单曲
+    connect(this, SIGNAL(sigRemoveSelectedSongs(const QString &, const QStringList &, bool)),
+            &m_worker, SLOT(slotRemoveSelectedSongs(const QString &, const QStringList &, bool)));
+    // 发送给子线程加载图片
     connect(this, SIGNAL(signalCreatCoverImg(const QList<MediaMeta> &)), &m_worker, SLOT(slotCreatCoverImg(const QList<MediaMeta> &)));
 
-    connect(&m_worker, &DBOperate::sigImportMetaFromThread, this, &DataBaseService::slotGetMetaFromThread);
-    connect(&m_worker, &DBOperate::sigImportFinished, this, &DataBaseService::slotImportFinished);
-    connect(&m_worker, &DBOperate::sigCreatOneCoverImg, this, &DataBaseService::slotCreatOneCoverImg);
-
+    // 单首歌曲完成解析
+    connect(&m_worker, &DBOperate::sigImportMetaFromThread, this, &DataBaseService::slotGetMetaFromThread, Qt::QueuedConnection);
+    // 完成加载
+    connect(&m_worker, &DBOperate::sigImportFinished, this, &DataBaseService::slotImportFinished, Qt::QueuedConnection);
+    // 单张图片完成封面解析
+    connect(&m_worker, &DBOperate::sigCreatOneCoverImg, this, &DataBaseService::slotCreatOneCoverImg, Qt::QueuedConnection);
+    // 收藏中的歌曲被删除，动态显示
+    connect(&m_worker, &DBOperate::signalFavSongRemove, this, &DataBaseService::signalFavSongRemove, Qt::QueuedConnection);
+    // 发送删除歌曲通知消息，动态显示
+    connect(&m_worker, &DBOperate::signalRmvSong, this, &DataBaseService::slotRmvSongThread, Qt::QueuedConnection);
+    // 所有歌曲被清空
+    connect(&m_worker, &DBOperate::signalAllMusicCleared, this, &DataBaseService::signalAllMusicCleared, Qt::QueuedConnection);
+    // 已导入百分比
+    connect(&m_worker, &DBOperate::signalImportedPercent, this, &DataBaseService::signalImportedPercent, Qt::QueuedConnection);
+    connect(&m_worker, &DBOperate::signalAllMusicAddOne, this, &DataBaseService::signalAllMusicAddOne, Qt::QueuedConnection);
+    connect(&m_worker, &DBOperate::signalFavSongAdd, this, &DataBaseService::signalFavSongAdd, Qt::QueuedConnection);
     m_workerThread->start();
 }
 
 DataBaseService::~DataBaseService()
 {
+    m_worker.stop();
     m_workerThread->quit();
     m_workerThread->wait();
 }

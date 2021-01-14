@@ -97,8 +97,6 @@ public:
     // 获取导入状态，true正在导入，false没有导入，空闲
     //bool                 getImportStatus();
     void                 addMediaMeta(const MediaMeta &meta);
-    // 获取新导入文件
-    QList<MediaMeta>     getNewLoadMusicInfos();
 
     // 音乐收藏
     bool favoriteMusic(const MediaMeta meta);
@@ -141,17 +139,17 @@ public:
 public slots:
     void slotGetMetaFromThread(MediaMeta meta);
     // 收到子线程导入结束通知
-    void slotImportFinished(int failCount);
+    void slotImportFinished(int failCount, int successCount, int exsitCount);
     // 收到子线程一张图片加载完信号
     void slotCreatOneCoverImg(MediaMeta meta);
+    // 收到子线程删除歌曲通知消息，动态显示
+    void slotRmvSongThread(const QString &listHash, const QString &musicHash, bool removeFromLocal);
 signals:
     // 所有歌曲数量变化
     void signalAllMusicAddOne(MediaMeta meta);
     // 所有歌曲被清空
     void signalAllMusicCleared();
     void signalGetAllMediaMeta();
-    // 发送给子线程执行
-    void signalImportMedias(const QStringList &urllist);
     // 发送给子线程执行创建图片
     void signalCreatCoverImg(const QList<MediaMeta> &metas);
     // 导入结束，通知主界面 allCount:待导入的文件数量   successCount：导入成功的数量
@@ -170,6 +168,14 @@ signals:
     void signalPlayFromFileMaganager();
     // 歌单名称改变
     void signalPlaylistNameUpdate(QString hash);
+    // 已导入百分比
+    void signalImportedPercent(int percent);
+
+    // 子线程执行
+    // 导入歌曲
+    void signalImportMedias(QString importHash, const QStringList &urllist);
+    // 删除歌单所选歌曲 removeFromLocal:是否从本地删除
+    void sigRemoveSelectedSongs(const QString &curpage, const QStringList &musichashlist, bool removeFromLocal);
 private:
     bool createConnection();
     bool isPlaylistExist(const QString &uuid);
@@ -186,11 +192,6 @@ private:
 private:
     QThread *m_workerThread = nullptr;
     QSqlDatabase m_db;
-    // 导入的歌曲计数
-    int m_successCount = 0;
-    // 存在的歌曲计数
-    int m_exsitCount = 0;
-
     QList<PlaylistData> m_PlaylistMeta;
     QList<MediaMeta> m_AllMediaMeta;
     QList<AlbumInfo> m_AllAlbumInfo;
@@ -198,7 +199,6 @@ private:
     QList<MediaMeta> m_AllFavourite;
     // 新加载的歌曲文件
     DBOperate m_worker;
-    QList<MediaMeta> m_loadMediaMeta;
 // 不需要这个变量控制导入多次问题
 //    bool             m_importing = false;
     QString          m_importHash;

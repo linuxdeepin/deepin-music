@@ -32,21 +32,59 @@ class DBOperate : public QObject
 public:
     explicit DBOperate(QObject *parent = nullptr);
     ~DBOperate();
-public slots:
-    void     slotImportMedias(const QStringList &urllist);
-    void     slotCreatCoverImg(const QList<MediaMeta> &metas);
-private:
 
+    struct PlaylistDataThread {
+        QString uuid;
+        bool    readonly    = false;
+    };
+
+    void stop();
+public slots:
+    void     slotImportMedias(QString importHash, const QStringList &urllist);
+    void     slotCreatCoverImg(const QList<MediaMeta> &metas);
+    void     slotRemoveSelectedSongs(const QString &curpage, const QStringList &musichashlist, bool removeFromLocal);
+private:
+    bool     deleteMetaFromAllMusic(const QStringList &metaHash, bool removeFromLocal);
+    bool     deleteMetaFromPlaylist(QString uuid, const QStringList &metaHash);
+    // 歌曲数量
+    int      allMusicInfosCount();
+    // 歌单信息
+    QList<PlaylistDataThread>  allPlaylistMetaUUid();
+    void     addMediaMetaToDB(const MediaMeta &meta);
+    // 判断歌曲是否存在
+    bool     isMediaMetaExist(const QString &hash);
+    // 添加歌曲到歌单
+    int      addMetaToPlaylist(QString uuid, const QList<MediaMeta> &metas);
 signals:
     void     fileIsNotExist(QString imagepath);
 
     void     sigImportMetaFromThread(MediaMeta meta);
     // 导入成功结束
-    void     sigImportFinished(int failCount);
+    void     sigImportFinished(int failCount, int successCount, int exsitCount);
     void     sigCreatOneCoverImg(MediaMeta meta);
+    // 收藏中的歌曲被删除，动态显示
+    void     signalFavSongRemove(const QString &musicHash);
+    // 发送删除歌曲通知消息，动态显示
+    void     signalRmvSong(const QString &listHash, const QString &musicHash, bool removeFromLocal);
+    // 所有歌曲被清空
+    void     signalAllMusicCleared();
+    // 已导入百分比
+    void     signalImportedPercent(int percent);
+    // 所有歌曲数量变化
+    void     signalAllMusicAddOne(MediaMeta meta);
+    // 收藏中的歌曲被删除，动态显示
+    void     signalFavSongAdd(QString musicHash);
 public:
 private:
     MediaLibrary     *m_mediaLibrary = nullptr;
+    QSqlDatabase      m_db;
+    bool              m_needStop = false;
+    QMutex            m_mutex;
+    QString           m_importHash;
+    // 导入的歌曲计数
+    int               m_successCount = 0;
+    // 存在的歌曲计数
+    int               m_exsitCount = 0;
 };
 
 #endif // DBOPERATE_H
