@@ -29,6 +29,7 @@ DWIDGET_USE_NAMESPACE
 
 class PlayListView;
 class InotifyFiles;
+class QPropertyAnimation;
 class PlayQueueWidget : public DFloatingWidget
 {
     Q_OBJECT
@@ -37,12 +38,14 @@ public:
     static constexpr int Margin = 5;
     // 控件高度
     static constexpr int Height = 80;
+    // 动画持续时间
+    static constexpr int AnimationDelay = 400;
 public:
     explicit PlayQueueWidget(QWidget *parent = Q_NULLPTR);
     ~PlayQueueWidget() override;
 
-    void animationToUp(const QSize &size);
-    void animationToDown(const QSize &size);
+    void playAnimation(const QSize &size);
+    void stopAnimation();
 
 public slots:
     void slotPlayListChanged();
@@ -51,7 +54,6 @@ public slots:
 
 signals:
     void signalAutoHidden();
-//    void requestCustomContextMenu(const QPoint &pos, char type);
 
 private slots:
     void slotClearAllClicked();
@@ -64,10 +66,11 @@ private slots:
 
 protected:
     virtual void dragEnterEvent(QDragEnterEvent *event) Q_DECL_OVERRIDE;
-//    virtual void dragMoveEvent(QDragMoveEvent *event) Q_DECL_OVERRIDE;
-//    virtual void dragLeaveEvent(QDragLeaveEvent *event) Q_DECL_OVERRIDE;
     virtual void dropEvent(QDropEvent *event) Q_DECL_OVERRIDE;
     virtual void resizeEvent(QResizeEvent *event) Q_DECL_OVERRIDE;
+
+private:
+    void initAnimation();
 
 private:
     DLabel              *m_titleLabel     = nullptr;
@@ -77,5 +80,7 @@ private:
     DPushButton         *m_btClearAll     = nullptr;
     PlayListView        *m_playListView   = nullptr;
     QAction             *m_customAction   = nullptr;
-//    InotifyFiles        inotifyFiles;
+
+    QPropertyAnimation  *m_animationToUp = nullptr;
+    QPropertyAnimation  *m_animationToDown = nullptr;
 };

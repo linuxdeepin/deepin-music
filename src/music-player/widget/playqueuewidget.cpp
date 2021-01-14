@@ -49,13 +49,10 @@
 DWIDGET_USE_NAMESPACE
 DGUI_USE_NAMESPACE
 
-static const int AnimationDelay = 400;
-
-
 PlayQueueWidget::PlayQueueWidget(QWidget *parent) :
     DFloatingWidget(parent)
 {
-    setAcceptDrops(true);
+    this->setAcceptDrops(true);
 
     this->setBlurBackgroundEnabled(true);
     this->blurBackground()->setRadius(30);
@@ -115,6 +112,8 @@ PlayQueueWidget::PlayQueueWidget(QWidget *parent) :
     mainLayout->addSpacing(12);
     mainLayout->setContentsMargins(0, 30, 0, 70);
 
+    initAnimation();
+
     connect(m_btClearAll, &DPushButton::clicked, this, &PlayQueueWidget::slotClearAllClicked);
     connect(m_playListView, &PlayListView::rowCountChanged, this, &PlayQueueWidget::slotUpdateItemCount);
     // 初始化播放列表数据
@@ -133,40 +132,82 @@ PlayQueueWidget::PlayQueueWidget(QWidget *parent) :
     this->hide();
 }
 
-void PlayQueueWidget::animationToUp(const QSize &size)
+void PlayQueueWidget::playAnimation(const QSize &size)
 {
-    QRect start(Margin, size.height() - Height - Margin, size.width() - Margin * 2, Height);
-    QRect end(Margin, size.height() - 450, size.width() - Margin * 2, 445);
-    QPropertyAnimation *animation = new QPropertyAnimation(this, "geometry");
-    animation->setEasingCurve(QEasingCurve::InCurve);
-    animation->setDuration(AnimationDelay);
-    animation->setStartValue(start);
-    animation->setEndValue(end);
-    animation->start();
-    this->show();
-    animation->connect(animation, &QPropertyAnimation::finished,
-                       animation, &QPropertyAnimation::deleteLater);
+    QRect startRect = QRect(Margin, size.height() - Height - Margin, size.width() - Margin * 2, Height);
+    QRect endRect = QRect(Margin, size.height() - 450, size.width() - Margin * 2, 445);
+
+    m_animationToUp->setStartValue(startRect);
+    m_animationToUp->setEndValue(endRect);
+
+    m_animationToDown->setStartValue(endRect);
+    m_animationToDown->setEndValue(startRect);
+
+    if (this->isHidden()) {
+        this->show();
+        m_animationToUp->start();
+    } else {
+        this->show();
+        m_animationToDown->start();
+    }
 }
 
-void PlayQueueWidget::animationToDown(const QSize &size)
+void PlayQueueWidget::stopAnimation()
 {
-    QRect start(Margin, size.height() - Height - Margin, size.width() - Margin * 2, Height);
-    QRect end(Margin, size.height() - 450, size.width() - Margin * 2, 445);
-    QPropertyAnimation *animation = new QPropertyAnimation(this, "geometry");
-    animation->setEasingCurve(QEasingCurve::InCurve);
-    animation->setDuration(AnimationDelay);
-    animation->setStartValue(end);
-    animation->setEndValue(start);
-    animation->start();
-    animation->connect(animation, &QPropertyAnimation::finished,
-                       animation, &QPropertyAnimation::deleteLater);
-    animation->connect(animation, &QPropertyAnimation::finished, this, [ = ]() {
+    m_animationToDown->stop();
+}
+
+void PlayQueueWidget::initAnimation()
+{
+    // 动画状态Up
+    m_animationToUp = new QPropertyAnimation(this, "geometry");
+    m_animationToUp->setEasingCurve(QEasingCurve::InCurve);
+    m_animationToUp->setDuration(AnimationDelay);
+
+    // 动画状态Down
+    m_animationToDown = new QPropertyAnimation(this, "geometry");
+    m_animationToDown->setEasingCurve(QEasingCurve::InCurve);
+    m_animationToDown->setDuration(AnimationDelay);
+    m_animationToDown->connect(m_animationToDown, &QPropertyAnimation::finished, this, [ = ]() {
         this->hide();
+
+        emit signalAutoHidden();
         emit CommonService::getInstance()->signalPlayQueueClosed();
     });
-
-    emit signalAutoHidden();
 }
+
+// 废弃动画方法,已重写适用于最大化时动画
+//void PlayQueueWidget::playAnimationToUp(const QSize &size)
+//{
+//    QRect start(Margin, size.height() - Height - Margin, size.width() - Margin * 2, Height);
+//    QRect end(Margin, size.height() - 450, size.width() - Margin * 2, 445);
+//    QPropertyAnimation *animation = new QPropertyAnimation(this, "geometry");
+//    animation->setEasingCurve(QEasingCurve::InCurve);
+//    animation->setDuration(AnimationDelay);
+//    animation->setStartValue(start);
+//    animation->setEndValue(end);
+//    animation->start();
+//    this->show();
+//}
+
+// 废弃动画方法,已重写适用于最大化时动画
+//void PlayQueueWidget::playAnimationToDown(const QSize &size)
+//{
+//    QRect start(Margin, size.height() - Height - Margin, size.width() - Margin * 2, Height);
+//    QRect end(Margin, size.height() - 450, size.width() - Margin * 2, 445);
+//    QPropertyAnimation *animation = new QPropertyAnimation(this, "geometry");
+//    animation->setEasingCurve(QEasingCurve::InCurve);
+//    animation->setDuration(AnimationDelay);
+//    animation->setStartValue(end);
+//    animation->setEndValue(start);
+//    animation->start();
+//    animation->connect(animation, &QPropertyAnimation::finished, this, [ = ]() {
+//        this->hide();
+//        emit CommonService::getInstance()->signalPlayQueueClosed();
+//    });
+
+//    emit signalAutoHidden();
+//}
 
 void PlayQueueWidget::slotPlayListChanged()
 {
@@ -217,7 +258,6 @@ void PlayQueueWidget::dropEvent(QDropEvent *event)
 
 void PlayQueueWidget::resizeEvent(QResizeEvent *event)
 {
-    //Q_D(PlayListWidget);
     DWidget::resizeEvent(event);
 }
 
@@ -297,16 +337,17 @@ void PlayQueueWidget::slotUpdateItemCount()
 void PlayQueueWidget::autoHidden(QWidget *old, QWidget *now)
 {
     if (old && now) {
-        if (now->objectName() == "infoDialog" || now->objectName() == "InfoTitle" ||
-                now->objectName() == "MainFrame" || now->objectName() == "MessageBox")  {
-        } else {
+        if (!(now->objectName() == "infoDialog" || now->objectName() == "InfoTitle" ||
+                now->objectName() == "MainFrame" || now->objectName() == "MessageBox"))  {
+
             PlayListView *playListQueue = dynamic_cast<PlayListView *>(now);
+
             if (playListQueue && playListQueue->objectName() == "PlayListView") {
                 if (!playListQueue->getIsPlayQueue()) {
                     if (!this->isHidden()) {
                         QWidget *parent = static_cast<QWidget *>(this->parent());
                         if (parent) {
-                            animationToDown(parent->size());
+                            this->playAnimation(parent->size());
                         }
                     }
                 }
@@ -315,11 +356,12 @@ void PlayQueueWidget::autoHidden(QWidget *old, QWidget *now)
                     if (!this->isHidden()) {
                         QWidget *parent = static_cast<QWidget *>(this->parent());
                         if (parent) {
-                            animationToDown(parent->size());
+                            this->playAnimation(parent->size());
                         }
                     }
                 }
             }
+
         }
     }
 }

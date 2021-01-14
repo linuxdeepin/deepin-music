@@ -680,7 +680,7 @@ void FooterWidget::slotPlayQueueClick(bool click)
         m_forwardWidget->setSourceImage(QImage());
     }
 
-    MainFrame *mainFree =  static_cast<MainFrame *>(parent());
+    MainFrame *mainFree = static_cast<MainFrame *>(parent());
     if (mainFree) {
         mainFree->playQueueAnimation();
     }

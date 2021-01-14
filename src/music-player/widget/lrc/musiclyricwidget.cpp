@@ -58,6 +58,7 @@ static constexpr int AnimationDelay = 400; //ms
 MusicLyricWidget::MusicLyricWidget(QWidget *parent)
     : DWidget(parent)
 {
+    setFocusPolicy(Qt::ClickFocus);
     setAutoFillBackground(true);
     auto palette = this->palette();
     palette.setColor(DPalette::Background, QColor("#F8F8F8"));

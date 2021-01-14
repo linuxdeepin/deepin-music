@@ -88,6 +88,7 @@ private slots:
     void slotShowSubSonglist(const QMap<QString, MediaMeta> &musicinfos, bool isAlbumDialog);
 protected:
     void showEvent(QShowEvent *event) Q_DECL_OVERRIDE;
+    void changeEvent(QEvent *event) Q_DECL_OVERRIDE;
     void resizeEvent(QResizeEvent *e) Q_DECL_OVERRIDE;
     void closeEvent(QCloseEvent *event) Q_DECL_OVERRIDE;
     void hideEvent(QHideEvent *event) Q_DECL_OVERRIDE;

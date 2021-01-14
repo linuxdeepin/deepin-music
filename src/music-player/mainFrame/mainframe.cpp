@@ -716,6 +716,14 @@ void MainFrame::showEvent(QShowEvent *event)
     }
 }
 
+void MainFrame::changeEvent(QEvent *event)
+{
+    if (event->type() == QEvent::WindowStateChange) {
+        // 窗体状态改变，播放队列收回问题修复
+        m_playQueueWidget->stopAnimation();
+    }
+}
+
 void MainFrame::resizeEvent(QResizeEvent *e)
 {
     DMainWindow::resizeEvent(e);
@@ -833,11 +841,7 @@ void MainFrame::playQueueAnimation()
         connect(m_playQueueWidget, &PlayQueueWidget::signalAutoHidden, m_footerWidget, &FooterWidget::slotPlayQueueAutoHidden);
     }
 
-    if (m_playQueueWidget->isHidden()) {
-        m_playQueueWidget->animationToUp(this->size());
-    } else {
-        m_playQueueWidget->animationToDown(this->size());
-    }
+    m_playQueueWidget->playAnimation(this->size());
 }
 
 
