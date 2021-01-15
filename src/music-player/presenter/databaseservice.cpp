@@ -444,6 +444,23 @@ void DataBaseService::deletePlaylist(const QString &hash)
     }
 }
 
+void DataBaseService::updatePlaylist(const QVector<DataBaseService::PlaylistData> &playlistDataList)
+{
+    QSqlQuery query;
+
+    for (auto item : playlistDataList) {
+        query.prepare("UPDATE playlist SET displayname = :displayname WHERE uuid = :uuid");
+
+        query.bindValue(":uuid", item.uuid);
+        query.bindValue(":displayname", item.displayName);
+
+        if (! query.exec()) {
+            qWarning() << query.lastError();
+            return;
+        }
+    }
+}
+
 bool DataBaseService::favoriteMusic(const MediaMeta meta)
 {
     bool ret = false;
@@ -948,6 +965,9 @@ bool DataBaseService::isMediaMetaExist(const QString &hash)
 void DataBaseService::initPlaylistTable()
 {
     QSqlDatabase::database().transaction();
+
+    QVector<PlaylistData> playlistDataList;
+
     PlaylistData playlistMeta;
     playlistMeta.uuid = "album";
     playlistMeta.displayName = tr("Albums");
@@ -956,9 +976,7 @@ void DataBaseService::initPlaylistTable()
     playlistMeta.hide = false;
     playlistMeta.sortID = 1;
     playlistMeta.sortType = SortByAddTimeASC;
-    if (!isPlaylistExist("album")) {
-        addPlaylist(playlistMeta);
-    }
+    playlistDataList << playlistMeta;
 
     playlistMeta.uuid = "artist";
     playlistMeta.displayName = tr("Artists");
@@ -966,9 +984,7 @@ void DataBaseService::initPlaylistTable()
     playlistMeta.readonly = true;
     playlistMeta.hide = false;
     playlistMeta.sortID = 2;
-    if (!isPlaylistExist("artist")) {
-        addPlaylist(playlistMeta);
-    }
+    playlistDataList << playlistMeta;
 
     playlistMeta.uuid = "all";
     playlistMeta.displayName = tr("All Music");
@@ -976,9 +992,7 @@ void DataBaseService::initPlaylistTable()
     playlistMeta.readonly = true;
     playlistMeta.hide = false;
     playlistMeta.sortID = 3;
-    if (!isPlaylistExist("all")) {
-        addPlaylist(playlistMeta);
-    }
+    playlistDataList << playlistMeta;
 
     playlistMeta.displayName = tr("My Favorites");
     playlistMeta.uuid = "fav";
@@ -986,9 +1000,7 @@ void DataBaseService::initPlaylistTable()
     playlistMeta.readonly = true;
     playlistMeta.hide = false;
     playlistMeta.sortID = 4;
-    if (!isPlaylistExist("fav")) {
-        addPlaylist(playlistMeta);
-    }
+    playlistDataList << playlistMeta;
 
     playlistMeta.displayName = "Playlist";
     playlistMeta.uuid = "play";
@@ -996,9 +1008,7 @@ void DataBaseService::initPlaylistTable()
     playlistMeta.readonly = true;
     playlistMeta.hide = true;
     playlistMeta.sortID = 5;
-    if (!isPlaylistExist("play")) {
-        addPlaylist(playlistMeta);
-    }
+    playlistDataList << playlistMeta;
 
     playlistMeta.displayName = "Search result";
     playlistMeta.uuid = "search";
@@ -1006,9 +1016,7 @@ void DataBaseService::initPlaylistTable()
     playlistMeta.readonly = true;
     playlistMeta.hide = true;
     playlistMeta.sortID = 6;
-    if (!isPlaylistExist("search")) {
-        addPlaylist(playlistMeta);
-    }
+    playlistDataList << playlistMeta;
 
     playlistMeta.displayName = "Music";
     playlistMeta.uuid = "musicCand";
@@ -1016,9 +1024,7 @@ void DataBaseService::initPlaylistTable()
     playlistMeta.readonly = true;
     playlistMeta.hide = true;
     playlistMeta.sortID = 7;
-    if (!isPlaylistExist("musicCand")) {
-        addPlaylist(playlistMeta);
-    }
+    playlistDataList << playlistMeta;
 
     playlistMeta.displayName = "Album";
     playlistMeta.uuid = "albumCand";
@@ -1026,9 +1032,7 @@ void DataBaseService::initPlaylistTable()
     playlistMeta.readonly = true;
     playlistMeta.hide = true;
     playlistMeta.sortID = 8;
-    if (!isPlaylistExist("albumCand")) {
-        addPlaylist(playlistMeta);
-    }
+    playlistDataList << playlistMeta;
 
     playlistMeta.displayName = "Artist";
     playlistMeta.uuid = "artistCand";
@@ -1036,9 +1040,7 @@ void DataBaseService::initPlaylistTable()
     playlistMeta.readonly = true;
     playlistMeta.hide = true;
     playlistMeta.sortID = 9;
-    if (!isPlaylistExist("artistCand")) {
-        addPlaylist(playlistMeta);
-    }
+    playlistDataList << playlistMeta;
 
     playlistMeta.displayName = "Music";
     playlistMeta.uuid = "musicResult";
@@ -1046,9 +1048,7 @@ void DataBaseService::initPlaylistTable()
     playlistMeta.readonly = true;
     playlistMeta.hide = true;
     playlistMeta.sortID = 10;
-    if (!isPlaylistExist("musicResult")) {
-        addPlaylist(playlistMeta);
-    }
+    playlistDataList << playlistMeta;
 
     playlistMeta.displayName = "Album";
     playlistMeta.uuid = "albumResult";
@@ -1056,9 +1056,7 @@ void DataBaseService::initPlaylistTable()
     playlistMeta.readonly = true;
     playlistMeta.hide = true;
     playlistMeta.sortID = 11;
-    if (!isPlaylistExist("albumResult")) {
-        addPlaylist(playlistMeta);
-    }
+    playlistDataList << playlistMeta;
 
     playlistMeta.displayName = "Artist";
     playlistMeta.uuid = "artistResult";
@@ -1066,8 +1064,17 @@ void DataBaseService::initPlaylistTable()
     playlistMeta.readonly = true;
     playlistMeta.hide = true;
     playlistMeta.sortID = 12;
-    if (!isPlaylistExist("artistResult")) {
-        addPlaylist(playlistMeta);
+    playlistDataList << playlistMeta;
+
+    if (!isPlaylistExist("album")) {
+        for (auto item : playlistDataList) {
+            addPlaylist(item);
+        }
+    } else {
+        QVector<PlaylistData> updatePlaylistDataList(4);
+        qCopy(playlistDataList.begin(), playlistDataList.begin() + updatePlaylistDataList.size(), updatePlaylistDataList.begin());
+
+        updatePlaylist(updatePlaylistDataList);
     }
 
     QSqlDatabase::database().commit();

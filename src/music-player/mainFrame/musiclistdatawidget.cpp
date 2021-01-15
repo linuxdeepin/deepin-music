@@ -150,7 +150,7 @@ void MusicListDataWidget::slotViewChanged(ListPageSwitchType switchtype, const Q
     case FavType: {
         refreshSortAction();
         m_musicListView->initCostomSonglist("fav");
-        m_titleLabel->setText(m_musicListView->getFavName());
+        m_titleLabel->setText(DataBaseService::getInstance()->getPlaylistNameByUUID("fav"));
         m_musicListView->setViewModeFlag("fav", m_musicListView->getViewMode());
         m_pStackedWidget->setCurrentWidget(m_musicListView);
         m_preHash = "fav";
@@ -163,8 +163,7 @@ void MusicListDataWidget::slotViewChanged(ListPageSwitchType switchtype, const Q
         refreshSortAction();
         m_musicListView->initCostomSonglist(hashOrSearchword);
         QFontMetrics titleFm(m_titleLabel->font());
-        auto text = titleFm.elidedText(DataBaseService::getInstance()->getPlaylistNameByUUID(hashOrSearchword), Qt::ElideRight, 300);
-
+        QString text = titleFm.elidedText(DataBaseService::getInstance()->getPlaylistNameByUUID(hashOrSearchword), Qt::ElideRight, 300);
         m_titleLabel->setText(text);
         m_musicListView->setViewModeFlag(hashOrSearchword, m_musicListView->getViewMode());
         m_pStackedWidget->setCurrentWidget(m_musicListView);
@@ -802,7 +801,7 @@ void MusicListDataWidget::slotPlaylistNameUpdate(const QString &listHash)
         return;
     }
     QFontMetrics titleFm(m_titleLabel->font());
-    auto text = titleFm.elidedText(DataBaseService::getInstance()->getPlaylistNameByUUID(m_currentHash), Qt::ElideRight, 300);
+    QString text = titleFm.elidedText(DataBaseService::getInstance()->getPlaylistNameByUUID(m_currentHash), Qt::ElideRight, 300);
     m_titleLabel->setText(text);
 }
 

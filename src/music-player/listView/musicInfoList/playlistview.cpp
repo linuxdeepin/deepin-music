@@ -480,11 +480,6 @@ void PlayListView::setSortType(DataBaseService::ListSortType sortType)
     this->setDataBySortType(mediaMetas, sortType);
 }
 
-QString PlayListView::getFavName()
-{
-    return tr("My favorites");
-}
-
 void PlayListView::showErrorDlg()
 {
     QList<DDialog *> ql = this->findChildren<DDialog *>("uniqueinvaliddailog");

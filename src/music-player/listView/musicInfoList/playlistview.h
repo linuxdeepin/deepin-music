@@ -73,8 +73,6 @@ public:
     //排序
     DataBaseService::ListSortType getSortType();
     void setSortType(DataBaseService::ListSortType sortType);
-    //获取收藏名字
-    QString getFavName();
     //弹出错误提示框，并播放下一首
     void showErrorDlg();
 

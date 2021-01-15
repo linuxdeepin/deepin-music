@@ -114,6 +114,8 @@ public:
     void                 addPlaylist(const PlaylistData &playlistMeta);
     // 删除一个歌单
     void                 deletePlaylist(const QString &hash);
+    // 更新部分歌单
+    void                 updatePlaylist(const QVector<PlaylistData> &playlistDataList);
     // 歌单信息
     QList<PlaylistData>  allPlaylistMeta();
     // 添加歌曲到歌单
