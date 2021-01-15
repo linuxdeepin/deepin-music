@@ -31,6 +31,8 @@
 #include "medialibrary.h"
 #include "global.h"
 
+#define SLEEPTIME 10
+
 DBOperate::DBOperate(QObject *parent)
 {
     Q_UNUSED(parent);
@@ -51,6 +53,13 @@ void DBOperate::stop()
 {
     m_mutex.lock();
     m_needStop = true;
+    m_mutex.unlock();
+}
+
+void DBOperate::setNeedSleep()
+{
+    m_mutex.lock();
+    m_needSleep = true;
     m_mutex.unlock();
 }
 
@@ -93,6 +102,10 @@ void DBOperate::slotImportMedias(QString importHash, const QStringList &urllist)
         if (m_needStop) {
             break;
         }
+        if (m_needSleep) {
+            QThread::msleep(SLEEPTIME);
+            m_needSleep = false;
+        }
         QFileInfo fileInfo(filepath);
         if (fileInfo.isDir()) {
             QDirIterator it(filepath, m_mediaLibrary->getSupportedSuffixs().keys(),
@@ -100,6 +113,10 @@ void DBOperate::slotImportMedias(QString importHash, const QStringList &urllist)
             while (it.hasNext()) {
                 if (m_needStop) {
                     break;
+                }
+                if (m_needSleep) {
+                    QThread::msleep(SLEEPTIME);
+                    m_needSleep = false;
                 }
                 QString  strtp = it.next();
                 MediaMeta mediaMeta = m_mediaLibrary->creatMediaMeta(strtp);
@@ -127,6 +144,10 @@ void DBOperate::slotImportMedias(QString importHash, const QStringList &urllist)
         } else {
             if (m_needStop) {
                 break;
+            }
+            if (m_needSleep) {
+                QThread::msleep(SLEEPTIME);
+                m_needSleep = false;
             }
             QString strtp = filepath;
             if (!m_mediaLibrary->getSupportedSuffixs().keys().contains(("*." + fileInfo.suffix()))) {
@@ -167,6 +188,10 @@ void DBOperate::slotCreatCoverImg(const QList<MediaMeta> &metas)
         if (m_needStop) {
             break;
         }
+        if (m_needSleep) {
+            QThread::msleep(SLEEPTIME);
+            m_needSleep = false;
+        }
         //没有加载过的文件才去解析数据
         if (meta.hasimage) {
             meta.getCoverData(Global::cacheDir());
@@ -201,9 +226,14 @@ bool DBOperate::deleteMetaFromAllMusic(const QStringList &metaHash, bool removeF
 {
     QSqlQuery query(m_db);
     QString strsql;
+    QList<PlaylistDataThread> playlistMetas = allPlaylistMetaUUid();
     for (QString hash : metaHash) {
         if (m_needStop) {
             break;
+        }
+        if (m_needSleep) {
+            QThread::msleep(SLEEPTIME);
+            m_needSleep = false;
         }
         strsql = QString("DELETE FROM musicNew WHERE hash='%1'").arg(hash);
         query.prepare(strsql);
@@ -212,24 +242,27 @@ bool DBOperate::deleteMetaFromAllMusic(const QStringList &metaHash, bool removeF
         } else {
             QThread::msleep(10);
             emit signalRmvSong("all", hash, removeFromLocal);
+
+            //遍历所有歌单,包含我的收藏
+            for (PlaylistDataThread playlist : playlistMetas) {
+                if (m_needStop) {
+                    break;
+                }
+                if (m_needSleep) {
+                    QThread::msleep(SLEEPTIME);
+                    m_needSleep = false;
+                }
+                if (playlist.readonly != 1) {
+                    deleteMetaFromPlaylist(playlist.uuid, QStringList() << hash);
+                }
+            }
+            deleteMetaFromPlaylist("fav", QStringList() << hash);
         }
     }
 
     if (allMusicInfosCount() <= 0) {
         emit signalAllMusicCleared();
     }
-
-    //遍历所有歌单,包含我的收藏
-    QList<PlaylistDataThread> playlistMetas = allPlaylistMetaUUid();
-    for (PlaylistDataThread playlist : playlistMetas) {
-        if (m_needStop) {
-            break;
-        }
-        if (playlist.readonly != 1) {
-            deleteMetaFromPlaylist(playlist.uuid, metaHash);
-        }
-    }
-    deleteMetaFromPlaylist("fav", metaHash);
     return true;
 }
 
@@ -241,6 +274,10 @@ bool DBOperate::deleteMetaFromPlaylist(QString uuid, const QStringList &metaHash
         if (m_needStop) {
             break;
         }
+        if (m_needSleep) {
+            QThread::msleep(SLEEPTIME);
+            m_needSleep = false;
+        }
         QString sqlIsExists = QString("select music_id from playlist_%1 where music_id = '%2'").arg(uuid).arg(hash);
         if (query.exec(sqlIsExists)) {
             if (query.next()) {
@@ -249,6 +286,7 @@ bool DBOperate::deleteMetaFromPlaylist(QString uuid, const QStringList &metaHash
                 if (! query.exec()) {
                     qCritical() << query.lastError() << strsql;
                 }
+                QThread::msleep(10);
                 if (uuid == "fav") {
                     emit signalFavSongRemove(hash);
                 }
@@ -379,6 +417,10 @@ int DBOperate::addMetaToPlaylist(QString uuid, const QList<MediaMeta> &metas)
     for (MediaMeta meta : metas) {
         if (m_needStop) {
             break;
+        }
+        if (m_needSleep) {
+            QThread::msleep(SLEEPTIME);
+            m_needSleep = false;
         }
         QSqlQuery query(m_db);
         QString sqlStr = QString("SELECT * FROM playlist_%1 WHERE music_id = :music_id").arg(uuid);

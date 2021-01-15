@@ -770,7 +770,7 @@ void MusicListDataWidget::refreshInfoLabel(QString hash)
         if (hash.isEmpty()) {
             return;
         }
-        songCount = DataBaseService::getInstance()->customizeMusicInfos(hash).size();
+        songCount = m_musicListView->getRowCount();
         if (0 == songCount) {
             countStr = QString("   ") + MusicListDataWidget::tr("No songs");
         } else if (1 == songCount) {

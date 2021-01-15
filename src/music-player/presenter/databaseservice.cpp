@@ -287,6 +287,7 @@ QList<DataBaseService::PlaylistData> DataBaseService::getCustomSongList()
 
 void DataBaseService::removeSelectedSongs(const QString &curpage, const QStringList &musichashlist, bool removeFromLocal)
 {
+    m_deleting = true;
     emit sigRemoveSelectedSongs(curpage, musichashlist, removeFromLocal);
     // 已经放到子线程中处理
 //    //需要从本地删除
@@ -573,7 +574,14 @@ void DataBaseService::slotRmvSongThread(const QString &listHash, const QString &
             }
         }
         emit signalRmvSong("all", musicHash);
+    } else {
+        emit signalRmvSong(listHash, musicHash);
     }
+}
+
+void DataBaseService::slotDelFinish()
+{
+    m_deleting = false;
 }
 
 QList<DataBaseService::PlaylistData> DataBaseService::allPlaylistMeta()
@@ -743,6 +751,16 @@ QString DataBaseService::getFirstSong()
 {
     QString strurl = m_firstSonsg;
     return strurl;
+}
+
+bool DataBaseService::getDelStatu()
+{
+    return m_deleting;
+}
+
+void DataBaseService::setDelNeedSleep()
+{
+    m_worker.setNeedSleep();
 }
 
 //void DataBaseService::updatePlaylistOrderType(int type, QString uuid)
@@ -1093,6 +1111,9 @@ DataBaseService::DataBaseService()
     connect(&m_worker, &DBOperate::signalImportedPercent, this, &DataBaseService::signalImportedPercent, Qt::QueuedConnection);
     connect(&m_worker, &DBOperate::signalAllMusicAddOne, this, &DataBaseService::signalAllMusicAddOne, Qt::QueuedConnection);
     connect(&m_worker, &DBOperate::signalFavSongAdd, this, &DataBaseService::signalFavSongAdd, Qt::QueuedConnection);
+    // 删除结束
+    connect(&m_worker, &DBOperate::signalDelFinish, this, &DataBaseService::slotDelFinish, Qt::QueuedConnection);
+
     m_workerThread->start();
 }
 

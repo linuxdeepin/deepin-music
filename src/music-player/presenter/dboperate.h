@@ -39,6 +39,7 @@ public:
     };
 
     void stop();
+    void setNeedSleep();
 public slots:
     void     slotImportMedias(QString importHash, const QStringList &urllist);
     void     slotCreatCoverImg(const QList<MediaMeta> &metas);
@@ -74,11 +75,14 @@ signals:
     void     signalAllMusicAddOne(MediaMeta meta);
     // 收藏中的歌曲被删除，动态显示
     void     signalFavSongAdd(QString musicHash);
+    // 删除结束
+    void     signalDelFinish();
 public:
 private:
     MediaLibrary     *m_mediaLibrary = nullptr;
     QSqlDatabase      m_db;
     bool              m_needStop = false;
+    bool              m_needSleep = false;
     QMutex            m_mutex;
     QString           m_importHash;
     // 导入的歌曲计数

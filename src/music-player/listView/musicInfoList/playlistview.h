@@ -77,6 +77,8 @@ public:
     QString getFavName();
     //弹出错误提示框，并播放下一首
     void showErrorDlg();
+
+    int getRowCount();
 public slots:
     void slotOnDoubleClicked(const QModelIndex &index);
     void slotUpdatePlayingIcon();

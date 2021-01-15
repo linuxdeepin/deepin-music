@@ -252,6 +252,9 @@ void PlayListView::initAllSonglist(QString hash)
 
 void PlayListView::initCostomSonglist(const QString &hash)
 {
+    if (DataBaseService::getInstance()->getDelStatu()) {
+        DataBaseService::getInstance()->setDelNeedSleep();
+    }
     m_currentHash = hash;
     m_model->clear();
     QList<MediaMeta> mediaMetas = DataBaseService::getInstance()->customizeMusicInfos(hash);
@@ -501,6 +504,11 @@ void PlayListView::showErrorDlg()
         //播放下一首
         Player::getInstance()->playNextMeta(true);
     }
+}
+
+int PlayListView::getRowCount()
+{
+    return m_model->rowCount();
 }
 
 void PlayListView::setViewModeFlag(QString hash, QListView::ViewMode mode)

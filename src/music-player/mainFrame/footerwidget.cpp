@@ -347,7 +347,7 @@ void FooterWidget::initUI(QWidget *parent)
     });
 
     connect(m_volSlider, &SoundVolume::sigVolumeChanged, this, &FooterWidget::slotFlushSoundIcon);
-    connect(DataBaseService::getInstance(), &DataBaseService::signalFavSongRemove, this, &FooterWidget::fluashFavoriteBtnIcon);
+    connect(DataBaseService::getInstance(), &DataBaseService::signalFavSongRemove, this, &FooterWidget::slotFavoriteRemove);
     connect(DataBaseService::getInstance(), &DataBaseService::signalFavSongAdd, this, &FooterWidget::fluashFavoriteBtnIconAdd);
 
     slotFlushSoundIcon();
@@ -571,6 +571,13 @@ void FooterWidget::fluashFavoriteBtnIcon()
     if (DataBaseService::getInstance()->favoriteExist(Player::getInstance()->getActiveMeta())) {
         m_btFavorite->setIcon(QIcon::fromTheme("collection1_press"));
     } else {
+        m_btFavorite->setIcon(QIcon::fromTheme("dcc_collection"));
+    }
+}
+
+void FooterWidget::slotFavoriteRemove(const QString &musicHash)
+{
+    if (musicHash == Player::getInstance()->getActiveMeta().hash) {
         m_btFavorite->setIcon(QIcon::fromTheme("dcc_collection"));
     }
 }

@@ -136,6 +136,9 @@ public:
     void                 setFirstSong(const QString &strurl);
     // 从文管导入后播放的第一首歌曲
     QString              getFirstSong();
+    // 获取删除状态
+    bool                 getDelStatu();
+    void                 setDelNeedSleep();
 public slots:
     void slotGetMetaFromThread(MediaMeta meta);
     // 收到子线程导入结束通知
@@ -144,6 +147,8 @@ public slots:
     void slotCreatOneCoverImg(MediaMeta meta);
     // 收到子线程删除歌曲通知消息，动态显示
     void slotRmvSongThread(const QString &listHash, const QString &musicHash, bool removeFromLocal);
+    // 收到子线程删除结束
+    void slotDelFinish();
 signals:
     // 所有歌曲数量变化
     void signalAllMusicAddOne(MediaMeta meta);
@@ -204,6 +209,8 @@ private:
     QString          m_importHash;
     // 文管导入的第一首歌
     QString          m_firstSonsg = "";
+    // 正在删除中
+    bool             m_deleting = false;
 };
 
 Q_DECLARE_METATYPE(DataBaseService::ListSortType)
