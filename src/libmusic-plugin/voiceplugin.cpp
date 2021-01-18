@@ -5,6 +5,10 @@
 #include <QJsonArray>
 #include <QJsonDocument>
 #include <QJsonObject>
+#include <QMessageBox>
+#include <QDBusReply>
+#include <QThread>
+#include <QDir>
 
 VoicePlugin::VoicePlugin(QObject *parent): QObject(parent)
 {
@@ -22,20 +26,59 @@ void VoicePlugin::process(const QString &semantic)
                              QDBusConnection::sessionBus());
     if (speechbus.isValid()) {
         //send sth
-        QDBusMessage msg  = speechbus.call(QString("invoke"), strconbine.at(0), strconbine.size() == 1 ? " " : strconbine.at(1)); //0 function  ,1 params
-        qDebug() << "=============" << msg.arguments();
+        QDBusReply<QVariant> msg  = speechbus.call(QString("invoke"), strconbine.at(0), strconbine.size() == 1 ? " " : strconbine.at(1)); //0 function  ,1 params
         //just send sth to deepin-music
-        m_replyMessage = "music process message";
-        if (msg.arguments().size() > 0)
-            emit signaleSendMessage(msg.arguments().at(0).toString());
+        if (msg.isValid()) {
+            m_replyMessage = msg.value().toString();
+            m_ttsMessage = msg.value().toString();
+            emit signaleSendMessage(m_ttsMessage);
+        }
     } else {
-        //service not start? -- start music
+        // 启动音乐
+        QDBusInterface startbus("com.deepin.SessionManager",
+                                "/com/deepin/StartManager",
+                                "com.deepin.StartManager",
+                                QDBusConnection::sessionBus(),
+                                this);
+        if (startbus.isValid()) {
+            QList<QVariant> strlist;
+            strlist << "/usr/share/applications/deepin-music.desktop";
+            QDBusReply<QVariant> msg  = startbus.asyncCallWithArgumentList(QString("Launch"), strlist);
+            //just send sth to deepin-music
+            int checkCount = 0;
+            while (checkCount <= 20) {
+                QDBusInterface speechbus("org.mpris.MediaPlayer2.DeepinMusic",
+                                         "/org/mpris/speech",
+                                         "com.deepin.speech",
+                                         QDBusConnection::sessionBus());
+                if (speechbus.isValid()) {
+                    break;
+                }
+                checkCount++;
+                QThread::msleep(100);
+            }
+
+            QDBusInterface speechbus("org.mpris.MediaPlayer2.DeepinMusic",
+                                     "/org/mpris/speech",
+                                     "com.deepin.speech",
+                                     QDBusConnection::sessionBus());
+            if (speechbus.isValid()) {
+                QDBusReply<QVariant> msg  = speechbus.call(QString("invoke"), strconbine.at(0), strconbine.size() == 1 ? " " : strconbine.at(1)); //0 function  ,1 params
+                //just send sth to deepin-music
+                if (msg.isValid()) {
+                    m_replyMessage = msg.value().toString();
+                    m_ttsMessage = msg.value().toString();
+                    emit signaleSendMessage(m_ttsMessage);
+                }
+            }
+        }
     }
 }
 
-QStringList VoicePlugin::analyseJsonString(const QString &str)
+QStringList VoicePlugin::analyseJsonString(const QString &semantic)
 {
-    QString jsonStr = str;
+    QString jsonStr = semantic;
+//    QMessageBox::about(nullptr, "1", jsonStr);
     QStringList strlist;
 
     QJsonParseError parseJsonErr;
@@ -55,14 +98,18 @@ QStringList VoicePlugin::analyseJsonString(const QString &str)
     QString insType;
     QString genre;
     // 不包含semantic，直接返回空
-    if (!jsonObject.contains(QStringLiteral("semantic"))) {
-        qDebug() << __FUNCTION__ << "---2---" << strlist;
+    if (!jsonObject.contains(QStringLiteral("intent"))) {
         return strlist;
     }
-    QJsonValue semanticValue = jsonObject.value(QStringLiteral("semantic"));
+    QJsonValue intentValue = jsonObject.value(QStringLiteral("intent"));
+    QJsonObject intentObject = intentValue.toObject();
+    // 不包含semantic，直接返回空
+    if (!intentObject.contains(QStringLiteral("semantic"))) {
+        return strlist;
+    }
+    QJsonValue semanticValue = intentObject.value(QStringLiteral("semantic"));
     // semantic是一个集合,不是集合直接返回空
     if (!semanticValue.isArray()) {
-        qDebug() << __FUNCTION__ << "---3---" << strlist;
         return strlist;
     }
     QJsonArray semanticArray = semanticValue.toArray();
@@ -167,7 +214,6 @@ QStringList VoicePlugin::analyseJsonString(const QString &str)
         } else if (insType == "random") {
             strlist << "setMode" << "2";
         }
-
     }
     return strlist;
 }

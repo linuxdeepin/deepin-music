@@ -299,11 +299,7 @@ void Player::playPreMeta()
         }
 
         setActiveMeta(m_MetaList.at(index));
-        // 记录切换歌单之前播放状态
-        PlaybackStatus preStatue = status();
-        if (preStatue == Player::PlaybackStatus::Playing) {
-            playMeta(m_ActiveMeta);
-        }
+        playMeta(m_ActiveMeta);
     }
 }
 
@@ -358,11 +354,7 @@ void Player::playNextMeta(bool isAuto)
         }
 
         setActiveMeta(m_MetaList.at(index));
-        // 记录切换歌单之前播放状态
-        PlaybackStatus preStatue = status();
-        if (preStatue == Player::PlaybackStatus::Playing) {
-            playMeta(m_ActiveMeta);
-        }
+        playMeta(m_ActiveMeta);
     }
 }
 
@@ -388,7 +380,7 @@ void Player::playRmvMeta(const QStringList &metalistToDel)
     int index = 0;
     QString nextPlayHash;
     // 记录切换歌单之前播放状态
-    PlaybackStatus preStatue = status();
+    PlaybackStatus preStatus = status();
     for (int i = 0; i < m_MetaList.size(); i++) {
         if (m_MetaList.at(i).hash == m_ActiveMeta.hash) {
             index = i;
@@ -421,7 +413,7 @@ void Player::playRmvMeta(const QStringList &metalistToDel)
         }
         if (!metaToPlay.hash.isEmpty()) {
             setActiveMeta(metaToPlay);
-            if (preStatue == Player::PlaybackStatus::Playing) {
+            if (preStatus == Player::PlaybackStatus::Playing) {
                 playMeta(m_ActiveMeta);
             }
         }
@@ -696,7 +688,12 @@ void Player::forcePlayMeta()
         if (m_MetaList.size() == 0)
             return;
     }
-    playMeta(m_MetaList.first());
+    // 如果当前歌曲已设置，则播放当前歌曲
+    if (m_ActiveMeta.hash.isEmpty()) {
+        playMeta(m_MetaList.first());
+    } else {
+        playMeta(m_ActiveMeta);
+    }
 }
 
 void Player::initEqualizerCfg()

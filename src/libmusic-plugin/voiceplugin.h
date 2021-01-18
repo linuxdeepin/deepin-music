@@ -39,12 +39,11 @@ public  slots:
 
 public:
     QString m_ttsMessage;
-
     QString m_replyMessage;
 signals:
     void signaleSendMessage(QString text);
 private:
-    QStringList analyseJsonString(const QString &str);
+    QStringList analyseJsonString(const QString &semantic);
 };
 
 #endif // ScheduleDemoWidget_H

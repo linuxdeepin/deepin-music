@@ -1,5 +1,6 @@
 #include "musicvoiceplugin.h"
 #include "musicvoiceservice.h"
+#include "voiceplugin.h"
 MusicVoicePlugin::MusicVoicePlugin(QObject *parent)
 {
     Q_UNUSED(parent);
@@ -19,7 +20,7 @@ void MusicVoicePlugin::uninit()
 }
 QStringList MusicVoicePlugin::getSupportService()
 {
-    return QStringList{ "weather" };
+    return QStringList{ "musicX" };
 }
 IService *MusicVoicePlugin::createService(const QString &service)
 {
@@ -27,7 +28,8 @@ IService *MusicVoicePlugin::createService(const QString &service)
         return nullptr;
     }
     QMutexLocker lock(&serviceLock);
-    auto pService = new MusicVoiceService();
+    MusicVoiceService *pService = new MusicVoiceService();
+    connect(pService->m_voice, &VoicePlugin::signaleSendMessage, this, &MusicVoicePlugin::slotSendMessage);
     serviceSet.insert(pService);
     return pService;
 }
@@ -48,4 +50,15 @@ void MusicVoicePlugin::releaseService(IService *service)
 bool MusicVoicePlugin::needRunInDifferentThread()
 {
     return false;
+}
+
+void MusicVoicePlugin::slotSendMessage(QString text)
+{
+    qDebug() << __FUNCTION__ << text;
+    Reply reply;
+    reply.setReplyType(Reply::RT_STRING_TTS | Reply::RT_STRING_DISPLAY);
+    reply.ttsMessage(text);
+    reply.displayMessage(text);
+    if (this->m_messageHandle)
+        this->m_messageHandle(this, reply);
 }

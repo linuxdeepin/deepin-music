@@ -3,7 +3,7 @@
 #include "interface/service.h"
 #include "systemsemanticplugin.h"
 #include <QMutex>
-class MusicVoicePlugin : public QObject,public IServicePlugin
+class MusicVoicePlugin : public QObject, public IServicePlugin
 {
     Q_OBJECT
     Q_INTERFACES(IServicePlugin)
@@ -17,9 +17,10 @@ public:
 
     virtual QStringList getSupportService() override;
     virtual IService *createService(const QString &service) override;
-    virtual void releaseService(IService* service) override;
+    virtual void releaseService(IService *service) override;
     virtual bool needRunInDifferentThread()  override;
-
+public slots:
+    void slotSendMessage(QString text);
 private:
     QSet<IService *> serviceSet;
     QMutex serviceLock;

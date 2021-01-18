@@ -49,7 +49,13 @@ QVariant SpeechCenter::playMusic(QString musicName)
             isExit = true;
         }
     }
-    return isExit;
+    QString str;
+    if (isExit) {
+        str = "好的，没问题。";
+    } else {
+        str = "您的音乐播放器中没有歌曲，赶紧去添加吧。";
+    }
+    return str;
 }
 
 void SpeechCenter::setMediaMetas(const QList<MediaMeta> &metas)
@@ -82,7 +88,13 @@ QVariant SpeechCenter::playArtist(QString artistName)
             break;
         }
     }
-    return isExit;
+    QString str;
+    if (isExit) {
+        str = "好的，没问题。";
+    } else {
+        str = "抱歉，没有在音乐播放器中找到这首歌，您可以听其他音乐哦";
+    }
+    return str;
 }
 
 QVariant SpeechCenter::playArtistMusic(QString artistAndmusic)
@@ -127,7 +139,13 @@ QVariant SpeechCenter::playArtistMusic(QString artistAndmusic)
             break;
         }
     }
-    return isExit;
+    QString str;
+    if (isExit) {
+        str = "好的，没问题。";
+    } else {
+        str = "抱歉，没有在音乐播放器中找到这首歌，您可以听其他音乐哦。";
+    }
+    return str;
 }
 
 QVariant SpeechCenter::playAlbum(QString albumName)
@@ -162,7 +180,13 @@ QVariant SpeechCenter::playAlbum(QString albumName)
             break;
         }
     }
-    return isExit;
+    QString str;
+    if (isExit) {
+        str = "好的，没问题。";
+    } else {
+        str = "您的音乐播放器中没有这首歌，换一首歌曲听听吧";
+    }
+    return str;
 }
 
 QVariant SpeechCenter::playFaverite(QString hash)
@@ -184,7 +208,13 @@ QVariant SpeechCenter::playFaverite(QString hash)
         Player::getInstance()->playMeta(mediaMeta);
         isExit = true;
     }
-    return isExit;
+    QString str;
+    if (isExit) {
+        str = "好的，没问题。";
+    } else {
+        str = "您的播放器中没有收藏的歌曲。";
+    }
+    return str;
 }
 
 QVariant SpeechCenter::playSonglist(QString songlistName)
@@ -217,7 +247,13 @@ QVariant SpeechCenter::playSonglist(QString songlistName)
     } else {
         isExit = playFaverite("").toBool();
     }
-    return isExit;
+    QString str;
+    if (isExit) {
+        str = "好的，没问题。";
+    } else {
+        str = "您的音乐播放器中没有这首歌，换一首歌曲听听吧。";
+    }
+    return str;
 }
 
 QVariant SpeechCenter::pause(QString musicName)
@@ -229,7 +265,13 @@ QVariant SpeechCenter::pause(QString musicName)
         Player::getInstance()->pause();
         isExit = true;
     }
-    return isExit;
+    QString str;
+    if (isExit) {
+        str = "好的，没问题。";
+    } else {
+//        str = "抱歉，设置失败，请重新尝试。";
+    }
+    return str;
 }
 
 QVariant SpeechCenter::resume(QString musicName)
@@ -241,7 +283,13 @@ QVariant SpeechCenter::resume(QString musicName)
         Player::getInstance()->resume();
         isExit = true;
     }
-    return isExit;
+    QString str;
+    if (isExit) {
+        str = "好的，没问题。";
+    } else {
+//        str = "抱歉，设置失败，请重新尝试。";
+    }
+    return str;
 }
 
 QVariant SpeechCenter::stop(QString musicName)
@@ -253,7 +301,13 @@ QVariant SpeechCenter::stop(QString musicName)
         Player::getInstance()->stop();
         isExit = true;
     }
-    return isExit;
+    QString str;
+    if (isExit) {
+        str = "好的，没问题。";
+    } else {
+//        str = "抱歉，设置失败，请重新尝试。";
+    }
+    return str;
 }
 
 QVariant SpeechCenter::pre(QString musicName)
@@ -265,7 +319,13 @@ QVariant SpeechCenter::pre(QString musicName)
         Player::getInstance()->playPreMeta();
         isExit = true;
     }
-    return isExit;
+    QString str;
+    if (isExit) {
+        str = "好的，没问题。";
+    } else {
+        str = "非常抱歉，没有找到这首歌，你可以更换其他歌单试试。";
+    }
+    return str;
 }
 
 QVariant SpeechCenter::next(QString musicName)
@@ -277,7 +337,13 @@ QVariant SpeechCenter::next(QString musicName)
         Player::getInstance()->playNextMeta(false);
         isExit = true;
     }
-    return isExit;
+    QString str;
+    if (isExit) {
+        str = "好的，没问题。";
+    } else {
+        str = "非常抱歉，没有找到这首歌，你可以更换其他歌单试试。";
+    }
+    return str;
 }
 
 QVariant SpeechCenter::playIndex(QString index)
@@ -291,7 +357,13 @@ QVariant SpeechCenter::playIndex(QString index)
         MediaMeta meta = mediaMetas.at(indexNumber - 1);
         Player::getInstance()->playMeta(meta);
     }
-    return isExit;
+    QString str;
+    if (isExit) {
+        str = "好的，没问题。";
+    } else {
+        str = "非常抱歉，没有找到这首歌，你可以更换其他歌单试试。";
+    }
+    return str;
 }
 
 QVariant SpeechCenter::addFaverite(QString musicName)
@@ -309,7 +381,13 @@ QVariant SpeechCenter::addFaverite(QString musicName)
                 DataBaseService::getInstance()->getPlaylistNameByUUID("fav"), 1, 1);
         }
     }
-    return isExit;
+    QString str;
+    if (isExit) {
+        str = "收藏成功。";
+    } else {
+//        str = "收藏失败。";
+    }
+    return str;
 }
 
 QVariant SpeechCenter::removeFaverite(QString musicName)
@@ -325,7 +403,13 @@ QVariant SpeechCenter::removeFaverite(QString musicName)
             isExit = true;
         }
     }
-    return isExit;
+    QString str;
+    if (isExit) {
+        str = "已取消收藏。";
+    } else {
+//        str = "收藏失败。";
+    }
+    return str;
 }
 
 QVariant SpeechCenter::setMode(QString mode)
@@ -333,20 +417,27 @@ QVariant SpeechCenter::setMode(QString mode)
     qDebug() << __FUNCTION__ << "";
     int modeNumber = mode.toInt();
     bool isExit = false;
+    QString str;
     if (Player::getInstance()->status() == Player::PlaybackStatus::Playing) {
         if (modeNumber == Player::PlaybackMode::RepeatAll) {
+            str = "已设为列表循环模式";
             Player::getInstance()->setMode(Player::PlaybackMode::RepeatAll);
             emit CommonService::getInstance()->signalSetPlayModel(Player::RepeatAll);
             isExit = true;
         } else if (modeNumber == Player::PlaybackMode::RepeatSingle) {
+            str = "已设为单曲循环模式";
             Player::getInstance()->setMode(Player::PlaybackMode::RepeatSingle);
             emit CommonService::getInstance()->signalSetPlayModel(Player::RepeatSingle);
             isExit = true;
         } else if (modeNumber == Player::PlaybackMode::Shuffle) {
+            str = "已设为随机播放模式";
             Player::getInstance()->setMode(Player::PlaybackMode::Shuffle);
             emit CommonService::getInstance()->signalSetPlayModel(Player::Shuffle);
             isExit = true;
         }
     }
-    return isExit;
+    if (!isExit) {
+        str = "";
+    }
+    return str;
 }

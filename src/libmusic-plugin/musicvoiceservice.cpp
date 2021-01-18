@@ -3,7 +3,7 @@
 
 MusicVoiceService::MusicVoiceService()
 {
-
+    m_voice = new VoicePlugin();
 }
 
 QString MusicVoiceService::serviceName()
@@ -21,24 +21,12 @@ bool MusicVoiceService::canHandle(const QString &s)
 }
 IRet MusicVoiceService::service(const QString &semantic)
 {
-    m_voice = new VoicePlugin();
     m_voice->process(semantic);
     return ERR_SUCCESS;
 }
 Reply &MusicVoiceService::getServiceReply()
 {
-//    if (m_processResult) {
-//        m_reply.setReplyType(Reply::RT_INNER_WIDGET | Reply::RT_STRING_TTS);
-//        m_reply.setReplyWidget(m_widget);
-//        m_reply.ttsMessage(m_widget->getTTSMessage());
-//    } else {
-//        m_reply.setReplyType(Reply::RT_STRING_TTS | Reply::RT_STRING_DISPLAY);
-//        m_reply.ttsMessage(m_widget->getTTSMessage());
-//        m_reply.displayMessage(m_widget->getTTSMessage());
-//        delete  m_widget;
-//        m_widget = nullptr;
-//    }
-    m_reply.code(ERR_SUCCESS);
-
+    m_reply.setReplyType(Reply::RT_STRING_TTS | Reply::RT_STRING_DISPLAY);
+    m_reply.ttsMessage(m_voice->m_ttsMessage);
     return m_reply;
 }

@@ -16,6 +16,7 @@ public:
 private:
     Reply                   m_reply;
     bool                    m_processResult = false;
+public:
     VoicePlugin            *m_voice = nullptr;
 };
 
