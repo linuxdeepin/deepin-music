@@ -46,9 +46,9 @@ public:
 
     void updateUI();
     // 控件显示动画
-    void showAnimation(const QSize &size);
+    void showAnimation();
     // 控件关闭动画
-    void closeAnimation(const QSize &size);
+    void closeAnimation();
 
 signals:
     void toggleLyricView();

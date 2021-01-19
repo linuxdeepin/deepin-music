@@ -21,30 +21,26 @@
 
 #pragma once
 
-#include <DWidget>
-#include <DLabel>
-#include <DGuiApplicationHelper>
+#include <DStackedWidget>
 
 DWIDGET_USE_NAMESPACE
 
-class MusicListDataWidget;
-class MusicImageButton;
-class MusicListScrollArea;
-class MusicContentWidget : public DWidget
+class MusicStatckedWidget : public DStackedWidget
 {
     Q_OBJECT
 public:
-    explicit MusicContentWidget(QWidget *parent = Q_NULLPTR);
-public slots:
-    void slotTheme(DGuiApplicationHelper::ColorType themeType);
-protected:
-    virtual void focusOutEvent(QFocusEvent *event) Q_DECL_OVERRIDE;
-    virtual void keyPressEvent(QKeyEvent *event) Q_DECL_OVERRIDE;
+    //
+    static constexpr int AnimationDelay = 400;
+public:
+    explicit MusicStatckedWidget(QWidget *parent = Q_NULLPTR);
+    // 向上移动动画
+    void animationToUp();
+    // 向下移动动画
+    void animationToDown();
 
-private:
-    MusicListDataWidget   *m_listDataWidget;
-//    MusicImageButton      *m_addListBtn;
-    MusicListScrollArea   *leftFrame;
-    bool                   addFlag = false;
+    // 导入向下移动动画
+    void animationImportToDown(const QSize &size);
+    // 导入向左移动动画
+    void animationImportToLeft(const QSize &size);
 };
 

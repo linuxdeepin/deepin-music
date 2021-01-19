@@ -153,10 +153,8 @@ void MusicLyricWidget::updateUI()
     m_backgroundW->update();
 }
 
-void MusicLyricWidget::showAnimation(const QSize &size)
+void MusicLyricWidget::showAnimation()
 {
-    this->resize(size);
-
     QPropertyAnimation *animation = new QPropertyAnimation(this, "pos");
 
     animation->setDuration(AnimationDelay);
@@ -173,16 +171,14 @@ void MusicLyricWidget::showAnimation(const QSize &size)
     animation->start();
 }
 
-void MusicLyricWidget::closeAnimation(const QSize &size)
+void MusicLyricWidget::closeAnimation()
 {
-    this->resize(size);
-
     QPropertyAnimation *animation = new QPropertyAnimation(this, "pos");
 
     animation->setDuration(AnimationDelay);
     animation->setEasingCurve(QEasingCurve::InCurve);
     animation->setStartValue(QPoint(0, 50));
-    animation->setEndValue(QPoint(0, size.height()));
+    animation->setEndValue(QPoint(0, this->height()));
 
     animation->connect(animation, &QPropertyAnimation::finished,
                        animation, &QPropertyAnimation::deleteLater);

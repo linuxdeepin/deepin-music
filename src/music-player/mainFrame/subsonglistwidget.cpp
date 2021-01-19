@@ -51,7 +51,7 @@ void SubSonglistWidget::initUI()
 
     QVBoxLayout *mainLayout = new QVBoxLayout(this);
     mainLayout->setSpacing(0);
-    mainLayout->setContentsMargins(0, 50, 0, 0);
+    mainLayout->setContentsMargins(0, 0, 0, 0);
 
     m_titleImage = new QLabel;
     m_titleImage->setForegroundRole(DPalette::BrightText);

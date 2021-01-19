@@ -268,12 +268,19 @@ void MusicListInfoView::slotPlayListMenuClicked(QAction *action)
 
         if (metaList.size() > 0) {
             QString songlistUuid = DataBaseService::getInstance()->getCustomSongList().last().uuid;
-            DataBaseService::getInstance()->addMetaToPlaylist(songlistUuid, metaList);
+            int insertCount = DataBaseService::getInstance()->addMetaToPlaylist(songlistUuid, metaList);
+
+            // 消息通知
+            emit CommonService::getInstance()->signalShowPopupMessage(action->text(), selection->selectedRows().size(), insertCount);
         }
     } else {
-        DataBaseService::getInstance()->addMetaToPlaylist(songlistHash, metaList);
+        int insertCount = DataBaseService::getInstance()->addMetaToPlaylist(songlistHash, metaList);
+
+        // 消息通知
+        emit CommonService::getInstance()->signalShowPopupMessage(action->text(), selection->selectedRows().size(), insertCount);
 
         if (songlistHash == "fav") {
+            // 刷新收藏按钮
             emit CommonService::getInstance()->signalFluashFavoriteBtnIcon();
         }
     }

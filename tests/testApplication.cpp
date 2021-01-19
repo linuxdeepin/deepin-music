@@ -127,14 +127,14 @@ TEST(Application, deleteAllMusic)
     event.clear();
     QTest::qWait(100);
 
-    // 点击所有音乐
-    QTest::qWait(100);
-    pos = QPoint(130, 100);
-    event.addMouseMove(pos);
-    event.addMouseClick(Qt::MouseButton::LeftButton, Qt::NoModifier, pos, 10);
-    event.simulate(baseListView->viewport());
-    event.clear();
-    QTest::qWait(100);
+//    // 点击所有音乐
+//    QTest::qWait(100);
+//    pos = QPoint(130, 100);
+//    event.addMouseMove(pos);
+//    event.addMouseClick(Qt::MouseButton::LeftButton, Qt::NoModifier, pos, 10);
+//    event.simulate(baseListView->viewport());
+//    event.clear();
+//    QTest::qWait(100);
 
 
     // dialog list 点击

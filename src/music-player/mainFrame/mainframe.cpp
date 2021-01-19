@@ -51,6 +51,7 @@
 #include "./core/util/global.h"
 
 #include "../widget/titlebarwidget.h"
+#include "musicstackedwidget.h"
 #include "musiccontentwidget.h"
 #include "footerwidget.h"
 #include "searchresult.h"
@@ -171,7 +172,11 @@ void MainFrame::initUI(bool showLoading)
     m_musicContentWidget->setVisible(showLoading);
 
     m_subSonglistWidget = new SubSonglistWidget("", this);
-    m_subSonglistWidget->setVisible(false);
+
+    m_musicStatckedWidget = new MusicStatckedWidget(this);
+    m_musicStatckedWidget->addWidget(m_musicContentWidget);
+    m_musicStatckedWidget->addWidget(m_subSonglistWidget);
+    m_musicStatckedWidget->setCurrentWidget(m_musicContentWidget);
 
     m_footerWidget = new FooterWidget(this);
     m_footerWidget->setVisible(showLoading);
@@ -425,7 +430,7 @@ void MainFrame::setThemeType(DGuiApplicationHelper::ColorType themeType)
 
 void MainFrame::slotLeftClicked()
 {
-    m_subSonglistWidget->setVisible(false);
+    m_musicStatckedWidget->setCurrentWidget(m_musicContentWidget);
     m_backBtn->setVisible(false);
 }
 
@@ -438,13 +443,13 @@ void MainFrame::slotLyricClicked()
 {
     // 歌词控件显示与关闭动画
     if (m_musicLyricWidget->isHidden()) {
-        m_musicLyricWidget->showAnimation(this->size());
-        m_musicContentWidget->animationToUp(this->size() - QSize(0, m_footerWidget->height() + titlebar()->height() + 5));
+        m_musicLyricWidget->showAnimation();
+        m_musicStatckedWidget->animationToUp();
         //搜索页面使能
         m_titlebarwidget->setEnabled(false);
     } else {
-        m_musicLyricWidget->closeAnimation(this->size());
-        m_musicContentWidget->animationToDown(this->size() - QSize(0, m_footerWidget->height() + titlebar()->height() + 5));
+        m_musicLyricWidget->closeAnimation();
+        m_musicStatckedWidget->animationToDown();
         //搜索页面使能
         m_titlebarwidget->setEnabled(true);
     }
@@ -462,8 +467,8 @@ void MainFrame::slotImportFinished(QString hash, int successCount)
     }
     // 导入界面显示与关闭动画
     if (m_importWidget->isVisible()) {
-        m_musicContentWidget->show();
-        m_musicContentWidget->animationImportToDown(this->size() - QSize(0, m_footerWidget->height() + titlebar()->height() + 5));
+        m_musicStatckedWidget->show();
+        m_musicStatckedWidget->animationImportToDown(this->size() - QSize(0, m_footerWidget->height() + titlebar()->height()));
         // 切换到所有音乐界面
         emit CommonService::getInstance()->signalSwitchToView(AllSongListType, "all");
         m_footerWidget->show();
@@ -495,7 +500,7 @@ void MainFrame::slotImportFailed()
 void MainFrame::slotHideSubWidget()
 {
     m_backBtn->setVisible(false);
-    m_subSonglistWidget->setVisible(false);
+    m_musicStatckedWidget->setCurrentWidget(m_musicContentWidget);
 }
 
 void MainFrame::slotShortCutTriggered()
@@ -605,7 +610,7 @@ void MainFrame::slotAllMusicCleared()
 {
     qDebug() << "MainFrame::slotAllMusicCleared";
     // 导入界面显示与关闭动画
-    m_musicContentWidget->animationImportToLeft(this->size() - QSize(0, m_footerWidget->height() + titlebar()->height() + 5));
+    m_musicStatckedWidget->animationImportToLeft(this->size() - QSize(0, m_footerWidget->height() + titlebar()->height()));
     m_footerWidget->hide();
     m_importWidget->showImportHint();
     m_importWidget->showAnimationToLeft(this->size());
@@ -653,7 +658,7 @@ void MainFrame::slotShowSubSonglist(const QMap<QString, MediaMeta> &musicinfos, 
 {
     m_backBtn->setVisible(true);
     m_subSonglistWidget->flushDialog(musicinfos, isAlbumDialog);
-    m_subSonglistWidget->setVisible(true);
+    m_musicStatckedWidget->setCurrentWidget(m_subSonglistWidget);
 }
 
 void MainFrame::showEvent(QShowEvent *event)
@@ -704,13 +709,12 @@ void MainFrame::showEvent(QShowEvent *event)
     }
     this->setFocus();
     qDebug() << "zy------MainWindow::showEvent " << QTime::currentTime().toString("hh:mm:ss.zzz");
+
     if (m_footerWidget) {
         m_footerWidget->setGeometry(FooterWidget::Margin, height() - FooterWidget::Height - FooterWidget::Margin,
                                     width() - FooterWidget::Margin * 2, FooterWidget::Height);
     }
-    if (m_musicContentWidget) {
-        m_musicContentWidget->setGeometry(0, 50, width(), height() - m_footerWidget->height() - titlebar()->height() - 5);
-    }
+
     if (m_importWidget) {
         m_importWidget->setGeometry(0, 50, width(), height() - titlebar()->height());
     }
@@ -731,15 +735,6 @@ void MainFrame::resizeEvent(QResizeEvent *e)
     DMainWindow::resizeEvent(e);
     QSize newSize = DMainWindow::size();
 
-//    if (loadWidget) {
-//        loadWidget->setFixedSize(newSize);
-//        loadWidget->raise();
-//    }
-
-//    if (searchResult) {
-//        searchResult->hide();
-//    }
-
     auto titleBarHeight =  m_titlebar->height();
     m_titlebar->raise();
     m_titlebar->resize(newSize.width(), titleBarHeight);
@@ -748,21 +743,25 @@ void MainFrame::resizeEvent(QResizeEvent *e)
         m_importWidget->setFixedSize(newSize);
     }
 
-    if (m_subSonglistWidget) {
-        m_subSonglistWidget->setFixedSize(newSize);
-    }
-
     if (m_footerWidget) {
         m_footerWidget->setGeometry(FooterWidget::Margin, height() - FooterWidget::Height - FooterWidget::Margin,
                                     width() - FooterWidget::Margin * 2, FooterWidget::Height);
     }
 
+    if (m_musicStatckedWidget) {
+        m_musicStatckedWidget->setGeometry(0, titlebar()->height(), width(), height() - m_footerWidget->height() - titlebar()->height());
+    }
+
     if (m_musicContentWidget) {
-        m_musicContentWidget->setGeometry(0, 50, width(), height() - m_footerWidget->height() - titlebar()->height() - 5);
+        m_musicContentWidget->setGeometry(0, 0, width(), height() - m_footerWidget->height() - titlebar()->height());
+    }
+
+    if (m_subSonglistWidget) {
+        m_subSonglistWidget->setGeometry(0, 0, width(), height() - m_footerWidget->height() - titlebar()->height());
     }
 
     if (m_musicLyricWidget) {
-        m_musicLyricWidget->setGeometry(0, 50, width(), height());
+        m_musicLyricWidget->setGeometry(0, titlebar()->height(), width(), height() - titlebar()->height());
     }
 
     if (m_playQueueWidget) {

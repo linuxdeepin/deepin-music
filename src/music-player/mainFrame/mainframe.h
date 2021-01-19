@@ -31,6 +31,7 @@
 
 DWIDGET_USE_NAMESPACE
 
+class MusicStatckedWidget;
 class TitlebarWidget;
 class FooterWidget;
 class MusicContentWidget;
@@ -93,18 +94,30 @@ protected:
     void closeEvent(QCloseEvent *event) Q_DECL_OVERRIDE;
     void hideEvent(QHideEvent *event) Q_DECL_OVERRIDE;
 private:
+    // 控件堆栈
+    MusicStatckedWidget  *m_musicStatckedWidget = nullptr;
+    // 主页面控件
+    MusicContentWidget  *m_musicContentWidget = nullptr;
+    // 歌手专辑控件
+    SubSonglistWidget   *m_subSonglistWidget = nullptr;
+    // 歌词控件
+    MusicLyricWidget    *m_musicLyricWidget = nullptr;
+    // 标题栏
     DTitlebar           *m_titlebar = nullptr;
+    // 标题栏返回按钮
     DPushButton         *m_backBtn = nullptr;
     TitlebarWidget      *m_titlebarwidget = nullptr;
+    // 播放控制托盘控件
     FooterWidget        *m_footerWidget = nullptr;
-    MusicContentWidget  *m_musicContentWidget = nullptr;
     SearchResult        *m_searchResult = nullptr;
-    MusicLyricWidget    *m_musicLyricWidget = nullptr;
+    // 导入控件
     ImportWidget        *m_importWidget = nullptr;
-    SubSonglistWidget   *m_subSonglistWidget = nullptr;
     DequalizerDialog    *m_dequalizerDialog = nullptr;
+    // 播放队列控件
     PlayQueueWidget     *m_playQueueWidget = nullptr;
+    // 零时消息控件
     DWidget             *m_popupMessage = nullptr;
+
     //mainframe action
     QAction             *m_newSonglistAction    = nullptr;
     QAction             *m_addMusicFiles        = nullptr;
