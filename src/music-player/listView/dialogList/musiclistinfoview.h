@@ -30,6 +30,9 @@ DWIDGET_USE_NAMESPACE
 
 #include <QString>
 
+class InfoDialog;
+class QShortcut;
+
 class MusicListInfoView : public DListView
 {
     Q_OBJECT
@@ -79,6 +82,8 @@ protected:
 private:
     void addMedia(MediaMeta meta);
     void onDoubleClicked(const QModelIndex &index);
+    // 初始化快捷键
+    void initShortcut();
 
 private:
     QString m_hash;
@@ -91,4 +96,7 @@ private:
     QPixmap                 playingPixmap = QPixmap(":/mpimage/light/music1.svg");
     QPixmap                 sidebarPixmap = QPixmap(":/mpimage/light/music_withe_sidebar/music1.svg");
     QIcon                   m_icon = QIcon(":/common/image/info_cover.svg");
+
+    // 歌曲信息快捷键
+    QShortcut           *m_detailShortcut = nullptr;
 };

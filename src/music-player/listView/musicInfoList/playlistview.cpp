@@ -177,6 +177,7 @@ PlayListView::PlayListView(QString hash, bool isPlayQueue, QWidget *parent)
 
     //detail shortcut
     m_pDetailShortcut = new QShortcut(this);
+    m_pDetailShortcut->setContext(Qt::WidgetWithChildrenShortcut);
     m_pDetailShortcut->setKey(QKeySequence(QLatin1String("Ctrl+I")));
     connect(m_pDetailShortcut, SIGNAL(activated()), this, SLOT(showDetailInfoDlg()));
 //    //快捷移出歌单
@@ -888,7 +889,7 @@ void PlayListView::slotAddToCustomSongList()
     }
 
     int insertCount = DataBaseService::getInstance()->addMetaToPlaylist(songlistHash, metas);
-    emit CommonService::getInstance()->signalShowPopupMessage(obj->text(), metas.size(), insertCount);
+    emit CommonService::getInstance()->signalShowPopupMessage(obj->property("displayName").toString(), metas.size(), insertCount);
 }
 
 void PlayListView::slotOpenInFileManager()
@@ -1106,9 +1107,14 @@ void PlayListView::contextMenuEvent(QContextMenuEvent *event)
     for (DataBaseService::PlaylistData pd : strplaylist) {
         if (m_currentHash != pd.uuid) { //filter itself
             QFontMetrics titleFm(actFav->font());
+            QString displayName = pd.displayName;
             QString text = titleFm.elidedText(QString(pd.displayName.replace("&", "&&")), Qt::ElideMiddle, 170);
+
             QAction *pact = playlistMenu.addAction(text);
+
+            pact->setProperty("displayName", displayName);
             pact->setData(QVariant(pd.uuid)); //to know which custom view to reach
+
             connect(pact, SIGNAL(triggered()), this, SLOT(slotAddToCustomSongList()));
         }
     }

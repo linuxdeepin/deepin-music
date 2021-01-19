@@ -115,10 +115,11 @@ void SubSonglistWidget::initUI()
     m_titleLabel->setContentsMargins(0, 0, 0, 0);
 
     m_musicListInfoView = new MusicListInfoView(hash);
-    AC_SET_OBJECT_NAME(m_musicListInfoView, AC_musicListInfoView);
-    AC_SET_ACCESSIBLE_NAME(m_musicListInfoView, AC_musicListInfoView);
     mainLayout->addWidget(m_musicListInfoView, 1);
     mainLayout->addStretch();
+
+    AC_SET_OBJECT_NAME(m_musicListInfoView, AC_musicListInfoView);
+    AC_SET_ACCESSIBLE_NAME(m_musicListInfoView, AC_musicListInfoView);
 
     connect(m_btPlayAll, &DPushButton::pressed, this, &SubSonglistWidget::slotPlayAllClicked);
     connect(m_btRandomPlay, &DPushButton::pressed, this, &SubSonglistWidget::slotPlayRandomClicked);

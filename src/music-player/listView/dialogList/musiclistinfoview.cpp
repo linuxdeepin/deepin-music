@@ -31,6 +31,7 @@
 #include <QStandardItemModel>
 #include <QVBoxLayout>
 
+#include <QShortcut>
 #include <DDialog>
 #include <DDesktopServices>
 #include <DScrollBar>
@@ -42,6 +43,7 @@
 #include "global.h"
 #include "databaseservice.h"
 #include "commonservice.h"
+#include "infodialog.h"
 #include "ac-desktop-define.h"
 
 DWIDGET_USE_NAMESPACE
@@ -64,6 +66,8 @@ MusicListInfoView::MusicListInfoView(const QString &hash, QWidget *parent)
 
     delegate = new MusicInfoItemDelegate(this);
     setItemDelegate(delegate);
+
+    initShortcut();
 
     setDragEnabled(true);
     viewport()->setAcceptDrops(true);
@@ -179,6 +183,7 @@ void MusicListInfoView::showContextMenu(const QPoint &pos)
     connect(&playListMenu, &DMenu::triggered, this, &MusicListInfoView::slotPlayListMenuClicked);
 
     QAction *actFav = playListMenu.addAction(tr("My favorites"));
+    actFav->setProperty("displayName", actFav->text());
     actFav->setData("fav");
 
     if (DataBaseService::getInstance()->favoriteExist(m_currMeta)) {
@@ -195,9 +200,13 @@ void MusicListInfoView::showContextMenu(const QPoint &pos)
     QList<DataBaseService::PlaylistData> strplaylist = DataBaseService::getInstance()->getCustomSongList();
     for (DataBaseService::PlaylistData pd : strplaylist) {
         QFontMetrics titleFm(actFav->font());
+        QString displayName = pd.displayName;
         QString text = titleFm.elidedText(QString(pd.displayName.replace("&", "&&")), Qt::ElideMiddle, 170);
+
         QAction *pact = playListMenu.addAction(text);
+        pact->setProperty("displayName", displayName);
         pact->setData(QVariant(pd.uuid)); //to know which custom view to reach
+
 //        pact->setData(QVariant(pd.uuid));
 //        connect(pact, SIGNAL(triggered()), this, SLOT(slotAddToCustomSongList()));
     }
@@ -271,13 +280,13 @@ void MusicListInfoView::slotPlayListMenuClicked(QAction *action)
             int insertCount = DataBaseService::getInstance()->addMetaToPlaylist(songlistUuid, metaList);
 
             // 消息通知
-            emit CommonService::getInstance()->signalShowPopupMessage(action->text(), selection->selectedRows().size(), insertCount);
+            emit CommonService::getInstance()->signalShowPopupMessage(action->property("displayName").toString(), selection->selectedRows().size(), insertCount);
         }
     } else {
         int insertCount = DataBaseService::getInstance()->addMetaToPlaylist(songlistHash, metaList);
 
         // 消息通知
-        emit CommonService::getInstance()->signalShowPopupMessage(action->text(), selection->selectedRows().size(), insertCount);
+        emit CommonService::getInstance()->signalShowPopupMessage(action->property("displayName").toString(), selection->selectedRows().size(), insertCount);
 
         if (songlistHash == "fav") {
             // 刷新收藏按钮
@@ -313,6 +322,14 @@ void MusicListInfoView::slotFileManagementShowClicked(bool checked)
 void MusicListInfoView::slotMusicInfoActionClicked(bool checked)
 {
     Q_UNUSED(checked)
+
+    QItemSelectionModel *selection = this->selectionModel();
+
+    if (selection->selectedRows().length() <= 0) {
+        return;
+    }
+
+    m_currMeta = this->currentIndex().data(Qt::UserRole).value<MediaMeta>();
 
     InfoDialog infoDialog(this);
     infoDialog.setObjectName(AC_infoDialog);
@@ -516,6 +533,16 @@ void MusicListInfoView::onDoubleClicked(const QModelIndex &index)
 
     MediaMeta meta = index.data(Qt::UserRole).value<MediaMeta>();
     Player::getInstance()->playMeta(meta);
+}
+
+void MusicListInfoView::initShortcut()
+{
+    m_detailShortcut = new QShortcut(this);
+    m_detailShortcut->setContext(Qt::WidgetWithChildrenShortcut);
+    m_detailShortcut->setKey(QKeySequence(QLatin1String("Ctrl+I")));
+    connect(m_detailShortcut, &QShortcut::activated, [ = ] {
+        this->slotMusicInfoActionClicked();
+    });
 }
 
 void MusicListInfoView::dragEnterEvent(QDragEnterEvent *event)
