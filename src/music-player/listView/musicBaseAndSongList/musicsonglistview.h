@@ -79,7 +79,13 @@ private:
     void initShortcut();
     // 初始化重命名控件
     void initRenameLineEdit();
-    void SetAttrRecur(QDomElement elem, QString strtagname, QString strattr, QString strattrval);
+
+    // 重命名快捷键
+    void slotRenameShortcut();
+    // ESC快捷键
+    void slotEscShortcut();
+
+    void setAttrRecur(QDomElement elem, QString strtagname, QString strattr, QString strattrval);
     QString newDisplayName();
 
 private:
@@ -92,8 +98,14 @@ private:
     QPixmap              playingPixmap;
     QPixmap              albumPixmap;
     QPixmap              defaultPixmap;
+
     // 新建歌单快捷键
     QShortcut           *m_newItemShortcut = nullptr;
+    // 重命名快捷键
+    QShortcut           *m_renameShortcut = nullptr;
+    // ESC快捷键
+    QShortcut           *m_escShortcut = nullptr;
+
     bool                pixmapState         = false;
     bool                m_heightChangeToMax = false;
 };

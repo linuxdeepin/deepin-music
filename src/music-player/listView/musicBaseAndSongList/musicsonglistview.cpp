@@ -373,30 +373,32 @@ void MusicSongListView::slotDoubleClicked(const QModelIndex &index)
 
 void MusicSongListView::slotLineEditingFinished()
 {
-    m_renameLineEdit->setVisible(false);
+    if (m_renameLineEdit->isVisible()) {
+        m_renameLineEdit->setVisible(false);
 
-    if (!m_curItem)
-        return;
-
-    m_curItem->setText(m_renameLineEdit->text());
-    QString uuid = m_curItem->data(Qt::UserRole).value<QString>();
-    // 歌单名去重
-    for (int i = 0; i < model->rowCount() ; ++i) {
-        DStandardItem *tmpItem = dynamic_cast<DStandardItem *>(model->itemFromIndex(model->index(i, 0)));
-        if (m_curItem->text().isEmpty() || (m_curItem->row() != tmpItem->row() && m_curItem->text() == tmpItem->text())) {
-            QList<DataBaseService::PlaylistData> plist = DataBaseService::getInstance()->getCustomSongList();
-            for (DataBaseService::PlaylistData data : plist) {
-                if (uuid == data.uuid) {
-                    m_curItem->setText(data.displayName);// 还原歌单名
-                }
-            }
-            m_curItem->setIcon(QIcon::fromTheme("music_famousballad"));
+        if (!m_curItem)
             return;
-        }
-    }
 
-    DataBaseService::getInstance()->updatePlaylistDisplayName(m_curItem->text(), uuid);
-    m_curItem->setIcon(QIcon::fromTheme("music_famousballad"));
+        m_curItem->setText(m_renameLineEdit->text());
+        QString uuid = m_curItem->data(Qt::UserRole).value<QString>();
+        // 歌单名去重
+        for (int i = 0; i < model->rowCount() ; ++i) {
+            DStandardItem *tmpItem = dynamic_cast<DStandardItem *>(model->itemFromIndex(model->index(i, 0)));
+            if (m_curItem->text().isEmpty() || (m_curItem->row() != tmpItem->row() && m_curItem->text() == tmpItem->text())) {
+                QList<DataBaseService::PlaylistData> plist = DataBaseService::getInstance()->getCustomSongList();
+                for (DataBaseService::PlaylistData data : plist) {
+                    if (uuid == data.uuid) {
+                        m_curItem->setText(data.displayName);// 还原歌单名
+                    }
+                }
+                m_curItem->setIcon(QIcon::fromTheme("music_famousballad"));
+                return;
+            }
+        }
+
+        DataBaseService::getInstance()->updatePlaylistDisplayName(m_curItem->text(), uuid);
+        m_curItem->setIcon(QIcon::fromTheme("music_famousballad"));
+    }
 }
 
 void MusicSongListView::resizeEvent(QResizeEvent *event)
@@ -484,14 +486,36 @@ void MusicSongListView::initRenameLineEdit()
     connect(m_renameLineEdit, &DLineEdit::editingFinished, this, &MusicSongListView::slotLineEditingFinished);
 }
 
+void MusicSongListView::slotRenameShortcut()
+{
+    if (selectedIndexes().size() > 0 && !m_renameLineEdit->isVisible()) {
+        slotDoubleClicked(currentIndex());
+    }
+}
+
+void MusicSongListView::slotEscShortcut()
+{
+    if (m_renameLineEdit->isVisible()) {
+        m_renameLineEdit->setVisible(false);
+    }
+}
+
 void MusicSongListView::initShortcut()
 {
     m_newItemShortcut = new QShortcut(this);
     m_newItemShortcut->setKey(QKeySequence(QLatin1String("Ctrl+Shift+N")));
     connect(m_newItemShortcut, &QShortcut::activated, this, &MusicSongListView::addNewSongList);
+
+    m_renameShortcut = new QShortcut(QKeySequence(Qt::Key_F2), this);
+    m_renameShortcut->setContext(Qt::WindowShortcut);
+    connect(m_renameShortcut, &QShortcut::activated, this, &MusicSongListView::slotRenameShortcut);
+
+    m_escShortcut = new QShortcut(QKeySequence(Qt::Key_Escape), this);
+    m_escShortcut->setContext(Qt::WidgetWithChildrenShortcut);
+    connect(m_escShortcut, &QShortcut::activated, this, &MusicSongListView::slotEscShortcut);
 }
 
-void MusicSongListView::SetAttrRecur(QDomElement elem, QString strtagname, QString strattr, QString strattrval)
+void MusicSongListView::setAttrRecur(QDomElement elem, QString strtagname, QString strattr, QString strattrval)
 {
     // if it has the tagname then overwritte desired attribute
     if (elem.tagName().compare(strtagname) == 0) {
@@ -502,7 +526,7 @@ void MusicSongListView::SetAttrRecur(QDomElement elem, QString strtagname, QStri
         if (!elem.childNodes().at(i).isElement()) {
             continue;
         }
-        this->SetAttrRecur(elem.childNodes().at(i).toElement(), strtagname, strattr, strattrval);
+        this->setAttrRecur(elem.childNodes().at(i).toElement(), strtagname, strattr, strattrval);
     }
 }
 
