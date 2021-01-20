@@ -281,6 +281,8 @@ void MusicListInfoView::slotPlayListMenuClicked(QAction *action)
 
             // 消息通知
             emit CommonService::getInstance()->signalShowPopupMessage(action->property("displayName").toString(), selection->selectedRows().size(), insertCount);
+            // 刷新自定义歌单页面
+            emit CommonService::getInstance()->signalSwitchToView(CustomType, songlistUuid);
         }
     } else {
         int insertCount = DataBaseService::getInstance()->addMetaToPlaylist(songlistHash, metaList);

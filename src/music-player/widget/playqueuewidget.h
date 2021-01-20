@@ -57,7 +57,7 @@ signals:
 
 private slots:
     void slotClearAllClicked();
-    //刷新歌曲数量
+    // 刷新歌曲数量
     void slotUpdateItemCount();
     // 自动收起
     void autoHidden(QWidget *old, QWidget *now);

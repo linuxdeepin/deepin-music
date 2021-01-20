@@ -684,7 +684,10 @@ void Player::forcePlayMeta()
 {
     qDebug() << "forcePlayMeta in";
     if (m_MetaList.size() == 0) {
-        setCurrentPlayListHash("all", true); //更新所有歌曲页面数据
+        // 更新所有歌曲页面数据
+        setCurrentPlayListHash("all", true);
+        // 通知播放队列刷新
+        emit signalPlayListChanged();
         if (m_MetaList.size() == 0)
             return;
     }

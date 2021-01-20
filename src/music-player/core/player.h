@@ -99,7 +99,7 @@ public:
     void loadMediaProgress(const QString &path);
     // 设置当前歌曲
     void setActiveMeta(const MediaMeta &meta);
-    // 播放列表中第一首歌，当音乐处于停止状态时
+    // 当音乐处于停止状态或者播放队列为空时，播放列表中第一首歌
     void forcePlayMeta();
     // 初始化均衡器配置
     void initEqualizerCfg();

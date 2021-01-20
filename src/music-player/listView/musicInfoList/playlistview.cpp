@@ -871,8 +871,9 @@ void PlayListView::slotAddToNewSongList(const QString songName)
         QList<DataBaseService::PlaylistData> customSongList = DataBaseService::getInstance()->getCustomSongList();
         QString songlistUuid = customSongList.last().uuid;
         int insertCount = DataBaseService::getInstance()->addMetaToPlaylist(songlistUuid, metaList);
+        // 消息通知
         CommonService::getInstance()->signalShowPopupMessage(songName, metaList.size(), insertCount);
-        //刷新
+        // 刷新自定义歌单页面
         emit CommonService::getInstance()->signalSwitchToView(CustomType, songlistUuid);
     }
 }
