@@ -112,6 +112,7 @@
 #define AC_dialogPlayRandom           "dialogPlayRandom"
 #define AC_subSonglistWidget          "subSonglistWidget"
 #define AC_titleBarLeft               "titleBarLeft"
+#define AC_subSonglistWidget          "subSonglistWidget"
 
 
 #endif // DESKTOP_ACCESSIBLE_UI_DEFINE_H

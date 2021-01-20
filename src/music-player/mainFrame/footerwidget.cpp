@@ -489,6 +489,11 @@ void FooterWidget::slotPlayQueueAutoHidden()
     m_btPlayQueue->setChecked(false);
 }
 
+void FooterWidget::slotLyricAutoHidden()
+{
+    m_btLyric->setChecked(false);
+}
+
 void FooterWidget::slotPlayClick(bool click)
 {
     Q_UNUSED(click)

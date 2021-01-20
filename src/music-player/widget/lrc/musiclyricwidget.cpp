@@ -183,6 +183,8 @@ void MusicLyricWidget::closeAnimation()
     animation->connect(animation, &QPropertyAnimation::finished,
                        animation, &QPropertyAnimation::deleteLater);
     animation->connect(animation, &QPropertyAnimation::finished,
+                       this, &MusicLyricWidget::signalAutoHidden);
+    animation->connect(animation, &QPropertyAnimation::finished,
                        this, &MusicLyricWidget::hide);
 
     animation->start();

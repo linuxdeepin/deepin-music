@@ -345,10 +345,11 @@ void MusicSongListView::slotMenuTriggered(QAction *action)
 
 void MusicSongListView::slotCurrentChanged(const QModelIndex &cur, const QModelIndex &pre)
 {
-    m_curItem = dynamic_cast<DStandardItem *>(model->itemFromIndex(cur));
-    if (m_curItem) {
-        m_curItem->setIcon(QIcon::fromTheme("music_famousballad"));
-    }
+// 逻辑变更，目前不用这段代码
+//    m_renameItem = dynamic_cast<DStandardItem *>(model->itemFromIndex(cur));
+//    if (m_renameItem) {
+//        m_renameItem->setIcon(QIcon::fromTheme("music_famousballad"));
+//    }
 
     DStandardItem *preStandardItem = dynamic_cast<DStandardItem *>(model->itemFromIndex(pre));
     if (preStandardItem) {
@@ -358,15 +359,15 @@ void MusicSongListView::slotCurrentChanged(const QModelIndex &cur, const QModelI
 
 void MusicSongListView::slotDoubleClicked(const QModelIndex &index)
 {
-    m_curItem = dynamic_cast<DStandardItem *>(model->itemFromIndex(index));
+    m_renameItem = dynamic_cast<DStandardItem *>(model->itemFromIndex(index));
 
-    if (!m_curItem)
+    if (!m_renameItem)
         return;
 
     m_renameLineEdit->setVisible(true);
-    m_renameLineEdit->move(50, m_curItem->row() * this->sizeHintForIndex(index).height() + ItemEditMargin);
+    m_renameLineEdit->move(50, m_renameItem->row() * this->sizeHintForIndex(index).height() + ItemEditMargin);
     m_renameLineEdit->setVisible(true);
-    m_renameLineEdit->lineEdit()->setText(m_curItem->text());
+    m_renameLineEdit->lineEdit()->setText(m_renameItem->text());
     m_renameLineEdit->lineEdit()->selectAll();
     m_renameLineEdit->lineEdit()->setFocus();
 }
@@ -376,28 +377,28 @@ void MusicSongListView::slotLineEditingFinished()
     if (m_renameLineEdit->isVisible()) {
         m_renameLineEdit->setVisible(false);
 
-        if (!m_curItem)
+        if (!m_renameItem)
             return;
 
-        m_curItem->setText(m_renameLineEdit->text());
-        QString uuid = m_curItem->data(Qt::UserRole).value<QString>();
+        m_renameItem->setText(m_renameLineEdit->text());
+        QString uuid = m_renameItem->data(Qt::UserRole).value<QString>();
         // 歌单名去重
         for (int i = 0; i < model->rowCount() ; ++i) {
             DStandardItem *tmpItem = dynamic_cast<DStandardItem *>(model->itemFromIndex(model->index(i, 0)));
-            if (m_curItem->text().isEmpty() || (m_curItem->row() != tmpItem->row() && m_curItem->text() == tmpItem->text())) {
+            if (m_renameItem->text().isEmpty() || (m_renameItem->row() != tmpItem->row() && m_renameItem->text() == tmpItem->text())) {
                 QList<DataBaseService::PlaylistData> plist = DataBaseService::getInstance()->getCustomSongList();
                 for (DataBaseService::PlaylistData data : plist) {
                     if (uuid == data.uuid) {
-                        m_curItem->setText(data.displayName);// 还原歌单名
+                        m_renameItem->setText(data.displayName);// 还原歌单名
                     }
                 }
-                m_curItem->setIcon(QIcon::fromTheme("music_famousballad"));
+                m_renameItem->setIcon(QIcon::fromTheme("music_famousballad"));
                 return;
             }
         }
 
-        DataBaseService::getInstance()->updatePlaylistDisplayName(m_curItem->text(), uuid);
-        m_curItem->setIcon(QIcon::fromTheme("music_famousballad"));
+        DataBaseService::getInstance()->updatePlaylistDisplayName(m_renameItem->text(), uuid);
+        m_renameItem->setIcon(QIcon::fromTheme("music_famousballad"));
     }
 }
 

@@ -178,6 +178,9 @@ void MainFrame::initUI(bool showLoading)
     m_musicStatckedWidget->addWidget(m_subSonglistWidget);
     m_musicStatckedWidget->setCurrentWidget(m_musicContentWidget);
 
+    AC_SET_OBJECT_NAME(m_subSonglistWidget, AC_subSonglistWidget);
+    AC_SET_ACCESSIBLE_NAME(m_subSonglistWidget, AC_subSonglistWidget);
+
     m_footerWidget = new FooterWidget(this);
     m_footerWidget->setVisible(showLoading);
     connect(m_footerWidget, SIGNAL(lyricClicked()), this, SLOT(slotLyricClicked()));
@@ -205,6 +208,9 @@ void MainFrame::initUI(bool showLoading)
 
     connect(DGuiApplicationHelper::instance(), &DGuiApplicationHelper::themeTypeChanged,
             this, &MainFrame::setThemeType);
+
+    connect(m_musicLyricWidget, &MusicLyricWidget::signalAutoHidden,
+            m_footerWidget, &FooterWidget::slotLyricAutoHidden);
 
     setThemeType(DGuiApplicationHelper::instance()->themeType());
 }
@@ -505,7 +511,7 @@ void MainFrame::slotHideSubWidget()
 
 void MainFrame::slotShortCutTriggered()
 {
-    QShortcut *objCut =   dynamic_cast<QShortcut *>(sender()) ;
+    QShortcut *objCut = dynamic_cast<QShortcut *>(sender()) ;
     Q_ASSERT(objCut);
 
     if (objCut == addmusicfilesShortcut) {
@@ -546,6 +552,13 @@ void MainFrame::slotMenuTriggered(QAction *action)
     Q_ASSERT(action);
 
     if (action == m_newSonglistAction) {
+        // 歌词控件自动收起
+        if (!m_musicLyricWidget->isHidden()) {
+            m_musicLyricWidget->closeAnimation();
+            m_musicStatckedWidget->animationToDown();
+            m_titlebarwidget->setEnabled(true);
+        }
+
         emit CommonService::getInstance()->signalAddNewSongList();
     }
 

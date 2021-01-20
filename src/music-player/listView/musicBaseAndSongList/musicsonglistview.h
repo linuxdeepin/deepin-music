@@ -91,8 +91,8 @@ private:
 private:
     MusicBaseAndSonglistModel *model = nullptr;
     DStyledItemDelegate  *delegate        = nullptr;
-    // 当前选择的自定义歌单
-    DStandardItem        *m_curItem = nullptr;
+    // 重命名的Item
+    DStandardItem        *m_renameItem = nullptr;
     // 重命名控件
     DLineEdit            *m_renameLineEdit = nullptr;
     QPixmap              playingPixmap;

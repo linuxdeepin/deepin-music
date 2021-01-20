@@ -51,6 +51,8 @@ public:
     void closeAnimation();
 
 signals:
+    // 歌词自动收起
+    void signalAutoHidden();
     void toggleLyricView();
     void requestContextSearch(const QString &context);
 

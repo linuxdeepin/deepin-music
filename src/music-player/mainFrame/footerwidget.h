@@ -79,6 +79,8 @@ public slots:
     void slotFlushBackground();
     // 播放队列自动收起
     void slotPlayQueueAutoHidden();
+    // 歌词自动收起
+    void slotLyricAutoHidden();
     // 点击播放按钮
     void slotPlayClick(bool click);
     // 点击播放列表按钮

@@ -43,7 +43,9 @@ DWIDGET_USE_NAMESPACE
 
 void SubSonglistWidget::initUI()
 {
-    setAutoFillBackground(true);
+    this->setFocusPolicy(Qt::ClickFocus);
+    this->setAutoFillBackground(true);
+
     auto palette = this->palette();
     QColor BackgroundColor("#F8F8F8");
     palette.setColor(DPalette::Window, BackgroundColor);
