@@ -39,6 +39,7 @@
 #include "ac-desktop-define.h"
 #include "player.h"
 #include "musiclistdialog.h"
+#include "playlistview.h"
 DWIDGET_USE_NAMESPACE
 
 void SubSonglistWidget::initUI()
@@ -116,7 +117,7 @@ void SubSonglistWidget::initUI()
 
     m_titleLabel->setContentsMargins(0, 0, 0, 0);
 
-    m_musicListInfoView = new MusicListInfoView(hash);
+    m_musicListInfoView = new PlayListView(hash, false);
     mainLayout->addWidget(m_musicListInfoView, 1);
     mainLayout->addStretch();
 

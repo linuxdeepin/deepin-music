@@ -117,9 +117,9 @@ AlbumListView::AlbumListView(QString hash, QWidget *parent)
     setBatchSize(2000);
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
-    musciListDialog = new MusicListDialog("album", this);
-    AC_SET_OBJECT_NAME(musciListDialog, AC_musicListDialogAlbum);
-    AC_SET_ACCESSIBLE_NAME(musciListDialog, AC_musicListDialogAlbum);
+//    musciListDialog = new MusicListDialog("album", this);
+//    AC_SET_OBJECT_NAME(musciListDialog, AC_musicListDialogAlbum);
+//    AC_SET_ACCESSIBLE_NAME(musciListDialog, AC_musicListDialogAlbum);
 
 
     connect(this, &AlbumListView::doubleClicked, this, &AlbumListView::onDoubleClicked);
@@ -340,7 +340,7 @@ MediaMeta AlbumListView::playing() const
 void AlbumListView::setThemeType(int type)
 {
     musicTheme = type;
-    musciListDialog->setThemeType(type);
+//    musciListDialog->setThemeType(type);
 }
 
 int AlbumListView::getThemeType() const

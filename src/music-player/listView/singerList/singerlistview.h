@@ -100,7 +100,7 @@ private:
     int                     musicTheme      = 1; //light theme
     SingerDataModel         *singerModel    = nullptr;
     SingerDataDelegate      *signerDelegate = nullptr;
-    MusicListDialog        *musicListDialog = nullptr;
+//    MusicListDialog        *musicListDialog = nullptr;
     QPixmap                 playingPix = QPixmap(":/mpimage/light/music1.svg");
     QPixmap                 sidebarPix = QPixmap(":/mpimage/light/music_withe_sidebar/music1.svg");
     QString                  m_hash;

@@ -120,9 +120,9 @@ SingerListView::SingerListView(QString hash, QWidget *parent)
     setBatchSize(2000);
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
-    musicListDialog = new MusicListDialog("artist", this);
-    AC_SET_OBJECT_NAME(musicListDialog, AC_musicListDialogSinger);
-    AC_SET_ACCESSIBLE_NAME(musicListDialog, AC_musicListDialogSinger);
+//    musicListDialog = new MusicListDialog("artist", this);
+//    AC_SET_OBJECT_NAME(musicListDialog, AC_musicListDialogSinger);
+//    AC_SET_ACCESSIBLE_NAME(musicListDialog, AC_musicListDialogSinger);
 
     connect(this, &SingerListView::doubleClicked, this, &SingerListView::onDoubleClicked);
 
@@ -340,7 +340,7 @@ QListView::ViewMode SingerListView::getViewMode()
 void SingerListView::setThemeType(int type)
 {
     musicTheme = type;
-    musicListDialog->setThemeType(type);
+//    musicListDialog->setThemeType(type);
 }
 
 int SingerListView::getThemeType() const

@@ -123,8 +123,8 @@ void MusicListDialog::initUI()
     btLayout->addWidget(m_btRandomPlay);
     btLayout->addStretch(100);
 
-    AC_SET_OBJECT_NAME(m_btPlayAll, AC_dialogPlayAll);
-    AC_SET_ACCESSIBLE_NAME(m_btPlayAll, AC_dialogPlayAll);
+//    AC_SET_OBJECT_NAME(m_btPlayAll, AC_dialogPlayAll);
+//    AC_SET_ACCESSIBLE_NAME(m_btPlayAll, AC_dialogPlayAll);
     AC_SET_OBJECT_NAME(m_btRandomPlay, AC_dialogPlayRandom);
     AC_SET_ACCESSIBLE_NAME(m_btRandomPlay, AC_dialogPlayRandom);
 
@@ -142,10 +142,10 @@ void MusicListDialog::initUI()
     AC_SET_OBJECT_NAME(m_closeBt, AC_musicListDialogCloseBt);
     AC_SET_ACCESSIBLE_NAME(m_closeBt, AC_musicListDialogCloseBt);
 
-    m_musicListInfoView = new MusicListInfoView(hash);
+//    m_musicListInfoView = new MusicListInfoView(hash);
 
     layout->addWidget(m_titleImage, 0, Qt::AlignTop | Qt::AlignCenter);
-    layout->addWidget(m_musicListInfoView);
+//    layout->addWidget(m_musicListInfoView);
 
     // 需求改动，这个页面不再使用，标签先注释，后期删除这个文件
 //    AC_SET_OBJECT_NAME(m_musicListInfoView, AC_musicListInfoView);

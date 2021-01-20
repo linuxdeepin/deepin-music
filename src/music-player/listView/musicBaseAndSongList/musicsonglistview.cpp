@@ -203,6 +203,8 @@ void MusicSongListView::addNewSongList()
 //        if (this->isPersistentEditorOpen(item))
 //            closePersistentEditor(item);
 //    }
+    // 如果二级页面显示则隐藏
+    emit CommonService::getInstance()->signalHideSubSonglist();
 
     qDebug() << "new item";
     QIcon icon = QIcon::fromTheme("music_famousballad");
@@ -503,9 +505,11 @@ void MusicSongListView::slotEscShortcut()
 
 void MusicSongListView::initShortcut()
 {
-    m_newItemShortcut = new QShortcut(this);
-    m_newItemShortcut->setKey(QKeySequence(QLatin1String("Ctrl+Shift+N")));
-    connect(m_newItemShortcut, &QShortcut::activated, this, &MusicSongListView::addNewSongList);
+    // 移动到mainframe中统一管理
+//    m_newItemShortcut = new QShortcut(this);
+//    m_newItemShortcut->setContext(Qt::WidgetWithChildrenShortcut);
+//    m_newItemShortcut->setKey(QKeySequence(QLatin1String("Ctrl+Shift+N")));
+//    connect(m_newItemShortcut, &QShortcut::activated, this, &MusicSongListView::addNewSongList);
 
     m_renameShortcut = new QShortcut(QKeySequence(Qt::Key_F2), this);
     m_renameShortcut->setContext(Qt::WindowShortcut);

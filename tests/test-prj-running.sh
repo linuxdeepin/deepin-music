@@ -1,4 +1,5 @@
 #!/bin/bash
+export QT_QPA_PLATFORM='offscreen'
 QTEST_FUNCTION_TIMEOUT='800000'
 rm -rf ${HOME}/.cache/deepin/deepin-music/*
 rm -rf build

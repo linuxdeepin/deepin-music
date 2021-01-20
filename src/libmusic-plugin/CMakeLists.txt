@@ -9,7 +9,7 @@ include_directories(./interface)
 
 aux_source_directory(. allSourcelib)
 
-add_library(${CMD_NAME} SHARED ${allSourcelib})
+add_library(${CMD_NAME} SHARED ${allSourcelib} interface/service.h)
 
 #使用第三方库需要用到的一个包
 find_package(PkgConfig REQUIRED)
@@ -18,8 +18,6 @@ find_package(PkgConfig REQUIRED)
 pkg_check_modules(3rd_lib REQUIRED  dframeworkdbus dtkcore)
 #将第三方库链接进来(注意 *_LIBRARIES)
 target_link_libraries(${CMD_NAME} ${3rd_lib_LIBRARIES})
-#target_link_libraries(${CMD_NAME} sys_semantic_inc)
-
 
 qt5_use_modules(${CMD_NAME} ${QtModule})
 

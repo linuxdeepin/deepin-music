@@ -7,7 +7,7 @@ DWIDGET_USE_NAMESPACE
 class InfoDialog;
 class MusicImageButton;
 class MusicTitleImageWidget;
-class MusicListInfoView;
+class PlayListView;
 
 #include <DLabel>
 #include <DPushButton>
@@ -48,6 +48,6 @@ private:
     DPushButton                        *m_btPlayAll           = nullptr;
     DPushButton                        *m_btRandomPlay        = nullptr;
     InfoDialog                         *m_infoDialog          = nullptr;
-    MusicListInfoView                  *m_musicListInfoView   = nullptr;
+    PlayListView                       *m_musicListInfoView   = nullptr;
     QPixmap                             m_img;
 };

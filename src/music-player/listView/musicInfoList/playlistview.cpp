@@ -507,6 +507,33 @@ int PlayListView::getRowCount()
     return m_model->rowCount();
 }
 
+void PlayListView::setMusicListView(QMap<QString, MediaMeta> musicinfos)
+{
+    m_model->clear();
+    for (int i = 0; i < musicinfos.values().size(); i++) {
+        QStandardItem *newItem = new QStandardItem;
+
+        QString imagesDirPath = Global::cacheDir() + "/images/" + musicinfos.values().at(i).hash + ".jpg";
+        QFileInfo file(imagesDirPath);
+        QIcon icon;
+        if (file.exists()) {
+            icon = QIcon(imagesDirPath);
+        } else {
+            icon = QIcon(":/common/image/cover_max.svg");
+        }
+        newItem->setIcon(icon);
+        m_model->appendRow(newItem);
+
+        auto row = m_model->rowCount() - 1;
+        QModelIndex index = m_model->index(row, 0, QModelIndex());
+
+        QVariant mediaMeta;
+        MediaMeta meta = musicinfos.values().at(i);
+        mediaMeta.setValue(meta);
+        m_model->setData(index, mediaMeta, Qt::UserRole);
+    }
+}
+
 void PlayListView::setViewModeFlag(QString hash, QListView::ViewMode mode)
 {
     m_viewModeMap[hash] = mode;
@@ -685,6 +712,9 @@ void PlayListView::slotRemoveSingleSong(const QString &listHash, const QString &
                 break;
             }
         }
+    }
+    if (m_model->rowCount() == 0) {
+        emit CommonService::getInstance()->signalHideSubSonglist();
     }
 }
 
@@ -934,8 +964,10 @@ void PlayListView::slotRmvFromSongList()
             if (m_currentHash == "musicResult") {
                 //搜索结果中删除，等同于所有音乐中删除
                 DataBaseService::getInstance()->removeSelectedSongs("all", metaList, false);
+                this->clearSelection();
             } else {
                 DataBaseService::getInstance()->removeSelectedSongs(m_currentHash, metaList, false);
+                this->clearSelection();
             }
             // 更新player中缓存的歌曲信息
             if (m_currentHash == "all" || m_currentHash == Player::getInstance()->getCurrentPlayListHash()) {

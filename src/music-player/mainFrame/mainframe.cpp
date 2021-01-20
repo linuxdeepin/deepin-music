@@ -199,7 +199,7 @@ void MainFrame::initUI(bool showLoading)
     /*---------------menu&shortcut-------------------*/
     initMenuAndShortcut();
     m_newSonglistAction->setEnabled(showLoading);
-    // 添加新建歌单
+    // 添加新建歌单或者双击专辑/演唱者
     connect(CommonService::getInstance(), &CommonService::signalShowSubSonglist,
             this, &MainFrame::slotShowSubSonglist);
 
@@ -268,6 +268,10 @@ void MainFrame::initMenuAndShortcut()
 
     windowShortcut = new QShortcut(this);
     windowShortcut->setKey(QKeySequence(QLatin1String("Ctrl+Alt+F")));
+
+    m_newItemShortcut = new QShortcut(this);
+    m_newItemShortcut->setKey(QKeySequence(QLatin1String("Ctrl+Shift+N")));
+    connect(m_newItemShortcut, &QShortcut::activated, CommonService::getInstance(), &CommonService::signalAddNewSongList);
 
     connect(addmusicfilesShortcut, SIGNAL(activated()), this, SLOT(slotShortCutTriggered()));
     connect(viewshortcut, SIGNAL(activated()), this, SLOT(slotShortCutTriggered()));
@@ -670,7 +674,9 @@ void MainFrame::slotPlayFromFileMaganager()
 void MainFrame::slotShowSubSonglist(const QMap<QString, MediaMeta> &musicinfos, bool isAlbumDialog)
 {
     m_backBtn->setVisible(true);
-    m_subSonglistWidget->flushDialog(musicinfos, isAlbumDialog);
+    if (musicinfos.size() > 0) {
+        m_subSonglistWidget->flushDialog(musicinfos, isAlbumDialog);
+    }
     m_musicStatckedWidget->setCurrentWidget(m_subSonglistWidget);
 }
 

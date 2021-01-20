@@ -77,6 +77,7 @@ public:
     void showErrorDlg();
 
     int getRowCount();
+    void setMusicListView(QMap<QString, MediaMeta> musicinfos);
 public slots:
     void slotOnDoubleClicked(const QModelIndex &index);
     void slotUpdatePlayingIcon();

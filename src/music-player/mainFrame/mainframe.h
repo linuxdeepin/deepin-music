@@ -131,6 +131,8 @@ private:
     QShortcut           *viewshortcut = nullptr;
     QShortcut           *searchShortcut = nullptr;
     QShortcut           *windowShortcut = nullptr;
+    // 新建歌单快捷键
+    QShortcut           *m_newItemShortcut = nullptr;
     //window geometry
     QByteArray          m_geometryBa = QByteArray();
 };

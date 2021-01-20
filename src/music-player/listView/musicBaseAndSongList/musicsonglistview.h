@@ -100,7 +100,7 @@ private:
     QPixmap              defaultPixmap;
 
     // 新建歌单快捷键
-    QShortcut           *m_newItemShortcut = nullptr;
+//    QShortcut           *m_newItemShortcut = nullptr;
     // 重命名快捷键
     QShortcut           *m_renameShortcut = nullptr;
     // ESC快捷键

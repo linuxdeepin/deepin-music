@@ -327,6 +327,7 @@ void ImportWidget::dropEvent(QDropEvent *event)
 
     if (!localpaths.isEmpty()) {
         DataBaseService::getInstance()->importMedias("all", localpaths);
+        showWaitHint();
     }
 }
 void ImportWidget::setThemeType(int type)
