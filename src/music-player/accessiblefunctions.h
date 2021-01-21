@@ -120,8 +120,7 @@ inline QString getIntelAccessibleName(QWidget *w, QAccessible::Role r, QString f
 inline QString getAccessibleName(QWidget *w, QAccessible::Role r, QString fallback)
 {
     QString accessibleName = getIntelAccessibleName(w, r, fallback);
-    if(accessibleName.isEmpty())
-    {
+    if (accessibleName.isEmpty()) {
         return getObjPrefix(r) + SEPARATOR;
     }
 
@@ -129,125 +128,125 @@ inline QString getAccessibleName(QWidget *w, QAccessible::Role r, QString fallba
 }
 
 #define FUNC_CREATE(classname,accessibletype,accessdescription)    Accessible##classname(classname *w) \
-    : QAccessibleWidget(w,accessibletype,#classname)\
-    , m_w(w)\
-    , m_description(accessdescription)\
-{}\
+        : QAccessibleWidget(w,accessibletype,#classname)\
+        , m_w(w)\
+        , m_description(accessdescription)\
+    {}\
     private:\
     classname *m_w;\
     QString m_description;\
 
 #define FUNC_PRESS(classobj)     QStringList actionNames() const override{\
-    if(!classobj->isEnabled())\
-    return QStringList();\
-    return QStringList() << pressAction();}\
+        if(!classobj->isEnabled())\
+            return QStringList();\
+        return QStringList() << pressAction();}\
     void doAction(const QString &actionName) override{\
-    if(actionName == pressAction())\
-{\
-    QPointF localPos = classobj->geometry().center();\
-    QMouseEvent event(QEvent::MouseButtonPress,localPos,Qt::LeftButton,Qt::LeftButton,Qt::NoModifier);\
-    QMouseEvent event2(QEvent::MouseButtonRelease,localPos,Qt::LeftButton,Qt::LeftButton,Qt::NoModifier);\
-    qApp->sendEvent(classobj,&event);\
-    qApp->sendEvent(classobj,&event2);\
-    }\
+        if(actionName == pressAction())\
+        {\
+            QPointF localPos = classobj->geometry().center();\
+            QMouseEvent event(QEvent::MouseButtonPress,localPos,Qt::LeftButton,Qt::LeftButton,Qt::NoModifier);\
+            QMouseEvent event2(QEvent::MouseButtonRelease,localPos,Qt::LeftButton,Qt::LeftButton,Qt::NoModifier);\
+            qApp->sendEvent(classobj,&event);\
+            qApp->sendEvent(classobj,&event2);\
+        }\
     }\
 
 #define FUNC_SHOWMENU(classobj)     QStringList actionNames() const override{\
-    if(!classobj->isEnabled())\
-    return QStringList();\
-    return QStringList() << showMenuAction();}\
+        if(!classobj->isEnabled())\
+            return QStringList();\
+        return QStringList() << showMenuAction();}\
     void doAction(const QString &actionName) override{\
-    if(actionName == showMenuAction())\
-{\
-    QPointF localPos = classobj->geometry().center();\
-    QMouseEvent event(QEvent::MouseButtonPress,localPos,Qt::RightButton,Qt::RightButton,Qt::NoModifier);\
-    QMouseEvent event2(QEvent::MouseButtonRelease,localPos,Qt::RightButton,Qt::RightButton,Qt::NoModifier);\
-    qApp->sendEvent(classobj,&event);\
-    qApp->sendEvent(classobj,&event2);\
-    }\
+        if(actionName == showMenuAction())\
+        {\
+            QPointF localPos = classobj->geometry().center();\
+            QMouseEvent event(QEvent::MouseButtonPress,localPos,Qt::RightButton,Qt::RightButton,Qt::NoModifier);\
+            QMouseEvent event2(QEvent::MouseButtonRelease,localPos,Qt::RightButton,Qt::RightButton,Qt::NoModifier);\
+            qApp->sendEvent(classobj,&event);\
+            qApp->sendEvent(classobj,&event2);\
+        }\
     }\
 
 #define FUNC_PRESS_SHOWMENU(classobj)     QStringList actionNames() const override{\
-    if(!classobj->isEnabled())\
-    return QStringList();\
-    return QStringList() << pressAction() << showMenuAction();}\
+        if(!classobj->isEnabled())\
+            return QStringList();\
+        return QStringList() << pressAction() << showMenuAction();}\
     void doAction(const QString &actionName) override{\
-    if(actionName == pressAction())\
-{\
-    QPointF localPos = classobj->geometry().center();\
-    QMouseEvent event(QEvent::MouseButtonPress,localPos,Qt::LeftButton,Qt::LeftButton,Qt::NoModifier);\
-    QMouseEvent event2(QEvent::MouseButtonRelease,localPos,Qt::LeftButton,Qt::LeftButton,Qt::NoModifier);\
-    qApp->sendEvent(classobj,&event);\
-    qApp->sendEvent(classobj,&event2);\
-    }\
-    else if(actionName == showMenuAction())\
-{\
-    QPointF localPos = classobj->geometry().center();\
-    QMouseEvent event(QEvent::MouseButtonPress,localPos,Qt::RightButton,Qt::RightButton,Qt::NoModifier);\
-    QMouseEvent event2(QEvent::MouseButtonRelease,localPos,Qt::RightButton,Qt::RightButton,Qt::NoModifier);\
-    qApp->sendEvent(classobj,&event);\
-    qApp->sendEvent(classobj,&event2);\
-    }\
+        if(actionName == pressAction())\
+        {\
+            QPointF localPos = classobj->geometry().center();\
+            QMouseEvent event(QEvent::MouseButtonPress,localPos,Qt::LeftButton,Qt::LeftButton,Qt::NoModifier);\
+            QMouseEvent event2(QEvent::MouseButtonRelease,localPos,Qt::LeftButton,Qt::LeftButton,Qt::NoModifier);\
+            qApp->sendEvent(classobj,&event);\
+            qApp->sendEvent(classobj,&event2);\
+        }\
+        else if(actionName == showMenuAction())\
+        {\
+            QPointF localPos = classobj->geometry().center();\
+            QMouseEvent event(QEvent::MouseButtonPress,localPos,Qt::RightButton,Qt::RightButton,Qt::NoModifier);\
+            QMouseEvent event2(QEvent::MouseButtonRelease,localPos,Qt::RightButton,Qt::RightButton,Qt::NoModifier);\
+            qApp->sendEvent(classobj,&event);\
+            qApp->sendEvent(classobj,&event2);\
+        }\
     }\
 
 #define FUNC_RECT(classobj) QRect rect() const override{\
-    if (!classobj->isVisible())\
-    return QRect();\
-    return classobj->geometry();\
+        if (!classobj->isVisible())\
+            return QRect();\
+        return classobj->geometry();\
     }\
 
 #define FUNC_TEXT(classname,accessiblename) QString Accessible##classname::text(QAccessible::Text t) const{\
-    switch (t) {\
-    case QAccessible::Name:\
-    return getAccessibleName(m_w, this->role(), accessiblename);\
-    case QAccessible::Description:\
-    return m_description;\
-    default:\
-    return QString();\
-    }\
+        switch (t) {\
+        case QAccessible::Name:\
+            return getAccessibleName(m_w, this->role(), accessiblename);\
+        case QAccessible::Description:\
+            return m_description;\
+        default:\
+            return QString();\
+        }\
     }\
 
 #define USE_ACCESSIBLE(classnamestring,classname)    if (classnamestring == QLatin1String(#classname) && object && object->isWidgetType())\
-{\
-    interface = new Accessible##classname(static_cast<classname *>(object));\
+    {\
+        interface = new Accessible##classname(static_cast<classname *>(object));\
     }\
 
 // [指定objectname]---适用同一个类，但objectname不同的情况
 #define USE_ACCESSIBLE_BY_OBJECTNAME(classnamestring,classname,objectname)    if (classnamestring == QLatin1String(#classname) && object && (object->objectName() == objectname) && object->isWidgetType())\
-{\
-    interface = new Accessible##classname(static_cast<classname *>(object));\
+    {\
+        interface = new Accessible##classname(static_cast<classname *>(object));\
     }\
 
 #define SET_BUTTON_ACCESSIBLE_PRESS_DESCRIPTION(classname,accessiblename,accessdescription)  class Accessible##classname : public QAccessibleWidget\
-{\
+    {\
     public:\
-    FUNC_CREATE(classname,QAccessible::Button,accessdescription)\
-    QString text(QAccessible::Text t) const override;\
-    FUNC_PRESS(m_w)\
+        explicit FUNC_CREATE(classname,QAccessible::Button,accessdescription)\
+        QString text(QAccessible::Text t) const override;\
+        FUNC_PRESS(m_w)\
     };\
 
 #define SET_BUTTON_ACCESSIBLE_SHOWMENU_DESCRIPTION(classname,accessiblename,accessdescription)  class Accessible##classname : public QAccessibleWidget\
-{\
+    {\
     public:\
-    FUNC_CREATE(classname,QAccessible::Button,accessdescription)\
-    QString text(QAccessible::Text t) const override;\
-    FUNC_SHOWMENU(m_w)\
+        explicit FUNC_CREATE(classname,QAccessible::Button,accessdescription)\
+        QString text(QAccessible::Text t) const override;\
+        FUNC_SHOWMENU(m_w)\
     };\
 
 #define SET_BUTTON_ACCESSIBLE_PRESS_SHOEMENU_DESCRIPTION(classname,accessiblename,accessdescription)  class Accessible##classname : public QAccessibleWidget\
-{\
+    {\
     public:\
-    FUNC_CREATE(classname,QAccessible::Button,accessdescription)\
-    QString text(QAccessible::Text t) const override;\
-    FUNC_PRESS_SHOWMENU(m_w)\
+        explicit FUNC_CREATE(classname,QAccessible::Button,accessdescription)\
+        QString text(QAccessible::Text t) const override;\
+        FUNC_PRESS_SHOWMENU(m_w)\
     };\
 
 #define SET_LABEL_ACCESSIBLE_WITH_DESCRIPTION(classname,aaccessibletype,accessiblename,accessdescription)  class Accessible##classname : public QAccessibleWidget\
-{\
+    {\
     public:\
-    FUNC_CREATE(classname,aaccessibletype,accessdescription)\
-    QString text(QAccessible::Text t) const override;\
-    FUNC_RECT(m_w)\
+        explicit FUNC_CREATE(classname,aaccessibletype,accessdescription)\
+        QString text(QAccessible::Text t) const override;\
+        FUNC_RECT(m_w)\
     };\
 
 // /*******************************************简化使用*******************************************/

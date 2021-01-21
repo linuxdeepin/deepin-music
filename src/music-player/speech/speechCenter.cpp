@@ -6,9 +6,12 @@
 #include <QJsonParseError>
 #include <QJsonObject>
 
-SpeechCenter::SpeechCenter(QObject *parent) : QObject(parent)
+SpeechCenter::SpeechCenter(QObject *parent)
+    : QObject(parent),
+      m_needRefresh(false)
 {
 }
+
 //指定歌曲
 QVariant SpeechCenter::playMusic(QString musicName)
 {
@@ -76,7 +79,7 @@ QVariant SpeechCenter::playArtist(QString artistName)
     //查找该歌手
     QList<SingerInfo> singerInfos = DataBaseService::getInstance()->allSingerInfos();
     bool isExit = false;
-    for (SingerInfo singerInfo : singerInfos) {
+    foreach (SingerInfo singerInfo, singerInfos) {
         if (singerInfo.singerName == artistName && singerInfo.musicinfos.size() > 0) {
             //重置播放队列
             Player::getInstance()->clearPlayList();
@@ -131,7 +134,7 @@ QVariant SpeechCenter::playArtistMusic(QString artistAndmusic)
                 break;
             }
             // 有歌曲名，播放指定歌曲
-            for (MediaMeta meta : singerInfo.musicinfos.values()) {
+            foreach (MediaMeta meta, singerInfo.musicinfos.values()) {
                 if (meta.title == musicName) {
                     Player::getInstance()->playMeta(meta);
                     isExit = true;
@@ -166,7 +169,7 @@ QVariant SpeechCenter::playAlbum(QString albumName)
             //设置当前播放为歌手
             Player::getInstance()->setCurrentPlayListHash("album", false);
             // 有歌曲名与专辑名相同
-            for (MediaMeta meta : albumInfo.musicinfos.values()) {
+            foreach (MediaMeta meta, albumInfo.musicinfos.values()) {
                 if (meta.title == albumName) {
                     Player::getInstance()->playMeta(meta);
                     isExit = true;
@@ -225,7 +228,7 @@ QVariant SpeechCenter::playSonglist(QString songlistName)
     bool songlistExit = false;
     QString uuid;
     QList<DataBaseService::PlaylistData> playlistDatas = DataBaseService::getInstance()->getCustomSongList();
-    for (DataBaseService::PlaylistData playlistData : playlistDatas) {
+    foreach (DataBaseService::PlaylistData playlistData, playlistDatas) {
         if (playlistData.displayName == songlistName) {
             songlistExit = true;
             uuid = playlistData.uuid;

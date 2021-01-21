@@ -10,6 +10,7 @@ class SpeechCenter : public QObject, public DMusic::DSingleton<SpeechCenter>
 {
     Q_OBJECT
 public:
+    explicit SpeechCenter(QObject *parent = nullptr);
     // 播放指定歌曲,若musicName为空则随机播放一首
     QVariant playMusic(QString musicName);
     void setMediaMetas(const QList<MediaMeta> &metas);
@@ -49,7 +50,6 @@ signals:
 public slots:
 
 private:
-    explicit SpeechCenter(QObject *parent = nullptr);
     friend class DMusic::DSingleton<SpeechCenter>;
 private:
     bool m_needRefresh;

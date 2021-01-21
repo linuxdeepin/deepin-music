@@ -335,51 +335,52 @@ void DataBaseService::importMedias(QString importHash, const QStringList &urllis
 //    return m_Importing;
 //}
 
-void DataBaseService::addMediaMeta(const MediaMeta &meta)
-{
-    QSqlQuery query(m_db);
+// 移到子线程中执行
+//void DataBaseService::addMediaMeta(const MediaMeta &meta)
+//{
+//    QSqlQuery query(m_db);
 
-    query.prepare("INSERT INTO musicNew ("
-                  "hash, timestamp, title, artist, album, "
-                  "filetype, size, track, offset, favourite, localpath, length, "
-                  "py_title, py_title_short, py_artist, py_artist_short, "
-                  "py_album, py_album_short, lyricPath, codec, cuepath "
-                  ") "
-                  "VALUES ("
-                  ":hash, :timestamp, :title, :artist, :album, "
-                  ":filetype, :size, :track, :offset, :favourite, :localpath, :length, "
-                  ":py_title, :py_title_short, :py_artist, :py_artist_short, "
-                  ":py_album, :py_album_short, :lyricPath, :codec, :cuepath "
-                  ")");
+//    query.prepare("INSERT INTO musicNew ("
+//                  "hash, timestamp, title, artist, album, "
+//                  "filetype, size, track, offset, favourite, localpath, length, "
+//                  "py_title, py_title_short, py_artist, py_artist_short, "
+//                  "py_album, py_album_short, lyricPath, codec, cuepath "
+//                  ") "
+//                  "VALUES ("
+//                  ":hash, :timestamp, :title, :artist, :album, "
+//                  ":filetype, :size, :track, :offset, :favourite, :localpath, :length, "
+//                  ":py_title, :py_title_short, :py_artist, :py_artist_short, "
+//                  ":py_album, :py_album_short, :lyricPath, :codec, :cuepath "
+//                  ")");
 
-    query.bindValue(":hash", meta.hash);
-    query.bindValue(":timestamp", meta.timestamp);
-    query.bindValue(":title", meta.title);
-    query.bindValue(":artist", meta.singer);
-    query.bindValue(":album", meta.album);
-    query.bindValue(":filetype", meta.filetype);
-    query.bindValue(":size", meta.size);
-    query.bindValue(":track", meta.track);
-    query.bindValue(":offset", meta.offset);
-    query.bindValue(":favourite", meta.favourite);
-    query.bindValue(":localpath", meta.localPath);
-    query.bindValue(":length", meta.length);
-    query.bindValue(":py_title", meta.pinyinTitle);
-    query.bindValue(":py_title_short", meta.pinyinTitleShort);
-    query.bindValue(":py_artist", meta.pinyinArtist);
-    query.bindValue(":py_artist_short", meta.pinyinArtistShort);
-    query.bindValue(":py_album", meta.pinyinAlbum);
-    query.bindValue(":py_album_short", meta.pinyinAlbumShort);
-    query.bindValue(":lyricPath", meta.lyricPath);
-    query.bindValue(":codec", meta.codec);
-    query.bindValue(":cuepath", meta.cuePath);
+//    query.bindValue(":hash", meta.hash);
+//    query.bindValue(":timestamp", meta.timestamp);
+//    query.bindValue(":title", meta.title);
+//    query.bindValue(":artist", meta.singer);
+//    query.bindValue(":album", meta.album);
+//    query.bindValue(":filetype", meta.filetype);
+//    query.bindValue(":size", meta.size);
+//    query.bindValue(":track", meta.track);
+//    query.bindValue(":offset", meta.offset);
+//    query.bindValue(":favourite", meta.favourite);
+//    query.bindValue(":localpath", meta.localPath);
+//    query.bindValue(":length", meta.length);
+//    query.bindValue(":py_title", meta.pinyinTitle);
+//    query.bindValue(":py_title_short", meta.pinyinTitleShort);
+//    query.bindValue(":py_artist", meta.pinyinArtist);
+//    query.bindValue(":py_artist_short", meta.pinyinArtistShort);
+//    query.bindValue(":py_album", meta.pinyinAlbum);
+//    query.bindValue(":py_album_short", meta.pinyinAlbumShort);
+//    query.bindValue(":lyricPath", meta.lyricPath);
+//    query.bindValue(":codec", meta.codec);
+//    query.bindValue(":cuepath", meta.cuePath);
 
-    if (! query.exec()) {
-        qCritical() << query.lastError();
-        return;
-    }
-    m_AllMediaMeta.append(meta);
-}
+//    if (! query.exec()) {
+//        qCritical() << query.lastError();
+//        return;
+//    }
+//    m_AllMediaMeta.append(meta);
+//}
 
 void DataBaseService::addPlaylist(const DataBaseService::PlaylistData &playlistMeta)
 {

@@ -10,10 +10,8 @@ class VoicePlugin: public QObject
 public:
 
     struct MusicContent {
-        MusicContent()
+        MusicContent() : name(""), value("")
         {
-            name = "";
-            value = "";
         }
 
         bool operator ==(const MusicContent &content)
@@ -31,7 +29,7 @@ public:
         QVector<MusicContent> contents;//key-name
     };
 
-    VoicePlugin(QObject *parent = nullptr);
+    explicit VoicePlugin(QObject *parent = nullptr);
 
     void process(const QString &semantic);
 

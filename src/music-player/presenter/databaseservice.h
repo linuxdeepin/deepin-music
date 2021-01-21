@@ -96,7 +96,7 @@ public:
     void                 importMedias(QString importHash, const QStringList &urllist);
     // 获取导入状态，true正在导入，false没有导入，空闲
     //bool                 getImportStatus();
-    void                 addMediaMeta(const MediaMeta &meta);
+//    void                 addMediaMeta(const MediaMeta &meta);
 
     // 音乐收藏
     bool favoriteMusic(const MediaMeta meta);

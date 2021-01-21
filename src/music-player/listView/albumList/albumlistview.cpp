@@ -207,7 +207,7 @@ void AlbumListView::resetAlbumListDataBySongName(const QList<MediaMeta> &mediaMe
 //            bool ret = std::any_of(mediaMetas.begin(), mediaMetas.end(), [](MediaMeta mt) {return mt.hash == tmpMeta.hash;});
         bool isAlbumContainSong = false;
         for (MediaMeta albumMeta : albumInfo.musicinfos.values()) {
-            for (MediaMeta listMeta : mediaMetas) {
+            foreach (MediaMeta listMeta, mediaMetas) {
                 if (albumMeta.hash == listMeta.hash) {
                     isAlbumContainSong = true;
                     break;
@@ -254,7 +254,7 @@ void AlbumListView::resetAlbumListDataBySinger(const QList<SingerInfo> &singerIn
 //        static AlbumInfo &tmpMeta = albumInfo;
 //        bool ret = std::any_of(singerInfos.begin(), singerInfos.end(), [](SingerInfo mt) {return CommonService::getInstance()->containsStr(mt.singerName, tmpMeta.singer);});
         bool isAlbumContainSong = false;
-        for (SingerInfo singerInfo : singerInfos) {
+        foreach (SingerInfo singerInfo, singerInfos) {
             if (CommonService::getInstance()->containsStr(singerInfo.singerName, albumInfo.singer)) {
                 isAlbumContainSong = true;
                 break;

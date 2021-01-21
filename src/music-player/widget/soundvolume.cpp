@@ -154,13 +154,6 @@ void SoundVolume::slotSetVolume(int volume)
 
 void SoundVolume::updateUI(int volume)
 {
-    bool muteToSet = false;
-    if (volume == 0) {
-        muteToSet = true;
-    } else {
-        muteToSet = false;
-    }
-
     Player::getInstance()->setVolume(volume);
 
     flushVolumeIcon();

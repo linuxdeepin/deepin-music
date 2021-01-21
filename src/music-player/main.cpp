@@ -210,7 +210,6 @@ bool checkOnly()
 
 void createSpeechDbus()
 {
-    const std::function<QVariant(QString)> handler;
     SpeechCenter::getInstance();
 
     SpeechExportBus *mSpeech = new SpeechExportBus(nullptr);

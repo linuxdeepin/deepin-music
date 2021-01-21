@@ -85,10 +85,10 @@ libvlc_media_player_t *VlcMediaPlayer::core() const
     return _vlcMediaPlayer;
 }
 
-VlcAudio *VlcMediaPlayer::audio() const
-{
-    return _vlcAudio;
-}
+//VlcAudio *VlcMediaPlayer::audio() const
+//{
+//    return _vlcAudio;
+//}
 
 VlcEqualizer *VlcMediaPlayer::equalizer() const
 {

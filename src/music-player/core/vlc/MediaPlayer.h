@@ -53,7 +53,7 @@ public:
         \brief Returns audio manager object.
         \return audio manager (VlcAudio *)
     */
-    VlcAudio *audio() const;
+//    VlcAudio *audio() const;
 
 #if LIBVLC_VERSION >= 0x020200
     /*!

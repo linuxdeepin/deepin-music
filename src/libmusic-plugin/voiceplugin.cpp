@@ -47,28 +47,27 @@ void VoicePlugin::process(const QString &semantic)
             //just send sth to deepin-music
             int checkCount = 0;
             while (checkCount <= 20) {
-                QDBusInterface speechbus("org.mpris.MediaPlayer2.DeepinMusic",
+                QDBusInterface speechBus("org.mpris.MediaPlayer2.DeepinMusic",
                                          "/org/mpris/speech",
                                          "com.deepin.speech",
                                          QDBusConnection::sessionBus());
-                if (speechbus.isValid()) {
+                if (speechBus.isValid()) {
                     break;
                 }
                 checkCount++;
                 QThread::msleep(100);
             }
-            // 音乐刚启动，添加延时给音乐初始化的时间
-            QThread::msleep(500);
-            QDBusInterface speechbus("org.mpris.MediaPlayer2.DeepinMusic",
+
+            QDBusInterface speechBus("org.mpris.MediaPlayer2.DeepinMusic",
                                      "/org/mpris/speech",
                                      "com.deepin.speech",
                                      QDBusConnection::sessionBus());
-            if (speechbus.isValid()) {
-                QDBusReply<QVariant> msg  = speechbus.call(QString("invoke"), strconbine.at(0), strconbine.size() == 1 ? " " : strconbine.at(1)); //0 function  ,1 params
+            if (speechBus.isValid()) {
+                QDBusReply<QVariant> message  = speechBus.call(QString("invoke"), strconbine.at(0), strconbine.size() == 1 ? " " : strconbine.at(1)); //0 function  ,1 params
                 //just send sth to deepin-music
-                if (msg.isValid()) {
-                    m_replyMessage = msg.value().toString();
-                    m_ttsMessage = msg.value().toString();
+                if (message.isValid()) {
+                    m_replyMessage = message.value().toString();
+                    m_ttsMessage = message.value().toString();
                     emit signaleSendMessage(m_ttsMessage);
                 }
             }

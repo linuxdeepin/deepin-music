@@ -239,12 +239,13 @@ MediaMeta MetaDetector::updateMediaFileTagCodec(MediaMeta &meta, const QByteArra
             auto allDetectCodecs = detectEncodings(detectByte);
             auto localeCode = localeCodes.value(QLocale::system().name());
 
-            for (auto curDetext : allDetectCodecs) {
+            foreach (auto curDetext, allDetectCodecs) {
                 if (curDetext == "Big5" || curDetext == localeCode) {
                     detectCodec = curDetext;
                     break;
                 }
             }
+
             if (detectCodec.isEmpty())
                 detectCodec = allDetectCodecs.value(0);
 
@@ -253,7 +254,7 @@ MediaMeta MetaDetector::updateMediaFileTagCodec(MediaMeta &meta, const QByteArra
                 curStr = QString::fromLocal8Bit(tag->artist().toCString());
             if (curStr.isEmpty())
                 curStr = QString::fromLocal8Bit(tag->album().toCString());
-            for (auto ch : curStr) {
+            foreach (auto ch, curStr) {
                 if (DMusic::PinyinSearch::isChinese(ch)) {
                     detectCodec = "GB18030";
                     break;
