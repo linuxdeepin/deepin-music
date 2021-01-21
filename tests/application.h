@@ -55,7 +55,7 @@ public :
     void setMainWindow(MainFrame *window);
     MainFrame *getMainWindow();
 public:
-    MainFrame *m_mainwindow;
+    MainFrame *m_mainwindow = nullptr;
     static DApplication *dAppNew;
     static Application *dApp1;
 };

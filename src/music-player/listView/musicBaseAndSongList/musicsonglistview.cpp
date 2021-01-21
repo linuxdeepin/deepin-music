@@ -401,6 +401,8 @@ void MusicSongListView::slotLineEditingFinished()
 
         DataBaseService::getInstance()->updatePlaylistDisplayName(m_renameItem->text(), uuid);
         m_renameItem->setIcon(QIcon::fromTheme("music_famousballad"));
+        // 防止焦点设置到其他控件 bug:61769
+        this->setFocus();
     }
 }
 

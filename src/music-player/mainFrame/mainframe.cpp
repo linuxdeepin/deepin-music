@@ -779,6 +779,7 @@ void MainFrame::resizeEvent(QResizeEvent *e)
         m_subSonglistWidget->setGeometry(0, 0, width(), height() - m_footerWidget->height() - titlebar()->height());
     }
 
+    // 防止主页面控件挡住歌词控件
     if (m_musicLyricWidget) {
         m_musicLyricWidget->setGeometry(0, titlebar()->height(), width(), height() - titlebar()->height());
     }

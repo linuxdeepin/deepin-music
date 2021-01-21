@@ -486,11 +486,13 @@ QString FooterWidget::playModeStr(int mode)
 
 void FooterWidget::slotPlayQueueAutoHidden()
 {
+    // 播放队列自动收起时更新播放队列按钮
     m_btPlayQueue->setChecked(false);
 }
 
 void FooterWidget::slotLyricAutoHidden()
 {
+    // 歌词控件自动收起时更新歌词按钮
     m_btLyric->setChecked(false);
 }
 
