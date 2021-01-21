@@ -21,4 +21,4 @@ target_link_libraries(${CMD_NAME} ${3rd_lib_LIBRARIES})
 
 qt5_use_modules(${CMD_NAME} ${QtModule})
 
-#install(TARGETS ${CMD_NAME} DESTINATION ${CMAKE_INSTALL_VOICE_LIBDIR})
+install(TARGETS ${CMD_NAME} DESTINATION ${CMAKE_INSTALL_VOICE_LIBDIR})
