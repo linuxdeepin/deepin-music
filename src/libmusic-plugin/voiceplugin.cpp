@@ -57,7 +57,8 @@ void VoicePlugin::process(const QString &semantic)
                 checkCount++;
                 QThread::msleep(100);
             }
-
+            // 音乐刚启动，添加延时给音乐初始化的时间
+            QThread::msleep(500);
             QDBusInterface speechbus("org.mpris.MediaPlayer2.DeepinMusic",
                                      "/org/mpris/speech",
                                      "com.deepin.speech",
