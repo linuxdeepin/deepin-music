@@ -31,6 +31,7 @@
 #include <DApplication>
 #include <DApplicationSettings>
 #include <DExportedInterface>
+#include <QDBusReply>
 #include <metadetector.h>
 
 #include <sys/types.h>
@@ -125,26 +126,36 @@ int main(int argc, char *argv[])
 
     if (!app->setSingleInstance("deepinmusic") || !checkOnly()) {
         qDebug() << "another deepin music has started";
-        for (auto curStr : parser.positionalArguments()) {
-            if (!curStr.isEmpty()) {
-                QUrl url = QUrl(curStr);//::fromLocalFile(fi.absoluteFilePath());
-                qDebug() << __FUNCTION__ << "toString = " << url.toString();
-                qDebug() << __FUNCTION__ << "toLocalFile = " << url.toLocalFile();
-                while (true) {
-                    QDBusInterface iface("org.mpris.MediaPlayer2.DeepinMusic",
-                                         "/org/mpris/MediaPlayer2",
-                                         "org.mpris.MediaPlayer2.Player",
-                                         QDBusConnection::sessionBus());
-                    if (iface.isValid()) {
-                        if (url.toLocalFile().isEmpty()) {
-                            iface.asyncCall("OpenUri", curStr);
-                        } else {
-                            iface.asyncCall("OpenUri", url.toLocalFile());
-                        }
-                        break;
-                    }
-                }
-            }
+        // 使用新写的dbus接口，一次性接收全部数据，不必要想之前的接收多次dbus调用
+//        for (auto curStr : parser.positionalArguments()) {
+//            if (!curStr.isEmpty()) {
+//                QUrl url = QUrl(curStr);//::fromLocalFile(fi.absoluteFilePath());
+//                qDebug() << __FUNCTION__ << "toString = " << url.toString();
+//                qDebug() << __FUNCTION__ << "toLocalFile = " << url.toLocalFile();
+//                while (true) {
+//                    QDBusInterface iface("org.mpris.MediaPlayer2.DeepinMusic",
+//                                         "/org/mpris/MediaPlayer2",
+//                                         "org.mpris.MediaPlayer2.Player",
+//                                         QDBusConnection::sessionBus());
+//                    if (iface.isValid()) {
+//                        if (url.toLocalFile().isEmpty()) {
+//                            iface.asyncCall("OpenUri", curStr);
+//                        } else {
+//                            iface.asyncCall("OpenUri", url.toLocalFile());
+//                        }
+//                        break;
+//                    }
+//                }
+//            }
+//        }
+        QDBusInterface speechbus("org.mpris.MediaPlayer2.DeepinMusic",
+                                 "/org/mpris/speech",
+                                 "com.deepin.speech",
+                                 QDBusConnection::sessionBus());
+        if (speechbus.isValid()) {
+            QVariant mediaMeta;
+            mediaMeta.setValue(parser.positionalArguments());
+            QDBusReply<QVariant> msg  = speechbus.call(QString("invokeStrlist"), "OpenUris", mediaMeta); //0 function  ,1 params
         }
 
         /*-----show deepin-music----*/
@@ -249,4 +260,7 @@ void createSpeechDbus()
     // 'setMode','0' 列表循环  'setMode','1' 单曲循环  'setMode','2' 随机
     mSpeech->registerAction("setMode", "set Mode",
                             std::bind(&SpeechCenter::setMode, SpeechCenter::getInstance(), std::placeholders::_1));
+    // dbus导入音乐文件
+    mSpeech->registerQStringListAction("OpenUris", "OpenUris",
+                                       std::bind(&SpeechCenter::OpenUris, SpeechCenter::getInstance(), std::placeholders::_1));
 }

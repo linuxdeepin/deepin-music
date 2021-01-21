@@ -658,7 +658,6 @@ void MainFrame::slotPlayFromFileMaganager()
         return;
     //通过路径查询歌曲信息，
     MediaMeta mt = DataBaseService::getInstance()->getMusicInfoByHash(DMusic::filepathHash(path));
-    DataBaseService::getInstance()->setFirstSong("");
     if (mt.localPath.isEmpty()) {
         //未导入到数据库
         qCritical() << "fail to start from file manager";
@@ -669,6 +668,7 @@ void MainFrame::slotPlayFromFileMaganager()
     Player::getInstance()->setCurrentPlayListHash("all", true);
     // 通知播放队列列表改变
     emit Player::getInstance()->signalPlayListChanged();
+    DataBaseService::getInstance()->setFirstSong("");
 }
 
 void MainFrame::slotShowSubSonglist(const QMap<QString, MediaMeta> &musicinfos, bool isAlbumDialog)

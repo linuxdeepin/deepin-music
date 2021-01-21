@@ -27,6 +27,11 @@ void SpeechExportBus::registerAction(const QString &action, const QString &descr
     m_pExportInterface->actions[action] = {handler, description};
 }
 
+void SpeechExportBus::registerQStringListAction(const QString &action, const QString &description, const std::function<QVariant(QStringList)> handler)
+{
+    m_pExportInterface->strListactions[action] = {handler, description};
+}
+
 QStringList SpeechExportBus::list()
 {
     return m_pExportInterface->actions.keys();
@@ -40,6 +45,22 @@ QDBusVariant ExporteDBusInterface::invoke(QString action, QString parameters)
         sendErrorReply(QDBusError::ErrorType::InvalidArgs, QString("Action \"%1\" is not registered").arg(action));
     } else {
         auto func = actions.value(action).first;
+        if (func)
+            ret.setVariant(func(parameters));
+        else
+            ret.setVariant(QVariant());
+    }
+    return ret;
+}
+
+QDBusVariant ExporteDBusInterface::invokeStrlist(QString action, QStringList parameters)
+{
+    qDebug() << __FUNCTION__ << action;
+    QDBusVariant ret;
+    if (!strListactions.contains(action)) {
+        sendErrorReply(QDBusError::ErrorType::InvalidArgs, QString("strlistAction \"%1\" is not registered").arg(action));
+    } else {
+        auto func = strListactions.value(action).first;
         if (func)
             ret.setVariant(func(parameters));
         else

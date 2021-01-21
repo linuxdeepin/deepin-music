@@ -74,47 +74,44 @@ bool compareAlbumName(const AlbumInfo &data)
 QList<MediaMeta> DataBaseService::allMusicInfos()
 {
     m_AllMediaMeta.clear();
-    if (m_AllMediaMeta.size() > 0) {
+    QString queryStringNew = QString("SELECT hash, localpath, title, artist, album, "
+                                     "filetype, track, offset, length, size, "
+                                     "timestamp, invalid, search_id, cuepath, "
+                                     "lyricPath, codec, py_title, py_artist, py_album "
+                                     "FROM musicNew");
+
+    QSqlQuery queryNew(m_db);
+    queryNew.prepare(queryStringNew);
+    if (! queryNew.exec()) {
+        qCritical() << queryNew.lastError();
         return m_AllMediaMeta;
-    } else {
-        QString queryStringNew = QString("SELECT hash, localpath, title, artist, album, "
-                                         "filetype, track, offset, length, size, "
-                                         "timestamp, invalid, search_id, cuepath, "
-                                         "lyricPath, codec, py_title, py_artist, py_album "
-                                         "FROM musicNew");
-
-        QSqlQuery queryNew(m_db);
-        queryNew.prepare(queryStringNew);
-        if (! queryNew.exec()) {
-            qCritical() << queryNew.lastError();
-            return m_AllMediaMeta;
-        }
-
-        while (queryNew.next()) {
-            MediaMeta meta;
-            meta.hash = queryNew.value(0).toString();
-            meta.localPath = queryNew.value(1).toString();
-            meta.title = queryNew.value(2).toString();
-            meta.singer = queryNew.value(3).toString();
-            meta.album = queryNew.value(4).toString();
-            meta.filetype = queryNew.value(5).toString();
-            meta.track = queryNew.value(6).toLongLong();
-            meta.offset = queryNew.value(7).toLongLong();
-            meta.length = queryNew.value(8).toLongLong();
-            meta.size = queryNew.value(9).toLongLong();
-            meta.timestamp = queryNew.value(10).toLongLong();
-            meta.invalid = queryNew.value(11).toBool();
-            meta.searchID = queryNew.value(12).toString();
-            meta.cuePath = queryNew.value(13).toString();
-            meta.lyricPath = queryNew.value(14).toString();
-            meta.codec = queryNew.value(15).toString();
-            meta.pinyinTitle = queryNew.value(16).toString();
-            meta.pinyinArtist = queryNew.value(17).toString();
-            meta.pinyinAlbum = queryNew.value(18).toString();
-            m_MediaMetaMap[meta.hash] = meta;
-            m_AllMediaMeta << meta;
-        }
     }
+
+    while (queryNew.next()) {
+        MediaMeta meta;
+        meta.hash = queryNew.value(0).toString();
+        meta.localPath = queryNew.value(1).toString();
+        meta.title = queryNew.value(2).toString();
+        meta.singer = queryNew.value(3).toString();
+        meta.album = queryNew.value(4).toString();
+        meta.filetype = queryNew.value(5).toString();
+        meta.track = queryNew.value(6).toLongLong();
+        meta.offset = queryNew.value(7).toLongLong();
+        meta.length = queryNew.value(8).toLongLong();
+        meta.size = queryNew.value(9).toLongLong();
+        meta.timestamp = queryNew.value(10).toLongLong();
+        meta.invalid = queryNew.value(11).toBool();
+        meta.searchID = queryNew.value(12).toString();
+        meta.cuePath = queryNew.value(13).toString();
+        meta.lyricPath = queryNew.value(14).toString();
+        meta.codec = queryNew.value(15).toString();
+        meta.pinyinTitle = queryNew.value(16).toString();
+        meta.pinyinArtist = queryNew.value(17).toString();
+        meta.pinyinAlbum = queryNew.value(18).toString();
+        m_MediaMetaMap[meta.hash] = meta;
+        m_AllMediaMeta << meta;
+    }
+
     allAlbumInfos();
     return m_AllMediaMeta;
 }
@@ -329,10 +326,8 @@ void DataBaseService::importMedias(QString importHash, const QStringList &urllis
 //        return;
 //    }
     m_importHash = importHash;
-    qDebug() << "------DataBaseService::importMedias " << urllist.size();
     emit signalImportedPercent(0);
     emit signalImportMedias(importHash, urllist);
-//    m_importing = true;
 }
 
 //bool DataBaseService::getImportStatus()
@@ -543,8 +538,6 @@ void DataBaseService::slotImportFinished(int failCount, int successCount, int ex
     } else {
         emit signalImportFailed();
     }
-//    m_importing = false;
-
     //数据加载完后再加载图片
     emit signalCreatCoverImg(m_AllMediaMeta);
     //启动加载数据完成后直接播放第一首歌
@@ -760,7 +753,6 @@ void DataBaseService::updateMetaCodec(const MediaMeta &meta)
 
 void DataBaseService::setFirstSong(const QString &strurl)
 {
-    qDebug() << "setFirstSong----------" << strurl;
     m_firstSonsg = strurl;
 }
 
@@ -821,7 +813,6 @@ QString DataBaseService::getPlaylistNameByUUID(QString uuid)
     strcmpuuid = uuid;
     QList<PlaylistData>::iterator itr = std::find_if(m_PlaylistMeta.begin(), m_PlaylistMeta.end(), compareUuid);
     if (itr != m_PlaylistMeta.end()) {
-        qDebug() << "switch to " << itr->displayName;
         return itr->displayName;
     }
 

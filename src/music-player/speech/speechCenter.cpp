@@ -12,6 +12,8 @@ SpeechCenter::SpeechCenter(QObject *parent) : QObject(parent)
 //指定歌曲
 QVariant SpeechCenter::playMusic(QString musicName)
 {
+    // 去掉空格
+    musicName = musicName.simplified();
     qDebug() << __FUNCTION__ << musicName;
     //跳转到所有音乐
     m_MediaMetas.clear();
@@ -440,4 +442,16 @@ QVariant SpeechCenter::setMode(QString mode)
         str = "";
     }
     return str;
+}
+
+QVariant SpeechCenter::OpenUris(QVariant paths)
+{
+    qDebug() << __FUNCTION__ ;
+    QStringList itemMetas = paths.value<QStringList>();
+
+    if (itemMetas.size() > 0) {
+        DataBaseService::getInstance()->setFirstSong(itemMetas.first());
+        DataBaseService::getInstance()->importMedias("all", itemMetas);
+    }
+    return true;
 }

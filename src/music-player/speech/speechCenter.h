@@ -42,6 +42,8 @@ public:
     QVariant removeFaverite(QString musicName);
     // 设置播放模式
     QVariant setMode(QString mode);
+    // 音乐打开后通过dbus导入文件
+    QVariant OpenUris(QVariant paths);
 signals:
 
 public slots:

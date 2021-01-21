@@ -183,7 +183,6 @@ void DBOperate::slotImportMedias(QString importHash, const QStringList &urllist)
 
 void DBOperate::slotCreatCoverImg(const QList<MediaMeta> &metas)
 {
-    qDebug() << "------DBOperate::slotCreatCoverImg  currentThread = " << QThread::currentThread();
     for (MediaMeta meta : metas) {
         if (m_needStop) {
             break;
