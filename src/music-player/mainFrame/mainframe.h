@@ -28,6 +28,7 @@
 #include <QVBoxLayout>
 #include <DGuiApplicationHelper>
 #include <DMainWindow>
+#include "mediameta.h"
 
 DWIDGET_USE_NAMESPACE
 
@@ -86,7 +87,7 @@ private slots:
     // 文管打开文件
     void slotPlayFromFileMaganager();
     // 显示二级页面
-    void slotShowSubSonglist(const QMap<QString, MediaMeta> &musicinfos, bool isAlbumDialog);
+    void slotShowSubSonglist(const QMap<QString, MediaMeta> &musicinfos, ListPageSwitchType listPageType);
 protected:
     void showEvent(QShowEvent *event) Q_DECL_OVERRIDE;
     void changeEvent(QEvent *event) Q_DECL_OVERRIDE;

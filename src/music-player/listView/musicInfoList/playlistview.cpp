@@ -507,8 +507,9 @@ int PlayListView::getRowCount()
     return m_model->rowCount();
 }
 
-void PlayListView::setMusicListView(QMap<QString, MediaMeta> musicinfos)
+void PlayListView::setMusicListView(QMap<QString, MediaMeta> musicinfos, QString hash)
 {
+    m_currentHash = hash;
     m_model->clear();
     for (int i = 0; i < musicinfos.values().size(); i++) {
         QStandardItem *newItem = new QStandardItem;
@@ -1347,6 +1348,10 @@ void PlayListView::playMusic(const MediaMeta &meta)
             Player::getInstance()->resume();
         } else if (Player::getInstance()->status() == Player::Stopped) {
             Player::getInstance()->playMeta(meta);
+            // 通知播放队列列表改变
+            emit Player::getInstance()->signalPlayListChanged();
+            // 设置当前播放playlist的hash
+            Player::getInstance()->setCurrentPlayListHash(m_currentHash, false);
         }
     } else {
         if (!m_IsPlayQueue) {

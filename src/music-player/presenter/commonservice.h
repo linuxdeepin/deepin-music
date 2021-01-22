@@ -57,7 +57,7 @@ signals:
     // 切换歌单时，清空搜索栏
     void signalClearEdit();
     // 双击专辑或者演唱者，显示二级页面
-    void signalShowSubSonglist(const QMap<QString, MediaMeta> &musicinfos, bool isAlbumDialog);
+    void signalShowSubSonglist(const QMap<QString, MediaMeta> &musicinfos, ListPageSwitchType listPageType);
     // 隐藏二级页面
     void signalHideSubSonglist();
 private:

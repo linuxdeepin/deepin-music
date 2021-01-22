@@ -1,10 +1,13 @@
 #include "speechCenter.h"
-#include "commonservice.h"
-#include "databaseservice.h"
-#include "player.h"
+
 #include <QDebug>
 #include <QJsonParseError>
 #include <QJsonObject>
+
+#include "musicsettings.h"
+#include "commonservice.h"
+#include "databaseservice.h"
+#include "player.h"
 
 SpeechCenter::SpeechCenter(QObject *parent)
     : QObject(parent),
@@ -39,6 +42,8 @@ QVariant SpeechCenter::playMusic(QString musicName)
             Player::getInstance()->setCurrentPlayListHash("all", false);
             Player::getInstance()->playMeta(mediaMeta);
             emit CommonService::getInstance()->sigScrollToCurrentPosition("all");
+            // 通知播放队列刷新
+            emit Player::getInstance()->signalPlayListChanged();
             isExit = true;
         }
     } else {
@@ -51,6 +56,8 @@ QVariant SpeechCenter::playMusic(QString musicName)
             //设置当前播放为查询出的音乐
             Player::getInstance()->setCurrentPlayListHash("musicResult", false);
             Player::getInstance()->playMeta(mediaMeta);
+            // 通知播放队列刷新
+            emit Player::getInstance()->signalPlayListChanged();
             isExit = true;
         }
     }
@@ -89,6 +96,8 @@ QVariant SpeechCenter::playArtist(QString artistName)
             //播放第一首
             Player::getInstance()->playMeta(singerInfo.musicinfos.values().first());
             emit CommonService::getInstance()->sigScrollToCurrentPosition("artist");
+            // 通知播放队列刷新
+            emit Player::getInstance()->signalPlayListChanged();
             isExit = true;
             break;
         }
@@ -141,6 +150,8 @@ QVariant SpeechCenter::playArtistMusic(QString artistAndmusic)
                     break;
                 }
             }
+            // 通知播放队列刷新
+            emit Player::getInstance()->signalPlayListChanged();
             break;
         }
     }
@@ -162,7 +173,7 @@ QVariant SpeechCenter::playAlbum(QString albumName)
     QList<AlbumInfo> albumInfos = DataBaseService::getInstance()->allAlbumInfos();
     bool isExit = false;
     for (AlbumInfo albumInfo : albumInfos) {
-        if (albumInfo.albumName == albumName && albumInfo.musicinfos.size() > 0) {
+        if (albumInfo.albumName.contains(albumName) && albumInfo.musicinfos.size() > 0) {
             //重置播放队列
             Player::getInstance()->clearPlayList();
             Player::getInstance()->setPlayList(albumInfo.musicinfos.values());
@@ -182,6 +193,8 @@ QVariant SpeechCenter::playAlbum(QString albumName)
                 emit CommonService::getInstance()->sigScrollToCurrentPosition("album");
                 isExit = true;
             }
+            // 通知播放队列刷新
+            emit Player::getInstance()->signalPlayListChanged();
             break;
         }
     }
@@ -189,7 +202,7 @@ QVariant SpeechCenter::playAlbum(QString albumName)
     if (isExit) {
         str = "好的，没问题。";
     } else {
-        str = "您的音乐播放器中没有这首歌，换一首歌曲听听吧";
+        str = "您的音乐播放器中没有这个专辑，换一个听听吧";
     }
     return str;
 }
@@ -211,6 +224,8 @@ QVariant SpeechCenter::playFaverite(QString hash)
         //设置当前播放为查询出的音乐
         Player::getInstance()->setCurrentPlayListHash("fav", false);
         Player::getInstance()->playMeta(mediaMeta);
+        // 通知播放队列刷新
+        emit Player::getInstance()->signalPlayListChanged();
         isExit = true;
     }
     QString str;
@@ -247,6 +262,8 @@ QVariant SpeechCenter::playSonglist(QString songlistName)
             //设置当前播放为查询出的音乐
             Player::getInstance()->setCurrentPlayListHash(uuid, false);
             Player::getInstance()->playMeta(mediaMeta);
+            // 通知播放队列刷新
+            emit Player::getInstance()->signalPlayListChanged();
             isExit = true;
         }
     } else {

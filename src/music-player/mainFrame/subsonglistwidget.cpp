@@ -240,18 +240,18 @@ void SubSonglistWidget::setThemeType(int type)
 //    infoDialog->setThemeType(type);
 }
 
-void SubSonglistWidget::flushDialog(QMap<QString, MediaMeta> musicinfos, int isAlbumDialog)
+void SubSonglistWidget::flushDialog(QMap<QString, MediaMeta> musicinfos, ListPageSwitchType listPageType)
 {
     if (musicinfos.size() > 0) {
         auto titleFont = m_titleLabel->font();
         auto infoFont = m_infoLabel->font();
 
-        if (isAlbumDialog) {
+        if (listPageType == AlbumType || listPageType == SearchAlbumResultType) {
             titleFont.setPixelSize(24);
             infoFont.setPixelSize(18);
             m_titleLabel->setText(musicinfos.first().album);
             m_infoLabel->setText(musicinfos.first().singer);
-        } else {
+        } else if (listPageType == SingerType || listPageType == SearchSingerResultType) {
             titleFont.setPixelSize(36);
             m_titleLabel->setText(musicinfos.first().singer);
             m_infoLabel->hide();
@@ -278,8 +278,13 @@ void SubSonglistWidget::flushDialog(QMap<QString, MediaMeta> musicinfos, int isA
         }
 
         setTitleImage(img);
-
-        m_musicListInfoView->setMusicListView(musicinfos);
+        if (listPageType == AlbumType) {
+            m_musicListInfoView->setMusicListView(musicinfos, "album");
+        } else if (listPageType == SingerType) {
+            m_musicListInfoView->setMusicListView(musicinfos, "artist");
+        } else {
+            m_musicListInfoView->setMusicListView(musicinfos, "all");
+        }
     }
 }
 

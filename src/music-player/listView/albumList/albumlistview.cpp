@@ -395,7 +395,11 @@ void AlbumListView::onDoubleClicked(const QModelIndex &index)
     // 修改为二级页面,去掉dialog
 //    musciListDialog->flushDialog(albumTmp.musicinfos, true);
 //    musciListDialog->exec();
-    emit CommonService::getInstance()->signalShowSubSonglist(albumTmp.musicinfos, true);
+    if (m_hash == "album") {
+        emit CommonService::getInstance()->signalShowSubSonglist(albumTmp.musicinfos, AlbumType);
+    } else if (m_hash == "albumResult") {
+        emit CommonService::getInstance()->signalShowSubSonglist(albumTmp.musicinfos, SearchAlbumResultType);
+    }
 }
 
 void AlbumListView::slotCoverUpdate(const MediaMeta &meta)

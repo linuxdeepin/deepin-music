@@ -90,6 +90,7 @@ void Player::init()
     setFadeInOut(MusicSettings::value("base.play.fade_in_out").toBool());
 
     m_mode = static_cast<PlaybackMode>(MusicSettings::value("base.play.playmode").toInt());
+    m_currentPlayListHash = MusicSettings::value("base.play.last_playlist").toString(); //上一次的页面
 }
 
 QStringList Player::supportedSuffixList() const
@@ -152,6 +153,8 @@ void Player::playMeta(MediaMeta meta)
 
         //设置音乐播放
         emit signalPlaybackStatusChanged(Player::Playing);
+        // 保存播放歌曲信息
+        MusicSettings::setOption("base.play.last_meta", m_ActiveMeta.hash);
     } else {
         //设置音乐播放
         emit signalPlaybackStatusChanged(Player::Paused);
@@ -486,7 +489,7 @@ void Player::setCurrentPlayListHash(QString hash, bool reloadMetaList)
     m_currentPlayListHash = hash;
     if (reloadMetaList) {
         m_MetaList.clear();
-        if (hash == "all") {
+        if (hash == "all" || hash == "album" || hash == "artist") {
             m_MetaList = DataBaseService::getInstance()->allMusicInfos();
         } else {
             m_MetaList = DataBaseService::getInstance()->customizeMusicInfos(hash);
@@ -496,6 +499,8 @@ void Player::setCurrentPlayListHash(QString hash, bool reloadMetaList)
     if (m_MetaList.size() == 0) {
         m_currentPlayListHash = "";
     }
+    // 保存播放歌曲及歌单信息
+    MusicSettings::setOption("base.play.last_playlist", m_currentPlayListHash);
     emit signalUpdatePlayingIcon();
 }
 

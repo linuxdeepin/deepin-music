@@ -26,7 +26,7 @@ public:
     void setThemeType(int type);
 
     // 更新Dialog UI信息
-    void flushDialog(QMap<QString, MediaMeta> musicinfos, int isAlbumDialog);
+    void flushDialog(QMap<QString, MediaMeta> musicinfos, ListPageSwitchType listPageType);
 public slots:
     void slotPlayAllClicked();
     void slotPlayRandomClicked();

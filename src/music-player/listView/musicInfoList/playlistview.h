@@ -77,7 +77,8 @@ public:
     void showErrorDlg();
 
     int getRowCount();
-    void setMusicListView(QMap<QString, MediaMeta> musicinfos);
+    // 二级页面添加歌曲，设置hash
+    void setMusicListView(QMap<QString, MediaMeta> musicinfos, QString hash);
 public slots:
     void slotOnDoubleClicked(const QModelIndex &index);
     void slotUpdatePlayingIcon();

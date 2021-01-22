@@ -531,7 +531,11 @@ void SingerListView::onDoubleClicked(const QModelIndex &index)
     // 原来的弹框修改为显示二级菜单
 //    musicListDialog->flushDialog(signerTmp.musicinfos, false);
 //    musicListDialog->exec();
-    emit CommonService::getInstance()->signalShowSubSonglist(signerTmp.musicinfos, false);
+    if (m_hash == "artist") {
+        emit CommonService::getInstance()->signalShowSubSonglist(signerTmp.musicinfos, SingerType);
+    } else if (m_hash == "artistResult") {
+        emit CommonService::getInstance()->signalShowSubSonglist(signerTmp.musicinfos, SearchSingerResultType);
+    }
 }
 
 void SingerListView::slotCoverUpdate(const MediaMeta &meta)

@@ -57,7 +57,8 @@ void VoicePlugin::process(const QString &semantic)
                 checkCount++;
                 QThread::msleep(100);
             }
-
+            // 音乐刚启动，添加延时给音乐初始化的时间,考虑到有特殊歌曲加载进度条时间较长，延时给到1s
+            QThread::msleep(1000);
             QDBusInterface speechBus("org.mpris.MediaPlayer2.DeepinMusic",
                                      "/org/mpris/speech",
                                      "com.deepin.speech",
@@ -183,6 +184,8 @@ QStringList VoicePlugin::analyseJsonString(const QString &semantic)
             strlist << "playMusic" << song;
         } else if (sourceType == "自定义") {
             strlist << "playSonglist";
+        } else if (sourceType == "专辑" && !source.isEmpty()) {
+            strlist << "playAlbum" << source;
         }
     }  else if (!song.isEmpty() && function == "RANDOM_SEARCH") {
         strlist << "playMusic" << song;

@@ -671,12 +671,13 @@ void MainFrame::slotPlayFromFileMaganager()
     DataBaseService::getInstance()->setFirstSong("");
 }
 
-void MainFrame::slotShowSubSonglist(const QMap<QString, MediaMeta> &musicinfos, bool isAlbumDialog)
+void MainFrame::slotShowSubSonglist(const QMap<QString, MediaMeta> &musicinfos, ListPageSwitchType listPageType)
 {
     m_backBtn->setVisible(true);
     if (musicinfos.size() > 0) {
-        m_subSonglistWidget->flushDialog(musicinfos, isAlbumDialog);
+        m_subSonglistWidget->flushDialog(musicinfos, listPageType);
     }
+    m_musicStatckedWidget->setCurrentWidget(m_subSonglistWidget);
     m_musicStatckedWidget->setCurrentWidget(m_subSonglistWidget);
 }
 
