@@ -79,6 +79,8 @@ signals:
 public slots:
     // 跳转到当前播放歌曲位置
     void slotScrollToCurrentPosition(QString songlistHash);
+    // 接收编码变更，更新对应项编码
+    void slotUpdateCodec(const MediaMeta &meta);
 private slots:
     void onDoubleClicked(const QModelIndex &index);
     void slotCoverUpdate(const MediaMeta &meta);

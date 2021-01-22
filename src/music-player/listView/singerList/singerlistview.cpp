@@ -144,6 +144,9 @@ SingerListView::SingerListView(QString hash, QWidget *parent)
     // 跳转到播放的位置
     connect(CommonService::getInstance(), &CommonService::sigScrollToCurrentPosition,
             this, &SingerListView::slotScrollToCurrentPosition);
+    // 刷新当前页面编码
+    connect(CommonService::getInstance(), &CommonService::signalUpdateCodec,
+            this, &SingerListView::slotUpdateCodec);
 }
 
 SingerListView::~SingerListView()
@@ -558,6 +561,19 @@ void SingerListView::slotCoverUpdate(const MediaMeta &meta)
                 item->setIcon(m_defaultIcon);
             }
             break;
+        }
+    }
+}
+
+void SingerListView::slotUpdateCodec(const MediaMeta &meta)
+{
+    for (int i = 0; i < singerModel->rowCount(); i++) {
+        MediaMeta tmpmeta = singerModel->index(i, 0).data(Qt::UserRole).value<MediaMeta>();
+        if (meta.hash == tmpmeta.hash) {
+            QVariant varmeta;
+            varmeta.setValue(meta);
+            singerModel->setData(singerModel->index(i, 0), varmeta, Qt::UserRole);
+            return;
         }
     }
 }

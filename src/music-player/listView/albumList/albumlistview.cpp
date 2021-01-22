@@ -140,6 +140,9 @@ AlbumListView::AlbumListView(QString hash, QWidget *parent)
     // 跳转到播放的位置
     connect(CommonService::getInstance(), &CommonService::sigScrollToCurrentPosition,
             this, &AlbumListView::slotScrollToCurrentPosition);
+    // 刷新当前页面编码
+    connect(CommonService::getInstance(), &CommonService::signalUpdateCodec,
+            this, &AlbumListView::slotUpdateCodec);
 }
 
 AlbumListView::~AlbumListView()
@@ -601,6 +604,19 @@ void AlbumListView::slotScrollToCurrentPosition(QString songlistHash)
                 break;
             }
             height += size.height();
+        }
+    }
+}
+
+void AlbumListView::slotUpdateCodec(const MediaMeta &meta)
+{
+    for (int i = 0; i < albumModel->rowCount(); i++) {
+        MediaMeta tmpmeta = albumModel->index(i, 0).data(Qt::UserRole).value<MediaMeta>();
+        if (meta.hash == tmpmeta.hash) {
+            QVariant varmeta;
+            varmeta.setValue(meta);
+            albumModel->setData(albumModel->index(i, 0), varmeta, Qt::UserRole);
+            return;
         }
     }
 }

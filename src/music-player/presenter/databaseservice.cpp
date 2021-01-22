@@ -109,6 +109,10 @@ QList<MediaMeta> DataBaseService::allMusicInfos()
         meta.pinyinArtist = queryNew.value(17).toString();
         meta.pinyinAlbum = queryNew.value(18).toString();
         m_MediaMetaMap[meta.hash] = meta;
+        //utf-8为默认的编码类型，每次更新数据时刷新非utf-8的编码，
+        //需要更新编码，并使其生效
+        if (meta.codec != "UTF-8")
+            meta.updateCodec(meta.codec.toUtf8());
         m_AllMediaMeta << meta;
     }
 

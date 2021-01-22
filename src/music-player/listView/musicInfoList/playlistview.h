@@ -121,7 +121,8 @@ public slots:
     // 右键菜单添加到歌单
     void slotPlaylistMenuClicked(QAction *action);
     ///右键菜单响应end
-
+    // 右键编码通知其他页面编码同步
+    void slotUpdateCodec(const MediaMeta &meta);
 private:
     // 播放音乐相关处理
     void playMusic(const MediaMeta &meta);

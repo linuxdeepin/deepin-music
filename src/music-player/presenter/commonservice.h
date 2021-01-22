@@ -60,6 +60,8 @@ signals:
     void signalShowSubSonglist(const QMap<QString, MediaMeta> &musicinfos, ListPageSwitchType listPageType);
     // 隐藏二级页面
     void signalHideSubSonglist();
+    // 通知页面刷新编码
+    void signalUpdateCodec(const MediaMeta &meta);
 private:
     explicit CommonService();
     friend class DMusic::DSingleton<CommonService>;

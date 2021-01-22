@@ -214,6 +214,9 @@ PlayListView::PlayListView(QString hash, bool isPlayQueue, QWidget *parent)
     // 跳转到播放的位置
     connect(CommonService::getInstance(), &CommonService::sigScrollToCurrentPosition,
             this, &PlayListView::slotScrollToCurrentPosition);
+    // 刷新当前页面编码
+    connect(CommonService::getInstance(), &CommonService::signalUpdateCodec,
+            this, &PlayListView::slotUpdateCodec);
 }
 
 PlayListView::~PlayListView()
@@ -1326,6 +1329,9 @@ void PlayListView::slotTextCodecMenuClicked(QAction *action)
 
         //restore to db
         DataBaseService::getInstance()->updateMetaCodec(meta);
+
+        //同步编码到其他页面
+        CommonService::getInstance()->signalUpdateCodec(meta);
     }
 }
 
@@ -1338,6 +1344,19 @@ void PlayListView::slotPlaylistMenuClicked(QAction *action)
         slotAddToNewSongList(action->text());
     } else if (actionText == "play queue") {
         slotAddToPlayQueue();
+    }
+}
+
+void PlayListView::slotUpdateCodec(const MediaMeta &meta)
+{
+    for (int i = 0; i < m_model->rowCount(); i++) {
+        MediaMeta tmpmeta = m_model->index(i, 0).data(Qt::UserRole).value<MediaMeta>();
+        if (meta.hash == tmpmeta.hash) {
+            QVariant varmeta;
+            varmeta.setValue(meta);
+            m_model->setData(m_model->index(i, 0), varmeta, Qt::UserRole);
+            return;
+        }
     }
 }
 
