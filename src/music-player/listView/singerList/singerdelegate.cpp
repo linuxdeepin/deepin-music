@@ -24,6 +24,7 @@
 #include "core/medialibrary.h"
 #include "global.h"
 
+#include <QTimer>
 #include <QPainter>
 #include <QPainterPath>
 #include <QDebug>
@@ -69,66 +70,36 @@ QSize SingerDataDelegate::sizeHint(const QStyleOptionViewItem &option,
     }
 }
 
-//QWidget *SingerDataDelegate::createEditor(QWidget *parent,
-//                                          const QStyleOptionViewItem &option,
-//                                          const QModelIndex &index) const
-
-//{
-//    return QStyledItemDelegate::createEditor(parent, option, index);
-//}
-
-//void SingerDataDelegate::setEditorData(QWidget *editor,
-//                                       const QModelIndex &index) const
-//{
-
-//    QStyledItemDelegate::setEditorData(editor, index);
-
-//}
-
-//void SingerDataDelegate::setModelData(QWidget *editor, QAbstractItemModel *model,
-//                                      const QModelIndex &index) const
-//{
-//    QStyledItemDelegate::setModelData(editor, model, index);
-//}
-
 bool SingerDataDelegate::editorEvent(QEvent *event, QAbstractItemModel *model, const QStyleOptionViewItem &option, const QModelIndex &index)
 {
-    auto listview = qobject_cast<const SingerListView *>(option.widget);
-    int borderWidth = 10;
-    QRect rect = option.rect.adjusted(borderWidth, borderWidth, -borderWidth, -borderWidth);
-    if (index.isValid() && listview->viewMode() == QListView::IconMode && event->type() == QEvent::MouseButtonPress) {
-        SingerInfo singertmp = index.data(Qt::UserRole).value<SingerInfo>();
-        bool playFlag = singertmp.musicinfos.keys().contains(Player::getInstance()->getActiveMeta().hash);
-        Player::PlaybackStatus playStatue = Player::getInstance()->status();
-        if (playFlag) {
-            if (playStatue == Player::Playing) {
-                Player::getInstance()->pause();
-            } else if (playStatue == Player::Paused) {
-                Player::getInstance()->resume();
+    // 用于判断鼠标点击状态
+    static int clickedCount = 0;
+
+    const SingerListView *singerListView = qobject_cast<const SingerListView *>(option.widget);
+    const QMouseEvent *pressEvent = static_cast<QMouseEvent *>(event);
+    const QPointF pressPos = pressEvent->pos();
+
+    if (index.isValid() && singerListView->viewMode() == QListView::IconMode &&
+            (event->type() == QEvent::MouseButtonPress || event->type() == QEvent::MouseButtonDblClick)) {
+        // 鼠标点击次数
+        clickedCount++;
+
+        QTimer::singleShot(200, [ = ]() {
+            if (clickedCount == 1) {
+                // 鼠标单击
+                mouseClicked(option, index, pressPos);
+            } else if (clickedCount > 1) {
+                // 鼠标双击
+                mouseDoubleClicked(option, index);
             }
-        } else {
-            QRect t_hoverRect(rect.x() + 50, rect.y() + 36, 50, 50);
-
-            QPainterPath t_imageClipPath;
-            t_imageClipPath.addEllipse(QRect(rect.x() + 50, rect.y() + 36, 50, 50));
-            t_imageClipPath.closeSubpath();
-            auto fillPolygon = t_imageClipPath.toFillPolygon();
-
-            QMouseEvent *pressEvent = static_cast<QMouseEvent *>(event);
-            QPointF pressPos = pressEvent->pos();
-
-            if (fillPolygon.containsPoint(pressPos, Qt::OddEvenFill)) {
-                if (singertmp.musicinfos.values().size() > 0) {
-                    emit CommonService::getInstance()->signalSetPlayModel(Player::RepeatAll);
-                    Player::getInstance()->setCurrentPlayListHash("album", false);
-                    Player::getInstance()->setPlayList(singertmp.musicinfos.values());
-                    Player::getInstance()->playMeta(singertmp.musicinfos.values().first());
-                    emit Player::getInstance()->signalPlayListChanged();
-                }
-            }
-        }
-        return false;
+            // 点击次数归零
+            clickedCount = 0;
+        });
+    } else if (index.isValid() && singerListView->viewMode() == QListView::ListMode && event->type() == QEvent::MouseButtonDblClick) {
+        // 鼠标双击
+        mouseDoubleClicked(option, index);
     }
+
     return QStyledItemDelegate::editorEvent(event, model, option, index);
 }
 
@@ -404,6 +375,52 @@ void SingerDataDelegate::drawListMode(QPainter &painter, const QStyleOptionViewI
     QString countText = songsFm.elidedText(infoStr, Qt::ElideMiddle, strwidth);
     painter.drawText(songsRect, Qt::AlignLeft | Qt::AlignVCenter, countText);
     painter.restore();
+}
+
+void SingerDataDelegate::mouseClicked(const QStyleOptionViewItem &option, const QModelIndex &index, const QPointF pressPos)
+{
+    SingerInfo singertmp = index.data(Qt::UserRole).value<SingerInfo>();
+    bool playFlag = singertmp.musicinfos.keys().contains(Player::getInstance()->getActiveMeta().hash);
+    Player::PlaybackStatus playStatue = Player::getInstance()->status();
+
+    if (playFlag) {
+        if (playStatue == Player::Playing) {
+            Player::getInstance()->pause();
+        } else if (playStatue == Player::Paused) {
+            Player::getInstance()->resume();
+        }
+    } else {
+        int borderWidth = 10;
+        QRect rect = option.rect.adjusted(borderWidth, borderWidth, -borderWidth, -borderWidth);
+        QRect hoverRect(rect.x() + 50, rect.y() + 36, 50, 50);
+
+        QPainterPath imageClipPath;
+        imageClipPath.addEllipse(QRect(rect.x() + 50, rect.y() + 36, 50, 50));
+        imageClipPath.closeSubpath();
+        auto fillPolygon = imageClipPath.toFillPolygon();
+
+        if (fillPolygon.containsPoint(pressPos, Qt::OddEvenFill)) {
+            if (singertmp.musicinfos.values().size() > 0) {
+                emit CommonService::getInstance()->signalSetPlayModel(Player::RepeatAll);
+                Player::getInstance()->setCurrentPlayListHash("album", false);
+                Player::getInstance()->setPlayList(singertmp.musicinfos.values());
+                Player::getInstance()->playMeta(singertmp.musicinfos.values().first());
+                emit Player::getInstance()->signalPlayListChanged();
+            }
+        }
+    }
+}
+
+void SingerDataDelegate::mouseDoubleClicked(const QStyleOptionViewItem &option, const QModelIndex &index)
+{
+    const SingerListView *singerListView = qobject_cast<const SingerListView *>(option.widget);
+    SingerInfo signerTmp = index.data(Qt::UserRole).value<SingerInfo>();
+
+    if (singerListView->getHash() == "artist") {
+        emit CommonService::getInstance()->signalShowSubSonglist(signerTmp.musicinfos, SingerType);
+    } else if (singerListView->getHash() == "artistResult") {
+        emit CommonService::getInstance()->signalShowSubSonglist(signerTmp.musicinfos, SearchSingerResultType);
+    }
 }
 
 SingerDataDelegate::SingerDataDelegate(QWidget *parent): QStyledItemDelegate(parent)

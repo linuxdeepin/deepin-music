@@ -98,6 +98,11 @@ void AlbumListView::sortList(QList<AlbumInfo> &albumInfos, const DataBaseService
     }
 }
 
+QString AlbumListView::getHash() const
+{
+    return m_hash;
+}
+
 AlbumListView::AlbumListView(QString hash, QWidget *parent)
     : DListView(parent), m_hash(hash)
 {
@@ -121,8 +126,8 @@ AlbumListView::AlbumListView(QString hash, QWidget *parent)
 //    AC_SET_OBJECT_NAME(musciListDialog, AC_musicListDialogAlbum);
 //    AC_SET_ACCESSIBLE_NAME(musciListDialog, AC_musicListDialogAlbum);
 
-
-    connect(this, &AlbumListView::doubleClicked, this, &AlbumListView::onDoubleClicked);
+// 双击逻辑位置移动
+//    connect(this, &AlbumListView::doubleClicked, this, &AlbumListView::onDoubleClicked);
 
     setSelectionMode(QListView::ExtendedSelection);
     setSelectionBehavior(QAbstractItemView::SelectRows);
@@ -392,18 +397,19 @@ QPixmap AlbumListView::getPlayPixmap(bool isSelect)
     return playingPixmap;
 }
 
-void AlbumListView::onDoubleClicked(const QModelIndex &index)
-{
-    AlbumInfo albumTmp = index.data(Qt::UserRole).value<AlbumInfo>();
-    // 修改为二级页面,去掉dialog
-//    musciListDialog->flushDialog(albumTmp.musicinfos, true);
-//    musciListDialog->exec();
-    if (m_hash == "album") {
-        emit CommonService::getInstance()->signalShowSubSonglist(albumTmp.musicinfos, AlbumType);
-    } else if (m_hash == "albumResult") {
-        emit CommonService::getInstance()->signalShowSubSonglist(albumTmp.musicinfos, SearchAlbumResultType);
-    }
-}
+// 区分单双击需要，双击逻辑位置移动
+//void AlbumListView::onDoubleClicked(const QModelIndex &index)
+//{
+//    AlbumInfo albumTmp = index.data(Qt::UserRole).value<AlbumInfo>();
+//    // 修改为二级页面,去掉dialog
+////    musciListDialog->flushDialog(albumTmp.musicinfos, true);
+////    musciListDialog->exec();
+//    if (m_hash == "album") {
+//        emit CommonService::getInstance()->signalShowSubSonglist(albumTmp.musicinfos, AlbumType);
+//    } else if (m_hash == "albumResult") {
+//        emit CommonService::getInstance()->signalShowSubSonglist(albumTmp.musicinfos, SearchAlbumResultType);
+//    }
+//}
 
 void AlbumListView::slotCoverUpdate(const MediaMeta &meta)
 {

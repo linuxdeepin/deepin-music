@@ -55,6 +55,8 @@ protected:
 private:
     void drawIconMode(QPainter &painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
     void drawListMode(QPainter &painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
+    void mouseClicked(const QStyleOptionViewItem &option, const QModelIndex &index, const QPointF pressPos);
+    void mouseDoubleClicked(const QStyleOptionViewItem &option, const QModelIndex &index);
 private:
     QPixmap hoverPlayImg ;
     QPixmap hoverSuspendImg ;

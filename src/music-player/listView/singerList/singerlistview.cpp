@@ -97,6 +97,11 @@ void SingerListView::sortList(QList<SingerInfo> &singerInfos, const DataBaseServ
     }
 }
 
+QString SingerListView::getHash() const
+{
+    return m_hash;
+}
+
 
 
 SingerListView::SingerListView(QString hash, QWidget *parent)
@@ -124,7 +129,8 @@ SingerListView::SingerListView(QString hash, QWidget *parent)
 //    AC_SET_OBJECT_NAME(musicListDialog, AC_musicListDialogSinger);
 //    AC_SET_ACCESSIBLE_NAME(musicListDialog, AC_musicListDialogSinger);
 
-    connect(this, &SingerListView::doubleClicked, this, &SingerListView::onDoubleClicked);
+// 双击逻辑位置移动
+//    connect(this, &SingerListView::doubleClicked, this, &SingerListView::onDoubleClicked);
 
     setSelectionMode(QListView::ExtendedSelection);
     setSelectionBehavior(QAbstractItemView::SelectRows);
@@ -528,18 +534,19 @@ void SingerListView::slotScrollToCurrentPosition(QString songlistHash)
     }
 }
 
-void SingerListView::onDoubleClicked(const QModelIndex &index)
-{
-    SingerInfo signerTmp = index.data(Qt::UserRole).value<SingerInfo>();
-    // 原来的弹框修改为显示二级菜单
-//    musicListDialog->flushDialog(signerTmp.musicinfos, false);
-//    musicListDialog->exec();
-    if (m_hash == "artist") {
-        emit CommonService::getInstance()->signalShowSubSonglist(signerTmp.musicinfos, SingerType);
-    } else if (m_hash == "artistResult") {
-        emit CommonService::getInstance()->signalShowSubSonglist(signerTmp.musicinfos, SearchSingerResultType);
-    }
-}
+// 区分单双击需要，双击逻辑位置移动
+//void SingerListView::onDoubleClicked(const QModelIndex &index)
+//{
+//    SingerInfo signerTmp = index.data(Qt::UserRole).value<SingerInfo>();
+//    // 原来的弹框修改为显示二级菜单
+////    musicListDialog->flushDialog(signerTmp.musicinfos, false);
+////    musicListDialog->exec();
+//    if (m_hash == "artist") {
+//        emit CommonService::getInstance()->signalShowSubSonglist(signerTmp.musicinfos, SingerType);
+//    } else if (m_hash == "artistResult") {
+//        emit CommonService::getInstance()->signalShowSubSonglist(signerTmp.musicinfos, SearchSingerResultType);
+//    }
+//}
 
 void SingerListView::slotCoverUpdate(const MediaMeta &meta)
 {

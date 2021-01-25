@@ -73,6 +73,8 @@ public:
     void setSortType(DataBaseService::ListSortType sortType);
     // 根据排序添加数据
     void setDataBySortType(QList<AlbumInfo> &albumInfos, DataBaseService::ListSortType sortType);
+    QString getHash() const;
+
 signals:
     void requestCustomContextMenu(const QPoint &pos);
     void modeChanged(int);
@@ -82,7 +84,6 @@ public slots:
     // 接收编码变更，更新对应项编码
     void slotUpdateCodec(const MediaMeta &meta);
 private slots:
-    void onDoubleClicked(const QModelIndex &index);
     void slotCoverUpdate(const MediaMeta &meta);
     void slotRemoveSingleSong(const QString &listHash, const QString &musicHash);
 protected:
