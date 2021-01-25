@@ -135,7 +135,6 @@ void SearchResultTabWidget::refreshListview()
         setLabelChecked(m_music);
         m_StackedWidget->setCurrentWidget(m_musicListView);
         m_musicListView->resetSonglistByStr(m_searchWord);
-        SpeechCenter::getInstance()->setMediaMetas(m_musicListView->getMusicListData());
         m_singerListView->resetSingerListDataBySongName(m_musicListView->getMusicListData());
         m_albumListView->resetAlbumListDataBySongName(m_musicListView->getMusicListData());
         emit sigSearchTypeChanged("musicResult");

@@ -1,10 +1,10 @@
 #ifndef SPEECHCENTER_H
 #define SPEECHCENTER_H
+#include <QObject>
 
 #include "util/singleton.h"
 #include "mediameta.h"
-
-#include <QObject>
+#include "databaseservice.h"
 
 class SpeechCenter : public QObject, public DMusic::DSingleton<SpeechCenter>
 {
@@ -13,7 +13,6 @@ public:
     explicit SpeechCenter(QObject *parent = nullptr);
     // 播放指定歌曲,若musicName为空则随机播放一首
     QVariant playMusic(QString musicName);
-    void setMediaMetas(const QList<MediaMeta> &metas);
     // 播放歌手
     QVariant playArtist(QString artistName);
     // 播放歌手指定歌曲
@@ -45,10 +44,9 @@ public:
     QVariant setMode(QString mode);
     // 音乐打开后通过dbus导入文件
     QVariant OpenUris(QVariant paths);
-signals:
-
-public slots:
-
+private:
+    // 排序
+    void sortList(QList<MediaMeta> &musicInfos, const DataBaseService::ListSortType &sortType);
 private:
     friend class DMusic::DSingleton<SpeechCenter>;
 private:

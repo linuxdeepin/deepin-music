@@ -1,8 +1,10 @@
-#ifndef ScheduleDemoWidget_H
-#define ScheduleDemoWidget_H
+#ifndef VoicePlugin_H
+#define VoicePlugin_H
 
 #include <QObject>
 #include <QVector>
+
+#include <DSettings>
 
 class VoicePlugin: public QObject
 {
@@ -42,6 +44,7 @@ signals:
     void signaleSendMessage(QString text);
 private:
     QStringList analyseJsonString(const QString &semantic);
+    Dtk::Core::DSettings *m_settings = nullptr;
 };
 
-#endif // ScheduleDemoWidget_H
+#endif // VoicePlugin_H

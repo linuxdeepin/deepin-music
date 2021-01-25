@@ -1,6 +1,8 @@
 #include "voiceplugin.h"
+#include <qsettingbackend.h>
 #include <QDebug>
 #include <QDBusInterface>
+#include <QStandardPaths>
 #include <QVariant>
 #include <QJsonArray>
 #include <QJsonDocument>
@@ -10,9 +12,10 @@
 #include <QThread>
 #include <QDir>
 
+#include <DStandardPaths>
 VoicePlugin::VoicePlugin(QObject *parent): QObject(parent)
 {
-
+    m_settings = Dtk::Core::DSettings::fromJsonFile(":/speech/data/deepin-music-speechconfig.json");
 }
 
 void VoicePlugin::process(const QString &semantic)
@@ -182,9 +185,9 @@ QStringList VoicePlugin::analyseJsonString(const QString &semantic)
             strlist << "playArtist" << artist;
         } else if (artist.isEmpty() && !song.isEmpty()) {
             strlist << "playMusic" << song;
-        } else if (sourceType == "自定义") {
+        } else if (sourceType == m_settings->value("base.speech.custom").toString()) {
             strlist << "playSonglist";
-        } else if (sourceType == "专辑" && !source.isEmpty()) {
+        } else if (sourceType == m_settings->value("base.speech.album").toString() && !source.isEmpty()) {
             strlist << "playAlbum" << source;
         }
     }  else if (!song.isEmpty() && function == "RANDOM_SEARCH") {
@@ -192,15 +195,21 @@ QStringList VoicePlugin::analyseJsonString(const QString &semantic)
     } else if (song.isEmpty() && function == "RANDOM_SEARCH") {
         strlist << "playMusic";
     } else if (!sourceType.isEmpty() && function == "PLAY") {
-        if (sourceType == "专辑" && !source.isEmpty()) {
+        if (sourceType == m_settings->value("base.speech.album").toString() && !source.isEmpty()) {
             strlist << "playAlbum" << source;
         }
     } else if (function == "INSTRUCTION") {
-        if (sourceType == "歌单" && source == "我的收藏" && insType == "play") {
+        if (sourceType == m_settings->value("base.speech.songlist").toString()
+                && source == m_settings->value("base.speech.fav").toString()
+                && insType == "play") {
             strlist << "playFaverite" << "fav";
-        } else if (sourceType == "歌单" && source == "我的收藏" && insType == "insert") {
+        } else if (sourceType == m_settings->value("base.speech.songlist").toString()
+                   && source == m_settings->value("base.speech.fav").toString()
+                   && insType == "insert") {
             strlist << "addFaverite";
-        } else if (sourceType == "歌单" && source == "我的收藏" && insType == "delete") {
+        } else if (sourceType == m_settings->value("base.speech.songlist").toString()
+                   && source == m_settings->value("base.speech.fav").toString()
+                   && insType == "delete") {
             strlist << "removeFaverite";
         } else if (insType == "pause") {
             strlist << "pause";

@@ -26,9 +26,9 @@ QVariant SpeechCenter::playMusic(QString musicName)
     m_needRefresh = true;
     bool isExit = false;
     if (musicName.isEmpty()) {
-        emit CommonService::getInstance()->signalSwitchToView(AllSongListType, "all");
         m_MediaMetas = DataBaseService::getInstance()->allMusicInfos();
         if (m_MediaMetas.size() > 0) {
+            emit CommonService::getInstance()->signalSwitchToView(AllSongListType, "all");
             QTime time;
             int index = 0;
             time = QTime::currentTime();
@@ -47,8 +47,21 @@ QVariant SpeechCenter::playMusic(QString musicName)
             isExit = true;
         }
     } else {
-        emit CommonService::getInstance()->signalSwitchToView(SearchMusicResultType, musicName);
+        // 获取全部歌曲
+        QList<MediaMeta> mediaMetas = DataBaseService::getInstance()->allMusicInfos();
+        // 获取当前搜索排序方式
+        DataBaseService::ListSortType type = static_cast<DataBaseService::ListSortType>
+                                             (DataBaseService::getInstance()->getPlaylistSortType("musicResult"));
+        for (int i = 0; i < mediaMetas.size(); i++) {
+            if (!CommonService::getInstance()->containsStr(musicName, mediaMetas.at(i).title)) {
+                continue;
+            }
+            m_MediaMetas.append(mediaMetas.at(i));
+        }
         if (m_MediaMetas.size() > 0) {
+            // 获得数据后排序
+            sortList(m_MediaMetas, type);
+            emit CommonService::getInstance()->signalSwitchToView(SearchMusicResultType, musicName);
             MediaMeta mediaMeta = m_MediaMetas.at(0);
             //重置播放队列
             Player::getInstance()->clearPlayList();
@@ -63,31 +76,25 @@ QVariant SpeechCenter::playMusic(QString musicName)
     }
     QString str;
     if (isExit) {
-        str = "好的，没问题。";
+        str = MusicSettings::value("speechreply.speech.ok").toString();
     } else {
-        str = "您的音乐播放器中没有歌曲，赶紧去添加吧。";
+        str = MusicSettings::value("speechreply.speech.playMusicError").toString();
     }
     return str;
 }
 
-void SpeechCenter::setMediaMetas(const QList<MediaMeta> &metas)
-{
-    if (m_needRefresh) {
-        m_MediaMetas = metas;
-    }
-    m_needRefresh = false;
-}
 // 指定歌手
 QVariant SpeechCenter::playArtist(QString artistName)
 {
     qDebug() << __FUNCTION__ << artistName;
-    //跳转到歌手界面
-    emit CommonService::getInstance()->signalSwitchToView(SingerType, "");
     //查找该歌手
     QList<SingerInfo> singerInfos = DataBaseService::getInstance()->allSingerInfos();
     bool isExit = false;
+    // 先完全匹配，匹配不到则模糊匹配
     foreach (SingerInfo singerInfo, singerInfos) {
         if (singerInfo.singerName == artistName && singerInfo.musicinfos.size() > 0) {
+            // 找到歌手后跳转到歌手界面
+            emit CommonService::getInstance()->signalSwitchToView(SingerType, "");
             //重置播放队列
             Player::getInstance()->clearPlayList();
             Player::getInstance()->setPlayList(singerInfo.musicinfos.values());
@@ -102,11 +109,31 @@ QVariant SpeechCenter::playArtist(QString artistName)
             break;
         }
     }
+    if (!isExit) {
+        foreach (SingerInfo singerInfo, singerInfos) {
+            if (singerInfo.singerName.contains(artistName) && singerInfo.musicinfos.size() > 0) {
+                // 找到歌手后跳转到歌手界面
+                emit CommonService::getInstance()->signalSwitchToView(SingerType, "");
+                //重置播放队列
+                Player::getInstance()->clearPlayList();
+                Player::getInstance()->setPlayList(singerInfo.musicinfos.values());
+                //设置当前播放为歌手
+                Player::getInstance()->setCurrentPlayListHash("artist", false);
+                //播放第一首
+                Player::getInstance()->playMeta(singerInfo.musicinfos.values().first());
+                emit CommonService::getInstance()->sigScrollToCurrentPosition("artist");
+                // 通知播放队列刷新
+                emit Player::getInstance()->signalPlayListChanged();
+                isExit = true;
+                break;
+            }
+        }
+    }
     QString str;
     if (isExit) {
-        str = "好的，没问题。";
+        str = MusicSettings::value("speechreply.speech.ok").toString();
     } else {
-        str = "抱歉，没有在音乐播放器中找到这首歌，您可以听其他音乐哦";
+        str = MusicSettings::value("speechreply.speech.playArtistError").toString();
     }
     return str;
 }
@@ -123,13 +150,13 @@ QVariant SpeechCenter::playArtistMusic(QString artistAndmusic)
         artistName = strList.at(0);
         musicName = strList.at(1);
     }
-    //跳转到歌手界面
-    emit CommonService::getInstance()->signalSwitchToView(SingerType, "");
     //查找该歌手
     QList<SingerInfo> singerInfos = DataBaseService::getInstance()->allSingerInfos();
     bool isExit = false;
     for (SingerInfo singerInfo : singerInfos) {
         if (singerInfo.singerName == artistName && singerInfo.musicinfos.size() > 0) {
+            // 找到歌手后跳转到歌手界面
+            emit CommonService::getInstance()->signalSwitchToView(SingerType, "");
             //重置播放队列
             Player::getInstance()->clearPlayList();
             Player::getInstance()->setPlayList(singerInfo.musicinfos.values());
@@ -157,9 +184,9 @@ QVariant SpeechCenter::playArtistMusic(QString artistAndmusic)
     }
     QString str;
     if (isExit) {
-        str = "好的，没问题。";
+        str = MusicSettings::value("speechreply.speech.ok").toString();
     } else {
-        str = "抱歉，没有在音乐播放器中找到这首歌，您可以听其他音乐哦。";
+        str = MusicSettings::value("speechreply.speech.playArtistMusicError").toString();
     }
     return str;
 }
@@ -167,13 +194,14 @@ QVariant SpeechCenter::playArtistMusic(QString artistAndmusic)
 QVariant SpeechCenter::playAlbum(QString albumName)
 {
     qDebug() << __FUNCTION__ << albumName;
-    //跳转到歌手界面
-    emit CommonService::getInstance()->signalSwitchToView(AlbumType, "");
+
     //查找该歌手
     QList<AlbumInfo> albumInfos = DataBaseService::getInstance()->allAlbumInfos();
     bool isExit = false;
     for (AlbumInfo albumInfo : albumInfos) {
         if (albumInfo.albumName.contains(albumName) && albumInfo.musicinfos.size() > 0) {
+            // 找到专辑后跳转到专辑界面
+            emit CommonService::getInstance()->signalSwitchToView(AlbumType, "");
             //重置播放队列
             Player::getInstance()->clearPlayList();
             Player::getInstance()->setPlayList(albumInfo.musicinfos.values());
@@ -200,9 +228,9 @@ QVariant SpeechCenter::playAlbum(QString albumName)
     }
     QString str;
     if (isExit) {
-        str = "好的，没问题。";
+        str = MusicSettings::value("speechreply.speech.ok").toString();
     } else {
-        str = "您的音乐播放器中没有这个专辑，换一个听听吧";
+        str = MusicSettings::value("speechreply.speech.playAlbumError").toString();
     }
     return str;
 }
@@ -211,12 +239,13 @@ QVariant SpeechCenter::playFaverite(QString hash)
 {
     Q_UNUSED(hash)
     qDebug() << __FUNCTION__ << hash;
-    //跳转到所有音乐
     m_MediaMetas.clear();
     m_needRefresh = true;
-    emit CommonService::getInstance()->signalSwitchToView(FavType, "fav");
     bool isExit = false;
+    m_MediaMetas = DataBaseService::getInstance()->customizeMusicInfos("fav");
     if (m_MediaMetas.size() > 0) {
+        // 收藏中有歌曲跳转到我的收藏
+        emit CommonService::getInstance()->signalSwitchToView(FavType, "fav");
         MediaMeta mediaMeta = m_MediaMetas.at(0);
         //重置播放队列
         Player::getInstance()->clearPlayList();
@@ -230,9 +259,9 @@ QVariant SpeechCenter::playFaverite(QString hash)
     }
     QString str;
     if (isExit) {
-        str = "好的，没问题。";
+        str = MusicSettings::value("speechreply.speech.ok").toString();
     } else {
-        str = "您的播放器中没有收藏的歌曲。";
+        str = MusicSettings::value("speechreply.speech.playFaveriteError").toString();
     }
     return str;
 }
@@ -253,8 +282,10 @@ QVariant SpeechCenter::playSonglist(QString songlistName)
     if (songlistExit) {
         m_MediaMetas.clear();
         m_needRefresh = true;
-        emit CommonService::getInstance()->signalSwitchToView(CustomType, uuid);
+        m_MediaMetas = DataBaseService::getInstance()->customizeMusicInfos(uuid);
         if (m_MediaMetas.size() > 0) {
+            // 歌单中有歌曲跳转到自定义歌单
+            emit CommonService::getInstance()->signalSwitchToView(CustomType, uuid);
             MediaMeta mediaMeta = m_MediaMetas.at(0);
             //重置播放队列
             Player::getInstance()->clearPlayList();
@@ -271,9 +302,9 @@ QVariant SpeechCenter::playSonglist(QString songlistName)
     }
     QString str;
     if (isExit) {
-        str = "好的，没问题。";
+        str = MusicSettings::value("speechreply.speech.ok").toString();
     } else {
-        str = "您的音乐播放器中没有这首歌，换一首歌曲听听吧。";
+        str = MusicSettings::value("speechreply.speech.playSonglistError").toString();
     }
     return str;
 }
@@ -289,7 +320,7 @@ QVariant SpeechCenter::pause(QString musicName)
     }
     QString str;
     if (isExit) {
-        str = "好的，没问题。";
+        str = MusicSettings::value("speechreply.speech.ok").toString();
     } else {
 //        str = "抱歉，设置失败，请重新尝试。";
     }
@@ -307,7 +338,7 @@ QVariant SpeechCenter::resume(QString musicName)
     }
     QString str;
     if (isExit) {
-        str = "好的，没问题。";
+        str = MusicSettings::value("speechreply.speech.ok").toString();
     } else {
 //        str = "抱歉，设置失败，请重新尝试。";
     }
@@ -325,7 +356,7 @@ QVariant SpeechCenter::stop(QString musicName)
     }
     QString str;
     if (isExit) {
-        str = "好的，没问题。";
+        str = MusicSettings::value("speechreply.speech.ok").toString();
     } else {
 //        str = "抱歉，设置失败，请重新尝试。";
     }
@@ -343,9 +374,9 @@ QVariant SpeechCenter::pre(QString musicName)
     }
     QString str;
     if (isExit) {
-        str = "好的，没问题。";
+        str = MusicSettings::value("speechreply.speech.ok").toString();
     } else {
-        str = "非常抱歉，没有找到这首歌，你可以更换其他歌单试试。";
+        str = MusicSettings::value("speechreply.speech.preError").toString();
     }
     return str;
 }
@@ -361,9 +392,9 @@ QVariant SpeechCenter::next(QString musicName)
     }
     QString str;
     if (isExit) {
-        str = "好的，没问题。";
+        str = MusicSettings::value("speechreply.speech.ok").toString();
     } else {
-        str = "非常抱歉，没有找到这首歌，你可以更换其他歌单试试。";
+        str = MusicSettings::value("speechreply.speech.nextError").toString();
     }
     return str;
 }
@@ -381,9 +412,9 @@ QVariant SpeechCenter::playIndex(QString index)
     }
     QString str;
     if (isExit) {
-        str = "好的，没问题。";
+        str = MusicSettings::value("speechreply.speech.ok").toString();
     } else {
-        str = "非常抱歉，没有找到这首歌，你可以更换其他歌单试试。";
+        str = MusicSettings::value("speechreply.speech.playIndexError").toString();
     }
     return str;
 }
@@ -405,7 +436,7 @@ QVariant SpeechCenter::addFaverite(QString musicName)
     }
     QString str;
     if (isExit) {
-        str = "收藏成功。";
+        str = MusicSettings::value("speechreply.speech.addFaveriteOk").toString();
     } else {
 //        str = "收藏失败。";
     }
@@ -427,7 +458,7 @@ QVariant SpeechCenter::removeFaverite(QString musicName)
     }
     QString str;
     if (isExit) {
-        str = "已取消收藏。";
+        str = MusicSettings::value("speechreply.speech.removeFaveriteOk").toString();
     } else {
 //        str = "收藏失败。";
     }
@@ -442,17 +473,17 @@ QVariant SpeechCenter::setMode(QString mode)
     QString str;
     if (Player::getInstance()->status() == Player::PlaybackStatus::Playing) {
         if (modeNumber == Player::PlaybackMode::RepeatAll) {
-            str = "已设为列表循环模式";
+            str = MusicSettings::value("speechreply.speech.setModeRepeatAllOk").toString();
             Player::getInstance()->setMode(Player::PlaybackMode::RepeatAll);
             emit CommonService::getInstance()->signalSetPlayModel(Player::RepeatAll);
             isExit = true;
         } else if (modeNumber == Player::PlaybackMode::RepeatSingle) {
-            str = "已设为单曲循环模式";
+            str = MusicSettings::value("speechreply.speech.setModeRepeatSingleOk").toString();
             Player::getInstance()->setMode(Player::PlaybackMode::RepeatSingle);
             emit CommonService::getInstance()->signalSetPlayModel(Player::RepeatSingle);
             isExit = true;
         } else if (modeNumber == Player::PlaybackMode::Shuffle) {
-            str = "已设为随机播放模式";
+            str = MusicSettings::value("speechreply.speech.setModeShuffleOk").toString();
             Player::getInstance()->setMode(Player::PlaybackMode::Shuffle);
             emit CommonService::getInstance()->signalSetPlayModel(Player::Shuffle);
             isExit = true;
@@ -474,4 +505,60 @@ QVariant SpeechCenter::OpenUris(QVariant paths)
         DataBaseService::getInstance()->importMedias("all", itemMetas);
     }
     return true;
+}
+
+void SpeechCenter::sortList(QList<MediaMeta> &musicInfos, const DataBaseService::ListSortType &sortType)
+{
+    switch (sortType) {
+    case DataBaseService::SortByAddTimeASC: {
+        qSort(musicInfos.begin(), musicInfos.end(), [](const MediaMeta v1, const MediaMeta v2) {
+            return v1.timestamp < v2.timestamp;
+        });
+        break;
+    }
+    case DataBaseService::SortByTitleASC: {
+        qSort(musicInfos.begin(), musicInfos.end(), [](const MediaMeta v1, const MediaMeta v2) {
+            return v1.pinyinTitle < v2.pinyinTitle;
+        });
+        break;
+    }
+    case DataBaseService::SortBySingerASC: {
+        qSort(musicInfos.begin(), musicInfos.end(), [](const MediaMeta v1, const MediaMeta v2) {
+            return v1.pinyinArtist < v2.pinyinArtist;
+        });
+        break;
+    }
+    case DataBaseService::SortByAblumASC: {
+        qSort(musicInfos.begin(), musicInfos.end(), [](const MediaMeta v1, const MediaMeta v2) {
+            return v1.pinyinAlbum < v2.pinyinAlbum;
+        });
+        break;
+    }
+    case DataBaseService::SortByAddTimeDES: {
+        qSort(musicInfos.begin(), musicInfos.end(), [](const MediaMeta v1, const MediaMeta v2) {
+            return v1.timestamp > v2.timestamp;
+        });
+        break;
+    }
+    case DataBaseService::SortByTitleDES: {
+        qSort(musicInfos.begin(), musicInfos.end(), [](const MediaMeta v1, const MediaMeta v2) {
+            return v1.pinyinTitle > v2.pinyinTitle;
+        });
+        break;
+    }
+    case DataBaseService::SortBySingerDES: {
+        qSort(musicInfos.begin(), musicInfos.end(), [](const MediaMeta v1, const MediaMeta v2) {
+            return v1.pinyinArtist > v2.pinyinArtist;
+        });
+        break;
+    }
+    case DataBaseService::SortByAblumDES: {
+        qSort(musicInfos.begin(), musicInfos.end(), [](const MediaMeta v1, const MediaMeta v2) {
+            return v1.pinyinAlbum > v2.pinyinAlbum;
+        });
+        break;
+    }
+    default:
+        break;
+    }
 }

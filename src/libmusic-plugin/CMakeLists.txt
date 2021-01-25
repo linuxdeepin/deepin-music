@@ -9,10 +9,17 @@ include_directories(./interface)
 
 aux_source_directory(. allSourcelib)
 
-add_library(${CMD_NAME} SHARED ${allSourcelib} interface/service.h)
+file(GLOB_RECURSE QRC_SOURCE_FILES ./*.qrc)
+set(QRC_FILES config.qrc)
+qt5_add_resources(QRC_FILES ${QRC_SOURCE_FILES})
+
+add_library(${CMD_NAME} SHARED ${allSourcelib} ${QRC_FILES} interface/service.h)
 
 #使用第三方库需要用到的一个包
 find_package(PkgConfig REQUIRED)
+pkg_check_modules(Dtk REQUIRED IMPORTED_TARGET dtkcore)
+#添加第三方库的所有文件夹路径到工程中来(注意 *_INCLUDE_DIRS)
+target_include_directories(${CMD_NAME} PUBLIC ${Dtk_INCLUDE_DIRS})
 
 #检查第三方库(这里检查了名字为dtkwidget的库和名字为dtkgui的库)，然后取名3rd_lib
 pkg_check_modules(3rd_lib REQUIRED  dframeworkdbus dtkcore)

@@ -344,7 +344,6 @@ TEST(Application, other1)
     QTest::qWait(100);
     SpeechCenter::getInstance()->playMusic("浮夸");
     SpeechCenter::getInstance()->playMusic("");
-    SpeechCenter::getInstance()->setMediaMetas(*Player::getInstance()->getPlayList());
     SpeechCenter::getInstance()->playArtist("华晨宇");
     SpeechCenter::getInstance()->playArtistMusic("华晨宇:浮夸");
     SpeechCenter::getInstance()->playArtistMusic("华晨宇");
