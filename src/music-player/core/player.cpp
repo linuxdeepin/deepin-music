@@ -87,6 +87,10 @@ void Player::init()
 
     initMpris();
     m_volume = MusicSettings::value("base.play.volume").toInt();
+    /**
+     *  初始获取音量，避免从dbus获取音量时，获取的值为初始值0
+     * */
+    m_mpris->setVolume((float)(m_volume / 100.0));
     setFadeInOut(MusicSettings::value("base.play.fade_in_out").toBool());
 
     m_mode = static_cast<PlaybackMode>(MusicSettings::value("base.play.playmode").toInt());
@@ -149,7 +153,7 @@ void Player::playMeta(MediaMeta meta)
         m_mpris->setMetadata(metadata);
         m_mpris->setLoopStatus(Mpris::Playlist);
         m_mpris->setPlaybackStatus(Mpris::Playing);
-        m_mpris->setVolume(double(this->getVolume()) / 100.0);
+        m_mpris->setVolume((float)(getVolume() / 100.0));//只获取前两位小数点
 
         //设置音乐播放
         emit signalPlaybackStatusChanged(Player::Playing);
@@ -213,7 +217,8 @@ void Player::resume()
     m_mpris->setMetadata(metadata);
     m_mpris->setLoopStatus(Mpris::Playlist);
     m_mpris->setPlaybackStatus(Mpris::Playing);
-    m_mpris->setVolume(double(this->getVolume()) / 100.0);
+
+    m_mpris->setVolume((float)(getVolume() / 100.0));//只获取前两位小数点
 
     //设置音乐播放
     emit signalPlaybackStatusChanged(Player::Playing);
@@ -663,8 +668,8 @@ void Player::setVolume(int volume)
     setMuted(volume == 0 ? true : false);
     m_mpris->setVolume(static_cast<double>(volume) / 100);
 
-    // 设置到dbus的音量必须大1，设置才会生效
-    setMusicVolume((volume + 0.1) / 100.0);
+    //+1会造成获取音量值不正确，取消+1
+    setMusicVolume((volume) / 100.0);
     emit signalVolumeChanged();
 }
 
@@ -748,7 +753,7 @@ void Player::setDbusMuted(bool muted)
         }
 
         //调用设置音量
-        ainterface.call(QLatin1String("SetVolume"), (m_volume + 0.1) / 100.0, false);
+        ainterface.call(QLatin1String("SetVolume"), (m_volume) / 100.0, false);//取消+1，保证音量值正确
 
         if (qFuzzyCompare(m_volume, 0.0))
             ainterface.call(QLatin1String("SetMute"), true);
