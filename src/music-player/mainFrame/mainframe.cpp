@@ -736,7 +736,8 @@ void MainFrame::showEvent(QShowEvent *event)
     }
 
     if (m_importWidget) {
-        m_importWidget->setGeometry(0, 50, width(), height() - titlebar()->height());
+        // 首页启动导入界面，调整位置
+        m_importWidget->setGeometry(0, 0, width(), height() - titlebar()->height());
     }
 }
 

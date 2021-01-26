@@ -45,17 +45,17 @@ public:
 
     QStandardItem *item(int row, int column) const;
     //void setCurrentItem(QStandardItem *item);
-    //性能优化歌曲展示专用
+    // 性能优化歌曲展示专用
     void initAllSonglist(QString hash);
-    //歌单&收藏页面
+    // 歌单&收藏页面
     void initCostomSonglist(const QString &hash);
-    //展示歌名包含str的歌曲
+    // 展示歌名包含str的歌曲
     void resetSonglistByStr(const QString &searchWord);
-    //展示专辑包含的歌曲
+    // 展示专辑包含的歌曲
     void resetSonglistByAlbum(const QList<AlbumInfo> &albuminfos);
-    //展示歌手的歌曲
+    // 展示歌手的歌曲
     void resetSonglistBySinger(const QList<SingerInfo> &singerInfos);
-    //获取展示中的歌曲列表
+    // 获取展示中的歌曲列表
     QList<MediaMeta> getMusicListData();
     // 根据排序添加数据
     void setDataBySortType(QList<MediaMeta> &mediaMetas, DataBaseService::ListSortType sortType);
@@ -64,16 +64,16 @@ public:
     //zy---begin
     QPixmap getPlayPixmap(bool isSelect = false);
     void playListChange();
-    //读写当前hash，用来判断当前显示的是什么列表
+    // 读写当前hash，用来判断当前显示的是什么列表
     //void setCurrentHash(QString hash);
     QString getCurrentHash();
-    //读写不同列表显示模式
+    // 读写不同列表显示模式
     void setViewModeFlag(QString hash, QListView::ViewMode mode);
     QListView::ViewMode getViewMode();
-    //排序
+    // 排序
     DataBaseService::ListSortType getSortType();
     void setSortType(DataBaseService::ListSortType sortType);
-    //弹出错误提示框，并播放下一首
+    // 弹出错误提示框，并播放下一首
     void showErrorDlg();
 
     int getRowCount();

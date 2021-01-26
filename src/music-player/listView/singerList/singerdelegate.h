@@ -28,7 +28,9 @@
 class SingerDataDelegate : public QStyledItemDelegate
 {
     Q_OBJECT
-
+public:
+    // Item 右边边距
+    static constexpr int PlayItemRightMargin = 20;
 public:
     explicit SingerDataDelegate(QWidget *parent = Q_NULLPTR);
     ~SingerDataDelegate() override;

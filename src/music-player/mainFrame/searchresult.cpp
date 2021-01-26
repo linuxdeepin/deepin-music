@@ -33,8 +33,6 @@
 
 SearchResult::SearchResult(QWidget *parent) : DBlurEffectWidget(parent)
 {
-    QFont labelFont("SourceHanSansSC");
-    labelFont.setPointSize(DFontSizeManager::T9);
     QPalette labelPalette;
     labelPalette.setColor(QPalette::WindowText, QColor("#414D68 "));
     //设置圆角
@@ -49,12 +47,12 @@ SearchResult::SearchResult(QWidget *parent) : DBlurEffectWidget(parent)
     vlayout->setSpacing(0);
     this->setLayout(vlayout);
 
-    //音乐
+    // 音乐
     m_MusicLabel = new DLabel(tr("Music"), this);
     m_MusicLabel->setFixedHeight(34);
-    m_MusicLabel->setFont(labelFont);
     m_MusicLabel->setPalette(labelPalette);
     m_MusicLabel->setContentsMargins(32, 0, 0, 0);
+    DFontSizeManager::instance()->bind(m_MusicLabel, DFontSizeManager::T8, QFont::Normal);
 
     m_MusicView = new MusicSearchListview(this);
     m_MusicView->setSearchResultWidget(this);
@@ -65,17 +63,17 @@ SearchResult::SearchResult(QWidget *parent) : DBlurEffectWidget(parent)
     AC_SET_OBJECT_NAME(m_MusicView, AC_musicView);
     AC_SET_ACCESSIBLE_NAME(m_MusicView, AC_musicView);
 
-    //分割线1
+    // 分割线1
     s_ArtistLine = new DHorizontalLine;
     s_ArtistLine->setFrameShadow(DHorizontalLine::Raised);
     s_ArtistLine->setLineWidth(2);
 
-    //演唱者
+    // 演唱者
     m_ArtistLabel = new DLabel(tr("Artists"), this);
     m_ArtistLabel->setFixedHeight(34);
-    m_ArtistLabel->setFont(labelFont);
     m_ArtistLabel->setPalette(labelPalette);
     m_ArtistLabel->setContentsMargins(32, 0, 0, 0);
+    DFontSizeManager::instance()->bind(m_ArtistLabel, DFontSizeManager::T8, QFont::Normal);
 
     m_SingerView = new MusicSearchListview(this);
     m_SingerView->setObjectName("SearchArtistView");
@@ -86,17 +84,17 @@ SearchResult::SearchResult(QWidget *parent) : DBlurEffectWidget(parent)
     AC_SET_OBJECT_NAME(m_SingerView, AC_singerView);
     AC_SET_ACCESSIBLE_NAME(m_SingerView, AC_singerView);
 
-    //分割线2
+    // 分割线2
     s_AblumLine = new DHorizontalLine;
     s_AblumLine->setFrameShadow(DHorizontalLine::Raised);
     s_AblumLine->setLineWidth(2);
 
-    //专辑
+    // 专辑
     m_AblumLabel = new DLabel(tr("Albums"), this);
     m_AblumLabel->setFixedHeight(34);
-    m_AblumLabel->setFont(labelFont);
     m_AblumLabel->setPalette(labelPalette);
     m_AblumLabel->setContentsMargins(32, 0, 0, 0);
+    DFontSizeManager::instance()->bind(m_AblumLabel, DFontSizeManager::T8, QFont::Normal);
 
     m_AlbumView = new MusicSearchListview(this);
     m_AlbumView->setObjectName("SearchAlbumView");

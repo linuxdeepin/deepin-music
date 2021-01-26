@@ -163,7 +163,7 @@ void FooterWidget::initUI(QWidget *parent)
     groupHlayout->addWidget(m_btNext);
     mainHBoxlayout->addWidget(m_ctlWidget, 0);
 
-    //添加封面按钮
+    // 封面按钮
     m_btCover = new MusicPixmapButton(this);
     m_btCover->setIcon(QIcon::fromTheme("info_cover"));
     m_btCover->setObjectName("FooterCoverHover");
@@ -174,34 +174,25 @@ void FooterWidget::initUI(QWidget *parent)
     AC_SET_OBJECT_NAME(m_btCover, AC_btCover);
     AC_SET_ACCESSIBLE_NAME(m_btCover, AC_btCover);
 
-    //添加歌曲名
+    // 歌曲名
     m_title = new Label;
-    auto titleFont = m_title->font();
-    titleFont.setFamily("SourceHanSansSC");
-    titleFont.setWeight(QFont::Normal);
-    titleFont.setPixelSize(12);
-    m_title->setFont(titleFont);
     m_title->setObjectName("FooterTitle");
-    m_title->setMaximumWidth(140);
     m_title->setText(tr("Unknown Title"));
     m_title->setForegroundRole(DPalette::BrightText);
-    //添加歌唱者
+    DFontSizeManager::instance()->bind(m_title, DFontSizeManager::T8, QFont::Normal);
+    // 歌唱者
     m_artist = new Label;
-    auto artistFont = m_artist->font();
-    artistFont.setFamily("SourceHanSansSC");
-    artistFont.setWeight(QFont::Normal);
-    artistFont.setPixelSize(11);
-    m_artist->setFont(titleFont);
     m_artist->setObjectName("FooterArtist");
-    m_artist->setMaximumWidth(140);
     m_artist->setText(tr("Unknown artist"));
-    auto artistPl = m_title->palette();
+    DFontSizeManager::instance()->bind(m_artist, DFontSizeManager::T9, QFont::Normal);
+
+    QPalette artistPl = m_title->palette();
     QColor artistColor = artistPl.color(DPalette::BrightText);
     artistColor.setAlphaF(0.6);
     artistPl.setColor(DPalette::WindowText, artistColor);
     m_artist->setPalette(artistPl);
     m_artist->setForegroundRole(DPalette::WindowText);
-    auto musicMetaLayout = new QVBoxLayout;
+    QVBoxLayout *musicMetaLayout = new QVBoxLayout;
     musicMetaLayout->setContentsMargins(0, 0, 0, 0);
     musicMetaLayout->setSpacing(0);
     musicMetaLayout->addStretch(100);
@@ -209,7 +200,7 @@ void FooterWidget::initUI(QWidget *parent)
     musicMetaLayout->addWidget(m_artist);
     musicMetaLayout->addStretch(100);
     mainHBoxlayout->addLayout(musicMetaLayout);
-    //添加进度条
+    // 进度条
     m_waveform = new Waveform(Qt::Horizontal, static_cast<QWidget *>(parent), this);
     m_waveform->setMinimum(0);
     m_waveform->setMaximum(1000);
@@ -220,7 +211,7 @@ void FooterWidget::initUI(QWidget *parent)
     AC_SET_OBJECT_NAME(m_waveform, AC_Waveform);
     AC_SET_ACCESSIBLE_NAME(m_waveform, AC_Waveform);
 
-    //添加收藏按钮
+    // 收藏按钮
     m_btFavorite = new DIconButton(this);
     m_btFavorite->setIcon(QIcon::fromTheme("dcc_collection"));
 //    m_btFavorite->setIcon(QIcon::fromTheme("collection1_press"));
@@ -233,7 +224,7 @@ void FooterWidget::initUI(QWidget *parent)
     AC_SET_OBJECT_NAME(m_btFavorite, AC_Favorite);
     AC_SET_ACCESSIBLE_NAME(m_btFavorite, AC_Favorite);
 
-    //添加歌词按钮
+    // 歌词按钮
     m_btLyric = new DIconButton(this);
     m_btLyric->setIcon(QIcon::fromTheme("lyric"));
     m_btLyric->setObjectName("FooterActionLyric");
@@ -245,7 +236,7 @@ void FooterWidget::initUI(QWidget *parent)
     AC_SET_OBJECT_NAME(m_btLyric, AC_Lyric);
     AC_SET_ACCESSIBLE_NAME(m_btLyric, AC_Lyric);
 
-    //添加播放模式
+    // 播放模式
     m_btPlayMode = new DIconButton(this);
     QString playmode = "sequential_loop";
     switch (Player::getInstance()->mode()) {
@@ -270,7 +261,7 @@ void FooterWidget::initUI(QWidget *parent)
 
     AC_SET_OBJECT_NAME(m_btPlayMode, AC_PlayMode);
     AC_SET_ACCESSIBLE_NAME(m_btPlayMode, AC_PlayMode);
-    //添加音量调节按钮
+    // 音量调节按钮
     m_btSound = new DIconButton(this);
     m_btSound->setObjectName("FooterActionSound");
     m_btSound->setFixedSize(50, 50);
@@ -281,7 +272,7 @@ void FooterWidget::initUI(QWidget *parent)
 
     AC_SET_OBJECT_NAME(m_btSound, AC_Sound);
     AC_SET_ACCESSIBLE_NAME(m_btSound, AC_Sound);
-    //添加歌曲列表按钮
+    // 歌曲列表按钮
     m_btPlayQueue = new DIconButton(this);
     m_btPlayQueue->setIcon(QIcon::fromTheme("playlist"));
     m_btPlayQueue->setObjectName("FooterActionPlayList");
@@ -299,7 +290,7 @@ void FooterWidget::initUI(QWidget *parent)
     m_volSlider->setProperty("DelayHide", true);
     m_volSlider->setProperty("NoDelayShow", true);
 
-    //设置静音
+    // 设置静音
     if (MusicSettings::value("base.play.mute").toBool()) {
         Player::getInstance()->setMuted(true);
     }
@@ -311,7 +302,7 @@ void FooterWidget::initUI(QWidget *parent)
     connect(&m_metaBufferDetector, SIGNAL(metaBuffer(const QVector<float> &, const QString &)),
             m_waveform, SLOT(onAudioBuffer(const QVector<float> &, const QString &)));
 
-    //设置提示框
+    // 设置提示框
     m_hintFilter =  new HintFilter(this);
     installTipHint(m_btPrev, tr("Previous"));
     installTipHint(m_btNext, tr("Next"));
@@ -319,7 +310,7 @@ void FooterWidget::initUI(QWidget *parent)
     installTipHint(m_btFavorite, tr("Favorite"));
     installTipHint(m_btLyric, tr("Lyrics"));
     installTipHint(m_btPlayQueue, tr("Play Queue"));
-    //设置播放模式提示框
+    // 设置播放模式提示框
     installTipHint(m_btPlayMode, playModeStr(Player::getInstance()->mode()));
 
     connect(m_btPlayQueue, SIGNAL(clicked(bool)), this, SLOT(slotPlayQueueClick(bool)));
@@ -340,7 +331,7 @@ void FooterWidget::initUI(QWidget *parent)
     connect(CommonService::getInstance(), &CommonService::signalFluashFavoriteBtnIcon, this, &FooterWidget::fluashFavoriteBtnIcon);
     connect(CommonService::getInstance(), &CommonService::signalSetPlayModel, this, &FooterWidget::setPlayModel);
     connect(CommonService::getInstance(), &CommonService::signalPlayQueueClosed, this, &FooterWidget::slotFlushBackground);
-    //dbus
+    // dbus
     connect(Player::getInstance()->getMpris(), SIGNAL(volumeRequested(double)), this, SLOT(slotDbusVolumeChanged(double)));
     connect(m_volSlider, &SoundVolume::delayAutoHide, this, [ = ]() {
         m_btSound->setChecked(false);

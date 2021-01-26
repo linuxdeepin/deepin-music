@@ -53,7 +53,9 @@ SoundVolume::SoundVolume(QWidget *parent)
     auto titleFont = m_volPersent->font();
     titleFont.setFamily("SourceHanSansSC");
     titleFont.setWeight(QFont::Medium);
-    titleFont.setPixelSize(14);
+
+// 解决字体不会根据系统字体大小改变问题
+//    titleFont.setPixelSize(14);
     m_volPersent->setFont(titleFont);
     m_volPersent->setText("100%");
 

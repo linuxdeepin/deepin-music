@@ -39,7 +39,6 @@ QT_BEGIN_NAMESPACE
 extern Q_WIDGETS_EXPORT void qt_blurImage(QPainter *p, QImage &blurImage, qreal radius, bool quality, bool alphaOnly, int transposed = 0);
 QT_END_NAMESPACE
 
-const int PlayItemRightMargin = 20;
 
 static inline int pixel2point(int pixel)
 {
@@ -114,7 +113,7 @@ void SingerDataDelegate::drawIconMode(QPainter &painter, const QStyleOptionViewI
 
     auto background = option.palette.background();
     painter.fillRect(option.rect, background);
-    //绘制阴影
+    // 绘制阴影
     QRect shadowRect(option.rect.x() - 10, option.rect.y(), 158, 158);
     QPainterPath roundRectShadowPath;
     roundRectShadowPath.addRoundRect(shadowRect, 8, 8);
@@ -137,7 +136,7 @@ void SingerDataDelegate::drawIconMode(QPainter &painter, const QStyleOptionViewI
     }
     painter.drawPixmap(rect, opticon.pixmap(rect.width(), rect.width()));
 
-    //draw border
+    // draw border
     painter.save();
     QColor borderPenColor("#000000");
     borderPenColor.setAlphaF(0.05);
@@ -166,7 +165,7 @@ void SingerDataDelegate::drawIconMode(QPainter &painter, const QStyleOptionViewI
         curFillSize = 70;
     }
 
-    //设置模糊
+    // 设置模糊
     QImage t_imageBlur = opticon.pixmap(rect.width(), rect.height()).toImage();
     qreal t_ratioBlur = t_imageBlur.devicePixelRatioF();
     curFillSize = static_cast<int>(curFillSize * t_ratioBlur);
@@ -178,8 +177,8 @@ void SingerDataDelegate::drawIconMode(QPainter &painter, const QStyleOptionViewI
     painter.setTransform(old_transformBlur);
     painter.fillRect(fillBlurRect, fillColor);
 
-    //draw playing
-    auto *listview2 = qobject_cast<SingerListView *>(const_cast<QWidget *>(option.widget));
+    // draw playing
+    SingerListView *listview2 = qobject_cast<SingerListView *>(const_cast<QWidget *>(option.widget));
     if (playFlag && playStatue == Player::Playing) {
         if (option.state & QStyle::State_MouseOver) {
             painter.drawPixmap(QRect(rect.x() + 56, rect.y() + 82, 36, 36), hoverSuspendImg);
@@ -193,10 +192,9 @@ void SingerDataDelegate::drawIconMode(QPainter &painter, const QStyleOptionViewI
 
     QRect fillRect(rect.x(), startHeight, rect.width(), fillAllHeight);
 
-    QFont font = option.font;
-    font.setPixelSize(14);
-    painter.setFont(font);
-    QFontMetrics fm(font);
+    QFont fontT6 = DFontSizeManager::instance()->get(DFontSizeManager::T6);
+    painter.setFont(fontT6);
+    QFontMetrics fm(fontT6);
 
     QRect nameFillRect(rect.x(), startHeight + 26, rect.width(), 24);
     nameFillRect.adjust(8, 0, -7, 0);
@@ -204,11 +202,6 @@ void SingerDataDelegate::drawIconMode(QPainter &painter, const QStyleOptionViewI
     painter.setPen(Qt::white);
     painter.drawText(nameFillRect, Qt::AlignLeft | Qt::AlignTop, nameText);
 
-    font.setPixelSize(10);
-    QFontMetrics extraNameFm(font);
-    painter.setFont(font);
-    QRect extraNameFillRect(rect.x(), startHeight + fillAllHeight / 2 + 1, rect.width(), fillAllHeight / 2);
-    extraNameFillRect.adjust(8, 0, -7, 0);
     QBrush t_fillBrush(QColor(128, 128, 128, 0));
 
     fillColor.setAlphaF(0.3);
@@ -241,7 +234,7 @@ void SingerDataDelegate::drawIconMode(QPainter &painter, const QStyleOptionViewI
 
         QPixmap t_hoverPlayImg(hoverPlayImg);
         t_hoverPlayImg.setDevicePixelRatio(option.widget->devicePixelRatioF());
-        //            t_hoverRect.adjust(0, 0, -7 * t_ratio, -7 * t_ratio);
+//        t_hoverRect.adjust(0, 0, -7 * t_ratio, -7 * t_ratio);
         QRect t_pixMapRect(rect.x() + 53, rect.y() + 40, 43, 43);
         painter.drawPixmap(t_pixMapRect, t_hoverPlayImg);
         painter.restore();
@@ -253,6 +246,12 @@ void SingerDataDelegate::drawListMode(QPainter &painter, const QStyleOptionViewI
 {
     auto listview = qobject_cast<const SingerListView *>(option.widget);
     auto singertmp = index.data(Qt::UserRole).value<SingerInfo>();
+
+    QFont fontT9 = DFontSizeManager::instance()->get(DFontSizeManager::T9);
+    QFont fontT6 = DFontSizeManager::instance()->get(DFontSizeManager::T6);
+
+    QColor nameColor("#090909");
+    QColor otherColor("#000000");
 
     painter.setRenderHint(QPainter::Antialiasing);
     painter.setRenderHint(QPainter::HighQualityAntialiasing);
@@ -304,7 +303,6 @@ void SingerDataDelegate::drawListMode(QPainter &painter, const QStyleOptionViewI
         painter.restore();
     }
 
-    QColor nameColor("#090909"), otherColor("#797979");
     otherColor.setAlphaF(0.5);
     if (listview->getThemeType() == 2) {
         nameColor = QColor("#C0C6D4");
@@ -312,22 +310,14 @@ void SingerDataDelegate::drawListMode(QPainter &painter, const QStyleOptionViewI
         otherColor.setAlphaF(0.5);
     }
 
-    QFont font11 = option.font;
-    font11.setFamily("SourceHanSansSC");
-    font11.setWeight(QFont::Normal);
-    font11.setPixelSize(11);
-    QFont font14 = option.font;
-    font14.setFamily("SourceHanSansSC");
-    font14.setWeight(QFont::Normal);
-    font14.setPixelSize(14);
-
     int rowCount = listview->model()->rowCount();
     auto rowCountSize = QString::number(rowCount).size();
     rowCountSize = qMax(rowCountSize, 2);
 
-    QFontMetrics songsFm(font11);
-    auto tailwidth = pixel2point(songsFm.width("0000-00-00")) + PlayItemRightMargin  + 20;
-    auto w = option.rect.width() - 0 - tailwidth;
+    QFontMetrics songsFm(fontT9);
+// 采用右对齐画文字，这里不用计算距离
+//    auto tailwidth = pixel2point(songsFm.width("0000-00-00")) + PlayItemRightMargin  + 20;
+//    auto w = option.rect.width() - 0 - tailwidth;
 
 
     QRect numRect(lrWidth + 10, option.rect.y() + 3, 32, 32);
@@ -347,17 +337,18 @@ void SingerDataDelegate::drawListMode(QPainter &painter, const QStyleOptionViewI
         nameColor = option.palette.highlightedText().color();
         otherColor = option.palette.highlightedText().color();
     }
-    //name
+
+    // name
     painter.setPen(nameColor);
-    QRect nameRect(60, option.rect.y(), w / 2 - 20, option.rect.height());
-    painter.setFont(font14);
+    QRect nameRect(60, option.rect.y(), option.rect.width() / 2 - 20, option.rect.height());
+    painter.setFont(fontT6);
     auto nameText = songsFm.elidedText(singertmp.singerName.isEmpty() ? SingerListView::tr("Unknown artist") :
                                        singertmp.singerName, Qt::ElideMiddle, nameRect.width());
     painter.drawText(nameRect, Qt::AlignLeft | Qt::AlignVCenter, nameText);
 
-    painter.setPen(nameColor);
 
-    //songs
+    // songs
+    painter.setPen(otherColor);
     int sortMetasSize = singertmp.musicinfos.keys().size();;
     QString infoStr;
     if (sortMetasSize == 0) {
@@ -368,12 +359,12 @@ void SingerDataDelegate::drawListMode(QPainter &painter, const QStyleOptionViewI
         infoStr = QString("   ") + tr("%1 songs").arg(sortMetasSize);
     }
     painter.save();
-    painter.setFont(font11);
-    QFontMetrics measuringFont(font11);
+    painter.setFont(fontT9);
+    QFontMetrics measuringFont(fontT9);
     int strwidth = pixel2point(measuringFont.width(infoStr));
-    QRect songsRect(option.rect.width() - tailwidth/*60 + w / 2 + w / 4*/, option.rect.y(), w / 4 - 20, option.rect.height());
     QString countText = songsFm.elidedText(infoStr, Qt::ElideMiddle, strwidth);
-    painter.drawText(songsRect, Qt::AlignLeft | Qt::AlignVCenter, countText);
+    // 歌曲数量右对齐
+    painter.drawText(option.rect.adjusted(0, 0, -PlayItemRightMargin, 0), Qt::AlignRight | Qt::AlignVCenter, countText);
     painter.restore();
 }
 

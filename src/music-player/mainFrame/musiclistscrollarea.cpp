@@ -67,7 +67,9 @@ MusicListScrollArea::MusicListScrollArea(QWidget *parent) : DScrollArea(parent)
     auto dataBaseLabelFont = dataBaseLabel->font();
     dataBaseLabelFont.setFamily("SourceHanSansSC");
     dataBaseLabelFont.setWeight(QFont::Medium);
-    dataBaseLabelFont.setPixelSize(14);
+
+// 解决字体不会根据系统字体大小改变问题
+//    dataBaseLabelFont.setPixelSize(14);
     dataBaseLabel->setFont(dataBaseLabelFont);
 
     customizeLabel = new DLabel;

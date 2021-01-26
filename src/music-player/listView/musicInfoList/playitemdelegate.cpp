@@ -23,14 +23,12 @@
 
 #include <QDebug>
 #include <QFont>
-#include <DGuiApplicationHelper>
 #include <QPainter>
-#include <QStandardItemModel>
 #include <QFileInfo>
 #include <QPainterPath>
+#include <QStandardItemModel>
 
-#include <musicmeta.h>
-
+#include <DGuiApplicationHelper>
 #include <DHiDPIHelper>
 
 #include "playlistview.h"
@@ -103,7 +101,7 @@ static inline QRect colRect(int col, const QStyleOptionViewItem &option)
     }
     return option.rect.marginsRemoved(QMargins(0, 0, 0, 0));
 }
-#include <QIcon>
+
 void PlayItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option,
                              const QModelIndex &index) const
 {
@@ -118,10 +116,10 @@ void PlayItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
 QSize PlayItemDelegate::sizeHint(const QStyleOptionViewItem &option,
                                  const QModelIndex &index) const
 {
-    //Q_D(const PlayItemDelegate);
     auto *listview = qobject_cast<const PlayListView *>(option.widget);
     if (listview && listview->viewMode() == QListView::IconMode) {
-        return QSize(150, 200);
+        // 调整Icon间距
+        return QSize(150, 190);
     } else {
         auto baseSize = QStyledItemDelegate::sizeHint(option, index);
         return QSize(baseSize.width(), 38);
@@ -150,7 +148,10 @@ QSize PlayItemDelegate::sizeHint(const QStyleOptionViewItem &option,
 
 void PlayItemDelegate::drawIconMode(QPainter &painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
-    auto listview = qobject_cast<const PlayListView *>(option.widget);
+    const PlayListView *listview = qobject_cast<const PlayListView *>(option.widget);
+
+    QFont fontT9 = DFontSizeManager::instance()->get(DFontSizeManager::T9);
+    QFont fontT6 = DFontSizeManager::instance()->get(DFontSizeManager::T6);
 
     MediaMeta activeMeta = Player::getInstance()->getActiveMeta();
     MediaMeta meta = index.data(Qt::UserRole).value<MediaMeta>();
@@ -167,7 +168,7 @@ void PlayItemDelegate::drawIconMode(QPainter &painter, const QStyleOptionViewIte
 
     painter.fillRect(option.rect, background);
 
-    //绘制阴影
+    // 绘制阴影
     QRect shadowRect(option.rect.x() - 10, option.rect.y(), 168, 158);
     QPainterPath roundRectShadowPath;
     roundRectShadowPath.addRoundRect(shadowRect, 8, 8);
@@ -176,13 +177,13 @@ void PlayItemDelegate::drawIconMode(QPainter &painter, const QStyleOptionViewIte
     painter.drawPixmap(shadowRect, m_shadowImg);
     painter.restore();
 
-    //绘制圆角框
+    // 绘制圆角框
     QRect rect(option.rect.x(), option.rect.y(), 150, 200);
     QPainterPath roundRectPath;
     roundRectPath.addRoundRect(rect, 10, 10);
     painter.setClipPath(roundRectPath);
 
-    //绘制专辑图片
+    // 绘制专辑图片
     painter.save();
     QIcon icon;
     auto value = index.data(Qt::DecorationRole);
@@ -195,7 +196,7 @@ void PlayItemDelegate::drawIconMode(QPainter &painter, const QStyleOptionViewIte
     painter.setClipPath(roundPixmapRectPath);
     painter.drawPixmap(pixmapRect, icon.pixmap(option.rect.width(), option.rect.width()));
     painter.restore();
-    //绘制图片上添加描边
+    // 绘制图片上添加描边
     painter.save();
     QColor borderPenColor("#000000");
     borderPenColor.setAlphaF(0.05);
@@ -208,35 +209,42 @@ void PlayItemDelegate::drawIconMode(QPainter &painter, const QStyleOptionViewIte
     int startHeight = option.rect.y() + 159;
     int fillAllHeight = 34;
 
-    //设置信息字体大小
-    QFont font = option.font;
-    font.setFamily("SourceHanSansSC");
-    font.setWeight(QFont::Normal);
-    font.setPixelSize(13);
-    painter.setFont(font);
-    QFontMetrics fm(font);
+    // 设置信息字体大小
+    painter.setFont(fontT6);
+    QFontMetrics fm(fontT6);
     QColor nameColor = "#000000";
     if (listview->getThemeType() == 2) {
         nameColor = "#C0C6D4";
     }
     painter.setPen(nameColor);
-    QRect nameFillRect(option.rect.x(), startHeight - 5, option.rect.width(), fm.height());
-    nameFillRect.adjust(8, 0, -7, 0);
-    auto nameText = fm.elidedText(meta.title, Qt::ElideRight, 125);
-    painter.drawText(nameFillRect, Qt::AlignLeft | Qt::AlignTop, nameText);
+    // 调整歌曲名位置
+    QRect nameFillRect(option.rect.x(), option.rect.y() + option.rect.width(),
+                       option.rect.width(), (option.rect.height() - option.rect.width()) / 2 + 5);
+    auto nameText = fm.elidedText(meta.title, Qt::ElideRight, option.rect.width());
+    painter.drawText(nameFillRect, Qt::AlignLeft | Qt::AlignVCenter, nameText);
 
-    font.setPixelSize(11);
-    QFontMetrics extraNameFm(font);
-    painter.setFont(font);
-    nameColor.setAlphaF(1.0);
+    QFontMetrics extraNameFm(fontT9);
+    painter.setFont(fontT9);
+    nameColor.setAlphaF(0.5);
     painter.setPen(nameColor);
-    QRect extraNameFillRect(option.rect.x(), startHeight + fillAllHeight / 2, 99, fm.height());
-    extraNameFillRect.adjust(8, 0, -7, 0);
-    auto extraNameText = extraNameFm.elidedText(meta.singer, Qt::ElideRight, 84);
-    painter.drawText(extraNameFillRect, Qt::AlignLeft | Qt::AlignTop, extraNameText);
+    QRect extraNameFillRect(option.rect.x(), option.rect.y() + option.rect.width() + (option.rect.height() - option.rect.width()) / 2 + 5,
+                            option.rect.width() * 4 / 5, (option.rect.height() - option.rect.width()) / 2);
+    auto extraNameText = extraNameFm.elidedText(meta.singer, Qt::ElideRight, option.rect.width() * 3 / 5);
+    painter.drawText(extraNameFillRect, Qt::AlignLeft | Qt::AlignVCenter, extraNameText);
 
-    //draw time
-    QRect timeFillRect(option.rect.x() + 102, startHeight + 17, 38, 16);
+    // 画时间矩形
+    QString timeText = DMusic::lengthString(meta.length);
+    // 如果时间超过一小时，矩形绘制长一点
+    QRect timeFillRect;
+    if (timeText.size() > 5) {
+        timeFillRect = QRect(option.rect.x() + option.rect.width() - 48,
+                             option.rect.y() + option.rect.width() + (option.rect.height() - option.rect.width()) / 2 + 7,
+                             48, 16);
+    } else {
+        timeFillRect = QRect(option.rect.x() + option.rect.width() - 38,
+                             option.rect.y() + option.rect.width() + (option.rect.height() - option.rect.width()) / 2 + 7,
+                             38, 16);
+    }
     painter.save();
     QColor timeFillColor("#232323");
     timeFillColor.setAlphaF(0.3);
@@ -249,38 +257,37 @@ void PlayItemDelegate::drawIconMode(QPainter &painter, const QStyleOptionViewIte
     painter.drawRoundedRect(timeFillRect, 8, 8);
     painter.restore();
 
-    font.setPixelSize(10);
-    painter.setFont(font);
+    // 时间字体固定大小
+    fontT9.setPixelSize(11);
+    painter.setFont(fontT9);
+
+    // 画时间
     QColor timedColor = Qt::white;
     if (listview->getThemeType() == 2) {
         timedColor = "#C0C6D4";
     }
     painter.setPen(timedColor);
-    auto timeText = fm.elidedText(DMusic::lengthString(meta.length), Qt::ElideRight, 38);
-    painter.drawText(timeFillRect, Qt::AlignHCenter | Qt::AlignTop, timeText);
+    painter.drawText(timeFillRect, Qt::AlignCenter, timeText);
 
-    QBrush t_fillBrush(QColor(128, 128, 128, 0));
+    QBrush fillBrush(QColor(128, 128, 128, 0));
     if (option.state & QStyle::State_Selected) {
-        t_fillBrush = QBrush(QColor(128, 128, 128, 90));
+        fillBrush = QBrush(QColor(128, 128, 128, 90));
     }
     painter.save();
     painter.setClipPath(roundPixmapRectPath);
-    painter.fillRect(pixmapRect, t_fillBrush);
+    painter.fillRect(pixmapRect, fillBrush);
     painter.restore();
 }
 
 void PlayItemDelegate::drawListMode(QPainter &painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
-    auto listview = qobject_cast<const PlayListView *>(option.widget);
+    const PlayListView *listview = qobject_cast<const PlayListView *>(option.widget);
 
-    QFont font11 = option.font;
-    font11.setFamily("SourceHanSansSC");
-    font11.setWeight(QFont::Normal);
-    font11.setPixelSize(11);
-    QFont font14 = option.font;
-    font14.setFamily("SourceHanSansSC");
-    font14.setWeight(QFont::Normal);
-    font14.setPixelSize(14);
+    QFont fontT9 = DFontSizeManager::instance()->get(DFontSizeManager::T9);
+    QFont fontT6 = DFontSizeManager::instance()->get(DFontSizeManager::T6);
+
+    QColor nameColor("#090909");
+    QColor otherColor("#000000");
 
     painter.save();
     painter.setRenderHint(QPainter::Antialiasing);
@@ -309,7 +316,6 @@ void PlayItemDelegate::drawListMode(QPainter &painter, const QStyleOptionViewIte
         painter.restore();
     }
 
-    QColor nameColor("#090909"), otherColor("#000000");
     otherColor.setAlphaF(0.5);
     if (listview->getThemeType() == 2) {
         nameColor = QColor("#C0C6D4");
@@ -328,9 +334,9 @@ void PlayItemDelegate::drawListMode(QPainter &painter, const QStyleOptionViewIte
     MediaMeta itemMeta = index.data(Qt::UserRole).value<MediaMeta>();
     if (activeMeta.hash == itemMeta.hash) {
         nameColor = QColor(DGuiApplicationHelper::instance()->applicationPalette().highlight().color());
-        otherColor = QColor("#2CA7F8");
-        font14.setFamily("SourceHanSansSC");
-        font14.setWeight(QFont::Medium);
+        otherColor = QColor(DGuiApplicationHelper::instance()->applicationPalette().highlight().color());
+        fontT6.setFamily("SourceHanSansSC");
+        fontT6.setWeight(QFont::Medium);
     }
 
     if (option.state & QStyle::State_Selected) {
@@ -380,6 +386,7 @@ void PlayItemDelegate::drawListMode(QPainter &painter, const QStyleOptionViewIte
                 painter.drawPixmap(iconRect, icon, QRectF());
                 break;
             }
+
             //绘制播放动态图
             if (activeMeta.hash == itemMeta.hash) {
                 QPixmap icon = playListView->getPlayPixmap(option.state & QStyle::State_Selected);
@@ -395,10 +402,10 @@ void PlayItemDelegate::drawListMode(QPainter &painter, const QStyleOptionViewIte
                                        t_ratioRect.width(), t_ratioRect.height());
                 painter.drawPixmap(iconRect.toRect(), icon);
             } else {
-                painter.setFont(font11);
+                painter.setFont(fontT9);
                 // 只显示行号，如总数100,原来显示001修改为显示1
                 auto str = QString::number(index.row() + 1);
-                QFont font(font11);
+                QFont font(fontT9);
                 QFontMetrics fm(font);
                 auto text = fm.elidedText(str, Qt::ElideMiddle, rect.width());
                 painter.drawText(rect, static_cast<int>(flag), text);
@@ -407,40 +414,40 @@ void PlayItemDelegate::drawListMode(QPainter &painter, const QStyleOptionViewIte
         }
         case Title: {
             painter.setPen(nameColor);
-            painter.setFont(font14);
-            QFont font(font14);
+            painter.setFont(fontT6);
+            QFont font(fontT6);
             QFontMetrics fm(font);
             auto text = fm.elidedText(itemMeta.title, Qt::ElideMiddle, rect.width());
             painter.drawText(rect, static_cast<int>(flag), text);
             break;
         }
         case Artist: {
-            painter.setPen(nameColor);
-            painter.setFont(font11);
+            painter.setPen(otherColor);
+            painter.setFont(fontT9);
             auto str = itemMeta.singer.isEmpty() ?
                        PlayListView::tr("Unknown artist") :
                        itemMeta.singer;
-            QFont font(font11);
+            QFont font(fontT9);
             QFontMetrics fm(font);
             auto text = fm.elidedText(str, Qt::ElideMiddle, rect.width());
             painter.drawText(rect, static_cast<int>(flag), text);
             break;
         }
         case Album: {
-            painter.setPen(nameColor);
-            painter.setFont(font11);
+            painter.setPen(otherColor);
+            painter.setFont(fontT9);
             auto str = itemMeta.album.isEmpty() ?
                        PlayListView::tr("Unknown album") :
                        itemMeta.album;
-            QFont font(font11);
+            QFont font(fontT9);
             QFontMetrics fm(font);
             auto text = fm.elidedText(str, Qt::ElideMiddle, rect.width());
             painter.drawText(rect, static_cast<int>(flag), text);
             break;
         }
         case Length: {
-            painter.setPen(nameColor);
-            painter.setFont(font11);
+            painter.setPen(otherColor);
+            painter.setFont(fontT9);
             painter.drawText(rect, static_cast<int>(flag), DMusic::lengthString(itemMeta.length));
             break;
         }

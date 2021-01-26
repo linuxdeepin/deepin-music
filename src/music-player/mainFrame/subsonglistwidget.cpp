@@ -80,24 +80,26 @@ void SubSonglistWidget::initUI()
     btLayout->setContentsMargins(0, 16, 0, 0);
     titleLayout->addLayout(btLayout, 1);
 
+    // 播放全部
     m_btPlayAll = new DPushButton;
-    auto btPlayAllFont = m_btPlayAll->font();
-    btPlayAllFont.setPixelSize(14);
-    m_btPlayAll->setFont(btPlayAllFont);
     auto playAllPalette = m_btPlayAll->palette();
     playAllPalette.setColor(DPalette::ButtonText, Qt::white);
-    playAllPalette.setColor(DPalette::Dark, QColor(Qt::red));
-    playAllPalette.setColor(DPalette::Light, QColor(Qt::red));
+    // 按钮颜色不对，由UI确认
+    playAllPalette.setColor(DPalette::Dark, QColor("#FD5E5E"));
+    playAllPalette.setColor(DPalette::Light, QColor("#ED5656"));
     m_btPlayAll->setPalette(playAllPalette);
     m_btPlayAll->setIcon(QIcon(":/mpimage/light/normal/play_all_normal.svg"));
     m_btPlayAll->setText(MusicListDialog::tr("Play All"));
     m_btPlayAll->setFocusPolicy(Qt::NoFocus);
     m_btPlayAll->setIconSize(QSize(18, 18));
-    m_btPlayAll->setFixedSize(QSize(100, 30));
-    btLayout->addWidget(m_btPlayAll, 1);
+    // 按钮自适应字体大小
+    m_btPlayAll->setFixedHeight(30);
 
+    DFontSizeManager::instance()->bind(m_btPlayAll, DFontSizeManager::T6, QFont::Medium);
+    btLayout->addWidget(m_btPlayAll);
+
+    // 随机播放
     m_btRandomPlay = new DPushButton;
-    m_btRandomPlay->setFont(btPlayAllFont);
     auto randomPlayPalette = m_btRandomPlay->palette();
     randomPlayPalette.setColor(DPalette::ButtonText, Qt::white);
     randomPlayPalette.setColor(DPalette::Dark, QColor(Qt::darkGray));
@@ -107,8 +109,10 @@ void SubSonglistWidget::initUI()
     m_btRandomPlay->setText(MusicListDialog::tr("Shuffle"));
     m_btRandomPlay->setFocusPolicy(Qt::NoFocus);
     m_btRandomPlay->setIconSize(QSize(18, 18));
-    m_btRandomPlay->setFixedSize(QSize(100, 30));
-    btLayout->addWidget(m_btRandomPlay, 1);
+    // 按钮自适应字体大小
+    m_btRandomPlay->setFixedHeight(30);
+    DFontSizeManager::instance()->bind(m_btRandomPlay, DFontSizeManager::T6, QFont::Medium);
+    btLayout->addWidget(m_btRandomPlay);
     btLayout->addStretch();
 
     AC_SET_OBJECT_NAME(m_btPlayAll, AC_dialogPlayAll);
@@ -248,12 +252,13 @@ void SubSonglistWidget::flushDialog(QMap<QString, MediaMeta> musicinfos, ListPag
         auto infoFont = m_infoLabel->font();
 
         if (listPageType == AlbumType || listPageType == SearchAlbumResultType) {
-            titleFont.setPixelSize(24);
-            infoFont.setPixelSize(18);
+// 解决字体不会根据系统字体大小改变问题
+//            titleFont.setPixelSize(24);
+//            infoFont.setPixelSize(18);
             m_titleLabel->setText(musicinfos.first().album);
             m_infoLabel->setText(musicinfos.first().singer);
         } else if (listPageType == SingerType || listPageType == SearchSingerResultType) {
-            titleFont.setPixelSize(36);
+//            titleFont.setPixelSize(36);
             m_titleLabel->setText(musicinfos.first().singer);
             m_infoLabel->hide();
         }

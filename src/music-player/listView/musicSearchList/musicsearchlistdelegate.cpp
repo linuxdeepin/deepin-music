@@ -69,7 +69,7 @@ void MusicSearchListDelegate::paint(QPainter *painter, const QStyleOptionViewIte
     backColor.setAlphaF(0.2);
 
     //获取当前行信息
-    auto listview = qobject_cast<const MusicSearchListview *>(option.widget);
+    const MusicSearchListview *listview = qobject_cast<const MusicSearchListview *>(option.widget);
     QString searchText = listview->getSearchText();
 
     QColor textColor;
@@ -127,10 +127,7 @@ void MusicSearchListDelegate::paint(QPainter *painter, const QStyleOptionViewIte
     painter->setRenderHint(QPainter::HighQualityAntialiasing);
 
     // 设置字体
-    QFont textFont = option.font;
-    textFont.setFamily("SourceHanSansSC");
-    textFont.setWeight(QFont::Normal);
-    textFont.setPixelSize(14);
+    QFont fontT6 = DFontSizeManager::instance()->get(DFontSizeManager::T6);
 
     if (listview->getSearchType() == SearchType::SearchMusic) {
         // 绘制歌曲
@@ -143,7 +140,7 @@ void MusicSearchListDelegate::paint(QPainter *painter, const QStyleOptionViewIte
         } else {
             mtext = metaPtr.title + " - " + metaPtr.singer;
         }
-        QFontMetricsF fontWidth(textFont);
+        QFontMetricsF fontWidth(fontT6);
         mtext = fontWidth.elidedText(mtext, Qt::ElideMiddle, 280);
 
         QStyleOptionViewItem viewOption(option);
@@ -169,7 +166,7 @@ void MusicSearchListDelegate::paint(QPainter *painter, const QStyleOptionViewIte
         testcursor.select(QTextCursor::LineUnderCursor);
         QTextCharFormat fmt;
         fmt.setForeground(textColor);
-        fmt.setFont(textFont);
+        fmt.setFont(fontT6);
         testcursor.mergeCharFormat(fmt);
         testcursor.clearSelection();
         testcursor.movePosition(QTextCursor::EndOfLine);
@@ -185,7 +182,8 @@ void MusicSearchListDelegate::paint(QPainter *painter, const QStyleOptionViewIte
         cursor.endEditBlock();
 
         QAbstractTextDocumentLayout::PaintContext paintContext;
-        QRect textRect(32, option.rect.y() + 3, 287, 24);
+        // 修复字体大小改变，字体显示不全问题
+        QRect textRect(32, option.rect.y() + 3, 287, option.rect.height());
         painter->save();
         painter->translate(textRect.topLeft());
         painter->setClipRect(textRect.translated(-textRect.topLeft()));
@@ -213,7 +211,7 @@ void MusicSearchListDelegate::paint(QPainter *painter, const QStyleOptionViewIte
         painter->drawPixmap(imageRect, image);
         painter->restore();
 
-        QFontMetricsF fontWidth(textFont);
+        QFontMetricsF fontWidth(fontT6);
         mtext = fontWidth.elidedText(mtext, Qt::ElideMiddle, 251);
         QStyleOptionViewItem viewOption(option);
         initStyleOption(&viewOption, index);
@@ -239,7 +237,7 @@ void MusicSearchListDelegate::paint(QPainter *painter, const QStyleOptionViewIte
         testcursor.select(QTextCursor::LineUnderCursor);
         QTextCharFormat fmt;
         fmt.setForeground(textColor);
-        fmt.setFont(textFont);
+        fmt.setFont(fontT6);
         testcursor.mergeCharFormat(fmt);
         testcursor.clearSelection();
         testcursor.movePosition(QTextCursor::EndOfLine);
@@ -255,7 +253,7 @@ void MusicSearchListDelegate::paint(QPainter *painter, const QStyleOptionViewIte
         cursor.endEditBlock();
 
         QAbstractTextDocumentLayout::PaintContext paintContext;
-        QRect textRect(61, option.rect.y() + 2, 251, 24);
+        QRect textRect(61, option.rect.y() + 2, 251, option.rect.height());
         painter->save();
         painter->translate(textRect.topLeft());
         painter->setClipRect(textRect.translated(-textRect.topLeft()));

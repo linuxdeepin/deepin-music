@@ -28,7 +28,7 @@
 #include <DLabel>
 #include <DMenu>
 #include <DIconButton>
-
+#include <DFontSizeManager>
 
 DDropdown::DDropdown(QWidget *parent) : DWidget(parent)
 {
@@ -38,13 +38,10 @@ DDropdown::DDropdown(QWidget *parent) : DWidget(parent)
     layout->setContentsMargins(15, 0, 15, 0);
     menu = new DMenu;
     text = new DLabel("undefined");
-    auto font = text->font();
-    font.setFamily("SourceHanSansSC");
-    font.setWeight(QFont::Normal);
-    font.setPixelSize(11);
-    text->setFont(font);
     text->setObjectName("DDropdownText");
     text->setForegroundRole(DPalette::BrightText);
+    DFontSizeManager::instance()->bind(text, DFontSizeManager::T9, QFont::Normal);
+
     dropdown = new DIconButton(DStyle::SP_ArrowDown, this);
     dropdown->setIconSize(QSize(9, 9));
     dropdown->setObjectName("DDropdownIcon");

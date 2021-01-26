@@ -116,13 +116,16 @@ void AlbumDataDelegate::drawIconMode(QPainter &painter, const QStyleOptionViewIt
     auto listview = qobject_cast<const AlbumListView *>(option.widget);
     AlbumInfo albumTmp = index.data(Qt::UserRole).value<AlbumInfo>();
 
+    QFont fontT6 = DFontSizeManager::instance()->get(DFontSizeManager::T6);
+    QFont fontT9 = DFontSizeManager::instance()->get(DFontSizeManager::T9);
+
     painter.setRenderHint(QPainter::Antialiasing);
     painter.setRenderHint(QPainter::HighQualityAntialiasing);
     painter.setRenderHint(QPainter::SmoothPixmapTransform);
 
     auto background = option.palette.background();
     painter.fillRect(option.rect, background);
-    //绘制阴影
+    // 绘制阴影
     QRect shadowRect(option.rect.x() - 10, option.rect.y(), 158, 158);
     QPainterPath roundRectShadowPath;
     roundRectShadowPath.addRoundRect(shadowRect, 8, 8);
@@ -174,7 +177,7 @@ void AlbumDataDelegate::drawIconMode(QPainter &painter, const QStyleOptionViewIt
         curFillSize = 80;
     }
 
-    //设置模糊
+    // 设置模糊
     QImage t_imageBlur = opticon.pixmap(rect.width(), rect.height()).toImage();
     qreal t_ratioBlur = t_imageBlur.devicePixelRatioF();
     curFillSize = static_cast<int>(curFillSize * t_ratioBlur);
@@ -184,10 +187,10 @@ void AlbumDataDelegate::drawIconMode(QPainter &painter, const QStyleOptionViewIt
     painter.translate(fillBlurRect.topLeft());
     qt_blurImage(&painter, t_imageBlur, 35, false, false);
     painter.setTransform(old_transformBlur);
-    //设置模糊
+    // 设置模糊
     painter.fillRect(fillBlurRect, fillColor);
 
-    //draw playing
+    // draw playing
     auto *listview2 = qobject_cast<AlbumListView *>(const_cast<QWidget *>(option.widget));
     if (playFlag && playStatue == Player::Playing) {
         if (option.state & QStyle::State_MouseOver) {
@@ -201,27 +204,23 @@ void AlbumDataDelegate::drawIconMode(QPainter &painter, const QStyleOptionViewIt
 
     QRect fillRect(rect.x(), startHeight, rect.width(), fillAllHeight);
 
-    QFont font = option.font;
-    font.setPixelSize(14);
-    painter.setFont(font);
-    QFontMetrics fm(font);
-
-    QRect nameFillRect(rect.x(), startHeight + 2, rect.width(), fillAllHeight / 2);
+    QFontMetrics nameTextFm(fontT6);
+    painter.setFont(fontT6);
+    QRect nameFillRect(rect.x(), startHeight + 2, rect.width(), fillAllHeight * 3 / 2);
     nameFillRect.adjust(8, 0, -7, 0);
-    auto nameText = fm.elidedText(albumTmp.albumName.isEmpty() ? AlbumListView::tr("Unknown album") : albumTmp.albumName, Qt::ElideMiddle, nameFillRect.width());
+    QString nameText = nameTextFm.elidedText(albumTmp.albumName.isEmpty() ? AlbumListView::tr("Unknown album") : albumTmp.albumName, Qt::ElideMiddle, nameFillRect.width());
     painter.setPen(Qt::white);
     painter.drawText(nameFillRect, Qt::AlignLeft | Qt::AlignTop, nameText);
 
-    font.setPixelSize(10);
-    QFontMetrics extraNameFm(font);
-    painter.setFont(font);
+    QFontMetrics extraNameFm(fontT9);
+    painter.setFont(fontT9);
     QRect extraNameFillRect(rect.x(), startHeight + fillAllHeight / 2 + 1, rect.width(), fillAllHeight / 2);
     extraNameFillRect.adjust(8, 0, -7, 0);
-    auto extraNameText = extraNameFm.elidedText(albumTmp.singer.isEmpty() ? SingerListView::tr("Unknown artist") : albumTmp.singer, Qt::ElideMiddle, extraNameFillRect.width());
+    QString extraNameText = extraNameFm.elidedText(albumTmp.singer.isEmpty() ? SingerListView::tr("Unknown artist") : albumTmp.singer, Qt::ElideMiddle, extraNameFillRect.width());
     painter.setPen(Qt::white);
     painter.drawText(extraNameFillRect, Qt::AlignLeft | Qt::AlignTop, extraNameText);
 
-    QBrush t_fillBrush(QColor(128, 128, 128, 0));
+    QBrush fillBrush(QColor(128, 128, 128, 0));
 
     fillColor.setAlphaF(0.3);
     if (listview->getThemeType() == 2) {
@@ -230,7 +229,7 @@ void AlbumDataDelegate::drawIconMode(QPainter &painter, const QStyleOptionViewIt
     }
 
     if (option.state & QStyle::State_Selected) {
-        t_fillBrush = QBrush(QColor(128, 128, 128, 90));
+        fillBrush = QBrush(QColor(128, 128, 128, 90));
     }
 
     if ((option.state & QStyle::State_MouseOver)  && (!playFlag || (playStatue == Player::Paused))) {
@@ -258,13 +257,19 @@ void AlbumDataDelegate::drawIconMode(QPainter &painter, const QStyleOptionViewIt
         painter.drawPixmap(t_pixMapRect, t_hoverPlayImg);
     }
 
-    painter.fillRect(option.rect, t_fillBrush);
+    painter.fillRect(option.rect, fillBrush);
 }
 
 void AlbumDataDelegate::drawListMode(QPainter &painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
     auto listview = qobject_cast<const AlbumListView *>(option.widget);
     AlbumInfo albumTmp = index.data(Qt::UserRole).value<AlbumInfo>();
+
+    QFont fontT9 = DFontSizeManager::instance()->get(DFontSizeManager::T9);
+    QFont fontT6 = DFontSizeManager::instance()->get(DFontSizeManager::T6);
+
+    QColor nameColor("#090909");
+    QColor otherColor("#000000");
 
     painter.save();
     painter.setRenderHint(QPainter::Antialiasing);
@@ -317,7 +322,6 @@ void AlbumDataDelegate::drawListMode(QPainter &painter, const QStyleOptionViewIt
         painter.restore();
     }
 
-    QColor nameColor("#090909"), otherColor("#797979");
     otherColor.setAlphaF(0.5);
     if (listview->getThemeType() == 2) {
         nameColor = QColor("#C0C6D4");
@@ -325,20 +329,11 @@ void AlbumDataDelegate::drawListMode(QPainter &painter, const QStyleOptionViewIt
         otherColor.setAlphaF(0.5);
     }
 
-    QFont font11 = option.font;
-    font11.setFamily("SourceHanSansSC");
-    font11.setWeight(QFont::Normal);
-    font11.setPixelSize(11);
-    QFont font14 = option.font;
-    font14.setFamily("SourceHanSansSC");
-    font14.setWeight(QFont::Normal);
-    font14.setPixelSize(14);
-
     int rowCount = listview->model()->rowCount();
     auto rowCountSize = QString::number(rowCount).size();
     rowCountSize = qMax(rowCountSize, 2);
 
-    QFontMetrics songsFm(font11);
+    QFontMetrics songsFm(fontT9);
     auto tailwidth = pixel2point(songsFm.width("0000-00-00")) + PlayItemRightMargin  + 20;
     auto w = option.rect.width() - 0 - tailwidth;
 
@@ -354,8 +349,6 @@ void AlbumDataDelegate::drawListMode(QPainter &painter, const QStyleOptionViewIt
             nameColor = QColor(DGuiApplicationHelper::instance()->applicationPalette().highlight().color());
             otherColor = QColor("#2CA7F8");
         }
-        font14.setFamily("SourceHanSansSC");
-        font14.setWeight(QFont::Medium);
         QRect numRect(lrWidth, option.rect.y(), 40, option.rect.height());
         if (option.state & QStyle::State_Selected) {
             if (listview2) {
@@ -385,30 +378,29 @@ void AlbumDataDelegate::drawListMode(QPainter &painter, const QStyleOptionViewIt
 
         painter.setPen(otherColor);
         QRect numRect(lrWidth, option.rect.y(), 40, option.rect.height());
-        painter.setFont(font11);
+        painter.setFont(fontT9);
         // 序号显示由001改为1
         QString str = QString::number(index.row() + 1);
-        QFont font(font11);
-        QFontMetrics fm(font);
+        QFontMetrics fm(fontT9);
         auto text = fm.elidedText(str, Qt::ElideMiddle, numRect.width());
         painter.drawText(numRect, Qt::AlignCenter, text);
     }
 
-    //name
+    // name
     painter.setPen(nameColor);
     QRect nameRect(50, option.rect.y(), w / 2 - 20, option.rect.height());
-    painter.setFont(font14);
+    painter.setFont(fontT6);
     auto nameText = songsFm.elidedText(albumTmp.albumName.isEmpty() ? AlbumListView::tr("Unknown album") : albumTmp.albumName, Qt::ElideMiddle, nameRect.width());
     painter.drawText(nameRect, Qt::AlignLeft | Qt::AlignVCenter, nameText);
 
-    painter.setPen(nameColor);
-    //extraname
+    // extraname
+    painter.setPen(otherColor);
     QRect extraRect(50 + w / 2, option.rect.y(), w / 4 - 20, option.rect.height());
-    painter.setFont(font11);
+    painter.setFont(fontT9);
     auto extraText = songsFm.elidedText(albumTmp.singer.isEmpty() ? SingerListView::tr("Unknown artist") : albumTmp.singer, Qt::ElideMiddle, extraRect.width());
     painter.drawText(extraRect, Qt::AlignLeft | Qt::AlignVCenter, extraText);
 
-    //songs
+    // songs
     int sortMetasSize = albumTmp.musicinfos.size();
     QString infoStr;
     if (sortMetasSize == 0) {
@@ -419,13 +411,13 @@ void AlbumDataDelegate::drawListMode(QPainter &painter, const QStyleOptionViewIt
         infoStr = QString("   ") + tr("%1 songs").arg(sortMetasSize);
     }
 
-    QFont measuringFont(font11);
+    QFont measuringFont(fontT9);
     QRect songsRect(50 + w / 2 + w / 4, option.rect.y(), w / 4 - 20, option.rect.height());
     painter.drawText(songsRect, Qt::AlignLeft | Qt::AlignVCenter, infoStr);
 
-    //day
+    // day
     QRect dayRect(w, option.rect.y(), tailwidth - 20, option.rect.height());
-    painter.setFont(font11);
+    painter.setFont(fontT9);
     QString dayStr = QDateTime::fromMSecsSinceEpoch(albumTmp.timestamp / static_cast<qint64>(1000)).toString("yyyy-MM-dd");
     painter.drawText(dayRect, Qt::AlignRight | Qt::AlignVCenter, dayStr);
 

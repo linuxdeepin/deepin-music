@@ -458,18 +458,18 @@ void MusicListDataWidget::initUI()
     palette.setColor(DPalette::Background, background);
     setPalette(palette);
 
-    //用来和搜索时无结果的时候做切换，老代码里所有控件写visible太冗长
-    auto layoutContent = new QVBoxLayout(this);
+    // 用来和搜索时无结果的时候做切换，老代码里所有控件写visible太冗长
+    QVBoxLayout *layoutContent = new QVBoxLayout(this);
     layoutContent->setContentsMargins(0, 0, 0, 0);
     layoutContent->setSpacing(0);
     m_contentWidget = new DWidget(this);
     m_contentWidget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     layoutContent->addWidget(m_contentWidget, 1);
 
-    auto layout = new QVBoxLayout(m_contentWidget);
+    QVBoxLayout *layout = new QVBoxLayout(m_contentWidget);
     layout->setContentsMargins(0, 0, 0, 0);
     layout->setSpacing(0);
-    //action widget
+    // action widget
     m_actionBar = new ActionBar;
     m_actionBar->setFixedHeight(80);
     m_actionBar->setObjectName("MusicListDataActionBar");
@@ -477,7 +477,7 @@ void MusicListDataWidget::initUI()
     m_pStackedWidget = new QStackedWidget(this);
     layout->addWidget(m_pStackedWidget, 1);
 
-    //action layout
+    // action layout
     QVBoxLayout *actionBarLayout = new QVBoxLayout(m_actionBar);
     actionBarLayout->setContentsMargins(10, 3, 8, 0);
     actionBarLayout->setSpacing(0);
@@ -489,23 +489,24 @@ void MusicListDataWidget::initUI()
     actionInfoBarLayout->setSpacing(0);
     actionBarLayout->addLayout(actionTileBarLayout);
     actionBarLayout->addLayout(actionInfoBarLayout);
-    //初始化大标题
+    // 初始化大标题
     initTitle(actionTileBarLayout);
-    //初始化专辑排序action
+    // 初始化专辑排序action
     initAlbumAction(actionTileBarLayout);
-    //初始化演唱者排序action
+    // 初始化演唱者排序action
     initArtistAction(actionTileBarLayout);
-    //初始化歌曲排序action
+    // 初始化歌曲排序action
     initMusicAction(actionTileBarLayout);
-    //初始化全部播放按钮
+    // 初始化全部播放按钮
     initBtPlayAll(actionInfoBarLayout);
-    //初始化数量标签和icon mode
+    // 初始化数量标签和icon mode
     initCountLabelAndListMode(actionInfoBarLayout);
-    //初始化搜索结果为空时的标签
+
+    // 初始化搜索结果为空时的标签
     initemptyHits(layoutContent);
 
-    m_musicListView = new PlayListView("all", false); //all music
-//    m_musicListView->setStyleSheet("background-color:blue;");
+    // 启动首页
+    m_musicListView = new PlayListView("all", false);
 
     AC_SET_OBJECT_NAME(m_musicListView, AC_PlayListView);
     AC_SET_ACCESSIBLE_NAME(m_musicListView, AC_PlayListView);
@@ -523,16 +524,16 @@ void MusicListDataWidget::initUI()
 void MusicListDataWidget::initTitle(QHBoxLayout *layout)
 {
     m_titleLabel = new DLabel;
-    auto titleFont = m_titleLabel->font();
+    QFont titleFont = m_titleLabel->font();
     titleFont.setFamily("SourceHanSansSC");
-    titleFont.setWeight(QFont::Medium);
-    titleFont.setPixelSize(24);
     m_titleLabel->setFont(titleFont);
     m_titleLabel->setFixedHeight(36);
     m_titleLabel->setFixedWidth(300);
     m_titleLabel->setObjectName("MusicListDataTitle");
     m_titleLabel->setText(tr("All Music"));
     m_titleLabel->setForegroundRole(DPalette::BrightText);
+    DFontSizeManager::instance()->bind(m_titleLabel, DFontSizeManager::T3, QFont::Medium);
+
     layout->addWidget(m_titleLabel, 0, Qt::AlignLeft | Qt::AlignBottom);
     layout->addStretch();
 }
@@ -603,15 +604,12 @@ void MusicListDataWidget::initBtPlayAll(QHBoxLayout *layout)
     m_btPlayAll->setFixedHeight(30);
     m_btPlayAll->setFocusPolicy(Qt::NoFocus);
     m_btPlayAll->setIconSize(QSize(18, 18));
-    auto btPlayAllFont = m_btPlayAll->font();
-    btPlayAllFont.setFamily("SourceHanSansSC");
-    btPlayAllFont.setWeight(QFont::Medium);
-    DFontSizeManager::instance()->bind(m_btPlayAll, DFontSizeManager::T8);
-    m_btPlayAll->setFont(btPlayAllFont);
 
     m_btPlayAll->setFocusPolicy(Qt::TabFocus);
     m_btPlayAll->setDefault(true);
     m_btPlayAll->installEventFilter(this);
+
+    DFontSizeManager::instance()->bind(m_btPlayAll, DFontSizeManager::T6, QFont::Medium);
     layout->addWidget(m_btPlayAll, 0, Qt::AlignVCenter);
 
     connect(m_btPlayAll, &DPushButton::clicked, this, &MusicListDataWidget::slotPlayAllClicked);
@@ -622,20 +620,17 @@ void MusicListDataWidget::initCountLabelAndListMode(QHBoxLayout *layout)
     m_infoLabel = new DLabel;
     m_infoLabel->setObjectName("MusicListDataTitle");
     m_infoLabel->setText(tr("All Music"));
-    m_infoLabel->setMinimumWidth(200);
+// 这段导致了，字体大小改变，文字显示换行问题
+//    m_infoLabel->setMinimumWidth(200);
     m_infoLabel->setWordWrap(true);
 
-    auto btPlayAllFont = m_btPlayAll->font();
-    btPlayAllFont.setFamily("SourceHanSansSC");
-    btPlayAllFont.setWeight(QFont::Medium);
-
-    m_infoLabel->setFont(btPlayAllFont);
     auto infoLabelPalette = m_infoLabel->palette();
     QColor infoLabelColor = infoLabelPalette.color(DPalette::BrightText);
     infoLabelColor.setAlphaF(0.7);
     infoLabelPalette.setColor(DPalette::ButtonText, infoLabelColor);
     m_infoLabel->setPalette(infoLabelPalette);
     m_infoLabel->setForegroundRole(DPalette::ButtonText);
+    DFontSizeManager::instance()->bind(m_infoLabel, DFontSizeManager::T6, QFont::Medium);
 
     m_btIconMode = new DToolButton;
     m_btIconMode->setIcon(QIcon::fromTheme("picture_list_texts"));
@@ -677,7 +672,8 @@ void MusicListDataWidget::initemptyHits(QVBoxLayout *layout)
     m_emptyHits->hide();
     auto emptyHitsFont = m_emptyHits->font();
     emptyHitsFont.setFamily("SourceHanSansSC");
-    emptyHitsFont.setPixelSize(20);
+// 解决字体不会根据系统字体大小改变问题
+//    emptyHitsFont.setPixelSize(20);
     m_emptyHits->setFont(emptyHitsFont);
     m_emptyHits->setText(MusicListDataWidget::tr("No search results"));
 
@@ -690,7 +686,9 @@ void MusicListDataWidget::initemptyHits(QVBoxLayout *layout)
     emptyLayout->addStretch(100);
 
     layout->addLayout(emptyLayout, 0);
-    layout->addSpacing(8);
+
+// 这段代码导致了ListView底部空白问题
+//    layout->addSpacing(8);
 }
 
 void MusicListDataWidget::refreshModeBtn(DListView::ViewMode mode)

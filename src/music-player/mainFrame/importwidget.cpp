@@ -34,6 +34,7 @@
 #include <DHiDPIHelper>
 #include <DPalette>
 #include <DGuiApplicationHelper>
+#include <DFontSizeManager>
 
 #include "musicsettings.h"
 #include "databaseservice.h"
@@ -65,11 +66,6 @@ ImportWidget::ImportWidget(QWidget *parent) : DFrame(parent)
     m_waterProgress->setVisible(false);
 
     m_importPathButton = new DPushButton;
-    auto importButtonFont = m_importPathButton->font();
-    importButtonFont.setFamily("SourceHanSansSC");
-    importButtonFont.setWeight(QFont::Normal);
-    importButtonFont.setPixelSize(14);
-    m_importPathButton->setFont(importButtonFont);
     auto pl = m_importPathButton->palette();
     pl.setColor(DPalette::Dark, QColor("#0098FF"));
     pl.setColor(DPalette::Light, QColor("#25B7FF"));
@@ -83,28 +79,24 @@ ImportWidget::ImportWidget(QWidget *parent) : DFrame(parent)
     m_importPathButton->setFocusPolicy(Qt::TabFocus);
     m_importPathButton->setDefault(true);
     m_importPathButton->installEventFilter(this);
+    DFontSizeManager::instance()->bind(m_importPathButton, DFontSizeManager::T6, QFont::Normal);
 
     m_addMusicButton = new DPushButton;
-    m_addMusicButton->setFont(importButtonFont);
 //    d->addMusicButton->setPalette(pl);
     m_addMusicButton->setFixedSize(302, 36);
     m_addMusicButton->setText(tr("Add Music"));
     m_addMusicButton->setFocusPolicy(Qt::TabFocus);
     m_addMusicButton->setDefault(true);
     m_addMusicButton->installEventFilter(this);
+    DFontSizeManager::instance()->bind(m_addMusicButton, DFontSizeManager::T6, QFont::Normal);
 
     m_text = new QLabel;
     m_text->setObjectName("ImportViewText");
-    auto textFont = m_text->font();
-    textFont.setFamily("SourceHanSansSC");
-    textFont.setWeight(QFont::Normal);
-    textFont.setPixelSize(12);
-    m_text->setFont(textFont);
-    m_text->setFixedHeight(18);
     QString linkText = QString(linkTemplate).arg(tr("Scan")).arg(tr("Scan"));
     m_text->setText(tr("%1 music directory or drag music files here").arg(linkText));
     m_text->setFocusPolicy(Qt::TabFocus);
     m_text->installEventFilter(this);
+    DFontSizeManager::instance()->bind(m_text, DFontSizeManager::T8, QFont::Normal);
 
     layout->setSpacing(0);
     layout->addStretch();

@@ -84,7 +84,9 @@ CloseConfirmDialog::CloseConfirmDialog(QWidget *parent) :
     auto font = d->exitBt->font();
     font.setFamily("SourceHanSansSC");
     font.setWeight(QFont::Medium);
-    font.setPixelSize(14);
+
+// 解决字体不会根据系统字体大小改变问题
+//    font.setPixelSize(14);
 
     d->exitBt->setFont(font);
     miniBt->setFont(font);

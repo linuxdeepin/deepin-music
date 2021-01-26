@@ -92,7 +92,9 @@ void DequalizerDialog::initUI()
     QFont font;
     font.setFamily("SourceHanSansSC");
     font.setWeight(QFont::Normal);
-    font.setPixelSize(17);
+
+// 解决字体不会根据系统字体大小改变问题
+//    font.setPixelSize(17);
     mtitleLabel  = new DLabel(DequalizerDialog::tr("Equalizer"));
     mtitleLabel->resize(51, 25);
     mtitleLabel->setFont(font);
@@ -498,7 +500,9 @@ DequalizerDialog::DequalizerDialog(QWidget *parent):
     this->initUI();
     initConnection();
     QFont font;
-    font.setPixelSize(13);
+
+// 解决字体不会根据系统字体大小改变问题
+//    font.setPixelSize(13);
     QFontMetrics fm(font);
     this->saveMessage  = new DFloatingMessage(DFloatingMessage::TransientType, this);
     this->saveMessage->setFont(font);

@@ -39,7 +39,9 @@ DWIDGET_USE_NAMESPACE
 SearchEdit::SearchEdit(QWidget *parent) : DSearchEdit(parent)
 {
     auto textFont = font();
-    textFont.setPixelSize(14);
+
+// 解决字体不会根据系统字体大小改变问题
+//    textFont.setPixelSize(14);
     setFont(textFont);
 
     lineEdit()->setFocusPolicy(Qt::ClickFocus);
