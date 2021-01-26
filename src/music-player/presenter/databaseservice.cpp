@@ -1103,7 +1103,7 @@ DataBaseService::DataBaseService()
     // 完成加载
     connect(&m_worker, &DBOperate::sigImportFinished, this, &DataBaseService::slotImportFinished, Qt::QueuedConnection);
     // 单张图片完成封面解析
-    connect(&m_worker, &DBOperate::sigCreatOneCoverImg, this, &DataBaseService::slotCreatOneCoverImg, Qt::QueuedConnection);
+    connect(&m_worker, &DBOperate::sigCreatOneCoverImg, this, &DataBaseService::signalCoverUpdate, Qt::QueuedConnection);
     // 收藏中的歌曲被删除，动态显示
     connect(&m_worker, &DBOperate::signalFavSongRemove, this, &DataBaseService::signalFavSongRemove, Qt::QueuedConnection);
     // 发送删除歌曲通知消息，动态显示

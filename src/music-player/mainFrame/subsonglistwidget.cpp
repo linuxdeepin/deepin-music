@@ -40,6 +40,7 @@
 #include "player.h"
 #include "musiclistdialog.h"
 #include "playlistview.h"
+#include "metadetector.h"
 DWIDGET_USE_NAMESPACE
 
 void SubSonglistWidget::initUI()
@@ -268,7 +269,8 @@ void SubSonglistWidget::flushDialog(QMap<QString, MediaMeta> musicinfos, ListPag
             QString imagesDirPath = Global::cacheDir() + "/images/" + meta.hash + ".jpg";
             // 查找可用图片
             if (QFileInfo(imagesDirPath).exists()) {
-                img = QPixmap(imagesDirPath);
+                MetaDetector::init();
+                img = MetaDetector::getCoverDataPixmap(meta);
                 break;
             }
         }

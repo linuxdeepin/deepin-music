@@ -192,16 +192,12 @@ void DBOperate::slotCreatCoverImg(const QList<MediaMeta> &metas)
             m_needSleep = false;
         }
         //没有加载过的文件才去解析数据
-        if (meta.hasimage) {
+
+        QFileInfo coverInfo(Global::cacheDir() + "/images/" + meta.hash + ".jpg");
+        if (!coverInfo.exists()) {
             meta.getCoverData(Global::cacheDir());
-            QFileInfo coverInfo(Global::cacheDir() + "/images/" + meta.hash + ".jpg");
-            if (coverInfo.exists()) {
-                meta.hasimage = true;
-            } else {
-                meta.hasimage = false;
-            }
-            emit sigCreatOneCoverImg(meta);
         }
+        emit sigCreatOneCoverImg(meta);
     }
 }
 

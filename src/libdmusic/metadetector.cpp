@@ -363,6 +363,36 @@ void MetaDetector::getCoverData(const QString &path, const QString &tmpPath, con
 //#endif // DISABLE_LIBAV
     return;
 }
+// 获取音乐封面图片原图
+QPixmap MetaDetector::getCoverDataPixmap(MediaMeta meta)
+{
+    format_alloc_context_function format_alloc_context = (format_alloc_context_function)FfmpegDynamicInstance::VlcFunctionInstance()->resolveSymbol("avformat_alloc_context", true);
+    format_open_input_function format_open_input = (format_open_input_function)FfmpegDynamicInstance::VlcFunctionInstance()->resolveSymbol("avformat_open_input", true);
+    format_close_input_function format_close_input = (format_close_input_function)FfmpegDynamicInstance::VlcFunctionInstance()->resolveSymbol("avformat_close_input", true);
+    format_free_context_function format_free_context = (format_free_context_function)FfmpegDynamicInstance::VlcFunctionInstance()->resolveSymbol("avformat_free_context", true);
+
+    AVFormatContext *pFormatCtx = format_alloc_context();
+    format_open_input(&pFormatCtx, meta.localPath.toUtf8().data(), nullptr, nullptr);
+
+    QPixmap pixmap;
+    QImage image;
+    if (pFormatCtx) {
+        if (pFormatCtx->iformat != nullptr && pFormatCtx->iformat->read_header(pFormatCtx) >= 0) {
+            for (unsigned int i = 0; i < pFormatCtx->nb_streams; i++) {
+                if (pFormatCtx->streams[i]->disposition & AV_DISPOSITION_ATTACHED_PIC) {
+                    AVPacket pkt = pFormatCtx->streams[i]->attached_pic;
+                    image = QImage::fromData(static_cast<uchar *>(pkt.data), pkt.size);
+                    break;
+                }
+            }
+        }
+    }
+
+    format_close_input(&pFormatCtx);
+    format_free_context(pFormatCtx);
+    pixmap = QPixmap::fromImage(image);
+    return pixmap;
+}
 
 //QVector<float> MetaDetector::getMetaData(const QString &path)
 //{

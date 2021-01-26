@@ -58,15 +58,8 @@ void MediaMeta::updateCodec(const QByteArray &codec)
 
 void MediaMeta::getCoverData(const QString &tmpPath)
 {
-    //如果当前音乐没被解析过才继续解析
-    if (hasimage) {
-        //如果当前图片没有被加到缓存
-//        if (!loadCover) {
-//        coverData = MetaDetector::getCoverData(localPath, tmpPath, hash);
-//        }
-//        loadCover = true;
-        MetaDetector::getCoverData(localPath, tmpPath, hash);
-    }
+    // 直接获取图片，封面图片是否存在在使用前已经判断过
+    MetaDetector::getCoverData(localPath, tmpPath, hash);
 }
 
 MediaMeta MediaMeta::fromLocalFile(const QFileInfo &fileInfo)

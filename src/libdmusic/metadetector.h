@@ -42,5 +42,6 @@ public:
     static MediaMeta updateMediaFileTagCodec(MediaMeta &meta, const QByteArray &codecName, bool forceEncode);
 
     static void getCoverData(const QString &path, const QString &tmpPath, const QString &hash);
+    static QPixmap getCoverDataPixmap(MediaMeta meta);
     //static QVector<float> getMetaData(const QString &path);
 };
