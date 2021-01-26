@@ -28,20 +28,23 @@
 #include <mediameta.h>
 
 class QFileInfo;
-class LIBDMUSICSHARED_EXPORT MetaDetector
+class LIBDMUSICSHARED_EXPORT MetaDetector: public QObject, public DMusic::DSingleton<MetaDetector>
 {
 public:
-    static void init();
+    void init();
 
     static QList<QByteArray> detectEncodings(const MediaMeta meta);
     static QList<QByteArray> detectEncodings(const QByteArray &rawData);
 
-    static void updateCueFileTagCodec(MediaMeta &meta, const QFileInfo &, const QByteArray &codec);
+    void updateCueFileTagCodec(MediaMeta &meta, const QFileInfo &, const QByteArray &codec);
 
-    static MediaMeta updateMetaFromLocalfile(MediaMeta meta, const QFileInfo &fileInfo);
-    static MediaMeta updateMediaFileTagCodec(MediaMeta &meta, const QByteArray &codecName, bool forceEncode);
+    MediaMeta updateMetaFromLocalfile(MediaMeta meta, const QFileInfo &fileInfo);
+    MediaMeta updateMediaFileTagCodec(MediaMeta &meta, const QByteArray &codecName, bool forceEncode);
 
     static void getCoverData(const QString &path, const QString &tmpPath, const QString &hash);
     static QPixmap getCoverDataPixmap(MediaMeta meta);
     //static QVector<float> getMetaData(const QString &path);
+private:
+    explicit MetaDetector();
+    friend class DMusic::DSingleton<MetaDetector>;
 };

@@ -56,6 +56,8 @@ private:
     bool     isMediaMetaExist(const QString &hash);
     // 添加歌曲到歌单
     int      addMetaToPlaylist(QString uuid, const QList<MediaMeta> &metas);
+    // 添加歌曲到歌单
+    bool     addMetaToAll(MediaMeta meta);
 signals:
     void     fileIsNotExist(QString imagepath);
 
@@ -71,8 +73,8 @@ signals:
     void     signalAllMusicCleared();
     // 已导入百分比
     void     signalImportedPercent(int percent);
-    // 所有歌曲数量变化
-    void     signalAllMusicAddOne(MediaMeta meta);
+    // 歌曲数量导入
+    void     signalMusicAddOne(QString listHash, MediaMeta meta);
     // 收藏中的歌曲被删除，动态显示
     void     signalFavSongAdd(QString musicHash);
     // 删除结束
@@ -89,6 +91,8 @@ private:
     int               m_successCount = 0;
     // 存在的歌曲计数
     int               m_exsitCount = 0;
+    // 导入失败的歌曲计数
+    int               m_importFailCount = 0;
 };
 
 #endif // DBOPERATE_H

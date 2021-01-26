@@ -97,7 +97,7 @@ MediaMeta MediaLibrary::creatMediaMeta(QString path)
     }
     auto hash = DMusic::filepathHash(fileinfo.absoluteFilePath());
     mediaMeta.hash = hash;
-    mediaMeta = MetaDetector::updateMetaFromLocalfile(mediaMeta, fileinfo);
+    mediaMeta = MetaDetector::getInstance()->updateMetaFromLocalfile(mediaMeta, fileinfo);
 
     return mediaMeta;
 }
@@ -109,5 +109,5 @@ QMap<QString, bool> MediaLibrary::getSupportedSuffixs()
 
 void MediaLibrary::init()
 {
-    MetaDetector::init();
+    MetaDetector::getInstance();
 }

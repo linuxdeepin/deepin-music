@@ -71,53 +71,58 @@ bool compareAlbumName(const AlbumInfo &data)
 }
 
 
-QList<MediaMeta> DataBaseService::allMusicInfos()
+QList<MediaMeta> DataBaseService::allMusicInfos(bool refresh)
 {
-    m_AllMediaMeta.clear();
-    QString queryStringNew = QString("SELECT hash, localpath, title, artist, album, "
-                                     "filetype, track, offset, length, size, "
-                                     "timestamp, invalid, search_id, cuepath, "
-                                     "lyricPath, codec, py_title, py_artist, py_album "
-                                     "FROM musicNew");
+    if (!refresh) {
+        return m_AllMediaMeta;
+    } else {
+        m_AllMediaMeta.clear();
+        QString queryStringNew = QString("SELECT hash, localpath, title, artist, album, "
+                                         "filetype, track, offset, length, size, "
+                                         "timestamp, invalid, search_id, cuepath, "
+                                         "lyricPath, codec, py_title, py_artist, py_album "
+                                         "FROM musicNew");
 
-    QSqlQuery queryNew(m_db);
-    queryNew.prepare(queryStringNew);
-    if (! queryNew.exec()) {
-        qCritical() << queryNew.lastError();
+        QSqlQuery queryNew(m_db);
+        queryNew.prepare(queryStringNew);
+        if (! queryNew.exec()) {
+            qCritical() << queryNew.lastError();
+            return m_AllMediaMeta;
+        }
+
+        while (queryNew.next()) {
+            MediaMeta meta;
+            meta.hash = queryNew.value(0).toString();
+            meta.localPath = queryNew.value(1).toString();
+            meta.title = queryNew.value(2).toString();
+            meta.singer = queryNew.value(3).toString();
+            meta.album = queryNew.value(4).toString();
+            meta.filetype = queryNew.value(5).toString();
+            meta.track = queryNew.value(6).toLongLong();
+            meta.offset = queryNew.value(7).toLongLong();
+            meta.length = queryNew.value(8).toLongLong();
+            meta.size = queryNew.value(9).toLongLong();
+            meta.timestamp = queryNew.value(10).toLongLong();
+            meta.invalid = queryNew.value(11).toBool();
+            meta.searchID = queryNew.value(12).toString();
+            meta.cuePath = queryNew.value(13).toString();
+            meta.lyricPath = queryNew.value(14).toString();
+            meta.codec = queryNew.value(15).toString();
+            meta.pinyinTitle = queryNew.value(16).toString();
+            meta.pinyinArtist = queryNew.value(17).toString();
+            meta.pinyinAlbum = queryNew.value(18).toString();
+            m_MediaMetaMap[meta.hash] = meta;
+            //utf-8为默认的编码类型，每次更新数据时刷新非utf-8的编码，
+            //需要更新编码，并使其生效
+            if (meta.codec != "UTF-8") {
+                meta.updateCodec(meta.codec.toUtf8());
+            }
+            m_AllMediaMeta << meta;
+        }
+
+        allAlbumInfos();
         return m_AllMediaMeta;
     }
-
-    while (queryNew.next()) {
-        MediaMeta meta;
-        meta.hash = queryNew.value(0).toString();
-        meta.localPath = queryNew.value(1).toString();
-        meta.title = queryNew.value(2).toString();
-        meta.singer = queryNew.value(3).toString();
-        meta.album = queryNew.value(4).toString();
-        meta.filetype = queryNew.value(5).toString();
-        meta.track = queryNew.value(6).toLongLong();
-        meta.offset = queryNew.value(7).toLongLong();
-        meta.length = queryNew.value(8).toLongLong();
-        meta.size = queryNew.value(9).toLongLong();
-        meta.timestamp = queryNew.value(10).toLongLong();
-        meta.invalid = queryNew.value(11).toBool();
-        meta.searchID = queryNew.value(12).toString();
-        meta.cuePath = queryNew.value(13).toString();
-        meta.lyricPath = queryNew.value(14).toString();
-        meta.codec = queryNew.value(15).toString();
-        meta.pinyinTitle = queryNew.value(16).toString();
-        meta.pinyinArtist = queryNew.value(17).toString();
-        meta.pinyinAlbum = queryNew.value(18).toString();
-        m_MediaMetaMap[meta.hash] = meta;
-        //utf-8为默认的编码类型，每次更新数据时刷新非utf-8的编码，
-        //需要更新编码，并使其生效
-        if (meta.codec != "UTF-8")
-            meta.updateCodec(meta.codec.toUtf8());
-        m_AllMediaMeta << meta;
-    }
-
-    allAlbumInfos();
-    return m_AllMediaMeta;
 }
 
 bool DataBaseService::deleteMetaFromAllMusic(const QStringList &metaHash, bool removeFromLocal)
@@ -1112,7 +1117,7 @@ DataBaseService::DataBaseService()
     connect(&m_worker, &DBOperate::signalAllMusicCleared, this, &DataBaseService::signalAllMusicCleared, Qt::QueuedConnection);
     // 已导入百分比
     connect(&m_worker, &DBOperate::signalImportedPercent, this, &DataBaseService::signalImportedPercent, Qt::QueuedConnection);
-    connect(&m_worker, &DBOperate::signalAllMusicAddOne, this, &DataBaseService::signalAllMusicAddOne, Qt::QueuedConnection);
+    connect(&m_worker, &DBOperate::signalMusicAddOne, this, &DataBaseService::signalMusicAddOne, Qt::QueuedConnection);
     connect(&m_worker, &DBOperate::signalFavSongAdd, this, &DataBaseService::signalFavSongAdd, Qt::QueuedConnection);
     // 删除结束
     connect(&m_worker, &DBOperate::signalDelFinish, this, &DataBaseService::slotDelFinish, Qt::QueuedConnection);

@@ -78,7 +78,7 @@ public:
     //QSqlDatabase            getDatabase();
 
     // 所有歌曲信息
-    QList<MediaMeta>     allMusicInfos();
+    QList<MediaMeta>     allMusicInfos(bool refresh = true);
     bool                 deleteMetaFromAllMusic(const QStringList &metaHash, bool removeFromLocal);
     // 歌曲数量
     int                  allMusicInfosCount();
@@ -153,7 +153,7 @@ public slots:
     void slotDelFinish();
 signals:
     // 所有歌曲数量变化
-    void signalAllMusicAddOne(MediaMeta meta);
+    void signalMusicAddOne(QString listHash, MediaMeta meta);
     // 所有歌曲被清空
     void signalAllMusicCleared();
     void signalGetAllMediaMeta();

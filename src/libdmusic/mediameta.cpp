@@ -50,9 +50,9 @@ void MediaMeta::updateCodec(const QByteArray &codec)
 {
     QFileInfo cueFi(this->cuePath);
     if (cueFi.exists()) {
-        MetaDetector::updateCueFileTagCodec(*this, cueFi, codec);
+        MetaDetector::getInstance()->updateCueFileTagCodec(*this, cueFi, codec);
     } else {
-        MetaDetector::updateMediaFileTagCodec(*this, codec, true);
+        MetaDetector::getInstance()->updateMediaFileTagCodec(*this, codec, true);
     }
 }
 
@@ -66,7 +66,7 @@ MediaMeta MediaMeta::fromLocalFile(const QFileInfo &fileInfo)
 {
     MediaMeta meta;
     meta.hash = filepathHash(fileInfo.absoluteFilePath());
-    MetaDetector::updateMetaFromLocalfile(meta, fileInfo);
+    MetaDetector::getInstance()->updateMetaFromLocalfile(meta, fileInfo);
     return  meta;
 }
 

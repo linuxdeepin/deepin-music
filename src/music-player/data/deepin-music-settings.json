@@ -174,8 +174,8 @@
                         {
                             "key": "playMusicError",
                             "name": " ",
-                            "text": "您的音乐播放器中没有歌曲，赶紧去添加吧",
-                            "default": "您的音乐播放器中没有歌曲，赶紧去添加吧"
+                            "text": "您的播放器中没有这首歌，赶紧去添加吧",
+                            "default": "您的播放器中没有这首歌，赶紧去添加吧"
                         },
                         {
                             "key": "playArtistError",

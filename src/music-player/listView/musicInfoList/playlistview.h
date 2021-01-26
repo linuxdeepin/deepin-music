@@ -83,8 +83,6 @@ public slots:
     void slotOnDoubleClicked(const QModelIndex &index);
     void slotUpdatePlayingIcon();
 
-    // 新导入文件
-    void slotImportFinished(QString hash, int successCount);
     // 封面图片刷新
     void slotCoverUpdate(const MediaMeta &meta);
     void slotTheme(int type);
@@ -92,7 +90,7 @@ public slots:
     // 删除单个歌单中的歌曲
     void slotRemoveSingleSong(const QString &listHash, const QString &musicHash);
     // 增加歌曲
-    void slotAllMusicAddOne(MediaMeta addMeta);
+    void slotMusicAddOne(QString listHash, MediaMeta addMeta);
     // 跳转到当前播放歌曲位置
     void slotScrollToCurrentPosition(QString songlistHash);
     //右键菜单响应begin

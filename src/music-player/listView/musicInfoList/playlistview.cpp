@@ -195,17 +195,14 @@ PlayListView::PlayListView(QString hash, bool isPlayQueue, QWidget *parent)
     connect(Player::getInstance(), &Player::signalPlayQueueMetaRemove,
             this, &PlayListView::slotPlayQueueMetaRemove);
 
-    connect(DataBaseService::getInstance(), &DataBaseService::signalImportFinished,
-            this, &PlayListView::slotImportFinished);
-
     connect(DataBaseService::getInstance(), &DataBaseService::signalCoverUpdate,
             this, &PlayListView::slotCoverUpdate);
 
     connect(DataBaseService::getInstance(), &DataBaseService::signalRmvSong,
             this, &PlayListView::slotRemoveSingleSong);
 
-    connect(DataBaseService::getInstance(), &DataBaseService::signalAllMusicAddOne,
-            this, &PlayListView::slotAllMusicAddOne);
+    connect(DataBaseService::getInstance(), &DataBaseService::signalMusicAddOne,
+            this, &PlayListView::slotMusicAddOne);
 
     connect(DGuiApplicationHelper::instance(), &DGuiApplicationHelper::themeTypeChanged,
             this, &PlayListView::setThemeType);
@@ -575,34 +572,73 @@ void PlayListView::slotUpdatePlayingIcon()
     this->update();
 }
 
-void PlayListView::slotImportFinished(QString hash, int successCount)
+void PlayListView::slotCoverUpdate(const MediaMeta &meta)
 {
-    if (successCount <= 0) {
+    for (int i = 0; i < m_model->rowCount(); i++) {
+        QModelIndex idx = m_model->index(i, 0, QModelIndex());
+        MediaMeta metaBind = idx.data(Qt::UserRole).value<MediaMeta>();
+
+        if (metaBind.hash == meta.hash) {
+            QStandardItem *item = dynamic_cast<QStandardItem *>(m_model->item(i, 0));
+            if (item == nullptr) {
+                break;
+            }
+            QString imagesDirPath = Global::cacheDir() + "/images/" + meta.hash + ".jpg";
+            QFileInfo file(imagesDirPath);
+            QIcon icon;
+            if (file.exists()) {
+                item->setIcon(QIcon(imagesDirPath));
+            } else {
+                item->setIcon(m_defaultIcon);
+            }
+            break;
+        }
+    }
+}
+
+void PlayListView::slotTheme(int type)
+{
+    m_themeType = type;
+}
+
+void PlayListView::slotRemoveSingleSong(const QString &listHash, const QString &musicHash)
+{
+    if (listHash == "all" || listHash == m_currentHash) {
+        int row =  m_model->rowCount();
+        for (int i = 0; i < row; i++) {
+            QModelIndex mindex = m_model->index(i, 0, QModelIndex());
+            MediaMeta meta = mindex.data(Qt::UserRole).value<MediaMeta>();
+            if (meta.hash == musicHash) {
+                m_model->removeRow(mindex.row());
+                //搜索结果中删除，刷新数量显示
+                if (m_currentHash == "musicResult") {
+                    emit musicResultListCountChanged("musicResult");
+                }
+                break;
+            }
+        }
+    }
+    if (m_model->rowCount() == 0) {
+        emit CommonService::getInstance()->signalHideSubSonglist();
+    }
+}
+
+void PlayListView::slotMusicAddOne(QString listHash, MediaMeta addMeta)
+{
+    if (!this->isVisible() || listHash != m_currentHash) {
         return;
     }
-
-    //只刷新全部歌曲列表
-    if (m_currentHash != hash) {
-        return;
-    }
-    QList<MediaMeta> list = DataBaseService::getInstance()->allMusicInfos();
-
-    DataBaseService::ListSortType sortType = getSortType();
-    for (int i = 0; i < list.size(); i++) {
-        MediaMeta addMeta = list.at(i);
-        if (m_model->rowCount() == 0) {
-            insertRow(0, addMeta);
-        } else {
-            bool isInserted = false;
+    DataBaseService::ListSortType sortType = DataBaseService::SortByAddTimeASC;//getSortType();
+    if (m_model->rowCount() == 0) {
+        insertRow(0, addMeta);
+    } else {
+        bool isInserted = false;
+        //如果已经存在，则不加入
+        if (!isContain(addMeta.hash)) {
             for (int rowIndex = 0; rowIndex < m_model->rowCount(); rowIndex++) {
                 isInserted = false;
                 QModelIndex index = m_model->index(rowIndex, 0, QModelIndex());
                 MediaMeta meta = index.data(Qt::UserRole).value<MediaMeta>();
-                //如果已经存在，则不加入
-                if (isContain(addMeta.hash)) {
-                    isInserted = true;
-                    break;
-                }
                 switch (sortType) {
                 case DataBaseService::SortByAddTimeASC: {
                     if (addMeta.timestamp <= meta.timestamp) {
@@ -667,143 +703,6 @@ void PlayListView::slotImportFinished(QString hash, int successCount)
             if (!isInserted) {
                 insertRow(m_model->rowCount(), addMeta);
             }
-        }
-    }
-}
-
-void PlayListView::slotCoverUpdate(const MediaMeta &meta)
-{
-    for (int i = 0; i < m_model->rowCount(); i++) {
-        QModelIndex idx = m_model->index(i, 0, QModelIndex());
-        MediaMeta metaBind = idx.data(Qt::UserRole).value<MediaMeta>();
-
-        if (metaBind.hash == meta.hash) {
-            QStandardItem *item = dynamic_cast<QStandardItem *>(m_model->item(i, 0));
-            if (item == nullptr) {
-                break;
-            }
-            QString imagesDirPath = Global::cacheDir() + "/images/" + meta.hash + ".jpg";
-            QFileInfo file(imagesDirPath);
-            QIcon icon;
-            if (file.exists()) {
-                item->setIcon(QIcon(imagesDirPath));
-            } else {
-                item->setIcon(m_defaultIcon);
-            }
-            break;
-        }
-    }
-}
-
-void PlayListView::slotTheme(int type)
-{
-    m_themeType = type;
-}
-
-void PlayListView::slotRemoveSingleSong(const QString &listHash, const QString &musicHash)
-{
-    if (listHash == "all" || listHash == m_currentHash) {
-        int row =  m_model->rowCount();
-        for (int i = 0; i < row; i++) {
-            QModelIndex mindex = m_model->index(i, 0, QModelIndex());
-            MediaMeta meta = mindex.data(Qt::UserRole).value<MediaMeta>();
-            if (meta.hash == musicHash) {
-                m_model->removeRow(mindex.row());
-                //搜索结果中删除，刷新数量显示
-                if (m_currentHash == "musicResult") {
-                    emit musicResultListCountChanged("musicResult");
-                }
-                break;
-            }
-        }
-    }
-    if (m_model->rowCount() == 0) {
-        emit CommonService::getInstance()->signalHideSubSonglist();
-    }
-}
-
-void PlayListView::slotAllMusicAddOne(MediaMeta addMeta)
-{
-    if (!this->isVisible()) {
-        return;
-    }
-    DataBaseService::ListSortType sortType = getSortType();
-    if (m_model->rowCount() == 0) {
-        insertRow(0, addMeta);
-    } else {
-        bool isInserted = false;
-        for (int rowIndex = 0; rowIndex < m_model->rowCount(); rowIndex++) {
-            isInserted = false;
-            QModelIndex index = m_model->index(rowIndex, 0, QModelIndex());
-            MediaMeta meta = index.data(Qt::UserRole).value<MediaMeta>();
-            //如果已经存在，则不加入
-            if (isContain(addMeta.hash)) {
-                isInserted = true;
-                break;
-            }
-            switch (sortType) {
-            case DataBaseService::SortByAddTimeASC: {
-                if (addMeta.timestamp <= meta.timestamp) {
-                    insertRow(rowIndex, addMeta);
-                    isInserted = true;
-                }
-                break;
-            }
-            case DataBaseService::SortByTitleASC: {
-                if (addMeta.pinyinTitle <= meta.pinyinTitle) {
-                    insertRow(rowIndex, addMeta);
-                    isInserted = true;
-                }
-                break;
-            }
-            case DataBaseService::SortBySingerASC: {
-                if (addMeta.pinyinArtist <= meta.pinyinArtist) {
-                    insertRow(rowIndex, addMeta);
-                    isInserted = true;
-                }
-                break;
-            }
-            case DataBaseService::SortByAblumASC: {
-                if (addMeta.pinyinAlbum <= meta.pinyinAlbum) {
-                    insertRow(rowIndex, addMeta);
-                    isInserted = true;
-                }
-                break;
-            }
-            case DataBaseService::SortByAddTimeDES: {
-                if (addMeta.timestamp >= meta.timestamp) {
-                    insertRow(rowIndex, addMeta);
-                    isInserted = true;
-                }
-                break;
-            }
-            case DataBaseService::SortByTitleDES: {
-                if (addMeta.pinyinTitle >= meta.pinyinTitle) {
-                    insertRow(rowIndex, addMeta);
-                    isInserted = true;
-                }
-                break;
-            }
-            case DataBaseService::SortBySingerDES: {
-                if (addMeta.pinyinArtist >= meta.pinyinArtist) {
-                    insertRow(rowIndex, addMeta);
-                    isInserted = true;
-                }
-                break;
-            }
-            case DataBaseService::SortByAblumDES: {
-                if (addMeta.pinyinAlbum <= meta.pinyinAlbum) {
-                    insertRow(rowIndex, addMeta);
-                    isInserted = true;
-                }
-                break;
-            }
-            default:
-                break;
-            }
-        }
-        if (!isInserted) {
-            insertRow(m_model->rowCount(), addMeta);
         }
     }
 }

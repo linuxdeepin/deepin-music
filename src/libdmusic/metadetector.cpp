@@ -394,6 +394,11 @@ QPixmap MetaDetector::getCoverDataPixmap(MediaMeta meta)
     return pixmap;
 }
 
+MetaDetector::MetaDetector()
+{
+    init();
+}
+
 //QVector<float> MetaDetector::getMetaData(const QString &path)
 //{
 //    QVector<float> curData;

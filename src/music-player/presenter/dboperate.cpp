@@ -92,7 +92,7 @@ void DBOperate::slotImportMedias(QString importHash, const QStringList &urllist)
     }
     qDebug() << __FUNCTION__ << "allCount = " << allCount;
 
-    int importFailCount = 0;
+    m_importFailCount = 0;
     // 包含导入成功和失败的
     double importedCount = 0;
     for (auto &filepath : urllist) {
@@ -121,7 +121,7 @@ void DBOperate::slotImportMedias(QString importHash, const QStringList &urllist)
                 QString  strtp = it.next();
                 MediaMeta mediaMeta = m_mediaLibrary->creatMediaMeta(strtp);
                 if (mediaMeta.length <= 0) {
-                    importFailCount++;
+                    m_importFailCount++;
                     importedCount++;
                 } else {
                     mediaMeta.updateSearchIndex();
@@ -151,13 +151,13 @@ void DBOperate::slotImportMedias(QString importHash, const QStringList &urllist)
             }
             QString strtp = filepath;
             if (!m_mediaLibrary->getSupportedSuffixs().keys().contains(("*." + fileInfo.suffix()))) {
-                importFailCount++;
+                m_importFailCount++;
                 importedCount++;
                 continue;
             }
             MediaMeta mediaMeta = m_mediaLibrary->creatMediaMeta(strtp);
             if (mediaMeta.length <= 0) {
-                importFailCount++;
+                m_importFailCount++;
             } else {
                 mediaMeta.updateSearchIndex();
                 if (mediaMeta.album.isEmpty()) {
@@ -178,7 +178,7 @@ void DBOperate::slotImportMedias(QString importHash, const QStringList &urllist)
         }
     }
 
-    emit sigImportFinished(importFailCount, m_successCount, m_exsitCount);
+    emit sigImportFinished(m_importFailCount, m_successCount, m_exsitCount);
 }
 
 void DBOperate::slotCreatCoverImg(const QList<MediaMeta> &metas)
@@ -333,57 +333,30 @@ QList<DBOperate::PlaylistDataThread> DBOperate::allPlaylistMetaUUid()
 void DBOperate::addMediaMetaToDB(const MediaMeta &meta)
 {
     if (!this->isMediaMetaExist(meta.hash)) {
-        QSqlQuery query(m_db);
-        query.prepare("INSERT INTO musicNew ("
-                      "hash, timestamp, title, artist, album, "
-                      "filetype, size, track, offset, favourite, localpath, length, "
-                      "py_title, py_title_short, py_artist, py_artist_short, "
-                      "py_album, py_album_short, lyricPath, codec, cuepath "
-                      ") "
-                      "VALUES ("
-                      ":hash, :timestamp, :title, :artist, :album, "
-                      ":filetype, :size, :track, :offset, :favourite, :localpath, :length, "
-                      ":py_title, :py_title_short, :py_artist, :py_artist_short, "
-                      ":py_album, :py_album_short, :lyricPath, :codec, :cuepath "
-                      ")");
-        query.bindValue(":hash", meta.hash);
-        query.bindValue(":timestamp", meta.timestamp);
-        query.bindValue(":title", meta.title);
-        query.bindValue(":artist", meta.singer);
-        query.bindValue(":album", meta.album);
-        query.bindValue(":filetype", meta.filetype);
-        query.bindValue(":size", meta.size);
-        query.bindValue(":track", meta.track);
-        query.bindValue(":offset", meta.offset);
-        query.bindValue(":favourite", meta.favourite);
-        query.bindValue(":localpath", meta.localPath);
-        query.bindValue(":length", meta.length);
-        query.bindValue(":py_title", meta.pinyinTitle);
-        query.bindValue(":py_title_short", meta.pinyinTitleShort);
-        query.bindValue(":py_artist", meta.pinyinArtist);
-        query.bindValue(":py_artist_short", meta.pinyinArtistShort);
-        query.bindValue(":py_album", meta.pinyinAlbum);
-        query.bindValue(":py_album_short", meta.pinyinAlbumShort);
-        query.bindValue(":lyricPath", meta.lyricPath);
-        query.bindValue(":codec", meta.codec);
-        query.bindValue(":cuepath", meta.cuePath);
-
-        if (! query.exec()) {
-            qCritical() << query.lastError();
-            return;
+        // 导入到所有音乐
+        if (addMetaToAll(meta)) {
+            emit sigImportMetaFromThread(meta);
+            // 添加到自定义歌单,但是当前页面上你所有音乐,则所有音乐要刷新,添加这个信号
+            // 直接添加到所有音乐的,通过signalAllMusicAddOne信号刷新
+            if (m_importHash != "all") {
+                QList<MediaMeta> metas;
+                metas.append(meta);
+                addMetaToPlaylist(m_importHash, metas);
+            } else {
+                emit signalMusicAddOne("all", meta);
+                m_successCount++;
+            }
+        } else {
+            m_importFailCount++;
         }
-        m_successCount++;
-        emit sigImportMetaFromThread(meta);
-        // 添加到自定义歌单,但是当前页面上你所有音乐,则所有音乐要刷新,添加这个信号
-        // 直接添加到所有音乐的,通过signalImportFinished信号刷新
-        emit signalAllMusicAddOne(meta);
+    } else {
         if (m_importHash != "all") {
             QList<MediaMeta> metas;
             metas.append(meta);
             addMetaToPlaylist(m_importHash, metas);
+        } else {
+            m_exsitCount++;
         }
-    } else {
-        m_exsitCount++;
     }
 }
 
@@ -434,9 +407,11 @@ int DBOperate::addMetaToPlaylist(QString uuid, const QList<MediaMeta> &metas)
                 query.bindValue(":sort_id", 0);
                 if (query.exec()) {
                     insert_count++;
+                    m_successCount++;
                     if (uuid == "fav") {
                         emit signalFavSongAdd(meta.hash);
                     }
+                    emit signalMusicAddOne(m_importHash, meta);
                 } else {
                     qCritical() << query.lastError() << sqlStr;
                 }
@@ -447,6 +422,50 @@ int DBOperate::addMetaToPlaylist(QString uuid, const QList<MediaMeta> &metas)
     }
 
     return insert_count;
+}
+
+bool DBOperate::addMetaToAll(MediaMeta meta)
+{
+    QSqlQuery query(m_db);
+    query.prepare("INSERT INTO musicNew ("
+                  "hash, timestamp, title, artist, album, "
+                  "filetype, size, track, offset, favourite, localpath, length, "
+                  "py_title, py_title_short, py_artist, py_artist_short, "
+                  "py_album, py_album_short, lyricPath, codec, cuepath "
+                  ") "
+                  "VALUES ("
+                  ":hash, :timestamp, :title, :artist, :album, "
+                  ":filetype, :size, :track, :offset, :favourite, :localpath, :length, "
+                  ":py_title, :py_title_short, :py_artist, :py_artist_short, "
+                  ":py_album, :py_album_short, :lyricPath, :codec, :cuepath "
+                  ")");
+    query.bindValue(":hash", meta.hash);
+    query.bindValue(":timestamp", meta.timestamp);
+    query.bindValue(":title", meta.title);
+    query.bindValue(":artist", meta.singer);
+    query.bindValue(":album", meta.album);
+    query.bindValue(":filetype", meta.filetype);
+    query.bindValue(":size", meta.size);
+    query.bindValue(":track", meta.track);
+    query.bindValue(":offset", meta.offset);
+    query.bindValue(":favourite", meta.favourite);
+    query.bindValue(":localpath", meta.localPath);
+    query.bindValue(":length", meta.length);
+    query.bindValue(":py_title", meta.pinyinTitle);
+    query.bindValue(":py_title_short", meta.pinyinTitleShort);
+    query.bindValue(":py_artist", meta.pinyinArtist);
+    query.bindValue(":py_artist_short", meta.pinyinArtistShort);
+    query.bindValue(":py_album", meta.pinyinAlbum);
+    query.bindValue(":py_album_short", meta.pinyinAlbumShort);
+    query.bindValue(":lyricPath", meta.lyricPath);
+    query.bindValue(":codec", meta.codec);
+    query.bindValue(":cuepath", meta.cuePath);
+
+    if (! query.exec()) {
+        qCritical() << query.lastError();
+        return false;
+    }
+    return true;
 }
 
 
