@@ -79,7 +79,8 @@ public:
     // 根据排序添加数据
     void setDataBySortType(QList<SingerInfo> &singerInfos, DataBaseService::ListSortType sortType);
     QString getHash() const;
-
+    // 获取列表中歌手数量
+    int getSingerCount();
 public slots:
     // 歌曲删除
     void slotRemoveSingleSong(const QString &listHash, const QString &musicHash);

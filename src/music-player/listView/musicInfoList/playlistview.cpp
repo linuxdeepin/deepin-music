@@ -504,7 +504,7 @@ void PlayListView::showErrorDlg()
     }
 }
 
-int PlayListView::getRowCount()
+int PlayListView::getMusicCount()
 {
     return m_model->rowCount();
 }

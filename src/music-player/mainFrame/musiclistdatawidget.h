@@ -56,6 +56,8 @@ public slots:
     void refreshInfoLabel(QString hash);
     // 刷新显示模式按钮check状态
     void refreshModeBtnByHash(QString hash);
+    // 刷新播放所有按钮enable状态
+    void refreshPlayAllBtn(int count);
     // 删除了一首音乐
     void slotRemoveSingleSong(const QString &listHash, const QString &musicHash);
     void slotPlaylistNameUpdate(const QString &listHash);

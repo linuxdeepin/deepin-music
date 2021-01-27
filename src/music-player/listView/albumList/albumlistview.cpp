@@ -312,6 +312,11 @@ int AlbumListView::getMusicCount()
     QList<AlbumInfo> albumInfos = getAlbumListData();
     return std::accumulate(albumInfos.begin(), albumInfos.end(), 0, calculateAlbumSize);
 }
+// 获取专辑数量
+int AlbumListView::getAlbumCount()
+{
+    return albumModel->rowCount();
+}
 
 void AlbumListView::setViewModeFlag(QListView::ViewMode mode)
 {

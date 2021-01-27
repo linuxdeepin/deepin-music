@@ -114,6 +114,7 @@ void MusicListDataWidget::slotViewChanged(ListPageSwitchType switchtype, const Q
         refreshModeBtn(m_albumListView->viewMode());
         refreshInfoLabel("album");
         refreshSortAction();
+        refreshPlayAllBtn(m_albumListView->getAlbumCount());
         break;
     }
     case SingerType: {
@@ -133,6 +134,7 @@ void MusicListDataWidget::slotViewChanged(ListPageSwitchType switchtype, const Q
         refreshModeBtn(m_singerListView->viewMode());
         refreshInfoLabel("artist");
         refreshSortAction();
+        refreshPlayAllBtn(m_singerListView->getSingerCount());
         break;
     }
     case AllSongListType: {
@@ -145,6 +147,7 @@ void MusicListDataWidget::slotViewChanged(ListPageSwitchType switchtype, const Q
         m_preHash = "all";
         m_preSwitchtype = AllSongListType;
         refreshSortAction();
+        refreshPlayAllBtn(m_musicListView->getMusicCount());
         break;
     }
     case FavType: {
@@ -157,6 +160,7 @@ void MusicListDataWidget::slotViewChanged(ListPageSwitchType switchtype, const Q
         m_preSwitchtype = FavType;
         refreshModeBtn(m_musicListView->getViewMode());
         refreshInfoLabel("fav");
+        refreshPlayAllBtn(m_musicListView->getMusicCount());
         break;
     }
     case CdaType: {
@@ -169,6 +173,7 @@ void MusicListDataWidget::slotViewChanged(ListPageSwitchType switchtype, const Q
         m_preSwitchtype = CdaType;
         refreshModeBtn(m_musicListView->getViewMode());
         refreshInfoLabel(hashOrSearchword);
+        refreshPlayAllBtn(m_musicListView->getMusicCount());
         break;
     }
     case CustomType: {
@@ -183,6 +188,7 @@ void MusicListDataWidget::slotViewChanged(ListPageSwitchType switchtype, const Q
         m_preSwitchtype = CustomType;
         refreshModeBtn(m_musicListView->getViewMode());
         refreshInfoLabel(hashOrSearchword);
+        refreshPlayAllBtn(m_musicListView->getMusicCount());
         break;
     }
     case SearchMusicResultType:
@@ -765,7 +771,7 @@ void MusicListDataWidget::refreshInfoLabel(QString hash)
             showEmptyHits(songCount);
             refreshSortAction("musicResult");
         } else {
-            songCount = m_musicListView->getRowCount();
+            songCount = m_musicListView->getMusicCount();
         }
         if (0 == songCount) {
             countStr = QString("   ") + MusicListDataWidget::tr("No songs");
@@ -779,7 +785,7 @@ void MusicListDataWidget::refreshInfoLabel(QString hash)
         if (hash.isEmpty()) {
             return;
         }
-        songCount = m_musicListView->getRowCount();
+        songCount = m_musicListView->getMusicCount();
         if (0 == songCount) {
             countStr = QString("   ") + MusicListDataWidget::tr("No songs");
         } else if (1 == songCount) {
@@ -795,6 +801,15 @@ void MusicListDataWidget::refreshModeBtnByHash(QString hash)
 {
     if (hash == "albumResult" || hash == "artistResult" || hash == "musicResult") {
         refreshModeBtn(m_searchResultTabWidget->getViewMode());
+    }
+}
+// 根据当前页面中内容数量刷新播放所有按钮状态
+void MusicListDataWidget::refreshPlayAllBtn(int count)
+{
+    if (count > 0) {
+        m_btPlayAll->setEnabled(true);
+    } else {
+        m_btPlayAll->setEnabled(false);
     }
 }
 

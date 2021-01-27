@@ -101,8 +101,11 @@ QString SingerListView::getHash() const
 {
     return m_hash;
 }
-
-
+// 过去歌手数量
+int SingerListView::getSingerCount()
+{
+    return singerModel->rowCount();
+}
 
 SingerListView::SingerListView(QString hash, QWidget *parent)
     : DListView(parent)

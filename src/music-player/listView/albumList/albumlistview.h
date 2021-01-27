@@ -52,7 +52,8 @@ public:
     QList<AlbumInfo> getAlbumListData() const;
 
     int getMusicCount();
-
+    // 获取列表中专辑数量
+    int getAlbumCount();
     void setViewModeFlag(QListView::ViewMode mode);
     QListView::ViewMode getViewMode();
 

@@ -75,8 +75,8 @@ public:
     void setSortType(DataBaseService::ListSortType sortType);
     // 弹出错误提示框，并播放下一首
     void showErrorDlg();
-
-    int getRowCount();
+    // 获取列表中歌曲数量
+    int getMusicCount();
     // 二级页面添加歌曲，设置hash
     void setMusicListView(QMap<QString, MediaMeta> musicinfos, QString hash);
 public slots:
