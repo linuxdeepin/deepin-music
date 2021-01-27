@@ -868,7 +868,9 @@ void PlayListView::slotRmvFromSongList()
     if (warnDlg.exec()) { //Remove button
         //数据库中删除时有信号通知刷新界面
         if (!m_IsPlayQueue) {
-            if (m_currentHash == "musicResult") {
+            if (m_currentHash == "musicResult"
+                    || m_currentHash == "album"
+                    || m_currentHash == "artist") {
                 //搜索结果中删除，等同于所有音乐中删除
                 DataBaseService::getInstance()->removeSelectedSongs("all", metaList, false);
                 this->clearSelection();

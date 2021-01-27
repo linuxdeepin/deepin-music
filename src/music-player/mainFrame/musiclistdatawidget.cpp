@@ -724,7 +724,7 @@ void MusicListDataWidget::refreshInfoLabel(QString hash)
             refreshSortAction("albumResult");
         } else {
             albumCount = DataBaseService::getInstance()->allAlbumInfos().size();
-            songCount = DataBaseService::getInstance()->allMusicInfos().size();
+            songCount = DataBaseService::getInstance()->allMusicInfos(false).size();
         }
 
         if (songCount == 0) {
