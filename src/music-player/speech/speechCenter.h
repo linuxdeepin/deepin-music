@@ -2,6 +2,8 @@
 #define SPEECHCENTER_H
 #include <QObject>
 
+#include <DSettings>
+
 #include "util/singleton.h"
 #include "mediameta.h"
 #include "databaseservice.h"
@@ -52,6 +54,7 @@ private:
 private:
     bool m_needRefresh;
     QList<MediaMeta>  m_MediaMetas;
+    Dtk::Core::DSettings *m_settings = nullptr;
 };
 
 #endif // SPEECHCENTER_H

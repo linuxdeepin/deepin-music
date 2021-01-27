@@ -13,6 +13,7 @@ SpeechCenter::SpeechCenter(QObject *parent)
     : QObject(parent),
       m_needRefresh(false)
 {
+    m_settings = Dtk::Core::DSettings::fromJsonFile(":/data/deepin-music-speechreply.json");
 }
 
 //指定歌曲
@@ -76,9 +77,9 @@ QVariant SpeechCenter::playMusic(QString musicName)
     }
     QString str;
     if (isExit) {
-        str = MusicSettings::value("speechreply.speech.ok").toString();
+        str = m_settings->value("speechreply.speech.ok").toString();
     } else {
-        str = MusicSettings::value("speechreply.speech.playMusicError").toString();
+        str = m_settings->value("speechreply.speech.playMusicError").toString();
     }
     return str;
 }
@@ -131,9 +132,9 @@ QVariant SpeechCenter::playArtist(QString artistName)
     }
     QString str;
     if (isExit) {
-        str = MusicSettings::value("speechreply.speech.ok").toString();
+        str = m_settings->value("speechreply.speech.ok").toString();
     } else {
-        str = MusicSettings::value("speechreply.speech.playArtistError").toString();
+        str = m_settings->value("speechreply.speech.playArtistError").toString();
     }
     return str;
 }
@@ -184,9 +185,9 @@ QVariant SpeechCenter::playArtistMusic(QString artistAndmusic)
     }
     QString str;
     if (isExit) {
-        str = MusicSettings::value("speechreply.speech.ok").toString();
+        str = m_settings->value("speechreply.speech.ok").toString();
     } else {
-        str = MusicSettings::value("speechreply.speech.playArtistMusicError").toString();
+        str = m_settings->value("speechreply.speech.playArtistMusicError").toString();
     }
     return str;
 }
@@ -228,9 +229,9 @@ QVariant SpeechCenter::playAlbum(QString albumName)
     }
     QString str;
     if (isExit) {
-        str = MusicSettings::value("speechreply.speech.ok").toString();
+        str = m_settings->value("speechreply.speech.ok").toString();
     } else {
-        str = MusicSettings::value("speechreply.speech.playAlbumError").toString();
+        str = m_settings->value("speechreply.speech.playAlbumError").toString();
     }
     return str;
 }
@@ -259,9 +260,9 @@ QVariant SpeechCenter::playFaverite(QString hash)
     }
     QString str;
     if (isExit) {
-        str = MusicSettings::value("speechreply.speech.ok").toString();
+        str = m_settings->value("speechreply.speech.ok").toString();
     } else {
-        str = MusicSettings::value("speechreply.speech.playFaveriteError").toString();
+        str = m_settings->value("speechreply.speech.playFaveriteError").toString();
     }
     return str;
 }
@@ -302,9 +303,9 @@ QVariant SpeechCenter::playSonglist(QString songlistName)
     }
     QString str;
     if (isExit) {
-        str = MusicSettings::value("speechreply.speech.ok").toString();
+        str = m_settings->value("speechreply.speech.ok").toString();
     } else {
-        str = MusicSettings::value("speechreply.speech.playSonglistError").toString();
+        str = m_settings->value("speechreply.speech.playSonglistError").toString();
     }
     return str;
 }
@@ -320,7 +321,7 @@ QVariant SpeechCenter::pause(QString musicName)
     }
     QString str;
     if (isExit) {
-        str = MusicSettings::value("speechreply.speech.ok").toString();
+        str = m_settings->value("speechreply.speech.ok").toString();
     } else {
 //        str = "抱歉，设置失败，请重新尝试。";
     }
@@ -338,7 +339,7 @@ QVariant SpeechCenter::resume(QString musicName)
     }
     QString str;
     if (isExit) {
-        str = MusicSettings::value("speechreply.speech.ok").toString();
+        str = m_settings->value("speechreply.speech.ok").toString();
     } else {
 //        str = "抱歉，设置失败，请重新尝试。";
     }
@@ -356,7 +357,7 @@ QVariant SpeechCenter::stop(QString musicName)
     }
     QString str;
     if (isExit) {
-        str = MusicSettings::value("speechreply.speech.ok").toString();
+        str = m_settings->value("speechreply.speech.ok").toString();
     } else {
 //        str = "抱歉，设置失败，请重新尝试。";
     }
@@ -374,9 +375,9 @@ QVariant SpeechCenter::pre(QString musicName)
     }
     QString str;
     if (isExit) {
-        str = MusicSettings::value("speechreply.speech.ok").toString();
+        str = m_settings->value("speechreply.speech.ok").toString();
     } else {
-        str = MusicSettings::value("speechreply.speech.preError").toString();
+        str = m_settings->value("speechreply.speech.preError").toString();
     }
     return str;
 }
@@ -392,9 +393,9 @@ QVariant SpeechCenter::next(QString musicName)
     }
     QString str;
     if (isExit) {
-        str = MusicSettings::value("speechreply.speech.ok").toString();
+        str = m_settings->value("speechreply.speech.ok").toString();
     } else {
-        str = MusicSettings::value("speechreply.speech.nextError").toString();
+        str = m_settings->value("speechreply.speech.nextError").toString();
     }
     return str;
 }
@@ -412,9 +413,9 @@ QVariant SpeechCenter::playIndex(QString index)
     }
     QString str;
     if (isExit) {
-        str = MusicSettings::value("speechreply.speech.ok").toString();
+        str = m_settings->value("speechreply.speech.ok").toString();
     } else {
-        str = MusicSettings::value("speechreply.speech.playIndexError").toString();
+        str = m_settings->value("speechreply.speech.playIndexError").toString();
     }
     return str;
 }
@@ -436,7 +437,7 @@ QVariant SpeechCenter::addFaverite(QString musicName)
     }
     QString str;
     if (isExit) {
-        str = MusicSettings::value("speechreply.speech.addFaveriteOk").toString();
+        str = m_settings->value("speechreply.speech.addFaveriteOk").toString();
     } else {
 //        str = "收藏失败。";
     }
@@ -458,7 +459,7 @@ QVariant SpeechCenter::removeFaverite(QString musicName)
     }
     QString str;
     if (isExit) {
-        str = MusicSettings::value("speechreply.speech.removeFaveriteOk").toString();
+        str = m_settings->value("speechreply.speech.removeFaveriteOk").toString();
     } else {
 //        str = "收藏失败。";
     }
@@ -473,17 +474,17 @@ QVariant SpeechCenter::setMode(QString mode)
     QString str;
     if (Player::getInstance()->status() == Player::PlaybackStatus::Playing) {
         if (modeNumber == Player::PlaybackMode::RepeatAll) {
-            str = MusicSettings::value("speechreply.speech.setModeRepeatAllOk").toString();
+            str = m_settings->value("speechreply.speech.setModeRepeatAllOk").toString();
             Player::getInstance()->setMode(Player::PlaybackMode::RepeatAll);
             emit CommonService::getInstance()->signalSetPlayModel(Player::RepeatAll);
             isExit = true;
         } else if (modeNumber == Player::PlaybackMode::RepeatSingle) {
-            str = MusicSettings::value("speechreply.speech.setModeRepeatSingleOk").toString();
+            str = m_settings->value("speechreply.speech.setModeRepeatSingleOk").toString();
             Player::getInstance()->setMode(Player::PlaybackMode::RepeatSingle);
             emit CommonService::getInstance()->signalSetPlayModel(Player::RepeatSingle);
             isExit = true;
         } else if (modeNumber == Player::PlaybackMode::Shuffle) {
-            str = MusicSettings::value("speechreply.speech.setModeShuffleOk").toString();
+            str = m_settings->value("speechreply.speech.setModeShuffleOk").toString();
             Player::getInstance()->setMode(Player::PlaybackMode::Shuffle);
             emit CommonService::getInstance()->signalSetPlayModel(Player::Shuffle);
             isExit = true;

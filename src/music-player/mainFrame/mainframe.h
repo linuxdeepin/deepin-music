@@ -88,6 +88,8 @@ private slots:
     void slotPlayFromFileMaganager();
     // 显示二级页面
     void slotShowSubSonglist(const QMap<QString, MediaMeta> &musicinfos, ListPageSwitchType listPageType);
+    // 左侧菜单切换ListView
+    void slotViewChanged(ListPageSwitchType switchtype, const QString &hashOrSearchword);
 protected:
     void showEvent(QShowEvent *event) Q_DECL_OVERRIDE;
     void changeEvent(QEvent *event) Q_DECL_OVERRIDE;
@@ -136,6 +138,8 @@ private:
     QShortcut           *m_newItemShortcut = nullptr;
     //window geometry
     QByteArray          m_geometryBa = QByteArray();
+    // 当前页面hash，供右上角菜单导入使用
+    QString             m_importListHash = "all";
 };
 
 //extern const QString s_PropertyViewname;

@@ -43,6 +43,7 @@ public:
     void showAnimationToLeft(const QSize &size);
 
     const QString getLastImportPath() const;
+    void addMusic(QString listHash);
 signals:
     void scanMusicDirectory();
     void selectImportDirectory();

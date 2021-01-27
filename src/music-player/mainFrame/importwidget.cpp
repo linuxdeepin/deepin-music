@@ -192,6 +192,29 @@ const QString ImportWidget::getLastImportPath() const
 
     return lastImportPath;
 }
+// 添加需要导入的歌单hash
+void ImportWidget::addMusic(QString listHash)
+{
+    if (listHash.isEmpty()) {
+        listHash = "all";
+    }
+    DFileDialog fileDlg(this);
+    QString lastImportPath = getLastImportPath();
+    fileDlg.setDirectory(lastImportPath);
+    QString selfilter = tr("All music") + (" (%1)");
+    selfilter = selfilter.arg(Player::getInstance()->supportedSuffixList().join(" "));
+    fileDlg.setViewMode(DFileDialog::Detail);
+    fileDlg.setFileMode(DFileDialog::ExistingFiles);
+    fileDlg.setOption(DFileDialog::HideNameFilterDetails);
+    fileDlg.setNameFilter(selfilter);
+    fileDlg.selectNameFilter(selfilter);
+    fileDlg.setObjectName("fileDialogAdd");
+    if (DFileDialog::Accepted == fileDlg.exec()) {
+        showWaitHint();
+        MusicSettings::setOption("base.play.last_import_path",  fileDlg.directory().path());
+        DataBaseService::getInstance()->importMedias(listHash, fileDlg.selectedFiles());
+    }
+}
 
 void ImportWidget::showImportHint()
 {
@@ -215,22 +238,8 @@ void ImportWidget::slotLinkActivated(const QString &link)
 
 void ImportWidget::slotAddMusicButtonClicked()
 {
-    DFileDialog fileDlg(this);
-    QString lastImportPath = getLastImportPath();
-    fileDlg.setDirectory(lastImportPath);
-    QString selfilter = tr("All music") + (" (%1)");
-    selfilter = selfilter.arg(Player::getInstance()->supportedSuffixList().join(" "));
-    fileDlg.setViewMode(DFileDialog::Detail);
-    fileDlg.setFileMode(DFileDialog::ExistingFiles);
-    fileDlg.setOption(DFileDialog::HideNameFilterDetails);
-    fileDlg.setNameFilter(selfilter);
-    fileDlg.selectNameFilter(selfilter);
-    fileDlg.setObjectName("fileDialogAdd");
-    if (DFileDialog::Accepted == fileDlg.exec()) {
-        showWaitHint();
-        MusicSettings::setOption("base.play.last_import_path",  fileDlg.directory().path());
-        DataBaseService::getInstance()->importMedias("all", fileDlg.selectedFiles());
-    }
+    // 默认导入到所有音乐中
+    addMusic("all");
 }
 
 void ImportWidget::slotImportPathButtonClicked()

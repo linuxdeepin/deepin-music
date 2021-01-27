@@ -155,6 +155,8 @@ MainFrame::MainFrame()
             activateWindow();
         }
     });
+
+    connect(CommonService::getInstance(), &CommonService::signalSwitchToView, this, &MainFrame::slotViewChanged);
 }
 
 MainFrame::~MainFrame()
@@ -569,7 +571,7 @@ void MainFrame::slotMenuTriggered(QAction *action)
     }
 
     if (action == m_addMusicFiles) {
-        m_importWidget->slotAddMusicButtonClicked();
+        m_importWidget->addMusic(m_importListHash);
     }
 
     if (action == m_equalizer) {
@@ -685,6 +687,37 @@ void MainFrame::slotShowSubSonglist(const QMap<QString, MediaMeta> &musicinfos, 
     }
     m_musicStatckedWidget->setCurrentWidget(m_subSonglistWidget);
     m_musicStatckedWidget->setCurrentWidget(m_subSonglistWidget);
+}
+
+void MainFrame::slotViewChanged(ListPageSwitchType switchtype, const QString &hashOrSearchword)
+{
+    // 记录需要导入的歌单hash值
+    switch (switchtype) {
+    case AlbumType:
+    case SingerType:
+    case AllSongListType: {
+        m_importListHash = "all";
+        break;
+    }
+    case FavType: {
+        m_importListHash = "fav";
+        break;
+    }
+    case CustomType: {
+        m_importListHash = hashOrSearchword;
+        break;
+    }
+    case SearchMusicResultType:
+    case SearchSingerResultType:
+    case SearchAlbumResultType:
+    case PreType: {
+        m_importListHash = "all";
+        break;
+    }
+    default:
+        m_importListHash = "all";
+        break;
+    }
 }
 
 void MainFrame::showEvent(QShowEvent *event)

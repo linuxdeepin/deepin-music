@@ -1,5 +1,6 @@
 <RCC>
     <qresource prefix="/">
         <file>data/deepin-music-settings.json</file>
+        <file>data/deepin-music-speechreply.json</file>
     </qresource>
 </RCC>
