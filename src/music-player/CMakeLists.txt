@@ -43,6 +43,8 @@ include_directories(./listView/singerList)
 include_directories(./listView/lyricLineList)
 include_directories(./listView/dialogList)
 
+include_directories(/usr/include/udisks2-qt5)
+
 if(ISTEST MATCHES "1")
     message("tests start！")
     file(GLOB mainSource
@@ -93,6 +95,9 @@ pkg_check_modules(qgsettings REQUIRED IMPORTED_TARGET gsettings-qt)
 
 pkg_check_modules(AV REQUIRED IMPORTED_TARGET libcue taglib)
 
+pkg_check_modules(udisks2 REQUIRED IMPORTED_TARGET udisks2-qt5)
+
+
 set(AllQRC
     ./resource/resource.qrc
     ./resource/theme/theme.qrc
@@ -134,8 +139,8 @@ target_include_directories(${CMD_NAME} PUBLIC  ${PROJECT_INCLUDE} )
 qt5_use_modules(${CMD_NAME} ${QtModule})
 
 set(TARGET_LIBS Qt5::Widgets Qt5::Core Qt5::Gui Qt5::DBus  Qt5::Sql Qt5::Svg Qt5::Multimedia Qt5::Xml
-     PkgConfig::AV PkgConfig::Dtk PkgConfig::qgsettings icui18n
-    PkgConfig::MPRIS PkgConfig::DBusextended pthread dmusic)
+     PkgConfig::AV PkgConfig::Dtk PkgConfig::qgsettings PkgConfig::udisks2 icui18n
+    PkgConfig::MPRIS PkgConfig::DBusextended pthread dmusic )
 LINK_DIRECTORIES(${CMAKE_BINARY_DIR}/src/libdmusic/)
 
 

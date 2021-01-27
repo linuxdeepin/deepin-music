@@ -275,7 +275,13 @@ public:
 
     void initMedia(const QString &location,
                    bool localFile,
-                   VlcInstance *instance);
+                   VlcInstance *instance, int track = -1);
+
+    /**
+     * @brief getCdaTrack 获取cd track id
+     * @return
+     */
+    int getCdaTrack() const;
 
 signals:
     /*!
@@ -333,6 +339,7 @@ private:
     libvlc_event_manager_t *_vlcEvents;
 
     QString _currentLocation;
+    int m_cdaTrackId = -1;
 };
 
 #endif // VLCQT_MEDIA_H_

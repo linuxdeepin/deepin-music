@@ -400,6 +400,8 @@ void MainFrame::showPopupMessage(const QString &songListName, int selectCount, i
                 text = tr("%1 songs added").arg(insertCount);
         }
     }
+    if (selectCount == 0 && insertCount == 0) //cda仅仅添加cd歌单，暂未导入数据，
+        text = tr("A disc is connected");
 
     if (m_popupMessage == nullptr) {
         m_popupMessage = new DWidget(this);
@@ -625,6 +627,10 @@ void MainFrame::slotSwitchTheme()
 
 void MainFrame::slotAllMusicCleared()
 {
+    //当存在cd歌曲时，不返回到初始页面
+    if (Player::getInstance()->getCdaPlayList().size() > 0) {
+        return;
+    }
     qDebug() << "MainFrame::slotAllMusicCleared";
     // 导入界面显示与关闭动画
     m_musicStatckedWidget->animationImportToLeft(this->size() - QSize(0, m_footerWidget->height() + titlebar()->height()));

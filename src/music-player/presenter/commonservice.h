@@ -46,6 +46,8 @@ signals:
     void signalFluashFavoriteBtnIcon();
     // 添加新的歌曲清单
     void signalAddNewSongList();
+    // 添加&删除CD歌曲清单
+    void signalCdaSongListChanged(int stat);
     // 右键菜单播放所有音乐
     void signalPlayAllMusic();
     // 设置播放模式

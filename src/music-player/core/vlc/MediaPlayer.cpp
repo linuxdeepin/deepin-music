@@ -1,6 +1,9 @@
 
 
 #include <vlc/vlc.h>
+#include <vlc_common.h>
+#include <vlc_variables.h>
+#include <vlc_plugin.h>
 
 #include "Audio.h"
 #include "Error.h"
@@ -51,11 +54,15 @@ typedef void (*vlc_media_player_set_position_function)(libvlc_media_player_t *, 
 typedef int (*vlc_media_player_set_rate_function)(libvlc_media_player_t *, float);
 
 typedef float (*vlc_media_player_get_rate_function)(libvlc_media_player_t *);
+
+typedef void (*config_PutInt_func)(vlc_object_t *, const char *, int64_t);
+
 VlcMediaPlayer::VlcMediaPlayer(VlcInstance *instance)
     : QObject(instance)
 {
     vlc_media_player_new_function vlc_media_player_new = (vlc_media_player_new_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("libvlc_media_player_new");
     vlc_media_player_event_manager_function vlc_media_player_event_manager = (vlc_media_player_event_manager_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("libvlc_media_player_event_manager");
+    config_PutInt_func config_PutInt_fc = (config_PutInt_func)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("config_PutInt");
     _vlcMediaPlayer = vlc_media_player_new(instance->core());
     _vlcEvents = vlc_media_player_event_manager(_vlcMediaPlayer);
 
@@ -66,6 +73,10 @@ VlcMediaPlayer::VlcMediaPlayer(VlcInstance *instance)
 
     _media = 0;
 
+    //屏蔽视频功能,只支持音频
+    config_PutInt_fc((vlc_object_t *)_vlcMediaPlayer, "video", 0); //0=disable
+    //cdda plugin使能
+    config_PutInt_fc((vlc_object_t *)_vlcMediaPlayer, "cd-audio", 1);
     createCoreConnections();
 
     VlcError::showErrmsg();
@@ -194,7 +205,14 @@ void VlcMediaPlayer::open(VlcMedia *media)
 {
     _media = media;
     vlc_media_player_set_media_function vlc_media_player_set_media = (vlc_media_player_set_media_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("libvlc_media_player_set_media");
+    config_PutInt_func config_PutInt_fc = (config_PutInt_func)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("config_PutInt");
+    int track = media->getCdaTrack();
     vlc_media_player_set_media(_vlcMediaPlayer, media->core());
+    if (track >= 0) {
+        config_PutInt_fc((vlc_object_t *)_vlcMediaPlayer, "cdda-track", track);
+//        config_PutInt_fc((vlc_object_t *)_vlcMediaPlayer, "cdda-first-sector", -1);
+//        config_PutInt_fc((vlc_object_t *)_vlcMediaPlayer, "cdda-last-sector", 0);
+    }
 
     VlcError::showErrmsg();
 }

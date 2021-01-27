@@ -364,9 +364,6 @@ void PlayItemDelegate::drawListMode(QPainter &painter, const QStyleOptionViewIte
         painter.restore();
     }
 
-    int rowCount = listview->model()->rowCount();
-    auto rowCountSize = QString::number(rowCount).size();
-
     for (int col = 0; col < ColumnButt; ++col) {
         auto flag = alignmentFlag(col);
         auto rect = colRect(col, option);
@@ -376,7 +373,7 @@ void PlayItemDelegate::drawListMode(QPainter &painter, const QStyleOptionViewIte
             PlayListView *playListView = qobject_cast<PlayListView *>(const_cast<QWidget *>(option.widget));
             // Fixme:
             QFileInfo info(itemMeta.localPath);
-            if (!info.exists()) {
+            if (!info.exists() && itemMeta.mmType != MIMETYPE_CDA) {
                 auto sz = QSizeF(20, 20);
                 auto icon = QIcon::fromTheme("icon_warning").pixmap(sz.toSize());
                 auto centerF = QRectF(rect).center();

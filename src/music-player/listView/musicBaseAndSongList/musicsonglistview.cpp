@@ -24,12 +24,15 @@
 #include <QDebug>
 #include <QKeyEvent>
 #include <QMimeData>
+#include <QPushButton>
 
 #include <DMenu>
 #include <DDialog>
 #include <DScrollBar>
 #include <DPalette>
 #include <DApplicationHelper>
+#include <DFloatingMessage>
+#include <DMessageManager>
 #include <QDomDocument>
 #include <QDomElement>
 #include <QSvgRenderer>
@@ -45,6 +48,10 @@
 #include "player.h"
 #include "playlistview.h"
 #include "ac-desktop-define.h"
+#include "databaseservice.h"
+
+#define CDA_USER_ROLE "CdaRole"
+#define CDA_USER_ROLE_OFFSET 12  //userrole+12 防止和其他歌单role重叠
 
 DGUI_USE_NAMESPACE
 
@@ -95,7 +102,10 @@ MusicSongListView::MusicSongListView(QWidget *parent) : DListView(parent)
 
     connect(this, &MusicSongListView::clicked, this, [](QModelIndex midx) {
         qDebug() << "customize midx.row()" << midx.row();
-        emit CommonService::getInstance()->signalSwitchToView(CustomType, midx.data(Qt::UserRole).toString());
+        if (midx.row() == 0 && midx.data(Qt::UserRole + CDA_USER_ROLE_OFFSET).toString() == CDA_USER_ROLE)
+            emit CommonService::getInstance()->signalSwitchToView(CdaType, midx.data(Qt::UserRole + CDA_USER_ROLE_OFFSET).toString());
+        else
+            emit CommonService::getInstance()->signalSwitchToView(CustomType, midx.data(Qt::UserRole).toString());
     });
 
     connect(Player::getInstance(), &Player::signalUpdatePlayingIcon,
@@ -105,7 +115,8 @@ MusicSongListView::MusicSongListView(QWidget *parent) : DListView(parent)
     connect(this, &MusicSongListView::currentChanged, this, &MusicSongListView::slotCurrentChanged);
 
     connect(CommonService::getInstance(), &CommonService::signalAddNewSongList, this, &MusicSongListView::addNewSongList);
-
+    //connect(CommonService::getInstance(), &CommonService::signalCdaSongListChanged, this, &MusicSongListView::changeCdaSongList);
+    connect(CommonService::getInstance(), &CommonService::signalCdaSongListChanged, this, &MusicSongListView::slotPopMessageWindow);
     connect(DGuiApplicationHelper::instance(), &DGuiApplicationHelper::themeTypeChanged,
             this, &MusicSongListView::setThemeType);
 
@@ -154,6 +165,10 @@ void MusicSongListView::showContextMenu(const QPoint &pos)
     auto item = model->itemFromIndex(index);
     if (!item) {
         return;
+    }
+
+    if (index.row() == 0 && index.data(Qt::UserRole + CDA_USER_ROLE_OFFSET).toString() == CDA_USER_ROLE) {
+        return;//cda item不做任何处理
     }
 
     QPoint globalPos = this->mapToGlobal(pos);
@@ -209,7 +224,7 @@ void MusicSongListView::addNewSongList()
     qDebug() << "new item";
     QIcon icon = QIcon::fromTheme("music_famousballad");
 
-    QString displayName = newDisplayName(); //translation? from playlistmanager
+    QString displayName = newDisplayName();
     DStandardItem *item = new DStandardItem(icon, displayName);
     if (DGuiApplicationHelper::instance()->themeType() == 1) {
         item->setForeground(QColor("#414D68"));
@@ -241,9 +256,58 @@ void MusicSongListView::addNewSongList()
     adjustHeight();
 }
 
+void MusicSongListView::changeCdaSongList(int stat)
+{
+    if (stat == 1) {
+        //发送提示消息
+        emit CommonService::getInstance()->signalShowPopupMessage("", 0, 0);
+    }
+
+    qDebug() << __FUNCTION__ << stat;
+    if (model->rowCount() > 0) {
+        QString rolestr = model->index(0, 0).data(Qt::UserRole + CDA_USER_ROLE_OFFSET).toString();
+        if (rolestr == CDA_USER_ROLE) { //remove node
+            if (stat != 1) {
+                model->removeRow(0);  //移出CD歌单项目
+            }
+            return;
+        }
+    }
+    if (stat != 1) {//CD弹出或其他异常
+        return;
+    }
+
+    qDebug() << "new CD item";
+    QIcon icon = QIcon::fromTheme("music_famousballad");
+
+    QString displayName = tr("CD playlist");
+    DStandardItem *item = new DStandardItem(icon, displayName);
+    if (DGuiApplicationHelper::instance()->themeType() == 1) {
+        item->setForeground(QColor("#414D68"));
+    } else {
+        item->setForeground(QColor("#C0C6D4"));
+    }
+
+    model->insertRow(0, item);
+    setMinimumHeight(model->rowCount() * ItemHeight);
+    setCurrentIndex(model->indexFromItem(item));
+    scrollToTop();
+
+    QString uuid = CDA_USER_ROLE;
+    item->setData(uuid, Qt::UserRole + CDA_USER_ROLE_OFFSET);
+
+    //主页面清空选择项
+    emit sigAddNewSongList();
+    m_heightChangeToMax = true;
+    adjustHeight();
+}
+
 void MusicSongListView::rmvSongList()
 {
     QModelIndex index = this->currentIndex();
+    if (index.row() == 0 && index.data(Qt::UserRole + CDA_USER_ROLE_OFFSET).toString() == CDA_USER_ROLE) {
+        return;//cda item不做任何处理
+    }
     if (index.row() >= 0) {
         QString message = QString(tr("Are you sure you want to delete this playlist?"));
 
@@ -288,6 +352,10 @@ void MusicSongListView::slotUpdatePlayingIcon()
             continue;
         }
         QString hash = index.data(Qt::UserRole).value<QString>();
+        //获取cda的hash值，用于处理cd歌单的波浪条
+        QString cdahash = index.data(Qt::UserRole + CDA_USER_ROLE_OFFSET).value<QString>();
+        if (!cdahash.isEmpty())
+            hash = cdahash;
         if (hash == Player::getInstance()->getCurrentPlayListHash()) {
             QPixmap playingPixmap = QPixmap(ItemIconSide, ItemIconSide);
             playingPixmap.fill(Qt::transparent);
@@ -363,6 +431,9 @@ void MusicSongListView::slotDoubleClicked(const QModelIndex &index)
 {
     m_renameItem = dynamic_cast<DStandardItem *>(model->itemFromIndex(index));
 
+    if (index.row() == 0 && index.data(Qt::UserRole + CDA_USER_ROLE_OFFSET).toString() == CDA_USER_ROLE) {
+        return;//cda item不做任何处理
+    }
     if (!m_renameItem)
         return;
 
@@ -404,6 +475,94 @@ void MusicSongListView::slotLineEditingFinished()
         // 防止焦点设置到其他控件 bug:61769
         this->setFocus();
     }
+}
+
+void MusicSongListView::slotPopMessageWindow(int stat)
+{
+    MediaMeta tmpMeta = Player::getInstance()->getActiveMeta();
+    //CD退出时若不关闭弹窗，再次接入cd后，此弹窗自动隐藏，列表数据刷新
+    QList<QWidget *> oldMsgList = this->findChildren<QWidget *>("_d_message_cda_deepin_music");
+    if (oldMsgList.size() > 0) {
+        oldMsgList.first()->setProperty("cda", 1);
+        oldMsgList.first()->close();
+        oldMsgList.first()->deleteLater();
+        //执行添加/移出CD歌单,cd弹出
+        changeCdaSongList(stat);
+        return;
+    }
+
+    //只处理弹出cd的弹窗
+    if (stat == 1) {
+        changeCdaSongList(stat);
+        return;
+    }
+
+    int retexec = -1;
+    int iprop = 0;
+    QString popStrMsg = "";
+
+    popStrMsg = tr("The CD has been removed");
+    if (tmpMeta.mmType == MIMETYPE_CDA) {
+        popStrMsg = tr("Play failed, as the CD has been removed");
+    }
+
+
+    Dtk::Widget::DDialog tipsDlg(this);
+    tipsDlg.setObjectName("_d_message_cda_deepin_music");
+    tipsDlg.setIcon(QIcon::fromTheme("deepin-music"));
+    tipsDlg.setTextFormat(Qt::RichText);
+    tipsDlg.addButton(tr("OK"), true, Dtk::Widget::DDialog::ButtonNormal);
+    tipsDlg.setMessage(popStrMsg);
+    retexec = tipsDlg.exec();
+    iprop = tipsDlg.property("cda").toInt();
+    /**
+     * 确保关闭前一个窗口后，再执行下一次的操作
+     */
+    qDebug() << __FUNCTION__ << "prop:" << iprop << "exec" << retexec;
+    if (retexec != 0 && iprop == 1) {
+        qDebug() << "________tipsDlg_______property" << retexec;
+        return;
+    }
+
+    /**
+     * 查看所有歌单是否有歌曲，无歌曲跳转到初始页面，有歌曲则跳转到所有页面播放第一首歌曲
+     * */
+    qDebug() << __FUNCTION__ << stat;
+    int allsize = DataBaseService::getInstance()->allMusicInfosCount();
+    if (allsize == 0) {
+        //进入主页面
+        emit DataBaseService::getInstance()->signalImportFinished(CDA_USER_ROLE, 1);
+    } else {
+        if (allsize == 0) {
+            //回到初始页面
+            emit DataBaseService::getInstance()->signalAllMusicCleared();
+        } else {
+
+            if (tmpMeta.mmType == MIMETYPE_CDA) {
+                Player::getInstance()->setActiveMeta(MediaMeta());
+                //设置当前页面，刷新播放队列和显示列表
+                Player::getInstance()->setCurrentPlayListHash("all", true);
+                //播放歌单第一首歌曲
+                Player::getInstance()->forcePlayMeta();
+            }
+
+            if (model->rowCount() > 0  && tmpMeta.mmType != MIMETYPE_CDA) {
+                int row = this->currentIndex().row();
+                QString strrole = model->index(row, 0).data(Qt::UserRole + CDA_USER_ROLE_OFFSET).toString();
+                if (strrole == CDA_USER_ROLE) {
+                    //设置当前页面，刷新播放队列和显示列表
+                    Player::getInstance()->setCurrentPlayListHash("all", false);
+                }
+            }
+            // 切换到所有音乐界面
+            emit CommonService::getInstance()->signalSwitchToView(AllSongListType, "all");
+        }
+    }
+
+    //执行添加/移出CD歌单,cd弹出
+    changeCdaSongList(stat);
+    //清空选中
+    this->clearSelection();
 }
 
 void MusicSongListView::resizeEvent(QResizeEvent *event)
@@ -451,6 +610,10 @@ void MusicSongListView::dropEvent(QDropEvent *event)
     //    auto t_playlistPtr = playlistPtr(index);
     if (/*t_playlistPtr == nullptr || */(!event->mimeData()->hasFormat("text/uri-list") && !event->mimeData()->hasFormat("application/x-qabstractitemmodeldatalist"))) {
         return;
+    }
+
+    if (indexDrop.data(Qt::UserRole + CDA_USER_ROLE_OFFSET).toString() == CDA_USER_ROLE) {
+        return;//cda item不做任何处理
     }
 
     if (event->mimeData()->hasFormat("text/uri-list")) {

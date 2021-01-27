@@ -80,7 +80,7 @@ void DBOperate::slotImportMedias(QString importHash, const QStringList &urllist)
         }
         QFileInfo fileInfo(filepath);
         if (fileInfo.isDir()) {
-            QDirIterator it(filepath, m_mediaLibrary->getSupportedSuffixs().keys(),
+            QDirIterator it(filepath, m_mediaLibrary->getSupportedSuffixs(),
                             QDir::Files, QDirIterator::Subdirectories);
             while (it.hasNext()) {
                 QString  strtp = it.next();
@@ -108,7 +108,7 @@ void DBOperate::slotImportMedias(QString importHash, const QStringList &urllist)
         }
         QFileInfo fileInfo(filepath);
         if (fileInfo.isDir()) {
-            QDirIterator it(filepath, m_mediaLibrary->getSupportedSuffixs().keys(),
+            QDirIterator it(filepath, m_mediaLibrary->getSupportedSuffixs(),
                             QDir::Files, QDirIterator::Subdirectories);
             while (it.hasNext()) {
                 if (m_needStop) {
@@ -150,7 +150,8 @@ void DBOperate::slotImportMedias(QString importHash, const QStringList &urllist)
                 m_needSleep = false;
             }
             QString strtp = filepath;
-            if (!m_mediaLibrary->getSupportedSuffixs().keys().contains(("*." + fileInfo.suffix()))) {
+
+            if (!m_mediaLibrary->getSupportedSuffixs().contains(("*." + fileInfo.suffix()))) {
                 m_importFailCount++;
                 importedCount++;
                 continue;

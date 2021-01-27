@@ -29,7 +29,8 @@ Build-Depends:
  qttools5-dev,
  qttools5-dev-tools,
  libdframeworkdbus-dev,
- libgmock-dev 
+ libgmock-dev,
+ libudisks2-qt5-dev 
 Standards-Version: 4.5.1
 Homepage: http://www.deepin.org/
 

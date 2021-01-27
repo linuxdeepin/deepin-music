@@ -56,24 +56,21 @@
 #include "vlc/MediaPlayer.h"
 #include "vlc/Equalizer.h"
 #include "databaseservice.h"
+#include "vlc/cda.h"
 
 #include "core/musicsettings.h"
 #include <DPushButton>
 #include <DPalette>
 #include <QThread>
 
+#include "commonservice.h"
+
 DCORE_USE_NAMESPACE
-static QMap<QString, bool>  sSupportedSuffix;
-static QStringList          sSupportedSuffixList;
-static QStringList          sSupportedFiterList;
-static QStringList          sSupportedMimeTypes;
 
 static const int sFadeInOutAnimationDuration = 900; //ms
 
-void initMiniTypes();
 Player::Player(QObject *parent) : QObject(parent)
 {
-    initMiniTypes();
     init();
 }
 
@@ -85,6 +82,19 @@ void Player::init()
     m_fadeOutAnimation = new QPropertyAnimation(this, "fadeInOutFactor");
     m_fadeInAnimation = new QPropertyAnimation(this, "fadeInOutFactor");
 
+    //支持格式列表,.cda格式自动加载，无需放在支持列表中
+    m_supportedSuffix << "*.aac"
+                      << "*.amr"
+                      << "*.wav"
+                      << "*.ogg"
+                      << "*.ape"
+                      << "*.mp3"
+                      << "*.flac"
+                      << "*.wma"
+                      << "*.m4a"
+                      << "*.ac3"
+                      << "*.voc"
+                      << "*.aiff";
     initMpris();
     m_volume = MusicSettings::value("base.play.volume").toInt();
     /**
@@ -94,28 +104,42 @@ void Player::init()
     setFadeInOut(MusicSettings::value("base.play.fade_in_out").toBool());
 
     m_mode = static_cast<PlaybackMode>(MusicSettings::value("base.play.playmode").toInt());
+
     m_currentPlayListHash = MusicSettings::value("base.play.last_playlist").toString(); //上一次的页面
+    //初始化cd线程
+    m_pCdaThread = new CdaThread(this);
+    //connect(m_pCdaThread, &CdaThread::sigSendCdaMimeData, this, &Player::setCdaInfoToList);
+    connect(m_pCdaThread, &CdaThread::sigSendCdaStatus, CommonService::getInstance(), &CommonService::signalCdaSongListChanged);
+    //为了不影响主线程加载，1s后再加载CD
+    QTimer::singleShot(1000, this, [ = ]() {
+        if (m_qvinstance == nullptr || m_qvplayer == nullptr || m_qvmedia == nullptr) {
+            initVlc();
+        }
+        //初始化mediaplayer
+        m_pCdaThread->setMediaPlayerPointer(m_qvplayer->core());
+        //查询cd信息
+        m_pCdaThread->doQuery();
+    });
 }
 
 QStringList Player::supportedSuffixList() const
 {
-    return sSupportedSuffixList;
-}
-
-QStringList Player::supportedMimeTypes() const
-{
-    return sSupportedMimeTypes;
+    return m_supportedSuffix;
 }
 
 Player::~Player()
 {
+    m_pCdaThread->closeThread();
+    while (m_pCdaThread->isRunning()) {
+
+    }
 }
 
 void Player::playMeta(MediaMeta meta)
 {
     if (meta.hash != "") {
-        if (access(meta.localPath.toStdString().c_str(), R_OK) != 0  ||
-                QFileInfo(m_ActiveMeta.localPath).dir().isEmpty()) {
+        if ((access(meta.localPath.toStdString().c_str(), R_OK) != 0  ||
+                QFileInfo(m_ActiveMeta.localPath).dir().isEmpty()) && meta.mmType != MIMETYPE_CDA) {
             //文件不存在提示  todo..
             emit signalPlaybackStatusChanged(Player::Paused);
             return;
@@ -125,9 +149,9 @@ void Player::playMeta(MediaMeta meta)
         if (m_qvinstance == nullptr || m_qvplayer == nullptr || m_qvmedia == nullptr) {
             initVlc();
         }
-        m_qvmedia->initMedia(meta.localPath, true, m_qvinstance);
+        m_qvmedia->initMedia(meta.localPath, meta.mmType == MIMETYPE_CDA ? false : true, m_qvinstance, meta.track);
         m_qvplayer->open(m_qvmedia);
-        m_qvplayer->setTime(meta.offset);
+        //m_qvplayer->setTime(meta.offset);
         m_qvplayer->play();
 
         /*************************
@@ -484,6 +508,11 @@ QList<MediaMeta> *Player::getPlayList()
     return &m_MetaList;
 }
 
+QList<MediaMeta> Player::getCdaPlayList()
+{
+    return m_pCdaThread->getCdaMetaInfo();
+}
+
 MprisPlayer *Player::getMpris() const
 {
     return m_mpris;
@@ -681,6 +710,11 @@ void Player::setMuted(bool mute)
     MusicSettings::setOption("base.play.mute", mute);
 }
 
+void Player::setCdaInfoToList(const QList<MediaMeta> &list)
+{
+    m_MetaList << list;
+}
+
 void Player::setActiveMeta(const MediaMeta &meta)
 {
     m_ActiveMeta = meta;
@@ -781,11 +815,6 @@ void Player::setFadeInOut(bool fadeInOut)
     m_fadeInOut = fadeInOut;
 }
 
-//void Player::setPlayOnLoaded(bool playOnLoaded)
-//{
-//    m_playOnLoad = playOnLoaded;
-//}
-
 void Player::setEqualizer(bool enabled, int curIndex, QList<int> indexbaud)
 {
     if (m_qvinstance == nullptr || m_qvplayer == nullptr || m_qvmedia == nullptr) {
@@ -861,12 +890,18 @@ bool Player::isValidDbusMute()
     if (!m_sinkInputPath.isEmpty()) {
         QVariant MuteV = DBusUtils::readDBusProperty("com.deepin.daemon.Audio", m_sinkInputPath,
                                                      "com.deepin.daemon.Audio.SinkInput", "Mute");
-
         return MuteV.isValid();
     }
 
     return false;
 }
+
+//void Player::sigCdaTracksReady(const QList<MediaMeta> &list)
+//{
+//    foreach (MediaMeta meta, list) {
+//        qDebug() << __FUNCTION__ << "__track" << meta.track;
+//    }
+//}
 
 void Player::readSinkInputPath()
 {
@@ -1057,7 +1092,8 @@ void Player::initMpris()
     m_mpris =  new MprisPlayer();
     m_mpris->setServiceName("DeepinMusic");
 
-    m_mpris->setSupportedMimeTypes(supportedMimeTypes());
+    m_mpris->setSupportedMimeTypes(m_supportedSuffix);
+
     m_mpris->setSupportedUriSchemes(QStringList() << "file");
     m_mpris->setCanQuit(true);
     m_mpris->setCanRaise(true);
@@ -1182,59 +1218,3 @@ void Player::changePicture()
     }
     emit signalUpdatePlayingIcon();
 }
-
-void initMiniTypes()
-{
-    //black list
-    QHash<QString, bool> suffixBlacklist;
-    suffixBlacklist.insert("m3u", true);
-    suffixBlacklist.insert("mid", true);
-    suffixBlacklist.insert("midi", true);
-    suffixBlacklist.insert("imy", true);
-    suffixBlacklist.insert("xmf", true);
-    suffixBlacklist.insert("mp4", true);
-    suffixBlacklist.insert("mkv", true);
-    suffixBlacklist.insert("avi", true);
-    suffixBlacklist.insert("mpeg4", true);
-    suffixBlacklist.insert("3gp", true);
-    suffixBlacklist.insert("flv", true);
-    suffixBlacklist.insert("ass", true);
-
-    QHash<QString, bool> suffixWhitelist;
-    suffixWhitelist.insert("cue", true);
-
-    QStringList  mimeTypeWhiteList;
-    mimeTypeWhiteList << "application/vnd.ms-asf";
-
-    QMimeDatabase mdb;
-    for (auto &mt : mdb.allMimeTypes()) {
-        if (mt.name().startsWith("audio/") /*|| mt.name().startsWith("video/")*/) {
-            sSupportedFiterList << mt.filterString();
-            for (auto &suffix : mt.suffixes()) {
-                if (suffixBlacklist.contains(suffix)) {
-                    continue;
-                }
-
-                sSupportedSuffixList << "*." + suffix;
-                sSupportedSuffix.insert(suffix, true);
-            }
-            sSupportedMimeTypes << mt.name();
-        }
-        if (mt.name().startsWith("video/")) {
-            sSupportedMimeTypes << mt.name();
-        }
-
-        if (mt.name().startsWith("application/octet-stream")) {
-            sSupportedMimeTypes << mt.name();
-        }
-    }
-
-    sSupportedMimeTypes << mimeTypeWhiteList;
-
-    for (auto &suffix : suffixWhitelist.keys()) {
-        sSupportedSuffixList << "*." + suffix;
-        sSupportedSuffix.insert(suffix, true);
-    }
-}
-
-

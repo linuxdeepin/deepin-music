@@ -159,6 +159,18 @@ void MusicListDataWidget::slotViewChanged(ListPageSwitchType switchtype, const Q
         refreshInfoLabel("fav");
         break;
     }
+    case CdaType: {
+        refreshSortAction();
+        m_musicListView->initCostomSonglist(hashOrSearchword);
+        m_titleLabel->setText(tr("CD playlist"));
+        m_musicListView->setViewModeFlag(hashOrSearchword, m_musicListView->getViewMode());
+        m_pStackedWidget->setCurrentWidget(m_musicListView);
+        m_preHash = hashOrSearchword;
+        m_preSwitchtype = CdaType;
+        refreshModeBtn(m_musicListView->getViewMode());
+        refreshInfoLabel(hashOrSearchword);
+        break;
+    }
     case CustomType: {
         refreshSortAction();
         m_musicListView->initCostomSonglist(hashOrSearchword);

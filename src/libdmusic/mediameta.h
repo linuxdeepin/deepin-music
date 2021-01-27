@@ -32,6 +32,13 @@
 
 class QFileInfo;
 
+enum MIMETYPE {
+    MIMETYPE_OTHER = -1,
+    MIMETYPE_LOCAL,
+    MIMETYPE_CDA,
+    MIMETYPE_NET
+};
+
 class LIBDMUSICSHARED_EXPORT MediaMeta
 {
 public:
@@ -52,19 +59,19 @@ public:
 
     QString filetype;
 
+    MIMETYPE mmType = MIMETYPE_LOCAL;
+
     qint64  timestamp   = 0;    // addTime;
     qint64  offset      = 0;    //msec
     qint64  length      = 1;    //msec
-    qint64  track       = 0;
     qint64  size        = 1;
+    qint32  track       = 0;
     QString editor;
     QString composer;
     QString creator;
 
     QString searchID;
     QUrl    coverUrl;
-
-//    QByteArray coverData;
 
     bool    hasimage = true;
     bool    favourite   = false;
@@ -112,6 +119,7 @@ struct customInfo {
     QString songPath;
 };
 
+
 enum SearchType {
     none = 0,
     SearchMusic,
@@ -128,6 +136,7 @@ enum ListPageSwitchType {
     SingerType,         //歌手
     AllSongListType,    //所有歌曲
     FavType,            //收藏
+    CdaType,            //自定义歌单cda
     CustomType,         //自定义歌单
     SearchMusicResultType,     //搜索歌曲结果
     SearchSingerResultType,    //搜索歌手结果

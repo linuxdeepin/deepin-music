@@ -46,8 +46,6 @@ extern "C" {
 #include "player.h"
 #include "core/vlc/vlcdynamicinstance.h"
 
-const static int ScanCacheSize = 5000;
-
 typedef AVFormatContext *(*format_alloc_context_function)(void);
 typedef int (*format_open_input_function)(AVFormatContext **, const char *, AVInputFormat *, AVDictionary **);
 typedef void (*format_free_context_function)(AVFormatContext *);
@@ -76,10 +74,6 @@ typedef int (*codec_receive_frame_function)(AVCodecContext *, AVFrame *);
 
 MediaLibrary::MediaLibrary(QObject *parent) : QObject(parent)
 {
-    auto suffixList = Player::getInstance()->supportedSuffixList();
-    for (auto suffix : suffixList) {
-        m_supportedSuffixs.insert(suffix, true);
-    }
 }
 
 
@@ -102,9 +96,9 @@ MediaMeta MediaLibrary::creatMediaMeta(QString path)
     return mediaMeta;
 }
 
-QMap<QString, bool> MediaLibrary::getSupportedSuffixs()
+QStringList MediaLibrary::getSupportedSuffixs()
 {
-    return  m_supportedSuffixs;
+    return  Player::getInstance()->supportedSuffixList();
 }
 
 void MediaLibrary::init()

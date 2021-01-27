@@ -37,6 +37,7 @@
 
 class QAudioBuffer;
 class MprisPlayer;
+class CdaThread;
 class Player : public QObject, public DMusic::DSingleton<Player>
 {
     Q_OBJECT
@@ -87,6 +88,8 @@ public:
     void setPlayList(const QList<MediaMeta> &list);
     // 获取播放列表
     QList<MediaMeta> *getPlayList();
+    // 获取CD播放列表
+    QList<MediaMeta> getCdaPlayList();
     // 获取dbus实例
     MprisPlayer *getMpris() const;
     // 当前播放playlist的hash, reloadMetaList为true表示需要更新播放列表
@@ -129,6 +132,7 @@ public slots:
     void changePicture();
     void setVolume(int volume);
     void setMuted(bool muted);
+    void setCdaInfoToList(const QList<MediaMeta> &list);
 private:
     QTimer         *m_timer = nullptr;
     QIcon           m_playingIcon = QIcon::fromTheme("music_play1");
@@ -149,7 +153,6 @@ public:
 
     VlcMediaPlayer *core();
     QStringList supportedSuffixList()const;
-    QStringList supportedMimeTypes() const;
 
 signals:
     void readyToResume();
@@ -178,7 +181,8 @@ signals:
     void fadeInOutChanged(bool fadeInOut);
     void playOnLoadedChanged(bool playOnLoaded);
     void audioBufferProbed(const QAudioBuffer &buffer);
-
+    //cda歌曲信息
+    void sigCdaTracksReady(const QList<MediaMeta> &);
 public slots:
     void setCanControl(bool canControl);
     void setPosition(qlonglong position);
@@ -193,7 +197,6 @@ public slots:
     void setDbusMuted(bool muted = false);
     void setFadeInOutFactor(double fadeInOutFactor);
     void setFadeInOut(bool fadeInOut);
-    //void setPlayOnLoaded(bool playOnLoaded);
     void setEqualizer(bool enabled, int curIndex, QList<int> indexbaud);
     void setEqualizerEnable(bool enable);
     void setEqualizerpre(int val);
@@ -231,12 +234,13 @@ private:
     bool m_shuffle        = false;
     bool m_mute           = false; // unused
     QString m_sinkInputPath;
+    QStringList m_supportedSuffix;
 
     VlcInstance             *m_qvinstance = nullptr;
     VlcMedia                *m_qvmedia = nullptr;
     VlcMediaPlayer          *m_qvplayer = nullptr;
+    CdaThread               *m_pCdaThread = nullptr;
 
-    //bool            m_playOnLoad  = true;
     // 外部双击打开处理一次
     bool            m_firstPlayOnLoad  = true;
     bool            m_fadeInOut   = false;

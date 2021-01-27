@@ -258,8 +258,12 @@ void PlayListView::initCostomSonglist(const QString &hash)
     }
     m_currentHash = hash;
     m_model->clear();
-    QList<MediaMeta> mediaMetas = DataBaseService::getInstance()->customizeMusicInfos(hash);
-
+    QList<MediaMeta> mediaMetas;
+    if (hash == "CdaRole") { //从player获取cda缓存数据
+        mediaMetas = Player::getInstance()->getCdaPlayList();
+    } else {
+        mediaMetas = DataBaseService::getInstance()->customizeMusicInfos(hash);
+    }
     DataBaseService::ListSortType sortType = getSortType();
     this->setDataBySortType(mediaMetas, sortType);
 }
@@ -557,7 +561,7 @@ void PlayListView::slotOnDoubleClicked(const QModelIndex &index)
     //todo检查文件是否存在
     MediaMeta itemMeta = index.data(Qt::UserRole).value<MediaMeta>();
     qDebug() << "------" << itemMeta.hash;
-    if (!QFileInfo(itemMeta.localPath).exists()) {
+    if (!QFileInfo(itemMeta.localPath).exists() && itemMeta.mmType != MIMETYPE_CDA) {
         //停止当前的歌曲
         Player::getInstance()->stop();
         //弹出提示框
@@ -1019,6 +1023,14 @@ void PlayListView::contextMenuEvent(QContextMenuEvent *event)
         return;
     }
 
+    //查找是否有cda格式歌曲
+    if (selection->selectedRows().size() == 1) {
+        QModelIndex curindex = selection->selectedRows().at(0);
+        MediaMeta meta = curindex.data(Qt::UserRole).value<MediaMeta>();
+        if (meta.mmType == MIMETYPE_CDA) //cda不处理右键菜单
+            return;
+    }
+
     QPoint globalPos = mapToGlobal(event->pos());
 
     DMenu allMusicMenu;//first level menu
@@ -1184,7 +1196,7 @@ void PlayListView::dropEvent(QDropEvent *event)
             localpaths << url.toLocalFile();
         }
 
-        if (!localpaths.isEmpty()) {
+        if (!localpaths.isEmpty() && m_currentHash != "CdaRole") { //cda歌单不需要添加歌曲
             DataBaseService::getInstance()->importMedias(m_currentHash, localpaths);
         }
     }

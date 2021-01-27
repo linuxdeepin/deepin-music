@@ -52,6 +52,7 @@ public slots:
 
     // 新建歌单
     void addNewSongList();
+    void changeCdaSongList(int stat);
     // 删除歌单
     void rmvSongList();
     void slotUpdatePlayingIcon();
@@ -60,6 +61,8 @@ public slots:
     void slotDoubleClicked(const QModelIndex &index);
     // 重命名完成
     void slotLineEditingFinished();
+    // cda状态变更弹窗
+    void slotPopMessageWindow(int stat);
 signals:
     void sigAddNewSongList();
     void sigRmvSongList();

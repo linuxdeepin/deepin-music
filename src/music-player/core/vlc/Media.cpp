@@ -76,12 +76,13 @@ libvlc_media_t *VlcMedia::core()
 
 void VlcMedia::initMedia(const QString &location,
                          bool localFile,
-                         VlcInstance *instance)
+                         VlcInstance *instance, int track)
 {
     _currentLocation = location;
-    QString l = location;
+    m_cdaTrackId = track;
+    QString path = location;
     if (localFile)
-        l = QDir::toNativeSeparators(l);
+        path = QDir::toNativeSeparators(path);
 
     // Create a new libvlc media descriptor from location
     vlc_media_new_path_function vlc_media_new_path = (vlc_media_new_path_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("libvlc_media_new_path");
@@ -89,15 +90,20 @@ void VlcMedia::initMedia(const QString &location,
     vlc_media_event_manager_function vlc_media_event_manager = (vlc_media_event_manager_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("libvlc_media_event_manager");
 
     if (localFile)
-        _vlcMedia = vlc_media_new_path(instance->core(), l.toUtf8().data());
-    else
-        _vlcMedia = vlc_media_new_location(instance->core(), l.toUtf8().data());
-
+        _vlcMedia = vlc_media_new_path(instance->core(), path.toUtf8().data());
+    else {
+        _vlcMedia = vlc_media_new_location(instance->core(), path.toUtf8().data());
+    }
     _vlcEvents = vlc_media_event_manager(_vlcMedia);
 
     createCoreConnections();
 
     VlcError::showErrmsg();
+}
+
+int VlcMedia::getCdaTrack() const
+{
+    return m_cdaTrackId;
 }
 
 void VlcMedia::createCoreConnections()

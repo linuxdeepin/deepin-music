@@ -36,7 +36,7 @@ public:
     ~MediaLibrary();
 
     MediaMeta creatMediaMeta(QString path);
-    QMap<QString, bool>    getSupportedSuffixs();
+    QStringList   getSupportedSuffixs();
 signals:
     void mediaClean();
     void scanFinished(const QString &jobid, int mediaCount);
@@ -46,7 +46,5 @@ public slots:
 private:
     explicit MediaLibrary(QObject *parent = nullptr);
     friend class DMusic::DSingleton<MediaLibrary>;
-
-    QMap<QString, bool>    m_supportedSuffixs;
 };
 
