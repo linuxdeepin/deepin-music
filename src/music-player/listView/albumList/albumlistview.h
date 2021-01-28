@@ -100,8 +100,7 @@ private:
     AlbumDataDelegate       *albumDelegate = nullptr;
     MediaMeta                 playingMeta;
     MediaMeta                 hoverinMeta;
-    QPixmap                 playingPix = QPixmap(":/mpimage/light/music1.svg");
-    QPixmap                 sidebarPix = QPixmap(":/mpimage/light/music_withe_sidebar/music1.svg");
+    QPixmap                 playingPix = QPixmap(":/texts/music_play1_20px.svg");
 //    MusicListDialog        *musciListDialog = nullptr;
     QString                 m_hash;
     QListView::ViewMode     m_viewModel = QListView::ListMode;

@@ -166,6 +166,5 @@ private:
     //QShortcut           *m_pShowMenuShortcut = nullptr;
 
     QPixmap m_sidebarPixmap;
-    const QPixmap m_albumPixmap = QPixmap(":/mpimage/light/music_white_album_cover/music1.svg");
     QIcon     m_defaultIcon = QIcon(":/common/image/cover_max.svg");
 };

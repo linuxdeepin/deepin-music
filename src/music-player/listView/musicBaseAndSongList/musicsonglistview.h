@@ -98,9 +98,6 @@ private:
     DStandardItem        *m_renameItem = nullptr;
     // 重命名控件
     DLineEdit            *m_renameLineEdit = nullptr;
-    QPixmap              playingPixmap;
-    QPixmap              albumPixmap;
-    QPixmap              defaultPixmap;
 
     // 新建歌单快捷键
 //    QShortcut           *m_newItemShortcut = nullptr;

@@ -346,7 +346,7 @@ void AlbumDataDelegate::drawListMode(QPainter &painter, const QStyleOptionViewIt
             nameColor = option.palette.highlightedText().color();
             otherColor = option.palette.highlightedText().color();
         } else {
-            nameColor = QColor(DGuiApplicationHelper::instance()->applicationPalette().highlight().color());
+            nameColor = DGuiApplicationHelper::instance()->applicationPalette().highlight().color();
             otherColor = QColor("#2CA7F8");
         }
         QRect numRect(lrWidth, option.rect.y(), 40, option.rect.height());
@@ -394,7 +394,7 @@ void AlbumDataDelegate::drawListMode(QPainter &painter, const QStyleOptionViewIt
     painter.drawText(nameRect, Qt::AlignLeft | Qt::AlignVCenter, nameText);
 
     // extraname
-    painter.setPen(otherColor);
+//    painter.setPen(nameColor);
     QRect extraRect(50 + w / 2, option.rect.y(), w / 4 - 20, option.rect.height());
     painter.setFont(fontT9);
     auto extraText = songsFm.elidedText(albumTmp.singer.isEmpty() ? SingerListView::tr("Unknown artist") : albumTmp.singer, Qt::ElideMiddle, extraRect.width());

@@ -99,7 +99,7 @@ pkg_check_modules(udisks2 REQUIRED IMPORTED_TARGET udisks2-qt5)
 
 
 set(AllQRC
-    ./resource/resource.qrc
+    #./resource/resource.qrc
     ./resource/theme/theme.qrc
     ./icons/icons.qrc
     ./config.qrc

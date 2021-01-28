@@ -64,9 +64,6 @@ private:
     DStyledItemDelegate  *delegate        = nullptr;
     QStandardItem        *playingItem     = nullptr;
     //QStandardItem      *m_currentitem = nullptr;
-    QPixmap              playingPixmap;
-    QPixmap              albumPixmap;
-    QPixmap              defaultPixmap;
     bool                m_sizeChangedFlag   = false;
     bool                pixmapState         = false;
 };

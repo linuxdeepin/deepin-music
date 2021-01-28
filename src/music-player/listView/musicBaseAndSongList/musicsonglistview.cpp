@@ -69,10 +69,6 @@ MusicSongListView::MusicSongListView(QWidget *parent) : DListView(parent)
     setItemDelegate(delegate);
 
     setViewportMargins(8, 0, 8, 0);
-
-    playingPixmap = QPixmap(":/mpimage/light/music1.svg");
-    albumPixmap = QPixmap(":/mpimage/light/music_withe_sidebar/music1.svg");
-    defaultPixmap = QPixmap(":/mpimage/light/music_withe_sidebar/music1.svg");
     auto font = this->font();
     font.setFamily("SourceHanSansSC");
     font.setWeight(QFont::Medium);

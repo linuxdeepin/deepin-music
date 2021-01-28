@@ -59,7 +59,7 @@ ImportWidget::ImportWidget(QWidget *parent) : DFrame(parent)
     m_logo = new QLabel;
     m_logo->setFixedSize(128, 128);
     m_logo->setObjectName("ImportViewLogo");
-    m_logo->setPixmap(DHiDPIHelper::loadNxPixmap(":/mpimage/light/import_music.svg"));
+    m_logo->setPixmap(QIcon::fromTheme("import_music_light").pixmap(QSize(128, 128)));
 
     m_waterProgress = new DWaterProgress(this);
     m_waterProgress->setTextVisible(true);
@@ -333,9 +333,7 @@ void ImportWidget::dropEvent(QDropEvent *event)
 }
 void ImportWidget::setThemeType(int type)
 {
-    QString rStr;
     if (type == 1) {
-        rStr = "light";
         auto pl = m_importPathButton->palette();
         pl.setColor(DPalette::Dark, QColor("#0098FF"));
         pl.setColor(DPalette::Light, QColor("#25B7FF"));
@@ -352,8 +350,8 @@ void ImportWidget::setThemeType(int type)
 //        d->text->setPalette(pa);
         m_text->setForegroundRole(QPalette::WindowText);
 //        d->text->setForegroundRole(DPalette::TextTips);
+        m_logo->setPixmap(QIcon::fromTheme("import_music_light").pixmap(QSize(128, 128)));
     } else {
-        rStr = "dark";
         auto pl = m_importPathButton->palette();
         pl.setColor(DPalette::Dark, QColor("#0056C1"));
         pl.setColor(DPalette::Light, QColor("#004C9C"));
@@ -370,8 +368,9 @@ void ImportWidget::setThemeType(int type)
 //        d->text->setPalette(pa);
         m_text->setForegroundRole(QPalette::WindowText);
 //        d->text->setForegroundRole(DPalette::TextTips);
+        m_logo->setPixmap(QIcon::fromTheme("import_music_dark").pixmap(QSize(128, 128)));
     }
-    m_logo->setPixmap(DHiDPIHelper::loadNxPixmap(QString(":/mpimage/%1/import_music.svg").arg(rStr)));
+
 }
 
 void ImportWidget::slotImportedPercent(int percent)

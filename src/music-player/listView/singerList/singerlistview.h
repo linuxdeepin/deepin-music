@@ -105,8 +105,7 @@ private:
     SingerDataModel         *singerModel    = nullptr;
     SingerDataDelegate      *signerDelegate = nullptr;
 //    MusicListDialog        *musicListDialog = nullptr;
-    QPixmap                 playingPix = QPixmap(":/mpimage/light/music1.svg");
-    QPixmap                 sidebarPix = QPixmap(":/mpimage/light/music_withe_sidebar/music1.svg");
+    QPixmap                 playingPix = QPixmap(":/texts/music_play1_20px.svg");
     QString                  m_hash;
     QListView::ViewMode      m_viewModel = QListView::ListMode;
     QIcon                   m_defaultIcon = QIcon(":/common/image/cover_max.svg");
