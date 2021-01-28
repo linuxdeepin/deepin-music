@@ -165,3 +165,4 @@ install(FILES ${PROJECT_SOURCE_DIR}/src/music-player/data/deepin-music.desktop
 # install Manual App icon
 install(FILES ${PROJECT_SOURCE_DIR}/src/music-player/resource/theme/common/image/deepin-music.svg
     DESTINATION share/icons/hicolor/scalable/apps)
+install(DIRECTORY ${PROJECT_SOURCE_DIR}/assets/deepin-music DESTINATION /usr/share/deepin-manual/manual-assets/application/)

@@ -31,7 +31,6 @@
 #include <DApplication>
 #include "dplatformwindowhandle.h"
 #include "dblureffectwidget.h"
-#include <DImageButton>
 #include <DFrame>
 #include <DFloatingWidget>
 #include <DHiDPIHelper>

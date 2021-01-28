@@ -28,7 +28,6 @@
 #include <DFrame>
 #include <DLabel>
 #include <QBitmap>
-#include <DImageButton>
 #include <DPushButton>
 #include <DApplicationHelper>
 #include <DHiDPIHelper>
