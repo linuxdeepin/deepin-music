@@ -423,7 +423,7 @@ void MainFrame::showPopupMessage(const QString &songListName, int selectCount, i
     if (oldMsgList.size() >= 2)
         return;
 
-    QIcon icon = QIcon(":/common/image/notify_success_new.svg");
+    QIcon icon = QIcon::fromTheme("notify_success");
     DFloatingMessage *pDFloatingMessage = new DFloatingMessage(DFloatingMessage::MessageType::TransientType, m_popupMessage);
     pDFloatingMessage->setObjectName("_d_message_float_deepin_music");
     pDFloatingMessage->setBlurBackgroundEnabled(true);

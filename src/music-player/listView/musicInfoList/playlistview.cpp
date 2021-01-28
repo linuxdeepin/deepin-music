@@ -296,7 +296,7 @@ void PlayListView::resetSonglistByStr(const QString &searchWord)
         if (file.exists()) {
             icon = QIcon(imagesDirPath);
         } else {
-            icon = QIcon(":/common/image/cover_max.svg");
+            icon = QIcon::fromTheme("cover_max");
         }
         newItem->setIcon(icon);
         m_model->appendRow(newItem);
@@ -360,7 +360,7 @@ void PlayListView::setDataBySortType(QList<MediaMeta> &mediaMetas, DataBaseServi
         if (file.exists()) {
             icon = QIcon(imagesDirPath);
         } else {
-            icon = QIcon(":/common/image/cover_max.svg");
+            icon = QIcon::fromTheme("cover_max");
         }
         newItem->setIcon(icon);
         m_model->appendRow(newItem);
@@ -528,7 +528,7 @@ void PlayListView::setMusicListView(QMap<QString, MediaMeta> musicinfos, QString
         if (file.exists()) {
             icon = QIcon(imagesDirPath);
         } else {
-            icon = QIcon(":/common/image/cover_max.svg");
+            icon = QIcon::fromTheme("cover_max");
         }
         newItem->setIcon(icon);
         m_model->appendRow(newItem);
@@ -927,7 +927,6 @@ void PlayListView::slotDelFromLocal()
     warnDlg.addButton(tr("Cancel"), true, Dtk::Widget::DDialog::ButtonNormal);
     int deleteFlag = warnDlg.addButton(tr("Delete"), false, Dtk::Widget::DDialog::ButtonWarning);
 
-    auto cover = QImage(QString(":/common/image/del_notify.svg"));
     if (1 == strlist.length()) {
         QModelIndex idx =  this->selectedIndexes().at(0);
         MediaMeta imt = idx.data(Qt::UserRole).value<MediaMeta>();
@@ -963,7 +962,7 @@ void PlayListView::insertRow(int row, MediaMeta meta)
     if (file.exists()) {
         icon = QIcon(imagesDirPath);
     } else {
-        icon = QIcon(":/common/image/cover_max.svg");
+        icon = QIcon::fromTheme("cover_max");
     }
     newItem->setIcon(icon);
     m_model->insertRow(row, newItem);

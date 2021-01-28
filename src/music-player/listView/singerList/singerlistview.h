@@ -108,5 +108,5 @@ private:
     QPixmap                 playingPix = QPixmap(":/texts/music_play1_20px.svg");
     QString                  m_hash;
     QListView::ViewMode      m_viewModel = QListView::ListMode;
-    QIcon                   m_defaultIcon = QIcon(":/common/image/cover_max.svg");
+    QIcon                   m_defaultIcon = QIcon::fromTheme("cover_max");
 };

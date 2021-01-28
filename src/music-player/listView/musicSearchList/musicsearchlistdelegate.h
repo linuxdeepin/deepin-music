@@ -48,7 +48,5 @@ protected:
 
 //    void setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const override;
 private:
-    QString m_playingIcon = ":/images/logo.svg";
-    QString m_highlightPlayingIcon = ":/images/logo.svg";
     QPixmap m_shadowImg;
 };

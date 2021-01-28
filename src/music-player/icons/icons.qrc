@@ -38,5 +38,10 @@
         <file>texts/left_arrow_24px.svg</file>
         <file>icons/import_music_dark_128px.svg</file>
         <file>icons/import_music_light_128px.svg</file>
+        <file>icons/notify_success_32px.svg</file>
+        <file>icons/deepin-music.svg</file>
+        <file>icons/play_all_18px.svg</file>
+        <file>icons/random_play_18px.svg</file>
+        <file>icons/clear_list_18px.svg</file>
     </qresource>
 </RCC>

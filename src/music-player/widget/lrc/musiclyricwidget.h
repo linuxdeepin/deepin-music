@@ -71,8 +71,6 @@ private:
     Cover               *m_cover              = nullptr;
     LyricLabel          *m_lyricview            = nullptr;
     DLabel              *m_nolyric              = nullptr;
-    QString              m_defaultCover = ":/common/image/cover_max.svg";
     bool                 m_serachflag = false;
     DBlurEffectWidget   *m_backgroundW = nullptr;
-    QImage               m_defaultImage = QImage(":/common/image/cover_max.svg");
 };

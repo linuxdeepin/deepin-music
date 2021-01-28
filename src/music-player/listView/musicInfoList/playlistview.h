@@ -168,5 +168,5 @@ private:
     //QShortcut           *m_pShowMenuShortcut = nullptr;
 
     QPixmap m_sidebarPixmap;
-    QIcon     m_defaultIcon = QIcon(":/common/image/cover_max.svg");
+    QIcon     m_defaultIcon = QIcon::fromTheme("cover_max");
 };

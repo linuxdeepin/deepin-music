@@ -621,7 +621,7 @@ void MusicListDataWidget::initBtPlayAll(QHBoxLayout *layout)
     playAllPalette.setColor(DPalette::Dark, QColor("#FD5E5E"));
     playAllPalette.setColor(DPalette::Light, QColor("#ED5656"));
     m_btPlayAll->setPalette(playAllPalette);
-    m_btPlayAll->setIcon(QIcon(":/mpimage/light/normal/play_all_normal.svg"));
+    m_btPlayAll->setIcon(QIcon::fromTheme("play_all"));
     m_btPlayAll->setObjectName("MusicListDataPlayAll");
     m_btPlayAll->setText(tr("Play All"));
     m_btPlayAll->setFixedHeight(30);

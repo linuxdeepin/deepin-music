@@ -48,6 +48,7 @@
 #include "musicsettings.h"
 #include <DGuiApplicationHelper>
 #include <DBlurEffectWidget>
+#include "metadetector.h"
 
 #include "ac-desktop-define.h"
 DGUI_USE_NAMESPACE
@@ -128,13 +129,14 @@ void MusicLyricWidget::updateUI()
 {
     MediaMeta meta = Player::getInstance()->getActiveMeta();
     QFileInfo coverInfo(Global::cacheDir() + "/images/" + meta.hash + ".jpg");
-    QImage cover;
+    QPixmap cover;
     if (coverInfo.exists()) {
-        cover = QImage(Global::cacheDir() + "/images/" + meta.hash + ".jpg");
+        // 不使用缩略图,使用原图,更加清晰
+        cover = MetaDetector::getCoverDataPixmap(meta);
     } else {
-        cover = m_defaultImage;
+        cover = QIcon::fromTheme("cover_max").pixmap(QSize(200, 200));
     }
-    m_cover->setCoverPixmap(QPixmap::fromImage(cover));
+    m_cover->setCoverPixmap(cover);
     m_cover->update();
 
     //cut image
@@ -143,10 +145,10 @@ void MusicLyricWidget::updateUI()
     QImage coverImage;
     if (imageWidth > cover.width()) {
         int imageheight = static_cast<int>(cover.width() / windowScale);
-        coverImage = cover.copy(0, (cover.height() - imageheight) / 2, cover.width(), imageheight);
+        coverImage = cover.toImage().copy(0, (cover.height() - imageheight) / 2, cover.width(), imageheight);
     } else {
         int imageheight = cover.height();
-        coverImage = cover.copy((cover.width() - imageWidth) / 2, 0, imageWidth, imageheight);
+        coverImage = cover.toImage().copy((cover.width() - imageWidth) / 2, 0, imageWidth, imageheight);
     }
 
     m_backgroundW->setSourceImage(coverImage);

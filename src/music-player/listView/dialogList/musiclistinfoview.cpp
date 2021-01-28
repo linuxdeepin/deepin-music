@@ -389,7 +389,6 @@ void MusicListInfoView::slotDeleteLocalActionClicked(bool checked)
     warnDlg.addButton(tr("Cancel"), true, Dtk::Widget::DDialog::ButtonNormal);
     int deleteFlag = warnDlg.addButton(tr("Delete"), false, Dtk::Widget::DDialog::ButtonWarning);
 
-    auto cover = QImage(QString(":/common/image/del_notify.svg"));
     if (1 == metas.length()) {
         auto meta = metas.first();
         warnDlg.setMessage(QString(tr("Are you sure you want to delete %1?")).arg(meta.title));

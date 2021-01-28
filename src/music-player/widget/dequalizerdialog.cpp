@@ -506,7 +506,7 @@ DequalizerDialog::DequalizerDialog(QWidget *parent):
     QFontMetrics fm(font);
     this->saveMessage  = new DFloatingMessage(DFloatingMessage::TransientType, this);
     this->saveMessage->setFont(font);
-    this->saveMessage->setIcon(QIcon(":/common/image/notify_success_new.svg"));
+    this->saveMessage->setIcon(QIcon::fromTheme("notify_success"));
     this->saveMessage->setMessage(tr("Sound Effects Saved"));
     int Minwid = fm.width(tr("Sound Effects Saved")) + 70;
     this->saveMessage->setMinimumSize(Minwid, 60);

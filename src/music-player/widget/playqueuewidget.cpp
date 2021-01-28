@@ -74,7 +74,7 @@ PlayQueueWidget::PlayQueueWidget(QWidget *parent) :
     m_infoLabel->setMargin(4);
 
     m_btClearAll = new DPushButton;
-    m_btClearAll->setIcon(QIcon(":/mpimage/light/normal/clear_list_normal.svg"));
+    m_btClearAll->setIcon(QIcon::fromTheme("clear_list"));
 //    m_btClearAll->setFont(infoFont);
     DFontSizeManager::instance()->bind(m_btClearAll, DFontSizeManager::T6);
     m_btClearAll->setObjectName("PlayListPlayAll");

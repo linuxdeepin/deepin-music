@@ -104,5 +104,5 @@ private:
 //    MusicListDialog        *musciListDialog = nullptr;
     QString                 m_hash;
     QListView::ViewMode     m_viewModel = QListView::ListMode;
-    QIcon                   m_defaultIcon = QIcon(":/common/image/cover_max.svg");
+    QIcon                   m_defaultIcon = QIcon::fromTheme("cover_max");
 };

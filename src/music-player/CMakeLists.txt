@@ -99,8 +99,8 @@ pkg_check_modules(udisks2 REQUIRED IMPORTED_TARGET udisks2-qt5)
 
 
 set(AllQRC
-    #./resource/resource.qrc
-    ./resource/theme/theme.qrc
+#    ./resource/resource.qrc
+#    ./resource/theme/theme.qrc
     ./icons/icons.qrc
     ./config.qrc
     )
@@ -163,6 +163,6 @@ install(DIRECTORY ${PROJECT_SOURCE_DIR}/src/music-player/translations
 install(FILES ${PROJECT_SOURCE_DIR}/src/music-player/data/deepin-music.desktop
     DESTINATION share/applications)
 # install Manual App icon
-install(FILES ${PROJECT_SOURCE_DIR}/src/music-player/resource/theme/common/image/deepin-music.svg
+install(FILES ${PROJECT_SOURCE_DIR}/src/music-player/icons/icons/deepin-music.svg
     DESTINATION share/icons/hicolor/scalable/apps)
 install(DIRECTORY ${PROJECT_SOURCE_DIR}/assets/deepin-music DESTINATION /usr/share/deepin-manual/manual-assets/application/)
