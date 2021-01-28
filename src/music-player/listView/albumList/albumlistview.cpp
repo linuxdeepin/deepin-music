@@ -624,12 +624,16 @@ void AlbumListView::slotScrollToCurrentPosition(QString songlistHash)
 void AlbumListView::slotUpdateCodec(const MediaMeta &meta)
 {
     for (int i = 0; i < albumModel->rowCount(); i++) {
-        MediaMeta tmpmeta = albumModel->index(i, 0).data(Qt::UserRole).value<MediaMeta>();
-        if (meta.hash == tmpmeta.hash) {
-            QVariant varmeta;
-            varmeta.setValue(meta);
-            albumModel->setData(albumModel->index(i, 0), varmeta, Qt::UserRole);
-            return;
+        AlbumInfo tmpmeta = albumModel->index(i, 0).data(Qt::UserRole).value<AlbumInfo>();
+        foreach (QString strhash, tmpmeta.musicinfos.keys()) {
+            if (meta.hash == strhash) {
+                tmpmeta.musicinfos[strhash].codec = meta.codec;
+                tmpmeta.musicinfos[strhash].updateCodec(meta.codec.toUtf8());
+                QVariant varmeta;
+                varmeta.setValue(tmpmeta);
+                albumModel->setData(albumModel->index(i, 0), varmeta, Qt::UserRole);
+                return;
+            }
         }
     }
 }

@@ -339,7 +339,7 @@ void FooterWidget::initUI(QWidget *parent)
 
     connect(m_volSlider, &SoundVolume::sigVolumeChanged, this, &FooterWidget::slotFlushSoundIcon);
     connect(DataBaseService::getInstance(), &DataBaseService::signalFavSongRemove, this, &FooterWidget::slotFavoriteRemove);
-    connect(DataBaseService::getInstance(), &DataBaseService::signalFavSongAdd, this, &FooterWidget::fluashFavoriteBtnIconAdd);
+    connect(DataBaseService::getInstance(), &DataBaseService::signalFavSongAdd, this, &FooterWidget::flushFavoriteBtnIconAdd);
 
     slotFlushSoundIcon();
     resetBtnVisible();
@@ -580,7 +580,7 @@ void FooterWidget::slotFavoriteRemove(const QString &musicHash)
     }
 }
 
-void FooterWidget::fluashFavoriteBtnIconAdd(QString hash)
+void FooterWidget::flushFavoriteBtnIconAdd(QString hash)
 {
     if (CommonService::getInstance()->getListPageSwitchType() == ListPageSwitchType::FavType)
         emit CommonService::getInstance()->signalSwitchToView(FavType, "fav");

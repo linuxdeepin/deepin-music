@@ -490,6 +490,10 @@ void MusicSongListView::slotPopMessageWindow(int stat)
     //只处理弹出cd的弹窗
     if (stat == 1) {
         changeCdaSongList(stat);
+        if (DataBaseService::getInstance()->allMusicInfosCount() == 0) {
+            //进入主页面
+            emit CommonService::getInstance()->signalCdaImportFinished();
+        }
         return;
     }
 
@@ -525,34 +529,29 @@ void MusicSongListView::slotPopMessageWindow(int stat)
      * */
     qDebug() << __FUNCTION__ << stat;
     int allsize = DataBaseService::getInstance()->allMusicInfosCount();
+
     if (allsize == 0) {
-        //进入主页面
-        emit DataBaseService::getInstance()->signalImportFinished(CDA_USER_ROLE, 1);
+        //回到初始页面
+        emit DataBaseService::getInstance()->signalAllMusicCleared();
     } else {
-        if (allsize == 0) {
-            //回到初始页面
-            emit DataBaseService::getInstance()->signalAllMusicCleared();
-        } else {
-
-            if (tmpMeta.mmType == MIMETYPE_CDA) {
-                Player::getInstance()->setActiveMeta(MediaMeta());
-                //设置当前页面，刷新播放队列和显示列表
-                Player::getInstance()->setCurrentPlayListHash("all", true);
-                //播放歌单第一首歌曲
-                Player::getInstance()->forcePlayMeta();
-            }
-
-            if (model->rowCount() > 0  && tmpMeta.mmType != MIMETYPE_CDA) {
-                int row = this->currentIndex().row();
-                QString strrole = model->index(row, 0).data(Qt::UserRole + CDA_USER_ROLE_OFFSET).toString();
-                if (strrole == CDA_USER_ROLE) {
-                    //设置当前页面，刷新播放队列和显示列表
-                    Player::getInstance()->setCurrentPlayListHash("all", false);
-                }
-            }
-            // 切换到所有音乐界面
-            emit CommonService::getInstance()->signalSwitchToView(AllSongListType, "all");
+        if (tmpMeta.mmType == MIMETYPE_CDA) {
+            Player::getInstance()->setActiveMeta(MediaMeta());
+            //设置当前页面，刷新播放队列和显示列表
+            Player::getInstance()->setCurrentPlayListHash("all", true);
+            //播放歌单第一首歌曲
+            Player::getInstance()->forcePlayMeta();
         }
+
+        if (model->rowCount() > 0  && tmpMeta.mmType != MIMETYPE_CDA) {
+            int row = this->currentIndex().row();
+            QString strrole = model->index(row, 0).data(Qt::UserRole + CDA_USER_ROLE_OFFSET).toString();
+            if (strrole == CDA_USER_ROLE) {
+                //设置当前页面，刷新播放队列和显示列表
+                Player::getInstance()->setCurrentPlayListHash("all", false);
+            }
+        }
+        // 切换到所有音乐界面
+        emit CommonService::getInstance()->signalSwitchToView(AllSongListType, "all");
     }
 
     //执行添加/移出CD歌单,cd弹出
@@ -628,7 +627,8 @@ void MusicSongListView::dropEvent(QDropEvent *event)
             QList<MediaMeta> metas;
             for (auto index : source->selectionModel()->selectedIndexes()) {
                 MediaMeta imt = index.data(Qt::UserRole).value<MediaMeta>();
-                metas.append(imt);
+                if (imt.mmType != MIMETYPE_CDA)
+                    metas.append(imt);
             }
 
             if (!metas.isEmpty()) {

@@ -580,12 +580,16 @@ void SingerListView::slotCoverUpdate(const MediaMeta &meta)
 void SingerListView::slotUpdateCodec(const MediaMeta &meta)
 {
     for (int i = 0; i < singerModel->rowCount(); i++) {
-        MediaMeta tmpmeta = singerModel->index(i, 0).data(Qt::UserRole).value<MediaMeta>();
-        if (meta.hash == tmpmeta.hash) {
-            QVariant varmeta;
-            varmeta.setValue(meta);
-            singerModel->setData(singerModel->index(i, 0), varmeta, Qt::UserRole);
-            return;
+        SingerInfo tmpmeta = singerModel->index(i, 0).data(Qt::UserRole).value<SingerInfo>();
+        foreach (QString hashstr, tmpmeta.musicinfos.keys()) {
+            if (meta.hash == hashstr) {
+                tmpmeta.musicinfos[hashstr].codec = meta.codec;
+                tmpmeta.musicinfos[hashstr].updateCodec(meta.codec.toUtf8());
+                QVariant varmeta;
+                varmeta.setValue(tmpmeta);
+                singerModel->setData(singerModel->index(i, 0), varmeta, Qt::UserRole);
+                return;
+            }
         }
     }
 }

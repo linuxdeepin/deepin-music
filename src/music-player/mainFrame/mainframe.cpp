@@ -119,7 +119,7 @@ MainFrame::MainFrame()
             this, &MainFrame::slotHideSubWidget);
     // 导入成功
     connect(DataBaseService::getInstance(), &DataBaseService::signalImportFinished,
-            this, &MainFrame::slotImportFinished);
+            this, &MainFrame::slotDBImportFinished);
     // 导入失败
     connect(DataBaseService::getInstance(), &DataBaseService::signalImportFailed,
             this, &MainFrame::slotImportFailed);
@@ -213,6 +213,9 @@ void MainFrame::initUI(bool showLoading)
 
     connect(m_musicLyricWidget, &MusicLyricWidget::signalAutoHidden,
             m_footerWidget, &FooterWidget::slotLyricAutoHidden);
+
+    connect(CommonService::getInstance(), &CommonService::signalCdaImportFinished,
+            this, &MainFrame::slotCdaImportFinished);
 
     setThemeType(DGuiApplicationHelper::instance()->themeType());
 }
@@ -469,10 +472,8 @@ void MainFrame::slotLyricClicked()
     }
 }
 
-void MainFrame::slotImportFinished(QString hash, int successCount)
+void MainFrame::slotDBImportFinished(QString hash, int successCount)
 {
-    Q_UNUSED(hash)
-
     if (successCount <= 0) {
         if (DataBaseService::getInstance()->allMusicInfos().size() <= 0) {
             m_importWidget->showImportHint();
@@ -484,7 +485,24 @@ void MainFrame::slotImportFinished(QString hash, int successCount)
         m_musicStatckedWidget->show();
         m_musicStatckedWidget->animationImportToDown(this->size() - QSize(0, m_footerWidget->height() + titlebar()->height()));
         // 切换到所有音乐界面
-        emit CommonService::getInstance()->signalSwitchToView(AllSongListType, "all");
+        if (hash != "CdaRole")
+            emit CommonService::getInstance()->signalSwitchToView(AllSongListType, "all");
+        else
+            emit CommonService::getInstance()->signalSwitchToView(CdaType, hash); //处理cd加载时，切换到主页面，且没有歌曲存在的情况
+        m_footerWidget->show();
+        m_importWidget->closeAnimationToDown(this->size());
+    }
+    m_titlebarwidget->setEnabled(true);
+    m_newSonglistAction->setEnabled(true);
+}
+
+void MainFrame::slotCdaImportFinished()
+{
+    if (m_importWidget->isVisible()) {
+        m_musicStatckedWidget->show();
+        m_musicStatckedWidget->animationImportToDown(this->size() - QSize(0, m_footerWidget->height() + titlebar()->height()));
+        // 切换到所有音乐界面
+        emit CommonService::getInstance()->signalSwitchToView(CdaType, "CdaRole"); //处理cd加载时，切换到主页面，且没有歌曲存在的情况
         m_footerWidget->show();
         m_importWidget->closeAnimationToDown(this->size());
     }

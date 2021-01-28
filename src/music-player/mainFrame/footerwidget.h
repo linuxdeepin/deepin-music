@@ -98,7 +98,7 @@ public slots:
     void fluashFavoriteBtnIcon();
     // 删除收藏
     void slotFavoriteRemove(const QString &musicHash);
-    void fluashFavoriteBtnIconAdd(QString hash);
+    void flushFavoriteBtnIconAdd(QString hash);
     // 点击音量按钮
     void slotSoundClick(bool click);
     void slotPlaybackStatusChanged(Player::PlaybackStatus statue);

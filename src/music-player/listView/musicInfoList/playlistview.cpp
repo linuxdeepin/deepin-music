@@ -214,6 +214,9 @@ PlayListView::PlayListView(QString hash, bool isPlayQueue, QWidget *parent)
     // 刷新当前页面编码
     connect(CommonService::getInstance(), &CommonService::signalUpdateCodec,
             this, &PlayListView::slotUpdateCodec);
+    // 移出cda格式歌曲
+    connect(CommonService::getInstance(), &CommonService::signalCdaSongListChanged,
+            this, &PlayListView::rmvCdaSongs);
 }
 
 PlayListView::~PlayListView()
@@ -784,9 +787,13 @@ void PlayListView::slotAddToFavSongList(const QString songName)
     QItemSelectionModel *selection = selectionModel();
     for (int i = 0; i < selection->selectedRows().size(); i++) {
         QModelIndex curIndex = selection->selectedRows().at(i);
-        listMeta << curIndex.data(Qt::UserRole).value<MediaMeta>();
+        MediaMeta meta = curIndex.data(Qt::UserRole).value<MediaMeta>();
+        if (meta.mmType != MIMETYPE_CDA)
+            listMeta << curIndex.data(Qt::UserRole).value<MediaMeta>();
     }
 
+    if (listMeta.size() == 0)
+        return;
     int insertCount = DataBaseService::getInstance()->addMetaToPlaylist("fav", listMeta);
     emit CommonService::getInstance()->signalShowPopupMessage(songName, selection->selectedRows().size(), insertCount);
     emit CommonService::getInstance()->signalFluashFavoriteBtnIcon();
@@ -799,7 +806,8 @@ void PlayListView::slotAddToNewSongList(const QString songName)
     for (int i = 0; i < selection->selectedRows().size(); i++) {
         QModelIndex curIndex = selection->selectedRows().at(i);
         MediaMeta meta = curIndex.data(Qt::UserRole).value<MediaMeta>();
-        metaList.append(meta);
+        if (meta.mmType != MIMETYPE_CDA)
+            metaList.append(meta);
     }
 
     emit CommonService::getInstance()->signalAddNewSongList();
@@ -823,9 +831,11 @@ void PlayListView::slotAddToCustomSongList()
     QModelIndexList mindexlist =  this->selectedIndexes();
     for (QModelIndex mindex : mindexlist) {
         MediaMeta imt = mindex.data(Qt::UserRole).value<MediaMeta>();
-        metas.append(imt);
+        if (imt.mmType != MIMETYPE_CDA)
+            metas.append(imt);
     }
-
+    if (metas.size() == 0)
+        return;
     int insertCount = DataBaseService::getInstance()->addMetaToPlaylist(songlistHash, metas);
     emit CommonService::getInstance()->signalShowPopupMessage(obj->property("displayName").toString(), metas.size(), insertCount);
 }
@@ -849,9 +859,15 @@ void PlayListView::slotRmvFromSongList()
     QStringList metaList;
     for (QModelIndex mindex : modellist) {
         MediaMeta imt = mindex.data(Qt::UserRole).value<MediaMeta>();
-        metaList << imt.hash;
+        //过滤cda格式歌曲
+        if (imt.mmType != MIMETYPE_CDA) {
+            metaList << imt.hash;
+        }
     }
 
+    //过滤cda格式以后再判断size
+    if (metaList.size() == 0)
+        return;
     Dtk::Widget::DDialog warnDlg(this);
     warnDlg.setObjectName("MessageBox");
     warnDlg.setTextFormat(Qt::RichText);
@@ -890,15 +906,18 @@ void PlayListView::slotRmvFromSongList()
 
 void PlayListView::slotDelFromLocal()
 {
-    QList<MediaMeta> metas;
     QModelIndexList mindexlist =  this->selectedIndexes();
     QStringList strlist;
     for (QModelIndex mindex : mindexlist) {
         MediaMeta imt = mindex.data(Qt::UserRole).value<MediaMeta>();
-        metas.append(imt);
-        strlist << imt.hash;
+        //过滤cda格式歌曲
+        if (imt.mmType != MIMETYPE_CDA) {
+            strlist << imt.hash;
+        }
     }
 
+    if (strlist.size() == 0)
+        return;
     Dtk::Widget::DDialog warnDlg(this);
     warnDlg.setObjectName("MessageBox");
     warnDlg.setTextFormat(Qt::RichText);
@@ -906,16 +925,17 @@ void PlayListView::slotDelFromLocal()
     int deleteFlag = warnDlg.addButton(tr("Delete"), false, Dtk::Widget::DDialog::ButtonWarning);
 
     auto cover = QImage(QString(":/common/image/del_notify.svg"));
-    if (1 == metas.length()) {
-        auto meta = metas.first();
-        warnDlg.setMessage(QString(tr("Are you sure you want to delete %1?")).arg(meta.title));
+    if (1 == strlist.length()) {
+        QModelIndex idx =  this->selectedIndexes().at(0);
+        MediaMeta imt = idx.data(Qt::UserRole).value<MediaMeta>();
+        warnDlg.setMessage(QString(tr("Are you sure you want to delete %1?")).arg(imt.title));
     } else {
         //                warnDlg.setTitle(QString(tr("Are you sure you want to delete the selected %1 songs?")).arg(metalist.length()));
         DLabel *t_titleLabel = new DLabel(this);
         t_titleLabel->setForegroundRole(DPalette::TextTitle);
         DLabel *t_infoLabel = new DLabel(this);
         t_infoLabel->setForegroundRole(DPalette::TextTips);
-        t_titleLabel->setText(tr("Are you sure you want to delete the selected %1 songs?").arg(metas.length()));
+        t_titleLabel->setText(tr("Are you sure you want to delete the selected %1 songs?").arg(strlist.length()));
         t_infoLabel->setText(tr("The song files contained will also be deleted"));
         warnDlg.addContent(t_titleLabel, Qt::AlignHCenter);
         warnDlg.addContent(t_infoLabel, Qt::AlignHCenter);
@@ -1026,12 +1046,16 @@ void PlayListView::contextMenuEvent(QContextMenuEvent *event)
     }
 
     //查找是否有cda格式歌曲
-    if (selection->selectedRows().size() == 1) {
-        QModelIndex curindex = selection->selectedRows().at(0);
-        MediaMeta meta = curindex.data(Qt::UserRole).value<MediaMeta>();
-        if (meta.mmType == MIMETYPE_CDA) //cda不处理右键菜单
-            return;
+    QStringList metalist;
+    foreach (QModelIndex mindex, selection->selectedRows()) {
+        MediaMeta meta = mindex.data(Qt::UserRole).value<MediaMeta>();
+        if (meta.mmType != MIMETYPE_CDA)
+            metalist << meta.hash;
     }
+
+    //全是cda歌曲不处理右键菜单
+    if (metalist.size() == 0)
+        return;
 
     QPoint globalPos = mapToGlobal(event->pos());
 
@@ -1269,6 +1293,21 @@ void PlayListView::slotUpdateCodec(const MediaMeta &meta)
             varmeta.setValue(meta);
             m_model->setData(m_model->index(i, 0), varmeta, Qt::UserRole);
             return;
+        }
+    }
+}
+
+void PlayListView::rmvCdaSongs()
+{
+    //remove cda songs
+    if (m_IsPlayQueue) {
+        for (int i = 0; i < m_model->rowCount();) {
+            MediaMeta tmpmeta = m_model->index(i, 0).data(Qt::UserRole).value<MediaMeta>();
+            if (tmpmeta.mmType == MIMETYPE_CDA) {
+                m_model->removeRow(i);
+            } else {
+                i++;
+            }
         }
     }
 }

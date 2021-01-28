@@ -132,7 +132,6 @@ public slots:
     void changePicture();
     void setVolume(int volume);
     void setMuted(bool muted);
-    void setCdaInfoToList(const QList<MediaMeta> &list);
 private:
     QTimer         *m_timer = nullptr;
     QIcon           m_playingIcon = QIcon::fromTheme("music_play1");
@@ -181,8 +180,6 @@ signals:
     void fadeInOutChanged(bool fadeInOut);
     void playOnLoadedChanged(bool playOnLoaded);
     void audioBufferProbed(const QAudioBuffer &buffer);
-    //cda歌曲信息
-    void sigCdaTracksReady(const QList<MediaMeta> &);
 public slots:
     void setCanControl(bool canControl);
     void setPosition(qlonglong position);

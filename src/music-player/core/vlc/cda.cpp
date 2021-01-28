@@ -172,6 +172,9 @@ void CdaThread::run()
                 if (child != nullptr) {
                     qDebug() << __FUNCTION__ << "thread id:" << QThread::currentThread() \
                              << "name:" << child->p_item->psz_name << "duration:" << child->p_item->i_duration;
+                    //空光盘有可能节点不为空，检测持续时间
+                    if (child->p_item->i_duration == 0)
+                        continue;
                     MediaMeta meta;
                     meta.hash = DMusic::filepathHash(QString(child->p_item->psz_name));
                     meta.title = child->p_item->psz_name;
@@ -192,7 +195,9 @@ void CdaThread::run()
             /**
              * 发送添加歌单消息
              * */
-            setCdaState(CDROM_MOUNT_WITH_CD);
+            if (m_mediaList.size() > 0) {
+                setCdaState(CDROM_MOUNT_WITH_CD);
+            }
         } else {
             sleep(1);
         }

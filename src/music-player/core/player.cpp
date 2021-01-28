@@ -138,11 +138,14 @@ Player::~Player()
 void Player::playMeta(MediaMeta meta)
 {
     if (meta.hash != "") {
-        if ((access(meta.localPath.toStdString().c_str(), R_OK) != 0  ||
-                QFileInfo(m_ActiveMeta.localPath).dir().isEmpty()) && meta.mmType != MIMETYPE_CDA) {
-            //文件不存在提示  todo..
-            emit signalPlaybackStatusChanged(Player::Paused);
-            return;
+        if (meta.mmType != MIMETYPE_CDA) {
+            int acint = access(meta.localPath.toStdString().c_str(), R_OK);
+            bool empty = QFileInfo(m_ActiveMeta.localPath).dir().path().isEmpty();
+            if (acint != 0 || empty) {
+                //文件不存在提示  todo..
+                emit signalPlaybackStatusChanged(Player::Paused);
+                return;
+            }
         }
         m_ActiveMeta = meta;
         setActiveMeta(meta);
@@ -200,7 +203,8 @@ void Player::resume()
         return;
     }
 
-    if (QFileInfo(m_ActiveMeta.localPath).dir().isEmpty()) {//光盘弹出时，有可能歌曲路径还在，不需要再播放。
+    bool empty = QFileInfo(m_ActiveMeta.localPath).dir().path().isEmpty();
+    if (empty && m_ActiveMeta.mmType != MIMETYPE_CDA) {//光盘弹出时，有可能歌曲路径还在，不需要再播放。
         return ;
     }
 
@@ -708,11 +712,6 @@ void Player::setMuted(bool mute)
         qDebug() << "audio service not started,mute can not be set";
     //使用本地静音配置
     MusicSettings::setOption("base.play.mute", mute);
-}
-
-void Player::setCdaInfoToList(const QList<MediaMeta> &list)
-{
-    m_MetaList << list;
 }
 
 void Player::setActiveMeta(const MediaMeta &meta)

@@ -422,6 +422,7 @@ void MusicListDataWidget::slotPlayAllClicked()
     case AllSongListType:
     // 同下共用
     case FavType:
+    case CdaType:
     case CustomType:
         // 清空播放队列
         Player::getInstance()->clearPlayList();

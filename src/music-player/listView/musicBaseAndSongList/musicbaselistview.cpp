@@ -254,7 +254,8 @@ void MusicBaseListView::dropEvent(QDropEvent *event)
             QList<MediaMeta> metas;
             for (auto index : source->selectionModel()->selectedIndexes()) {
                 MediaMeta imt = index.data(Qt::UserRole).value<MediaMeta>();
-                metas.append(imt);
+                if (imt.mmType != MIMETYPE_CDA)
+                    metas.append(imt);
             }
 
             if (!metas.isEmpty()) {

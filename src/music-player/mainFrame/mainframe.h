@@ -73,7 +73,8 @@ private slots:
     void slotLeftClicked();
     void slotSearchEditFoucusIn();
     void slotLyricClicked();
-    void slotImportFinished(QString hash, int successCount);
+    void slotDBImportFinished(QString hash, int successCount);
+    void slotCdaImportFinished();
     void slotImportFailed();
     // 隐藏二级页面
     void slotHideSubWidget();

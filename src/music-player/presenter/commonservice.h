@@ -64,6 +64,8 @@ signals:
     void signalHideSubSonglist();
     // 通知页面刷新编码
     void signalUpdateCodec(const MediaMeta &meta);
+    // cda导入完成消息
+    void signalCdaImportFinished();
 private:
     explicit CommonService();
     friend class DMusic::DSingleton<CommonService>;
