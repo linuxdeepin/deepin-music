@@ -117,7 +117,7 @@ void MusicListDataWidget::slotViewChanged(ListPageSwitchType switchtype, const Q
         m_titleLabel->setText(DataBaseService::getInstance()->getPlaylistNameByUUID("album"));
         refreshModeBtn(m_albumListView->viewMode());
         refreshInfoLabel("album");
-        refreshSortAction();
+        refreshSortAction("album");
         refreshPlayAllBtn(m_albumListView->getAlbumCount());
         break;
     }
@@ -137,7 +137,7 @@ void MusicListDataWidget::slotViewChanged(ListPageSwitchType switchtype, const Q
         m_titleLabel->setText(DataBaseService::getInstance()->getPlaylistNameByUUID("artist"));
         refreshModeBtn(m_singerListView->viewMode());
         refreshInfoLabel("artist");
-        refreshSortAction();
+        refreshSortAction("artist");
         refreshPlayAllBtn(m_singerListView->getSingerCount());
         break;
     }
@@ -150,12 +150,11 @@ void MusicListDataWidget::slotViewChanged(ListPageSwitchType switchtype, const Q
         m_pStackedWidget->setCurrentWidget(m_musicListView);
         m_preHash = "all";
         m_preSwitchtype = AllSongListType;
-        refreshSortAction();
+        refreshSortAction("all");
         refreshPlayAllBtn(m_musicListView->getMusicCount());
         break;
     }
     case FavType: {
-        refreshSortAction();
         m_musicListView->initCostomSonglist("fav");
         m_titleLabel->setText(DataBaseService::getInstance()->getPlaylistNameByUUID("fav"));
         m_musicListView->setViewModeFlag("fav", m_musicListView->getViewMode());
@@ -165,10 +164,10 @@ void MusicListDataWidget::slotViewChanged(ListPageSwitchType switchtype, const Q
         refreshModeBtn(m_musicListView->getViewMode());
         refreshInfoLabel("fav");
         refreshPlayAllBtn(m_musicListView->getMusicCount());
+        refreshSortAction("fav");
         break;
     }
     case CdaType: {
-        refreshSortAction();
         m_musicListView->initCostomSonglist(hashOrSearchword);
         m_titleLabel->setText(tr("CD playlist"));
         m_musicListView->setViewModeFlag(hashOrSearchword, m_musicListView->getViewMode());
@@ -178,10 +177,10 @@ void MusicListDataWidget::slotViewChanged(ListPageSwitchType switchtype, const Q
         refreshModeBtn(m_musicListView->getViewMode());
         refreshInfoLabel(hashOrSearchword);
         refreshPlayAllBtn(m_musicListView->getMusicCount());
+        refreshSortAction();
         break;
     }
     case CustomType: {
-        refreshSortAction();
         m_musicListView->initCostomSonglist(hashOrSearchword);
         QFontMetrics titleFm(m_titleLabel->font());
         QString text = titleFm.elidedText(DataBaseService::getInstance()->getPlaylistNameByUUID(hashOrSearchword), Qt::ElideRight, 300);
@@ -193,6 +192,7 @@ void MusicListDataWidget::slotViewChanged(ListPageSwitchType switchtype, const Q
         refreshModeBtn(m_musicListView->getViewMode());
         refreshInfoLabel(hashOrSearchword);
         refreshPlayAllBtn(m_musicListView->getMusicCount());
+        refreshSortAction(hashOrSearchword);
         break;
     }
     case SearchMusicResultType:
@@ -216,13 +216,15 @@ void MusicListDataWidget::slotViewChanged(ListPageSwitchType switchtype, const Q
         m_searchResultTabWidget->setCurrentPage(switchtype);
         if (switchtype == SearchMusicResultType) {
             refreshInfoLabel("musicResult");
+            refreshSortAction("musicResult");
         } else if (switchtype == SearchSingerResultType) {
             refreshInfoLabel("artistResult");
+            refreshSortAction("artistResult");
         } else if (switchtype == SearchAlbumResultType) {
             refreshInfoLabel("albumResult");
+            refreshSortAction("albumResult");
         }
         refreshModeBtn(m_searchResultTabWidget->getViewMode());
-        refreshSortAction();
         break;
     }
     case PreType: {
@@ -845,8 +847,43 @@ void MusicListDataWidget::refreshSortAction(QString hash)
         for (int i = 0; i < m_musicDropdown->actions().size(); i++) {
             QAction *action = m_musicDropdown->actions().at(i);
             DataBaseService::ListSortType sortType = action->data().value<DataBaseService::ListSortType>();
-            if (sortType == (hash == "musicResult" ? m_searchResultTabWidget->getSortType() : m_musicListView->getSortType())) {
-                m_musicDropdown->setCurrentAction(action);
+            if (CommonService::getInstance()->getListPageSwitchType() == CdaType) {
+                if (sortType == DataBaseService::SortByTitleASC
+                        || sortType == DataBaseService::SortByTitleDES
+                        || sortType == DataBaseService::SortByTitle) {
+                    m_musicDropdown->setCurrentAction(action);
+                    break;
+                }
+            } else {
+                DataBaseService::ListSortType searchSortType = (hash == "musicResult" ? m_searchResultTabWidget->getSortType() : m_musicListView->getSortType());
+                switch (searchSortType) {
+                case DataBaseService::SortByAddTimeASC:
+                case DataBaseService::SortByAddTimeDES: {
+                    searchSortType = DataBaseService::SortByAddTime;
+                    break;
+                }
+                case DataBaseService::SortByTitleASC:
+                case DataBaseService::SortByTitleDES: {
+                    searchSortType = DataBaseService::SortByTitle;
+                    break;
+                }
+                case DataBaseService::SortByAblumASC:
+                case DataBaseService::SortByAblumDES: {
+                    searchSortType = DataBaseService::SortByAblum;
+                    break;
+                }
+                case DataBaseService::SortBySingerASC:
+                case DataBaseService::SortBySingerDES: {
+                    searchSortType = DataBaseService::SortBySinger;
+                    break;
+                }
+                default:
+                    break;
+                }
+                if (sortType == searchSortType) {
+                    m_musicDropdown->setCurrentAction(action);
+                    break;
+                }
             }
         }
     } else if (m_pStackedWidget->currentWidget() == m_albumListView ||
