@@ -87,7 +87,14 @@ MusicLyricWidget::MusicLyricWidget(QWidget *parent)
     layout->addLayout(m_leftLayout, 0);
     layout->addWidget(m_lyricview, 10);
     layout->addWidget(m_nolyric, 10);
-    m_nolyric->hide();
+
+    if (Player::getInstance()->getActiveMeta().hash.isEmpty()) {
+        m_nolyric->show();
+        m_lyricview->hide();
+    } else {
+        m_nolyric->hide();
+        m_lyricview->show();
+    }
 
 
     AC_SET_OBJECT_NAME(m_lyricview, AC_lyricview);
