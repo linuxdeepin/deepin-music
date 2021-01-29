@@ -88,7 +88,7 @@ void SubSonglistWidget::initUI()
     playAllPalette.setColor(DPalette::Light, QColor("#ED5656"));
     m_btPlayAll->setPalette(playAllPalette);
     m_btPlayAll->setIcon(QIcon::fromTheme("play_all"));
-    m_btPlayAll->setText(MusicListDialog::tr("Play All"));
+    m_btPlayAll->setText(tr("Play All"));
     m_btPlayAll->setFocusPolicy(Qt::NoFocus);
     m_btPlayAll->setIconSize(QSize(18, 18));
     // 按钮自适应字体大小
@@ -105,7 +105,7 @@ void SubSonglistWidget::initUI()
     randomPlayPalette.setColor(DPalette::Light, QColor(Qt::darkGray));
     m_btRandomPlay->setPalette(randomPlayPalette);
     m_btRandomPlay->setIcon(QIcon::fromTheme("random_play"));
-    m_btRandomPlay->setText(MusicListDialog::tr("Shuffle"));
+    m_btRandomPlay->setText(tr("Shuffle"));
     m_btRandomPlay->setFocusPolicy(Qt::NoFocus);
     m_btRandomPlay->setIconSize(QSize(18, 18));
     // 按钮自适应字体大小

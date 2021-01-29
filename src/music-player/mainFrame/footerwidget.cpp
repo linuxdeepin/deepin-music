@@ -241,13 +241,13 @@ void FooterWidget::initUI(QWidget *parent)
     QString playmode = "sequential_loop";
     switch (Player::getInstance()->mode()) {
     case 0:
-        playmode = tr("sequential_loop");
+        playmode = "sequential_loop";
         break;
     case 1:
-        playmode = tr("single_tune_circulation");
+        playmode = "single_tune_circulation";
         break;
     case 2:
-        playmode = tr("cross_cycling");
+        playmode = "cross_cycling";
         break;
     default:
         break;
