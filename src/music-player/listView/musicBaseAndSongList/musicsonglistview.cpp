@@ -416,7 +416,7 @@ void MusicSongListView::slotCurrentChanged(const QModelIndex &cur, const QModelI
 //    if (m_renameItem) {
 //        m_renameItem->setIcon(QIcon::fromTheme("music_famousballad"));
 //    }
-
+    Q_UNUSED(cur)
     DStandardItem *preStandardItem = dynamic_cast<DStandardItem *>(model->itemFromIndex(pre));
     if (preStandardItem) {
         preStandardItem->setIcon(QIcon::fromTheme("music_famousballad"));

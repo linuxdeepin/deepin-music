@@ -93,6 +93,10 @@ void MusicListDataWidget::slotViewChanged(ListPageSwitchType switchtype, const Q
 {
     // 任意非0数，隐藏无搜索结果界面
     showEmptyHits(1);
+    //设置dropdown使能
+    if (m_musicDropdown) {
+        m_musicDropdown->setEnabled(switchtype != CdaType ? true : false);
+    }
 
     CommonService::getInstance()->setListPageSwitchType(switchtype);
     qDebug() << "------MusicListDataWidget::viewChanged switchtype = " << switchtype;

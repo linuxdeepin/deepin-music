@@ -259,15 +259,18 @@ void PlayListView::initCostomSonglist(const QString &hash)
     if (DataBaseService::getInstance()->getDelStatu()) {
         DataBaseService::getInstance()->setDelNeedSleep();
     }
+
     m_currentHash = hash;
-    m_model->clear();
+
     QList<MediaMeta> mediaMetas;
+    DataBaseService::ListSortType sortType = DataBaseService::SortByNull;
     if (hash == "CdaRole") { //从player获取cda缓存数据
         mediaMetas = Player::getInstance()->getCdaPlayList();
     } else {
         mediaMetas = DataBaseService::getInstance()->customizeMusicInfos(hash);
+        sortType = getSortType();
     }
-    DataBaseService::ListSortType sortType = getSortType();
+
     this->setDataBySortType(mediaMetas, sortType);
 }
 

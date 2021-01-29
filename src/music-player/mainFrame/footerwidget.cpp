@@ -642,10 +642,17 @@ void FooterWidget::slotMediaMetaChanged(MediaMeta activeMeta)
     m_metaBufferDetector.onClearBufferDetector();
     m_metaBufferDetector.onBufferDetector(meta.localPath, meta.hash);
 
-    if (DataBaseService::getInstance()->favoriteExist(Player::getInstance()->getActiveMeta())) {
-        m_btFavorite->setIcon(QIcon::fromTheme("collection1_press"));
-    } else {
+    if (meta.mmType == MIMETYPE_CDA) {
         m_btFavorite->setIcon(QIcon::fromTheme("dcc_collection"));
+        m_btFavorite->setEnabled(false);
+    } else {
+        m_btFavorite->setEnabled(true);
+        if (DataBaseService::getInstance()->favoriteExist(Player::getInstance()->getActiveMeta())) {
+            m_btFavorite->setIcon(QIcon::fromTheme("collection1_press"));
+        } else {
+            m_btFavorite->setIcon(QIcon::fromTheme("dcc_collection"));
+        }
+
     }
 }
 
