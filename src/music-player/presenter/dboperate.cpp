@@ -398,6 +398,7 @@ int DBOperate::addMetaToPlaylist(QString uuid, const QList<MediaMeta> &metas)
 
         if (query.exec()) {
             if (!query.next()) {
+                // 不存在则添加
                 sqlStr = QString("INSERT INTO playlist_%1 "
                                  "(music_id, playlist_id, sort_id) "
                                  "SELECT :music_id, :playlist_id, :sort_id ").arg(uuid);
@@ -414,10 +415,16 @@ int DBOperate::addMetaToPlaylist(QString uuid, const QList<MediaMeta> &metas)
                     }
                     emit signalMusicAddOne(m_importHash, meta);
                 } else {
+                    m_importFailCount++;
                     qCritical() << query.lastError() << sqlStr;
                 }
+            } else {
+                // 已存在,已存在计数器加1
+                m_exsitCount++;
             }
         } else {
+            // 查询是否存在失败,导入失败计数器加1
+            m_importFailCount++;
             qCritical() << query.lastError() << sqlStr;
         }
     }
