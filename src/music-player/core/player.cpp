@@ -109,16 +109,20 @@ void Player::init()
     //初始化cd线程
     m_pCdaThread = new CdaThread(this);
     //connect(m_pCdaThread, &CdaThread::sigSendCdaMimeData, this, &Player::setCdaInfoToList);
-    connect(m_pCdaThread, &CdaThread::sigSendCdaStatus, CommonService::getInstance(), &CommonService::signalCdaSongListChanged);
+    connect(m_pCdaThread, &CdaThread::sigSendCdaStatus, CommonService::getInstance(),
+            &CommonService::signalCdaSongListChanged, Qt::QueuedConnection);
     //为了不影响主线程加载，1s后再加载CD
     QTimer::singleShot(1000, this, [ = ]() {
+#ifndef  ENABLE_AUTO_UNIT_TEST  //目前无法打桩，执行测试用例时不开启cda线程
         if (m_qvinstance == nullptr || m_qvplayer == nullptr || m_qvmedia == nullptr) {
             initVlc();
         }
         //初始化mediaplayer
         m_pCdaThread->setMediaPlayerPointer(m_qvplayer->core());
         //查询cd信息
+
         m_pCdaThread->doQuery();
+#endif
     });
 }
 

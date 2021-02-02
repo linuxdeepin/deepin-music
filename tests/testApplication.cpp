@@ -96,6 +96,65 @@
 #include "closeconfirmdialog.h"
 #include "subsonglistwidget.h"
 
+
+bool copyDirFiles(const QString &fromDir, const QString &toDir)
+{
+    QDir sourceDir(fromDir);
+    QDir targetDir(toDir);
+
+    if (!targetDir.exists()) {
+        if (!targetDir.mkdir(targetDir.absolutePath())) {
+            return false;
+        }
+    }
+
+    QFileInfoList fileInfoList = sourceDir.entryInfoList();
+    for (auto fileInfo : fileInfoList) {
+        if (fileInfo.fileName() == "." || fileInfo.fileName() == "..") {
+            continue;
+        }
+
+        if (fileInfo.isDir()) {
+            if (!copyDirFiles(fileInfo.filePath(), targetDir.filePath(fileInfo.fileName()))) {
+                return false;
+            }
+        } else {
+            if (!QFile::copy(fileInfo.filePath(), targetDir.filePath(fileInfo.fileName()))) {
+                return false;
+            }
+        }
+    }
+
+    return true;
+}
+
+TEST(Application, copyMusicToMusicDir1)
+{
+    // 拷贝音乐文件夹到系统音乐文件夹下
+    TEST_CASE_NAME("other")
+
+    QDir dir;
+    dir.cd("../resource");
+    // 启动方式不同，路径不同
+    if (!dir.path().contains("resource")) {
+        dir.setPath("../../../tests/resource");
+    }
+
+    QStringList stringList = QStandardPaths::standardLocations(QStandardPaths::MusicLocation);
+    if (stringList.size() > 0) {
+        stringList[0].append("/歌曲");
+
+        QDir deleteDir(stringList[0]);
+        deleteDir.removeRecursively();
+
+        QTest::qWait(50);
+        copyDirFiles(dir.path(), stringList[0]);
+    }
+
+    QTest::qWait(50);
+}
+
+
 TEST(Application, importLinkText)
 {
     // 扫描歌曲
@@ -127,14 +186,14 @@ TEST(Application, deleteAllMusic)
     event.clear();
     QTest::qWait(100);
 
-//    // 点击所有音乐
-//    QTest::qWait(100);
-//    pos = QPoint(130, 100);
-//    event.addMouseMove(pos);
-//    event.addMouseClick(Qt::MouseButton::LeftButton, Qt::NoModifier, pos, 10);
-//    event.simulate(baseListView->viewport());
-//    event.clear();
-//    QTest::qWait(100);
+    // 点击所有音乐
+    QTest::qWait(100);
+    pos = QPoint(130, 100);
+    event.addMouseMove(pos);
+    event.addMouseClick(Qt::MouseButton::LeftButton, Qt::NoModifier, pos, 10);
+    event.simulate(baseListView->viewport());
+    event.clear();
+    QTest::qWait(100);
 
 
     // dialog list 点击
@@ -194,40 +253,7 @@ TEST(Application, deleteAllMusic)
     QTest::qWait(1000);
 }
 
-
-// 文件夹拷贝
-bool copyDirFiles(const QString &fromDir, const QString &toDir)
-{
-    QDir sourceDir(fromDir);
-    QDir targetDir(toDir);
-
-    if (!targetDir.exists()) {
-        if (!targetDir.mkdir(targetDir.absolutePath())) {
-            return false;
-        }
-    }
-
-    QFileInfoList fileInfoList = sourceDir.entryInfoList();
-    for (auto fileInfo : fileInfoList) {
-        if (fileInfo.fileName() == "." || fileInfo.fileName() == "..") {
-            continue;
-        }
-
-        if (fileInfo.isDir()) {
-            if (!copyDirFiles(fileInfo.filePath(), targetDir.filePath(fileInfo.fileName()))) {
-                return false;
-            }
-        } else {
-            if (!QFile::copy(fileInfo.filePath(), targetDir.filePath(fileInfo.fileName()))) {
-                return false;
-            }
-        }
-    }
-
-    return true;
-}
-
-TEST(Application, copyMusicToMusicDir)
+TEST(Application, copyMusicToMusicDir2)
 {
     // 拷贝音乐文件夹到系统音乐文件夹下
     TEST_CASE_NAME("other")
@@ -881,10 +907,10 @@ TEST(Application, musicListDialg9)
     QTest::qWait(400);
 }
 
-TEST(Application, copyMusicToMusicDir1)
+TEST(Application, copyMusicToMusicDir4)
 {
     // 拷贝音乐文件夹到系统音乐文件夹下
-    TEST_CASE_NAME("copyMusicToMusicDir1")
+    TEST_CASE_NAME("copyMusicToMusicDir")
 
     QDir dir;
     dir.cd("../resource");

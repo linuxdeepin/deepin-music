@@ -108,7 +108,8 @@ void CdaThread::setCdaState(CdaThread::CdromState stat)
     }
 
     if (m_cdaStat == stat) {
-        QThread::sleep(1); //状态一致时，统一休眠
+        // 线程中做休眠
+//        QThread::sleep(1); //状态一致时，统一休眠
         return;
     }
     qDebug() << __FUNCTION__ << "cda state changed:" << stat;
@@ -144,7 +145,8 @@ void CdaThread::run()
         }
 
         qulonglong blocksize = pblk->size();
-        if (blocksize == 0) {
+        // 屏蔽刻录光盘和空光盘
+        if (blocksize == 0 || pblk->fsType() == DBlockDevice::iso9660) {
             setCdaState(CDROM_MOUNT_WITHOUT_CD);
             continue;
         }
@@ -198,9 +200,8 @@ void CdaThread::run()
             if (m_mediaList.size() > 0) {
                 setCdaState(CDROM_MOUNT_WITH_CD);
             }
-        } else {
-            sleep(1);
         }
+        sleep(1);
     }
 }
 
