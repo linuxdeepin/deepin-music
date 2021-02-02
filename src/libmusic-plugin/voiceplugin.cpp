@@ -97,10 +97,12 @@ QStringList VoicePlugin::analyseJsonString(const QString &semantic)
     QString function;
     QString artist;
     QString song;
+    QString songList;
     QString source;
     QString sourceType;
     QString insType;
     QString genre;
+    QString number;
     // 不包含semantic，直接返回空
     if (!jsonObject.contains(QStringLiteral("intent"))) {
         return strlist;
@@ -167,6 +169,16 @@ QStringList VoicePlugin::analyseJsonString(const QString &semantic)
                         insType = slotsArrayObject["value"].toString();
                     }
                 }
+                if (slotsArrayObject["name"].toString() == "number") {
+                    if (slotsArrayObject.contains(QStringLiteral("value"))) {
+                        number = slotsArrayObject["value"].toString();
+                    }
+                }
+                if (slotsArrayObject["name"].toString() == "songlist") {
+                    if (slotsArrayObject.contains(QStringLiteral("value"))) {
+                        songList = slotsArrayObject["value"].toString();
+                    }
+                }
                 if (slotsArrayObject["name"].toString() == "genre") {
                     if (slotsArrayObject.contains(QStringLiteral("value"))) {
                         genre = slotsArrayObject["value"].toString();
@@ -189,6 +201,8 @@ QStringList VoicePlugin::analyseJsonString(const QString &semantic)
             strlist << "playSonglist";
         } else if (sourceType == m_settings->value("base.speech.album").toString() && !source.isEmpty()) {
             strlist << "playAlbum" << source;
+        } else {
+            strlist << "playMusic";
         }
     }  else if (!song.isEmpty() && function == "RANDOM_SEARCH") {
         strlist << "playMusic" << song;
@@ -199,18 +213,36 @@ QStringList VoicePlugin::analyseJsonString(const QString &semantic)
             strlist << "playAlbum" << source;
         }
     } else if (function == "INSTRUCTION") {
-        if (sourceType == m_settings->value("base.speech.songlist").toString()
-                && source == m_settings->value("base.speech.fav").toString()
-                && insType == "play") {
-            strlist << "playFaverite" << "fav";
-        } else if (sourceType == m_settings->value("base.speech.songlist").toString()
-                   && source == m_settings->value("base.speech.fav").toString()
-                   && insType == "insert") {
-            strlist << "addFaverite";
-        } else if (sourceType == m_settings->value("base.speech.songlist").toString()
-                   && source == m_settings->value("base.speech.fav").toString()
-                   && insType == "delete") {
-            strlist << "removeFaverite";
+        if (insType == "play") {
+            if (sourceType == m_settings->value("base.speech.songlist").toString()) {
+                if (source == m_settings->value("base.speech.fav").toString()) {
+                    // 播放我的收藏
+                    strlist << "playFaverite" << "fav";
+                } else if (source == m_settings->value("base.speech.custom").toString()) {
+                    // 播放第一个自建歌单
+                    strlist << "playSonglist" << " ";
+                } else if (!songList.isEmpty()) {
+                    // 播放指定歌单
+                    strlist << "playSonglist" << songList;
+                }
+            }
+        } else if (insType == "choose") {
+            // 播放第几首
+            if (!number.isEmpty()) {
+                strlist << "playIndex" << number;
+            }
+        } else if (insType == "insert") {
+            // 添加收藏
+            if (sourceType == m_settings->value("base.speech.songlist").toString()
+                    && source == m_settings->value("base.speech.fav").toString()) {
+                // 添加收藏
+                strlist << "addFaverite";
+            }
+        } else if (insType == "delete") {
+            if (sourceType == m_settings->value("base.speech.songlist").toString()
+                    && source == m_settings->value("base.speech.fav").toString()) {
+                strlist << "removeFaverite";
+            }
         } else if (insType == "pause") {
             strlist << "pause";
         } else if (insType == "replay") {

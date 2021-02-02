@@ -269,43 +269,68 @@ QVariant SpeechCenter::playFaverite(QString hash)
 
 QVariant SpeechCenter::playSonglist(QString songlistName)
 {
-    bool isExit = false;
-    bool songlistExit = false;
-    QString uuid;
-    QList<DataBaseService::PlaylistData> playlistDatas = DataBaseService::getInstance()->getCustomSongList();
-    foreach (DataBaseService::PlaylistData playlistData, playlistDatas) {
-        if (playlistData.displayName == songlistName) {
-            songlistExit = true;
-            uuid = playlistData.uuid;
-            break;
-        }
-    }
-    if (songlistExit) {
-        m_MediaMetas.clear();
-        m_needRefresh = true;
-        m_MediaMetas = DataBaseService::getInstance()->customizeMusicInfos(uuid);
-        if (m_MediaMetas.size() > 0) {
-            // 歌单中有歌曲跳转到自定义歌单
-            emit CommonService::getInstance()->signalSwitchToView(CustomType, uuid);
-            MediaMeta mediaMeta = m_MediaMetas.at(0);
-            //重置播放队列
-            Player::getInstance()->clearPlayList();
-            Player::getInstance()->setPlayList(m_MediaMetas);
-            //设置当前播放为查询出的音乐
-            Player::getInstance()->setCurrentPlayListHash(uuid, false);
-            Player::getInstance()->playMeta(mediaMeta);
-            // 通知播放队列刷新
-            emit Player::getInstance()->signalPlayListChanged();
-            isExit = true;
-        }
-    } else {
-        isExit = playFaverite("").toBool();
-    }
+    // 去掉空格
+    songlistName = songlistName.simplified();
     QString str;
-    if (isExit) {
-        str = m_settings->value("speechreply.speech.ok").toString();
+    QList<DataBaseService::PlaylistData> playlistDatas = DataBaseService::getInstance()->getCustomSongList();
+    if (playlistDatas.size() <= 0) {
+        // 没有自定义歌单则播放我的收藏
+        str = playFaverite("").toString();
     } else {
-        str = m_settings->value("speechreply.speech.playSonglistError").toString();
+        QString uuid;
+        if (songlistName.isEmpty()) {
+            // 歌单名为空,随机选择歌单播放
+            QTime time;
+            int index = 0;
+            time = QTime::currentTime();
+            qsrand(static_cast<uint>((time.msec() + time.second() * 1000)));
+            index = qrand() % playlistDatas.size();
+            uuid = playlistDatas.at(0).uuid;
+        } else {
+            // 根据名称匹配歌单
+            // 精确匹配
+            foreach (DataBaseService::PlaylistData playlistData, playlistDatas) {
+                if (playlistData.displayName == songlistName) {
+                    uuid = playlistData.uuid;
+                    break;
+                }
+            }
+            // 如果精确匹配没有则开始模糊匹配
+            if (uuid.isEmpty()) {
+                foreach (DataBaseService::PlaylistData playlistData, playlistDatas) {
+                    if (playlistData.displayName.contains(songlistName)) {
+                        uuid = playlistData.uuid;
+                        break;
+                    }
+                }
+            }
+        }
+        // 找到对应歌单
+        if (!uuid.isEmpty()) {
+            m_MediaMetas.clear();
+            m_needRefresh = true;
+            m_MediaMetas = DataBaseService::getInstance()->customizeMusicInfos(uuid);
+            if (m_MediaMetas.size() > 0) {
+                // 歌单中有歌曲跳转到自定义歌单
+                emit CommonService::getInstance()->signalSwitchToView(CustomType, uuid);
+                MediaMeta mediaMeta = m_MediaMetas.at(0);
+                //重置播放队列
+                Player::getInstance()->clearPlayList();
+                Player::getInstance()->setPlayList(m_MediaMetas);
+                //设置当前播放为查询出的音乐
+                Player::getInstance()->setCurrentPlayListHash(uuid, false);
+                Player::getInstance()->playMeta(mediaMeta);
+                // 通知播放队列刷新
+                emit Player::getInstance()->signalPlayListChanged();
+                str = m_settings->value("speechreply.speech.ok").toString();
+            } else {
+                // 自定义歌单没有歌曲则播放我的收藏
+                str = playFaverite("").toString();
+            }
+        } else {
+            // 没有自定义歌单则播放我的收藏
+            str = playFaverite("").toString();
+        }
     }
     return str;
 }
@@ -402,6 +427,7 @@ QVariant SpeechCenter::next(QString musicName)
 
 QVariant SpeechCenter::playIndex(QString index)
 {
+    qDebug() << __FUNCTION__ << "index = " << index;
     int indexNumber = index.toInt();
     bool isExit = false;
     QList<MediaMeta> mediaMetas = *Player::getInstance()->getPlayList();

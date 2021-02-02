@@ -130,10 +130,8 @@ void MusicSongListView::init()
 
     for (int i = 0; i < list.size(); i++) {
         DataBaseService::PlaylistData data = list.at(i);
-        if (data.uuid == "album" || data.uuid == "artist" || data.uuid == "all" || data.uuid == "fav" ||
-                data.uuid == "play" || data.uuid == "musicCand" || data.uuid == "albumCand" || data.uuid == "artistCand" ||
-                data.uuid == "musicResult" || data.uuid == "albumResult" || data.uuid == "artistResult" ||
-                data.uuid == "search") {
+        // 使用专门的属性判断是否自定义歌单
+        if (data.readonly == 1) {
             continue;
         }
         QString displayName = data.displayName;
