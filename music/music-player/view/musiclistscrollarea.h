@@ -45,6 +45,9 @@ public slots:
     void changePicture(QPixmap pixmap, QPixmap albumPixmap, QPixmap sidebarPixmap);
 
 protected:
+    bool eventFilter(QObject *o, QEvent *e) Q_DECL_OVERRIDE;
+
+protected:
     virtual void resizeEvent(QResizeEvent *event) Q_DECL_OVERRIDE;
 
 private:

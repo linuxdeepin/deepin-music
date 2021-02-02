@@ -78,8 +78,8 @@ MusicListInfoView::MusicListInfoView(QWidget *parent)
     QColor BackgroundColor("#FFFFFF");
     palette.setColor(DPalette::Background, BackgroundColor);
     setPalette(palette);
-    setIconSize( QSize(36, 36) );
-//    setGridSize( QSize(36, 36) );
+    setIconSize(QSize(36, 36));
+    //    setGridSize( QSize(36, 36) );
     d->model = new MusiclistInfomodel(0, 1, this);
     setModel(d->model);
 
@@ -341,9 +341,9 @@ void MusicListInfoView::keyPressEvent(QKeyEvent *event)
             break;
         }
         break;
-    case Qt::AltModifier:
+    case Qt::ControlModifier:
         switch (event->key()) {
-        case Qt::Key_Return:
+        case Qt::Key_I:
             QItemSelectionModel *selection = this->selectionModel();
             if (selection->selectedRows().length() <= 0) {
                 return;
@@ -354,38 +354,38 @@ void MusicListInfoView::keyPressEvent(QKeyEvent *event)
             break;
         }
         break;
-    case Qt::ControlModifier:
-        switch (event->key()) {
-        case Qt::Key_K:
-            QItemSelectionModel *selection = this->selectionModel();
-            if (selection->selectedRows().length() > 0) {
-                MetaPtrList metalist;
-                for (auto index : selection->selectedRows()) {
-                    auto meta = d->model->meta(index);
-                    metalist << meta;
-                }
-                if (!metalist.isEmpty())
-                    Q_EMIT addMetasFavourite(metalist);
-            }
-            break;
-        }
-        break;
-    case Qt::ControlModifier | Qt::ShiftModifier:
-        switch (event->key()) {
-        case Qt::Key_K:
-            QItemSelectionModel *selection = this->selectionModel();
-            if (selection->selectedRows().length() > 0) {
-                MetaPtrList metalist;
-                for (auto index : selection->selectedRows()) {
-                    auto meta = d->model->meta(index);
-                    metalist << meta;
-                }
-                if (!metalist.isEmpty())
-                    Q_EMIT removeMetasFavourite(metalist);
-            }
-            break;
-        }
-        break;
+    //    case Qt::ControlModifier:
+    //        switch (event->key()) {
+    //        case Qt::Key_K:
+    //            QItemSelectionModel *selection = this->selectionModel();
+    //            if (selection->selectedRows().length() > 0) {
+    //                MetaPtrList metalist;
+    //                for (auto index : selection->selectedRows()) {
+    //                    auto meta = d->model->meta(index);
+    //                    metalist << meta;
+    //                }
+    //                if (!metalist.isEmpty())
+    //                    Q_EMIT addMetasFavourite(metalist);
+    //            }
+    //            break;
+    //        }
+    //        break;
+    //    case Qt::ControlModifier | Qt::ShiftModifier:
+    //        switch (event->key()) {
+    //        case Qt::Key_K:
+    //            QItemSelectionModel *selection = this->selectionModel();
+    //            if (selection->selectedRows().length() > 0) {
+    //                MetaPtrList metalist;
+    //                for (auto index : selection->selectedRows()) {
+    //                    auto meta = d->model->meta(index);
+    //                    metalist << meta;
+    //                }
+    //                if (!metalist.isEmpty())
+    //                    Q_EMIT removeMetasFavourite(metalist);
+    //            }
+    //            break;
+    //        }
+    //        break;
     default:
         break;
     }
@@ -503,14 +503,19 @@ void MusicListInfoView::showContextMenu(const QPoint &pos,
 
     connect(&playlistMenu, &DMenu::triggered, this, [ = ](QAction * action) {
         auto playlist = action->data().value<PlaylistPtr >();
-        qDebug() << playlist;
         MetaPtrList metalist;
+
         for (auto &index : selection->selectedRows()) {
             auto meta = d->model->meta(index);
             if (!meta.isNull()) {
+                if (!playlist.isNull()) {
+                    if (playlist->id() == "fav")
+                        meta->favourite = true;
+                }
                 metalist << meta;
             }
         }
+
         Q_EMIT addToPlaylist(playlist, metalist);
     });
 
@@ -624,12 +629,12 @@ void MusicListInfoView::showContextMenu(const QPoint &pos,
 
     if (deleteAction) {
         connect(deleteAction, &QAction::triggered, this, [ = ](bool) {
-            bool containsCue = false;
+            //bool containsCue = false;
             MetaPtrList metalist;
             for (auto index : selection->selectedRows()) {
                 auto meta = d->model->meta(index);
                 if (!meta->cuePath.isEmpty()) {
-                    containsCue = true;
+                    //containsCue = true;
                 }
                 metalist << meta;
             }
@@ -659,7 +664,7 @@ void MusicListInfoView::showContextMenu(const QPoint &pos,
                 warnDlg.addContent(t_infoLabel, Qt::AlignHCenter);
                 warnDlg.addSpacing(20);
             }
-
+#if 0
             if (containsCue && false) {
 //                warnDlg.setTitle(tr("Are you sure you want to delete the selected %1 songs?").arg(metalist.length()));
 //                warnDlg.setMessage(tr("The song files contained will also be deleted"));
@@ -673,6 +678,7 @@ void MusicListInfoView::showContextMenu(const QPoint &pos,
                 warnDlg.addContent(t_infoLabel, Qt::AlignHCenter);
                 warnDlg.addSpacing(20);
             }
+#endif
             auto coverPixmap =  QPixmap::fromImage(WidgetHelper::cropRect(cover, QSize(64, 64)));
 
             warnDlg.setIcon(QIcon::fromTheme("deepin-music"));

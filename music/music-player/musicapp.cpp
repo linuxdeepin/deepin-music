@@ -49,12 +49,13 @@ public:
     void initMpris(const QString &serviceName);
     void triggerShortcutAction(const QString &optKey);
     void onDataPrepared();
+    void quickPrepared();
     void onQuit();
     void onRaise();
 
     Presenter       *presenter      = nullptr;
     MainFrame       *playerFrame    = nullptr;
-
+    QStringList     m_Files;
     MusicApp *q_ptr;
     Q_DECLARE_PUBLIC(MusicApp)
 };
@@ -70,7 +71,7 @@ void MusicAppPrivate::initMpris(const QString &serviceName)
     mprisPlayer->setCanQuit(true);
     mprisPlayer->setCanRaise(true);
     mprisPlayer->setCanSetFullscreen(false);
-    mprisPlayer->setHasTrackList(false);
+    mprisPlayer->setHasTrackList(true);
     // setDesktopEntry: see https://specifications.freedesktop.org/mpris-spec/latest/Media_Player.html#Property:DesktopEntry for more
     mprisPlayer->setDesktopEntry("deepin-music");
     mprisPlayer->setIdentity("Deepin Music Player");
@@ -82,7 +83,7 @@ void MusicAppPrivate::initMpris(const QString &serviceName)
     mprisPlayer->setCanPause(true);
 
     q->connect(mprisPlayer, &MprisPlayer::quitRequested, q, [ = ]() {
-//        onQuit();
+        onQuit();
     });
     q->connect(mprisPlayer, &MprisPlayer::raiseRequested, q, [ = ]() {
         onRaise();
@@ -110,10 +111,15 @@ void MusicAppPrivate::triggerShortcutAction(const QString &optKey)
     }
 }
 
+void MusicAppPrivate::quickPrepared()
+{
+    playerFrame->quickBinding(presenter);
+}
+
 void MusicAppPrivate::onDataPrepared()
 {
     Q_Q(MusicApp);
-    qDebug() << "TRACE:" << "data prepared";
+    //qDebug() << "TRACE:" << "data prepared";
 
     playerFrame->postInitUI();
     playerFrame->binding(presenter);
@@ -122,29 +128,23 @@ void MusicAppPrivate::onDataPrepared()
     q, [ = ](const QString & optKey) {
         this->triggerShortcutAction(optKey);
     });
-
-    initMpris("DeepinMusic");
-
-    presenter->postAction();
 }
 
 void MusicAppPrivate::onQuit()
 {
-    presenter->deleteLater();
-    playerFrame->deleteLater();
-//    this->deleteLater();
+//    presenter->deleteLater();
+//    playerFrame->deleteLater();
+    playerFrame->close();
 }
 
 void MusicAppPrivate::onRaise()
 {
     // blumia: call show() will not bring it up (at least it's not working under dde-kwin),
     //         so we need call showNormal() here.
-    // playerFrame->show();
     playerFrame->showNormal();
     playerFrame->raise();
     playerFrame->activateWindow();
 }
-
 
 MusicApp::MusicApp(MainFrame *frame, QObject *parent)
     : QObject(parent), d_ptr(new MusicAppPrivate(this))
@@ -198,11 +198,11 @@ void dumpGeometry(const QByteArray &geometry)
            >> maximized
            >> fullScreen;
 
-    qDebug() << "restore geometry:" << restoredFrameGeometry
-             << restoredNormalGeometry
-             << restoredScreenNumber
-             << maximized
-             << fullScreen;
+//    qDebug() << "restore geometry:" << restoredFrameGeometry
+//             << restoredNormalGeometry
+//             << restoredScreenNumber
+//             << maximized
+//             << fullScreen;
 
     if (majorVersion > 1) {
         stream >> restoredScreenWidth;
@@ -213,28 +213,25 @@ void MusicApp::show()
 {
     Q_D(MusicApp);
     auto geometry = MusicSettings::value("base.play.geometry").toByteArray();
-    auto state = MusicSettings::value("base.play.state").toInt();
-    qDebug() << "restore state:" << state;
+    //qDebug() << "restore state:" << state;
     dumpGeometry(geometry);
 
     d->playerFrame->resize(QSize(1070, 680));
-    d->playerFrame->show();
     Dtk::Widget::moveToCenter(d->playerFrame);
-//    if (geometry.isEmpty()) {
-//        d->playerFrame->resize(QSize(1070, 680));
-//        d->playerFrame->show();
-//        Dtk::Widget::moveToCenter(d->playerFrame);
-//    } else {
-//        d->playerFrame->restoreGeometry(geometry);
-//        d->playerFrame->setWindowState(static_cast<Qt::WindowStates >(state));
-//    }
+    if (geometry.isEmpty()) {
+        d->playerFrame->resize(QSize(1070, 680));
+        Dtk::Widget::moveToCenter(d->playerFrame);
+    } else {
+        d->playerFrame->restoreGeometry(geometry);
+        d->playerFrame->restoreState(MusicSettings::value("base.play.state").toByteArray());
+    }
     d->playerFrame->show();
     d->playerFrame->setFocus();
 }
 
 void MusicApp::quit()
 {
-    Q_D(MusicApp);
+    //Q_D(MusicApp);
 //    d->presenter->handleQuit();
     qDebug() << "sync config start";
 //    MusicSettings::sync();
@@ -245,38 +242,49 @@ void MusicApp::quit()
     qApp->quit();
 }
 
-void MusicApp::initUI()
+void MusicApp::onStartImport(QStringList files)
 {
     Q_D(MusicApp);
+    d->m_Files = files;
+}
 
-    /*
-     *auto mediaCount = AppSettings::instance()->value("base.play.media_count").toInt();
-     *auto mediaCount = 1;
-     *d->playerFrame->initUI(0 != mediaCount);
-     */
-
-    d->playerFrame->initUI(true);
-
-    qDebug() << "TRACE:" << "create MainFrame";
-
+void MusicApp::initUI(bool showFlag)
+{
+    Q_D(MusicApp);
+    d->playerFrame->initUI(showFlag);
+    d->playerFrame->initMenu();
     show();
 }
 
-void MusicApp::initConnection()
+void MusicApp::initConnection(bool showFlag)
 {
     Q_D(MusicApp);
 
-    qDebug() << "TRACE:" << "create Presenter";
     d->presenter = new Presenter;
     auto presenterWork = ThreadPool::instance()->newThread();
     d->presenter->moveToThread(presenterWork);
     connect(presenterWork, &QThread::started, d->presenter, &Presenter::prepareData);
+    connect(this, &MusicApp::sigStartImport, d->playerFrame, &MainFrame::onClickedImportFiles);
     connect(d->presenter, &Presenter::dataLoaded, this, [ = ]() {
-        d->onDataPrepared();
-        Player::instance()->init();
+        if (showFlag) {
+            d->quickPrepared();
+            d->presenter->quickLoad();
+        }
+        QTimer::singleShot(200, nullptr, [ = ]() {
+            d->initMpris("DeepinMusic");
+            d->onDataPrepared();
+            if (!showFlag) {
+                d->quickPrepared();
+            }
+            d->presenter->postAction(showFlag);
+            Player::instance()->init();
+            if (d->m_Files.size() > 0) {
+                emit sigStartImport(d->m_Files);
+                d->m_Files.clear();
+            }
+        });
     });
 
     presenterWork->start();
-    qDebug() << "TRACE:" << "start prepare data";
 }
 

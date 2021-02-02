@@ -1,6 +1,6 @@
 ### deepin-music
 
-Deepin music is a local music player with beautiful design and simple functions  developed by Deepin Technology.
+Deepin music  is a local music player with beautiful design and simple functions  developed by Deepin Technology.
 
 ### Dependencies
 
@@ -47,7 +47,7 @@ $ apt build-dep deepin-music
 $ cd deepin-music
 $ mkdir Build
 $ cd Build
-$ cmake ..
+$ qmake ..
 $ make
 ```
 

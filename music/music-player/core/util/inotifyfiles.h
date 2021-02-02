@@ -19,20 +19,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef INOTIFYENGINE_H
-#define INOTIFYENGINE_H
+#ifndef INOTIFYFILES_H
+#define INOTIFYFILES_H
 
 #include <QObject>
+#include <QMutex>
 #include <QScopedPointer>
 
 class QDir;
-
 class InotifyFilesPrivate;
 class InotifyFiles : public QObject
 {
     Q_OBJECT
 public:
-    explicit InotifyFiles(QObject *parent = 0);
+    explicit InotifyFiles(QObject *parent = nullptr);
     ~InotifyFiles();
 
     void start();
@@ -48,6 +48,7 @@ public slots:
 
 private:
     QScopedPointer<InotifyFilesPrivate> d;
+    QMutex  m_mutex;
 };
 
-#endif // INOTIFYENGINE_H
+#endif // INOTIFYFILES_H

@@ -41,6 +41,7 @@
 #include "delegate/musiclistdatadelegate.h"
 #include "model/musiclistdatamodel.h"
 #include "musiclistdialog.h"
+#include "ac-desktop-define.h"
 
 DWIDGET_USE_NAMESPACE
 
@@ -102,8 +103,8 @@ MusicListDataView::MusicListDataView(QWidget *parent)
     setUniformItemSizes(true);
 
     setViewModeFlag(QListView::ListMode);
-    setResizeMode( QListView::Adjust );
-    setMovement( QListView::Static );
+    setResizeMode(QListView::Adjust);
+    setMovement(QListView::Static);
     setLayoutMode(QListView::Batched);
     setBatchSize(2000);
 
@@ -111,17 +112,20 @@ MusicListDataView::MusicListDataView(QWidget *parent)
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
     d->musciListDialog = new MusicListDialog(this);
+    AC_SET_OBJECT_NAME(d->musciListDialog, AC_musicListDialogSinger);
+    AC_SET_ACCESSIBLE_NAME(d->musciListDialog, AC_musicListDialogSinger);
 
 
     connect(this, &MusicListDataView::doubleClicked,
     this, [ = ](const QModelIndex & index) {
         PlaylistPtr curPlaylist = d->model->playlist();
+
         auto playMusicTypePtrList = curPlaylist->playMusicTypePtrList();
         if (index.row() >= playMusicTypePtrList.size()) {
             return;
         }
-        auto PlayMusicTypePtr = playMusicTypePtrList[index.row()];
 
+        auto PlayMusicTypePtr = playMusicTypePtrList[index.row()];
         d->musciListDialog->setPlayMusicData(curPlaylist, PlayMusicTypePtr);
         d->musciListDialog->setPlaying(playing());
         d->musciListDialog->exec();
@@ -144,7 +148,7 @@ MusicListDataView::MusicListDataView(QWidget *parent)
                 Q_EMIT playMedia(curtMeta);
                 setPlaying(curtMeta);
             } else {
-                auto curtMeta = playlist()->playing();
+                auto curtMeta = this->playing();
                 if (!playlist()->playingStatus()) {
                     Q_EMIT resume(curtMeta);
                 } else {
@@ -160,7 +164,7 @@ MusicListDataView::MusicListDataView(QWidget *parent)
                 Q_EMIT playMedia(curtMeta);
                 setPlaying(curtMeta);
             } else {
-                auto curtMeta = playlist()->playing();
+                auto curtMeta = this->playing();
                 if (!playlist()->playingStatus()) {
                     Q_EMIT resume(curtMeta);
                 } else {
@@ -249,12 +253,17 @@ int MusicListDataView::listSize()
 
 void MusicListDataView::setViewModeFlag(QListView::ViewMode mode)
 {
+
     if (mode == QListView::IconMode) {
-        setIconSize( QSize(170, 170) );
-        setGridSize( QSize(170, 170) );
+        setIconSize(QSize(150, 150));
+        setGridSize(QSize(-1, -1));
+        setViewportMargins(-10, -13, -35, 10);
+        setSpacing(20);
     } else {
-        setIconSize( QSize(36, 36) );
-        setGridSize( QSize(-1, -1) );
+        setIconSize(QSize(36, 36));
+        setGridSize(QSize(-1, -1));
+        setViewportMargins(0, 0, 8, 0);
+        setSpacing(0);
     }
     setViewMode(mode);
 }
@@ -363,7 +372,7 @@ void MusicListDataView::updateList()
 
 void MusicListDataView::mouseMoveEvent(QMouseEvent *event)
 {
-
+    Q_UNUSED(event)
 }
 
 void MusicListDataView::onMusiclistChanged(PlaylistPtr playlist)

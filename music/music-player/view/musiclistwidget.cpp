@@ -41,6 +41,7 @@
 #include "musiclistdatawidget.h"
 #include "widget/musicimagebutton.h"
 #include "musiclistscrollarea.h"
+#include "ac-desktop-define.h"
 
 MusicListWidget::MusicListWidget(QWidget *parent) : DWidget(parent)
 {
@@ -62,23 +63,41 @@ MusicListWidget::MusicListWidget(QWidget *parent) : DWidget(parent)
     auto leftFramePalette = leftFrame->palette();
     leftFramePalette.setColor(DPalette::Background, QColor("#FFFFFF"));
     leftFrame->setPalette(leftFramePalette);
+    AC_SET_OBJECT_NAME(leftFrame, AC_MusicListScrollArea);
+    AC_SET_ACCESSIBLE_NAME(leftFrame, AC_MusicListScrollArea);
 
     m_addListBtn = leftFrame->getAddButton();
 
     m_dataBaseListview = leftFrame->getDBMusicListView();
     m_customizeListview = leftFrame->getCustomMusicListView();
     m_dataListView = new MusicListDataWidget;
+    AC_SET_OBJECT_NAME(m_dataListView, AC_MusicListDataWidget);
+    AC_SET_ACCESSIBLE_NAME(m_dataListView, AC_MusicListDataWidget);
 
     layout->addWidget(leftFrame, 0);
     layout->addWidget(m_dataListView, 100);
-
-    bool themeFlag = false;
 
     int themeType = DGuiApplicationHelper::instance()->themeType();
     slotTheme(themeType);
 
     connect(this, &MusicListWidget::seaResult,
             m_dataListView,  &MusicListDataWidget::retResult);
+
+    connect(m_dataListView, &MusicListDataWidget::changeFocus, this, [ = ](QString type) {
+
+        if (type == "AllMusicListID") {
+            m_customizeListview->clearSelection();
+            int rowIndex = m_dataBaseListview->currentIndex().row();
+            if (rowIndex == -1) {
+                auto index = m_dataBaseListview->item(2, 0);
+                m_dataBaseListview->setCurrentItem(index);
+            }
+        } else if (type == "btlistMode") {
+
+            auto index = m_dataBaseListview->item(-1, 0);
+            m_dataBaseListview->setCurrentItem(index);
+        }
+    });
 
     connect(this, &MusicListWidget::seaResult, this, [ = ]() {
         m_customizeListview->clearSelected();
@@ -107,10 +126,11 @@ MusicListWidget::MusicListWidget(QWidget *parent) : DWidget(parent)
             curPtr->setSearchStr("");
             Q_EMIT selectedPlaylistChange(curPtr);
         }
-        m_dataBaseListview->setFocus();
+        m_dataBaseListview->setFocus();           //快捷键生效，需要设置焦点
     });
     connect(m_dataBaseListview, &MusicListView::currentChanged,
     this, [ = ](const QModelIndex & current, const QModelIndex & previous) {
+        Q_UNUSED(previous)
         auto curPtr = m_dataBaseListview->playlistPtr(current);
         if (curPtr != nullptr) {
             m_customizeListview->clearSelected();
@@ -119,7 +139,7 @@ MusicListWidget::MusicListWidget(QWidget *parent) : DWidget(parent)
             curPtr->setSearchStr("");
             Q_EMIT selectedPlaylistChange(curPtr);
         }
-        m_dataBaseListview->setFocus();
+        m_dataBaseListview->setFocus();          //快捷键生效，需要设置焦点
     });
     connect(m_dataBaseListview, &MusicListView::customResort,
     this, [ = ](const QStringList & uuids) {
@@ -164,10 +184,11 @@ MusicListWidget::MusicListWidget(QWidget *parent) : DWidget(parent)
             curPtr->setSearchStr("");
             Q_EMIT selectedPlaylistChange(curPtr);
         }
-        m_customizeListview->setFocus();
+        m_customizeListview->setFocus();         //快捷键生效，需要设置焦点
     });
     connect(m_customizeListview, &MusicListView::currentChanged,
     this, [ = ](const QModelIndex & current, const QModelIndex & previous) {
+        Q_UNUSED(previous)
         auto curPtr = m_customizeListview->playlistPtr(current);
         if (curPtr != nullptr) {
             m_dataBaseListview->clearSelected();
@@ -177,10 +198,11 @@ MusicListWidget::MusicListWidget(QWidget *parent) : DWidget(parent)
             curPtr->setSearchStr("");
             Q_EMIT selectedPlaylistChange(curPtr);
         }
-        m_customizeListview->setFocus();
+        m_customizeListview->setFocus();         //快捷键生效，需要设置焦点
     });
     connect(m_customizeListview, &MusicListView::removeAllList,
     this, [ = ](const MetaPtr meta) {
+        Q_UNUSED(meta)
         auto current = m_dataBaseListview->item(2);
         auto curPtr = m_dataBaseListview->playlistPtr(current);
         if (curPtr != nullptr) {
@@ -195,6 +217,13 @@ MusicListWidget::MusicListWidget(QWidget *parent) : DWidget(parent)
             curPtr->setSearchStr("");
             Q_EMIT selectedPlaylistChange(curPtr);
         }
+    });
+    connect(m_customizeListview, &MusicListView::changeToAllMusic,
+    this, [ = ]() {
+        auto current = m_dataBaseListview->item(2);
+        auto curPtr = m_dataBaseListview->playlistPtr(current);
+
+        m_dataListView->selectMusiclistChanged(curPtr);
     });
     connect(m_customizeListview, &MusicListView::customResort,
     this, [ = ](const QStringList & uuids) {
@@ -228,7 +257,7 @@ MusicListWidget::MusicListWidget(QWidget *parent) : DWidget(parent)
     //musiclistdatawidget
     connect(m_dataListView, &MusicListDataWidget::playall,
     this, [ = ](PlaylistPtr playlist) {
-//        Q_EMIT this->selectPlaylist(playlist);
+
         Q_EMIT this->playall(playlist);
     });
     connect(m_dataListView, &MusicListDataWidget::playMedia,
@@ -347,7 +376,7 @@ void MusicListWidget::onPlaylistAdded(PlaylistPtr playlist, bool newflag)
     }
 
     if (playlist->id() == AlbumMusicListID || playlist->id() == ArtistMusicListID ||
-            playlist->id() == AllMusicListID || playlist->id() == FavMusicListID ) {
+            playlist->id() == AllMusicListID || playlist->id() == FavMusicListID) {
         m_dataBaseListview->addMusicList(playlist);
     } else {
         m_customizeListview->closeAllPersistentEditor();
@@ -381,7 +410,7 @@ void MusicListWidget::onCurrentChanged(PlaylistPtr playlist)
             auto *item = m_dataBaseListview->item(i);
             auto curPlaylist = m_dataBaseListview->playlistPtr(item);
             if (playlist == curPlaylist) {
-                Q_EMIT selectedPlaylistChange(curPlaylist);
+//                Q_EMIT selectedPlaylistChange(curPlaylist);
                 m_dataBaseListview->setCurPlaylist(item);
                 m_customizeListview->setCurPlaylist(nullptr);
             }
@@ -390,7 +419,7 @@ void MusicListWidget::onCurrentChanged(PlaylistPtr playlist)
             auto *item = m_customizeListview->item(i);
             auto curPlaylist = m_customizeListview->playlistPtr(item);
             if (playlist == curPlaylist) {
-                Q_EMIT selectedPlaylistChange(curPlaylist);
+//                Q_EMIT selectedPlaylistChange(curPlaylist);
                 m_customizeListview->setCurPlaylist(item);
                 m_dataBaseListview->setCurPlaylist(nullptr);
             }

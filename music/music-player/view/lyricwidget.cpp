@@ -28,6 +28,7 @@
 #include <QPainter>
 #include <QResizeEvent>
 #include <QPaintEvent>
+#include <QPainterPath>
 #include <QStringListModel>
 #include <QAbstractItemDelegate>
 
@@ -419,6 +420,7 @@ void LyricWidget::onMusicPlayed(PlaylistPtr playlist, const MetaPtr meta)
 
 void LyricWidget::onMusicStop(PlaylistPtr playlist, const MetaPtr meta)
 {
+    Q_UNUSED(playlist)
     Q_D(LyricWidget);
 
     auto lyricStr = QString::fromUtf8("");
@@ -516,11 +518,11 @@ void LyricWidget::onUpdateMetaCodec(const MetaPtr /*meta*/)
     //    }
 }
 
-void LyricWidget::slotTheme(int type)
-{
-    Q_D(LyricWidget);
+//void LyricWidget::slotTheme(int type)
+//{
+//    Q_D(LyricWidget);
 
-}
+//}
 
 void LyricWidget::setBackgroundColor(QColor backgroundColor)
 {

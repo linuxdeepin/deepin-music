@@ -105,7 +105,7 @@ TitlebarWidget::~TitlebarWidget()
 
 void TitlebarWidget::exitSearch()
 {
-    Q_D(TitlebarWidget);
+    //Q_D(TitlebarWidget);
     clearSearch();
 }
 
@@ -148,7 +148,8 @@ void TitlebarWidget::selectPlaylist(PlaylistPtr playlistPtr)
     Q_D(TitlebarWidget);
     if (playlistPtr != d->search->curPlaylistPtr()) {
 //        d->search->selectPlaylist(playlistPtr);
-        d->search->clear();
+//        d->search->clear();
+        d->search->clearEdit();
     }
 }
 
@@ -168,7 +169,7 @@ void TitlebarWidget::resizeEvent(QResizeEvent *event)
 
 void TitlebarWidgetPrivate::fixSearchPosition()
 {
-    Q_Q(TitlebarWidget);
+    //Q_Q(TitlebarWidget);
     //auto fixSize = QPoint(search->width() / 2, search->height() / 2);
     // auto fixPos = q->geometry().center() - fixSize;
     // search->setGeometry(fixPos.x(), fixPos.y(),

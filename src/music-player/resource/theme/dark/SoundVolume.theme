@@ -1,5 +1,0 @@
-#SoundVolume {
-  qproperty-background: rgba(49, 49, 49, 100%);
-  qproperty-borderColor: rgba(0, 0, 0, 10%);
-  qproperty-radius: 4.0;
-}

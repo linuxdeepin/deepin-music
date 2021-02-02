@@ -30,7 +30,7 @@ class MusicTitleImageWidget : public DWidget
     Q_OBJECT
 public:
     explicit MusicTitleImageWidget(QWidget *parent = Q_NULLPTR);
-    ~MusicTitleImageWidget();
+    ~MusicTitleImageWidget() override;
 
     void setPixmap(QPixmap pixmap);
 

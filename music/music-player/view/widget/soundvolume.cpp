@@ -23,6 +23,7 @@
 
 #include <QDebug>
 #include <QPainter>
+#include <QPainterPath>
 #include <QWheelEvent>
 #include <QGraphicsDropShadowEffect>
 #include <QVBoxLayout>
@@ -34,6 +35,9 @@
 #include <DHiDPIHelper>
 
 #include "core/player.h"
+#include "widget/soundpixmapbutton.h"
+#include "musicsettings.h"
+#include "ac-desktop-define.h"
 
 using namespace Dtk::Widget;
 
@@ -43,14 +47,16 @@ public:
     SoundVolumePrivate(SoundVolume *parent) : q_ptr(parent) {}
 
     SoundVolume *q_ptr;
-    DLabel      *lblPersent;
-    DSlider     *volSlider  = nullptr;
+    DLabel      *lblPersent = nullptr;
+    DSlider     *volSlider           = nullptr;
+    SoundPixmapButton *sound         = nullptr;
     QBrush      background;
     QColor      borderColor = QColor(0, 0, 0,  255 * 2 / 10);
 
     int         radius      = 20;
     bool        mouseIn     = false;
     int         sThemeType  = 0;
+    bool        volMute     = false;
 
     Q_DECLARE_PUBLIC(SoundVolume)
 };
@@ -63,7 +69,7 @@ SoundVolume::SoundVolume(QWidget *parent) : QWidget(parent), d_ptr(new SoundVolu
 
     setFixedSize(62, 201);
     auto layout = new QVBoxLayout(this);
-    layout->setContentsMargins(2, 16, 0, 31);
+    layout->setContentsMargins(2, 16, 0, 14);
     layout->setSpacing(0);
 
     d->lblPersent = new DLabel(this);
@@ -79,17 +85,25 @@ SoundVolume::SoundVolume(QWidget *parent) : QWidget(parent), d_ptr(new SoundVolu
     d->volSlider->setMaximum(100);
     d->volSlider->slider()->setSingleStep(Player::VolumeStep);
     d->volSlider->setValue(50);
-    d->volSlider->slider()->setFixedHeight(126);
+    d->volSlider->slider()->setFixedHeight(120);
     d->volSlider->setFixedWidth(24);
     d->volSlider->setIconSize(QSize(15, 15));
     d->volSlider->setMouseWheelEnabled(true);
-//    d->volSlider->setRightIcon(DHiDPIHelper::loadNxPixmap(":/mpimage/light/normal/volume_add_normal.svg"));
-//    d->volSlider->setLeftIcon(DHiDPIHelper::loadNxPixmap(":/mpimage/light/normal/volume_lessen_normal.svg"));
+    AC_SET_OBJECT_NAME(d->volSlider, AC_DSlider);
+    AC_SET_ACCESSIBLE_NAME(d->volSlider, AC_DSlider);
+
+    d->sound = new SoundPixmapButton();
+    //d->sound->setShortcut(QKeySequence(QLatin1String("M")));
+    d->sound->setFixedSize(30, 30);
+    d->sound->setIconSize(QSize(30, 30));
+
+    d->volMute = MusicSettings::value("base.play.mute").toBool();
+    volumeIcon();
 
     layout->addStretch();
-
     layout->addWidget(d->lblPersent, 0, Qt::AlignTop | Qt::AlignHCenter);
-    layout->addWidget(d->volSlider, 1, Qt::AlignCenter);
+    layout->addWidget(d->volSlider, 0, Qt::AlignCenter);
+    layout->addWidget(d->sound, 0, Qt::AlignHCenter);
     layout->addStretch();
     setFixedSize(62, 201);
 
@@ -99,8 +113,28 @@ SoundVolume::SoundVolume(QWidget *parent) : QWidget(parent), d_ptr(new SoundVolu
     bodyShadow->setOffset(0, 2.0);
     this->setGraphicsEffect(bodyShadow);
 
+//    connect(d->volSlider, &DSlider::valueChanged,
+//            this, &SoundVolume::volumeChanged);
+
     connect(d->volSlider, &DSlider::valueChanged,
-            this, &SoundVolume::volumeChanged);
+    this, [ = ](int volume) {
+        if (volume == 0) {
+            d->volMute = true;
+        } else {
+            d->volMute = false;
+        }
+        volumeIcon();
+
+        Q_EMIT volumeChanged(volume);
+    });
+
+    connect(d->sound, &SoundPixmapButton::pressed,
+    this, [ = ]() {
+        d->volMute = !d->volMute;
+        volumeIcon();
+
+        Q_EMIT volumeMute();
+    });
 }
 
 SoundVolume::~SoundVolume()
@@ -150,7 +184,34 @@ void SoundVolume::setBorderColor(QColor borderColor)
     d->borderColor = borderColor;
 }
 
-void SoundVolume::deleyHide()
+void SoundVolume::volumeIcon()
+{
+    Q_D(SoundVolume);
+    if (d->sThemeType != 2) {
+        if (!d->volMute) {
+            d->sound->setIcon(QPixmap(":/mpimage/light/normal/volume_low_normal.svg"));
+        } else {
+            d->sound->setIcon(QPixmap(":/mpimage/light/normal/mute_normal.svg"));
+        }
+    } else {
+        if (!d->volMute) {
+            d->sound->setIcon(QPixmap(":/mpimage/light/checked/volume_low_checked.svg"));
+        } else {
+            d->sound->setIcon(QPixmap(":/mpimage/light/checked/mute_checked.svg"));
+        }
+    }
+}
+
+void SoundVolume::syncMute(bool mute)
+{
+    Q_D(SoundVolume);
+    d->volMute = mute;
+    volumeIcon();
+
+    Q_UNUSED(mute)
+}
+
+void SoundVolume::delayHide()
 {
     Q_D(SoundVolume);
     d->mouseIn = false;
@@ -158,6 +219,7 @@ void SoundVolume::deleyHide()
         Q_D(SoundVolume);
         if (!d->mouseIn) {
             hide();
+            Q_EMIT delayAutoHide();
         }
     });
 }
@@ -189,7 +251,7 @@ void SoundVolume::leaveEvent(QEvent *event)
 {
     Q_D(SoundVolume);
     d->mouseIn = false;
-    deleyHide();
+    delayHide();
     QWidget::leaveEvent(event);
 }
 
@@ -234,23 +296,36 @@ void SoundVolume::paintEvent(QPaintEvent * /*event*/)
     QRectF topLeftRect(QPointF(width, 0),
                        QPointF(width - 2 * radius, 2 * radius));
     QRectF bottomLeftRect(QPointF(width, height),
-                          QPointF(width - 2 * radius, height - 2 * radius));
+                          QPointF(width - 30, height - 30));
 
+#if 0
     path.moveTo(radius, 0.0);
     path.lineTo(width - radius, 0.0);
+
     path.arcTo(topLeftRect, 90.0, 90.0);
     path.lineTo(width, height - radius);
-    path.arcTo(bottomLeftRect, 180.0, -90.0);
-    path.lineTo(width / 2 + triWidth / 2, height);
     path.lineTo(width / 2, height + triHeight);
-    path.lineTo(width / 2 - triWidth / 2, height);
-    path.lineTo(radius, height);
-
-    path.arcTo(bottomRightRect, 270.0, -90.0);
+    path.lineTo(0.0, height - radius);
     path.lineTo(0.0, radius);
 
     path.arcTo(topRightRect, 180.0, -90.0);
     path.lineTo(radius, 0.0);
+#else
+    path.moveTo(radius, 0.0);
+    path.lineTo(width - radius, 0.0);
+    path.arcTo(topLeftRect, 90.0, 90.0);
+    path.lineTo(width, height - radius);
+    path.arcTo(bottomLeftRect, 180.0, -60.0);
+
+    path.lineTo(width / 2 + 3, height + triHeight);
+    path.lineTo(10, height - 2);
+
+    path.arcTo(bottomRightRect, 270.0, -90.0);
+    path.lineTo(0.0,  radius);
+
+    path.arcTo(topRightRect, 180.0, -90.0);
+    path.lineTo(radius, 0.0);
+#endif
 
     /*
     FIXME: light: white
@@ -273,15 +348,7 @@ void SoundVolume::paintEvent(QPaintEvent * /*event*/)
 void SoundVolume::slotTheme(int type)
 {
     Q_D(SoundVolume);
-
     d->sThemeType = type;
 
-    QString rStr;
-    if (type == 1) {
-        rStr = "light";
-    } else {
-        rStr = "dark";
-    }
-//  d->volSlider->setRightIcon(DHiDPIHelper::loadNxPixmap(QString(":/mpimage/%1/normal/volume_add_normal.svg").arg(rStr)));
-
+    volumeIcon();
 }

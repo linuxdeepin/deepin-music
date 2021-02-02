@@ -72,6 +72,8 @@ public:
 void PlayListWidgetPrivate::initData(PlaylistPtr playlist)
 {
     Q_Q(PlayListWidget);
+    if (playlist.isNull())
+        return;
 
     if (playlist->id() != PlayMusicListID)
         return;
@@ -145,6 +147,8 @@ void PlayListWidgetPrivate::initConntion()
     q->connect(&inotifyFiles, &InotifyFiles::fileChanged,
     q, [ = ](const QStringList  & files) {
         auto allMetas = playListView->playlist()->allmusic();
+        int allCount = allMetas.size();
+        int missCount = 0;
         if (!allMetas.isEmpty()) {
             MetaPtrList  metalist;
             for (auto file : files) {
@@ -152,15 +156,46 @@ void PlayListWidgetPrivate::initConntion()
                     if (file == allMetas[i]->localPath) {
                         metalist.append(allMetas[i]);
                         allMetas.removeAt(i);
-                        break;
+                        missCount++;
+                        //break;
                     }
                 }
             }
+
+            if (allCount == missCount) {
+                if (allCount == 1)
+                    Q_EMIT q->fileRemoved(playListView->playlist(), metalist.at(0), 1);
+                else {
+                    for (MetaPtr meta : metalist) {
+                        if (meta == playListView->activingMeta()) {
+                            Q_EMIT q->fileRemoved(playListView->playlist(), metalist.at(0), 1);
+                        }
+                    }
+                }
+                Q_EMIT q->musiclistRemove(playListView->playlist(), playListView->playlist()->allmusic());
+            } else if (missCount > 0) {
+                /***************************************************************
+                 * stop current music
+                 * *************************************************************/
+                Q_EMIT q->musiclistRemove(playListView->playlist(), metalist);
+                /****************************************************************
+                 * emit file not found
+                 * 1 = Player::ResourceError
+                 * ***************************************************************/
+                for (MetaPtr meta : metalist) {
+                    if (meta == playListView->activingMeta())
+                        Q_EMIT q->fileRemoved(playListView->playlist(), metalist.at(0), 1);
+                }
+            }
+
             if (!metalist.isEmpty()) {
                 playListView->playlist()->removeMusicList(metalist);
             }
         }
         Q_EMIT q->musicFileMiss();
+    });
+    q->connect(playListView, &PlayListView::hideEmptyHits, q, [ = ](bool a) {
+        showEmptyHits(a);
     });
 }
 
@@ -232,8 +267,12 @@ PlayListWidget::PlayListWidget(QWidget *parent) :
     d->btClearAll->setPalette(playAllPalette);
     d->btClearAll->setObjectName("PlayListPlayAll");
     d->btClearAll->setText(tr("Empty"));
-    d->btClearAll->setFocusPolicy(Qt::NoFocus);
     d->btClearAll->setFixedHeight(30);
+
+    d->btClearAll->setFocusPolicy(Qt::TabFocus);
+    d->btClearAll->setDefault(true);
+    d->btClearAll->installEventFilter(this);
+    this->installEventFilter(this);
 
     d->emptyHits = new DLabel(this);
     d->emptyHits->setObjectName("PlayListEmptyHits");
@@ -244,12 +283,16 @@ PlayListWidget::PlayListWidget(QWidget *parent) :
     actionBarLayout->addWidget(d->btClearAll, 0, Qt::AlignLeft);
     actionBarLayout->addStretch();
 
-    d->playListView = new PlayListView(false);
+    d->playListView = new PlayListView(false, true);
     d->playListView->hide();
+    d->playListView->setFocusPolicy(Qt::StrongFocus);
+    d->playListView->installEventFilter(this);
 
     layout->addWidget(d->actionBar);
     layout->addWidget(d->playListView);
     layout->addWidget(d->emptyHits, 0, Qt::AlignCenter);
+    //show scroll bar
+    layout->addSpacing(12);
 
     d->initConntion();
 
@@ -302,6 +345,74 @@ PlaylistPtr PlayListWidget::curPlaylist()
     return d->playListView->playlist();
 }
 
+bool PlayListWidget::eventFilter(QObject *o, QEvent *e)
+{
+    Q_D(PlayListWidget);
+
+    if (e->type() == QEvent::KeyPress) {
+        QKeyEvent *event = static_cast<QKeyEvent *>(e);
+        if (event->key() == Qt::Key_Escape) {
+
+            Q_EMIT btPlayList();
+        }
+    }
+
+    if (o == d->playListView) {
+        if (e->type() == QEvent::KeyPress) {
+            QKeyEvent *event = static_cast<QKeyEvent *>(e);
+            if ((event->modifiers() == Qt::ControlModifier) && (event->key() == Qt::Key_M)) {
+
+                int rowIndex = d->playListView->currentIndex().row();
+                int row = 40 * rowIndex;
+                QPoint pos;
+
+                if (row > 300) {
+                    QPoint posm(300, 65);
+                    pos = posm;
+                } else {
+                    QPoint posm(300, row);
+                    pos = posm;
+                }
+
+                Q_EMIT requestCustomContextMenu(pos, 0);
+
+            } else if (event->key() == Qt::Key_Escape) {
+
+            }
+        } else if (e->type() == QEvent::FocusIn) {
+
+            int rowIndex = d->playListView->currentIndex().row();
+            if (rowIndex == -1) {
+                auto index = d->playListView->item(0, 0);
+                d->playListView->setCurrentItem(index);
+            }
+
+        } else if (e->type() == QEvent::FocusOut) {
+
+            int rowIndex = d->playListView->currentIndex().row();
+            if (rowIndex == 0) {
+                //    d->playListView->clearSelection();
+            }
+        }
+    } else if (o == d->btClearAll) {
+
+        if (e->type() == QEvent::KeyPress) {
+            QKeyEvent *event = static_cast<QKeyEvent *>(e);
+            if (event->key() == Qt::Key_Escape) {
+
+            }
+        } else  if (e->type() == QEvent::FocusIn) {
+            auto index = d->playListView->item(-1, 0);
+            d->playListView->setCurrentItem(index);
+
+        } else if (e->type() == QEvent::FocusOut) {
+
+        }
+    }
+
+    return QWidget::eventFilter(o, e);
+}
+
 void PlayListWidget::dragEnterEvent(QDragEnterEvent *event)
 {
     DWidget::dragEnterEvent(event);
@@ -335,7 +446,7 @@ void PlayListWidget::dropEvent(QDropEvent *event)
 
 void PlayListWidget::resizeEvent(QResizeEvent *event)
 {
-    Q_D(PlayListWidget);
+    //Q_D(PlayListWidget);
     DWidget::resizeEvent(event);
 }
 

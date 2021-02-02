@@ -27,17 +27,20 @@
 
 DWIDGET_USE_NAMESPACE
 
+class ActionBar;
 class MusicListDataWidgetPrivate;
 class MusicListDataWidget : public DWidget
 {
     Q_OBJECT
 public:
     explicit MusicListDataWidget(QWidget *parent = Q_NULLPTR);
-    ~MusicListDataWidget();
+    ~MusicListDataWidget() override;
 
     void setCustomSortType(PlaylistPtr playlist);
     void tabwidgetInfo(PlaylistPtr infoPlaylist);
     PlaylistPtr curPlaylist();
+
+    void initTabWidget();
 
 public slots:
     void onSearchText(QString str);
@@ -77,6 +80,11 @@ signals:
     void addMetasFavourite(const MetaPtrList  &metalist);
     void removeMetasFavourite(const MetaPtrList  &metalist);
 
+    void changeFocus(QString type);
+
+protected:
+    bool eventFilter(QObject *o, QEvent *e) Q_DECL_OVERRIDE;
+
 protected:
     virtual void dragEnterEvent(QDragEnterEvent *event) Q_DECL_OVERRIDE;
     virtual void dropEvent(QDropEvent *event) Q_DECL_OVERRIDE;
@@ -88,5 +96,21 @@ private:
 
     QScopedPointer<MusicListDataWidgetPrivate> d_ptr;
     Q_DECLARE_PRIVATE_D(qGetPtrHelper(d_ptr), MusicListDataWidget)
+};
+
+class ActionBar : public DWidget
+{
+    Q_OBJECT
+public:
+    explicit ActionBar(QWidget *parent = Q_NULLPTR);
+    ~ActionBar() {}
+private:
+    bool MoveFlag = false;
+
+protected:
+    //Filter the mousemoveevent
+    virtual void mouseReleaseEvent(QMouseEvent *event);
+    virtual void mousePressEvent(QMouseEvent *event);
+    virtual void mouseMoveEvent(QMouseEvent *event);
 };
 

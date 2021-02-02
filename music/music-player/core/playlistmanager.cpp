@@ -52,7 +52,7 @@ public:
 
     inline uint indexUUID(const QString &uuid)
     {
-        return sortUUIDs.indexOf(uuid);
+        return static_cast<uint>(sortUUIDs.indexOf(uuid));
     }
 
     QStringList                 sortUUIDs;
@@ -104,12 +104,17 @@ void PlaylistManager::load()
 {
     Q_D(PlaylistManager);
 
+    d->sortUUIDs.clear();       //启动加载歌单，容器清空
+
     for (auto &playlistmeta : MediaDatabase::instance()->allPlaylistMeta()) {
         PlaylistPtr emptylist(new Playlist(playlistmeta));
         emptylist->load();
         insertPlaylist(playlistmeta.uuid, emptylist);
+
+        d->sortUUIDs << playlistmeta.uuid;      //读取数据库的数据，直接进行排序
     }
 
+#if 0
     QMap<uint, QString> sortUUIDs;
     for (auto playlist : d->playlists) {
         sortUUIDs.insert(playlist->sortID(), playlist->id());
@@ -161,6 +166,7 @@ void PlaylistManager::load()
             d->sortUUIDs << sortUUIDs.value(static_cast<uint>(sortID));
         }
     }
+#endif
 
     auto album = playlist(AlbumMusicListID);
     auto trAlbumName = tr("Albums");
@@ -271,7 +277,7 @@ PlaylistPtr PlaylistManager::addPlaylist(const PlaylistMeta &listinfo)
 {
     Q_D(PlaylistManager);
     PlaylistMeta saveInfo(listinfo);
-    saveInfo.sortID = d->sortUUIDs.length();
+    saveInfo.sortID = static_cast<uint>(d->sortUUIDs.length());
     d->sortUUIDs << saveInfo.uuid;
     insertPlaylist(listinfo.uuid, PlaylistPtr(new Playlist(saveInfo)));
     MediaDatabase::addPlaylist(saveInfo);
@@ -323,7 +329,7 @@ void PlaylistManager::insertPlaylist(const QString &uuid, PlaylistPtr playlist)
         QSqlDatabase::database().commit();
     });
     connect(playlist.data(), &Playlist::displayNameChanged,
-    this, [ = ] (QString displayName) {
+    this, [ = ](QString displayName) {
         QSqlDatabase::database().transaction();
         playlist.data()->setDisplayName(displayName);
         QSqlDatabase::database().commit();

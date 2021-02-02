@@ -93,14 +93,12 @@ NeteaseMetaSearchEngine::NeteaseMetaSearchEngine(QObject *parent): MetaSearchEng
     m_geese->setRawHeader("Cookie", "appver=1.5.0.75771;");
     m_geese->setRawHeader("Referer", "http://music.163.com/");
 
-//    qDebug() << "-------------------------------------------------------";
 //    connect(this, &MetaSearchEngine::doSearchMeta,
 //            this, &NeteaseMetaSearchEngine::searchMeta);
-    connect(getObject(), SIGNAL(doSearchMeta(const MetaPtr)),
+    connect(this, SIGNAL(doSearchMeta(const MetaPtr)),
             this, SLOT(searchMeta(const MetaPtr)));
-    connect(getObject(), SIGNAL(doSearchContext(const QString &)),
+    connect(this, SIGNAL(doSearchContext(const QString &)),
             this, SLOT(searchContext(const QString &)));
-//    qDebug() << "-------------------------------------------------------";
 }
 
 QString NeteaseMetaSearchEngine::pluginId() const

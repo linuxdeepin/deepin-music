@@ -51,7 +51,7 @@
 #include <DBlurEffectWidget>
 DGUI_USE_NAMESPACE
 
-static const int LyricLineHeight = 40;
+//static const int LyricLineHeight = 40;
 static const QString defaultLyric = "No Lyric";
 
 class MUsicLyricWidgetPrivate
@@ -65,6 +65,7 @@ public:
 
     SearchLyricsWidget  *searchLyricsWidget   = nullptr;
     LyricLabel          *lyricview            = nullptr;
+    DLabel              *nolyric              = nullptr;
 
     MusicImageButton         *serachbt = nullptr;
 
@@ -74,7 +75,7 @@ public:
 
     QImage              backgroundimage;
 
-    DBlurEffectWidget *backgroundW;
+    DBlurEffectWidget *backgroundW = nullptr;
     MUsicLyricWidget *q_ptr;
     Q_DECLARE_PUBLIC(MUsicLyricWidget)
 };
@@ -89,7 +90,7 @@ MUsicLyricWidget::MUsicLyricWidget(QWidget *parent)
     palette.setColor(DPalette::Background, QColor("#F8F8F8"));
     setPalette(palette);
 
-    d->backgroundW = new DBlurEffectWidget (this);
+    d->backgroundW = new DBlurEffectWidget(this);
 //    d->backgroundW->setBlurEnabled(true);
 //    d->backgroundW->setMode(DBlurEffectWidget::GaussianBlur);
 
@@ -114,6 +115,12 @@ MUsicLyricWidget::MUsicLyricWidget(QWidget *parent)
     m_leftLayout->addWidget(d->searchLyricsWidget);
 
     d->lyricview = new LyricLabel(false);
+    d->nolyric = new DLabel();
+    d->nolyric->setAlignment(Qt::AlignCenter);
+    d->nolyric->setText(tr("No lyrics yet"));
+    QPalette nolyr = d->nolyric->palette();
+    nolyr.setColor(QPalette::WindowText, QColor(85, 85, 85, 102));
+    d->nolyric->setPalette(nolyr);
 
     auto searchlayout = new QVBoxLayout();
     d->serachbt = new MusicImageButton(":/mpimage/light/normal/search_normal.svg",
@@ -132,6 +139,8 @@ MUsicLyricWidget::MUsicLyricWidget(QWidget *parent)
 
     layout->addLayout(m_leftLayout, 0);
     layout->addWidget(d->lyricview, 10);
+    layout->addWidget(d->nolyric, 10);
+    d->nolyric->hide();
     layout->addLayout(searchlayout, 0);
 
     d->backgroundW->setLayout(layout);
@@ -160,10 +169,10 @@ void MUsicLyricWidget::updateUI()
 
     //cut image
     double windowScale = (width() * 1.0) / height();
-    int imageWidth = cover.height() * windowScale;
+    int imageWidth = static_cast<int>(cover.height() * windowScale) ;
     QImage coverImage;
     if (imageWidth > cover.width()) {
-        int imageheight = cover.width() / windowScale;
+        int imageheight = static_cast<int>(cover.width() / windowScale);
         coverImage = cover.copy(0, (cover.height() - imageheight) / 2, cover.width(), imageheight);
     } else {
         int imageheight = cover.height();
@@ -181,7 +190,8 @@ QString MUsicLyricWidget::defaultCover() const
 
 void MUsicLyricWidget::checkHiddenSearch(QPoint mousePos)
 {
-    Q_D(MUsicLyricWidget);
+    Q_UNUSED(mousePos)
+    //Q_D(MUsicLyricWidget);
 
 }
 
@@ -192,10 +202,10 @@ void MUsicLyricWidget::resizeEvent(QResizeEvent *event)
 
     //cut image
     double windowScale = (width() * 1.0) / height();
-    int imageWidth = cover.height() * windowScale;
+    int imageWidth = static_cast<int>(cover.height() * windowScale);
     QImage coverImage;
     if (imageWidth > cover.width()) {
-        int imageheight = cover.width() / windowScale;
+        int imageheight = static_cast<int>(cover.width() / windowScale);
         coverImage = cover.copy(0, (cover.height() - imageheight) / 2, cover.width(), imageheight);
     } else {
         int imageheight = cover.height();
@@ -223,6 +233,14 @@ void MUsicLyricWidget::onMusicPlayed(PlaylistPtr playlist, const MetaPtr meta)
 
     QFileInfo fileInfo(meta->localPath);
     QString lrcPath = fileInfo.dir().path() + QDir::separator() + fileInfo.completeBaseName() + ".lrc";
+    QFile file(lrcPath);
+    if (!file.exists()) {
+        d->nolyric->show();
+        d->lyricview->hide();
+    } else {
+        d->nolyric->hide();
+        d->lyricview->show();
+    }
     d->lyricview->getFromFile(lrcPath);
     d->searchLyricsWidget->setSearchDir(fileInfo.dir().path() + QDir::separator());
 
@@ -237,10 +255,10 @@ void MUsicLyricWidget::onMusicPlayed(PlaylistPtr playlist, const MetaPtr meta)
     d->backgroundimage = cover;
     //cut image
     double windowScale = (width() * 1.0) / height();
-    int imageWidth = cover.height() * windowScale;
+    int imageWidth = static_cast<int>(cover.height() * windowScale);
     QImage coverImage;
     if (imageWidth > cover.width()) {
-        int imageheight = cover.width() / windowScale;
+        int imageheight = static_cast<int>(cover.width() / windowScale);
         coverImage = cover.copy(0, (cover.height() - imageheight) / 2, cover.width(), imageheight);
     } else {
         int imageheight = cover.height();
@@ -252,6 +270,7 @@ void MUsicLyricWidget::onMusicPlayed(PlaylistPtr playlist, const MetaPtr meta)
 
 void MUsicLyricWidget::onMusicStop(PlaylistPtr playlist, const MetaPtr meta)
 {
+    Q_UNUSED(playlist)
     Q_D(MUsicLyricWidget);
 
     QImage cover(d->defaultCover);
@@ -265,10 +284,10 @@ void MUsicLyricWidget::onMusicStop(PlaylistPtr playlist, const MetaPtr meta)
     d->backgroundimage = cover;
     //cut image
     double windowScale = (width() * 1.0) / height();
-    int imageWidth = cover.height() * windowScale;
+    int imageWidth = static_cast<int>(cover.height() * windowScale);
     QImage coverImage;
     if (imageWidth > cover.width()) {
-        int imageheight = cover.width() / windowScale;
+        int imageheight = static_cast<int>(cover.width() / windowScale);
         coverImage = cover.copy(0, (cover.height() - imageheight) / 2, cover.width(), imageheight);
     } else {
         int imageheight = cover.height();
@@ -276,6 +295,8 @@ void MUsicLyricWidget::onMusicStop(PlaylistPtr playlist, const MetaPtr meta)
     }
     d->backgroundW->setSourceImage(coverImage);
     d->backgroundW->update();
+
+    d->lyricview->getFromFile("clearLyric");
 }
 
 void MUsicLyricWidget::onProgressChanged(qint64 value, qint64 /*length*/)
@@ -287,6 +308,8 @@ void MUsicLyricWidget::onProgressChanged(qint64 value, qint64 /*length*/)
 
 void MUsicLyricWidget::onLyricChanged(const MetaPtr meta, const DMusic::SearchMeta &search,  const QByteArray &lyricData)
 {
+    Q_UNUSED(search)
+    Q_UNUSED(lyricData)
     Q_D(MUsicLyricWidget);
     if (d->activingMeta != meta) {
         return;
@@ -295,6 +318,7 @@ void MUsicLyricWidget::onLyricChanged(const MetaPtr meta, const DMusic::SearchMe
 
 void MUsicLyricWidget::onCoverChanged(const MetaPtr meta,  const DMusic::SearchMeta &search, const QByteArray &coverData)
 {
+    Q_UNUSED(search)
     Q_D(MUsicLyricWidget);
     if (d->activingMeta != meta) {
         return;
@@ -310,10 +334,10 @@ void MUsicLyricWidget::onCoverChanged(const MetaPtr meta,  const DMusic::SearchM
 
     //cut image
     double windowScale = (width() * 1.0) / height();
-    int imageWidth = cover.height() * windowScale;
+    int imageWidth = static_cast<int>(cover.height() * windowScale);
     QImage coverImage;
     if (imageWidth > cover.width()) {
-        int imageheight = cover.width() / windowScale;
+        int imageheight = static_cast<int>(cover.width() / windowScale);
         coverImage = cover.copy(0, (cover.height() - imageheight) / 2, cover.width(), imageheight);
     } else {
         int imageheight = cover.height();
@@ -331,7 +355,7 @@ void MUsicLyricWidget::setDefaultCover(QString defaultCover)
 
 void MUsicLyricWidget::onUpdateMetaCodec(const MetaPtr /*meta*/)
 {
-    Q_D(MUsicLyricWidget);
+    //Q_D(MUsicLyricWidget);
 
 //    if (d->m_playingMusic == meta) {
 //        d->m_playingMusic.title = meta.title;
@@ -411,10 +435,11 @@ void MUsicLyricWidget::slotTheme(int type)
 
 void MUsicLyricWidget::onContextSearchFinished(const QString &context, const QList<DMusic::SearchMeta> &metalist)
 {
-    Q_D(MUsicLyricWidget);
+    //Q_D(MUsicLyricWidget);
 
     //TODO: check context
     Q_UNUSED(context);
+    Q_UNUSED(metalist)
 }
 
 

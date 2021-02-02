@@ -19,8 +19,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef INOTIFYENGINE1_H
-#define INOTIFYENGINE1_H
+#ifndef INOTIFYENGINE_H
+#define INOTIFYENGINE_H
 
 #include <QObject>
 #include <QScopedPointer>
@@ -48,9 +48,9 @@ private slots:
     void handleInotifyEvent(inotify_event *);
 
 private:
-    bool watchDirectory(QDir &dir);
+    bool watchDirectory(QDir& dir);
     void watchAllDirectory(const QString &path);
     QScopedPointer<InotifyEnginePrivate> d;
 };
 
-#endif // INOTIFYENGINE1_H
+#endif // INOTIFYENGINE_H

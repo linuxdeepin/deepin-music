@@ -25,6 +25,7 @@
 #include <DHiDPIHelper>
 #include <QDebug>
 #include <QPainter>
+#include <QPainterPath>
 #include <QTextDocument>
 #include <QStyleOptionViewItem>
 #include <QTextCursor>
@@ -37,12 +38,12 @@ QT_BEGIN_NAMESPACE
 extern Q_WIDGETS_EXPORT void qt_blurImage(QPainter *p, QImage &blurImage, qreal radius, bool quality, bool alphaOnly, int transposed = 0);
 QT_END_NAMESPACE
 
-static inline int pixel2point(int pixel)
-{
-    return pixel * 96 / 72;
-}
+//static inline int pixel2point(int pixel)
+//{
+//    return pixel * 96 / 72;
+//}
 
-const int PlayItemRightMargin = 20;
+//const int PlayItemRightMargin = 20;
 
 class MusicSearchListDelegatePrivate
 {
@@ -79,23 +80,20 @@ void MusicSearchListDelegate::initStyleOption(QStyleOptionViewItem *option, cons
 
 bool MusicSearchListDelegate::editorEvent(QEvent *event, QAbstractItemModel *model, const QStyleOptionViewItem &option, const QModelIndex &index)
 {
+    Q_UNUSED(event)
+    Q_UNUSED(model)
+    Q_UNUSED(option)
+    Q_UNUSED(index)
     return true;
 }
 
 void MusicSearchListDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
-    Q_D(const MusicSearchListDelegate);
+    //Q_D(const MusicSearchListDelegate);
 
     /********************设置基础颜色***************************/
     QColor backColor("#FFFFFF");
     backColor.setAlphaF(0.2);
-    QColor textColor("#000000 ");
-    QColor lightColor("#0081FF");
-    QColor grandColor("#003300 ");
-
-    QColor alternateBaseColor("#000000");
-    alternateBaseColor.setAlphaF(0.2);
-    QColor selecteColor("#000000");
 
     //获取当前行信息
     auto listview = qobject_cast<const MusicSearchListview *>(option.widget);
@@ -115,12 +113,21 @@ void MusicSearchListDelegate::paint(QPainter *painter, const QStyleOptionViewIte
             return;
         }
     }
+
+    QColor textColor;
+    QColor lightColor;
+
     //主题改变需要修改color
     if (listview->getThemeType() == 2) {
-        backColor = QColor("#C0C6D4");
-        textColor = QColor("#C0C6D4");
-        //        grandColor.setAlphaF(0.5);
+        textColor = QColor("#FFFFFF");
+    } else {
+        textColor = QColor("#000000");
     }
+
+    DPalette pa = option.palette;
+    QBrush selectBrush = pa.brush(QPalette::Active, DPalette:: Highlight);
+    QColor selectColor = selectBrush.color();
+    lightColor = selectColor;
 
     //绘制选中状态
     if (option.state & QStyle::State_MouseOver) {
@@ -129,13 +136,15 @@ void MusicSearchListDelegate::paint(QPainter *painter, const QStyleOptionViewIte
         painter->save();
         painter->setPen(Qt::NoPen);
         QColor hovertColor(option.palette.highlight().color());
+
         textColor = QColor("#FFFFFF");
-        lightColor = option.palette.highlightedText().color();
+        lightColor = QColor("#FFFFFF");
+
         if (option.state & QStyle::State_Selected)
             hovertColor.setAlphaF(0.2);
         painter->setBrush(hovertColor);
         QRect selecteColorRect = option.rect.adjusted(0, 0, 0, 0);
-        painter->drawRoundedRect(selecteColorRect, 8, 8);
+        painter->drawRoundedRect(selecteColorRect, 0, 0);
         painter->restore();
 
         emit SearchClear();
@@ -146,8 +155,10 @@ void MusicSearchListDelegate::paint(QPainter *painter, const QStyleOptionViewIte
         painter->save();
         painter->setPen(Qt::NoPen);
         QColor hovertColor(option.palette.highlight().color());
+//        lightColor = option.palette.highlightedText().color();
         textColor = QColor("#FFFFFF");
-        lightColor = option.palette.highlightedText().color();
+        lightColor = QColor("#FFFFFF");
+
         if (option.state & QStyle::State_Selected)
             hovertColor.setAlphaF(0.2);
         painter->setBrush(hovertColor);
@@ -176,7 +187,7 @@ void MusicSearchListDelegate::paint(QPainter *painter, const QStyleOptionViewIte
             mtext = metaPtr->title + " - " + metaPtr->artist;
         }
         QFontMetricsF fontWidth(textFont);
-        mtext = fontWidth.elidedText(mtext, Qt::ElideMiddle, 287);
+        mtext = fontWidth.elidedText(mtext, Qt::ElideMiddle, 280);
 
         QStyleOptionViewItem viewOption(option);
         initStyleOption(&viewOption, index);
@@ -196,6 +207,16 @@ void MusicSearchListDelegate::paint(QPainter *painter, const QStyleOptionViewIte
         cursor.beginEditBlock();
         QTextCharFormat color_format(highlight_cursor.charFormat());
         color_format.setForeground(lightColor);
+
+        /*-------------LineUnderCursor-------------*/
+        QTextCursor testcursor(&document);
+        testcursor.select(QTextCursor::LineUnderCursor);
+        QTextCharFormat fmt;
+        fmt.setForeground(textColor);
+        testcursor.mergeCharFormat(fmt);
+        testcursor.clearSelection();
+        testcursor.movePosition(QTextCursor::EndOfLine);
+
         while (!highlight_cursor.isNull() && !highlight_cursor.atEnd()) {
             highlight_cursor = document.find(searchText, highlight_cursor);
             if (!highlight_cursor.isNull()) {
@@ -207,7 +228,7 @@ void MusicSearchListDelegate::paint(QPainter *painter, const QStyleOptionViewIte
         cursor.endEditBlock();
 
         QAbstractTextDocumentLayout::PaintContext paintContext;
-        QRect textRect(0, option.rect.y(), 287, 24);
+        QRect textRect(32, option.rect.y() + 3, 287, 24);
         painter->save();
         painter->translate(textRect.topLeft());
         painter->setClipRect(textRect.translated(-textRect.topLeft()));
@@ -219,11 +240,18 @@ void MusicSearchListDelegate::paint(QPainter *painter, const QStyleOptionViewIte
         /***********************绘制图片***************************/
         QPixmap image;
         image.loadFromData(playMusicTypePtr->icon);
+        if (image.isNull()) {
+            image = QPixmap(":/common/image/cover_max.svg");
+        }
         painter->save();
-        QRect imageRect(0, index.row() * 34 + 2, 24, 24);
+        QRect imageRect(32, index.row() * 34 + 5, 24, 24);
         if (playlistPtr->id() == ArtistCandListID) {
             QPainterPath clipPath;
             clipPath.addEllipse(imageRect.adjusted(0, 0, 0, 0));
+            painter->setClipPath(clipPath);
+        } else {
+            QPainterPath clipPath;
+            clipPath.addRoundedRect(imageRect, 4, 4);
             painter->setClipPath(clipPath);
         }
         painter->drawPixmap(imageRect, image);
@@ -250,6 +278,16 @@ void MusicSearchListDelegate::paint(QPainter *painter, const QStyleOptionViewIte
         QTextCharFormat color_format(highlight_cursor.charFormat());
 
         color_format.setForeground(lightColor);
+
+        /*-------------LineUnderCursor-------------*/
+        QTextCursor testcursor(&document);
+        testcursor.select(QTextCursor::LineUnderCursor);
+        QTextCharFormat fmt;
+        fmt.setForeground(textColor);
+        testcursor.mergeCharFormat(fmt);
+        testcursor.clearSelection();
+        testcursor.movePosition(QTextCursor::EndOfLine);
+
         while (!highlight_cursor.isNull() && !highlight_cursor.atEnd()) {
             highlight_cursor = document.find(searchText, highlight_cursor);
             if (!highlight_cursor.isNull()) {
@@ -261,7 +299,7 @@ void MusicSearchListDelegate::paint(QPainter *painter, const QStyleOptionViewIte
         cursor.endEditBlock();
 
         QAbstractTextDocumentLayout::PaintContext paintContext;
-        QRect textRect(29, option.rect.y(), 251, 24);
+        QRect textRect(61, option.rect.y() + 2, 251, 24);
         painter->save();
         painter->translate(textRect.topLeft());
         painter->setClipRect(textRect.translated(-textRect.topLeft()));
@@ -272,8 +310,9 @@ void MusicSearchListDelegate::paint(QPainter *painter, const QStyleOptionViewIte
 
 QSize MusicSearchListDelegate::sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
-    //return QStyledItemDelegate::sizeHint(option, index);
-    return QSize(30, 30);
+    Q_UNUSED(option)
+    Q_UNUSED(index)
+    return QSize(350, 34);
 }
 
 QWidget *MusicSearchListDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const

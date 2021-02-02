@@ -38,6 +38,7 @@
 #include "musicimagebutton.h"
 #include "infodialog.h"
 #include "musictitleimage.h"
+#include "ac-desktop-define.h"
 
 DWIDGET_USE_NAMESPACE
 
@@ -95,6 +96,8 @@ void MusicListDialogPrivate::initUI()
                                    ":/mpimage/light/press/close_round press.svg");
     closeBt->setFixedSize(24, 24);
     closeBt->setFocusPolicy(Qt::NoFocus);
+    AC_SET_OBJECT_NAME(closeBt, AC_musicListDialogCloseBt);
+    AC_SET_ACCESSIBLE_NAME(closeBt, AC_musicListDialogCloseBt);
 //    closeBt = new DImageButton;
 //    closeBt->setNormalPic(":/mpimage/light/normal/close_round normal.svg");
 //    closeBt->setHoverPic(":/mpimage/light/hover/close_round hover.svg");
@@ -108,6 +111,9 @@ void MusicListDialogPrivate::initUI()
     infoLabel = new DLabel();
     infoLabel->setForegroundRole(DPalette::BrightText);
 
+    auto textLayout = new QVBoxLayout(titleFrame);
+    textLayout->setSpacing(0);
+    textLayout->setContentsMargins(0, 5, 0, 5);
 
     auto btLayout = new QHBoxLayout(titleFrame);
     btLayout->setSpacing(0);
@@ -147,14 +153,18 @@ void MusicListDialogPrivate::initUI()
     btLayout->addStretch(100);
 
 //    titleLayout->addWidget(closeBt, 0, Qt::AlignTop | Qt::AlignRight);
-    titleLayout->addWidget(titleLabel, 0, Qt::AlignTop);
-    titleLayout->addWidget(infoLabel, 0, Qt::AlignTop);
-    titleLayout->addLayout(btLayout, Qt::AlignTop);
+    titleLabel->setContentsMargins(0, 0, 0, 0);
+    textLayout->addWidget(titleLabel, 0, Qt::AlignVCenter);
+    textLayout->addWidget(infoLabel, 0, Qt::AlignVCenter);
+    titleLayout->addLayout(textLayout, 1);
+    titleLayout->addLayout(btLayout, 0);
 
     closeLayout->addLayout(titleLayout);
     closeLayout->addWidget(closeBt, 0, Qt::AlignTop | Qt::AlignRight);
 
     musicListInfoView = new MusicListInfoView;
+    AC_SET_OBJECT_NAME(musicListInfoView, AC_musicListInfoView);
+    AC_SET_ACCESSIBLE_NAME(musicListInfoView, AC_musicListInfoView);
 //    DPalette pa = musicListInfoView->palette();
 //    pa.setColor(DPalette::Base, pa.window().color());
 //    musicListInfoView->setFrameShape(QFrame::NoFrame);
@@ -331,8 +341,10 @@ void MusicListDialog::setPlayMusicData(PlaylistPtr playlist, PlayMusicTypePtr pl
         titleFont.setPixelSize(36);
         d->infoLabel->hide();
     }
-    d->titleLabel->setFont(titleFont);
+    DFontSizeManager::instance()->bind(d->titleLabel, DFontSizeManager::T3, QFont::DemiBold);
     d->infoLabel->setFont(infoFont);
+    DFontSizeManager::instance()->bind(d->infoLabel, DFontSizeManager::T5, QFont::Normal);
+    d->titleLabel->setForegroundRole(DPalette::TextTitle);
 
     QString name = playMusicType->name;
     for (auto meta : playlist->playMusicTypePtrList()) {

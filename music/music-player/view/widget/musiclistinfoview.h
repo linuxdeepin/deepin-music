@@ -33,7 +33,7 @@ class MusicListInfoView : public QListView
     Q_OBJECT
 public:
     explicit MusicListInfoView(QWidget *parent = Q_NULLPTR);
-    ~MusicListInfoView();
+    ~MusicListInfoView() override;
 
     MetaPtr activingMeta() const;
     MetaPtr firstMeta() const;

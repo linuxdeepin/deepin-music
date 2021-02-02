@@ -28,12 +28,26 @@
 DWIDGET_USE_NAMESPACE
 
 class PlayListViewPrivate;
+
+class ModelMake: public QObject
+{
+    Q_OBJECT
+public:
+    explicit ModelMake(QObject *parent = 0);
+    ~ModelMake();
+public slots:
+    void onModelMake(PlaylistPtr playlist, QString searchStr);
+signals:
+    void addMeta(QString playListId, const MetaPtr meta);
+    void hideEmptyHits(bool ishide);
+};
+
 class PlayListView : public DListView
 {
     Q_OBJECT
 public:
-    explicit PlayListView(bool searchFlag, QWidget *parent = Q_NULLPTR);
-    ~PlayListView();
+    explicit PlayListView(bool searchFlag, bool isPlayList, QWidget *parent = Q_NULLPTR);
+    ~PlayListView() override;
 
     MetaPtr activingMeta() const;
     PlaylistPtr playlist() const;
@@ -52,8 +66,17 @@ public:
     QPixmap getSidebarPixmap() const;
     QPixmap getAlbumPixmap() const;
 
+    QStandardItem *item(int row, int column) const;
+    void setCurrentItem(QStandardItem *item);
+
     int rowCount();
     QString firstHash();
+    //性能优化歌曲展示专用
+    void initAllSonglist();
+    int getMusicCount();
+public slots:
+    void onAddMeta(QString playListId, const MetaPtr meta);
+
 
 signals:
     void addToPlaylist(PlaylistPtr playlist, const MetaPtrList &metalist);
@@ -68,9 +91,11 @@ signals:
     void customSort();
     void addMetasFavourite(const MetaPtrList  &metalist);
     void removeMetasFavourite(const MetaPtrList  &metalist);
-
+    void modelMake(PlaylistPtr playlist, QString searchStr);
+    void hideEmptyHits(bool ishide);
+    void getSearchData(bool isvalid); //get search data
 public:
-    void onMusiclistChanged(PlaylistPtr playlist);
+    bool onMusiclistChanged(PlaylistPtr playlist);
     void onMusicListAdded(const MetaPtrList metalist);
     void onMusicListRemoved(const MetaPtrList metalist);
     void onMusicError(const MetaPtr meta, int error);
@@ -88,7 +113,9 @@ protected:
     virtual void keyboardSearch(const QString &search) Q_DECL_OVERRIDE;
 
 private:
+    ModelMake *m_ModelMake;
     QScopedPointer<PlayListViewPrivate> d_ptr;
+    bool m_IsPlayList;
     Q_DECLARE_PRIVATE_D(qGetPtrHelper(d_ptr), PlayListView)
 
 };

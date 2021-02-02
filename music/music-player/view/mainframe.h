@@ -35,8 +35,14 @@ public:
     ~MainFrame() Q_DECL_OVERRIDE;
 
     void initUI(bool showLoading);
+    void initMenu();
     void postInitUI();
     void binding(Presenter *presenter);
+    void quickBinding(Presenter *presenter);
+
+    void bindSpeechConnect(Presenter *presenter);
+
+    void bindEqualizerConnect(Presenter *presenter);
 
     void focusPlayList();
     QString coverBackground() const;
@@ -47,16 +53,20 @@ signals:
     void importSelectFiles(const QStringList &filelist, PlaylistPtr playlist);
     void triggerShortcutAction(const QString &optKey);
     void fadeInOut();
+    void onImportFiles(const QStringList &filelist, PlaylistPtr playlist);
     void exit();
+    void savePosition();
 
 public slots:
     void updateUI();
     void setCoverBackground(QString coverBackground);
     void onSelectImportDirectory();
     void onSelectImportFiles();
+    void onClickedImportFiles(QStringList files);
     void slotTheme(int type);
     void changePicture();
     void onViewShortcut();
+    void closeFromMenu();
 protected:
     virtual void enterEvent(QEvent *event) Q_DECL_OVERRIDE;
     virtual bool eventFilter(QObject *obj, QEvent *e) Q_DECL_OVERRIDE;

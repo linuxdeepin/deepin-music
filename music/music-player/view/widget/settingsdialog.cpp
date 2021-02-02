@@ -24,7 +24,8 @@
 void GenerateSettingTranslate()
 {
     auto base_close_quit_action_text0 = QObject::tr("Minimize to system tray");
-    auto base_close_quit_action_text1 = QObject::tr("Exit Music");
+    auto base_close_quit_action_text1 = QObject::tr("Exit");
+    auto base_close_quit_action_text2 = QObject::tr("Ask me always");
     auto base_play_auto_play_text = QObject::tr("Autoplay");
     auto base_play_fade_in_out_text = QObject::tr("Enable fade in/out");
     auto base_play_remember_progress_text = QObject::tr("Remember playback position");

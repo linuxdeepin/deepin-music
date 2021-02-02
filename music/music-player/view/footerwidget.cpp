@@ -28,6 +28,9 @@
 #include <QMouseEvent>
 #include <QWheelEvent>
 #include <QStackedLayout>
+#include <QDBusInterface>
+#include <QDBusReply>
+#include <QGSettings>
 
 #include <DHiDPIHelper>
 #include <DPushButton>
@@ -36,6 +39,7 @@
 #include <DPalette>
 #include <DButtonBox>
 #include <DToolTip>
+#include <DIconButton>
 
 #include <metadetector.h>
 
@@ -60,6 +64,7 @@
 #include "playlistwidget.h"
 #include "widget/musicboxbutton.h"
 #include "widget/tooltips.h"
+#include "ac-desktop-define.h"
 
 static const char *sPropertyFavourite         = "fav";
 static const char *sPropertyPlayStatus        = "playstatus";
@@ -82,20 +87,32 @@ public:
     void installTipHint(QWidget *w, const QString &hintstr);
     void installHint(QWidget *w, QWidget *hint);
     void initConnection();
+    //customization: standby until music play end
+    void screenStandby(bool isStandby);
+    bool getStandbyParam();
 
     DBlurEffectWidget *forwardWidget = nullptr;
     Label           *title      = nullptr;
     Label           *artist     = nullptr;
 
+
+
     MusicPixmapButton *btCover    = nullptr;
     MusicBoxButton  *btPlay     = nullptr;
     MusicBoxButton  *btPrev     = nullptr;
     MusicBoxButton  *btNext     = nullptr;
-    MusicIconButton  *btFavorite = nullptr;
-    MusicIconButton  *btLyric    = nullptr;
-    MusicIconButton  *btPlayList = nullptr;
-    ModeButton        *btPlayMode = nullptr;
-    MusicIconButton  *btSound    = nullptr;
+    // MusicIconButton  *btFavorite = nullptr;
+    // MusicIconButton  *btLyric    = nullptr;
+    // MusicIconButton  *btPlayList = nullptr;
+    // ModeButton        *btPlayMode = nullptr;
+    // MusicIconButton  *btSound    = nullptr;
+
+    DIconButton     *btFavorite = nullptr;
+    DIconButton     *btLyric    = nullptr;
+    DIconButton     *btPlayMode = nullptr;
+    DIconButton     *btSound    = nullptr;
+    DIconButton     *btPlayList = nullptr;
+
     SoundVolume       *volSlider  = nullptr;
     DButtonBox        *ctlWidget  = nullptr;
     Waveform          *waveform   = nullptr;
@@ -112,21 +129,23 @@ public:
 
     int             mode            = -1;
     bool            enableMove      = false;
+    bool            isPangu         = false;
 
     int             m_type = 1;
 
     bool            btPlayingStatus = false;
-
+    QTimer         *m_timer = nullptr; //to avoid mul-repeat click
     VolumeMonitoring         volumeMonitoring;
     int             m_Volume = 0;
     int             m_Mute = 0;
+    uint32_t        lastCookie = 0;
     Footer *q_ptr;
     Q_DECLARE_PUBLIC(Footer)
 };
 
 void FooterPrivate::updateQssProperty(QWidget *w, const char *name, const QVariant &value)
 {
-    Q_Q(Footer);
+    //Q_Q(Footer);
     w->setProperty(name, value);
     w->update();
 }
@@ -153,18 +172,14 @@ void FooterPrivate::initConnection()
 {
     Q_Q(Footer);
 
-    q->connect(btPlayMode, &ModeButton::modeChanged,
-    q, [ = ](int mode) {
+    q->connect(btPlayMode, &DIconButton::released,
+    q, [ = ]() {
+
+        mode = (mode + 1) %  3;
         Q_EMIT q->modeChanged(mode);
         auto hintWidget = btPlayMode->property("HintWidget").value<QWidget *>();
         hintFilter->showHitsFor(btPlayMode, hintWidget);
     });
-
-//    q->connect(progress, &Slider::valueAccpet, q, [ = ](int value) {
-//        auto range = progress->maximum() - progress->minimum();
-//        Q_ASSERT(range != 0);
-//        Q_EMIT q->changeProgress(value, range);
-//    });
 
     q->connect(waveform, &Waveform::valueAccpet, q, [ = ](int value) {
         auto range = waveform->maximum() - waveform->minimum();
@@ -173,8 +188,18 @@ void FooterPrivate::initConnection()
     });
 
     q->connect(btPlay, &DPushButton::released, q, [ = ]() {
-        q->onTogglePlayButton();
+        //play once in a period time to avoid mult-repeat click
+        if (!m_timer->isActive()) {
+            m_timer->start(200);
+            q->onTogglePlayButton();
+        }
     });
+
+    q->connect(q, &Footer::focusButton, q, [ = ]() {
+
+        Q_EMIT btPlayList->click();
+    });
+
 
     q->connect(btPrev, &DPushButton::released, q, [ = ]() {
         Q_EMIT q->prev(activingPlaylist, activingMeta);
@@ -184,29 +209,67 @@ void FooterPrivate::initConnection()
     });
 
     q->connect(btFavorite, &DPushButton::released, q, [ = ]() {
-        if (activingMeta != nullptr)
+        if (activingMeta != nullptr) {
             Q_EMIT q->toggleFavourite(activingMeta);
+            activingMeta->favourite = !activingMeta->favourite;
+        }
     });
     q->connect(title, &Label::clicked, q, [ = ](bool) {
         Q_EMIT q->locateMusic(activingPlaylist, activingMeta);
+        Q_EMIT q->togglePlaylist(true);
     });
     q->connect(btLyric, &DPushButton::released, q, [ = ]() {
         Q_EMIT  q->toggleLyricView();
     });
     q->connect(btPlayList, &DPushButton::released, q, [ = ]() {
-        Q_EMIT q->togglePlaylist();
+        Q_EMIT q->togglePlaylist(false);
     });
-    q->connect(btSound, &DPushButton::pressed, q, [ = ]() {
-        Q_EMIT q->toggleMute();
+    q->connect(btSound, &DPushButton::released, q, [ = ]() {
+        // Q_EMIT q->localToggleMute();
+
+        if (volSlider->isVisible()) {
+            volSlider->hide();
+        } else {
+
+            auto centerPos = btSound->mapToGlobal(btSound->rect().center());
+            volSlider->show();
+            volSlider->adjustSize();
+            auto sz = volSlider->size();
+            centerPos.setX(centerPos.x()  - sz.width() / 2);
+            centerPos.setY(centerPos.y() - 32 - sz.height());
+            centerPos = volSlider->mapFromGlobal(centerPos);
+            centerPos = volSlider->mapToParent(centerPos);
+            volSlider->move(centerPos);
+            volSlider->raise();
+        }
     });
+
+    q->connect(volSlider, &SoundVolume::delayAutoHide, q, [ = ]() {
+        btSound->setChecked(false);
+    });
+
+    q->connect(volSlider, &SoundVolume::volumeMute, q, [ = ]() {
+        Q_EMIT q->localToggleMute();
+    });
+
     q->connect(volSlider, &SoundVolume::volumeChanged, q, [ = ](int vol) {
-        q->onVolumeChanged(vol);
+        q->onLocalVolumeChanged(vol);
         if (m_Mute) {
             m_Mute = false;
             Q_EMIT q->toggleMute();
         }
+
         m_Volume = vol;
-        Q_EMIT q->volumeChanged(vol);
+
+        if (m_Volume > 77) {
+            btSound->setIcon(QIcon::fromTheme("volume"));
+        } else if (m_Volume > 33) {
+            btSound->setIcon(QIcon::fromTheme("volume_mid"));
+        } else {
+            btSound->setIcon(QIcon::fromTheme("volume_low"));
+        }
+
+
     });
 
     q->connect(q, &Footer::mouseMoving, q, [ = ](Qt::MouseButton) {
@@ -223,6 +286,51 @@ void FooterPrivate::initConnection()
     q->connect(&volumeMonitoring, &VolumeMonitoring::muteChanged, q, [ = ](bool mute) {
         q->onMutedChanged(mute);
     });
+    isPangu =  getStandbyParam();
+}
+
+void FooterPrivate::screenStandby(bool isStandby)
+{
+    if (!isPangu)   //not pangu,return
+        return;
+    if (isStandby) {
+        if (lastCookie > 0) {
+            QDBusInterface iface("org.freedesktop.ScreenSaver",
+                                 "/org/freedesktop/ScreenSaver",
+                                 "org.freedesktop.ScreenSaver");
+            iface.call("UnInhibit", lastCookie);
+            lastCookie = 0;
+        }
+        QDBusInterface iface("org.freedesktop.ScreenSaver",
+                             "/org/freedesktop/ScreenSaver",
+                             "org.freedesktop.ScreenSaver");
+        QDBusReply<uint32_t> reply = iface.call("Inhibit", "deepin-movie", "playing in fullscreen");
+
+        if (reply.isValid()) {
+            lastCookie = reply.value();
+        }
+    } else {
+        if (lastCookie > 0) {
+            QDBusInterface iface("org.freedesktop.ScreenSaver",
+                                 "/org/freedesktop/ScreenSaver",
+                                 "org.freedesktop.ScreenSaver");
+            iface.call("UnInhibit", lastCookie);
+            lastCookie = 0;
+        }
+    }
+}
+
+bool FooterPrivate::getStandbyParam()
+{
+    if (QGSettings::isSchemaInstalled("com.deepin.music")) {
+        QGSettings setting("com.deepin.music", "/com/deepin/music/");
+        QStringList list = setting.keys();
+        if (list.contains("autoSleep")
+                && setting.get("auto-sleep").toBool()) {
+            return true;
+        }
+    }
+    return false;
 }
 
 Footer::Footer(QWidget *parent) :
@@ -263,8 +371,6 @@ Footer::Footer(QWidget *parent) :
     mainVBoxlayout->setSpacing(0);
     mainVBoxlayout->setContentsMargins(10, 0, 0, 10);
 
-    auto hoverFilter = new HoverFilter(this);
-
     auto downWidget = new DWidget();
     auto layout = new QHBoxLayout(downWidget);
     layout->setContentsMargins(0, 0, 10, 0);
@@ -274,6 +380,8 @@ Footer::Footer(QWidget *parent) :
     d->btCover->setObjectName("FooterCoverHover");
     d->btCover->setFixedSize(50, 50);
     d->btCover->setIconSize(QSize(50, 50));
+    AC_SET_OBJECT_NAME(d->btCover, AC_btCover);
+    AC_SET_ACCESSIBLE_NAME(d->btCover, AC_btCover);
 
 
     d->title = new Label;
@@ -291,6 +399,9 @@ Footer::Footer(QWidget *parent) :
 //    d->title->setPalette(titlePl);
 
     d->title->setForegroundRole(DPalette::BrightText);
+
+    d->m_timer = new QTimer(this);
+    d->m_timer->setSingleShot(true);//to avoid call timer once more
 
     d->artist = new Label;
     auto artistFont = d->artist->font();
@@ -315,23 +426,75 @@ Footer::Footer(QWidget *parent) :
     //d->btPlay->setIcon(DHiDPIHelper::loadNxPixmap(":/mpimage/light/normal/play_normal.svg"));
     d->btPlay->setIconSize(QSize(36, 36));
     d->btPlay->setFixedSize(40, 50);
+    AC_SET_OBJECT_NAME(d->btPlay, AC_Play);
+    AC_SET_ACCESSIBLE_NAME(d->btPlay, AC_Play);
 
     d->btPrev = new MusicBoxButton("", ":/mpimage/light/normal/last_normal.svg",
                                    ":/mpimage/light/normal/last_normal.svg",
                                    ":/mpimage/light/press/last_press.svg");
     //d->btPrev->setIcon(DHiDPIHelper::loadNxPixmap(":/mpimage/light/normal/last_normal.svg"));
     d->btPrev->setIconSize(QSize(36, 36));
-    d->btPrev->setObjectName("FooterActionPrev");
     d->btPrev->setFixedSize(40, 50);
+    AC_SET_OBJECT_NAME(d->btPrev, AC_Prev);
+    AC_SET_ACCESSIBLE_NAME(d->btPrev, AC_Prev);
 
     d->btNext = new MusicBoxButton("", ":/mpimage/light/normal/next_normal.svg",
                                    ":/mpimage/light/normal/next_normal.svg",
                                    ":/mpimage/light/press/next_press.svg");
     //d->btNext->setIcon(DHiDPIHelper::loadNxPixmap(":/mpimage/light/normal/next_normal.svg"));
     d->btNext->setIconSize(QSize(36, 36));
-    d->btNext->setObjectName("FooterActionNext");
     d->btNext->setFixedSize(40, 50);
+    AC_SET_OBJECT_NAME(d->btNext, AC_Next);
+    AC_SET_ACCESSIBLE_NAME(d->btNext, AC_Next);
 
+    //添加收藏按钮
+    d->btFavorite = new DIconButton(this);
+    d->btFavorite->setIcon(QIcon::fromTheme("dcc_collection"));
+    d->btFavorite->setShortcut(QKeySequence::fromString("."));
+    d->btFavorite->setFixedSize(50, 50);
+    d->btFavorite->setIconSize(QSize(36, 36));
+    AC_SET_OBJECT_NAME(d->btFavorite, AC_Favorite);
+    AC_SET_ACCESSIBLE_NAME(d->btFavorite, AC_Favorite);
+    // mainHBoxlayout->addWidget(m_btFavorite, 0);
+    //添加歌词按钮
+    d->btLyric = new DIconButton(this);
+    d->btLyric->setIcon(QIcon::fromTheme("lyric"));
+    d->btLyric->setFixedSize(50, 50);
+    d->btLyric->setIconSize(QSize(36, 36));
+    d->btLyric->setCheckable(true);
+    AC_SET_OBJECT_NAME(d->btLyric, AC_Lyric);
+    AC_SET_ACCESSIBLE_NAME(d->btLyric, AC_Lyric);
+    // mainHBoxlayout->addWidget(m_btLyric, 0);
+    //添加播放模式
+    d->btPlayMode = new DIconButton(this);
+    d->btPlayMode->setIcon(QIcon::fromTheme("sequential_loop"));
+    d->btPlayMode->setFixedSize(50, 50);
+    d->btPlayMode->setIconSize(QSize(36, 36));
+    AC_SET_OBJECT_NAME(d->btPlayMode, AC_PlayMode);
+    AC_SET_ACCESSIBLE_NAME(d->btPlayMode, AC_PlayMode);
+    // mainHBoxlayout->addWidget(m_btPlayMode, 0);
+    //添加音量调节按钮
+    d->btSound = new DIconButton(this);
+    d->btSound->setIcon(QIcon::fromTheme("volume_mid"));
+    d->btSound->setFixedSize(50, 50);
+    d->btSound->setProperty("volume", "mid");
+    d->btSound->setCheckable(true);
+    d->btSound->setIconSize(QSize(36, 36));
+    AC_SET_OBJECT_NAME(d->btSound, AC_Sound);
+    AC_SET_ACCESSIBLE_NAME(d->btSound, AC_Sound);
+    // mainHBoxlayout->addWidget(m_btSound, 0);
+    //添加歌曲列表按钮
+    d->btPlayList = new DIconButton(this);
+    d->btPlayList->setIcon(QIcon::fromTheme("playlist"));
+    d->btPlayList->setFixedSize(50, 50);
+    d->btPlayList->setCheckable(true);
+    d->btPlayList->setIconSize(QSize(36, 36));
+    AC_SET_OBJECT_NAME(d->btPlayList, AC_PlayQueue);
+    AC_SET_ACCESSIBLE_NAME(d->btPlayList, AC_PlayQueue);
+    // mainHBoxlayout->addWidget(m_btPlayList, 0);
+
+
+#if 0
     d->btFavorite = new MusicIconButton(":/mpimage/light/normal/collection_normal.svg",
                                         ":/mpimage/light/normal/collection_normal.svg",
                                         ":/mpimage/light/press/collection_press.svg");
@@ -340,6 +503,7 @@ Footer::Footer(QWidget *parent) :
                                   ":/mpimage/light/checked/collection1_checked.svg",
                                   ":/mpimage/light/press/collection_press.svg");
     d->btFavorite->setObjectName("FooterActionFavorite");
+    d->btFavorite->setShortcut(QKeySequence::fromString("."));
     d->btFavorite->setFixedSize(50, 50);
     d->btFavorite->setTransparent(false);
 
@@ -401,11 +565,13 @@ Footer::Footer(QWidget *parent) :
     d->btPlayList->setTransparent(false);
     d->btPlayList->setCheckable(true);
 //    d->btPlayList->hide();
+#endif
+
 
     d->hoverShadowFilter = new HoverShadowFilter;
     d->title->installEventFilter(d->hoverShadowFilter);
 
-    d->btSound->installEventFilter(this);
+    // d->btSound->installEventFilter(this);
     d->installTipHint(d->btPrev, tr("Previous"));
     d->installTipHint(d->btNext, tr("Next"));
     d->installTipHint(d->btPlay, tr("Play/Pause"));
@@ -426,7 +592,9 @@ Footer::Footer(QWidget *parent) :
     d->volSlider->hide();
     d->volSlider->setProperty("DelayHide", true);
     d->volSlider->setProperty("NoDelayShow", true);
-    d->installHint(d->btSound, d->volSlider);
+    AC_SET_OBJECT_NAME(d->volSlider, AC_VolSlider);
+    AC_SET_ACCESSIBLE_NAME(d->volSlider, AC_VolSlider);
+    // d->installHint(d->btSound, d->volSlider);
 
     auto musicMetaLayout = new QVBoxLayout;
     musicMetaLayout->setContentsMargins(0, 0, 0, 0);
@@ -450,11 +618,13 @@ Footer::Footer(QWidget *parent) :
     allCtlButtons.append(d->btNext);
     d->ctlWidget->setButtonList(allCtlButtons, false);
 
-    d->waveform = new Waveform(Qt::Horizontal, (QWidget *)parent, this);
+    d->waveform = new Waveform(Qt::Horizontal, static_cast<QWidget *>(parent), this);
     d->waveform->setMinimum(0);
     d->waveform->setMaximum(1000);
     d->waveform->setValue(0);
     d->waveform->adjustSize();
+    AC_SET_OBJECT_NAME(d->waveform, AC_Waveform);
+    AC_SET_ACCESSIBLE_NAME(d->waveform, AC_Waveform);
 
     auto actWidget = new QWidget;
     auto actLayout = new QHBoxLayout(actWidget);
@@ -491,14 +661,17 @@ Footer::Footer(QWidget *parent) :
     d->btFavorite->hide();
     d->btLyric->hide();
 
-    d->btPrev->setFocusPolicy(Qt::NoFocus);
-    d->btPlay->setFocusPolicy(Qt::NoFocus);
-    d->btNext->setFocusPolicy(Qt::NoFocus);
-    d->btFavorite->setFocusPolicy(Qt::NoFocus);
-    d->btLyric->setFocusPolicy(Qt::NoFocus);
-    d->btPlayMode ->setFocusPolicy(Qt::NoFocus);
-    d->btSound->setFocusPolicy(Qt::NoFocus);
-    d->btPlayList->setFocusPolicy(Qt::NoFocus);
+
+    d->btFavorite->setFocusPolicy(Qt::TabFocus);
+    // d->btFavorite->setDefault(true);
+    d->btLyric->setFocusPolicy(Qt::TabFocus);
+    // d->btLyric->setDefault(true);
+    d->btPlayMode ->setFocusPolicy(Qt::TabFocus);
+    // d->btPlayMode->setDefault(true);
+    d->btSound->setFocusPolicy(Qt::TabFocus);
+    // d->btSound->setDefault(true);
+    d->btPlayList->setFocusPolicy(Qt::TabFocus);
+    // d->btPlayList->setDefault(true);
 
     d->btPrev->setDisabled(true);
     d->btNext->setDisabled(true);
@@ -539,13 +712,34 @@ Footer::Footer(QWidget *parent) :
 
 Footer::~Footer()
 {
-
+    Q_D(Footer);
+    if (d->lastCookie > 0) {
+        d->screenStandby(false);
+    }
 }
 
 void Footer::setCurPlaylist(PlaylistPtr playlist)
 {
     Q_D(Footer);
     d->activingPlaylist = playlist;
+    if (d->activingPlaylist != nullptr) {
+        if (d->activingPlaylist->allmusic().isEmpty()) {
+            d->btPlay->setDisabled(true);
+            d->btPrev->setDisabled(true);
+            d->btNext->setDisabled(true);
+            d->btFavorite->setDisabled(true);
+        } else if (d->activingPlaylist->allmusic().size() == 1) {
+            d->btPrev->setDisabled(true);
+            d->btNext->setDisabled(true);
+            d->btFavorite->setDisabled(false);
+            d->btPlay->setDisabled(false);
+        } else {
+            d->btPrev->setDisabled(false);
+            d->btNext->setDisabled(false);
+            d->btFavorite->setDisabled(false);
+            d->btPlay->setDisabled(false);
+        }
+    }
 }
 
 void Footer::enableControl(bool enable)
@@ -685,13 +879,13 @@ void Footer::refreshBackground()
     }
     //cut image
     double windowScale = (width() * 1.0) / height();
-    int imageWidth = cover.height() * windowScale;
+    int imageWidth = static_cast<int>(cover.height() * windowScale);
     QImage coverImage;
     if (d->playListWidget->isVisible()) {
         coverImage.fill(QColor(255, 255, 255));
     } else {
         if (imageWidth > cover.width()) {
-            int imageheight = cover.width() / windowScale;
+            int imageheight = static_cast<int>(cover.width() / windowScale);
             coverImage = cover.copy(0, (cover.height() - imageheight) / 2, cover.width(), imageheight);
         } else {
             int imageheight = cover.height();
@@ -699,6 +893,12 @@ void Footer::refreshBackground()
         }
     }
     d->forwardWidget->setSourceImage(coverImage);
+}
+
+void Footer::hidewaveform()
+{
+    Q_D(Footer);
+    d->waveform->hidewaveformScale();
 }
 
 void Footer::mousePressEvent(QMouseEvent *event)
@@ -745,14 +945,14 @@ bool Footer::eventFilter(QObject *obj, QEvent *event)
             if (vol > 100) {
                 vol = 100;
             }
-            onVolumeChanged(vol);
+            onLocalVolumeChanged(vol);
             Q_EMIT this->volumeChanged(d->volSlider->volume());
         } else {
             auto vol = d->volSlider->volume() - Player::VolumeStep;
             if (vol < 0) {
                 vol = 0;
             }
-            onVolumeChanged(vol);
+            onLocalVolumeChanged(vol);
             Q_EMIT this->volumeChanged(d->volSlider->volume());
         }
         return true;
@@ -765,17 +965,6 @@ bool Footer::eventFilter(QObject *obj, QEvent *event)
 void Footer::onMusicListAdded(PlaylistPtr playlist, const MetaPtrList metalist)
 {
     Q_D(Footer);
-    if (playlist != nullptr && playlist->id() == FavMusicListID
-            && d->activingMeta != nullptr && playlist->contains(d->activingMeta))
-        d->updateQssProperty(d->btFavorite, sPropertyFavourite, true);
-    else {
-        if (d->activingMeta != nullptr) {
-            d->updateQssProperty(d->btFavorite, sPropertyFavourite, d->activingMeta->favourite);
-        } else {
-            d->updateQssProperty(d->btFavorite, sPropertyFavourite, false);
-        }
-    }
-
     if (d->activingPlaylist != nullptr) {
         if (d->activingPlaylist->allmusic().isEmpty()) {
             d->btPlay->setDisabled(true);
@@ -790,38 +979,66 @@ void Footer::onMusicListAdded(PlaylistPtr playlist, const MetaPtrList metalist)
             d->btNext->setDisabled(false);
             d->btPlay->setDisabled(false);
         }
+    }
+
+    if (d->activingMeta.isNull())
+        return;
+
+    for (MetaPtr pt : metalist) {
+        if (pt->hash == d->activingMeta->hash)
+            d->activingMeta->favourite = pt->favourite;
+    }
+
+    if (d->activingMeta->favourite) {
+        d->btFavorite->setIcon(QIcon::fromTheme("collection1_checked"));
+    } else {
+        d->btFavorite->setIcon(QIcon::fromTheme("dcc_collection"));
     }
 }
 
 void Footer::onMusicListRemoved(PlaylistPtr playlist, const MetaPtrList metalist)
 {
+    Q_UNUSED(metalist)
     Q_D(Footer);
-    if (playlist != nullptr && playlist->id() == FavMusicListID
-            && d->activingMeta != nullptr && playlist->contains(d->activingMeta))
-        d->updateQssProperty(d->btFavorite, sPropertyFavourite, true);
-    else {
-        d->updateQssProperty(d->btFavorite, sPropertyFavourite, false);
-    }
 
     if (d->activingPlaylist != nullptr) {
         if (d->activingPlaylist->allmusic().isEmpty()) {
             d->btPlay->setDisabled(true);
             d->btPrev->setDisabled(true);
             d->btNext->setDisabled(true);
+            d->btFavorite->setDisabled(true);
+            d->btFavorite->setIcon(QIcon::fromTheme("dcc_collection"));
         } else if (d->activingPlaylist->allmusic().size() == 1) {
             d->btPrev->setDisabled(true);
             d->btNext->setDisabled(true);
+            d->btFavorite->setDisabled(false);
             d->btPlay->setDisabled(false);
         } else {
             d->btPrev->setDisabled(false);
             d->btNext->setDisabled(false);
+            d->btFavorite->setDisabled(false);
             d->btPlay->setDisabled(false);
         }
+    }
+
+    if (d->activingMeta.isNull())
+        return;
+
+    if (metalist.contains(d->activingMeta)) {
+        d->btFavorite->setIcon(QIcon::fromTheme("dcc_collection"));
+        return;
+    }
+
+    if (d->activingMeta->favourite) {
+        d->btFavorite->setIcon(QIcon::fromTheme("collection1_checked"));
+    } else {
+        d->btFavorite->setIcon(QIcon::fromTheme("dcc_collection"));
     }
 }
 
 void Footer::onMusicPlayed(PlaylistPtr playlist, const MetaPtr meta)
 {
+    Q_UNUSED(playlist)
     Q_D(Footer);
 
     if (!d->activingPlaylist->contains(meta))
@@ -848,20 +1065,18 @@ void Footer::onMusicPlayed(PlaylistPtr playlist, const MetaPtr meta)
 
     //cut image
     double windowScale = (width() * 1.0) / height();
-    int imageWidth = cover.height() * windowScale;
+    int imageWidth = static_cast<int>(cover.height() * windowScale);
     QImage coverImage;
     if (imageWidth > cover.width()) {
-        int imageheight = cover.width() / windowScale;
+        int imageheight = static_cast<int>(cover.width() / windowScale);
         coverImage = cover.copy(0, (cover.height() - imageheight) / 2, cover.width(), imageheight);
     } else {
         int imageheight = cover.height();
         coverImage = cover.copy((cover.width() - imageWidth) / 2, 0, imageWidth, imageheight);
     }
 
+    d->activingMeta = meta;
     refreshBackground();
-//    d->forwardWidget->setSourceImage(coverImage);
-//    blurBackground()->setSourceImage(coverImage);
-    //d->waveform->onAudioBuffer(MetaDetector::getMetaData(meta->localPath));
 
     this->enableControl(true);
     d->title->show();
@@ -871,26 +1086,33 @@ void Footer::onMusicPlayed(PlaylistPtr playlist, const MetaPtr meta)
     d->btFavorite->show();
     d->btLyric->show();
 
-    //d->activingPlaylist = playlist;
-    d->activingMeta = meta;
+
 
     if (d->activingPlaylist != nullptr) {
         if (d->activingPlaylist->allmusic().isEmpty()) {
             d->btPlay->setDisabled(true);
             d->btPrev->setDisabled(true);
             d->btNext->setDisabled(true);
+            d->btFavorite->setDisabled(true);
+
         } else if (d->activingPlaylist->allmusic().size() == 1) {
             d->btPrev->setDisabled(true);
             d->btNext->setDisabled(true);
+            d->btFavorite->setDisabled(false);
             d->btPlay->setDisabled(false);
         } else {
             d->btPrev->setDisabled(false);
             d->btNext->setDisabled(false);
+            d->btFavorite->setDisabled(false);
             d->btPlay->setDisabled(false);
         }
     }
 
-    d->updateQssProperty(d->btFavorite, sPropertyFavourite, meta->favourite);
+    if (meta->favourite) {
+        d->btFavorite->setIcon(QIcon::fromTheme("collection1_checked"));
+    } else {
+        d->btFavorite->setIcon(QIcon::fromTheme("dcc_collection"));
+    }
 
     if (!meta->invalid || true) {
         d->updateQssProperty(d->btPlay, sPropertyPlayStatus, sPlayStatusValuePlaying);
@@ -908,25 +1130,14 @@ void Footer::onMusicPlayed(PlaylistPtr playlist, const MetaPtr meta)
         }
 
         d->btPlayingStatus = true;
-    } else {
-        if (d->m_type == 1) {
-            d->btPlay->setPropertyPic(":/mpimage/light/normal/play_normal.svg",
-                                      ":/mpimage/light/normal/play_normal.svg",
-                                      ":/mpimage/light/press/play_press.svg");
-            //d->btPlay->setIcon(DHiDPIHelper::loadNxPixmap(":/mpimage/light/normal/play_normal.svg"));
-        } else {
-            d->btPlay->setPropertyPic(":/mpimage/dark/normal/play_normal.svg",
-                                      ":/mpimage/dark/normal/play_normal.svg",
-                                      ":/mpimage/dark/press/play_press.svg");
-            //d->btPlay->setIcon(DHiDPIHelper::loadNxPixmap(":/mpimage/dark/normal/play_normal.svg"));
-        }
-
-        d->btPlayingStatus = false;
+        d->screenStandby(true);
     }
 }
 
 void Footer::onMusicError(PlaylistPtr playlist, const MetaPtr meta, int error)
 {
+    Q_UNUSED(playlist)
+    Q_UNUSED(meta)
     Q_D(Footer);
 
     //d->waveform->clearBufferAudio();
@@ -954,10 +1165,13 @@ void Footer::onMusicError(PlaylistPtr playlist, const MetaPtr meta, int error)
         //d->btPlay->setIcon(DHiDPIHelper::loadNxPixmap(":/mpimage/dark/normal/play_normal.svg"));
     }
     d->btPlayingStatus = false;
+    d->screenStandby(false);
 }
 
 void Footer::onMusicPause(PlaylistPtr playlist, const MetaPtr meta)
 {
+    Q_UNUSED(playlist)
+    Q_UNUSED(meta)
     Q_D(Footer);
 
     auto status = sPlayStatusValuePause;
@@ -974,19 +1188,24 @@ void Footer::onMusicPause(PlaylistPtr playlist, const MetaPtr meta)
                                   ":/mpimage/dark/press/play_press.svg");
     }
     d->btPlayingStatus = false;
+    d->screenStandby(false);
 
     if (d->activingPlaylist != nullptr) {
         if (d->activingPlaylist->allmusic().isEmpty()) {
             d->btPlay->setDisabled(true);
             d->btPrev->setDisabled(true);
             d->btNext->setDisabled(true);
+            d->btFavorite->setDisabled(true);
+
         } else if (d->activingPlaylist->allmusic().size() == 1) {
             d->btPrev->setDisabled(true);
             d->btNext->setDisabled(true);
+            d->btFavorite->setDisabled(false);
             d->btPlay->setDisabled(false);
         } else {
             d->btPrev->setDisabled(false);
             d->btNext->setDisabled(false);
+            d->btFavorite->setDisabled(false);
             d->btPlay->setDisabled(false);
         }
     }
@@ -1022,27 +1241,31 @@ void Footer::onMusicStoped(PlaylistPtr playlist, const MetaPtr meta)
                                   ":/mpimage/dark/press/play_press.svg");
     }
     d->btPlayingStatus = false;
+    d->screenStandby(false);
 
     if (d->activingPlaylist != nullptr) {
         if (d->activingPlaylist->allmusic().isEmpty()) {
             d->btPlay->setDisabled(true);
             d->btPrev->setDisabled(true);
             d->btNext->setDisabled(true);
+            d->btFavorite->setDisabled(true);
         } else if (d->activingPlaylist->allmusic().size() == 1) {
             d->btPrev->setDisabled(true);
             d->btNext->setDisabled(true);
+            d->btFavorite->setDisabled(false);
             d->btPlay->setDisabled(false);
         } else {
             d->btPrev->setDisabled(false);
             d->btNext->setDisabled(false);
             d->btPlay->setDisabled(false);
+            d->btFavorite->setDisabled(false);
         }
     }
 }
 
 void Footer::onMediaLibraryClean()
 {
-    Q_D(Footer);
+    //Q_D(Footer);
 
     /*---enableControl----*/
     enableControl(false);
@@ -1178,6 +1401,7 @@ void Footer::slotTheme(int type)
                               QString(":/mpimage/%1/normal/next_normal.svg").arg(rStr),
                               QString(":/mpimage/%1/press/next_press.svg").arg(rStr));
 
+#if 0
     d->btFavorite->setPropertyPic(QString(":/mpimage/%1/normal/collection_normal.svg").arg(rStr),
                                   QString(":/mpimage/%1/normal/collection_normal.svg").arg(rStr),
                                   QString(":/mpimage/%1/press/collection_press.svg").arg(rStr));
@@ -1186,7 +1410,6 @@ void Footer::slotTheme(int type)
                                   QString(":/mpimage/%1/checked/collection1_checked.svg").arg(rStr),
                                   QString(":/mpimage/%1/press/collection1_press.svg").arg(rStr),
                                   QString(":/mpimage/%1/checked/collection1_checked.svg").arg(rStr));
-
     d->btLyric->setPropertyPic(QString(":/mpimage/%1/normal/lyric_normal.svg").arg(rStr),
                                QString(":/mpimage/%1/normal/lyric_normal.svg").arg(rStr),
                                QString(":/mpimage/%1/press/lyric_press.svg").arg(rStr),
@@ -1224,6 +1447,8 @@ void Footer::slotTheme(int type)
                                   QString(":/mpimage/%1/checked/playlist_checked.svg").arg(rStr));
 
     d->btPlayMode->setModeIcons(modes, pressModes);
+#endif
+
     d->waveform->setThemeType(type);
     d->volSlider->slotTheme(type);
     d->playListWidget->slotTheme(type);
@@ -1274,30 +1499,133 @@ void Footer::onCoverChanged(const MetaPtr meta, const DMusic::SearchMeta &, cons
 void Footer::onVolumeChanged(int volume)
 {
     Q_D(Footer);
+    //need to sync volume to dbus
+    if (d->volumeMonitoring.needSyncLocalFlag(1)) {
+        d->volumeMonitoring.stop();
+        d->volumeMonitoring.timeoutSlot();
+        d->volumeMonitoring.start();
+    }
     QString status = "mid";
     if (volume > 77) {
         status = "high";
+        d->btSound->setIcon(QIcon::fromTheme("volume"));
+
     } else if (volume > 33) {
         status = "mid";
+        d->btSound->setIcon(QIcon::fromTheme("volume_mid"));
+
     } else {
         status = "low";
+
+        d->btSound->setIcon(QIcon::fromTheme("volume_low"));
     }
-    if (d->m_Mute) {
+
+
+
+    if (d->m_Mute || volume == 0) {
         d->updateQssProperty(d->btSound, "volume", "mute");
+        d->btSound->setIcon(QIcon::fromTheme("mute"));
+        d->volSlider->syncMute(true);
     } else {
         d->updateQssProperty(d->btSound, "volume", status);
     }
+
+    if (!d->m_Mute && volume > 0) {
+        d->volSlider->syncMute(false);
+    }
+
     d->m_Volume = volume;
     MusicSettings::setOption("base.play.volume", d->m_Volume);
+    // 音量变化为0，设置为静音
+    MusicSettings::setOption("base.play.mute", d->m_Mute);
     d->volSlider->onVolumeChanged(volume);
+}
+
+void Footer::onLocalVolumeChanged(int volume)
+{
+    Q_D(Footer);
+    QString status = "mid";
+    if (volume > 77) {
+        status = "high";
+
+        d->btSound->setIcon(QIcon::fromTheme("volume"));
+    } else if (volume > 33) {
+        status = "mid";
+
+        d->btSound->setIcon(QIcon::fromTheme("volume_mid"));
+    } else {
+        status = "low";
+
+        d->btSound->setIcon(QIcon::fromTheme("volume_low"));
+    }
+
+    if (d->m_Mute) {
+        d->updateQssProperty(d->btSound, "volume", "mute");
+        d->btSound->setIcon(QIcon::fromTheme("mute"));
+    } else {
+        d->updateQssProperty(d->btSound, "volume", status);
+    }
+
+    if (volume == 0) {
+        d->updateQssProperty(d->btSound, "volume", "mute");
+    }
+
+    d->m_Volume = volume;
+    MusicSettings::setOption("base.play.volume", d->m_Volume);
+    MusicSettings::setOption("base.play.mute", d->m_Mute);
+    d->volSlider->onVolumeChanged(volume);
+
+    Q_EMIT volumeChanged(volume);
+    //set sync state
+    if (d->volumeMonitoring.readSinkInputValid() != 0) {
+        d->volumeMonitoring.syncLocalFlag(1);
+    }
 }
 
 void Footer::onMutedChanged(bool muted)
 {
     Q_D(Footer);
+    if (d->volumeMonitoring.needSyncLocalFlag()) {
+        d->volumeMonitoring.stop();
+        d->volumeMonitoring.timeoutSlot();
+        d->volumeMonitoring.start();
+        return ;
+    }
     d->m_Mute = muted;
-    MusicSettings::setOption("base.play.mute", muted);
     if (muted) {
+        // d->updateQssProperty(d->btSound, "volume", "mute");
+        d->btSound->setIcon(QIcon::fromTheme("mute"));
+    } else {
+        QString status = "mid";
+        if (d->m_Volume > 77) {
+            status = "high";
+            d->btSound->setIcon(QIcon::fromTheme("volume"));
+        } else if (d->m_Volume > 33) {
+            status = "mid";
+            d->btSound->setIcon(QIcon::fromTheme("volume_mid"));
+        } else {
+            status = "low";
+            d->btSound->setIcon(QIcon::fromTheme("volume_low"));
+        }
+
+        // d->updateQssProperty(d->btSound, "volume", status);
+        d->volSlider->onVolumeChanged(d->m_Volume);
+    }
+    MusicSettings::setOption("base.play.volume", d->m_Volume);
+    MusicSettings::setOption("base.play.mute", d->m_Mute);
+    //sync mute to slider
+    d->volSlider->syncMute(d->m_Mute);
+}
+
+void Footer::onLocalMutedChanged(int type)
+{
+    Q_D(Footer);
+    if (type)
+        d->m_Mute = !d->m_Mute;
+    else
+        d->m_Mute = false;
+
+    if (d->m_Mute) {
         d->updateQssProperty(d->btSound, "volume", "mute");
     } else {
         QString status = "mid";
@@ -1308,27 +1636,42 @@ void Footer::onMutedChanged(bool muted)
         } else {
             status = "low";
         }
-        if (d->m_Mute) {
-            d->updateQssProperty(d->btSound, "volume", "mute");
-        } else {
-            d->updateQssProperty(d->btSound, "volume", status);
-        }
+        d->updateQssProperty(d->btSound, "volume", status);
         d->volSlider->onVolumeChanged(d->m_Volume);
     }
+    MusicSettings::setOption("base.play.volume", d->m_Volume);
+    MusicSettings::setOption("base.play.mute", d->m_Mute);
+
+    d->volumeMonitoring.syncLocalFlag();
+    //emit mute state
+    Q_EMIT localMuteStat(d->m_Mute);
+
+    //sync mute to slider
+    d->volSlider->syncMute(d->m_Mute);
 }
 
 void Footer::onModeChange(int mode)
 {
     Q_D(Footer);
-
     qDebug() << "change play mode to" << mode;
+#if 0
     if (d->mode == mode) {
         return;
     }
     d->btPlayMode->blockSignals(true);
-    d->btPlayMode->setMode(mode);
+    // d->btPlayMode->setMode(mode);
     d->btPlayMode->blockSignals(false);
+#endif
+
     d->mode = mode;
+
+    if (mode == 0) {
+        d->btPlayMode->setIcon(QIcon::fromTheme("sequential_loop"));
+    } else if (mode == 1) {
+        d->btPlayMode->setIcon(QIcon::fromTheme("single_tune_circulation"));
+    } else if (mode == 2) {
+        d->btPlayMode->setIcon(QIcon::fromTheme("cross_cycling"));
+    }
 
     auto hintWidget = d->btPlayMode->property("HintWidget").value<QWidget *>();
     if (hintWidget != nullptr) {
@@ -1354,6 +1697,9 @@ void Footer::onModeChange(int mode)
 
 void Footer::onUpdateMetaCodec(const QString &preTitle, const QString &preArtist, const QString &preAlbum, const MetaPtr meta)
 {
+    Q_UNUSED(preTitle)
+    Q_UNUSED(preArtist)
+    Q_UNUSED(preAlbum)
     Q_D(Footer);
     if (d->activingMeta && d->activingMeta == meta) {
         d->title->setText(meta->title);
@@ -1376,12 +1722,6 @@ void Footer::resizeEvent(QResizeEvent *event)
     Q_D(Footer);
     DWidget::resizeEvent(event);
 
-    //auto fix = progressExtentHeight();
-    //auto center = rect().marginsRemoved(QMargins(0, fix, 0, 0)).center() - d->ctlWidget->rect().center();
-
-    //d->ctlWidget->move(center);
-    //d->ctlWidget->raise();
-
     QImage cover(d->defaultCover);
     if (d->activingMeta != nullptr) {
         auto coverData = MetaSearchService::coverData(d->activingMeta);
@@ -1391,10 +1731,10 @@ void Footer::resizeEvent(QResizeEvent *event)
     }
     //cut image
     double windowScale = (width() * 1.0) / height();
-    int imageWidth = cover.height() * windowScale;
+    int imageWidth = static_cast<int>(cover.height() * windowScale);
     QImage coverImage;
     if (imageWidth > cover.width()) {
-        int imageheight = cover.width() / windowScale;
+        int imageheight = static_cast<int>(cover.width() / windowScale);
         coverImage = cover.copy(0, (cover.height() - imageheight) / 2, cover.width(), imageheight);
     } else {
         int imageheight = cover.height();
@@ -1404,5 +1744,4 @@ void Footer::resizeEvent(QResizeEvent *event)
         coverImage.fill(QColor(255, 255, 255));
     }
     d->forwardWidget->setSourceImage(coverImage);
-//    blurBackground()->setSourceImage(coverImage);
 }

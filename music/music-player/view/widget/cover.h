@@ -33,7 +33,7 @@ class Cover : public Label
 
 public:
     explicit Cover(QWidget *parent = Q_NULLPTR);
-    ~Cover();
+    ~Cover() override;
 
     int radius() const;
     QColor borderColor() const;

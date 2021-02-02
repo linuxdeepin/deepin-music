@@ -33,7 +33,7 @@ class SoundVolume : public QWidget
     Q_PROPERTY(QColor borderColor READ borderColor WRITE setBorderColor)
 public:
     explicit SoundVolume(QWidget *parent = nullptr);
-    ~SoundVolume();
+    ~SoundVolume() override;
 
     int volume() const;
     int radius() const;
@@ -42,14 +42,17 @@ public:
 
 signals:
     void volumeChanged(int volume);
+    void volumeMute();
+    void delayAutoHide();
 
 public slots:
-    void deleyHide();
+    void delayHide();
     void onVolumeChanged(int volume);
     void setBackground(QBrush background);
     void setRadius(int radius);
     void setBorderColor(QColor borderColor);
-
+    void volumeIcon();
+    void syncMute(bool mute);
     void slotTheme(int type);
 protected:
     virtual void showEvent(QShowEvent *event) Q_DECL_OVERRIDE;

@@ -29,6 +29,7 @@
 #include <QTime>
 
 #include "../core/metasearchservice.h"
+#include "../core/musicsettings.h"
 #include "util/pinyinsearch.h"
 
 #include "medialibrary.h"
@@ -421,6 +422,7 @@ void Playlist::appendMusicList(const MetaPtrList metalist)
         newMetalist << meta;
         playlistMeta.sortMetas << meta->hash;
         playlistMeta.metas.insert(meta->hash, meta);
+        MusicSettings::setOption("base.play.showFlag", 1);
     }
 
     Q_EMIT MediaDatabase::instance()->insertMusicList(newMetalist, this->playlistMeta);
@@ -458,12 +460,14 @@ MetaPtr Playlist::removeMusicList(const MetaPtrList metalist)
 
 MetaPtr Playlist::removeOneMusic(const MetaPtr meta)
 {
-    Q_ASSERT(!meta.isNull());
+//    Q_ASSERT(!meta.isNull());
+    if (meta.isNull())
+        return MetaPtr();
     if (meta->hash.isEmpty()) {
         qCritical() << "Cannot remove empty id" << meta->hash << meta->title;
         return MetaPtr();
     }
-    if (id() == AlbumMusicListID ) {
+    if (id() == AlbumMusicListID) {
         QString albumStr = meta->album;
         if (albumStr.isEmpty()) {
             albumStr = tr("Unknown album");
@@ -830,7 +834,9 @@ void Playlist::playMusicTypeToMeta(QString name, QStringList sortMetas)
     for (auto meta : playMusicTypePtrListData.metas) {
         if (name.isEmpty() || name == meta->name) {
             for (auto hashCode : meta->playlistMeta.sortMetas) {
-                mlist << meta->playlistMeta.metas[hashCode];
+                if (meta->playlistMeta.metas[hashCode] != nullptr) {
+                    mlist << meta->playlistMeta.metas[hashCode];
+                }
             }
         }
     }

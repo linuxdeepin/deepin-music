@@ -41,7 +41,7 @@ class Footer : public DFloatingWidget
 
 public:
     explicit Footer(QWidget *parent = nullptr);
-    ~Footer();
+    ~Footer() override;
 
 public:
     void setCurPlaylist(PlaylistPtr playlist);
@@ -58,6 +58,7 @@ public:
     void setSize(int width, int height, bool changFlag = false);
     bool getShowPlayListFlag();
     void refreshBackground();
+    void hidewaveform();
 
 signals:
     void toggleLyricView();
@@ -70,9 +71,11 @@ signals:
     void prev(PlaylistPtr playlist, const MetaPtr meta);
     void changeProgress(qint64 value, qint64 duration);
     void volumeChanged(int volume);
+    void focusButton();
 
     void toggleMute();
-    void togglePlaylist();
+    void localToggleMute();
+    void togglePlaylist(bool isShow);
     void modeChanged(int);
     void toggleFavourite(const MetaPtr meta);
 
@@ -81,7 +84,10 @@ signals:
 
     void audioBufferProbed(const QAudioBuffer &buffer);
     void metaBuffer(const QVector<float> &buffer, const QString &hash);
-
+    /*****************************************
+     * emit local changed mute state
+     * ****************************************/
+    void localMuteStat(bool mute);
 public slots:
     void onMusicListAdded(PlaylistPtr playlist, const MetaPtrList metalist);
     void onMusicListRemoved(PlaylistPtr playlist, const MetaPtrList metalist);
@@ -92,7 +98,17 @@ public slots:
     void onProgressChanged(qint64 value, qint64 duration, qint64 coefficient);
     void onCoverChanged(const MetaPtr meta, const DMusic::SearchMeta &, const QByteArray &coverData);
     void onVolumeChanged(int volume);
+    /**
+     * @brief onLocalVolumeChanged to resolve no reponse for local operation \
+     * when music state is stoped.
+     * @param volume music volume
+     */
+    void onLocalVolumeChanged(int volume);
     void onMutedChanged(bool muted);
+    /**************************************
+     * slots local mute ,type: 0 volume,1 mute
+     * ************************************/
+    void onLocalMutedChanged(int type);
     void onModeChange(int mode);
     void onUpdateMetaCodec(const QString &preTitle, const QString &preArtist, const QString &preAlbum, const MetaPtr meta);
     void setDefaultCover(QString defaultCover);

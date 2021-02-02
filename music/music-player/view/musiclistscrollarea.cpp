@@ -24,13 +24,14 @@
 #include <QDebug>
 #include <QVBoxLayout>
 #include <QFocusEvent>
+#include <QScrollBar>
 
 #include <DListWidget>
 #include <DLabel>
 #include <DPushButton>
 #include <DFloatingButton>
 #include <DPalette>
-
+#include <DGuiApplicationHelper>
 #include <DUtil>
 
 #include "../core/playlist.h"
@@ -39,7 +40,7 @@
 #include "widget/musiclistviewitem.h"
 #include "musiclistdatawidget.h"
 #include "widget/musicimagebutton.h"
-#include <DGuiApplicationHelper>
+#include "ac-desktop-define.h"
 
 MusicListScrollArea::MusicListScrollArea(QWidget *parent) : DScrollArea(parent)
 {
@@ -54,7 +55,7 @@ MusicListScrollArea::MusicListScrollArea(QWidget *parent) : DScrollArea(parent)
 
     QWidget *widget = new QWidget(this);
     setWidget(widget);
-
+    widget->setFixedWidth(220);
     auto musicLayout = new QVBoxLayout(widget);
     musicLayout->setContentsMargins(10, 5, 10, 5);
     musicLayout->setSpacing(0);
@@ -62,7 +63,6 @@ MusicListScrollArea::MusicListScrollArea(QWidget *parent) : DScrollArea(parent)
     dataBaseLabel = new DLabel;
     dataBaseLabel->setFixedHeight(40);
     dataBaseLabel->setText(tr("Library"));
-    dataBaseLabel->setObjectName("MusicListScrollAreaDataBase");
     dataBaseLabel->setMargin(10);
     auto dataBaseLabelFont = dataBaseLabel->font();
     dataBaseLabelFont.setFamily("SourceHanSansSC");
@@ -81,7 +81,9 @@ MusicListScrollArea::MusicListScrollArea(QWidget *parent) : DScrollArea(parent)
                                         ":/mpimage/light/hover/add_hover.svg",
                                         ":/mpimage/light/press/add_press.svg");
     m_addListBtn->setFixedSize(37, 37);
-    m_addListBtn->setFocusPolicy(Qt::NoFocus);
+
+    m_addListBtn->setFocusPolicy(Qt::TabFocus);
+    m_addListBtn->installEventFilter(this);
 
     auto customizeLayout = new QHBoxLayout(widget);
     customizeLayout->setContentsMargins(0, 0, 5, 0);
@@ -90,10 +92,21 @@ MusicListScrollArea::MusicListScrollArea(QWidget *parent) : DScrollArea(parent)
     customizeLayout->addWidget(m_addListBtn, 0, Qt::AlignBottom);
 
     m_dataBaseListview = new MusicListView;
+    m_dataBaseListview->initPerformanceDataBase();
     m_dataBaseListview->setEditTriggers(QAbstractItemView::NoEditTriggers);
     m_dataBaseListview->setFixedHeight(162);
+    AC_SET_OBJECT_NAME(m_dataBaseListview, AC_dataBaseListview);
+    AC_SET_ACCESSIBLE_NAME(m_dataBaseListview, AC_dataBaseListview);
+    // m_dataBaseListview->setFocusPolicy(Qt::TabFocus);   //使用默认设置焦点方式
+    m_dataBaseListview->installEventFilter(this);
+
     m_customizeListview = new MusicListView;
     musicLayout->setContentsMargins(0, 0, 0, 0);
+    m_customizeListview->initPerformanceSonglist();
+    // m_customizeListview->setFocusPolicy(Qt::TabFocus);
+    m_customizeListview->installEventFilter(this);
+    AC_SET_OBJECT_NAME(m_customizeListview, AC_customizeListview);
+    AC_SET_ACCESSIBLE_NAME(m_customizeListview, AC_customizeListview);
 
     musicLayout->addWidget(dataBaseLabel, 0, Qt::AlignVCenter);
     musicLayout->addWidget(m_dataBaseListview, 0, Qt::AlignTop);
@@ -102,6 +115,13 @@ MusicListScrollArea::MusicListScrollArea(QWidget *parent) : DScrollArea(parent)
 
     int themeType = DGuiApplicationHelper::instance()->themeType();
     slotTheme(themeType);
+
+    connect(verticalScrollBar(), &QScrollBar::rangeChanged, this, [ = ]() {
+        if (m_customizeListview->getSizeChangedFlag()) {
+            this->verticalScrollBar()->setValue(this->verticalScrollBar()->maximum());
+            m_customizeListview->setSizeChangedFlag(false);
+        }
+    });
 }
 
 MusicListView *MusicListScrollArea::getDBMusicListView()
@@ -161,8 +181,78 @@ void MusicListScrollArea::slotTheme(int type)
 
 void MusicListScrollArea::changePicture(QPixmap pixmap, QPixmap albumPixmap, QPixmap sidebarPixmap)
 {
+    Q_UNUSED(albumPixmap)
     m_dataBaseListview->changePicture(pixmap, sidebarPixmap);
     m_customizeListview->changePicture(pixmap, sidebarPixmap);
+}
+
+
+bool MusicListScrollArea::eventFilter(QObject *o, QEvent *e)
+{
+    if (o == m_dataBaseListview) {
+
+        if (e->type() == QEvent::KeyPress) {
+            QKeyEvent *event = static_cast<QKeyEvent *>(e);
+            if ((event->modifiers() == Qt::ControlModifier) && (event->key() == Qt::Key_M)) {
+
+                int rowIndex = m_dataBaseListview->currentIndex().row();
+                int row = 40 * rowIndex;
+
+                QPoint pos(120, row);
+                m_dataBaseListview->showContextMenu(pos);
+            }
+        }
+        // Tab焦点进入事件和点击事件冲突，保留点击事件设置焦点
+    }
+
+    if (o == m_customizeListview) {
+
+        if (e->type() == QEvent::KeyPress) {
+            QKeyEvent *event = static_cast<QKeyEvent *>(e);
+            if ((event->modifiers() == Qt::ControlModifier) && (event->key() == Qt::Key_M)) {
+
+                int rowIndex = m_customizeListview->currentIndex().row();
+                int row = 40 * rowIndex;
+                QPoint pos;
+
+                if (row > 300) {
+                    QPoint posm(120, 120);
+                    pos = posm;
+                } else {
+                    QPoint posm(120, row);
+                    pos = posm;
+                }
+
+                m_customizeListview->showContextMenu(pos);
+            }
+        }
+        // Tab焦点进入事件和点击事件冲突，保留点击事件设置焦点
+    }
+
+    if (o == m_addListBtn) {
+
+        if (e->type() == QEvent::KeyPress) {
+            QKeyEvent *event = static_cast<QKeyEvent *>(e);
+            if (event->key() == Qt::Key_Return) {
+
+                Q_EMIT m_addListBtn->click();
+            }
+        } else if (e->type() == QEvent::FocusIn) {
+
+            m_addListBtn->setPropertyPic(":/mpimage/light/hover/add_hover.svg",
+                                         ":/mpimage/light/normal/add_normal.svg",
+                                         ":/mpimage/light/press/add_press.svg");
+            m_dataBaseListview->clearSelection();
+
+        } else if (e->type() == QEvent::FocusOut) {
+
+            m_addListBtn->setPropertyPic(":/mpimage/light/normal/add_normal.svg",
+                                         ":/mpimage/light/hover/add_hover.svg",
+                                         ":/mpimage/light/press/add_press.svg");
+        }
+    }
+
+    return QWidget::eventFilter(o, e);
 }
 
 void MusicListScrollArea::resizeEvent(QResizeEvent *event)

@@ -265,6 +265,8 @@ void slideTop2BottomWidget(QWidget *top, QWidget *bottom, int delay)
 
 void slideEdgeWidget(QWidget *widget, QWidget *child, QRect start, QRect end, int delay, bool visible)
 {
+    Q_UNUSED(child)
+    Q_UNUSED(visible)
     QPropertyAnimation *animation2 = new QPropertyAnimation(widget, "geometry");
     animation2->setEasingCurve(QEasingCurve::InCurve);
     animation2->setDuration(delay);

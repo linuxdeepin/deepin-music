@@ -32,7 +32,7 @@ class ListView : public DListView
     Q_OBJECT
 public:
     explicit ListView(QWidget *parent = Q_NULLPTR);
-    ~ListView();
+    ~ListView() override;
 
 protected:
     void updateScrollbar();

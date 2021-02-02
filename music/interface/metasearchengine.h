@@ -29,8 +29,10 @@
 
 class MediaMeta;
 
-namespace DMusic {
-namespace Plugin {
+namespace DMusic
+{
+namespace Plugin
+{
 
 class MetaSearchEngine : public QObject, public PluginInterface
 {

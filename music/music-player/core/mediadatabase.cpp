@@ -51,7 +51,7 @@ static bool createConnection()
         return false;
     }
 
-    QSqlQuery query;
+    QSqlQuery query(db);
     query.exec("CREATE TABLE IF NOT EXISTS music (hash TEXT primary key not null, "
                "timestamp INTEGER,"
                "title VARCHAR(256), artist VARCHAR(256), "
@@ -244,20 +244,31 @@ void margeDatabase()
     }
 }
 
-MediaDatabase::MediaDatabase(QObject *parent) : QObject(parent)
+MediaDatabase::MediaDatabase(QObject *parent) : QObject(parent), m_writer(nullptr)
 {
 }
 
 void MediaDatabase::init()
 {
     createConnection();
+    margeDatabase();
+
+    QDir cacheDir(Global::cacheDir());
+    if (!cacheDir.exists()) {
+        cacheDir.mkpath(".");
+    }
+    QString cachePath = Global::cacheDir() + "/mediameta.sqlite";
+    QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE", "mediabase");
+    db.setDatabaseName(cachePath);
 
     // sqlite must run in one thread!!!
     m_writer = new MediaDatabaseWriter;
-
+    ThreadPool::instance()->moveToNewThread(m_writer);//将读写耗时操作放到子线程操作
+    connect(this, &MediaDatabase::initWrter,
+            m_writer, &MediaDatabaseWriter::initDataBase);
+    Q_EMIT initWrter();
     bind();
 
-    margeDatabase();
 
     QSqlDatabase::database().transaction();
     PlaylistMeta playlistMeta;
@@ -387,7 +398,7 @@ void MediaDatabase::init()
 QStringList MediaDatabase::allPlaylistDisplayName()
 {
     QStringList list;
-    QSqlQuery query;
+    QSqlQuery query(QSqlDatabase::database("mediabase"));
     query.prepare("SELECT displayname FROM playlist");
 
     if (!query.exec()) {
@@ -404,7 +415,7 @@ QStringList MediaDatabase::allPlaylistDisplayName()
 QList<PlaylistMeta> MediaDatabase::allPlaylistMeta()
 {
     QList<PlaylistMeta> list;
-    QSqlQuery query;
+    QSqlQuery query(QSqlDatabase::database("mediabase"));
     query.prepare("SELECT uuid, displayname, icon, readonly, hide, "
                   "sort_type, order_type, sort_id FROM playlist");
 
@@ -432,7 +443,7 @@ static MetaPtrList searchTitle(const QString &queryString)
 {
     MetaPtrList metalist;
 
-    QSqlQuery query;
+    QSqlQuery query(QSqlDatabase::database("mediabase"));
     query.prepare(queryString);
     if (! query.exec()) {
         qCritical() << query.lastError();
@@ -503,7 +514,7 @@ MetaPtrList MediaDatabase::searchMediaPath(const QString &path, int limit)
 
 void MediaDatabase::addPlaylist(const PlaylistMeta &playlistMeta)
 {
-    QSqlQuery query;
+    QSqlQuery query(QSqlDatabase::database("mediabase"));
     query.prepare("INSERT INTO playlist ("
                   "uuid, displayname, icon, readonly, hide, "
                   "sort_type, order_type, sort_id "
@@ -538,7 +549,7 @@ void MediaDatabase::addPlaylist(const PlaylistMeta &playlistMeta)
 
 void MediaDatabase::updatePlaylist(const PlaylistMeta &playlistMeta)
 {
-    QSqlQuery query;
+    QSqlQuery query(QSqlDatabase::database("mediabase"));
     query.prepare("UPDATE playlist "
                   "SET displayname = :displayname, icon = :icon, "
                   "readonly = :readonly, hide = :hide, "
@@ -561,7 +572,7 @@ void MediaDatabase::updatePlaylist(const PlaylistMeta &playlistMeta)
 
 void MediaDatabase::removePlaylist(const PlaylistMeta &playlistMeta)
 {
-    QSqlQuery query;
+    QSqlQuery query(QSqlDatabase::database("mediabase"));
     QString sqlstring = QString("DROP TABLE IF EXISTS playlist_%1").arg(playlistMeta.uuid);
     if (! query.exec(sqlstring)) {
         qWarning() << query.lastError();
@@ -581,7 +592,7 @@ void MediaDatabase::deleteMusic(const MetaPtr meta, const PlaylistMeta &playlist
         return;
     }
 
-    QSqlQuery query;
+    QSqlQuery query(QSqlDatabase::database("mediabase"));
     QString sqlstring = QString("DELETE FROM playlist_%1 WHERE music_id = '%2'")
                         .arg(playlistMeta.uuid).arg(meta->hash);
     if (! query.exec(sqlstring)) {
@@ -592,7 +603,7 @@ void MediaDatabase::deleteMusic(const MetaPtr meta, const PlaylistMeta &playlist
 
 bool MediaDatabase::playlistExist(const QString &uuid)
 {
-    QSqlQuery query;
+    QSqlQuery query(QSqlDatabase::database("mediabase"));
     query.prepare("SELECT COUNT(*) FROM playlist where uuid = :uuid");
     query.bindValue(":uuid", uuid);
 
@@ -606,7 +617,7 @@ bool MediaDatabase::playlistExist(const QString &uuid)
 
 bool MediaDatabase::mediaMetaExist(const QString &hash)
 {
-    QSqlQuery query;
+    QSqlQuery query(QSqlDatabase::database("mediabase"));
     query.prepare("SELECT COUNT(*) FROM music where hash = :hash");
     query.bindValue(":hash", hash);
 
@@ -621,121 +632,19 @@ bool MediaDatabase::mediaMetaExist(const QString &hash)
 QList<MediaMeta> MediaDatabase::allmetas()
 {
     QList<MediaMeta> metalist;
+    QList<QString> allhash;
+    QVariantList removeHash;
+    QSqlQuery querysql(QSqlDatabase::database("mediabase"));
+    QString queryStringAll = QString("select music_id from playlist_all");
 
-    QString queryString = QString("SELECT hash, localpath, title, artist, album, "
-                                  "filetype, track, offset, length, size, "
-                                  "timestamp, invalid, search_id, cuepath "
-                                  "FROM music");
-
-    QSqlQuery query;
-    query.prepare(queryString);
-    if (! query.exec()) {
-        qCritical() << query.lastError();
+    querysql.prepare(queryStringAll);
+    if (!querysql.exec()) {
+        qCritical() << querysql.lastError();
         return metalist;
     }
 
-    while (query.next()) {
-        MediaMeta meta;
-        meta.hash = query.value(0).toString();
-        meta.localPath = query.value(1).toString();
-        meta.title = query.value(2).toString();
-        meta.artist = query.value(3).toString();
-        meta.album = query.value(4).toString();
-        meta.filetype = query.value(5).toString();
-        meta.track = query.value(6).toLongLong();
-        meta.offset = query.value(7).toLongLong();
-        meta.length = query.value(8).toLongLong();
-        meta.size = query.value(9).toLongLong();
-        meta.timestamp = query.value(10).toLongLong();
-        meta.invalid = query.value(11).toBool();
-        meta.searchID = query.value(12).toString();
-        meta.cuePath = query.value(13).toString();
-
-        /*----------INSERT INTO musicNew------------*/
-
-        QSqlQuery querys;
-
-        querys.prepare("INSERT INTO musicNew ("
-                       "hash, timestamp, title, artist, album, "
-                       "filetype, size, track, offset, favourite, localpath, length, "
-                       "py_title, py_title_short, py_artist, py_artist_short, "
-                       "py_album, py_album_short, lyricPath, codec, cuepath "
-                       ") "
-                       "VALUES ("
-                       ":hash, :timestamp, :title, :artist, :album, "
-                       ":filetype, :size, :track, :offset, :favourite, :localpath, :length, "
-                       ":py_title, :py_title_short, :py_artist, :py_artist_short, "
-                       ":py_album, :py_album_short, :lyricPath, :codec, :cuepath "
-                       ")");
-
-        QString uuid = QUuid::createUuid().toString().remove('{').remove('}').remove('-');
-        qDebug() << "uuid : " << uuid << endl;
-
-        querys.bindValue(":hash", meta.hash);
-        querys.bindValue(":timestamp", meta.timestamp);
-        querys.bindValue(":title", meta.title);
-        querys.bindValue(":artist", meta.artist);
-        querys.bindValue(":album", meta.album);
-        querys.bindValue(":filetype", meta.filetype);
-        querys.bindValue(":size", meta.size);
-        querys.bindValue(":track", meta.track);
-        querys.bindValue(":offset", meta.offset);
-        querys.bindValue(":favourite", meta.favourite);
-        querys.bindValue(":localpath", meta.localPath);
-        querys.bindValue(":length", meta.length);
-        querys.bindValue(":py_title", meta.pinyinTitle);
-        querys.bindValue(":py_title_short", meta.pinyinTitleShort);
-        querys.bindValue(":py_artist", meta.pinyinArtist);
-        querys.bindValue(":py_artist_short", meta.pinyinArtistShort);
-        querys.bindValue(":py_album", meta.pinyinAlbum);
-        querys.bindValue(":py_album_short", meta.pinyinAlbumShort);
-        querys.bindValue(":lyricPath", meta.lyricPath);
-        querys.bindValue(":codec", meta.codec);
-        querys.bindValue(":cuepath", meta.cuePath);
-
-
-        /*-------------querys.exec----------------*/
-
-        if (! querys.exec()) {
-            qCritical() << querys.lastError();
-
-
-            QString queryStringNew = QString("SELECT hash, localpath, title, artist, album, "
-                                             "filetype, track, offset, length, size, "
-                                             "timestamp, invalid, search_id, cuepath, "
-                                             "lyricPath, codec "
-                                             "FROM musicNew");
-
-            QSqlQuery queryNew;
-
-            queryNew.prepare(queryStringNew);
-            if (! queryNew.exec()) {
-                qCritical() << queryNew.lastError();
-                return metalist;
-            }
-
-            while (queryNew.next()) {
-                MediaMeta meta;
-                meta.hash = queryNew.value(0).toString();
-                meta.localPath = queryNew.value(1).toString();
-                meta.title = queryNew.value(2).toString();
-                meta.artist = queryNew.value(3).toString();
-                meta.album = queryNew.value(4).toString();
-                meta.filetype = queryNew.value(5).toString();
-                meta.track = queryNew.value(6).toLongLong();
-                meta.offset = queryNew.value(7).toLongLong();
-                meta.length = queryNew.value(8).toLongLong();
-                meta.size = queryNew.value(9).toLongLong();
-                meta.timestamp = queryNew.value(10).toLongLong();
-                meta.invalid = queryNew.value(11).toBool();
-                meta.searchID = queryNew.value(12).toString();
-                meta.cuePath = queryNew.value(13).toString();
-                meta.lyricPath = queryNew.value(14).toString();
-                meta.codec = queryNew.value(15).toString();
-                metalist << meta;
-            }
-        }
-
+    while (querysql.next()) {
+        allhash << querysql.value(0).toString();
     }
 
     QString queryStringNew = QString("SELECT hash, localpath, title, artist, album, "
@@ -743,34 +652,48 @@ QList<MediaMeta> MediaDatabase::allmetas()
                                      "timestamp, invalid, search_id, cuepath, "
                                      "lyricPath, codec "
                                      "FROM musicNew");
-
-    QSqlQuery queryNew;
-
-    queryNew.prepare(queryStringNew);
-    if (! queryNew.exec()) {
-        qCritical() << queryNew.lastError();
+    querysql.prepare(queryStringNew);
+    if (! querysql.exec()) {
+        qCritical() << querysql.lastError();
         return metalist;
     }
 
-    while (queryNew.next()) {
+    while (querysql.next()) {
+        QString musicHash = querysql.value(0).toString();
+        if (!allhash.contains(musicHash)) {
+            removeHash.append(musicHash);
+            continue;
+        }
+
         MediaMeta meta;
-        meta.hash = queryNew.value(0).toString();
-        meta.localPath = queryNew.value(1).toString();
-        meta.title = queryNew.value(2).toString();
-        meta.artist = queryNew.value(3).toString();
-        meta.album = queryNew.value(4).toString();
-        meta.filetype = queryNew.value(5).toString();
-        meta.track = queryNew.value(6).toLongLong();
-        meta.offset = queryNew.value(7).toLongLong();
-        meta.length = queryNew.value(8).toLongLong();
-        meta.size = queryNew.value(9).toLongLong();
-        meta.timestamp = queryNew.value(10).toLongLong();
-        meta.invalid = queryNew.value(11).toBool();
-        meta.searchID = queryNew.value(12).toString();
-        meta.cuePath = queryNew.value(13).toString();
-        meta.lyricPath = queryNew.value(14).toString();
-        meta.codec = queryNew.value(15).toString();
+        meta.hash = querysql.value(0).toString();
+        meta.localPath = querysql.value(1).toString();
+        meta.title = querysql.value(2).toString();
+        meta.artist = querysql.value(3).toString();
+        meta.album = querysql.value(4).toString();
+        meta.filetype = querysql.value(5).toString();
+        meta.track = querysql.value(6).toLongLong();
+        meta.offset = querysql.value(7).toLongLong();
+        meta.length = querysql.value(8).toLongLong();
+        meta.size = querysql.value(9).toLongLong();
+        meta.timestamp = querysql.value(10).toLongLong();
+        meta.invalid = querysql.value(11).toBool();
+        meta.searchID = querysql.value(12).toString();
+        meta.cuePath = querysql.value(13).toString();
+        meta.lyricPath = querysql.value(14).toString();
+        meta.codec = querysql.value(15).toString();
         metalist << meta;
+    }
+
+    if (removeHash.size() > 0) {
+        //remove from musicNew
+        for (QVariant var : removeHash) {
+            QString queryStringRemove = QString("delete from musicNew where hash=%1").arg(var.toString());
+            querysql.prepare(queryStringRemove);
+            if (!querysql.exec()) {
+                qCritical() << querysql.lastError();
+            }
+        }
     }
 
     return metalist;
@@ -779,19 +702,19 @@ QList<MediaMeta> MediaDatabase::allmetas()
 void MediaDatabase::bind()
 {
     connect(this, &MediaDatabase::addMediaMeta,
-            m_writer, &MediaDatabaseWriter::addMediaMeta);
+            m_writer, &MediaDatabaseWriter::addMediaMeta, Qt::UniqueConnection);
     connect(this, &MediaDatabase::addMediaMetaList,
-            m_writer, &MediaDatabaseWriter::addMediaMetaList);
+            m_writer, &MediaDatabaseWriter::addMediaMetaList, Qt::UniqueConnection);
     connect(this, &MediaDatabase::updateMediaMeta,
-            m_writer, &MediaDatabaseWriter::updateMediaMeta);
+            m_writer, &MediaDatabaseWriter::updateMediaMeta, Qt::UniqueConnection);
     connect(this, &MediaDatabase::updateMediaMetaList,
-            m_writer, &MediaDatabaseWriter::updateMediaMetaList);
+            m_writer, &MediaDatabaseWriter::updateMediaMetaList, Qt::UniqueConnection);
     connect(this, &MediaDatabase::insertMusic,
-            m_writer, &MediaDatabaseWriter::insertMusic);
+            m_writer, &MediaDatabaseWriter::insertMusic, Qt::UniqueConnection);
     connect(this, &MediaDatabase::insertMusicList,
-            m_writer, &MediaDatabaseWriter::insertMusicList);
+            m_writer, &MediaDatabaseWriter::insertMusicList, Qt::UniqueConnection);
     connect(this, &MediaDatabase::removeMediaMetaList,
-            m_writer, &MediaDatabaseWriter::removeMediaMetaList);
+            m_writer, &MediaDatabaseWriter::removeMediaMetaList, Qt::UniqueConnection);
 }
 
 

@@ -33,18 +33,32 @@ class QAudioBuffer;
 class Playlist;
 
 class PresenterPrivate;
+class Transfer: public QObject
+{
+    Q_OBJECT
+public:
+    explicit Transfer(QObject *parent = 0);
+    ~Transfer();
+public slots:
+    void onMusicListAdded(PlaylistPtr playlist, const MetaPtrList metalist);
+signals:
+    void musicListAdded(PlaylistPtr playlist, const MetaPtrList metalist);
+};
+
 class Presenter : public QObject
 {
     Q_OBJECT
 public:
-    explicit Presenter(QObject *parent = 0);
+    explicit Presenter(QObject *parent = nullptr);
     ~Presenter();
 
     void initMpris(MprisPlayer *mprisPlayer);
     void prepareData();
-    void postAction();
+    void postAction(bool showFlag);
+    void quickLoad();
     void handleQuit();
     void openUri(const QUrl &uri);
+    void removeListSame(QStringList *list);
 
     QList<PlaylistPtr > allplaylist();
     PlaylistPtr playlist(const QString &id);
@@ -61,6 +75,8 @@ public slots:
 
 signals:
     void dataLoaded();
+    //控制进度条滑块
+    void hidewaveformScale();
 
 signals:
     //! player
@@ -94,6 +110,7 @@ signals:
                               QList<PlaylistPtr >newlists,
                               char type);
     void musicListClear();
+    void dockTogglePaly();
 
     //! from control
     void musicPlayed(PlaylistPtr playlist, const MetaPtr meta);
@@ -104,6 +121,10 @@ signals:
     void progrossChanged(qint64 pos, qint64 length, qint64 coefficient);
     void volumeChanged(int volume);
     void mutedChanged(bool muted);
+    /**********************************************
+     * local mute operation,type: 0 volume , 1:mute
+     * *******************************************/
+    void localMutedChanged(int type);
     void modeChanged(int);
 
     //! from lyricservice
@@ -122,7 +143,8 @@ signals:
     void searchCand(QString searchText, PlaylistPtr playlist);
     void searchResult(QString searchText, QList<PlaylistPtr> resultlist, QString id);
     void musicFileMiss();
-
+    //语音控制
+    void sigSpeedResult(int action, bool result);
 public slots:
     //! music control interface
     void onSyncMusicPlay(PlaylistPtr playlist, const MetaPtr meta);
@@ -143,9 +165,14 @@ public slots:
     void onRemoveMetasFavourite(const MetaPtrList metalist);
 
     void onChangeProgress(qint64 value, qint64 range);
+    void onChangePosition(qint64 value, qint64 range); //dbus set positon
     void onVolumeChanged(int volume);
     void onPlayModeChanged(int mode);
     void onToggleMute();
+    /******************************
+     *local toggle
+     * *****************************/
+    void onLocalToggleMute();
     void onFadeInOut();
 
     void onUpdateMetaCodec(const QString &preTitle, const QString &preArtist, const QString &preAlbum, const MetaPtr meta);
@@ -173,6 +200,36 @@ public slots:
 
     void onScanMusicDirectory();
     void onImportFiles(const QStringList &filelist, PlaylistPtr playlist);
+
+    //语音控制槽函数
+    void onSpeechPlayMusic(const QString music);
+    void onSpeechPlayArtist(const QString artist);
+    void onSpeechPlayArtistMusic(const QString artist, const QString music);
+    void onSpeechPlayFaverite();
+    void onSpeechPlayCustom(const QString listName);
+    void onSpeechPlayRadom();
+
+    void onSpeechPause();
+    void onSpeechStop();
+    void onSpeechResume();
+    void onSpeechPrevious();
+    void onSpeechNext();
+
+    void onSpeechFavorite();
+    void onSpeechunFaverite();
+    void onSpeechsetMode(const int mode);
+
+    //均衡器
+    void setEqualizer(bool enabled, int curIndex, QList<int> indexbaud);
+    void setEqualizerEnable(bool enabled);
+    void setEqualizerpre(int val);
+    void setEqualizerbauds(int index, int val);
+    void setEqualizerCurMode(int curIndex);
+
+    /**************************************************
+     * local mute operation to player
+     * ***********************************************/
+    void localMuteChanged(bool mute);
 
 private:
     bool containsStr(QString searchText, QString text);

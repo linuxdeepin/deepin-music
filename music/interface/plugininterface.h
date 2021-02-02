@@ -26,9 +26,11 @@
 
 class MediaMeta;
 
-namespace DMusic {
+namespace DMusic
+{
 
-namespace Plugin {
+namespace Plugin
+{
 
 enum class PluginType {
     TypeMetaSearchEngine = 0,

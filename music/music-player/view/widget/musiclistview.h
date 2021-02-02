@@ -32,14 +32,14 @@ class MusicListView : public DListView
     Q_OBJECT
 public:
     explicit MusicListView(QWidget *parent = Q_NULLPTR);
-    ~MusicListView();
+    ~MusicListView() override;
 
     void showContextMenu(const QPoint &pos);
 
     void addMusicList(PlaylistPtr playlist, bool addFlag = false);
 
     QStandardItem *item(int row, int column = 0) const;
-    void setCurrentItem ( QStandardItem *item );
+    void setCurrentItem(QStandardItem *item);
 
     PlaylistPtr playlistPtr(const QModelIndex &index);
     PlaylistPtr playlistPtr(QStandardItem *item);
@@ -53,9 +53,17 @@ public:
 
     void adjustHeight();
 
+    void setSizeChangedFlag(bool flag);
+    bool getSizeChangedFlag();
+    //性能优化音乐库专用
+    void initPerformanceDataBase();
+    //性能优化歌单专用
+    void initPerformanceSonglist();
+
 public slots:
     void slotTheme(int type);
     void onRename(QStandardItem *item);
+    void closeEditor(QWidget *editor, QAbstractItemDelegate::EndEditHint hint) Q_DECL_OVERRIDE;
 
 signals:
     void playall(PlaylistPtr playlist);
@@ -65,6 +73,7 @@ signals:
     void removeAllList(const MetaPtr meta);
     void importSelectFiles(PlaylistPtr playlist, QStringList urllist);
     void addToPlaylist(PlaylistPtr playlist, const MetaPtrList &metalist);
+    void changeToAllMusic();
 
     void currentChanged(const QModelIndex &current, const QModelIndex &previous) Q_DECL_OVERRIDE;
 
@@ -86,6 +95,10 @@ private:
     QPixmap              playingPixmap;
     QPixmap              albumPixmap;
     QPixmap              defaultPixmap;
-    int                  m_type = 1;
+    int                  m_type             = 1;
+    bool                m_sizeChangedFlag   = false;
+    bool                pixmapState         = false;
+    bool m_isDataBase = false;
+    bool m_isSongList = false;
 };
 

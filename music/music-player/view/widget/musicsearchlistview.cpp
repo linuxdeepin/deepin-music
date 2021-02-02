@@ -66,7 +66,7 @@ MusicSearchListview::MusicSearchListview(QWidget *parent)
 {
     Q_D(MusicSearchListview);
 
-    d->model = new MusicSearchListModel (3, 3, this);
+    d->model = new MusicSearchListModel(3, 3, this);
     setModel(d->model);
     d->delegate = new MusicSearchListDelegate;
     setItemDelegate(d->delegate);
@@ -75,8 +75,8 @@ MusicSearchListview::MusicSearchListview(QWidget *parent)
     setUniformItemSizes(true);
 
     setViewModeFlag(QListView::ListMode);
-    setResizeMode( QListView::Adjust );
-    setMovement( QListView::Static );
+    setResizeMode(QListView::Adjust);
+    setMovement(QListView::Static);
     setLayoutMode(QListView::Batched);
     setBatchSize(2000);
 
@@ -277,11 +277,11 @@ void MusicSearchListview::keyChoice()
 void MusicSearchListview::setViewModeFlag(QListView::ViewMode mode)
 {
     if (mode == QListView::IconMode) {
-        setIconSize( QSize(170, 170) );
-        setGridSize( QSize(170, 170) );
+        setIconSize(QSize(170, 170));
+        setGridSize(QSize(170, 170));
     } else {
-        setIconSize( QSize(36, 36) );
-        setGridSize( QSize(-1, -1) );
+        setIconSize(QSize(36, 36));
+        setGridSize(QSize(-1, -1));
     }
     setViewMode(mode);
 }
@@ -294,5 +294,6 @@ void MusicSearchListview::SearchClear()
 
 void MusicSearchListview::mouseMoveEvent(QMouseEvent *event)
 {
+    Q_UNUSED(event)
     qDebug() << "MusicSearchListview::mouseMoveEvent";
 }

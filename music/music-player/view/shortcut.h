@@ -40,7 +40,7 @@ class Shortcut : public QObject
 {
     Q_OBJECT
 public:
-    explicit Shortcut(QObject *parent = 0);
+    explicit Shortcut(QObject *parent = nullptr);
     QString toStr();
 
 private:

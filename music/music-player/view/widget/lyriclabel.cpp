@@ -14,6 +14,7 @@
 #include "../../core/util/musiclyric.h"
 #include "../../core/musicsettings.h"
 #include "musicsettings.h"
+#include "ac-desktop-define.h"
 #define WHEEL_SCROLL_OFFSET 50000.0
 
 #include <QDebug>
@@ -23,6 +24,8 @@ DGUI_USE_NAMESPACE
 LyricLabel::LyricLabel(bool touch, QWidget *parent)
     : AbstractWheelWidget(touch, parent)
 {
+    AC_SET_OBJECT_NAME(this, AC_lyricview);
+    AC_SET_ACCESSIBLE_NAME(this, AC_lyricview);
     lyric = new MusicLyric();
     lyricFont = new QFont();
     lyricFont->setFamily("SourceHanSansSC");
@@ -65,7 +68,7 @@ void LyricLabel::paintItem(QPainter *painter, int index, const QRect &rect)
         font.setPixelSize(font.pixelSize() + 1);
         painter->setFont(font);
         QPoint leftpos = rect.bottomLeft();
-        leftpos.setY(leftpos.y() + rect.height() / 2.0 + 5);
+        leftpos.setY(static_cast<int>(leftpos.y() + rect.height() / 2.0 + 5));
         QPoint rightpos = rect.bottomRight();
         rightpos.setY(leftpos.y());
         rightpos.setX(rightpos.x() - 3);
@@ -130,7 +133,7 @@ int LyricLabel::itemHeight() const
     QFontMetrics fm(*lyricFont);
     //qDebug() << "itemheight" << fm.height()*2.8;
     //return fm.height() * 1.4;
-    return fm.height() * 2.8;
+    return static_cast<int>(fm.height() * 2.8);
     //return 45;
 }
 
@@ -198,11 +201,13 @@ void LyricLabel::changeHightLightColor()
 
 void LyricLabel::contextMenuEvent(QContextMenuEvent *event)
 {
+    Q_UNUSED(event)
     emit rightClicked();
 }
 
 void LyricLabel::enterEvent(QEvent *e)
 {
+    Q_UNUSED(e)
     emit mouseEnter();
 }
 
@@ -241,7 +246,7 @@ bool AbstractWheelWidget::event(QEvent *e)
         // We set the snap positions as late as possible so that we are sure
         // we get the correct itemHeight
         QScroller *scroller = QScroller::scroller(this);
-        scroller->setSnapPositionsY( WHEEL_SCROLL_OFFSET, itemHeight() );
+        scroller->setSnapPositionsY(WHEEL_SCROLL_OFFSET, itemHeight());
 
         QScrollPrepareEvent *se = static_cast<QScrollPrepareEvent *>(e);
         se->setViewportSize(QSizeF(size()));
@@ -274,7 +279,7 @@ bool AbstractWheelWidget::event(QEvent *e)
         }
 
         qreal y = se->contentPos().y();
-        int iy = y - WHEEL_SCROLL_OFFSET;
+        int iy = static_cast<int>(y - WHEEL_SCROLL_OFFSET);
         int ih = itemHeight();
 
 // ![2]
@@ -305,17 +310,54 @@ bool AbstractWheelWidget::event(QEvent *e)
         return true;
 // ![3]
     }
+    case QEvent::Wheel: {
+        QWheelEvent *we = static_cast<QWheelEvent *>(e);
+        int delta = we->delta();
+        //过滤觸控板双指和鼠标滚轮
+        if (abs(delta) < 120) { //觸控板
+            currentWheelNum += delta;
+
+            if (abs(currentWheelNum) < 120) {
+                we->accept();
+                return true;
+            }
+            if (currentWheelNum > 0) {
+                this->m_currentItem -= 1;
+            } else {
+                this->m_currentItem += 1;
+            }
+            currentWheelNum = 0;
+        } else {// 鼠标滚轮
+            if (delta > 0) {
+                this->m_currentItem -= 1;
+            } else {
+                this->m_currentItem += 1;
+            }
+        }
+
+        if (this->m_currentItem < 0)
+            this->m_currentItem = 0;
+
+        int ic = itemCount();
+        if (m_currentItem >= ic)
+            m_currentItem = ic - 1;
+
+        emit changeTo(this->m_currentItem);
+        update();
+        we->accept();
+        return true;
+    }
     case QEvent::MouseButtonPress:
         return true;
     default:
         return QWidget::event(e);
     }
-    return true;
+//    return true;
 }
 
 void AbstractWheelWidget::paintEvent(QPaintEvent *event)
 {
-    Q_UNUSED( event );
+    Q_UNUSED(event);
 
     // -- first calculate size and position.
     int w = width();
@@ -331,8 +373,8 @@ void AbstractWheelWidget::paintEvent(QPaintEvent *event)
     grad.setColorAt(0.2, palette.color(colorGroup, DPalette::Button));
     grad.setColorAt(0.8, palette.color(colorGroup, DPalette::Button));
     grad.setColorAt(1.0, palette.color(colorGroup, DPalette::ButtonText));
-    grad.setCoordinateMode( QGradient::ObjectBoundingMode );
-    QBrush gBrush( grad );
+    grad.setCoordinateMode(QGradient::ObjectBoundingMode);
+    QBrush gBrush(grad);
     /*
         // paint a border and background
         painter.setPen(palette.color(colorGroup, QPalette::ButtonText));
@@ -346,7 +388,7 @@ void AbstractWheelWidget::paintEvent(QPaintEvent *event)
         //painter.drawRect( 1, 1, w-3, h-3 );
     */
     // paint the items
-    painter.setClipRect( QRect( 3, 3, w - 6, h - 6 ) );
+    painter.setClipRect(QRect(3, 3, w - 6, h - 6));
     painter.setPen(palette.color(colorGroup, QPalette::ButtonText));
 
     int iH = itemHeight();
@@ -388,7 +430,7 @@ void AbstractWheelWidget::paintEvent(QPaintEvent *event)
                         painter.setPen(QColor("#FFFFFF"));
                     }
                 }
-                paintItem(&painter, itemNum, QRect(6, h / 2 + i * iH - m_itemOffset - iH / 2, w - 6, iH ));
+                paintItem(&painter, itemNum, QRect(6, h / 2 + i * iH - m_itemOffset - iH / 2, w - 6, iH));
             }
         }
     }

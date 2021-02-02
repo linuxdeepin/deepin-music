@@ -35,13 +35,13 @@ qint64 AudioBufferDevice::readData(char *data, qint64 size)
 
     if (_queue.empty()) {
         //QAudioBuffer *buffer = _abuffer_queue.first();
-        QAudioBuffer *buffer = _abuffer_queue.at(position);
+        QAudioBuffer *buffer = _abuffer_queue.at(static_cast<int>(position));
 
-        qint32 *data = (qint32 *)(buffer->data());
-        size_t len = buffer->sampleCount();
+        qint32 *data = static_cast<qint32 *>(buffer->data());
+        int len = buffer->sampleCount();
         QByteArray retpcm;
 
-        for (size_t i = 0; i < len; i += 1) {
+        for (int i = 0; i < len; i += 1) {
             qint32 pcm = data[i];
             retpcm.append((char *)&pcm, sizeof(pcm));
         }
@@ -73,6 +73,8 @@ qint64 AudioBufferDevice::readData(char *data, qint64 size)
 
 qint64 AudioBufferDevice::writeData(const char *data, qint64 maxSize)
 {
+    Q_UNUSED(data)
+    Q_UNUSED(maxSize)
     return 0;
 }
 

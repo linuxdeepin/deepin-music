@@ -34,7 +34,7 @@
 #include <DDesktopServices>
 #include <DScrollBar>
 #include <DLabel>
-
+#include "util/threadpool.h"
 #include "util/pinyinsearch.h"
 
 #include "../../core/metasearchservice.h"
@@ -42,6 +42,8 @@
 
 #include "delegate/playitemdelegate.h"
 #include "model/playlistmodel.h"
+#include "databaseservice.h"
+#include "global.h"
 
 DWIDGET_USE_NAMESPACE
 
@@ -52,6 +54,7 @@ public:
 
     void addMedia(const MetaPtr meta);
     void removeSelection(QItemSelectionModel *selection);
+    void initAllSonglist();
 
     PlaylistModel      *model        = nullptr;
     PlayItemDelegate   *delegate     = nullptr;
@@ -63,20 +66,22 @@ public:
     QPixmap              playingPixmap = QPixmap(":/mpimage/light/music1.svg");
     QPixmap              sidebarPixmap = QPixmap(":/mpimage/light/music_withe_sidebar/music1.svg");
     QPixmap              albumPixmap   = QPixmap(":/mpimage/light/music_white_album_cover/music1.svg");
+    int                  addCount = 0;
 
     PlayListView *q_ptr;
     Q_DECLARE_PUBLIC(PlayListView)
 };
 
-PlayListView::PlayListView(bool searchFlag, QWidget *parent)
+PlayListView::PlayListView(bool searchFlag, bool isPlayList, QWidget *parent)
     : DListView(parent), d_ptr(new PlayListViewPrivate(this))
 {
     Q_D(PlayListView);
-
+    m_IsPlayList = isPlayList;
     setObjectName("PlayListView");
 
     d->searchFlag = searchFlag;
     d->model = new PlaylistModel(0, 1, this);
+    d->model->clear();
     setModel(d->model);
 
     d->delegate = new PlayItemDelegate;
@@ -88,8 +93,6 @@ PlayListView::PlayListView(bool searchFlag, QWidget *parent)
     //viewport()->setAcceptDrops(true);
     setDropIndicatorShown(true);
     setDragDropOverwriteMode(false);
-    //setVerticalScrollMode(QAbstractItemView::ScrollPerItem);
-    //setHorizontalScrollMode(QAbstractItemView::ScrollPerItem);
     setDefaultDropAction(Qt::MoveAction);
     setDragDropMode(QAbstractItemView::DragOnly);
     setDragEnabled(true);
@@ -101,7 +104,6 @@ PlayListView::PlayListView(bool searchFlag, QWidget *parent)
     setBatchSize(2000);
 
     setSelectionMode(QListView::ExtendedSelection);
-    //setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     setEditTriggers(QAbstractItemView::NoEditTriggers);
     setSelectionBehavior(QAbstractItemView::SelectRows);
@@ -114,18 +116,23 @@ PlayListView::PlayListView(bool searchFlag, QWidget *parent)
         MetaPtr meta = d->model->meta(index);
         if (meta == playlist()->playing()) {
             Q_EMIT resume(meta);
+            qDebug() << "-------resume";
         } else {
             Q_EMIT playMedia(meta);
+            qDebug() << "-------playMedia";
         }
     });
-
-    // For debug
-//    connect(selectionModel(), &QItemSelectionModel::selectionChanged,
-//    this, [ = ](const QItemSelection & /*selected*/, const QItemSelection & deselected) {
-//        if (!deselected.isEmpty()) {
-//            qDebug() << "cancel" << deselected;
-//        }
-//    });
+    m_ModelMake = new ModelMake();
+    ThreadPool::instance()->moveToNewThread(m_ModelMake);
+    connect(this, &PlayListView::modelMake, m_ModelMake, &ModelMake::onModelMake, Qt::QueuedConnection);
+    connect(m_ModelMake, &ModelMake::addMeta, this, &PlayListView::onAddMeta, Qt::QueuedConnection);
+    connect(m_ModelMake, &ModelMake::hideEmptyHits, this, [ = ](bool a) {
+        if (d->playMetaPtrList.isEmpty()) {
+            //emit got none data
+            emit getSearchData(false);
+        }
+        Q_EMIT hideEmptyHits(a);
+    });
 }
 
 PlayListView::~PlayListView()
@@ -171,13 +178,14 @@ void PlayListView::setPlaying(const MetaPtr meta)
 void PlayListView::setViewModeFlag(QListView::ViewMode mode)
 {
     if (mode == QListView::IconMode) {
-        setIconSize( QSize(140, 140) );
-        setGridSize( QSize(170, 213) );
-        setViewportMargins(10, 10, 10, 10);
+        setIconSize(QSize(150, 150));
+        setGridSize(QSize(-1, -1));
+        setSpacing(20);
+        setViewportMargins(-10, -10, -35, 10);
     } else {
-        setIconSize( QSize(36, 36) );
-
-        setGridSize( QSize(-1, -1) );
+        setIconSize(QSize(36, 36));
+        setGridSize(QSize(-1, -1));
+        setSpacing(0);
         setViewportMargins(0, 0, 8, 0);
     }
     setViewMode(mode);
@@ -228,6 +236,20 @@ QPixmap PlayListView::getAlbumPixmap() const
     return d->sidebarPixmap;
 }
 
+QStandardItem *PlayListView::item(int row, int column) const
+{
+    Q_D(const PlayListView);
+
+    return  d->model->item(row, column);
+}
+
+void PlayListView::setCurrentItem(QStandardItem *item)
+{
+    Q_D(PlayListView);
+
+    setCurrentIndex(d->model->indexFromItem(item));
+}
+
 int PlayListView::rowCount()
 {
     Q_D(const PlayListView);
@@ -247,6 +269,35 @@ QString PlayListView::firstHash()
     return hashStr;
 }
 
+void PlayListView::initAllSonglist()
+{
+    Q_D(PlayListView);
+    d->initAllSonglist();
+}
+
+int PlayListView::getMusicCount()
+{
+    Q_D(PlayListView);
+    return d->model->rowCount();
+}
+
+void PlayListView::onAddMeta(QString playListId, const MetaPtr meta)
+{
+    Q_D(PlayListView);
+    if (playlist().isNull()) {
+        return;
+    }
+    if (playListId == playlist()->id()) {
+        //first time to get here
+        if (d->playMetaPtrList.isEmpty()) {
+            //emit data ready
+            emit getSearchData(true);
+        }
+        d->addMedia(meta);
+        d->playMetaPtrList.append(meta);
+    }
+}
+
 void PlayListView::onMusicListRemoved(const MetaPtrList metalist)
 {
     Q_D(PlayListView);
@@ -258,7 +309,8 @@ void PlayListView::onMusicListRemoved(const MetaPtrList metalist)
             continue;
         }
 
-        for (int i = 0; i < d->model->rowCount(); ++i) {
+//        for (int i = 0; i < d->model->rowCount(); ++i) {
+        for (int i = 0; i < d->playMetaPtrList.size(); ++i) {
             auto index = d->model->index(i, 0);
             auto itemHash = d->model->data(index).toString();
             if (itemHash == meta->hash) {
@@ -273,17 +325,9 @@ void PlayListView::onMusicListRemoved(const MetaPtrList metalist)
 
 void PlayListView::onMusicError(const MetaPtr meta, int /*error*/)
 {
-    Q_ASSERT(!meta.isNull());
-//    Q_D(PlayListView);
-
-//    qDebug() << error;
-//    QModelIndex index = findIndex(meta);
-
-//    auto indexData = index.data().value<MetaPtr>();
-//    indexData.invalid = (error != 0);
-//    d->m_model->setData(index, QVariant::fromValue<MetaPtr>(indexData));
-
-    update();
+    if (!meta.isNull()) {
+        update();
+    }
 }
 
 void PlayListView::onMusicListAdded(const MetaPtrList metalist)
@@ -293,6 +337,7 @@ void PlayListView::onMusicListAdded(const MetaPtrList metalist)
     setAutoScroll(false);
     for (auto meta : metalist) {
         d->addMedia(meta);
+        d->playMetaPtrList.append(meta);
     }
     setAutoScroll(true);
     setUpdatesEnabled(true);
@@ -317,16 +362,15 @@ void PlayListView::onLocate(const MetaPtr meta)
     setCurrentIndex(index);
 }
 
-void PlayListView::onMusiclistChanged(PlaylistPtr playlist)
+bool PlayListView::onMusiclistChanged(PlaylistPtr playlist)
 {
     Q_D(PlayListView);
-
     if (playlist.isNull()) {
         qWarning() << "can not change to emptry playlist";
         d->model->removeRows(0, d->model->rowCount());
         d->playMetaPtrList.clear();
         d->model->setPlaylist(nullptr);
-        return;
+        return false;
     }
     if (playlist->searchStr().isEmpty() && playlist == d->model->playlist()
             && playlist->allmusic().size() == rowCount()) {
@@ -340,57 +384,26 @@ void PlayListView::onMusiclistChanged(PlaylistPtr playlist)
             }
         }
         if (flag)
-            return;
+            return  false;
     }
 
     setUpdatesEnabled(false);
     setModel(nullptr);
-    d->model->removeRows(0, d->model->rowCount());
-    d->playMetaPtrList.clear();
+    if (DataBaseService::getInstance()->m_couldClear) {
+        d->model->removeRows(0, d->model->rowCount());
+        d->playMetaPtrList.clear();
+    }
+    DataBaseService::getInstance()->m_couldClear = true;
 
     QString searchStr = playlist->searchStr();
     if (!d->searchFlag)
         searchStr.clear();
-    bool chineseFlag = false;
-    for (auto ch : searchStr) {
-        if (DMusic::PinyinSearch::isChinese(ch)) {
-            chineseFlag = true;
-            break;
-        }
-    }
 
-    for (auto meta : playlist->allmusic()) {
-        if (searchStr.isEmpty()) {
-            d->addMedia(meta);
-            d->playMetaPtrList.append(meta);
-        } else {
-            if (chineseFlag) {
-                if (meta->title.contains(searchStr, Qt::CaseInsensitive)) {
-                    d->addMedia(meta);
-                    d->playMetaPtrList.append(meta);
-                }
-            } else {
-                if (playlist->searchStr().size() == 1) {
-                    auto curTextList = DMusic::PinyinSearch::simpleChineseSplit(meta->title);
-                    if (!curTextList.isEmpty() && curTextList.first().contains(searchStr, Qt::CaseInsensitive)) {
-                        d->addMedia(meta);
-                        d->playMetaPtrList.append(meta);
-                    }
-                } else {
-                    auto curTextList = DMusic::PinyinSearch::simpleChineseSplit(meta->title);
-                    if (!curTextList.isEmpty() && curTextList.join("").contains(searchStr, Qt::CaseInsensitive)) {
-                        d->addMedia(meta);
-                        d->playMetaPtrList.append(meta);
-                    }
-                }
-            }
-        }
-    }
+    Q_EMIT modelMake(playlist, searchStr);
     setUpdatesEnabled(true);
     setModel(d->model);
-
     d->model->setPlaylist(playlist);
-    //updateScrollbar();
+    return true;
 }
 
 void PlayListView::keyPressEvent(QKeyEvent *event)
@@ -424,9 +437,9 @@ void PlayListView::keyPressEvent(QKeyEvent *event)
             break;
         }
         break;
-    case Qt::AltModifier:
+    case Qt::ControlModifier:
         switch (event->key()) {
-        case Qt::Key_Return:
+        case Qt::Key_I:
             QItemSelectionModel *selection = this->selectionModel();
             if (selection->selectedRows().length() <= 0) {
                 return;
@@ -437,38 +450,38 @@ void PlayListView::keyPressEvent(QKeyEvent *event)
             break;
         }
         break;
-    case Qt::ControlModifier:
-        switch (event->key()) {
-        case Qt::Key_K:
-            QItemSelectionModel *selection = this->selectionModel();
-            if (selection->selectedRows().length() > 0) {
-                MetaPtrList metalist;
-                for (auto index : selection->selectedRows()) {
-                    auto meta = d->model->meta(index);
-                    metalist << meta;
-                }
-                if (!metalist.isEmpty())
-                    Q_EMIT addMetasFavourite(metalist);
-            }
-            break;
-        }
-        break;
-    case Qt::ControlModifier | Qt::ShiftModifier:
-        switch (event->key()) {
-        case Qt::Key_K:
-            QItemSelectionModel *selection = this->selectionModel();
-            if (selection->selectedRows().length() > 0) {
-                MetaPtrList metalist;
-                for (auto index : selection->selectedRows()) {
-                    auto meta = d->model->meta(index);
-                    metalist << meta;
-                }
-                if (!metalist.isEmpty())
-                    Q_EMIT removeMetasFavourite(metalist);
-            }
-            break;
-        }
-        break;
+    //    case Qt::ControlModifier:
+    //        switch (event->key()) {
+    //        case Qt::Key_K:
+    //            QItemSelectionModel *selection = this->selectionModel();
+    //            if (selection->selectedRows().length() > 0) {
+    //                MetaPtrList metalist;
+    //                for (auto index : selection->selectedRows()) {
+    //                    auto meta = d->model->meta(index);
+    //                    metalist << meta;
+    //                }
+    //                if (!metalist.isEmpty())
+    //                    Q_EMIT addMetasFavourite(metalist);
+    //            }
+    //            break;
+    //        }
+    //        break;
+    //    case Qt::ControlModifier | Qt::ShiftModifier:
+    //        switch (event->key()) {
+    //        case Qt::Key_K:
+    //            QItemSelectionModel *selection = this->selectionModel();
+    //            if (selection->selectedRows().length() > 0) {
+    //                MetaPtrList metalist;
+    //                for (auto index : selection->selectedRows()) {
+    //                    auto meta = d->model->meta(index);
+    //                    metalist << meta;
+    //                }
+    //                if (!metalist.isEmpty())
+    //                    Q_EMIT removeMetasFavourite(metalist);
+    //            }
+    //            break;
+    //        }
+    //        break;
     default:
         break;
     }
@@ -479,13 +492,40 @@ void PlayListView::keyPressEvent(QKeyEvent *event)
 void PlayListView::keyboardSearch(const QString &search)
 {
     Q_UNUSED(search);
-// Disable keyborad serach
-//    qDebug() << search;
-//    QAbstractItemView::keyboardSearch(search);
+    // Disable keyborad serach
+    //    qDebug() << search;
+    //    QAbstractItemView::keyboardSearch(search);
+}
+
+void PlayListViewPrivate::initAllSonglist()
+{
+    QList<MediaMeta> list = DataBaseService::getInstance()->allMusicInfos();
+    for (int i = 0; i < list.size(); i++) {
+        QStandardItem *newItem = new QStandardItem;
+
+        QString imagesDirPath = Global::cacheDir() + "/images/" + list.at(i).hash + ".jpg";
+        QFileInfo file(imagesDirPath);
+        QIcon icon;
+        if (file.exists()) {
+            icon = QIcon(imagesDirPath);
+        } else {
+            icon = QIcon(":/common/image/cover_max.svg");
+        }
+        newItem->setIcon(icon);
+        model->appendRow(newItem);
+
+        auto row = model->rowCount() - 1;
+        QModelIndex index = model->index(row, 0, QModelIndex());
+
+        model->setData(index, list.at(i).hash);
+    }
+    int count = model->rowCount();
+    qDebug() << "------count = " << count;
 }
 
 void PlayListViewPrivate::addMedia(const MetaPtr meta)
 {
+    int count = model->rowCount();
     for (int i = 0; i < model->rowCount(); ++i) {
         auto hash = model->data(model->index(i, 0)).toString();
         if (hash == meta->hash)
@@ -497,6 +537,8 @@ void PlayListViewPrivate::addMedia(const MetaPtr meta)
     if (coverData.length() > 0) {
         cover = QPixmap::fromImage(QImage::fromData(coverData));
     }
+    if (cover.width() > 160 || cover.height() > 160)
+        cover = cover.scaled(QSize(160, 160));
     QIcon icon = QIcon(cover);
     newItem->setIcon(icon);
     model->appendRow(newItem);
@@ -547,9 +589,8 @@ void PlayListView::showContextMenu(const QPoint &pos,
             break;
         }
     }
-
-    if (selectedPlaylist != favPlaylist) {
-//        auto act = playlistMenu.addAction(favPlaylist->displayName());
+    if (selectedPlaylist != favPlaylist || this->playlist()->id() == "musicResult") {
+        //        auto act = playlistMenu.addAction(favPlaylist->displayName());
         auto act = playlistMenu.addAction(tr("My favorites"));
         bool flag = true;
         for (auto &index : selection->selectedRows()) {
@@ -567,9 +608,9 @@ void PlayListView::showContextMenu(const QPoint &pos,
         playlistMenu.addSeparator();
     }
     auto createPlaylist = playlistMenu.addAction(tr("Add to new playlist"));
-//    auto font = createPlaylist->font();
-//    font.setWeight(QFont::DemiBold);
-//    createPlaylist->setFont(font);
+    //    auto font = createPlaylist->font();
+    //    font.setWeight(QFont::DemiBold);
+    //    createPlaylist->setFont(font);
     createPlaylist->setData(newvar);
     playlistMenu.addSeparator();
 
@@ -594,15 +635,19 @@ void PlayListView::showContextMenu(const QPoint &pos,
     playlistMenu.addSeparator();
 
     connect(&playlistMenu, &DMenu::triggered, this, [ = ](QAction * action) {
-        auto playlist = action->data().value<PlaylistPtr >();
-        qDebug() << playlist;
+        PlaylistPtr playlist = action->data().value<PlaylistPtr >();
         MetaPtrList metalist;
         for (auto &index : selection->selectedRows()) {
             auto meta = d->model->meta(index);
             if (!meta.isNull()) {
+                if (!playlist.isNull()) {
+                    if (playlist->id() == "fav")
+                        meta->favourite = true;
+                }
                 metalist << meta;
             }
         }
+
         Q_EMIT addToPlaylist(playlist, metalist);
     });
 
@@ -642,8 +687,12 @@ void PlayListView::showContextMenu(const QPoint &pos,
     if (singleSelect) {
         displayAction = myMenu.addAction(tr("Display in file manager"));
     }
-
-    auto removeAction = myMenu.addAction(tr("Remove from play queue"));
+    QAction *removeAction = nullptr;
+    if (m_IsPlayList) {
+        removeAction = myMenu.addAction(tr("Remove from play queue"));
+    } else {
+        removeAction = myMenu.addAction(tr("Remove from playlist"));
+    }
     auto deleteAction = myMenu.addAction(tr("Delete from local disk"));
 
     QAction *songAction = nullptr;
@@ -680,7 +729,7 @@ void PlayListView::showContextMenu(const QPoint &pos,
             act->setData(QVariant::fromValue(codec));
         }
 
-        if (codecList.length() > 1) {
+        if (codecList.length() >= 1) { //show Encoding action
             myMenu.addSeparator();
             myMenu.addAction(tr("Encoding"))->setMenu(&textCodecMenu);
         }
@@ -875,3 +924,56 @@ void PlayListView::startDrag(Qt::DropActions supportedActions)
     }
 }
 
+
+ModelMake::ModelMake(QObject *parent)
+{
+
+}
+
+ModelMake::~ModelMake()
+{
+
+}
+
+void ModelMake::onModelMake(PlaylistPtr playlist, QString searchStr)
+{
+    bool chineseFlag = false;
+    for (auto ch : searchStr) {
+        if (DMusic::PinyinSearch::isChinese(ch)) {
+            chineseFlag = true;
+            break;
+        }
+    }
+    MetaPtr meta;
+    QString id = playlist->id();
+    int count = 0;
+    for (auto meta : playlist->allmusic()) {
+        if (searchStr.isEmpty()) {
+            Q_EMIT addMeta(id, meta);
+        } else {
+            if (chineseFlag) {
+                if (meta->title.contains(searchStr, Qt::CaseInsensitive)) {
+                    Q_EMIT addMeta(id, meta);
+                }
+            } else {
+                if (playlist->searchStr().size() == 1) {
+                    auto curTextList = DMusic::PinyinSearch::simpleChineseSplit(meta->title);
+                    if (!curTextList.isEmpty() && curTextList.first().contains(searchStr, Qt::CaseInsensitive)) {
+                        Q_EMIT addMeta(id, meta);
+                    }
+                } else {
+                    auto curTextList = DMusic::PinyinSearch::simpleChineseSplit(meta->title);
+                    if (!curTextList.isEmpty() && curTextList.join("").contains(searchStr, Qt::CaseInsensitive)) {
+                        Q_EMIT addMeta(id, meta);
+                    }
+                }
+            }
+        }
+        if (count % 12 == 0) {
+            QThread::msleep(50);
+        }
+        count ++;
+    }
+
+    Q_EMIT hideEmptyHits(!(count > 0));
+}

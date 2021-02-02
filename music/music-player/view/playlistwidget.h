@@ -33,7 +33,7 @@ class PlayListWidget : public DWidget
     Q_OBJECT
 public:
     explicit PlayListWidget(QWidget *parent = Q_NULLPTR);
-    ~PlayListWidget();
+    ~PlayListWidget() override;
 
     void updateInfo(PlaylistPtr playlist);
     void setCurPlaylist(PlaylistPtr playlist);
@@ -73,6 +73,10 @@ signals:
     void addMetasFavourite(const MetaPtrList  &metalist);
     void removeMetasFavourite(const MetaPtrList  &metalist);
     void musicFileMiss();
+    void btPlayList();
+    void fileRemoved(PlaylistPtr playlist, const MetaPtr meta, int);
+protected:
+    bool eventFilter(QObject *o, QEvent *e) Q_DECL_OVERRIDE;
 
 protected:
     virtual void dragEnterEvent(QDragEnterEvent *event) Q_DECL_OVERRIDE;

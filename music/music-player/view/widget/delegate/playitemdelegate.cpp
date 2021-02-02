@@ -24,7 +24,9 @@
 
 #include <QDebug>
 #include <QFont>
+#include <DGuiApplicationHelper>
 #include <QPainter>
+#include <QPainterPath>
 #include <QStandardItemModel>
 
 #include <musicmeta.h>
@@ -223,6 +225,8 @@ void PlayItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
 
         auto hash = index.data().toString();
         auto meta = MediaLibrary::instance()->meta(hash);
+        if (meta.isNull())
+            return;
 
         painter->save();
         painter->setRenderHint(QPainter::Antialiasing);
@@ -232,23 +236,22 @@ void PlayItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
         auto background = option.palette.background();
 
         if (option.state & QStyle::State_Selected) {
-            //background = option.palette.highlight();
+//            background = option.palette.highlight();
         }
 
         painter->fillRect(option.rect, background);
 
         //绘制阴影
-        //QRect shadowRect(option.rect.x() - 10, option.rect.y() - 10, 160, 160);
-        QRect shadowRect(option.rect.x() - 10, option.rect.y(), 160, 150);
+        QRect shadowRect(option.rect.x() - 10, option.rect.y(), 168, 158);
         QPainterPath roundRectShadowPath;
-        roundRectShadowPath.addRoundRect(shadowRect, 10, 10);
+        roundRectShadowPath.addRoundRect(shadowRect, 8, 8);
         painter->save();
         painter->setClipPath(roundRectShadowPath);
         painter->drawPixmap(shadowRect, d_ptr->shadowImg);
         painter->restore();
 
         //绘制圆角框
-        QRect rect(option.rect.x(), option.rect.y(), 140, 183);
+        QRect rect(option.rect.x(), option.rect.y(), 150, 200);
         QPainterPath roundRectPath;
         roundRectPath.addRoundRect(rect, 10, 10);
         painter->setClipPath(roundRectPath);
@@ -259,7 +262,7 @@ void PlayItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
         if (value.type() == QVariant::Icon) {
             icon = qvariant_cast<QIcon>(value);
         }
-        QRect pixmapRect(option.rect.x(), option.rect.y(), 140, 140);
+        QRect pixmapRect(option.rect.x(), option.rect.y(), 150, 150);
         painter->save();
         QPainterPath roundPixmapRectPath;
         roundPixmapRectPath.addRoundRect(pixmapRect, 10, 10);
@@ -278,7 +281,7 @@ void PlayItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
 
         painter->restore();
 
-        int startHeight = option.rect.y() + 149;
+        int startHeight = option.rect.y() + 159;
         int fillAllHeight = 34;
 
         //设置信息字体大小
@@ -301,7 +304,7 @@ void PlayItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
         font.setPixelSize(11);
         QFontMetrics extraNameFm(font);
         painter->setFont(font);
-        nameColor.setAlphaF(0.6);
+        nameColor.setAlphaF(1.0);
         painter->setPen(nameColor);
         QRect extraNameFillRect(option.rect.x(), startHeight + fillAllHeight / 2, 99, fm.height());
         extraNameFillRect.adjust(8, 0, -7, 0);
@@ -346,7 +349,7 @@ void PlayItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
         return;
     }
 
-    Q_D(const PlayItemDelegate);
+    //Q_D(const PlayItemDelegate);
 
     painter->save();
 
@@ -380,7 +383,7 @@ void PlayItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
     //auto background = baseColor;
 
     int lrWidth = 10;
-    if (!(option.state & QStyle::State_Selected) && !(option.state & QStyle::State_MouseOver) ) {
+    if (!(option.state & QStyle::State_Selected) && !(option.state & QStyle::State_MouseOver)) {
         painter->save();
         painter->setPen(Qt::NoPen);
         painter->setBrush(background);
@@ -408,8 +411,10 @@ void PlayItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
     }
 
     auto activeMeta = listview->activingMeta();
-    if (activeMeta == meta) {
-        nameColor = QColor("#2CA7F8");
+    if (!activeMeta.isNull() && activeMeta->hash == meta->hash) {
+
+        nameColor = QColor(DGuiApplicationHelper::instance()->applicationPalette().highlight().color());
+
         otherColor = QColor("#2CA7F8");
         font14.setFamily("SourceHanSansSC");
         font14.setWeight(QFont::Medium);
@@ -454,7 +459,7 @@ void PlayItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
 
     int rowCount = listview->model()->rowCount();
     auto rowCountSize = QString::number(rowCount).size();
-    rowCountSize = qMax(rowCountSize, 2);
+    rowCountSize = qMax(rowCountSize, 3);
 
     for (int col = 0; col < ColumnButt; ++col) {
         auto flag = alignmentFlag(col);
@@ -465,7 +470,7 @@ void PlayItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
             auto *listview = qobject_cast<PlayListView *>(const_cast<QWidget *>(option.widget));
             // Fixme:
             if (!meta.isNull() && meta->invalid) {
-                auto sz = QSizeF(15, 15);
+                auto sz = QSizeF(20, 20);
                 auto icon = QIcon(":/mpimage/light/warning.svg").pixmap(sz.toSize());
                 auto centerF = QRectF(rect).center();
                 auto iconRect = QRectF(centerF.x() - sz.width() / 2,
@@ -475,7 +480,7 @@ void PlayItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
                 break;
             }
 
-            if (activeMeta == meta) {
+            if (!activeMeta.isNull() && activeMeta->hash == meta->hash) {
                 auto icon = listview->getPlayPixmap();
                 if (option.state & QStyle::State_Selected) {
                     icon = listview->getAlbumPixmap();
@@ -485,8 +490,8 @@ void PlayItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
                 QRect t_ratioRect;
                 t_ratioRect.setX(0);
                 t_ratioRect.setY(0);
-                t_ratioRect.setWidth(icon.width() / t_ratio);
-                t_ratioRect.setHeight(icon.height() / t_ratio);
+                t_ratioRect.setWidth(static_cast<int>(icon.width() / t_ratio));
+                t_ratioRect.setHeight(static_cast<int>(icon.height() / t_ratio));
                 auto iconRect = QRectF(centerF.x() - t_ratioRect.width() / 2,
                                        centerF.y() - t_ratioRect.height() / 2,
                                        t_ratioRect.width(), t_ratioRect.height());
@@ -498,7 +503,7 @@ void PlayItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
                 QFont font(font11);
                 QFontMetrics fm(font);
                 auto text = fm.elidedText(str, Qt::ElideMiddle, rect.width());
-                painter->drawText(rect, flag, text);
+                painter->drawText(rect, static_cast<int>(flag), text);
             }
             break;
         }
@@ -508,11 +513,11 @@ void PlayItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
             QFont font(font14);
             QFontMetrics fm(font);
             auto text = fm.elidedText(meta->title, Qt::ElideMiddle, rect.width());
-            painter->drawText(rect, flag, text);
+            painter->drawText(rect, static_cast<int>(flag), text);
             break;
         }
         case Artist: {
-            painter->setPen(otherColor);
+            painter->setPen(nameColor);
             painter->setFont(font11);
             auto str = meta->artist.isEmpty() ?
                        PlayListView::tr("Unknown artist") :
@@ -520,11 +525,11 @@ void PlayItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
             QFont font(font11);
             QFontMetrics fm(font);
             auto text = fm.elidedText(str, Qt::ElideMiddle, rect.width());
-            painter->drawText(rect, flag, text);
+            painter->drawText(rect, static_cast<int>(flag), text);
             break;
         }
         case Album: {
-            painter->setPen(otherColor);
+            painter->setPen(nameColor);
             painter->setFont(font11);
             auto str = meta->album.isEmpty() ?
                        PlayListView::tr("Unknown album") :
@@ -532,13 +537,13 @@ void PlayItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
             QFont font(font11);
             QFontMetrics fm(font);
             auto text = fm.elidedText(str, Qt::ElideMiddle, rect.width());
-            painter->drawText(rect, flag, text);
+            painter->drawText(rect, static_cast<int>(flag), text);
             break;
         }
         case Length:
-            painter->setPen(otherColor);
+            painter->setPen(nameColor);
             painter->setFont(font11);
-            painter->drawText(rect, flag, DMusic::lengthString(meta->length));
+            painter->drawText(rect, static_cast<int>(flag), DMusic::lengthString(meta->length));
             break;
         default:
             break;
@@ -550,8 +555,11 @@ void PlayItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
 QSize PlayItemDelegate::sizeHint(const QStyleOptionViewItem &option,
                                  const QModelIndex &index) const
 {
-    Q_D(const PlayItemDelegate);
-
+    //Q_D(const PlayItemDelegate);
+    auto listview = qobject_cast<const PlayListView *>(option.widget);
+    if (listview->viewMode() == QListView::IconMode) {
+        return QSize(150, 200);
+    }
     return QStyledItemDelegate::sizeHint(option, index);
 
 //    auto listview = qobject_cast<const PlayListView *>(option.widget);

@@ -25,6 +25,16 @@
 #include <QFileInfo>
 #include <QDirIterator>
 
+//#ifndef DISABLE_LIBAV
+#ifdef __cplusplus
+extern "C" {
+#endif // __cplusplus
+#include <libavcodec/avcodec.h>
+#include <libavformat/avformat.h>
+#ifdef __cplusplus
+}
+#endif // __cplusplus
+//#endif // DISABLE_LIBAV
 
 #include <util/cueparser.h>
 #include <mediameta.h>
@@ -36,28 +46,54 @@
 
 #include "player.h"
 #include "mediadatabase.h"
+#include "core/vlc/vlcdynamicinstance.h"
 
 const static int ScanCacheSize = 5000;
+
+typedef AVFormatContext *(*format_alloc_context_function)(void);
+typedef int (*format_open_input_function)(AVFormatContext **, const char *, AVInputFormat *, AVDictionary **);
+typedef void (*format_free_context_function)(AVFormatContext *);
+typedef int (*format_find_stream_info_function)(AVFormatContext *, AVDictionary **);
+typedef int (*find_best_stream_function)(AVFormatContext *,
+                                         enum AVMediaType,
+                                         int,
+                                         int,
+                                         AVCodec **,
+                                         int);
+typedef void (*format_close_input_function)(AVFormatContext **);
+typedef AVCodecContext *(*codec_alloc_context3_function)(const AVCodec *);
+typedef int (*codec_parameters_to_context_function)(AVCodecContext *,
+                                                    const AVCodecParameters *);
+typedef AVCodec *(*codec_find_decoder_function)(enum AVCodecID);
+typedef int (*codec_open2_function)(AVCodecContext *, const AVCodec *, AVDictionary **);
+typedef AVPacket *(*packet_alloc_function)(void);
+typedef AVFrame *(*frame_alloc_function)(void);
+typedef int (*read_frame_function)(AVFormatContext *, AVPacket *);
+typedef void (*packet_unref_function)(AVPacket *);
+typedef void (*frame_free_function)(AVFrame **);
+typedef int (*codec_close_function)(AVCodecContext *);
+typedef int (*codec_send_packet_function)(AVCodecContext *, const AVPacket *);
+typedef int (*codec_receive_frame_function)(AVCodecContext *, AVFrame *);
 
 class MediaLibraryPrivate
 {
 public:
     MediaLibraryPrivate(MediaLibrary *parent) : q_ptr(parent)
     {
-        losslessSuffixs.insert("flac", true);
-        losslessSuffixs.insert("ape", true);
-        losslessSuffixs.insert("wav", true);
+        QTimer::singleShot(200, nullptr, [ = ]() {
+            losslessSuffixs.insert("flac", true);
+            losslessSuffixs.insert("ape", true);
+            losslessSuffixs.insert("wav", true);
 
-        auto suffixList = Player::instance()->supportedSuffixList();
-        for (auto suffix : suffixList) {
-            supportedSuffixs.insert(suffix, true);
-        }
-
-//        qDebug() << supportedSuffixs;
+            auto suffixList = Player::instance()->supportedSuffixList();
+            for (auto suffix : suffixList) {
+                supportedSuffixs.insert(suffix, true);
+            }
 
 #ifdef SUPPORT_INOTIFY
-        watcher = new InotifyEngine;
+            watcher = new InotifyEngine;
 #endif
+        });
     }
 
     MetaPtr createMeta(const QFileInfo &fileInfo);
@@ -79,10 +115,6 @@ public:
 #ifdef SUPPORT_INOTIFY
         watcher->addPaths(dirs.keys());
 #endif
-
-//        for (auto meta : metas) {
-//            qDebug() << meta->title;
-//        }
     }
 
 private:
@@ -103,7 +135,6 @@ MetaPtr MediaLibraryPrivate::createMeta(const QFileInfo &fileinfo)
     if (metas.contains(hash)) {
         return metas.value(hash);
     }
-
     auto meta = MetaPtr(new MediaMeta);
     meta->hash = hash;
     MetaDetector::updateMetaFromLocalfile(meta.data(), fileinfo);
@@ -121,7 +152,18 @@ MetaPtr MediaLibraryPrivate::importMeta(const QString &filepath,
         return MetaPtr();
     }
 
-    if (fileInfo.suffix().toLower() == "cue") {
+    if (fileInfo.suffix().toLower() != "wav" &&
+            fileInfo.suffix().toLower() != "mp3" &&
+            fileInfo.suffix().toLower() != "ogg" &&
+            fileInfo.suffix().toLower() != "vorbis" &&
+            fileInfo.suffix().toLower() != "flac" &&
+            fileInfo.suffix().toLower() != "wma" &&
+            fileInfo.suffix().toLower() != "m4a" &&
+            fileInfo.suffix().toLower() != "aac" &&
+            fileInfo.suffix().toLower() != "ape" &&
+            fileInfo.suffix().toLower() != "ac3" &&
+            fileInfo.suffix().toLower() != "amr"
+       ) {
         cuelist << DMusic::CueParserPtr(new DMusic::CueParser(filepath));
         // TODO: check cue invalid
 #ifdef SUPPORT_INOTIFY
@@ -131,6 +173,119 @@ MetaPtr MediaLibraryPrivate::importMeta(const QString &filepath,
         return MetaPtr();
     }
 
+    format_alloc_context_function format_alloc_context = (format_alloc_context_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("avformat_alloc_context", true);
+    format_open_input_function format_open_input = (format_open_input_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("avformat_open_input", true);
+    format_free_context_function format_free_context = (format_free_context_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("avformat_free_context", true);
+    format_find_stream_info_function format_find_stream_info = (format_find_stream_info_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("avformat_find_stream_info", true);
+    find_best_stream_function find_best_stream = (find_best_stream_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("av_find_best_stream", true);
+    format_close_input_function format_close_input = (format_close_input_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("avformat_close_input", true);
+    codec_alloc_context3_function codec_alloc_context3 = (codec_alloc_context3_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("avcodec_alloc_context3", true);
+    codec_parameters_to_context_function codec_parameters_to_context = (codec_parameters_to_context_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("avcodec_parameters_to_context", true);
+    codec_find_decoder_function codec_find_decoder = (codec_find_decoder_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("avcodec_find_decoder", true);
+    codec_open2_function codec_open2 = (codec_open2_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("avcodec_open2", true);
+    packet_alloc_function packet_alloc = (packet_alloc_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("av_packet_alloc", true);
+    frame_alloc_function frame_alloc = (frame_alloc_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("av_frame_alloc", true);
+    read_frame_function read_frame = (read_frame_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("av_read_frame", true);
+
+    packet_unref_function packet_unref = (packet_unref_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("av_packet_unref", true);
+    frame_free_function frame_free = (frame_free_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("av_frame_free", true);
+    codec_close_function codec_close = (codec_close_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("avcodec_close", true);
+    codec_send_packet_function codec_send_packet = (codec_send_packet_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("avcodec_send_packet", true);
+    codec_receive_frame_function codec_receive_frame = (codec_receive_frame_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("avcodec_receive_frame", true);
+
+    AVFormatContext *pFormatCtx = format_alloc_context();
+    format_open_input(&pFormatCtx, filepath.toStdString().c_str(), nullptr, nullptr);
+
+    if (pFormatCtx == nullptr) {
+        format_free_context(pFormatCtx);
+        return MetaPtr();
+    }
+
+    if (format_find_stream_info(pFormatCtx, nullptr) < 0) {
+        format_free_context(pFormatCtx);
+        return MetaPtr();
+    }
+
+    int audio_stream_index = -1;
+    audio_stream_index = find_best_stream(pFormatCtx, AVMEDIA_TYPE_AUDIO, -1, -1, nullptr, 0);
+
+    if (audio_stream_index < 0) {
+        format_close_input(&pFormatCtx);
+        format_free_context(pFormatCtx);
+        return MetaPtr();
+    }
+
+    AVStream *in_stream = pFormatCtx->streams[audio_stream_index];
+    AVCodecParameters *in_codecpar = in_stream->codecpar;
+
+    AVCodecContext *pCodecCtx = codec_alloc_context3(nullptr);
+    codec_parameters_to_context(pCodecCtx, in_codecpar);
+
+    AVCodec *pCodec = codec_find_decoder(pCodecCtx->codec_id);
+    codec_open2(pCodecCtx, pCodec, nullptr);
+
+    AVPacket *packet = packet_alloc();
+    AVFrame *frame = frame_alloc();
+
+    int readCount = 0;
+    int sendCount = 0;
+    int receiveCount = 0;
+
+    while (read_frame(pFormatCtx, packet) >= 0) {
+        if (packet->stream_index == audio_stream_index) {
+            int ret;
+            ret = codec_send_packet(pCodecCtx, packet);
+            packet_unref(packet);
+            if (ret != 0) {
+                sendCount++;
+            }
+
+            ret = codec_receive_frame(pCodecCtx, frame);
+            if (ret != 0) {
+                receiveCount++;
+            }
+        }
+        packet_unref(packet);
+
+        if (readCount++ > 300) {
+            break ;
+        }
+    }
+
+    bool invalidFile = false;
+
+    if (sendCount != 0 || receiveCount != 0) {
+        if (sendCount == receiveCount) {
+            invalidFile = true;
+        }
+    }
+
+    if (readCount < 65) {
+        if (receiveCount > 2) {
+            invalidFile = true;
+        }
+    }
+
+    if (readCount == 33 && sendCount == 1 && receiveCount == 2) {
+        invalidFile = true;
+    }
+
+    if (invalidFile) {
+        packet_unref(packet);
+        frame_free(&frame);
+        codec_close(pCodecCtx);
+        format_close_input(&pFormatCtx);
+        format_free_context(pFormatCtx);
+
+        return MetaPtr();
+    }
+
+    packet_unref(packet);
+    frame_free(&frame);
+    codec_close(pCodecCtx);
+    format_close_input(&pFormatCtx);
+    format_free_context(pFormatCtx);
+
     auto hash = DMusic::filepathHash(filepath);
     if (MediaLibrary::instance()->contains(hash)) {
         // FIXME: insertToPlaylist;
@@ -138,17 +293,16 @@ MetaPtr MediaLibraryPrivate::importMeta(const QString &filepath,
         qDebug() << "exit" << hash << MediaLibrary::instance()->meta(hash);
         return MediaLibrary::instance()->meta(hash);
     }
-
     auto meta = createMeta(fileInfo);
 
     if (meta->length == 0)
         return MetaPtr();
 
     //check is lossless file
-    if (losslessSuffixs.contains(fileInfo.suffix())) {
-        losslessMetaCache.insert(meta->localPath, meta);
-        return MetaPtr();
-    }
+//    if (losslessSuffixs.contains(fileInfo.suffix())) {
+//        losslessMetaCache.insert(meta->localPath, meta);
+//        return MetaPtr();
+//    }
 
     metas.insert(meta->hash, meta);
 #ifdef SUPPORT_INOTIFY
@@ -156,6 +310,7 @@ MetaPtr MediaLibraryPrivate::importMeta(const QString &filepath,
 #endif
     return meta;
 }
+
 
 MediaLibrary::MediaLibrary(QObject *parent) :
     QObject(parent), d_ptr(new MediaLibraryPrivate(this))
@@ -249,6 +404,7 @@ void MediaLibrary::importMedias(const QString &jobid, const QStringList &urllist
     qDebug() << "import form" << urllist << "to" << jobid;
 
     int                             mediaCount  = 0;
+    bool                            bfailed = false;
     QMap<QString, MetaPtr>          losslessMetaCache;
     QList<DMusic::CueParserPtr>     cuelist;
     MetaPtrList                     metaCache;
@@ -259,12 +415,19 @@ void MediaLibrary::importMedias(const QString &jobid, const QStringList &urllist
             QDirIterator it(filepath, d->supportedSuffixs.keys(),
                             QDir::Files, QDirIterator::Subdirectories);
             while (it.hasNext()) {
-                QString  filepath = it.next();
+                QString  strtp = it.next();
+                while (QFileInfo(strtp).isSymLink()) {
+                    /*****************************
+                     * use oringnal path to replace link path
+                     * ***************************/
+                    strtp = QFileInfo(strtp).symLinkTarget();
+                }
 
-                auto meta = d->importMeta(filepath, losslessMetaCache, cuelist);
-                qDebug() << "process file" << filepath << meta;
+                auto meta = d->importMeta(strtp, losslessMetaCache, cuelist);
+                qDebug() << "process file" << strtp << meta;
                 if (meta.isNull()) {
-                    qWarning() << "create meta failed:" << filepath << meta;
+                    bfailed = true;
+                    qWarning() << "create meta failed:" << strtp << meta;
                     continue;
                 }
 
@@ -277,8 +440,17 @@ void MediaLibrary::importMedias(const QString &jobid, const QStringList &urllist
                 }
             }
         } else {
-            auto meta = d->importMeta(filepath, losslessMetaCache, cuelist);
+            QString strtp = filepath;
+            while (QFileInfo(strtp).isSymLink()) {
+                /*****************************
+                 * use oringnal path to replace link path
+                 * ***************************/
+                strtp = QFileInfo(strtp).symLinkTarget();
+            }
+            auto meta = d->importMeta(strtp, losslessMetaCache, cuelist);
+
             if (meta.isNull()) {
+                bfailed = true;
                 continue;
             }
 
@@ -334,6 +506,6 @@ void MediaLibrary::importMedias(const QString &jobid, const QStringList &urllist
     }
 
     qDebug() << "scanFinished" << jobid << "with media count:" << mediaCount;
-    Q_EMIT scanFinished(jobid, mediaCount);
+    Q_EMIT scanFinished(jobid, !bfailed);
 }
 

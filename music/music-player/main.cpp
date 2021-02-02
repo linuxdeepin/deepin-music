@@ -28,11 +28,18 @@
 
 #include <DLog>
 #include <DStandardPaths>
-#include <DApplication>
+//#include <DApplication>
 #include <DGuiApplicationHelper>
 #include <DApplicationSettings>
-
+#include <DExportedInterface>
 #include <metadetector.h>
+
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <unistd.h>
+
+//#include "config.h"
 
 #include "view/mainframe.h"
 #include "core/mediadatabase.h"
@@ -44,13 +51,53 @@
 #include "core/util/threadpool.h"
 #include "core/util/global.h"
 #include "musicapp.h"
+#include "speech/exportedinterface.h"
+
+#include <DVtableHook>
+#define protected public
+#include <DApplication>
+#undef protected
+#include "acobjectlist.h"
 
 using namespace Dtk::Core;
 using namespace Dtk::Widget;
 
+bool checkOnly()
+{
+    //single
+    QString userName = QDir::homePath().section("/", -1, -1);
+    std::string path = ("/home/" + userName + "/.cache/deepin/deepin-music/").toStdString();
+    QDir tdir(path.c_str());
+    if (!tdir.exists()) {
+        bool ret =  tdir.mkpath(path.c_str());
+        MusicSettings::setOption("base.play.showFlag", 0);
+        qDebug() << ret ;
+    }
+
+    path += "single";
+    int fd = open(path.c_str(), O_WRONLY | O_CREAT, 0644);
+    int flock = lockf(fd, F_TLOCK, 0);
+
+    if (fd == -1) {
+        perror("open lockfile/n");
+        return false;
+    }
+    if (flock == -1) {
+        perror("lock file error/n");
+        return false;
+    }
+    return true;
+}
+
 int main(int argc, char *argv[])
 {
-//    DApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+    setenv("PULSE_PROP_media.role", "music", 1);
+//#if (DTK_VERSION < DTK_VERSION_CHECK(5, 4, 0, 0))
+    DApplication *app = new DApplication(argc, argv);
+//#else
+//    DApplication *app = DApplication::globalApplication(argc, argv);
+//#endif
+
 #ifdef SNAP_APP
     DStandardPaths::setMode(DStandardPaths::Snap);
 #endif
@@ -59,22 +106,17 @@ int main(int argc, char *argv[])
     DWIDGET_INIT_RESOURCE();
     QCoreApplication::addLibraryPath(".");
 #endif
-    DApplication::loadDXcbPlugin();
 
-    DApplication app(argc, argv);
-    app.setAttribute(Qt::AA_UseHighDpiPixmaps);
-//    app.setAttribute(Qt::AA_EnableHighDpiScaling);
-    app.setOrganizationName("deepin");
-
-    app.setApplicationName("deepin-music");
-    //app.setApplicationVersion(DApplication::buildVersion("3.1"));
-    const QDate buildDate = QLocale( QLocale::English ).toDate( QString(__DATE__).replace("  ", " 0"), "MMM dd yyyy");
-    QString t_date = buildDate.toString("MMdd");
+    app->setAttribute(Qt::AA_UseHighDpiPixmaps);
+    QAccessible::installFactory(accessibleFactory);
+    app->setOrganizationName("deepin");
+    app->setApplicationName("deepin-music");
     // Version Time
-    app.setApplicationVersion(DApplication::buildVersion(t_date));
-    //app.setStyle("chameleon");
-
-
+#ifdef CVERSION
+    QString verstr(CVERSION);
+//    app->setApplicationVersion(DApplication::buildVersion(verstr));
+    app->setApplicationVersion(verstr);
+#endif
     DLogManager::registerConsoleAppender();
     DLogManager::registerFileAppender();
 
@@ -83,36 +125,19 @@ int main(int argc, char *argv[])
     parser.addHelpOption();
     parser.addVersionOption();
     parser.addPositionalArgument("file", "Music file path");
-    parser.process(app);
-
+    parser.process(*app);
     // handle open file
     QString toOpenFile;
     if (parser.positionalArguments().length() > 0) {
         toOpenFile = parser.positionalArguments().first();
     }
 
-    app.loadTranslator();
-
-    /*
-     MUST setApplicationDisplayName before DMainWindow create
-     app.setApplicationDisplayName(QObject::tr("Music"));
-     app.setWindowIcon(QIcon(":/common/image/deepin-music.svg"));
-    */
+    app->loadTranslator();
 
     QIcon icon = QIcon::fromTheme("deepin-music");
-    app.setProductIcon(icon);
+    app->setProductIcon(icon);
 
-    QString userName = QDir::homePath().section("/", -1, -1);
-
-    auto *sharedMemory = new QSharedMemory(userName + QString("-deepinmusicsingle"));
-    volatile int i = 2;
-    while (i--) {
-        if (sharedMemory->attach(QSharedMemory::ReadOnly)) {
-            sharedMemory->detach();
-        }
-    }
-
-    if (!app.setSingleInstance("deepinmusic") || !sharedMemory->create(1)) {
+    if (!app->setSingleInstance("deepinmusic") || !checkOnly()) {
         qDebug() << "another deepin music has started";
         for (auto curStr : parser.positionalArguments()) {
             if (!curStr.isEmpty()) {
@@ -136,23 +161,27 @@ int main(int argc, char *argv[])
                              "/org/mpris/MediaPlayer2",
                              "org.mpris.MediaPlayer2",
                              QDBusConnection::sessionBus());
-        iface.asyncCall("Raise");
-        exit(0);
+        if (iface.isValid()) {
+            iface.asyncCall("Raise");
+        }
+        return 0;
     }
 
     MusicSettings::init();
-
     DApplicationSettings saveTheme;
 
-    /*-DMainWindow must create on main function, so it can deconstruction before QApplication-*/
-
+    /*---Player instance init---*/
     MainFrame mainframe;
     MusicApp *music = new MusicApp(&mainframe);
-    music->initUI();
-
-    /*---Player instance init---*/
-
-    music->initConnection();
+    auto showflag = MusicSettings::value("base.play.showFlag").toBool();
+    music->initUI(showflag);
+    music->initConnection(showflag);
+    int count = parser.positionalArguments().length();
+    if (count > 1) {
+        QStringList files = parser.positionalArguments();
+        files.removeFirst();
+        music->onStartImport(files);
+    }
 
     if (!toOpenFile.isEmpty()) {
         auto fi = QFileInfo(toOpenFile);
@@ -160,19 +189,19 @@ int main(int argc, char *argv[])
         MusicSettings::setOption("base.play.to_open_uri", url.toString());
     }
 
-    app.connect(&app, &QApplication::lastWindowClosed,
+    app->connect(app, &QApplication::lastWindowClosed,
     &mainframe, [ & ]() {
-        auto quit = MusicSettings::value("base.close.close_action").toInt();
-        if (quit == 1) {
+        auto quit = MusicSettings::value("base.close.is_close").toBool();
+        if (quit) {
             music->quit();
         }
     });
 
-    app.setQuitOnLastWindowClosed(false);
-
+    app->setQuitOnLastWindowClosed(false);
 
     QObject::connect(DGuiApplicationHelper::instance(), &DGuiApplicationHelper::themeTypeChanged,
                      &mainframe, &MainFrame::slotTheme);
-
-    return app.exec();
+    Dtk::Core::DVtableHook::overrideVfptrFun(app, &DApplication::handleQuitAction,
+                                             &mainframe, &MainFrame::closeFromMenu);
+    return app->exec();
 }

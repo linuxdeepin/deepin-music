@@ -24,13 +24,14 @@
 #include "../core/playlist.h"
 #include "../core/musicsettings.h"
 #include "searchmeta.h"
-
+class QTimer;
 class Presenter;
 class MetaSearchService;
 class PlaylistManager;
 class Player;
 class MediaLibrary;
 class MetaBufferDetector;
+class Transfer;
 class PresenterPrivate: public QObject
 {
     Q_OBJECT
@@ -38,6 +39,7 @@ public:
     PresenterPrivate(Presenter *parent = nullptr);
 
     void initBackend();
+    void quickReadSql();
     void notifyMusicPlayed(PlaylistPtr playlist, const MetaPtr meta);
 
     PlaylistPtr         playlistBeforeSearch;
@@ -53,7 +55,8 @@ public:
     Player              *player         = nullptr;
     MediaLibrary        *library        = nullptr;
     MusicSettings         *settings       = nullptr;
-
+    Transfer            *transfer       = nullptr;
+    QTimer              *pdbusinterval  = nullptr; //to forbid mult times dbus invoke
     MetaBufferDetector  *metaBufferDetector = nullptr;
 
     Presenter *q_ptr;
@@ -72,4 +75,5 @@ signals:
     void playPrev(PlaylistPtr playlist, const MetaPtr info);
     void stop();
     void pause();
+    void dbusPause();
 };

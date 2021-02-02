@@ -20,9 +20,11 @@
  */
 
 #include "musiciconbutton.h"
+#include "dapplicationhelper.h"
 
 #include <QDebug>
 #include <QPainter>
+#include <QBrush>
 
 #include <DHiDPIHelper>
 #include <DPalette>
@@ -87,10 +89,14 @@ void MusicIconButton::setAutoChecked(bool flag)
     autoChecked = flag;
 }
 
+void MusicIconButton::setStatus(char stat)
+{
+    status = stat;
+}
 void MusicIconButton::paintEvent(QPaintEvent *event)
 {
     if (!transparent) {
-        DPushButton::paintEvent(event);
+        //DIconButton::paintEvent(event);
     }
 
     QString curPicPath = defaultPicPath.normalPicPath;
@@ -129,13 +135,6 @@ void MusicIconButton::paintEvent(QPaintEvent *event)
         }
     }
 
-
-//    QIcon icon;
-//    icon.addFile(curPicPath);
-
-//    this->setIconSize(QSize(36, 36));
-//    this->setIcon(icon);
-
     DPushButton::paintEvent(event);
 
     QPixmap pixmap = DHiDPIHelper::loadNxPixmap(curPicPath);
@@ -149,14 +148,14 @@ void MusicIconButton::paintEvent(QPaintEvent *event)
     painter.setRenderHint(QPainter::Antialiasing);
     painter.setRenderHint(QPainter::HighQualityAntialiasing);
     painter.setRenderHint(QPainter::SmoothPixmapTransform);
+    DPalette p = DGuiApplicationHelper::instance()->applicationPalette();
 
-    int pixmapWidth = pixmap.rect().width() / devicePixelRatioF();
-    int pixmapHeight = pixmap.rect().height() / devicePixelRatioF();
+    int pixmapWidth = static_cast<int>(pixmap.rect().width() / devicePixelRatioF());
+    int pixmapHeight = static_cast<int>(pixmap.rect().height() / devicePixelRatioF());
     QRect pixmapRect((rect().width() - pixmapWidth) / 2, (rect().height() - pixmapHeight) / 2, pixmapWidth, pixmapHeight);
     pixmapRect = pixmapRect.intersected(rect());
-//    painter.drawPixmap(pixmapRect, pixmap, QRect(0, 0, pixmapWidth, pixmapHeight));
 
-    QIcon icon;
+    QIcon icon(curPicPath);
     icon.addFile(curPicPath);
     icon.paint(&painter, pixmapRect);
 
@@ -166,7 +165,6 @@ void MusicIconButton::paintEvent(QPaintEvent *event)
 void MusicIconButton::enterEvent(QEvent *event)
 {
     status = 1;
-    DPushButton::enterEvent(event);
     if (autoChecked) {
         setChecked(true);
     }
@@ -175,7 +173,6 @@ void MusicIconButton::enterEvent(QEvent *event)
 void MusicIconButton::leaveEvent(QEvent *event)
 {
     status = 0;
-    DPushButton::leaveEvent(event);
     if (autoChecked) {
         setChecked(false);
     }

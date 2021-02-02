@@ -33,6 +33,7 @@
 #include <QHBoxLayout>
 #include <QLabel>
 #include <QPainter>
+#include <QPainterPath>
 #include <QGraphicsDropShadowEffect>
 #include <QPropertyAnimation>
 #include <QGraphicsOpacityEffect>
@@ -53,7 +54,7 @@ public:
     int             radius              = 8;
     int             shadowWidth         = 20;
     QMargins        shadowMargins       = QMargins(20, 20, 20, 20);
-    QColor          borderColor         = QColor(0, 0, 0, 0.2 * 255);
+    QColor          borderColor         = QColor(0, 0, 0, 51/*0.2 * 255*/);
 
     DLabel          *textLable          = nullptr;
     QFrame          *m_interFrame       = nullptr;
@@ -117,7 +118,7 @@ ToolTips::ToolTips(const QString &text, QWidget *parent)
 
     auto *bodyShadow = new QGraphicsDropShadowEffect;
     bodyShadow->setBlurRadius(10.0);
-    bodyShadow->setColor(QColor(0, 0, 0, 0.1 * 255));
+    bodyShadow->setColor(QColor(0, 0, 0, 25/*0.1 * 255*/));
     bodyShadow->setOffset(0, 2.0);
 //    this->setGraphicsEffect(bodyShadow);
     hide();
@@ -133,6 +134,7 @@ ToolTips::~ToolTips()
 
 void ToolTips::enterEvent(QEvent *e)
 {
+    Q_UNUSED(e)
     hide();
 }
 
@@ -182,7 +184,7 @@ void ToolTips::setBorderColor(QColor borderColor)
 
 void ToolTips::pop(QPoint center)
 {
-    Q_D(ToolTips);
+    //Q_D(ToolTips);
     this->show();
     center = center - QPoint(width() / 2, height() / 2);
     this->move(center);
@@ -262,7 +264,6 @@ void ToolTips::paintEvent(QPaintEvent *)
     painter.strokePath(borderPath, borderPen);
 }
 
-}
 #else
 void ToolTips::paintEvent(QPaintEvent *)
 {

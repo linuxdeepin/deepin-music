@@ -152,7 +152,7 @@ Lyric parseLrc(QString &rawLyric)
     return lyric;
 }
 
-Lyric::Lyric()
+Lyric::Lyric():hasTime(false)
 {
 
 }
