@@ -63,11 +63,11 @@ int main(int argc, char *argv[])
     qDebug() << "zy------main " << QTime::currentTime().toString("hh:mm:ss.zzz");
     setenv("PULSE_PROP_media.role", "music", 1);
 
-//#if (DTK_VERSION < DTK_VERSION_CHECK(5, 4, 0, 0))
+#if (DTK_VERSION < DTK_VERSION_CHECK(5, 4, 0, 0))
     DApplication *app = new DApplication(argc, argv);
-//#else
-//    DApplication *app = DApplication::globalApplication(argc, argv);
-//#endif
+#else
+    DApplication *app = DApplication::globalApplication(argc, argv);
+#endif
 
 #ifdef SNAP_APP
     DStandardPaths::setMode(DStandardPaths::Snap);
@@ -117,7 +117,8 @@ int main(int argc, char *argv[])
                 strList.append(url.toLocalFile());
             }
         }
-        if (strList.size() > 0) {
+        // 添加应用唯一性判断
+        if (strList.size() > 0 && checkOnly()) {
             DataBaseService::getInstance()->setFirstSong(strList.at(0));
             DataBaseService::getInstance()->importMedias("all", strList); //导入数据库
         }

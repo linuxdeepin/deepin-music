@@ -136,7 +136,11 @@ void SubSonglistWidget::resizeEvent(QResizeEvent *e)
 {
     m_titleImage->setFixedWidth(this->width());
 
-    QImage img = m_img.scaled(this->width(), 200, Qt::KeepAspectRatioByExpanding).toImage();
+    // 添加非空判断，减少警告日志输出与不必要的性能损耗
+    QImage img;
+    if (!m_img.isNull()) {
+        img = m_img.scaled(this->width(), 200, Qt::KeepAspectRatioByExpanding).toImage();
+    }
     QPainter pai(&img);
     pai.setRenderHints(QPainter::Antialiasing | QPainter::HighQualityAntialiasing | QPainter::SmoothPixmapTransform);
     QColor fillColor("#FFFFFF");
@@ -311,7 +315,11 @@ void SubSonglistWidget::slotPlayRandomClicked()
 void SubSonglistWidget::setTitleImage(QPixmap &img)
 {
     m_img = img;
-    img = img.scaled(this->width(), 200, Qt::KeepAspectRatioByExpanding);
+
+    // 添加非空判断，减少警告日志输出与不必要的性能损耗
+    if (!img.isNull()) {
+        img = img.scaled(this->width(), 200, Qt::KeepAspectRatioByExpanding);
+    }
 
     QPainter pai(&img);
     pai.setRenderHints(QPainter::Antialiasing | QPainter::HighQualityAntialiasing | QPainter::SmoothPixmapTransform);

@@ -525,7 +525,16 @@ QVariant SpeechCenter::setMode(QString mode)
 QVariant SpeechCenter::OpenUris(QVariant paths)
 {
     qDebug() << __FUNCTION__ ;
-    QStringList itemMetas = paths.value<QStringList>();
+    QStringList itemMetas;
+    for (auto str : paths.value<QStringList>()) {
+        QUrl url = QUrl(str);
+        // 根据url类型进行转换
+        if (url.isLocalFile()) {
+            itemMetas << url.toLocalFile();
+        } else {
+            itemMetas << str;
+        }
+    }
 
     if (itemMetas.size() > 0) {
         DataBaseService::getInstance()->setFirstSong(itemMetas.first());

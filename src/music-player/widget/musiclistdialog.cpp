@@ -324,7 +324,10 @@ void MusicListDialog::slotPlayRandomClicked()
 
 void MusicListDialog::setTitleImage(QPixmap &img)
 {
-    img = img.scaled(480, 130, Qt::KeepAspectRatioByExpanding);
+    // 添加非空判断，减少警告日志输出与不必要的性能损耗
+    if (!img.isNull()) {
+        img = img.scaled(480, 130, Qt::KeepAspectRatioByExpanding);
+    }
 
     QPainter pai(&img);
     pai.setRenderHints(QPainter::Antialiasing | QPainter::HighQualityAntialiasing | QPainter::SmoothPixmapTransform);

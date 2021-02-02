@@ -406,19 +406,21 @@ TEST(Application, musicListDialg1)
     QTimer::singleShot(500, w, [ = ]() {
         QTestEventList event;
         DMenu *menuWidget = static_cast<DMenu *>(qApp->activePopupWidget());
-        event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
-        event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
-        event.addKeyClick(Qt::Key_Enter, Qt::NoModifier, 50);
-        event.addDelay(100);
-        event.simulate(menuWidget);
-        event.clear();
-        QTest::qWait(100);
+        if (menuWidget) {
+            event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
+            event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
+            event.addKeyClick(Qt::Key_Enter, Qt::NoModifier, 50);
+            event.addDelay(100);
+            event.simulate(menuWidget);
+            event.clear();
+            QTest::qWait(100);
 
-        menuWidget = static_cast<DMenu *>(qApp->activePopupWidget());
-        event.addKeyClick(Qt::Key_Enter, Qt::NoModifier, 50);
-        event.simulate(menuWidget);
-        event.clear();
-        QTest::qWait(100);
+            menuWidget = static_cast<DMenu *>(qApp->activePopupWidget());
+            event.addKeyClick(Qt::Key_Enter, Qt::NoModifier, 50);
+            event.simulate(menuWidget);
+            event.clear();
+            QTest::qWait(100);
+        }
     });
     QContextMenuEvent menuEvent(QContextMenuEvent::Mouse, QPoint(20, 20));
     qApp->sendEvent(mliv->viewport(), &menuEvent);
@@ -428,19 +430,21 @@ TEST(Application, musicListDialg1)
     QTimer::singleShot(500, w, [ = ]() {
         QTestEventList event;
         DMenu *menuWidget = static_cast<DMenu *>(qApp->activePopupWidget());
-        event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
-        event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
-        event.addKeyClick(Qt::Key_Enter, Qt::NoModifier, 50);
-        event.addDelay(50);
-        event.simulate(menuWidget);
-        event.clear();
-        QTest::qWait(50);
+        if (menuWidget) {
+            event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
+            event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
+            event.addKeyClick(Qt::Key_Enter, Qt::NoModifier, 50);
+            event.addDelay(50);
+            event.simulate(menuWidget);
+            event.clear();
+            QTest::qWait(50);
 
-        menuWidget = static_cast<DMenu *>(qApp->activePopupWidget());
-        event.addKeyClick(Qt::Key_Enter, Qt::NoModifier, 50);
-        event.simulate(menuWidget);
-        event.clear();
-        QTest::qWait(50);
+            menuWidget = static_cast<DMenu *>(qApp->activePopupWidget());
+            event.addKeyClick(Qt::Key_Enter, Qt::NoModifier, 50);
+            event.simulate(menuWidget);
+            event.clear();
+            QTest::qWait(50);
+        }
     });
     qApp->sendEvent(mliv->viewport(), &menuEvent);
 
@@ -449,21 +453,23 @@ TEST(Application, musicListDialg1)
     QTimer::singleShot(500, w, [ = ]() {
         QTestEventList event;
         DMenu *menuWidget = static_cast<DMenu *>(qApp->activePopupWidget());
-        event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
-        event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
-        event.addKeyClick(Qt::Key_Enter, Qt::NoModifier, 50);
-        event.addDelay(50);
-        event.simulate(menuWidget);
-        event.clear();
-        QTest::qWait(50);
+        if (menuWidget) {
+            event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
+            event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
+            event.addKeyClick(Qt::Key_Enter, Qt::NoModifier, 50);
+            event.addDelay(50);
+            event.simulate(menuWidget);
+            event.clear();
+            QTest::qWait(50);
 
-        menuWidget = static_cast<DMenu *>(qApp->activePopupWidget());
-        event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
-        event.addKeyClick(Qt::Key_Enter, Qt::NoModifier, 50);
-        event.simulate(menuWidget);
-        event.clear();
-        QTest::qWait(500);
-        emit backBtn->clicked();
+            menuWidget = static_cast<DMenu *>(qApp->activePopupWidget());
+            event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
+            event.addKeyClick(Qt::Key_Enter, Qt::NoModifier, 50);
+            event.simulate(menuWidget);
+            event.clear();
+            QTest::qWait(500);
+            emit backBtn->clicked();
+        }
     });
     qApp->sendEvent(mliv->viewport(), &menuEvent);
     QTest::qWait(200);

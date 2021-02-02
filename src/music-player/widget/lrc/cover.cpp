@@ -114,7 +114,11 @@ void Cover::setCoverPixmap(const QPixmap &pixmap)
     auto coverRect = QRectF(rect()).marginsRemoved(outterMargins);
     auto sz = coverRect.size().toSize() * ratio;
 
-    QPixmap backgroundPixmap = pixmap.scaled(sz, Qt::KeepAspectRatioByExpanding);
+    // 添加非空判断，减少警告日志输出与不必要的性能损耗
+    QPixmap backgroundPixmap;
+    if (!pixmap.isNull()) {
+        backgroundPixmap = pixmap.scaled(sz, Qt::KeepAspectRatioByExpanding);
+    }
     // TODO: fix ratio by Dtk::Widget::DHiDPIHelper
     backgroundPixmap.setDevicePixelRatio(1);
     QPixmap maskPixmap(sz);

@@ -49,7 +49,11 @@ static const int CoverSize = 142;
 
 QImage cropRect(const QImage &image, QSize sz)
 {
-    QImage newImage = image.scaled(sz, Qt::KeepAspectRatioByExpanding, Qt::SmoothTransformation);
+    // 添加非空判断，减少警告日志输出与不必要的性能损耗
+    QImage newImage;
+    if (!image.isNull()) {
+        newImage = image.scaled(sz, Qt::KeepAspectRatioByExpanding, Qt::SmoothTransformation);
+    }
     auto center = QRectF(newImage.rect()).center();
     auto topLeft = QPointF(center.x() - sz.width() / 2.0,
                            center.y() - sz.height() / 2.0);
