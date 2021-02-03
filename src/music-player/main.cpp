@@ -105,6 +105,7 @@ int main(int argc, char *argv[])
         OpenFilePaths = parser.positionalArguments();
     }
 
+    app->loadTranslator();
     MusicSettings::init();
     Player::getInstance();
     if (!OpenFilePaths.isEmpty()) {
@@ -123,7 +124,6 @@ int main(int argc, char *argv[])
             DataBaseService::getInstance()->importMedias("all", strList); //导入数据库
         }
     }
-    app->loadTranslator();
 
     if (!app->setSingleInstance("deepinmusic") || !checkOnly()) {
         qDebug() << "another deepin music has started";
