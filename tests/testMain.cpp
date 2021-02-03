@@ -87,7 +87,10 @@ void QTestMain::testGTest()
     char **argv = &argv0;
     testing::InitGoogleTest(&argc, argv);
     int ret = RUN_ALL_TESTS();
+    // 内存分析屏蔽mips
+#ifndef SYSTEM_MIPS
     __sanitizer_set_report_path("./asan_deepin-music.log");//内存检测输出
+#endif
     Player::getInstance()->stop();
     Q_UNUSED(ret)
 }

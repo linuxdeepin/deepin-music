@@ -20,6 +20,7 @@ set(ISTEST "1")#单元测试标志
 
 if (CMAKE_HOST_SYSTEM_PROCESSOR MATCHES "mips64")
     set(CMAKE_CXX_FLAGS "-g -fprofile-arcs -ftest-coverage")
+    add_definitions(-DSYSTEM_MIPS)
 else()
     set(CMAKE_CXX_FLAGS "-fsanitize=undefined,address,leak -fno-omit-frame-pointer -g -fprofile-arcs -ftest-coverage -lgcov")
 #    set(CMAKE_C_FLAGS "-fsanitize=undefined,address,leak -fno-omit-frame-pointer")
