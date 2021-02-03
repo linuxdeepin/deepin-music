@@ -473,6 +473,9 @@ void MusicSongListView::slotLineEditingFinished()
 
 void MusicSongListView::slotPopMessageWindow(int stat)
 {
+    //初始cd的track索引
+    Player::getInstance()->initCddTrack();
+
     MediaMeta tmpMeta = Player::getInstance()->getActiveMeta();
     //CD退出时若不关闭弹窗，再次接入cd后，此弹窗自动隐藏，列表数据刷新
     QList<QWidget *> oldMsgList = this->findChildren<QWidget *>("_d_message_cda_deepin_music");
@@ -495,6 +498,9 @@ void MusicSongListView::slotPopMessageWindow(int stat)
         return;
     }
 
+    //停止音乐
+    Player::getInstance()->stop();
+
     int retexec = -1;
     int iprop = 0;
     QString popStrMsg = "";
@@ -503,7 +509,6 @@ void MusicSongListView::slotPopMessageWindow(int stat)
     if (tmpMeta.mmType == MIMETYPE_CDA) {
         popStrMsg = tr("Play failed, as the CD has been removed");
     }
-
 
     Dtk::Widget::DDialog tipsDlg(this);
     tipsDlg.setObjectName("_d_message_cda_deepin_music");
@@ -527,8 +532,9 @@ void MusicSongListView::slotPopMessageWindow(int stat)
      * */
     qDebug() << __FUNCTION__ << stat;
     int allsize = DataBaseService::getInstance()->allMusicInfosCount();
-
     if (allsize == 0) {
+        //清空列表
+        Player::getInstance()->clearPlayList();
         //回到初始页面
         emit DataBaseService::getInstance()->signalAllMusicCleared();
     } else {

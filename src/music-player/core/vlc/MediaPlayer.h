@@ -93,6 +93,11 @@ public:
     */
     //void openOnly(VlcMedia *media);
 
+    /**
+     * @brief releaseMediaPlayer 释放vlc资源
+     */
+    void initCddaTrack();
+
 public slots:
     /*! \brief Set the movie time (in ms).
 
@@ -323,15 +328,12 @@ private:
                                 void *data);
 
     void createCoreConnections();
-//    void removeCoreConnections();
+    void removeCoreConnections();
 
     libvlc_media_player_t *_vlcMediaPlayer;
     libvlc_event_manager_t *_vlcEvents;
 
-    VlcMedia *_media;
-
-    VlcAudio *_vlcAudio;
-    VlcVideo *_vlcVideo;
+    //VlcAudio *_vlcAudio;
     VlcEqualizer *_vlcEqualizer;
 };
 

@@ -68,10 +68,9 @@ VlcMediaPlayer::VlcMediaPlayer(VlcInstance *instance)
 
     VlcError::showErrmsg();
 
-    _vlcAudio = new VlcAudio(this);
+    //unuseless
+    //_vlcAudio = new VlcAudio(this);
     _vlcEqualizer = new VlcEqualizer(this);
-
-    _media = 0;
 
     //屏蔽视频功能,只支持音频
     config_PutInt_fc((vlc_object_t *)_vlcMediaPlayer, "video", 0); //0=disable
@@ -84,11 +83,6 @@ VlcMediaPlayer::VlcMediaPlayer(VlcInstance *instance)
 
 VlcMediaPlayer::~VlcMediaPlayer()
 {
-//    removeCoreConnections();
-
-//    delete _vlcAudio;
-//    vlc_media_player_release_function vlc_media_player_release = (vlc_media_player_release_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("libvlc_media_player_release");
-//    vlc_media_player_release(_vlcMediaPlayer);
 }
 
 libvlc_media_player_t *VlcMediaPlayer::core() const
@@ -136,34 +130,34 @@ void VlcMediaPlayer::createCoreConnections()
     }
 }
 
-//void VlcMediaPlayer::removeCoreConnections()
-//{
-//    QList<libvlc_event_e> list;
-//    list << libvlc_MediaPlayerMediaChanged
-//         << libvlc_MediaPlayerNothingSpecial
-//         << libvlc_MediaPlayerOpening
-//         << libvlc_MediaPlayerBuffering
-//         << libvlc_MediaPlayerPlaying
-//         << libvlc_MediaPlayerPaused
-//         << libvlc_MediaPlayerStopped
-//         << libvlc_MediaPlayerForward
-//         << libvlc_MediaPlayerBackward
-//         << libvlc_MediaPlayerEndReached
-//         << libvlc_MediaPlayerEncounteredError
-//         << libvlc_MediaPlayerTimeChanged
-//         << libvlc_MediaPlayerPositionChanged
-//         << libvlc_MediaPlayerSeekableChanged
-//         << libvlc_MediaPlayerPausableChanged
-//         << libvlc_MediaPlayerTitleChanged
-//         << libvlc_MediaPlayerSnapshotTaken
-//         << libvlc_MediaPlayerLengthChanged
-//         << libvlc_MediaPlayerVout;
+void VlcMediaPlayer::removeCoreConnections()
+{
+    QList<libvlc_event_e> list;
+    list << libvlc_MediaPlayerMediaChanged
+         << libvlc_MediaPlayerNothingSpecial
+         << libvlc_MediaPlayerOpening
+         << libvlc_MediaPlayerBuffering
+         << libvlc_MediaPlayerPlaying
+         << libvlc_MediaPlayerPaused
+         << libvlc_MediaPlayerStopped
+         << libvlc_MediaPlayerForward
+         << libvlc_MediaPlayerBackward
+         << libvlc_MediaPlayerEndReached
+         << libvlc_MediaPlayerEncounteredError
+         << libvlc_MediaPlayerTimeChanged
+         << libvlc_MediaPlayerPositionChanged
+         << libvlc_MediaPlayerSeekableChanged
+         << libvlc_MediaPlayerPausableChanged
+         << libvlc_MediaPlayerTitleChanged
+         << libvlc_MediaPlayerSnapshotTaken
+         << libvlc_MediaPlayerLengthChanged
+         << libvlc_MediaPlayerVout;
 
-//    vlc_event_detach_function vlc_event_detach = (vlc_event_detach_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("libvlc_event_detach");
-//    foreach (const libvlc_event_e &event, list) {
-//        vlc_event_detach(_vlcEvents, event, libvlc_callback, this);
-//    }
-//}
+    vlc_event_detach_function vlc_event_detach = (vlc_event_detach_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("libvlc_event_detach");
+    foreach (const libvlc_event_e &event, list) {
+        vlc_event_detach(_vlcEvents, event, libvlc_callback, this);
+    }
+}
 
 //bool VlcMediaPlayer::hasVout() const
 //{
@@ -203,7 +197,6 @@ int VlcMediaPlayer::length() const
 
 void VlcMediaPlayer::open(VlcMedia *media)
 {
-    _media = media;
     vlc_media_player_set_media_function vlc_media_player_set_media = (vlc_media_player_set_media_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("libvlc_media_player_set_media");
     config_PutInt_func config_PutInt_fc = (config_PutInt_func)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("config_PutInt");
     int track = media->getCdaTrack();
@@ -215,6 +208,15 @@ void VlcMediaPlayer::open(VlcMedia *media)
     }
 
     VlcError::showErrmsg();
+}
+
+void VlcMediaPlayer::initCddaTrack()
+{
+    /**
+     * important:do not modify it,it will access to open stream failed if does not set cdda-track to zero!
+     **/
+    config_PutInt_func config_PutInt_fc = (config_PutInt_func)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("config_PutInt");
+    config_PutInt_fc((vlc_object_t *)_vlcMediaPlayer, "cdda-track", 0);
 }
 
 //void VlcMediaPlayer::openOnly(VlcMedia *media)

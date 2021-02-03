@@ -164,7 +164,12 @@ public:
     double fadeInOutFactor() const;
     bool fadeInOut() const;
     //bool playOnLoaded() const;
+    /**
+     * @brief initCddTrack 初始化cddatrack值，以免引起因为配置问题无法加载cd的问题
+     */
+    void initCddTrack();
 
+    void startCdaThread();
 signals:
     void canControlChanged(bool canControl);
     void positionChanged(qlonglong position, qlonglong length, qint64 coefficient);

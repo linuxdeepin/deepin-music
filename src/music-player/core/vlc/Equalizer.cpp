@@ -30,10 +30,10 @@ VlcEqualizer::VlcEqualizer(VlcMediaPlayer *vlcMediaPlayer)
 
 VlcEqualizer::~VlcEqualizer()
 {
-//    if (_vlcEqualizer) {
-//        vlc_audio_equalizer_release_function vlc_audio_equalizer_release = (vlc_audio_equalizer_release_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("libvlc_audio_equalizer_release");
-//        vlc_audio_equalizer_release(_vlcEqualizer);
-//    }
+    if (_vlcEqualizer) {
+        vlc_audio_equalizer_release_function vlc_audio_equalizer_release = (vlc_audio_equalizer_release_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("libvlc_audio_equalizer_release");
+        vlc_audio_equalizer_release(_vlcEqualizer);
+    }
 }
 
 float VlcEqualizer::amplificationForBandAt(uint bandIndex) const

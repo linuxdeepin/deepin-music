@@ -6,6 +6,7 @@
 
 struct libvlc_media_player_t;
 struct input_item_node_t;
+
 class CdaThread : public QThread
 {
     Q_OBJECT
@@ -44,7 +45,6 @@ signals:
     void sigSendCdaMimeData(const QList<MediaMeta> &);
     void sigSendCdaStatus(int state); //state,0:close ,1:open
 public slots:
-
 private:
     libvlc_media_player_t *m_play_t = nullptr;
     int m_needRun = 1;

@@ -1,5 +1,4 @@
 #include "dbusutils.h"
-#include <QDBusConnection>
 #include <QDBusReply>
 #include <QDBusInterface>
 #include <QDebug>
@@ -15,13 +14,14 @@ DBusUtils::DBusUtils()
 
 }
 
-QVariant DBusUtils::readDBusProperty(const QString &service, const QString &path, const QString &interface, const char *propert)
+QVariant DBusUtils::readDBusProperty(const QString &service, const QString &path, const QString &interface, const char *propert, QDBusConnection connection)
 {
     // 创建QDBusInterface接口
     mutex.lock();
-    QDBusInterface ainterface(service, path,
+    QDBusInterface ainterface(service,
+                              path,
                               interface,
-                              QDBusConnection::sessionBus());
+                              connection);
     if (!ainterface.isValid()) {
         qDebug() << qPrintable(QDBusConnection::sessionBus().lastError().message());
         //cause dead lock if no unlock here,

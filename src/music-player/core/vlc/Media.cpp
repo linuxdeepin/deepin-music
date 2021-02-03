@@ -62,11 +62,9 @@ VlcMedia::VlcMedia()
 
 VlcMedia::~VlcMedia()
 {
-    removeCoreConnections();
+//    removeCoreConnections();
 //    vlc_media_release_function vlc_media_release = (vlc_media_release_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("libvlc_media_release");
 //    vlc_media_release(_vlcMedia);
-
-//    VlcError::showErrmsg();
 }
 
 libvlc_media_t *VlcMedia::core()

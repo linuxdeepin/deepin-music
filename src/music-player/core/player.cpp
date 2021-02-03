@@ -108,22 +108,10 @@ void Player::init()
     m_currentPlayListHash = MusicSettings::value("base.play.last_playlist").toString(); //上一次的页面
     //初始化cd线程
     m_pCdaThread = new CdaThread(this);
-    //connect(m_pCdaThread, &CdaThread::sigSendCdaMimeData, this, &Player::setCdaInfoToList);
     connect(m_pCdaThread, &CdaThread::sigSendCdaStatus, CommonService::getInstance(),
             &CommonService::signalCdaSongListChanged, Qt::QueuedConnection);
-    //为了不影响主线程加载，1s后再加载CD
-    QTimer::singleShot(1000, this, [ = ]() {
-#ifndef  ENABLE_AUTO_UNIT_TEST  //目前无法打桩，执行测试用例时不开启cda线程
-        if (m_qvinstance == nullptr || m_qvplayer == nullptr || m_qvmedia == nullptr) {
-            initVlc();
-        }
-        //初始化mediaplayer
-        m_pCdaThread->setMediaPlayerPointer(m_qvplayer->core());
-        //查询cd信息
-
-        m_pCdaThread->doQuery();
-#endif
-    });
+    //开启cd线程
+    startCdaThread();
 }
 
 QStringList Player::supportedSuffixList() const
@@ -658,6 +646,11 @@ bool Player::fadeInOut() const
     return m_fadeInOut;
 }
 
+void Player::initCddTrack()
+{
+    m_qvplayer->initCddaTrack();
+}
+
 //bool Player::playOnLoaded() const
 //{
 //    return m_playOnLoad;
@@ -671,9 +664,6 @@ void Player::setCanControl(bool canControl)
 
 void Player::setPosition(qlonglong position)
 {
-//    if (m_activeMeta.isNull()) {
-//        return;
-//    }
     if (m_qvinstance == nullptr || m_qvplayer == nullptr || m_qvmedia == nullptr) {
         initVlc();
     }
@@ -1070,7 +1060,6 @@ void Player::initVlc()
 //            }
 //            break;
 //        }
-
         }
     });
 
@@ -1078,16 +1067,20 @@ void Player::initVlc()
     this, [ = ]() {
         playNextMeta(true);//just sync with Vlc::Ended
     });
+}
 
-
-//    connect(m_qvplayer->audio(), &VlcAudio::muteChanged,
-//    this, [ = ](bool mute) {
-//        if (isDevValid()) {
-//            emit signalMutedChanged();
-//        } else {
-//            qDebug() << "device does not start";
-//        }
-//    });
+void Player::startCdaThread()
+{
+    //为了不影响主线程加载，1s后再加载CD
+    QTimer::singleShot(1000, this, [ = ]() {
+        if (m_qvinstance == nullptr || m_qvplayer == nullptr || m_qvmedia == nullptr) {
+            initVlc();
+        }
+        //初始化mediaplayer
+        m_pCdaThread->setMediaPlayerPointer(m_qvplayer->core());
+        //查询cd信息
+        m_pCdaThread->doQuery();
+    });
 }
 
 void Player::initMpris()
