@@ -475,7 +475,7 @@ void SingerListView::setDataBySortType(QList<SingerInfo> &singerInfos, DataBaseS
 
 void SingerListView::slotRemoveSingleSong(const QString &listHash, const QString &musicHash)
 {
-    if (listHash != "all") {
+    if (listHash != "all" || Player::getInstance()->getCurrentPlayListHash() != m_hash) {
         return;
     }
     for (int i = 0; i < singerModel->rowCount(); i++) {

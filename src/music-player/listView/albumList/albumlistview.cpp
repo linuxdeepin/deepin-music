@@ -444,7 +444,7 @@ void AlbumListView::slotCoverUpdate(const MediaMeta &meta)
 
 void AlbumListView::slotRemoveSingleSong(const QString &listHash, const QString &musicHash)
 {
-    if (listHash != "all") {
+    if (listHash != "all" || Player::getInstance()->getCurrentPlayListHash() != m_hash) {
         return;
     }
     for (int i = 0; i < albumModel->rowCount(); i++) {

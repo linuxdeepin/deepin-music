@@ -121,7 +121,7 @@ void SubSonglistWidget::initUI()
 
     m_titleLabel->setContentsMargins(0, 0, 0, 0);
 
-    m_musicListInfoView = new PlayListView(hash, false);
+    m_musicListInfoView = new PlayListView(m_hash, false);
     mainLayout->addWidget(m_musicListInfoView, 1);
     mainLayout->addStretch();
 
@@ -154,7 +154,7 @@ void SubSonglistWidget::resizeEvent(QResizeEvent *e)
 
 SubSonglistWidget::SubSonglistWidget(const QString &hash, QWidget *parent)
     : DFrame(parent)
-    , hash(hash)
+    , m_hash(hash)
 {
     AC_SET_OBJECT_NAME(this, AC_subSonglistWidget);
     AC_SET_ACCESSIBLE_NAME(this, AC_subSonglistWidget);
@@ -243,7 +243,29 @@ void SubSonglistWidget::flushDialog(QMap<QString, MediaMeta> musicinfos, ListPag
     if (musicinfos.size() > 0) {
         auto titleFont = m_titleLabel->font();
         auto infoFont = m_infoLabel->font();
-
+        // 根据进入二级页面场景，设置hash值，二级页面删除时判断使用
+        switch (listPageType) {
+        case AlbumType: {
+            m_hash = "album";
+            break;
+        }
+        case SearchAlbumResultType: {
+            m_hash = "albumResult";
+            break;
+        }
+        case SingerType: {
+            m_hash = "artist";
+            break;
+        }
+        case SearchSingerResultType: {
+            m_hash = "artistResult";
+            break;
+        }
+        default: {
+            m_hash = "album";
+            break;
+        }
+        }
         if (listPageType == AlbumType || listPageType == SearchAlbumResultType) {
 // 解决字体不会根据系统字体大小改变问题
 //            titleFont.setPixelSize(24);
@@ -292,7 +314,7 @@ void SubSonglistWidget::slotPlayAllClicked()
     QList<MediaMeta> musicList = m_musicListInfoView->getMusicListData();
     if (musicList.size() > 0) {
         emit CommonService::getInstance()->signalSetPlayModel(Player::RepeatAll);
-        Player::getInstance()->setCurrentPlayListHash(hash, false);
+        Player::getInstance()->setCurrentPlayListHash(m_hash, false);
         Player::getInstance()->setPlayList(musicList);
         Player::getInstance()->playMeta(musicList.first());
         emit Player::getInstance()->signalPlayListChanged();
@@ -307,7 +329,7 @@ void SubSonglistWidget::slotPlayRandomClicked()
         emit CommonService::getInstance()->signalSetPlayModel(Player::Shuffle);
         Player::getInstance()->playNextMeta(false);
 
-        Player::getInstance()->setCurrentPlayListHash(hash, false);
+        Player::getInstance()->setCurrentPlayListHash(m_hash, false);
         emit Player::getInstance()->signalPlayListChanged();
     }
 }

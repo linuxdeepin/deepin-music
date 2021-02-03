@@ -704,7 +704,6 @@ void MainFrame::slotShowSubSonglist(const QMap<QString, MediaMeta> &musicinfos, 
         m_subSonglistWidget->flushDialog(musicinfos, listPageType);
     }
     m_musicStatckedWidget->setCurrentWidget(m_subSonglistWidget);
-    m_musicStatckedWidget->setCurrentWidget(m_subSonglistWidget);
 }
 
 void MainFrame::slotViewChanged(ListPageSwitchType switchtype, const QString &hashOrSearchword)

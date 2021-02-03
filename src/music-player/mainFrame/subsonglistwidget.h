@@ -40,7 +40,7 @@ private:
     // 当前主题
     int m_themeType = 1;
     // 专辑或则演唱者的hash
-    QString hash;
+    QString                             m_hash;
 
     QLabel                             *m_titleImage          = nullptr;
     DLabel                             *m_titleLabel          = nullptr;

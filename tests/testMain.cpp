@@ -15,7 +15,9 @@
 #include "application.h"
 #include "mainframe.h"
 #include "player.h"
+#ifndef SYSTEM_MIPS
 #include <sanitizer/asan_interface.h>
+#endif
 
 using namespace Dtk::Core;
 using namespace Dtk::Widget;
