@@ -394,11 +394,44 @@ void MusicListDataWidget::dropEvent(QDropEvent *event)
 void MusicListDataWidget::slotPlayAllClicked()
 {
     switch (CommonService::getInstance()->getListPageSwitchType()) {
-    case AlbumType:
+    case AlbumType: {
         // 清空播放队列
         Player::getInstance()->clearPlayList();
         // 添加到播放列表
-        Player::getInstance()->setPlayList(DataBaseService::getInstance()->allMusicInfos());
+        QList<MediaMeta> allMediaMetas = DataBaseService::getInstance()->allMusicInfos();
+        QList<MediaMeta> playMediaMetas;
+        QStringList metaList = DataBaseService::getInstance()->getDelMetaHashs();
+        if (DataBaseService::getInstance()->getDelStatus()) {
+            for (MediaMeta meta : allMediaMetas) {
+                if (!metaList.contains(meta.hash)) {
+                    playMediaMetas.append(meta);
+                }
+            }
+            Player::getInstance()->setPlayList(playMediaMetas);
+        } else {
+            Player::getInstance()->setPlayList(allMediaMetas);
+        }
+        // 查找第一首歌
+        MediaMeta playMeta;
+        QList<AlbumInfo> albumInfos =  m_albumListView->getAlbumListData();
+        if (DataBaseService::getInstance()->getDelStatus()) {
+            for (int i = 0; i < albumInfos.size(); i++) {
+                AlbumInfo albumTmp = albumInfos.at(i);
+                for (MediaMeta meta : albumTmp.musicinfos.values()) {
+                    if (!metaList.contains(meta.hash)) {
+                        playMeta = meta;
+                        break;
+                    }
+                }
+                if (!playMeta.hash.isEmpty()) {
+                    break;
+                }
+            }
+        } else {
+            if (albumInfos.size() > 0) {
+                playMeta = albumInfos.at(0).musicinfos.values().at(0);
+            }
+        }
 
         // 通知播放队列改变
         Player::getInstance()->setCurrentPlayListHash(m_currentHash, false);
@@ -406,14 +439,48 @@ void MusicListDataWidget::slotPlayAllClicked()
 
         // 设置第一首播放音乐
         if (Player::getInstance()->getPlayList()->size() > 0) {
-            Player::getInstance()->playMeta(Player::getInstance()->getPlayList()->first());
+            Player::getInstance()->playMeta(playMeta);
         }
         break;
-    case SingerType:
+    }
+    case SingerType: {
         // 清空播放队列
         Player::getInstance()->clearPlayList();
         // 添加到播放列表
-        Player::getInstance()->setPlayList(DataBaseService::getInstance()->allMusicInfos());
+        QList<MediaMeta> allMediaMetas = DataBaseService::getInstance()->allMusicInfos();
+        QList<MediaMeta> playMediaMetas;
+        QStringList metaList = DataBaseService::getInstance()->getDelMetaHashs();
+        if (DataBaseService::getInstance()->getDelStatus()) {
+            for (MediaMeta meta : allMediaMetas) {
+                if (!metaList.contains(meta.hash)) {
+                    playMediaMetas.append(meta);
+                }
+            }
+            Player::getInstance()->setPlayList(playMediaMetas);
+        } else {
+            Player::getInstance()->setPlayList(allMediaMetas);
+        }
+        // 查找第一首歌
+        MediaMeta playMeta;
+        QList<SingerInfo> singerInfos =  m_singerListView->getSingerListData();
+        if (DataBaseService::getInstance()->getDelStatus()) {
+            for (int i = 0; i < singerInfos.size(); i++) {
+                SingerInfo singerTmp = singerInfos.at(i);
+                for (MediaMeta meta : singerTmp.musicinfos.values()) {
+                    if (!metaList.contains(meta.hash)) {
+                        playMeta = meta;
+                        break;
+                    }
+                }
+                if (!playMeta.hash.isEmpty()) {
+                    break;
+                }
+            }
+        } else {
+            if (singerInfos.size() > 0) {
+                playMeta = singerInfos.at(0).musicinfos.values().at(0);
+            }
+        }
 
         // 通知播放队列改变
         Player::getInstance()->setCurrentPlayListHash(m_currentHash, false);
@@ -421,9 +488,10 @@ void MusicListDataWidget::slotPlayAllClicked()
 
         // 设置第一首播放音乐
         if (Player::getInstance()->getPlayList()->size() > 0) {
-            Player::getInstance()->playMeta(Player::getInstance()->getPlayList()->first());
+            Player::getInstance()->playMeta(playMeta);
         }
         break;
+    }
     // 同下共用
     case AllSongListType:
     // 同下共用

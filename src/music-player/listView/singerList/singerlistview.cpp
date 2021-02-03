@@ -475,7 +475,7 @@ void SingerListView::setDataBySortType(QList<SingerInfo> &singerInfos, DataBaseS
 
 void SingerListView::slotRemoveSingleSong(const QString &listHash, const QString &musicHash)
 {
-    if (listHash != "all" || Player::getInstance()->getCurrentPlayListHash() != m_hash) {
+    if (listHash != "all") {
         return;
     }
     for (int i = 0; i < singerModel->rowCount(); i++) {
@@ -496,21 +496,23 @@ void SingerListView::slotRemoveSingleSong(const QString &listHash, const QString
             // 如果该专辑内歌曲不存在了，则刷新页面
             if (singerTmp.musicinfos.size() == 0) {
                 singerModel->removeRow(i);
-                int nextPlayIndex = i;
-                if (singerModel->rowCount() > 0 && isActive) {
-                    if (nextPlayIndex == singerModel->rowCount()) {
-                        nextPlayIndex = 0;
-                    }
-                    QModelIndex nextModelIndex = singerModel->index(nextPlayIndex, 0, QModelIndex());
-                    SingerInfo nextSinger = nextModelIndex.data(Qt::UserRole).value<SingerInfo>();
-                    Player::getInstance()->clearPlayList();
-                    Player::getInstance()->setPlayList(nextSinger.musicinfos.values());
-                    Player::getInstance()->setCurrentPlayListHash("artist", false);
-                    emit Player::getInstance()->signalPlayListChanged();
-                    if (preStatue == Player::PlaybackStatus::Playing) {
-                        Player::getInstance()->playMeta(nextSinger.musicinfos.values().first());
-                    } else {
-                        Player::getInstance()->setActiveMeta(nextSinger.musicinfos.values().first());
+                if (Player::getInstance()->getCurrentPlayListHash() == m_hash) {
+                    int nextPlayIndex = i;
+                    if (singerModel->rowCount() > 0 && isActive) {
+                        if (nextPlayIndex == singerModel->rowCount()) {
+                            nextPlayIndex = 0;
+                        }
+                        QModelIndex nextModelIndex = singerModel->index(nextPlayIndex, 0, QModelIndex());
+                        SingerInfo nextSinger = nextModelIndex.data(Qt::UserRole).value<SingerInfo>();
+                        Player::getInstance()->clearPlayList();
+                        Player::getInstance()->setPlayList(nextSinger.musicinfos.values());
+                        Player::getInstance()->setCurrentPlayListHash("artist", false);
+                        emit Player::getInstance()->signalPlayListChanged();
+                        if (preStatue == Player::PlaybackStatus::Playing) {
+                            Player::getInstance()->playMeta(nextSinger.musicinfos.values().first());
+                        } else {
+                            Player::getInstance()->setActiveMeta(nextSinger.musicinfos.values().first());
+                        }
                     }
                 }
             }

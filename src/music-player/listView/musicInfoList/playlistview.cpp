@@ -256,7 +256,7 @@ void PlayListView::initAllSonglist(QString hash)
 
 void PlayListView::initCostomSonglist(const QString &hash)
 {
-    if (DataBaseService::getInstance()->getDelStatu()) {
+    if (DataBaseService::getInstance()->getDelStatus()) {
         DataBaseService::getInstance()->setDelNeedSleep();
     }
 
@@ -338,10 +338,22 @@ void PlayListView::resetSonglistBySinger(const QList<SingerInfo> &singerInfos)
 QList<MediaMeta> PlayListView::getMusicListData()
 {
     QList<MediaMeta> list;
-    for (int i = 0; i < m_model->rowCount(); i++) {
-        QModelIndex idx = m_model->index(i, 0, QModelIndex());
-        MediaMeta meta = idx.data(Qt::UserRole).value<MediaMeta>();
-        list.append(meta);
+    if (DataBaseService::getInstance()->getDelStatus()) {
+        // 批量删除后的音乐文件
+        QStringList metaList = DataBaseService::getInstance()->getDelMetaHashs();
+        for (int i = 0; i < m_model->rowCount(); i++) {
+            QModelIndex idx = m_model->index(i, 0, QModelIndex());
+            MediaMeta meta = idx.data(Qt::UserRole).value<MediaMeta>();
+            if (!metaList.contains(meta.hash)) {
+                list.append(meta);
+            }
+        }
+    } else {
+        for (int i = 0; i < m_model->rowCount(); i++) {
+            QModelIndex idx = m_model->index(i, 0, QModelIndex());
+            MediaMeta meta = idx.data(Qt::UserRole).value<MediaMeta>();
+            list.append(meta);
+        }
     }
     return list;
 }

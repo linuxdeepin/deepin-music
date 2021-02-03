@@ -444,7 +444,7 @@ void AlbumListView::slotCoverUpdate(const MediaMeta &meta)
 
 void AlbumListView::slotRemoveSingleSong(const QString &listHash, const QString &musicHash)
 {
-    if (listHash != "all" || Player::getInstance()->getCurrentPlayListHash() != m_hash) {
+    if (listHash != "all") {
         return;
     }
     for (int i = 0; i < albumModel->rowCount(); i++) {
@@ -465,24 +465,27 @@ void AlbumListView::slotRemoveSingleSong(const QString &listHash, const QString 
             // 如果该专辑内歌曲不存在了，则刷新页面
             if (albumTmp.musicinfos.size() == 0) {
                 albumModel->removeRow(i);
-                int nextPlayIndex = i;
-                if (albumModel->rowCount() > 0 && isActive) {
-                    if (nextPlayIndex == albumModel->rowCount()) {
-                        nextPlayIndex = 0;
-                    }
-                    QModelIndex nextModelIndex = albumModel->index(nextPlayIndex, 0, QModelIndex());
-                    AlbumInfo nextAlbum = nextModelIndex.data(Qt::UserRole).value<AlbumInfo>();
-                    Player::getInstance()->clearPlayList();
-                    Player::getInstance()->setPlayList(nextAlbum.musicinfos.values());
-                    Player::getInstance()->setCurrentPlayListHash("album", false);
-                    emit Player::getInstance()->signalPlayListChanged();
-                    if (preStatue == Player::PlaybackStatus::Playing) {
-                        Player::getInstance()->playMeta(nextAlbum.musicinfos.values().first());
-                    } else {
-                        Player::getInstance()->setActiveMeta(nextAlbum.musicinfos.values().first());
+                if (Player::getInstance()->getCurrentPlayListHash() == m_hash) {
+                    int nextPlayIndex = i;
+                    if (albumModel->rowCount() > 0 && isActive) {
+                        if (nextPlayIndex == albumModel->rowCount()) {
+                            nextPlayIndex = 0;
+                        }
+                        QModelIndex nextModelIndex = albumModel->index(nextPlayIndex, 0, QModelIndex());
+                        AlbumInfo nextAlbum = nextModelIndex.data(Qt::UserRole).value<AlbumInfo>();
+                        Player::getInstance()->clearPlayList();
+                        Player::getInstance()->setPlayList(nextAlbum.musicinfos.values());
+                        Player::getInstance()->setCurrentPlayListHash("album", false);
+                        emit Player::getInstance()->signalPlayListChanged();
+                        if (preStatue == Player::PlaybackStatus::Playing) {
+                            Player::getInstance()->playMeta(nextAlbum.musicinfos.values().first());
+                        } else {
+                            Player::getInstance()->setActiveMeta(nextAlbum.musicinfos.values().first());
+                        }
                     }
                 }
             }
+            update();
             break;
         }
     }

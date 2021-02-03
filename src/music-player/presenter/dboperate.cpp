@@ -216,6 +216,7 @@ void DBOperate::slotRemoveSelectedSongs(const QString &curpage, const QStringLis
             deleteMetaFromPlaylist(curpage, musichashlist);
         }
     }
+    emit signalDelFinish();
 }
 
 bool DBOperate::deleteMetaFromAllMusic(const QStringList &metaHash, bool removeFromLocal)

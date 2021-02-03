@@ -139,7 +139,9 @@ public:
     // 从文管导入后播放的第一首歌曲
     QString              getFirstSong();
     // 获取删除状态
-    bool                 getDelStatu();
+    bool                 getDelStatus();
+    // 获取删除中的歌曲hash
+    QStringList          getDelMetaHashs();
     void                 setDelNeedSleep();
 public slots:
     void slotGetMetaFromThread(MediaMeta meta);
@@ -177,6 +179,8 @@ signals:
     void signalPlaylistNameUpdate(QString hash);
     // 已导入百分比
     void signalImportedPercent(int percent);
+    // 删除结束
+    void signalDelFinish();
 
     // 子线程执行
     // 导入歌曲
@@ -213,6 +217,8 @@ private:
     QString          m_firstSonsg = "";
     // 正在删除中
     bool             m_deleting = false;
+    // 准备删除的歌曲hash
+    QStringList      m_musichashlistToDel;
 };
 
 Q_DECLARE_METATYPE(DataBaseService::ListSortType)

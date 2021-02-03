@@ -294,6 +294,7 @@ QList<DataBaseService::PlaylistData> DataBaseService::getCustomSongList()
 void DataBaseService::removeSelectedSongs(const QString &curpage, const QStringList &musichashlist, bool removeFromLocal)
 {
     m_deleting = true;
+    m_musichashlistToDel = musichashlist;
     emit sigRemoveSelectedSongs(curpage, musichashlist, removeFromLocal);
     // 已经放到子线程中处理
 //    //需要从本地删除
@@ -602,6 +603,8 @@ void DataBaseService::slotRmvSongThread(const QString &listHash, const QString &
 void DataBaseService::slotDelFinish()
 {
     m_deleting = false;
+    m_musichashlistToDel.clear();
+    emit signalDelFinish();
 }
 
 QList<DataBaseService::PlaylistData> DataBaseService::allPlaylistMeta()
@@ -772,9 +775,14 @@ QString DataBaseService::getFirstSong()
     return strurl;
 }
 
-bool DataBaseService::getDelStatu()
+bool DataBaseService::getDelStatus()
 {
     return m_deleting;
+}
+
+QStringList DataBaseService::getDelMetaHashs()
+{
+    return m_musichashlistToDel;
 }
 
 void DataBaseService::setDelNeedSleep()
