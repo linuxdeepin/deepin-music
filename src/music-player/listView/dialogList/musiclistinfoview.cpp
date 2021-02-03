@@ -366,7 +366,7 @@ void MusicListInfoView::slotRemoveSongListActionClicked(bool checked)
 
     warnDlg.setObjectName(AC_MessageBox);
     warnDlg.setIcon(QIcon::fromTheme("deepin-music"));
-    if (warnDlg.exec()) {
+    if (warnDlg.exec() > 0) {
         DataBaseService::getInstance()->removeSelectedSongs("all", metaList, false);
     }
 }
