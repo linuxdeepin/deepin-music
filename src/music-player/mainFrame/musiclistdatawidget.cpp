@@ -71,6 +71,8 @@ MusicListDataWidget::MusicListDataWidget(QWidget *parent) :
             this, &MusicListDataWidget::slotRemoveSingleSong);
     connect(DataBaseService::getInstance(), &DataBaseService::signalPlaylistNameUpdate,
             this, &MusicListDataWidget::slotPlaylistNameUpdate);
+    // 音乐列表数据变化
+    connect(m_musicListView, &PlayListView::rowCountChanged, this, &MusicListDataWidget::slotMusicRowCountChanged);
 }
 
 MusicListDataWidget::~MusicListDataWidget()
@@ -536,6 +538,14 @@ void MusicListDataWidget::slotPlayAllClicked()
         break;
     default:
         break;
+    }
+}
+
+void MusicListDataWidget::slotMusicRowCountChanged()
+{
+    // 当前页面为歌曲列表时刷新按钮使能状态
+    if (m_musicListView && m_pStackedWidget->currentWidget() == m_musicListView) {
+        refreshPlayAllBtn(m_musicListView->getMusicCount());
     }
 }
 

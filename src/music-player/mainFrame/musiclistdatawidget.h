@@ -69,6 +69,8 @@ protected:
 private slots:
     // 播放所有歌曲
     void slotPlayAllClicked();
+    // 歌曲列表数量变化
+    void slotMusicRowCountChanged();
 private:
     void initUI();
     void initTitle(QHBoxLayout *layout);
