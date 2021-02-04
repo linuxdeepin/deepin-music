@@ -70,7 +70,8 @@ private:
     void initShortcut();
 
     void setPlayProperty(Player::PlaybackStatus status);
-    void resetBtnVisible();
+    // 设置按钮使能状态
+    void resetBtnEnable();
     QString playModeStr(int mode);
 signals:
     void lyricClicked();

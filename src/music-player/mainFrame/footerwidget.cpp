@@ -342,7 +342,7 @@ void FooterWidget::initUI(QWidget *parent)
     connect(DataBaseService::getInstance(), &DataBaseService::signalFavSongAdd, this, &FooterWidget::flushFavoriteBtnIconAdd);
 
     slotFlushSoundIcon();
-    resetBtnVisible();
+    resetBtnEnable();
 }
 
 void FooterWidget::installTipHint(QWidget *widget, const QString &hintstr)
@@ -448,7 +448,7 @@ void FooterWidget::setPlayProperty(Player::PlaybackStatus status)
     }
 }
 
-void FooterWidget::resetBtnVisible()
+void FooterWidget::resetBtnEnable()
 {
     // 需求变动，只针对收藏按钮做处理
     if (Player::getInstance()->getActiveMeta().hash.isEmpty()) {
@@ -619,7 +619,7 @@ void FooterWidget::slotMediaMetaChanged(MediaMeta activeMeta)
 {
     Q_UNUSED(activeMeta)
     MediaMeta meta = Player::getInstance()->getActiveMeta();
-    resetBtnVisible();
+    resetBtnEnable();
     //替换封面按钮与背景图片
     QString imagesDirPath = Global::cacheDir() + "/images/" + meta.hash + ".jpg";
     QFileInfo file(imagesDirPath);
@@ -646,7 +646,12 @@ void FooterWidget::slotMediaMetaChanged(MediaMeta activeMeta)
         m_btFavorite->setIcon(QIcon::fromTheme("dcc_collection"));
         m_btFavorite->setEnabled(false);
     } else {
-        m_btFavorite->setEnabled(true);
+        // 根据当前歌曲判断收藏是否可用
+        if (Player::getInstance()->getActiveMeta().hash.isEmpty()) {
+            m_btFavorite->setEnabled(false);
+        } else {
+            m_btFavorite->setEnabled(true);
+        }
         if (DataBaseService::getInstance()->favoriteExist(Player::getInstance()->getActiveMeta())) {
             m_btFavorite->setIcon(QIcon::fromTheme("collection1_press"));
         } else {
