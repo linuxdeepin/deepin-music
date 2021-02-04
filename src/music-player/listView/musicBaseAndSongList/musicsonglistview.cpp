@@ -542,6 +542,8 @@ void MusicSongListView::slotPopMessageWindow(int stat)
             Player::getInstance()->setActiveMeta(MediaMeta());
             //设置当前页面，刷新播放队列和显示列表
             Player::getInstance()->setCurrentPlayListHash("all", true);
+            //清空列表
+            Player::getInstance()->clearPlayList();
             //播放歌单第一首歌曲
             Player::getInstance()->forcePlayMeta();
         }
