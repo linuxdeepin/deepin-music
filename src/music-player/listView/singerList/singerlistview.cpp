@@ -149,7 +149,9 @@ SingerListView::SingerListView(QString hash, QWidget *parent)
     // 歌曲删除
     connect(DataBaseService::getInstance(), &DataBaseService::signalRmvSong,
             this, &SingerListView::slotRemoveSingleSong);
-
+    // 歌曲导入
+    connect(DataBaseService::getInstance(), &DataBaseService::signalMusicAddOne,
+            this, &SingerListView::slotAddSingleSong);
     // 跳转到播放的位置
     connect(CommonService::getInstance(), &CommonService::sigScrollToCurrentPosition,
             this, &SingerListView::slotScrollToCurrentPosition);
@@ -597,6 +599,26 @@ void SingerListView::slotUpdateCodec(const MediaMeta &meta)
     }
 }
 
+void SingerListView::slotAddSingleSong(const QString &listHash, const MediaMeta &addMeta)
+{
+    Q_UNUSED(listHash)
+    // 有歌曲导入，刷新列表数据
+    for (int i = 0; i < singerModel->rowCount(); i++) {
+        QModelIndex idx = singerModel->index(i, 0, QModelIndex());
+        SingerInfo singerTmp = idx.data(Qt::UserRole).value<SingerInfo>();
+
+        if (singerTmp.singerName == addMeta.singer) {
+            if (!singerTmp.musicinfos.contains(addMeta.hash)) {
+                singerTmp.musicinfos[addMeta.hash] = addMeta;
+                QVariant albumval;
+                albumval.setValue(singerTmp);
+                singerModel->setData(idx, albumval, Qt::UserRole);
+                break;
+            }
+        }
+    }
+}
+
 void SingerListView::dragEnterEvent(QDragEnterEvent *event)
 {
     auto t_formats = event->mimeData()->formats();
@@ -634,7 +656,7 @@ void SingerListView::dropEvent(QDropEvent *event)
         }
 
         if (!localpaths.isEmpty()) {
-            DataBaseService::getInstance()->importMedias("all", localpaths);
+            DataBaseService::getInstance()->importMedias(m_hash, localpaths);
         }
     }
 

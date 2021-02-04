@@ -647,83 +647,107 @@ void PlayListView::slotRemoveSingleSong(const QString &listHash, const QString &
 
 void PlayListView::slotMusicAddOne(QString listHash, MediaMeta addMeta)
 {
-    if (!this->isVisible() || listHash != m_currentHash) {
-        return;
-    }
-    DataBaseService::ListSortType sortType = DataBaseService::SortByAddTimeASC;//getSortType();
-    if (m_model->rowCount() == 0) {
-        insertRow(0, addMeta);
-    } else {
-        bool isInserted = false;
-        //如果已经存在，则不加入
-        if (!isContain(addMeta.hash)) {
-            for (int rowIndex = 0; rowIndex < m_model->rowCount(); rowIndex++) {
-                isInserted = false;
-                QModelIndex index = m_model->index(rowIndex, 0, QModelIndex());
-                MediaMeta meta = index.data(Qt::UserRole).value<MediaMeta>();
-                switch (sortType) {
-                case DataBaseService::SortByAddTimeASC: {
-                    if (addMeta.timestamp <= meta.timestamp) {
-                        insertRow(rowIndex, addMeta);
-                        isInserted = true;
-                    }
-                    break;
-                }
-                case DataBaseService::SortByTitleASC: {
-                    if (addMeta.pinyinTitle <= meta.pinyinTitle) {
-                        insertRow(rowIndex, addMeta);
-                        isInserted = true;
-                    }
-                    break;
-                }
-                case DataBaseService::SortBySingerASC: {
-                    if (addMeta.pinyinArtist <= meta.pinyinArtist) {
-                        insertRow(rowIndex, addMeta);
-                        isInserted = true;
-                    }
-                    break;
-                }
-                case DataBaseService::SortByAblumASC: {
-                    if (addMeta.pinyinAlbum <= meta.pinyinAlbum) {
-                        insertRow(rowIndex, addMeta);
-                        isInserted = true;
-                    }
-                    break;
-                }
-                case DataBaseService::SortByAddTimeDES: {
-                    if (addMeta.timestamp >= meta.timestamp) {
-                        insertRow(rowIndex, addMeta);
-                        isInserted = true;
-                    }
-                    break;
-                }
-                case DataBaseService::SortByTitleDES: {
-                    if (addMeta.pinyinTitle >= meta.pinyinTitle) {
-                        insertRow(rowIndex, addMeta);
-                        isInserted = true;
-                    }
-                    break;
-                }
-                case DataBaseService::SortBySingerDES: {
-                    if (addMeta.pinyinArtist >= meta.pinyinArtist) {
-                        insertRow(rowIndex, addMeta);
-                        isInserted = true;
-                    }
-                    break;
-                }
-                case DataBaseService::SortByAblumDES: {
-                    if (addMeta.pinyinAlbum <= meta.pinyinAlbum) {
-                        insertRow(rowIndex, addMeta);
-                        isInserted = true;
-                    }
-                    break;
-                }
-                default:
-                    break;
-                }
-            }
-            if (!isInserted) {
+    if (m_currentHash == "album" || m_currentHash == "albumResult"
+            || m_currentHash == "artist" || m_currentHash == "artistResult") {
+        // 二级页面
+        if (m_model->rowCount() < 0) {
+            return;
+        }
+        if (m_currentHash == "album" || m_currentHash == "albumResult") {
+            // 专辑二级页面根据专辑名称匹配
+            QModelIndex index = m_model->index(0, 0, QModelIndex());
+            MediaMeta meta = index.data(Qt::UserRole).value<MediaMeta>();
+            if (addMeta.album == meta.album) {
                 insertRow(m_model->rowCount(), addMeta);
+            }
+        } else if (m_currentHash == "artist" || m_currentHash == "artistResult") {
+            // 歌手二级页面根据歌手名称匹配
+            QModelIndex index = m_model->index(0, 0, QModelIndex());
+            MediaMeta meta = index.data(Qt::UserRole).value<MediaMeta>();
+            if (addMeta.singer == meta.singer) {
+                insertRow(m_model->rowCount(), addMeta);
+            }
+        }
+    } else {
+        // 普通歌单页面
+        if (!this->isVisible() || listHash != m_currentHash) {
+            return;
+        }
+        DataBaseService::ListSortType sortType = DataBaseService::SortByAddTimeASC;//getSortType();
+        if (m_model->rowCount() == 0) {
+            insertRow(0, addMeta);
+        } else {
+            bool isInserted = false;
+            //如果已经存在，则不加入
+            if (!isContain(addMeta.hash)) {
+                for (int rowIndex = 0; rowIndex < m_model->rowCount(); rowIndex++) {
+                    isInserted = false;
+                    QModelIndex index = m_model->index(rowIndex, 0, QModelIndex());
+                    MediaMeta meta = index.data(Qt::UserRole).value<MediaMeta>();
+                    switch (sortType) {
+                    case DataBaseService::SortByAddTimeASC: {
+                        if (addMeta.timestamp <= meta.timestamp) {
+                            insertRow(rowIndex, addMeta);
+                            isInserted = true;
+                        }
+                        break;
+                    }
+                    case DataBaseService::SortByTitleASC: {
+                        if (addMeta.pinyinTitle <= meta.pinyinTitle) {
+                            insertRow(rowIndex, addMeta);
+                            isInserted = true;
+                        }
+                        break;
+                    }
+                    case DataBaseService::SortBySingerASC: {
+                        if (addMeta.pinyinArtist <= meta.pinyinArtist) {
+                            insertRow(rowIndex, addMeta);
+                            isInserted = true;
+                        }
+                        break;
+                    }
+                    case DataBaseService::SortByAblumASC: {
+                        if (addMeta.pinyinAlbum <= meta.pinyinAlbum) {
+                            insertRow(rowIndex, addMeta);
+                            isInserted = true;
+                        }
+                        break;
+                    }
+                    case DataBaseService::SortByAddTimeDES: {
+                        if (addMeta.timestamp >= meta.timestamp) {
+                            insertRow(rowIndex, addMeta);
+                            isInserted = true;
+                        }
+                        break;
+                    }
+                    case DataBaseService::SortByTitleDES: {
+                        if (addMeta.pinyinTitle >= meta.pinyinTitle) {
+                            insertRow(rowIndex, addMeta);
+                            isInserted = true;
+                        }
+                        break;
+                    }
+                    case DataBaseService::SortBySingerDES: {
+                        if (addMeta.pinyinArtist >= meta.pinyinArtist) {
+                            insertRow(rowIndex, addMeta);
+                            isInserted = true;
+                        }
+                        break;
+                    }
+                    case DataBaseService::SortByAblumDES: {
+                        if (addMeta.pinyinAlbum <= meta.pinyinAlbum) {
+                            insertRow(rowIndex, addMeta);
+                            isInserted = true;
+                        }
+                        break;
+                    }
+                    default:
+                        break;
+                    }
+                }
+                if (!isInserted) {
+                    insertRow(m_model->rowCount(), addMeta);
+                }
             }
         }
     }

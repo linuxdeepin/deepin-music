@@ -374,7 +374,8 @@ void MusicListDataWidget::dragEnterEvent(QDragEnterEvent *event)
 
 void MusicListDataWidget::dropEvent(QDropEvent *event)
 {
-    DWidget::dropEvent(event);
+    // 不需要向下传递事件
+//    DWidget::dropEvent(event);
 
     if (!event->mimeData()->hasFormat("text/uri-list")) {
         return;

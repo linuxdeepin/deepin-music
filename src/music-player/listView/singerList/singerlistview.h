@@ -93,6 +93,8 @@ private slots:
     void slotCoverUpdate(const MediaMeta &meta);
     // 接收编码变更，更新对应项编码
     void slotUpdateCodec(const MediaMeta &meta);
+    // 添加歌曲
+    void slotAddSingleSong(const QString &listHash, const MediaMeta &addMeta);
 protected:
     void dragEnterEvent(QDragEnterEvent *event) Q_DECL_OVERRIDE;
     void dragMoveEvent(QDragMoveEvent *event) Q_DECL_OVERRIDE;
