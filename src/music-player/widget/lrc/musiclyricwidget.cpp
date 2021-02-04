@@ -78,8 +78,11 @@ MusicLyricWidget::MusicLyricWidget(QWidget *parent)
     m_nolyric->setAlignment(Qt::AlignCenter);
     m_nolyric->setText(tr("No lyrics yet"));
     QPalette nolyr = m_nolyric->palette();
-    nolyr.setColor(QPalette::WindowText, QColor(85, 85, 85, 102));
+    QColor nolyrPaletteColor("#C0C6D4");
+    nolyrPaletteColor.setAlphaF(0.4);
+    nolyr.setColor(QPalette::WindowText, nolyrPaletteColor);
     m_nolyric->setPalette(nolyr);
+    m_nolyric->setForegroundRole(QPalette::WindowText);
 
 
     QHBoxLayout *layout = new QHBoxLayout(this);
@@ -241,6 +244,13 @@ void MusicLyricWidget::setThemeType(int type)
 
         QColor backMaskColor(255, 255, 255, 140);
         m_backgroundW->setMaskColor(backMaskColor);
+
+        QPalette nolyr = m_nolyric->palette();
+        QColor nolyrPaletteColor("#000000");
+        nolyrPaletteColor.setAlphaF(0.3);
+        nolyr.setColor(QPalette::WindowText, nolyrPaletteColor);
+        m_nolyric->setPalette(nolyr);
+        m_nolyric->setForegroundRole(QPalette::WindowText);
     } else {
         auto palette = this->palette();
         palette.setColor(DPalette::Background, QColor("#252525"));
@@ -248,6 +258,13 @@ void MusicLyricWidget::setThemeType(int type)
 
         QColor backMaskColor(37, 37, 37, 140);
         m_backgroundW->setMaskColor(backMaskColor);
+
+        QPalette nolyr = m_nolyric->palette();
+        QColor nolyrPaletteColor("#C0C6D4");
+        nolyrPaletteColor.setAlphaF(0.4);
+        nolyr.setColor(QPalette::WindowText, nolyrPaletteColor);
+        m_nolyric->setPalette(nolyr);
+        m_nolyric->setForegroundRole(QPalette::WindowText);
     }
 }
 
