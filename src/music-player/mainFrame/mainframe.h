@@ -84,7 +84,7 @@ private slots:
     // 所有歌曲被删除
     void slotAllMusicCleared();
     // 延迟自动播放
-    void slotAutoPlay(bool bremb);
+    void slotAutoPlay(const MediaMeta &meta);
     // 文管打开文件
     void slotPlayFromFileMaganager();
     // 显示二级页面

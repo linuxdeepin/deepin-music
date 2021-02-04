@@ -287,7 +287,7 @@ TEST(Application, other)
     emit Player::getInstance()->getMpris()->nextRequested();
 
     QTest::qWait(500);
-    Player::getInstance()->loadMediaProgress(Player::getInstance()->getActiveMeta().localPath);
+    //Player::getInstance()->loadMediaProgress(Player::getInstance()->getActiveMeta().localPath);
 
     MediaMeta meta = Player::getInstance()->getActiveMeta();
     Player::getInstance()->stop();

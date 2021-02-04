@@ -61,6 +61,12 @@ public:
     void updateShortcut();
     // 加载波形图
     void slotLoadDetector(const QString &hash);
+    /**
+     * @brief slotSetWaveValue 设置初始进度
+     * @param step 初始播放时间ms
+     * @param duration 整体时长ms
+     */
+    void slotSetWaveValue(int step, long duration);
 private:
     void initUI(QWidget *parent = nullptr);
     void installTipHint(QWidget *widget, const QString &hintstr);

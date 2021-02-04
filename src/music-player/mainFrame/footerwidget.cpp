@@ -773,10 +773,13 @@ void FooterWidget::slotLoadDetector(const QString &hash)
     MediaMeta mt = DataBaseService::getInstance()->getMusicInfoByHash(hash);
     if (mt.localPath.isEmpty())
         return;
-//    if (m_metaBufferDetector)
     m_metaBufferDetector.onBufferDetector(mt.localPath, mt.hash);
-//    else
-//        qDebug() << __FUNCTION__ << " at line:" << __LINE__ << " m_metaBufferDetector is not initailized";
+    qDebug() << __FUNCTION__ << mt.localPath << mt.hash;
+}
+
+void FooterWidget::slotSetWaveValue(int step, long duration)
+{
+    m_waveform->onProgressChanged(step, duration, 1); //1:偏移率
 }
 
 void FooterWidget::resizeEvent(QResizeEvent *event)

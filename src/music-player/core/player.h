@@ -99,7 +99,7 @@ public:
     MediaMeta getActiveMeta();
     QIcon playingIcon();
     // 启动加载歌曲进度
-    void loadMediaProgress(const QString &path);
+    //void loadMediaProgress(const QString &path);
     // 设置当前歌曲
     void setActiveMeta(const MediaMeta &meta);
     // 当音乐处于停止状态或者播放队列为空时，播放列表中第一首歌

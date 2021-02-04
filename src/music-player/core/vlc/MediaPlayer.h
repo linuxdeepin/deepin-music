@@ -94,7 +94,7 @@ public:
     //void openOnly(VlcMedia *media);
 
     /**
-     * @brief releaseMediaPlayer 释放vlc资源
+     * @brief initCddaTrack 初始化cdda track索引
      */
     void initCddaTrack();
 

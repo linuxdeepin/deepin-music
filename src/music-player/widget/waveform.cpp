@@ -353,11 +353,9 @@ void Waveform::onProgressChanged(qint64 value, qint64 duration, qint64 coefficie
 
     /*------curCoefficient-------*/
     curCoefficient = coefficient;
-
     auto progress = 0;
     if (0 != duration) {
         progress = static_cast<int>(length * value / duration);
-        //isPlayNextMeta(progress);
     }
 
     if (signalsBlocked()) {

@@ -68,6 +68,7 @@
 DCORE_USE_NAMESPACE
 
 static const int sFadeInOutAnimationDuration = 900; //ms
+static int INT_LAST_PROGRESS_FLAG = 1;
 
 Player::Player(QObject *parent) : QObject(parent)
 {
@@ -139,19 +140,29 @@ void Player::playMeta(MediaMeta meta)
                 return;
             }
         }
-        m_ActiveMeta = meta;
-        setActiveMeta(meta);
+
         if (m_qvinstance == nullptr || m_qvplayer == nullptr || m_qvmedia == nullptr) {
             initVlc();
         }
+
         m_qvmedia->initMedia(meta.localPath, meta.mmType == MIMETYPE_CDA ? false : true, m_qvinstance, meta.track);
         m_qvplayer->open(m_qvmedia);
-        //m_qvplayer->setTime(meta.offset);
         m_qvplayer->play();
 
+        if (INT_LAST_PROGRESS_FLAG && m_ActiveMeta.hash == meta.hash) {
+            QTimer::singleShot(100, this, [ = ]() {//为了记录进度条生效，在加载的时候让音乐播放100ms
+                qDebug() << "seek last position:" << m_ActiveMeta.offset;
+                m_qvplayer->setTime(m_ActiveMeta.offset);
+            });
+            INT_LAST_PROGRESS_FLAG = 0;
+        }
+
+        m_ActiveMeta = meta;
+        setActiveMeta(meta);
         /*************************
          * mute to dbus
          * ***********************/
+
         QTimer::singleShot(100, this, [ = ]() {
             setDbusMuted();
         });
@@ -208,7 +219,6 @@ void Player::resume()
         //reopen data
         m_qvmedia->initMedia(m_ActiveMeta.localPath, true, m_qvinstance);
         m_qvplayer->open(m_qvmedia);
-        m_qvplayer->setTime(m_ActiveMeta.offset);
     }
 
     if (m_fadeInOut) {
@@ -217,7 +227,7 @@ void Player::resume()
     }
 
     qDebug() << "resume top";
-    m_qvplayer->resume();
+    m_qvplayer->play();
     if (m_fadeInOut && m_fadeInAnimation->state() != QPropertyAnimation::Running) {
         m_fadeInAnimation->setEasingCurve(QEasingCurve::InCubic);
         m_fadeInAnimation->setStartValue(0.1000);
@@ -671,7 +681,7 @@ void Player::setPosition(qlonglong position)
     if (m_qvplayer->length() == m_ActiveMeta.length) {
         return m_qvplayer->setTime(position);
     } else {
-        m_qvplayer->setTime(position + m_ActiveMeta.offset);
+        m_qvplayer->setTime(position);
     }
 }
 
@@ -1006,7 +1016,7 @@ void Player::initVlc()
     connect(m_timer, SIGNAL(timeout()), this, SLOT(changePicture()));
     connect(m_qvplayer, &VlcMediaPlayer::timeChanged,
     this, [ = ](qint64 position) {
-        Q_EMIT positionChanged(position - m_ActiveMeta.offset,  m_ActiveMeta.length, 1);
+        Q_EMIT positionChanged(position /*- m_ActiveMeta.offset*/,  m_ActiveMeta.length, 1); //直接上报当前位置，offset无实质意义
     });
 
     //vlc stateChanged
@@ -1167,28 +1177,28 @@ void Player::initMpris()
     });
 }
 
-void Player::loadMediaProgress(const QString &path)
-{
-    qDebug() << __FUNCTION__ << " at line:" << __LINE__ << " initialize path:" << path;
-    QFileInfo info(path);
-    if (!info.exists())
-        return;
+//void Player::loadMediaProgress(const QString &path)
+//{
+//    qDebug() << __FUNCTION__ << " at line:" << __LINE__ << " initialize path:" << path;
+//    QFileInfo info(path);
+//    if (!info.exists())
+//        return;
 
-    if (m_qvinstance == nullptr || m_qvplayer == nullptr || m_qvmedia == nullptr) {
-        initVlc();
-    }
-    m_qvplayer->blockSignals(true);
-    m_qvmedia->initMedia(path, true, m_qvinstance);
-    m_qvplayer->open(m_qvmedia);
-    m_qvplayer->play();
-    float volEqualizer =  m_qvplayer->equalizer()->preamplification();
-    m_qvplayer->equalizer()->setPreamplification(0.1f);
-    QTimer::singleShot(100, this, [ = ]() {//为了记录进度条生效，在加载的时候让音乐播放100ms
-        m_qvplayer->pause();
-        m_qvplayer->blockSignals(false);
-        m_qvplayer->equalizer()->setPreamplification(volEqualizer);
-    });
-}
+//    if (m_qvinstance == nullptr || m_qvplayer == nullptr || m_qvmedia == nullptr) {
+//        initVlc();
+//    }
+//    m_qvplayer->setAudioEnabled(false);
+//    m_qvplayer->blockSignals(true);
+//    m_qvmedia->initMedia(path, true, m_qvinstance);
+//    m_qvplayer->open(m_qvmedia);
+//    m_qvplayer->play();
+
+//    QTimer::singleShot(100, this, [ = ]() {//为了记录进度条生效，在加载的时候让音乐播放100ms
+//        m_qvplayer->pause();
+//        m_qvplayer->blockSignals(false);
+//        m_qvplayer->setAudioEnabled(true);
+//    });
+//}
 
 void Player::changePicture()
 {

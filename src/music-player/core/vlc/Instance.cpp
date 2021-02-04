@@ -69,7 +69,7 @@ VlcInstance::VlcInstance(const QStringList &args,
     : QObject(parent),
       _vlcInstance(nullptr),
       _status(false),
-      _logLevel(Vlc::DebugLevel)
+      _logLevel(Vlc::ErrorLevel)
 {
     Q_UNUSED(args)
     vlc_new_function vlc_new = (vlc_new_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("libvlc_new");

@@ -203,8 +203,6 @@ void VlcMediaPlayer::open(VlcMedia *media)
     vlc_media_player_set_media(_vlcMediaPlayer, media->core());
     if (track >= 0) {
         config_PutInt_fc((vlc_object_t *)_vlcMediaPlayer, "cdda-track", track);
-//        config_PutInt_fc((vlc_object_t *)_vlcMediaPlayer, "cdda-first-sector", -1);
-//        config_PutInt_fc((vlc_object_t *)_vlcMediaPlayer, "cdda-last-sector", 0);
     }
 
     VlcError::showErrmsg();
@@ -213,7 +211,7 @@ void VlcMediaPlayer::open(VlcMedia *media)
 void VlcMediaPlayer::initCddaTrack()
 {
     /**
-     * important:do not modify it,it will access to open stream failed if does not set cdda-track to zero!
+     * important:do not modify it,it will open stream failed if does not set cdda-track to zero!
      **/
     config_PutInt_func config_PutInt_fc = (config_PutInt_func)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("config_PutInt");
     config_PutInt_fc((vlc_object_t *)_vlcMediaPlayer, "cdda-track", 0);

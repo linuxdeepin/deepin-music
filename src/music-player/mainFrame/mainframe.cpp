@@ -366,25 +366,25 @@ void MainFrame::autoStartToPlay()
         Player::getInstance()->setCurrentPlayListHash(lastplaypage, true);
         //获取上一次的歌曲信息
         MediaMeta medmeta = DataBaseService::getInstance()->getMusicInfoByHash(lastMeta);
+        //上一次进度的赋值
+        medmeta.offset = MusicSettings::value("base.play.last_position").toInt();
         if (medmeta.localPath.isEmpty())
             return;
         if (bremb) {
             Player::getInstance()->setActiveMeta(medmeta);
             //加载进度
-            Player::getInstance()->loadMediaProgress(medmeta.localPath);
-            //设置进度
-            QTimer::singleShot(150, [ = ]() {
-                Player::getInstance()->setPosition(MusicSettings::value("base.play.last_position").toInt());
-            });
+            /**
+              * 初始不再读取歌曲设置进度，方案更改为直接设置进度，播放歌曲后跳转
+              **/
+            //Player::getInstance()->loadMediaProgress(medmeta.localPath);
+            // 设置进度
+            m_footerWidget->slotSetWaveValue(MusicSettings::value("base.play.last_position").toInt(), medmeta.length);
             //加载波形图数据
             m_footerWidget->slotLoadDetector(lastMeta);
         }
-
         //自动播放处理
         if (bautoplay) {
-            QTimer::singleShot(200, [ = ]() {
-                slotAutoPlay(bremb);
-            });
+            slotAutoPlay(medmeta); //不再延迟处理，直接播放
         }
     }
 }
@@ -661,19 +661,13 @@ void MainFrame::slotAllMusicCleared()
     m_newSonglistAction->setEnabled(false);
 }
 
-void MainFrame::slotAutoPlay(bool bremb)
+void MainFrame::slotAutoPlay(const MediaMeta &meta)
 {
     qDebug() << "slotAutoPlay=========";
-    auto lastMeta = MusicSettings::value("base.play.last_meta").toString();
-    if (bremb)
-        Player::getInstance()->resume();
-    else {
-        MediaMeta mt = DataBaseService::getInstance()->getMusicInfoByHash(lastMeta);
-        if (!mt.localPath.isEmpty())
-            Player::getInstance()->playMeta(mt);
-        else
-            qDebug() << __FUNCTION__ << " at line:" << __LINE__ << " localPath is empty.";
-    }
+    if (!meta.localPath.isEmpty())
+        Player::getInstance()->playMeta(meta);
+    else
+        qDebug() << __FUNCTION__ << " at line:" << __LINE__ << " localPath is empty.";
 }
 
 void MainFrame::slotPlayFromFileMaganager()
