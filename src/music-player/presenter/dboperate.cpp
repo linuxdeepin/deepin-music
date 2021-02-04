@@ -340,8 +340,10 @@ void DBOperate::addMediaMetaToDB(const MediaMeta &meta)
             emit sigImportMetaFromThread(meta);
             // 添加到自定义歌单,但是当前页面上你所有音乐,则所有音乐要刷新,添加这个信号
             // 直接添加到所有音乐的,通过signalAllMusicAddOne信号刷新
-            if (m_importHash != "all" && m_importHash != "album"
-                    && m_importHash != "albumResult" && m_importHash != "artist" && m_importHash != "artistResult") {
+            if (m_importHash != "all"
+                    && m_importHash != "album" && m_importHash != "albumResult"
+                    && m_importHash != "artist" && m_importHash != "artistResult"
+                    && m_importHash != "musicResult") {
                 QList<MediaMeta> metas;
                 metas.append(meta);
                 addMetaToPlaylist(m_importHash, metas);
