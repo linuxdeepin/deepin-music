@@ -125,47 +125,6 @@ QList<MediaMeta> DataBaseService::allMusicInfos(bool refresh)
     }
 }
 
-bool DataBaseService::deleteMetaFromAllMusic(const QStringList &metaHash, bool removeFromLocal)
-{
-    QSqlQuery query(m_db);
-    QString strsql;
-    for (QString hash : metaHash) {
-        strsql = QString("DELETE FROM musicNew WHERE hash='%1'").arg(hash);
-        query.prepare(strsql);
-        if (! query.exec()) {
-            qCritical() << query.lastError() << strsql;
-        } else {
-            for (int i = 0; i < m_AllMediaMeta.size(); i++) {
-                if (m_AllMediaMeta.at(i).hash == hash) {
-                    if (removeFromLocal) {
-                        QFile info(m_AllMediaMeta.at(i).localPath);
-                        if (info.exists()) {
-                            info.remove();
-                        }
-                    }
-                    m_AllMediaMeta.removeAt(i);
-                    break;
-                }
-            }
-            emit signalRmvSong("all", hash);
-        }
-    }
-
-    if (allMusicInfosCount() <= 0) {
-        emit signalAllMusicCleared();
-    }
-
-    //遍历所有歌单,包含我的收藏
-    for (PlaylistData playlist : m_PlaylistMeta) {
-        if (playlist.readonly != 1) {
-            deleteMetaFromPlaylist(playlist.uuid, metaHash);
-        }
-    }
-    deleteMetaFromPlaylist("fav", metaHash);
-
-    return true;
-}
-
 int DataBaseService::allMusicInfosCount()
 {
     int count = 0;
@@ -296,19 +255,6 @@ void DataBaseService::removeSelectedSongs(const QString &curpage, const QStringL
     m_deleting = true;
     m_musichashlistToDel = musichashlist;
     emit sigRemoveSelectedSongs(curpage, musichashlist, removeFromLocal);
-    // 已经放到子线程中处理
-//    //需要从本地删除
-//    if (removeFromLocal) {
-//        //遍历musicNew
-//        deleteMetaFromAllMusic(musichashlist, removeFromLocal);
-//    } else {
-//        if (curpage == "all") {
-//            //遍历musicNew
-//            deleteMetaFromAllMusic(musichashlist, removeFromLocal);
-//        } else {
-//            deleteMetaFromPlaylist(curpage, musichashlist);
-//        }
-//    }
 }
 
 
@@ -558,30 +504,6 @@ void DataBaseService::slotImportFinished(int failCount, int successCount, int ex
     emit signalCreatCoverImg(m_AllMediaMeta);
     //启动加载数据完成后直接播放第一首歌
     emit signalPlayFromFileMaganager();
-}
-
-void DataBaseService::slotCreatOneCoverImg(MediaMeta meta)
-{
-    QSqlQuery query(m_db);
-    query.prepare("UPDATE musicNew "
-                  "SET hasimage = :hasimage "
-                  "WHERE hash = :hash;");
-    query.bindValue(":hash", meta.hash);
-    query.bindValue(":hasimage", meta.hasimage);
-
-    if (! query.exec()) {
-        qWarning() << query.lastError();
-        return;
-    }
-    for (int i = 0; i < m_AllMediaMeta.size(); i++) {
-        if (m_AllMediaMeta.at(i).hash == meta.hash) {
-            MediaMeta metaTemp = m_AllMediaMeta.at(i);
-            metaTemp.hasimage = meta.hasimage;
-            m_AllMediaMeta.replace(i, metaTemp);
-            emit signalCoverUpdate(metaTemp);
-            break;
-        }
-    }
 }
 
 void DataBaseService::slotRmvSongThread(const QString &listHash, const QString &musicHash, bool removeFromLocal)
@@ -956,24 +878,6 @@ bool DataBaseService::isPlaylistExist(const QString &uuid)
     query.first();
 
     return query.value(0).toInt() > 0;
-}
-
-bool DataBaseService::isMediaMetaExist(const QString &hash)
-{
-    QSqlQuery query(m_db);
-    query.prepare("SELECT COUNT(*) FROM musicNew where hash = :hash");
-    query.bindValue(":hash", hash);
-
-    if (!query.exec()) {
-        qWarning() << query.lastError();
-        return false;
-    }
-
-    if (query.next()) {
-        return query.value(0).toInt() > 0;
-    }
-
-    return false;
 }
 
 void DataBaseService::initPlaylistTable()

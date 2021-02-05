@@ -79,7 +79,6 @@ public:
 
     // 所有歌曲信息
     QList<MediaMeta>     allMusicInfos(bool refresh = true);
-    bool                 deleteMetaFromAllMusic(const QStringList &metaHash, bool removeFromLocal);
     // 歌曲数量
     int                  allMusicInfosCount();
     // 通过hash值获取单个歌曲的信息
@@ -147,8 +146,6 @@ public slots:
     void slotGetMetaFromThread(MediaMeta meta);
     // 收到子线程导入结束通知
     void slotImportFinished(int failCount, int successCount, int exsitCount);
-    // 收到子线程一张图片加载完信号
-    void slotCreatOneCoverImg(MediaMeta meta);
     // 收到子线程删除歌曲通知消息，动态显示
     void slotRmvSongThread(const QString &listHash, const QString &musicHash, bool removeFromLocal);
     // 收到子线程删除结束
@@ -190,7 +187,6 @@ signals:
 private:
     bool createConnection();
     bool isPlaylistExist(const QString &uuid);
-    bool isMediaMetaExist(const QString &hash);
     // 初始化歌单统计表
     void initPlaylistTable();
 public:
