@@ -178,12 +178,14 @@ void FooterWidget::initUI(QWidget *parent)
     m_title = new Label;
     m_title->setObjectName("FooterTitle");
     m_title->setText(tr("Unknown Title"));
+    m_title->setMaximumWidth(140);
     m_title->setForegroundRole(DPalette::BrightText);
     DFontSizeManager::instance()->bind(m_title, DFontSizeManager::T8, QFont::Normal);
     // 歌唱者
     m_artist = new Label;
     m_artist->setObjectName("FooterArtist");
     m_artist->setText(tr("Unknown artist"));
+    m_artist->setMaximumWidth(140);
     DFontSizeManager::instance()->bind(m_artist, DFontSizeManager::T9, QFont::Normal);
 
     QPalette artistPl = m_title->palette();
