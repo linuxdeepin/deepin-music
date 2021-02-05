@@ -41,7 +41,6 @@ include_directories(./listView/musicSearchList)
 include_directories(./listView/albumList)
 include_directories(./listView/singerList)
 include_directories(./listView/lyricLineList)
-include_directories(./listView/dialogList)
 
 include_directories(/usr/include/udisks2-qt5)
 
@@ -78,7 +77,6 @@ aux_source_directory(./view/widget/delegate allSource)
 aux_source_directory(./view/widget/model allSource)
 aux_source_directory(./listView/musicSearchList allSource)
 aux_source_directory(./listView/lyricLineList allSource)
-aux_source_directory(./listView/dialogList allSource)
 
 find_package(PkgConfig REQUIRED)
 

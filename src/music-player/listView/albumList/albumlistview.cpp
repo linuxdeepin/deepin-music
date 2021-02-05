@@ -41,7 +41,6 @@
 #include "albumdatamodel.h"
 #include "databaseservice.h"
 #include "commonservice.h"
-#include "musiclistdialog.h"
 #include "ac-desktop-define.h"
 #include "global.h"
 #include "playlistview.h"

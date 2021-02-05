@@ -34,10 +34,8 @@
 
 #include "global.h"
 #include "commonservice.h"
-#include "dialogList/musiclistinfoview.h"
 #include "ac-desktop-define.h"
 #include "player.h"
-#include "musiclistdialog.h"
 #include "playlistview.h"
 #include "metadetector.h"
 DWIDGET_USE_NAMESPACE

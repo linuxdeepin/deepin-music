@@ -90,7 +90,6 @@
 #include "listView/singerList/singerdelegate.h"
 #include "albumlistview.h"
 //#include "musiclistinfoview.h"
-#include "musiclistdialog.h"
 #include "dequalizerdialog.h"
 #include "infodialog.h"
 #include "closeconfirmdialog.h"

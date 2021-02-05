@@ -41,7 +41,6 @@
 #include "singerdatamodel.h"
 #include "databaseservice.h"
 #include "commonservice.h"
-#include "musiclistdialog.h"
 #include "global.h"
 #include "ac-desktop-define.h"
 

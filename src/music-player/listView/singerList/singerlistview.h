@@ -30,7 +30,6 @@ DWIDGET_USE_NAMESPACE
 
 class SingerDataModel;
 class SingerDataDelegate;
-class MusicListDialog;
 
 class SingerListView : public DListView
 {

@@ -17,9 +17,6 @@
 #include "playlistview.h"
 #include "musicsonglistview.h"
 #include "albumlistview.h"
-#include "musiclistinfoview.h"
-#include "musiclistdialog.h"
-
 
 //TEST(Application, musicListDialg)
 //{

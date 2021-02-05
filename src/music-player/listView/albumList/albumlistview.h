@@ -30,7 +30,6 @@ DWIDGET_USE_NAMESPACE
 
 class AlbumDataModel;
 class AlbumDataDelegate;
-class MusicListDialog;
 class AlbumListView : public DListView
 {
     Q_OBJECT
