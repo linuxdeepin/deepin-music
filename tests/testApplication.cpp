@@ -46,12 +46,10 @@
 #include "util/pinyinsearch.h"
 #include "metabufferdetector.h"
 #include "player.h"
-#include "fft.h"
 #include "musiclyric.h"
 #include "lyriclabel.h"
 
 #include <vlc/vlc.h>
-#include "vlc/Audio.h"
 #include "vlc/Error.h"
 #include "vlc/Common.h"
 #include "vlc/Enums.h"

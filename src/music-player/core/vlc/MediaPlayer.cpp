@@ -5,7 +5,6 @@
 #include <vlc_variables.h>
 #include <vlc_plugin.h>
 
-#include "Audio.h"
 #include "Error.h"
 #include "Instance.h"
 #include "Media.h"

@@ -22,9 +22,6 @@
 #include <DPushButton>
 #include <DTitlebar>
 
-
-
-#include <vlc/Audio.h>
 #include <vlc/Equalizer.h>
 #include <vlc/MediaPlayer.h>
 #include "ac-desktop-define.h"

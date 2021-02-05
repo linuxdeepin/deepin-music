@@ -49,7 +49,7 @@
 #include "speechCenter.h"
 #include <functional>
 #include "mainframe.h"
-#include "util/speechexportbus.h"
+#include "speechexportbus.h"
 
 using namespace Dtk::Core;
 using namespace Dtk::Widget;

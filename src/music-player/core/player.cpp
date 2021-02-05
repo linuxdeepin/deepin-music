@@ -47,7 +47,6 @@
 
 
 #include <vlc/vlc.h>
-#include "vlc/Audio.h"
 #include "vlc/Error.h"
 #include "vlc/Common.h"
 #include "vlc/Enums.h"

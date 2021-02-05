@@ -33,8 +33,8 @@
 
 #include "waveform.h"
 #include "waveformscale.h"
-#include "core/util/fft.h"
 #include "player.h"
+#include "math.h"
 
 const int Waveform::SAMPLE_DURATION = 30;
 const int Waveform::WAVE_WIDTH = 2;
