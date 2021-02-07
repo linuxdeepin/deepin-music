@@ -241,6 +241,7 @@ void FooterWidget::initUI(QWidget *parent)
     // 播放模式
     m_btPlayMode = new DIconButton(this);
     QString playmode = "sequential_loop";
+    // 根据播放管理类中模式，设置不同图标
     switch (Player::getInstance()->mode()) {
     case 0:
         playmode = "sequential_loop";
@@ -258,6 +259,7 @@ void FooterWidget::initUI(QWidget *parent)
     m_btPlayMode->setObjectName("FooterActionPlayMode");
     m_btPlayMode->setFixedSize(50, 50);
     m_btPlayMode->setIconSize(QSize(36, 36));
+    // 控件上记录当前播放模式
     m_btPlayMode->setProperty("playModel", QVariant(Player::getInstance()->mode()));
     mainHBoxlayout->addWidget(m_btPlayMode, 0);
 
@@ -459,7 +461,7 @@ void FooterWidget::resetBtnEnable()
         m_btFavorite->setEnabled(true);
     }
 }
-
+// 根据播放模式，获取中文tip
 QString FooterWidget::playModeStr(int mode)
 {
     QString playmode;

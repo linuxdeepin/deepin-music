@@ -102,7 +102,7 @@ void Player::init()
      * */
     m_mpris->setVolume((float)(m_volume / 100.0));
     setFadeInOut(MusicSettings::value("base.play.fade_in_out").toBool());
-
+    // 根据记录初始化播放模式
     m_mode = static_cast<PlaybackMode>(MusicSettings::value("base.play.playmode").toInt());
 
     m_currentPlayListHash = MusicSettings::value("base.play.last_playlist").toString(); //上一次的页面
@@ -687,6 +687,7 @@ void Player::setPosition(qlonglong position)
 void Player::setMode(Player::PlaybackMode mode)
 {
     m_mode = mode;
+    // 设置模式后保存
     MusicSettings::setOption("base.play.playmode", m_mode);
 }
 

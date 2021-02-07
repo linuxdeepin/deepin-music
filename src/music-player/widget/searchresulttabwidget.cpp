@@ -70,6 +70,7 @@ SearchResultTabWidget::SearchResultTabWidget(QWidget *parent) :
     hLayout->addWidget(m_music);
     //歌手
     m_singer = new Label(tr("Artists"), this);
+    // 根据字体大小重置控件大小
     m_singer->resize(static_cast<int>(strlen(reinterpret_cast<char *>(m_singer->text().data()))) * m_singer->font().pointSize(), 20);
     m_singer->setAlignment(Qt::AlignCenter);
     DFontSizeManager::instance()->bind(m_singer, DFontSizeManager::T6);
@@ -308,6 +309,7 @@ void SearchResultTabWidget::setLabelChecked(Label *label)
         m_album->setEnabled(false);
         m_music->setEnabled(true);
         m_LineWidget->show();
+        // 修改计算逻辑
         m_LineWidget->move((m_music->x() + (m_music->width() - m_LineWidget->width()) / 2), m_singer->y() + m_singer->height() + 8);
         m_StackedWidget->setCurrentWidget(m_musicListView);
     } else if (m_singer == label) {
