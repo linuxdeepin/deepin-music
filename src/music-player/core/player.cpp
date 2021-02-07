@@ -1206,6 +1206,7 @@ void Player::changePicture()
     m_playingCount = curCount + 1;
     switch (curCount) {
     case 0:
+        // 使用已加载的缓存图片，不必要每次都加载
         m_playingIcon = m_playingIcon1;
         break;
     case 1:

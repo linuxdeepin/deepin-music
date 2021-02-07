@@ -384,6 +384,7 @@ QPixmap SingerListView::getPlayPixmap() const
 
 QPixmap SingerListView::getPlayPixmap(bool isSelect)
 {
+    // 修改icon绘制方法为修改像素点颜色
     QColor color;
     if (isSelect) {
         color = QColor(Qt::white);
