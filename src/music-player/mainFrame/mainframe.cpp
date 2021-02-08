@@ -211,6 +211,7 @@ void MainFrame::initUI(bool showLoading)
     connect(DGuiApplicationHelper::instance(), &DGuiApplicationHelper::themeTypeChanged,
             this, &MainFrame::setThemeType);
 
+    // 歌词控件自动收起时更新歌词按钮
     connect(m_musicLyricWidget, &MusicLyricWidget::signalAutoHidden,
             m_footerWidget, &FooterWidget::slotLyricAutoHidden);
 
