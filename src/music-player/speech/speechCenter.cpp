@@ -436,6 +436,8 @@ QVariant SpeechCenter::playIndex(QString index)
     } else {
         MediaMeta meta = mediaMetas.at(indexNumber - 1);
         Player::getInstance()->playMeta(meta);
+        // 正确播放，重置标志位
+        isExit = true;
     }
     QString str;
     if (isExit) {
