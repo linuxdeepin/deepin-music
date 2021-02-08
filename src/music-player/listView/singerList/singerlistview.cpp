@@ -157,6 +157,9 @@ SingerListView::SingerListView(QString hash, QWidget *parent)
     // 刷新当前页面编码
     connect(CommonService::getInstance(), &CommonService::signalUpdateCodec,
             this, &SingerListView::slotUpdateCodec);
+    // 删除歌曲
+    connect(DataBaseService::getInstance(), SIGNAL(sigRemoveSelectedSongs(const QString &, const QStringList &, bool)),
+            this, SLOT(slotRemoveSelectedSongs(const QString &, const QStringList &, bool)), Qt::DirectConnection);
 }
 
 SingerListView::~SingerListView()
@@ -486,38 +489,12 @@ void SingerListView::slotRemoveSingleSong(const QString &listHash, const QString
 
         if (singerTmp.musicinfos.contains(musicHash)) {
             singerTmp.musicinfos.remove(musicHash);
-
             QVariant singerVal;
             singerVal.setValue(singerTmp);
             singerModel->setData(idx, singerVal, Qt::UserRole);
             // 如果该专辑内歌曲不存在了，则刷新页面
             if (singerTmp.musicinfos.size() == 0) {
                 singerModel->removeRow(i);
-                if (Player::getInstance()->getCurrentPlayListHash() == m_hash) {
-                    int nextPlayIndex = i;
-                    // 记录切换歌单之前播放状态
-                    Player::PlaybackStatus preStatue = Player::getInstance()->status();
-                    bool isActive = (musicHash == Player::getInstance()->getActiveMeta().hash);
-                    // 更新player中缓存的歌曲信息，如果存在正在播放的歌曲，停止播放
-                    Player::getInstance()->playRmvMeta(QStringList() << musicHash);
-                    if (singerModel->rowCount() > 0 && isActive) {
-                        if (nextPlayIndex == singerModel->rowCount()) {
-                            nextPlayIndex = 0;
-                        }
-                        QModelIndex nextModelIndex = singerModel->index(nextPlayIndex, 0, QModelIndex());
-                        SingerInfo nextSinger = nextModelIndex.data(Qt::UserRole).value<SingerInfo>();
-                        Player::getInstance()->clearPlayList();
-                        Player::getInstance()->setPlayList(nextSinger.musicinfos.values());
-                        // hash由当前已存确定，不应写死
-                        Player::getInstance()->setCurrentPlayListHash(m_hash, false);
-                        emit Player::getInstance()->signalPlayListChanged();
-                        if (preStatue == Player::PlaybackStatus::Playing) {
-                            Player::getInstance()->playMeta(nextSinger.musicinfos.values().first());
-                        } else {
-                            Player::getInstance()->setActiveMeta(nextSinger.musicinfos.values().first());
-                        }
-                    }
-                }
             }
             break;
         }
@@ -614,6 +591,103 @@ void SingerListView::slotAddSingleSong(const QString &listHash, const MediaMeta 
                 albumval.setValue(singerTmp);
                 singerModel->setData(idx, albumval, Qt::UserRole);
                 break;
+            }
+        }
+    }
+}
+
+void SingerListView::slotRemoveSelectedSongs(const QString &deleteHash, const QStringList &musicHashs, bool removeFromLocal)
+{
+    Q_UNUSED(removeFromLocal)
+    if (deleteHash != "all") {
+        return;
+    }
+    if (Player::getInstance()->getCurrentPlayListHash() != m_hash) {
+        return;
+    }
+    if (musicHashs.size() == 0) {
+        return;
+    }
+    // 标志准备删除的歌曲,找到当前正在播放的专辑index
+    int playIndex = -1;
+    for (int i = 0; i < singerModel->rowCount(); i++) {
+        QModelIndex idx = singerModel->index(i, 0, QModelIndex());
+        SingerInfo singerTmp = idx.data(Qt::UserRole).value<SingerInfo>();
+        if (singerTmp.musicinfos.contains(Player::getInstance()->getActiveMeta().hash)) {
+            playIndex = i;
+        }
+        for (MediaMeta meta : singerTmp.musicinfos.values()) {
+            if (musicHashs.contains(meta.hash)) {
+                singerTmp.musicinfos[meta.hash].toDelete = true;
+            }
+        }
+        QVariant singerval;
+        singerval.setValue(singerTmp);
+        singerModel->setData(idx, singerval, Qt::UserRole);
+    }
+    // 记录切换歌单之前播放状态
+    Player::PlaybackStatus preStatue = Player::getInstance()->status();
+    // 找到要播放的专辑
+    for (int i = playIndex; i < singerModel->rowCount(); i++) {
+        QModelIndex idx = singerModel->index(i, 0, QModelIndex());
+        SingerInfo singerTmp = idx.data(Qt::UserRole).value<SingerInfo>();
+        // 查看专辑中除去要删除的还有没有剩余歌曲
+        bool isExsit = false;
+        for (MediaMeta meta : singerTmp.musicinfos.values()) {
+            if (!meta.toDelete) {
+                isExsit = true;
+                break;
+            }
+        }
+        if (isExsit) {
+            // 当前专辑存在歌曲，播放该专辑
+            QList<MediaMeta> list;
+            // 创建播放队列
+            for (MediaMeta meta : singerTmp.musicinfos.values()) {
+                if (!meta.toDelete) {
+                    list << meta;
+                }
+            }
+            // 找到要播放的歌曲
+            MediaMeta activeMeta;
+            int activeMetaIndex = 0;
+            for (int j = 0; j < singerTmp.musicinfos.size(); j++) {
+                MediaMeta meta = singerTmp.musicinfos.values().at(j);
+                if (meta.hash == Player::getInstance()->getActiveMeta().hash) {
+                    activeMetaIndex = j;
+                    break;
+                }
+            }
+            for (int j = activeMetaIndex; j < singerTmp.musicinfos.size(); j++) {
+                MediaMeta meta = singerTmp.musicinfos.values().at(j);
+                if (!meta.toDelete) {
+                    activeMeta = meta;
+                    break;
+                }
+                if (j == (activeMetaIndex - 1)) {
+                    break;
+                }
+                if (activeMetaIndex != 0 && j == (singerTmp.musicinfos.size() - 1)) {
+                    j = -1;
+                }
+            }
+            Player::getInstance()->clearPlayList();
+            Player::getInstance()->setPlayList(list);
+            // hash由当前已存确定，不应写死
+            Player::getInstance()->setCurrentPlayListHash(m_hash, false);
+            emit Player::getInstance()->signalPlayListChanged();
+            if (preStatue == Player::PlaybackStatus::Playing) {
+                Player::getInstance()->playMeta(activeMeta);
+            } else {
+                Player::getInstance()->setActiveMeta(activeMeta);
+            }
+            break;
+        } else {
+            if (i == (singerModel->rowCount() - 1)) {
+                break;
+            }
+            if (playIndex != 0 && i == (singerModel->rowCount() - 1)) {
+                i = -1;
             }
         }
     }

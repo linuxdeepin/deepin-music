@@ -482,12 +482,18 @@ void Player::removeMeta(const QStringList &metalistToDel)
         MusicSettings::setOption("base.play.last_meta", "");
         MusicSettings::setOption("base.play.last_playlist", "");
     } else {
-        if (DataBaseService::getInstance()->getPlaylistSongCount(m_currentPlayListHash) == 0) {
-            m_currentPlayListHash = "all";
-            // 刷新动态图图标
-            emit signalUpdatePlayingIcon();
-            MusicSettings::setOption("base.play.last_meta", m_ActiveMeta.hash);
-            MusicSettings::setOption("base.play.last_playlist", m_currentPlayListHash);
+        // 自定义歌单时才需要查询数量
+        if (m_currentPlayListHash != "album"
+                && m_currentPlayListHash != "artist"
+                && m_currentPlayListHash != "albumResult"
+                && m_currentPlayListHash != "artistResult") {
+            if (DataBaseService::getInstance()->getPlaylistSongCount(m_currentPlayListHash) == 0) {
+                m_currentPlayListHash = "all";
+                // 刷新动态图图标
+                emit signalUpdatePlayingIcon();
+                MusicSettings::setOption("base.play.last_meta", m_ActiveMeta.hash);
+                MusicSettings::setOption("base.play.last_playlist", m_currentPlayListHash);
+            }
         }
     }
 }

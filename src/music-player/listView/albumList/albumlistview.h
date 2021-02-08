@@ -88,6 +88,8 @@ private slots:
     void slotRemoveSingleSong(const QString &listHash, const QString &musicHash);
     // 添加歌曲
     void slotAddSingleSong(const QString &listHash, const MediaMeta &addMeta);
+    // 多选歌曲删除时逻辑
+    void slotRemoveSelectedSongs(const QString &deleteHash, const QStringList &musicHashs, bool removeFromLocal);
 protected:
     void dragEnterEvent(QDragEnterEvent *event) Q_DECL_OVERRIDE;
     void dragMoveEvent(QDragMoveEvent *event) Q_DECL_OVERRIDE;

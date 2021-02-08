@@ -77,6 +77,8 @@ public:
     bool    favourite   = false;
     bool    invalid     = false;
     bool    loadCover   = false;
+    // 在列表中时，记录是否是要删除的
+    bool    toDelete    = false;
 
     QString codec;              //save codec
 
