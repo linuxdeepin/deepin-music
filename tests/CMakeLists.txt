@@ -51,9 +51,10 @@ endif()
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS on)
 
-include_directories(googletest)
-include_directories(googletest/googlemock/include)
-include_directories(googletest/googletest/include)
+#不需要包含googletest头文件
+#include_directories(googletest)
+#include_directories(googletest/googlemock/include)
+#include_directories(googletest/googletest/include)
 
 aux_source_directory(./ mainSource)#单元测试相关代码
 
