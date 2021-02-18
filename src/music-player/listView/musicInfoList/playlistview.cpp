@@ -921,7 +921,7 @@ void PlayListView::slotRmvFromSongList()
     }
 
     warnDlg.setIcon(QIcon::fromTheme("deepin-music"));
-    if (warnDlg.exec() > 0) { //Remove button
+    if (warnDlg.exec() > QDialog::Rejected) {
         //数据库中删除时有信号通知刷新界面
         if (!m_IsPlayQueue) {
             if (m_currentHash == "musicResult"
