@@ -116,10 +116,10 @@ set_directory_properties(PROPERTIES CLEAN_NO_CUSTOM 1)
 
 #set_source_files_properties(${qmfiles} PROPERTIES OUTPUT_LOCATION "translations")
 
-file(GLOB TS LIST_DIRECTORIES false ./translations/${CMD_NAME}*.ts)
+file(GLOB TS LIST_DIRECTORIES false ../../translations/${CMD_NAME}*.ts)
 set_source_files_properties(${TS}
-    PROPERTIES OUTPUT_LOCATION ${PROJECT_SOURCE_DIR}/src/music-player/translations)
-set(translate ${PROJECT_SOURCE_DIR}/src/music-player/translations)
+    PROPERTIES OUTPUT_LOCATION ${PROJECT_SOURCE_DIR}/translations)
+set(translate ${PROJECT_SOURCE_DIR}/translations)
 
 if (NOT (${CMAKE_BUILD_TYPE} MATCHES "Debug"))
     qt5_create_translation(Translate1 ${allSource} ${TS} OPTIONS -source-language en_US -no-obsolete)
@@ -153,7 +153,7 @@ endif()
 # ------------------------------- install script -------------------------------
 install(TARGETS ${CMD_NAME} DESTINATION bin)
 # install Translation files:
-install(DIRECTORY ${PROJECT_SOURCE_DIR}/src/music-player/translations
+install(DIRECTORY ${PROJECT_SOURCE_DIR}/translations
     DESTINATION share/${CMD_NAME}
     FILES_MATCHING PATTERN "*.qm")
 #install(FILES ${Translate1} DESTINATION share/${CMD_NAME})

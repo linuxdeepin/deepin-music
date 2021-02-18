@@ -4,13 +4,13 @@ minimum_perc = 80
 mode = developer
 
 [deepin-music.deepin-music]
-file_filter = src/music-player/translations/deepin-music_<lang>.ts
-source_file = src/music-player/translations/deepin-music_en_US.ts
+file_filter = translations/deepin-music_<lang>.ts
+source_file = translations/deepin-music_en_US.ts
 source_lang = en_US
 type = QT
 
 [deepin-music.deepin-music-desktop-ts]
-file_filter = src/music-player/translations/desktop/desktop_<lang>.ts
-source_file = src/music-player/translations/desktop/desktop.ts
+file_filter = translations/desktop/desktop_<lang>.ts
+source_file = translations/desktop/desktop.ts
 source_lang = en
 type = QT
