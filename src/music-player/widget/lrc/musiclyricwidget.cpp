@@ -90,7 +90,7 @@ MusicLyricWidget::MusicLyricWidget(QWidget *parent)
     layout->addLayout(m_leftLayout, 0);
     layout->addWidget(m_lyricview, 10);
     layout->addWidget(m_nolyric, 10);
-
+    // 根据是否有歌曲播放判断是否显示“无歌词”
     if (Player::getInstance()->getActiveMeta().hash.isEmpty()) {
         m_nolyric->show();
         m_lyricview->hide();
