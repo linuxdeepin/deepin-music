@@ -191,7 +191,7 @@ void SearchResult::autoResize()
     if (m_MusicView->isHidden() && m_SingerView->isHidden() && m_AlbumView->isHidden()) {
         setFixedHeight(total);
     } else {
-        setFixedHeight(total + 26);
+        setFixedHeight(total + 28);
     }
 }
 

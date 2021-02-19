@@ -359,7 +359,10 @@ void DBOperate::addMediaMetaToDB(const MediaMeta &meta)
             m_importFailCount++;
         }
     } else {
-        if (m_importHash != "all") {
+        if (m_importHash != "all"
+                && m_importHash != "album" && m_importHash != "albumResult"
+                && m_importHash != "artist" && m_importHash != "artistResult"
+                && m_importHash != "musicResult" && m_importHash != "play") {
             QList<MediaMeta> metas;
             metas.append(meta);
             addMetaToPlaylist(m_importHash, metas);
