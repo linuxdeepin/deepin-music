@@ -59,14 +59,14 @@ MusicSongListView::MusicSongListView(QWidget *parent) : DListView(parent)
 {
     this->setEditTriggers(NoEditTriggers);
 
-    model = new MusicBaseAndSonglistModel(this);
-    setModel(model);
-    delegate = new DStyledItemDelegate(this);
+    m_model = new MusicBaseAndSonglistModel(this);
+    setModel(m_model);
+    m_delegate = new DStyledItemDelegate(this);
     //delegate->setBackgroundType(DStyledItemDelegate::NoBackground);
-    auto delegateMargins = delegate->margins();
+    auto delegateMargins = m_delegate->margins();
     delegateMargins.setLeft(18);
-    delegate->setMargins(delegateMargins);
-    setItemDelegate(delegate);
+    m_delegate->setMargins(delegateMargins);
+    setItemDelegate(m_delegate);
 
     setViewportMargins(8, 0, 8, 0);
     auto font = this->font();
@@ -144,10 +144,10 @@ void MusicSongListView::init()
         } else {
             item->setForeground(QColor("#C0C6D4"));
         }
-        model->appendRow(item);
+        m_model->appendRow(item);
     }
 
-    setMinimumHeight(model->rowCount() * ItemHeight);
+    setMinimumHeight(m_model->rowCount() * ItemHeight);
 }
 
 void MusicSongListView::showContextMenu(const QPoint &pos)
@@ -156,7 +156,7 @@ void MusicSongListView::showContextMenu(const QPoint &pos)
     if (!index.isValid())
         return;
 
-    auto item = model->itemFromIndex(index);
+    auto item = m_model->itemFromIndex(index);
     if (!item) {
         return;
     }
@@ -195,7 +195,7 @@ void MusicSongListView::showContextMenu(const QPoint &pos)
 
 void MusicSongListView::adjustHeight()
 {
-    setMinimumHeight(model->rowCount() * ItemHeight);
+    setMinimumHeight(m_model->rowCount() * ItemHeight);
 }
 
 bool MusicSongListView::getHeightChangeToMax()
@@ -225,10 +225,10 @@ void MusicSongListView::addNewSongList()
     } else {
         item->setForeground(QColor("#C0C6D4"));
     }
-    model->appendRow(item);
-    setMinimumHeight(model->rowCount() * ItemHeight);
-    setCurrentIndex(model->indexFromItem(item));
-    slotDoubleClicked(model->indexFromItem(item));
+    m_model->appendRow(item);
+    setMinimumHeight(m_model->rowCount() * ItemHeight);
+    setCurrentIndex(m_model->indexFromItem(item));
+    slotDoubleClicked(m_model->indexFromItem(item));
     scrollToBottom();
 
     //record to db
@@ -258,11 +258,11 @@ void MusicSongListView::changeCdaSongList(int stat)
     }
 
     qDebug() << __FUNCTION__ << stat;
-    if (model->rowCount() > 0) {
-        QString rolestr = model->index(0, 0).data(Qt::UserRole + CDA_USER_ROLE_OFFSET).toString();
+    if (m_model->rowCount() > 0) {
+        QString rolestr = m_model->index(0, 0).data(Qt::UserRole + CDA_USER_ROLE_OFFSET).toString();
         if (rolestr == CDA_USER_ROLE) { //remove node
             if (stat != 1) {
-                model->removeRow(0);  //移出CD歌单项目
+                m_model->removeRow(0);  //移出CD歌单项目
             }
             return;
         }
@@ -282,9 +282,9 @@ void MusicSongListView::changeCdaSongList(int stat)
         item->setForeground(QColor("#C0C6D4"));
     }
 
-    model->insertRow(0, item);
-    setMinimumHeight(model->rowCount() * ItemHeight);
-    setCurrentIndex(model->indexFromItem(item));
+    m_model->insertRow(0, item);
+    setMinimumHeight(m_model->rowCount() * ItemHeight);
+    setCurrentIndex(m_model->indexFromItem(item));
     scrollToTop();
 
     QString uuid = CDA_USER_ROLE;
@@ -299,10 +299,14 @@ void MusicSongListView::changeCdaSongList(int stat)
 void MusicSongListView::rmvSongList()
 {
     QModelIndex index = this->currentIndex();
-    if (index.row() == 0 && index.data(Qt::UserRole + CDA_USER_ROLE_OFFSET).toString() == CDA_USER_ROLE) {
+    // 当前选中行
+    int rowCurrent = index.row();
+    // 总行数，删除后焦点定位使用
+    int rowCount = m_model->rowCount();
+    if (rowCurrent == 0 && index.data(Qt::UserRole + CDA_USER_ROLE_OFFSET).toString() == CDA_USER_ROLE) {
         return;//cda item不做任何处理
     }
-    if (index.row() >= 0) {
+    if (rowCurrent >= 0) {
         QString message = QString(tr("Are you sure you want to delete this playlist?"));
 
         DDialog warnDlg(this);
@@ -315,23 +319,39 @@ void MusicSongListView::rmvSongList()
         warnDlg.setObjectName(AC_MessageBox);
         if (1 == warnDlg.exec()) {
             QString hash = index.data(Qt::UserRole).value<QString>();
-
-            QStandardItem *item = model->itemFromIndex(index);
-            model->removeRow(item->row());
-            // 清除选中，防止连续点击delete删除
-            this->setCurrentIndex(QModelIndex());
-            DataBaseService::getInstance()->deletePlaylist(hash);
-            // 切换到所有音乐界面
-            emit CommonService::getInstance()->signalSwitchToView(AllSongListType, "all");
-            // 清除选中状态
-            this->clearSelection();
-            // 设置所有音乐播放状态
-            Player::getInstance()->setCurrentPlayListHash("all", false);
-            // 记忆播放歌单
-            MusicSettings::setOption("base.play.last_playlist", "all");
+            bool isMediaMetaInSonglist = false;
+            isMediaMetaInSonglist = DataBaseService::getInstance()->isMediaMetaInSonglist(hash, Player::getInstance()->getActiveMeta().hash);
+            // 数据库删除歌单
+            if (DataBaseService::getInstance()->deletePlaylist(hash)) {
+                // 判断当前是否播放歌曲，如果正在播放，则判断当前歌曲是否在此歌单
+                if (!Player::getInstance()->getActiveMeta().hash.isEmpty() && isMediaMetaInSonglist) {
+                    Player::getInstance()->clearPlayList();
+                    // 设置所有音乐播放状态
+                    Player::getInstance()->setCurrentPlayListHash("", false);
+                }
+                if (rowCount == 1) {
+                    // 没有播放且只有一个歌单,删除后焦点定位到所有音乐
+                    this->setCurrentIndex(QModelIndex());
+                    emit CommonService::getInstance()->signalSwitchToView(AllSongListType, "all");
+                    this->clearSelection();
+                } else if (rowCurrent < (rowCount - 1)) {
+                    // 删除后焦点定位到下一个歌单
+                    QModelIndex nextIndex = m_model->index((rowCurrent + 1), 0);
+                    QString nextHash = nextIndex.data(Qt::UserRole).value<QString>();
+                    this->setCurrentIndex(nextIndex);
+                    emit CommonService::getInstance()->signalSwitchToView(CustomType, nextHash);
+                } else {
+                    // 没有后一个歌单,删除后焦点定位到上一个歌单
+                    QModelIndex nextIndex = m_model->index((rowCurrent - 1), 0);
+                    QString nextHash = nextIndex.data(Qt::UserRole).value<QString>();
+                    this->setCurrentIndex(nextIndex);
+                    emit CommonService::getInstance()->signalSwitchToView(CustomType, nextHash);
+                }
+                // 删除成功，移除歌单
+                m_model->removeRow(rowCurrent);
+            }
         }
         //删除消息，让scroll自动刷新
-//        emit sigRmvSongList();
         m_heightChangeToMax = false;
         adjustHeight();
     }
@@ -339,9 +359,9 @@ void MusicSongListView::rmvSongList()
 
 void MusicSongListView::slotUpdatePlayingIcon()
 {
-    for (int i = 0; i < model->rowCount(); i++) {
-        QModelIndex index = model->index(i, 0);
-        DStandardItem *item = dynamic_cast<DStandardItem *>(model->item(i, 0));
+    for (int i = 0; i < m_model->rowCount(); i++) {
+        QModelIndex index = m_model->index(i, 0);
+        DStandardItem *item = dynamic_cast<DStandardItem *>(m_model->item(i, 0));
         if (item == nullptr) {
             continue;
         }
@@ -415,7 +435,7 @@ void MusicSongListView::slotCurrentChanged(const QModelIndex &cur, const QModelI
 //        m_renameItem->setIcon(QIcon::fromTheme("music_famousballad"));
 //    }
     Q_UNUSED(cur)
-    DStandardItem *preStandardItem = dynamic_cast<DStandardItem *>(model->itemFromIndex(pre));
+    DStandardItem *preStandardItem = dynamic_cast<DStandardItem *>(m_model->itemFromIndex(pre));
     if (preStandardItem) {
         preStandardItem->setIcon(QIcon::fromTheme("music_famousballad"));
     }
@@ -423,7 +443,7 @@ void MusicSongListView::slotCurrentChanged(const QModelIndex &cur, const QModelI
 
 void MusicSongListView::slotDoubleClicked(const QModelIndex &index)
 {
-    m_renameItem = dynamic_cast<DStandardItem *>(model->itemFromIndex(index));
+    m_renameItem = dynamic_cast<DStandardItem *>(m_model->itemFromIndex(index));
 
     if (index.row() == 0 && index.data(Qt::UserRole + CDA_USER_ROLE_OFFSET).toString() == CDA_USER_ROLE) {
         return;//cda item不做任何处理
@@ -450,8 +470,8 @@ void MusicSongListView::slotLineEditingFinished()
         m_renameItem->setText(m_renameLineEdit->text());
         QString uuid = m_renameItem->data(Qt::UserRole).value<QString>();
         // 歌单名去重
-        for (int i = 0; i < model->rowCount() ; ++i) {
-            DStandardItem *tmpItem = dynamic_cast<DStandardItem *>(model->itemFromIndex(model->index(i, 0)));
+        for (int i = 0; i < m_model->rowCount() ; ++i) {
+            DStandardItem *tmpItem = dynamic_cast<DStandardItem *>(m_model->itemFromIndex(m_model->index(i, 0)));
             if (m_renameItem->text().isEmpty() || (m_renameItem->row() != tmpItem->row() && m_renameItem->text() == tmpItem->text())) {
                 QList<DataBaseService::PlaylistData> plist = DataBaseService::getInstance()->getCustomSongList();
                 for (DataBaseService::PlaylistData data : plist) {
@@ -548,9 +568,9 @@ void MusicSongListView::slotPopMessageWindow(int stat)
             Player::getInstance()->forcePlayMeta();
         }
 
-        if (model->rowCount() > 0  && tmpMeta.mmType != MIMETYPE_CDA) {
+        if (m_model->rowCount() > 0  && tmpMeta.mmType != MIMETYPE_CDA) {
             int row = this->currentIndex().row();
-            QString strrole = model->index(row, 0).data(Qt::UserRole + CDA_USER_ROLE_OFFSET).toString();
+            QString strrole = m_model->index(row, 0).data(Qt::UserRole + CDA_USER_ROLE_OFFSET).toString();
             if (strrole == CDA_USER_ROLE) {
                 //设置当前页面，刷新播放队列和显示列表
                 Player::getInstance()->setCurrentPlayListHash("all", false);
@@ -639,7 +659,7 @@ void MusicSongListView::dropEvent(QDropEvent *event)
 
             if (!metas.isEmpty()) {
                 int insertCount = DataBaseService::getInstance()->addMetaToPlaylist(hash, metas);
-                CommonService::getInstance()->signalShowPopupMessage(model->itemFromIndex(indexDrop)->text(), metas.size(), insertCount);
+                CommonService::getInstance()->signalShowPopupMessage(m_model->itemFromIndex(indexDrop)->text(), metas.size(), insertCount);
             }
         }
     }
@@ -726,9 +746,9 @@ QString MusicSongListView::newDisplayName()
 
 void MusicSongListView::setThemeType(int type)
 {
-    for (int i = 0; i < model->rowCount(); i++) {
-        auto curIndex = model->index(i, 0);
-        auto curStandardItem = dynamic_cast<DStandardItem *>(model->itemFromIndex(curIndex));
+    for (int i = 0; i < m_model->rowCount(); i++) {
+        auto curIndex = m_model->index(i, 0);
+        auto curStandardItem = dynamic_cast<DStandardItem *>(m_model->itemFromIndex(curIndex));
 //        auto curItemRow = curStandardItem->row();
 //        if (curItemRow < 0 || curItemRow >= allPlaylists.size())
 //            continue;

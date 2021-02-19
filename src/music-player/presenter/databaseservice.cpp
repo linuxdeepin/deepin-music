@@ -373,27 +373,28 @@ void DataBaseService::addPlaylist(const DataBaseService::PlaylistData &playlistM
         return;
     }
 }
-
-void DataBaseService::deletePlaylist(const QString &hash)
+// 添加是否删除成功返回值
+bool DataBaseService::deletePlaylist(const QString &hash)
 {
     QSqlQuery query(m_db);
     QString sqlstring = QString("DROP TABLE IF EXISTS playlist_%1").arg(hash);
     if (! query.exec(sqlstring)) {
         qWarning() << query.lastError();
-        return;
+        return false;
     }
 
     sqlstring = QString("DELETE FROM playlist WHERE uuid = '%1'").arg(hash);
     if (! query.exec(sqlstring)) {
         qWarning() << query.lastError();
-        return;
+        return false;
     }
-    for (int i = 0; 1 < m_PlaylistMeta.size(); i++) {
+    for (int i = 0; i < m_PlaylistMeta.size(); i++) {
         if (m_PlaylistMeta.at(i).uuid == hash) {
             m_PlaylistMeta.removeAt(i);
             break;
         }
     }
+    return true;
 }
 
 void DataBaseService::updatePlaylist(const QVector<DataBaseService::PlaylistData> &playlistDataList)
@@ -672,6 +673,22 @@ int DataBaseService::getPlaylistSongCount(QString uuid)
         count = queryNew.value(0).toInt();
     }
     return count;
+}
+
+bool DataBaseService::isMediaMetaInSonglist(const QString &songlistHash, const QString &musicHash)
+{
+    QSqlQuery query(m_db);
+    QString sqlIsExists = QString("select music_id from playlist_%1 where music_id = '%2'").arg(songlistHash).arg(musicHash);
+    if (query.exec(sqlIsExists)) {
+        if (query.next()) {
+            return true;
+        } else {
+            return false;
+        }
+    } else {
+        qCritical() << query.lastError() << sqlIsExists;
+        return false;
+    }
 }
 
 void DataBaseService::updateMetaCodec(const MediaMeta &meta)

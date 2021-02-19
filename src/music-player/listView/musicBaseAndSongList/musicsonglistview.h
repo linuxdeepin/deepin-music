@@ -92,8 +92,8 @@ private:
     QString newDisplayName();
 
 private:
-    MusicBaseAndSonglistModel *model = nullptr;
-    DStyledItemDelegate  *delegate        = nullptr;
+    MusicBaseAndSonglistModel *m_model = nullptr;
+    DStyledItemDelegate  *m_delegate        = nullptr;
     // 重命名的Item
     DStandardItem        *m_renameItem = nullptr;
     // 重命名控件

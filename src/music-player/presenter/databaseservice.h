@@ -111,8 +111,8 @@ public:
     QList<MediaMeta>     customizeMusicInfos(const QString &hash);
     // 添加一个歌单
     void                 addPlaylist(const PlaylistData &playlistMeta);
-    // 删除一个歌单
-    void                 deletePlaylist(const QString &hash);
+    // 删除一个歌单,返回值确认是否删除成功
+    bool                 deletePlaylist(const QString &hash);
     // 更新部分歌单
     void                 updatePlaylist(const QVector<PlaylistData> &playlistDataList);
     // 歌单信息
@@ -127,6 +127,8 @@ public:
     int                  getPlaylistSortType(QString uuid);
     // 获取歌单中歌曲数量
     int                  getPlaylistSongCount(QString uuid);
+    // 判断歌曲是否存在于该自定义歌单,返回值确认是否存在
+    bool                 isMediaMetaInSonglist(const QString &songlistHash, const QString &musicHash);
 //    // 更新歌单显示类型，list，icon，未使用框架QListView::ViewMode
 //    void                 updatePlaylistOrderType(int type, QString uuid);
 //    // 获取歌单QListView::ViewMode
