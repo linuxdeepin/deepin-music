@@ -161,17 +161,7 @@ void Waveform::paintEvent(QPaintEvent *)
 void Waveform::onAudioBuffer(const QVector<float> &allData, const QString &hash)
 {
     metaHash = hash;
-    QVector<float> t_allData;
-    if (!allData.isEmpty()) {
-        float max = allData.first();
-        for (auto data : allData) {
-            max = qMax(max, data);
-        }
-        for (int i = 0; i < allData.size(); ++i) {
-            t_allData.append(qAbs(allData[i] / max));
-        }
-    }
-    reciveSampleList = t_allData;
+    reciveSampleList = allData; //比例缩放已在MetaBufferDetector中处理
     spectrumFlag = false;
     updateAudioBuffer();
     this->update();

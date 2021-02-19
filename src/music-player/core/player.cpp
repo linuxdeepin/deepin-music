@@ -1038,7 +1038,7 @@ void Player::initVlc()
             break;
         }
         case Vlc::Opening: {
-            emit signalMediaMetaChanged(m_ActiveMeta);
+            //emit signalMediaMetaChanged(m_ActiveMeta);//由setActiveMeta统一发送信号
             break;
         }
         case Vlc::Buffering: {
@@ -1060,7 +1060,7 @@ void Player::initVlc()
         case Vlc::Stopped: {
             //emit signalPlaybackStatusChanged(Player::Stopped);
             m_timer->stop();
-            emit signalMediaMetaChanged(MediaMeta());
+            //emit signalMediaMetaChanged(MediaMeta()); //由setActiveMeta统一发送信号
             break;
         }
         case Vlc::Ended: {

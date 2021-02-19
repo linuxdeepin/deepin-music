@@ -31,6 +31,7 @@
 #include <QBuffer>
 #include <QByteArray>
 #include <QProcess>
+#include <QDir>
 
 //#ifndef DISABLE_LIBAV
 #ifdef __cplusplus
@@ -72,34 +73,23 @@ typedef int (*codec_close_function)(AVCodecContext *);
 typedef int (*codec_send_packet_function)(AVCodecContext *, const AVPacket *);
 typedef int (*codec_receive_frame_function)(AVCodecContext *, AVFrame *);
 
-class MetaBufferDetectorPrivate
-{
-public:
-    explicit MetaBufferDetectorPrivate(MetaBufferDetector *parent) : q_ptr(parent) {}
-    QString           curPath;
-    QString           curHash;
-    QVector<float>    listData;
-
-    bool              stopFlag = false;
-
-    MetaBufferDetector *q_ptr;
-    Q_DECLARE_PUBLIC(MetaBufferDetector)
-};
-
 MetaBufferDetector::MetaBufferDetector(QObject *parent)
-    : QThread(parent), d_ptr(new MetaBufferDetectorPrivate(this))
+    : QThread(parent)
 {
 }
 
 MetaBufferDetector::~MetaBufferDetector()
 {
+    m_stopFlag = true;
+    while (isRunning()) {
+
+    }
 }
 
 void MetaBufferDetector::run()
 {
-    Q_D(MetaBufferDetector);
-    QString path = d->curPath;
-    QString hash = d->curHash;
+    QString path = m_curPath;
+    QString hash = m_curHash;
     if (path.isEmpty())
         return;
     format_alloc_context_function format_alloc_context = (format_alloc_context_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("avformat_alloc_context", true);
@@ -127,8 +117,8 @@ void MetaBufferDetector::run()
 
     if (pFormatCtx == nullptr) {
         format_free_context(pFormatCtx);
-        d->curPath.clear();
-        d->curHash.clear();
+        m_curPath.clear();
+        m_curHash.clear();
         return;
     }
 
@@ -139,8 +129,8 @@ void MetaBufferDetector::run()
     if (audio_stream_index < 0) {
         format_close_input(&pFormatCtx);
         format_free_context(pFormatCtx);
-        d->curPath.clear();
-        d->curHash.clear();
+        m_curPath.clear();
+        m_curHash.clear();
         return;
     }
 
@@ -160,16 +150,16 @@ void MetaBufferDetector::run()
 
     while (read_frame(pFormatCtx, packet) >= 0) {
         //stop detector
-        if (d->stopFlag && curData.size() > 100) {
+        if (m_stopFlag && curData.size() > 100) {
             packet_unref(packet);
             frame_free(&frame);
             codec_close(pCodecCtx);
             format_close_input(&pFormatCtx);
             format_free_context(pFormatCtx);
-            resample(curData, hash);//刷新波浪条
-            d->stopFlag = false;
-            d->curPath.clear();
-            d->curHash.clear();
+            resample(curData, hash, true);//刷新波浪条
+            m_stopFlag = false;
+            m_curPath.clear();
+            m_curHash.clear();
             return;
         }
 
@@ -210,31 +200,38 @@ void MetaBufferDetector::run()
 
 void MetaBufferDetector::onBufferDetector(const QString &path, const QString &hash)
 {
-    Q_D(MetaBufferDetector);
-    QString curHash = d->curHash;
+    QString curHash = m_curHash;
     if (hash == curHash/* || true*/)
         return;
     if (isRunning()) {
-        d->stopFlag = true;
+        m_stopFlag = true;
     }
-    d->curPath = path;
-    d->curHash = hash;
-    start();
+    m_curPath = path;
+    m_curHash = hash;
+    if (queryCacheExisted(hash)) { //查询到本地无缓存信息
+        start();
+    }
 }
 
 void MetaBufferDetector::onClearBufferDetector()
 {
-    Q_D(MetaBufferDetector);
     if (isRunning()) {
-        d->stopFlag = true;
+        m_stopFlag = true;
     }
-    d->curPath.clear();
-    d->curHash.clear();
+    m_curPath.clear();
+    m_curHash.clear();
 }
 
-void MetaBufferDetector::resample(const QVector<float> &buffer, const QString &hash)
+void MetaBufferDetector::resample(const QVector<float> &buffer, const QString &hash, bool forceQuit)
 {
+    if (buffer.isEmpty()) {
+        qDebug() << __FUNCTION__ << "buffer size ==" << buffer.size();
+        return;
+    }
+
     QVector<float> t_buffer;
+    QVector<float> s_buffer;
+    QVector<float> mappingbuf;
     t_buffer.reserve(1001);
     if (buffer.size() < 1000) {
         t_buffer = buffer;
@@ -248,5 +245,75 @@ void MetaBufferDetector::resample(const QVector<float> &buffer, const QString &h
         }
         t_buffer.append(t_curValue);
     }
-    Q_EMIT metaBuffer(t_buffer, hash);
+
+
+    if (!t_buffer.isEmpty()) {
+        float max = t_buffer.first();
+        for (auto data : t_buffer) {
+            if (max < data)
+                max = data;
+        }
+        for (int i = 0; i < t_buffer.size(); ++i) {
+            float ft = t_buffer[i] / max;
+            ft *= 1000;
+            mappingbuf.append(ft);
+            s_buffer.append(qAbs(t_buffer[i] / max));
+        }
+    }
+
+    if (!forceQuit) {
+        QString userName = QDir::homePath().section("/", -1, -1);
+        QString path = QString("/home/" + userName + "/.cache/deepin/deepin-music/wave/");
+
+        QDir dir(path);
+        if (!dir.exists()) {
+            dir.mkdir(path);
+        }
+        path += QString("%1.dat").arg(hash);
+        qDebug() << "path:" << QFileInfo(path);
+        //write cache
+        char *buf = new char[mappingbuf.size() * 4 ];
+        memset(buf, 0, mappingbuf.size() * 4);
+        FILE *fp = fopen(path.toUtf8().data(), "w+");
+        if (fp != nullptr) {
+            for (int i = 0; i < mappingbuf.size(); i++) {
+                float ss = mappingbuf[i];
+                memcpy(buf + i * 4, &ss, 4);
+            }
+
+            fwrite(buf, 4, mappingbuf.size(),  fp);
+        } else {
+            qWarning() << "can not write cache file " << hash << " failed";
+        }
+        if (fp)
+            fclose(fp);
+        delete []buf;
+    }
+    Q_EMIT metaBuffer(s_buffer, hash);
+}
+
+int MetaBufferDetector::queryCacheExisted(const QString &hash)
+{
+    QString userName = QDir::homePath().section("/", -1, -1);
+    QString path = QString("/home/" + userName + "/.cache/deepin/deepin-music/wave/%1.dat").arg(hash);
+    QFile file(path);
+    if (!file.open(QFile::ReadOnly)) {
+        return -1;
+    }
+    if (file.size() == 0)
+        return -1;
+
+    QVector<float> f_buffer;
+
+    //读取二进制数据
+    while (!file.atEnd()) {
+        float ss;
+        file.read((char *)&ss, 4);
+        f_buffer << qAbs(ss * 1.0 / 1000);
+    }
+
+    file.close();
+
+    Q_EMIT metaBuffer(f_buffer, hash);
+    return 0;
 }

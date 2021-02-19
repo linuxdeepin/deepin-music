@@ -644,7 +644,9 @@ void FooterWidget::slotMediaMetaChanged(MediaMeta activeMeta)
     QString singerText = singerFm.elidedText(meta.singer, Qt::ElideMiddle, m_artist->maximumWidth());
     m_artist->setText(singerText.isEmpty() ? tr("Unknown artist") : singerText);
     m_metaBufferDetector.onClearBufferDetector();
-    m_metaBufferDetector.onBufferDetector(meta.localPath, meta.hash);
+    if (!meta.hash.isEmpty()) { //避免解析无效的歌曲的波浪条数据
+        m_metaBufferDetector.onBufferDetector(meta.localPath, meta.hash);
+    }
 
     if (meta.mmType == MIMETYPE_CDA) {
         m_btFavorite->setIcon(QIcon::fromTheme("dcc_collection"));

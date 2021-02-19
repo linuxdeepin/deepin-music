@@ -22,6 +22,7 @@
 #pragma once
 
 #include <QThread>
+#include <QVector>
 
 #include "libdmusic_global.h"
 
@@ -40,9 +41,15 @@ signals:
     void metaBuffer(const QVector<float> &buffer, const QString &hash);
 
 private:
-    void resample(const QVector<float> &buffer, const QString &hash);
+    void resample(const QVector<float> &buffer, const QString &hash, bool forceQuit = false);
+    int queryCacheExisted(const QString &hash);
     void run() override;
 private:
-    QScopedPointer<MetaBufferDetectorPrivate> d_ptr;
-    Q_DECLARE_PRIVATE_D(qGetPtrHelper(d_ptr), MetaBufferDetector)
+//    QScopedPointer<MetaBufferDetectorPrivate> d_ptr;
+//    Q_DECLARE_PRIVATE_D(qGetPtrHelper(d_ptr), MetaBufferDetector)
+    QString           m_curPath;
+    QString           m_curHash;
+    QVector<float>    m_listData;
+
+    bool              m_stopFlag = false;
 };
