@@ -131,7 +131,6 @@ void MusicSearchListDelegate::paint(QPainter *painter, const QStyleOptionViewIte
 
     if (listview->getSearchType() == SearchType::SearchMusic) {
         // 绘制歌曲
-//        auto metaPtr = metaPtrList[index.row()];
         MediaMeta metaPtr = index.data(Qt::UserRole + SearchType::SearchMusic).value<MediaMeta>();
 
         QString mtext;
@@ -152,6 +151,8 @@ void MusicSearchListDelegate::paint(QPainter *painter, const QStyleOptionViewIte
         pStyle->drawControl(QStyle::CE_ItemViewItem, &viewOption, painter, viewOption.widget);
 
         QTextDocument document;
+        // 设置文字边距，保证绘制文字居中
+        document.setDocumentMargin(0);
         document.setPlainText(mtext);
         bool found = false;
         QTextCursor highlight_cursor(&document);
@@ -182,8 +183,9 @@ void MusicSearchListDelegate::paint(QPainter *painter, const QStyleOptionViewIte
         cursor.endEditBlock();
 
         QAbstractTextDocumentLayout::PaintContext paintContext;
-        // 修复字体大小改变，字体显示不全问题
-        QRect textRect(32, option.rect.y() + 3, 287, option.rect.height());
+        // 修复字体大小改变，字体显示不全问题，动态计算边距，保证调整字体大小时绘制居中
+        int margin = static_cast<int>(((option.rect.height() - fontWidth.height()) / 2));
+        QRect textRect(32, option.rect.y() + margin, 287, option.rect.height());
         painter->save();
         painter->translate(textRect.topLeft());
         painter->setClipRect(textRect.translated(-textRect.topLeft()));
@@ -222,6 +224,8 @@ void MusicSearchListDelegate::paint(QPainter *painter, const QStyleOptionViewIte
         pStyle->drawControl(QStyle::CE_ItemViewItem, &viewOption, painter, viewOption.widget);
 
         QTextDocument document;
+        // 设置文字边距，保证绘制文字居中
+        document.setDocumentMargin(0);
         document.setPlainText(mtext);
         bool found = false;
         QTextCursor highlight_cursor(&document);
@@ -253,7 +257,9 @@ void MusicSearchListDelegate::paint(QPainter *painter, const QStyleOptionViewIte
         cursor.endEditBlock();
 
         QAbstractTextDocumentLayout::PaintContext paintContext;
-        QRect textRect(61, option.rect.y() + 2, 251, option.rect.height());
+        // 动态计算边距，保证调整字体大小时绘制居中
+        int margin = static_cast<int>(((option.rect.height() - fontWidth.height()) / 2));
+        QRect textRect(61, option.rect.y() + margin, 251, option.rect.height());
         painter->save();
         painter->translate(textRect.topLeft());
         painter->setClipRect(textRect.translated(-textRect.topLeft()));
