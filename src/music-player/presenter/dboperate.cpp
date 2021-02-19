@@ -343,11 +343,15 @@ void DBOperate::addMediaMetaToDB(const MediaMeta &meta)
             if (m_importHash != "all"
                     && m_importHash != "album" && m_importHash != "albumResult"
                     && m_importHash != "artist" && m_importHash != "artistResult"
-                    && m_importHash != "musicResult") {
+                    && m_importHash != "musicResult" && m_importHash != "play") {
                 QList<MediaMeta> metas;
                 metas.append(meta);
                 addMetaToPlaylist(m_importHash, metas);
             } else {
+                // 如果是从播放队列导入需要发送信号通知更新播放队列
+                if (m_importHash == "play") {
+                    emit signalMusicAddOne("play", meta);
+                }
                 emit signalMusicAddOne("all", meta);
                 m_successCount++;
             }

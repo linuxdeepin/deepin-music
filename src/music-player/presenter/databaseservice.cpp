@@ -491,7 +491,8 @@ void DataBaseService::slotImportFinished(int failCount, int successCount, int ex
     if (successCount > 0 || exsitCount > 0) {
         emit signalImportFinished(m_importHash, successCount);
         // 拖拽到搜索结果提示导入到所有音乐
-        if (m_importHash == "musicResult" || m_importHash == "albumResult" || m_importHash == "artistResult") {
+        if (m_importHash == "musicResult" || m_importHash == "albumResult" || m_importHash == "artistResult"
+                || m_importHash == "play") {
             emit CommonService::getInstance()->signalShowPopupMessage(
                 DataBaseService::getInstance()->getPlaylistNameByUUID("all"), successCount + exsitCount, successCount);
         } else {
