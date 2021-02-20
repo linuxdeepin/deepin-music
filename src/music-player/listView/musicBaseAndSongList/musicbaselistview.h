@@ -40,9 +40,9 @@ public:
     void init();
     void showContextMenu(const QPoint &pos);
 public slots:
-    void setThemeType(int type);
     void slotUpdatePlayingIcon();
     void slotMenuTriggered(QAction *action);
+    void slotItemClicked(const QModelIndex &index);
     void viewChanged(ListPageSwitchType switchtype, QString hashOrSearchword);
 signals:
 

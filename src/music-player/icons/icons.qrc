@@ -1,10 +1,5 @@
 <RCC>
     <qresource prefix="/icons/deepin/builtin">
-        <file>actions/music_album_24px.svg</file>
-        <file>actions/music_allmusic_24px.svg</file>
-        <file>actions/music_famousballad_24px.svg</file>
-        <file>actions/music_mycollection_24px.svg</file>
-        <file>actions/music_singer_24px.svg</file>
         <file>texts/picture_list_texts_36px.svg</file>
         <file>texts/text_list_texts_36px.svg</file>
         <file>icons/icon_warning_20px.svg</file>
@@ -43,5 +38,10 @@
         <file>icons/play_all_18px.svg</file>
         <file>icons/random_play_18px.svg</file>
         <file>icons/clear_list_18px.svg</file>
+        <file>texts/music_album_24px.svg</file>
+        <file>texts/music_allmusic_24px.svg</file>
+        <file>texts/music_famousballad_24px.svg</file>
+        <file>texts/music_mycollection_24px.svg</file>
+        <file>texts/music_singer_24px.svg</file>
     </qresource>
 </RCC>

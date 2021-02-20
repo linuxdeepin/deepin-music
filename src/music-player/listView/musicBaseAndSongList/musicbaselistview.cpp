@@ -89,20 +89,17 @@ MusicBaseListView::MusicBaseListView(QWidget *parent) : DListView(parent)
 //        }
 //    });
     init();
-    connect(this, &MusicBaseListView::clicked, this, [](QModelIndex midx) {
-        ListPageSwitchType type = midx.data(Qt::UserRole).value<ListPageSwitchType>();
-        emit CommonService::getInstance()->signalSwitchToView(type, "");
-    });
+    connect(this, &MusicBaseListView::clicked,
+            this, &MusicBaseListView::slotItemClicked);
 
     connect(Player::getInstance(), &Player::signalUpdatePlayingIcon,
             this, &MusicBaseListView::slotUpdatePlayingIcon);
+
     connect(CommonService::getInstance(), &CommonService::signalSwitchToView, this, &MusicBaseListView::viewChanged);
 
 
     connect(DGuiApplicationHelper::instance(), &DGuiApplicationHelper::themeTypeChanged,
-            this, &MusicBaseListView::setThemeType);
-
-    setThemeType(DGuiApplicationHelper::instance()->themeType());
+            this, &MusicBaseListView::slotUpdatePlayingIcon);
 }
 
 MusicBaseListView::~MusicBaseListView()
@@ -129,11 +126,6 @@ void MusicBaseListView::init()
 {
     QString displayName = tr("Albums");
     auto item = new DStandardItem(QIcon::fromTheme("music_album"), displayName);
-    if (DGuiApplicationHelper::instance()->themeType() == 1) {
-        item->setForeground(QColor("#414D68"));
-    } else {
-        item->setForeground(QColor("#C0C6D4"));
-    }
     item->setData(ListPageSwitchType::AlbumType, Qt::UserRole);
     item->setData("album", Qt::UserRole + 2);
     model->appendRow(item);
@@ -357,6 +349,14 @@ void MusicBaseListView::slotMenuTriggered(QAction *action)
     }
 }
 
+void MusicBaseListView::slotItemClicked(const QModelIndex &index)
+{
+    ListPageSwitchType type = index.data(Qt::UserRole).value<ListPageSwitchType>();
+    emit CommonService::getInstance()->signalSwitchToView(type, "");
+    // 选中后刷新播放动态图
+    slotUpdatePlayingIcon();
+}
+
 void MusicBaseListView::viewChanged(ListPageSwitchType switchtype, QString hashOrSearchword)
 {
     Q_UNUSED(hashOrSearchword)
@@ -368,23 +368,6 @@ void MusicBaseListView::viewChanged(ListPageSwitchType switchtype, QString hashO
                 this->setCurrentIndex(curIndex);
                 break;
             }
-        }
-    }
-}
-
-void MusicBaseListView::setThemeType(int type)
-{
-    for (int i = 0; i < model->rowCount(); i++) {
-        auto curIndex = model->index(i, 0);
-        auto curStandardItem = dynamic_cast<DStandardItem *>(model->itemFromIndex(curIndex));
-//        auto curItemRow = curStandardItem->row();
-//        if (curItemRow < 0 || curItemRow >= allPlaylists.size())
-//            continue;
-
-        if (type == 1) {
-            curStandardItem->setForeground(QColor("#414D68"));
-        } else {
-            curStandardItem->setForeground(QColor("#C0C6D4"));
         }
     }
 }
