@@ -47,7 +47,7 @@ $ apt build-dep deepin-music
 $ cd deepin-music
 $ mkdir Build
 $ cd Build
-$ qmake ..
+$ cmake ..
 $ make
 ```
 
@@ -66,7 +66,7 @@ Execute `deepin-music`
 ## Documentations
 
  - [Development Documentation](https://linuxdeepin.github.io/)
- - [User Documentation](https://wikidev.uniontech.com/index.php?title=音乐) | [用户文档](https://wikidev.uniontech.com/index.php?title=音乐)
+ - [User Documentation](https://wikidev.uniontech.com/index.php?title=%E9%9F%B3%E4%B9%90) | [用户文档](https://wikidev.uniontech.com/index.php?title=音乐)
 
 ## Getting help
 
@@ -85,4 +85,4 @@ We encourage you to report issues and contribute changes
 
 ## License
 
-deepin-music is licensed under [GPLv3](LICENSE)
+This project is licensed under [GPLv3](LICENSE) or any later version.
