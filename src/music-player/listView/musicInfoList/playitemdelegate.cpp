@@ -227,7 +227,8 @@ void PlayItemDelegate::drawIconMode(QPainter &painter, const QStyleOptionViewIte
     painter.setFont(fontT9);
     nameColor.setAlphaF(0.5);
     painter.setPen(nameColor);
-    QRect extraNameFillRect(option.rect.x(), option.rect.y() + option.rect.width() + (option.rect.height() - option.rect.width()) / 2 + 5,
+    // 调整歌手位置
+    QRect extraNameFillRect(option.rect.x(), option.rect.y() + option.rect.width() + (option.rect.height() - option.rect.width()) / 2 + 2,
                             option.rect.width() * 4 / 5, (option.rect.height() - option.rect.width()) / 2);
     auto extraNameText = extraNameFm.elidedText(meta.singer, Qt::ElideRight, option.rect.width() * 3 / 5);
     painter.drawText(extraNameFillRect, Qt::AlignLeft | Qt::AlignVCenter, extraNameText);

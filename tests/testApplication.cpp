@@ -1302,7 +1302,7 @@ TEST(Application, preMusic)
     TEST_CASE_NAME("preMusic")
 
     MainFrame *w = Application::getInstance()->getMainWindow();
-    DToolButton *preBtn = w->findChild<DToolButton *>(AC_Prev);
+    DButtonBoxButton *preBtn = w->findChild<DButtonBoxButton *>(AC_Prev);
     QTest::qWait(50);
     // 点击上一首
     QPoint pos(20, 20);
@@ -1312,7 +1312,7 @@ TEST(Application, preMusic)
     event.simulate(preBtn);
     event.clear();
 
-    DToolButton *playBtn = w->findChild<DToolButton *>(AC_Play);
+    DButtonBoxButton *playBtn = w->findChild<DButtonBoxButton *>(AC_Play);
     QTest::qWait(50);
     // 点击播放
     QTestEventList event1;
@@ -1322,7 +1322,7 @@ TEST(Application, preMusic)
     event1.simulate(playBtn);
     event1.clear();
 
-    DToolButton *nextBtn = w->findChild<DToolButton *>(AC_Next);
+    DButtonBoxButton *nextBtn = w->findChild<DButtonBoxButton *>(AC_Next);
     QTest::qWait(50);
     // 点击下一首
     QTestEventList event2;

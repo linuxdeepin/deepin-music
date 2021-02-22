@@ -127,9 +127,10 @@ private:
 
     DBlurEffectWidget *m_forwardWidget = nullptr;
 
-    DToolButton  *m_btPlay     = nullptr;
-    DToolButton  *m_btPrev     = nullptr;
-    DToolButton  *m_btNext     = nullptr;
+    DButtonBox        *m_ctlWidget = nullptr;
+    DButtonBoxButton  *m_btPlay     = nullptr;
+    DButtonBoxButton  *m_btPrev     = nullptr;
+    DButtonBoxButton  *m_btNext     = nullptr;
 
     MusicPixmapButton  *m_btCover     = nullptr;
     Label           *m_title      = nullptr;
@@ -150,7 +151,6 @@ private:
     QShortcut           *muteShortcut = nullptr;
 
     SoundVolume        *m_volSlider  = nullptr;
-    DBackgroundGroup   *m_ctlWidget  = nullptr;
     MetaBufferDetector  m_metaBufferDetector;
     HintFilter          *m_hintFilter = nullptr;
 

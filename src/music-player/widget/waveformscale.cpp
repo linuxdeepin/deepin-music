@@ -23,6 +23,8 @@
 
 #include "waveformscale.h"
 
+#include <DGuiApplicationHelper>
+
 #include <QDebug>
 #include <QEvent>
 #include <QPaintEvent>
@@ -30,6 +32,8 @@
 #include <QPainterPath>
 
 #include <mediameta.h>
+
+DGUI_USE_NAMESPACE
 
 const int WaveformScale::WAVE_WIDTH = 2;
 const int WaveformScale::WAVE_TEXTHEIGHT = 25;
@@ -58,8 +62,9 @@ void WaveformScale::paintEvent(QPaintEvent *)
     painter.setBrush(QColor("#FF8A00"));
     QRectF lineRect(rect().center().x() - WAVE_WIDTH / 2, WAVE_TEXTHEIGHT, WAVE_WIDTH, rect().height() - WAVE_TEXTHEIGHT - 20);
     painter.drawRect(lineRect);
-
-    painter.setBrush(QColor("#0081FF"));
+    // 进度图标颜色跟随系统活动色
+    QColor color = DGuiApplicationHelper::instance()->applicationPalette().highlight().color();
+    painter.setBrush(color);
     //draw top
     int t_textWidth = WAVE_TEXTWIDTH;
     QRect t_textRect(rect().center().x() - t_textWidth / 2, 0, t_textWidth, 20);

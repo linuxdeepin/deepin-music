@@ -33,6 +33,7 @@
 #include <DPalette>
 #include <DUtil>
 #include <DGuiApplicationHelper>
+#include <DApplicationHelper>
 
 #include "../core/musicsettings.h"
 //#include "widget/musiclistview.h"
@@ -145,21 +146,20 @@ void MusicListScrollArea::slotTheme(int type)
 
         DPalette dataBaseLabelPalette = dataBaseLabel->palette();
         QColor WindowTextColor("#757F92");
-        WindowTextColor.setAlphaF(0.8);
         dataBaseLabelPalette.setColor(DPalette::WindowText, WindowTextColor);
-        dataBaseLabel->setPalette(dataBaseLabelPalette);
-        customizeLabel->setPalette(dataBaseLabelPalette);
+        DApplicationHelper::instance()->setPalette(dataBaseLabel, dataBaseLabelPalette);
+        DApplicationHelper::instance()->setPalette(customizeLabel, dataBaseLabelPalette);
     } else {
         auto leftFramePalette = palette();
         leftFramePalette.setColor(DPalette::Background, QColor("#232323"));
         setPalette(leftFramePalette);
 
         DPalette dataBaseLabelPalette = dataBaseLabel->palette();
-        QColor WindowTextColor("#C0C6D4");
-        WindowTextColor.setAlphaF(0.8);
+        // 根据设计重新设置颜色
+        QColor WindowTextColor("#EDEDED");
         dataBaseLabelPalette.setColor(DPalette::WindowText, WindowTextColor);
-        dataBaseLabel->setPalette(dataBaseLabelPalette);
-        customizeLabel->setPalette(dataBaseLabelPalette);
+        DApplicationHelper::instance()->setPalette(dataBaseLabel, dataBaseLabelPalette);
+        DApplicationHelper::instance()->setPalette(customizeLabel, dataBaseLabelPalette);
     }
 }
 

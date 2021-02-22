@@ -121,54 +121,36 @@ void FooterWidget::initUI(QWidget *parent)
 //    layout->setContentsMargins(0, 0, 10, 0);
 //    mainVBoxlayout->addWidget(downWidget);
 
-//    m_btPrev = new DButtonBoxButton(QIcon::fromTheme("music_last"), "", this);
-    m_btPrev = new DToolButton(this);
-    m_btPrev->setIcon(QIcon::fromTheme("music_last"));
+    m_btPrev = new DButtonBoxButton(QIcon::fromTheme("music_last"), "", this);
     m_btPrev->setIconSize(QSize(36, 36));
     m_btPrev->setObjectName("FooterActionPrev");
     m_btPrev->setFixedSize(40, 50);
     AC_SET_OBJECT_NAME(m_btPrev, AC_Prev);
     AC_SET_ACCESSIBLE_NAME(m_btPrev, AC_Prev);
 
-//    m_btPlay = new DButtonBoxButton(QIcon::fromTheme("music_play"), "", this);
-    m_btPlay = new DToolButton(this);
-    m_btPlay->setIcon(QIcon::fromTheme("music_play"));
+    m_btPlay = new DButtonBoxButton(QIcon::fromTheme("music_play"), "", this);
     m_btPlay->setIconSize(QSize(36, 36));
     m_btPlay->setFixedSize(40, 50);
-
     AC_SET_OBJECT_NAME(m_btPlay, AC_Play);
     AC_SET_ACCESSIBLE_NAME(m_btPlay, AC_Play);
 
-//    m_btNext = new DButtonBoxButton(QIcon::fromTheme("music_next"), "", this);
-    m_btNext = new DToolButton(this);
-    m_btNext->setIcon(QIcon::fromTheme("music_next"));
+    m_btNext = new DButtonBoxButton(QIcon::fromTheme("music_next"), "", this);
     m_btNext->setIconSize(QSize(36, 36));
     m_btNext->setObjectName("FooterActionNext");
     m_btNext->setFixedSize(40, 50);
-
     AC_SET_OBJECT_NAME(m_btNext, AC_Next);
     AC_SET_ACCESSIBLE_NAME(m_btNext, AC_Next);
 
-    QHBoxLayout *groupHlayout = new QHBoxLayout();
-    groupHlayout->setSpacing(0);
-    groupHlayout->setContentsMargins(0, 0, 0, 0);
-    m_ctlWidget = new DBackgroundGroup(groupHlayout, this);
-    m_ctlWidget->setFixedHeight(50);
-    m_ctlWidget->setItemSpacing(0);
-    m_ctlWidget->setUseWidgetBackground(false);
-    QMargins margins(0, 0, 0, 0);
-    m_ctlWidget->setItemMargins(margins);
-    groupHlayout->addWidget(m_btPrev);
-    groupHlayout->addWidget(m_btPlay);
-    groupHlayout->addWidget(m_btNext);
+    m_ctlWidget = new DButtonBox;
+    m_ctlWidget->setButtonList(QList<DButtonBoxButton *>() << m_btPrev << m_btPlay << m_btNext, false);
     mainHBoxlayout->addWidget(m_ctlWidget, 0);
 
     // 封面按钮
     m_btCover = new MusicPixmapButton(this);
     m_btCover->setIcon(QIcon::fromTheme("info_cover"));
     m_btCover->setObjectName("FooterCoverHover");
-    m_btCover->setFixedSize(50, 50);
-    m_btCover->setIconSize(QSize(50, 50));
+    m_btCover->setFixedSize(48, 48);
+    m_btCover->setIconSize(QSize(48, 48));
     mainHBoxlayout->addWidget(m_btCover, 0);
 
     AC_SET_OBJECT_NAME(m_btCover, AC_btCover);
@@ -832,11 +814,13 @@ void FooterWidget::slotTheme(int type)
 {
     m_slotTheme = type;
 
+    // 组合按钮无边框
+    QColor framecolor("#FFFFFF");
+    framecolor.setAlphaF(0.00);
     QString rStr;
     if (type == 1) {
-        QColor backMaskColor(255, 255, 255, 140);
-        this->blurBackground()->setMaskColor(backMaskColor);
-        QColor maskColor(255, 255, 255, 76);
+        QColor maskColor(247, 247, 247);
+        maskColor.setAlphaF(0.60);
         m_forwardWidget->setMaskColor(maskColor);
         rStr = "light";
 
@@ -850,36 +834,28 @@ void FooterWidget::slotTheme(int type)
         pa = m_btFavorite->palette();
         pa.setColor(DPalette::Light, QColor("#FFFFFF"));
         pa.setColor(DPalette::Dark, QColor("#FFFFFF"));
-        m_btFavorite->setPalette(pa);
+        pa.setColor(DPalette::ButtonText, QColor(Qt::black));
+        // 单个按钮边框
+        QColor btnframecolor("#000000");
+        btnframecolor.setAlphaF(0.00);
+        pa.setColor(DPalette::FrameBorder, btnframecolor);
+        // 取消阴影
+        pa.setColor(DPalette::Shadow, btnframecolor);
+        DApplicationHelper::instance()->setPalette(m_btFavorite, pa);
+        DApplicationHelper::instance()->setPalette(m_btLyric, pa);
+        DApplicationHelper::instance()->setPalette(m_btPlayMode, pa);
+        DApplicationHelper::instance()->setPalette(m_btSound, pa);
+        DApplicationHelper::instance()->setPalette(m_btPlayQueue, pa);
 
-        pa = m_btPlay->palette();
-        pa.setColor(DPalette::Light, QColor("#FFFFFF"));
-        pa.setColor(DPalette::Dark, QColor("#FFFFFF"));
-        m_btPlay->setPalette(pa);
-
-        pa = m_btLyric->palette();
-        pa.setColor(DPalette::Light, QColor("#FFFFFF"));
-        pa.setColor(DPalette::Dark, QColor("#FFFFFF"));
-        m_btLyric->setPalette(pa);
-
-        pa = m_btPlayMode->palette();
-        pa.setColor(DPalette::Light, QColor("#FFFFFF"));
-        pa.setColor(DPalette::Dark, QColor("#FFFFFF"));
-        m_btPlayMode->setPalette(pa);
-
-        pa = m_btSound->palette();
-        pa.setColor(DPalette::Light, QColor("#FFFFFF"));
-        pa.setColor(DPalette::Dark, QColor("#FFFFFF"));
-        m_btSound->setPalette(pa);
-
-        pa = m_btPlayQueue->palette();
-        pa.setColor(DPalette::Light, QColor("#FFFFFF"));
-        pa.setColor(DPalette::Dark, QColor("#FFFFFF"));
-        m_btPlayQueue->setPalette(pa);
+        DPalette pl = m_ctlWidget ->palette();
+        pl.setColor(DPalette::Button, QColor("#FFFFFF"));
+        pl.setColor(DPalette::ButtonText, QColor(Qt::black));
+        pl.setColor(DPalette::FrameBorder, framecolor);
+        pl.setColor(DPalette::Shadow, framecolor);
+        DApplicationHelper::instance()->setPalette(m_ctlWidget, pl);
     } else {
-        QColor backMaskColor(37, 37, 37, 140);
-        blurBackground()->setMaskColor(backMaskColor);
-        QColor maskColor(37, 37, 37, 76);
+        QColor maskColor(32, 32, 32);
+        maskColor.setAlphaF(0.80);
         m_forwardWidget->setMaskColor(maskColor);
         rStr = "dark";
 
@@ -891,29 +867,28 @@ void FooterWidget::slotTheme(int type)
 
         DPalette pa;
         pa = m_btFavorite->palette();
-        pa.setColor(DPalette::Light, QColor("#444444"));
-        pa.setColor(DPalette::Dark, QColor("#444444"));
-        m_btFavorite->setPalette(pa);
+        QColor btnMaskColor("#000000");
+        btnMaskColor.setAlphaF(0.30);
+        pa.setColor(DPalette::Light, btnMaskColor);
+        pa.setColor(DPalette::Dark, btnMaskColor);
+        pa.setColor(DPalette::ButtonText, QColor("#c5cfe0"));
+        pa.setColor(DPalette::FrameBorder, framecolor);
+        // 取消阴影
+        pa.setColor(DPalette::Shadow, framecolor);
+        DApplicationHelper::instance()->setPalette(m_btFavorite, pa);
+        DApplicationHelper::instance()->setPalette(m_btLyric, pa);
+        DApplicationHelper::instance()->setPalette(m_btPlayMode, pa);
+        DApplicationHelper::instance()->setPalette(m_btSound, pa);
+        DApplicationHelper::instance()->setPalette(m_btPlayQueue, pa);
 
-        pa = m_btLyric->palette();
-        pa.setColor(DPalette::Light, QColor("#444444"));
-        pa.setColor(DPalette::Dark, QColor("#444444"));
-        m_btLyric->setPalette(pa);
-
-        pa = m_btPlayMode->palette();
-        pa.setColor(DPalette::Light, QColor("#444444"));
-        pa.setColor(DPalette::Dark, QColor("#444444"));
-        m_btPlayMode->setPalette(pa);
-
-        pa = m_btSound->palette();
-        pa.setColor(DPalette::Light, QColor("#444444"));
-        pa.setColor(DPalette::Dark, QColor("#444444"));
-        m_btSound->setPalette(pa);
-
-        pa = m_btPlayQueue->palette();
-        pa.setColor(DPalette::Light, QColor("#444444"));
-        pa.setColor(DPalette::Dark, QColor("#444444"));
-        m_btPlayQueue->setPalette(pa);
+        DPalette pl = m_ctlWidget ->palette();
+        QColor btnColor("#000000");
+        btnColor.setAlphaF(0.60);
+        pl.setColor(DPalette::Button, btnColor);
+        pl.setColor(DPalette::ButtonText, QColor("#c5cfe0"));
+        pl.setColor(DPalette::FrameBorder, framecolor);
+        pl.setColor(DPalette::Shadow, framecolor);
+        DApplicationHelper::instance()->setPalette(m_ctlWidget, pl);
     }
 
     m_waveform->setThemeType(type);

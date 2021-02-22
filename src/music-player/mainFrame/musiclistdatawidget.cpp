@@ -39,6 +39,7 @@
 #include <DFrame>
 #include <DFontSizeManager>
 #include <DGuiApplicationHelper>
+#include <DApplicationHelper>
 
 #include "util/pinyinsearch.h"
 
@@ -1015,10 +1016,11 @@ void MusicListDataWidget::slotTheme(int type)
         m_btPlayAll->setPalette(playAllPalette);
 
         auto infoLabelPalette = m_infoLabel->palette();
-        QColor infoLabelColor = infoLabelPalette.color(DPalette::BrightText);
-        infoLabelColor.setAlphaF(0.7);
+        // 根据设计重新设置颜色
+        QColor infoLabelColor(QColor("#777777"));
+//        infoLabelColor.setAlphaF(0.7);
         infoLabelPalette.setColor(DPalette::ButtonText, infoLabelColor);
-        m_infoLabel->setPalette(infoLabelPalette);
+        DApplicationHelper::instance()->setPalette(m_infoLabel, infoLabelPalette);
     } else {
         auto palette = this->palette();
         QColor background("#252525");
@@ -1040,10 +1042,12 @@ void MusicListDataWidget::slotTheme(int type)
         m_btPlayAll->setPalette(playAllPalette);
 
         auto infoLabelPalette = m_infoLabel->palette();
-        QColor infoLabelColor = infoLabelPalette.color(DPalette::BrightText);
-        infoLabelColor.setAlphaF(0.7);
+//        QColor infoLabelColor = infoLabelPalette.color(DPalette::BrightText);
+//        infoLabelColor.setAlphaF(0.7);
+        // 根据设计重新设置颜色
+        QColor infoLabelColor(QColor("#FFFFFF"));
         infoLabelPalette.setColor(DPalette::ButtonText, infoLabelColor);
-        m_infoLabel->setPalette(infoLabelPalette);
+        DApplicationHelper::instance()->setPalette(m_infoLabel, infoLabelPalette);
     }
 
     m_btIconMode->setIcon(QIcon::fromTheme("picture_list_texts"));

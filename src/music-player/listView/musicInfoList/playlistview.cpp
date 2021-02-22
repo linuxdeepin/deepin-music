@@ -394,7 +394,7 @@ QPixmap PlayListView::getPlayPixmap(bool isSelect)
     if (isSelect) {
         color = QColor(Qt::white);
     } else {
-        color = QColor(DGuiApplicationHelper::instance()->applicationPalette().highlight().color());
+        color = DGuiApplicationHelper::instance()->applicationPalette().highlight().color();
     }
 
     QImage playingImage = Player::getInstance()->playingIcon().pixmap(QSize(20, 20), QIcon::Active, QIcon::On).toImage();
