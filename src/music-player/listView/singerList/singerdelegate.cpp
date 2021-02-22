@@ -307,7 +307,8 @@ void SingerDataDelegate::drawListMode(QPainter &painter, const QStyleOptionViewI
     if (listview->getThemeType() == 2) {
         nameColor = QColor("#C0C6D4");
         otherColor = QColor("#C0C6D4");
-        otherColor.setAlphaF(0.5);
+        // 按设计修改透明度
+        otherColor.setAlphaF(0.6);
     }
 
     int rowCount = listview->model()->rowCount();

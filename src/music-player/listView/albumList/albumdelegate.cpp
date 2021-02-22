@@ -326,7 +326,8 @@ void AlbumDataDelegate::drawListMode(QPainter &painter, const QStyleOptionViewIt
     if (listview->getThemeType() == 2) {
         nameColor = QColor("#C0C6D4");
         otherColor = QColor("#C0C6D4");
-        otherColor.setAlphaF(0.5);
+        // 按设计修改透明度
+        otherColor.setAlphaF(0.6);
     }
 
     int rowCount = listview->model()->rowCount();
@@ -347,7 +348,8 @@ void AlbumDataDelegate::drawListMode(QPainter &painter, const QStyleOptionViewIt
             otherColor = option.palette.highlightedText().color();
         } else {
             nameColor = DGuiApplicationHelper::instance()->applicationPalette().highlight().color();
-            otherColor = QColor("#2CA7F8");
+            // 未选中时，显示活动色
+            otherColor = nameColor;
         }
         QRect numRect(lrWidth, option.rect.y(), 40, option.rect.height());
         if (option.state & QStyle::State_Selected) {
@@ -394,7 +396,8 @@ void AlbumDataDelegate::drawListMode(QPainter &painter, const QStyleOptionViewIt
     painter.drawText(nameRect, Qt::AlignLeft | Qt::AlignVCenter, nameText);
 
     // extraname
-//    painter.setPen(nameColor);
+    // 按设计修改透明度
+    painter.setPen(otherColor);
     QRect extraRect(50 + w / 2, option.rect.y(), w / 4 - 20, option.rect.height());
     painter.setFont(fontT9);
     auto extraText = songsFm.elidedText(albumTmp.singer.isEmpty() ? SingerListView::tr("Unknown artist") : albumTmp.singer, Qt::ElideMiddle, extraRect.width());
