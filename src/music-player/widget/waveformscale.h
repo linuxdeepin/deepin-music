@@ -33,7 +33,8 @@ class WaveformScale : public DFrame
 
     static const int WAVE_WIDTH;
     static const int WAVE_TEXTHEIGHT;
-    static const int WAVE_TEXTWIDTH;
+    static const int WAVE_TEXTDEFAULTWIDTH;
+    static const int WAVE_OFFSET;
 
 public:
     explicit WaveformScale(QWidget *parent = nullptr);
