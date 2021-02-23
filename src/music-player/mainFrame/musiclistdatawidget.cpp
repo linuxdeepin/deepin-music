@@ -887,11 +887,16 @@ void MusicListDataWidget::refreshModeBtnByHash(QString hash)
 // 根据当前页面中内容数量刷新播放所有按钮状态
 void MusicListDataWidget::refreshPlayAllBtn(int count)
 {
+    auto playAllPalette = m_btPlayAll->palette();
+    QColor color(Qt::white);
     if (count > 0) {
         m_btPlayAll->setEnabled(true);
     } else {
         m_btPlayAll->setEnabled(false);
+        color.setAlphaF(0.4);
     }
+    playAllPalette.setColor(DPalette::ButtonText, color);
+    m_btPlayAll->setPalette(playAllPalette);
 }
 
 void MusicListDataWidget::slotRemoveSingleSong(const QString &listHash, const QString &musicHash)
@@ -1050,6 +1055,13 @@ void MusicListDataWidget::slotTheme(int type)
     m_btIconMode->setIconSize(QSize(36, 36));
     m_btlistMode->setIcon(QIcon::fromTheme("text_list_texts"));
     m_btlistMode->setIconSize(QSize(36, 36));
+    if (m_albumListView != nullptr && m_pStackedWidget->currentWidget() == m_albumListView) {
+        refreshPlayAllBtn(m_albumListView->getAlbumCount());
+    } else if (m_singerListView != nullptr && m_pStackedWidget->currentWidget() == m_singerListView) {
+        refreshPlayAllBtn(m_singerListView->getSingerCount());
+    } else if (m_musicListView != nullptr && m_pStackedWidget->currentWidget() == m_musicListView) {
+        refreshPlayAllBtn(m_musicListView->getMusicCount());
+    }
 }
 
 ActionBar::ActionBar(QWidget *parent)
