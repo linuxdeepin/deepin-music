@@ -294,7 +294,13 @@ void SingerDataDelegate::drawListMode(QPainter &painter, const QStyleOptionViewI
     if (option.state & QStyle::State_MouseOver) {
         painter.save();
         painter.setPen(Qt::NoPen);
-        QColor hovertColor(option.palette.shadow().color());
+        QColor hovertColor;
+        if (listview->getThemeType() == 1) {
+            hovertColor = option.palette.shadow().color();
+        } else {
+            hovertColor = QColor("#ffffff");
+            hovertColor.setAlphaF(0.1);
+        }
         if (option.state & QStyle::State_Selected)
             hovertColor.setAlphaF(0.2);
         painter.setBrush(hovertColor);
