@@ -728,12 +728,6 @@ void MusicListDataWidget::initCountLabelAndListMode(QHBoxLayout *layout)
 // 这段导致了，字体大小改变，文字显示换行问题
 //    m_infoLabel->setMinimumWidth(200);
     m_infoLabel->setWordWrap(true);
-
-    auto infoLabelPalette = m_infoLabel->palette();
-    QColor infoLabelColor = infoLabelPalette.color(DPalette::BrightText);
-    infoLabelColor.setAlphaF(0.7);
-    infoLabelPalette.setColor(DPalette::ButtonText, infoLabelColor);
-    m_infoLabel->setPalette(infoLabelPalette);
     m_infoLabel->setForegroundRole(DPalette::ButtonText);
     DFontSizeManager::instance()->bind(m_infoLabel, DFontSizeManager::T6, QFont::Medium);
 
@@ -1046,7 +1040,9 @@ void MusicListDataWidget::slotTheme(int type)
 //        infoLabelColor.setAlphaF(0.7);
         // 根据设计重新设置颜色
         QColor infoLabelColor(QColor("#FFFFFF"));
+        infoLabelColor.setAlphaF(0.7);
         infoLabelPalette.setColor(DPalette::ButtonText, infoLabelColor);
+        m_infoLabel->setForegroundRole(DPalette::ButtonText);
         DApplicationHelper::instance()->setPalette(m_infoLabel, infoLabelPalette);
     }
 

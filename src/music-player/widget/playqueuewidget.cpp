@@ -21,6 +21,14 @@
 
 #include "playqueuewidget.h"
 
+#include <DPushButton>
+#include <DComboBox>
+#include <DLabel>
+#include <DPalette>
+#include <DGuiApplicationHelper>
+#include <DFontSizeManager>
+#include <DApplicationHelper>
+
 #include <QDebug>
 #include <QAction>
 #include <QVBoxLayout>
@@ -28,13 +36,6 @@
 #include <QMimeData>
 #include <QResizeEvent>
 #include <QStandardItemModel>
-
-#include <DPushButton>
-#include <DComboBox>
-#include <DLabel>
-#include <DPalette>
-#include <DGuiApplicationHelper>
-#include <DFontSizeManager>
 #include <QApplication>
 
 #include "../core/music.h"
@@ -72,6 +73,7 @@ PlayQueueWidget::PlayQueueWidget(QWidget *parent) :
     m_infoLabel = new DLabel();
     DFontSizeManager::instance()->bind(m_infoLabel, DFontSizeManager::T6);
     m_infoLabel->setMargin(4);
+    m_infoLabel->setForegroundRole(DPalette::ButtonText);
 
     m_btClearAll = new DPushButton;
     m_btClearAll->setIcon(QIcon::fromTheme("clear_list"));
@@ -264,7 +266,8 @@ void PlayQueueWidget::resizeEvent(QResizeEvent *event)
 void PlayQueueWidget::setThemeType(int type)
 {
     if (type == 1) {
-        QColor backMaskColor(255, 255, 255, 180);
+        QColor backMaskColor(247, 247, 247);
+        backMaskColor.setAlphaF(0.6);
         this->blurBackground()->setMaskColor(backMaskColor);
 
 //        auto titleLabelPalette = d->infoLabel->palette();
@@ -273,10 +276,10 @@ void PlayQueueWidget::setThemeType(int type)
 //        d->titleLabel->setForegroundRole(DPalette::ButtonText);
 
         auto infoLabelPalette = m_infoLabel->palette();
-        QColor infoLabelColor = infoLabelPalette.color(DPalette::BrightText);
+        QColor infoLabelColor("#000000");
         infoLabelColor.setAlphaF(0.5);
         infoLabelPalette.setColor(DPalette::ButtonText, infoLabelColor);
-        m_infoLabel->setPalette(infoLabelPalette);
+        DApplicationHelper::instance()->setPalette(m_infoLabel, infoLabelPalette);
 
         DPalette pl = m_btClearAll ->palette();
         pl.setColor(DPalette::ButtonText, QColor("#FFFFFF"));
@@ -287,7 +290,8 @@ void PlayQueueWidget::setThemeType(int type)
         pl.setColor(DPalette::Shadow, sbcolor);
         m_btClearAll->setPalette(pl);
     } else {
-        QColor backMaskColor(37, 37, 37, 140);
+        QColor backMaskColor(32, 32, 32);
+        backMaskColor.setAlphaF(0.5);
         this->blurBackground()->setMaskColor(backMaskColor);
 
 //        auto titleLabelPalette = d->infoLabel->palette();
@@ -296,10 +300,10 @@ void PlayQueueWidget::setThemeType(int type)
 //        d->titleLabel->setForegroundRole(DPalette::ButtonText);
 
         auto infoLabelPalette = m_infoLabel->palette();
-        QColor infoLabelColor = infoLabelPalette.color(DPalette::BrightText);
+        QColor infoLabelColor("#ffffff");
         infoLabelColor.setAlphaF(0.5);
         infoLabelPalette.setColor(DPalette::ButtonText, infoLabelColor);
-        m_infoLabel->setPalette(infoLabelPalette);
+        DApplicationHelper::instance()->setPalette(m_infoLabel, infoLabelPalette);
 
         DPalette pl = m_btClearAll->palette();
         pl.setColor(DPalette::ButtonText, QColor("#FFFFFF"));
