@@ -279,13 +279,24 @@ QVariant SpeechCenter::playSonglist(QString songlistName)
     } else {
         QString uuid;
         if (songlistName.isEmpty()) {
-            // 歌单名为空,随机选择歌单播放
-            QTime time;
-            int index = 0;
-            time = QTime::currentTime();
-            qsrand(static_cast<uint>((time.msec() + time.second() * 1000)));
-            index = qrand() % playlistDatas.size();
-            uuid = playlistDatas.at(0).uuid;
+            //过滤无歌曲的歌单
+            QList<DataBaseService::PlaylistData> tmplist;
+            for (DataBaseService::PlaylistData data : playlistDatas) {
+                QList<MediaMeta> metalist = DataBaseService::getInstance()->customizeMusicInfos(data.uuid);
+                if (metalist.size() > 0) {
+                    tmplist << data;
+                }
+            }
+            qDebug() << __FUNCTION__ << "song list to play size:" << tmplist.size();
+            if (tmplist.size() > 0) {
+                // 歌单名为空,随机选择歌单播放
+                QTime time;
+                int index = 0;
+                time = QTime::currentTime();
+                qsrand(static_cast<uint>((time.msec() + time.second() * 1000)));
+                index = qrand() % (tmplist.size());
+                uuid = tmplist.at(index == tmplist.size() ? index - 1 : index).uuid;
+            }
         } else {
             // 根据名称匹配歌单
             // 精确匹配
