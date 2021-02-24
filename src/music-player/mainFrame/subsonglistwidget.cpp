@@ -243,7 +243,7 @@ void SubSonglistWidget::flushDialog(QMap<QString, MediaMeta> musicinfos, ListPag
         auto infoFont = m_infoLabel->font();
         // 根据进入二级页面场景，设置hash值，二级页面删除时判断使用
         switch (listPageType) {
-        case AlbumType: {
+        case AlbumSubSongListType: {
             m_hash = "album";
             break;
         }
@@ -251,7 +251,7 @@ void SubSonglistWidget::flushDialog(QMap<QString, MediaMeta> musicinfos, ListPag
             m_hash = "albumResult";
             break;
         }
-        case SingerType: {
+        case SingerSubSongListType: {
             m_hash = "artist";
             break;
         }
@@ -264,13 +264,14 @@ void SubSonglistWidget::flushDialog(QMap<QString, MediaMeta> musicinfos, ListPag
             break;
         }
         }
-        if (listPageType == AlbumType || listPageType == SearchAlbumResultType) {
+        if (listPageType == AlbumSubSongListType || listPageType == SearchAlbumSubSongListType) {
 // 解决字体不会根据系统字体大小改变问题
 //            titleFont.setPixelSize(24);
 //            infoFont.setPixelSize(18);
             m_titleLabel->setText(musicinfos.first().album);
             m_infoLabel->setText(musicinfos.first().singer);
-        } else if (listPageType == SingerType || listPageType == SearchSingerResultType) {
+            m_infoLabel->show();
+        } else if (listPageType == SingerSubSongListType || listPageType == SearchSingerSubSongListType) {
 //            titleFont.setPixelSize(36);
             m_titleLabel->setText(musicinfos.first().singer);
             m_infoLabel->hide();

@@ -20,16 +20,18 @@
  */
 
 #include "searchresult.h"
-#include "listView/musicSearchList/musicsearchlistview.h"
 
 #include <QDebug>
-#include <DPushButton>
+#include <QApplication>
 #include <QStringListModel>
+
+#include <DPushButton>
 #include <DListView>
 #include <DApplicationHelper>
 
 #include "searchedit.h"
 #include "ac-desktop-define.h"
+#include "musicsearchlistview.h"
 
 SearchResult::SearchResult(QWidget *parent) : DBlurEffectWidget(parent)
 {

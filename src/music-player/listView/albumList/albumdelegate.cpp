@@ -472,9 +472,11 @@ void AlbumDataDelegate::mouseDoubleClicked(const QStyleOptionViewItem &option, c
     AlbumInfo albumTmp = index.data(Qt::UserRole).value<AlbumInfo>();
 
     if (albumlistView->getHash() == "album") {
-        emit CommonService::getInstance()->signalShowSubSonglist(albumTmp.musicinfos, AlbumType);
+        // 切换到专辑二级页面
+        emit CommonService::getInstance()->signalSwitchToView(AlbumSubSongListType, "", albumTmp.musicinfos);
     } else if (albumlistView->getHash() == "albumResult") {
-        emit CommonService::getInstance()->signalShowSubSonglist(albumTmp.musicinfos, SearchAlbumResultType);
+        // 切换到搜索结果专辑二级页面
+        emit CommonService::getInstance()->signalSwitchToView(SearchAlbumSubSongListType, "", albumTmp.musicinfos);
     }
 }
 

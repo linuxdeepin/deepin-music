@@ -38,6 +38,7 @@ class SingerListView;
 class SearchResultTabWidget;
 class QShortcut;
 class InfoDialog;
+class SubSonglistWidget;
 class MusicListDataWidget : public DWidget
 {
     Q_OBJECT
@@ -48,7 +49,7 @@ public:
 public slots:
     void slotTheme(int type);
     // 左侧菜单切换ListView
-    void slotViewChanged(ListPageSwitchType switchtype, const QString &hashOrSearchword);
+    void slotViewChanged(ListPageSwitchType switchtype, const QString &hashOrSearchword, QMap<QString, MediaMeta> musicinfos);
     void switchViewModel();
     void slotSortChange(QAction *action);
     void slotImportFinished(QString hash, int successCount);
@@ -89,6 +90,8 @@ private:
     QStackedWidget      *m_pStackedWidget  = nullptr;
     DLabel              *m_emptyHits       = nullptr;
     ActionBar           *m_actionBar       = nullptr;
+    // 歌手专辑二级页面
+    SubSonglistWidget   *m_subSonglistWidget = nullptr;
     DLabel              *m_titleLabel      = nullptr;
     DDropdown           *m_albumDropdown   = nullptr;
     DDropdown           *m_artistDropdown  = nullptr;

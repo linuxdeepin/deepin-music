@@ -39,7 +39,7 @@ public:
     bool containsStr(QString searchText, QString text);
 signals:
     // hashOrSearchword为hash值或者搜索关键词
-    void signalSwitchToView(ListPageSwitchType switchtype, QString hashOrSearchword); //switch to playlist view,
+    void signalSwitchToView(ListPageSwitchType switchtype, QString hashOrSearchword, QMap<QString, MediaMeta> musicinfos = QMap<QString, MediaMeta>()); //switch to playlist view,
     // 跳转到当前播放的位置,参数为需要跳转的歌单hash
     void sigScrollToCurrentPosition(QString songlistHash);
     // 刷新收藏按钮图标
@@ -58,10 +58,6 @@ signals:
     void signalPlayQueueClosed();
     // 切换歌单时，清空搜索栏
     void signalClearEdit();
-    // 双击专辑或者演唱者，显示二级页面
-    void signalShowSubSonglist(const QMap<QString, MediaMeta> &musicinfos, ListPageSwitchType listPageType);
-    // 隐藏二级页面
-    void signalHideSubSonglist();
     // 通知页面刷新编码
     void signalUpdateCodec(const MediaMeta &meta);
     // cda导入完成消息

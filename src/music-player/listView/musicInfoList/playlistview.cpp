@@ -642,7 +642,7 @@ void PlayListView::slotRemoveSingleSong(const QString &listHash, const QString &
         }
     }
     if (m_model->rowCount() == 0) {
-        emit CommonService::getInstance()->signalHideSubSonglist();
+        emit CommonService::getInstance()->signalSwitchToView(PreType, "", QMap<QString, MediaMeta>());
     }
 }
 

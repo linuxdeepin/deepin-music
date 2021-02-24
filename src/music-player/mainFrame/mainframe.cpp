@@ -111,12 +111,6 @@ MainFrame::MainFrame()
 
     connect(m_titlebarwidget, &TitlebarWidget::sigSearchEditFoucusIn,
             this, &MainFrame::slotSearchEditFoucusIn);
-    // 添加自定义歌单
-    connect(CommonService::getInstance(), &CommonService::signalHideSubSonglist,
-            this, &MainFrame::slotHideSubWidget);
-    // 添加自定义歌单
-    connect(CommonService::getInstance(), &CommonService::signalAddNewSongList,
-            this, &MainFrame::slotHideSubWidget);
     // 导入成功
     connect(DataBaseService::getInstance(), &DataBaseService::signalImportFinished,
             this, &MainFrame::slotDBImportFinished);
@@ -173,15 +167,9 @@ void MainFrame::initUI(bool showLoading)
     m_musicContentWidget = new MusicContentWidget(this);
     m_musicContentWidget->setVisible(showLoading);
 
-    m_subSonglistWidget = new SubSonglistWidget("", this);
-
     m_musicStatckedWidget = new MusicStatckedWidget(this);
     m_musicStatckedWidget->addWidget(m_musicContentWidget);
-    m_musicStatckedWidget->addWidget(m_subSonglistWidget);
     m_musicStatckedWidget->setCurrentWidget(m_musicContentWidget);
-
-    AC_SET_OBJECT_NAME(m_subSonglistWidget, AC_subSonglistWidget);
-    AC_SET_ACCESSIBLE_NAME(m_subSonglistWidget, AC_subSonglistWidget);
 
     m_footerWidget = new FooterWidget(this);
     m_footerWidget->setVisible(showLoading);
@@ -201,9 +189,6 @@ void MainFrame::initUI(bool showLoading)
     /*---------------menu&shortcut-------------------*/
     initMenuAndShortcut();
     m_newSonglistAction->setEnabled(showLoading);
-    // 添加新建歌单或者双击专辑/演唱者
-    connect(CommonService::getInstance(), &CommonService::signalShowSubSonglist,
-            this, &MainFrame::slotShowSubSonglist);
 
     connect(DataBaseService::getInstance(), &DataBaseService::signalAllMusicCleared,
             this, &MainFrame::slotAllMusicCleared);
@@ -448,7 +433,7 @@ void MainFrame::setThemeType(DGuiApplicationHelper::ColorType themeType)
 
 void MainFrame::slotLeftClicked()
 {
-    m_musicStatckedWidget->setCurrentWidget(m_musicContentWidget);
+    emit CommonService::getInstance()->signalSwitchToView(PreType, "", QMap<QString, MediaMeta>());
     m_backBtn->setVisible(false);
 }
 
@@ -528,12 +513,6 @@ void MainFrame::slotImportFailed()
     if (0 == warnDlg.exec()) {
         return;
     }
-}
-
-void MainFrame::slotHideSubWidget()
-{
-    m_backBtn->setVisible(false);
-    m_musicStatckedWidget->setCurrentWidget(m_musicContentWidget);
 }
 
 void MainFrame::slotShortCutTriggered()
@@ -692,17 +671,15 @@ void MainFrame::slotPlayFromFileMaganager()
     DataBaseService::getInstance()->setFirstSong("");
 }
 
-void MainFrame::slotShowSubSonglist(const QMap<QString, MediaMeta> &musicinfos, ListPageSwitchType listPageType)
+void MainFrame::slotViewChanged(ListPageSwitchType switchtype, const QString &hashOrSearchword, QMap<QString, MediaMeta> musicinfos)
 {
-    m_backBtn->setVisible(true);
-    if (musicinfos.size() > 0) {
-        m_subSonglistWidget->flushDialog(musicinfos, listPageType);
+    Q_UNUSED(musicinfos)
+    if (switchtype != AlbumSubSongListType
+            && switchtype != SingerSubSongListType
+            && switchtype != SearchAlbumSubSongListType
+            && switchtype != SearchSingerSubSongListType) {
+        m_backBtn->setVisible(false);
     }
-    m_musicStatckedWidget->setCurrentWidget(m_subSonglistWidget);
-}
-
-void MainFrame::slotViewChanged(ListPageSwitchType switchtype, const QString &hashOrSearchword)
-{
     // 记录需要导入的歌单hash值
     switch (switchtype) {
     case AlbumType:
@@ -724,6 +701,13 @@ void MainFrame::slotViewChanged(ListPageSwitchType switchtype, const QString &ha
     case SearchAlbumResultType:
     case PreType: {
         m_importListHash = "all";
+        break;
+    }
+    case AlbumSubSongListType:
+    case SingerSubSongListType:
+    case SearchAlbumSubSongListType:
+    case SearchSingerSubSongListType: {
+        m_backBtn->setVisible(true);
         break;
     }
     default:
@@ -826,10 +810,6 @@ void MainFrame::resizeEvent(QResizeEvent *e)
 
     if (m_musicContentWidget) {
         m_musicContentWidget->setGeometry(0, 0, width(), height() - m_footerWidget->height() - titlebar()->height());
-    }
-
-    if (m_subSonglistWidget) {
-        m_subSonglistWidget->setGeometry(0, 0, width(), height() - m_footerWidget->height() - titlebar()->height());
     }
 
     // 防止主页面控件挡住歌词控件

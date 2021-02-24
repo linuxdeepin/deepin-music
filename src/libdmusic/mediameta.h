@@ -142,7 +142,11 @@ enum ListPageSwitchType {
     CustomType,         //自定义歌单
     SearchMusicResultType,     //搜索歌曲结果
     SearchSingerResultType,    //搜索歌手结果
-    SearchAlbumResultType      //搜索专辑结果
+    SearchAlbumResultType,     //搜索专辑结果
+    AlbumSubSongListType,      //专辑二级页面
+    SingerSubSongListType,     //歌手二级页面
+    SearchAlbumSubSongListType,//搜索专辑二级页面
+    SearchSingerSubSongListType//搜索歌手二级页面
 };
 
 Q_DECLARE_METATYPE(MediaMeta)

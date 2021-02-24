@@ -57,6 +57,7 @@
 #include "databaseservice.h"
 #include "infodialog.h"
 #include "player.h"
+#include "subsonglistwidget.h"
 
 DWIDGET_USE_NAMESPACE
 
@@ -92,10 +93,16 @@ void MusicListDataWidget::showEmptyHits(int count)
 }
 
 // 左侧菜单切换ListView
-void MusicListDataWidget::slotViewChanged(ListPageSwitchType switchtype, const QString &hashOrSearchword)
+void MusicListDataWidget::slotViewChanged(ListPageSwitchType switchtype, const QString &hashOrSearchword, QMap<QString, MediaMeta> musicinfos)
 {
     // 任意非0数，隐藏无搜索结果界面
     showEmptyHits(1);
+    if (switchtype != AlbumSubSongListType
+            && switchtype != SingerSubSongListType
+            && switchtype != SearchAlbumSubSongListType
+            && switchtype != SearchSingerSubSongListType) {
+        m_actionBar->setVisible(true);
+    }
     //设置dropdown使能
     if (m_musicDropdown) {
         m_musicDropdown->setEnabled(switchtype != CdaType ? true : false);
@@ -231,7 +238,30 @@ void MusicListDataWidget::slotViewChanged(ListPageSwitchType switchtype, const Q
         break;
     }
     case PreType: {
-        slotViewChanged(m_preSwitchtype, m_preHash);
+        // 返回进入二级页面前的页面
+        if (m_preSwitchtype == AlbumSubSongListType) {
+            slotViewChanged(AlbumType, "album", QMap<QString, MediaMeta>());
+        } else if (m_preSwitchtype == SingerSubSongListType) {
+            slotViewChanged(SingerType, "artist", QMap<QString, MediaMeta>());
+        } else if (m_preSwitchtype == SearchAlbumSubSongListType) {
+            m_pStackedWidget->setCurrentWidget(m_searchResultTabWidget);
+        } else if (m_preSwitchtype == SearchSingerSubSongListType) {
+            m_pStackedWidget->setCurrentWidget(m_searchResultTabWidget);
+        } else {
+            slotViewChanged(m_preSwitchtype, m_preHash, QMap<QString, MediaMeta>());
+        }
+        break;
+    }
+    case AlbumSubSongListType:
+    case SingerSubSongListType:
+    case SearchAlbumSubSongListType:
+    case SearchSingerSubSongListType: {
+        m_preSwitchtype = switchtype;
+        m_actionBar->setVisible(false);
+        if (musicinfos.size() > 0) {
+            m_subSonglistWidget->flushDialog(musicinfos, switchtype);
+        }
+        m_pStackedWidget->setCurrentWidget(m_subSonglistWidget);
         break;
     }
     default:
@@ -622,7 +652,11 @@ void MusicListDataWidget::initUI()
     m_pStackedWidget->setCurrentWidget(m_musicListView);
     refreshInfoLabel("all");
     refreshSortAction();
-
+    // 添加二级页面
+    m_subSonglistWidget = new SubSonglistWidget("", this);
+    AC_SET_OBJECT_NAME(m_subSonglistWidget, AC_subSonglistWidget);
+    AC_SET_ACCESSIBLE_NAME(m_subSonglistWidget, AC_subSonglistWidget);
+    m_pStackedWidget->addWidget(m_subSonglistWidget);
     slotTheme(DGuiApplicationHelper::instance()->themeType());
 }
 

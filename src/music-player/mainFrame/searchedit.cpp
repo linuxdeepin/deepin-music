@@ -58,22 +58,10 @@ SearchEdit::SearchEdit(QWidget *parent) : DSearchEdit(parent)
         qDebug() << "zy------SearchEdit::focusChanged onFocus = " << onFocus;
         if (!onFocus) {
             m_result->hide();
-        } else {
-            if (m_result) {
-                onTextChanged();
-            } else {
-                emit sigFoucusIn();
+            if (lineEdit()) {
+                lineEdit()->setFocus(Qt::NoFocusReason);
             }
-        }
-    });
-    connect(this, &SearchEdit::cursorPositionChanged,
-    this, [ = ](int index1, int index2) {
-        Q_UNUSED(index1)
-        Q_UNUSED(index2)
-        auto alltext = this->text();
-        if (alltext.isEmpty()) {
-            //清除搜索时，回退到上一次界面
-            emit CommonService::getInstance()->signalSwitchToView(PreType, "");
+            this->setFocus(Qt::NoFocusReason);
         }
     });
 }
@@ -123,8 +111,6 @@ void SearchEdit::onTextChanged()
     auto alltext = this->text();
     if (alltext.isEmpty()) {
         m_result->hide();
-        //清除搜索时，回退到上一次界面
-        emit CommonService::getInstance()->signalSwitchToView(PreType, "");
         return;
     }
 

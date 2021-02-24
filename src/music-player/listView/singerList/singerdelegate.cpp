@@ -415,9 +415,11 @@ void SingerDataDelegate::mouseDoubleClicked(const QStyleOptionViewItem &option, 
     SingerInfo signerTmp = index.data(Qt::UserRole).value<SingerInfo>();
 
     if (singerListView->getHash() == "artist") {
-        emit CommonService::getInstance()->signalShowSubSonglist(signerTmp.musicinfos, SingerType);
+        // 切换到歌手二级页面
+        emit CommonService::getInstance()->signalSwitchToView(SingerSubSongListType, "", signerTmp.musicinfos);
     } else if (singerListView->getHash() == "artistResult") {
-        emit CommonService::getInstance()->signalShowSubSonglist(signerTmp.musicinfos, SearchSingerResultType);
+        // 切换到搜索结果歌手二级页面
+        emit CommonService::getInstance()->signalSwitchToView(SearchSingerSubSongListType, "", signerTmp.musicinfos);
     }
 }
 

@@ -212,8 +212,6 @@ void MusicSongListView::addNewSongList()
 //        if (this->isPersistentEditorOpen(item))
 //            closePersistentEditor(item);
 //    }
-    // 如果二级页面显示则隐藏
-    emit CommonService::getInstance()->signalHideSubSonglist();
 
     qDebug() << "new item";
     QIcon icon = QIcon::fromTheme("music_famousballad");

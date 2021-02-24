@@ -76,8 +76,6 @@ private slots:
     void slotDBImportFinished(QString hash, int successCount);
     void slotCdaImportFinished();
     void slotImportFailed();
-    // 隐藏二级页面
-    void slotHideSubWidget();
     void slotShortCutTriggered();
     void slotMenuTriggered(QAction *action);
     void slotSwitchTheme();
@@ -87,10 +85,8 @@ private slots:
     void slotAutoPlay(const MediaMeta &meta);
     // 文管打开文件
     void slotPlayFromFileMaganager();
-    // 显示二级页面
-    void slotShowSubSonglist(const QMap<QString, MediaMeta> &musicinfos, ListPageSwitchType listPageType);
     // 左侧菜单切换ListView
-    void slotViewChanged(ListPageSwitchType switchtype, const QString &hashOrSearchword);
+    void slotViewChanged(ListPageSwitchType switchtype, const QString &hashOrSearchword, QMap<QString, MediaMeta> musicinfos);
 protected:
     void showEvent(QShowEvent *event) Q_DECL_OVERRIDE;
     void changeEvent(QEvent *event) Q_DECL_OVERRIDE;
@@ -102,8 +98,6 @@ private:
     MusicStatckedWidget  *m_musicStatckedWidget = nullptr;
     // 主页面控件
     MusicContentWidget  *m_musicContentWidget = nullptr;
-    // 歌手专辑控件
-    SubSonglistWidget   *m_subSonglistWidget = nullptr;
     // 歌词控件
     MusicLyricWidget    *m_musicLyricWidget = nullptr;
     // 标题栏

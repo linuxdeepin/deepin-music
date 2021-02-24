@@ -183,6 +183,15 @@ void MusicListScrollArea::viewChanged(ListPageSwitchType switchtype, const QStri
 {
     Q_UNUSED(hashOrSearchword)
     switch (switchtype) {
+    case AlbumType:
+    case AllSongListType:
+    case SingerType:
+    case FavType:
+    case CdaType:
+    case CustomType: {
+        emit CommonService::getInstance()->signalClearEdit();//清空搜索栏
+        return;
+    }
     case SearchMusicResultType:
     case SearchSingerResultType:
     case SearchAlbumResultType: {
@@ -192,7 +201,6 @@ void MusicListScrollArea::viewChanged(ListPageSwitchType switchtype, const QStri
         return;
     }
     default:
-        emit CommonService::getInstance()->signalClearEdit();//清空搜索栏
         return;
     }
 }
