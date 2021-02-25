@@ -63,6 +63,8 @@ public:
 //    QWidget *createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const;
 //    void setEditorData(QWidget *editor, const QModelIndex &index) const;
 //    void setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const;
+protected:
+    bool editorEvent(QEvent *event, QAbstractItemModel *model, const QStyleOptionViewItem &option, const QModelIndex &index) override;
 private:
     void drawIconMode(QPainter &painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
     void drawListMode(QPainter &painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
@@ -74,5 +76,7 @@ public:
     QColor m_alternateBackground;
     QColor m_highlightedBackground;
     QPixmap m_shadowImg;
+    QPixmap m_selectedPix;
+    QPixmap m_unselectedPix;
 };
 

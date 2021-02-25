@@ -27,9 +27,11 @@
 #include <QFileInfo>
 #include <QPainterPath>
 #include <QStandardItemModel>
+#include <QMouseEvent>
 
 #include <DGuiApplicationHelper>
 #include <DHiDPIHelper>
+#include <DStyle>
 
 #include "playlistview.h"
 #include "databaseservice.h"
@@ -37,9 +39,11 @@
 
 DWIDGET_USE_NAMESPACE
 
-const int PlayItemLeftMargin = 15;
 const int PlayItemRightMargin = 20;
-const int PlayItemNumberMargin = 10;
+const int ImgWidthAndHeight = 150;
+const int xoffset = 10;
+const int yoffset = 8;
+const int roundRadius = 10;
 
 static inline int pixel2point(int pixel)
 {
@@ -119,10 +123,32 @@ QSize PlayItemDelegate::sizeHint(const QStyleOptionViewItem &option,
     auto *listview = qobject_cast<const PlayListView *>(option.widget);
     if (listview && listview->viewMode() == QListView::IconMode) {
         // 调整Icon间距
-        return QSize(150, 190);
+        return QSize(170, 210);
     } else {
         auto baseSize = QStyledItemDelegate::sizeHint(option, index);
         return QSize(baseSize.width(), 38);
+    }
+}
+
+bool PlayItemDelegate::editorEvent(QEvent *event, QAbstractItemModel *model, const QStyleOptionViewItem &option, const QModelIndex &index)
+{
+    const PlayListView *listview = qobject_cast<const PlayListView *>(option.widget);
+    const QMouseEvent *pressEvent = static_cast<QMouseEvent *>(event);
+    const QPointF pressPos = pressEvent->pos();
+
+    if (index.isValid() && listview->viewMode() == QListView::IconMode) {
+        if (pressPos.x() > (option.rect.x() + 160) // 点在图片右边
+                || pressPos.y() > (option.rect.y() + option.rect.height() - 12) // 点在文字下面
+                || pressPos.y() < (option.rect.y() + 8) // 点在图片上面
+                || pressPos.x() < (option.rect.x() + 10)) { // 点在图片左边
+            // 点击在空白处，清空选中
+            const_cast<PlayListView *>(listview)->clearSelection();
+            return true;
+        } else {
+            return QStyledItemDelegate::editorEvent(event, model, option, index);
+        }
+    } else {
+        return QStyledItemDelegate::editorEvent(event, model, option, index);
     }
 }
 
@@ -145,7 +171,6 @@ QSize PlayItemDelegate::sizeHint(const QStyleOptionViewItem &option,
 //{
 //    QStyledItemDelegate::setModelData(editor, model, index);
 //}
-
 void PlayItemDelegate::drawIconMode(QPainter &painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
     const PlayListView *listview = qobject_cast<const PlayListView *>(option.widget);
@@ -160,28 +185,24 @@ void PlayItemDelegate::drawIconMode(QPainter &painter, const QStyleOptionViewIte
     painter.setRenderHint(QPainter::HighQualityAntialiasing);
     painter.setRenderHint(QPainter::SmoothPixmapTransform);
 
-    auto background = option.palette.background();
-
-    if (option.state & QStyle::State_Selected) {
-//            background = option.palette.highlight();
-    }
-
-    painter.fillRect(option.rect, background);
+//    auto background = option.palette.background();
+//    background.setColor(Qt::red);
+//    painter.fillRect(option.rect, background);
 
     // 绘制阴影
-    QRect shadowRect(option.rect.x() - 10, option.rect.y(), 168, 158);
-    QPainterPath roundRectShadowPath;
-    roundRectShadowPath.addRoundRect(shadowRect, 8, 8);
-    painter.save();
-    painter.setClipPath(roundRectShadowPath);
-    painter.drawPixmap(shadowRect, m_shadowImg);
-    painter.restore();
+//    QRect shadowRect(option.rect.x() - 10 + xoffset, option.rect.y() + yoffset, 158, 148);
+//    QPainterPath roundRectShadowPath;
+//    roundRectShadowPath.addRoundRect(shadowRect, 8, 8);
+//    painter.save();
+//    painter.setClipPath(roundRectShadowPath);
+//    painter.drawPixmap(shadowRect, m_shadowImg);
+//    painter.restore();
 
     // 绘制圆角框
-    QRect rect(option.rect.x(), option.rect.y(), 150, 200);
-    QPainterPath roundRectPath;
-    roundRectPath.addRoundRect(rect, 10, 10);
-    painter.setClipPath(roundRectPath);
+//    QRect rect(option.rect.x() + xoffset, option.rect.y() + xoffset, 140, 190);
+//    QPainterPath roundRectPath;
+//    roundRectPath.addRoundRect(rect, 10, 10);
+//    painter.setClipPath(roundRectPath);
 
     // 绘制专辑图片
     painter.save();
@@ -190,11 +211,11 @@ void PlayItemDelegate::drawIconMode(QPainter &painter, const QStyleOptionViewIte
     if (value.type() == QVariant::Icon) {
         icon = qvariant_cast<QIcon>(value);
     }
-    QRect pixmapRect(option.rect.x(), option.rect.y(), 150, 150);
+    QRect pixmapRect(option.rect.x() + xoffset, option.rect.y() + yoffset, ImgWidthAndHeight, ImgWidthAndHeight);
     QPainterPath roundPixmapRectPath;
-    roundPixmapRectPath.addRoundRect(pixmapRect, 10, 10);
+    roundPixmapRectPath.addRoundRect(pixmapRect, roundRadius, roundRadius);
     painter.setClipPath(roundPixmapRectPath);
-    painter.drawPixmap(pixmapRect, icon.pixmap(option.rect.width(), option.rect.width()));
+    painter.drawPixmap(pixmapRect, icon.pixmap(ImgWidthAndHeight, ImgWidthAndHeight));
     painter.restore();
     // 绘制图片上添加描边
     painter.save();
@@ -203,11 +224,11 @@ void PlayItemDelegate::drawIconMode(QPainter &painter, const QStyleOptionViewIte
     QPen borderPen(borderPenColor);
     borderPen.setWidthF(2);
     painter.setPen(borderPen);
-    painter.drawRoundRect(pixmapRect/*.adjusted(1, 1, -1, 1)*/, 10, 10);
+    painter.drawRoundRect(pixmapRect/*.adjusted(1, 1, -1, 1)*/, roundRadius, roundRadius);
     painter.restore();
 
-    int startHeight = option.rect.y() + 159;
-    int fillAllHeight = 34;
+//    int startHeight = option.rect.y() + 159;
+//    int fillAllHeight = 34;
 
     // 设置信息字体大小
     painter.setFont(fontT6);
@@ -218,9 +239,9 @@ void PlayItemDelegate::drawIconMode(QPainter &painter, const QStyleOptionViewIte
     }
     painter.setPen(nameColor);
     // 调整歌曲名位置
-    QRect nameFillRect(option.rect.x(), option.rect.y() + option.rect.width(),
-                       option.rect.width(), (option.rect.height() - option.rect.width()) / 2 + 5);
-    auto nameText = fm.elidedText(meta.title, Qt::ElideRight, option.rect.width());
+    QRect nameFillRect(option.rect.x() + xoffset, option.rect.y() + yoffset + ImgWidthAndHeight,
+                       ImgWidthAndHeight, fm.height());
+    auto nameText = fm.elidedText(meta.title, Qt::ElideRight, ImgWidthAndHeight);
     painter.drawText(nameFillRect, Qt::AlignLeft | Qt::AlignVCenter, nameText);
 
     QFontMetrics extraNameFm(fontT9);
@@ -228,9 +249,9 @@ void PlayItemDelegate::drawIconMode(QPainter &painter, const QStyleOptionViewIte
     nameColor.setAlphaF(0.5);
     painter.setPen(nameColor);
     // 调整歌手位置
-    QRect extraNameFillRect(option.rect.x(), option.rect.y() + option.rect.width() + (option.rect.height() - option.rect.width()) / 2 + 2,
-                            option.rect.width() * 4 / 5, (option.rect.height() - option.rect.width()) / 2);
-    auto extraNameText = extraNameFm.elidedText(meta.singer, Qt::ElideRight, option.rect.width() * 3 / 5);
+    QRect extraNameFillRect(option.rect.x() + xoffset, nameFillRect.bottom(),
+                            ImgWidthAndHeight, extraNameFm.height());
+    auto extraNameText = extraNameFm.elidedText(meta.singer, Qt::ElideRight, ImgWidthAndHeight);
     painter.drawText(extraNameFillRect, Qt::AlignLeft | Qt::AlignVCenter, extraNameText);
 
     // 画时间矩形
@@ -238,12 +259,12 @@ void PlayItemDelegate::drawIconMode(QPainter &painter, const QStyleOptionViewIte
     // 如果时间超过一小时，矩形绘制长一点
     QRect timeFillRect;
     if (timeText.size() > 5) {
-        timeFillRect = QRect(option.rect.x() + option.rect.width() - 48,
-                             option.rect.y() + option.rect.width() + (option.rect.height() - option.rect.width()) / 2 + 7,
+        timeFillRect = QRect(option.rect.x() + xoffset * 2 + ImgWidthAndHeight - 58,
+                             extraNameFillRect.top() + extraNameFillRect.height() / 2 - 8,
                              48, 16);
     } else {
-        timeFillRect = QRect(option.rect.x() + option.rect.width() - 38,
-                             option.rect.y() + option.rect.width() + (option.rect.height() - option.rect.width()) / 2 + 7,
+        timeFillRect = QRect(option.rect.x() + xoffset * 2 + ImgWidthAndHeight - 48,
+                             extraNameFillRect.top() + extraNameFillRect.height() / 2 - 8,
                              38, 16);
     }
     painter.save();
@@ -270,6 +291,7 @@ void PlayItemDelegate::drawIconMode(QPainter &painter, const QStyleOptionViewIte
     painter.setPen(timedColor);
     painter.drawText(timeFillRect, Qt::AlignCenter, timeText);
 
+    // 绘制选中时的阴影
     QBrush fillBrush(QColor(128, 128, 128, 0));
     if (option.state & QStyle::State_Selected) {
         fillBrush = QBrush(QColor(128, 128, 128, 90));
@@ -278,6 +300,11 @@ void PlayItemDelegate::drawIconMode(QPainter &painter, const QStyleOptionViewIte
     painter.setClipPath(roundPixmapRectPath);
     painter.fillRect(pixmapRect, fillBrush);
     painter.restore();
+    // 绘制选中时右上角的选中图标
+    if (option.state & QStyle::State_Selected) {
+        QRect selectionRect(option.rect.x() +  option.rect.width() - 20, option.rect.y() + 2, 14, 14);
+        painter.drawPixmap(selectionRect, m_selectedPix);
+    }
 }
 
 void PlayItemDelegate::drawListMode(QPainter &painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
@@ -469,6 +496,9 @@ PlayItemDelegate::PlayItemDelegate(QWidget *parent)
     setObjectName("PlayItemStyleProxy");
     m_shadowImg = DHiDPIHelper::loadNxPixmap(":/mpimage/light/shadow.svg");
     m_shadowImg = m_shadowImg.copy(5, 5, m_shadowImg.width() - 10, m_shadowImg.height() - 10);
+    DStyle d;
+    m_selectedPix = d.standardIcon(DStyle::SP_IndicatorChecked).pixmap(QSize(14, 14));
+    m_unselectedPix = d.standardIcon(DStyle::SP_IndicatorUnchecked).pixmap(QSize(14, 14));
 }
 
 PlayItemDelegate::~PlayItemDelegate()

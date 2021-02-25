@@ -560,11 +560,11 @@ void PlayListView::setViewModeFlag(QString hash, QListView::ViewMode mode)
 {
     m_viewModeMap[hash] = mode;
     if (mode == QListView::IconMode) {
-        setIconSize(QSize(150, 150));
         setGridSize(QSize(-1, -1));
-        setSpacing(20);
+        setSpacing(0);
+        setIconSize(QSize(170, 210));
         // 修改底部间距
-        setViewportMargins(-10, -13, -35, 0);
+        setViewportMargins(0, 0, -35, 0);
     } else {
         setIconSize(QSize(36, 36));
         setGridSize(QSize(-1, -1));
