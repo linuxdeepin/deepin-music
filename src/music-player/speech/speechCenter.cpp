@@ -289,13 +289,7 @@ QVariant SpeechCenter::playSonglist(QString songlistName)
             }
             qDebug() << __FUNCTION__ << "song list to play size:" << tmplist.size();
             if (tmplist.size() > 0) {
-                // 歌单名为空,随机选择歌单播放
-                QTime time;
-                int index = 0;
-                time = QTime::currentTime();
-                qsrand(static_cast<uint>((time.msec() + time.second() * 1000)));
-                index = qrand() % (tmplist.size());
-                uuid = tmplist.at(index == tmplist.size() ? index - 1 : index).uuid;
+                uuid = tmplist.at(0).uuid;
             }
         } else {
             // 根据名称匹配歌单
@@ -335,12 +329,12 @@ QVariant SpeechCenter::playSonglist(QString songlistName)
                 emit Player::getInstance()->signalPlayListChanged();
                 str = m_settings->value("speechreply.speech.ok").toString();
             } else {
-                // 自定义歌单没有歌曲则播放我的收藏
-                str = playFaverite("").toString();
+                // 自定义歌单没有歌曲
+                str = m_settings->value("speechreply.speech.playSonglistNoSong").toString();
             }
         } else {
-            // 没有自定义歌单则播放我的收藏
-            str = playFaverite("").toString();
+            // 没有自定义歌单
+            str = m_settings->value("speechreply.speech.playSonglistNoSongList").toString();
         }
     }
     return str;

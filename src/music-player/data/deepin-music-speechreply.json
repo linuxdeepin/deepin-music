@@ -45,10 +45,16 @@
                             "default": "您的播放器中没有收藏的歌曲"
                         },
                         {
-                            "key": "playSonglistError",
+                            "key": "playSonglistNoSong",
                             "name": " ",
-                            "text": "您的音乐播放器中没有这首歌，换一首歌曲听听吧",
-                            "default": "您的音乐播放器中没有这首歌，换一首歌曲听听吧"
+                            "text": "您的歌单中没有歌曲",
+                            "default": "您的歌单中没有歌曲"
+                        },
+                        {
+                            "key": "playSonglistNoSongList",
+                            "name": " ",
+                            "text": "您的播放器中没有匹配的歌单",
+                            "default": "您的播放器中没有匹配的歌单"
                         },
                         {
                             "key": "preError",

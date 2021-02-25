@@ -272,6 +272,15 @@ void AlbumListView::resetAlbumListDataBySinger(const QList<SingerInfo> &singerIn
                 isAlbumContainSong = true;
                 break;
             }
+            // 通过歌手名称不能查到专辑时，通过歌曲hash判断
+            if (!isAlbumContainSong) {
+                for (int i = 0; i < singerInfo.musicinfos.size(); i++) {
+                    if (albumInfo.musicinfos.contains(singerInfo.musicinfos.keys().at(i))) {
+                        isAlbumContainSong = true;
+                        break;
+                    }
+                }
+            }
         }
         if (isAlbumContainSong) {
             QStandardItem *pItem = new QStandardItem;
