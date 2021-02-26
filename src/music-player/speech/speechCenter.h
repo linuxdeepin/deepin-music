@@ -48,7 +48,8 @@ public:
     QVariant OpenUris(QVariant paths);
 private:
     // 排序
-    void sortList(QList<MediaMeta> &musicInfos, const DataBaseService::ListSortType &sortType);
+    // 不需要排序，播放的就是第一首
+//    void sortList(QList<MediaMeta> &musicInfos, const DataBaseService::ListSortType &sortType);
 private:
     friend class DMusic::DSingleton<SpeechCenter>;
 private:

@@ -51,8 +51,8 @@ QVariant SpeechCenter::playMusic(QString musicName)
         // 获取全部歌曲
         QList<MediaMeta> mediaMetas = DataBaseService::getInstance()->allMusicInfos();
         // 获取当前搜索排序方式
-        DataBaseService::ListSortType type = static_cast<DataBaseService::ListSortType>
-                                             (DataBaseService::getInstance()->getPlaylistSortType("musicResult"));
+//        DataBaseService::ListSortType type = static_cast<DataBaseService::ListSortType>
+//                                             (DataBaseService::getInstance()->getPlaylistSortType("musicResult"));
         for (int i = 0; i < mediaMetas.size(); i++) {
             if (!CommonService::getInstance()->containsStr(musicName, mediaMetas.at(i).title)) {
                 continue;
@@ -61,7 +61,8 @@ QVariant SpeechCenter::playMusic(QString musicName)
         }
         if (m_MediaMetas.size() > 0) {
             // 获得数据后排序
-            sortList(m_MediaMetas, type);
+            // 不需要排序，播放的就是第一首
+//            sortList(m_MediaMetas, type);
             emit CommonService::getInstance()->signalSwitchToView(SearchMusicResultType, musicName);
             MediaMeta mediaMeta = m_MediaMetas.at(0);
             //重置播放队列
@@ -274,8 +275,8 @@ QVariant SpeechCenter::playSonglist(QString songlistName)
     QString str;
     QList<DataBaseService::PlaylistData> playlistDatas = DataBaseService::getInstance()->getCustomSongList();
     if (playlistDatas.size() <= 0) {
-        // 没有自定义歌单则播放我的收藏
-        str = playFaverite("").toString();
+        // 没有自定义歌单
+        str = m_settings->value("speechreply.speech.playSonglistNoSongList").toString();
     } else {
         QString uuid;
         if (songlistName.isEmpty()) {
@@ -549,59 +550,59 @@ QVariant SpeechCenter::OpenUris(QVariant paths)
     }
     return true;
 }
-
-void SpeechCenter::sortList(QList<MediaMeta> &musicInfos, const DataBaseService::ListSortType &sortType)
-{
-    switch (sortType) {
-    case DataBaseService::SortByAddTimeASC: {
-        qSort(musicInfos.begin(), musicInfos.end(), [](const MediaMeta v1, const MediaMeta v2) {
-            return v1.timestamp < v2.timestamp;
-        });
-        break;
-    }
-    case DataBaseService::SortByTitleASC: {
-        qSort(musicInfos.begin(), musicInfos.end(), [](const MediaMeta v1, const MediaMeta v2) {
-            return v1.pinyinTitle < v2.pinyinTitle;
-        });
-        break;
-    }
-    case DataBaseService::SortBySingerASC: {
-        qSort(musicInfos.begin(), musicInfos.end(), [](const MediaMeta v1, const MediaMeta v2) {
-            return v1.pinyinArtist < v2.pinyinArtist;
-        });
-        break;
-    }
-    case DataBaseService::SortByAblumASC: {
-        qSort(musicInfos.begin(), musicInfos.end(), [](const MediaMeta v1, const MediaMeta v2) {
-            return v1.pinyinAlbum < v2.pinyinAlbum;
-        });
-        break;
-    }
-    case DataBaseService::SortByAddTimeDES: {
-        qSort(musicInfos.begin(), musicInfos.end(), [](const MediaMeta v1, const MediaMeta v2) {
-            return v1.timestamp > v2.timestamp;
-        });
-        break;
-    }
-    case DataBaseService::SortByTitleDES: {
-        qSort(musicInfos.begin(), musicInfos.end(), [](const MediaMeta v1, const MediaMeta v2) {
-            return v1.pinyinTitle > v2.pinyinTitle;
-        });
-        break;
-    }
-    case DataBaseService::SortBySingerDES: {
-        qSort(musicInfos.begin(), musicInfos.end(), [](const MediaMeta v1, const MediaMeta v2) {
-            return v1.pinyinArtist > v2.pinyinArtist;
-        });
-        break;
-    }
-    case DataBaseService::SortByAblumDES: {
-        qSort(musicInfos.begin(), musicInfos.end(), [](const MediaMeta v1, const MediaMeta v2) {
-            return v1.pinyinAlbum > v2.pinyinAlbum;
-        });
-        break;
-    }
-    default:
-        break;
-    }
-}
+// 不需要排序，播放的就是第一首
+//void SpeechCenter::sortList(QList<MediaMeta> &musicInfos, const DataBaseService::ListSortType &sortType)
+//{
+//    switch (sortType) {
+//    case DataBaseService::SortByAddTimeASC: {
+//        qSort(musicInfos.begin(), musicInfos.end(), [](const MediaMeta v1, const MediaMeta v2) {
+//            return v1.timestamp < v2.timestamp;
+//        });
+//        break;
+//    }
+//    case DataBaseService::SortByTitleASC: {
+//        qSort(musicInfos.begin(), musicInfos.end(), [](const MediaMeta v1, const MediaMeta v2) {
+//            return v1.pinyinTitle < v2.pinyinTitle;
+//        });
+//        break;
+//    }
+//    case DataBaseService::SortBySingerASC: {
+//        qSort(musicInfos.begin(), musicInfos.end(), [](const MediaMeta v1, const MediaMeta v2) {
+//            return v1.pinyinArtist < v2.pinyinArtist;
+//        });
+//        break;
+//    }
+//    case DataBaseService::SortByAblumASC: {
+//        qSort(musicInfos.begin(), musicInfos.end(), [](const MediaMeta v1, const MediaMeta v2) {
+//            return v1.pinyinAlbum < v2.pinyinAlbum;
+//        });
+//        break;
+//    }
+//    case DataBaseService::SortByAddTimeDES: {
+//        qSort(musicInfos.begin(), musicInfos.end(), [](const MediaMeta v1, const MediaMeta v2) {
+//            return v1.timestamp > v2.timestamp;
+//        });
+//        break;
+//    }
+//    case DataBaseService::SortByTitleDES: {
+//        qSort(musicInfos.begin(), musicInfos.end(), [](const MediaMeta v1, const MediaMeta v2) {
+//            return v1.pinyinTitle > v2.pinyinTitle;
+//        });
+//        break;
+//    }
+//    case DataBaseService::SortBySingerDES: {
+//        qSort(musicInfos.begin(), musicInfos.end(), [](const MediaMeta v1, const MediaMeta v2) {
+//            return v1.pinyinArtist > v2.pinyinArtist;
+//        });
+//        break;
+//    }
+//    case DataBaseService::SortByAblumDES: {
+//        qSort(musicInfos.begin(), musicInfos.end(), [](const MediaMeta v1, const MediaMeta v2) {
+//            return v1.pinyinAlbum > v2.pinyinAlbum;
+//        });
+//        break;
+//    }
+//    default:
+//        break;
+//    }
+//}

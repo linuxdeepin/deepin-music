@@ -342,21 +342,33 @@ TEST(Application, other1)
 
 
     QTest::qWait(100);
+    qDebug() << __FUNCTION__ << "playMusic浮夸";
     SpeechCenter::getInstance()->playMusic("浮夸");
+    qDebug() << __FUNCTION__ << "playMusic浮夸1";
+    SpeechCenter::getInstance()->playMusic("浮夸1");//不存在
     SpeechCenter::getInstance()->playMusic("");
     SpeechCenter::getInstance()->playArtist("华晨宇");
+    qDebug() << __FUNCTION__ << "playArtist华晨";
+    SpeechCenter::getInstance()->playArtist("华晨");//模糊匹配
+    qDebug() << __FUNCTION__ << "playArtist华晨1";
+    SpeechCenter::getInstance()->playArtist("华晨1");//不存在
     SpeechCenter::getInstance()->playArtistMusic("华晨宇:浮夸");
     SpeechCenter::getInstance()->playArtistMusic("华晨宇");
     SpeechCenter::getInstance()->playArtistMusic("");
     SpeechCenter::getInstance()->playAlbum("Unknown album");
+    qDebug() << __FUNCTION__ << "未知专辑";
+    SpeechCenter::getInstance()->playAlbum("未知专辑");
     SpeechCenter::getInstance()->playFaverite("fav");
     SpeechCenter::getInstance()->playSonglist("New playlist");
     SpeechCenter::getInstance()->playSonglist("空");
+    qDebug() << __FUNCTION__ << "playMusic浮夸";
+    SpeechCenter::getInstance()->playMusic("浮夸");
+    qDebug() << __FUNCTION__ << "pause";
+    SpeechCenter::getInstance()->pause("");
     SpeechCenter::getInstance()->resume("");
-    SpeechCenter::getInstance()->stop("");
     SpeechCenter::getInstance()->next("");
     SpeechCenter::getInstance()->pre("");
-    SpeechCenter::getInstance()->pause("");
+    SpeechCenter::getInstance()->stop("");
     SpeechCenter::getInstance()->playIndex("100");
     SpeechCenter::getInstance()->playIndex("1");
     SpeechCenter::getInstance()->addFaverite("");
@@ -364,7 +376,10 @@ TEST(Application, other1)
     SpeechCenter::getInstance()->setMode("0");
     SpeechCenter::getInstance()->setMode("1");
     SpeechCenter::getInstance()->setMode("2");
-
+    qDebug() << __FUNCTION__ << "OpenUris";
+    QStringList list;
+    SpeechCenter::getInstance()->OpenUris(list);
+    qDebug() << __FUNCTION__ << "OpenUris2";
     QTest::qWait(500);
 }
 
