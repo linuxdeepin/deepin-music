@@ -151,6 +151,62 @@ TEST(Application, copyMusicToMusicDir1)
     QTest::qWait(50);
 }
 
+TEST(Application, init)
+{
+    // 获取音乐数量
+    int count = DataBaseService::getInstance()->allMusicInfosCount();
+    qDebug() << __FUNCTION__ << "count = " << count;
+    // 新建歌单
+    DataBaseService::PlaylistData info;
+    info.editmode = true;
+    info.readonly = false;
+    info.uuid = QUuid::createUuid().toString().remove("{").remove("}").remove("-");
+    info.displayName = "测试歌单";
+    info.sortID = DataBaseService::getInstance()->getPlaylistMaxSortid();
+    info.sortType = DataBaseService::SortByAddTimeASC;
+    DataBaseService::getInstance()->addPlaylist(info);
+    // 查询歌曲是否在歌单中
+    DataBaseService::getInstance()->isMediaMetaInSonglist(info.uuid, "aaa");
+    // 查询全部歌单
+    DataBaseService::getInstance()->allPlaylistMeta();
+    // 更新歌单1
+    QVector<DataBaseService::PlaylistData> playlistDataList;
+    info.displayName = "测试歌单2";
+    playlistDataList << info;
+    DataBaseService::getInstance()->updatePlaylist(playlistDataList);
+    // 更新歌单2
+    DataBaseService::getInstance()->updatePlaylistDisplayName("测试歌单3", info.uuid);
+    // 移除歌单
+    DataBaseService::getInstance()->deletePlaylist(info.uuid);
+    QStringList lsit = DataBaseService::getInstance()->getDelMetaHashs();
+    // 查询所有音乐
+    QTest::qWait(100);
+    QList<MediaMeta> metaList = DataBaseService::getInstance()->allMusicInfos(true);
+    // 删除所有音乐
+    QStringList delList;
+    for (MediaMeta meta : metaList) {
+        delList << meta.hash;
+    }
+    emit DataBaseService::getInstance()->sigRemoveSelectedSongs("all", delList, false);
+    // 新建歌单
+    info.editmode = true;
+    info.readonly = false;
+    info.uuid = QUuid::createUuid().toString().remove("{").remove("}").remove("-");
+    info.displayName = "测试歌单";
+    info.sortID = DataBaseService::getInstance()->getPlaylistMaxSortid();
+    info.sortType = DataBaseService::SortByAddTimeASC;
+    DataBaseService::getInstance()->addPlaylist(info);
+    // 导入歌曲
+    QStringList importList;
+    QStringList stringList = QStandardPaths::standardLocations(QStandardPaths::MusicLocation);
+    if (stringList.size() > 0) {
+        stringList[0].append("/歌曲/001.mp3");
+        importList << stringList[0];
+        QTest::qWait(50);
+    }
+    DataBaseService::getInstance()->importMedias(info.uuid, importList);
+    QTest::qWait(500);
+}
 
 TEST(Application, importLinkText)
 {
