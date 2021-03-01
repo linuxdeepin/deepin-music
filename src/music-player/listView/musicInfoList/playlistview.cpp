@@ -136,10 +136,16 @@ void PlayListView::sortList(QList<MediaMeta> &musicInfos, const DataBaseService:
     }
 }
 
+void PlayListView::setListPageSwitchType(ListPageSwitchType type)
+{
+    m_listPageType = type;
+}
+
 PlayListView::PlayListView(QString hash, bool isPlayQueue, QWidget *parent)
     : DListView(parent)
     , m_currentHash(hash.isEmpty() ? "all" : hash)
 {
+    m_listPageType = NullType;
     m_IsPlayQueue = isPlayQueue;
     setObjectName("PlayListView");
 
@@ -641,7 +647,8 @@ void PlayListView::slotRemoveSingleSong(const QString &listHash, const QString &
             }
         }
     }
-    if (m_model->rowCount() == 0) {
+    if (m_model->rowCount() == 0 && (m_listPageType == AlbumSubSongListType || m_listPageType == SingerSubSongListType
+                                     || m_listPageType == SearchAlbumSubSongListType || m_listPageType == SearchSingerSubSongListType)) {
         emit CommonService::getInstance()->signalSwitchToView(PreType, "", QMap<QString, MediaMeta>());
     }
 }

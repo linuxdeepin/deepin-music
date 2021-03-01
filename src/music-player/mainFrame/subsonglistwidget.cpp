@@ -264,6 +264,7 @@ void SubSonglistWidget::flushDialog(QMap<QString, MediaMeta> musicinfos, ListPag
             break;
         }
         }
+        m_musicListInfoView->setListPageSwitchType(listPageType);
         if (listPageType == AlbumSubSongListType || listPageType == SearchAlbumSubSongListType) {
 // 解决字体不会根据系统字体大小改变问题
 //            titleFont.setPixelSize(24);

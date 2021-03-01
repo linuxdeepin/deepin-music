@@ -602,9 +602,6 @@ void SingerListView::slotRemoveSelectedSongs(const QString &deleteHash, const QS
     if (deleteHash != "all") {
         return;
     }
-    if (Player::getInstance()->getCurrentPlayListHash() != m_hash) {
-        return;
-    }
     if (musicHashs.size() == 0) {
         return;
     }

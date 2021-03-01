@@ -79,6 +79,8 @@ public:
     int getMusicCount();
     // 二级页面添加歌曲，设置hash
     void setMusicListView(QMap<QString, MediaMeta> musicinfos, QString hash);
+    // 设置当前列表属于哪个页面
+    void setListPageSwitchType(ListPageSwitchType type);
 public slots:
     void slotOnDoubleClicked(const QModelIndex &index);
     void slotUpdatePlayingIcon();
@@ -162,11 +164,8 @@ private:
     InfoDialog          *m_pInfoDlg = nullptr;
     // 详细信息快捷键
     QShortcut           *m_pDetailShortcut = nullptr;
-//    // 移出歌单快捷键
-//    QShortcut           *m_pRmvSongsShortcut = nullptr;
-    // 显示菜单快捷键
-    //QShortcut           *m_pShowMenuShortcut = nullptr;
-
+    // 判断歌曲列表是哪个页面
+    ListPageSwitchType   m_listPageType;
     QPixmap m_sidebarPixmap;
     QIcon     m_defaultIcon = QIcon::fromTheme("cover_max");
 };
