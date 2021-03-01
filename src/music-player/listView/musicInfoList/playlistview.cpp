@@ -570,7 +570,7 @@ void PlayListView::setViewModeFlag(QString hash, QListView::ViewMode mode)
         setGridSize(QSize(-1, -1));
         setSpacing(0);
         // 修改顶部间距
-        setViewportMargins(0, 5, 8, 0);
+        setViewportMargins(0, 0, 8, 0);
     }
     setViewMode(mode);
 }

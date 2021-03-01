@@ -79,7 +79,8 @@ private:
     void initArtistAction(QHBoxLayout *layout);
     void initMusicAction(QHBoxLayout *layout);
     void initBtPlayAll(QHBoxLayout *layout);
-    void initCountLabelAndListMode(QHBoxLayout *layout);
+    void initCountLabel(QHBoxLayout *layout);
+    void initListIconMode(QHBoxLayout *layout);
     void initemptyHits(QVBoxLayout *layout);
     // 刷新显示模式按钮check状态
     void refreshModeBtn(DListView::ViewMode mode);
