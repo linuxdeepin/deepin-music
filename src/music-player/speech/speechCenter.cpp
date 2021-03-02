@@ -82,6 +82,7 @@ QVariant SpeechCenter::playMusic(QString musicName)
     } else {
         str = m_settings->value("speechreply.speech.playMusicError").toString();
     }
+    m_needRefresh = false;
     return str;
 }
 
@@ -265,6 +266,7 @@ QVariant SpeechCenter::playFaverite(QString hash)
     } else {
         str = m_settings->value("speechreply.speech.playFaveriteError").toString();
     }
+    m_needRefresh = false;
     return str;
 }
 
@@ -291,6 +293,12 @@ QVariant SpeechCenter::playSonglist(QString songlistName)
             qDebug() << __FUNCTION__ << "song list to play size:" << tmplist.size();
             if (tmplist.size() > 0) {
                 uuid = tmplist.at(0).uuid;
+            }
+            if (playlistDatas.size() > 0 && tmplist.size() <= 0) {
+                // 没有自定义歌单
+                str = m_settings->value("speechreply.speech.playSonglistNoSong").toString();
+                m_needRefresh = false;
+                return str;
             }
         } else {
             // 根据名称匹配歌单
@@ -329,15 +337,10 @@ QVariant SpeechCenter::playSonglist(QString songlistName)
                 // 通知播放队列刷新
                 emit Player::getInstance()->signalPlayListChanged();
                 str = m_settings->value("speechreply.speech.ok").toString();
-            } else {
-                // 自定义歌单没有歌曲
-                str = m_settings->value("speechreply.speech.playSonglistNoSong").toString();
             }
-        } else {
-            // 没有自定义歌单
-            str = m_settings->value("speechreply.speech.playSonglistNoSongList").toString();
         }
     }
+    m_needRefresh = false;
     return str;
 }
 
@@ -549,6 +552,17 @@ QVariant SpeechCenter::OpenUris(QVariant paths)
         DataBaseService::getInstance()->importMedias("all", itemMetas);
     }
     return true;
+}
+
+void SpeechCenter::setMediaMetas(QList<MediaMeta> mediaMetas)
+{
+    m_MediaMetas.clear();
+    m_MediaMetas = mediaMetas;
+}
+
+bool SpeechCenter::getNeedRefresh()
+{
+    return m_needRefresh;
 }
 // 不需要排序，播放的就是第一首
 //void SpeechCenter::sortList(QList<MediaMeta> &musicInfos, const DataBaseService::ListSortType &sortType)

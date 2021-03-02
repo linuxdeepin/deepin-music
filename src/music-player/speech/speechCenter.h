@@ -46,6 +46,10 @@ public:
     QVariant setMode(QString mode);
     // 音乐打开后通过dbus导入文件
     QVariant OpenUris(QVariant paths);
+    // 查询出的结果由列表给出，解决排序问题
+    void setMediaMetas(QList<MediaMeta>  mediaMetas);
+    // 确认是否需要刷新播放队列，即是否要排序
+    bool getNeedRefresh();
 private:
     // 排序
     // 不需要排序，播放的就是第一首

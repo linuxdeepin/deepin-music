@@ -58,7 +58,7 @@ public:
     // 获取展示中的歌曲列表
     QList<MediaMeta> getMusicListData();
     // 根据排序添加数据
-    void setDataBySortType(QList<MediaMeta> &mediaMetas, DataBaseService::ListSortType sortType);
+    QList<MediaMeta> setDataBySortType(QList<MediaMeta> &mediaMetas, DataBaseService::ListSortType sortType);
 
     //QPixmap getSidebarPixmap();
     //zy---begin

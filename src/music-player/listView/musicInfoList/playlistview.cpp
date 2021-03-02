@@ -277,7 +277,11 @@ void PlayListView::initCostomSonglist(const QString &hash)
         sortType = getSortType();
     }
 
-    this->setDataBySortType(mediaMetas, sortType);
+    mediaMetas = this->setDataBySortType(mediaMetas, sortType);
+    // 返回给语音中心排好序的列表
+    if (SpeechCenter::getInstance()->getNeedRefresh()) {
+        SpeechCenter::getInstance()->setMediaMetas(mediaMetas);
+    }
 }
 
 void PlayListView::resetSonglistByStr(const QString &searchWord)
@@ -364,7 +368,7 @@ QList<MediaMeta> PlayListView::getMusicListData()
     return list;
 }
 
-void PlayListView::setDataBySortType(QList<MediaMeta> &mediaMetas, DataBaseService::ListSortType sortType)
+QList<MediaMeta> PlayListView::setDataBySortType(QList<MediaMeta> &mediaMetas, DataBaseService::ListSortType sortType)
 {
     // 排序
     sortList(mediaMetas, sortType);
@@ -391,6 +395,7 @@ void PlayListView::setDataBySortType(QList<MediaMeta> &mediaMetas, DataBaseServi
         mediaMeta.setValue(meta);
         m_model->setData(index, mediaMeta, Qt::UserRole);
     }
+    return mediaMetas;
 }
 
 QPixmap PlayListView::getPlayPixmap(bool isSelect)
