@@ -57,6 +57,7 @@
 //#define AC_btPlayAll                  QObject::tr("btPlayAll")
 #define AC_btIconMode                 "btIconMode"
 #define AC_btlistMode                 "btlistMode"
+#define AC_btSort                     "btSort"
 #define AC_MusicListScrollArea        "MusicListScrollArea"
 //#define AC_libraryWidget              QObject::tr("libraryWidget")
 //#define AC_dataBaseLabel              QObject::tr("dataBaseLabel")

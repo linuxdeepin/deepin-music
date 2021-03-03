@@ -35,17 +35,15 @@ DDropdown::DDropdown(QWidget *parent) : DWidget(parent)
     setObjectName("DDropdown");
 
     auto layout = new QHBoxLayout(this);
-    layout->setContentsMargins(15, 0, 15, 0);
+    layout->setContentsMargins(0, 0, 0, 0);
     menu = new DMenu;
-    text = new DLabel("undefined");
-    text->setObjectName("DDropdownText");
-    text->setForegroundRole(DPalette::BrightText);
-    DFontSizeManager::instance()->bind(text, DFontSizeManager::T9, QFont::Normal);
 
-    dropdown = new DIconButton(DStyle::SP_ArrowDown, this);
-    dropdown->setIconSize(QSize(9, 9));
+    dropdown = new DToolButton(this);
+    dropdown->setCheckable(false);
+    dropdown->setIcon(QIcon::fromTheme("sort_rank_texts"));
+    dropdown->setIconSize(QSize(36, 36));
     dropdown->setObjectName("DDropdownIcon");
-    dropdown->setFixedSize(9, 9);
+    dropdown->setFixedSize(36, 36);
     dropdown->setWindowModality(Qt::WindowModal);
     DPalette pl = dropdown->palette();
     pl.setColor(DPalette::Light, QColor(Qt::transparent));
@@ -57,11 +55,9 @@ DDropdown::DDropdown(QWidget *parent) : DWidget(parent)
 
     layout->addStretch();
     layout->addStretch();
-    layout->addWidget(text, 0, Qt::AlignCenter);
     layout->addWidget(dropdown, 0, Qt::AlignCenter);
 
     connect(menu, &DMenu::triggered, this, [ = ](QAction * action) {
-        text->setText(action->text());
         Q_EMIT this->triggered(action);
     });
 
@@ -94,18 +90,12 @@ QList<QAction *> DDropdown::actions() const
     return menu->actions();
 }
 
-void DDropdown::setText(const QString &text)
-{
-    this->text->setText(text);
-}
-
 void DDropdown::setCurrentAction(QAction *action)
 {
     if (action) {
         for (auto action : menu->actions()) {
             action->setChecked(false);
         }
-        text->setText(action->text());
         action->setChecked(true);
     } else {
         for (auto action : menu->actions()) {

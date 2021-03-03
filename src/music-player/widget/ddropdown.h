@@ -26,6 +26,7 @@
 #include <DWidget>
 #include <DLabel>
 #include <DIconButton>
+#include <DToolButton>
 
 DWIDGET_USE_NAMESPACE
 
@@ -47,7 +48,6 @@ signals:
     void triggered(QAction *action);
 
 public slots:
-    void setText(const QString &text);
     void setCurrentAction(QAction *action);
     void setCurrentAction(int index = 0);
     QAction *addAction(const QString &item, const QVariant &var);
@@ -60,8 +60,7 @@ protected:
 
 private:
     DMenu            *menu       = nullptr;
-    DLabel           *text       = nullptr;
-    DIconButton      *dropdown   = nullptr;
+    DToolButton      *dropdown   = nullptr;
     QString           status;
 };
 
