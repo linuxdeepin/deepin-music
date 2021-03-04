@@ -45,7 +45,6 @@
 MusicListScrollArea::MusicListScrollArea(QWidget *parent) : DScrollArea(parent)
 {
     setFrameShape(QFrame::NoFrame);
-    setFixedWidth(220);
     setWidgetResizable(true);
 
     setAutoFillBackground(true);
@@ -55,7 +54,13 @@ MusicListScrollArea::MusicListScrollArea(QWidget *parent) : DScrollArea(parent)
 
     QWidget *widget = new QWidget(this);
     setWidget(widget);
+#ifdef TABLET_PC
+    setFixedWidth(300);
+    widget->setFixedWidth(300);
+#else
+    setFixedWidth(220);
     widget->setFixedWidth(220);
+#endif
     auto musicLayout = new QVBoxLayout(widget);
     musicLayout->setContentsMargins(10, 5, 10, 5);
     musicLayout->setSpacing(0);
@@ -90,7 +95,7 @@ MusicListScrollArea::MusicListScrollArea(QWidget *parent) : DScrollArea(parent)
     m_addListBtn->installEventFilter(this);
 
     auto customizeLayout = new QHBoxLayout();
-    customizeLayout->setContentsMargins(0, 0, 5, 0);
+    customizeLayout->setContentsMargins(0, 0, 15, 0);
     customizeLayout->addWidget(customizeLabel, 100, Qt::AlignLeft);
     customizeLayout->addStretch();
     customizeLayout->addWidget(m_addListBtn, 0, Qt::AlignRight);

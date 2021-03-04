@@ -58,11 +58,21 @@ void AlbumDataDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opt
 //    if (index.row() >= albumlist.size()) {
 //        return;
 //    }
+
+#ifdef TABLET_PC
+    if (listview->viewMode() == QListView::IconMode) {
+        drawTabletIconMode(*painter, option, index);
+    } else {
+        this->drawListMode(*painter, option, index);
+    }
+#else
     if (listview->viewMode() == QListView::IconMode) {
         this->drawIconMode(*painter, option, index);
     } else {
         this->drawListMode(*painter, option, index);
     }
+#endif
+
 }
 
 QSize AlbumDataDelegate::sizeHint(const QStyleOptionViewItem &option,
@@ -70,7 +80,11 @@ QSize AlbumDataDelegate::sizeHint(const QStyleOptionViewItem &option,
 {
     auto *listview = qobject_cast<const AlbumListView *>(option.widget);
     if (listview && listview->viewMode() == QListView::IconMode) {
+#ifdef TABLET_PC
+        return QSize(200, 200);
+#else
         return QSize(150, 150);
+#endif
     } else {
         auto baseSize = QStyledItemDelegate::sizeHint(option, index);
         return QSize(baseSize.width(), 38);
@@ -259,6 +273,186 @@ void AlbumDataDelegate::drawIconMode(QPainter &painter, const QStyleOptionViewIt
 
     painter.fillRect(option.rect, fillBrush);
 }
+
+#ifdef TABLET_PC
+QPixmap blurPixmap(const QPixmap &pix, int radius, int tp, const QRect &clipRect)
+{
+    QPixmap tmpPixmap = pix;
+
+    if (clipRect.isValid()) {
+        tmpPixmap = tmpPixmap.copy(clipRect);
+    }
+
+    int imgWidth = tmpPixmap.width();
+    int imgHeigth = tmpPixmap.height();
+    if (!tmpPixmap.isNull()) {
+        tmpPixmap = tmpPixmap.scaled(imgWidth / radius, imgHeigth / radius, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+        if (tp == 0) {
+            tmpPixmap = tmpPixmap.scaled(imgWidth, imgHeigth, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+        } else {
+            tmpPixmap = tmpPixmap.scaled(imgWidth, imgHeigth);
+        }
+    }
+    return tmpPixmap;
+}
+
+void AlbumDataDelegate::drawTabletIconMode(QPainter &painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
+{
+    auto listview = qobject_cast<const AlbumListView *>(option.widget);
+    AlbumInfo albumTmp = index.data(Qt::UserRole).value<AlbumInfo>();
+
+    QFont fontT6 = DFontSizeManager::instance()->get(DFontSizeManager::T6);
+    QFont fontT9 = DFontSizeManager::instance()->get(DFontSizeManager::T9);
+
+    painter.setRenderHint(QPainter::Antialiasing);
+    painter.setRenderHint(QPainter::HighQualityAntialiasing);
+    painter.setRenderHint(QPainter::SmoothPixmapTransform);
+
+    auto background = option.palette.background();
+    painter.fillRect(option.rect, background);
+
+    // 绘制阴影
+    QRect shadowRect(option.rect.x(), option.rect.y(), 200, 200);
+    QPainterPath roundRectShadowPath;
+    roundRectShadowPath.addRoundRect(shadowRect, 8, 8);
+    painter.save();
+    painter.setClipPath(roundRectShadowPath);
+    painter.drawPixmap(shadowRect, shadowImg);
+    painter.restore();
+
+    int borderWidth = 0;
+    QRect rect = option.rect.adjusted(borderWidth, borderWidth, -borderWidth, -borderWidth);
+    QPainterPath roundRectPath;
+    roundRectPath.addRoundRect(rect, 10, 10);
+    painter.setClipPath(roundRectPath);
+
+    // 画背景图片
+    QIcon opticon;
+    auto value = index.data(Qt::DecorationRole);
+    if (value.type() == QVariant::Icon) {
+        opticon = qvariant_cast<QIcon>(value);
+    }
+    painter.drawPixmap(rect, opticon.pixmap(rect.width(), rect.width()));
+
+    //draw border
+    painter.save();
+    QColor borderPenColor("#000000");
+    borderPenColor.setAlphaF(0.05);
+    QPen borderPen(borderPenColor);
+    borderPen.setWidthF(2);
+    painter.setPen(borderPen);
+    painter.drawRoundRect(rect/*.adjusted(1, 1, -1, 1)*/, 10, 10);
+    painter.restore();
+
+    bool playFlag = albumTmp.musicinfos.keys().contains(Player::getInstance()->getActiveMeta().hash);
+    Player::PlaybackStatus playStatue = Player::getInstance()->status();
+
+    QColor fillColor(0, 0, 0);
+    fillColor.setAlphaF(0.3);
+    if (listview->getThemeType() == 2) {
+        fillColor = "#000000";
+        fillColor.setAlphaF(0.3);
+    }
+    int startHeight = rect.y() + rect.height() - 46;
+    int fillAllHeight = 57;
+    QRect fillBlurRect(rect.x(), rect.y() + rect.height() - fillAllHeight, rect.width(), fillAllHeight);
+
+    QPixmap cov;
+    cov = opticon.pixmap(200, 200);
+    cov = cov.scaled(200, 200);
+    QRect target;
+    auto *listview2 = qobject_cast<AlbumListView *>(const_cast<QWidget *>(option.widget));
+    if (playFlag) {
+        // 播放状态
+        fillBlurRect = QRect(option.rect.x(), option.rect.y() + 93, option.rect.width(), 107);
+        // 设置模糊
+        cov = blurPixmap(cov, 20, 0, QRect(0, 93, 200, 107));
+        target = option.rect;
+        painter.drawPixmap(target.adjusted(0, 93, 0, 0), cov, QRect(0, 0, 200, 107));
+        // 绘制透明阴影
+        painter.fillRect(fillBlurRect, fillColor);
+        // 绘制播放动态图
+        painter.drawPixmap(QRect(option.rect.x() + 89, option.rect.y() + 114, 22, 18), listview2->getPlayPixmap(true));
+    } else {
+        // 普通状态
+        // 设置模糊
+        cov = blurPixmap(cov, 20, 0, QRect(0, 143, 200, 57));
+        target = option.rect;
+        painter.drawPixmap(target.adjusted(0, 143, 0, 0), cov, QRect(0, 0, 200, 57));
+        // 绘制透明阴影
+        painter.fillRect(fillBlurRect, fillColor);
+    }
+
+    QRect fillRect(rect.x(), startHeight, rect.width(), fillAllHeight);
+// 专辑名称
+    QFontMetrics nameTextFm(fontT6);
+    painter.setFont(fontT6);
+    QRect nameFillRect(option.rect.x() + 8, option.rect.y() + 150, 135, 40);
+    QString nameText = nameTextFm.elidedText(albumTmp.albumName.isEmpty() ? AlbumListView::tr("Unknown album") : albumTmp.albumName, Qt::ElideMiddle, nameFillRect.width());
+    painter.setPen(Qt::white);
+    painter.drawText(nameFillRect, Qt::AlignLeft | Qt::AlignTop, nameText);
+// 歌手名称
+    QFontMetrics singerNameFm(fontT9);
+    painter.setFont(fontT9);
+    QRect singerNameFillRect(option.rect.x() + 8, option.rect.y() + 173, 135, 40);
+    QString singerNameText = singerNameFm.elidedText(albumTmp.singer.isEmpty() ? SingerListView::tr("Unknown artist") : albumTmp.singer, Qt::ElideMiddle, singerNameFillRect.width());
+    painter.setPen(Qt::white);
+    painter.drawText(singerNameFillRect, Qt::AlignLeft | Qt::AlignTop, singerNameText);
+
+    QBrush fillBrush(QColor(128, 128, 128, 0));
+
+    fillColor.setAlphaF(0.3);
+    if (listview->getThemeType() == 2) {
+        fillColor = "#000000";
+        fillColor.setAlphaF(0.3);
+    }
+
+    if (option.state & QStyle::State_Selected) {
+        fillBrush = QBrush(QColor(128, 128, 128, 90));
+    }
+
+    painter.save();
+    QImage t_image = opticon.pixmap(rect.width(), rect.height()).toImage();
+    int t_ratio = static_cast<int>(t_image.devicePixelRatioF());
+    QRect t_imageRect(rect.width() / 2 - 25, rect.height() / 2 - 25, 60 * t_ratio, 60 * t_ratio);
+    t_image  = t_image.copy(t_imageRect);
+    QRect t_hoverRect(rect.x() + 150, rect.y() + 150, 50 * t_ratio, 50 * t_ratio);
+
+    QTransform old_transform = painter.transform();
+    painter.translate(t_hoverRect.topLeft());
+
+    QPainterPath t_imageClipPath;
+    t_imageClipPath.addEllipse(QRect(0, 0, 40, 40));
+    painter.setClipPath(t_imageClipPath);
+
+    qt_blurImage(&painter, t_image, 30, false, false);
+    painter.setTransform(old_transform);
+    painter.fillRect(t_hoverRect, fillColor);
+    if (!playFlag) {
+        // 没有播放，绘制播放按钮
+        QPixmap t_hoverPlayImg(hoverPlayImg);
+        t_hoverPlayImg.setDevicePixelRatio(option.widget->devicePixelRatioF());
+        QRect t_pixMapRect(rect.x() + 150, rect.y() + 150, 40, 40);
+        painter.drawPixmap(t_pixMapRect, t_hoverPlayImg);
+    } else {
+        if (playStatue == Player::Paused) {
+            // 暂停状态，绘制播放按钮
+            QPixmap t_hoverPlayImg(hoverPlayImg);
+            t_hoverPlayImg.setDevicePixelRatio(option.widget->devicePixelRatioF());
+            QRect t_pixMapRect(rect.x() + 150, rect.y() + 150, 40, 40);
+            painter.drawPixmap(t_pixMapRect, t_hoverPlayImg);
+        } else {
+            // 播放状态，绘制暂停按钮
+            QPixmap t_hoverPlayImg(hoverSuspendImg);
+            t_hoverPlayImg.setDevicePixelRatio(option.widget->devicePixelRatioF());
+            QRect t_pixMapRect(rect.x() + 150, rect.y() + 150, 40, 40);
+            painter.drawPixmap(t_pixMapRect, t_hoverPlayImg);
+        }
+    }
+    painter.restore();
+    painter.fillRect(option.rect, fillBrush);
+}
+#endif
 
 void AlbumDataDelegate::drawListMode(QPainter &painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
@@ -479,7 +673,68 @@ void AlbumDataDelegate::mouseDoubleClicked(const QStyleOptionViewItem &option, c
         emit CommonService::getInstance()->signalSwitchToView(SearchAlbumSubSongListType, "", albumTmp.musicinfos);
     }
 }
+#ifdef TABLET_PC
+void AlbumDataDelegate::touchClicked(const QStyleOptionViewItem &option, const QModelIndex &index, const QPointF pressPos)
+{
+    const AlbumListView *albumlistView = qobject_cast<const AlbumListView *>(option.widget);
+    AlbumInfo albumTmp = index.data(Qt::UserRole).value<AlbumInfo>();
 
+    int borderWidth = 10;
+    QRect rect = option.rect.adjusted(borderWidth, borderWidth, -borderWidth, -borderWidth);
+    QRect hoverRect(rect.x() + 50, rect.y() + 36, 50, 50);
+
+    QPainterPath imageClipPath;
+    imageClipPath.addEllipse(QRect(rect.x() + 50, rect.y() + 36, 50, 50));
+    imageClipPath.closeSubpath();
+    auto fillPolygon = imageClipPath.toFillPolygon();
+
+    if (fillPolygon.containsPoint(pressPos, Qt::OddEvenFill)) {
+        bool playFlag = albumTmp.musicinfos.keys().contains(Player::getInstance()->getActiveMeta().hash);
+        Player::PlaybackStatus playStatue = Player::getInstance()->status();
+        if (playFlag) {
+            if (playStatue == Player::Playing) {
+                Player::getInstance()->pause();
+            } else if (playStatue == Player::Paused) {
+                Player::getInstance()->resume();
+            }
+        } else if (albumTmp.musicinfos.values().size() > 0) {
+            emit CommonService::getInstance()->signalSetPlayModel(Player::RepeatAll);
+            Player::getInstance()->setCurrentPlayListHash("album", false);
+            Player::getInstance()->setPlayList(albumTmp.musicinfos.values());
+            Player::getInstance()->playMeta(albumTmp.musicinfos.values().first());
+            emit Player::getInstance()->signalPlayListChanged();
+        }
+    } else if (albumlistView->getHash() == "album") {
+        // 切换到专辑二级页面
+        emit CommonService::getInstance()->signalSwitchToView(AlbumSubSongListType, "", albumTmp.musicinfos);
+    } else if (albumlistView->getHash() == "albumResult") {
+        // 切换到搜索结果专辑二级页面
+        emit CommonService::getInstance()->signalSwitchToView(SearchAlbumSubSongListType, "", albumTmp.musicinfos);
+    }
+}
+
+void AlbumDataDelegate::touchDoubleClicked(const QStyleOptionViewItem &option, const QModelIndex &index)
+{
+    AlbumInfo albumTmp = index.data(Qt::UserRole).value<AlbumInfo>();
+    bool playFlag = albumTmp.musicinfos.keys().contains(Player::getInstance()->getActiveMeta().hash);
+    Player::PlaybackStatus playStatue = Player::getInstance()->status();
+    if (playFlag) {
+        if (playStatue == Player::Playing) {
+            Player::getInstance()->pause();
+        } else if (playStatue == Player::Paused) {
+            Player::getInstance()->resume();
+        }
+    } else {
+        if (albumTmp.musicinfos.values().size() > 0) {
+            emit CommonService::getInstance()->signalSetPlayModel(Player::RepeatAll);
+            Player::getInstance()->setCurrentPlayListHash("album", false);
+            Player::getInstance()->setPlayList(albumTmp.musicinfos.values());
+            Player::getInstance()->playMeta(albumTmp.musicinfos.values().first());
+            emit Player::getInstance()->signalPlayListChanged();
+        }
+    }
+}
+#endif
 AlbumDataDelegate::AlbumDataDelegate(QWidget *parent): QStyledItemDelegate(parent)
     , hoverPlayImg(DHiDPIHelper::loadNxPixmap(":/icons/deepin/builtin/actions/play_hover_36px.svg"))
     , hoverSuspendImg(DHiDPIHelper::loadNxPixmap(":/icons/deepin/builtin/actions/suspend_hover_36px.svg"))

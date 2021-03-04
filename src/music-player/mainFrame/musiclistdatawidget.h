@@ -26,6 +26,7 @@
 #include <DToolButton>
 #include <DLabel>
 #include <QHBoxLayout>
+#include <QResizeEvent>
 
 #include "mediameta.h"
 DWIDGET_USE_NAMESPACE
@@ -67,6 +68,7 @@ protected:
 protected:
     virtual void dragEnterEvent(QDragEnterEvent *event) Q_DECL_OVERRIDE;
     virtual void dropEvent(QDropEvent *event) Q_DECL_OVERRIDE;
+    virtual void resizeEvent(QResizeEvent *event) Q_DECL_OVERRIDE;
 private slots:
     // 播放所有歌曲
     void slotPlayAllClicked();
@@ -93,6 +95,7 @@ private:
     ActionBar           *m_actionBar       = nullptr;
     // 歌手专辑二级页面
     SubSonglistWidget   *m_subSonglistWidget = nullptr;
+    QWidget             *m_lableWidget     = nullptr;
     DLabel              *m_titleLabel      = nullptr;
     DDropdown           *m_albumDropdown   = nullptr;
     DDropdown           *m_artistDropdown  = nullptr;

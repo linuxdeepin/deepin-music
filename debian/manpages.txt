@@ -1,0 +1,1 @@
+debian/deepin-music.1

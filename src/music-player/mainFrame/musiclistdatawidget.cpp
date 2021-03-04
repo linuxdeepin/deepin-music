@@ -424,6 +424,12 @@ void MusicListDataWidget::dropEvent(QDropEvent *event)
         DataBaseService::getInstance()->importMedias(m_currentHash, localpaths);
     }
 }
+// 大标题跟随resize变化
+void MusicListDataWidget::resizeEvent(QResizeEvent *event)
+{
+    m_lableWidget->setGeometry(m_actionBar->geometry());
+    return QWidget::resizeEvent(event);
+}
 
 void MusicListDataWidget::slotPlayAllClicked()
 {
@@ -615,12 +621,18 @@ void MusicListDataWidget::initUI()
 
     // action layout
     QHBoxLayout *actionInfoBarLayout = new QHBoxLayout(m_actionBar);
+#ifdef TABLET_PC
+    actionInfoBarLayout->setContentsMargins(50, 0, 50, 0);
+#else
     actionInfoBarLayout->setContentsMargins(10, 0, 8, 0);
+#endif
     actionInfoBarLayout->setSpacing(0);
     // 初始化全部播放按钮
     initBtPlayAll(actionInfoBarLayout);
     // 初始化数量标签
     initCountLabel(actionInfoBarLayout);
+    // 两边控件撑满
+    actionInfoBarLayout->addStretch(100);
     // 初始化大标题
     initTitle(actionInfoBarLayout);
     // 初始化列表模式
@@ -666,7 +678,11 @@ void MusicListDataWidget::initBtPlayAll(QHBoxLayout *layout)
     m_btPlayAll->setIcon(QIcon::fromTheme("play_all"));
     m_btPlayAll->setObjectName("MusicListDataPlayAll");
     m_btPlayAll->setText(tr("Play All"));
+#ifdef TABLET_PC
     m_btPlayAll->setFixedSize(QSize(100, 40));
+#else
+    m_btPlayAll->setFixedSize(QSize(93, 30));
+#endif
     m_btPlayAll->setFocusPolicy(Qt::NoFocus);
     m_btPlayAll->setIconSize(QSize(18, 18));
 
@@ -694,6 +710,11 @@ void MusicListDataWidget::initCountLabel(QHBoxLayout *layout)
 // 初始化大标题
 void MusicListDataWidget::initTitle(QHBoxLayout *layout)
 {
+    Q_UNUSED(layout)
+    m_lableWidget = new QWidget(m_actionBar);
+    QHBoxLayout *lableLayout = new QHBoxLayout(m_lableWidget);
+    lableLayout->setContentsMargins(0, 0, 0, 0);
+
     m_titleLabel = new DLabel;
     QFont titleFont = m_titleLabel->font();
     titleFont.setFamily("SourceHanSansSC");
@@ -706,7 +727,8 @@ void MusicListDataWidget::initTitle(QHBoxLayout *layout)
     m_titleLabel->setForegroundRole(DPalette::BrightText);
     DFontSizeManager::instance()->bind(m_titleLabel, DFontSizeManager::T3, QFont::Medium);
 
-    layout->addWidget(m_titleLabel, 100, Qt::AlignCenter);
+    m_lableWidget->setGeometry(m_actionBar->geometry());
+    lableLayout->addWidget(m_titleLabel, 100, Qt::AlignCenter);
 }
 // 初始化列表模式
 void MusicListDataWidget::initListIconMode(QHBoxLayout *layout)

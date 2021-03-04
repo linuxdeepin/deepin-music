@@ -90,7 +90,7 @@ void SubSonglistWidget::initUI()
     m_btPlayAll->setFocusPolicy(Qt::NoFocus);
     m_btPlayAll->setIconSize(QSize(18, 18));
     // 按钮自适应字体大小
-    m_btPlayAll->setFixedHeight(30);
+    m_btPlayAll->setFixedSize(QSize(93, 30));
 
     DFontSizeManager::instance()->bind(m_btPlayAll, DFontSizeManager::T6, QFont::Medium);
     btLayout->addWidget(m_btPlayAll);
@@ -107,7 +107,7 @@ void SubSonglistWidget::initUI()
     m_btRandomPlay->setFocusPolicy(Qt::NoFocus);
     m_btRandomPlay->setIconSize(QSize(18, 18));
     // 按钮自适应字体大小
-    m_btRandomPlay->setFixedHeight(30);
+    m_btRandomPlay->setFixedSize(QSize(93, 30));
     DFontSizeManager::instance()->bind(m_btRandomPlay, DFontSizeManager::T6, QFont::Medium);
     btLayout->addWidget(m_btRandomPlay);
     btLayout->addStretch();
@@ -299,9 +299,9 @@ void SubSonglistWidget::flushDialog(QMap<QString, MediaMeta> musicinfos, ListPag
         }
 
         setTitleImage(img);
-        if (listPageType == AlbumType) {
+        if (listPageType == AlbumSubSongListType) {
             m_musicListInfoView->setMusicListView(musicinfos, "album");
-        } else if (listPageType == SingerType) {
+        } else if (listPageType == SingerSubSongListType) {
             m_musicListInfoView->setMusicListView(musicinfos, "artist");
         } else {
             m_musicListInfoView->setMusicListView(musicinfos, "all");

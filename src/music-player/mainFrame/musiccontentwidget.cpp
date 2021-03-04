@@ -59,7 +59,6 @@ MusicContentWidget::MusicContentWidget(QWidget *parent) : DWidget(parent)
     layout->setSpacing(0);
 
     leftFrame = new MusicListScrollArea;
-    leftFrame->setFixedWidth(220);
     leftFrame->setAutoFillBackground(true);
     auto leftFramePalette = leftFrame->palette();
     leftFramePalette.setColor(DPalette::Background, QColor("#FFFFFF"));
