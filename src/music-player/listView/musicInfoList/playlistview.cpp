@@ -990,7 +990,7 @@ void PlayListView::slotDelFromLocal()
 
     warnDlg.setIcon(QIcon::fromTheme("deepin-music"));
     if (deleteFlag == warnDlg.exec()) {
-        DataBaseService::getInstance()->removeSelectedSongs("all", strlist, true);
+        DataBaseService::getInstance()->removeSelectedSongs(m_currentHash, strlist, true);
         // 如果是专辑或者歌手,playRmvMeta的逻辑放在专辑与歌手中处理,二级页面删除后继续播放逻辑
         if (m_currentHash != "album" && m_currentHash != "artist" && m_currentHash != "albumResult" && m_currentHash != "artistResult") {
             Player::getInstance()->playRmvMeta(strlist);
