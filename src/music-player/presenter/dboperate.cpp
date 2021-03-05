@@ -204,16 +204,25 @@ void DBOperate::slotCreatCoverImg(const QList<MediaMeta> &metas)
 
 void DBOperate::slotRemoveSelectedSongs(const QString &curpage, const QStringList &musichashlist, bool removeFromLocal)
 {
+    // 从专辑等处删除，统一走删除所有逻辑
+    QString removeListHash = curpage;
+    if (curpage == "musicResult"
+            || curpage == "album"
+            || curpage == "artist"
+            || curpage == "albumResult"
+            || curpage == "artistResult") {
+        removeListHash = "all";
+    }
     //需要从本地删除
     if (removeFromLocal) {
         //遍历musicNew
         deleteMetaFromAllMusic(musichashlist, removeFromLocal);
     } else {
-        if (curpage == "all") {
+        if (removeListHash == "all") {
             //遍历musicNew
             deleteMetaFromAllMusic(musichashlist, removeFromLocal);
         } else {
-            deleteMetaFromPlaylist(curpage, musichashlist);
+            deleteMetaFromPlaylist(removeListHash, musichashlist);
         }
     }
     emit signalDelFinish();

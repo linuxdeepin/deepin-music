@@ -526,7 +526,7 @@ void AlbumListView::slotAddSingleSong(const QString &listHash, const MediaMeta &
 void AlbumListView::slotRemoveSelectedSongs(const QString &deleteHash, const QStringList &musicHashs, bool removeFromLocal)
 {
     Q_UNUSED(removeFromLocal)
-    if (deleteHash != "all") {
+    if (deleteHash != "album") {
         return;
     }
     if (musicHashs.size() == 0) {
@@ -539,15 +539,25 @@ void AlbumListView::slotRemoveSelectedSongs(const QString &deleteHash, const QSt
         AlbumInfo albumTmp = idx.data(Qt::UserRole).value<AlbumInfo>();
         if (albumTmp.musicinfos.contains(Player::getInstance()->getActiveMeta().hash)) {
             playIndex = i;
-        }
-        for (MediaMeta meta : albumTmp.musicinfos.values()) {
-            if (musicHashs.contains(meta.hash)) {
-                albumTmp.musicinfos[meta.hash].toDelete = true;
+            // 更新是否删除状态
+            for (MediaMeta meta : albumTmp.musicinfos.values()) {
+                if (musicHashs.contains(meta.hash)) {
+                    albumTmp.musicinfos[meta.hash].toDelete = true;
+                }
+            }
+            QVariant albumval;
+            albumval.setValue(albumTmp);
+            albumModel->setData(idx, albumval, Qt::UserRole);
+
+            if (albumTmp.musicinfos.size() == musicHashs.size()) {
+                // 跳出播放下一专辑
+                break;
+            } else {
+                Player::getInstance()->playRmvMeta(musicHashs);
+                emit Player::getInstance()->signalPlayListChanged();
+                return;
             }
         }
-        QVariant albumval;
-        albumval.setValue(albumTmp);
-        albumModel->setData(idx, albumval, Qt::UserRole);
     }
     // 记录切换歌单之前播放状态
     Player::PlaybackStatus preStatue = Player::getInstance()->status();
@@ -564,47 +574,13 @@ void AlbumListView::slotRemoveSelectedSongs(const QString &deleteHash, const QSt
             }
         }
         if (isExsit) {
-            // 当前专辑存在歌曲，播放该专辑
-            QList<MediaMeta> list;
-            // 创建播放队列
-            for (MediaMeta meta : albumTmp.musicinfos.values()) {
-                if (!meta.toDelete) {
-                    list << meta;
-                }
-            }
-            // 找到要播放的歌曲
-            MediaMeta activeMeta;
-            int activeMetaIndex = 0;
-            for (int j = 0; j < albumTmp.musicinfos.size(); j++) {
-                MediaMeta meta = albumTmp.musicinfos.values().at(j);
-                if (meta.hash == Player::getInstance()->getActiveMeta().hash) {
-                    activeMetaIndex = j;
-                    break;
-                }
-            }
-            for (int j = activeMetaIndex; j < albumTmp.musicinfos.size(); j++) {
-                MediaMeta meta = albumTmp.musicinfos.values().at(j);
-                if (!meta.toDelete) {
-                    activeMeta = meta;
-                    break;
-                }
-                if (j == (activeMetaIndex - 1)) {
-                    break;
-                }
-                if (activeMetaIndex != 0 && j == (albumTmp.musicinfos.size() - 1)) {
-                    j = -1;
-                }
-            }
-            Player::getInstance()->clearPlayList();
-            Player::getInstance()->setPlayList(list);
-            // hash由当前已存确定，不应写死
-            Player::getInstance()->setCurrentPlayListHash(m_hash, false);
-            emit Player::getInstance()->signalPlayListChanged();
             if (preStatue == Player::PlaybackStatus::Playing) {
-                Player::getInstance()->playMeta(activeMeta);
+                Player::getInstance()->playMeta(albumTmp.musicinfos.values().at(0));
             } else {
-                Player::getInstance()->setActiveMeta(activeMeta);
+                Player::getInstance()->setActiveMeta(albumTmp.musicinfos.values().at(0));
             }
+            Player::getInstance()->setPlayList(albumTmp.musicinfos.values());
+            emit Player::getInstance()->signalPlayListChanged();
             break;
         } else {
             if (i == (albumModel->rowCount() - 1)) {

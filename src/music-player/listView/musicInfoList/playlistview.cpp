@@ -936,16 +936,8 @@ void PlayListView::slotRmvFromSongList()
     if (warnDlg.exec() > QDialog::Rejected) {
         //数据库中删除时有信号通知刷新界面
         if (!m_IsPlayQueue) {
-            if (m_currentHash == "musicResult"
-                    || m_currentHash == "album"
-                    || m_currentHash == "artist") {
-                //搜索结果中删除，等同于所有音乐中删除
-                DataBaseService::getInstance()->removeSelectedSongs("all", metaList, false);
-                this->clearSelection();
-            } else {
-                DataBaseService::getInstance()->removeSelectedSongs(m_currentHash, metaList, false);
-                this->clearSelection();
-            }
+            DataBaseService::getInstance()->removeSelectedSongs(m_currentHash, metaList, false);
+            this->clearSelection();
             // 更新player中缓存的歌曲信息
             if (m_currentHash == "all" || m_currentHash == Player::getInstance()->getCurrentPlayListHash()) {
                 // 如果是专辑或者歌手,playRmvMeta的逻辑放在专辑与歌手中处理,二级页面删除后继续播放逻辑
@@ -1378,7 +1370,13 @@ void PlayListView::playMusic(const MediaMeta &meta)
             // 通知播放队列列表改变
             emit Player::getInstance()->signalPlayListChanged();
             // 设置当前播放playlist的hash
-            Player::getInstance()->setCurrentPlayListHash(m_currentHash, false);
+            if (m_listPageType == SearchAlbumSubSongListType
+                    || m_listPageType == SearchSingerSubSongListType) {
+                // 搜索结果中播放hash为all
+                Player::getInstance()->setCurrentPlayListHash("all", false);
+            } else {
+                Player::getInstance()->setCurrentPlayListHash(m_currentHash, false);
+            }
         }
     } else {
         if (!m_IsPlayQueue) {
