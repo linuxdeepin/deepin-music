@@ -55,46 +55,46 @@ private:
 
 private:
 
-    DTitlebar   *mtitlebar            = nullptr;
-    DSwitchButton *mswitchBtn         = nullptr;
-    DComboBox      *mcombox           = nullptr;
-    DPushButton    *saveBtn           = nullptr;
+    DTitlebar   *m_titleBar            = nullptr;
+    DSwitchButton *m_switchBtn         = nullptr;
+    DComboBox      *m_comBox           = nullptr;
+    DPushButton    *m_saveBtn           = nullptr;
 
-    DLabel      *mtitleLabel          = nullptr;
-    DLabel      *mswitchLabel         = nullptr;
-    DLabel      *lb_baud_pre          = nullptr;
-    DLabel      *lb_baud_60           = nullptr;
-    DLabel      *lb_baud_170          = nullptr;
-    DLabel      *lb_baud_310          = nullptr;
-    DLabel      *lb_baud_600          = nullptr;
-    DLabel      *lb_baud_1K           = nullptr;
-    DLabel      *lb_baud_3K           = nullptr;
-    DLabel      *lb_baud_6K           = nullptr;
-    DLabel      *lb_baud_12K          = nullptr;
-    DLabel      *lb_baud_14K          = nullptr;
-    DLabel      *lb_baud_16K          = nullptr;
+    DLabel      *m_titleLabel          = nullptr;
+    DLabel      *m_switchLabel         = nullptr;
+    DLabel      *m_lbBaudPre          = nullptr;
+    DLabel      *m_lbBaud60           = nullptr;
+    DLabel      *m_lbBaud170          = nullptr;
+    DLabel      *m_lbBaud310          = nullptr;
+    DLabel      *m_lbBaud600          = nullptr;
+    DLabel      *m_lbBaud1K           = nullptr;
+    DLabel      *m_lbBaud3K           = nullptr;
+    DLabel      *m_lbBaud6K           = nullptr;
+    DLabel      *m_lbBaud12K          = nullptr;
+    DLabel      *m_lbBaud14K          = nullptr;
+    DLabel      *m_lbBaud16K          = nullptr;
 
-    DSlider     *slider_pre           = nullptr;
-    DSlider     *slider_60            = nullptr;
-    DSlider     *slider_170           = nullptr;
-    DSlider     *slider_310           = nullptr;
-    DSlider     *slider_600           = nullptr;
-    DSlider     *slider_1K            = nullptr;
-    DSlider     *slider_3K            = nullptr;
-    DSlider     *slider_6K            = nullptr;
-    DSlider     *slider_12K           = nullptr;
-    DSlider     *slider_14K           = nullptr;
-    DSlider     *slider_16K           = nullptr;
-    DPushButton *btn_default          = nullptr;
-    DFloatingMessage *saveMessage     = nullptr;
-    CustomTabStyle  *tabStyle        = nullptr;
+    DSlider     *m_sliderPre           = nullptr;
+    DSlider     *m_slider60            = nullptr;
+    DSlider     *m_slider170           = nullptr;
+    DSlider     *m_slider310           = nullptr;
+    DSlider     *m_slider600           = nullptr;
+    DSlider     *m_slider1K            = nullptr;
+    DSlider     *m_slider3K            = nullptr;
+    DSlider     *m_slider6K            = nullptr;
+    DSlider     *m_slider12K           = nullptr;
+    DSlider     *m_slider14K           = nullptr;
+    DSlider     *m_slider16K           = nullptr;
+    DPushButton *m_btnDefault          = nullptr;
+    DFloatingMessage *m_saveMessage     = nullptr;
+    CustomTabStyle  *m_tabStyle        = nullptr;
 
-    QStringList    effect_type;
-    QList<int> BaudList;
+    QStringList    m_effectType;
+    QList<int> m_baudList;
 
-    bool    switchflag               = false;
-    bool    changeflag                = false;
-    int     curEffect                 = 0;
+    bool    m_switchFlag               = false;
+    bool    m_changeFlag                = false;
+    int     m_curEffect                 = 0;
 
     int flat_bauds[11] = {12, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
     int Classical_bauds[11] = {12, 0, 0, 0, 0, 0, 0, -7, -7, -7, -9};

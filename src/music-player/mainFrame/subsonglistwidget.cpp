@@ -151,7 +151,7 @@ void SubSonglistWidget::resizeEvent(QResizeEvent *e)
 }
 
 SubSonglistWidget::SubSonglistWidget(const QString &hash, QWidget *parent)
-    : DFrame(parent)
+    : DWidget(parent)
     , m_hash(hash)
 {
     AC_SET_OBJECT_NAME(this, AC_subSonglistWidget);

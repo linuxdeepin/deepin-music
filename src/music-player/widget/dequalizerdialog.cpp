@@ -76,8 +76,8 @@ public:
 void DequalizerDialog::readConfig()
 {
 //    Q_Q(DequalizerDialog);
-    switchflag = MusicSettings::value("equalizer.all.switch").toBool();
-    curEffect   = MusicSettings::value("equalizer.all.curEffect").toInt();
+    m_switchFlag = MusicSettings::value("equalizer.all.switch").toBool();
+    m_curEffect   = MusicSettings::value("equalizer.all.curEffect").toInt();
 
 }
 
@@ -91,297 +91,297 @@ void DequalizerDialog::initUI()
 
 // 解决字体不会根据系统字体大小改变问题
 //    font.setPixelSize(17);
-    mtitleLabel  = new DLabel(DequalizerDialog::tr("Equalizer"));
-    mtitleLabel->resize(51, 25);
-    mtitleLabel->setFont(font);
+    m_titleLabel  = new DLabel(DequalizerDialog::tr("Equalizer"));
+    m_titleLabel->resize(51, 25);
+    m_titleLabel->setFont(font);
 
-    mswitchLabel = new DLabel;
-    mswitchLabel->resize(14, 20);
-    if (switchflag) {
-        mswitchLabel->setText(DequalizerDialog::tr("ON"));
+    m_switchLabel = new DLabel;
+    m_switchLabel->resize(14, 20);
+    if (m_switchFlag) {
+        m_switchLabel->setText(DequalizerDialog::tr("ON"));
     } else {
-        mswitchLabel->setText(DequalizerDialog::tr("OFF"));
+        m_switchLabel->setText(DequalizerDialog::tr("OFF"));
     }
 
-    mswitchBtn = new DSwitchButton(this);
-    mswitchBtn->resize(50, 20);
-    AC_SET_OBJECT_NAME(mswitchBtn, AC_switchBtn);
-    AC_SET_ACCESSIBLE_NAME(mswitchBtn, AC_switchBtn);
+    m_switchBtn = new DSwitchButton(this);
+    m_switchBtn->resize(50, 20);
+    AC_SET_OBJECT_NAME(m_switchBtn, AC_switchBtn);
+    AC_SET_ACCESSIBLE_NAME(m_switchBtn, AC_switchBtn);
 //    //设置底色
 //    DPalette sw;
 //    sw.setColor(DPalette::Button,QColor("#000000"));
 //    mswitchBtn->setPalette(sw);
 
-    mcombox = new DComboBox(this);
-    mcombox->setMinimumSize(240, 36);
-    mcombox->addItems(effect_type);
-    AC_SET_OBJECT_NAME(mcombox, AC_effectCombox);
-    AC_SET_ACCESSIBLE_NAME(mcombox, AC_effectCombox);
+    m_comBox = new DComboBox(this);
+    m_comBox->setMinimumSize(240, 36);
+    m_comBox->addItems(m_effectType);
+    AC_SET_OBJECT_NAME(m_comBox, AC_effectCombox);
+    AC_SET_ACCESSIBLE_NAME(m_comBox, AC_effectCombox);
 
 
-    saveBtn = new DPushButton(this);
-    saveBtn->setMinimumSize(110, 36);
-    saveBtn->setText(DequalizerDialog::tr("Save"));
-    AC_SET_OBJECT_NAME(saveBtn, AC_saveBtn);
-    AC_SET_ACCESSIBLE_NAME(saveBtn, AC_saveBtn);
+    m_saveBtn = new DPushButton(this);
+    m_saveBtn->setMinimumSize(110, 36);
+    m_saveBtn->setText(DequalizerDialog::tr("Save"));
+    AC_SET_OBJECT_NAME(m_saveBtn, AC_saveBtn);
+    AC_SET_ACCESSIBLE_NAME(m_saveBtn, AC_saveBtn);
 
-    lb_baud_pre = new DLabel(this);
-    lb_baud_pre->setMaximumWidth(20);
-    lb_baud_pre->setMinimumHeight(22);
-    lb_baud_pre->setAlignment(Qt::AlignCenter);
+    m_lbBaudPre = new DLabel(this);
+    m_lbBaudPre->setMaximumWidth(20);
+    m_lbBaudPre->setMinimumHeight(22);
+    m_lbBaudPre->setAlignment(Qt::AlignCenter);
     auto hlayout_lb_baud_pre  = new QHBoxLayout;
     hlayout_lb_baud_pre->addStretch();
-    hlayout_lb_baud_pre->addWidget(lb_baud_pre);
+    hlayout_lb_baud_pre->addWidget(m_lbBaudPre);
     hlayout_lb_baud_pre->addStretch();
-    slider_pre = new DSlider(Qt::Vertical);
-    AC_SET_OBJECT_NAME(slider_pre, AC_baud_pre);
-    AC_SET_ACCESSIBLE_NAME(slider_pre, AC_baud_pre);
-    slider_pre->setMinimum(-20);
-    slider_pre->setMaximum(20);
-    slider_pre->setPageStep(1);
+    m_sliderPre = new DSlider(Qt::Vertical);
+    AC_SET_OBJECT_NAME(m_sliderPre, AC_baud_pre);
+    AC_SET_ACCESSIBLE_NAME(m_sliderPre, AC_baud_pre);
+    m_sliderPre->setMinimum(-20);
+    m_sliderPre->setMaximum(20);
+    m_sliderPre->setPageStep(1);
     auto hlayout_slider_pre  = new QHBoxLayout;
     hlayout_slider_pre->addStretch();
-    hlayout_slider_pre->addWidget(slider_pre);
+    hlayout_slider_pre->addWidget(m_sliderPre);
     hlayout_slider_pre->addStretch();
     DLabel *lb_preamplifier = new DLabel(DequalizerDialog::tr("Preamplifier"));
     lb_preamplifier->setAlignment(Qt::AlignCenter);
     DFontSizeManager::instance()->bind(lb_preamplifier, DFontSizeManager::T8, QFont::Normal);
-    DFontSizeManager::instance()->bind(lb_baud_pre, DFontSizeManager::T8, QFont::Normal);
+    DFontSizeManager::instance()->bind(m_lbBaudPre, DFontSizeManager::T8, QFont::Normal);
 
-    lb_baud_60 = new DLabel(this);
-    lb_baud_60->setMaximumWidth(20);
-    lb_baud_60->setMinimumHeight(22);
-    lb_baud_60->setAlignment(Qt::AlignCenter);
+    m_lbBaud60 = new DLabel(this);
+    m_lbBaud60->setMaximumWidth(20);
+    m_lbBaud60->setMinimumHeight(22);
+    m_lbBaud60->setAlignment(Qt::AlignCenter);
     auto hlayout_lb_baud_60  = new QHBoxLayout;
     hlayout_lb_baud_60->addStretch();
-    hlayout_lb_baud_60->addWidget(lb_baud_60);
+    hlayout_lb_baud_60->addWidget(m_lbBaud60);
     hlayout_lb_baud_60->addStretch();
-    slider_60 = new DSlider(Qt::Vertical);
-    AC_SET_OBJECT_NAME(slider_60, AC_slider_60);
-    AC_SET_ACCESSIBLE_NAME(slider_60, AC_slider_60);
-    slider_60->setMinimum(-20);
-    slider_60->setMaximum(20);
-    slider_60->setPageStep(1);
+    m_slider60 = new DSlider(Qt::Vertical);
+    AC_SET_OBJECT_NAME(m_slider60, AC_slider_60);
+    AC_SET_ACCESSIBLE_NAME(m_slider60, AC_slider_60);
+    m_slider60->setMinimum(-20);
+    m_slider60->setMaximum(20);
+    m_slider60->setPageStep(1);
     auto hlayout_slider_60  = new QHBoxLayout;
     hlayout_slider_60->addStretch();
-    hlayout_slider_60->addWidget(slider_60);
+    hlayout_slider_60->addWidget(m_slider60);
     hlayout_slider_60->addStretch();
     DLabel *lb_60 = new DLabel("60");
     lb_60->setAlignment(Qt::AlignCenter);
-    DFontSizeManager::instance()->bind(lb_baud_60, DFontSizeManager::T8, QFont::Normal);
+    DFontSizeManager::instance()->bind(m_lbBaud60, DFontSizeManager::T8, QFont::Normal);
     DFontSizeManager::instance()->bind(lb_60, DFontSizeManager::T8, QFont::Normal);
 
-    lb_baud_170 = new DLabel(this);
-    lb_baud_170->setMaximumWidth(20);
-    lb_baud_170->setMinimumHeight(22);
-    lb_baud_170->setAlignment(Qt::AlignCenter);
+    m_lbBaud170 = new DLabel(this);
+    m_lbBaud170->setMaximumWidth(20);
+    m_lbBaud170->setMinimumHeight(22);
+    m_lbBaud170->setAlignment(Qt::AlignCenter);
     auto hlayout_lb_baud_170  = new QHBoxLayout;
     hlayout_lb_baud_170->addStretch();
-    hlayout_lb_baud_170->addWidget(lb_baud_170);
+    hlayout_lb_baud_170->addWidget(m_lbBaud170);
     hlayout_lb_baud_170->addStretch();
-    slider_170 = new DSlider(Qt::Vertical);
-    AC_SET_OBJECT_NAME(slider_170, AC_slider_170);
-    AC_SET_ACCESSIBLE_NAME(slider_170, AC_slider_170);
-    slider_170->setMinimum(-20);
-    slider_170->setMaximum(20);
-    slider_170->setPageStep(1);
+    m_slider170 = new DSlider(Qt::Vertical);
+    AC_SET_OBJECT_NAME(m_slider170, AC_slider_170);
+    AC_SET_ACCESSIBLE_NAME(m_slider170, AC_slider_170);
+    m_slider170->setMinimum(-20);
+    m_slider170->setMaximum(20);
+    m_slider170->setPageStep(1);
     auto hlayout_slider_170  = new QHBoxLayout;
     hlayout_slider_170->addStretch();
-    hlayout_slider_170->addWidget(slider_170);
+    hlayout_slider_170->addWidget(m_slider170);
     hlayout_slider_170->addStretch();
     DLabel *lb_170 = new DLabel("170");
     lb_170->setAlignment(Qt::AlignCenter);
-    DFontSizeManager::instance()->bind(lb_baud_170, DFontSizeManager::T8, QFont::Normal);
+    DFontSizeManager::instance()->bind(m_lbBaud170, DFontSizeManager::T8, QFont::Normal);
     DFontSizeManager::instance()->bind(lb_170, DFontSizeManager::T8, QFont::Normal);
 
-    lb_baud_310 = new DLabel(this);
-    lb_baud_310->setMaximumWidth(20);
-    lb_baud_310->setMinimumHeight(22);
-    lb_baud_310->setAlignment(Qt::AlignCenter);
+    m_lbBaud310 = new DLabel(this);
+    m_lbBaud310->setMaximumWidth(20);
+    m_lbBaud310->setMinimumHeight(22);
+    m_lbBaud310->setAlignment(Qt::AlignCenter);
     auto hlayout_lb_baud_310  = new QHBoxLayout;
     hlayout_lb_baud_310->addStretch();
-    hlayout_lb_baud_310->addWidget(lb_baud_310);
+    hlayout_lb_baud_310->addWidget(m_lbBaud310);
     hlayout_lb_baud_310->addStretch();
-    slider_310 = new DSlider(Qt::Vertical);
-    AC_SET_OBJECT_NAME(slider_310, AC_slider_310);
-    AC_SET_ACCESSIBLE_NAME(slider_310, AC_slider_310);
-    slider_310->setMinimum(-20);
-    slider_310->setMaximum(20);
-    slider_310->setPageStep(1);
+    m_slider310 = new DSlider(Qt::Vertical);
+    AC_SET_OBJECT_NAME(m_slider310, AC_slider_310);
+    AC_SET_ACCESSIBLE_NAME(m_slider310, AC_slider_310);
+    m_slider310->setMinimum(-20);
+    m_slider310->setMaximum(20);
+    m_slider310->setPageStep(1);
     auto hlayout_slider_310  = new QHBoxLayout;
     hlayout_slider_310->addStretch();
-    hlayout_slider_310->addWidget(slider_310);
+    hlayout_slider_310->addWidget(m_slider310);
     hlayout_slider_310->addStretch();
     DLabel *lb_310 = new DLabel("310");
     lb_310->setAlignment(Qt::AlignCenter);
-    DFontSizeManager::instance()->bind(lb_baud_310, DFontSizeManager::T8, QFont::Normal);
+    DFontSizeManager::instance()->bind(m_lbBaud310, DFontSizeManager::T8, QFont::Normal);
     DFontSizeManager::instance()->bind(lb_310, DFontSizeManager::T8, QFont::Normal);
 
-    lb_baud_600 = new DLabel(this);
-    lb_baud_600->setMaximumWidth(20);
-    lb_baud_600->setMinimumHeight(22);
-    lb_baud_600->setAlignment(Qt::AlignCenter);
+    m_lbBaud600 = new DLabel(this);
+    m_lbBaud600->setMaximumWidth(20);
+    m_lbBaud600->setMinimumHeight(22);
+    m_lbBaud600->setAlignment(Qt::AlignCenter);
     auto hlayout_lb_baud_600  = new QHBoxLayout;
     hlayout_lb_baud_600->addStretch();
-    hlayout_lb_baud_600->addWidget(lb_baud_600);
+    hlayout_lb_baud_600->addWidget(m_lbBaud600);
     hlayout_lb_baud_600->addStretch();
-    slider_600 = new DSlider(Qt::Vertical);
-    AC_SET_OBJECT_NAME(slider_600, AC_slider_600);
-    AC_SET_ACCESSIBLE_NAME(slider_600, AC_slider_600);
-    slider_600->setMinimum(-20);
-    slider_600->setMaximum(20);
-    slider_600->setPageStep(1);
+    m_slider600 = new DSlider(Qt::Vertical);
+    AC_SET_OBJECT_NAME(m_slider600, AC_slider_600);
+    AC_SET_ACCESSIBLE_NAME(m_slider600, AC_slider_600);
+    m_slider600->setMinimum(-20);
+    m_slider600->setMaximum(20);
+    m_slider600->setPageStep(1);
     auto hlayout_slider_600  = new QHBoxLayout;
     hlayout_slider_600->addStretch();
-    hlayout_slider_600->addWidget(slider_600);
+    hlayout_slider_600->addWidget(m_slider600);
     hlayout_slider_600->addStretch();
     DLabel *lb_600 = new DLabel("600");
     lb_600->setAlignment(Qt::AlignCenter);
-    DFontSizeManager::instance()->bind(lb_baud_600, DFontSizeManager::T8, QFont::Normal);
+    DFontSizeManager::instance()->bind(m_lbBaud600, DFontSizeManager::T8, QFont::Normal);
     DFontSizeManager::instance()->bind(lb_600, DFontSizeManager::T8, QFont::Normal);
 
-    lb_baud_1K = new DLabel(this);
-    lb_baud_1K->setMaximumWidth(20);
-    lb_baud_1K->setMinimumHeight(22);
-    lb_baud_1K->setAlignment(Qt::AlignCenter);
+    m_lbBaud1K = new DLabel(this);
+    m_lbBaud1K->setMaximumWidth(20);
+    m_lbBaud1K->setMinimumHeight(22);
+    m_lbBaud1K->setAlignment(Qt::AlignCenter);
     auto hlayout_lb_baud_1K  = new QHBoxLayout;
     hlayout_lb_baud_1K->addStretch();
-    hlayout_lb_baud_1K->addWidget(lb_baud_1K);
+    hlayout_lb_baud_1K->addWidget(m_lbBaud1K);
     hlayout_lb_baud_1K->addStretch();
-    slider_1K = new DSlider(Qt::Vertical);
-    AC_SET_OBJECT_NAME(slider_1K, AC_slider_1K);
-    AC_SET_ACCESSIBLE_NAME(slider_1K, AC_slider_1K);
-    slider_1K->setMinimum(-20);
-    slider_1K->setMaximum(20);
-    slider_1K->setPageStep(1);
+    m_slider1K = new DSlider(Qt::Vertical);
+    AC_SET_OBJECT_NAME(m_slider1K, AC_slider_1K);
+    AC_SET_ACCESSIBLE_NAME(m_slider1K, AC_slider_1K);
+    m_slider1K->setMinimum(-20);
+    m_slider1K->setMaximum(20);
+    m_slider1K->setPageStep(1);
     auto hlayout_slider_1K  = new QHBoxLayout;
     hlayout_slider_1K->addStretch();
-    hlayout_slider_1K->addWidget(slider_1K);
+    hlayout_slider_1K->addWidget(m_slider1K);
     hlayout_slider_1K->addStretch();
     DLabel *lb_1K = new DLabel("1K");
     lb_1K->setAlignment(Qt::AlignCenter);
-    DFontSizeManager::instance()->bind(lb_baud_1K, DFontSizeManager::T8, QFont::Normal);
+    DFontSizeManager::instance()->bind(m_lbBaud1K, DFontSizeManager::T8, QFont::Normal);
     DFontSizeManager::instance()->bind(lb_1K, DFontSizeManager::T8, QFont::Normal);
 
-    lb_baud_3K = new DLabel(this);
-    lb_baud_3K->setMaximumWidth(20);
-    lb_baud_3K->setMinimumHeight(22);
-    lb_baud_3K->setAlignment(Qt::AlignCenter);
+    m_lbBaud3K = new DLabel(this);
+    m_lbBaud3K->setMaximumWidth(20);
+    m_lbBaud3K->setMinimumHeight(22);
+    m_lbBaud3K->setAlignment(Qt::AlignCenter);
     auto hlayout_lb_baud_3K  = new QHBoxLayout;
     hlayout_lb_baud_3K->addStretch();
-    hlayout_lb_baud_3K->addWidget(lb_baud_3K);
+    hlayout_lb_baud_3K->addWidget(m_lbBaud3K);
     hlayout_lb_baud_3K->addStretch();
-    slider_3K = new DSlider(Qt::Vertical);
-    AC_SET_OBJECT_NAME(slider_3K, AC_slider_3K);
-    AC_SET_ACCESSIBLE_NAME(slider_3K, AC_slider_3K);
-    slider_3K->setMinimum(-20);
-    slider_3K->setMaximum(20);
-    slider_3K->setPageStep(1);
+    m_slider3K = new DSlider(Qt::Vertical);
+    AC_SET_OBJECT_NAME(m_slider3K, AC_slider_3K);
+    AC_SET_ACCESSIBLE_NAME(m_slider3K, AC_slider_3K);
+    m_slider3K->setMinimum(-20);
+    m_slider3K->setMaximum(20);
+    m_slider3K->setPageStep(1);
     auto hlayout_slider_3K  = new QHBoxLayout;
     hlayout_slider_3K->addStretch();
-    hlayout_slider_3K->addWidget(slider_3K);
+    hlayout_slider_3K->addWidget(m_slider3K);
     hlayout_slider_3K->addStretch();
     DLabel *lb_3K = new DLabel("3K");
     lb_3K->setAlignment(Qt::AlignCenter);
-    DFontSizeManager::instance()->bind(lb_baud_3K, DFontSizeManager::T8, QFont::Normal);
+    DFontSizeManager::instance()->bind(m_lbBaud3K, DFontSizeManager::T8, QFont::Normal);
     DFontSizeManager::instance()->bind(lb_3K, DFontSizeManager::T8, QFont::Normal);
 
-    lb_baud_6K = new DLabel(this);
-    lb_baud_6K->setMaximumWidth(20);
-    lb_baud_6K->setMinimumHeight(22);
-    lb_baud_6K->setAlignment(Qt::AlignCenter);
+    m_lbBaud6K = new DLabel(this);
+    m_lbBaud6K->setMaximumWidth(20);
+    m_lbBaud6K->setMinimumHeight(22);
+    m_lbBaud6K->setAlignment(Qt::AlignCenter);
     auto hlayout_lb_baud_6K  = new QHBoxLayout;
     hlayout_lb_baud_6K->addStretch();
-    hlayout_lb_baud_6K->addWidget(lb_baud_6K);
+    hlayout_lb_baud_6K->addWidget(m_lbBaud6K);
     hlayout_lb_baud_6K->addStretch();
-    slider_6K = new DSlider(Qt::Vertical);
-    AC_SET_OBJECT_NAME(slider_6K, AC_slider_6K);
-    AC_SET_ACCESSIBLE_NAME(slider_6K, AC_slider_6K);
-    slider_6K->setMinimum(-20);
-    slider_6K->setMaximum(20);
-    slider_6K->setPageStep(1);
+    m_slider6K = new DSlider(Qt::Vertical);
+    AC_SET_OBJECT_NAME(m_slider6K, AC_slider_6K);
+    AC_SET_ACCESSIBLE_NAME(m_slider6K, AC_slider_6K);
+    m_slider6K->setMinimum(-20);
+    m_slider6K->setMaximum(20);
+    m_slider6K->setPageStep(1);
     auto hlayout_slider_6K  = new QHBoxLayout;
     hlayout_slider_6K->addStretch();
-    hlayout_slider_6K->addWidget(slider_6K);
+    hlayout_slider_6K->addWidget(m_slider6K);
     hlayout_slider_6K->addStretch();
     DLabel *lb_6K = new DLabel("6K");
     lb_6K->setAlignment(Qt::AlignCenter);
-    DFontSizeManager::instance()->bind(lb_baud_6K, DFontSizeManager::T8, QFont::Normal);
+    DFontSizeManager::instance()->bind(m_lbBaud6K, DFontSizeManager::T8, QFont::Normal);
     DFontSizeManager::instance()->bind(lb_6K, DFontSizeManager::T8, QFont::Normal);
 
-    lb_baud_12K = new DLabel(this);
-    lb_baud_12K->setMaximumWidth(20);
-    lb_baud_12K->setMinimumHeight(22);
-    lb_baud_12K->setAlignment(Qt::AlignCenter);
+    m_lbBaud12K = new DLabel(this);
+    m_lbBaud12K->setMaximumWidth(20);
+    m_lbBaud12K->setMinimumHeight(22);
+    m_lbBaud12K->setAlignment(Qt::AlignCenter);
     auto hlayout_lb_baud_12K  = new QHBoxLayout;
     hlayout_lb_baud_12K->addStretch();
-    hlayout_lb_baud_12K->addWidget(lb_baud_12K);
+    hlayout_lb_baud_12K->addWidget(m_lbBaud12K);
     hlayout_lb_baud_12K->addStretch();
-    slider_12K = new DSlider(Qt::Vertical);
-    AC_SET_OBJECT_NAME(slider_12K, AC_slider_12K);
-    AC_SET_ACCESSIBLE_NAME(slider_12K, AC_slider_12K);
-    slider_12K->setMinimum(-20);
-    slider_12K->setMaximum(20);
-    slider_12K->setPageStep(1);
+    m_slider12K = new DSlider(Qt::Vertical);
+    AC_SET_OBJECT_NAME(m_slider12K, AC_slider_12K);
+    AC_SET_ACCESSIBLE_NAME(m_slider12K, AC_slider_12K);
+    m_slider12K->setMinimum(-20);
+    m_slider12K->setMaximum(20);
+    m_slider12K->setPageStep(1);
     auto hlayout_slider_12K  = new QHBoxLayout;
     hlayout_slider_12K->addStretch();
-    hlayout_slider_12K->addWidget(slider_12K);
+    hlayout_slider_12K->addWidget(m_slider12K);
     hlayout_slider_12K->addStretch();
     DLabel *lb_12K = new DLabel("12K");
     lb_12K->setAlignment(Qt::AlignCenter);
-    DFontSizeManager::instance()->bind(lb_baud_12K, DFontSizeManager::T8, QFont::Normal);
+    DFontSizeManager::instance()->bind(m_lbBaud12K, DFontSizeManager::T8, QFont::Normal);
     DFontSizeManager::instance()->bind(lb_12K, DFontSizeManager::T8, QFont::Normal);
 
-    lb_baud_14K = new DLabel(this);
-    lb_baud_14K->setMaximumWidth(20);
-    lb_baud_14K->setMinimumHeight(22);
-    lb_baud_14K->setAlignment(Qt::AlignCenter);
+    m_lbBaud14K = new DLabel(this);
+    m_lbBaud14K->setMaximumWidth(20);
+    m_lbBaud14K->setMinimumHeight(22);
+    m_lbBaud14K->setAlignment(Qt::AlignCenter);
     auto hlayout_lb_baud_14K  = new QHBoxLayout;
     hlayout_lb_baud_14K->addStretch();
-    hlayout_lb_baud_14K->addWidget(lb_baud_14K);
+    hlayout_lb_baud_14K->addWidget(m_lbBaud14K);
     hlayout_lb_baud_14K->addStretch();
-    slider_14K = new DSlider(Qt::Vertical);
-    AC_SET_OBJECT_NAME(slider_14K, AC_slider_14K);
-    AC_SET_ACCESSIBLE_NAME(slider_14K, AC_slider_14K);
-    slider_14K->setMinimum(-20);
-    slider_14K->setMaximum(20);
-    slider_14K->setPageStep(1);
+    m_slider14K = new DSlider(Qt::Vertical);
+    AC_SET_OBJECT_NAME(m_slider14K, AC_slider_14K);
+    AC_SET_ACCESSIBLE_NAME(m_slider14K, AC_slider_14K);
+    m_slider14K->setMinimum(-20);
+    m_slider14K->setMaximum(20);
+    m_slider14K->setPageStep(1);
     auto hlayout_slider_14K  = new QHBoxLayout;
     hlayout_slider_14K->addStretch();
-    hlayout_slider_14K->addWidget(slider_14K);
+    hlayout_slider_14K->addWidget(m_slider14K);
     hlayout_slider_14K->addStretch();
     DLabel *lb_14K = new DLabel("14K");
     lb_14K->setAlignment(Qt::AlignCenter);
-    DFontSizeManager::instance()->bind(lb_baud_14K, DFontSizeManager::T8, QFont::Normal);
+    DFontSizeManager::instance()->bind(m_lbBaud14K, DFontSizeManager::T8, QFont::Normal);
     DFontSizeManager::instance()->bind(lb_14K, DFontSizeManager::T8, QFont::Normal);
 
-    lb_baud_16K = new DLabel(this);
-    lb_baud_16K->setMaximumWidth(20);
-    lb_baud_16K->setMinimumHeight(22);
-    lb_baud_16K->setAlignment(Qt::AlignCenter);
+    m_lbBaud16K = new DLabel(this);
+    m_lbBaud16K->setMaximumWidth(20);
+    m_lbBaud16K->setMinimumHeight(22);
+    m_lbBaud16K->setAlignment(Qt::AlignCenter);
     auto hlayout_lb_baud_16K  = new QHBoxLayout;
     hlayout_lb_baud_16K->addStretch();
-    hlayout_lb_baud_16K->addWidget(lb_baud_16K);
+    hlayout_lb_baud_16K->addWidget(m_lbBaud16K);
     hlayout_lb_baud_16K->addStretch();
-    slider_16K = new DSlider(Qt::Vertical);
-    AC_SET_OBJECT_NAME(slider_16K, AC_slider_16K);
-    AC_SET_ACCESSIBLE_NAME(slider_16K, AC_slider_16K);
-    slider_16K->setMinimum(-20);
-    slider_16K->setMaximum(20);
-    slider_16K->setPageStep(1);
+    m_slider16K = new DSlider(Qt::Vertical);
+    AC_SET_OBJECT_NAME(m_slider16K, AC_slider_16K);
+    AC_SET_ACCESSIBLE_NAME(m_slider16K, AC_slider_16K);
+    m_slider16K->setMinimum(-20);
+    m_slider16K->setMaximum(20);
+    m_slider16K->setPageStep(1);
     auto hlayout_slider_16K  = new QHBoxLayout;
     hlayout_slider_16K->addStretch();
-    hlayout_slider_16K->addWidget(slider_16K);
+    hlayout_slider_16K->addWidget(m_slider16K);
     hlayout_slider_16K->addStretch();
     DLabel *lb_16K = new DLabel("16K");
     lb_16K->setAlignment(Qt::AlignCenter);
-    DFontSizeManager::instance()->bind(lb_baud_16K, DFontSizeManager::T8, QFont::Normal);
+    DFontSizeManager::instance()->bind(m_lbBaud16K, DFontSizeManager::T8, QFont::Normal);
     DFontSizeManager::instance()->bind(lb_16K, DFontSizeManager::T8, QFont::Normal);
 
-    btn_default = new DPushButton(DequalizerDialog::tr("Restore Defaults"));
-    btn_default->setMinimumSize(240, 36);
-    AC_SET_OBJECT_NAME(btn_default, AC_Restore);
-    AC_SET_ACCESSIBLE_NAME(btn_default, AC_Restore);
+    m_btnDefault = new DPushButton(DequalizerDialog::tr("Restore Defaults"));
+    m_btnDefault->setMinimumSize(240, 36);
+    AC_SET_OBJECT_NAME(m_btnDefault, AC_Restore);
+    AC_SET_ACCESSIBLE_NAME(m_btnDefault, AC_Restore);
 
     auto vlayout0  = new QVBoxLayout;
     vlayout0->setSpacing(0);
@@ -479,19 +479,19 @@ void DequalizerDialog::initUI()
 
     auto vlay  = new QVBoxLayout;
     //第一行
-    vlay->addWidget(mtitleLabel);
+    vlay->addWidget(m_titleLabel);
     //第二行
     auto hlay  = new QHBoxLayout;
-    hlay->addWidget(mswitchLabel, Qt::AlignLeft);
-    hlay->addWidget(mswitchBtn, Qt::AlignLeft);
-    hlay->addWidget(mcombox, 20, Qt::AlignCenter);
-    hlay->addWidget(saveBtn, Qt::AlignRight);
+    hlay->addWidget(m_switchLabel, Qt::AlignLeft);
+    hlay->addWidget(m_switchBtn, Qt::AlignLeft);
+    hlay->addWidget(m_comBox, 20, Qt::AlignCenter);
+    hlay->addWidget(m_saveBtn, Qt::AlignRight);
 
     //第三行
     vlay->addLayout(hlay);
     vlay->addStretch(2);
     vlay->addWidget(slWidget);
-    vlay->addWidget(btn_default, 0, Qt::AlignCenter);
+    vlay->addWidget(m_btnDefault, 0, Qt::AlignCenter);
     vlay->setContentsMargins(20, 10, 20, 20);
 
     //均衡器页面
@@ -509,8 +509,8 @@ void DequalizerDialog::initUI()
     mtabwidget->setDocumentMode(true);
     mtabwidget->resize(720, 463);
     mtabwidget->addTab(mequalizer, DequalizerDialog::tr("Equalizer"));
-    tabStyle = new CustomTabStyle;
-    mtabwidget->tabBar()->setStyle(tabStyle);
+    m_tabStyle = new CustomTabStyle;
+    mtabwidget->tabBar()->setStyle(m_tabStyle);
     mtabwidget->tabBar()->setContentsMargins(10, 0, 10, 0);
 
     auto mTitlebar = new DTitlebar(this);
@@ -546,18 +546,18 @@ void DequalizerDialog::initUI()
     AllbaudTypes.append(Soft_rock_bauds);
     AllbaudTypes.append(Techno_bauds);
 
-    mswitchBtn->setChecked(switchflag);
-    mcombox->setEnabled(switchflag);
-    saveBtn->setEnabled(switchflag);
+    m_switchBtn->setChecked(m_switchFlag);
+    m_comBox->setEnabled(m_switchFlag);
+    m_saveBtn->setEnabled(m_switchFlag);
 
     for (DSlider *slider : this->findChildren<DSlider *>()) {
         slider->setAttribute(Qt::WA_Hover, true); //开启悬停事件
         slider->installEventFilter(this);       //安装事件过滤器
-        slider->setEnabled(switchflag);
+        slider->setEnabled(m_switchFlag);
     }
-    if (curEffect != 0) {
-        this->showCurMode(AllbaudTypes.at(curEffect - 1));
-        mcombox->setCurrentIndex(curEffect);
+    if (m_curEffect != 0) {
+        this->showCurMode(AllbaudTypes.at(m_curEffect - 1));
+        m_comBox->setCurrentIndex(m_curEffect);
     } else {
         this->showCustom();
     }
@@ -566,29 +566,29 @@ void DequalizerDialog::initUI()
 void DequalizerDialog::SliderOneEntry(DSlider *slider, int value)
 {
     this->selectSlider(slider, QString::number(value));
-    if (slider == slider_pre) {
+    if (slider == m_sliderPre) {
         Q_EMIT this->setEqualizerpre(value);
     } else {
         int bandIndex = -1;
-        if (slider == slider_60) {
+        if (slider == m_slider60) {
             bandIndex = 0;
-        } else if (slider == slider_170) {
+        } else if (slider == m_slider170) {
             bandIndex = 1;
-        } else if (slider == slider_310) {
+        } else if (slider == m_slider310) {
             bandIndex = 2;
-        } else if (slider == slider_600) {
+        } else if (slider == m_slider600) {
             bandIndex = 3;
-        } else if (slider == slider_1K) {
+        } else if (slider == m_slider1K) {
             bandIndex = 4;
-        } else if (slider == slider_3K) {
+        } else if (slider == m_slider3K) {
             bandIndex = 5;
-        } else if (slider == slider_6K) {
+        } else if (slider == m_slider6K) {
             bandIndex = 6;
-        } else if (slider == slider_12K) {
+        } else if (slider == m_slider12K) {
             bandIndex = 7;
-        } else if (slider == slider_14K) {
+        } else if (slider == m_slider14K) {
             bandIndex = 8;
-        } else if (slider == slider_16K) {
+        } else if (slider == m_slider16K) {
             bandIndex = 9;
         }
         if (bandIndex == -1) {
@@ -604,25 +604,25 @@ DequalizerDialog::DequalizerDialog(QWidget *parent):
 {
     AC_SET_OBJECT_NAME(this, AC_Dequalizer);
     AC_SET_ACCESSIBLE_NAME(this, AC_Dequalizer);
-    effect_type << DequalizerDialog::tr("Custom")
-                << DequalizerDialog::tr("Monophony")
-                << DequalizerDialog::tr("Classical")
-                << DequalizerDialog::tr("Club")
-                << DequalizerDialog::tr("Dance")
-                << DequalizerDialog::tr("Full Bass")
-                << DequalizerDialog::tr("Full Bass and Treble")
-                << DequalizerDialog::tr("Full Treble")
-                << DequalizerDialog::tr("Headphones")
-                << DequalizerDialog::tr("Hall")
-                << DequalizerDialog::tr("Live")
-                << DequalizerDialog::tr("Party")
-                << DequalizerDialog::tr("Pop")
-                << DequalizerDialog::tr("Reggae")
-                << DequalizerDialog::tr("Rock")
-                << DequalizerDialog::tr("Ska")
-                << DequalizerDialog::tr("Soft")
-                << DequalizerDialog::tr("Soft Rock")
-                << DequalizerDialog::tr("Techno");
+    m_effectType << DequalizerDialog::tr("Custom")
+                 << DequalizerDialog::tr("Monophony")
+                 << DequalizerDialog::tr("Classical")
+                 << DequalizerDialog::tr("Club")
+                 << DequalizerDialog::tr("Dance")
+                 << DequalizerDialog::tr("Full Bass")
+                 << DequalizerDialog::tr("Full Bass and Treble")
+                 << DequalizerDialog::tr("Full Treble")
+                 << DequalizerDialog::tr("Headphones")
+                 << DequalizerDialog::tr("Hall")
+                 << DequalizerDialog::tr("Live")
+                 << DequalizerDialog::tr("Party")
+                 << DequalizerDialog::tr("Pop")
+                 << DequalizerDialog::tr("Reggae")
+                 << DequalizerDialog::tr("Rock")
+                 << DequalizerDialog::tr("Ska")
+                 << DequalizerDialog::tr("Soft")
+                 << DequalizerDialog::tr("Soft Rock")
+                 << DequalizerDialog::tr("Techno");
     this->readConfig();
     this->initUI();
     initConnection();
@@ -631,71 +631,71 @@ DequalizerDialog::DequalizerDialog(QWidget *parent):
 // 解决字体不会根据系统字体大小改变问题
 //    font.setPixelSize(13);
     QFontMetrics fm(font);
-    this->saveMessage  = new DFloatingMessage(DFloatingMessage::TransientType, this);
-    this->saveMessage->setFont(font);
-    this->saveMessage->setIcon(QIcon::fromTheme("notify_success"));
-    this->saveMessage->setMessage(tr("Sound Effects Saved"));
+    this->m_saveMessage  = new DFloatingMessage(DFloatingMessage::TransientType, this);
+    this->m_saveMessage->setFont(font);
+    this->m_saveMessage->setIcon(QIcon::fromTheme("notify_success"));
+    this->m_saveMessage->setMessage(tr("Sound Effects Saved"));
     int Minwid = fm.width(tr("Sound Effects Saved")) + 70;
-    this->saveMessage->setMinimumSize(Minwid, 60);
-    this->saveMessage->setDuration(2000);
-    this->saveMessage->move(width() / 2 - 80, height() - 70);
-    this->saveMessage->hide();
+    this->m_saveMessage->setMinimumSize(Minwid, 60);
+    this->m_saveMessage->setDuration(2000);
+    this->m_saveMessage->move(width() / 2 - 80, height() - 70);
+    this->m_saveMessage->hide();
 }
 
 DequalizerDialog::~DequalizerDialog()
 {
-    delete this->saveMessage;
-    delete this->tabStyle;
+    delete this->m_saveMessage;
+    delete this->m_tabStyle;
 }
 
 void DequalizerDialog::initConnection()
 {
-    connect(this->mswitchBtn, &DSwitchButton::checkedChanged, this, &DequalizerDialog::checkedChanged);
+    connect(this->m_switchBtn, &DSwitchButton::checkedChanged, this, &DequalizerDialog::checkedChanged);
 
     for (DSlider *slider : findChildren<DSlider *>()) {
         connect(slider, &DSlider::sliderReleased, [ = ]() {
-            this->changeflag = true;
-            if (this->mcombox->currentIndex() != 0) {
-                this->mcombox->setCurrentIndex(0);
+            this->m_changeFlag = true;
+            if (this->m_comBox->currentIndex() != 0) {
+                this->m_comBox->setCurrentIndex(0);
             }
             int value = slider->value();
             this->SliderOneEntry(slider, value);
         });
 
         connect(slider, &DSlider::valueChanged, [ = ](int value) {
-            this->saveBtn->setEnabled(true);
+            this->m_saveBtn->setEnabled(true);
 
             // 音乐模式切换到自定义模式，应该进行值的变化显示
             this->SliderOneEntry(slider, value);
         });
     }
 
-    connect(this->saveBtn, &DPushButton::clicked, [ = ]() {
+    connect(this->m_saveBtn, &DPushButton::clicked, [ = ]() {
         for (DSlider *slider : findChildren<DSlider *>()) {
             MusicSettings::setOption("equalizer.all." + slider->objectName(), slider->value());
         }
         MusicSettings::setOption("equalizer.all.curEffect", 0);
-        this->saveMessage->show();
+        this->m_saveMessage->show();
     });
 
-    connect(this->mcombox, QOverload<int>::of(&DComboBox::currentIndexChanged),
+    connect(this->m_comBox, QOverload<int>::of(&DComboBox::currentIndexChanged),
     this, [ = ](int index) {
         if (index == 0) {
             showCustom();
         } else {
-            this->changeflag = false;
+            this->m_changeFlag = false;
             showCurMode(this->AllbaudTypes.at(index - 1));
             Q_EMIT setEqualizerIndex(index);
             MusicSettings::setOption("equalizer.all.curEffect", index);
         }
     });
-    connect(this->btn_default, &DPushButton::clicked, this, &DequalizerDialog::setDefaultClicked);
+    connect(this->m_btnDefault, &DPushButton::clicked, this, &DequalizerDialog::setDefaultClicked);
 
 }
 //显示自定义模式
 void DequalizerDialog::showCustom()
 {
-    if (this->changeflag) {
+    if (this->m_changeFlag) {
         return;
     }
 
@@ -715,14 +715,14 @@ void DequalizerDialog::showCurMode(int *Allbauds)
     }
     int i = 0;
     for (DSlider *slider : findChildren<DSlider *>()) {
-        if (this->mswitchBtn->isChecked()) {
+        if (this->m_switchBtn->isChecked()) {
             slider->setEnabled(true);
         }
         slider->setValue(Allbauds[i]);
         selectSlider(slider, "");
         i++;
     }
-    this->saveBtn->setEnabled(false);
+    this->m_saveBtn->setEnabled(false);
 }
 
 //开关
@@ -731,20 +731,20 @@ void DequalizerDialog::checkedChanged(bool checked)
     for (DSlider *slider : findChildren<DSlider *>()) {
         slider->setEnabled(checked);
     }
-    this->mswitchLabel->setText(tr("OFF"));
+    this->m_switchLabel->setText(tr("OFF"));
     if (checked) {
-        this->mswitchLabel->setText(tr("ON"));
+        this->m_switchLabel->setText(tr("ON"));
         //flat;
         showCurMode(this->flat_bauds);
-        this->mcombox->setCurrentIndex(1);
+        this->m_comBox->setCurrentIndex(1);
         Q_EMIT setEqualizerIndex(1);
         MusicSettings::setOption("equalizer.all.curEffect", 1);
     } else {
         Q_EMIT setEqualizerIndex(1);
         MusicSettings::setOption("equalizer.all.curEffect", 1);
     }
-    this->mcombox->setEnabled(checked);
-    this->saveBtn->setEnabled(false);
+    this->m_comBox->setEnabled(checked);
+    this->m_saveBtn->setEnabled(false);
 //    Q_EMIT setEqualizerEnable(checked);
     MusicSettings::setOption("equalizer.all.switch", checked);
 }
@@ -752,13 +752,13 @@ void DequalizerDialog::checkedChanged(bool checked)
 //恢复默认
 void DequalizerDialog::setDefaultClicked()
 {
-    if (this->mswitchBtn->isChecked()) {
+    if (this->m_switchBtn->isChecked()) {
         showCurMode(this->flat_bauds);
-        this->mswitchBtn->setChecked(false);
-        this->mcombox->setCurrentIndex(1);
+        this->m_switchBtn->setChecked(false);
+        this->m_comBox->setCurrentIndex(1);
         MusicSettings::setOption("equalizer.all.curEffect", 1);
         for (DSlider *slider : findChildren<DSlider *>()) {
-            if (slider == this->slider_pre) {
+            if (slider == this->m_sliderPre) {
                 MusicSettings::setOption("equalizer.all." + slider->objectName(), 12);
             } else {
                 MusicSettings::setOption("equalizer.all." + slider->objectName(), 0);
@@ -768,28 +768,28 @@ void DequalizerDialog::setDefaultClicked()
 }
 void DequalizerDialog::selectSlider(QObject *obj, QString SliderVal)
 {
-    if (obj == this->slider_pre) {
-        this->lb_baud_pre->setText(SliderVal);
-    } else if (obj == this->slider_60) {
-        this->lb_baud_60->setText(SliderVal);
-    } else if (obj == this->slider_170) {
-        this->lb_baud_170->setText(SliderVal);
-    } else if (obj == this->slider_310) {
-        this->lb_baud_310->setText(SliderVal);
-    } else if (obj == this->slider_600) {
-        this->lb_baud_600->setText(SliderVal);
-    } else if (obj == this->slider_1K) {
-        this->lb_baud_1K->setText(SliderVal);
-    } else if (obj == this->slider_3K) {
-        this->lb_baud_3K->setText(SliderVal);
-    } else if (obj == this->slider_6K) {
-        this->lb_baud_6K->setText(SliderVal);
-    } else if (obj == this->slider_12K) {
-        this->lb_baud_12K->setText(SliderVal);
-    } else if (obj == this->slider_14K) {
-        this->lb_baud_14K->setText(SliderVal);
-    } else if (obj == this->slider_16K) {
-        this->lb_baud_16K->setText(SliderVal);
+    if (obj == this->m_sliderPre) {
+        this->m_lbBaudPre->setText(SliderVal);
+    } else if (obj == this->m_slider60) {
+        this->m_lbBaud60->setText(SliderVal);
+    } else if (obj == this->m_slider170) {
+        this->m_lbBaud170->setText(SliderVal);
+    } else if (obj == this->m_slider310) {
+        this->m_lbBaud310->setText(SliderVal);
+    } else if (obj == this->m_slider600) {
+        this->m_lbBaud600->setText(SliderVal);
+    } else if (obj == this->m_slider1K) {
+        this->m_lbBaud1K->setText(SliderVal);
+    } else if (obj == this->m_slider3K) {
+        this->m_lbBaud3K->setText(SliderVal);
+    } else if (obj == this->m_slider6K) {
+        this->m_lbBaud6K->setText(SliderVal);
+    } else if (obj == this->m_slider12K) {
+        this->m_lbBaud12K->setText(SliderVal);
+    } else if (obj == this->m_slider14K) {
+        this->m_lbBaud14K->setText(SliderVal);
+    } else if (obj == this->m_slider16K) {
+        this->m_lbBaud16K->setText(SliderVal);
     }
 }
 

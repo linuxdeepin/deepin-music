@@ -74,9 +74,12 @@ MusicListScrollArea::MusicListScrollArea(QWidget *parent) : DScrollArea(parent)
     dataBaseLabelFont.setFamily("SourceHanSansSC");
     dataBaseLabelFont.setWeight(QFont::Medium);
 
-// 解决字体不会根据系统字体大小改变问题
-//    dataBaseLabelFont.setPixelSize(14);
+    // 解决字体不会根据系统字体大小改变问题
     dataBaseLabel->setFont(dataBaseLabelFont);
+    auto dataBaseLabelLayout = new QHBoxLayout();
+    dataBaseLabelLayout->setContentsMargins(0, 0, 15, 0);
+    dataBaseLabelLayout->addWidget(dataBaseLabel, 100, Qt::AlignLeft | Qt::AlignVCenter);
+    dataBaseLabelLayout->addStretch();
 
     customizeLabel = new DLabel;
     customizeLabel->setFixedHeight(40);
@@ -115,7 +118,7 @@ MusicListScrollArea::MusicListScrollArea(QWidget *parent) : DScrollArea(parent)
     // m_customizeListview->setFocusPolicy(Qt::TabFocus);
     m_customizeListview->installEventFilter(this);
 
-    musicLayout->addWidget(dataBaseLabel, 0, Qt::AlignVCenter);
+    musicLayout->addLayout(dataBaseLabelLayout, 0);
     musicLayout->addWidget(m_dataBaseListview, 0, Qt::AlignTop);
     musicLayout->addLayout(customizeLayout);
     musicLayout->addWidget(m_customizeListview);

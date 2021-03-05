@@ -15,7 +15,7 @@ class PlayListView;
 #include <QGridLayout>
 #include <DIconButton>
 
-class SubSonglistWidget : public DFrame
+class SubSonglistWidget : public DWidget
 {
     Q_OBJECT
 
