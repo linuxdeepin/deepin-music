@@ -15,10 +15,16 @@
                             "default": "好的，没问题"
                         },
                         {
+                            "key": "playMusicIsEmptyError",
+                            "name": " ",
+                            "text": "您的音乐播放器中没有歌曲，赶紧去添加吧",
+                            "default": "您的音乐播放器中没有歌曲，赶紧去添加吧"
+                        },
+                        {
                             "key": "playMusicError",
                             "name": " ",
-                            "text": "您的播放器中没有这首歌，赶紧去添加吧",
-                            "default": "您的播放器中没有这首歌，赶紧去添加吧"
+                            "text": "您的音乐播放器中没有这首歌，换一首歌曲听听吧",
+                            "default": "您的音乐播放器中没有这首歌，换一首歌曲听听吧"
                         },
                         {
                             "key": "playArtistError",
@@ -103,6 +109,12 @@
                             "name": "已设为随机播放模式",
                             "text": "已设为随机播放模式",
                             "default": "已设为随机播放模式"
+                        },
+                        {
+                            "key": "songNameIsMyFav",
+                            "name": "我喜爱的",
+                            "text": "我喜爱的",
+                            "default": "我喜爱的"
                         }
                     ]
                 }

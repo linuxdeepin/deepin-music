@@ -141,7 +141,7 @@ signals:
 public:
     bool getIsPlayQueue() const;
     //void reflushItemMediaMeta(const MediaMeta &meta);
-
+    bool getMenuIsShow();
 protected:
     virtual void mouseMoveEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
     virtual void dragEnterEvent(QDragEnterEvent *event) Q_DECL_OVERRIDE;
@@ -168,4 +168,5 @@ private:
     ListPageSwitchType   m_listPageType;
     QPixmap m_sidebarPixmap;
     QIcon     m_defaultIcon = QIcon::fromTheme("cover_max");
+    bool      m_menuIsShow = false;
 };

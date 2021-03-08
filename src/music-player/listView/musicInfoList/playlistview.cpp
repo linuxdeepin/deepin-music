@@ -1087,9 +1087,11 @@ void PlayListView::keyPressEvent(QKeyEvent *event)
 
 void PlayListView::contextMenuEvent(QContextMenuEvent *event)
 {
+    m_menuIsShow = true;
     QItemSelectionModel *selection = selectionModel();
 
     if (selection->selectedRows().size() <= 0) {
+        m_menuIsShow = false;
         return;
     }
 
@@ -1102,8 +1104,10 @@ void PlayListView::contextMenuEvent(QContextMenuEvent *event)
     }
 
     //全是cda歌曲不处理右键菜单
-    if (metalist.size() == 0)
+    if (metalist.size() == 0) {
+        m_menuIsShow = false;
         return;
+    }
 
     QPoint globalPos = mapToGlobal(event->pos());
 
@@ -1244,6 +1248,7 @@ void PlayListView::contextMenuEvent(QContextMenuEvent *event)
     connect(&playlistMenu, &QMenu::triggered, this, &PlayListView::slotPlaylistMenuClicked);
 
     allMusicMenu.exec(globalPos);
+    m_menuIsShow = false;
 }
 
 void PlayListView::dragMoveEvent(QDragMoveEvent *event)
@@ -1281,6 +1286,11 @@ void PlayListView::dropEvent(QDropEvent *event)
 bool PlayListView::getIsPlayQueue() const
 {
     return m_IsPlayQueue;
+}
+
+bool PlayListView::getMenuIsShow()
+{
+    return m_menuIsShow;
 }
 
 //void PlayListView::reflushItemMediaMeta(const MediaMeta &meta)

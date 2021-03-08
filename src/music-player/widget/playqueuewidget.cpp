@@ -356,7 +356,14 @@ void PlayQueueWidget::autoHidden(QWidget *old, QWidget *now)
                     }
                 }
             } else {
-                if (now->objectName() != "FooterWidget") {
+                PlayListView *playListQueueOld = dynamic_cast<PlayListView *>(old);
+                if ((playListQueueOld
+                        && old->objectName() == "PlayListView"
+                        && now->objectName().isEmpty()
+                        && playListQueueOld->getMenuIsShow()) || (old->objectName().isEmpty()
+                                                                  && now->objectName().isEmpty())) {
+                    // 右键菜单正在显示或者进入二级页面时不做隐藏处理
+                } else if (now->objectName() != "FooterWidget") {
                     if (!this->isHidden()) {
                         QWidget *parent = static_cast<QWidget *>(this->parent());
                         if (parent) {

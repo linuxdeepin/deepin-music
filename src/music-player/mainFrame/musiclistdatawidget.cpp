@@ -712,6 +712,7 @@ void MusicListDataWidget::initTitle(QHBoxLayout *layout)
 {
     Q_UNUSED(layout)
     m_lableWidget = new QWidget(m_actionBar);
+    m_lableWidget->setAttribute(Qt::WA_TransparentForMouseEvents, true);
     QHBoxLayout *lableLayout = new QHBoxLayout(m_lableWidget);
     lableLayout->setContentsMargins(0, 0, 0, 0);
 

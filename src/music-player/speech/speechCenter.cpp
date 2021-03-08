@@ -25,7 +25,7 @@ QVariant SpeechCenter::playMusic(QString musicName)
     //跳转到所有音乐
     m_MediaMetas.clear();
     m_needRefresh = true;
-    bool isExit = false;
+    QString str;
     if (musicName.isEmpty()) {
         m_MediaMetas = DataBaseService::getInstance()->allMusicInfos();
         if (m_MediaMetas.size() > 0) {
@@ -45,7 +45,10 @@ QVariant SpeechCenter::playMusic(QString musicName)
             emit CommonService::getInstance()->sigScrollToCurrentPosition("all");
             // 通知播放队列刷新
             emit Player::getInstance()->signalPlayListChanged();
-            isExit = true;
+            str = m_settings->value("speechreply.speech.ok").toString();
+        } else {
+            // 没有歌曲
+            str = m_settings->value("speechreply.speech.playMusicIsEmptyError").toString();
         }
     } else {
         // 获取全部歌曲
@@ -53,34 +56,36 @@ QVariant SpeechCenter::playMusic(QString musicName)
         // 获取当前搜索排序方式
 //        DataBaseService::ListSortType type = static_cast<DataBaseService::ListSortType>
 //                                             (DataBaseService::getInstance()->getPlaylistSortType("musicResult"));
-        for (int i = 0; i < mediaMetas.size(); i++) {
-            if (!CommonService::getInstance()->containsStr(musicName, mediaMetas.at(i).title)) {
-                continue;
+        if (mediaMetas.size() > 0) {
+            for (int i = 0; i < mediaMetas.size(); i++) {
+                if (!CommonService::getInstance()->containsStr(musicName, mediaMetas.at(i).title)) {
+                    continue;
+                }
+                m_MediaMetas.append(mediaMetas.at(i));
             }
-            m_MediaMetas.append(mediaMetas.at(i));
+            if (m_MediaMetas.size() > 0) {
+                // 获得数据后排序
+                // 不需要排序，播放的就是第一首
+                //            sortList(m_MediaMetas, type);
+                emit CommonService::getInstance()->signalSwitchToView(SearchMusicResultType, musicName);
+                MediaMeta mediaMeta = m_MediaMetas.at(0);
+                //重置播放队列
+                Player::getInstance()->clearPlayList();
+                Player::getInstance()->setPlayList(m_MediaMetas);
+                //设置当前播放为查询出的音乐
+                Player::getInstance()->setCurrentPlayListHash("musicResult", false);
+                Player::getInstance()->playMeta(mediaMeta);
+                // 通知播放队列刷新
+                emit Player::getInstance()->signalPlayListChanged();
+                str = m_settings->value("speechreply.speech.ok").toString();
+            } else {
+                // 没有歌曲
+                str = m_settings->value("speechreply.speech.playMusicError").toString();
+            }
+        } else {
+            // 没有歌曲
+            str = m_settings->value("speechreply.speech.playMusicIsEmptyError").toString();
         }
-        if (m_MediaMetas.size() > 0) {
-            // 获得数据后排序
-            // 不需要排序，播放的就是第一首
-//            sortList(m_MediaMetas, type);
-            emit CommonService::getInstance()->signalSwitchToView(SearchMusicResultType, musicName);
-            MediaMeta mediaMeta = m_MediaMetas.at(0);
-            //重置播放队列
-            Player::getInstance()->clearPlayList();
-            Player::getInstance()->setPlayList(m_MediaMetas);
-            //设置当前播放为查询出的音乐
-            Player::getInstance()->setCurrentPlayListHash("musicResult", false);
-            Player::getInstance()->playMeta(mediaMeta);
-            // 通知播放队列刷新
-            emit Player::getInstance()->signalPlayListChanged();
-            isExit = true;
-        }
-    }
-    QString str;
-    if (isExit) {
-        str = m_settings->value("speechreply.speech.ok").toString();
-    } else {
-        str = m_settings->value("speechreply.speech.playMusicError").toString();
     }
     m_needRefresh = false;
     return str;
@@ -275,6 +280,9 @@ QVariant SpeechCenter::playSonglist(QString songlistName)
     // 去掉空格
     songlistName = songlistName.simplified();
     QString str;
+    if (songlistName == m_settings->value("speechreply.speech.songNameIsMyFav").toString()) {
+        return playFaverite("");
+    }
     QList<DataBaseService::PlaylistData> playlistDatas = DataBaseService::getInstance()->getCustomSongList();
     if (playlistDatas.size() <= 0) {
         // 没有自定义歌单
@@ -337,7 +345,13 @@ QVariant SpeechCenter::playSonglist(QString songlistName)
                 // 通知播放队列刷新
                 emit Player::getInstance()->signalPlayListChanged();
                 str = m_settings->value("speechreply.speech.ok").toString();
+            } else {
+                // 歌单中没有歌曲
+                str = m_settings->value("speechreply.speech.playSonglistNoSong").toString();
             }
+        } else {
+            // 没有自定义歌单
+            str = m_settings->value("speechreply.speech.playSonglistNoSongList").toString();
         }
     }
     m_needRefresh = false;
