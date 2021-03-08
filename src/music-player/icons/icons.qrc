@@ -44,5 +44,6 @@
         <file>texts/music_mycollection_24px.svg</file>
         <file>texts/music_singer_24px.svg</file>
         <file>texts/sort_rank_texts_36px.svg</file>
+        <file>icons/dcc_collectiondis_36px.svg</file>
     </qresource>
 </RCC>

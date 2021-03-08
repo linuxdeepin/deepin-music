@@ -197,8 +197,6 @@ void FooterWidget::initUI(QWidget *parent)
 
     // 收藏按钮
     m_btFavorite = new DIconButton(this);
-    m_btFavorite->setIcon(QIcon::fromTheme("dcc_collection"));
-//    m_btFavorite->setIcon(QIcon::fromTheme("collection1_press"));
     m_btFavorite->setObjectName("FooterActionFavorite");
     m_btFavorite->setShortcut(QKeySequence::fromString("."));
     m_btFavorite->setFixedSize(50, 50);
@@ -438,9 +436,15 @@ void FooterWidget::resetBtnEnable()
 {
     // 需求变动，只针对收藏按钮做处理
     if (Player::getInstance()->getActiveMeta().hash.isEmpty()) {
+        m_btFavorite->setIcon(QIcon::fromTheme("dcc_collectiondis"));
         m_btFavorite->setEnabled(false);
     } else {
         m_btFavorite->setEnabled(true);
+        if (DataBaseService::getInstance()->favoriteExist(Player::getInstance()->getActiveMeta())) {
+            m_btFavorite->setIcon(QIcon::fromTheme("collection1_press"));
+        } else {
+            m_btFavorite->setIcon(QIcon::fromTheme("dcc_collection"));
+        }
     }
 }
 // 根据播放模式，获取中文tip
@@ -631,21 +635,21 @@ void FooterWidget::slotMediaMetaChanged(MediaMeta activeMeta)
     }
 
     if (meta.mmType == MIMETYPE_CDA) {
-        m_btFavorite->setIcon(QIcon::fromTheme("dcc_collection"));
+        m_btFavorite->setIcon(QIcon::fromTheme("dcc_collectiondis"));
         m_btFavorite->setEnabled(false);
     } else {
         // 根据当前歌曲判断收藏是否可用
         if (Player::getInstance()->getActiveMeta().hash.isEmpty()) {
+            m_btFavorite->setIcon(QIcon::fromTheme("dcc_collectiondis"));
             m_btFavorite->setEnabled(false);
         } else {
             m_btFavorite->setEnabled(true);
+            if (DataBaseService::getInstance()->favoriteExist(Player::getInstance()->getActiveMeta())) {
+                m_btFavorite->setIcon(QIcon::fromTheme("collection1_press"));
+            } else {
+                m_btFavorite->setIcon(QIcon::fromTheme("dcc_collection"));
+            }
         }
-        if (DataBaseService::getInstance()->favoriteExist(Player::getInstance()->getActiveMeta())) {
-            m_btFavorite->setIcon(QIcon::fromTheme("collection1_press"));
-        } else {
-            m_btFavorite->setIcon(QIcon::fromTheme("dcc_collection"));
-        }
-
     }
 }
 
