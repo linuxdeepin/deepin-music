@@ -17,6 +17,8 @@ option(DTK_DMAN_PORTAL "turn on dman portal support" off)
 execute_process(COMMAND uname -m OUTPUT_VARIABLE MACH
     ERROR_QUIET OUTPUT_STRIP_TRAILING_WHITESPACE)
 
+#平板标志
+#add_definitions(-DTABLET_PC)
 
 if (CMAKE_BUILD_TYPE STREQUAL "Debug")
     set(DMR_DEBUG on)

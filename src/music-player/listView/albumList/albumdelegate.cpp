@@ -93,6 +93,34 @@ QSize AlbumDataDelegate::sizeHint(const QStyleOptionViewItem &option,
 
 bool AlbumDataDelegate::editorEvent(QEvent *event, QAbstractItemModel *model, const QStyleOptionViewItem &option, const QModelIndex &index)
 {
+#ifdef TABLET_PC
+    // 用于判断触屏点击状态
+    static int clickedCount = 0;
+    const AlbumListView *albumlistView = qobject_cast<const AlbumListView *>(option.widget);
+    const QMouseEvent *pressEvent = static_cast<QMouseEvent *>(event);
+    const QPointF pressPos = pressEvent->pos();
+
+    if (index.isValid() && albumlistView->viewMode() == QListView::IconMode &&
+            (event->type() == QEvent::MouseButtonPress || event->type() == QEvent::MouseButtonDblClick)) {
+        // 触屏点击次数
+        clickedCount++;
+
+        QTimer::singleShot(200, [ = ]() {
+            if (clickedCount == 1) {
+                // 触屏单击
+                touchClicked(option, index, pressPos);
+            } else if (clickedCount > 1) {
+                // 触屏双击
+                touchDoubleClicked(option, index);
+            }
+            // 点击次数归零
+            clickedCount = 0;
+        });
+    } else if (index.isValid() && albumlistView->viewMode() == QListView::ListMode && event->type() == QEvent::MouseButtonDblClick) {
+        // 触屏双击
+        touchDoubleClicked(option, index);
+    }
+#else
     // 用于判断鼠标点击状态
     static int clickedCount = 0;
 
@@ -121,6 +149,8 @@ bool AlbumDataDelegate::editorEvent(QEvent *event, QAbstractItemModel *model, co
         // 鼠标双击
         mouseDoubleClicked(option, index);
     }
+#endif
+
 
     return QStyledItemDelegate::editorEvent(event, model, option, index);
 }
@@ -679,12 +709,10 @@ void AlbumDataDelegate::touchClicked(const QStyleOptionViewItem &option, const Q
     const AlbumListView *albumlistView = qobject_cast<const AlbumListView *>(option.widget);
     AlbumInfo albumTmp = index.data(Qt::UserRole).value<AlbumInfo>();
 
-    int borderWidth = 10;
-    QRect rect = option.rect.adjusted(borderWidth, borderWidth, -borderWidth, -borderWidth);
-    QRect hoverRect(rect.x() + 50, rect.y() + 36, 50, 50);
+    QRect rect = option.rect;
 
     QPainterPath imageClipPath;
-    imageClipPath.addEllipse(QRect(rect.x() + 50, rect.y() + 36, 50, 50));
+    imageClipPath.addEllipse(QRect(rect.x() + 150, rect.y() + 150, 40, 40));
     imageClipPath.closeSubpath();
     auto fillPolygon = imageClipPath.toFillPolygon();
 
@@ -699,7 +727,7 @@ void AlbumDataDelegate::touchClicked(const QStyleOptionViewItem &option, const Q
             }
         } else if (albumTmp.musicinfos.values().size() > 0) {
             emit CommonService::getInstance()->signalSetPlayModel(Player::RepeatAll);
-            Player::getInstance()->setCurrentPlayListHash("album", false);
+            Player::getInstance()->setCurrentPlayListHash(albumlistView->getHash(), false);
             Player::getInstance()->setPlayList(albumTmp.musicinfos.values());
             Player::getInstance()->playMeta(albumTmp.musicinfos.values().first());
             emit Player::getInstance()->signalPlayListChanged();
@@ -715,6 +743,7 @@ void AlbumDataDelegate::touchClicked(const QStyleOptionViewItem &option, const Q
 
 void AlbumDataDelegate::touchDoubleClicked(const QStyleOptionViewItem &option, const QModelIndex &index)
 {
+    const AlbumListView *albumlistView = qobject_cast<const AlbumListView *>(option.widget);
     AlbumInfo albumTmp = index.data(Qt::UserRole).value<AlbumInfo>();
     bool playFlag = albumTmp.musicinfos.keys().contains(Player::getInstance()->getActiveMeta().hash);
     Player::PlaybackStatus playStatue = Player::getInstance()->status();
@@ -727,7 +756,7 @@ void AlbumDataDelegate::touchDoubleClicked(const QStyleOptionViewItem &option, c
     } else {
         if (albumTmp.musicinfos.values().size() > 0) {
             emit CommonService::getInstance()->signalSetPlayModel(Player::RepeatAll);
-            Player::getInstance()->setCurrentPlayListHash("album", false);
+            Player::getInstance()->setCurrentPlayListHash(albumlistView->getHash(), false);
             Player::getInstance()->setPlayList(albumTmp.musicinfos.values());
             Player::getInstance()->playMeta(albumTmp.musicinfos.values().first());
             emit Player::getInstance()->signalPlayListChanged();

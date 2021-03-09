@@ -8,12 +8,6 @@ else()
     set(CMD_NAME deepin-music)
 endif()
 
-#平板标志
-set(ISTABLETPC "2")
-if(ISTABLETPC MATCHES "1")
-    add_definitions(-DTABLET_PC)
-endif()
-
 #可执行文件路径
 #set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/music/dist/bin)
 

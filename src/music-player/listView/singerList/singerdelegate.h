@@ -56,6 +56,11 @@ protected:
     bool editorEvent(QEvent *event, QAbstractItemModel *model, const QStyleOptionViewItem &option, const QModelIndex &index) override;
 private:
     void drawIconMode(QPainter &painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
+#ifdef TABLET_PC
+    void drawTabletIconMode(QPainter &painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
+    void touchClicked(const QStyleOptionViewItem &option, const QModelIndex &index, const QPointF pressPos);
+    void touchDoubleClicked(const QStyleOptionViewItem &option, const QModelIndex &index);
+#endif
     void drawListMode(QPainter &painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
     void mouseClicked(const QStyleOptionViewItem &option, const QModelIndex &index, const QPointF pressPos);
     void mouseDoubleClicked(const QStyleOptionViewItem &option, const QModelIndex &index);

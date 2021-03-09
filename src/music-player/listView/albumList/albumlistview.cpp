@@ -368,7 +368,6 @@ void AlbumListView::setViewModeFlag(QListView::ViewMode mode)
     }
 #endif
 
-
     setViewMode(mode);
     m_viewModel = mode;
 }

@@ -160,6 +160,10 @@ SingerListView::SingerListView(QString hash, QWidget *parent)
     // 删除歌曲
     connect(DataBaseService::getInstance(), SIGNAL(sigRemoveSelectedSongs(const QString &, const QStringList &, bool)),
             this, SLOT(slotRemoveSelectedSongs(const QString &, const QStringList &, bool)), Qt::DirectConnection);
+#ifdef TABLET_PC
+    connect(Player::getInstance(), &Player::signalPlaybackStatusChanged,
+            this, &SingerListView::slotPlaybackStatusChanged);
+#endif
 }
 
 SingerListView::~SingerListView()
@@ -333,6 +337,21 @@ int SingerListView::getMusicCount()
 
 void SingerListView::setViewModeFlag(QListView::ViewMode mode)
 {
+#ifdef TABLET_PC
+    if (mode == QListView::IconMode) {
+        setIconSize(QSize(200, 200));
+        setGridSize(QSize(-1, -1));
+        // 去除底部间距
+        setViewportMargins(30, -13, -35, 0);
+        setSpacing(20);
+    } else {
+        setIconSize(QSize(36, 36));
+        setGridSize(QSize(-1, -1));
+        // 修改顶部间距
+        setViewportMargins(40, 0, 40, 0);
+        setSpacing(0);
+    }
+#else
     if (mode == QListView::IconMode) {
         setIconSize(QSize(150, 150));
         setGridSize(QSize(-1, -1));
@@ -346,6 +365,7 @@ void SingerListView::setViewModeFlag(QListView::ViewMode mode)
         setViewportMargins(0, 0, 8, 0);
         setSpacing(0);
     }
+#endif
     setViewMode(mode);
     m_viewModel = mode;
 }
@@ -666,7 +686,15 @@ void SingerListView::slotRemoveSelectedSongs(const QString &deleteHash, const QS
         }
     }
 }
-
+#ifdef TABLET_PC
+void SingerListView::slotPlaybackStatusChanged(Player::PlaybackStatus statue)
+{
+    Q_UNUSED(statue)
+    if (this->isVisible()) {
+        this->update();
+    }
+}
+#endif
 void SingerListView::dragEnterEvent(QDragEnterEvent *event)
 {
     auto t_formats = event->mimeData()->formats();
