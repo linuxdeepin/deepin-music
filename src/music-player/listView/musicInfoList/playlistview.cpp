@@ -652,8 +652,9 @@ void PlayListView::slotRemoveSingleSong(const QString &listHash, const QString &
             }
         }
     }
-    if (m_model->rowCount() == 0 && (m_listPageType == AlbumSubSongListType || m_listPageType == SingerSubSongListType
-                                     || m_listPageType == SearchAlbumSubSongListType || m_listPageType == SearchSingerSubSongListType)) {
+    // 由于该类复用，所以需要通过是否可见判断信号是否发送
+    if (this->isVisible() && m_model->rowCount() == 0 && (m_listPageType == AlbumSubSongListType || m_listPageType == SingerSubSongListType
+                                                          || m_listPageType == SearchAlbumSubSongListType || m_listPageType == SearchSingerSubSongListType)) {
         emit CommonService::getInstance()->signalSwitchToView(PreType, "", QMap<QString, MediaMeta>());
     }
 }
