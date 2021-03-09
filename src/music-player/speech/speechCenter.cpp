@@ -301,9 +301,7 @@ QVariant SpeechCenter::playSonglist(QString songlistName)
     // 去掉空格
     songlistName = songlistName.simplified();
     QString str;
-    if (songlistName == m_settings->value("speechreply.speech.songNameIsMyFav").toString()) {
-        return playFaverite("");
-    }
+    qDebug() << __FUNCTION__ << "songlistName = " << songlistName;
     QList<DataBaseService::PlaylistData> playlistDatas = DataBaseService::getInstance()->getCustomSongList();
     if (playlistDatas.size() <= 0) {
         // 没有自定义歌单
@@ -332,6 +330,19 @@ QVariant SpeechCenter::playSonglist(QString songlistName)
         } else {
             // 根据名称匹配歌单
             // 精确匹配
+            if (songlistName == m_settings->value("speechreply.speech.songNameIsMyFav").toString()) {
+                // 如果歌单名为“我喜爱的”，遍历歌单中有没有我喜爱的
+                bool favExsit = false;
+                foreach (DataBaseService::PlaylistData playlistData, playlistDatas) {
+                    if (playlistData.displayName == songlistName) {
+                        favExsit = true;
+                        break;
+                    }
+                }
+                if (!favExsit) {
+                    return playFaverite("");
+                }
+            }
             foreach (DataBaseService::PlaylistData playlistData, playlistDatas) {
                 if (playlistData.displayName == songlistName) {
                     uuid = playlistData.uuid;

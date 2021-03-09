@@ -250,8 +250,8 @@ void PlayItemDelegate::drawIconMode(QPainter &painter, const QStyleOptionViewIte
     painter.setPen(nameColor);
     // 调整歌手位置
     QRect extraNameFillRect(option.rect.x() + xoffset, nameFillRect.bottom(),
-                            ImgWidthAndHeight, extraNameFm.height());
-    auto extraNameText = extraNameFm.elidedText(meta.singer, Qt::ElideRight, ImgWidthAndHeight);
+                            ImgWidthAndHeight - 51, extraNameFm.height());
+    auto extraNameText = extraNameFm.elidedText(meta.singer, Qt::ElideRight, ImgWidthAndHeight - 51);
     painter.drawText(extraNameFillRect, Qt::AlignLeft | Qt::AlignVCenter, extraNameText);
 
     // 画时间矩形
