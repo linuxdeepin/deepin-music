@@ -211,9 +211,7 @@ bool checkOnly()
 
 void createSpeechDbus()
 {
-    SpeechCenter::getInstance();
-
-    SpeechExportBus *mSpeech = new SpeechExportBus(nullptr);
+    SpeechExportBus *mSpeech = new SpeechExportBus(SpeechCenter::getInstance());
     // 'playMusic','红颜' 显示搜索界面
     // 'playMusic',''       显示所有音乐界面，随机播放
     mSpeech->registerAction("playMusic", "play Music",

@@ -28,37 +28,39 @@ TEST(Application, testListScroll)
 
     MainFrame *w = Application::getInstance()->getMainWindow();
     MusicBaseListView *baseListView = w->findChild<MusicBaseListView *>(AC_dataBaseListview);
-    MusicSongListView *songListView = w->findChild<MusicSongListView *>(AC_customizeListview);
+//    MusicSongListView *songListView = w->findChild<MusicSongListView *>(AC_customizeListview);
 
-    QTest::qWait(100);
-    QTestEventList event;
-    QPoint pos = QPoint(20, 100);
-    event.addMouseMove(pos);
-    event.addMouseClick(Qt::MouseButton::LeftButton, Qt::NoModifier, pos, 10);
-    event.simulate(baseListView->viewport());
-    event.clear();
-
-    // 上方菜单
-    QTimer::singleShot(200, w, [ = ]() {
-        QTestEventList event;
+    if (baseListView) {
         QTest::qWait(100);
-        DMenu *menuWidget = static_cast<DMenu *>(qApp->activePopupWidget());
-        event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
-        event.addKeyClick(Qt::Key_Enter, Qt::NoModifier, 50);
-        event.simulate(menuWidget);
+        QTestEventList event;
+        QPoint pos = QPoint(20, 100);
+        event.addMouseMove(pos);
+        event.addMouseClick(Qt::MouseButton::LeftButton, Qt::NoModifier, pos, 10);
+        event.simulate(baseListView->viewport());
         event.clear();
-    });
 
-    // 点击所有音乐
-    QTest::qWait(50);
-    pos = QPoint(20, 20);
-    baseListView->setFocus();
-    event.addMouseMove(pos);
-    event.addMouseClick(Qt::MouseButton::LeftButton, Qt::NoModifier, pos);
-    event.addKeyClick(Qt::Key_M, Qt::ControlModifier, 10);
-    event.simulate(baseListView);
-    event.clear();
-    QTest::qWait(250);
+        // 上方菜单
+        QTimer::singleShot(200, w, [ = ]() {
+            QTestEventList event;
+            QTest::qWait(100);
+            DMenu *menuWidget = static_cast<DMenu *>(qApp->activePopupWidget());
+            event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
+            event.addKeyClick(Qt::Key_Enter, Qt::NoModifier, 50);
+            event.simulate(menuWidget);
+            event.clear();
+        });
+
+        // 点击所有音乐
+        QTest::qWait(50);
+        pos = QPoint(20, 20);
+        baseListView->setFocus();
+        event.addMouseMove(pos);
+        event.addMouseClick(Qt::MouseButton::LeftButton, Qt::NoModifier, pos);
+        event.addKeyClick(Qt::Key_M, Qt::ControlModifier, 10);
+        event.simulate(baseListView);
+        event.clear();
+        QTest::qWait(250);
+    }
 }
 
 TEST(Application, testListScroll1)
