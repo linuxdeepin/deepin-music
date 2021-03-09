@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 ~ 2021 Wuhan Deepin Technology Co., Ltd.
+ * Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co., Ltd.
  *
  * Author:     ZouYa <zouya@uniontech.com>
  *

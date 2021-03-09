@@ -1,9 +1,9 @@
 /*
- * Copyright (C) 2017 ~ 2018 Wuhan Deepin Technology Co., Ltd.
+ * Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co., Ltd.
  *
- * Author:     Iceyer <me@iceyer.net>
+ * Author:     ZouYa <zouya@uniontech.com>
  *
- * Maintainer: Iceyer <me@iceyer.net>
+ * Maintainer: WangYu <wangyu@uniontech.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,8 +25,11 @@
 #include <dabstractdialog.h>
 
 #include <DDialog>
+#include <DRadioButton>
+#include <DCheckBox>
 
-class CloseConfirmDialogPrivate;
+DWIDGET_USE_NAMESPACE
+
 class CloseConfirmDialog : public Dtk::Widget::DDialog
 {
     Q_OBJECT
@@ -36,7 +39,7 @@ public:
         QuitOnClose = 1,
     };
 
-    explicit CloseConfirmDialog(QWidget *parent = Q_NULLPTR);
+    explicit CloseConfirmDialog(QWidget *parent = nullptr);
     ~CloseConfirmDialog();
 
     bool isRemember() const;
@@ -45,7 +48,7 @@ public:
 public Q_SLOTS:
 
 private:
-    QScopedPointer<CloseConfirmDialogPrivate> d_ptr;
-    Q_DECLARE_PRIVATE_D(qGetPtrHelper(d_ptr), CloseConfirmDialog)
+    DRadioButton    *m_exitBt     = nullptr;
+    DCheckBox       *m_remember   = nullptr;
 };
 

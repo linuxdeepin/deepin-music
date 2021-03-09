@@ -1,9 +1,9 @@
 /*
- * Copyright (C) 2017 ~ 2018 Wuhan Deepin Technology Co., Ltd.
+ * Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co., Ltd.
  *
- * Author:     Iceyer <me@iceyer.net>
+ * Author:     ZouYa <zouya@uniontech.com>
  *
- * Maintainer: Iceyer <me@iceyer.net>
+ * Maintainer: WangYu <wangyu@uniontech.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -29,92 +29,57 @@
 #include <DLabel>
 #include <DCheckBox>
 #include <DRadioButton>
+#include <DApplicationHelper>
 
 #include "core/musicsettings.h"
 
 DWIDGET_USE_NAMESPACE
 
-class CloseConfirmDialogPrivate
-{
-public:
-    explicit CloseConfirmDialogPrivate(CloseConfirmDialog *parent) : q_ptr(parent) {}
-
-    DRadioButton    *exitBt     = Q_NULLPTR;
-    DCheckBox       *remember   = Q_NULLPTR;
-
-    CloseConfirmDialog *q_ptr;
-    Q_DECLARE_PUBLIC(CloseConfirmDialog)
-};
-
 CloseConfirmDialog::CloseConfirmDialog(QWidget *parent) :
-    Dtk::Widget::DDialog(parent), d_ptr(new CloseConfirmDialogPrivate(this))
+    Dtk::Widget::DDialog(parent)
 {
-    Q_D(CloseConfirmDialog);
-
-    auto contentFrame = new DWidget;
+    this->setFixedSize(380, 226);
+    this->setSpacing(0);
+    DWidget *contentFrame = new DWidget(this);
+    contentFrame->setFixedSize(380, 80);
+    contentFrame->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     auto contentLayout = new QVBoxLayout(contentFrame);
-    contentLayout->setSpacing(0);
+    contentLayout->setSpacing(10);
     contentLayout->setContentsMargins(0, 0, 0, 0);
 
-//    auto groupLabel = new DLabel(tr("Please select your operation"));
-//    groupLabel->setObjectName("CloseConfirmDialogLabel");
-
-//    auto groupLabelFont = groupLabel->font();
-//    groupLabelFont.setFamily("SourceHanSansSC");
-//    groupLabelFont.setWeight(QFont::Medium);
-//    groupLabelFont.setPixelSize(14);
-//    groupLabel->setFont(groupLabelFont);
-
-    auto actionSelectionGroup = new QGroupBox();
-    actionSelectionGroup->setContentsMargins(0, 0, 4, 0);
-    actionSelectionGroup->setObjectName("CloseConfirmDialogSelectionGroup");
-
-    d->exitBt = new DRadioButton(tr("Exit"));
-    d->exitBt->setObjectName("CloseConfirmDialogExit");
     auto miniBt = new DRadioButton(tr("Minimize to system tray"));
+    miniBt->setFixedHeight(20);
     miniBt->setObjectName("CloseConfirmDialogMini");
-    auto vbox = new QHBoxLayout;
-    vbox->setContentsMargins(0, 0, 0, 0);
-    vbox->addWidget(miniBt);
-    vbox->addWidget(d->exitBt);
-    actionSelectionGroup->setLayout(vbox);
 
-    d->remember = new DCheckBox(tr("Do not ask again"));
+    m_exitBt = new DRadioButton(tr("Exit"));
+    m_exitBt->setFixedHeight(20);
+    m_exitBt->setObjectName("CloseConfirmDialogExit");
 
-    auto font = d->exitBt->font();
+    m_remember = new DCheckBox(tr("Do not ask again"));
+    m_remember->setFixedHeight(20);
+
+    auto font = m_exitBt->font();
     font.setFamily("SourceHanSansSC");
     font.setWeight(QFont::Medium);
 
-// 解决字体不会根据系统字体大小改变问题
-//    font.setPixelSize(14);
-
-    d->exitBt->setFont(font);
     miniBt->setFont(font);
-    d->remember->setFont(font);
-
-//    contentLayout->addWidget(groupLabel, 0, Qt::AlignLeft);
-//    contentLayout->addSpacing(4);
-//    contentLayout->addWidget(actionSelectionGroup, 0, Qt::AlignLeft);
-//    contentLayout->addSpacing(6);
-//    contentLayout->addWidget(d->remember, 0, Qt::AlignLeft);
-
-//    this->addContent(groupLabel, Qt::AlignLeft);
-
+    m_exitBt->setFont(font);
+    m_remember->setFont(font);
 
     this->setTitle(tr("Please choose your action"));
-    this->addContent(miniBt, Qt::AlignLeft);
-    this->addContent(d->exitBt, Qt::AlignLeft);
-    this->addContent(d->remember, Qt::AlignLeft);
+    contentLayout->addWidget(miniBt);
+    contentLayout->addWidget(m_exitBt);
+    contentLayout->addWidget(m_remember);
 
+    this->addContent(contentFrame, Qt::AlignCenter);
     setIcon(QIcon::fromTheme("deepin-music"));
-    addContent(contentFrame);
 
     addButton(tr("Cancel"), false, ButtonNormal);
     addButton(tr("Confirm"), true, ButtonRecommend);
 
-    d->remember->setChecked(false);
+    m_remember->setChecked(false);
     if (QuitOnClose == MusicSettings::value("base.close.close_action").toInt()) {
-        d->exitBt->setChecked(true);
+        m_exitBt->setChecked(true);
     } else {
         miniBt->setChecked(true);
     }
@@ -129,12 +94,10 @@ CloseConfirmDialog::~CloseConfirmDialog()
 
 bool CloseConfirmDialog::isRemember() const
 {
-    Q_D(const CloseConfirmDialog);
-    return d->remember->isChecked();
+    return m_remember->isChecked();
 }
 
 int CloseConfirmDialog::closeAction() const
 {
-    Q_D(const CloseConfirmDialog);
-    return d->exitBt->isChecked() ?  QuitOnClose : MiniOnClose;
+    return m_exitBt->isChecked() ?  QuitOnClose : MiniOnClose;
 }

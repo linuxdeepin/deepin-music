@@ -1,3 +1,24 @@
+/*
+ * Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co., Ltd.
+ *
+ * Author:     ZouYa <zouya@uniontech.com>
+ *
+ * Maintainer: WangYu <wangyu@uniontech.com>
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 #ifndef REPLY_H
 #define REPLY_H
 
@@ -5,29 +26,28 @@
 #include <QVariant>
 #include <QWidget>
 #include <QDebug>
-enum IRet
-{
-    ERR_SUCCESS =             (0),       /* 一切正常 */
-    ERR_FAIL =                (-1),      /* 常规错误 */
-    ERR_PARAM =               (-2),      /* 函数入参异常 */
-    ERR_CONFIG =              (-3),      /* 配置错误 */
-    ERR_NOT_FOUND =           (-4),      /* 未找到对应项 */
+enum IRet {
+    ERR_SUCCESS = (0),                   /* 一切正常 */
+    ERR_FAIL = (-1),                     /* 常规错误 */
+    ERR_PARAM = (-2),                    /* 函数入参异常 */
+    ERR_CONFIG = (-3),                   /* 配置错误 */
+    ERR_NOT_FOUND = (-4),                /* 未找到对应项 */
 
-    ERR_UNSUPPORT_SERVICE =   (-20),      /* 不支持的服务 */
-    ERR_UNSUPPORT_INTENT =    (-21),      /* 不支持的操作 */
-    ERR_UNSUPPORT_SLOTS =     (-22),      /* 不支持的槽位 */
-    ERR_UNSUPPORT_ABILITY =   (-23),      /* 不支持的能力 */
-    ERR_UNSUPPORT_EXPRESS =   (-24),      /* 不支持的说法 */
+    ERR_UNSUPPORT_SERVICE = (-20),        /* 不支持的服务 */
+    ERR_UNSUPPORT_INTENT = (-21),         /* 不支持的操作 */
+    ERR_UNSUPPORT_SLOTS = (-22),          /* 不支持的槽位 */
+    ERR_UNSUPPORT_ABILITY = (-23),        /* 不支持的能力 */
+    ERR_UNSUPPORT_EXPRESS = (-24),        /* 不支持的说法 */
 
-    ERR_CLOUD_SERVICE =       (-100),    /* 云端服务内容异常 */
-    ERR_CLOUD_INTENT =        (-101),    /* 云端意图内容异常 */
-    ERR_CLOUD_SLOTS =         (-102)     /* 云端参数内容异常 */
+    ERR_CLOUD_SERVICE = (-100),          /* 云端服务内容异常 */
+    ERR_CLOUD_INTENT = (-101),           /* 云端意图内容异常 */
+    ERR_CLOUD_SLOTS = (-102)             /* 云端参数内容异常 */
 };
 class Reply
 {
 
 public:
-    enum ReplyType{
+    enum ReplyType {
         RT_NONE = 0,
         RT_STRING_DISPLAY = 1,
         RT_STRING_TTS = 2,
@@ -55,7 +75,7 @@ public:
     {
     }
 
-    Reply(int msgCode, const QString &msgDisplay, const QString &msgSynthesis, int type, QWidget* parent)
+    Reply(int msgCode, const QString &msgDisplay, const QString &msgSynthesis, int type, QWidget *parent)
         : messageCode(msgCode),
           messageDisplay(msgDisplay),
           messageTTS(msgSynthesis),
@@ -130,9 +150,9 @@ public:
     }
     void update(int msgCode)
     {
-       this->messageCode = msgCode;
+        this->messageCode = msgCode;
     }
-    void update(int msgCode, const QString &message,int replyType = RT_STRING_TTS | RT_STRING_DISPLAY)
+    void update(int msgCode, const QString &message, int replyType = RT_STRING_TTS | RT_STRING_DISPLAY)
     {
         this->messageCode = msgCode;
         this->messageDisplay = message;
@@ -140,7 +160,7 @@ public:
         this->m_replyType = replyType;
     }
 
-    void update(int msgCode, const QString &msgDisplay, const QString &msgSynthesis,int replyType = RT_STRING_TTS | RT_STRING_DISPLAY)
+    void update(int msgCode, const QString &msgDisplay, const QString &msgSynthesis, int replyType = RT_STRING_TTS | RT_STRING_DISPLAY)
     {
         this->messageCode = msgCode;
         this->messageDisplay = msgDisplay;
@@ -165,12 +185,12 @@ public:
         return messageTTS.isValid();
     }
 
-    QWidget* getReplyWidget()
+    QWidget *getReplyWidget()
     {
         return m_widget;
     }
 
-    void setReplyWidget(QWidget* w)
+    void setReplyWidget(QWidget *w)
     {
         m_widget = w;
     }
@@ -198,7 +218,7 @@ private:
     QVariant messageCode;
     QVariant messageDisplay;
     QVariant messageTTS;
-    QWidget*     m_widget;
+    QWidget     *m_widget;
     int    m_replyType;
     bool   m_shouldEndSession;
 };
