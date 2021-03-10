@@ -786,7 +786,7 @@ void Player::setDbusMuted(bool muted)
 {
     Q_UNUSED(muted)
     bool bvalid = isValidDbusMute();
-    qDebug() << __FUNCTION__ << bvalid;
+    qDebug() << __FUNCTION__ << bvalid << isMusicMuted();
     if (bvalid) {
         QDBusInterface ainterface("com.deepin.daemon.Audio", m_sinkInputPath,
                                   "com.deepin.daemon.Audio.SinkInput",

@@ -38,6 +38,10 @@ public:
     ListPageSwitchType getListPageSwitchType() const;
 
     bool containsStr(QString searchText, QString text);
+#ifdef TABLET_PC
+    void setSelectModel(int model);
+    int getSelectModel()const {return m_select;}
+#endif
 signals:
     // hashOrSearchword为hash值或者搜索关键词
     void signalSwitchToView(ListPageSwitchType switchtype, QString hashOrSearchword, QMap<QString, MediaMeta> musicinfos = QMap<QString, MediaMeta>()); //switch to playlist view,
@@ -63,10 +67,19 @@ signals:
     void signalUpdateCodec(const MediaMeta &meta);
     // cda导入完成消息
     void signalCdaImportFinished();
+    // 选择模式
+    void signalSelectMode(int model); //0:single,1:mult
+#ifdef TABLET_PC
+    // 全选
+    void signalSelectAll();
+#endif
 private:
     explicit CommonService();
     friend class DMusic::DSingleton<CommonService>;
 private:
     ListPageSwitchType listPageSwitchType = ListPageSwitchType::AllSongListType;
+#ifdef TABLET_PC
+    int m_select = 0; //0:no select ,1:select
+#endif
 };
 #endif // COMMONSERVICE_H

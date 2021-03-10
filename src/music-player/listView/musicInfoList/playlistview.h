@@ -123,7 +123,17 @@ public slots:
     // 右键编码通知其他页面编码同步
     void slotUpdateCodec(const MediaMeta &meta);
     // 删除cda相关歌曲
-    void rmvCdaSongs();
+    void slotRmvCdaSongs();
+#ifdef TABLET_PC
+    // 设置选择模式
+    void slotSetSelectModel(int model);
+    // 全选
+    void slotSelectAll();
+    // 显示歌单列表
+    void slotShowSongList();
+    // 添加到其他歌单或者播放队列
+    void slotAddToSongList(const QString &hash, const QString &name);
+#endif
 private:
     // 播放音乐相关处理
     void playMusic(const MediaMeta &meta);

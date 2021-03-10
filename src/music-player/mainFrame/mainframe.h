@@ -45,6 +45,7 @@ class PlayQueueWidget;
 class QSystemTrayIcon;
 class SubSonglistWidget;
 class MediaMeta;
+class TabletLabel;
 class MainFrame : public DMainWindow
 {
     Q_OBJECT
@@ -66,7 +67,9 @@ private:
      * @brief initMenuAndShortCut
      */
     void initMenuAndShortcut();
-
+#ifdef TABLET_PC
+    void initPadMenu();
+#endif
 private slots:
     void setThemeType(DGuiApplicationHelper::ColorType themeType);
     // 左上角返回按钮点击
@@ -105,6 +108,11 @@ private:
     // 标题栏返回按钮
     DPushButton         *m_backBtn = nullptr;
     TitlebarWidget      *m_titlebarwidget = nullptr;
+    // 标题栏选择控制按钮
+#ifdef TABLET_PC
+    TabletLabel         *m_tabletSelectAll = nullptr;
+    TabletLabel         *m_tabletSelectDone = nullptr;
+#endif
     // 播放控制托盘控件
     FooterWidget        *m_footerWidget = nullptr;
     SearchResult        *m_searchResult = nullptr;
@@ -123,6 +131,7 @@ private:
     //QAction             *m_colorModeAction      = nullptr;
     //QAction             *m_exit                 = nullptr;
     QAction             *m_settings             = nullptr;
+    QAction             *m_select               = nullptr;;
     QString             m_firstPlaySong = "";
     //short cut
     QShortcut           *addmusicfilesShortcut = nullptr;

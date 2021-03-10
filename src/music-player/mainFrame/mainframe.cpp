@@ -65,6 +65,7 @@
 #include "closeconfirmdialog.h"
 #include "playqueuewidget.h"
 #include "subsonglistwidget.h"
+#include "tabletlabel.h"
 DWIDGET_USE_NAMESPACE
 
 const QString s_PropertyViewname = "viewname";
@@ -102,9 +103,28 @@ MainFrame::MainFrame()
     AC_SET_ACCESSIBLE_NAME(m_backBtn, AC_titleBarLeft);
     m_backBtn->setVisible(false);
     m_backBtn->setFixedSize(QSize(36, 36));
+
+#ifdef  TABLET_PC
+    m_tabletSelectAll = new TabletLabel(tr("All"), m_titlebar, 1);
+    m_tabletSelectDone = new TabletLabel(tr("Done"), m_titlebar, 0);
+    m_tabletSelectAll->setFixedSize(QSize(50, 50));
+    m_tabletSelectDone->setFixedSize(QSize(50, 50));
+    m_tabletSelectAll->hide();
+    m_tabletSelectDone->hide();
+
+    m_titlebar->addWidget(m_tabletSelectAll, Qt::AlignRight | Qt::AlignVCenter);
+    m_titlebar->addWidget(m_tabletSelectDone, Qt::AlignRight | Qt::AlignVCenter);
+    connect(m_tabletSelectAll, &TabletLabel::signalTabletSelectAll, CommonService::getInstance(), &CommonService::signalSelectAll);
+    connect(m_tabletSelectDone, &TabletLabel::signalTabletDone, this, [ = ]() {
+        CommonService::getInstance()->setSelectModel(0);
+        m_tabletSelectAll->setVisible(false);
+        m_tabletSelectDone->setVisible(false);
+    });
+#endif
     m_backBtn->setIcon(QIcon::fromTheme("left_arrow"));
     m_titlebar->addWidget(m_backBtn, Qt::AlignLeft);
     m_titlebar->resize(width(), 50);
+
     // 返回按钮点击
     connect(m_backBtn, &DPushButton::clicked,
             this, &MainFrame::slotLeftClicked);
@@ -187,9 +207,12 @@ void MainFrame::initUI(bool showLoading)
     //    m_pwidget = new QWidget(this);
 
     /*---------------menu&shortcut-------------------*/
+#ifndef TABLET_PC
     initMenuAndShortcut();
     m_newSonglistAction->setEnabled(showLoading);
-
+#else
+    initPadMenu();
+#endif
     connect(DataBaseService::getInstance(), &DataBaseService::signalAllMusicCleared,
             this, &MainFrame::slotAllMusicCleared);
 
@@ -332,6 +355,27 @@ void MainFrame::initMenuAndShortcut()
         }
     });
 }
+
+#ifdef TABLET_PC
+void MainFrame::initPadMenu()
+{
+    m_addMusicFiles = new QAction(MainFrame::tr("Add music"), this);
+
+    m_select = new QAction(MainFrame::tr("Select"), this);
+
+    DMenu *pTitleMenu = new DMenu(this);
+
+    AC_SET_OBJECT_NAME(pTitleMenu, AC_titleMenu);
+    AC_SET_ACCESSIBLE_NAME(pTitleMenu, AC_titleMenu);
+
+    pTitleMenu->addAction(m_addMusicFiles);
+    pTitleMenu->addAction(m_select);
+
+    m_titlebar->setMenu(pTitleMenu);
+
+    connect(pTitleMenu, SIGNAL(triggered(QAction *)), this, SLOT(slotMenuTriggered(QAction *)));
+}
+#endif
 
 void MainFrame::autoStartToPlay()
 {
@@ -618,6 +662,14 @@ void MainFrame::slotMenuTriggered(QAction *action)
         //update fade
         Player::getInstance()->setFadeInOut(MusicSettings::value("base.play.fade_in_out").toBool());
     }
+
+#ifdef TABLET_PC
+    if (action == m_select) {
+        CommonService::getInstance()->setSelectModel(1); //1:selected,0:unselected
+        m_tabletSelectAll->setVisible(true);
+        m_tabletSelectDone->setVisible(true);
+    }
+#endif
 }
 
 void MainFrame::slotSwitchTheme()

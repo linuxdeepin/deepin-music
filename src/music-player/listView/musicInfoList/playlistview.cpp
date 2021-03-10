@@ -53,6 +53,13 @@
 #include "speechCenter.h"
 #include "ac-desktop-define.h"
 
+#include "commonservice.h"
+
+#ifdef TABLET_PC
+#include "songlistview.h"
+#include "songlistviewdialog.h"
+#endif
+
 DWIDGET_USE_NAMESPACE
 // 升序
 bool moreThanTimestampASC(MediaMeta v1, MediaMeta v2)
@@ -172,9 +179,11 @@ PlayListView::PlayListView(QString hash, bool isPlayQueue, QWidget *parent)
     setResizeMode(QListView::Adjust);
     setLayoutMode(QListView::Batched);
     setBatchSize(2000);
-
+#ifdef TABLET_PC
+    setSelectionMode(QListView::SingleSelection);
+#else
     setSelectionMode(QListView::ExtendedSelection);
-//setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+#endif
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     setEditTriggers(QAbstractItemView::NoEditTriggers);
     setSelectionBehavior(QAbstractItemView::SelectRows);
@@ -222,7 +231,14 @@ PlayListView::PlayListView(QString hash, bool isPlayQueue, QWidget *parent)
             this, &PlayListView::slotUpdateCodec);
     // 移出cda格式歌曲
     connect(CommonService::getInstance(), &CommonService::signalCdaSongListChanged,
-            this, &PlayListView::rmvCdaSongs);
+            this, &PlayListView::slotRmvCdaSongs);
+#ifdef TABLET_PC
+    // 设置选择模式
+    connect(CommonService::getInstance(), &CommonService::signalSelectMode,
+            this, &PlayListView::slotSetSelectModel);
+    connect(CommonService::getInstance(), &CommonService::signalSelectAll,
+            this, &PlayListView::slotSelectAll);
+#endif
 }
 
 PlayListView::~PlayListView()
@@ -1055,25 +1071,6 @@ void PlayListView::keyPressEvent(QKeyEvent *event)
         }
         }
         break;
-//    case Qt::ShiftModifier:
-//        switch (event->key()) {
-//        case Qt::Key_Delete:
-//            break;
-//        }
-//        break;
-//    case Qt::ControlModifier:
-//        switch (event->key()) {
-//        case Qt::Key_I:
-//            QItemSelectionModel *selection = this->selectionModel();
-//            if (selection->selectedRows().length() <= 0) {
-//                return;
-//            }
-//            auto index = selection->selectedRows().first();
-//            auto meta = d->model->meta(index);
-//            Q_EMIT showInfoDialog(meta);
-//            break;
-//        }
-//        break;
     default:
         break;
     }
@@ -1081,14 +1078,8 @@ void PlayListView::keyPressEvent(QKeyEvent *event)
     QAbstractItemView::keyPressEvent(event);
 }
 
-//void PlayListView::keyboardSearch(const QString &search)
-//{
-//    Q_UNUSED(search);
-//}
-
 void PlayListView::contextMenuEvent(QContextMenuEvent *event)
 {
-    m_menuIsShow = true;
     QItemSelectionModel *selection = selectionModel();
 
     if (selection->selectedRows().size() <= 0) {
@@ -1096,6 +1087,18 @@ void PlayListView::contextMenuEvent(QContextMenuEvent *event)
         return;
     }
 
+    m_menuIsShow = true;
+    DMenu allMusicMenu;//first level menu
+    DMenu playlistMenu;//second level menu
+    QAction *actRmv = nullptr; //remove action
+    QPoint globalPos = mapToGlobal(event->pos());
+#ifdef TABLET_PC
+    actRmv = allMusicMenu.addAction(tr("Remove"));
+    allMusicMenu.addSeparator();
+    QAction *actplaylist =  allMusicMenu.addAction(tr("Add to playlist"));
+    connect(actRmv, SIGNAL(triggered()), this, SLOT(slotRmvFromSongList()));
+    connect(actplaylist, &QAction::triggered, this, &PlayListView::slotShowSongList);
+#else
     //查找是否有cda格式歌曲
     QStringList metalist;
     foreach (QModelIndex mindex, selection->selectedRows()) {
@@ -1110,12 +1113,8 @@ void PlayListView::contextMenuEvent(QContextMenuEvent *event)
         return;
     }
 
-    QPoint globalPos = mapToGlobal(event->pos());
-
-    DMenu allMusicMenu;//first level menu
-    DMenu playlistMenu;//second level menu
     DMenu textCodecMenu; //coding of song information
-    QAction *actRmv = nullptr; //remove action
+
     QAction *actDel = nullptr;
 
     if (!m_IsPlayQueue) {
@@ -1178,6 +1177,7 @@ void PlayListView::contextMenuEvent(QContextMenuEvent *event)
         } else {
             actRmv = allMusicMenu.addAction(tr("Remove from playlist"));
         }
+
         actDel = allMusicMenu.addAction(tr("Delete from local disk"));
 
         allMusicMenu.addSeparator();
@@ -1247,15 +1247,14 @@ void PlayListView::contextMenuEvent(QContextMenuEvent *event)
     connect(actRmv, SIGNAL(triggered()), this, SLOT(slotRmvFromSongList()));
     connect(actDel, SIGNAL(triggered()), this, SLOT(slotDelFromLocal()));
     connect(&playlistMenu, &QMenu::triggered, this, &PlayListView::slotPlaylistMenuClicked);
-
+#endif
     allMusicMenu.exec(globalPos);
     m_menuIsShow = false;
 }
 
 void PlayListView::dragMoveEvent(QDragMoveEvent *event)
 {
-    auto index = indexAt(event->pos());
-    if (/*index.isValid() && */(event->mimeData()->hasFormat("text/uri-list"))) {
+    if ((event->mimeData()->hasFormat("text/uri-list"))) {
         event->setDropAction(Qt::CopyAction);
         event->acceptProposedAction();
     } else {
@@ -1356,7 +1355,7 @@ void PlayListView::slotUpdateCodec(const MediaMeta &meta)
     }
 }
 
-void PlayListView::rmvCdaSongs()
+void PlayListView::slotRmvCdaSongs()
 {
     //remove cda songs
     if (m_IsPlayQueue) {
@@ -1370,6 +1369,59 @@ void PlayListView::rmvCdaSongs()
         }
     }
 }
+
+#ifdef TABLET_PC
+void PlayListView::slotSetSelectModel(int model)
+{
+    // 切换模式，清空选项
+    clearSelection();
+
+    if (model == 0) {
+        setSelectionMode(QListView::SingleSelection);
+    } else if (model == 1) {
+        setSelectionMode(QListView::MultiSelection);
+    }
+}
+
+void PlayListView::slotSelectAll()
+{
+    this->selectAll();
+}
+
+void PlayListView::slotShowSongList()
+{
+    SongListViewDialog dialog(this);
+    dialog.setWindowTitle(tr("Add to playlist"));
+    dialog.m_songListView->addSongListItem("fav", tr("My favorites"), QIcon::fromTheme("music_mycollection"));
+
+    if (!m_IsPlayQueue) {
+        dialog.m_songListView->addSongListItem("play", tr("Play queue"), QIcon::fromTheme("music_famousballad"));
+    }
+
+    QList<DataBaseService::PlaylistData> strplaylist = DataBaseService::getInstance()->getCustomSongList();
+    for (DataBaseService::PlaylistData pd : strplaylist) {
+        if (m_currentHash != pd.uuid) { //filter itself
+            dialog.m_songListView->addSongListItem(pd.uuid, pd.displayName, QIcon::fromTheme("music_famousballad"));
+        }
+    }
+
+    connect(dialog.m_songListView, &SongListView::signalItemTriggered, this, &PlayListView::slotAddToSongList);
+    dialog.exec();
+}
+
+void PlayListView::slotAddToSongList(const QString &hash, const QString &name)
+{
+    QModelIndexList mindexlist =  this->selectedIndexes();
+    if (mindexlist.size() == 0)
+        return;
+    QList<MediaMeta> metas;
+    for (QModelIndex mindex : mindexlist) {
+        metas << (mindex.data(Qt::UserRole).value<MediaMeta>());
+    }
+    int insertCount = DataBaseService::getInstance()->addMetaToPlaylist(hash, metas);
+    emit CommonService::getInstance()->signalShowPopupMessage(name, metas.size(), insertCount);
+}
+#endif
 
 void PlayListView::playMusic(const MediaMeta &meta)
 {

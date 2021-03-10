@@ -71,3 +71,13 @@ bool CommonService::containsStr(QString searchText, QString text)
     }
 }
 
+#ifdef TABLET_PC
+void CommonService::setSelectModel(int model)
+{
+    if (m_select != model) {
+        m_select = model;
+        emit signalSelectMode(m_select);
+    }
+}
+#endif
+

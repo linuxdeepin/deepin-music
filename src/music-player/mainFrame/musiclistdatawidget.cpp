@@ -268,6 +268,9 @@ void MusicListDataWidget::slotViewChanged(ListPageSwitchType switchtype, const Q
         refreshSortAction();
         break;
     }
+#ifdef TABLET_PC
+    emit CommonService::getInstance()->setSelectModel(0);//1:selected,0:unselected
+#endif
 }
 
 void MusicListDataWidget::switchViewModel()

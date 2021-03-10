@@ -66,8 +66,14 @@ public:
 protected:
     bool editorEvent(QEvent *event, QAbstractItemModel *model, const QStyleOptionViewItem &option, const QModelIndex &index) override;
 private:
+#ifdef TABLET_PC
+    void drawTabletIconMode(QPainter &painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
+    void drawTabletListMode(QPainter &painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
+#else
     void drawIconMode(QPainter &painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
+#endif
     void drawListMode(QPainter &painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
+
 public:
     QColor m_textColor;
     QColor m_numberColor;

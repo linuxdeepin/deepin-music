@@ -50,14 +50,6 @@ static inline int pixel2point(int pixel)
     return pixel * 96 / 72;
 }
 
-//inline int headerPointWidth(const QStyleOptionViewItem &option, const QModelIndex &index)
-//{
-//    QFont measuringFont(option.font);
-//    QFontMetrics fm(measuringFont);
-//    auto headerWith = fm.width(QString("%1").arg(index.row()));
-//    return pixel2point(headerWith) + PlayItemLeftMargin + PlayItemNumberMargin;
-//}
-
 inline int tailPointWidth(const QStyleOptionViewItem &option)
 {
     QFont measuringFont(option.font);
@@ -111,9 +103,17 @@ void PlayItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
 {
     auto listview = qobject_cast<const PlayListView *>(option.widget);
     if (listview->viewMode() == QListView::IconMode) {
+#ifdef TABLET_PC
+        drawTabletIconMode(*painter, option, index);
+#else
         drawIconMode(*painter, option, index);
+#endif
     } else {
+#ifdef TABLET_PC
+        drawTabletListMode(*painter, option, index);
+#else
         drawListMode(*painter, option, index);
+#endif
     }
 }
 
@@ -151,6 +151,346 @@ bool PlayItemDelegate::editorEvent(QEvent *event, QAbstractItemModel *model, con
         return QStyledItemDelegate::editorEvent(event, model, option, index);
     }
 }
+#ifdef TABLET_PC
+void PlayItemDelegate::drawTabletIconMode(QPainter &painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
+{
+    const PlayListView *listview = qobject_cast<const PlayListView *>(option.widget);
+
+    QFont fontT9 = DFontSizeManager::instance()->get(DFontSizeManager::T9);
+    QFont fontT6 = DFontSizeManager::instance()->get(DFontSizeManager::T6);
+
+    MediaMeta activeMeta = Player::getInstance()->getActiveMeta();
+    MediaMeta meta = index.data(Qt::UserRole).value<MediaMeta>();
+
+    painter.setRenderHint(QPainter::Antialiasing);
+    painter.setRenderHint(QPainter::HighQualityAntialiasing);
+    painter.setRenderHint(QPainter::SmoothPixmapTransform);
+
+//    auto background = option.palette.background();
+//    background.setColor(Qt::red);
+//    painter.fillRect(option.rect, background);
+
+    // 绘制阴影
+//    QRect shadowRect(option.rect.x() - 10 + xoffset, option.rect.y() + yoffset, 158, 148);
+//    QPainterPath roundRectShadowPath;
+//    roundRectShadowPath.addRoundRect(shadowRect, 8, 8);
+//    painter.save();
+//    painter.setClipPath(roundRectShadowPath);
+//    painter.drawPixmap(shadowRect, m_shadowImg);
+//    painter.restore();
+
+    // 绘制圆角框
+//    QRect rect(option.rect.x() + xoffset, option.rect.y() + xoffset, 140, 190);
+//    QPainterPath roundRectPath;
+//    roundRectPath.addRoundRect(rect, 10, 10);
+//    painter.setClipPath(roundRectPath);
+
+    // 绘制专辑图片
+    painter.save();
+    QIcon icon;
+    auto value = index.data(Qt::DecorationRole);
+    if (value.type() == QVariant::Icon) {
+        icon = qvariant_cast<QIcon>(value);
+    }
+    QRect pixmapRect(option.rect.x() + xoffset, option.rect.y() + yoffset, ImgWidthAndHeight, ImgWidthAndHeight);
+    QPainterPath roundPixmapRectPath;
+    roundPixmapRectPath.addRoundRect(pixmapRect, roundRadius, roundRadius);
+    painter.setClipPath(roundPixmapRectPath);
+    painter.drawPixmap(pixmapRect, icon.pixmap(ImgWidthAndHeight, ImgWidthAndHeight));
+    painter.restore();
+    // 绘制图片上添加描边
+    painter.save();
+    QColor borderPenColor("#000000");
+    borderPenColor.setAlphaF(0.05);
+    QPen borderPen(borderPenColor);
+    borderPen.setWidthF(2);
+    painter.setPen(borderPen);
+    painter.drawRoundRect(pixmapRect/*.adjusted(1, 1, -1, 1)*/, roundRadius, roundRadius);
+    painter.restore();
+
+//    int startHeight = option.rect.y() + 159;
+//    int fillAllHeight = 34;
+
+    // 设置信息字体大小
+    painter.setFont(fontT6);
+    QFontMetrics fm(fontT6);
+    QColor nameColor = "#000000";
+    if (listview->getThemeType() == 2) {
+        nameColor = "#C0C6D4";
+    }
+    painter.setPen(nameColor);
+    // 调整歌曲名位置
+    QRect nameFillRect(option.rect.x() + xoffset, option.rect.y() + yoffset + ImgWidthAndHeight,
+                       ImgWidthAndHeight, fm.height());
+    auto nameText = fm.elidedText(meta.title, Qt::ElideRight, ImgWidthAndHeight);
+    painter.drawText(nameFillRect, Qt::AlignLeft | Qt::AlignVCenter, nameText);
+
+    QFontMetrics extraNameFm(fontT9);
+    painter.setFont(fontT9);
+    nameColor.setAlphaF(0.5);
+    painter.setPen(nameColor);
+    // 调整歌手位置
+    QRect extraNameFillRect(option.rect.x() + xoffset, nameFillRect.bottom(),
+                            ImgWidthAndHeight, extraNameFm.height());
+    auto extraNameText = extraNameFm.elidedText(meta.singer, Qt::ElideRight, ImgWidthAndHeight);
+    painter.drawText(extraNameFillRect, Qt::AlignLeft | Qt::AlignVCenter, extraNameText);
+
+    // 画时间矩形
+    QString timeText = DMusic::lengthString(meta.length);
+    // 如果时间超过一小时，矩形绘制长一点
+    QRect timeFillRect;
+    if (timeText.size() > 5) {
+        timeFillRect = QRect(option.rect.x() + xoffset * 2 + ImgWidthAndHeight - 58,
+                             extraNameFillRect.top() + extraNameFillRect.height() / 2 - 8,
+                             48, 16);
+    } else {
+        timeFillRect = QRect(option.rect.x() + xoffset * 2 + ImgWidthAndHeight - 48,
+                             extraNameFillRect.top() + extraNameFillRect.height() / 2 - 8,
+                             38, 16);
+    }
+    painter.save();
+    QColor timeFillColor("#232323");
+    timeFillColor.setAlphaF(0.3);
+    if (listview->getThemeType() == 2) {
+        timeFillColor = "#DCDCDC";
+        timeFillColor.setAlphaF(0.3);
+    }
+    painter.setPen(Qt::NoPen);
+    painter.setBrush(timeFillColor);
+    painter.drawRoundedRect(timeFillRect, 8, 8);
+    painter.restore();
+
+    // 时间字体固定大小
+    fontT9.setPixelSize(11);
+    painter.setFont(fontT9);
+
+    // 画时间
+    QColor timedColor = Qt::white;
+    if (listview->getThemeType() == 2) {
+        timedColor = "#C0C6D4";
+    }
+    painter.setPen(timedColor);
+    painter.drawText(timeFillRect, Qt::AlignCenter, timeText);
+
+    // 绘制选中时的阴影
+    QBrush fillBrush(QColor(128, 128, 128, 0));
+    if (option.state & QStyle::State_Selected) {
+        fillBrush = QBrush(QColor(128, 128, 128, 90));
+    }
+    painter.save();
+    painter.setClipPath(roundPixmapRectPath);
+    painter.fillRect(pixmapRect, fillBrush);
+    painter.restore();
+    // 绘制选中时右上角的选中图标
+    if (option.state & QStyle::State_Selected && CommonService::getInstance()->getSelectModel()) {
+        QRect selectionRect(option.rect.x() +  option.rect.width() - 20, option.rect.y() + 2, 14, 14);
+        painter.drawPixmap(selectionRect, m_selectedPix);
+    }
+}
+
+void PlayItemDelegate::drawTabletListMode(QPainter &painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
+{
+    const PlayListView *listview = qobject_cast<const PlayListView *>(option.widget);
+    if (listview->getIsPlayQueue()) {
+        drawListMode(painter, option, index);
+        return;
+    }
+
+    QFont fontT9 = DFontSizeManager::instance()->get(DFontSizeManager::T9);
+    QFont fontT6 = DFontSizeManager::instance()->get(DFontSizeManager::T6);
+
+    QColor nameColor("#090909");
+    QColor otherColor("#000000");
+
+    painter.save();
+
+    int selectMod = CommonService::getInstance()->getSelectModel();
+    painter.setRenderHint(QPainter::Antialiasing);
+    painter.setRenderHint(QPainter::HighQualityAntialiasing);
+    painter.setRenderHint(QPainter::SmoothPixmapTransform);
+    QColor baseColor("#FFFFFF");
+    baseColor.setAlphaF(0.1);
+    QColor alternateBaseColor("#000000");
+    alternateBaseColor.setAlphaF(0.02);
+    QColor selecteColor("#000000");
+    selecteColor.setAlphaF(0.20);
+    if (listview->getThemeType() == 2) {
+        baseColor.setAlphaF(0.05);
+        alternateBaseColor.setAlphaF(0.05);
+        selecteColor = QColor("#FFFFFF");
+        selecteColor.setAlphaF(0.20);
+    }
+    auto background = (index.row() % 2) == 1 ? baseColor : alternateBaseColor;
+    int lrWidth = 10;
+    if (!(option.state & QStyle::State_Selected) && !(option.state & QStyle::State_MouseOver)) {
+        painter.save();
+        painter.setPen(Qt::NoPen);
+        painter.setBrush(background);
+        QRect selecteColorRect = option.rect.adjusted(lrWidth, 0, -lrWidth, 0);
+        painter.drawRoundedRect(selecteColorRect, 8, 8);
+        painter.restore();
+    }
+
+    otherColor.setAlphaF(0.5);
+    if (listview->getThemeType() == 2) {
+        nameColor = QColor("#C0C6D4");
+        otherColor = QColor("#C0C6D4");
+        otherColor.setAlphaF(0.6);
+    }
+
+    QPixmap scacheicon = m_unselectedPix;
+    MediaMeta activeMeta = Player::getInstance()->getActiveMeta();
+    MediaMeta itemMeta = index.data(Qt::UserRole).value<MediaMeta>();
+    if (activeMeta.hash == itemMeta.hash) {
+        nameColor = QColor(DGuiApplicationHelper::instance()->applicationPalette().highlight().color());
+        otherColor = QColor(DGuiApplicationHelper::instance()->applicationPalette().highlight().color());
+        fontT6.setFamily("SourceHanSansSC");
+        fontT6.setWeight(QFont::Medium);
+    }
+
+    if (option.state & QStyle::State_Selected) {
+
+        if (listview->selectionMode() == QListView::SingleSelection) {
+            painter.save();
+            painter.setPen(Qt::NoPen);
+            QColor selectColor(option.palette.highlight().color());
+            painter.setBrush(selectColor);
+            QRect selecteColorRect = option.rect.adjusted(lrWidth, 0, -lrWidth, 0);
+            painter.drawRoundedRect(selecteColorRect, 8, 8);
+            painter.restore();
+
+            nameColor = option.palette.highlightedText().color();
+            otherColor = option.palette.highlightedText().color();
+        }
+
+        scacheicon = m_selectedPix;
+    }
+
+    if (option.state & QStyle::State_MouseOver) {
+        painter.save();
+        painter.setPen(Qt::NoPen);
+        QColor hovertColor;
+        if (listview->getThemeType() == 1) {
+            hovertColor = option.palette.shadow().color();
+        } else {
+            hovertColor = QColor("#ffffff");
+            hovertColor.setAlphaF(0.1);
+        }
+        if (option.state & QStyle::State_Selected)
+            hovertColor.setAlphaF(0.2);
+        painter.setBrush(hovertColor);
+        QRect selecteColorRect = option.rect.adjusted(lrWidth, 0, -lrWidth, 0);
+        painter.drawRoundedRect(selecteColorRect, 8, 8);
+        painter.restore();
+    }
+
+    int offset = 0;
+    for (int col = 0; col < ColumnButt; ++col) {
+        auto flag = alignmentFlag(col);
+        auto rect = colRect(col, option);
+        switch (col) {
+        case Number: {
+            painter.setPen(otherColor);
+            PlayListView *playListView = qobject_cast<PlayListView *>(const_cast<QWidget *>(option.widget));
+
+            if (selectMod) {
+                offset = 24;
+                auto sz = QSizeF(14, 14);
+                auto centerF = QRectF(rect).center();
+                auto iconRect = QRectF(centerF.x() - sz.width() / 2 - offset / 2,
+                                       centerF.y() - sz.height() / 2,
+                                       sz.width(), sz.height());
+                painter.drawPixmap(iconRect, scacheicon, QRectF());
+            }
+            // Fixme:
+            QFileInfo info(itemMeta.localPath);
+            if (!info.exists() && itemMeta.mmType != MIMETYPE_CDA) {
+                auto sz = QSizeF(20, 20);
+                auto icon = QIcon::fromTheme("icon_warning").pixmap(sz.toSize());
+                auto centerF = QRectF(rect).center();
+                auto iconRect = QRectF(centerF.x() - sz.width() / 2 + offset,
+                                       centerF.y() - sz.height() / 2,
+                                       sz.width(), sz.height());
+                painter.drawPixmap(iconRect, icon, QRectF());
+                break;
+            }
+
+            //绘制播放动态图
+            if (activeMeta.hash == itemMeta.hash && !selectMod) {
+                QPixmap icon = playListView->getPlayPixmap(option.state & QStyle::State_Selected);
+                auto centerF = QRectF(rect).center();
+                qreal t_ratio = icon.devicePixelRatioF();
+                QRect t_ratioRect;
+                t_ratioRect.setX(0);
+                t_ratioRect.setY(0);
+                t_ratioRect.setWidth(static_cast<int>(icon.width() / t_ratio));
+                t_ratioRect.setHeight(static_cast<int>(icon.height() / t_ratio));
+                auto iconRect = QRectF(centerF.x() - t_ratioRect.width() / 2 + offset,
+                                       centerF.y() - t_ratioRect.height() / 2,
+                                       t_ratioRect.width(), t_ratioRect.height());
+                painter.drawPixmap(iconRect.toRect(), icon);
+            } else {
+                painter.setFont(fontT9);
+                // 只显示行号，如总数100,原来显示001修改为显示1
+                auto str = QString::number(index.row() + 1);
+                QFont font(fontT9);
+                QFontMetrics fm(font);
+                auto text = fm.elidedText(str, Qt::ElideMiddle, rect.width());
+                QRect r0 = rect;
+                r0.setX(rect.x() + offset);
+                painter.drawText(r0, static_cast<int>(flag), text);
+            }
+            break;
+        }
+        case Title: {
+            painter.setPen(nameColor);
+            painter.setFont(fontT6);
+            QFont font(fontT6);
+            QFontMetrics fm(font);
+            auto text = fm.elidedText(itemMeta.title, Qt::ElideMiddle, rect.width());
+            QRect r1 = rect;
+            r1.setX(rect.x() + offset / 2);
+            painter.drawText(r1, static_cast<int>(flag), text);
+            break;
+        }
+        case Artist: {
+            painter.setPen(otherColor);
+            painter.setFont(fontT9);
+            auto str = itemMeta.singer.isEmpty() ?
+                       PlayListView::tr("Unknown artist") :
+                       itemMeta.singer;
+            QFont font(fontT9);
+            QFontMetrics fm(font);
+            auto text = fm.elidedText(str, Qt::ElideMiddle, rect.width());
+            painter.drawText(rect, static_cast<int>(flag), text);
+            break;
+        }
+        case Album: {
+            painter.setPen(otherColor);
+            painter.setFont(fontT9);
+            auto str = itemMeta.album.isEmpty() ?
+                       PlayListView::tr("Unknown album") :
+                       itemMeta.album;
+            QFont font(fontT9);
+            QFontMetrics fm(font);
+            auto text = fm.elidedText(str, Qt::ElideMiddle, rect.width());
+            painter.drawText(rect, static_cast<int>(flag), text);
+            break;
+        }
+        case Length: {
+            painter.setPen(otherColor);
+            painter.setFont(fontT9);
+            painter.drawText(rect, static_cast<int>(flag), DMusic::lengthString(itemMeta.length));
+            break;
+        }
+        default:
+            break;
+        }
+    }
+
+    painter.restore();
+}
+#endif
 
 //QWidget *PlayItemDelegate::createEditor(QWidget *parent,
 //                                        const QStyleOptionViewItem &option,
@@ -171,6 +511,7 @@ bool PlayItemDelegate::editorEvent(QEvent *event, QAbstractItemModel *model, con
 //{
 //    QStyledItemDelegate::setModelData(editor, model, index);
 //}
+#ifndef TABLET_PC
 void PlayItemDelegate::drawIconMode(QPainter &painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
     const PlayListView *listview = qobject_cast<const PlayListView *>(option.widget);
@@ -302,11 +643,12 @@ void PlayItemDelegate::drawIconMode(QPainter &painter, const QStyleOptionViewIte
     painter.fillRect(pixmapRect, fillBrush);
     painter.restore();
     // 绘制选中时右上角的选中图标
-    if (option.state & QStyle::State_Selected) {
-        QRect selectionRect(option.rect.x() +  option.rect.width() - 20, option.rect.y() + 2, 14, 14);
-        painter.drawPixmap(selectionRect, m_selectedPix);
-    }
+//    if (option.state & QStyle::State_Selected) {
+//        QRect selectionRect(option.rect.x() +  option.rect.width() - 20, option.rect.y() + 2, 14, 14);
+//        painter.drawPixmap(selectionRect, m_selectedPix);
+//    }
 }
+#endif
 
 void PlayItemDelegate::drawListMode(QPainter &painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
