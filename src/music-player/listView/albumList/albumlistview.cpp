@@ -525,7 +525,7 @@ void AlbumListView::slotAddSingleSong(const QString &listHash, const MediaMeta &
 void AlbumListView::slotRemoveSelectedSongs(const QString &deleteHash, const QStringList &musicHashs, bool removeFromLocal)
 {
     Q_UNUSED(removeFromLocal)
-    if (deleteHash != "album") {
+    if (deleteHash != "album" || Player::getInstance()->getCurrentPlayListHash() != "album") {
         return;
     }
     if (musicHashs.size() == 0) {
@@ -536,26 +536,34 @@ void AlbumListView::slotRemoveSelectedSongs(const QString &deleteHash, const QSt
     for (int i = 0; i < albumModel->rowCount(); i++) {
         QModelIndex idx = albumModel->index(i, 0, QModelIndex());
         AlbumInfo albumTmp = idx.data(Qt::UserRole).value<AlbumInfo>();
+        // 更新是否删除状态
+        for (MediaMeta meta : albumTmp.musicinfos.values()) {
+            if (musicHashs.contains(meta.hash)) {
+                albumTmp.musicinfos[meta.hash].toDelete = true;
+            }
+        }
+        QVariant albumval;
+        albumval.setValue(albumTmp);
+        albumModel->setData(idx, albumval, Qt::UserRole);
+    }
+    for (int i = 0; i < albumModel->rowCount(); i++) {
+        QModelIndex idx = albumModel->index(i, 0, QModelIndex());
+        AlbumInfo albumTmp = idx.data(Qt::UserRole).value<AlbumInfo>();
         if (albumTmp.musicinfos.contains(Player::getInstance()->getActiveMeta().hash)) {
             playIndex = i;
-            // 更新是否删除状态
-            for (MediaMeta meta : albumTmp.musicinfos.values()) {
-                if (musicHashs.contains(meta.hash)) {
-                    albumTmp.musicinfos[meta.hash].toDelete = true;
+
+            QStringList delHashs = musicHashs;
+            if (mapContainsList(albumTmp.musicinfos, delHashs)) {
+                if (albumTmp.musicinfos.size() == musicHashs.size()) {
+                    // 跳出播放下一专辑
+                    break;
+                } else {
+                    Player::getInstance()->playRmvMeta(musicHashs);
+                    emit Player::getInstance()->signalPlayListChanged();
+                    return;
                 }
             }
-            QVariant albumval;
-            albumval.setValue(albumTmp);
-            albumModel->setData(idx, albumval, Qt::UserRole);
-
-            if (albumTmp.musicinfos.size() == musicHashs.size()) {
-                // 跳出播放下一专辑
-                break;
-            } else {
-                Player::getInstance()->playRmvMeta(musicHashs);
-                emit Player::getInstance()->signalPlayListChanged();
-                return;
-            }
+            return;
         }
     }
     // 记录切换歌单之前播放状态
@@ -744,6 +752,18 @@ void AlbumListView::slotUpdateCodec(const MediaMeta &meta)
             }
         }
     }
+}
+
+bool AlbumListView::mapContainsList(QMap<QString, MediaMeta> metasMap, QStringList musicHashs)
+{
+    bool contain = false;
+    for (QString hash : musicHashs) {
+        if (metasMap.contains(hash)) {
+            contain = true;
+            break;
+        }
+    }
+    return contain;
 }
 #ifdef TABLET_PC
 void AlbumListView::slotPlaybackStatusChanged(Player::PlaybackStatus statue)

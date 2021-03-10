@@ -101,6 +101,8 @@ protected:
 private:
     // 排序
     void sortList(QList<AlbumInfo> &albumInfos, const DataBaseService::ListSortType &sortType);
+    // 判断map中是否包含list中的某项
+    bool mapContainsList(QMap<QString, MediaMeta> metasMap, QStringList musicHashs);
 private:
     int                     musicTheme     = 1; //light theme
     AlbumDataModel          *albumModel    = nullptr;

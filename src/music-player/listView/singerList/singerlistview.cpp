@@ -618,7 +618,7 @@ void SingerListView::slotAddSingleSong(const QString &listHash, const MediaMeta 
 void SingerListView::slotRemoveSelectedSongs(const QString &deleteHash, const QStringList &musicHashs, bool removeFromLocal)
 {
     Q_UNUSED(removeFromLocal)
-    if (deleteHash != "artist") {
+    if (deleteHash != "artist" || Player::getInstance()->getCurrentPlayListHash() != "artist") {
         return;
     }
     if (musicHashs.size() == 0) {
@@ -629,26 +629,34 @@ void SingerListView::slotRemoveSelectedSongs(const QString &deleteHash, const QS
     for (int i = 0; i < singerModel->rowCount(); i++) {
         QModelIndex idx = singerModel->index(i, 0, QModelIndex());
         SingerInfo singerTmp = idx.data(Qt::UserRole).value<SingerInfo>();
+        // 更新是否删除状态
+        for (MediaMeta meta : singerTmp.musicinfos.values()) {
+            if (musicHashs.contains(meta.hash)) {
+                singerTmp.musicinfos[meta.hash].toDelete = true;
+            }
+        }
+        QVariant singerval;
+        singerval.setValue(singerTmp);
+        singerModel->setData(idx, singerval, Qt::UserRole);
+    }
+    for (int i = 0; i < singerModel->rowCount(); i++) {
+        QModelIndex idx = singerModel->index(i, 0, QModelIndex());
+        SingerInfo singerTmp = idx.data(Qt::UserRole).value<SingerInfo>();
         if (singerTmp.musicinfos.contains(Player::getInstance()->getActiveMeta().hash)) {
             playIndex = i;
-            // 更新删除状态
-            for (MediaMeta meta : singerTmp.musicinfos.values()) {
-                if (musicHashs.contains(meta.hash)) {
-                    singerTmp.musicinfos[meta.hash].toDelete = true;
+
+            QStringList delHashs = musicHashs;
+            if (mapContainsList(singerTmp.musicinfos, delHashs)) {
+                if (singerTmp.musicinfos.size() == musicHashs.size()) {
+                    // 跳出，播放下一歌手
+                    break;
+                } else {
+                    Player::getInstance()->playRmvMeta(musicHashs);
+                    emit Player::getInstance()->signalPlayListChanged();
+                    return;
                 }
             }
-            QVariant singerval;
-            singerval.setValue(singerTmp);
-            singerModel->setData(idx, singerval, Qt::UserRole);
-            if (singerTmp.musicinfos.size() == musicHashs.size()) {
-                // 跳出，播放下一歌手
-                break;
-            } else {
-                // 删除要删除的歌曲
-                Player::getInstance()->playRmvMeta(musicHashs);
-                emit Player::getInstance()->signalPlayListChanged();
-                return;
-            }
+            return;
         }
     }
     // 记录切换歌单之前播放状态
@@ -738,6 +746,17 @@ void SingerListView::dropEvent(QDropEvent *event)
     DListView::dropEvent(event);
 }
 
+bool SingerListView::mapContainsList(QMap<QString, MediaMeta> metasMap, QStringList musicHashs)
+{
+    bool contain = false;
+    for (QString hash : musicHashs) {
+        if (metasMap.contains(hash)) {
+            contain = true;
+            break;
+        }
+    }
+    return contain;
+}
 
 
 
