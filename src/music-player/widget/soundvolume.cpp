@@ -255,7 +255,8 @@ void SoundVolume::paintEvent(QPaintEvent *event)
     Q_UNUSED(event)
 
     QPainter pai(this);
-    pai.setOpacity(0.75);
+    // 按设计修改透明度
+    pai.setOpacity(0.95);
     pai.drawPixmap(0, 0, bgImage);
 }
 

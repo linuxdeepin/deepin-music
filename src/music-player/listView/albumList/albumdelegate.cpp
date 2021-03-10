@@ -622,7 +622,8 @@ void AlbumDataDelegate::drawListMode(QPainter &painter, const QStyleOptionViewIt
     painter.setPen(nameColor);
     QRect nameRect(50, option.rect.y(), w / 2 - 20, option.rect.height());
     painter.setFont(fontT6);
-    auto nameText = songsFm.elidedText(albumTmp.albumName.isEmpty() ? AlbumListView::tr("Unknown album") : albumTmp.albumName, Qt::ElideMiddle, nameRect.width());
+    // 解决文字被截断问题
+    auto nameText = songsFm.elidedText(albumTmp.albumName.isEmpty() ? AlbumListView::tr("Unknown album") : albumTmp.albumName, Qt::ElideMiddle, nameRect.width() - 70);
     painter.drawText(nameRect, Qt::AlignLeft | Qt::AlignVCenter, nameText);
 
     // extraname

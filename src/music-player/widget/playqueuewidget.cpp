@@ -267,7 +267,8 @@ void PlayQueueWidget::setThemeType(int type)
 {
     if (type == 1) {
         QColor backMaskColor(247, 247, 247);
-        backMaskColor.setAlphaF(0.6);
+        // 按设计修改透明度
+        backMaskColor.setAlphaF(0.9);
         this->blurBackground()->setMaskColor(backMaskColor);
 
 //        auto titleLabelPalette = d->infoLabel->palette();
@@ -291,7 +292,8 @@ void PlayQueueWidget::setThemeType(int type)
         m_btClearAll->setPalette(pl);
     } else {
         QColor backMaskColor(32, 32, 32);
-        backMaskColor.setAlphaF(0.5);
+        // 按设计修改透明度
+        backMaskColor.setAlphaF(0.9);
         this->blurBackground()->setMaskColor(backMaskColor);
 
 //        auto titleLabelPalette = d->infoLabel->palette();

@@ -132,11 +132,16 @@ void SubSonglistWidget::initUI()
 void SubSonglistWidget::resizeEvent(QResizeEvent *e)
 {
     m_titleImage->setFixedWidth(this->width());
+    // 设置右侧显示省略号
+    QFontMetrics extraNameFm(m_titleLabel->font());
+    QString title = extraNameFm.elidedText(m_title, Qt::ElideRight, this->width() - 56);
+    m_titleLabel->setText(title);
 
     // 添加非空判断，减少警告日志输出与不必要的性能损耗
     QImage img;
     if (!m_img.isNull()) {
-        img = m_img.scaled(this->width(), 200, Qt::KeepAspectRatioByExpanding).toImage();
+        // 根据屏幕缩放比调整
+        img = m_img.scaled(this->width() * static_cast<int>(qApp->devicePixelRatio()), 200, Qt::KeepAspectRatioByExpanding).toImage();
     }
     QPainter pai(&img);
     pai.setRenderHints(QPainter::Antialiasing | QPainter::HighQualityAntialiasing | QPainter::SmoothPixmapTransform);
@@ -269,11 +274,13 @@ void SubSonglistWidget::flushDialog(QMap<QString, MediaMeta> musicinfos, ListPag
 //            titleFont.setPixelSize(24);
 //            infoFont.setPixelSize(18);
             m_titleLabel->setText(musicinfos.first().album);
+            m_title = musicinfos.first().album;
             m_infoLabel->setText(musicinfos.first().singer);
             m_infoLabel->show();
         } else if (listPageType == SingerSubSongListType || listPageType == SearchSingerSubSongListType) {
 //            titleFont.setPixelSize(36);
             m_titleLabel->setText(musicinfos.first().singer);
+            m_title = musicinfos.first().singer;
             m_infoLabel->hide();
         }
 
@@ -339,7 +346,7 @@ void SubSonglistWidget::setTitleImage(QPixmap &img)
 
     // 添加非空判断，减少警告日志输出与不必要的性能损耗
     if (!img.isNull()) {
-        img = img.scaled(this->width(), 200, Qt::KeepAspectRatioByExpanding);
+        img = img.scaled(this->width() * static_cast<int>(qApp->devicePixelRatio()), 200, Qt::KeepAspectRatioByExpanding);
     }
 
     QPainter pai(&img);

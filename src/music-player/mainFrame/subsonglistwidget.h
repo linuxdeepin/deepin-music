@@ -64,6 +64,7 @@ private:
     QString                             m_hash;
 
     QLabel                             *m_titleImage          = nullptr;
+    QString                             m_title;
     DLabel                             *m_titleLabel          = nullptr;
     DLabel                             *m_infoLabel           = nullptr;
     DPushButton                        *m_btPlayAll           = nullptr;

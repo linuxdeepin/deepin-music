@@ -222,7 +222,8 @@ void PlayItemDelegate::drawIconMode(QPainter &painter, const QStyleOptionViewIte
     QColor borderPenColor("#000000");
     borderPenColor.setAlphaF(0.05);
     QPen borderPen(borderPenColor);
-    borderPen.setWidthF(2);
+    // 按设计修改为1
+    borderPen.setWidthF(1);
     painter.setPen(borderPen);
     painter.drawRoundRect(pixmapRect/*.adjusted(1, 1, -1, 1)*/, roundRadius, roundRadius);
     painter.restore();
