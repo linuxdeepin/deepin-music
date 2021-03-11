@@ -59,9 +59,9 @@ SearchEdit::SearchEdit(QWidget *parent) : DSearchEdit(parent)
         if (!onFocus) {
             m_result->hide();
             if (lineEdit()) {
-                lineEdit()->setFocus(Qt::NoFocusReason);
+                lineEdit()->clearFocus();
             }
-            this->setFocus(Qt::NoFocusReason);
+            this->clearFocus();
         }
     });
 }

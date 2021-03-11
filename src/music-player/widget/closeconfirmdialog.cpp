@@ -30,6 +30,7 @@
 #include <DCheckBox>
 #include <DRadioButton>
 #include <DApplicationHelper>
+#include <DFontSizeManager>
 
 #include "core/musicsettings.h"
 
@@ -41,7 +42,7 @@ CloseConfirmDialog::CloseConfirmDialog(QWidget *parent) :
     this->setFixedSize(380, 226);
     this->setSpacing(0);
     DWidget *contentFrame = new DWidget(this);
-    contentFrame->setFixedSize(380, 80);
+    contentFrame->setFixedSize(380, 110);
     contentFrame->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     auto contentLayout = new QVBoxLayout(contentFrame);
     contentLayout->setSpacing(10);
@@ -50,23 +51,27 @@ CloseConfirmDialog::CloseConfirmDialog(QWidget *parent) :
     auto miniBt = new DRadioButton(tr("Minimize to system tray"));
     miniBt->setFixedHeight(20);
     miniBt->setObjectName("CloseConfirmDialogMini");
+    DFontSizeManager::instance()->bind(miniBt, DFontSizeManager::T6, QFont::Normal);
 
     m_exitBt = new DRadioButton(tr("Exit"));
     m_exitBt->setFixedHeight(20);
     m_exitBt->setObjectName("CloseConfirmDialogExit");
+    DFontSizeManager::instance()->bind(m_exitBt, DFontSizeManager::T6, QFont::Normal);
 
     m_remember = new DCheckBox(tr("Do not ask again"));
     m_remember->setFixedHeight(20);
+    DFontSizeManager::instance()->bind(m_remember, DFontSizeManager::T6, QFont::Normal);
 
-    auto font = m_exitBt->font();
-    font.setFamily("SourceHanSansSC");
-    font.setWeight(QFont::Medium);
+    DLabel *titleLabel = new DLabel;
+    titleLabel->setFixedHeight(20);
+    titleLabel->setFixedWidth(380);
+    titleLabel->setObjectName("MusicListDataTitle");
+    titleLabel->setText(tr("Please choose your action"));
+    titleLabel->setAlignment(Qt::AlignCenter);
+    titleLabel->setForegroundRole(DPalette::BrightText);
+    DFontSizeManager::instance()->bind(titleLabel, DFontSizeManager::T6, QFont::Medium);
 
-    miniBt->setFont(font);
-    m_exitBt->setFont(font);
-    m_remember->setFont(font);
-
-    this->setTitle(tr("Please choose your action"));
+    contentLayout->addWidget(titleLabel);
     contentLayout->addWidget(miniBt);
     contentLayout->addWidget(m_exitBt);
     contentLayout->addWidget(m_remember);
