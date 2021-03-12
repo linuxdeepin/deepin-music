@@ -202,8 +202,11 @@ PlayListView::PlayListView(QString hash, bool isPlayQueue, QWidget *parent)
 //    //快捷显示菜单
 //    m_pShowMenuShortcut = new QShortcut(this);
 //    m_pShowMenuShortcut->setKey(QKeySequence(QLatin1String("Alt+M")));
-
+#ifdef TABLET_PC
+    connect(this, SIGNAL(clicked(const QModelIndex &)), this, SLOT(slotOnClicked(const QModelIndex &)));
+#else
     connect(this, SIGNAL(doubleClicked(const QModelIndex &)), this, SLOT(slotOnDoubleClicked(const QModelIndex &)));
+#endif
 
     connect(Player::getInstance(), &Player::signalUpdatePlayingIcon,
             this, &PlayListView::slotUpdatePlayingIcon);
@@ -586,6 +589,21 @@ void PlayListView::setMusicListView(QMap<QString, MediaMeta> musicinfos, QString
 void PlayListView::setViewModeFlag(QString hash, QListView::ViewMode mode)
 {
     m_viewModeMap[hash] = mode;
+#ifdef TABLET_PC
+    if (mode == QListView::IconMode) {
+        setGridSize(QSize(-1, -1));
+        setSpacing(0);
+        setIconSize(QSize(170, 210));
+        // 修改底部间距
+        setViewportMargins(0, 0, -35, 0);
+    } else {
+        setIconSize(QSize(36, 36));
+        setGridSize(QSize(-1, -1));
+        setSpacing(0);
+        // 修改顶部间距
+        setViewportMargins(10, 0, 10, 0);
+    }
+#else
     if (mode == QListView::IconMode) {
         setGridSize(QSize(-1, -1));
         setSpacing(0);
@@ -599,9 +617,25 @@ void PlayListView::setViewModeFlag(QString hash, QListView::ViewMode mode)
         // 修改顶部间距
         setViewportMargins(0, 0, 8, 0);
     }
+#endif
     setViewMode(mode);
 }
-
+#ifdef TABLET_PC
+void PlayListView::slotOnClicked(const QModelIndex &index)
+{
+    //todo检查文件是否存在
+    MediaMeta itemMeta = index.data(Qt::UserRole).value<MediaMeta>();
+    qDebug() << "------" << itemMeta.hash;
+    if (!QFileInfo(itemMeta.localPath).exists() && itemMeta.mmType != MIMETYPE_CDA) {
+        //停止当前的歌曲
+        Player::getInstance()->stop();
+        //弹出提示框
+        showErrorDlg();
+    } else {
+        playMusic(itemMeta);
+    }
+}
+#else
 void PlayListView::slotOnDoubleClicked(const QModelIndex &index)
 {
     //todo检查文件是否存在
@@ -616,7 +650,7 @@ void PlayListView::slotOnDoubleClicked(const QModelIndex &index)
         playMusic(itemMeta);
     }
 }
-
+#endif
 void PlayListView::slotUpdatePlayingIcon()
 {
     this->update();
@@ -816,7 +850,11 @@ void PlayListView::slotAddToPlayQueue()
 
 void PlayListView::slotPlayMusic()
 {
+#ifdef TABLET_PC
+    slotOnClicked(this->currentIndex());
+#else
     slotOnDoubleClicked(this->currentIndex());
+#endif
 }
 
 void PlayListView::showDetailInfoDlg()
@@ -1093,7 +1131,7 @@ void PlayListView::contextMenuEvent(QContextMenuEvent *event)
     QAction *actRmv = nullptr; //remove action
     QPoint globalPos = mapToGlobal(event->pos());
 #ifdef TABLET_PC
-    actRmv = allMusicMenu.addAction(tr("Remove"));
+    actRmv = allMusicMenu.addAction(tr("Delete"));
     allMusicMenu.addSeparator();
     QAction *actplaylist =  allMusicMenu.addAction(tr("Add to playlist"));
     connect(actRmv, SIGNAL(triggered()), this, SLOT(slotRmvFromSongList()));
@@ -1371,14 +1409,15 @@ void PlayListView::slotRmvCdaSongs()
 }
 
 #ifdef TABLET_PC
-void PlayListView::slotSetSelectModel(int model)
+void PlayListView::slotSetSelectModel(CommonService::TabletSelectMode model)
 {
+    this->update();
     // 切换模式，清空选项
     clearSelection();
 
-    if (model == 0) {
+    if (model == CommonService::SingleSelect) {
         setSelectionMode(QListView::SingleSelection);
-    } else if (model == 1) {
+    } else if (model == CommonService::MultSelect) {
         setSelectionMode(QListView::MultiSelection);
     }
 }

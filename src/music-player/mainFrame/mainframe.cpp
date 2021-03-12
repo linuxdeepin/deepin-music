@@ -104,6 +104,9 @@ MainFrame::MainFrame()
     m_backBtn->setVisible(false);
     m_backBtn->setFixedSize(QSize(36, 36));
 
+    m_selectStr = tr("Select");
+    m_selectAllStr = tr("Select All");
+    m_doneStr = tr("Done");
 #ifdef  TABLET_PC
     m_tabletSelectAll = new TabletLabel(tr("All"), m_titlebar, 1);
     m_tabletSelectDone = new TabletLabel(tr("Done"), m_titlebar, 0);
@@ -116,7 +119,7 @@ MainFrame::MainFrame()
     m_titlebar->addWidget(m_tabletSelectDone, Qt::AlignRight | Qt::AlignVCenter);
     connect(m_tabletSelectAll, &TabletLabel::signalTabletSelectAll, CommonService::getInstance(), &CommonService::signalSelectAll);
     connect(m_tabletSelectDone, &TabletLabel::signalTabletDone, this, [ = ]() {
-        CommonService::getInstance()->setSelectModel(0);
+        CommonService::getInstance()->setSelectModel(CommonService::SingleSelect);
         m_tabletSelectAll->setVisible(false);
         m_tabletSelectDone->setVisible(false);
     });
@@ -523,7 +526,9 @@ void MainFrame::slotDBImportFinished(QString hash, int successCount)
         m_importWidget->closeAnimationToDown(this->size());
     }
     m_titlebarwidget->setEnabled(true);
-    m_newSonglistAction->setEnabled(true);
+    if (m_newSonglistAction) {
+        m_newSonglistAction->setEnabled(true);
+    }
 }
 
 void MainFrame::slotCdaImportFinished()
@@ -665,7 +670,7 @@ void MainFrame::slotMenuTriggered(QAction *action)
 
 #ifdef TABLET_PC
     if (action == m_select) {
-        CommonService::getInstance()->setSelectModel(1); //1:selected,0:unselected
+        CommonService::getInstance()->setSelectModel(CommonService::MultSelect);
         m_tabletSelectAll->setVisible(true);
         m_tabletSelectDone->setVisible(true);
     }
@@ -690,7 +695,9 @@ void MainFrame::slotAllMusicCleared()
     m_importWidget->showImportHint();
     m_importWidget->showAnimationToLeft(this->size());
     m_titlebarwidget->setEnabled(false);
-    m_newSonglistAction->setEnabled(false);
+    if (m_newSonglistAction) {
+        m_newSonglistAction->setEnabled(false);
+    }
 }
 
 void MainFrame::slotAutoPlay(const MediaMeta &meta)

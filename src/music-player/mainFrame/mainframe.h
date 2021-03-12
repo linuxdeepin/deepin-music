@@ -144,6 +144,9 @@ private:
     QByteArray          m_geometryBa = QByteArray();
     // 当前页面hash，供右上角菜单导入使用
     QString             m_importListHash = "all";
+    QString             m_selectStr;
+    QString             m_selectAllStr;
+    QString             m_doneStr;
 };
 
 //extern const QString s_PropertyViewname;

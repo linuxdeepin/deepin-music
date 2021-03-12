@@ -170,12 +170,12 @@ void MusicSongListView::showContextMenu(const QPoint &pos)
 
     DMenu menu;
     connect(&menu, &DMenu::triggered, this, &MusicSongListView::slotMenuTriggered);
-
-    QAction *playact = nullptr;
-    QAction *pauseact = nullptr;
-
     QString hash = index.data(Qt::UserRole).value<QString>();
     emit CommonService::getInstance()->signalSwitchToView(ListPageSwitchType::CustomType, hash);
+
+#ifndef TABLET_PC
+    QAction *playact = nullptr;
+    QAction *pauseact = nullptr;
 
     if (hash == Player::getInstance()->getCurrentPlayListHash() && Player::getInstance()->status() == Player::Playing) {
         pauseact = menu.addAction(tr("Pause"));
@@ -184,6 +184,7 @@ void MusicSongListView::showContextMenu(const QPoint &pos)
         playact = menu.addAction(tr("Play"));
         playact->setDisabled(0 == DataBaseService::getInstance()->customizeMusicInfos(hash).size());
     }
+#endif
 
     if (hash != "album" || hash != "artist" || hash != "all" || hash != "fav") {
         menu.addAction(tr("Rename"));

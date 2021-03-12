@@ -346,8 +346,8 @@ void SingerListView::setViewModeFlag(QListView::ViewMode mode)
     } else {
         setIconSize(QSize(36, 36));
         setGridSize(QSize(-1, -1));
-        // 修改顶部间距
-        setViewportMargins(40, 0, 40, 0);
+        // 修改间距
+        setViewportMargins(10, 0, 10, 0);
         setSpacing(0);
     }
 #else

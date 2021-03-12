@@ -100,15 +100,19 @@ bool AlbumDataDelegate::editorEvent(QEvent *event, QAbstractItemModel *model, co
     const QMouseEvent *pressEvent = static_cast<QMouseEvent *>(event);
     const QPointF pressPos = pressEvent->pos();
 
-    if (index.isValid() && albumlistView->viewMode() == QListView::IconMode &&
-            (event->type() == QEvent::MouseButtonPress || event->type() == QEvent::MouseButtonDblClick)) {
+    if (index.isValid() && (event->type() == QEvent::MouseButtonPress || event->type() == QEvent::MouseButtonDblClick)) {
         // 触屏点击次数
         clickedCount++;
 
         QTimer::singleShot(200, [ = ]() {
             if (clickedCount == 1) {
-                // 触屏单击
-                touchClicked(option, index, pressPos);
+                if (albumlistView->viewMode() == QListView::IconMode) {
+                    // IconMode触屏单击
+                    touchClicked(option, index, pressPos);
+                } else if (albumlistView->viewMode() == QListView::ListMode) {
+                    // 同鼠标双击，进入二级菜单
+                    mouseDoubleClicked(option, index);
+                }
             } else if (clickedCount > 1) {
                 // 触屏双击
                 touchDoubleClicked(option, index);
@@ -116,9 +120,6 @@ bool AlbumDataDelegate::editorEvent(QEvent *event, QAbstractItemModel *model, co
             // 点击次数归零
             clickedCount = 0;
         });
-    } else if (index.isValid() && albumlistView->viewMode() == QListView::ListMode && event->type() == QEvent::MouseButtonDblClick) {
-        // 触屏双击
-        touchDoubleClicked(option, index);
     }
 #else
     // 用于判断鼠标点击状态

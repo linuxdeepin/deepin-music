@@ -81,7 +81,11 @@ public:
     // 设置当前列表属于哪个页面
     void setListPageSwitchType(ListPageSwitchType type);
 public slots:
+#ifdef TABLET_PC
+    void slotOnClicked(const QModelIndex &index);
+#else
     void slotOnDoubleClicked(const QModelIndex &index);
+#endif
     void slotUpdatePlayingIcon();
 
     // 封面图片刷新
@@ -126,7 +130,7 @@ public slots:
     void slotRmvCdaSongs();
 #ifdef TABLET_PC
     // 设置选择模式
-    void slotSetSelectModel(int model);
+    void slotSetSelectModel(CommonService::TabletSelectMode model);
     // 全选
     void slotSelectAll();
     // 显示歌单列表

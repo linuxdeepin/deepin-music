@@ -282,7 +282,7 @@ void PlayItemDelegate::drawTabletIconMode(QPainter &painter, const QStyleOptionV
     painter.fillRect(pixmapRect, fillBrush);
     painter.restore();
     // 绘制选中时右上角的选中图标
-    if (option.state & QStyle::State_Selected && CommonService::getInstance()->getSelectModel()) {
+    if (option.state & QStyle::State_Selected && (CommonService::getInstance()->getSelectModel() == CommonService::MultSelect)) {
         QRect selectionRect(option.rect.x() +  option.rect.width() - 20, option.rect.y() + 2, 14, 14);
         painter.drawPixmap(selectionRect, m_selectedPix);
     }
@@ -304,7 +304,7 @@ void PlayItemDelegate::drawTabletListMode(QPainter &painter, const QStyleOptionV
 
     painter.save();
 
-    int selectMod = CommonService::getInstance()->getSelectModel();
+    CommonService::TabletSelectMode selectMod = CommonService::getInstance()->getSelectModel();
     painter.setRenderHint(QPainter::Antialiasing);
     painter.setRenderHint(QPainter::HighQualityAntialiasing);
     painter.setRenderHint(QPainter::SmoothPixmapTransform);
@@ -322,6 +322,10 @@ void PlayItemDelegate::drawTabletListMode(QPainter &painter, const QStyleOptionV
     }
     auto background = (index.row() % 2) == 1 ? baseColor : alternateBaseColor;
     int lrWidth = 10;
+    // 多选模式阴影向右偏移
+    if (selectMod == CommonService::MultSelect) {
+        lrWidth = 40;
+    }
     if (!(option.state & QStyle::State_Selected) && !(option.state & QStyle::State_MouseOver)) {
         painter.save();
         painter.setPen(Qt::NoPen);
@@ -384,7 +388,7 @@ void PlayItemDelegate::drawTabletListMode(QPainter &painter, const QStyleOptionV
         painter.restore();
     }
 
-    int offset = 0;
+    int offset = 10;
     for (int col = 0; col < ColumnButt; ++col) {
         auto flag = alignmentFlag(col);
         auto rect = colRect(col, option);
@@ -393,12 +397,11 @@ void PlayItemDelegate::drawTabletListMode(QPainter &painter, const QStyleOptionV
             painter.setPen(otherColor);
             PlayListView *playListView = qobject_cast<PlayListView *>(const_cast<QWidget *>(option.widget));
 
-            if (selectMod) {
-                offset = 24;
+            if (selectMod == CommonService::MultSelect) {
+                offset = 35;
                 auto sz = QSizeF(14, 14);
-                auto centerF = QRectF(rect).center();
-                auto iconRect = QRectF(centerF.x() - sz.width() / 2 - offset / 2,
-                                       centerF.y() - sz.height() / 2,
+                auto iconRect = QRectF(option.rect.x() + 8,
+                                       option.rect.y() + option.rect.height() / 2 - sz.height() / 2,
                                        sz.width(), sz.height());
                 painter.drawPixmap(iconRect, scacheicon, QRectF());
             }
@@ -416,8 +419,9 @@ void PlayItemDelegate::drawTabletListMode(QPainter &painter, const QStyleOptionV
             }
 
             //绘制播放动态图
-            if (activeMeta.hash == itemMeta.hash && !selectMod) {
-                QPixmap icon = playListView->getPlayPixmap(option.state & QStyle::State_Selected);
+            if (activeMeta.hash == itemMeta.hash) {
+                QPixmap icon = playListView->getPlayPixmap(
+                                   selectMod == CommonService::MultSelect ? false : (option.state & QStyle::State_Selected));
                 auto centerF = QRectF(rect).center();
                 qreal t_ratio = icon.devicePixelRatioF();
                 QRect t_ratioRect;
@@ -425,7 +429,7 @@ void PlayItemDelegate::drawTabletListMode(QPainter &painter, const QStyleOptionV
                 t_ratioRect.setY(0);
                 t_ratioRect.setWidth(static_cast<int>(icon.width() / t_ratio));
                 t_ratioRect.setHeight(static_cast<int>(icon.height() / t_ratio));
-                auto iconRect = QRectF(centerF.x() - t_ratioRect.width() / 2 + offset,
+                auto iconRect = QRectF(centerF.x() - t_ratioRect.width() / 2 + offset - 10,
                                        centerF.y() - t_ratioRect.height() / 2,
                                        t_ratioRect.width(), t_ratioRect.height());
                 painter.drawPixmap(iconRect.toRect(), icon);
@@ -435,9 +439,10 @@ void PlayItemDelegate::drawTabletListMode(QPainter &painter, const QStyleOptionV
                 auto str = QString::number(index.row() + 1);
                 QFont font(fontT9);
                 QFontMetrics fm(font);
-                auto text = fm.elidedText(str, Qt::ElideMiddle, rect.width());
+                auto text = fm.elidedText(str, Qt::ElideLeft, rect.width());
                 QRect r0 = rect;
-                r0.setX(rect.x() + offset);
+                r0.setX(option.rect.x() + offset);
+                r0.setWidth(40);
                 painter.drawText(r0, static_cast<int>(flag), text);
             }
             break;
@@ -447,9 +452,10 @@ void PlayItemDelegate::drawTabletListMode(QPainter &painter, const QStyleOptionV
             painter.setFont(fontT6);
             QFont font(fontT6);
             QFontMetrics fm(font);
-            auto text = fm.elidedText(itemMeta.title, Qt::ElideMiddle, rect.width());
+            auto text = fm.elidedText(itemMeta.title, Qt::ElideLeft, rect.width());
             QRect r1 = rect;
-            r1.setX(rect.x() + offset / 2);
+            r1.setX(rect.x() + offset - 10);
+            r1.setWidth(rect.width());
             painter.drawText(r1, static_cast<int>(flag), text);
             break;
         }
