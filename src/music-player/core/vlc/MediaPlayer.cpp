@@ -75,12 +75,16 @@ typedef float (*vlc_media_player_get_rate_function)(libvlc_media_player_t *);
 
 typedef void (*config_PutInt_func)(vlc_object_t *, const char *, int64_t);
 
+typedef int (*var_SetChecked_func)(vlc_object_t *, const char *, int, vlc_value_t);
+
 VlcMediaPlayer::VlcMediaPlayer(VlcInstance *instance)
     : QObject(instance)
 {
     vlc_media_player_new_function vlc_media_player_new = (vlc_media_player_new_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("libvlc_media_player_new");
     vlc_media_player_event_manager_function vlc_media_player_event_manager = (vlc_media_player_event_manager_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("libvlc_media_player_event_manager");
     config_PutInt_func config_PutInt_fc = (config_PutInt_func)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("config_PutInt");
+    var_SetChecked_func var_SetChecked_fc = (var_SetChecked_func)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("var_SetChecked");
+
     _vlcMediaPlayer = vlc_media_player_new(instance->core());
     _vlcEvents = vlc_media_player_event_manager(_vlcMediaPlayer);
 
@@ -94,6 +98,11 @@ VlcMediaPlayer::VlcMediaPlayer(VlcInstance *instance)
     config_PutInt_fc((vlc_object_t *)_vlcMediaPlayer, "video", 0); //0=disable
     //cdda plugin使能
     config_PutInt_fc((vlc_object_t *)_vlcMediaPlayer, "cd-audio", 1);
+    //设置role
+    vlc_value_t val;
+    val.psz_string = "music";
+    var_SetChecked_fc((vlc_object_t *)_vlcMediaPlayer, "role", VLC_VAR_STRING, val);
+
     createCoreConnections();
 
     VlcError::showErrmsg();
