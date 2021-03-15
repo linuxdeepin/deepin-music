@@ -108,8 +108,8 @@ MainFrame::MainFrame()
     m_selectAllStr = tr("Select All");
     m_doneStr = tr("Done");
 #ifdef  TABLET_PC
-    m_tabletSelectAll = new TabletLabel(tr("All"), m_titlebar, 1);
-    m_tabletSelectDone = new TabletLabel(tr("Done"), m_titlebar, 0);
+    m_tabletSelectAll = new TabletLabel(m_selectAllStr, m_titlebar, 1);
+    m_tabletSelectDone = new TabletLabel(m_doneStr, m_titlebar, 0);
     m_tabletSelectAll->setFixedSize(QSize(50, 50));
     m_tabletSelectDone->setFixedSize(QSize(50, 50));
     m_tabletSelectAll->hide();
@@ -364,7 +364,7 @@ void MainFrame::initPadMenu()
 {
     m_addMusicFiles = new QAction(MainFrame::tr("Add music"), this);
 
-    m_select = new QAction(MainFrame::tr("Select"), this);
+    m_select = new QAction(m_selectStr, this);
 
     DMenu *pTitleMenu = new DMenu(this);
 
