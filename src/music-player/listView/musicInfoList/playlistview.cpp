@@ -592,10 +592,10 @@ void PlayListView::setViewModeFlag(QString hash, QListView::ViewMode mode)
 #ifdef TABLET_PC
     if (mode == QListView::IconMode) {
         setGridSize(QSize(-1, -1));
-        setSpacing(0);
-        setIconSize(QSize(170, 210));
+        setSpacing(20);
+        setIconSize(QSize(200, 243));
         // 修改底部间距
-        setViewportMargins(0, 0, -35, 0);
+        setViewportMargins(30, -15, -35, 0);
     } else {
         setIconSize(QSize(36, 36));
         setGridSize(QSize(-1, -1));
@@ -624,15 +624,17 @@ void PlayListView::setViewModeFlag(QString hash, QListView::ViewMode mode)
 void PlayListView::slotOnClicked(const QModelIndex &index)
 {
     //todo检查文件是否存在
-    MediaMeta itemMeta = index.data(Qt::UserRole).value<MediaMeta>();
-    qDebug() << "------" << itemMeta.hash;
-    if (!QFileInfo(itemMeta.localPath).exists() && itemMeta.mmType != MIMETYPE_CDA) {
-        //停止当前的歌曲
-        Player::getInstance()->stop();
-        //弹出提示框
-        showErrorDlg();
-    } else {
-        playMusic(itemMeta);
+    if (CommonService::getInstance()->getSelectModel() != CommonService::MultSelect) {
+        MediaMeta itemMeta = index.data(Qt::UserRole).value<MediaMeta>();
+        qDebug() << "------" << itemMeta.hash;
+        if (!QFileInfo(itemMeta.localPath).exists() && itemMeta.mmType != MIMETYPE_CDA) {
+            //停止当前的歌曲
+            Player::getInstance()->stop();
+            //弹出提示框
+            showErrorDlg();
+        } else {
+            playMusic(itemMeta);
+        }
     }
 }
 #else
@@ -1330,7 +1332,18 @@ bool PlayListView::getMenuIsShow()
 {
     return m_menuIsShow;
 }
-
+#ifdef TABLET_PC
+void PlayListView::mousePressEvent(QMouseEvent *event)
+{
+    // 点击空白处时取消所有已选择项
+    auto index = this->indexAt(event->pos());
+    if (index.row() == -1) {
+        clearSelection();
+    } else {
+        QListView::mousePressEvent(event);
+    }
+}
+#endif
 //void PlayListView::reflushItemMediaMeta(const MediaMeta &meta)
 //{
 //    for (int i = 0; i <  m_model->rowCount(); i++) {

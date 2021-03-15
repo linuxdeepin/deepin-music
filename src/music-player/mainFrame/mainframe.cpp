@@ -110,8 +110,11 @@ MainFrame::MainFrame()
 #ifdef  TABLET_PC
     m_tabletSelectAll = new TabletLabel(m_selectAllStr, m_titlebar, 1);
     m_tabletSelectDone = new TabletLabel(m_doneStr, m_titlebar, 0);
-    m_tabletSelectAll->setFixedSize(QSize(50, 50));
-    m_tabletSelectDone->setFixedSize(QSize(50, 50));
+    DFontSizeManager::instance()->bind(m_tabletSelectAll, DFontSizeManager::T6, QFont::Medium);
+    DFontSizeManager::instance()->bind(m_tabletSelectDone, DFontSizeManager::T6, QFont::Medium);
+    QFontMetrics font(m_tabletSelectAll->font());
+    m_tabletSelectAll->setFixedSize((font.width(m_tabletSelectAll->text()) + 22), 50);
+    m_tabletSelectDone->setFixedSize((font.width(m_tabletSelectDone->text()) + 22), 50);
     m_tabletSelectAll->hide();
     m_tabletSelectDone->hide();
 
@@ -122,6 +125,12 @@ MainFrame::MainFrame()
         CommonService::getInstance()->setSelectModel(CommonService::SingleSelect);
         m_tabletSelectAll->setVisible(false);
         m_tabletSelectDone->setVisible(false);
+    });
+    connect(CommonService::getInstance(), &CommonService::signalSelectMode, this, [ = ](CommonService::TabletSelectMode mode) {
+        if (mode == CommonService::SingleSelect) {
+            m_tabletSelectAll->setVisible(false);
+            m_tabletSelectDone->setVisible(false);
+        }
     });
 #endif
     m_backBtn->setIcon(QIcon::fromTheme("left_arrow"));

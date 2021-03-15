@@ -45,6 +45,12 @@ const int xoffset = 10;
 const int yoffset = 8;
 const int roundRadius = 10;
 
+#ifdef TABLET_PC
+const int ImgWidthAndHeightTablet = 195;
+const int yoffsetTablet = 5;
+const int roundRadiusTablet = 10;
+#endif
+
 static inline int pixel2point(int pixel)
 {
     return pixel * 96 / 72;
@@ -122,8 +128,12 @@ QSize PlayItemDelegate::sizeHint(const QStyleOptionViewItem &option,
 {
     auto *listview = qobject_cast<const PlayListView *>(option.widget);
     if (listview && listview->viewMode() == QListView::IconMode) {
+#ifdef TABLET_PC
+        return QSize(200, 243);
+#else
         // 调整Icon间距
         return QSize(170, 210);
+#endif
     } else {
         auto baseSize = QStyledItemDelegate::sizeHint(option, index);
         return QSize(baseSize.width(), 38);
@@ -192,11 +202,11 @@ void PlayItemDelegate::drawTabletIconMode(QPainter &painter, const QStyleOptionV
     if (value.type() == QVariant::Icon) {
         icon = qvariant_cast<QIcon>(value);
     }
-    QRect pixmapRect(option.rect.x() + xoffset, option.rect.y() + yoffset, ImgWidthAndHeight, ImgWidthAndHeight);
+    QRect pixmapRect(option.rect.x(), option.rect.y() + 5, ImgWidthAndHeightTablet, ImgWidthAndHeightTablet);
     QPainterPath roundPixmapRectPath;
-    roundPixmapRectPath.addRoundRect(pixmapRect, roundRadius, roundRadius);
+    roundPixmapRectPath.addRoundRect(pixmapRect, roundRadiusTablet, roundRadiusTablet);
     painter.setClipPath(roundPixmapRectPath);
-    painter.drawPixmap(pixmapRect, icon.pixmap(ImgWidthAndHeight, ImgWidthAndHeight));
+    painter.drawPixmap(pixmapRect, icon.pixmap(ImgWidthAndHeightTablet, ImgWidthAndHeightTablet));
     painter.restore();
     // 绘制图片上添加描边
     painter.save();
@@ -220,9 +230,9 @@ void PlayItemDelegate::drawTabletIconMode(QPainter &painter, const QStyleOptionV
     }
     painter.setPen(nameColor);
     // 调整歌曲名位置
-    QRect nameFillRect(option.rect.x() + xoffset, option.rect.y() + yoffset + ImgWidthAndHeight,
-                       ImgWidthAndHeight, fm.height());
-    auto nameText = fm.elidedText(meta.title, Qt::ElideRight, ImgWidthAndHeight);
+    QRect nameFillRect(option.rect.x(), option.rect.y() + yoffsetTablet + ImgWidthAndHeightTablet,
+                       ImgWidthAndHeightTablet, fm.height());
+    auto nameText = fm.elidedText(meta.title, Qt::ElideRight, ImgWidthAndHeightTablet - 60);
     painter.drawText(nameFillRect, Qt::AlignLeft | Qt::AlignVCenter, nameText);
 
     QFontMetrics extraNameFm(fontT9);
@@ -230,9 +240,9 @@ void PlayItemDelegate::drawTabletIconMode(QPainter &painter, const QStyleOptionV
     nameColor.setAlphaF(0.5);
     painter.setPen(nameColor);
     // 调整歌手位置
-    QRect extraNameFillRect(option.rect.x() + xoffset, nameFillRect.bottom(),
-                            ImgWidthAndHeight, extraNameFm.height());
-    auto extraNameText = extraNameFm.elidedText(meta.singer, Qt::ElideRight, ImgWidthAndHeight);
+    QRect extraNameFillRect(option.rect.x(), nameFillRect.bottom(),
+                            ImgWidthAndHeightTablet, extraNameFm.height());
+    auto extraNameText = extraNameFm.elidedText(meta.singer, Qt::ElideRight, ImgWidthAndHeightTablet - 60);
     painter.drawText(extraNameFillRect, Qt::AlignLeft | Qt::AlignVCenter, extraNameText);
 
     // 画时间矩形
@@ -240,11 +250,11 @@ void PlayItemDelegate::drawTabletIconMode(QPainter &painter, const QStyleOptionV
     // 如果时间超过一小时，矩形绘制长一点
     QRect timeFillRect;
     if (timeText.size() > 5) {
-        timeFillRect = QRect(option.rect.x() + xoffset * 2 + ImgWidthAndHeight - 58,
+        timeFillRect = QRect(option.rect.x() + ImgWidthAndHeightTablet - 58,
                              extraNameFillRect.top() + extraNameFillRect.height() / 2 - 8,
                              48, 16);
     } else {
-        timeFillRect = QRect(option.rect.x() + xoffset * 2 + ImgWidthAndHeight - 48,
+        timeFillRect = QRect(option.rect.x() + ImgWidthAndHeightTablet - 48,
                              extraNameFillRect.top() + extraNameFillRect.height() / 2 - 8,
                              38, 16);
     }
@@ -274,17 +284,19 @@ void PlayItemDelegate::drawTabletIconMode(QPainter &painter, const QStyleOptionV
 
     // 绘制选中时的阴影
     QBrush fillBrush(QColor(128, 128, 128, 0));
+    QPixmap scacheicon = m_unselectedPix;
     if (option.state & QStyle::State_Selected) {
         fillBrush = QBrush(QColor(128, 128, 128, 90));
+        scacheicon = m_selectedPix;
     }
     painter.save();
     painter.setClipPath(roundPixmapRectPath);
     painter.fillRect(pixmapRect, fillBrush);
     painter.restore();
     // 绘制选中时右上角的选中图标
-    if (option.state & QStyle::State_Selected && (CommonService::getInstance()->getSelectModel() == CommonService::MultSelect)) {
-        QRect selectionRect(option.rect.x() +  option.rect.width() - 20, option.rect.y() + 2, 14, 14);
-        painter.drawPixmap(selectionRect, m_selectedPix);
+    if (option.state && (CommonService::getInstance()->getSelectModel() == CommonService::MultSelect)) {
+        QRect selectionRect(option.rect.x() +  option.rect.width() - 18, option.rect.y() + 2, 14, 14);
+        painter.drawPixmap(selectionRect, scacheicon);
     }
 }
 

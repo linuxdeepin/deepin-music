@@ -156,6 +156,9 @@ public:
     //void reflushItemMediaMeta(const MediaMeta &meta);
     bool getMenuIsShow();
 protected:
+#ifdef TABLET_PC
+    virtual void mousePressEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
+#endif
     virtual void mouseMoveEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
     virtual void dragEnterEvent(QDragEnterEvent *event) Q_DECL_OVERRIDE;
     virtual void startDrag(Qt::DropActions supportedActions) Q_DECL_OVERRIDE;
