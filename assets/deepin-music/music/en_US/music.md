@@ -1,4 +1,4 @@
-# Music|../common/deepin_music_96.svg|
+# Music|deepin-music|
 
 ## Overview
 
@@ -28,7 +28,7 @@ Music can be minimized to the system tray.
 - Click ![icon_menu](../common/icon_menu.svg) > **Settings** on the music interface and check **Minimize to system tray**. Music will be minimized directly to the system tray each time you close the main window. 
 - Click ![close_icon](../common/close.svg) on the Music interface to close the main window, select **Minimize to system tray** and click **Confirm**.
 
-> ![notes](../common/notes.svg) Notes: Check **Do not ask again** and the pop-up window will no longer be displayed.
+  > ![notes](../common/notes.svg) Notes: Check **Minimize to system tray** and **Do not ask again** and the pop-up window will no longer be displayed.
 
 Right-click the Music application icon in the tray and you can perform the following operations:
 
@@ -39,9 +39,9 @@ Right-click the Music application icon in the tray and you can perform the follo
 
 ### Exit Music
 
-- On the Music interface, click ![close_icon](../common/close.svg) and select **Exit** to exit Music.
-- Right-click the Music application icon ![music_icon_24](../common/music_icon24.svg) in the Dock and select **Close All** to exit Music.
-- Right-click ![music_icon-24](../common/music_icon24.svg) in the system tray and select **Exit** to exit Music. 
+- On the Music interface, click ![close_icon](../common/close.svg) and select **Exit** to exit Music or click ![close](../common/close.svg)to exit music directly if you have checked the **Exit** option in the **Close Main Window** option.  
+- Right-click the Music application icon ![music_icon24](../common/music_icon24.svg) in the Dock and select **Close All** to exit Music.
+- Right-click ![music_icon24](../common/music_icon24.svg) in the system tray and select **Exit** to exit Music. 
 
 ### View Shortcuts
 
@@ -86,7 +86,7 @@ On the main interface, you can choose from regular options, check view playlist,
     	<tr>
             <td>6</td>
             <td>Play box</td>
-            <td>Show the name of the song being played, the cover, and the album name.</td>
+            <td>Show the name of the song being played, the cover, and the artist name.</td>
         </tr>
     	<tr>
             <td>7</td>
@@ -106,7 +106,7 @@ On the main interface, you can choose from regular options, check view playlist,
     		<tr>
             <td>10</td>
             <td>Volume</td>
-            <td>Click it to Mute/Unmute and move to show the volume bar to adjust the volume.</td>
+            <td>Click it and drag the volume bar to adjust the volume.</td>
         </tr>
     		<tr>
             <td>11</td>
@@ -116,11 +116,11 @@ On the main interface, you can choose from regular options, check view playlist,
     </tbody>
 </table>
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-
 ## Common Operations
 
 You can add, delete, and view info of the local music in Music in the following ways.
+
+>![notes](../common/notes.svg) Notes: It is available to use Desktop AI Assistant to perform operations such as playing music,adding music to my favorites and setting play mode.
 
 ### Add Music
 
@@ -130,16 +130,13 @@ On the Music interface, you can:
 - Click ![icon_menu](../common/icon_menu.svg)> **Add music** to add music files to the playlist.
 - Drag the music file/folder to the Music interface, and add the music file to the playlist.
 
-> ![notes](../common/notes.svg) Notes: If you are using a computer equipped with touch-screen or touchpad, you can use touchscreen gestures to operate instead of the mouse: Hold down the music file with one finger and drag it to the Music interface to add music.
+> ![notes](../common/notes.svg) Notes: If you are using a computer equipped with touch-screen or touchpad, hold down the music file with one finger and drag it to the Music interface to add music.
 
 ### Search Music
 
 1. In the search box on top of the Music interface, you can click ![search](../common/search.svg) to enter keywords.
 
 2. Press the **Enter** key on the keyboard to conduct search.
-
-   - When there is matched information, click **Play All** in the search result list to play the music in the search result list.
-   - When there is no matched information, **No search results** will be displayed in the search result list.
 
 3. Click ![0|close](../common/close.svg) or delete the entered information in the search box to clear the current information or cancel the search.
 
@@ -159,7 +156,7 @@ On the Music interface, click ![collect](../common/collect.svg) to add music to 
 
 The prompt information **Successfully added to "My favorites"** pops up and the music is added to **My Favorites** list.
 
-> ![notes](../common/notes.svg) Notes: You can also right-click the music, and select **Add to playlist** > **My favorites** to add the music to **My Favorites** list.
+> ![tips](../common/tips.svg) Tips: You can also right-click the music, and select **Add to playlist** > **My favorites** to add the music to **My Favorites** list.
 
 ### View Lyrics
 
@@ -170,7 +167,7 @@ On the Music interface, you can:
 - Click ![music](../common/music.svg)to switch to the lyrics interface. Click it again to fold the lyrics interface.
 
 
-> ![notes](../common/notes.svg) Notes:  If the music being played has a cover picture,  ![music](../common/music.svg)will be displayed as the cover picture. Click it to switch to the lyrics interface and click it again to fold the lyrics interface.
+> ![notes](../common/notes.svg) Notes:  If the music being played has a cover picture,  ![music](../common/music.svg)will be displayed as the cover picture. Click it to switch to the lyrics interface.
 
 ### Adjust Play Mode
 
@@ -185,7 +182,7 @@ On the Music interface, click ![single](../common/single_tune_circulation_normal
 ### Display in File Manager
 
 1. On the Music interface, right-click the music.
-2. Click **Display in file manager** and you can view the music file in the File Manager.
+2. Click **Display in file manager** and you can view the music file in File Manager.
 
 ![0|infile](fig/infile.png)
 
@@ -200,8 +197,10 @@ On the Music interface, right-click the music and you can:
 
 ### Select Encoding
 
+For music with garbled characters, you can make it display normally by switching the encoding methods.
+
 1. On the Music interface, right-click the music.
-2. Click **Encoding**, and you can select the encoding as needed.
+2. Click **Encoding**, and select the encoding as needed.
 
 ![0|encoding](fig/encoding.png)
 
@@ -216,7 +215,7 @@ On the Music interface, right-click the music and you can:
 
 On the Music interface, you can create, delete, and rename playlist. You can also add music to the playlist.
 
-> ![notes](../common/notes.svg) Notes: **All music** and **My Favorites **are set as default playlists and cannot be deleted. Custom playlists are subsets of the **All Music **playlist. **My Favorites **playlist can be managed directly or through the Favorite button on the main interface.
+> ![notes](../common/notes.svg) Notes: **All music** and **My Favorites** are set as default playlists and cannot be deleted. Custom playlists are subsets of the **All Music** playlist. **My Favorites** playlist can be managed directly or through the Favorite icon on the main interface.
 
 ### Create New Playlist
 
@@ -260,7 +259,7 @@ On the Music interface, you can create, delete, and rename playlist. You can als
 
 ## Main Menu
 
-In the main menu, you can [Add Music](#Add Music), set the equalizer and the options, switch window themes, view help manual, and get more information about Music.
+In the main menu, you can [Add Music](#Add Music), create new playlists, set the equalizer and the options, switch window themes, view help manual, and get more information about Music.
 
 ### Equalizer
 
