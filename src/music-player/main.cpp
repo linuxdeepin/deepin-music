@@ -127,28 +127,6 @@ int main(int argc, char *argv[])
 
     if (!app->setSingleInstance("deepinmusic") || !checkOnly()) {
         qDebug() << "another deepin music has started";
-        // 使用新写的dbus接口，一次性接收全部数据，不必要想之前的接收多次dbus调用
-//        for (auto curStr : parser.positionalArguments()) {
-//            if (!curStr.isEmpty()) {
-//                QUrl url = QUrl(curStr);//::fromLocalFile(fi.absoluteFilePath());
-//                qDebug() << __FUNCTION__ << "toString = " << url.toString();
-//                qDebug() << __FUNCTION__ << "toLocalFile = " << url.toLocalFile();
-//                while (true) {
-//                    QDBusInterface iface("org.mpris.MediaPlayer2.DeepinMusic",
-//                                         "/org/mpris/MediaPlayer2",
-//                                         "org.mpris.MediaPlayer2.Player",
-//                                         QDBusConnection::sessionBus());
-//                    if (iface.isValid()) {
-//                        if (url.toLocalFile().isEmpty()) {
-//                            iface.asyncCall("OpenUri", curStr);
-//                        } else {
-//                            iface.asyncCall("OpenUri", url.toLocalFile());
-//                        }
-//                        break;
-//                    }
-//                }
-//            }
-//        }
         QDBusInterface speechbus("org.mpris.MediaPlayer2.DeepinMusic",
                                  "/org/mpris/speech",
                                  "com.deepin.speech",
