@@ -12,14 +12,14 @@
 
 ### 運行音樂
 
-1. 單擊桌面底部的 ![launcher](../common/deepin_launcher.svg)，進入啟動器界面。
-2. 上下滾動鼠標滾輪瀏覽或通過搜索，找到音樂 ![music](../common/music_icon24.svg) 單擊運行。
+1. 單擊任務欄上的啟動器圖標 ![launcher](../common/deepin_launcher.svg)，進入啟動器界面。
+2. 上下滾動鼠標滾輪瀏覽或通過搜索，找到音樂圖標 ![music](../common/music_icon24.svg) 單擊運行。
 3. 右鍵單擊 ![music](../common/music_icon24.svg)，您可以：
    - 單擊 **傳送到桌面**，在桌面創建快捷方式。
    - 單擊 **傳送到任務欄**，將應用程序固定到任務欄。
    - 單擊 **加至開機啟動**，將應用程序添加到開機啟動項，在電腦開機時自動運行該應用。
 
-> ![notes](../common/notes.svg)說明：如果音樂已經默認固定在任務欄上，您也可以單擊任務欄上的 ![music](../common/music_icon24.svg) 來運行。
+> ![notes](../common/notes.svg)說明：如果音樂已經默認固定在任務欄上，您也可以單擊任務欄上的圖標 ![music](../common/music_icon24.svg) 來運行。
 
 ### 隱藏到系統托盤
 
@@ -38,7 +38,7 @@
 
 ### 查看快捷鍵
 
-在音樂界面上，按下 **Ctrl + Shift + ?** 組合鍵來查看快捷鍵，熟練地使用快捷鍵，將大大提升您的操作效率。
+在音樂界面上，使用快捷鍵 **Ctrl + Shift + ?** 打開快捷鍵預覽界面，熟練地使用快捷鍵，將大大提升您的操作效率。
 
 ![0|view](fig/hotkey.png)
 
@@ -69,7 +69,7 @@
 ## 常用操作
 
 您可以在音樂中對本地音樂進行添加、刪除、查看訊息等基本操作。
-> ![notes](../common/notes.svg)說明：支持喚起桌面語音助手來播放音樂、收藏音樂、設定播放模式等。
+
 
 ### 添加音樂
 
@@ -109,10 +109,10 @@
 
 在音樂界面，您可以：
 
-- 單擊工具欄上的 ![lyric_normal](../common/lyric_normal.svg) 切換到歌詞界面，再次單擊，收起歌詞界面。
-- 單擊工具欄上的 ![music](../common/music.svg) 切換到歌詞界面，再次單擊，收起歌詞界面。
+- 單擊工具欄上的圖標 ![lyric_normal](../common/lyric_normal.svg) 切換到歌詞界面，再次單擊，收起歌詞界面。
+- 單擊工具欄上的圖標 ![music](../common/music.svg) 切換到歌詞界面，再次單擊，收起歌詞界面。
 
->  ![notes](../common/notes.svg)說明：如果播放的音樂文件有封面圖，那麼 ![music](../common/music.svg) 圖標將轉換為該音樂文件的封面圖，單擊封面圖也可以切換到歌詞界面。
+>  ![notes](../common/notes.svg)說明：如果播放的音樂文件有封面圖，那麼圖標 ![music](../common/music.svg) 將轉換為該音樂文件的封面圖，單擊封面圖也可以切換到歌詞界面。
 
 ### 調整播放模式
 
@@ -168,10 +168,10 @@
 
 > ![notes](../common/notes.svg)說明：**所有音樂** 和 **我的收藏** 是默認列表，不能刪除。**所有音樂** 包含各個歌單的全部音樂。您既可以在 **我的收藏** 列表中直接管理收藏的歌曲，也可以通過主界面上的收藏按鈕管理。
 
-### 新建歌單
+### 新建清單
 
-1. 在音樂界面，單擊「播放清單」右側的 ![icon_plus](../common/icon_plus.svg) 或者 ![icon_menu](../common/icon_menu.svg) > **新增播放清單**。
-2. 輸入名稱，按下鍵盤上的 **Enter** 鍵保存。
+1. 在音樂界面，單擊「播放清單」右側的按鈕 ![icon_plus](../common/icon_plus.svg) 或者 ![icon_menu](../common/icon_menu.svg) > **新增播放清單**。
+2. 輸入清單名稱後按下鍵盤上的 **Enter** 鍵保存。
 
 ![0|music_list](fig/music_list.png)
 
@@ -179,7 +179,7 @@
 
 1. 在「播放清單」列表中選擇一個清單。
 2. 單擊鼠標右鍵，選擇 **重新命名**。
-3. 輸入名稱後按下鍵盤上的 **Enter** 鍵保存。
+3. 輸入新名稱後按下鍵盤上的 **Enter** 鍵保存。
 
 ![0|music_list](fig/rename.png)
 

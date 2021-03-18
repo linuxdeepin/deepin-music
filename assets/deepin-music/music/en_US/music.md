@@ -120,7 +120,7 @@ On the main interface, you can choose from regular options, check view playlist,
 
 You can add, delete, and view info of the local music in Music in the following ways.
 
->![notes](../common/notes.svg) Notes: It is available to use Desktop AI Assistant to perform operations such as playing music,adding music to my favorites and setting play mode.
+
 
 ### Add Music
 

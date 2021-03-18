@@ -12,14 +12,14 @@
 
 ### 运行音乐
 
-1. 单击桌面底部的 ![launcher_icon](../common/deepin_launcher.svg)，进入启动器界面。
-2. 上下滚动鼠标滚轮浏览或通过搜索，找到音乐 ![music_icon24](../common/music_icon24.svg) 单击运行。
+1. 单击任务栏上的启动器图标![launcher_icon](../common/deepin_launcher.svg)，进入启动器界面。
+2. 上下滚动鼠标滚轮浏览或通过搜索，找到音乐图标 ![music_icon24](../common/music_icon24.svg)，单击运行。
 3. 右键单击 ![music_icon24](../common/music_icon24.svg)，您可以：
    - 单击 **发送到桌面**，在桌面创建快捷方式。
    - 单击 **发送到任务栏**，将应用程序固定到任务栏。
    - 单击 **开机自动启动**，将应用程序添加到开机启动项，在电脑开机时自动运行该应用。
 
-> ![notes](../common/notes.svg)说明：如果音乐已经默认固定在任务栏上，您也可以单击任务栏上的 ![music_icon24](../common/music_icon24.svg) 来运行。
+> ![notes](../common/notes.svg)说明：如果音乐已经默认固定在任务栏上，您也可以单击任务栏上的图标 ![music_icon24](../common/music_icon24.svg) 来运行。
 
 ### 隐藏到系统托盘
 
@@ -38,7 +38,7 @@
 
 ### 查看快捷键
 
-在音乐界面上，按下 **Ctrl + Shift + ?** 组合键来查看快捷键，熟练地使用快捷键，将大大提升您的操作效率。
+在音乐界面，使用快捷键 **Ctrl + Shift + ?** 打开快捷键预览界面，熟练地使用快捷键，将大大提升您的操作效率。
 
 ![0|view](fig/hotkey.png)
 
@@ -69,7 +69,7 @@
 ## 常用操作
 
 您可以在音乐中对本地音乐进行添加、删除、查看信息等基本操作。
-> ![notes](../common/notes.svg)说明：支持唤起桌面语音助手来播放音乐、收藏音乐、设定播放模式等。
+
 
 ### 添加音乐
 
@@ -110,10 +110,10 @@
 
 在音乐界面，您可以：
 
-- 单击工具栏上的 ![lyric_normal](../common/lyric_normal.svg) 切换到歌词界面，再次单击，收起歌词界面。
-- 单击工具栏上的 ![music](../common/music.svg) 切换到歌词界面，再次单击，收起歌词界面。
+- 单击工具栏上的图标 ![lyric_normal](../common/lyric_normal.svg) 切换到歌词界面，再次单击，收起歌词界面。
+- 单击工具栏上的图标 ![music](../common/music.svg) 切换到歌词界面，再次单击，收起歌词界面。
 
->  ![notes](../common/notes.svg)说明：如果播放的音乐文件有封面图，那么![music](../common/music.svg) 图标将转换为该音乐文件的封面图，单击封面图也可以切换到歌词界面。
+>  ![notes](../common/notes.svg)说明：如果播放的音乐文件有封面图，那么图标![music](../common/music.svg) 将转换为该音乐文件的封面图，单击封面图也可以切换到歌词界面。
 
 ### 调整播放模式
 
@@ -172,16 +172,16 @@
 
 ### 新建歌单
 
-1. 在音乐界面，单击“我的歌单”右侧的 ![icon_plus](../common/icon_plus.svg) 或者 ![icon_menu](../common/icon_menu.svg) > **添加新歌单**。
-2. 输入歌单的名称。
-3. 按下键盘上的 **Enter** 键。
+1. 在音乐界面，单击“我的歌单”右侧的按钮 ![icon_plus](../common/icon_plus.svg) 或者 ![icon_menu](../common/icon_menu.svg) > **添加新歌单**。
+2. 输入歌单名称后按下键盘上的 **Enter** 键保存。
 
 ![0|music_list](fig/music_list.png)
 
 ### 重命名歌单
 
-1. 在“我的歌单”中选择一个歌单。
-2. 单击鼠标右键选择 **重命名**，输入名称后按下键盘上的 **Enter** 键保存。
+1. 在“我的歌单”列表中选择一个歌单。
+2. 单击鼠标右键选择 **重命名**。
+3. 输入新名称后按下键盘上的 **Enter** 键保存。
 
 ![0|music_list](fig/rename.png)
 

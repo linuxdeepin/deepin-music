@@ -12,14 +12,14 @@
 
 ### 執行音樂
 
-1. 單擊桌面底部的 ![launcher_icon](../common/deepin_launcher.svg)，進入啟動器介面。
-2. 上下滾動滑鼠滾輪瀏覽或透過搜尋，找到音樂 ![music_icon24](../common/music_icon24.svg) 單擊執行。
+1. 單擊任務欄上的啟動器圖示  ![launcher_icon](../common/deepin_launcher.svg)，進入啟動器介面。
+2. 上下滾動滑鼠滾輪瀏覽或透過搜尋，找到音樂 ![music_icon24](../common/music_icon24.svg) 圖示，單擊執行。
 3. 右鍵單擊 ![music_icon24](../common/music_icon24.svg)，您可以：
    - 單擊 **建立桌面捷徑**，在桌面建立捷徑。
    - 單擊 **釘選到Dock**，將應用程式固定到Dock。
    - 單擊 **開機啟動**，將應用程式添加到開機啟動項，在電腦開機時自動執行該應用。
 
-> ![notes](../common/notes.svg)說明：如果音樂已經預設釘選到Dock上，您也可以單擊Dock上的 ![music_icon24](../common/music_icon24.svg) 來執行。
+> ![notes](../common/notes.svg)說明：如果音樂已經預設釘選到Dock上，您也可以單擊Dock上的 ![music_icon24](../common/music_icon24.svg) 執行。
 
 ### 隱藏到系統匣
 
@@ -38,7 +38,7 @@
 
 ### 查看快捷鍵
 
-在音樂介面上，按下 **Ctrl + Shift + ?** 組合鍵來查看快捷鍵，熟練的使用快捷鍵，將大大提升您的操作效率。
+在音樂介面上，使用快捷鍵 **Ctrl + Shift + ?** 打開快捷鍵預覽介面。熟練的使用快捷鍵，將大大提升您的操作效率。
 
 ![0|view](fig/hotkey.png)
 
@@ -65,8 +65,6 @@
 ## 常用操作
 
 您可以在音樂中對本機音樂進行添加、刪除、查看訊息等基本操作。
-
-> ![notes](../common/notes.svg)說明：支援喚起桌面智慧助手來播放音樂、收藏音樂、設定播放模式等。
 
 ### 添加音樂
 
@@ -201,7 +199,7 @@
 
 1. 在「我的歌單」中，選擇要刪除的歌單。
 2. 單擊滑鼠右鍵，選擇 **刪除**。
-3. 在彈出的對話框中單擊 **刪除**，來刪除歌單。
+3. 在彈出的對話框中單擊 **刪除**，刪除歌單。
 
 ![0|deletelist](fig/deletelist.png)
 
