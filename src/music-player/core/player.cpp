@@ -728,8 +728,6 @@ void Player::setMuted(bool mute)
     MusicSettings::setOption("base.play.mute", mute);
 }
 
-#include <iostream>
-
 void Player::setActiveMeta(const MediaMeta &meta)
 {
     m_ActiveMeta = meta;
