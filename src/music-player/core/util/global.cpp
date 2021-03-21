@@ -27,15 +27,20 @@
 #include <QDir>
 #include <QFile>
 #include <QFileInfo>
-#include <iostream>
+
+#define RECURSION_LIMIT 5
 
 DCORE_USE_NAMESPACE;
 QString appName;
+
+static int recursion = 0;
+static bool firstTime = true;
 static QString imagePushFilePath = "/tmp/deepin-music/cover.jpg";
 
 QString Global::configPath()
 {
-    return DStandardPaths::standardLocations(QStandardPaths::AppConfigLocation).value(0);
+    auto userConfigPath = DStandardPaths::standardLocations(QStandardPaths::AppConfigLocation).value(0);
+    return userConfigPath;
 }
 
 QString Global::cacheDir()
@@ -53,12 +58,6 @@ QString Global::getAppName()
 {
     return appName;
 }
-
-#define RECURSION_LIMIT 5
-
-static int recursion = 0;
-static bool firstTime = true;
-bool isPending = false; //Used in slotMediaMetaChanged(...) signal
 
 QString Global::imagePushed(QFile &src)
 {
@@ -92,7 +91,6 @@ QString Global::imagePushed(QFile &src)
                 f.flush();
                 f.close();
                 recursion = 0;
-                std::cout << "File saved." << std::endl;
                 return imagePushFilePath;
             }
             return "";
