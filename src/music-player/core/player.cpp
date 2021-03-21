@@ -171,12 +171,15 @@ void Player::playMeta(MediaMeta meta)
         data.appExec = "deepin-music";
         DRecentManager::addItem(meta.localPath, data);
 
-        QVariantMap metadata;
-        metadata.insert(Mpris::metadataToString(Mpris::Title), meta.title);
-        metadata.insert(Mpris::metadataToString(Mpris::Artist), meta.singer);
-        metadata.insert(Mpris::metadataToString(Mpris::Album), meta.album);
-        metadata.insert(Mpris::metadataToString(Mpris::Length), meta.length);
-        metadata.insert(Mpris::metadataToString(Mpris::ArtUrl), meta.coverUrl);
+        //Use m_ActiveMeta instead of meta cause in setActiveMeta(...), we generate the artwork FP.
+        //Now MPRIS will have an artwork image directly when selected.
+        QVariantMap metadata({
+                                 {Mpris::metadataToString(Mpris::Title), m_ActiveMeta.title},
+                                 {Mpris::metadataToString(Mpris::Artist), m_ActiveMeta.singer},
+                                 {Mpris::metadataToString(Mpris::Album), m_ActiveMeta.album},
+                                 {Mpris::metadataToString(Mpris::Length), m_ActiveMeta.length},
+                                 {Mpris::metadataToString(Mpris::ArtUrl), m_ActiveMeta.coverUrl}
+                             });
 
         //mprisPlayer->setCanSeek(true);
         m_mpris->setMetadata(metadata);
@@ -235,12 +238,13 @@ void Player::resume()
         m_fadeInAnimation->start();
     }
 
-    QVariantMap metadata;
-    metadata.insert(Mpris::metadataToString(Mpris::Title), m_ActiveMeta.title);
-    metadata.insert(Mpris::metadataToString(Mpris::Artist), m_ActiveMeta.singer);
-    metadata.insert(Mpris::metadataToString(Mpris::Album), m_ActiveMeta.album);
-    metadata.insert(Mpris::metadataToString(Mpris::Length), m_ActiveMeta.length);
-    metadata.insert(Mpris::metadataToString(Mpris::ArtUrl), m_ActiveMeta.coverUrl);
+    QVariantMap metadata({
+                             {Mpris::metadataToString(Mpris::Title), m_ActiveMeta.title},
+                             {Mpris::metadataToString(Mpris::Artist), m_ActiveMeta.singer},
+                             {Mpris::metadataToString(Mpris::Album), m_ActiveMeta.album},
+                             {Mpris::metadataToString(Mpris::Length), m_ActiveMeta.length},
+                             {Mpris::metadataToString(Mpris::ArtUrl), m_ActiveMeta.coverUrl}
+                         });
 
     //mprisPlayer->setCanSeek(true);
     m_mpris->setMetadata(metadata);
@@ -724,9 +728,16 @@ void Player::setMuted(bool mute)
     MusicSettings::setOption("base.play.mute", mute);
 }
 
+#include <iostream>
+
 void Player::setActiveMeta(const MediaMeta &meta)
 {
     m_ActiveMeta = meta;
+
+    //Push artwork to file and generate a FP for it.
+    QFile src(Global::cacheDir() + "/images/" + meta.hash + ".jpg");
+    m_ActiveMeta.coverUrl = Global::imagePushed(src);
+
     emit signalMediaMetaChanged(m_ActiveMeta);
     //保存上一次播放的歌曲
     MusicSettings::setOption("base.play.last_meta", meta.hash);
