@@ -460,12 +460,19 @@ void MusicListDataWidget::slotPlayAllClicked()
         if (DataBaseService::getInstance()->getDelStatus()) {
             for (int i = 0; i < albumInfos.size(); i++) {
                 AlbumInfo albumTmp = albumInfos.at(i);
-                for (MediaMeta meta : albumTmp.musicinfos.values()) {
-                    if (!metaList.contains(meta.hash)) {
-                        playMeta = meta;
+                QMap<QString, MediaMeta> albumTmpMap = albumTmp.musicinfos;
+                for(QMap<QString, MediaMeta>::Iterator iterator = albumTmpMap.begin();iterator!= albumTmpMap.end();iterator++){
+                    if (!metaList.contains((*iterator).hash)) {
+                        playMeta = (*iterator);
                         break;
                     }
                 }
+//                for (MediaMeta meta : albumTmp.musicinfos.values()) {
+//                    if (!metaList.contains(meta.hash)) {
+//                        playMeta = meta;
+//                        break;
+//                    }
+//                }
                 if (!playMeta.hash.isEmpty()) {
                     break;
                 }
@@ -509,12 +516,19 @@ void MusicListDataWidget::slotPlayAllClicked()
         if (DataBaseService::getInstance()->getDelStatus()) {
             for (int i = 0; i < singerInfos.size(); i++) {
                 SingerInfo singerTmp = singerInfos.at(i);
-                for (MediaMeta meta : singerTmp.musicinfos.values()) {
-                    if (!metaList.contains(meta.hash)) {
-                        playMeta = meta;
+                QMap<QString, MediaMeta> singerTmpMap = singerTmp.musicinfos;
+                for(QMap<QString, MediaMeta>::Iterator iterator = singerTmpMap.begin();iterator!= singerTmpMap.end();iterator++){
+                    if (!metaList.contains((*iterator).hash)) {
+                        playMeta = (*iterator);
                         break;
                     }
                 }
+//                for (MediaMeta meta : singerTmp.musicinfos.values()) {
+//                    if (!metaList.contains(meta.hash)) {
+//                        playMeta = meta;
+//                        break;
+//                    }
+//                }
                 if (!playMeta.hash.isEmpty()) {
                     break;
                 }

@@ -23,6 +23,7 @@
 
 #include <QThread>
 #include <QVector>
+#include <numeric>
 
 #include "libdmusic_global.h"
 

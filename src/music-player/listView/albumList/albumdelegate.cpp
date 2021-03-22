@@ -94,13 +94,13 @@ QSize AlbumDataDelegate::sizeHint(const QStyleOptionViewItem &option,
 bool AlbumDataDelegate::editorEvent(QEvent *event, QAbstractItemModel *model, const QStyleOptionViewItem &option, const QModelIndex &index)
 {
 #ifdef TABLET_PC
-    // 用于判断触屏点击状态
-    static int clickedCount = 0;
     const AlbumListView *albumlistView = qobject_cast<const AlbumListView *>(option.widget);
     const QMouseEvent *pressEvent = static_cast<QMouseEvent *>(event);
     const QPointF pressPos = pressEvent->pos();
 
     if (index.isValid() && (event->type() == QEvent::MouseButtonPress || event->type() == QEvent::MouseButtonDblClick)) {
+        // 用于判断触屏点击状态
+        static int clickedCount = 0;
         // 触屏点击次数
         clickedCount++;
 
@@ -122,16 +122,14 @@ bool AlbumDataDelegate::editorEvent(QEvent *event, QAbstractItemModel *model, co
         });
     }
 #else
-    // 用于判断鼠标点击状态
-    static int clickedCount = 0;
-
     const AlbumListView *albumlistView = qobject_cast<const AlbumListView *>(option.widget);
     const QMouseEvent *pressEvent = static_cast<QMouseEvent *>(event);
     const QPointF pressPos = pressEvent->pos();
 
-
     if (index.isValid() && albumlistView->viewMode() == QListView::IconMode &&
             (event->type() == QEvent::MouseButtonPress || event->type() == QEvent::MouseButtonDblClick)) {
+        // 用于判断鼠标点击状态
+        static int clickedCount = 0;
         // 鼠标点击次数
         clickedCount++;
 

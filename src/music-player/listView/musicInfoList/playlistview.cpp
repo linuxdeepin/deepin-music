@@ -151,8 +151,9 @@ void PlayListView::setListPageSwitchType(ListPageSwitchType type)
 PlayListView::PlayListView(QString hash, bool isPlayQueue, QWidget *parent)
     : DListView(parent)
     , m_currentHash(hash.isEmpty() ? "all" : hash)
+    ,m_listPageType(NullType)
 {
-    m_listPageType = NullType;
+    //m_listPageType = NullType;
     m_IsPlayQueue = isPlayQueue;
     setObjectName("PlayListView");
 
@@ -743,9 +744,9 @@ void PlayListView::slotMusicAddOne(QString listHash, MediaMeta addMeta)
         if (m_model->rowCount() == 0) {
             insertRow(0, addMeta);
         } else {
-            bool isInserted = false;
             //如果已经存在，则不加入
             if (!isContain(addMeta.hash)) {
+                bool isInserted = false;
                 for (int rowIndex = 0; rowIndex < m_model->rowCount(); rowIndex++) {
                     isInserted = false;
                     QModelIndex index = m_model->index(rowIndex, 0, QModelIndex());

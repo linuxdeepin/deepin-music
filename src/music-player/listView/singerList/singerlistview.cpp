@@ -667,12 +667,19 @@ void SingerListView::slotRemoveSelectedSongs(const QString &deleteHash, const QS
         SingerInfo singerTmp = idx.data(Qt::UserRole).value<SingerInfo>();
         // 查看专辑中除去要删除的还有没有剩余歌曲
         bool isExsit = false;
-        for (MediaMeta meta : singerTmp.musicinfos.values()) {
-            if (!meta.toDelete) {
+        QMap<QString, MediaMeta> musicinfosMap = singerTmp.musicinfos;
+        for(QMap<QString, MediaMeta>::Iterator iterator = musicinfosMap.begin();iterator!= musicinfosMap.end();iterator++){
+            if(!(*iterator).toDelete){
                 isExsit = true;
                 break;
             }
         }
+//        for (MediaMeta meta : singerTmp.musicinfos.values()) {
+//            if (!meta.toDelete) {
+//                isExsit = true;
+//                break;
+//            }
+//        }
         if (isExsit) {
             // 当前歌手存在歌曲，移除要删除的歌曲并播放该歌手
             if (preStatue == Player::PlaybackStatus::Playing) {

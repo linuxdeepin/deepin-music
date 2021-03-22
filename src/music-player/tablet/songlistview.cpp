@@ -69,10 +69,10 @@ SongListView::SongListView(QWidget *parent) : DListView(parent)
             this, &SongListView::setThemeType);
 }
 
-void SongListView::clearData()
-{
-    m_listViewModel->clear();
-}
+//void SongListView::clearData()
+//{
+//    m_listViewModel->clear();
+//}
 
 void SongListView::addSongListItem(const QString &hash, const QString &name, const QIcon &icon)
 {

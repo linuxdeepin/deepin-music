@@ -38,7 +38,7 @@ class SongListView : public DListView
     static constexpr int ItemIconSide = 24;
 public:
     explicit SongListView(QWidget *parent = nullptr);
-    void clearData();
+    //void clearData();
     void addSongListItem(const QString &hash, const QString &name, const QIcon &icon);
     void setThemeType(int type);
 signals:

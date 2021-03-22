@@ -574,12 +574,19 @@ void AlbumListView::slotRemoveSelectedSongs(const QString &deleteHash, const QSt
         AlbumInfo albumTmp = idx.data(Qt::UserRole).value<AlbumInfo>();
         // 查看专辑中除去要删除的还有没有剩余歌曲
         bool isExsit = false;
-        for (MediaMeta meta : albumTmp.musicinfos.values()) {
-            if (!meta.toDelete) {
+        QMap<QString, MediaMeta> musicinfosMap = albumTmp.musicinfos;
+        for(QMap<QString, MediaMeta>::Iterator iterator = musicinfosMap.begin();iterator!= musicinfosMap.end();iterator++){
+            if(!(*iterator).toDelete){
                 isExsit = true;
                 break;
             }
         }
+//        for (MediaMeta meta : albumTmp.musicinfos.values()) {
+//            if (!meta.toDelete) {
+//                isExsit = true;
+//                break;
+//            }
+//        }
         if (isExsit) {
             if (preStatue == Player::PlaybackStatus::Playing) {
                 Player::getInstance()->playMeta(albumTmp.musicinfos.values().at(0));

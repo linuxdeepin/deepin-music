@@ -47,7 +47,6 @@ extern "C" {
 #include "util/global.h"
 #include "core/vlc/vlcdynamicinstance.h"
 
-
 typedef AVFormatContext *(*format_alloc_context_function)(void);
 typedef int (*format_open_input_function)(AVFormatContext **, const char *, AVInputFormat *, AVDictionary **);
 typedef void (*format_free_context_function)(AVFormatContext *);
@@ -248,11 +247,12 @@ void MetaBufferDetector::resample(const QVector<float> &buffer, const QString &h
 
 
     if (!t_buffer.isEmpty()) {
-        float max = t_buffer.first();
-        for (auto data : t_buffer) {
-            if (max < data)
-                max = data;
-        }
+//        float max = t_buffer.first();
+//        for (auto data : t_buffer) {
+//            if (max < data) max = data;
+
+//        }
+        auto max = *(std::max_element(std::begin(t_buffer),std::end(t_buffer)));
         for (int i = 0; i < t_buffer.size(); ++i) {
             float ft = t_buffer[i] / max;
             ft *= 1000;

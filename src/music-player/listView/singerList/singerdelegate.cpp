@@ -84,13 +84,14 @@ QSize SingerDataDelegate::sizeHint(const QStyleOptionViewItem &option,
 bool SingerDataDelegate::editorEvent(QEvent *event, QAbstractItemModel *model, const QStyleOptionViewItem &option, const QModelIndex &index)
 {
 #ifdef TABLET_PC
-    // 用于判断触屏点击状态
-    static int clickedCount = 0;
+
     const SingerListView *singerListView = qobject_cast<const SingerListView *>(option.widget);
     const QMouseEvent *pressEvent = static_cast<QMouseEvent *>(event);
     const QPointF pressPos = pressEvent->pos();
 
     if (index.isValid() && (event->type() == QEvent::MouseButtonPress || event->type() == QEvent::MouseButtonDblClick)) {
+        // 用于判断触屏点击状态
+        static int clickedCount = 0;
         // 触屏点击次数
         clickedCount++;
 
@@ -112,15 +113,14 @@ bool SingerDataDelegate::editorEvent(QEvent *event, QAbstractItemModel *model, c
         });
     }
 #else
-    // 用于判断鼠标点击状态
-    static int clickedCount = 0;
-
     const SingerListView *singerListView = qobject_cast<const SingerListView *>(option.widget);
     const QMouseEvent *pressEvent = static_cast<QMouseEvent *>(event);
     const QPointF pressPos = pressEvent->pos();
 
     if (index.isValid() && singerListView->viewMode() == QListView::IconMode &&
             (event->type() == QEvent::MouseButtonPress || event->type() == QEvent::MouseButtonDblClick)) {
+        // 用于判断鼠标点击状态
+        static int clickedCount = 0;
         // 鼠标点击次数
         clickedCount++;
 
@@ -340,12 +340,12 @@ void SingerDataDelegate::drawTabletIconMode(QPainter &painter, const QStyleOptio
     }
     int startHeight = rect.y() + rect.height() - 56;
     int fillAllHeight = 57;
-    int curFillSize = fillAllHeight;
+    //int curFillSize = fillAllHeight;
     QRect fillBlurRect(rect.x(), rect.y() + rect.height() - fillAllHeight, rect.width(), fillAllHeight);
 
     if (playFlag && (playStatue == Player::Playing)) {
         fillBlurRect = QRect(rect.x(), rect.y() + rect.height() - 70, rect.width(), 76);
-        curFillSize = 70;
+        //curFillSize = 70;
     }
 
     // 设置模糊
