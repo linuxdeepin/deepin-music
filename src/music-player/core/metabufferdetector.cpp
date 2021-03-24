@@ -177,7 +177,8 @@ void MetaBufferDetector::run()
                 if (path.endsWith(".ape") || path.endsWith(".APE")) {
                     for (int i = 0; (i + 1) < frame->linesize[0]; i++) {
                         auto  valDate = ((ptr[i]) << 16 | (ptr[i + 1]));
-                        curData.append((float)valDate + qrand());
+                        //curData.append((float)valDate + qrand());
+                        curData.append(static_cast<float> (valDate)+ QRandomGenerator::global()->generate());
                     }
                 } else {
                     for (int i = 0; (i + 1) < frame->linesize[0]; i += 1024) {

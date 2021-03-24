@@ -75,19 +75,20 @@ void SingerListView::sortList(QList<SingerInfo> &singerInfos, const DataBaseServ
 {
     switch (sortType) {
     case DataBaseService::SortByAddTimeASC: {
-        qSort(singerInfos.begin(), singerInfos.end(), moreThanTimestampASC);
+        std::sort(singerInfos.begin(), singerInfos.end(), moreThanTimestampASC);
+        //qSort(singerInfos.begin(), singerInfos.end(), moreThanTimestampASC);
         break;
     }
     case DataBaseService::SortBySingerASC: {
-        qSort(singerInfos.begin(), singerInfos.end(), moreThanSingerASC);
+        std::sort(singerInfos.begin(), singerInfos.end(), moreThanSingerASC);
         break;
     }
     case DataBaseService::SortByAddTimeDES: {
-        qSort(singerInfos.begin(), singerInfos.end(), moreThanTimestampDES);
+        std::sort(singerInfos.begin(), singerInfos.end(), moreThanTimestampDES);
         break;
     }
     case DataBaseService::SortBySingerDES: {
-        qSort(singerInfos.begin(), singerInfos.end(), moreThanSingerDES);
+        std::sort(singerInfos.begin(), singerInfos.end(), moreThanSingerDES);
         break;
     }
     default:

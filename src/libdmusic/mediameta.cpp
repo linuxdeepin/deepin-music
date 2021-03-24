@@ -96,18 +96,22 @@ QString sizeString(qint64 sizeByte)
 {
     QString text;
     if (sizeByte < 1024) {
-        text.sprintf("%.1fB", sizeByte / 1.0);
+        text = QString("%1B").arg(QString::number(sizeByte / 1.0,'f',1));
+        //text.sprintf("%.1fB", sizeByte / 1.0);
         return text;
     }
     if (sizeByte < 1024 * 1024) {
-        text.sprintf("%.1fK", sizeByte / 1024.0);
+        text = QString("%1K").arg(QString::number(sizeByte / 1024.0,'f',1));
+        //text.sprintf("%.1fK", sizeByte / 1024.0);
         return text;
     }
     if (sizeByte < 1024 * 1024 * 1024) {
-        text.sprintf("%.1fM", sizeByte / 1024.0 / 1024.0);
+        text = QString("%1M").arg(QString::number(sizeByte / 1024.0 / 1024.0,'f',1));
+        //text.sprintf("%.1fM", sizeByte / 1024.0 / 1024.0);
         return text;
     }
-    text.sprintf("%.1fG", sizeByte / 1024.0 / 1024.0 / 1024.0);
+    text = QString("%1G").arg(QString::number(sizeByte / 1024.0 / 1024.0 / 1024.0,'f',1));
+    //text.sprintf("%.1fG", sizeByte / 1024.0 / 1024.0 / 1024.0);
     return text;
 }
 

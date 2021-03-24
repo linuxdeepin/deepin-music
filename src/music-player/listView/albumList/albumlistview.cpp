@@ -77,19 +77,23 @@ void AlbumListView::sortList(QList<AlbumInfo> &albumInfos, const DataBaseService
 {
     switch (sortType) {
     case DataBaseService::SortByAddTimeASC: {
-        qSort(albumInfos.begin(), albumInfos.end(), moreThanTimestampASC);
+        std::sort(albumInfos.begin(), albumInfos.end(), moreThanTimestampASC);
+        //qSort(albumInfos.begin(), albumInfos.end(), moreThanTimestampASC);
         break;
     }
     case DataBaseService::SortByTitleASC: {
-        qSort(albumInfos.begin(), albumInfos.end(), moreThanTitleASC);
+        std::sort(albumInfos.begin(), albumInfos.end(), moreThanTitleASC);
+        //qSort(albumInfos.begin(), albumInfos.end(), moreThanTitleASC);
         break;
     }
     case DataBaseService::SortByAddTimeDES: {
-        qSort(albumInfos.begin(), albumInfos.end(), moreThanTimestampDES);
+        std::sort(albumInfos.begin(), albumInfos.end(), moreThanTimestampDES);
+        //qSort(albumInfos.begin(), albumInfos.end(), moreThanTimestampDES);
         break;
     }
     case DataBaseService::SortByTitleDES: {
-        qSort(albumInfos.begin(), albumInfos.end(), moreThanTitleDES);
+        std::sort(albumInfos.begin(), albumInfos.end(), moreThanTitleDES);
+        //qSort(albumInfos.begin(), albumInfos.end(), moreThanTitleDES);
         break;
     }
     default:

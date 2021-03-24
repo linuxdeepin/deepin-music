@@ -320,9 +320,10 @@ void Player::playPreMeta()
         }
         case Shuffle: {
             QTime time;
-            time = QTime::currentTime();
-            qsrand(static_cast<uint>((time.msec() + time.second() * 1000)));
-            index = qrand() % m_MetaList.size();
+            time = QTime::currentTime();        
+            index = static_cast<int>(QRandomGenerator::global()->bounded(time.msec() + time.second() * 1000)) % m_MetaList.size();
+            //qsrand(static_cast<uint>((time.msec() + time.second() * 1000)));
+            //index = qrand() % m_MetaList.size();
             break;
         }
         default: {
@@ -376,8 +377,9 @@ void Player::playNextMeta(bool isAuto)
         case Shuffle: {
             QTime time;
             time = QTime::currentTime();
-            qsrand(static_cast<uint>((time.msec() + time.second() * 1000)));
-            index = qrand() % m_MetaList.size();
+            index = static_cast<int>(QRandomGenerator::global()->bounded(time.msec() + time.second() * 1000)) % m_MetaList.size();
+            //qsrand(static_cast<uint>((time.msec() + time.second() * 1000)));
+            //index = qrand() % m_MetaList.size();
             break;
         }
         default: {

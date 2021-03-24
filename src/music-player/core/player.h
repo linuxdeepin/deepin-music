@@ -28,6 +28,7 @@
 #include <QPropertyAnimation>
 #include <QPixmap>
 #include <QIcon>
+#include <QRandomGenerator>
 
 #include <MprisPlayer>
 #include <mediameta.h>
