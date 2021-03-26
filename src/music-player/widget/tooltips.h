@@ -44,7 +44,7 @@ public:
 //    void pop(QPoint center);
 
 public slots:
-    void setText(const QString text);
+    void setText(const QString &text);
 private slots:
     void setThemeType(int type);
 

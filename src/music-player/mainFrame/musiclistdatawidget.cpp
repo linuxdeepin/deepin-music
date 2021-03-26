@@ -944,7 +944,7 @@ void MusicListDataWidget::refreshInfoLabel(QString hash)
     m_infoLabel->setText(countStr);
 }
 
-void MusicListDataWidget::refreshModeBtnByHash(QString hash)
+void MusicListDataWidget::refreshModeBtnByHash(const QString &hash)
 {
     if (hash == "albumResult" || hash == "artistResult" || hash == "musicResult") {
         refreshModeBtn(m_searchResultTabWidget->getViewMode());
@@ -982,7 +982,7 @@ void MusicListDataWidget::slotPlaylistNameUpdate(const QString &listHash)
     m_titleLabel->setText(text);
 }
 
-void MusicListDataWidget::refreshSortAction(QString hash)
+void MusicListDataWidget::refreshSortAction(const QString &hash)
 {
     if (m_pStackedWidget->currentWidget() == m_musicListView ||
             (hash == "musicResult")) {

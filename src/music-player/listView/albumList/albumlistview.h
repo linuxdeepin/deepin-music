@@ -34,7 +34,7 @@ class AlbumListView : public DListView
 {
     Q_OBJECT
 public:
-    explicit AlbumListView(QString hash, QWidget *parent = Q_NULLPTR);
+    explicit AlbumListView(const QString &hash, QWidget *parent = Q_NULLPTR);
     ~AlbumListView();
     /**
      * @brief setAlbumListData set album data from DataBaseService to delegate
@@ -80,7 +80,7 @@ signals:
     void modeChanged(int);
 public slots:
     // 跳转到当前播放歌曲位置
-    void slotScrollToCurrentPosition(QString songlistHash);
+    void slotScrollToCurrentPosition(const QString &songlistHash);
     // 接收编码变更，更新对应项编码
     void slotUpdateCodec(const MediaMeta &meta);
 #ifdef TABLET_PC

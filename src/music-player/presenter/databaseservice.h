@@ -93,7 +93,7 @@ public:
     void removeSelectedSongs(const QString &curpage, const QStringList &musichashlist, bool removeFromLocal);
 
     // 导入
-    void                 importMedias(QString importHash, const QStringList &urllist);
+    void importMedias(const QString &importHash, const QStringList &urllist);
     // 获取导入状态，true正在导入，false没有导入，空闲
     //bool                 getImportStatus();
 //    void                 addMediaMeta(const MediaMeta &meta);
@@ -104,7 +104,7 @@ public:
     bool favoriteExist(const MediaMeta meta);
     // 歌单相关
     bool                 deleteMetaFromPlaylist(QString uuid, const QStringList &metaHash);
-    QString              getPlaylistNameByUUID(QString uuid);
+    QString              getPlaylistNameByUUID(const QString &uuid);
     uint                 getPlaylistMaxSortid();
     // 获取自定义歌单
     QList<PlaylistData>  getCustomSongList();

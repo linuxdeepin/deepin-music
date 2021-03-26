@@ -123,7 +123,7 @@ QAction *DDropdown::addAction(const QString &item, const QVariant &var)
     return action;
 }
 
-void DDropdown::setStatus(QString status)
+void DDropdown::setStatus(const QString &status)
 {
     this->status = status;
 }

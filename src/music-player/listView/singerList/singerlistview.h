@@ -35,7 +35,7 @@ class SingerListView : public DListView
 {
     Q_OBJECT
 public:
-    explicit SingerListView(QString hash, QWidget *parent = Q_NULLPTR);
+    explicit SingerListView(const QString &hash, QWidget *parent = Q_NULLPTR);
     ~SingerListView();
 
     /**
@@ -84,7 +84,7 @@ public slots:
     // 歌曲删除
     void slotRemoveSingleSong(const QString &listHash, const QString &musicHash);
     // 跳转到当前播放歌曲位置
-    void slotScrollToCurrentPosition(QString songlistHash);
+    void slotScrollToCurrentPosition(const QString &songlistHash);
 signals:
     void requestCustomContextMenu(const QPoint &pos);
     void modeChanged(int);

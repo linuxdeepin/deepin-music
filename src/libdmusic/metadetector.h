@@ -33,7 +33,7 @@ class LIBDMUSICSHARED_EXPORT MetaDetector: public QObject, public DMusic::DSingl
 public:
     void init();
 
-    static QList<QByteArray> detectEncodings(const MediaMeta meta);
+    static QList<QByteArray> detectEncodings(const MediaMeta &meta);
     static QList<QByteArray> detectEncodings(const QByteArray &rawData);
 
     void updateCueFileTagCodec(MediaMeta &meta, const QFileInfo &, const QByteArray &codec);

@@ -156,7 +156,7 @@ void PlayListView::setListPageSwitchType(ListPageSwitchType type)
     m_listPageType = type;
 }
 
-PlayListView::PlayListView(QString hash, bool isPlayQueue, QWidget *parent)
+PlayListView::PlayListView(const QString &hash, bool isPlayQueue, QWidget *parent)
     : DListView(parent)
     , m_currentHash(hash.isEmpty() ? "all" : hash)
     ,m_listPageType(NullType)
@@ -278,7 +278,7 @@ QStandardItem *PlayListView::item(int row, int column) const
 //    setCurrentIndex(m_model->indexFromItem(item));
 //}
 
-void PlayListView::initAllSonglist(QString hash)
+void PlayListView::initAllSonglist(const QString &hash)
 {
     m_currentHash = hash;
     m_model->clear();
@@ -567,7 +567,7 @@ int PlayListView::getMusicCount()
     return m_model->rowCount();
 }
 
-void PlayListView::setMusicListView(QMap<QString, MediaMeta> musicinfos, QString hash)
+void PlayListView::setMusicListView(QMap<QString, MediaMeta> musicinfos, const QString &hash)
 {
     m_currentHash = hash;
     m_model->clear();
@@ -720,7 +720,7 @@ void PlayListView::slotRemoveSingleSong(const QString &listHash, const QString &
     }
 }
 
-void PlayListView::slotMusicAddOne(QString listHash, MediaMeta addMeta)
+void PlayListView::slotMusicAddOne(const QString &listHash, MediaMeta addMeta)
 {
     if (m_currentHash == "album" || m_currentHash == "albumResult"
             || m_currentHash == "artist" || m_currentHash == "artistResult") {
@@ -828,7 +828,7 @@ void PlayListView::slotMusicAddOne(QString listHash, MediaMeta addMeta)
     }
 }
 
-void PlayListView::slotScrollToCurrentPosition(QString songlistHash)
+void PlayListView::slotScrollToCurrentPosition(const QString &songlistHash)
 {
     qDebug() << __FUNCTION__ << songlistHash;
     // listmode情况下跳转到播放位置
@@ -882,7 +882,7 @@ void PlayListView::showDetailInfoDlg()
     m_pInfoDlg->show();
 }
 
-void PlayListView::slotPlayQueueMetaRemove(QString metaHash)
+void PlayListView::slotPlayQueueMetaRemove(const QString &metaHash)
 {
     if (!m_IsPlayQueue) {
         return;
@@ -899,7 +899,7 @@ void PlayListView::slotPlayQueueMetaRemove(QString metaHash)
     }
 }
 
-void PlayListView::slotAddToFavSongList(const QString songName)
+void PlayListView::slotAddToFavSongList(const QString &songName)
 {
     QList<MediaMeta> listMeta;
     QItemSelectionModel *selection = selectionModel();
@@ -917,7 +917,7 @@ void PlayListView::slotAddToFavSongList(const QString songName)
     emit CommonService::getInstance()->signalFluashFavoriteBtnIcon();
 }
 
-void PlayListView::slotAddToNewSongList(const QString songName)
+void PlayListView::slotAddToNewSongList(const QString &songName)
 {
     QItemSelectionModel *selection = selectionModel();
     QList<MediaMeta> metaList;
@@ -1085,7 +1085,7 @@ void PlayListView::insertRow(int row, MediaMeta meta)
     m_model->setData(index, mediaMeta, Qt::UserRole);
 }
 
-bool PlayListView::isContain(QString hash)
+bool PlayListView::isContain(const QString &hash)
 {
     bool bIsContain = false;
     int row =  m_model->rowCount();

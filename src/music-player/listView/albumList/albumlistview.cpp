@@ -106,7 +106,7 @@ QString AlbumListView::getHash() const
     return m_hash;
 }
 
-AlbumListView::AlbumListView(QString hash, QWidget *parent)
+AlbumListView::AlbumListView(const QString &hash, QWidget *parent)
     : DListView(parent), m_hash(hash)
 {
     setObjectName("AlbumListView");
@@ -728,7 +728,7 @@ void AlbumListView::setDataBySortType(QList<AlbumInfo> &albumInfos, DataBaseServ
     }
 }
 
-void AlbumListView::slotScrollToCurrentPosition(QString songlistHash)
+void AlbumListView::slotScrollToCurrentPosition(const QString &songlistHash)
 {
     qDebug() << __FUNCTION__ << songlistHash;
     // listmode情况下跳转到播放位置

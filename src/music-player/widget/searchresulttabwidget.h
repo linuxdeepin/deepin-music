@@ -42,7 +42,7 @@ public:
     ~SearchResultTabWidget();
 
     void refreshListview();
-    void refreshListview(ListPageSwitchType switchtype, QString searchword);
+    void refreshListview(ListPageSwitchType switchtype, const QString &searchword);
     void setViewMode(DListView::ViewMode mode);
     void setSortType(DataBaseService::ListSortType sortType);
     //排序

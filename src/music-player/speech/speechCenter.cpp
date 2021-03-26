@@ -600,7 +600,7 @@ QVariant SpeechCenter::OpenUris(QVariant paths)
     return true;
 }
 
-void SpeechCenter::setMediaMetas(QList<MediaMeta> mediaMetas)
+void SpeechCenter::setMediaMetas(const QList<MediaMeta> &mediaMetas)
 {
     m_MediaMetas.clear();
     m_MediaMetas = mediaMetas;

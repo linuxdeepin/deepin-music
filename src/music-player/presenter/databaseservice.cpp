@@ -85,7 +85,10 @@ QList<MediaMeta> DataBaseService::allMusicInfos(bool refresh)
                                          "FROM musicNew");
 
         QSqlQuery queryNew(m_db);
-        queryNew.prepare(queryStringNew);
+        if (!queryNew.prepare(queryStringNew)) {
+            qCritical() << queryNew.lastError();
+            return m_AllMediaMeta;
+        }
         if (! queryNew.exec()) {
             qCritical() << queryNew.lastError();
             return m_AllMediaMeta;
@@ -134,7 +137,10 @@ int DataBaseService::allMusicInfosCount()
     } else {
         QString queryString = QString("SELECT count(*) FROM musicNew");
         QSqlQuery queryNew(m_db);
-        queryNew.prepare(queryString);
+        if (!queryNew.prepare(queryString)) {
+            qCritical() << queryNew.lastError();
+            return 0;
+        }
         if (!queryNew.exec()) {
             qCritical() << queryNew.lastError();
             count = 0;
@@ -213,7 +219,10 @@ QList<MediaMeta> DataBaseService::customizeMusicInfos(const QString &hash)
 
     QList<MediaMeta> medialist;
     QSqlQuery query;
-    query.prepare(QString("SELECT music_id FROM playlist_%1").arg(hash));
+    if (!query.prepare(QString("SELECT music_id FROM playlist_%1").arg(hash))) {
+        qWarning() << query.lastError();
+        return medialist;
+    }
     if (!query.exec()) {
         qWarning() << query.lastError();
         return medialist;
@@ -234,7 +243,10 @@ QList<DataBaseService::PlaylistData> DataBaseService::getCustomSongList()
 {
     QList<DataBaseService::PlaylistData> customlist;
     QSqlQuery query;
-    query.prepare("SELECT uuid ,displayname FROM playlist WHERE readonly=0 order by sort_id ASC");
+    if (!query.prepare("SELECT uuid ,displayname FROM playlist WHERE readonly=0 order by sort_id ASC")) {
+        qWarning() << query.lastError();
+        return customlist;
+    }
 
     if (!query.exec()) {
         qWarning() << query.lastError();
@@ -274,7 +286,7 @@ void DataBaseService::removeSelectedSongs(const QString &curpage, const QStringL
 //    return m_db;
 //}
 
-void DataBaseService::importMedias(QString importHash, const QStringList &urllist)
+void DataBaseService::importMedias(const QString &importHash, const QStringList &urllist)
 {
 // bool值判断用来解决重复导入问题，考虑多次导入，
 // 在线程中已由信号槽队列处理，这个值多余了，注释处理
@@ -342,14 +354,14 @@ void DataBaseService::importMedias(QString importHash, const QStringList &urllis
 void DataBaseService::addPlaylist(const DataBaseService::PlaylistData &playlistMeta)
 {
     QSqlQuery query;
-    query.prepare("INSERT INTO playlist ("
-                  "uuid, displayname, icon, readonly, hide, "
-                  "sort_type, order_type, sort_id "
-                  ") "
-                  "VALUES ("
-                  ":uuid, :displayname, :icon, :readonly, :hide, "
-                  ":sort_type, :order_type, :sort_id "
-                  ")");
+    bool isPrepare = query.prepare("INSERT INTO playlist ("
+                                   "uuid, displayname, icon, readonly, hide, "
+                                   "sort_type, order_type, sort_id "
+                                   ") "
+                                   "VALUES ("
+                                   ":uuid, :displayname, :icon, :readonly, :hide, "
+                                   ":sort_type, :order_type, :sort_id "
+                                   ")");
     query.bindValue(":uuid", playlistMeta.uuid);
     query.bindValue(":displayname", playlistMeta.displayName);
     query.bindValue(":icon", playlistMeta.icon);
@@ -359,7 +371,7 @@ void DataBaseService::addPlaylist(const DataBaseService::PlaylistData &playlistM
     query.bindValue(":order_type", playlistMeta.orderType);
     query.bindValue(":sort_id", playlistMeta.sortID);
 
-    if (! query.exec()) {
+    if ((!isPrepare) || (! query.exec())) {
         qWarning() << query.lastError();
         return;
     }
@@ -465,8 +477,8 @@ bool DataBaseService::deleteMetaFromPlaylist(QString uuid, const QStringList &me
         if (query.exec(sqlIsExists)) {
             if (query.next()) {
                 strsql = QString("DELETE FROM playlist_%1 WHERE music_id='%2'").arg(uuid).arg(hash);
-                query.prepare(strsql);
-                if (! query.exec()) {
+                bool isPrepare = query.prepare(strsql);
+                if ((!isPrepare) || (! query.exec())) {
                     qCritical() << query.lastError() << strsql;
                 }
                 if (uuid == "fav") {
@@ -544,10 +556,10 @@ QList<DataBaseService::PlaylistData> DataBaseService::allPlaylistMeta()
     } else {
         m_PlaylistMeta.clear();
         QSqlQuery query(m_db);
-        query.prepare("SELECT uuid, displayname, icon, readonly, hide, "
-                      "sort_type, order_type, sort_id FROM playlist");
+        bool isPrepare = query.prepare("SELECT uuid, displayname, icon, readonly, hide, "
+                                       "sort_type, order_type, sort_id FROM playlist");
 
-        if (!query.exec()) {
+        if ((!isPrepare) || (! query.exec())) {
             qWarning() << query.lastError();
             return m_PlaylistMeta;
         }
@@ -575,10 +587,10 @@ int DataBaseService::addMetaToPlaylist(QString uuid, const QList<MediaMeta> &met
     for (MediaMeta meta : metas) {
         QSqlQuery query(m_db);
         QString sqlStr = QString("SELECT * FROM playlist_%1 WHERE music_id = :music_id").arg(uuid);
-        query.prepare(sqlStr);
+        bool isPrepare = query.prepare(sqlStr);
         query.bindValue(":music_id", meta.hash);
 
-        if (query.exec()) {
+        if (isPrepare && query.exec()) {
             if (!query.next()) {
                 sqlStr = QString("INSERT INTO playlist_%1 "
                                  "(music_id, playlist_id, sort_id) "
@@ -608,13 +620,13 @@ int DataBaseService::addMetaToPlaylist(QString uuid, const QList<MediaMeta> &met
 void DataBaseService::updatePlaylistSortType(int type, QString uuid)
 {
     QSqlQuery query(m_db);
-    query.prepare("UPDATE playlist "
-                  "SET sort_type = :sort_type "
-                  "WHERE uuid = :uuid;");
+    bool isPrepare = query.prepare("UPDATE playlist "
+                                   "SET sort_type = :sort_type "
+                                   "WHERE uuid = :uuid;");
     query.bindValue(":uuid", uuid);
     query.bindValue(":sort_type", type);
 
-    if (! query.exec()) {
+    if ((!isPrepare) || (! query.exec())) {
         qWarning() << query.lastError();
         return;
     }
@@ -623,13 +635,13 @@ void DataBaseService::updatePlaylistSortType(int type, QString uuid)
 void DataBaseService::updatePlaylistDisplayName(QString displayname, QString uuid)
 {
     QSqlQuery query(m_db);
-    query.prepare("UPDATE playlist "
-                  "SET displayname = :displayname "
-                  "WHERE uuid = :uuid;");
+    bool isPrepare = query.prepare("UPDATE playlist "
+                                   "SET displayname = :displayname "
+                                   "WHERE uuid = :uuid;");
     query.bindValue(":uuid", uuid);
     query.bindValue(":displayname", displayname);
 
-    if (! query.exec()) {
+    if ((!isPrepare) || (! query.exec())) {
         qWarning() << query.lastError();
         return;
     }
@@ -647,9 +659,9 @@ void DataBaseService::updatePlaylistDisplayName(QString displayname, QString uui
 int DataBaseService::getPlaylistSortType(QString uuid)
 {
     QSqlQuery query(m_db);
-    query.prepare("SELECT sort_type FROM playlist where uuid = :uuid;");
+    bool isPrepare = query.prepare("SELECT sort_type FROM playlist where uuid = :uuid;");
     query.bindValue(":uuid", uuid);
-    if (!query.exec()) {
+    if ((!isPrepare) || (! query.exec())) {
         qWarning() << query.lastError();
         return -1;
     }
@@ -666,8 +678,8 @@ int DataBaseService::getPlaylistSongCount(QString uuid)
     int count = 0;
     QString queryString = QString("SELECT count(*) FROM playlist_%1").arg(uuid);
     QSqlQuery queryNew(m_db);
-    queryNew.prepare(queryString);
-    if (!queryNew.exec()) {
+    bool isPrepare = queryNew.prepare(queryString);
+    if ((!isPrepare) || (! queryNew.exec())) {
         qCritical() << queryNew.lastError();
         count = 0;
     }
@@ -696,8 +708,8 @@ bool DataBaseService::isMediaMetaInSonglist(const QString &songlistHash, const Q
 void DataBaseService::updateMetaCodec(const MediaMeta &meta)
 {
     QSqlQuery query;
-    query.prepare(QString("UPDATE musicNew set codec='%1' WHERE hash='%2'").arg(meta.codec).arg(meta.hash));
-    if (!query.exec()) {
+    bool isPrepare = query.prepare(QString("UPDATE musicNew set codec='%1' WHERE hash='%2'").arg(meta.codec).arg(meta.hash));
+    if ((!isPrepare) || (! query.exec())) {
         qWarning() << query.lastError();
         return ;
     }
@@ -768,7 +780,7 @@ void DataBaseService::setDelNeedSleep()
 //    return 0;
 //}l
 
-QString DataBaseService::getPlaylistNameByUUID(QString uuid)
+QString DataBaseService::getPlaylistNameByUUID(const QString &uuid)
 {
     if (m_PlaylistMeta.size() <= 0) {
         allPlaylistMeta();
@@ -787,10 +799,10 @@ uint DataBaseService::getPlaylistMaxSortid()
 {
     uint max = 1;
     QSqlQuery query(m_db);
-    query.prepare("SELECT uuid, displayname, icon, readonly, hide, "
-                  "sort_type, order_type, sort_id FROM playlist");
+    bool isPrepare = query.prepare("SELECT uuid, displayname, icon, readonly, hide, "
+                                   "sort_type, order_type, sort_id FROM playlist");
 
-    if (!query.exec()) {
+    if ((!isPrepare) || (! query.exec())) {
         qWarning() << query.lastError();
         return 0;
     }
@@ -821,76 +833,76 @@ bool DataBaseService::createConnection()
     }
 
     QSqlQuery query(m_db);
-    query.exec("CREATE TABLE IF NOT EXISTS music (hash TEXT primary key not null, "
-               "timestamp INTEGER,"
-               "title VARCHAR(256), artist VARCHAR(256), "
-               "py_title VARCHAR(256), py_title_short VARCHAR(256), "
-               "py_artist VARCHAR(256), py_artist_short VARCHAR(256), "
-               "py_album VARCHAR(256), py_album_short VARCHAR(256), "
-               "album VARCHAR(256), filetype VARCHAR(32), "
-               "size INTEGER, track INTEGER, "
-               "offset INTEGER, favourite INTEGER(32), "
-               "localpath VARCHAR(4096), length INTEGER, "
-               "search_id VARCHAR(256), "
-               "invalid INTEGER(32), "
-               "cuepath VARCHAR(4096) )"
-              );
+    bool isExec = query.exec("CREATE TABLE IF NOT EXISTS music (hash TEXT primary key not null, "
+                             "timestamp INTEGER,"
+                             "title VARCHAR(256), artist VARCHAR(256), "
+                             "py_title VARCHAR(256), py_title_short VARCHAR(256), "
+                             "py_artist VARCHAR(256), py_artist_short VARCHAR(256), "
+                             "py_album VARCHAR(256), py_album_short VARCHAR(256), "
+                             "album VARCHAR(256), filetype VARCHAR(32), "
+                             "size INTEGER, track INTEGER, "
+                             "offset INTEGER, favourite INTEGER(32), "
+                             "localpath VARCHAR(4096), length INTEGER, "
+                             "search_id VARCHAR(256), "
+                             "invalid INTEGER(32), "
+                             "cuepath VARCHAR(4096) )"
+                            );
 
     //Smooth transition
-    query.exec("CREATE TABLE IF NOT EXISTS musicNew (hash TEXT primary key not null, "
-               "timestamp INTEGER,"
-               "title VARCHAR(256), artist VARCHAR(256), "
-               "py_title VARCHAR(256), py_title_short VARCHAR(256), "
-               "py_artist VARCHAR(256), py_artist_short VARCHAR(256), "
-               "py_album VARCHAR(256), py_album_short VARCHAR(256), "
-               "album VARCHAR(256), filetype VARCHAR(32), "
-               "size INTEGER, track INTEGER, "
-               "offset INTEGER, favourite INTEGER(32), "
-               "localpath VARCHAR(4096), length INTEGER, "
-               "search_id VARCHAR(256), "
-               "invalid INTEGER(32), "
-               "lyricPath VARCHAR(4096), "
-               "codec VARCHAR(35), "
-               "isCoverLoaded INTEGER(32), "
-               "cuepath VARCHAR(4096) )"
-              );
+    isExec &= query.exec("CREATE TABLE IF NOT EXISTS musicNew (hash TEXT primary key not null, "
+                         "timestamp INTEGER,"
+                         "title VARCHAR(256), artist VARCHAR(256), "
+                         "py_title VARCHAR(256), py_title_short VARCHAR(256), "
+                         "py_artist VARCHAR(256), py_artist_short VARCHAR(256), "
+                         "py_album VARCHAR(256), py_album_short VARCHAR(256), "
+                         "album VARCHAR(256), filetype VARCHAR(32), "
+                         "size INTEGER, track INTEGER, "
+                         "offset INTEGER, favourite INTEGER(32), "
+                         "localpath VARCHAR(4096), length INTEGER, "
+                         "search_id VARCHAR(256), "
+                         "invalid INTEGER(32), "
+                         "lyricPath VARCHAR(4096), "
+                         "codec VARCHAR(35), "
+                         "isCoverLoaded INTEGER(32), "
+                         "cuepath VARCHAR(4096) )"
+                        );
 
     // 判断musicNew中是否有isCoverLoaded字段
-    query.exec("select sql from sqlite_master where name = \"musicNew\" and sql like \"%hasimage%\"");
+    isExec &= query.exec("select sql from sqlite_master where name = \"musicNew\" and sql like \"%hasimage%\"");
     if (!query.next()) {
         // 无isCoverLoaded字段,则增加isCoverLoaded字段,默认值1
-        query.exec(QString("ALTER TABLE \"musicNew\" ADD COLUMN \"hasimage\" INTEGER default \"%1\"")
-                   .arg("1"));
+        isExec &= query.exec(QString("ALTER TABLE \"musicNew\" ADD COLUMN \"hasimage\" INTEGER default \"%1\"")
+                             .arg("1"));
     }
 
 
 
-    query.exec("CREATE TABLE IF NOT EXISTS ablum (id int primary key, "
-               "name VARCHAR(20), localpath VARCHAR(4096), url VARCHAR(4096))");
+    isExec &= query.exec("CREATE TABLE IF NOT EXISTS ablum (id int primary key, "
+                         "name VARCHAR(20), localpath VARCHAR(4096), url VARCHAR(4096))");
 
-    query.exec("CREATE TABLE IF NOT EXISTS artist (id int primary key, "
-               "name VARCHAR(20))");
+    isExec &= query.exec("CREATE TABLE IF NOT EXISTS artist (id int primary key, "
+                         "name VARCHAR(20))");
 
-    query.exec("CREATE TABLE IF NOT EXISTS playlist (uuid TEXT primary key not null, "
-               "displayname VARCHAR(4096), "
-               "icon VARCHAR(256), readonly INTEGER, "
-               "hide INTEGER, sort_type INTEGER, "
-               "sort_id INTEGER, "
-               "order_type INTEGER )");
+    isExec &= query.exec("CREATE TABLE IF NOT EXISTS playlist (uuid TEXT primary key not null, "
+                         "displayname VARCHAR(4096), "
+                         "icon VARCHAR(256), readonly INTEGER, "
+                         "hide INTEGER, sort_type INTEGER, "
+                         "sort_id INTEGER, "
+                         "order_type INTEGER )");
 
-    query.exec("CREATE TABLE IF NOT EXISTS info (uuid TEXT primary key not null, "
-               "version INTEGER )");
+    isExec &= query.exec("CREATE TABLE IF NOT EXISTS info (uuid TEXT primary key not null, "
+                         "version INTEGER )");
     initPlaylistTable();
-    return true;
+    return isExec;
 }
 
 bool DataBaseService::isPlaylistExist(const QString &uuid)
 {
     QSqlQuery query(m_db);
-    query.prepare("SELECT COUNT(*) FROM playlist where uuid = :uuid");
+    bool isPrepare = query.prepare("SELECT COUNT(*) FROM playlist where uuid = :uuid");
     query.bindValue(":uuid", uuid);
 
-    if (!query.exec()) {
+    if ((!isPrepare) || (! query.exec())) {
         qWarning() << query.lastError();
         return false;
     }

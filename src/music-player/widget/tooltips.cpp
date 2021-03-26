@@ -111,7 +111,7 @@ void ToolTips::enterEvent(QEvent *e)
     hide();
 }
 
-void ToolTips::setText(const QString text)
+void ToolTips::setText(const QString &text)
 {
     textLable->setText(text);
     m_strText = text;

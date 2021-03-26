@@ -46,7 +46,7 @@ public:
     void stop();
     void setNeedSleep();
 public slots:
-    void     slotImportMedias(QString importHash, const QStringList &urllist);
+    void     slotImportMedias(const QString &importHash, const QStringList &urllist);
     void     slotCreatCoverImg(const QList<MediaMeta> &metas);
     void     slotRemoveSelectedSongs(const QString &curpage, const QStringList &musichashlist, bool removeFromLocal);
 private:

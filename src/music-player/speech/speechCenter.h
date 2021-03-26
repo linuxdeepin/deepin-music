@@ -68,7 +68,7 @@ public:
     // 音乐打开后通过dbus导入文件
     QVariant OpenUris(QVariant paths);
     // 查询出的结果由列表给出，解决排序问题
-    void setMediaMetas(QList<MediaMeta>  mediaMetas);
+    void setMediaMetas(const QList<MediaMeta> &mediaMetas);
     // 确认是否需要刷新播放队列，即是否要排序
     bool getNeedRefresh();
 private:

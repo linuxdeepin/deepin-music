@@ -36,7 +36,7 @@ class PlayListView : public DListView
 {
     Q_OBJECT
 public:
-    explicit PlayListView(QString hash, bool isPlayQueue, QWidget *parent = Q_NULLPTR);
+    explicit PlayListView(const QString &hash, bool isPlayQueue, QWidget *parent = Q_NULLPTR);
     ~PlayListView() override;
 
     void setThemeType(int type);
@@ -45,7 +45,7 @@ public:
     QStandardItem *item(int row, int column) const;
     //void setCurrentItem(QStandardItem *item);
     // 性能优化歌曲展示专用
-    void initAllSonglist(QString hash);
+    void initAllSonglist(const QString &hash);
     // 歌单&收藏页面
     void initCostomSonglist(const QString &hash);
     // 展示歌名包含str的歌曲
@@ -77,7 +77,7 @@ public:
     // 获取列表中歌曲数量
     int getMusicCount();
     // 二级页面添加歌曲，设置hash
-    void setMusicListView(QMap<QString, MediaMeta> musicinfos, QString hash);
+    void setMusicListView(QMap<QString, MediaMeta> musicinfos, const QString &hash);
     // 设置当前列表属于哪个页面
     void setListPageSwitchType(ListPageSwitchType type);
 public slots:
@@ -95,16 +95,16 @@ public slots:
     // 删除单个歌单中的歌曲
     void slotRemoveSingleSong(const QString &listHash, const QString &musicHash);
     // 增加歌曲
-    void slotMusicAddOne(QString listHash, MediaMeta addMeta);
+    void slotMusicAddOne(const QString &listHash, MediaMeta addMeta);
     // 跳转到当前播放歌曲位置
-    void slotScrollToCurrentPosition(QString songlistHash);
+    void slotScrollToCurrentPosition(const QString &songlistHash);
     //右键菜单响应begin
     // 添加到播放队列
     void slotAddToPlayQueue();
     // 添加收藏
-    void slotAddToFavSongList(const QString songName);
+    void slotAddToFavSongList(const QString &songName);
     // 添加到新歌单
-    void slotAddToNewSongList(const QString songName);
+    void slotAddToNewSongList(const QString &songName);
     // 播放音乐
     void slotPlayMusic();
     // 添加到其他歌单
@@ -118,7 +118,7 @@ public slots:
     // 查看歌曲信息
     void showDetailInfoDlg();
     // 播放队列中歌曲被删除
-    void slotPlayQueueMetaRemove(QString metaHash);
+    void slotPlayQueueMetaRemove(const QString &metaHash);
     // 右键菜单设置音乐编码
     void slotTextCodecMenuClicked(QAction *action);
     // 右键菜单添加到歌单
@@ -142,7 +142,7 @@ private:
     // 播放音乐相关处理
     void playMusic(const MediaMeta &meta);
     void insertRow(int row, MediaMeta meta);
-    bool isContain(QString hash);
+    bool isContain(const QString &hash);
     // 排序
     void sortList(QList<MediaMeta> &musicInfos, const DataBaseService::ListSortType &sortType);
 signals:

@@ -38,7 +38,7 @@ QString Global::cacheDir()
     return userCachePath;
 }
 
-void Global::setAppName(QString name)
+void Global::setAppName(const QString &name)
 {
     appName = name;
 }

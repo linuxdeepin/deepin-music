@@ -57,7 +57,7 @@ public slots:
     // 刷新各列表数量信息
     void refreshInfoLabel(QString hash);
     // 刷新显示模式按钮check状态
-    void refreshModeBtnByHash(QString hash);
+    void refreshModeBtnByHash(const QString &hash);
     // 刷新播放所有按钮enable状态
     void refreshPlayAllBtn(int count);
     // 删除了一首音乐
@@ -87,7 +87,7 @@ private:
     // 刷新显示模式按钮check状态
     void refreshModeBtn(DListView::ViewMode mode);
     // 刷新当前排序菜单
-    void refreshSortAction(QString hash = "");
+    void refreshSortAction(const QString &hash = "");
 private:
     DWidget             *m_contentWidget   = nullptr;
     QStackedWidget      *m_pStackedWidget  = nullptr;

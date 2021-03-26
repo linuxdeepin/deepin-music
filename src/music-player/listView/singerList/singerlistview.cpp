@@ -106,7 +106,7 @@ int SingerListView::getSingerCount()
     return singerModel->rowCount();
 }
 
-SingerListView::SingerListView(QString hash, QWidget *parent)
+SingerListView::SingerListView(const QString &hash, QWidget *parent)
     : DListView(parent)
 {
     setObjectName("SingerListView");
@@ -521,7 +521,7 @@ void SingerListView::slotRemoveSingleSong(const QString &listHash, const QString
     }
 }
 
-void SingerListView::slotScrollToCurrentPosition(QString songlistHash)
+void SingerListView::slotScrollToCurrentPosition(const QString &songlistHash)
 {
     qDebug() << __FUNCTION__ << songlistHash;
     // listmode情况下跳转到播放位置

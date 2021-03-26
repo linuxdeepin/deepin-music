@@ -115,7 +115,7 @@ void MetaDetector::updateCueFileTagCodec(MediaMeta &meta, const QFileInfo &/*cue
 //    }
 }
 
-QList<QByteArray> MetaDetector::detectEncodings(const MediaMeta meta)
+QList<QByteArray> MetaDetector::detectEncodings(const MediaMeta &meta)
 {
     if (meta.localPath.isEmpty()) {
         return QList<QByteArray>() << "UTF-8";

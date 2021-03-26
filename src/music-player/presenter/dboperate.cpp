@@ -68,7 +68,7 @@ void DBOperate::setNeedSleep()
     m_mutex.unlock();
 }
 
-void DBOperate::slotImportMedias(QString importHash, const QStringList &urllist)
+void DBOperate::slotImportMedias(const QString &importHash, const QStringList &urllist)
 {
     m_importHash = importHash;
     m_successCount = 0;

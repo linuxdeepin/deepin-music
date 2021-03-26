@@ -570,7 +570,7 @@ void FooterWidget::slotFavoriteRemove(const QString &musicHash)
     }
 }
 
-void FooterWidget::flushFavoriteBtnIconAdd(QString hash)
+void FooterWidget::flushFavoriteBtnIconAdd(const QString &hash)
 {
     if (CommonService::getInstance()->getListPageSwitchType() == ListPageSwitchType::FavType)
         emit CommonService::getInstance()->signalSwitchToView(FavType, "fav");

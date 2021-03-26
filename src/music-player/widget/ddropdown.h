@@ -51,7 +51,7 @@ public slots:
     void setCurrentAction(QAction *action);
     void setCurrentAction(int index = 0);
     QAction *addAction(const QString &item, const QVariant &var);
-    void setStatus(QString status);
+    void setStatus(const QString &status);
 
 protected:
     virtual void enterEvent(QEvent *event);

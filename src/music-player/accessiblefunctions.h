@@ -118,7 +118,7 @@ inline QString getIntelAccessibleName(QWidget *w, QAccessible::Role r, QString f
     }
 }
 
-inline QString getAccessibleName(QWidget *w, QAccessible::Role r, QString fallback)
+inline QString getAccessibleName(QWidget *w, QAccessible::Role r, const QString &fallback)
 {
     QString accessibleName = getIntelAccessibleName(w, r, fallback);
     if (accessibleName.isEmpty()) {

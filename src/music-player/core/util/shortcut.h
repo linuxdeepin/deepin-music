@@ -30,7 +30,7 @@
 struct ShortcutItem {
     QString name;
     QString value;
-    ShortcutItem(QString n, QString v): name(n), value(v) {}
+    ShortcutItem(const QString &n, const QString &v): name(n), value(v) {}
 };
 
 struct ShortcutGroup {

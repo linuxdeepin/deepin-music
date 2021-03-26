@@ -123,7 +123,7 @@ SearchResultTabWidget::~SearchResultTabWidget()
 {
 }
 
-void SearchResultTabWidget::refreshListview(ListPageSwitchType switchtype, QString searchword)
+void SearchResultTabWidget::refreshListview(ListPageSwitchType switchtype, const QString &searchword)
 {
     m_switchtype = switchtype;
     m_searchWord = searchword;
