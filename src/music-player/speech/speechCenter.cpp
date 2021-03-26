@@ -54,8 +54,9 @@ QVariant SpeechCenter::playMusic(QString musicName)
             QTime time;
             int index = 0;
             time = QTime::currentTime();
-            qsrand(static_cast<uint>((time.msec() + time.second() * 1000)));
-            index = qrand() % m_MediaMetas.size();
+            //qsrand(static_cast<uint>((time.msec() + time.second() * 1000)));
+            //index = qrand() % m_MediaMetas.size();
+            index = static_cast<int>(QRandomGenerator::global()->bounded((time.msec() + time.second() * 1000)) % m_MediaMetas.size());
             MediaMeta mediaMeta = m_MediaMetas.at(index);
             //重置播放队列
             Player::getInstance()->clearPlayList();
@@ -120,7 +121,8 @@ QVariant SpeechCenter::playArtist(QString artistName)
     QList<SingerInfo> singerInfos = DataBaseService::getInstance()->allSingerInfos();
     bool isExit = false;
     // 先完全匹配，匹配不到则模糊匹配
-    foreach (SingerInfo singerInfo, singerInfos) {
+    for (int i = 0; i < singerInfos.size(); i++) {
+        SingerInfo singerInfo = singerInfos[i];
         if (singerInfo.singerName == artistName && singerInfo.musicinfos.size() > 0) {
             // 找到歌手后跳转到歌手界面
             emit CommonService::getInstance()->signalSwitchToView(SingerType, "");
@@ -139,7 +141,8 @@ QVariant SpeechCenter::playArtist(QString artistName)
         }
     }
     if (!isExit) {
-        foreach (SingerInfo singerInfo, singerInfos) {
+        for (int i = 0; i < singerInfos.size(); i++) {
+            SingerInfo singerInfo = singerInfos[i];
             if (singerInfo.singerName.contains(artistName) && singerInfo.musicinfos.size() > 0) {
                 // 找到歌手后跳转到歌手界面
                 emit CommonService::getInstance()->signalSwitchToView(SingerType, "");
@@ -199,7 +202,9 @@ QVariant SpeechCenter::playArtistMusic(QString artistAndmusic)
                 break;
             }
             // 有歌曲名，播放指定歌曲
-            foreach (MediaMeta meta, singerInfo.musicinfos.values()) {
+            auto singerInfoMusicinfosValues = singerInfo.musicinfos.values();
+            for (int i = 0; i < singerInfoMusicinfosValues.size(); i++) {
+                MediaMeta meta = singerInfoMusicinfosValues[i];
                 if (meta.title == musicName) {
                     Player::getInstance()->playMeta(meta);
                     isExit = true;
@@ -237,7 +242,9 @@ QVariant SpeechCenter::playAlbum(QString albumName)
             //设置当前播放为歌手
             Player::getInstance()->setCurrentPlayListHash("album", false);
             // 有歌曲名与专辑名相同
-            foreach (MediaMeta meta, albumInfo.musicinfos.values()) {
+            auto albumInfoMusicinfosValues = albumInfo.musicinfos.values();
+            for (int i = 0; i < albumInfoMusicinfosValues.size(); i++) {
+                MediaMeta meta = albumInfoMusicinfosValues[i];
                 if (meta.title == albumName) {
                     Player::getInstance()->playMeta(meta);
                     isExit = true;
@@ -333,7 +340,8 @@ QVariant SpeechCenter::playSonglist(QString songlistName)
             if (songlistName == m_settings->value("speechreply.speech.songNameIsMyFav").toString()) {
                 // 如果歌单名为“我喜爱的”，遍历歌单中有没有我喜爱的
                 bool favExsit = false;
-                foreach (DataBaseService::PlaylistData playlistData, playlistDatas) {
+                for (int i = 0; i < playlistDatas.size(); i++) {
+                    DataBaseService::PlaylistData playlistData = playlistDatas[i];
                     if (playlistData.displayName == songlistName) {
                         favExsit = true;
                         break;
@@ -343,15 +351,18 @@ QVariant SpeechCenter::playSonglist(QString songlistName)
                     return playFaverite("");
                 }
             }
-            foreach (DataBaseService::PlaylistData playlistData, playlistDatas) {
+            for (int i = 0; i < playlistDatas.size(); i++) {
+                DataBaseService::PlaylistData playlistData = playlistDatas[i];
                 if (playlistData.displayName == songlistName) {
                     uuid = playlistData.uuid;
                     break;
                 }
             }
+
             // 如果精确匹配没有则开始模糊匹配
             if (uuid.isEmpty()) {
-                foreach (DataBaseService::PlaylistData playlistData, playlistDatas) {
+                for (int i = 0; i < playlistDatas.size(); i++) {
+                    DataBaseService::PlaylistData playlistData = playlistDatas[i];
                     if (playlistData.displayName.contains(songlistName)) {
                         uuid = playlistData.uuid;
                         break;

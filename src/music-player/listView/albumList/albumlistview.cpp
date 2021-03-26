@@ -228,12 +228,20 @@ void AlbumListView::resetAlbumListDataBySongName(const QList<MediaMeta> &mediaMe
 //            bool ret = std::any_of(mediaMetas.begin(), mediaMetas.end(), [](MediaMeta mt) {return mt.hash == tmpMeta.hash;});
         bool isAlbumContainSong = false;
         for (MediaMeta albumMeta : albumInfo.musicinfos.values()) {
-            foreach (MediaMeta listMeta, mediaMetas) {
+
+            for (int i = 0; i < mediaMetas.size(); i++) {
+                MediaMeta listMeta = mediaMetas[i];
                 if (albumMeta.hash == listMeta.hash) {
                     isAlbumContainSong = true;
                     break;
                 }
             }
+//            foreach (MediaMeta listMeta, mediaMetas) {
+//                if (albumMeta.hash == listMeta.hash) {
+//                    isAlbumContainSong = true;
+//                    break;
+//                }
+//            }
             if (isAlbumContainSong) {
                 break;
             }
@@ -579,8 +587,8 @@ void AlbumListView::slotRemoveSelectedSongs(const QString &deleteHash, const QSt
         // 查看专辑中除去要删除的还有没有剩余歌曲
         bool isExsit = false;
         QMap<QString, MediaMeta> musicinfosMap = albumTmp.musicinfos;
-        for(QMap<QString, MediaMeta>::Iterator iterator = musicinfosMap.begin();iterator!= musicinfosMap.end();iterator++){
-            if(!(*iterator).toDelete){
+        for (QMap<QString, MediaMeta>::Iterator iterator = musicinfosMap.begin(); iterator != musicinfosMap.end(); iterator++) {
+            if (!(*iterator).toDelete) {
                 isExsit = true;
                 break;
             }
@@ -752,7 +760,9 @@ void AlbumListView::slotUpdateCodec(const MediaMeta &meta)
 {
     for (int i = 0; i < albumModel->rowCount(); i++) {
         AlbumInfo tmpmeta = albumModel->index(i, 0).data(Qt::UserRole).value<AlbumInfo>();
-        foreach (QString strhash, tmpmeta.musicinfos.keys()) {
+        auto tmpmetaMusicinfosKeys = tmpmeta.musicinfos.keys();
+        for (int keyIndex = 0; keyIndex < tmpmetaMusicinfosKeys.size(); keyIndex++) {
+            QString strhash = tmpmetaMusicinfosKeys[keyIndex];
             if (meta.hash == strhash) {
                 tmpmeta.musicinfos[strhash].codec = meta.codec;
                 tmpmeta.musicinfos[strhash].updateCodec(meta.codec.toUtf8());
@@ -762,6 +772,16 @@ void AlbumListView::slotUpdateCodec(const MediaMeta &meta)
                 return;
             }
         }
+//        foreach (QString strhash, tmpmeta.musicinfos.keys()) {
+//            if (meta.hash == strhash) {
+//                tmpmeta.musicinfos[strhash].codec = meta.codec;
+//                tmpmeta.musicinfos[strhash].updateCodec(meta.codec.toUtf8());
+//                QVariant varmeta;
+//                varmeta.setValue(tmpmeta);
+//                albumModel->setData(albumModel->index(i, 0), varmeta, Qt::UserRole);
+//                return;
+//            }
+//        }
     }
 }
 

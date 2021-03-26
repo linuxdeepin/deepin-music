@@ -415,12 +415,12 @@ void DataBaseService::updatePlaylist(const QVector<DataBaseService::PlaylistData
     QSqlQuery query;
 
     for (auto item : playlistDataList) {
-        query.prepare("UPDATE playlist SET displayname = :displayname WHERE uuid = :uuid");
+        bool isPrepare = query.prepare("UPDATE playlist SET displayname = :displayname WHERE uuid = :uuid");
 
         query.bindValue(":uuid", item.uuid);
         query.bindValue(":displayname", item.displayName);
 
-        if (! query.exec()) {
+        if ((!isPrepare) || (! query.exec())) {
             qWarning() << query.lastError();
             return;
         }
@@ -596,11 +596,11 @@ int DataBaseService::addMetaToPlaylist(QString uuid, const QList<MediaMeta> &met
                                  "(music_id, playlist_id, sort_id) "
                                  "SELECT :music_id, :playlist_id, :sort_id ").arg(uuid);
 
-                query.prepare(sqlStr);
+                isPrepare = query.prepare(sqlStr);
                 query.bindValue(":playlist_id", uuid);
                 query.bindValue(":music_id", meta.hash);
                 query.bindValue(":sort_id", 0);
-                if (query.exec()) {
+                if (isPrepare && query.exec()) {
                     insert_count++;
                     if (uuid == "fav") {
                         emit signalFavSongAdd(meta.hash);

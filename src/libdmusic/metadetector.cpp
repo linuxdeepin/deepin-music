@@ -238,8 +238,8 @@ MediaMeta MetaDetector::updateMediaFileTagCodec(MediaMeta &meta, const QByteArra
             detectByte += tag->album().toCString();
             auto allDetectCodecs = detectEncodings(detectByte);
             auto localeCode = localeCodes.value(QLocale::system().name());
-
-            foreach (auto curDetext, allDetectCodecs) {
+            for (int i = 0; i < allDetectCodecs.size(); i++) {
+                auto curDetext = allDetectCodecs[i];
                 if (curDetext == "Big5" || curDetext == localeCode) {
                     detectCodec = curDetext;
                     break;
@@ -254,7 +254,9 @@ MediaMeta MetaDetector::updateMediaFileTagCodec(MediaMeta &meta, const QByteArra
                 curStr = QString::fromLocal8Bit(tag->artist().toCString());
             if (curStr.isEmpty())
                 curStr = QString::fromLocal8Bit(tag->album().toCString());
-            foreach (auto ch, curStr) {
+
+            for (int i = 0; i < curStr.size(); i++) {
+                auto ch = curStr[i];
                 if (DMusic::PinyinSearch::isChinese(ch)) {
                     detectCodec = "GB18030";
                     break;
@@ -308,9 +310,9 @@ void MetaDetector::getCoverData(const QString &path, const QString &tmpPath, con
     QString imageName = hash + ".jpg";
     QDir imageDir(imagesDirPath);
     if (!imageDir.exists()) {
-        imageDir.cdUp();
-        imageDir.mkdir("images");
-        imageDir.cd("images");
+        bool isExists = imageDir.cdUp();
+        isExists &= imageDir.mkdir("images");
+        isExists &= imageDir.cd("images");
     }
 
     QByteArray byteArray;

@@ -247,8 +247,10 @@ void SingerListView::resetSingerListDataBySongName(const QList<MediaMeta> &media
 //        bool ret = std::any_of(mediaMetasTemp.begin(), mediaMetasTemp.end(), [](MediaMeta mt) {
 //            return CommonService::getInstance()->containsStr(mt.singer, tmpMeta.singerName);
 //        });
+
         bool isSingerContainSong = false;
-        foreach (MediaMeta meta, mediaMetas) {
+        for (int i = 0; i < mediaMetas.size(); i++) {
+            MediaMeta meta = mediaMetas[i];
             if (CommonService::getInstance()->containsStr(meta.singer, singerInfo.singerName)) {
                 isSingerContainSong = true;
                 break;
@@ -295,12 +297,19 @@ void SingerListView::resetSingerListDataByAlbum(const QList<AlbumInfo> &albumInf
 //        static SingerInfo &tmpMeta = singerInfo;
 //        bool ret = std::any_of(albumInfos.begin(), albumInfos.end(), [](AlbumInfo mt) {return CommonService::getInstance()->containsStr(mt.singer, tmpMeta.singerName);});
         bool isSingerContainSong = false;
-        foreach (AlbumInfo albumInfo, albumInfos) {
+        for (int i = 0; i < albumInfos.size(); i++) {
+            AlbumInfo albumInfo = albumInfos[i];
             if (CommonService::getInstance()->containsStr(albumInfo.singer, singerInfo.singerName)) {
                 isSingerContainSong = true;
                 break;
             }
         }
+//        foreach (AlbumInfo albumInfo, albumInfos) {
+//            if (CommonService::getInstance()->containsStr(albumInfo.singer, singerInfo.singerName)) {
+//                isSingerContainSong = true;
+//                break;
+//            }
+//        }
         if (isSingerContainSong) {
             QStandardItem *pItem = new QStandardItem;
             //设置icon
@@ -583,7 +592,9 @@ void SingerListView::slotUpdateCodec(const MediaMeta &meta)
 {
     for (int i = 0; i < singerModel->rowCount(); i++) {
         SingerInfo tmpmeta = singerModel->index(i, 0).data(Qt::UserRole).value<SingerInfo>();
-        foreach (QString hashstr, tmpmeta.musicinfos.keys()) {
+        auto tmpmetaMusicinfosKeys = tmpmeta.musicinfos.keys();
+        for (int keysIndex = 0; keysIndex < tmpmetaMusicinfosKeys.size(); keysIndex++) {
+            QString hashstr = tmpmetaMusicinfosKeys[keysIndex];
             if (meta.hash == hashstr) {
                 tmpmeta.musicinfos[hashstr].codec = meta.codec;
                 tmpmeta.musicinfos[hashstr].updateCodec(meta.codec.toUtf8());
@@ -593,6 +604,16 @@ void SingerListView::slotUpdateCodec(const MediaMeta &meta)
                 return;
             }
         }
+//        foreach (QString hashstr, tmpmeta.musicinfos.keys()) {
+//            if (meta.hash == hashstr) {
+//                tmpmeta.musicinfos[hashstr].codec = meta.codec;
+//                tmpmeta.musicinfos[hashstr].updateCodec(meta.codec.toUtf8());
+//                QVariant varmeta;
+//                varmeta.setValue(tmpmeta);
+//                singerModel->setData(singerModel->index(i, 0), varmeta, Qt::UserRole);
+//                return;
+//            }
+//        }
     }
 }
 
@@ -669,8 +690,8 @@ void SingerListView::slotRemoveSelectedSongs(const QString &deleteHash, const QS
         // 查看专辑中除去要删除的还有没有剩余歌曲
         bool isExsit = false;
         QMap<QString, MediaMeta> musicinfosMap = singerTmp.musicinfos;
-        for(QMap<QString, MediaMeta>::Iterator iterator = musicinfosMap.begin();iterator!= musicinfosMap.end();iterator++){
-            if(!(*iterator).toDelete){
+        for (QMap<QString, MediaMeta>::Iterator iterator = musicinfosMap.begin(); iterator != musicinfosMap.end(); iterator++) {
+            if (!(*iterator).toDelete) {
                 isExsit = true;
                 break;
             }

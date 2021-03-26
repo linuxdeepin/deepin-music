@@ -247,8 +247,8 @@ bool DBOperate::deleteMetaFromAllMusic(const QStringList &metaHash, bool removeF
             m_needSleep = false;
         }
         strsql = QString("DELETE FROM musicNew WHERE hash='%1'").arg(hash);
-        query.prepare(strsql);
-        if (! query.exec()) {
+        bool isPrepare = query.prepare(strsql);
+        if ((!isPrepare) || (! query.exec())) {
             qCritical() << query.lastError() << strsql;
         } else {
             QThread::msleep(10);
@@ -293,8 +293,8 @@ bool DBOperate::deleteMetaFromPlaylist(QString uuid, const QStringList &metaHash
         if (query.exec(sqlIsExists)) {
             if (query.next()) {
                 strsql = QString("DELETE FROM playlist_%1 WHERE music_id='%2'").arg(uuid).arg(hash);
-                query.prepare(strsql);
-                if (! query.exec()) {
+                bool isPrepare = query.prepare(strsql);
+                if ((!isPrepare) || (! query.exec())) {
                     qCritical() << query.lastError() << strsql;
                 }
                 QThread::msleep(10);
@@ -315,8 +315,8 @@ int DBOperate::allMusicInfosCount()
     int count = 0;
     QString queryString = QString("SELECT count(*) FROM musicNew");
     QSqlQuery queryNew(m_db);
-    queryNew.prepare(queryString);
-    if (!queryNew.exec()) {
+    bool isPrepare = queryNew.prepare(queryString);
+    if ((!isPrepare) || (!queryNew.exec())) {
         qCritical() << queryNew.lastError();
         count = 0;
     }
@@ -331,8 +331,8 @@ QList<DBOperate::PlaylistDataThread> DBOperate::allPlaylistMetaUUid()
     QList<PlaylistDataThread> playlistMetas;
     playlistMetas.clear();
     QSqlQuery query(m_db);
-    query.prepare("SELECT uuid, readonly FROM playlist");
-    if (!query.exec()) {
+    bool isPrepare = query.prepare("SELECT uuid, readonly FROM playlist");
+    if ((!isPrepare) || (!query.exec())) {
         qWarning() << query.lastError();
         return playlistMetas;
     }
@@ -389,10 +389,10 @@ void DBOperate::addMediaMetaToDB(const MediaMeta &meta)
 bool DBOperate::isMediaMetaExist(const QString &hash)
 {
     QSqlQuery query(m_db);
-    query.prepare("SELECT COUNT(*) FROM musicNew where hash = :hash");
+    bool isPrepare = query.prepare("SELECT COUNT(*) FROM musicNew where hash = :hash");
     query.bindValue(":hash", hash);
 
-    if (!query.exec()) {
+    if ((!isPrepare) || (!query.exec())) {
         qWarning() << query.lastError();
         return false;
     }
@@ -418,21 +418,21 @@ int DBOperate::addMetaToPlaylist(QString uuid, const QList<MediaMeta> &metas)
         }
         QSqlQuery query(m_db);
         QString sqlStr = QString("SELECT * FROM playlist_%1 WHERE music_id = :music_id").arg(uuid);
-        query.prepare(sqlStr);
+        bool isPrepare = query.prepare(sqlStr);
         query.bindValue(":music_id", meta.hash);
 
-        if (query.exec()) {
+        if (isPrepare && query.exec()) {
             if (!query.next()) {
                 // 不存在则添加
                 sqlStr = QString("INSERT INTO playlist_%1 "
                                  "(music_id, playlist_id, sort_id) "
                                  "SELECT :music_id, :playlist_id, :sort_id ").arg(uuid);
 
-                query.prepare(sqlStr);
+                isPrepare = query.prepare(sqlStr);
                 query.bindValue(":playlist_id", uuid);
                 query.bindValue(":music_id", meta.hash);
                 query.bindValue(":sort_id", 0);
-                if (query.exec()) {
+                if (isPrepare && query.exec()) {
                     insert_count++;
                     m_successCount++;
                     if (uuid == "fav") {
@@ -460,18 +460,18 @@ int DBOperate::addMetaToPlaylist(QString uuid, const QList<MediaMeta> &metas)
 bool DBOperate::addMetaToAll(MediaMeta meta)
 {
     QSqlQuery query(m_db);
-    query.prepare("INSERT INTO musicNew ("
-                  "hash, timestamp, title, artist, album, "
-                  "filetype, size, track, offset, favourite, localpath, length, "
-                  "py_title, py_title_short, py_artist, py_artist_short, "
-                  "py_album, py_album_short, lyricPath, codec, cuepath "
-                  ") "
-                  "VALUES ("
-                  ":hash, :timestamp, :title, :artist, :album, "
-                  ":filetype, :size, :track, :offset, :favourite, :localpath, :length, "
-                  ":py_title, :py_title_short, :py_artist, :py_artist_short, "
-                  ":py_album, :py_album_short, :lyricPath, :codec, :cuepath "
-                  ")");
+    bool isPrepare = query.prepare("INSERT INTO musicNew ("
+                                   "hash, timestamp, title, artist, album, "
+                                   "filetype, size, track, offset, favourite, localpath, length, "
+                                   "py_title, py_title_short, py_artist, py_artist_short, "
+                                   "py_album, py_album_short, lyricPath, codec, cuepath "
+                                   ") "
+                                   "VALUES ("
+                                   ":hash, :timestamp, :title, :artist, :album, "
+                                   ":filetype, :size, :track, :offset, :favourite, :localpath, :length, "
+                                   ":py_title, :py_title_short, :py_artist, :py_artist_short, "
+                                   ":py_album, :py_album_short, :lyricPath, :codec, :cuepath "
+                                   ")");
     query.bindValue(":hash", meta.hash);
     query.bindValue(":timestamp", meta.timestamp);
     query.bindValue(":title", meta.title);
@@ -494,7 +494,7 @@ bool DBOperate::addMetaToAll(MediaMeta meta)
     query.bindValue(":codec", meta.codec);
     query.bindValue(":cuepath", meta.cuePath);
 
-    if (! query.exec()) {
+    if ((!isPrepare) || (! query.exec())) {
         qCritical() << query.lastError();
         return false;
     }

@@ -817,7 +817,7 @@ void MainFrame::showEvent(QShowEvent *event)
         qint32 restoredScreenNumber;
         quint8 maximized;
         quint8 fullScreen;
-        qint32 restoredScreenWidth = 0;
+        //qint32 restoredScreenWidth = 0;
 
         stream >> restoredFrameGeometry
                >> restoredNormalGeometry
@@ -826,6 +826,7 @@ void MainFrame::showEvent(QShowEvent *event)
                >> fullScreen;
 
         if (majorVersion > 1) {
+            qint32 restoredScreenWidth = 0;
             stream >> restoredScreenWidth;
         }
         restoreGeometry(m_geometryBa);
