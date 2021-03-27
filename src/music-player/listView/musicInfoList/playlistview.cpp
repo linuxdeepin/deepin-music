@@ -159,7 +159,7 @@ void PlayListView::setListPageSwitchType(ListPageSwitchType type)
 PlayListView::PlayListView(const QString &hash, bool isPlayQueue, QWidget *parent)
     : DListView(parent)
     , m_currentHash(hash.isEmpty() ? "all" : hash)
-    ,m_listPageType(NullType)
+    , m_listPageType(NullType)
 {
     //m_listPageType = NullType;
     m_IsPlayQueue = isPlayQueue;
@@ -203,7 +203,7 @@ PlayListView::PlayListView(const QString &hash, bool isPlayQueue, QWidget *paren
     m_pDetailShortcut = new QShortcut(this);
     m_pDetailShortcut->setContext(Qt::WidgetWithChildrenShortcut);
     m_pDetailShortcut->setKey(QKeySequence(QLatin1String("Ctrl+I")));
-    connect(m_pDetailShortcut, SIGNAL(activated()), this, SLOT(showDetailInfoDlg()));
+    connect(m_pDetailShortcut, &QShortcut::activated, this, &PlayListView::showDetailInfoDlg);
 //    //快捷移出歌单
 //    m_pRmvSongsShortcut = new QShortcut(this);
 //    m_pRmvSongsShortcut->setKey(QKeySequence(QLatin1String("Delete")));
@@ -1190,7 +1190,7 @@ void PlayListView::contextMenuEvent(QContextMenuEvent *event)
             pact->setProperty("displayName", displayName);
             pact->setData(QVariant(pd.uuid)); //to know which custom view to reach
 
-            connect(pact, SIGNAL(triggered()), this, SLOT(slotAddToCustomSongList()));
+            connect(pact, &QAction::triggered, this, &PlayListView::slotAddToCustomSongList);
         }
     }
 
@@ -1267,8 +1267,8 @@ void PlayListView::contextMenuEvent(QContextMenuEvent *event)
         auto actsonginfo = allMusicMenu.addAction(tr("Song info"));
 
         //connnect
-        connect(actdisplay, SIGNAL(triggered()), this, SLOT(slotOpenInFileManager()));
-        connect(actsonginfo, SIGNAL(triggered()), this, SLOT(showDetailInfoDlg()));
+        connect(actdisplay, &QAction::triggered, this, &PlayListView::slotOpenInFileManager);
+        connect(actsonginfo, &QAction::triggered, this, &PlayListView::showDetailInfoDlg);
         connect(&textCodecMenu, &QMenu::triggered, this, &PlayListView::slotTextCodecMenuClicked);
     } else {// 选中多首歌
 
@@ -1294,7 +1294,7 @@ void PlayListView::contextMenuEvent(QContextMenuEvent *event)
     }
 
     connect(actRmv, SIGNAL(triggered()), this, SLOT(slotRmvFromSongList()));
-    connect(actDel, SIGNAL(triggered()), this, SLOT(slotDelFromLocal()));
+    connect(actDel, &QAction::triggered, this, &PlayListView::slotDelFromLocal);
     connect(&playlistMenu, &QMenu::triggered, this, &PlayListView::slotPlaylistMenuClicked);
 #endif
     allMusicMenu.exec(globalPos);

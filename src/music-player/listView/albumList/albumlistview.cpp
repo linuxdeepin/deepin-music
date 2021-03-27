@@ -155,8 +155,7 @@ AlbumListView::AlbumListView(const QString &hash, QWidget *parent)
     connect(CommonService::getInstance(), &CommonService::signalUpdateCodec,
             this, &AlbumListView::slotUpdateCodec);
     // 删除歌曲
-    connect(DataBaseService::getInstance(), SIGNAL(sigRemoveSelectedSongs(const QString &, const QStringList &, bool)),
-            this, SLOT(slotRemoveSelectedSongs(const QString &, const QStringList &, bool)), Qt::DirectConnection);
+    connect(DataBaseService::getInstance(), &DataBaseService::sigRemoveSelectedSongs, this, &AlbumListView::slotRemoveSelectedSongs, Qt::DirectConnection);
 #ifdef TABLET_PC
     connect(Player::getInstance(), &Player::signalPlaybackStatusChanged,
             this, &AlbumListView::slotPlaybackStatusChanged);

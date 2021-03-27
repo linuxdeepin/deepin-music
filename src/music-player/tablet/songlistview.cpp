@@ -64,7 +64,7 @@ SongListView::SongListView(QWidget *parent) : DListView(parent)
     setAutoFillBackground(true); //控件本身填充背景色
 
     setAlternatingRowColors(true);
-    connect(this, SIGNAL(currentChanged(QModelIndex)), this, SLOT(slotItemChanged(QModelIndex)));
+    connect(this, &SongListView::currentChanged, this, &SongListView::slotItemChanged);
     connect(DGuiApplicationHelper::instance(), &DGuiApplicationHelper::themeTypeChanged,
             this, &SongListView::setThemeType);
 }

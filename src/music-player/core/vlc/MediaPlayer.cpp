@@ -110,6 +110,7 @@ VlcMediaPlayer::VlcMediaPlayer(VlcInstance *instance)
 
 VlcMediaPlayer::~VlcMediaPlayer()
 {
+    removeCoreConnections();
 }
 
 libvlc_media_player_t *VlcMediaPlayer::core() const

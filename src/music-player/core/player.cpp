@@ -320,7 +320,7 @@ void Player::playPreMeta()
         }
         case Shuffle: {
             QTime time;
-            time = QTime::currentTime();        
+            time = QTime::currentTime();
             index = static_cast<int>(QRandomGenerator::global()->bounded(time.msec() + time.second() * 1000)) % m_MetaList.size();
             //qsrand(static_cast<uint>((time.msec() + time.second() * 1000)));
             //index = qrand() % m_MetaList.size();
@@ -1021,7 +1021,7 @@ void Player::initVlc()
     m_qvmedia = new VlcMedia();
     m_timer = new QTimer(this);
     m_timer->setInterval(250);
-    connect(m_timer, SIGNAL(timeout()), this, SLOT(changePicture()));
+    connect(m_timer, &QTimer::timeout, this, &Player::changePicture);
     connect(m_qvplayer, &VlcMediaPlayer::timeChanged,
     this, [ = ](qint64 position) {
         Q_EMIT positionChanged(position /*- m_ActiveMeta.offset*/,  m_ActiveMeta.length, 1); //直接上报当前位置，offset无实质意义

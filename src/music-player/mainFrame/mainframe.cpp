@@ -205,7 +205,7 @@ void MainFrame::initUI(bool showLoading)
 
     m_footerWidget = new FooterWidget(this);
     m_footerWidget->setVisible(showLoading);
-    connect(m_footerWidget, SIGNAL(lyricClicked()), this, SLOT(slotLyricClicked()));
+    connect(m_footerWidget, &FooterWidget::lyricClicked, this, &MainFrame::slotLyricClicked);
 
     m_importWidget = new ImportWidget(this);
     m_importWidget->setVisible(!showLoading);
@@ -279,7 +279,7 @@ void MainFrame::initMenuAndShortcut()
     m_titlebar->setMenu(pTitleMenu);
 
     connect(pTitleMenu, SIGNAL(triggered(QAction *)), this, SLOT(slotMenuTriggered(QAction *)));
-    connect(m_colorModeAction, SIGNAL(triggered()), this, SLOT(slotSwitchTheme()));
+    connect(m_colorModeAction, &QAction::triggered, this, &MainFrame::slotSwitchTheme);
     connect(m_exit, SIGNAL(triggered()), this, SLOT(close()));
 
     //short cut

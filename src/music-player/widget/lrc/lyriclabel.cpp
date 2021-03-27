@@ -58,7 +58,7 @@ LyricLabel::LyricLabel(bool touch, QWidget *parent)
 //    lyricFont.setPixelSize(14);
     lyricNormal = QColor("#526A7F");
     lyricHighlight = QColor("#000000");
-    connect(this, SIGNAL(changeTo(int)), this, SLOT(changeToEvent(int)));
+    connect(this, &LyricLabel::changeTo, this, &LyricLabel::changeToEvent);
 
     m_FadeFlag = MusicSettings::value("base.play.fade_in_out").toBool();
 

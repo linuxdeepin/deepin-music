@@ -1043,13 +1043,12 @@ DataBaseService::DataBaseService()
 //    DBOperate *worker = new DBOperate(m_workerThread);
     m_worker.moveToThread(m_workerThread);
     // 发送信号给子线程导入数据
-    connect(this, SIGNAL(signalImportMedias(QString, const QStringList &)),
-            &m_worker, SLOT(slotImportMedias(QString, const QStringList &)));
+    connect(this, &DataBaseService::signalImportMedias, &m_worker, &DBOperate::slotImportMedias);
     // 发送给子线程删除单曲
     connect(this, SIGNAL(sigRemoveSelectedSongs(const QString &, const QStringList &, bool)),
             &m_worker, SLOT(slotRemoveSelectedSongs(const QString &, const QStringList &, bool)));
     // 发送给子线程加载图片
-    connect(this, SIGNAL(signalCreatCoverImg(const QList<MediaMeta> &)), &m_worker, SLOT(slotCreatCoverImg(const QList<MediaMeta> &)));
+    connect(this, &DataBaseService::signalCreatCoverImg, &m_worker, &DBOperate::slotCreatCoverImg);
 
     // 单首歌曲完成解析
     connect(&m_worker, &DBOperate::sigImportMetaFromThread, this, &DataBaseService::slotGetMetaFromThread, Qt::QueuedConnection);

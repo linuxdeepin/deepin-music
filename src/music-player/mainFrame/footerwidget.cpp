@@ -283,8 +283,7 @@ void FooterWidget::initUI(QWidget *parent)
     AC_SET_ACCESSIBLE_NAME(m_volSlider, AC_VolSlider);
 
 //    m_metaBufferDetector = new MetaBufferDetector(nullptr);
-    connect(&m_metaBufferDetector, SIGNAL(metaBuffer(const QVector<float> &, const QString &)),
-            m_waveform, SLOT(onAudioBuffer(const QVector<float> &, const QString &)));
+    connect(&m_metaBufferDetector, &MetaBufferDetector::metaBuffer, m_waveform, &Waveform::onAudioBuffer);
 
     // 设置提示框
     m_hintFilter =  new HintFilter(this);
@@ -297,10 +296,10 @@ void FooterWidget::initUI(QWidget *parent)
     // 设置播放模式提示框
     installTipHint(m_btPlayMode, playModeStr(Player::getInstance()->mode()));
 
-    connect(m_btPlayQueue, SIGNAL(clicked(bool)), this, SLOT(slotPlayQueueClick(bool)));
-    connect(m_btLyric, SIGNAL(clicked(bool)), this, SLOT(slotLrcClick(bool)));
-    connect(m_btPlayMode, SIGNAL(clicked(bool)), this, SLOT(slotPlayModeClick(bool)));
-    connect(m_btCover, SIGNAL(clicked(bool)), this, SLOT(slotCoverClick(bool)));
+    connect(m_btPlayQueue, &DIconButton::clicked, this, &FooterWidget::slotPlayQueueClick);
+    connect(m_btLyric, &DIconButton::clicked, this, &FooterWidget::slotLrcClick);
+    connect(m_btPlayMode, &DIconButton::clicked, this, &FooterWidget::slotPlayModeClick);
+    connect(m_btCover, &MusicPixmapButton::clicked, this, &FooterWidget::slotCoverClick);
     connect(m_btPlay, SIGNAL(clicked(bool)), this, SLOT(slotPlayClick(bool)));
     connect(m_btNext, SIGNAL(clicked(bool)), this, SLOT(slotNextClick(bool)));
     connect(m_btPrev, SIGNAL(clicked(bool)), this, SLOT(slotPreClick(bool)));
@@ -316,7 +315,7 @@ void FooterWidget::initUI(QWidget *parent)
     connect(CommonService::getInstance(), &CommonService::signalSetPlayModel, this, &FooterWidget::setPlayModel);
     connect(CommonService::getInstance(), &CommonService::signalPlayQueueClosed, this, &FooterWidget::slotFlushBackground);
     // dbus
-    connect(Player::getInstance()->getMpris(), SIGNAL(volumeRequested(double)), this, SLOT(slotDbusVolumeChanged(double)));
+    connect(Player::getInstance()->getMpris(), &MprisPlayer::volumeRequested, this, &FooterWidget::slotDbusVolumeChanged);
     connect(m_volSlider, &SoundVolume::delayAutoHide, this, [ = ]() {
         m_btSound->setChecked(false);
     });
@@ -375,12 +374,12 @@ void FooterWidget::initShortcut()
     muteShortcut->setKey(QKeySequence(QLatin1String("M")));
     //connect(muteShortcut, &QShortcut::activated, presenter, &Presenter::onLocalToggleMute);
 
-    connect(playPauseShortcut, SIGNAL(activated()), this, SLOT(slotShortCutTriggered()));
-    connect(volUpShortcut, SIGNAL(activated()), this, SLOT(slotShortCutTriggered()));
-    connect(volDownShortcut, SIGNAL(activated()), this, SLOT(slotShortCutTriggered()));
-    connect(nextShortcut, SIGNAL(activated()), this, SLOT(slotShortCutTriggered()));
-    connect(previousShortcut, SIGNAL(activated()), this, SLOT(slotShortCutTriggered()));
-    connect(muteShortcut, SIGNAL(activated()), this, SLOT(slotShortCutTriggered()));
+    connect(playPauseShortcut, &QShortcut::activated, this, &FooterWidget::slotShortCutTriggered);
+    connect(volUpShortcut, &QShortcut::activated, this, &FooterWidget::slotShortCutTriggered);
+    connect(volDownShortcut, &QShortcut::activated, this, &FooterWidget::slotShortCutTriggered);
+    connect(nextShortcut, &QShortcut::activated, this, &FooterWidget::slotShortCutTriggered);
+    connect(previousShortcut, &QShortcut::activated, this, &FooterWidget::slotShortCutTriggered);
+    connect(muteShortcut, &QShortcut::activated, this, &FooterWidget::slotShortCutTriggered);
 }
 
 void FooterWidget::updateShortcut()
