@@ -23,6 +23,8 @@
 
 #include <QString>
 
+class QFile;
+
 class Global
 {
 public:
@@ -30,4 +32,11 @@ public:
     static QString cacheDir();
     static void setAppName(const QString &name);
     static QString getAppName();
+
+    /**
+     * @brief Saves src file to a local file with automatic FP resolution to ensure we can read and write on it. Use it for artworks.
+     * @param src
+     * @return
+     */
+    static QString imagePushed(QFile &src);
 };
