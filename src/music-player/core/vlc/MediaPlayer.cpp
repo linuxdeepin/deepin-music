@@ -110,7 +110,7 @@ VlcMediaPlayer::VlcMediaPlayer(VlcInstance *instance)
 
 VlcMediaPlayer::~VlcMediaPlayer()
 {
-    removeCoreConnections();
+    //removeCoreConnections();
 }
 
 libvlc_media_player_t *VlcMediaPlayer::core() const
@@ -158,34 +158,34 @@ void VlcMediaPlayer::createCoreConnections()
     }
 }
 
-void VlcMediaPlayer::removeCoreConnections()
-{
-    QList<libvlc_event_e> list;
-    list << libvlc_MediaPlayerMediaChanged
-         << libvlc_MediaPlayerNothingSpecial
-         << libvlc_MediaPlayerOpening
-         << libvlc_MediaPlayerBuffering
-         << libvlc_MediaPlayerPlaying
-         << libvlc_MediaPlayerPaused
-         << libvlc_MediaPlayerStopped
-         << libvlc_MediaPlayerForward
-         << libvlc_MediaPlayerBackward
-         << libvlc_MediaPlayerEndReached
-         << libvlc_MediaPlayerEncounteredError
-         << libvlc_MediaPlayerTimeChanged
-         << libvlc_MediaPlayerPositionChanged
-         << libvlc_MediaPlayerSeekableChanged
-         << libvlc_MediaPlayerPausableChanged
-         << libvlc_MediaPlayerTitleChanged
-         << libvlc_MediaPlayerSnapshotTaken
-         << libvlc_MediaPlayerLengthChanged
-         << libvlc_MediaPlayerVout;
+//void VlcMediaPlayer::removeCoreConnections()
+//{
+//    QList<libvlc_event_e> list;
+//    list << libvlc_MediaPlayerMediaChanged
+//         << libvlc_MediaPlayerNothingSpecial
+//         << libvlc_MediaPlayerOpening
+//         << libvlc_MediaPlayerBuffering
+//         << libvlc_MediaPlayerPlaying
+//         << libvlc_MediaPlayerPaused
+//         << libvlc_MediaPlayerStopped
+//         << libvlc_MediaPlayerForward
+//         << libvlc_MediaPlayerBackward
+//         << libvlc_MediaPlayerEndReached
+//         << libvlc_MediaPlayerEncounteredError
+//         << libvlc_MediaPlayerTimeChanged
+//         << libvlc_MediaPlayerPositionChanged
+//         << libvlc_MediaPlayerSeekableChanged
+//         << libvlc_MediaPlayerPausableChanged
+//         << libvlc_MediaPlayerTitleChanged
+//         << libvlc_MediaPlayerSnapshotTaken
+//         << libvlc_MediaPlayerLengthChanged
+//         << libvlc_MediaPlayerVout;
 
-    vlc_event_detach_function vlc_event_detach = (vlc_event_detach_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("libvlc_event_detach");
-    foreach (const libvlc_event_e &event, list) {
-        vlc_event_detach(_vlcEvents, event, libvlc_callback, this);
-    }
-}
+//    vlc_event_detach_function vlc_event_detach = (vlc_event_detach_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("libvlc_event_detach");
+//    foreach (const libvlc_event_e &event, list) {
+//        vlc_event_detach(_vlcEvents, event, libvlc_callback, this);
+//    }
+//}
 
 //bool VlcMediaPlayer::hasVout() const
 //{

@@ -150,7 +150,8 @@ private:
     // zy--end
 public:
     void init();
-    void stop();
+    //当emitSignal为true时,清空当前播放刷新状态,false只在关闭应用时停止播放动作
+    void stop(bool emitSignal = true);
 
     VlcMediaPlayer *core();
     QStringList supportedSuffixList()const;

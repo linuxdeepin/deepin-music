@@ -556,20 +556,28 @@ QString Player::getCurrentPlayListHash()
     return m_currentPlayListHash;
 }
 
-void Player::stop()
+void Player::stop(bool emitSignal)
 {
-    //play停止后，发送清空当前波形图的信号
-    emit signalMediaStop("");//不用当前的参数
-    if (m_qvplayer) {
-        m_qvplayer->pause();
-        setActiveMeta(MediaMeta());//清除当前播放音乐；
-        m_qvplayer->stop();
+    if (emitSignal) {
+        //play停止后，发送清空当前波形图的信号
+        emit signalMediaStop("");//不用当前的参数
+        if (m_qvplayer) {
+            m_qvplayer->pause();
+            setActiveMeta(MediaMeta());//清除当前播放音乐；
+            m_qvplayer->stop();
+        }
+
+        QVariantMap metadata;
+        m_mpris->setMetadata(metadata);
+
+        emit signalPlaybackStatusChanged(Player::Stopped);
+    } else {
+        if (m_qvplayer) {
+            m_qvplayer->pause();
+            m_qvplayer->stop();
+        }
     }
 
-    QVariantMap metadata;
-    m_mpris->setMetadata(metadata);
-
-    emit signalPlaybackStatusChanged(Player::Stopped);
 }
 
 VlcMediaPlayer *Player::core()

@@ -938,6 +938,7 @@ void MainFrame::closeEvent(QCloseEvent *event)
 
     MusicSettings::setOption("base.play.last_position", Player::getInstance()->position());
     this->setFocus();
+    Player::getInstance()->stop(false);
     DMainWindow::closeEvent(event);
 }
 
