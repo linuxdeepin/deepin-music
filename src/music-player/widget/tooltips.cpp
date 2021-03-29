@@ -31,14 +31,10 @@
 #include <QGraphicsOpacityEffect>
 
 #include <DUtil>
-#include <dthememanager.h>
-
 
 ToolTips::ToolTips(const QString &text, QWidget *parent)
     : QFrame(parent)
 {
-    DThemeManager::instance()->registerWidget(this);
-
     setAttribute(Qt::WA_DeleteOnClose);
 //    setWindowFlags(Qt::ToolTip | Qt::CustomizeWindowHint);
     setAttribute(Qt::WA_TranslucentBackground);

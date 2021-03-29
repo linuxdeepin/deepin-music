@@ -70,8 +70,7 @@ void SubSonglistWidget::initUI()
     m_infoLabel = new DLabel();
     m_infoLabel->setForegroundRole(DPalette::BrightText);
     titleLayout->addWidget(m_infoLabel, 1);
-
-    QHBoxLayout *btLayout = new QHBoxLayout(m_titleImage);
+    QHBoxLayout *btLayout = new QHBoxLayout();
     btLayout->setSpacing(5);
     btLayout->setContentsMargins(0, 16, 0, 0);
     titleLayout->addLayout(btLayout, 1);

@@ -258,6 +258,13 @@ void MusicListDataWidget::slotViewChanged(ListPageSwitchType switchtype, const Q
     case SearchSingerSubSongListType: {
         m_preSwitchtype = switchtype;
         m_actionBar->setVisible(false);
+        if (m_subSonglistWidget == nullptr) {
+            // 添加二级页面
+            m_subSonglistWidget = new SubSonglistWidget("", this);
+            AC_SET_OBJECT_NAME(m_subSonglistWidget, AC_subSonglistWidget);
+            AC_SET_ACCESSIBLE_NAME(m_subSonglistWidget, AC_subSonglistWidget);
+            m_pStackedWidget->addWidget(m_subSonglistWidget);
+        }
         if (musicinfos.size() > 0) {
             m_subSonglistWidget->flushDialog(musicinfos, switchtype);
         }
@@ -676,11 +683,6 @@ void MusicListDataWidget::initUI()
     m_pStackedWidget->setCurrentWidget(m_musicListView);
     refreshInfoLabel("all");
     refreshSortAction();
-    // 添加二级页面
-    m_subSonglistWidget = new SubSonglistWidget("", this);
-    AC_SET_OBJECT_NAME(m_subSonglistWidget, AC_subSonglistWidget);
-    AC_SET_ACCESSIBLE_NAME(m_subSonglistWidget, AC_subSonglistWidget);
-    m_pStackedWidget->addWidget(m_subSonglistWidget);
     slotTheme(DGuiApplicationHelper::instance()->themeType());
 }
 // 初始化播放所有按钮

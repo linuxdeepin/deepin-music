@@ -207,9 +207,9 @@ void MainFrame::initUI(bool showLoading)
     m_footerWidget->setVisible(showLoading);
     connect(m_footerWidget, &FooterWidget::lyricClicked, this, &MainFrame::slotLyricClicked);
 
-    m_importWidget = new ImportWidget(this);
-    m_importWidget->setVisible(!showLoading);
-
+    if (!showLoading) {
+        m_importWidget = new ImportWidget(this);
+    }
     m_musicLyricWidget = new MusicLyricWidget(this);
     m_musicLyricWidget->hide();
 
@@ -518,12 +518,15 @@ void MainFrame::slotDBImportFinished(QString hash, int successCount)
 {
     if (successCount <= 0) {
         if (DataBaseService::getInstance()->allMusicInfos().size() <= 0) {
+            if (m_importWidget == nullptr) {
+                m_importWidget = new ImportWidget(this);
+            }
             m_importWidget->showImportHint();
         }
         return;
     }
     // 导入界面显示与关闭动画
-    if (m_importWidget->isVisible()) {
+    if (m_importWidget && m_importWidget->isVisible()) {
         m_musicStatckedWidget->show();
         m_musicStatckedWidget->animationImportToDown(this->size() - QSize(0, m_footerWidget->height() + titlebar()->height()));
         // 切换到所有音乐界面
@@ -542,7 +545,7 @@ void MainFrame::slotDBImportFinished(QString hash, int successCount)
 
 void MainFrame::slotCdaImportFinished()
 {
-    if (m_importWidget->isVisible()) {
+    if (m_importWidget && m_importWidget->isVisible()) {
         m_musicStatckedWidget->show();
         m_musicStatckedWidget->animationImportToDown(this->size() - QSize(0, m_footerWidget->height() + titlebar()->height()));
         // 切换到所有音乐界面
@@ -579,6 +582,9 @@ void MainFrame::slotShortCutTriggered()
     Q_ASSERT(objCut);
 
     if (objCut == addmusicfilesShortcut) {
+        if (m_importWidget == nullptr) {
+            m_importWidget = new ImportWidget(this);
+        }
         m_importWidget->slotAddMusicButtonClicked(); //open filedialog
     }
 
@@ -627,6 +633,9 @@ void MainFrame::slotMenuTriggered(QAction *action)
     }
 
     if (action == m_addMusicFiles) {
+        if (m_importWidget == nullptr) {
+            m_importWidget = new ImportWidget(this);
+        }
         m_importWidget->addMusic(m_importListHash);
     }
 
@@ -701,6 +710,9 @@ void MainFrame::slotAllMusicCleared()
     // 导入界面显示与关闭动画
     m_musicStatckedWidget->animationImportToLeft(this->size() - QSize(0, m_footerWidget->height() + titlebar()->height()));
     m_footerWidget->hide();
+    if (m_importWidget == nullptr) {
+        m_importWidget = new ImportWidget(this);
+    }
     m_importWidget->showImportHint();
     m_importWidget->showAnimationToLeft(this->size());
     m_titlebarwidget->setEnabled(false);
@@ -832,7 +844,6 @@ void MainFrame::showEvent(QShowEvent *event)
         restoreGeometry(m_geometryBa);
     }
     this->setFocus();
-    qDebug() << "zy------MainWindow::showEvent " << QTime::currentTime().toString("hh:mm:ss.zzz");
 
     if (m_footerWidget) {
         m_footerWidget->setGeometry(FooterWidget::Margin, height() - FooterWidget::Height - FooterWidget::Margin,

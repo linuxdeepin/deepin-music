@@ -94,8 +94,6 @@ MusicSongListView::MusicSongListView(QWidget *parent) : DListView(parent)
 
     init();
     initShortcut();
-    initRenameLineEdit();
-
     connect(this, &MusicSongListView::clicked, this, [](QModelIndex midx) {
         qDebug() << "customize midx.row()" << midx.row();
         if (midx.row() == 0 && midx.data(Qt::UserRole + CDA_USER_ROLE_OFFSET).toString() == CDA_USER_ROLE)
@@ -450,6 +448,9 @@ void MusicSongListView::slotDoubleClicked(const QModelIndex &index)
     if (!m_renameItem)
         return;
 
+    if (m_renameLineEdit == nullptr) {
+        initRenameLineEdit();
+    }
     m_renameLineEdit->setVisible(true);
     m_renameLineEdit->move(50, m_renameItem->row() * this->sizeHintForIndex(index).height() + ItemEditMargin);
     m_renameLineEdit->setVisible(true);
@@ -460,7 +461,7 @@ void MusicSongListView::slotDoubleClicked(const QModelIndex &index)
 
 void MusicSongListView::slotLineEditingFinished()
 {
-    if (m_renameLineEdit->isVisible()) {
+    if (m_renameLineEdit && m_renameLineEdit->isVisible()) {
         m_renameLineEdit->setVisible(false);
 
         if (!m_renameItem)
@@ -589,7 +590,9 @@ void MusicSongListView::resizeEvent(QResizeEvent *event)
 {
     Q_UNUSED(event)
 
-    m_renameLineEdit->resize(this->width() - 64, ItemHeight - ItemEditMargin * 2);
+    if (m_renameLineEdit) {
+        m_renameLineEdit->resize(this->width() - 64, ItemHeight - ItemEditMargin * 2);
+    }
 }
 
 void MusicSongListView::keyReleaseEvent(QKeyEvent *event)
@@ -677,14 +680,14 @@ void MusicSongListView::initRenameLineEdit()
 
 void MusicSongListView::slotRenameShortcut()
 {
-    if (selectedIndexes().size() > 0 && !m_renameLineEdit->isVisible()) {
+    if (selectedIndexes().size() > 0 && (!m_renameLineEdit || !m_renameLineEdit->isVisible())) {
         slotDoubleClicked(currentIndex());
     }
 }
 
 void MusicSongListView::slotEscShortcut()
 {
-    if (m_renameLineEdit->isVisible()) {
+    if (m_renameLineEdit && m_renameLineEdit->isVisible()) {
         m_renameLineEdit->setVisible(false);
     }
 }

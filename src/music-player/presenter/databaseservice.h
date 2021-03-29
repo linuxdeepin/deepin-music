@@ -218,6 +218,8 @@ private:
     bool             m_deleting = false;
     // 准备删除的歌曲hash
     QStringList      m_musichashlistToDel;
+    // 第一次查询所有歌曲
+    bool             m_firstInitAllMusic = true;
 };
 
 Q_DECLARE_METATYPE(DataBaseService::ListSortType)
