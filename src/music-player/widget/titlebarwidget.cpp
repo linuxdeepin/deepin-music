@@ -52,6 +52,7 @@ TitlebarWidget::TitlebarWidget(QWidget *parent) :
     setLayout(layout);
 
     m_search = new SearchEdit(this);
+    m_search->setMainWindow(parent);
     m_search->setObjectName("TitleSearch");
     m_search->setFixedWidth(354);
     m_search->setPlaceHolder(tr("Search"));
@@ -66,10 +67,10 @@ TitlebarWidget::~TitlebarWidget()
 
 }
 
-void TitlebarWidget::setResultWidget(SearchResult *result)
-{
-    m_search->setResultWidget(result);
-}
+//void TitlebarWidget::setResultWidget(SearchResult *result)
+//{
+//    m_search->setResultWidget(result);
+//}
 
 void TitlebarWidget::slotSearchEditFoucusIn()
 {

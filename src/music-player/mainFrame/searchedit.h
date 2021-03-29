@@ -31,7 +31,8 @@ public:
     explicit SearchEdit(QWidget *parent = Q_NULLPTR);
 
 public:
-    void setResultWidget(SearchResult *);
+//    void setResultWidget(SearchResult *);
+    void setMainWindow(QWidget *mainWindow);
 
 signals:
     void searchText(const QString &id, const QString &text);
@@ -50,6 +51,7 @@ private:
 //    void searchText3(QString id, QString text);
     SearchResult    *m_result = nullptr;
     QString         m_CurrentId;
+    QWidget         *m_mainWindow = nullptr;
 //    QString         m_Text;
 //    QString         m_LastText;
 };

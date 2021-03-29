@@ -56,6 +56,16 @@ SearchEdit::SearchEdit(QWidget *parent) : DSearchEdit(parent)
     connect(this, &SearchEdit::focusChanged,
     this, [ = ](bool onFocus) {
         qDebug() << "zy------SearchEdit::focusChanged onFocus = " << onFocus;
+        if (m_result == nullptr) {
+            m_result = new SearchResult(m_mainWindow);
+            m_result->setSearchEdit(this);
+            QRect rect = this->rect();
+            QPoint bottomLeft = rect.bottomLeft();
+            bottomLeft = mapTo(parentWidget()->parentWidget(), bottomLeft);
+            m_result->setFixedWidth(width());
+            m_result->hide();
+            m_result->move(bottomLeft.x(), bottomLeft.y() + 5);
+        }
         if (!onFocus) {
             m_result->hide();
             if (lineEdit()) {
@@ -66,22 +76,30 @@ SearchEdit::SearchEdit(QWidget *parent) : DSearchEdit(parent)
     });
 }
 
-void SearchEdit::setResultWidget(SearchResult *result)
-{
-    m_result = result;
-    m_result->setSearchEdit(this);
+//void SearchEdit::setResultWidget(SearchResult *result)
+//{
+//    m_result = result;
+//    m_result->setSearchEdit(this);
 
-    QRect rect = this->rect();
-    QPoint bottomLeft = rect.bottomLeft();
-    bottomLeft = mapTo(parentWidget()->parentWidget(), bottomLeft);
-    m_result->setFixedWidth(width());
-    m_result->hide();
-    m_result->move(bottomLeft.x(), bottomLeft.y() + 5);
+//    QRect rect = this->rect();
+//    QPoint bottomLeft = rect.bottomLeft();
+//    bottomLeft = mapTo(parentWidget()->parentWidget(), bottomLeft);
+//    m_result->setFixedWidth(width());
+//    m_result->hide();
+//    m_result->move(bottomLeft.x(), bottomLeft.y() + 5);
+//}
+
+void SearchEdit::setMainWindow(QWidget *mainWindow)
+{
+    m_mainWindow = mainWindow;
 }
 
 void SearchEdit::keyPressEvent(QKeyEvent *event)
 {
     //输入框中上下按键操作
+    if (m_result == nullptr) {
+        return;
+    }
     if (event->key() == Qt::Key_Up) {
         m_result->selectUp();
     }
@@ -108,6 +126,9 @@ void SearchEdit::keyPressEvent(QKeyEvent *event)
 
 void SearchEdit::onTextChanged()
 {
+    if (m_result == nullptr) {
+        return;
+    }
     auto alltext = this->text();
     if (alltext.isEmpty()) {
         m_result->hide();
@@ -153,6 +174,9 @@ void SearchEdit::onTextChanged()
 
 void SearchEdit::onReturnPressed()
 {
+    if (m_result == nullptr) {
+        return;
+    }
     if (m_result->getCurrentIndex() >= 0) {
         m_result->onReturnPressed();
         m_result->hide();

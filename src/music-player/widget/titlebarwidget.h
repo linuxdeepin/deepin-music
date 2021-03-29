@@ -33,7 +33,7 @@ public:
     explicit TitlebarWidget(QWidget *parent = Q_NULLPTR);
     ~TitlebarWidget() override;
 
-    void setResultWidget(SearchResult *result);
+//    void setResultWidget(SearchResult *result);
 public slots:
     void slotSearchEditFoucusIn();
     void slotClearEdit();

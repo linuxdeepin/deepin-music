@@ -60,7 +60,6 @@ bool checkOnly();
 
 int main(int argc, char *argv[])
 {
-    qDebug() << "zy------main " << QTime::currentTime().toString("hh:mm:ss.zzz");
     setenv("PULSE_PROP_media.role", "music", 1);
 
 #if (DTK_VERSION < DTK_VERSION_CHECK(5, 4, 0, 0))
