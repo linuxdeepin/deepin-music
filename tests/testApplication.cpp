@@ -589,8 +589,8 @@ TEST(Application, musicListDialg3)
     QTest::qWait(100);
 
     // 从歌单中删除
-    QTimer::singleShot(500, w, [ = ]() {
-        QTimer::singleShot(800, w, [ = ]() {
+    QTimer::singleShot(300, w, [ = ]() {
+        QTimer::singleShot(300, w, [ = ]() {
             QTestEventList event;
             DDialog *messageBox = w->findChild<DDialog *>(AC_MessageBox);
             event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
@@ -600,8 +600,7 @@ TEST(Application, musicListDialg3)
             event.addKeyClick(Qt::Key_Enter, Qt::NoModifier, 50);
             event.simulate(messageBox);
             event.clear();
-            QTest::qWait(500);
-            emit backBtn->clicked();
+            w->slotLeftClicked();
         });
         QTestEventList event;
         DMenu *menuWidget = static_cast<DMenu *>(qApp->activePopupWidget());
@@ -617,9 +616,7 @@ TEST(Application, musicListDialg3)
     });
     QContextMenuEvent menuEvent(QContextMenuEvent::Mouse, QPoint(20, 20));
     qApp->sendEvent(mliv->viewport(), &menuEvent);
-    QTest::qWait(700);
-
-    QTest::qWait(200);
+    QTest::qWait(1000);
 }
 
 // Dialg窗口

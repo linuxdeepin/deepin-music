@@ -62,6 +62,8 @@ public:
 public slots:
     // 显示弹窗消息
     void showPopupMessage(const QString &songListName, int selectCount, int insertCount);
+    // 左上角返回按钮点击
+    void slotLeftClicked();
 private:
     /**
      * @brief initMenuAndShortCut
@@ -72,8 +74,6 @@ private:
 #endif
 private slots:
     void setThemeType(DGuiApplicationHelper::ColorType themeType);
-    // 左上角返回按钮点击
-    void slotLeftClicked();
     void slotSearchEditFoucusIn();
     void slotLyricClicked();
     void slotDBImportFinished(QString hash, int successCount);

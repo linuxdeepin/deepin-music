@@ -221,7 +221,11 @@ void CdaThread::run()
                         continue;
                     MediaMeta meta;
                     meta.hash = DMusic::filepathHash(QString(child->p_item->psz_name));
-                    meta.title = child->p_item->psz_name;
+                    QString strnum = QString::number(i + 1);
+                    if (strnum.length() == 1) {
+                        strnum.insert(0, '0'); //前置0显示，如01,02，
+                    }
+                    meta.title = QString("Audio CD - Track %1").arg(strnum); /*child->p_item->psz_name;*/
                     meta.localPath = child->p_item->psz_uri;
                     meta.length = child->p_item->i_duration / 1000; //microseconds to milliseconds
                     meta.track = i + 1; //cd的歌曲索引值，从1开始，用于歌曲切歌
