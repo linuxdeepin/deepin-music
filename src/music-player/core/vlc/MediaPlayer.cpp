@@ -100,7 +100,8 @@ VlcMediaPlayer::VlcMediaPlayer(VlcInstance *instance)
     config_PutInt_fc((vlc_object_t *)_vlcMediaPlayer, "cd-audio", 1);
     //设置role
     vlc_value_t val;
-    val.psz_string = "music";
+    val.psz_string = const_cast<char *>("music");
+    qDebug() << __FUNCTION__ << val.psz_string;
     var_SetChecked_fc((vlc_object_t *)_vlcMediaPlayer, "role", VLC_VAR_STRING, val);
 
     createCoreConnections();

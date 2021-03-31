@@ -189,6 +189,7 @@ DataBaseService::ListSortType SearchResultTabWidget::getSortType()
     } else if (m_StackedWidget->currentWidget() == m_singerListView) {
         return m_singerListView->getSortType();
     }
+    return DataBaseService::SortByNull;
 }
 
 QListView::ViewMode SearchResultTabWidget::getViewMode()
