@@ -47,6 +47,7 @@ public:
     explicit MusicListDataWidget(QWidget *parent = Q_NULLPTR);
     ~MusicListDataWidget() override;
     void showEmptyHits(int count);
+    void initInfoLabel(QString hash);
 public slots:
     void slotTheme(int type);
     // 左侧菜单切换ListView

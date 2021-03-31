@@ -48,6 +48,7 @@ public:
     TabletSelectMode getSelectModel()const {return m_select;}
 #endif
 signals:
+    void loadData();
     // hashOrSearchword为hash值或者搜索关键词
     void signalSwitchToView(ListPageSwitchType switchtype, QString hashOrSearchword, QMap<QString, MediaMeta> musicinfos = QMap<QString, MediaMeta>()); //switch to playlist view,
     // 跳转到当前播放的位置,参数为需要跳转的歌单hash

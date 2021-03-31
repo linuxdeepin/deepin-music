@@ -70,7 +70,120 @@ bool compareAlbumName(const AlbumInfo &data)
 {
     return data.albumName == strcmpAlbumName;
 }
+//获取所有音乐，排序后按count取数据
+QList<MediaMeta> DataBaseService::getMusicInfosBySortAndCount(int count)
+{
+    QList<MediaMeta> mediaMetas;
 
+    DataBaseService::ListSortType type = static_cast<DataBaseService::ListSortType>
+                                         (DataBaseService::getInstance()->getPlaylistSortType("all"));
+
+    QString queryStringNew;
+    switch (type) {
+    case DataBaseService::SortByAddTimeASC: {
+        queryStringNew = QString("SELECT hash, localpath, title, artist, album, "
+                                 "filetype, track, offset, length, size, "
+                                 "timestamp, invalid, search_id, cuepath, "
+                                 "lyricPath, codec, py_title, py_artist, py_album "
+                                 "FROM musicNew ORDER BY timestamp ASC LIMIT ") + QString::number(count);
+        break;
+    }
+    case DataBaseService::SortByTitleASC: {
+        queryStringNew = QString("SELECT hash, localpath, title, artist, album, "
+                                 "filetype, track, offset, length, size, "
+                                 "timestamp, invalid, search_id, cuepath, "
+                                 "lyricPath, codec, py_title, py_artist, py_album "
+                                 "FROM musicNew ORDER BY title ASC LIMIT ") + QString::number(count);
+        break;
+    }
+    case DataBaseService::SortBySingerASC: {
+        queryStringNew = QString("SELECT hash, localpath, title, artist, album, "
+                                 "filetype, track, offset, length, size, "
+                                 "timestamp, invalid, search_id, cuepath, "
+                                 "lyricPath, codec, py_title, py_artist, py_album "
+                                 "FROM musicNew ORDER BY artist ASC LIMIT ") + QString::number(count);
+        break;
+    }
+    case DataBaseService::SortByAblumASC: {
+        queryStringNew = QString("SELECT hash, localpath, title, artist, album, "
+                                 "filetype, track, offset, length, size, "
+                                 "timestamp, invalid, search_id, cuepath, "
+                                 "lyricPath, codec, py_title, py_artist, py_album "
+                                 "FROM musicNew ORDER BY album ASC LIMIT ") + QString::number(count);
+        break;
+    }
+    case DataBaseService::SortByAddTimeDES: {
+        queryStringNew = QString("SELECT hash, localpath, title, artist, album, "
+                                 "filetype, track, offset, length, size, "
+                                 "timestamp, invalid, search_id, cuepath, "
+                                 "lyricPath, codec, py_title, py_artist, py_album "
+                                 "FROM musicNew ORDER BY timestamp DESC LIMIT ") + QString::number(count);
+        break;
+    }
+    case DataBaseService::SortByTitleDES: {
+        queryStringNew = QString("SELECT hash, localpath, title, artist, album, "
+                                 "filetype, track, offset, length, size, "
+                                 "timestamp, invalid, search_id, cuepath, "
+                                 "lyricPath, codec, py_title, py_artist, py_album "
+                                 "FROM musicNew ORDER BY title DESC LIMIT ") + QString::number(count);
+        break;
+    }
+    case DataBaseService::SortBySingerDES: {
+        queryStringNew = QString("SELECT hash, localpath, title, artist, album, "
+                                 "filetype, track, offset, length, size, "
+                                 "timestamp, invalid, search_id, cuepath, "
+                                 "lyricPath, codec, py_title, py_artist, py_album "
+                                 "FROM musicNew ORDER BY artist DESC LIMIT ") + QString::number(count);
+        break;
+    }
+    case DataBaseService::SortByAblumDES: {
+        queryStringNew = QString("SELECT hash, localpath, title, artist, album, "
+                                 "filetype, track, offset, length, size, "
+                                 "timestamp, invalid, search_id, cuepath, "
+                                 "lyricPath, codec, py_title, py_artist, py_album "
+                                 "FROM musicNew ORDER BY album DESC LIMIT ") + QString::number(count);
+        break;
+    }
+    default:
+        break;
+    }
+
+    QSqlQuery queryNew(m_db);
+    if (!queryNew.prepare(queryStringNew)) {
+        qCritical() << queryNew.lastError();
+        return mediaMetas;
+    }
+    if (! queryNew.exec()) {
+        qCritical() << queryNew.lastError();
+        return mediaMetas;
+    }
+
+    while (queryNew.next()) {
+        MediaMeta meta;
+        meta.hash = queryNew.value(0).toString();
+        meta.localPath = queryNew.value(1).toString();
+        meta.title = queryNew.value(2).toString();
+        meta.singer = queryNew.value(3).toString();
+        meta.album = queryNew.value(4).toString();
+        meta.filetype = queryNew.value(5).toString();
+        meta.track = queryNew.value(6).toLongLong();
+        meta.offset = queryNew.value(7).toLongLong();
+        meta.length = queryNew.value(8).toLongLong();
+        meta.size = queryNew.value(9).toLongLong();
+        meta.timestamp = queryNew.value(10).toLongLong();
+        meta.invalid = queryNew.value(11).toBool();
+        meta.searchID = queryNew.value(12).toString();
+        meta.cuePath = queryNew.value(13).toString();
+        meta.lyricPath = queryNew.value(14).toString();
+        meta.codec = queryNew.value(15).toString();
+        meta.pinyinTitle = queryNew.value(16).toString();
+        meta.pinyinArtist = queryNew.value(17).toString();
+        meta.pinyinAlbum = queryNew.value(18).toString();
+        mediaMetas << meta;
+    }
+
+    return mediaMetas;
+}
 
 QList<MediaMeta> DataBaseService::allMusicInfos(bool refresh)
 {

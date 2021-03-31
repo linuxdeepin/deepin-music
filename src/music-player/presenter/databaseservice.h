@@ -78,6 +78,7 @@ public:
 public:
     //QSqlDatabase            getDatabase();
 
+    QList<MediaMeta>     getMusicInfosBySortAndCount(int count);
     // 所有歌曲信息
     QList<MediaMeta>     allMusicInfos(bool refresh = true);
     // 歌曲数量

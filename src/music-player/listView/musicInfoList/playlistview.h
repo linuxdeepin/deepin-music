@@ -44,6 +44,7 @@ public:
 
     QStandardItem *item(int row, int column) const;
     //void setCurrentItem(QStandardItem *item);
+    void reloadAllSonglist();
     // 性能优化歌曲展示专用
     void initAllSonglist(const QString &hash);
     // 歌单&收藏页面
@@ -86,6 +87,7 @@ public slots:
 #else
     void slotOnDoubleClicked(const QModelIndex &index);
 #endif
+    void slotLoadData();
     void slotUpdatePlayingIcon();
 
     // 封面图片刷新
@@ -185,4 +187,5 @@ private:
     QPixmap m_sidebarPixmap;
     QIcon     m_defaultIcon = QIcon::fromTheme("cover_max");
     bool      m_menuIsShow = false;
+    static constexpr int FirstLoadCount = 15;
 };

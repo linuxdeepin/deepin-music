@@ -92,6 +92,30 @@ void MusicListDataWidget::showEmptyHits(int count)
     }
 }
 
+void MusicListDataWidget::initInfoLabel(QString hash)
+{
+    m_currentHash = hash;
+    QString countStr;
+    int songCount = 0;
+    if (hash == "all" || hash == "musicResult") {
+        if (hash == "musicResult") {
+            songCount = m_searchResultTabWidget->getMusicCountByMusic();
+            showEmptyHits(songCount);
+            refreshSortAction("musicResult");
+        } else {
+            songCount = DataBaseService::getInstance()->allMusicInfosCount();
+        }
+        if (0 == songCount) {
+            countStr = QString("   ") + MusicListDataWidget::tr("No songs");
+        } else if (1 == songCount) {
+            countStr = QString("   ") + MusicListDataWidget::tr("1 song");
+        } else {
+            countStr = QString("   ") + MusicListDataWidget::tr("%1 songs").arg(songCount);
+        }
+    }
+    m_infoLabel->setText(countStr);
+}
+
 // 左侧菜单切换ListView
 void MusicListDataWidget::slotViewChanged(ListPageSwitchType switchtype, const QString &hashOrSearchword, QMap<QString, MediaMeta> musicinfos)
 {
@@ -152,7 +176,7 @@ void MusicListDataWidget::slotViewChanged(ListPageSwitchType switchtype, const Q
         break;
     }
     case AllSongListType: {
-        m_musicListView->initAllSonglist("all");
+        m_musicListView->reloadAllSonglist();
         m_titleLabel->setText(DataBaseService::getInstance()->getPlaylistNameByUUID("all"));
         m_musicListView->setViewModeFlag("all", m_musicListView->getViewMode());
         refreshModeBtn(m_musicListView->getViewMode());
@@ -468,7 +492,7 @@ void MusicListDataWidget::slotPlayAllClicked()
             for (int i = 0; i < albumInfos.size(); i++) {
                 AlbumInfo albumTmp = albumInfos.at(i);
                 QMap<QString, MediaMeta> albumTmpMap = albumTmp.musicinfos;
-                for(QMap<QString, MediaMeta>::Iterator iterator = albumTmpMap.begin();iterator!= albumTmpMap.end();iterator++){
+                for (QMap<QString, MediaMeta>::Iterator iterator = albumTmpMap.begin(); iterator != albumTmpMap.end(); iterator++) {
                     if (!metaList.contains((*iterator).hash)) {
                         playMeta = (*iterator);
                         break;
@@ -524,7 +548,7 @@ void MusicListDataWidget::slotPlayAllClicked()
             for (int i = 0; i < singerInfos.size(); i++) {
                 SingerInfo singerTmp = singerInfos.at(i);
                 QMap<QString, MediaMeta> singerTmpMap = singerTmp.musicinfos;
-                for(QMap<QString, MediaMeta>::Iterator iterator = singerTmpMap.begin();iterator!= singerTmpMap.end();iterator++){
+                for (QMap<QString, MediaMeta>::Iterator iterator = singerTmpMap.begin(); iterator != singerTmpMap.end(); iterator++) {
                     if (!metaList.contains((*iterator).hash)) {
                         playMeta = (*iterator);
                         break;
@@ -681,7 +705,7 @@ void MusicListDataWidget::initUI()
     m_pStackedWidget->addWidget(m_musicListView);
 //    m_pCenterWidget->setMouseTracking(true);
     m_pStackedWidget->setCurrentWidget(m_musicListView);
-    refreshInfoLabel("all");
+    initInfoLabel("all");
     refreshSortAction();
     slotTheme(DGuiApplicationHelper::instance()->themeType());
 }

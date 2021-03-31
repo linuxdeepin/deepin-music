@@ -244,6 +244,9 @@ PlayListView::PlayListView(const QString &hash, bool isPlayQueue, QWidget *paren
     // 移出cda格式歌曲
     connect(CommonService::getInstance(), &CommonService::signalCdaSongListChanged,
             this, &PlayListView::slotRmvCdaSongs);
+
+    connect(CommonService::getInstance(), &CommonService::loadData,
+            this, &PlayListView::slotLoadData, Qt::QueuedConnection);
 #ifdef TABLET_PC
     // 设置选择模式
     connect(CommonService::getInstance(), &CommonService::signalSelectMode,
@@ -273,6 +276,16 @@ QStandardItem *PlayListView::item(int row, int column) const
     return  m_model->item(row, column);
 }
 
+void PlayListView::reloadAllSonglist()
+{
+    m_currentHash = "all";
+    m_model->clear();
+    QList<MediaMeta> mediaMetas = DataBaseService::getInstance()->allMusicInfos();
+
+    DataBaseService::ListSortType sortType = getSortType();
+    this->setDataBySortType(mediaMetas, sortType);
+}
+
 //void PlayListView::setCurrentItem(QStandardItem *item)
 //{
 //    setCurrentIndex(m_model->indexFromItem(item));
@@ -282,10 +295,39 @@ void PlayListView::initAllSonglist(const QString &hash)
 {
     m_currentHash = hash;
     m_model->clear();
-    QList<MediaMeta> mediaMetas = DataBaseService::getInstance()->allMusicInfos();
 
-    DataBaseService::ListSortType sortType = getSortType();
-    this->setDataBySortType(mediaMetas, sortType);
+    if (DataBaseService::getInstance()->allMusicInfosCount() > FirstLoadCount) {
+        QList<MediaMeta> mediaMetas = DataBaseService::getInstance()->getMusicInfosBySortAndCount(FirstLoadCount);
+        qDebug() << __FUNCTION__ << "mediaMetas.size = " << mediaMetas.size();
+        m_model->clear();
+        for (int i = 0; i < mediaMetas.size(); i++) {
+            QStandardItem *newItem = new QStandardItem;
+
+            QString imagesDirPath = Global::cacheDir() + "/images/" + mediaMetas.at(i).hash + ".jpg";
+            QFileInfo file(imagesDirPath);
+            QIcon icon;
+            if (file.exists()) {
+                icon = QIcon(imagesDirPath);
+            } else {
+                icon = QIcon::fromTheme("cover_max");
+            }
+            newItem->setIcon(icon);
+            m_model->appendRow(newItem);
+
+            auto row = m_model->rowCount() - 1;
+            QModelIndex index = m_model->index(row, 0, QModelIndex());
+
+            QVariant mediaMeta;
+            MediaMeta meta = mediaMetas.at(i);
+            mediaMeta.setValue(meta);
+            m_model->setData(index, mediaMeta, Qt::UserRole);
+        }
+        emit CommonService::getInstance()->loadData();
+    } else {
+        QList<MediaMeta> mediaMetas = DataBaseService::getInstance()->allMusicInfos();
+        DataBaseService::ListSortType sortType = getSortType();
+        this->setDataBySortType(mediaMetas, sortType);
+    }
 }
 
 void PlayListView::initCostomSonglist(const QString &hash)
@@ -659,6 +701,37 @@ void PlayListView::slotOnDoubleClicked(const QModelIndex &index)
         showErrorDlg();
     } else {
         playMusic(itemMeta);
+    }
+}
+
+void PlayListView::slotLoadData()
+{
+    QList<MediaMeta> mediaMetas = DataBaseService::getInstance()->allMusicInfos();
+    DataBaseService::ListSortType sortType = getSortType();
+    // 排序
+    sortList(mediaMetas, sortType);
+
+    for (int i = FirstLoadCount; i < mediaMetas.size(); i++) {
+        QStandardItem *newItem = new QStandardItem;
+
+        QString imagesDirPath = Global::cacheDir() + "/images/" + mediaMetas.at(i).hash + ".jpg";
+        QFileInfo file(imagesDirPath);
+        QIcon icon;
+        if (file.exists()) {
+            icon = QIcon(imagesDirPath);
+        } else {
+            icon = QIcon::fromTheme("cover_max");
+        }
+        newItem->setIcon(icon);
+        m_model->appendRow(newItem);
+
+        auto row = m_model->rowCount() - 1;
+        QModelIndex index = m_model->index(row, 0, QModelIndex());
+
+        QVariant mediaMeta;
+        MediaMeta meta = mediaMetas.at(i);
+        mediaMeta.setValue(meta);
+        m_model->setData(index, mediaMeta, Qt::UserRole);
     }
 }
 #endif
