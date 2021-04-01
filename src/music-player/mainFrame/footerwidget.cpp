@@ -189,8 +189,8 @@ void FooterWidget::initUI(QWidget *parent)
     m_waveform->setMinimum(0);
     m_waveform->setMaximum(1000);
     m_waveform->setValue(0);
-    m_waveform->setFixedWidth(400);
-    mainHBoxlayout->addWidget(m_waveform, 100, Qt::AlignCenter);
+    m_waveform->adjustSize();
+    mainHBoxlayout->addWidget(m_waveform, 100);
 
     AC_SET_OBJECT_NAME(m_waveform, AC_Waveform);
     AC_SET_ACCESSIBLE_NAME(m_waveform, AC_Waveform);
