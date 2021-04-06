@@ -696,6 +696,7 @@ void FooterWidget::slotPlayQueueClick(bool click)
 
 void FooterWidget::slotFlushSoundIcon()
 {
+    m_volSlider->update();
     int volume = Player::getInstance()->getVolume();
 
     if (Player::getInstance()->getMuted() || volume == 0) {
