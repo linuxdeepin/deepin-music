@@ -114,7 +114,7 @@ bool HintFilter::eventFilter(QObject *obj, QEvent *event)
             m_delayShowTimer->start();
         }
 
-        m_parentWidget->setCursor(QCursor(Qt::PointingHandCursor));
+        m_parentWidget->setCursor(QCursor(Qt::ArrowCursor));
         break;
     }
     case QEvent::Leave: {
@@ -169,7 +169,7 @@ void HintFilter::showHitsFor(QWidget *w, QWidget *hint)
 
     showHint(hint);
 
-    m_hintWidget->setCursor(QCursor(Qt::PointingHandCursor));
+    m_hintWidget->setCursor(QCursor(Qt::ArrowCursor));
 }
 
 void HintFilter::showHint(QWidget *hint)
