@@ -519,7 +519,7 @@ void MusicSongListView::slotPopMessageWindow(int stat)
     }
 
     //停止音乐
-    Player::getInstance()->stop();
+    //Player::getInstance()->stop();
 
     int retexec = -1;
     int iprop = 0;
@@ -527,6 +527,8 @@ void MusicSongListView::slotPopMessageWindow(int stat)
 
     popStrMsg = tr("The CD has been removed");
     if (tmpMeta.mmType == MIMETYPE_CDA) {
+        //停止音乐
+        Player::getInstance()->stop();
         popStrMsg = tr("Play failed, as the CD has been removed");
     }
 
