@@ -62,7 +62,9 @@ public:
 
 //    void setViewModeFlag(QListView::ViewMode mode);
 //    void addItem(const QString str);
-
+private:
+    // 单击或者触屏单击时调用，跳转到搜索结果tab页
+    void switchToSearchResultTab(const QModelIndex &index);
 signals:
     void sigSearchClear();
 
@@ -72,6 +74,7 @@ public slots:
     void onReturnPressed();
 protected:
     virtual void mouseMoveEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
+    virtual bool event(QEvent *event)Q_DECL_OVERRIDE;
 public:
     SearchType                  m_SearchType;
 private:

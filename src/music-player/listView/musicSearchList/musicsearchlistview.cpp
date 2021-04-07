@@ -23,6 +23,7 @@
 #include "musicsearchlistmodel.h"
 #include "musicsearchlistdelegate.h"
 
+#include <QTouchEvent>
 #include <QDebug>
 #include <QFileInfo>
 #include <DGuiApplicationHelper>
@@ -39,6 +40,7 @@ MusicSearchListview::MusicSearchListview(QWidget *parent)
     : DListView(parent)
     , m_SearchType(SearchType::none)
 {
+    setAttribute(Qt::WA_AcceptTouchEvents);
     m_model = new MusicSearchListModel(3, 3, this);
     setModel(m_model);
     m_delegate = new MusicSearchListDelegate(this);
@@ -240,6 +242,29 @@ void MusicSearchListview::setCurrentIndexInt(int row)
     m_CurrentIndex = row;
 }
 
+void MusicSearchListview::switchToSearchResultTab(const QModelIndex &index)
+{
+    if (m_SearchType == SearchType::SearchMusic) {
+        MediaMeta mediaMeta = index.data(Qt::UserRole + SearchType::SearchMusic).value<MediaMeta>();
+        emit CommonService::getInstance()->signalSwitchToView(SearchMusicResultType, mediaMeta.title);
+        if (m_SearchResultWidget) {
+            m_SearchResultWidget->setLineEditSearchString(mediaMeta.title);
+        }
+    } else if (m_SearchType == SearchType::SearchSinger) {
+        SingerInfo singerInfo = index.data(Qt::UserRole + SearchType::SearchSinger).value<SingerInfo>();
+        emit CommonService::getInstance()->signalSwitchToView(SearchSingerResultType, singerInfo.singerName);
+        if (m_SearchResultWidget) {
+            m_SearchResultWidget->setLineEditSearchString(singerInfo.singerName);
+        }
+    } else if (m_SearchType == SearchType::SearchAlbum) {
+        AlbumInfo albumInfo = index.data(Qt::UserRole + SearchType::SearchAlbum).value<AlbumInfo>();
+        emit CommonService::getInstance()->signalSwitchToView(SearchAlbumResultType, albumInfo.albumName);
+        if (m_SearchResultWidget) {
+            m_SearchResultWidget->setLineEditSearchString(albumInfo.albumName);
+        }
+    }
+}
+
 //QString MusicSearchListview::getCurrentIndexText(int row)
 //{
 //    QString currentIndexText;
@@ -303,25 +328,7 @@ void MusicSearchListview::SearchClear()
 
 void MusicSearchListview::slotOnClicked(const QModelIndex &index)
 {
-    if (m_SearchType == SearchType::SearchMusic) {
-        MediaMeta mediaMeta = index.data(Qt::UserRole + SearchType::SearchMusic).value<MediaMeta>();
-        emit CommonService::getInstance()->signalSwitchToView(SearchMusicResultType, mediaMeta.title);
-        if (m_SearchResultWidget) {
-            m_SearchResultWidget->setLineEditSearchString(mediaMeta.title);
-        }
-    } else if (m_SearchType == SearchType::SearchSinger) {
-        SingerInfo singerInfo = index.data(Qt::UserRole + SearchType::SearchSinger).value<SingerInfo>();
-        emit CommonService::getInstance()->signalSwitchToView(SearchSingerResultType, singerInfo.singerName);
-        if (m_SearchResultWidget) {
-            m_SearchResultWidget->setLineEditSearchString(singerInfo.singerName);
-        }
-    } else if (m_SearchType == SearchType::SearchAlbum) {
-        AlbumInfo albumInfo = index.data(Qt::UserRole + SearchType::SearchAlbum).value<AlbumInfo>();
-        emit CommonService::getInstance()->signalSwitchToView(SearchAlbumResultType, albumInfo.albumName);
-        if (m_SearchResultWidget) {
-            m_SearchResultWidget->setLineEditSearchString(albumInfo.albumName);
-        }
-    }
+    switchToSearchResultTab(index);
 }
 
 void MusicSearchListview::onReturnPressed()
@@ -330,9 +337,20 @@ void MusicSearchListview::onReturnPressed()
     slotOnClicked(m_model->index(m_CurrentIndex, 0));
 }
 
-
 void MusicSearchListview::mouseMoveEvent(QMouseEvent *event)
 {
     Q_UNUSED(event)
     qDebug() << "MusicSearchListview::mouseMoveEvent";
+}
+
+bool MusicSearchListview::event(QEvent *event)
+{
+    if (event->type() == QEvent::TouchBegin) {
+        QTouchEvent *touch = static_cast<QTouchEvent *>(event);
+        if (touch && touch->touchPoints().size() > 0) {
+            QModelIndex index = this->indexAt(touch->touchPoints().at(0).pos().toPoint());
+            switchToSearchResultTab(index);
+        }
+    }
+    return QListView::event(event);
 }
