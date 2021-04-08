@@ -132,6 +132,9 @@ void SubSonglistWidget::initUI()
 
     connect(m_btPlayAll, &DPushButton::pressed, this, &SubSonglistWidget::slotPlayAllClicked);
     connect(m_btRandomPlay, &DPushButton::pressed, this, &SubSonglistWidget::slotPlayRandomClicked);
+    connect(DGuiApplicationHelper::instance(), &DGuiApplicationHelper::themeTypeChanged,
+            this, &SubSonglistWidget::setThemeType);
+    setThemeType(DGuiApplicationHelper::instance()->themeType());
 }
 
 void SubSonglistWidget::resizeEvent(QResizeEvent *e)
