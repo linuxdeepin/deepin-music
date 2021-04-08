@@ -206,7 +206,6 @@ void MainFrame::initUI(bool showLoading)
     m_footerWidget = new FooterWidget(this);
     m_footerWidget->setVisible(showLoading);
     connect(m_footerWidget, &FooterWidget::lyricClicked, this, &MainFrame::slotLyricClicked);
-
     if (!showLoading) {
         m_importWidget = new ImportWidget(this);
     }
@@ -713,6 +712,7 @@ void MainFrame::slotAllMusicCleared()
     if (m_importWidget == nullptr) {
         m_importWidget = new ImportWidget(this);
     }
+    this->setCentralWidget(m_importWidget);
     m_importWidget->showImportHint();
     m_importWidget->showAnimationToLeft(this->size());
     m_titlebarwidget->setEnabled(false);
