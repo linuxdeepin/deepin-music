@@ -918,6 +918,8 @@ void MainFrame::closeEvent(QCloseEvent *event)
     case 1: {
         MusicSettings::setOption("base.play.state", int(windowState()));
         MusicSettings::setOption("base.close.is_close", true);
+        //退出时,stop当前音乐
+        Player::getInstance()->stop(false);
         qApp->quit();
         break;
     }
@@ -937,6 +939,8 @@ void MainFrame::closeEvent(QCloseEvent *event)
         }
         if (ccd.closeAction() == 1) {
             MusicSettings::setOption("base.close.is_close", true);
+            //退出时,stop当前音乐
+            Player::getInstance()->stop(false);
             qApp->quit();
         } else {
             MusicSettings::setOption("base.close.is_close", false);
@@ -949,7 +953,6 @@ void MainFrame::closeEvent(QCloseEvent *event)
 
     MusicSettings::setOption("base.play.last_position", Player::getInstance()->position());
     this->setFocus();
-    Player::getInstance()->stop(false);
     DMainWindow::closeEvent(event);
 }
 
