@@ -674,6 +674,8 @@ void MusicSongListView::dropEvent(QDropEvent *event)
 void MusicSongListView::initRenameLineEdit()
 {
     m_renameLineEdit = new DLineEdit(this);
+    // 初始化编辑控件大小
+    m_renameLineEdit->resize(this->width() - ItemWidthDiff, ItemHeight - ItemEditMargin * 2);
     m_renameLineEdit->setVisible(false);
     m_renameLineEdit->setClearButtonEnabled(false);
 

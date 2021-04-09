@@ -36,6 +36,8 @@ class MusicSongListView : public DListView
 public:
     // Item高度
     static constexpr int ItemHeight = 40;
+    // Item与listview宽度差
+    static constexpr int ItemWidthDiff = 64;
     // Item编辑状态边距
     static constexpr int ItemEditMargin = 5;
     // Icon边长
