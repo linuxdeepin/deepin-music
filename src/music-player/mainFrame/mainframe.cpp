@@ -712,7 +712,7 @@ void MainFrame::slotAllMusicCleared()
     if (m_importWidget == nullptr) {
         m_importWidget = new ImportWidget(this);
     }
-    this->setCentralWidget(m_importWidget);
+    m_importWidget->lower();
     m_importWidget->showImportHint();
     m_importWidget->showAnimationToLeft(this->size());
     m_titlebarwidget->setEnabled(false);
