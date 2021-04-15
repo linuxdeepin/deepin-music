@@ -25,6 +25,7 @@
 #include <QKeyEvent>
 
 #include <DUtil>
+#include <DApplication>
 
 #include "util/pinyinsearch.h"
 

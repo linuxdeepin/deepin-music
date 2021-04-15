@@ -139,6 +139,8 @@ public slots:
     void slotShowSongList();
     // 添加到其他歌单或者播放队列
     void slotAddToSongList(const QString &hash, const QString &name);
+    // 横竖屏切换
+    void slotHScreen(bool isHScreen);
 #endif
 private:
     // 播放音乐相关处理

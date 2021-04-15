@@ -253,6 +253,10 @@ PlayListView::PlayListView(const QString &hash, bool isPlayQueue, QWidget *paren
             this, &PlayListView::slotSetSelectModel);
     connect(CommonService::getInstance(), &CommonService::signalSelectAll,
             this, &PlayListView::slotSelectAll);
+
+    // 横竖屏切换
+    connect(CommonService::getInstance(), &CommonService::signalHScreen,
+            this, &PlayListView::slotHScreen);
 #endif
 }
 
@@ -643,10 +647,17 @@ void PlayListView::setViewModeFlag(QString hash, QListView::ViewMode mode)
 #ifdef TABLET_PC
     if (mode == QListView::IconMode) {
         setGridSize(QSize(-1, -1));
-        setSpacing(20);
-        setIconSize(QSize(200, 243));
-        // 修改底部间距
-        setViewportMargins(30, -15, -35, 0);
+            setSpacing(20);
+            setIconSize(QSize(200, 243));
+            // 修改底部间距
+            setViewportMargins(30, -15, -35, 0);
+            if (CommonService::getInstance()->isHScreen()) {
+                setSpacing(20);
+                setViewportMargins(30, -15, -35, 0);
+            } else {
+                setSpacing(33);
+                setViewportMargins(23, -15, -35, 0);
+            }
     } else {
         setIconSize(QSize(36, 36));
         setGridSize(QSize(-1, -1));
@@ -1554,6 +1565,19 @@ void PlayListView::slotAddToSongList(const QString &hash, const QString &name)
     }
     int insertCount = DataBaseService::getInstance()->addMetaToPlaylist(hash, metas);
     emit CommonService::getInstance()->signalShowPopupMessage(name, metas.size(), insertCount);
+}
+
+void PlayListView::slotHScreen(bool isHScreen)
+{
+    if (this->viewMode() == QListView::IconMode) {
+        if (isHScreen) {
+            setSpacing(20);
+            setViewportMargins(30, -15, -35, 0);
+        } else {
+            setSpacing(33);
+            setViewportMargins(23, -15, -35, 0);
+        }
+    }
 }
 #endif
 

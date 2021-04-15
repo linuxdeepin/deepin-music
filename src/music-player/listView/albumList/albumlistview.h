@@ -86,6 +86,8 @@ public slots:
 #ifdef TABLET_PC
     // 播放状态发生改变
     void slotPlaybackStatusChanged(Player::PlaybackStatus statue);
+    // 横竖屏切换
+    void slotHScreen(bool isHScreen);
 #endif
 private slots:
     void slotCoverUpdate(const MediaMeta &meta);

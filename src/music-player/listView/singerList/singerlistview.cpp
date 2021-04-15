@@ -162,6 +162,10 @@ SingerListView::SingerListView(const QString &hash, QWidget *parent)
 #ifdef TABLET_PC
     connect(Player::getInstance(), &Player::signalPlaybackStatusChanged,
             this, &SingerListView::slotPlaybackStatusChanged);
+
+    // 横竖屏切换
+    connect(CommonService::getInstance(), &CommonService::signalHScreen,
+            this, &SingerListView::slotHScreen);
 #endif
 }
 
@@ -352,6 +356,13 @@ void SingerListView::setViewModeFlag(QListView::ViewMode mode)
         // 去除底部间距
         setViewportMargins(30, -13, -35, 0);
         setSpacing(20);
+        if (CommonService::getInstance()->isHScreen()) {
+            setSpacing(20);
+            setViewportMargins(30, -13, -35, 0);
+        } else {
+            setSpacing(33);
+            setViewportMargins(23, -13, -35, 0);
+        }
     } else {
         setIconSize(QSize(36, 36));
         setGridSize(QSize(-1, -1));
@@ -548,7 +559,20 @@ void SingerListView::slotScrollToCurrentPosition(const QString &songlistHash)
         }
     }
 }
-
+#ifdef TABLET_PC
+void SingerListView::slotHScreen(bool isHScreen)
+{
+    if (this->viewMode() == QListView::IconMode) {
+        if (isHScreen) {
+            setSpacing(20);
+            setViewportMargins(30, -13, -35, 0);
+        } else {
+            setSpacing(33);
+            setViewportMargins(23, -13, -35, 0);
+        }
+    }
+}
+#endif
 // 区分单双击需要，双击逻辑位置移动
 //void SingerListView::onDoubleClicked(const QModelIndex &index)
 //{

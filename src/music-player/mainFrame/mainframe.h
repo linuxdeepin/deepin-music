@@ -64,6 +64,10 @@ public slots:
     void showPopupMessage(const QString &songListName, int selectCount, int insertCount);
     // 左上角返回按钮点击
     void slotLeftClicked();
+#ifdef TABLET_PC
+    // 虚拟键盘
+    void slotActiveChanged(bool isActive);
+#endif
 private:
     /**
      * @brief initMenuAndShortCut

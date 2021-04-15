@@ -22,8 +22,13 @@
 #include "musicstackedwidget.h"
 
 #include <QPropertyAnimation>
+#include <QDesktopWidget>
+
+#include <DApplication>
 
 #include "ac-desktop-define.h"
+#include "commonservice.h"
+#include "musicsonglistview.h"
 
 MusicStatckedWidget::MusicStatckedWidget(QWidget *parent)
     : DStackedWidget(parent)
@@ -102,3 +107,38 @@ void MusicStatckedWidget::animationImportToLeft(const QSize &size)
 
     animation->start();
 }
+
+#ifdef TABLET_PC
+void MusicStatckedWidget::animationToUpByInput()
+{
+    int posY = CommonService::getInstance()->getCurrentWidgetPosY();
+    QRect screenRect = DApplication::desktop()->screenGeometry();
+
+    QPropertyAnimation *animation = new QPropertyAnimation(this, "pos");
+    animation->setDuration(InputAnimationDelay);
+    animation->setEasingCurve(QEasingCurve::InCurve);
+    animation->setStartValue(QPoint(0, 50));
+    animation->connect(animation, &QPropertyAnimation::finished,
+                       animation, &QPropertyAnimation::deleteLater);
+    int keyboardHeight = static_cast<int>(DApplication::inputMethod()->keyboardRectangle().height());
+    if (posY > (screenRect.height() - keyboardHeight - MusicSongListView::ItemHeight)) {
+        animation->setEndValue(QPoint(0, (screenRect.height() - keyboardHeight - posY)));
+        animation->start();
+    }
+}
+
+void MusicStatckedWidget::animationToDownByInput()
+{
+    QPropertyAnimation *animation = new QPropertyAnimation(this, "pos");
+
+    animation->setDuration(InputAnimationDelay);
+    animation->setEasingCurve(QEasingCurve::InCurve);
+    animation->setStartValue(this->pos());
+    animation->setEndValue(QPoint(0, 50));
+
+    animation->connect(animation, &QPropertyAnimation::finished,
+                       animation, &QPropertyAnimation::deleteLater);
+
+    animation->start();
+}
+#endif

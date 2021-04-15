@@ -32,6 +32,7 @@
 #include <DPushButton>
 #include <DSearchEdit>
 #include <DLabel>
+#include <DApplication>
 
 #include "searchedit.h"
 

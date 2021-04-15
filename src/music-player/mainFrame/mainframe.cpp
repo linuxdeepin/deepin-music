@@ -30,6 +30,10 @@
 #include <QPainter>
 #include <QSystemTrayIcon>
 #include <QTime>
+#include <QShortcut>
+#include <QPropertyAnimation>
+#include <QDBusConnection>
+#include <QDesktopWidget>
 
 #include <DUtil>
 #include <DWidgetUtil>
@@ -41,12 +45,9 @@
 #include <DMessageManager>
 #include <DFloatingMessage>
 #include <DSettingsDialog>
-#include <QShortcut>
-#include <QPropertyAnimation>
 #include <DThemeManager>
 
 #include <unistd.h>
-
 #include "./core/musicsettings.h"
 #include "./core/util/global.h"
 
@@ -183,6 +184,17 @@ MainFrame::MainFrame()
     });
 
     connect(CommonService::getInstance(), &CommonService::signalSwitchToView, this, &MainFrame::slotViewChanged);
+
+#ifdef TABLET_PC
+    QDBusConnection connection = QDBusConnection::sessionBus();
+    m_comDeepinImInterface = new ComDeepinImInterface("com.deepin.im", "/com/deepin/im", connection);
+    if (m_comDeepinImInterface->isValid() == false) {
+        qDebug() << __FUNCTION__ << "----------QDbus service can not connect";
+    } else {
+        qDebug() << __FUNCTION__ << "----------QDbus service connected";
+        connect(m_comDeepinImInterface, &ComDeepinImInterface::imActiveChanged, this, &MainFrame::slotActiveChanged);
+    }
+#endif
 }
 
 MainFrame::~MainFrame()
@@ -206,6 +218,7 @@ void MainFrame::initUI(bool showLoading)
     m_footerWidget = new FooterWidget(this);
     m_footerWidget->setVisible(showLoading);
     connect(m_footerWidget, &FooterWidget::lyricClicked, this, &MainFrame::slotLyricClicked);
+
     if (!showLoading) {
         m_importWidget = new ImportWidget(this);
     }
@@ -491,7 +504,20 @@ void MainFrame::slotLeftClicked()
     emit CommonService::getInstance()->signalSwitchToView(PreType, "", QMap<QString, MediaMeta>());
     m_backBtn->setVisible(false);
 }
-
+#ifdef TABLET_PC
+void MainFrame::slotActiveChanged(bool isActive)
+{
+    if (CommonService::getInstance()->isTabletEnvironment()) {
+        if (isActive) {
+            m_musicStatckedWidget->animationToUpByInput();
+        } else {
+            if (m_musicStatckedWidget->pos().y() != 50) {
+                m_musicStatckedWidget->animationToDownByInput();
+            }
+        }
+    }
+}
+#endif
 void MainFrame::slotSearchEditFoucusIn()
 {
     m_titlebarwidget->slotSearchEditFoucusIn();
@@ -905,6 +931,13 @@ void MainFrame::resizeEvent(QResizeEvent *e)
     if (m_popupMessage) {
         m_popupMessage->resize(this->width(), this->height() - m_footerWidget->height());
     }
+#ifdef TABLET_PC
+    if (this->width() > 1900) {
+        CommonService::getInstance()->setIsHScreen(true);
+    } else {
+        CommonService::getInstance()->setIsHScreen(false);
+    }
+#endif
 }
 
 void MainFrame::closeEvent(QCloseEvent *event)

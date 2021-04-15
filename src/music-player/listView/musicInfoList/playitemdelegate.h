@@ -67,9 +67,11 @@ protected:
     bool editorEvent(QEvent *event, QAbstractItemModel *model, const QStyleOptionViewItem &option, const QModelIndex &index) override;
 private:
 #ifdef TABLET_PC
+    // 平板模式
     void drawTabletIconMode(QPainter &painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
     void drawTabletListMode(QPainter &painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
 #else
+    // pc模式
     void drawIconMode(QPainter &painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
 #endif
     void drawListMode(QPainter &painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;

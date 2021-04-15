@@ -46,6 +46,7 @@ const int yoffset = 8;
 const int roundRadius = 10;
 
 #ifdef TABLET_PC
+// 平板模式
 const int ImgWidthAndHeightTablet = 195;
 const int yoffsetTablet = 5;
 const int roundRadiusTablet = 10;

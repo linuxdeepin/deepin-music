@@ -49,7 +49,9 @@ MusicBaseListView::MusicBaseListView(QWidget *parent) : DListView(parent)
     model = new MusicBaseAndSonglistModel(this);
     setModel(model);
     delegate = new DStyledItemDelegate(this);
-    //delegate->setBackgroundType(DStyledItemDelegate::NoBackground);
+#ifdef TABLET_PC
+    delegate->setBackgroundType(DStyledItemDelegate::NoBackground);
+#endif
     auto delegateMargins = delegate->margins();
     delegateMargins.setLeft(18);
     delegate->setMargins(delegateMargins);

@@ -99,6 +99,8 @@ private slots:
 #ifdef TABLET_PC
     // 播放状态发生改变
     void slotPlaybackStatusChanged(Player::PlaybackStatus statue);
+    // 横竖屏切换
+    void slotHScreen(bool isHScreen);
 #endif
 protected:
     void dragEnterEvent(QDragEnterEvent *event) Q_DECL_OVERRIDE;
