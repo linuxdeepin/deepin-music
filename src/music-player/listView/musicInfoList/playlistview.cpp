@@ -491,7 +491,7 @@ QPixmap PlayListView::getPlayPixmap(bool isSelect)
         }
     }
     QPixmap playingPixmap = QPixmap::fromImage(playingImage);
-    update();
+//    update();
     return playingPixmap;
 }
 
@@ -647,17 +647,17 @@ void PlayListView::setViewModeFlag(QString hash, QListView::ViewMode mode)
 #ifdef TABLET_PC
     if (mode == QListView::IconMode) {
         setGridSize(QSize(-1, -1));
+        setSpacing(20);
+        setIconSize(QSize(200, 243));
+        // 修改底部间距
+        setViewportMargins(30, -15, -35, 0);
+        if (CommonService::getInstance()->isHScreen()) {
             setSpacing(20);
-            setIconSize(QSize(200, 243));
-            // 修改底部间距
             setViewportMargins(30, -15, -35, 0);
-            if (CommonService::getInstance()->isHScreen()) {
-                setSpacing(20);
-                setViewportMargins(30, -15, -35, 0);
-            } else {
-                setSpacing(33);
-                setViewportMargins(23, -15, -35, 0);
-            }
+        } else {
+            setSpacing(33);
+            setViewportMargins(23, -15, -35, 0);
+        }
     } else {
         setIconSize(QSize(36, 36));
         setGridSize(QSize(-1, -1));

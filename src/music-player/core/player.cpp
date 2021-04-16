@@ -1028,7 +1028,7 @@ void Player::initVlc()
     m_qvplayer->equalizer()->setPreamplification(12);
     m_qvmedia = new VlcMedia();
     m_timer = new QTimer(this);
-    m_timer->setInterval(250);
+    m_timer->setInterval(300);
     connect(m_timer, &QTimer::timeout, this, &Player::changePicture);
     connect(m_qvplayer, &VlcMediaPlayer::timeChanged,
     this, [ = ](qint64 position) {
