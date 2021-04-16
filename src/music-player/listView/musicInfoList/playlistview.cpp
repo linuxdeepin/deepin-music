@@ -1088,12 +1088,10 @@ void PlayListView::slotRmvFromSongList()
         if (!m_IsPlayQueue) {
             DataBaseService::getInstance()->removeSelectedSongs(m_currentHash, metaList, false);
             this->clearSelection();
-            // 更新player中缓存的歌曲信息
-            if (m_currentHash == "all" || m_currentHash == Player::getInstance()->getCurrentPlayListHash()) {
-                // 如果是专辑或者歌手,playRmvMeta的逻辑放在专辑与歌手中处理,二级页面删除后继续播放逻辑
-                if (m_currentHash != "album" && m_currentHash != "artist" && m_currentHash != "albumResult" && m_currentHash != "artistResult") {
-                    Player::getInstance()->playRmvMeta(metaList);
-                }
+            QString playListHash = Player::getInstance()->getCurrentPlayListHash();
+            // 如果是专辑或者歌手,playRmvMeta的逻辑放在专辑与歌手中处理,二级页面删除后继续播放逻辑
+            if (playListHash != "album" && playListHash != "artist" && playListHash != "albumResult" && playListHash != "artistResult") {
+                Player::getInstance()->playRmvMeta(metaList);
             }
         } else {
             Player::getInstance()->playRmvMeta(metaList);
@@ -1142,7 +1140,8 @@ void PlayListView::slotDelFromLocal()
     if (deleteFlag == warnDlg.exec()) {
         DataBaseService::getInstance()->removeSelectedSongs(m_currentHash, strlist, true);
         // 如果是专辑或者歌手,playRmvMeta的逻辑放在专辑与歌手中处理,二级页面删除后继续播放逻辑
-        if (m_currentHash != "album" && m_currentHash != "artist" && m_currentHash != "albumResult" && m_currentHash != "artistResult") {
+        QString playListHash = Player::getInstance()->getCurrentPlayListHash();
+        if (playListHash != "album" && playListHash != "artist" && playListHash != "albumResult" && playListHash != "artistResult") {
             Player::getInstance()->playRmvMeta(strlist);
         }
     }
