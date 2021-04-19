@@ -443,7 +443,7 @@ QPixmap SingerListView::getPlayPixmap(bool isSelect)
         }
     }
     QPixmap playingPixmap = QPixmap::fromImage(playingImage);
-    update();
+//    update();
     return playingPixmap;
 }
 
