@@ -83,6 +83,8 @@ public slots:
     void slotScrollToCurrentPosition(const QString &songlistHash);
     // 接收编码变更，更新对应项编码
     void slotUpdateCodec(const MediaMeta &meta);
+    // 刷新播放动态图
+    void slotUpdatePlayingIcon();
 #ifdef TABLET_PC
     // 播放状态发生改变
     void slotPlaybackStatusChanged(Player::PlaybackStatus statue);

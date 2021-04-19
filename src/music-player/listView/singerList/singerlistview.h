@@ -85,6 +85,8 @@ public slots:
     void slotRemoveSingleSong(const QString &listHash, const QString &musicHash);
     // 跳转到当前播放歌曲位置
     void slotScrollToCurrentPosition(const QString &songlistHash);
+    // 刷新播放动态图
+    void slotUpdatePlayingIcon();
 signals:
     void requestCustomContextMenu(const QPoint &pos);
     void modeChanged(int);

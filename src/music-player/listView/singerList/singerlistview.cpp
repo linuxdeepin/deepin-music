@@ -148,6 +148,9 @@ SingerListView::SingerListView(const QString &hash, QWidget *parent)
     // 歌曲删除
     connect(DataBaseService::getInstance(), &DataBaseService::signalRmvSong,
             this, &SingerListView::slotRemoveSingleSong);
+    // 刷新播放动态图
+    connect(Player::getInstance(), &Player::signalUpdatePlayingIcon,
+            this, &SingerListView::slotUpdatePlayingIcon);
     // 歌曲导入
     connect(DataBaseService::getInstance(), &DataBaseService::signalMusicAddOne,
             this, &SingerListView::slotAddSingleSong);
@@ -557,6 +560,13 @@ void SingerListView::slotScrollToCurrentPosition(const QString &songlistHash)
             }
             height += size.height();
         }
+    }
+}
+
+void SingerListView::slotUpdatePlayingIcon()
+{
+    if (this->isVisible()) {
+        this->update();
     }
 }
 #ifdef TABLET_PC

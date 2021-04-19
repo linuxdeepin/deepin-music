@@ -138,6 +138,9 @@ AlbumListView::AlbumListView(const QString &hash, QWidget *parent)
     connect(DataBaseService::getInstance(), &DataBaseService::signalCoverUpdate,
             this, &AlbumListView::slotCoverUpdate);
 
+    connect(Player::getInstance(), &Player::signalUpdatePlayingIcon,
+            this, &AlbumListView::slotUpdatePlayingIcon);
+
     connect(DGuiApplicationHelper::instance(), &DGuiApplicationHelper::themeTypeChanged,
             this, &AlbumListView::setThemeType);
 
@@ -792,6 +795,13 @@ void AlbumListView::slotUpdateCodec(const MediaMeta &meta)
 //                return;
 //            }
 //        }
+    }
+}
+
+void AlbumListView::slotUpdatePlayingIcon()
+{
+    if (this->isVisible()) {
+        this->update();
     }
 }
 
