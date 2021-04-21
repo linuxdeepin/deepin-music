@@ -147,7 +147,6 @@ void MusicSongListView::init()
         }
         m_model->appendRow(item);
     }
-
     setMinimumHeight(m_model->rowCount() * ItemHeight);
 }
 
@@ -191,7 +190,6 @@ void MusicSongListView::showContextMenu(const QPoint &pos)
         menu.addAction(tr("Rename"));
         menu.addAction(tr("Delete"));
     }
-
     menu.exec(globalPos);
 }
 
@@ -726,6 +724,7 @@ void MusicSongListView::initShortcut()
     connect(m_renameShortcut, &QShortcut::activated, this, &MusicSongListView::slotRenameShortcut);
 
     m_escShortcut = new QShortcut(QKeySequence(Qt::Key_Escape), this);
+    m_escShortcut->setObjectName("Shortcut_Escape");
     m_escShortcut->setContext(Qt::WidgetWithChildrenShortcut);
     connect(m_escShortcut, &QShortcut::activated, this, &MusicSongListView::slotEscShortcut);
 }

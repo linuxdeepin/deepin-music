@@ -33,6 +33,7 @@
 #include <DApplication>
 #include <QDBusInterface>
 #include <QDBusPendingCall>
+#include <QShortcut>
 
 #include "ac-desktop-define.h"
 
@@ -86,10 +87,7 @@ TEST(Application, musicBaseSong1)
 
     // 新建歌单
     QTestEventList event;
-    QTest::qWait(50);
-    event.addKeyClick(Qt::Key_N, Qt::ControlModifier | Qt::ShiftModifier, 10);
-    event.simulate(w);
-    event.clear();
+    songListView->addNewSongList();
 
     // 点击自定义列表
     QTest::qWait(100);
@@ -128,4 +126,88 @@ TEST(Application, musicBaseSong1)
     QTest::qWait(100);
 }
 
+//esc按键,重命名取消
+TEST(Application, musicSongListViewEsc)
+{
+    TEST_CASE_NAME("musicSongListView");
+    MainFrame *w = Application::getInstance()->getMainWindow();
+    MusicSongListView *songListView = w->findChild<MusicSongListView *>(AC_customizeListview);
+    songListView->addNewSongList();
+
+    //按esc键
+    QTimer::singleShot(400, songListView, [ = ]() {
+        QShortcut *escShortcut = songListView->findChild<QShortcut *>("Shortcut_Escape");
+        if (escShortcut != nullptr)
+            escShortcut->activated();
+        QTest::qWait(600);
+    });
+    // 双击list
+    QPoint pos = QPoint(73, 21);
+    QTestEventList eventList;
+    eventList.addMouseMove(pos);
+    eventList.addMouseClick(Qt::MouseButton::LeftButton, Qt::NoModifier, pos, 10);
+    eventList.addMousePress(Qt::MouseButton::LeftButton, Qt::NoModifier, pos, 10);
+    eventList.addMouseDClick(Qt::MouseButton::LeftButton, Qt::NoModifier, pos, 10);
+    eventList.simulate(songListView->viewport());
+    eventList.clear();
+    QTest::qWait(1000);
+}
+
+TEST(Application, songListViewPlayorPause)
+{
+    TEST_CASE_NAME("musicSongListView");
+    MainFrame *w = Application::getInstance()->getMainWindow();
+    MusicSongListView *songListView = w->findChild<MusicSongListView *>(AC_customizeListview);
+
+    QTestEventList eventList;
+    eventList.addKeyClick(Qt::Key_Space, Qt::NoModifier, 10);
+    eventList.simulate(songListView->viewport());
+    eventList.clear();
+    QTest::qWait(200);
+
+    eventList.addKeyClick(Qt::Key_Space, Qt::NoModifier, 10);
+    eventList.simulate(songListView->viewport());
+    eventList.clear();
+    QTest::qWait(50);
+}
+
+//MusicSongListView右键菜单测试1
+TEST(Application, musicSongListViewRename)
+{
+    TEST_CASE_NAME("musicSongListView");
+    MainFrame *w = Application::getInstance()->getMainWindow();
+    MusicSongListView *songListView = w->findChild<MusicSongListView *>(AC_customizeListview);
+
+    QPoint pos(73, 21);
+    QTestEventList eventList;
+    eventList.addMouseMove(pos);
+    eventList.addMouseClick(Qt::MouseButton::LeftButton, Qt::NoModifier, pos, 10);
+    eventList.simulate(songListView->viewport());
+    eventList.clear();
+    QTest::qWait(100);
+    //菜单触发重命名
+    QTimer::singleShot(300, songListView, [ = ]() {
+        QTimer::singleShot(200, songListView, [ = ]() {
+            QTestEventList event;
+            event.addKeyClick(Qt::Key_Enter, Qt::NoModifier, 50);
+            event.simulate(songListView->viewport());
+            event.clear();
+            QTest::qWait(50);
+        });
+        QTestEventList event;
+        DMenu *menuWidget = static_cast<DMenu *>(qApp->activePopupWidget());
+        if (menuWidget != nullptr) {
+            event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
+            event.addKeyClick(Qt::Key_Enter, Qt::NoModifier, 50);
+            event.simulate(menuWidget);
+            event.clear();
+            QTest::qWait(50);
+        }
+        QTest::qWait(950);
+    });
+
+    QContextMenuEvent menuEvent(QContextMenuEvent::Mouse, pos);
+    qApp->sendEvent(songListView->viewport(), &menuEvent);
+    QTest::qWait(2000);
+}
 
