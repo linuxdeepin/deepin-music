@@ -41,6 +41,8 @@
 #include "playlistview.h"
 #include "musicsonglistview.h"
 #include "singerlistview.h"
+#include "musiclistdatawidget.h"
+#include "subsonglistwidget.h"
 
 
 TEST(Application, singerListViewDrag)
@@ -90,4 +92,68 @@ TEST(Application, singerListViewDrag)
     qApp->sendEvent(slv->viewport(), &e);
 
     QTest::qWait(100);
+}
+
+TEST(Application, singerDataDelegateEdit)
+{
+    TEST_CASE_NAME("singerDataDelegateEdit")
+    MainFrame *w = Application::getInstance()->getMainWindow();
+    MusicBaseListView *baseListView = w->findChild<MusicBaseListView *>(AC_dataBaseListview);
+
+    // 点击歌手
+    QTestEventList event;
+    event.addMouseMove(QPoint(20, 50));
+    event.addMouseClick(Qt::MouseButton::LeftButton, Qt::NoModifier, QPoint(20, 50), 10);
+    event.addMousePress(Qt::MouseButton::LeftButton, Qt::NoModifier, QPoint(20, 50), 10);
+    event.addMouseDClick(Qt::MouseButton::LeftButton, Qt::NoModifier, QPoint(20, 50), 10);
+    event.simulate(baseListView->viewport());
+    event.clear();
+    QTest::qWait(100);
+
+    DToolButton *iconModeBtn = w->findChild<DToolButton *>(AC_btIconMode);
+    if (iconModeBtn != nullptr) {
+        QTest::mousePress(iconModeBtn, Qt::LeftButton, Qt::NoModifier, QPoint(20, 20), 10);
+        QTest::mouseRelease(iconModeBtn, Qt::LeftButton, Qt::NoModifier, QPoint(20, 20), 10);
+    }
+    QTest::qWait(100);
+
+    SingerListView *singerListView = w->findChild<SingerListView *>(AC_singerListView);
+    QPoint pos(87, 78);
+    QTest::mouseMove(singerListView->viewport(), pos, 10);
+    QTest::mouseClick(singerListView->viewport(), Qt::LeftButton, Qt::NoModifier, pos, 10);
+    QTest::qWait(1000);
+}
+
+TEST(Application, singerDataDelegateEdit1)
+{
+    TEST_CASE_NAME("singerDataDelegateEdit")
+    MainFrame *w = Application::getInstance()->getMainWindow();
+    MusicBaseListView *baseListView = w->findChild<MusicBaseListView *>(AC_dataBaseListview);
+
+    // 点击歌手
+    QTestEventList event;
+    event.addMouseMove(QPoint(20, 50));
+    event.addMouseClick(Qt::MouseButton::LeftButton, Qt::NoModifier, QPoint(20, 50), 10);
+    event.addMousePress(Qt::MouseButton::LeftButton, Qt::NoModifier, QPoint(20, 50), 10);
+    event.addMouseDClick(Qt::MouseButton::LeftButton, Qt::NoModifier, QPoint(20, 50), 10);
+    event.simulate(baseListView->viewport());
+    event.clear();
+    QTest::qWait(100);
+
+    DToolButton *iconModeBtn = w->findChild<DToolButton *>(AC_btIconMode);
+    if (iconModeBtn != nullptr) {
+        QTest::mousePress(iconModeBtn, Qt::LeftButton, Qt::NoModifier, QPoint(20, 20), 10);
+        QTest::mouseRelease(iconModeBtn, Qt::LeftButton, Qt::NoModifier, QPoint(20, 20), 10);
+    }
+    QTest::qWait(100);
+
+    SingerListView *singerListView = w->findChild<SingerListView *>(AC_singerListView);
+    QPoint pos(87, 79);
+    QTest::mouseMove(singerListView->viewport(), pos, 10);
+    event.addMouseClick(Qt::MouseButton::LeftButton, Qt::NoModifier, pos, 10);
+    event.addMousePress(Qt::MouseButton::LeftButton, Qt::NoModifier, pos, 10);
+    event.addMouseDClick(Qt::MouseButton::LeftButton, Qt::NoModifier, pos, 10);
+    event.simulate(singerListView->viewport());
+    event.clear();
+    QTest::qWait(1000);
 }

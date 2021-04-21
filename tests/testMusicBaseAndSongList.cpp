@@ -136,7 +136,7 @@ TEST(Application, musicSongListViewEsc)
 
     //按esc键
     QTimer::singleShot(400, songListView, [ = ]() {
-        QShortcut *escShortcut = songListView->findChild<QShortcut *>("Shortcut_Escape");
+        QShortcut *escShortcut = songListView->findChild<QShortcut *>(AC_Shortcut_Escape);
         if (escShortcut != nullptr)
             escShortcut->activated();
         QTest::qWait(600);
@@ -209,5 +209,58 @@ TEST(Application, musicSongListViewRename)
     QContextMenuEvent menuEvent(QContextMenuEvent::Mouse, pos);
     qApp->sendEvent(songListView->viewport(), &menuEvent);
     QTest::qWait(2000);
+}
+
+//MusicSongListView右键菜单测试2
+TEST(Application, musicSongListViewMenuDelete)
+{
+    TEST_CASE_NAME("musicSongListView");
+    MainFrame *w = Application::getInstance()->getMainWindow();
+    MusicSongListView *songListView = w->findChild<MusicSongListView *>(AC_customizeListview);
+
+    //菜单触发删除
+    QPoint pos(73, 21);
+    QTestEventList eventList;
+    eventList.addMouseMove(pos);
+    eventList.addMouseClick(Qt::MouseButton::LeftButton, Qt::NoModifier, pos, 10);
+    eventList.simulate(songListView->viewport());
+    eventList.clear();
+    QTest::qWait(100);
+
+    QTimer::singleShot(300, songListView, [ = ]() {
+        QTimer::singleShot(300, songListView, [ = ]() {
+            QTest::qWait(50);
+            QTestEventList event;
+            DDialog *messageBox = songListView->findChild<DDialog *>(AC_MessageBox);
+            if (messageBox != nullptr) {
+                event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
+                event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
+                event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
+                event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
+                event.addKeyClick(Qt::Key_Enter, Qt::NoModifier, 50);
+                event.simulate(messageBox);
+                event.clear();
+                QTest::qWait(50);
+            }
+        });
+
+        QTestEventList event;
+        DMenu *menuWidget = static_cast<DMenu *>(qApp->activePopupWidget());
+        if (menuWidget != nullptr) {
+            event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
+            event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
+            event.addKeyClick(Qt::Key_Enter, Qt::NoModifier, 50);
+            event.addDelay(100);
+            event.simulate(menuWidget);
+            event.clear();
+            QTest::qWait(50);
+        }
+        QTest::qWait(950);
+    });
+
+    QContextMenuEvent menuEvent(QContextMenuEvent::Mouse, pos);
+    qApp->sendEvent(songListView->viewport(), &menuEvent);
+    QTest::qWait(2000);
+    songListView->setThemeType(1);
 }
 

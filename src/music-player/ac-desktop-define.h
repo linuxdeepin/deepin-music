@@ -129,6 +129,7 @@
 #define AC_subSonglistWidget          "subSonglistWidget"
 #define AC_titleBarLeft               "titleBarLeft"
 #define AC_subSonglistWidget          "subSonglistWidget"
+#define AC_Shortcut_Escape            "Shortcut_Escape"
 
 
 #endif // DESKTOP_ACCESSIBLE_UI_DEFINE_H

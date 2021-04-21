@@ -724,7 +724,7 @@ void MusicSongListView::initShortcut()
     connect(m_renameShortcut, &QShortcut::activated, this, &MusicSongListView::slotRenameShortcut);
 
     m_escShortcut = new QShortcut(QKeySequence(Qt::Key_Escape), this);
-    m_escShortcut->setObjectName("Shortcut_Escape");
+    m_escShortcut->setObjectName(AC_Shortcut_Escape);
     m_escShortcut->setContext(Qt::WidgetWithChildrenShortcut);
     connect(m_escShortcut, &QShortcut::activated, this, &MusicSongListView::slotEscShortcut);
 }
