@@ -79,6 +79,8 @@ public:
     bool    loadCover   = false;
     // 在列表中时，记录是否是要删除的
     bool    toDelete    = false;
+    // 平板多选时使用
+    bool    beSelect    = false;
 
     QString codec;              //save codec
 

@@ -351,11 +351,7 @@ void MetaDetector::getCoverData(const QString &path, const QString &tmpPath, con
             QBuffer buffer(&byteArray);
             buffer.open(QIODevice::WriteOnly);
             image.save(&buffer, "jpg");
-#ifdef TABLET_PC
             image = image.scaled(QSize(200, 200));
-#else
-            image = image.scaled(QSize(160, 160));
-#endif
             image.save(imagesDirPath + "/" + imageName);
         } else {
 //            image = QImage(":/common/image/cover_max.svg");

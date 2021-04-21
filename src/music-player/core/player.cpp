@@ -176,8 +176,18 @@ void Player::playMeta(MediaMeta meta)
         metadata.insert(Mpris::metadataToString(Mpris::Artist), meta.singer);
         metadata.insert(Mpris::metadataToString(Mpris::Album), meta.album);
         metadata.insert(Mpris::metadataToString(Mpris::Length), meta.length);
-        metadata.insert(Mpris::metadataToString(Mpris::ArtUrl), meta.coverUrl);
-
+        QString str = Global::cacheDir() + "/images/" + meta.hash + ".jpg";
+        QFileInfo info(str);
+        if (!info.exists()) {
+            str =  Global::cacheDir() + "/images/" + "default_cover_max.jpg";
+            info.setFile(str);
+            if (!info.exists()) {
+                QIcon icon = QIcon::fromTheme("cover_max");
+                icon.pixmap(QSize(50, 50)).save(str);
+            }
+        }
+        str = "file://" + str;
+        metadata.insert(Mpris::metadataToString(Mpris::ArtUrl), str);
         //mprisPlayer->setCanSeek(true);
         m_mpris->setMetadata(metadata);
         m_mpris->setLoopStatus(Mpris::Playlist);
