@@ -41,57 +41,14 @@
 #include <DFloatingMessage>
 #include <DPushButton>
 #include <DTitlebar>
+#include <DApplicationHelper>
 
 #include <vlc/Equalizer.h>
 #include <vlc/MediaPlayer.h>
 #include "ac-desktop-define.h"
+#include "player.h"
 
 DGUI_USE_NAMESPACE
-
-class CustomTabStyle : public QProxyStyle
-{
-public:
-    QSize sizeFromContents(ContentsType type, const QStyleOption *option,
-                           const QSize &size, const QWidget *widget) const
-    {
-        QSize s = QProxyStyle::sizeFromContents(type, option, size, widget);
-        if (type == QStyle::CT_TabBarTab) {
-            s.transpose();
-            s.rwidth() = 144; // 设置每个tabBar中item的大小
-            s.rheight() = 30;
-        }
-        return s;
-    }
-
-    void drawControl(ControlElement element, const QStyleOption *option, QPainter *painter, const QWidget *widget) const
-    {
-        if (element == CE_TabBarTabLabel) {
-            if (const QStyleOptionTab *tab = qstyleoption_cast<const QStyleOptionTab *>(option)) {
-
-                if (tab->state & QStyle::State_Selected) {
-                    painter->save();
-                    painter->setPen(0x89cfff);
-                    painter->setBrush(QBrush(0x89cfff));
-                    painter->restore();
-                }
-                QTextOption option;
-                option.setAlignment(Qt::AlignCenter);
-                if (tab->state & QStyle::State_Selected) {
-                    painter->setPen(0xf8fcff);
-                } else {
-                    painter->setPen(0x5d5d5d);
-                }
-
-                painter->drawText(tab->rect, tab->text, option);
-                return;
-            }
-        }
-
-        if (element == CE_TabBarTab) {
-            QProxyStyle::drawControl(element, option, painter, widget);
-        }
-    }
-};
 
 //开机后默认参数设置
 void DequalizerDialog::readConfig()
@@ -104,18 +61,12 @@ void DequalizerDialog::readConfig()
 
 void DequalizerDialog::initUI()
 {
-    resize(720, 463);
+    this->setAutoFillBackground(true);
 
     QFont font;
     font.setFamily("SourceHanSansSC");
     font.setWeight(QFont::Normal);
-
-// 解决字体不会根据系统字体大小改变问题
-//    font.setPixelSize(17);
-    m_titleLabel  = new DLabel(DequalizerDialog::tr("Equalizer"));
-    m_titleLabel->resize(51, 25);
-    m_titleLabel->setFont(font);
-
+    DequalizerDialog::tr("Equalizer");
     m_switchLabel = new DLabel;
     m_switchLabel->resize(14, 20);
     if (m_switchFlag) {
@@ -491,62 +442,30 @@ void DequalizerDialog::initUI()
     slWidget->setRadius(8);
     slWidget->setBlurEnabled(true);
     slWidget->setMode(DBlurEffectWidget::GaussianBlur);
-    slWidget->setMinimumWidth(517);
+//    slWidget->setMinimumWidth(517);
     slWidget->setMinimumHeight(264);
     slWidget->setLayout(hlayout);
     slWidget->setContentsMargins(10, 4, 9, 18);
     AC_SET_OBJECT_NAME(slWidget, AC_slWidget);
     AC_SET_ACCESSIBLE_NAME(slWidget, AC_slWidget);
 
-    auto vlay  = new QVBoxLayout;
     //第一行
-    vlay->addWidget(m_titleLabel);
-    //第二行
     auto hlay  = new QHBoxLayout;
     hlay->addWidget(m_switchLabel, Qt::AlignLeft);
     hlay->addWidget(m_switchBtn, Qt::AlignLeft);
     hlay->addWidget(m_comBox, 20, Qt::AlignCenter);
     hlay->addWidget(m_saveBtn, Qt::AlignRight);
 
-    //第三行
+    //第二行
+    auto vlay  = new QVBoxLayout;
     vlay->addLayout(hlay);
-    vlay->addStretch(2);
-    vlay->addWidget(slWidget);
+    vlay->addSpacing(18);
+    vlay->addWidget(slWidget, Qt::AlignLeft);
+    vlay->addSpacing(18);
     vlay->addWidget(m_btnDefault, 0, Qt::AlignCenter);
-    vlay->setContentsMargins(20, 10, 20, 20);
-
-    //均衡器页面
-    auto mequalizer = new DWidget(this);
-    mequalizer->resize(537, 393);
-    mequalizer->setLayout(vlay);
-    AC_SET_OBJECT_NAME(mequalizer, AC_mequalizer);
-    AC_SET_ACCESSIBLE_NAME(mequalizer, AC_mequalizer);
-
-    auto mtabwidget = new DTabWidget;
-    AC_SET_OBJECT_NAME(mtabwidget, AC_mtabwidget);
-    AC_SET_ACCESSIBLE_NAME(mtabwidget, AC_mtabwidget);
-    mtabwidget->setTabPosition(QTabWidget::West);
-    mtabwidget->setAutoFillBackground(true);
-    mtabwidget->setDocumentMode(true);
-    mtabwidget->resize(720, 463);
-    mtabwidget->addTab(mequalizer, DequalizerDialog::tr("Equalizer"));
-    m_tabStyle = new CustomTabStyle;
-    mtabwidget->tabBar()->setStyle(m_tabStyle);
-    mtabwidget->tabBar()->setContentsMargins(10, 0, 10, 0);
-
-    auto mTitlebar = new DTitlebar(this);
-    mTitlebar->setTitle("");
-    mTitlebar->resize(720, 50);
-    AC_SET_OBJECT_NAME(mTitlebar, AC_mTitlebar);
-    AC_SET_ACCESSIBLE_NAME(mTitlebar, AC_mTitlebar);
-
-    //垂直布局TabWidget和TitleBar
-    auto  mlayout = new QVBoxLayout;
-    mlayout->addWidget(mTitlebar);
-    mlayout->addWidget(mtabwidget);
-    mlayout->setSpacing(0);
-    mlayout->setMargin(0);
-    this->setLayout(mlayout);
+    vlay->setMargin(0);
+    this->setLayout(vlay);
+    this->setContentsMargins(0, 0, 0, 0);
 
     AllbaudTypes.append(flat_bauds);
     AllbaudTypes.append(Classical_bauds);
@@ -621,7 +540,7 @@ void DequalizerDialog::SliderOneEntry(DSlider *slider, int value)
 
 
 DequalizerDialog::DequalizerDialog(QWidget *parent):
-    DAbstractDialog(parent)
+    DWidget(parent)
 {
     AC_SET_OBJECT_NAME(this, AC_Dequalizer);
     AC_SET_ACCESSIBLE_NAME(this, AC_Dequalizer);
@@ -661,12 +580,21 @@ DequalizerDialog::DequalizerDialog(QWidget *parent):
     this->m_saveMessage->setDuration(2000);
     this->m_saveMessage->move(width() / 2 - 80, height() - 70);
     this->m_saveMessage->hide();
+
+
+    connect(this, &DequalizerDialog::setEqualizerEnable,
+            Player::getInstance(), &Player::setEqualizerEnable);
+    connect(this, &DequalizerDialog::setEqualizerpre,
+            Player::getInstance(), &Player::setEqualizerpre);
+    connect(this, &DequalizerDialog::setEqualizerbauds,
+            Player::getInstance(), &Player::setEqualizerbauds);
+    connect(this, &DequalizerDialog::setEqualizerIndex,
+            Player::getInstance(), &Player::setEqualizerCurMode);
 }
 
 DequalizerDialog::~DequalizerDialog()
 {
     delete this->m_saveMessage;
-    delete this->m_tabStyle;
 }
 
 void DequalizerDialog::initConnection()

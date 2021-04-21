@@ -43,9 +43,7 @@
 DWIDGET_USE_NAMESPACE
 
 
-class CustomTabStyle;
-
-class DequalizerDialog: public Dtk::Widget::DAbstractDialog
+class DequalizerDialog: public DWidget
 {
     Q_OBJECT
 public:
@@ -81,7 +79,6 @@ private:
     DComboBox      *m_comBox           = nullptr;
     DPushButton    *m_saveBtn           = nullptr;
 
-    DLabel      *m_titleLabel          = nullptr;
     DLabel      *m_switchLabel         = nullptr;
     DLabel      *m_lbBaudPre          = nullptr;
     DLabel      *m_lbBaud60           = nullptr;
@@ -108,7 +105,6 @@ private:
     DSlider     *m_slider16K           = nullptr;
     DPushButton *m_btnDefault          = nullptr;
     DFloatingMessage *m_saveMessage     = nullptr;
-    CustomTabStyle  *m_tabStyle        = nullptr;
 
     QStringList    m_effectType;
     QList<int> m_baudList;

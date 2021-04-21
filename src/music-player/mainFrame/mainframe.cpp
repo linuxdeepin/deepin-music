@@ -34,6 +34,7 @@
 #include <QPropertyAnimation>
 #include <QDBusConnection>
 #include <QDesktopWidget>
+#include <QScrollArea>
 
 #include <DUtil>
 #include <DWidgetUtil>
@@ -45,7 +46,11 @@
 #include <DMessageManager>
 #include <DFloatingMessage>
 #include <DSettingsDialog>
+#include <DSettings>
 #include <DThemeManager>
+#include <DSettingsWidgetFactory>
+#include <DSettingsOption>
+#include <DApplicationHelper>
 
 #include <unistd.h>
 #include "./core/musicsettings.h"
@@ -642,6 +647,14 @@ void MainFrame::slotShortCutTriggered()
     }
 }
 
+static DequalizerDialog *dequalizerDialog = nullptr;
+static QWidget *createEqualizerWidgetHandle(QObject *opt)
+{
+    Q_UNUSED(opt)
+    dequalizerDialog = new DequalizerDialog();
+    return dequalizerDialog;
+}
+
 void MainFrame::slotMenuTriggered(QAction *action)
 {
     Q_ASSERT(action);
@@ -665,22 +678,35 @@ void MainFrame::slotMenuTriggered(QAction *action)
     }
 
     if (action == m_equalizer) {
-        if (m_dequalizerDialog == nullptr) {
-            m_dequalizerDialog = new DequalizerDialog(this);
-            connect(m_dequalizerDialog, &DequalizerDialog::setEqualizerEnable,
-                    Player::getInstance(), &Player::setEqualizerEnable);
-            connect(m_dequalizerDialog, &DequalizerDialog::setEqualizerpre,
-                    Player::getInstance(), &Player::setEqualizerpre);
-            connect(m_dequalizerDialog, &DequalizerDialog::setEqualizerbauds,
-                    Player::getInstance(), &Player::setEqualizerbauds);
-            connect(m_dequalizerDialog, &DequalizerDialog::setEqualizerIndex,
-                    Player::getInstance(), &Player::setEqualizerCurMode);
-        }
+        DSettingsDialog *configDialog = new DSettingsDialog(this);
+        configDialog->setFixedSize(720, 540);
+        AC_SET_OBJECT_NAME(configDialog, AC_Dequalizer);
+        AC_SET_ACCESSIBLE_NAME(configDialog, AC_Dequalizer);
+        configDialog->widgetFactory()->registerWidget("equalizerWidget", createEqualizerWidgetHandle);
+
+        Dtk::Core::DSettings *equalizerSettings = Dtk::Core::DSettings::fromJsonFile(":/data/dequalizer-settings.json");
+        qDebug() << __FUNCTION__ << "" << equalizerSettings->keys();
         //配置均衡器参数
         Player::getInstance()->initEqualizerCfg();
-        Dtk::Widget::moveToCenter(m_dequalizerDialog);
-        m_dequalizerDialog->exec();
-        MusicSettings::sync();
+        configDialog->updateSettings(equalizerSettings);
+        Dtk::Widget::moveToCenter(configDialog);
+        configDialog->setResetVisible(false);
+        if (dequalizerDialog && static_cast<QWidget *>(dequalizerDialog->parent())) {
+            QWidget *w = static_cast<QWidget *>(dequalizerDialog->parent());
+
+            w->setContentsMargins(0, 0, 0, 0);
+            qDebug() << __FUNCTION__ << "" << dequalizerDialog->height();
+            if (w->findChildren<QHBoxLayout *>().size() > 0) {
+                for (int i = 0; i < w->findChildren<QHBoxLayout *>().size(); i++) {
+                    QHBoxLayout *h = static_cast<QHBoxLayout *>(w->findChildren<QHBoxLayout *>().at(i));
+                    if (h) {
+                        h->setContentsMargins(0, 0, 0, 0);
+                    }
+                }
+            }
+        }
+        configDialog->exec();
+        delete configDialog;
     }
 
     if (action == m_settings) {

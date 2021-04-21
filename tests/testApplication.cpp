@@ -1923,9 +1923,8 @@ TEST(Application, dequalizerDialog)
     QAction *act = w->findChild<QAction *>(AC_equalizerAction);
     DMenu *menu = w->findChild<DMenu *>(AC_titleMenu);
 
-
     QTimer::singleShot(1500, w, [ = ]() {
-        DequalizerDialog *dd = w->findChild<DequalizerDialog *>(AC_Dequalizer);
+        DSettingsDialog *dd = w->findChild<DSettingsDialog *>(AC_Dequalizer);
 
         // 开关
         DSwitchButton *swbt = w->findChild<DSwitchButton *>(AC_switchBtn);

@@ -1,0 +1,20 @@
+{
+    "groups": [
+        {
+            "key": "equalizer",
+            "name": "Equalizer",
+            "groups": [
+                {
+                    "options": [
+                        {
+                            "key": "equalizer",
+                            "name": "Equalizer:",
+                            "type": "equalizerWidget",
+                            "default": ""
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
