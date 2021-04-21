@@ -39,4 +39,6 @@ void GenerateSettingTranslate()
     auto shortcuts_all_previous_name = QObject::tr("Previous");
     auto shortcuts_all_volume_down_name = QObject::tr("Volume down");
     auto shortcuts_all_volume_up_name = QObject::tr("Volume up");
+
+    auto equalizer = QObject::tr("Equalizer");
 }
