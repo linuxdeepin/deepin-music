@@ -50,6 +50,8 @@
 
 DGUI_USE_NAMESPACE
 
+const int LableMaximumWidth = 50;
+
 //开机后默认参数设置
 void DequalizerDialog::readConfig()
 {
@@ -98,7 +100,7 @@ void DequalizerDialog::initUI()
     AC_SET_ACCESSIBLE_NAME(m_saveBtn, AC_saveBtn);
 
     m_lbBaudPre = new DLabel(this);
-    m_lbBaudPre->setMaximumWidth(20);
+    m_lbBaudPre->setMaximumWidth(LableMaximumWidth);
     m_lbBaudPre->setMinimumHeight(22);
     m_lbBaudPre->setAlignment(Qt::AlignCenter);
     auto hlayout_lb_baud_pre  = new QHBoxLayout;
@@ -121,7 +123,7 @@ void DequalizerDialog::initUI()
     DFontSizeManager::instance()->bind(m_lbBaudPre, DFontSizeManager::T8, QFont::Normal);
 
     m_lbBaud60 = new DLabel(this);
-    m_lbBaud60->setMaximumWidth(20);
+    m_lbBaud60->setMaximumWidth(LableMaximumWidth);
     m_lbBaud60->setMinimumHeight(22);
     m_lbBaud60->setAlignment(Qt::AlignCenter);
     auto hlayout_lb_baud_60  = new QHBoxLayout;
@@ -144,7 +146,7 @@ void DequalizerDialog::initUI()
     DFontSizeManager::instance()->bind(lb_60, DFontSizeManager::T8, QFont::Normal);
 
     m_lbBaud170 = new DLabel(this);
-    m_lbBaud170->setMaximumWidth(20);
+    m_lbBaud170->setMaximumWidth(LableMaximumWidth);
     m_lbBaud170->setMinimumHeight(22);
     m_lbBaud170->setAlignment(Qt::AlignCenter);
     auto hlayout_lb_baud_170  = new QHBoxLayout;
@@ -167,7 +169,7 @@ void DequalizerDialog::initUI()
     DFontSizeManager::instance()->bind(lb_170, DFontSizeManager::T8, QFont::Normal);
 
     m_lbBaud310 = new DLabel(this);
-    m_lbBaud310->setMaximumWidth(20);
+    m_lbBaud310->setMaximumWidth(LableMaximumWidth);
     m_lbBaud310->setMinimumHeight(22);
     m_lbBaud310->setAlignment(Qt::AlignCenter);
     auto hlayout_lb_baud_310  = new QHBoxLayout;
@@ -190,7 +192,7 @@ void DequalizerDialog::initUI()
     DFontSizeManager::instance()->bind(lb_310, DFontSizeManager::T8, QFont::Normal);
 
     m_lbBaud600 = new DLabel(this);
-    m_lbBaud600->setMaximumWidth(20);
+    m_lbBaud600->setMaximumWidth(LableMaximumWidth);
     m_lbBaud600->setMinimumHeight(22);
     m_lbBaud600->setAlignment(Qt::AlignCenter);
     auto hlayout_lb_baud_600  = new QHBoxLayout;
@@ -213,7 +215,7 @@ void DequalizerDialog::initUI()
     DFontSizeManager::instance()->bind(lb_600, DFontSizeManager::T8, QFont::Normal);
 
     m_lbBaud1K = new DLabel(this);
-    m_lbBaud1K->setMaximumWidth(20);
+    m_lbBaud1K->setMaximumWidth(LableMaximumWidth);
     m_lbBaud1K->setMinimumHeight(22);
     m_lbBaud1K->setAlignment(Qt::AlignCenter);
     auto hlayout_lb_baud_1K  = new QHBoxLayout;
@@ -236,7 +238,7 @@ void DequalizerDialog::initUI()
     DFontSizeManager::instance()->bind(lb_1K, DFontSizeManager::T8, QFont::Normal);
 
     m_lbBaud3K = new DLabel(this);
-    m_lbBaud3K->setMaximumWidth(20);
+    m_lbBaud3K->setMaximumWidth(LableMaximumWidth);
     m_lbBaud3K->setMinimumHeight(22);
     m_lbBaud3K->setAlignment(Qt::AlignCenter);
     auto hlayout_lb_baud_3K  = new QHBoxLayout;
@@ -259,7 +261,7 @@ void DequalizerDialog::initUI()
     DFontSizeManager::instance()->bind(lb_3K, DFontSizeManager::T8, QFont::Normal);
 
     m_lbBaud6K = new DLabel(this);
-    m_lbBaud6K->setMaximumWidth(20);
+    m_lbBaud6K->setMaximumWidth(LableMaximumWidth);
     m_lbBaud6K->setMinimumHeight(22);
     m_lbBaud6K->setAlignment(Qt::AlignCenter);
     auto hlayout_lb_baud_6K  = new QHBoxLayout;
@@ -282,7 +284,7 @@ void DequalizerDialog::initUI()
     DFontSizeManager::instance()->bind(lb_6K, DFontSizeManager::T8, QFont::Normal);
 
     m_lbBaud12K = new DLabel(this);
-    m_lbBaud12K->setMaximumWidth(20);
+    m_lbBaud12K->setMaximumWidth(LableMaximumWidth);
     m_lbBaud12K->setMinimumHeight(22);
     m_lbBaud12K->setAlignment(Qt::AlignCenter);
     auto hlayout_lb_baud_12K  = new QHBoxLayout;
@@ -305,7 +307,7 @@ void DequalizerDialog::initUI()
     DFontSizeManager::instance()->bind(lb_12K, DFontSizeManager::T8, QFont::Normal);
 
     m_lbBaud14K = new DLabel(this);
-    m_lbBaud14K->setMaximumWidth(20);
+    m_lbBaud14K->setMaximumWidth(LableMaximumWidth);
     m_lbBaud14K->setMinimumHeight(22);
     m_lbBaud14K->setAlignment(Qt::AlignCenter);
     auto hlayout_lb_baud_14K  = new QHBoxLayout;
@@ -328,7 +330,7 @@ void DequalizerDialog::initUI()
     DFontSizeManager::instance()->bind(lb_14K, DFontSizeManager::T8, QFont::Normal);
 
     m_lbBaud16K = new DLabel(this);
-    m_lbBaud16K->setMaximumWidth(20);
+    m_lbBaud16K->setMaximumWidth(LableMaximumWidth);
     m_lbBaud16K->setMinimumHeight(22);
     m_lbBaud16K->setAlignment(Qt::AlignCenter);
     auto hlayout_lb_baud_16K  = new QHBoxLayout;
