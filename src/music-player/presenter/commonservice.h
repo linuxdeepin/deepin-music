@@ -39,14 +39,24 @@ public:
         MultSelect
     };
 public:
+    // 是否平板环境判断
+    bool isTabletEnvironment();
+    // 设置是否平板环境，单元测试覆盖平板代码时使用
+    void setIsTabletEnvironment(bool isTablet);
+
     void setListPageSwitchType(ListPageSwitchType lpst);
     ListPageSwitchType getListPageSwitchType() const;
 
     bool containsStr(QString searchText, QString text);
-#ifdef TABLET_PC
+    // 设置选择模式
     void setSelectModel(TabletSelectMode model);
     TabletSelectMode getSelectModel()const {return m_select;}
-#endif
+    // 横竖屏
+    void setIsHScreen(bool state);
+    bool isHScreen();
+
+    void setCurrentWidgetPosY(int posY);
+    int  getCurrentWidgetPosY();
 signals:
     void loadData();
     // hashOrSearchword为hash值或者搜索关键词
@@ -73,19 +83,22 @@ signals:
     void signalUpdateCodec(const MediaMeta &meta);
     // cda导入完成消息
     void signalCdaImportFinished();
-#ifdef TABLET_PC
     // 选择模式
     void signalSelectMode(TabletSelectMode model);
     // 全选
     void signalSelectAll();
-#endif
+    // 横竖屏切换 true:横 false:竖
+    void signalHScreen(bool stat);
+    // 滚动
+    void signalScroll(int height);
 private:
     explicit CommonService();
     friend class DMusic::DSingleton<CommonService>;
 private:
     ListPageSwitchType listPageSwitchType = ListPageSwitchType::AllSongListType;
-#ifdef TABLET_PC
     TabletSelectMode m_select = SingleSelect;
-#endif
+    bool m_isHScreen = false;
+    int  m_currentWidgetPosY = 0;
+    bool m_isTabletEnvironment = false;
 };
 #endif // COMMONSERVICE_H

@@ -132,4 +132,53 @@ TEST(Application, albumDataDelegate)
     QTest::qWait(100);
 }
 
+// 平板相关
+TEST(Application, setIsHScreen)
+{
+    TEST_CASE_NAME("setIsHScreen")
+    CommonService::getInstance()->setIsHScreen(false);
+    QCOMPARE(false, CommonService::getInstance()->isHScreen());
+    CommonService::getInstance()->setIsHScreen(true);
+    QCOMPARE(true, CommonService::getInstance()->isHScreen());
+}
 
+TEST(Application, setCurrentWidgetPosY)
+{
+    TEST_CASE_NAME("setCurrentWidgetPosY")
+    CommonService::getInstance()->setCurrentWidgetPosY(50);
+    QCOMPARE(50, CommonService::getInstance()->getCurrentWidgetPosY());
+}
+
+TEST(Application, setSelectModel)
+{
+    TEST_CASE_NAME("setSelectModel")
+    CommonService::getInstance()->setSelectModel(CommonService::SingleSelect);
+    QCOMPARE(CommonService::SingleSelect, CommonService::getInstance()->getSelectModel());
+}
+
+TEST(Application, setIsTabletEnvironment)
+{
+    TEST_CASE_NAME("setIsTabletEnvironment")
+    CommonService::getInstance()->setIsTabletEnvironment(false);
+    QCOMPARE(false, CommonService::getInstance()->isTabletEnvironment());
+}
+// 平板模式下专辑页面Icon模式显示
+TEST(Application, tabletAlbum)
+{
+    TEST_CASE_NAME("tabletAlbum")
+    CommonService::getInstance()->setIsTabletEnvironment(true);
+
+    MainFrame *w = Application::getInstance()->getMainWindow();
+    MusicBaseListView *baseListView = w->findChild<MusicBaseListView *>(AC_dataBaseListview);
+    QTest::qWait(50);
+    // 点击专辑
+    QPoint pos(130, 20);
+    QTestEventList event;
+    event.addMouseMove(pos);
+    event.addMouseClick(Qt::MouseButton::LeftButton, Qt::NoModifier, pos, 10);
+    event.simulate(baseListView->viewport());
+    event.clear();
+
+    QTest::qWait(200);
+    CommonService::getInstance()->setIsTabletEnvironment(false);
+}

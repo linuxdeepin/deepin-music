@@ -24,6 +24,18 @@
 #include "util/pinyinsearch.h"
 #include "util/global.h"
 
+#include <DGuiApplicationHelper>
+
+bool CommonService::isTabletEnvironment()
+{
+    return m_isTabletEnvironment;
+}
+
+void CommonService::setIsTabletEnvironment(bool isTablet)
+{
+    m_isTabletEnvironment = isTablet;
+}
+
 void CommonService::setListPageSwitchType(ListPageSwitchType lpst)
 {
     listPageSwitchType = lpst;
@@ -31,7 +43,11 @@ void CommonService::setListPageSwitchType(ListPageSwitchType lpst)
 
 CommonService::CommonService()
 {
-
+#if (DTK_VERSION >= DTK_VERSION_CHECK(5, 5, 0, 0))
+    m_isTabletEnvironment = Dtk::Gui::DGuiApplicationHelper::isTabletEnvironment();
+#else
+    m_isTabletEnvironment = false;
+#endif
 }
 
 ListPageSwitchType CommonService::getListPageSwitchType() const
@@ -71,7 +87,6 @@ bool CommonService::containsStr(QString searchText, QString text)
     }
 }
 
-#ifdef TABLET_PC
 void CommonService::setSelectModel(TabletSelectMode model)
 {
     if (m_select != model) {
@@ -79,5 +94,26 @@ void CommonService::setSelectModel(TabletSelectMode model)
         emit signalSelectMode(m_select);
     }
 }
-#endif
+
+void CommonService::setIsHScreen(bool state)
+{
+    m_isHScreen = state;
+    emit signalHScreen(m_isHScreen);
+}
+
+bool CommonService::isHScreen()
+{
+    return m_isHScreen;
+}
+
+void CommonService::setCurrentWidgetPosY(int posY)
+{
+    qDebug() << __FUNCTION__ << "--------" << posY;
+    m_currentWidgetPosY = posY;
+}
+
+int CommonService::getCurrentWidgetPosY()
+{
+    return m_currentWidgetPosY;
+}
 

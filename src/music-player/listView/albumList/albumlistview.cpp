@@ -159,14 +159,14 @@ AlbumListView::AlbumListView(const QString &hash, QWidget *parent)
             this, &AlbumListView::slotUpdateCodec);
     // 删除歌曲
     connect(DataBaseService::getInstance(), &DataBaseService::sigRemoveSelectedSongs, this, &AlbumListView::slotRemoveSelectedSongs, Qt::DirectConnection);
-#ifdef TABLET_PC
-    connect(Player::getInstance(), &Player::signalPlaybackStatusChanged,
-            this, &AlbumListView::slotPlaybackStatusChanged);
+    if (CommonService::getInstance()->isTabletEnvironment()) {
+        connect(Player::getInstance(), &Player::signalPlaybackStatusChanged,
+                this, &AlbumListView::slotPlaybackStatusChanged);
 
-    // 横竖屏切换
-    connect(CommonService::getInstance(), &CommonService::signalHScreen,
-            this, &AlbumListView::slotHScreen);
-#endif
+        // 横竖屏切换
+        connect(CommonService::getInstance(), &CommonService::signalHScreen,
+                this, &AlbumListView::slotHScreen);
+    }
 }
 
 AlbumListView::~AlbumListView()
@@ -356,42 +356,42 @@ int AlbumListView::getAlbumCount()
 
 void AlbumListView::setViewModeFlag(QListView::ViewMode mode)
 {
-#ifdef TABLET_PC
-    if (mode == QListView::IconMode) {
-        setIconSize(QSize(150, 150));
-        setGridSize(QSize(-1, -1));
-        // 去除底部间距
-        setViewportMargins(30, -13, -35, 0);
-        setSpacing(20);
-        if (CommonService::getInstance()->isHScreen()) {
-            setSpacing(20);
+    if (CommonService::getInstance()->isTabletEnvironment()) {
+        if (mode == QListView::IconMode) {
+            setIconSize(QSize(150, 150));
+            setGridSize(QSize(-1, -1));
+            // 去除底部间距
             setViewportMargins(30, -13, -35, 0);
+            setSpacing(20);
+            if (CommonService::getInstance()->isHScreen()) {
+                setSpacing(20);
+                setViewportMargins(30, -13, -35, 0);
+            } else {
+                setSpacing(33);
+                setViewportMargins(23, -13, -35, 0);
+            }
         } else {
-            setSpacing(33);
-            setViewportMargins(23, -13, -35, 0);
+            setIconSize(QSize(36, 36));
+            setGridSize(QSize(-1, -1));
+            // 修改间距
+            setViewportMargins(10, 0, 10, 0);
+            setSpacing(0);
         }
     } else {
-        setIconSize(QSize(36, 36));
-        setGridSize(QSize(-1, -1));
-        // 修改间距
-        setViewportMargins(10, 0, 10, 0);
-        setSpacing(0);
+        if (mode == QListView::IconMode) {
+            setIconSize(QSize(150, 150));
+            setGridSize(QSize(-1, -1));
+            // 去除底部间距
+            setViewportMargins(-10, -13, -35, 0);
+            setSpacing(20);
+        } else {
+            setIconSize(QSize(36, 36));
+            setGridSize(QSize(-1, -1));
+            // 修改顶部间距
+            setViewportMargins(0, 0, 8, 0);
+            setSpacing(0);
+        }
     }
-#else
-    if (mode == QListView::IconMode) {
-        setIconSize(QSize(150, 150));
-        setGridSize(QSize(-1, -1));
-        // 去除底部间距
-        setViewportMargins(-10, -13, -35, 0);
-        setSpacing(20);
-    } else {
-        setIconSize(QSize(36, 36));
-        setGridSize(QSize(-1, -1));
-        // 修改顶部间距
-        setViewportMargins(0, 0, 8, 0);
-        setSpacing(0);
-    }
-#endif
 
     setViewMode(mode);
     m_viewModel = mode;
@@ -816,7 +816,7 @@ bool AlbumListView::mapContainsList(QMap<QString, MediaMeta> metasMap, QStringLi
     }
     return contain;
 }
-#ifdef TABLET_PC
+
 void AlbumListView::slotPlaybackStatusChanged(Player::PlaybackStatus statue)
 {
     Q_UNUSED(statue)
@@ -837,4 +837,3 @@ void AlbumListView::slotHScreen(bool isHScreen)
         }
     }
 }
-#endif

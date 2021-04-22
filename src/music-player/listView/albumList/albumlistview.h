@@ -85,12 +85,10 @@ public slots:
     void slotUpdateCodec(const MediaMeta &meta);
     // 刷新播放动态图
     void slotUpdatePlayingIcon();
-#ifdef TABLET_PC
     // 播放状态发生改变
     void slotPlaybackStatusChanged(Player::PlaybackStatus statue);
     // 横竖屏切换
     void slotHScreen(bool isHScreen);
-#endif
 private slots:
     void slotCoverUpdate(const MediaMeta &meta);
     void slotRemoveSingleSong(const QString &listHash, const QString &musicHash);
