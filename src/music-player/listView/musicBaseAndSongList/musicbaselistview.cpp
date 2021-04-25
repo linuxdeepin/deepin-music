@@ -49,9 +49,9 @@ MusicBaseListView::MusicBaseListView(QWidget *parent) : DListView(parent)
     model = new MusicBaseAndSonglistModel(this);
     setModel(model);
     delegate = new DStyledItemDelegate(this);
-#ifdef TABLET_PC
-    delegate->setBackgroundType(DStyledItemDelegate::NoBackground);
-#endif
+    if (CommonService::getInstance()->isTabletEnvironment()) {
+        delegate->setBackgroundType(DStyledItemDelegate::NoBackground);
+    }
     auto delegateMargins = delegate->margins();
     delegateMargins.setLeft(18);
     delegate->setMargins(delegateMargins);
@@ -370,5 +370,8 @@ void MusicBaseListView::viewChanged(ListPageSwitchType switchtype, QString hashO
                 break;
             }
         }
+    }
+    if (switchtype == CustomType || switchtype == CdaType) {
+        this->clearSelection();
     }
 }

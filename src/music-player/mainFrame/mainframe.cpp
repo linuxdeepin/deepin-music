@@ -113,32 +113,9 @@ MainFrame::MainFrame()
     m_selectStr = tr("Select");
     m_selectAllStr = tr("Select All");
     m_doneStr = tr("Done");
-#ifdef  TABLET_PC
-    m_tabletSelectAll = new TabletLabel(m_selectAllStr, m_titlebar, 1);
-    m_tabletSelectDone = new TabletLabel(m_doneStr, m_titlebar, 0);
-    DFontSizeManager::instance()->bind(m_tabletSelectAll, DFontSizeManager::T6, QFont::Medium);
-    DFontSizeManager::instance()->bind(m_tabletSelectDone, DFontSizeManager::T6, QFont::Medium);
-    QFontMetrics font(m_tabletSelectAll->font());
-    m_tabletSelectAll->setFixedSize((font.width(m_tabletSelectAll->text()) + 22), 50);
-    m_tabletSelectDone->setFixedSize((font.width(m_tabletSelectDone->text()) + 22), 50);
-    m_tabletSelectAll->hide();
-    m_tabletSelectDone->hide();
-
-    m_titlebar->addWidget(m_tabletSelectAll, Qt::AlignRight | Qt::AlignVCenter);
-    m_titlebar->addWidget(m_tabletSelectDone, Qt::AlignRight | Qt::AlignVCenter);
-    connect(m_tabletSelectAll, &TabletLabel::signalTabletSelectAll, CommonService::getInstance(), &CommonService::signalSelectAll);
-    connect(m_tabletSelectDone, &TabletLabel::signalTabletDone, this, [ = ]() {
-        CommonService::getInstance()->setSelectModel(CommonService::SingleSelect);
-        m_tabletSelectAll->setVisible(false);
-        m_tabletSelectDone->setVisible(false);
-    });
-    connect(CommonService::getInstance(), &CommonService::signalSelectMode, this, [ = ](CommonService::TabletSelectMode mode) {
-        if (mode == CommonService::SingleSelect) {
-            m_tabletSelectAll->setVisible(false);
-            m_tabletSelectDone->setVisible(false);
-        }
-    });
-#endif
+    if (CommonService::getInstance()->isTabletEnvironment()) {
+        initTabletSelectBtn();
+    }
     m_backBtn->setIcon(QIcon::fromTheme("left_arrow"));
     m_titlebar->addWidget(m_backBtn, Qt::AlignLeft);
     m_titlebar->resize(width(), 50);
@@ -236,12 +213,12 @@ void MainFrame::initUI(bool showLoading)
     //    m_pwidget = new QWidget(this);
 
     /*---------------menu&shortcut-------------------*/
-#ifndef TABLET_PC
-    initMenuAndShortcut();
-    m_newSonglistAction->setEnabled(showLoading);
-#else
-    initPadMenu();
-#endif
+    if (!CommonService::getInstance()->isTabletEnvironment()) {
+        initMenuAndShortcut();
+        m_newSonglistAction->setEnabled(showLoading);
+    } else {
+        initPadMenu();
+    }
     connect(DataBaseService::getInstance(), &DataBaseService::signalAllMusicCleared,
             this, &MainFrame::slotAllMusicCleared);
 
@@ -385,12 +362,12 @@ void MainFrame::initMenuAndShortcut()
     });
 }
 
-#ifdef TABLET_PC
 void MainFrame::initPadMenu()
 {
     m_addMusicFiles = new QAction(MainFrame::tr("Add music"), this);
 
     m_select = new QAction(m_selectStr, this);
+    m_select->setObjectName(AC_tablet_title_select);
 
     DMenu *pTitleMenu = new DMenu(this);
 
@@ -404,7 +381,6 @@ void MainFrame::initPadMenu()
 
     connect(pTitleMenu, SIGNAL(triggered(QAction *)), this, SLOT(slotMenuTriggered(QAction *)));
 }
-#endif
 
 void MainFrame::autoStartToPlay()
 {
@@ -566,6 +542,9 @@ void MainFrame::slotDBImportFinished(QString hash, int successCount)
             emit CommonService::getInstance()->signalSwitchToView(CdaType, hash); //处理cd加载时，切换到主页面，且没有歌曲存在的情况
         m_footerWidget->show();
         m_importWidget->closeAnimationToDown(this->size());
+        if (CommonService::getInstance()->isTabletEnvironment() && m_select) {
+            m_select->setEnabled(true);
+        }
     }
     m_titlebarwidget->setEnabled(true);
     if (m_newSonglistAction) {
@@ -582,6 +561,9 @@ void MainFrame::slotCdaImportFinished()
         emit CommonService::getInstance()->signalSwitchToView(CdaType, "CdaRole"); //处理cd加载时，切换到主页面，且没有歌曲存在的情况
         m_footerWidget->show();
         m_importWidget->closeAnimationToDown(this->size());
+        if (CommonService::getInstance()->isTabletEnvironment() && m_select) {
+            m_select->setEnabled(true);
+        }
     }
     m_titlebarwidget->setEnabled(true);
     m_newSonglistAction->setEnabled(true);
@@ -737,13 +719,13 @@ void MainFrame::slotMenuTriggered(QAction *action)
         Player::getInstance()->setFadeInOut(MusicSettings::value("base.play.fade_in_out").toBool());
     }
 
-#ifdef TABLET_PC
-    if (action == m_select) {
-        CommonService::getInstance()->setSelectModel(CommonService::MultSelect);
-        m_tabletSelectAll->setVisible(true);
-        m_tabletSelectDone->setVisible(true);
+    if (CommonService::getInstance()->isTabletEnvironment()) {
+        if (action == m_select) {
+            CommonService::getInstance()->setSelectModel(CommonService::MultSelect);
+            m_tabletSelectAll->setVisible(true);
+            m_tabletSelectDone->setVisible(true);
+        }
     }
-#endif
 }
 
 void MainFrame::slotSwitchTheme()
@@ -1041,7 +1023,33 @@ void MainFrame::playQueueAnimation()
     m_playQueueWidget->playAnimation(this->size());
 }
 
+void MainFrame::initTabletSelectBtn()
+{
+    m_tabletSelectAll = new TabletLabel(m_selectAllStr, m_titlebar, 1);
+    m_tabletSelectDone = new TabletLabel(m_doneStr, m_titlebar, 0);
+    DFontSizeManager::instance()->bind(m_tabletSelectAll, DFontSizeManager::T6, QFont::Medium);
+    DFontSizeManager::instance()->bind(m_tabletSelectDone, DFontSizeManager::T6, QFont::Medium);
+    QFontMetrics font(m_tabletSelectAll->font());
+    m_tabletSelectAll->setFixedSize((font.width(m_tabletSelectAll->text()) + 22), 50);
+    m_tabletSelectDone->setFixedSize((font.width(m_tabletSelectDone->text()) + 22), 50);
+    m_tabletSelectAll->hide();
+    m_tabletSelectDone->hide();
 
+    m_titlebar->addWidget(m_tabletSelectAll, Qt::AlignRight | Qt::AlignVCenter);
+    m_titlebar->addWidget(m_tabletSelectDone, Qt::AlignRight | Qt::AlignVCenter);
+    connect(m_tabletSelectAll, &TabletLabel::signalTabletSelectAll, CommonService::getInstance(), &CommonService::signalSelectAll);
+    connect(m_tabletSelectDone, &TabletLabel::signalTabletDone, this, [ = ]() {
+        CommonService::getInstance()->setSelectModel(CommonService::SingleSelect);
+        m_tabletSelectAll->setVisible(false);
+        m_tabletSelectDone->setVisible(false);
+    });
+    connect(CommonService::getInstance(), &CommonService::signalSelectMode, this, [ = ](CommonService::TabletSelectMode mode) {
+        if (mode == CommonService::SingleSelect) {
+            m_tabletSelectAll->setVisible(false);
+            m_tabletSelectDone->setVisible(false);
+        }
+    });
+}
 
 
 

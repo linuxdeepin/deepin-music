@@ -27,7 +27,8 @@
 #include <DDialog>
 #include <DFrame>
 
-#ifdef TABLET_PC
+#include "commonservice.h"
+
 DWIDGET_USE_NAMESPACE
 
 SongListView::SongListView(QWidget *parent) : DListView(parent)
@@ -104,6 +105,9 @@ void SongListView::slotItemChanged(const QModelIndex &model)
     if (parentdialog) {
         parentdialog->close();
     }
+    if (CommonService::getInstance()->isTabletEnvironment()) {
+        emit CommonService::getInstance()->setSelectModel(CommonService::SingleSelect);
+    }
 }
 
 void SongListView::setThemeType(int type)
@@ -132,4 +136,3 @@ void SongListView::setThemeType(int type)
         this->setPalette(pl);
     }
 }
-#endif

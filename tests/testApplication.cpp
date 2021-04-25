@@ -113,7 +113,7 @@
 #include "infodialog.h"
 #include "closeconfirmdialog.h"
 #include "subsonglistwidget.h"
-
+#include "songlistview.h"
 
 bool copyDirFiles(const QString &fromDir, const QString &toDir)
 {
@@ -2137,6 +2137,120 @@ TEST(Application, musicListDataWidgetDropEvent)
     qApp->sendEvent(mldw, &e);
 
     QTest::qWait(100);
+}
+
+// 平板相关
+TEST(Application, tabletallMusic)
+{
+    TEST_CASE_NAME("tabletallMusic")
+
+    CommonService::getInstance()->setIsTabletEnvironment(true);
+
+    MainFrame *w = Application::getInstance()->getMainWindow();
+    MusicBaseListView *baseListView = w->findChild<MusicBaseListView *>(AC_dataBaseListview);
+
+    DToolButton *iconModeBtn = w->findChild<DToolButton *>(AC_btIconMode);
+    DToolButton *iconListBtn = w->findChild<DToolButton *>(AC_btlistMode);
+
+    QPoint pos(130, 20);
+    QTestEventList event;
+    // 点击所有音乐
+    QTest::qWait(50);
+    pos.setY(100);
+    event.addMouseMove(pos);
+    event.addMouseClick(Qt::MouseButton::LeftButton, Qt::NoModifier, pos, 10);
+    event.simulate(baseListView->viewport());
+    event.clear();
+
+    // icon模式
+    QTest::qWait(50);
+    pos = QPoint(20, 20);
+    event.addMouseMove(pos);
+    event.addMouseClick(Qt::MouseButton::LeftButton, Qt::NoModifier, pos, 10);
+    event.simulate(iconModeBtn);
+    event.clear();
+
+    QTest::qWait(50);
+    // 点击切换回list模式
+    event.addMouseMove(pos);
+    event.addMouseClick(Qt::MouseButton::LeftButton, Qt::NoModifier, pos, 10);
+    event.simulate(iconListBtn);
+    event.clear();
+
+    // 点击所有音乐
+    QTest::qWait(50);
+    pos = QPoint(130, 100);
+    event.addMouseMove(pos);
+    event.addMouseClick(Qt::MouseButton::LeftButton, Qt::NoModifier, pos, 10);
+    event.simulate(baseListView->viewport());
+    event.clear();
+
+    // 切换选择模式
+    emit CommonService::getInstance()->signalSelectMode(CommonService::MultSelect);
+    // 全选
+    emit CommonService::getInstance()->signalSelectAll();
+    // 横屏
+    emit CommonService::getInstance()->signalHScreen(false);
+    emit CommonService::getInstance()->signalHScreen(true);
+
+    CommonService::getInstance()->setIsTabletEnvironment(false);
+    QTest::qWait(50);
+}
+
+// 添加到播放队列等
+TEST(Application, tabletAddToSonglist)
+{
+    TEST_CASE_NAME("tabletAddToSonglist")
+
+    CommonService::getInstance()->setIsTabletEnvironment(true);
+
+    MainFrame *w = Application::getInstance()->getMainWindow();
+    MusicBaseListView *baseListView = w->findChild<MusicBaseListView *>(AC_dataBaseListview);
+
+    QPoint pos(130, 20);
+    QTestEventList event;
+    // 点击所有音乐
+    QTest::qWait(50);
+    pos.setY(100);
+    event.addMouseMove(pos);
+    event.addMouseClick(Qt::MouseButton::LeftButton, Qt::NoModifier, pos, 10);
+    event.simulate(baseListView->viewport());
+    event.clear();
+
+    QTest::qWait(200);
+    PlayListView *mliv = w->findChild<PlayListView *>(AC_PlayListView);
+
+    event.addMouseMove(pos);
+    event.addMouseClick(Qt::MouseButton::LeftButton, Qt::NoModifier, pos, 100);
+    event.addMousePress(Qt::MouseButton::LeftButton, Qt::NoModifier, pos, 100);
+    event.addMouseDClick(Qt::MouseButton::LeftButton, Qt::NoModifier, pos, 100);
+    event.simulate(mliv->viewport());
+    event.clear();
+    QTest::qWait(100);
+
+    mliv->slotUpdatePlayingIcon();
+    QModelIndexList list = mliv->tabletSelectedIndexes();
+
+    // 添加到歌单
+    QTimer::singleShot(300, w, [ = ]() {
+        SongListView *songlist = w->findChild<SongListView *>(AC_tablet_songListView);
+        if (songlist) {
+            songlist->setThemeType(0);
+            songlist->setThemeType(1);
+            QPoint pos(50, 20);
+            QTestEventList event;
+            event.addMouseMove(pos);
+            event.addMouseClick(Qt::MouseButton::LeftButton, Qt::NoModifier, pos, 100);
+            event.simulate(songlist->viewport());
+            event.clear();
+        }
+        QTest::qWait(100);
+    });
+
+    mliv->slotShowSongList();
+
+    CommonService::getInstance()->setIsTabletEnvironment(false);
+    QTest::qWait(50);
 }
 
 TEST(Application, end)

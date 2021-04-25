@@ -24,7 +24,6 @@
 
 #include <DListView>
 
-#ifdef TABLET_PC
 DWIDGET_USE_NAMESPACE
 
 class SongListViewModel;
@@ -48,5 +47,4 @@ public slots:
 private:
     SongListViewModel *m_listViewModel;
 };
-#endif
 #endif // SONGLISTVIEW_H

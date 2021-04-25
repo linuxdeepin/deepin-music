@@ -63,9 +63,9 @@ MusicSongListView::MusicSongListView(QWidget *parent) : DListView(parent)
     m_model = new MusicBaseAndSonglistModel(this);
     setModel(m_model);
     m_delegate = new DStyledItemDelegate(this);
-#ifdef TABLET_PC
-    m_delegate->setBackgroundType(DStyledItemDelegate::NoBackground);
-#endif
+    if (CommonService::getInstance()->isTabletEnvironment()) {
+        m_delegate->setBackgroundType(DStyledItemDelegate::NoBackground);
+    }
     auto delegateMargins = m_delegate->margins();
     delegateMargins.setLeft(18);
     m_delegate->setMargins(delegateMargins);
@@ -167,29 +167,29 @@ void MusicSongListView::showContextMenu(const QPoint &pos)
 
     QPoint globalPos = this->mapToGlobal(pos);
 
-
     DMenu menu;
     connect(&menu, &DMenu::triggered, this, &MusicSongListView::slotMenuTriggered);
     QString hash = index.data(Qt::UserRole).value<QString>();
     emit CommonService::getInstance()->signalSwitchToView(ListPageSwitchType::CustomType, hash);
 
-#ifndef TABLET_PC
-    QAction *playact = nullptr;
-    QAction *pauseact = nullptr;
+    if (!CommonService::getInstance()->isTabletEnvironment()) {
+        QAction *playact = nullptr;
+        QAction *pauseact = nullptr;
 
-    if (hash == Player::getInstance()->getCurrentPlayListHash() && Player::getInstance()->status() == Player::Playing) {
-        pauseact = menu.addAction(tr("Pause"));
-        pauseact->setDisabled(0 == DataBaseService::getInstance()->customizeMusicInfos(hash).size());
-    } else {
-        playact = menu.addAction(tr("Play"));
-        playact->setDisabled(0 == DataBaseService::getInstance()->customizeMusicInfos(hash).size());
+        if (hash == Player::getInstance()->getCurrentPlayListHash() && Player::getInstance()->status() == Player::Playing) {
+            pauseact = menu.addAction(tr("Pause"));
+            pauseact->setDisabled(0 == DataBaseService::getInstance()->customizeMusicInfos(hash).size());
+        } else {
+            playact = menu.addAction(tr("Play"));
+            playact->setDisabled(0 == DataBaseService::getInstance()->customizeMusicInfos(hash).size());
+        }
     }
-#endif
 
     if (hash != "album" || hash != "artist" || hash != "all" || hash != "fav") {
         menu.addAction(tr("Rename"));
         menu.addAction(tr("Delete"));
     }
+
     menu.exec(globalPos);
 }
 
@@ -454,27 +454,27 @@ void MusicSongListView::slotDoubleClicked(const QModelIndex &index)
     }
     m_renameLineEdit->setVisible(true);
     m_renameLineEdit->move(50, m_renameItem->row() * this->sizeHintForIndex(index).height() + ItemEditMargin);
-#ifdef TABLET_PC
-    QPoint pos = this->mapToGlobal(m_renameLineEdit->pos());
-    CommonService::getInstance()->setCurrentWidgetPosY(pos.y());
-#endif
+    if (CommonService::getInstance()->isTabletEnvironment()) {
+        QPoint pos = this->mapToGlobal(m_renameLineEdit->pos());
+        CommonService::getInstance()->setCurrentWidgetPosY(pos.y());
+    }
     m_renameLineEdit->setVisible(true);
     m_renameLineEdit->lineEdit()->setText(m_renameItem->text());
     m_renameLineEdit->lineEdit()->selectAll();
     m_renameLineEdit->lineEdit()->setFocus();
-#ifdef TABLET_PC
-    if (!DApplication::inputMethod()->isVisible()) {
-        DApplication::inputMethod()->show();
+    if (CommonService::getInstance()->isTabletEnvironment()) {
+        if (!DApplication::inputMethod()->isVisible()) {
+            DApplication::inputMethod()->show();
+        }
     }
-#endif
 }
 
 void MusicSongListView::slotLineEditingFinished()
 {
     if (m_renameLineEdit && m_renameLineEdit->isVisible()) {
-#ifdef TABLET_PC
-        m_renameLineEdit->clearFocus();
-#endif
+        if (CommonService::getInstance()->isTabletEnvironment()) {
+            m_renameLineEdit->clearFocus();
+        }
         m_renameLineEdit->setVisible(false);
 
         if (!m_renameItem)
@@ -500,9 +500,9 @@ void MusicSongListView::slotLineEditingFinished()
         DataBaseService::getInstance()->updatePlaylistDisplayName(m_renameItem->text(), uuid);
         m_renameItem->setIcon(QIcon::fromTheme("music_famousballad"));
         // 防止焦点设置到其他控件 bug:61769
-#ifndef TABLET_PC
-        this->setFocus();
-#endif
+        if (!CommonService::getInstance()->isTabletEnvironment()) {
+            this->setFocus();
+        }
     }
 }
 

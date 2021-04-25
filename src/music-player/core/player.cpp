@@ -171,25 +171,8 @@ void Player::playMeta(MediaMeta meta)
         data.appExec = "deepin-music";
         DRecentManager::addItem(meta.localPath, data);
 
-        QVariantMap metadata;
-        metadata.insert(Mpris::metadataToString(Mpris::Title), meta.title);
-        metadata.insert(Mpris::metadataToString(Mpris::Artist), meta.singer);
-        metadata.insert(Mpris::metadataToString(Mpris::Album), meta.album);
-        metadata.insert(Mpris::metadataToString(Mpris::Length), meta.length);
-        QString str = Global::cacheDir() + "/images/" + meta.hash + ".jpg";
-        QFileInfo info(str);
-        if (!info.exists()) {
-            str =  Global::cacheDir() + "/images/" + "default_cover_max.jpg";
-            info.setFile(str);
-            if (!info.exists()) {
-                QIcon icon = QIcon::fromTheme("cover_max");
-                icon.pixmap(QSize(50, 50)).save(str);
-            }
-        }
-        str = "file://" + str;
-        metadata.insert(Mpris::metadataToString(Mpris::ArtUrl), str);
-        //mprisPlayer->setCanSeek(true);
-        m_mpris->setMetadata(metadata);
+
+        this->resetDBusMpris(meta);
         m_mpris->setLoopStatus(Mpris::Playlist);
         m_mpris->setPlaybackStatus(Mpris::Playing);
         m_mpris->setVolume((float)(getVolume() / 100.0));//只获取前两位小数点
@@ -245,15 +228,7 @@ void Player::resume()
         m_fadeInAnimation->start();
     }
 
-    QVariantMap metadata;
-    metadata.insert(Mpris::metadataToString(Mpris::Title), m_ActiveMeta.title);
-    metadata.insert(Mpris::metadataToString(Mpris::Artist), m_ActiveMeta.singer);
-    metadata.insert(Mpris::metadataToString(Mpris::Album), m_ActiveMeta.album);
-    metadata.insert(Mpris::metadataToString(Mpris::Length), m_ActiveMeta.length);
-    metadata.insert(Mpris::metadataToString(Mpris::ArtUrl), m_ActiveMeta.coverUrl);
-
-    //mprisPlayer->setCanSeek(true);
-    m_mpris->setMetadata(metadata);
+    this->resetDBusMpris(m_ActiveMeta);
     m_mpris->setLoopStatus(Mpris::Playlist);
     m_mpris->setPlaybackStatus(Mpris::Playing);
 
@@ -1201,6 +1176,28 @@ void Player::initMpris()
     this, [ = ]() {
         playPreMeta();
     });
+}
+
+void Player::resetDBusMpris(const MediaMeta &meta)
+{
+    QVariantMap metadata;
+    metadata.insert(Mpris::metadataToString(Mpris::Title), meta.title);
+    metadata.insert(Mpris::metadataToString(Mpris::Artist), meta.singer);
+    metadata.insert(Mpris::metadataToString(Mpris::Album), meta.album);
+    metadata.insert(Mpris::metadataToString(Mpris::Length), meta.length);
+    QString str = Global::cacheDir() + "/images/" + meta.hash + ".jpg";
+    QFileInfo info(str);
+    if (!info.exists()) {
+        str =  Global::cacheDir() + "/images/" + "default_cover_max.jpg";
+        info.setFile(str);
+        if (!info.exists()) {
+            QIcon icon = QIcon::fromTheme("cover_max");
+            icon.pixmap(QSize(50, 50)).save(str);
+        }
+    }
+    str = "file://" + str;
+    metadata.insert(Mpris::metadataToString(Mpris::ArtUrl), str);
+    m_mpris->setMetadata(metadata);
 }
 
 //void Player::loadMediaProgress(const QString &path)

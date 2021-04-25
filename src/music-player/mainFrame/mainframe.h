@@ -59,6 +59,10 @@ public:
     void autoStartToPlay();
     // 播放列表显示与关闭
     void playQueueAnimation();
+    // 初始化平板选择按钮
+    void initTabletSelectBtn();
+    // 初始化平板菜单
+    void initPadMenu();
 public slots:
     // 显示弹窗消息
     void showPopupMessage(const QString &songListName, int selectCount, int insertCount);
@@ -73,9 +77,8 @@ private:
      * @brief initMenuAndShortCut
      */
     void initMenuAndShortcut();
-#ifdef TABLET_PC
-    void initPadMenu();
-#endif
+public slots:
+    void slotMenuTriggered(QAction *action);
 private slots:
     void setThemeType(DGuiApplicationHelper::ColorType themeType);
     void slotSearchEditFoucusIn();
@@ -84,7 +87,6 @@ private slots:
     void slotCdaImportFinished();
     void slotImportFailed();
     void slotShortCutTriggered();
-    void slotMenuTriggered(QAction *action);
     void slotSwitchTheme();
     // 所有歌曲被删除
     void slotAllMusicCleared();
@@ -113,10 +115,8 @@ private:
     DPushButton         *m_backBtn = nullptr;
     TitlebarWidget      *m_titlebarwidget = nullptr;
     // 标题栏选择控制按钮
-#ifdef TABLET_PC
     TabletLabel         *m_tabletSelectAll = nullptr;
     TabletLabel         *m_tabletSelectDone = nullptr;
-#endif
     // 播放控制托盘控件
     FooterWidget        *m_footerWidget = nullptr;
     SearchResult        *m_searchResult = nullptr;

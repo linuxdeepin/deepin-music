@@ -18,17 +18,20 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+#include <QHBoxLayout>
+
+#include <DFrame>
 
 #include "songlistviewdialog.h"
 #include "songlistview.h"
-#include <DFrame>
-#include <QHBoxLayout>
+#include "ac-desktop-define.h"
 
-#ifdef TABLET_PC
 DWIDGET_USE_NAMESPACE
 SongListViewDialog::SongListViewDialog(QWidget *parent) : DDialog(parent)
 {
+    this->setObjectName(AC_tablet_songListViewDlg);
     m_songListView = new SongListView(this);
+    m_songListView->setObjectName(AC_tablet_songListView);
     DFrame  *d = new DFrame;
     QVBoxLayout *hb = new QVBoxLayout(d);
     hb->addWidget(m_songListView, Qt::AlignCenter);
@@ -38,4 +41,3 @@ SongListViewDialog::SongListViewDialog(QWidget *parent) : DDialog(parent)
     this->addContent(d, Qt::AlignCenter);
     setFixedSize(500, 500);
 }
-#endif

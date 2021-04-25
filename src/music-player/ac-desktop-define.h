@@ -129,7 +129,9 @@
 #define AC_subSonglistWidget          "subSonglistWidget"
 #define AC_titleBarLeft               "titleBarLeft"
 #define AC_subSonglistWidget          "subSonglistWidget"
-#define AC_Shortcut_Escape            "Shortcut_Escape"
-
+#define AC_Shortcut_Escape            "shortcut_Escape"
+#define AC_tablet_songListViewDlg     "tabletSongListViewDialog"
+#define AC_tablet_songListView        "tabletSongListView"
+#define AC_tablet_title_select        "tablet_title_select"
 
 #endif // DESKTOP_ACCESSIBLE_UI_DEFINE_H

@@ -21,7 +21,7 @@
 #include "songlistviewmodel.h"
 
 #include <QDebug>
-#ifdef TABLET_PC
+
 SongListViewModel::SongListViewModel(QObject *parent) :
     QStandardItemModel(parent)
 {
@@ -47,4 +47,3 @@ Qt::ItemFlags SongListViewModel::flags(const QModelIndex &index) const
     else
         return defaultFlags;
 }
-#endif

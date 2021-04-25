@@ -81,12 +81,15 @@ public:
     void setMusicListView(QMap<QString, MediaMeta> musicinfos, const QString &hash);
     // 设置当前列表属于哪个页面
     void setListPageSwitchType(ListPageSwitchType type);
+    // 获取是否播放队列
+    bool getIsPlayQueue();
+    // 平板选中项
+    QModelIndexList tabletSelectedIndexes();
 public slots:
-#ifdef TABLET_PC
     void slotOnClicked(const QModelIndex &index);
-#else
+
     void slotOnDoubleClicked(const QModelIndex &index);
-#endif
+
     void slotLoadData();
     void slotUpdatePlayingIcon();
 
@@ -121,6 +124,8 @@ public slots:
     void showDetailInfoDlg();
     // 播放队列中歌曲被删除
     void slotPlayQueueMetaRemove(const QString &metaHash);
+    // 播放状态发生改变
+    void slotPlaybackStatusChanged(Player::PlaybackStatus statue);
     // 右键菜单设置音乐编码
     void slotTextCodecMenuClicked(QAction *action);
     // 右键菜单添加到歌单
@@ -130,7 +135,6 @@ public slots:
     void slotUpdateCodec(const MediaMeta &meta);
     // 删除cda相关歌曲
     void slotRmvCdaSongs();
-#ifdef TABLET_PC
     // 设置选择模式
     void slotSetSelectModel(CommonService::TabletSelectMode model);
     // 全选
@@ -141,7 +145,6 @@ public slots:
     void slotAddToSongList(const QString &hash, const QString &name);
     // 横竖屏切换
     void slotHScreen(bool isHScreen);
-#endif
 private:
     // 播放音乐相关处理
     void playMusic(const MediaMeta &meta);
@@ -149,6 +152,8 @@ private:
     bool isContain(const QString &hash);
     // 排序
     void sortList(QList<MediaMeta> &musicInfos, const DataBaseService::ListSortType &sortType);
+    // 平板清除选中
+    void tabletClearSelection();
 signals:
     bool musicResultListCountChanged(QString hash);
     //zy---end
@@ -160,9 +165,8 @@ public:
     //void reflushItemMediaMeta(const MediaMeta &meta);
     bool getMenuIsShow();
 protected:
-#ifdef TABLET_PC
     virtual void mousePressEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
-#endif
+    virtual void mouseReleaseEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
     virtual void mouseMoveEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
     virtual void dragEnterEvent(QDragEnterEvent *event) Q_DECL_OVERRIDE;
     virtual void startDrag(Qt::DropActions supportedActions) Q_DECL_OVERRIDE;
@@ -190,4 +194,5 @@ private:
     QIcon     m_defaultIcon = QIcon::fromTheme("cover_max");
     bool      m_menuIsShow = false;
     static constexpr int FirstLoadCount = 15;
+    QModelIndex m_pressIndex;
 };

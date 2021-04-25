@@ -45,12 +45,10 @@ const int xoffset = 10;
 const int yoffset = 8;
 const int roundRadius = 10;
 
-#ifdef TABLET_PC
 // 平板模式
 const int ImgWidthAndHeightTablet = 195;
 const int yoffsetTablet = 5;
 const int roundRadiusTablet = 10;
-#endif
 
 static inline int pixel2point(int pixel)
 {
@@ -110,17 +108,17 @@ void PlayItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
 {
     auto listview = qobject_cast<const PlayListView *>(option.widget);
     if (listview->viewMode() == QListView::IconMode) {
-#ifdef TABLET_PC
-        drawTabletIconMode(*painter, option, index);
-#else
-        drawIconMode(*painter, option, index);
-#endif
+        if (CommonService::getInstance()->isTabletEnvironment()) {
+            drawTabletIconMode(*painter, option, index);
+        } else {
+            drawIconMode(*painter, option, index);
+        }
     } else {
-#ifdef TABLET_PC
-        drawTabletListMode(*painter, option, index);
-#else
-        drawListMode(*painter, option, index);
-#endif
+        if (CommonService::getInstance()->isTabletEnvironment()) {
+            drawTabletListMode(*painter, option, index);
+        } else {
+            drawListMode(*painter, option, index);
+        }
     }
 }
 
@@ -129,12 +127,12 @@ QSize PlayItemDelegate::sizeHint(const QStyleOptionViewItem &option,
 {
     auto *listview = qobject_cast<const PlayListView *>(option.widget);
     if (listview && listview->viewMode() == QListView::IconMode) {
-#ifdef TABLET_PC
-        return QSize(200, 243);
-#else
-        // 调整Icon间距
-        return QSize(170, 210);
-#endif
+        if (CommonService::getInstance()->isTabletEnvironment()) {
+            return QSize(200, 243);
+        } else {
+            // 调整Icon间距
+            return QSize(170, 210);
+        }
     } else {
         auto baseSize = QStyledItemDelegate::sizeHint(option, index);
         return QSize(baseSize.width(), 38);
@@ -162,7 +160,7 @@ bool PlayItemDelegate::editorEvent(QEvent *event, QAbstractItemModel *model, con
         return QStyledItemDelegate::editorEvent(event, model, option, index);
     }
 }
-#ifdef TABLET_PC
+
 void PlayItemDelegate::drawTabletIconMode(QPainter &painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
     const PlayListView *listview = qobject_cast<const PlayListView *>(option.widget);
@@ -176,25 +174,6 @@ void PlayItemDelegate::drawTabletIconMode(QPainter &painter, const QStyleOptionV
     painter.setRenderHint(QPainter::Antialiasing);
     painter.setRenderHint(QPainter::HighQualityAntialiasing);
     painter.setRenderHint(QPainter::SmoothPixmapTransform);
-
-//    auto background = option.palette.background();
-//    background.setColor(Qt::red);
-//    painter.fillRect(option.rect, background);
-
-    // 绘制阴影
-//    QRect shadowRect(option.rect.x() - 10 + xoffset, option.rect.y() + yoffset, 158, 148);
-//    QPainterPath roundRectShadowPath;
-//    roundRectShadowPath.addRoundRect(shadowRect, 8, 8);
-//    painter.save();
-//    painter.setClipPath(roundRectShadowPath);
-//    painter.drawPixmap(shadowRect, m_shadowImg);
-//    painter.restore();
-
-    // 绘制圆角框
-//    QRect rect(option.rect.x() + xoffset, option.rect.y() + xoffset, 140, 190);
-//    QPainterPath roundRectPath;
-//    roundRectPath.addRoundRect(rect, 10, 10);
-//    painter.setClipPath(roundRectPath);
 
     // 绘制专辑图片
     painter.save();
@@ -286,7 +265,7 @@ void PlayItemDelegate::drawTabletIconMode(QPainter &painter, const QStyleOptionV
     // 绘制选中时的阴影
     QBrush fillBrush(QColor(128, 128, 128, 0));
     QPixmap scacheicon = m_unselectedPix;
-    if (option.state & QStyle::State_Selected) {
+    if (meta.beSelect) {
         fillBrush = QBrush(QColor(128, 128, 128, 90));
         scacheicon = m_selectedPix;
     }
@@ -304,10 +283,10 @@ void PlayItemDelegate::drawTabletIconMode(QPainter &painter, const QStyleOptionV
 void PlayItemDelegate::drawTabletListMode(QPainter &painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
     const PlayListView *listview = qobject_cast<const PlayListView *>(option.widget);
-    if (listview->getIsPlayQueue()) {
-        drawListMode(painter, option, index);
-        return;
-    }
+//    if (listview->getIsPlayQueue()) {
+//        drawListMode(painter, option, index);
+//        return;
+//    }
 
     QFont fontT9 = DFontSizeManager::instance()->get(DFontSizeManager::T9);
     QFont fontT6 = DFontSizeManager::instance()->get(DFontSizeManager::T6);
@@ -336,10 +315,12 @@ void PlayItemDelegate::drawTabletListMode(QPainter &painter, const QStyleOptionV
     auto background = (index.row() % 2) == 1 ? baseColor : alternateBaseColor;
     int lrWidth = 10;
     // 多选模式阴影向右偏移
-    if (selectMod == CommonService::MultSelect) {
+    if (!listview->getIsPlayQueue() && selectMod == CommonService::MultSelect) {
         lrWidth = 40;
     }
-    if (!(option.state & QStyle::State_Selected) && !(option.state & QStyle::State_MouseOver)) {
+    // 当前绘制项
+    MediaMeta itemMeta = index.data(Qt::UserRole).value<MediaMeta>();
+    if (!itemMeta.beSelect && !(option.state & QStyle::State_MouseOver)) {
         painter.save();
         painter.setPen(Qt::NoPen);
         painter.setBrush(background);
@@ -357,7 +338,6 @@ void PlayItemDelegate::drawTabletListMode(QPainter &painter, const QStyleOptionV
 
     QPixmap scacheicon = m_unselectedPix;
     MediaMeta activeMeta = Player::getInstance()->getActiveMeta();
-    MediaMeta itemMeta = index.data(Qt::UserRole).value<MediaMeta>();
     if (activeMeta.hash == itemMeta.hash) {
         nameColor = QColor(DGuiApplicationHelper::instance()->applicationPalette().highlight().color());
         otherColor = QColor(DGuiApplicationHelper::instance()->applicationPalette().highlight().color());
@@ -365,9 +345,9 @@ void PlayItemDelegate::drawTabletListMode(QPainter &painter, const QStyleOptionV
         fontT6.setWeight(QFont::Medium);
     }
 
-    if (option.state & QStyle::State_Selected) {
+    if (itemMeta.beSelect/*option.state & QStyle::State_Selected*/) {
 
-        if (listview->selectionMode() == QListView::SingleSelection) {
+        if (selectMod == CommonService::SingleSelect || listview->getIsPlayQueue()) {
             painter.save();
             painter.setPen(Qt::NoPen);
             QColor selectColor(option.palette.highlight().color());
@@ -382,24 +362,24 @@ void PlayItemDelegate::drawTabletListMode(QPainter &painter, const QStyleOptionV
 
         scacheicon = m_selectedPix;
     }
-
-    if (option.state & QStyle::State_MouseOver) {
-        painter.save();
-        painter.setPen(Qt::NoPen);
-        QColor hovertColor;
-        if (listview->getThemeType() == 1) {
-            hovertColor = option.palette.shadow().color();
-        } else {
-            hovertColor = QColor("#ffffff");
-            hovertColor.setAlphaF(0.1);
-        }
-        if (option.state & QStyle::State_Selected)
-            hovertColor.setAlphaF(0.2);
-        painter.setBrush(hovertColor);
-        QRect selecteColorRect = option.rect.adjusted(lrWidth, 0, -lrWidth, 0);
-        painter.drawRoundedRect(selecteColorRect, 8, 8);
-        painter.restore();
-    }
+    // 平板没有hover状态
+//    if (option.state & QStyle::State_MouseOver) {
+//        painter.save();
+//        painter.setPen(Qt::NoPen);
+//        QColor hovertColor;
+//        if (listview->getThemeType() == 1) {
+//            hovertColor = option.palette.shadow().color();
+//        } else {
+//            hovertColor = QColor("#ffffff");
+//            hovertColor.setAlphaF(0.1);
+//        }
+//        if (option.state & QStyle::State_Selected)
+//            hovertColor.setAlphaF(0.2);
+//        painter.setBrush(hovertColor);
+//        QRect selecteColorRect = option.rect.adjusted(lrWidth, 0, -lrWidth, 0);
+//        painter.drawRoundedRect(selecteColorRect, 8, 8);
+//        painter.restore();
+//    }
 
     int offset = 10;
     for (int col = 0; col < ColumnButt; ++col) {
@@ -410,7 +390,7 @@ void PlayItemDelegate::drawTabletListMode(QPainter &painter, const QStyleOptionV
             painter.setPen(otherColor);
             PlayListView *playListView = qobject_cast<PlayListView *>(const_cast<QWidget *>(option.widget));
 
-            if (selectMod == CommonService::MultSelect) {
+            if (!listview->getIsPlayQueue() && selectMod == CommonService::MultSelect) {
                 offset = 35;
                 auto sz = QSizeF(14, 14);
                 auto iconRect = QRectF(option.rect.x() + 8,
@@ -433,8 +413,12 @@ void PlayItemDelegate::drawTabletListMode(QPainter &painter, const QStyleOptionV
 
             //绘制播放动态图
             if (activeMeta.hash == itemMeta.hash) {
-                QPixmap icon = playListView->getPlayPixmap(
-                                   selectMod == CommonService::MultSelect ? false : (option.state & QStyle::State_Selected));
+                QPixmap icon;
+                if (selectMod == CommonService::MultSelect) {
+                    icon = playListView->getPlayPixmap(listview->getIsPlayQueue() ? itemMeta.beSelect : false);
+                } else {
+                    icon = playListView->getPlayPixmap(itemMeta.beSelect);
+                }
                 auto centerF = QRectF(rect).center();
                 qreal t_ratio = icon.devicePixelRatioF();
                 QRect t_ratioRect;
@@ -509,7 +493,6 @@ void PlayItemDelegate::drawTabletListMode(QPainter &painter, const QStyleOptionV
 
     painter.restore();
 }
-#endif
 
 //QWidget *PlayItemDelegate::createEditor(QWidget *parent,
 //                                        const QStyleOptionViewItem &option,
@@ -530,7 +513,7 @@ void PlayItemDelegate::drawTabletListMode(QPainter &painter, const QStyleOptionV
 //{
 //    QStyledItemDelegate::setModelData(editor, model, index);
 //}
-#ifndef TABLET_PC
+
 void PlayItemDelegate::drawIconMode(QPainter &painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
     const PlayListView *listview = qobject_cast<const PlayListView *>(option.widget);
@@ -667,7 +650,6 @@ void PlayItemDelegate::drawIconMode(QPainter &painter, const QStyleOptionViewIte
 //        painter.drawPixmap(selectionRect, m_selectedPix);
 //    }
 }
-#endif
 
 void PlayItemDelegate::drawListMode(QPainter &painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {

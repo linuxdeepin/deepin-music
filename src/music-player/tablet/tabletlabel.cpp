@@ -28,7 +28,6 @@
 #include <DStyle>
 #include <DFontSizeManager>
 
-#ifdef TABLET_PC
 DWIDGET_USE_NAMESPACE
 
 TabletLabel::TabletLabel(const QString &text, QWidget *parent, int val):
@@ -65,4 +64,3 @@ void TabletLabel::paintEvent(QPaintEvent *event)
     option.setAlignment(Qt::AlignVCenter);
     painter.drawText(this->rect(), this->text(), option);
 }
-#endif

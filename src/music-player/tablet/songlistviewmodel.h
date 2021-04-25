@@ -23,7 +23,6 @@
 
 #include <QStandardItemModel>
 
-#ifdef TABLET_PC
 class SongListViewModel : public QStandardItemModel
 {
     Q_OBJECT
@@ -35,4 +34,3 @@ public:
     //virtual Qt::DropActions supportedDropActions() const Q_DECL_OVERRIDE;
     virtual Qt::ItemFlags flags(const QModelIndex &index) const Q_DECL_OVERRIDE;
 };
-#endif

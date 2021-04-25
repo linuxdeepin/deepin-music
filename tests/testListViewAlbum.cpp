@@ -179,6 +179,17 @@ TEST(Application, tabletAlbum)
     event.simulate(baseListView->viewport());
     event.clear();
 
+    w->initPadMenu();
+    w->initTabletSelectBtn();
+
+    QAction *selectAction = w->findChild<QAction *>(AC_tablet_title_select);
+    if (selectAction) {
+        w->slotMenuTriggered(selectAction);
+    }
+
+    QTest::qWait(200);
+    CommonService::getInstance()->setSelectModel(CommonService::SingleSelect);
+
     QTest::qWait(200);
     CommonService::getInstance()->setIsTabletEnvironment(false);
 }

@@ -25,7 +25,6 @@
 #include <QLabel>
 #include <QWidget>
 
-#ifdef TABLET_PC
 class TabletLabel : public QLabel
 {
     Q_OBJECT
@@ -41,5 +40,4 @@ public slots:
 private:
     int m_valprop = 0;
 };
-#endif
 #endif // TABLETLABEL_H

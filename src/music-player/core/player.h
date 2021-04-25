@@ -225,6 +225,8 @@ private:
     // begin
     void initVlc();
     void initMpris();//dbus interface
+    // 重置DBus中媒体信息
+    void resetDBusMpris(const MediaMeta &meta);
     MediaMeta m_ActiveMeta;
     QList<MediaMeta> m_MetaList;
     // end
