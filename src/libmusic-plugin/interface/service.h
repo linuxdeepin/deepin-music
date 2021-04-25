@@ -31,9 +31,9 @@
 enum ServicePriority {
     ServicePriorityIgnore   = -10,
     ServicePriorityLow      = 0,
-    SerivcePriorityNormal   = 10,
-    SerivcePriorityHigh     = 50,
-    SerivcePriorityPatch    = 127
+    ServicePriorityNormal   = 10,
+    ServicePriorityHigh     = 50,
+    ServicePriorityPatch    = 127
 };
 
 
