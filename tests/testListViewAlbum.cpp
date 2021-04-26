@@ -193,3 +193,103 @@ TEST(Application, tabletAlbum)
     QTest::qWait(200);
     CommonService::getInstance()->setIsTabletEnvironment(false);
 }
+
+// 平板模式下专辑页面Icon模式下的单击操作
+TEST(Application, tabletAlbumInconClick)
+{
+    TEST_CASE_NAME("tabletAlbumInconClick")
+    CommonService::getInstance()->setIsTabletEnvironment(true);
+
+    MainFrame *w = Application::getInstance()->getMainWindow();
+    MusicBaseListView *baseListView = w->findChild<MusicBaseListView *>(AC_dataBaseListview);
+    QTest::qWait(50);
+    // 点击专辑
+    QPoint pos(130, 20);
+    QTestEventList event;
+    event.addMouseMove(pos);
+    event.addMouseClick(Qt::MouseButton::LeftButton, Qt::NoModifier, pos, 10);
+    event.simulate(baseListView->viewport());
+    event.clear();
+
+    DToolButton *iconModeBtn = w->findChild<DToolButton *>(AC_btIconMode);
+    if (iconModeBtn != nullptr) {
+        QTest::mousePress(iconModeBtn, Qt::LeftButton, Qt::NoModifier, QPoint(20, 20), 10);
+        QTest::mouseRelease(iconModeBtn, Qt::LeftButton, Qt::NoModifier, QPoint(20, 20), 10);
+    }
+    QTest::qWait(100);
+
+    AlbumListView *albumListView = w->findChild<AlbumListView *>(AC_albumListView);
+    QPoint posClick(87, 78);
+    QTest::mouseMove(albumListView->viewport(), posClick, 10);
+    QTest::mouseClick(albumListView->viewport(), Qt::LeftButton, Qt::NoModifier, posClick, 10);
+    QTest::qWait(1000);
+    CommonService::getInstance()->setIsTabletEnvironment(false);
+}
+
+// 平板模式下专辑页面Icon模式下的双击操作
+TEST(Application, tabletAlbumInconDoubleClick)
+{
+    TEST_CASE_NAME("tabletAlbumInconDoubleClick")
+    CommonService::getInstance()->setIsTabletEnvironment(true);
+
+    MainFrame *w = Application::getInstance()->getMainWindow();
+    MusicBaseListView *baseListView = w->findChild<MusicBaseListView *>(AC_dataBaseListview);
+    QTest::qWait(50);
+    // 点击专辑
+    QPoint pos(130, 20);
+    QTestEventList event;
+    event.addMouseMove(pos);
+    event.addMouseClick(Qt::MouseButton::LeftButton, Qt::NoModifier, pos, 10);
+    event.simulate(baseListView->viewport());
+    event.clear();
+    DToolButton *iconModeBtn = w->findChild<DToolButton *>(AC_btIconMode);
+    if (iconModeBtn != nullptr) {
+        QTest::mousePress(iconModeBtn, Qt::LeftButton, Qt::NoModifier, QPoint(20, 20), 10);
+        QTest::mouseRelease(iconModeBtn, Qt::LeftButton, Qt::NoModifier, QPoint(20, 20), 10);
+    }
+    QTest::qWait(100);
+
+    AlbumListView *albumListView = w->findChild<AlbumListView *>(AC_albumListView);
+    QPoint posDclick(87, 79);
+    QTest::mouseMove(albumListView->viewport(), posDclick, 10);
+    event.addMouseClick(Qt::MouseButton::LeftButton, Qt::NoModifier, posDclick, 10);
+    event.addMousePress(Qt::MouseButton::LeftButton, Qt::NoModifier, posDclick, 10);
+    event.addMouseDClick(Qt::MouseButton::LeftButton, Qt::NoModifier, posDclick, 10);
+    event.simulate(albumListView->viewport());
+    event.clear();
+    QTest::qWait(1000);
+    CommonService::getInstance()->setIsTabletEnvironment(false);
+}
+
+TEST(Application, tabletAlbumInconListDoubleClick)
+{
+    TEST_CASE_NAME("tabletAlbumInconDoubleClick")
+    CommonService::getInstance()->setIsTabletEnvironment(true);
+
+    MainFrame *w = Application::getInstance()->getMainWindow();
+    MusicBaseListView *baseListView = w->findChild<MusicBaseListView *>(AC_dataBaseListview);
+    QTest::qWait(50);
+    // 点击专辑
+    QPoint pos(130, 20);
+    QTestEventList event;
+    event.addMouseMove(pos);
+    event.addMouseClick(Qt::MouseButton::LeftButton, Qt::NoModifier, pos, 10);
+    event.simulate(baseListView->viewport());
+    event.clear();
+    DToolButton *listModeBtn = w->findChild<DToolButton *>(AC_btlistMode);
+    if (listModeBtn != nullptr) {
+        QTest::mousePress(listModeBtn, Qt::LeftButton, Qt::NoModifier, QPoint(20, 20), 10);
+        QTest::mouseRelease(listModeBtn, Qt::LeftButton, Qt::NoModifier, QPoint(20, 20), 10);
+    }
+    QTest::qWait(100);
+
+    AlbumListView *albumListView = w->findChild<AlbumListView *>(AC_albumListView);
+    QTest::mouseMove(albumListView->viewport(), pos, 10);
+    event.addMouseClick(Qt::MouseButton::LeftButton, Qt::NoModifier, pos, 10);
+    event.addMousePress(Qt::MouseButton::LeftButton, Qt::NoModifier, pos, 10);
+    event.addMouseDClick(Qt::MouseButton::LeftButton, Qt::NoModifier, pos, 10);
+    event.simulate(albumListView->viewport());
+    event.clear();
+    QTest::qWait(1000);
+    CommonService::getInstance()->setIsTabletEnvironment(false);
+}
