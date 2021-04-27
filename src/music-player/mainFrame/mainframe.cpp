@@ -1025,6 +1025,11 @@ void MainFrame::playQueueAnimation()
 
 void MainFrame::initTabletSelectBtn()
 {
+    // 公有函数防止重复调用引起的内存泄露
+    if (m_tabletSelectAll || m_tabletSelectDone) {
+        return;
+    }
+
     m_tabletSelectAll = new TabletLabel(m_selectAllStr, m_titlebar, 1);
     m_tabletSelectDone = new TabletLabel(m_doneStr, m_titlebar, 0);
     DFontSizeManager::instance()->bind(m_tabletSelectAll, DFontSizeManager::T6, QFont::Medium);
