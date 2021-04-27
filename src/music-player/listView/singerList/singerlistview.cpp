@@ -673,7 +673,9 @@ void SingerListView::slotAddSingleSong(const QString &listHash, const MediaMeta 
 void SingerListView::slotRemoveSelectedSongs(const QString &deleteHash, const QStringList &musicHashs, bool removeFromLocal)
 {
     Q_UNUSED(removeFromLocal)
-    if (deleteHash != "artist" || Player::getInstance()->getCurrentPlayListHash() != "artist") {
+    if ((deleteHash != "artist"
+            || Player::getInstance()->getCurrentPlayListHash() != "artist")
+            && deleteHash != "all") {
         return;
     }
     if (musicHashs.size() == 0) {
@@ -716,7 +718,10 @@ void SingerListView::slotRemoveSelectedSongs(const QString &deleteHash, const QS
     }
     // 记录切换歌单之前播放状态
     Player::PlaybackStatus preStatue = Player::getInstance()->status();
-    // 找到要播放的专辑
+    // 找到要播放的歌手,如果删除的是最后一个歌手的唯一一首歌，则从第一个播起
+    if (playIndex == (singerModel->rowCount() - 1)) {
+        playIndex = 0;
+    }
     for (int i = playIndex; i < singerModel->rowCount(); i++) {
         QModelIndex idx = singerModel->index(i, 0, QModelIndex());
         SingerInfo singerTmp = idx.data(Qt::UserRole).value<SingerInfo>();

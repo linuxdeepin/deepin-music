@@ -550,7 +550,9 @@ void AlbumListView::slotAddSingleSong(const QString &listHash, const MediaMeta &
 void AlbumListView::slotRemoveSelectedSongs(const QString &deleteHash, const QStringList &musicHashs, bool removeFromLocal)
 {
     Q_UNUSED(removeFromLocal)
-    if (deleteHash != "album" || Player::getInstance()->getCurrentPlayListHash() != "album") {
+    if ((deleteHash != "album"
+            || Player::getInstance()->getCurrentPlayListHash() != "album")
+            && deleteHash != "all") {
         return;
     }
     if (musicHashs.size() == 0) {
@@ -593,7 +595,10 @@ void AlbumListView::slotRemoveSelectedSongs(const QString &deleteHash, const QSt
     }
     // 记录切换歌单之前播放状态
     Player::PlaybackStatus preStatue = Player::getInstance()->status();
-    // 找到要播放的专辑
+    // 找到要播放的专辑，如果删除的是最后一个专辑的唯一一首歌，则从第一个播起
+    if (playIndex == (albumModel->rowCount() - 1)) {
+        playIndex = 0;
+    }
     for (int i = playIndex; i < albumModel->rowCount(); i++) {
         QModelIndex idx = albumModel->index(i, 0, QModelIndex());
         AlbumInfo albumTmp = idx.data(Qt::UserRole).value<AlbumInfo>();

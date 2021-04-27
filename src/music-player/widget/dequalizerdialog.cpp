@@ -573,14 +573,17 @@ DequalizerDialog::DequalizerDialog(QWidget *parent):
 // 解决字体不会根据系统字体大小改变问题
 //    font.setPixelSize(13);
     QFontMetrics fm(font);
-    this->m_saveMessage  = new DFloatingMessage(DFloatingMessage::TransientType, this);
+    QWidget *parentWidget = dynamic_cast<QWidget *>(this->parent());
+    this->m_saveMessage  = new DFloatingMessage(DFloatingMessage::TransientType, parentWidget);
     this->m_saveMessage->setFont(font);
     this->m_saveMessage->setIcon(QIcon::fromTheme("notify_success"));
     this->m_saveMessage->setMessage(tr("Sound Effects Saved"));
     int Minwid = fm.width(tr("Sound Effects Saved")) + 70;
     this->m_saveMessage->setMinimumSize(Minwid, 60);
     this->m_saveMessage->setDuration(2000);
-    this->m_saveMessage->move(width() / 2 - 80, height() - 70);
+    if (parentWidget) {
+        this->m_saveMessage->move(parentWidget->width() / 2 - 80, parentWidget->height() - 70);
+    }
     this->m_saveMessage->hide();
 
 

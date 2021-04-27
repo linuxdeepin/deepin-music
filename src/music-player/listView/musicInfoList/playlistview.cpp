@@ -1465,8 +1465,8 @@ void PlayListView::mousePressEvent(QMouseEvent *event)
                 m_model->setData(curIndex, mediaMeta, Qt::UserRole);
             }
         }
-        QListView::mousePressEvent(event);
     }
+    QListView::mousePressEvent(event);
 }
 
 void PlayListView::mouseReleaseEvent(QMouseEvent *event)

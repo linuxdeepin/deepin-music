@@ -77,7 +77,7 @@ DWIDGET_USE_NAMESPACE
 const QString s_PropertyViewname = "viewname";
 const QString s_PropertyViewnameLyric = "lyric";
 const QString s_PropertyViewnamePlay = "playList";
-
+static DSettingsDialog *equalizer = nullptr;
 using namespace Dtk::Widget;
 
 MainFrame::MainFrame()
@@ -633,7 +633,7 @@ static DequalizerDialog *dequalizerDialog = nullptr;
 static QWidget *createEqualizerWidgetHandle(QObject *opt)
 {
     Q_UNUSED(opt)
-    dequalizerDialog = new DequalizerDialog();
+    dequalizerDialog = new DequalizerDialog(equalizer);
     return dequalizerDialog;
 }
 
@@ -661,6 +661,7 @@ void MainFrame::slotMenuTriggered(QAction *action)
 
     if (action == m_equalizer) {
         DSettingsDialog *configDialog = new DSettingsDialog(this);
+        equalizer = configDialog;
         configDialog->setFixedSize(720, 540);
         AC_SET_OBJECT_NAME(configDialog, AC_Dequalizer);
         AC_SET_ACCESSIBLE_NAME(configDialog, AC_Dequalizer);
