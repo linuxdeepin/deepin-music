@@ -35,8 +35,9 @@
 #include <QDBusPendingCall>
 #include <QShortcut>
 
-#include "ac-desktop-define.h"
+#include <DPushButton>
 
+#include "ac-desktop-define.h"
 #include "mainframe.h"
 #include "musicbaselistview.h"
 #include "playlistview.h"
@@ -264,3 +265,37 @@ TEST(Application, musicSongListViewMenuDelete)
     songListView->setThemeType(1);
 }
 
+TEST(Application, songlistSearch)
+{
+    // fix bug77449
+    MainFrame *w = Application::getInstance()->getMainWindow();
+    MusicSongListView *songListView = w->findChild<MusicSongListView *>(AC_customizeListview);
+    //菜单触发删除
+    QPoint pos(73, 61);
+    QTestEventList eventList;
+    eventList.addMouseMove(pos);
+    eventList.addMouseClick(Qt::MouseButton::LeftButton, Qt::NoModifier, pos, 10);
+    eventList.simulate(songListView->viewport());
+    eventList.clear();
+    QTest::qWait(100);
+
+    // 歌曲搜索
+    QLineEdit *se = w->findChild<QLineEdit *>(AC_Search);
+    // 搜索a
+    QTest::qWait(50);
+    pos = QPoint(100, 20);
+    QTestEventList event1;
+    event1.addMouseMove(pos);
+    event1.addMouseClick(Qt::MouseButton::LeftButton, Qt::NoModifier, pos, 50);
+    event1.addKeyPress(Qt::Key::Key_A, Qt::NoModifier, 100);
+    event1.addKeyPress(Qt::Key::Key_Enter, Qt::NoModifier, 100);
+    event1.simulate(se);
+    event1.clear();
+
+    DPushButton *playAllBtn = w->findChild<DPushButton *>(AC_musicListDataPlayAll);
+    bool isEnable = false;
+    if (playAllBtn) {
+        isEnable = playAllBtn->isEnabled();
+    }
+    QCOMPARE(isEnable, true);
+}

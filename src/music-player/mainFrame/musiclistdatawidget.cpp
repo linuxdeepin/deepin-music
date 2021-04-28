@@ -248,6 +248,7 @@ void MusicListDataWidget::slotViewChanged(ListPageSwitchType switchtype, const Q
         m_titleLabel->setText(tr("Search Results"));
         m_searchResultTabWidget->refreshListview(switchtype, hashOrSearchword);
         m_searchResultTabWidget->setCurrentPage(switchtype);
+        refreshPlayAllBtn(1);//搜索界面，重置播放所有为可点击状态
         if (switchtype == SearchMusicResultType) {
             refreshInfoLabel("musicResult");
             refreshSortAction("musicResult");
@@ -299,9 +300,9 @@ void MusicListDataWidget::slotViewChanged(ListPageSwitchType switchtype, const Q
         refreshSortAction();
         break;
     }
-#ifdef TABLET_PC
-    emit CommonService::getInstance()->setSelectModel(CommonService::SingleSelect);
-#endif
+    if (CommonService::getInstance()->isTabletEnvironment()) {
+        emit CommonService::getInstance()->setSelectModel(CommonService::SingleSelect);
+    }
 }
 
 void MusicListDataWidget::switchViewModel()
@@ -669,11 +670,11 @@ void MusicListDataWidget::initUI()
 
     // action layout
     QHBoxLayout *actionInfoBarLayout = new QHBoxLayout(m_actionBar);
-#ifdef TABLET_PC
-    actionInfoBarLayout->setContentsMargins(50, 0, 50, 0);
-#else
-    actionInfoBarLayout->setContentsMargins(10, 0, 8, 0);
-#endif
+    if (CommonService::getInstance()->isTabletEnvironment()) {
+        actionInfoBarLayout->setContentsMargins(50, 0, 50, 0);
+    } else {
+        actionInfoBarLayout->setContentsMargins(10, 0, 8, 0);
+    }
     actionInfoBarLayout->setSpacing(0);
     // 初始化全部播放按钮
     initBtPlayAll(actionInfoBarLayout);
@@ -719,16 +720,16 @@ void MusicListDataWidget::initBtPlayAll(QHBoxLayout *layout)
     playAllPalette.setColor(DPalette::Light, QColor("#ED5656"));
     m_btPlayAll->setPalette(playAllPalette);
     m_btPlayAll->setIcon(QIcon::fromTheme("play_all"));
-    m_btPlayAll->setObjectName("MusicListDataPlayAll");
+    m_btPlayAll->setObjectName(AC_musicListDataPlayAll);
     m_btPlayAll->setText(tr("Play All"));
-#ifdef TABLET_PC
-    m_btPlayAll->setFixedSize(QSize(100, 40));
-#else
-    m_btPlayAll->setFixedSize(QSize(93, 30));
-    // 字体宽度加图标大于93,重新设置按钮宽度
-    QFontMetrics font(m_btPlayAll->font());
-    m_btPlayAll->setFixedWidth((font.width(m_btPlayAll->text()) + 18) >= 93 ? (font.width(m_btPlayAll->text()) + 38) : 93);
-#endif
+    if (CommonService::getInstance()->isTabletEnvironment()) {
+        m_btPlayAll->setFixedSize(QSize(100, 40));
+    } else {
+        m_btPlayAll->setFixedSize(QSize(93, 30));
+        // 字体宽度加图标大于93,重新设置按钮宽度
+        QFontMetrics font(m_btPlayAll->font());
+        m_btPlayAll->setFixedWidth((font.width(m_btPlayAll->text()) + 18) >= 93 ? (font.width(m_btPlayAll->text()) + 38) : 93);
+    }
     m_btPlayAll->setFocusPolicy(Qt::NoFocus);
     m_btPlayAll->setIconSize(QSize(18, 18));
 

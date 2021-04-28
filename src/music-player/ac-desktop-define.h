@@ -133,5 +133,6 @@
 #define AC_tablet_songListViewDlg     "tabletSongListViewDialog"
 #define AC_tablet_songListView        "tabletSongListView"
 #define AC_tablet_title_select        "tablet_title_select"
+#define AC_musicListDataPlayAll       "MusicListDataPlayAll"
 
 #endif // DESKTOP_ACCESSIBLE_UI_DEFINE_H
