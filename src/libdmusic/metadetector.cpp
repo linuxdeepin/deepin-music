@@ -182,7 +182,7 @@ MediaMeta MetaDetector::updateMetaFromLocalfile(MediaMeta meta, const QFileInfo 
     auto current = QDateTime::currentDateTime();
     // HACK how to sort by add time
     meta.timestamp = current.toMSecsSinceEpoch() * 1000;
-    meta.filetype = fileInfo.suffix();
+    meta.filetype = fileInfo.suffix().toLower(); //歌曲文件后缀使用小写保存
 
     if (meta.title.isEmpty()) {
         meta.title = fileInfo.completeBaseName();

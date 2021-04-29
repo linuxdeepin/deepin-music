@@ -156,7 +156,7 @@ void DBOperate::slotImportMedias(const QString &importHash, const QStringList &u
             }
             QString strtp = filepath;
 
-            if (!m_mediaLibrary->getSupportedSuffixs().contains(("*." + fileInfo.suffix()))) {
+            if (!m_mediaLibrary->getSupportedSuffixs().contains(("*." + fileInfo.suffix().toLower()))) { //歌曲文件后缀使用小写比较
                 m_importFailCount++;
                 importedCount++;
                 continue;

@@ -238,6 +238,7 @@ TEST(Application, importLinkText)
     MainFrame *w = Application::getInstance()->getMainWindow();
     QLabel *ilt = w->findChild<QLabel *>(AC_importLinkText);
     ilt->linkActivated("");
+    QCOMPARE(5, DataBaseService::getInstance()->allMusicInfosCount());
     QTest::qWait(500);
 }
 
