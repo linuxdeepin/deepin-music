@@ -188,10 +188,10 @@ void MusicBaseListView::showContextMenu(const QPoint &pos)
     menu.exec(globalPos);
 }
 
-void MusicBaseListView::mousePressEvent(QMouseEvent *event)
-{
-    DListView::mousePressEvent(event);
-}
+//void MusicBaseListView::mousePressEvent(QMouseEvent *event)
+//{
+//    DListView::mousePressEvent(event);
+//}
 
 void MusicBaseListView::dragEnterEvent(QDragEnterEvent *event)
 {
@@ -264,20 +264,20 @@ void MusicBaseListView::dropEvent(QDropEvent *event)
     DListView::dropEvent(event);
 }
 
-void MusicBaseListView::SetAttrRecur(QDomElement elem, QString strtagname, QString strattr, QString strattrval)
-{
-    // if it has the tagname then overwritte desired attribute
-    if (elem.tagName().compare(strtagname) == 0) {
-        elem.setAttribute(strattr, strattrval);
-    }
-    // loop all children
-    for (int i = 0; i < elem.childNodes().count(); i++) {
-        if (!elem.childNodes().at(i).isElement()) {
-            continue;
-        }
-        this->SetAttrRecur(elem.childNodes().at(i).toElement(), strtagname, strattr, strattrval);
-    }
-}
+//void MusicBaseListView::SetAttrRecur(QDomElement elem, QString strtagname, QString strattr, QString strattrval)
+//{
+//    // if it has the tagname then overwritte desired attribute
+//    if (elem.tagName().compare(strtagname) == 0) {
+//        elem.setAttribute(strattr, strattrval);
+//    }
+//    // loop all children
+//    for (int i = 0; i < elem.childNodes().count(); i++) {
+//        if (!elem.childNodes().at(i).isElement()) {
+//            continue;
+//        }
+//        this->SetAttrRecur(elem.childNodes().at(i).toElement(), strtagname, strattr, strattrval);
+//    }
+//}
 
 void MusicBaseListView::setActionDisabled(const QString &hash, QAction *act)
 {

@@ -62,13 +62,13 @@ void MediaMeta::getCoverData(const QString &tmpPath)
     MetaDetector::getCoverData(localPath, tmpPath, hash);
 }
 
-MediaMeta MediaMeta::fromLocalFile(const QFileInfo &fileInfo)
-{
-    MediaMeta meta;
-    meta.hash = filepathHash(fileInfo.absoluteFilePath());
-    MetaDetector::getInstance()->updateMetaFromLocalfile(meta, fileInfo);
-    return  meta;
-}
+//MediaMeta MediaMeta::fromLocalFile(const QFileInfo &fileInfo)
+//{
+//    MediaMeta meta;
+//    meta.hash = filepathHash(fileInfo.absoluteFilePath());
+//    MetaDetector::getInstance()->updateMetaFromLocalfile(meta, fileInfo);
+//    return  meta;
+//}
 
 namespace DMusic {
 QString filepathHash(const QString &filepath)
@@ -96,21 +96,21 @@ QString sizeString(qint64 sizeByte)
 {
     QString text;
     if (sizeByte < 1024) {
-        text = QString("%1B").arg(QString::number(sizeByte / 1.0,'f',1));
+        text = QString("%1B").arg(QString::number(sizeByte / 1.0, 'f', 1));
         //text.sprintf("%.1fB", sizeByte / 1.0);
         return text;
     }
     if (sizeByte < 1024 * 1024) {
-        text = QString("%1K").arg(QString::number(sizeByte / 1024.0,'f',1));
+        text = QString("%1K").arg(QString::number(sizeByte / 1024.0, 'f', 1));
         //text.sprintf("%.1fK", sizeByte / 1024.0);
         return text;
     }
     if (sizeByte < 1024 * 1024 * 1024) {
-        text = QString("%1M").arg(QString::number(sizeByte / 1024.0 / 1024.0,'f',1));
+        text = QString("%1M").arg(QString::number(sizeByte / 1024.0 / 1024.0, 'f', 1));
         //text.sprintf("%.1fM", sizeByte / 1024.0 / 1024.0);
         return text;
     }
-    text = QString("%1G").arg(QString::number(sizeByte / 1024.0 / 1024.0 / 1024.0,'f',1));
+    text = QString("%1G").arg(QString::number(sizeByte / 1024.0 / 1024.0 / 1024.0, 'f', 1));
     //text.sprintf("%.1fG", sizeByte / 1024.0 / 1024.0 / 1024.0);
     return text;
 }

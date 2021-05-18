@@ -108,7 +108,6 @@ void MusicStatckedWidget::animationImportToLeft(const QSize &size)
     animation->start();
 }
 
-#ifdef TABLET_PC
 void MusicStatckedWidget::animationToUpByInput()
 {
     int posY = CommonService::getInstance()->getCurrentWidgetPosY();
@@ -141,4 +140,3 @@ void MusicStatckedWidget::animationToDownByInput()
 
     animation->start();
 }
-#endif

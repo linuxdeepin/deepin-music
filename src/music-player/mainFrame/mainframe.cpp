@@ -72,6 +72,7 @@
 #include "playqueuewidget.h"
 #include "subsonglistwidget.h"
 #include "tabletlabel.h"
+#include "comdeepiniminterface.h"
 DWIDGET_USE_NAMESPACE
 
 const QString s_PropertyViewname = "viewname";
@@ -167,16 +168,16 @@ MainFrame::MainFrame()
 
     connect(CommonService::getInstance(), &CommonService::signalSwitchToView, this, &MainFrame::slotViewChanged);
 
-#ifdef TABLET_PC
-    QDBusConnection connection = QDBusConnection::sessionBus();
-    m_comDeepinImInterface = new ComDeepinImInterface("com.deepin.im", "/com/deepin/im", connection);
-    if (m_comDeepinImInterface->isValid() == false) {
-        qDebug() << __FUNCTION__ << "----------QDbus service can not connect";
-    } else {
-        qDebug() << __FUNCTION__ << "----------QDbus service connected";
-        connect(m_comDeepinImInterface, &ComDeepinImInterface::imActiveChanged, this, &MainFrame::slotActiveChanged);
+    if (CommonService::getInstance()->isTabletEnvironment()) {
+        QDBusConnection connection = QDBusConnection::sessionBus();
+        m_comDeepinImInterface = new ComDeepinImInterface("com.deepin.im", "/com/deepin/im", connection);
+        if (m_comDeepinImInterface->isValid() == false) {
+            qDebug() << __FUNCTION__ << "----------QDbus service can not connect";
+        } else {
+            qDebug() << __FUNCTION__ << "----------QDbus service connected";
+            connect(m_comDeepinImInterface, &ComDeepinImInterface::imActiveChanged, this, &MainFrame::slotActiveChanged);
+        }
     }
-#endif
 }
 
 MainFrame::~MainFrame()
@@ -364,6 +365,11 @@ void MainFrame::initMenuAndShortcut()
 
 void MainFrame::initPadMenu()
 {
+    // 公有函数防止重复调用引起的内存泄露
+    if (m_addMusicFiles || m_select) {
+        return;
+    }
+
     m_addMusicFiles = new QAction(MainFrame::tr("Add music"), this);
 
     m_select = new QAction(m_selectStr, this);
@@ -485,7 +491,7 @@ void MainFrame::slotLeftClicked()
     emit CommonService::getInstance()->signalSwitchToView(PreType, "", QMap<QString, MediaMeta>());
     m_backBtn->setVisible(false);
 }
-#ifdef TABLET_PC
+
 void MainFrame::slotActiveChanged(bool isActive)
 {
     if (CommonService::getInstance()->isTabletEnvironment()) {
@@ -498,7 +504,7 @@ void MainFrame::slotActiveChanged(bool isActive)
         }
     }
 }
-#endif
+
 void MainFrame::slotSearchEditFoucusIn()
 {
     m_titlebarwidget->slotSearchEditFoucusIn();
@@ -750,6 +756,9 @@ void MainFrame::slotAllMusicCleared()
     m_importWidget->lower();
     m_importWidget->showImportHint();
     m_importWidget->showAnimationToLeft(this->size());
+    if (CommonService::getInstance()->isTabletEnvironment() && m_select) {
+        m_select->setEnabled(false);
+    }
     m_titlebarwidget->setEnabled(false);
     if (m_newSonglistAction) {
         m_newSonglistAction->setEnabled(false);
@@ -940,13 +949,13 @@ void MainFrame::resizeEvent(QResizeEvent *e)
     if (m_popupMessage) {
         m_popupMessage->resize(this->width(), this->height() - m_footerWidget->height());
     }
-#ifdef TABLET_PC
-    if (this->width() > 1900) {
-        CommonService::getInstance()->setIsHScreen(true);
-    } else {
-        CommonService::getInstance()->setIsHScreen(false);
+    if (CommonService::getInstance()->isTabletEnvironment()) {
+        if (this->width() > 1900) {
+            CommonService::getInstance()->setIsHScreen(true);
+        } else {
+            CommonService::getInstance()->setIsHScreen(false);
+        }
     }
-#endif
 }
 
 void MainFrame::closeEvent(QCloseEvent *event)
@@ -1056,6 +1065,5 @@ void MainFrame::initTabletSelectBtn()
         }
     });
 }
-
 
 

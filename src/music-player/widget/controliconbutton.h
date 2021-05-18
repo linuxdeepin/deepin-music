@@ -21,31 +21,23 @@
 
 #pragma once
 
-#include <DStackedWidget>
+#include <DIconButton>
 
 DWIDGET_USE_NAMESPACE
 
-class MusicStatckedWidget : public DStackedWidget
+class ControlIconButton : public DIconButton
 {
     Q_OBJECT
 public:
-    //
-    static constexpr int AnimationDelay = 400;
-    static constexpr int InputAnimationDelay = 250;
-public:
-    explicit MusicStatckedWidget(QWidget *parent = Q_NULLPTR);
-    // 向上移动动画
-    void animationToUp();
-    // 向下移动动画
-    void animationToDown();
+    explicit ControlIconButton(QWidget *parent = Q_NULLPTR);
+    ~ControlIconButton() override;
 
-    // 导入向下移动动画
-    void animationImportToDown(const QSize &size);
-    // 导入向左移动动画
-    void animationImportToLeft(const QSize &size);
-    // 虚拟键盘引起的向上移动动画
-    void animationToUpByInput();
-    // 虚拟键盘引起的向下移动动画
-    void animationToDownByInput();
+signals:
+    // 鼠标是否在按钮上 true为在按钮上
+    void mouseIn(bool);
+
+protected:
+    virtual void enterEvent(QEvent *event) Q_DECL_OVERRIDE;
+    virtual void leaveEvent(QEvent *event) Q_DECL_OVERRIDE;
+private:
 };
-

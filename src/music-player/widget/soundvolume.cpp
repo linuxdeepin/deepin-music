@@ -93,6 +93,9 @@ SoundVolume::SoundVolume(QWidget *parent)
     bodyShadow->setOffset(0, 2.0);
     this->setGraphicsEffect(bodyShadow);
 
+    m_timer = new QTimer(this);
+    m_timer->setInterval(3000);
+    connect(m_timer, &QTimer::timeout, this, &SoundVolume::slotTimeOut);
 
     connect(m_btSound, &DToolButton::pressed, this, &SoundVolume::slotSoundClick);
     connect(Player::getInstance(), &Player::signalMutedChanged, this, &SoundVolume::flushVolumeIcon);
@@ -136,6 +139,20 @@ void SoundVolume::flushVolumeIcon()
     }
 
     emit sigVolumeChanged();
+}
+
+void SoundVolume::setMouseIn(bool in)
+{
+    m_mouseIn = in;
+}
+// 外部调用，决定是否启动隐藏定时器
+void SoundVolume::startTimer(bool start)
+{
+    if (start) {
+        m_timer->start();
+    } else {
+        m_timer->stop();
+    }
 }
 
 void SoundVolume::delayHide()
@@ -221,7 +238,6 @@ void SoundVolume::initBgImage()
 
 void SoundVolume::showEvent(QShowEvent *event)
 {
-    m_mouseIn = true;
     flushVolumeIcon();
     QWidget::showEvent(event);
 }
@@ -229,6 +245,8 @@ void SoundVolume::showEvent(QShowEvent *event)
 void SoundVolume::enterEvent(QEvent *event)
 {
     m_mouseIn = true;
+    // 鼠标进入，停止定时器，防止音量条隐藏
+    m_timer->stop();
     QWidget::enterEvent(event);
 }
 
@@ -272,4 +290,10 @@ void SoundVolume::slotSoundClick()
     bool mute = Player::getInstance()->getMuted();
     Player::getInstance()->setMuted(!mute);
     flushVolumeIcon();
+}
+
+void SoundVolume::slotTimeOut()
+{
+    hide();
+    Q_EMIT delayAutoHide();
 }

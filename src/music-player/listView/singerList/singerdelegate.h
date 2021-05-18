@@ -56,14 +56,12 @@ protected:
     bool editorEvent(QEvent *event, QAbstractItemModel *model, const QStyleOptionViewItem &option, const QModelIndex &index) override;
 private:
     void drawIconMode(QPainter &painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
-#ifdef TABLET_PC
     // 平板icon模式
     void drawTabletIconMode(QPainter &painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
     // 平板单击
     void touchClicked(const QStyleOptionViewItem &option, const QModelIndex &index, const QPointF pressPos);
     //平板双击
     void touchDoubleClicked(const QStyleOptionViewItem &option, const QModelIndex &index);
-#endif
     // pc或者平板list模式
     void drawListMode(QPainter &painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
     void mouseClicked(const QStyleOptionViewItem &option, const QModelIndex &index, const QPointF pressPos);

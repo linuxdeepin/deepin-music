@@ -90,7 +90,7 @@ public:
     void updateCodec(const QByteArray &codec);
     void getCoverData(const QString &tmpPath);
 
-    static MediaMeta fromLocalFile(const QFileInfo &fileInfo);
+//    static MediaMeta fromLocalFile(const QFileInfo &fileInfo);
 
 private:
     friend bool operator == (const MediaMeta &meta1, const MediaMeta &meta2)

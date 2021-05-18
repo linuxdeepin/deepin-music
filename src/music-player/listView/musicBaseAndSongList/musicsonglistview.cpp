@@ -729,20 +729,20 @@ void MusicSongListView::initShortcut()
     connect(m_escShortcut, &QShortcut::activated, this, &MusicSongListView::slotEscShortcut);
 }
 
-void MusicSongListView::setAttrRecur(QDomElement elem, QString strtagname, QString strattr, QString strattrval)
-{
-    // if it has the tagname then overwritte desired attribute
-    if (elem.tagName().compare(strtagname) == 0) {
-        elem.setAttribute(strattr, strattrval);
-    }
-    // loop all children
-    for (int i = 0; i < elem.childNodes().count(); i++) {
-        if (!elem.childNodes().at(i).isElement()) {
-            continue;
-        }
-        this->setAttrRecur(elem.childNodes().at(i).toElement(), strtagname, strattr, strattrval);
-    }
-}
+//void MusicSongListView::setAttrRecur(QDomElement elem, QString strtagname, QString strattr, QString strattrval)
+//{
+//    // if it has the tagname then overwritte desired attribute
+//    if (elem.tagName().compare(strtagname) == 0) {
+//        elem.setAttribute(strattr, strattrval);
+//    }
+//    // loop all children
+//    for (int i = 0; i < elem.childNodes().count(); i++) {
+//        if (!elem.childNodes().at(i).isElement()) {
+//            continue;
+//        }
+//        this->setAttrRecur(elem.childNodes().at(i).toElement(), strtagname, strattr, strattrval);
+//    }
+//}
 
 QString MusicSongListView::newDisplayName()
 {

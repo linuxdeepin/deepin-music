@@ -45,6 +45,7 @@ class Waveform;
 //class MetaBufferDetector;
 class HintFilter;
 class QTimer;
+class ControlIconButton;
 class FooterWidget : public DFloatingWidget
 {
     Q_OBJECT
@@ -108,6 +109,8 @@ public slots:
     void flushFavoriteBtnIconAdd(const QString &hash);
     // 点击音量按钮
     void slotSoundClick(bool click);
+    // 点击音量按钮鼠标是否进入
+    void slotSoundMouseIn(bool in);
     void slotPlaybackStatusChanged(Player::PlaybackStatus statue);
     void slotMediaMetaChanged(MediaMeta activeMeta);
 
@@ -139,7 +142,7 @@ private:
     DIconButton     *m_btFavorite = nullptr;
     DIconButton     *m_btLyric    = nullptr;
     DIconButton     *m_btPlayMode = nullptr;
-    DIconButton     *m_btSound    = nullptr;
+    ControlIconButton     *m_btSound    = nullptr;
     DIconButton     *m_btPlayQueue = nullptr;
 
     // short cut on footer

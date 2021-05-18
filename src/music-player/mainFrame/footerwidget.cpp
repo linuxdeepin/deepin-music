@@ -61,6 +61,7 @@
 #include "tooltips.h"
 #include "filter.h"
 #include "mainframe.h"
+#include "controliconbutton.h"
 
 static const QString sPlayStatusValuePlaying    = "playing";
 static const QString sPlayStatusValuePause      = "pause";
@@ -246,7 +247,7 @@ void FooterWidget::initUI(QWidget *parent)
     AC_SET_OBJECT_NAME(m_btPlayMode, AC_PlayMode);
     AC_SET_ACCESSIBLE_NAME(m_btPlayMode, AC_PlayMode);
     // 音量调节按钮
-    m_btSound = new DIconButton(this);
+    m_btSound = new ControlIconButton(this);
     m_btSound->setObjectName("FooterActionSound");
     m_btSound->setFixedSize(50, 50);
     m_btSound->setCheckable(true);
@@ -304,6 +305,7 @@ void FooterWidget::initUI(QWidget *parent)
     connect(m_btNext, SIGNAL(clicked(bool)), this, SLOT(slotNextClick(bool)));
     connect(m_btPrev, SIGNAL(clicked(bool)), this, SLOT(slotPreClick(bool)));
     connect(m_btSound, &DIconButton::clicked, this, &FooterWidget::slotSoundClick);
+    connect(m_btSound, &ControlIconButton::mouseIn, this, &FooterWidget::slotSoundMouseIn);
     connect(m_btFavorite, &DIconButton::clicked, this, &FooterWidget::slotFavoriteClick);
 
     connect(Player::getInstance(), &Player::signalPlaybackStatusChanged,
@@ -503,6 +505,9 @@ void FooterWidget::slotLrcClick(bool click)
 void FooterWidget::slotPlayModeClick(bool click)
 {
     Q_UNUSED(click)
+#ifdef TABLET_PC
+    qDebug() << __FUNCTION__ << "DGuiApplicationHelper::isTabletEnvironment() = " << DGuiApplicationHelper::isTabletEnvironment();
+#endif
     int playModel = m_btPlayMode->property("playModel").toInt();
     if (++playModel == 3)
         playModel = 0;
@@ -591,6 +596,13 @@ void FooterWidget::slotSoundClick(bool click)
         m_volSlider->show();
         m_volSlider->raise();
     }
+}
+
+void FooterWidget::slotSoundMouseIn(bool in)
+{
+    m_volSlider->setMouseIn(in);
+    // 鼠标进入则关闭定时器
+    m_volSlider->startTimer(!in);
 }
 
 void FooterWidget::slotPlaybackStatusChanged(Player::PlaybackStatus status)

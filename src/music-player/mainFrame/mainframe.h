@@ -46,6 +46,7 @@ class QSystemTrayIcon;
 class SubSonglistWidget;
 class MediaMeta;
 class TabletLabel;
+class ComDeepinImInterface;
 class MainFrame : public DMainWindow
 {
     Q_OBJECT
@@ -68,10 +69,8 @@ public slots:
     void showPopupMessage(const QString &songListName, int selectCount, int insertCount);
     // 左上角返回按钮点击
     void slotLeftClicked();
-#ifdef TABLET_PC
     // 虚拟键盘
     void slotActiveChanged(bool isActive);
-#endif
 private:
     /**
      * @brief initMenuAndShortCut
@@ -151,6 +150,8 @@ private:
     QString             m_selectStr;
     QString             m_selectAllStr;
     QString             m_doneStr;
+    bool                m_contentUpByKeyBoard = false;
+    ComDeepinImInterface *m_comDeepinImInterface = nullptr;
 };
 
 //extern const QString s_PropertyViewname;

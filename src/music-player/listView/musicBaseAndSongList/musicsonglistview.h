@@ -90,7 +90,7 @@ private:
     // ESC快捷键
     void slotEscShortcut();
 
-    void setAttrRecur(QDomElement elem, QString strtagname, QString strattr, QString strattrval);
+//    void setAttrRecur(QDomElement elem, QString strtagname, QString strattr, QString strattrval);
     QString newDisplayName();
 
 private:

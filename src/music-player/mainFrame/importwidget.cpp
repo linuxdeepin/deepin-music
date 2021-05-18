@@ -40,6 +40,7 @@
 #include "databaseservice.h"
 #include "player.h"
 #include "ac-desktop-define.h"
+#include "commonservice.h"
 DGUI_USE_NAMESPACE
 
 const QString linkTemplate = "<a href='%1'>%2</a>";
@@ -175,6 +176,11 @@ void ImportWidget::showAnimationToLeft(const QSize &size)
                        animation, &QPropertyAnimation::deleteLater);
     this->show();
     animation->start();
+    if (CommonService::getInstance()->isTabletEnvironment()) {
+        if (CommonService::getInstance()->getSelectModel() == CommonService::MultSelect) {
+            emit CommonService::getInstance()->setSelectModel(CommonService::SingleSelect);
+        }
+    }
 }
 
 const QString ImportWidget::getLastImportPath() const

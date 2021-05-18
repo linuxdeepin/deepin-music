@@ -50,19 +50,19 @@ void SingerDataDelegate::paint(QPainter *painter, const QStyleOptionViewItem &op
 {
     auto listview = qobject_cast<const SingerListView *>(option.widget);
 
-#ifdef TABLET_PC
-    if (listview->viewMode() == QListView::IconMode) {
-        drawTabletIconMode(*painter, option, index);
+    if (CommonService::getInstance()->isTabletEnvironment()) {
+        if (listview->viewMode() == QListView::IconMode) {
+            drawTabletIconMode(*painter, option, index);
+        } else {
+            this->drawListMode(*painter, option, index);
+        }
     } else {
-        this->drawListMode(*painter, option, index);
+        if (listview->viewMode() == QListView::IconMode) {
+            drawIconMode(*painter, option, index);
+        } else {
+            drawListMode(*painter, option, index);
+        }
     }
-#else
-    if (listview->viewMode() == QListView::IconMode) {
-        drawIconMode(*painter, option, index);
-    } else {
-        drawListMode(*painter, option, index);
-    }
-#endif
 }
 
 QSize SingerDataDelegate::sizeHint(const QStyleOptionViewItem &option,
@@ -70,11 +70,11 @@ QSize SingerDataDelegate::sizeHint(const QStyleOptionViewItem &option,
 {
     auto *listview = qobject_cast<const SingerListView *>(option.widget);
     if (listview && listview->viewMode() == QListView::IconMode) {
-#ifdef TABLET_PC
-        return QSize(200, 200);
-#else
-        return QSize(150, 150);
-#endif
+        if (CommonService::getInstance()->isTabletEnvironment()) {
+            return QSize(200, 200);
+        } else {
+            return QSize(150, 150);
+        }
     } else {
         auto baseSize = QStyledItemDelegate::sizeHint(option, index);
         return QSize(baseSize.width(), 38);
@@ -83,63 +83,62 @@ QSize SingerDataDelegate::sizeHint(const QStyleOptionViewItem &option,
 
 bool SingerDataDelegate::editorEvent(QEvent *event, QAbstractItemModel *model, const QStyleOptionViewItem &option, const QModelIndex &index)
 {
-#ifdef TABLET_PC
+    if (CommonService::getInstance()->isTabletEnvironment()) {
+        const SingerListView *singerListView = qobject_cast<const SingerListView *>(option.widget);
+        const QMouseEvent *pressEvent = static_cast<QMouseEvent *>(event);
+        const QPointF pressPos = pressEvent->pos();
 
-    const SingerListView *singerListView = qobject_cast<const SingerListView *>(option.widget);
-    const QMouseEvent *pressEvent = static_cast<QMouseEvent *>(event);
-    const QPointF pressPos = pressEvent->pos();
+        if (index.isValid() && (event->type() == QEvent::MouseButtonPress || event->type() == QEvent::MouseButtonDblClick)) {
+            // 用于判断触屏点击状态
+            static int clickedCount = 0;
+            // 触屏点击次数
+            clickedCount++;
 
-    if (index.isValid() && (event->type() == QEvent::MouseButtonPress || event->type() == QEvent::MouseButtonDblClick)) {
-        // 用于判断触屏点击状态
-        static int clickedCount = 0;
-        // 触屏点击次数
-        clickedCount++;
+            QTimer::singleShot(200, [ = ]() {
+                if (clickedCount == 1) {
+                    if (singerListView->viewMode() == QListView::IconMode) {
+                        // IconMode触屏单击
+                        touchClicked(option, index, pressPos);
+                    } else if (singerListView->viewMode() == QListView::ListMode) {
+                        // 同鼠标双击，直接进入二级菜单
+                        mouseDoubleClicked(option, index);
+                    }
+                } else if (clickedCount > 1) {
+                    // 触屏双击
+                    touchDoubleClicked(option, index);
+                }
+                // 点击次数归零
+                clickedCount = 0;
+            });
+        }
+    } else {
+        const SingerListView *singerListView = qobject_cast<const SingerListView *>(option.widget);
+        const QMouseEvent *pressEvent = static_cast<QMouseEvent *>(event);
+        const QPointF pressPos = pressEvent->pos();
 
-        QTimer::singleShot(200, [ = ]() {
-            if (clickedCount == 1) {
-                if (singerListView->viewMode() == QListView::IconMode) {
-                    // IconMode触屏单击
-                    touchClicked(option, index, pressPos);
-                } else if (singerListView->viewMode() == QListView::ListMode) {
-                    // 同鼠标双击，直接进入二级菜单
+        if (index.isValid() && singerListView->viewMode() == QListView::IconMode &&
+                (event->type() == QEvent::MouseButtonPress || event->type() == QEvent::MouseButtonDblClick)) {
+            // 用于判断鼠标点击状态
+            static int clickedCount = 0;
+            // 鼠标点击次数
+            clickedCount++;
+
+            QTimer::singleShot(200, [ = ]() {
+                if (clickedCount == 1) {
+                    // 鼠标单击
+                    mouseClicked(option, index, pressPos);
+                } else if (clickedCount > 1) {
+                    // 鼠标双击
                     mouseDoubleClicked(option, index);
                 }
-            } else if (clickedCount > 1) {
-                // 触屏双击
-                touchDoubleClicked(option, index);
-            }
-            // 点击次数归零
-            clickedCount = 0;
-        });
+                // 点击次数归零
+                clickedCount = 0;
+            });
+        } else if (index.isValid() && singerListView->viewMode() == QListView::ListMode && event->type() == QEvent::MouseButtonDblClick) {
+            // 鼠标双击
+            mouseDoubleClicked(option, index);
+        }
     }
-#else
-    const SingerListView *singerListView = qobject_cast<const SingerListView *>(option.widget);
-    const QMouseEvent *pressEvent = static_cast<QMouseEvent *>(event);
-    const QPointF pressPos = pressEvent->pos();
-
-    if (index.isValid() && singerListView->viewMode() == QListView::IconMode &&
-            (event->type() == QEvent::MouseButtonPress || event->type() == QEvent::MouseButtonDblClick)) {
-        // 用于判断鼠标点击状态
-        static int clickedCount = 0;
-        // 鼠标点击次数
-        clickedCount++;
-
-        QTimer::singleShot(200, [ = ]() {
-            if (clickedCount == 1) {
-                // 鼠标单击
-                mouseClicked(option, index, pressPos);
-            } else if (clickedCount > 1) {
-                // 鼠标双击
-                mouseDoubleClicked(option, index);
-            }
-            // 点击次数归零
-            clickedCount = 0;
-        });
-    } else if (index.isValid() && singerListView->viewMode() == QListView::ListMode && event->type() == QEvent::MouseButtonDblClick) {
-        // 鼠标双击
-        mouseDoubleClicked(option, index);
-    }
-#endif
     return QStyledItemDelegate::editorEvent(event, model, option, index);
 }
 
@@ -282,7 +281,7 @@ void SingerDataDelegate::drawIconMode(QPainter &painter, const QStyleOptionViewI
     }
     painter.fillRect(option.rect, t_fillBrush);
 }
-#ifdef TABLET_PC
+
 extern QPixmap blurPixmap(const QPixmap &pix, int radius, int tp, const QRect &clipRect);
 
 void SingerDataDelegate::drawTabletIconMode(QPainter &painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
@@ -498,7 +497,7 @@ void SingerDataDelegate::touchDoubleClicked(const QStyleOptionViewItem &option, 
         }
     }
 }
-#endif
+
 void SingerDataDelegate::drawListMode(QPainter &painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
     auto listview = qobject_cast<const SingerListView *>(option.widget);

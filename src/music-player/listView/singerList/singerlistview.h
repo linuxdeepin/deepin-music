@@ -87,6 +87,8 @@ public slots:
     void slotScrollToCurrentPosition(const QString &songlistHash);
     // 刷新播放动态图
     void slotUpdatePlayingIcon();
+    // 横竖屏切换
+    void slotHScreen(bool isHScreen);
 signals:
     void requestCustomContextMenu(const QPoint &pos);
     void modeChanged(int);
@@ -98,12 +100,8 @@ private slots:
     void slotAddSingleSong(const QString &listHash, const MediaMeta &addMeta);
     // 多选歌曲删除时逻辑
     void slotRemoveSelectedSongs(const QString &deleteHash, const QStringList &musicHashs, bool removeFromLocal);
-#ifdef TABLET_PC
     // 播放状态发生改变
     void slotPlaybackStatusChanged(Player::PlaybackStatus statue);
-    // 横竖屏切换
-    void slotHScreen(bool isHScreen);
-#endif
 protected:
     void dragEnterEvent(QDragEnterEvent *event) Q_DECL_OVERRIDE;
     void dragMoveEvent(QDragMoveEvent *event) Q_DECL_OVERRIDE;

@@ -46,6 +46,7 @@ SearchEdit::SearchEdit(QWidget *parent) : DSearchEdit(parent)
     setFont(textFont);
 
     lineEdit()->setFocusPolicy(Qt::ClickFocus);
+    lineEdit()->setContextMenuPolicy(Qt::DefaultContextMenu);
 
     AC_SET_OBJECT_NAME(lineEdit(), AC_Search);
     AC_SET_ACCESSIBLE_NAME(lineEdit(), AC_Search);
@@ -66,6 +67,11 @@ SearchEdit::SearchEdit(QWidget *parent) : DSearchEdit(parent)
             m_result->setFixedWidth(width());
             m_result->hide();
             m_result->move(bottomLeft.x(), bottomLeft.y() + 5);
+            if (CommonService::getInstance()->isTabletEnvironment()) {
+                if (!DApplication::inputMethod()->isVisible()) {
+                    DApplication::inputMethod()->show();
+                }
+            }
         }
         if (!onFocus) {
             m_result->hide();

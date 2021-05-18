@@ -48,7 +48,7 @@ signals:
 
 protected:
 //    virtual void startDrag(Qt::DropActions supportedActions) Q_DECL_OVERRIDE;
-    void mousePressEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
+//    void mousePressEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
 
 //    void keyPressEvent(QKeyEvent *event) Q_DECL_OVERRIDE;
     void dragEnterEvent(QDragEnterEvent *event) Q_DECL_OVERRIDE;
@@ -56,7 +56,7 @@ protected:
     void dropEvent(QDropEvent *event) Q_DECL_OVERRIDE;
 
 private:
-    void SetAttrRecur(QDomElement elem, QString strtagname, QString strattr, QString strattrval);
+//    void SetAttrRecur(QDomElement elem, QString strtagname, QString strattr, QString strattrval);
     void setActionDisabled(const QString &hash, QAction *act);
 private:
     //    QList<PlaylistPtr >  allPlaylists;

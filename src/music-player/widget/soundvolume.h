@@ -43,6 +43,10 @@ public:
 
     void setVolume(int value);
     void flushVolumeIcon();
+    // 设置鼠标状态，鼠标在音量条呼出按钮上时也不消失
+    void setMouseIn(bool in);
+    // 启动隐藏定时器
+    void startTimer(bool start);
 signals:
     void delayAutoHide();
     void sigVolumeChanged();//本地音量和静音状态改变，通知footer栏改变图标
@@ -50,6 +54,7 @@ public slots:
     void delayHide();
     void setThemeType(int type);
     void slotSoundClick();
+    void slotTimeOut();
 protected:
     virtual void showEvent(QShowEvent *event) Q_DECL_OVERRIDE;
     virtual void enterEvent(QEvent *event) Q_DECL_OVERRIDE;
@@ -71,6 +76,7 @@ private:
     QPixmap     bgImage;
 
     bool        m_mouseIn     = false;
+    QTimer      *m_timer = nullptr;
 };
 
 
