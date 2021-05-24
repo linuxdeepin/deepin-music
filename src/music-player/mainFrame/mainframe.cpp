@@ -616,7 +616,7 @@ void MainFrame::slotShortCutTriggered()
         shortcutString << "-b" << param1 << param2;
 
         QProcess *shortcutViewProc = new QProcess(this);
-        shortcutViewProc->startDetached("killall deepin-shortcut-viewer");
+        //此处不会造成多进程闲置，deepin-shortcut会自动检查删除多余进程
         shortcutViewProc->startDetached("deepin-shortcut-viewer", shortcutString);
 
         connect(shortcutViewProc, SIGNAL(finished(int)), shortcutViewProc, SLOT(deleteLater()));
