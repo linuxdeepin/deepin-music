@@ -178,7 +178,7 @@ void LyricLabel::postionChanged(qint64 pos)
 {
     if (this->isScrolled) return;
     pos = pos + 500; //歌词滚动需要500ms
-    int index = lyric.getIndex(pos);
+    int index = lyric.getIndex(pos) - 1;
     if (index != m_currentItem)
         this->scrollTo(index);
 }
