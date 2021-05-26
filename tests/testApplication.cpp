@@ -469,6 +469,9 @@ TEST(Application, musicListDialg1)
     PlayListView *mliv = w->findChild<PlayListView *>(AC_musicListInfoView);
     DPushButton *backBtn = w->findChild<DPushButton *>(AC_titleBarLeft);
 
+    if (mliv == nullptr) {
+        return;
+    }
     event.addMouseMove(pos);
     event.addMouseClick(Qt::MouseButton::LeftButton, Qt::NoModifier, pos, 100);
     event.addMousePress(Qt::MouseButton::LeftButton, Qt::NoModifier, pos, 100);

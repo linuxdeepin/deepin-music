@@ -1235,6 +1235,7 @@ void PlayListView::contextMenuEvent(QContextMenuEvent *event)
     m_menuIsShow = true;
     DMenu allMusicMenu;//first level menu
     DMenu playlistMenu;//second level menu
+    DMenu textCodecMenu; //coding of song information
     QAction *actRmv = nullptr; //remove action
     QPoint globalPos = mapToGlobal(event->pos());
     if (CommonService::getInstance()->isTabletEnvironment()) {
@@ -1257,8 +1258,6 @@ void PlayListView::contextMenuEvent(QContextMenuEvent *event)
             m_menuIsShow = false;
             return;
         }
-
-        DMenu textCodecMenu; //coding of song information
 
         QAction *actDel = nullptr;
 
