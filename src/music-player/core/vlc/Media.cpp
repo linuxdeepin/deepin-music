@@ -106,11 +106,15 @@ void VlcMedia::initMedia(const QString &location,
     vlc_media_new_location_function vlc_media_new_location = (vlc_media_new_location_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("libvlc_media_new_location");
     vlc_media_event_manager_function vlc_media_event_manager = (vlc_media_event_manager_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("libvlc_media_event_manager");
 
-    if (localFile)
+    if (localFile) {
         _vlcMedia = vlc_media_new_path(instance->core(), path.toUtf8().data());
-    else {
+    } else {
         _vlcMedia = vlc_media_new_location(instance->core(), path.toUtf8().data());
     }
+
+    //防止内存泄露，每次创建_vlcEvents之前需要将上一次的事件进行清理
+    if (_vlcEvents != nullptr)
+        removeCoreConnections();
     _vlcEvents = vlc_media_event_manager(_vlcMedia);
 
     createCoreConnections();
@@ -139,21 +143,21 @@ void VlcMedia::createCoreConnections()
     }
 }
 
-//void VlcMedia::removeCoreConnections()
-//{
-//    QList<libvlc_event_e> list;
-//    list << libvlc_MediaMetaChanged
-//         << libvlc_MediaSubItemAdded
-//         << libvlc_MediaDurationChanged
-//         << libvlc_MediaParsedChanged
-//         << libvlc_MediaFreed
-//         << libvlc_MediaStateChanged;
+void VlcMedia::removeCoreConnections()
+{
+    QList<libvlc_event_e> list;
+    list << libvlc_MediaMetaChanged
+         << libvlc_MediaSubItemAdded
+         << libvlc_MediaDurationChanged
+         << libvlc_MediaParsedChanged
+         << libvlc_MediaFreed
+         << libvlc_MediaStateChanged;
 
-//    vlc_event_detach_function vlc_event_detach = (vlc_event_detach_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("libvlc_event_detach");
-//    foreach (const libvlc_event_e &event, list) {
-//        vlc_event_detach(_vlcEvents, event, libvlc_callback, this);
-//    }
-//}
+    vlc_event_detach_function vlc_event_detach = (vlc_event_detach_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("libvlc_event_detach");
+    foreach (const libvlc_event_e &event, list) {
+        vlc_event_detach(_vlcEvents, event, libvlc_callback, this);
+    }
+}
 
 //bool VlcMedia::parsed() const
 //{
