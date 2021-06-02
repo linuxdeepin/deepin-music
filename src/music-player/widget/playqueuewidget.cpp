@@ -161,13 +161,13 @@ void PlayQueueWidget::stopAnimation()
 
 void PlayQueueWidget::initAnimation()
 {
-    // 动画状态Up
-    m_animationToUp = new QPropertyAnimation(this, "geometry");
+    // 动画状态Up,初始化指明父类，方便后续释放，防止内存泄露
+    m_animationToUp = new QPropertyAnimation(this, "geometry", this);
     m_animationToUp->setEasingCurve(QEasingCurve::InCurve);
     m_animationToUp->setDuration(AnimationDelay);
 
-    // 动画状态Down
-    m_animationToDown = new QPropertyAnimation(this, "geometry");
+    // 动画状态Down,初始化指明父类，方便后续释放，防止内存泄露
+    m_animationToDown = new QPropertyAnimation(this, "geometry", this);
     m_animationToDown->setEasingCurve(QEasingCurve::InCurve);
     m_animationToDown->setDuration(AnimationDelay);
     m_animationToDown->connect(m_animationToDown, &QPropertyAnimation::finished, this, [ = ]() {
