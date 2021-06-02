@@ -92,7 +92,8 @@ void MusicStatckedWidget::animationImportToDown(const QSize &size)
 
 void MusicStatckedWidget::animationImportToLeft(const QSize &size)
 {
-    QPropertyAnimation *animation = new QPropertyAnimation(this, "pos");
+    //初始化指明父类，方便后续释放，防止内存泄露
+    QPropertyAnimation *animation = new QPropertyAnimation(this, "pos", this);
 
     animation->setDuration(200);
     animation->setEasingCurve(QEasingCurve::InCurve);
