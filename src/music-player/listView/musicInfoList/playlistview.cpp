@@ -724,6 +724,10 @@ void PlayListView::slotCoverUpdate(const MediaMeta &meta)
             } else {
                 item->setIcon(m_defaultIcon);
             }
+            // 记录该音频文件已加载过封面
+            if (!DataBaseService::getInstance()->m_IconLoadedHash.contains(meta.hash)) {
+                DataBaseService::getInstance()->m_IconLoadedHash.append(meta.hash);
+            }
             break;
         }
     }
@@ -1449,19 +1453,21 @@ void PlayListView::mousePressEvent(QMouseEvent *event)
         }
     } else {
         m_pressIndex = index;
-        CommonService::TabletSelectMode model = CommonService::getInstance()->getSelectModel();
-        if (model == CommonService::SingleSelect || m_IsPlayQueue) {
-            for (int i = 0; i <  m_model->rowCount(); i++) {
-                QModelIndex curIndex = m_model->index(i, 0);
-                MediaMeta metaTemp = curIndex.data(Qt::UserRole).value<MediaMeta>();
-                QVariant mediaMeta;
-                if (curIndex.row() == index.row()) {
-                    metaTemp.beSelect = true;
-                } else {
-                    metaTemp.beSelect = false;
+        if (CommonService::getInstance()->isTabletEnvironment()) {
+            CommonService::TabletSelectMode model = CommonService::getInstance()->getSelectModel();
+            if (model == CommonService::SingleSelect || m_IsPlayQueue) {
+                for (int i = 0; i <  m_model->rowCount(); i++) {
+                    QModelIndex curIndex = m_model->index(i, 0);
+                    MediaMeta metaTemp = curIndex.data(Qt::UserRole).value<MediaMeta>();
+                    QVariant mediaMeta;
+                    if (curIndex.row() == index.row()) {
+                        metaTemp.beSelect = true;
+                    } else {
+                        metaTemp.beSelect = false;
+                    }
+                    mediaMeta.setValue(metaTemp);
+                    m_model->setData(curIndex, mediaMeta, Qt::UserRole);
                 }
-                mediaMeta.setValue(metaTemp);
-                m_model->setData(curIndex, mediaMeta, Qt::UserRole);
             }
         }
     }
@@ -1470,16 +1476,18 @@ void PlayListView::mousePressEvent(QMouseEvent *event)
 
 void PlayListView::mouseReleaseEvent(QMouseEvent *event)
 {
-    QModelIndex index = this->indexAt(event->pos());
-    if (index.row() != -1 && m_pressIndex == index) {
-        CommonService::TabletSelectMode model = CommonService::getInstance()->getSelectModel();
+    if (CommonService::getInstance()->isTabletEnvironment()) {
+        QModelIndex index = this->indexAt(event->pos());
+        if (index.row() != -1 && m_pressIndex == index) {
+            CommonService::TabletSelectMode model = CommonService::getInstance()->getSelectModel();
 
-        if (!m_IsPlayQueue && model == CommonService::MultSelect) {
-            MediaMeta meta = index.data(Qt::UserRole).value<MediaMeta>();
-            meta.beSelect = !meta.beSelect;
-            QVariant varmeta;
-            varmeta.setValue(meta);
-            m_model->setData(m_model->index(index.row(), 0), varmeta, Qt::UserRole);
+            if (!m_IsPlayQueue && model == CommonService::MultSelect) {
+                MediaMeta meta = index.data(Qt::UserRole).value<MediaMeta>();
+                meta.beSelect = !meta.beSelect;
+                QVariant varmeta;
+                varmeta.setValue(meta);
+                m_model->setData(m_model->index(index.row(), 0), varmeta, Qt::UserRole);
+            }
         }
     }
     QListView::mouseReleaseEvent(event);

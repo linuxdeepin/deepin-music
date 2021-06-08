@@ -142,10 +142,10 @@ QSize PlayItemDelegate::sizeHint(const QStyleOptionViewItem &option,
 bool PlayItemDelegate::editorEvent(QEvent *event, QAbstractItemModel *model, const QStyleOptionViewItem &option, const QModelIndex &index)
 {
     const PlayListView *listview = qobject_cast<const PlayListView *>(option.widget);
-    const QMouseEvent *pressEvent = static_cast<QMouseEvent *>(event);
-    const QPointF pressPos = pressEvent->pos();
 
     if (index.isValid() && listview->viewMode() == QListView::IconMode) {
+        const QMouseEvent *pressEvent = static_cast<QMouseEvent *>(event);
+        const QPointF pressPos = pressEvent->pos();
         if (pressPos.x() > (option.rect.x() + 160) // 点在图片右边
                 || pressPos.y() > (option.rect.y() + option.rect.height() - 12) // 点在文字下面
                 || pressPos.y() < (option.rect.y() + 8) // 点在图片上面
@@ -549,6 +549,9 @@ void PlayItemDelegate::drawIconMode(QPainter &painter, const QStyleOptionViewIte
 
     // 绘制专辑图片
     painter.save();
+    if (!DataBaseService::getInstance()->m_IconLoadedHash.contains(meta.hash)) {
+        emit DataBaseService::getInstance()->signalCreatOneCoverImg(meta);
+    }
     QIcon icon;
     auto value = index.data(Qt::DecorationRole);
     if (value.type() == QVariant::Icon) {

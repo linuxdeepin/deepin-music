@@ -123,6 +123,8 @@ public slots:
     //void slotDelayAutoHide();
     // 快捷键响应
     void slotShortCutTriggered();
+    // 封面图片刷新
+    void slotCoverUpdate(const MediaMeta &meta);
 protected:
     virtual void resizeEvent(QResizeEvent *event) Q_DECL_OVERRIDE;
 private:

@@ -32,7 +32,8 @@
 #include <QTextBlock>
 #include <QAbstractTextDocumentLayout>
 #include <QApplication>
-using namespace DMusic;
+
+#include "databaseservice.h"
 using namespace DMusic;
 QT_BEGIN_NAMESPACE
 extern Q_WIDGETS_EXPORT void qt_blurImage(QPainter *p, QImage &blurImage, qreal radius, bool quality, bool alphaOnly, int transposed = 0);
@@ -204,12 +205,30 @@ void MusicSearchListDelegate::paint(QPainter *painter, const QStyleOptionViewIte
             QPainterPath clipPath;
             clipPath.addEllipse(imageRect.adjusted(0, 0, 0, 0));
             painter->setClipPath(clipPath);
-            mtext = index.data(Qt::UserRole + SearchType::SearchSinger).value<SingerInfo>().singerName;
+            SingerInfo singerInfo;
+            singerInfo = index.data(Qt::UserRole + SearchType::SearchSinger).value<SingerInfo>();
+            // 若没有加载过缩略图则加载
+            for (int coverIndex = 0; coverIndex < singerInfo.musicinfos.values().size(); coverIndex++) {
+                MediaMeta covermeta = singerInfo.musicinfos.values().at(coverIndex);
+                if (!DataBaseService::getInstance()->m_IconLoadedHash.contains(covermeta.hash)) {
+                    emit DataBaseService::getInstance()->signalCreatOneCoverImg(covermeta);
+                }
+            }
+            mtext = singerInfo.singerName;
         } else {
             QPainterPath clipPath;
             clipPath.addRoundedRect(imageRect, 4, 4);
             painter->setClipPath(clipPath);
-            mtext = index.data(Qt::UserRole + SearchType::SearchAlbum).value<AlbumInfo>().albumName;
+            AlbumInfo albumInfo;
+            albumInfo = index.data(Qt::UserRole + SearchType::SearchAlbum).value<AlbumInfo>();
+            // 若没有加载过缩略图则加载
+            for (int coverIndex = 0; coverIndex < albumInfo.musicinfos.values().size(); coverIndex++) {
+                MediaMeta covermeta = albumInfo.musicinfos.values().at(coverIndex);
+                if (!DataBaseService::getInstance()->m_IconLoadedHash.contains(covermeta.hash)) {
+                    emit DataBaseService::getInstance()->signalCreatOneCoverImg(covermeta);
+                }
+            }
+            mtext = albumInfo.albumName;
         }
         painter->drawPixmap(imageRect, image);
         painter->restore();

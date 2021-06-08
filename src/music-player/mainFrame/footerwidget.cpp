@@ -328,6 +328,9 @@ void FooterWidget::initUI(QWidget *parent)
 
     slotFlushSoundIcon();
     resetBtnEnable();
+    // 刷新封面图片
+    connect(DataBaseService::getInstance(), &DataBaseService::signalCoverUpdate,
+            this, &FooterWidget::slotCoverUpdate);
 }
 
 void FooterWidget::installTipHint(QWidget *widget, const QString &hintstr)
@@ -769,6 +772,28 @@ void FooterWidget::slotShortCutTriggered()
         Player::getInstance()->setMuted(!mute);
         m_volSlider->flushVolumeIcon();
     }
+}
+
+void FooterWidget::slotCoverUpdate(const MediaMeta &meta)
+{
+    if (meta.hash != Player::getInstance()->getActiveMeta().hash) {
+        return;
+    }
+    //替换封面按钮与背景图片
+    QString imagesDirPath = Global::cacheDir() + "/images/" + meta.hash + ".jpg";
+    QFileInfo file(imagesDirPath);
+    QIcon icon;
+    if (file.exists()) {
+        icon = QIcon(imagesDirPath);
+        m_btCover->setIcon(icon);
+    } else {
+        m_btCover->setIcon(QIcon::fromTheme("info_cover"));
+    }
+    if (!DataBaseService::getInstance()->m_IconLoadedHash.contains(meta.hash)) {
+        DataBaseService::getInstance()->m_IconLoadedHash.append(meta.hash);
+    }
+
+    slotFlushBackground();
 }
 
 void FooterWidget::slotLoadDetector(const QString &hash)

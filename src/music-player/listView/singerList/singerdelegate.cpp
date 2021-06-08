@@ -170,6 +170,13 @@ void SingerDataDelegate::drawIconMode(QPainter &painter, const QStyleOptionViewI
 
     // 画背景图片
     QIcon opticon;
+    // 若没有加载过缩略图则加载
+    for (int coverIndex = 0; coverIndex < singertmp.musicinfos.values().size(); coverIndex++) {
+        MediaMeta covermeta = singertmp.musicinfos.values().at(coverIndex);
+        if (!DataBaseService::getInstance()->m_IconLoadedHash.contains(covermeta.hash)) {
+            emit DataBaseService::getInstance()->signalCreatOneCoverImg(covermeta);
+        }
+    }
     auto value = index.data(Qt::DecorationRole);
     if (value.type() == QVariant::Icon) {
         opticon = qvariant_cast<QIcon>(value);
@@ -585,6 +592,13 @@ void SingerDataDelegate::drawListMode(QPainter &painter, const QStyleOptionViewI
 
     QRect numRect(lrWidth + 10, option.rect.y() + 3, 32, 32);
     auto icon = option.icon;
+    // 若没有加载过缩略图则加载
+    for (int coverIndex = 0; coverIndex < singertmp.musicinfos.values().size(); coverIndex++) {
+        MediaMeta covermeta = singertmp.musicinfos.values().at(coverIndex);
+        if (!DataBaseService::getInstance()->m_IconLoadedHash.contains(covermeta.hash)) {
+            emit DataBaseService::getInstance()->signalCreatOneCoverImg(covermeta);
+        }
+    }
     auto value = index.data(Qt::DecorationRole);
     if (value.type() == QVariant::Icon) {
         icon = qvariant_cast<QIcon>(value);

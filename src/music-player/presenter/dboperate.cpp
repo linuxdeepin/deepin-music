@@ -206,6 +206,15 @@ void DBOperate::slotCreatCoverImg(const QList<MediaMeta> &metas)
         emit sigCreatOneCoverImg(meta);
     }
 }
+// 加载一首歌的封面图片
+void DBOperate::slotCreatOneCoverImg(MediaMeta meta)
+{
+    QFileInfo coverInfo(Global::cacheDir() + "/images/" + meta.hash + ".jpg");
+    if (!coverInfo.exists()) {
+        meta.getCoverData(Global::cacheDir());
+    }
+    emit sigCreatOneCoverImg(meta);
+}
 
 void DBOperate::slotRemoveSelectedSongs(const QString &curpage, const QStringList &musichashlist, bool removeFromLocal)
 {

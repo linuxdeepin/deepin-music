@@ -629,7 +629,10 @@ void DataBaseService::slotImportFinished(int failCount, int successCount, int ex
         emit signalImportFailed();
     }
     //数据加载完后再加载图片
-    emit signalCreatCoverImg(m_AllMediaMeta);
+    if (CommonService::getInstance()->isTabletEnvironment()) {
+        // 平板模式全部加载图片
+        emit signalCreatCoverImg(m_AllMediaMeta);
+    }
     //启动加载数据完成后直接播放第一首歌
     emit signalPlayFromFileMaganager();
 }
@@ -1162,6 +1165,7 @@ DataBaseService::DataBaseService()
             &m_worker, SLOT(slotRemoveSelectedSongs(const QString &, const QStringList &, bool)));
     // 发送给子线程加载图片
     connect(this, &DataBaseService::signalCreatCoverImg, &m_worker, &DBOperate::slotCreatCoverImg);
+    connect(this, &DataBaseService::signalCreatOneCoverImg, &m_worker, &DBOperate::slotCreatOneCoverImg);
 
     // 单首歌曲完成解析
     connect(&m_worker, &DBOperate::sigImportMetaFromThread, this, &DataBaseService::slotGetMetaFromThread, Qt::QueuedConnection);
