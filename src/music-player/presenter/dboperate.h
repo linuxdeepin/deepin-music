@@ -48,8 +48,6 @@ public:
 public slots:
     void     slotImportMedias(const QString &importHash, const QStringList &urllist);
     void     slotCreatCoverImg(const QList<MediaMeta> &metas);
-    // 加载一首歌的封面图片
-    void     slotCreatOneCoverImg(MediaMeta meta);
     void     slotRemoveSelectedSongs(const QString &curpage, const QStringList &musichashlist, bool removeFromLocal);
 private:
     bool     deleteMetaFromAllMusic(const QStringList &metaHash, bool removeFromLocal);

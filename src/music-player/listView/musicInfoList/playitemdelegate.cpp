@@ -549,9 +549,6 @@ void PlayItemDelegate::drawIconMode(QPainter &painter, const QStyleOptionViewIte
 
     // 绘制专辑图片
     painter.save();
-    if (!DataBaseService::getInstance()->m_IconLoadedHash.contains(meta.hash)) {
-        emit DataBaseService::getInstance()->signalCreatOneCoverImg(meta);
-    }
     QIcon icon;
     auto value = index.data(Qt::DecorationRole);
     if (value.type() == QVariant::Icon) {

@@ -182,13 +182,6 @@ void AlbumDataDelegate::drawIconMode(QPainter &painter, const QStyleOptionViewIt
 
     // 画背景图片
     QIcon opticon;
-    // 若没有加载过缩略图则加载
-    for (int coverIndex = 0; coverIndex < albumTmp.musicinfos.values().size(); coverIndex++) {
-        MediaMeta covermeta = albumTmp.musicinfos.values().at(coverIndex);
-        if (!DataBaseService::getInstance()->m_IconLoadedHash.contains(covermeta.hash)) {
-            emit DataBaseService::getInstance()->signalCreatOneCoverImg(covermeta);
-        }
-    }
     auto value = index.data(Qt::DecorationRole);
     if (value.type() == QVariant::Icon) {
         opticon = qvariant_cast<QIcon>(value);

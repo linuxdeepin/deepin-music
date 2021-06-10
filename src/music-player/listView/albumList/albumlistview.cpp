@@ -498,10 +498,6 @@ void AlbumListView::slotCoverUpdate(const MediaMeta &meta)
             } else {
                 item->setIcon(m_defaultIcon);
             }
-            // 记录该音频文件已加载过封面
-            if (!DataBaseService::getInstance()->m_IconLoadedHash.contains(meta.hash)) {
-                DataBaseService::getInstance()->m_IconLoadedHash.append(meta.hash);
-            }
             break;
         }
     }

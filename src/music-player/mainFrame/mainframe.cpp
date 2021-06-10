@@ -513,7 +513,6 @@ void MainFrame::slotSearchEditFoucusIn()
 void MainFrame::slotLyricClicked()
 {
     // 歌词控件显示与关闭动画
-    m_musicLyricWidget->updateUI();
     if (m_musicLyricWidget->isHidden()) {
         m_musicLyricWidget->showAnimation();
         m_musicStatckedWidget->animationToUp();

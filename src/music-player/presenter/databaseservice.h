@@ -162,8 +162,6 @@ signals:
     void signalGetAllMediaMeta();
     // 发送给子线程执行创建图片
     void signalCreatCoverImg(const QList<MediaMeta> &metas);
-    // 发送给子线程执行创建一张图片
-    void signalCreatOneCoverImg(MediaMeta meta);
     // 导入结束，通知主界面 allCount:待导入的文件数量   successCount：导入成功的数量
     void signalImportFinished(QString hash, int successCount);
     // 导入失败，有不支持的文件
@@ -197,7 +195,6 @@ private:
     void initPlaylistTable();
 public:
     QMap<QString, MediaMeta> m_MediaMetaMap;
-    QStringList m_IconLoadedHash;// 已加载过图片hash
 private:
     explicit DataBaseService();
     ~DataBaseService();

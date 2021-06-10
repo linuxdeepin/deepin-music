@@ -158,10 +158,6 @@ void Player::playMeta(MediaMeta meta)
 
         m_ActiveMeta = meta;
         setActiveMeta(meta);
-        // 如果没有加载过封面则发送信号到子线程加载
-        if (!DataBaseService::getInstance()->m_IconLoadedHash.contains(meta.hash)) {
-            emit DataBaseService::getInstance()->signalCreatOneCoverImg(meta);
-        }
         /*************************
          * mute to dbus
          * ***********************/
