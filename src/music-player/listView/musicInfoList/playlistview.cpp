@@ -1628,9 +1628,17 @@ void PlayListView::slotAddToSongList(const QString &hash, const QString &name)
         return;
     QList<MediaMeta> metas;
     for (QModelIndex mindex : modelIndexList) {
-        metas << (mindex.data(Qt::UserRole).value<MediaMeta>());
+        MediaMeta meta = (mindex.data(Qt::UserRole).value<MediaMeta>());
+        metas << meta;
+        if (hash.compare("play") == 0) {
+            Player::getInstance()->playListAppendMeta(meta);
+        }
     }
     int insertCount = DataBaseService::getInstance()->addMetaToPlaylist(hash, metas);
+    if (hash.compare("play") == 0) {
+        //通知播放队列刷新
+        emit Player::getInstance()->signalPlayListChanged();
+    }
     emit CommonService::getInstance()->signalShowPopupMessage(name, metas.size(), insertCount);
 }
 
