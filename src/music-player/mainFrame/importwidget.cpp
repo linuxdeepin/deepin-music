@@ -146,8 +146,8 @@ ImportWidget::~ImportWidget()
 void ImportWidget::closeAnimationToDown(const QSize &size)
 {
     this->resize(size);
-
-    QPropertyAnimation *animation = new QPropertyAnimation(this, "pos");
+    //初始化指明父类，方便后续释放，防止内存泄露
+    QPropertyAnimation *animation = new QPropertyAnimation(this, "pos", this);
     animation->setEasingCurve(QEasingCurve::InCurve);
     animation->setDuration(AnimationDelay);
     animation->setStartValue(QPoint(0, 0));

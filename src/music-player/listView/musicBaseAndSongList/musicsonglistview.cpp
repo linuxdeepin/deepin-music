@@ -387,6 +387,7 @@ void MusicSongListView::slotUpdatePlayingIcon()
             } else {
                 actionList.clear();
                 auto viewItemAction = new DViewItemAction(Qt::AlignCenter, QSize(ItemIconSide, ItemIconSide));
+                viewItemAction->setParent(this);
                 viewItemAction->setIcon(playingIcon);
                 actionList.append(viewItemAction);
                 dynamic_cast<DStandardItem *>(item)->setActionList(Qt::RightEdge, actionList);
@@ -399,6 +400,8 @@ void MusicSongListView::slotUpdatePlayingIcon()
             } else {
                 actionList.clear();
                 auto viewItemAction = new DViewItemAction(Qt::AlignCenter, QSize(ItemIconSide, ItemIconSide));
+                //初始化指明父类，方便后续释放，防止内存泄露
+                viewItemAction->setParent(this);
                 viewItemAction->setIcon(playingIcon);
                 actionList.append(viewItemAction);
                 dynamic_cast<DStandardItem *>(item)->setActionList(Qt::RightEdge, actionList);
