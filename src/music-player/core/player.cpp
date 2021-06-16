@@ -1157,7 +1157,8 @@ void Player::initMpris()
             resume();
         } else {
             if (status() != Player::Playing) {
-                playMeta(getActiveMeta());
+                //播放列表为空时也应考虑，不然会出现dbus调用无效的情况
+                forcePlayMeta();
             }
         }
     });
@@ -1169,11 +1170,27 @@ void Player::initMpris()
 
     connect(m_mpris, &MprisPlayer::nextRequested,
     this, [ = ]() {
+        if (m_MetaList.size() == 0) {
+            // 更新所有歌曲页面数据
+            setCurrentPlayListHash("all", true);
+            // 通知播放队列刷新
+            emit signalPlayListChanged();
+            if (m_MetaList.size() == 0)
+                return;
+        }
         playNextMeta(true);
     });
 
     connect(m_mpris, &MprisPlayer::previousRequested,
     this, [ = ]() {
+        if (m_MetaList.size() == 0) {
+            // 更新所有歌曲页面数据
+            setCurrentPlayListHash("all", true);
+            // 通知播放队列刷新
+            emit signalPlayListChanged();
+            if (m_MetaList.size() == 0)
+                return;
+        }
         playPreMeta();
     });
 }
