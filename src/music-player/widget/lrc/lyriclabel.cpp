@@ -200,7 +200,7 @@ void LyricLabel::setThemeType(int type)
 
 void LyricLabel::changeToEvent(int index)
 {
-    emit changeTo(lyric.getPostion(index));
+    emit changeTo(lyric.getPosition(index));
 }
 
 //void LyricLabel::changeFont()
