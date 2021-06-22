@@ -112,6 +112,10 @@ void Player::init()
             &CommonService::signalCdaSongListChanged, Qt::QueuedConnection);
     //开启cd线程
     startCdaThread();
+
+    m_pDBus = new QDBusInterface("org.freedesktop.login1", "/org/freedesktop/login1",
+                                 "org.freedesktop.login1.Manager", QDBusConnection::systemBus());
+    connect(m_pDBus, SIGNAL(PrepareForSleep(bool)), this, SLOT(onSleepWhenTaking(bool)));
 }
 
 QStringList Player::supportedSuffixList() const
@@ -884,6 +888,24 @@ void Player::setEqualizerCurMode(int curIndex)
         for (int i = 0 ; i < 10; i++) {
             //设置频率值
             m_qvplayer->equalizer()->setAmplificationForBandAt(m_qvplayer->equalizer()->amplificationForBandAt(uint(i)), uint(i));
+        }
+    }
+}
+
+void Player::onSleepWhenTaking(bool sleep)
+{
+    qDebug() << "onSleepWhenTaking:" << sleep;
+    if (sleep) { //休眠记录状态
+        m_Vlcstate = m_qvplayer->state();
+        //如果播放，设置暂停
+        if (m_Vlcstate == Vlc::Playing) {
+            pause();
+        }
+    } else { //设置状态
+        if (m_Vlcstate == Vlc::Playing) {
+            QTimer::singleShot(1000, [ = ]() {
+                resume(); //播放
+            });
         }
     }
 }

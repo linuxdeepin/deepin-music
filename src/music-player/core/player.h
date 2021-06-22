@@ -29,6 +29,7 @@
 #include <QPixmap>
 #include <QIcon>
 #include <QRandomGenerator>
+#include <QDBusInterface>
 
 #include <MprisPlayer>
 #include <mediameta.h>
@@ -207,11 +208,7 @@ public slots:
     void setEqualizerpre(int val);
     void setEqualizerbauds(int index, int val);
     void setEqualizerCurMode(int curIndex);
-    /***********************************************
-     * if player stat is stop state or
-     * device does not start
-     * **********************************/
-    bool isValidDbusMute();
+    void onSleepWhenTaking(bool sleep);
 private:
     explicit Player(QObject *parent = nullptr);
     ~Player();
@@ -222,6 +219,11 @@ private:
     bool setMusicMuted(bool muted);
     bool isMusicMuted();
     bool isDevValid();
+    /***********************************************
+     * if player stat is stop state or
+     * device does not start
+     * **********************************/
+    bool isValidDbusMute();
     // begin
     void initVlc();
     void initMpris();//dbus interface
@@ -256,6 +258,8 @@ private:
     qlonglong       m_m_position          = 0;
     // 音乐dbus接口
     MprisPlayer     *m_mpris = nullptr;
+    QDBusInterface      *m_pDBus        = nullptr;      //接收休眠信号
+    int             m_Vlcstate = -1; //休眠状态缓存
 
     QPropertyAnimation  *m_fadeInAnimation    = nullptr;
     QPropertyAnimation  *m_fadeOutAnimation   = nullptr;
