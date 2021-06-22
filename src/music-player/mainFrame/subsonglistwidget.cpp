@@ -149,7 +149,7 @@ void SubSonglistWidget::resizeEvent(QResizeEvent *e)
     QImage img;
     if (!m_img.isNull()) {
         // 根据屏幕缩放比调整
-        img = m_img.scaled(this->width() * static_cast<int>(qApp->devicePixelRatio()), 200, Qt::KeepAspectRatioByExpanding).toImage();
+        img = m_img.scaled(static_cast<int>(static_cast<double>(this->width()) * qApp->devicePixelRatio()), 200, Qt::KeepAspectRatioByExpanding, Qt::SmoothTransformation).toImage();
     }
     QPainter pai(&img);
     pai.setRenderHints(QPainter::Antialiasing | QPainter::HighQualityAntialiasing | QPainter::SmoothPixmapTransform);
@@ -354,7 +354,7 @@ void SubSonglistWidget::setTitleImage(QPixmap &img)
 
     // 添加非空判断，减少警告日志输出与不必要的性能损耗
     if (!img.isNull()) {
-        img = img.scaled(this->width() * static_cast<int>(qApp->devicePixelRatio()), 200, Qt::KeepAspectRatioByExpanding);
+        img = img.scaled(static_cast<int>(static_cast<double>(this->width()) * qApp->devicePixelRatio()), 200, Qt::KeepAspectRatioByExpanding, Qt::SmoothTransformation);
     }
 
     QPainter pai(&img);
