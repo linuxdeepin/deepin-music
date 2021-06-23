@@ -351,7 +351,7 @@ void MetaDetector::getCoverData(const QString &path, const QString &tmpPath, con
             QBuffer buffer(&byteArray);
             buffer.open(QIODevice::WriteOnly);
             image.save(&buffer, "jpg");
-            image = image.scaled(QSize(200, 200));
+            image = image.scaled(QSize(200, 200), Qt::KeepAspectRatioByExpanding, Qt::SmoothTransformation);
             image.save(imagesDirPath + "/" + imageName);
         } else {
 //            image = QImage(":/common/image/cover_max.svg");
