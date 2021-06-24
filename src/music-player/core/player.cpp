@@ -895,16 +895,30 @@ void Player::setEqualizerCurMode(int curIndex)
 void Player::onSleepWhenTaking(bool sleep)
 {
     qDebug() << "onSleepWhenTaking:" << sleep;
-    if (sleep) { //休眠记录状态
+    if (sleep) {
+        //休眠记录状态
         m_Vlcstate = m_qvplayer->state();
-        //如果播放，设置暂停
         if (m_Vlcstate == Vlc::Playing) {
-            pause();
+            //休眠唤醒前设置音量为1%
+            readSinkInputPath();
+            if (!m_sinkInputPath.isEmpty()) {
+                QDBusInterface ainterface("com.deepin.daemon.Audio", m_sinkInputPath,
+                                          "com.deepin.daemon.Audio.SinkInput",
+                                          QDBusConnection::sessionBus());
+                if (!ainterface.isValid()) {
+                    return ;
+                }
+                //调用设置音量
+                ainterface.call(QLatin1String("SetVolume"), 0.01, false);
+            }
         }
     } else { //设置状态
         if (m_Vlcstate == Vlc::Playing) {
-            QTimer::singleShot(1000, [ = ]() {
-                resume(); //播放
+            //播放
+            resume();
+            QTimer::singleShot(2000, [ = ]() {
+                //2s后恢复
+                setMusicVolume(m_volume);
             });
         }
     }
