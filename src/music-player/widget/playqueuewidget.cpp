@@ -82,6 +82,9 @@ PlayQueueWidget::PlayQueueWidget(QWidget *parent) :
     m_btClearAll->setObjectName("PlayListPlayAll");
     m_btClearAll->setText(tr("Empty"));
     m_btClearAll->setFixedHeight(30);
+    if (CommonService::getInstance()->isTabletEnvironment()) {
+        m_btClearAll->setFixedSize(QSize(100, 40));
+    }
 
     m_btClearAll->setFocusPolicy(Qt::TabFocus);
     m_btClearAll->setDefault(true);

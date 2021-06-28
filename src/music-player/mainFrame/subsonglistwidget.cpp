@@ -88,10 +88,12 @@ void SubSonglistWidget::initUI()
     m_btPlayAll->setFocusPolicy(Qt::NoFocus);
     m_btPlayAll->setIconSize(QSize(18, 18));
     // 按钮自适应字体大小
-    m_btPlayAll->setFixedSize(QSize(93, 30));
+    int btnWidth = CommonService::getInstance()->isTabletEnvironment() ? 100 : 93;
+    int btnHight = CommonService::getInstance()->isTabletEnvironment() ? 40 : 30;
+    m_btPlayAll->setFixedSize(QSize(btnWidth, btnHight));
     // 字体宽度加图标大于93,重新设置按钮宽度
     QFontMetrics font(m_btPlayAll->font());
-    m_btPlayAll->setFixedWidth((font.width(m_btPlayAll->text()) + 18) >= 93 ? (font.width(m_btPlayAll->text()) + 38) : 93);
+    m_btPlayAll->setFixedWidth((font.width(m_btPlayAll->text()) + 18) >= btnWidth ? (font.width(m_btPlayAll->text()) + 38) : btnWidth);
 
     DFontSizeManager::instance()->bind(m_btPlayAll, DFontSizeManager::T6, QFont::Medium);
     btLayout->addWidget(m_btPlayAll);
@@ -108,10 +110,10 @@ void SubSonglistWidget::initUI()
     m_btRandomPlay->setFocusPolicy(Qt::NoFocus);
     m_btRandomPlay->setIconSize(QSize(18, 18));
     // 按钮自适应字体大小
-    m_btRandomPlay->setFixedSize(QSize(93, 30));
+    m_btRandomPlay->setFixedSize(QSize(btnWidth, btnHight));
     // 字体宽度加图标大于93,重新设置按钮宽度
     QFontMetrics fontRandom(m_btRandomPlay->font());
-    m_btRandomPlay->setFixedWidth((fontRandom.width(m_btRandomPlay->text()) + 18) >= 93 ? (fontRandom.width(m_btRandomPlay->text()) + 38) : 93);
+    m_btRandomPlay->setFixedWidth((fontRandom.width(m_btRandomPlay->text()) + 18) >= btnWidth ? (fontRandom.width(m_btRandomPlay->text()) + 38) : btnWidth);
     DFontSizeManager::instance()->bind(m_btRandomPlay, DFontSizeManager::T6, QFont::Medium);
     btLayout->addWidget(m_btRandomPlay);
     btLayout->addStretch();
