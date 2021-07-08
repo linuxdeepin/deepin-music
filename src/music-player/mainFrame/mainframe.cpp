@@ -391,7 +391,6 @@ void MainFrame::initPadMenu()
 void MainFrame::autoStartToPlay()
 {
     QString strOpenPath = DataBaseService::getInstance()->getFirstSong();
-    qDebug() << "autoStartToPlay:========" << strOpenPath;
     auto lastplaypage = MusicSettings::value("base.play.last_playlist").toString(); //上一次的页面
     if (!strOpenPath.isEmpty()) {
         //通知设置当前页面
@@ -401,28 +400,26 @@ void MainFrame::autoStartToPlay()
     }
     auto lastMeta = MusicSettings::value("base.play.last_meta").toString();
     if (!lastMeta.isEmpty()) {
-        bool bremb = MusicSettings::value("base.play.remember_progress").toBool();
+        bool bremember = MusicSettings::value("base.play.remember_progress").toBool();
         bool bautoplay = MusicSettings::value("base.play.auto_play").toBool();
         //通知设置当前页面&查询数据
         Player::getInstance()->setCurrentPlayListHash(lastplaypage, true);
         //获取上一次的歌曲信息
         MediaMeta medmeta = DataBaseService::getInstance()->getMusicInfoByHash(lastMeta);
-        //上一次进度的赋值
-        medmeta.offset = MusicSettings::value("base.play.last_position").toInt();
         if (medmeta.localPath.isEmpty())
             return;
-        if (bremb) {
-            Player::getInstance()->setActiveMeta(medmeta);
-            //加载进度
+        Player::getInstance()->setActiveMeta(medmeta);
+        if (bremember) {
+            //上一次进度的赋值
+            medmeta.offset = MusicSettings::value("base.play.last_position").toInt();
             /**
               * 初始不再读取歌曲设置进度，方案更改为直接设置进度，播放歌曲后跳转
               **/
-            //Player::getInstance()->loadMediaProgress(medmeta.localPath);
             // 设置进度
             m_footerWidget->slotSetWaveValue(MusicSettings::value("base.play.last_position").toInt(), medmeta.length);
-            //加载波形图数据
-            m_footerWidget->slotLoadDetector(lastMeta);
         }
+        //加载波形图数据
+        m_footerWidget->slotLoadDetector(lastMeta);
         //自动播放处理
         if (bautoplay) {
             slotAutoPlay(medmeta); //不再延迟处理，直接播放
@@ -960,6 +957,9 @@ void MainFrame::resizeEvent(QResizeEvent *e)
 
 void MainFrame::closeEvent(QCloseEvent *event)
 {
+    //保存进度
+    MusicSettings::setOption("base.play.last_position", Player::getInstance()->position());
+
     auto askCloseAction = MusicSettings::value("base.close.close_action").toInt();
     switch (askCloseAction) {
     case 0: {
@@ -1002,7 +1002,6 @@ void MainFrame::closeEvent(QCloseEvent *event)
         break;
     }
 
-    MusicSettings::setOption("base.play.last_position", Player::getInstance()->position());
     this->setFocus();
     DMainWindow::closeEvent(event);
 }
