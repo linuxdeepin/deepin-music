@@ -69,6 +69,27 @@ DCORE_USE_NAMESPACE
 static const int sFadeInOutAnimationDuration = 900; //ms
 static int INT_LAST_PROGRESS_FLAG = 1;
 
+QStringList mimeTypes()
+{
+    QStringList  mimeTypeWhiteList;
+    mimeTypeWhiteList << "application/vnd.ms-asf";
+
+    QMimeDatabase mdb;
+    for (auto &mt : mdb.allMimeTypes()) {
+        if (mt.name().startsWith("audio/") /*|| mt.name().startsWith("video/")*/) {
+            mimeTypeWhiteList << mt.name();
+        }
+        if (mt.name().startsWith("video/")) {
+            mimeTypeWhiteList << mt.name();
+        }
+
+        if (mt.name().startsWith("application/octet-stream")) {
+            mimeTypeWhiteList << mt.name();
+        }
+    }
+    return mimeTypeWhiteList;
+}
+
 Player::Player(QObject *parent) : QObject(parent)
 {
     init();
@@ -1135,7 +1156,7 @@ void Player::initMpris()
     m_mpris =  new MprisPlayer();
     m_mpris->setServiceName("DeepinMusic");
 
-    m_mpris->setSupportedMimeTypes(m_supportedSuffix);
+    m_mpris->setSupportedMimeTypes(mimeTypes());
 
     m_mpris->setSupportedUriSchemes(QStringList() << "file");
     m_mpris->setCanQuit(true);
@@ -1228,6 +1249,20 @@ void Player::initMpris()
                 return;
         }
         playPreMeta();
+    });
+
+    connect(m_mpris, &MprisPlayer::openUriRequested, this, [ = ](const QUrl & url) {
+        qDebug() << __FUNCTION__ << "toString = " << url.toString();
+        qDebug() << __FUNCTION__ << "toLocalFile = " << url.toLocalFile();
+        QString path = url.toLocalFile();
+        if (path.isEmpty()) {
+            path = url.toString().isEmpty() ? url.path() : url.toString(); //复杂名称可能出现tostring为空的问题，直接取path()
+            if (path.isEmpty()) {
+                return;
+            }
+        }
+        DataBaseService::getInstance()->setFirstSong(path);
+        DataBaseService::getInstance()->importMedias("all", QStringList() << path);
     });
 }
 

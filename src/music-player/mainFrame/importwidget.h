@@ -55,7 +55,7 @@ public slots:
     void slotLinkActivated(const QString &link);
     void slotAddMusicButtonClicked();
     void slotImportPathButtonClicked();
-    void slotImportFormDbus(const QUrl &url); //右键菜单打开音乐
+    //void slotImportFormDbus(const QUrl &url); //右键菜单打开音乐
     void setThemeType(int type);
     // 已导入百分比
     void slotImportedPercent(int percent);

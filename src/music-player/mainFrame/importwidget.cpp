@@ -126,7 +126,7 @@ ImportWidget::ImportWidget(QWidget *parent) : DFrame(parent)
 
 
     //connection
-    connect(Player::getInstance()->getMpris(), &MprisPlayer::openUriRequested, this, &ImportWidget::slotImportFormDbus);  //open file form dbus
+    //connect(Player::getInstance()->getMpris(), &MprisPlayer::openUriRequested, this, &ImportWidget::slotImportFormDbus);
 
 
     connect(DGuiApplicationHelper::instance(), &DGuiApplicationHelper::themeTypeChanged,
@@ -263,20 +263,20 @@ void ImportWidget::slotImportPathButtonClicked()
     }
 }
 
-void ImportWidget::slotImportFormDbus(const QUrl &url)
-{
-    qDebug() << __FUNCTION__ << "toString = " << url.toString();
-    qDebug() << __FUNCTION__ << "toLocalFile = " << url.toLocalFile();
-    QString path = url.toLocalFile();
-    if (path.isEmpty()) {
-        path = url.toString().isEmpty() ? url.path() : url.toString(); //复杂名称可能出现tostring为空的问题，直接取path()
-        if (path.isEmpty()) {
-            return;
-        }
-    }
-    DataBaseService::getInstance()->setFirstSong(path);
-    DataBaseService::getInstance()->importMedias("all", QStringList() << path);
-}
+//void ImportWidget::slotImportFormDbus(const QUrl &url)
+//{
+//    qDebug() << __FUNCTION__ << "toString = " << url.toString();
+//    qDebug() << __FUNCTION__ << "toLocalFile = " << url.toLocalFile();
+//    QString path = url.toLocalFile();
+//    if (path.isEmpty()) {
+//        path = url.toString().isEmpty() ? url.path() : url.toString(); //复杂名称可能出现tostring为空的问题，直接取path()
+//        if (path.isEmpty()) {
+//            return;
+//        }
+//    }
+//    DataBaseService::getInstance()->setFirstSong(path);
+//    DataBaseService::getInstance()->importMedias("all", QStringList() << path);
+//}
 
 bool ImportWidget::eventFilter(QObject *o, QEvent *e)
 {
