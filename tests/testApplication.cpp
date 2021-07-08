@@ -238,8 +238,8 @@ TEST(Application, importLinkText)
     MainFrame *w = Application::getInstance()->getMainWindow();
     QLabel *ilt = w->findChild<QLabel *>(AC_importLinkText);
     ilt->linkActivated("");
+    QTest::qWait(500); //等待扫描线程结束后，再做判断
     QCOMPARE(5, DataBaseService::getInstance()->allMusicInfosCount());
-    QTest::qWait(500);
 }
 
 TEST(Application, deleteAllMusic)
