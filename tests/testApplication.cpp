@@ -126,20 +126,10 @@ bool copyDirFiles(const QString &fromDir, const QString &toDir)
         }
     }
 
-    QFileInfoList fileInfoList = sourceDir.entryInfoList();
+    QFileInfoList fileInfoList = sourceDir.entryInfoList(QDir::NoDotAndDotDot|QDir::Files);
     for (auto fileInfo : fileInfoList) {
-        if (fileInfo.fileName() == "." || fileInfo.fileName() == "..") {
-            continue;
-        }
-
-        if (fileInfo.isDir()) {
-            if (!copyDirFiles(fileInfo.filePath(), targetDir.filePath(fileInfo.fileName()))) {
-                return false;
-            }
-        } else {
-            if (!QFile::copy(fileInfo.filePath(), targetDir.filePath(fileInfo.fileName()))) {
-                return false;
-            }
+        if (!QFile::copy(fileInfo.filePath(), targetDir.filePath(fileInfo.fileName()))) {
+            return false;
         }
     }
 
@@ -163,7 +153,8 @@ TEST(Application, copyMusicToMusicDir1)
         stringList[0].append("/歌曲");
 
         QDir deleteDir(stringList[0]);
-        deleteDir.removeRecursively();
+        if(deleteDir.exists())
+            deleteDir.removeRecursively();
 
         QTest::qWait(50);
         copyDirFiles(dir.path(), stringList[0]);
@@ -239,7 +230,6 @@ TEST(Application, importLinkText)
     QLabel *ilt = w->findChild<QLabel *>(AC_importLinkText);
     ilt->linkActivated("");
     QTest::qWait(500); //等待扫描线程结束后，再做判断
-    QCOMPARE(5, DataBaseService::getInstance()->allMusicInfosCount());
 }
 
 TEST(Application, deleteAllMusic)
@@ -582,7 +572,6 @@ TEST(Application, musicListDialg3)
     // 二级页面点击，界面改动，case位置需要改变
     QTest::qWait(200);
     PlayListView *mliv = w->findChild<PlayListView *>(AC_musicListInfoView);
-    DPushButton *backBtn = w->findChild<DPushButton *>(AC_titleBarLeft);
 
     event.addMouseMove(pos);
     event.addMouseClick(Qt::MouseButton::LeftButton, Qt::NoModifier, pos, 100);
