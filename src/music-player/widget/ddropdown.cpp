@@ -36,7 +36,7 @@ DDropdown::DDropdown(QWidget *parent) : DWidget(parent)
 
     auto layout = new QHBoxLayout(this);
     layout->setContentsMargins(0, 0, 0, 0);
-    menu = new DMenu;
+    menu = new DMenu(this);//添加父类，减少内存泄露的风险
 
     dropdown = new DToolButton(this);
     dropdown->setCheckable(false);
