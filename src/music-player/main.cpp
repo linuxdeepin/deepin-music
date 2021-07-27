@@ -110,6 +110,8 @@ int main(int argc, char *argv[])
     app->loadTranslator();
     MusicSettings::init();
     Player::getInstance();
+    //将检查唯一性提前可以先创建好缓存路径避免某种情况下创建数据库失败
+    bool bc = checkOnly();
     if (!OpenFilePaths.isEmpty()) {
         QStringList strList;
         for (QString str : OpenFilePaths) {
@@ -121,7 +123,7 @@ int main(int argc, char *argv[])
             }
         }
         // 添加应用唯一性判断
-        if (strList.size() > 0 && checkOnly()) {
+        if (strList.size() > 0 && bc) {
             DataBaseService::getInstance()->setFirstSong(strList.at(0));
             DataBaseService::getInstance()->importMedias("all", strList); //导入数据库
         }
