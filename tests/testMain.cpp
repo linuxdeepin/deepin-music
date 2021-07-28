@@ -27,6 +27,11 @@
 #include <QScopedPointer>
 #include <util/singleton.h>
 
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <unistd.h>
+
 #include <gtest/gtest.h>
 #include <gmock/gmock-matchers.h>
 #include <AbstractAppender.h>
@@ -43,6 +48,8 @@
 using namespace Dtk::Core;
 using namespace Dtk::Widget;
 
+static bool checkOnly();
+
 #define QMYTEST_MAIN(TestObject) \
     QT_BEGIN_NAMESPACE \
     QTEST_ADD_GPU_BLACKLIST_SUPPORT_DEFS \
@@ -54,6 +61,7 @@ using namespace Dtk::Widget;
         app.setOrganizationName("deepin"); \
         app.setApplicationName("deepin-music"); \
         app.loadTranslator(); \
+        checkOnly(); \
         MusicSettings::init(); \
         MainFrame mainframe; \
         auto showflag = MusicSettings::value("base.play.showFlag").toBool(); \
@@ -167,6 +175,32 @@ void QTestMain::testGui_data()
     list2.addKeyClicks("abs0");
     list2.addKeyClick(Qt::Key_Backspace);
     QTest::newRow("item 1") << list2 << QString("abs");
+}
+
+bool checkOnly()
+{
+    //single
+    QString userName = QDir::homePath().section("/", -1, -1);
+    std::string path = ("/home/" + userName + "/.cache/deepin/deepin-music/").toStdString();
+    QDir tdir(path.c_str());
+    if (!tdir.exists()) {
+        bool ret =  tdir.mkpath(path.c_str());
+        qDebug() << ret ;
+    }
+
+    path += "single";
+    int fd = open(path.c_str(), O_WRONLY | O_CREAT, 0644);
+    int flock = lockf(fd, F_TLOCK, 0);
+
+    if (fd == -1) {
+        perror("open lockfile/n");
+        return false;
+    }
+    if (flock == -1) {
+        perror("lock file error/n");
+        return false;
+    }
+    return true;
 }
 
 QMYTEST_MAIN(QTestMain)
