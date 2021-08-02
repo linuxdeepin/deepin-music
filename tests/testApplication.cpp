@@ -2240,7 +2240,7 @@ TEST(Application, tabletAddToSonglist)
         QTest::qWait(100);
     });
 
-    mliv->slotShowSongList();
+    //mliv->slotShowSongList();
 
     CommonService::getInstance()->setIsTabletEnvironment(false);
     QTest::qWait(50);
