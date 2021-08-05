@@ -939,7 +939,7 @@ void Player::onSleepWhenTaking(bool sleep)
             resume();
             QTimer::singleShot(2000, [ = ]() {
                 //2s后恢复
-                setMusicVolume(m_volume);
+                setMusicVolume(m_volume / 100.0);
             });
         }
     }
