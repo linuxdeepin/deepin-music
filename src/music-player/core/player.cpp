@@ -1261,6 +1261,10 @@ void Player::initMpris()
                 return;
             }
         }
+        QFileInfo fileInfo(path);
+        //符号连接无法正常播放
+        if (fileInfo.isSymLink())
+            path = fileInfo.symLinkTarget();
         DataBaseService::getInstance()->setFirstSong(path);
         DataBaseService::getInstance()->importMedias("all", QStringList() << path);
     });
