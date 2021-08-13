@@ -114,6 +114,7 @@
 #include "closeconfirmdialog.h"
 #include "subsonglistwidget.h"
 #include "songlistview.h"
+#include "songlistviewdialog.h"
 
 bool copyDirFiles(const QString &fromDir, const QString &toDir)
 {
@@ -2238,9 +2239,14 @@ TEST(Application, tabletAddToSonglist)
             event.clear();
         }
         QTest::qWait(100);
+        SongListViewDialog *songlistdlg = w->findChild<SongListViewDialog *>(AC_tablet_songListViewDlg);
+        //关闭对话框
+        if (songlist) {
+            songlistdlg->close();
+        }
     });
 
-    //mliv->slotShowSongList();
+    mliv->slotShowSongList();
 
     CommonService::getInstance()->setIsTabletEnvironment(false);
     QTest::qWait(50);
