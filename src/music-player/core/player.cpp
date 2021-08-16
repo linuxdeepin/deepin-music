@@ -100,8 +100,8 @@ void Player::init()
     qRegisterMetaType<Player::Error>();
     qRegisterMetaType<Player::PlaybackStatus>();
 
-    m_fadeOutAnimation = new QPropertyAnimation(this, "fadeInOutFactor");
-    m_fadeInAnimation = new QPropertyAnimation(this, "fadeInOutFactor");
+    m_fadeOutAnimation = new QPropertyAnimation(this, "fadeInOutFactor", this);
+    m_fadeInAnimation = new QPropertyAnimation(this, "fadeInOutFactor", this);
 
     //支持格式列表,.cda格式自动加载，无需放在支持列表中
     m_supportedSuffix << "*.aac"

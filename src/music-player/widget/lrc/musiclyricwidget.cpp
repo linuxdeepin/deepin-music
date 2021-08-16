@@ -167,7 +167,7 @@ void MusicLyricWidget::updateUI()
 
 void MusicLyricWidget::showAnimation()
 {
-    QPropertyAnimation *animation = new QPropertyAnimation(this, "pos");
+    QPropertyAnimation *animation = new QPropertyAnimation(this, "pos", this);
 
     animation->setDuration(AnimationDelay);
     animation->setEasingCurve(QEasingCurve::InCurve);
@@ -185,7 +185,7 @@ void MusicLyricWidget::showAnimation()
 
 void MusicLyricWidget::closeAnimation()
 {
-    QPropertyAnimation *animation = new QPropertyAnimation(this, "pos");
+    QPropertyAnimation *animation = new QPropertyAnimation(this, "pos", this);
 
     animation->setDuration(AnimationDelay);
     animation->setEasingCurve(QEasingCurve::InCurve);
