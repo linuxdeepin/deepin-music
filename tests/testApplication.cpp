@@ -2241,17 +2241,12 @@ TEST(Application, tabletAddToSonglist)
             event.clear();
         }
         QTest::qWait(100);
-        SongListViewDialog *songlistdlg = w->findChild<SongListViewDialog *>(AC_tablet_songListViewDlg);
-        //关闭对话框
-        if (songlist) {
-            songlistdlg->close();
-        }
     });
 
     mliv->slotShowSongList();
 
     CommonService::getInstance()->setIsTabletEnvironment(false);
-    QTest::qWait(50);
+    QTest::qWait(500);
 }
 
 TEST(Application, end)

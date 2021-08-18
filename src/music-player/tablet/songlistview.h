@@ -45,6 +45,7 @@ signals:
 public slots:
     void slotItemChanged(const QModelIndex &model);
 private:
-    SongListViewModel *m_listViewModel;
+    SongListViewModel *m_listViewModel = nullptr;
+    QWidget           *m_songListViewDialog = nullptr;
 };
 #endif // SONGLISTVIEW_H
