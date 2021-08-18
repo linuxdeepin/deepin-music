@@ -127,7 +127,7 @@ bool copyDirFiles(const QString &fromDir, const QString &toDir)
         }
     }
 
-    QFileInfoList fileInfoList = sourceDir.entryInfoList(QDir::NoDotAndDotDot|QDir::Files);
+    QFileInfoList fileInfoList = sourceDir.entryInfoList(QDir::NoDotAndDotDot | QDir::Files);
     for (auto fileInfo : fileInfoList) {
         if (!QFile::copy(fileInfo.filePath(), targetDir.filePath(fileInfo.fileName()))) {
             return false;
@@ -154,7 +154,7 @@ TEST(Application, copyMusicToMusicDir1)
         stringList[0].append("/歌曲");
 
         QDir deleteDir(stringList[0]);
-        if(deleteDir.exists())
+        if (deleteDir.exists())
             deleteDir.removeRecursively();
 
         QTest::qWait(50);
@@ -229,7 +229,9 @@ TEST(Application, importLinkText)
     QTest::qWait(100);
     MainFrame *w = Application::getInstance()->getMainWindow();
     QLabel *ilt = w->findChild<QLabel *>(AC_importLinkText);
-    ilt->linkActivated("");
+    //防止未找到扫描按钮
+    if (ilt)
+        ilt->linkActivated("");
     QTest::qWait(500); //等待扫描线程结束后，再做判断
 }
 
@@ -584,7 +586,7 @@ TEST(Application, musicListDialg3)
 
     // 从歌单中删除
     QTimer::singleShot(300, w, [ = ]() {
-        QTimer::singleShot(300, w, [ = ]() {
+        QTimer::singleShot(500, w, [ = ]() {
             QTestEventList event;
             DDialog *messageBox = w->findChild<DDialog *>(AC_MessageBox);
             event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
