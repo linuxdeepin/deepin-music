@@ -232,7 +232,7 @@ TEST(Application, importLinkText)
     //防止未找到扫描按钮
     if (ilt)
         ilt->linkActivated("");
-    QTest::qWait(500); //等待扫描线程结束后，再做判断
+    QTest::qWait(1000); //等待扫描线程结束后，再做判断
 }
 
 TEST(Application, deleteAllMusic)
