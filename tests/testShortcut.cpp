@@ -40,7 +40,7 @@
 #include "musicsonglistview.h"
 #include "speechCenter.h"
 #include "shortcut.h"
-
+#include "importwidget.h"
 
 TEST(Application, shortCut)
 {
@@ -411,8 +411,9 @@ TEST(Application, otherImportLinkText2)
 
     QTest::qWait(100);
     MainFrame *w = Application::getInstance()->getMainWindow();
-    QLabel *ilt = w->findChild<QLabel *>(AC_importLinkText);
-    ilt->linkActivated("");
-    QTest::qWait(500);
+    ImportWidget *ilt = w->findChild<ImportWidget *>(AC_ImportWidget);
+    //防止未找到扫描按钮
+    if (ilt)
+        ilt->slotLinkActivated("");
+    QTest::qWait(1000); //等待扫描线程结束后，再做判断
 }
-
