@@ -219,7 +219,7 @@ TEST(Application, init)
         QTest::qWait(50);
     }
     DataBaseService::getInstance()->importMedias(info.uuid, importList);
-    QTest::qWait(500);
+    QTest::qWait(1000);
 }
 
 TEST(Application, importLinkText)
@@ -233,7 +233,7 @@ TEST(Application, importLinkText)
     //防止未找到扫描按钮
     if (ilt)
         ilt->slotLinkActivated("");
-    QTest::qWait(500); //等待扫描线程结束后，再做判断
+    QTest::qWait(1000); //等待扫描线程结束后，再做判断
 }
 
 TEST(Application, deleteAllMusic)
@@ -359,7 +359,7 @@ TEST(Application, importLinkText1)
     //防止未找到扫描按钮
     if (ilt)
         ilt->slotLinkActivated("");
-    QTest::qWait(500);
+    QTest::qWait(1000);
 }
 
 //// Dialg窗口
@@ -1017,8 +1017,9 @@ TEST(Application, importLinkText2)
     QTest::qWait(100);
     MainFrame *w = Application::getInstance()->getMainWindow();
     QLabel *ilt = w->findChild<QLabel *>(AC_importLinkText);
-    ilt->linkActivated("");
-    QTest::qWait(500);
+    if (ilt)
+        ilt->linkActivated("");
+    QTest::qWait(1000);
 }
 
 TEST(Application, viewChanged)
@@ -2257,10 +2258,3 @@ TEST(Application, end)
     TEST_CASE_NAME("end")
     QTest::qWait(500);
 }
-
-
-
-
-
-
-
