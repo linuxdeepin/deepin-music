@@ -115,6 +115,7 @@
 #include "subsonglistwidget.h"
 #include "songlistview.h"
 #include "songlistviewdialog.h"
+#include "importwidget.h"
 
 bool copyDirFiles(const QString &fromDir, const QString &toDir)
 {
@@ -228,11 +229,11 @@ TEST(Application, importLinkText)
 
     QTest::qWait(100);
     MainFrame *w = Application::getInstance()->getMainWindow();
-    QLabel *ilt = w->findChild<QLabel *>(AC_importLinkText);
+    ImportWidget *ilt = w->findChild<ImportWidget *>(AC_ImportWidget);
     //防止未找到扫描按钮
     if (ilt)
-        ilt->linkActivated("");
-    QTest::qWait(1000); //等待扫描线程结束后，再做判断
+        ilt->slotLinkActivated("");
+    QTest::qWait(500); //等待扫描线程结束后，再做判断
 }
 
 TEST(Application, deleteAllMusic)
@@ -354,8 +355,10 @@ TEST(Application, importLinkText1)
 
     QTest::qWait(100);
     MainFrame *w = Application::getInstance()->getMainWindow();
-    QLabel *ilt = w->findChild<QLabel *>(AC_importLinkText);
-    ilt->linkActivated("");
+    ImportWidget *ilt = w->findChild<ImportWidget *>(AC_ImportWidget);
+    //防止未找到扫描按钮
+    if (ilt)
+        ilt->slotLinkActivated("");
     QTest::qWait(500);
 }
 
