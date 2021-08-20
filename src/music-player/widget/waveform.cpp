@@ -581,6 +581,10 @@ void Waveform::updatePlayerPos(int value)
     Q_ASSERT(range != 0);
     if (value <= range) {
         long long position = value * Player::getInstance()->duration() / range;
+        if (Player::getInstance()->position() == -1) {
+            auto activeMeta = Player::getInstance()->getActiveMeta();
+            position = value * activeMeta.length / range;
+        }
         Player::getInstance()->setPosition(position);
     }
 }

@@ -415,6 +415,7 @@ void MainFrame::autoStartToPlay()
             /**
               * 初始不再读取歌曲设置进度，方案更改为直接设置进度，播放歌曲后跳转
               **/
+            Player::getInstance()->setPosition(medmeta.offset);
             // 设置进度
             m_footerWidget->slotSetWaveValue(MusicSettings::value("base.play.last_position").toInt(), medmeta.length);
         }
@@ -958,8 +959,16 @@ void MainFrame::resizeEvent(QResizeEvent *e)
 void MainFrame::closeEvent(QCloseEvent *event)
 {
     //保存进度
-    MusicSettings::setOption("base.play.last_position", Player::getInstance()->position());
-
+    auto curPosition = Player::getInstance()->getActiveMeta().offset;
+    //是否记录最后播放位置
+    if (MusicSettings::value("base.play.remember_progress").toBool()) {
+        //防止未播放时重置进度
+        if (!Player::getInstance()->getActiveMeta().localPath.isEmpty()) {
+            MusicSettings::setOption("base.play.last_position", curPosition);
+        }
+    } else {
+        MusicSettings::setOption("base.play.last_position", -1);
+    }
     auto askCloseAction = MusicSettings::value("base.close.close_action").toInt();
     switch (askCloseAction) {
     case 0: {

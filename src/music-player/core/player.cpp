@@ -702,6 +702,11 @@ void Player::setPosition(qlonglong position)
     if (m_qvinstance == nullptr || m_qvplayer == nullptr || m_qvmedia == nullptr) {
         initVlc();
     }
+    //未加载前设置进度
+    if (m_qvplayer->time() == -1) {
+        INT_LAST_PROGRESS_FLAG = 1;
+        m_ActiveMeta.offset = position;
+    }
 
     if (m_qvplayer->length() == m_ActiveMeta.length) {
         return m_qvplayer->setTime(position);
@@ -1075,6 +1080,7 @@ void Player::initVlc()
     connect(m_qvplayer, &VlcMediaPlayer::timeChanged,
     this, [ = ](qint64 position) {
         Q_EMIT positionChanged(position /*- m_ActiveMeta.offset*/,  m_ActiveMeta.length, 1); //直接上报当前位置，offset无实质意义
+        m_ActiveMeta.offset = position;
     });
 
     //vlc stateChanged
