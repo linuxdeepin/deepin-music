@@ -694,6 +694,7 @@ void MainFrame::slotMenuTriggered(QAction *action)
         }
         configDialog->exec();
         delete configDialog;
+        delete equalizerSettings;
     }
 
     if (action == m_settings) {
