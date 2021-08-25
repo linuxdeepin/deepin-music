@@ -41,6 +41,7 @@
 #include "application.h"
 #include "mainframe.h"
 #include "player.h"
+#include "core/vlc/vlcdynamicinstance.h"
 #ifndef SYSTEM_MIPS
 #include <sanitizer/asan_interface.h>
 #endif
@@ -63,6 +64,8 @@ static bool checkOnly();
         app.loadTranslator(); \
         checkOnly(); \
         MusicSettings::init(); \
+        VlcDynamicInstance::VlcFunctionInstance(); \
+        Player::getInstance(); \
         MainFrame mainframe; \
         auto showflag = MusicSettings::value("base.play.showFlag").toBool(); \
         mainframe.initUI(showflag); \
@@ -85,9 +88,6 @@ public:
     ~QTestMain();
 
 private slots:
-//    void initTestCase();
-//    void cleanupTestCase();
-
     void testGTest();
 
     void testQString_data();

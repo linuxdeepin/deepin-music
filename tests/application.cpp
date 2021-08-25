@@ -20,30 +20,10 @@
  */
 
 #include "application.h"
-//#include "config.h"
-
-#include "mainframe.h"
-
-#include <QDebug>
-#include <QTranslator>
-#include <QIcon>
-#include <QImageReader>
-#include <sys/time.h>
-#include <DApplicationSettings>
-#include <QFile>
-#include <DLog>
-//#include <dgiofile.h>
-//#include <dgiofileinfo.h>
-#include <DAboutDialog>
-namespace {
-//const QString CACHE_PATH = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) + QDir::separator() + "deepin" + QDir::separator() + "deepin-album"/* + QDir::separator()*/;
-}
-// namespace
 
 #define IMAGE_HEIGHT_DEFAULT    100
 #define IMAGE_LOAD_DEFAULT    100
 
-DApplication *Application::dAppNew = nullptr;
 Application *Application::dApp1 = nullptr;
 Application::Application()
 {
@@ -59,23 +39,6 @@ Application *Application::getInstance()
         dApp1 = new Application();
     }
     return dApp1;
-}
-
-DApplication *Application::getDAppNew()
-{
-    return dAppNew;
-}
-
-Application *Application::getApp()
-{
-    if (dApp1 == nullptr)
-        dApp1 = new Application;
-    return dApp1;
-}
-
-void Application::setApp(DApplication *app)
-{
-    dAppNew = app;
 }
 
 void Application::setMainWindow(MainFrame *window)

@@ -42,6 +42,7 @@
 #include "config.h"
 
 #include "core/player.h"
+#include "core/vlc/vlcdynamicinstance.h"
 #include "core/musicsettings.h"
 #include "core/util/global.h"
 #include "databaseservice.h"
@@ -109,6 +110,7 @@ int main(int argc, char *argv[])
 
     app->loadTranslator();
     MusicSettings::init();
+    VlcDynamicInstance::VlcFunctionInstance();
     Player::getInstance();
     //将检查唯一性提前可以先创建好缓存路径避免某种情况下创建数据库失败
     bool bc = checkOnly();
