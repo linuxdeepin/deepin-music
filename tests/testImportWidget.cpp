@@ -79,7 +79,7 @@
 //    QTimer::singleShot(200, w, [ = ]() {
 //        // 清空ListView
 //        QTest::qWait(50);
-//        DDialog *messageBox = w->findChild<DDialog *>("MessageBox");
+//        DDialog *messageBox = w->findChild<DDialog *>("messageBox");
 //        if (messageBox) {
 //            QPoint pos = QPoint(130, 150);
 //            QTestEventList event;
