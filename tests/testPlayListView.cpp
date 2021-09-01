@@ -86,11 +86,15 @@ TEST(Application, playListView1)
     QTimer::singleShot(300, w, [ = ]() {
         QTestEventList event;
         DMenu *menuWidget = static_cast<DMenu *>(qApp->activePopupWidget());
-        event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
-        event.addKeyClick(Qt::Key_Enter, Qt::NoModifier, 50);
-        event.addDelay(100);
-        event.simulate(menuWidget);
-        event.clear();
+        //防止窗口未打开
+        if (menuWidget) {
+            event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
+            event.addKeyClick(Qt::Key_Enter, Qt::NoModifier, 50);
+            event.addDelay(100);
+            event.simulate(menuWidget);
+            event.clear();
+        }
+
         QTest::qWait(100);
     });
 
@@ -137,11 +141,15 @@ TEST(Application, playListView2)
 
         QTestEventList event;
         DMenu *menuWidget = static_cast<DMenu *>(qApp->activePopupWidget());
-        event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
-        event.addKeyClick(Qt::Key_Enter, Qt::NoModifier, 50);
-        event.addDelay(100);
-        event.simulate(menuWidget);
-        event.clear();
+        //防止窗口未打开
+        if (menuWidget) {
+            event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
+            event.addKeyClick(Qt::Key_Enter, Qt::NoModifier, 50);
+            event.addDelay(100);
+            event.simulate(menuWidget);
+            event.clear();
+        }
+
         QTest::qWait(100);
     });
 
@@ -174,18 +182,24 @@ TEST(Application, playListView3)
     QTimer::singleShot(300, w, [ = ]() {
         QTestEventList event;
         DMenu *menuWidget = static_cast<DMenu *>(qApp->activePopupWidget());
-        event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
-        event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
-        event.addKeyClick(Qt::Key_Enter, Qt::NoModifier, 50);
-        event.addDelay(100);
-        event.simulate(menuWidget);
-        event.clear();
+        //防止窗口未打开
+        if (menuWidget) {
+            event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
+            event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
+            event.addKeyClick(Qt::Key_Enter, Qt::NoModifier, 50);
+            event.addDelay(100);
+            event.simulate(menuWidget);
+            event.clear();
+        }
         QTest::qWait(100);
 
         menuWidget = static_cast<DMenu *>(qApp->activePopupWidget());
-        event.addKeyClick(Qt::Key_Enter, Qt::NoModifier, 50);
-        event.simulate(menuWidget);
-        event.clear();
+        //防止窗口未打开
+        if (menuWidget) {
+            event.addKeyClick(Qt::Key_Enter, Qt::NoModifier, 50);
+            event.simulate(menuWidget);
+            event.clear();
+        }
         QTest::qWait(100);
     });
 
@@ -218,19 +232,25 @@ TEST(Application, playListView4)
     QTimer::singleShot(300, w, [ = ]() {
         QTestEventList event;
         DMenu *menuWidget = static_cast<DMenu *>(qApp->activePopupWidget());
-        event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
-        event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
-        event.addKeyClick(Qt::Key_Enter, Qt::NoModifier, 50);
-        event.addDelay(100);
-        event.simulate(menuWidget);
-        event.clear();
+        //防止窗口未打开
+        if (menuWidget) {
+            event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
+            event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
+            event.addKeyClick(Qt::Key_Enter, Qt::NoModifier, 50);
+            event.addDelay(100);
+            event.simulate(menuWidget);
+            event.clear();
+        }
         QTest::qWait(100);
 
         menuWidget = static_cast<DMenu *>(qApp->activePopupWidget());
-        event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
-        event.addKeyClick(Qt::Key_Enter, Qt::NoModifier, 50);
-        event.simulate(menuWidget);
-        event.clear();
+        //防止窗口未打开
+        if (menuWidget) {
+            event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
+            event.addKeyClick(Qt::Key_Enter, Qt::NoModifier, 50);
+            event.simulate(menuWidget);
+            event.clear();
+        }
         QTest::qWait(100);
     });
 
@@ -264,19 +284,25 @@ TEST(Application, playListView5)
     QTimer::singleShot(300, w, [ = ]() {
         QTestEventList event;
         DMenu *menuWidget = static_cast<DMenu *>(qApp->activePopupWidget());
-        event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
-        event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
-        event.addKeyClick(Qt::Key_Enter, Qt::NoModifier, 50);
-        event.addDelay(100);
-        event.simulate(menuWidget);
-        event.clear();
+        //防止窗口未打开
+        if (menuWidget) {
+            event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
+            event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
+            event.addKeyClick(Qt::Key_Enter, Qt::NoModifier, 50);
+            event.addDelay(100);
+            event.simulate(menuWidget);
+            event.clear();
+        }
         QTest::qWait(100);
 
         menuWidget = static_cast<DMenu *>(qApp->activePopupWidget());
-        event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
-        event.addKeyClick(Qt::Key_Enter, Qt::NoModifier, 50);
-        event.simulate(menuWidget);
-        event.clear();
+        //防止窗口未打开
+        if (menuWidget) {
+            event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
+            event.addKeyClick(Qt::Key_Enter, Qt::NoModifier, 50);
+            event.simulate(menuWidget);
+            event.clear();
+        }
         baseListView->setFocus();
         QTest::qWait(100);
     });
@@ -321,20 +347,26 @@ TEST(Application, playListView6)
     QTimer::singleShot(300, w, [ = ]() {
         QTestEventList event;
         DMenu *menuWidget = static_cast<DMenu *>(qApp->activePopupWidget());
-        event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
-        event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
-        event.addKeyClick(Qt::Key_Enter, Qt::NoModifier, 50);
-        event.addDelay(100);
-        event.simulate(menuWidget);
-        event.clear();
+        //防止窗口未打开
+        if (menuWidget) {
+            event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
+            event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
+            event.addKeyClick(Qt::Key_Enter, Qt::NoModifier, 50);
+            event.addDelay(100);
+            event.simulate(menuWidget);
+            event.clear();
+        }
         QTest::qWait(100);
 
         menuWidget = static_cast<DMenu *>(qApp->activePopupWidget());
-        event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
-        event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
-        event.addKeyClick(Qt::Key_Enter, Qt::NoModifier, 50);
-        event.simulate(menuWidget);
-        event.clear();
+        //防止窗口未打开
+        if (menuWidget) {
+            event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
+            event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
+            event.addKeyClick(Qt::Key_Enter, Qt::NoModifier, 50);
+            event.simulate(menuWidget);
+            event.clear();
+        }
         QTest::qWait(100);
     });
 
@@ -380,26 +412,32 @@ TEST(Application, playListView7)
             QTest::qWait(500);
             QTestEventList event;
             DDialog *messageBox = w->findChild<DDialog *>(AC_MessageBox);
-            event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
-            event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
-            event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
-            event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
-            event.addKeyClick(Qt::Key_Enter, Qt::NoModifier, 50);
-            event.simulate(messageBox);
-            event.clear();
+            //防止窗口未打开
+            if (messageBox) {
+                event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
+                event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
+                event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
+                event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
+                event.addKeyClick(Qt::Key_Enter, Qt::NoModifier, 50);
+                event.simulate(messageBox);
+                event.clear();
+            }
             QTest::qWait(50);
         });
 
         QTestEventList event;
         DMenu *menuWidget = static_cast<DMenu *>(qApp->activePopupWidget());
-        event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
-        event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
-        event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
-        event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
-        event.addKeyClick(Qt::Key_Enter, Qt::NoModifier, 50);
-        event.addDelay(100);
-        event.simulate(menuWidget);
-        event.clear();
+        //防止窗口未打开
+        if (menuWidget) {
+            event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
+            event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
+            event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
+            event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
+            event.addKeyClick(Qt::Key_Enter, Qt::NoModifier, 50);
+            event.addDelay(100);
+            event.simulate(menuWidget);
+            event.clear();
+        }
         QTest::qWait(100);
     });
 
@@ -445,27 +483,33 @@ TEST(Application, playListView8)
             QTest::qWait(500);
             QTestEventList event;
             DDialog *messageBox = w->findChild<DDialog *>(AC_MessageBox);
-            event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
-            event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
-            event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
-            event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
-            event.addKeyClick(Qt::Key_Enter, Qt::NoModifier, 50);
-            event.simulate(messageBox);
-            event.clear();
+            //防止窗口未打开
+            if (messageBox) {
+                event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
+                event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
+                event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
+                event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
+                event.addKeyClick(Qt::Key_Enter, Qt::NoModifier, 50);
+                event.simulate(messageBox);
+                event.clear();
+            }
             QTest::qWait(50);
         });
 
         QTestEventList event;
         DMenu *menuWidget = static_cast<DMenu *>(qApp->activePopupWidget());
-        event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
-        event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
-        event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
-        event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
-        event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
-        event.addKeyClick(Qt::Key_Enter, Qt::NoModifier, 50);
-        event.addDelay(100);
-        event.simulate(menuWidget);
-        event.clear();
+        //防止窗口未打开
+        if (menuWidget) {
+            event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
+            event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
+            event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
+            event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
+            event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
+            event.addKeyClick(Qt::Key_Enter, Qt::NoModifier, 50);
+            event.addDelay(100);
+            event.simulate(menuWidget);
+            event.clear();
+        }
         QTest::qWait(100);
     });
 
@@ -498,22 +542,28 @@ TEST(Application, playListView9)
     QTimer::singleShot(300, w, [ = ]() {
         QTestEventList event;
         DMenu *menuWidget = static_cast<DMenu *>(qApp->activePopupWidget());
-        event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
-        event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
-        event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
-        event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
-        event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
-        event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
-        event.addKeyClick(Qt::Key_Enter, Qt::NoModifier, 50);
-        event.addDelay(100);
-        event.simulate(menuWidget);
-        event.clear();
+        //防止窗口未打开
+        if (menuWidget) {
+            event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
+            event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
+            event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
+            event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
+            event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
+            event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
+            event.addKeyClick(Qt::Key_Enter, Qt::NoModifier, 50);
+            event.addDelay(100);
+            event.simulate(menuWidget);
+            event.clear();
+        }
         QTest::qWait(100);
 
         menuWidget = static_cast<DMenu *>(qApp->activePopupWidget());
-        event.addKeyClick(Qt::Key_Enter, Qt::NoModifier, 50);
-        event.simulate(menuWidget);
-        event.clear();
+        //防止窗口未打开
+        if (menuWidget) {
+            event.addKeyClick(Qt::Key_Enter, Qt::NoModifier, 50);
+            event.simulate(menuWidget);
+            event.clear();
+        }
         QTest::qWait(100);
     });
 
@@ -546,21 +596,28 @@ TEST(Application, playListView10)
     QTimer::singleShot(300, w, [ = ]() {
         QTestEventList event;
         DMenu *menuWidget = static_cast<DMenu *>(qApp->activePopupWidget());
-        event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
-        event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
-        event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
-        event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
-        event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
-        event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
-        event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
-        event.addKeyClick(Qt::Key_Enter, Qt::NoModifier, 50);
-        event.addDelay(100);
-        event.simulate(menuWidget);
-        event.clear();
+        //防止窗口未打开
+        if (menuWidget) {
+            event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
+            event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
+            event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
+            event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
+            event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
+            event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
+            event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
+            event.addKeyClick(Qt::Key_Enter, Qt::NoModifier, 50);
+            event.addDelay(100);
+            event.simulate(menuWidget);
+            event.clear();
+        }
+
         QTest::qWait(100);
 
         InfoDialog *info = w->findChild<InfoDialog *>(AC_infoDialog);
-        info->close();
+        //防止窗口未打开
+        if (info) {
+            info->close();
+        }
     });
 
     QContextMenuEvent menuEvent(QContextMenuEvent::Mouse, QPoint(20, 20));

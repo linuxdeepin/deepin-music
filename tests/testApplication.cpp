@@ -271,7 +271,7 @@ TEST(Application, deleteAllMusic)
         QTimer::singleShot(1000, w, [ = ]() {
             // 清空ListView
             QTest::qWait(50);
-            DDialog *messageBox = w->findChild<DDialog *>("MessageBox");
+            DDialog *messageBox = w->findChild<DDialog *>(AC_MessageBox);
             if (messageBox) {
                 QTestEventList event;
                 event.addKeyClick(Qt::Key::Key_Tab, Qt::NoModifier, 50);
@@ -592,25 +592,32 @@ TEST(Application, musicListDialg3)
         QTimer::singleShot(500, w, [ = ]() {
             QTestEventList event;
             DDialog *messageBox = w->findChild<DDialog *>(AC_MessageBox);
+            //防止窗口未打开
+            if (messageBox) {
+                event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
+                event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
+                event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
+                event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
+                event.addKeyClick(Qt::Key_Enter, Qt::NoModifier, 50);
+                event.simulate(messageBox);
+                event.clear();
+            }
+            w->slotLeftClicked();
+        });
+        QTestEventList event;
+        DMenu *menuWidget = static_cast<DMenu *>(qApp->activePopupWidget());
+        //防止窗口未打开
+        if (menuWidget) {
             event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
             event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
             event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
             event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
             event.addKeyClick(Qt::Key_Enter, Qt::NoModifier, 50);
-            event.simulate(messageBox);
+            event.addDelay(100);
+            event.simulate(menuWidget);
             event.clear();
-            w->slotLeftClicked();
-        });
-        QTestEventList event;
-        DMenu *menuWidget = static_cast<DMenu *>(qApp->activePopupWidget());
-        event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
-        event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
-        event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
-        event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
-        event.addKeyClick(Qt::Key_Enter, Qt::NoModifier, 50);
-        event.addDelay(100);
-        event.simulate(menuWidget);
-        event.clear();
+        }
+
         QTest::qWait(100);
     });
     QContextMenuEvent menuEvent(QContextMenuEvent::Mouse, QPoint(20, 20));
@@ -662,14 +669,18 @@ TEST(Application, musicListDialg4)
         QTimer::singleShot(800, w, [ = ]() {
             QTestEventList event;
             DDialog *messageBox = w->findChild<DDialog *>(AC_MessageBox);
-            event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
-            event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
-            event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
-            event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
-            event.addKeyClick(Qt::Key_Enter, Qt::NoModifier, 50);
-            event.simulate(messageBox);
-            event.clear();
-            QTest::qWait(500);
+            //防止窗口未打开
+            if (messageBox) {
+                event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
+                event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
+                event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
+                event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
+                event.addKeyClick(Qt::Key_Enter, Qt::NoModifier, 50);
+                event.simulate(messageBox);
+                event.clear();
+                QTest::qWait(500);
+            }
+
             emit backBtn->clicked();
         });
         QTestEventList event;
@@ -799,15 +810,18 @@ TEST(Application, musicListDialg6)
     QTimer::singleShot(800, w, [ = ]() {
         QTestEventList event;
         DDialog *messageBox = w->findChild<DDialog *>(AC_MessageBox);
-        event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
-        event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
-        event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
-        event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
-        event.addKeyClick(Qt::Key_Enter, Qt::NoModifier, 50);
-        event.simulate(messageBox);
-        event.clear();
-        QTest::qWait(500);
-        emit backBtn->clicked();
+        //防止窗口未打开
+        if (messageBox) {
+            event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
+            event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
+            event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
+            event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
+            event.addKeyClick(Qt::Key_Enter, Qt::NoModifier, 50);
+            event.simulate(messageBox);
+            event.clear();
+            QTest::qWait(500);
+            emit backBtn->clicked();
+        }
     });
 
     // Dialog KeyPress
@@ -2058,31 +2072,32 @@ TEST(Application, settings)
     // 设置窗体
     QTimer::singleShot(1000, w, [ = ]() {
         DSettingsDialog *setting = w->findChild<DSettingsDialog *>(AC_configDialog);
+        //防止窗口未打开
+        if (setting) {
+            QTestEventList event;
+            event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
+            event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
+            event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
+            event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
+            event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
+            event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
+            event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
+            event.simulate(setting);
+            event.clear();
 
-        QTestEventList event;
-        event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
-        event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
-        event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
-        event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
-        event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
-        event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
-        event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
-        event.simulate(setting);
-        event.clear();
+            MusicSettings::setOption("base.close.close_action", 2);
 
-        MusicSettings::setOption("base.close.close_action", 2);
+            QTest::qWait(100);
+            setting->close();
+            QTest::qWait(100);
 
-        QTest::qWait(100);
-        setting->close();
-        QTest::qWait(100);
-
-        QTimer::singleShot(200, w, [ = ]() {
-            CloseConfirmDialog *ccd = w->findChild<CloseConfirmDialog *>(AC_CloseConfirmDialog);
-            if (ccd) {
-                ccd->close();
-            }
-        });
-
+            QTimer::singleShot(200, w, [ = ]() {
+                CloseConfirmDialog *ccd = w->findChild<CloseConfirmDialog *>(AC_CloseConfirmDialog);
+                if (ccd) {
+                    ccd->close();
+                }
+            });
+        }
         w->close();
     });
 
