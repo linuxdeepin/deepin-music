@@ -174,9 +174,10 @@ void Player::playMeta(MediaMeta meta)
         m_qvplayer->play();
 
         if (INT_LAST_PROGRESS_FLAG && m_ActiveMeta.hash == meta.hash) {
+            qint64 lastOffset = m_ActiveMeta.offset;
             QTimer::singleShot(100, this, [ = ]() {//为了记录进度条生效，在加载的时候让音乐播放100ms
-                qDebug() << "seek last position:" << m_ActiveMeta.offset;
-                m_qvplayer->setTime(m_ActiveMeta.offset);
+                qDebug() << "seek last position:" << lastOffset;
+                m_qvplayer->setTime(lastOffset);
             });
             INT_LAST_PROGRESS_FLAG = 0;
         }
@@ -923,8 +924,7 @@ void Player::onSleepWhenTaking(bool sleep)
     qDebug() << "onSleepWhenTaking:" << sleep;
     if (sleep) {
         //休眠记录状态
-        m_Vlcstate = m_qvplayer->state();
-        if (m_Vlcstate == Vlc::Playing) {
+        if (m_qvplayer->state() == Vlc::Playing) {
             //休眠唤醒前设置音量为1%
             readSinkInputPath();
             if (!m_sinkInputPath.isEmpty()) {
@@ -934,18 +934,22 @@ void Player::onSleepWhenTaking(bool sleep)
                 if (!ainterface.isValid()) {
                     return ;
                 }
-                //调用设置音量
-                ainterface.call(QLatin1String("SetVolume"), 0.01, false);
+                //停止播放并记录播放位置
+                m_Vlcstate = Vlc::Playing;
+                m_qvplayer->pause();
+                qlonglong time = position();
+                INT_LAST_PROGRESS_FLAG = 1;
+                m_ActiveMeta.offset = time;
+                m_qvplayer->stop();
             }
         }
     } else { //设置状态
         if (m_Vlcstate == Vlc::Playing) {
             //播放
-            resume();
             QTimer::singleShot(2000, [ = ]() {
-                //2s后恢复
-                setMusicVolume(m_volume / 100.0);
+                playMeta(m_ActiveMeta);
             });
+            m_Vlcstate = -1;
         }
     }
 }
@@ -1080,7 +1084,9 @@ void Player::initVlc()
     connect(m_qvplayer, &VlcMediaPlayer::timeChanged,
     this, [ = ](qint64 position) {
         Q_EMIT positionChanged(position /*- m_ActiveMeta.offset*/,  m_ActiveMeta.length, 1); //直接上报当前位置，offset无实质意义
-        m_ActiveMeta.offset = position;
+        if (INT_LAST_PROGRESS_FLAG == 0) {
+            m_ActiveMeta.offset = position;
+        }
     });
 
     //vlc stateChanged
