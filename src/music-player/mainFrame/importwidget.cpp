@@ -57,7 +57,7 @@ ImportWidget::ImportWidget(QWidget *parent) : DFrame(parent)
     auto layout = new QVBoxLayout(this);
     layout->setMargin(0);
 
-    m_logo = new QLabel;
+    m_logo = new QLabel(this);
     m_logo->setFixedSize(128, 128);
     m_logo->setObjectName("ImportViewLogo");
     m_logo->setPixmap(QIcon::fromTheme("import_music_light").pixmap(QSize(128, 128)));
@@ -66,7 +66,7 @@ ImportWidget::ImportWidget(QWidget *parent) : DFrame(parent)
     m_waterProgress->setTextVisible(true);
     m_waterProgress->setVisible(false);
 
-    m_importPathButton = new DPushButton;
+    m_importPathButton = new DPushButton(this);
     auto pl = m_importPathButton->palette();
     pl.setColor(DPalette::Dark, QColor("#0098FF"));
     pl.setColor(DPalette::Light, QColor("#25B7FF"));
@@ -82,7 +82,7 @@ ImportWidget::ImportWidget(QWidget *parent) : DFrame(parent)
     m_importPathButton->installEventFilter(this);
     DFontSizeManager::instance()->bind(m_importPathButton, DFontSizeManager::T6, QFont::Normal);
 
-    m_addMusicButton = new DPushButton;
+    m_addMusicButton = new DPushButton(this);
 //    d->addMusicButton->setPalette(pl);
     m_addMusicButton->setFixedSize(302, 36);
     m_addMusicButton->setText(tr("Add Music"));
@@ -91,7 +91,7 @@ ImportWidget::ImportWidget(QWidget *parent) : DFrame(parent)
     m_addMusicButton->installEventFilter(this);
     DFontSizeManager::instance()->bind(m_addMusicButton, DFontSizeManager::T6, QFont::Normal);
 
-    m_text = new QLabel;
+    m_text = new QLabel(this);
     m_text->setObjectName("ImportViewText");
     QString linkText = QString(linkTemplate).arg(tr("Scan")).arg(tr("Scan"));
     m_text->setText(tr("%1 music directory or drag music files here").arg(linkText));

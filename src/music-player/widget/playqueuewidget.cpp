@@ -60,22 +60,22 @@ PlayQueueWidget::PlayQueueWidget(QWidget *parent) :
     this->blurBackground()->setBlurEnabled(true);
     this->blurBackground()->setMode(DBlurEffectWidget::GaussianBlur);
 
-    m_actionBar = new DWidget;
+    m_actionBar = new DWidget(this);
     m_actionBar->setFixedWidth(200);
     m_actionBar->setObjectName("PlayListActionBar");
 
-    m_titleLabel = new DLabel();
+    m_titleLabel = new DLabel(this);
     DFontSizeManager::instance()->bind(m_titleLabel, DFontSizeManager::T3);
     m_titleLabel->setMargin(4);
     m_titleLabel->setText(tr("Play Queue"));
     m_titleLabel->setForegroundRole(DPalette::BrightText);
 
-    m_infoLabel = new DLabel();
+    m_infoLabel = new DLabel(this);
     DFontSizeManager::instance()->bind(m_infoLabel, DFontSizeManager::T6);
     m_infoLabel->setMargin(4);
     m_infoLabel->setForegroundRole(DPalette::ButtonText);
 
-    m_btClearAll = new DPushButton;
+    m_btClearAll = new DPushButton(this);
     m_btClearAll->setIcon(QIcon::fromTheme("clear_list"));
 //    m_btClearAll->setFont(infoFont);
     DFontSizeManager::instance()->bind(m_btClearAll, DFontSizeManager::T6);
@@ -105,7 +105,7 @@ PlayQueueWidget::PlayQueueWidget(QWidget *parent) :
     actionBarLayout->addWidget(m_btClearAll, 0, Qt::AlignLeft);
     actionBarLayout->addStretch();
 
-    m_playListView = new PlayListView("play", true);
+    m_playListView = new PlayListView("play", true, this);
     m_playListView->setFocusPolicy(Qt::StrongFocus);
 //    m_playListView->installEventFilter(this);
 

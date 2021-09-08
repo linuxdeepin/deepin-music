@@ -142,7 +142,7 @@ void FooterWidget::initUI(QWidget *parent)
     AC_SET_OBJECT_NAME(m_btNext, AC_Next);
     AC_SET_ACCESSIBLE_NAME(m_btNext, AC_Next);
 
-    m_ctlWidget = new DButtonBox;
+    m_ctlWidget = new DButtonBox(this);
     m_ctlWidget->setButtonList(QList<DButtonBoxButton *>() << m_btPrev << m_btPlay << m_btNext, false);
     mainHBoxlayout->addWidget(m_ctlWidget, 0);
 
@@ -158,14 +158,14 @@ void FooterWidget::initUI(QWidget *parent)
     AC_SET_ACCESSIBLE_NAME(m_btCover, AC_btCover);
 
     // 歌曲名
-    m_title = new Label;
+    m_title = new Label(this);
     m_title->setObjectName("FooterTitle");
     m_title->setText(tr("Unknown Title"));
     m_title->setMaximumWidth(140);
     m_title->setForegroundRole(DPalette::BrightText);
     DFontSizeManager::instance()->bind(m_title, DFontSizeManager::T8, QFont::Normal);
     // 歌唱者
-    m_artist = new Label;
+    m_artist = new Label(this);
     m_artist->setObjectName("FooterArtist");
     m_artist->setText(tr("Unknown artist"));
     m_artist->setMaximumWidth(140);

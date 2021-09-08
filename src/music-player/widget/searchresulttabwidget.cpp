@@ -86,12 +86,12 @@ SearchResultTabWidget::SearchResultTabWidget(QWidget *parent) :
     hLayout->addStretch();
 
     //分割线1
-    m_Line = new DHorizontalLine;
+    m_Line = new DHorizontalLine(this);
     m_Line->setFrameShadow(DHorizontalLine::Raised);
     m_Line->setLineWidth(1);
     m_Line->lower();
 
-    QHBoxLayout *hLineLayout = new QHBoxLayout();
+    QHBoxLayout *hLineLayout = new QHBoxLayout;
     hLineLayout->setContentsMargins(17, 0, 12, 0);
     hLineLayout->addWidget(m_Line);
     vlayout->addLayout(hLineLayout);

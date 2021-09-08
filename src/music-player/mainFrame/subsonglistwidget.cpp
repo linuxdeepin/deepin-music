@@ -53,7 +53,7 @@ void SubSonglistWidget::initUI()
     mainLayout->setSpacing(0);
     mainLayout->setContentsMargins(0, 0, 0, 0);
 
-    m_titleImage = new QLabel;
+    m_titleImage = new QLabel(this);
     m_titleImage->setForegroundRole(DPalette::BrightText);
     m_titleImage->setFixedHeight(150);
     QPixmap m_bgImage = QIcon::fromTheme("cover_max").pixmap(QSize(200, 200));
@@ -64,19 +64,19 @@ void SubSonglistWidget::initUI()
     titleLayout->setSpacing(5);
     titleLayout->setContentsMargins(28, 15, 0, 20);
 
-    m_titleLabel = new DLabel();
+    m_titleLabel = new DLabel(this);
     m_titleLabel->setForegroundRole(DPalette::BrightText);
     titleLayout->addWidget(m_titleLabel, 1);
-    m_infoLabel = new DLabel();
+    m_infoLabel = new DLabel(this);
     m_infoLabel->setForegroundRole(DPalette::BrightText);
     titleLayout->addWidget(m_infoLabel, 1);
-    QHBoxLayout *btLayout = new QHBoxLayout();
+    QHBoxLayout *btLayout = new QHBoxLayout(this);
     btLayout->setSpacing(5);
     btLayout->setContentsMargins(0, 16, 0, 0);
     titleLayout->addLayout(btLayout, 1);
 
     // 播放全部
-    m_btPlayAll = new DPushButton;
+    m_btPlayAll = new DPushButton(this);
     auto playAllPalette = m_btPlayAll->palette();
     playAllPalette.setColor(DPalette::ButtonText, Qt::white);
     // 按钮颜色不对，由UI确认
@@ -99,7 +99,7 @@ void SubSonglistWidget::initUI()
     btLayout->addWidget(m_btPlayAll);
 
     // 随机播放
-    m_btRandomPlay = new DPushButton;
+    m_btRandomPlay = new DPushButton(this);
     auto randomPlayPalette = m_btRandomPlay->palette();
     randomPlayPalette.setColor(DPalette::ButtonText, Qt::white);
     randomPlayPalette.setColor(DPalette::Dark, QColor(Qt::darkGray));
@@ -125,7 +125,7 @@ void SubSonglistWidget::initUI()
 
     m_titleLabel->setContentsMargins(0, 0, 0, 0);
 
-    m_musicListInfoView = new PlayListView(m_hash, false);
+    m_musicListInfoView = new PlayListView(m_hash, false, this);
     mainLayout->addWidget(m_musicListInfoView, 1);
     mainLayout->addStretch();
 

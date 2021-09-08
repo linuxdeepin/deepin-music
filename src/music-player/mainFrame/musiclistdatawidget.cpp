@@ -660,7 +660,7 @@ void MusicListDataWidget::initUI()
     layout->setContentsMargins(0, 0, 0, 0);
     layout->setSpacing(0);
     // action widget
-    m_actionBar = new ActionBar;
+    m_actionBar = new ActionBar(this);
     // 按设计修改
     m_actionBar->setFixedHeight(60);
     m_actionBar->setObjectName("MusicListDataActionBar");
@@ -697,7 +697,7 @@ void MusicListDataWidget::initUI()
     initemptyHits(layoutContent);
 
     // 启动首页
-    m_musicListView = new PlayListView("all", false);
+    m_musicListView = new PlayListView("all", false, this);
 
     AC_SET_OBJECT_NAME(m_musicListView, AC_PlayListView);
     AC_SET_ACCESSIBLE_NAME(m_musicListView, AC_PlayListView);
@@ -713,7 +713,7 @@ void MusicListDataWidget::initUI()
 // 初始化播放所有按钮
 void MusicListDataWidget::initBtPlayAll(QHBoxLayout *layout)
 {
-    m_btPlayAll = new DPushButton;
+    m_btPlayAll = new DPushButton(this);
     auto playAllPalette = m_btPlayAll->palette();
     playAllPalette.setColor(DPalette::ButtonText, Qt::white);
     playAllPalette.setColor(DPalette::Dark, QColor("#FD5E5E"));
@@ -745,7 +745,7 @@ void MusicListDataWidget::initBtPlayAll(QHBoxLayout *layout)
 // 初始化数量标签
 void MusicListDataWidget::initCountLabel(QHBoxLayout *layout)
 {
-    m_infoLabel = new DLabel;
+    m_infoLabel = new DLabel(this);
     m_infoLabel->setObjectName("MusicListDataTitle");
     m_infoLabel->setText(tr("All Music"));
     m_infoLabel->setWordWrap(true);
@@ -763,7 +763,7 @@ void MusicListDataWidget::initTitle(QHBoxLayout *layout)
     QHBoxLayout *lableLayout = new QHBoxLayout(m_lableWidget);
     lableLayout->setContentsMargins(0, 0, 0, 0);
 
-    m_titleLabel = new DLabel;
+    m_titleLabel = new DLabel(this);
     QFont titleFont = m_titleLabel->font();
     titleFont.setFamily("SourceHanSansSC");
     m_titleLabel->setFont(titleFont);
@@ -782,7 +782,7 @@ void MusicListDataWidget::initTitle(QHBoxLayout *layout)
 void MusicListDataWidget::initListIconMode(QHBoxLayout *layout)
 {
     // icon模式
-    m_btIconMode = new DToolButton;
+    m_btIconMode = new DToolButton(this);
     m_btIconMode->setIcon(QIcon::fromTheme("picture_list_texts"));
     m_btIconMode->setIconSize(QSize(36, 36));
     m_btIconMode->setFixedSize(36, 36);
@@ -793,7 +793,7 @@ void MusicListDataWidget::initListIconMode(QHBoxLayout *layout)
     m_btIconMode->setFocusPolicy(Qt::TabFocus);
     m_btIconMode->installEventFilter(this);
     // 列表模式
-    m_btlistMode = new DToolButton;
+    m_btlistMode = new DToolButton(this);
     m_btlistMode->setIcon(QIcon::fromTheme("text_list_texts"));
     m_btlistMode->setIconSize(QSize(36, 36));
     m_btlistMode->setFixedSize(36, 36);
@@ -813,7 +813,7 @@ void MusicListDataWidget::initListIconMode(QHBoxLayout *layout)
 
 void MusicListDataWidget::initAlbumAction(QHBoxLayout *layout)
 {
-    m_albumDropdown = new DDropdown;
+    m_albumDropdown = new DDropdown(this);
     m_albumDropdown->setObjectName("MusicListAlbumDataSort");
     m_albumDropdown->addAction(tr("Time added"), QVariant::fromValue<DataBaseService::ListSortType>(DataBaseService::SortByAddTime));
     m_albumDropdown->addAction(tr("Album"), QVariant::fromValue<DataBaseService::ListSortType>(DataBaseService::SortByTitle));
@@ -828,7 +828,7 @@ void MusicListDataWidget::initAlbumAction(QHBoxLayout *layout)
 
 void MusicListDataWidget::initArtistAction(QHBoxLayout *layout)
 {
-    m_artistDropdown = new DDropdown;
+    m_artistDropdown = new DDropdown(this);
     m_artistDropdown->setObjectName("MusicListArtistDataSort");
     m_artistDropdown->addAction(tr("Time added"), QVariant::fromValue<DataBaseService::ListSortType>(DataBaseService::SortByAddTime));
     m_artistDropdown->addAction(tr("Artist"), QVariant::fromValue<DataBaseService::ListSortType>(DataBaseService::SortBySinger));
@@ -843,7 +843,7 @@ void MusicListDataWidget::initArtistAction(QHBoxLayout *layout)
 
 void MusicListDataWidget::initMusicAction(QHBoxLayout *layout)
 {
-    m_musicDropdown = new DDropdown;
+    m_musicDropdown = new DDropdown(this);
     m_musicDropdown->setObjectName("MusicListMusicDataSort");
     m_musicDropdown->addAction(tr("Time added"), QVariant::fromValue<DataBaseService::ListSortType>(DataBaseService::SortByAddTime));
     m_musicDropdown->addAction(tr("Title"), QVariant::fromValue<DataBaseService::ListSortType>(DataBaseService::SortByTitle));
@@ -859,7 +859,7 @@ void MusicListDataWidget::initMusicAction(QHBoxLayout *layout)
 
 void MusicListDataWidget::initemptyHits(QVBoxLayout *layout)
 {
-    m_emptyHits = new DLabel();
+    m_emptyHits = new DLabel(this);
     m_emptyHits->setObjectName("MusicListDataEmptyHits");
     m_emptyHits->hide();
     auto emptyHitsFont = m_emptyHits->font();
@@ -869,7 +869,7 @@ void MusicListDataWidget::initemptyHits(QVBoxLayout *layout)
     m_emptyHits->setFont(emptyHitsFont);
     m_emptyHits->setText(MusicListDataWidget::tr("No search results"));
 
-    auto emptyLayout = new QVBoxLayout();
+    auto emptyLayout = new QVBoxLayout;
     emptyLayout->setContentsMargins(0, 0, 0, 0);
     emptyLayout->setSpacing(10);
 

@@ -59,13 +59,13 @@ SoundVolume::SoundVolume(QWidget *parent)
     m_volPersent->setFont(titleFont);
     m_volPersent->setText("100%");
 
-    m_btSound = new DToolButton();
+    m_btSound = new DToolButton(this);
     m_btSound->setIcon(QIcon::fromTheme("volume_low"));
     //d->sound->setShortcut(QKeySequence(QLatin1String("M")));
     m_btSound->setFixedSize(30, 30);
     m_btSound->setIconSize(QSize(30, 30));
 
-    m_volSlider = new DSlider(Qt::Vertical);
+    m_volSlider = new DSlider(Qt::Vertical, this);
     m_volSlider->setMinimum(0);
     m_volSlider->setMaximum(100);
     m_volSlider->slider()->setSingleStep(Player::VolumeStep);
@@ -87,7 +87,7 @@ SoundVolume::SoundVolume(QWidget *parent)
     layout->addStretch();
     setFixedSize(62, 201);
 
-    auto *bodyShadow = new QGraphicsDropShadowEffect;
+    auto *bodyShadow = new QGraphicsDropShadowEffect(this);
     bodyShadow->setBlurRadius(10.0);
     bodyShadow->setColor(QColor(0, 0, 0,  255 / 10));
     bodyShadow->setOffset(0, 2.0);
