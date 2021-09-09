@@ -97,7 +97,8 @@ void LyricLabel::paintItem(QPainter *painter, int index, const QRect &rect)
     if (index == this->m_currentItem) {
         painter->setPen(lyricHighlight);
         QFont font(lyricFont);
-        font.setPixelSize(font.pixelSize() + 1);
+        int fontpixelSize = font.pixelSize() < 0 ? 0 : font.pixelSize();
+        font.setPixelSize(fontpixelSize + 1);
         painter->setFont(font);
         QPoint leftpos = rect.bottomLeft();
         leftpos.setY(static_cast<int>(leftpos.y() + rect.height() / 2.0 + 5));
