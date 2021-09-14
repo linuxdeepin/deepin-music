@@ -147,8 +147,21 @@ QStringList Player::supportedSuffixList() const
 Player::~Player()
 {
     m_pCdaThread->closeThread();
-    while (m_pCdaThread->isRunning()) {
-
+    while (m_pCdaThread->isRunning()) {}
+    //删除媒体资源
+    if (m_qvmedia) {
+        delete m_qvmedia;
+        m_qvmedia = nullptr;
+    }
+    //删除媒体播放器
+    if (m_qvplayer) {
+        delete m_qvplayer;
+        m_qvplayer = nullptr;
+    }
+    //删除媒体instance
+    if (m_qvinstance) {
+        delete m_qvinstance;
+        m_qvinstance = nullptr;
     }
 }
 
@@ -1093,22 +1106,6 @@ void Player::initVlc()
     connect(m_qvmedia, &VlcMedia::stateChanged,
     this, [ = ](Vlc::State status) {
         switch (status) {
-        case Vlc::Idle: {
-//            /**************************************
-//             * if settings is mute ,then setmute to dbus
-//             * ************************************/
-//            if (MusicSettings::value("base.play.mute").toBool())
-//                setMusicMuted(true);
-            break;
-        }
-        case Vlc::Opening: {
-            //emit signalMediaMetaChanged(m_ActiveMeta);//由setActiveMeta统一发送信号
-            break;
-        }
-        case Vlc::Buffering: {
-
-            break;
-        }
         case Vlc::Playing: {
             //emit signalPlaybackStatusChanged(Player::Playing);
             if (!m_timer->isActive()) {
@@ -1127,19 +1124,8 @@ void Player::initVlc()
             //emit signalMediaMetaChanged(MediaMeta()); //由setActiveMeta统一发送信号
             break;
         }
-        case Vlc::Ended: {
-//            playNextMeta();//just sync with Vlc::Ended
+        default:
             break;
-        }
-//        case Vlc::Error: {
-//            if (!m_activeMeta.isNull() /*&& !QFile::exists(activeMeta->localPath)*/) {
-//                MetaPtrList removeMusicList;
-//                removeMusicList.append(m_activeMeta);
-//                m_curPlaylist->removeMusicList(removeMusicList);
-//                Q_EMIT mediaError(m_activePlaylist, m_activeMeta, Player::ResourceError);
-//            }
-//            break;
-//        }
         }
     });
 

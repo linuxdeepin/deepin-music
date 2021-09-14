@@ -68,12 +68,6 @@ public:
     */
     libvlc_media_player_t *core() const;
 
-    /*!
-        \brief Returns audio manager object.
-        \return audio manager (VlcAudio *)
-    */
-//    VlcAudio *audio() const;
-
 #if LIBVLC_VERSION >= 0x020200
     /*!
         \brief Returns equalizer object.
@@ -89,28 +83,10 @@ public:
     int length() const;
 
     /*!
-        \brief Get current media object
-        \return media object (VlcMedia *)
-    */
-    //VlcMedia *currentMedia() const;
-
-    /*!
-        \brief Get current media core object
-        \return media core object (libvlc_media_t *)
-    */
-    //libvlc_media_t *currentMediaCore();
-
-    /*!
         \brief Open media file or stream. Any media should be playable and opened.
         \param media object (VlcMedia *)
     */
     void open(VlcMedia *media);
-
-    /*!
-        \brief Just opens the media file or stream, do not starts playing the media.
-        \param media object (VlcMedia *)
-    */
-    //void openOnly(VlcMedia *media);
 
     /**
      * @brief initCddaTrack 初始化cdda track索引
@@ -133,26 +109,6 @@ public:
     */
     int time() const;
 
-    /*! \brief Set video widget.
-
-        Set video widget to be able to play video inside Qt interface.
-
-        \param widget video widget (VlcVideoDelegate *)
-    */
-//    void setVideoWidget(VlcVideoDelegate *widget);
-
-    /*!
-        \brief Get video output status
-        \return video output status (const bool)
-    */
-    //bool hasVout() const;
-
-    /*!
-        \brief Get seekable status
-        \return seekable status (const bool)
-    */
-    //bool seekable() const;
-
     /*!
         \brief Get current player state.
         \return current player state (const Vlc::State)
@@ -160,28 +116,10 @@ public:
     Vlc::State state() const;
 
     /*!
-        \brief Get current video widget.
-        \return current video widget (VlcVideoWidget *)
-    */
-//    VlcVideoDelegate *videoWidget() const;
-
-    /*!
         \brief Get media content position.
         \return current media position (float)
     */
     float position();
-
-    /*!
-        \brief Get sample aspect ratio for current video track( vlc >= 2.1.0 ).
-        \return sample aspect ratio (float)
-    */
-    //float sampleAspectRatio();
-
-    /*!
-        \brief Get current media playback rate.
-        \return current media playback rate (float)
-    */
-    //float playbackRate();
 
 public slots:
     /*! \brief Set the media position.
@@ -191,12 +129,6 @@ public slots:
         \param pos the media position (float)
     */
     void setPosition(float pos);
-
-    /*! \brief Set the media playback rate.
-
-        \param rate the media playback rate (float)
-    */
-    //void setPlaybackRate(float rate);
 
     /*!
         \brief Starts playing current media if possible
@@ -209,11 +141,6 @@ public slots:
     void pause();
 
     /*!
-        \brief Toggles pause of the playback of current media if possible
-    */
-    //timePropertyWidthvoid togglePause();
-
-    /*!
         \brief Resumes the playback of current media if possible
     */
     void resume();
@@ -222,8 +149,6 @@ public slots:
         \brief Stops playing current media
     */
     void stop();
-
-//    void timeoutSlot();
 
 signals:
     /*!
@@ -347,12 +272,11 @@ private:
                                 void *data);
 
     void createCoreConnections();
-    //void removeCoreConnections();
+    void removeCoreConnections();
 
     libvlc_media_player_t *_vlcMediaPlayer;
     libvlc_event_manager_t *_vlcEvents;
 
-    //VlcAudio *_vlcAudio;
     VlcEqualizer *_vlcEqualizer;
 };
 
