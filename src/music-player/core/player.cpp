@@ -158,11 +158,6 @@ Player::~Player()
         delete m_qvplayer;
         m_qvplayer = nullptr;
     }
-    //删除媒体instance
-    if (m_qvinstance) {
-        delete m_qvinstance;
-        m_qvinstance = nullptr;
-    }
 }
 
 void Player::playMeta(MediaMeta meta)
