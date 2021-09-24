@@ -111,6 +111,12 @@ MainFrame::MainFrame()
     m_backBtn->setVisible(false);
     m_backBtn->setFixedSize(QSize(36, 36));
 
+    m_addMusicBtn = new DIconButton(DStyle::SP_IncreaseElement, this);
+    m_addMusicBtn->setToolTip(tr("Add music"));
+    AC_SET_OBJECT_NAME(m_addMusicBtn, AC_titleBarAddMusic);
+    AC_SET_ACCESSIBLE_NAME(m_addMusicBtn, AC_titleBarAddMusic);
+    m_addMusicBtn->setFixedSize(QSize(36, 36));
+
     m_selectStr = tr("Select");
     m_selectAllStr = tr("Select All");
     m_doneStr = tr("Done");
@@ -119,11 +125,18 @@ MainFrame::MainFrame()
     }
     m_backBtn->setIcon(QIcon::fromTheme("left_arrow"));
     m_titlebar->addWidget(m_backBtn, Qt::AlignLeft);
+    m_titlebar->addWidget(m_addMusicBtn, Qt::AlignRight);
     m_titlebar->resize(width(), 50);
 
     // 返回按钮点击
     connect(m_backBtn, &DPushButton::clicked,
             this, &MainFrame::slotLeftClicked);
+
+    // 添加音乐
+    connect(m_addMusicBtn, &DPushButton::clicked,
+            this, &MainFrame::slotAddMusicClicked);
+    connect(CommonService::getInstance(), &CommonService::signalAddMusic,
+            this, &MainFrame::slotAddMusicClicked);
 
     connect(m_titlebarwidget, &TitlebarWidget::sigSearchEditFoucusIn,
             this, &MainFrame::slotSearchEditFoucusIn);
@@ -654,16 +667,9 @@ void MainFrame::slotMenuTriggered(QAction *action)
         }
 
         emit CommonService::getInstance()->signalAddNewSongList();
-    }
-
-    if (action == m_addMusicFiles) {
-        if (m_importWidget == nullptr) {
-            m_importWidget = new ImportWidget(this);
-        }
-        m_importWidget->addMusic(m_importListHash);
-    }
-
-    if (action == m_equalizer) {
+    } else if (action == m_addMusicFiles) {
+        slotAddMusicClicked();
+    } else if (action == m_equalizer) {
         DSettingsDialog *configDialog = new DSettingsDialog(this);
         equalizer = configDialog;
         configDialog->setFixedSize(720, 540);
@@ -695,9 +701,7 @@ void MainFrame::slotMenuTriggered(QAction *action)
         configDialog->exec();
         delete configDialog;
         delete equalizerSettings;
-    }
-
-    if (action == m_settings) {
+    } else if (action == m_settings) {
         DSettingsDialog *configDialog = new DSettingsDialog(this);
         AC_SET_OBJECT_NAME(configDialog, AC_configDialog);
         AC_SET_ACCESSIBLE_NAME(configDialog, AC_configDialog);
@@ -732,6 +736,15 @@ void MainFrame::slotMenuTriggered(QAction *action)
             m_tabletSelectDone->setVisible(true);
         }
     }
+}
+
+void MainFrame::slotAddMusicClicked()
+{
+    //初始化导入对话框
+    if (m_importWidget == nullptr) {
+        m_importWidget = new ImportWidget(this);
+    }
+    m_importWidget->addMusic(m_importListHash);
 }
 
 void MainFrame::slotSwitchTheme()

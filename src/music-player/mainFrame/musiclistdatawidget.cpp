@@ -58,6 +58,7 @@
 #include "infodialog.h"
 #include "player.h"
 #include "subsonglistwidget.h"
+#include "addmusicwidget.h"
 
 DWIDGET_USE_NAMESPACE
 
@@ -220,7 +221,12 @@ void MusicListDataWidget::slotViewChanged(ListPageSwitchType switchtype, const Q
         QString text = titleFm.elidedText(DataBaseService::getInstance()->getPlaylistNameByUUID(hashOrSearchword), Qt::ElideRight, 300);
         m_titleLabel->setText(text);
         m_musicListView->setViewModeFlag(hashOrSearchword, m_musicListView->getViewMode());
-        m_pStackedWidget->setCurrentWidget(m_musicListView);
+        if (m_musicListView->model()->rowCount() > 0) {
+            m_pStackedWidget->setCurrentWidget(m_musicListView);
+        } else {
+            m_addMusicWidget->setSongList(hashOrSearchword);
+            m_pStackedWidget->setCurrentWidget(m_addMusicWidget);
+        }
         m_preHash = hashOrSearchword;
         m_preSwitchtype = CustomType;
         refreshModeBtn(m_musicListView->getViewMode());
@@ -696,6 +702,10 @@ void MusicListDataWidget::initUI()
     // 初始化搜索结果为空时的标签
     initemptyHits(layoutContent);
 
+    //添加音乐
+    m_addMusicWidget = new AddMusicWidget(this);
+    m_pStackedWidget->addWidget(m_addMusicWidget);
+
     // 启动首页
     m_musicListView = new PlayListView("all", false, this);
 
@@ -959,6 +969,7 @@ void MusicListDataWidget::refreshInfoLabel(QString hash)
         if (hash.isEmpty()) {
             return;
         }
+        m_musicListView->initCostomSonglist(hash);
         songCount = m_musicListView->getMusicCount();
         if (0 == songCount) {
             countStr = QString("   ") + MusicListDataWidget::tr("No songs");
@@ -966,6 +977,11 @@ void MusicListDataWidget::refreshInfoLabel(QString hash)
             countStr = QString("   ") + MusicListDataWidget::tr("1 song");
         } else {
             countStr = QString("   ") + MusicListDataWidget::tr("%1 songs").arg(songCount);
+        }
+        if (m_musicListView->model()->rowCount() > 0) {
+            m_pStackedWidget->setCurrentWidget(m_musicListView);
+        } else {
+            m_pStackedWidget->setCurrentWidget(m_addMusicWidget);
         }
     }
     m_infoLabel->setText(countStr);

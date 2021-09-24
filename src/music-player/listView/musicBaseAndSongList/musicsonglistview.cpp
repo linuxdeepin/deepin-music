@@ -186,6 +186,7 @@ void MusicSongListView::showContextMenu(const QPoint &pos)
     }
 
     if (hash != "album" || hash != "artist" || hash != "all" || hash != "fav") {
+        menu.addAction(tr("Add music"));
         menu.addAction(tr("Rename"));
         menu.addAction(tr("Delete"));
     }
@@ -419,6 +420,8 @@ void MusicSongListView::slotMenuTriggered(QAction *action)
 
     if (action->text() == tr("Play")) {
         emit CommonService::getInstance()->signalPlayAllMusic();
+    } else if (action->text() == tr("Add music")) {
+        emit CommonService::getInstance()->signalAddMusic();
     } else if (action->text() == tr("Pause")) {
         Player::getInstance()->pause();
     } else if (action->text() == tr("Rename")) {

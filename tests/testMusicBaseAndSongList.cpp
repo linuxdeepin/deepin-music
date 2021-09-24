@@ -199,12 +199,13 @@ TEST(Application, musicSongListViewRename)
         DMenu *menuWidget = static_cast<DMenu *>(qApp->activePopupWidget());
         if (menuWidget != nullptr) {
             event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
+            event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
             event.addKeyClick(Qt::Key_Enter, Qt::NoModifier, 50);
             event.simulate(menuWidget);
             event.clear();
             QTest::qWait(50);
         }
-        QTest::qWait(950);
+        QTest::qWait(1000);
     });
 
     QContextMenuEvent menuEvent(QContextMenuEvent::Mouse, pos);
@@ -229,7 +230,7 @@ TEST(Application, musicSongListViewMenuDelete)
     QTest::qWait(100);
 
     QTimer::singleShot(300, songListView, [ = ]() {
-        QTimer::singleShot(300, songListView, [ = ]() {
+        QTimer::singleShot(400, songListView, [ = ]() {
             QTest::qWait(50);
             QTestEventList event;
             DDialog *messageBox = songListView->findChild<DDialog *>(AC_MessageBox);
@@ -250,13 +251,14 @@ TEST(Application, musicSongListViewMenuDelete)
         if (menuWidget != nullptr) {
             event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
             event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
+            event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
             event.addKeyClick(Qt::Key_Enter, Qt::NoModifier, 50);
             event.addDelay(100);
             event.simulate(menuWidget);
             event.clear();
             QTest::qWait(50);
         }
-        QTest::qWait(950);
+        QTest::qWait(1000);
     });
 
     QContextMenuEvent menuEvent(QContextMenuEvent::Mouse, pos);

@@ -40,6 +40,7 @@ class SearchResultTabWidget;
 class QShortcut;
 class InfoDialog;
 class SubSonglistWidget;
+class AddMusicWidget;
 class MusicListDataWidget : public DWidget
 {
     Q_OBJECT
@@ -109,6 +110,7 @@ private:
     AlbumListView       *m_albumListView  = nullptr;
     SingerListView      *m_singerListView = nullptr;
     PlayListView        *m_musicListView  = nullptr;
+    AddMusicWidget      *m_addMusicWidget = nullptr;
     SearchResultTabWidget *m_searchResultTabWidget = nullptr;
 
     QAction             *m_customAction    = nullptr;

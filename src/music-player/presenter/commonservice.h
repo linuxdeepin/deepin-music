@@ -65,6 +65,8 @@ signals:
     void sigScrollToCurrentPosition(QString songlistHash);
     // 刷新收藏按钮图标
     void signalFluashFavoriteBtnIcon();
+    // 添加音乐
+    void signalAddMusic();
     // 添加新的歌曲清单
     void signalAddNewSongList();
     // 添加&删除CD歌曲清单
