@@ -994,6 +994,7 @@ void MainFrame::closeEvent(QCloseEvent *event)
         MusicSettings::setOption("base.close.is_close", true);
         //退出时,stop当前音乐
         Player::getInstance()->stop(false);
+        qApp->processEvents();
         qApp->quit();
         break;
     }
@@ -1015,6 +1016,7 @@ void MainFrame::closeEvent(QCloseEvent *event)
             MusicSettings::setOption("base.close.is_close", true);
             //退出时,stop当前音乐
             Player::getInstance()->stop(false);
+            qApp->processEvents();
             qApp->quit();
         } else {
             MusicSettings::setOption("base.close.is_close", false);
