@@ -1,18 +1,31 @@
 <?xml version="1.0" ?><!DOCTYPE TS><TS language="bo" sourcelanguage="en_US" version="2.1">
 <context>
+    <name>AddMusicWidget</name>
+    <message>
+        <location filename="../src/music-player/mainFrame/addmusicwidget.cpp" line="70"/>
+        <source>Add Music</source>
+        <translation>གླུ་གཞས་སྣོན་པ།</translation>
+    </message>
+    <message>
+        <location filename="../src/music-player/mainFrame/addmusicwidget.cpp" line="80"/>
+        <source>Or drag music files here</source>
+        <translation>ཁྱེད་ཀྱིས་གླུ་གཞས་ཡིག་ཆ་དེ་འདི་གར་འདྲུད་ཀྱང་ཆོག </translation>
+    </message>
+</context>
+<context>
     <name>AlbumDataDelegate</name>
     <message>
-        <location filename="../src/music-player/listView/albumList/albumdelegate.cpp" line="640"/>
+        <location filename="../src/music-player/listView/albumList/albumdelegate.cpp" line="635"/>
         <source>No songs</source>
         <translation>གླུ་གཞས་མེད།</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/albumList/albumdelegate.cpp" line="642"/>
+        <location filename="../src/music-player/listView/albumList/albumdelegate.cpp" line="637"/>
         <source>1 song</source>
         <translation>གླུ་གཞས་1</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/albumList/albumdelegate.cpp" line="644"/>
+        <location filename="../src/music-player/listView/albumList/albumdelegate.cpp" line="639"/>
         <source>%1 songs</source>
         <translation>གླུ་གཞས་%1</translation>
     </message>
@@ -20,9 +33,9 @@
 <context>
     <name>AlbumListView</name>
     <message>
-        <location filename="../src/music-player/listView/albumList/albumdelegate.cpp" line="254"/>
-        <location filename="../src/music-player/listView/albumList/albumdelegate.cpp" line="420"/>
-        <location filename="../src/music-player/listView/albumList/albumdelegate.cpp" line="625"/>
+        <location filename="../src/music-player/listView/albumList/albumdelegate.cpp" line="251"/>
+        <location filename="../src/music-player/listView/albumList/albumdelegate.cpp" line="416"/>
+        <location filename="../src/music-player/listView/albumList/albumdelegate.cpp" line="620"/>
         <source>Unknown album</source>
         <translation>མ་ཤེས་པའི་ཆེད་བསྒྲིགས།</translation>
     </message>
@@ -101,136 +114,135 @@
 <context>
     <name>DequalizerDialog</name>
     <message>
-        <location filename="../src/music-player/widget/dequalizerdialog.cpp" line="628"/>
+        <location filename="../src/music-player/widget/dequalizerdialog.cpp" line="274"/>
         <source>Custom</source>
         <translation>རང་སྒྲུབ། </translation>
     </message>
     <message>
-        <location filename="../src/music-player/widget/dequalizerdialog.cpp" line="629"/>
+        <location filename="../src/music-player/widget/dequalizerdialog.cpp" line="275"/>
         <source>Monophony</source>
         <translation>རྐྱང་འགྱུར།</translation>
     </message>
     <message>
-        <location filename="../src/music-player/widget/dequalizerdialog.cpp" line="630"/>
+        <location filename="../src/music-player/widget/dequalizerdialog.cpp" line="276"/>
         <source>Classical</source>
         <translation>གནའ་གཞུང་།</translation>
     </message>
     <message>
-        <location filename="../src/music-player/widget/dequalizerdialog.cpp" line="631"/>
+        <location filename="../src/music-player/widget/dequalizerdialog.cpp" line="277"/>
         <source>Club</source>
         <translation>སྤྲོ་སྐྱིད་ཁང་།</translation>
     </message>
     <message>
-        <location filename="../src/music-player/widget/dequalizerdialog.cpp" line="632"/>
+        <location filename="../src/music-player/widget/dequalizerdialog.cpp" line="278"/>
         <source>Dance</source>
         <translation>བྲོ་གཞས།</translation>
     </message>
     <message>
-        <location filename="../src/music-player/widget/dequalizerdialog.cpp" line="633"/>
+        <location filename="../src/music-player/widget/dequalizerdialog.cpp" line="279"/>
         <source>Full Bass</source>
         <translation>ཚང་མ་སྒྲ་གདངས་དམའ་བ།</translation>
     </message>
     <message>
-        <location filename="../src/music-player/widget/dequalizerdialog.cpp" line="634"/>
+        <location filename="../src/music-player/widget/dequalizerdialog.cpp" line="280"/>
         <source>Full Bass and Treble</source>
         <translation>ཚང་མ་སྒྲ་གདངས་དམའ་བ་དང་མཐོ་བ།</translation>
     </message>
     <message>
-        <location filename="../src/music-player/widget/dequalizerdialog.cpp" line="635"/>
+        <location filename="../src/music-player/widget/dequalizerdialog.cpp" line="281"/>
         <source>Full Treble</source>
         <translation>ཚང་མ་སྒྲ་གདངས་མཐོ་བ།</translation>
     </message>
     <message>
-        <location filename="../src/music-player/widget/dequalizerdialog.cpp" line="636"/>
+        <location filename="../src/music-player/widget/dequalizerdialog.cpp" line="282"/>
         <source>Headphones</source>
         <translation>ཉན་ཆས།</translation>
     </message>
     <message>
-        <location filename="../src/music-player/widget/dequalizerdialog.cpp" line="637"/>
+        <location filename="../src/music-player/widget/dequalizerdialog.cpp" line="283"/>
         <source>Hall</source>
         <translation>ཚོམས་ཆེན།</translation>
     </message>
     <message>
-        <location filename="../src/music-player/widget/dequalizerdialog.cpp" line="638"/>
+        <location filename="../src/music-player/widget/dequalizerdialog.cpp" line="284"/>
         <source>Live</source>
         <translation>གནས་ཚུལ་དངོས།</translation>
     </message>
     <message>
-        <location filename="../src/music-player/widget/dequalizerdialog.cpp" line="639"/>
+        <location filename="../src/music-player/widget/dequalizerdialog.cpp" line="285"/>
         <source>Party</source>
         <translation>འདུ་ཚོགས། </translation>
     </message>
     <message>
-        <location filename="../src/music-player/widget/dequalizerdialog.cpp" line="640"/>
+        <location filename="../src/music-player/widget/dequalizerdialog.cpp" line="286"/>
         <source>Pop</source>
         <translation>དར་ཁྱབ། </translation>
     </message>
     <message>
-        <location filename="../src/music-player/widget/dequalizerdialog.cpp" line="641"/>
+        <location filename="../src/music-player/widget/dequalizerdialog.cpp" line="287"/>
         <source>Reggae</source>
         <translation>རེ་ཀེ།</translation>
     </message>
     <message>
-        <location filename="../src/music-player/widget/dequalizerdialog.cpp" line="642"/>
+        <location filename="../src/music-player/widget/dequalizerdialog.cpp" line="288"/>
         <source>Rock</source>
         <translation>རོག་ཁ།</translation>
     </message>
     <message>
-        <location filename="../src/music-player/widget/dequalizerdialog.cpp" line="643"/>
+        <location filename="../src/music-player/widget/dequalizerdialog.cpp" line="289"/>
         <source>Ska</source>
         <translation>སི་ཀ</translation>
     </message>
     <message>
-        <location filename="../src/music-player/widget/dequalizerdialog.cpp" line="644"/>
+        <location filename="../src/music-player/widget/dequalizerdialog.cpp" line="290"/>
         <source>Soft</source>
         <translation>འཇམ་པ།</translation>
     </message>
     <message>
-        <location filename="../src/music-player/widget/dequalizerdialog.cpp" line="645"/>
+        <location filename="../src/music-player/widget/dequalizerdialog.cpp" line="291"/>
         <source>Soft Rock</source>
         <translation>རོག་ཁ་འཇམ་པ། </translation>
     </message>
     <message>
-        <location filename="../src/music-player/widget/dequalizerdialog.cpp" line="646"/>
+        <location filename="../src/music-player/widget/dequalizerdialog.cpp" line="292"/>
         <source>Techno</source>
         <translation>གློག་རྡུལ་རོལ་ཆ།</translation>
     </message>
     <message>
-        <location filename="../src/music-player/widget/dequalizerdialog.cpp" line="115"/>
-        <location filename="../src/music-player/widget/dequalizerdialog.cpp" line="532"/>
+        <location filename="../src/music-player/widget/dequalizerdialog.cpp" line="71"/>
         <source>Equalizer</source>
         <translation>ངོ་སྙོམ་ཆས།</translation>
     </message>
     <message>
-        <location filename="../src/music-player/widget/dequalizerdialog.cpp" line="122"/>
-        <location filename="../src/music-player/widget/dequalizerdialog.cpp" line="757"/>
+        <location filename="../src/music-player/widget/dequalizerdialog.cpp" line="79"/>
+        <location filename="../src/music-player/widget/dequalizerdialog.cpp" line="415"/>
         <source>ON</source>
         <translation>ཁ་ཕྱེ།</translation>
     </message>
     <message>
-        <location filename="../src/music-player/widget/dequalizerdialog.cpp" line="124"/>
-        <location filename="../src/music-player/widget/dequalizerdialog.cpp" line="755"/>
+        <location filename="../src/music-player/widget/dequalizerdialog.cpp" line="81"/>
+        <location filename="../src/music-player/widget/dequalizerdialog.cpp" line="413"/>
         <source>OFF</source>
         <translation>ཁ་རྒྱག</translation>
     </message>
     <message>
-        <location filename="../src/music-player/widget/dequalizerdialog.cpp" line="145"/>
+        <location filename="../src/music-player/widget/dequalizerdialog.cpp" line="102"/>
         <source>Save</source>
         <translation>ཉར་ཚགས། </translation>
     </message>
     <message>
-        <location filename="../src/music-player/widget/dequalizerdialog.cpp" line="167"/>
+        <location filename="../src/music-player/widget/dequalizerdialog.cpp" line="131"/>
         <source>Preamplifier</source>
         <translation>མདུན་བཀོད་ཆེར་སྒྱུར།</translation>
     </message>
     <message>
-        <location filename="../src/music-player/widget/dequalizerdialog.cpp" line="402"/>
+        <location filename="../src/music-player/widget/dequalizerdialog.cpp" line="178"/>
         <source>Restore Defaults</source>
         <translation>སོར་བཞག་སོར་ཆུད། </translation>
     </message>
     <message>
-        <location filename="../src/music-player/widget/dequalizerdialog.cpp" line="658"/>
-        <location filename="../src/music-player/widget/dequalizerdialog.cpp" line="659"/>
+        <location filename="../src/music-player/widget/dequalizerdialog.cpp" line="305"/>
+        <location filename="../src/music-player/widget/dequalizerdialog.cpp" line="306"/>
         <source>Sound Effects Saved</source>
         <translation>སྒྲ་ཉམས་ཉར་ཟིན། </translation>
     </message>
@@ -238,59 +250,59 @@
 <context>
     <name>FooterWidget</name>
     <message>
-        <location filename="../src/music-player/mainFrame/footerwidget.cpp" line="162"/>
-        <location filename="../src/music-player/mainFrame/footerwidget.cpp" line="627"/>
+        <location filename="../src/music-player/mainFrame/footerwidget.cpp" line="163"/>
+        <location filename="../src/music-player/mainFrame/footerwidget.cpp" line="639"/>
         <source>Unknown Title</source>
         <translation>མིང་མི་ཤེས།</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/footerwidget.cpp" line="169"/>
-        <location filename="../src/music-player/mainFrame/footerwidget.cpp" line="630"/>
+        <location filename="../src/music-player/mainFrame/footerwidget.cpp" line="170"/>
+        <location filename="../src/music-player/mainFrame/footerwidget.cpp" line="642"/>
         <source>Unknown artist</source>
         <translation>ངོ་མ་ཤེས་པའི་གླུ་པ།</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/footerwidget.cpp" line="290"/>
+        <location filename="../src/music-player/mainFrame/footerwidget.cpp" line="291"/>
         <source>Previous</source>
         <translation>སྔོན་མ།</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/footerwidget.cpp" line="291"/>
+        <location filename="../src/music-player/mainFrame/footerwidget.cpp" line="292"/>
         <source>Next</source>
         <translation>རྗེས་མ། </translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/footerwidget.cpp" line="292"/>
+        <location filename="../src/music-player/mainFrame/footerwidget.cpp" line="293"/>
         <source>Play/Pause</source>
         <translation>གཏོང་བ།/སྐབས་སྡོད།</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/footerwidget.cpp" line="293"/>
+        <location filename="../src/music-player/mainFrame/footerwidget.cpp" line="294"/>
         <source>Favorite</source>
         <translation>ཉར་ཚགས།</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/footerwidget.cpp" line="294"/>
+        <location filename="../src/music-player/mainFrame/footerwidget.cpp" line="295"/>
         <source>Lyrics</source>
         <translation>གཞས་ཚིག</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/footerwidget.cpp" line="295"/>
+        <location filename="../src/music-player/mainFrame/footerwidget.cpp" line="296"/>
         <source>Play Queue</source>
         <translation>གཏོང་བའི་རུ་སྒྲིག</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/footerwidget.cpp" line="455"/>
+        <location filename="../src/music-player/mainFrame/footerwidget.cpp" line="457"/>
         <source>List Loop</source>
         <translation>རེའུ་མིག་རྒྱུན་འཁོར།</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/footerwidget.cpp" line="458"/>
+        <location filename="../src/music-player/mainFrame/footerwidget.cpp" line="460"/>
         <source>Single Loop</source>
         <translation>གཞས་གཅིག་རྒྱུན་འཁོར།</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/footerwidget.cpp" line="461"/>
+        <location filename="../src/music-player/mainFrame/footerwidget.cpp" line="463"/>
         <source>Shuffle</source>
         <translation>སྐབས་བསྟུན་གཏོང་བ།</translation>
     </message>
@@ -298,34 +310,34 @@
 <context>
     <name>ImportWidget</name>
     <message>
-        <location filename="../src/music-player/mainFrame/importwidget.cpp" line="78"/>
+        <location filename="../src/music-player/mainFrame/importwidget.cpp" line="79"/>
         <source>Open Folder</source>
         <translation>གླུ་གཞས་སྣོན་པའི་འགྲོ་ལམ།</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/importwidget.cpp" line="87"/>
+        <location filename="../src/music-player/mainFrame/importwidget.cpp" line="88"/>
         <source>Add Music</source>
         <translation>གླུ་གཞས་སྣོན་པ།</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/importwidget.cpp" line="95"/>
-        <location filename="../src/music-player/mainFrame/importwidget.cpp" line="227"/>
+        <location filename="../src/music-player/mainFrame/importwidget.cpp" line="96"/>
+        <location filename="../src/music-player/mainFrame/importwidget.cpp" line="233"/>
         <source>Scan</source>
         <translation>བཤར་འབེབས།</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/importwidget.cpp" line="96"/>
-        <location filename="../src/music-player/mainFrame/importwidget.cpp" line="228"/>
+        <location filename="../src/music-player/mainFrame/importwidget.cpp" line="97"/>
+        <location filename="../src/music-player/mainFrame/importwidget.cpp" line="234"/>
         <source>%1 music directory or drag music files here</source>
         <translation>%1གླུ་གཞས་དཀར་ཆག་གམ་གླུ་གཞས་ཡིག་ཁུག་འཐེན་ནས་གླུ་གཞས་སྣོན་པ།</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/importwidget.cpp" line="204"/>
+        <location filename="../src/music-player/mainFrame/importwidget.cpp" line="210"/>
         <source>All music</source>
         <translation>རོལ་མོ་ཚང་མ། </translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/importwidget.cpp" line="391"/>
+        <location filename="../src/music-player/mainFrame/importwidget.cpp" line="397"/>
         <source>Loading music, please wait...</source>
         <translation>གླུ་གཞས་སྣོན་འཇུག་བྱེད་བཞིན་ཡོད་པས། ཏོག་ཙམ་སྒུག་རོགས།</translation>
     </message>
@@ -386,112 +398,113 @@
 <context>
     <name>MainFrame</name>
     <message>
-        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="264"/>
+        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="260"/>
         <source>Add playlist</source>
         <translation>གླུ་གཞས་པ་སྣོན་པ། </translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="266"/>
+        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="115"/>
+        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="262"/>
         <location filename="../src/music-player/mainFrame/mainframe.cpp" line="386"/>
         <source>Add music</source>
         <translation>རོལ་མོ་སྣོན་པ། </translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="267"/>
+        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="263"/>
         <source>Equalizer</source>
         <translation>ངོ་སྙོམ་ཆས།</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="270"/>
+        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="266"/>
         <source>Settings</source>
         <translation>སྒྲིག་འགོད།</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="273"/>
+        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="269"/>
         <source>Dark theme</source>
         <translation>བརྗོད་བྱ་ཁ་ནག་པོ།</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="277"/>
-        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="323"/>
+        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="273"/>
+        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="319"/>
         <source>Exit</source>
         <translation>ཕྱིར་འཐོན། </translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="81"/>
-        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="89"/>
-        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="97"/>
-        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="335"/>
+        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="87"/>
+        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="95"/>
+        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="103"/>
+        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="331"/>
         <source>Music</source>
         <translation>རོལ་མོ། </translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="82"/>
+        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="88"/>
         <source>Music is a local music player with beautiful design and simple functions.</source>
         <translation>རོལ་མོ་ནི་ཇུས་འགོད་སྙིང་རྗེ་བ་དང་། བྱེད་ནུས་སྟབས་བདེ་བའི་རང་གནས་རོལ་མོ་གཏོང་ཆས་ཞིག་རེད།</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="108"/>
+        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="120"/>
         <source>Select</source>
         <translation>ཡིག་བརྙན་འདེམས་པ།</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="109"/>
+        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="121"/>
         <source>Select All</source>
         <translation>ཡོངས་འདེམས།</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="110"/>
+        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="122"/>
         <source>Done</source>
         <translation>གྲུབ་ཟིན། </translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="320"/>
+        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="316"/>
         <source>Play/Pause</source>
         <translation>གཏོང་བ།/སྐབས་སྡོད།</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="321"/>
+        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="317"/>
         <source>Previous</source>
         <translation>སྔོན་མ།</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="322"/>
+        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="318"/>
         <source>Next</source>
         <translation>རྗེས་མ། </translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="451"/>
+        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="449"/>
         <source>Successfully added to &quot;%1&quot;</source>
         <translation>&quot;%1&quot;ལ་བསྣན་ཐུབ།</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="454"/>
+        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="452"/>
         <source>Already added to the playlist</source>
         <translation>རོལ་མོ་དེ་བསྣན་ཟིན།</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="457"/>
+        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="455"/>
         <source>1 song added</source>
         <translation>རོལ་མོ་1བསྣན་ཟིན། </translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="459"/>
+        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="457"/>
         <source>%1 songs added</source>
         <translation>རོལ་མོ་%1བསྣན་ཟིན། </translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="463"/>
+        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="461"/>
         <source>A disc is connected</source>
         <translation>CDཪྙེད་བྱུང་།</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="597"/>
+        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="601"/>
         <source>OK</source>
         <translation>གཏན་ཁེལ།</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="590"/>
+        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="594"/>
         <source>Import failed, no valid music file found</source>
         <translation>འདྲེན་འཇུག་མི་ཐུབ། གོ་ཆོད་པའི་རོལ་མོའི་ཡིག་ཆ་རྙེད་མ་བྱུང་།</translation>
     </message>
@@ -520,119 +533,125 @@
     </message>
     <message>
         <location filename="../src/music-player/listView/musicBaseAndSongList/musicbaselistview.cpp" line="181"/>
-        <location filename="../src/music-player/listView/musicBaseAndSongList/musicbaselistview.cpp" line="348"/>
+        <location filename="../src/music-player/listView/musicBaseAndSongList/musicbaselistview.cpp" line="354"/>
         <source>Pause</source>
         <translation>སྐབས་སྡོད།</translation>
     </message>
     <message>
         <location filename="../src/music-player/listView/musicBaseAndSongList/musicbaselistview.cpp" line="184"/>
-        <location filename="../src/music-player/listView/musicBaseAndSongList/musicbaselistview.cpp" line="346"/>
+        <location filename="../src/music-player/listView/musicBaseAndSongList/musicbaselistview.cpp" line="350"/>
         <source>Play</source>
         <translation>གཏོང་བ།</translation>
+    </message>
+    <message>
+        <location filename="../src/music-player/listView/musicBaseAndSongList/musicbaselistview.cpp" line="187"/>
+        <location filename="../src/music-player/listView/musicBaseAndSongList/musicbaselistview.cpp" line="352"/>
+        <source>Add music</source>
+        <translation>རོལ་མོ་སྣོན་པ། </translation>
     </message>
 </context>
 <context>
     <name>MusicListDataWidget</name>
     <message>
-        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="109"/>
-        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="910"/>
-        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="931"/>
-        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="950"/>
-        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="963"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="110"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="921"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="942"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="961"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="975"/>
         <source>No songs</source>
         <translation>གླུ་གཞས་མེད།</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="912"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="923"/>
         <source>1 album - 1 song</source>
         <translation>ཆེད་བསྒྲིགས་1 - གླུ་གཞས་1</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="915"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="926"/>
         <source>%1 album - %2 songs</source>
         <translation>ཆེད་བསྒྲིགས་%1 - གླུ་གཞས་%2</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="917"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="928"/>
         <source>%1 albums - %2 songs</source>
         <translation>ཆེད་བསྒྲིགས་%1 - གླུ་གཞས་%2</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="933"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="944"/>
         <source>1 artist - 1 song</source>
         <translation>གཞས་པ་1 - གླུ་གཞས་1</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="936"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="947"/>
         <source>%1 artist - %2 songs</source>
         <translation>གཞས་པ་%1 - གླུ་གཞས་%2</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="938"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="949"/>
         <source>%1 artists - %2 songs</source>
         <translation>གཞས་པ་%1 - གླུ་གཞས་%2</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="111"/>
-        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="952"/>
-        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="965"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="112"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="963"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="977"/>
         <source>1 song</source>
         <translation>གླུ་གཞས་1</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="113"/>
-        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="954"/>
-        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="967"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="114"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="965"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="979"/>
         <source>%1 songs</source>
         <translation>གླུ་གཞས་%1</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="248"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="254"/>
         <source>Search Results</source>
         <translation>འཚོལ་ཞིབ་བྱས་འབྲས།</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="869"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="880"/>
         <source>No search results</source>
         <translation>འཚོལ་ཞིབ་བྱས་འབྲས་མེད།</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="749"/>
-        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="772"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="760"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="783"/>
         <source>All Music</source>
         <translation>རོལ་མོ་ཚང་མ། </translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="206"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="207"/>
         <source>CD playlist</source>
         <translation>CDགཞས་ཐོ།</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="817"/>
-        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="832"/>
-        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="847"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="828"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="843"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="858"/>
         <source>Time added</source>
         <translation>དུས་ཚོད་སྣོན་པ།</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="818"/>
-        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="850"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="829"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="861"/>
         <source>Album</source>
         <translation>ཆེད་བསྒྲིགས་མིང་། </translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="833"/>
-        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="849"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="844"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="860"/>
         <source>Artist</source>
         <translation>གླུ་པའི་མིང་། </translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="848"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="859"/>
         <source>Title</source>
         <translation>གླུ་གཞས་མིང་། </translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="723"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="734"/>
         <source>Play All</source>
         <translation>ཚང་མ་གཏོང་བ།</translation>
     </message>
@@ -653,7 +672,7 @@
 <context>
     <name>MusicLyricWidget</name>
     <message>
-        <location filename="../src/music-player/widget/lrc/musiclyricwidget.cpp" line="79"/>
+        <location filename="../src/music-player/widget/lrc/musiclyricwidget.cpp" line="81"/>
         <source>No lyrics yet</source>
         <translation>གཞས་ཚིག་རྙེད་མེད། </translation>
     </message>
@@ -661,62 +680,68 @@
 <context>
     <name>MusicSongListView</name>
     <message>
-        <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="182"/>
-        <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="421"/>
+        <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="180"/>
+        <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="425"/>
         <source>Pause</source>
         <translation>སྐབས་སྡོད།</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="185"/>
-        <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="419"/>
+        <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="183"/>
+        <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="421"/>
         <source>Play</source>
         <translation>གཏོང་བ།</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="191"/>
+        <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="189"/>
         <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="423"/>
+        <source>Add music</source>
+        <translation>རོལ་མོ་སྣོན་པ། </translation>
+    </message>
+    <message>
+        <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="190"/>
+        <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="427"/>
         <source>Rename</source>
         <translation>མིང་བསྐྱར་འདོགས།</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="192"/>
-        <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="318"/>
-        <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="425"/>
+        <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="191"/>
+        <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="317"/>
+        <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="429"/>
         <source>Delete</source>
         <translation>སུབ་པ།</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="277"/>
+        <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="276"/>
         <source>CD playlist</source>
         <translation>CDགཞས་ཐོ།</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="310"/>
+        <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="309"/>
         <source>Are you sure you want to delete this playlist?</source>
         <translation>ཁྱེད་ཀྱིས་གཞས་ཐོ་འདི་དངོས་གནས་སུབ་བམ།</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="317"/>
+        <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="316"/>
         <source>Cancel</source>
         <translation>འདོར་བ།</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="545"/>
+        <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="549"/>
         <source>The CD has been removed</source>
         <translation>ཁྱེད་ཀྱི་CDཕྱིར་འབུད་བྱས་འདུག</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="549"/>
+        <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="553"/>
         <source>Play failed, as the CD has been removed</source>
         <translation>ཕབ་གཏོང་མི་ཐུབ། ཁྱེད་ཀྱི་CDཕྱིར་འབུད་བྱས་འདུག</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="556"/>
+        <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="560"/>
         <source>OK</source>
         <translation>གཏན་ཁེལ།</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="755"/>
+        <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="760"/>
         <source>New playlist</source>
         <translation>གཞས་ཐོ་གསར་བཟོ།</translation>
     </message>
@@ -724,134 +749,134 @@
 <context>
     <name>PlayListView</name>
     <message>
-        <location filename="../src/music-player/listView/musicInfoList/playitemdelegate.cpp" line="479"/>
-        <location filename="../src/music-player/listView/musicInfoList/playitemdelegate.cpp" line="821"/>
+        <location filename="../src/music-player/listView/musicInfoList/playitemdelegate.cpp" line="463"/>
+        <location filename="../src/music-player/listView/musicInfoList/playitemdelegate.cpp" line="803"/>
         <source>Unknown artist</source>
         <translation>ངོ་མ་ཤེས་པའི་གླུ་པ།</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicInfoList/playitemdelegate.cpp" line="491"/>
-        <location filename="../src/music-player/listView/musicInfoList/playitemdelegate.cpp" line="833"/>
+        <location filename="../src/music-player/listView/musicInfoList/playitemdelegate.cpp" line="475"/>
+        <location filename="../src/music-player/listView/musicInfoList/playitemdelegate.cpp" line="815"/>
         <source>Unknown album</source>
         <translation>མ་ཤེས་པའི་ཆེད་བསྒྲིགས།</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1253"/>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1542"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1265"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1605"/>
         <source>Play queue</source>
         <translation>གཏོང་བའི་རུ་སྒྲིག</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1256"/>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1539"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1268"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1602"/>
         <source>My favorites</source>
         <translation>ངའི་ཉར་ཚགས།</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="602"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="549"/>
         <source>File is invalid or does not exist, load failed</source>
         <translation>ཡིག་ཆ་གོ་མི་ཆོད་པའམ་མེད་པས། སྣོན་འཇུག་མི་ཐུབ།</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="603"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="550"/>
         <source>OK</source>
         <translation>གཏན་ཁེལ།</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1260"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1272"/>
         <source>Add to new playlist</source>
         <translation>གཞས་ཐོ་གསར་པར་སྣོན་པ།</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1294"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1306"/>
         <source>Play</source>
         <translation>གཏོང་བ།</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1297"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1309"/>
         <source>Pause</source>
         <translation>སྐབས་སྡོད།</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1230"/>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1304"/>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1370"/>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1538"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1244"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1316"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1382"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1601"/>
         <source>Add to playlist</source>
         <translation>གཞས་ཐོར་སྣོན་པ། </translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1306"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1318"/>
         <source>Display in file manager</source>
         <translation>ཡིག་ཆ་དོ་དམ་ཆས་སུ་མངོན་པ།</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1308"/>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1372"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1320"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1384"/>
         <source>Remove from play queue</source>
         <translation>གཏོང་བའི་རུ་སྒྲིག་ནས་སུབ་པ། </translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1310"/>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1374"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1322"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1386"/>
         <source>Remove from playlist</source>
         <translation>གཞས་ཐོ་ནས་སུབ་པ།</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1313"/>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1376"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1325"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1388"/>
         <source>Delete from local disk</source>
         <translation>རང་གནས་ནས་སུབ་པ།</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1346"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1358"/>
         <source>Encoding</source>
         <translation>ཨང་སྒྲིག་བྱེད་སྟངས།</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1350"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1362"/>
         <source>Song info</source>
         <translation>གླུ་གཞས་ཆ་འཕྲིན། </translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1076"/>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1119"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1068"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1123"/>
         <source>Cancel</source>
         <translation>ཕྱིར་འཐེན།</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1077"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1069"/>
         <source>Remove</source>
         <translation>སྤོ་འབུད།</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1080"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1072"/>
         <source>Are you sure you want to remove %1?</source>
         <translation>ཁྱོད་ཀྱི་སྤོ་འབུད་%1བྱེད་རྒྱུ་གཏན་ཁེལ་ལམ།</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1082"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1074"/>
         <source>Are you sure you want to remove the selected %1 songs?</source>
         <translation>ཁྱེད་ཀྱིས་འདེམས་ཟིན་པའི་གླུ་གཞས་%1སྤོ་འབུད་བྱེད་རྒྱུ་གཏན་ཁེལ་ལམ།</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1120"/>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1228"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1124"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1242"/>
         <source>Delete</source>
         <translation>སུབ་པ།</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1125"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1129"/>
         <source>Are you sure you want to delete %1?</source>
         <translation>ཁྱོད་ཀྱིས་ %1སུབ་རྒྱུ་གཏན་ཁེལ་ལམ།</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1132"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1136"/>
         <source>Are you sure you want to delete the selected %1 songs?</source>
         <translation>ཁྱེད་ཀྱིས་འདེམས་ཟིན་པའི་གླུ་གཞས་%1སུབ་རྒྱུ་གཏན་ཁེལ་ལམ།</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1133"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1137"/>
         <source>The song files contained will also be deleted</source>
         <translation>གླུ་གཞས་འདི་དག་ནང་ཚུད་པའི་གླུ་གཞས་ཡིག་ཆ་ཡང་སུབ་སྲིད།</translation>
     </message>
@@ -869,18 +894,18 @@
         <translation>གསལ་ཐོ་གཙང་སེལ།</translation>
     </message>
     <message>
-        <location filename="../src/music-player/widget/playqueuewidget.cpp" line="92"/>
-        <location filename="../src/music-player/widget/playqueuewidget.cpp" line="334"/>
+        <location filename="../src/music-player/widget/playqueuewidget.cpp" line="95"/>
+        <location filename="../src/music-player/widget/playqueuewidget.cpp" line="337"/>
         <source>No songs</source>
         <translation>གླུ་གཞས་མེད།</translation>
     </message>
     <message>
-        <location filename="../src/music-player/widget/playqueuewidget.cpp" line="336"/>
+        <location filename="../src/music-player/widget/playqueuewidget.cpp" line="339"/>
         <source>1 song</source>
         <translation>གླུ་གཞས་1</translation>
     </message>
     <message>
-        <location filename="../src/music-player/widget/playqueuewidget.cpp" line="338"/>
+        <location filename="../src/music-player/widget/playqueuewidget.cpp" line="341"/>
         <source>%1 songs</source>
         <translation>གླུ་གཞས་%1</translation>
     </message>
@@ -888,7 +913,7 @@
 <context>
     <name>QApplication</name>
     <message>
-        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="84"/>
+        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="90"/>
         <source>Music</source>
         <translation>རོལ་མོ། </translation>
     </message>
@@ -978,7 +1003,7 @@
     <message>
         <location filename="../src/music-player/widget/settingsdialog.cpp" line="43"/>
         <source>Equalizer</source>
-        <translation>ངོ་སྙོམ་ཆས།</translation>
+        <translation>ངོ་སྙོམས་སྒྲིག་ཆས།</translation>
     </message>
 </context>
 <context>
@@ -1136,12 +1161,12 @@
 <context>
     <name>SingerListView</name>
     <message>
-        <location filename="../src/music-player/listView/singerList/singerdelegate.cpp" line="242"/>
-        <location filename="../src/music-player/listView/singerList/singerdelegate.cpp" line="385"/>
+        <location filename="../src/music-player/listView/singerList/singerdelegate.cpp" line="241"/>
+        <location filename="../src/music-player/listView/singerList/singerdelegate.cpp" line="384"/>
         <location filename="../src/music-player/listView/singerList/singerdelegate.cpp" line="609"/>
-        <location filename="../src/music-player/listView/albumList/albumdelegate.cpp" line="262"/>
-        <location filename="../src/music-player/listView/albumList/albumdelegate.cpp" line="427"/>
-        <location filename="../src/music-player/listView/albumList/albumdelegate.cpp" line="633"/>
+        <location filename="../src/music-player/listView/albumList/albumdelegate.cpp" line="259"/>
+        <location filename="../src/music-player/listView/albumList/albumdelegate.cpp" line="423"/>
+        <location filename="../src/music-player/listView/albumList/albumdelegate.cpp" line="628"/>
         <source>Unknown artist</source>
         <translation>ངོ་མ་ཤེས་པའི་གླུ་པ།</translation>
     </message>
@@ -1154,7 +1179,7 @@
         <translation>ཚང་མ་གཏོང་བ།</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/subsonglistwidget.cpp" line="107"/>
+        <location filename="../src/music-player/mainFrame/subsonglistwidget.cpp" line="109"/>
         <source>Shuffle</source>
         <translation>སྐབས་བསྟུན་གཏོང་བ།</translation>
     </message>

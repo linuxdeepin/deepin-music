@@ -184,6 +184,7 @@ void MusicBaseListView::showContextMenu(const QPoint &pos)
         playact = menu.addAction(tr("Play"));
         setActionDisabled(hash, playact);
     }
+    menu.addAction(tr("Add music"));
 
     menu.exec(globalPos);
 }
@@ -348,7 +349,9 @@ void MusicBaseListView::slotMenuTriggered(QAction *action)
 {
     if (action->text() == tr("Play")) {
         emit CommonService::getInstance()->signalPlayAllMusic();
-    } else if (action->text() == tr("Pause")) {
+    } else if (action->text() == tr("Add music")) {
+        emit CommonService::getInstance()->signalAddMusic();
+    }  else if (action->text() == tr("Pause")) {
         Player::getInstance()->pause();
     }
 }

@@ -535,14 +535,20 @@
     </message>
     <message>
         <location filename="../src/music-player/listView/musicBaseAndSongList/musicbaselistview.cpp" line="181"/>
-        <location filename="../src/music-player/listView/musicBaseAndSongList/musicbaselistview.cpp" line="351"/>
+        <location filename="../src/music-player/listView/musicBaseAndSongList/musicbaselistview.cpp" line="354"/>
         <source>Pause</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/music-player/listView/musicBaseAndSongList/musicbaselistview.cpp" line="184"/>
-        <location filename="../src/music-player/listView/musicBaseAndSongList/musicbaselistview.cpp" line="349"/>
+        <location filename="../src/music-player/listView/musicBaseAndSongList/musicbaselistview.cpp" line="350"/>
         <source>Play</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/music-player/listView/musicBaseAndSongList/musicbaselistview.cpp" line="187"/>
+        <location filename="../src/music-player/listView/musicBaseAndSongList/musicbaselistview.cpp" line="352"/>
+        <source>Add music</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

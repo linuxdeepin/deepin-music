@@ -1,18 +1,31 @@
 <?xml version="1.0" ?><!DOCTYPE TS><TS language="ms" sourcelanguage="en_US" version="2.1">
 <context>
+    <name>AddMusicWidget</name>
+    <message>
+        <location filename="../src/music-player/mainFrame/addmusicwidget.cpp" line="70"/>
+        <source>Add Music</source>
+        <translation>Tambah Muzik</translation>
+    </message>
+    <message>
+        <location filename="../src/music-player/mainFrame/addmusicwidget.cpp" line="80"/>
+        <source>Or drag music files here</source>
+        <translation type="unfinished"/>
+    </message>
+</context>
+<context>
     <name>AlbumDataDelegate</name>
     <message>
-        <location filename="../src/music-player/listView/albumList/albumdelegate.cpp" line="640"/>
+        <location filename="../src/music-player/listView/albumList/albumdelegate.cpp" line="635"/>
         <source>No songs</source>
         <translation>Tiada lagu</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/albumList/albumdelegate.cpp" line="642"/>
+        <location filename="../src/music-player/listView/albumList/albumdelegate.cpp" line="637"/>
         <source>1 song</source>
         <translation>1 lagu</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/albumList/albumdelegate.cpp" line="644"/>
+        <location filename="../src/music-player/listView/albumList/albumdelegate.cpp" line="639"/>
         <source>%1 songs</source>
         <translation>%1 lagu</translation>
     </message>
@@ -20,9 +33,9 @@
 <context>
     <name>AlbumListView</name>
     <message>
-        <location filename="../src/music-player/listView/albumList/albumdelegate.cpp" line="254"/>
-        <location filename="../src/music-player/listView/albumList/albumdelegate.cpp" line="420"/>
-        <location filename="../src/music-player/listView/albumList/albumdelegate.cpp" line="625"/>
+        <location filename="../src/music-player/listView/albumList/albumdelegate.cpp" line="251"/>
+        <location filename="../src/music-player/listView/albumList/albumdelegate.cpp" line="416"/>
+        <location filename="../src/music-player/listView/albumList/albumdelegate.cpp" line="620"/>
         <source>Unknown album</source>
         <translation>Album tidak diketahui</translation>
     </message>
@@ -101,136 +114,135 @@
 <context>
     <name>DequalizerDialog</name>
     <message>
-        <location filename="../src/music-player/widget/dequalizerdialog.cpp" line="628"/>
+        <location filename="../src/music-player/widget/dequalizerdialog.cpp" line="274"/>
         <source>Custom</source>
         <translation>Suai</translation>
     </message>
     <message>
-        <location filename="../src/music-player/widget/dequalizerdialog.cpp" line="629"/>
+        <location filename="../src/music-player/widget/dequalizerdialog.cpp" line="275"/>
         <source>Monophony</source>
         <translation>Monophoni</translation>
     </message>
     <message>
-        <location filename="../src/music-player/widget/dequalizerdialog.cpp" line="630"/>
+        <location filename="../src/music-player/widget/dequalizerdialog.cpp" line="276"/>
         <source>Classical</source>
         <translation>Klasik</translation>
     </message>
     <message>
-        <location filename="../src/music-player/widget/dequalizerdialog.cpp" line="631"/>
+        <location filename="../src/music-player/widget/dequalizerdialog.cpp" line="277"/>
         <source>Club</source>
         <translation>Kelab</translation>
     </message>
     <message>
-        <location filename="../src/music-player/widget/dequalizerdialog.cpp" line="632"/>
+        <location filename="../src/music-player/widget/dequalizerdialog.cpp" line="278"/>
         <source>Dance</source>
         <translation>Dance</translation>
     </message>
     <message>
-        <location filename="../src/music-player/widget/dequalizerdialog.cpp" line="633"/>
+        <location filename="../src/music-player/widget/dequalizerdialog.cpp" line="279"/>
         <source>Full Bass</source>
         <translation>Bass Penuh</translation>
     </message>
     <message>
-        <location filename="../src/music-player/widget/dequalizerdialog.cpp" line="634"/>
+        <location filename="../src/music-player/widget/dequalizerdialog.cpp" line="280"/>
         <source>Full Bass and Treble</source>
         <translation>Bass Penuh dan Trebel</translation>
     </message>
     <message>
-        <location filename="../src/music-player/widget/dequalizerdialog.cpp" line="635"/>
+        <location filename="../src/music-player/widget/dequalizerdialog.cpp" line="281"/>
         <source>Full Treble</source>
         <translation>Trebel Penuh</translation>
     </message>
     <message>
-        <location filename="../src/music-player/widget/dequalizerdialog.cpp" line="636"/>
+        <location filename="../src/music-player/widget/dequalizerdialog.cpp" line="282"/>
         <source>Headphones</source>
         <translation>Fon kepala</translation>
     </message>
     <message>
-        <location filename="../src/music-player/widget/dequalizerdialog.cpp" line="637"/>
+        <location filename="../src/music-player/widget/dequalizerdialog.cpp" line="283"/>
         <source>Hall</source>
         <translation>Dewan</translation>
     </message>
     <message>
-        <location filename="../src/music-player/widget/dequalizerdialog.cpp" line="638"/>
+        <location filename="../src/music-player/widget/dequalizerdialog.cpp" line="284"/>
         <source>Live</source>
         <translation>Langsung</translation>
     </message>
     <message>
-        <location filename="../src/music-player/widget/dequalizerdialog.cpp" line="639"/>
+        <location filename="../src/music-player/widget/dequalizerdialog.cpp" line="285"/>
         <source>Party</source>
         <translation>Parti</translation>
     </message>
     <message>
-        <location filename="../src/music-player/widget/dequalizerdialog.cpp" line="640"/>
+        <location filename="../src/music-player/widget/dequalizerdialog.cpp" line="286"/>
         <source>Pop</source>
         <translation>Pop</translation>
     </message>
     <message>
-        <location filename="../src/music-player/widget/dequalizerdialog.cpp" line="641"/>
+        <location filename="../src/music-player/widget/dequalizerdialog.cpp" line="287"/>
         <source>Reggae</source>
         <translation>Reggae</translation>
     </message>
     <message>
-        <location filename="../src/music-player/widget/dequalizerdialog.cpp" line="642"/>
+        <location filename="../src/music-player/widget/dequalizerdialog.cpp" line="288"/>
         <source>Rock</source>
         <translation>Rock</translation>
     </message>
     <message>
-        <location filename="../src/music-player/widget/dequalizerdialog.cpp" line="643"/>
+        <location filename="../src/music-player/widget/dequalizerdialog.cpp" line="289"/>
         <source>Ska</source>
         <translation>Ska</translation>
     </message>
     <message>
-        <location filename="../src/music-player/widget/dequalizerdialog.cpp" line="644"/>
+        <location filename="../src/music-player/widget/dequalizerdialog.cpp" line="290"/>
         <source>Soft</source>
         <translation>Lembut</translation>
     </message>
     <message>
-        <location filename="../src/music-player/widget/dequalizerdialog.cpp" line="645"/>
+        <location filename="../src/music-player/widget/dequalizerdialog.cpp" line="291"/>
         <source>Soft Rock</source>
         <translation>Soft Rock</translation>
     </message>
     <message>
-        <location filename="../src/music-player/widget/dequalizerdialog.cpp" line="646"/>
+        <location filename="../src/music-player/widget/dequalizerdialog.cpp" line="292"/>
         <source>Techno</source>
         <translation>Techno</translation>
     </message>
     <message>
-        <location filename="../src/music-player/widget/dequalizerdialog.cpp" line="115"/>
-        <location filename="../src/music-player/widget/dequalizerdialog.cpp" line="532"/>
+        <location filename="../src/music-player/widget/dequalizerdialog.cpp" line="71"/>
         <source>Equalizer</source>
         <translation>Penyama</translation>
     </message>
     <message>
-        <location filename="../src/music-player/widget/dequalizerdialog.cpp" line="122"/>
-        <location filename="../src/music-player/widget/dequalizerdialog.cpp" line="757"/>
+        <location filename="../src/music-player/widget/dequalizerdialog.cpp" line="79"/>
+        <location filename="../src/music-player/widget/dequalizerdialog.cpp" line="415"/>
         <source>ON</source>
         <translation>HIDUP</translation>
     </message>
     <message>
-        <location filename="../src/music-player/widget/dequalizerdialog.cpp" line="124"/>
-        <location filename="../src/music-player/widget/dequalizerdialog.cpp" line="755"/>
+        <location filename="../src/music-player/widget/dequalizerdialog.cpp" line="81"/>
+        <location filename="../src/music-player/widget/dequalizerdialog.cpp" line="413"/>
         <source>OFF</source>
         <translation>MATI</translation>
     </message>
     <message>
-        <location filename="../src/music-player/widget/dequalizerdialog.cpp" line="145"/>
+        <location filename="../src/music-player/widget/dequalizerdialog.cpp" line="102"/>
         <source>Save</source>
         <translation>Simpan</translation>
     </message>
     <message>
-        <location filename="../src/music-player/widget/dequalizerdialog.cpp" line="167"/>
+        <location filename="../src/music-player/widget/dequalizerdialog.cpp" line="131"/>
         <source>Preamplifier</source>
         <translation>Prapenguat</translation>
     </message>
     <message>
-        <location filename="../src/music-player/widget/dequalizerdialog.cpp" line="402"/>
+        <location filename="../src/music-player/widget/dequalizerdialog.cpp" line="178"/>
         <source>Restore Defaults</source>
         <translation>Pulih ke Lalai</translation>
     </message>
     <message>
-        <location filename="../src/music-player/widget/dequalizerdialog.cpp" line="658"/>
-        <location filename="../src/music-player/widget/dequalizerdialog.cpp" line="659"/>
+        <location filename="../src/music-player/widget/dequalizerdialog.cpp" line="305"/>
+        <location filename="../src/music-player/widget/dequalizerdialog.cpp" line="306"/>
         <source>Sound Effects Saved</source>
         <translation>Kesan Bunyi Disimpan</translation>
     </message>
@@ -238,59 +250,59 @@
 <context>
     <name>FooterWidget</name>
     <message>
-        <location filename="../src/music-player/mainFrame/footerwidget.cpp" line="162"/>
-        <location filename="../src/music-player/mainFrame/footerwidget.cpp" line="627"/>
+        <location filename="../src/music-player/mainFrame/footerwidget.cpp" line="163"/>
+        <location filename="../src/music-player/mainFrame/footerwidget.cpp" line="639"/>
         <source>Unknown Title</source>
         <translation>Tajuk Tidak Diketahui</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/footerwidget.cpp" line="169"/>
-        <location filename="../src/music-player/mainFrame/footerwidget.cpp" line="630"/>
+        <location filename="../src/music-player/mainFrame/footerwidget.cpp" line="170"/>
+        <location filename="../src/music-player/mainFrame/footerwidget.cpp" line="642"/>
         <source>Unknown artist</source>
         <translation>Artis tidak diketahui</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/footerwidget.cpp" line="290"/>
+        <location filename="../src/music-player/mainFrame/footerwidget.cpp" line="291"/>
         <source>Previous</source>
         <translation>Terdahulu</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/footerwidget.cpp" line="291"/>
+        <location filename="../src/music-player/mainFrame/footerwidget.cpp" line="292"/>
         <source>Next</source>
         <translation>Berikutnya</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/footerwidget.cpp" line="292"/>
+        <location filename="../src/music-player/mainFrame/footerwidget.cpp" line="293"/>
         <source>Play/Pause</source>
         <translation>Main/Jeda</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/footerwidget.cpp" line="293"/>
+        <location filename="../src/music-player/mainFrame/footerwidget.cpp" line="294"/>
         <source>Favorite</source>
         <translation>Kegemaran</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/footerwidget.cpp" line="294"/>
+        <location filename="../src/music-player/mainFrame/footerwidget.cpp" line="295"/>
         <source>Lyrics</source>
         <translation>Lirik</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/footerwidget.cpp" line="295"/>
+        <location filename="../src/music-player/mainFrame/footerwidget.cpp" line="296"/>
         <source>Play Queue</source>
         <translation>Main Baris Gilir</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/footerwidget.cpp" line="455"/>
+        <location filename="../src/music-player/mainFrame/footerwidget.cpp" line="457"/>
         <source>List Loop</source>
         <translation>Ulang Senarai</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/footerwidget.cpp" line="458"/>
+        <location filename="../src/music-player/mainFrame/footerwidget.cpp" line="460"/>
         <source>Single Loop</source>
         <translation>Ulang Tunggal</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/footerwidget.cpp" line="461"/>
+        <location filename="../src/music-player/mainFrame/footerwidget.cpp" line="463"/>
         <source>Shuffle</source>
         <translation>Kocok</translation>
     </message>
@@ -298,34 +310,34 @@
 <context>
     <name>ImportWidget</name>
     <message>
-        <location filename="../src/music-player/mainFrame/importwidget.cpp" line="78"/>
+        <location filename="../src/music-player/mainFrame/importwidget.cpp" line="79"/>
         <source>Open Folder</source>
         <translation>Buka Folder</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/importwidget.cpp" line="87"/>
+        <location filename="../src/music-player/mainFrame/importwidget.cpp" line="88"/>
         <source>Add Music</source>
         <translation>Tambah Muzik</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/importwidget.cpp" line="95"/>
-        <location filename="../src/music-player/mainFrame/importwidget.cpp" line="227"/>
+        <location filename="../src/music-player/mainFrame/importwidget.cpp" line="96"/>
+        <location filename="../src/music-player/mainFrame/importwidget.cpp" line="233"/>
         <source>Scan</source>
         <translation>Imbas</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/importwidget.cpp" line="96"/>
-        <location filename="../src/music-player/mainFrame/importwidget.cpp" line="228"/>
+        <location filename="../src/music-player/mainFrame/importwidget.cpp" line="97"/>
+        <location filename="../src/music-player/mainFrame/importwidget.cpp" line="234"/>
         <source>%1 music directory or drag music files here</source>
         <translation>%1 direktori muzik atau seret fail-fail muzik di sini</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/importwidget.cpp" line="204"/>
+        <location filename="../src/music-player/mainFrame/importwidget.cpp" line="210"/>
         <source>All music</source>
         <translation>Semua muzik</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/importwidget.cpp" line="391"/>
+        <location filename="../src/music-player/mainFrame/importwidget.cpp" line="397"/>
         <source>Loading music, please wait...</source>
         <translation>Memuatkan muzik, tunggu sebentar...</translation>
     </message>
@@ -386,112 +398,113 @@
 <context>
     <name>MainFrame</name>
     <message>
-        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="264"/>
+        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="260"/>
         <source>Add playlist</source>
         <translation>Tambah senarai main</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="266"/>
+        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="115"/>
+        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="262"/>
         <location filename="../src/music-player/mainFrame/mainframe.cpp" line="386"/>
         <source>Add music</source>
         <translation>Tambah muzik</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="267"/>
+        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="263"/>
         <source>Equalizer</source>
         <translation>Penyama</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="270"/>
+        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="266"/>
         <source>Settings</source>
         <translation>Tetapan</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="273"/>
+        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="269"/>
         <source>Dark theme</source>
         <translation>Tema gelap</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="277"/>
-        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="323"/>
+        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="273"/>
+        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="319"/>
         <source>Exit</source>
         <translation>Keluar</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="81"/>
-        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="89"/>
-        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="97"/>
-        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="335"/>
+        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="87"/>
+        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="95"/>
+        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="103"/>
+        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="331"/>
         <source>Music</source>
         <translation>Muzik</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="82"/>
+        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="88"/>
         <source>Music is a local music player with beautiful design and simple functions.</source>
         <translation>Muzik ialah sebuah pemain muzik setempat dengan reka bentuk cantik dan fungsi-fungsi yang ringkas.</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="108"/>
+        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="120"/>
         <source>Select</source>
         <translation>Pilih</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="109"/>
+        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="121"/>
         <source>Select All</source>
-        <translation type="unfinished"/>
+        <translation>Pilih Semua</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="110"/>
+        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="122"/>
         <source>Done</source>
         <translation>Selesai</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="320"/>
+        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="316"/>
         <source>Play/Pause</source>
         <translation>Main/Jeda</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="321"/>
+        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="317"/>
         <source>Previous</source>
         <translation>Terdahulu</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="322"/>
+        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="318"/>
         <source>Next</source>
         <translation>Berikutnya</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="451"/>
+        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="449"/>
         <source>Successfully added to &quot;%1&quot;</source>
         <translation>Berjaya ditambah kepada &quot;%1&quot;</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="454"/>
+        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="452"/>
         <source>Already added to the playlist</source>
         <translation>Sudah ditambah ke dalam senarai main</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="457"/>
+        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="455"/>
         <source>1 song added</source>
         <translation>1 lagu ditambah</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="459"/>
+        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="457"/>
         <source>%1 songs added</source>
         <translation>%1 lagu ditambah</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="463"/>
+        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="461"/>
         <source>A disc is connected</source>
-        <translation type="unfinished"/>
+        <translation>Cakera bersambung</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="597"/>
+        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="601"/>
         <source>OK</source>
         <translation>OK</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="590"/>
+        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="594"/>
         <source>Import failed, no valid music file found</source>
         <translation>Import gagal, tiada fail muzik yang sah ditemui</translation>
     </message>
@@ -520,119 +533,125 @@
     </message>
     <message>
         <location filename="../src/music-player/listView/musicBaseAndSongList/musicbaselistview.cpp" line="181"/>
-        <location filename="../src/music-player/listView/musicBaseAndSongList/musicbaselistview.cpp" line="348"/>
+        <location filename="../src/music-player/listView/musicBaseAndSongList/musicbaselistview.cpp" line="354"/>
         <source>Pause</source>
         <translation>Jeda</translation>
     </message>
     <message>
         <location filename="../src/music-player/listView/musicBaseAndSongList/musicbaselistview.cpp" line="184"/>
-        <location filename="../src/music-player/listView/musicBaseAndSongList/musicbaselistview.cpp" line="346"/>
+        <location filename="../src/music-player/listView/musicBaseAndSongList/musicbaselistview.cpp" line="350"/>
         <source>Play</source>
         <translation>Main</translation>
+    </message>
+    <message>
+        <location filename="../src/music-player/listView/musicBaseAndSongList/musicbaselistview.cpp" line="187"/>
+        <location filename="../src/music-player/listView/musicBaseAndSongList/musicbaselistview.cpp" line="352"/>
+        <source>Add music</source>
+        <translation>Tambah muzik</translation>
     </message>
 </context>
 <context>
     <name>MusicListDataWidget</name>
     <message>
-        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="109"/>
-        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="910"/>
-        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="931"/>
-        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="950"/>
-        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="963"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="110"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="921"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="942"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="961"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="975"/>
         <source>No songs</source>
         <translation>Tiada lagu</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="912"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="923"/>
         <source>1 album - 1 song</source>
         <translation>1 album - 1 lagu</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="915"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="926"/>
         <source>%1 album - %2 songs</source>
         <translation>%1 album - %2 lagu</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="917"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="928"/>
         <source>%1 albums - %2 songs</source>
         <translation>%1 album - %2 lagu</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="933"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="944"/>
         <source>1 artist - 1 song</source>
         <translation>1 artis - 1 lagu</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="936"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="947"/>
         <source>%1 artist - %2 songs</source>
         <translation>%1 artist - %2 lagu</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="938"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="949"/>
         <source>%1 artists - %2 songs</source>
         <translation>%1 artis - %2 lagu</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="111"/>
-        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="952"/>
-        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="965"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="112"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="963"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="977"/>
         <source>1 song</source>
         <translation>1 lagu</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="113"/>
-        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="954"/>
-        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="967"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="114"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="965"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="979"/>
         <source>%1 songs</source>
         <translation>%1 lagu</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="248"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="254"/>
         <source>Search Results</source>
         <translation>Keputusan Gelintar</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="869"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="880"/>
         <source>No search results</source>
         <translation>Tiada keputusan gelintar</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="749"/>
-        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="772"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="760"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="783"/>
         <source>All Music</source>
         <translation>Semua Muzik</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="206"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="207"/>
         <source>CD playlist</source>
-        <translation type="unfinished"/>
+        <translation>Senarai main CD</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="817"/>
-        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="832"/>
-        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="847"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="828"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="843"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="858"/>
         <source>Time added</source>
         <translation>Masa ditambah</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="818"/>
-        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="850"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="829"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="861"/>
         <source>Album</source>
         <translation>Album</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="833"/>
-        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="849"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="844"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="860"/>
         <source>Artist</source>
         <translation>Artis</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="848"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="859"/>
         <source>Title</source>
         <translation>Tajuk</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="723"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="734"/>
         <source>Play All</source>
         <translation>Main Semua</translation>
     </message>
@@ -653,7 +672,7 @@
 <context>
     <name>MusicLyricWidget</name>
     <message>
-        <location filename="../src/music-player/widget/lrc/musiclyricwidget.cpp" line="79"/>
+        <location filename="../src/music-player/widget/lrc/musiclyricwidget.cpp" line="81"/>
         <source>No lyrics yet</source>
         <translation>Belum ada lirik</translation>
     </message>
@@ -661,62 +680,68 @@
 <context>
     <name>MusicSongListView</name>
     <message>
-        <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="182"/>
-        <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="421"/>
+        <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="180"/>
+        <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="425"/>
         <source>Pause</source>
         <translation>Jeda</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="185"/>
-        <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="419"/>
+        <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="183"/>
+        <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="421"/>
         <source>Play</source>
         <translation>Main</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="191"/>
+        <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="189"/>
         <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="423"/>
+        <source>Add music</source>
+        <translation>Tambah muzik</translation>
+    </message>
+    <message>
+        <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="190"/>
+        <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="427"/>
         <source>Rename</source>
         <translation>Nama Semula</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="192"/>
-        <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="318"/>
-        <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="425"/>
+        <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="191"/>
+        <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="317"/>
+        <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="429"/>
         <source>Delete</source>
         <translation>Padam</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="277"/>
+        <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="276"/>
         <source>CD playlist</source>
-        <translation type="unfinished"/>
+        <translation>Senarai main CD</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="310"/>
+        <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="309"/>
         <source>Are you sure you want to delete this playlist?</source>
         <translation>Anda pasti mahu memadam senarai main ini?</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="317"/>
+        <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="316"/>
         <source>Cancel</source>
         <translation>Batal</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="545"/>
-        <source>The CD has been removed</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
         <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="549"/>
-        <source>Play failed, as the CD has been removed</source>
-        <translation type="unfinished"/>
+        <source>The CD has been removed</source>
+        <translation>CD telah ditanggalkan</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="556"/>
+        <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="553"/>
+        <source>Play failed, as the CD has been removed</source>
+        <translation>Gagal dimainkan, kerana CD telah ditanggalkan</translation>
+    </message>
+    <message>
+        <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="560"/>
         <source>OK</source>
         <translation>OK</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="755"/>
+        <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="760"/>
         <source>New playlist</source>
         <translation>Senarai main baharu</translation>
     </message>
@@ -724,134 +749,134 @@
 <context>
     <name>PlayListView</name>
     <message>
-        <location filename="../src/music-player/listView/musicInfoList/playitemdelegate.cpp" line="479"/>
-        <location filename="../src/music-player/listView/musicInfoList/playitemdelegate.cpp" line="821"/>
+        <location filename="../src/music-player/listView/musicInfoList/playitemdelegate.cpp" line="463"/>
+        <location filename="../src/music-player/listView/musicInfoList/playitemdelegate.cpp" line="803"/>
         <source>Unknown artist</source>
         <translation>Artis tidak diketahui</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicInfoList/playitemdelegate.cpp" line="491"/>
-        <location filename="../src/music-player/listView/musicInfoList/playitemdelegate.cpp" line="833"/>
+        <location filename="../src/music-player/listView/musicInfoList/playitemdelegate.cpp" line="475"/>
+        <location filename="../src/music-player/listView/musicInfoList/playitemdelegate.cpp" line="815"/>
         <source>Unknown album</source>
         <translation>Album tidak diketahui</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1253"/>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1542"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1265"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1605"/>
         <source>Play queue</source>
         <translation>Main baris gilir</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1256"/>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1539"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1268"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1602"/>
         <source>My favorites</source>
         <translation>Kegemaran saya</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="602"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="549"/>
         <source>File is invalid or does not exist, load failed</source>
         <translation>Fail tidak sah atau tidak wujud, proses muat gagal</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="603"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="550"/>
         <source>OK</source>
         <translation>OK</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1260"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1272"/>
         <source>Add to new playlist</source>
         <translation>Tambah ke senarai main baharu</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1294"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1306"/>
         <source>Play</source>
         <translation>Main</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1297"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1309"/>
         <source>Pause</source>
         <translation>Jeda</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1230"/>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1304"/>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1370"/>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1538"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1244"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1316"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1382"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1601"/>
         <source>Add to playlist</source>
         <translation>Tambah ke senarai main</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1306"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1318"/>
         <source>Display in file manager</source>
         <translation>Papar dalam pengurus fail</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1308"/>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1372"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1320"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1384"/>
         <source>Remove from play queue</source>
         <translation>Buang dari baris gilir main</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1310"/>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1374"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1322"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1386"/>
         <source>Remove from playlist</source>
         <translation>Buang dari senarai main</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1313"/>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1376"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1325"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1388"/>
         <source>Delete from local disk</source>
         <translation>Padam dari cakera setempat</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1346"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1358"/>
         <source>Encoding</source>
         <translation>Pengekodan</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1350"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1362"/>
         <source>Song info</source>
         <translation>Maklumat lagu</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1076"/>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1119"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1068"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1123"/>
         <source>Cancel</source>
         <translation>Batal</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1077"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1069"/>
         <source>Remove</source>
         <translation>Buang</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1080"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1072"/>
         <source>Are you sure you want to remove %1?</source>
         <translation>Anda pasti mahu membuang %1?</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1082"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1074"/>
         <source>Are you sure you want to remove the selected %1 songs?</source>
         <translation>Anda pasti mahu membuang %1 lagu terpilih ini?</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1120"/>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1228"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1124"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1242"/>
         <source>Delete</source>
         <translation>Padam</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1125"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1129"/>
         <source>Are you sure you want to delete %1?</source>
         <translation>Anda pasti mahu memadam %1?</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1132"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1136"/>
         <source>Are you sure you want to delete the selected %1 songs?</source>
         <translation>Anda pasti mahu memadam %1 lagu terpilih ini?</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1133"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1137"/>
         <source>The song files contained will also be deleted</source>
         <translation>Fail lagu yang terkandung juga akan dipadamkan</translation>
     </message>
@@ -869,18 +894,18 @@
         <translation>Kosong</translation>
     </message>
     <message>
-        <location filename="../src/music-player/widget/playqueuewidget.cpp" line="92"/>
-        <location filename="../src/music-player/widget/playqueuewidget.cpp" line="334"/>
+        <location filename="../src/music-player/widget/playqueuewidget.cpp" line="95"/>
+        <location filename="../src/music-player/widget/playqueuewidget.cpp" line="337"/>
         <source>No songs</source>
         <translation>Tiada lagu</translation>
     </message>
     <message>
-        <location filename="../src/music-player/widget/playqueuewidget.cpp" line="336"/>
+        <location filename="../src/music-player/widget/playqueuewidget.cpp" line="339"/>
         <source>1 song</source>
         <translation>1 lagu</translation>
     </message>
     <message>
-        <location filename="../src/music-player/widget/playqueuewidget.cpp" line="338"/>
+        <location filename="../src/music-player/widget/playqueuewidget.cpp" line="341"/>
         <source>%1 songs</source>
         <translation>%1 lagu</translation>
     </message>
@@ -888,7 +913,7 @@
 <context>
     <name>QApplication</name>
     <message>
-        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="84"/>
+        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="90"/>
         <source>Music</source>
         <translation>Muzik</translation>
     </message>
@@ -1136,12 +1161,12 @@
 <context>
     <name>SingerListView</name>
     <message>
-        <location filename="../src/music-player/listView/singerList/singerdelegate.cpp" line="242"/>
-        <location filename="../src/music-player/listView/singerList/singerdelegate.cpp" line="385"/>
+        <location filename="../src/music-player/listView/singerList/singerdelegate.cpp" line="241"/>
+        <location filename="../src/music-player/listView/singerList/singerdelegate.cpp" line="384"/>
         <location filename="../src/music-player/listView/singerList/singerdelegate.cpp" line="609"/>
-        <location filename="../src/music-player/listView/albumList/albumdelegate.cpp" line="262"/>
-        <location filename="../src/music-player/listView/albumList/albumdelegate.cpp" line="427"/>
-        <location filename="../src/music-player/listView/albumList/albumdelegate.cpp" line="633"/>
+        <location filename="../src/music-player/listView/albumList/albumdelegate.cpp" line="259"/>
+        <location filename="../src/music-player/listView/albumList/albumdelegate.cpp" line="423"/>
+        <location filename="../src/music-player/listView/albumList/albumdelegate.cpp" line="628"/>
         <source>Unknown artist</source>
         <translation>Artis tidak diketahui</translation>
     </message>
@@ -1154,7 +1179,7 @@
         <translation>Main Semua</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/subsonglistwidget.cpp" line="107"/>
+        <location filename="../src/music-player/mainFrame/subsonglistwidget.cpp" line="109"/>
         <source>Shuffle</source>
         <translation>Kocok</translation>
     </message>
