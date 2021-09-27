@@ -293,6 +293,7 @@ void MusicSongListView::changeCdaSongList(int stat)
     emit sigAddNewSongList();
     m_heightChangeToMax = true;
     adjustHeight();
+    emit CommonService::getInstance()->signalSwitchToView(CdaType, m_model->index(0, 0).data(Qt::UserRole + CDA_USER_ROLE_OFFSET).toString());
 }
 
 void MusicSongListView::rmvSongList()
@@ -338,13 +339,21 @@ void MusicSongListView::rmvSongList()
                     QModelIndex nextIndex = m_model->index((rowCurrent + 1), 0);
                     QString nextHash = nextIndex.data(Qt::UserRole).value<QString>();
                     this->setCurrentIndex(nextIndex);
-                    emit CommonService::getInstance()->signalSwitchToView(CustomType, nextHash);
+                    // 显示CD列表
+                    if (nextIndex.row() == 0 && nextIndex.data(Qt::UserRole + CDA_USER_ROLE_OFFSET).toString() == CDA_USER_ROLE)
+                        emit CommonService::getInstance()->signalSwitchToView(CdaType, nextIndex.data(Qt::UserRole + CDA_USER_ROLE_OFFSET).toString());
+                    else
+                        emit CommonService::getInstance()->signalSwitchToView(CustomType, nextHash);
                 } else {
                     // 没有后一个歌单,删除后焦点定位到上一个歌单
                     QModelIndex nextIndex = m_model->index((rowCurrent - 1), 0);
                     QString nextHash = nextIndex.data(Qt::UserRole).value<QString>();
                     this->setCurrentIndex(nextIndex);
-                    emit CommonService::getInstance()->signalSwitchToView(CustomType, nextHash);
+                    // 显示CD列表
+                    if (nextIndex.row() == 0 && nextIndex.data(Qt::UserRole + CDA_USER_ROLE_OFFSET).toString() == CDA_USER_ROLE)
+                        emit CommonService::getInstance()->signalSwitchToView(CdaType, nextIndex.data(Qt::UserRole + CDA_USER_ROLE_OFFSET).toString());
+                    else
+                        emit CommonService::getInstance()->signalSwitchToView(CustomType, nextHash);
                 }
                 // 删除成功，移除歌单
                 m_model->removeRow(rowCurrent);
