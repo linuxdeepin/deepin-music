@@ -97,8 +97,9 @@ void MusicListDataWidget::initInfoLabel(QString hash)
 {
     m_currentHash = hash;
     QString countStr;
-    int songCount = 0;
+    //刷新歌曲
     if (hash == "all" || hash == "musicResult") {
+        int songCount = 0;
         if (hash == "musicResult") {
             songCount = m_searchResultTabWidget->getMusicCountByMusic();
             showEmptyHits(songCount);
@@ -193,7 +194,13 @@ void MusicListDataWidget::slotViewChanged(ListPageSwitchType switchtype, const Q
         m_musicListView->initCostomSonglist("fav");
         m_titleLabel->setText(DataBaseService::getInstance()->getPlaylistNameByUUID("fav"));
         m_musicListView->setViewModeFlag("fav", m_musicListView->getViewMode());
-        m_pStackedWidget->setCurrentWidget(m_musicListView);
+        //无法拖拽添加收藏
+        if (m_musicListView->model()->rowCount() > 0) {
+            m_pStackedWidget->setCurrentWidget(m_musicListView);
+        } else {
+            m_addMusicWidget->setSongList("fav");
+            m_pStackedWidget->setCurrentWidget(m_addMusicWidget);
+        }
         m_preHash = "fav";
         m_preSwitchtype = FavType;
         refreshModeBtn(m_musicListView->getViewMode());
