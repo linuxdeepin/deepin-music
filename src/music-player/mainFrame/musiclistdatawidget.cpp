@@ -643,7 +643,8 @@ void MusicListDataWidget::slotPlayAllClicked()
 void MusicListDataWidget::slotMusicRowCountChanged()
 {
     // 当前页面为歌曲列表时刷新按钮使能状态
-    if (m_musicListView && m_pStackedWidget->currentWidget() == m_musicListView) {
+    if ((m_musicListView && m_pStackedWidget->currentWidget() == m_musicListView)
+            || (m_addMusicWidget && m_pStackedWidget->currentWidget() == m_addMusicWidget)) {
         refreshPlayAllBtn(m_musicListView->getMusicCount());
     }
 }
