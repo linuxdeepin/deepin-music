@@ -610,14 +610,10 @@ void MainFrame::slotShortCutTriggered()
     QShortcut *objCut = dynamic_cast<QShortcut *>(sender()) ;
     Q_ASSERT(objCut);
 
+    //添加歌曲时将其加载当前选中歌单里
     if (objCut == addmusicfilesShortcut) {
-        if (m_importWidget == nullptr) {
-            m_importWidget = new ImportWidget(this);
-        }
-        m_importWidget->slotAddMusicButtonClicked(); //open filedialog
-    }
-
-    if (objCut == viewshortcut) {
+        slotAddMusicClicked();
+    } else if (objCut == viewshortcut) {
         QRect rect = window()->geometry();
         QPoint pos(rect.x() + rect.width() / 2, rect.y() + rect.height() / 2);
         Shortcut sc;
@@ -631,13 +627,9 @@ void MainFrame::slotShortCutTriggered()
         shortcutViewProc->startDetached("deepin-shortcut-viewer", shortcutString);
 
         connect(shortcutViewProc, SIGNAL(finished(int)), shortcutViewProc, SLOT(deleteLater()));
-    }
-
-    if (objCut == searchShortcut) {
+    } else if (objCut == searchShortcut) {
         m_titlebarwidget->slotSearchEditFoucusIn();
-    }
-
-    if (objCut == windowShortcut) {
+    } else if (objCut == windowShortcut) {
         if (windowState() == Qt::WindowMaximized) {
             showNormal();
         } else {
