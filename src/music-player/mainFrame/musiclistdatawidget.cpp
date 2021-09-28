@@ -134,6 +134,14 @@ void MusicListDataWidget::slotViewChanged(ListPageSwitchType switchtype, const Q
         m_musicDropdown->setEnabled(switchtype != CdaType ? true : false);
     }
 
+    //移除搜索影响
+    if (m_searchResultTabWidget) {
+        disconnect(m_searchResultTabWidget, &SearchResultTabWidget::sigSearchTypeChanged,
+                   this, &MusicListDataWidget::refreshInfoLabel);
+        disconnect(m_searchResultTabWidget, &SearchResultTabWidget::sigSearchTypeChanged,
+                   this, &MusicListDataWidget::refreshModeBtnByHash);
+    }
+
     CommonService::getInstance()->setListPageSwitchType(switchtype);
     qDebug() << "------MusicListDataWidget::viewChanged switchtype = " << switchtype;
     switch (switchtype) {
@@ -252,11 +260,11 @@ void MusicListDataWidget::slotViewChanged(ListPageSwitchType switchtype, const Q
             AC_SET_ACCESSIBLE_NAME(m_searchResultTabWidget, AC_searchResultTabWidget);
 
             m_pStackedWidget->addWidget(m_searchResultTabWidget);
-            connect(m_searchResultTabWidget, &SearchResultTabWidget::sigSearchTypeChanged,
-                    this, &MusicListDataWidget::refreshInfoLabel);
-            connect(m_searchResultTabWidget, &SearchResultTabWidget::sigSearchTypeChanged,
-                    this, &MusicListDataWidget::refreshModeBtnByHash);
         }
+        connect(m_searchResultTabWidget, &SearchResultTabWidget::sigSearchTypeChanged,
+                this, &MusicListDataWidget::refreshInfoLabel);
+        connect(m_searchResultTabWidget, &SearchResultTabWidget::sigSearchTypeChanged,
+                this, &MusicListDataWidget::refreshModeBtnByHash);
         m_pStackedWidget->setCurrentWidget(m_searchResultTabWidget);
         m_titleLabel->setText(tr("Search Results"));
         m_searchResultTabWidget->refreshListview(switchtype, hashOrSearchword);
@@ -283,10 +291,18 @@ void MusicListDataWidget::slotViewChanged(ListPageSwitchType switchtype, const Q
             slotViewChanged(SingerType, "artist", QMap<QString, MediaMeta>());
         } else if (m_preSwitchtype == SearchAlbumSubSongListType) {
             m_pStackedWidget->setCurrentWidget(m_searchResultTabWidget);
+            connect(m_searchResultTabWidget, &SearchResultTabWidget::sigSearchTypeChanged,
+                    this, &MusicListDataWidget::refreshInfoLabel);
+            connect(m_searchResultTabWidget, &SearchResultTabWidget::sigSearchTypeChanged,
+                    this, &MusicListDataWidget::refreshModeBtnByHash);
         } else if (m_preSwitchtype == SearchSingerSubSongListType) {
             m_pStackedWidget->setCurrentWidget(m_searchResultTabWidget);
         } else {
             slotViewChanged(m_preSwitchtype, m_preHash, QMap<QString, MediaMeta>());
+            connect(m_searchResultTabWidget, &SearchResultTabWidget::sigSearchTypeChanged,
+                    this, &MusicListDataWidget::refreshInfoLabel);
+            connect(m_searchResultTabWidget, &SearchResultTabWidget::sigSearchTypeChanged,
+                    this, &MusicListDataWidget::refreshModeBtnByHash);
         }
         break;
     }
