@@ -354,8 +354,8 @@ void Player::playPreMeta()
             break;
         }
         }
-
-        setActiveMeta(m_MetaList.at(index));
+        m_ActiveMeta = m_MetaList.at(index);
+        //setActiveMeta(m_MetaList.at(index));
         playMeta(m_ActiveMeta);
     }
 }
@@ -410,8 +410,8 @@ void Player::playNextMeta(bool isAuto)
             break;
         }
         }
-
-        setActiveMeta(m_MetaList.at(index));
+        m_ActiveMeta = m_MetaList.at(index);
+        //setActiveMeta(m_MetaList.at(index));
         playMeta(m_ActiveMeta);
     }
 }
