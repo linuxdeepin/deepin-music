@@ -93,6 +93,8 @@ signals:
     void signalHScreen(bool stat);
     // 滚动
     void signalScroll(int height);
+    // 将文件拖动到任务栏上的音乐图标导入，speechCenter会用到
+    void signalImprotFromTaskbar(const QStringList &itemMetas);
 private:
     explicit CommonService();
     friend class DMusic::DSingleton<CommonService>;

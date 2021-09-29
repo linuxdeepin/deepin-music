@@ -59,7 +59,8 @@ public slots:
     void setThemeType(int type);
     // 已导入百分比
     void slotImportedPercent(int percent);
-
+    // 将文件拖动到任务栏上的音乐图标导入
+    void slotFileImportProcessing(const QStringList &itemMetas);
 protected:
     bool eventFilter(QObject *o, QEvent *e) Q_DECL_OVERRIDE;
 

@@ -127,7 +127,7 @@ ImportWidget::ImportWidget(QWidget *parent) : DFrame(parent)
 
     //connection
     //connect(Player::getInstance()->getMpris(), &MprisPlayer::openUriRequested, this, &ImportWidget::slotImportFormDbus);
-
+    connect(CommonService::getInstance(), &CommonService::signalImprotFromTaskbar, this, &ImportWidget::slotFileImportProcessing);
 
     connect(DGuiApplicationHelper::instance(), &DGuiApplicationHelper::themeTypeChanged,
             this, &ImportWidget::setThemeType);
@@ -383,6 +383,15 @@ void ImportWidget::slotImportedPercent(int percent)
 {
     if (m_waterProgress->isVisible()) {
         m_waterProgress->setValue(percent);
+    }
+}
+// 将文件拖动到任务栏上的音乐图标导入
+void ImportWidget::slotFileImportProcessing(const QStringList &itemMetas)
+{
+    if (itemMetas.size() > 0) {
+        DataBaseService::getInstance()->setFirstSong(itemMetas.first());
+        DataBaseService::getInstance()->importMedias("all", itemMetas);
+        showWaitHint();
     }
 }
 
