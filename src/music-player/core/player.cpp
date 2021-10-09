@@ -1223,6 +1223,8 @@ void Player::initMpris()
     connect(m_mpris, &MprisPlayer::nextRequested,
     this, [ = ]() {
         if (m_MetaList.size() == 0) {
+            if (DataBaseService::getInstance()->getDelStatus() == true)//判断是否正在删除中
+                return;
             // 更新所有歌曲页面数据
             setCurrentPlayListHash("all", true);
             // 通知播放队列刷新
@@ -1236,6 +1238,8 @@ void Player::initMpris()
     connect(m_mpris, &MprisPlayer::previousRequested,
     this, [ = ]() {
         if (m_MetaList.size() == 0) {
+            if (DataBaseService::getInstance()->getDelStatus() == true)//判断是否正在删除中
+                return;
             // 更新所有歌曲页面数据
             setCurrentPlayListHash("all", true);
             // 通知播放队列刷新
