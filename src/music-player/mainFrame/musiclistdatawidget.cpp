@@ -134,6 +134,9 @@ void MusicListDataWidget::slotViewChanged(ListPageSwitchType switchtype, const Q
         m_musicDropdown->setEnabled(switchtype != CdaType ? true : false);
     }
 
+    // 设置导入使能
+    m_musicListView->setImportToModelEnable(false);
+
     //移除搜索影响
     if (m_searchResultTabWidget) {
         disconnect(m_searchResultTabWidget, &SearchResultTabWidget::sigSearchTypeChanged,
@@ -186,6 +189,7 @@ void MusicListDataWidget::slotViewChanged(ListPageSwitchType switchtype, const Q
         break;
     }
     case AllSongListType: {
+        m_musicListView->setImportToModelEnable(true);
         m_musicListView->reloadAllSonglist();
         m_titleLabel->setText(DataBaseService::getInstance()->getPlaylistNameByUUID("all"));
         m_musicListView->setViewModeFlag("all", m_musicListView->getViewMode());
@@ -200,6 +204,7 @@ void MusicListDataWidget::slotViewChanged(ListPageSwitchType switchtype, const Q
     }
     case FavType: {
         m_musicListView->initCostomSonglist("fav");
+        m_musicListView->setImportToModelEnable(true);
         m_titleLabel->setText(DataBaseService::getInstance()->getPlaylistNameByUUID("fav"));
         m_musicListView->setViewModeFlag("fav", m_musicListView->getViewMode());
         //无法拖拽添加收藏
@@ -232,6 +237,7 @@ void MusicListDataWidget::slotViewChanged(ListPageSwitchType switchtype, const Q
     }
     case CustomType: {
         m_musicListView->initCostomSonglist(hashOrSearchword);
+        m_musicListView->setImportToModelEnable(true);
         QFontMetrics titleFm(m_titleLabel->font());
         QString text = titleFm.elidedText(DataBaseService::getInstance()->getPlaylistNameByUUID(hashOrSearchword), Qt::ElideRight, 300);
         m_titleLabel->setText(text);
@@ -993,7 +999,8 @@ void MusicListDataWidget::refreshInfoLabel(QString hash)
         if (hash.isEmpty()) {
             return;
         }
-        m_musicListView->initCostomSonglist(hash);
+        // 注释initCostomSonglist，避免重复获取model,解决刷新lable刷新卡顿
+        //m_musicListView->initCostomSonglist(hash);
         songCount = m_musicListView->getMusicCount();
         if (0 == songCount) {
             countStr = QString("   ") + MusicListDataWidget::tr("No songs");

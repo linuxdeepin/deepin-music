@@ -576,10 +576,10 @@ void FooterWidget::slotFavoriteRemove(const QString &musicHash)
 
 void FooterWidget::flushFavoriteBtnIconAdd(const QString &hash)
 {
-    if (CommonService::getInstance()->getListPageSwitchType() == ListPageSwitchType::FavType)
-        emit CommonService::getInstance()->signalSwitchToView(FavType, "fav");
-
+    // 存在当前播放时才切换，避免造成不必要的卡顿
     if (hash == Player::getInstance()->getActiveMeta().hash) {
+        if (CommonService::getInstance()->getListPageSwitchType() == ListPageSwitchType::FavType)
+            emit CommonService::getInstance()->signalSwitchToView(FavType, "fav");
         m_btFavorite->setIcon(QIcon::fromTheme("collection1_press"));
     } else {
         m_btFavorite->setIcon(QIcon::fromTheme("dcc_collection"));

@@ -85,6 +85,8 @@ public:
     bool getIsPlayQueue();
     // 平板选中项
     QModelIndexList tabletSelectedIndexes();
+    //设置是否可以导入到m_model
+    void setImportToModelEnable(bool enable);
 public slots:
     void slotOnClicked(const QModelIndex &index);
 
@@ -195,4 +197,5 @@ private:
     bool      m_menuIsShow = false;
     static constexpr int FirstLoadCount = 15;
     QModelIndex m_pressIndex;
+    bool m_importEnable = false; //是否可以导入到m_model
 };

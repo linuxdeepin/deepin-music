@@ -783,7 +783,8 @@ void PlayListView::slotMusicAddOne(const QString &listHash, MediaMeta addMeta)
         }
     } else {
         // 普通歌单页面
-        if (!this->isVisible() || listHash != m_currentHash) {
+        // this->isVisible()不起作用，采用m_importEnable进行判断设置model,解决导入、删除时卡顿
+        if (m_importEnable == false || listHash != m_currentHash) {
             return;
         }
         DataBaseService::ListSortType sortType = DataBaseService::SortByAddTimeASC;//getSortType();
@@ -1739,6 +1740,12 @@ QModelIndexList PlayListView::tabletSelectedIndexes()
         }
     }
     return list;
+}
+
+//设置是否可以导入到m_model
+void PlayListView::setImportToModelEnable(bool enable)
+{
+    m_importEnable = enable;
 }
 
 void PlayListView::tabletClearSelection()
