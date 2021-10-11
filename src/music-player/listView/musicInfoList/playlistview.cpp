@@ -865,6 +865,7 @@ void PlayListView::slotMusicAddOne(const QString &listHash, MediaMeta addMeta)
             }
         }
     }
+    emit signalRefreshInfoLabel(m_currentHash);
 }
 
 void PlayListView::slotScrollToCurrentPosition(const QString &songlistHash)

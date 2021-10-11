@@ -162,6 +162,7 @@ signals:
     void customSort();
     void hideEmptyHits(bool ishide);
     void getSearchData(bool isvalid); //get search data
+    void signalRefreshInfoLabel(QString hash); //导入时刷新leble
 public:
     bool getIsPlayQueue() const;
     //void reflushItemMediaMeta(const MediaMeta &meta);

@@ -76,6 +76,8 @@ MusicListDataWidget::MusicListDataWidget(QWidget *parent) :
             this, &MusicListDataWidget::slotPlaylistNameUpdate);
     // 音乐列表数据变化
     connect(m_musicListView, &PlayListView::rowCountChanged, this, &MusicListDataWidget::slotMusicRowCountChanged);
+    // 导入时刷新leble
+    connect(m_musicListView, &PlayListView::signalRefreshInfoLabel, this, &MusicListDataWidget::refreshInfoLabel);
 }
 
 MusicListDataWidget::~MusicListDataWidget()
