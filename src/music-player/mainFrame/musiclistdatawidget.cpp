@@ -1012,6 +1012,7 @@ void MusicListDataWidget::refreshInfoLabel(QString hash)
         if (m_musicListView->model()->rowCount() > 0) {
             m_pStackedWidget->setCurrentWidget(m_musicListView);
         } else {
+            m_addMusicWidget->setSongList(hash); //切换时设置当前hash值，解决无法导入
             m_pStackedWidget->setCurrentWidget(m_addMusicWidget);
         }
     }
