@@ -177,7 +177,12 @@ bool checkOnly()
 {
     //single
     QString userName = QDir::homePath().section("/", -1, -1);
-    std::string path = ("/home/" + userName + "/.cache/deepin/deepin-music/").toStdString();
+    std::string path;
+    if (userName == "root") {
+        path = "/tmp/deepin-music/";
+    } else {
+        path = ("/home/" + userName + "/.cache/deepin/deepin-music/").toStdString();
+    }
     QDir tdir(path.c_str());
     if (!tdir.exists()) {
         bool ret =  tdir.mkpath(path.c_str());
