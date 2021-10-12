@@ -91,6 +91,7 @@ MainFrame::MainFrame()
     qApp->setApplicationAcknowledgementPage(acknowledgementLink);
     qApp->setProductIcon(QIcon::fromTheme("deepin-music"));
     qApp->setApplicationDescription(descriptionText);
+    qApp->setApplicationDisplayName(QApplication::tr("Music"));
 
     this->setWindowTitle(tr("Music"));
 
