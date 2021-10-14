@@ -233,7 +233,7 @@ On the Music interface, you can create, delete, and rename playlist. You can als
 2.  Right-click and select **Rename**.
 3.  Enter the name of the playlist, and press the **Enter** key on the keyboard to save it.
 
-![0|renamelist](fig/renamelist.png)
+![0|renamelist](fig/rename.png)
 
 ### Add Music to Playlist
 
