@@ -87,6 +87,7 @@ public:
     QModelIndexList tabletSelectedIndexes();
     //设置是否可以导入到m_model
     void setImportToModelEnable(bool enable);
+    bool getImportToModelEnable();
 public slots:
     void slotOnClicked(const QModelIndex &index);
 

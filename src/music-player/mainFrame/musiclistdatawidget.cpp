@@ -354,7 +354,7 @@ void MusicListDataWidget::switchViewModel()
     } else if (m_pStackedWidget->currentWidget() == m_singerListView) {
         m_singerListView->setViewModeFlag(ptb == m_btIconMode ?
                                           DListView::IconMode : DListView::ListMode);
-    } else if (m_pStackedWidget->currentWidget() == m_musicListView) {
+    } else if (m_pStackedWidget->currentWidget() == m_musicListView || m_musicListView->getImportToModelEnable() == true) {
         m_musicListView->setViewModeFlag(m_musicListView->getCurrentHash(), ptb == m_btIconMode ?
                                          DListView::IconMode : DListView::ListMode);
     } else if (m_pStackedWidget->currentWidget() == m_searchResultTabWidget) {
@@ -1197,7 +1197,7 @@ void MusicListDataWidget::slotTheme(int type)
         refreshPlayAllBtn(m_albumListView->getAlbumCount());
     } else if (m_singerListView != nullptr && m_pStackedWidget->currentWidget() == m_singerListView) {
         refreshPlayAllBtn(m_singerListView->getSingerCount());
-    } else if (m_musicListView != nullptr && m_pStackedWidget->currentWidget() == m_musicListView) {
+    } else if ((m_musicListView != nullptr && m_pStackedWidget->currentWidget() == m_musicListView) || m_musicListView->getImportToModelEnable() == true) {
         refreshPlayAllBtn(m_musicListView->getMusicCount());
     }
 }

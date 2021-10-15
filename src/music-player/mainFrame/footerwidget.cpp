@@ -557,10 +557,9 @@ void FooterWidget::slotFavoriteClick(bool click)
 
 void FooterWidget::fluashFavoriteBtnIcon()
 {
-    if (CommonService::getInstance()->getListPageSwitchType() == ListPageSwitchType::FavType)
-        emit CommonService::getInstance()->signalSwitchToView(FavType, "fav");
-
     if (DataBaseService::getInstance()->favoriteExist(Player::getInstance()->getActiveMeta())) {
+        if (CommonService::getInstance()->getListPageSwitchType() == ListPageSwitchType::FavType)
+            emit CommonService::getInstance()->signalSwitchToView(FavType, "fav");
         m_btFavorite->setIcon(QIcon::fromTheme("collection1_press"));
     } else {
         m_btFavorite->setIcon(QIcon::fromTheme("dcc_collection"));
@@ -581,9 +580,9 @@ void FooterWidget::flushFavoriteBtnIconAdd(const QString &hash)
         if (CommonService::getInstance()->getListPageSwitchType() == ListPageSwitchType::FavType)
             emit CommonService::getInstance()->signalSwitchToView(FavType, "fav");
         m_btFavorite->setIcon(QIcon::fromTheme("collection1_press"));
-    } else {
+    } /*else {
         m_btFavorite->setIcon(QIcon::fromTheme("dcc_collection"));
-    }
+    }*/
 }
 
 void FooterWidget::slotSoundClick(bool click)

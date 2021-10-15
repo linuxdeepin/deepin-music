@@ -1749,6 +1749,11 @@ void PlayListView::setImportToModelEnable(bool enable)
     m_importEnable = enable;
 }
 
+bool PlayListView::getImportToModelEnable()
+{
+    return m_importEnable;
+}
+
 void PlayListView::tabletClearSelection()
 {
     clearSelection();
