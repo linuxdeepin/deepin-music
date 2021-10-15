@@ -227,7 +227,9 @@ void MusicSongListView::addNewSongList()
     m_model->appendRow(item);
     setMinimumHeight(m_model->rowCount() * ItemHeight);
     setCurrentIndex(m_model->indexFromItem(item));
-    slotDoubleClicked(m_model->indexFromItem(item));
+    //未显示时不编辑
+    if (isVisible())
+        slotDoubleClicked(m_model->indexFromItem(item));
     scrollToBottom();
 
     //record to db
