@@ -127,7 +127,7 @@ ImportWidget::ImportWidget(QWidget *parent) : DFrame(parent)
 
     //connection
     //connect(Player::getInstance()->getMpris(), &MprisPlayer::openUriRequested, this, &ImportWidget::slotImportFormDbus);
-    connect(CommonService::getInstance(), &CommonService::signalImprotFromTaskbar, this, &ImportWidget::slotFileImportProcessing);
+//    connect(CommonService::getInstance(), &CommonService::signalImprotFromTaskbar, this, &ImportWidget::slotFileImportProcessing);
 
     connect(DGuiApplicationHelper::instance(), &DGuiApplicationHelper::themeTypeChanged,
             this, &ImportWidget::setThemeType);

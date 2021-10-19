@@ -182,6 +182,14 @@ MainFrame::MainFrame()
 
     connect(CommonService::getInstance(), &CommonService::signalSwitchToView, this, &MainFrame::slotViewChanged);
 
+    connect(CommonService::getInstance(), &CommonService::signalImprotFromTaskbar, this, [ = ](const QStringList & itemMetas) {
+        //初始化导入窗口
+        if (m_importWidget == nullptr) {
+            m_importWidget = new ImportWidget(this);
+        }
+        m_importWidget->slotFileImportProcessing(itemMetas);
+    });
+
     if (CommonService::getInstance()->isTabletEnvironment()) {
         QDBusConnection connection = QDBusConnection::sessionBus();
         m_comDeepinImInterface = new ComDeepinImInterface("com.deepin.im", "/com/deepin/im", connection);
