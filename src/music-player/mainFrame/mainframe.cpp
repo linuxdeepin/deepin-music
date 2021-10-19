@@ -414,6 +414,30 @@ void MainFrame::autoStartToPlay()
 {
     QString strOpenPath = DataBaseService::getInstance()->getFirstSong();
     auto lastplaypage = MusicSettings::value("base.play.last_playlist").toString(); //上一次的页面
+    ListPageSwitchType lastListPageSwitchType = AllSongListType;
+    //最后记录的歌单
+    if (!lastplaypage.isEmpty()) {
+        if (lastplaypage == "album") {
+            lastListPageSwitchType = AlbumType;
+        } else if (lastplaypage == "artist") {
+            lastListPageSwitchType = SingerType;
+        } else if (lastplaypage == "fav") {
+            lastListPageSwitchType = FavType;
+        } else if (lastplaypage == "CdaRole") {
+            lastListPageSwitchType = AllSongListType;
+        } else if (lastplaypage == "all") {
+            lastListPageSwitchType = AllSongListType;
+        } else if (lastplaypage == "musicResult") {
+            lastListPageSwitchType = AllSongListType;
+        } else if (lastplaypage == "artistResult") {
+            lastListPageSwitchType = AllSongListType;
+        } else if (lastplaypage == "albumResult") {
+            lastListPageSwitchType = AllSongListType;
+        } else {
+            lastListPageSwitchType = CustomType;
+        }
+    }
+    emit CommonService::getInstance()->signalSwitchToView(lastListPageSwitchType, lastplaypage);
     if (!strOpenPath.isEmpty()) {
         //通知设置当前页面
         Player::getInstance()->setCurrentPlayListHash(lastplaypage, true);
