@@ -743,7 +743,8 @@ void MusicListDataWidget::initUI()
 
     AC_SET_OBJECT_NAME(m_musicListView, AC_PlayListView);
     AC_SET_ACCESSIBLE_NAME(m_musicListView, AC_PlayListView);
-    m_musicListView->initAllSonglist("all");
+    //取消初始化所有歌单，转移到autoStartToPlay初始化
+//    m_musicListView->initAllSonglist("all");
     m_musicListView->setFocusPolicy(Qt::StrongFocus);
     m_pStackedWidget->addWidget(m_musicListView);
 //    m_pCenterWidget->setMouseTracking(true);
