@@ -180,6 +180,9 @@ void MusicListScrollArea::slotListViewClicked(const QModelIndex &index)
     } else if (listview == m_customizeListview) {
         m_dataBaseListview->clearSelection();
     }
+    //切换歌单时刷新播放状态图标
+    m_customizeListview->slotUpdatePlayingIcon();
+    m_dataBaseListview->slotUpdatePlayingIcon();
 }
 
 void MusicListScrollArea::slotAddNewSongList()
