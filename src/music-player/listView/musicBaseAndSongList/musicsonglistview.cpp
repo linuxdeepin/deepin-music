@@ -326,7 +326,7 @@ void MusicSongListView::rmvSongList()
             // 数据库删除歌单
             if (DataBaseService::getInstance()->deletePlaylist(hash)) {
                 // 判断当前是否播放歌曲，如果正在播放，则判断当前歌曲是否在此歌单
-                if (!Player::getInstance()->getActiveMeta().hash.isEmpty() && isMediaMetaInSonglist) {
+                if (!Player::getInstance()->getActiveMeta().hash.isEmpty() && isMediaMetaInSonglist && Player::getInstance()->getCurrentPlayListHash() == hash) {
                     Player::getInstance()->clearPlayList();
                     // 设置所有音乐播放状态
                     Player::getInstance()->setCurrentPlayListHash("", false);
