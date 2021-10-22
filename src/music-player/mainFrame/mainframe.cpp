@@ -183,11 +183,16 @@ MainFrame::MainFrame()
     connect(CommonService::getInstance(), &CommonService::signalSwitchToView, this, &MainFrame::slotViewChanged);
 
     connect(CommonService::getInstance(), &CommonService::signalImprotFromTaskbar, this, [ = ](const QStringList & itemMetas) {
+        // 当itemMetas为空时，不做导入
+        if (itemMetas.isEmpty())
+            return ;
         //初始化导入窗口
         if (m_importWidget == nullptr) {
-            m_importWidget = new ImportWidget(this);
+            DataBaseService::getInstance()->setFirstSong(itemMetas.first());
+            DataBaseService::getInstance()->importMedias("all", itemMetas);
+        } else {
+            m_importWidget->slotFileImportProcessing(itemMetas);
         }
-        m_importWidget->slotFileImportProcessing(itemMetas);
     });
 
     if (CommonService::getInstance()->isTabletEnvironment()) {
@@ -933,7 +938,7 @@ void MainFrame::showEvent(QShowEvent *event)
 
     if (m_importWidget) {
         // 首页启动导入界面，调整位置
-        m_importWidget->setGeometry(0, 0, width(), height() - titlebar()->height());
+        m_importWidget->setGeometry(0, 0, width(), height());
     }
 }
 
