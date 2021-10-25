@@ -59,6 +59,7 @@
 #include "player.h"
 #include "subsonglistwidget.h"
 #include "addmusicwidget.h"
+#include "musicsettings.h"
 
 DWIDGET_USE_NAMESPACE
 

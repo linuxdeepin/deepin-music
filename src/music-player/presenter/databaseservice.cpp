@@ -409,7 +409,8 @@ void DataBaseService::importMedias(const QString &importHash, const QStringList 
 //    }
     m_importHash = importHash;
     emit signalImportedPercent(0);
-    emit signalImportMedias(importHash, urllist);
+    QString playHash = Player::getInstance()->getCurrentPlayListHash();
+    emit signalImportMedias(importHash, playHash, urllist);
 }
 
 //bool DataBaseService::getImportStatus()

@@ -185,7 +185,7 @@ signals:
 
     // 子线程执行
     // 导入歌曲
-    void signalImportMedias(QString importHash, const QStringList &urllist);
+    void signalImportMedias(QString importHash, QString playHash, const QStringList &urllist);
     // 删除歌单所选歌曲 removeFromLocal:是否从本地删除
     void sigRemoveSelectedSongs(const QString &curpage, const QStringList &musichashlist, bool removeFromLocal);
 private:

@@ -68,9 +68,10 @@ void DBOperate::setNeedSleep()
     m_mutex.unlock();
 }
 
-void DBOperate::slotImportMedias(const QString &importHash, const QStringList &urllist)
+void DBOperate::slotImportMedias(const QString &importHash, QString playHash, const QStringList &urllist)
 {
     m_importHash = importHash;
+    m_playHash = playHash;
     m_successCount = 0;
     m_exsitCount = 0;
     if (m_mediaLibrary == nullptr) {
@@ -361,9 +362,15 @@ void DBOperate::addMediaMetaToDB(const MediaMeta &meta)
                 QList<MediaMeta> metas;
                 metas.append(meta);
                 addMetaToPlaylist(m_importHash, metas);
+                //自定义歌单添加到播放列表
+                if (m_importHash == m_playHash || m_playHash == "all"
+                        || m_playHash == "album" || m_playHash == "artist") {
+                    emit signalMusicAddOne("play", meta);
+                }
             } else {
                 // 如果是从播放队列导入需要发送信号通知更新播放队列
-                if (m_importHash == "play") {
+                if (m_importHash == m_playHash || m_playHash == "all"
+                        || m_playHash == "album" || m_playHash == "artist") {
                     emit signalMusicAddOne("play", meta);
                 }
                 emit signalMusicAddOne("all", meta);
@@ -380,6 +387,10 @@ void DBOperate::addMediaMetaToDB(const MediaMeta &meta)
             QList<MediaMeta> metas;
             metas.append(meta);
             addMetaToPlaylist(m_importHash, metas);
+            //自定义歌单添加到播放列表
+            if (m_importHash == m_playHash) {
+                emit signalMusicAddOne("play", meta);
+            }
         } else {
             m_exsitCount++;
         }

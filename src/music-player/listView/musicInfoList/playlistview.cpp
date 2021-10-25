@@ -760,6 +760,11 @@ void PlayListView::slotRemoveSingleSong(const QString &listHash, const QString &
 
 void PlayListView::slotMusicAddOne(const QString &listHash, MediaMeta addMeta)
 {
+    //添加到播放队列
+    if (m_IsPlayQueue && listHash == m_currentHash) {
+        Player::getInstance()->playListAppendMeta(addMeta);
+    }
+
     if (m_currentHash == "album" || m_currentHash == "albumResult"
             || m_currentHash == "artist" || m_currentHash == "artistResult") {
         // 二级页面
@@ -784,7 +789,7 @@ void PlayListView::slotMusicAddOne(const QString &listHash, MediaMeta addMeta)
     } else {
         // 普通歌单页面
         // this->isVisible()不起作用，采用m_importEnable进行判断设置model,解决导入、删除时卡顿
-        if (m_importEnable == false || listHash != m_currentHash) {
+        if ((m_importEnable == false && !m_IsPlayQueue) || listHash != m_currentHash) {
             return;
         }
         DataBaseService::ListSortType sortType = DataBaseService::SortByAddTimeASC;//getSortType();
