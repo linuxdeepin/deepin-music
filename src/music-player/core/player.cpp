@@ -181,11 +181,14 @@ void Player::playMeta(MediaMeta meta)
         m_qvplayer->open(m_qvmedia);
         m_qvplayer->play();
 
+        //延迟设置进度
         if (INT_LAST_PROGRESS_FLAG && m_ActiveMeta.hash == meta.hash) {
+            m_qvplayer->pause();
             qint64 lastOffset = m_ActiveMeta.offset;
             QTimer::singleShot(100, this, [ = ]() {//为了记录进度条生效，在加载的时候让音乐播放100ms
                 qDebug() << "seek last position:" << lastOffset;
                 m_qvplayer->setTime(lastOffset);
+                m_qvplayer->play();
             });
             INT_LAST_PROGRESS_FLAG = 0;
         }
