@@ -1085,7 +1085,6 @@ void PlayListView::slotRmvFromSongList()
     if (warnDlg.exec() > QDialog::Rejected) {
         //数据库中删除时有信号通知刷新界面
         if (!m_IsPlayQueue) {
-            DataBaseService::getInstance()->removeSelectedSongs(m_currentHash, metaList, false);
             if (CommonService::getInstance()->isTabletEnvironment()) {
                 tabletClearSelection();
             } else {
@@ -1096,6 +1095,7 @@ void PlayListView::slotRmvFromSongList()
             if (m_currentHash == "all" || m_currentHash == "album" || m_currentHash == "artist" || m_currentHash == "musicResult") {
                 Player::getInstance()->playRmvMeta(metaList);
             }
+            DataBaseService::getInstance()->removeSelectedSongs(m_currentHash, metaList, false);
         } else {
             Player::getInstance()->playRmvMeta(metaList);
         }
@@ -1149,12 +1149,12 @@ void PlayListView::slotDelFromLocal()
 
     warnDlg.setIcon(QIcon::fromTheme("deepin-music"));
     if (deleteFlag == warnDlg.exec()) {
-        DataBaseService::getInstance()->removeSelectedSongs(m_currentHash, strlist, true);
         // 如果是专辑或者歌手,playRmvMeta的逻辑放在专辑与歌手中处理,二级页面删除后继续播放逻辑
         QString playListHash = Player::getInstance()->getCurrentPlayListHash();
         if (playListHash != "album" && playListHash != "artist" && playListHash != "albumResult" && playListHash != "artistResult") {
             Player::getInstance()->playRmvMeta(strlist);
         }
+        DataBaseService::getInstance()->removeSelectedSongs(m_currentHash, strlist, true);
     }
 }
 
