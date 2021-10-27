@@ -727,6 +727,19 @@ int DataBaseService::addMetaToPlaylist(QString uuid, const QList<MediaMeta> &met
             qCritical() << query.lastError() << sqlStr;
         }
     }
+    QString playHash = Player::getInstance()->getCurrentPlayListHash();
+    // 当前歌单为播放队列时需要将歌曲添加到播放队列
+    if (playHash == uuid) {
+        auto curPlaylist = Player::getInstance()->getPlayList();
+        for (int i = 0; i < metas.size(); ++i) {
+            // 防止重复操作
+            if (!curPlaylist->contains(metas[i])) {
+                // 防止播放队列窗口未创建时无法添加到播放队列
+                Player::getInstance()->playListAppendMeta(metas[i]);
+                emit signalMusicAddOne("play", metas[i]);
+            }
+        }
+    }
 
     return insert_count;
 }
