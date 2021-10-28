@@ -1253,7 +1253,7 @@ void Player::initMpris()
             if (m_MetaList.size() == 0)
                 return;
         }
-        playNextMeta(true);
+        playNextMeta(false);
     });
 
     connect(m_mpris, &MprisPlayer::previousRequested,
