@@ -1196,7 +1196,7 @@ DataBaseService::DataBaseService()
         if (listHash == "play") {
             Player::getInstance()->playListAppendMeta(meta);
         }
-        signalMusicAddOne(listHash, meta);
+        emit signalMusicAddOne(listHash, meta);
     }, Qt::QueuedConnection);
     connect(&m_worker, &DBOperate::signalFavSongAdd, this, &DataBaseService::signalFavSongAdd, Qt::QueuedConnection);
     // 删除结束

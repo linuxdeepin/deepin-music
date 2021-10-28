@@ -1117,6 +1117,7 @@ void Player::initVlc()
         Q_EMIT positionChanged(position /*- m_ActiveMeta.offset*/,  m_ActiveMeta.length, 1); //直接上报当前位置，offset无实质意义
         if (INT_LAST_PROGRESS_FLAG == 0) {
             m_ActiveMeta.offset = position;
+            MusicSettings::setOption("base.play.last_position", position);
         }
     });
 
