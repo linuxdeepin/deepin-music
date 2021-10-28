@@ -30,6 +30,7 @@
 #include <QColorDialog>
 #include <DPalette>
 #include <DGuiApplicationHelper>
+#include <DFontSizeManager>
 
 #include "../../core/util/musiclyric.h"
 #include "../../core/musicsettings.h"
@@ -97,8 +98,8 @@ void LyricLabel::paintItem(QPainter *painter, int index, const QRect &rect)
     if (index == this->m_currentItem) {
         painter->setPen(lyricHighlight);
         QFont font(lyricFont);
-        int fontpixelSize = font.pixelSize() < 0 ? 0 : font.pixelSize();
-        font.setPixelSize(fontpixelSize + 1);
+        //绑定获取系统字体大小
+        font.setPixelSize(DFontSizeManager::instance()->fontPixelSize(DFontSizeManager::T6));
         painter->setFont(font);
         QPoint leftpos = rect.bottomLeft();
         leftpos.setY(static_cast<int>(leftpos.y() + rect.height() / 2.0 + 5));

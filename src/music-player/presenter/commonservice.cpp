@@ -43,11 +43,11 @@ void CommonService::setListPageSwitchType(ListPageSwitchType lpst)
 
 CommonService::CommonService()
 {
-#if (DTK_VERSION >= DTK_VERSION_CHECK(5, 5, 0, 0))
-    m_isTabletEnvironment = Dtk::Gui::DGuiApplicationHelper::isTabletEnvironment();
-#else
+//#if (DTK_VERSION >= DTK_VERSION_CHECK(5, 5, 0, 0))
+//    m_isTabletEnvironment = Dtk::Gui::DGuiApplicationHelper::isTabletEnvironment();
+//#else
     m_isTabletEnvironment = false;
-#endif
+//#endif
 }
 
 ListPageSwitchType CommonService::getListPageSwitchType() const
