@@ -1191,7 +1191,13 @@ DataBaseService::DataBaseService()
     connect(&m_worker, &DBOperate::signalAllMusicCleared, this, &DataBaseService::signalAllMusicCleared, Qt::QueuedConnection);
     // 已导入百分比
     connect(&m_worker, &DBOperate::signalImportedPercent, this, &DataBaseService::signalImportedPercent, Qt::QueuedConnection);
-    connect(&m_worker, &DBOperate::signalMusicAddOne, this, &DataBaseService::signalMusicAddOne, Qt::QueuedConnection);
+    connect(&m_worker, &DBOperate::signalMusicAddOne, this, [ = ](QString listHash, MediaMeta meta) {
+        //添加播放列表时防止窗口未初始化
+        if (listHash == "play") {
+            Player::getInstance()->playListAppendMeta(meta);
+        }
+        signalMusicAddOne(listHash, meta);
+    }, Qt::QueuedConnection);
     connect(&m_worker, &DBOperate::signalFavSongAdd, this, &DataBaseService::signalFavSongAdd, Qt::QueuedConnection);
     // 删除结束
     connect(&m_worker, &DBOperate::signalDelFinish, this, &DataBaseService::slotDelFinish, Qt::QueuedConnection);
