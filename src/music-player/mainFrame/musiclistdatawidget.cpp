@@ -402,6 +402,7 @@ void MusicListDataWidget::slotImportFinished(QString hash, int successCount)
             m_singerListView->setSingerListData(DataBaseService::getInstance()->allSingerInfos()); //set singer data
         }
     }
+    m_lableWidget->setGeometry(m_actionBar->geometry());
 }
 
 bool MusicListDataWidget::eventFilter(QObject *o, QEvent *e)
