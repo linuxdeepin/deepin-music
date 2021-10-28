@@ -432,9 +432,9 @@ void AbstractWheelWidget::paintEvent(QPaintEvent *event)
                 t = (t+8)*255/(len+8);
                 */
                 //抛物线衰减的方法
-                int t = abs(i);
+                int t = abs(i - 1);
                 t = 255 - t * t * 220 / len / len - 35; //220是255-y得到,y为边界透明度
-                if (t < 0) t = 0;
+                if (t < 35) t = 35;
                 //qDebug() << "a值:" << t << endl;
                 if (m_themetype == 1) {
                     if (m_FadeFlag) {
