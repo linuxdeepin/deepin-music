@@ -397,9 +397,27 @@ void Player::playNextMeta(bool isAuto)
             break;
         }
         case Shuffle: {
-            QTime time;
-            time = QTime::currentTime();
-            index = static_cast<int>(QRandomGenerator::global()->bounded(time.msec() + time.second() * 1000)) % m_MetaList.size();
+            //多个随机处理
+            if (m_MetaList.size() > 1) {
+                QTime time;
+                time = QTime::currentTime();
+                int curIndex = static_cast<int>(QRandomGenerator::global()->bounded(time.msec() + time.msec() * 1000)) % m_MetaList.size();
+                // 随机相同时特殊处理
+                if (curIndex == index) {
+                    if (curIndex == 0) {
+                        index = 1;
+                    } else if (curIndex == m_MetaList.size() - 1) {
+                        index = 0;
+                    } else {
+                        index = curIndex + 1;
+                    }
+                } else {
+                    index = curIndex;
+                }
+            } else {
+                index = 0;
+            }
+
             //qsrand(static_cast<uint>((time.msec() + time.second() * 1000)));
             //index = qrand() % m_MetaList.size();
             break;
