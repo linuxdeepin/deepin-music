@@ -210,6 +210,7 @@ void InfoDialog::updateLabelSize()
 InfoDialog::InfoDialog(QWidget *parent)
     : DAbstractDialog(parent)
 {
+    setModal(true);
     initUI();
 }
 
