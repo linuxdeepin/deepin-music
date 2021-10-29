@@ -546,19 +546,11 @@ bool DataBaseService::favoriteMusic(const MediaMeta meta)
     bool ret = false;
     QSqlQuery query(m_db);
 
+    // 刷新播放列表
     if (favoriteExist(meta)) {
-        QString sqlDelete = QString("delete from playlist_fav where music_id = '%1'").arg(meta.hash);
-
-        if (!query.exec(sqlDelete))
-            qCritical() << query.lastError() << sqlDelete;
+        ret = deleteMetaFromPlaylist("fav", QStringList() << meta.hash);
     } else {
-        QString sqlInsert = QString("insert into playlist_fav values('%1', 'fav', 0)").arg(meta.hash);
-
-        if (!query.exec(sqlInsert)) {
-            qCritical() << query.lastError() << sqlInsert;
-        } else {
-            ret = true;
-        }
+        ret = addMetaToPlaylist("fav", QList<MediaMeta>() << meta);
     }
 
     return ret;
