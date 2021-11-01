@@ -320,11 +320,16 @@ void Player::playPreMeta()
     if (m_qvinstance == nullptr || m_qvplayer == nullptr || m_qvmedia == nullptr) {
         initVlc();
     }
-    if (m_MetaList.size() > 0) {
+    QList<MediaMeta> curMetaList;
+    for (int i = 0; i < m_MetaList.size(); i++) {
+        if (QFile::exists(m_MetaList[i].localPath) || m_MetaList[i].mmType == MIMETYPE_CDA)
+            curMetaList.append(m_MetaList[i]);
+    }
+    if (curMetaList.size() > 0) {
         //播放模式todo
         int index = 0;
-        for (int i = 0; i < m_MetaList.size(); i++) {
-            if (m_MetaList.at(i).hash == m_ActiveMeta.hash) {
+        for (int i = 0; i < curMetaList.size(); i++) {
+            if (curMetaList.at(i).hash == m_ActiveMeta.hash) {
                 index = i;
                 break;
             }
@@ -334,30 +339,45 @@ void Player::playPreMeta()
         case RepeatAll:
         case RepeatSingle: {
             if (index == 0) {
-                index = m_MetaList.size() - 1;
+                index = curMetaList.size() - 1;
             } else {
                 index--;
             }
             break;
         }
         case Shuffle: {
-            QTime time;
-            time = QTime::currentTime();
-            index = static_cast<int>(QRandomGenerator::global()->bounded(time.msec() + time.second() * 1000)) % m_MetaList.size();
-            //qsrand(static_cast<uint>((time.msec() + time.second() * 1000)));
-            //index = qrand() % m_MetaList.size();
+            // 多个随机处理
+            if (curMetaList.size() > 1) {
+                QTime time;
+                time = QTime::currentTime();
+                int curIndex = static_cast<int>(QRandomGenerator::global()->bounded(time.msec() + time.msec() * 1000)) % curMetaList.size();
+                // 随机相同时特殊处理
+                if (curIndex == index) {
+                    if (curIndex == 0) {
+                        index = 1;
+                    } else if (curIndex == curMetaList.size() - 1) {
+                        index = 0;
+                    } else {
+                        index = curIndex - 1;
+                    }
+                } else {
+                    index = curIndex;
+                }
+            } else {
+                index = 0;
+            }
             break;
         }
         default: {
             if (index == 0) {
-                index = m_MetaList.size() - 1;
+                index = curMetaList.size() - 1;
             } else {
                 index--;
             }
             break;
         }
         }
-        m_ActiveMeta = m_MetaList.at(index);
+        m_ActiveMeta = curMetaList.at(index);
         //setActiveMeta(m_MetaList.at(index));
         playMeta(m_ActiveMeta);
     }
@@ -368,10 +388,15 @@ void Player::playNextMeta(bool isAuto)
     if (m_qvinstance == nullptr || m_qvplayer == nullptr || m_qvmedia == nullptr) {
         initVlc();
     }
-    if (m_MetaList.size() > 0) {
+    QList<MediaMeta> curMetaList;
+    for (int i = 0; i < m_MetaList.size(); i++) {
+        if (QFile::exists(m_MetaList[i].localPath) || m_MetaList[i].mmType == MIMETYPE_CDA)
+            curMetaList.append(m_MetaList[i]);
+    }
+    if (curMetaList.size() > 0) {
         int index = 0;
-        for (int i = 0; i < m_MetaList.size(); i++) {
-            if (m_MetaList.at(i).hash == m_ActiveMeta.hash) {
+        for (int i = 0; i < curMetaList.size(); i++) {
+            if (curMetaList.at(i).hash == m_ActiveMeta.hash) {
                 index = i;
                 break;
             }
@@ -379,7 +404,7 @@ void Player::playNextMeta(bool isAuto)
 
         switch (m_mode) {
         case RepeatAll: {
-            if (index == (m_MetaList.size() - 1)) {
+            if (index == (curMetaList.size() - 1)) {
                 index = 0;
             } else {
                 index++;
@@ -388,7 +413,7 @@ void Player::playNextMeta(bool isAuto)
         }
         case RepeatSingle: {
             if (!isAuto) {
-                if (index == (m_MetaList.size() - 1)) {
+                if (index == (curMetaList.size() - 1)) {
                     index = 0;
                 } else {
                     index++;
@@ -398,15 +423,15 @@ void Player::playNextMeta(bool isAuto)
         }
         case Shuffle: {
             //多个随机处理
-            if (m_MetaList.size() > 1) {
+            if (curMetaList.size() > 1) {
                 QTime time;
                 time = QTime::currentTime();
-                int curIndex = static_cast<int>(QRandomGenerator::global()->bounded(time.msec() + time.msec() * 1000)) % m_MetaList.size();
+                int curIndex = static_cast<int>(QRandomGenerator::global()->bounded(time.msec() + time.msec() * 1000)) % curMetaList.size();
                 // 随机相同时特殊处理
                 if (curIndex == index) {
                     if (curIndex == 0) {
                         index = 1;
-                    } else if (curIndex == m_MetaList.size() - 1) {
+                    } else if (curIndex == curMetaList.size() - 1) {
                         index = 0;
                     } else {
                         index = curIndex + 1;
@@ -423,7 +448,7 @@ void Player::playNextMeta(bool isAuto)
             break;
         }
         default: {
-            if (index == (m_MetaList.size() - 1)) {
+            if (index == (curMetaList.size() - 1)) {
                 index = 0;
             } else {
                 index++;
@@ -431,7 +456,7 @@ void Player::playNextMeta(bool isAuto)
             break;
         }
         }
-        m_ActiveMeta = m_MetaList.at(index);
+        m_ActiveMeta = curMetaList.at(index);
         //setActiveMeta(m_MetaList.at(index));
         playMeta(m_ActiveMeta);
     }
