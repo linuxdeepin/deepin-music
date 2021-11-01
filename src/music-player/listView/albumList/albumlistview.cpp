@@ -720,9 +720,9 @@ void AlbumListView::setSortType(DataBaseService::ListSortType sortType)
 void AlbumListView::setDataBySortType(QList<AlbumInfo> &albumInfos, DataBaseService::ListSortType sortType)
 {
     // 不加入到搜索结果中
-    if (m_hash == "albumResult" || m_hash == "artistResult") {
-        return;
-    }
+//    if (m_hash == "albumResult" || m_hash == "artistResult") {
+//        return;
+//    }
     // 排序
     sortList(albumInfos, sortType);
 
