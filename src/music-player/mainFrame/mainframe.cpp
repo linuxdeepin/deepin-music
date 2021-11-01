@@ -459,6 +459,11 @@ void MainFrame::autoStartToPlay()
         MediaMeta medmeta = DataBaseService::getInstance()->getMusicInfoByHash(lastMeta);
         if (medmeta.localPath.isEmpty())
             return;
+        auto playList = Player::getInstance()->getPlayList();
+        // 最后播放歌曲默认添加到播放列表
+        if (!playList->contains(medmeta)) {
+            Player::getInstance()->playListAppendMeta(medmeta);
+        }
         Player::getInstance()->setActiveMeta(medmeta);
         if (bremember) {
             //上一次进度的赋值
@@ -1012,6 +1017,11 @@ void MainFrame::closeEvent(QCloseEvent *event)
         }
     } else {
         MusicSettings::setOption("base.play.last_position", -1);
+    }
+    //当前列表为空转为所有音乐
+    if (!Player::getInstance()->getCurrentPlayListHash().isEmpty()
+            && DataBaseService::getInstance()->getPlaylistSongCount(Player::getInstance()->getCurrentPlayListHash()) == 0) {
+        MusicSettings::setOption("base.play.last_playlist", "all");
     }
     auto askCloseAction = MusicSettings::value("base.close.close_action").toInt();
     switch (askCloseAction) {
