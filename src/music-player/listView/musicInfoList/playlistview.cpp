@@ -1174,7 +1174,7 @@ void PlayListView::slotDelFromLocal()
     if (deleteFlag == warnDlg.exec()) {
         // 如果是专辑或者歌手,playRmvMeta的逻辑放在专辑与歌手中处理,二级页面删除后继续播放逻辑
         QString playListHash = Player::getInstance()->getCurrentPlayListHash();
-        if (playListHash != "album" && playListHash != "artist" && playListHash != "albumResult" && playListHash != "artistResult") {
+        if (m_IsPlayQueue || (playListHash != "album" && playListHash != "artist" && playListHash != "albumResult" && playListHash != "artistResult")) {
             Player::getInstance()->playRmvMeta(strlist);
         }
         DataBaseService::getInstance()->removeSelectedSongs(m_currentHash, strlist, true);

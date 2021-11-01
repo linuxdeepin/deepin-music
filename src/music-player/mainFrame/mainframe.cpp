@@ -1019,8 +1019,9 @@ void MainFrame::closeEvent(QCloseEvent *event)
         MusicSettings::setOption("base.play.last_position", -1);
     }
     //当前列表为空转为所有音乐
-    if (!Player::getInstance()->getCurrentPlayListHash().isEmpty()
-            && DataBaseService::getInstance()->getPlaylistSongCount(Player::getInstance()->getCurrentPlayListHash()) == 0) {
+    QString curPlaylistHash = Player::getInstance()->getCurrentPlayListHash();
+    if (curPlaylistHash != "album" && curPlaylistHash != "artist" && !Player::getInstance()->getCurrentPlayListHash().isEmpty()
+            && DataBaseService::getInstance()->getPlaylistSongCount(curPlaylistHash) == 0) {
         MusicSettings::setOption("base.play.last_playlist", "all");
     }
     auto askCloseAction = MusicSettings::value("base.close.close_action").toInt();

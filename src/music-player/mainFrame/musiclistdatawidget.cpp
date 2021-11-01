@@ -159,6 +159,10 @@ void MusicListDataWidget::slotViewChanged(ListPageSwitchType switchtype, const Q
             AC_SET_OBJECT_NAME(m_albumListView, AC_albumListView);
             AC_SET_ACCESSIBLE_NAME(m_albumListView, AC_albumListView);
         }
+        //防止第一次无数据
+        if (DataBaseService::getInstance()->allAlbumInfos().isEmpty()) {
+            DataBaseService::getInstance()->allMusicInfos(true);
+        }
         m_albumListView->setAlbumListData(DataBaseService::getInstance()->allAlbumInfos()); //set album data
         m_albumListView->setViewModeFlag(m_albumListView->getViewMode());
         m_pStackedWidget->setCurrentWidget(m_albumListView);
@@ -178,6 +182,10 @@ void MusicListDataWidget::slotViewChanged(ListPageSwitchType switchtype, const Q
             m_pStackedWidget->addWidget(m_singerListView);
             AC_SET_OBJECT_NAME(m_singerListView, AC_singerListView);
             AC_SET_ACCESSIBLE_NAME(m_singerListView, AC_singerListView);
+        }
+        //防止第一次无数据
+        if (DataBaseService::getInstance()->allSingerInfos().isEmpty()) {
+            DataBaseService::getInstance()->allMusicInfos(true);
         }
         m_singerListView->setSingerListData(DataBaseService::getInstance()->allSingerInfos()); //set singer data
         m_singerListView->setViewModeFlag(m_singerListView->getViewMode());
