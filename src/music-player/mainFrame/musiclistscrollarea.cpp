@@ -42,6 +42,9 @@
 #include "commonservice.h"
 #include "ac-desktop-define.h"
 
+#define CDA_USER_ROLE "CdaRole"
+#define CDA_USER_ROLE_OFFSET 12  //userrole+12 防止和其他歌单role重叠
+
 MusicListScrollArea::MusicListScrollArea(QWidget *parent) : DScrollArea(parent)
 {
     setFrameShape(QFrame::NoFrame);
@@ -229,6 +232,9 @@ bool MusicListScrollArea::eventFilter(QObject *o, QEvent *e)
 
                 QPoint pos(120, row);
                 m_dataBaseListview->showContextMenu(pos);
+            } else if (event->key() == Qt::Key_Return && m_dataBaseListview->currentIndex().isValid()) { // 添加回车选中
+                slotListViewClicked(m_dataBaseListview->currentIndex());
+                m_dataBaseListview->slotItemClicked(m_dataBaseListview->currentIndex());
             }
         }
         // Tab焦点进入事件和点击事件冲突，保留点击事件设置焦点
@@ -253,6 +259,13 @@ bool MusicListScrollArea::eventFilter(QObject *o, QEvent *e)
                 }
 
                 m_customizeListview->showContextMenu(pos);
+            } else if (event->key() == Qt::Key_Return && m_customizeListview->currentIndex().isValid()) {// 添加回车选中
+                slotListViewClicked(m_customizeListview->currentIndex());
+                QModelIndex curIndex = m_customizeListview->currentIndex();
+                if (curIndex.row() == 0 && curIndex.data(Qt::UserRole + CDA_USER_ROLE_OFFSET).toString() == CDA_USER_ROLE)
+                    emit CommonService::getInstance()->signalSwitchToView(CdaType, curIndex.data(Qt::UserRole + CDA_USER_ROLE_OFFSET).toString());
+                else
+                    emit CommonService::getInstance()->signalSwitchToView(CustomType, curIndex.data(Qt::UserRole).toString());
             }
         }
         // Tab焦点进入事件和点击事件冲突，保留点击事件设置焦点
