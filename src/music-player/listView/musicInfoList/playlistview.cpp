@@ -815,14 +815,18 @@ void PlayListView::slotMusicAddOne(const QString &listHash, MediaMeta addMeta)
             QModelIndex index = m_model->index(0, 0, QModelIndex());
             MediaMeta meta = index.data(Qt::UserRole).value<MediaMeta>();
             if (addMeta.album == meta.album) {
-                insertRow(m_model->rowCount(), addMeta);
+                if (!isContain(addMeta.hash)) {
+                    insertRow(m_model->rowCount(), addMeta);
+                }
             }
         } else if (m_currentHash == "artist" || m_currentHash == "artistResult") {
             // 歌手二级页面根据歌手名称匹配
             QModelIndex index = m_model->index(0, 0, QModelIndex());
             MediaMeta meta = index.data(Qt::UserRole).value<MediaMeta>();
             if (addMeta.singer == meta.singer) {
-                insertRow(m_model->rowCount(), addMeta);
+                if (!isContain(addMeta.hash)) {
+                    insertRow(m_model->rowCount(), addMeta);
+                }
             }
         }
     } else {
