@@ -329,7 +329,6 @@ void SubSonglistWidget::slotPlayAllClicked()
 {
     QList<MediaMeta> musicList = m_musicListInfoView->getMusicListData();
     if (musicList.size() > 0) {
-        emit CommonService::getInstance()->signalSetPlayModel(Player::RepeatAll);
         Player::getInstance()->setCurrentPlayListHash(m_hash, false);
         Player::getInstance()->setPlayList(musicList);
         Player::getInstance()->playMeta(musicList.first());
