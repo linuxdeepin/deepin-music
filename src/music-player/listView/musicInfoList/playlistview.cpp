@@ -369,7 +369,10 @@ void PlayListView::resetSonglistBySinger(const QList<SingerInfo> &singerInfos)
 QList<MediaMeta> PlayListView::getMusicListData()
 {
     QList<MediaMeta> list;
-    if (DataBaseService::getInstance()->getDelStatus()) {
+    // 删除所有列表里的文件过程中也将其从播放列表移除
+    if (DataBaseService::getInstance()->getDelStatus() && (DataBaseService::getInstance()->getCurPage() == "album"
+                                                           || DataBaseService::getInstance()->getCurPage() == "artist"
+                                                           || DataBaseService::getInstance()->getCurPage() == "all")) {
         // 批量删除后的音乐文件
         QStringList metaList = DataBaseService::getInstance()->getDelMetaHashs();
         for (int i = 0; i < m_model->rowCount(); i++) {

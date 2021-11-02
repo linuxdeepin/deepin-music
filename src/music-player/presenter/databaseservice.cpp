@@ -380,6 +380,7 @@ void DataBaseService::removeSelectedSongs(const QString &curpage, const QStringL
 {
     m_deleting = true;
     m_musichashlistToDel = musichashlist;
+    m_curPage = curpage;
     emit sigRemoveSelectedSongs(curpage, musichashlist, removeFromLocal);
 }
 
@@ -855,6 +856,11 @@ QString DataBaseService::getFirstSong()
 bool DataBaseService::getDelStatus()
 {
     return m_deleting;
+}
+
+QString DataBaseService::getCurPage()
+{
+    return m_curPage;
 }
 
 QStringList DataBaseService::getDelMetaHashs()

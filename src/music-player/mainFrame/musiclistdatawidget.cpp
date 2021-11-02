@@ -521,11 +521,15 @@ void MusicListDataWidget::slotPlayAllClicked()
     case AlbumType: {
         // 清空播放队列
         Player::getInstance()->clearPlayList();
-        // 添加到播放列表
-        QList<MediaMeta> allMediaMetas = DataBaseService::getInstance()->allMusicInfos();
-        QList<MediaMeta> playMediaMetas;
+
         QStringList metaList = DataBaseService::getInstance()->getDelMetaHashs();
-        if (DataBaseService::getInstance()->getDelStatus()) {
+        // 删除所有列表里的文件过程中也将其从播放列表移除
+        if (DataBaseService::getInstance()->getDelStatus() && (DataBaseService::getInstance()->getCurPage() == "album"
+                                                               || DataBaseService::getInstance()->getCurPage() == "artist"
+                                                               || DataBaseService::getInstance()->getCurPage() == "all")) {
+            QList<MediaMeta> playMediaMetas;
+            // 添加到播放列表
+            QList<MediaMeta> allMediaMetas = DataBaseService::getInstance()->allMusicInfos();
             for (MediaMeta meta : allMediaMetas) {
                 if (!metaList.contains(meta.hash)) {
                     playMediaMetas.append(meta);
@@ -533,12 +537,17 @@ void MusicListDataWidget::slotPlayAllClicked()
             }
             Player::getInstance()->setPlayList(playMediaMetas);
         } else {
+            // 添加到播放列表
+            QList<MediaMeta> allMediaMetas = DataBaseService::getInstance()->allMusicInfos();
             Player::getInstance()->setPlayList(allMediaMetas);
         }
         // 查找第一首歌
         MediaMeta playMeta;
         QList<AlbumInfo> albumInfos =  m_albumListView->getAlbumListData();
-        if (DataBaseService::getInstance()->getDelStatus()) {
+        // 删除所有列表里的文件过程中也将其从播放列表移除
+        if (DataBaseService::getInstance()->getDelStatus() && (DataBaseService::getInstance()->getCurPage() == "album"
+                                                               || DataBaseService::getInstance()->getCurPage() == "artist"
+                                                               || DataBaseService::getInstance()->getCurPage() == "all")) {
             for (int i = 0; i < albumInfos.size(); i++) {
                 AlbumInfo albumTmp = albumInfos.at(i);
                 QMap<QString, MediaMeta> albumTmpMap = albumTmp.musicinfos;
@@ -577,11 +586,15 @@ void MusicListDataWidget::slotPlayAllClicked()
     case SingerType: {
         // 清空播放队列
         Player::getInstance()->clearPlayList();
-        // 添加到播放列表
-        QList<MediaMeta> allMediaMetas = DataBaseService::getInstance()->allMusicInfos();
-        QList<MediaMeta> playMediaMetas;
+
         QStringList metaList = DataBaseService::getInstance()->getDelMetaHashs();
-        if (DataBaseService::getInstance()->getDelStatus()) {
+        // 删除所有列表里的文件过程中也将其从播放列表移除
+        if (DataBaseService::getInstance()->getDelStatus() && (DataBaseService::getInstance()->getCurPage() == "album"
+                                                               || DataBaseService::getInstance()->getCurPage() == "artist"
+                                                               || DataBaseService::getInstance()->getCurPage() == "all")) {
+            QList<MediaMeta> playMediaMetas;
+            // 添加到播放列表
+            QList<MediaMeta> allMediaMetas = DataBaseService::getInstance()->allMusicInfos();
             for (MediaMeta meta : allMediaMetas) {
                 if (!metaList.contains(meta.hash)) {
                     playMediaMetas.append(meta);
@@ -589,12 +602,17 @@ void MusicListDataWidget::slotPlayAllClicked()
             }
             Player::getInstance()->setPlayList(playMediaMetas);
         } else {
+            // 添加到播放列表
+            QList<MediaMeta> allMediaMetas = DataBaseService::getInstance()->allMusicInfos();
             Player::getInstance()->setPlayList(allMediaMetas);
         }
         // 查找第一首歌
         MediaMeta playMeta;
         QList<SingerInfo> singerInfos =  m_singerListView->getSingerListData();
-        if (DataBaseService::getInstance()->getDelStatus()) {
+        // 删除所有列表里的文件过程中也将其从播放列表移除
+        if (DataBaseService::getInstance()->getDelStatus() && (DataBaseService::getInstance()->getCurPage() == "album"
+                                                               || DataBaseService::getInstance()->getCurPage() == "artist"
+                                                               || DataBaseService::getInstance()->getCurPage() == "all")) {
             for (int i = 0; i < singerInfos.size(); i++) {
                 SingerInfo singerTmp = singerInfos.at(i);
                 QMap<QString, MediaMeta> singerTmpMap = singerTmp.musicinfos;

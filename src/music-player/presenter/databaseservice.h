@@ -143,6 +143,8 @@ public:
     QString              getFirstSong();
     // 获取删除状态
     bool                 getDelStatus();
+    // 获取当前Page
+    QString              getCurPage();
     // 获取删除中的歌曲hash
     QStringList          getDelMetaHashs();
     void                 setDelNeedSleep();
@@ -219,6 +221,8 @@ private:
     bool             m_deleting = false;
     // 准备删除的歌曲hash
     QStringList      m_musichashlistToDel;
+    // 当前删除页面
+    QString          m_curPage;
     // 第一次查询所有歌曲
     bool             m_firstInitAllMusic = true;
 };
