@@ -754,6 +754,45 @@ void PlayListView::slotRemoveSingleSong(const QString &listHash, const QString &
     // 由于该类复用，所以需要通过是否可见判断信号是否发送
     if (this->isVisible() && m_model->rowCount() == 0 && (m_listPageType == AlbumSubSongListType || m_listPageType == SingerSubSongListType
                                                           || m_listPageType == SearchAlbumSubSongListType || m_listPageType == SearchSingerSubSongListType)) {
+        if (m_listPageType == SingerSubSongListType && Player::getInstance()->getPlayList()->isEmpty()) {
+            QList<SingerInfo> allSingerInfos = DataBaseService::getInstance()->allSingerInfos();
+            if (!allSingerInfos.isEmpty()) {
+                // 清空播放队列
+                Player::getInstance()->clearPlayList();
+                QList<MediaMeta> playMediaMetas;
+                for (MediaMeta meta : allSingerInfos.first().musicinfos) {
+                    playMediaMetas.append(meta);
+                }
+                Player::getInstance()->setPlayList(playMediaMetas);
+                // 通知播放队列改变
+                Player::getInstance()->setCurrentPlayListHash(m_currentHash, false);
+                emit Player::getInstance()->signalPlayListChanged();
+
+                // 设置第一首播放音乐
+                if (Player::getInstance()->getPlayList()->size() > 0) {
+                    Player::getInstance()->playMeta(playMediaMetas.first());
+                }
+            }
+        } else if (m_listPageType == AlbumSubSongListType && Player::getInstance()->getPlayList()->isEmpty()) {
+            QList<AlbumInfo> allAlbumInfos = DataBaseService::getInstance()->allAlbumInfos();
+            if (!allAlbumInfos.isEmpty()) {
+                // 清空播放队列
+                Player::getInstance()->clearPlayList();
+                QList<MediaMeta> playMediaMetas;
+                for (MediaMeta meta : allAlbumInfos.first().musicinfos) {
+                    playMediaMetas.append(meta);
+                }
+                Player::getInstance()->setPlayList(playMediaMetas);
+                // 通知播放队列改变
+                Player::getInstance()->setCurrentPlayListHash(m_currentHash, false);
+                emit Player::getInstance()->signalPlayListChanged();
+
+                // 设置第一首播放音乐
+                if (Player::getInstance()->getPlayList()->size() > 0) {
+                    Player::getInstance()->playMeta(playMediaMetas.first());
+                }
+            }
+        }
         emit CommonService::getInstance()->signalSwitchToView(PreType, "", QMap<QString, MediaMeta>());
     }
 }
@@ -1114,11 +1153,11 @@ void PlayListView::slotRmvFromSongList()
                 clearSelection();
             }
             QString playListHash = Player::getInstance()->getCurrentPlayListHash();
+            DataBaseService::getInstance()->removeSelectedSongs(m_currentHash, metaList, false);
             // 如果是专辑或者歌手,playRmvMeta的逻辑放在专辑与歌手中处理,二级页面删除后继续播放逻辑
             if (m_currentHash == "all" || m_currentHash == "album" || m_currentHash == "artist" || m_currentHash == "musicResult") {
                 Player::getInstance()->playRmvMeta(metaList);
             }
-            DataBaseService::getInstance()->removeSelectedSongs(m_currentHash, metaList, false);
         } else {
             Player::getInstance()->playRmvMeta(metaList);
         }
