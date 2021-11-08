@@ -367,6 +367,7 @@ void DBOperate::addMediaMetaToDB(const MediaMeta &meta)
                         || m_playHash == "album" || m_playHash == "artist") {
                     emit signalMusicAddOne("play", meta);
                 }
+                emit signalMusicAddOne("all", meta);
             } else {
                 // 如果是从播放队列导入需要发送信号通知更新播放队列
                 if (m_importHash == m_playHash || m_playHash == "all"

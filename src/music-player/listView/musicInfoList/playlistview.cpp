@@ -807,6 +807,10 @@ void PlayListView::slotMusicAddOne(const QString &listHash, MediaMeta addMeta)
         Player::getInstance()->playListAppendMeta(addMeta);
     }
 
+    //防止未显示时添加数据
+    if (m_currentHash == "all" && !isVisible())
+        return;
+
     if (m_currentHash == "album" || m_currentHash == "albumResult"
             || m_currentHash == "artist" || m_currentHash == "artistResult") {
         // 二级页面
