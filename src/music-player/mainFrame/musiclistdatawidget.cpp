@@ -312,10 +312,10 @@ void MusicListDataWidget::slotViewChanged(ListPageSwitchType switchtype, const Q
                     this, &MusicListDataWidget::refreshInfoLabel);
             connect(m_searchResultTabWidget, &SearchResultTabWidget::sigSearchTypeChanged,
                     this, &MusicListDataWidget::refreshModeBtnByHash);
-            CommonService::getInstance()->setListPageSwitchType(SearchAlbumSubSongListType);
+            CommonService::getInstance()->setListPageSwitchType(SearchAlbumResultType);
         } else if (m_preSwitchtype == SearchSingerSubSongListType) {
             m_pStackedWidget->setCurrentWidget(m_searchResultTabWidget);
-            CommonService::getInstance()->setListPageSwitchType(SearchAlbumResultType);
+            CommonService::getInstance()->setListPageSwitchType(SearchSingerResultType);
         } else {
             slotViewChanged(m_preSwitchtype, m_preHash, QMap<QString, MediaMeta>());
             connect(m_searchResultTabWidget, &SearchResultTabWidget::sigSearchTypeChanged,
