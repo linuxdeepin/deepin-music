@@ -258,7 +258,6 @@ TEST(Application, musicSongListViewMenuDelete)
             event.clear();
             QTest::qWait(50);
         }
-        QTest::qWait(1000);
     });
 
     QContextMenuEvent menuEvent(QContextMenuEvent::Mouse, pos);

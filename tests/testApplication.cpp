@@ -622,7 +622,7 @@ TEST(Application, musicListDialg3)
     });
     QContextMenuEvent menuEvent(QContextMenuEvent::Mouse, QPoint(20, 20));
     qApp->sendEvent(mliv->viewport(), &menuEvent);
-    QTest::qWait(1000);
+    QTest::qWait(2000);
 }
 
 // Dialg窗口
@@ -665,7 +665,7 @@ TEST(Application, musicListDialg4)
     QTest::qWait(100);
 
     // 从本地中删除
-    QTimer::singleShot(500, w, [ = ]() {
+    QTimer::singleShot(400, w, [ = ]() {
         QTimer::singleShot(800, w, [ = ]() {
             QTestEventList event;
             DDialog *messageBox = w->findChild<DDialog *>(AC_MessageBox);
@@ -698,7 +698,7 @@ TEST(Application, musicListDialg4)
     });
     QContextMenuEvent menuEvent(QContextMenuEvent::Mouse, QPoint(20, 20));
     qApp->sendEvent(mliv->viewport(), &menuEvent);
-    QTest::qWait(200);
+    QTest::qWait(2000);
 }
 
 // Dialg窗口

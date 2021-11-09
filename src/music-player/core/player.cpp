@@ -459,6 +459,8 @@ void Player::playNextMeta(bool isAuto)
         m_ActiveMeta = curMetaList.at(index);
         //setActiveMeta(m_MetaList.at(index));
         playMeta(m_ActiveMeta);
+    } else {
+        stop();
     }
 }
 
@@ -1131,6 +1133,7 @@ bool Player::isDevValid()
 void Player::initVlc()
 {
     m_qvinstance = new VlcInstance(VlcCommon::args(), nullptr);
+    m_qvinstance->version();
     m_qvplayer = new VlcMediaPlayer(m_qvinstance);
     m_qvplayer->equalizer()->setPreamplification(12);
     m_qvmedia = new VlcMedia();
@@ -1143,6 +1146,9 @@ void Player::initVlc()
         if (INT_LAST_PROGRESS_FLAG == 0) {
             m_ActiveMeta.offset = position;
             MusicSettings::setOption("base.play.last_position", position);
+            if (!QFile::exists(m_ActiveMeta.localPath)) {
+                playNextMeta(true);
+            }
         }
     });
 
