@@ -382,6 +382,8 @@ TEST(Application, other1)
     SpeechCenter::getInstance()->playFaverite("fav");
     SpeechCenter::getInstance()->playSonglist("New playlist");
     SpeechCenter::getInstance()->playSonglist("空");
+    SpeechCenter::getInstance()->playSonglist("");
+    SpeechCenter::getInstance()->playSonglist("test");
     qDebug() << __FUNCTION__ << "playMusic浮夸";
     SpeechCenter::getInstance()->playMusic("浮夸");
     qDebug() << __FUNCTION__ << "pause";

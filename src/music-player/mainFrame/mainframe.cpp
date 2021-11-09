@@ -73,6 +73,7 @@
 #include "subsonglistwidget.h"
 #include "tabletlabel.h"
 #include "comdeepiniminterface.h"
+#include "dbusutils.h"
 DWIDGET_USE_NAMESPACE
 
 const QString s_PropertyViewname = "viewname";
@@ -80,6 +81,39 @@ const QString s_PropertyViewnameLyric = "lyric";
 const QString s_PropertyViewnamePlay = "playList";
 static DSettingsDialog *equalizer = nullptr;
 using namespace Dtk::Widget;
+
+static bool showWindowfromDBus()
+{
+    QVariant v = DBusUtils::readDBusProperty("com.deepin.dde.daemon.Dock", "/com/deepin/dde/daemon/Dock",
+                                             "com.deepin.dde.daemon.Dock", "Entries");
+
+    if (!v.isValid())
+        return false;
+
+    QList<QDBusObjectPath> allSinkInputsList = v.value<QList<QDBusObjectPath> >();
+
+    QString entryPath;
+    for (auto curPath : allSinkInputsList) {
+        QVariant nameV = DBusUtils::readDBusProperty("com.deepin.dde.daemon.Dock", curPath.path(),
+                                                     "com.deepin.dde.daemon.Dock.Entry", "Name");
+
+        if (!nameV.isValid() || nameV != Global::getAppName())
+            continue;
+
+        entryPath = curPath.path();
+        break;
+    }
+
+    QDBusInterface ainterface("com.deepin.dde.daemon.Dock", entryPath,
+                              "com.deepin.dde.daemon.Dock.Entry",
+                              QDBusConnection::sessionBus());
+    if (!ainterface.isValid()) {
+        return false;
+    }
+    ainterface.call(QLatin1String("Activate"), 1);
+
+    return true;
+}
 
 MainFrame::MainFrame()
 {
@@ -165,9 +199,16 @@ MainFrame::MainFrame()
                     showFullScreen();
                 } else {
                     this->titlebar()->setFocus();
-                    showNormal();
-                    activateWindow();
-                    this->restoreGeometry(m_geometryBa);
+
+                    auto e = QProcessEnvironment::systemEnvironment();
+                    QString XDG_SESSION_TYPE = e.value(QStringLiteral("XDG_SESSION_TYPE"));
+                    QString WAYLAND_DISPLAY = e.value(QStringLiteral("WAYLAND_DISPLAY"));
+
+                    if ((XDG_SESSION_TYPE != QLatin1String("wayland") && !WAYLAND_DISPLAY.contains(QLatin1String("wayland"), Qt::CaseInsensitive)) || !showWindowfromDBus()) {
+                        showNormal();
+                        activateWindow();
+                        this->restoreGeometry(m_geometryBa);
+                    }
                 }
             } else {
                 raise();
@@ -369,17 +410,26 @@ void MainFrame::initMenuAndShortcut()
     this, [ = ](QSystemTrayIcon::ActivationReason reason) {
         if (QSystemTrayIcon::Trigger == reason) {
             if (isVisible()) {
-                if (isMinimized()) {
+                // 最小化和激活窗口
+                if (isMinimized() || !isActiveWindow()) {
                     if (isFullScreen()) {
+                        hide();
                         showFullScreen();
                     } else {
                         this->titlebar()->setFocus();
-                        showNormal();
-                        activateWindow();
-                        this->restoreGeometry(m_geometryBa);
+
+                        auto e = QProcessEnvironment::systemEnvironment();
+                        QString XDG_SESSION_TYPE = e.value(QStringLiteral("XDG_SESSION_TYPE"));
+                        QString WAYLAND_DISPLAY = e.value(QStringLiteral("WAYLAND_DISPLAY"));
+
+                        if ((XDG_SESSION_TYPE != QLatin1String("wayland") && !WAYLAND_DISPLAY.contains(QLatin1String("wayland"), Qt::CaseInsensitive)) || !showWindowfromDBus()) {
+                            showNormal();
+                            activateWindow();
+                        }
                     }
                 } else {
                     showMinimized();
+                    hide();
                 }
             } else {
                 this->titlebar()->setFocus();

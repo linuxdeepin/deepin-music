@@ -694,7 +694,6 @@ TEST(Application, musicListDialg4)
         event.addDelay(100);
         event.simulate(menuWidget);
         event.clear();
-        QTest::qWait(100);
     });
     QContextMenuEvent menuEvent(QContextMenuEvent::Mouse, QPoint(20, 20));
     qApp->sendEvent(mliv->viewport(), &menuEvent);
@@ -2265,6 +2264,21 @@ TEST(Application, tabletAddToSonglist)
     mliv->slotShowSongList();
 
     CommonService::getInstance()->setIsTabletEnvironment(false);
+    QTest::qWait(500);
+}
+
+// 显示隐藏
+TEST(Application, showHide)
+{
+    TEST_CASE_NAME("showHide")
+
+    CommonService::getInstance()->setIsTabletEnvironment(true);
+
+    MainFrame *w = Application::getInstance()->getMainWindow();
+    w->showMinimized();
+    QTest::qWait(500);
+
+    emit Player::getInstance()->getMpris()->raiseRequested();
     QTest::qWait(500);
 }
 
