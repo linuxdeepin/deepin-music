@@ -697,7 +697,7 @@ TEST(Application, musicListDialg4)
     });
     QContextMenuEvent menuEvent(QContextMenuEvent::Mouse, QPoint(20, 20));
     qApp->sendEvent(mliv->viewport(), &menuEvent);
-    QTest::qWait(2000);
+    QTest::qWait(2500);
 }
 
 // Dialg窗口

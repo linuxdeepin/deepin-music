@@ -1496,7 +1496,7 @@ void PlayListView::dropEvent(QDropEvent *event)
         auto urls = event->mimeData()->urls();
         QStringList localpaths;
         for (auto &url : urls) {
-            localpaths << url.toLocalFile();
+            localpaths << (url.isLocalFile() ? url.toLocalFile() : url.path());
         }
 
         if (!localpaths.isEmpty() && m_currentHash != "CdaRole") { //cda歌单不需要添加歌曲

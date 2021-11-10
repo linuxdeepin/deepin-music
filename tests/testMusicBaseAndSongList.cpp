@@ -188,7 +188,7 @@ TEST(Application, musicSongListViewRename)
     QTest::qWait(100);
     //菜单触发重命名
     QTimer::singleShot(300, songListView, [ = ]() {
-        QTimer::singleShot(200, songListView, [ = ]() {
+        QTimer::singleShot(500, songListView, [ = ]() {
             QTestEventList event;
             event.addKeyClick(Qt::Key_Enter, Qt::NoModifier, 50);
             event.simulate(songListView->viewport());
@@ -200,12 +200,12 @@ TEST(Application, musicSongListViewRename)
         if (menuWidget != nullptr) {
             event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
             event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
+            event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
             event.addKeyClick(Qt::Key_Enter, Qt::NoModifier, 50);
             event.simulate(menuWidget);
             event.clear();
             QTest::qWait(50);
         }
-        QTest::qWait(1000);
     });
 
     QContextMenuEvent menuEvent(QContextMenuEvent::Mouse, pos);
@@ -249,6 +249,7 @@ TEST(Application, musicSongListViewMenuDelete)
         QTestEventList event;
         DMenu *menuWidget = static_cast<DMenu *>(qApp->activePopupWidget());
         if (menuWidget != nullptr) {
+            event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
             event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
             event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
             event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
