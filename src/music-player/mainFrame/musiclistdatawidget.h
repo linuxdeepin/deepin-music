@@ -71,6 +71,7 @@ protected:
     virtual void dragEnterEvent(QDragEnterEvent *event) Q_DECL_OVERRIDE;
     virtual void dropEvent(QDropEvent *event) Q_DECL_OVERRIDE;
     virtual void resizeEvent(QResizeEvent *event) Q_DECL_OVERRIDE;
+    virtual void showEvent(QShowEvent *event) Q_DECL_OVERRIDE;
 private slots:
     // 播放所有歌曲
     void slotPlayAllClicked();

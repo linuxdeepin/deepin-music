@@ -511,8 +511,17 @@ void MusicListDataWidget::dropEvent(QDropEvent *event)
 // 大标题跟随resize变化
 void MusicListDataWidget::resizeEvent(QResizeEvent *event)
 {
+    QWidget::resizeEvent(event);
     m_lableWidget->setGeometry(m_actionBar->geometry());
-    return QWidget::resizeEvent(event);
+}
+
+// 大标题跟随size变化
+void MusicListDataWidget::showEvent(QShowEvent *event)
+{
+    QWidget::showEvent(event);
+    if (m_lableWidget->geometry() != m_actionBar->geometry()) {
+        m_lableWidget->setGeometry(m_actionBar->geometry());
+    }
 }
 
 void MusicListDataWidget::slotPlayAllClicked()
