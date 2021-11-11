@@ -550,13 +550,22 @@ void AlbumListView::slotAddSingleSong(const QString &listHash, const MediaMeta &
 void AlbumListView::slotRemoveSelectedSongs(const QString &deleteHash, const QStringList &musicHashs, bool removeFromLocal)
 {
     Q_UNUSED(removeFromLocal)
-    if ((deleteHash != "album"
-            || Player::getInstance()->getCurrentPlayListHash() != "album")
-            && deleteHash != "all") {
+    if (deleteHash != "album" || Player::getInstance()->getCurrentPlayListHash() != "album") {
         return;
     }
     if (musicHashs.size() == 0) {
         return;
+    }
+    if (musicHashs.size() == 0 || Player::getInstance()->getPlayList()->isEmpty()) {
+        return;
+    }
+    QList<MediaMeta> *curPlayList = Player::getInstance()->getPlayList();
+    // 歌单存在非歌手歌曲不处理
+    QString firstAlbum = curPlayList->first().album;
+    for (int i = 1; i < curPlayList->size(); i++) {
+        if (curPlayList->at(i).album != firstAlbum) {
+            return;
+        }
     }
     // 标志准备删除的歌曲,找到当前正在播放的专辑index
     int playIndex = -1;

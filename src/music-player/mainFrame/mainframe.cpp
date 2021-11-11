@@ -616,6 +616,10 @@ void MainFrame::slotSearchEditFoucusIn()
 
 void MainFrame::slotLyricClicked()
 {
+    // 隐藏播放队列
+    if (m_playQueueWidget != nullptr && m_playQueueWidget->isVisible()) {
+        playQueueAnimation();
+    }
     // 歌词控件显示与关闭动画
     if (m_musicLyricWidget->isHidden()) {
         m_musicLyricWidget->showAnimation();
@@ -1037,10 +1041,9 @@ void MainFrame::resizeEvent(QResizeEvent *e)
     if (m_musicLyricWidget) {
         m_musicLyricWidget->setGeometry(0, titlebar()->height(), width(), height() - titlebar()->height());
     }
-
+    // 防止最大化后播放队列高度改变
     if (m_playQueueWidget) {
-        m_playQueueWidget->setGeometry(PlayQueueWidget::Margin, m_footerWidget->y() - m_playQueueWidget->height() + m_footerWidget->height(),
-                                       width() - PlayQueueWidget::Margin * 2, m_playQueueWidget->height());
+        m_playQueueWidget->setGeometry(PlayQueueWidget::Margin, size().height() - 450, width() - PlayQueueWidget::Margin * 2, 445);
     }
 
     if (m_popupMessage) {

@@ -610,7 +610,7 @@ void Player::setCurrentPlayListHash(QString hash, bool reloadMetaList)
         }
     }
     // 当前播放队列没有数据，应用左侧不显示动态图
-    if (m_MetaList.size() == 0) {
+    if (m_MetaList.size() == 0 && hash != "all" && hash != "album" && hash != "artist") {
         m_currentPlayListHash = "";
     }
     // 保存播放歌曲及歌单信息
