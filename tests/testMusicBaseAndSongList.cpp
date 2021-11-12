@@ -230,7 +230,7 @@ TEST(Application, musicSongListViewMenuDelete)
     QTest::qWait(100);
 
     QTimer::singleShot(300, songListView, [ = ]() {
-        QTimer::singleShot(500, songListView, [ = ]() {
+        QTimer::singleShot(600, songListView, [ = ]() {
             QTest::qWait(50);
             QTestEventList event;
             DDialog *messageBox = songListView->findChild<DDialog *>(AC_MessageBox);

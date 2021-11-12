@@ -672,7 +672,12 @@ void PlayListView::slotLoadData()
     // 排序
     sortList(mediaMetas, sortType);
 
-    for (int i = FirstLoadCount; i < mediaMetas.size(); i++) {
+    QList<MediaMeta> preMediaMetas = DataBaseService::getInstance()->getMusicInfosBySortAndCount(FirstLoadCount);
+    for (int i = 0; i < mediaMetas.size(); i++) {
+        //防止重复添加
+        if (preMediaMetas.contains(mediaMetas[i])) {
+            continue;
+        }
         QStandardItem *newItem = new QStandardItem;
 
         QString imagesDirPath = Global::cacheDir() + "/images/" + mediaMetas.at(i).hash + ".jpg";

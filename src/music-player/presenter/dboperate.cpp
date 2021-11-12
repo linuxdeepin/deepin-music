@@ -101,6 +101,7 @@ void DBOperate::slotImportMedias(const QString &importHash, QString playHash, co
     m_importFailCount = 0;
     // 包含导入成功和失败的
     double importedCount = 0;
+    m_db.transaction();
     for (auto &filepath : urllist) {
         if (filepath.isEmpty()) {
             continue;
@@ -186,6 +187,7 @@ void DBOperate::slotImportMedias(const QString &importHash, QString playHash, co
     }
 
     emit sigImportFinished(m_importFailCount, m_successCount, m_exsitCount);
+    m_db.commit();
 }
 
 void DBOperate::slotCreatCoverImg(const QList<MediaMeta> &metas)
@@ -239,6 +241,7 @@ bool DBOperate::deleteMetaFromAllMusic(const QStringList &metaHash, bool removeF
     QSqlQuery query(m_db);
     QString strsql;
     QList<PlaylistDataThread> playlistMetas = allPlaylistMetaUUid();
+    m_db.transaction();
     for (QString hash : metaHash) {
         if (m_needStop) {
             break;
@@ -275,6 +278,7 @@ bool DBOperate::deleteMetaFromAllMusic(const QStringList &metaHash, bool removeF
     if (allMusicInfosCount() <= 0) {
         emit signalAllMusicCleared();
     }
+    m_db.commit();
     return true;
 }
 

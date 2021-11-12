@@ -492,7 +492,9 @@ void MainFrame::autoStartToPlay()
             lastListPageSwitchType = CustomType;
         }
     }
-    emit CommonService::getInstance()->signalSwitchToView(lastListPageSwitchType, lastplaypage);
+    // 非所有音乐切换歌单
+    if (lastListPageSwitchType != AllSongListType)
+        emit CommonService::getInstance()->signalSwitchToView(lastListPageSwitchType, lastplaypage);
     if (!strOpenPath.isEmpty()) {
         //通知设置当前页面
         Player::getInstance()->setCurrentPlayListHash(lastplaypage, true);

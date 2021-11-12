@@ -783,7 +783,33 @@ void MusicListDataWidget::initUI()
     AC_SET_OBJECT_NAME(m_musicListView, AC_PlayListView);
     AC_SET_ACCESSIBLE_NAME(m_musicListView, AC_PlayListView);
     //取消初始化所有歌单，转移到autoStartToPlay初始化
-//    m_musicListView->initAllSonglist("all");
+    auto lastplaypage = MusicSettings::value("base.play.last_playlist").toString(); //上一次的页面
+    ListPageSwitchType lastListPageSwitchType = AllSongListType;
+    //最后记录的歌单
+    if (!lastplaypage.isEmpty()) {
+        if (lastplaypage == "album") {
+            lastListPageSwitchType = AlbumType;
+        } else if (lastplaypage == "artist") {
+            lastListPageSwitchType = SingerType;
+        } else if (lastplaypage == "fav") {
+            lastListPageSwitchType = FavType;
+        } else if (lastplaypage == "CdaRole") {
+            lastListPageSwitchType = AllSongListType;
+        } else if (lastplaypage == "all") {
+            lastListPageSwitchType = AllSongListType;
+        } else if (lastplaypage == "musicResult") {
+            lastListPageSwitchType = AllSongListType;
+        } else if (lastplaypage == "artistResult") {
+            lastListPageSwitchType = AllSongListType;
+        } else if (lastplaypage == "albumResult") {
+            lastListPageSwitchType = AllSongListType;
+        } else {
+            lastListPageSwitchType = CustomType;
+        }
+    }
+    // 初始化窗口
+    if (lastListPageSwitchType == AllSongListType)
+        m_musicListView->initAllSonglist("all");
     m_musicListView->setFocusPolicy(Qt::StrongFocus);
     m_pStackedWidget->addWidget(m_musicListView);
 //    m_pCenterWidget->setMouseTracking(true);
