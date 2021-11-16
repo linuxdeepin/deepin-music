@@ -32,6 +32,7 @@
 #include <QVariant>
 #include <QShortcut>
 #include <QMimeData>
+#include <QTimer>
 
 #include <DDialog>
 #include <DDesktopServices>
@@ -273,7 +274,10 @@ void PlayListView::initAllSonglist(const QString &hash)
             mediaMeta.setValue(meta);
             m_model->setData(index, mediaMeta, Qt::UserRole);
         }
-        emit CommonService::getInstance()->loadData();
+        // 延迟加载歌曲
+        QTimer::singleShot(500, this, [ = ]() {
+            emit CommonService::getInstance()->loadData();
+        });
     } else {
         QList<MediaMeta> mediaMetas = DataBaseService::getInstance()->allMusicInfos();
         DataBaseService::ListSortType sortType = getSortType();
