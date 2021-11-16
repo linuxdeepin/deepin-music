@@ -805,6 +805,21 @@ void MainFrame::slotMenuTriggered(QAction *action)
         auto curLastMeta = MusicSettings::value("base.play.last_meta").toString();
         auto curLastPosition = MusicSettings::value("base.play.last_position").toInt();
 
+        // 保留均衡器的配置
+        int curEqualizerBaud_12K = MusicSettings::value("equalizer.all.baud_12K").toInt();
+        int curEqualizerBaud_14K = MusicSettings::value("equalizer.all.baud_14K").toInt();
+        int curEqualizerBaud_16K = MusicSettings::value("equalizer.all.baud_16K").toInt();
+        int curEqualizerBaud_170 = MusicSettings::value("equalizer.all.baud_170").toInt();
+        int curEqualizerBaud_1K = MusicSettings::value("equalizer.all.baud_1K").toInt();
+        int curEqualizerBaud_310 = MusicSettings::value("equalizer.all.baud_310").toInt();
+        int curEqualizerBaud_3K = MusicSettings::value("equalizer.all.baud_3K").toInt();
+        int curEqualizerBaud_60 = MusicSettings::value("equalizer.all.baud_60").toInt();
+        int curEqualizerBaud_600 = MusicSettings::value("equalizer.all.baud_600").toInt();
+        int curEqualizerBaud_6K = MusicSettings::value("equalizer.all.baud_6K").toInt();
+        int curEqualizerBaud_pre = MusicSettings::value("equalizer.all.baud_pre").toInt();
+        int curEqualizerCurEffect = MusicSettings::value("equalizer.all.curEffect").toInt();
+        int curEqualizerSwitch = MusicSettings::value("equalizer.all.switch").toInt();
+
         configDialog->exec();
         delete configDialog;
 
@@ -813,6 +828,21 @@ void MainFrame::slotMenuTriggered(QAction *action)
         MusicSettings::setOption("base.play.last_playlist", curLastPlaylist);
         MusicSettings::setOption("base.play.last_meta", curLastMeta);
         MusicSettings::setOption("base.play.last_position", curLastPosition);
+
+        // 恢复均衡器设置
+        MusicSettings::setOption("equalizer.all.baud_12K", curEqualizerBaud_12K);
+        MusicSettings::setOption("equalizer.all.baud_14K", curEqualizerBaud_14K);
+        MusicSettings::setOption("equalizer.all.baud_16K", curEqualizerBaud_16K);
+        MusicSettings::setOption("equalizer.all.baud_170", curEqualizerBaud_170);
+        MusicSettings::setOption("equalizer.all.baud_1K", curEqualizerBaud_1K);
+        MusicSettings::setOption("equalizer.all.baud_310", curEqualizerBaud_310);
+        MusicSettings::setOption("equalizer.all.baud_3K", curEqualizerBaud_3K);
+        MusicSettings::setOption("equalizer.all.baud_60", curEqualizerBaud_60);
+        MusicSettings::setOption("equalizer.all.baud_600", curEqualizerBaud_600);
+        MusicSettings::setOption("equalizer.all.baud_6K", curEqualizerBaud_6K);
+        MusicSettings::setOption("equalizer.all.baud_pre", curEqualizerBaud_pre);
+        MusicSettings::setOption("equalizer.all.curEffect", curEqualizerCurEffect);
+        MusicSettings::setOption("equalizer.all.switch", curEqualizerSwitch);
 
         //update shortcut
         m_footerWidget->updateShortcut();
