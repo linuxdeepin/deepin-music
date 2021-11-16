@@ -193,18 +193,18 @@ MainFrame::MainFrame()
     });
     connect(Player::getInstance()->getMpris(), &MprisPlayer::raiseRequested, this, [ = ]() {
         qDebug() << "raiseRequested=============";
+        auto e = QProcessEnvironment::systemEnvironment();
+        QString XDG_SESSION_TYPE = e.value(QStringLiteral("XDG_SESSION_TYPE"));
+        QString WAYLAND_DISPLAY = e.value(QStringLiteral("WAYLAND_DISPLAY"));
         if (isVisible()) {
+            // 最小化和激活窗口
             if (isMinimized()) {
-                if (isFullScreen()) {
-                    showFullScreen();
-                } else {
-                    this->titlebar()->setFocus();
-
-                    auto e = QProcessEnvironment::systemEnvironment();
-                    QString XDG_SESSION_TYPE = e.value(QStringLiteral("XDG_SESSION_TYPE"));
-                    QString WAYLAND_DISPLAY = e.value(QStringLiteral("WAYLAND_DISPLAY"));
-
-                    if ((XDG_SESSION_TYPE != QLatin1String("wayland") && !WAYLAND_DISPLAY.contains(QLatin1String("wayland"), Qt::CaseInsensitive)) || !showWindowfromDBus()) {
+                // 使用dbus显示窗口
+                if ((XDG_SESSION_TYPE != QLatin1String("wayland") && !WAYLAND_DISPLAY.contains(QLatin1String("wayland"), Qt::CaseInsensitive)) || !showWindowfromDBus()) {
+                    if (isFullScreen()) {
+                        showFullScreen();
+                    } else {
+                        this->titlebar()->setFocus();
                         showNormal();
                         activateWindow();
                         this->restoreGeometry(m_geometryBa);
@@ -215,9 +215,12 @@ MainFrame::MainFrame()
                 activateWindow();
             }
         } else {
-            this->titlebar()->setFocus();
-            showNormal();
-            activateWindow();
+            // 使用dbus显示窗口
+            if ((XDG_SESSION_TYPE != QLatin1String("wayland") && !WAYLAND_DISPLAY.contains(QLatin1String("wayland"), Qt::CaseInsensitive)) || !showWindowfromDBus()) {
+                this->titlebar()->setFocus();
+                showNormal();
+                activateWindow();
+            }
         }
     });
 
@@ -409,20 +412,19 @@ void MainFrame::initMenuAndShortcut()
     connect(m_sysTrayIcon, &QSystemTrayIcon::activated,
     this, [ = ](QSystemTrayIcon::ActivationReason reason) {
         if (QSystemTrayIcon::Trigger == reason) {
+            auto e = QProcessEnvironment::systemEnvironment();
+            QString XDG_SESSION_TYPE = e.value(QStringLiteral("XDG_SESSION_TYPE"));
+            QString WAYLAND_DISPLAY = e.value(QStringLiteral("WAYLAND_DISPLAY"));
             if (isVisible()) {
                 // 最小化和激活窗口
                 if (isMinimized() || !isActiveWindow()) {
-                    if (isFullScreen()) {
-                        hide();
-                        showFullScreen();
-                    } else {
-                        this->titlebar()->setFocus();
-
-                        auto e = QProcessEnvironment::systemEnvironment();
-                        QString XDG_SESSION_TYPE = e.value(QStringLiteral("XDG_SESSION_TYPE"));
-                        QString WAYLAND_DISPLAY = e.value(QStringLiteral("WAYLAND_DISPLAY"));
-
-                        if ((XDG_SESSION_TYPE != QLatin1String("wayland") && !WAYLAND_DISPLAY.contains(QLatin1String("wayland"), Qt::CaseInsensitive)) || !showWindowfromDBus()) {
+                    // 使用dbus显示窗口
+                    if ((XDG_SESSION_TYPE != QLatin1String("wayland") && !WAYLAND_DISPLAY.contains(QLatin1String("wayland"), Qt::CaseInsensitive)) || !showWindowfromDBus()) {
+                        if (isFullScreen()) {
+                            hide();
+                            showFullScreen();
+                        } else {
+                            this->titlebar()->setFocus();
                             showNormal();
                             activateWindow();
                         }
@@ -432,9 +434,12 @@ void MainFrame::initMenuAndShortcut()
                     hide();
                 }
             } else {
-                this->titlebar()->setFocus();
-                showNormal();
-                activateWindow();
+                // 使用dbus显示窗口
+                if ((XDG_SESSION_TYPE != QLatin1String("wayland") && !WAYLAND_DISPLAY.contains(QLatin1String("wayland"), Qt::CaseInsensitive)) || !showWindowfromDBus()) {
+                    this->titlebar()->setFocus();
+                    showNormal();
+                    activateWindow();
+                }
             }
         }
     });
