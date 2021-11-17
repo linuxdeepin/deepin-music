@@ -793,15 +793,9 @@ void MusicListDataWidget::initUI()
             lastListPageSwitchType = SingerType;
         } else if (lastplaypage == "fav") {
             lastListPageSwitchType = FavType;
-        } else if (lastplaypage == "CdaRole") {
-            lastListPageSwitchType = AllSongListType;
-        } else if (lastplaypage == "all") {
-            lastListPageSwitchType = AllSongListType;
-        } else if (lastplaypage == "musicResult") {
-            lastListPageSwitchType = AllSongListType;
-        } else if (lastplaypage == "artistResult") {
-            lastListPageSwitchType = AllSongListType;
-        } else if (lastplaypage == "albumResult") {
+        } else if (lastplaypage == "CdaRole" || lastplaypage == "all"
+                   || lastplaypage == "musicResult" || lastplaypage == "artistResult"
+                   || lastplaypage == "albumResult") {
             lastListPageSwitchType = AllSongListType;
         } else {
             lastListPageSwitchType = CustomType;

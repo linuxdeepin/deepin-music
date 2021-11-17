@@ -242,10 +242,7 @@ MainFrame::MainFrame()
     if (CommonService::getInstance()->isTabletEnvironment()) {
         QDBusConnection connection = QDBusConnection::sessionBus();
         m_comDeepinImInterface = new ComDeepinImInterface("com.deepin.im", "/com/deepin/im", connection);
-        if (m_comDeepinImInterface->isValid() == false) {
-            qDebug() << __FUNCTION__ << "----------QDbus service can not connect";
-        } else {
-            qDebug() << __FUNCTION__ << "----------QDbus service connected";
+        if (m_comDeepinImInterface->isValid()) {
             connect(m_comDeepinImInterface, &ComDeepinImInterface::imActiveChanged, this, &MainFrame::slotActiveChanged);
         }
     }
@@ -483,15 +480,9 @@ void MainFrame::autoStartToPlay()
             lastListPageSwitchType = SingerType;
         } else if (lastplaypage == "fav") {
             lastListPageSwitchType = FavType;
-        } else if (lastplaypage == "CdaRole") {
-            lastListPageSwitchType = AllSongListType;
-        } else if (lastplaypage == "all") {
-            lastListPageSwitchType = AllSongListType;
-        } else if (lastplaypage == "musicResult") {
-            lastListPageSwitchType = AllSongListType;
-        } else if (lastplaypage == "artistResult") {
-            lastListPageSwitchType = AllSongListType;
-        } else if (lastplaypage == "albumResult") {
+        } else if (lastplaypage == "CdaRole" || lastplaypage == "all"
+                   || lastplaypage == "musicResult" || lastplaypage == "artistResult"
+                   || lastplaypage == "albumResult") {
             lastListPageSwitchType = AllSongListType;
         } else {
             lastListPageSwitchType = CustomType;
@@ -503,7 +494,6 @@ void MainFrame::autoStartToPlay()
     if (!strOpenPath.isEmpty()) {
         //通知设置当前页面
         Player::getInstance()->setCurrentPlayListHash(lastplaypage, true);
-        qDebug() << "lastplaypage:========" << lastplaypage;
         return ;
     }
     auto lastMeta = MusicSettings::value("base.play.last_meta").toString();
@@ -704,9 +694,7 @@ void MainFrame::slotImportFailed()
     warnDlg.setMessage(message);
     warnDlg.addButton(tr("OK"), true, Dtk::Widget::DDialog::ButtonNormal);
     //warnDlg.setDefaultButton(0);
-    if (0 == warnDlg.exec()) {
-        return;
-    }
+    warnDlg.exec();
 }
 
 void MainFrame::slotShortCutTriggered()
@@ -784,7 +772,6 @@ void MainFrame::slotMenuTriggered(QAction *action)
             QWidget *w = static_cast<QWidget *>(dequalizerDialog->parent());
 
             w->setContentsMargins(0, 0, 0, 0);
-            qDebug() << __FUNCTION__ << "" << dequalizerDialog->height();
             if (w->findChildren<QHBoxLayout *>().size() > 0) {
                 for (int i = 0; i < w->findChildren<QHBoxLayout *>().size(); i++) {
                     QHBoxLayout *h = static_cast<QHBoxLayout *>(w->findChildren<QHBoxLayout *>().at(i));
@@ -908,8 +895,6 @@ void MainFrame::slotAutoPlay(const MediaMeta &meta)
     qDebug() << "slotAutoPlay=========";
     if (!meta.localPath.isEmpty())
         Player::getInstance()->playMeta(meta);
-    else
-        qDebug() << __FUNCTION__ << " at line:" << __LINE__ << " localPath is empty.";
 }
 
 void MainFrame::slotPlayFromFileMaganager()
@@ -921,11 +906,8 @@ void MainFrame::slotPlayFromFileMaganager()
     //通过路径查询歌曲信息，
     MediaMeta mt = DataBaseService::getInstance()->getMusicInfoByHash(DMusic::filepathHash(path));
     if (mt.localPath.isEmpty()) {
-        //未导入到数据库
-        qCritical() << "fail to start from file manager";
         return;
     }
-    qDebug() << "----------playMeta:" << mt.localPath;
     Player::getInstance()->playMeta(mt);
     Player::getInstance()->setCurrentPlayListHash("all", true);
     // 通知播放队列列表改变
@@ -1167,7 +1149,6 @@ void MainFrame::hideEvent(QHideEvent *event)
     //用于最小化时保存窗口位置信息,note：托盘到最小化或者退出程序也会触发该事件
     DMainWindow::hideEvent(event);
     m_geometryBa = saveGeometry();
-    qDebug() << "hideEvent=============";
 }
 
 void MainFrame::playQueueAnimation()
