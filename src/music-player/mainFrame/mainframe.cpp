@@ -192,7 +192,6 @@ MainFrame::MainFrame()
         qApp->quit();
     });
     connect(Player::getInstance()->getMpris(), &MprisPlayer::raiseRequested, this, [ = ]() {
-        qDebug() << "raiseRequested=============";
         auto e = QProcessEnvironment::systemEnvironment();
         QString XDG_SESSION_TYPE = e.value(QStringLiteral("XDG_SESSION_TYPE"));
         QString WAYLAND_DISPLAY = e.value(QStringLiteral("WAYLAND_DISPLAY"));
@@ -201,14 +200,11 @@ MainFrame::MainFrame()
             if (isMinimized()) {
                 // 使用dbus显示窗口
                 if ((XDG_SESSION_TYPE != QLatin1String("wayland") && !WAYLAND_DISPLAY.contains(QLatin1String("wayland"), Qt::CaseInsensitive)) || !showWindowfromDBus()) {
-                    if (isFullScreen()) {
-                        showFullScreen();
-                    } else {
-                        this->titlebar()->setFocus();
-                        showNormal();
-                        activateWindow();
-                        this->restoreGeometry(m_geometryBa);
-                    }
+                    this->titlebar()->setFocus();
+                    show();
+                    raise();
+                    activateWindow();
+                    this->restoreGeometry(m_geometryBa);
                 }
             } else {
                 raise();
@@ -216,11 +212,10 @@ MainFrame::MainFrame()
             }
         } else {
             // 使用dbus显示窗口
-            if ((XDG_SESSION_TYPE != QLatin1String("wayland") && !WAYLAND_DISPLAY.contains(QLatin1String("wayland"), Qt::CaseInsensitive)) || !showWindowfromDBus()) {
-                this->titlebar()->setFocus();
-                showNormal();
-                activateWindow();
-            }
+            this->titlebar()->setFocus();
+            show();
+            raise();
+            activateWindow();
         }
     });
 
@@ -387,7 +382,6 @@ void MainFrame::initMenuAndShortcut()
     m_sysTrayIcon->setContextMenu(trayIconMenu);
 #ifndef  ENABLE_AUTO_UNIT_TEST
     m_sysTrayIcon->show();
-#endif
     connect(playAction, &QAction::triggered,
     this, [ = ]() {
         m_footerWidget->slotPlayClick(true);
@@ -405,6 +399,7 @@ void MainFrame::initMenuAndShortcut()
         sync();
         qApp->quit();
     });
+#endif
 
     connect(m_sysTrayIcon, &QSystemTrayIcon::activated,
     this, [ = ](QSystemTrayIcon::ActivationReason reason) {
@@ -417,26 +412,21 @@ void MainFrame::initMenuAndShortcut()
                 if (isMinimized() || !isActiveWindow()) {
                     // 使用dbus显示窗口
                     if ((XDG_SESSION_TYPE != QLatin1String("wayland") && !WAYLAND_DISPLAY.contains(QLatin1String("wayland"), Qt::CaseInsensitive)) || !showWindowfromDBus()) {
-                        if (isFullScreen()) {
-                            hide();
-                            showFullScreen();
-                        } else {
-                            this->titlebar()->setFocus();
-                            showNormal();
-                            activateWindow();
-                        }
+                        this->titlebar()->setFocus();
+                        show();
+                        raise();
+                        activateWindow();
                     }
                 } else {
-                    showMinimized();
                     hide();
+                    showMinimized();
                 }
             } else {
                 // 使用dbus显示窗口
-                if ((XDG_SESSION_TYPE != QLatin1String("wayland") && !WAYLAND_DISPLAY.contains(QLatin1String("wayland"), Qt::CaseInsensitive)) || !showWindowfromDBus()) {
-                    this->titlebar()->setFocus();
-                    showNormal();
-                    activateWindow();
-                }
+                this->titlebar()->setFocus();
+                show();
+                raise();
+                activateWindow();
             }
         }
     });
@@ -598,10 +588,8 @@ void MainFrame::slotActiveChanged(bool isActive)
     if (CommonService::getInstance()->isTabletEnvironment()) {
         if (isActive) {
             m_musicStatckedWidget->animationToUpByInput();
-        } else {
-            if (m_musicStatckedWidget->pos().y() != 50) {
-                m_musicStatckedWidget->animationToDownByInput();
-            }
+        } else if (m_musicStatckedWidget->pos().y() != 50) {
+            m_musicStatckedWidget->animationToDownByInput();
         }
     }
 }
