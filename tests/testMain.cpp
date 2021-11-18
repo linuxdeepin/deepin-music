@@ -55,56 +55,56 @@ static bool checkOnly();
 
 void createSpeechDbus()
 {
-    SpeechExportBus *mSpeech = new SpeechExportBus(SpeechCenter::getInstance());
+    SpeechExportBus mSpeech(SpeechCenter::getInstance());
     // 'playMusic','红颜' 显示搜索界面
     // 'playMusic',''       显示所有音乐界面，随机播放
-    mSpeech->registerAction("playMusic", "play Music",
-                            std::bind(&SpeechCenter::playMusic, SpeechCenter::getInstance(), std::placeholders::_1));
+    mSpeech.registerAction("playMusic", "play Music",
+                           std::bind(&SpeechCenter::playMusic, SpeechCenter::getInstance(), std::placeholders::_1));
     // 'playArtist','华晨宇'
-    mSpeech->registerAction("playArtist", "play Artist",
-                            std::bind(&SpeechCenter::playArtist, SpeechCenter::getInstance(), std::placeholders::_1));
+    mSpeech.registerAction("playArtist", "play Artist",
+                           std::bind(&SpeechCenter::playArtist, SpeechCenter::getInstance(), std::placeholders::_1));
     // 'playArtistMusic','华晨宇:齐天'
-    mSpeech->registerAction("playArtistMusic", "play Artist Music",
-                            std::bind(&SpeechCenter::playArtistMusic, SpeechCenter::getInstance(), std::placeholders::_1));
+    mSpeech.registerAction("playArtistMusic", "play Artist Music",
+                           std::bind(&SpeechCenter::playArtistMusic, SpeechCenter::getInstance(), std::placeholders::_1));
     // 'playAlbum','历久尝新'
-    mSpeech->registerAction("playAlbum", "play Album",
-                            std::bind(&SpeechCenter::playAlbum, SpeechCenter::getInstance(), std::placeholders::_1));
+    mSpeech.registerAction("playAlbum", "play Album",
+                           std::bind(&SpeechCenter::playAlbum, SpeechCenter::getInstance(), std::placeholders::_1));
     // 'playFaverite','fav'
-    mSpeech->registerAction("playFaverite", "play Faverite",
-                            std::bind(&SpeechCenter::playFaverite, SpeechCenter::getInstance(), std::placeholders::_1));
+    mSpeech.registerAction("playFaverite", "play Faverite",
+                           std::bind(&SpeechCenter::playFaverite, SpeechCenter::getInstance(), std::placeholders::_1));
     // 'playSonglist','123'  歌单名称
-    mSpeech->registerAction("playSonglist", "play Songlist",
-                            std::bind(&SpeechCenter::playSonglist, SpeechCenter::getInstance(), std::placeholders::_1));
+    mSpeech.registerAction("playSonglist", "play Songlist",
+                           std::bind(&SpeechCenter::playSonglist, SpeechCenter::getInstance(), std::placeholders::_1));
     // 'pause',''
-    mSpeech->registerAction("pause", "pause",
-                            std::bind(&SpeechCenter::pause, SpeechCenter::getInstance(), std::placeholders::_1));
+    mSpeech.registerAction("pause", "pause",
+                           std::bind(&SpeechCenter::pause, SpeechCenter::getInstance(), std::placeholders::_1));
     // 'resume',''
-    mSpeech->registerAction("resume", "resume",
-                            std::bind(&SpeechCenter::resume, SpeechCenter::getInstance(), std::placeholders::_1));
+    mSpeech.registerAction("resume", "resume",
+                           std::bind(&SpeechCenter::resume, SpeechCenter::getInstance(), std::placeholders::_1));
     // 'stop',''
-    mSpeech->registerAction("stop", "stop",
-                            std::bind(&SpeechCenter::stop, SpeechCenter::getInstance(), std::placeholders::_1));
+    mSpeech.registerAction("stop", "stop",
+                           std::bind(&SpeechCenter::stop, SpeechCenter::getInstance(), std::placeholders::_1));
     // 'pre',''
-    mSpeech->registerAction("pre", "pre",
-                            std::bind(&SpeechCenter::pre, SpeechCenter::getInstance(), std::placeholders::_1));
+    mSpeech.registerAction("pre", "pre",
+                           std::bind(&SpeechCenter::pre, SpeechCenter::getInstance(), std::placeholders::_1));
     // 'next',''
-    mSpeech->registerAction("next", "next",
-                            std::bind(&SpeechCenter::next, SpeechCenter::getInstance(), std::placeholders::_1));
+    mSpeech.registerAction("next", "next",
+                           std::bind(&SpeechCenter::next, SpeechCenter::getInstance(), std::placeholders::_1));
     // 'playIndex',''    指定播放第几首
-    mSpeech->registerAction("playIndex", "play Index",
-                            std::bind(&SpeechCenter::playIndex, SpeechCenter::getInstance(), std::placeholders::_1));
+    mSpeech.registerAction("playIndex", "play Index",
+                           std::bind(&SpeechCenter::playIndex, SpeechCenter::getInstance(), std::placeholders::_1));
     // 'addFaverite',''
-    mSpeech->registerAction("addFaverite", "add Faverite",
-                            std::bind(&SpeechCenter::addFaverite, SpeechCenter::getInstance(), std::placeholders::_1));
+    mSpeech.registerAction("addFaverite", "add Faverite",
+                           std::bind(&SpeechCenter::addFaverite, SpeechCenter::getInstance(), std::placeholders::_1));
     // 'removeFaverite',''
-    mSpeech->registerAction("removeFaverite", "remove Faverite",
-                            std::bind(&SpeechCenter::removeFaverite, SpeechCenter::getInstance(), std::placeholders::_1));
+    mSpeech.registerAction("removeFaverite", "remove Faverite",
+                           std::bind(&SpeechCenter::removeFaverite, SpeechCenter::getInstance(), std::placeholders::_1));
     // 'setMode','0' 列表循环  'setMode','1' 单曲循环  'setMode','2' 随机
-    mSpeech->registerAction("setMode", "set Mode",
-                            std::bind(&SpeechCenter::setMode, SpeechCenter::getInstance(), std::placeholders::_1));
+    mSpeech.registerAction("setMode", "set Mode",
+                           std::bind(&SpeechCenter::setMode, SpeechCenter::getInstance(), std::placeholders::_1));
     // dbus导入音乐文件
-    mSpeech->registerQStringListAction("OpenUris", "OpenUris",
-                                       std::bind(&SpeechCenter::OpenUris, SpeechCenter::getInstance(), std::placeholders::_1));
+    mSpeech.registerQStringListAction("OpenUris", "OpenUris",
+                                      std::bind(&SpeechCenter::OpenUris, SpeechCenter::getInstance(), std::placeholders::_1));
 }
 
 #define QMYTEST_MAIN(TestObject) \

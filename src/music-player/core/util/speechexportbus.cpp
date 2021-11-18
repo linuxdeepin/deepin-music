@@ -40,6 +40,7 @@ SpeechExportBus::SpeechExportBus(QObject *parent) : QObject(parent), m_pExportIn
 SpeechExportBus::~SpeechExportBus()
 {
     QDBusConnection::sessionBus().unregisterObject("/org/mpris/speech");
+    m_pExportInterface->deleteLater();
 }
 
 void SpeechExportBus::registerAction(const QString &action, const QString &description, const std::function<QVariant(QString)> handler)
