@@ -345,6 +345,7 @@ void MainFrame::initMenuAndShortcut()
     addmusicfilesShortcut->setKey(QKeySequence(QLatin1String("Ctrl+O")));
 
     viewshortcut = new QShortcut(this);
+    viewshortcut->setAutoRepeat(false);
     viewshortcut->setKey(QKeySequence(QLatin1String("Ctrl+Shift+/")));
 
     searchShortcut = new QShortcut(this);
@@ -700,7 +701,7 @@ void MainFrame::slotShortCutTriggered()
         QStringList shortcutString;
         QString param1 = "-j=" + sc.toStr();
         QString param2 = "-p=" + QString::number(pos.x()) + "," + QString::number(pos.y());
-        shortcutString << "-b" << param1 << param2;
+        shortcutString << param1 << param2;
 
         QProcess *shortcutViewProc = new QProcess(this);
         //此处不会造成多进程闲置，deepin-shortcut会自动检查删除多余进程
