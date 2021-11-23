@@ -9,7 +9,7 @@
     <message>
         <location filename="../src/music-player/mainFrame/addmusicwidget.cpp" line="80"/>
         <source>Or drag music files here</source>
-        <translation type="unfinished"/>
+        <translation>ali povlecite glasbene datoteke sem</translation>
     </message>
 </context>
 <context>
@@ -451,7 +451,7 @@
     <message>
         <location filename="../src/music-player/mainFrame/mainframe.cpp" line="121"/>
         <source>Select All</source>
-        <translation type="unfinished"/>
+        <translation>Izberi vse</translation>
     </message>
     <message>
         <location filename="../src/music-player/mainFrame/mainframe.cpp" line="122"/>
@@ -496,7 +496,7 @@
     <message>
         <location filename="../src/music-player/mainFrame/mainframe.cpp" line="461"/>
         <source>A disc is connected</source>
-        <translation type="unfinished"/>
+        <translation>Povezan je disk</translation>
     </message>
     <message>
         <location filename="../src/music-player/mainFrame/mainframe.cpp" line="601"/>
@@ -624,7 +624,7 @@
     <message>
         <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="207"/>
         <source>CD playlist</source>
-        <translation type="unfinished"/>
+        <translation>CD seznam predvajanja</translation>
     </message>
     <message>
         <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="828"/>
@@ -713,7 +713,7 @@
     <message>
         <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="276"/>
         <source>CD playlist</source>
-        <translation type="unfinished"/>
+        <translation>CD seznam predvajanja</translation>
     </message>
     <message>
         <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="309"/>
@@ -728,12 +728,12 @@
     <message>
         <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="549"/>
         <source>The CD has been removed</source>
-        <translation type="unfinished"/>
+        <translation>CD je bil odstranjen</translation>
     </message>
     <message>
         <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="553"/>
         <source>Play failed, as the CD has been removed</source>
-        <translation type="unfinished"/>
+        <translation>Predvajanje ni uspelo, ker je bil CD odstranjen</translation>
     </message>
     <message>
         <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="560"/>

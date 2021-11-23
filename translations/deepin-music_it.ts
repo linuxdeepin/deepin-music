@@ -9,7 +9,7 @@
     <message>
         <location filename="../src/music-player/mainFrame/addmusicwidget.cpp" line="80"/>
         <source>Or drag music files here</source>
-        <translation type="unfinished"/>
+        <translation>O trascina qui i file musicali</translation>
     </message>
 </context>
 <context>

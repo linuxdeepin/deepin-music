@@ -9,7 +9,7 @@
     <message>
         <location filename="../src/music-player/mainFrame/addmusicwidget.cpp" line="80"/>
         <source>Or drag music files here</source>
-        <translation type="unfinished"/>
+        <translation>Lub przeciągnij plik muzyczny tutaj</translation>
     </message>
 </context>
 <context>
@@ -718,7 +718,7 @@
     <message>
         <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="309"/>
         <source>Are you sure you want to delete this playlist?</source>
-        <translation>Czy na pewno chcesz usunąć tę listę odtwarzania?</translation>
+        <translation>Czy na pewno chcesz usunąć listę odtwarzania?</translation>
     </message>
     <message>
         <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="316"/>
@@ -923,7 +923,7 @@
     <message>
         <location filename="../src/music-player/widget/settingsdialog.cpp" line="26"/>
         <source>Minimize to system tray</source>
-        <translation>Minimalizuj do tacki systemowej</translation>
+        <translation>Zminimalizuj do zasobnika systemowego</translation>
     </message>
     <message>
         <location filename="../src/music-player/widget/settingsdialog.cpp" line="27"/>
@@ -953,7 +953,7 @@
     <message>
         <location filename="../src/music-player/widget/settingsdialog.cpp" line="32"/>
         <source>Close Main Window</source>
-        <translation>Zamknij okno główne</translation>
+        <translation>Akcja zamknięcia</translation>
     </message>
     <message>
         <location filename="../src/music-player/widget/settingsdialog.cpp" line="33"/>
@@ -963,7 +963,7 @@
     <message>
         <location filename="../src/music-player/widget/settingsdialog.cpp" line="34"/>
         <source>Play</source>
-        <translation>Odtwórz</translation>
+        <translation>Odtwarzanie</translation>
     </message>
     <message>
         <location filename="../src/music-player/widget/settingsdialog.cpp" line="35"/>
