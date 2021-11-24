@@ -1146,7 +1146,8 @@ void Player::initVlc()
         if (INT_LAST_PROGRESS_FLAG == 0) {
             m_ActiveMeta.offset = position;
             MusicSettings::setOption("base.play.last_position", position);
-            if (!QFile::exists(m_ActiveMeta.localPath)) {
+            // cd特殊处理
+            if (!QFile::exists(m_ActiveMeta.localPath) && m_ActiveMeta.mmType != MIMETYPE_CDA) {
                 playNextMeta(true);
             }
         }
