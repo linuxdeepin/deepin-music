@@ -487,6 +487,11 @@ void MainFrame::autoStartToPlay()
         Player::getInstance()->setCurrentPlayListHash(lastplaypage, true);
         return ;
     }
+    //读取均衡器使能开关配置
+    auto eqSwitch = MusicSettings::value("equalizer.all.switch").toBool();
+    if (eqSwitch) {
+        Player::getInstance()->initEqualizerCfg();
+    }
     auto lastMeta = MusicSettings::value("base.play.last_meta").toString();
     if (!lastMeta.isEmpty()) {
         bool bremember = MusicSettings::value("base.play.remember_progress").toBool();
