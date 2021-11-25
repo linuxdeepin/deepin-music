@@ -4,7 +4,7 @@
     <message>
         <location filename="../src/music-player/mainFrame/addmusicwidget.cpp" line="70"/>
         <source>Add Music</source>
-        <translation>加入音樂文件</translation>
+        <translation>添加音樂</translation>
     </message>
     <message>
         <location filename="../src/music-player/mainFrame/addmusicwidget.cpp" line="80"/>
@@ -317,7 +317,7 @@
     <message>
         <location filename="../src/music-player/mainFrame/importwidget.cpp" line="88"/>
         <source>Add Music</source>
-        <translation>加入音樂資料夾</translation>
+        <translation>添加音樂</translation>
     </message>
     <message>
         <location filename="../src/music-player/mainFrame/importwidget.cpp" line="96"/>
@@ -407,7 +407,7 @@
         <location filename="../src/music-player/mainFrame/mainframe.cpp" line="262"/>
         <location filename="../src/music-player/mainFrame/mainframe.cpp" line="386"/>
         <source>Add music</source>
-        <translation>加入音樂資料夾</translation>
+        <translation>添加音樂</translation>
     </message>
     <message>
         <location filename="../src/music-player/mainFrame/mainframe.cpp" line="263"/>
@@ -547,7 +547,7 @@
         <location filename="../src/music-player/listView/musicBaseAndSongList/musicbaselistview.cpp" line="187"/>
         <location filename="../src/music-player/listView/musicBaseAndSongList/musicbaselistview.cpp" line="352"/>
         <source>Add music</source>
-        <translation>加入音樂</translation>
+        <translation>添加音樂</translation>
     </message>
 </context>
 <context>
@@ -695,7 +695,7 @@
         <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="189"/>
         <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="423"/>
         <source>Add music</source>
-        <translation>加入音樂</translation>
+        <translation>添加音樂</translation>
     </message>
     <message>
         <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="190"/>
@@ -1117,7 +1117,7 @@
     <message>
         <location filename="../src/music-player/core/util/shortcut.cpp" line="56"/>
         <source>Add music</source>
-        <translation>加入音樂資料夾</translation>
+        <translation>添加音樂</translation>
     </message>
     <message>
         <location filename="../src/music-player/core/util/shortcut.cpp" line="57"/>

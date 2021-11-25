@@ -4,7 +4,7 @@
     <message>
         <location filename="../src/music-player/mainFrame/addmusicwidget.cpp" line="70"/>
         <source>Add Music</source>
-        <translation>添加歌曲文件</translation>
+        <translation>添加音乐</translation>
     </message>
     <message>
         <location filename="../src/music-player/mainFrame/addmusicwidget.cpp" line="80"/>
@@ -317,7 +317,7 @@
     <message>
         <location filename="../src/music-player/mainFrame/importwidget.cpp" line="88"/>
         <source>Add Music</source>
-        <translation>添加歌曲文件</translation>
+        <translation>添加音乐</translation>
     </message>
     <message>
         <location filename="../src/music-player/mainFrame/importwidget.cpp" line="96"/>
