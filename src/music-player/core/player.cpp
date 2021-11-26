@@ -1259,8 +1259,12 @@ void Player::initMpris()
 
     connect(m_mpris, &MprisPlayer::playRequested,
     this, [ = ]() {
+        // dbus暂停立即执行
         if (status() == Player::Paused) {
+            bool curFadeInOut = m_fadeInOut;
+            m_fadeInOut = false;
             resume();
+            m_fadeInOut = curFadeInOut;
         } else {
             if (status() != Player::Playing) {
                 //播放列表为空时也应考虑，不然会出现dbus调用无效的情况
