@@ -547,10 +547,12 @@ void FooterWidget::slotPreClick(bool click)
 void FooterWidget::slotFavoriteClick(bool click)
 {
     Q_UNUSED(click)
+    bool isExist = DataBaseService::getInstance()->favoriteExist(Player::getInstance()->getActiveMeta());
     bool isFavorite = DataBaseService::getInstance()->favoriteMusic(Player::getInstance()->getActiveMeta());
     fluashFavoriteBtnIcon();
 
-    if (isFavorite)
+    //  未收藏时提示成功
+    if (isFavorite && !isExist)
         emit CommonService::getInstance()->signalShowPopupMessage(
             DataBaseService::getInstance()->getPlaylistNameByUUID("fav"), 1, 1);
 }
