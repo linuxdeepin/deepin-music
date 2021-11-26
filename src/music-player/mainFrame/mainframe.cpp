@@ -804,7 +804,7 @@ void MainFrame::slotMenuTriggered(QAction *action)
         int curEqualizerBaud_6K = MusicSettings::value("equalizer.all.baud_6K").toInt();
         int curEqualizerBaud_pre = MusicSettings::value("equalizer.all.baud_pre").toInt();
         int curEqualizerCurEffect = MusicSettings::value("equalizer.all.curEffect").toInt();
-        int curEqualizerSwitch = MusicSettings::value("equalizer.all.switch").toInt();
+        bool curEqualizerSwitch = MusicSettings::value("equalizer.all.switch").toBool();
 
         configDialog->exec();
         delete configDialog;
