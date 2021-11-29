@@ -128,7 +128,7 @@ You can add, delete, and view info of the local music in Music in the following 
 ### Add Music
 
 On the Music interface, you can add music in the following ways: 
-- Click the ![icon_menu](../common/add1.svg) icon on the title bar
+- Click the ![icon_menu](../common/add1.svg) icon on the title bar.
 - Click ![icon_menu](../common/icon_menu.svg)> **Add music** to add music files to the playlist.
 - Drag the music file/folder to the Music interface.
 
