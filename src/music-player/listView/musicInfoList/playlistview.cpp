@@ -1137,7 +1137,8 @@ void PlayListView::slotRmvFromSongList()
             QString playListHash = Player::getInstance()->getCurrentPlayListHash();
             DataBaseService::getInstance()->removeSelectedSongs(m_currentHash, metaList, false);
             // 如果是专辑或者歌手,playRmvMeta的逻辑放在专辑与歌手中处理,二级页面删除后继续播放逻辑
-            if (m_currentHash == "all" || m_currentHash == "album" || m_currentHash == "artist" || m_currentHash == "musicResult") {
+            if (m_currentHash == "all" || m_currentHash == "album" || m_currentHash == "artist"
+                    || m_currentHash == "musicResult" || m_currentHash == playListHash) {
                 Player::getInstance()->playRmvMeta(metaList);
             }
         } else {
