@@ -802,8 +802,10 @@ void MusicListDataWidget::initUI()
         }
     }
     // 初始化窗口
-    if (lastListPageSwitchType == AllSongListType)
+    if (lastListPageSwitchType == AllSongListType) {
         m_musicListView->initAllSonglist("all");
+        m_musicListView->setImportToModelEnable(true);
+    }
     m_musicListView->setFocusPolicy(Qt::StrongFocus);
     m_pStackedWidget->addWidget(m_musicListView);
 //    m_pCenterWidget->setMouseTracking(true);
