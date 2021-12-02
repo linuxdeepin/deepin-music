@@ -169,6 +169,8 @@ void Player::playMeta(MediaMeta meta)
             if (acint != 0 || empty) {
                 //文件不存在提示  todo..
                 emit signalPlaybackStatusChanged(Player::Paused);
+                playNextMeta(true);
+                INT_LAST_PROGRESS_FLAG = 0;
                 return;
             }
         }
@@ -190,8 +192,9 @@ void Player::playMeta(MediaMeta meta)
                 m_qvplayer->setTime(lastOffset);
                 m_qvplayer->play();
             });
-            INT_LAST_PROGRESS_FLAG = 0;
         }
+        // 开始后点击播放另一首哥播放保证错误
+        INT_LAST_PROGRESS_FLAG = 0;
 
         m_ActiveMeta = meta;
         setActiveMeta(meta);
