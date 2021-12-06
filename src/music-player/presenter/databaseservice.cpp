@@ -70,6 +70,18 @@ bool compareAlbumName(const AlbumInfo &data)
 {
     return data.albumName == strcmpAlbumName;
 }
+
+static void setMetatitleAndSinger(MediaMeta &meta)
+{
+    if (meta.singer.isEmpty()) {
+        meta.singer = DBOperate::tr("Unknown artist");
+        meta.singer = DBOperate::tr("Unknown artist");
+    }
+    if (meta.album.isEmpty()) {
+        meta.album = DBOperate::tr("Unknown album");
+        meta.album = DBOperate::tr("Unknown album");
+    }
+}
 //获取所有音乐，排序后按count取数据
 QList<MediaMeta> DataBaseService::getMusicInfosBySortAndCount(int count)
 {
@@ -179,6 +191,7 @@ QList<MediaMeta> DataBaseService::getMusicInfosBySortAndCount(int count)
         meta.pinyinTitle = queryNew.value(16).toString();
         meta.pinyinArtist = queryNew.value(17).toString();
         meta.pinyinAlbum = queryNew.value(18).toString();
+        setMetatitleAndSinger(meta);
         mediaMetas << meta;
     }
 
@@ -234,6 +247,7 @@ QList<MediaMeta> DataBaseService::allMusicInfos(bool refresh)
             if (/*!m_firstInitAllMusic && */meta.codec != "UTF-8") {
                 meta.updateCodec(meta.codec.toUtf8());
             }
+            setMetatitleAndSinger(meta);
             m_AllMediaMeta << meta;
         }
         m_firstInitAllMusic = false;
