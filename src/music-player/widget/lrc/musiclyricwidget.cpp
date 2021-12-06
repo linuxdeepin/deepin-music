@@ -144,7 +144,9 @@ void MusicLyricWidget::updateUI()
     if (coverInfo.exists()) {
         // 不使用缩略图,使用原图,更加清晰
         cover = MetaDetector::getCoverDataPixmap(meta);
-    } else {
+    }
+    //防止缓存为默认图片数据
+    if (cover.isNull()) {
         cover = QIcon::fromTheme("cover_max").pixmap(QSize(200, 200));
     }
     m_cover->setCoverPixmap(cover);
