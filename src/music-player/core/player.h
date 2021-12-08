@@ -122,6 +122,8 @@ signals:
     void signalUpdatePlayingIcon();
     // 播放列表改变
     void signalPlayListChanged();
+    // 播放列表数据个数改变
+    void signalPlaylistCountChange();
     // 当前歌曲删除或无效停止播放
     void signalMediaStop(const QString &activeHah);
     // 播放列表中歌曲被删除

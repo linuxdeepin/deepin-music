@@ -380,9 +380,11 @@ void Player::playPreMeta()
             break;
         }
         }
-        m_ActiveMeta = curMetaList.at(index);
-        //setActiveMeta(m_MetaList.at(index));
-        playMeta(m_ActiveMeta);
+        // 相同歌曲部处理
+        if (m_ActiveMeta.hash != curMetaList.at(index).hash) {
+            m_ActiveMeta = curMetaList.at(index);
+            playMeta(m_ActiveMeta);
+        }
     }
 }
 
@@ -459,9 +461,12 @@ void Player::playNextMeta(bool isAuto)
             break;
         }
         }
-        m_ActiveMeta = curMetaList.at(index);
-        //setActiveMeta(m_MetaList.at(index));
-        playMeta(m_ActiveMeta);
+        // 相同歌曲部处理
+        if (m_ActiveMeta.hash != curMetaList.at(index).hash) {
+            m_ActiveMeta = curMetaList.at(index);
+            playMeta(m_ActiveMeta);
+        }
+
     } else {
         stop();
     }
@@ -568,12 +573,16 @@ void Player::removeMeta(const QStringList &metalistToDel)
             }
         }
     }
+    emit signalPlaylistCountChange();
 }
 
 void Player::playListAppendMeta(const MediaMeta &meta)
 {
-    if (!m_MetaList.contains(meta))
+    // 防止重复添加
+    if (!m_MetaList.contains(meta)) {
         m_MetaList.append(meta);
+        emit signalPlaylistCountChange();
+    }
 }
 
 void Player::setPlayList(const QList<MediaMeta> &list)
@@ -584,6 +593,7 @@ void Player::setPlayList(const QList<MediaMeta> &list)
         m_currentPlayListHash = "";
     }
     emit signalUpdatePlayingIcon();
+    emit signalPlaylistCountChange();
 }
 
 QList<MediaMeta> *Player::getPlayList()
@@ -619,6 +629,7 @@ void Player::setCurrentPlayListHash(QString hash, bool reloadMetaList)
     // 保存播放歌曲及歌单信息
     MusicSettings::setOption("base.play.last_playlist", m_currentPlayListHash);
     emit signalUpdatePlayingIcon();
+    emit signalPlaylistCountChange();
 }
 
 QString Player::getCurrentPlayListHash()
@@ -824,8 +835,18 @@ void Player::forcePlayMeta()
     if (m_MetaList.size() == 0) {
         if (DataBaseService::getInstance()->getDelStatus() == true)//判断是否正在删除中
             return;
-        // 更新所有歌曲页面数据
-        setCurrentPlayListHash("all", true);
+        QString curHash = (DataBaseService::getInstance()->allMusicInfos().isEmpty() && !getCdaPlayList().isEmpty()) ? "CdaRole" : "all";
+        // cd特殊处理
+        if (curHash == "CdaRole") {
+            // 添加到播放列表
+            for (auto meta : getCdaPlayList()) {
+                Player::getInstance()->playListAppendMeta(meta);
+            }
+            setCurrentPlayListHash(curHash, false);
+        } else {
+            // 更新所有歌曲页面数据
+            setCurrentPlayListHash(curHash, true);
+        }
         // 通知播放队列刷新
         emit signalPlayListChanged();
         if (m_MetaList.size() == 0)

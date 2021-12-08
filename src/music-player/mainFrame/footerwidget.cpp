@@ -126,6 +126,7 @@ void FooterWidget::initUI(QWidget *parent)
     m_btPrev->setIconSize(QSize(36, 36));
     m_btPrev->setObjectName("FooterActionPrev");
     m_btPrev->setFixedSize(40, 50);
+    m_btPrev->setEnabled(false);
     AC_SET_OBJECT_NAME(m_btPrev, AC_Prev);
     AC_SET_ACCESSIBLE_NAME(m_btPrev, AC_Prev);
 
@@ -139,6 +140,7 @@ void FooterWidget::initUI(QWidget *parent)
     m_btNext->setIconSize(QSize(36, 36));
     m_btNext->setObjectName("FooterActionNext");
     m_btNext->setFixedSize(40, 50);
+    m_btNext->setEnabled(false);
     AC_SET_OBJECT_NAME(m_btNext, AC_Next);
     AC_SET_ACCESSIBLE_NAME(m_btNext, AC_Next);
 
@@ -307,6 +309,11 @@ void FooterWidget::initUI(QWidget *parent)
     connect(m_btSound, &DIconButton::clicked, this, &FooterWidget::slotSoundClick);
     connect(m_btSound, &ControlIconButton::mouseIn, this, &FooterWidget::slotSoundMouseIn);
     connect(m_btFavorite, &DIconButton::clicked, this, &FooterWidget::slotFavoriteClick);
+    // 歌单数据改变时设置上下一首按钮状态
+    connect(Player::getInstance(), &Player::signalPlaylistCountChange, this, [ = ]() {
+        m_btNext->setEnabled(Player::getInstance()->getPlayList()->size() > 1);
+        m_btPrev->setEnabled(Player::getInstance()->getPlayList()->size() > 1);
+    });
 
     connect(Player::getInstance(), &Player::signalPlaybackStatusChanged,
             this, &FooterWidget::slotPlaybackStatusChanged);

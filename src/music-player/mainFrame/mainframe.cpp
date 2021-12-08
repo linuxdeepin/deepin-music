@@ -365,8 +365,11 @@ void MainFrame::initMenuAndShortcut()
 
     //初始化托盘
     auto playAction = new QAction(tr("Play/Pause"), this);
+    playAction->setEnabled(m_importWidget == nullptr);
     auto prevAction = new QAction(tr("Previous"), this);
+    prevAction->setEnabled(false);
     auto nextAction = new QAction(tr("Next"), this);
+    nextAction->setEnabled(false);
     auto quitAction = new QAction(tr("Exit"), this);
 
     auto trayIconMenu = new DMenu(this);
@@ -399,6 +402,23 @@ void MainFrame::initMenuAndShortcut()
     this, [ = ]() {
         sync();
         qApp->quit();
+    });
+    // 歌单数据改变时设置上下一首按钮状态
+    connect(Player::getInstance(), &Player::signalPlaylistCountChange, this, [ = ]() {
+        prevAction->setEnabled(Player::getInstance()->getPlayList()->size() > 1);
+        nextAction->setEnabled(Player::getInstance()->getPlayList()->size() > 1);
+    });
+    // 清除所有歌曲后置灰播放按钮
+    connect(DataBaseService::getInstance(), &DataBaseService::signalAllMusicCleared, this, [ = ]() {
+        playAction->setEnabled(Player::getInstance()->getCdaPlayList().size() > 0);
+    });
+    // 导入歌曲后恢复播放按钮
+    connect(DataBaseService::getInstance(), &DataBaseService::signalImportFinished, this, [ = ]() {
+        playAction->setEnabled(DataBaseService::getInstance()->allMusicInfos().size() > 0 || Player::getInstance()->getCdaPlayList().size() > 0);
+    });
+    // 监控cd状态
+    connect(CommonService::getInstance(), &CommonService::signalCdaSongListChanged, this, [ = ](int stat) {
+        playAction->setEnabled(DataBaseService::getInstance()->allMusicInfos().size() > 0 || Player::getInstance()->getCdaPlayList().size() > 0);
     });
 #endif
 
