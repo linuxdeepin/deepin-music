@@ -300,4 +300,7 @@ TEST(Application, songlistSearch)
         isEnable = playAllBtn->isEnabled();
     }
     QCOMPARE(isEnable, true);
+
+    songListView->changeCdaSongList(1);
+    songListView->changeCdaSongList(0);
 }

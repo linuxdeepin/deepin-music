@@ -76,14 +76,18 @@
 <context>
     <name>DBOperate</name>
     <message>
-        <location filename="../src/music-player/presenter/dboperate.cpp" line="134"/>
-        <location filename="../src/music-player/presenter/dboperate.cpp" line="170"/>
+        <location filename="../src/music-player/presenter/dboperate.cpp" line="136"/>
+        <location filename="../src/music-player/presenter/dboperate.cpp" line="172"/>
+        <location filename="../src/music-player/presenter/databaseservice.cpp" line="81"/>
+        <location filename="../src/music-player/presenter/databaseservice.cpp" line="82"/>
         <source>Unknown album</source>
         <translation>Tuntematon albumi</translation>
     </message>
     <message>
-        <location filename="../src/music-player/presenter/dboperate.cpp" line="137"/>
-        <location filename="../src/music-player/presenter/dboperate.cpp" line="173"/>
+        <location filename="../src/music-player/presenter/dboperate.cpp" line="139"/>
+        <location filename="../src/music-player/presenter/dboperate.cpp" line="175"/>
+        <location filename="../src/music-player/presenter/databaseservice.cpp" line="77"/>
+        <location filename="../src/music-player/presenter/databaseservice.cpp" line="78"/>
         <source>Unknown artist</source>
         <translation>Tuntematon artisti</translation>
     </message>
@@ -91,22 +95,22 @@
 <context>
     <name>DataBaseService</name>
     <message>
-        <location filename="../src/music-player/presenter/databaseservice.cpp" line="1035"/>
+        <location filename="../src/music-player/presenter/databaseservice.cpp" line="1061"/>
         <source>Albums</source>
         <translation>Albumit</translation>
     </message>
     <message>
-        <location filename="../src/music-player/presenter/databaseservice.cpp" line="1044"/>
+        <location filename="../src/music-player/presenter/databaseservice.cpp" line="1070"/>
         <source>Artists</source>
         <translation>Artistit</translation>
     </message>
     <message>
-        <location filename="../src/music-player/presenter/databaseservice.cpp" line="1052"/>
+        <location filename="../src/music-player/presenter/databaseservice.cpp" line="1078"/>
         <source>All Music</source>
         <translation>Kaikki musiikki</translation>
     </message>
     <message>
-        <location filename="../src/music-player/presenter/databaseservice.cpp" line="1059"/>
+        <location filename="../src/music-player/presenter/databaseservice.cpp" line="1085"/>
         <source>My Favorites</source>
         <translation>Minun suosikit</translation>
     </message>
@@ -251,13 +255,13 @@
     <name>FooterWidget</name>
     <message>
         <location filename="../src/music-player/mainFrame/footerwidget.cpp" line="163"/>
-        <location filename="../src/music-player/mainFrame/footerwidget.cpp" line="639"/>
+        <location filename="../src/music-player/mainFrame/footerwidget.cpp" line="640"/>
         <source>Unknown Title</source>
         <translation>Tuntematon nimi</translation>
     </message>
     <message>
         <location filename="../src/music-player/mainFrame/footerwidget.cpp" line="170"/>
-        <location filename="../src/music-player/mainFrame/footerwidget.cpp" line="642"/>
+        <location filename="../src/music-player/mainFrame/footerwidget.cpp" line="643"/>
         <source>Unknown artist</source>
         <translation>Tuntematon artisti</translation>
     </message>
@@ -337,7 +341,7 @@
         <translation>Kaikki musiikki</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/importwidget.cpp" line="397"/>
+        <location filename="../src/music-player/mainFrame/importwidget.cpp" line="406"/>
         <source>Loading music, please wait...</source>
         <translation>Lataa musiikkia, odota ...</translation>
     </message>
@@ -385,12 +389,12 @@
         <translation>Polku:</translation>
     </message>
     <message>
-        <location filename="../src/music-player/widget/infodialog.cpp" line="229"/>
+        <location filename="../src/music-player/widget/infodialog.cpp" line="230"/>
         <source>Unknown artist</source>
         <translation>Tuntematon artisti</translation>
     </message>
     <message>
-        <location filename="../src/music-player/widget/infodialog.cpp" line="230"/>
+        <location filename="../src/music-player/widget/infodialog.cpp" line="231"/>
         <source>Unknown album</source>
         <translation>Tuntematon albumi</translation>
     </message>
@@ -398,113 +402,113 @@
 <context>
     <name>MainFrame</name>
     <message>
-        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="260"/>
+        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="310"/>
         <source>Add playlist</source>
         <translation>Lisää soittolistaan</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="115"/>
-        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="262"/>
-        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="386"/>
+        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="150"/>
+        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="312"/>
+        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="443"/>
         <source>Add music</source>
         <translation>Lisää musiikkia</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="263"/>
+        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="313"/>
         <source>Equalizer</source>
         <translation>Taajuuskorjain</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="266"/>
+        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="316"/>
         <source>Settings</source>
         <translation>Asetukset</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="269"/>
+        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="319"/>
         <source>Dark theme</source>
         <translation>Tumma</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="273"/>
-        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="319"/>
+        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="323"/>
+        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="370"/>
         <source>Exit</source>
         <translation>Poistu</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="87"/>
-        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="95"/>
-        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="103"/>
-        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="331"/>
+        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="121"/>
+        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="130"/>
+        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="138"/>
+        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="382"/>
         <source>Music</source>
         <translation>Musiikki</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="88"/>
+        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="122"/>
         <source>Music is a local music player with beautiful design and simple functions.</source>
         <translation>Musiikki on soitin, jossa on kaunis muotoilu ja yksinkertaiset toiminnot.</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="120"/>
+        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="155"/>
         <source>Select</source>
         <translation>Valitse</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="121"/>
+        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="156"/>
         <source>Select All</source>
         <translation>Valitse kaikki</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="122"/>
+        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="157"/>
         <source>Done</source>
         <translation>Valmis</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="316"/>
+        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="367"/>
         <source>Play/Pause</source>
         <translation>Toista/keskeytä</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="317"/>
+        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="368"/>
         <source>Previous</source>
         <translation>Edellinen</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="318"/>
+        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="369"/>
         <source>Next</source>
         <translation>Seuraava</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="449"/>
+        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="535"/>
         <source>Successfully added to &quot;%1&quot;</source>
         <translation>Lisätty onnistuneesti osoitteeseen &quot;%1&quot;</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="452"/>
+        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="538"/>
         <source>Already added to the playlist</source>
         <translation>On jo lisätty soittolistaan</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="455"/>
+        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="541"/>
         <source>1 song added</source>
         <translation>1 kappale lisätty</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="457"/>
+        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="543"/>
         <source>%1 songs added</source>
         <translation>  %1 kappaletta lisätty</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="461"/>
+        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="547"/>
         <source>A disc is connected</source>
         <translation>Levy on yhdistetty</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="601"/>
+        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="689"/>
         <source>OK</source>
         <translation>OK</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="594"/>
+        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="682"/>
         <source>Import failed, no valid music file found</source>
         <translation>Tuonti epäonnistui, musiikkitiedostoa ei löytynyt</translation>
     </message>
@@ -553,105 +557,105 @@
 <context>
     <name>MusicListDataWidget</name>
     <message>
-        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="110"/>
-        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="921"/>
-        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="942"/>
-        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="961"/>
-        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="975"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="114"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="1015"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="1036"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="1055"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="1070"/>
         <source>No songs</source>
         <translation>Ei kappaleita</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="923"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="1017"/>
         <source>1 album - 1 song</source>
         <translation>1 albumi - 1 kappale</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="926"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="1020"/>
         <source>%1 album - %2 songs</source>
         <translation>%1 albumi - %2 kappaletta</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="928"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="1022"/>
         <source>%1 albums - %2 songs</source>
         <translation>%1 albumia - %2 kappaletta</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="944"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="1038"/>
         <source>1 artist - 1 song</source>
         <translation>1 artisti - 1 kappale</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="947"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="1041"/>
         <source>%1 artist - %2 songs</source>
         <translation>%1 artisti - %2 kappaletta</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="949"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="1043"/>
         <source>%1 artists - %2 songs</source>
         <translation>%1 artistia - %2 kappaletta</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="112"/>
-        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="963"/>
-        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="977"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="116"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="1057"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="1072"/>
         <source>1 song</source>
         <translation>1 kappale</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="114"/>
-        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="965"/>
-        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="979"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="118"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="1059"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="1074"/>
         <source>%1 songs</source>
         <translation>  %1 kappaletta</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="254"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="286"/>
         <source>Search Results</source>
         <translation>Hakutulokset</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="880"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="974"/>
         <source>No search results</source>
         <translation>Ei hakutuloksia</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="760"/>
-        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="783"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="854"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="877"/>
         <source>All Music</source>
         <translation>Kaikki musiikki</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="207"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="238"/>
         <source>CD playlist</source>
         <translation>Soittolista CD</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="828"/>
-        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="843"/>
-        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="858"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="922"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="937"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="952"/>
         <source>Time added</source>
         <translation>Aikaväli</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="829"/>
-        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="861"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="923"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="955"/>
         <source>Album</source>
         <translation>Albumi</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="844"/>
-        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="860"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="938"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="954"/>
         <source>Artist</source>
         <translation>Esittäjä</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="859"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="953"/>
         <source>Title</source>
         <translation>Nimi</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="734"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="828"/>
         <source>Play All</source>
         <translation>Toista kaikki</translation>
     </message>
@@ -659,12 +663,12 @@
 <context>
     <name>MusicListScrollArea</name>
     <message>
-        <location filename="../src/music-player/mainFrame/musiclistscrollarea.cpp" line="70"/>
+        <location filename="../src/music-player/mainFrame/musiclistscrollarea.cpp" line="73"/>
         <source>Library</source>
         <translation>Kirjasto</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/musiclistscrollarea.cpp" line="86"/>
+        <location filename="../src/music-player/mainFrame/musiclistscrollarea.cpp" line="89"/>
         <source>Playlists</source>
         <translation>Soittolistat</translation>
     </message>
@@ -681,67 +685,67 @@
     <name>MusicSongListView</name>
     <message>
         <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="180"/>
-        <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="425"/>
+        <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="436"/>
         <source>Pause</source>
         <translation>Pysäytä</translation>
     </message>
     <message>
         <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="183"/>
-        <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="421"/>
+        <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="432"/>
         <source>Play</source>
         <translation>Toista</translation>
     </message>
     <message>
         <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="189"/>
-        <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="423"/>
+        <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="434"/>
         <source>Add music</source>
         <translation>Lisää musiikkia</translation>
     </message>
     <message>
         <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="190"/>
-        <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="427"/>
+        <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="438"/>
         <source>Rename</source>
         <translation>Nimeä uudelleen</translation>
     </message>
     <message>
         <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="191"/>
-        <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="317"/>
-        <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="429"/>
+        <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="320"/>
+        <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="440"/>
         <source>Delete</source>
         <translation>Poista</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="276"/>
+        <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="278"/>
         <source>CD playlist</source>
         <translation>Soittolista CD</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="309"/>
+        <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="312"/>
         <source>Are you sure you want to delete this playlist?</source>
         <translation>Haluatko varmasti poistaa tämän soittolistan?</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="316"/>
+        <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="319"/>
         <source>Cancel</source>
         <translation>Peruuta</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="549"/>
+        <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="560"/>
         <source>The CD has been removed</source>
         <translation>CD-levy on poistettu</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="553"/>
+        <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="564"/>
         <source>Play failed, as the CD has been removed</source>
         <translation>Toisto epäonnistui, koska CD-levy on poistettu</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="560"/>
+        <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="571"/>
         <source>OK</source>
         <translation>OK</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="760"/>
+        <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="771"/>
         <source>New playlist</source>
         <translation>Uusi soittolista</translation>
     </message>
@@ -761,122 +765,126 @@
         <translation>Tuntematon albumi</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1265"/>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1605"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1317"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1657"/>
         <source>Play queue</source>
         <translation>Soittojono</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1268"/>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1602"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1320"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1654"/>
         <source>My favorites</source>
         <translation>Minun suosikit</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="549"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="556"/>
         <source>File is invalid or does not exist, load failed</source>
         <translation>Tiedosto virheellinen tai sitä ei ole, lataus epäonnistui</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="550"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="557"/>
         <source>OK</source>
         <translation>OK</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1272"/>
-        <source>Add to new playlist</source>
-        <translation>Lisää uuteen soittolistaan</translation>
-    </message>
-    <message>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1306"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1358"/>
         <source>Play</source>
         <translation>Toista</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1309"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1361"/>
         <source>Pause</source>
         <translation>Pysäytä</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1244"/>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1316"/>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1382"/>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1601"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1653"/>
         <source>Add to playlist</source>
         <translation>Lisää soittolistaan</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1318"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1370"/>
         <source>Display in file manager</source>
         <translation>Näytä tiedostonhallinnassa</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1320"/>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1384"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1296"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1368"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1434"/>
+        <source>Add to</source>
+        <translation>Lisää</translation>
+    </message>
+    <message>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1324"/>
+        <source>Create new playlist</source>
+        <translation>Luo uusi soittolista</translation>
+    </message>
+    <message>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1372"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1436"/>
         <source>Remove from play queue</source>
         <translation>Poista soittojonosta</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1322"/>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1386"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1374"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1438"/>
         <source>Remove from playlist</source>
         <translation>Poista soittolistalta</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1325"/>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1388"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1377"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1440"/>
         <source>Delete from local disk</source>
         <translation>Poista paikalliselta levyltä</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1358"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1410"/>
         <source>Encoding</source>
         <translation>Koodaus</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1362"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1414"/>
         <source>Song info</source>
         <translation>Kappaleen tiedot</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1068"/>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1123"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1119"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1175"/>
         <source>Cancel</source>
         <translation>Peruuta</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1069"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1120"/>
         <source>Remove</source>
         <translation>Poista</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1072"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1123"/>
         <source>Are you sure you want to remove %1?</source>
         <translation>Haluatko varmasti poistaa %1?</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1074"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1125"/>
         <source>Are you sure you want to remove the selected %1 songs?</source>
         <translation>Haluatko varmasti poistaa valitut %1 kappaleet?</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1124"/>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1242"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1176"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1294"/>
         <source>Delete</source>
         <translation>Poista</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1129"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1181"/>
         <source>Are you sure you want to delete %1?</source>
         <translation>Haluatko varmasti poistaa %1?</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1136"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1188"/>
         <source>Are you sure you want to delete the selected %1 songs?</source>
         <translation>Haluatko varmasti poistaa valitut %1 kappaleet?</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1137"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1189"/>
         <source>The song files contained will also be deleted</source>
         <translation>Sisältämät musiikkitiedostot poistetaan myös</translation>
     </message>
@@ -913,7 +921,8 @@
 <context>
     <name>QApplication</name>
     <message>
-        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="90"/>
+        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="124"/>
+        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="128"/>
         <source>Music</source>
         <translation>Musiikki</translation>
     </message>

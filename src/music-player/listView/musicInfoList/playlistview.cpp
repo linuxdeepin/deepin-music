@@ -1293,7 +1293,7 @@ void PlayListView::contextMenuEvent(QContextMenuEvent *event)
     if (CommonService::getInstance()->isTabletEnvironment()) {
         actRmv = allMusicMenu.addAction(tr("Delete"));
         allMusicMenu.addSeparator();
-        QAction *actplaylist =  allMusicMenu.addAction(tr("Add to playlist"));
+        QAction *actplaylist =  allMusicMenu.addAction(tr("Add to"));
         connect(actRmv, SIGNAL(triggered()), this, SLOT(slotRmvFromSongList()));
         connect(actplaylist, &QAction::triggered, this, &PlayListView::slotShowSongList);
     } else {
@@ -1321,7 +1321,7 @@ void PlayListView::contextMenuEvent(QContextMenuEvent *event)
         actFav->setData("fav");
 
         playlistMenu.addSeparator();
-        playlistMenu.addAction(tr("Add to new playlist"))->setData("song list");
+        playlistMenu.addAction(tr("Create new playlist"))->setData("song list");
         playlistMenu.addSeparator();
 
         //add custom playlist to second menu
@@ -1365,7 +1365,7 @@ void PlayListView::contextMenuEvent(QContextMenuEvent *event)
             if (currMeta.invalid)
                 actplay->setEnabled(false);
 
-            allMusicMenu.addAction(tr("Add to playlist"))->setMenu(&playlistMenu);
+            allMusicMenu.addAction(tr("Add to"))->setMenu(&playlistMenu);
             allMusicMenu.addSeparator();
             QAction *actdisplay = allMusicMenu.addAction(tr("Display in file manager"));
             if (m_IsPlayQueue) {
@@ -1431,7 +1431,7 @@ void PlayListView::contextMenuEvent(QContextMenuEvent *event)
                 }
             }
 
-            allMusicMenu.addAction(tr("Add to playlist"))->setMenu(&playlistMenu);
+            allMusicMenu.addAction(tr("Add to"))->setMenu(&playlistMenu);
             if (m_IsPlayQueue) {
                 actRmv = allMusicMenu.addAction(tr("Remove from play queue"));
             } else {

@@ -180,7 +180,7 @@ void QTestMain::testGTest()
 #ifndef SYSTEM_MIPS
     __sanitizer_set_report_path("./asan_deepin-music.log");//内存检测输出
 #endif
-    Player::getInstance()->stop();
+    Player::getInstance()->stop(false);
     Q_UNUSED(ret)
 }
 
