@@ -200,7 +200,8 @@ QList<MediaMeta> DataBaseService::getMusicInfosBySortAndCount(int count)
 
 QList<MediaMeta> DataBaseService::allMusicInfos(bool refresh)
 {
-    if (!refresh) {
+    // 防止重复查询数据库
+    if (!refresh || m_AllMediaMeta.size() == allMusicInfosCount()) {
         return m_AllMediaMeta;
     } else {
         m_AllMediaMeta.clear();
@@ -251,7 +252,7 @@ QList<MediaMeta> DataBaseService::allMusicInfos(bool refresh)
             m_AllMediaMeta << meta;
         }
         m_firstInitAllMusic = false;
-        allAlbumInfos();
+//        allAlbumInfos();
         return m_AllMediaMeta;
     }
 }
@@ -726,6 +727,7 @@ int DataBaseService::addMetaToPlaylist(QString uuid, const QList<MediaMeta> &met
                     if (uuid == "fav") {
                         emit signalFavSongAdd(meta.hash);
                     }
+                    emit signalMusicAddOne(uuid, meta);
                 } else {
                     qCritical() << query.lastError() << sqlStr;
                 }

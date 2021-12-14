@@ -160,7 +160,7 @@ void MusicListDataWidget::slotViewChanged(ListPageSwitchType switchtype, const Q
             AC_SET_ACCESSIBLE_NAME(m_albumListView, AC_albumListView);
         }
         //防止第一次无数据
-        if (DataBaseService::getInstance()->allAlbumInfos().isEmpty()) {
+        if (DataBaseService::getInstance()->allMusicInfos(false).isEmpty()) {
             DataBaseService::getInstance()->allMusicInfos(true);
         }
         m_albumListView->setAlbumListData(DataBaseService::getInstance()->allAlbumInfos()); //set album data
@@ -184,7 +184,7 @@ void MusicListDataWidget::slotViewChanged(ListPageSwitchType switchtype, const Q
             AC_SET_ACCESSIBLE_NAME(m_singerListView, AC_singerListView);
         }
         //防止第一次无数据
-        if (DataBaseService::getInstance()->allSingerInfos().isEmpty()) {
+        if (DataBaseService::getInstance()->allMusicInfos(false).isEmpty()) {
             DataBaseService::getInstance()->allMusicInfos(true);
         }
         m_singerListView->setSingerListData(DataBaseService::getInstance()->allSingerInfos()); //set singer data
@@ -1030,7 +1030,7 @@ void MusicListDataWidget::refreshInfoLabel(QString hash)
             refreshSortAction("artistResult");
         } else {
             singerCount = DataBaseService::getInstance()->allSingerInfos().size();
-            songCount = DataBaseService::getInstance()->allMusicInfos().size();
+            songCount = DataBaseService::getInstance()->allMusicInfos(false).size();
         }
         if (songCount == 0) {
             countStr = QString("   ") + MusicListDataWidget::tr("No songs");

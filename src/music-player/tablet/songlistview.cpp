@@ -27,6 +27,7 @@
 #include <DApplicationHelper>
 #include <DDialog>
 #include <DFrame>
+#include <QDebug>
 
 #include "commonservice.h"
 

@@ -454,7 +454,7 @@ int DBOperate::addMetaToPlaylist(QString uuid, const QList<MediaMeta> &metas)
                     if (uuid == "fav") {
                         emit signalFavSongAdd(meta.hash);
                     }
-                    emit signalMusicAddOne(m_importHash, meta);
+                    emit signalMusicAddOne(uuid, meta);
                 } else {
                     m_importFailCount++;
                     qCritical() << query.lastError() << sqlStr;
