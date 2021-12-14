@@ -92,11 +92,6 @@ QStringList mimeTypes()
 
 Player::Player(QObject *parent) : QObject(parent)
 {
-    init();
-}
-
-void Player::init()
-{
     qRegisterMetaType<Player::Error>();
     qRegisterMetaType<Player::PlaybackStatus>();
 
@@ -127,16 +122,25 @@ void Player::init()
     m_mode = static_cast<PlaybackMode>(MusicSettings::value("base.play.playmode").toInt());
 
     m_currentPlayListHash = MusicSettings::value("base.play.last_playlist").toString(); //上一次的页面
+//    init();
+}
+
+void Player::init()
+{
     //初始化cd线程
-    m_pCdaThread = new CdaThread(this);
-    connect(m_pCdaThread, &CdaThread::sigSendCdaStatus, CommonService::getInstance(),
-            &CommonService::signalCdaSongListChanged, Qt::QueuedConnection);
+    if (nullptr == m_pCdaThread) {
+        m_pCdaThread = new CdaThread(this);
+        connect(m_pCdaThread, &CdaThread::sigSendCdaStatus, CommonService::getInstance(),
+                &CommonService::signalCdaSongListChanged, Qt::QueuedConnection);
+    }
+
     //开启cd线程
     startCdaThread();
-
-    m_pDBus = new QDBusInterface("org.freedesktop.login1", "/org/freedesktop/login1",
-                                 "org.freedesktop.login1.Manager", QDBusConnection::systemBus());
-    connect(m_pDBus, SIGNAL(PrepareForSleep(bool)), this, SLOT(onSleepWhenTaking(bool)));
+    if (nullptr == m_pDBus) {
+        m_pDBus = new QDBusInterface("org.freedesktop.login1", "/org/freedesktop/login1",
+                                     "org.freedesktop.login1.Manager", QDBusConnection::systemBus());
+        connect(m_pDBus, SIGNAL(PrepareForSleep(bool)), this, SLOT(onSleepWhenTaking(bool)));
+    }
 }
 
 QStringList Player::supportedSuffixList() const
@@ -144,10 +148,14 @@ QStringList Player::supportedSuffixList() const
     return m_supportedSuffix;
 }
 
-Player::~Player()
+void Player::releasePlayer()
 {
-    m_pCdaThread->closeThread();
-    while (m_pCdaThread->isRunning()) {}
+    stop(false);
+    //释放cd线程
+    if (m_pCdaThread) {
+        m_pCdaThread->closeThread();
+        while (m_pCdaThread->isRunning()) {}
+    }
     //删除媒体资源
     if (m_qvmedia) {
         delete m_qvmedia;
@@ -158,6 +166,11 @@ Player::~Player()
         delete m_qvplayer;
         m_qvplayer = nullptr;
     }
+}
+
+Player::~Player()
+{
+    releasePlayer();
 }
 
 void Player::playMeta(MediaMeta meta)

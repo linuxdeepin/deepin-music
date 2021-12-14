@@ -505,6 +505,7 @@ void MainFrame::autoStartToPlay()
     if (!strOpenPath.isEmpty()) {
         //通知设置当前页面
         Player::getInstance()->setCurrentPlayListHash(lastplaypage, true);
+        Player::getInstance()->init();
         return ;
     }
     //读取均衡器使能开关配置
@@ -520,8 +521,10 @@ void MainFrame::autoStartToPlay()
         Player::getInstance()->setCurrentPlayListHash(lastplaypage, true);
         //获取上一次的歌曲信息
         MediaMeta medmeta = DataBaseService::getInstance()->getMusicInfoByHash(lastMeta);
-        if (medmeta.localPath.isEmpty())
+        if (medmeta.localPath.isEmpty()) {
+            Player::getInstance()->init();
             return;
+        }
         auto playList = Player::getInstance()->getPlayList();
         // 最后播放歌曲默认添加到播放列表
         if (!playList->contains(medmeta)) {
@@ -534,7 +537,8 @@ void MainFrame::autoStartToPlay()
             /**
               * 初始不再读取歌曲设置进度，方案更改为直接设置进度，播放歌曲后跳转
               **/
-            Player::getInstance()->setPosition(medmeta.offset);
+            if (medmeta.offset != 0)
+                Player::getInstance()->setPosition(medmeta.offset);
             // 设置进度
             m_footerWidget->slotSetWaveValue(MusicSettings::value("base.play.last_position").toInt(), medmeta.length);
         }
@@ -545,6 +549,7 @@ void MainFrame::autoStartToPlay()
             slotAutoPlay(medmeta); //不再延迟处理，直接播放
         }
     }
+    Player::getInstance()->init();
 }
 
 void MainFrame::showPopupMessage(const QString &songListName, int selectCount, int insertCount)

@@ -120,8 +120,6 @@ void createSpeechDbus()
         app.loadTranslator(); \
         checkOnly(); \
         MusicSettings::init(); \
-        VlcDynamicInstance::VlcFunctionInstance(); \
-        Player::getInstance(); \
         MainFrame mainframe; \
         auto showflag = MusicSettings::value("base.play.showFlag").toBool(); \
         mainframe.initUI(showflag); \
@@ -134,7 +132,9 @@ void createSpeechDbus()
         QTEST_ADD_GPU_BLACKLIST_SUPPORT \
         TestObject tc; \
         QTEST_SET_MAIN_SOURCE_PATH \
-        return QTest::qExec(&tc, argc, argv); \
+        int status = QTest::qExec(&tc, argc, argv); \
+        Player::getInstance()->releasePlayer(); \
+        return status;\
     } \
 
 class QTestMain : public QObject
@@ -180,7 +180,6 @@ void QTestMain::testGTest()
 #ifndef SYSTEM_MIPS
     __sanitizer_set_report_path("./asan_deepin-music.log");//内存检测输出
 #endif
-    Player::getInstance()->stop(false);
     Q_UNUSED(ret)
 }
 

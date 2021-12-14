@@ -112,6 +112,8 @@ public:
     bool getMuted();
     // 获取音量大小
     int getVolume() const;
+    // 释放播放器
+    void releasePlayer();
 
 signals:
     // 播放状态改变
