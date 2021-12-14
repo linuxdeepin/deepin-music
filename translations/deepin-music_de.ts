@@ -811,12 +811,12 @@
         <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1368"/>
         <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1434"/>
         <source>Add to</source>
-        <translation type="unfinished"/>
+        <translation>Hinzufügen zu</translation>
     </message>
     <message>
         <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1324"/>
         <source>Create new playlist</source>
-        <translation type="unfinished"/>
+        <translation>Neue Wiedergabeliste erstellen</translation>
     </message>
     <message>
         <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1372"/>

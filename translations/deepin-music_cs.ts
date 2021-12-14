@@ -50,7 +50,7 @@
     <message>
         <location filename="../src/music-player/widget/closeconfirmdialog.cpp" line="51"/>
         <source>Minimize to system tray</source>
-        <translation>Minimalizovat do oznamovací oblasti panelu</translation>
+        <translation>Zmenšit do oznamovací oblasti panelu</translation>
     </message>
     <message>
         <location filename="../src/music-player/widget/closeconfirmdialog.cpp" line="61"/>
@@ -60,12 +60,12 @@
     <message>
         <location filename="../src/music-player/widget/closeconfirmdialog.cpp" line="69"/>
         <source>Please choose your action</source>
-        <translation>Prosím zvolte akci</translation>
+        <translation>Prosím zvolte činnost</translation>
     </message>
     <message>
         <location filename="../src/music-player/widget/closeconfirmdialog.cpp" line="82"/>
         <source>Cancel</source>
-        <translation>Storno</translation>
+        <translation>Zrušit</translation>
     </message>
     <message>
         <location filename="../src/music-player/widget/closeconfirmdialog.cpp" line="83"/>
@@ -293,7 +293,7 @@
     <message>
         <location filename="../src/music-player/mainFrame/footerwidget.cpp" line="296"/>
         <source>Play Queue</source>
-        <translation>Přehrát frontu</translation>
+        <translation>Přehrát zařazené</translation>
     </message>
     <message>
         <location filename="../src/music-player/mainFrame/footerwidget.cpp" line="457"/>
@@ -343,7 +343,7 @@
     <message>
         <location filename="../src/music-player/mainFrame/importwidget.cpp" line="406"/>
         <source>Loading music, please wait...</source>
-        <translation>Načítá se hudba – čekejte prosím…</translation>
+        <translation>Načítá se hudba – čekejte, prosím…</translation>
     </message>
 </context>
 <context>
@@ -727,7 +727,7 @@
     <message>
         <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="319"/>
         <source>Cancel</source>
-        <translation>Storno</translation>
+        <translation>Zrušit</translation>
     </message>
     <message>
         <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="560"/>
@@ -768,7 +768,7 @@
         <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1317"/>
         <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1657"/>
         <source>Play queue</source>
-        <translation>Fronta přehrávání</translation>
+        <translation>Zařazené skladby</translation>
     </message>
     <message>
         <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1320"/>
@@ -811,18 +811,18 @@
         <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1368"/>
         <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1434"/>
         <source>Add to</source>
-        <translation type="unfinished"/>
+        <translation>Přidat do</translation>
     </message>
     <message>
         <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1324"/>
         <source>Create new playlist</source>
-        <translation type="unfinished"/>
+        <translation>Vytvořit nový seznam skladeb</translation>
     </message>
     <message>
         <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1372"/>
         <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1436"/>
         <source>Remove from play queue</source>
-        <translation>Odstranit z fronty pro přehrávání</translation>
+        <translation>Vyřadit z přehrávání</translation>
     </message>
     <message>
         <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1374"/>
@@ -894,7 +894,7 @@
     <message>
         <location filename="../src/music-player/widget/playqueuewidget.cpp" line="70"/>
         <source>Play Queue</source>
-        <translation>Přehrát frontu</translation>
+        <translation>Přehrát zařazené</translation>
     </message>
     <message>
         <location filename="../src/music-player/widget/playqueuewidget.cpp" line="83"/>
@@ -932,7 +932,7 @@
     <message>
         <location filename="../src/music-player/widget/settingsdialog.cpp" line="26"/>
         <source>Minimize to system tray</source>
-        <translation>Minimalizovat do oznamovací oblasti panelu</translation>
+        <translation>Zmenšit do oznamovací oblasti panelu</translation>
     </message>
     <message>
         <location filename="../src/music-player/widget/settingsdialog.cpp" line="27"/>
