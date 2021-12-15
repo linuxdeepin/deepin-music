@@ -393,11 +393,8 @@ void Player::playPreMeta()
             break;
         }
         }
-        // 相同歌曲部处理
-        if (m_ActiveMeta.hash != curMetaList.at(index).hash) {
-            m_ActiveMeta = curMetaList.at(index);
-            playMeta(m_ActiveMeta);
-        }
+        m_ActiveMeta = curMetaList.at(index);
+        playMeta(m_ActiveMeta);
     }
 }
 
@@ -474,12 +471,8 @@ void Player::playNextMeta(bool isAuto)
             break;
         }
         }
-        // 相同歌曲部处理
-        if (m_ActiveMeta.hash != curMetaList.at(index).hash) {
-            m_ActiveMeta = curMetaList.at(index);
-            playMeta(m_ActiveMeta);
-        }
-
+        m_ActiveMeta = curMetaList.at(index);
+        playMeta(m_ActiveMeta);
     } else {
         stop();
     }

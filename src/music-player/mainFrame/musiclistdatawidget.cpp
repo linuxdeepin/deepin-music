@@ -1187,7 +1187,7 @@ void MusicListDataWidget::refreshSortAction(const QString &hash)
         }
         // 搜索时防止专辑窗口不存在
         if (m_albumListView)
-            m_artistDropdown->setEnabled(m_albumListView->model()->rowCount() > 0);
+            m_albumDropdown->setEnabled(m_albumListView->model()->rowCount() > 0);
     } else if (m_pStackedWidget->currentWidget() == m_singerListView ||
                (hash == "artistResult")) {
         m_musicDropdown->setVisible(false);
