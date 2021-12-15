@@ -1007,7 +1007,7 @@ void MusicListDataWidget::refreshInfoLabel(QString hash)
             showEmptyHits(songCount);
             refreshSortAction("albumResult");
         } else {
-            albumCount = DataBaseService::getInstance()->allAlbumInfos().size();
+            albumCount = m_albumListView->getAlbumCount();
             songCount = DataBaseService::getInstance()->allMusicInfos(false).size();
         }
 
@@ -1029,7 +1029,7 @@ void MusicListDataWidget::refreshInfoLabel(QString hash)
             showEmptyHits(songCount);
             refreshSortAction("artistResult");
         } else {
-            singerCount = DataBaseService::getInstance()->allSingerInfos().size();
+            singerCount = m_singerListView->getSingerCount();
             songCount = DataBaseService::getInstance()->allMusicInfos(false).size();
         }
         if (songCount == 0) {
@@ -1109,6 +1109,7 @@ void MusicListDataWidget::slotRemoveSingleSong(const QString &listHash, const QS
     Q_UNUSED(listHash)
     Q_UNUSED(musicHash)
     refreshInfoLabel(m_currentHash);
+    refreshSortAction(m_currentHash);
 }
 
 void MusicListDataWidget::slotPlaylistNameUpdate(const QString &listHash)
@@ -1123,8 +1124,8 @@ void MusicListDataWidget::slotPlaylistNameUpdate(const QString &listHash)
 
 void MusicListDataWidget::refreshSortAction(const QString &hash)
 {
-    if (m_pStackedWidget->currentWidget() == m_musicListView ||
-            (hash == "musicResult")) {
+    if (m_pStackedWidget->currentWidget() == m_musicListView || m_musicListView->getImportToModelEnable()
+            || (hash == "musicResult")) {
         m_musicDropdown->setVisible(true);
         m_albumDropdown->setVisible(false);
         m_artistDropdown->setVisible(false);
@@ -1170,6 +1171,8 @@ void MusicListDataWidget::refreshSortAction(const QString &hash)
                 }
             }
         }
+        // 计算搜索和歌单数目
+        m_musicDropdown->setEnabled(hash == "musicResult" ? (m_searchResultTabWidget->getMusicCountByMusic() > 0) : (m_musicListView->model()->rowCount() > 0));
     } else if (m_pStackedWidget->currentWidget() == m_albumListView ||
                (hash == "albumResult")) {
         m_musicDropdown->setVisible(false);
@@ -1182,6 +1185,9 @@ void MusicListDataWidget::refreshSortAction(const QString &hash)
                 m_albumDropdown->setCurrentAction(action);
             }
         }
+        // 搜索时防止专辑窗口不存在
+        if (m_albumListView)
+            m_artistDropdown->setEnabled(m_albumListView->model()->rowCount() > 0);
     } else if (m_pStackedWidget->currentWidget() == m_singerListView ||
                (hash == "artistResult")) {
         m_musicDropdown->setVisible(false);
@@ -1194,6 +1200,9 @@ void MusicListDataWidget::refreshSortAction(const QString &hash)
                 m_artistDropdown->setCurrentAction(action);
             }
         }
+        // 搜索时防止歌手窗口不存在
+        if (m_singerListView)
+            m_artistDropdown->setEnabled(m_singerListView->model()->rowCount() > 0);
     }
 }
 
