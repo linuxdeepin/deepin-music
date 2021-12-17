@@ -32,9 +32,9 @@ Music can be minimized to the system tray.
 
 Right-click the Music application icon in the tray and you can perform the following operations:
 
- - Click **Play/Pause** to play/pause the song.
- - Click **Previous** to play the previous song.
- - Click **Next** to play the next song.
+ - Click **Play/Pause** to play/pause the song. 
+ - Click **Previous** to play the previous song. 
+ - Click **Next** to play the next song. 
  - Click **Exit** to exit Music.
 
 ### Exit Music
@@ -186,7 +186,7 @@ On the Music interface, click ![single](../common/single_tune_circulation_normal
 1. On the Music interface, right-click the music.
 2. Click **Display in file manager** and you can view the music file in File Manager.
 
-![0|infile](fig/infile.png)
+![0|infile](fig/d_infile.png)
 
 ### Delete Music
 
@@ -195,7 +195,7 @@ On the Music interface, right-click the music and you can:
 - Click **Remove from playlist** to remove the music from the playlist, but the music file will still be saved on the local disk.
 - Click **Delete from local disk** to remove the music both from the playlist and the local disk. 
 
-![0|remove](fig/remove.png)
+![0|remove](fig/d_remove.png)
 
 ### Select Encoding
 
@@ -204,7 +204,7 @@ For music with garbled characters, you can make it display normally by switching
 1. On the Music interface, right-click the music.
 2. Click **Encoding**, and select the encoding as needed.
 
-![0|encoding](fig/encoding.png)
+![0|encoding](fig/d_encoding.png)
 
 ### View Music Info
 
@@ -225,7 +225,9 @@ On the Music interface, you can create, delete, and rename playlist. You can als
 2.  Enter the name of the playlist.
 3.  Press the **Enter** key on keyboard.
 
-![0|addlist](fig/addlist.png)
+>![tips](../common/tips.svg) Tips: You can also create a new playlist by right-clicking a song and then choosing **Add to > Create new playlist**.
+
+<img src="fig/addlist.png" alt="0|addlist" style="zoom:80%;" />
 
 ### Rename Playlist
 
@@ -238,18 +240,18 @@ On the Music interface, you can create, delete, and rename playlist. You can als
 ### Add Music to Playlist
 
 1. On the Music interface, select the music you want to add.
-2. Right-click and select **Add to playlist** to add the music to the selected playlist.
+2. Right-click and select **Add to** to add the music to the selected playlist.
 
 > ![tips](../common/tips.svg)Tips: You can drag the local music to a specified playlist to add the music into the current playlist and **All Music** playlist. 
 
-![0|addtolist](fig/addtolist.png)
+![0|addtolist](fig/d_addtolist.png)
 
 ### Remove Music from Playlist
 
 1. Select a playlist from **Playlists**, and select the music you want to remove from it.
 2. Right-click and select **Remove from playlist** to remove the music from the playlist.
 
-![0|remove](fig/removefromlist.png)
+![0|remove](fig/d_removefromlist.png)
 
 ### Delete Playlist
 
