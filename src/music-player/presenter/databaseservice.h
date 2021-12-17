@@ -83,6 +83,8 @@ public:
     QList<MediaMeta>     allMusicInfos(bool refresh = true);
     // 歌曲数量
     int                  allMusicInfosCount();
+    // 获取数据库歌曲数目
+    int                  allDBMusicInfosCount();
     // 通过hash值获取单个歌曲的信息
     MediaMeta            getMusicInfoByHash(const QString &hash);
     // 专辑

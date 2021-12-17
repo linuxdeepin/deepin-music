@@ -3,7 +3,6 @@
 
 if(ISTEST MATCHES "1")
     set(CMD_NAME deepin-music-test)
-    add_definitions(-DENABLE_AUTO_UNIT_TEST)
 else()
     set(CMD_NAME deepin-music)
 endif()

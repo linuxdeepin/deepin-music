@@ -778,7 +778,7 @@ void PlayListView::slotMusicAddOne(const QString &listHash, MediaMeta addMeta)
     }
 
     //防止未显示时添加数据
-    if (m_currentHash == "all" && !isVisible())
+    if (m_currentHash == "all" && !m_importEnable)
         return;
 
     if (m_currentHash == "album" || m_currentHash == "albumResult"

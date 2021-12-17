@@ -384,7 +384,7 @@ void MainFrame::initMenuAndShortcut()
     m_sysTrayIcon->setIcon(QIcon::fromTheme("deepin-music"));
     m_sysTrayIcon->setToolTip(tr("Music"));
     m_sysTrayIcon->setContextMenu(trayIconMenu);
-#ifndef  ENABLE_AUTO_UNIT_TEST
+#ifndef  AUTO_UNIT_TEST
     m_sysTrayIcon->show();
     connect(playAction, &QAction::triggered,
     this, [ = ]() {
@@ -418,6 +418,7 @@ void MainFrame::initMenuAndShortcut()
     });
     // 监控cd状态
     connect(CommonService::getInstance(), &CommonService::signalCdaSongListChanged, this, [ = ](int stat) {
+        Q_UNUSED(stat)
         playAction->setEnabled(DataBaseService::getInstance()->allMusicInfos().size() > 0 || Player::getInstance()->getCdaPlayList().size() > 0);
     });
 #endif

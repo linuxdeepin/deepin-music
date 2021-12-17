@@ -201,7 +201,7 @@ QList<MediaMeta> DataBaseService::getMusicInfosBySortAndCount(int count)
 QList<MediaMeta> DataBaseService::allMusicInfos(bool refresh)
 {
     // 防止重复查询数据库
-    if (!refresh || m_AllMediaMeta.size() == allMusicInfosCount()) {
+    if (!refresh || m_AllMediaMeta.size() == allDBMusicInfosCount()) {
         return m_AllMediaMeta;
     } else {
         m_AllMediaMeta.clear();
@@ -257,25 +257,32 @@ QList<MediaMeta> DataBaseService::allMusicInfos(bool refresh)
     }
 }
 
+int DataBaseService::allDBMusicInfosCount()
+{
+    int count = 0;
+    QString queryString = QString("SELECT count(*) FROM musicNew");
+    QSqlQuery queryNew(m_db);
+    if (!queryNew.prepare(queryString)) {
+        qCritical() << queryNew.lastError();
+        return 0;
+    }
+    if (!queryNew.exec()) {
+        qCritical() << queryNew.lastError();
+        count = 0;
+    }
+    while (queryNew.next()) {
+        count = queryNew.value(0).toInt();
+    }
+    return count;
+}
+
 int DataBaseService::allMusicInfosCount()
 {
     int count = 0;
     if (m_AllMediaMeta.size() > 0) {
         count = m_AllMediaMeta.size();
     } else {
-        QString queryString = QString("SELECT count(*) FROM musicNew");
-        QSqlQuery queryNew(m_db);
-        if (!queryNew.prepare(queryString)) {
-            qCritical() << queryNew.lastError();
-            return 0;
-        }
-        if (!queryNew.exec()) {
-            qCritical() << queryNew.lastError();
-            count = 0;
-        }
-        while (queryNew.next()) {
-            count = queryNew.value(0).toInt();
-        }
+        count = allDBMusicInfosCount();
     }
     return count;
 }
