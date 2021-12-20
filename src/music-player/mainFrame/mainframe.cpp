@@ -254,6 +254,14 @@ void MainFrame::initUI(bool showLoading)
 
     m_titlebarwidget->setEnabled(showLoading);
 
+    /*---------------menu&shortcut-------------------*/
+    if (!CommonService::getInstance()->isTabletEnvironment()) {
+        initMenuAndShortcut();
+        m_newSonglistAction->setEnabled(showLoading);
+    } else {
+        initPadMenu();
+    }
+
     m_musicContentWidget = new MusicContentWidget(this);
     m_musicContentWidget->setVisible(showLoading);
 
@@ -276,13 +284,6 @@ void MainFrame::initUI(bool showLoading)
 
     //    m_pwidget = new QWidget(this);
 
-    /*---------------menu&shortcut-------------------*/
-    if (!CommonService::getInstance()->isTabletEnvironment()) {
-        initMenuAndShortcut();
-        m_newSonglistAction->setEnabled(showLoading);
-    } else {
-        initPadMenu();
-    }
     connect(DataBaseService::getInstance(), &DataBaseService::signalAllMusicCleared,
             this, &MainFrame::slotAllMusicCleared);
 
@@ -420,6 +421,11 @@ void MainFrame::initMenuAndShortcut()
     connect(CommonService::getInstance(), &CommonService::signalCdaSongListChanged, this, [ = ](int stat) {
         Q_UNUSED(stat)
         playAction->setEnabled(DataBaseService::getInstance()->allMusicInfos().size() > 0 || Player::getInstance()->getCdaPlayList().size() > 0);
+        //都不存在时设置未不可操作
+        if (Player::getInstance()->getCurrentPlayListHash() == "CdaRole" && DataBaseService::getInstance()->allMusicInfos().isEmpty() && Player::getInstance()->getCdaPlayList().isEmpty()) {
+            prevAction->setEnabled(false);
+            nextAction->setEnabled(false);
+        }
     });
 #endif
 
