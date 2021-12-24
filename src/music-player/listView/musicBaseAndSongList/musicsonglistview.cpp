@@ -599,7 +599,7 @@ void MusicSongListView::slotPopMessageWindow(int stat)
             //清空列表
             Player::getInstance()->clearPlayList();
             //播放歌单第一首歌曲
-            Player::getInstance()->forcePlayMeta();
+//            Player::getInstance()->forcePlayMeta();
         }
 
         if (m_model->rowCount() > 0  && tmpMeta.mmType != MIMETYPE_CDA) {

@@ -760,15 +760,15 @@ void FooterWidget::slotShortCutTriggered()
         m_volSlider->setVolume(voldown);
     }
 
-    if (objCut == nextShortcut) {
+    if (objCut == nextShortcut && m_btNext->isEnabled()) {
         Player::getInstance()->playNextMeta(false);
     }
 
-    if (objCut == playPauseShortcut) { //pause
+    if (objCut == playPauseShortcut && m_btPlay->isEnabled()) { //pause
         slotPlayClick(true);
     }
 
-    if (objCut == previousShortcut) {
+    if (objCut == previousShortcut && m_btPrev->isEnabled()) {
         Player::getInstance()->playPreMeta();
     }
 
