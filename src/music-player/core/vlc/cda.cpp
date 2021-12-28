@@ -220,7 +220,8 @@ void CdaThread::run()
                     if (child->p_item->i_duration == 0)
                         continue;
                     MediaMeta meta;
-                    meta.hash = DMusic::filepathHash(QString(child->p_item->psz_name));
+                    // cd的hash值添加编号防止psz_name相同
+                    meta.hash = DMusic::filepathHash(QString(child->p_item->psz_name) + QString::number(i + 1));
                     QString strnum = QString::number(i + 1);
                     if (strnum.length() == 1) {
                         strnum.insert(0, '0'); //前置0显示，如01,02，
