@@ -411,6 +411,10 @@ void Waveform::leaveEvent(QEvent *event)
 {
     IsShowwaveformScale = false;
     waveformScale->hide();
+    // 隐藏刻度后可以显示进度
+    if (signalsBlocked()) {
+        blockSignals(false);
+    }
     DSlider::leaveEvent(event);
 }
 
