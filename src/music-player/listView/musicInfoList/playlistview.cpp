@@ -531,6 +531,10 @@ void PlayListView::setSortType(DataBaseService::ListSortType sortType)
         }
         break;
     }
+    case DataBaseService::SortByCustom: {
+        sortType = DataBaseService::SortByCustomASC;
+        break;
+    }
     default:
         sortType = DataBaseService::SortByAddTimeASC;
         break;
@@ -1823,42 +1827,42 @@ void PlayListView::sortList(QList<MediaMeta> &musicInfos, const DataBaseService:
     switch (sortType) {
     case DataBaseService::SortByAddTimeASC: {
         std::sort(musicInfos.begin(), musicInfos.end(), moreThanTimestampASC);
-        //qSort(musicInfos.begin(), musicInfos.end(), moreThanTimestampASC);
         break;
     }
     case DataBaseService::SortByTitleASC: {
         std::sort(musicInfos.begin(), musicInfos.end(), moreThanTitleASC);
-        //qSort(musicInfos.begin(), musicInfos.end(), moreThanTitleASC);
         break;
     }
     case DataBaseService::SortBySingerASC: {
         std::sort(musicInfos.begin(), musicInfos.end(), moreThanSingerASC);
-        //qSort(musicInfos.begin(), musicInfos.end(), moreThanSingerASC);
         break;
     }
     case DataBaseService::SortByAblumASC: {
         std::sort(musicInfos.begin(), musicInfos.end(), moreThanAblumASC);
-        //qSort(musicInfos.begin(), musicInfos.end(), moreThanAblumASC);
         break;
     }
     case DataBaseService::SortByAddTimeDES: {
         std::sort(musicInfos.begin(), musicInfos.end(), moreThanTimestampDES);
-        //qSort(musicInfos.begin(), musicInfos.end(), moreThanTimestampDES);
         break;
     }
     case DataBaseService::SortByTitleDES: {
         std::sort(musicInfos.begin(), musicInfos.end(), moreThanTitleDES);
-        //qSort(musicInfos.begin(), musicInfos.end(), moreThanTitleDES);
         break;
     }
     case DataBaseService::SortBySingerDES: {
         std::sort(musicInfos.begin(), musicInfos.end(), moreThanSingerDES);
-        //qSort(musicInfos.begin(), musicInfos.end(), moreThanSingerDES);
         break;
     }
     case DataBaseService::SortByAblumDES: {
         std::sort(musicInfos.begin(), musicInfos.end(), moreThanAblumDES);
-        //qSort(musicInfos.begin(), musicInfos.end(), moreThanAblumDES);
+        break;
+    }
+    case DataBaseService::SortByCustomASC: {
+        musicInfos = DataBaseService::getInstance()->customizeMusicInfosByOrder(m_currentHash, DataBaseService::SortByCustomASC);
+        break;
+    }
+    case DataBaseService::SortByCustomDES: {
+        musicInfos = DataBaseService::getInstance()->customizeMusicInfosByOrder(m_currentHash, DataBaseService::SortByCustomDES);
         break;
     }
     default:

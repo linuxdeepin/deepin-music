@@ -79,6 +79,7 @@ MusicListDataWidget::MusicListDataWidget(QWidget *parent) :
     connect(m_musicListView, &PlayListView::rowCountChanged, this, &MusicListDataWidget::slotMusicRowCountChanged);
     // 导入时刷新leble
     connect(m_musicListView, &PlayListView::signalRefreshInfoLabel, this, &MusicListDataWidget::refreshInfoLabel);
+    connect(m_musicListView, &PlayListView::signalRefreshInfoLabel, this, &MusicListDataWidget::refreshSortAction);
 }
 
 MusicListDataWidget::~MusicListDataWidget()
@@ -243,7 +244,7 @@ void MusicListDataWidget::slotViewChanged(ListPageSwitchType switchtype, const Q
         refreshModeBtn(m_musicListView->getViewMode());
         refreshInfoLabel(hashOrSearchword);
         refreshPlayAllBtn(m_musicListView->getMusicCount());
-        refreshSortAction();
+        refreshSortAction(hashOrSearchword);
         break;
     }
     case CustomType: {
@@ -777,6 +778,8 @@ void MusicListDataWidget::initUI()
     initArtistAction(actionInfoBarLayout);
     // 初始化歌曲排序action
     initMusicAction(actionInfoBarLayout);
+    // 初始化自定义排序action
+    initCustomMusicAction(actionInfoBarLayout);
 
     // 初始化搜索结果为空时的标签
     initemptyHits(layoutContent);
@@ -969,6 +972,24 @@ void MusicListDataWidget::initMusicAction(QHBoxLayout *layout)
     AC_SET_ACCESSIBLE_NAME(m_musicDropdown, AC_musicDropdown);
 }
 
+void MusicListDataWidget::initCustomMusicAction(QHBoxLayout *layout)
+{
+    m_customMusicDropdown = new DDropdown(this);
+    m_customMusicDropdown->setObjectName("MusicListCustomMusicDataSort");
+    m_customMusicDropdown->addAction(tr("Custom"), QVariant::fromValue<DataBaseService::ListSortType>(DataBaseService::SortByCustom));
+    m_customMusicDropdown->addAction(tr("Time added"), QVariant::fromValue<DataBaseService::ListSortType>(DataBaseService::SortByAddTime));
+    m_customMusicDropdown->addAction(tr("Title"), QVariant::fromValue<DataBaseService::ListSortType>(DataBaseService::SortByTitle));
+    m_customMusicDropdown->addAction(tr("Artist"), QVariant::fromValue<DataBaseService::ListSortType>(DataBaseService::SortBySinger));
+    m_customMusicDropdown->addAction(tr("Album"), QVariant::fromValue<DataBaseService::ListSortType>(DataBaseService::SortByAblum));
+    m_customMusicDropdown->setCurrentAction();
+    layout->addWidget(m_customMusicDropdown, 0, Qt::AlignRight | Qt::AlignVCenter);
+    m_customMusicDropdown->setVisible(false);
+    connect(m_customMusicDropdown, &DDropdown::triggered, this, &MusicListDataWidget::slotSortChange);
+
+    AC_SET_OBJECT_NAME(m_customMusicDropdown, AC_customMusicDropdown);
+    AC_SET_ACCESSIBLE_NAME(m_customMusicDropdown, AC_customMusicDropdown);
+}
+
 void MusicListDataWidget::initemptyHits(QVBoxLayout *layout)
 {
     m_emptyHits = new DLabel(this);
@@ -1134,58 +1155,63 @@ void MusicListDataWidget::refreshSortAction(const QString &hash)
 {
     if (m_pStackedWidget->currentWidget() == m_musicListView || m_musicListView->getImportToModelEnable()
             || (hash == "musicResult")) {
-        m_musicDropdown->setVisible(true);
         m_albumDropdown->setVisible(false);
         m_artistDropdown->setVisible(false);
-        for (int i = 0; i < m_musicDropdown->actions().size(); i++) {
-            QAction *action = m_musicDropdown->actions().at(i);
-            DataBaseService::ListSortType sortType = action->data().value<DataBaseService::ListSortType>();
-            if (CommonService::getInstance()->getListPageSwitchType() == CdaType) {
-                if (sortType == DataBaseService::SortByTitleASC
-                        || sortType == DataBaseService::SortByTitleDES
-                        || sortType == DataBaseService::SortByTitle) {
-                    m_musicDropdown->setCurrentAction(action);
-                    break;
-                }
-            } else {
-                DataBaseService::ListSortType searchSortType = (hash == "musicResult" ? m_searchResultTabWidget->getSortType() : m_musicListView->getSortType());
-                switch (searchSortType) {
-                case DataBaseService::SortByAddTimeASC:
-                case DataBaseService::SortByAddTimeDES: {
-                    searchSortType = DataBaseService::SortByAddTime;
-                    break;
-                }
-                case DataBaseService::SortByTitleASC:
-                case DataBaseService::SortByTitleDES: {
-                    searchSortType = DataBaseService::SortByTitle;
-                    break;
-                }
-                case DataBaseService::SortByAblumASC:
-                case DataBaseService::SortByAblumDES: {
-                    searchSortType = DataBaseService::SortByAblum;
-                    break;
-                }
-                case DataBaseService::SortBySingerASC:
-                case DataBaseService::SortBySingerDES: {
-                    searchSortType = DataBaseService::SortBySinger;
-                    break;
-                }
-                default:
-                    break;
-                }
-                if (sortType == searchSortType) {
-                    m_musicDropdown->setCurrentAction(action);
-                    break;
+        m_musicDropdown->setVisible(false);
+        m_customMusicDropdown->setVisible(false);
+        DDropdown *curDropdown = (!hash.isEmpty() && hash != "all" && hash != "CdaRole" && hash != "musicResult") ? m_customMusicDropdown : m_musicDropdown;
+        curDropdown->setVisible(true);
+        if (hash != "all")
+            for (int i = 0; i < curDropdown->actions().size(); i++) {
+                QAction *action = curDropdown->actions().at(i);
+                DataBaseService::ListSortType sortType = action->data().value<DataBaseService::ListSortType>();
+                if (CommonService::getInstance()->getListPageSwitchType() == CdaType) {
+                    if (sortType == DataBaseService::SortByTitleASC
+                            || sortType == DataBaseService::SortByTitleDES
+                            || sortType == DataBaseService::SortByTitle) {
+                        curDropdown->setCurrentAction(action);
+                        break;
+                    }
+                } else {
+                    DataBaseService::ListSortType searchSortType = (hash == "musicResult" ? m_searchResultTabWidget->getSortType() : m_musicListView->getSortType());
+                    switch (searchSortType) {
+                    case DataBaseService::SortByAddTimeASC:
+                    case DataBaseService::SortByAddTimeDES: {
+                        searchSortType = DataBaseService::SortByAddTime;
+                        break;
+                    }
+                    case DataBaseService::SortByTitleASC:
+                    case DataBaseService::SortByTitleDES: {
+                        searchSortType = DataBaseService::SortByTitle;
+                        break;
+                    }
+                    case DataBaseService::SortByAblumASC:
+                    case DataBaseService::SortByAblumDES: {
+                        searchSortType = DataBaseService::SortByAblum;
+                        break;
+                    }
+                    case DataBaseService::SortBySingerASC:
+                    case DataBaseService::SortBySingerDES: {
+                        searchSortType = DataBaseService::SortBySinger;
+                        break;
+                    }
+                    default:
+                        break;
+                    }
+                    if (sortType == searchSortType) {
+                        curDropdown->setCurrentAction(action);
+                        break;
+                    }
                 }
             }
-        }
         // 计算搜索和歌单数目
-        m_musicDropdown->setEnabled(hash == "musicResult" ? (m_searchResultTabWidget->getMusicCountByMusic() > 0) : (m_musicListView->model()->rowCount() > 0));
+        curDropdown->setEnabled(hash == "musicResult" ? (m_searchResultTabWidget->getMusicCountByMusic() > 0) : (m_musicListView->model()->rowCount() > 0));
     } else if (m_pStackedWidget->currentWidget() == m_albumListView ||
                (hash == "albumResult")) {
         m_musicDropdown->setVisible(false);
         m_albumDropdown->setVisible(true);
         m_artistDropdown->setVisible(false);
+        m_customMusicDropdown->setVisible(false);
         for (int i = 0; i < m_albumDropdown->actions().size(); i++) {
             QAction *action = m_albumDropdown->actions().at(i);
             DataBaseService::ListSortType sortType = action->data().value<DataBaseService::ListSortType>();
@@ -1201,6 +1227,7 @@ void MusicListDataWidget::refreshSortAction(const QString &hash)
         m_musicDropdown->setVisible(false);
         m_albumDropdown->setVisible(false);
         m_artistDropdown->setVisible(true);
+        m_customMusicDropdown->setVisible(false);
         for (int i = 0; i < m_artistDropdown->actions().size(); i++) {
             QAction *action = m_artistDropdown->actions().at(i);
             DataBaseService::ListSortType sortType = action->data().value<DataBaseService::ListSortType>();

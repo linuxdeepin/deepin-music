@@ -373,6 +373,38 @@ QList<MediaMeta> DataBaseService::customizeMusicInfos(const QString &hash)
 
     return medialist;
 }
+// 获取排序后的歌单歌曲&获取收藏歌曲
+QList<MediaMeta> DataBaseService::customizeMusicInfosByOrder(const QString &hash, ListSortType type)
+{
+    // 自定义特殊处理
+    if (type != SortByCustomASC && type != SortByCustomDES) {
+        return customizeMusicInfos(hash);
+    } else {
+        // 读取歌曲数据
+        if (m_AllMediaMeta.isEmpty()) {
+            allMusicInfos();
+        }
+        QList<MediaMeta> medialist;
+        QSqlQuery query;
+        if (!query.prepare(QString("SELECT music_id FROM playlist_%1 order by sort_id %2").arg(hash).arg(type == SortByCustomASC ? "ASC" : "DESC"))) {
+            qWarning() << query.lastError();
+            return medialist;
+        }
+        if (!query.exec()) {
+            qWarning() << query.lastError();
+            return medialist;
+        }
+        while (query.next()) {
+            for (MediaMeta &meta : m_AllMediaMeta) {
+                if (meta.hash == query.value(0).toString()) {
+                    medialist << meta;
+                }
+            }
+        }
+
+        return medialist;
+    }
+}
 
 QList<DataBaseService::PlaylistData> DataBaseService::getCustomSongList()
 {
@@ -714,11 +746,25 @@ int DataBaseService::addMetaToPlaylist(QString uuid, const QList<MediaMeta> &met
     int insert_count = 0;
 
     for (MediaMeta meta : metas) {
+        int count = 0;
+        if (uuid != "album" && uuid != "artist" && uuid != "all") {
+            QString queryString = QString("SELECT MAX(sort_id) FROM playlist_%1").arg(uuid);
+            QSqlQuery queryNew(m_db);
+            bool isPrepare = queryNew.prepare(queryString);
+            if ((!isPrepare) || (!queryNew.exec())) {
+                qCritical() << queryNew.lastError();
+                count = 0;
+            }
+            while (queryNew.next()) {
+                count = queryNew.value(0).toInt();
+                count++;
+            }
+        }
+
         QSqlQuery query(m_db);
         QString sqlStr = QString("SELECT * FROM playlist_%1 WHERE music_id = :music_id").arg(uuid);
         bool isPrepare = query.prepare(sqlStr);
         query.bindValue(":music_id", meta.hash);
-
         if (isPrepare && query.exec()) {
             if (!query.next()) {
                 sqlStr = QString("INSERT INTO playlist_%1 "
@@ -728,7 +774,7 @@ int DataBaseService::addMetaToPlaylist(QString uuid, const QList<MediaMeta> &met
                 isPrepare = query.prepare(sqlStr);
                 query.bindValue(":playlist_id", uuid);
                 query.bindValue(":music_id", meta.hash);
-                query.bindValue(":sort_id", 0);
+                query.bindValue(":sort_id", count);
                 if (isPrepare && query.exec()) {
                     insert_count++;
                     if (uuid == "fav") {

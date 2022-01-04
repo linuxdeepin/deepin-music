@@ -432,6 +432,21 @@ int DBOperate::addMetaToPlaylist(QString uuid, const QList<MediaMeta> &metas)
             QThread::msleep(SLEEPTIME);
             m_needSleep = false;
         }
+        int count = 0;
+        if (uuid != "album" && uuid != "artist" && uuid != "all") {
+            QString queryString = QString("SELECT MAX(sort_id) FROM playlist_%1").arg(uuid);
+            QSqlQuery queryNew(m_db);
+            bool isPrepare = queryNew.prepare(queryString);
+            if ((!isPrepare) || (!queryNew.exec())) {
+                qCritical() << queryNew.lastError();
+                count = 0;
+            }
+            while (queryNew.next()) {
+                count = queryNew.value(0).toInt();
+                count++;
+            }
+        }
+
         QSqlQuery query(m_db);
         QString sqlStr = QString("SELECT * FROM playlist_%1 WHERE music_id = :music_id").arg(uuid);
         bool isPrepare = query.prepare(sqlStr);
@@ -447,7 +462,7 @@ int DBOperate::addMetaToPlaylist(QString uuid, const QList<MediaMeta> &metas)
                 isPrepare = query.prepare(sqlStr);
                 query.bindValue(":playlist_id", uuid);
                 query.bindValue(":music_id", meta.hash);
-                query.bindValue(":sort_id", 0);
+                query.bindValue(":sort_id", count);
                 if (isPrepare && query.exec()) {
                     insert_count++;
                     m_successCount++;
