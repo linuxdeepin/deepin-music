@@ -262,7 +262,7 @@ void MusicBaseListView::dropEvent(QDropEvent *event)
         }
     }
 
-    DListView::dropEvent(event);
+//    DListView::dropEvent(event);
 }
 
 //void MusicBaseListView::SetAttrRecur(QDomElement elem, QString strtagname, QString strattr, QString strattrval)

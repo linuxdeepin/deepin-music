@@ -24,10 +24,21 @@
 #include <DListView>
 #include <QDomElement>
 #include <DLineEdit>
+#include <QTimer>
+#include <QAbstractItemView>
 
 DWIDGET_USE_NAMESPACE
 
 class MusicBaseAndSonglistModel;
+
+class MusicItemDelegate : public DStyledItemDelegate
+{
+    Q_OBJECT
+public:
+    explicit MusicItemDelegate(QAbstractItemView *parent = nullptr);
+    void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const override;
+};
+
 class QShortcut;
 // 自定义歌单列表
 class MusicSongListView : public DListView
@@ -49,6 +60,8 @@ public:
     void showContextMenu(const QPoint &pos);
     void adjustHeight();
     bool getHeightChangeToMax();
+    int highlightedRow() const;
+
 public slots:
     void setThemeType(int type);
 
@@ -65,9 +78,13 @@ public slots:
     void slotLineEditingFinished();
     // cda状态变更弹窗
     void slotPopMessageWindow(int stat);
+    // 更新滚动条
+    void slotUpdateDragScroll();
+
 signals:
     void sigAddNewSongList();
     void sigRmvSongList();
+    void sigUpdateDragScroll();
     void currentChanged(const QModelIndex &current, const QModelIndex &previous) Q_DECL_OVERRIDE;
 
 protected:
@@ -76,7 +93,9 @@ protected:
     void keyReleaseEvent(QKeyEvent *event) Q_DECL_OVERRIDE;
     void dragEnterEvent(QDragEnterEvent *event) Q_DECL_OVERRIDE;
     void dragMoveEvent(QDragMoveEvent *event) Q_DECL_OVERRIDE;
+    void dragLeaveEvent(QDragLeaveEvent *event) Q_DECL_OVERRIDE;
     void dropEvent(QDropEvent *event) Q_DECL_OVERRIDE;
+
 private:
     // 初始化快捷键
     void init();
@@ -94,8 +113,9 @@ private:
     QString newDisplayName();
 
 private:
+    friend MusicItemDelegate;
     MusicBaseAndSonglistModel *m_model = nullptr;
-    DStyledItemDelegate  *m_delegate        = nullptr;
+    MusicItemDelegate  *m_delegate        = nullptr;
     // 重命名的Item
     DStandardItem        *m_renameItem = nullptr;
     // 重命名控件
@@ -107,8 +127,12 @@ private:
     QShortcut           *m_renameShortcut = nullptr;
     // ESC快捷键
     QShortcut           *m_escShortcut = nullptr;
+    // 拖动滚动条
+    QTimer               m_dragScrollTimer;
 
     bool                pixmapState         = false;
     bool                m_heightChangeToMax = false;
+    bool                m_isDraging = false;
+    QModelIndex         m_preIndex;
 };
 

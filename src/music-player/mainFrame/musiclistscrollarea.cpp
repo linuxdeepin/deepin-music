@@ -143,6 +143,7 @@ MusicListScrollArea::MusicListScrollArea(QWidget *parent) : DScrollArea(parent)
     connect(m_dataBaseListview, &QAbstractItemView::clicked, this, &MusicListScrollArea::slotListViewClicked);
     connect(m_customizeListview, &QAbstractItemView::clicked, this, &MusicListScrollArea::slotListViewClicked);
     connect(m_customizeListview, &MusicSongListView::sigAddNewSongList, this, &MusicListScrollArea::slotAddNewSongList);
+    connect(m_customizeListview, &MusicSongListView::sigUpdateDragScroll, this, &MusicListScrollArea::slotUpdateDragScroll);
     connect(CommonService::getInstance(), &CommonService::signalSwitchToView, this, &MusicListScrollArea::viewChanged);
 }
 
@@ -216,6 +217,24 @@ void MusicListScrollArea::viewChanged(ListPageSwitchType switchtype, const QStri
     }
     default:
         return;
+    }
+}
+
+void MusicListScrollArea::slotUpdateDragScroll()
+{
+    QPoint pos = mapFromGlobal(QCursor::pos());
+    auto curValue = verticalScrollBar()->value();
+    // 向上滚动
+    if (pos.y() < 20 && pos.y() > 0 && curValue > 0) {
+        curValue -= 15;
+        if (curValue < 0) curValue = 0;
+        verticalScrollBar()->setValue(curValue);
+        m_customizeListview->update();
+    } else if (pos.y() > (height() - 20) && curValue < verticalScrollBar()->maximum()) { // 向下滚动
+        curValue += 15;
+        if (curValue > verticalScrollBar()->maximum()) curValue = verticalScrollBar()->maximum();
+        verticalScrollBar()->setValue(curValue);
+        m_customizeListview->update();
     }
 }
 

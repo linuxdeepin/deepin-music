@@ -46,6 +46,8 @@ public slots:
     void slotAddNewSongList();
     // 切换到搜索结果界面
     void viewChanged(ListPageSwitchType switchtype, const QString &hashOrSearchword);
+    void slotUpdateDragScroll();
+
 protected:
     bool eventFilter(QObject *o, QEvent *e) Q_DECL_OVERRIDE;
     void resizeEvent(QResizeEvent *e) Q_DECL_OVERRIDE;

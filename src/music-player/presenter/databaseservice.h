@@ -123,6 +123,8 @@ public:
     void                 updatePlaylist(const QVector<PlaylistData> &playlistDataList);
     // 歌单信息
     QList<PlaylistData>  allPlaylistMeta();
+    // 更新歌单顺序
+    void                 sortAllPlaylist(const QVector<QString> &hashs);
     // 添加歌曲到歌单
     int                  addMetaToPlaylist(QString uuid, const QList<MediaMeta> &metas);
     // 更新歌单排序类型，如按歌手，时间排序

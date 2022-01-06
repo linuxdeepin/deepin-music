@@ -718,7 +718,7 @@ QList<DataBaseService::PlaylistData> DataBaseService::allPlaylistMeta()
         m_PlaylistMeta.clear();
         QSqlQuery query(m_db);
         bool isPrepare = query.prepare("SELECT uuid, displayname, icon, readonly, hide, "
-                                       "sort_type, order_type, sort_id FROM playlist");
+                                       "sort_type, order_type, sort_id FROM playlist order by sort_id ASC");
 
         if ((!isPrepare) || (! query.exec())) {
             qWarning() << query.lastError();
@@ -738,6 +738,23 @@ QList<DataBaseService::PlaylistData> DataBaseService::allPlaylistMeta()
             m_PlaylistMeta << playlistMeta;
         }
         return m_PlaylistMeta;
+    }
+}
+
+void DataBaseService::sortAllPlaylist(const QVector<QString> &hashs)
+{
+    QSqlQuery query(m_db);
+    for (int i = 0; i < hashs.size(); ++i) {
+        QString curHash = hashs.at(i);
+        bool isPrepare = query.prepare("UPDATE playlist "
+                                       "SET sort_id = :sort_id "
+                                       "WHERE uuid = :uuid;");
+        query.bindValue(":uuid", curHash);
+        query.bindValue(":sort_id", i + 20);
+
+        if ((!isPrepare) || (! query.exec())) {
+            qWarning() << query.lastError();
+        }
     }
 }
 
