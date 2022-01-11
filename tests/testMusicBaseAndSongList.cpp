@@ -81,7 +81,7 @@ TEST(Application, musicBaseSong)
 
 TEST(Application, musicBaseSong1)
 {
-    TEST_CASE_NAME("musicBaseSong")
+    TEST_CASE_NAME("musicBaseSong1")
 
     MainFrame *w = Application::getInstance()->getMainWindow();
     MusicSongListView *songListView = w->findChild<MusicSongListView *>(AC_customizeListview);
@@ -127,10 +127,34 @@ TEST(Application, musicBaseSong1)
     QTest::qWait(100);
 }
 
+// 拖动
+TEST(Application, musicSongListViewDrag)
+{
+    TEST_CASE_NAME("musicSongListViewDrag");
+    MainFrame *w = Application::getInstance()->getMainWindow();
+    MusicSongListView *songListView = w->findChild<MusicSongListView *>(AC_customizeListview);
+    songListView->addNewSongList();
+    QShortcut *escShortcut = songListView->findChild<QShortcut *>(AC_Shortcut_Escape);
+    if (escShortcut != nullptr)
+        escShortcut->activated();
+    QTest::qWait(100);
+
+    // 拖动
+    QPoint pos = QPoint(73, 21);
+    QPoint pos2 = QPoint(73, 100);
+
+    QTest::mousePress(songListView, Qt::MouseButton::LeftButton, Qt::KeyboardModifiers(), pos, 300);
+
+    songListView->dropItem(0);
+    songListView->slotUpdateDragScroll();
+
+    QTest::qWait(100);
+}
+
 //esc按键,重命名取消
 TEST(Application, musicSongListViewEsc)
 {
-    TEST_CASE_NAME("musicSongListView");
+    TEST_CASE_NAME("musicSongListViewEsc");
     MainFrame *w = Application::getInstance()->getMainWindow();
     MusicSongListView *songListView = w->findChild<MusicSongListView *>(AC_customizeListview);
     songListView->addNewSongList();
@@ -156,7 +180,7 @@ TEST(Application, musicSongListViewEsc)
 
 TEST(Application, songListViewPlayorPause)
 {
-    TEST_CASE_NAME("musicSongListView");
+    TEST_CASE_NAME("songListViewPlayorPause");
     MainFrame *w = Application::getInstance()->getMainWindow();
     MusicSongListView *songListView = w->findChild<MusicSongListView *>(AC_customizeListview);
 
@@ -175,7 +199,7 @@ TEST(Application, songListViewPlayorPause)
 //MusicSongListView右键菜单测试1
 TEST(Application, musicSongListViewRename)
 {
-    TEST_CASE_NAME("musicSongListView");
+    TEST_CASE_NAME("musicSongListViewRename");
     MainFrame *w = Application::getInstance()->getMainWindow();
     MusicSongListView *songListView = w->findChild<MusicSongListView *>(AC_customizeListview);
 
@@ -216,7 +240,7 @@ TEST(Application, musicSongListViewRename)
 //MusicSongListView右键菜单测试2
 TEST(Application, musicSongListViewMenuDelete)
 {
-    TEST_CASE_NAME("musicSongListView");
+    TEST_CASE_NAME("musicSongListViewMenuDelete");
     MainFrame *w = Application::getInstance()->getMainWindow();
     MusicSongListView *songListView = w->findChild<MusicSongListView *>(AC_customizeListview);
 
@@ -269,6 +293,7 @@ TEST(Application, musicSongListViewMenuDelete)
 
 TEST(Application, songlistSearch)
 {
+    TEST_CASE_NAME("songlistSearch");
     // fix bug77449
     MainFrame *w = Application::getInstance()->getMainWindow();
     MusicSongListView *songListView = w->findChild<MusicSongListView *>(AC_customizeListview);

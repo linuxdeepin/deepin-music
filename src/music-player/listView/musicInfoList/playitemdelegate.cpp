@@ -36,6 +36,7 @@
 #include "playlistview.h"
 #include "databaseservice.h"
 #include "player.h"
+#include "playlistmodel.h"
 
 DWIDGET_USE_NAMESPACE
 
@@ -107,19 +108,42 @@ void PlayItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
                              const QModelIndex &index) const
 {
     auto listview = qobject_cast<const PlayListView *>(option.widget);
+    QColor color = DGuiApplicationHelper::instance()->applicationPalette().highlight().color();
+    QPen pen(color, 1);
+    painter->save();
+    painter->setPen(pen);
+    int curRowCount = listview->m_model->rowCount();
     if (listview->viewMode() == QListView::IconMode) {
         if (CommonService::getInstance()->isTabletEnvironment()) {
             drawTabletIconMode(*painter, option, index);
         } else {
             drawIconMode(*painter, option, index);
+            // 绘制拖拽分割线
+            if (listview != nullptr && !listview->allSelectedIndexes().contains(index) && listview->m_dragFlag && listview->m_isDraging) {
+                if (listview->highlightedRow() == index.row()) {
+                    painter->drawLine(QLine(QPoint(option.rect.x() + 1, option.rect.top() + yoffset), QPoint(option.rect.x() + 1, option.rect.y() + yoffset + ImgWidthAndHeight)));
+                } else if ((index.row() == (curRowCount - 1)) && (listview->highlightedRow() == curRowCount || listview->highlightedRow() == -1)) {
+                    painter->drawLine(QLine(QPoint(option.rect.right() - 1, option.rect.top() + yoffset), QPoint(option.rect.right() - 1, option.rect.y() + yoffset + ImgWidthAndHeight)));
+                }
+            }
         }
     } else {
         if (CommonService::getInstance()->isTabletEnvironment()) {
             drawTabletListMode(*painter, option, index);
         } else {
             drawListMode(*painter, option, index);
+            // 绘制拖拽分割线
+            if (listview != nullptr && !listview->allSelectedIndexes().contains(index) && listview->m_dragFlag && listview->m_isDraging) {
+                int lrWidth = 10;
+                if (listview->highlightedRow() == index.row()) {
+                    painter->drawLine(QLine(QPoint(option.rect.x() + lrWidth, option.rect.top() + 1), QPoint(option.rect.width() - lrWidth, option.rect.top() + 1)));
+                } else if ((index.row() == (curRowCount - 1)) && (listview->highlightedRow() == curRowCount || listview->highlightedRow() == -1)) {
+                    painter->drawLine(QLine(QPoint(option.rect.x() + lrWidth, option.rect.bottom() - 1), QPoint(option.rect.width() - lrWidth, option.rect.bottom() - 1)));
+                }
+            }
         }
     }
+    painter->restore();
 }
 
 QSize PlayItemDelegate::sizeHint(const QStyleOptionViewItem &option,
@@ -574,6 +598,7 @@ void PlayItemDelegate::drawIconMode(QPainter &painter, const QStyleOptionViewIte
 //    int startHeight = option.rect.y() + 159;
 //    int fillAllHeight = 34;
 
+    painter.save();
     // 设置信息字体大小
     painter.setFont(fontT6);
     QFontMetrics fm(fontT6);
@@ -611,6 +636,8 @@ void PlayItemDelegate::drawIconMode(QPainter &painter, const QStyleOptionViewIte
                              extraNameFillRect.top() + extraNameFillRect.height() / 2 - 8,
                              38, 16);
     }
+    painter.restore();
+
     painter.save();
     QColor timeFillColor("#232323");
     timeFillColor.setAlphaF(0.3);
@@ -623,6 +650,7 @@ void PlayItemDelegate::drawIconMode(QPainter &painter, const QStyleOptionViewIte
     painter.drawRoundedRect(timeFillRect, 8, 8);
     painter.restore();
 
+    painter.save();
     // 时间字体固定大小
     fontT9.setPixelSize(11);
     painter.setFont(fontT9);
@@ -640,6 +668,8 @@ void PlayItemDelegate::drawIconMode(QPainter &painter, const QStyleOptionViewIte
     if (option.state & QStyle::State_Selected) {
         fillBrush = QBrush(QColor(128, 128, 128, 90));
     }
+    painter.restore();
+
     painter.save();
     painter.setClipPath(roundPixmapRectPath);
     painter.fillRect(pixmapRect, fillBrush);
@@ -679,11 +709,12 @@ void PlayItemDelegate::drawListMode(QPainter &painter, const QStyleOptionViewIte
     }
     auto background = (index.row() % 2) == 1 ? baseColor : alternateBaseColor;
     int lrWidth = 10;
+    int tHeight = 0;
     if (!(option.state & QStyle::State_Selected) && !(option.state & QStyle::State_MouseOver)) {
         painter.save();
         painter.setPen(Qt::NoPen);
         painter.setBrush(background);
-        QRect selecteColorRect = option.rect.adjusted(lrWidth, 0, -lrWidth, 0);
+        QRect selecteColorRect = option.rect.adjusted(lrWidth, tHeight, -lrWidth, 0);
         painter.drawRoundedRect(selecteColorRect, 8, 8);
         painter.restore();
     }
@@ -716,7 +747,7 @@ void PlayItemDelegate::drawListMode(QPainter &painter, const QStyleOptionViewIte
         painter.setPen(Qt::NoPen);
         QColor selectColor(option.palette.highlight().color());
         painter.setBrush(selectColor);
-        QRect selecteColorRect = option.rect.adjusted(lrWidth, 0, -lrWidth, 0);
+        QRect selecteColorRect = option.rect.adjusted(lrWidth, tHeight, -lrWidth, 0);
         painter.drawRoundedRect(selecteColorRect, 8, 8);
         painter.restore();
 
@@ -737,7 +768,7 @@ void PlayItemDelegate::drawListMode(QPainter &painter, const QStyleOptionViewIte
         if (option.state & QStyle::State_Selected)
             hovertColor.setAlphaF(0.2);
         painter.setBrush(hovertColor);
-        QRect selecteColorRect = option.rect.adjusted(lrWidth, 0, -lrWidth, 0);
+        QRect selecteColorRect = option.rect.adjusted(lrWidth, tHeight, -lrWidth, 0);
         painter.drawRoundedRect(selecteColorRect, 8, 8);
         painter.restore();
     }

@@ -26,6 +26,7 @@
 #include <DLineEdit>
 #include <QTimer>
 #include <QAbstractItemView>
+#include <QMimeData>
 
 DWIDGET_USE_NAMESPACE
 
@@ -61,6 +62,8 @@ public:
     void adjustHeight();
     bool getHeightChangeToMax();
     int highlightedRow() const;
+    // 拖拽表格数据
+    void dropItem(int preRow);
 
 public slots:
     void setThemeType(int type);
@@ -91,6 +94,7 @@ protected:
     void resizeEvent(QResizeEvent *event) Q_DECL_OVERRIDE;
     // 实现delete快捷操作
     void keyReleaseEvent(QKeyEvent *event) Q_DECL_OVERRIDE;
+    void startDrag(Qt::DropActions supportedActions) Q_DECL_OVERRIDE;
     void dragEnterEvent(QDragEnterEvent *event) Q_DECL_OVERRIDE;
     void dragMoveEvent(QDragMoveEvent *event) Q_DECL_OVERRIDE;
     void dragLeaveEvent(QDragLeaveEvent *event) Q_DECL_OVERRIDE;

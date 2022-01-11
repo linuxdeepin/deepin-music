@@ -509,9 +509,10 @@ void MainFrame::autoStartToPlay()
     // 非所有音乐切换歌单
     if (lastListPageSwitchType != AllSongListType)
         emit CommonService::getInstance()->signalSwitchToView(lastListPageSwitchType, lastplaypage);
+    Player::getInstance()->reloadMetaList();
     if (!strOpenPath.isEmpty()) {
         //通知设置当前页面
-        Player::getInstance()->setCurrentPlayListHash(lastplaypage, true);
+        Player::getInstance()->setCurrentPlayListHash(lastplaypage, false);
         Player::getInstance()->init();
         return ;
     }
@@ -525,7 +526,7 @@ void MainFrame::autoStartToPlay()
         bool bremember = MusicSettings::value("base.play.remember_progress").toBool();
         bool bautoplay = MusicSettings::value("base.play.auto_play").toBool();
         //通知设置当前页面&查询数据
-        Player::getInstance()->setCurrentPlayListHash(lastplaypage, true);
+        Player::getInstance()->setCurrentPlayListHash(lastplaypage, false);
         //获取上一次的歌曲信息
         MediaMeta medmeta = DataBaseService::getInstance()->getMusicInfoByHash(lastMeta);
         if (medmeta.localPath.isEmpty()) {

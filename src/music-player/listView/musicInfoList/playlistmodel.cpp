@@ -41,7 +41,6 @@ bool PlaylistModel::setData(const QModelIndex &index, const QVariant &value, int
 
 Qt::DropActions PlaylistModel::supportedDropActions() const
 {
-//    return QAbstractItemModel::supportedDropActions();
     return /*Qt::CopyAction | */Qt::IgnoreAction;
 }
 

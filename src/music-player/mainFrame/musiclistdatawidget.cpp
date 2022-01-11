@@ -789,7 +789,7 @@ void MusicListDataWidget::initUI()
     m_pStackedWidget->addWidget(m_addMusicWidget);
 
     // 启动首页
-    m_musicListView = new PlayListView("all", false, this);
+    m_musicListView = new PlayListView("all", false, false, this);
 
     AC_SET_OBJECT_NAME(m_musicListView, AC_PlayListView);
     AC_SET_ACCESSIBLE_NAME(m_musicListView, AC_PlayListView);
@@ -1205,7 +1205,7 @@ void MusicListDataWidget::refreshSortAction(const QString &hash)
                 }
             }
         // 计算搜索和歌单数目
-        curDropdown->setEnabled(hash == "musicResult" ? (m_searchResultTabWidget->getMusicCountByMusic() > 0) : (m_musicListView->model()->rowCount() > 0));
+        curDropdown->setEnabled(hash == "CdaRole" ? false : (hash == "musicResult" ? (m_searchResultTabWidget->getMusicCountByMusic() > 0) : (m_musicListView->model()->rowCount() > 0)));
     } else if (m_pStackedWidget->currentWidget() == m_albumListView ||
                (hash == "albumResult")) {
         m_musicDropdown->setVisible(false);

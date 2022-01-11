@@ -105,7 +105,7 @@ PlayQueueWidget::PlayQueueWidget(QWidget *parent) :
     actionBarLayout->addWidget(m_btClearAll, 0, Qt::AlignLeft);
     actionBarLayout->addStretch();
 
-    m_playListView = new PlayListView("play", true, this);
+    m_playListView = new PlayListView("play", true, true, this);
     m_playListView->setFocusPolicy(Qt::StrongFocus);
 //    m_playListView->installEventFilter(this);
 

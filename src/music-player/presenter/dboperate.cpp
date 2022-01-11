@@ -101,23 +101,54 @@ void DBOperate::slotImportMedias(const QString &importHash, QString playHash, co
     m_importFailCount = 0;
     // 包含导入成功和失败的
     double importedCount = 0;
-    m_db.transaction();
-    for (auto &filepath : urllist) {
-        if (filepath.isEmpty()) {
-            continue;
-        }
-        if (m_needStop) {
-            break;
-        }
-        if (m_needSleep) {
-            QThread::msleep(SLEEPTIME);
-            m_needSleep = false;
-        }
-        QFileInfo fileInfo(filepath);
-        if (fileInfo.isDir()) {
-            QDirIterator it(filepath, m_mediaLibrary->getSupportedSuffixs(),
-                            QDir::Files, QDirIterator::Subdirectories);
-            while (it.hasNext()) {
+    if (m_db.transaction()) {
+        for (auto &filepath : urllist) {
+            if (filepath.isEmpty()) {
+                continue;
+            }
+            if (m_needStop) {
+                break;
+            }
+            if (m_needSleep) {
+                QThread::msleep(SLEEPTIME);
+                m_needSleep = false;
+            }
+            QFileInfo fileInfo(filepath);
+            if (fileInfo.isDir()) {
+                QDirIterator it(filepath, m_mediaLibrary->getSupportedSuffixs(),
+                                QDir::Files, QDirIterator::Subdirectories);
+                while (it.hasNext()) {
+                    if (m_needStop) {
+                        break;
+                    }
+                    if (m_needSleep) {
+                        QThread::msleep(SLEEPTIME);
+                        m_needSleep = false;
+                    }
+                    QString  strtp = it.next();
+                    MediaMeta mediaMeta = m_mediaLibrary->creatMediaMeta(strtp);
+                    if (mediaMeta.length <= 0) {
+                        m_importFailCount++;
+                        importedCount++;
+                    } else {
+                        mediaMeta.updateSearchIndex();
+                        if (mediaMeta.album.isEmpty()) {
+                            mediaMeta.album = tr("Unknown album");
+                        }
+                        if (mediaMeta.singer.isEmpty()) {
+                            mediaMeta.singer = tr("Unknown artist");
+                        }
+                        // 导入数据库
+                        addMediaMetaToDB(mediaMeta);
+                        importedCount++;
+                        // 已导入百分比
+                        int value = static_cast<int>(importedCount / allCount * 100);
+                        if (value <= 100) {
+                            emit signalImportedPercent(value);
+                        }
+                    }
+                }
+            } else {
                 if (m_needStop) {
                     break;
                 }
@@ -125,11 +156,16 @@ void DBOperate::slotImportMedias(const QString &importHash, QString playHash, co
                     QThread::msleep(SLEEPTIME);
                     m_needSleep = false;
                 }
-                QString  strtp = it.next();
+                QString strtp = filepath;
+
+                if (!m_mediaLibrary->getSupportedSuffixs().contains(("*." + fileInfo.suffix().toLower()))) { //歌曲文件后缀使用小写比较
+                    m_importFailCount++;
+                    importedCount++;
+                    continue;
+                }
                 MediaMeta mediaMeta = m_mediaLibrary->creatMediaMeta(strtp);
                 if (mediaMeta.length <= 0) {
                     m_importFailCount++;
-                    importedCount++;
                 } else {
                     mediaMeta.updateSearchIndex();
                     if (mediaMeta.album.isEmpty()) {
@@ -148,46 +184,11 @@ void DBOperate::slotImportMedias(const QString &importHash, QString playHash, co
                     }
                 }
             }
-        } else {
-            if (m_needStop) {
-                break;
-            }
-            if (m_needSleep) {
-                QThread::msleep(SLEEPTIME);
-                m_needSleep = false;
-            }
-            QString strtp = filepath;
-
-            if (!m_mediaLibrary->getSupportedSuffixs().contains(("*." + fileInfo.suffix().toLower()))) { //歌曲文件后缀使用小写比较
-                m_importFailCount++;
-                importedCount++;
-                continue;
-            }
-            MediaMeta mediaMeta = m_mediaLibrary->creatMediaMeta(strtp);
-            if (mediaMeta.length <= 0) {
-                m_importFailCount++;
-            } else {
-                mediaMeta.updateSearchIndex();
-                if (mediaMeta.album.isEmpty()) {
-                    mediaMeta.album = tr("Unknown album");
-                }
-                if (mediaMeta.singer.isEmpty()) {
-                    mediaMeta.singer = tr("Unknown artist");
-                }
-                // 导入数据库
-                addMediaMetaToDB(mediaMeta);
-                importedCount++;
-                // 已导入百分比
-                int value = static_cast<int>(importedCount / allCount * 100);
-                if (value <= 100) {
-                    emit signalImportedPercent(value);
-                }
-            }
         }
-    }
 
-    emit sigImportFinished(m_importFailCount, m_successCount, m_exsitCount);
-    m_db.commit();
+        emit sigImportFinished(m_importFailCount, m_successCount, m_exsitCount);
+        m_db.commit();
+    }
 }
 
 void DBOperate::slotCreatCoverImg(const QList<MediaMeta> &metas)
@@ -241,44 +242,46 @@ bool DBOperate::deleteMetaFromAllMusic(const QStringList &metaHash, bool removeF
     QSqlQuery query(m_db);
     QString strsql;
     QList<PlaylistDataThread> playlistMetas = allPlaylistMetaUUid();
-    m_db.transaction();
-    for (QString hash : metaHash) {
-        if (m_needStop) {
-            break;
-        }
-        if (m_needSleep) {
-            QThread::msleep(SLEEPTIME);
-            m_needSleep = false;
-        }
-        strsql = QString("DELETE FROM musicNew WHERE hash='%1'").arg(hash);
-        bool isPrepare = query.prepare(strsql);
-        if ((!isPrepare) || (! query.exec())) {
-            qCritical() << query.lastError() << strsql;
-        } else {
-            QThread::msleep(10);
-            emit signalRmvSong("all", hash, removeFromLocal);
-
-            //遍历所有歌单,包含我的收藏
-            for (PlaylistDataThread playlist : playlistMetas) {
-                if (m_needStop) {
-                    break;
-                }
-                if (m_needSleep) {
-                    QThread::msleep(SLEEPTIME);
-                    m_needSleep = false;
-                }
-                if (playlist.readonly != 1) {
-                    deleteMetaFromPlaylist(playlist.uuid, QStringList() << hash);
-                }
+    if (m_db.transaction()) {
+        for (QString hash : metaHash) {
+            if (m_needStop) {
+                break;
             }
-            deleteMetaFromPlaylist("fav", QStringList() << hash);
+            if (m_needSleep) {
+                QThread::msleep(SLEEPTIME);
+                m_needSleep = false;
+            }
+            strsql = QString("DELETE FROM musicNew WHERE hash='%1'").arg(hash);
+            bool isPrepare = query.prepare(strsql);
+            if ((!isPrepare) || (! query.exec())) {
+                qCritical() << query.lastError() << strsql;
+            } else {
+                QThread::msleep(10);
+                emit signalRmvSong("all", hash, removeFromLocal);
+
+                //遍历所有歌单,包含我的收藏
+                for (PlaylistDataThread playlist : playlistMetas) {
+                    if (m_needStop) {
+                        break;
+                    }
+                    if (m_needSleep) {
+                        QThread::msleep(SLEEPTIME);
+                        m_needSleep = false;
+                    }
+                    if (playlist.readonly != 1) {
+                        deleteMetaFromPlaylist(playlist.uuid, QStringList() << hash);
+                    }
+                }
+                deleteMetaFromPlaylist("fav", QStringList() << hash);
+            }
         }
+
+        if (allMusicInfosCount() <= 0) {
+            emit signalAllMusicCleared();
+        }
+        m_db.commit();
     }
 
-    if (allMusicInfosCount() <= 0) {
-        emit signalAllMusicCleared();
-    }
-    m_db.commit();
     return true;
 }
 

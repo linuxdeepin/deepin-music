@@ -99,7 +99,7 @@ SearchResultTabWidget::SearchResultTabWidget(QWidget *parent) :
     m_StackedWidget = new QStackedWidget(this);
     vlayout->addWidget(m_StackedWidget);
 
-    m_musicListView = new PlayListView("musicResult", false);
+    m_musicListView = new PlayListView("musicResult", false, false, this);
     m_StackedWidget->addWidget(m_musicListView);
 
     m_singerListView = new SingerListView("artistResult", this);

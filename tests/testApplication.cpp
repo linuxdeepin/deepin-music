@@ -475,6 +475,9 @@ TEST(Application, musicListDialg1)
     event.simulate(mliv->viewport());
     event.clear();
     QTest::qWait(100);
+    Player::getInstance()->onSleepWhenTaking(true);
+    QTest::qWait(100);
+    Player::getInstance()->onSleepWhenTaking(false);
 
     // 添加到我的收藏
     QTimer::singleShot(500, w, [ = ]() {
@@ -589,7 +592,7 @@ TEST(Application, musicListDialg3)
 
     // 从歌单中删除
     QTimer::singleShot(300, w, [ = ]() {
-        QTimer::singleShot(600, w, [ = ]() {
+        QTimer::singleShot(700, w, [ = ]() {
             QTestEventList event;
             DDialog *messageBox = w->findChild<DDialog *>(AC_MessageBox);
             //防止窗口未打开
@@ -689,7 +692,6 @@ TEST(Application, musicListDialg4)
         event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
         event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
         event.addKeyClick(Qt::Key_Enter, Qt::NoModifier, 50);
-        event.addDelay(100);
         event.simulate(menuWidget);
         event.clear();
     });

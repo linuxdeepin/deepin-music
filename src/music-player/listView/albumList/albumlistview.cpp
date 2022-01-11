@@ -553,9 +553,6 @@ void AlbumListView::slotRemoveSelectedSongs(const QString &deleteHash, const QSt
     if (deleteHash != "album" || Player::getInstance()->getCurrentPlayListHash() != "album") {
         return;
     }
-    if (musicHashs.size() == 0) {
-        return;
-    }
     if (musicHashs.size() == 0 || Player::getInstance()->getPlayList()->isEmpty()) {
         return;
     }

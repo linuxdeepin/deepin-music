@@ -168,8 +168,25 @@ void Player::releasePlayer()
     }
 }
 
+void Player::sortMetas(const QVector<QString> &metaHashs)
+{
+    auto t_MetaList = m_MetaList;
+    m_MetaList.clear();
+    // 根据hash排序
+    for (auto hash : metaHashs) {
+        for (int i = 0; i < t_MetaList.size(); ++i) {
+            if (t_MetaList[i].hash == hash) {
+                m_MetaList.append(t_MetaList[i]);
+                t_MetaList.removeAt(i);
+                break;
+            }
+        }
+    }
+}
+
 Player::~Player()
 {
+    DataBaseService::getInstance()->updateMetasforPlayerList();
     releasePlayer();
 }
 
@@ -615,6 +632,12 @@ QList<MediaMeta> Player::getCdaPlayList()
 MprisPlayer *Player::getMpris() const
 {
     return m_mpris;
+}
+
+void Player::reloadMetaList()
+{
+    m_MetaList = DataBaseService::getInstance()->customizeMusicInfos("play");
+    if (!m_MetaList.isEmpty()) m_currentPlayListHash = "all";
 }
 
 void Player::setCurrentPlayListHash(QString hash, bool reloadMetaList)

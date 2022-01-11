@@ -88,6 +88,8 @@ public:
     void playListAppendMeta(const MediaMeta &meta);
     // 设置播放列表
     void setPlayList(const QList<MediaMeta> &list);
+    // 重新加载数据
+    void reloadMetaList();
     // 获取播放列表
     QList<MediaMeta> *getPlayList();
     // 获取CD播放列表
@@ -114,6 +116,8 @@ public:
     int getVolume() const;
     // 释放播放器
     void releasePlayer();
+    // 更新播放列表
+    void sortMetas(const QVector<QString> &metaHashs);
 
 signals:
     // 播放状态改变

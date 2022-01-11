@@ -33,6 +33,7 @@
 #include <QShortcut>
 #include <QMimeData>
 #include <QTimer>
+#include <QDrag>
 
 #include <DDialog>
 #include <DDesktopServices>
@@ -58,6 +59,12 @@
 #include "songlistviewdialog.h"
 
 DWIDGET_USE_NAMESPACE
+
+#define DRAGICON_SIZE 46   //拖拽聚合默认icon边长
+#define DRAGICON_LEFTBORDER 16
+#define DRAGICON_TOPBORDER 6
+#define DRAGICON_TEXTBORDERSIZE 2   //拖拽聚合默认icon边长
+
 // 升序
 bool moreThanTimestampASC(MediaMeta v1, MediaMeta v2)
 {
@@ -99,10 +106,11 @@ bool moreThanAblumDES(const MediaMeta v1, const MediaMeta v2)
     return v1.pinyinAlbum > v2.pinyinAlbum;
 }
 
-PlayListView::PlayListView(const QString &hash, bool isPlayQueue, QWidget *parent)
+PlayListView::PlayListView(const QString &hash, bool isPlayQueue, bool dragFlag, QWidget *parent)
     : DListView(parent)
     , m_currentHash(hash.isEmpty() ? "all" : hash)
     , m_listPageType(NullType)
+    , m_dragFlag(dragFlag)
 {
     //m_listPageType = NullType;
     m_IsPlayQueue = isPlayQueue;
@@ -206,6 +214,8 @@ PlayListView::PlayListView(const QString &hash, bool isPlayQueue, QWidget *paren
     // 横竖屏切换
     connect(CommonService::getInstance(), &CommonService::signalHScreen,
             this, &PlayListView::slotHScreen);
+
+    connect(&m_dragScrollTimer, SIGNAL(timeout()), this, SLOT(slotUpdateDragScroll()));
 }
 
 PlayListView::~PlayListView()
@@ -398,6 +408,7 @@ QList<MediaMeta> PlayListView::getMusicListData()
 
 QList<MediaMeta> PlayListView::setDataBySortType(QList<MediaMeta> &mediaMetas, DataBaseService::ListSortType sortType)
 {
+    m_dragFlag = (sortType == DataBaseService::SortByCustomASC || sortType == DataBaseService::SortByCustomDES) ? true : false;
     // 排序
     sortList(mediaMetas, sortType);
     m_model->clear();
@@ -816,7 +827,7 @@ void PlayListView::slotMusicAddOne(const QString &listHash, MediaMeta addMeta)
         if ((m_importEnable == false && !m_IsPlayQueue) || listHash != m_currentHash) {
             return;
         }
-        DataBaseService::ListSortType sortType = DataBaseService::SortByAddTimeASC;//getSortType();
+        DataBaseService::ListSortType sortType = getSortType();//getSortType();
         // 播放队列直接加载最后
         if (m_model->rowCount() == 0 || m_IsPlayQueue) {
             insertRow(m_model->rowCount(), addMeta);
@@ -943,12 +954,7 @@ void PlayListView::slotScrollToCurrentPosition(const QString &songlistHash)
 
 void PlayListView::slotAddToPlayQueue()
 {
-    QModelIndexList modelIndexList;
-    if (CommonService::getInstance()->isTabletEnvironment()) {
-        modelIndexList =  this->tabletSelectedIndexes();
-    } else {
-        modelIndexList =  this->selectedIndexes();
-    }
+    QModelIndexList modelIndexList = allSelectedIndexes();
     for (int i = 0; i < modelIndexList.size(); i++) {
         QModelIndex curIndex = modelIndexList.at(i);
         Player::getInstance()->playListAppendMeta(curIndex.data(Qt::UserRole).value<MediaMeta>());
@@ -1008,12 +1014,7 @@ void PlayListView::slotPlaybackStatusChanged(Player::PlaybackStatus statue)
 void PlayListView::slotAddToFavSongList(const QString &songName)
 {
     QList<MediaMeta> listMeta;
-    QModelIndexList modelIndexList;
-    if (CommonService::getInstance()->isTabletEnvironment()) {
-        modelIndexList =  this->tabletSelectedIndexes();
-    } else {
-        modelIndexList =  this->selectedIndexes();
-    }
+    QModelIndexList modelIndexList = allSelectedIndexes();
     for (int i = 0; i < modelIndexList.size(); i++) {
         QModelIndex curIndex = modelIndexList.at(i);
         MediaMeta meta = curIndex.data(Qt::UserRole).value<MediaMeta>();
@@ -1030,12 +1031,8 @@ void PlayListView::slotAddToFavSongList(const QString &songName)
 
 void PlayListView::slotAddToNewSongList(const QString &songName)
 {
-    QModelIndexList modelIndexList;
-    if (CommonService::getInstance()->isTabletEnvironment()) {
-        modelIndexList =  this->tabletSelectedIndexes();
-    } else {
-        modelIndexList =  this->selectedIndexes();
-    }
+    Q_UNUSED(songName)
+    QModelIndexList modelIndexList = allSelectedIndexes();
     QList<MediaMeta> metaList;
     for (int i = 0; i < modelIndexList.size(); i++) {
         QModelIndex curIndex = modelIndexList.at(i);
@@ -1062,12 +1059,7 @@ void PlayListView::slotAddToCustomSongList()
     QAction *obj =   dynamic_cast<QAction *>(sender());
     QString songlistHash = obj->data().value<QString>();
     QList<MediaMeta> metas;
-    QModelIndexList modelIndexList;
-    if (CommonService::getInstance()->isTabletEnvironment()) {
-        modelIndexList =  this->tabletSelectedIndexes();
-    } else {
-        modelIndexList =  this->selectedIndexes();
-    }
+    QModelIndexList modelIndexList = allSelectedIndexes();
     for (QModelIndex mindex : modelIndexList) {
         MediaMeta imt = mindex.data(Qt::UserRole).value<MediaMeta>();
         if (imt.mmType != MIMETYPE_CDA)
@@ -1081,12 +1073,7 @@ void PlayListView::slotAddToCustomSongList()
 
 void PlayListView::slotOpenInFileManager()
 {
-    QModelIndexList modelIndexList;
-    if (CommonService::getInstance()->isTabletEnvironment()) {
-        modelIndexList =  this->tabletSelectedIndexes();
-    } else {
-        modelIndexList =  this->selectedIndexes();
-    }
+    QModelIndexList modelIndexList = allSelectedIndexes();
     if (modelIndexList.size() == 0)
         return;
     MediaMeta imt = modelIndexList.at(0).data(Qt::UserRole).value<MediaMeta>();
@@ -1096,12 +1083,7 @@ void PlayListView::slotOpenInFileManager()
 
 void PlayListView::slotRmvFromSongList()
 {
-    QModelIndexList modelIndexList;
-    if (CommonService::getInstance()->isTabletEnvironment()) {
-        modelIndexList =  this->tabletSelectedIndexes();
-    } else {
-        modelIndexList =  this->selectedIndexes();
-    }
+    QModelIndexList modelIndexList = allSelectedIndexes();
     if (modelIndexList.size() == 0)
         return;
 
@@ -1156,12 +1138,7 @@ void PlayListView::slotRmvFromSongList()
 
 void PlayListView::slotDelFromLocal()
 {
-    QModelIndexList modelIndexList;
-    if (CommonService::getInstance()->isTabletEnvironment()) {
-        modelIndexList =  this->tabletSelectedIndexes();
-    } else {
-        modelIndexList =  this->selectedIndexes();
-    }
+    QModelIndexList modelIndexList = allSelectedIndexes();
     QStringList strlist;
     for (QModelIndex mindex : modelIndexList) {
         MediaMeta imt = mindex.data(Qt::UserRole).value<MediaMeta>();
@@ -1249,12 +1226,7 @@ void PlayListView::keyPressEvent(QKeyEvent *event)
     case Qt::NoModifier:
         switch (event->key()) {
         case Qt::Key_Return: {
-            QModelIndexList mindexlist;
-            if (CommonService::getInstance()->isTabletEnvironment()) {
-                mindexlist =  this->tabletSelectedIndexes();
-            } else {
-                mindexlist =  this->selectedIndexes();
-            }
+            QModelIndexList mindexlist = allSelectedIndexes();
             if (!mindexlist.isEmpty()) {
                 QModelIndex index = mindexlist.first();
                 MediaMeta meta = index.data(Qt::UserRole).value<MediaMeta>();
@@ -1277,12 +1249,7 @@ void PlayListView::keyPressEvent(QKeyEvent *event)
 
 void PlayListView::contextMenuEvent(QContextMenuEvent *event)
 {
-    QModelIndexList modelIndexList;
-    if (CommonService::getInstance()->isTabletEnvironment()) {
-        modelIndexList =  this->tabletSelectedIndexes();
-    } else {
-        modelIndexList =  this->selectedIndexes();
-    }
+    QModelIndexList modelIndexList = allSelectedIndexes();
     if (modelIndexList.size() <= 0) {
         m_menuIsShow = false;
         return;
@@ -1452,35 +1419,249 @@ void PlayListView::contextMenuEvent(QContextMenuEvent *event)
     m_menuIsShow = false;
 }
 
-void PlayListView::dragMoveEvent(QDragMoveEvent *event)
+QPixmap PlayListView::dragItemsPixmap()
 {
-    if ((event->mimeData()->hasFormat("text/uri-list"))) {
+    qreal scale = devicePixelRatio();
+    QModelIndexList modelIndexList = allSelectedIndexes();
+
+    QFont font;
+    font.setPixelSize(10);
+    QFontMetrics fontMetrics(font);
+    int textSize = fontMetrics.width(QString("%1").arg(modelIndexList.size()));
+    if (textSize < fontMetrics.height()) textSize = fontMetrics.height();
+    int testRadius = textSize / 2 + DRAGICON_TEXTBORDERSIZE;
+    QRect pixRect(0, 0, DRAGICON_SIZE + DRAGICON_LEFTBORDER + testRadius, DRAGICON_SIZE + testRadius + DRAGICON_TOPBORDER);
+    QPixmap pixmap(pixRect.size() * scale);
+    pixmap.setDevicePixelRatio(scale);
+    pixmap.fill(Qt::transparent);
+    QPainter painter(&pixmap);
+    painter.setRenderHint(QPainter::Antialiasing, true);
+    painter.setRenderHint(QPainter::SmoothPixmapTransform, true);
+
+    QMatrix matrix;
+    matrix.rotate(180.0);
+    painter.save();
+    painter.translate(DRAGICON_LEFTBORDER + DRAGICON_SIZE, DRAGICON_TOPBORDER + DRAGICON_SIZE);
+    // 绘制图片
+    for (int i = qMin(modelIndexList.size() - 1, 2); i >= 0; --i) {
+        QStandardItem *newItem = m_model->itemFromIndex(modelIndexList.at(i));
+        QPixmap pixmap1 = newItem->icon().pixmap(QSize(DRAGICON_SIZE, DRAGICON_SIZE));
+        pixmap1 = pixmap1.transformed(matrix, Qt::FastTransformation);
+        painter.save();
+        painter.rotate(-180 - i * 4);
+        painter.drawPixmap(0, 0, pixmap1);
+        painter.restore();
+    }
+    painter.restore();
+
+    painter.save();
+    painter.setPen(Qt::NoPen);
+    painter.setBrush(Qt::red);
+    painter.drawEllipse(QRect(DRAGICON_LEFTBORDER + DRAGICON_SIZE - testRadius, DRAGICON_TOPBORDER + DRAGICON_SIZE - testRadius, testRadius * 2, testRadius * 2));
+    painter.setPen(Qt::white);
+    painter.setFont(font);
+    painter.setBrush(Qt::black);
+    painter.drawText(QRect(DRAGICON_LEFTBORDER + DRAGICON_SIZE - textSize / 2, DRAGICON_TOPBORDER + DRAGICON_SIZE - textSize / 2, textSize, textSize), QString("%1").arg(modelIndexList.size()), QTextOption(Qt::AlignCenter));
+    painter.restore();
+
+    QIcon icon = QIcon::fromTheme("music_famousballad");
+    return pixmap;
+}
+
+void PlayListView::startDrag(Qt::DropActions supportedActions)
+{
+    QItemSelection selection;
+
+    QModelIndexList modelIndexList = allSelectedIndexes();
+
+    for (QModelIndex index : modelIndexList) {
+        selection.append(QItemSelectionRange(index));
+    }
+
+//    if (!modelIndexList.isEmpty())
+//        scrollTo(modelIndexList.first());
+
+//    setAutoScroll(false);
+//    DListView::startDrag(supportedActions);
+//    setAutoScroll(true);
+
+    if (!selection.isEmpty()) {
+        selectionModel()->select(selection, QItemSelectionModel::Select);
+    }
+
+    QVector<int> modelIndexs;
+    for (auto &index : modelIndexList) {
+        MediaMeta metaTemp = index.data(Qt::UserRole).value<MediaMeta>();
+        if (metaTemp.mmType == MIMETYPE_CDA) return;
+        modelIndexs.append(index.row());
+    }
+    QByteArray itemData;
+    QDataStream dataStream(&itemData, QIODevice::WriteOnly);
+    dataStream << modelIndexs;
+
+    QMimeData *mimeData = new QMimeData;
+    mimeData->setData("playlistview/x-datalist", itemData);
+
+    QDrag *drag = new QDrag(this);
+    drag->setPixmap(dragItemsPixmap());
+    drag->setMimeData(mimeData);
+    Qt::DropAction dropAction = Qt::MoveAction;
+    drag->exec(supportedActions, dropAction);
+}
+
+int PlayListView::highlightedRow() const
+{
+    QPoint pos = mapFromGlobal(QCursor::pos());
+    QModelIndex curRowIndex = indexAt(pos);
+    int curRow = curRowIndex.row();
+    if (curRow != -1) {
+        auto curIndexRect = rectForIndex(curRowIndex);
+        // 图标模式
+        if (viewMode() == QListView::ListMode) {
+            if (pos.y() + verticalOffset() > curIndexRect.center().y()) {
+                curRow += 1;
+            }
+        } else {
+            if (pos.x() + horizontalOffset() > curIndexRect.center().x()) {
+                curRow += 1;
+            }
+        }
+    }
+    MediaMeta metaTemp = m_model->index(curRow, 0).data(Qt::UserRole).value<MediaMeta>();
+    while (metaTemp.mmType == MIMETYPE_CDA) {
+        curRow += 1;
+        metaTemp = m_model->index(curRow, 0).data(Qt::UserRole).value<MediaMeta>();
+    }
+
+    return curRow;
+}
+
+void PlayListView::setDragFlag(bool flag)
+{
+    m_dragFlag = flag;
+}
+
+void PlayListView::dragEnterEvent(QDragEnterEvent *event)
+{
+    auto t_formats = event->mimeData()->formats();
+    if (event->mimeData()->hasFormat("text/uri-list")) {
         event->setDropAction(Qt::CopyAction);
         event->acceptProposedAction();
-    } else {
-        DListView::dragMoveEvent(event);
+    } else if (event->source() == this && m_dragFlag) {
+        event->setDropAction(Qt::MoveAction);
+        event->acceptProposedAction();
+
+        m_dragScrollTimer.start(200);
+        m_isDraging = true;
+        QModelIndex indexDrop = m_model->index(highlightedRow(), 0);
+        update(indexDrop);
+        m_preIndex = indexDrop;
+    }
+}
+
+void PlayListView::slotUpdateDragScroll()
+{
+    QPoint pos = mapFromGlobal(QCursor::pos());
+    auto curValue = verticalScrollBar()->value();
+    // 向上滚动
+    if (pos.y() < 20 && pos.y() > 0 && curValue > 0) {
+        curValue -= 15;
+        if (curValue < 0) curValue = 0;
+        verticalScrollBar()->setValue(curValue);
+        update();
+    } else if (pos.y() > (height() - 20) && curValue < verticalScrollBar()->maximum()) { // 向下滚动
+        curValue += 15;
+        if (curValue > verticalScrollBar()->maximum()) curValue = verticalScrollBar()->maximum();
+        verticalScrollBar()->setValue(curValue);
+        update();
+    }
+}
+
+void PlayListView::dragMoveEvent(QDragMoveEvent *event)
+{
+    if (event->mimeData()->hasFormat("text/uri-list")) {
+        event->setDropAction(Qt::CopyAction);
+        event->acceptProposedAction();
+    } else if (event->source() == this && m_dragFlag) {
+        event->setDropAction(Qt::MoveAction);
+        event->acceptProposedAction();
+
+        int curRow = highlightedRow();
+        if (curRow == -1) curRow = m_model->rowCount() - 1;
+        QModelIndex indexDrop = m_model->index(curRow, 0);
+        //刷新旧区域使dropIndicator消失
+        update(m_preIndex);
+        update(indexDrop);
+        m_preIndex = indexDrop;
+    }
+}
+
+void PlayListView::dragLeaveEvent(QDragLeaveEvent *event)
+{
+    m_dragScrollTimer.stop();
+    m_isDraging = false;
+    DListView::dragLeaveEvent(event);
+}
+
+void PlayListView::dropItems(QVector<int> &modelIndexs)
+{
+    int curRow = highlightedRow();
+    if (curRow == -1) curRow = m_model->rowCount();
+    QVector<MediaMeta> allMetas;
+
+    for (auto &index : modelIndexs) {
+        // 删除前一个后需要将索引减去1
+        if (curRow > index) curRow--;
+        allMetas.insert(0, m_model->index(index, 0).data(Qt::UserRole).value<MediaMeta>());
+    }
+    std::sort(modelIndexs.begin(), modelIndexs.end(), [ = ](const int &d1, const int &d2) {return (d1 > d2);});
+    for (auto &index : modelIndexs) {
+        m_model->removeRow(index);
+    }
+    if (curRow > m_model->rowCount()) curRow = m_model->rowCount();
+    for (auto &item : allMetas) {
+        insertRow(curRow, item);
+    }
+    clearSelection();
+    QVector<QString> metaHashs;
+    for (int i = 0; i <  m_model->rowCount(); i++) {
+        QModelIndex curIndex = m_model->index(i, 0);
+        MediaMeta metaTemp = curIndex.data(Qt::UserRole).value<MediaMeta>();
+        metaHashs.append(metaTemp.hash);
+    }
+    DataBaseService::getInstance()->sortMetasFromPlaylist(m_currentHash, metaHashs);
+    // 刷新播放队列
+    if (m_IsPlayQueue) {
+        Player::getInstance()->sortMetas(metaHashs);
     }
 }
 
 void PlayListView::dropEvent(QDropEvent *event)
 {
-    if ((!event->mimeData()->hasFormat("text/uri-list"))) {
-        return;
-    }
+    m_dragScrollTimer.stop();
+    m_isDraging = false;
+    // 歌单处理
+    if (event->source() == this && m_dragFlag) {
+        auto curMimeData = event->mimeData();
+        QByteArray itemData(curMimeData->data("playlistview/x-datalist"));
+        QDataStream dataStream(&itemData, QIODevice::ReadOnly);
+        QVector<int> modelIndexs;
+        dataStream >> modelIndexs;
 
-    if (event->mimeData()->hasFormat("text/uri-list")) {
+        dropItems(modelIndexs);
+    } else if (event->mimeData()->hasFormat("text/uri-list") && m_currentHash != "CdaRole") {
         auto urls = event->mimeData()->urls();
         QStringList localpaths;
         for (auto &url : urls) {
             localpaths << (url.isLocalFile() ? url.toLocalFile() : url.path());
         }
 
-        if (!localpaths.isEmpty() && m_currentHash != "CdaRole") { //cda歌单不需要添加歌曲
+        // cda歌单不需要添加歌曲
+        if (!localpaths.isEmpty()) {
             DataBaseService::getInstance()->importMedias(m_currentHash, localpaths);
         }
+        DListView::dropEvent(event);
     }
-
-    DListView::dropEvent(event);
 }
 
 bool PlayListView::getIsPlayQueue() const
@@ -1562,12 +1743,7 @@ void PlayListView::mouseReleaseEvent(QMouseEvent *event)
 
 void PlayListView::slotTextCodecMenuClicked(QAction *action)
 {
-    QModelIndexList modelIndexList;
-    if (CommonService::getInstance()->isTabletEnvironment()) {
-        modelIndexList =  this->tabletSelectedIndexes();
-    } else {
-        modelIndexList =  this->selectedIndexes();
-    }
+    QModelIndexList modelIndexList = allSelectedIndexes();
     if (modelIndexList.size() > 0) {
         QModelIndex curIndex = modelIndexList.at(0);
         MediaMeta meta = curIndex.data(Qt::UserRole).value<MediaMeta>();
@@ -1629,6 +1805,7 @@ void PlayListView::slotRmvCdaSongs()
 
 void PlayListView::slotSetSelectModel(CommonService::TabletSelectMode model)
 {
+    Q_UNUSED(model)
     this->update();
     // 切换模式，清空选项
     tabletClearSelection();
@@ -1674,12 +1851,7 @@ void PlayListView::slotShowSongList()
 
 void PlayListView::slotAddToSongList(const QString &hash, const QString &name)
 {
-    QModelIndexList modelIndexList;
-    if (CommonService::getInstance()->isTabletEnvironment()) {
-        modelIndexList =  this->tabletSelectedIndexes();
-    } else {
-        modelIndexList =  this->selectedIndexes();
-    }
+    QModelIndexList modelIndexList = allSelectedIndexes();
     if (modelIndexList.size() == 0)
         return;
     QList<MediaMeta> metas;
@@ -1748,43 +1920,7 @@ void PlayListView::mouseMoveEvent(QMouseEvent *event)
     DListView::mouseMoveEvent(event);
 }
 
-void PlayListView::dragEnterEvent(QDragEnterEvent *event)
-{
-    auto t_formats = event->mimeData()->formats();
-    if (event->mimeData()->hasFormat("text/uri-list") || event->mimeData()->hasFormat("application/x-qabstractitemmodeldatalist")) {
-        event->setDropAction(Qt::CopyAction);
-        event->acceptProposedAction();
-    }
-}
-
-void PlayListView::startDrag(Qt::DropActions supportedActions)
-{
-    QItemSelection selection;
-
-    QModelIndexList modelIndexList;
-    if (CommonService::getInstance()->isTabletEnvironment()) {
-        modelIndexList =  this->tabletSelectedIndexes();
-    } else {
-        modelIndexList =  this->selectedIndexes();
-    }
-
-    for (QModelIndex index : modelIndexList) {
-        selection.append(QItemSelectionRange(index));
-    }
-
-    if (!modelIndexList.isEmpty())
-        scrollTo(modelIndexList.first());
-
-    setAutoScroll(false);
-    DListView::startDrag(supportedActions);
-    setAutoScroll(true);
-
-    if (!selection.isEmpty()) {
-        selectionModel()->select(selection, QItemSelectionModel::Select);
-    }
-}
-
-QModelIndexList PlayListView::tabletSelectedIndexes()
+QModelIndexList PlayListView::tabletSelectedIndexes() const
 {
     QModelIndexList list;
     for (int i = 0; i <  m_model->rowCount(); i++) {
@@ -1795,6 +1931,11 @@ QModelIndexList PlayListView::tabletSelectedIndexes()
         }
     }
     return list;
+}
+
+QModelIndexList PlayListView::allSelectedIndexes() const
+{
+    return CommonService::getInstance()->isTabletEnvironment() ? this->tabletSelectedIndexes() : this->selectedIndexes();
 }
 
 //设置是否可以导入到m_model

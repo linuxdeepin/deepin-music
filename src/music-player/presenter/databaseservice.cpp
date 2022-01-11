@@ -191,6 +191,9 @@ QList<MediaMeta> DataBaseService::getMusicInfosBySortAndCount(int count)
         meta.pinyinTitle = queryNew.value(16).toString();
         meta.pinyinArtist = queryNew.value(17).toString();
         meta.pinyinAlbum = queryNew.value(18).toString();
+        if (meta.codec != "UTF-8") {
+            meta.updateCodec(meta.codec.toUtf8());
+        }
         setMetatitleAndSinger(meta);
         mediaMetas << meta;
     }
@@ -741,6 +744,25 @@ QList<DataBaseService::PlaylistData> DataBaseService::allPlaylistMeta()
     }
 }
 
+void DataBaseService::sortMetasFromPlaylist(const QString &hash, const QVector<QString> &metaHashs)
+{
+    QSqlQuery query(m_db);
+    if (m_db.transaction()) {
+        QString sqlIsExists = QString("UPDATE playlist_%1 SET sort_id = :sort_id WHERE music_id = :music_id;").arg(hash);
+        for (int i = 0; i < metaHashs.size(); ++i) {
+            QString curHash = metaHashs.at(i);
+            bool isPrepare = query.prepare(sqlIsExists);
+            query.bindValue(":sort_id", i + 1);
+            query.bindValue(":music_id", curHash);
+
+            if ((!isPrepare) || (! query.exec())) {
+                qWarning() << query.lastError();
+            }
+        }
+        m_db.commit();
+    }
+}
+
 void DataBaseService::sortAllPlaylist(const QVector<QString> &hashs)
 {
     QSqlQuery query(m_db);
@@ -758,54 +780,116 @@ void DataBaseService::sortAllPlaylist(const QVector<QString> &hashs)
     }
 }
 
+QList<QString> DataBaseService::customizeMusicHashs(const QString &hash)
+{
+    QList<QString> hashlist;
+    QSqlQuery query;
+    if (!query.prepare(QString("SELECT music_id FROM playlist_%1").arg(hash))) {
+        qWarning() << query.lastError();
+        return hashlist;
+    }
+    if (!query.exec()) {
+        qWarning() << query.lastError();
+        return hashlist;
+    }
+
+    while (query.next()) {
+        hashlist << query.value(0).toString();
+    }
+
+    return hashlist;
+}
+
+void DataBaseService::updateMetasforPlayerList()
+{
+    auto allPlaylist = Player::getInstance()->getPlayList();
+    QList<MediaMeta> playlistMetas;
+    // 不保存cd
+    for (int i = 0; i < allPlaylist->size(); ++i) {
+        if (allPlaylist->at(i).mmType != MIMETYPE_CDA) {
+            playlistMetas.append(allPlaylist->at(i));
+        }
+    }
+    auto allHash = customizeMusicHashs("play");
+    QSqlQuery query(m_db);
+    if (m_db.transaction()) {
+        int count = 0;
+        for (MediaMeta meta : playlistMetas) {
+            QString sqlStr("INSERT INTO playlist_play "
+                           "(music_id, playlist_id, sort_id) "
+                           "SELECT :music_id, :playlist_id, :sort_id ");
+
+            bool isPrepare = query.prepare(sqlStr);
+            query.bindValue(":playlist_id", "play");
+            query.bindValue(":music_id", meta.hash);
+            query.bindValue(":sort_id", count);
+            if (isPrepare) query.exec();
+            count++;
+            allHash.removeAll(meta.hash);
+        }
+        for (auto hash : allHash) {
+            QString sqlStr = QString("DELETE FROM playlist_play WHERE music_id='%1'").arg(hash);
+            bool isPrepare = query.prepare(sqlStr);
+            if (!isPrepare || !query.exec()) {
+                qCritical() << query.lastError();
+            }
+        }
+        m_db.commit();
+    }
+}
+
 int DataBaseService::addMetaToPlaylist(QString uuid, const QList<MediaMeta> &metas)
 {
     int insert_count = 0;
 
-    for (MediaMeta meta : metas) {
-        int count = 0;
-        if (uuid != "album" && uuid != "artist" && uuid != "all") {
-            QString queryString = QString("SELECT MAX(sort_id) FROM playlist_%1").arg(uuid);
-            QSqlQuery queryNew(m_db);
-            bool isPrepare = queryNew.prepare(queryString);
-            if ((!isPrepare) || (!queryNew.exec())) {
-                qCritical() << queryNew.lastError();
-                count = 0;
-            }
-            while (queryNew.next()) {
-                count = queryNew.value(0).toInt();
-                count++;
-            }
-        }
-
-        QSqlQuery query(m_db);
-        QString sqlStr = QString("SELECT * FROM playlist_%1 WHERE music_id = :music_id").arg(uuid);
-        bool isPrepare = query.prepare(sqlStr);
-        query.bindValue(":music_id", meta.hash);
-        if (isPrepare && query.exec()) {
-            if (!query.next()) {
-                sqlStr = QString("INSERT INTO playlist_%1 "
-                                 "(music_id, playlist_id, sort_id) "
-                                 "SELECT :music_id, :playlist_id, :sort_id ").arg(uuid);
-
-                isPrepare = query.prepare(sqlStr);
-                query.bindValue(":playlist_id", uuid);
-                query.bindValue(":music_id", meta.hash);
-                query.bindValue(":sort_id", count);
-                if (isPrepare && query.exec()) {
-                    insert_count++;
-                    if (uuid == "fav") {
-                        emit signalFavSongAdd(meta.hash);
-                    }
-                    emit signalMusicAddOne(uuid, meta);
-                } else {
-                    qCritical() << query.lastError() << sqlStr;
+    QSqlQuery query(m_db);
+    if (m_db.transaction()) {
+        for (MediaMeta meta : metas) {
+            int count = 0;
+            if (uuid != "album" && uuid != "artist" && uuid != "all") {
+                QString queryString = QString("SELECT MAX(sort_id) FROM playlist_%1").arg(uuid);
+                QSqlQuery queryNew(m_db);
+                bool isPrepare = queryNew.prepare(queryString);
+                if ((!isPrepare) || (!queryNew.exec())) {
+                    qCritical() << queryNew.lastError();
+                    count = 0;
+                }
+                while (queryNew.next()) {
+                    count = queryNew.value(0).toInt();
+                    count++;
                 }
             }
-        } else {
-            qCritical() << query.lastError() << sqlStr;
+
+            QString sqlStr = QString("SELECT * FROM playlist_%1 WHERE music_id = :music_id").arg(uuid);
+            bool isPrepare = query.prepare(sqlStr);
+            query.bindValue(":music_id", meta.hash);
+            if (isPrepare && query.exec()) {
+                if (!query.next()) {
+                    sqlStr = QString("INSERT INTO playlist_%1 "
+                                     "(music_id, playlist_id, sort_id) "
+                                     "SELECT :music_id, :playlist_id, :sort_id ").arg(uuid);
+
+                    isPrepare = query.prepare(sqlStr);
+                    query.bindValue(":playlist_id", uuid);
+                    query.bindValue(":music_id", meta.hash);
+                    query.bindValue(":sort_id", count);
+                    if (isPrepare && query.exec()) {
+                        insert_count++;
+                        if (uuid == "fav") {
+                            emit signalFavSongAdd(meta.hash);
+                        }
+                        emit signalMusicAddOne(uuid, meta);
+                    } else {
+                        qCritical() << query.lastError() << sqlStr;
+                    }
+                }
+            } else {
+                qCritical() << query.lastError() << sqlStr;
+            }
         }
+        m_db.commit();
     }
+
     QString playHash = Player::getInstance()->getCurrentPlayListHash();
     // 当前歌单为播放队列时需要将歌曲添加到播放队列
     if (playHash == uuid) {
@@ -1124,120 +1208,121 @@ bool DataBaseService::isPlaylistExist(const QString &uuid)
 
 void DataBaseService::initPlaylistTable()
 {
-    QSqlDatabase::database().transaction();
+    if (QSqlDatabase::database().transaction()) {
 
-    QVector<PlaylistData> playlistDataList;
+        QVector<PlaylistData> playlistDataList;
 
-    PlaylistData playlistMeta;
-    playlistMeta.uuid = "album";
-    playlistMeta.displayName = tr("Albums");
-    playlistMeta.icon = "album";
-    playlistMeta.readonly = true;
-    playlistMeta.hide = false;
-    playlistMeta.sortID = 1;
-    playlistMeta.sortType = SortByAddTimeASC;
-    playlistDataList << playlistMeta;
+        PlaylistData playlistMeta;
+        playlistMeta.uuid = "album";
+        playlistMeta.displayName = tr("Albums");
+        playlistMeta.icon = "album";
+        playlistMeta.readonly = true;
+        playlistMeta.hide = false;
+        playlistMeta.sortID = 1;
+        playlistMeta.sortType = SortByAddTimeASC;
+        playlistDataList << playlistMeta;
 
-    playlistMeta.uuid = "artist";
-    playlistMeta.displayName = tr("Artists");
-    playlistMeta.icon = "artist";
-    playlistMeta.readonly = true;
-    playlistMeta.hide = false;
-    playlistMeta.sortID = 2;
-    playlistDataList << playlistMeta;
+        playlistMeta.uuid = "artist";
+        playlistMeta.displayName = tr("Artists");
+        playlistMeta.icon = "artist";
+        playlistMeta.readonly = true;
+        playlistMeta.hide = false;
+        playlistMeta.sortID = 2;
+        playlistDataList << playlistMeta;
 
-    playlistMeta.uuid = "all";
-    playlistMeta.displayName = tr("All Music");
-    playlistMeta.icon = "all";
-    playlistMeta.readonly = true;
-    playlistMeta.hide = false;
-    playlistMeta.sortID = 3;
-    playlistDataList << playlistMeta;
+        playlistMeta.uuid = "all";
+        playlistMeta.displayName = tr("All Music");
+        playlistMeta.icon = "all";
+        playlistMeta.readonly = true;
+        playlistMeta.hide = false;
+        playlistMeta.sortID = 3;
+        playlistDataList << playlistMeta;
 
-    playlistMeta.displayName = tr("My Favorites");
-    playlistMeta.uuid = "fav";
-    playlistMeta.icon = "fav";
-    playlistMeta.readonly = true;
-    playlistMeta.hide = false;
-    playlistMeta.sortID = 4;
-    playlistDataList << playlistMeta;
+        playlistMeta.displayName = tr("My Favorites");
+        playlistMeta.uuid = "fav";
+        playlistMeta.icon = "fav";
+        playlistMeta.readonly = true;
+        playlistMeta.hide = false;
+        playlistMeta.sortID = 4;
+        playlistDataList << playlistMeta;
 
-    playlistMeta.displayName = "Playlist";
-    playlistMeta.uuid = "play";
-    playlistMeta.icon = "play";
-    playlistMeta.readonly = true;
-    playlistMeta.hide = true;
-    playlistMeta.sortID = 5;
-    playlistDataList << playlistMeta;
+        playlistMeta.displayName = "Playlist";
+        playlistMeta.uuid = "play";
+        playlistMeta.icon = "play";
+        playlistMeta.readonly = true;
+        playlistMeta.hide = true;
+        playlistMeta.sortID = 5;
+        playlistDataList << playlistMeta;
 
-    playlistMeta.displayName = "Search result";
-    playlistMeta.uuid = "search";
-    playlistMeta.icon = "search";
-    playlistMeta.readonly = true;
-    playlistMeta.hide = true;
-    playlistMeta.sortID = 6;
-    playlistDataList << playlistMeta;
+        playlistMeta.displayName = "Search result";
+        playlistMeta.uuid = "search";
+        playlistMeta.icon = "search";
+        playlistMeta.readonly = true;
+        playlistMeta.hide = true;
+        playlistMeta.sortID = 6;
+        playlistDataList << playlistMeta;
 
-    playlistMeta.displayName = "Music";
-    playlistMeta.uuid = "musicCand";
-    playlistMeta.icon = "musicCand";
-    playlistMeta.readonly = true;
-    playlistMeta.hide = true;
-    playlistMeta.sortID = 7;
-    playlistDataList << playlistMeta;
+        playlistMeta.displayName = "Music";
+        playlistMeta.uuid = "musicCand";
+        playlistMeta.icon = "musicCand";
+        playlistMeta.readonly = true;
+        playlistMeta.hide = true;
+        playlistMeta.sortID = 7;
+        playlistDataList << playlistMeta;
 
-    playlistMeta.displayName = "Album";
-    playlistMeta.uuid = "albumCand";
-    playlistMeta.icon = "albumCand";
-    playlistMeta.readonly = true;
-    playlistMeta.hide = true;
-    playlistMeta.sortID = 8;
-    playlistDataList << playlistMeta;
+        playlistMeta.displayName = "Album";
+        playlistMeta.uuid = "albumCand";
+        playlistMeta.icon = "albumCand";
+        playlistMeta.readonly = true;
+        playlistMeta.hide = true;
+        playlistMeta.sortID = 8;
+        playlistDataList << playlistMeta;
 
-    playlistMeta.displayName = "Artist";
-    playlistMeta.uuid = "artistCand";
-    playlistMeta.icon = "artistCand";
-    playlistMeta.readonly = true;
-    playlistMeta.hide = true;
-    playlistMeta.sortID = 9;
-    playlistDataList << playlistMeta;
+        playlistMeta.displayName = "Artist";
+        playlistMeta.uuid = "artistCand";
+        playlistMeta.icon = "artistCand";
+        playlistMeta.readonly = true;
+        playlistMeta.hide = true;
+        playlistMeta.sortID = 9;
+        playlistDataList << playlistMeta;
 
-    playlistMeta.displayName = "Music";
-    playlistMeta.uuid = "musicResult";
-    playlistMeta.icon = "musicResult";
-    playlistMeta.readonly = true;
-    playlistMeta.hide = true;
-    playlistMeta.sortID = 10;
-    playlistDataList << playlistMeta;
+        playlistMeta.displayName = "Music";
+        playlistMeta.uuid = "musicResult";
+        playlistMeta.icon = "musicResult";
+        playlistMeta.readonly = true;
+        playlistMeta.hide = true;
+        playlistMeta.sortID = 10;
+        playlistDataList << playlistMeta;
 
-    playlistMeta.displayName = "Album";
-    playlistMeta.uuid = "albumResult";
-    playlistMeta.icon = "albumResult";
-    playlistMeta.readonly = true;
-    playlistMeta.hide = true;
-    playlistMeta.sortID = 11;
-    playlistDataList << playlistMeta;
+        playlistMeta.displayName = "Album";
+        playlistMeta.uuid = "albumResult";
+        playlistMeta.icon = "albumResult";
+        playlistMeta.readonly = true;
+        playlistMeta.hide = true;
+        playlistMeta.sortID = 11;
+        playlistDataList << playlistMeta;
 
-    playlistMeta.displayName = "Artist";
-    playlistMeta.uuid = "artistResult";
-    playlistMeta.icon = "artistResult";
-    playlistMeta.readonly = true;
-    playlistMeta.hide = true;
-    playlistMeta.sortID = 12;
-    playlistDataList << playlistMeta;
+        playlistMeta.displayName = "Artist";
+        playlistMeta.uuid = "artistResult";
+        playlistMeta.icon = "artistResult";
+        playlistMeta.readonly = true;
+        playlistMeta.hide = true;
+        playlistMeta.sortID = 12;
+        playlistDataList << playlistMeta;
 
-    if (!isPlaylistExist("album")) {
-        for (auto item : playlistDataList) {
-            addPlaylist(item);
+        if (!isPlaylistExist("album")) {
+            for (auto item : playlistDataList) {
+                addPlaylist(item);
+            }
+        } else {
+            QVector<PlaylistData> updatePlaylistDataList(4);
+            qCopy(playlistDataList.begin(), playlistDataList.begin() + updatePlaylistDataList.size(), updatePlaylistDataList.begin());
+
+            updatePlaylist(updatePlaylistDataList);
         }
-    } else {
-        QVector<PlaylistData> updatePlaylistDataList(4);
-        qCopy(playlistDataList.begin(), playlistDataList.begin() + updatePlaylistDataList.size(), updatePlaylistDataList.begin());
 
-        updatePlaylist(updatePlaylistDataList);
+        QSqlDatabase::database().commit();
     }
-
-    QSqlDatabase::database().commit();
 }
 
 DataBaseService::DataBaseService()

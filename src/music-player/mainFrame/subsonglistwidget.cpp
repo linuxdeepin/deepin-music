@@ -125,7 +125,7 @@ void SubSonglistWidget::initUI()
 
     m_titleLabel->setContentsMargins(0, 0, 0, 0);
 
-    m_musicListInfoView = new PlayListView(m_hash, false, this);
+    m_musicListInfoView = new PlayListView(m_hash, false, false, this);
     mainLayout->addWidget(m_musicListInfoView, 1);
     mainLayout->addStretch();
 

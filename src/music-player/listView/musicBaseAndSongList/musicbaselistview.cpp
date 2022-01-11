@@ -198,7 +198,7 @@ void MusicBaseListView::dragEnterEvent(QDragEnterEvent *event)
 {
     auto t_formats = event->mimeData()->formats();
     qDebug() << t_formats;
-    if (event->mimeData()->hasFormat("text/uri-list") || event->mimeData()->hasFormat("application/x-qabstractitemmodeldatalist")) {
+    if (event->mimeData()->hasFormat("text/uri-list") || event->mimeData()->hasFormat("playlistview/x-datalist")) {
         qDebug() << "acceptProposedAction" << event;
         event->setDropAction(Qt::CopyAction);
         event->acceptProposedAction();
@@ -208,7 +208,7 @@ void MusicBaseListView::dragEnterEvent(QDragEnterEvent *event)
 void MusicBaseListView::dragMoveEvent(QDragMoveEvent *event)
 {
     auto index = indexAt(event->pos());
-    if (index.isValid() && (event->mimeData()->hasFormat("text/uri-list")  || event->mimeData()->hasFormat("application/x-qabstractitemmodeldatalist"))) {
+    if (index.isValid() && (event->mimeData()->hasFormat("text/uri-list")  || event->mimeData()->hasFormat("playlistview/x-datalist"))) {
         event->setDropAction(Qt::CopyAction);
         event->acceptProposedAction();
     } else {
@@ -224,7 +224,7 @@ void MusicBaseListView::dropEvent(QDropEvent *event)
     QString hash = indexDrop.data(Qt::UserRole + 2).value<QString>();
 
 //    auto t_playlistPtr = playlistPtr(index);
-    if (/*t_playlistPtr == nullptr || */(!event->mimeData()->hasFormat("text/uri-list") && !event->mimeData()->hasFormat("application/x-qabstractitemmodeldatalist"))) {
+    if (/*t_playlistPtr == nullptr || */(!event->mimeData()->hasFormat("text/uri-list") && !event->mimeData()->hasFormat("playlistview/x-datalist"))) {
         return;
     }
 
