@@ -119,7 +119,7 @@ void PlayItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
         } else {
             drawIconMode(*painter, option, index);
             // 绘制拖拽分割线
-            if (listview != nullptr && !listview->allSelectedIndexes().contains(index) && listview->m_dragFlag && listview->m_isDraging) {
+            if (listview != nullptr && listview->m_dragFlag && listview->m_isDraging) {
                 if (listview->highlightedRow() == index.row()) {
                     painter->drawLine(QLine(QPoint(option.rect.x() + 1, option.rect.top() + yoffset), QPoint(option.rect.x() + 1, option.rect.y() + yoffset + ImgWidthAndHeight)));
                 } else if ((index.row() == (curRowCount - 1)) && (listview->highlightedRow() == curRowCount || listview->highlightedRow() == -1)) {

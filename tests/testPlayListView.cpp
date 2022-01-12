@@ -595,6 +595,15 @@ TEST(Application, playListView10)
 
     QTimer::singleShot(300, w, [ = ]() {
         QTestEventList event;
+
+        QTimer::singleShot(700, w, [ = ]() {
+            InfoDialog *info = w->findChild<InfoDialog *>(AC_infoDialog);
+            //防止窗口未打开
+            if (info) {
+                info->close();
+            }
+        });
+
         DMenu *menuWidget = static_cast<DMenu *>(qApp->activePopupWidget());
         //防止窗口未打开
         if (menuWidget) {
@@ -606,24 +615,15 @@ TEST(Application, playListView10)
             event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
             event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
             event.addKeyClick(Qt::Key_Enter, Qt::NoModifier, 50);
-            event.addDelay(100);
             event.simulate(menuWidget);
             event.clear();
-        }
-
-        QTest::qWait(100);
-
-        InfoDialog *info = w->findChild<InfoDialog *>(AC_infoDialog);
-        //防止窗口未打开
-        if (info) {
-            info->close();
         }
     });
 
     QContextMenuEvent menuEvent(QContextMenuEvent::Mouse, QPoint(20, 20));
     qApp->sendEvent(plv->viewport(), &menuEvent);
 
-    QTest::qWait(1000);
+    QTest::qWait(1500);
 }
 
 TEST(Application, playListViewDrag)

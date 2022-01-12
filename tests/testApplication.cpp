@@ -616,7 +616,6 @@ TEST(Application, musicListDialg3)
             event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
             event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
             event.addKeyClick(Qt::Key_Enter, Qt::NoModifier, 50);
-            event.addDelay(100);
             event.simulate(menuWidget);
             event.clear();
         }
