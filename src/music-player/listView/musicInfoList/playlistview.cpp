@@ -469,6 +469,10 @@ void PlayListView::playListChange()
     m_model->clear();
     for (auto meta : *Player::getInstance()->getPlayList()) {
         QStandardItem *newItem = new QStandardItem;
+        QString imagesDirPath = Global::cacheDir() + "/images/" + meta.hash + ".jpg";
+        QFileInfo file(imagesDirPath);
+        QIcon icon = file.exists() ? QIcon(imagesDirPath) : QIcon::fromTheme("cover_max");
+        newItem->setIcon(icon);
         m_model->appendRow(newItem);
         auto row = m_model->rowCount() - 1;
         QModelIndex index = m_model->index(row, 0, QModelIndex());
