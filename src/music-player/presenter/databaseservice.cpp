@@ -357,7 +357,7 @@ QList<MediaMeta> DataBaseService::customizeMusicInfos(const QString &hash)
 
     QList<MediaMeta> medialist;
     QSqlQuery query;
-    if (!query.prepare(QString("SELECT music_id FROM playlist_%1").arg(hash))) {
+    if (!query.prepare(QString("SELECT music_id FROM playlist_%1 order by sort_id ASC").arg(hash))) {
         qWarning() << query.lastError();
         return medialist;
     }
