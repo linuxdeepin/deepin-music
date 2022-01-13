@@ -1613,9 +1613,10 @@ void PlayListView::dropItems(QVector<int> &modelIndexs)
     if (curRow == -1) curRow = m_model->rowCount();
     QVector<MediaMeta> allMetas;
 
+    int preRow = curRow;
     for (auto &index : modelIndexs) {
         // 删除前一个后需要将索引减去1
-        if (curRow >= index) curRow--;
+        if (preRow > index) curRow--;
         allMetas.insert(0, m_model->index(index, 0).data(Qt::UserRole).value<MediaMeta>());
     }
     std::sort(modelIndexs.begin(), modelIndexs.end(), [ = ](const int &d1, const int &d2) {return (d1 > d2);});
