@@ -1243,6 +1243,7 @@ void DataBaseService::initPlaylistTable()
         playlistMeta.icon = "fav";
         playlistMeta.readonly = true;
         playlistMeta.hide = false;
+        playlistMeta.sortType = 4;
         playlistMeta.sortID = 4;
         playlistDataList << playlistMeta;
 

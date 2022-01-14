@@ -254,7 +254,7 @@ void MusicSongListView::addNewSongList()
     info.uuid = QUuid::createUuid().toString().remove("{").remove("}").remove("-");
     info.displayName = displayName;
     info.sortID = DataBaseService::getInstance()->getPlaylistMaxSortid();
-    info.sortType = DataBaseService::SortByAddTimeASC;
+    info.sortType = DataBaseService::SortByCustomASC;
     DataBaseService::getInstance()->addPlaylist(info);
     item->setData(info.uuid, Qt::UserRole); //covert to hash
     // 切换listpage
