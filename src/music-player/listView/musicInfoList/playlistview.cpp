@@ -1128,9 +1128,11 @@ void PlayListView::slotRmvFromSongList()
             DataBaseService::getInstance()->removeSelectedSongs(m_currentHash, metaList, false);
             // 如果是专辑或者歌手,playRmvMeta的逻辑放在专辑与歌手中处理,二级页面删除后继续播放逻辑
             if (m_currentHash == "all" || m_currentHash == "album" || m_currentHash == "artist"
-                    || m_currentHash == "musicResult" || m_currentHash == playListHash) {
+                    || m_currentHash == "musicResult") {
                 Player::getInstance()->playRmvMeta(metaList);
             }
+            // 删除所有后停止播放
+            if (metaList.size() == m_model->rowCount()) Player::getInstance()->stop();
         } else {
             Player::getInstance()->playRmvMeta(metaList);
         }
