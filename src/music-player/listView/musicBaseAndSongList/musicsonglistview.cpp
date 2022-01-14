@@ -668,6 +668,9 @@ void MusicSongListView::dragEnterEvent(QDragEnterEvent *event)
 
 void MusicSongListView::slotUpdateDragScroll()
 {
+    QPoint pos = mapFromGlobal(QCursor::pos());
+    // 防止出边界
+    if (!rect().contains(pos)) return;
     emit sigUpdateDragScroll();
 }
 
