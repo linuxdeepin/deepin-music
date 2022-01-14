@@ -48,7 +48,6 @@
 TEST(Application, playListView1)
 {
     TEST_CASE_NAME("playListView")
-
     MainFrame *w = Application::getInstance()->getMainWindow();
     MusicBaseListView *baseListView = w->findChild<MusicBaseListView *>(AC_dataBaseListview);
 
@@ -675,7 +674,7 @@ TEST(Application, playListViewDrag)
 
 TEST(Application, playListViewDelete)
 {
-    TEST_CASE_NAME("playListViewDrag")
+    TEST_CASE_NAME("playListViewDelete")
 
     MainFrame *w = Application::getInstance()->getMainWindow();
     PlayListView *plv = w->findChild<PlayListView *>(AC_PlayListView);

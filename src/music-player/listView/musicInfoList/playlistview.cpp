@@ -106,6 +106,11 @@ bool moreThanAblumDES(const MediaMeta v1, const MediaMeta v2)
     return v1.pinyinAlbum > v2.pinyinAlbum;
 }
 
+bool moreThanIndexASC(const int &d1, const int &d2)
+{
+    return d1 > d2;
+}
+
 PlayListView::PlayListView(const QString &hash, bool isPlayQueue, bool dragFlag, QWidget *parent)
     : DListView(parent)
     , m_currentHash(hash.isEmpty() ? "all" : hash)
@@ -1517,13 +1522,15 @@ void PlayListView::startDrag(Qt::DropActions supportedActions)
 
 int PlayListView::highlightedRow() const
 {
-    QPoint pos = mapFromGlobal(QCursor::pos());
+    QPoint pos = QCursor::pos();
+    pos = mapFromGlobal(pos);
     QModelIndex curRowIndex = indexAt(pos);
     int curRow = curRowIndex.row();
+    auto curMode = viewMode();
     if (curRow != -1) {
         auto curIndexRect = rectForIndex(curRowIndex);
         // 图标模式
-        if (viewMode() == QListView::ListMode) {
+        if (curMode == QListView::ListMode) {
             if (pos.y() + verticalOffset() > curIndexRect.center().y()) {
                 curRow += 1;
             }
@@ -1547,9 +1554,19 @@ void PlayListView::setDragFlag(bool flag)
     m_dragFlag = flag;
 }
 
+void PlayListView::updateDropIndicator()
+{
+    int curRow = highlightedRow();
+    if (curRow == -1) curRow = m_model->rowCount() - 1;
+    QModelIndex indexDrop = m_model->index(curRow, 0);
+    //刷新旧区域使dropIndicator消失
+    update(m_preIndex);
+    update(indexDrop);
+    m_preIndex = indexDrop;
+}
+
 void PlayListView::dragEnterEvent(QDragEnterEvent *event)
 {
-    auto t_formats = event->mimeData()->formats();
     if (event->mimeData()->hasFormat("text/uri-list")) {
         event->setDropAction(Qt::CopyAction);
         event->acceptProposedAction();
@@ -1559,26 +1576,23 @@ void PlayListView::dragEnterEvent(QDragEnterEvent *event)
 
         m_dragScrollTimer.start(200);
         m_isDraging = true;
-        QModelIndex indexDrop = m_model->index(highlightedRow(), 0);
-        update(indexDrop);
-        m_preIndex = indexDrop;
+        updateDropIndicator();
     }
 }
 
 void PlayListView::slotUpdateDragScroll()
 {
-    QPoint pos = mapFromGlobal(QCursor::pos());
+    QPoint pos = QCursor::pos();
+    pos = mapFromGlobal(pos);
     auto curValue = verticalScrollBar()->value();
     // 向上滚动
     if (pos.y() < 20 && pos.y() > 0 && curValue > 0) {
         curValue -= 15;
-        if (curValue < 0) curValue = 0;
-        verticalScrollBar()->setValue(curValue);
+        verticalScrollBar()->setValue(curValue < 0 ? 0 : curValue);
         update();
     } else if (pos.y() > (height() - 20) && curValue < verticalScrollBar()->maximum()) { // 向下滚动
         curValue += 15;
-        if (curValue > verticalScrollBar()->maximum()) curValue = verticalScrollBar()->maximum();
-        verticalScrollBar()->setValue(curValue);
+        verticalScrollBar()->setValue(curValue > verticalScrollBar()->maximum() ? verticalScrollBar()->maximum() : curValue);
         update();
     }
 }
@@ -1592,13 +1606,7 @@ void PlayListView::dragMoveEvent(QDragMoveEvent *event)
         event->setDropAction(Qt::MoveAction);
         event->acceptProposedAction();
 
-        int curRow = highlightedRow();
-        if (curRow == -1) curRow = m_model->rowCount() - 1;
-        QModelIndex indexDrop = m_model->index(curRow, 0);
-        //刷新旧区域使dropIndicator消失
-        update(m_preIndex);
-        update(indexDrop);
-        m_preIndex = indexDrop;
+        updateDropIndicator();
     }
 }
 
@@ -1611,12 +1619,13 @@ void PlayListView::dragLeaveEvent(QDragLeaveEvent *event)
 
 void PlayListView::dropItems(QVector<int> &modelIndexs)
 {
+    m_preIndex = QModelIndex();
     int curRow = highlightedRow();
     if (curRow == -1) curRow = m_model->rowCount();
     QVector<MediaMeta> allMetas;
 
     int preRow = curRow;
-    std::sort(modelIndexs.begin(), modelIndexs.end(), [ = ](const int &d1, const int &d2) {return (d1 > d2);});
+    std::sort(modelIndexs.begin(), modelIndexs.end(), moreThanIndexASC);
     for (auto &index : modelIndexs) {
         // 删除前一个后需要将索引减去1
         if (preRow > index) curRow--;

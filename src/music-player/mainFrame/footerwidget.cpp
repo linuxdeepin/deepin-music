@@ -362,25 +362,31 @@ void FooterWidget::moveVolSlider()
 void FooterWidget::initShortcut()
 {
     playPauseShortcut = new QShortcut(this);
-    playPauseShortcut->setKey(QKeySequence(MusicSettings::value("shortcuts.all.play_pause").toString()));
+    QKeySequence playPauseKeySequence(MusicSettings::value("shortcuts.all.play_pause").toString());
+    playPauseShortcut->setKey(playPauseKeySequence);
     playPauseShortcut->setAutoRepeat(false);
 
     volUpShortcut = new QShortcut(this);
-    volUpShortcut->setKey(QKeySequence(MusicSettings::value("shortcuts.all.volume_up").toString()));
+    QKeySequence volUpKeySequence(MusicSettings::value("shortcuts.all.volume_up").toString());
+    volUpShortcut->setKey(volUpKeySequence);
 
     volDownShortcut = new QShortcut(this);
-    volDownShortcut->setKey(QKeySequence(MusicSettings::value("shortcuts.all.volume_down").toString()));
+    QKeySequence volDownKeySequence(MusicSettings::value("shortcuts.all.volume_down").toString());
+    volDownShortcut->setKey(volDownKeySequence);
 
     nextShortcut = new QShortcut(this);
-    nextShortcut->setKey(QKeySequence(MusicSettings::value("shortcuts.all.next").toString()));
+    QKeySequence nextKeySequence(MusicSettings::value("shortcuts.all.next").toString());
+    nextShortcut->setKey(nextKeySequence);
     nextShortcut->setAutoRepeat(false);
 
     previousShortcut = new QShortcut(this);
-    previousShortcut->setKey(QKeySequence(MusicSettings::value("shortcuts.all.previous").toString()));
+    QKeySequence previousKeySequence(MusicSettings::value("shortcuts.all.previous").toString());
+    previousShortcut->setKey(previousKeySequence);
     previousShortcut->setAutoRepeat(false);
 
     muteShortcut = new QShortcut(this);
-    muteShortcut->setKey(QKeySequence(QLatin1String("M")));
+    QKeySequence muteKeySequence(QLatin1String("M"));
+    muteShortcut->setKey(muteKeySequence);
     //connect(muteShortcut, &QShortcut::activated, presenter, &Presenter::onLocalToggleMute);
 
     connect(playPauseShortcut, &QShortcut::activated, this, &FooterWidget::slotShortCutTriggered);

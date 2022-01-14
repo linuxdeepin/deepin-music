@@ -1172,6 +1172,11 @@ TEST(Application, viewChanged)
     event.simulate(iconListBtn);
     event.clear();
 
+    QTest::qWait(50);
+    event.addMouseMove(pos);
+    event.addKeyPress(Qt::Key::Key_Period, Qt::NoModifier, 100);
+    event.simulate(w);
+    event.clear();
 
     // 点击我的收藏
     QTest::qWait(50);
@@ -1183,10 +1188,12 @@ TEST(Application, viewChanged)
 
     // list排序
     QTest::qWait(50);
-    for (auto item = allMusicList.begin(); item != allMusicList.end(); ++item) {
-        emit allMusicDropdown->triggered(*item);
+    DDropdown *customMusicDropdown = w->findChild<DDropdown *>(AC_customMusicDropdown);
+    QList<QAction *> customMusicList = customMusicDropdown->actions();
+    for (auto item = customMusicList.begin(); item != customMusicList.end(); ++item) {
+        emit customMusicDropdown->triggered(*item);
         QTest::qWait(50);
-        emit allMusicDropdown->triggered(*item);
+        emit customMusicDropdown->triggered(*item);
         QTest::qWait(50);
     }
 

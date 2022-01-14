@@ -72,12 +72,15 @@ void MusicItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opt
     painter->setPen(pen);
     if (view == nullptr) return;
     int curRowCount = view->m_model->rowCount();
+    bool dragFlag = view->m_isDraging;
+    QRect borderRect = option.rect;
+    int hRow = view->highlightedRow();
     // 绘制拖拽分割线
-    if (!view->selectedIndexes().contains(index) && view->m_isDraging) {
-        if (view->highlightedRow() == index.row()) {
-            painter->drawLine(QLine(QPoint(option.rect.x(), option.rect.top() + 1), QPoint(option.rect.width(), option.rect.top() + 1)));
-        } else if ((index.row() == (curRowCount - 1)) && (view->highlightedRow() == curRowCount || view->highlightedRow() == -1)) {
-            painter->drawLine(QLine(QPoint(option.rect.x(), option.rect.bottom() - 1), QPoint(option.rect.width(), option.rect.bottom() - 1)));
+    if (!view->selectedIndexes().contains(index) && dragFlag) {
+        if (hRow == index.row()) {
+            painter->drawLine(QLine(QPoint(borderRect.x(), borderRect.top() + 1), QPoint(borderRect.width(), borderRect.top() + 1)));
+        } else if ((index.row() == (curRowCount - 1)) && (hRow == curRowCount || hRow == -1)) {
+            painter->drawLine(QLine(QPoint(borderRect.x(), borderRect.bottom() - 1), QPoint(borderRect.width(), borderRect.bottom() - 1)));
         }
     }
 }
@@ -668,7 +671,8 @@ void MusicSongListView::dragEnterEvent(QDragEnterEvent *event)
 
 void MusicSongListView::slotUpdateDragScroll()
 {
-    QPoint pos = mapFromGlobal(QCursor::pos());
+    QPoint pos = QCursor::pos();
+    pos = mapFromGlobal(pos);
     // 防止出边界
     if (!rect().contains(pos)) return;
     emit sigUpdateDragScroll();
@@ -702,7 +706,8 @@ void MusicSongListView::dragLeaveEvent(QDragLeaveEvent *event)
 
 int MusicSongListView::highlightedRow() const
 {
-    QPoint pos = mapFromGlobal(QCursor::pos());
+    QPoint pos = QCursor::pos();
+    pos = mapFromGlobal(pos);
     QModelIndex curRowIndex = indexAt(pos);
     int curRow = curRowIndex.row();
     if (curRow != -1) {

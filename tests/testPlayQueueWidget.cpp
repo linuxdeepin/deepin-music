@@ -93,6 +93,7 @@ TEST(Application, playQueueWidget)
 
     PlayListView *pv = pqw->findChild<PlayListView *>("PlayListView");
     pv->setDragFlag(true);
+    pv->updateDropIndicator();
     pv->dropItems(QVector<int>() << 0);
     pv->dragItemsPixmap();
 

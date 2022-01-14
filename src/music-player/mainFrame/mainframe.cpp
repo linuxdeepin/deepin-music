@@ -343,20 +343,25 @@ void MainFrame::initMenuAndShortcut()
 
     //short cut
     addmusicfilesShortcut = new QShortcut(this);
-    addmusicfilesShortcut->setKey(QKeySequence(QLatin1String("Ctrl+O")));
+    QKeySequence addmusicKeySequence(QLatin1String("Ctrl+O"));
+    addmusicfilesShortcut->setKey(addmusicKeySequence);
 
     viewshortcut = new QShortcut(this);
     viewshortcut->setAutoRepeat(false);
-    viewshortcut->setKey(QKeySequence(QLatin1String("Ctrl+Shift+/")));
+    QKeySequence viewSequence(QLatin1String("Ctrl+Shift+/"));
+    viewshortcut->setKey(viewSequence);
 
     searchShortcut = new QShortcut(this);
-    searchShortcut->setKey(QKeySequence(QLatin1String("Ctrl+F")));
+    QKeySequence searchSequence(QLatin1String("Ctrl+F"));
+    searchShortcut->setKey(searchSequence);
 
     windowShortcut = new QShortcut(this);
-    windowShortcut->setKey(QKeySequence(QLatin1String("Ctrl+Alt+F")));
+    QKeySequence windowSequence(QLatin1String("Ctrl+Alt+F"));
+    windowShortcut->setKey(windowSequence);
 
     m_newItemShortcut = new QShortcut(this);
-    m_newItemShortcut->setKey(QKeySequence(QLatin1String("Ctrl+Shift+N")));
+    QKeySequence newItemSequence(QLatin1String("Ctrl+Shift+N"));
+    m_newItemShortcut->setKey(newItemSequence);
     connect(m_newItemShortcut, &QShortcut::activated, CommonService::getInstance(), &CommonService::signalAddNewSongList);
 
     connect(addmusicfilesShortcut, SIGNAL(activated()), this, SLOT(slotShortCutTriggered()));

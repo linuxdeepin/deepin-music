@@ -99,6 +99,8 @@ public:
     void dropItems(QVector<int> &modelIndexs);
     // 获取拖拽图片
     QPixmap dragItemsPixmap();
+    // 更新拖拽分割线
+    void updateDropIndicator();
 
 public slots:
     void slotOnClicked(const QModelIndex &index);

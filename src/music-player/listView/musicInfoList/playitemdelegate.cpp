@@ -108,6 +108,7 @@ void PlayItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
                              const QModelIndex &index) const
 {
     auto listview = qobject_cast<const PlayListView *>(option.widget);
+    if (listview == nullptr) return;
     QColor color = DGuiApplicationHelper::instance()->applicationPalette().highlight().color();
     QPen pen(color, 1);
     painter->save();
@@ -119,7 +120,7 @@ void PlayItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
         } else {
             drawIconMode(*painter, option, index);
             // 绘制拖拽分割线
-            if (listview != nullptr && listview->m_dragFlag && listview->m_isDraging) {
+            if (listview->m_dragFlag && listview->m_isDraging) {
                 if (listview->highlightedRow() == index.row()) {
                     painter->drawLine(QLine(QPoint(option.rect.x() + 1, option.rect.top() + yoffset), QPoint(option.rect.x() + 1, option.rect.y() + yoffset + ImgWidthAndHeight)));
                 } else if ((index.row() == (curRowCount - 1)) && (listview->highlightedRow() == curRowCount || listview->highlightedRow() == -1)) {
@@ -133,7 +134,7 @@ void PlayItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
         } else {
             drawListMode(*painter, option, index);
             // 绘制拖拽分割线
-            if (listview != nullptr && !listview->allSelectedIndexes().contains(index) && listview->m_dragFlag && listview->m_isDraging) {
+            if (!listview->allSelectedIndexes().contains(index) && listview->m_dragFlag && listview->m_isDraging) {
                 int lrWidth = 10;
                 if (listview->highlightedRow() == index.row()) {
                     painter->drawLine(QLine(QPoint(option.rect.x() + lrWidth, option.rect.top() + 1), QPoint(option.rect.width() - lrWidth, option.rect.top() + 1)));
