@@ -135,7 +135,7 @@ void MusicLyric::getFromFile(QString dir)
                 ss = t_timelist[1].toDouble(&flag);
                 if (flag) {
                     qint64  curtime = (qint64)(ss * 1000) + mm * 60 * 1000;
-                    ans.insert(curtime, str);
+                    ans.insert(curtime, str.trimmed());
                 }
             }
         }
