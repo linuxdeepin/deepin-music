@@ -1,4 +1,4 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS language="uk" sourcelanguage="en_US" version="2.1">
+<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="uk" sourcelanguage="en_US">
 <context>
     <name>AddMusicWidget</name>
     <message>
@@ -95,22 +95,22 @@
 <context>
     <name>DataBaseService</name>
     <message>
-        <location filename="../src/music-player/presenter/databaseservice.cpp" line="1061"/>
+        <location filename="../src/music-player/presenter/databaseservice.cpp" line="1217"/>
         <source>Albums</source>
         <translation>Альбоми</translation>
     </message>
     <message>
-        <location filename="../src/music-player/presenter/databaseservice.cpp" line="1070"/>
+        <location filename="../src/music-player/presenter/databaseservice.cpp" line="1226"/>
         <source>Artists</source>
         <translation>Виконавці</translation>
     </message>
     <message>
-        <location filename="../src/music-player/presenter/databaseservice.cpp" line="1078"/>
+        <location filename="../src/music-player/presenter/databaseservice.cpp" line="1234"/>
         <source>All Music</source>
         <translation>Уся музика</translation>
     </message>
     <message>
-        <location filename="../src/music-player/presenter/databaseservice.cpp" line="1085"/>
+        <location filename="../src/music-player/presenter/databaseservice.cpp" line="1241"/>
         <source>My Favorites</source>
         <translation>Мої улюблені</translation>
     </message>
@@ -254,59 +254,59 @@
 <context>
     <name>FooterWidget</name>
     <message>
-        <location filename="../src/music-player/mainFrame/footerwidget.cpp" line="163"/>
-        <location filename="../src/music-player/mainFrame/footerwidget.cpp" line="640"/>
+        <location filename="../src/music-player/mainFrame/footerwidget.cpp" line="165"/>
+        <location filename="../src/music-player/mainFrame/footerwidget.cpp" line="653"/>
         <source>Unknown Title</source>
         <translation>Невідома назва</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/footerwidget.cpp" line="170"/>
-        <location filename="../src/music-player/mainFrame/footerwidget.cpp" line="643"/>
+        <location filename="../src/music-player/mainFrame/footerwidget.cpp" line="172"/>
+        <location filename="../src/music-player/mainFrame/footerwidget.cpp" line="656"/>
         <source>Unknown artist</source>
         <translation>Невідомий виконавець</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/footerwidget.cpp" line="291"/>
+        <location filename="../src/music-player/mainFrame/footerwidget.cpp" line="293"/>
         <source>Previous</source>
         <translation>Назад</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/footerwidget.cpp" line="292"/>
+        <location filename="../src/music-player/mainFrame/footerwidget.cpp" line="294"/>
         <source>Next</source>
         <translation>Далі</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/footerwidget.cpp" line="293"/>
+        <location filename="../src/music-player/mainFrame/footerwidget.cpp" line="295"/>
         <source>Play/Pause</source>
         <translation>Відтворення/Пауза</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/footerwidget.cpp" line="294"/>
+        <location filename="../src/music-player/mainFrame/footerwidget.cpp" line="296"/>
         <source>Favorite</source>
         <translation>Улюблені</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/footerwidget.cpp" line="295"/>
+        <location filename="../src/music-player/mainFrame/footerwidget.cpp" line="297"/>
         <source>Lyrics</source>
         <translation>Текст пісні</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/footerwidget.cpp" line="296"/>
+        <location filename="../src/music-player/mainFrame/footerwidget.cpp" line="298"/>
         <source>Play Queue</source>
         <translation>Відтворити чергу</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/footerwidget.cpp" line="457"/>
+        <location filename="../src/music-player/mainFrame/footerwidget.cpp" line="470"/>
         <source>List Loop</source>
         <translation>Зациклити список</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/footerwidget.cpp" line="460"/>
+        <location filename="../src/music-player/mainFrame/footerwidget.cpp" line="473"/>
         <source>Single Loop</source>
         <translation>Зациклити</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/footerwidget.cpp" line="463"/>
+        <location filename="../src/music-player/mainFrame/footerwidget.cpp" line="476"/>
         <source>Shuffle</source>
         <translation>Перемішати</translation>
     </message>
@@ -402,35 +402,35 @@
 <context>
     <name>MainFrame</name>
     <message>
-        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="310"/>
+        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="311"/>
         <source>Add playlist</source>
         <translation>Додати список відтворення</translation>
     </message>
     <message>
         <location filename="../src/music-player/mainFrame/mainframe.cpp" line="150"/>
-        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="312"/>
-        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="443"/>
+        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="313"/>
+        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="475"/>
         <source>Add music</source>
         <translation>Додати музику</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="313"/>
+        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="314"/>
         <source>Equalizer</source>
         <translation>Еквалайзер</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="316"/>
+        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="317"/>
         <source>Settings</source>
         <translation>Налаштування</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="319"/>
+        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="320"/>
         <source>Dark theme</source>
         <translation>Темна тема</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="323"/>
-        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="370"/>
+        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="324"/>
+        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="379"/>
         <source>Exit</source>
         <translation>Вихід</translation>
     </message>
@@ -438,7 +438,7 @@
         <location filename="../src/music-player/mainFrame/mainframe.cpp" line="121"/>
         <location filename="../src/music-player/mainFrame/mainframe.cpp" line="130"/>
         <location filename="../src/music-player/mainFrame/mainframe.cpp" line="138"/>
-        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="382"/>
+        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="391"/>
         <source>Music</source>
         <translation>Музика</translation>
     </message>
@@ -463,52 +463,52 @@
         <translation>Готово</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="367"/>
+        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="373"/>
         <source>Play/Pause</source>
         <translation>Відтворення/Пауза</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="368"/>
+        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="375"/>
         <source>Previous</source>
         <translation>Попередній</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="369"/>
+        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="377"/>
         <source>Next</source>
         <translation>Наступний</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="535"/>
+        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="573"/>
         <source>Successfully added to &quot;%1&quot;</source>
         <translation>Успішно додано до &quot;%1&quot;</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="538"/>
+        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="576"/>
         <source>Already added to the playlist</source>
         <translation>Вже додано до списку відтворення</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="541"/>
+        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="579"/>
         <source>1 song added</source>
         <translation>Додано 1 композицію</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="543"/>
+        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="581"/>
         <source>%1 songs added</source>
         <translation>Додано %1 композицій</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="547"/>
+        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="585"/>
         <source>A disc is connected</source>
         <translation>Диск з&apos;єднано</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="689"/>
+        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="727"/>
         <source>OK</source>
         <translation>Гаразд</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="682"/>
+        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="720"/>
         <source>Import failed, no valid music file found</source>
         <translation>Не вдалося імпортувати. Не знайдено коректного файла звукових даних.</translation>
     </message>
@@ -557,105 +557,114 @@
 <context>
     <name>MusicListDataWidget</name>
     <message>
-        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="114"/>
-        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="1015"/>
-        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="1036"/>
-        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="1055"/>
-        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="1070"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="115"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="1044"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="1065"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="1084"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="1099"/>
         <source>No songs</source>
         <translation>Немає пісень</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="1017"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="979"/>
+        <source>Custom</source>
+        <translation>Користувацький</translation>
+    </message>
+    <message>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="1046"/>
         <source>1 album - 1 song</source>
         <translation>1 альбом — 1 композиція</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="1020"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="1049"/>
         <source>%1 album - %2 songs</source>
         <translation>%1 альбом — %2 композиції</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="1022"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="1051"/>
         <source>%1 albums - %2 songs</source>
         <translation>%1 альбомів — %2 композицій</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="1038"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="1067"/>
         <source>1 artist - 1 song</source>
         <translation>1 виконавець — 1 композиція</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="1041"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="1070"/>
         <source>%1 artist - %2 songs</source>
         <translation>%1 виконавець — %2 композицій</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="1043"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="1072"/>
         <source>%1 artists - %2 songs</source>
         <translation>%1 виконавців — %2 композицій</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="116"/>
-        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="1057"/>
-        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="1072"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="117"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="1086"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="1101"/>
         <source>1 song</source>
         <translation>1 піісня</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="118"/>
-        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="1059"/>
-        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="1074"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="119"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="1088"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="1103"/>
         <source>%1 songs</source>
         <translation>%1 пісні</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="286"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="287"/>
         <source>Search Results</source>
         <translation>Результати пошуку</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="974"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="1003"/>
         <source>No search results</source>
         <translation>Немає результатів пошуку</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="854"/>
-        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="877"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="865"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="888"/>
         <source>All Music</source>
         <translation>Уся музика</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="238"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="239"/>
         <source>CD playlist</source>
         <translation>Список відтворення КД</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="922"/>
-        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="937"/>
-        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="952"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="933"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="948"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="963"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="980"/>
         <source>Time added</source>
         <translation>Час додано</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="923"/>
-        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="955"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="934"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="966"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="983"/>
         <source>Album</source>
         <translation>Альбом</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="938"/>
-        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="954"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="949"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="965"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="982"/>
         <source>Artist</source>
         <translation>Виконавець</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="953"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="964"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="981"/>
         <source>Title</source>
         <translation>Назва</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="828"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="839"/>
         <source>Play All</source>
         <translation>Відтворити всі</translation>
     </message>
@@ -684,68 +693,68 @@
 <context>
     <name>MusicSongListView</name>
     <message>
-        <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="180"/>
-        <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="436"/>
+        <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="202"/>
+        <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="450"/>
         <source>Pause</source>
         <translation>Пауза</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="183"/>
-        <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="432"/>
+        <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="205"/>
+        <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="446"/>
         <source>Play</source>
         <translation>Відтворити</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="189"/>
-        <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="434"/>
+        <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="211"/>
+        <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="448"/>
         <source>Add music</source>
         <translation>Додати музику</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="190"/>
-        <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="438"/>
+        <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="212"/>
+        <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="452"/>
         <source>Rename</source>
         <translation>Перейменувати</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="191"/>
-        <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="320"/>
-        <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="440"/>
+        <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="213"/>
+        <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="334"/>
+        <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="454"/>
         <source>Delete</source>
         <translation>Вилучити</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="278"/>
+        <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="296"/>
         <source>CD playlist</source>
         <translation>Список відтворення КД</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="312"/>
+        <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="326"/>
         <source>Are you sure you want to delete this playlist?</source>
         <translation>Ви впевнені, що хочете видалити цей плейлист?</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="319"/>
+        <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="333"/>
         <source>Cancel</source>
         <translation>Скасувати</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="560"/>
+        <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="571"/>
         <source>The CD has been removed</source>
         <translation>КД було вилучено</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="564"/>
+        <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="575"/>
         <source>Play failed, as the CD has been removed</source>
         <translation>Помилка відтворення, оскільки КД було вилучено</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="571"/>
+        <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="582"/>
         <source>OK</source>
         <translation>Гаразд</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="771"/>
+        <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="883"/>
         <source>New playlist</source>
         <translation>Новий плейлист</translation>
     </message>
@@ -753,138 +762,138 @@
 <context>
     <name>PlayListView</name>
     <message>
-        <location filename="../src/music-player/listView/musicInfoList/playitemdelegate.cpp" line="463"/>
-        <location filename="../src/music-player/listView/musicInfoList/playitemdelegate.cpp" line="803"/>
+        <location filename="../src/music-player/listView/musicInfoList/playitemdelegate.cpp" line="488"/>
+        <location filename="../src/music-player/listView/musicInfoList/playitemdelegate.cpp" line="835"/>
         <source>Unknown artist</source>
         <translation>Невідомий виконавець</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicInfoList/playitemdelegate.cpp" line="475"/>
-        <location filename="../src/music-player/listView/musicInfoList/playitemdelegate.cpp" line="815"/>
+        <location filename="../src/music-player/listView/musicInfoList/playitemdelegate.cpp" line="500"/>
+        <location filename="../src/music-player/listView/musicInfoList/playitemdelegate.cpp" line="847"/>
         <source>Unknown album</source>
         <translation>Невідомий альбом</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1317"/>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1657"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1299"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1855"/>
         <source>Play queue</source>
         <translation>Відтворити чергу</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1320"/>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1654"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1302"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1852"/>
         <source>My favorites</source>
         <translation>Мої улюблені</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="556"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="580"/>
         <source>File is invalid or does not exist, load failed</source>
         <translation>Файл є некоректним або файла не існує. Не вдалося завантажити.</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="557"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="581"/>
         <source>OK</source>
         <translation>Гаразд</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1358"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1340"/>
         <source>Play</source>
         <translation>Відтворити</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1361"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1343"/>
         <source>Pause</source>
         <translation>Пауза</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1653"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1851"/>
         <source>Add to playlist</source>
         <translation>Додати у плейлист</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1370"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1352"/>
         <source>Display in file manager</source>
         <translation>Відобразити у файловому менеджері</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1296"/>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1368"/>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1434"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1278"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1350"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1416"/>
         <source>Add to</source>
         <translation>Додати</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1324"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1306"/>
         <source>Create new playlist</source>
         <translation>Створити список відтворення</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1372"/>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1436"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1354"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1418"/>
         <source>Remove from play queue</source>
         <translation>Видалити з черги відтворення</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1374"/>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1438"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1356"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1420"/>
         <source>Remove from playlist</source>
         <translation>Видалити з плейлисту</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1377"/>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1440"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1359"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1422"/>
         <source>Delete from local disk</source>
         <translation>Видалити з локального диску</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1410"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1392"/>
         <source>Encoding</source>
         <translation>Кодування</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1414"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1396"/>
         <source>Song info</source>
         <translation>Інформація про пісню</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1119"/>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1175"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1114"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1167"/>
         <source>Cancel</source>
         <translation>Скасувати</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1120"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1115"/>
         <source>Remove</source>
         <translation>Видалити</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1123"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1118"/>
         <source>Are you sure you want to remove %1?</source>
         <translation>Ви впевнені, що хочете видалити %1?</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1125"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1120"/>
         <source>Are you sure you want to remove the selected %1 songs?</source>
         <translation>Ви впевнені, що хочете видалити вибрані %1 пісні?</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1176"/>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1294"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1168"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1276"/>
         <source>Delete</source>
         <translation>Видалити</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1181"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1173"/>
         <source>Are you sure you want to delete %1?</source>
         <translation>Ви впевнені, що хочете видалити %1?</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1188"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1180"/>
         <source>Are you sure you want to delete the selected %1 songs?</source>
         <translation>Ви впевнені, що хочете видалити вибрані %1 пісні?</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1189"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1181"/>
         <source>The song files contained will also be deleted</source>
         <translation>Файли пісень, які там зберігаються, також буде вилучено.</translation>
     </message>

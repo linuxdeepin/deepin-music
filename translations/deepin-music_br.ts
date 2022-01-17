@@ -1,4 +1,4 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS language="br" sourcelanguage="en_US" version="2.1">
+<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="br" sourcelanguage="en_US">
 <context>
     <name>AddMusicWidget</name>
     <message>
@@ -95,22 +95,22 @@
 <context>
     <name>DataBaseService</name>
     <message>
-        <location filename="../src/music-player/presenter/databaseservice.cpp" line="1061"/>
+        <location filename="../src/music-player/presenter/databaseservice.cpp" line="1217"/>
         <source>Albums</source>
         <translation>Albomoù</translation>
     </message>
     <message>
-        <location filename="../src/music-player/presenter/databaseservice.cpp" line="1070"/>
+        <location filename="../src/music-player/presenter/databaseservice.cpp" line="1226"/>
         <source>Artists</source>
         <translation>Arzourien</translation>
     </message>
     <message>
-        <location filename="../src/music-player/presenter/databaseservice.cpp" line="1078"/>
+        <location filename="../src/music-player/presenter/databaseservice.cpp" line="1234"/>
         <source>All Music</source>
         <translation>An holl sonerezh</translation>
     </message>
     <message>
-        <location filename="../src/music-player/presenter/databaseservice.cpp" line="1085"/>
+        <location filename="../src/music-player/presenter/databaseservice.cpp" line="1241"/>
         <source>My Favorites</source>
         <translation>Ma re muiañ-karet</translation>
     </message>
@@ -254,59 +254,59 @@
 <context>
     <name>FooterWidget</name>
     <message>
-        <location filename="../src/music-player/mainFrame/footerwidget.cpp" line="163"/>
-        <location filename="../src/music-player/mainFrame/footerwidget.cpp" line="640"/>
+        <location filename="../src/music-player/mainFrame/footerwidget.cpp" line="165"/>
+        <location filename="../src/music-player/mainFrame/footerwidget.cpp" line="653"/>
         <source>Unknown Title</source>
         <translation>Titl dizanv</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/footerwidget.cpp" line="170"/>
-        <location filename="../src/music-player/mainFrame/footerwidget.cpp" line="643"/>
+        <location filename="../src/music-player/mainFrame/footerwidget.cpp" line="172"/>
+        <location filename="../src/music-player/mainFrame/footerwidget.cpp" line="656"/>
         <source>Unknown artist</source>
         <translation>Arzour dianav</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/footerwidget.cpp" line="291"/>
+        <location filename="../src/music-player/mainFrame/footerwidget.cpp" line="293"/>
         <source>Previous</source>
         <translation>Kent</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/footerwidget.cpp" line="292"/>
+        <location filename="../src/music-player/mainFrame/footerwidget.cpp" line="294"/>
         <source>Next</source>
         <translation>Da-heul</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/footerwidget.cpp" line="293"/>
+        <location filename="../src/music-player/mainFrame/footerwidget.cpp" line="295"/>
         <source>Play/Pause</source>
         <translation>Lenn/Ehanañ</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/footerwidget.cpp" line="294"/>
+        <location filename="../src/music-player/mainFrame/footerwidget.cpp" line="296"/>
         <source>Favorite</source>
         <translation>Muiañ-karet</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/footerwidget.cpp" line="295"/>
+        <location filename="../src/music-player/mainFrame/footerwidget.cpp" line="297"/>
         <source>Lyrics</source>
         <translation>Komzoù</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/footerwidget.cpp" line="296"/>
+        <location filename="../src/music-player/mainFrame/footerwidget.cpp" line="298"/>
         <source>Play Queue</source>
         <translation>Lenn ar steudad-c&apos;hortoz</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/footerwidget.cpp" line="457"/>
+        <location filename="../src/music-player/mainFrame/footerwidget.cpp" line="470"/>
         <source>List Loop</source>
         <translation>Roll-lenn e bouklenn</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/footerwidget.cpp" line="460"/>
+        <location filename="../src/music-player/mainFrame/footerwidget.cpp" line="473"/>
         <source>Single Loop</source>
         <translation>Lenn e bouklenn</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/footerwidget.cpp" line="463"/>
+        <location filename="../src/music-player/mainFrame/footerwidget.cpp" line="476"/>
         <source>Shuffle</source>
         <translation>Dre-zegouezh</translation>
     </message>
@@ -402,35 +402,35 @@
 <context>
     <name>MainFrame</name>
     <message>
-        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="310"/>
+        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="311"/>
         <source>Add playlist</source>
         <translation>Ouzhpennañ d&apos;ar roll-lenn</translation>
     </message>
     <message>
         <location filename="../src/music-player/mainFrame/mainframe.cpp" line="150"/>
-        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="312"/>
-        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="443"/>
+        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="313"/>
+        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="475"/>
         <source>Add music</source>
         <translation>Ouzhpennañ sonerezh</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="313"/>
+        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="314"/>
         <source>Equalizer</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="316"/>
+        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="317"/>
         <source>Settings</source>
         <translation>Arventennoù</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="319"/>
+        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="320"/>
         <source>Dark theme</source>
         <translation>Tem teñval</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="323"/>
-        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="370"/>
+        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="324"/>
+        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="379"/>
         <source>Exit</source>
         <translation>Kuitaat</translation>
     </message>
@@ -438,7 +438,7 @@
         <location filename="../src/music-player/mainFrame/mainframe.cpp" line="121"/>
         <location filename="../src/music-player/mainFrame/mainframe.cpp" line="130"/>
         <location filename="../src/music-player/mainFrame/mainframe.cpp" line="138"/>
-        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="382"/>
+        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="391"/>
         <source>Music</source>
         <translation>Sonerezh</translation>
     </message>
@@ -463,52 +463,52 @@
         <translation>Graet</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="367"/>
+        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="373"/>
         <source>Play/Pause</source>
         <translation>Lenn/Ehanañ</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="368"/>
+        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="375"/>
         <source>Previous</source>
         <translation>Kent</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="369"/>
+        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="377"/>
         <source>Next</source>
         <translation>Da-heul</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="535"/>
+        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="573"/>
         <source>Successfully added to &quot;%1&quot;</source>
         <translation>Ouzhpennet gant berzh da &quot;%1&quot;</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="538"/>
+        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="576"/>
         <source>Already added to the playlist</source>
         <translation>Ouzhpennet endeo d&apos;ar roll-lenn</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="541"/>
+        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="579"/>
         <source>1 song added</source>
         <translation>1 ganaouenn ouzhpennet</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="543"/>
+        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="581"/>
         <source>%1 songs added</source>
         <translation>%1 a ganaouennoù ouzhpennet</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="547"/>
+        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="585"/>
         <source>A disc is connected</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="689"/>
+        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="727"/>
         <source>OK</source>
         <translation>Mat eo</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="682"/>
+        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="720"/>
         <source>Import failed, no valid music file found</source>
         <translation>C&apos;hwitet ez eus bet war an emporzhiañ, n&apos;eus bet kavet restr sonerezhel ebet</translation>
     </message>
@@ -557,105 +557,114 @@
 <context>
     <name>MusicListDataWidget</name>
     <message>
-        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="114"/>
-        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="1015"/>
-        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="1036"/>
-        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="1055"/>
-        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="1070"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="115"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="1044"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="1065"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="1084"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="1099"/>
         <source>No songs</source>
         <translation>Kanaouenn ebet</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="1017"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="979"/>
+        <source>Custom</source>
+        <translation>Personnelaet</translation>
+    </message>
+    <message>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="1046"/>
         <source>1 album - 1 song</source>
         <translation>1 albom - 1 ganaouenn</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="1020"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="1049"/>
         <source>%1 album - %2 songs</source>
         <translation>%1 albom - %2 a ganaouennoù</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="1022"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="1051"/>
         <source>%1 albums - %2 songs</source>
         <translation>%1 a albomioù - %2 a ganaouennoù</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="1038"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="1067"/>
         <source>1 artist - 1 song</source>
         <translation>1 arzour - 1 ganaouenn</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="1041"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="1070"/>
         <source>%1 artist - %2 songs</source>
         <translation>%1 a arzourien - %2 a ganaouennoù</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="1043"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="1072"/>
         <source>%1 artists - %2 songs</source>
         <translation>%1 a arzourien - %2 a ganaouennoù</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="116"/>
-        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="1057"/>
-        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="1072"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="117"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="1086"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="1101"/>
         <source>1 song</source>
         <translation>1 ganaouenn</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="118"/>
-        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="1059"/>
-        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="1074"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="119"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="1088"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="1103"/>
         <source>%1 songs</source>
         <translation>%1 a ganaouennoù</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="286"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="287"/>
         <source>Search Results</source>
         <translation>Disoc&apos;hoù an enklask</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="974"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="1003"/>
         <source>No search results</source>
         <translation>Disoc&apos;h ebet kavet</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="854"/>
-        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="877"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="865"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="888"/>
         <source>All Music</source>
         <translation>An holl sonerezh</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="238"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="239"/>
         <source>CD playlist</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="922"/>
-        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="937"/>
-        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="952"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="933"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="948"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="963"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="980"/>
         <source>Time added</source>
         <translation>Amzerioù ouzhpennet</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="923"/>
-        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="955"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="934"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="966"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="983"/>
         <source>Album</source>
         <translation>Albom</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="938"/>
-        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="954"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="949"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="965"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="982"/>
         <source>Artist</source>
         <translation>Arzour</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="953"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="964"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="981"/>
         <source>Title</source>
         <translation>Titl</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="828"/>
+        <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="839"/>
         <source>Play All</source>
         <translation>Lenn pep-tra</translation>
     </message>
@@ -684,68 +693,68 @@
 <context>
     <name>MusicSongListView</name>
     <message>
-        <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="180"/>
-        <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="436"/>
+        <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="202"/>
+        <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="450"/>
         <source>Pause</source>
         <translation>Ehanet</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="183"/>
-        <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="432"/>
+        <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="205"/>
+        <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="446"/>
         <source>Play</source>
         <translation>Lenn</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="189"/>
-        <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="434"/>
+        <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="211"/>
+        <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="448"/>
         <source>Add music</source>
         <translation>Ouzhpennañ sonerezh</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="190"/>
-        <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="438"/>
+        <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="212"/>
+        <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="452"/>
         <source>Rename</source>
         <translation>Adenvel</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="191"/>
-        <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="320"/>
-        <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="440"/>
+        <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="213"/>
+        <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="334"/>
+        <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="454"/>
         <source>Delete</source>
         <translation>Dilemel</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="278"/>
+        <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="296"/>
         <source>CD playlist</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="312"/>
+        <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="326"/>
         <source>Are you sure you want to delete this playlist?</source>
         <translation>Ha fellout a ra deoc&apos;h dilemel ar roll-lenn-mañ?</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="319"/>
+        <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="333"/>
         <source>Cancel</source>
         <translation>Nullañ</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="560"/>
+        <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="571"/>
         <source>The CD has been removed</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="564"/>
+        <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="575"/>
         <source>Play failed, as the CD has been removed</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="571"/>
+        <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="582"/>
         <source>OK</source>
         <translation>Mat eo</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="771"/>
+        <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="883"/>
         <source>New playlist</source>
         <translation>Roll-lenn nevez</translation>
     </message>
@@ -753,138 +762,138 @@
 <context>
     <name>PlayListView</name>
     <message>
-        <location filename="../src/music-player/listView/musicInfoList/playitemdelegate.cpp" line="463"/>
-        <location filename="../src/music-player/listView/musicInfoList/playitemdelegate.cpp" line="803"/>
+        <location filename="../src/music-player/listView/musicInfoList/playitemdelegate.cpp" line="488"/>
+        <location filename="../src/music-player/listView/musicInfoList/playitemdelegate.cpp" line="835"/>
         <source>Unknown artist</source>
         <translation>Arzour dianav</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicInfoList/playitemdelegate.cpp" line="475"/>
-        <location filename="../src/music-player/listView/musicInfoList/playitemdelegate.cpp" line="815"/>
+        <location filename="../src/music-player/listView/musicInfoList/playitemdelegate.cpp" line="500"/>
+        <location filename="../src/music-player/listView/musicInfoList/playitemdelegate.cpp" line="847"/>
         <source>Unknown album</source>
         <translation>Albom dianav</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1317"/>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1657"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1299"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1855"/>
         <source>Play queue</source>
         <translation>Lenn ar steudad-c&apos;hortoz</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1320"/>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1654"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1302"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1852"/>
         <source>My favorites</source>
         <translation>Ma re muiañ-karet</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="556"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="580"/>
         <source>File is invalid or does not exist, load failed</source>
         <translation>Neket reizh ar restr pe n&apos;eus ket anezhi, ar prantad-kargañ a zo chomet sac&apos;het</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="557"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="581"/>
         <source>OK</source>
         <translation>Mat eo</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1358"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1340"/>
         <source>Play</source>
         <translation>Lenn</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1361"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1343"/>
         <source>Pause</source>
         <translation>Ehanet</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1653"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1851"/>
         <source>Add to playlist</source>
         <translation>Ouzhpennañ d&apos;ar roll-lenn</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1370"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1352"/>
         <source>Display in file manager</source>
         <translation>Diskouez er merer restroù</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1296"/>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1368"/>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1434"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1278"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1350"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1416"/>
         <source>Add to</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1324"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1306"/>
         <source>Create new playlist</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1372"/>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1436"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1354"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1418"/>
         <source>Remove from play queue</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1374"/>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1438"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1356"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1420"/>
         <source>Remove from playlist</source>
         <translation>Dilemel diwar ar roll-lenn</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1377"/>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1440"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1359"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1422"/>
         <source>Delete from local disk</source>
         <translation>Dilemel diwar an disk lec&apos;hel</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1410"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1392"/>
         <source>Encoding</source>
         <translation>Enkodañ</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1414"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1396"/>
         <source>Song info</source>
         <translation>Titouroù ar roll-lenn</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1119"/>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1175"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1114"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1167"/>
         <source>Cancel</source>
         <translation>Nullañ</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1120"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1115"/>
         <source>Remove</source>
         <translation>Dilemel</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1123"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1118"/>
         <source>Are you sure you want to remove %1?</source>
         <translation>Ha fellout a ra deoc&apos;h dilemel da vat %1?</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1125"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1120"/>
         <source>Are you sure you want to remove the selected %1 songs?</source>
         <translation>Ha fellout a ra deoc&apos;h dilemel da vat an/ar %1 a ganaouennoù?</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1176"/>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1294"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1168"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1276"/>
         <source>Delete</source>
         <translation>Dilemel</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1181"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1173"/>
         <source>Are you sure you want to delete %1?</source>
         <translation>Ha sur oc&apos;h ho peus c&apos;hoant dilemel %1?</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1188"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1180"/>
         <source>Are you sure you want to delete the selected %1 songs?</source>
         <translation>Ha fellout a ra deoc&apos;h dilemel an/ar %1 a ganaouennoù diuzet?</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1189"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1181"/>
         <source>The song files contained will also be deleted</source>
         <translation>Restroù ar c&apos;hanaouennoù endalc&apos;het a vo dilemet ivez</translation>
     </message>
