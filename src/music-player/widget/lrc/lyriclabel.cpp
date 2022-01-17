@@ -95,21 +95,22 @@ void LyricLabel::getFromFile(QString dir)
 
 void LyricLabel::paintItem(QPainter *painter, int index, const QRect &rect)
 {
-    if (index == this->m_currentItem) {
+    if (index == this->m_currentItem + 1) {
         painter->setPen(lyricHighlight);
         QFont font(lyricFont);
         //绑定获取系统字体大小
         font.setPixelSize(DFontSizeManager::instance()->fontPixelSize(DFontSizeManager::T6));
+        font.setWeight(QFont::DemiBold);
         painter->setFont(font);
         QPoint leftpos = rect.bottomLeft();
-        leftpos.setY(static_cast<int>(leftpos.y() + rect.height() / 2.0 + 5));
+        //leftpos.setY(static_cast<int>(leftpos.y() + rect.height() / 2.0 + 5));
         QPoint rightpos = rect.bottomRight();
         rightpos.setY(leftpos.y());
         rightpos.setX(rightpos.x() - 3);
-        leftpos.setY(leftpos.y() - 3);
-        rightpos.setY(rightpos.y() - 3);
-        //leftpos.setY(leftpos.y() - rect.height() / 2);
-        //rightpos.setY(rightpos.y() - rect.height() / 2);
+        //leftpos.setY(leftpos.y() - 3);
+        //rightpos.setY(rightpos.y() - 3);
+        leftpos.setY(leftpos.y() - rect.height() / 2);
+        rightpos.setY(rightpos.y() - rect.height() / 2);
         painter->save();
         QPointF triangle1[3] = {QPointF(leftpos.x(), leftpos.y() * 1.0 + 4.5), QPointF(leftpos.x(), leftpos.y() * 1.0 - 4.5), QPointF(leftpos.x() + 9, leftpos.y())}; //1
         QPointF triangle2[3] = {QPointF(rightpos.x(), rightpos.y() * 1.0 + 4.5), QPointF(rightpos.x(), rightpos.y() * 1.0 - 4.5), QPointF(rightpos.x() - 9, rightpos.y())}; //1
@@ -189,9 +190,7 @@ void LyricLabel::setThemeType(int type)
 {
     m_themetype = type;
     if (type == 1) {
-        QColor normalcolor = "#000000";
-        normalcolor.setAlphaF(0.5);
-        lyricNormal =  normalcolor;
+        lyricNormal =  QColor("#333333");
         lyricHighlight =  QColor("#000000");
     } else {
         lyricNormal =  QColor("#C0C6D4");
