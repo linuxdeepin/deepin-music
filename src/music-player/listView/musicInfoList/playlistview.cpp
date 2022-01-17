@@ -2016,11 +2016,11 @@ void PlayListView::sortList(QList<MediaMeta> &musicInfos, const DataBaseService:
         break;
     }
     case DataBaseService::SortByCustomASC: {
-        musicInfos = DataBaseService::getInstance()->customizeMusicInfosByOrder(m_currentHash, DataBaseService::SortByCustomASC);
+        if (m_currentHash != "musicResult") musicInfos = DataBaseService::getInstance()->customizeMusicInfosByOrder(m_currentHash, DataBaseService::SortByCustomASC);
         break;
     }
     case DataBaseService::SortByCustomDES: {
-        musicInfos = DataBaseService::getInstance()->customizeMusicInfosByOrder(m_currentHash, DataBaseService::SortByCustomDES);
+        if (m_currentHash != "musicResult") musicInfos = DataBaseService::getInstance()->customizeMusicInfosByOrder(m_currentHash, DataBaseService::SortByCustomDES);
         break;
     }
     default:

@@ -288,15 +288,12 @@ void SearchResultTabWidget::resizeEvent(QResizeEvent *event)
 void SearchResultTabWidget::mousePressEvent(QMouseEvent *event)
 {
     if (m_music->geometry().contains(event->pos())) {
-        qDebug() << "zy------m_music clicked";
         setLabelChecked(m_music);
         emit sigSearchTypeChanged("musicResult");
     } else if (m_singer->geometry().contains(event->pos())) {
-        qDebug() << "zy------m_singer clicked";
         setLabelChecked(m_singer);
         emit sigSearchTypeChanged("artistResult");
     } else if (m_album->geometry().contains(event->pos())) {
-        qDebug() << "zy------m_album clicked";
         setLabelChecked(m_album);
         emit sigSearchTypeChanged("albumResult");
     }
