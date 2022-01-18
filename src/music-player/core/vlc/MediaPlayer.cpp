@@ -205,7 +205,7 @@ int VlcMediaPlayer::length() const
 void VlcMediaPlayer::open(VlcMedia *media)
 {
     //防止没打开文件
-    if(media->core() == nullptr)
+    if (media->core() == nullptr)
         return;
     vlc_media_player_set_media_function vlc_media_player_set_media = (vlc_media_player_set_media_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("libvlc_media_player_set_media");
     config_PutInt_func config_PutInt_fc = (config_PutInt_func)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("config_PutInt");
@@ -361,9 +361,9 @@ void VlcMediaPlayer::libvlc_callback(const libvlc_event_t *event,
     case libvlc_MediaPlayerEncounteredError:
         emit core->error();
         break;
-    case libvlc_MediaPlayerTimeChanged:
-        emit core->timeChanged(event->u.media_player_time_changed.new_time);
-        break;
+//    case libvlc_MediaPlayerTimeChanged:
+//        emit core->timeChanged(event->u.media_player_time_changed.new_time);
+//        break;
     case libvlc_MediaPlayerPositionChanged:
         emit core->positionChanged(event->u.media_player_position_changed.new_position);
         break;

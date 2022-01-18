@@ -1195,10 +1195,15 @@ void Player::initVlc()
     connect(m_timer, &QTimer::timeout, this, &Player::changePicture);
     connect(m_qvplayer, &VlcMediaPlayer::timeChanged,
     this, [ = ](qint64 position) {
-        Q_EMIT positionChanged(position /*- m_ActiveMeta.offset*/,  m_ActiveMeta.length, 1); //直接上报当前位置，offset无实质意义
+        Q_EMIT positionChanged(position,  m_ActiveMeta.length, 1); //直接上报当前位置，offset无实质意义
+    });
+    connect(m_qvplayer, &VlcMediaPlayer::positionChanged,
+    this, [ = ](float position) {
+        qint64 curPosition = static_cast<qint64>(position * m_ActiveMeta.length);
+        Q_EMIT positionChanged(curPosition,  m_ActiveMeta.length, 1); //直接上报当前位置，offset无实质意义
         if (INT_LAST_PROGRESS_FLAG == 0) {
-            m_ActiveMeta.offset = position;
-            MusicSettings::setOption("base.play.last_position", position);
+            m_ActiveMeta.offset = curPosition;
+            MusicSettings::setOption("base.play.last_position", curPosition);
             // cd特殊处理
             if (!QFile::exists(m_ActiveMeta.localPath) && m_ActiveMeta.mmType != MIMETYPE_CDA) {
                 playNextMeta(true);
