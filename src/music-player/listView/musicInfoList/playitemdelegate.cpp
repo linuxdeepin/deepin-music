@@ -580,6 +580,20 @@ void PlayItemDelegate::drawIconMode(QPainter &painter, const QStyleOptionViewIte
         icon = qvariant_cast<QIcon>(value);
     }
     QRect pixmapRect(option.rect.x() + xoffset, option.rect.y() + yoffset, ImgWidthAndHeight, ImgWidthAndHeight);
+
+    // 绘制选中时的阴影
+    QBrush fillBrush(QColor(128, 128, 128, 0));
+    if (option.state & QStyle::State_Selected) {
+        fillBrush = QBrush(option.palette.highlight().color());
+    }
+    int borderWidth = 4;
+    painter.save();
+    QPainterPath borderPixmapRectPath;
+    borderPixmapRectPath.addRoundRect(pixmapRect.adjusted(-borderWidth, -borderWidth, borderWidth, borderWidth), roundRadius, roundRadius);
+    painter.setClipPath(borderPixmapRectPath);
+    painter.fillRect(pixmapRect.adjusted(-borderWidth, -borderWidth, borderWidth, borderWidth), fillBrush);
+    painter.restore();
+
     QPainterPath roundPixmapRectPath;
     roundPixmapRectPath.addRoundRect(pixmapRect, roundRadius, roundRadius);
     painter.setClipPath(roundPixmapRectPath);
@@ -663,18 +677,8 @@ void PlayItemDelegate::drawIconMode(QPainter &painter, const QStyleOptionViewIte
     }
     painter.setPen(timedColor);
     painter.drawText(timeFillRect, Qt::AlignCenter, timeText);
-
-    // 绘制选中时的阴影
-    QBrush fillBrush(QColor(128, 128, 128, 0));
-    if (option.state & QStyle::State_Selected) {
-        fillBrush = QBrush(QColor(128, 128, 128, 90));
-    }
     painter.restore();
 
-    painter.save();
-    painter.setClipPath(roundPixmapRectPath);
-    painter.fillRect(pixmapRect, fillBrush);
-    painter.restore();
     // 绘制选中时右上角的选中图标
 //    if (option.state & QStyle::State_Selected) {
 //        QRect selectionRect(option.rect.x() +  option.rect.width() - 20, option.rect.y() + 2, 14, 14);

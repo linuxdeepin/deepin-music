@@ -1475,7 +1475,6 @@ QPixmap PlayListView::dragItemsPixmap()
     painter.drawText(QRect(DRAGICON_LEFTBORDER + DRAGICON_SIZE - textSize / 2, DRAGICON_TOPBORDER + DRAGICON_SIZE - textSize / 2, textSize, textSize), QString("%1").arg(modelIndexList.size()), QTextOption(Qt::AlignCenter));
     painter.restore();
 
-    QIcon icon = QIcon::fromTheme("music_famousballad");
     return pixmap;
 }
 
