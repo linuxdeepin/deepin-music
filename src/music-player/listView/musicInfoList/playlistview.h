@@ -22,6 +22,7 @@
 
 #include <DListView>
 #include <QPixmap>
+#include <QTimer>
 
 #include "commonservice.h"
 #include "databaseservice.h"
@@ -36,7 +37,7 @@ class PlayListView : public DListView
 {
     Q_OBJECT
 public:
-    explicit PlayListView(const QString &hash, bool isPlayQueue, QWidget *parent = Q_NULLPTR);
+    explicit PlayListView(const QString &hash, bool isPlayQueue, bool dragFlag, QWidget *parent);
     ~PlayListView() override;
 
     void setThemeType(int type);
@@ -84,7 +85,23 @@ public:
     // 获取是否播放队列
     bool getIsPlayQueue();
     // 平板选中项
-    QModelIndexList tabletSelectedIndexes();
+    QModelIndexList tabletSelectedIndexes() const;
+    // 统一不同模式选择接口
+    QModelIndexList allSelectedIndexes() const;
+    //设置是否可以导入到m_model
+    void setImportToModelEnable(bool enable);
+    bool getImportToModelEnable();
+    // 获取高亮位置
+    int highlightedRow() const;
+    // 设置歌单拖拽状态
+    void setDragFlag(bool flag);
+    // 拖拽表格数据
+    void dropItems(QVector<int> &modelIndexs);
+    // 获取拖拽图片
+    QPixmap dragItemsPixmap();
+    // 更新拖拽分割线
+    void updateDropIndicator();
+
 public slots:
     void slotOnClicked(const QModelIndex &index);
 
@@ -145,6 +162,9 @@ public slots:
     void slotAddToSongList(const QString &hash, const QString &name);
     // 横竖屏切换
     void slotHScreen(bool isHScreen);
+    // 更新滚动条
+    void slotUpdateDragScroll();
+
 private:
     // 播放音乐相关处理
     void playMusic(const MediaMeta &meta);
@@ -154,16 +174,20 @@ private:
     void sortList(QList<MediaMeta> &musicInfos, const DataBaseService::ListSortType &sortType);
     // 平板清除选中
     void tabletClearSelection();
+
 signals:
     bool musicResultListCountChanged(QString hash);
     //zy---end
     void customSort();
     void hideEmptyHits(bool ishide);
     void getSearchData(bool isvalid); //get search data
+    void signalRefreshInfoLabel(QString hash); //导入时刷新leble
+
 public:
     bool getIsPlayQueue() const;
     //void reflushItemMediaMeta(const MediaMeta &meta);
     bool getMenuIsShow();
+
 protected:
     virtual void mousePressEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
     virtual void mouseReleaseEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
@@ -176,23 +200,27 @@ protected:
 
     void dragMoveEvent(QDragMoveEvent *event) Q_DECL_OVERRIDE;
     void dropEvent(QDropEvent *event) Q_DECL_OVERRIDE;
+    void dragLeaveEvent(QDragLeaveEvent *event) Q_DECL_OVERRIDE;
+
 private:
-    PlaylistModel           *m_model        = nullptr;
-    PlayItemDelegate        *m_delegate     = nullptr;
-    int                      m_themeType    = 1;
-    bool                     m_IsPlayQueue;
-    // 根据hash区分所有，收藏与自定义歌单
-    QString                  m_currentHash;
-    QMap<QString, QListView::ViewMode> m_viewModeMap;
-    // 详细信息窗口
-    InfoDialog          *m_pInfoDlg = nullptr;
-    // 详细信息快捷键
-    QShortcut           *m_pDetailShortcut = nullptr;
-    // 判断歌曲列表是哪个页面
-    ListPageSwitchType   m_listPageType;
-    QPixmap m_sidebarPixmap;
-    QIcon     m_defaultIcon = QIcon::fromTheme("cover_max");
-    bool      m_menuIsShow = false;
-    static constexpr int FirstLoadCount = 15;
-    QModelIndex m_pressIndex;
+    friend PlayItemDelegate;
+    PlaylistModel                       *m_model                     = nullptr;
+    PlayItemDelegate                    *m_delegate                  = nullptr;
+    int                                  m_themeType                 = 1;
+    bool                                 m_IsPlayQueue;
+    QString                              m_currentHash;// 根据hash区分所有，收藏与自定义歌单
+    QMap<QString, QListView::ViewMode>   m_viewModeMap;
+    InfoDialog                          *m_pInfoDlg                  = nullptr;// 详细信息窗口
+    QShortcut                           *m_pDetailShortcut           = nullptr;// 详细信息快捷键
+    ListPageSwitchType                   m_listPageType;// 判断歌曲列表是哪个页面
+    QPixmap                              m_sidebarPixmap;
+    QIcon                                m_defaultIcon               = QIcon::fromTheme("cover_max");
+    bool                                 m_menuIsShow                = false;
+    static constexpr int                 FirstLoadCount              = 15;
+    QModelIndex                          m_pressIndex;
+    bool                                 m_importEnable              = false; //是否可以导入到m_model
+    bool                                 m_dragFlag                  = false;
+    bool                                 m_isDraging                 = false;
+    QModelIndex                          m_preIndex;
+    QTimer                               m_dragScrollTimer;// 拖动滚动条
 };

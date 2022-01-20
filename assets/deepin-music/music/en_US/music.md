@@ -8,15 +8,15 @@ Music is a local music playing application with brand-new UI design and state-of
 
 ## Guide
 
-You can run, close, and create a shortcut for Music in the following ways.
+You can run, close, and create a desktop shortcut for Music in the following ways.
 
 ### Run Music
 
-1. Click ![launcher_icon](../common/deepin_launcher.svg) in the dock to enter the Launcher interface.
-2. Locate ![music_icon_24](../common/music_icon24.svg) by scrolling mouse wheel or searching "music" in the Launcher interface.
+1. Click the Launcher icon ![launcher_icon](../common/deepin_launcher.svg) in the Dock to enter the Launcher interface.
+2. Locate Music ![music_icon_24](../common/music_icon24.svg) by scrolling mouse wheel or searching "music" in the Launcher interface.
 3. Right-click the Music application icon and you can:
  - Click **Send to desktop** to create a desktop shortcut.
- - Click **Send to dock** to fix the application on dock.
+ - Click **Send to dock** to fix the application in the Dock.
  - Click **Add to startup** to add the application to startup and it will automatically run when the system starts up.
 
 > ![notes](../common/notes.svg) Notes: If Music has been fixed in the Dock, you can also click ![music_icon24](../common/music_icon24.svg) in the Dock to run it.
@@ -63,53 +63,58 @@ On the main interface, you can choose from regular options, check view playlist,
             <td>Search box</td>
             <td>You can search music quickly by search box.</td>
         </tr>
-        <tr>
+                <tr>
             <td>2</td>
+            <td>Add music</td>
+            <td>You can add music to the playlist.</td>
+        </tr>
+        <tr>
+            <td>3</td>
             <td>Main menu</td>
             <td>You can add playlist, add music, set options, view manual and about information, and exit the application via main menu.</td>
         </tr>
     	<tr>
-            <td>3</td>
+            <td>4</td>
             <td>Sort options</td>
             <td>You can sort the list by different types of order including time added, title, artist, or album name.</td>
         </tr>
     	<tr>
-            <td>4</td>
+            <td>5</td>
             <td>Previous/Next</td>
             <td>Click to switch to Previous/Next music.</td>
         </tr>
     		<tr>
-            <td>5</td>
+            <td>6</td>
             <td>Play/Pause button</td>
             <td>Click to Play/Pause music.</td>
         </tr>
     	<tr>
-            <td>6</td>
+            <td>7</td>
             <td>Play box</td>
             <td>Show the name of the song being played, the cover, and the artist name.</td>
         </tr>
     	<tr>
-            <td>7</td>
+            <td>8</td>
             <td>Favorite</td>
             <td>Click to add music to my favorites and click again to unfavorite it.</td>
         </tr>
     	<tr>
-            <td>8</td>
+            <td>9</td>
             <td>Lyrics</td>
             <td>Click it to switch to the lyrics interface and click it again to exit the lyrics interface.</td>
         </tr>
     		<tr>
-            <td>9</td>
+            <td>10</td>
             <td>Play mode</td>
             <td>Click it to switch to the play mode, including list loop, single loop, and shuffle.</td>
         </tr>
     		<tr>
-            <td>10</td>
+            <td>11</td>
             <td>Volume</td>
             <td>Click it and drag the volume bar to adjust the volume.</td>
         </tr>
     		<tr>
-            <td>11</td>
+            <td>12</td>
             <td>Play Queue</td>
             <td>Click it to show/hide the playlist.</td>
         </tr>
@@ -120,17 +125,14 @@ On the main interface, you can choose from regular options, check view playlist,
 
 You can add, delete, and view info of the local music in Music in the following ways.
 
-
-
 ### Add Music
 
-On the Music interface, you can: 
-- Click **Add Music**, and add local music to the playlist, or click **Scan** to add music if there is no music file in Music.
-- Click **Open Folder** to customize the local song directory, and add music files in batch if there is no music file in Music.
+On the Music interface, you can add music in the following ways: 
+- Click the ![icon_menu](../common/add1.svg) icon on the title bar.
 - Click ![icon_menu](../common/icon_menu.svg)> **Add music** to add music files to the playlist.
-- Drag the music file/folder to the Music interface, and add the music file to the playlist.
+- Drag the music file/folder to the Music interface.
 
-> ![notes](../common/notes.svg) Notes: If you are using a computer equipped with touch-screen or touchpad, hold down the music file with one finger and drag it to the Music interface to add music.
+> ![notes](../common/notes.svg) Notes: If there is no music file in Music, you can also click **Add Music**,  **Open Folder** or **Scan** to add music. Otherwise, you can also right-click the music repository or playlist to choose **Add music** to add your music .
 
 ### Search Music
 
@@ -144,7 +146,7 @@ On the Music interface, you can:
 
 You can play music in the following ways:
 
-- Select a music in the playlist, and double-click or right-click it to select **Play** to play the music.
+- Select a song in the playlist, and double-click or right-click it to select **Play** to play the music.
 - Select a list under the playlist in the left navigation bar. Right-click and select **Play** to play all the songs in the list according to the current order.
 - Click **Play All** to play all the songs in the current list according to the current order. 
 
@@ -219,7 +221,7 @@ On the Music interface, you can create, delete, and rename playlist. You can als
 
 ### Create New Playlist
 
-1.  On the Music interface, click ![icon_plus](../common/icon_plus.svg) right to the **Playlists**, or click ![menu](../common/icon_menu.svg)> **Add playlist**.
+1.  On the Music interface, click ![add](../common/add.svg) right to the **Playlists**, or click ![menu](../common/icon_menu.svg)> **Add playlist**.
 2.  Enter the name of the playlist.
 3.  Press the **Enter** key on keyboard.
 
@@ -229,9 +231,9 @@ On the Music interface, you can create, delete, and rename playlist. You can als
 
 1.  Select a playlist from **Playlists**.
 2.  Right-click and select **Rename**.
-3.  Enter the name of the playlist, and press the **Enter** key on keyboard to save it.
+3.  Enter the name of the playlist, and press the **Enter** key on the keyboard to save it.
 
-![0|renamelist](fig/renamelist.png)
+![0|renamelist](fig/rename.png)
 
 ### Add Music to Playlist
 
@@ -288,7 +290,6 @@ You can set the basic information and shortcuts in settings.
         - Select **Minimize to system tray** to close the main window, and hide Music to system tray.
         - Select **Exit** to close the main window, and exit Music. 
         - Select **Ask me always** to prompt system notification, and confirm whether to exit Music when the main window is closed.
-3. Click **Restore Defaults** to restore the default settings.
 
 #### Shortcuts
 

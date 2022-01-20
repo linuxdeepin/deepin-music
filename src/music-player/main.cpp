@@ -42,6 +42,7 @@
 #include "config.h"
 
 #include "core/player.h"
+#include "core/vlc/vlcdynamicinstance.h"
 #include "core/musicsettings.h"
 #include "core/util/global.h"
 #include "databaseservice.h"
@@ -65,6 +66,13 @@ int main(int argc, char *argv[])
     }
     setenv("PULSE_PROP_media.role", "music", 1);
 
+    auto e = QProcessEnvironment::systemEnvironment();
+    QString XDG_SESSION_TYPE = e.value(QStringLiteral("XDG_SESSION_TYPE"));
+    QString WAYLAND_DISPLAY = e.value(QStringLiteral("WAYLAND_DISPLAY"));
+
+    if (XDG_SESSION_TYPE == QLatin1String("wayland") || WAYLAND_DISPLAY.contains(QLatin1String("wayland"), Qt::CaseInsensitive)) //是否开启wayland
+        qputenv("QT_WAYLAND_SHELL_INTEGRATION", "kwayland-shell"); //add wayland parameter
+
 #if (DTK_VERSION < DTK_VERSION_CHECK(5, 4, 0, 0))
     DApplication *app = new DApplication(argc, argv);
 #else
@@ -79,7 +87,6 @@ int main(int argc, char *argv[])
     DWIDGET_INIT_RESOURCE();
     QCoreApplication::addLibraryPath(".");
 #endif
-
     app->setAttribute(Qt::AA_UseHighDpiPixmaps);
     QAccessible::installFactory(accessibleFactory);
     app->setOrganizationName("deepin");
@@ -109,7 +116,10 @@ int main(int argc, char *argv[])
 
     app->loadTranslator();
     MusicSettings::init();
-    Player::getInstance();
+//    VlcDynamicInstance::VlcFunctionInstance();
+//    Player::getInstance();
+    //将检查唯一性提前可以先创建好缓存路径避免某种情况下创建数据库失败
+    bool bc = checkOnly();
     if (!OpenFilePaths.isEmpty()) {
         QStringList strList;
         for (QString str : OpenFilePaths) {
@@ -121,7 +131,7 @@ int main(int argc, char *argv[])
             }
         }
         // 添加应用唯一性判断
-        if (strList.size() > 0 && checkOnly()) {
+        if (strList.size() > 0 && bc) {
             DataBaseService::getInstance()->setFirstSong(strList.at(0));
             DataBaseService::getInstance()->importMedias("all", strList); //导入数据库
         }
@@ -160,14 +170,21 @@ int main(int argc, char *argv[])
     createSpeechDbus();
 
     app->setQuitOnLastWindowClosed(false);
-    return app->exec();
+    int status = app->exec();
+    Player::getInstance()->releasePlayer();
+    return status;
 }
 
 bool checkOnly()
 {
     //single
     QString userName = QDir::homePath().section("/", -1, -1);
-    std::string path = ("/home/" + userName + "/.cache/deepin/deepin-music/").toStdString();
+    std::string path;
+    if (userName == "root") {
+        path = "/tmp/deepin-music/";
+    } else {
+        path = ("/home/" + userName + "/.cache/deepin/deepin-music/").toStdString();
+    }
     QDir tdir(path.c_str());
     if (!tdir.exists()) {
         bool ret =  tdir.mkpath(path.c_str());

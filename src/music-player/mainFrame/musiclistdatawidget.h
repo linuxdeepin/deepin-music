@@ -40,6 +40,7 @@ class SearchResultTabWidget;
 class QShortcut;
 class InfoDialog;
 class SubSonglistWidget;
+class AddMusicWidget;
 class MusicListDataWidget : public DWidget
 {
     Q_OBJECT
@@ -70,6 +71,7 @@ protected:
     virtual void dragEnterEvent(QDragEnterEvent *event) Q_DECL_OVERRIDE;
     virtual void dropEvent(QDropEvent *event) Q_DECL_OVERRIDE;
     virtual void resizeEvent(QResizeEvent *event) Q_DECL_OVERRIDE;
+    virtual void showEvent(QShowEvent *event) Q_DECL_OVERRIDE;
 private slots:
     // 播放所有歌曲
     void slotPlayAllClicked();
@@ -81,6 +83,7 @@ private:
     void initAlbumAction(QHBoxLayout *layout);
     void initArtistAction(QHBoxLayout *layout);
     void initMusicAction(QHBoxLayout *layout);
+    void initCustomMusicAction(QHBoxLayout *layout);
     void initBtPlayAll(QHBoxLayout *layout);
     void initCountLabel(QHBoxLayout *layout);
     void initListIconMode(QHBoxLayout *layout);
@@ -90,33 +93,34 @@ private:
     // 刷新当前排序菜单
     void refreshSortAction(const QString &hash = "");
 private:
-    DWidget             *m_contentWidget   = nullptr;
-    QStackedWidget      *m_pStackedWidget  = nullptr;
-    DLabel              *m_emptyHits       = nullptr;
-    ActionBar           *m_actionBar       = nullptr;
+    DWidget             *m_contentWidget           = nullptr;
+    QStackedWidget      *m_pStackedWidget          = nullptr;
+    DLabel              *m_emptyHits               = nullptr;
+    ActionBar           *m_actionBar               = nullptr;
     // 歌手专辑二级页面
-    SubSonglistWidget   *m_subSonglistWidget = nullptr;
-    QWidget             *m_lableWidget     = nullptr;
-    DLabel              *m_titleLabel      = nullptr;
-    DDropdown           *m_albumDropdown   = nullptr;
-    DDropdown           *m_artistDropdown  = nullptr;
-    DDropdown           *m_musicDropdown   = nullptr;
-    DPushButton         *m_btPlayAll       = nullptr;
-    DLabel              *m_infoLabel       = nullptr;
-    DToolButton         *m_btIconMode      = nullptr;
-    DToolButton         *m_btlistMode      = nullptr;
+    SubSonglistWidget   *m_subSonglistWidget       = nullptr;
+    QWidget             *m_lableWidget             = nullptr;
+    DLabel              *m_titleLabel              = nullptr;
+    DDropdown           *m_albumDropdown           = nullptr;
+    DDropdown           *m_artistDropdown          = nullptr;
+    DDropdown           *m_musicDropdown           = nullptr;
+    DDropdown           *m_customMusicDropdown     = nullptr;
+    DPushButton         *m_btPlayAll               = nullptr;
+    DLabel              *m_infoLabel               = nullptr;
+    DToolButton         *m_btIconMode              = nullptr;
+    DToolButton         *m_btlistMode              = nullptr;
 
-    AlbumListView       *m_albumListView  = nullptr;
-    SingerListView      *m_singerListView = nullptr;
-    PlayListView        *m_musicListView  = nullptr;
+    AlbumListView       *m_albumListView           = nullptr;
+    SingerListView      *m_singerListView          = nullptr;
+    PlayListView        *m_musicListView           = nullptr;
+    AddMusicWidget      *m_addMusicWidget = nullptr;
     SearchResultTabWidget *m_searchResultTabWidget = nullptr;
 
-    QAction             *m_customAction    = nullptr;
-    bool                m_updateFlag       = false;
-//    int                 m_preIndex = 0;//记录前一次显示，当清除搜索时回到上一页面
+    QAction             *m_customAction            = nullptr;
+    bool                m_updateFlag               = false;
     QString             m_currentHash;
-    ListPageSwitchType  m_preSwitchtype = AllSongListType;
-    QString             m_preHash = "all";//记录前一次显示，当清除搜索时回到上一页面
+    ListPageSwitchType  m_preSwitchtype            = AllSongListType;
+    QString             m_preHash                  = "all";//记录前一次显示，当清除搜索时回到上一页面
 };
 
 class ActionBar : public DWidget

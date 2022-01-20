@@ -3,7 +3,6 @@
 
 if(ISTEST MATCHES "1")
     set(CMD_NAME deepin-music-test)
-    add_definitions(-DENABLE_AUTO_UNIT_TEST)
 else()
     set(CMD_NAME deepin-music)
 endif()
@@ -93,7 +92,7 @@ pkg_check_modules(qgsettings REQUIRED IMPORTED_TARGET gsettings-qt)
 #pkg_check_modules(AV REQUIRED IMPORTED_TARGET libavutil libavcodec
 #    libavformat libcue taglib)
 
-pkg_check_modules(AV REQUIRED IMPORTED_TARGET libcue taglib)
+pkg_check_modules(AV REQUIRED IMPORTED_TARGET taglib)
 
 pkg_check_modules(udisks2 REQUIRED IMPORTED_TARGET udisks2-qt5)
 

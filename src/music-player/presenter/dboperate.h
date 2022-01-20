@@ -46,7 +46,7 @@ public:
     void stop();
     void setNeedSleep();
 public slots:
-    void     slotImportMedias(const QString &importHash, const QStringList &urllist);
+    void     slotImportMedias(const QString &importHash, QString playHash, const QStringList &urllist);
     void     slotCreatCoverImg(const QList<MediaMeta> &metas);
     void     slotRemoveSelectedSongs(const QString &curpage, const QStringList &musichashlist, bool removeFromLocal);
 private:
@@ -92,6 +92,7 @@ private:
     bool              m_needSleep = false;
     QMutex            m_mutex;
     QString           m_importHash;
+    QString           m_playHash;
     // 导入的歌曲计数
     int               m_successCount = 0;
     // 存在的歌曲计数

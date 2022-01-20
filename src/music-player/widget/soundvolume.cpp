@@ -43,7 +43,6 @@ SoundVolume::SoundVolume(QWidget *parent)
     setObjectName("SoundVolume");
     setProperty("_dm_keep_on_click", true);
 
-    setFixedSize(62, 201);
     auto layout = new QVBoxLayout(this);
     layout->setContentsMargins(2, 16, 0, 14);
     layout->setSpacing(0);
@@ -58,14 +57,15 @@ SoundVolume::SoundVolume(QWidget *parent)
 //    titleFont.setPixelSize(14);
     m_volPersent->setFont(titleFont);
     m_volPersent->setText("100%");
+    m_volPersent->setMinimumHeight(20);
 
-    m_btSound = new DToolButton();
+    m_btSound = new DToolButton(this);
     m_btSound->setIcon(QIcon::fromTheme("volume_low"));
     //d->sound->setShortcut(QKeySequence(QLatin1String("M")));
     m_btSound->setFixedSize(30, 30);
     m_btSound->setIconSize(QSize(30, 30));
 
-    m_volSlider = new DSlider(Qt::Vertical);
+    m_volSlider = new DSlider(Qt::Vertical, this);
     m_volSlider->setMinimum(0);
     m_volSlider->setMaximum(100);
     m_volSlider->slider()->setSingleStep(Player::VolumeStep);
@@ -80,14 +80,13 @@ SoundVolume::SoundVolume(QWidget *parent)
     AC_SET_OBJECT_NAME(m_volSlider, AC_DSlider);
     AC_SET_ACCESSIBLE_NAME(m_volSlider, AC_DSlider);
 
-    layout->addStretch();
     layout->addWidget(m_volPersent, 0, Qt::AlignTop | Qt::AlignHCenter);
     layout->addWidget(m_volSlider, 0, Qt::AlignCenter);
     layout->addWidget(m_btSound, 0, Qt::AlignHCenter);
-    layout->addStretch();
-    setFixedSize(62, 201);
+    setFixedWidth(62);
+    setMinimumHeight(201);
 
-    auto *bodyShadow = new QGraphicsDropShadowEffect;
+    auto *bodyShadow = new QGraphicsDropShadowEffect(this);
     bodyShadow->setBlurRadius(10.0);
     bodyShadow->setColor(QColor(0, 0, 0,  255 / 10));
     bodyShadow->setOffset(0, 2.0);

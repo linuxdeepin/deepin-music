@@ -27,6 +27,11 @@
 #include <QScopedPointer>
 #include <util/singleton.h>
 
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <unistd.h>
+
 #include <gtest/gtest.h>
 #include <gmock/gmock-matchers.h>
 #include <AbstractAppender.h>
@@ -36,12 +41,71 @@
 #include "application.h"
 #include "mainframe.h"
 #include "player.h"
+#include "core/vlc/vlcdynamicinstance.h"
 #ifndef SYSTEM_MIPS
 #include <sanitizer/asan_interface.h>
 #endif
+#include "speechexportbus.h"
+#include "speechCenter.h"
 
 using namespace Dtk::Core;
 using namespace Dtk::Widget;
+
+static bool checkOnly();
+
+void createSpeechDbus()
+{
+    SpeechExportBus mSpeech(SpeechCenter::getInstance());
+    // 'playMusic','红颜' 显示搜索界面
+    // 'playMusic',''       显示所有音乐界面，随机播放
+    mSpeech.registerAction("playMusic", "play Music",
+                           std::bind(&SpeechCenter::playMusic, SpeechCenter::getInstance(), std::placeholders::_1));
+    // 'playArtist','华晨宇'
+    mSpeech.registerAction("playArtist", "play Artist",
+                           std::bind(&SpeechCenter::playArtist, SpeechCenter::getInstance(), std::placeholders::_1));
+    // 'playArtistMusic','华晨宇:齐天'
+    mSpeech.registerAction("playArtistMusic", "play Artist Music",
+                           std::bind(&SpeechCenter::playArtistMusic, SpeechCenter::getInstance(), std::placeholders::_1));
+    // 'playAlbum','历久尝新'
+    mSpeech.registerAction("playAlbum", "play Album",
+                           std::bind(&SpeechCenter::playAlbum, SpeechCenter::getInstance(), std::placeholders::_1));
+    // 'playFaverite','fav'
+    mSpeech.registerAction("playFaverite", "play Faverite",
+                           std::bind(&SpeechCenter::playFaverite, SpeechCenter::getInstance(), std::placeholders::_1));
+    // 'playSonglist','123'  歌单名称
+    mSpeech.registerAction("playSonglist", "play Songlist",
+                           std::bind(&SpeechCenter::playSonglist, SpeechCenter::getInstance(), std::placeholders::_1));
+    // 'pause',''
+    mSpeech.registerAction("pause", "pause",
+                           std::bind(&SpeechCenter::pause, SpeechCenter::getInstance(), std::placeholders::_1));
+    // 'resume',''
+    mSpeech.registerAction("resume", "resume",
+                           std::bind(&SpeechCenter::resume, SpeechCenter::getInstance(), std::placeholders::_1));
+    // 'stop',''
+    mSpeech.registerAction("stop", "stop",
+                           std::bind(&SpeechCenter::stop, SpeechCenter::getInstance(), std::placeholders::_1));
+    // 'pre',''
+    mSpeech.registerAction("pre", "pre",
+                           std::bind(&SpeechCenter::pre, SpeechCenter::getInstance(), std::placeholders::_1));
+    // 'next',''
+    mSpeech.registerAction("next", "next",
+                           std::bind(&SpeechCenter::next, SpeechCenter::getInstance(), std::placeholders::_1));
+    // 'playIndex',''    指定播放第几首
+    mSpeech.registerAction("playIndex", "play Index",
+                           std::bind(&SpeechCenter::playIndex, SpeechCenter::getInstance(), std::placeholders::_1));
+    // 'addFaverite',''
+    mSpeech.registerAction("addFaverite", "add Faverite",
+                           std::bind(&SpeechCenter::addFaverite, SpeechCenter::getInstance(), std::placeholders::_1));
+    // 'removeFaverite',''
+    mSpeech.registerAction("removeFaverite", "remove Faverite",
+                           std::bind(&SpeechCenter::removeFaverite, SpeechCenter::getInstance(), std::placeholders::_1));
+    // 'setMode','0' 列表循环  'setMode','1' 单曲循环  'setMode','2' 随机
+    mSpeech.registerAction("setMode", "set Mode",
+                           std::bind(&SpeechCenter::setMode, SpeechCenter::getInstance(), std::placeholders::_1));
+    // dbus导入音乐文件
+    mSpeech.registerQStringListAction("OpenUris", "OpenUris",
+                                      std::bind(&SpeechCenter::OpenUris, SpeechCenter::getInstance(), std::placeholders::_1));
+}
 
 #define QMYTEST_MAIN(TestObject) \
     QT_BEGIN_NAMESPACE \
@@ -54,18 +118,23 @@ using namespace Dtk::Widget;
         app.setOrganizationName("deepin"); \
         app.setApplicationName("deepin-music"); \
         app.loadTranslator(); \
+        checkOnly(); \
         MusicSettings::init(); \
         MainFrame mainframe; \
         auto showflag = MusicSettings::value("base.play.showFlag").toBool(); \
         mainframe.initUI(showflag); \
         mainframe.show(); \
+        mainframe.autoStartToPlay(); \
+        createSpeechDbus(); \
         Application::getInstance()->setMainWindow(&mainframe); \
         app.setSingleInstance("deepinmusic"); \
         QTEST_DISABLE_KEYPAD_NAVIGATION \
         QTEST_ADD_GPU_BLACKLIST_SUPPORT \
         TestObject tc; \
         QTEST_SET_MAIN_SOURCE_PATH \
-        return QTest::qExec(&tc, argc, argv); \
+        int status = QTest::qExec(&tc, argc, argv); \
+        Player::getInstance()->releasePlayer(); \
+        return status;\
     } \
 
 class QTestMain : public QObject
@@ -77,9 +146,6 @@ public:
     ~QTestMain();
 
 private slots:
-//    void initTestCase();
-//    void cleanupTestCase();
-
     void testGTest();
 
     void testQString_data();
@@ -114,7 +180,6 @@ void QTestMain::testGTest()
 #ifndef SYSTEM_MIPS
     __sanitizer_set_report_path("./asan_deepin-music.log");//内存检测输出
 #endif
-    Player::getInstance()->stop();
     Q_UNUSED(ret)
 }
 
@@ -167,6 +232,32 @@ void QTestMain::testGui_data()
     list2.addKeyClicks("abs0");
     list2.addKeyClick(Qt::Key_Backspace);
     QTest::newRow("item 1") << list2 << QString("abs");
+}
+
+bool checkOnly()
+{
+    //single
+    QString userName = QDir::homePath().section("/", -1, -1);
+    std::string path = ("/home/" + userName + "/.cache/deepin/deepin-music/").toStdString();
+    QDir tdir(path.c_str());
+    if (!tdir.exists()) {
+        bool ret =  tdir.mkpath(path.c_str());
+        qDebug() << ret ;
+    }
+
+    path += "single";
+    int fd = open(path.c_str(), O_WRONLY | O_CREAT, 0644);
+    int flock = lockf(fd, F_TLOCK, 0);
+
+    if (fd == -1) {
+        perror("open lockfile/n");
+        return false;
+    }
+    if (flock == -1) {
+        perror("lock file error/n");
+        return false;
+    }
+    return true;
 }
 
 QMYTEST_MAIN(QTestMain)

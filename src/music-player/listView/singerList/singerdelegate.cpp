@@ -390,6 +390,7 @@ void SingerDataDelegate::drawTabletIconMode(QPainter &painter, const QStyleOptio
     fillColor.setAlphaF(0.3);
     if (listview->getThemeType() == 2) {
         fillColor = "#000000";
+        fillColor.setAlphaF(0.3);
     }
 
     if (option.state & QStyle::State_Selected) {

@@ -22,18 +22,22 @@
 #include "songlistview.h"
 #include "songlistviewmodel.h"
 
+#include <QScroller>
 #include <DStandardItem>
 #include <DApplicationHelper>
 #include <DDialog>
 #include <DFrame>
+#include <QDebug>
 
 #include "commonservice.h"
 
 DWIDGET_USE_NAMESPACE
 
-SongListView::SongListView(QWidget *parent) : DListView(parent)
+SongListView::SongListView(QWidget *parent)
+    : DListView(parent), m_songListViewDialog(parent)
 {
     setEditTriggers(NoEditTriggers);
+    QScroller::grabGesture(viewport());
 
     DStyledItemDelegate *m_delegate = new DStyledItemDelegate(this);
     auto delegateMargins = m_delegate->margins();
@@ -65,7 +69,8 @@ SongListView::SongListView(QWidget *parent) : DListView(parent)
     setAutoFillBackground(true); //控件本身填充背景色
 
     setAlternatingRowColors(true);
-    connect(this, qNonConstOverload<const QModelIndex &>(&SongListView::currentChanged), this, &SongListView::slotItemChanged);
+
+    connect(this, &DListView::clicked, this, &SongListView::slotItemChanged);
     connect(DGuiApplicationHelper::instance(), &DGuiApplicationHelper::themeTypeChanged,
             this, &SongListView::setThemeType);
 }
@@ -100,13 +105,11 @@ void SongListView::slotItemChanged(const QModelIndex &model)
     // 发送点击信号，传送hash和name值
     signalItemTriggered(standardItem->data(Qt::UserRole).toString(), standardItem->text());
     // 点击item关闭窗口
-    Q_ASSERT(this->parent());
-    QDialog *parentdialog = dynamic_cast<QDialog *>(this->parent()->parent());
-    if (parentdialog) {
-        parentdialog->close();
+    if (m_songListViewDialog) {
+        m_songListViewDialog->close();
     }
     if (CommonService::getInstance()->isTabletEnvironment()) {
-        emit CommonService::getInstance()->setSelectModel(CommonService::SingleSelect);
+        CommonService::getInstance()->setSelectModel(CommonService::SingleSelect);
     }
 }
 

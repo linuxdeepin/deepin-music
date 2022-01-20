@@ -30,6 +30,7 @@
 #include <QColorDialog>
 #include <DPalette>
 #include <DGuiApplicationHelper>
+#include <DFontSizeManager>
 
 #include "../../core/util/musiclyric.h"
 #include "../../core/musicsettings.h"
@@ -97,7 +98,8 @@ void LyricLabel::paintItem(QPainter *painter, int index, const QRect &rect)
     if (index == this->m_currentItem) {
         painter->setPen(lyricHighlight);
         QFont font(lyricFont);
-        font.setPixelSize(font.pixelSize() + 1);
+        //绑定获取系统字体大小
+        font.setPixelSize(DFontSizeManager::instance()->fontPixelSize(DFontSizeManager::T6));
         painter->setFont(font);
         QPoint leftpos = rect.bottomLeft();
         leftpos.setY(static_cast<int>(leftpos.y() + rect.height() / 2.0 + 5));
@@ -430,9 +432,9 @@ void AbstractWheelWidget::paintEvent(QPaintEvent *event)
                 t = (t+8)*255/(len+8);
                 */
                 //抛物线衰减的方法
-                int t = abs(i);
+                int t = abs(i - 1);
                 t = 255 - t * t * 220 / len / len - 35; //220是255-y得到,y为边界透明度
-                if (t < 0) t = 0;
+                if (t < 35) t = 35;
                 //qDebug() << "a值:" << t << endl;
                 if (m_themetype == 1) {
                     if (m_FadeFlag) {

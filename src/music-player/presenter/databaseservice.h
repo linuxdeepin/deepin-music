@@ -83,6 +83,8 @@ public:
     QList<MediaMeta>     allMusicInfos(bool refresh = true);
     // 歌曲数量
     int                  allMusicInfosCount();
+    // 获取数据库歌曲数目
+    int                  allDBMusicInfosCount();
     // 通过hash值获取单个歌曲的信息
     MediaMeta            getMusicInfoByHash(const QString &hash);
     // 专辑
@@ -109,8 +111,12 @@ public:
     uint                 getPlaylistMaxSortid();
     // 获取自定义歌单
     QList<PlaylistData>  getCustomSongList();
+    // 获取歌单歌曲&获取收藏歌曲hash
+    QList<QString>       customizeMusicHashs(const QString &hash);
     // 获取歌单歌曲&获取收藏歌曲
     QList<MediaMeta>     customizeMusicInfos(const QString &hash);
+    // 获取排序后的歌单歌曲&获取收藏歌曲
+    QList<MediaMeta>     customizeMusicInfosByOrder(const QString &hash, ListSortType type);
     // 添加一个歌单
     void                 addPlaylist(const PlaylistData &playlistMeta);
     // 删除一个歌单,返回值确认是否删除成功
@@ -119,6 +125,12 @@ public:
     void                 updatePlaylist(const QVector<PlaylistData> &playlistDataList);
     // 歌单信息
     QList<PlaylistData>  allPlaylistMeta();
+    // 更新歌单的顺序
+    void                 sortMetasFromPlaylist(const QString &hash, const QVector<QString> &metaHashs);
+    // 更新歌单顺序
+    void                 sortAllPlaylist(const QVector<QString> &hashs);
+    // 更新播放队列
+    void updateMetasforPlayerList();
     // 添加歌曲到歌单
     int                  addMetaToPlaylist(QString uuid, const QList<MediaMeta> &metas);
     // 更新歌单排序类型，如按歌手，时间排序
@@ -143,9 +155,12 @@ public:
     QString              getFirstSong();
     // 获取删除状态
     bool                 getDelStatus();
+    // 获取当前Page
+    QString              getCurPage();
     // 获取删除中的歌曲hash
     QStringList          getDelMetaHashs();
     void                 setDelNeedSleep();
+
 public slots:
     void slotGetMetaFromThread(MediaMeta meta);
     // 收到子线程导入结束通知
@@ -154,6 +169,7 @@ public slots:
     void slotRmvSongThread(const QString &listHash, const QString &musicHash, bool removeFromLocal);
     // 收到子线程删除结束
     void slotDelFinish();
+
 signals:
     // 所有歌曲数量变化
     void signalMusicAddOne(QString listHash, MediaMeta meta);
@@ -185,9 +201,10 @@ signals:
 
     // 子线程执行
     // 导入歌曲
-    void signalImportMedias(QString importHash, const QStringList &urllist);
+    void signalImportMedias(QString importHash, QString playHash, const QStringList &urllist);
     // 删除歌单所选歌曲 removeFromLocal:是否从本地删除
     void sigRemoveSelectedSongs(const QString &curpage, const QStringList &musichashlist, bool removeFromLocal);
+
 private:
     bool createConnection();
     bool isPlaylistExist(const QString &uuid);
@@ -219,6 +236,8 @@ private:
     bool             m_deleting = false;
     // 准备删除的歌曲hash
     QStringList      m_musichashlistToDel;
+    // 当前删除页面
+    QString          m_curPage;
     // 第一次查询所有歌曲
     bool             m_firstInitAllMusic = true;
 };

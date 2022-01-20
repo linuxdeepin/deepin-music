@@ -25,21 +25,6 @@
 #include <DApplication>
 
 class MainFrame;
-class Application;
-class ConfigSetter;
-class DatabaseManager;
-class DBManager;
-class Exporter;
-class Importer;
-class ScanPathsDialog;
-class SignalManager;
-class WallpaperSetter;
-class ViewerThemeManager;
-#if defined(dApp)
-#undef dApp
-#endif
-//#define dApp (static_cast<Application *>(QCoreApplication::instance()))
-#define dApp (Application::getApp())
 
 DWIDGET_USE_NAMESPACE
 
@@ -52,16 +37,13 @@ public:
     ~Application();
     static Application *getInstance();
 
-    DApplication *getDAppNew();
-    static Application *getApp();
-    static void setApp(DApplication *);
 public :
     //test
     void setMainWindow(MainFrame *window);
     MainFrame *getMainWindow();
+
 public:
     MainFrame *m_mainwindow = nullptr;
-    static DApplication *dAppNew;
     static Application *dApp1;
 };
 

@@ -57,7 +57,7 @@ ImportWidget::ImportWidget(QWidget *parent) : DFrame(parent)
     auto layout = new QVBoxLayout(this);
     layout->setMargin(0);
 
-    m_logo = new QLabel;
+    m_logo = new QLabel(this);
     m_logo->setFixedSize(128, 128);
     m_logo->setObjectName("ImportViewLogo");
     m_logo->setPixmap(QIcon::fromTheme("import_music_light").pixmap(QSize(128, 128)));
@@ -66,7 +66,7 @@ ImportWidget::ImportWidget(QWidget *parent) : DFrame(parent)
     m_waterProgress->setTextVisible(true);
     m_waterProgress->setVisible(false);
 
-    m_importPathButton = new DPushButton;
+    m_importPathButton = new DPushButton(this);
     auto pl = m_importPathButton->palette();
     pl.setColor(DPalette::Dark, QColor("#0098FF"));
     pl.setColor(DPalette::Light, QColor("#25B7FF"));
@@ -82,7 +82,7 @@ ImportWidget::ImportWidget(QWidget *parent) : DFrame(parent)
     m_importPathButton->installEventFilter(this);
     DFontSizeManager::instance()->bind(m_importPathButton, DFontSizeManager::T6, QFont::Normal);
 
-    m_addMusicButton = new DPushButton;
+    m_addMusicButton = new DPushButton(this);
 //    d->addMusicButton->setPalette(pl);
     m_addMusicButton->setFixedSize(302, 36);
     m_addMusicButton->setText(tr("Add Music"));
@@ -91,7 +91,7 @@ ImportWidget::ImportWidget(QWidget *parent) : DFrame(parent)
     m_addMusicButton->installEventFilter(this);
     DFontSizeManager::instance()->bind(m_addMusicButton, DFontSizeManager::T6, QFont::Normal);
 
-    m_text = new QLabel;
+    m_text = new QLabel(this);
     m_text->setObjectName("ImportViewText");
     QString linkText = QString(linkTemplate).arg(tr("Scan")).arg(tr("Scan"));
     m_text->setText(tr("%1 music directory or drag music files here").arg(linkText));
@@ -126,8 +126,8 @@ ImportWidget::ImportWidget(QWidget *parent) : DFrame(parent)
 
 
     //connection
-    connect(Player::getInstance()->getMpris(), &MprisPlayer::openUriRequested, this, &ImportWidget::slotImportFormDbus);  //open file form dbus
-
+    //connect(Player::getInstance()->getMpris(), &MprisPlayer::openUriRequested, this, &ImportWidget::slotImportFormDbus);
+//    connect(CommonService::getInstance(), &CommonService::signalImprotFromTaskbar, this, &ImportWidget::slotFileImportProcessing);
 
     connect(DGuiApplicationHelper::instance(), &DGuiApplicationHelper::themeTypeChanged,
             this, &ImportWidget::setThemeType);
@@ -263,20 +263,20 @@ void ImportWidget::slotImportPathButtonClicked()
     }
 }
 
-void ImportWidget::slotImportFormDbus(const QUrl &url)
-{
-    qDebug() << __FUNCTION__ << "toString = " << url.toString();
-    qDebug() << __FUNCTION__ << "toLocalFile = " << url.toLocalFile();
-    QString path = url.toLocalFile();
-    if (path.isEmpty()) {
-        path = url.toString().isEmpty() ? url.path() : url.toString(); //复杂名称可能出现tostring为空的问题，直接取path()
-        if (path.isEmpty()) {
-            return;
-        }
-    }
-    DataBaseService::getInstance()->setFirstSong(path);
-    DataBaseService::getInstance()->importMedias("all", QStringList() << path);
-}
+//void ImportWidget::slotImportFormDbus(const QUrl &url)
+//{
+//    qDebug() << __FUNCTION__ << "toString = " << url.toString();
+//    qDebug() << __FUNCTION__ << "toLocalFile = " << url.toLocalFile();
+//    QString path = url.toLocalFile();
+//    if (path.isEmpty()) {
+//        path = url.toString().isEmpty() ? url.path() : url.toString(); //复杂名称可能出现tostring为空的问题，直接取path()
+//        if (path.isEmpty()) {
+//            return;
+//        }
+//    }
+//    DataBaseService::getInstance()->setFirstSong(path);
+//    DataBaseService::getInstance()->importMedias("all", QStringList() << path);
+//}
 
 bool ImportWidget::eventFilter(QObject *o, QEvent *e)
 {
@@ -329,7 +329,7 @@ void ImportWidget::dropEvent(QDropEvent *event)
     auto urls = event->mimeData()->urls();
     QStringList localpaths;
     for (auto &url : urls) {
-        localpaths << url.toLocalFile();
+        localpaths << (url.isLocalFile() ? url.toLocalFile() : url.path());
     }
 
     if (!localpaths.isEmpty()) {
@@ -383,6 +383,15 @@ void ImportWidget::slotImportedPercent(int percent)
 {
     if (m_waterProgress->isVisible()) {
         m_waterProgress->setValue(percent);
+    }
+}
+// 将文件拖动到任务栏上的音乐图标导入
+void ImportWidget::slotFileImportProcessing(const QStringList &itemMetas)
+{
+    if (itemMetas.size() > 0) {
+        DataBaseService::getInstance()->setFirstSong(itemMetas.first());
+        DataBaseService::getInstance()->importMedias("all", itemMetas);
+        showWaitHint();
     }
 }
 

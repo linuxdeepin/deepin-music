@@ -65,16 +65,18 @@ MusicLyricWidget::MusicLyricWidget(QWidget *parent)
     palette.setColor(DPalette::Background, QColor("#F8F8F8"));
     setPalette(palette);
 
-    m_cover = new Cover;
+    m_cover = new Cover(this);
     m_cover->setFixedSize(200, 200);
     m_cover->setObjectName("LyricCover");
 
-    m_leftLayout = new QHBoxLayout();
+    QHBoxLayout *layout = new QHBoxLayout(this);
+
+    m_leftLayout = new QHBoxLayout;
     m_leftLayout->setContentsMargins(120, 0, 140, 0);
     m_leftLayout->addWidget(m_cover, Qt::AlignLeft | Qt::AlignVCenter);
 
-    m_lyricview = new LyricLabel(false);
-    m_nolyric = new DLabel();
+    m_lyricview = new LyricLabel(false, this);
+    m_nolyric = new DLabel(this);
     m_nolyric->setAlignment(Qt::AlignCenter);
     m_nolyric->setText(tr("No lyrics yet"));
     QPalette nolyr = m_nolyric->palette();
@@ -85,7 +87,6 @@ MusicLyricWidget::MusicLyricWidget(QWidget *parent)
     m_nolyric->setForegroundRole(QPalette::WindowText);
 
 
-    QHBoxLayout *layout = new QHBoxLayout(this);
     layout->setContentsMargins(20, 20, 20, 150);
     layout->addLayout(m_leftLayout, 0);
     layout->addWidget(m_lyricview, 10);
@@ -143,7 +144,9 @@ void MusicLyricWidget::updateUI()
     if (coverInfo.exists()) {
         // 不使用缩略图,使用原图,更加清晰
         cover = MetaDetector::getCoverDataPixmap(meta);
-    } else {
+    }
+    //防止缓存为默认图片数据
+    if (cover.isNull()) {
         cover = QIcon::fromTheme("cover_max").pixmap(QSize(200, 200));
     }
     m_cover->setCoverPixmap(cover);
@@ -167,7 +170,7 @@ void MusicLyricWidget::updateUI()
 
 void MusicLyricWidget::showAnimation()
 {
-    QPropertyAnimation *animation = new QPropertyAnimation(this, "pos");
+    QPropertyAnimation *animation = new QPropertyAnimation(this, "pos", this);
 
     animation->setDuration(AnimationDelay);
     animation->setEasingCurve(QEasingCurve::InCurve);
@@ -185,7 +188,7 @@ void MusicLyricWidget::showAnimation()
 
 void MusicLyricWidget::closeAnimation()
 {
-    QPropertyAnimation *animation = new QPropertyAnimation(this, "pos");
+    QPropertyAnimation *animation = new QPropertyAnimation(this, "pos", this);
 
     animation->setDuration(AnimationDelay);
     animation->setEasingCurve(QEasingCurve::InCurve);

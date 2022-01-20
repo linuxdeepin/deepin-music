@@ -78,6 +78,12 @@ private:
     void initMenuAndShortcut();
 public slots:
     void slotMenuTriggered(QAction *action);
+
+    /**
+     * @brief 添加音乐
+     */
+    void slotAddMusicClicked();
+
 private slots:
     void setThemeType(DGuiApplicationHelper::ColorType themeType);
     void slotSearchEditFoucusIn();
@@ -112,6 +118,8 @@ private:
     DTitlebar           *m_titlebar = nullptr;
     // 标题栏返回按钮
     DPushButton         *m_backBtn = nullptr;
+    // 添加音乐按钮
+    DIconButton         *m_addMusicBtn = nullptr;
     TitlebarWidget      *m_titlebarwidget = nullptr;
     // 标题栏选择控制按钮
     TabletLabel         *m_tabletSelectAll = nullptr;

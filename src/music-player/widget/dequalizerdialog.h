@@ -74,44 +74,23 @@ private:
 
 private:
 
-    DTitlebar   *m_titleBar            = nullptr;
-    DSwitchButton *m_switchBtn         = nullptr;
-    DComboBox      *m_comBox           = nullptr;
-    DPushButton    *m_saveBtn           = nullptr;
+    DTitlebar           *m_titleBar               = nullptr;
+    DSwitchButton       *m_switchBtn              = nullptr;
+    DComboBox           *m_comBox                 = nullptr;
+    DPushButton         *m_saveBtn                = nullptr;
+    DLabel              *m_switchLabel            = nullptr;
+    QVector<DLabel *>    m_baudLabels;
+    QVector<DSlider *>   m_allBaudSliders;
 
-    DLabel      *m_switchLabel         = nullptr;
-    DLabel      *m_lbBaudPre          = nullptr;
-    DLabel      *m_lbBaud60           = nullptr;
-    DLabel      *m_lbBaud170          = nullptr;
-    DLabel      *m_lbBaud310          = nullptr;
-    DLabel      *m_lbBaud600          = nullptr;
-    DLabel      *m_lbBaud1K           = nullptr;
-    DLabel      *m_lbBaud3K           = nullptr;
-    DLabel      *m_lbBaud6K           = nullptr;
-    DLabel      *m_lbBaud12K          = nullptr;
-    DLabel      *m_lbBaud14K          = nullptr;
-    DLabel      *m_lbBaud16K          = nullptr;
+    DPushButton          *m_btnDefault            = nullptr;
+    DFloatingMessage     *m_saveMessage           = nullptr;
 
-    DSlider     *m_sliderPre           = nullptr;
-    DSlider     *m_slider60            = nullptr;
-    DSlider     *m_slider170           = nullptr;
-    DSlider     *m_slider310           = nullptr;
-    DSlider     *m_slider600           = nullptr;
-    DSlider     *m_slider1K            = nullptr;
-    DSlider     *m_slider3K            = nullptr;
-    DSlider     *m_slider6K            = nullptr;
-    DSlider     *m_slider12K           = nullptr;
-    DSlider     *m_slider14K           = nullptr;
-    DSlider     *m_slider16K           = nullptr;
-    DPushButton *m_btnDefault          = nullptr;
-    DFloatingMessage *m_saveMessage     = nullptr;
+    QStringList          m_effectType;
+    QList<int>           m_baudList;
 
-    QStringList    m_effectType;
-    QList<int> m_baudList;
-
-    bool    m_switchFlag               = false;
-    bool    m_changeFlag                = false;
-    int     m_curEffect                 = 0;
+    bool                 m_switchFlag             = false;
+    bool                 m_changeFlag             = false;
+    int                  m_curEffect              = 0;
 
     int flat_bauds[11] = {12, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
     int Classical_bauds[11] = {12, 0, 0, 0, 0, 0, 0, -7, -7, -7, -9};
@@ -132,9 +111,9 @@ private:
     int Soft_rock_bauds[11] = {7, 4, 4, 2, 0, -4, -5, -3, 0, 2, 8};
     int Techno_bauds[11] = {5, 8, 5, 0, -5, -4, 0, 8, 9, 9, 8};
 
-    QList<int *> AllbaudTypes;
+    QList<int *>        AllbaudTypes;
     //slidergroup
-    DBlurEffectWidget *slWidget  = nullptr;
+    DBlurEffectWidget   *slWidget                 = nullptr;
 };
 
 #endif // DEQUALIZERDIALOG_H

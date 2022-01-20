@@ -73,6 +73,7 @@
 #include "subsonglistwidget.h"
 #include "tabletlabel.h"
 #include "comdeepiniminterface.h"
+#include "dbusutils.h"
 DWIDGET_USE_NAMESPACE
 
 const QString s_PropertyViewname = "viewname";
@@ -80,6 +81,39 @@ const QString s_PropertyViewnameLyric = "lyric";
 const QString s_PropertyViewnamePlay = "playList";
 static DSettingsDialog *equalizer = nullptr;
 using namespace Dtk::Widget;
+
+static bool showWindowfromDBus()
+{
+    QVariant v = DBusUtils::readDBusProperty("com.deepin.dde.daemon.Dock", "/com/deepin/dde/daemon/Dock",
+                                             "com.deepin.dde.daemon.Dock", "Entries");
+
+    if (!v.isValid())
+        return false;
+
+    QList<QDBusObjectPath> allSinkInputsList = v.value<QList<QDBusObjectPath> >();
+
+    QString entryPath;
+    for (auto curPath : allSinkInputsList) {
+        QVariant nameV = DBusUtils::readDBusProperty("com.deepin.dde.daemon.Dock", curPath.path(),
+                                                     "com.deepin.dde.daemon.Dock.Entry", "Name");
+
+        if (!nameV.isValid() || nameV != Global::getAppName())
+            continue;
+
+        entryPath = curPath.path();
+        break;
+    }
+
+    QDBusInterface ainterface("com.deepin.dde.daemon.Dock", entryPath,
+                              "com.deepin.dde.daemon.Dock.Entry",
+                              QDBusConnection::sessionBus());
+    if (!ainterface.isValid()) {
+        return false;
+    }
+    ainterface.call(QLatin1String("Activate"), 1);
+
+    return true;
+}
 
 MainFrame::MainFrame()
 {
@@ -91,6 +125,7 @@ MainFrame::MainFrame()
     qApp->setApplicationAcknowledgementPage(acknowledgementLink);
     qApp->setProductIcon(QIcon::fromTheme("deepin-music"));
     qApp->setApplicationDescription(descriptionText);
+    qApp->setApplicationDisplayName(QApplication::tr("Music"));
 
     this->setWindowTitle(tr("Music"));
 
@@ -111,6 +146,12 @@ MainFrame::MainFrame()
     m_backBtn->setVisible(false);
     m_backBtn->setFixedSize(QSize(36, 36));
 
+    m_addMusicBtn = new DIconButton(DStyle::SP_IncreaseElement, this);
+    m_addMusicBtn->setToolTip(tr("Add music"));
+    AC_SET_OBJECT_NAME(m_addMusicBtn, AC_titleBarAddMusic);
+    AC_SET_ACCESSIBLE_NAME(m_addMusicBtn, AC_titleBarAddMusic);
+    m_addMusicBtn->setFixedSize(QSize(36, 36));
+
     m_selectStr = tr("Select");
     m_selectAllStr = tr("Select All");
     m_doneStr = tr("Done");
@@ -119,11 +160,18 @@ MainFrame::MainFrame()
     }
     m_backBtn->setIcon(QIcon::fromTheme("left_arrow"));
     m_titlebar->addWidget(m_backBtn, Qt::AlignLeft);
+    m_titlebar->addWidget(m_addMusicBtn, Qt::AlignRight);
     m_titlebar->resize(width(), 50);
 
     // 返回按钮点击
     connect(m_backBtn, &DPushButton::clicked,
             this, &MainFrame::slotLeftClicked);
+
+    // 添加音乐
+    connect(m_addMusicBtn, &DPushButton::clicked,
+            this, &MainFrame::slotAddMusicClicked);
+    connect(CommonService::getInstance(), &CommonService::signalAddMusic,
+            this, &MainFrame::slotAddMusicClicked);
 
     connect(m_titlebarwidget, &TitlebarWidget::sigSearchEditFoucusIn,
             this, &MainFrame::slotSearchEditFoucusIn);
@@ -144,14 +192,17 @@ MainFrame::MainFrame()
         qApp->quit();
     });
     connect(Player::getInstance()->getMpris(), &MprisPlayer::raiseRequested, this, [ = ]() {
-        qDebug() << "raiseRequested=============";
+        auto e = QProcessEnvironment::systemEnvironment();
+        QString XDG_SESSION_TYPE = e.value(QStringLiteral("XDG_SESSION_TYPE"));
+        QString WAYLAND_DISPLAY = e.value(QStringLiteral("WAYLAND_DISPLAY"));
         if (isVisible()) {
+            // 最小化和激活窗口
             if (isMinimized()) {
-                if (isFullScreen()) {
-                    showFullScreen();
-                } else {
+                // 使用dbus显示窗口
+                if ((XDG_SESSION_TYPE != QLatin1String("wayland") && !WAYLAND_DISPLAY.contains(QLatin1String("wayland"), Qt::CaseInsensitive)) || !showWindowfromDBus()) {
                     this->titlebar()->setFocus();
-                    showNormal();
+                    show();
+                    raise();
                     activateWindow();
                     this->restoreGeometry(m_geometryBa);
                 }
@@ -160,21 +211,33 @@ MainFrame::MainFrame()
                 activateWindow();
             }
         } else {
+            // 使用dbus显示窗口
             this->titlebar()->setFocus();
-            showNormal();
+            show();
+            raise();
             activateWindow();
         }
     });
 
     connect(CommonService::getInstance(), &CommonService::signalSwitchToView, this, &MainFrame::slotViewChanged);
 
+    connect(CommonService::getInstance(), &CommonService::signalImprotFromTaskbar, this, [ = ](const QStringList & itemMetas) {
+        // 当itemMetas为空时，不做导入
+        if (itemMetas.isEmpty())
+            return ;
+        //初始化导入窗口
+        if (m_importWidget == nullptr) {
+            DataBaseService::getInstance()->setFirstSong(itemMetas.first());
+            DataBaseService::getInstance()->importMedias("all", itemMetas);
+        } else {
+            m_importWidget->slotFileImportProcessing(itemMetas);
+        }
+    });
+
     if (CommonService::getInstance()->isTabletEnvironment()) {
         QDBusConnection connection = QDBusConnection::sessionBus();
         m_comDeepinImInterface = new ComDeepinImInterface("com.deepin.im", "/com/deepin/im", connection);
-        if (m_comDeepinImInterface->isValid() == false) {
-            qDebug() << __FUNCTION__ << "----------QDbus service can not connect";
-        } else {
-            qDebug() << __FUNCTION__ << "----------QDbus service connected";
+        if (m_comDeepinImInterface->isValid()) {
             connect(m_comDeepinImInterface, &ComDeepinImInterface::imActiveChanged, this, &MainFrame::slotActiveChanged);
         }
     }
@@ -190,6 +253,14 @@ void MainFrame::initUI(bool showLoading)
     this->setFocusPolicy(Qt::ClickFocus);
 
     m_titlebarwidget->setEnabled(showLoading);
+
+    /*---------------menu&shortcut-------------------*/
+    if (!CommonService::getInstance()->isTabletEnvironment()) {
+        initMenuAndShortcut();
+        m_newSonglistAction->setEnabled(showLoading);
+    } else {
+        initPadMenu();
+    }
 
     m_musicContentWidget = new MusicContentWidget(this);
     m_musicContentWidget->setVisible(showLoading);
@@ -213,13 +284,6 @@ void MainFrame::initUI(bool showLoading)
 
     //    m_pwidget = new QWidget(this);
 
-    /*---------------menu&shortcut-------------------*/
-    if (!CommonService::getInstance()->isTabletEnvironment()) {
-        initMenuAndShortcut();
-        m_newSonglistAction->setEnabled(showLoading);
-    } else {
-        initPadMenu();
-    }
     connect(DataBaseService::getInstance(), &DataBaseService::signalAllMusicCleared,
             this, &MainFrame::slotAllMusicCleared);
 
@@ -279,19 +343,25 @@ void MainFrame::initMenuAndShortcut()
 
     //short cut
     addmusicfilesShortcut = new QShortcut(this);
-    addmusicfilesShortcut->setKey(QKeySequence(QLatin1String("Ctrl+O")));
+    QKeySequence addmusicKeySequence(QLatin1String("Ctrl+O"));
+    addmusicfilesShortcut->setKey(addmusicKeySequence);
 
     viewshortcut = new QShortcut(this);
-    viewshortcut->setKey(QKeySequence(QLatin1String("Ctrl+Shift+/")));
+    viewshortcut->setAutoRepeat(false);
+    QKeySequence viewSequence(QLatin1String("Ctrl+Shift+/"));
+    viewshortcut->setKey(viewSequence);
 
     searchShortcut = new QShortcut(this);
-    searchShortcut->setKey(QKeySequence(QLatin1String("Ctrl+F")));
+    QKeySequence searchSequence(QLatin1String("Ctrl+F"));
+    searchShortcut->setKey(searchSequence);
 
     windowShortcut = new QShortcut(this);
-    windowShortcut->setKey(QKeySequence(QLatin1String("Ctrl+Alt+F")));
+    QKeySequence windowSequence(QLatin1String("Ctrl+Alt+F"));
+    windowShortcut->setKey(windowSequence);
 
     m_newItemShortcut = new QShortcut(this);
-    m_newItemShortcut->setKey(QKeySequence(QLatin1String("Ctrl+Shift+N")));
+    QKeySequence newItemSequence(QLatin1String("Ctrl+Shift+N"));
+    m_newItemShortcut->setKey(newItemSequence);
     connect(m_newItemShortcut, &QShortcut::activated, CommonService::getInstance(), &CommonService::signalAddNewSongList);
 
     connect(addmusicfilesShortcut, SIGNAL(activated()), this, SLOT(slotShortCutTriggered()));
@@ -301,8 +371,11 @@ void MainFrame::initMenuAndShortcut()
 
     //初始化托盘
     auto playAction = new QAction(tr("Play/Pause"), this);
+    playAction->setEnabled(m_importWidget == nullptr);
     auto prevAction = new QAction(tr("Previous"), this);
+    prevAction->setEnabled(false);
     auto nextAction = new QAction(tr("Next"), this);
+    nextAction->setEnabled(false);
     auto quitAction = new QAction(tr("Exit"), this);
 
     auto trayIconMenu = new DMenu(this);
@@ -317,9 +390,8 @@ void MainFrame::initMenuAndShortcut()
     m_sysTrayIcon->setIcon(QIcon::fromTheme("deepin-music"));
     m_sysTrayIcon->setToolTip(tr("Music"));
     m_sysTrayIcon->setContextMenu(trayIconMenu);
-#ifndef  ENABLE_AUTO_UNIT_TEST
+#ifndef  AUTO_UNIT_TEST
     m_sysTrayIcon->show();
-#endif
     connect(playAction, &QAction::triggered,
     this, [ = ]() {
         m_footerWidget->slotPlayClick(true);
@@ -337,26 +409,56 @@ void MainFrame::initMenuAndShortcut()
         sync();
         qApp->quit();
     });
+    // 歌单数据改变时设置上下一首按钮状态
+    connect(Player::getInstance(), &Player::signalPlaylistCountChange, this, [ = ]() {
+        prevAction->setEnabled(Player::getInstance()->getPlayList()->size() > 1);
+        nextAction->setEnabled(Player::getInstance()->getPlayList()->size() > 1);
+    });
+    // 清除所有歌曲后置灰播放按钮
+    connect(DataBaseService::getInstance(), &DataBaseService::signalAllMusicCleared, this, [ = ]() {
+        playAction->setEnabled(Player::getInstance()->getCdaPlayList().size() > 0);
+    });
+    // 导入歌曲后恢复播放按钮
+    connect(DataBaseService::getInstance(), &DataBaseService::signalImportFinished, this, [ = ]() {
+        playAction->setEnabled(DataBaseService::getInstance()->allMusicInfos().size() > 0 || Player::getInstance()->getCdaPlayList().size() > 0);
+    });
+    // 监控cd状态
+    connect(CommonService::getInstance(), &CommonService::signalCdaSongListChanged, this, [ = ](int stat) {
+        Q_UNUSED(stat)
+        playAction->setEnabled(DataBaseService::getInstance()->allMusicInfos().size() > 0 || Player::getInstance()->getCdaPlayList().size() > 0);
+        //都不存在时设置未不可操作
+        if (Player::getInstance()->getCurrentPlayListHash() == "CdaRole" && DataBaseService::getInstance()->allMusicInfos().isEmpty() && Player::getInstance()->getCdaPlayList().isEmpty()) {
+            prevAction->setEnabled(false);
+            nextAction->setEnabled(false);
+        }
+    });
+#endif
 
     connect(m_sysTrayIcon, &QSystemTrayIcon::activated,
     this, [ = ](QSystemTrayIcon::ActivationReason reason) {
         if (QSystemTrayIcon::Trigger == reason) {
+            auto e = QProcessEnvironment::systemEnvironment();
+            QString XDG_SESSION_TYPE = e.value(QStringLiteral("XDG_SESSION_TYPE"));
+            QString WAYLAND_DISPLAY = e.value(QStringLiteral("WAYLAND_DISPLAY"));
             if (isVisible()) {
-                if (isMinimized()) {
-                    if (isFullScreen()) {
-                        showFullScreen();
-                    } else {
+                // 最小化和激活窗口
+                if (isMinimized() || !isActiveWindow()) {
+                    // 使用dbus显示窗口
+                    if ((XDG_SESSION_TYPE != QLatin1String("wayland") && !WAYLAND_DISPLAY.contains(QLatin1String("wayland"), Qt::CaseInsensitive)) || !showWindowfromDBus()) {
                         this->titlebar()->setFocus();
-                        showNormal();
+                        show();
+                        raise();
                         activateWindow();
-                        this->restoreGeometry(m_geometryBa);
                     }
                 } else {
+                    hide();
                     showMinimized();
                 }
             } else {
+                // 使用dbus显示窗口
                 this->titlebar()->setFocus();
-                showNormal();
+                show();
+                raise();
                 activateWindow();
             }
         }
@@ -391,43 +493,76 @@ void MainFrame::initPadMenu()
 void MainFrame::autoStartToPlay()
 {
     QString strOpenPath = DataBaseService::getInstance()->getFirstSong();
-    qDebug() << "autoStartToPlay:========" << strOpenPath;
     auto lastplaypage = MusicSettings::value("base.play.last_playlist").toString(); //上一次的页面
+    ListPageSwitchType lastListPageSwitchType = AllSongListType;
+    //最后记录的歌单
+    if (!lastplaypage.isEmpty()) {
+        if (lastplaypage == "album") {
+            lastListPageSwitchType = AlbumType;
+        } else if (lastplaypage == "artist") {
+            lastListPageSwitchType = SingerType;
+        } else if (lastplaypage == "fav") {
+            lastListPageSwitchType = FavType;
+        } else if (lastplaypage == "CdaRole" || lastplaypage == "all"
+                   || lastplaypage == "musicResult" || lastplaypage == "artistResult"
+                   || lastplaypage == "albumResult") {
+            lastListPageSwitchType = AllSongListType;
+        } else {
+            lastListPageSwitchType = CustomType;
+        }
+    }
+    // 非所有音乐切换歌单
+    if (lastListPageSwitchType != AllSongListType)
+        emit CommonService::getInstance()->signalSwitchToView(lastListPageSwitchType, lastplaypage);
+    Player::getInstance()->reloadMetaList();
     if (!strOpenPath.isEmpty()) {
         //通知设置当前页面
-        Player::getInstance()->setCurrentPlayListHash(lastplaypage, true);
-        qDebug() << "lastplaypage:========" << lastplaypage;
+        Player::getInstance()->setCurrentPlayListHash(lastplaypage, false);
+        Player::getInstance()->init();
         return ;
+    }
+    //读取均衡器使能开关配置
+    auto eqSwitch = MusicSettings::value("equalizer.all.switch").toBool();
+    if (eqSwitch) {
+        Player::getInstance()->initEqualizerCfg();
     }
     auto lastMeta = MusicSettings::value("base.play.last_meta").toString();
     if (!lastMeta.isEmpty()) {
-        bool bremb = MusicSettings::value("base.play.remember_progress").toBool();
+        bool bremember = MusicSettings::value("base.play.remember_progress").toBool();
         bool bautoplay = MusicSettings::value("base.play.auto_play").toBool();
         //通知设置当前页面&查询数据
-        Player::getInstance()->setCurrentPlayListHash(lastplaypage, true);
+        Player::getInstance()->setCurrentPlayListHash(lastplaypage, false);
         //获取上一次的歌曲信息
         MediaMeta medmeta = DataBaseService::getInstance()->getMusicInfoByHash(lastMeta);
-        //上一次进度的赋值
-        medmeta.offset = MusicSettings::value("base.play.last_position").toInt();
-        if (medmeta.localPath.isEmpty())
+        if (medmeta.localPath.isEmpty()) {
+            Player::getInstance()->init();
             return;
-        if (bremb) {
-            Player::getInstance()->setActiveMeta(medmeta);
-            //加载进度
+        }
+        auto playList = Player::getInstance()->getPlayList();
+        // 最后播放歌曲默认添加到播放列表
+        if (!playList->contains(medmeta)) {
+            Player::getInstance()->playListAppendMeta(medmeta);
+        }
+        Player::getInstance()->setActiveMeta(medmeta);
+        if (bremember) {
+            //上一次进度的赋值
+            medmeta.offset = MusicSettings::value("base.play.last_position").toInt();
             /**
               * 初始不再读取歌曲设置进度，方案更改为直接设置进度，播放歌曲后跳转
               **/
-            //Player::getInstance()->loadMediaProgress(medmeta.localPath);
+            if (medmeta.offset != 0)
+                Player::getInstance()->setPosition(medmeta.offset);
             // 设置进度
             m_footerWidget->slotSetWaveValue(MusicSettings::value("base.play.last_position").toInt(), medmeta.length);
-            //加载波形图数据
-            m_footerWidget->slotLoadDetector(lastMeta);
         }
+        //加载波形图数据
+        m_footerWidget->slotLoadDetector(lastMeta);
         //自动播放处理
         if (bautoplay) {
             slotAutoPlay(medmeta); //不再延迟处理，直接播放
         }
     }
+    Player::getInstance()->init();
 }
 
 void MainFrame::showPopupMessage(const QString &songListName, int selectCount, int insertCount)
@@ -497,10 +632,8 @@ void MainFrame::slotActiveChanged(bool isActive)
     if (CommonService::getInstance()->isTabletEnvironment()) {
         if (isActive) {
             m_musicStatckedWidget->animationToUpByInput();
-        } else {
-            if (m_musicStatckedWidget->pos().y() != 50) {
-                m_musicStatckedWidget->animationToDownByInput();
-            }
+        } else if (m_musicStatckedWidget->pos().y() != 50) {
+            m_musicStatckedWidget->animationToDownByInput();
         }
     }
 }
@@ -512,6 +645,10 @@ void MainFrame::slotSearchEditFoucusIn()
 
 void MainFrame::slotLyricClicked()
 {
+    // 隐藏播放队列
+    if (m_playQueueWidget != nullptr && m_playQueueWidget->isVisible()) {
+        playQueueAnimation();
+    }
     // 歌词控件显示与关闭动画
     if (m_musicLyricWidget->isHidden()) {
         m_musicLyricWidget->showAnimation();
@@ -589,9 +726,7 @@ void MainFrame::slotImportFailed()
     warnDlg.setMessage(message);
     warnDlg.addButton(tr("OK"), true, Dtk::Widget::DDialog::ButtonNormal);
     //warnDlg.setDefaultButton(0);
-    if (0 == warnDlg.exec()) {
-        return;
-    }
+    warnDlg.exec();
 }
 
 void MainFrame::slotShortCutTriggered()
@@ -599,34 +734,26 @@ void MainFrame::slotShortCutTriggered()
     QShortcut *objCut = dynamic_cast<QShortcut *>(sender()) ;
     Q_ASSERT(objCut);
 
+    //添加歌曲时将其加载当前选中歌单里
     if (objCut == addmusicfilesShortcut) {
-        if (m_importWidget == nullptr) {
-            m_importWidget = new ImportWidget(this);
-        }
-        m_importWidget->slotAddMusicButtonClicked(); //open filedialog
-    }
-
-    if (objCut == viewshortcut) {
+        slotAddMusicClicked();
+    } else if (objCut == viewshortcut) {
         QRect rect = window()->geometry();
         QPoint pos(rect.x() + rect.width() / 2, rect.y() + rect.height() / 2);
         Shortcut sc;
         QStringList shortcutString;
         QString param1 = "-j=" + sc.toStr();
         QString param2 = "-p=" + QString::number(pos.x()) + "," + QString::number(pos.y());
-        shortcutString << "-b" << param1 << param2;
+        shortcutString << param1 << param2;
 
         QProcess *shortcutViewProc = new QProcess(this);
         //此处不会造成多进程闲置，deepin-shortcut会自动检查删除多余进程
         shortcutViewProc->startDetached("deepin-shortcut-viewer", shortcutString);
 
         connect(shortcutViewProc, SIGNAL(finished(int)), shortcutViewProc, SLOT(deleteLater()));
-    }
-
-    if (objCut == searchShortcut) {
+    } else if (objCut == searchShortcut) {
         m_titlebarwidget->slotSearchEditFoucusIn();
-    }
-
-    if (objCut == windowShortcut) {
+    } else if (objCut == windowShortcut) {
         if (windowState() == Qt::WindowMaximized) {
             showNormal();
         } else {
@@ -656,16 +783,9 @@ void MainFrame::slotMenuTriggered(QAction *action)
         }
 
         emit CommonService::getInstance()->signalAddNewSongList();
-    }
-
-    if (action == m_addMusicFiles) {
-        if (m_importWidget == nullptr) {
-            m_importWidget = new ImportWidget(this);
-        }
-        m_importWidget->addMusic(m_importListHash);
-    }
-
-    if (action == m_equalizer) {
+    } else if (action == m_addMusicFiles) {
+        slotAddMusicClicked();
+    } else if (action == m_equalizer) {
         DSettingsDialog *configDialog = new DSettingsDialog(this);
         equalizer = configDialog;
         configDialog->setFixedSize(720, 540);
@@ -684,7 +804,6 @@ void MainFrame::slotMenuTriggered(QAction *action)
             QWidget *w = static_cast<QWidget *>(dequalizerDialog->parent());
 
             w->setContentsMargins(0, 0, 0, 0);
-            qDebug() << __FUNCTION__ << "" << dequalizerDialog->height();
             if (w->findChildren<QHBoxLayout *>().size() > 0) {
                 for (int i = 0; i < w->findChildren<QHBoxLayout *>().size(); i++) {
                     QHBoxLayout *h = static_cast<QHBoxLayout *>(w->findChildren<QHBoxLayout *>().at(i));
@@ -696,9 +815,8 @@ void MainFrame::slotMenuTriggered(QAction *action)
         }
         configDialog->exec();
         delete configDialog;
-    }
-
-    if (action == m_settings) {
+        delete equalizerSettings;
+    } else if (action == m_settings) {
         DSettingsDialog *configDialog = new DSettingsDialog(this);
         AC_SET_OBJECT_NAME(configDialog, AC_configDialog);
         AC_SET_ACCESSIBLE_NAME(configDialog, AC_configDialog);
@@ -711,6 +829,21 @@ void MainFrame::slotMenuTriggered(QAction *action)
         auto curLastMeta = MusicSettings::value("base.play.last_meta").toString();
         auto curLastPosition = MusicSettings::value("base.play.last_position").toInt();
 
+        // 保留均衡器的配置
+        int curEqualizerBaud_12K = MusicSettings::value("equalizer.all.baud_12K").toInt();
+        int curEqualizerBaud_14K = MusicSettings::value("equalizer.all.baud_14K").toInt();
+        int curEqualizerBaud_16K = MusicSettings::value("equalizer.all.baud_16K").toInt();
+        int curEqualizerBaud_170 = MusicSettings::value("equalizer.all.baud_170").toInt();
+        int curEqualizerBaud_1K = MusicSettings::value("equalizer.all.baud_1K").toInt();
+        int curEqualizerBaud_310 = MusicSettings::value("equalizer.all.baud_310").toInt();
+        int curEqualizerBaud_3K = MusicSettings::value("equalizer.all.baud_3K").toInt();
+        int curEqualizerBaud_60 = MusicSettings::value("equalizer.all.baud_60").toInt();
+        int curEqualizerBaud_600 = MusicSettings::value("equalizer.all.baud_600").toInt();
+        int curEqualizerBaud_6K = MusicSettings::value("equalizer.all.baud_6K").toInt();
+        int curEqualizerBaud_pre = MusicSettings::value("equalizer.all.baud_pre").toInt();
+        int curEqualizerCurEffect = MusicSettings::value("equalizer.all.curEffect").toInt();
+        bool curEqualizerSwitch = MusicSettings::value("equalizer.all.switch").toBool();
+
         configDialog->exec();
         delete configDialog;
 
@@ -719,6 +852,21 @@ void MainFrame::slotMenuTriggered(QAction *action)
         MusicSettings::setOption("base.play.last_playlist", curLastPlaylist);
         MusicSettings::setOption("base.play.last_meta", curLastMeta);
         MusicSettings::setOption("base.play.last_position", curLastPosition);
+
+        // 恢复均衡器设置
+        MusicSettings::setOption("equalizer.all.baud_12K", curEqualizerBaud_12K);
+        MusicSettings::setOption("equalizer.all.baud_14K", curEqualizerBaud_14K);
+        MusicSettings::setOption("equalizer.all.baud_16K", curEqualizerBaud_16K);
+        MusicSettings::setOption("equalizer.all.baud_170", curEqualizerBaud_170);
+        MusicSettings::setOption("equalizer.all.baud_1K", curEqualizerBaud_1K);
+        MusicSettings::setOption("equalizer.all.baud_310", curEqualizerBaud_310);
+        MusicSettings::setOption("equalizer.all.baud_3K", curEqualizerBaud_3K);
+        MusicSettings::setOption("equalizer.all.baud_60", curEqualizerBaud_60);
+        MusicSettings::setOption("equalizer.all.baud_600", curEqualizerBaud_600);
+        MusicSettings::setOption("equalizer.all.baud_6K", curEqualizerBaud_6K);
+        MusicSettings::setOption("equalizer.all.baud_pre", curEqualizerBaud_pre);
+        MusicSettings::setOption("equalizer.all.curEffect", curEqualizerCurEffect);
+        MusicSettings::setOption("equalizer.all.switch", curEqualizerSwitch);
 
         //update shortcut
         m_footerWidget->updateShortcut();
@@ -733,6 +881,15 @@ void MainFrame::slotMenuTriggered(QAction *action)
             m_tabletSelectDone->setVisible(true);
         }
     }
+}
+
+void MainFrame::slotAddMusicClicked()
+{
+    //初始化导入对话框
+    if (m_importWidget == nullptr) {
+        m_importWidget = new ImportWidget(this);
+    }
+    m_importWidget->addMusic(m_importListHash);
 }
 
 void MainFrame::slotSwitchTheme()
@@ -770,8 +927,6 @@ void MainFrame::slotAutoPlay(const MediaMeta &meta)
     qDebug() << "slotAutoPlay=========";
     if (!meta.localPath.isEmpty())
         Player::getInstance()->playMeta(meta);
-    else
-        qDebug() << __FUNCTION__ << " at line:" << __LINE__ << " localPath is empty.";
 }
 
 void MainFrame::slotPlayFromFileMaganager()
@@ -783,11 +938,8 @@ void MainFrame::slotPlayFromFileMaganager()
     //通过路径查询歌曲信息，
     MediaMeta mt = DataBaseService::getInstance()->getMusicInfoByHash(DMusic::filepathHash(path));
     if (mt.localPath.isEmpty()) {
-        //未导入到数据库
-        qCritical() << "fail to start from file manager";
         return;
     }
-    qDebug() << "----------playMeta:" << mt.localPath;
     Player::getInstance()->playMeta(mt);
     Player::getInstance()->setCurrentPlayListHash("all", true);
     // 通知播放队列列表改变
@@ -896,7 +1048,7 @@ void MainFrame::showEvent(QShowEvent *event)
 
     if (m_importWidget) {
         // 首页启动导入界面，调整位置
-        m_importWidget->setGeometry(0, 0, width(), height() - titlebar()->height());
+        m_importWidget->setGeometry(0, 0, width(), height());
     }
 }
 
@@ -940,10 +1092,9 @@ void MainFrame::resizeEvent(QResizeEvent *e)
     if (m_musicLyricWidget) {
         m_musicLyricWidget->setGeometry(0, titlebar()->height(), width(), height() - titlebar()->height());
     }
-
+    // 防止最大化后播放队列高度改变
     if (m_playQueueWidget) {
-        m_playQueueWidget->setGeometry(PlayQueueWidget::Margin, m_footerWidget->y() - m_playQueueWidget->height() + m_footerWidget->height(),
-                                       width() - PlayQueueWidget::Margin * 2, m_playQueueWidget->height());
+        m_playQueueWidget->setGeometry(PlayQueueWidget::Margin, size().height() - 450, width() - PlayQueueWidget::Margin * 2, 445);
     }
 
     if (m_popupMessage) {
@@ -960,6 +1111,23 @@ void MainFrame::resizeEvent(QResizeEvent *e)
 
 void MainFrame::closeEvent(QCloseEvent *event)
 {
+    //保存进度
+    auto curPosition = Player::getInstance()->getActiveMeta().offset;
+    //是否记录最后播放位置
+    if (MusicSettings::value("base.play.remember_progress").toBool()) {
+        //防止未播放时重置进度
+        if (!Player::getInstance()->getActiveMeta().localPath.isEmpty()) {
+            MusicSettings::setOption("base.play.last_position", curPosition);
+        }
+    } else {
+        MusicSettings::setOption("base.play.last_position", -1);
+    }
+    //当前列表为空转为所有音乐
+    QString curPlaylistHash = Player::getInstance()->getCurrentPlayListHash();
+    if (curPlaylistHash != "album" && curPlaylistHash != "artist" && !Player::getInstance()->getCurrentPlayListHash().isEmpty()
+            && DataBaseService::getInstance()->getPlaylistSongCount(curPlaylistHash) == 0) {
+        MusicSettings::setOption("base.play.last_playlist", "all");
+    }
     auto askCloseAction = MusicSettings::value("base.close.close_action").toInt();
     switch (askCloseAction) {
     case 0: {
@@ -971,6 +1139,7 @@ void MainFrame::closeEvent(QCloseEvent *event)
         MusicSettings::setOption("base.close.is_close", true);
         //退出时,stop当前音乐
         Player::getInstance()->stop(false);
+        qApp->processEvents();
         qApp->quit();
         break;
     }
@@ -992,6 +1161,7 @@ void MainFrame::closeEvent(QCloseEvent *event)
             MusicSettings::setOption("base.close.is_close", true);
             //退出时,stop当前音乐
             Player::getInstance()->stop(false);
+            qApp->processEvents();
             qApp->quit();
         } else {
             MusicSettings::setOption("base.close.is_close", false);
@@ -1002,7 +1172,6 @@ void MainFrame::closeEvent(QCloseEvent *event)
         break;
     }
 
-    MusicSettings::setOption("base.play.last_position", Player::getInstance()->position());
     this->setFocus();
     DMainWindow::closeEvent(event);
 }
@@ -1012,7 +1181,6 @@ void MainFrame::hideEvent(QHideEvent *event)
     //用于最小化时保存窗口位置信息,note：托盘到最小化或者退出程序也会触发该事件
     DMainWindow::hideEvent(event);
     m_geometryBa = saveGeometry();
-    qDebug() << "hideEvent=============";
 }
 
 void MainFrame::playQueueAnimation()

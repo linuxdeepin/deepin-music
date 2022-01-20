@@ -48,7 +48,7 @@ TitlebarWidget::TitlebarWidget(QWidget *parent) :
     setFocusPolicy(Qt::NoFocus);
     setObjectName("TitlebarWidget");
 
-    auto layout = new QHBoxLayout();
+    auto layout = new QHBoxLayout(this);
     layout->setContentsMargins(0, 0, 0, 0);
     setLayout(layout);
 

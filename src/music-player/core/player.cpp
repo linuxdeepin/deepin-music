@@ -69,18 +69,34 @@ DCORE_USE_NAMESPACE
 static const int sFadeInOutAnimationDuration = 900; //ms
 static int INT_LAST_PROGRESS_FLAG = 1;
 
-Player::Player(QObject *parent) : QObject(parent)
+QStringList mimeTypes()
 {
-    init();
+    QStringList  mimeTypeWhiteList;
+    mimeTypeWhiteList << "application/vnd.ms-asf";
+
+    QMimeDatabase mdb;
+    for (auto &mt : mdb.allMimeTypes()) {
+        if (mt.name().startsWith("audio/") /*|| mt.name().startsWith("video/")*/) {
+            mimeTypeWhiteList << mt.name();
+        }
+        if (mt.name().startsWith("video/")) {
+            mimeTypeWhiteList << mt.name();
+        }
+
+        if (mt.name().startsWith("application/octet-stream")) {
+            mimeTypeWhiteList << mt.name();
+        }
+    }
+    return mimeTypeWhiteList;
 }
 
-void Player::init()
+Player::Player(QObject *parent) : QObject(parent)
 {
     qRegisterMetaType<Player::Error>();
     qRegisterMetaType<Player::PlaybackStatus>();
 
-    m_fadeOutAnimation = new QPropertyAnimation(this, "fadeInOutFactor");
-    m_fadeInAnimation = new QPropertyAnimation(this, "fadeInOutFactor");
+    m_fadeOutAnimation = new QPropertyAnimation(this, "fadeInOutFactor", this);
+    m_fadeInAnimation = new QPropertyAnimation(this, "fadeInOutFactor", this);
 
     //支持格式列表,.cda格式自动加载，无需放在支持列表中
     m_supportedSuffix << "*.aac"
@@ -106,16 +122,25 @@ void Player::init()
     m_mode = static_cast<PlaybackMode>(MusicSettings::value("base.play.playmode").toInt());
 
     m_currentPlayListHash = MusicSettings::value("base.play.last_playlist").toString(); //上一次的页面
+//    init();
+}
+
+void Player::init()
+{
     //初始化cd线程
-    m_pCdaThread = new CdaThread(this);
-    connect(m_pCdaThread, &CdaThread::sigSendCdaStatus, CommonService::getInstance(),
-            &CommonService::signalCdaSongListChanged, Qt::QueuedConnection);
+    if (nullptr == m_pCdaThread) {
+        m_pCdaThread = new CdaThread(this);
+        connect(m_pCdaThread, &CdaThread::sigSendCdaStatus, CommonService::getInstance(),
+                &CommonService::signalCdaSongListChanged, Qt::QueuedConnection);
+    }
+
     //开启cd线程
     startCdaThread();
-
-    m_pDBus = new QDBusInterface("org.freedesktop.login1", "/org/freedesktop/login1",
-                                 "org.freedesktop.login1.Manager", QDBusConnection::systemBus());
-    connect(m_pDBus, SIGNAL(PrepareForSleep(bool)), this, SLOT(onSleepWhenTaking(bool)));
+    if (nullptr == m_pDBus) {
+        m_pDBus = new QDBusInterface("org.freedesktop.login1", "/org/freedesktop/login1",
+                                     "org.freedesktop.login1.Manager", QDBusConnection::systemBus());
+        connect(m_pDBus, SIGNAL(PrepareForSleep(bool)), this, SLOT(onSleepWhenTaking(bool)));
+    }
 }
 
 QStringList Player::supportedSuffixList() const
@@ -123,12 +148,46 @@ QStringList Player::supportedSuffixList() const
     return m_supportedSuffix;
 }
 
+void Player::releasePlayer()
+{
+    stop(false);
+    //释放cd线程
+    if (m_pCdaThread) {
+        m_pCdaThread->closeThread();
+        while (m_pCdaThread->isRunning()) {}
+    }
+    //删除媒体资源
+    if (m_qvmedia) {
+        delete m_qvmedia;
+        m_qvmedia = nullptr;
+    }
+    //删除媒体播放器
+    if (m_qvplayer) {
+        delete m_qvplayer;
+        m_qvplayer = nullptr;
+    }
+}
+
+void Player::sortMetas(const QVector<QString> &metaHashs)
+{
+    auto t_MetaList = m_MetaList;
+    m_MetaList.clear();
+    // 根据hash排序
+    for (auto hash : metaHashs) {
+        for (int i = 0; i < t_MetaList.size(); ++i) {
+            if (t_MetaList[i].hash == hash) {
+                m_MetaList.append(t_MetaList[i]);
+                t_MetaList.removeAt(i);
+                break;
+            }
+        }
+    }
+}
+
 Player::~Player()
 {
-    m_pCdaThread->closeThread();
-    while (m_pCdaThread->isRunning()) {
-
-    }
+    DataBaseService::getInstance()->updateMetasforPlayerList();
+    releasePlayer();
 }
 
 void Player::playMeta(MediaMeta meta)
@@ -140,6 +199,8 @@ void Player::playMeta(MediaMeta meta)
             if (acint != 0 || empty) {
                 //文件不存在提示  todo..
                 emit signalPlaybackStatusChanged(Player::Paused);
+                playNextMeta(true);
+                INT_LAST_PROGRESS_FLAG = 0;
                 return;
             }
         }
@@ -152,13 +213,18 @@ void Player::playMeta(MediaMeta meta)
         m_qvplayer->open(m_qvmedia);
         m_qvplayer->play();
 
+        //延迟设置进度
         if (INT_LAST_PROGRESS_FLAG && m_ActiveMeta.hash == meta.hash) {
+            m_qvplayer->pause();
+            qint64 lastOffset = m_ActiveMeta.offset;
             QTimer::singleShot(100, this, [ = ]() {//为了记录进度条生效，在加载的时候让音乐播放100ms
-                qDebug() << "seek last position:" << m_ActiveMeta.offset;
-                m_qvplayer->setTime(m_ActiveMeta.offset);
+                qDebug() << "seek last position:" << lastOffset;
+                m_qvplayer->setTime(lastOffset);
+                m_qvplayer->play();
             });
-            INT_LAST_PROGRESS_FLAG = 0;
         }
+        // 开始后点击播放另一首哥播放保证错误
+        INT_LAST_PROGRESS_FLAG = 0;
 
         m_ActiveMeta = meta;
         setActiveMeta(meta);
@@ -287,11 +353,16 @@ void Player::playPreMeta()
     if (m_qvinstance == nullptr || m_qvplayer == nullptr || m_qvmedia == nullptr) {
         initVlc();
     }
-    if (m_MetaList.size() > 0) {
+    QList<MediaMeta> curMetaList;
+    for (int i = 0; i < m_MetaList.size(); i++) {
+        if (QFile::exists(m_MetaList[i].localPath) || m_MetaList[i].mmType == MIMETYPE_CDA)
+            curMetaList.append(m_MetaList[i]);
+    }
+    if (curMetaList.size() > 0) {
         //播放模式todo
         int index = 0;
-        for (int i = 0; i < m_MetaList.size(); i++) {
-            if (m_MetaList.at(i).hash == m_ActiveMeta.hash) {
+        for (int i = 0; i < curMetaList.size(); i++) {
+            if (curMetaList.at(i).hash == m_ActiveMeta.hash) {
                 index = i;
                 break;
             }
@@ -301,31 +372,45 @@ void Player::playPreMeta()
         case RepeatAll:
         case RepeatSingle: {
             if (index == 0) {
-                index = m_MetaList.size() - 1;
+                index = curMetaList.size() - 1;
             } else {
                 index--;
             }
             break;
         }
         case Shuffle: {
-            QTime time;
-            time = QTime::currentTime();
-            index = static_cast<int>(QRandomGenerator::global()->bounded(time.msec() + time.second() * 1000)) % m_MetaList.size();
-            //qsrand(static_cast<uint>((time.msec() + time.second() * 1000)));
-            //index = qrand() % m_MetaList.size();
+            // 多个随机处理
+            if (curMetaList.size() > 1) {
+                QTime time;
+                time = QTime::currentTime();
+                int curIndex = static_cast<int>(QRandomGenerator::global()->bounded(time.msec() + time.msec() * 1000)) % curMetaList.size();
+                // 随机相同时特殊处理
+                if (curIndex == index) {
+                    if (curIndex == 0) {
+                        index = 1;
+                    } else if (curIndex == curMetaList.size() - 1) {
+                        index = 0;
+                    } else {
+                        index = curIndex - 1;
+                    }
+                } else {
+                    index = curIndex;
+                }
+            } else {
+                index = 0;
+            }
             break;
         }
         default: {
             if (index == 0) {
-                index = m_MetaList.size() - 1;
+                index = curMetaList.size() - 1;
             } else {
                 index--;
             }
             break;
         }
         }
-
-        setActiveMeta(m_MetaList.at(index));
+        m_ActiveMeta = curMetaList.at(index);
         playMeta(m_ActiveMeta);
     }
 }
@@ -335,10 +420,15 @@ void Player::playNextMeta(bool isAuto)
     if (m_qvinstance == nullptr || m_qvplayer == nullptr || m_qvmedia == nullptr) {
         initVlc();
     }
-    if (m_MetaList.size() > 0) {
+    QList<MediaMeta> curMetaList;
+    for (int i = 0; i < m_MetaList.size(); i++) {
+        if (QFile::exists(m_MetaList[i].localPath) || m_MetaList[i].mmType == MIMETYPE_CDA)
+            curMetaList.append(m_MetaList[i]);
+    }
+    if (curMetaList.size() > 0) {
         int index = 0;
-        for (int i = 0; i < m_MetaList.size(); i++) {
-            if (m_MetaList.at(i).hash == m_ActiveMeta.hash) {
+        for (int i = 0; i < curMetaList.size(); i++) {
+            if (curMetaList.at(i).hash == m_ActiveMeta.hash) {
                 index = i;
                 break;
             }
@@ -346,7 +436,7 @@ void Player::playNextMeta(bool isAuto)
 
         switch (m_mode) {
         case RepeatAll: {
-            if (index == (m_MetaList.size() - 1)) {
+            if (index == (curMetaList.size() - 1)) {
                 index = 0;
             } else {
                 index++;
@@ -355,7 +445,7 @@ void Player::playNextMeta(bool isAuto)
         }
         case RepeatSingle: {
             if (!isAuto) {
-                if (index == (m_MetaList.size() - 1)) {
+                if (index == (curMetaList.size() - 1)) {
                     index = 0;
                 } else {
                     index++;
@@ -364,15 +454,33 @@ void Player::playNextMeta(bool isAuto)
             break;
         }
         case Shuffle: {
-            QTime time;
-            time = QTime::currentTime();
-            index = static_cast<int>(QRandomGenerator::global()->bounded(time.msec() + time.second() * 1000)) % m_MetaList.size();
+            //多个随机处理
+            if (curMetaList.size() > 1) {
+                QTime time;
+                time = QTime::currentTime();
+                int curIndex = static_cast<int>(QRandomGenerator::global()->bounded(time.msec() + time.msec() * 1000)) % curMetaList.size();
+                // 随机相同时特殊处理
+                if (curIndex == index) {
+                    if (curIndex == 0) {
+                        index = 1;
+                    } else if (curIndex == curMetaList.size() - 1) {
+                        index = 0;
+                    } else {
+                        index = curIndex + 1;
+                    }
+                } else {
+                    index = curIndex;
+                }
+            } else {
+                index = 0;
+            }
+
             //qsrand(static_cast<uint>((time.msec() + time.second() * 1000)));
             //index = qrand() % m_MetaList.size();
             break;
         }
         default: {
-            if (index == (m_MetaList.size() - 1)) {
+            if (index == (curMetaList.size() - 1)) {
                 index = 0;
             } else {
                 index++;
@@ -380,9 +488,10 @@ void Player::playNextMeta(bool isAuto)
             break;
         }
         }
-
-        setActiveMeta(m_MetaList.at(index));
+        m_ActiveMeta = curMetaList.at(index);
         playMeta(m_ActiveMeta);
+    } else {
+        stop();
     }
 }
 
@@ -487,12 +596,16 @@ void Player::removeMeta(const QStringList &metalistToDel)
             }
         }
     }
+    emit signalPlaylistCountChange();
 }
 
 void Player::playListAppendMeta(const MediaMeta &meta)
 {
-    if (!m_MetaList.contains(meta))
+    // 防止重复添加
+    if (!m_MetaList.contains(meta)) {
         m_MetaList.append(meta);
+        emit signalPlaylistCountChange();
+    }
 }
 
 void Player::setPlayList(const QList<MediaMeta> &list)
@@ -503,6 +616,7 @@ void Player::setPlayList(const QList<MediaMeta> &list)
         m_currentPlayListHash = "";
     }
     emit signalUpdatePlayingIcon();
+    emit signalPlaylistCountChange();
 }
 
 QList<MediaMeta> *Player::getPlayList()
@@ -520,6 +634,12 @@ MprisPlayer *Player::getMpris() const
     return m_mpris;
 }
 
+void Player::reloadMetaList()
+{
+    m_MetaList = DataBaseService::getInstance()->customizeMusicInfos("play");
+    if (!m_MetaList.isEmpty()) m_currentPlayListHash = "all";
+}
+
 void Player::setCurrentPlayListHash(QString hash, bool reloadMetaList)
 {
     m_currentPlayListHash = hash;
@@ -532,12 +652,13 @@ void Player::setCurrentPlayListHash(QString hash, bool reloadMetaList)
         }
     }
     // 当前播放队列没有数据，应用左侧不显示动态图
-    if (m_MetaList.size() == 0) {
+    if (m_MetaList.size() == 0 && hash != "all" && hash != "album" && hash != "artist") {
         m_currentPlayListHash = "";
     }
     // 保存播放歌曲及歌单信息
     MusicSettings::setOption("base.play.last_playlist", m_currentPlayListHash);
     emit signalUpdatePlayingIcon();
+    emit signalPlaylistCountChange();
 }
 
 QString Player::getCurrentPlayListHash()
@@ -681,6 +802,11 @@ void Player::setPosition(qlonglong position)
     if (m_qvinstance == nullptr || m_qvplayer == nullptr || m_qvmedia == nullptr) {
         initVlc();
     }
+    //未加载前设置进度
+    if (m_qvplayer->time() == -1) {
+        INT_LAST_PROGRESS_FLAG = 1;
+        m_ActiveMeta.offset = position;
+    }
 
     if (m_qvplayer->length() == m_ActiveMeta.length) {
         return m_qvplayer->setTime(position);
@@ -736,8 +862,20 @@ void Player::forcePlayMeta()
 {
     qDebug() << "forcePlayMeta in";
     if (m_MetaList.size() == 0) {
-        // 更新所有歌曲页面数据
-        setCurrentPlayListHash("all", true);
+        if (DataBaseService::getInstance()->getDelStatus() == true)//判断是否正在删除中
+            return;
+        QString curHash = (DataBaseService::getInstance()->allMusicInfos().isEmpty() && !getCdaPlayList().isEmpty()) ? "CdaRole" : "all";
+        // cd特殊处理
+        if (curHash == "CdaRole") {
+            // 添加到播放列表
+            for (auto meta : getCdaPlayList()) {
+                Player::getInstance()->playListAppendMeta(meta);
+            }
+            setCurrentPlayListHash(curHash, false);
+        } else {
+            // 更新所有歌曲页面数据
+            setCurrentPlayListHash(curHash, true);
+        }
         // 通知播放队列刷新
         emit signalPlayListChanged();
         if (m_MetaList.size() == 0)
@@ -897,8 +1035,7 @@ void Player::onSleepWhenTaking(bool sleep)
     qDebug() << "onSleepWhenTaking:" << sleep;
     if (sleep) {
         //休眠记录状态
-        m_Vlcstate = m_qvplayer->state();
-        if (m_Vlcstate == Vlc::Playing) {
+        if (m_qvplayer->state() == Vlc::Playing) {
             //休眠唤醒前设置音量为1%
             readSinkInputPath();
             if (!m_sinkInputPath.isEmpty()) {
@@ -908,18 +1045,22 @@ void Player::onSleepWhenTaking(bool sleep)
                 if (!ainterface.isValid()) {
                     return ;
                 }
-                //调用设置音量
-                ainterface.call(QLatin1String("SetVolume"), 0.01, false);
+                //停止播放并记录播放位置
+                m_Vlcstate = Vlc::Playing;
+                m_qvplayer->pause();
+                qlonglong time = position();
+                INT_LAST_PROGRESS_FLAG = 1;
+                m_ActiveMeta.offset = time;
+                m_qvplayer->stop();
             }
         }
     } else { //设置状态
         if (m_Vlcstate == Vlc::Playing) {
             //播放
-            resume();
             QTimer::singleShot(2000, [ = ]() {
-                //2s后恢复
-                setMusicVolume(m_volume);
+                playMeta(m_ActiveMeta);
             });
+            m_Vlcstate = -1;
         }
     }
 }
@@ -1045,6 +1186,7 @@ bool Player::isDevValid()
 void Player::initVlc()
 {
     m_qvinstance = new VlcInstance(VlcCommon::args(), nullptr);
+    m_qvinstance->version();
     m_qvplayer = new VlcMediaPlayer(m_qvinstance);
     m_qvplayer->equalizer()->setPreamplification(12);
     m_qvmedia = new VlcMedia();
@@ -1053,29 +1195,26 @@ void Player::initVlc()
     connect(m_timer, &QTimer::timeout, this, &Player::changePicture);
     connect(m_qvplayer, &VlcMediaPlayer::timeChanged,
     this, [ = ](qint64 position) {
-        Q_EMIT positionChanged(position /*- m_ActiveMeta.offset*/,  m_ActiveMeta.length, 1); //直接上报当前位置，offset无实质意义
+        Q_EMIT positionChanged(position,  m_ActiveMeta.length, 1); //直接上报当前位置，offset无实质意义
+    });
+    connect(m_qvplayer, &VlcMediaPlayer::positionChanged,
+    this, [ = ](float position) {
+        qint64 curPosition = static_cast<qint64>(position * m_ActiveMeta.length);
+        Q_EMIT positionChanged(curPosition,  m_ActiveMeta.length, 1); //直接上报当前位置，offset无实质意义
+        if (INT_LAST_PROGRESS_FLAG == 0) {
+            m_ActiveMeta.offset = curPosition;
+            MusicSettings::setOption("base.play.last_position", curPosition);
+            // cd特殊处理
+            if (!QFile::exists(m_ActiveMeta.localPath) && m_ActiveMeta.mmType != MIMETYPE_CDA) {
+                playNextMeta(true);
+            }
+        }
     });
 
     //vlc stateChanged
     connect(m_qvmedia, &VlcMedia::stateChanged,
     this, [ = ](Vlc::State status) {
         switch (status) {
-        case Vlc::Idle: {
-//            /**************************************
-//             * if settings is mute ,then setmute to dbus
-//             * ************************************/
-//            if (MusicSettings::value("base.play.mute").toBool())
-//                setMusicMuted(true);
-            break;
-        }
-        case Vlc::Opening: {
-            //emit signalMediaMetaChanged(m_ActiveMeta);//由setActiveMeta统一发送信号
-            break;
-        }
-        case Vlc::Buffering: {
-
-            break;
-        }
         case Vlc::Playing: {
             //emit signalPlaybackStatusChanged(Player::Playing);
             if (!m_timer->isActive()) {
@@ -1094,19 +1233,8 @@ void Player::initVlc()
             //emit signalMediaMetaChanged(MediaMeta()); //由setActiveMeta统一发送信号
             break;
         }
-        case Vlc::Ended: {
-//            playNextMeta();//just sync with Vlc::Ended
+        default:
             break;
-        }
-//        case Vlc::Error: {
-//            if (!m_activeMeta.isNull() /*&& !QFile::exists(activeMeta->localPath)*/) {
-//                MetaPtrList removeMusicList;
-//                removeMusicList.append(m_activeMeta);
-//                m_curPlaylist->removeMusicList(removeMusicList);
-//                Q_EMIT mediaError(m_activePlaylist, m_activeMeta, Player::ResourceError);
-//            }
-//            break;
-//        }
         }
     });
 
@@ -1135,7 +1263,7 @@ void Player::initMpris()
     m_mpris =  new MprisPlayer();
     m_mpris->setServiceName("DeepinMusic");
 
-    m_mpris->setSupportedMimeTypes(m_supportedSuffix);
+    m_mpris->setSupportedMimeTypes(mimeTypes());
 
     m_mpris->setSupportedUriSchemes(QStringList() << "file");
     m_mpris->setCanQuit(true);
@@ -1189,8 +1317,12 @@ void Player::initMpris()
 
     connect(m_mpris, &MprisPlayer::playRequested,
     this, [ = ]() {
+        // dbus暂停立即执行
         if (status() == Player::Paused) {
+            bool curFadeInOut = m_fadeInOut;
+            m_fadeInOut = false;
             resume();
+            m_fadeInOut = curFadeInOut;
         } else {
             if (status() != Player::Playing) {
                 //播放列表为空时也应考虑，不然会出现dbus调用无效的情况
@@ -1207,6 +1339,8 @@ void Player::initMpris()
     connect(m_mpris, &MprisPlayer::nextRequested,
     this, [ = ]() {
         if (m_MetaList.size() == 0) {
+            if (DataBaseService::getInstance()->getDelStatus() == true)//判断是否正在删除中
+                return;
             // 更新所有歌曲页面数据
             setCurrentPlayListHash("all", true);
             // 通知播放队列刷新
@@ -1214,12 +1348,14 @@ void Player::initMpris()
             if (m_MetaList.size() == 0)
                 return;
         }
-        playNextMeta(true);
+        playNextMeta(false);
     });
 
     connect(m_mpris, &MprisPlayer::previousRequested,
     this, [ = ]() {
         if (m_MetaList.size() == 0) {
+            if (DataBaseService::getInstance()->getDelStatus() == true)//判断是否正在删除中
+                return;
             // 更新所有歌曲页面数据
             setCurrentPlayListHash("all", true);
             // 通知播放队列刷新
@@ -1228,6 +1364,24 @@ void Player::initMpris()
                 return;
         }
         playPreMeta();
+    });
+
+    connect(m_mpris, &MprisPlayer::openUriRequested, this, [ = ](const QUrl & url) {
+        qDebug() << __FUNCTION__ << "toString = " << url.toString();
+        qDebug() << __FUNCTION__ << "toLocalFile = " << url.toLocalFile();
+        QString path = url.toLocalFile();
+        if (path.isEmpty()) {
+            path = url.toString().isEmpty() ? url.path() : url.toString(); //复杂名称可能出现tostring为空的问题，直接取path()
+            if (path.isEmpty()) {
+                return;
+            }
+        }
+        QFileInfo fileInfo(path);
+        //符号连接无法正常播放
+        if (fileInfo.isSymLink())
+            path = fileInfo.symLinkTarget();
+        DataBaseService::getInstance()->setFirstSong(path);
+        DataBaseService::getInstance()->importMedias("all", QStringList() << path);
     });
 }
 

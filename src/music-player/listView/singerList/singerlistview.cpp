@@ -47,22 +47,22 @@ DWIDGET_USE_NAMESPACE
 // 升序
 bool moreThanTimestampASC(SingerInfo v1, SingerInfo v2)
 {
-    return v1.timestamp <= v2.timestamp;
+    return v1.timestamp < v2.timestamp;
 }
 
 bool moreThanSingerASC(SingerInfo v1, SingerInfo v2)
 {
-    return v1.pinyinSinger <= v2.pinyinSinger;
+    return v1.pinyinSinger < v2.pinyinSinger;
 }
 // 降序
 bool moreThanTimestampDES(SingerInfo v1, SingerInfo v2)
 {
-    return v1.timestamp >= v2.timestamp;
+    return v1.timestamp > v2.timestamp;
 }
 
 bool moreThanSingerDES(SingerInfo v1, SingerInfo v2)
 {
-    return v1.pinyinSinger >= v2.pinyinSinger;
+    return v1.pinyinSinger > v2.pinyinSinger;
 }
 
 int calculateSingerSize(int index, SingerInfo info)
@@ -673,13 +673,20 @@ void SingerListView::slotAddSingleSong(const QString &listHash, const MediaMeta 
 void SingerListView::slotRemoveSelectedSongs(const QString &deleteHash, const QStringList &musicHashs, bool removeFromLocal)
 {
     Q_UNUSED(removeFromLocal)
-    if ((deleteHash != "artist"
-            || Player::getInstance()->getCurrentPlayListHash() != "artist")
-            && deleteHash != "all") {
+    QString curDeleteHash = deleteHash;
+    if (curDeleteHash != "artist" || Player::getInstance()->getCurrentPlayListHash() != "artist") {
         return;
     }
-    if (musicHashs.size() == 0) {
+    if (musicHashs.size() == 0 || Player::getInstance()->getPlayList()->isEmpty()) {
         return;
+    }
+    QList<MediaMeta> *curPlayList = Player::getInstance()->getPlayList();
+    // 歌单存在非歌手歌曲不处理
+    QString firstSinger = curPlayList->first().singer;
+    for (int i = 1; i < curPlayList->size(); i++) {
+        if (curPlayList->at(i).singer != firstSinger) {
+            return;
+        }
     }
     // 标志准备删除的歌曲,找到当前正在播放的专辑index
     int playIndex = -1;
@@ -802,7 +809,7 @@ void SingerListView::dropEvent(QDropEvent *event)
         auto urls = event->mimeData()->urls();
         QStringList localpaths;
         for (auto &url : urls) {
-            localpaths << url.toLocalFile();
+            localpaths << (url.isLocalFile() ? url.toLocalFile() : url.path());
         }
 
         if (!localpaths.isEmpty()) {

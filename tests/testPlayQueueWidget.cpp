@@ -33,6 +33,7 @@
 #include <DApplication>
 #include <QDBusInterface>
 #include <QDBusPendingCall>
+#include <DPushButton>
 
 #include "ac-desktop-define.h"
 
@@ -89,6 +90,12 @@ TEST(Application, playQueueWidget)
 
     QDropEvent e(pos, Qt::IgnoreAction, &mimedata, Qt::LeftButton, Qt::NoModifier);
     qApp->sendEvent(pqw, &e);
+
+    PlayListView *pv = pqw->findChild<PlayListView *>("PlayListView");
+    pv->setDragFlag(true);
+    pv->updateDropIndicator();
+    pv->dropItems(QVector<int>() << 0);
+    pv->dragItemsPixmap();
 
     QTest::qWait(100);
 }

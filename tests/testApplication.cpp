@@ -114,6 +114,8 @@
 #include "closeconfirmdialog.h"
 #include "subsonglistwidget.h"
 #include "songlistview.h"
+#include "songlistviewdialog.h"
+#include "importwidget.h"
 
 bool copyDirFiles(const QString &fromDir, const QString &toDir)
 {
@@ -126,20 +128,10 @@ bool copyDirFiles(const QString &fromDir, const QString &toDir)
         }
     }
 
-    QFileInfoList fileInfoList = sourceDir.entryInfoList();
+    QFileInfoList fileInfoList = sourceDir.entryInfoList(QDir::NoDotAndDotDot | QDir::Files);
     for (auto fileInfo : fileInfoList) {
-        if (fileInfo.fileName() == "." || fileInfo.fileName() == "..") {
-            continue;
-        }
-
-        if (fileInfo.isDir()) {
-            if (!copyDirFiles(fileInfo.filePath(), targetDir.filePath(fileInfo.fileName()))) {
-                return false;
-            }
-        } else {
-            if (!QFile::copy(fileInfo.filePath(), targetDir.filePath(fileInfo.fileName()))) {
-                return false;
-            }
+        if (!QFile::copy(fileInfo.filePath(), targetDir.filePath(fileInfo.fileName()))) {
+            return false;
         }
     }
 
@@ -163,7 +155,8 @@ TEST(Application, copyMusicToMusicDir1)
         stringList[0].append("/歌曲");
 
         QDir deleteDir(stringList[0]);
-        deleteDir.removeRecursively();
+        if (deleteDir.exists())
+            deleteDir.removeRecursively();
 
         QTest::qWait(50);
         copyDirFiles(dir.path(), stringList[0]);
@@ -226,7 +219,7 @@ TEST(Application, init)
         QTest::qWait(50);
     }
     DataBaseService::getInstance()->importMedias(info.uuid, importList);
-    QTest::qWait(500);
+    QTest::qWait(1000);
 }
 
 TEST(Application, importLinkText)
@@ -236,10 +229,11 @@ TEST(Application, importLinkText)
 
     QTest::qWait(100);
     MainFrame *w = Application::getInstance()->getMainWindow();
-    QLabel *ilt = w->findChild<QLabel *>(AC_importLinkText);
-    ilt->linkActivated("");
-    QCOMPARE(5, DataBaseService::getInstance()->allMusicInfosCount());
-    QTest::qWait(500);
+    ImportWidget *ilt = w->findChild<ImportWidget *>(AC_ImportWidget);
+    //防止未找到扫描按钮
+    if (ilt)
+        ilt->slotLinkActivated("");
+    QTest::qWait(1000); //等待扫描线程结束后，再做判断
 }
 
 TEST(Application, deleteAllMusic)
@@ -277,7 +271,7 @@ TEST(Application, deleteAllMusic)
         QTimer::singleShot(1000, w, [ = ]() {
             // 清空ListView
             QTest::qWait(50);
-            DDialog *messageBox = w->findChild<DDialog *>("MessageBox");
+            DDialog *messageBox = w->findChild<DDialog *>(AC_MessageBox);
             if (messageBox) {
                 QTestEventList event;
                 event.addKeyClick(Qt::Key::Key_Tab, Qt::NoModifier, 50);
@@ -361,9 +355,11 @@ TEST(Application, importLinkText1)
 
     QTest::qWait(100);
     MainFrame *w = Application::getInstance()->getMainWindow();
-    QLabel *ilt = w->findChild<QLabel *>(AC_importLinkText);
-    ilt->linkActivated("");
-    QTest::qWait(500);
+    ImportWidget *ilt = w->findChild<ImportWidget *>(AC_ImportWidget);
+    //防止未找到扫描按钮
+    if (ilt)
+        ilt->slotLinkActivated("");
+    QTest::qWait(1000);
 }
 
 //// Dialg窗口
@@ -479,6 +475,9 @@ TEST(Application, musicListDialg1)
     event.simulate(mliv->viewport());
     event.clear();
     QTest::qWait(100);
+    Player::getInstance()->onSleepWhenTaking(true);
+    QTest::qWait(100);
+    Player::getInstance()->onSleepWhenTaking(false);
 
     // 添加到我的收藏
     QTimer::singleShot(500, w, [ = ]() {
@@ -582,7 +581,6 @@ TEST(Application, musicListDialg3)
     // 二级页面点击，界面改动，case位置需要改变
     QTest::qWait(200);
     PlayListView *mliv = w->findChild<PlayListView *>(AC_musicListInfoView);
-    DPushButton *backBtn = w->findChild<DPushButton *>(AC_titleBarLeft);
 
     event.addMouseMove(pos);
     event.addMouseClick(Qt::MouseButton::LeftButton, Qt::NoModifier, pos, 100);
@@ -594,33 +592,37 @@ TEST(Application, musicListDialg3)
 
     // 从歌单中删除
     QTimer::singleShot(300, w, [ = ]() {
-        QTimer::singleShot(300, w, [ = ]() {
+        QTimer::singleShot(700, w, [ = ]() {
             QTestEventList event;
             DDialog *messageBox = w->findChild<DDialog *>(AC_MessageBox);
+            //防止窗口未打开
+            if (messageBox) {
+                event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
+                event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
+                event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
+                event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
+                event.addKeyClick(Qt::Key_Enter, Qt::NoModifier, 50);
+                event.simulate(messageBox);
+                event.clear();
+                w->slotLeftClicked();
+            }
+        });
+        DMenu *menuWidget = static_cast<DMenu *>(qApp->activePopupWidget());
+        //防止窗口未打开
+        if (menuWidget) {
+            QTestEventList event;
             event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
             event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
             event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
             event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
             event.addKeyClick(Qt::Key_Enter, Qt::NoModifier, 50);
-            event.simulate(messageBox);
+            event.simulate(menuWidget);
             event.clear();
-            w->slotLeftClicked();
-        });
-        QTestEventList event;
-        DMenu *menuWidget = static_cast<DMenu *>(qApp->activePopupWidget());
-        event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
-        event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
-        event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
-        event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
-        event.addKeyClick(Qt::Key_Enter, Qt::NoModifier, 50);
-        event.addDelay(100);
-        event.simulate(menuWidget);
-        event.clear();
-        QTest::qWait(100);
+        }
     });
     QContextMenuEvent menuEvent(QContextMenuEvent::Mouse, QPoint(20, 20));
     qApp->sendEvent(mliv->viewport(), &menuEvent);
-    QTest::qWait(1000);
+    QTest::qWait(2000);
 }
 
 // Dialg窗口
@@ -663,18 +665,22 @@ TEST(Application, musicListDialg4)
     QTest::qWait(100);
 
     // 从本地中删除
-    QTimer::singleShot(500, w, [ = ]() {
+    QTimer::singleShot(400, w, [ = ]() {
         QTimer::singleShot(800, w, [ = ]() {
             QTestEventList event;
             DDialog *messageBox = w->findChild<DDialog *>(AC_MessageBox);
-            event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
-            event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
-            event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
-            event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
-            event.addKeyClick(Qt::Key_Enter, Qt::NoModifier, 50);
-            event.simulate(messageBox);
-            event.clear();
-            QTest::qWait(500);
+            //防止窗口未打开
+            if (messageBox) {
+                event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
+                event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
+                event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
+                event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
+                event.addKeyClick(Qt::Key_Enter, Qt::NoModifier, 50);
+                event.simulate(messageBox);
+                event.clear();
+                QTest::qWait(500);
+            }
+
             emit backBtn->clicked();
         });
         QTestEventList event;
@@ -685,14 +691,12 @@ TEST(Application, musicListDialg4)
         event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
         event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
         event.addKeyClick(Qt::Key_Enter, Qt::NoModifier, 50);
-        event.addDelay(100);
         event.simulate(menuWidget);
         event.clear();
-        QTest::qWait(100);
     });
     QContextMenuEvent menuEvent(QContextMenuEvent::Mouse, QPoint(20, 20));
     qApp->sendEvent(mliv->viewport(), &menuEvent);
-    QTest::qWait(200);
+    QTest::qWait(2500);
 }
 
 // Dialg窗口
@@ -804,15 +808,18 @@ TEST(Application, musicListDialg6)
     QTimer::singleShot(800, w, [ = ]() {
         QTestEventList event;
         DDialog *messageBox = w->findChild<DDialog *>(AC_MessageBox);
-        event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
-        event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
-        event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
-        event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
-        event.addKeyClick(Qt::Key_Enter, Qt::NoModifier, 50);
-        event.simulate(messageBox);
-        event.clear();
-        QTest::qWait(500);
-        emit backBtn->clicked();
+        //防止窗口未打开
+        if (messageBox) {
+            event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
+            event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
+            event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
+            event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
+            event.addKeyClick(Qt::Key_Enter, Qt::NoModifier, 50);
+            event.simulate(messageBox);
+            event.clear();
+            QTest::qWait(500);
+            emit backBtn->clicked();
+        }
     });
 
     // Dialog KeyPress
@@ -1022,8 +1029,9 @@ TEST(Application, importLinkText2)
     QTest::qWait(100);
     MainFrame *w = Application::getInstance()->getMainWindow();
     QLabel *ilt = w->findChild<QLabel *>(AC_importLinkText);
-    ilt->linkActivated("");
-    QTest::qWait(500);
+    if (ilt)
+        ilt->linkActivated("");
+    QTest::qWait(1000);
 }
 
 TEST(Application, viewChanged)
@@ -1164,6 +1172,11 @@ TEST(Application, viewChanged)
     event.simulate(iconListBtn);
     event.clear();
 
+    QTest::qWait(50);
+    event.addMouseMove(pos);
+    event.addKeyPress(Qt::Key::Key_Period, Qt::NoModifier, 100);
+    event.simulate(w);
+    event.clear();
 
     // 点击我的收藏
     QTest::qWait(50);
@@ -1175,10 +1188,12 @@ TEST(Application, viewChanged)
 
     // list排序
     QTest::qWait(50);
-    for (auto item = allMusicList.begin(); item != allMusicList.end(); ++item) {
-        emit allMusicDropdown->triggered(*item);
+    DDropdown *customMusicDropdown = w->findChild<DDropdown *>(AC_customMusicDropdown);
+    QList<QAction *> customMusicList = customMusicDropdown->actions();
+    for (auto item = customMusicList.begin(); item != customMusicList.end(); ++item) {
+        emit customMusicDropdown->triggered(*item);
         QTest::qWait(50);
-        emit allMusicDropdown->triggered(*item);
+        emit customMusicDropdown->triggered(*item);
         QTest::qWait(50);
     }
 
@@ -2062,31 +2077,32 @@ TEST(Application, settings)
     // 设置窗体
     QTimer::singleShot(1000, w, [ = ]() {
         DSettingsDialog *setting = w->findChild<DSettingsDialog *>(AC_configDialog);
+        //防止窗口未打开
+        if (setting) {
+            QTestEventList event;
+            event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
+            event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
+            event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
+            event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
+            event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
+            event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
+            event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
+            event.simulate(setting);
+            event.clear();
 
-        QTestEventList event;
-        event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
-        event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
-        event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
-        event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
-        event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
-        event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
-        event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
-        event.simulate(setting);
-        event.clear();
+            MusicSettings::setOption("base.close.close_action", 2);
 
-        MusicSettings::setOption("base.close.close_action", 2);
+            QTest::qWait(100);
+            setting->close();
+            QTest::qWait(100);
 
-        QTest::qWait(100);
-        setting->close();
-        QTest::qWait(100);
-
-        QTimer::singleShot(200, w, [ = ]() {
-            CloseConfirmDialog *ccd = w->findChild<CloseConfirmDialog *>(AC_CloseConfirmDialog);
-            if (ccd) {
-                ccd->close();
-            }
-        });
-
+            QTimer::singleShot(200, w, [ = ]() {
+                CloseConfirmDialog *ccd = w->findChild<CloseConfirmDialog *>(AC_CloseConfirmDialog);
+                if (ccd) {
+                    ccd->close();
+                }
+            });
+        }
         w->close();
     });
 
@@ -2254,7 +2270,22 @@ TEST(Application, tabletAddToSonglist)
     mliv->slotShowSongList();
 
     CommonService::getInstance()->setIsTabletEnvironment(false);
-    QTest::qWait(50);
+    QTest::qWait(500);
+}
+
+// 显示隐藏
+TEST(Application, showHide)
+{
+    TEST_CASE_NAME("showHide")
+
+    CommonService::getInstance()->setIsTabletEnvironment(true);
+
+    MainFrame *w = Application::getInstance()->getMainWindow();
+    w->showMinimized();
+    QTest::qWait(500);
+
+    emit Player::getInstance()->getMpris()->raiseRequested();
+    QTest::qWait(500);
 }
 
 TEST(Application, end)
@@ -2262,10 +2293,3 @@ TEST(Application, end)
     TEST_CASE_NAME("end")
     QTest::qWait(500);
 }
-
-
-
-
-
-
-

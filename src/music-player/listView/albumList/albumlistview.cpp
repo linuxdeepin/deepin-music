@@ -49,22 +49,22 @@ DWIDGET_USE_NAMESPACE
 // 升序
 bool moreThanTimestampASC(AlbumInfo v1, AlbumInfo v2)
 {
-    return v1.timestamp <= v2.timestamp;
+    return v1.timestamp < v2.timestamp;
 }
 
 bool moreThanTitleASC(const AlbumInfo v1, const AlbumInfo v2)
 {
-    return v1.pinyinAlbum <= v2.pinyinAlbum;
+    return v1.pinyinAlbum < v2.pinyinAlbum;
 }
 // 降序
 bool moreThanTimestampDES(AlbumInfo v1, AlbumInfo v2)
 {
-    return v1.timestamp >= v2.timestamp;
+    return v1.timestamp > v2.timestamp;
 }
 
 bool moreThanTitleDES(const AlbumInfo v1, const AlbumInfo v2)
 {
-    return v1.pinyinAlbum >= v2.pinyinAlbum;
+    return v1.pinyinAlbum > v2.pinyinAlbum;
 }
 
 int calculateAlbumSize(int index, AlbumInfo info)
@@ -550,13 +550,19 @@ void AlbumListView::slotAddSingleSong(const QString &listHash, const MediaMeta &
 void AlbumListView::slotRemoveSelectedSongs(const QString &deleteHash, const QStringList &musicHashs, bool removeFromLocal)
 {
     Q_UNUSED(removeFromLocal)
-    if ((deleteHash != "album"
-            || Player::getInstance()->getCurrentPlayListHash() != "album")
-            && deleteHash != "all") {
+    if (deleteHash != "album" || Player::getInstance()->getCurrentPlayListHash() != "album") {
         return;
     }
-    if (musicHashs.size() == 0) {
+    if (musicHashs.size() == 0 || Player::getInstance()->getPlayList()->isEmpty()) {
         return;
+    }
+    QList<MediaMeta> *curPlayList = Player::getInstance()->getPlayList();
+    // 歌单存在非歌手歌曲不处理
+    QString firstAlbum = curPlayList->first().album;
+    for (int i = 1; i < curPlayList->size(); i++) {
+        if (curPlayList->at(i).album != firstAlbum) {
+            return;
+        }
     }
     // 标志准备删除的歌曲,找到当前正在播放的专辑index
     int playIndex = -1;
@@ -669,7 +675,7 @@ void AlbumListView::dropEvent(QDropEvent *event)
         auto urls = event->mimeData()->urls();
         QStringList localpaths;
         for (auto &url : urls) {
-            localpaths << url.toLocalFile();
+            localpaths << (url.isLocalFile() ? url.toLocalFile() : url.path());
         }
 
         if (!localpaths.isEmpty()) {
@@ -720,9 +726,9 @@ void AlbumListView::setSortType(DataBaseService::ListSortType sortType)
 void AlbumListView::setDataBySortType(QList<AlbumInfo> &albumInfos, DataBaseService::ListSortType sortType)
 {
     // 不加入到搜索结果中
-    if (m_hash == "albumResult" || m_hash == "artistResult") {
-        return;
-    }
+//    if (m_hash == "albumResult" || m_hash == "artistResult") {
+//        return;
+//    }
     // 排序
     sortList(albumInfos, sortType);
 

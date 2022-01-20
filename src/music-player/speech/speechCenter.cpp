@@ -603,11 +603,7 @@ QVariant SpeechCenter::OpenUris(QVariant paths)
             itemMetas << str;
         }
     }
-
-    if (itemMetas.size() > 0) {
-        DataBaseService::getInstance()->setFirstSong(itemMetas.first());
-        DataBaseService::getInstance()->importMedias("all", itemMetas);
-    }
+    emit CommonService::getInstance()->signalImprotFromTaskbar(itemMetas); //发送导入通知
     return true;
 }
 

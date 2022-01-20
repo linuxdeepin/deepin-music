@@ -65,6 +65,8 @@ signals:
     void sigScrollToCurrentPosition(QString songlistHash);
     // 刷新收藏按钮图标
     void signalFluashFavoriteBtnIcon();
+    // 添加音乐
+    void signalAddMusic();
     // 添加新的歌曲清单
     void signalAddNewSongList();
     // 添加&删除CD歌曲清单
@@ -91,6 +93,8 @@ signals:
     void signalHScreen(bool stat);
     // 滚动
     void signalScroll(int height);
+    // 将文件拖动到任务栏上的音乐图标导入，speechCenter会用到
+    void signalImprotFromTaskbar(const QStringList &itemMetas);
 private:
     explicit CommonService();
     friend class DMusic::DSingleton<CommonService>;

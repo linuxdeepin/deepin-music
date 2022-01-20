@@ -86,12 +86,12 @@ SearchResultTabWidget::SearchResultTabWidget(QWidget *parent) :
     hLayout->addStretch();
 
     //分割线1
-    m_Line = new DHorizontalLine;
+    m_Line = new DHorizontalLine(this);
     m_Line->setFrameShadow(DHorizontalLine::Raised);
     m_Line->setLineWidth(1);
     m_Line->lower();
 
-    QHBoxLayout *hLineLayout = new QHBoxLayout();
+    QHBoxLayout *hLineLayout = new QHBoxLayout;
     hLineLayout->setContentsMargins(17, 0, 12, 0);
     hLineLayout->addWidget(m_Line);
     vlayout->addLayout(hLineLayout);
@@ -99,7 +99,7 @@ SearchResultTabWidget::SearchResultTabWidget(QWidget *parent) :
     m_StackedWidget = new QStackedWidget(this);
     vlayout->addWidget(m_StackedWidget);
 
-    m_musicListView = new PlayListView("musicResult", false);
+    m_musicListView = new PlayListView("musicResult", false, false, this);
     m_StackedWidget->addWidget(m_musicListView);
 
     m_singerListView = new SingerListView("artistResult", this);
@@ -288,15 +288,12 @@ void SearchResultTabWidget::resizeEvent(QResizeEvent *event)
 void SearchResultTabWidget::mousePressEvent(QMouseEvent *event)
 {
     if (m_music->geometry().contains(event->pos())) {
-        qDebug() << "zy------m_music clicked";
         setLabelChecked(m_music);
         emit sigSearchTypeChanged("musicResult");
     } else if (m_singer->geometry().contains(event->pos())) {
-        qDebug() << "zy------m_singer clicked";
         setLabelChecked(m_singer);
         emit sigSearchTypeChanged("artistResult");
     } else if (m_album->geometry().contains(event->pos())) {
-        qDebug() << "zy------m_album clicked";
         setLabelChecked(m_album);
         emit sigSearchTypeChanged("albumResult");
     }

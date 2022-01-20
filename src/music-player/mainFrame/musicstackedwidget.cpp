@@ -38,7 +38,8 @@ MusicStatckedWidget::MusicStatckedWidget(QWidget *parent)
 
 void MusicStatckedWidget::animationToUp()
 {
-    QPropertyAnimation *animation = new QPropertyAnimation(this, "pos");
+    //指明父类防止内存泄露
+    QPropertyAnimation *animation = new QPropertyAnimation(this, "pos", this);
 
     animation->setDuration(AnimationDelay);
     animation->setEasingCurve(QEasingCurve::InCurve);
@@ -59,7 +60,8 @@ void MusicStatckedWidget::animationToUp()
 
 void MusicStatckedWidget::animationToDown()
 {
-    QPropertyAnimation *animation = new QPropertyAnimation(this, "pos");
+    //指明父类防止内存泄露
+    QPropertyAnimation *animation = new QPropertyAnimation(this, "pos", this);
     animation->setEasingCurve(QEasingCurve::InCurve);
     animation->setDuration(AnimationDelay);
     animation->setStartValue(QPoint(0, -height()));
@@ -114,8 +116,8 @@ void MusicStatckedWidget::animationToUpByInput()
 {
     int posY = CommonService::getInstance()->getCurrentWidgetPosY();
     QRect screenRect = DApplication::desktop()->screenGeometry();
-
-    QPropertyAnimation *animation = new QPropertyAnimation(this, "pos");
+    //初始化指明父类，方便后续释放，防止内存泄露
+    QPropertyAnimation *animation = new QPropertyAnimation(this, "pos", this);
     animation->setDuration(InputAnimationDelay);
     animation->setEasingCurve(QEasingCurve::InCurve);
     animation->setStartValue(QPoint(0, 50));
@@ -130,7 +132,8 @@ void MusicStatckedWidget::animationToUpByInput()
 
 void MusicStatckedWidget::animationToDownByInput()
 {
-    QPropertyAnimation *animation = new QPropertyAnimation(this, "pos");
+    //初始化指明父类，方便后续释放，防止内存泄露
+    QPropertyAnimation *animation = new QPropertyAnimation(this, "pos", this);
 
     animation->setDuration(InputAnimationDelay);
     animation->setEasingCurve(QEasingCurve::InCurve);

@@ -411,6 +411,10 @@ void Waveform::leaveEvent(QEvent *event)
 {
     IsShowwaveformScale = false;
     waveformScale->hide();
+    // 隐藏刻度后可以显示进度
+    if (signalsBlocked()) {
+        blockSignals(false);
+    }
     DSlider::leaveEvent(event);
 }
 
@@ -581,6 +585,10 @@ void Waveform::updatePlayerPos(int value)
     Q_ASSERT(range != 0);
     if (value <= range) {
         long long position = value * Player::getInstance()->duration() / range;
+        if (Player::getInstance()->position() == -1) {
+            auto activeMeta = Player::getInstance()->getActiveMeta();
+            position = value * activeMeta.length / range;
+        }
         Player::getInstance()->setPosition(position);
     }
 }

@@ -53,7 +53,7 @@ void SubSonglistWidget::initUI()
     mainLayout->setSpacing(0);
     mainLayout->setContentsMargins(0, 0, 0, 0);
 
-    m_titleImage = new QLabel;
+    m_titleImage = new QLabel(this);
     m_titleImage->setForegroundRole(DPalette::BrightText);
     m_titleImage->setFixedHeight(150);
     QPixmap m_bgImage = QIcon::fromTheme("cover_max").pixmap(QSize(200, 200));
@@ -64,19 +64,19 @@ void SubSonglistWidget::initUI()
     titleLayout->setSpacing(5);
     titleLayout->setContentsMargins(28, 15, 0, 20);
 
-    m_titleLabel = new DLabel();
+    m_titleLabel = new DLabel(this);
     m_titleLabel->setForegroundRole(DPalette::BrightText);
     titleLayout->addWidget(m_titleLabel, 1);
-    m_infoLabel = new DLabel();
+    m_infoLabel = new DLabel(this);
     m_infoLabel->setForegroundRole(DPalette::BrightText);
     titleLayout->addWidget(m_infoLabel, 1);
-    QHBoxLayout *btLayout = new QHBoxLayout();
+    QHBoxLayout *btLayout = new QHBoxLayout(this);
     btLayout->setSpacing(5);
     btLayout->setContentsMargins(0, 16, 0, 0);
     titleLayout->addLayout(btLayout, 1);
 
     // 播放全部
-    m_btPlayAll = new DPushButton;
+    m_btPlayAll = new DPushButton(this);
     auto playAllPalette = m_btPlayAll->palette();
     playAllPalette.setColor(DPalette::ButtonText, Qt::white);
     // 按钮颜色不对，由UI确认
@@ -88,16 +88,18 @@ void SubSonglistWidget::initUI()
     m_btPlayAll->setFocusPolicy(Qt::NoFocus);
     m_btPlayAll->setIconSize(QSize(18, 18));
     // 按钮自适应字体大小
-    m_btPlayAll->setFixedSize(QSize(93, 30));
+    int btnWidth = CommonService::getInstance()->isTabletEnvironment() ? 100 : 93;
+    int btnHight = CommonService::getInstance()->isTabletEnvironment() ? 40 : 30;
+    m_btPlayAll->setFixedSize(QSize(btnWidth, btnHight));
     // 字体宽度加图标大于93,重新设置按钮宽度
     QFontMetrics font(m_btPlayAll->font());
-    m_btPlayAll->setFixedWidth((font.width(m_btPlayAll->text()) + 18) >= 93 ? (font.width(m_btPlayAll->text()) + 38) : 93);
+    m_btPlayAll->setFixedWidth((font.width(m_btPlayAll->text()) + 18) >= btnWidth ? (font.width(m_btPlayAll->text()) + 38) : btnWidth);
 
     DFontSizeManager::instance()->bind(m_btPlayAll, DFontSizeManager::T6, QFont::Medium);
     btLayout->addWidget(m_btPlayAll);
 
     // 随机播放
-    m_btRandomPlay = new DPushButton;
+    m_btRandomPlay = new DPushButton(this);
     auto randomPlayPalette = m_btRandomPlay->palette();
     randomPlayPalette.setColor(DPalette::ButtonText, Qt::white);
     randomPlayPalette.setColor(DPalette::Dark, QColor(Qt::darkGray));
@@ -108,10 +110,10 @@ void SubSonglistWidget::initUI()
     m_btRandomPlay->setFocusPolicy(Qt::NoFocus);
     m_btRandomPlay->setIconSize(QSize(18, 18));
     // 按钮自适应字体大小
-    m_btRandomPlay->setFixedSize(QSize(93, 30));
+    m_btRandomPlay->setFixedSize(QSize(btnWidth, btnHight));
     // 字体宽度加图标大于93,重新设置按钮宽度
     QFontMetrics fontRandom(m_btRandomPlay->font());
-    m_btRandomPlay->setFixedWidth((fontRandom.width(m_btRandomPlay->text()) + 18) >= 93 ? (fontRandom.width(m_btRandomPlay->text()) + 38) : 93);
+    m_btRandomPlay->setFixedWidth((fontRandom.width(m_btRandomPlay->text()) + 18) >= btnWidth ? (fontRandom.width(m_btRandomPlay->text()) + 38) : btnWidth);
     DFontSizeManager::instance()->bind(m_btRandomPlay, DFontSizeManager::T6, QFont::Medium);
     btLayout->addWidget(m_btRandomPlay);
     btLayout->addStretch();
@@ -123,7 +125,7 @@ void SubSonglistWidget::initUI()
 
     m_titleLabel->setContentsMargins(0, 0, 0, 0);
 
-    m_musicListInfoView = new PlayListView(m_hash, false);
+    m_musicListInfoView = new PlayListView(m_hash, false, false, this);
     mainLayout->addWidget(m_musicListInfoView, 1);
     mainLayout->addStretch();
 
@@ -327,7 +329,6 @@ void SubSonglistWidget::slotPlayAllClicked()
 {
     QList<MediaMeta> musicList = m_musicListInfoView->getMusicListData();
     if (musicList.size() > 0) {
-        emit CommonService::getInstance()->signalSetPlayModel(Player::RepeatAll);
         Player::getInstance()->setCurrentPlayListHash(m_hash, false);
         Player::getInstance()->setPlayList(musicList);
         Player::getInstance()->playMeta(musicList.first());

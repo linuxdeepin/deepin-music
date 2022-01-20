@@ -40,7 +40,7 @@
 #include "musicsonglistview.h"
 #include "speechCenter.h"
 #include "shortcut.h"
-
+#include "importwidget.h"
 
 TEST(Application, shortCut)
 {
@@ -127,7 +127,7 @@ TEST(Application, shortCut)
     QTimer::singleShot(200, w, [ = ]() {
         // 清空ListView
         QTest::qWait(50);
-        DDialog *messageBox = w->findChild<DDialog *>("MessageBox");
+        DDialog *messageBox = w->findChild<DDialog *>(AC_MessageBox);
         if (messageBox) {
             QPoint pos = QPoint(130, 150);
             QTestEventList event;
@@ -382,6 +382,8 @@ TEST(Application, other1)
     SpeechCenter::getInstance()->playFaverite("fav");
     SpeechCenter::getInstance()->playSonglist("New playlist");
     SpeechCenter::getInstance()->playSonglist("空");
+    SpeechCenter::getInstance()->playSonglist("");
+    SpeechCenter::getInstance()->playSonglist("test");
     qDebug() << __FUNCTION__ << "playMusic浮夸";
     SpeechCenter::getInstance()->playMusic("浮夸");
     qDebug() << __FUNCTION__ << "pause";
@@ -411,8 +413,9 @@ TEST(Application, otherImportLinkText2)
 
     QTest::qWait(100);
     MainFrame *w = Application::getInstance()->getMainWindow();
-    QLabel *ilt = w->findChild<QLabel *>(AC_importLinkText);
-    ilt->linkActivated("");
-    QTest::qWait(500);
+    ImportWidget *ilt = w->findChild<ImportWidget *>(AC_ImportWidget);
+    //防止未找到扫描按钮
+    if (ilt)
+        ilt->slotLinkActivated("");
+    QTest::qWait(1000); //等待扫描线程结束后，再做判断
 }
-

@@ -8,7 +8,6 @@ Build-Depends:
  libavutil-dev,
  libavcodec-dev,
  libavformat-dev,
- libcue-dev,
  libdtkcore5-bin,
  libdtkgui-dev,
  libdtkwidget-dev,
@@ -29,7 +28,6 @@ Build-Depends:
  qttools5-dev,
  qttools5-dev-tools,
  libdframeworkdbus-dev,
- libgmock-dev,
  libudisks2-qt5-dev 
 Standards-Version: 4.5.1
 Homepage: http://www.deepin.org/

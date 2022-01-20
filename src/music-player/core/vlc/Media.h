@@ -49,42 +49,18 @@ public:
         \brief VlcMedia constructor.
 
         This constructor creates a new media instance from a media location.
-
-        \param location location of the media (QString)
-        \param localFile true, if media is local file (bool)
-        \param instance main libvlc instance (VlcInstance *)
     */
-//    VlcMedia(const QString &location,
-//             bool localFile,
-//             VlcInstance *instance);
-
-    /*!
-        \brief VlcMedia constructor.
-
-        This constructor creates a new media instance from a remote media location.
-        Provided for convenience.
-
-        \param location remote location of the media (QString)
-        \param instance main libvlc instance (VlcInstance *)
-    */
-//    VlcMedia(const QString &location,
-//             VlcInstance *instance);
-
     VlcMedia();
-
-    /*!
-        \brief VlcMedia constructor.
-
-        This constructor creates a new media instance from an existing one.
-
-        \param media libvlc media item (libvlc_media_t *)
-    */
-//    explicit VlcMedia(libvlc_media_t *media);
 
     /*!
         \brief VlcMedia destructor
     */
     ~VlcMedia();
+
+    /*!
+        \brief release Media
+    */
+    void releaseMedia();
 
     /*!
         \brief libvlc media item
@@ -93,204 +69,10 @@ public:
     libvlc_media_t *core();
 
     /*!
-        \brief Get parsed status
-
-        Know when it is OK to read metadata and track information
-
-        \return parsed status (const bool)
-    */
-    //bool parsed() const;
-
-    /*!
-        \brief Parse media information
-
-        Parse media information: metadata and track information.
-        This call is async.
-
-        \see parsedChanged
-    */
-    //void parse();
-
-    /*!
-        \brief Current media location
-
-        \return QString media location
-    */
-    //QString currentLocation() const;
-
-    /*!
-        \brief Get media stats
-
-        \return VlcStats media stats object
-    */
-//    VlcStats *getStats();
-
-    /*!
         \brief Get media state
         \return current media state
     */
     Vlc::State state() const;
-
-    /*!
-        \brief Get media duration
-        \return duration
-    */
-//    qint64 duration() const;
-
-    /*!
-        \brief Duplicate (provided for convenience)
-
-        Apply duplicate options with desired mux but without transcoding.
-
-        \param name output file name (QString)
-        \param path output path (QString)
-        \param mux output mux (Vlc::Mux)
-        \return QString output file
-        \sa record()
-    */
-//    QString duplicate(const QString &name,
-//                      const QString &path,
-//                      const Vlc::Mux &mux);
-
-    /*!
-        \brief Duplicate (provided for convenience)
-
-        Apply duplicate options with desired mux and transcoding (experimental).
-
-        \param name output file name (QString)
-        \param path output path (QString)
-        \param mux output mux (Vlc::Mux)
-        \param audioCodec audio codec (Vlc::AudioCodec)
-        \param videoCodec video codec (Vlc::VideoCodec)
-        \return QString output file
-        \sa record()
-    */
-//    QString duplicate(const QString &name,
-//                      const QString &path,
-//                      const Vlc::Mux &mux,
-//                      const Vlc::AudioCodec &audioCodec,
-//                      const Vlc::VideoCodec &videoCodec);
-
-    /*!
-        \brief Duplicate (provided for convenience)
-
-        Apply duplicate options with desired mux, transcoding
-        and some other options (experimental).
-
-        \param name output file name (QString)
-        \param path output path (QString)
-        \param mux output mux (Vlc::Mux)
-        \param audioCodec audio codec (Vlc::AudioCodec)
-        \param videoCodec video codec (Vlc::VideoCodec)
-        \param bitrate video bitrate (int)
-        \param fps frames per second (int)
-        \param scale video scale (int)
-        \return QString output file
-        \sa record()
-    */
-//    QString duplicate(const QString &name,
-//                      const QString &path,
-//                      const Vlc::Mux &mux,
-//                      const Vlc::AudioCodec &audioCodec,
-//                      const Vlc::VideoCodec &videoCodec,
-//                      int bitrate,
-//                      int fps,
-//                      int scale);
-
-    /*!
-        \brief Merge
-
-        Apply merge options with desired mux but without transcoding.
-
-        \param name output file name (QString)
-        \param path output path (QString)
-        \param mux output mux (Vlc::Mux)
-        \return QString output file
-    */
-//    QString merge(const QString &name,
-//                  const QString &path,
-//                  const Vlc::Mux &mux);
-
-    /*!
-        \brief Record
-
-        Apply recording options with desired mux but without transcoding.
-
-        \param name output file name (QString)
-        \param path output path (QString)
-        \param mux output mux (Vlc::Mux)
-        \param duplicate also duplicate on screen (bool)
-        \return QString output file
-    */
-//    QString record(const QString &name,
-//                   const QString &path,
-//                   const Vlc::Mux &mux,
-//                   bool duplicate = false);
-
-    /*!
-        \brief Record
-
-        Apply recording options with desired mux and transcoding (experimental).
-
-        \param name output file name (QString)
-        \param path output path (QString)
-        \param mux output mux (Vlc::Mux)
-        \param audioCodec audio codec (Vlc::AudioCodec)
-        \param videoCodec video codec (Vlc::VideoCodec)
-        \param duplicate also duplicate on screen (bool)
-        \return QString output file
-    */
-//    QString record(const QString &name,
-//                   const QString &path,
-//                   const Vlc::Mux &mux,
-//                   const Vlc::AudioCodec &audioCodec,
-//                   const Vlc::VideoCodec &videoCodec,
-//                   bool duplicate = false);
-
-    /*!
-        \brief Record
-
-        Apply recording options with desired mux, transcoding
-        and some other options (experimental).
-
-        \param name output file name (QString)
-        \param path output path (QString)
-        \param mux output mux (Vlc::Mux)
-        \param audioCodec audio codec (Vlc::AudioCodec)
-        \param videoCodec video codec (Vlc::VideoCodec)
-        \param bitrate video bitrate (int)
-        \param fps frames per second (int)
-        \param scale video scale (int)
-        \param duplicate also duplicate on screen (bool)
-        \return QString output file
-    */
-//    QString record(const QString &name,
-//                   const QString &path,
-//                   const Vlc::Mux &mux,
-//                   const Vlc::AudioCodec &audioCodec,
-//                   const Vlc::VideoCodec &videoCodec,
-//                   int bitrate,
-//                   int fps,
-//                   int scale,
-//                   bool duplicate = false);
-
-    /*!
-        \brief Set program
-        \param program program PID (int)
-    */
-//    void setProgram(int program);
-
-    /*!
-        \brief Set media option
-        \param option media option (QString)
-    */
-//    void setOption(const QString &option);
-
-    /*!
-        \brief Set media options
-        \param options media options (QStringList)
-    */
-    //void setOptions(const QStringList &options);
 
     void initMedia(const QString &location,
                    bool localFile,
@@ -346,8 +128,6 @@ signals:
     void stateChanged(const Vlc::State &state);
 
 private:
-
-
     static void libvlc_callback(const libvlc_event_t *event,
                                 void *data);
 

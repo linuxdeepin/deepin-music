@@ -25,6 +25,12 @@
 #include <QKeyEvent>
 #include <QMimeData>
 #include <QPushButton>
+#include <QDomDocument>
+#include <QDomElement>
+#include <QSvgRenderer>
+#include <QPainter>
+#include <QShortcut>
+#include <QUuid>
 
 #include <DMenu>
 #include <DDialog>
@@ -34,14 +40,8 @@
 #include <DFloatingMessage>
 #include <DMessageManager>
 #include <DApplication>
-#include <QDomDocument>
-#include <QDomElement>
-#include <QSvgRenderer>
-#include <QPainter>
-#include <QShortcut>
-#include <QUuid>
-#include "mediameta.h"
 
+#include "mediameta.h"
 #include "musicsettings.h"
 #include "commonservice.h"
 #include "musicbaseandsonglistmodel.h"
@@ -56,13 +56,42 @@
 
 DGUI_USE_NAMESPACE
 
+
+MusicItemDelegate::MusicItemDelegate(QAbstractItemView *parent)
+    : DStyledItemDelegate(parent)
+{
+
+}
+
+void MusicItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
+{
+    DStyledItemDelegate::paint(painter, option, index);
+    MusicSongListView *view = static_cast<MusicSongListView *>(option.styleObject);
+    QColor color = DGuiApplicationHelper::instance()->applicationPalette().highlight().color();
+    QPen pen(color, 1);
+    painter->setPen(pen);
+    if (view == nullptr) return;
+    int curRowCount = view->m_model->rowCount();
+    bool dragFlag = view->m_isDraging;
+    QRect borderRect = option.rect;
+    int hRow = view->highlightedRow();
+    // 绘制拖拽分割线
+    if (!view->selectedIndexes().contains(index) && dragFlag) {
+        if (hRow == index.row()) {
+            painter->drawLine(QLine(QPoint(borderRect.x(), borderRect.top() + 1), QPoint(borderRect.width(), borderRect.top() + 1)));
+        } else if ((index.row() == (curRowCount - 1)) && (hRow == curRowCount || hRow == -1)) {
+            painter->drawLine(QLine(QPoint(borderRect.x(), borderRect.bottom() - 1), QPoint(borderRect.width(), borderRect.bottom() - 1)));
+        }
+    }
+}
+
 MusicSongListView::MusicSongListView(QWidget *parent) : DListView(parent)
 {
     this->setEditTriggers(NoEditTriggers);
 
     m_model = new MusicBaseAndSonglistModel(this);
     setModel(m_model);
-    m_delegate = new DStyledItemDelegate(this);
+    m_delegate = new MusicItemDelegate(this);
     if (CommonService::getInstance()->isTabletEnvironment()) {
         m_delegate->setBackgroundType(DStyledItemDelegate::NoBackground);
     }
@@ -86,10 +115,13 @@ MusicSongListView::MusicSongListView(QWidget *parent) : DListView(parent)
     pa.setColor(DPalette::ItemBackground, Qt::transparent);
     DApplicationHelper::instance()->setPalette(this, pa);
 
-    setAcceptDrops(true);
     setDropIndicatorShown(true);
     setSelectionMode(QListView::SingleSelection);
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    setDragDropMode(QAbstractItemView::InternalMove);
+    setDefaultDropAction(Qt::MoveAction);
+
+    connect(&m_dragScrollTimer, SIGNAL(timeout()), this, SLOT(slotUpdateDragScroll()));
 
     setContextMenuPolicy(Qt::CustomContextMenu);
     connect(this, &MusicSongListView::customContextMenuRequested,
@@ -139,12 +171,7 @@ void MusicSongListView::init()
         DStandardItem *item = new DStandardItem(QIcon::fromTheme("music_famousballad"), displayName);
 
         item->setData(data.uuid, Qt::UserRole);
-
-        if (DGuiApplicationHelper::instance()->themeType() == 1) {
-            item->setForeground(QColor("#414D68"));
-        } else {
-            item->setForeground(QColor("#C0C6D4"));
-        }
+        item->setForeground(DGuiApplicationHelper::instance()->themeType() == 1 ? QColor("#414D68") : QColor("#C0C6D4"));
         m_model->appendRow(item);
     }
     setMinimumHeight(m_model->rowCount() * ItemHeight);
@@ -153,15 +180,10 @@ void MusicSongListView::init()
 void MusicSongListView::showContextMenu(const QPoint &pos)
 {
     auto index = indexAt(pos);
-    if (!index.isValid())
-        return;
+    if (!index.isValid()) return;
 
     auto item = m_model->itemFromIndex(index);
-    if (!item) {
-        return;
-    }
-
-    if (index.row() == 0 && index.data(Qt::UserRole + CDA_USER_ROLE_OFFSET).toString() == CDA_USER_ROLE) {
+    if (!item || (index.row() == 0 && index.data(Qt::UserRole + CDA_USER_ROLE_OFFSET).toString() == CDA_USER_ROLE)) {
         return;//cda item不做任何处理
     }
 
@@ -186,6 +208,7 @@ void MusicSongListView::showContextMenu(const QPoint &pos)
     }
 
     if (hash != "album" || hash != "artist" || hash != "all" || hash != "fav") {
+        menu.addAction(tr("Add music"));
         menu.addAction(tr("Rename"));
         menu.addAction(tr("Delete"));
     }
@@ -218,15 +241,13 @@ void MusicSongListView::addNewSongList()
 
     QString displayName = newDisplayName();
     DStandardItem *item = new DStandardItem(icon, displayName);
-    if (DGuiApplicationHelper::instance()->themeType() == 1) {
-        item->setForeground(QColor("#414D68"));
-    } else {
-        item->setForeground(QColor("#C0C6D4"));
-    }
+    item->setForeground(DGuiApplicationHelper::instance()->themeType() == 1 ? QColor("#414D68") : QColor("#C0C6D4"));
     m_model->appendRow(item);
     setMinimumHeight(m_model->rowCount() * ItemHeight);
     setCurrentIndex(m_model->indexFromItem(item));
-    slotDoubleClicked(m_model->indexFromItem(item));
+    //未显示时不编辑
+    if (isVisible())
+        slotDoubleClicked(m_model->indexFromItem(item));
     scrollToBottom();
 
     //record to db
@@ -236,7 +257,7 @@ void MusicSongListView::addNewSongList()
     info.uuid = QUuid::createUuid().toString().remove("{").remove("}").remove("-");
     info.displayName = displayName;
     info.sortID = DataBaseService::getInstance()->getPlaylistMaxSortid();
-    info.sortType = DataBaseService::SortByAddTimeASC;
+    info.sortType = DataBaseService::SortByCustomASC;
     DataBaseService::getInstance()->addPlaylist(info);
     item->setData(info.uuid, Qt::UserRole); //covert to hash
     // 切换listpage
@@ -274,11 +295,7 @@ void MusicSongListView::changeCdaSongList(int stat)
 
     QString displayName = tr("CD playlist");
     DStandardItem *item = new DStandardItem(icon, displayName);
-    if (DGuiApplicationHelper::instance()->themeType() == 1) {
-        item->setForeground(QColor("#414D68"));
-    } else {
-        item->setForeground(QColor("#C0C6D4"));
-    }
+    item->setForeground(DGuiApplicationHelper::instance()->themeType() == 1 ? QColor("#414D68") : QColor("#C0C6D4"));
 
     m_model->insertRow(0, item);
     setMinimumHeight(m_model->rowCount() * ItemHeight);
@@ -292,6 +309,7 @@ void MusicSongListView::changeCdaSongList(int stat)
     emit sigAddNewSongList();
     m_heightChangeToMax = true;
     adjustHeight();
+    emit CommonService::getInstance()->signalSwitchToView(CdaType, m_model->index(0, 0).data(Qt::UserRole + CDA_USER_ROLE_OFFSET).toString());
 }
 
 void MusicSongListView::rmvSongList()
@@ -322,7 +340,7 @@ void MusicSongListView::rmvSongList()
             // 数据库删除歌单
             if (DataBaseService::getInstance()->deletePlaylist(hash)) {
                 // 判断当前是否播放歌曲，如果正在播放，则判断当前歌曲是否在此歌单
-                if (!Player::getInstance()->getActiveMeta().hash.isEmpty() && isMediaMetaInSonglist) {
+                if (!Player::getInstance()->getActiveMeta().hash.isEmpty() && isMediaMetaInSonglist && Player::getInstance()->getCurrentPlayListHash() == hash) {
                     Player::getInstance()->clearPlayList();
                     // 设置所有音乐播放状态
                     Player::getInstance()->setCurrentPlayListHash("", false);
@@ -337,13 +355,21 @@ void MusicSongListView::rmvSongList()
                     QModelIndex nextIndex = m_model->index((rowCurrent + 1), 0);
                     QString nextHash = nextIndex.data(Qt::UserRole).value<QString>();
                     this->setCurrentIndex(nextIndex);
-                    emit CommonService::getInstance()->signalSwitchToView(CustomType, nextHash);
+                    // 显示CD列表
+                    if (nextIndex.row() == 0 && nextIndex.data(Qt::UserRole + CDA_USER_ROLE_OFFSET).toString() == CDA_USER_ROLE)
+                        emit CommonService::getInstance()->signalSwitchToView(CdaType, nextIndex.data(Qt::UserRole + CDA_USER_ROLE_OFFSET).toString());
+                    else
+                        emit CommonService::getInstance()->signalSwitchToView(CustomType, nextHash);
                 } else {
                     // 没有后一个歌单,删除后焦点定位到上一个歌单
                     QModelIndex nextIndex = m_model->index((rowCurrent - 1), 0);
                     QString nextHash = nextIndex.data(Qt::UserRole).value<QString>();
                     this->setCurrentIndex(nextIndex);
-                    emit CommonService::getInstance()->signalSwitchToView(CustomType, nextHash);
+                    // 显示CD列表
+                    if (nextIndex.row() == 0 && nextIndex.data(Qt::UserRole + CDA_USER_ROLE_OFFSET).toString() == CDA_USER_ROLE)
+                        emit CommonService::getInstance()->signalSwitchToView(CdaType, nextIndex.data(Qt::UserRole + CDA_USER_ROLE_OFFSET).toString());
+                    else
+                        emit CommonService::getInstance()->signalSwitchToView(CustomType, nextHash);
                 }
                 // 删除成功，移除歌单
                 m_model->removeRow(rowCurrent);
@@ -419,6 +445,8 @@ void MusicSongListView::slotMenuTriggered(QAction *action)
 
     if (action->text() == tr("Play")) {
         emit CommonService::getInstance()->signalPlayAllMusic();
+    } else if (action->text() == tr("Add music")) {
+        emit CommonService::getInstance()->signalAddMusic();
     } else if (action->text() == tr("Pause")) {
         Player::getInstance()->pause();
     } else if (action->text() == tr("Rename")) {
@@ -449,8 +477,7 @@ void MusicSongListView::slotDoubleClicked(const QModelIndex &index)
     if (index.row() == 0 && index.data(Qt::UserRole + CDA_USER_ROLE_OFFSET).toString() == CDA_USER_ROLE) {
         return;//cda item不做任何处理
     }
-    if (!m_renameItem)
-        return;
+    if (!m_renameItem) return;
 
     if (m_renameLineEdit == nullptr) {
         initRenameLineEdit();
@@ -465,10 +492,8 @@ void MusicSongListView::slotDoubleClicked(const QModelIndex &index)
     m_renameLineEdit->lineEdit()->setText(m_renameItem->text());
     m_renameLineEdit->lineEdit()->selectAll();
     m_renameLineEdit->lineEdit()->setFocus();
-    if (CommonService::getInstance()->isTabletEnvironment()) {
-        if (!DApplication::inputMethod()->isVisible()) {
-            DApplication::inputMethod()->show();
-        }
+    if (CommonService::getInstance()->isTabletEnvironment() && !DApplication::inputMethod()->isVisible()) {
+        DApplication::inputMethod()->show();
     }
 }
 
@@ -585,7 +610,7 @@ void MusicSongListView::slotPopMessageWindow(int stat)
             //清空列表
             Player::getInstance()->clearPlayList();
             //播放歌单第一首歌曲
-            Player::getInstance()->forcePlayMeta();
+//            Player::getInstance()->forcePlayMeta();
         }
 
         if (m_model->rowCount() > 0  && tmpMeta.mmType != MIMETYPE_CDA) {
@@ -623,70 +648,171 @@ void MusicSongListView::keyReleaseEvent(QKeyEvent *event)
     DListView::keyReleaseEvent(event);
 }
 
+void MusicSongListView::startDrag(Qt::DropActions supportedActions)
+{
+    emit clicked(indexAt(mapFromGlobal(QCursor::pos())));
+    DListView::startDrag(supportedActions);
+}
+
 void MusicSongListView::dragEnterEvent(QDragEnterEvent *event)
 {
-    auto t_formats = event->mimeData()->formats();
-    if (event->mimeData()->hasFormat("text/uri-list") || event->mimeData()->hasFormat("application/x-qabstractitemmodeldatalist")) {
+    if (event->source() != this && (event->mimeData()->hasFormat("text/uri-list") || event->mimeData()->hasFormat("playlistview/x-datalist"))) {
         event->setDropAction(Qt::CopyAction);
         event->acceptProposedAction();
+    } else if (event->source() == this) {
+        DListView::dragEnterEvent(event);
+        m_dragScrollTimer.start(200);
+        m_isDraging = true;
+        QModelIndex indexDrop = m_model->index(highlightedRow(), 0);
+        update(indexDrop);
+        m_preIndex = indexDrop;
     }
+}
+
+void MusicSongListView::slotUpdateDragScroll()
+{
+    QPoint pos = QCursor::pos();
+    pos = mapFromGlobal(pos);
+    // 防止出边界
+    if (!rect().contains(pos)) return;
+    emit sigUpdateDragScroll();
 }
 
 void MusicSongListView::dragMoveEvent(QDragMoveEvent *event)
 {
-    auto index = indexAt(event->pos());
-    if (index.isValid() && (event->mimeData()->hasFormat("text/uri-list")  || event->mimeData()->hasFormat("application/x-qabstractitemmodeldatalist"))) {
-        event->setDropAction(Qt::CopyAction);
-        event->acceptProposedAction();
-    } else {
-        DListView::dragMoveEvent(event);
+    if (event->source() != this && (event->mimeData()->hasFormat("text/uri-list") || event->mimeData()->hasFormat("playlistview/x-datalist"))) {
+        auto index = indexAt(event->pos());
+        if (index.isValid()) {
+            event->setDropAction(Qt::CopyAction);
+            event->acceptProposedAction();
+        }
+    } else if (event->source() == this) {
+        int curRow = highlightedRow();
+        if (curRow == -1) curRow = m_model->rowCount() - 1;
+        QModelIndex indexDrop = m_model->index(curRow, 0);
+        //刷新旧区域使dropIndicator消失
+        update(m_preIndex);
+        update(indexDrop);
+        m_preIndex = indexDrop;
     }
+}
+
+void MusicSongListView::dragLeaveEvent(QDragLeaveEvent *event)
+{
+    m_dragScrollTimer.stop();
+    m_isDraging = false;
+    DListView::dragLeaveEvent(event);
+}
+
+int MusicSongListView::highlightedRow() const
+{
+    QPoint pos = QCursor::pos();
+    pos = mapFromGlobal(pos);
+    QModelIndex curRowIndex = indexAt(pos);
+    int curRow = curRowIndex.row();
+    if (curRow != -1) {
+        auto curIndexRect = rectForIndex(curRowIndex);
+        if (pos.y() + verticalOffset() < curIndexRect.center().y()) {
+            // 防止添加到cd之前
+            if (curRow == 0 && curRowIndex.data(Qt::UserRole + CDA_USER_ROLE_OFFSET).toString() == CDA_USER_ROLE) {
+                curRow += 1;
+            }
+        } else {
+            curRow += 1;
+        }
+    }
+
+    return curRow;
+}
+
+void MusicSongListView::dropItem(int preRow)
+{
+    auto curSelectedItem = static_cast<DStandardItem *>(m_model->itemFromIndex(m_model->index(preRow, 0)));
+    if (curSelectedItem == nullptr)
+        return;
+    auto uuid = curSelectedItem->data(Qt::UserRole).toString();
+    auto curText = curSelectedItem->text();
+
+    int curRow = highlightedRow();
+    // 防止重复添加
+    if (curRow == preRow) {
+        return;
+    }
+    if (curRow == -1) curRow = m_model->rowCount();
+    // 删除前一个后需要将索引减去1
+    if (curRow > preRow) curRow--;
+    m_model->removeRow(preRow);
+    QIcon icon = QIcon::fromTheme("music_famousballad");
+    DStandardItem *item = new DStandardItem(icon, curText);
+    item->setForeground(DGuiApplicationHelper::instance()->themeType() == 1 ? QColor("#414D68") : QColor("#C0C6D4"));
+    m_model->insertRow(curRow, item);
+    item->setData(uuid, Qt::UserRole);
+    setCurrentIndex(m_model->index(curRow, 0));
+
+    // 更新数据库
+    QVector<QString> allHashs;
+    for (int i = 0; i < m_model->rowCount(); i++) {
+        auto curIndex = m_model->index(i, 0);
+        if (i != 0 || curIndex.data(Qt::UserRole + CDA_USER_ROLE_OFFSET).toString() != CDA_USER_ROLE) {
+            allHashs.append(curIndex.data(Qt::UserRole).toString());
+        }
+    }
+    DataBaseService::getInstance()->sortAllPlaylist(allHashs);
 }
 
 void MusicSongListView::dropEvent(QDropEvent *event)
 {
-    QModelIndex indexDrop = indexAt(event->pos());
-    if (!indexDrop.isValid())
-        return;
-    QString hash = indexDrop.data(Qt::UserRole).value<QString>();
+    m_isDraging = false;
+    m_dragScrollTimer.stop();
+    // 歌单处理
+    if (event->source() == this) {
+        auto curMimeData = event->mimeData();
+        // 防止cd
+        if (curMimeData == nullptr || curMimeData->data("CdaRole").toInt() != 1)
+            return;
 
-    //    auto t_playlistPtr = playlistPtr(index);
-    if (/*t_playlistPtr == nullptr || */(!event->mimeData()->hasFormat("text/uri-list") && !event->mimeData()->hasFormat("application/x-qabstractitemmodeldatalist"))) {
-        return;
-    }
-
-    if (indexDrop.data(Qt::UserRole + CDA_USER_ROLE_OFFSET).toString() == CDA_USER_ROLE) {
-        return;//cda item不做任何处理
-    }
-
-    if (event->mimeData()->hasFormat("text/uri-list")) {
-        auto urls = event->mimeData()->urls();
-        QStringList localpaths;
-        for (auto &url : urls) {
-            localpaths << url.toLocalFile();
-        }
-
-        if (!localpaths.isEmpty()) {
-            DataBaseService::getInstance()->importMedias(hash, localpaths);
-        }
+        auto preRow = curMimeData->data("ROW").toInt();
+        dropItem(preRow);
     } else {
-        PlayListView *source = qobject_cast<PlayListView *>(event->source());
-        if (source != nullptr) {
-            QList<MediaMeta> metas;
-            for (auto index : source->selectionModel()->selectedIndexes()) {
-                MediaMeta imt = index.data(Qt::UserRole).value<MediaMeta>();
-                if (imt.mmType != MIMETYPE_CDA)
-                    metas.append(imt);
+        QModelIndex indexDrop = indexAt(event->pos());
+        if (!indexDrop.isValid())
+            return;
+        QString hash = indexDrop.data(Qt::UserRole).value<QString>();
+
+        //cda item不做任何处理
+        if ((!event->mimeData()->hasFormat("text/uri-list") && !event->mimeData()->hasFormat("playlistview/x-datalist")) || (indexDrop.data(Qt::UserRole + CDA_USER_ROLE_OFFSET).toString() == CDA_USER_ROLE)) {
+            return;
+        }
+
+        if (event->mimeData()->hasFormat("text/uri-list")) {
+            auto urls = event->mimeData()->urls();
+            QStringList localpaths;
+            for (auto &url : urls) {
+                localpaths << (url.isLocalFile() ? url.toLocalFile() : url.path());
             }
 
-            if (!metas.isEmpty()) {
-                int insertCount = DataBaseService::getInstance()->addMetaToPlaylist(hash, metas);
-                CommonService::getInstance()->signalShowPopupMessage(m_model->itemFromIndex(indexDrop)->text(), metas.size(), insertCount);
+            if (!localpaths.isEmpty()) {
+                DataBaseService::getInstance()->importMedias(hash, localpaths);
+            }
+        } else {
+            PlayListView *source = qobject_cast<PlayListView *>(event->source());
+            if (source != nullptr) {
+                QList<MediaMeta> metas;
+                for (auto index : source->selectionModel()->selectedIndexes()) {
+                    MediaMeta imt = index.data(Qt::UserRole).value<MediaMeta>();
+                    if (imt.mmType != MIMETYPE_CDA)
+                        metas.append(imt);
+                }
+
+                if (!metas.isEmpty()) {
+                    int insertCount = DataBaseService::getInstance()->addMetaToPlaylist(hash, metas);
+                    CommonService::getInstance()->signalShowPopupMessage(m_model->itemFromIndex(indexDrop)->text(), metas.size(), insertCount);
+                }
             }
         }
-    }
 
-    DListView::dropEvent(event);
+        DListView::dropEvent(event);
+    }
 }
 
 void MusicSongListView::initRenameLineEdit()
@@ -772,16 +898,8 @@ QString MusicSongListView::newDisplayName()
 void MusicSongListView::setThemeType(int type)
 {
     for (int i = 0; i < m_model->rowCount(); i++) {
-        auto curIndex = m_model->index(i, 0);
-        auto curStandardItem = dynamic_cast<DStandardItem *>(m_model->itemFromIndex(curIndex));
-//        auto curItemRow = curStandardItem->row();
-//        if (curItemRow < 0 || curItemRow >= allPlaylists.size())
-//            continue;
-
-        if (type == 1) {
-            curStandardItem->setForeground(QColor("#414D68"));
-        } else {
-            curStandardItem->setForeground(QColor("#C0C6D4"));
-        }
+        auto curStandardItem = dynamic_cast<DStandardItem *>(m_model->itemFromIndex(m_model->index(i, 0)));
+        curStandardItem->setForeground(type == 1 ? QColor("#414D68") : QColor("#C0C6D4"));
     }
 }
+

@@ -126,6 +126,7 @@ void FooterWidget::initUI(QWidget *parent)
     m_btPrev->setIconSize(QSize(36, 36));
     m_btPrev->setObjectName("FooterActionPrev");
     m_btPrev->setFixedSize(40, 50);
+    m_btPrev->setEnabled(false);
     AC_SET_OBJECT_NAME(m_btPrev, AC_Prev);
     AC_SET_ACCESSIBLE_NAME(m_btPrev, AC_Prev);
 
@@ -139,10 +140,11 @@ void FooterWidget::initUI(QWidget *parent)
     m_btNext->setIconSize(QSize(36, 36));
     m_btNext->setObjectName("FooterActionNext");
     m_btNext->setFixedSize(40, 50);
+    m_btNext->setEnabled(false);
     AC_SET_OBJECT_NAME(m_btNext, AC_Next);
     AC_SET_ACCESSIBLE_NAME(m_btNext, AC_Next);
 
-    m_ctlWidget = new DButtonBox;
+    m_ctlWidget = new DButtonBox(this);
     m_ctlWidget->setButtonList(QList<DButtonBoxButton *>() << m_btPrev << m_btPlay << m_btNext, false);
     mainHBoxlayout->addWidget(m_ctlWidget, 0);
 
@@ -158,14 +160,14 @@ void FooterWidget::initUI(QWidget *parent)
     AC_SET_ACCESSIBLE_NAME(m_btCover, AC_btCover);
 
     // 歌曲名
-    m_title = new Label;
+    m_title = new Label(this);
     m_title->setObjectName("FooterTitle");
     m_title->setText(tr("Unknown Title"));
     m_title->setMaximumWidth(140);
     m_title->setForegroundRole(DPalette::BrightText);
     DFontSizeManager::instance()->bind(m_title, DFontSizeManager::T8, QFont::Normal);
     // 歌唱者
-    m_artist = new Label;
+    m_artist = new Label(this);
     m_artist->setObjectName("FooterArtist");
     m_artist->setText(tr("Unknown artist"));
     m_artist->setMaximumWidth(140);
@@ -307,6 +309,11 @@ void FooterWidget::initUI(QWidget *parent)
     connect(m_btSound, &DIconButton::clicked, this, &FooterWidget::slotSoundClick);
     connect(m_btSound, &ControlIconButton::mouseIn, this, &FooterWidget::slotSoundMouseIn);
     connect(m_btFavorite, &DIconButton::clicked, this, &FooterWidget::slotFavoriteClick);
+    // 歌单数据改变时设置上下一首按钮状态
+    connect(Player::getInstance(), &Player::signalPlaylistCountChange, this, [ = ]() {
+        m_btNext->setEnabled(Player::getInstance()->getPlayList()->size() > 1);
+        m_btPrev->setEnabled(Player::getInstance()->getPlayList()->size() > 1);
+    });
 
     connect(Player::getInstance(), &Player::signalPlaybackStatusChanged,
             this, &FooterWidget::slotPlaybackStatusChanged);
@@ -355,25 +362,31 @@ void FooterWidget::moveVolSlider()
 void FooterWidget::initShortcut()
 {
     playPauseShortcut = new QShortcut(this);
-    playPauseShortcut->setKey(QKeySequence(MusicSettings::value("shortcuts.all.play_pause").toString()));
+    QKeySequence playPauseKeySequence(MusicSettings::value("shortcuts.all.play_pause").toString());
+    playPauseShortcut->setKey(playPauseKeySequence);
     playPauseShortcut->setAutoRepeat(false);
 
     volUpShortcut = new QShortcut(this);
-    volUpShortcut->setKey(QKeySequence(MusicSettings::value("shortcuts.all.volume_up").toString()));
+    QKeySequence volUpKeySequence(MusicSettings::value("shortcuts.all.volume_up").toString());
+    volUpShortcut->setKey(volUpKeySequence);
 
     volDownShortcut = new QShortcut(this);
-    volDownShortcut->setKey(QKeySequence(MusicSettings::value("shortcuts.all.volume_down").toString()));
+    QKeySequence volDownKeySequence(MusicSettings::value("shortcuts.all.volume_down").toString());
+    volDownShortcut->setKey(volDownKeySequence);
 
     nextShortcut = new QShortcut(this);
-    nextShortcut->setKey(QKeySequence(MusicSettings::value("shortcuts.all.next").toString()));
+    QKeySequence nextKeySequence(MusicSettings::value("shortcuts.all.next").toString());
+    nextShortcut->setKey(nextKeySequence);
     nextShortcut->setAutoRepeat(false);
 
     previousShortcut = new QShortcut(this);
-    previousShortcut->setKey(QKeySequence(MusicSettings::value("shortcuts.all.previous").toString()));
+    QKeySequence previousKeySequence(MusicSettings::value("shortcuts.all.previous").toString());
+    previousShortcut->setKey(previousKeySequence);
     previousShortcut->setAutoRepeat(false);
 
     muteShortcut = new QShortcut(this);
-    muteShortcut->setKey(QKeySequence(QLatin1String("M")));
+    QKeySequence muteKeySequence(QLatin1String("M"));
+    muteShortcut->setKey(muteKeySequence);
     //connect(muteShortcut, &QShortcut::activated, presenter, &Presenter::onLocalToggleMute);
 
     connect(playPauseShortcut, &QShortcut::activated, this, &FooterWidget::slotShortCutTriggered);
@@ -547,20 +560,21 @@ void FooterWidget::slotPreClick(bool click)
 void FooterWidget::slotFavoriteClick(bool click)
 {
     Q_UNUSED(click)
+    bool isExist = DataBaseService::getInstance()->favoriteExist(Player::getInstance()->getActiveMeta());
     bool isFavorite = DataBaseService::getInstance()->favoriteMusic(Player::getInstance()->getActiveMeta());
     fluashFavoriteBtnIcon();
 
-    if (isFavorite)
+    //  未收藏时提示成功
+    if (isFavorite && !isExist)
         emit CommonService::getInstance()->signalShowPopupMessage(
             DataBaseService::getInstance()->getPlaylistNameByUUID("fav"), 1, 1);
 }
 
 void FooterWidget::fluashFavoriteBtnIcon()
 {
-    if (CommonService::getInstance()->getListPageSwitchType() == ListPageSwitchType::FavType)
-        emit CommonService::getInstance()->signalSwitchToView(FavType, "fav");
-
     if (DataBaseService::getInstance()->favoriteExist(Player::getInstance()->getActiveMeta())) {
+        if (CommonService::getInstance()->getListPageSwitchType() == ListPageSwitchType::FavType)
+            emit CommonService::getInstance()->signalSwitchToView(FavType, "fav");
         m_btFavorite->setIcon(QIcon::fromTheme("collection1_press"));
     } else {
         m_btFavorite->setIcon(QIcon::fromTheme("dcc_collection"));
@@ -576,14 +590,14 @@ void FooterWidget::slotFavoriteRemove(const QString &musicHash)
 
 void FooterWidget::flushFavoriteBtnIconAdd(const QString &hash)
 {
-    if (CommonService::getInstance()->getListPageSwitchType() == ListPageSwitchType::FavType)
-        emit CommonService::getInstance()->signalSwitchToView(FavType, "fav");
-
+    // 存在当前播放时才切换，避免造成不必要的卡顿
     if (hash == Player::getInstance()->getActiveMeta().hash) {
+        if (CommonService::getInstance()->getListPageSwitchType() == ListPageSwitchType::FavType)
+            emit CommonService::getInstance()->signalSwitchToView(FavType, "fav");
         m_btFavorite->setIcon(QIcon::fromTheme("collection1_press"));
-    } else {
+    } /*else {
         m_btFavorite->setIcon(QIcon::fromTheme("dcc_collection"));
-    }
+    }*/
 }
 
 void FooterWidget::slotSoundClick(bool click)
@@ -752,15 +766,15 @@ void FooterWidget::slotShortCutTriggered()
         m_volSlider->setVolume(voldown);
     }
 
-    if (objCut == nextShortcut) {
+    if (objCut == nextShortcut && m_btNext->isEnabled()) {
         Player::getInstance()->playNextMeta(false);
     }
 
-    if (objCut == playPauseShortcut) { //pause
+    if (objCut == playPauseShortcut && m_btPlay->isEnabled()) { //pause
         slotPlayClick(true);
     }
 
-    if (objCut == previousShortcut) {
+    if (objCut == previousShortcut && m_btPrev->isEnabled()) {
         Player::getInstance()->playPreMeta();
     }
 

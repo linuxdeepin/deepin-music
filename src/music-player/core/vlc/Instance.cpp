@@ -117,10 +117,11 @@ VlcInstance::VlcInstance(const QStringList &args,
 
 VlcInstance::~VlcInstance()
 {
-//    if (_status && _vlcInstance) {
-//        vlc_release_function vlc_release = (vlc_release_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("libvlc_release");
-//        vlc_release(_vlcInstance);
-//    }
+    //释放Instance
+    if (_vlcInstance) {
+        vlc_release_function vlc_release = (vlc_release_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("libvlc_release");
+        vlc_release(_vlcInstance);
+    }
 }
 
 libvlc_instance_t *VlcInstance::core()

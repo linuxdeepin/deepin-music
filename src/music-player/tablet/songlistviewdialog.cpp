@@ -32,7 +32,7 @@ SongListViewDialog::SongListViewDialog(QWidget *parent) : DDialog(parent)
     this->setObjectName(AC_tablet_songListViewDlg);
     m_songListView = new SongListView(this);
     m_songListView->setObjectName(AC_tablet_songListView);
-    DFrame  *d = new DFrame;
+    DFrame  *d = new DFrame(this);
     QVBoxLayout *hb = new QVBoxLayout(d);
     hb->addWidget(m_songListView, Qt::AlignCenter);
     hb->setSpacing(0);

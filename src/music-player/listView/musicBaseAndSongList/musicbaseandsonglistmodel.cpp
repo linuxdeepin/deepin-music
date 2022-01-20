@@ -22,6 +22,10 @@
 #include "musicbaseandsonglistmodel.h"
 
 #include <QDebug>
+#include <QMimeData>
+#include <DStandardItem>
+
+DWIDGET_USE_NAMESPACE
 
 MusicBaseAndSonglistModel::MusicBaseAndSonglistModel(QObject *parent) :
     QStandardItemModel(parent)
@@ -44,13 +48,21 @@ bool MusicBaseAndSonglistModel::setData(const QModelIndex &index, const QVariant
 //    return Qt::CopyAction;
 //}
 
+QMimeData *MusicBaseAndSonglistModel::mimeData(const QModelIndexList &indexes) const
+{
+    auto curMimeData = QStandardItemModel::mimeData(indexes);
+    if (curMimeData != nullptr && indexes.count() == 1) {
+        auto curSelectedItem = static_cast<DStandardItem *>(itemFromIndex(indexes.first()));
+        if (curSelectedItem->row() != 0 || curSelectedItem->data(Qt::UserRole + 12).toString() != "CdaRole") {
+            curMimeData->setData("CdaRole", QByteArray::number(1));
+            curMimeData->setData("ROW", QByteArray::number(curSelectedItem->row()));
+        }
+    }
+    return curMimeData;
+}
+
 Qt::ItemFlags MusicBaseAndSonglistModel::flags(const QModelIndex &index) const
 {
-    Qt::ItemFlags defaultFlags = QStandardItemModel::flags(index);
-
-    if (index.isValid())
-        return Qt::ItemIsDropEnabled | defaultFlags;
-    else
-        return defaultFlags;
+    return index.isValid() ? Qt::ItemIsDropEnabled | QStandardItemModel::flags(index) : QStandardItemModel::flags(index);
 }
 

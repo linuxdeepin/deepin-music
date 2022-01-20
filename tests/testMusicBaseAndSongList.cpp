@@ -81,7 +81,7 @@ TEST(Application, musicBaseSong)
 
 TEST(Application, musicBaseSong1)
 {
-    TEST_CASE_NAME("musicBaseSong")
+    TEST_CASE_NAME("musicBaseSong1")
 
     MainFrame *w = Application::getInstance()->getMainWindow();
     MusicSongListView *songListView = w->findChild<MusicSongListView *>(AC_customizeListview);
@@ -127,10 +127,34 @@ TEST(Application, musicBaseSong1)
     QTest::qWait(100);
 }
 
+// 拖动
+TEST(Application, musicSongListViewDrag)
+{
+    TEST_CASE_NAME("musicSongListViewDrag");
+    MainFrame *w = Application::getInstance()->getMainWindow();
+    MusicSongListView *songListView = w->findChild<MusicSongListView *>(AC_customizeListview);
+    songListView->addNewSongList();
+    QShortcut *escShortcut = songListView->findChild<QShortcut *>(AC_Shortcut_Escape);
+    if (escShortcut != nullptr)
+        escShortcut->activated();
+    QTest::qWait(100);
+
+    // 拖动
+    QPoint pos = QPoint(73, 21);
+    QPoint pos2 = QPoint(73, 100);
+
+    QTest::mousePress(songListView, Qt::MouseButton::LeftButton, Qt::KeyboardModifiers(), pos, 300);
+
+    songListView->dropItem(0);
+    songListView->slotUpdateDragScroll();
+
+    QTest::qWait(100);
+}
+
 //esc按键,重命名取消
 TEST(Application, musicSongListViewEsc)
 {
-    TEST_CASE_NAME("musicSongListView");
+    TEST_CASE_NAME("musicSongListViewEsc");
     MainFrame *w = Application::getInstance()->getMainWindow();
     MusicSongListView *songListView = w->findChild<MusicSongListView *>(AC_customizeListview);
     songListView->addNewSongList();
@@ -156,7 +180,7 @@ TEST(Application, musicSongListViewEsc)
 
 TEST(Application, songListViewPlayorPause)
 {
-    TEST_CASE_NAME("musicSongListView");
+    TEST_CASE_NAME("songListViewPlayorPause");
     MainFrame *w = Application::getInstance()->getMainWindow();
     MusicSongListView *songListView = w->findChild<MusicSongListView *>(AC_customizeListview);
 
@@ -175,7 +199,7 @@ TEST(Application, songListViewPlayorPause)
 //MusicSongListView右键菜单测试1
 TEST(Application, musicSongListViewRename)
 {
-    TEST_CASE_NAME("musicSongListView");
+    TEST_CASE_NAME("musicSongListViewRename");
     MainFrame *w = Application::getInstance()->getMainWindow();
     MusicSongListView *songListView = w->findChild<MusicSongListView *>(AC_customizeListview);
 
@@ -188,7 +212,7 @@ TEST(Application, musicSongListViewRename)
     QTest::qWait(100);
     //菜单触发重命名
     QTimer::singleShot(300, songListView, [ = ]() {
-        QTimer::singleShot(200, songListView, [ = ]() {
+        QTimer::singleShot(500, songListView, [ = ]() {
             QTestEventList event;
             event.addKeyClick(Qt::Key_Enter, Qt::NoModifier, 50);
             event.simulate(songListView->viewport());
@@ -199,12 +223,13 @@ TEST(Application, musicSongListViewRename)
         DMenu *menuWidget = static_cast<DMenu *>(qApp->activePopupWidget());
         if (menuWidget != nullptr) {
             event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
+            event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
+            event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
             event.addKeyClick(Qt::Key_Enter, Qt::NoModifier, 50);
             event.simulate(menuWidget);
             event.clear();
             QTest::qWait(50);
         }
-        QTest::qWait(950);
     });
 
     QContextMenuEvent menuEvent(QContextMenuEvent::Mouse, pos);
@@ -215,7 +240,7 @@ TEST(Application, musicSongListViewRename)
 //MusicSongListView右键菜单测试2
 TEST(Application, musicSongListViewMenuDelete)
 {
-    TEST_CASE_NAME("musicSongListView");
+    TEST_CASE_NAME("musicSongListViewMenuDelete");
     MainFrame *w = Application::getInstance()->getMainWindow();
     MusicSongListView *songListView = w->findChild<MusicSongListView *>(AC_customizeListview);
 
@@ -229,7 +254,7 @@ TEST(Application, musicSongListViewMenuDelete)
     QTest::qWait(100);
 
     QTimer::singleShot(300, songListView, [ = ]() {
-        QTimer::singleShot(300, songListView, [ = ]() {
+        QTimer::singleShot(600, songListView, [ = ]() {
             QTest::qWait(50);
             QTestEventList event;
             DDialog *messageBox = songListView->findChild<DDialog *>(AC_MessageBox);
@@ -250,13 +275,14 @@ TEST(Application, musicSongListViewMenuDelete)
         if (menuWidget != nullptr) {
             event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
             event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
+            event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
+            event.addKeyClick(Qt::Key_Tab, Qt::NoModifier, 50);
             event.addKeyClick(Qt::Key_Enter, Qt::NoModifier, 50);
             event.addDelay(100);
             event.simulate(menuWidget);
             event.clear();
             QTest::qWait(50);
         }
-        QTest::qWait(950);
     });
 
     QContextMenuEvent menuEvent(QContextMenuEvent::Mouse, pos);
@@ -267,6 +293,7 @@ TEST(Application, musicSongListViewMenuDelete)
 
 TEST(Application, songlistSearch)
 {
+    TEST_CASE_NAME("songlistSearch");
     // fix bug77449
     MainFrame *w = Application::getInstance()->getMainWindow();
     MusicSongListView *songListView = w->findChild<MusicSongListView *>(AC_customizeListview);
@@ -298,4 +325,7 @@ TEST(Application, songlistSearch)
         isEnable = playAllBtn->isEnabled();
     }
     QCOMPARE(isEnable, true);
+
+    songListView->changeCdaSongList(1);
+    songListView->changeCdaSongList(0);
 }

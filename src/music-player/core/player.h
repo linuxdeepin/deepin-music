@@ -88,6 +88,8 @@ public:
     void playListAppendMeta(const MediaMeta &meta);
     // 设置播放列表
     void setPlayList(const QList<MediaMeta> &list);
+    // 重新加载数据
+    void reloadMetaList();
     // 获取播放列表
     QList<MediaMeta> *getPlayList();
     // 获取CD播放列表
@@ -112,6 +114,10 @@ public:
     bool getMuted();
     // 获取音量大小
     int getVolume() const;
+    // 释放播放器
+    void releasePlayer();
+    // 更新播放列表
+    void sortMetas(const QVector<QString> &metaHashs);
 
 signals:
     // 播放状态改变
@@ -122,6 +128,8 @@ signals:
     void signalUpdatePlayingIcon();
     // 播放列表改变
     void signalPlayListChanged();
+    // 播放列表数据个数改变
+    void signalPlaylistCountChange();
     // 当前歌曲删除或无效停止播放
     void signalMediaStop(const QString &activeHah);
     // 播放列表中歌曲被删除

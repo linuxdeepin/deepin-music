@@ -42,6 +42,9 @@
 #include "commonservice.h"
 #include "ac-desktop-define.h"
 
+#define CDA_USER_ROLE "CdaRole"
+#define CDA_USER_ROLE_OFFSET 12  //userrole+12 防止和其他歌单role重叠
+
 MusicListScrollArea::MusicListScrollArea(QWidget *parent) : DScrollArea(parent)
 {
     setFrameShape(QFrame::NoFrame);
@@ -65,7 +68,7 @@ MusicListScrollArea::MusicListScrollArea(QWidget *parent) : DScrollArea(parent)
     musicLayout->setContentsMargins(10, 5, 10, 5);
     musicLayout->setSpacing(0);
 
-    dataBaseLabel = new DLabel;
+    dataBaseLabel = new DLabel(widget);
     dataBaseLabel->setFixedHeight(40);
     dataBaseLabel->setText(tr("Library"));
     dataBaseLabel->setObjectName("MusicListScrollAreaDataBase");
@@ -76,19 +79,19 @@ MusicListScrollArea::MusicListScrollArea(QWidget *parent) : DScrollArea(parent)
 
     // 解决字体不会根据系统字体大小改变问题
     dataBaseLabel->setFont(dataBaseLabelFont);
-    auto dataBaseLabelLayout = new QHBoxLayout();
+    auto dataBaseLabelLayout = new QHBoxLayout;
     dataBaseLabelLayout->setContentsMargins(0, 0, 15, 0);
     dataBaseLabelLayout->addWidget(dataBaseLabel, 100, Qt::AlignLeft | Qt::AlignVCenter);
     dataBaseLabelLayout->addStretch();
 
-    customizeLabel = new DLabel;
+    customizeLabel = new DLabel(widget);
     customizeLabel->setFixedHeight(40);
     customizeLabel->setText(tr("Playlists"));
     customizeLabel->setObjectName("MusicListScrollAreaCustomizeLabel");
     customizeLabel->setMargin(10);
     customizeLabel->setFont(dataBaseLabelFont);
 
-    m_addListBtn = new DIconButton(this);
+    m_addListBtn = new DIconButton(widget);
     m_addListBtn->setIcon(QIcon::fromTheme("text_add"));
     m_addListBtn->setEnabledCircle(true);
     m_addListBtn->setIconSize(QSize(20, 20));
@@ -97,13 +100,13 @@ MusicListScrollArea::MusicListScrollArea(QWidget *parent) : DScrollArea(parent)
     m_addListBtn->setFocusPolicy(Qt::TabFocus);
     m_addListBtn->installEventFilter(this);
 
-    auto customizeLayout = new QHBoxLayout();
+    auto customizeLayout = new QHBoxLayout;
     customizeLayout->setContentsMargins(0, 0, 15, 0);
     customizeLayout->addWidget(customizeLabel, 100, Qt::AlignLeft);
     customizeLayout->addStretch();
     customizeLayout->addWidget(m_addListBtn, 0, Qt::AlignRight);
 
-    m_dataBaseListview = new MusicBaseListView;
+    m_dataBaseListview = new MusicBaseListView(widget);
     m_dataBaseListview->setEditTriggers(QAbstractItemView::NoEditTriggers);
     m_dataBaseListview->setFixedHeight(162);
     AC_SET_OBJECT_NAME(m_dataBaseListview, AC_dataBaseListview);
@@ -112,7 +115,7 @@ MusicListScrollArea::MusicListScrollArea(QWidget *parent) : DScrollArea(parent)
     // m_dataBaseListview->setFocusPolicy(Qt::TabFocus);   //使用默认设置焦点方式
     m_dataBaseListview->installEventFilter(this);
 
-    m_customizeListview = new MusicSongListView;
+    m_customizeListview = new MusicSongListView(widget);
     musicLayout->setContentsMargins(0, 0, 0, 0);
 
     // m_customizeListview->setFocusPolicy(Qt::TabFocus);
@@ -140,6 +143,7 @@ MusicListScrollArea::MusicListScrollArea(QWidget *parent) : DScrollArea(parent)
     connect(m_dataBaseListview, &QAbstractItemView::clicked, this, &MusicListScrollArea::slotListViewClicked);
     connect(m_customizeListview, &QAbstractItemView::clicked, this, &MusicListScrollArea::slotListViewClicked);
     connect(m_customizeListview, &MusicSongListView::sigAddNewSongList, this, &MusicListScrollArea::slotAddNewSongList);
+    connect(m_customizeListview, &MusicSongListView::sigUpdateDragScroll, this, &MusicListScrollArea::slotUpdateDragScroll);
     connect(CommonService::getInstance(), &CommonService::signalSwitchToView, this, &MusicListScrollArea::viewChanged);
 }
 
@@ -180,6 +184,9 @@ void MusicListScrollArea::slotListViewClicked(const QModelIndex &index)
     } else if (listview == m_customizeListview) {
         m_dataBaseListview->clearSelection();
     }
+    //切换歌单时刷新播放状态图标
+    m_customizeListview->slotUpdatePlayingIcon();
+    m_dataBaseListview->slotUpdatePlayingIcon();
 }
 
 void MusicListScrollArea::slotAddNewSongList()
@@ -213,6 +220,24 @@ void MusicListScrollArea::viewChanged(ListPageSwitchType switchtype, const QStri
     }
 }
 
+void MusicListScrollArea::slotUpdateDragScroll()
+{
+    QPoint pos = mapFromGlobal(QCursor::pos());
+    auto curValue = verticalScrollBar()->value();
+    // 向上滚动
+    if (pos.y() < 20 && pos.y() > 0 && curValue > 0) {
+        curValue -= 15;
+        if (curValue < 0) curValue = 0;
+        verticalScrollBar()->setValue(curValue);
+        m_customizeListview->update();
+    } else if (pos.y() > (height() - 20) && curValue < verticalScrollBar()->maximum()) { // 向下滚动
+        curValue += 15;
+        if (curValue > verticalScrollBar()->maximum()) curValue = verticalScrollBar()->maximum();
+        verticalScrollBar()->setValue(curValue);
+        m_customizeListview->update();
+    }
+}
+
 bool MusicListScrollArea::eventFilter(QObject *o, QEvent *e)
 {
     if (o == m_dataBaseListview) {
@@ -226,6 +251,9 @@ bool MusicListScrollArea::eventFilter(QObject *o, QEvent *e)
 
                 QPoint pos(120, row);
                 m_dataBaseListview->showContextMenu(pos);
+            } else if (event->key() == Qt::Key_Return && m_dataBaseListview->currentIndex().isValid()) { // 添加回车选中
+                slotListViewClicked(m_dataBaseListview->currentIndex());
+                m_dataBaseListview->slotItemClicked(m_dataBaseListview->currentIndex());
             }
         }
         // Tab焦点进入事件和点击事件冲突，保留点击事件设置焦点
@@ -250,6 +278,13 @@ bool MusicListScrollArea::eventFilter(QObject *o, QEvent *e)
                 }
 
                 m_customizeListview->showContextMenu(pos);
+            } else if (event->key() == Qt::Key_Return && m_customizeListview->currentIndex().isValid()) {// 添加回车选中
+                slotListViewClicked(m_customizeListview->currentIndex());
+                QModelIndex curIndex = m_customizeListview->currentIndex();
+                if (curIndex.row() == 0 && curIndex.data(Qt::UserRole + CDA_USER_ROLE_OFFSET).toString() == CDA_USER_ROLE)
+                    emit CommonService::getInstance()->signalSwitchToView(CdaType, curIndex.data(Qt::UserRole + CDA_USER_ROLE_OFFSET).toString());
+                else
+                    emit CommonService::getInstance()->signalSwitchToView(CustomType, curIndex.data(Qt::UserRole).toString());
             }
         }
         // Tab焦点进入事件和点击事件冲突，保留点击事件设置焦点
