@@ -64,6 +64,8 @@ public:
     int highlightedRow() const;
     // 拖拽表格数据
     void dropItem(int preRow);
+    // 获取拖拽图片
+    QPixmap dragItemPixmap();
 
 public slots:
     void setThemeType(int type);
