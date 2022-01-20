@@ -53,11 +53,11 @@ static float codecConfidenceForData(const QTextCodec *codec, const QByteArray &d
             break;
         case QChar::Script_Han:
             hep_count += (country == QLocale::China || country == QLocale::Japan) ? 1.2 : 0.5;
-            unidentification_count += (country == QLocale::China) || (country == QLocale::Japan) ? 0 : 0.3;
+            unidentification_count += (country == QLocale::China || country == QLocale::Japan) ? 0 : 0.3;
             break;
         case QChar::Script_Hangul:
-            hep_count += (country == QLocale::NorthKorea) || (country == QLocale::SouthKorea) ? 1.2 : 0.5;
-            unidentification_count += (country == QLocale::NorthKorea) || (country == QLocale::SouthKorea) ? 0 : 0.3;
+            hep_count += (country == QLocale::NorthKorea || country == QLocale::SouthKorea) ? 1.2 : 0.5;
+            unidentification_count += (country == QLocale::NorthKorea || country == QLocale::SouthKorea) ? 0 : 0.3;
             break;
         case QChar::Script_Cyrillic:
             hep_count += (country == QLocale::Russia) ? 1.2 : 0.5;
