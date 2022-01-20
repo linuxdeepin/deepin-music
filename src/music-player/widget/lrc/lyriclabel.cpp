@@ -446,8 +446,7 @@ void AbstractWheelWidget::paintEvent(QPaintEvent *event)
                     }
                 }
 
-                // QRect第二个参数-50用于item向上偏移
-                paintItem(&painter, itemNum, QRect(6, h / 2 + i * iH - m_itemOffset - iH / 2 - 50, w - 6, iH));
+                paintItem(&painter, itemNum, QRect(6, h / 2 + i * iH - m_itemOffset - iH / 2, w - 6, iH));
             }
         }
     }
