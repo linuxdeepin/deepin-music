@@ -95,7 +95,7 @@ void LyricLabel::getFromFile(QString dir)
 
 void LyricLabel::paintItem(QPainter *painter, int index, const QRect &rect)
 {
-    if (index == this->m_currentItem + 1) {
+    if (index == this->m_currentItem) {
         painter->setPen(lyricHighlight);
         QFont font(lyricFont);
         //绑定获取系统字体大小
@@ -103,12 +103,9 @@ void LyricLabel::paintItem(QPainter *painter, int index, const QRect &rect)
         font.setWeight(QFont::DemiBold);
         painter->setFont(font);
         QPoint leftpos = rect.bottomLeft();
-        //leftpos.setY(static_cast<int>(leftpos.y() + rect.height() / 2.0 + 5));
         QPoint rightpos = rect.bottomRight();
         rightpos.setY(leftpos.y());
         rightpos.setX(rightpos.x() - 3);
-        //leftpos.setY(leftpos.y() - 3);
-        //rightpos.setY(rightpos.y() - 3);
         leftpos.setY(leftpos.y() - rect.height() / 2);
         rightpos.setY(rightpos.y() - rect.height() / 2);
         painter->save();
@@ -181,7 +178,7 @@ void LyricLabel::postionChanged(qint64 pos)
 {
     if (this->isScrolled) return;
     pos = pos + 500; //歌词滚动需要500ms
-    int index = lyric.getIndex(pos) - 1;
+    int index = lyric.getIndex(pos);
     if (index != m_currentItem)
         this->scrollTo(index);
 }
