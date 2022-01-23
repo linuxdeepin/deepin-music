@@ -848,7 +848,7 @@ void MusicListDataWidget::initCountLabel(QHBoxLayout *layout)
     m_infoLabel = new DLabel(this);
     m_infoLabel->setObjectName("MusicListDataTitle");
     m_infoLabel->setText(tr("All Music"));
-    m_infoLabel->setWordWrap(true);
+    m_infoLabel->setWordWrap(false);
     m_infoLabel->setForegroundRole(DPalette::ButtonText);
     DFontSizeManager::instance()->bind(m_infoLabel, DFontSizeManager::T6, QFont::Medium);
 
