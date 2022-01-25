@@ -46,6 +46,7 @@
 #include "footerwidget.h"
 #include "commonservice.h"
 #include "mainframe.h"
+#include "ac-desktop-define.h"
 
 DWIDGET_USE_NAMESPACE
 DGUI_USE_NAMESPACE
@@ -347,7 +348,7 @@ void PlayQueueWidget::autoHidden(QWidget *old, QWidget *now)
 {
     if (old && now) {
         if (!(now->objectName() == "infoDialog" || now->objectName() == "InfoTitle" ||
-                now->objectName() == "MainFrame" || now->objectName() == "messageBox"))  {
+                now->objectName() == "MainFrame" || now->objectName() == "messageBox" || now->objectName() == AC_customizeListview))  {
 
             PlayListView *playListQueue = dynamic_cast<PlayListView *>(now);
 
