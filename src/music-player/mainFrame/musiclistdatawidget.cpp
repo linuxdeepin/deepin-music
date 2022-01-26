@@ -1195,6 +1195,11 @@ void MusicListDataWidget::refreshSortAction(const QString &hash)
                         searchSortType = DataBaseService::SortBySinger;
                         break;
                     }
+                    case DataBaseService::SortByCustomASC:
+                    case DataBaseService::SortByCustomDES: {
+                        searchSortType = DataBaseService::SortByCustom;
+                        break;
+                    }
                     default:
                         break;
                     }
