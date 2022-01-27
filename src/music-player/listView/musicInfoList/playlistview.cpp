@@ -1559,8 +1559,9 @@ void PlayListView::updateDropIndicator()
     if (curRow == -1) curRow = m_model->rowCount() - 1;
     QModelIndex indexDrop = m_model->index(curRow, 0);
     //刷新旧区域使dropIndicator消失
-    update(m_preIndex);
-    update(indexDrop);
+    update(rect());
+//    update(m_preIndex);
+//    update(indexDrop);
     m_preIndex = indexDrop;
 }
 
