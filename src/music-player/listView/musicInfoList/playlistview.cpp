@@ -1441,7 +1441,7 @@ QPixmap PlayListView::dragItemsPixmap()
     int textSize = fontMetrics.width(QString("%1").arg(modelIndexList.size()));
     if (textSize < fontMetrics.height()) textSize = fontMetrics.height();
     int testRadius = textSize / 2 + DRAGICON_TEXTBORDERSIZE;
-    QRect pixRect(0, 0, DRAGICON_SIZE + DRAGICON_LEFTBORDER + testRadius, DRAGICON_SIZE + testRadius + DRAGICON_TOPBORDER);
+    QRect pixRect(0, 0, DRAGICON_SIZE + DRAGICON_LEFTBORDER + testRadius, DRAGICON_SIZE + testRadius + DRAGICON_TOPBORDER + 10);
     QPixmap pixmap(pixRect.size() * scale);
     pixmap.setDevicePixelRatio(scale);
     pixmap.fill(Qt::transparent);
@@ -1457,9 +1457,26 @@ QPixmap PlayListView::dragItemsPixmap()
     for (int i = qMin(modelIndexList.size() - 1, 2); i >= 0; --i) {
         QStandardItem *newItem = m_model->itemFromIndex(modelIndexList.at(i));
         QPixmap pixmap1 = newItem->icon().pixmap(QSize(DRAGICON_SIZE, DRAGICON_SIZE));
-        pixmap1 = pixmap1.transformed(matrix, Qt::FastTransformation);
+        pixmap1 = pixmap1.transformed(matrix, Qt::SmoothTransformation);
+
+        // 绘制描边
         painter.save();
-        painter.rotate(-180 - i * 4);
+        QColor borderPenColor("#000000");
+        borderPenColor.setAlphaF(0.1);
+        painter.setPen(Qt::NoPen);
+        painter.setBrush(borderPenColor);
+        painter.rotate(-180 - i * 8);
+        QPainterPath borderRectPath;
+        borderRectPath.addRoundRect(pixmap1.rect().adjusted(-2, -2, 2, 2), 20, 20);
+        painter.drawPath(borderRectPath);
+        painter.restore();
+
+        QPainterPath roundPixmapRectPath;
+        roundPixmapRectPath.addRoundRect(pixmap1.rect(), 20, 20);
+        painter.save();
+        painter.setOpacity(i == 0 ? 1.0 : (i == 1 ? 0.8 : 0.5));
+        painter.rotate(-180 - i * 8);
+        painter.setClipPath(roundPixmapRectPath);
         painter.drawPixmap(0, 0, pixmap1);
         painter.restore();
     }
