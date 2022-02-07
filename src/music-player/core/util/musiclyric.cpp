@@ -124,7 +124,7 @@ void MusicLyric::getFromFile(QString dir)
 
             QString str;
             if (lineList.size() == 2)
-                str = lineList[1];
+                str = lineList[1].trimmed();
             QString t_timeStr = lineList[0].remove(0, 1);
             QStringList t_timelist = t_timeStr.split(':');
             if (t_timelist.size() != 2)
@@ -135,11 +135,12 @@ void MusicLyric::getFromFile(QString dir)
                 ss = t_timelist[1].toDouble(&flag);
                 if (flag) {
                     qint64  curtime = (qint64)(ss * 1000) + mm * 60 * 1000;
-                    ans.insert(curtime, str.trimmed());
+                    if(!str.isEmpty()){
+                        ans.insert(curtime, str);
+                    }
                 }
             }
         }
-
     }
 
     QMap<qint64, QString>::iterator it;
