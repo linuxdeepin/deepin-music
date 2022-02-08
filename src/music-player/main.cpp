@@ -66,11 +66,8 @@ int main(int argc, char *argv[])
     }
     setenv("PULSE_PROP_media.role", "music", 1);
 
-    auto e = QProcessEnvironment::systemEnvironment();
-    QString XDG_SESSION_TYPE = e.value(QStringLiteral("XDG_SESSION_TYPE"));
-    QString WAYLAND_DISPLAY = e.value(QStringLiteral("WAYLAND_DISPLAY"));
-
-    if (XDG_SESSION_TYPE == QLatin1String("wayland") || WAYLAND_DISPLAY.contains(QLatin1String("wayland"), Qt::CaseInsensitive)) //是否开启wayland
+    Global::checkWaylandMode();
+    if (Global::isWaylandMode()) //是否开启wayland
         qputenv("QT_WAYLAND_SHELL_INTEGRATION", "kwayland-shell"); //add wayland parameter
 
 #if (DTK_VERSION < DTK_VERSION_CHECK(5, 4, 0, 0))

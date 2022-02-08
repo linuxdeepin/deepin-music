@@ -67,16 +67,19 @@ public slots:
     void slotPlaylistNameUpdate(const QString &listHash);
 protected:
     bool eventFilter(QObject *o, QEvent *e) Q_DECL_OVERRIDE;
+
 protected:
     virtual void dragEnterEvent(QDragEnterEvent *event) Q_DECL_OVERRIDE;
     virtual void dropEvent(QDropEvent *event) Q_DECL_OVERRIDE;
     virtual void resizeEvent(QResizeEvent *event) Q_DECL_OVERRIDE;
     virtual void showEvent(QShowEvent *event) Q_DECL_OVERRIDE;
+
 private slots:
     // 播放所有歌曲
     void slotPlayAllClicked();
     // 歌曲列表数量变化
     void slotMusicRowCountChanged();
+
 private:
     void initUI();
     void initTitle(QHBoxLayout *layout);
@@ -92,6 +95,8 @@ private:
     void refreshModeBtn(DListView::ViewMode mode);
     // 刷新当前排序菜单
     void refreshSortAction(const QString &hash = "");
+    // 播放歌曲
+    void playMetas(QList<MediaMeta> &metas);
 private:
     DWidget             *m_contentWidget           = nullptr;
     QStackedWidget      *m_pStackedWidget          = nullptr;

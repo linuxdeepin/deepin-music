@@ -23,9 +23,13 @@
 
 #include <QCoreApplication>
 #include <DStandardPaths>
+#include <QProcessEnvironment>
 
 DCORE_USE_NAMESPACE;
-QString appName;
+
+static QString appName;
+static bool waylandMode = false;
+
 QString Global::configPath()
 {
     auto userConfigPath = DStandardPaths::standardLocations(QStandardPaths::AppConfigLocation).value(0);
@@ -46,5 +50,28 @@ void Global::setAppName(const QString &name)
 QString Global::getAppName()
 {
     return appName;
+}
+
+bool Global::checkWaylandMode()
+{
+    auto e = QProcessEnvironment::systemEnvironment();
+    QString XDG_SESSION_TYPE = e.value(QStringLiteral("XDG_SESSION_TYPE"));
+    QString WAYLAND_DISPLAY = e.value(QStringLiteral("WAYLAND_DISPLAY"));
+
+    waylandMode = false;
+    if (XDG_SESSION_TYPE == QLatin1String("wayland") || WAYLAND_DISPLAY.contains(QLatin1String("wayland"), Qt::CaseInsensitive)) //是否开启wayland
+        waylandMode = true;
+
+    return waylandMode;
+}
+
+void Global::setWaylandMode(bool mode)
+{
+    waylandMode = mode;
+}
+
+bool Global::isWaylandMode()
+{
+    return waylandMode;
 }
 

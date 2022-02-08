@@ -246,6 +246,16 @@ QList<MediaMeta> SearchResultTabWidget::getMusicListData()
     return m_musicListView->getMusicListData();
 }
 
+QList<SingerInfo> SearchResultTabWidget::getSingerListData()
+{
+    return m_singerListView->getSingerListData();
+}
+
+QList<AlbumInfo> SearchResultTabWidget::getAlbumListData()
+{
+    return m_albumListView->getAlbumListData();
+}
+
 void SearchResultTabWidget::setCurrentPage(ListPageSwitchType type)
 {
     if (type == SearchMusicResultType) {

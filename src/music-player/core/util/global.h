@@ -26,8 +26,18 @@
 class Global
 {
 public:
+    // 获取config路径
     static QString configPath();
+    // 获取缓存路径
     static QString cacheDir();
+    // 设置应用名称
     static void setAppName(const QString &name);
+    // 获取应用名称
     static QString getAppName();
+    // 检测是否开启Wayland
+    static bool checkWaylandMode();
+    // 设置Wayland
+    static void setWaylandMode(bool mode);
+    // 是否开启Wayland
+    static bool isWaylandMode();
 };

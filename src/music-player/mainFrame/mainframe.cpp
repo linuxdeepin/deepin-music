@@ -192,14 +192,11 @@ MainFrame::MainFrame()
         qApp->quit();
     });
     connect(Player::getInstance()->getMpris(), &MprisPlayer::raiseRequested, this, [ = ]() {
-        auto e = QProcessEnvironment::systemEnvironment();
-        QString XDG_SESSION_TYPE = e.value(QStringLiteral("XDG_SESSION_TYPE"));
-        QString WAYLAND_DISPLAY = e.value(QStringLiteral("WAYLAND_DISPLAY"));
         if (isVisible()) {
             // 最小化和激活窗口
             if (isMinimized()) {
                 // 使用dbus显示窗口
-                if ((XDG_SESSION_TYPE != QLatin1String("wayland") && !WAYLAND_DISPLAY.contains(QLatin1String("wayland"), Qt::CaseInsensitive)) || !showWindowfromDBus()) {
+                if (!Global::isWaylandMode() || !showWindowfromDBus()) {
                     this->titlebar()->setFocus();
                     show();
                     raise();
@@ -437,14 +434,11 @@ void MainFrame::initMenuAndShortcut()
     connect(m_sysTrayIcon, &QSystemTrayIcon::activated,
     this, [ = ](QSystemTrayIcon::ActivationReason reason) {
         if (QSystemTrayIcon::Trigger == reason) {
-            auto e = QProcessEnvironment::systemEnvironment();
-            QString XDG_SESSION_TYPE = e.value(QStringLiteral("XDG_SESSION_TYPE"));
-            QString WAYLAND_DISPLAY = e.value(QStringLiteral("WAYLAND_DISPLAY"));
             if (isVisible()) {
                 // 最小化和激活窗口
                 if (isMinimized() || !isActiveWindow()) {
                     // 使用dbus显示窗口
-                    if ((XDG_SESSION_TYPE != QLatin1String("wayland") && !WAYLAND_DISPLAY.contains(QLatin1String("wayland"), Qt::CaseInsensitive)) || !showWindowfromDBus()) {
+                    if (!Global::isWaylandMode() || !showWindowfromDBus()) {
                         this->titlebar()->setFocus();
                         show();
                         raise();

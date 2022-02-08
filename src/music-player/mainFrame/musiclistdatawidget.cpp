@@ -525,8 +525,28 @@ void MusicListDataWidget::showEvent(QShowEvent *event)
     }
 }
 
+void MusicListDataWidget::playMetas(QList<MediaMeta> &metas)
+{
+    // 清空播放队列
+    Player::getInstance()->clearPlayList();
+    // 添加到播放列表
+    for (auto meta : metas) {
+        Player::getInstance()->playListAppendMeta(meta);
+    }
+
+    // 通知播放队列改变
+    Player::getInstance()->setCurrentPlayListHash(m_currentHash, false);
+    emit Player::getInstance()->signalPlayListChanged();
+
+    // 设置第一首播放音乐
+    if (Player::getInstance()->getPlayList()->size() > 0) {
+        Player::getInstance()->playMeta(Player::getInstance()->getPlayList()->first());
+    }
+}
+
 void MusicListDataWidget::slotPlayAllClicked()
 {
+    QList<MediaMeta> searchMetas;
     switch (CommonService::getInstance()->getListPageSwitchType()) {
     case AlbumType: {
         // 清空播放队列
@@ -640,12 +660,6 @@ void MusicListDataWidget::slotPlayAllClicked()
                         break;
                     }
                 }
-//                for (MediaMeta meta : singerTmp.musicinfos.values()) {
-//                    if (!metaList.contains(meta.hash)) {
-//                        playMeta = meta;
-//                        break;
-//                    }
-//                }
                 if (!playMeta.hash.isEmpty()) {
                     break;
                 }
@@ -671,42 +685,34 @@ void MusicListDataWidget::slotPlayAllClicked()
     // 同下共用
     case FavType:
     case CdaType:
-    case CustomType:
-        // 清空播放队列
-        Player::getInstance()->clearPlayList();
-        // 添加到播放列表
-        for (auto meta : m_musicListView->getMusicListData()) {
-            Player::getInstance()->playListAppendMeta(meta);
+    case CustomType: {
+        searchMetas = m_musicListView->getMusicListData();
+        playMetas(searchMetas);
+    }
+    break;
+    case SearchMusicResultType: {
+        searchMetas = m_searchResultTabWidget->getMusicListData();
+        playMetas(searchMetas);
+    }
+    break;
+    case SearchSingerResultType: {
+        for (auto singer : m_searchResultTabWidget->getSingerListData()) {
+            foreach (auto meta, singer.musicinfos) {
+                searchMetas.append(meta);
+            }
         }
-
-        // 通知播放队列改变
-        Player::getInstance()->setCurrentPlayListHash(m_currentHash, false);
-        emit Player::getInstance()->signalPlayListChanged();
-
-        // 设置第一首播放音乐
-        if (Player::getInstance()->getPlayList()->size() > 0) {
-            Player::getInstance()->playMeta(Player::getInstance()->getPlayList()->first());
+        playMetas(searchMetas);
+    }
+    break;
+    case SearchAlbumResultType: {
+        for (auto album : m_searchResultTabWidget->getAlbumListData()) {
+            foreach (auto meta, album.musicinfos) {
+                searchMetas.append(meta);
+            }
         }
-        break;
-    case SearchMusicResultType:
-    case SearchSingerResultType:
-    case SearchAlbumResultType:
-        // 清空播放队列
-        Player::getInstance()->clearPlayList();
-        // 添加到播放列表
-        for (auto meta : m_searchResultTabWidget->getMusicListData()) {
-            Player::getInstance()->playListAppendMeta(meta);
-        }
-
-        // 通知播放队列改变
-        Player::getInstance()->setCurrentPlayListHash(m_currentHash, false);
-        emit Player::getInstance()->signalPlayListChanged();
-
-        // 设置第一首播放音乐
-        if (Player::getInstance()->getPlayList()->size() > 0) {
-            Player::getInstance()->playMeta(Player::getInstance()->getPlayList()->first());
-        }
-        break;
+        playMetas(searchMetas);
+    }
+    break;
     default:
         break;
     }
