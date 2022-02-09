@@ -51,6 +51,7 @@
 #include <DSettingsWidgetFactory>
 #include <DSettingsOption>
 #include <DApplicationHelper>
+#include <DApplication>
 
 #include <unistd.h>
 #include "./core/musicsettings.h"
@@ -1166,6 +1167,10 @@ void MainFrame::closeEvent(QCloseEvent *event)
         break;
     }
 
+    // 最小化时隐藏关于窗口
+    if (qApp->aboutDialog() != nullptr && qApp->aboutDialog()->isVisible()) {
+        qApp->aboutDialog()->hide();
+    }
     this->setFocus();
     DMainWindow::closeEvent(event);
 }
@@ -1175,6 +1180,10 @@ void MainFrame::hideEvent(QHideEvent *event)
     //用于最小化时保存窗口位置信息,note：托盘到最小化或者退出程序也会触发该事件
     DMainWindow::hideEvent(event);
     m_geometryBa = saveGeometry();
+    // 最小化时隐藏关于窗口
+    if (qApp->aboutDialog() != nullptr && qApp->aboutDialog()->isVisible()) {
+        qApp->aboutDialog()->hide();
+    }
 }
 
 void MainFrame::playQueueAnimation()
