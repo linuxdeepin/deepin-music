@@ -143,21 +143,15 @@ void InfoDialog::initUI()
 
     for (int i = 0; i < infoKeys.length(); ++i) {
         auto infoKey = new DLabel(infoKeys.value(i));
-//        auto infoFont = infoKey->font();
-//        infoFont.setPointSize(8);
-//        infoKey->setFont(infoFont);
         infoKey->setObjectName("InfoKey");
-//        infoKey->setMinimumHeight(18);
         infoKey->setForegroundRole(DPalette::WindowText);
         infoKey->setAlignment(Qt::AlignLeft | Qt::AlignTop);
         DFontSizeManager::instance()->bind(infoKey, DFontSizeManager::T8);
         keyList << infoKey;
 
         auto infoValue = new DLabel(this);
-//        infoValue->setFont(infoFont);
         infoValue->setWordWrap(true);
         infoValue->setObjectName("InfoValue");
-//        infoValue->setMinimumHeight(28);
         infoValue->setMinimumWidth(200);
         infoValue->setMaximumWidth(260);
         infoValue->setAlignment(Qt::AlignLeft | Qt::AlignTop);
