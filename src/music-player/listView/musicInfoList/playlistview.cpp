@@ -983,11 +983,14 @@ void PlayListView::slotPlayMusic()
 
 void PlayListView::showDetailInfoDlg()
 {
-    if (!m_pInfoDlg) {
-        m_pInfoDlg = new InfoDialog(this);
-        AC_SET_OBJECT_NAME(m_pInfoDlg, AC_infoDialog);
-        AC_SET_ACCESSIBLE_NAME(m_pInfoDlg, AC_infoDialog);
+    // 信息对话框
+    if (m_pInfoDlg) {
+        delete m_pInfoDlg;
+        m_pInfoDlg = nullptr;
     }
+    m_pInfoDlg = new InfoDialog(this);
+    AC_SET_OBJECT_NAME(m_pInfoDlg, AC_infoDialog);
+    AC_SET_ACCESSIBLE_NAME(m_pInfoDlg, AC_infoDialog);
 
     QModelIndex mindex =  this->currentIndex();
     MediaMeta meta = mindex.data(Qt::UserRole).value<MediaMeta>();
