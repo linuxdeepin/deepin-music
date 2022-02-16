@@ -84,7 +84,8 @@ SoundVolume::SoundVolume(QWidget *parent)
     layout->addWidget(m_volSlider, 0, Qt::AlignCenter);
     layout->addWidget(m_btSound, 0, Qt::AlignHCenter);
     setFixedWidth(62);
-    setMinimumHeight(201);
+    // 藏语下显示高度不够
+    setMinimumHeight(210);
 
     auto *bodyShadow = new QGraphicsDropShadowEffect(this);
     bodyShadow->setBlurRadius(10.0);
