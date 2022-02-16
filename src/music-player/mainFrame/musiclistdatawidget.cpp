@@ -843,14 +843,9 @@ void MusicListDataWidget::initBtPlayAll(QHBoxLayout *layout)
     m_btPlayAll->setIcon(QIcon::fromTheme("play_all"));
     m_btPlayAll->setObjectName(AC_musicListDataPlayAll);
     m_btPlayAll->setText(tr("Play All"));
-    if (CommonService::getInstance()->isTabletEnvironment()) {
-        m_btPlayAll->setFixedSize(QSize(100, 40));
-    } else {
-        m_btPlayAll->setFixedSize(QSize(93, 30));
-        // 字体宽度加图标大于93,重新设置按钮宽度
-        QFontMetrics font(m_btPlayAll->font());
-        m_btPlayAll->setFixedWidth((font.width(m_btPlayAll->text()) + 18) >= 93 ? (font.width(m_btPlayAll->text()) + 38) : 93);
-    }
+    int btnWidth = CommonService::getInstance()->isTabletEnvironment() ? 100 : 93;
+    int btnHight = CommonService::getInstance()->isTabletEnvironment() ? 40 : 30;
+    m_btPlayAll->setMinimumSize(QSize(btnWidth, btnHight));
     m_btPlayAll->setFocusPolicy(Qt::NoFocus);
     m_btPlayAll->setIconSize(QSize(18, 18));
 
