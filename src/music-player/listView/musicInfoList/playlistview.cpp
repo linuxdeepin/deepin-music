@@ -34,6 +34,7 @@
 #include <QMimeData>
 #include <QTimer>
 #include <QDrag>
+#include <QPainterPath>
 
 #include <DDialog>
 #include <DDesktopServices>
