@@ -690,26 +690,10 @@ void MusicListDataWidget::slotPlayAllClicked()
         playMetas(searchMetas);
     }
     break;
-    case SearchMusicResultType: {
-        searchMetas = m_searchResultTabWidget->getMusicListData();
-        playMetas(searchMetas);
-    }
-    break;
-    case SearchSingerResultType: {
-        for (auto singer : m_searchResultTabWidget->getSingerListData()) {
-            foreach (auto meta, singer.musicinfos) {
-                searchMetas.append(meta);
-            }
-        }
-        playMetas(searchMetas);
-    }
-    break;
+    case SearchMusicResultType:
+    case SearchSingerResultType:
     case SearchAlbumResultType: {
-        for (auto album : m_searchResultTabWidget->getAlbumListData()) {
-            foreach (auto meta, album.musicinfos) {
-                searchMetas.append(meta);
-            }
-        }
+        searchMetas = m_searchResultTabWidget->getCurMusicListData();
         playMetas(searchMetas);
     }
     break;
