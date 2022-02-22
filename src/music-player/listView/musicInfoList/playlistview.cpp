@@ -1141,7 +1141,7 @@ void PlayListView::slotRmvFromSongList()
                 Player::getInstance()->playRmvMeta(metaList);
             }
             // 删除所有后停止播放
-            if (metaList.size() == m_model->rowCount()) Player::getInstance()->stop();
+            if (metaList.size() == m_model->rowCount() && m_currentHash != "album" && m_currentHash != "artist") Player::getInstance()->stop();
         } else {
             Player::getInstance()->playRmvMeta(metaList);
         }
