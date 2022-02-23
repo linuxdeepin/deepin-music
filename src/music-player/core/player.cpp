@@ -209,6 +209,12 @@ void Player::playMeta(MediaMeta meta)
             initVlc();
         }
 
+        // 防止淡入淡出时切换歌曲
+        if (m_fadeInOut) {
+            m_fadeOutAnimation->stop();
+            setFadeInOutFactor(1.0);
+        }
+
         m_qvmedia->initMedia(meta.localPath, meta.mmType == MIMETYPE_CDA ? false : true, m_qvinstance, meta.track);
         m_qvplayer->open(m_qvmedia);
         m_qvplayer->play();
