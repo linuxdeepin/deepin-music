@@ -50,13 +50,10 @@ LyricLabel::LyricLabel(bool touch, QWidget *parent)
     AC_SET_OBJECT_NAME(this, AC_lyricview);
     AC_SET_ACCESSIBLE_NAME(this, AC_lyricview);
 
-//    lyric = new MusicLyric();
-//    lyricFont = new QFont();
     lyricFont.setFamily("SourceHanSansSC");
     lyricFont.setWeight(QFont::Normal);
 
 // 解决字体不会根据系统字体大小改变问题
-//    lyricFont.setPixelSize(14);
     lyricNormal = QColor("#526A7F");
     lyricHighlight = QColor("#000000");
     connect(this, &LyricLabel::changeTo, this, &LyricLabel::changeToEvent);
@@ -68,23 +65,6 @@ LyricLabel::LyricLabel(bool touch, QWidget *parent)
             this, &LyricLabel::setThemeType);
 
     setThemeType(DGuiApplicationHelper::instance()->themeType());
-
-    /* MyMenu *menu = new MyMenu(this);
-     QAction *selectLyric = new QAction("关联本地歌词", menu);
-     QAction *fontSelect = new QAction("字体设置", menu);
-     connect(fontSelect, SIGNAL(triggered(bool)), this, SLOT(changeFont()));
-    // QAction *colorNormal = new QAction("普通颜色", menu);
-    QAction *colorNormal = new QAction("pp", menu);
-     connect(colorNormal, SIGNAL(triggered(bool)), this, SLOT(changeNormalColor()));
-     QAction *colorHighLight = new QAction("高亮颜色", menu);
-     connect(colorHighLight, SIGNAL(triggered(bool)), this, SLOT(changeHightLightColor()));
-     menu->addAction(selectLyric);
-     menu->addSeparator();
-     menu->addAction(fontSelect);
-     menu->addAction(colorNormal);
-     menu->addAction(colorHighLight);
-     connect(this, SIGNAL(rightClicked()), menu, SLOT(menuVisiable()));*/
-    //setMinimumWidth(600);
 }
 
 void LyricLabel::getFromFile(QString dir)
@@ -96,7 +76,7 @@ void LyricLabel::getFromFile(QString dir)
 void LyricLabel::paintItem(QPainter *painter, int index, const QRect &rect)
 {
     if (index == this->m_currentItem) {
-        painter->setPen(lyricHighlight);
+//        painter->setPen(lyricHighlight);
         QFont font(lyricFont);
         //绑定获取系统字体大小
         font.setPixelSize(DFontSizeManager::instance()->fontPixelSize(DFontSizeManager::T6));
@@ -129,15 +109,16 @@ void LyricLabel::paintItem(QPainter *painter, int index, const QRect &rect)
 
         painter->drawLine(leftpos.x() + 23, leftpos.y(), rightpos.x() - 23, rightpos.y());
         painter->restore();
-    } else {
-        QPen pen = painter->pen();
-        QColor color = pen.color();
-        color.setRed(lyricNormal.red());
-        color.setGreen(lyricNormal.green());
-        color.setBlue(lyricNormal.blue());
-        painter->setPen(color);
-        painter->setFont(lyricFont);
     }
+
+    QPen pen = painter->pen();
+    QColor color = pen.color();
+    color.setRed(lyricNormal.red());
+    color.setGreen(lyricNormal.green());
+    color.setBlue(lyricNormal.blue());
+    painter->setPen(index == (this->m_currentItem + 1) ? lyricHighlight : color);
+    painter->setFont(lyricFont);
+
     QFontMetrics fm(lyricFont);
     QString lricstr = lyric.getLineAt(index);
     QPoint tleftpos = rect.topLeft();
@@ -455,26 +436,6 @@ void AbstractWheelWidget::paintEvent(QPaintEvent *event)
             }
         }
     }
-    /*
-        // draw a transparent bar over the center
-        QColor highlight = palette.color(colorGroup, QPalette::Highlight);
-        highlight.setAlpha(150);
-
-        QLinearGradient grad2(0.5, 0, 0.5, 1.0);
-        grad2.setColorAt(0, highlight);
-        grad2.setColorAt(1.0, highlight.lighter());
-        grad2.setCoordinateMode( QGradient::ObjectBoundingMode );
-        QBrush gBrush2( grad2 );
-
-        QLinearGradient grad3(0.5, 0, 0.5, 1.0);
-        grad3.setColorAt(0, highlight);
-        grad3.setColorAt(1.0, highlight.darker());
-        grad3.setCoordinateMode( QGradient::ObjectBoundingMode );
-        QBrush gBrush3( grad3 );
-
-        painter.fillRect( QRect( 0, h/2 - iH/2, w, iH/2 ), gBrush2 );
-        painter.fillRect( QRect( 0, h/2,        w, iH/2 ), gBrush3 );
-    */
 }
 
 /*!
