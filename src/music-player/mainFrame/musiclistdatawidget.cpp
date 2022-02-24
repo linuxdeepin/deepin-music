@@ -1210,8 +1210,7 @@ void MusicListDataWidget::refreshSortAction(const QString &hash)
             }
         }
         // 搜索时防止专辑窗口不存在
-        if (m_albumListView)
-            m_albumDropdown->setEnabled(m_albumListView->model()->rowCount() > 0);
+        m_albumDropdown->setEnabled(hash == "albumResult" ? (m_searchResultTabWidget->getAlbumCount() > 0) : (m_albumListView->model()->rowCount() > 0));
     } else if (m_pStackedWidget->currentWidget() == m_singerListView ||
                (hash == "artistResult")) {
         m_musicDropdown->setVisible(false);
@@ -1226,8 +1225,7 @@ void MusicListDataWidget::refreshSortAction(const QString &hash)
             }
         }
         // 搜索时防止歌手窗口不存在
-        if (m_singerListView)
-            m_artistDropdown->setEnabled(m_singerListView->model()->rowCount() > 0);
+        m_artistDropdown->setEnabled(hash == "artistResult" ? (m_searchResultTabWidget->getSingerCount() > 0) : (m_singerListView->model()->rowCount() > 0));
     }
 }
 
