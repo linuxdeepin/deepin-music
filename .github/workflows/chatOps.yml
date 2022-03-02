@@ -41,15 +41,19 @@ jobs:
         with:
           script: |
             const { COMMENT_BODY } = process.env
-            const groups = COMMENT_BODY.match(/\/review \@(\S+)/)
-            if( !groups ){
+            const command = COMMENT_BODY.match(/\/review (\@\w+ )+/)
+            if ( !command || !command[0] ){
+              return
+            }
+            const users = command[0].match(/\@\w+/g)
+            if( !user ){
               return
             }
             await github.rest.pulls.requestReviewers({
               pull_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              reviewers: [groups[1]]
+              reviewers: users.map(a=>a.slice(1))
             });
 
       - name: "approve"
