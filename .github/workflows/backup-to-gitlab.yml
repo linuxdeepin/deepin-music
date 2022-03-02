@@ -1,0 +1,30 @@
+name: backup to gitlab
+on: [push]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  backup-to-gitlab:
+    if: github.repository_owner == 'linuxdeepin'
+    name: backup-to-gitlab
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          repository: "linuxdeepin/jenkins-bridge-client"
+          path: jenkins-bridge-client
+
+      - name: Install Client
+        run: |
+          cd $GITHUB_WORKSPACE/jenkins-bridge-client
+          go build .
+          sudo install -Dvm755 jenkins-bridge-client -t /usr/bin/
+      - name: Trigger sync
+        id: generate-runid
+        run: |
+          echo "::set-output name=RUN_ID::$(jenkins-bridge-client -triggerSync -token '${{ secrets.BRIDGETOKEN }}')"
+      - name: Print log
+        run: |
+          jenkins-bridge-client -printlog -token "${{ secrets.BRIDGETOKEN }}" -runid "${{ steps.generate-runid.outputs.RUN_ID }}"
