@@ -134,7 +134,7 @@ SingerListView::SingerListView(const QString &hash, QWidget *parent)
 // 双击逻辑位置移动
 //    connect(this, &SingerListView::doubleClicked, this, &SingerListView::onDoubleClicked);
 
-    setSelectionMode(QListView::ExtendedSelection);
+    setSelectionMode(QListView::SingleSelection);
     setSelectionBehavior(QAbstractItemView::SelectRows);
 
     connect(DataBaseService::getInstance(), &DataBaseService::signalCoverUpdate,
