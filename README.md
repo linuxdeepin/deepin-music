@@ -11,13 +11,18 @@ _The **master** branch is current development branch, build dependencies may cha
 * pkg-config
 * libtag1-dev
 * libicu-dev
-* libcue-dev
-* libtag1-dev
+* libgsettings-qt-dev
+* libdbusextended-qt5-dev
+* libkf5codecs-dev
 * libavutil-dev
 * libavcodec-dev
 * libavformat-dev
 * libdtkcore-dev
 * libdtkgui-dev
+* libdframeworkdbus-dev
+* libudisks2-qt5-dev 
+* libvlc-dev
+* libvlccore-dev
 * Qt5(>= 5.6) with modules:
   - qt5-qmake
   - libqt5svg5-dev
