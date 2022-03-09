@@ -1931,7 +1931,9 @@ void PlayListView::playMusic(const MediaMeta &meta)
             // 设置当前播放playlist的hash
             Player::getInstance()->setCurrentPlayListHash(m_currentHash, false);
         }
-        Player::getInstance()->playMeta(meta);
+        // 防止删除文件过程中播放音乐
+        if (!Player::getInstance()->getPlayList()->isEmpty())
+            Player::getInstance()->playMeta(meta);
     }
 }
 
