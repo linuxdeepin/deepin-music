@@ -82,14 +82,11 @@ void LyricLabel::paintItem(QPainter *painter, int index, const QRect &rect)
         font.setPixelSize(DFontSizeManager::instance()->fontPixelSize(DFontSizeManager::T6));
         painter->setFont(font);
         QPoint leftpos = rect.bottomLeft();
-        leftpos.setY(static_cast<int>(leftpos.y() + rect.height() / 2.0 + 5));
         QPoint rightpos = rect.bottomRight();
         rightpos.setY(leftpos.y());
         rightpos.setX(rightpos.x() - 3);
-        leftpos.setY(leftpos.y() - 3);
-        rightpos.setY(rightpos.y() - 3);
-        //leftpos.setY(leftpos.y() - rect.height() / 2);
-        //rightpos.setY(rightpos.y() - rect.height() / 2);
+        leftpos.setY(leftpos.y() - rect.height() / 2);
+        rightpos.setY(rightpos.y() - rect.height() / 2);
         painter->save();
         QPointF triangle1[3] = {QPointF(leftpos.x(), leftpos.y() * 1.0 + 4.5), QPointF(leftpos.x(), leftpos.y() * 1.0 - 4.5), QPointF(leftpos.x() + 9, leftpos.y())}; //1
         QPointF triangle2[3] = {QPointF(rightpos.x(), rightpos.y() * 1.0 + 4.5), QPointF(rightpos.x(), rightpos.y() * 1.0 - 4.5), QPointF(rightpos.x() - 9, rightpos.y())}; //1
@@ -116,7 +113,7 @@ void LyricLabel::paintItem(QPainter *painter, int index, const QRect &rect)
     color.setRed(lyricNormal.red());
     color.setGreen(lyricNormal.green());
     color.setBlue(lyricNormal.blue());
-    painter->setPen(index == (this->m_currentItem + 1) ? lyricHighlight : color);
+    painter->setPen(index == this->m_currentItem ? lyricHighlight : color);
     painter->setFont(lyricFont);
 
     QFontMetrics fm(lyricFont);
@@ -161,7 +158,7 @@ void LyricLabel::postionChanged(qint64 pos)
 {
     if (this->isScrolled) return;
     pos = pos + 500; //歌词滚动需要500ms
-    int index = lyric.getIndex(pos) - 1;
+    int index = lyric.getIndex(pos);
     if (index != m_currentItem)
         this->scrollTo(index);
 }
@@ -431,8 +428,7 @@ void AbstractWheelWidget::paintEvent(QPaintEvent *event)
                     }
                 }
 
-                // QRect第二个参数-50用于item向上偏移
-                paintItem(&painter, itemNum, QRect(6, h / 2 + i * iH - m_itemOffset - iH / 2 - 50, w - 6, iH));
+                paintItem(&painter, itemNum, QRect(6, h / 2 + i * iH - m_itemOffset - iH / 2 + 12, w - 6, iH));
             }
         }
     }
