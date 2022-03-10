@@ -1109,6 +1109,10 @@ void MusicListDataWidget::refreshInfoLabel(QString hash)
             m_pStackedWidget->setCurrentWidget(m_addMusicWidget);
         }
     }
+    
+    // 文本太长显示...
+    QFontMetrics font(m_infoLabel->font());
+    countStr = font.elidedText(countStr, Qt::ElideRight, 240);
     m_infoLabel->setText(countStr);
 }
 
