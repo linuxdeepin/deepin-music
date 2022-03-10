@@ -828,7 +828,7 @@ void Player::setMode(Player::PlaybackMode mode)
     MusicSettings::setOption("base.play.playmode", m_mode);
 }
 
-void Player::setVolume(int volume)
+void Player::setVolume(int volume, bool sync)
 {
     if (volume > 100) {
         volume = 100;
@@ -838,8 +838,8 @@ void Player::setVolume(int volume)
     }
 
     m_volume = volume;
-    MusicSettings::setOption("base.play.volume", volume);
-    setMuted(volume == 0 ? true : false);
+    if (sync) MusicSettings::setOption("base.play.volume", volume);
+    setMuted(volume == 0 ? true : false, sync);
     m_mpris->setVolume(static_cast<double>(volume) / 100);
 
     //+1会造成获取音量值不正确，取消+1
@@ -847,12 +847,12 @@ void Player::setVolume(int volume)
     emit signalVolumeChanged();
 }
 
-void Player::setMuted(bool mute)
+void Player::setMuted(bool mute, bool sync)
 {
     if (!setMusicMuted(mute))  //audio服务未启动
         qDebug() << "audio service not started,mute can not be set";
     //使用本地静音配置
-    MusicSettings::setOption("base.play.mute", mute);
+    if (sync) MusicSettings::setOption("base.play.mute", mute);
 }
 
 void Player::setActiveMeta(const MediaMeta &meta)

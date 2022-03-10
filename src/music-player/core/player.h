@@ -140,8 +140,8 @@ signals:
     void signalVolumeChanged();
 public slots:
     void changePicture();
-    void setVolume(int volume);
-    void setMuted(bool muted);
+    void setVolume(int volume, bool sync = true);
+    void setMuted(bool muted, bool sync = true);
 private:
     QTimer         *m_timer = nullptr;
     QIcon           m_playingIcon = QIcon::fromTheme("music_play1");

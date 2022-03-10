@@ -1050,6 +1050,7 @@ void MainFrame::resizeEvent(QResizeEvent *e)
 
 void MainFrame::closeEvent(QCloseEvent *event)
 {
+    Player::getInstance()->setVolume(Player::getInstance()->getVolume());
     //保存进度
     auto curPosition = Player::getInstance()->getActiveMeta().offset;
     //是否记录最后播放位置
