@@ -9,6 +9,6 @@ concurrency:
 
 jobs:
   check_job:
-    uses: linuxdeepin/.github/.github/workflows/jenkins-bridge.yml@master
+    uses: linuxdeepin/.github/.github/workflows/build-deb.yml@master
     secrets:
       BridgeToken: ${{ secrets.BridgeToken }}
