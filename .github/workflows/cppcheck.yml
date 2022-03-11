@@ -1,7 +1,6 @@
 name: cppcheck
 on:
   pull_request_target:
-    types: [opened, reopened, synchronize, closed]
 
 concurrency:
   group: ${{ github.workflow }}-pull/${{ github.event.number }}
