@@ -514,6 +514,7 @@ void MusicListDataWidget::resizeEvent(QResizeEvent *event)
 {
     QWidget::resizeEvent(event);
     m_lableWidget->setGeometry(m_actionBar->geometry());
+    refreshInfoLabel(m_currentHash);
 }
 
 // 大标题跟随size变化
@@ -1094,10 +1095,12 @@ void MusicListDataWidget::refreshInfoLabel(QString hash)
             m_pStackedWidget->setCurrentWidget(m_addMusicWidget);
         }
     }
-    
+
     // 文本太长显示...
+    QFontMetrics m_titleLabelFontMetrics(m_titleLabel->font());
+    int width = m_actionBar->width() / 2 - 20 - m_btPlayAll->width() - m_titleLabelFontMetrics.width(m_titleLabel->text()) / 2;
     QFontMetrics font(m_infoLabel->font());
-    countStr = font.elidedText(countStr, Qt::ElideRight, 240);
+    countStr = font.elidedText(countStr, Qt::ElideRight, width);
     m_infoLabel->setText(countStr);
 }
 
