@@ -31,6 +31,7 @@
 #include <QPainter>
 #include <QShortcut>
 #include <QUuid>
+#include <QDrag>
 
 #include <DMenu>
 #include <DDialog>
@@ -40,6 +41,7 @@
 #include <DFloatingMessage>
 #include <DMessageManager>
 #include <DApplication>
+#include <DBlurEffectWidget>
 
 #include "mediameta.h"
 #include "musicsettings.h"
@@ -53,6 +55,9 @@
 
 #define CDA_USER_ROLE "CdaRole"
 #define CDA_USER_ROLE_OFFSET 12  //userrole+12 防止和其他歌单role重叠
+#define DRAGICON_LEFTBORDER 16
+#define DRAGICON_TOPBORDER 6
+#define DRAGICON_ROUNDRADIUS 10
 
 DGUI_USE_NAMESPACE
 
@@ -648,10 +653,78 @@ void MusicSongListView::keyReleaseEvent(QKeyEvent *event)
     DListView::keyReleaseEvent(event);
 }
 
+QPixmap MusicSongListView::dragItemPixmap()
+{
+    qreal scale = devicePixelRatio();
+    QModelIndexList modelIndexList = selectedIndexes();
+    if (modelIndexList.size() != 1) return QPixmap();
+    auto curSelectedItem = static_cast<DStandardItem *>(m_model->itemFromIndex(modelIndexList.first()));
+    if (curSelectedItem->data(Qt::UserRole + 12).toString() == "CdaRole") return QPixmap();
+
+    QString text = curSelectedItem->text();
+
+    QFont font;
+    font.setPixelSize(12);
+    QFontMetrics fontMetrics(font);
+    text = fontMetrics.elidedText(text, Qt::ElideRight, 100);
+    int textWidth = fontMetrics.width(text) + DRAGICON_ROUNDRADIUS;
+    int textHeight = fontMetrics.height() + 4;
+
+    DBlurEffectWidget forwardWidget;
+    forwardWidget.setBlurRectXRadius(DRAGICON_ROUNDRADIUS);
+    forwardWidget.setBlurRectYRadius(DRAGICON_ROUNDRADIUS);
+    forwardWidget.setRadius(30);
+    forwardWidget.setBlurEnabled(true);
+    forwardWidget.setMaskColor(QColor(247, 247, 247, 154));
+    forwardWidget.setMaskAlpha(255);
+    forwardWidget.setMode(DBlurEffectWidget::GaussianBlur);
+    forwardWidget.setFixedSize(textWidth, textHeight);
+
+    QPixmap forwardPixmap = forwardWidget.grab();
+
+    QRect pixRect(0, 0, textWidth + DRAGICON_LEFTBORDER, textHeight + DRAGICON_TOPBORDER);
+    QPixmap pixmap(pixRect.size() * scale);
+    pixmap.setDevicePixelRatio(scale);
+    pixmap.fill(Qt::transparent);
+    QPainter painter(&pixmap);
+    painter.setRenderHint(QPainter::Antialiasing, true);
+    painter.setRenderHint(QPainter::SmoothPixmapTransform, true);
+
+    QRect textRect(DRAGICON_LEFTBORDER, DRAGICON_TOPBORDER, textWidth, textHeight);
+
+    painter.drawPixmap(textRect, forwardPixmap, QRect(0, 0, forwardPixmap.width(), forwardPixmap.height()));
+
+    painter.save();
+    painter.setFont(font);
+    painter.setBrush(Qt::black);
+    painter.drawText(textRect, text, QTextOption(Qt::AlignCenter));
+    painter.restore();
+
+    return pixmap;
+}
+
 void MusicSongListView::startDrag(Qt::DropActions supportedActions)
 {
     emit clicked(indexAt(mapFromGlobal(QCursor::pos())));
-    DListView::startDrag(supportedActions);
+
+    slotLineEditingFinished();
+    QModelIndexList modelIndexList = selectedIndexes();
+    if (modelIndexList.size() != 1) return;
+    auto curSelectedItem = static_cast<DStandardItem *>(m_model->itemFromIndex(modelIndexList.first()));
+    if (curSelectedItem->data(Qt::UserRole + 12).toString() == "CdaRole") return;
+
+    QByteArray itemData;
+    QDataStream dataStream(&itemData, QIODevice::WriteOnly);
+    dataStream << modelIndexList.first().row();
+
+    QMimeData *mimeData = new QMimeData;
+    mimeData->setData("MusicSongListView/x-datalist", itemData);
+
+    QDrag *drag = new QDrag(this);
+    drag->setPixmap(dragItemPixmap());
+    drag->setMimeData(mimeData);
+    Qt::DropAction dropAction = Qt::MoveAction;
+    drag->exec(supportedActions, dropAction);
 }
 
 void MusicSongListView::dragEnterEvent(QDragEnterEvent *event)
@@ -660,7 +733,9 @@ void MusicSongListView::dragEnterEvent(QDragEnterEvent *event)
         event->setDropAction(Qt::CopyAction);
         event->acceptProposedAction();
     } else if (event->source() == this) {
-        DListView::dragEnterEvent(event);
+        event->setDropAction(Qt::MoveAction);
+        event->acceptProposedAction();
+
         m_dragScrollTimer.start(200);
         m_isDraging = true;
         QModelIndex indexDrop = m_model->index(highlightedRow(), 0);
@@ -687,6 +762,9 @@ void MusicSongListView::dragMoveEvent(QDragMoveEvent *event)
             event->acceptProposedAction();
         }
     } else if (event->source() == this) {
+        event->setDropAction(Qt::MoveAction);
+        event->acceptProposedAction();
+
         int curRow = highlightedRow();
         if (curRow == -1) curRow = m_model->rowCount() - 1;
         QModelIndex indexDrop = m_model->index(curRow, 0);
@@ -768,10 +846,13 @@ void MusicSongListView::dropEvent(QDropEvent *event)
     if (event->source() == this) {
         auto curMimeData = event->mimeData();
         // 防止cd
-        if (curMimeData == nullptr || curMimeData->data("CdaRole").toInt() != 1)
+        if (curMimeData == nullptr)
             return;
 
-        auto preRow = curMimeData->data("ROW").toInt();
+        QByteArray itemData(curMimeData->data("MusicSongListView/x-datalist"));
+        QDataStream dataStream(&itemData, QIODevice::ReadOnly);
+        int preRow;
+        dataStream >> preRow;
         dropItem(preRow);
     } else {
         QModelIndex indexDrop = indexAt(event->pos());

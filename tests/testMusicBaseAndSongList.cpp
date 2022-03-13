@@ -141,12 +141,12 @@ TEST(Application, musicSongListViewDrag)
 
     // 拖动
     QPoint pos = QPoint(73, 21);
-    QPoint pos2 = QPoint(73, 100);
 
     QTest::mousePress(songListView, Qt::MouseButton::LeftButton, Qt::KeyboardModifiers(), pos, 300);
 
     songListView->dropItem(0);
     songListView->slotUpdateDragScroll();
+    songListView->dragItemPixmap();
 
     QTest::qWait(100);
 }

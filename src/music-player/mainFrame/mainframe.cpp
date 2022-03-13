@@ -51,6 +51,7 @@
 #include <DSettingsWidgetFactory>
 #include <DSettingsOption>
 #include <DApplicationHelper>
+#include <DApplication>
 
 #include <unistd.h>
 #include "./core/musicsettings.h"
@@ -81,39 +82,6 @@ const QString s_PropertyViewnameLyric = "lyric";
 const QString s_PropertyViewnamePlay = "playList";
 static DSettingsDialog *equalizer = nullptr;
 using namespace Dtk::Widget;
-
-static bool showWindowfromDBus()
-{
-    QVariant v = DBusUtils::readDBusProperty("com.deepin.dde.daemon.Dock", "/com/deepin/dde/daemon/Dock",
-                                             "com.deepin.dde.daemon.Dock", "Entries");
-
-    if (!v.isValid())
-        return false;
-
-    QList<QDBusObjectPath> allSinkInputsList = v.value<QList<QDBusObjectPath> >();
-
-    QString entryPath;
-    for (auto curPath : allSinkInputsList) {
-        QVariant nameV = DBusUtils::readDBusProperty("com.deepin.dde.daemon.Dock", curPath.path(),
-                                                     "com.deepin.dde.daemon.Dock.Entry", "Name");
-
-        if (!nameV.isValid() || nameV != Global::getAppName())
-            continue;
-
-        entryPath = curPath.path();
-        break;
-    }
-
-    QDBusInterface ainterface("com.deepin.dde.daemon.Dock", entryPath,
-                              "com.deepin.dde.daemon.Dock.Entry",
-                              QDBusConnection::sessionBus());
-    if (!ainterface.isValid()) {
-        return false;
-    }
-    ainterface.call(QLatin1String("Activate"), 1);
-
-    return true;
-}
 
 MainFrame::MainFrame()
 {
@@ -192,31 +160,14 @@ MainFrame::MainFrame()
         qApp->quit();
     });
     connect(Player::getInstance()->getMpris(), &MprisPlayer::raiseRequested, this, [ = ]() {
-        auto e = QProcessEnvironment::systemEnvironment();
-        QString XDG_SESSION_TYPE = e.value(QStringLiteral("XDG_SESSION_TYPE"));
-        QString WAYLAND_DISPLAY = e.value(QStringLiteral("WAYLAND_DISPLAY"));
-        if (isVisible()) {
-            // 最小化和激活窗口
-            if (isMinimized()) {
-                // 使用dbus显示窗口
-                if ((XDG_SESSION_TYPE != QLatin1String("wayland") && !WAYLAND_DISPLAY.contains(QLatin1String("wayland"), Qt::CaseInsensitive)) || !showWindowfromDBus()) {
-                    this->titlebar()->setFocus();
-                    show();
-                    raise();
-                    activateWindow();
-                    this->restoreGeometry(m_geometryBa);
-                }
-            } else {
-                raise();
-                activateWindow();
-            }
-        } else {
-            // 使用dbus显示窗口
-            this->titlebar()->setFocus();
-            show();
-            raise();
-            activateWindow();
+        if (!isVisible()) {
+            restoreGeometry(m_geometryBa);
         }
+        // 使用dbus显示窗口
+        this->titlebar()->setFocus();
+        show();
+        raise();
+        activateWindow();
     });
 
     connect(CommonService::getInstance(), &CommonService::signalSwitchToView, this, &MainFrame::slotViewChanged);
@@ -437,24 +388,12 @@ void MainFrame::initMenuAndShortcut()
     connect(m_sysTrayIcon, &QSystemTrayIcon::activated,
     this, [ = ](QSystemTrayIcon::ActivationReason reason) {
         if (QSystemTrayIcon::Trigger == reason) {
-            auto e = QProcessEnvironment::systemEnvironment();
-            QString XDG_SESSION_TYPE = e.value(QStringLiteral("XDG_SESSION_TYPE"));
-            QString WAYLAND_DISPLAY = e.value(QStringLiteral("WAYLAND_DISPLAY"));
-            if (isVisible()) {
-                // 最小化和激活窗口
-                if (isMinimized() || !isActiveWindow()) {
-                    // 使用dbus显示窗口
-                    if ((XDG_SESSION_TYPE != QLatin1String("wayland") && !WAYLAND_DISPLAY.contains(QLatin1String("wayland"), Qt::CaseInsensitive)) || !showWindowfromDBus()) {
-                        this->titlebar()->setFocus();
-                        show();
-                        raise();
-                        activateWindow();
-                    }
-                } else {
-                    hide();
-                    showMinimized();
-                }
+            if (isVisible() && !isMinimized()) {
+                showMinimized();
             } else {
+                if (!isVisible()) {
+                    restoreGeometry(m_geometryBa);
+                }
                 // 使用dbus显示窗口
                 this->titlebar()->setFocus();
                 show();
@@ -1037,7 +976,7 @@ void MainFrame::showEvent(QShowEvent *event)
             qint32 restoredScreenWidth = 0;
             stream >> restoredScreenWidth;
         }
-        restoreGeometry(m_geometryBa);
+//        restoreGeometry(m_geometryBa);
     }
     this->setFocus();
 
@@ -1111,6 +1050,7 @@ void MainFrame::resizeEvent(QResizeEvent *e)
 
 void MainFrame::closeEvent(QCloseEvent *event)
 {
+    Player::getInstance()->setVolume(Player::getInstance()->getVolume());
     //保存进度
     auto curPosition = Player::getInstance()->getActiveMeta().offset;
     //是否记录最后播放位置
@@ -1172,6 +1112,10 @@ void MainFrame::closeEvent(QCloseEvent *event)
         break;
     }
 
+    // 最小化时隐藏关于窗口
+    if (qApp->aboutDialog() != nullptr && qApp->aboutDialog()->isVisible()) {
+        qApp->aboutDialog()->hide();
+    }
     this->setFocus();
     DMainWindow::closeEvent(event);
 }

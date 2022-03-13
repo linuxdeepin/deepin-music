@@ -101,6 +101,7 @@ void DBOperate::slotImportMedias(const QString &importHash, QString playHash, co
     m_importFailCount = 0;
     // 包含导入成功和失败的
     double importedCount = 0;
+    qint64 preTime = QDateTime::currentDateTime().toMSecsSinceEpoch() * 1000;
     if (m_db.transaction()) {
         for (auto &filepath : urllist) {
             if (filepath.isEmpty()) {
@@ -127,6 +128,8 @@ void DBOperate::slotImportMedias(const QString &importHash, QString playHash, co
                     }
                     QString  strtp = it.next();
                     MediaMeta mediaMeta = m_mediaLibrary->creatMediaMeta(strtp);
+                    mediaMeta.timestamp = preTime >= mediaMeta.timestamp ? (preTime + 1) : mediaMeta.timestamp;
+                    preTime = mediaMeta.timestamp;
                     if (mediaMeta.length <= 0) {
                         m_importFailCount++;
                         importedCount++;
@@ -164,6 +167,8 @@ void DBOperate::slotImportMedias(const QString &importHash, QString playHash, co
                     continue;
                 }
                 MediaMeta mediaMeta = m_mediaLibrary->creatMediaMeta(strtp);
+                mediaMeta.timestamp = preTime >= mediaMeta.timestamp ? (preTime + 1) : mediaMeta.timestamp;
+                preTime = mediaMeta.timestamp;
                 if (mediaMeta.length <= 0) {
                     m_importFailCount++;
                 } else {

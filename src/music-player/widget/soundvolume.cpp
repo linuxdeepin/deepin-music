@@ -84,7 +84,8 @@ SoundVolume::SoundVolume(QWidget *parent)
     layout->addWidget(m_volSlider, 0, Qt::AlignCenter);
     layout->addWidget(m_btSound, 0, Qt::AlignHCenter);
     setFixedWidth(62);
-    setMinimumHeight(201);
+    // 藏语下显示高度不够
+    setMinimumHeight(210);
 
     auto *bodyShadow = new QGraphicsDropShadowEffect(this);
     bodyShadow->setBlurRadius(10.0);
@@ -118,7 +119,9 @@ int SoundVolume::volume() const
 
 void SoundVolume::setVolume(int value)
 {
+    Player::getInstance()->setVolume(value);
     m_volSlider->setValue(value);
+    updateUI(value);
 }
 
 void SoundVolume::flushVolumeIcon()
@@ -172,7 +175,7 @@ void SoundVolume::slotSetVolume(int volume)
 
 void SoundVolume::updateUI(int volume)
 {
-    Player::getInstance()->setVolume(volume);
+    Player::getInstance()->setVolume(volume, false);
 
     flushVolumeIcon();
     m_volPersent->setText(QString::number(volume) + QString("%"));
@@ -239,6 +242,12 @@ void SoundVolume::showEvent(QShowEvent *event)
 {
     flushVolumeIcon();
     QWidget::showEvent(event);
+}
+
+void SoundVolume::hideEvent(QHideEvent *event)
+{
+    Player::getInstance()->setVolume(m_volSlider->value());
+    QWidget::hideEvent(event);
 }
 
 void SoundVolume::enterEvent(QEvent *event)

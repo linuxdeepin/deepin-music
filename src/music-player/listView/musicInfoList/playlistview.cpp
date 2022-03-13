@@ -34,6 +34,7 @@
 #include <QMimeData>
 #include <QTimer>
 #include <QDrag>
+#include <QPainterPath>
 
 #include <DDialog>
 #include <DDesktopServices>
@@ -844,91 +845,73 @@ void PlayListView::slotMusicAddOne(const QString &listHash, MediaMeta addMeta)
             // 如果已经存在，则不加入
             if (!isContain(addMeta.hash)) {
                 bool isInserted = false;
-                // 升序排列
-                if (sortType == DataBaseService::SortByAddTimeASC || sortType == DataBaseService::SortByTitleASC
-                        || sortType == DataBaseService::SortBySingerASC || sortType == DataBaseService::SortByAblumASC) {
-                    for (int rowIndex = 0; rowIndex < m_model->rowCount(); rowIndex++) {
-                        isInserted = false;
-                        QModelIndex index = m_model->index(rowIndex, 0, QModelIndex());
-                        MediaMeta meta = index.data(Qt::UserRole).value<MediaMeta>();
-                        switch (sortType) {
-                        case DataBaseService::SortByAddTimeASC: {// 时间升序排列
-                            if (addMeta.timestamp <= meta.timestamp) {
-                                insertRow(rowIndex, addMeta);
-                                isInserted = true;
-                            }
-                            break;
+                for (int rowIndex = 0; rowIndex < m_model->rowCount(); rowIndex++) {
+                    isInserted = false;
+                    QModelIndex index = m_model->index(rowIndex, 0, QModelIndex());
+                    MediaMeta meta = index.data(Qt::UserRole).value<MediaMeta>();
+                    switch (sortType) {
+                    case DataBaseService::SortByAddTimeASC: {// 时间升序排列
+                        if (addMeta.timestamp <= meta.timestamp) {
+                            insertRow(rowIndex, addMeta);
+                            isInserted = true;
                         }
-                        case DataBaseService::SortByTitleASC: {// 标题升序排列
-                            if (addMeta.pinyinTitle <= meta.pinyinTitle) {
-                                insertRow(rowIndex, addMeta);
-                                isInserted = true;
-                            }
-                            break;
-                        }
-                        case DataBaseService::SortBySingerASC: {// 歌手名称升序排列
-                            if (addMeta.pinyinArtist <= meta.pinyinArtist) {
-                                insertRow(rowIndex, addMeta);
-                                isInserted = true;
-                            }
-                            break;
-                        }
-                        case DataBaseService::SortByAblumASC: {// 专辑名称升序排列
-                            if (addMeta.pinyinAlbum <= meta.pinyinAlbum) {
-                                insertRow(rowIndex, addMeta);
-                                isInserted = true;
-                            }
-                            break;
-                        }
-                        default:
-                            break;
-                        }
-                        //已查找到歌曲
-                        if (isInserted) {
-                            break;
-                        }
+                        break;
                     }
-                } else {// 降序排列
-                    for (int rowIndex = m_model->rowCount() - 1; rowIndex >= 0; rowIndex--) {
-                        isInserted = false;
-                        QModelIndex index = m_model->index(rowIndex, 0, QModelIndex());
-                        MediaMeta meta = index.data(Qt::UserRole).value<MediaMeta>();
-                        switch (sortType) {
-                        case DataBaseService::SortByAddTimeDES: {// 时间降序排列
-                            if (addMeta.timestamp >= meta.timestamp) {
-                                insertRow(rowIndex, addMeta);
-                                isInserted = true;
-                            }
-                            break;
+                    case DataBaseService::SortByTitleASC: {// 标题升序排列
+                        if (addMeta.pinyinTitle <= meta.pinyinTitle) {
+                            insertRow(rowIndex, addMeta);
+                            isInserted = true;
                         }
-                        case DataBaseService::SortByTitleDES: {// 标题降序排列
-                            if (addMeta.pinyinTitle >= meta.pinyinTitle) {
-                                insertRow(rowIndex, addMeta);
-                                isInserted = true;
-                            }
-                            break;
+                        break;
+                    }
+                    case DataBaseService::SortBySingerASC: {// 歌手名称升序排列
+                        if (addMeta.pinyinArtist <= meta.pinyinArtist) {
+                            insertRow(rowIndex, addMeta);
+                            isInserted = true;
                         }
-                        case DataBaseService::SortBySingerDES: {// 歌手名称降序排列
-                            if (addMeta.pinyinArtist >= meta.pinyinArtist) {
-                                insertRow(rowIndex, addMeta);
-                                isInserted = true;
-                            }
-                            break;
+                        break;
+                    }
+                    case DataBaseService::SortByAblumASC: {// 专辑名称升序排列
+                        if (addMeta.pinyinAlbum <= meta.pinyinAlbum) {
+                            insertRow(rowIndex, addMeta);
+                            isInserted = true;
                         }
-                        case DataBaseService::SortByAblumDES: {// 专辑名称降序排列
-                            if (addMeta.pinyinAlbum <= meta.pinyinAlbum) {
-                                insertRow(rowIndex, addMeta);
-                                isInserted = true;
-                            }
-                            break;
+                        break;
+                    }
+                    case DataBaseService::SortByAddTimeDES: {// 时间降序排列
+                        if (addMeta.timestamp >= meta.timestamp) {
+                            insertRow(rowIndex, addMeta);
+                            isInserted = true;
                         }
-                        default:
-                            break;
+                        break;
+                    }
+                    case DataBaseService::SortByTitleDES: {// 标题降序排列
+                        if (addMeta.pinyinTitle >= meta.pinyinTitle) {
+                            insertRow(rowIndex, addMeta);
+                            isInserted = true;
                         }
-                        //已查找到歌曲
-                        if (isInserted) {
-                            break;
+                        break;
+                    }
+                    case DataBaseService::SortBySingerDES: {// 歌手名称降序排列
+                        if (addMeta.pinyinArtist >= meta.pinyinArtist) {
+                            insertRow(rowIndex, addMeta);
+                            isInserted = true;
                         }
+                        break;
+                    }
+                    case DataBaseService::SortByAblumDES: {// 专辑名称降序排列
+                        if (addMeta.pinyinAlbum <= meta.pinyinAlbum) {
+                            insertRow(rowIndex, addMeta);
+                            isInserted = true;
+                        }
+                        break;
+                    }
+                    default:
+                        break;
+                    }
+                    //已查找到歌曲
+                    if (isInserted) {
+                        break;
                     }
                 }
 
@@ -983,11 +966,14 @@ void PlayListView::slotPlayMusic()
 
 void PlayListView::showDetailInfoDlg()
 {
-    if (!m_pInfoDlg) {
-        m_pInfoDlg = new InfoDialog(this);
-        AC_SET_OBJECT_NAME(m_pInfoDlg, AC_infoDialog);
-        AC_SET_ACCESSIBLE_NAME(m_pInfoDlg, AC_infoDialog);
+    // 信息对话框
+    if (m_pInfoDlg) {
+        delete m_pInfoDlg;
+        m_pInfoDlg = nullptr;
     }
+    m_pInfoDlg = new InfoDialog(this);
+    AC_SET_OBJECT_NAME(m_pInfoDlg, AC_infoDialog);
+    AC_SET_ACCESSIBLE_NAME(m_pInfoDlg, AC_infoDialog);
 
     QModelIndex mindex =  this->currentIndex();
     MediaMeta meta = mindex.data(Qt::UserRole).value<MediaMeta>();
@@ -1137,7 +1123,7 @@ void PlayListView::slotRmvFromSongList()
                 Player::getInstance()->playRmvMeta(metaList);
             }
             // 删除所有后停止播放
-            if (metaList.size() == m_model->rowCount()) Player::getInstance()->stop();
+            if (playListHash == m_currentHash && metaList.size() == m_model->rowCount() && m_currentHash != "album" && m_currentHash != "artist") Player::getInstance()->stop();
         } else {
             Player::getInstance()->playRmvMeta(metaList);
         }
@@ -1441,7 +1427,7 @@ QPixmap PlayListView::dragItemsPixmap()
     int textSize = fontMetrics.width(QString("%1").arg(modelIndexList.size()));
     if (textSize < fontMetrics.height()) textSize = fontMetrics.height();
     int testRadius = textSize / 2 + DRAGICON_TEXTBORDERSIZE;
-    QRect pixRect(0, 0, DRAGICON_SIZE + DRAGICON_LEFTBORDER + testRadius, DRAGICON_SIZE + testRadius + DRAGICON_TOPBORDER);
+    QRect pixRect(0, 0, DRAGICON_SIZE + DRAGICON_LEFTBORDER + testRadius, DRAGICON_SIZE + testRadius + DRAGICON_TOPBORDER + 10);
     QPixmap pixmap(pixRect.size() * scale);
     pixmap.setDevicePixelRatio(scale);
     pixmap.fill(Qt::transparent);
@@ -1457,9 +1443,26 @@ QPixmap PlayListView::dragItemsPixmap()
     for (int i = qMin(modelIndexList.size() - 1, 2); i >= 0; --i) {
         QStandardItem *newItem = m_model->itemFromIndex(modelIndexList.at(i));
         QPixmap pixmap1 = newItem->icon().pixmap(QSize(DRAGICON_SIZE, DRAGICON_SIZE));
-        pixmap1 = pixmap1.transformed(matrix, Qt::FastTransformation);
+        pixmap1 = pixmap1.transformed(matrix, Qt::SmoothTransformation);
+
+        // 绘制描边
         painter.save();
-        painter.rotate(-180 - i * 4);
+        QColor borderPenColor("#000000");
+        borderPenColor.setAlphaF(0.1);
+        painter.setPen(Qt::NoPen);
+        painter.setBrush(borderPenColor);
+        painter.rotate(-180 - i * 8);
+        QPainterPath borderRectPath;
+        borderRectPath.addRoundRect(pixmap1.rect().adjusted(-2, -2, 2, 2), 20, 20);
+        painter.drawPath(borderRectPath);
+        painter.restore();
+
+        QPainterPath roundPixmapRectPath;
+        roundPixmapRectPath.addRoundRect(pixmap1.rect(), 20, 20);
+        painter.save();
+        painter.setOpacity(i == 0 ? 1.0 : (i == 1 ? 0.8 : 0.5));
+        painter.rotate(-180 - i * 8);
+        painter.setClipPath(roundPixmapRectPath);
         painter.drawPixmap(0, 0, pixmap1);
         painter.restore();
     }
@@ -1559,8 +1562,9 @@ void PlayListView::updateDropIndicator()
     if (curRow == -1) curRow = m_model->rowCount() - 1;
     QModelIndex indexDrop = m_model->index(curRow, 0);
     //刷新旧区域使dropIndicator消失
-    update(m_preIndex);
-    update(indexDrop);
+    update(rect());
+//    update(m_preIndex);
+//    update(indexDrop);
     m_preIndex = indexDrop;
 }
 
@@ -1927,7 +1931,9 @@ void PlayListView::playMusic(const MediaMeta &meta)
             // 设置当前播放playlist的hash
             Player::getInstance()->setCurrentPlayListHash(m_currentHash, false);
         }
-        Player::getInstance()->playMeta(meta);
+        // 防止删除文件过程中播放音乐
+        if (!Player::getInstance()->getPlayList()->isEmpty())
+            Player::getInstance()->playMeta(meta);
     }
 }
 

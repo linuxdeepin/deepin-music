@@ -514,6 +514,7 @@ void MusicListDataWidget::resizeEvent(QResizeEvent *event)
 {
     QWidget::resizeEvent(event);
     m_lableWidget->setGeometry(m_actionBar->geometry());
+    refreshInfoLabel(m_currentHash);
 }
 
 // 大标题跟随size变化
@@ -525,8 +526,28 @@ void MusicListDataWidget::showEvent(QShowEvent *event)
     }
 }
 
+void MusicListDataWidget::playMetas(QList<MediaMeta> &metas)
+{
+    // 清空播放队列
+    Player::getInstance()->clearPlayList();
+    // 添加到播放列表
+    for (auto meta : metas) {
+        Player::getInstance()->playListAppendMeta(meta);
+    }
+
+    // 通知播放队列改变
+    Player::getInstance()->setCurrentPlayListHash(m_currentHash, false);
+    emit Player::getInstance()->signalPlayListChanged();
+
+    // 设置第一首播放音乐
+    if (Player::getInstance()->getPlayList()->size() > 0) {
+        Player::getInstance()->playMeta(Player::getInstance()->getPlayList()->first());
+    }
+}
+
 void MusicListDataWidget::slotPlayAllClicked()
 {
+    QList<MediaMeta> searchMetas;
     switch (CommonService::getInstance()->getListPageSwitchType()) {
     case AlbumType: {
         // 清空播放队列
@@ -640,12 +661,6 @@ void MusicListDataWidget::slotPlayAllClicked()
                         break;
                     }
                 }
-//                for (MediaMeta meta : singerTmp.musicinfos.values()) {
-//                    if (!metaList.contains(meta.hash)) {
-//                        playMeta = meta;
-//                        break;
-//                    }
-//                }
                 if (!playMeta.hash.isEmpty()) {
                     break;
                 }
@@ -671,42 +686,18 @@ void MusicListDataWidget::slotPlayAllClicked()
     // 同下共用
     case FavType:
     case CdaType:
-    case CustomType:
-        // 清空播放队列
-        Player::getInstance()->clearPlayList();
-        // 添加到播放列表
-        for (auto meta : m_musicListView->getMusicListData()) {
-            Player::getInstance()->playListAppendMeta(meta);
-        }
-
-        // 通知播放队列改变
-        Player::getInstance()->setCurrentPlayListHash(m_currentHash, false);
-        emit Player::getInstance()->signalPlayListChanged();
-
-        // 设置第一首播放音乐
-        if (Player::getInstance()->getPlayList()->size() > 0) {
-            Player::getInstance()->playMeta(Player::getInstance()->getPlayList()->first());
-        }
-        break;
+    case CustomType: {
+        searchMetas = m_musicListView->getMusicListData();
+        playMetas(searchMetas);
+    }
+    break;
     case SearchMusicResultType:
     case SearchSingerResultType:
-    case SearchAlbumResultType:
-        // 清空播放队列
-        Player::getInstance()->clearPlayList();
-        // 添加到播放列表
-        for (auto meta : m_searchResultTabWidget->getMusicListData()) {
-            Player::getInstance()->playListAppendMeta(meta);
-        }
-
-        // 通知播放队列改变
-        Player::getInstance()->setCurrentPlayListHash(m_currentHash, false);
-        emit Player::getInstance()->signalPlayListChanged();
-
-        // 设置第一首播放音乐
-        if (Player::getInstance()->getPlayList()->size() > 0) {
-            Player::getInstance()->playMeta(Player::getInstance()->getPlayList()->first());
-        }
-        break;
+    case SearchAlbumResultType: {
+        searchMetas = m_searchResultTabWidget->getCurMusicListData();
+        playMetas(searchMetas);
+    }
+    break;
     default:
         break;
     }
@@ -837,14 +828,9 @@ void MusicListDataWidget::initBtPlayAll(QHBoxLayout *layout)
     m_btPlayAll->setIcon(QIcon::fromTheme("play_all"));
     m_btPlayAll->setObjectName(AC_musicListDataPlayAll);
     m_btPlayAll->setText(tr("Play All"));
-    if (CommonService::getInstance()->isTabletEnvironment()) {
-        m_btPlayAll->setFixedSize(QSize(100, 40));
-    } else {
-        m_btPlayAll->setFixedSize(QSize(93, 30));
-        // 字体宽度加图标大于93,重新设置按钮宽度
-        QFontMetrics font(m_btPlayAll->font());
-        m_btPlayAll->setFixedWidth((font.width(m_btPlayAll->text()) + 18) >= 93 ? (font.width(m_btPlayAll->text()) + 38) : 93);
-    }
+    int btnWidth = CommonService::getInstance()->isTabletEnvironment() ? 100 : 93;
+    int btnHight = CommonService::getInstance()->isTabletEnvironment() ? 40 : 30;
+    m_btPlayAll->setMinimumSize(QSize(btnWidth, btnHight));
     m_btPlayAll->setFocusPolicy(Qt::NoFocus);
     m_btPlayAll->setIconSize(QSize(18, 18));
 
@@ -863,7 +849,7 @@ void MusicListDataWidget::initCountLabel(QHBoxLayout *layout)
     m_infoLabel = new DLabel(this);
     m_infoLabel->setObjectName("MusicListDataTitle");
     m_infoLabel->setText(tr("All Music"));
-    m_infoLabel->setWordWrap(true);
+    m_infoLabel->setWordWrap(false);
     m_infoLabel->setForegroundRole(DPalette::ButtonText);
     DFontSizeManager::instance()->bind(m_infoLabel, DFontSizeManager::T6, QFont::Medium);
 
@@ -1109,6 +1095,12 @@ void MusicListDataWidget::refreshInfoLabel(QString hash)
             m_pStackedWidget->setCurrentWidget(m_addMusicWidget);
         }
     }
+
+    // 文本太长显示...
+    QFontMetrics m_titleLabelFontMetrics(m_titleLabel->font());
+    int width = m_actionBar->width() / 2 - 20 - m_btPlayAll->width() - m_titleLabelFontMetrics.width(m_titleLabel->text()) / 2;
+    QFontMetrics font(m_infoLabel->font());
+    countStr = font.elidedText(countStr, Qt::ElideRight, width);
     m_infoLabel->setText(countStr);
 }
 
@@ -1195,6 +1187,11 @@ void MusicListDataWidget::refreshSortAction(const QString &hash)
                         searchSortType = DataBaseService::SortBySinger;
                         break;
                     }
+                    case DataBaseService::SortByCustomASC:
+                    case DataBaseService::SortByCustomDES: {
+                        searchSortType = DataBaseService::SortByCustom;
+                        break;
+                    }
                     default:
                         break;
                     }
@@ -1220,8 +1217,7 @@ void MusicListDataWidget::refreshSortAction(const QString &hash)
             }
         }
         // 搜索时防止专辑窗口不存在
-        if (m_albumListView)
-            m_albumDropdown->setEnabled(m_albumListView->model()->rowCount() > 0);
+        m_albumDropdown->setEnabled(hash == "albumResult" ? (m_searchResultTabWidget->getAlbumCount() > 0) : (m_albumListView->model()->rowCount() > 0));
     } else if (m_pStackedWidget->currentWidget() == m_singerListView ||
                (hash == "artistResult")) {
         m_musicDropdown->setVisible(false);
@@ -1236,8 +1232,7 @@ void MusicListDataWidget::refreshSortAction(const QString &hash)
             }
         }
         // 搜索时防止歌手窗口不存在
-        if (m_singerListView)
-            m_artistDropdown->setEnabled(m_singerListView->model()->rowCount() > 0);
+        m_artistDropdown->setEnabled(hash == "artistResult" ? (m_searchResultTabWidget->getSingerCount() > 0) : (m_singerListView->model()->rowCount() > 0));
     }
 }
 

@@ -132,7 +132,7 @@ AlbumListView::AlbumListView(const QString &hash, QWidget *parent)
 // 双击逻辑位置移动
 //    connect(this, &AlbumListView::doubleClicked, this, &AlbumListView::onDoubleClicked);
 
-    setSelectionMode(QListView::ExtendedSelection);
+    setSelectionMode(QListView::SingleSelection);
     setSelectionBehavior(QAbstractItemView::SelectRows);
 
     connect(DataBaseService::getInstance(), &DataBaseService::signalCoverUpdate,

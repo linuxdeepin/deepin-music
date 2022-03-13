@@ -94,7 +94,7 @@ static QString getFileCodex(QString dir)
 void MusicLyric::parseLyric(const QString &str)
 {
     auto lines = str.split("\n");
-    QRegExp rx("\\[([^\\]]*)\\]\\s*(\\S.*)");
+    QRegExp rx("\\[([^\\]]*)\\]\\s*(\\S.*\\S)\\s*$");
     QVector<QPair<qint64,QString>> tmp;
     for(auto line : lines) {
         rx.indexIn(line);
@@ -133,6 +133,7 @@ void MusicLyric::getFromFile(QString dir)
         read.setCodec(QTextCodec::codecForName(codeStr.toStdString().c_str()));
     }
     parseLyric(read.readAll());
+
 }
 
 /*

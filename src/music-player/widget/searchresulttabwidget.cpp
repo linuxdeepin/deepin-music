@@ -246,6 +246,38 @@ QList<MediaMeta> SearchResultTabWidget::getMusicListData()
     return m_musicListView->getMusicListData();
 }
 
+QList<MediaMeta> SearchResultTabWidget::getCurMusicListData()
+{
+    QList<MediaMeta> searchMetas;
+    // 获取当前页面数据
+    if (m_musicListView->isVisible()) {
+        searchMetas = m_musicListView->getMusicListData();
+    } else if (m_singerListView->isVisible()) {
+        for (auto singer : m_singerListView->getSingerListData()) {
+            foreach (auto meta, singer.musicinfos) {
+                searchMetas.append(meta);
+            }
+        }
+    } else if (m_albumListView->isVisible()) {
+        for (auto album : m_albumListView->getAlbumListData()) {
+            foreach (auto meta, album.musicinfos) {
+                searchMetas.append(meta);
+            }
+        }
+    }
+    return searchMetas;
+}
+
+QList<SingerInfo> SearchResultTabWidget::getSingerListData()
+{
+    return m_singerListView->getSingerListData();
+}
+
+QList<AlbumInfo> SearchResultTabWidget::getAlbumListData()
+{
+    return m_albumListView->getAlbumListData();
+}
+
 void SearchResultTabWidget::setCurrentPage(ListPageSwitchType type)
 {
     if (type == SearchMusicResultType) {

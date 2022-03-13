@@ -141,25 +141,25 @@ void InfoDialog::initUI()
              << InfoDialog::tr("Size:") << InfoDialog::tr("Duration:")
              << InfoDialog::tr("Path:");
 
+    QFontMetrics fm(DFontSizeManager::instance()->get(DFontSizeManager::T8));
+    int maxWidth = 140;
+    for (int i = 0; i < infoKeys.length(); ++i) {
+        maxWidth  = maxWidth > (fm.width(infoKeys.value(i)) + 10) ? maxWidth : (fm.width(infoKeys.value(i)) + 10);
+    }
+
     for (int i = 0; i < infoKeys.length(); ++i) {
         auto infoKey = new DLabel(infoKeys.value(i));
-//        auto infoFont = infoKey->font();
-//        infoFont.setPointSize(8);
-//        infoKey->setFont(infoFont);
         infoKey->setObjectName("InfoKey");
-//        infoKey->setMinimumHeight(18);
         infoKey->setForegroundRole(DPalette::WindowText);
         infoKey->setAlignment(Qt::AlignLeft | Qt::AlignTop);
         DFontSizeManager::instance()->bind(infoKey, DFontSizeManager::T8);
         keyList << infoKey;
 
         auto infoValue = new DLabel(this);
-//        infoValue->setFont(infoFont);
         infoValue->setWordWrap(true);
         infoValue->setObjectName("InfoValue");
-//        infoValue->setMinimumHeight(28);
-        infoValue->setMinimumWidth(200);
-        infoValue->setMaximumWidth(260);
+        infoValue->setMinimumWidth(140);
+        infoValue->setMaximumWidth(300 - maxWidth);
         infoValue->setAlignment(Qt::AlignLeft | Qt::AlignTop);
         infoValue->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
         infoValue->setForegroundRole(DPalette::WindowText);
@@ -198,9 +198,9 @@ void InfoDialog::initUI()
 void InfoDialog::updateLabelSize()
 {
     title->adjustSize();
-    auto h = 0;
-    for (auto label : valueList) {
-        h += label->size().height() + 6 + 6;
+    auto h = title->height() + 10;
+    for (int i = 0; i < valueList.length(); ++i) {
+        h += i != keyList[i]->size().height() > valueList[i]->size().height() ? (keyList[i]->size().height() + 6 + 6) : (valueList[i]->size().height() + 6 + 6);
     }
     infoGridFrame->setFixedHeight(h);
     infoGridFrame->adjustSize();
@@ -250,7 +250,7 @@ void InfoDialog::updateInfo(const MediaMeta meta)
                 QString str = geteElidedText(valueList.value(i)->font(), infoValues.value(i), valueList.value(i)->width() * 3 / 2);
                 valueList.value(i)->setText(str);
                 QRect rec = fontWidth.boundingRect(valueList.value(i)->text());
-                valueList.value(i)->setFixedHeight(2 * rec.height());
+                valueList.value(i)->setFixedHeight(5 * rec.height() / 2);
 
             } else {
                 DoubleElements = false;

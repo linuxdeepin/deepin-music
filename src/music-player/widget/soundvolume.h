@@ -57,6 +57,7 @@ public slots:
     void slotTimeOut();
 protected:
     virtual void showEvent(QShowEvent *event) Q_DECL_OVERRIDE;
+    virtual void hideEvent(QHideEvent *event) Q_DECL_OVERRIDE;
     virtual void enterEvent(QEvent *event) Q_DECL_OVERRIDE;
     virtual void leaveEvent(QEvent *event) Q_DECL_OVERRIDE;
     virtual void wheelEvent(QWheelEvent *event) Q_DECL_OVERRIDE;

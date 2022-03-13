@@ -43,26 +43,14 @@ bool MusicBaseAndSonglistModel::setData(const QModelIndex &index, const QVariant
     return QStandardItemModel::setData(index, value, role);
 }
 
-//Qt::DropActions MusicBaseAndSonglistModel::supportedDropActions() const
-//{
-//    return Qt::CopyAction;
-//}
-
-QMimeData *MusicBaseAndSonglistModel::mimeData(const QModelIndexList &indexes) const
+Qt::DropActions MusicBaseAndSonglistModel::supportedDropActions() const
 {
-    auto curMimeData = QStandardItemModel::mimeData(indexes);
-    if (curMimeData != nullptr && indexes.count() == 1) {
-        auto curSelectedItem = static_cast<DStandardItem *>(itemFromIndex(indexes.first()));
-        if (curSelectedItem->row() != 0 || curSelectedItem->data(Qt::UserRole + 12).toString() != "CdaRole") {
-            curMimeData->setData("CdaRole", QByteArray::number(1));
-            curMimeData->setData("ROW", QByteArray::number(curSelectedItem->row()));
-        }
-    }
-    return curMimeData;
+    return Qt::IgnoreAction;;
 }
 
 Qt::ItemFlags MusicBaseAndSonglistModel::flags(const QModelIndex &index) const
 {
-    return index.isValid() ? Qt::ItemIsDropEnabled | QStandardItemModel::flags(index) : QStandardItemModel::flags(index);
+    Qt::ItemFlags defaultFlags = QAbstractItemModel::flags(index);
+    return Qt::ItemIsDragEnabled | defaultFlags;
 }
 

@@ -46,6 +46,7 @@
 #include "footerwidget.h"
 #include "commonservice.h"
 #include "mainframe.h"
+#include "ac-desktop-define.h"
 
 DWIDGET_USE_NAMESPACE
 DGUI_USE_NAMESPACE
@@ -81,10 +82,9 @@ PlayQueueWidget::PlayQueueWidget(QWidget *parent) :
     DFontSizeManager::instance()->bind(m_btClearAll, DFontSizeManager::T6);
     m_btClearAll->setObjectName("PlayListPlayAll");
     m_btClearAll->setText(tr("Empty"));
-    m_btClearAll->setFixedHeight(30);
-    if (CommonService::getInstance()->isTabletEnvironment()) {
-        m_btClearAll->setFixedSize(QSize(100, 40));
-    }
+    int btnWidth = CommonService::getInstance()->isTabletEnvironment() ? 100 : 93;
+    int btnHight = CommonService::getInstance()->isTabletEnvironment() ? 40 : 30;
+    m_btClearAll->setMinimumSize(QSize(btnWidth, btnHight));
 
     m_btClearAll->setFocusPolicy(Qt::TabFocus);
     m_btClearAll->setDefault(true);
@@ -347,7 +347,7 @@ void PlayQueueWidget::autoHidden(QWidget *old, QWidget *now)
 {
     if (old && now) {
         if (!(now->objectName() == "infoDialog" || now->objectName() == "InfoTitle" ||
-                now->objectName() == "MainFrame" || now->objectName() == "messageBox"))  {
+                now->objectName() == "MainFrame" || now->objectName() == "messageBox" || now->objectName() == AC_customizeListview))  {
 
             PlayListView *playListQueue = dynamic_cast<PlayListView *>(now);
 
