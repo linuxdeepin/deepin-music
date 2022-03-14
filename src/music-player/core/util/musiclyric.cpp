@@ -24,6 +24,7 @@
 #include <QTextStream>
 #include <QFileDialog>
 #include <QTextCodec>
+#include <QTime>
 #include <QDebug>
 
 #include "util/basetool.h"
@@ -90,15 +91,37 @@ static QString getFileCodex(QString dir)
     return code;
 }
 
+void MusicLyric::parseLyric(const QString &str)
+{
+    auto lines = str.split("\n");
+    // [(match time)](optional spaces)(match content=non-space+anything+non-space or non-space)(optional spaces)
+    QRegExp rx("\\[([^\\]]*)\\]\\s*(\\S.*\\S|\\S)\\s*$");
+    QVector<QPair<qint64,QString>> tmp;
+    for(auto line : lines) {
+        rx.indexIn(line);
+        auto timeStr = rx.capturedTexts()[1];
+        auto lyricStr = rx.capturedTexts()[2];
+        QTime t = QTime::fromString(timeStr,"mm:ss.z");
+        qint64 time = t.msecsSinceStartOfDay();
+        if(t.isValid())
+            tmp.push_back({time,lyricStr});
+    }
+    std::sort(tmp.begin(),tmp.end());
+    this->postion.clear();
+    this->line.clear();
+    for(auto item:tmp) {
+        this->postion.push_back(item.first);
+        this->line.push_back(item.second);
+    }
+}
+
 void MusicLyric::getFromFile(QString dir)
 {
-    qDebug() << "Lyric dir:" << dir << endl;
+    qDebug() << "Lyric dir:" << dir << Qt::endl;
     this->filedir = dir;
     //this->offset
     this->line.clear();
     this->postion.clear();
-    //先使用暴力的字符串匹配，还不会正则表达式
-    //时间复杂度O(n)
     QString codeStr = getFileCodex(dir);
     QFile file(dir);
     if (!file.exists()) return;
@@ -108,46 +131,7 @@ void MusicLyric::getFromFile(QString dir)
     if (!codeStr.isEmpty()) {
         read.setCodec(QTextCodec::codecForName(codeStr.toStdString().c_str()));
     }
-    qint64 mm;
-    double ss = 0.0;
-    QMap<qint64, QString> ans;
-    while (!read.atEnd()) {
-        QString lineStr = read.readLine();
-        if (lineStr.isEmpty() || lineStr[0] != '[')
-            continue;
-        QStringList curLineList = lineStr.split('[');
-        for (auto curLineStr : curLineList) {
-
-            QStringList lineList = curLineStr.split(']');
-            if (lineList.isEmpty() || lineList[0].size() < 3)
-                continue;
-
-            QString str;
-            if (lineList.size() == 2)
-                str = lineList[1].trimmed();
-            QString t_timeStr = lineList[0].remove(0, 1);
-            QStringList t_timelist = t_timeStr.split(':');
-            if (t_timelist.size() != 2)
-                continue;
-            bool flag = false;
-            mm = t_timelist[0].toLongLong(&flag, 10);
-            if (flag) {
-                ss = t_timelist[1].toDouble(&flag);
-                if (flag) {
-                    qint64  curtime = (qint64)(ss * 1000) + mm * 60 * 1000;
-                    if(!str.isEmpty()){
-                        ans.insert(curtime, str);
-                    }
-                }
-            }
-        }
-    }
-
-    QMap<qint64, QString>::iterator it;
-    for (it = ans.begin(); it != ans.end(); ++it) {
-        this->postion.push_back(it.key());
-        this->line.push_back(it.value());
-    }
+    parseLyric(read.readAll());
 }
 
 /*

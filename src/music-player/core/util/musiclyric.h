@@ -41,6 +41,8 @@ private:
     double offset;
     QVector<qint64> postion;
     QVector<QString> line;
+
+    void parseLyric(const QString& str);
 };
 
 #endif // LYRIC_H
