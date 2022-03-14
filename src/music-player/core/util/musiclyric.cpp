@@ -117,7 +117,7 @@ void MusicLyric::parseLyric(const QString &str)
 
 void MusicLyric::getFromFile(QString dir)
 {
-    qDebug() << "Lyric dir:" << dir << Qt::endl;
+    qDebug() << "Lyric dir:" << dir << endl;
     this->filedir = dir;
     //this->offset
     this->line.clear();
