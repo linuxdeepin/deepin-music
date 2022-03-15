@@ -2,7 +2,7 @@ name: backup to gitlab
 on: [push]
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
+  group: ${{ github.workflow }}
   cancel-in-progress: true
 
 jobs:
@@ -30,6 +30,7 @@ jobs:
           jenkins-bridge-client -printlog -token "${{ secrets.BRIDGETOKEN }}" -runid "${{ steps.generate-runid.outputs.RUN_ID }}"
 
   backup-to-gitee:
+    if: github.repository_owner == 'linuxdeepin'
     runs-on: ubuntu-latest
     steps:
       - name: create-repo
