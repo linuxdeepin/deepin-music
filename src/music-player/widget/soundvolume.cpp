@@ -246,7 +246,7 @@ void SoundVolume::showEvent(QShowEvent *event)
 
 void SoundVolume::hideEvent(QHideEvent *event)
 {
-    Player::getInstance()->setVolume(m_volSlider->value());
+    MusicSettings::setOption("base.play.volume", m_volSlider->value());
     QWidget::hideEvent(event);
 }
 
