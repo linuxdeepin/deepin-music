@@ -839,7 +839,7 @@ void PlayListView::slotMusicAddOne(const QString &listHash, MediaMeta addMeta)
         }
         DataBaseService::ListSortType sortType = getSortType();//getSortType();
         // 播放队列直接加载最后
-        if (m_model->rowCount() == 0 || m_IsPlayQueue) {
+        if (m_model->rowCount() == 0 || (m_IsPlayQueue && !isContain(addMeta.hash))) {
             insertRow(m_model->rowCount(), addMeta);
         } else {
             // 如果已经存在，则不加入
