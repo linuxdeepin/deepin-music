@@ -134,7 +134,7 @@ int main(int argc, char *argv[])
         }
     }
 
-    if (!app->setSingleInstance("deepinmusic") || !checkOnly()) {
+    if (!app->setSingleInstance("deepinmusic") || !bc) {
         qDebug() << "another deepin music has started";
         QDBusInterface speechbus("org.mpris.MediaPlayer2.DeepinMusic",
                                  "/org/mpris/speech",
