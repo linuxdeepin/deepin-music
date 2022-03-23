@@ -102,6 +102,27 @@ public slots:
     */
     void setTime(qint64 time);
 
+    /**
+     * Set current software audio volume.
+     *
+     * \param i_volume the volume in percents (0 = mute, 100 = 0dB)
+     * \return 0 if the volume was set, -1 if it was out of range
+     */
+    void setVolume(int volume);
+
+    /**
+     * Set mute status.
+     *
+     * \param status If status is true then mute, otherwise unmute
+     * \warning This function does not always work. If there are no active audio
+     * playback stream, the mute status might not be available. If digital
+     * pass-through (S/PDIF, HDMI...) is in use, muting may be unapplicable. Also
+     * some audio output plugins do not support muting at all.
+     * \note To force silent playback, disable all audio tracks. This is more
+     * efficient and reliable than mute.
+     */
+    void setMute(bool mute);
+
 public:
     /*!
         \brief Get the current movie time (in ms).
@@ -120,6 +141,21 @@ public:
         \return current media position (float)
     */
     float position();
+
+    /**
+     * Get current software audio volume.
+     *
+     * \return the software volume in percents
+     * (0 = mute, 100 = nominal / 0dB)
+     */
+    int getVolume();
+
+    /**
+     * Get current mute status.
+     *
+     * \return the mute status (boolean) if defined, -1 if undefined/unapplicable
+     */
+    bool getMute();
 
 public slots:
     /*! \brief Set the media position.

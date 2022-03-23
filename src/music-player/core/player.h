@@ -226,7 +226,6 @@ private:
     bool setMusicVolume(double volume);
     bool setMusicMuted(bool muted);
     bool isMusicMuted();
-    bool isDevValid();
     /***********************************************
      * if player stat is stop state or
      * device does not start

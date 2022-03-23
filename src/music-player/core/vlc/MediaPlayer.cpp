@@ -77,6 +77,11 @@ typedef void (*config_PutInt_func)(vlc_object_t *, const char *, int64_t);
 
 typedef int (*var_SetChecked_func)(vlc_object_t *, const char *, int, vlc_value_t);
 
+typedef int (*vlc_audio_set_volume_function)(libvlc_media_player_t *, int);
+typedef int (*vlc_audio_get_volume_function)(libvlc_media_player_t *);
+typedef int (*vlc_audio_set_mute_function)(libvlc_media_player_t *, int);
+typedef int (*vlc_audio_get_mute_function)(libvlc_media_player_t *);
+
 VlcMediaPlayer::VlcMediaPlayer(VlcInstance *instance)
     : QObject(instance)
 {
@@ -287,6 +292,26 @@ void VlcMediaPlayer::setTime(qint64 time)
     VlcError::showErrmsg();
 }
 
+void VlcMediaPlayer::setVolume(int volume)
+{
+    if (!_vlcMediaPlayer)
+        return;
+    vlc_audio_set_volume_function vlc_audio_set_volume = (vlc_audio_set_volume_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("libvlc_audio_set_volume");
+    vlc_audio_set_volume(_vlcMediaPlayer, volume);
+
+    VlcError::showErrmsg();
+}
+
+void VlcMediaPlayer::setMute(bool mute)
+{
+    if (!_vlcMediaPlayer)
+        return;
+    vlc_audio_set_mute_function vlc_audio_set_mute = (vlc_audio_set_mute_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("libvlc_audio_set_mute");
+    vlc_audio_set_mute(_vlcMediaPlayer, mute ? 1 : 0);
+
+    VlcError::showErrmsg();
+}
+
 Vlc::State VlcMediaPlayer::state() const
 {
     // It's possible that the vlc doesn't play anything
@@ -401,6 +426,22 @@ float VlcMediaPlayer::position()
         return -1;
     vlc_media_player_get_position_function vlc_media_player_get_position = (vlc_media_player_get_position_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("libvlc_media_player_get_position");
     return vlc_media_player_get_position(_vlcMediaPlayer);
+}
+
+int VlcMediaPlayer::getVolume()
+{
+    if (!_vlcMediaPlayer)
+        return -1;
+    vlc_audio_get_volume_function vlc_audio_get_volume = (vlc_audio_get_volume_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("libvlc_audio_get_volume");
+    return vlc_audio_get_volume(_vlcMediaPlayer);
+}
+
+bool VlcMediaPlayer::getMute()
+{
+    if (!_vlcMediaPlayer)
+        return -1;
+    vlc_audio_get_mute_function vlc_audio_get_mute = (vlc_audio_get_mute_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("libvlc_audio_get_mute");
+    return vlc_audio_get_mute(_vlcMediaPlayer) > 0 ? true : false;
 }
 
 void VlcMediaPlayer::setPosition(float pos)
