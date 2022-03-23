@@ -32,13 +32,13 @@ static bool waylandMode = false;
 
 QString Global::configPath()
 {
-    auto userConfigPath = DStandardPaths::standardLocations(QStandardPaths::AppConfigLocation).value(0);
+    auto userConfigPath = DStandardPaths::writableLocation(QStandardPaths::AppConfigLocation);
     return userConfigPath;
 }
 
 QString Global::cacheDir()
 {
-    auto userCachePath = DStandardPaths::standardLocations(QStandardPaths::CacheLocation).value(0);
+    auto userCachePath = DStandardPaths::writableLocation(QStandardPaths::CacheLocation);
     return userCachePath;
 }
 

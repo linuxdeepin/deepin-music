@@ -283,7 +283,7 @@ void Player::resume()
      * 1.audio service dbus not start
      * 2.audio device not start
      * ****************************************************************************************/
-    if (m_qvplayer->state() == Vlc::Stopped  || (!isDevValid() &&  m_qvplayer->time() == 0)) {
+    if (m_qvplayer->state() == Vlc::Stopped  || (!isValidDbusMute() &&  m_qvplayer->time() == 0)) {
         //reopen data
         m_qvmedia->initMedia(m_ActiveMeta.localPath, true, m_qvinstance);
         m_qvplayer->open(m_qvmedia);
@@ -760,10 +760,10 @@ Player::PlaybackMode Player::mode() const
 
 bool Player::getMuted()
 {
-    if (isDevValid())
-        return isMusicMuted();
-    else
-        return MusicSettings::value("base.play.mute").toBool();
+    if (m_qvinstance == nullptr || m_qvplayer == nullptr || m_qvmedia == nullptr) {
+        initVlc();
+    }
+    return MusicSettings::value("base.play.mute").toBool();
 }
 
 qint64 Player::duration()
@@ -840,7 +840,6 @@ void Player::setVolume(int volume, bool sync)
     m_volume = volume;
     if (sync) MusicSettings::setOption("base.play.volume", volume);
     setMuted(volume == 0 ? true : false, sync);
-    m_mpris->setVolume(static_cast<double>(volume) / 100);
 
     //+1会造成获取音量值不正确，取消+1
     setMusicVolume((volume) / 100.0);
@@ -849,10 +848,12 @@ void Player::setVolume(int volume, bool sync)
 
 void Player::setMuted(bool mute, bool sync)
 {
+    Q_UNUSED(sync)
     if (!setMusicMuted(mute))  //audio服务未启动
         qDebug() << "audio service not started,mute can not be set";
     //使用本地静音配置
-    if (sync) MusicSettings::setOption("base.play.mute", mute);
+    if (MusicSettings::value("base.play.mute").toBool() != mute)
+        MusicSettings::setOption("base.play.mute", mute);
 }
 
 void Player::setActiveMeta(const MediaMeta &meta)
@@ -1071,25 +1072,6 @@ void Player::onSleepWhenTaking(bool sleep)
     }
 }
 
-bool Player::isValidDbusMute()
-{
-    readSinkInputPath();
-    if (!m_sinkInputPath.isEmpty()) {
-        QVariant MuteV = DBusUtils::readDBusProperty("com.deepin.daemon.Audio", m_sinkInputPath,
-                                                     "com.deepin.daemon.Audio.SinkInput", "Mute");
-        return MuteV.isValid();
-    }
-
-    return false;
-}
-
-//void Player::sigCdaTracksReady(const QList<MediaMeta> &list)
-//{
-//    foreach (MediaMeta meta, list) {
-//        qDebug() << __FUNCTION__ << "__track" << meta.track;
-//    }
-//}
-
 void Player::readSinkInputPath()
 {
     QVariant v = DBusUtils::readDBusProperty("com.deepin.daemon.Audio", "/com/deepin/daemon/Audio",
@@ -1112,72 +1094,7 @@ void Player::readSinkInputPath()
     }
 }
 
-bool Player::setMusicVolume(double volume)
-{
-    if (volume > 1.0) {
-        volume = 1.000;
-    }
-
-    m_mpris->setVolume(volume);
-
-    readSinkInputPath();
-    if (!m_sinkInputPath.isEmpty()) {
-        QDBusInterface ainterface("com.deepin.daemon.Audio", m_sinkInputPath,
-                                  "com.deepin.daemon.Audio.SinkInput",
-                                  QDBusConnection::sessionBus());
-        if (!ainterface.isValid()) {
-            return false;
-        }
-
-        //调用设置音量
-        ainterface.call(QLatin1String("SetVolume"), volume, false);
-
-        if (qFuzzyCompare(volume, 0.0))
-            ainterface.call(QLatin1String("SetMute"), true);
-        return true;
-    }
-    return false;
-}
-
-bool Player::setMusicMuted(bool muted)
-{
-    readSinkInputPath();
-    if (!m_sinkInputPath.isEmpty()) {
-        QDBusInterface ainterface("com.deepin.daemon.Audio", m_sinkInputPath,
-                                  "com.deepin.daemon.Audio.SinkInput",
-                                  QDBusConnection::sessionBus());
-        if (!ainterface.isValid()) {
-            return false;
-        }
-
-        //调用设置音量
-        MusicSettings::setOption("base.play.mute", muted);
-        ainterface.call(QLatin1String("SetMute"), muted);
-        emit signalMutedChanged();
-        return true;
-    }
-
-    return false;
-}
-
-bool Player::isMusicMuted()
-{
-    readSinkInputPath();
-    if (!m_sinkInputPath.isEmpty()) {
-        QVariant MuteV = DBusUtils::readDBusProperty("com.deepin.daemon.Audio", m_sinkInputPath,
-                                                     "com.deepin.daemon.Audio.SinkInput", "Mute");
-
-        if (!MuteV.isValid()) {
-            return false;
-        }
-
-        return MuteV.toBool();
-    }
-
-    return false;
-}
-
-bool Player::isDevValid()
+bool Player::isValidDbusMute()
 {
     readSinkInputPath();
     if (!m_sinkInputPath.isEmpty()) {
@@ -1187,6 +1104,43 @@ bool Player::isDevValid()
     }
 
     return false;
+}
+
+bool Player::setMusicVolume(double volume)
+{
+    if (volume > 1.0) {
+        volume = 1.000;
+    }
+
+    m_mpris->setVolume(volume);
+
+    if (m_qvinstance == nullptr || m_qvplayer == nullptr || m_qvmedia == nullptr) {
+        initVlc();
+    }
+    m_qvplayer->setVolume(int(volume * 100));
+
+    return false;
+}
+
+bool Player::setMusicMuted(bool muted)
+{
+    if (m_qvinstance == nullptr || m_qvplayer == nullptr || m_qvmedia == nullptr) {
+        initVlc();
+    }
+    if (!QFile::exists(m_ActiveMeta.localPath) && m_ActiveMeta.mmType != MIMETYPE_CDA) {
+        return false;
+    }
+    m_qvplayer->setMute(muted);
+
+    return true;
+}
+
+bool Player::isMusicMuted()
+{
+    if (m_qvinstance == nullptr || m_qvplayer == nullptr || m_qvmedia == nullptr) {
+        initVlc();
+    }
+    return m_qvplayer->getMute();
 }
 
 void Player::initVlc()
