@@ -322,7 +322,7 @@ void MainFrame::initMenuAndShortcut()
 
     //初始化托盘
     auto playAction = new QAction(tr("Play/Pause"), this);
-    playAction->setEnabled(m_importWidget == nullptr);
+    playAction->setEnabled(DataBaseService::getInstance()->allMusicInfos().size() > 0);
     auto prevAction = new QAction(tr("Previous"), this);
     prevAction->setEnabled(false);
     auto nextAction = new QAction(tr("Next"), this);

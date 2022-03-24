@@ -122,7 +122,7 @@ void FooterWidget::initUI(QWidget *parent)
 //    layout->setContentsMargins(0, 0, 10, 0);
 //    mainVBoxlayout->addWidget(downWidget);
 
-    m_btPrev = new DButtonBoxButton(QIcon::fromTheme("music_last"), "", this);
+    m_btPrev = new DButtonBoxButton(QIcon(":/icons/deepin/builtin/texts/music_last_36px.svg"), "", this);
     m_btPrev->setIconSize(QSize(36, 36));
     m_btPrev->setObjectName("FooterActionPrev");
     m_btPrev->setFixedSize(40, 50);
@@ -136,7 +136,7 @@ void FooterWidget::initUI(QWidget *parent)
     AC_SET_OBJECT_NAME(m_btPlay, AC_Play);
     AC_SET_ACCESSIBLE_NAME(m_btPlay, AC_Play);
 
-    m_btNext = new DButtonBoxButton(QIcon::fromTheme("music_next"), "", this);
+    m_btNext = new DButtonBoxButton(QIcon(":/icons/deepin/builtin/texts/music_next_36px.svg"), "", this);
     m_btNext->setIconSize(QSize(36, 36));
     m_btNext->setObjectName("FooterActionNext");
     m_btNext->setFixedSize(40, 50);
@@ -883,6 +883,9 @@ void FooterWidget::slotTheme(int type)
         pl.setColor(DPalette::FrameBorder, framecolor);
         pl.setColor(DPalette::Shadow, framecolor);
         DApplicationHelper::instance()->setPalette(m_ctlWidget, pl);
+
+        m_btPrev->setIcon(QIcon(":/icons/deepin/builtin/texts/music_last_36px.svg"));
+        m_btNext->setIcon(QIcon(":/icons/deepin/builtin/texts/music_next_36px.svg"));
     } else {
         QColor maskColor(32, 32, 32);
         maskColor.setAlphaF(0.80);
@@ -919,6 +922,9 @@ void FooterWidget::slotTheme(int type)
         pl.setColor(DPalette::FrameBorder, framecolor);
         pl.setColor(DPalette::Shadow, framecolor);
         DApplicationHelper::instance()->setPalette(m_ctlWidget, pl);
+
+        m_btPrev->setIcon(QIcon(":/icons/deepin/builtin/texts/music_last_light_36px.svg"));
+        m_btNext->setIcon(QIcon(":/icons/deepin/builtin/texts/music_next_light_36px.svg"));
     }
 
     m_waveform->setThemeType(type);
