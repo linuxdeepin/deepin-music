@@ -134,7 +134,7 @@ int main(int argc, char *argv[])
         }
     }
 
-    if (!app->setSingleInstance("deepinmusic") || !checkOnly()) {
+    if (!app->setSingleInstance("deepinmusic") || !bc) {
         qDebug() << "another deepin music has started";
         QDBusInterface speechbus("org.mpris.MediaPlayer2.DeepinMusic",
                                  "/org/mpris/speech",
@@ -175,21 +175,15 @@ int main(int argc, char *argv[])
 bool checkOnly()
 {
     //single
-    QString userName = QDir::homePath().section("/", -1, -1);
-    std::string path;
-    if (userName == "root") {
-        path = "/tmp/deepin-music/";
-    } else {
-        path = ("/home/" + userName + "/.cache/deepin/deepin-music/").toStdString();
-    }
-    QDir tdir(path.c_str());
+    QString path = DStandardPaths::writableLocation(QStandardPaths::AppConfigLocation);
+    QDir tdir(path);
     if (!tdir.exists()) {
-        bool ret =  tdir.mkpath(path.c_str());
-        qDebug() << ret ;
+        bool ret =  tdir.mkpath(path);
+        qDebug() << __func__ << ret ;
     }
 
-    path += "single";
-    int fd = open(path.c_str(), O_WRONLY | O_CREAT, 0644);
+    path += "/single";
+    int fd = open(path.toLocal8Bit().toStdString().c_str(), O_WRONLY | O_CREAT, 0644);
     int flock = lockf(fd, F_TLOCK, 0);
 
     if (fd == -1) {
