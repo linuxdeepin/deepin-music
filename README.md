@@ -68,11 +68,6 @@ The executable binary file could be found at `/usr/bin/deepin-music`
 
 Execute `deepin-music`
 
-## Documentations
-
- - [Development Documentation](https://linuxdeepin.github.io/)
- - [User Documentation](https://wikidev.uniontech.com/index.php?title=%E9%9F%B3%E4%B9%90) | [用户文档](https://wikidev.uniontech.com/index.php?title=音乐)
-
 ## Getting help
 
  - [Official Forum](https://bbs.deepin.org/)
