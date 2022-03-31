@@ -33,21 +33,21 @@ public:
 
 public:
     // 初始化
-    void init() Q_DECL_OVERRIDE;
+    void init() override;
     // 释放资源
-    void release() Q_DECL_OVERRIDE;
-    PlayerBase::PlayState state() Q_DECL_OVERRIDE;
-    void play() Q_DECL_OVERRIDE;
-    void pause() Q_DECL_OVERRIDE;
-    void stop() Q_DECL_OVERRIDE;
-    int length() Q_DECL_OVERRIDE; //播放总时长
-    void setTime(qint64 time) Q_DECL_OVERRIDE;
-    qint64 time() Q_DECL_OVERRIDE;
-    void setVolume(int volume) Q_DECL_OVERRIDE;
-    void setMute(bool value) Q_DECL_OVERRIDE;
-    void setMediaMeta(MediaMeta meta) Q_DECL_OVERRIDE;
-    bool getMute() Q_DECL_OVERRIDE;
-    void setFadeInOutFactor(double fadeInOutFactor) Q_DECL_OVERRIDE;
+    void release() override;
+    PlayerBase::PlayState state() override;
+    void play() override;
+    void pause() override;
+    void stop() override;
+    int length() override; //播放总时长
+    void setTime(qint64 time) override;
+    qint64 time() override;
+    void setVolume(int volume) override;
+    void setMute(bool value) override;
+    void setMediaMeta(MediaMeta meta) override;
+    bool getMute() override;
+    void setFadeInOutFactor(double fadeInOutFactor) override;
 
 protected slots:
     void onMediaStatusChanged(QMediaPlayer::MediaStatus status);
