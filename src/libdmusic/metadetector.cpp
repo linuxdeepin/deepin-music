@@ -32,6 +32,7 @@
 #include <QByteArray>
 #include <QDir>
 #include <QString>
+#include <QImageReader>
 
 //#ifndef DISABLE_LIBAV
 #ifdef __cplusplus
@@ -48,6 +49,13 @@ extern "C" {
 #include <taglib/fileref.h>
 #include <taglib/taglib.h>
 #include <taglib/tpropertymap.h>
+#include <taglib/mpegfile.h>
+#include <taglib/id3v2tag.h>
+#include <taglib/id3v2frame.h>
+#include <taglib/id3v2header.h>
+#include <taglib/tag.h>
+#include <taglib/attachedpictureframe.h>
+#include <taglib/apetag.h>
 
 #include <unicode/ucnv.h>
 
@@ -57,8 +65,6 @@ extern "C" {
 
 static QMap<QString, QByteArray> localeCodes;
 
-
-typedef void (*register_all_function)(void);
 typedef AVFormatContext *(*format_alloc_context_function)(void);
 typedef int (*format_open_input_function)(AVFormatContext **, const char *, AVInputFormat *, AVDictionary **);
 typedef void (*format_free_context_function)(AVFormatContext *);
@@ -86,8 +92,6 @@ typedef int (*codec_receive_frame_function)(AVCodecContext *, AVFrame *);
 
 void MetaDetector::init()
 {
-    register_all_function register_all = FfmpegDynamicInstance::VlcFunctionInstance()->resolveSymbol("av_register_all");
-    register_all();
     localeCodes.insert("zh_CN", "GB18030");
 }
 
@@ -146,7 +150,7 @@ QList<QByteArray> MetaDetector::detectEncodings(const MediaMeta &meta)
     return detectEncodings(detectByte);
 }
 
-MediaMeta MetaDetector::updateMetaFromLocalfile(MediaMeta meta, const QFileInfo &fileInfo)
+MediaMeta MetaDetector::updateMetaFromLocalfile(MediaMeta meta, const QFileInfo &fileInfo, int engineType)
 {
     meta.localPath = fileInfo.absoluteFilePath();
     if (meta.localPath.isEmpty()) {
@@ -156,7 +160,7 @@ MediaMeta MetaDetector::updateMetaFromLocalfile(MediaMeta meta, const QFileInfo 
 
     meta = updateMediaFileTagCodec(meta, "", false);
 
-    if (meta.length == 0) {
+    if (meta.length == 0 && engineType == 1) {
         //#ifndef DISABLE_LIBAV
         format_alloc_context_function format_alloc_context = (format_alloc_context_function)FfmpegDynamicInstance::VlcFunctionInstance()->resolveSymbol("avformat_alloc_context", true);
         format_open_input_function format_open_input = (format_open_input_function)FfmpegDynamicInstance::VlcFunctionInstance()->resolveSymbol("avformat_open_input", true);
@@ -174,7 +178,6 @@ MediaMeta MetaDetector::updateMetaFromLocalfile(MediaMeta meta, const QFileInfo 
         }
         format_close_input(&pFormatCtx);
         format_free_context(pFormatCtx);
-        //#endif // DISABLE_LIBAV
     }
 
     meta.size = fileInfo.size();
@@ -304,7 +307,7 @@ MediaMeta MetaDetector::updateMediaFileTagCodec(MediaMeta &meta, const QByteArra
     return meta;
 }
 
-void MetaDetector::getCoverData(const QString &path, const QString &tmpPath, const QString &hash)
+void MetaDetector::getCoverData(const QString &path, const QString &tmpPath, const QString &hash, int engineType)
 {
     QString imagesDirPath = tmpPath + "/images";
     QString imageName = hash + ".jpg";
@@ -327,13 +330,69 @@ void MetaDetector::getCoverData(const QString &path, const QString &tmpPath, con
 
 //#ifndef DISABLE_LIBAV
     if (!path.isEmpty()) {
+        QImage image;
+        if (engineType == 1) {
+            format_alloc_context_function format_alloc_context = (format_alloc_context_function)FfmpegDynamicInstance::VlcFunctionInstance()->resolveSymbol("avformat_alloc_context", true);
+            format_open_input_function format_open_input = (format_open_input_function)FfmpegDynamicInstance::VlcFunctionInstance()->resolveSymbol("avformat_open_input", true);
+            format_close_input_function format_close_input = (format_close_input_function)FfmpegDynamicInstance::VlcFunctionInstance()->resolveSymbol("avformat_close_input", true);
+            format_free_context_function format_free_context = (format_free_context_function)FfmpegDynamicInstance::VlcFunctionInstance()->resolveSymbol("avformat_free_context", true);
+
+            AVFormatContext *pFormatCtx = format_alloc_context();
+            format_open_input(&pFormatCtx, path.toStdString().c_str(), nullptr, nullptr);
+
+            if (pFormatCtx) {
+                if (pFormatCtx->iformat != nullptr && pFormatCtx->iformat->read_header(pFormatCtx) >= 0) {
+                    for (unsigned int i = 0; i < pFormatCtx->nb_streams; i++) {
+                        if (pFormatCtx->streams[i]->disposition & AV_DISPOSITION_ATTACHED_PIC) {
+                            AVPacket pkt = pFormatCtx->streams[i]->attached_pic;
+                            image = QImage::fromData(static_cast<uchar *>(pkt.data), pkt.size);
+                            break;
+                        }
+                    }
+                }
+            }
+
+            format_close_input(&pFormatCtx);
+            format_free_context(pFormatCtx);
+        } else {
+#ifdef _WIN32
+            TagLib::MPEG::File f(path.toStdString().c_str());
+#else
+            TagLib::MPEG::File f(path.toStdString().c_str());
+#endif
+            TagLib::ID3v2::FrameList frameList = f.ID3v2Tag()->frameListMap()["APIC"];
+            if (!frameList.isEmpty()) {
+                TagLib::ID3v2::AttachedPictureFrame *picFrame = static_cast<TagLib::ID3v2::AttachedPictureFrame *>(frameList.front());
+                QBuffer buffer;
+                buffer.setData(picFrame->picture().data(), static_cast<int>(picFrame->picture().size()));
+                QImageReader imageReader(&buffer);
+                image = imageReader.read();
+            }
+        }
+
+        if (!image.isNull()) {
+            QBuffer buffer(&byteArray);
+            buffer.open(QIODevice::WriteOnly);
+            image.save(&buffer, "jpg");
+            image = image.scaled(QSize(200, 200), Qt::KeepAspectRatioByExpanding, Qt::SmoothTransformation);
+            image.save(imagesDirPath + "/" + imageName);
+        }
+    }
+//#endif // DISABLE_LIBAV
+    return;
+}
+// 获取音乐封面图片原图
+QPixmap MetaDetector::getCoverDataPixmap(MediaMeta meta, int engineType)
+{
+    QPixmap pixmap;
+    if (engineType == 1) {
         format_alloc_context_function format_alloc_context = (format_alloc_context_function)FfmpegDynamicInstance::VlcFunctionInstance()->resolveSymbol("avformat_alloc_context", true);
         format_open_input_function format_open_input = (format_open_input_function)FfmpegDynamicInstance::VlcFunctionInstance()->resolveSymbol("avformat_open_input", true);
         format_close_input_function format_close_input = (format_close_input_function)FfmpegDynamicInstance::VlcFunctionInstance()->resolveSymbol("avformat_close_input", true);
         format_free_context_function format_free_context = (format_free_context_function)FfmpegDynamicInstance::VlcFunctionInstance()->resolveSymbol("avformat_free_context", true);
 
         AVFormatContext *pFormatCtx = format_alloc_context();
-        format_open_input(&pFormatCtx, path.toStdString().c_str(), nullptr, nullptr);
+        format_open_input(&pFormatCtx, meta.localPath.toUtf8().data(), nullptr, nullptr);
 
         QImage image;
         if (pFormatCtx) {
@@ -347,52 +406,30 @@ void MetaDetector::getCoverData(const QString &path, const QString &tmpPath, con
                 }
             }
         }
-        if (!image.isNull()) {
-            QBuffer buffer(&byteArray);
-            buffer.open(QIODevice::WriteOnly);
-            image.save(&buffer, "jpg");
-            image = image.scaled(QSize(200, 200), Qt::KeepAspectRatioByExpanding, Qt::SmoothTransformation);
-            image.save(imagesDirPath + "/" + imageName);
-        } else {
-//            image = QImage(":/common/image/cover_max.svg");
-//            image = image.scaled(QSize(160, 160));
-//            image.save(imagesDirPath + "/" + imageName);
-        }
 
         format_close_input(&pFormatCtx);
         format_free_context(pFormatCtx);
-    }
-//#endif // DISABLE_LIBAV
-    return;
-}
-// 获取音乐封面图片原图
-QPixmap MetaDetector::getCoverDataPixmap(MediaMeta meta)
-{
-    format_alloc_context_function format_alloc_context = (format_alloc_context_function)FfmpegDynamicInstance::VlcFunctionInstance()->resolveSymbol("avformat_alloc_context", true);
-    format_open_input_function format_open_input = (format_open_input_function)FfmpegDynamicInstance::VlcFunctionInstance()->resolveSymbol("avformat_open_input", true);
-    format_close_input_function format_close_input = (format_close_input_function)FfmpegDynamicInstance::VlcFunctionInstance()->resolveSymbol("avformat_close_input", true);
-    format_free_context_function format_free_context = (format_free_context_function)FfmpegDynamicInstance::VlcFunctionInstance()->resolveSymbol("avformat_free_context", true);
-
-    AVFormatContext *pFormatCtx = format_alloc_context();
-    format_open_input(&pFormatCtx, meta.localPath.toUtf8().data(), nullptr, nullptr);
-
-    QPixmap pixmap;
-    QImage image;
-    if (pFormatCtx) {
-        if (pFormatCtx->iformat != nullptr && pFormatCtx->iformat->read_header(pFormatCtx) >= 0) {
-            for (unsigned int i = 0; i < pFormatCtx->nb_streams; i++) {
-                if (pFormatCtx->streams[i]->disposition & AV_DISPOSITION_ATTACHED_PIC) {
-                    AVPacket pkt = pFormatCtx->streams[i]->attached_pic;
-                    image = QImage::fromData(static_cast<uchar *>(pkt.data), pkt.size);
-                    break;
-                }
-            }
+        pixmap = QPixmap::fromImage(image);
+    } else {
+#ifdef _WIN32
+        TagLib::MPEG::File f(meta.localPath.toStdWString().c_str());
+#else
+        TagLib::MPEG::File f(meta.localPath.toStdString().c_str());
+#endif
+        TagLib::ID3v2::FrameList frameList = f.ID3v2Tag()->frameListMap()["APIC"];
+        QPixmap pixmap;
+        if (!frameList.isEmpty()) {
+            TagLib::ID3v2::AttachedPictureFrame *picFrame = static_cast<TagLib::ID3v2::AttachedPictureFrame *>(frameList.front());
+            QImage image;
+            QBuffer buffer;
+            buffer.setData(picFrame->picture().data(), static_cast<int>(picFrame->picture().size()));
+            QImageReader imageReader(&buffer);
+            image = imageReader.read();
+            pixmap = QPixmap::fromImage(image);
         }
+        f.clear();
     }
 
-    format_close_input(&pFormatCtx);
-    format_free_context(pFormatCtx);
-    pixmap = QPixmap::fromImage(image);
     return pixmap;
 }
 
@@ -400,91 +437,3 @@ MetaDetector::MetaDetector()
 {
     init();
 }
-
-//QVector<float> MetaDetector::getMetaData(const QString &path)
-//{
-//    QVector<float> curData;
-//    if (path.isEmpty())
-//        return curData;
-//    format_alloc_context_function format_alloc_context = (format_alloc_context_function)FfmpegDynamicInstance::VlcFunctionInstance()->resolveSymbol("avformat_alloc_context", true);
-//    format_open_input_function format_open_input = (format_open_input_function)FfmpegDynamicInstance::VlcFunctionInstance()->resolveSymbol("avformat_open_input", true);
-//    format_find_stream_info_function format_find_stream_info = (format_find_stream_info_function)FfmpegDynamicInstance::VlcFunctionInstance()->resolveSymbol("avformat_find_stream_info", true);
-//    find_best_stream_function find_best_stream = (find_best_stream_function)FfmpegDynamicInstance::VlcFunctionInstance()->resolveSymbol("av_find_best_stream", true);
-//    codec_alloc_context3_function codec_alloc_context3 = (codec_alloc_context3_function)FfmpegDynamicInstance::VlcFunctionInstance()->resolveSymbol("avcodec_alloc_context3", true);
-//    codec_parameters_to_context_function codec_parameters_to_context = (codec_parameters_to_context_function)FfmpegDynamicInstance::VlcFunctionInstance()->resolveSymbol("avcodec_parameters_to_context", true);
-//    codec_find_decoder_function codec_find_decoder = (codec_find_decoder_function)FfmpegDynamicInstance::VlcFunctionInstance()->resolveSymbol("avcodec_find_decoder", true);
-//    codec_open2_function codec_open2 = (codec_open2_function)FfmpegDynamicInstance::VlcFunctionInstance()->resolveSymbol("avcodec_open2", true);
-//    packet_alloc_function packet_alloc = (packet_alloc_function)FfmpegDynamicInstance::VlcFunctionInstance()->resolveSymbol("av_packet_alloc", true);
-//    frame_alloc_function frame_alloc = (frame_alloc_function)FfmpegDynamicInstance::VlcFunctionInstance()->resolveSymbol("av_frame_alloc", true);
-//    read_frame_function read_frame = (read_frame_function)FfmpegDynamicInstance::VlcFunctionInstance()->resolveSymbol("av_read_frame", true);
-//    codec_send_packet_function codec_send_packet = (codec_send_packet_function)FfmpegDynamicInstance::VlcFunctionInstance()->resolveSymbol("avcodec_send_packet", true);
-//    packet_unref_function packet_unref = (packet_unref_function)FfmpegDynamicInstance::VlcFunctionInstance()->resolveSymbol("av_packet_unref", true);
-//    codec_receive_frame_function codec_receive_frame = (codec_receive_frame_function)FfmpegDynamicInstance::VlcFunctionInstance()->resolveSymbol("avcodec_receive_frame", true);
-//    frame_free_function frame_free = (frame_free_function)FfmpegDynamicInstance::VlcFunctionInstance()->resolveSymbol("av_frame_free", true);
-//    codec_close_function codec_close = (codec_close_function)FfmpegDynamicInstance::VlcFunctionInstance()->resolveSymbol("avcodec_close", true);
-//    format_close_input_function format_close_input = (format_close_input_function)FfmpegDynamicInstance::VlcFunctionInstance()->resolveSymbol("avformat_close_input", true);
-//    format_free_context_function format_free_context = (format_free_context_function)FfmpegDynamicInstance::VlcFunctionInstance()->resolveSymbol("avformat_free_context", true);
-
-//    AVFormatContext *pFormatCtx = format_alloc_context();
-//    format_open_input(&pFormatCtx, path.toStdString().c_str(), nullptr, nullptr);
-
-//    if (pFormatCtx == nullptr)
-//        return curData;
-
-//    format_find_stream_info(pFormatCtx, nullptr);
-
-//    int audio_stream_index = -1;
-//    audio_stream_index = find_best_stream(pFormatCtx, AVMEDIA_TYPE_AUDIO, -1, -1, nullptr, 0);
-//    if (audio_stream_index < 0)
-//        return curData;
-
-//    AVStream *in_stream = pFormatCtx->streams[audio_stream_index];
-//    AVCodecParameters *in_codecpar = in_stream->codecpar;
-
-//    AVCodecContext *pCodecCtx = codec_alloc_context3(nullptr);
-//    codec_parameters_to_context(pCodecCtx, in_codecpar);
-
-//    AVCodec *pCodec = codec_find_decoder(pCodecCtx->codec_id);
-//    codec_open2(pCodecCtx, pCodec, nullptr);
-
-//    AVPacket *packet = packet_alloc();
-//    AVFrame *frame = frame_alloc();
-
-//    while (read_frame(pFormatCtx, packet) >= 0) {
-//        if (packet->stream_index == audio_stream_index) {
-
-//            int state;
-//            state = codec_send_packet(pCodecCtx, packet);
-//            packet_unref(packet);
-//            if (state != 0) {
-//                continue;
-//            }
-
-//            state = codec_receive_frame(pCodecCtx, frame);
-//            if (state == 0) {
-
-//                quint8 *ptr = frame->extended_data[0];
-//                if (path.endsWith(".ape") || path.endsWith(".APE")) {
-//                    for (int i = 0; i < frame->linesize[0]; i++) {
-//                        auto  valDate = ((ptr[i]) << 16 | (ptr[i + 1]));
-//                        curData.append(valDate + qrand());
-//                    }
-//                } else {
-//                    for (int i = 0; i < frame->linesize[0]; i += 1024) {
-//                        auto  valDate = ((ptr[i]) << 16 | (ptr[i + 1]));
-//                        curData.append(valDate);
-//                    }
-//                }
-//            }
-//        }
-//        packet_unref(packet);
-//    }
-
-//    packet_unref(packet);
-//    frame_free(&frame);
-//    codec_close(pCodecCtx);
-//    format_close_input(&pFormatCtx);
-//    format_free_context(pFormatCtx);
-
-//    return curData;
-//}

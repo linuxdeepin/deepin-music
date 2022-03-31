@@ -425,7 +425,7 @@ void PlayItemDelegate::drawTabletListMode(QPainter &painter, const QStyleOptionV
             }
             // Fixme:
             QFileInfo info(itemMeta.localPath);
-            if (!info.exists() && itemMeta.mmType != MIMETYPE_CDA) {
+            if ((!info.exists() || !Player::getInstance()->supportedSuffixStrList().contains(info.suffix().toLower())) && itemMeta.mmType != MIMETYPE_CDA) {
                 auto sz = QSizeF(20, 20);
                 auto icon = QIcon::fromTheme("icon_warning").pixmap(sz.toSize());
                 auto centerF = QRectF(rect).center();
@@ -787,7 +787,7 @@ void PlayItemDelegate::drawListMode(QPainter &painter, const QStyleOptionViewIte
             PlayListView *playListView = qobject_cast<PlayListView *>(const_cast<QWidget *>(option.widget));
             // Fixme:
             QFileInfo info(itemMeta.localPath);
-            if (!info.exists() && itemMeta.mmType != MIMETYPE_CDA) {
+            if ((!info.exists() || !Player::getInstance()->supportedSuffixStrList().contains(info.suffix().toLower())) && itemMeta.mmType != MIMETYPE_CDA) {
                 auto sz = QSizeF(20, 20);
                 auto icon = QIcon::fromTheme("icon_warning").pixmap(sz.toSize());
                 auto centerF = QRectF(rect).center();

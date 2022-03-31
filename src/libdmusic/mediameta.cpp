@@ -56,19 +56,11 @@ void MediaMeta::updateCodec(const QByteArray &codec)
     }
 }
 
-void MediaMeta::getCoverData(const QString &tmpPath)
+void MediaMeta::getCoverData(const QString &tmpPath, int engineType)
 {
     // 直接获取图片，封面图片是否存在在使用前已经判断过
-    MetaDetector::getCoverData(localPath, tmpPath, hash);
+    MetaDetector::getCoverData(localPath, tmpPath, hash, engineType);
 }
-
-//MediaMeta MediaMeta::fromLocalFile(const QFileInfo &fileInfo)
-//{
-//    MediaMeta meta;
-//    meta.hash = filepathHash(fileInfo.absoluteFilePath());
-//    MetaDetector::getInstance()->updateMetaFromLocalfile(meta, fileInfo);
-//    return  meta;
-//}
 
 namespace DMusic {
 QString filepathHash(const QString &filepath)
