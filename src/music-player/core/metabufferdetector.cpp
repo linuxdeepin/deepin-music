@@ -32,6 +32,7 @@
 #include <QByteArray>
 #include <QProcess>
 #include <QDir>
+#include <QStandardPaths>
 
 //#ifndef DISABLE_LIBAV
 #ifdef __cplusplus
@@ -178,7 +179,7 @@ void MetaBufferDetector::run()
                     for (int i = 0; (i + 1) < frame->linesize[0]; i++) {
                         auto  valDate = ((ptr[i]) << 16 | (ptr[i + 1]));
                         //curData.append((float)valDate + qrand());
-                        curData.append(static_cast<float> (valDate)+ QRandomGenerator::global()->generate());
+                        curData.append(static_cast<float>(valDate) + QRandomGenerator::global()->generate());
                     }
                 } else {
                     for (int i = 0; (i + 1) < frame->linesize[0]; i += 1024) {
@@ -208,7 +209,7 @@ void MetaBufferDetector::onBufferDetector(const QString &path, const QString &ha
     }
     m_curPath = path;
     m_curHash = hash;
-    if (queryCacheExisted(hash)) { //查询到本地无缓存信息
+    if (queryCacheExisted(hash) && Global::playbackEngineType() == 1) { //查询到本地无缓存信息
         start();
     }
 }
@@ -248,12 +249,7 @@ void MetaBufferDetector::resample(const QVector<float> &buffer, const QString &h
 
 
     if (!t_buffer.isEmpty()) {
-//        float max = t_buffer.first();
-//        for (auto data : t_buffer) {
-//            if (max < data) max = data;
-
-//        }
-        auto max = *(std::max_element(std::begin(t_buffer),std::end(t_buffer)));
+        auto max = *(std::max_element(std::begin(t_buffer), std::end(t_buffer)));
         for (int i = 0; i < t_buffer.size(); ++i) {
             float ft = t_buffer[i] / max;
             ft *= 1000;
@@ -263,8 +259,8 @@ void MetaBufferDetector::resample(const QVector<float> &buffer, const QString &h
     }
 
     if (!forceQuit) {
-        QString userName = QDir::homePath().section("/", -1, -1);
-        QString path = QString("/home/" + userName + "/.cache/deepin/deepin-music/wave/");
+        auto userCachePath = QStandardPaths::writableLocation(QStandardPaths::CacheLocation);
+        QString path = userCachePath + "/wave/";
 
         QDir dir(path);
         if (!dir.exists()) {
@@ -295,8 +291,11 @@ void MetaBufferDetector::resample(const QVector<float> &buffer, const QString &h
 
 int MetaBufferDetector::queryCacheExisted(const QString &hash)
 {
-    QString userName = QDir::homePath().section("/", -1, -1);
-    QString path = QString("/home/" + userName + "/.cache/deepin/deepin-music/wave/%1.dat").arg(hash);
+    auto userCachePath = QStandardPaths::writableLocation(QStandardPaths::CacheLocation);
+    QString path = userCachePath + QString("/wave/%1.dat").arg(hash);
+    if (!QFile::exists(path) && Global::playbackEngineType() != 1) {
+        path = ":/data/default_music.dat";
+    }
     QFile file(path);
     if (!file.open(QFile::ReadOnly)) {
         return -1;

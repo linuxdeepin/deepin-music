@@ -210,7 +210,7 @@ void DBOperate::slotCreatCoverImg(const QList<MediaMeta> &metas)
 
         QFileInfo coverInfo(Global::cacheDir() + "/images/" + meta.hash + ".jpg");
         if (!coverInfo.exists()) {
-            meta.getCoverData(Global::cacheDir());
+            meta.getCoverData(Global::cacheDir(), Global::playbackEngineType());
         }
         emit sigCreatOneCoverImg(meta);
     }

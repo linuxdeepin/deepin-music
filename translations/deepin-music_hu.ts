@@ -404,35 +404,35 @@
 <context>
     <name>MainFrame</name>
     <message>
-        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="262"/>
+        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="264"/>
         <source>Add playlist</source>
         <translation>Lejátszási lista létrehozása</translation>
     </message>
     <message>
         <location filename="../src/music-player/mainFrame/mainframe.cpp" line="118"/>
-        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="264"/>
-        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="414"/>
+        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="266"/>
+        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="416"/>
         <source>Add music</source>
         <translation>Zeneszám hozzáadása</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="265"/>
+        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="267"/>
         <source>Equalizer</source>
         <translation>Hangszínszabályzó</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="268"/>
+        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="270"/>
         <source>Settings</source>
         <translation>Beállítások</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="271"/>
+        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="273"/>
         <source>Dark theme</source>
         <translation>Sötét téma</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="275"/>
-        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="330"/>
+        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="277"/>
+        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="332"/>
         <source>Exit</source>
         <translation>Kilépés</translation>
     </message>
@@ -440,7 +440,7 @@
         <location filename="../src/music-player/mainFrame/mainframe.cpp" line="89"/>
         <location filename="../src/music-player/mainFrame/mainframe.cpp" line="98"/>
         <location filename="../src/music-player/mainFrame/mainframe.cpp" line="106"/>
-        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="342"/>
+        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="344"/>
         <source>Music</source>
         <translation>Zene</translation>
     </message>
@@ -465,52 +465,57 @@
         <translation>Kész</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="324"/>
+        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="326"/>
         <source>Play/Pause</source>
         <translation>Lejátszás/Szünet</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="326"/>
+        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="328"/>
         <source>Previous</source>
         <translation>Előző</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="328"/>
+        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="330"/>
         <source>Next</source>
         <translation>Következő</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="512"/>
+        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="514"/>
         <source>Successfully added to &quot;%1&quot;</source>
         <translation>Sikeres hozzáadás ehhez: &quot;%1&quot;</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="515"/>
+        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="517"/>
         <source>Already added to the playlist</source>
         <translation>Már hozzáadva a lejátszási listához</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="518"/>
+        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="520"/>
         <source>1 song added</source>
         <translation>1 dal hozzáadva</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="520"/>
+        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="522"/>
         <source>%1 songs added</source>
         <translation>%1 dal hozzáadva</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="524"/>
+        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="526"/>
         <source>A disc is connected</source>
         <translation>A lemez csatlakoztatva</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="666"/>
+        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="576"/>
+        <source>Unsupported audio codec</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="697"/>
         <source>OK</source>
         <translation>OK</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="659"/>
+        <location filename="../src/music-player/mainFrame/mainframe.cpp" line="690"/>
         <source>Import failed, no valid music file found</source>
         <translation>Az importálás sikertelen, nem található érvényes zenefájl</translation>
     </message>
@@ -776,14 +781,14 @@
         <translation>Ismeretlen Album</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1285"/>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1858"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1291"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1864"/>
         <source>Play queue</source>
         <translation>Lejátszási sor</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1288"/>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1855"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1294"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1861"/>
         <source>My favorites</source>
         <translation>Kedvenceim</translation>
     </message>
@@ -798,104 +803,104 @@
         <translation>OK</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1326"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1332"/>
         <source>Play</source>
         <translation>Lejátszás</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1329"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1335"/>
         <source>Pause</source>
         <translation>Szüneteltetés</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1854"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1860"/>
         <source>Add to playlist</source>
         <translation>Hozzáadás a lejátszási listához</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1338"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1344"/>
         <source>Display in file manager</source>
         <translation>Megjelenítés a fájlkezelőben</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1264"/>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1336"/>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1402"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1270"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1342"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1408"/>
         <source>Add to</source>
         <translation>Hozzáadás a</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1292"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1298"/>
         <source>Create new playlist</source>
         <translation>Új lejátszási lista létrehozása</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1340"/>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1404"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1346"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1410"/>
         <source>Remove from play queue</source>
         <translation>Eltávolítás a lejátszási sorból</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1342"/>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1406"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1348"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1412"/>
         <source>Remove from playlist</source>
         <translation>Éltávoltás a lejátszási listáról </translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1345"/>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1408"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1351"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1414"/>
         <source>Delete from local disk</source>
         <translation>Törlés a helyi lemezről</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1378"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1384"/>
         <source>Encoding</source>
         <translation>Kódolás</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1382"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1388"/>
         <source>Song info</source>
         <translation>Dal információ</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1100"/>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1153"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1106"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1159"/>
         <source>Cancel</source>
         <translation>Mégsem</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1101"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1107"/>
         <source>Remove</source>
         <translation>Eltávolítás</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1104"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1110"/>
         <source>Are you sure you want to remove %1?</source>
         <translation>Biztosan el kívánja távolítani a %1-t?</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1106"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1112"/>
         <source>Are you sure you want to remove the selected %1 songs?</source>
         <translation>Biztosan el kívánja távolítani a kijelölt %1 dalokat?</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1154"/>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1262"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1160"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1268"/>
         <source>Delete</source>
         <translation>Törlés</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1159"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1165"/>
         <source>Are you sure you want to delete %1?</source>
         <translation>Biztos, hogy törölni akarja a %1-t?</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1166"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1172"/>
         <source>Are you sure you want to delete the selected %1 songs?</source>
         <translation>Biztos, hogy törölni akarja a kiválasztott %1 dalokat?</translation>
     </message>
     <message>
-        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1167"/>
+        <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1173"/>
         <source>The song files contained will also be deleted</source>
         <translation>A dalfájlok is törlődnek</translation>
     </message>

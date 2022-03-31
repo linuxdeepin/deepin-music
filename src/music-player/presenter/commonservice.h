@@ -77,6 +77,8 @@ signals:
     void signalSetPlayModel(Player::PlaybackMode playModel);
     // 弹窗消息
     void signalShowPopupMessage(const QString &songListName, int allCount, int successCount);
+    // 弹窗解码失败消息
+    void signalDecodingErrorMessage();
     // 播放队列关闭动画播放完毕，刷新背景
     void signalPlayQueueClosed();
     // 切换歌单时，清空搜索栏
