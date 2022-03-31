@@ -32,6 +32,7 @@
 #include <QByteArray>
 #include <QProcess>
 #include <QDir>
+#include <QStandardPaths>
 
 //#ifndef DISABLE_LIBAV
 #ifdef __cplusplus
@@ -178,7 +179,7 @@ void MetaBufferDetector::run()
                     for (int i = 0; (i + 1) < frame->linesize[0]; i++) {
                         auto  valDate = ((ptr[i]) << 16 | (ptr[i + 1]));
                         //curData.append((float)valDate + qrand());
-                        curData.append(static_cast<float> (valDate)+ QRandomGenerator::global()->generate());
+                        curData.append(static_cast<float>(valDate) + QRandomGenerator::global()->generate());
                     }
                 } else {
                     for (int i = 0; (i + 1) < frame->linesize[0]; i += 1024) {
@@ -253,7 +254,7 @@ void MetaBufferDetector::resample(const QVector<float> &buffer, const QString &h
 //            if (max < data) max = data;
 
 //        }
-        auto max = *(std::max_element(std::begin(t_buffer),std::end(t_buffer)));
+        auto max = *(std::max_element(std::begin(t_buffer), std::end(t_buffer)));
         for (int i = 0; i < t_buffer.size(); ++i) {
             float ft = t_buffer[i] / max;
             ft *= 1000;
@@ -263,8 +264,8 @@ void MetaBufferDetector::resample(const QVector<float> &buffer, const QString &h
     }
 
     if (!forceQuit) {
-        QString userName = QDir::homePath().section("/", -1, -1);
-        QString path = QString("/home/" + userName + "/.cache/deepin/deepin-music/wave/");
+        auto userCachePath = QStandardPaths::writableLocation(QStandardPaths::CacheLocation);
+        QString path = userCachePath + QString("/wave/%1.dat").arg(hash);
 
         QDir dir(path);
         if (!dir.exists()) {
@@ -295,8 +296,8 @@ void MetaBufferDetector::resample(const QVector<float> &buffer, const QString &h
 
 int MetaBufferDetector::queryCacheExisted(const QString &hash)
 {
-    QString userName = QDir::homePath().section("/", -1, -1);
-    QString path = QString("/home/" + userName + "/.cache/deepin/deepin-music/wave/%1.dat").arg(hash);
+    auto userCachePath = QStandardPaths::writableLocation(QStandardPaths::CacheLocation);
+    QString path = userCachePath + QString("/wave/%1.dat").arg(hash);
     QFile file(path);
     if (!file.open(QFile::ReadOnly)) {
         return -1;
