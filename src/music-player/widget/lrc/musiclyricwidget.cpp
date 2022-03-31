@@ -143,7 +143,7 @@ void MusicLyricWidget::updateUI()
     QPixmap cover;
     if (coverInfo.exists()) {
         // 不使用缩略图,使用原图,更加清晰
-        cover = MetaDetector::getCoverDataPixmap(meta);
+        cover = MetaDetector::getCoverDataPixmap(meta, Global::playbackEngineType());
     }
     //防止缓存为默认图片数据
     if (cover.isNull()) {
