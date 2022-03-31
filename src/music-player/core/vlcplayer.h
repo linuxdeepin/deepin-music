@@ -37,33 +37,33 @@ public:
 
 public:
     // 初始化
-    void init() Q_DECL_OVERRIDE;
+    void init() override;
     // 释放资源
-    void release() Q_DECL_OVERRIDE;
+    void release() override;
     void initCdaThread();
-    void initCddaTrack() Q_DECL_OVERRIDE;
-    QList<MediaMeta> getCdaMetaInfo() Q_DECL_OVERRIDE;
+    void initCddaTrack() override;
+    QList<MediaMeta> getCdaMetaInfo() override;
 
 public:
-    void play() Q_DECL_OVERRIDE;
-    void pause() Q_DECL_OVERRIDE;
-    PlayerBase::PlayState state() Q_DECL_OVERRIDE;
-    void stop() Q_DECL_OVERRIDE;
-    int length() Q_DECL_OVERRIDE;
-    void setTime(qint64 time) Q_DECL_OVERRIDE;
-    qint64 time() Q_DECL_OVERRIDE;
-    void setVolume(int volume) Q_DECL_OVERRIDE;
-    void setMute(bool value) Q_DECL_OVERRIDE;
-    bool getMute() Q_DECL_OVERRIDE;
-    void setMediaMeta(MediaMeta meta) Q_DECL_OVERRIDE; //初始化打开vlcMedia
-    void setFadeInOutFactor(double fadeInOutFactor) Q_DECL_OVERRIDE;
+    void play() override;
+    void pause() override;
+    PlayerBase::PlayState state() override;
+    void stop() override;
+    int length() override;
+    void setTime(qint64 time) override;
+    qint64 time() override;
+    void setVolume(int volume) override;
+    void setMute(bool value) override;
+    bool getMute() override;
+    void setMediaMeta(MediaMeta meta) override; //初始化打开vlcMedia
+    void setFadeInOutFactor(double fadeInOutFactor) override;
 
     //Equalizer
-    void setEqualizerEnabled(bool enabled) Q_DECL_OVERRIDE;
-    void loadFromPreset(uint index) Q_DECL_OVERRIDE;
-    void setPreamplification(float value) Q_DECL_OVERRIDE;
-    void setAmplificationForBandAt(float amp, uint bandIndex) Q_DECL_OVERRIDE;
-    float amplificationForBandAt(uint bandIndex) Q_DECL_OVERRIDE;
+    void setEqualizerEnabled(bool enabled) override;
+    void loadFromPreset(uint index) override;
+    void setPreamplification(float value) override;
+    void setAmplificationForBandAt(float amp, uint bandIndex) override;
+    float amplificationForBandAt(uint bandIndex) override;
 
 protected:
     void startCdaThread();
