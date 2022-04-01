@@ -760,9 +760,6 @@ Player::PlaybackMode Player::mode() const
 
 bool Player::getMuted()
 {
-    if (m_qvinstance == nullptr || m_qvplayer == nullptr || m_qvmedia == nullptr) {
-        initVlc();
-    }
     return MusicSettings::value("base.play.mute").toBool();
 }
 
