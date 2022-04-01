@@ -25,7 +25,7 @@
 #include <QObject>
 
 typedef enum PlayerTypeTag {
-    VLC,
+    VLC  = 0,
     QtMEDIAPLAYER
 } PLAYERTYPETAG;
 
@@ -34,7 +34,7 @@ class PlayerBase : public QObject
     Q_OBJECT
 public:
     enum PlayState {
-        Idle,
+        Idle = 0,
         Opening,
         Buffering,
         Playing,

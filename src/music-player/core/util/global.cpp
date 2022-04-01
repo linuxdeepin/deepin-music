@@ -36,13 +36,13 @@ static int engineType = 0;
 
 QString Global::configPath()
 {
-    auto userConfigPath = DStandardPaths::writableLocation(QStandardPaths::AppConfigLocation);
+    QString userConfigPath = DStandardPaths::writableLocation(QStandardPaths::AppConfigLocation);
     return userConfigPath;
 }
 
 QString Global::cacheDir()
 {
-    auto userCachePath = DStandardPaths::writableLocation(QStandardPaths::CacheLocation);
+    QString userCachePath = DStandardPaths::writableLocation(QStandardPaths::CacheLocation);
     return userCachePath;
 }
 

@@ -60,7 +60,7 @@ public:
     };
 
     enum Error {
-        NoError,
+        NoError = 0,
         ResourceError,
         FormatError,
         NetworkError,
