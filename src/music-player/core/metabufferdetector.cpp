@@ -259,7 +259,7 @@ void MetaBufferDetector::resample(const QVector<float> &buffer, const QString &h
     }
 
     if (!forceQuit) {
-        auto userCachePath = QStandardPaths::writableLocation(QStandardPaths::CacheLocation);
+        QString userCachePath = QStandardPaths::writableLocation(QStandardPaths::CacheLocation);
         QString path = userCachePath + "/wave/";
 
         QDir dir(path);
@@ -291,7 +291,7 @@ void MetaBufferDetector::resample(const QVector<float> &buffer, const QString &h
 
 int MetaBufferDetector::queryCacheExisted(const QString &hash)
 {
-    auto userCachePath = QStandardPaths::writableLocation(QStandardPaths::CacheLocation);
+    QString userCachePath = QStandardPaths::writableLocation(QStandardPaths::CacheLocation);
     QString path = userCachePath + QString("/wave/%1.dat").arg(hash);
     if (!QFile::exists(path) && Global::playbackEngineType() != 1) {
         path = ":/data/default_music.dat";
