@@ -67,6 +67,8 @@ public:
 public slots:
     // 显示弹窗消息
     void showPopupMessage(const QString &songListName, int selectCount, int insertCount);
+    // 显示解码失败消息
+    void decodingErrorMessage();
     // 左上角返回按钮点击
     void slotLeftClicked();
     // 虚拟键盘

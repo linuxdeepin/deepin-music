@@ -39,7 +39,7 @@
 
 class QAudioBuffer;
 class MprisPlayer;
-class CdaThread;
+class PlayerBase;
 class Player : public QObject, public DMusic::DSingleton<Player>
 {
     Q_OBJECT
@@ -162,8 +162,8 @@ public:
     //当emitSignal为true时,清空当前播放刷新状态,false只在关闭应用时停止播放动作
     void stop(bool emitSignal = true);
 
-    VlcMediaPlayer *core();
     QStringList supportedSuffixList()const;
+    QStringList supportedSuffixStrList()const;
 
 signals:
     void readyToResume();
@@ -217,10 +217,12 @@ public slots:
     void setEqualizerbauds(int index, int val);
     void setEqualizerCurMode(int curIndex);
     void onSleepWhenTaking(bool sleep);
+
 private:
     explicit Player(QObject *parent = nullptr);
     ~Player();
     friend class DMusic::DSingleton<Player>;
+
 private:
     void readSinkInputPath();
     bool setMusicVolume(double volume);
@@ -232,7 +234,7 @@ private:
      * **********************************/
     bool isValidDbusMute();
     // begin
-    void initVlc();
+    void initPlayer();
     void initMpris();//dbus interface
     // 重置DBus中媒体信息
     void resetDBusMpris(const MediaMeta &meta);
@@ -251,11 +253,9 @@ private:
     bool m_mute           = false; // unused
     QString m_sinkInputPath;
     QStringList m_supportedSuffix;
+    QStringList m_supportedSuffixStr;
 
-    VlcInstance             *m_qvinstance = nullptr;
-    VlcMedia                *m_qvmedia = nullptr;
-    VlcMediaPlayer          *m_qvplayer = nullptr;
-    CdaThread               *m_pCdaThread = nullptr;
+    PlayerBase            *m_basePlayer = nullptr;
 
     // 外部双击打开处理一次
     bool            m_firstPlayOnLoad  = true;

@@ -24,11 +24,15 @@
 #include <QCoreApplication>
 #include <DStandardPaths>
 #include <QProcessEnvironment>
+#include <QLibrary>
+#include <QDir>
+#include <QLibraryInfo>
 
 DCORE_USE_NAMESPACE;
 
 static QString appName;
 static bool waylandMode = false;
+static int engineType = 0;
 
 QString Global::configPath()
 {
@@ -73,5 +77,27 @@ void Global::setWaylandMode(bool mode)
 bool Global::isWaylandMode()
 {
     return waylandMode;
+}
+
+void Global::initPlaybackEngineType()
+{
+    engineType = 0;
+    QDir dir(QLibraryInfo::location(QLibraryInfo::LibrariesPath));
+    QStringList list = dir.entryList(QStringList() << QString("libvlccore.so*") << QString("libavcodec.so*"), QDir::NoDotAndDotDot | QDir::Files);
+    bool vlcFlag = false, avFlag = false;
+    for (auto str : list) {
+        if (!vlcFlag && str.startsWith("libvlccore.so")) vlcFlag = true;
+        if (!avFlag && str.startsWith("libavcodec.so")) avFlag = true;
+        if (vlcFlag && avFlag) {
+            engineType = 1;
+            break;
+        }
+    }
+}
+
+// 播放引擎类型1为vlc，0为QMediaPlayer
+int Global::playbackEngineType()
+{
+    return engineType;
 }
 

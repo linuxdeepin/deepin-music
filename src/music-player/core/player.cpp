@@ -56,6 +56,9 @@
 #include "vlc/Equalizer.h"
 #include "databaseservice.h"
 #include "vlc/cda.h"
+#include "playerbase.h"
+#include "qtplayer.h"
+#include "vlcplayer.h"
 
 #include "core/musicsettings.h"
 #include <DPushButton>
@@ -99,18 +102,42 @@ Player::Player(QObject *parent) : QObject(parent)
     m_fadeInAnimation = new QPropertyAnimation(this, "fadeInOutFactor", this);
 
     //支持格式列表,.cda格式自动加载，无需放在支持列表中
-    m_supportedSuffix << "*.aac"
-                      << "*.amr"
-                      << "*.wav"
-                      << "*.ogg"
-                      << "*.ape"
-                      << "*.mp3"
-                      << "*.flac"
-                      << "*.wma"
-                      << "*.m4a"
-                      << "*.ac3"
-                      << "*.voc"
-                      << "*.aiff";
+    if (Global::playbackEngineType() == 1) {
+        m_supportedSuffix << "*.aac"
+                          << "*.amr"
+                          << "*.wav"
+                          << "*.ogg"
+                          << "*.ape"
+                          << "*.mp3"
+                          << "*.flac"
+                          << "*.wma"
+                          << "*.m4a"
+                          << "*.ac3"
+                          << "*.voc"
+                          << "*.aiff";
+        m_supportedSuffixStr  << "aac"
+                              << "amr"
+                              << "wav"
+                              << "ogg"
+                              << "ape"
+                              << "mp3"
+                              << "flac"
+                              << "wma"
+                              << "m4a"
+                              << "ac3"
+                              << "voc"
+                              << "aiff";
+    } else {
+        m_supportedSuffix << "*.wav"
+                          << "*.ogg"
+                          << "*.mp3"
+                          << "*.flac";
+        m_supportedSuffixStr << "wav"
+                             << "ogg"
+                             << "mp3"
+                             << "flac";
+    }
+
     initMpris();
     m_volume = MusicSettings::value("base.play.volume").toInt();
     /**
@@ -122,20 +149,12 @@ Player::Player(QObject *parent) : QObject(parent)
     m_mode = static_cast<PlaybackMode>(MusicSettings::value("base.play.playmode").toInt());
 
     m_currentPlayListHash = MusicSettings::value("base.play.last_playlist").toString(); //上一次的页面
-//    init();
+    initPlayer();
 }
 
 void Player::init()
 {
-    //初始化cd线程
-    if (nullptr == m_pCdaThread) {
-        m_pCdaThread = new CdaThread(this);
-        connect(m_pCdaThread, &CdaThread::sigSendCdaStatus, CommonService::getInstance(),
-                &CommonService::signalCdaSongListChanged, Qt::QueuedConnection);
-    }
-
-    //开启cd线程
-    startCdaThread();
+    m_basePlayer->init();
     if (nullptr == m_pDBus) {
         m_pDBus = new QDBusInterface("org.freedesktop.login1", "/org/freedesktop/login1",
                                      "org.freedesktop.login1.Manager", QDBusConnection::systemBus());
@@ -148,23 +167,17 @@ QStringList Player::supportedSuffixList() const
     return m_supportedSuffix;
 }
 
+QStringList Player::supportedSuffixStrList() const
+{
+    return m_supportedSuffixStr;
+}
+
 void Player::releasePlayer()
 {
     stop(false);
-    //释放cd线程
-    if (m_pCdaThread) {
-        m_pCdaThread->closeThread();
-        while (m_pCdaThread->isRunning()) {}
-    }
-    //删除媒体资源
-    if (m_qvmedia) {
-        delete m_qvmedia;
-        m_qvmedia = nullptr;
-    }
-    //删除媒体播放器
-    if (m_qvplayer) {
-        delete m_qvplayer;
-        m_qvplayer = nullptr;
+    //释放资源
+    if (m_basePlayer) {
+        m_basePlayer->release();
     }
 }
 
@@ -196,17 +209,14 @@ void Player::playMeta(MediaMeta meta)
         if (meta.mmType != MIMETYPE_CDA) {
             int acint = access(meta.localPath.toStdString().c_str(), R_OK);
             bool empty = QFileInfo(m_ActiveMeta.localPath).dir().path().isEmpty();
-            if (acint != 0 || empty) {
-                //文件不存在提示  todo..
+            bool suffixFlag = m_supportedSuffixStr.contains(QFileInfo(meta.localPath).suffix().toLower());
+            if (acint != 0 || empty || !suffixFlag) {
+                //文件不存在提示
                 emit signalPlaybackStatusChanged(Player::Paused);
                 playNextMeta(true);
                 INT_LAST_PROGRESS_FLAG = 0;
                 return;
             }
-        }
-
-        if (m_qvinstance == nullptr || m_qvplayer == nullptr || m_qvmedia == nullptr) {
-            initVlc();
         }
 
         // 防止淡入淡出时切换歌曲
@@ -215,25 +225,23 @@ void Player::playMeta(MediaMeta meta)
             setFadeInOutFactor(1.0);
         }
 
-        m_qvmedia->initMedia(meta.localPath, meta.mmType == MIMETYPE_CDA ? false : true, m_qvinstance, meta.track);
-        m_qvplayer->open(m_qvmedia);
-        m_qvplayer->play();
+        m_ActiveMeta = meta;
+        setActiveMeta(meta);
+        m_basePlayer->setMediaMeta(meta);
+        m_basePlayer->play();
 
         //延迟设置进度
         if (INT_LAST_PROGRESS_FLAG && m_ActiveMeta.hash == meta.hash) {
-            m_qvplayer->pause();
+            m_basePlayer->pause();
             qint64 lastOffset = m_ActiveMeta.offset;
             QTimer::singleShot(100, this, [ = ]() {//为了记录进度条生效，在加载的时候让音乐播放100ms
                 qDebug() << "seek last position:" << lastOffset;
-                m_qvplayer->setTime(lastOffset);
-                m_qvplayer->play();
+                m_basePlayer->setTime(lastOffset);
+                m_basePlayer->play();
             });
         }
         // 开始后点击播放另一首哥播放保证错误
         INT_LAST_PROGRESS_FLAG = 0;
-
-        m_ActiveMeta = meta;
-        setActiveMeta(meta);
         /*************************
          * mute to dbus
          * ***********************/
@@ -265,10 +273,6 @@ void Player::playMeta(MediaMeta meta)
 
 void Player::resume()
 {
-    if (m_qvinstance == nullptr || m_qvplayer == nullptr || m_qvmedia == nullptr) {
-        initVlc();
-    }
-
     if (m_ActiveMeta.localPath.isEmpty()) {
         Player::getInstance()->forcePlayMeta();//播放列表第一首歌
         return;
@@ -283,10 +287,9 @@ void Player::resume()
      * 1.audio service dbus not start
      * 2.audio device not start
      * ****************************************************************************************/
-    if (m_qvplayer->state() == Vlc::Stopped  || (!isValidDbusMute() &&  m_qvplayer->time() == 0)) {
+    if (m_basePlayer->state() == PlayerBase::Stopped  || (!isValidDbusMute() &&  m_basePlayer->time() == 0)) {
         //reopen data
-        m_qvmedia->initMedia(m_ActiveMeta.localPath, true, m_qvinstance);
-        m_qvplayer->open(m_qvmedia);
+        m_basePlayer->setMediaMeta(m_ActiveMeta);
     }
 
     if (m_fadeInOut) {
@@ -295,7 +298,7 @@ void Player::resume()
     }
 
     qDebug() << "resume top";
-    m_qvplayer->play();
+    m_basePlayer->play();
     if (m_fadeInOut && m_fadeInAnimation->state() != QPropertyAnimation::Running) {
         m_fadeInAnimation->setEasingCurve(QEasingCurve::InCubic);
         m_fadeInAnimation->setStartValue(0.1000);
@@ -316,10 +319,6 @@ void Player::resume()
 
 void Player::pause()
 {
-    if (m_qvinstance == nullptr || m_qvplayer == nullptr || m_qvmedia == nullptr) {
-        initVlc();
-    }
-
     if (m_fadeInOut) {
         m_fadeInAnimation->stop();
     }
@@ -332,11 +331,11 @@ void Player::pause()
         m_fadeOutAnimation->start();
         connect(m_fadeOutAnimation, &QPropertyAnimation::finished,
         this, [ = ]() {
-            m_qvplayer->pause();
+            m_basePlayer->pause();
             setFadeInOutFactor(1.0);
         });
     } else {
-        m_qvplayer->pause();
+        m_basePlayer->pause();
         setFadeInOutFactor(1.0);
     }
 
@@ -346,22 +345,16 @@ void Player::pause()
 
 void Player::pauseNow()
 {
-    if (m_qvinstance == nullptr || m_qvplayer == nullptr || m_qvmedia == nullptr) {
-        initVlc();
-    }
-    m_qvplayer->pause();
+    m_basePlayer->pause();
     //设置音乐播放
     emit signalPlaybackStatusChanged(Player::Paused);
 }
 
 void Player::playPreMeta()
 {
-    if (m_qvinstance == nullptr || m_qvplayer == nullptr || m_qvmedia == nullptr) {
-        initVlc();
-    }
     QList<MediaMeta> curMetaList;
     for (int i = 0; i < m_MetaList.size(); i++) {
-        if (QFile::exists(m_MetaList[i].localPath) || m_MetaList[i].mmType == MIMETYPE_CDA)
+        if ((QFile::exists(m_MetaList[i].localPath) && m_supportedSuffixStr.contains(QFileInfo(m_MetaList[i].localPath).suffix().toLower())) || m_MetaList[i].mmType == MIMETYPE_CDA)
             curMetaList.append(m_MetaList[i]);
     }
     if (curMetaList.size() > 0) {
@@ -423,12 +416,9 @@ void Player::playPreMeta()
 
 void Player::playNextMeta(bool isAuto)
 {
-    if (m_qvinstance == nullptr || m_qvplayer == nullptr || m_qvmedia == nullptr) {
-        initVlc();
-    }
     QList<MediaMeta> curMetaList;
     for (int i = 0; i < m_MetaList.size(); i++) {
-        if (QFile::exists(m_MetaList[i].localPath) || m_MetaList[i].mmType == MIMETYPE_CDA)
+        if ((QFile::exists(m_MetaList[i].localPath) && m_supportedSuffixStr.contains(QFileInfo(m_MetaList[i].localPath).suffix().toLower())) || m_MetaList[i].mmType == MIMETYPE_CDA)
             curMetaList.append(m_MetaList[i]);
     }
     if (curMetaList.size() > 0) {
@@ -512,20 +502,23 @@ void Player::clearPlayList()
 
 void Player::playRmvMeta(const QStringList &metalistToDel)
 {
-    if (m_qvinstance == nullptr || m_qvplayer == nullptr || m_qvmedia == nullptr) {
-        initVlc();
-    }
-
     if (m_MetaList.size() == 0) {
         return;
+    }
+
+    // 去除无法播放歌曲
+    QList<MediaMeta> curMetaList;
+    for (int i = 0; i < m_MetaList.size(); i++) {
+        if ((QFile::exists(m_MetaList[i].localPath) && m_supportedSuffixStr.contains(QFileInfo(m_MetaList[i].localPath).suffix().toLower())) || m_MetaList[i].mmType == MIMETYPE_CDA)
+            curMetaList.append(m_MetaList[i]);
     }
 
     int index = 0;
     QString nextPlayHash;
     // 记录切换歌单之前播放状态
     PlaybackStatus preStatus = status();
-    for (int i = 0; i < m_MetaList.size(); i++) {
-        if (m_MetaList.at(i).hash == m_ActiveMeta.hash) {
+    for (int i = 0; i < curMetaList.size(); i++) {
+        if (curMetaList.at(i).hash == m_ActiveMeta.hash) {
             index = i;
             break;
         }
@@ -537,20 +530,20 @@ void Player::playRmvMeta(const QStringList &metalistToDel)
         MediaMeta metaToPlay;
         metaToPlay.hash = "";
         // 从当前播放的位置寻找下一首
-        for (int i = (index + 1); i <= m_MetaList.size(); i++) {
-            if (i == m_MetaList.size()) {
+        for (int i = (index + 1); i <= curMetaList.size(); i++) {
+            if (i == curMetaList.size()) {
                 i = 0;
             }
             if (i == index) {
                 break;
             }
             // 如果下一首不在删除队列中，则找到了下一首
-            if (!metalistToDel.contains(m_MetaList.at(i).hash)) {
-                metaToPlay = m_MetaList.at(i);
+            if (!metalistToDel.contains(curMetaList.at(i).hash)) {
+                metaToPlay = curMetaList.at(i);
                 break;
             }
             // 防止死循环
-            if (m_MetaList.size() == 1) {
+            if (curMetaList.size() == 1) {
                 break;
             }
         }
@@ -632,7 +625,7 @@ QList<MediaMeta> *Player::getPlayList()
 
 QList<MediaMeta> Player::getCdaPlayList()
 {
-    return m_pCdaThread->getCdaMetaInfo();
+    return m_basePlayer->getCdaMetaInfo();
 }
 
 MprisPlayer *Player::getMpris() const
@@ -677,10 +670,10 @@ void Player::stop(bool emitSignal)
     if (emitSignal) {
         //play停止后，发送清空当前波形图的信号
         emit signalMediaStop("");//不用当前的参数
-        if (m_qvplayer) {
-            m_qvplayer->pause();
+        if (m_basePlayer) {
+            m_basePlayer->pause();
             setActiveMeta(MediaMeta());//清除当前播放音乐；
-            m_qvplayer->stop();
+            m_basePlayer->stop();
         }
 
         QVariantMap metadata;
@@ -688,34 +681,23 @@ void Player::stop(bool emitSignal)
 
         emit signalPlaybackStatusChanged(Player::Stopped);
     } else {
-        if (m_qvplayer) {
-            m_qvplayer->pause();
-            m_qvplayer->stop();
+        if (m_basePlayer) {
+            m_basePlayer->pause();
+            m_basePlayer->stop();
         }
     }
 
 }
 
-VlcMediaPlayer *Player::core()
-{
-    if (m_qvinstance == nullptr || m_qvplayer == nullptr || m_qvmedia == nullptr) {
-        initVlc();
-    }
-    return m_qvplayer;
-}
-
 Player::PlaybackStatus Player::status()
 {
-    if (m_qvinstance == nullptr || m_qvplayer == nullptr || m_qvmedia == nullptr) {
-        initVlc();
-    }
-    Vlc::State  status = m_qvplayer->state();
+    PlayerBase::PlayState  status = m_basePlayer->state();
 
-    if (status == Vlc::Playing) {
+    if (status == PlayerBase::Playing) {
         return PlaybackStatus::Playing;
-    } else if (status == Vlc::Paused) {
+    } else if (status == PlayerBase::Paused) {
         return PlaybackStatus::Paused;
-    } else if (status == Vlc::Stopped || status == Vlc::Idle) {
+    } else if (status == PlayerBase::Stopped || status == PlayerBase::Idle) {
         return PlaybackStatus::Stopped;
     } else {
         return PlaybackStatus::InvalidPlaybackStatus;
@@ -742,10 +724,7 @@ QIcon Player::playingIcon()
 
 qlonglong Player::position()
 {
-    if (m_qvinstance == nullptr || m_qvplayer == nullptr || m_qvmedia == nullptr) {
-        initVlc();
-    }
-    return m_qvplayer->time();
+    return m_basePlayer->time();
 }
 
 int Player::getVolume() const
@@ -760,21 +739,15 @@ Player::PlaybackMode Player::mode() const
 
 bool Player::getMuted()
 {
-    if (m_qvinstance == nullptr || m_qvplayer == nullptr || m_qvmedia == nullptr) {
-        initVlc();
-    }
     return MusicSettings::value("base.play.mute").toBool();
 }
 
 qint64 Player::duration()
 {
-    if (m_qvinstance == nullptr || m_qvplayer == nullptr || m_qvmedia == nullptr) {
-        initVlc();
-    }
     if (m_ActiveMeta.localPath.isEmpty()) {
         return 0;
     }
-    return  m_qvplayer->length();
+    return  m_basePlayer->length();
 }
 
 double Player::fadeInOutFactor() const
@@ -789,7 +762,7 @@ bool Player::fadeInOut() const
 
 void Player::initCddTrack()
 {
-    m_qvplayer->initCddaTrack();
+    m_basePlayer->initCddaTrack();
 }
 
 //bool Player::playOnLoaded() const
@@ -805,19 +778,16 @@ void Player::setCanControl(bool canControl)
 
 void Player::setPosition(qlonglong position)
 {
-    if (m_qvinstance == nullptr || m_qvplayer == nullptr || m_qvmedia == nullptr) {
-        initVlc();
-    }
     //未加载前设置进度
-    if (m_qvplayer->time() == -1) {
+    if (m_basePlayer->time() == -1) {
         INT_LAST_PROGRESS_FLAG = 1;
         m_ActiveMeta.offset = position;
     }
 
-    if (m_qvplayer->length() == m_ActiveMeta.length) {
-        return m_qvplayer->setTime(position);
+    if (m_basePlayer->length() == m_ActiveMeta.length) {
+        return m_basePlayer->setTime(position);
     } else {
-        m_qvplayer->setTime(position);
+        m_basePlayer->setTime(position);
     }
 }
 
@@ -898,9 +868,6 @@ void Player::forcePlayMeta()
 
 void Player::initEqualizerCfg()
 {
-    if (m_qvinstance == nullptr || m_qvplayer == nullptr || m_qvmedia == nullptr) {
-        initVlc();
-    }
     setEqualizerEnable(true);
     //读取均衡器使能开关配置
     auto eqSwitch = MusicSettings::value("equalizer.all.switch").toBool();
@@ -931,7 +898,7 @@ void Player::setDbusMuted(bool muted)
     Q_UNUSED(muted)
     bool bvalid = isValidDbusMute();
     qDebug() << __FUNCTION__ << bvalid << isMusicMuted();
-    if (bvalid) {
+    if (bvalid && Global::playbackEngineType() == 1) {
         QDBusInterface ainterface("com.deepin.daemon.Audio", m_sinkInputPath,
                                   "com.deepin.daemon.Audio.SinkInput",
                                   QDBusConnection::sessionBus());
@@ -949,18 +916,19 @@ void Player::setDbusMuted(bool muted)
         bool localmute = MusicSettings::value("base.play.mute").toBool();
         if (localmute != isMusicMuted())
             ainterface.call(QLatin1String("SetMute"), localmute);
+    } else if (Global::playbackEngineType() != 1) {
+        m_basePlayer->setVolume(m_volume);
+        bool localmute = MusicSettings::value("base.play.mute").toBool();
+        m_basePlayer->setMute(localmute);
     }
 }
 
 void Player::setFadeInOutFactor(double fadeInOutFactor)
 {
-    if (m_qvinstance == nullptr || m_qvplayer == nullptr || m_qvmedia == nullptr) {
-        initVlc();
-    }
     m_fadeInOutFactor = fadeInOutFactor;
-    m_qvplayer->equalizer()->blockSignals(true);
-    m_qvplayer->equalizer()->setPreamplification(static_cast<float>(12 * m_fadeInOutFactor));
-    m_qvplayer->equalizer()->blockSignals(false);
+    m_basePlayer->blockSignals(true);
+    m_basePlayer->setPreamplification(static_cast<float>(12 * m_fadeInOutFactor));
+    m_basePlayer->blockSignals(false);
 }
 
 void Player::setFadeInOut(bool fadeInOut)
@@ -970,26 +938,23 @@ void Player::setFadeInOut(bool fadeInOut)
 
 void Player::setEqualizer(bool enabled, int curIndex, QList<int> indexbaud)
 {
-    if (m_qvinstance == nullptr || m_qvplayer == nullptr || m_qvmedia == nullptr) {
-        initVlc();
-    }
     if (enabled) {
         //非自定义模式时
         if (curIndex > 0) {
-            m_qvplayer->equalizer()->loadFromPreset(uint(curIndex - 1));
+            m_basePlayer->loadFromPreset(uint(curIndex - 1));
             //设置放大值
-            m_qvplayer->equalizer()->setPreamplification(m_qvplayer->equalizer()->preamplification());
+            m_basePlayer->setPreamplification(m_basePlayer->preamplification());
             for (int i = 0 ; i < 10; i++) {
                 //设置频率值
-                m_qvplayer->equalizer()->setAmplificationForBandAt(m_qvplayer->equalizer()->amplificationForBandAt(uint(i)), uint(i));
+                m_basePlayer->setAmplificationForBandAt(m_basePlayer->amplificationForBandAt(uint(i)), uint(i));
             }
         } else {
             if (indexbaud.size() == 0) {
                 return;
             } else {
-                m_qvplayer->equalizer()->setPreamplification(indexbaud.at(0));
+                m_basePlayer->setPreamplification(indexbaud.at(0));
                 for (int i = 1; i < 11; i++) {
-                    m_qvplayer->equalizer()->setAmplificationForBandAt(indexbaud.at(i), uint(i - 1));
+                    m_basePlayer->setAmplificationForBandAt(indexbaud.at(i), uint(i - 1));
                 }
             }
         }
@@ -998,41 +963,29 @@ void Player::setEqualizer(bool enabled, int curIndex, QList<int> indexbaud)
 
 void Player::setEqualizerEnable(bool enable)
 {
-    if (m_qvinstance == nullptr || m_qvplayer == nullptr || m_qvmedia == nullptr) {
-        initVlc();
-    }
-    m_qvplayer->equalizer()->setEnabled(enable);
+    m_basePlayer->setEqualizerEnabled(enable);
 }
 
 void Player::setEqualizerpre(int val)
 {
-    if (m_qvinstance == nullptr || m_qvplayer == nullptr || m_qvmedia == nullptr) {
-        initVlc();
-    }
-    m_qvplayer->equalizer()->setPreamplification(val);
+    m_basePlayer->setPreamplification(val);
 }
 
 void Player::setEqualizerbauds(int index, int val)
 {
-    if (m_qvinstance == nullptr || m_qvplayer == nullptr || m_qvmedia == nullptr) {
-        initVlc();
-    }
-    m_qvplayer->equalizer()->setAmplificationForBandAt(uint(val), uint(index));
+    m_basePlayer->setAmplificationForBandAt(uint(val), uint(index));
 }
 
 void Player::setEqualizerCurMode(int curIndex)
 {
-    if (m_qvinstance == nullptr || m_qvplayer == nullptr || m_qvmedia == nullptr) {
-        initVlc();
-    }
     //非自定义模式时
     if (curIndex != 0) {
-        m_qvplayer->equalizer()->loadFromPreset(uint(curIndex - 1));
+        m_basePlayer->loadFromPreset(uint(curIndex - 1));
         //设置放大值
-        m_qvplayer->equalizer()->setPreamplification(m_qvplayer->equalizer()->preamplification());
+        m_basePlayer->setPreamplification(m_basePlayer->preamplification());
         for (int i = 0 ; i < 10; i++) {
             //设置频率值
-            m_qvplayer->equalizer()->setAmplificationForBandAt(m_qvplayer->equalizer()->amplificationForBandAt(uint(i)), uint(i));
+            m_basePlayer->setAmplificationForBandAt(m_basePlayer->amplificationForBandAt(uint(i)), uint(i));
         }
     }
 }
@@ -1042,7 +995,7 @@ void Player::onSleepWhenTaking(bool sleep)
     qDebug() << "onSleepWhenTaking:" << sleep;
     if (sleep) {
         //休眠记录状态
-        if (m_qvplayer->state() == Vlc::Playing) {
+        if (m_basePlayer->state() == PlayerBase::Playing) {
             //休眠唤醒前设置音量为1%
             readSinkInputPath();
             if (!m_sinkInputPath.isEmpty()) {
@@ -1054,11 +1007,11 @@ void Player::onSleepWhenTaking(bool sleep)
                 }
                 //停止播放并记录播放位置
                 m_Vlcstate = Vlc::Playing;
-                m_qvplayer->pause();
+                m_basePlayer->pause();
                 qlonglong time = position();
                 INT_LAST_PROGRESS_FLAG = 1;
                 m_ActiveMeta.offset = time;
-                m_qvplayer->stop();
+                m_basePlayer->stop();
             }
         }
     } else { //设置状态
@@ -1084,9 +1037,9 @@ void Player::readSinkInputPath()
 
     for (auto curPath : allSinkInputsList) {
         QVariant nameV = DBusUtils::readDBusProperty("com.deepin.daemon.Audio", curPath.path(),
-                                                     "com.deepin.daemon.Audio.SinkInput", "Name");
+                                                     "com.deepin.daemon.Audio.SinkInput", "Icon");
 
-        if (!nameV.isValid() || nameV.toString() != Global::getAppName())
+        if (!nameV.isValid() || nameV.toString() != "deepin-music")
             continue;
 
         m_sinkInputPath = curPath.path();
@@ -1114,50 +1067,44 @@ bool Player::setMusicVolume(double volume)
 
     m_mpris->setVolume(volume);
 
-    if (m_qvinstance == nullptr || m_qvplayer == nullptr || m_qvmedia == nullptr) {
-        initVlc();
-    }
-    m_qvplayer->setVolume(int(volume * 100));
+    m_basePlayer->setVolume(int(volume * 100));
 
     return false;
 }
 
 bool Player::setMusicMuted(bool muted)
 {
-    if (m_qvinstance == nullptr || m_qvplayer == nullptr || m_qvmedia == nullptr) {
-        initVlc();
-    }
     if (!QFile::exists(m_ActiveMeta.localPath) && m_ActiveMeta.mmType != MIMETYPE_CDA) {
         return false;
     }
-    m_qvplayer->setMute(muted);
+    m_basePlayer->setMute(muted);
 
     return true;
 }
 
 bool Player::isMusicMuted()
 {
-    if (m_qvinstance == nullptr || m_qvplayer == nullptr || m_qvmedia == nullptr) {
-        initVlc();
-    }
-    return m_qvplayer->getMute();
+    return m_basePlayer->getMute();
 }
 
-void Player::initVlc()
+void Player::initPlayer()
 {
-    m_qvinstance = new VlcInstance(VlcCommon::args(), nullptr);
-    m_qvinstance->version();
-    m_qvplayer = new VlcMediaPlayer(m_qvinstance);
-    m_qvplayer->equalizer()->setPreamplification(12);
-    m_qvmedia = new VlcMedia();
+    if (Global::playbackEngineType() != 1) {
+        m_basePlayer = new QtPlayer(this);
+        qDebug() << __func__ << "QtPlayer";
+    } else {
+        m_basePlayer = new VlcPlayer(this);
+        qDebug() << __func__ << "VlcPlayer";
+    }
+
     m_timer = new QTimer(this);
     m_timer->setInterval(300);
     connect(m_timer, &QTimer::timeout, this, &Player::changePicture);
-    connect(m_qvplayer, &VlcMediaPlayer::timeChanged,
+    connect(m_basePlayer, &PlayerBase::timeChanged,
     this, [ = ](qint64 position) {
         Q_EMIT positionChanged(position,  m_ActiveMeta.length, 1); //直接上报当前位置，offset无实质意义
     });
-    connect(m_qvplayer, &VlcMediaPlayer::positionChanged,
+    connect(m_basePlayer, &PlayerBase::positionChanged,
     this, [ = ](float position) {
         qint64 curPosition = static_cast<qint64>(position * m_ActiveMeta.length);
         Q_EMIT positionChanged(curPosition,  m_ActiveMeta.length, 1); //直接上报当前位置，offset无实质意义
@@ -1172,22 +1119,22 @@ void Player::initVlc()
     });
 
     //vlc stateChanged
-    connect(m_qvmedia, &VlcMedia::stateChanged,
-    this, [ = ](Vlc::State status) {
+    connect(m_basePlayer, &PlayerBase::stateChanged,
+    this, [ = ](PlayerBase::PlayState status) {
         switch (status) {
-        case Vlc::Playing: {
+        case PlayerBase::Playing: {
             //emit signalPlaybackStatusChanged(Player::Playing);
             if (!m_timer->isActive()) {
                 m_timer->start();
             }
             break;
         }
-        case Vlc::Paused: {
+        case PlayerBase::Paused: {
             //emit signalPlaybackStatusChanged(Player::Paused);
             m_timer->stop();
             break;
         }
-        case Vlc::Stopped: {
+        case PlayerBase::Stopped: {
             //emit signalPlaybackStatusChanged(Player::Stopped);
             m_timer->stop();
             //emit signalMediaMetaChanged(MediaMeta()); //由setActiveMeta统一发送信号
@@ -1198,24 +1145,13 @@ void Player::initVlc()
         }
     });
 
-    connect(m_qvplayer, &VlcMediaPlayer::end,
+    connect(m_basePlayer, &PlayerBase::end,
     this, [ = ]() {
         playNextMeta(true);//just sync with Vlc::Ended
     });
-}
 
-void Player::startCdaThread()
-{
-    //为了不影响主线程加载，1s后再加载CD
-    QTimer::singleShot(1000, this, [ = ]() {
-        if (m_qvinstance == nullptr || m_qvplayer == nullptr || m_qvmedia == nullptr) {
-            initVlc();
-        }
-        //初始化mediaplayer
-        m_pCdaThread->setMediaPlayerPointer(m_qvplayer->core());
-        //查询cd信息
-        m_pCdaThread->doQuery();
-    });
+    connect(m_basePlayer, &PlayerBase::sigSendCdaStatus, CommonService::getInstance(),
+            &CommonService::signalCdaSongListChanged);
 }
 
 void Player::initMpris()
@@ -1366,29 +1302,6 @@ void Player::resetDBusMpris(const MediaMeta &meta)
     metadata.insert(Mpris::metadataToString(Mpris::ArtUrl), str);
     m_mpris->setMetadata(metadata);
 }
-
-//void Player::loadMediaProgress(const QString &path)
-//{
-//    qDebug() << __FUNCTION__ << " at line:" << __LINE__ << " initialize path:" << path;
-//    QFileInfo info(path);
-//    if (!info.exists())
-//        return;
-
-//    if (m_qvinstance == nullptr || m_qvplayer == nullptr || m_qvmedia == nullptr) {
-//        initVlc();
-//    }
-//    m_qvplayer->setAudioEnabled(false);
-//    m_qvplayer->blockSignals(true);
-//    m_qvmedia->initMedia(path, true, m_qvinstance);
-//    m_qvplayer->open(m_qvmedia);
-//    m_qvplayer->play();
-
-//    QTimer::singleShot(100, this, [ = ]() {//为了记录进度条生效，在加载的时候让音乐播放100ms
-//        m_qvplayer->pause();
-//        m_qvplayer->blockSignals(false);
-//        m_qvplayer->setAudioEnabled(true);
-//    });
-//}
 
 void Player::changePicture()
 {
