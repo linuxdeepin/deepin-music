@@ -151,6 +151,8 @@ MainFrame::MainFrame()
             this, &MainFrame::slotImportFailed);
     connect(CommonService::getInstance(), &CommonService::signalShowPopupMessage,
             this, &MainFrame::showPopupMessage);
+    connect(CommonService::getInstance(), &CommonService::signalDecodingErrorMessage,
+            this, &MainFrame::decodingErrorMessage);
 
     connect(DataBaseService::getInstance(), &DataBaseService::signalPlayFromFileMaganager,
             this, &MainFrame::slotPlayFromFileMaganager);
@@ -282,7 +284,7 @@ void MainFrame::initMenuAndShortcut()
     pTitleMenu->addAction(m_newSonglistAction);
     pTitleMenu->addAction(m_addMusicFiles);
     pTitleMenu->addSeparator();
-    pTitleMenu->addAction(m_equalizer);
+    if (Global::playbackEngineType() == 1) pTitleMenu->addAction(m_equalizer);
     pTitleMenu->addAction(m_settings);
     pTitleMenu->addSeparator();
 
@@ -543,6 +545,35 @@ void MainFrame::showPopupMessage(const QString &songListName, int selectCount, i
     pDFloatingMessage->setObjectName("_d_message_float_deepin_music");
     pDFloatingMessage->setBlurBackgroundEnabled(true);
     pDFloatingMessage->setMessage(text);
+    pDFloatingMessage->setIcon(icon);
+    pDFloatingMessage->setDuration(2000);
+    m_popupMessage->resize(this->width(), this->height() - m_footerWidget->height());
+    m_popupMessage->raise();
+    DMessageManager::instance()->sendMessage(m_popupMessage, pDFloatingMessage);
+}
+
+void MainFrame::decodingErrorMessage()
+{
+    if (m_popupMessage == nullptr) {
+        m_popupMessage = new DWidget(this);
+        m_popupMessage->setAttribute(Qt::WA_TransparentForMouseEvents);
+        m_popupMessage->setVisible(true);
+        m_popupMessage->move(0, 0);
+    }
+
+    // 确保弹窗只显示一条
+    QList<QWidget *> oldMsgList = m_popupMessage->findChildren<QWidget *>("_d_message_float_deepin_music");
+    if (oldMsgList.size() > 0) {
+        oldMsgList.first()->deleteLater(); // auto delete
+    }
+    if (oldMsgList.size() >= 2)
+        return;
+
+    QIcon icon = QIcon::fromTheme("icon_warning");
+    DFloatingMessage *pDFloatingMessage = new DFloatingMessage(DFloatingMessage::MessageType::TransientType, m_popupMessage);
+    pDFloatingMessage->setObjectName("_d_message_float_deepin_music");
+    pDFloatingMessage->setBlurBackgroundEnabled(true);
+    pDFloatingMessage->setMessage(tr("Unsupported audio codec"));
     pDFloatingMessage->setIcon(icon);
     pDFloatingMessage->setDuration(2000);
     m_popupMessage->resize(this->width(), this->height() - m_footerWidget->height());

@@ -40,4 +40,8 @@ public:
     static void setWaylandMode(bool mode);
     // 是否开启Wayland
     static bool isWaylandMode();
+    // 初始化播放引擎类型
+    static void initPlaybackEngineType();
+    // 播放引擎类型1为vlc，0为QMediaPlayer
+    static int playbackEngineType();
 };

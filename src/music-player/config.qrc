@@ -3,5 +3,6 @@
         <file>data/deepin-music-settings.json</file>
         <file>data/deepin-music-speechreply.json</file>
         <file>data/dequalizer-settings.json</file>
+        <file>data/default_music.dat</file>
     </qresource>
 </RCC>

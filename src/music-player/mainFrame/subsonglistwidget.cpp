@@ -304,7 +304,7 @@ void SubSonglistWidget::flushDialog(QMap<QString, MediaMeta> musicinfos, ListPag
             QString imagesDirPath = Global::cacheDir() + "/images/" + meta.hash + ".jpg";
             // 查找可用图片
             if (QFileInfo(imagesDirPath).exists()) {
-                img = MetaDetector::getCoverDataPixmap(meta);
+                img = MetaDetector::getCoverDataPixmap(meta, Global::playbackEngineType());
                 break;
             }
         }

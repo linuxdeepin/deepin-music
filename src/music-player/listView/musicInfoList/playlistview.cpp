@@ -684,12 +684,16 @@ void PlayListView::slotOnDoubleClicked(const QModelIndex &index)
     //todo检查文件是否存在
     MediaMeta itemMeta = index.data(Qt::UserRole).value<MediaMeta>();
     qDebug() << "------" << itemMeta.hash;
-    if (!QFileInfo(itemMeta.localPath).exists() && itemMeta.mmType != MIMETYPE_CDA) {
+    QFileInfo fileInfo(itemMeta.localPath);
+    QString fileSuffix = fileInfo.suffix();
+    if (!fileInfo.exists() && itemMeta.mmType != MIMETYPE_CDA) {
         //停止当前的歌曲
         Player::getInstance()->stop();
         //弹出提示框
         showErrorDlg();
     } else {
+        if (!Player::getInstance()->supportedSuffixStrList().contains(fileSuffix.toLower()))
+            emit CommonService::getInstance()->signalDecodingErrorMessage();
         playMusic(itemMeta);
     }
 }

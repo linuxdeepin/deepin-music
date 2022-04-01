@@ -38,12 +38,11 @@ public:
 
     void updateCueFileTagCodec(MediaMeta &meta, const QFileInfo &, const QByteArray &codec);
 
-    MediaMeta updateMetaFromLocalfile(MediaMeta meta, const QFileInfo &fileInfo);
+    MediaMeta updateMetaFromLocalfile(MediaMeta meta, const QFileInfo &fileInfo, int engineType);
     MediaMeta updateMediaFileTagCodec(MediaMeta &meta, const QByteArray &codecName, bool forceEncode);
 
-    static void getCoverData(const QString &path, const QString &tmpPath, const QString &hash);
-    static QPixmap getCoverDataPixmap(MediaMeta meta);
-    //static QVector<float> getMetaData(const QString &path);
+    static void getCoverData(const QString &path, const QString &tmpPath, const QString &hash, int engineType);
+    static QPixmap getCoverDataPixmap(MediaMeta meta, int engineType);
 private:
     explicit MetaDetector();
     friend class DMusic::DSingleton<MetaDetector>;
