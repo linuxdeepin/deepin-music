@@ -416,16 +416,20 @@ QPixmap MetaDetector::getCoverDataPixmap(MediaMeta meta, int engineType)
 #else
         TagLib::MPEG::File f(meta.localPath.toStdString().c_str());
 #endif
-        TagLib::ID3v2::FrameList frameList = f.ID3v2Tag()->frameListMap()["APIC"];
-        if (!frameList.isEmpty()) {
-            TagLib::ID3v2::AttachedPictureFrame *picFrame = static_cast<TagLib::ID3v2::AttachedPictureFrame *>(frameList.front());
-            QImage image;
-            QBuffer buffer;
-            buffer.setData(picFrame->picture().data(), static_cast<int>(picFrame->picture().size()));
-            QImageReader imageReader(&buffer);
-            image = imageReader.read();
-            pixmap = QPixmap::fromImage(image);
+        // 音乐文件不一定存在ID3v2Tag
+        if(f.ID3v2Tag()){
+            TagLib::ID3v2::FrameList frameList = f.ID3v2Tag()->frameListMap()["APIC"];
+            if (!frameList.isEmpty()) {
+                TagLib::ID3v2::AttachedPictureFrame *picFrame = static_cast<TagLib::ID3v2::AttachedPictureFrame *>(frameList.front());
+                QImage image;
+                QBuffer buffer;
+                buffer.setData(picFrame->picture().data(), static_cast<int>(picFrame->picture().size()));
+                QImageReader imageReader(&buffer);
+                image = imageReader.read();
+                pixmap = QPixmap::fromImage(image);
+            }
         }
+
         f.clear();
     }
 
