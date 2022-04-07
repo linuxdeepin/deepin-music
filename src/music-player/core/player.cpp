@@ -154,7 +154,10 @@ Player::Player(QObject *parent) : QObject(parent)
 
 void Player::init()
 {
-    m_basePlayer->init();
+    //设置延时加载
+    QTimer::singleShot(300, this, [ = ]() {
+        m_basePlayer->init();
+    });
     if (nullptr == m_pDBus) {
         m_pDBus = new QDBusInterface("org.freedesktop.login1", "/org/freedesktop/login1",
                                      "org.freedesktop.login1.Manager", QDBusConnection::systemBus());
