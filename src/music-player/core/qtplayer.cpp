@@ -106,13 +106,13 @@ void QtPlayer::play()
 
 void QtPlayer::pause()
 {
-    if (m_mediaPlayer != nullptr && m_mediaPlayer->state() == QMediaPlayer::State::PlayingState)
+    if (m_mediaPlayer != nullptr && m_mediaPlayer->state() == QMediaPlayer::PlayingState)
         m_mediaPlayer->pause();
 }
 
 void QtPlayer::stop()
 {
-    if (m_mediaPlayer != nullptr && m_mediaPlayer->state() == QMediaPlayer::State::PlayingState)
+    if (m_mediaPlayer != nullptr && m_mediaPlayer->state() == QMediaPlayer::PlayingState)
         m_mediaPlayer->stop();
 }
 
@@ -125,7 +125,7 @@ int QtPlayer::length()
 void QtPlayer::setTime(qint64 time)
 {
     init();
-    if (m_mediaPlayer->mediaStatus() == QMediaPlayer::MediaStatus::NoMedia)
+    if (m_mediaPlayer->mediaStatus() == QMediaPlayer::NoMedia)
         return;
     m_mediaPlayer->setPosition(time);
 }
@@ -133,24 +133,23 @@ void QtPlayer::setTime(qint64 time)
 qint64 QtPlayer::time()
 {
     init();
-    if (m_mediaPlayer->mediaStatus() == QMediaPlayer::MediaStatus::NoMedia)
-        return -1;
+    if (m_mediaPlayer->mediaStatus() == QMediaPlayer::NoMedia) return -1;
     return m_mediaPlayer->position();
 }
 
 void QtPlayer::setMediaMeta(MediaMeta meta)
 {
     init();
-    if (m_activeMeta.hash != meta.hash) {
-        m_activeMeta = meta;
-        bool value = m_activeMeta.mmType == MIMETYPE_CDA ? false : true;
-        if (value) {
-            m_mediaPlayer->setMedia(QUrl::fromLocalFile(m_activeMeta.localPath));
-        } else {
-            m_mediaPlayer->setMedia(QUrl::fromUserInput(m_activeMeta.localPath));
-        }
-        m_mediaPlayer->setVolume(MusicSettings::value("base.play.volume").toInt());
+    if (m_activeMeta.hash == meta.hash) return;
+
+    m_activeMeta = meta;
+    bool value = m_activeMeta.mmType == MIMETYPE_CDA ? false : true;
+    if (value) {
+        m_mediaPlayer->setMedia(QUrl::fromLocalFile(m_activeMeta.localPath));
+    } else {
+        m_mediaPlayer->setMedia(QUrl::fromUserInput(m_activeMeta.localPath));
     }
+    m_mediaPlayer->setVolume(MusicSettings::value("base.play.volume").toInt());
 }
 
 bool QtPlayer::getMute()
@@ -187,7 +186,6 @@ void QtPlayer::onMediaStatusChanged(QMediaPlayer::MediaStatus status)
 void QtPlayer::onPositionChanged(qint64 position)
 {
     init();
-    //qDebug() << __FUNCTION__ << __LINE__ << position;
     m_currPositionChanged = position;
     float value = static_cast<float>(position) / m_mediaPlayer->duration();
     emit timeChanged(position);
@@ -209,22 +207,16 @@ void QtPlayer::resetPlayInfo()
     QVariant muteV = DBusUtils::readDBusProperty("com.deepin.daemon.Audio", m_sinkInputPath,
                                                  "com.deepin.daemon.Audio.SinkInput", "Mute");
 
-    if (!volumeV.isValid() || !muteV.isValid())
-        return;
+    if (!volumeV.isValid() || !muteV.isValid()) return;
 
     QDBusInterface ainterface("com.deepin.daemon.Audio", m_sinkInputPath,
                               "com.deepin.daemon.Audio.SinkInput",
                               QDBusConnection::sessionBus());
-    if (!ainterface.isValid()) {
-        return ;
-    }
+    if (!ainterface.isValid()) return ;
 
-    if (!qFuzzyCompare(volumeV.toDouble(), 1.0)) {
-        ainterface.call(QLatin1String("SetVolume"), 1.0, false);
-    }
-    if (muteV.toBool()) {
-        ainterface.call(QLatin1String("SetMute"), false);
-    }
+    if (!qFuzzyCompare(volumeV.toDouble(), 1.0)) ainterface.call(QLatin1String("SetVolume"), 1.0, false);
+
+    if (muteV.toBool()) ainterface.call(QLatin1String("SetMute"), false);
 }
 
 void QtPlayer::readSinkInputPath()
@@ -232,8 +224,7 @@ void QtPlayer::readSinkInputPath()
     QVariant v = DBusUtils::readDBusProperty("com.deepin.daemon.Audio", "/com/deepin/daemon/Audio",
                                              "com.deepin.daemon.Audio", "SinkInputs");
 
-    if (!v.isValid())
-        return;
+    if (!v.isValid()) return;
 
     QList<QDBusObjectPath> allSinkInputsList = v.value<QList<QDBusObjectPath> >();
 

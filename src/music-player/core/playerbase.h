@@ -45,7 +45,6 @@ public:
     };
 
     PlayerBase(QObject *parent = nullptr);
-    ~PlayerBase();
 
     // 初始化
     virtual void init() = 0;
@@ -53,8 +52,8 @@ public:
     virtual void release() = 0;
 
 public:
-    virtual void initCddaTrack();
-    virtual QList<MediaMeta> getCdaMetaInfo();
+    virtual void initCddaTrack() {}
+    virtual QList<MediaMeta> getCdaMetaInfo() {return QList<MediaMeta>();}
 
     virtual PlayState state() = 0;
     virtual void play() = 0;
@@ -70,12 +69,12 @@ public:
     virtual void setFadeInOutFactor(double fadeInOutFactor) = 0;
 
     //Equalizer
-    virtual void setEqualizerEnabled(bool enabled);
-    virtual void loadFromPreset(uint index);
-    virtual void setPreamplification(float value);
-    virtual void setAmplificationForBandAt(float amp, uint bandIndex);
-    virtual float amplificationForBandAt(uint bandIndex);
-    virtual float preamplification();
+    virtual void setEqualizerEnabled(bool enabled) {Q_UNUSED(enabled);}
+    virtual void loadFromPreset(uint index) {Q_UNUSED(index);}
+    virtual void setPreamplification(float value) {Q_UNUSED(value);}
+    virtual void setAmplificationForBandAt(float amp, uint bandIndex) {Q_UNUSED(amp); Q_UNUSED(bandIndex);}
+    virtual float amplificationForBandAt(uint bandIndex) {Q_UNUSED(bandIndex);}
+    virtual float preamplification() {return 1.0;}
 
 signals:
     void timeChanged(qint64 position);  //播放时长改变
