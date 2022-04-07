@@ -38,6 +38,7 @@
 #include <DApplication>
 
 #include "core/musicsettings.h"
+#include "core/util/global.h"
 #include "application.h"
 #include "mainframe.h"
 #include "player.h"
@@ -120,6 +121,7 @@ void createSpeechDbus()
         app.loadTranslator(); \
         checkOnly(); \
         MusicSettings::init(); \
+        Global::initPlaybackEngineType(); \
         MainFrame mainframe; \
         auto showflag = MusicSettings::value("base.play.showFlag").toBool(); \
         mainframe.initUI(showflag); \
