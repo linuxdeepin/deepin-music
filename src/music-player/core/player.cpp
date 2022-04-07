@@ -800,12 +800,8 @@ void Player::setMode(Player::PlaybackMode mode)
 
 void Player::setVolume(int volume, bool sync)
 {
-    if (volume > 100) {
-        volume = 100;
-    }
-    if (volume < 0) {
-        volume = 0;
-    }
+    if (volume > 100) volume = 100;
+    if (volume < 0) volume = 0;
 
     m_volume = volume;
     if (sync) MusicSettings::setOption("base.play.volume", volume);
@@ -902,9 +898,7 @@ void Player::setDbusMuted(bool muted)
         QDBusInterface ainterface("com.deepin.daemon.Audio", m_sinkInputPath,
                                   "com.deepin.daemon.Audio.SinkInput",
                                   QDBusConnection::sessionBus());
-        if (!ainterface.isValid()) {
-            return ;
-        }
+        if (!ainterface.isValid()) return ;
 
         //调用设置音量
         ainterface.call(QLatin1String("SetVolume"), (m_volume) / 100.0, false);//取消+1，保证音量值正确
@@ -1002,9 +996,8 @@ void Player::onSleepWhenTaking(bool sleep)
                 QDBusInterface ainterface("com.deepin.daemon.Audio", m_sinkInputPath,
                                           "com.deepin.daemon.Audio.SinkInput",
                                           QDBusConnection::sessionBus());
-                if (!ainterface.isValid()) {
-                    return ;
-                }
+                if (!ainterface.isValid()) return ;
+
                 //停止播放并记录播放位置
                 m_Vlcstate = Vlc::Playing;
                 m_basePlayer->pause();
@@ -1030,8 +1023,7 @@ void Player::readSinkInputPath()
     QVariant v = DBusUtils::readDBusProperty("com.deepin.daemon.Audio", "/com/deepin/daemon/Audio",
                                              "com.deepin.daemon.Audio", "SinkInputs");
 
-    if (!v.isValid())
-        return;
+    if (!v.isValid()) return;
 
     QList<QDBusObjectPath> allSinkInputsList = v.value<QList<QDBusObjectPath> >();
 
@@ -1039,8 +1031,7 @@ void Player::readSinkInputPath()
         QVariant nameV = DBusUtils::readDBusProperty("com.deepin.daemon.Audio", curPath.path(),
                                                      "com.deepin.daemon.Audio.SinkInput", "Icon");
 
-        if (!nameV.isValid() || nameV.toString() != "deepin-music")
-            continue;
+        if (!nameV.isValid() || nameV.toString() != "deepin-music") continue;
 
         m_sinkInputPath = curPath.path();
         break;
@@ -1050,13 +1041,14 @@ void Player::readSinkInputPath()
 bool Player::isValidDbusMute()
 {
     readSinkInputPath();
+    bool validFlag = false;
     if (!m_sinkInputPath.isEmpty()) {
-        QVariant MuteV = DBusUtils::readDBusProperty("com.deepin.daemon.Audio", m_sinkInputPath,
+        QVariant muteV = DBusUtils::readDBusProperty("com.deepin.daemon.Audio", m_sinkInputPath,
                                                      "com.deepin.daemon.Audio.SinkInput", "Mute");
-        return MuteV.isValid();
+        validFlag = muteV.isValid();
     }
 
-    return false;
+    return validFlag;
 }
 
 bool Player::setMusicVolume(double volume)
