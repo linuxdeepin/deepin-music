@@ -119,6 +119,7 @@ void MusicListDataWidget::initInfoLabel(QString hash)
             countStr = QString("   ") + MusicListDataWidget::tr("%1 songs").arg(songCount);
         }
     }
+    m_countStr = countStr;
     m_infoLabel->setText(countStr);
 }
 
@@ -514,7 +515,12 @@ void MusicListDataWidget::resizeEvent(QResizeEvent *event)
 {
     QWidget::resizeEvent(event);
     m_lableWidget->setGeometry(m_actionBar->geometry());
-    refreshInfoLabel(m_currentHash);
+
+    QFontMetrics m_titleLabelFontMetrics(m_titleLabel->font());
+    int width = m_actionBar->width() / 2 - 20 - m_btPlayAll->width() - m_titleLabelFontMetrics.width(m_titleLabel->text()) / 2;
+    QFontMetrics font(m_infoLabel->font());
+    QString countStr = font.elidedText(m_countStr, Qt::ElideRight, width);
+    m_infoLabel->setText(countStr);
 }
 
 // 大标题跟随size变化
@@ -1096,6 +1102,7 @@ void MusicListDataWidget::refreshInfoLabel(QString hash)
         }
     }
 
+    m_countStr = countStr;
     // 文本太长显示...
     QFontMetrics m_titleLabelFontMetrics(m_titleLabel->font());
     int width = m_actionBar->width() / 2 - 20 - m_btPlayAll->width() - m_titleLabelFontMetrics.width(m_titleLabel->text()) / 2;
