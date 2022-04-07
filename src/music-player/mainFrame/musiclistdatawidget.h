@@ -126,6 +126,7 @@ private:
     QString             m_currentHash;
     ListPageSwitchType  m_preSwitchtype            = AllSongListType;
     QString             m_preHash                  = "all";//记录前一次显示，当清除搜索时回到上一页面
+    QString             m_countStr;
 };
 
 class ActionBar : public DWidget
