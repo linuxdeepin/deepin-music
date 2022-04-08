@@ -280,6 +280,11 @@ void Player::resume()
         Player::getInstance()->forcePlayMeta();//播放列表第一首歌
         return;
     }
+    // 播放歌曲与当前歌曲不一致
+    if (m_basePlayer->getMediaMeta().hash != m_ActiveMeta.hash) {
+        playMeta(m_ActiveMeta);
+        return;
+    }
 
     bool empty = QFileInfo(m_ActiveMeta.localPath).dir().path().isEmpty();
     if (empty && m_ActiveMeta.mmType != MIMETYPE_CDA) {//光盘弹出时，有可能歌曲路径还在，不需要再播放。

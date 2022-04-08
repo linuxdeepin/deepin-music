@@ -52,6 +52,7 @@ public:
     virtual void release() = 0;
 
 public:
+    MediaMeta getMediaMeta() {return m_activeMeta;}
     virtual void initCddaTrack() {}
     virtual QList<MediaMeta> getCdaMetaInfo() {return QList<MediaMeta>();}
 
