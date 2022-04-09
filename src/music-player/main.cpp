@@ -61,6 +61,7 @@ bool checkOnly();
 
 int main(int argc, char *argv[])
 {
+    qputenv("QT_QPA_PLATFORMTHEME",""); //修复在其它桌面环境运行时因QT_QPA_PLATFORMTHEME环境变量导致的界面样式显示异常
     if (!QString(qgetenv("XDG_CURRENT_DESKTOP")).toLower().startsWith("deepin")) {
         setenv("XDG_CURRENT_DESKTOP", "Deepin", 1);
     }
