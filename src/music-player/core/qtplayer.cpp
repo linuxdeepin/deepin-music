@@ -112,8 +112,12 @@ void QtPlayer::pause()
 
 void QtPlayer::stop()
 {
-    if (m_mediaPlayer != nullptr && m_mediaPlayer->state() == QMediaPlayer::PlayingState)
+    // 播放和状态状态都可以停止播放
+    if (m_mediaPlayer != nullptr && (m_mediaPlayer->state() == QMediaPlayer::State::PlayingState
+                                     || m_mediaPlayer->state() == QMediaPlayer::State::PausedState)) {
         m_mediaPlayer->stop();
+    }
+
 }
 
 int QtPlayer::length()

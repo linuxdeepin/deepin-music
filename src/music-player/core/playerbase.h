@@ -74,7 +74,7 @@ public:
     virtual void loadFromPreset(uint index) {Q_UNUSED(index);}
     virtual void setPreamplification(float value) {Q_UNUSED(value);}
     virtual void setAmplificationForBandAt(float amp, uint bandIndex) {Q_UNUSED(amp); Q_UNUSED(bandIndex);}
-    virtual float amplificationForBandAt(uint bandIndex) {Q_UNUSED(bandIndex);}
+    virtual float amplificationForBandAt(uint bandIndex) {Q_UNUSED(bandIndex); return 1.0;}
     virtual float preamplification() {return 1.0;}
 
 signals:

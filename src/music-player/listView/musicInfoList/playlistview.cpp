@@ -581,10 +581,7 @@ void PlayListView::showErrorDlg()
     warnDlg.setTitle(tr("File is invalid or does not exist, load failed"));
     warnDlg.addButtons(QStringList() << tr("OK"));
     warnDlg.setDefaultButton(0);
-    if (0 == warnDlg.exec()) {
-        //播放下一首
-        Player::getInstance()->playNextMeta(true);
-    }
+    warnDlg.exec();
 }
 
 int PlayListView::getMusicCount()
@@ -694,8 +691,8 @@ void PlayListView::slotOnDoubleClicked(const QModelIndex &index)
     } else {
         if (!Player::getInstance()->supportedSuffixStrList().contains(fileSuffix.toLower()))
             emit CommonService::getInstance()->signalDecodingErrorMessage();
-        playMusic(itemMeta);
     }
+    playMusic(itemMeta);
 }
 
 void PlayListView::slotLoadData()
