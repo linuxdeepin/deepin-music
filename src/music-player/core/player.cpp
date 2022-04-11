@@ -216,7 +216,8 @@ void Player::playMeta(MediaMeta meta)
             if (acint != 0 || empty || !suffixFlag) {
                 //文件不存在提示
                 emit signalPlaybackStatusChanged(Player::Paused);
-                playNextMeta(true);
+                m_ActiveMeta = meta;
+                playNextMeta(false);
                 INT_LAST_PROGRESS_FLAG = 0;
                 return;
             }
@@ -424,17 +425,33 @@ void Player::playPreMeta()
 
 void Player::playNextMeta(bool isAuto)
 {
-    QList<MediaMeta> curMetaList;
+    QList<QPair<int, MediaMeta> > curMetaList;
     for (int i = 0; i < m_MetaList.size(); i++) {
         if ((QFile::exists(m_MetaList[i].localPath) && m_supportedSuffixStr.contains(QFileInfo(m_MetaList[i].localPath).suffix().toLower())) || m_MetaList[i].mmType == MIMETYPE_CDA)
-            curMetaList.append(m_MetaList[i]);
+            curMetaList.append(qMakePair<int, MediaMeta>(i, m_MetaList[i]));
     }
     if (curMetaList.size() > 0) {
-        int index = 0;
+        int index = -1;
         for (int i = 0; i < curMetaList.size(); i++) {
-            if (curMetaList.at(i).hash == m_ActiveMeta.hash) {
+            if (curMetaList.at(i).second.hash == m_ActiveMeta.hash) {
                 index = i;
                 break;
+            }
+        }
+        if (index == -1 && !m_ActiveMeta.hash.isEmpty()) {
+            for (int i = 0; i < m_MetaList.size(); i++) {
+                if (m_MetaList.at(i).hash == m_ActiveMeta.hash) {
+                    index = i;
+                    break;
+                }
+            }
+            if (index != -1) {
+                for (int i = 0; i < curMetaList.size(); i++) {
+                    if (curMetaList.at(i).first > index && i > 0) {
+                        index = i - 1;
+                        break;
+                    }
+                }
             }
         }
 
@@ -492,7 +509,7 @@ void Player::playNextMeta(bool isAuto)
             break;
         }
         }
-        m_ActiveMeta = curMetaList.at(index);
+        m_ActiveMeta = curMetaList.at(index == -1 ? 0 : index).second;
         playMeta(m_ActiveMeta);
     } else {
         stop();
@@ -680,8 +697,8 @@ void Player::stop(bool emitSignal)
         emit signalMediaStop("");//不用当前的参数
         if (m_basePlayer) {
             m_basePlayer->pause();
-            setActiveMeta(MediaMeta());//清除当前播放音乐；
             m_basePlayer->stop();
+            setActiveMeta(MediaMeta());//清除当前播放音乐；
         }
 
         QVariantMap metadata;
