@@ -438,6 +438,7 @@ void Player::playNextMeta(bool isAuto)
                 break;
             }
         }
+
         if (index == -1 && !m_ActiveMeta.hash.isEmpty()) {
             for (int i = 0; i < m_MetaList.size(); i++) {
                 if (m_MetaList.at(i).hash == m_ActiveMeta.hash) {
@@ -447,7 +448,7 @@ void Player::playNextMeta(bool isAuto)
             }
             if (index != -1) {
                 for (int i = 0; i < curMetaList.size(); i++) {
-                    if (curMetaList.at(i).first > index && i > 0) {
+                    if (curMetaList.at(i).first > index && i >= 0) {
                         index = i - 1;
                         break;
                     }
@@ -509,7 +510,10 @@ void Player::playNextMeta(bool isAuto)
             break;
         }
         }
-        m_ActiveMeta = curMetaList.at(index == -1 ? 0 : index).second;
+
+        index = (index == -1 ? 0 : index);
+        index = (index >= curMetaList.size() ? 0 : index);
+        m_ActiveMeta = curMetaList.at(index).second;
         playMeta(m_ActiveMeta);
     } else {
         stop();

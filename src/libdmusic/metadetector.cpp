@@ -360,15 +360,21 @@ void MetaDetector::getCoverData(const QString &path, const QString &tmpPath, con
 #else
             TagLib::MPEG::File f(path.toStdString().c_str());
 #endif
-            if (f.ID3v2Tag() != nullptr) {
-                TagLib::ID3v2::FrameList frameList = f.ID3v2Tag()->frameListMap()["APIC"];
-                if (!frameList.isEmpty()) {
-                    TagLib::ID3v2::AttachedPictureFrame *picFrame = static_cast<TagLib::ID3v2::AttachedPictureFrame *>(frameList.front());
-                    QBuffer buffer;
-                    buffer.setData(picFrame->picture().data(), static_cast<int>(picFrame->picture().size()));
-                    QImageReader imageReader(&buffer);
-                    image = imageReader.read();
+            // 检查音乐文件
+            if (f.isValid()) {
+                // 音乐文件不一定存在ID3v2Tag
+                if (f.ID3v2Tag() != nullptr) {
+                    TagLib::ID3v2::FrameList frameList = f.ID3v2Tag()->frameListMap()["APIC"];
+                    if (!frameList.isEmpty()) {
+                        TagLib::ID3v2::AttachedPictureFrame *picFrame = static_cast<TagLib::ID3v2::AttachedPictureFrame *>(frameList.front());
+                        QBuffer buffer;
+                        buffer.setData(picFrame->picture().data(), static_cast<int>(picFrame->picture().size()));
+                        QImageReader imageReader(&buffer);
+                        image = imageReader.read();
+                    }
                 }
+
+                f.clear();
             }
         }
 
@@ -418,21 +424,24 @@ QPixmap MetaDetector::getCoverDataPixmap(MediaMeta meta, int engineType)
 #else
         TagLib::MPEG::File f(meta.localPath.toStdString().c_str());
 #endif
-        // 音乐文件不一定存在ID3v2Tag
-        if (f.ID3v2Tag()) {
-            TagLib::ID3v2::FrameList frameList = f.ID3v2Tag()->frameListMap()["APIC"];
-            if (!frameList.isEmpty()) {
-                TagLib::ID3v2::AttachedPictureFrame *picFrame = static_cast<TagLib::ID3v2::AttachedPictureFrame *>(frameList.front());
-                QImage image;
-                QBuffer buffer;
-                buffer.setData(picFrame->picture().data(), static_cast<int>(picFrame->picture().size()));
-                QImageReader imageReader(&buffer);
-                image = imageReader.read();
-                pixmap = QPixmap::fromImage(image);
+        // 检查音乐文件
+        if (f.isValid()) {
+            // 音乐文件不一定存在ID3v2Tag
+            if (f.ID3v2Tag()) {
+                TagLib::ID3v2::FrameList frameList = f.ID3v2Tag()->frameListMap()["APIC"];
+                if (!frameList.isEmpty()) {
+                    TagLib::ID3v2::AttachedPictureFrame *picFrame = static_cast<TagLib::ID3v2::AttachedPictureFrame *>(frameList.front());
+                    QImage image;
+                    QBuffer buffer;
+                    buffer.setData(picFrame->picture().data(), static_cast<int>(picFrame->picture().size()));
+                    QImageReader imageReader(&buffer);
+                    image = imageReader.read();
+                    pixmap = QPixmap::fromImage(image);
+                }
             }
-        }
 
-        f.clear();
+            f.clear();
+        }
     }
 
     return pixmap;
