@@ -142,8 +142,12 @@ void MusicLyricWidget::updateUI()
     QFileInfo coverInfo(Global::cacheDir() + "/images/" + meta.hash + ".jpg");
     QPixmap cover;
     if (coverInfo.exists()) {
-        // 不使用缩略图,使用原图,更加清晰
-        cover = MetaDetector::getCoverDataPixmap(meta, Global::playbackEngineType());
+        if (Global::playbackEngineType() == 1) {
+            // 不使用缩略图,使用原图,更加清晰
+            cover = MetaDetector::getCoverDataPixmap(meta, Global::playbackEngineType());
+        } else {
+            cover = QPixmap(coverInfo.filePath()); //如果是gstreamer播放器，直接读取缓存
+        }
     }
     //防止缓存为默认图片数据
     if (cover.isNull()) {
