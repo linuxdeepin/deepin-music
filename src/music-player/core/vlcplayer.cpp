@@ -103,6 +103,10 @@ void VlcPlayer::releasePlayer()
         delete m_qvplayer;
         m_qvplayer = nullptr;
     }
+    if (m_qvinstance) {
+        delete m_qvinstance;
+        m_qvinstance = nullptr;
+    }
 }
 
 void VlcPlayer::release()
