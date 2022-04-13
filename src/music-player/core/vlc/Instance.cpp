@@ -121,6 +121,10 @@ VlcInstance::~VlcInstance()
     if (_vlcInstance) {
         vlc_release_function vlc_release = (vlc_release_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("libvlc_release");
         vlc_release(_vlcInstance);
+
+        vlc_release_function vlc_free = (vlc_release_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("libvlc_free");
+        vlc_free(_vlcInstance);
+        _vlcInstance = nullptr;
     }
 }
 

@@ -207,10 +207,11 @@ void DBOperate::slotCreatCoverImg(const QList<MediaMeta> &metas)
             m_needSleep = false;
         }
         //没有加载过的文件才去解析数据
-
         QFileInfo coverInfo(Global::cacheDir() + "/images/" + meta.hash + ".jpg");
         if (!coverInfo.exists()) {
-            meta.getCoverData(Global::cacheDir(), Global::playbackEngineType());
+            //taglib无法解析mp3格式之外的音频封面，所以需要在这里进行选择性过滤
+            if (Global::playbackEngineType() == 1 || QFileInfo(meta.localPath).suffix().contains("mp3", Qt::CaseInsensitive))
+                meta.getCoverData(Global::cacheDir(), Global::playbackEngineType());
         }
         emit sigCreatOneCoverImg(meta);
     }
