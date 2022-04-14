@@ -279,6 +279,12 @@ void Player::resume()
         return ;
     }
 
+    // 播放歌曲与当前歌曲不一致
+    if (m_ActiveMeta.mmType != MIMETYPE_CDA && m_qvmedia->getCurrentLocation() != m_ActiveMeta.localPath) {
+        playMeta(m_ActiveMeta);
+        return;
+    }
+
     /*****************************************************************************************
      * 1.audio service dbus not start
      * 2.audio device not start

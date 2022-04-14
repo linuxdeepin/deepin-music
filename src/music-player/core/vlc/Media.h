@@ -84,6 +84,12 @@ public:
      */
     int getCdaTrack() const;
 
+    /**
+     * @brief getCurrentLocation 获取路径
+     * @return
+     */
+    QString getCurrentLocation() const;
+
 signals:
     /*!
         \brief Signal sent on meta change
