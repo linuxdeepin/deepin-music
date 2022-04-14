@@ -657,7 +657,7 @@ void SingerDataDelegate::mouseClicked(const QStyleOptionViewItem &option, const 
         if (fillPolygon.containsPoint(pressPos, Qt::OddEvenFill)) {
             if (singertmp.musicinfos.values().size() > 0) {
                 emit CommonService::getInstance()->signalSetPlayModel(Player::RepeatAll);
-                Player::getInstance()->setCurrentPlayListHash("album", false);
+                Player::getInstance()->setCurrentPlayListHash("artist", false);
                 Player::getInstance()->setPlayList(singertmp.musicinfos.values());
                 Player::getInstance()->playMeta(singertmp.musicinfos.values().first());
                 emit Player::getInstance()->signalPlayListChanged();
