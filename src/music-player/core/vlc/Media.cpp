@@ -68,6 +68,7 @@ void VlcMedia::releaseMedia()
         vlc_media_release_function vlc_media_release = (vlc_media_release_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("libvlc_media_release");
         vlc_media_release(_vlcMedia);
         _vlcMedia = nullptr;
+        _currentLocation.clear();
     }
 }
 
@@ -108,6 +109,11 @@ void VlcMedia::initMedia(const QString &location,
 int VlcMedia::getCdaTrack() const
 {
     return m_cdaTrackId;
+}
+
+QString VlcMedia::getCurrentLocation() const
+{
+    return _currentLocation;
 }
 
 void VlcMedia::createCoreConnections()
