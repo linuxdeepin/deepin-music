@@ -61,13 +61,13 @@ void createSpeechDbus()
     // 'playMusic',''       显示所有音乐界面，随机播放
     mSpeech.registerAction("playMusic", "play Music",
                            std::bind(&SpeechCenter::playMusic, SpeechCenter::getInstance(), std::placeholders::_1));
-    // 'playArtist','华晨宇'
+    // 'playArtist','xxx'
     mSpeech.registerAction("playArtist", "play Artist",
                            std::bind(&SpeechCenter::playArtist, SpeechCenter::getInstance(), std::placeholders::_1));
-    // 'playArtistMusic','华晨宇:齐天'
+    // 'playArtistMusic','xxx:xx'
     mSpeech.registerAction("playArtistMusic", "play Artist Music",
                            std::bind(&SpeechCenter::playArtistMusic, SpeechCenter::getInstance(), std::placeholders::_1));
-    // 'playAlbum','历久尝新'
+    // 'playAlbum','xxx'
     mSpeech.registerAction("playAlbum", "play Album",
                            std::bind(&SpeechCenter::playAlbum, SpeechCenter::getInstance(), std::placeholders::_1));
     // 'playFaverite','fav'

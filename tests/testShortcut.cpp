@@ -363,18 +363,18 @@ TEST(Application, other1)
 
 
     QTest::qWait(100);
-    qDebug() << __FUNCTION__ << "playMusic浮夸";
-    SpeechCenter::getInstance()->playMusic("浮夸");
-    qDebug() << __FUNCTION__ << "playMusic浮夸1";
-    SpeechCenter::getInstance()->playMusic("浮夸1");//不存在
+    qDebug() << __FUNCTION__ << "playMusic副卡顶";
+    SpeechCenter::getInstance()->playMusic("副卡顶");
+    qDebug() << __FUNCTION__ << "playMusic副卡顶1";
+    SpeechCenter::getInstance()->playMusic("副卡顶1");//不存在
     SpeechCenter::getInstance()->playMusic("");
-    SpeechCenter::getInstance()->playArtist("华晨宇");
-    qDebug() << __FUNCTION__ << "playArtist华晨";
-    SpeechCenter::getInstance()->playArtist("华晨");//模糊匹配
-    qDebug() << __FUNCTION__ << "playArtist华晨1";
-    SpeechCenter::getInstance()->playArtist("华晨1");//不存在
-    SpeechCenter::getInstance()->playArtistMusic("华晨宇:浮夸");
-    SpeechCenter::getInstance()->playArtistMusic("华晨宇");
+    SpeechCenter::getInstance()->playArtist("花茶");
+    qDebug() << __FUNCTION__ << "playArtist花";
+    SpeechCenter::getInstance()->playArtist("花");//模糊匹配
+    qDebug() << __FUNCTION__ << "playArtist花1";
+    SpeechCenter::getInstance()->playArtist("花1");//不存在
+    SpeechCenter::getInstance()->playArtistMusic("花茶:副卡顶");
+    SpeechCenter::getInstance()->playArtistMusic("花茶");
     SpeechCenter::getInstance()->playArtistMusic("");
     SpeechCenter::getInstance()->playAlbum("Unknown album");
     qDebug() << __FUNCTION__ << "未知专辑";
@@ -384,8 +384,8 @@ TEST(Application, other1)
     SpeechCenter::getInstance()->playSonglist("空");
     SpeechCenter::getInstance()->playSonglist("");
     SpeechCenter::getInstance()->playSonglist("test");
-    qDebug() << __FUNCTION__ << "playMusic浮夸";
-    SpeechCenter::getInstance()->playMusic("浮夸");
+    qDebug() << __FUNCTION__ << "playMusic副卡顶";
+    SpeechCenter::getInstance()->playMusic("副卡顶");
     qDebug() << __FUNCTION__ << "pause";
     SpeechCenter::getInstance()->pause("");
     SpeechCenter::getInstance()->resume("");
