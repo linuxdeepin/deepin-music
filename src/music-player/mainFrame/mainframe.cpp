@@ -456,16 +456,16 @@ void MainFrame::autoStartToPlay()
     if (lastListPageSwitchType != AllSongListType)
         emit CommonService::getInstance()->signalSwitchToView(lastListPageSwitchType, lastplaypage);
     Player::getInstance()->reloadMetaList();
+    //读取均衡器使能开关配置
+    auto eqSwitch = MusicSettings::value("equalizer.all.switch").toBool();
+    if (eqSwitch) {
+        Player::getInstance()->initEqualizerCfg();
+    }
     if (!strOpenPath.isEmpty()) {
         //通知设置当前页面
         Player::getInstance()->setCurrentPlayListHash(lastplaypage, false);
         Player::getInstance()->init();
         return ;
-    }
-    //读取均衡器使能开关配置
-    auto eqSwitch = MusicSettings::value("equalizer.all.switch").toBool();
-    if (eqSwitch) {
-        Player::getInstance()->initEqualizerCfg();
     }
     auto lastMeta = MusicSettings::value("base.play.last_meta").toString();
     if (!lastMeta.isEmpty()) {
