@@ -204,7 +204,7 @@ QList<MediaMeta> DataBaseService::getMusicInfosBySortAndCount(int count)
 QList<MediaMeta> DataBaseService::allMusicInfos(bool refresh)
 {
     // 防止重复查询数据库
-    if (!refresh || m_AllMediaMeta.size() == allDBMusicInfosCount()) {
+    if (!refresh || m_deleting || m_AllMediaMeta.size() == allDBMusicInfosCount()) {
         return m_AllMediaMeta;
     } else {
         m_AllMediaMeta.clear();
