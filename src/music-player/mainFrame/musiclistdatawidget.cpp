@@ -80,6 +80,9 @@ MusicListDataWidget::MusicListDataWidget(QWidget *parent) :
     // 导入时刷新leble
     connect(m_musicListView, &PlayListView::signalRefreshInfoLabel, this, &MusicListDataWidget::refreshInfoLabel);
     connect(m_musicListView, &PlayListView::signalRefreshInfoLabel, this, &MusicListDataWidget::refreshSortAction);
+    connect(CommonService::getInstance(), &CommonService::loadData, this, [ = ]() {
+        refreshInfoLabel("all");
+    }, Qt::QueuedConnection);
 }
 
 MusicListDataWidget::~MusicListDataWidget()
