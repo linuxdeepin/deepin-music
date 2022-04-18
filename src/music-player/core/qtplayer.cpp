@@ -182,7 +182,8 @@ void QtPlayer::setMute(bool value)
 
 void QtPlayer::onMediaStatusChanged(QMediaPlayer::MediaStatus status)
 {
-    if (status == QMediaPlayer::MediaStatus::EndOfMedia) {
+    // 过滤无效音乐文件
+    if (status == QMediaPlayer::MediaStatus::EndOfMedia || status == QMediaPlayer::MediaStatus::InvalidMedia) {
         emit end();
     }
 }
