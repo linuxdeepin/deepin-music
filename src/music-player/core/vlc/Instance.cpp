@@ -80,6 +80,7 @@ typedef void (*vlc_set_user_agent_function)(libvlc_instance_t *, const char *, c
 typedef void (*vlc_set_app_id_function)(libvlc_instance_t *, const char *, const char *, const char *);
 typedef void (*vlc_log_set_function)(libvlc_instance_t *, libvlc_log_cb, void *);
 typedef void (*vlc_release_function)(libvlc_instance_t *);
+typedef void (*vlc_free_function)(libvlc_instance_t *);
 typedef const char *(*vlc_get_changeset_function)(void);
 typedef const char *(*vlc_get_compiler_function)(void);
 typedef const char *(*vlc_get_version_function)(void);
@@ -119,8 +120,8 @@ VlcInstance::~VlcInstance()
 {
     //释放Instance
     if (_vlcInstance) {
-        vlc_release_function vlc_release = (vlc_release_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("libvlc_release");
-        vlc_release(_vlcInstance);
+        vlc_free_function vlc_free = (vlc_free_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("libvlc_free");
+        vlc_free(_vlcInstance);
         _vlcInstance = nullptr;
     }
 }
