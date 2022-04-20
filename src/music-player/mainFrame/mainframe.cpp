@@ -390,7 +390,7 @@ void MainFrame::initMenuAndShortcut()
     connect(m_sysTrayIcon, &QSystemTrayIcon::activated,
     this, [ = ](QSystemTrayIcon::ActivationReason reason) {
         if (QSystemTrayIcon::Trigger == reason) {
-            if (isVisible() && !isMinimized()) {
+            if (checkWindowVisible(Global::isWaylandMode())) {
                 showMinimized();
             } else {
                 if (!isVisible()) {
@@ -404,6 +404,35 @@ void MainFrame::initMenuAndShortcut()
             }
         }
     });
+}
+
+bool MainFrame::checkWindowVisible(bool waylandMode)
+{
+    if (waylandMode) {
+        QVariant v = DBusUtils::readDBusProperty("com.deepin.dde.daemon.Dock", "/com/deepin/dde/daemon/Dock",
+                                                 "com.deepin.dde.daemon.Dock", "Entries");
+
+        if (!v.isValid()) return false;
+
+        QList<QDBusObjectPath> allSinkInputsList = v.value<QList<QDBusObjectPath> >();
+
+        QString entryPath;
+        for (auto curPath : allSinkInputsList) {
+            QVariant nameV = DBusUtils::readDBusProperty("com.deepin.dde.daemon.Dock", curPath.path(),
+                                                         "com.deepin.dde.daemon.Dock.Entry", "Name");
+            if (!nameV.isValid() || nameV != Global::getAppName()) continue;
+
+            entryPath = curPath.path();
+            break;
+        }
+
+        QVariant isActive = DBusUtils::readDBusProperty("com.deepin.dde.daemon.Dock", entryPath,
+                                                        "com.deepin.dde.daemon.Dock.Entry", "IsActive");
+
+        return isActive.isValid() ? isActive.toBool() : false;
+    } else {
+        return (isVisible() && !isMinimized());
+    }
 }
 
 void MainFrame::initPadMenu()
