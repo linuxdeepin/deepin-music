@@ -2281,6 +2281,8 @@ TEST(Application, showHide)
     CommonService::getInstance()->setIsTabletEnvironment(true);
 
     MainFrame *w = Application::getInstance()->getMainWindow();
+    w->checkWindowVisible(false);
+    w->checkWindowVisible(true);
     w->showMinimized();
     QTest::qWait(500);
 
