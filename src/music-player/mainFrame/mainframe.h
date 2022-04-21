@@ -64,6 +64,8 @@ public:
     void initTabletSelectBtn();
     // 初始化平板菜单
     void initPadMenu();
+    // 检查窗口状态
+    bool checkWindowVisible(bool waylandMode);
 public slots:
     // 显示弹窗消息
     void showPopupMessage(const QString &songListName, int selectCount, int insertCount);
