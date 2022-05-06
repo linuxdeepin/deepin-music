@@ -24,11 +24,13 @@
 #include <QCoreApplication>
 #include <DStandardPaths>
 #include <QProcessEnvironment>
+#include <QFile>
 
 DCORE_USE_NAMESPACE;
 
 static QString appName;
 static bool waylandMode = false;
+static bool boardVendorFlag = false;
 
 QString Global::configPath()
 {
@@ -73,5 +75,22 @@ void Global::setWaylandMode(bool mode)
 bool Global::isWaylandMode()
 {
     return waylandMode;
+}
+
+bool Global::checkBoardVendorType()
+{
+    QFile file("/sys/class/dmi/id/board_vendor");
+    if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        QString result(file.readAll());
+        boardVendorFlag = result.contains("HUAWEI");
+        file.close();
+    }
+
+    return boardVendorFlag;
+}
+
+bool Global::boardVendorType()
+{
+    return boardVendorFlag;
 }
 
