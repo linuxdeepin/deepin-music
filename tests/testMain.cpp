@@ -122,6 +122,8 @@ void createSpeechDbus()
         checkOnly(); \
         MusicSettings::init(); \
         Global::initPlaybackEngineType(); \
+        Global::checkBoardVendorType(); \
+        Global::setBoardVendorType(true); \
         MainFrame mainframe; \
         auto showflag = MusicSettings::value("base.play.showFlag").toBool(); \
         mainframe.initUI(showflag); \

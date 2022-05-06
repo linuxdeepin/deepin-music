@@ -44,4 +44,10 @@ public:
     static void initPlaybackEngineType();
     // 播放引擎类型1为vlc，0为QMediaPlayer
     static int playbackEngineType();
+    // 检测是否boardVendor
+    static bool checkBoardVendorType();
+    // 开启boardVendor
+    static void setBoardVendorType(bool type);
+    // boardVendor
+    static bool boardVendorType();
 };
