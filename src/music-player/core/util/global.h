@@ -40,4 +40,8 @@ public:
     static void setWaylandMode(bool mode);
     // 是否开启Wayland
     static bool isWaylandMode();
+    // 检测是否boardVendor
+    static bool checkBoardVendorType();
+    // boardVendor
+    static bool boardVendorType();
 };

@@ -91,7 +91,10 @@ FooterWidget::FooterWidget(QWidget *parent) :
 
 FooterWidget::~FooterWidget()
 {
-
+    // 取消
+    if (m_lastCookie > 0) {
+        screenStandby(false);
+    }
 }
 
 void FooterWidget::initUI(QWidget *parent)
@@ -441,8 +444,10 @@ void FooterWidget::setPlayProperty(Player::PlaybackStatus status)
 {
     if (status != Player::PlaybackStatus::Playing) {
         m_btPlay->setIcon(QIcon::fromTheme("music_play"));
+        screenStandby(false);
     } else {
         m_btPlay->setIcon(QIcon::fromTheme("suspend"));
+        screenStandby(true);
     }
 }
 
@@ -798,6 +803,37 @@ void FooterWidget::slotLoadDetector(const QString &hash)
 void FooterWidget::slotSetWaveValue(int step, long duration)
 {
     m_waveform->onProgressChanged(step, duration, 1); //1:偏移率
+}
+
+void FooterWidget::screenStandby(bool isStandby)
+{
+    if (!Global::boardVendorType())
+        return;
+    if (isStandby) {
+        if (m_lastCookie > 0) {
+            QDBusInterface iface("org.freedesktop.ScreenSaver",
+                                 "/org/freedesktop/ScreenSaver",
+                                 "org.freedesktop.ScreenSaver");
+            iface.call("UnInhibit", m_lastCookie);
+            m_lastCookie = 0;
+        }
+        QDBusInterface iface("org.freedesktop.ScreenSaver",
+                             "/org/freedesktop/ScreenSaver",
+                             "org.freedesktop.ScreenSaver");
+        QDBusReply<uint32_t> reply = iface.call("Inhibit", "deepin-music", "playing in fullscreen");
+
+        if (reply.isValid()) {
+            m_lastCookie = reply.value();
+        }
+    } else {
+        if (m_lastCookie > 0) {
+            QDBusInterface iface("org.freedesktop.ScreenSaver",
+                                 "/org/freedesktop/ScreenSaver",
+                                 "org.freedesktop.ScreenSaver");
+            iface.call("UnInhibit", m_lastCookie);
+            m_lastCookie = 0;
+        }
+    }
 }
 
 void FooterWidget::resizeEvent(QResizeEvent *event)

@@ -159,6 +159,7 @@ int main(int argc, char *argv[])
 
     DApplicationSettings saveTheme;
     /*---Player instance init---*/
+    Global::checkBoardVendorType();
     MainFrame mainframe;
     int musicCount = DataBaseService::getInstance()->allMusicInfosCount();
     mainframe.initUI(musicCount > 0 ? true : false);
