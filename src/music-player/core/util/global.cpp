@@ -33,6 +33,7 @@ DCORE_USE_NAMESPACE;
 static QString appName;
 static bool waylandMode = false;
 static int engineType = 0;
+static bool boardVendorFlag = false;
 
 QString Global::configPath()
 {
@@ -99,5 +100,27 @@ void Global::initPlaybackEngineType()
 int Global::playbackEngineType()
 {
     return engineType;
+}
+
+bool Global::checkBoardVendorType()
+{
+    QFile file("/sys/class/dmi/id/board_vendor");
+    if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        QString result(file.readAll());
+        boardVendorFlag = result.contains("HUAWEI");
+        file.close();
+    }
+
+    return boardVendorFlag;
+}
+
+void Global::setBoardVendorType(bool type)
+{
+    boardVendorFlag = type;
+}
+
+bool Global::boardVendorType()
+{
+    return boardVendorFlag;
 }
 

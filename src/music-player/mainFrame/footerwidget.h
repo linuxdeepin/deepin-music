@@ -68,6 +68,8 @@ public:
      * @param duration 整体时长ms
      */
     void slotSetWaveValue(int step, long duration);
+    // 阻止休眠
+    void screenStandby(bool isStandby);
 private:
     void initUI(QWidget *parent = nullptr);
     void installTipHint(QWidget *widget, const QString &hintstr);
@@ -156,6 +158,7 @@ private:
     SoundVolume        *m_volSlider  = nullptr;
     MetaBufferDetector  m_metaBufferDetector;
     HintFilter          *m_hintFilter = nullptr;
+    quint32             m_lastCookie = 0;
 
     QTimer             *m_limitRepeatClick = nullptr;
 };
