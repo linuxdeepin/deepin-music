@@ -33,8 +33,8 @@
 ### 關閉音樂
 
 - 在音樂界面，如果您設置關閉主窗口的操作是退出，可以單擊 ![close_icon](../common/close.svg)，關閉音樂。
-- 右鍵單擊系統托盤中的 ![music](../common/music_icon24.svg)，選擇 **退出**，關閉音樂。
-- 右鍵單擊任務欄上的 ![music](../common/music_icon24.svg)，選擇 **關閉所有**，關閉音樂。
+- 在系統托盤上右鍵單擊 ![music](../common/music_icon24.svg)，選擇 **退出**，關閉音樂。
+- 在任務欄上右鍵單擊 ![music](../common/music_icon24.svg)，選擇 **關閉所有**，關閉音樂。
 
 ### 查看快捷鍵
 
@@ -71,6 +71,7 @@
 
 您可以在音樂中對本地音樂進行添加、刪除、查看訊息等基本操作。
 
+> ![notes](../common/notes.svg) 說明：採用不同的解碼技術，其所支持的功能也會不同，請以實際界面為準。
 
 ### 添加音樂
 
@@ -98,7 +99,7 @@
 - 選擇一個歌單，右鍵單擊 **播放**，按照當前設置的播放順序播放當前歌單中所有歌曲。
 
 
-> ![tips](../common/tips.svg) 竅門：在音樂界面，單擊 ![play_normal](../common/play_normal.svg) 播放選中的歌曲；單擊 ![suspend_normal](../common/suspend_normal.svg) 暫停正在播放的歌曲；單擊 ![last_normal](../common/last_normal.svg) 或 ![next_normal](../common/next_normal.svg)，按照當前播放模式切換到上一首或下一首歌曲。
+> ![tips](../common/tips.svg)竅門：在音樂界面，單擊 ![play_normal](../common/play_normal.svg) 播放選中的歌曲；單擊 ![suspend_normal](../common/suspend_normal.svg) 暫停正在播放的歌曲；單擊 ![last_normal](../common/last_normal.svg) 或 ![next_normal](../common/next_normal.svg)，按照當前播放模式切換到上一首或下一首歌曲。
 
 
 ### 收藏音樂
@@ -187,7 +188,7 @@
 
 1. 在音樂界面，選擇一個音樂文件。
 2. 單擊鼠標右鍵。
-3. 選擇 **加到播放清單**，將歌曲添加到選定的清單。  
+3. 選擇 **添加到**，將歌曲添加到選定的清單。  
 
 > ![tips](../common/tips.svg) 竅門：您可以拖拽本地歌曲到某一指定清單，即將歌曲添加到了當前清單和所有音樂中。
 

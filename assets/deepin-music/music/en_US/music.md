@@ -32,9 +32,9 @@ Music can be minimized to the system tray.
 
 Right-click the Music application icon in the tray and you can perform the following operations:
 
- - Click **Play/Pause** to play/pause the song.
- - Click **Previous** to play the previous song.
- - Click **Next** to play the next song.
+ - Click **Play/Pause** to play/pause the song. 
+ - Click **Previous** to play the previous song. 
+ - Click **Next** to play the next song. 
  - Click **Exit** to exit Music.
 
 ### Exit Music
@@ -124,6 +124,8 @@ On the main interface, you can choose from regular options, check view playlist,
 ## Common Operations
 
 You can add, delete, and view info of the local music in Music in the following ways.
+
+> ![notes](../common/notes.svg) Notes: The actual functions supported may differ according to the decoding method adopted.  Please refer to the interface.
 
 ### Add Music
 
@@ -225,7 +227,9 @@ On the Music interface, you can create, delete, and rename playlist. You can als
 2.  Enter the name of the playlist.
 3.  Press the **Enter** key on keyboard.
 
-![0|addlist](fig/addlist.png)
+>![tips](../common/tips.svg) Tips: You can also create a new playlist by right-clicking a song and then choosing **Add to > Create new playlist**.
+
+<img src="fig/addlist.png" alt="0|addlist" style="zoom:80%;" />
 
 ### Rename Playlist
 
@@ -238,7 +242,7 @@ On the Music interface, you can create, delete, and rename playlist. You can als
 ### Add Music to Playlist
 
 1. On the Music interface, select the music you want to add.
-2. Right-click and select **Add to playlist** to add the music to the selected playlist.
+2. Right-click and select **Add to** to add the music to the selected playlist.
 
 > ![tips](../common/tips.svg)Tips: You can drag the local music to a specified playlist to add the music into the current playlist and **All Music** playlist. 
 
@@ -267,7 +271,7 @@ In the main menu, you can [Add Music](#Add Music), create new playlists, set the
 
 You can set your favorite music mode, such as classical, rock, and so on. 
 
-1. On the Music interface, click ![menu](../common/icon_menu.svg).
+1. Click ![menu](../common/icon_menu.svg) on the Music interface.
 2. Select **Equalizer**.
 3. You can switch on equalizer, customize **Preamplifier** values and frequencies, and click **Save**; or select a music mode from the drop-down list which will be automatically saved by the system.
 4. Click **Restore Defaults** to restore the default settings.
@@ -280,7 +284,7 @@ You can set the basic information and shortcuts in settings.
 
 #### Basic Settings
 
-1. On the Music interface, click ![menu](../common/icon_menu.svg).
+1. Click ![menu](../common/icon_menu.svg) on the Music interface.
 2. Select **Settings** > **Basic**.
     - In the option **Play**, you can:
         - Check the **Autoplay** box, and the music will be played automatically when Music runs.
@@ -293,7 +297,7 @@ You can set the basic information and shortcuts in settings.
 
 #### Shortcuts
 
-1. On the Music interface, click ![menu](../common/icon_menu.svg).
+1. Click ![menu](../common/icon_menu.svg) on the Music interface.
 2. Select **Settings** > **Shortcuts** to view the shortcuts.
 3. You can select and re-enter shortcut keys to customize your choice.
 
@@ -301,20 +305,20 @@ You can set the basic information and shortcuts in settings.
 
 The window theme provides three theme types, namely Light Theme, Dark Theme, and System Theme.
 
-1. On the Music interface, click ![icon_menu](../common/icon_menu.svg).
+1. Click ![menu](../common/icon_menu.svg) on the Music interface.
 2. Click **Theme** to select one theme.
 
 ### Help
 
-1. On the Music interface, click ![menu](../common/icon_menu.svg).
+1. Click ![menu](../common/icon_menu.svg) on the Music interface.
 2. Click **Help** to view the manual of Music.
 
 ### About
 
-1. On the Music interface, click ![menu](../common/icon_menu.svg).
+1. Click ![menu](../common/icon_menu.svg) on the Music interface.
 2. Click **About** to view the version and introduction of Music.
 
 ### Exit
 
-1. On the Music interface, click ![menu](../common/icon_menu.svg).
+1. Click ![menu](../common/icon_menu.svg) on the Music interface.
 2. Click **Exit** to exit Music.

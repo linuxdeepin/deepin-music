@@ -33,8 +33,8 @@
 ### 关闭音乐
 
 - 在音乐界面，如果您设置关闭主窗口的操作是退出，可以单击 ![close_icon](../common/close.svg)，退出音乐。
-- 右键单击系统托盘中的 ![music_icon24](../common/music_icon24.svg)，选择 **退出**，退出音乐。
-- 右键单击任务栏上的 ![music_icon24](../common/music_icon24.svg)，选择 **关闭所有**，退出音乐。
+- 在系统托盘上右键单击 ![music_icon24](../common/music_icon24.svg)，选择 **退出**，退出音乐。
+- 在任务栏上右键单击 ![music_icon24](../common/music_icon24.svg)，选择 **关闭所有**，退出音乐。
 
 ### 查看快捷键
 
@@ -69,12 +69,14 @@
 
 您可以在音乐中对本地音乐进行添加、删除、查看信息等基本操作。
 
+> ![notes](../common/notes.svg) 说明：采用不同的解码技术，其所支持的功能也会不同，请以实际界面为准。
+
 
 ### 添加音乐
 
 在音乐界面，通过以下方法之一添加音乐：
 
-- 单击标题栏上的添加按钮 ![icon_menu](../common/add1.svg)。
+- 单击标题栏上的添加按钮 ![icon_menu](../common/add1.svg) 。
 - 单击 ![icon_menu](../common/icon_menu.svg) > **添加音乐**。
 - 直接将音乐文件拖拽到音乐界面。
 
@@ -95,7 +97,7 @@
 - 在音乐列表，单击 **播放所有**，按照当前设置的播放顺序播放当前列表中所有歌曲。
 - 选择一个歌单，右键单击 **播放**，按照当前设置的播放顺序播放当前歌单中所有歌曲。
 
-> ![tips](../common/tips.svg) 窍门：在音乐界面，单击 ![play_normal](../common/play_normal.svg) 播放选中的歌曲；单击 ![suspend_normal](../common/suspend_normal.svg) 暂停正在播放的歌曲；单击 ![last_normal](../common/last_normal.svg) 或 ![next_normal](../common/next_normal.svg)，按照当前播放模式切换到上一首或下一首歌曲。
+> ![tips](../common/tips.svg)窍门：在音乐界面，单击 ![play_normal](../common/play_normal.svg) 播放选中的歌曲；单击 ![suspend_normal](../common/suspend_normal.svg) 暂停正在播放的歌曲；单击 ![last_normal](../common/last_normal.svg) 或 ![next_normal](../common/next_normal.svg)，按照当前播放模式切换到上一首或下一首歌曲。
 
 
 ### 收藏音乐
@@ -107,7 +109,7 @@
 
 ### 查看歌词
 
-在音乐界面，单击工具栏上的图标 ![lyric_normal](../common/lyric_normal.svg) 或 ![music](../common/music.svg) 切换到歌词界面，再次单击，收起歌词界面。
+在音乐界面，单击工具栏上的图标 ![lyric_normal](../common/lyric_normal.svg) 或 ![music](../common/music.svg)  切换到歌词界面，再次单击，收起歌词界面。
 
 >  ![notes](../common/notes.svg)说明：如果播放的音乐文件有封面图，那么图标 ![music](../common/music.svg) 将转换为该音乐文件的封面图，单击封面图也可以切换到歌词界面。
 
@@ -185,7 +187,7 @@
 
 1. 在音乐界面，选择一个音乐文件。
 2. 单击鼠标右键。
-3. 选择 **添加到歌单**，将歌曲添加到选定的歌单。  
+3. 选择 **添加到**，将歌曲添加到选定的歌单。  
 
 > ![tips](../common/tips.svg) 窍门：您可以拖拽本地歌曲到某一指定歌单，即将歌曲添加到了当前歌单和所有音乐中。
 
