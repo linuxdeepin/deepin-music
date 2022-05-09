@@ -117,7 +117,7 @@ private:
     SingerDataDelegate      *signerDelegate = nullptr;
 //    MusicListDialog        *musicListDialog = nullptr;
     QPixmap                 playingPix = QPixmap(":/texts/music_play1_20px.svg");
-    QString                  m_hash;
+    QString                  m_hash; //用于区分当前列表是artist列表还是搜索中的artist列表
     QListView::ViewMode      m_viewModel = QListView::ListMode;
     QIcon                   m_defaultIcon = QIcon::fromTheme("cover_max");
 };
