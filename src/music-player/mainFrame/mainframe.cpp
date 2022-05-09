@@ -198,6 +198,7 @@ MainFrame::MainFrame()
 
 MainFrame::~MainFrame()
 {
+    MusicSettings::release();
 }
 
 void MainFrame::initUI(bool showLoading)
@@ -1137,6 +1138,7 @@ void MainFrame::closeEvent(QCloseEvent *event)
     case 1: {
         MusicSettings::setOption("base.play.state", int(windowState()));
         MusicSettings::setOption("base.close.is_close", true);
+        MusicSettings::release();
         //退出时,stop当前音乐
         Player::getInstance()->stop(false);
         qApp->processEvents();
@@ -1159,6 +1161,7 @@ void MainFrame::closeEvent(QCloseEvent *event)
         }
         if (ccd.closeAction() == 1) {
             MusicSettings::setOption("base.close.is_close", true);
+            MusicSettings::release();
             //退出时,stop当前音乐
             Player::getInstance()->stop(false);
             qApp->processEvents();
