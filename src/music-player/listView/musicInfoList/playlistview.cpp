@@ -689,7 +689,7 @@ void PlayListView::slotOnDoubleClicked(const QModelIndex &index)
         //弹出提示框
         showErrorDlg();
     } else {
-        if (!Player::getInstance()->supportedSuffixStrList().contains(fileSuffix.toLower()))
+        if ((itemMeta.mmType != MIMETYPE_CDA) && (!Player::getInstance()->supportedSuffixStrList().contains(fileSuffix.toLower())))
             emit CommonService::getInstance()->signalDecodingErrorMessage();
     }
     playMusic(itemMeta);
