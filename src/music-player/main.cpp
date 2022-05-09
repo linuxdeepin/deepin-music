@@ -120,11 +120,13 @@ int main(int argc, char *argv[])
     if (!OpenFilePaths.isEmpty()) {
         QStringList strList;
         for (QString str : OpenFilePaths) {
-            QUrl url = QUrl(str);
-            if (url.toLocalFile().isEmpty()) {
-                strList.append(str);
-            } else {
-                strList.append(url.toLocalFile());
+            if (QFile::exists(str)) {
+                QUrl url = QUrl::fromLocalFile(QDir::current().absoluteFilePath(str));
+                if (url.toLocalFile().isEmpty()) {
+                    strList.append(str);
+                } else {
+                    strList.append(url.toLocalFile());
+                }
             }
         }
         // 添加应用唯一性判断
