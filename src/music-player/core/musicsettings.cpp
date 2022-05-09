@@ -41,7 +41,7 @@ MusicSettings::MusicSettings(QObject *parent) :
 
 MusicSettings::~MusicSettings()
 {
-
+    release();
 }
 
 void MusicSettings::init()
@@ -52,6 +52,15 @@ void MusicSettings::init()
     m_settings->setBackend(backend);
 }
 
+void MusicSettings::release()
+{
+    if (!m_settings.isNull()) {
+        m_settings->sync();
+        delete m_settings;
+        m_settings = nullptr;
+    }
+}
+
 QPointer<Dtk::Core::DSettings> MusicSettings::settings()
 {
     return m_settings;
@@ -59,15 +68,17 @@ QPointer<Dtk::Core::DSettings> MusicSettings::settings()
 
 void MusicSettings::sync()
 {
-    m_settings->sync();
+    if (!m_settings.isNull())
+        m_settings->sync();
 }
 
 QVariant MusicSettings::value(const QString &key)
 {
-    return m_settings->value(key);
+    return m_settings.isNull() ? QVariant() : m_settings->value(key);
 }
 
 void MusicSettings::setOption(const QString &key, const QVariant &value)
 {
-    m_settings->setOption(key, value);
+    if (!m_settings.isNull())
+        m_settings->setOption(key, value);
 }

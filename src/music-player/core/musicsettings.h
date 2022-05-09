@@ -32,6 +32,7 @@ public:
     ~MusicSettings();
 
     static void init();
+    static void release();
     static QPointer<Dtk::Core::DSettings> settings();
 
     static void sync();
