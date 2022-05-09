@@ -328,6 +328,8 @@ void SubSonglistWidget::slotPlayAllClicked()
 {
     QList<MediaMeta> musicList = m_musicListInfoView->getMusicListData();
     if (musicList.size() > 0) {
+        // 清空播放队列
+        Player::getInstance()->clearPlayList();
         Player::getInstance()->setCurrentPlayListHash(m_hash, false);
         Player::getInstance()->setPlayList(musicList);
         Player::getInstance()->playMeta(musicList.first());
