@@ -674,7 +674,7 @@ void SingerListView::slotRemoveSelectedSongs(const QString &deleteHash, const QS
 {
     Q_UNUSED(removeFromLocal)
     QString curDeleteHash = deleteHash;
-    if (curDeleteHash != "artist" || Player::getInstance()->getCurrentPlayListHash() != "artist") {
+    if (curDeleteHash != m_hash || Player::getInstance()->getCurrentPlayListHash() != m_hash) {
         return;
     }
     if (musicHashs.size() == 0 || Player::getInstance()->getPlayList()->isEmpty()) {

@@ -550,7 +550,7 @@ void AlbumListView::slotAddSingleSong(const QString &listHash, const MediaMeta &
 void AlbumListView::slotRemoveSelectedSongs(const QString &deleteHash, const QStringList &musicHashs, bool removeFromLocal)
 {
     Q_UNUSED(removeFromLocal)
-    if (deleteHash != "album" || Player::getInstance()->getCurrentPlayListHash() != "album") {
+    if (deleteHash != m_hash || Player::getInstance()->getCurrentPlayListHash() != m_hash) {
         return;
     }
     if (musicHashs.size() == 0 || Player::getInstance()->getPlayList()->isEmpty()) {

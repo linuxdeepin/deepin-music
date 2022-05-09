@@ -113,7 +113,7 @@ private:
     MediaMeta                 hoverinMeta;
     QPixmap                 playingPix = QPixmap(":/texts/music_play1_20px.svg");
 //    MusicListDialog        *musciListDialog = nullptr;
-    QString                 m_hash;
+    QString                 m_hash; //用于区分当前列表是album列表还是搜索中的album列表
     QListView::ViewMode     m_viewModel = QListView::ListMode;
     QIcon                   m_defaultIcon = QIcon::fromTheme("cover_max");
 };
