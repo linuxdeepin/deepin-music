@@ -81,13 +81,13 @@ void VlcMedia::initMedia(const QString &location,
                          bool localFile,
                          VlcInstance *instance, int track)
 {
+    releaseMedia();
+
     _currentLocation = location;
     m_cdaTrackId = track;
     QString path = location;
     if (localFile)
         path = QDir::toNativeSeparators(path);
-
-    releaseMedia();
 
     // Create a new libvlc media descriptor from location
     vlc_media_new_path_function vlc_media_new_path = (vlc_media_new_path_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("libvlc_media_new_path");
