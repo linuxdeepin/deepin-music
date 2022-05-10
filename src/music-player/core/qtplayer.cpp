@@ -153,7 +153,7 @@ void QtPlayer::setMediaMeta(MediaMeta meta)
     } else {
         m_mediaPlayer->setMedia(QUrl::fromUserInput(m_activeMeta.localPath));
     }
-//    m_mediaPlayer->setVolume(MusicSettings::value("base.play.volume").toInt());
+    m_mediaPlayer->setVolume(MusicSettings::value("base.play.volume").toInt());
 }
 
 bool QtPlayer::getMute()
