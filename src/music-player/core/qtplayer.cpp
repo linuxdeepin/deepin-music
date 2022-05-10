@@ -25,6 +25,7 @@
 
 #include <QDBusObjectPath>
 #include <QDBusInterface>
+#include <QTimer>
 
 QtPlayer::QtPlayer(QObject *parent)
     : PlayerBase(parent)
@@ -185,7 +186,9 @@ void QtPlayer::onMediaStatusChanged(QMediaPlayer::MediaStatus status)
 {
     // 过滤无效音乐文件
     if (status == QMediaPlayer::MediaStatus::EndOfMedia || status == QMediaPlayer::MediaStatus::InvalidMedia) {
-        emit end();
+        QTimer::singleShot(300, this, [ = ]() {
+            emit end();
+        });
     }
 }
 
