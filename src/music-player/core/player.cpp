@@ -238,7 +238,7 @@ void Player::playMeta(MediaMeta meta)
         if (INT_LAST_PROGRESS_FLAG && m_ActiveMeta.hash == meta.hash) {
             m_basePlayer->pause();
             qint64 lastOffset = m_ActiveMeta.offset;
-            QTimer::singleShot(100, this, [ = ]() {//为了记录进度条生效，在加载的时候让音乐播放100ms
+            QTimer::singleShot(150, this, [ = ]() {//为了记录进度条生效，在加载的时候让音乐播放150ms
                 qDebug() << "seek last position:" << lastOffset;
                 m_basePlayer->setTime(lastOffset);
                 m_basePlayer->play();
@@ -923,7 +923,7 @@ void Player::setDbusMuted(bool muted)
     Q_UNUSED(muted)
     bool bvalid = isValidDbusMute();
     qDebug() << __FUNCTION__ << bvalid << isMusicMuted();
-    if (bvalid && Global::playbackEngineType() == 1) {
+    if (bvalid) {
         QDBusInterface ainterface("com.deepin.daemon.Audio", m_sinkInputPath,
                                   "com.deepin.daemon.Audio.SinkInput",
                                   QDBusConnection::sessionBus());
@@ -939,10 +939,6 @@ void Player::setDbusMuted(bool muted)
         bool localmute = MusicSettings::value("base.play.mute").toBool();
         if (localmute != isMusicMuted())
             ainterface.call(QLatin1String("SetMute"), localmute);
-    } else if (Global::playbackEngineType() != 1) {
-        m_basePlayer->setVolume(m_volume);
-        bool localmute = MusicSettings::value("base.play.mute").toBool();
-        m_basePlayer->setMute(localmute);
     }
 }
 

@@ -153,13 +153,14 @@ void QtPlayer::setMediaMeta(MediaMeta meta)
     } else {
         m_mediaPlayer->setMedia(QUrl::fromUserInput(m_activeMeta.localPath));
     }
-    m_mediaPlayer->setVolume(MusicSettings::value("base.play.volume").toInt());
+//    m_mediaPlayer->setVolume(MusicSettings::value("base.play.volume").toInt());
 }
 
 bool QtPlayer::getMute()
 {
     init();
-    return m_mediaPlayer->isMuted();
+//    return m_mediaPlayer->isMuted();
+    return isDbusMuted();
 }
 
 void QtPlayer::setFadeInOutFactor(double fadeInOutFactor)
@@ -177,7 +178,8 @@ void QtPlayer::setVolume(int volume)
 void QtPlayer::setMute(bool value)
 {
     init();
-    m_mediaPlayer->setMuted(value);
+//    m_mediaPlayer->setMuted(value);
+    setDbusMute(value);
 }
 
 void QtPlayer::onMediaStatusChanged(QMediaPlayer::MediaStatus status)
@@ -193,9 +195,41 @@ void QtPlayer::onPositionChanged(qint64 position)
     init();
     m_currPositionChanged = position;
     float value = static_cast<float>(position) / m_mediaPlayer->duration();
+//    qDebug() << "position" << position << "value" << value;
     emit timeChanged(position);
     emit positionChanged(value);
     resetPlayInfo();
+}
+
+bool QtPlayer::setDbusMute(bool value)
+{
+    readSinkInputPath();
+    if (!m_sinkInputPath.isEmpty()) {
+        QDBusInterface ainterface("com.deepin.daemon.Audio", m_sinkInputPath,
+                                  "com.deepin.daemon.Audio.SinkInput",
+                                  QDBusConnection::sessionBus());
+        if (!ainterface.isValid()) {
+            return false;
+        }
+        ainterface.call(QLatin1String("SetMute"), value);
+        return true;
+    }
+    return false;
+}
+
+bool QtPlayer::isDbusMuted()
+{
+    readSinkInputPath();
+    if (!m_sinkInputPath.isEmpty()) {
+        QVariant MuteV = DBusUtils::readDBusProperty("com.deepin.daemon.Audio", m_sinkInputPath,
+                                                     "com.deepin.daemon.Audio.SinkInput", "Mute");
+
+        if (!MuteV.isValid()) {
+            return false;
+        }
+        return MuteV.toBool();
+    }
+    return false;
 }
 
 void QtPlayer::resetPlayInfo()
