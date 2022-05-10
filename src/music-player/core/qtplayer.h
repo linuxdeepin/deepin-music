@@ -54,6 +54,8 @@ protected slots:
     void onPositionChanged(qint64 position);
 
 private:
+    bool setDbusMute(bool value);
+    bool isDbusMuted();
     void resetPlayInfo();
     void readSinkInputPath();
     void releasePlayer();
