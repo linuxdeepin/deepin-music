@@ -117,7 +117,6 @@ void QtPlayer::stop()
                                      || m_mediaPlayer->state() == QMediaPlayer::State::PausedState)) {
         m_mediaPlayer->stop();
     }
-
 }
 
 int QtPlayer::length()
@@ -193,6 +192,9 @@ void QtPlayer::onMediaStatusChanged(QMediaPlayer::MediaStatus status)
 void QtPlayer::onPositionChanged(qint64 position)
 {
     init();
+    // 停止播放时，不设置进度
+    if (m_mediaPlayer->duration() <= 0 || m_mediaPlayer->state() != QMediaPlayer::State::PlayingState)
+        return;
     m_currPositionChanged = position;
     float value = static_cast<float>(position) / m_mediaPlayer->duration();
 //    qDebug() << "position" << position << "value" << value;
