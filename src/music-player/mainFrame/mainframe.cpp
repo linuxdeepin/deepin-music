@@ -392,14 +392,18 @@ void MainFrame::initMenuAndShortcut()
     this, [ = ](QSystemTrayIcon::ActivationReason reason) {
         if (QSystemTrayIcon::Trigger == reason) {
             if (checkWindowVisible(Global::isWaylandMode())) {
+                m_preMaxFlag = isMaximized();
                 showMinimized();
             } else {
                 if (!isVisible()) {
                     restoreGeometry(m_geometryBa);
                 }
+                show();
+                // 特性关闭后需要使用showNormal/showMaximized
+                if (m_preMaxFlag) showMaximized();
+                else showNormal();
                 // 使用dbus显示窗口
                 this->titlebar()->setFocus();
-                show();
                 raise();
                 activateWindow();
             }
@@ -1180,6 +1184,7 @@ void MainFrame::closeEvent(QCloseEvent *event)
         qApp->aboutDialog()->hide();
     }
     this->setFocus();
+    m_preMaxFlag = isMaximized();
     DMainWindow::closeEvent(event);
 }
 

@@ -163,6 +163,7 @@ private:
     QString             m_selectAllStr;
     QString             m_doneStr;
     bool                m_contentUpByKeyBoard = false;
+    bool                m_preMaxFlag = false;
     ComDeepinImInterface *m_comDeepinImInterface = nullptr;
 };
 
