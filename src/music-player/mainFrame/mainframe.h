@@ -160,8 +160,9 @@ private:
     QString             m_selectStr;
     QString             m_selectAllStr;
     QString             m_doneStr;
-    bool                m_contentUpByKeyBoard = false;
-    ComDeepinImInterface *m_comDeepinImInterface = nullptr;
+    bool                m_contentUpByKeyBoard     = false;
+    bool                m_preMaxFlag              = false;
+    ComDeepinImInterface *m_comDeepinImInterface  = nullptr;
 };
 
 //extern const QString s_PropertyViewname;
