@@ -112,6 +112,7 @@ int main(int argc, char *argv[])
     }
 
     app->loadTranslator();
+    Global::initPlaybackEngineType();
     MusicSettings::init();
 //    VlcDynamicInstance::VlcFunctionInstance();
 //    Player::getInstance();
@@ -160,7 +161,6 @@ int main(int argc, char *argv[])
     }
 
     DApplicationSettings saveTheme;
-    Global::initPlaybackEngineType();
     Global::checkBoardVendorType();
     /*---Player instance init---*/
     MainFrame mainframe;

@@ -250,6 +250,7 @@ void MetaBufferDetector::resample(const QVector<float> &buffer, const QString &h
 
     if (!t_buffer.isEmpty()) {
         auto max = *(std::max_element(std::begin(t_buffer), std::end(t_buffer)));
+        if (max < 1) max = 1.0;
         for (int i = 0; i < t_buffer.size(); ++i) {
             float ft = t_buffer[i] / max;
             ft *= 1000;
