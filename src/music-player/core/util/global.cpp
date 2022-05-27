@@ -33,6 +33,7 @@ DCORE_USE_NAMESPACE;
 static QString appName;
 static bool waylandMode = false;
 static int engineType = 0;
+static bool initBoardVendorFlag = false;
 static bool boardVendorFlag = false;
 
 QString Global::configPath()
@@ -104,23 +105,34 @@ int Global::playbackEngineType()
 
 bool Global::checkBoardVendorType()
 {
-    QFile file("/sys/class/dmi/id/board_vendor");
-    if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        QString result(file.readAll());
-        boardVendorFlag = result.contains("HUAWEI");
-        file.close();
-    }
+//    QFile file("/sys/class/dmi/id/board_vendor");
+//    if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+//        QString result(file.readAll());
+//        boardVendorFlag = result.contains("HUAWEI");
+//        file.close();
+//    }
+    QProcess process;
+    process.start("dmidecode", QStringList() << "-s" << "system-product-name");
+    process.waitForStarted();
+    process.waitForFinished();
+    QString result(process.readAll());
+    boardVendorFlag = result.contains("KLVV") || result.contains("KLVU") || result.contains("PGUW") ;
+    process.close();
 
+    initBoardVendorFlag = true;
     return boardVendorFlag;
 }
 
 void Global::setBoardVendorType(bool type)
 {
+    initBoardVendorFlag = true;
     boardVendorFlag = type;
 }
 
 bool Global::boardVendorType()
 {
+    if (!initBoardVendorFlag)
+        checkBoardVendorType();
     return boardVendorFlag;
 }
 
