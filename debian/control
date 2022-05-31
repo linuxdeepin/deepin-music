@@ -36,13 +36,6 @@ Homepage: http://www.deepin.org/
 Package: deepin-music
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends},
- gstreamer1.0-fluendo-mp3,
- gstreamer1.0-libav,
- gstreamer1.0-plugins-base,
- gstreamer1.0-plugins-good,
- gstreamer1.0-plugins-bad,
- gstreamer1.0-plugins-ugly,
- gstreamer1.0-pulseaudio,
  gvfs-bin,
  libqt5sql5-sqlite,
  libqt5multimedia5-plugins,
