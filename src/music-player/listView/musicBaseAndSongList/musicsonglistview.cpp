@@ -647,7 +647,8 @@ void MusicSongListView::resizeEvent(QResizeEvent *event)
 
 void MusicSongListView::keyReleaseEvent(QKeyEvent *event)
 {
-    if (event->key() == Qt::Key_Delete) {
+    // 重命名时不删除操作
+    if (event->key() == Qt::Key_Delete && (m_renameLineEdit == nullptr || !m_renameLineEdit->isVisible())) {
         rmvSongList();
     }
     DListView::keyReleaseEvent(event);
