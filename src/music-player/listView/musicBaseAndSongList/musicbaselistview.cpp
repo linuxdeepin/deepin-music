@@ -201,7 +201,7 @@ void MusicBaseListView::dragEnterEvent(QDragEnterEvent *event)
     if (event->mimeData()->hasFormat("text/uri-list") || event->mimeData()->hasFormat("playlistview/x-datalist")) {
         qDebug() << "acceptProposedAction" << event;
         event->setDropAction(Qt::CopyAction);
-        event->acceptProposedAction();
+        event->accept();
     }
 }
 
@@ -210,8 +210,9 @@ void MusicBaseListView::dragMoveEvent(QDragMoveEvent *event)
     auto index = indexAt(event->pos());
     if (index.isValid() && (event->mimeData()->hasFormat("text/uri-list")  || event->mimeData()->hasFormat("playlistview/x-datalist"))) {
         event->setDropAction(Qt::CopyAction);
-        event->acceptProposedAction();
+        event->accept();
     } else {
+        event->acceptProposedAction();
         DListView::dragMoveEvent(event);
     }
 }
