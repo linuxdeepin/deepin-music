@@ -1422,13 +1422,15 @@ QPixmap PlayListView::dragItemsPixmap()
     qreal scale = devicePixelRatio();
     QModelIndexList modelIndexList = allSelectedIndexes();
 
+    int leftBorder = m_dragFlag ? 0 : DRAGICON_LEFTBORDER;
+    int topBorder = m_dragFlag ? 0 : DRAGICON_TOPBORDER;
     QFont font;
     font.setPixelSize(10);
     QFontMetrics fontMetrics(font);
     int textSize = fontMetrics.width(QString("%1").arg(modelIndexList.size()));
     if (textSize < fontMetrics.height()) textSize = fontMetrics.height();
     int testRadius = textSize / 2 + DRAGICON_TEXTBORDERSIZE;
-    QRect pixRect(0, 0, DRAGICON_SIZE + DRAGICON_LEFTBORDER + testRadius, DRAGICON_SIZE + testRadius + DRAGICON_TOPBORDER + 10);
+    QRect pixRect(0, 0, DRAGICON_SIZE + leftBorder + testRadius, DRAGICON_SIZE + testRadius + topBorder + 10);
     QPixmap pixmap(pixRect.size() * scale);
     pixmap.setDevicePixelRatio(scale);
     pixmap.fill(Qt::transparent);
@@ -1439,7 +1441,7 @@ QPixmap PlayListView::dragItemsPixmap()
     QMatrix matrix;
     matrix.rotate(180.0);
     painter.save();
-    painter.translate(DRAGICON_LEFTBORDER + DRAGICON_SIZE, DRAGICON_TOPBORDER + DRAGICON_SIZE);
+    painter.translate(leftBorder + DRAGICON_SIZE, topBorder + DRAGICON_SIZE);
     // 绘制图片
     for (int i = qMin(modelIndexList.size() - 1, 2); i >= 0; --i) {
         QStandardItem *newItem = m_model->itemFromIndex(modelIndexList.at(i));
@@ -1472,11 +1474,11 @@ QPixmap PlayListView::dragItemsPixmap()
     painter.save();
     painter.setPen(Qt::NoPen);
     painter.setBrush(Qt::red);
-    painter.drawEllipse(QRect(DRAGICON_LEFTBORDER + DRAGICON_SIZE - testRadius, DRAGICON_TOPBORDER + DRAGICON_SIZE - testRadius, testRadius * 2, testRadius * 2));
+    painter.drawEllipse(QRect(leftBorder + DRAGICON_SIZE - testRadius, topBorder + DRAGICON_SIZE - testRadius, testRadius * 2, testRadius * 2));
     painter.setPen(Qt::white);
     painter.setFont(font);
     painter.setBrush(Qt::black);
-    painter.drawText(QRect(DRAGICON_LEFTBORDER + DRAGICON_SIZE - textSize / 2, DRAGICON_TOPBORDER + DRAGICON_SIZE - textSize / 2, textSize, textSize), QString("%1").arg(modelIndexList.size()), QTextOption(Qt::AlignCenter));
+    painter.drawText(QRect(leftBorder + DRAGICON_SIZE - textSize / 2, topBorder + DRAGICON_SIZE - textSize / 2, textSize, textSize), QString("%1").arg(modelIndexList.size()), QTextOption(Qt::AlignCenter));
     painter.restore();
 
     return pixmap;
@@ -1573,10 +1575,10 @@ void PlayListView::dragEnterEvent(QDragEnterEvent *event)
 {
     if (event->mimeData()->hasFormat("text/uri-list")) {
         event->setDropAction(Qt::CopyAction);
-        event->acceptProposedAction();
+        event->accept();
     } else if (event->source() == this && m_dragFlag) {
         event->setDropAction(Qt::MoveAction);
-        event->acceptProposedAction();
+        event->accept();
 
         m_dragScrollTimer.start(200);
         m_isDraging = true;
@@ -1605,10 +1607,10 @@ void PlayListView::dragMoveEvent(QDragMoveEvent *event)
 {
     if (event->mimeData()->hasFormat("text/uri-list")) {
         event->setDropAction(Qt::CopyAction);
-        event->acceptProposedAction();
+        event->accept();
     } else if (event->source() == this && m_dragFlag) {
         event->setDropAction(Qt::MoveAction);
-        event->acceptProposedAction();
+        event->accept();
 
         updateDropIndicator();
     }
