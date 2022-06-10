@@ -45,7 +45,7 @@ bool MusicBaseAndSonglistModel::setData(const QModelIndex &index, const QVariant
 
 Qt::DropActions MusicBaseAndSonglistModel::supportedDropActions() const
 {
-    return Qt::IgnoreAction;;
+    return Qt::MoveAction;
 }
 
 Qt::ItemFlags MusicBaseAndSonglistModel::flags(const QModelIndex &index) const

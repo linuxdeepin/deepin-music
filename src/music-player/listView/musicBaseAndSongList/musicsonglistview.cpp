@@ -55,8 +55,8 @@
 
 #define CDA_USER_ROLE "CdaRole"
 #define CDA_USER_ROLE_OFFSET 12  //userrole+12 防止和其他歌单role重叠
-#define DRAGICON_LEFTBORDER 16
-#define DRAGICON_TOPBORDER 6
+#define DRAGICON_LEFTBORDER 0
+#define DRAGICON_TOPBORDER 0
 #define DRAGICON_ROUNDRADIUS 10
 
 DGUI_USE_NAMESPACE
@@ -732,10 +732,10 @@ void MusicSongListView::dragEnterEvent(QDragEnterEvent *event)
 {
     if (event->source() != this && (event->mimeData()->hasFormat("text/uri-list") || event->mimeData()->hasFormat("playlistview/x-datalist"))) {
         event->setDropAction(Qt::CopyAction);
-        event->acceptProposedAction();
+        event->accept();
     } else if (event->source() == this) {
         event->setDropAction(Qt::MoveAction);
-        event->acceptProposedAction();
+        event->accept();
 
         m_dragScrollTimer.start(200);
         m_isDraging = true;
@@ -760,11 +760,13 @@ void MusicSongListView::dragMoveEvent(QDragMoveEvent *event)
         auto index = indexAt(event->pos());
         if (index.isValid()) {
             event->setDropAction(Qt::CopyAction);
-            event->acceptProposedAction();
+            event->accept();
+        } else {
+            event->ignore();
         }
     } else if (event->source() == this) {
         event->setDropAction(Qt::MoveAction);
-        event->acceptProposedAction();
+        event->accept();
 
         int curRow = highlightedRow();
         if (curRow == -1) curRow = m_model->rowCount() - 1;
