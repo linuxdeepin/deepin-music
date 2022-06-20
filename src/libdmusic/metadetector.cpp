@@ -56,6 +56,8 @@ extern "C" {
 #include <taglib/tag.h>
 #include <taglib/attachedpictureframe.h>
 #include <taglib/apetag.h>
+#include <taglib/mpegfile.h>
+#include <taglib/unsynchronizedlyricsframe.h>
 
 #include <unicode/ucnv.h>
 
@@ -445,6 +447,37 @@ QPixmap MetaDetector::getCoverDataPixmap(MediaMeta meta, int engineType)
     }
 
     return pixmap;
+}
+
+void MetaDetector::getLyricData(const QString &path, const QString &tmpPath, const QString &hash)
+{
+    QString lyricsDirPath = tmpPath + "/lyrics";
+    QString lyricName = hash + ".lrc";
+    QDir lyricsDir(lyricsDirPath);
+    if (!lyricsDir.exists()) {
+        lyricsDir.mkdir(lyricsDirPath);
+    }
+
+    if (!path.isEmpty() && !tmpPath.isEmpty() && !hash.isEmpty()) {
+        if (!lyricsDir.exists(lyricName)) {
+            QFile lyric(lyricsDirPath + "/" + lyricName);
+
+            TagLib::MPEG::File f1(path.toStdString().c_str());
+            TagLib::ID3v2::FrameList frames = f1.ID3v2Tag()->frameListMap()["USLT"];
+            if (!frames.isEmpty()) {
+                TagLib::ID3v2::UnsynchronizedLyricsFrame *frame = dynamic_cast<TagLib::ID3v2::UnsynchronizedLyricsFrame *>(frames.front());
+                if (frame) {
+                    if (lyric.open(QIODevice::WriteOnly)) {
+                        QString str = TStringToQString(frame->text());
+                        lyric.write(str.toUtf8());
+                    }
+                    lyric.close();
+                }
+            }   
+        }
+    }
+
+    return;
 }
 
 MetaDetector::MetaDetector()

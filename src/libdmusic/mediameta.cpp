@@ -62,6 +62,11 @@ void MediaMeta::getCoverData(const QString &tmpPath, int engineType)
     MetaDetector::getCoverData(localPath, tmpPath, hash, engineType);
 }
 
+void MediaMeta::getLyricData(const QString &tmpPath)
+{
+    MetaDetector::getLyricData(localPath, tmpPath, hash);
+}
+
 namespace DMusic {
 QString filepathHash(const QString &filepath)
 {

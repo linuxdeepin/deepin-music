@@ -178,6 +178,8 @@ signals:
     void signalGetAllMediaMeta();
     // 发送给子线程执行创建图片
     void signalCreatCoverImg(const QList<MediaMeta> &metas);
+    // 发送给子线程执行创建歌词
+    void signalCreatLyric(const QList<MediaMeta> &metas);
     // 导入结束，通知主界面 allCount:待导入的文件数量   successCount：导入成功的数量
     void signalImportFinished(QString hash, int successCount);
     // 导入失败，有不支持的文件

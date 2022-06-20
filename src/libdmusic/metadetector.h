@@ -43,6 +43,8 @@ public:
 
     static void getCoverData(const QString &path, const QString &tmpPath, const QString &hash, int engineType);
     static QPixmap getCoverDataPixmap(MediaMeta meta, int engineType);
+
+    static void getLyricData(const QString &path, const QString &tmpPath, const QString &hash);
 private:
     explicit MetaDetector();
     friend class DMusic::DSingleton<MetaDetector>;

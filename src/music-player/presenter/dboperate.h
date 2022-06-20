@@ -48,6 +48,7 @@ public:
 public slots:
     void     slotImportMedias(const QString &importHash, QString playHash, const QStringList &urllist);
     void     slotCreatCoverImg(const QList<MediaMeta> &metas);
+    void     slotCreatLyric(const QList<MediaMeta> &metas);
     void     slotRemoveSelectedSongs(const QString &curpage, const QStringList &musichashlist, bool removeFromLocal);
 private:
     bool     deleteMetaFromAllMusic(const QStringList &metaHash, bool removeFromLocal);

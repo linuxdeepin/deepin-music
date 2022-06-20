@@ -681,6 +681,8 @@ void DataBaseService::slotImportFinished(int failCount, int successCount, int ex
     }
     //数据加载完后再加载图片
     emit signalCreatCoverImg(m_AllMediaMeta);
+    //数据加载完后再加载歌词
+    emit signalCreatLyric(m_AllMediaMeta);
     //启动加载数据完成后直接播放第一首歌
     emit signalPlayFromFileMaganager();
 }
@@ -1346,6 +1348,8 @@ DataBaseService::DataBaseService()
             &m_worker, SLOT(slotRemoveSelectedSongs(const QString &, const QStringList &, bool)));
     // 发送给子线程加载图片
     connect(this, &DataBaseService::signalCreatCoverImg, &m_worker, &DBOperate::slotCreatCoverImg);
+    // 发送给子线程加载歌词
+    connect(this, &DataBaseService::signalCreatLyric, &m_worker, &DBOperate::slotCreatLyric);
 
     // 单首歌曲完成解析
     connect(&m_worker, &DBOperate::sigImportMetaFromThread, this, &DataBaseService::slotGetMetaFromThread, Qt::QueuedConnection);

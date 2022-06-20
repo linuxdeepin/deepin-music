@@ -227,13 +227,22 @@ void MusicLyricWidget::onMusicPlayed(MediaMeta meta)
     QString lrcPath = fileInfo.dir().path() + QDir::separator() + fileInfo.completeBaseName() + ".lrc";
     QFile file(lrcPath);
     if (!file.exists()) {
-        m_nolyric->show();
-        m_lyricview->hide();
+        //读取根目录中歌词文件后读取媒体文件内嵌的歌词
+        MediaMeta meta = Player::getInstance()->getActiveMeta();
+        QFileInfo lyricInfo(Global::cacheDir() + "/lyrics/" + meta.hash + ".lrc");
+        if (!lyricInfo.exists()) {
+            m_nolyric->show();
+            m_lyricview->hide();
+        } else {
+            m_nolyric->hide();
+            m_lyricview->show();
+            m_lyricview->getFromFile(lyricInfo.filePath());
+        }
     } else {
         m_nolyric->hide();
         m_lyricview->show();
+        m_lyricview->getFromFile(lrcPath);
     }
-    m_lyricview->getFromFile(lrcPath);
 }
 
 void MusicLyricWidget::onCoverChanged(MediaMeta meta)

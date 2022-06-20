@@ -89,6 +89,7 @@ public:
     void updateSearchIndex();
     void updateCodec(const QByteArray &codec);
     void getCoverData(const QString &tmpPath, int engineType);
+    void getLyricData(const QString &tmpPath);
 
 //    static MediaMeta fromLocalFile(const QFileInfo &fileInfo);
 

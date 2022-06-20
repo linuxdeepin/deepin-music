@@ -217,6 +217,25 @@ void DBOperate::slotCreatCoverImg(const QList<MediaMeta> &metas)
     }
 }
 
+void DBOperate::slotCreatLyric(const QList<MediaMeta> &metas)
+{
+    for (MediaMeta meta : metas) {
+        if (m_needStop) {
+            break;
+        }
+        if (m_needSleep) {
+            QThread::msleep(SLEEPTIME);
+            m_needSleep = false;
+        }
+
+        //没有加载过的文件才去解析数据
+        QFileInfo lyricInfo(Global::cacheDir() + "/lyrics/" + meta.hash + ".lrc");
+        if (!lyricInfo.exists()) {
+            meta.getLyricData(Global::cacheDir());
+        }
+    }
+}
+
 void DBOperate::slotRemoveSelectedSongs(const QString &curpage, const QStringList &musichashlist, bool removeFromLocal)
 {
     // 从专辑等处删除，统一走删除所有逻辑
