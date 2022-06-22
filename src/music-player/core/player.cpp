@@ -998,13 +998,20 @@ void Player::setEqualizerbauds(int index, int val)
 void Player::setEqualizerCurMode(int curIndex)
 {
     //非自定义模式时
-    if (curIndex != 0) {
+    if (curIndex > 0) {
         m_basePlayer->loadFromPreset(uint(curIndex - 1));
         //设置放大值
         m_basePlayer->setPreamplification(m_basePlayer->preamplification());
         for (int i = 0 ; i < 10; i++) {
             //设置频率值
             m_basePlayer->setAmplificationForBandAt(m_basePlayer->amplificationForBandAt(uint(i)), uint(i));
+        }
+    } else if (curIndex == -1) { // 关闭均衡器时
+        //设置放大值
+        m_basePlayer->setPreamplification(12);
+        for (int i = 0 ; i < 10; i++) {
+            //设置频率值
+            m_basePlayer->setAmplificationForBandAt(uint(0), uint(i));
         }
     }
 }

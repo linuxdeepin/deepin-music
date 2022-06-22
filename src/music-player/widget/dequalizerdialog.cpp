@@ -419,7 +419,7 @@ void DequalizerDialog::checkedChanged(bool checked)
         Q_EMIT setEqualizerIndex(1);
         MusicSettings::setOption("equalizer.all.curEffect", 1);
     } else {
-        Q_EMIT setEqualizerIndex(1);
+        Q_EMIT setEqualizerIndex(-1);
         MusicSettings::setOption("equalizer.all.curEffect", 1);
     }
     this->m_comBox->setEnabled(checked);
