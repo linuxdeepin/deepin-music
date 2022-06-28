@@ -96,20 +96,20 @@ void MusicLyric::parseLyric(const QString &str)
     auto lines = str.split("\n");
     // [(match time)](optional spaces)(match content=non-space+anything+non-space or non-space)(optional spaces)
     QRegExp rx("\\[([^\\]]*)\\]\\s*(\\S.*\\S|\\S)\\s*$");
-    QVector<QPair<qint64,QString>> tmp;
-    for(auto line : lines) {
-        rx.indexIn(line);
+    QVector<QPair<qint64, QString>> tmp;
+    for (auto line : lines) {
+        if (rx.indexIn(line) == -1) continue;
         auto timeStr = rx.capturedTexts()[1];
         auto lyricStr = rx.capturedTexts()[2];
-        QTime t = QTime::fromString(timeStr,"mm:ss.z");
+        QTime t = QTime::fromString(timeStr, "mm:ss.z");
         qint64 time = t.msecsSinceStartOfDay();
-        if(t.isValid())
-            tmp.push_back({time,lyricStr});
+        if (t.isValid())
+            tmp.push_back({time, lyricStr});
     }
-    std::sort(tmp.begin(),tmp.end());
+    std::sort(tmp.begin(), tmp.end());
     this->postion.clear();
     this->line.clear();
-    for(auto item:tmp) {
+    for (auto item : tmp) {
         this->postion.push_back(item.first);
         this->line.push_back(item.second);
     }
