@@ -448,7 +448,7 @@ void Player::playNextMeta(bool isAuto)
             }
             if (index != -1) {
                 for (int i = 0; i < curMetaList.size(); i++) {
-                    if (curMetaList.at(i).first > index && i >= 0) {
+                    if (curMetaList.at(i).first > index) {
                         index = i - 1;
                         break;
                     }
