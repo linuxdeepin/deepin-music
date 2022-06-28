@@ -40,21 +40,36 @@ class DataBaseService : public QObject, public DMusic::DSingleton<DataBaseServic
     Q_OBJECT
 public:
     struct PlaylistData {
-        QString uuid;
-        QString displayName;
-        QString icon;
+        PlaylistData()
+        {
+            uuid = QString();
+            displayName = QString();
+            icon = QString();
+            sortMetas = QStringList();
 
-        QStringList              sortMetas;
+            sortType    = 0;
+            orderType   = 0;
 
-        int     sortType    = 0;
-        int     orderType   = 0;
+            sortID     = 0;
+            editmode    = false;
+            readonly    = false;
+            hide        = false;
+            active      = false;
+            playStatus  = false;
+        };
 
-        uint     sortID;
-        bool    editmode    = false;
-        bool    readonly    = false;
-        bool    hide        = false;
-        bool    active      = false;
-        bool    playStatus  = false;
+        QString        uuid;
+        QString        displayName;
+        QString        icon;
+        QStringList    sortMetas;
+        int            sortType;
+        int            orderType;
+        uint           sortID;
+        bool           editmode;
+        bool           readonly;
+        bool           hide;
+        bool           active;
+        bool           playStatus;
     };
 
     enum ListSortType {
