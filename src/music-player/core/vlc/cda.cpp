@@ -57,6 +57,23 @@ typedef int (*vlc_stream_ReadDir_func)(stream_t *, input_item_node_t *);
 typedef void (*input_item_node_Delete_func)(input_item_node_t *);
 typedef void (*vlc_stream_Delete_func)(stream_t *);
 
+static input_item_t *inputItem = nullptr;
+static stream_t *pStream = nullptr;
+
+static void inputItemNewExtFc(const QString &strcda)
+{
+    inputItem = nullptr;
+    input_item_NewExt_func input_item_NewExt_fc = (input_item_NewExt_func)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("input_item_NewExt");
+    inputItem = input_item_NewExt_fc(strcda.toUtf8().data(), "access_demux", 0, ITEM_TYPE_DISC, ITEM_LOCAL);
+}
+
+static void vlc_stream_NewURL_fc(libvlc_media_player_t *mediaPlayer, const QString &strcda)
+{
+    pStream = nullptr;
+    vlc_stream_NewURL_func vlc_stream_NewURL_fc = (vlc_stream_NewURL_func)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("vlc_stream_NewURL");
+    pStream = vlc_stream_NewURL_fc((vlc_object_t *)mediaPlayer, strcda.toUtf8().data()); //打开CD，读取流，该操作较耗时
+}
+
 QStringList getCDADirectory()
 {
     return QStringList() << "cdda:///dev/sr0"; //暂时只考虑sr0,原装光驱
@@ -89,8 +106,6 @@ void CdaThread::doQuery()
 
 input_item_node_t *CdaThread::getInputNode()
 {
-    input_item_NewExt_func input_item_NewExt_fc = (input_item_NewExt_func)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("input_item_NewExt");
-    vlc_stream_NewURL_func vlc_stream_NewURL_fc = (vlc_stream_NewURL_func)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("vlc_stream_NewURL");
     input_item_node_Create_func input_item_node_Create_fc = (input_item_node_Create_func)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("input_item_node_Create");
     input_item_Release_func input_item_Release_fc = (input_item_Release_func)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("input_item_Release");
     vlc_stream_ReadDir_func vlc_stream_ReadDir_fc = (vlc_stream_ReadDir_func)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("vlc_stream_ReadDir");
@@ -99,29 +114,29 @@ input_item_node_t *CdaThread::getInputNode()
     input_item_node_t *p_items = nullptr;
     QStringList strcdalist = getCDADirectory();
 
-    if (strcdalist.size() < 0)
+    if (strcdalist.isEmpty())
         return p_items;
 
     QString strcda = strcdalist.at(0);
-    input_item_t *p_input = input_item_NewExt_fc(strcda.toUtf8().data(), "access_demux", 0, ITEM_TYPE_DISC, ITEM_LOCAL);
-    if (!p_input) {
+    inputItemNewExtFc(strcda);
+    if (!inputItem) {
         qDebug() << "no cd driver?";
         return p_items;
     }
 
     Q_ASSERT(m_play_t);
 
-    stream_t *pstream = vlc_stream_NewURL_fc((vlc_object_t *)m_play_t, strcda.toUtf8().data()); //打开CD，读取流，该操作较耗时
-    if (!pstream) {
+    vlc_stream_NewURL_fc(m_play_t, strcda);
+    if (!pStream) {
         qDebug() << "create stream failed";
         return p_items;
     }
-    p_items = input_item_node_Create_fc(p_input);
-    input_item_Release_fc(p_input);
-    int ret = vlc_stream_ReadDir_fc(pstream, p_items);//读取CD中的节点信息
+    p_items = input_item_node_Create_fc(inputItem);
+    input_item_Release_fc(inputItem);
+    int ret = vlc_stream_ReadDir_fc(pStream, p_items);//读取CD中的节点信息
     qDebug() << __FUNCTION__ << ":vlc_stream_ReadDir result:" << ret;
     //释放stream流
-    vlc_stream_Delete_fc(pstream);
+    vlc_stream_Delete_fc(pStream);
     return p_items;
 }
 
