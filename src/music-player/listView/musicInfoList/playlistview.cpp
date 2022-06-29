@@ -702,6 +702,11 @@ void PlayListView::slotLoadData()
     // 排序
     sortList(mediaMetas, sortType);
 
+    // 直接打开重复添加歌曲
+    for (int i = FirstLoadCount; i < m_model->rowCount(); ++i) {
+        m_model->removeRow(i);
+    }
+
     QList<MediaMeta> preMediaMetas = DataBaseService::getInstance()->getMusicInfosBySortAndCount(FirstLoadCount);
     for (int i = 0; i < mediaMetas.size(); i++) {
         //防止重复添加
