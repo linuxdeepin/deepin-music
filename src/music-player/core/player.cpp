@@ -64,6 +64,7 @@
 #include <DPushButton>
 #include <DPalette>
 #include <QThread>
+#include "../util/eventlogutils.h"
 
 #include "commonservice.h"
 
@@ -273,6 +274,13 @@ void Player::playMeta(MediaMeta meta)
         //设置音乐播放
         emit signalPlaybackStatusChanged(Player::Paused);
     }
+
+    QJsonObject obj{
+        {"tid", EventLogUtils::StartPlaying},
+        {"successful", true},
+        {"encapsulation_format", meta.filetype}//封装格式
+    };
+    EventLogUtils::get().writeLogs(obj);
 }
 
 void Player::resume()
