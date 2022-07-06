@@ -56,6 +56,7 @@
 #include <unistd.h>
 #include "./core/musicsettings.h"
 #include "./core/util/global.h"
+#include "../core/util/eventlogutils.h"
 
 #include "../widget/titlebarwidget.h"
 #include "musicstackedwidget.h"
@@ -1003,6 +1004,13 @@ void MainFrame::showEvent(QShowEvent *event)
         this->setMinimumSize(QSize(1070, 680));
         this->resize(QSize(1070, 680));
         Dtk::Widget::moveToCenter(this);
+
+        QJsonObject obj{
+            {"tid", EventLogUtils::Start},
+            {"mode", 1} //冷启动
+        };
+        EventLogUtils::get().writeLogs(obj);
+
     } else {
         QDataStream stream(m_geometryBa); //仅在程序运行期间生效
         stream.setVersion(QDataStream::Qt_4_0);
@@ -1041,7 +1049,12 @@ void MainFrame::showEvent(QShowEvent *event)
             qint32 restoredScreenWidth = 0;
             stream >> restoredScreenWidth;
         }
-//        restoreGeometry(m_geometryBa);
+
+        QJsonObject obj{
+            {"tid", EventLogUtils::Start},
+            {"mode", 2} //热启动
+        };
+        EventLogUtils::get().writeLogs(obj);
     }
     this->setFocus();
 

@@ -58,6 +58,7 @@
 #include "commonservice.h"
 #include "songlistview.h"
 #include "songlistviewdialog.h"
+#include "../util/eventlogutils.h"
 
 DWIDGET_USE_NAMESPACE
 
@@ -668,6 +669,14 @@ void PlayListView::slotOnClicked(const QModelIndex &index)
         if (!QFileInfo(itemMeta.localPath).exists() && itemMeta.mmType != MIMETYPE_CDA) {
             //停止当前的歌曲
             Player::getInstance()->stop();
+
+            QJsonObject obj{
+                {"tid", EventLogUtils::StartPlaying},
+                {"successful", false},
+                {"encapsulation_format", itemMeta.filetype}//封装格式
+            };
+            EventLogUtils::get().writeLogs(obj);
+
             //弹出提示框
             showErrorDlg();
         } else {
@@ -686,6 +695,14 @@ void PlayListView::slotOnDoubleClicked(const QModelIndex &index)
     if (!fileInfo.exists() && itemMeta.mmType != MIMETYPE_CDA) {
         //停止当前的歌曲
         Player::getInstance()->stop();
+
+        QJsonObject obj{
+            {"tid", EventLogUtils::StartPlaying},
+            {"successful", false},
+            {"encapsulation_format", itemMeta.filetype}//封装格式
+        };
+        EventLogUtils::get().writeLogs(obj);
+
         //弹出提示框
         showErrorDlg();
     } else {
