@@ -12,7 +12,7 @@ public:
         ClosingTime     = 1000000001,
         Start           = 1000000003,
         Quit            = 1000000004,
-        StartPlaying    = 1000100010
+        StartPlaying    = 1000200021
     };
 
     static EventLogUtils &get();
