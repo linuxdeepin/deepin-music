@@ -163,6 +163,9 @@ void MusicListDataWidget::slotViewChanged(ListPageSwitchType switchtype, const Q
             m_pStackedWidget->addWidget(m_albumListView);
             AC_SET_OBJECT_NAME(m_albumListView, AC_albumListView);
             AC_SET_ACCESSIBLE_NAME(m_albumListView, AC_albumListView);
+            connect(m_albumListView, &AlbumListView::rowCountChanged, this, [=](){
+                this->refreshInfoLabel("album");
+            });
         }
         //防止第一次无数据
         if (DataBaseService::getInstance()->allMusicInfos(false).isEmpty()) {
@@ -187,6 +190,9 @@ void MusicListDataWidget::slotViewChanged(ListPageSwitchType switchtype, const Q
             m_pStackedWidget->addWidget(m_singerListView);
             AC_SET_OBJECT_NAME(m_singerListView, AC_singerListView);
             AC_SET_ACCESSIBLE_NAME(m_singerListView, AC_singerListView);
+            connect(m_singerListView, &SingerListView::rowCountChanged, this, [=](){
+                this->refreshInfoLabel("artist");
+            });
         }
         //防止第一次无数据
         if (DataBaseService::getInstance()->allMusicInfos(false).isEmpty()) {
