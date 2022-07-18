@@ -59,6 +59,7 @@
 #include "songlistview.h"
 #include "songlistviewdialog.h"
 #include "../util/eventlogutils.h"
+#include "config.h"
 
 DWIDGET_USE_NAMESPACE
 
@@ -672,6 +673,7 @@ void PlayListView::slotOnClicked(const QModelIndex &index)
 
             QJsonObject obj{
                 {"tid", EventLogUtils::StartPlaying},
+                {"version", VERSION},
                 {"successful", false},
                 {"encapsulation_format", itemMeta.filetype}//封装格式
             };
@@ -698,6 +700,7 @@ void PlayListView::slotOnDoubleClicked(const QModelIndex &index)
 
         QJsonObject obj{
             {"tid", EventLogUtils::StartPlaying},
+            {"version", VERSION},
             {"successful", false},
             {"encapsulation_format", itemMeta.filetype}//封装格式
         };

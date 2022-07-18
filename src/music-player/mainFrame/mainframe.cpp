@@ -76,6 +76,7 @@
 #include "tabletlabel.h"
 #include "comdeepiniminterface.h"
 #include "dbusutils.h"
+#include "config.h"
 DWIDGET_USE_NAMESPACE
 
 const QString s_PropertyViewname = "viewname";
@@ -1007,6 +1008,7 @@ void MainFrame::showEvent(QShowEvent *event)
 
         QJsonObject obj{
             {"tid", EventLogUtils::Start},
+            {"version", VERSION},
             {"mode", 1} //冷启动
         };
         EventLogUtils::get().writeLogs(obj);
@@ -1052,6 +1054,7 @@ void MainFrame::showEvent(QShowEvent *event)
 
         QJsonObject obj{
             {"tid", EventLogUtils::Start},
+            {"version", VERSION},
             {"mode", 2} //热启动
         };
         EventLogUtils::get().writeLogs(obj);
