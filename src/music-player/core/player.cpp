@@ -67,6 +67,7 @@
 #include "../util/eventlogutils.h"
 
 #include "commonservice.h"
+#include "config.h"
 
 DCORE_USE_NAMESPACE
 
@@ -277,6 +278,7 @@ void Player::playMeta(MediaMeta meta)
 
     QJsonObject obj{
         {"tid", EventLogUtils::StartPlaying},
+        {"version", VERSION},
         {"successful", true},
         {"encapsulation_format", meta.filetype}//封装格式
     };

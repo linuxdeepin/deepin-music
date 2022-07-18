@@ -7,25 +7,6 @@
 
 EventLogUtils *EventLogUtils::m_instance(nullptr);
 
-QString libPath(const QString &strlib)
-{
-    QDir  dir;
-    QString lib_path  = "/usr/lib";
-    dir.setPath(lib_path);
-    QStringList list = dir.entryList(QStringList() << (strlib + "*"), QDir::NoDotAndDotDot | QDir::Files); //filter name with strlib
-    if (list.contains(strlib)) {
-        return strlib;
-    } else {
-        list.sort();
-    }
-
-    if (list.size() > 0)
-        return list.last();
-    else
-        return "";
-}
-
-
 EventLogUtils &EventLogUtils::get()
 {
     if (m_instance == nullptr) {
