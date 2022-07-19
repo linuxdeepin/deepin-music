@@ -231,8 +231,8 @@ void MusicLyricWidget::onMusicPlayed(MediaMeta meta)
         MediaMeta meta = Player::getInstance()->getActiveMeta();
         QFileInfo lyricInfo(Global::cacheDir() + "/lyrics/" + meta.hash + ".lrc");
         if (!lyricInfo.exists()) {
-            m_nolyric->show();
             m_lyricview->hide();
+            m_nolyric->show();
         } else {
             m_nolyric->hide();
             m_lyricview->show();
