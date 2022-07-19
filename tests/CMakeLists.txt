@@ -76,6 +76,8 @@ endif()
 
 add_definitions(-DAUTO_UNIT_TEST)
 
+configure_file(../config.h.in ${PROJECT_BINARY_DIR}/config.h @ONLY)
+
 #添加覆盖率命令
 if(ISTEST MATCHES "1")
     add_test(${CMD_NAME} COMMAND ${CMD_NAME})
