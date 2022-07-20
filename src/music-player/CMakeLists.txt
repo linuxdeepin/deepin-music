@@ -145,6 +145,7 @@ LINK_DIRECTORIES(${CMAKE_BINARY_DIR}/src/libdmusic/)
 
 #将第三方库链接进来(注意 *_LIBRARIES)
 target_link_libraries(${CMD_NAME} ${TARGET_LIBS} )
+#target_link_libraries(${CMD_NAME} ${TARGET_LIBS} deepin-event-log)
 
 if(ISTEST MATCHES "1")
     set(GTEST_LIBS gmock  gtest)

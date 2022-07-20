@@ -64,8 +64,10 @@
 #include <DPushButton>
 #include <DPalette>
 #include <QThread>
+#include "../util/eventlogutils.h"
 
 #include "commonservice.h"
+#include "config.h"
 
 DCORE_USE_NAMESPACE
 
@@ -273,6 +275,14 @@ void Player::playMeta(MediaMeta meta)
         //设置音乐播放
         emit signalPlaybackStatusChanged(Player::Paused);
     }
+
+    QJsonObject obj{
+        {"tid", EventLogUtils::StartPlaying},
+        {"version", VERSION},
+        {"successful", true},
+        {"encapsulation_format", meta.filetype}//封装格式
+    };
+    EventLogUtils::get().writeLogs(obj);
 }
 
 void Player::resume()
@@ -448,7 +458,7 @@ void Player::playNextMeta(bool isAuto)
             }
             if (index != -1) {
                 for (int i = 0; i < curMetaList.size(); i++) {
-                    if (curMetaList.at(i).first > index && i >= 0) {
+                    if (curMetaList.at(i).first > index) {
                         index = i - 1;
                         break;
                     }
@@ -998,13 +1008,20 @@ void Player::setEqualizerbauds(int index, int val)
 void Player::setEqualizerCurMode(int curIndex)
 {
     //非自定义模式时
-    if (curIndex != 0) {
+    if (curIndex > 0) {
         m_basePlayer->loadFromPreset(uint(curIndex - 1));
         //设置放大值
         m_basePlayer->setPreamplification(m_basePlayer->preamplification());
         for (int i = 0 ; i < 10; i++) {
             //设置频率值
             m_basePlayer->setAmplificationForBandAt(m_basePlayer->amplificationForBandAt(uint(i)), uint(i));
+        }
+    } else if (curIndex == -1) { // 关闭均衡器时
+        //设置放大值
+        m_basePlayer->setPreamplification(12);
+        for (int i = 0 ; i < 10; i++) {
+            //设置频率值
+            m_basePlayer->setAmplificationForBandAt(uint(0), uint(i));
         }
     }
 }

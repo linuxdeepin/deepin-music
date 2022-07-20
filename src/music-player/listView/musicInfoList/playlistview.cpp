@@ -58,6 +58,8 @@
 #include "commonservice.h"
 #include "songlistview.h"
 #include "songlistviewdialog.h"
+#include "../util/eventlogutils.h"
+#include "config.h"
 
 DWIDGET_USE_NAMESPACE
 
@@ -668,6 +670,15 @@ void PlayListView::slotOnClicked(const QModelIndex &index)
         if (!QFileInfo(itemMeta.localPath).exists() && itemMeta.mmType != MIMETYPE_CDA) {
             //停止当前的歌曲
             Player::getInstance()->stop();
+
+            QJsonObject obj{
+                {"tid", EventLogUtils::StartPlaying},
+                {"version", VERSION},
+                {"successful", false},
+                {"encapsulation_format", itemMeta.filetype}//封装格式
+            };
+            EventLogUtils::get().writeLogs(obj);
+
             //弹出提示框
             showErrorDlg();
         } else {
@@ -686,6 +697,15 @@ void PlayListView::slotOnDoubleClicked(const QModelIndex &index)
     if (!fileInfo.exists() && itemMeta.mmType != MIMETYPE_CDA) {
         //停止当前的歌曲
         Player::getInstance()->stop();
+
+        QJsonObject obj{
+            {"tid", EventLogUtils::StartPlaying},
+            {"version", VERSION},
+            {"successful", false},
+            {"encapsulation_format", itemMeta.filetype}//封装格式
+        };
+        EventLogUtils::get().writeLogs(obj);
+
         //弹出提示框
         showErrorDlg();
     } else {
@@ -701,6 +721,11 @@ void PlayListView::slotLoadData()
     DataBaseService::ListSortType sortType = getSortType();
     // 排序
     sortList(mediaMetas, sortType);
+
+    // 直接打开重复添加歌曲
+    for (int i = FirstLoadCount; i < m_model->rowCount(); ++i) {
+        m_model->removeRow(i);
+    }
 
     QList<MediaMeta> preMediaMetas = DataBaseService::getInstance()->getMusicInfosBySortAndCount(FirstLoadCount);
     for (int i = 0; i < mediaMetas.size(); i++) {

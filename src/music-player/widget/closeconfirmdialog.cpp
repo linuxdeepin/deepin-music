@@ -43,24 +43,24 @@ CloseConfirmDialog::CloseConfirmDialog(QWidget *parent) :
     this->setSpacing(0);
     DWidget *contentFrame = new DWidget(this);
     QFontMetrics fm(DFontSizeManager::instance()->get(DFontSizeManager::T6, QFont::Normal));
-    contentFrame->setFixedSize(380, fm.height() * 4 + 30);
+    contentFrame->setFixedSize(380, (fm.height() < 25 ? 25 : fm.height()) * 4 + 30);
     contentFrame->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     auto contentLayout = new QVBoxLayout(contentFrame);
     contentLayout->setSpacing(10);
     contentLayout->setContentsMargins(0, 0, 0, 0);
 
     auto miniBt = new DRadioButton(tr("Minimize to system tray"), this);
-    miniBt->setFixedHeight(fm.height());
+    miniBt->setFixedHeight(fm.height() < 25 ? 25 : fm.height());
     miniBt->setObjectName("CloseConfirmDialogMini");
     DFontSizeManager::instance()->bind(miniBt, DFontSizeManager::T6, QFont::Normal);
 
     m_exitBt = new DRadioButton(tr("Exit"), this);
-    m_exitBt->setFixedHeight(fm.height());
+    m_exitBt->setFixedHeight(fm.height() < 25 ? 25 : fm.height());
     m_exitBt->setObjectName("CloseConfirmDialogExit");
     DFontSizeManager::instance()->bind(m_exitBt, DFontSizeManager::T6, QFont::Normal);
 
     m_remember = new DCheckBox(tr("Do not ask again"), this);
-    m_remember->setFixedHeight(fm.height());
+    m_remember->setFixedHeight(fm.height() < 25 ? 25 : fm.height());
     DFontSizeManager::instance()->bind(m_remember, DFontSizeManager::T6, QFont::Normal);
 
     DLabel *titleLabel = new DLabel(this);

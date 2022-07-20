@@ -91,14 +91,11 @@ void VlcMedia::initMedia(const QString &location,
     // Create a new libvlc media descriptor from location
     vlc_media_new_path_function vlc_media_new_path = (vlc_media_new_path_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("libvlc_media_new_path");
     vlc_media_new_location_function vlc_media_new_location = (vlc_media_new_location_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("libvlc_media_new_location");
-    vlc_media_event_manager_function vlc_media_event_manager = (vlc_media_event_manager_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("libvlc_media_event_manager");
-
     if (localFile) {
         _vlcMedia = vlc_media_new_path(instance->core(), path.toUtf8().data());
     } else {
         _vlcMedia = vlc_media_new_location(instance->core(), path.toUtf8().data());
     }
-    _vlcEvents = vlc_media_event_manager(_vlcMedia);
 
     createCoreConnections();
 
@@ -120,6 +117,8 @@ void VlcMedia::createCoreConnections()
          << libvlc_MediaFreed
          << libvlc_MediaStateChanged;
 
+    vlc_media_event_manager_function vlc_media_event_manager = (vlc_media_event_manager_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("libvlc_media_event_manager");
+    _vlcEvents = vlc_media_event_manager(_vlcMedia);
     vlc_event_attach_function vlc_event_attach = (vlc_event_attach_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("libvlc_event_attach");
     foreach (const libvlc_event_e &event, list) {
         vlc_event_attach(_vlcEvents, event, libvlc_callback, this);
