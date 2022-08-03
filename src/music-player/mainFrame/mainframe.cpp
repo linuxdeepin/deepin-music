@@ -1052,12 +1052,12 @@ void MainFrame::showEvent(QShowEvent *event)
             stream >> restoredScreenWidth;
         }
 
-//        QJsonObject obj{
-//            {"tid", EventLogUtils::Start},
-//            {"version", VERSION},
-//            {"mode", 2} //热启动
-//        };
-//        EventLogUtils::get().writeLogs(obj);
+        QJsonObject obj{
+            {"tid", EventLogUtils::Start},
+            {"version", VERSION},
+            {"mode", 2} //热启动
+        };
+        EventLogUtils::get().writeLogs(obj);
     }
     this->setFocus();
 
