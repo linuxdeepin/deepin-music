@@ -276,13 +276,13 @@ void Player::playMeta(MediaMeta meta)
         emit signalPlaybackStatusChanged(Player::Paused);
     }
 
-    QJsonObject obj{
-        {"tid", EventLogUtils::StartPlaying},
-        {"version", VERSION},
-        {"successful", true},
-        {"encapsulation_format", meta.filetype}//封装格式
-    };
-    EventLogUtils::get().writeLogs(obj);
+//    QJsonObject obj{
+//        {"tid", EventLogUtils::StartPlaying},
+//        {"version", VERSION},
+//        {"successful", true},
+//        {"encapsulation_format", meta.filetype}//封装格式
+//    };
+//    EventLogUtils::get().writeLogs(obj);
 }
 
 void Player::resume()
