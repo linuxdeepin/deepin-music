@@ -671,13 +671,13 @@ void PlayListView::slotOnClicked(const QModelIndex &index)
             //停止当前的歌曲
             Player::getInstance()->stop();
 
-            QJsonObject obj{
-                {"tid", EventLogUtils::StartPlaying},
-                {"version", VERSION},
-                {"successful", false},
-                {"encapsulation_format", itemMeta.filetype}//封装格式
-            };
-            EventLogUtils::get().writeLogs(obj);
+//            QJsonObject obj{
+//                {"tid", EventLogUtils::StartPlaying},
+//                {"version", VERSION},
+//                {"successful", false},
+//                {"encapsulation_format", itemMeta.filetype}//封装格式
+//            };
+//            EventLogUtils::get().writeLogs(obj);
 
             //弹出提示框
             showErrorDlg();
@@ -698,13 +698,13 @@ void PlayListView::slotOnDoubleClicked(const QModelIndex &index)
         //停止当前的歌曲
         Player::getInstance()->stop();
 
-        QJsonObject obj{
-            {"tid", EventLogUtils::StartPlaying},
-            {"version", VERSION},
-            {"successful", false},
-            {"encapsulation_format", itemMeta.filetype}//封装格式
-        };
-        EventLogUtils::get().writeLogs(obj);
+//        QJsonObject obj{
+//            {"tid", EventLogUtils::StartPlaying},
+//            {"version", VERSION},
+//            {"successful", false},
+//            {"encapsulation_format", itemMeta.filetype}//封装格式
+//        };
+//        EventLogUtils::get().writeLogs(obj);
 
         //弹出提示框
         showErrorDlg();
