@@ -40,6 +40,6 @@ Depends: ${shlibs:Depends}, ${misc:Depends},
  libqt5sql5-sqlite,
  libqt5multimedia5-plugins,
  vlc-plugin-base
-Recommends: gstreamer1.0-pulseaudio
+Recommends: gstreamer1.0-pulseaudio, uos-reporter, deepin-event-log
 Description: Music software for UOS
  Music is a local music player with beautiful design and simple functions.
