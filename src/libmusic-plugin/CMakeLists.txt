@@ -4,8 +4,11 @@
 
 #工程名
 set(CMD_NAME music-plugin)
-set(CMAKE_INSTALL_VOICE_LIBDIR /usr/lib/deepin-aiassistant/serivce-plugins)
 cmake_minimum_required(VERSION 3.10)
+
+if(NOT DEFINED CMAKE_INSTALL_VOICE_LIBDIR)
+    set(CMAKE_INSTALL_VOICE_LIBDIR ${CMAKE_INSTALL_LIBDIR}/deepin-aiassistant/serivce-plugins)
+endif()
 
 #文件夹包含
 include_directories(.)
