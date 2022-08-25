@@ -10,5 +10,6 @@ override_dh_auto_configure:
 	dh_auto_configure -- \
 	  -DCMAKE_BUILD_TYPE=Release \
 	  -DCMAKE_INSTALL_PREFIX=/usr \
+	  -DCMAKE_INSTALL_VOICE_LIBDIR=/usr/lib/deepin-aiassistant/serivce-plugins \
       -DAPP_VERSION=$(DEB_VERSION_UPSTREAM) -DVERSION=$(DEB_VERSION_UPSTREAM) LIB_INSTALL_DIR=/usr/lib DH_AUTO_ARGS = --parallel --buildsystem=cmake
 

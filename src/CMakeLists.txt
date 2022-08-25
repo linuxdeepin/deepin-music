@@ -16,6 +16,9 @@ find_package(Qt5LinguistTools)
 #find_package(Qt5X11Extras)
 
 include(GNUInstallDirs)
+if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
+   set(CMAKE_INSTALL_PREFIX /usr)
+endif()
 
 add_subdirectory(libdmusic)
 add_subdirectory(music-player)
