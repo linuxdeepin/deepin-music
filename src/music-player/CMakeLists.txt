@@ -152,21 +152,21 @@ target_link_libraries(${CMD_NAME} ${TARGET_LIBS} )
 #target_link_libraries(${CMD_NAME} ${TARGET_LIBS} deepin-event-log)
 
 if(ISTEST MATCHES "1")
-    set(GTEST_LIBS gmock  gtest)
+    set(GTEST_LIBS gmock gtest)
     target_link_libraries(${CMD_NAME} ${GTEST_LIBS})
 endif()
 
 # ------------------------------- install script -------------------------------
-install(TARGETS ${CMD_NAME} DESTINATION bin)
+install(TARGETS ${CMD_NAME} DESTINATION ${CMAKE_INSTALL_BINDIR})
 # install Translation files:
 install(DIRECTORY ${PROJECT_SOURCE_DIR}/translations
-    DESTINATION share/${CMD_NAME}
+    DESTINATION ${CMAKE_INSTALL_DATADIR}/${CMD_NAME}
     FILES_MATCHING PATTERN "*.qm")
 #install(FILES ${Translate1} DESTINATION share/${CMD_NAME})
 # install Desktop icon
 install(FILES ${PROJECT_SOURCE_DIR}/src/music-player/data/deepin-music.desktop
-    DESTINATION share/applications)
+    DESTINATION ${CMAKE_INSTALL_DATADIR}/applications)
 # install Manual App icon
 install(FILES ${PROJECT_SOURCE_DIR}/src/music-player/icons/icons/deepin-music.svg
-    DESTINATION share/icons/hicolor/scalable/apps)
-install(DIRECTORY ${PROJECT_SOURCE_DIR}/assets/deepin-music DESTINATION /usr/share/deepin-manual/manual-assets/application/)
+    DESTINATION ${CMAKE_INSTALL_DATADIR}/icons/hicolor/scalable/apps)
+install(DIRECTORY ${PROJECT_SOURCE_DIR}/assets/deepin-music DESTINATION ${CMAKE_INSTALL_DATADIR}/deepin-manual/manual-assets/application/)
