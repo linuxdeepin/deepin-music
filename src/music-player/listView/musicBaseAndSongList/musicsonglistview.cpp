@@ -985,5 +985,6 @@ void MusicSongListView::setThemeType(int type)
         auto curStandardItem = dynamic_cast<DStandardItem *>(m_model->itemFromIndex(m_model->index(i, 0)));
         curStandardItem->setForeground(type == 1 ? QColor("#414D68") : QColor("#C0C6D4"));
     }
+    emit sigThemeTypeChanged(type);
 }
 

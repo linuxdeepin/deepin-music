@@ -150,6 +150,8 @@ void MusicBaseListView::init()
     model->appendRow(item);
 
     setMinimumHeight(model->rowCount() * 40);
+
+    setThemeType(DGuiApplicationHelper::instance()->themeType());
 }
 
 void MusicBaseListView::showContextMenu(const QPoint &pos)
@@ -187,6 +189,14 @@ void MusicBaseListView::showContextMenu(const QPoint &pos)
     menu.addAction(tr("Add music"));
 
     menu.exec(globalPos);
+}
+
+void MusicBaseListView::setThemeType(int type)
+{
+    for (int i = 0; i < model->rowCount(); i++) {
+        auto curStandardItem = dynamic_cast<DStandardItem *>(model->itemFromIndex(model->index(i, 0)));
+        curStandardItem->setForeground(type == 1 ? QColor("#414D68") : QColor("#C0C6D4"));
+    }
 }
 
 //void MusicBaseListView::mousePressEvent(QMouseEvent *event)
