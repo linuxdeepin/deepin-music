@@ -91,6 +91,7 @@ signals:
     void sigRmvSongList();
     void sigUpdateDragScroll();
     void currentChanged(const QModelIndex &current, const QModelIndex &previous) Q_DECL_OVERRIDE;
+    void sigThemeTypeChanged(int type);
 
 protected:
     void resizeEvent(QResizeEvent *event) Q_DECL_OVERRIDE;

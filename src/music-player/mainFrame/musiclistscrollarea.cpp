@@ -144,6 +144,7 @@ MusicListScrollArea::MusicListScrollArea(QWidget *parent) : DScrollArea(parent)
     connect(m_customizeListview, &QAbstractItemView::clicked, this, &MusicListScrollArea::slotListViewClicked);
     connect(m_customizeListview, &MusicSongListView::sigAddNewSongList, this, &MusicListScrollArea::slotAddNewSongList);
     connect(m_customizeListview, &MusicSongListView::sigUpdateDragScroll, this, &MusicListScrollArea::slotUpdateDragScroll);
+    connect(m_customizeListview, &MusicSongListView::sigThemeTypeChanged, m_dataBaseListview, &MusicBaseListView::setThemeType);
     connect(CommonService::getInstance(), &CommonService::signalSwitchToView, this, &MusicListScrollArea::viewChanged);
 }
 
