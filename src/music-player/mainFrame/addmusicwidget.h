@@ -23,7 +23,7 @@
 
 #include <QScopedPointer>
 #include <DWidget>
-#include <DPushButton>
+#include <DSuggestButton>
 #include <QLabel>
 
 DWIDGET_USE_NAMESPACE
@@ -46,7 +46,7 @@ protected:
 
 private:
     QLabel                  *m_text = nullptr;
-    DPushButton             *m_addMusicButton = nullptr;
+    DSuggestButton          *m_addMusicButton = nullptr;
     QLabel                  *m_logo = nullptr;
     QString                  m_currentHash = "all";
 };
