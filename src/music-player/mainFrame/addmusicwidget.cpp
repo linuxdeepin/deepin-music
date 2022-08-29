@@ -65,13 +65,13 @@ AddMusicWidget::AddMusicWidget(QWidget *parent) : DWidget(parent)
     QButtonGroup *buttonGroup = new QButtonGroup(this);
     buttonGroup->setExclusive(true);
 
-    m_addMusicButton = new DPushButton(this);
+    m_addMusicButton = new DSuggestButton(this);
     m_addMusicButton->setFixedSize(302, 36);
     m_addMusicButton->setText(tr("Add Music"));
     m_addMusicButton->setFocusPolicy(Qt::TabFocus);
     m_addMusicButton->setDefault(true);
-    m_addMusicButton->setCheckable(true);
-    m_addMusicButton->setChecked(true);
+//    m_addMusicButton->setCheckable(true);
+//    m_addMusicButton->setChecked(true);
     DFontSizeManager::instance()->bind(m_addMusicButton, DFontSizeManager::T6, QFont::Normal);
     buttonGroup->addButton(m_addMusicButton);
 
