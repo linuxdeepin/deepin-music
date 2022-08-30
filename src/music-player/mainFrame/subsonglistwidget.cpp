@@ -65,10 +65,10 @@ void SubSonglistWidget::initUI()
     titleLayout->setContentsMargins(28, 15, 0, 20);
 
     m_titleLabel = new DLabel(this);
-    m_titleLabel->setForegroundRole(DPalette::BrightText);
+    m_titleLabel->setForegroundRole(DPalette::TextTitle);
     titleLayout->addWidget(m_titleLabel, 1);
     m_infoLabel = new DLabel(this);
-    m_infoLabel->setForegroundRole(DPalette::BrightText);
+    m_infoLabel->setForegroundRole(DPalette::TextTitle);
     titleLayout->addWidget(m_infoLabel, 1);
     QHBoxLayout *btLayout = new QHBoxLayout(this);
     btLayout->setSpacing(5);
@@ -146,21 +146,7 @@ void SubSonglistWidget::resizeEvent(QResizeEvent *e)
     QString title = extraNameFm.elidedText(m_title, Qt::ElideRight, this->width() - 56);
     m_titleLabel->setText(title);
 
-    // 添加非空判断，减少警告日志输出与不必要的性能损耗
-    QImage img;
-    if (!m_img.isNull()) {
-        // 根据屏幕缩放比调整
-        img = m_img.scaled(static_cast<int>(static_cast<double>(this->width()) * qApp->devicePixelRatio()), 200, Qt::KeepAspectRatioByExpanding, Qt::SmoothTransformation).toImage();
-    }
-    QPainter pai(&img);
-    pai.setRenderHints(QPainter::Antialiasing | QPainter::HighQualityAntialiasing | QPainter::SmoothPixmapTransform);
-    QColor fillColor("#FFFFFF");
-    fillColor.setAlphaF(0.6);
-    pai.setBrush(fillColor);
-    QRect rect = img.rect();
-    rect.adjust(-5, 0, 5, 0);
-    pai.drawRect(rect);
-    m_titleImage->setPixmap(QPixmap::fromImage(img));
+    setTitleImage(m_img);
 }
 
 SubSonglistWidget::SubSonglistWidget(const QString &hash, QWidget *parent)
@@ -187,13 +173,8 @@ void SubSonglistWidget::setThemeType(int type)
         palette.setColor(DPalette::Background, BackgroundColor);
         setPalette(palette);
 
-//        auto titleLabelPl = d->titleLabel->palette();
-//        titleLabelPl.setColor(DPalette::WindowText, Qt::black);
-//        d->titleLabel->setPalette(titleLabelPl);
-
-//        auto infoLabelPl = d->infoLabel->palette();
-//        infoLabelPl.setColor(DPalette::WindowText, Qt::black);
-//        d->infoLabel->setPalette(infoLabelPl);
+        m_titleLabel->setForegroundRole(DPalette::TextTitle);
+        m_infoLabel->setForegroundRole(DPalette::TextTitle);
 
         auto playAllPalette = m_btPlayAll->palette();
         playAllPalette.setColor(DPalette::ButtonText, Qt::white);
@@ -218,13 +199,8 @@ void SubSonglistWidget::setThemeType(int type)
         palette.setColor(DPalette::Background, BackgroundColor);
         setPalette(palette);
 
-//        auto titleLabelPl = d->titleLabel->palette();
-//        titleLabelPl.setColor(DPalette::WindowText, Qt::white);
-//        d->titleLabel->setPalette(titleLabelPl);
-
-//        auto infoLabelPl = d->infoLabel->palette();
-//        infoLabelPl.setColor(DPalette::WindowText, Qt::white);
-//        d->infoLabel->setPalette(infoLabelPl);
+        m_titleLabel->setForegroundRole(DPalette::HighlightedText);
+        m_infoLabel->setForegroundRole(DPalette::HighlightedText);
 
         auto playAllPalette = m_btPlayAll->palette();
         playAllPalette.setColor(DPalette::ButtonText, "#FFFFFF");
@@ -247,6 +223,7 @@ void SubSonglistWidget::setThemeType(int type)
     m_btPlayAll->setIcon(QIcon::fromTheme("play_all"));
     m_btRandomPlay->setIcon(QIcon::fromTheme("random_play"));
 //    infoDialog->setThemeType(type);
+    setTitleImage(m_img);
 }
 
 void SubSonglistWidget::flushDialog(QMap<QString, MediaMeta> musicinfos, ListPageSwitchType listPageType)
@@ -296,7 +273,6 @@ void SubSonglistWidget::flushDialog(QMap<QString, MediaMeta> musicinfos, ListPag
         DFontSizeManager::instance()->bind(m_titleLabel, DFontSizeManager::T3, QFont::DemiBold);
         m_infoLabel->setFont(infoFont);
         DFontSizeManager::instance()->bind(m_infoLabel, DFontSizeManager::T5, QFont::Normal);
-        m_titleLabel->setForegroundRole(DPalette::TextTitle);
 
         // 设置titleImage
         QPixmap img;
@@ -354,22 +330,24 @@ void SubSonglistWidget::setTitleImage(QPixmap &img)
 {
     m_img = img;
 
+    QPixmap curImg;
     // 添加非空判断，减少警告日志输出与不必要的性能损耗
     if (!img.isNull()) {
-        img = img.scaled(static_cast<int>(static_cast<double>(this->width()) * qApp->devicePixelRatio()), 200, Qt::KeepAspectRatioByExpanding, Qt::SmoothTransformation);
+        curImg = img.scaled(static_cast<int>(static_cast<double>(this->width()) * qApp->devicePixelRatio()), 200, Qt::KeepAspectRatioByExpanding, Qt::SmoothTransformation);
     }
 
-    QPainter pai(&img);
+    QPainter pai(&curImg);
     pai.setRenderHints(QPainter::Antialiasing | QPainter::HighQualityAntialiasing | QPainter::SmoothPixmapTransform);
 
     QColor fillColor("#FFFFFF");
+    if (DGuiApplicationHelper::instance()->themeType() != 1)
+        fillColor = QColor(Qt::black);
     fillColor.setAlphaF(0.6);
     pai.setBrush(fillColor);
-    QRect rect = img.rect();
+    QRect rect = curImg.rect();
     rect.adjust(-5, 0, 5, 0);
     pai.drawRect(rect);
+    pai.end();
 
-    m_titleImage->setPixmap(img);
+    m_titleImage->setPixmap(curImg);
 }
-
-
