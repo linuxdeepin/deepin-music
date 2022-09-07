@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
 #工程名
 set(CMD_NAME music-plugin)
 set(CMAKE_INSTALL_VOICE_LIBDIR /usr/lib/deepin-aiassistant/serivce-plugins)

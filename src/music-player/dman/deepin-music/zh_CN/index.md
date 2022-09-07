@@ -1,3 +1,9 @@
+<!--
+SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+
+SPDX-License-Identifier: GPL-3.0-or-later
+-->
+
 # 深度音乐|../common/deepin-music.svg|
 
 ## 概述|../common/icon_overview.svg|
