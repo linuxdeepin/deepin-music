@@ -1,4 +1,9 @@
 #!/bin/bash
+
+# SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
 export QT_QPA_PLATFORM='offscreen'
 QTEST_FUNCTION_TIMEOUT='800000'
 rm -rf ${HOME}/.cache/deepin/deepin-music/*
