@@ -1,6 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS>
-<TS version="2.1" language="ro" sourcelanguage="en_US">
+<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="ro" sourcelanguage="en_US">
 <context>
     <name>AddMusicWidget</name>
     <message>
@@ -11,7 +9,7 @@
     <message>
         <location filename="../src/music-player/mainFrame/addmusicwidget.cpp" line="80"/>
         <source>Or drag music files here</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -457,7 +455,7 @@
     <message>
         <location filename="../src/music-player/mainFrame/mainframe.cpp" line="124"/>
         <source>Select All</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/mainFrame/mainframe.cpp" line="125"/>
@@ -502,12 +500,12 @@
     <message>
         <location filename="../src/music-player/mainFrame/mainframe.cpp" line="526"/>
         <source>A disc is connected</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/mainFrame/mainframe.cpp" line="576"/>
         <source>Unsupported audio codec</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/mainFrame/mainframe.cpp" line="697"/>
@@ -640,7 +638,7 @@
     <message>
         <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="239"/>
         <source>CD playlist</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="919"/>
@@ -733,7 +731,7 @@
     <message>
         <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="301"/>
         <source>CD playlist</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="331"/>
@@ -748,12 +746,12 @@
     <message>
         <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="576"/>
         <source>The CD has been removed</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="580"/>
         <source>Play failed, as the CD has been removed</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="587"/>
@@ -827,12 +825,12 @@
         <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1342"/>
         <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1408"/>
         <source>Add to</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1298"/>
         <source>Create new playlist</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1346"/>
