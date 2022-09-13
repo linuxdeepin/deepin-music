@@ -1,6 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS>
-<TS version="2.1" language="fr" sourcelanguage="en_US">
+<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="fr" sourcelanguage="en_US">
 <context>
     <name>AddMusicWidget</name>
     <message>
@@ -11,7 +9,7 @@
     <message>
         <location filename="../src/music-player/mainFrame/addmusicwidget.cpp" line="80"/>
         <source>Or drag music files here</source>
-        <translation type="unfinished"></translation>
+        <translation>Ou faites glisser des fichiers musicaux ici</translation>
     </message>
 </context>
 <context>
@@ -507,7 +505,7 @@
     <message>
         <location filename="../src/music-player/mainFrame/mainframe.cpp" line="576"/>
         <source>Unsupported audio codec</source>
-        <translation type="unfinished"></translation>
+        <translation>Codec audio non pris en charge</translation>
     </message>
     <message>
         <location filename="../src/music-player/mainFrame/mainframe.cpp" line="697"/>
@@ -758,7 +756,7 @@
     <message>
         <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="587"/>
         <source>OK</source>
-        <translation>D&apos;accord</translation>
+        <translation>OK</translation>
     </message>
     <message>
         <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="964"/>
@@ -827,12 +825,12 @@
         <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1342"/>
         <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1408"/>
         <source>Add to</source>
-        <translation type="unfinished"></translation>
+        <translation>Ajouter à</translation>
     </message>
     <message>
         <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1298"/>
         <source>Create new playlist</source>
-        <translation type="unfinished"></translation>
+        <translation>Créer une nouvelle liste de lecture</translation>
     </message>
     <message>
         <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1346"/>
@@ -983,7 +981,7 @@
     <message>
         <location filename="../src/music-player/widget/settingsdialog.cpp" line="33"/>
         <source>Basic</source>
-        <translation>Basique</translation>
+        <translation>De base</translation>
     </message>
     <message>
         <location filename="../src/music-player/widget/settingsdialog.cpp" line="34"/>
