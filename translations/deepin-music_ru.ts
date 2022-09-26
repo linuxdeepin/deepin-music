@@ -1,6 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS>
-<TS version="2.1" language="ru" sourcelanguage="en_US">
+<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="ru" sourcelanguage="en_US">
 <context>
     <name>AddMusicWidget</name>
     <message>
@@ -11,7 +9,7 @@
     <message>
         <location filename="../src/music-player/mainFrame/addmusicwidget.cpp" line="80"/>
         <source>Or drag music files here</source>
-        <translation type="unfinished"></translation>
+        <translation>Или перетащите сюда музыкальные файлы</translation>
     </message>
 </context>
 <context>
@@ -406,7 +404,7 @@
     <message>
         <location filename="../src/music-player/mainFrame/mainframe.cpp" line="264"/>
         <source>Add playlist</source>
-        <translation>Новый список воспроизведения</translation>
+        <translation>Добавить список воспроизведения</translation>
     </message>
     <message>
         <location filename="../src/music-player/mainFrame/mainframe.cpp" line="118"/>
@@ -487,7 +485,7 @@
     <message>
         <location filename="../src/music-player/mainFrame/mainframe.cpp" line="517"/>
         <source>Already added to the playlist</source>
-        <translation>Уже добавлено в плейлист</translation>
+        <translation>Уже добавлено в список</translation>
     </message>
     <message>
         <location filename="../src/music-player/mainFrame/mainframe.cpp" line="520"/>
@@ -507,7 +505,7 @@
     <message>
         <location filename="../src/music-player/mainFrame/mainframe.cpp" line="576"/>
         <source>Unsupported audio codec</source>
-        <translation type="unfinished"></translation>
+        <translation>Аудиокодек не поддерживается</translation>
     </message>
     <message>
         <location filename="../src/music-player/mainFrame/mainframe.cpp" line="697"/>
@@ -827,12 +825,12 @@
         <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1342"/>
         <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1408"/>
         <source>Add to</source>
-        <translation type="unfinished"></translation>
+        <translation>Добавить в</translation>
     </message>
     <message>
         <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1298"/>
         <source>Create new playlist</source>
-        <translation type="unfinished"></translation>
+        <translation>Новый список воспроизведения</translation>
     </message>
     <message>
         <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1346"/>

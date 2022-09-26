@@ -1,12 +1,10 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS>
-<TS version="2.1" language="pt" sourcelanguage="en_US">
+<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="pt" sourcelanguage="en_US">
 <context>
     <name>AddMusicWidget</name>
     <message>
         <location filename="../src/music-player/mainFrame/addmusicwidget.cpp" line="70"/>
         <source>Add Music</source>
-        <translation>Adicionar Música</translation>
+        <translation>Adicionar música</translation>
     </message>
     <message>
         <location filename="../src/music-player/mainFrame/addmusicwidget.cpp" line="80"/>
@@ -19,17 +17,17 @@
     <message>
         <location filename="../src/music-player/listView/albumList/albumdelegate.cpp" line="635"/>
         <source>No songs</source>
-        <translation>Sem músicas</translation>
+        <translation>Sem faixas</translation>
     </message>
     <message>
         <location filename="../src/music-player/listView/albumList/albumdelegate.cpp" line="637"/>
         <source>1 song</source>
-        <translation>1 música</translation>
+        <translation>1 faixa</translation>
     </message>
     <message>
         <location filename="../src/music-player/listView/albumList/albumdelegate.cpp" line="639"/>
         <source>%1 songs</source>
-        <translation>%1 músicas</translation>
+        <translation>%1 faixas</translation>
     </message>
 </context>
 <context>
@@ -132,7 +130,7 @@
     <message>
         <location filename="../src/music-player/widget/dequalizerdialog.cpp" line="276"/>
         <source>Classical</source>
-        <translation>Clássico</translation>
+        <translation>Clássica</translation>
     </message>
     <message>
         <location filename="../src/music-player/widget/dequalizerdialog.cpp" line="277"/>
@@ -295,7 +293,7 @@
     <message>
         <location filename="../src/music-player/mainFrame/footerwidget.cpp" line="298"/>
         <source>Play Queue</source>
-        <translation>Fila de espera</translation>
+        <translation>Reproduzir fila</translation>
     </message>
     <message>
         <location filename="../src/music-player/mainFrame/footerwidget.cpp" line="470"/>
@@ -318,18 +316,18 @@
     <message>
         <location filename="../src/music-player/mainFrame/importwidget.cpp" line="79"/>
         <source>Open Folder</source>
-        <translation>Abrir Pasta</translation>
+        <translation>Abrir pasta</translation>
     </message>
     <message>
         <location filename="../src/music-player/mainFrame/importwidget.cpp" line="88"/>
         <source>Add Music</source>
-        <translation>Adicionar Música</translation>
+        <translation>Adicionar música</translation>
     </message>
     <message>
         <location filename="../src/music-player/mainFrame/importwidget.cpp" line="96"/>
         <location filename="../src/music-player/mainFrame/importwidget.cpp" line="233"/>
         <source>Scan</source>
-        <translation>Pesquisar</translation>
+        <translation>Analisar</translation>
     </message>
     <message>
         <location filename="../src/music-player/mainFrame/importwidget.cpp" line="97"/>
@@ -353,7 +351,7 @@
     <message>
         <location filename="../src/music-player/widget/infodialog.cpp" line="122"/>
         <source>Basic info</source>
-        <translation>Informação Básica</translation>
+        <translation>Informação básica</translation>
     </message>
     <message>
         <location filename="../src/music-player/widget/infodialog.cpp" line="139"/>
@@ -388,7 +386,7 @@
     <message>
         <location filename="../src/music-player/widget/infodialog.cpp" line="142"/>
         <source>Path:</source>
-        <translation>Caminho:</translation>
+        <translation>Localização:</translation>
     </message>
     <message>
         <location filename="../src/music-player/widget/infodialog.cpp" line="230"/>
@@ -467,7 +465,7 @@
     <message>
         <location filename="../src/music-player/mainFrame/mainframe.cpp" line="326"/>
         <source>Play/Pause</source>
-        <translation>Reproduzir/Pausa</translation>
+        <translation>Reproduzir/Pausar</translation>
     </message>
     <message>
         <location filename="../src/music-player/mainFrame/mainframe.cpp" line="328"/>
@@ -492,12 +490,12 @@
     <message>
         <location filename="../src/music-player/mainFrame/mainframe.cpp" line="520"/>
         <source>1 song added</source>
-        <translation>1 música adicionada</translation>
+        <translation>1 faixa adicionada</translation>
     </message>
     <message>
         <location filename="../src/music-player/mainFrame/mainframe.cpp" line="522"/>
         <source>%1 songs added</source>
-        <translation>%1 músicas adicionadas</translation>
+        <translation>%1 faixas adicionadas</translation>
     </message>
     <message>
         <location filename="../src/music-player/mainFrame/mainframe.cpp" line="526"/>
@@ -507,12 +505,12 @@
     <message>
         <location filename="../src/music-player/mainFrame/mainframe.cpp" line="576"/>
         <source>Unsupported audio codec</source>
-        <translation type="unfinished"></translation>
+        <translation>Codec de áudio não suportado</translation>
     </message>
     <message>
         <location filename="../src/music-player/mainFrame/mainframe.cpp" line="697"/>
         <source>OK</source>
-        <translation>OK</translation>
+        <translation>Aceitar</translation>
     </message>
     <message>
         <location filename="../src/music-player/mainFrame/mainframe.cpp" line="690"/>
@@ -540,7 +538,7 @@
     <message>
         <location filename="../src/music-player/listView/musicBaseAndSongList/musicbaselistview.cpp" line="146"/>
         <source>My Favorites</source>
-        <translation>Minhas Favoritas</translation>
+        <translation>Minhas favoritas</translation>
     </message>
     <message>
         <location filename="../src/music-player/listView/musicBaseAndSongList/musicbaselistview.cpp" line="181"/>
@@ -570,7 +568,7 @@
         <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="1070"/>
         <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="1085"/>
         <source>No songs</source>
-        <translation>Sem músicas</translation>
+        <translation>Sem faixas</translation>
     </message>
     <message>
         <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="965"/>
@@ -580,46 +578,46 @@
     <message>
         <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="1032"/>
         <source>1 album - 1 song</source>
-        <translation>1 álbum - 1 música</translation>
+        <translation>1 álbum - 1 faixa</translation>
     </message>
     <message>
         <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="1035"/>
         <source>%1 album - %2 songs</source>
-        <translation>%1 álbum - %2 músicas</translation>
+        <translation>%1 álbum - %2 faixas</translation>
     </message>
     <message>
         <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="1037"/>
         <source>%1 albums - %2 songs</source>
-        <translation>%1 álbuns - %2 músicas</translation>
+        <translation>%1 álbuns - %2 faixas</translation>
     </message>
     <message>
         <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="1053"/>
         <source>1 artist - 1 song</source>
-        <translation>1 artista - 1 música</translation>
+        <translation>1 artista - 1 faixa</translation>
     </message>
     <message>
         <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="1056"/>
         <source>%1 artist - %2 songs</source>
-        <translation>%1 artista - %2 músicas</translation>
+        <translation>%1 artista - %2 faixas</translation>
     </message>
     <message>
         <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="1058"/>
         <source>%1 artists - %2 songs</source>
-        <translation>%1 artistas - %2 músicas</translation>
+        <translation>%1 artistas - %2 faixas</translation>
     </message>
     <message>
         <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="117"/>
         <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="1072"/>
         <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="1087"/>
         <source>1 song</source>
-        <translation>1 música</translation>
+        <translation>1 faixa</translation>
     </message>
     <message>
         <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="119"/>
         <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="1074"/>
         <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="1089"/>
         <source>%1 songs</source>
-        <translation>%1 músicas</translation>
+        <translation>%1 faixas</translation>
     </message>
     <message>
         <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="287"/>
@@ -673,7 +671,7 @@
     <message>
         <location filename="../src/music-player/mainFrame/musiclistdatawidget.cpp" line="830"/>
         <source>Play All</source>
-        <translation>Reproduzir Tudo</translation>
+        <translation>Reproduzir tudo</translation>
     </message>
 </context>
 <context>
@@ -753,7 +751,7 @@
     <message>
         <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="580"/>
         <source>Play failed, as the CD has been removed</source>
-        <translation>A reprodução falhou, uma vez que o CD foi removido</translation>
+        <translation>Falha ao reproduzir, uma vez que o CD foi removido</translation>
     </message>
     <message>
         <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="587"/>
@@ -784,7 +782,7 @@
         <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1291"/>
         <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1864"/>
         <source>Play queue</source>
-        <translation>Fila de espera</translation>
+        <translation>Reproduzir fila</translation>
     </message>
     <message>
         <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1294"/>
@@ -860,7 +858,7 @@
     <message>
         <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1388"/>
         <source>Song info</source>
-        <translation>Informação da música</translation>
+        <translation>Informação da faixa</translation>
     </message>
     <message>
         <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1106"/>
@@ -881,7 +879,7 @@
     <message>
         <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1112"/>
         <source>Are you sure you want to remove the selected %1 songs?</source>
-        <translation>Tem a certeza que deseja remover as %1 músicas selecionadas?</translation>
+        <translation>Tem a certeza que deseja remover as %1 faixas selecionadas?</translation>
     </message>
     <message>
         <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1160"/>
@@ -897,12 +895,12 @@
     <message>
         <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1172"/>
         <source>Are you sure you want to delete the selected %1 songs?</source>
-        <translation>Tem a certeza que deseja eliminar as %1 músicas selecionadas?</translation>
+        <translation>Tem a certeza que deseja eliminar as %1 faixas selecionadas?</translation>
     </message>
     <message>
         <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1173"/>
         <source>The song files contained will also be deleted</source>
-        <translation>Os ficheiros de música contidos também serão eliminados</translation>
+        <translation>Os ficheiros da faixa contidos também serão eliminados</translation>
     </message>
 </context>
 <context>
@@ -910,7 +908,7 @@
     <message>
         <location filename="../src/music-player/widget/playqueuewidget.cpp" line="71"/>
         <source>Play Queue</source>
-        <translation>Fila de espera</translation>
+        <translation>Reproduzir fila</translation>
     </message>
     <message>
         <location filename="../src/music-player/widget/playqueuewidget.cpp" line="84"/>
@@ -921,17 +919,17 @@
         <location filename="../src/music-player/widget/playqueuewidget.cpp" line="95"/>
         <location filename="../src/music-player/widget/playqueuewidget.cpp" line="337"/>
         <source>No songs</source>
-        <translation>Sem músicas</translation>
+        <translation>Sem faixas</translation>
     </message>
     <message>
         <location filename="../src/music-player/widget/playqueuewidget.cpp" line="339"/>
         <source>1 song</source>
-        <translation>1 música</translation>
+        <translation>1 faixa</translation>
     </message>
     <message>
         <location filename="../src/music-player/widget/playqueuewidget.cpp" line="341"/>
         <source>%1 songs</source>
-        <translation>%1 músicas</translation>
+        <translation>%1 faixas</translation>
     </message>
 </context>
 <context>
@@ -1008,7 +1006,7 @@
     <message>
         <location filename="../src/music-player/widget/settingsdialog.cpp" line="38"/>
         <source>Play/Pause</source>
-        <translation>Reproduzir/Pausa</translation>
+        <translation>Reproduzir/Pausar</translation>
     </message>
     <message>
         <location filename="../src/music-player/widget/settingsdialog.cpp" line="39"/>
@@ -1054,7 +1052,7 @@
     <message>
         <location filename="../src/music-player/widget/searchresulttabwidget.cpp" line="65"/>
         <source>Songs</source>
-        <translation>Músicas</translation>
+        <translation>Faixas</translation>
     </message>
     <message>
         <location filename="../src/music-player/widget/searchresulttabwidget.cpp" line="72"/>
@@ -1077,12 +1075,12 @@
     <message>
         <location filename="../src/music-player/core/util/shortcut.cpp" line="33"/>
         <source>Songs</source>
-        <translation>Músicas</translation>
+        <translation>Faixas</translation>
     </message>
     <message>
         <location filename="../src/music-player/core/util/shortcut.cpp" line="34"/>
         <source>Playlists</source>
-        <translation>Listas de Reprodução</translation>
+        <translation>Listas de reprodução</translation>
     </message>
     <message>
         <location filename="../src/music-player/core/util/shortcut.cpp" line="35"/>
@@ -1092,7 +1090,7 @@
     <message>
         <location filename="../src/music-player/core/util/shortcut.cpp" line="42"/>
         <source>Play/Pause</source>
-        <translation>Reproduzir/Pausa</translation>
+        <translation>Reproduzir/Pausar</translation>
     </message>
     <message>
         <location filename="../src/music-player/core/util/shortcut.cpp" line="43"/>
@@ -1107,12 +1105,12 @@
     <message>
         <location filename="../src/music-player/core/util/shortcut.cpp" line="45"/>
         <source>Volume Up</source>
-        <translation>Aumentar Volume</translation>
+        <translation>Aumentar volume</translation>
     </message>
     <message>
         <location filename="../src/music-player/core/util/shortcut.cpp" line="46"/>
         <source>Volume Down</source>
-        <translation>Diminuir Volume</translation>
+        <translation>Diminuir volume</translation>
     </message>
     <message>
         <location filename="../src/music-player/core/util/shortcut.cpp" line="47"/>
@@ -1132,7 +1130,7 @@
     <message>
         <location filename="../src/music-player/core/util/shortcut.cpp" line="52"/>
         <source>Song info</source>
-        <translation>Informação da música</translation>
+        <translation>Informação da faixa</translation>
     </message>
     <message>
         <location filename="../src/music-player/core/util/shortcut.cpp" line="55"/>
@@ -1170,17 +1168,17 @@
     <message>
         <location filename="../src/music-player/listView/singerList/singerdelegate.cpp" line="619"/>
         <source>No songs</source>
-        <translation>Sem músicas</translation>
+        <translation>Sem faixas</translation>
     </message>
     <message>
         <location filename="../src/music-player/listView/singerList/singerdelegate.cpp" line="621"/>
         <source>1 song</source>
-        <translation>1 música</translation>
+        <translation>1 faixa</translation>
     </message>
     <message>
         <location filename="../src/music-player/listView/singerList/singerdelegate.cpp" line="623"/>
         <source>%1 songs</source>
-        <translation>%1 músicas</translation>
+        <translation>%1 faixas</translation>
     </message>
 </context>
 <context>

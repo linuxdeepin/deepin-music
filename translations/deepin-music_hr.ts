@@ -1,6 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS>
-<TS version="2.1" language="hr" sourcelanguage="en_US">
+<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="hr" sourcelanguage="en_US">
 <context>
     <name>AddMusicWidget</name>
     <message>
@@ -11,7 +9,7 @@
     <message>
         <location filename="../src/music-player/mainFrame/addmusicwidget.cpp" line="80"/>
         <source>Or drag music files here</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -52,7 +50,7 @@
     <message>
         <location filename="../src/music-player/widget/closeconfirmdialog.cpp" line="52"/>
         <source>Minimize to system tray</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/widget/closeconfirmdialog.cpp" line="62"/>
@@ -127,7 +125,7 @@
     <message>
         <location filename="../src/music-player/widget/dequalizerdialog.cpp" line="275"/>
         <source>Monophony</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/widget/dequalizerdialog.cpp" line="276"/>
@@ -167,7 +165,7 @@
     <message>
         <location filename="../src/music-player/widget/dequalizerdialog.cpp" line="283"/>
         <source>Hall</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/widget/dequalizerdialog.cpp" line="284"/>
@@ -212,7 +210,7 @@
     <message>
         <location filename="../src/music-player/widget/dequalizerdialog.cpp" line="292"/>
         <source>Techno</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/widget/dequalizerdialog.cpp" line="71"/>
@@ -223,13 +221,13 @@
         <location filename="../src/music-player/widget/dequalizerdialog.cpp" line="79"/>
         <location filename="../src/music-player/widget/dequalizerdialog.cpp" line="415"/>
         <source>ON</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/widget/dequalizerdialog.cpp" line="81"/>
         <location filename="../src/music-player/widget/dequalizerdialog.cpp" line="413"/>
         <source>OFF</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/widget/dequalizerdialog.cpp" line="102"/>
@@ -295,17 +293,17 @@
     <message>
         <location filename="../src/music-player/mainFrame/footerwidget.cpp" line="298"/>
         <source>Play Queue</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/mainFrame/footerwidget.cpp" line="470"/>
         <source>List Loop</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/mainFrame/footerwidget.cpp" line="473"/>
         <source>Single Loop</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/mainFrame/footerwidget.cpp" line="476"/>
@@ -335,7 +333,7 @@
         <location filename="../src/music-player/mainFrame/importwidget.cpp" line="97"/>
         <location filename="../src/music-player/mainFrame/importwidget.cpp" line="234"/>
         <source>%1 music directory or drag music files here</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/mainFrame/importwidget.cpp" line="210"/>
@@ -447,7 +445,7 @@
     <message>
         <location filename="../src/music-player/mainFrame/mainframe.cpp" line="90"/>
         <source>Music is a local music player with beautiful design and simple functions.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/mainFrame/mainframe.cpp" line="123"/>
@@ -507,7 +505,7 @@
     <message>
         <location filename="../src/music-player/mainFrame/mainframe.cpp" line="576"/>
         <source>Unsupported audio codec</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/mainFrame/mainframe.cpp" line="697"/>
@@ -753,7 +751,7 @@
     <message>
         <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="580"/>
         <source>Play failed, as the CD has been removed</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/listView/musicBaseAndSongList/musicsonglistview.cpp" line="587"/>
@@ -784,7 +782,7 @@
         <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1291"/>
         <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1864"/>
         <source>Play queue</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1294"/>
@@ -827,18 +825,18 @@
         <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1342"/>
         <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1408"/>
         <source>Add to</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1298"/>
         <source>Create new playlist</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1346"/>
         <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1410"/>
         <source>Remove from play queue</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1348"/>
@@ -902,7 +900,7 @@
     <message>
         <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1173"/>
         <source>The song files contained will also be deleted</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -910,7 +908,7 @@
     <message>
         <location filename="../src/music-player/widget/playqueuewidget.cpp" line="71"/>
         <source>Play Queue</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/widget/playqueuewidget.cpp" line="84"/>
@@ -948,7 +946,7 @@
     <message>
         <location filename="../src/music-player/widget/settingsdialog.cpp" line="26"/>
         <source>Minimize to system tray</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/widget/settingsdialog.cpp" line="27"/>
@@ -968,7 +966,7 @@
     <message>
         <location filename="../src/music-player/widget/settingsdialog.cpp" line="30"/>
         <source>Enable fade in/out</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/widget/settingsdialog.cpp" line="31"/>
@@ -1127,7 +1125,7 @@
     <message>
         <location filename="../src/music-player/core/util/shortcut.cpp" line="51"/>
         <source>Unfavorite</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/core/util/shortcut.cpp" line="52"/>

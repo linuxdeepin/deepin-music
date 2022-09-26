@@ -1,6 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS>
-<TS version="2.1" language="pl" sourcelanguage="en_US">
+<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="pl" sourcelanguage="en_US">
 <context>
     <name>AddMusicWidget</name>
     <message>
@@ -11,7 +9,7 @@
     <message>
         <location filename="../src/music-player/mainFrame/addmusicwidget.cpp" line="80"/>
         <source>Or drag music files here</source>
-        <translation>Lub przeciągnij tutaj plik muzyczny</translation>
+        <translation>lub przeciągnij tutaj plik muzyczny</translation>
     </message>
 </context>
 <context>
@@ -47,7 +45,7 @@
     <message>
         <location filename="../src/music-player/widget/closeconfirmdialog.cpp" line="57"/>
         <source>Exit</source>
-        <translation>Wyjdź</translation>
+        <translation>Wyjście</translation>
     </message>
     <message>
         <location filename="../src/music-player/widget/closeconfirmdialog.cpp" line="52"/>
@@ -345,7 +343,7 @@
     <message>
         <location filename="../src/music-player/mainFrame/importwidget.cpp" line="406"/>
         <source>Loading music, please wait...</source>
-        <translation>Wczytywanie muzyki, prosimy czekać</translation>
+        <translation>Wczytywanie muzyki, proszę czekać</translation>
     </message>
 </context>
 <context>
@@ -353,7 +351,7 @@
     <message>
         <location filename="../src/music-player/widget/infodialog.cpp" line="122"/>
         <source>Basic info</source>
-        <translation>Podstawowe informacje</translation>
+        <translation>Informacje podstawowe</translation>
     </message>
     <message>
         <location filename="../src/music-player/widget/infodialog.cpp" line="139"/>
@@ -434,7 +432,7 @@
         <location filename="../src/music-player/mainFrame/mainframe.cpp" line="277"/>
         <location filename="../src/music-player/mainFrame/mainframe.cpp" line="332"/>
         <source>Exit</source>
-        <translation>Wyjdź</translation>
+        <translation>Wyjście</translation>
     </message>
     <message>
         <location filename="../src/music-player/mainFrame/mainframe.cpp" line="89"/>
@@ -507,7 +505,7 @@
     <message>
         <location filename="../src/music-player/mainFrame/mainframe.cpp" line="576"/>
         <source>Unsupported audio codec</source>
-        <translation type="unfinished"></translation>
+        <translation>Niewspierany kodek audio</translation>
     </message>
     <message>
         <location filename="../src/music-player/mainFrame/mainframe.cpp" line="697"/>
@@ -694,7 +692,7 @@
     <message>
         <location filename="../src/music-player/widget/lrc/musiclyricwidget.cpp" line="81"/>
         <source>No lyrics yet</source>
-        <translation>Nie ma jeszcze tekstu</translation>
+        <translation>Nie znaleziono tekstu piosenki</translation>
     </message>
 </context>
 <context>
@@ -795,7 +793,7 @@
     <message>
         <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="581"/>
         <source>File is invalid or does not exist, load failed</source>
-        <translation>Plik jest nieprawidłowy lub nie istnieje, ładowanie nie powiodło się</translation>
+        <translation>Plik jest uszkodzony lub nie istnieje, błąd wczytywania</translation>
     </message>
     <message>
         <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="582"/>
@@ -820,7 +818,7 @@
     <message>
         <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1344"/>
         <source>Display in file manager</source>
-        <translation>Wyświetl w menedżerze plików</translation>
+        <translation>Wyświetl w Menedżerze plików</translation>
     </message>
     <message>
         <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1270"/>
@@ -844,7 +842,7 @@
         <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1348"/>
         <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1412"/>
         <source>Remove from playlist</source>
-        <translation>Usuń z playlisty </translation>
+        <translation>Usuń z playlisty</translation>
     </message>
     <message>
         <location filename="../src/music-player/listView/musicInfoList/playlistview.cpp" line="1351"/>
@@ -953,7 +951,7 @@
     <message>
         <location filename="../src/music-player/widget/settingsdialog.cpp" line="27"/>
         <source>Exit</source>
-        <translation>Wyjdź</translation>
+        <translation>Wyjście</translation>
     </message>
     <message>
         <location filename="../src/music-player/widget/settingsdialog.cpp" line="28"/>
@@ -1102,7 +1100,7 @@
     <message>
         <location filename="../src/music-player/core/util/shortcut.cpp" line="44"/>
         <source>Next</source>
-        <translation>Następny</translation>
+        <translation>Następna</translation>
     </message>
     <message>
         <location filename="../src/music-player/core/util/shortcut.cpp" line="45"/>
