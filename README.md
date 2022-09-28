@@ -85,4 +85,4 @@ We encourage you to report issues and contribute changes
 
 ## License
 
-This project is licensed under [GPL-3.0-or-later](LICENSE) or any later version.
+deepin-music is licensed under [GPL-3.0-or-later](LICENSE).
