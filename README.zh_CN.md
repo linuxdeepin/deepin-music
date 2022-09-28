@@ -85,4 +85,4 @@ We encourage you to report issues and contribute changes
 
 ## 协议
 
-deepin-music 项目根据 [GPL-3.0-or-later](LICENSE) 或任何更高版本获得许可.
+deepin-music 根据 [GPL-3.0-or-later]（许可证）获得许可.
