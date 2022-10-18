@@ -13,7 +13,7 @@ const QString libvlccore = "libvlccore.so";
 const QString libvlc = "libvlc.so";
 const QString libcodec = "libavcodec.so";
 const QString libformate = "libavformat.so";
-const QString libSDL2 = "libSDL2.so";
+const QString libSDL2 = "libSDL2";
 
 VlcDynamicInstance::VlcDynamicInstance(QObject *parent) : QObject(parent)
 {
@@ -145,12 +145,18 @@ QString VlcDynamicInstance::libPath(const QString &strlib)
     QString path  = QLibraryInfo::location(QLibraryInfo::LibrariesPath);
     dir.setPath(path);
     QStringList list = dir.entryList(QStringList() << (strlib + "*"), QDir::NoDotAndDotDot | QDir::Files); //filter name with strlib
+    QString libPath;
     if (list.contains(strlib)) {
-        return path + "/" + strlib;
+        libPath = path + "/" + strlib;
     } else {
         list.sort();
+        for (int i = list.size() - 1; i >= 0; i--) {
+            if (list[i].contains(".so")) {
+                libPath = path + "/" + list[i];
+                break;
+            }
+        }
     }
 
-    Q_ASSERT(list.size() > 0);
-    return path + "/" + list.last();
+    return libPath;
 }
