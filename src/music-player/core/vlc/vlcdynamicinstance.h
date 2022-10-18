@@ -15,25 +15,32 @@ class VlcDynamicInstance : public QObject
     Q_OBJECT
 public:
     static VlcDynamicInstance *VlcFunctionInstance();
-    QFunctionPointer resolveSymbol(const char *symbol, bool bffmpeg = false);
-signals:
 
-public slots:
+    QFunctionPointer resolveSymbol(const char *symbol, bool bffmpeg = false);
+
+    QFunctionPointer resolveSdlSymbol(const char *symbol);
+
+    bool loadSdlLibrary();
 
 private:
     explicit VlcDynamicInstance(QObject *parent = nullptr);
     ~VlcDynamicInstance();
+
     bool loadVlcLibrary();
+
     /**
      * @brief libPath get absolutely library path
      * @param strlib library name
      * @return
      */
     QString libPath(const QString &strlib);
+
+private:
     QLibrary libcore;
     QLibrary libdvlc;
     QLibrary libavcode;
     QLibrary libdformate;
+    QLibrary libsdl2;
 
     QMap<QString, QFunctionPointer> m_funMap;
 };

@@ -16,6 +16,7 @@
 #include "vlc/Media.h"
 #include "vlc/MediaPlayer.h"
 #include "vlc/Equalizer.h"
+#include "vlc/sdlplayer.h"
 #include "core/musicsettings.h"
 
 #include <QDBusObjectPath>
@@ -38,7 +39,7 @@ void VlcPlayer::init()
     if (m_qvinstance == nullptr) {
         m_qvinstance = new VlcInstance(VlcCommon::args(), nullptr);
         m_qvinstance->version();
-        m_qvplayer = new VlcMediaPlayer(m_qvinstance);
+        m_qvplayer = new SdlPlayer(m_qvinstance);
         m_qvplayer->equalizer()->setPreamplification(12);
         m_qvmedia = new VlcMedia();
 

@@ -70,7 +70,7 @@ public:
         \brief Open media file or stream. Any media should be playable and opened.
         \param media object (VlcMedia *)
     */
-    void open(VlcMedia *media);
+    virtual void open(VlcMedia *media);
 
     /**
      * @brief initCddaTrack 初始化cdda track索引
@@ -84,7 +84,7 @@ public slots:
 
         \param time the movie time (in ms) (int)
     */
-    void setTime(qint64 time);
+    virtual void setTime(qint64 time);
 
     /**
      * Set current software audio volume.
@@ -92,7 +92,7 @@ public slots:
      * \param i_volume the volume in percents (0 = mute, 100 = 0dB)
      * \return 0 if the volume was set, -1 if it was out of range
      */
-    void setVolume(int volume);
+    virtual void setVolume(int volume);
 
     /**
      * Set mute status.
@@ -105,7 +105,7 @@ public slots:
      * \note To force silent playback, disable all audio tracks. This is more
      * efficient and reliable than mute.
      */
-    void setMute(bool mute);
+    virtual void setMute(bool mute);
 
 public:
     /*!
@@ -132,14 +132,14 @@ public:
      * \return the software volume in percents
      * (0 = mute, 100 = nominal / 0dB)
      */
-    int getVolume();
+    virtual int getVolume();
 
     /**
      * Get current mute status.
      *
      * \return the mute status (boolean) if defined, -1 if undefined/unapplicable
      */
-    bool getMute();
+    virtual bool getMute();
 
 public slots:
     /*! \brief Set the media position.
@@ -153,22 +153,22 @@ public slots:
     /*!
         \brief Starts playing current media if possible
     */
-    void play();
+    virtual void play();
 
     /*!
         \brief Pauses the playback of current media if possible
     */
-    void pause();
+    virtual void pause();
 
     /*!
         \brief Resumes the playback of current media if possible
     */
-    void resume();
+    virtual void resume();
 
     /*!
         \brief Stops playing current media
     */
-    void stop();
+    virtual void stop();
 
 signals:
     /*!
@@ -287,7 +287,7 @@ signals:
     */
     void stateChanged();
 
-private:
+protected:
     static void libvlc_callback(const libvlc_event_t *event,
                                 void *data);
 
