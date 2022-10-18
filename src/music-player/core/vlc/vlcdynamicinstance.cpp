@@ -13,6 +13,7 @@ const QString libvlccore = "libvlccore.so";
 const QString libvlc = "libvlc.so";
 const QString libcodec = "libavcodec.so";
 const QString libformate = "libavformat.so";
+const QString libSDL2 = "libSDL2.so";
 
 VlcDynamicInstance::VlcDynamicInstance(QObject *parent) : QObject(parent)
 {
@@ -22,10 +23,16 @@ VlcDynamicInstance::VlcDynamicInstance(QObject *parent) : QObject(parent)
 
 VlcDynamicInstance::~VlcDynamicInstance()
 {
-    libcore.unload();
-    libdvlc.unload();
-    libavcode.unload();
-    libdformate.unload();
+    if (libcore.isLoaded())
+        libcore.unload();
+    if (libdvlc.isLoaded())
+        libdvlc.unload();
+    if (libavcode.isLoaded())
+        libavcode.unload();
+    if (libdformate.isLoaded())
+        libdformate.unload();
+    if (libsdl2.isLoaded())
+        libsdl2.unload();
 }
 
 VlcDynamicInstance *VlcDynamicInstance::VlcFunctionInstance()
@@ -70,6 +77,14 @@ QFunctionPointer VlcDynamicInstance::resolveSymbol(const char *symbol, bool bffm
     return fp;
 }
 
+QFunctionPointer VlcDynamicInstance::resolveSdlSymbol(const char *symbol)
+{
+    if (m_funMap.contains(symbol)) {
+        return m_funMap[symbol];
+    }
+    return libsdl2.resolve(symbol);
+}
+
 bool VlcDynamicInstance::loadVlcLibrary()
 {
     QString strvlccore = libPath(libvlccore);
@@ -111,6 +126,17 @@ bool VlcDynamicInstance::loadVlcLibrary()
         return false;
     }
     return true;
+}
+
+bool VlcDynamicInstance::loadSdlLibrary()
+{
+    QString strSdl = libPath(libSDL2);
+    if (QLibrary::isLibrary(strSdl)) {
+        libsdl2.setFileName(strSdl);
+        return libsdl2.load();
+    } else {
+        return false;
+    }
 }
 
 QString VlcDynamicInstance::libPath(const QString &strlib)

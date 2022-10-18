@@ -126,6 +126,7 @@ Player::Player(QObject *parent) : QObject(parent)
 
     initMpris();
     m_volume = MusicSettings::value("base.play.volume").toInt();
+    m_mute = MusicSettings::value("base.play.mute").toBool();
     /**
      *  初始获取音量，避免从dbus获取音量时，获取的值为初始值0
      * */
@@ -1114,6 +1115,8 @@ void Player::initPlayer()
         m_basePlayer = new VlcPlayer(this);
         qDebug() << __func__ << "VlcPlayer";
     }
+    m_basePlayer->setVolume(m_volume);
+    m_basePlayer->setMute(m_mute);
 
     m_timer = new QTimer(this);
     m_timer->setInterval(300);
