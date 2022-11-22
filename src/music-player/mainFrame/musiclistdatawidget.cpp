@@ -865,6 +865,7 @@ void MusicListDataWidget::initTitle(QHBoxLayout *layout)
     m_titleLabel = new DLabel(this);
     QFont titleFont = m_titleLabel->font();
     titleFont.setFamily("SourceHanSansSC");
+    m_titleLabel->setTextFormat(Qt::PlainText);
     m_titleLabel->setFont(titleFont);
     m_titleLabel->setFixedHeight(36);
     m_titleLabel->setFixedWidth(300);
