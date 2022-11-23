@@ -236,4 +236,7 @@ void createSpeechDbus()
     // dbus导入音乐文件
     mSpeech->registerQStringListAction("OpenUris", "OpenUris",
                                        std::bind(&SpeechCenter::OpenUris, SpeechCenter::getInstance(), std::placeholders::_1));
+
+    mSpeech->registerAction("setPosition", "setPosition",
+                                       std::bind(&SpeechCenter::setPosition, SpeechCenter::getInstance(), std::placeholders::_1));
 }

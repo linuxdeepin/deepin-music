@@ -55,6 +55,7 @@ public:
     void setMediaMetas(const QList<MediaMeta> &mediaMetas);
     // 确认是否需要刷新播放队列，即是否要排序
     bool getNeedRefresh();
+    QVariant setPosition(QVariant position);
 private:
     // 排序
     // 不需要排序，播放的就是第一首
