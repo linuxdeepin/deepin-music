@@ -108,6 +108,8 @@ QStringList VoicePlugin::analyseJsonString(const QString &semantic)
     QString insType;
     QString genre;
     QString number;
+    QString minute;
+    QString second;
     // 不包含semantic，直接返回空
     if (!jsonObject.contains(QStringLiteral("intent"))) {
         return strlist;
@@ -189,6 +191,16 @@ QStringList VoicePlugin::analyseJsonString(const QString &semantic)
                         genre = slotsArrayObject["value"].toString();
                     }
                 }
+                if (slotsArrayObject["name"].toString() == "minute") {
+                    if (slotsArrayObject.contains(QStringLiteral("value"))) {
+                        minute = slotsArrayObject["value"].toString();
+                    }
+                }
+                if (slotsArrayObject["name"].toString() == "second") {
+                    if (slotsArrayObject.contains(QStringLiteral("value"))) {
+                        second = slotsArrayObject["value"].toString();
+                    }
+                }
             }
         }
     }
@@ -262,6 +274,9 @@ QStringList VoicePlugin::analyseJsonString(const QString &semantic)
             strlist << "setMode" << "0";
         } else if (insType == "random") {
             strlist << "setMode" << "2";
+        } else if (insType == "start_time") {
+            qlonglong position = (minute.toInt() * 60 + second.toInt()) * 1000;
+            strlist << "setPosition" << QString::number(position);
         }
     }
     return strlist;

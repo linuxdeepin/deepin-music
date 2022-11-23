@@ -601,6 +601,28 @@ bool SpeechCenter::getNeedRefresh()
 {
     return m_needRefresh;
 }
+
+QVariant SpeechCenter::setPosition(QVariant position)
+{
+    qDebug() << __FUNCTION__ ;
+    QString str;
+    if(position < 0)
+        str = "抱歉，设置失败，请重新尝试。";
+    bool isExit = false;
+    if (Player::getInstance()->status() == Player::PlaybackStatus::Playing ||
+            Player::getInstance()->status() == Player::PlaybackStatus::Paused) {
+        Player::getInstance()->setPosition(position.toLongLong());
+        isExit = true;
+    }
+
+    if (isExit) {
+        str = m_settings->value("speechreply.speech.ok").toString();
+    } else {
+//        str = "抱歉，设置失败，请重新尝试。";
+    }
+    return str;
+}
+
 // 不需要排序，播放的就是第一首
 //void SpeechCenter::sortList(QList<MediaMeta> &musicInfos, const DataBaseService::ListSortType &sortType)
 //{
