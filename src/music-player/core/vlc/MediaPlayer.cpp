@@ -257,9 +257,9 @@ void VlcMediaPlayer::setTime(qint64 time)
      * ***************************************/
 #ifdef QT_DEBUG
     if (!(state() == Vlc::Buffering
-            || state() == Vlc::Playing
-            || state() == Vlc::Paused
-            ||  state() == Vlc::Opening))
+          || state() == Vlc::Playing
+          || state() == Vlc::Paused
+          || state() == Vlc::Opening))
         return;
 #else
     if (!(state() == Vlc::Buffering

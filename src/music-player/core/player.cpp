@@ -806,6 +806,7 @@ void Player::setPosition(qlonglong position)
     if (m_basePlayer->time() == -1) {
         INT_LAST_PROGRESS_FLAG = 1;
         m_ActiveMeta.offset = position;
+        emit positionChanged(position,  m_ActiveMeta.length, 1);
     }
 
     if (m_basePlayer->length() == m_ActiveMeta.length) {

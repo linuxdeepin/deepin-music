@@ -444,7 +444,8 @@ QVariant SpeechCenter::pre(QString musicName)
     Q_UNUSED(musicName)
     qDebug() << __FUNCTION__ << "";
     bool isExit = false;
-    if (Player::getInstance()->status() == Player::PlaybackStatus::Playing) {
+    if (Player::getInstance()->status() != Player::PlaybackStatus::InvalidPlaybackStatus &&
+            Player::getInstance()->getActiveMeta().hash != "") {
         Player::getInstance()->playPreMeta();
         isExit = true;
     }
@@ -460,9 +461,10 @@ QVariant SpeechCenter::pre(QString musicName)
 QVariant SpeechCenter::next(QString musicName)
 {
     Q_UNUSED(musicName)
-    qDebug() << __FUNCTION__ << "";
+    qDebug() << __FUNCTION__;
     bool isExit = false;
-    if (Player::getInstance()->status() == Player::PlaybackStatus::Playing) {
+    if (Player::getInstance()->status() != Player::PlaybackStatus::InvalidPlaybackStatus &&
+            Player::getInstance()->getActiveMeta().hash != "") {
         Player::getInstance()->playNextMeta(false);
         isExit = true;
     }
@@ -604,21 +606,21 @@ bool SpeechCenter::getNeedRefresh()
 
 QVariant SpeechCenter::setPosition(QVariant position)
 {
-    qDebug() << __FUNCTION__ ;
+    qDebug() << __FUNCTION__;
     QString str;
     if(position < 0)
         str = "抱歉，设置失败，请重新尝试。";
     bool isExit = false;
-    if (Player::getInstance()->status() == Player::PlaybackStatus::Playing ||
-            Player::getInstance()->status() == Player::PlaybackStatus::Paused) {
-        Player::getInstance()->setPosition(position.toLongLong());
+    if (Player::getInstance()->status() != Player::PlaybackStatus::InvalidPlaybackStatus &&
+            Player::getInstance()->getActiveMeta().hash != ""){
+        Player::getInstance()->setPosition(position.toLongLong() + 500);
         isExit = true;
     }
 
     if (isExit) {
         str = m_settings->value("speechreply.speech.ok").toString();
     } else {
-//        str = "抱歉，设置失败，请重新尝试。";
+        str = "抱歉，设置失败，请重新尝试。";
     }
     return str;
 }
