@@ -61,6 +61,7 @@
 #include "comdeepiniminterface.h"
 #include "dbusutils.h"
 #include "config.h"
+#include "player.h"
 DWIDGET_USE_NAMESPACE
 
 const QString s_PropertyViewname = "viewname";
@@ -154,8 +155,9 @@ MainFrame::MainFrame()
         // 使用dbus显示窗口
         this->titlebar()->setFocus();
         show();
-        raise();
-        activateWindow();
+//        raise();
+//        activateWindow();
+        this->setWindowState((this->windowState() & ~Qt::WindowMinimized) | Qt::WindowActive);
     });
 
     connect(CommonService::getInstance(), &CommonService::signalSwitchToView, this, &MainFrame::slotViewChanged);
@@ -171,6 +173,10 @@ MainFrame::MainFrame()
         } else {
             m_importWidget->slotFileImportProcessing(itemMetas);
         }
+    });
+    connect(Player::getInstance(), &Player::signalMediaMetaChanged,
+            this, [=](MediaMeta meta) {
+        this->setWindowTitle(meta.localPath);
     });
 
     if (CommonService::getInstance()->isTabletEnvironment()) {
