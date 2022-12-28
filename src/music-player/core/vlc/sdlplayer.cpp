@@ -103,7 +103,7 @@ void SDL_LogOutputFunction_Err_Write(void *userdata, int category, SDL_LogPriori
 SdlPlayer::SdlPlayer(VlcInstance *instance)
     : VlcMediaPlayer(instance), m_loadSdlLibrary(false)
 {
-    if (Global::checkBoardVendorType()) {
+//    if (Global::checkBoardVendorType()) {
         m_loadSdlLibrary = VlcDynamicInstance::VlcFunctionInstance()->loadSdlLibrary();
         if (m_loadSdlLibrary) {
             SDL_Init_function Init = (SDL_Init_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSdlSymbol("SDL_GetAudioStatus");
@@ -125,7 +125,7 @@ SdlPlayer::SdlPlayer(VlcInstance *instance)
             connect(m_pCheckDataThread, &CheckDataZeroThread::sigPlayNextSong, this, &SdlPlayer::checkDataZero, Qt::QueuedConnection);
             connect(m_pCheckDataThread, &CheckDataZeroThread::sigExtraTime, this, &VlcMediaPlayer::timeChanged, Qt::QueuedConnection);
         }
-    }
+//    }
 }
 
 SdlPlayer::~SdlPlayer()
