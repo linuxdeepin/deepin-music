@@ -23,6 +23,11 @@ Files: debian/*
 Copyright: None
 License: CC0-1.0
 
+# patches
+Files: patches/*
+Copyright: None
+License: CC0-1.0
+
 # rpm
 Files: rpm/*
 Copyright: None
