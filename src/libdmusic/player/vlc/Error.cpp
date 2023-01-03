@@ -1,0 +1,37 @@
+// Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
+//
+// SPDX-License-Identifier: GPL-3.0-or-later
+
+#include <QtCore/QDebug>
+#include <vlc/vlc.h>
+
+#include "Error.h"
+#include "dynamiclibraries.h"
+
+typedef void (*vlc_clearerr_function)(void);
+typedef const char *(*vlc_errmsg_function)(void);
+QString VlcError::errmsg()
+{
+    QString error;
+    vlc_errmsg_function vlc_errmsg = (vlc_errmsg_function)DynamicLibraries::instance()->resolve("libvlc_errmsg");
+    if (vlc_errmsg()) {
+        error = QString::fromUtf8(vlc_errmsg());
+        vlc_clearerr_function vlc_clearerr = (vlc_clearerr_function)DynamicLibraries::instance()->resolve("libvlc_clearerr");
+        vlc_clearerr();
+    }
+
+    return error;
+}
+
+void VlcError::showErrmsg()
+{
+    // Outputs libvlc error message if there is any
+    QString error = errmsg();
+    if (!error.isEmpty()) {
+        qWarning() << "VlcError libvlc"
+                   << "Error:" << error;
+    }
+}
+
+//void VlcError::clearerr() {}

@@ -1,0 +1,77 @@
+package:
+  id: org.deepin.music
+  name: "deepin-music"
+  version: 6.2.8
+  kind: app
+  description: |
+    music for deepin os.
+
+variables: 
+  extra_args: |
+    -DVERSION=${VERSION}
+
+runtime:
+  id: org.deepin.Runtime
+  version: 23.0.0
+
+#libxtst ffmpeg vlc
+depends:
+  - id: "dde-qt-dbus-factory" 
+    version: 5.5.12
+  - id: vlc 
+    version: 3.0.11 
+    type: runtime
+#  - id: icu 
+#    version: 63.1
+#    type: runtime
+  - id: qtmpris
+    version: 0.1.0.1
+    type: runtime
+  - id: kcodecs
+    version: 5.54.0
+    type: runtime
+  - id: ffmpeg
+    version: 4.1.8
+  - id: taglib
+    version: 1.12.0
+  - id: "udisks2-qt5"
+    version: 5.0.3
+    type: runtime
+  - id: qtdbusextended
+    version: 0.0.3
+    type: runtime
+  - id: xcb-util
+    version: 0.3.8.1
+    type: runtime
+  - id: "gstreamer1.0"
+    version: 1.14.6
+    type: runtime
+  - id: "gst-plugins-base1.0"
+    version: 1.14.5
+    type: runtime
+  - id: "gst-plugins-good1.0"
+    version: 1.14.5
+    type: runtime
+  - id: libidn
+    version: 1.33
+    type: runtime
+  - id: libvpx
+    version: 1.7.0.1
+    type: runtime
+
+
+source:
+  kind: local
+  url: "http://gerrit.uniontech.com/deepin-music"
+  version: develop/snipe
+  commit: b174391f283887fac3854194eec01ed71b31f0de
+  patch: patches/fix-library-path.patch
+build:
+  kind: manual
+  manual:
+    configure: |
+      mkdir build
+      cd build
+      cmake -DCMAKE_INSTALL_PREFIX=${PREFIX} ${extra_args} ..
+      make -j6
+      make -j install

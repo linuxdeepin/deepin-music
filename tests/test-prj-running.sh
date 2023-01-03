@@ -1,45 +1,17 @@
 #!/bin/bash
-
-# SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
-#
-# SPDX-License-Identifier: GPL-3.0-or-later
-
 export QT_QPA_PLATFORM='offscreen'
 QTEST_FUNCTION_TIMEOUT='800000'
 rm -rf ${HOME}/.cache/deepin/deepin-music/*
 rm -rf ${HOME}/.config/deepin/deepin-music/*
-rm -rf build
-mkdir build
-cd build
-cp ../../tests/collection-coverage.sh ./
-cmake ..
+rm -rf ../$(dirname $0)/build-ut
+mkdir ../$(dirname $0)/build-ut
+cd ../build-ut
+#cp ../../tests/collection-coverage.sh ./
+cmake -DCMAKE_BUILD_TYPE=Debug ../
 make -j8
 
-lcov --directory ./CMakeFiles/deepin-music-test.dir --zerocounters
-./build/music-player/deepin-music-test
-#第一次会因为未知原因失败
-./collection-coverage.sh
-sleep 5
-#第一次因为未知原因失败,执行第二次进行收集
-./collection-coverage.sh
-#make test -j8
 
-cd ./../../
-rm -rf ./build-ut
-mkdir build-ut
-cd build-ut
-
-cp -r ./../tests/build/coverageResult/report/ ./
-mv report html
-cd html
-mv index.html cov_deepin-music.html
-
-cd ..
-mkdir report
-cd report
-cp ./../../tests/build/report/report_deepin-music.xml ./
-
-cd ..
-cp ./../tests/build/asan_deepin-music.log* ./asan_deepin-music.log
+../tests/libdmusic-test/ut-build-run.sh
+../tests/tst_music-player/ut-build-run.sh
 
 exit 0
