@@ -1,0 +1,107 @@
+{
+  "magic": "dsg.config.meta",
+  "version": "1.0",
+  "contents": {
+      "autoPlay": {
+          "value": false,
+          "serial": 0,
+          "flags": [],
+          "name": "Autoplay",
+          "name[zh_CN]": "启动时自动播放",
+          "description": "I am description",
+          "permissions": "readwrite",
+          "visibility": "private"
+      },
+      "rememberProgress": {
+          "value": true,
+          "serial": 0,
+          "flags": [],
+          "name": "Remember playback position",
+          "name[zh_CN]": "记住上次播放进度",
+          "description": "Remember playback position",
+          "permissions": "readwrite",
+          "visibility": "private"
+      },
+      "fadeInOut": {
+          "value": false,
+          "serial": 0,
+          "flags": [],
+          "name": "Enable fade in/out",
+          "name[zh_CN]": "开启淡入淡出",
+          "description": "Enable fade in/out",
+          "permissions": "readwrite",
+          "visibility": "private"
+      },
+      "closeAction": {
+          "value": 2,
+          "serial": 0,
+          "flags": [],
+          "name": "closeAction",
+          "name[zh_CN]": "关闭主窗口",
+          "description": "closeAction",
+          "permissions": "readwrite",
+          "visibility": "private"
+      },
+      "shortcutPlayPause": {
+          "value": "Space",
+          "serial": 0,
+          "flags": [],
+          "name": "shortcutPlayPause",
+          "name[zh_CN]": "播放/暂停",
+          "description": "I am description",
+          "permissions": "readwrite",
+          "visibility": "private"
+      },
+      "shortcutPrevious": {
+          "value": "Ctrl+Left",
+          "serial": 0,
+          "flags": [],
+          "name": "shortcutPrevious",
+          "name[zh_CN]": "上一首",
+          "description": "I am description",
+          "permissions": "readwrite",
+          "visibility": "private"
+      },
+      "shortcutNext": {
+          "value": "Ctrl+Right",
+          "serial": 0,
+          "flags": [],
+          "name": "shortcutNext",
+          "name[zh_CN]": "下一首",
+          "description": "I am description",
+          "permissions": "readwrite",
+          "visibility": "private"
+      },
+      "shortcutVolumeUp": {
+          "value": "Ctrl+Alt+Up",
+          "serial": 0,
+          "flags": [],
+          "name": "shortcutVolumeUp",
+          "name[zh_CN]": "音量加",
+          "description": "I am description",
+          "permissions": "readwrite",
+          "visibility": "private"
+      },
+      "shortcutVolumeDown": {
+          "value": "Ctrl+Alt+Down",
+          "serial": 0,
+          "flags": [],
+          "name": "shortcutVolumeDown",
+          "name[zh_CN]": "音量减",
+          "description": "I am description",
+          "permissions": "readwrite",
+          "visibility": "private"
+      },
+      "shortcutFavoriteSong": {
+          "value": ".",
+          "serial": 0,
+          "flags": [],
+          "name": "shortcutFavoriteSong",
+          "name[zh_CN]": "喜欢歌曲",
+          "description": "I am description",
+          "permissions": "readwrite",
+          "visibility": "private"
+      }
+
+  }
+}

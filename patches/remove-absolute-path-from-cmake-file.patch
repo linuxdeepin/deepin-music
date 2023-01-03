@@ -1,0 +1,59 @@
+diff -Naur a/src/libmusic-plugin/CMakeLists.txt b/src/libmusic-plugin/CMakeLists.txt
+--- a/src/libmusic-plugin/CMakeLists.txt	2022-04-22 14:35:12.065818796 +0800
++++ b/src/libmusic-plugin/CMakeLists.txt	2022-04-22 14:37:04.669813124 +0800
+@@ -1,6 +1,6 @@
+ #工程名
+ set(CMD_NAME music-plugin)
+-set(CMAKE_INSTALL_VOICE_LIBDIR /usr/lib/deepin-aiassistant/serivce-plugins)
++set(CMAKE_INSTALL_VOICE_LIBDIR ${CMAKE_INSTALL_PREFIX}/lib/deepin-aiassistant/serivce-plugins)
+ cmake_minimum_required(VERSION 3.10)
+ 
+ #文件夹包含
+diff -Naur a/src/music-player/CMakeLists.txt b/src/music-player/CMakeLists.txt
+--- a/src/music-player/CMakeLists.txt	2022-04-22 14:35:12.065818796 +0800
++++ b/src/music-player/CMakeLists.txt	2022-04-22 18:42:35.953071084 +0800
+@@ -22,8 +22,8 @@
+ 
+ #include_directories(/usr/include/libdtk-5.2.0/DWidget)
+ #include_directories(/usr/include/libdtk-5.2.0/DCore)
+-include_directories(/usr/include/vlc)
+-include_directories(/usr/include/vlc/plugins)
++#include_directories(/usr/include/vlc)
++#include_directories(/usr/include/vlc/plugins)
+ include_directories(./../interface)
+ include_directories(./../libdmusic)
+ include_directories(./core)
+@@ -43,7 +43,7 @@
+ include_directories(./listView/singerList)
+ include_directories(./listView/lyricLineList)
+ 
+-include_directories(/usr/include/udisks2-qt5)
++#include_directories(/usr/include/udisks2-qt5)
+ 
+ if(ISTEST MATCHES "1")
+     message("tests start！")
+@@ -87,7 +87,8 @@
+ pkg_check_modules(Dtk REQUIRED IMPORTED_TARGET dtkgui)
+ pkg_check_modules(MPRIS REQUIRED IMPORTED_TARGET mpris-qt5)
+ pkg_check_modules(DBusextended REQUIRED IMPORTED_TARGET dbusextended-qt5)
+-pkg_check_modules(VLC REQUIRED IMPORTED_TARGET vlc-plugin)
++pkg_check_modules(VlcPlugin REQUIRED IMPORTED_TARGET vlc-plugin)
++pkg_check_modules(Vlc REQUIRED IMPORTED_TARGET libvlc)
+ pkg_check_modules(qgsettings REQUIRED IMPORTED_TARGET gsettings-qt)
+ 
+ #pkg_check_modules(AV REQUIRED IMPORTED_TARGET libavutil libavcodec
+@@ -140,7 +141,7 @@
+ 
+ set(TARGET_LIBS Qt5::Widgets Qt5::Core Qt5::Gui Qt5::DBus Qt5::Sql Qt5::Svg Qt5::Xml
+      PkgConfig::AV PkgConfig::Dtk PkgConfig::qgsettings PkgConfig::udisks2 icui18n
+-    PkgConfig::MPRIS PkgConfig::DBusextended pthread dmusic )
++     PkgConfig::MPRIS PkgConfig::Vlc PkgConfig::VlcPlugin PkgConfig::DBusextended pthread dmusic )
+ LINK_DIRECTORIES(${CMAKE_BINARY_DIR}/src/libdmusic/)
+ 
+ 
+@@ -165,4 +166,4 @@
+ # install Manual App icon
+ install(FILES ${PROJECT_SOURCE_DIR}/src/music-player/icons/icons/deepin-music.svg
+     DESTINATION share/icons/hicolor/scalable/apps)
+-install(DIRECTORY ${PROJECT_SOURCE_DIR}/assets/deepin-music DESTINATION /usr/share/deepin-manual/manual-assets/application/)
++install(DIRECTORY ${PROJECT_SOURCE_DIR}/assets/deepin-music DESTINATION share/deepin-manual/manual-assets/application/)

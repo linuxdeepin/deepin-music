@@ -1,0 +1,32 @@
+diff -Naur a/src/libdmusic/core/audioanalysis.cpp b/src/libdmusic/core/audioanalysis.cpp
+--- a/src/libdmusic/core/audioanalysis.cpp	2022-06-08 07:47:15.496056334 -0400
++++ b/src/libdmusic/core/audioanalysis.cpp	2022-06-08 07:49:33.164049655 -0400
+@@ -29,17 +29,17 @@
+ }
+ #endif // __cplusplus
+ 
+-#include <taglib/tag.h>
+-#include <taglib/fileref.h>
+-#include <taglib/taglib.h>
+-#include <taglib/tpropertymap.h>
+-#include <taglib/mpegfile.h>
+-#include <taglib/id3v2tag.h>
+-#include <taglib/id3v2frame.h>
+-#include <taglib/id3v2header.h>
+-#include <taglib/tag.h>
+-#include <taglib/attachedpictureframe.h>
+-#include <taglib/apetag.h>
++#include <tag.h>
++#include <fileref.h>
++#include <taglib.h>
++#include <tpropertymap.h>
++#include <mpegfile.h>
++#include <id3v2tag.h>
++#include <id3v2frame.h>
++#include <id3v2header.h>
++#include <tag.h>
++#include <attachedpictureframe.h>
++#include <apetag.h>
+ 
+ #include <QAudioInput>
+ #include <QTextCodec>

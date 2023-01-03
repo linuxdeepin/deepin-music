@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/">
+        <file>data/music-settings.json</file>
+        <file>data/default_cover.svg</file>
+        <file>data/default_cover.png</file>
+    </qresource>
+</RCC>

@@ -1,48 +1,33 @@
-// Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co., Ltd.
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// Copyright (C) 2020 ~ 2020 Deepin Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-#include <QUrl>
+#include <QQmlApplicationEngine>
+#include <QScopedPointer>
+#include <QQmlContext>
+#include <QStandardPaths>
 #include <QIcon>
 #include <QDBusInterface>
-#include <QDBusPendingCall>
-#include <QCommandLineParser>
-#include <QProcessEnvironment>
+#include <QDBusReply>
 
 #include <DLog>
-#include <DStandardPaths>
 #include <DApplication>
-#include <DApplicationSettings>
-#include <DExportedInterface>
-#include <QDBusReply>
-#include <metadetector.h>
-
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <fcntl.h>
-#include <unistd.h>
+#include <QSurfaceFormat>
 
 #include "config.h"
 
-#include "core/player.h"
-#include "core/vlc/vlcdynamicinstance.h"
-#include "core/musicsettings.h"
-#include "core/util/global.h"
-#include "databaseservice.h"
-#include "acobjectlist.h"
-#include "speechCenter.h"
-#include <functional>
-#include "mainframe.h"
-#include "speechexportbus.h"
+#include "effect/shaderimageview.h"
+#include "effect/shaderdataview.h"
+#include "presenter.h"
+#include "util/eventsfilter.h"
+#include "util/shortcut.h"
+#include "util/dbusadpator.h"
 
-using namespace Dtk::Core;
-using namespace Dtk::Widget;
+DWIDGET_USE_NAMESPACE;
+DCORE_USE_NAMESPACE;
 
-void createSpeechDbus();
-
-bool checkOnly();
-
+// 此文件是QML应用的启动文件，一般无需修改
 int main(int argc, char *argv[])
 {
     if (!QString(qgetenv("XDG_CURRENT_DESKTOP")).toLower().startsWith("deepin")) {
@@ -50,26 +35,27 @@ int main(int argc, char *argv[])
     }
     setenv("PULSE_PROP_media.role", "music", 1);
 
-    Global::checkWaylandMode();
-    if (Global::isWaylandMode()) //是否开启wayland
+    DmGlobal::checkWaylandMode();
+    if (DmGlobal::isWaylandMode()) //是否开启wayland
         qputenv("QT_WAYLAND_SHELL_INTEGRATION", "kwayland-shell"); //add wayland parameter
 
-#if (DTK_VERSION < DTK_VERSION_CHECK(5, 4, 0, 0))
+    QSurfaceFormat format;
+    format.setRenderableType(QSurfaceFormat::OpenGLES);
+    format.setDefaultFormat(format);
+    // 1.可以使用自己创建的 QGuiApplication 对象；
+    // 2.可以在创建 QGuiApplication 之前为程序设置一些属性（如使用
+    //   QCoreApplication::setAttribute 禁用屏幕缩放）；
+    // 3.可以添加一些在 QGuiApplication 构造过程中才需要的环境变量；
+
+    // TODO: 无 XDG_CURRENT_DESKTOP 变量时，将不会加载 deepin platformtheme 插件，会导致
+    // 查找图标的接口无法调用 qt5integration 提供的插件，后续应当把图标查找相关的功能移到 dtkgui
+    if (qEnvironmentVariableIsEmpty("XDG_CURRENT_DESKTOP")) {
+        qputenv("XDG_CURRENT_DESKTOP", "Deepin");
+    }
+    qputenv("D_POPUP_MODE", "embed");
+
     DApplication *app = new DApplication(argc, argv);
-#else
-    DApplication *app = DApplication::globalApplication(argc, argv);
-#endif
-
-#ifdef SNAP_APP
-    DStandardPaths::setMode(DStandardPaths::Snap);
-#endif
-
-#if defined(STATIC_LIB)
-    DWIDGET_INIT_RESOURCE();
-    QCoreApplication::addLibraryPath(".");
-#endif
     app->setAttribute(Qt::AA_UseHighDpiPixmaps);
-    QAccessible::installFactory(accessibleFactory);
     app->setOrganizationName("deepin");
     app->setApplicationName("deepin-music");
     // Version Time
@@ -78,7 +64,6 @@ int main(int argc, char *argv[])
     DLogManager::registerConsoleAppender();
     DLogManager::registerFileAppender();
 
-
     QCommandLineParser parser;
     parser.setApplicationDescription("Deepin music player.");
     parser.addHelpOption();
@@ -86,54 +71,30 @@ int main(int argc, char *argv[])
     parser.addPositionalArgument("file", "Music file path");
     parser.process(*app);
 
-    QIcon icon = QIcon::fromTheme("deepin-music");
-    app->setProductIcon(icon);
-
     // handle open file
-    QStringList OpenFilePaths;
-    if (parser.positionalArguments().length() > 0) {
-        OpenFilePaths = parser.positionalArguments();
-    }
-
-    app->loadTranslator();
-    Global::initPlaybackEngineType();
-    MusicSettings::init();
-//    VlcDynamicInstance::VlcFunctionInstance();
-//    Player::getInstance();
-    //将检查唯一性提前可以先创建好缓存路径避免某种情况下创建数据库失败
-    bool bc = checkOnly();
+    QStringList OpenFilePaths = parser.positionalArguments();
     if (!OpenFilePaths.isEmpty()) {
         QStringList strList;
         for (QString str : OpenFilePaths) {
-            if (QFile::exists(str)) {
-                QUrl url = QUrl::fromLocalFile(QDir::current().absoluteFilePath(str));
-                if (url.toLocalFile().isEmpty()) {
-                    strList.append(str);
-                } else {
-                    strList.append(url.toLocalFile());
-                }
-            }
+            QUrl url = QUrl::fromLocalFile(QDir::current().absoluteFilePath(str));
+            strList.append(url.toLocalFile().isEmpty() ? str : url.toLocalFile());
         }
-        // 添加应用唯一性判断
-        if (strList.size() > 0 && bc) {
-            DataBaseService::getInstance()->setFirstSong(strList.at(0));
-            DataBaseService::getInstance()->importMedias("all", strList); //导入数据库
-        }
+        OpenFilePaths = strList;
     }
 
-    if (!app->setSingleInstance("deepinmusic") || !bc) {
+    if (!app->setSingleInstance("deepinmusic")) {
         qDebug() << "another deepin music has started";
         QDBusInterface speechbus("org.mpris.MediaPlayer2.DeepinMusic",
                                  "/org/mpris/speech",
                                  "com.deepin.speech",
                                  QDBusConnection::sessionBus());
+
         if (speechbus.isValid()) {
             QVariant mediaMeta;
-            mediaMeta.setValue(parser.positionalArguments());
-            QDBusReply<QVariant> msg  = speechbus.call(QString("invokeStrlist"), "OpenUris", mediaMeta); //0 function  ,1 params
+            mediaMeta.setValue(OpenFilePaths);
+            speechbus.asyncCall("OpenUris", OpenFilePaths);
         }
 
-        /*-----show deepin-music----*/
         QDBusInterface iface("org.mpris.MediaPlayer2.DeepinMusic",
                              "/org/mpris/MediaPlayer2",
                              "org.mpris.MediaPlayer2",
@@ -144,99 +105,49 @@ int main(int argc, char *argv[])
         return 0;
     }
 
-    DApplicationSettings saveTheme;
-    /*---Player instance init---*/
-    MainFrame mainframe;
-    int musicCount = DataBaseService::getInstance()->allMusicInfosCount();
-    mainframe.initUI(musicCount > 0 ? true : false);
-    mainframe.show();
-    mainframe.autoStartToPlay();
-    createSpeechDbus();
-
+    DmGlobal::initPlaybackEngineType();
     app->setQuitOnLastWindowClosed(false);
-    int status = app->exec();
-    Player::getInstance()->releasePlayer();
-    return status;
-}
+    app->loadTranslator();
 
-bool checkOnly()
-{
-    //single
-    QString path = DStandardPaths::writableLocation(QStandardPaths::AppConfigLocation);
-    QDir tdir(path);
-    if (!tdir.exists()) {
-        bool ret =  tdir.mkpath(path);
-        qDebug() << __func__ << ret ;
+    // 请在此处注册QML中的C++类型
+    qmlRegisterType<ShaderImageView>("audio.image", 1, 0, "View_image");
+    qmlRegisterType<ShaderDataView>("audio.image", 1, 0, "View_data");
+    qmlRegisterType<DmGlobal>("audio.global", 1, 0, "DmGlobal");
+
+    QString descriptionText = QObject::tr("Music is a local music player with beautiful design and simple functions.");
+    QString acknowledgementLink = "https://www.deepin.org/acknowledgments/deepin-music#thanks";
+    DmGlobal::setAppName(QObject::tr("Music"));
+    qApp->setProductName(DmGlobal::getAppName());
+    qApp->setApplicationAcknowledgementPage(acknowledgementLink);
+    qApp->setProductIcon(QIcon::fromTheme("deepin-music"));
+    qApp->setApplicationDescription(descriptionText);
+    qApp->setApplicationDisplayName(DmGlobal::getAppName());
+
+    QQmlApplicationEngine engine;
+    // 请在此处注册需要导入到QML中的C++类型
+    // 例如： engine.rootContext()->setContextProperty("Utils", new Utils);
+    QScopedPointer<Presenter> presenter(new Presenter(QObject::tr("Unknown album"), QObject::tr("Unknown artist"), app));
+
+    EventsFilter eventsFilter(presenter.data());
+    Shortcut shortcut(presenter.data());
+
+    ApplicationAdaptor adaptor(presenter.data());
+    QDBusConnection::sessionBus().registerObject("/org/mpris/speech", "com.deepin.speech", &adaptor, QDBusConnection::RegisterOption::ExportAllSlots);
+
+    presenter->setMprisPlayer("DeepinMusic", "deepin-music", "Deepin Music Player");
+    engine.rootContext()->setContextProperty("Presenter", presenter.data());
+    engine.rootContext()->setContextProperty("EventsFilter", &eventsFilter);
+    engine.rootContext()->setContextProperty("ShortcutDialg", &shortcut);
+    engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
+    engine.rootObjects()[0]->installEventFilter(&eventsFilter);
+    if (engine.rootObjects().isEmpty())
+        return -1;
+    // 导入自动播放
+    if (!OpenFilePaths.isEmpty()) {
+        presenter->importMetas(OpenFilePaths, "play", true);
     }
 
-    path += "/single";
-    int fd = open(path.toLocal8Bit().toStdString().c_str(), O_WRONLY | O_CREAT, 0644);
-    int flock = lockf(fd, F_TLOCK, 0);
+    QObject::connect(&engine, &QQmlApplicationEngine::quit, presenter.data(), &Presenter::saveDataToDB);
 
-    if (fd == -1) {
-        perror("open lockfile/n");
-        return false;
-    }
-    if (flock == -1) {
-        perror("lock file error/n");
-        return false;
-    }
-    return true;
-}
-
-void createSpeechDbus()
-{
-    SpeechExportBus *mSpeech = new SpeechExportBus(SpeechCenter::getInstance());
-    // 'playMusic','红颜' 显示搜索界面
-    // 'playMusic',''       显示所有音乐界面，随机播放
-    mSpeech->registerAction("playMusic", "play Music",
-                            std::bind(&SpeechCenter::playMusic, SpeechCenter::getInstance(), std::placeholders::_1));
-    // 'playArtist','华晨宇'
-    mSpeech->registerAction("playArtist", "play Artist",
-                            std::bind(&SpeechCenter::playArtist, SpeechCenter::getInstance(), std::placeholders::_1));
-    // 'playArtistMusic','华晨宇:齐天'
-    mSpeech->registerAction("playArtistMusic", "play Artist Music",
-                            std::bind(&SpeechCenter::playArtistMusic, SpeechCenter::getInstance(), std::placeholders::_1));
-    // 'playAlbum','历久尝新'
-    mSpeech->registerAction("playAlbum", "play Album",
-                            std::bind(&SpeechCenter::playAlbum, SpeechCenter::getInstance(), std::placeholders::_1));
-    // 'playFaverite','fav'
-    mSpeech->registerAction("playFaverite", "play Faverite",
-                            std::bind(&SpeechCenter::playFaverite, SpeechCenter::getInstance(), std::placeholders::_1));
-    // 'playSonglist','123'  歌单名称
-    mSpeech->registerAction("playSonglist", "play Songlist",
-                            std::bind(&SpeechCenter::playSonglist, SpeechCenter::getInstance(), std::placeholders::_1));
-    // 'pause',''
-    mSpeech->registerAction("pause", "pause",
-                            std::bind(&SpeechCenter::pause, SpeechCenter::getInstance(), std::placeholders::_1));
-    // 'resume',''
-    mSpeech->registerAction("resume", "resume",
-                            std::bind(&SpeechCenter::resume, SpeechCenter::getInstance(), std::placeholders::_1));
-    // 'stop',''
-    mSpeech->registerAction("stop", "stop",
-                            std::bind(&SpeechCenter::stop, SpeechCenter::getInstance(), std::placeholders::_1));
-    // 'pre',''
-    mSpeech->registerAction("pre", "pre",
-                            std::bind(&SpeechCenter::pre, SpeechCenter::getInstance(), std::placeholders::_1));
-    // 'next',''
-    mSpeech->registerAction("next", "next",
-                            std::bind(&SpeechCenter::next, SpeechCenter::getInstance(), std::placeholders::_1));
-    // 'playIndex',''    指定播放第几首
-    mSpeech->registerAction("playIndex", "play Index",
-                            std::bind(&SpeechCenter::playIndex, SpeechCenter::getInstance(), std::placeholders::_1));
-    // 'addFaverite',''
-    mSpeech->registerAction("addFaverite", "add Faverite",
-                            std::bind(&SpeechCenter::addFaverite, SpeechCenter::getInstance(), std::placeholders::_1));
-    // 'removeFaverite',''
-    mSpeech->registerAction("removeFaverite", "remove Faverite",
-                            std::bind(&SpeechCenter::removeFaverite, SpeechCenter::getInstance(), std::placeholders::_1));
-    // 'setMode','0' 列表循环  'setMode','1' 单曲循环  'setMode','2' 随机
-    mSpeech->registerAction("setMode", "set Mode",
-                            std::bind(&SpeechCenter::setMode, SpeechCenter::getInstance(), std::placeholders::_1));
-    // dbus导入音乐文件
-    mSpeech->registerQStringListAction("OpenUris", "OpenUris",
-                                       std::bind(&SpeechCenter::OpenUris, SpeechCenter::getInstance(), std::placeholders::_1));
-
-    mSpeech->registerAction("setPosition", "setPosition",
-                                       std::bind(&SpeechCenter::setPosition, SpeechCenter::getInstance(), std::placeholders::_1));
+    return app->exec();
 }

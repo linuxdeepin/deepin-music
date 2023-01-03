@@ -1,10 +1,11 @@
 Source: deepin-music
-Section: sound
-Priority: extra
+Section: admin
+Priority: optional
 Maintainer: Deepin Packages Builder <packages@deepin.com>
-Build-Depends: 
- cmake,
+Build-Depends:
  debhelper (>= 11),
+ cmake,
+ pkg-config,
  libavutil-dev,
  libavcodec-dev,
  libavformat-dev,
@@ -23,24 +24,33 @@ Build-Depends:
  libxtst-dev,
  libvlc-dev,
  libvlccore-dev,
- pkg-config,
  qtmultimedia5-dev,
  qttools5-dev,
  qttools5-dev-tools,
  libdframeworkdbus-dev,
  libudisks2-qt5-dev,
- libsdl2-dev
-Standards-Version: 4.5.1
-Homepage: http://www.deepin.org/
-
+ qtdeclarative5-dev,
+ libdtkdeclarative-dev
+Standards-Version: 3.9.8
+Homepage: http://www.deepin.org
 
 Package: deepin-music
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends},
+ libvlc5,
+ libdtkdeclarative5,
+ qml-module-qt-labs-platform,
+ gstreamer1.0-fluendo-mp3,
+ gstreamer1.0-libav,
+ gstreamer1.0-plugins-base,
+ gstreamer1.0-plugins-good,
+ gstreamer1.0-plugins-bad,
+ gstreamer1.0-plugins-ugly,
+ gstreamer1.0-pulseaudio,
  gvfs-bin,
  libqt5sql5-sqlite,
  libqt5multimedia5-plugins,
  vlc-plugin-base
-Recommends: gstreamer1.0-pulseaudio, uos-reporter, deepin-event-log
 Description: Music software for UOS
  Music is a local music player with beautiful design and simple functions.
+

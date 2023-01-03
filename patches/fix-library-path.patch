@@ -1,0 +1,106 @@
+diff --git a/src/libdmusic/core/dynamiclibraries.cpp b/src/libdmusic/core/dynamiclibraries.cpp
+index bb39559b..a9cedbc0 100644
+--- a/src/libdmusic/core/dynamiclibraries.cpp
++++ b/src/libdmusic/core/dynamiclibraries.cpp
+@@ -24,6 +24,7 @@
+ #include <QLibrary>
+ #include <QLibraryInfo>
+ #include <QDebug>
++#include <QProcess>
+ 
+ #include "global.h"
+ 
+@@ -149,15 +150,29 @@ bool DynamicLibraries::loadLibraries()
+ QString DynamicLibraries::libPath(const QString &strlib)
+ {
+     QDir  dir;
+-    QString path  = QLibraryInfo::location(QLibraryInfo::LibrariesPath);
+-    dir.setPath(path);
+-    QStringList list = dir.entryList(QStringList() << (strlib + "*"), QDir::NoDotAndDotDot | QDir::Files); //filter name with strlib
+-    if (list.contains(strlib)) {
+-        return strlib;
+-    } else {
+-        list.sort();
++    QStringList environment = QProcess::systemEnvironment();
++    QString str, t_str;
++    foreach (str, environment) {
++        if (str.startsWith("LD_LIBRARY_PATH=")) {
++            t_str = str;
++            break;
++        }
+     }
+-
+-    Q_ASSERT(list.size() > 0);
+-    return list.last();
++    if (t_str.isEmpty()) {
++        return QString();
++    }
++    qDebug() << "lib:"<<strlib<<",LD_LIBRARY_PATH:"<<t_str;
++    QStringList liststr = t_str.split("=").at(1).split(":");
++    QString t_libPath;
++    for (size_t i = 0; i < liststr.count() ; i++) {
++        QString path  = liststr.at(i);
++        dir.setPath(path);
++        QStringList list = dir.entryList(QStringList() << (strlib + "*"), QDir::NoDotAndDotDot | QDir::Files); //filter name with strlib
++        if (!list.isEmpty()) {
++            t_libPath = path + "/" + list.first();
++            break;
++        }
++    }
++    qDebug() << t_libPath;
++    return t_libPath;
+ }
+diff --git a/src/libdmusic/global.cpp b/src/libdmusic/global.cpp
+index a1ecdc57..40aa126a 100644
+--- a/src/libdmusic/global.cpp
++++ b/src/libdmusic/global.cpp
+@@ -20,6 +20,7 @@
+ #include <QProcessEnvironment>
+ #include <QLibraryInfo>
+ #include <QDir>
++#include <QDebug>
+ 
+ #include <DStandardPaths>
+ 
+@@ -138,14 +139,35 @@ bool DmGlobal::isWaylandMode()
+ void DmGlobal::initPlaybackEngineType()
+ {
+     engineType = 0;
+-    QDir dir(QLibraryInfo::location(QLibraryInfo::LibrariesPath));
+-    QStringList list = dir.entryList(QStringList() << QString("libvlccore.so*") << QString("libavcodec.so*"), QDir::NoDotAndDotDot | QDir::Files);
++    QDir  dir;
++    QStringList environment = QProcess::systemEnvironment();
++    QString str, t_str;
++    foreach (str, environment) {
++        if (str.startsWith("LD_LIBRARY_PATH=")) {
++            t_str = str;
++            break;
++        }
++    }
++    qDebug() << "LD_LIBRARY_PATH=" << t_str;
++    if (t_str.isEmpty()) {
++        return ;
++    }
++    QStringList liststr = t_str.split("=").at(1).split(":");
++    QStringList t_list;
+     bool vlcFlag = false, avFlag = false;
+-    for (auto str : list) {
+-        if (!vlcFlag && str.startsWith("libvlccore.so")) vlcFlag = true;
+-        if (!avFlag && str.startsWith("libavcodec.so")) avFlag = true;
++    for (size_t i = 0; i < liststr.count() ; i++) {
++        QString path  = liststr.at(i);
++        dir.setPath(path);
++        QStringList list = dir.entryList(QStringList() << ("libvlccore.so*") << ("libavcodec.so*"), QDir::NoDotAndDotDot | QDir::Files); //filter name with strlib
++        for (QString str : list) {
++            if (!vlcFlag && str.contains("libvlccore.so")) vlcFlag = true;
++            if (!avFlag && str.contains("libavcodec.so")) avFlag = true;
++            if (vlcFlag && avFlag) {
++                engineType = 1;
++                break;
++            }
++        }
+         if (vlcFlag && avFlag) {
+-            engineType = 1;
+             break;
+         }
+     }
