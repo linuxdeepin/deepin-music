@@ -11,18 +11,13 @@ _The **master** branch is current development branch, build dependencies may cha
 * pkg-config
 * libtag1-dev
 * libicu-dev
-* libgsettings-qt-dev
-* libdbusextended-qt5-dev
-* libkf5codecs-dev
+* libcue-dev
+* libtag1-dev
 * libavutil-dev
 * libavcodec-dev
 * libavformat-dev
 * libdtkcore-dev
 * libdtkgui-dev
-* libdframeworkdbus-dev
-* libudisks2-qt5-dev 
-* libvlc-dev
-* libvlccore-dev
 * Qt5(>= 5.6) with modules:
   - qt5-qmake
   - libqt5svg5-dev
@@ -68,6 +63,11 @@ The executable binary file could be found at `/usr/bin/deepin-music`
 
 Execute `deepin-music`
 
+## Documentations
+
+ - [Development Documentation](https://linuxdeepin.github.io/)
+ - [User Documentation](https://wikidev.uniontech.com/index.php?title=%E9%9F%B3%E4%B9%90) | [用户文档](https://wikidev.uniontech.com/index.php?title=音乐)
+
 ## Getting help
 
  - [Official Forum](https://bbs.deepin.org/)
@@ -85,4 +85,4 @@ We encourage you to report issues and contribute changes
 
 ## License
 
-deepin-music is licensed under [GPL-3.0-or-later](LICENSE).
+This project is licensed under [GPLv3](LICENSE) or any later version.
