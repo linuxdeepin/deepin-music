@@ -1,7 +1,7 @@
 package:
   id: org.deepin.music
   name: "deepin-music"
-  version: 6.2.8
+  version: 7.0.2
   kind: app
   description: |
     music for deepin os.
