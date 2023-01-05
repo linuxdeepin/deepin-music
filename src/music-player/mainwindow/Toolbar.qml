@@ -96,6 +96,17 @@ FloatingPanel {
                 visible: songTitle.length === 0 ? false : true
             }
 
+            // border
+            Rectangle {
+                id: borderRect
+                anchors.fill: parent
+                color: "transparent"
+                border.color: Qt.rgba(0, 0, 0, 0.1)
+                border.width: 1
+                visible: true
+                radius: 8
+            }
+
             Rectangle {
                 id: hoverMask
                 width: parent.width

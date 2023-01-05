@@ -11,9 +11,7 @@ import org.deepin.dtk 1.0
 Rectangle {
     id: control
     property alias source: image.source
-//    property size imageSourceSize
     property bool m_isPlaying: (globalVariant.curPlayingStatus === DmGlobal.Playing) ? true : false
-//    property real imageScale: 1
     signal clicked
     property string pageHash: ""
     property bool isCurPlay: false
@@ -49,6 +47,16 @@ Rectangle {
         maskSource: mask
     }
 
+    // border
+    Rectangle {
+        id: borderRect
+        anchors.fill: parent
+        color: "transparent"
+        border.color: Qt.rgba(0, 0, 0, 0.1)
+        border.width: 1
+        visible: true
+        radius: 3
+    }
 
     ActionButton {
         id: playActionButton
@@ -79,7 +87,7 @@ Rectangle {
             }
        }
     }
-//    hoverEnabled: true;
+
     function itemHoveredChanged(value) {
         if(value === true){
             playActionButton.visible = true;
