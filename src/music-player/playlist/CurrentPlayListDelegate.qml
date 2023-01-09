@@ -71,6 +71,7 @@ ItemDelegate{
             } else if (mouse.button ===  Qt.RightButton){
                 if(playlistView.delegateModelGroup.length <= 1){
                     playlistMoreMenu.mediaData = model
+                    playlistMoreMenu.itemIndex = index
                     playlistMoreMenu.popup()
                 }else{
                     selectMenu.musicHashList = playlistView.getSelectGroupHashList();
@@ -126,10 +127,11 @@ ItemDelegate{
                 icon.width: 20
                 icon.height: 20
                 onClicked: {
-                    playlistAddMenu.popup()
+                    playlistAddMenu.itemIndex = index
                     var tmpHash = [];
                     tmpHash.push(model.hash);
                     playlistAddMenu.mediaHashList = tmpHash;
+                    playlistAddMenu.popup()
                 }
             }
             ActionButton {
@@ -149,8 +151,9 @@ ItemDelegate{
                 icon.width: 20
                 icon.height: 20
                 onClicked: {
-                    playlistMoreMenu.popup()
+                    playlistMoreMenu.itemIndex = index
                     playlistMoreMenu.mediaData = model
+                    playlistMoreMenu.popup()
                 }
             }
         }
@@ -181,8 +184,9 @@ ItemDelegate{
             }
             Rectangle {
                 id: musicInfoRect
-                width: rootRectangle.hovered ? parent.width - imgCellRectWidth - 102 - spacingWidth * 3 :
-                                               parent.width - (imgCellRectWidth + timeRectWidth + spacingWidth * 2)
+                width: rootRectangle.hovered || btnsLoader.visible ?
+                           parent.width - imgCellRectWidth - 102 - spacingWidth * 3 :
+                           parent.width - (imgCellRectWidth + timeRectWidth + spacingWidth * 2)
                 height: 40
                 anchors.verticalCenter: parent.verticalCenter
                 color: "transparent"
@@ -217,7 +221,7 @@ ItemDelegate{
             }
             Label {
                 id: musicTimeLabel
-                visible: !rootRectangle.hovered
+                visible: !rootRectangle.hovered && !btnsLoader.visible
                 width: timeRectWidth
                 height: parent.height
                 color: checked ? palette.highlightedText : "#7C7C7C"
@@ -238,7 +242,8 @@ ItemDelegate{
                 id: btnsLoader
                 anchors.verticalCenter: parent.verticalCenter
                 sourceComponent: hoverButtons
-                visible: false
+                visible: rootRectangle.hovered || (playlistAddMenu.visible && playlistAddMenu.itemIndex === index) ||
+                         (playlistMoreMenu.visible && playlistMoreMenu.itemIndex === index)
             }
         }
 
@@ -317,12 +322,6 @@ ItemDelegate{
     }
 
     onHoveredChanged: {
-        if(rootRectangle.hovered == true){
-            btnsLoader.visible = true;
-        } else {
-            btnsLoader.visible = false;
-        }
         imagecell.itemHoveredChanged(rootRectangle.hovered);
     }
 }
-

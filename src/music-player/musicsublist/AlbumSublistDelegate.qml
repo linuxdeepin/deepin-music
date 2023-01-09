@@ -14,14 +14,16 @@ ItemDelegate {
     property bool activeMeta:(globalVariant.curPlayingHash === hash) ? true : false
 
     id: sublistDelegate
+    hoverEnabled: true
     MouseArea {
+        id: mouseArea
         anchors.fill: sublistDelegate
         acceptedButtons: Qt.RightButton | Qt.LeftButton
         onDoubleClicked: {
             Presenter.playAlbum(album, hash);
         }
         onClicked: {
-            if(mouse.button ===  Qt.LeftButton){
+            if(mouse.button ===  Qt.LeftButton) {
                 listview.forceActiveFocus();
                 switch(mouse.modifiers){
                 case Qt.ControlModifier:
@@ -36,11 +38,12 @@ ItemDelegate {
                     listview.checkOne(index);
                     break;
                 }
-            }else if(mouse.button ===  Qt.RightButton){
-                if(listview.delegateModelGroup.length <= 1){
+            } else if (mouse.button ===  Qt.RightButton) {
+                if (listview.delegateModelGroup.length <= 1) {
                     musicMoreMenu.mediaData = model;
+                    musicMoreMenu.itemIndex = index
                     musicMoreMenu.popup();
-                }else{
+                } else {
                     selectMenu.musicHashList = listview.getSelectGroupHashList();
                     selectMenu.popup();
                 }
@@ -59,6 +62,7 @@ ItemDelegate {
                     var tmpHash = [];
                     tmpHash.push(model.hash);
                     importMenu.mediaHashList = tmpHash
+                    importMenu.itemIndex = index
                     importMenu.popup();
                 }
             }
@@ -69,6 +73,7 @@ ItemDelegate {
                 anchors.verticalCenter: addButton.verticalCenter
                 onClicked: {
                     musicMoreMenu.mediaData = model;
+                    musicMoreMenu.itemIndex = index
                     musicMoreMenu.popup();
                 }
             }
@@ -167,7 +172,8 @@ ItemDelegate {
                         id: buttonsLoader;
                         anchors.verticalCenter: musicNameLabel.verticalCenter
                         sourceComponent: hoverbuttons
-                        visible: false;
+                        visible: sublistDelegate.hovered || (importMenu.visible && importMenu.itemIndex === index) ||
+                              (musicMoreMenu.visible && musicMoreMenu.itemIndex === index)
                     }
 
                 }
@@ -197,15 +203,6 @@ ItemDelegate {
                 verticalAlignment: Qt.AlignVCenter
                 anchors.verticalCenter: ablumLabel.verticalCenter
             }
-        }
-    }
-    hoverEnabled: true
-    onHoveredChanged: { //icon显隐
-        console.log("onHoveredChanged.............", sublistDelegate.hovered)
-        if (sublistDelegate.hovered == true) {
-            buttonsLoader.visible = true;
-        } else {
-            buttonsLoader.visible = false;
         }
     }
 }

@@ -34,13 +34,14 @@ ItemDelegate {
                     listview.checkOne(index);
                     break;
                 }
-            }else if(mouse.button ===  Qt.RightButton){
-                if(listview.delegateModelGroup.length <= 1){
-                    musicMoreMenu.mediaData = model;
-                    musicMoreMenu.popup();
-                }else{
-                    selectMenu.musicHashList = listview.getSelectGroupHashList();
-                    selectMenu.popup();
+            } else if (mouse.button ===  Qt.RightButton) {
+                if (listview.delegateModelGroup.length <= 1) {
+                    musicMoreMenu.mediaData = model
+                    musicMoreMenu.itemIndex = index
+                    musicMoreMenu.popup()
+                } else {
+                    selectMenu.musicHashList = listview.getSelectGroupHashList()
+                    selectMenu.popup()
                 }
             }
 
@@ -55,10 +56,11 @@ ItemDelegate {
                 icon.name: sublistDelegate.checked ? "list_add_checked" : "list_add"
                 icon.width: 20; icon.height: 20
                 onClicked: {
-                    var tmpHash = [];
-                    tmpHash.push(model.hash);
+                    var tmpHash = []
+                    tmpHash.push(model.hash)
                     importMenu.mediaHashList = tmpHash;
-                    importMenu.popup();
+                    importMenu.itemIndex = index
+                    importMenu.popup()
                 }
             }
             ActionButton {
@@ -67,8 +69,9 @@ ItemDelegate {
                 icon.width: 20; icon.height: 20
                 anchors.verticalCenter: addButton.verticalCenter
                 onClicked: {
-                    musicMoreMenu.mediaData = model;
-                    musicMoreMenu.popup();
+                    musicMoreMenu.mediaData = model
+                    musicMoreMenu.itemIndex = index
+                    musicMoreMenu.popup()
                 }
             }
         }
@@ -100,7 +103,6 @@ ItemDelegate {
                     }
                 }
             }
-
             Rectangle {
                 id: columnMusic
                 width: sublistDelegate.width - 368; height: 56
@@ -132,7 +134,9 @@ ItemDelegate {
                     id: buttonsLoader;
                     anchors.right: columnMusic.right; anchors.rightMargin: 10
                     anchors.verticalCenter: musicNameLabel.verticalCenter
-                    sourceComponent: hoverbuttons; visible: false;
+                    sourceComponent: hoverbuttons
+                    visible: sublistDelegate.hovered || (importMenu.visible && importMenu.itemIndex === index) ||
+                             (musicMoreMenu.visible && musicMoreMenu.itemIndex === index)
                 }
             }
             Label {
@@ -144,7 +148,6 @@ ItemDelegate {
                 verticalAlignment: Qt.AlignVCenter
                 anchors.verticalCenter: columnMusic.verticalCenter
             }
-
             Label {
                 id: musictimeLabel
                 width: 142; height: 36
@@ -164,12 +167,7 @@ ItemDelegate {
         }
     }
     hoverEnabled: true
-    onHoveredChanged: { //icon显隐
-        if(sublistDelegate.hovered == true){
-            buttonsLoader.visible = true;
-        }else{
-            buttonsLoader.visible = false;
-        }
+    onHoveredChanged: {
         imagecell.itemHoveredChanged(sublistDelegate.hovered);
     }
 }
