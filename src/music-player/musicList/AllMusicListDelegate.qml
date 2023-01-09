@@ -20,12 +20,6 @@ ItemDelegate{
     anchors.horizontalCenter: parent.horizontalCenter
     checked: inMulitSelect
     hoverEnabled: true
-//    background: Rectangle {
-//        anchors.fill: parent
-//        radius: 8
-//        opacity: checked ? 1 : hovered ? 0.05 : backgroundVisible ? 0.03 : 0
-//        color: checked ? palette.highlight : Qt.rgba(0, 0, 0)
-//    }
 
     Drag.active: mouseArea.drag.active
     Drag.supportedActions: Qt.MoveAction
@@ -95,6 +89,7 @@ ItemDelegate{
                     if (moreMenuLoader.status === Loader.Ready ) {
                         console.log("moreMenuPopup...................")
                         moreMenuLoader.item.mediaData = model
+                        moreMenuLoader.item.itemIndex = index
                         moreMenuLoader.item.popup();
                     }
                 } else {
@@ -138,7 +133,6 @@ ItemDelegate{
         id: hoverbuttons
         Row {
             spacing: 10
-            rightPadding: 10
             ActionButton {
                 id: addButton
                 icon.name: rootRectangle.checked ? "list_add_checked" : "list_add"
@@ -152,6 +146,7 @@ ItemDelegate{
                     }
                     if (importMenuLoader.status === Loader.Ready ) {
                         importMenuLoader.item.mediaHashList = tmpHash
+                        importMenuLoader.item.itemIndex = index
                         importMenuLoader.item.popup();
                     }
                 }
@@ -168,6 +163,7 @@ ItemDelegate{
                     }
                     if (moreMenuLoader.status === Loader.Ready ) {
                         moreMenuLoader.item.mediaData = model
+                        moreMenuLoader.item.itemIndex = index
                         moreMenuLoader.item.popup();
                     }
                 }
@@ -237,7 +233,7 @@ ItemDelegate{
                 }
                 Label {
                     id: musicNameLabel;
-                    width: rootRectangle.hovered ? columnMusic.width - 130:
+                    width: rootRectangle.hovered || buttonsLoader.visible ? columnMusic.width - 130:
                                                    columnMusic.width - 120;
                     height: 17
                     elide: Text.ElideRight
@@ -250,7 +246,9 @@ ItemDelegate{
                     id: buttonsLoader;
                     anchors.verticalCenter: musicNameLabel.verticalCenter
                     sourceComponent: hoverbuttons
-                    visible: false
+                    visible: rootRectangle.hovered ||
+                             (importMenuLoader.status === Loader.Ready && importMenuLoader.item.visible && importMenuLoader.item.itemIndex === index) ||
+                             (moreMenuLoader.status === Loader.Ready && moreMenuLoader.item.visible && moreMenuLoader.item.itemIndex === index)
                 }
             }
         }
@@ -260,7 +258,7 @@ ItemDelegate{
             height: 56
             leftPadding: 10
             elide: Text.ElideRight
-            text: (artist === "") ? "undefind": artist
+            text: (artist === "") ? "undefind" : artist
             anchors.verticalCenter: parent.verticalCenter
             verticalAlignment: Qt.AlignVCenter
         }
@@ -311,12 +309,7 @@ ItemDelegate{
         visible: dragFlag
     }
 
-    onHoveredChanged: { //icon显隐
-        if(rootRectangle.hovered == true){
-            buttonsLoader.visible = true;
-        }else{
-            buttonsLoader.visible = false;
-        }
+    onHoveredChanged: {
         imagecell.itemHoveredChanged(rootRectangle.hovered);
     }
 

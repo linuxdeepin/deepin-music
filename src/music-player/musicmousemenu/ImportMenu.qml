@@ -11,6 +11,8 @@ import org.deepin.dtk 1.0
 Menu{
     property string pageHash: ""
     property var mediaHashList: []
+    property int itemIndex: -1  //判断当前菜单属于哪个列表项，用于控制菜单按钮的显隐
+
     signal importMenuClosed();
 
     id: importMenu
@@ -64,6 +66,3 @@ Menu{
         }
     }
 }
-
-
-

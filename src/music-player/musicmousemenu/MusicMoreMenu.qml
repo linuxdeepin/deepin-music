@@ -15,6 +15,8 @@ Menu{
     property var encodings: []
     property bool isPlaying: (globalVariant.curPlayingStatus === DmGlobal.Playing) ? true : false
     property bool activeMeta: (globalVariant.curPlayingHash === mediaData.hash) ? true : false;
+    property int itemIndex: -1  //判断当前菜单属于哪个列表项，用于控制菜单按钮的显隐
+
 
     id: moreMenu
     width: 200
