@@ -15,6 +15,7 @@ set(QRC_FILES config.qrc)
 #文件夹包含
 include_directories(/usr/include/vlc)
 include_directories(/usr/include/vlc/plugins)
+include_directories(/usr/include/ffmpeg)
 include_directories(/runtime/include/vlc)
 include_directories(/runtime/include/vlc/plugins)
 include_directories(/runtime/include)
