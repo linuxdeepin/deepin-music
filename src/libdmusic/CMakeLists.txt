@@ -45,8 +45,9 @@ pkg_check_modules(MPRIS REQUIRED IMPORTED_TARGET mpris-qt5)
 pkg_check_modules(TAGLIB REQUIRED IMPORTED_TARGET taglib)
 pkg_check_modules(DTK REQUIRED IMPORTED_TARGET dtkcore)
 pkg_check_modules(udisks2 REQUIRED IMPORTED_TARGET udisks2-qt5)
+pkg_check_modules(icu REQUIRED IMPORTED_TARGET icu-i18n icu-io icu-uc)
 
-set(TARGET_LIBS PkgConfig::MPRIS KF5::Codecs PkgConfig::TAGLIB PkgConfig::DTK PkgConfig::udisks2)
+set(TARGET_LIBS PkgConfig::MPRIS KF5::Codecs PkgConfig::TAGLIB PkgConfig::DTK PkgConfig::udisks2 PkgConfig::icu)
 target_link_libraries(${CMD_NAME} ${TARGET_LIBS})
 
 qt5_use_modules(${CMD_NAME} ${QT_MODULES})
