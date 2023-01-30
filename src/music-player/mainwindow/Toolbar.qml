@@ -152,9 +152,10 @@ FloatingPanel {
             anchors.verticalCenter: parent.verticalCenter
             Column {
                 width: parent.width
-                Text {
+                Text{
                     id: title
                     width: parent.width
+                    color: DTK.themeType === ApplicationHelper.DarkType ? Qt.rgba(247, 247, 247, 0.9) : Qt.rgba(0, 0, 0, 0.9)
                     text: songTitle
                     font.pixelSize: 14
                     elide: Text.ElideRight
@@ -164,7 +165,7 @@ FloatingPanel {
                     width: parent.width
                     text: artistStr
                     font.pixelSize: 12
-                    color: "#90000000"
+                    color: DTK.themeType === ApplicationHelper.DarkType ? Qt.rgba(247, 247, 247, 0.7) : Qt.rgba(0, 0, 0, 0.7)
                     font {
                         family: "SourceHanSansSC, SourceHanSansSC-Normal"
                         pixelSize: 12

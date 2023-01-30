@@ -48,9 +48,7 @@ Rectangle{
         FloatingButton {
             id: palyBtn
             width: 28; height: 28
-            icon.name: "list_play"
-            icon.width: 20; icon.height: 20
-            ColorSelector.hovered: false
+            icon.name: "headline_play_all"
             ToolTip {
                 visible: palyBtn.hovered
                 text: qsTr("Play All")

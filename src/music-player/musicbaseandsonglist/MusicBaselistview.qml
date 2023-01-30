@@ -50,6 +50,7 @@ Rectangle {
                 action: FloatingButton {
                     width: 21; height: 21
                     checked: false
+                    palette: systemSideBar.palette
                     DciIcon {
                         name: "sidebar_list_add"
                         sourceSize: Qt.size(15, 15)
