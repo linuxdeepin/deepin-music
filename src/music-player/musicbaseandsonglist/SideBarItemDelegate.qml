@@ -68,6 +68,7 @@ ItemDelegate {
         anchors.verticalCenter: item.verticalCenter
         name: item.checked ? model.icon_checked : model.icon
         sourceSize: Qt.size(20, 20)
+        palette: DTK.makeIconPalette(item.palette)
     }
     Label {
         id: songName

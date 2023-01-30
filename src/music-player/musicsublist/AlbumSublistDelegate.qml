@@ -116,8 +116,8 @@ ItemDelegate {
                             icon.height: 20
                             anchors.centerIn: parent
                             visible: sublistDelegate.hovered || activeMeta
-                            ColorSelector.hovered: true
-                            ColorSelector.pressed: sublistDelegate.checked
+                            ColorSelector.hovered: !sublistDelegate.checked
+                            ColorSelector.pressed: false
                             onClicked:{
                                 if(playing && activeMeta) {
                                     Presenter.pause();

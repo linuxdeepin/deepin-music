@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-import QtQuick 2.0
+import QtQuick 2.11
 import QtQuick.Layouts 1.11
 import QtQuick.Controls 2.0
 import org.deepin.dtk 1.0
@@ -57,33 +57,37 @@ ItemDelegate{
         Rectangle {
             id: albumCell
             width: itemDelegate.width - 438; height: itemDelegate.height
-            color: Qt.rgba(0,0,0,0);
-            ImageCell {
-                id: imagecell
-                anchors.left: parent.left; anchors.leftMargin: 10
-                anchors.verticalCenter: albumCell.verticalCenter
-                source: "file:///" + coverUrl
-                pageHash: "album"
-                isCurPlay: (globalVariant.curPlayingAlbum === name) ? true : false
-                isCurHover: itemDelegate.hovered
-                curMediaData: model
-                width: 40; height: 40
-            }
-            Label {
-                id: albumNameLabel;
-                anchors.left: imagecell.right; anchors.leftMargin: 10
-                width: albumCell.width - 110; height: 17
-                elide: Text.ElideRight
-                text: (name === "") ? "undefind": name
-                verticalAlignment: Qt.AlignVCenter
-                anchors.verticalCenter: imagecell.verticalCenter
-                color: checked ? palette.highlightedText :
-                                 (imagecell.isCurPlay ? palette.highlight : palette.text)
-            }
-            Loader {
-                id: buttonsLoader;
-                anchors.verticalCenter: parent.verticalCenter
-                sourceComponent: hoverbuttons; visible: false;
+            color: Qt.rgba(0,0,0,0)
+            Row {
+                spacing: 10
+                leftPadding: 10
+                anchors.fill: parent
+                ImageCell {
+                    id: imagecell
+                    anchors.verticalCenter: parent.verticalCenter
+                    source: "file:///" + coverUrl
+                    pageHash: "album"
+                    isCurPlay: (globalVariant.curPlayingAlbum === name) ? true : false
+                    isCurHover: itemDelegate.hovered
+                    curMediaData: model
+                    width: 40; height: 40
+                }
+                Label {
+                    id: albumNameLabel
+                    width: albumCell.width - 110; height: 17
+                    elide: Text.ElideRight
+                    text: (name === "") ? "undefind": name
+                    verticalAlignment: Qt.AlignVCenter
+                    anchors.verticalCenter: parent.verticalCenter
+                    color: checked ? palette.highlightedText :
+                                     (imagecell.isCurPlay ? palette.highlight : palette.text)
+                }
+                Loader {
+                    id: buttonsLoader
+                    anchors.verticalCenter: parent.verticalCenter
+                    sourceComponent: hoverbuttons
+                    visible: itemDelegate.hovered
+                }
             }
         }
         Label {
@@ -113,13 +117,7 @@ ItemDelegate{
     }
     }
 
-    onHoveredChanged: { //icon显隐
-        //timestamp
-        if(itemDelegate.hovered == true) {
-            buttonsLoader.visible = true;
-        } else {
-            buttonsLoader.visible = false;
-        }
+    onHoveredChanged: {
         imagecell.itemHoveredChanged(itemDelegate.hovered);
     }
 }

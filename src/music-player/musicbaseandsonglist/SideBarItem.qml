@@ -34,7 +34,7 @@ Column {
             width: 42; height: 20
             anchors.left: parent.left
             anchors.leftMargin: 10
-            color: Qt.rgba(0, 0, 0, 0.3)
+            color: Qt.rgba(0.6,0.6,0.6, 0.8)
             text: title
             horizontalAlignment: Qt.AlignLeft
         }

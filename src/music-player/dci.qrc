@@ -95,5 +95,6 @@
         <file>dsg/icons/music_play4_blue.dci</file>
         <file>dsg/icons/sidebar_list_add.dci</file>
         <file>dsg/icons/details_more.dci</file>
+        <file>dsg/icons/headline_play_all.dci</file>
     </qresource>
 </RCC>

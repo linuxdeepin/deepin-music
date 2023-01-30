@@ -4,6 +4,7 @@
 
 import QtQuick 2.0
 import QtGraphicalEffects 1.0
+import org.deepin.dtk 1.0
 
 Rectangle {
     property real itemWidth: 2
@@ -19,7 +20,7 @@ Rectangle {
         width: parent.width
         height: parent.height
         visible: false
-        color: "#30000000"
+        color: DTK.themeType === ApplicationHelper.DarkType ? Qt.rgba(247, 247, 247, 0.7) : "#30000000"
     }
 
     Rectangle {
