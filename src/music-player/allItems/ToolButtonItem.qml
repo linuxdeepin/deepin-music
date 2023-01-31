@@ -49,6 +49,8 @@ Rectangle{
             id: palyBtn
             width: 28; height: 28
             icon.name: "headline_play_all"
+            icon.width: 28
+            icon.height: 28
             ToolTip {
                 visible: palyBtn.hovered
                 text: qsTr("Play All")

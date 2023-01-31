@@ -26,7 +26,7 @@ Item {
     property ListModel globalCustomPlaylistModel: CustomPlaylistModel {} //全局的自定义歌单model
     property var currentSelectMediaMeta: null //当前选择歌曲
     property int curPlayMode: Presenter.getPlaybackMode()
-    property string appIconName: "music"
+    property string appIconName: "deepin-music"
 
     signal switchToPreviousPlaylist(int previousIndex);  //删除歌单后，自动切换到上一个歌单列表
     signal renamePlaylist(string hash); //重命名
