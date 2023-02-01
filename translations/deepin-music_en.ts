@@ -16,8 +16,8 @@
         <translation>Drag music files here or</translation>
     </message>
     <message>
-        <source>scan the Music directory</source>
-        <translation>scan the Music directory</translation>
+        <source> scan the Music directory</source>
+        <translation> scan the Music directory</translation>
     </message>
 </context>
 <context>
@@ -207,8 +207,8 @@
         <translation>Drag music files here or</translation>
     </message>
     <message>
-        <source>scan the Music directory</source>
-        <translation>scan the Music directory</translation>
+        <source> scan the Music directory</source>
+        <translation> scan the Music directory</translation>
     </message>
 </context>
 <context>

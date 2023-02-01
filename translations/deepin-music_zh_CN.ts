@@ -16,8 +16,8 @@
         <translation>拖拽歌曲文件来添加歌曲 或</translation>
     </message>
     <message>
-        <source>scan the Music directory</source>
-        <translation>扫描歌曲目录</translation>
+        <source> scan the Music directory</source>
+        <translation> 扫描歌曲目录</translation>
     </message>
 </context>
 <context>
@@ -207,8 +207,8 @@
         <translation>拖拽歌曲文件来添加歌曲 或</translation>
     </message>
     <message>
-        <source>scan the Music directory</source>
-        <translation>扫描歌曲目录</translation>
+        <source> scan the Music directory</source>
+        <translation> 扫描歌曲目录</translation>
     </message>
 </context>
 <context>
