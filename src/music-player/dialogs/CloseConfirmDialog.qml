@@ -60,22 +60,21 @@ DialogWindow {
                     closeAction = 1
                 }
             }
-            CheckBox {
-                width: parent.width
-                height: 30
-                padding: 5
-                text: qsTr("Do not ask again")
-                font: DTK.fontManager.t6
-                onClicked: {
-                    if (checked) {
-                        isClose = true
-                    } else {
-                        isClose = false
-                    }
+        }
+        CheckBox {
+            width: parent.width
+            height: 30
+            padding: 5
+            text: qsTr("Do not ask again")
+            font: DTK.fontManager.t6
+            onClicked: {
+                if (checked) {
+                    isClose = true
+                } else {
+                    isClose = false
                 }
             }
         }
-
         Row {
             width: parent.width
             spacing: 10
