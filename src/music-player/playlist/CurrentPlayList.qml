@@ -95,6 +95,7 @@ FloatingPanel {
                         id: playlistText
                         text: qsTr("Play queue")
                         font: DTK.fontManager.t5
+                        color: DTK.themeType === ApplicationHelper.DarkType ? Qt.rgba(247, 247, 247, 0.9) : Qt.rgba(0, 0, 0, 0.9)
                     }
                 }
                 Rectangle {
@@ -129,6 +130,7 @@ FloatingPanel {
                         spacing: 1
                         padding: 0
                         textColor: Palette {
+                            normal: palette.text
                             hovered: palette.highlight
                         }
 
@@ -266,7 +268,7 @@ FloatingPanel {
 
             Timer {
                 id: scrollDownTimer
-                interval: 40
+                interval: 10
                 repeat: true
                 running: false
 
@@ -279,7 +281,7 @@ FloatingPanel {
             }
             Timer {
                 id: scrollUpTimer
-                interval: 40
+                interval: 10
                 repeat: true
                 running: false
 
