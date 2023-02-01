@@ -349,7 +349,7 @@ FloatingPanel {
                             horizontalAlignment: Text.AlignRight
                             enabled: songTitle.length === 0 ? false : true
                             text: enabled ? currentTime : "0:00"
-                            color: "#90000000"
+                            color: DTK.themeType === ApplicationHelper.DarkType ? Qt.rgba(247, 247, 247, 0.7) : Qt.rgba(0, 0, 0, 0.7)
                             font: DTK.fontManager.t8
                         }
                         Text {
@@ -359,7 +359,7 @@ FloatingPanel {
                             elide: Text.ElideRight
                             enabled: songTitle.length === 0 ? false : true
                             text: "/ " + (enabled ? totalTime : "0:00")
-                            color: "#90000000"
+                            color: DTK.themeType === ApplicationHelper.DarkType ? Qt.rgba(247, 247, 247, 0.7) : Qt.rgba(0, 0, 0, 0.7)
                             font: DTK.fontManager.t8
 
                         }

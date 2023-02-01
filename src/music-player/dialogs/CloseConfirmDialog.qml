@@ -15,16 +15,15 @@ DialogWindow {
     signal minimizeToSystemTray()
 
     id: closeConfirmDialog
-    maximumWidth: 400
-    maximumHeight: 230
-    minimumWidth: 400
-    minimumHeight: 230
+    width: 400
+    height: 230
     modality: Qt.ApplicationModal
     icon: globalVariant.appIconName
     Column {
         width: parent.width
         height: parent.height
         anchors.centerIn: parent
+        spacing: 5
         Label {
             width: parent.width
             horizontalAlignment: Text.AlignHCenter
@@ -37,12 +36,14 @@ DialogWindow {
         Column {
             id: column
             width: parent.width
-            spacing: 10
+            spacing: 5
             RadioButton {
                 id: minimizeBtn
                 width: parent.width
                 height: 30
+                padding: 5
                 text: qsTr("Minimize to system tray")
+                font: DTK.fontManager.t6
                 checked: true
                 onClicked: {
                     closeAction = 0
@@ -52,26 +53,29 @@ DialogWindow {
                 id: closeBtn
                 width: parent.width
                 height: 30
+                padding: 5
                 text: qsTr("Exit")
+                font: DTK.fontManager.t6
                 onClicked: {
                     closeAction = 1
                 }
             }
-        }
-        CheckBox {
-            width: parent.width
-            height: 30
-            text: qsTr("Do not ask again")
-            font: DTK.fontManager.t6
-
-            onClicked: {
-                if (checked) {
-                    isClose = true
-                } else {
-                    isClose = false
+            CheckBox {
+                width: parent.width
+                height: 30
+                padding: 5
+                text: qsTr("Do not ask again")
+                font: DTK.fontManager.t6
+                onClicked: {
+                    if (checked) {
+                        isClose = true
+                    } else {
+                        isClose = false
+                    }
                 }
             }
         }
+
         Row {
             width: parent.width
             spacing: 10

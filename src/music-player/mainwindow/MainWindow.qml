@@ -72,7 +72,9 @@ ApplicationWindow {
 //                    DciIcon {
 //                        sourceSize: control.icon_size
 //                        name: control.icon_name
-//                        mode: /*ColorSelector.NormalState*/control.iconMode[index]
+//                        mode: control.iconMode[index]
+//                        palette: DTK.makeIconPalette(parent.palette)
+//                        theme: ApplicationHelper.LightType
 //                    }
 //                }
 //            }
