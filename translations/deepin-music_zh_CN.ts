@@ -135,20 +135,28 @@
         <translation>拖拽歌曲文件来添加歌曲 或</translation>
     </message>
     <message>
-        <source>Your favorite songs will be displayed here.</source>
+        <source> scan the Music directory</source>
+        <translation> 扫描歌曲目录</translation>
+    </message>
+    <message>
+        <source>Your favorite songs will be displayed here</source>
         <translation>您喜欢的歌曲会显示在这里</translation>
     </message>
     <message>
-        <source>Click“  ♥  ”to add a song to My Favorites</source>
-        <translation>点击“♥”添加歌曲到“我喜欢”</translation>
+        <source>Click “</source>
+        <translation>点击 “</translation>
     </message>
     <message>
-        <source>No songs yet. Click“  ➕  ”to add songs to the playlist.</source>
-        <translation>歌单内暂无歌曲，点击“➕”图标将歌曲添加到歌单</translation>
+        <source>” to add a song to My Favorites</source>
+        <translation>” 添加歌曲到“我喜欢”</translation>
     </message>
     <message>
-        <source> scan the Music directory</source>
-        <translation> 扫描歌曲目录</translation>
+        <source>No songs yet. Click “</source>
+        <translation>歌单内暂无歌曲，点击 “</translation>
+    </message>
+    <message>
+        <source>” to add songs to the playlist</source>
+        <translation>” 将歌曲添加到歌单</translation>
     </message>
 </context>
 <context>

@@ -31,7 +31,7 @@ Rectangle {
         LinearGradient {
             anchors.fill: parent
             start: Qt.point(0, 0)
-            end: Qt.point(parent.width, 0)
+            end: Qt.point(curSecs * parent.width / totalSecs, 0)
             gradient: Gradient {
                 GradientStop { position: 0.0; color: "#0206cd"}
                 GradientStop { position: 1.0; color: "#3ce6ff"}

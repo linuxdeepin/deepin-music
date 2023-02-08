@@ -64,6 +64,36 @@ Rectangle {
     }
 
     Rectangle {
+        id: shadowRect
+        width: parent.width
+        height: 5
+        anchors.bottom: parent.bottom
+        anchors.bottomMargin: 10
+        color: "transparent"
+        LinearGradient {
+            id: linearGradient
+            anchors.fill: parent
+            visible: false
+            start: Qt.point(0, 0)
+            end: Qt.point(parent.width, 0)
+            gradient: Gradient {
+                GradientStop { position: 0.0; color: "#0206cd"}
+                GradientStop { position: 1.0; color: "#3ce6ff"}
+            }
+        }
+        FastBlur {
+            id: blur
+            width: curSecs * parent.width / totalSecs
+            height: linearGradient.height
+            anchors.left: linearGradient.left
+            anchors.verticalCenter: linearGradient.verticalCenter
+            source: linearGradient
+            radius: 48
+            transparentBorder: true
+        }
+    }
+
+    Rectangle {
         id: hoverTip
         width: 60
         height: parent.height + 20

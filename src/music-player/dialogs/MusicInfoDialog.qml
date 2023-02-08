@@ -13,8 +13,6 @@ DialogWindow {
 
     width: 386
     height: 468
-    minimumHeight: 100
-    maximumHeight: 1920
     header: DialogTitleBar {
         enableInWindowBlendBlur: true
         content: Loader {

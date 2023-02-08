@@ -18,7 +18,7 @@ ListModel {
         tmpModel.clear();
         var favourite = {};
         favourite.checked = false;
-        favourite.icon = "like";
+        favourite.icon = "images";
         favourite.icon_checked = "like_checked";
         favourite.displayName = qsTr("My Favorites")
         favourite.uuid = "fav";
@@ -65,6 +65,7 @@ ListModel {
     function onAddPlaylist(playlist){
         playlist.checked = false;
         playlist.icon = "list";
+        playlist.icon_checked = "list_checked";
         playlist.editable = true;
         playlist.dragFlag = false;
         customPlaylistModel.append(playlist);
@@ -75,6 +76,7 @@ ListModel {
             var cdList = {};
             cdList.checked = false;
             cdList.icon = "list";
+            cdList.icon_checked = "list_checked";
             cdList.displayName = qsTr("CD playlist")
             cdList.uuid = "cdarole";
             cdList.editable = false;
