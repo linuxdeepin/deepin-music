@@ -18,7 +18,7 @@ ListModel {
         tmpModel.clear();
         var favourite = {};
         favourite.checked = false;
-        favourite.icon = "images";
+        favourite.icon = "like";
         favourite.icon_checked = "like_checked";
         favourite.displayName = qsTr("My Favorites")
         favourite.uuid = "fav";
