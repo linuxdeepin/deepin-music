@@ -94,18 +94,44 @@ Rectangle {
             id: favouriteLable
             anchors.top: favouriteImage.bottom; anchors.topMargin: 40
             anchors.horizontalCenter: favmusicDefault.horizontalCenter;
-            color: Qt.rgba(0, 0, 0, 0.4)
-            text: qsTr("Your favorite songs will be displayed here.");
+            color: DTK.themeType === ApplicationHelper.DarkType ? Qt.rgba(247, 247, 247, 0.7)
+                                                                : Qt.rgba(0, 0, 0, 0.4)
+            text: qsTr("Your favorite songs will be displayed here");
             horizontalAlignment: Qt.AlignHCenter
+        }
+        Rectangle {
+            width: childrenRect.width
+            height: childrenRect.height
+            anchors.top: favouriteLable.bottom; anchors.topMargin: 13
+            anchors.horizontalCenter: parent.horizontalCenter
+            color: Qt.rgba(0, 0, 0, 0)
+
+            Row {
+                Text {
+                    text: qsTr("Click “")
+                    color: DTK.themeType === ApplicationHelper.DarkType ? Qt.rgba(247, 247, 247, 0.7)
+                                                                        : Qt.rgba(0, 0, 0, 0.4)
+                }
+                DciIcon {
+                    name: "default_heart"
+                    sourceSize: Qt.size(20, 20)
+                    anchors.verticalCenter: parent.verticalCenter
+                }
+                Text {
+                    text: qsTr("” to add a song to My Favorites")
+                    color: DTK.themeType === ApplicationHelper.DarkType ? Qt.rgba(247, 247, 247, 0.7)
+                                                                        : Qt.rgba(0, 0, 0, 0.4)
+                }
+            }
         }
 
-        Label {
-            anchors.top: favouriteLable.bottom; anchors.topMargin: 13
-            anchors.horizontalCenter: favmusicDefault.horizontalCenter;
-            color: Qt.rgba(0, 0, 0, 0.4)
-            text: qsTr("Click“  ♥  ”to add a song to My Favorites");
-            horizontalAlignment: Qt.AlignHCenter
-        }
+//        Label {
+//            anchors.top: favouriteLable.bottom; anchors.topMargin: 13
+//            anchors.horizontalCenter: favmusicDefault.horizontalCenter;
+//            color: Qt.rgba(0, 0, 0, 0.4)
+//            text: qsTr("Click “ ♥ ” to add a song to My Favorites");
+//            horizontalAlignment: Qt.AlignHCenter
+//        }
     }
 
     Rectangle {
@@ -119,14 +145,39 @@ Rectangle {
             source: "qrc:/dsg/img/favourite_default.png"
             sourceSize: Qt.size(126, 126);
         }
-        Label {
-            id: songListLable
+        Rectangle {
+            width: childrenRect.width
+            height: childrenRect.height
             anchors.top: songListImage.bottom; anchors.topMargin: 40
-            anchors.horizontalCenter: songListDefault.horizontalCenter;
-            color: Qt.rgba(0, 0, 0, 0.4)
-            text: qsTr("No songs yet. Click“  ➕  ”to add songs to the playlist.");
-            horizontalAlignment: Qt.AlignHCenter
+            anchors.horizontalCenter: songListDefault.horizontalCenter
+            color: Qt.rgba(0, 0, 0, 0)
+            Row {
+                Text {
+                    text: qsTr("No songs yet. Click “")
+                    color: DTK.themeType === ApplicationHelper.DarkType ? Qt.rgba(247, 247, 247, 0.7)
+                                                                        : Qt.rgba(0, 0, 0, 0.4)
+                }
+                DciIcon {
+                    name: "default_add"
+                    sourceSize: Qt.size(20, 20)
+                    anchors.verticalCenter: parent.verticalCenter
+                }
+                Text {
+                    text: qsTr("” to add songs to the playlist")
+                    color: DTK.themeType === ApplicationHelper.DarkType ? Qt.rgba(247, 247, 247, 0.7)
+                                                                        : Qt.rgba(0, 0, 0, 0.4)
+                }
+            }
         }
+
+//        Label {
+//            id: songListLable
+//            anchors.top: songListImage.bottom; anchors.topMargin: 40
+//            anchors.horizontalCenter: songListDefault.horizontalCenter;
+//            color: Qt.rgba(0, 0, 0, 0.4)
+//            text: qsTr("No songs yet. Click “ ➕ ” to add songs to the playlist.")
+//            horizontalAlignment: Qt.AlignHCenter
+//        }
     }
     onPageHashChanged: {
         if(pageHash === "all"){

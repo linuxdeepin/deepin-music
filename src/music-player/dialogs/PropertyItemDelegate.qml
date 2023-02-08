@@ -30,13 +30,12 @@ Control {
             visible: control.title
             text: control.title
             font: DTK.fontManager.t10
-            color: Qt.rgba(0, 0, 0, 0.6)
         }
         RowLayout {
             Label {
 //                property Palette backgroundColor: Palette {
-//                    normal: "#000000"
-//                    normal.dark: "#ffffff"
+//                    normal: Qt.rgba(0, 0, 0, 1)
+//                    normalDark: Qt.rgba(247, 247, 247, 1)
 //                }
                 visible: control.description
                 Layout.fillWidth: true

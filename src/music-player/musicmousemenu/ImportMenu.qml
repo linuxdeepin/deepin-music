@@ -51,17 +51,19 @@ Menu{
         visible: (globalVariant.globalCustomPlaylistModel.tmpModel.count === 0) ? false : true;
         height: visible ? 12 : 0;
     }
-    Repeater {
-        id: repeater
-        model: globalVariant.globalCustomPlaylistModel.tmpModel
-        MenuItem {
-            text: model.displayName.replace(/</g, "&lt;")
-            visible: (model.uuid === pageHash) ? false : true
-            height: visible ? 30 : 0
-            onTriggered: {
-                Presenter.addMetasToPlayList(mediaHashList, model.uuid);
-                importMenu.importMenuClosed();
-                close();
+    Column {
+        Repeater {
+            id: repeater
+            model: globalVariant.globalCustomPlaylistModel.tmpModel
+            MenuItem {
+                text: model.displayName.replace(/</g, "&lt;")
+                visible: (model.uuid === pageHash) ? false : true
+                height: visible ? 30 : 0
+                onTriggered: {
+                    Presenter.addMetasToPlayList(mediaHashList, model.uuid);
+                    importMenu.importMenuClosed();
+                    close();
+                }
             }
         }
     }

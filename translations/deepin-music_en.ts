@@ -135,20 +135,28 @@
         <translation>Drag music files here or</translation>
     </message>
     <message>
-        <source>Your favorite songs will be displayed here.</source>
-        <translation>Your favorite songs will be displayed here.</translation>
-    </message>
-    <message>
-        <source>Click“  ♥  ”to add a song to My Favorites</source>
-        <translation>Click“  ♥  ”to add a song to My Favorites</translation>
-    </message>
-    <message>
-        <source>No songs yet. Click“  ➕  ”to add songs to the playlist.</source>
-        <translation>No songs yet. Click“  ➕  ”to add songs to the playlist.</translation>
-    </message>
-    <message>
         <source> scan the Music directory</source>
-        <translation type="unfinished"></translation>
+        <translation> scan the Music directory</translation>
+    </message>
+    <message>
+        <source>Your favorite songs will be displayed here</source>
+        <translation>Your favorite songs will be displayed here</translation>
+    </message>
+    <message>
+        <source>Click “</source>
+        <translation>Click “</translation>
+    </message>
+    <message>
+        <source>” to add a song to My Favorites</source>
+        <translation>” to add a song to My Favorites</translation>
+    </message>
+    <message>
+        <source>No songs yet. Click “</source>
+        <translation>No songs yet. Click “</translation>
+    </message>
+    <message>
+        <source>” to add songs to the playlist</source>
+        <translation>” to add songs to the playlist</translation>
     </message>
 </context>
 <context>
