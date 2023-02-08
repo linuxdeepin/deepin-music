@@ -150,8 +150,12 @@ Rectangle {
         }
         onPositionChanged: {
             if (mousePressed) {
-                curSecs = Math.floor(mouse.x / width * totalSecs)
                 hoverX = mouseX
+                if (hoverX < 0)
+                    hoverX  =  0
+                if (hoverX > width)
+                    hoverX = width
+                curSecs = Math.floor(hoverX / width * totalSecs)
             }
         }
         onEntered: {
