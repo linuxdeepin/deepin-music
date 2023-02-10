@@ -41,115 +41,115 @@ Item {
         }
     }
     Component {
-                id: effectLineView;
-                Item {
-                    anchors.fill: parent
-                    EffectLine {
-                        id: around
-                        width: parent.width
-                        height: parent.height
-                        anchors.centerIn: parent
-                        Circular_img {
-                            id:circular_img
-                            anchors.centerIn: around
-                            background_width:around.width*1.8/3
-                            background_height:around.height*1.8/3
-                        }
-                    }
+        id: effectLineView;
+        Item {
+            anchors.fill: parent
+            EffectLine {
+                id: around
+                width: parent.width
+                height: parent.height
+                anchors.centerIn: parent
+                Circular_img {
+                    id:circular_img
+                    anchors.centerIn: around
+                    background_width:around.width*1.8/3
+                    background_height:around.height*1.8/3
                 }
             }
-        Component {
-                id: effectLightWaveView;
-                Item {
-                    anchors.fill: parent
+        }
+    }
+    Component {
+        id: effectLightWaveView;
+        Item {
+            anchors.fill: parent
 
-                    EffectLightWave {
-                        id: around
-                        width: parent.width
-                        height: parent.height
-                        anchors.centerIn: parent
-                        Circular_img {
-                            id:circular_img
-                            anchors.centerIn: around
-                            background_width:around.width*1.8/3
-                            background_height:around.height*1.8/3
-                        }
-                    }
+            EffectLightWave {
+                id: around
+                width: parent.width
+                height: parent.height
+                anchors.centerIn: parent
+                Circular_img {
+                    id:circular_img
+                    anchors.centerIn: around
+                    background_width:around.width*1.8/3
+                    background_height:around.height*1.8/3
                 }
             }
-        Component {
-            id: effectSunView;
-            Item {
-                anchors.fill: parent
-                EffectSun {
-                    id: around
-                    width: parent.width
-                    height: parent.height
-                    anchors.centerIn: parent
+        }
+    }
+    Component {
+        id: effectSunView;
+        Item {
+            anchors.fill: parent
+            EffectSun {
+                id: around
+                width: parent.width
+                height: parent.height
+                anchors.centerIn: parent
 
-                    Circular_img {
-                        id:circular_img
-                        anchors.centerIn: around
-                        background_width:around.width*1.8/3
-                        background_height:around.height*1.8/3
-                    }
+                Circular_img {
+                    id:circular_img
+                    anchors.centerIn: around
+                    background_width:around.width*1.8/3
+                    background_height:around.height*1.8/3
                 }
             }
         }
-        Component {
-            id: effectWaterWaveView;
-            Item {
-                anchors.fill: parent
-                EffectWaterWave {
-                    id: around
-                    width: parent.width
-                    height: parent.height
-                    anchors.centerIn: parent
-                    Circular_img {
-                        id:circular_img
-                        anchors.centerIn: around
-                        background_width:around.width*1.8/3
-                        background_height:around.height*1.8/3
-                    }
+    }
+    Component {
+        id: effectWaterWaveView;
+        Item {
+            anchors.fill: parent
+            EffectWaterWave {
+                id: around
+                width: parent.width
+                height: parent.height
+                anchors.centerIn: parent
+                Circular_img {
+                    id:circular_img
+                    anchors.centerIn: around
+                    background_width:around.width*1.8/3
+                    background_height:around.height*1.8/3
                 }
             }
         }
-        Component {
-            id: effectParticleView;
-            Item {
-                anchors.fill: parent
-                EffectParticle {
-                    id: around
-                    width: parent.width
-                    height: parent.height
-                    anchors.centerIn: parent
-                    Circular_img {
-                        id:circular_img
-                        anchors.centerIn: around
-                        background_width:around.width*1.8/3
-                        background_height:around.height*1.8/3
-                    }
+    }
+    Component {
+        id: effectParticleView;
+        Item {
+            anchors.fill: parent
+            EffectParticle {
+                id: around
+                width: parent.width
+                height: parent.height
+                anchors.centerIn: parent
+                Circular_img {
+                    id:circular_img
+                    anchors.centerIn: around
+                    background_width:around.width*1.8/3
+                    background_height:around.height*1.8/3
                 }
             }
         }
-        Component {
-            id: commView
-            Item {
-                id: commItem
-                anchors.fill: parent
-                Rectangle {
-                    id: around
-                    width: parent.width
-                    height: parent.height
-                    anchors.centerIn: parent
-                    color: "transparent"
-                    Circular_img {
-                        id:circular_img
-                        anchors.centerIn: around
-                        background_width:around.width*1.8/3
-                        background_height:around.height*1.8/3
-                    }
+    }
+    Component {
+        id: commView
+        Item {
+            id: commItem
+            anchors.fill: parent
+            Rectangle {
+                id: around
+                width: parent.width
+                height: parent.height
+                anchors.centerIn: parent
+                color: "transparent"
+                Circular_img {
+                    id:circular_img
+                    anchors.centerIn: around
+                    background_width:around.width*1.8/3
+                    background_height:around.height*1.8/3
                 }
             }
         }
+    }
 }

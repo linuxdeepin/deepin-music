@@ -38,9 +38,9 @@ ShaderEffect {
     signal sigPlaybackStatusChange(int playbackStatus)
     function playbackStatusChange(playbackStatus){
         if(playbackStatus === DmGlobal.Playing) {
-                timer1.start();
+            timer1.start();
         } else {
-                timer1.stop();
+            timer1.stop();
         }
     }
     Component.onCompleted: {

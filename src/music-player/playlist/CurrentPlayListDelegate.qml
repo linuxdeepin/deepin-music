@@ -48,7 +48,8 @@ ItemDelegate{
         }
         onPressed: {
             if (mouse.button ===  Qt.LeftButton) {
-                playlistView.forceActiveFocus();
+                playlistView.forceActiveFocus()
+                playlistView.currentIndex = index
                 var inMulitSelect = listmodel.get(index).inMulitSelect;
 
                 switch(mouse.modifiers){
