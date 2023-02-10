@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-import QtQuick 2.0
+import QtQuick 2.11
 import QtQuick.Layouts 1.11
 import QtQuick.Window 2.11
 import QtGraphicalEffects 1.0
@@ -15,16 +15,18 @@ DialogWindow {
     property string listHash: ""
     property string musicTitle: ""
     property bool removeMusic: true
-    width: 400;
+    width: 400
 //    color: Qt.rgba(247,247,247,0.80);
     modality: Qt.ApplicationModal
     icon: globalVariant.appIconName
-    ColumnLayout {
+    Column {
         width: parent.width
+        spacing: 10
+        bottomPadding: 10
         Label {
             id:deleteSongsLabel
-            Layout.preferredWidth: parent.width
-            Layout.alignment: Qt.AlignHCenter
+            anchors.horizontalCenter: parent.horizontalCenter
+            width: parent.width
             font: DTK.fontManager.t5
             wrapMode: Text.WordWrap
             horizontalAlignment: Qt.AlignHCenter
@@ -39,15 +41,12 @@ DialogWindow {
             }
         }
 
-        RowLayout {
-            Layout.alignment: Qt.AlignBottom | Qt.AlignHCenter
-            Layout.bottomMargin: 10
-            Layout.topMargin: 10
-            Layout.fillWidth: true
+        Row {
+            width: parent.width
+            spacing: 10
             WarningButton {
+                width: 185; height: 36
                 text: removeMusic ? qsTr("Remove") : qsTr("Delete")
-                Layout.preferredWidth: 185; Layout.preferredHeight: 36
-                Layout.alignment: Qt.AlignRight
                 onClicked: {
                     if(removeMusic){
                         if (listHash === "musicResult")
@@ -61,13 +60,12 @@ DialogWindow {
                 }
             }
             Button {
+                width: 185; height: 36
                 text: qsTr("Cancel")
-                Layout.preferredWidth: 185; Layout.preferredHeight: 36
                 onClicked: {
                     dialog.close();
                 }
             }
-            Item {Layout.fillWidth: true}
         }
     }
 }

@@ -32,6 +32,7 @@ Rectangle{
         source: bgImgPath
         fillMode: Image.PreserveAspectCrop
         clip: true
+        visible: false
         Rectangle {
             width: parent.width
             height: Window.height
@@ -277,7 +278,8 @@ Rectangle{
     }
 
     function switchShader() {
-        if(shaderView.currentItem >= 4) shaderView.currentItem = -1;
+        if(shaderView.currentItem >= 4)
+            shaderView.currentItem = -1;
         shaderView.currentItem += 1;
         shaderView.stackView.clear();
         shaderView.stackView.push(shaderView.taskMap[shaderView.currentItem]);

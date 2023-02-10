@@ -66,7 +66,7 @@ Rectangle {
     Rectangle {
         id: shadowRect
         width: parent.width
-        height: 5
+        height: 3
         anchors.bottom: parent.bottom
         anchors.bottomMargin: 10
         color: "transparent"

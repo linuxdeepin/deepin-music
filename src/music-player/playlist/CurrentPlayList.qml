@@ -176,7 +176,7 @@ FloatingPanel {
                 anchors.fill: parent
 
                 onEntered: {
-                    //console.log("onEntered.................")
+                    drag.accepted = true
                     for(var j = 0; j < drag.keys.length; j++) {
                         if (drag.keys[j] === "music-list/index-list") {
                             dragForSort = true
@@ -185,10 +185,9 @@ FloatingPanel {
                     }
                 }
                 onPositionChanged: {
-//                    console.log("onPositionChanged.................")
                     updateHoverIndex()
 
-                    /*if (drag.y < 20 && !playlistView.atYBeginning) {
+                    if (drag.y < 20 && !playlistView.atYBeginning) {
                         scrollUpTimer.start()
                     } else {
                         scrollUpTimer.stop()
@@ -198,13 +197,12 @@ FloatingPanel {
                         scrollDownTimer.start()
                     } else {
                         scrollDownTimer.stop()
-                    }*/
+                    }
                 }
                 onDropped: {
-//                    console.log("onDropped...................", dragForSort)
                     if (dragForSort) {
-//                        scrollDownTimer.stop()
-//                        scrollUpTimer.stop()
+                        scrollDownTimer.stop()
+                        scrollUpTimer.stop()
 
                         var hashList = []
                         for (var i = 0; i < playlistView.delegateModelGroup.length; i++){
@@ -235,13 +233,14 @@ FloatingPanel {
                     dragForSort = false
                 }
                 onExited: {
-                    //console.log("onEntered.................")
                     if (lastDragIndex >= 0)
                         listmodel.setProperty(lastDragIndex, "dragFlag", false)
-//                    scrollDownTimer.stop()
-//                    scrollUpTimer.stop()
+                    scrollDownTimer.stop()
+                    scrollUpTimer.stop()
                     dragForSort = false
+                    drag.accepted = false
                 }
+
                 function updateHoverIndex() {
                     hoverIndex = playlistView.indexAt(drag.x, drag.y + playlistView.contentY)
 
@@ -250,7 +249,6 @@ FloatingPanel {
                     if (hoverIndex < 0)
                         hoverIndex = -1
 
-//                    console.log("updateHoverIndex...................", hoverIndex, "    lastDragIndex:", lastDragIndex)
                     if (hoverIndex !== lastDragIndex) {
                         if (hoverIndex >= 0)
                             listmodel.setProperty(hoverIndex, "dragFlag", true)
@@ -268,12 +266,11 @@ FloatingPanel {
 
             Timer {
                 id: scrollDownTimer
-                interval: 10
+                interval: 40
                 repeat: true
                 running: false
 
                 onTriggered: {
-//                    console.log("scrollDownTimer.................", playlistView.atYEnd, playlistView.contentY)
                     if(!playlistView.atYEnd) {
                         playlistView.contentY += 10
                     }
@@ -281,7 +278,7 @@ FloatingPanel {
             }
             Timer {
                 id: scrollUpTimer
-                interval: 10
+                interval: 40
                 repeat: true
                 running: false
 
@@ -293,7 +290,6 @@ FloatingPanel {
             }
 
             onContentYChanged: {
-//                console.log("onContentYChanged.......", dropArea.dragForSort)
                 if (dropArea.dragForSort)
                     dropArea.updateHoverIndex()
             }
