@@ -27,23 +27,21 @@ Control {
     padding: 5
     contentItem: ColumnLayout {
         Label {
+            property Palette backgroundColor: Palette {
+                normal: Qt.rgba(0, 0, 0, 0.6)
+                normalDark: Qt.rgba(247, 247, 247, 1)
+            }
             visible: control.title
             text: control.title
             font: DTK.fontManager.t10
+            color: ColorSelector.backgroundColor
         }
         RowLayout {
             Label {
-//                property Palette backgroundColor: Palette {
-//                    normal: Qt.rgba(0, 0, 0, 1)
-//                    normalDark: Qt.rgba(247, 247, 247, 1)
-//                }
                 visible: control.description
                 Layout.fillWidth: true
                 text: control.description
                 font: DTK.fontManager.t7
-//                font.weight: Font.Medium
-//                color: ColorSelector.backgroundColor
-//                color: DTK.themeType === ApplicationHelper.DarkType ? Qt.rgba(247, 247, 247, 1) : Qt.rgba(0, 0, 0, 1)
                 elide: Text.ElideMiddle
             }
             Loader {
@@ -57,7 +55,7 @@ Control {
         implicitWidth: 66
         implicitHeight: 40
         color: Qt.rgba(0, 0, 0, 0.05)
-        radius: /*Style.control.radius*/ 8
+        radius: Style.control.radius
         corners: control.corners
     }
 }

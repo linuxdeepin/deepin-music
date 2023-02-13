@@ -16,11 +16,13 @@ DialogWindow {
     property string musicTitle: ""
     property bool removeMusic: true
     width: 400
-//    color: Qt.rgba(247,247,247,0.80);
+    height: deleteSongsLabel.height + 110
     modality: Qt.ApplicationModal
     icon: globalVariant.appIconName
+
     Column {
         width: parent.width
+        height: parent.height
         spacing: 10
         bottomPadding: 10
         Label {
