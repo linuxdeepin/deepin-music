@@ -27,8 +27,53 @@ ApplicationWindow {
     width: windowMiniWidth
     height: windowMiniHeight
     DWindow.enabled: true
+    DWindow.alphaBufferSize: 8
     flags: Qt.Window | Qt.WindowMinMaxButtonsHint | Qt.WindowCloseButtonHint | Qt.WindowTitleHint
     header: WindowTitlebar { id: musicTitle }
+    background: Rectangle {
+        anchors.fill: parent
+        color: "transparent"
+
+        Row {
+            anchors.fill: parent
+            StyledBehindWindowBlur {
+                id: leftBgArea
+                width: 220
+                height: parent.height
+                anchors.top: parent.top
+                control: rootWindow
+                //cornerRadius: 30
+                Rectangle {
+                    anchors.fill: parent
+//                    color: Qt.rgba(247, 247, 247, 0.5)
+                    color: DTK.themeType === ApplicationHelper.LightType ? "#ddf7f7f7"
+                                                                         : "#ee252525"
+                    border.color: DTK.themeType === ApplicationHelper.LightType ? "#eee7e7e7"
+                                                                                : "#ee252525"
+                    border.width: 1
+                }
+            }
+            Rectangle {
+                id: rightBgArea
+                width: parent.width - leftBgArea.width
+                height: 50
+                anchors.top: parent.top
+                color: Qt.rgba(0, 0, 0, 0.01)
+                BoxShadow {
+                    anchors.fill: rightBgArea
+                    shadowOffsetX: 0
+                    shadowOffsetY: 4
+                    shadowColor: Qt.rgba(0, 0, 0, 0.05)
+                    shadowBlur: 10
+                    cornerRadius: rightBgArea.radius
+                    spread: 0
+                    hollow: true
+                }
+            }
+        }
+    }
+
+
 
     Shortcuts {
         id: shortcuts

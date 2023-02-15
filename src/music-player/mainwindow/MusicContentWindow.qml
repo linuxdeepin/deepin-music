@@ -23,36 +23,7 @@ Rectangle {
 
     id: contentWindow
     color: Qt.rgba(0, 0, 0, 0)
-    Row { //左右分栏背景
-        width: parent.width
-        height: parent.height + 50
-        Rectangle {
-            id: leftBgArea
-            width: 220
-            height: parent.height
-            anchors.top: parent.top
-            border.color: Qt.rgba(0, 0, 0, 0.05)
-            border.width: 1
-            color: Qt.rgba(0, 0, 0, 0.02)
-        }
-        Rectangle {
-            id: rightBgArea
-            width: parent.width - leftBgArea.width
-            height: 50
-            anchors.top: parent.top
-            color: Qt.rgba(0, 0, 0, 0.01)
-            BoxShadow {
-                anchors.fill: rightBgArea
-                shadowOffsetX: 0
-                shadowOffsetY: 4
-                shadowColor: Qt.rgba(0, 0, 0, 0.05)
-                shadowBlur: 10
-                cornerRadius: rightBgArea.radius
-                spread: 0
-                hollow: true
-            }
-        }
-    }
+
 
     MusicBaselistview {
         id: musicBaselist
