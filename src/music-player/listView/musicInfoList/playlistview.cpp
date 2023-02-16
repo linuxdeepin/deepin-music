@@ -1431,8 +1431,8 @@ QPixmap PlayListView::dragItemsPixmap()
     qreal scale = devicePixelRatio();
     QModelIndexList modelIndexList = allSelectedIndexes();
 
-    int leftBorder = m_dragFlag ? 0 : DRAGICON_LEFTBORDER;
-    int topBorder = m_dragFlag ? 0 : DRAGICON_TOPBORDER;
+    int leftBorder = DRAGICON_LEFTBORDER;
+    int topBorder = DRAGICON_TOPBORDER;
     QFont font;
     font.setPixelSize(10);
     QFontMetrics fontMetrics(font);
