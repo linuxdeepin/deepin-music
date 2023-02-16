@@ -109,6 +109,7 @@ public slots:
     //void slotDelayAutoHide();
     // 快捷键响应
     void slotShortCutTriggered();
+    void slotCoverUpdate(const MediaMeta &meta);
 protected:
     virtual void resizeEvent(QResizeEvent *event) Q_DECL_OVERRIDE;
 private:

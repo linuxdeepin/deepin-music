@@ -382,6 +382,7 @@ void FooterWidget::initShortcut()
     connect(nextShortcut, &QShortcut::activated, this, &FooterWidget::slotShortCutTriggered);
     connect(previousShortcut, &QShortcut::activated, this, &FooterWidget::slotShortCutTriggered);
     connect(muteShortcut, &QShortcut::activated, this, &FooterWidget::slotShortCutTriggered);
+    connect(DataBaseService::getInstance(), &DataBaseService::signalCoverUpdate, this, &FooterWidget::slotCoverUpdate);
 }
 
 void FooterWidget::updateShortcut()
@@ -771,6 +772,23 @@ void FooterWidget::slotShortCutTriggered()
         bool mute = Player::getInstance()->getMuted();
         Player::getInstance()->setMuted(!mute);
         m_volSlider->flushVolumeIcon();
+    }
+}
+
+void FooterWidget::slotCoverUpdate(const MediaMeta &meta)
+{
+    MediaMeta curMeta = Player::getInstance()->getActiveMeta();
+    if (curMeta.hash != meta.hash)
+        return;
+
+    QString imagesDirPath = Global::cacheDir() + "/images/" + curMeta.hash + ".jpg";
+    QFileInfo file(imagesDirPath);
+    QIcon icon;
+    if (file.exists()) {
+        icon = QIcon(imagesDirPath);
+        m_btCover->setIcon(icon);
+    } else {
+        m_btCover->setIcon(QIcon::fromTheme("info_cover"));
     }
 }
 
