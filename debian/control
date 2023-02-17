@@ -30,7 +30,8 @@ Build-Depends:
  libdframeworkdbus-dev,
  libudisks2-qt5-dev,
  qtdeclarative5-dev,
- libdtkdeclarative-dev
+ libdtkdeclarative-dev,
+ libsdl2-dev
 Standards-Version: 3.9.8
 Homepage: http://www.deepin.org
 
