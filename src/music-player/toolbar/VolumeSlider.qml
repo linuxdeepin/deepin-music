@@ -12,7 +12,7 @@ FloatingPanel {
     property int volume: 0
     property bool isMute: false
 
-    id: root
+    id: control
     width: 60
     height: 250
     visible: false
