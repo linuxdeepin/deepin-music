@@ -36,21 +36,19 @@ ApplicationWindow {
 
         Row {
             anchors.fill: parent
-            StyledBehindWindowBlur {
+            BehindWindowBlur {
                 id: leftBgArea
                 width: 220
                 height: parent.height
                 anchors.top: parent.top
-                control: rootWindow
-                //cornerRadius: 30
+                blendColor: DTK.themeType === ApplicationHelper.LightType ? "#ddf7f7f7"
+                                                                          : "#ee252525"
                 Rectangle {
-                    anchors.fill: parent
-//                    color: Qt.rgba(247, 247, 247, 0.5)
-                    color: DTK.themeType === ApplicationHelper.LightType ? "#ddf7f7f7"
+                    width: 1
+                    height: parent.height
+                    anchors.right: parent.right
+                    color: DTK.themeType === ApplicationHelper.LightType ? "#eee7e7e7"
                                                                          : "#ee252525"
-                    border.color: DTK.themeType === ApplicationHelper.LightType ? "#eee7e7e7"
-                                                                                : "#ee252525"
-                    border.width: 1
                 }
             }
             Rectangle {

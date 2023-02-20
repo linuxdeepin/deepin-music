@@ -46,7 +46,7 @@ void VlcPlayer::init()
     if (m_qvinstance == nullptr) {
         m_qvinstance = new VlcInstance(VlcCommon::args(), nullptr);
         m_qvinstance->version();
-        m_qvplayer = new VlcMediaPlayer(m_qvinstance);
+        m_qvplayer = new SdlPlayer(m_qvinstance);
         m_qvplayer->equalizer()->setPreamplification(12);
         m_qvmedia = new VlcMedia();
 
@@ -201,6 +201,7 @@ void VlcPlayer::setMediaMeta(MediaMeta meta)
     m_activeMeta = meta;
     m_qvmedia->initMedia(meta.localPath, meta.mmType == DmGlobal::MimeTypeCDA ? false : true, m_qvinstance, meta.track);
     m_qvplayer->open(m_qvmedia);
+    m_qvplayer->setCurMeta(meta);
     emit metaChanged();
 }
 
