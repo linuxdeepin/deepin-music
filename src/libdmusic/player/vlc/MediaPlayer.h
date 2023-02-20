@@ -287,7 +287,7 @@ signals:
     */
     void stateChanged();
 
-private:
+protected:
     static void libvlc_callback(const libvlc_event_t *event,
                                 void *data);
 

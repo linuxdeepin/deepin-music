@@ -13,6 +13,8 @@
 #include <QTimer>
 #include <QPropertyAnimation>
 
+#include "vlc/sdlplayer.h"
+
 class VlcPlayer : public PlayerBase
 {
     Q_OBJECT
@@ -62,7 +64,7 @@ private:
 private:
     VlcInstance *m_qvinstance = nullptr;
     VlcMedia *m_qvmedia = nullptr;
-    VlcMediaPlayer *m_qvplayer = nullptr;
+    SdlPlayer *m_qvplayer = nullptr;
     CdaThread *m_pCdaThread = nullptr;
     int m_Vlcstate = -1; //休眠状态缓存(上一次休眠时的状态)
     int m_volume = 50.0;
