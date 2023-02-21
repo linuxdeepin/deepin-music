@@ -118,13 +118,13 @@ void DBOperate::slotImportMedias(const QString &importHash, QString playHash, co
                         m_importFailCount++;
                         importedCount++;
                     } else {
-                        mediaMeta.updateSearchIndex();
                         if (mediaMeta.album.isEmpty()) {
                             mediaMeta.album = tr("Unknown album");
                         }
                         if (mediaMeta.singer.isEmpty()) {
                             mediaMeta.singer = tr("Unknown artist");
                         }
+                        mediaMeta.updateSearchIndex();
                         // 导入数据库
                         addMediaMetaToDB(mediaMeta);
                         importedCount++;

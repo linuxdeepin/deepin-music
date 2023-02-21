@@ -89,7 +89,7 @@ QList<MediaMeta> DataBaseService::getMusicInfosBySortAndCount(int count)
                                  "filetype, track, offset, length, size, "
                                  "timestamp, invalid, search_id, cuepath, "
                                  "lyricPath, codec, py_title, py_artist, py_album "
-                                 "FROM musicNew ORDER BY title ASC LIMIT ") + QString::number(count);
+                                 "FROM musicNew ORDER BY py_title ASC LIMIT ") + QString::number(count);
         break;
     }
     case DataBaseService::SortBySingerASC: {
@@ -97,7 +97,7 @@ QList<MediaMeta> DataBaseService::getMusicInfosBySortAndCount(int count)
                                  "filetype, track, offset, length, size, "
                                  "timestamp, invalid, search_id, cuepath, "
                                  "lyricPath, codec, py_title, py_artist, py_album "
-                                 "FROM musicNew ORDER BY artist ASC LIMIT ") + QString::number(count);
+                                 "FROM musicNew ORDER BY py_artist ASC LIMIT ") + QString::number(count);
         break;
     }
     case DataBaseService::SortByAblumASC: {
@@ -105,7 +105,7 @@ QList<MediaMeta> DataBaseService::getMusicInfosBySortAndCount(int count)
                                  "filetype, track, offset, length, size, "
                                  "timestamp, invalid, search_id, cuepath, "
                                  "lyricPath, codec, py_title, py_artist, py_album "
-                                 "FROM musicNew ORDER BY album ASC LIMIT ") + QString::number(count);
+                                 "FROM musicNew ORDER BY py_album ASC LIMIT ") + QString::number(count);
         break;
     }
     case DataBaseService::SortByAddTimeDES: {
@@ -121,7 +121,7 @@ QList<MediaMeta> DataBaseService::getMusicInfosBySortAndCount(int count)
                                  "filetype, track, offset, length, size, "
                                  "timestamp, invalid, search_id, cuepath, "
                                  "lyricPath, codec, py_title, py_artist, py_album "
-                                 "FROM musicNew ORDER BY title DESC LIMIT ") + QString::number(count);
+                                 "FROM musicNew ORDER BY py_title DESC LIMIT ") + QString::number(count);
         break;
     }
     case DataBaseService::SortBySingerDES: {
@@ -129,7 +129,7 @@ QList<MediaMeta> DataBaseService::getMusicInfosBySortAndCount(int count)
                                  "filetype, track, offset, length, size, "
                                  "timestamp, invalid, search_id, cuepath, "
                                  "lyricPath, codec, py_title, py_artist, py_album "
-                                 "FROM musicNew ORDER BY artist DESC LIMIT ") + QString::number(count);
+                                 "FROM musicNew ORDER BY py_artist DESC LIMIT ") + QString::number(count);
         break;
     }
     case DataBaseService::SortByAblumDES: {
@@ -137,7 +137,7 @@ QList<MediaMeta> DataBaseService::getMusicInfosBySortAndCount(int count)
                                  "filetype, track, offset, length, size, "
                                  "timestamp, invalid, search_id, cuepath, "
                                  "lyricPath, codec, py_title, py_artist, py_album "
-                                 "FROM musicNew ORDER BY album DESC LIMIT ") + QString::number(count);
+                                 "FROM musicNew ORDER BY py_album DESC LIMIT ") + QString::number(count);
         break;
     }
     default:
