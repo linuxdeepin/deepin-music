@@ -240,11 +240,6 @@ void PlayListView::reloadAllSonglist()
     this->setDataBySortType(mediaMetas, sortType);
 }
 
-//void PlayListView::setCurrentItem(QStandardItem *item)
-//{
-//    setCurrentIndex(m_model->indexFromItem(item));
-//}
-
 void PlayListView::initAllSonglist(const QString &hash)
 {
     m_currentHash = hash;
@@ -476,12 +471,6 @@ void PlayListView::playListChange()
     setUpdatesEnabled(true);
     update();
 }
-
-//void PlayListView::setCurrentHash(QString hash)
-//{
-//    m_currentHash = hash;
-//}
-
 QString PlayListView::getCurrentHash()
 {
     return m_currentHash;
@@ -1428,7 +1417,7 @@ void PlayListView::contextMenuEvent(QContextMenuEvent *event)
 
 QPixmap PlayListView::dragItemsPixmap()
 {
-    qreal scale = devicePixelRatio();
+    qreal scale = devicePixelRatioF();
     QModelIndexList modelIndexList = allSelectedIndexes();
 
     int leftBorder = DRAGICON_LEFTBORDER;
@@ -1437,9 +1426,11 @@ QPixmap PlayListView::dragItemsPixmap()
     font.setPixelSize(10);
     QFontMetrics fontMetrics(font);
     int textSize = fontMetrics.width(QString("%1").arg(modelIndexList.size()));
-    if (textSize < fontMetrics.height()) textSize = fontMetrics.height();
-    int testRadius = textSize / 2 + DRAGICON_TEXTBORDERSIZE;
-    QRect pixRect(0, 0, DRAGICON_SIZE + leftBorder + testRadius, DRAGICON_SIZE + testRadius + topBorder + 10);
+    if (textSize < fontMetrics.height())
+        textSize = fontMetrics.height();
+    int textRadius = textSize / 2 + DRAGICON_TEXTBORDERSIZE;
+
+    QRect pixRect(0, 0, DRAGICON_SIZE * scale + leftBorder + textRadius, DRAGICON_SIZE * scale + textRadius + topBorder + 10);
     QPixmap pixmap(pixRect.size() * scale);
     pixmap.setDevicePixelRatio(scale);
     pixmap.fill(Qt::transparent);
@@ -1447,10 +1438,13 @@ QPixmap PlayListView::dragItemsPixmap()
     painter.setRenderHint(QPainter::Antialiasing, true);
     painter.setRenderHint(QPainter::SmoothPixmapTransform, true);
 
+    // painter.setPen(QColor("#ff0000"));
+    // painter.drawRect(pixRect);
+
     QMatrix matrix;
     matrix.rotate(180.0);
     painter.save();
-    painter.translate(leftBorder + DRAGICON_SIZE, topBorder + DRAGICON_SIZE);
+    painter.translate(leftBorder + DRAGICON_SIZE * scale, topBorder + DRAGICON_SIZE * scale);
     // 绘制图片
     for (int i = qMin(modelIndexList.size() - 1, 2); i >= 0; --i) {
         QStandardItem *newItem = m_model->itemFromIndex(modelIndexList.at(i));
@@ -1483,11 +1477,12 @@ QPixmap PlayListView::dragItemsPixmap()
     painter.save();
     painter.setPen(Qt::NoPen);
     painter.setBrush(Qt::red);
-    painter.drawEllipse(QRect(leftBorder + DRAGICON_SIZE - testRadius, topBorder + DRAGICON_SIZE - testRadius, testRadius * 2, testRadius * 2));
+    painter.drawEllipse(QRect(leftBorder + DRAGICON_SIZE * scale - textRadius, topBorder + DRAGICON_SIZE * scale - textRadius, textRadius * 2, textRadius * 2));
     painter.setPen(Qt::white);
     painter.setFont(font);
     painter.setBrush(Qt::black);
-    painter.drawText(QRect(leftBorder + DRAGICON_SIZE - textSize / 2, topBorder + DRAGICON_SIZE - textSize / 2, textSize, textSize), QString("%1").arg(modelIndexList.size()), QTextOption(Qt::AlignCenter));
+    painter.drawText(QRect(leftBorder + DRAGICON_SIZE * scale - textSize / 2, topBorder + DRAGICON_SIZE * scale - textSize / 2, textSize, textSize),
+                     QString("%1").arg(modelIndexList.size()), QTextOption(Qt::AlignCenter));
     painter.restore();
 
     return pixmap;
@@ -1502,13 +1497,6 @@ void PlayListView::startDrag(Qt::DropActions supportedActions)
     for (QModelIndex index : modelIndexList) {
         selection.append(QItemSelectionRange(index));
     }
-
-//    if (!modelIndexList.isEmpty())
-//        scrollTo(modelIndexList.first());
-
-//    setAutoScroll(false);
-//    DListView::startDrag(supportedActions);
-//    setAutoScroll(true);
 
     if (!selection.isEmpty()) {
         selectionModel()->select(selection, QItemSelectionModel::Select);
