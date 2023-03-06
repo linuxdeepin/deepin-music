@@ -59,7 +59,7 @@ depends:
     version: 1.7.0.1
     type: runtime
   - id: libsdl2
-    version: 2.0.16
+    version: 2.0.16.1
     type: runtime
 
 
