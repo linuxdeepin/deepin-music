@@ -217,14 +217,6 @@ bool MusicSongListView::getHeightChangeToMax()
 
 void MusicSongListView::addNewSongList()
 {
-// 编辑功能逻辑变更，代码废弃
-//    //close editor
-//    for (int i = 0; i < model->rowCount(); i++) {
-//        auto item = model->index(i, 0);
-//        if (this->isPersistentEditorOpen(item))
-//            closePersistentEditor(item);
-//    }
-
     qDebug() << "new item";
     QIcon icon = QIcon::fromTheme("music_famousballad");
 
@@ -640,7 +632,7 @@ void MusicSongListView::keyReleaseEvent(QKeyEvent *event)
 
 QPixmap MusicSongListView::dragItemPixmap()
 {
-    qreal scale = devicePixelRatio();
+    qreal scale = devicePixelRatioF();
     QModelIndexList modelIndexList = selectedIndexes();
     if (modelIndexList.size() != 1) return QPixmap();
     auto curSelectedItem = static_cast<DStandardItem *>(m_model->itemFromIndex(modelIndexList.first()));
