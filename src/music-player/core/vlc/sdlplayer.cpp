@@ -178,6 +178,7 @@ void SdlPlayer::play()
 {
     if (!_vlcMediaPlayer)
         return;
+
     VlcMediaPlayer::play();
     if (m_loadSdlLibrary) {
         if (!m_pCheckDataThread->isRunning())
@@ -194,8 +195,23 @@ void SdlPlayer::pause()
     if (m_loadSdlLibrary) {
         SDL_GetAudioStatus_function GetAudioStatus = (SDL_GetAudioStatus_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSdlSymbol("SDL_GetAudioStatus");
         SDL_PauseAudio_function PauseAudio = (SDL_PauseAudio_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSdlSymbol("SDL_PauseAudio");
+        SDL_GetQueuedAudioSize_function GetQueuedAudioSize = (SDL_GetQueuedAudioSize_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSdlSymbol("SDL_GetQueuedAudioSize");
+        SDL_ClearQueuedAudio_function ClearQueuedAudio = (SDL_ClearQueuedAudio_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSdlSymbol("SDL_ClearQueuedAudio");
+        SDL_LockAudio_function LockAudio = (SDL_LockAudio_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSdlSymbol("SDL_LockAudio");
+        SDL_UnlockAudio_function UnlockAudio = (SDL_UnlockAudio_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSdlSymbol("SDL_UnlockAudio");
+        SDL_Delay_function Delay = (SDL_Delay_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSdlSymbol("SDL_Delay");
+        SDL_CloseAudio_function CloseAudio = (SDL_CloseAudio_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSdlSymbol("SDL_CloseAudio");
         if (GetAudioStatus() != SDL_AUDIO_PAUSED && GetAudioStatus() != SDL_AUDIO_STOPPED)
             PauseAudio(1);
+
+        if (Global::checkBoardVendorType()) {
+            if (GetQueuedAudioSize(1) > 0)
+                ClearQueuedAudio(1);
+            LockAudio();
+            Delay(40);
+            UnlockAudio();
+            CloseAudio();
+        }
     }
 
     VlcMediaPlayer::pause();
@@ -205,6 +221,7 @@ void SdlPlayer::resume()
 {
     if (!_vlcMediaPlayer)
         return;
+
     VlcMediaPlayer::resume();
     if (m_loadSdlLibrary) {
         SDL_GetAudioStatus_function GetAudioStatus = (SDL_GetAudioStatus_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSdlSymbol("SDL_GetAudioStatus");

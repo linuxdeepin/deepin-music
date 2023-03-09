@@ -134,7 +134,12 @@ void VlcPlayer::pause()
         m_qvplayer->pause();
     }
 }
-
+void VlcPlayer::resume()
+{
+    if (m_qvplayer) {
+        m_qvplayer->resume();
+    }
+}
 PlayerBase::PlayState VlcPlayer::state()
 {
     init();

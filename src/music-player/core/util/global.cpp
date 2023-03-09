@@ -100,7 +100,11 @@ bool Global::checkBoardVendorType()
     process.waitForStarted();
     process.waitForFinished();
     QString result(process.readAll());
-    boardVendorFlag = result.contains("KLVV") || result.contains("KLVU") || result.contains("PGUV") || result.contains("PGUW") ;
+    boardVendorFlag = result.contains("KLVV", Qt::CaseInsensitive)
+            || result.contains("KLVU", Qt::CaseInsensitive)
+            || result.contains("PGUV", Qt::CaseInsensitive)
+            || result.contains("PGUW", Qt::CaseInsensitive)
+            || result.contains("L540", Qt::CaseInsensitive);
     process.close();
 
     initBoardVendorFlag = true;

@@ -229,6 +229,8 @@ void Player::playMeta(MediaMeta meta)
                 qDebug() << "seek last position:" << lastOffset;
                 m_basePlayer->setTime(lastOffset);
                 m_basePlayer->play();
+                if (Global::checkBoardVendorType())
+                    m_basePlayer->resume();
             });
         }
         // 开始后点击播放另一首哥播放保证错误
@@ -310,6 +312,8 @@ void Player::resume()
         m_fadeInAnimation->setDuration(sFadeInOutAnimationDuration);
         m_fadeInAnimation->start();
     }
+    if (Global::checkBoardVendorType())
+        m_basePlayer->resume();
 
     this->resetDBusMpris(m_ActiveMeta);
     m_mpris->setLoopStatus(Mpris::Playlist);
