@@ -383,5 +383,6 @@ ApplicationWindow {
         Presenter.importFinished.connect(onImportFinished)
         Presenter.quitRequested.connect(onQuitRequested)
         Presenter.raiseRequested.connect(onRaiseRequested)
+        globalVariant.devicePixelRatio = Screen.devicePixelRatio
     }
 }

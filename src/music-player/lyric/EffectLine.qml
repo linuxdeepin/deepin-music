@@ -7,7 +7,7 @@ import audio.image 1.0
 import "effectpublic"
 import QtQml.Models 2.3
 
-    CusShaderToy {
+CusShaderToy {
     id: r
 
     //step 6: around

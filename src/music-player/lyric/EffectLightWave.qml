@@ -67,7 +67,7 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord )
     float beamWidth = (0.7+0.5*cos(uv.x*10.0*tau*0.15*clamp(floor(5.0 + 10.0*cos(iTime)), 0.0, 10.0))) * abs(1.0 / (30.0 * uv.y));
     vec3 horBeam = vec3(beamWidth);
     vec3 col = mix(iColor, (vec3(( horBeam) * horColour)), beamWidth);
-    fragColor = removeRing(vec4(col, 1.), fragCoord, 0.5);
+    fragColor = removeRing(vec4(col, 0.8), fragCoord, 0.45);
 }
 "
     iChannel0: View_data {
