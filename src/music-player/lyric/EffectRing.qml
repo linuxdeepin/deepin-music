@@ -6,7 +6,7 @@ import QtQuick 2.0
 import audio.image 1.0
 import "effectpublic"
 
-    CusShaderToy {
+CusShaderToy {
     id: r
 
     //step 6: around

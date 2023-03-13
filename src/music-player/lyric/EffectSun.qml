@@ -89,7 +89,7 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord )
     float m = m1*m1*m2 * ((s1*s2*s3) * (1.-l)) * sh;
 
     vec3 col = mix(iColor, (0.5 + 0.5*cos(iTime+uv.xyx*3.+vec3(0,2,4))), m*2.);
-    vec4 t = removeRing(vec4(col, 1.), fragCoord, 0.5, 0.4);
+    vec4 t = removeRing(vec4(col, 1.), fragCoord, 0.4, 0.3);
     fragColor = removeRing(t, fragCoord, 0.5, 0.2);
 }
 "

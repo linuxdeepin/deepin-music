@@ -9,6 +9,7 @@
 #include <QProcessEnvironment>
 #include <QLibraryInfo>
 #include <QDir>
+#include <QDebug>
 
 #include <DStandardPaths>
 
@@ -138,6 +139,7 @@ void DmGlobal::initPlaybackEngineType()
             break;
         }
     }
+    qDebug() << "initPlaybackEngineType: " << engineType;
 }
 
 void DmGlobal::setPlaybackEngineType(int type)
