@@ -223,6 +223,10 @@ void Player::playMeta(MediaMeta meta)
 
         //延迟设置进度
         if (INT_LAST_PROGRESS_FLAG && m_ActiveMeta.hash == meta.hash) {
+            //这里静音似乎没有用处，此时sinkInput还未初始化完成
+            QTimer::singleShot(100, this, [ = ]() {
+                setDbusMuted();
+            });
             m_basePlayer->pause();
             qint64 lastOffset = m_ActiveMeta.offset;
             QTimer::singleShot(150, this, [ = ]() {//为了记录进度条生效，在加载的时候让音乐播放150ms
@@ -231,17 +235,32 @@ void Player::playMeta(MediaMeta meta)
                 m_basePlayer->play();
                 if (Global::checkBoardVendorType())
                     m_basePlayer->resume();
+
+                QTimer *muteTimer = new QTimer(this);
+                muteTimer->setInterval(200);
+                connect(muteTimer, &QTimer::timeout, this, [=](){
+                    //  对于已经静音无法恢复的情况，在此通过dbus恢复
+                    bool bvalid = isValidDbusMute();
+                    if (bvalid) {
+                        QDBusInterface ainterface("com.deepin.daemon.Audio", m_sinkInputPath,
+                                                  "com.deepin.daemon.Audio.SinkInput",
+                                                  QDBusConnection::sessionBus());
+                        if (!ainterface.isValid())
+                            return ;
+
+                        QVariant mute = ainterface.property("Mute");
+                        if (mute.toBool()) {
+                            ainterface.call(QLatin1String("SetMute"), false);
+                        }
+                        muteTimer->stop();
+                        muteTimer->deleteLater();
+                    }
+                });
+                muteTimer->start();
             });
         }
         // 开始后点击播放另一首哥播放保证错误
         INT_LAST_PROGRESS_FLAG = 0;
-        /*************************
-         * mute to dbus
-         * ***********************/
-
-        QTimer::singleShot(100, this, [ = ]() {
-            setDbusMuted();
-        });
 
         DRecentData data;
         data.appName = Global::getAppName();
@@ -1063,7 +1082,8 @@ void Player::readSinkInputPath()
         QVariant nameV = DBusUtils::readDBusProperty("com.deepin.daemon.Audio", curPath.path(),
                                                      "com.deepin.daemon.Audio.SinkInput", "Icon");
 
-        if (!nameV.isValid() || nameV.toString() != "deepin-music") continue;
+        if (!nameV.isValid() || nameV.toString() != "deepin-music")
+            continue;
 
         m_sinkInputPath = curPath.path();
         break;
