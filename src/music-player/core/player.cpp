@@ -253,6 +253,7 @@ void Player::playMeta(MediaMeta meta)
                             ainterface.call(QLatin1String("SetMute"), false);
                         }
                         muteTimer->stop();
+                        muteTimer->deleteLater();
                     }
                 });
                 muteTimer->start();
@@ -260,9 +261,7 @@ void Player::playMeta(MediaMeta meta)
         }
         // 开始后点击播放另一首哥播放保证错误
         INT_LAST_PROGRESS_FLAG = 0;
-        /*************************
-         * mute to dbus
-         * ***********************/
+        
         DRecentData data;
         data.appName = Global::getAppName();
         data.appExec = "deepin-music";
