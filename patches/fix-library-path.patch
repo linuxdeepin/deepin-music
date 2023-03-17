@@ -1,8 +1,8 @@
 diff --git a/src/libdmusic/core/dynamiclibraries.cpp b/src/libdmusic/core/dynamiclibraries.cpp
-index bb39559b..a9cedbc0 100644
+index 3549b85f..20fc396b 100644
 --- a/src/libdmusic/core/dynamiclibraries.cpp
 +++ b/src/libdmusic/core/dynamiclibraries.cpp
-@@ -24,6 +24,7 @@
+@@ -8,6 +8,7 @@
  #include <QLibrary>
  #include <QLibraryInfo>
  #include <QDebug>
@@ -10,7 +10,7 @@ index bb39559b..a9cedbc0 100644
  
  #include "global.h"
  
-@@ -149,15 +150,29 @@ bool DynamicLibraries::loadLibraries()
+@@ -133,15 +134,29 @@ bool DynamicLibraries::loadLibraries()
  QString DynamicLibraries::libPath(const QString &strlib)
  {
      QDir  dir;
@@ -51,18 +51,10 @@ index bb39559b..a9cedbc0 100644
 +    return t_libPath;
  }
 diff --git a/src/libdmusic/global.cpp b/src/libdmusic/global.cpp
-index a1ecdc57..40aa126a 100644
+index 67eda21d..25f1d189 100644
 --- a/src/libdmusic/global.cpp
 +++ b/src/libdmusic/global.cpp
-@@ -20,6 +20,7 @@
- #include <QProcessEnvironment>
- #include <QLibraryInfo>
- #include <QDir>
-+#include <QDebug>
- 
- #include <DStandardPaths>
- 
-@@ -138,14 +139,35 @@ bool DmGlobal::isWaylandMode()
+@@ -128,14 +128,35 @@ bool DmGlobal::isWaylandMode()
  void DmGlobal::initPlaybackEngineType()
  {
      engineType = 0;
