@@ -380,7 +380,14 @@ int SdlPlayer::libvlc_audio_setup_cb(void **data, char *format, unsigned *rate, 
     desiredAS.format = format_from_vlc_to_SDL(format);
     desiredAS.channels = static_cast<uint8_t>(sdlMediaPlayer->_channels);
     desiredAS.silence = 0;
-    desiredAS.samples = FFMAX(AUDIO_MIN_BUFFER_SIZE, 2 << Log2(desiredAS.freq / AUDIO_MAX_CALLBACKS_PER_SEC));
+    if (Global::checkBoardVendorType()) {
+        // Some models with lower performance experience very sluggish playback
+        // when the CPU usage exceeds 100%.
+        // Therefore, reduce the number of callbacks and take more samples at once
+        desiredAS.samples = FFMAX(AUDIO_MIN_BUFFER_SIZE, 2 << Log2(desiredAS.freq / 20));
+    } else {
+        desiredAS.samples = FFMAX(AUDIO_MIN_BUFFER_SIZE, 2 << Log2(desiredAS.freq / AUDIO_MAX_CALLBACKS_PER_SEC));
+    }
     //desiredAS.size = AUDIO_MIN_BUFFER_SIZE; let sdl adapt size  itself
     desiredAS.callback = SDL_audio_cbk;
     desiredAS.userdata = sdlMediaPlayer;
@@ -462,6 +469,7 @@ void SdlPlayer::SDL_audio_cbk(void *userdata, uint8_t *stream, int len)
         return ;
     }
 
+    //qDebug() << "length: " << len << "      size: " << sdlMediaPlayer->_data.size();
     if (sdlMediaPlayer->_data.size() >= len) {
         QMutexLocker locker(&vlc_mutex);
         QByteArray d = sdlMediaPlayer->_data.mid(0, len);
