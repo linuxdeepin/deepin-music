@@ -136,6 +136,8 @@ private:
 
     void resetVolume();
 
+    static void switchToDefaultSink();
+
 public:
     unsigned int _rate, _channels, _sampleRate;
 
@@ -150,6 +152,8 @@ private:
     bool m_mute = false;
 
     CheckDataZeroThread *m_pCheckDataThread = nullptr;
+
+    static int  switchOnceFlag;
 };
 
 #endif // SDLPLAYER_H_

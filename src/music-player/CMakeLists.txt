@@ -23,6 +23,19 @@ set(CMAKE_AUTOUIC ON)
 
 ADD_DEFINITIONS(-DENABLE_ACCESSIBILITY=0)
 
+message("---- current cpu arch: ${CMAKE_HOST_SYSTEM_PROCESSOR}")
+if(CMAKE_HOST_SYSTEM_PROCESSOR MATCHES "x86_64")
+    include_directories(/usr/lib/x86_64-linux-gnu/glib-2.0/include)
+elseif(CMAKE_HOST_SYSTEM_PROCESSOR MATCHES "aarch64")
+    include_directories(/usr/lib/aarch64-linux-gnu/glib-2.0/include)
+else()
+    include_directories(/usr/lib/mips64el-linux-gnu/glib-2.0/include)
+endif()
+
+pkg_check_modules(glib REQUIRED glib-2.0)
+include_directories(${glib_INCLUDEDIR}/glib-2.0)
+include_directories(${glib_INCLUDEDIR}/glib-2.0/glib)
+
 #include_directories(/usr/include/libdtk-5.2.0/DWidget)
 #include_directories(/usr/include/libdtk-5.2.0/DCore)
 include_directories(/usr/include/vlc)
@@ -143,7 +156,7 @@ qt5_use_modules(${CMD_NAME} ${QtModule})
 
 set(TARGET_LIBS Qt5::Widgets Qt5::Core Qt5::Gui Qt5::DBus Qt5::Sql Qt5::Svg Qt5::Xml
      PkgConfig::AV PkgConfig::Dtk PkgConfig::qgsettings PkgConfig::udisks2 icui18n
-    PkgConfig::MPRIS PkgConfig::DBusextended pthread dmusic )
+    PkgConfig::MPRIS PkgConfig::DBusextended pthread dmusic pulse glib-2.0 pulse-mainloop-glib)
 LINK_DIRECTORIES(${CMAKE_BINARY_DIR}/src/libdmusic/)
 
 

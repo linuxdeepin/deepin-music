@@ -21,12 +21,24 @@ extern "C" {
 #include <QTimer>
 #include <QDBusObjectPath>
 #include <QDBusInterface>
+#include <QVariant>
 
 #include "global.h"
 #include "vlcdynamicinstance.h"
 #include "checkdatazerothread.h"
 #include "Media.h"
 #include "util/dbusutils.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif // __cplusplus
+#include <pulse/introspect.h>
+#include <pulse/glib-mainloop.h>
+#include <pulse/error.h>
+#include <gmain.h>
+#ifdef __cplusplus
+}
+#endif // __cplusplus
 
 #define PLAYBACK_STATUS_INIT        0
 #define PLAYBACK_STATUS_CHANGING    1
@@ -43,6 +55,10 @@ extern "C" {
 #define SDL_AUDIO_ERR_MSG "Error writing to datastream"
 int g_playbackStatus = 0;
 static QMutex vlc_mutex;
+
+static pa_context *context = nullptr;
+static pa_mainloop_api *api = nullptr;
+//static pa_glib_mainloop *mainloop = nullptr;
 
 typedef SDL_AudioStatus(*SDL_GetAudioStatus_function)();
 typedef int (*SDL_Init_function)(Uint32 flags);
@@ -100,32 +116,43 @@ void SDL_LogOutputFunction_Err_Write(void *userdata, int category, SDL_LogPriori
     }
 }
 
+int SdlPlayer::switchOnceFlag = -1;
+
 SdlPlayer::SdlPlayer(VlcInstance *instance)
     : VlcMediaPlayer(instance), m_loadSdlLibrary(false)
 {
-//    if (Global::checkBoardVendorType()) {
-        m_loadSdlLibrary = VlcDynamicInstance::VlcFunctionInstance()->loadSdlLibrary();
-        if (m_loadSdlLibrary) {
-            SDL_Init_function Init = (SDL_Init_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSdlSymbol("SDL_GetAudioStatus");
-            vlc_audio_set_callbacks_function vlc_audio_set_callbacks = (vlc_audio_set_callbacks_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("libvlc_audio_set_callbacks");
-            vlc_audio_set_format_callbacks_function vlc_audio_set_format_callbacks = (vlc_audio_set_format_callbacks_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("libvlc_audio_set_format_callbacks");
-            SDL_LogSetPriority_function LogSetPriority = (SDL_LogSetPriority_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSdlSymbol("SDL_LogSetPriority");
-            SDL_LogSetOutputFunction_function LogSetOutputFunction = (SDL_LogSetOutputFunction_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSdlSymbol("SDL_LogSetOutputFunction");
-            Init(SDL_INIT_AUDIO);
-            vlc_audio_set_callbacks(_vlcMediaPlayer, libvlc_audio_play_cb, libvlc_audio_pause_cb, libvlc_audio_resume_cb, libvlc_audio_flush_cb, nullptr, this);
-            vlc_audio_set_format_callbacks(_vlcMediaPlayer, libvlc_audio_setup_cb, nullptr);
+    //if (Global::checkBoardVendorType()) {
+    m_loadSdlLibrary = VlcDynamicInstance::VlcFunctionInstance()->loadSdlLibrary();
+    if (m_loadSdlLibrary) {
+        SDL_Init_function Init = (SDL_Init_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSdlSymbol("SDL_GetAudioStatus");
+        vlc_audio_set_callbacks_function vlc_audio_set_callbacks = (vlc_audio_set_callbacks_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("libvlc_audio_set_callbacks");
+        vlc_audio_set_format_callbacks_function vlc_audio_set_format_callbacks = (vlc_audio_set_format_callbacks_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("libvlc_audio_set_format_callbacks");
+        SDL_LogSetPriority_function LogSetPriority = (SDL_LogSetPriority_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSdlSymbol("SDL_LogSetPriority");
+        SDL_LogSetOutputFunction_function LogSetOutputFunction = (SDL_LogSetOutputFunction_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSdlSymbol("SDL_LogSetOutputFunction");
+        Init(SDL_INIT_AUDIO);
+        vlc_audio_set_callbacks(_vlcMediaPlayer, libvlc_audio_play_cb, libvlc_audio_pause_cb, libvlc_audio_resume_cb, libvlc_audio_flush_cb, nullptr, this);
+        vlc_audio_set_format_callbacks(_vlcMediaPlayer, libvlc_audio_setup_cb, nullptr);
 
-            //设置日志回调等级
-            LogSetPriority(SDL_LOG_CATEGORY_AUDIO, SDL_LOG_PRIORITY_ERROR);
-            //注册SDL日志回调，捕获SDL输出的错误日志
-            LogSetOutputFunction(SDL_LogOutputFunction_Err_Write, this);
+        //设置日志回调等级
+        LogSetPriority(SDL_LOG_CATEGORY_AUDIO, SDL_LOG_PRIORITY_ERROR);
+        //注册SDL日志回调，捕获SDL输出的错误日志
+        LogSetOutputFunction(SDL_LogOutputFunction_Err_Write, this);
 
-            g_playbackStatus = PLAYBACK_STATUS_INIT;
-            m_pCheckDataThread = new CheckDataZeroThread(this);
-            connect(m_pCheckDataThread, &CheckDataZeroThread::sigPlayNextSong, this, &SdlPlayer::checkDataZero, Qt::QueuedConnection);
-            connect(m_pCheckDataThread, &CheckDataZeroThread::sigExtraTime, this, &VlcMediaPlayer::timeChanged, Qt::QueuedConnection);
-        }
-//    }
+        g_playbackStatus = PLAYBACK_STATUS_INIT;
+        m_pCheckDataThread = new CheckDataZeroThread(this);
+        connect(m_pCheckDataThread, &CheckDataZeroThread::sigPlayNextSong, this, &SdlPlayer::checkDataZero, Qt::QueuedConnection);
+        connect(m_pCheckDataThread, &CheckDataZeroThread::sigExtraTime, this, &VlcMediaPlayer::timeChanged, Qt::QueuedConnection);
+    }
+    //}
+
+    pa_glib_mainloop *m = pa_glib_mainloop_new(g_main_context_default());
+    api = pa_glib_mainloop_get_api(m);
+    pa_proplist *proplist = pa_proplist_new();
+    context = pa_context_new_with_proplist(api, nullptr, proplist);
+    pa_proplist_free(proplist);
+    //connect to pulse
+    if (pa_context_connect(context, nullptr, PA_CONTEXT_NOFAIL, nullptr) < 0)
+        qDebug() << __FUNCTION__ << "pa_context_connect: connect to pa failed";
 }
 
 SdlPlayer::~SdlPlayer()
@@ -136,6 +163,14 @@ SdlPlayer::~SdlPlayer()
         m_pCheckDataThread->quitThread();
         while (m_pCheckDataThread->isRunning()) {}
     }
+
+    //disconnect
+    if (context) {
+        pa_context_disconnect(context);
+        pa_context_ref(context);
+    }
+    //free mainloop
+    //pa_glib_mainloop_free(mainloop);
 }
 
 void SdlPlayer::open(VlcMedia *media)
@@ -184,6 +219,7 @@ void SdlPlayer::play()
         if (!m_pCheckDataThread->isRunning())
             m_pCheckDataThread->start();
     }
+    switchOnceFlag = -1;
 }
 
 void SdlPlayer::pause()
@@ -468,6 +504,7 @@ void SdlPlayer::SDL_audio_cbk(void *userdata, uint8_t *stream, int len)
 
         return ;
     }
+    switchToDefaultSink();
 
     //qDebug() << "length: " << len << "      size: " << sdlMediaPlayer->_data.size();
     if (sdlMediaPlayer->_data.size() >= len) {
@@ -534,4 +571,75 @@ void SdlPlayer::resetVolume()
     if (!qFuzzyCompare(volumeV.toDouble(), 1.0)) ainterface.call(QLatin1String("SetVolume"), 1.0, false);
 
     m_sinkInputPath.clear();
+}
+
+void SdlPlayer::switchToDefaultSink()
+{
+    if (!switchOnceFlag)
+        return;
+
+    QVariant v = DBusUtils::readDBusProperty("com.deepin.daemon.Audio", "/com/deepin/daemon/Audio",
+                                             "com.deepin.daemon.Audio", "SinkInputs");
+
+    if (!v.isValid())
+        return;
+
+    QList<QDBusObjectPath> allSinkInputsList = v.value<QList<QDBusObjectPath>>();
+
+    int inputIndex = -1; //当前音乐的索引值
+    int curSinkIndex = -1;
+    for (auto curPath : allSinkInputsList) {
+        QVariant nameV = DBusUtils::readDBusProperty("com.deepin.daemon.Audio", curPath.path(),
+                                                     "com.deepin.daemon.Audio.SinkInput", "Name");
+
+        if (!nameV.isValid() || nameV.toString() != "Deepin Music")
+            continue;
+        QString path =  curPath.path();
+        int indx = path.lastIndexOf("/");
+        path = path.mid(indx + 1, path.size() - indx); //最后一个'/'，然后移出Sink关键字
+        if (path.size() > 9) {
+            inputIndex = path.remove(0, 9).toInt();
+            //break;
+        } else
+            return;
+
+        QVariant sinkV = DBusUtils::readDBusProperty("com.deepin.daemon.Audio", curPath.path(),
+                                                     "com.deepin.daemon.Audio.SinkInput", "SinkIndex");
+        if (!sinkV.isValid())
+            continue;
+        curSinkIndex = sinkV.toInt();
+    }
+
+    if (inputIndex == -1)
+        return;
+
+    //获取默认输出设备
+    QVariant varsink = DBusUtils::readDBusProperty("com.deepin.daemon.Audio", "/com/deepin/daemon/Audio",
+                                                   "com.deepin.daemon.Audio", "DefaultSink");
+    if (!varsink.isValid())
+        return;
+    QString sinkpath = varsink.value<QDBusObjectPath >().path();
+    int sinkindex = sinkpath.lastIndexOf("/");
+    sinkpath = sinkpath.mid(sinkindex + 1, sinkpath.size() - sinkindex);//最后一个'/'
+    if (sinkpath.size() > 4) {
+        sinkindex = sinkpath.remove(0, 4).toInt();
+    } else
+        return;
+
+    qDebug() <<"default sink: " << sinkindex << "\tcurrent sink: " << curSinkIndex << "\tsink input index: " << inputIndex;
+
+    if (curSinkIndex == sinkindex) {
+        switchOnceFlag = 0;
+        return;
+    }
+
+    pa_operation *o;
+    o = pa_context_move_sink_input_by_index(context, inputIndex, sinkindex, nullptr, nullptr);
+    char buf[256] = {0};
+    snprintf(buf, sizeof(buf), "%s: %s", "move index: ", pa_strerror(pa_context_errno(context)));
+    qDebug() << __FUNCTION__ << "pa_context_move_sink_input_by_index:" << QString::fromUtf8(buf);
+    if (o)
+        pa_operation_unref(o);
+
+    switchOnceFlag = 0;
 }
