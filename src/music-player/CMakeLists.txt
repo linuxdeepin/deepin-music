@@ -23,14 +23,14 @@ set(CMAKE_AUTOUIC ON)
 
 ADD_DEFINITIONS(-DENABLE_ACCESSIBILITY=0)
 
-message("---- current cpu arch: ${CMAKE_HOST_SYSTEM_PROCESSOR}")
-if(CMAKE_HOST_SYSTEM_PROCESSOR MATCHES "x86_64")
-    include_directories(/usr/lib/x86_64-linux-gnu/glib-2.0/include)
-elseif(CMAKE_HOST_SYSTEM_PROCESSOR MATCHES "aarch64")
-    include_directories(/usr/lib/aarch64-linux-gnu/glib-2.0/include)
-else()
-    include_directories(/usr/lib/mips64el-linux-gnu/glib-2.0/include)
-endif()
+#message("---- current cpu arch: ${CMAKE_HOST_SYSTEM_PROCESSOR}")
+#if(CMAKE_HOST_SYSTEM_PROCESSOR MATCHES "x86_64")
+#    include_directories(/usr/lib/x86_64-linux-gnu/glib-2.0/include)
+#elseif(CMAKE_HOST_SYSTEM_PROCESSOR MATCHES "aarch64")
+#    include_directories(/usr/lib/aarch64-linux-gnu/glib-2.0/include)
+#else()
+#    include_directories(/usr/lib/mips64el-linux-gnu/glib-2.0/include)
+#endif()
 
 pkg_check_modules(glib REQUIRED glib-2.0)
 include_directories(${glib_INCLUDEDIR}/glib-2.0)
@@ -105,6 +105,7 @@ pkg_check_modules(MPRIS REQUIRED IMPORTED_TARGET mpris-qt5)
 pkg_check_modules(DBusextended REQUIRED IMPORTED_TARGET dbusextended-qt5)
 pkg_check_modules(VLC REQUIRED IMPORTED_TARGET vlc-plugin)
 pkg_check_modules(qgsettings REQUIRED IMPORTED_TARGET gsettings-qt)
+pkg_check_modules(glib REQUIRED IMPORTED_TARGET glib-2.0)
 
 #pkg_check_modules(AV REQUIRED IMPORTED_TARGET libavutil libavcodec
 #    libavformat libcue taglib)
@@ -156,7 +157,7 @@ qt5_use_modules(${CMD_NAME} ${QtModule})
 
 set(TARGET_LIBS Qt5::Widgets Qt5::Core Qt5::Gui Qt5::DBus Qt5::Sql Qt5::Svg Qt5::Xml
      PkgConfig::AV PkgConfig::Dtk PkgConfig::qgsettings PkgConfig::udisks2 icui18n
-    PkgConfig::MPRIS PkgConfig::DBusextended pthread dmusic pulse glib-2.0 pulse-mainloop-glib)
+    PkgConfig::MPRIS PkgConfig::DBusextended pthread dmusic pulse PkgConfig::glib pulse-mainloop-glib)
 LINK_DIRECTORIES(${CMAKE_BINARY_DIR}/src/libdmusic/)
 
 
