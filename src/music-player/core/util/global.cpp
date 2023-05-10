@@ -104,8 +104,9 @@ bool Global::checkBoardVendorType()
             || result.contains("KLVU", Qt::CaseInsensitive)
             || result.contains("PGUV", Qt::CaseInsensitive)
             || result.contains("PGUW", Qt::CaseInsensitive)
-            || result.contains("L540", Qt::CaseInsensitive);
-    process.close();
+            || result.contains("L540", Qt::CaseInsensitive)
+            || result.contains("W585", Qt::CaseInsensitive);
+            process.close();
 
     initBoardVendorFlag = true;
     return boardVendorFlag;
