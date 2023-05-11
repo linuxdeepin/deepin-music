@@ -32,6 +32,11 @@ Settings.SettingsDialog {
                 Settings.SettingsGroup {
                     key: "Play"
                     name: qsTr("Play")
+                    background: Settings.ContentBackground {
+                        //border.color: "red"
+                        color: palette.base
+                        //radius: 8
+                    }
                     Settings.SettingsOption {
                         key: "autoPlay"
                         name: qsTr("Autoplay")
@@ -71,6 +76,9 @@ Settings.SettingsDialog {
                 Settings.SettingsGroup {
                     key: "Close Main Window"
                     name: qsTr("Close Main Window")
+                    background: Settings.ContentBackground {
+                        color: palette.base
+                    }
                     Settings.SettingsOption {
                         id: closeAct
                         key: "closeAction"
@@ -127,6 +135,9 @@ Settings.SettingsDialog {
         Settings.SettingsGroup {
             key: "Shortcuts"
             name: qsTr("Shortcuts")
+            background: Settings.ContentBackground {
+                color: palette.base
+            }
             Settings.SettingsOption {
                 property int idd: 0
                 property string oldValue: Presenter.valueFromSettings("shortcuts.all.play_pause")
