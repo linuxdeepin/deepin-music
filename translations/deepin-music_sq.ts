@@ -1,23 +1,21 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS>
-<TS version="2.1" language="sq" sourcelanguage="en_US">
+<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="sq" sourcelanguage="en_US">
 <context>
     <name>AlbumDefaultPage</name>
     <message>
         <source>Add Songs</source>
-        <translation type="unfinished"></translation>
+        <translation>Shtoni Këngë</translation>
     </message>
     <message>
         <source>Open Folders</source>
-        <translation type="unfinished"></translation>
+        <translation>Hap Dosje</translation>
     </message>
     <message>
         <source>Drag music files here or</source>
-        <translation type="unfinished"></translation>
+        <translation>Tërhiqni këtu kartela muzikore, ose</translation>
     </message>
     <message>
         <source>scan the Music directory</source>
-        <translation type="unfinished"></translation>
+        <translation>kontrolloni te drejtoria Muzikë</translation>
     </message>
 </context>
 <context>
@@ -50,22 +48,22 @@
     </message>
     <message>
         <source>Tracks</source>
-        <translation type="unfinished"></translation>
+        <translation>Pjesë</translation>
     </message>
     <message>
         <source>Date added</source>
-        <translation type="unfinished"></translation>
+        <translation>Datë shtimi</translation>
     </message>
 </context>
 <context>
     <name>AlbumMoreMenu</name>
     <message>
         <source>View details</source>
-        <translation type="unfinished"></translation>
+        <translation>Shihni hollësi</translation>
     </message>
     <message>
         <source>Play all</source>
-        <translation type="unfinished"></translation>
+        <translation>Luaji krejt</translation>
     </message>
     <message>
         <source>Add to</source>
@@ -124,38 +122,38 @@
     <name>AllMusicDefaultPage</name>
     <message>
         <source>Add Songs</source>
-        <translation type="unfinished"></translation>
+        <translation>Shtoni Këngë</translation>
     </message>
     <message>
         <source>Open Folders</source>
-        <translation type="unfinished"></translation>
+        <translation>Hap Dosje</translation>
     </message>
     <message>
         <source>Drag music files here or</source>
-        <translation type="unfinished"></translation>
+        <translation>Tërhiqni këtu kartela muzikore, ose</translation>
     </message>
     <message>
         <source>Your favorite songs will be displayed here.</source>
-        <translation type="unfinished"></translation>
+        <translation>Këngët tuaja të parapëlqyera do të shfaqen këtu.</translation>
     </message>
     <message>
         <source>Click“  ♥  ”to add a song to My Favorites</source>
-        <translation type="unfinished"></translation>
+        <translation>Klikoni mbi “  ♥  ” që të shtoni një këngë te Të parapëlqyerat e Mia</translation>
     </message>
     <message>
         <source>No songs yet. Click“  ➕  ”to add songs to the playlist.</source>
-        <translation type="unfinished"></translation>
+        <translation>Ende pa këngë. Klikoni mbi “  ➕  ” që të shtoni këngë te luajlista.</translation>
     </message>
     <message>
         <source> scan the Music directory</source>
-        <translation type="unfinished"></translation>
+        <translation>skano drejtorinë Muzikë</translation>
     </message>
 </context>
 <context>
     <name>AllMusicList</name>
     <message>
         <source>All Songs</source>
-        <translation type="unfinished"></translation>
+        <translation>Krejt Këngët</translation>
     </message>
     <message>
         <source>1 song</source>
@@ -196,19 +194,19 @@
     <name>ArtistDefaultPage</name>
     <message>
         <source>Add Songs</source>
-        <translation type="unfinished"></translation>
+        <translation>Shtoni Këngë</translation>
     </message>
     <message>
         <source>Open Folders</source>
-        <translation type="unfinished"></translation>
+        <translation>Hap Dosje</translation>
     </message>
     <message>
         <source>Drag music files here or</source>
-        <translation type="unfinished"></translation>
+        <translation>Tërhiqni këtu kartela muzikore, ose</translation>
     </message>
     <message>
         <source>scan the Music directory</source>
-        <translation type="unfinished"></translation>
+        <translation>kontrolloni te drejtoria Muzikë</translation>
     </message>
 </context>
 <context>
@@ -226,11 +224,11 @@
     <name>ArtistMoreMenu</name>
     <message>
         <source>View details</source>
-        <translation type="unfinished"></translation>
+        <translation>Shihni hollësi</translation>
     </message>
     <message>
         <source>Play all</source>
-        <translation type="unfinished"></translation>
+        <translation>Luaji krejt</translation>
     </message>
     <message>
         <source>Add to</source>
@@ -346,7 +344,7 @@
     </message>
     <message>
         <source>CD</source>
-        <translation type="unfinished"></translation>
+        <translation>CD</translation>
     </message>
 </context>
 <context>
@@ -357,7 +355,7 @@
     </message>
     <message>
         <source>Are you sure you want to delete the selected %1 songs?</source>
-        <translation>A jeni i sigurt se doni të hiqen %1 këngët e përzgjedhura?</translation>
+        <translation>Jeni i sigurt se doni të hiqen %1 këngët e përzgjedhura?</translation>
     </message>
     <message>
         <source>The song files contained will also be deleted</source>
@@ -376,11 +374,11 @@
     <name>DeleteSonglistDialog</name>
     <message>
         <source>Are you sure you want to remove %1?</source>
-        <translation>A jeni i sigurt se doni të hiqet %1?</translation>
+        <translation>Jeni i sigurt se doni të hiqet %1?</translation>
     </message>
     <message>
         <source>Are you sure you want to remove the selected %1 songs?</source>
-        <translation>A jeni i sigurt se doni të hiqen %1 këngët e përzgjedhura?</translation>
+        <translation>Jeni i sigurt se doni të hiqen %1 këngët e përzgjedhura?</translation>
     </message>
     <message>
         <source>Are you sure you want to delete this playlist?</source>
@@ -536,11 +534,11 @@
     </message>
     <message>
         <source>No lyrics found</source>
-        <translation type="unfinished"></translation>
+        <translation>S’u gjetën vargje</translation>
     </message>
     <message>
         <source>Please put the lyric file (same name as the song) and the song file in the same folder</source>
-        <translation type="unfinished"></translation>
+        <translation>Ju lutemi, vëreni kartelën e vargjeve (me të njëjtin emër si kënga) dhe kartelën e këngës në të njëjtën dosje</translation>
     </message>
 </context>
 <context>
@@ -559,7 +557,7 @@
     </message>
     <message>
         <source>Next</source>
-        <translation>Pasuesi</translation>
+        <translation>Pasuesja</translation>
     </message>
     <message>
         <source>Exit</source>
@@ -571,11 +569,11 @@
     </message>
     <message>
         <source>Added to &quot;%1&quot;</source>
-        <translation type="unfinished"></translation>
+        <translation>U shtua te “%1”</translation>
     </message>
     <message>
         <source>Removed from &quot;My Favorites&quot;</source>
-        <translation type="unfinished"></translation>
+        <translation>Hiqe prej “Të parapëlqyerave të Mia”</translation>
     </message>
     <message>
         <source>A disc is connected</source>
@@ -587,7 +585,7 @@
     </message>
     <message>
         <source>All Songs</source>
-        <translation type="unfinished"></translation>
+        <translation>Krejt Këngët</translation>
     </message>
 </context>
 <context>
@@ -621,7 +619,7 @@
     </message>
     <message>
         <source>All Songs</source>
-        <translation type="unfinished"></translation>
+        <translation>Krejt Këngët</translation>
     </message>
     <message>
         <source>Playlists</source>
@@ -629,7 +627,7 @@
     </message>
     <message>
         <source>Create playlist</source>
-        <translation type="unfinished"></translation>
+        <translation>Krijoni luajlistë</translation>
     </message>
     <message>
         <source>New playlist</source>
@@ -794,11 +792,11 @@
     </message>
     <message>
         <source>Remember playback position on exit</source>
-        <translation type="unfinished"></translation>
+        <translation>Gjatë daljes mbaj mend pozicionin e luajtjes</translation>
     </message>
     <message>
         <source>Enable fade in/out</source>
-        <translation>Aktivizo fade in/out</translation>
+        <translation>Aktivizo “fade in/out”</translation>
     </message>
     <message>
         <source>Close Main Window</source>
@@ -846,15 +844,15 @@
     </message>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished">Anuloje</translation>
+        <translation>Anuloje</translation>
     </message>
     <message>
         <source>Replace</source>
-        <translation type="unfinished"></translation>
+        <translation>Zëvendësoje</translation>
     </message>
     <message>
         <source>This shortcut key conflicts with [%1], click Replace to make this shortcut key take effect immediately</source>
-        <translation type="unfinished"></translation>
+        <translation>Ky tast shkurtoreje ka përplasje me [%1], klikoni mbi “Zëvendësoje” për ta bërë këtë tast shkurtore të hyjë në fuqi menjëherë</translation>
     </message>
 </context>
 <context>
@@ -955,7 +953,7 @@
     </message>
     <message>
         <source>Add songs</source>
-        <translation type="unfinished"></translation>
+        <translation>Shtoni këngë</translation>
     </message>
     <message>
         <source>Rename</source>
@@ -978,7 +976,7 @@
     </message>
     <message>
         <source>Date added</source>
-        <translation type="unfinished"></translation>
+        <translation>Datë shtimi</translation>
     </message>
     <message>
         <source>Album</source>
@@ -1012,14 +1010,14 @@
     <name>ToolButtonItem</name>
     <message>
         <source>Play All</source>
-        <translation type="unfinished">Luaji Krejt</translation>
+        <translation>Luaji Krejt</translation>
     </message>
 </context>
 <context>
     <name>Toolbar</name>
     <message>
         <source>Sequential play</source>
-        <translation type="unfinished"></translation>
+        <translation>Luajtje njëra pas tjetrës</translation>
     </message>
     <message>
         <source>List loop</source>
@@ -1102,15 +1100,15 @@
     </message>
     <message>
         <source>Quit</source>
-        <translation type="unfinished"></translation>
+        <translation>Mbylle</translation>
     </message>
     <message>
         <source>Previous page</source>
-        <translation type="unfinished"></translation>
+        <translation>Faqja e mëparshme</translation>
     </message>
     <message>
         <source>Next page</source>
-        <translation type="unfinished"></translation>
+        <translation>Faqja pasuese</translation>
     </message>
     <message>
         <source>Search</source>
@@ -1118,7 +1116,7 @@
     </message>
     <message>
         <source>%1 is released under %2</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 hidhet në qarkullim sipas %2</translation>
     </message>
 </context>
 </TS>

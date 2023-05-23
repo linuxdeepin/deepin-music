@@ -1,6 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS>
-<TS version="2.1" language="hu" sourcelanguage="en_US">
+<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="hu" sourcelanguage="en_US">
 <context>
     <name>AlbumDefaultPage</name>
     <message>
@@ -148,7 +146,7 @@
     </message>
     <message>
         <source> scan the Music directory</source>
-        <translation type="unfinished"></translation>
+        <translation> olvassa be a Zene könyvtárat</translation>
     </message>
 </context>
 <context>
@@ -846,15 +844,15 @@
     </message>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished">Mégsem</translation>
+        <translation>Mégsem</translation>
     </message>
     <message>
         <source>Replace</source>
-        <translation type="unfinished"></translation>
+        <translation>Csere</translation>
     </message>
     <message>
         <source>This shortcut key conflicts with [%1], click Replace to make this shortcut key take effect immediately</source>
-        <translation type="unfinished"></translation>
+        <translation>Ez a gyorsbillentyű ütközik a következővel: [%1], kattintson a Csere gombra, hogy ez a gyorsbillentyű azonnal használható legyen</translation>
     </message>
 </context>
 <context>
@@ -1012,7 +1010,7 @@
     <name>ToolButtonItem</name>
     <message>
         <source>Play All</source>
-        <translation type="unfinished">Összes lejátszása</translation>
+        <translation>Összes lejátszása</translation>
     </message>
 </context>
 <context>
@@ -1118,7 +1116,7 @@
     </message>
     <message>
         <source>%1 is released under %2</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 kiadásra került %2 alatt</translation>
     </message>
 </context>
 </TS>

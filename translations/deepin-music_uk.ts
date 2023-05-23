@@ -1,6 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS>
-<TS version="2.1" language="uk" sourcelanguage="en_US">
+<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="uk" sourcelanguage="en_US">
 <context>
     <name>AlbumDefaultPage</name>
     <message>
@@ -148,7 +146,7 @@
     </message>
     <message>
         <source> scan the Music directory</source>
-        <translation type="unfinished"></translation>
+        <translation>сканувати каталог «Музика»</translation>
     </message>
 </context>
 <context>
@@ -571,11 +569,11 @@
     </message>
     <message>
         <source>Added to &quot;%1&quot;</source>
-        <translation type="unfinished"></translation>
+        <translation>Додано до «%1»</translation>
     </message>
     <message>
         <source>Removed from &quot;My Favorites&quot;</source>
-        <translation type="unfinished"></translation>
+        <translation>Вилучено з улюблених</translation>
     </message>
     <message>
         <source>A disc is connected</source>
@@ -846,15 +844,15 @@
     </message>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished">Скасувати</translation>
+        <translation>Скасувати</translation>
     </message>
     <message>
         <source>Replace</source>
-        <translation type="unfinished"></translation>
+        <translation>Замінити</translation>
     </message>
     <message>
         <source>This shortcut key conflicts with [%1], click Replace to make this shortcut key take effect immediately</source>
-        <translation type="unfinished"></translation>
+        <translation>Це скорочення конфліктує з [%1], натисніть «Замінити», щоб негайно активувати це скорочення</translation>
     </message>
 </context>
 <context>
@@ -1012,7 +1010,7 @@
     <name>ToolButtonItem</name>
     <message>
         <source>Play All</source>
-        <translation type="unfinished">Відтворити всі</translation>
+        <translation>Відтворити всі</translation>
     </message>
 </context>
 <context>
@@ -1118,7 +1116,7 @@
     </message>
     <message>
         <source>%1 is released under %2</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 випущено за умов дотримання %2</translation>
     </message>
 </context>
 </TS>

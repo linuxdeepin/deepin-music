@@ -1,23 +1,21 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS>
-<TS version="2.1" language="bo" sourcelanguage="en_US">
+<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="bo" sourcelanguage="en_US">
 <context>
     <name>AlbumDefaultPage</name>
     <message>
         <source>Add Songs</source>
-        <translation type="unfinished"></translation>
+        <translation>གླུ་གཞས་སྣོན་པ།</translation>
     </message>
     <message>
         <source>Open Folders</source>
-        <translation type="unfinished"></translation>
+        <translation>གླུ་གཞས་དཀར་ཆག་སྣོན་པ།</translation>
     </message>
     <message>
         <source>Drag music files here or</source>
-        <translation type="unfinished"></translation>
+        <translation>གླུ་གཞས་ཡིག་ཁུག་འཐེན་ནས་གླུ་གཞས་སྣོན་པའམ་</translation>
     </message>
     <message>
         <source>scan the Music directory</source>
-        <translation type="unfinished"></translation>
+        <translation>གླུ་གཞས་དཀར་ཆག་བཤེར་བ།</translation>
     </message>
 </context>
 <context>
@@ -42,30 +40,30 @@
     <name>AlbumListView</name>
     <message>
         <source>Album</source>
-        <translation>ཆེད་བསྒྲིགས་མིང་། </translation>
+        <translation>ཆེད་བསྒྲིགས། </translation>
     </message>
     <message>
         <source>Artist</source>
-        <translation>གླུ་པའི་མིང་། </translation>
+        <translation>གླུ་བ། </translation>
     </message>
     <message>
         <source>Tracks</source>
-        <translation type="unfinished"></translation>
+        <translation>གླུ་གཞས་གྲངས།</translation>
     </message>
     <message>
         <source>Date added</source>
-        <translation type="unfinished"></translation>
+        <translation>སྣོན་པའི་དུས་ཚོད།</translation>
     </message>
 </context>
 <context>
     <name>AlbumMoreMenu</name>
     <message>
         <source>View details</source>
-        <translation type="unfinished"></translation>
+        <translation>ཞིབ་ཕྲའི་གནས་ཚུལ།</translation>
     </message>
     <message>
         <source>Play all</source>
-        <translation type="unfinished"></translation>
+        <translation>ཚང་མ་གཏོང་བ།</translation>
     </message>
     <message>
         <source>Add to</source>
@@ -76,11 +74,11 @@
     <name>AlbumSublist</name>
     <message>
         <source>Title</source>
-        <translation>གླུ་གཞས་མིང་། </translation>
+        <translation>གླུ་གཞས་མིང་།</translation>
     </message>
     <message>
         <source>Artist</source>
-        <translation>གླུ་པའི་མིང་། </translation>
+        <translation>གླུ་པ།</translation>
     </message>
     <message>
         <source>Duration</source>
@@ -124,38 +122,38 @@
     <name>AllMusicDefaultPage</name>
     <message>
         <source>Add Songs</source>
-        <translation type="unfinished"></translation>
+        <translation>གླུ་གཞས་སྣོན་པ།</translation>
     </message>
     <message>
         <source>Open Folders</source>
-        <translation type="unfinished"></translation>
+        <translation>གླུ་གཞས་དཀར་ཆག་སྣོན་པ།</translation>
     </message>
     <message>
         <source>Drag music files here or</source>
-        <translation type="unfinished"></translation>
+        <translation>གླུ་གཞས་ཡིག་ཁུག་འཐེན་ནས་གླུ་གཞས་སྣོན་པའམ་</translation>
     </message>
     <message>
         <source>Your favorite songs will be displayed here.</source>
-        <translation type="unfinished"></translation>
+        <translation>ཁྱེད་ཀྱིས་དགའ་བའི་གླུ་གཞས་འདི་རུ་འཆར་སྲིད།</translation>
     </message>
     <message>
         <source>Click“  ♥  ”to add a song to My Favorites</source>
-        <translation type="unfinished"></translation>
+        <translation>“♥”བསྣན་ནས་གླུ་གཞས་“ངའི་དགའ་ཤོས་”ནང་བསྣན་སྲིད།</translation>
     </message>
     <message>
         <source>No songs yet. Click“  ➕  ”to add songs to the playlist.</source>
-        <translation type="unfinished"></translation>
+        <translation>གཞས་ཐོའི་ནང་མེད་པའི་གླུ་གཞས། རི་མོ་“➕”འདི་བསྣན་ནས་གླུ་གཞས་གཞས་ཐོའི་ནང་བསྣན་ཆོག</translation>
     </message>
     <message>
         <source> scan the Music directory</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
     <name>AllMusicList</name>
     <message>
         <source>All Songs</source>
-        <translation type="unfinished"></translation>
+        <translation>གླུ་གཞས་ཡོངས།</translation>
     </message>
     <message>
         <source>1 song</source>
@@ -181,11 +179,11 @@
     </message>
     <message>
         <source>Artist</source>
-        <translation>གླུ་པའི་མིང་། </translation>
+        <translation>གླུ་པ།</translation>
     </message>
     <message>
         <source>Album</source>
-        <translation>ཆེད་བསྒྲིགས་མིང་། </translation>
+        <translation>ཆེད་བསྒྲིགས།</translation>
     </message>
     <message>
         <source>Duration</source>
@@ -196,19 +194,19 @@
     <name>ArtistDefaultPage</name>
     <message>
         <source>Add Songs</source>
-        <translation type="unfinished"></translation>
+        <translation>གླུ་གཞས་སྣོན་པ།</translation>
     </message>
     <message>
         <source>Open Folders</source>
-        <translation type="unfinished"></translation>
+        <translation>གླུ་གཞས་དཀར་ཆག་སྣོན་པ།</translation>
     </message>
     <message>
         <source>Drag music files here or</source>
-        <translation type="unfinished"></translation>
+        <translation>གླུ་གཞས་ཡིག་ཁུག་འཐེན་ནས་གླུ་གཞས་སྣོན་པའམ་</translation>
     </message>
     <message>
         <source>scan the Music directory</source>
-        <translation type="unfinished"></translation>
+        <translation>གླུ་གཞས་དཀར་ཆག་བཤེར་བ།</translation>
     </message>
 </context>
 <context>
@@ -226,11 +224,11 @@
     <name>ArtistMoreMenu</name>
     <message>
         <source>View details</source>
-        <translation type="unfinished"></translation>
+        <translation>ཞིབ་ཕྲའི་གནས་ཚུལ།</translation>
     </message>
     <message>
         <source>Play all</source>
-        <translation type="unfinished"></translation>
+        <translation>ཚང་མ་གཏོང་བ།</translation>
     </message>
     <message>
         <source>Add to</source>
@@ -346,7 +344,7 @@
     </message>
     <message>
         <source>CD</source>
-        <translation type="unfinished"></translation>
+        <translation>CD</translation>
     </message>
 </context>
 <context>
@@ -536,11 +534,11 @@
     </message>
     <message>
         <source>No lyrics found</source>
-        <translation type="unfinished"></translation>
+        <translation>གླུ་གཞས་འདི་ལ་གནས་སྐབས་གཞས་ཚིག་མེད།</translation>
     </message>
     <message>
         <source>Please put the lyric file (same name as the song) and the song file in the same folder</source>
-        <translation type="unfinished"></translation>
+        <translation>མིང་གཅིག་པའི་LRCཡིག་ཆ་གླུ་གཞས་ཡིག་ཆའི་དཀར་ཆག་འོག་ཏུ་འཇོག་དང་།</translation>
     </message>
 </context>
 <context>
@@ -571,11 +569,11 @@
     </message>
     <message>
         <source>Added to &quot;%1&quot;</source>
-        <translation type="unfinished"></translation>
+        <translation>“%1”བསྣན་ཟིན།</translation>
     </message>
     <message>
         <source>Removed from &quot;My Favorites&quot;</source>
-        <translation type="unfinished"></translation>
+        <translation>&quot;ངའི་དགའ་ཤོས་&quot;ནས་ཕུད་ཟིན།</translation>
     </message>
     <message>
         <source>A disc is connected</source>
@@ -587,7 +585,7 @@
     </message>
     <message>
         <source>All Songs</source>
-        <translation type="unfinished"></translation>
+        <translation>གླུ་གཞས་ཡོངས།</translation>
     </message>
 </context>
 <context>
@@ -621,7 +619,7 @@
     </message>
     <message>
         <source>All Songs</source>
-        <translation type="unfinished"></translation>
+        <translation>གླུ་གཞས་ཡོངས།</translation>
     </message>
     <message>
         <source>Playlists</source>
@@ -629,7 +627,7 @@
     </message>
     <message>
         <source>Create playlist</source>
-        <translation type="unfinished"></translation>
+        <translation>གཞས་ཐོ་བཟོ་བ།</translation>
     </message>
     <message>
         <source>New playlist</source>
@@ -794,7 +792,7 @@
     </message>
     <message>
         <source>Remember playback position on exit</source>
-        <translation type="unfinished"></translation>
+        <translation>ཕྱིར་འཐེན་བྱེད་དུས་གཏོང་ཐེངས་གོང་མའི་གཏོང་ཚད་ངེས་དང་།</translation>
     </message>
     <message>
         <source>Enable fade in/out</source>
@@ -846,15 +844,15 @@
     </message>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished"></translation>
+        <translation>འདོར་བ། </translation>
     </message>
     <message>
         <source>Replace</source>
-        <translation type="unfinished"></translation>
+        <translation>བརྗེ་བ།</translation>
     </message>
     <message>
         <source>This shortcut key conflicts with [%1], click Replace to make this shortcut key take effect immediately</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -955,7 +953,7 @@
     </message>
     <message>
         <source>Add songs</source>
-        <translation type="unfinished"></translation>
+        <translation>གླུ་གཞས་སྣོན་པ།</translation>
     </message>
     <message>
         <source>Rename</source>
@@ -978,7 +976,7 @@
     </message>
     <message>
         <source>Date added</source>
-        <translation type="unfinished"></translation>
+        <translation>སྣོན་པའི་དུས་ཚོད།</translation>
     </message>
     <message>
         <source>Album</source>
@@ -1012,14 +1010,14 @@
     <name>ToolButtonItem</name>
     <message>
         <source>Play All</source>
-        <translation type="unfinished">ཚང་མ་གཏོང་བ།</translation>
+        <translation>ཚང་མ་གཏོང་བ།</translation>
     </message>
 </context>
 <context>
     <name>Toolbar</name>
     <message>
         <source>Sequential play</source>
-        <translation type="unfinished"></translation>
+        <translation>གོ་རིམ་ལྟར་གཏོང་བ།</translation>
     </message>
     <message>
         <source>List loop</source>
@@ -1102,15 +1100,15 @@
     </message>
     <message>
         <source>Quit</source>
-        <translation type="unfinished"></translation>
+        <translation>ཕྱིར་འཐེན།</translation>
     </message>
     <message>
         <source>Previous page</source>
-        <translation type="unfinished"></translation>
+        <translation>ཤོག་ངོས་གོང་མ།</translation>
     </message>
     <message>
         <source>Next page</source>
-        <translation type="unfinished"></translation>
+        <translation>གཞས་རྗེས་མ།</translation>
     </message>
     <message>
         <source>Search</source>
@@ -1118,7 +1116,7 @@
     </message>
     <message>
         <source>%1 is released under %2</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 </TS>

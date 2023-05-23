@@ -1,23 +1,21 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS>
-<TS version="2.1" language="de" sourcelanguage="en_US">
+<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="de" sourcelanguage="en_US">
 <context>
     <name>AlbumDefaultPage</name>
     <message>
         <source>Add Songs</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>Open Folders</source>
-        <translation type="unfinished"></translation>
+        <translation>Ordner öffnen</translation>
     </message>
     <message>
         <source>Drag music files here or</source>
-        <translation type="unfinished"></translation>
+        <translation>Ziehen Sie Musikdateien hierher oder</translation>
     </message>
     <message>
         <source>scan the Music directory</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -50,22 +48,22 @@
     </message>
     <message>
         <source>Tracks</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>Date added</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
     <name>AlbumMoreMenu</name>
     <message>
         <source>View details</source>
-        <translation type="unfinished"></translation>
+        <translation>Details ansehen</translation>
     </message>
     <message>
         <source>Play all</source>
-        <translation type="unfinished"></translation>
+        <translation>Alle abspielen</translation>
     </message>
     <message>
         <source>Add to</source>
@@ -124,38 +122,38 @@
     <name>AllMusicDefaultPage</name>
     <message>
         <source>Add Songs</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>Open Folders</source>
-        <translation type="unfinished"></translation>
+        <translation>Ordner öffnen</translation>
     </message>
     <message>
         <source>Drag music files here or</source>
-        <translation type="unfinished"></translation>
+        <translation>Ziehen Sie Musikdateien hierher oder</translation>
     </message>
     <message>
         <source>Your favorite songs will be displayed here.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>Click“  ♥  ”to add a song to My Favorites</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>No songs yet. Click“  ➕  ”to add songs to the playlist.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source> scan the Music directory</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
     <name>AllMusicList</name>
     <message>
         <source>All Songs</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>1 song</source>
@@ -196,19 +194,19 @@
     <name>ArtistDefaultPage</name>
     <message>
         <source>Add Songs</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>Open Folders</source>
-        <translation type="unfinished"></translation>
+        <translation>Ordner öffnen</translation>
     </message>
     <message>
         <source>Drag music files here or</source>
-        <translation type="unfinished"></translation>
+        <translation>Ziehen Sie Musikdateien hierher oder</translation>
     </message>
     <message>
         <source>scan the Music directory</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -226,11 +224,11 @@
     <name>ArtistMoreMenu</name>
     <message>
         <source>View details</source>
-        <translation type="unfinished"></translation>
+        <translation>Details ansehen</translation>
     </message>
     <message>
         <source>Play all</source>
-        <translation type="unfinished"></translation>
+        <translation>Alle abspielen</translation>
     </message>
     <message>
         <source>Add to</source>
@@ -536,11 +534,11 @@
     </message>
     <message>
         <source>No lyrics found</source>
-        <translation type="unfinished"></translation>
+        <translation>Keine Songtexte gefunden</translation>
     </message>
     <message>
         <source>Please put the lyric file (same name as the song) and the song file in the same folder</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -571,15 +569,15 @@
     </message>
     <message>
         <source>Added to &quot;%1&quot;</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>Removed from &quot;My Favorites&quot;</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>A disc is connected</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>My Favorites</source>
@@ -587,7 +585,7 @@
     </message>
     <message>
         <source>All Songs</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -621,7 +619,7 @@
     </message>
     <message>
         <source>All Songs</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>Playlists</source>
@@ -629,7 +627,7 @@
     </message>
     <message>
         <source>Create playlist</source>
-        <translation type="unfinished"></translation>
+        <translation>Wiedergabeliste erstellen</translation>
     </message>
     <message>
         <source>New playlist</source>
@@ -794,7 +792,7 @@
     </message>
     <message>
         <source>Remember playback position on exit</source>
-        <translation type="unfinished"></translation>
+        <translation>Wiedergabeposition beim Beenden merken</translation>
     </message>
     <message>
         <source>Enable fade in/out</source>
@@ -846,15 +844,15 @@
     </message>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished">Abbrechen</translation>
+        <translation>Abbrechen</translation>
     </message>
     <message>
         <source>Replace</source>
-        <translation type="unfinished"></translation>
+        <translation>Ersetzen</translation>
     </message>
     <message>
         <source>This shortcut key conflicts with [%1], click Replace to make this shortcut key take effect immediately</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -955,7 +953,7 @@
     </message>
     <message>
         <source>Add songs</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>Rename</source>
@@ -978,7 +976,7 @@
     </message>
     <message>
         <source>Date added</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>Album</source>
@@ -1012,14 +1010,14 @@
     <name>ToolButtonItem</name>
     <message>
         <source>Play All</source>
-        <translation type="unfinished">Alle abspielen</translation>
+        <translation>Alle abspielen</translation>
     </message>
 </context>
 <context>
     <name>Toolbar</name>
     <message>
         <source>Sequential play</source>
-        <translation type="unfinished"></translation>
+        <translation>Sequentielle Wiedergabe</translation>
     </message>
     <message>
         <source>List loop</source>
@@ -1106,11 +1104,11 @@
     </message>
     <message>
         <source>Previous page</source>
-        <translation type="unfinished"></translation>
+        <translation>Vorherige Seite</translation>
     </message>
     <message>
         <source>Next page</source>
-        <translation type="unfinished"></translation>
+        <translation>Nächste Seite</translation>
     </message>
     <message>
         <source>Search</source>
@@ -1118,7 +1116,7 @@
     </message>
     <message>
         <source>%1 is released under %2</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 </TS>

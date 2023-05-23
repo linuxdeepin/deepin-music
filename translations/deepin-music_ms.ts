@@ -1,23 +1,21 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS>
-<TS version="2.1" language="ms" sourcelanguage="en_US">
+<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="ms" sourcelanguage="en_US">
 <context>
     <name>AlbumDefaultPage</name>
     <message>
         <source>Add Songs</source>
-        <translation type="unfinished"></translation>
+        <translation>Tambah Lagu</translation>
     </message>
     <message>
         <source>Open Folders</source>
-        <translation type="unfinished"></translation>
+        <translation>Buka Folder</translation>
     </message>
     <message>
         <source>Drag music files here or</source>
-        <translation type="unfinished"></translation>
+        <translation>Serety fail muzik ke sini atau</translation>
     </message>
     <message>
         <source>scan the Music directory</source>
-        <translation type="unfinished"></translation>
+        <translation>imbas direktori Muzik</translation>
     </message>
 </context>
 <context>
@@ -50,22 +48,22 @@
     </message>
     <message>
         <source>Tracks</source>
-        <translation type="unfinished"></translation>
+        <translation>Trek</translation>
     </message>
     <message>
         <source>Date added</source>
-        <translation type="unfinished"></translation>
+        <translation>Tarikh ditambah</translation>
     </message>
 </context>
 <context>
     <name>AlbumMoreMenu</name>
     <message>
         <source>View details</source>
-        <translation type="unfinished"></translation>
+        <translation>Lihat perincian</translation>
     </message>
     <message>
         <source>Play all</source>
-        <translation type="unfinished"></translation>
+        <translation>Main semua</translation>
     </message>
     <message>
         <source>Add to</source>
@@ -124,38 +122,38 @@
     <name>AllMusicDefaultPage</name>
     <message>
         <source>Add Songs</source>
-        <translation type="unfinished"></translation>
+        <translation>Tambah Lagu</translation>
     </message>
     <message>
         <source>Open Folders</source>
-        <translation type="unfinished"></translation>
+        <translation>Buka Folder</translation>
     </message>
     <message>
         <source>Drag music files here or</source>
-        <translation type="unfinished"></translation>
+        <translation>Serety fail muzik ke sini atau</translation>
     </message>
     <message>
         <source>Your favorite songs will be displayed here.</source>
-        <translation type="unfinished"></translation>
+        <translation>Lagu kegemaran anda akan dipaparkan di sini.</translation>
     </message>
     <message>
         <source>Click“  ♥  ”to add a song to My Favorites</source>
-        <translation type="unfinished"></translation>
+        <translation>Klik“  ♥  ”untuk menmab satu lagu ke dalam Kegemaran Saya</translation>
     </message>
     <message>
         <source>No songs yet. Click“  ➕  ”to add songs to the playlist.</source>
-        <translation type="unfinished"></translation>
+        <translation>Belum ada lagu. Klik“  ➕  ”untuk menambah masuk lagu ke dalam senarai main.</translation>
     </message>
     <message>
         <source> scan the Music directory</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
     <name>AllMusicList</name>
     <message>
         <source>All Songs</source>
-        <translation type="unfinished"></translation>
+        <translation>Semua Lagu</translation>
     </message>
     <message>
         <source>1 song</source>
@@ -196,19 +194,19 @@
     <name>ArtistDefaultPage</name>
     <message>
         <source>Add Songs</source>
-        <translation type="unfinished"></translation>
+        <translation>Tambah Lagu</translation>
     </message>
     <message>
         <source>Open Folders</source>
-        <translation type="unfinished"></translation>
+        <translation>Buka Folder</translation>
     </message>
     <message>
         <source>Drag music files here or</source>
-        <translation type="unfinished"></translation>
+        <translation>Serety fail muzik ke sini atau</translation>
     </message>
     <message>
         <source>scan the Music directory</source>
-        <translation type="unfinished"></translation>
+        <translation>imbas direktori Muzik</translation>
     </message>
 </context>
 <context>
@@ -226,11 +224,11 @@
     <name>ArtistMoreMenu</name>
     <message>
         <source>View details</source>
-        <translation type="unfinished"></translation>
+        <translation>Lihat perincian</translation>
     </message>
     <message>
         <source>Play all</source>
-        <translation type="unfinished"></translation>
+        <translation>Main semua</translation>
     </message>
     <message>
         <source>Add to</source>
@@ -346,7 +344,7 @@
     </message>
     <message>
         <source>CD</source>
-        <translation type="unfinished"></translation>
+        <translation>CD</translation>
     </message>
 </context>
 <context>
@@ -536,11 +534,11 @@
     </message>
     <message>
         <source>No lyrics found</source>
-        <translation type="unfinished"></translation>
+        <translation>Tiada lirik ditemui</translation>
     </message>
     <message>
         <source>Please put the lyric file (same name as the song) and the song file in the same folder</source>
-        <translation type="unfinished"></translation>
+        <translation>Sila letak fail lirik (pastikan nama serupa dengan lagu) dan fail lagu dalam folder yang sama</translation>
     </message>
 </context>
 <context>
@@ -571,11 +569,11 @@
     </message>
     <message>
         <source>Added to &quot;%1&quot;</source>
-        <translation type="unfinished"></translation>
+        <translation>Ditambah kepada &quot;%1&quot;</translation>
     </message>
     <message>
         <source>Removed from &quot;My Favorites&quot;</source>
-        <translation type="unfinished"></translation>
+        <translation>Buang dari &quot;Kegemaran Saya&quot;</translation>
     </message>
     <message>
         <source>A disc is connected</source>
@@ -587,7 +585,7 @@
     </message>
     <message>
         <source>All Songs</source>
-        <translation type="unfinished"></translation>
+        <translation>Semua Lagu</translation>
     </message>
 </context>
 <context>
@@ -621,7 +619,7 @@
     </message>
     <message>
         <source>All Songs</source>
-        <translation type="unfinished"></translation>
+        <translation>Semua Lagu</translation>
     </message>
     <message>
         <source>Playlists</source>
@@ -629,7 +627,7 @@
     </message>
     <message>
         <source>Create playlist</source>
-        <translation type="unfinished"></translation>
+        <translation>Cipta senarai main</translation>
     </message>
     <message>
         <source>New playlist</source>
@@ -794,7 +792,7 @@
     </message>
     <message>
         <source>Remember playback position on exit</source>
-        <translation type="unfinished"></translation>
+        <translation>Ingat kedudukan main balik bila keluar</translation>
     </message>
     <message>
         <source>Enable fade in/out</source>
@@ -846,15 +844,15 @@
     </message>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished">Batal</translation>
+        <translation>Batal</translation>
     </message>
     <message>
         <source>Replace</source>
-        <translation type="unfinished"></translation>
+        <translation>Ganti</translation>
     </message>
     <message>
         <source>This shortcut key conflicts with [%1], click Replace to make this shortcut key take effect immediately</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -955,7 +953,7 @@
     </message>
     <message>
         <source>Add songs</source>
-        <translation type="unfinished"></translation>
+        <translation>Tambah lagu</translation>
     </message>
     <message>
         <source>Rename</source>
@@ -978,7 +976,7 @@
     </message>
     <message>
         <source>Date added</source>
-        <translation type="unfinished"></translation>
+        <translation>Tarikh ditambah</translation>
     </message>
     <message>
         <source>Album</source>
@@ -1012,14 +1010,14 @@
     <name>ToolButtonItem</name>
     <message>
         <source>Play All</source>
-        <translation type="unfinished">Main Semua</translation>
+        <translation>Main Semua</translation>
     </message>
 </context>
 <context>
     <name>Toolbar</name>
     <message>
         <source>Sequential play</source>
-        <translation type="unfinished"></translation>
+        <translation>Main berjujukan</translation>
     </message>
     <message>
         <source>List loop</source>
@@ -1106,11 +1104,11 @@
     </message>
     <message>
         <source>Previous page</source>
-        <translation type="unfinished"></translation>
+        <translation>Halaman terdahulu</translation>
     </message>
     <message>
         <source>Next page</source>
-        <translation type="unfinished"></translation>
+        <translation>Halaman berikut</translation>
     </message>
     <message>
         <source>Search</source>
@@ -1118,7 +1116,7 @@
     </message>
     <message>
         <source>%1 is released under %2</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 </TS>

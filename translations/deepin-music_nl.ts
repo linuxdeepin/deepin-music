@@ -1,6 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS>
-<TS version="2.1" language="nl" sourcelanguage="en_US">
+<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="nl" sourcelanguage="en_US">
 <context>
     <name>AlbumDefaultPage</name>
     <message>
@@ -148,7 +146,7 @@
     </message>
     <message>
         <source> scan the Music directory</source>
-        <translation type="unfinished"></translation>
+        <translation>indexeer de muziekmap</translation>
     </message>
 </context>
 <context>
@@ -846,15 +844,15 @@
     </message>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished">Annuleren</translation>
+        <translation>Annuleren</translation>
     </message>
     <message>
         <source>Replace</source>
-        <translation type="unfinished"></translation>
+        <translation>Vervangen</translation>
     </message>
     <message>
         <source>This shortcut key conflicts with [%1], click Replace to make this shortcut key take effect immediately</source>
-        <translation type="unfinished"></translation>
+        <translation>Deze sneltoets wordt al gebruikt door [1%]. Klik op ‘Vervangen’ om de nieuwe sneltoets toe te wijzen.</translation>
     </message>
 </context>
 <context>
@@ -1012,7 +1010,7 @@
     <name>ToolButtonItem</name>
     <message>
         <source>Play All</source>
-        <translation type="unfinished">Alles afspelen</translation>
+        <translation>Alles afspelen</translation>
     </message>
 </context>
 <context>
@@ -1118,7 +1116,7 @@
     </message>
     <message>
         <source>%1 is released under %2</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 is uitgebracht onder de %2-licentie</translation>
     </message>
 </context>
 </TS>

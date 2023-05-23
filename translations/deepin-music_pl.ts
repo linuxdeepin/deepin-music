@@ -1,6 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS>
-<TS version="2.1" language="pl" sourcelanguage="en_US">
+<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="pl" sourcelanguage="en_US">
 <context>
     <name>AlbumDefaultPage</name>
     <message>
@@ -9,7 +7,7 @@
     </message>
     <message>
         <source>Open Folders</source>
-        <translation>Otwórz katalogi</translation>
+        <translation>Otwórz foldery</translation>
     </message>
     <message>
         <source>Drag music files here or</source>
@@ -128,7 +126,7 @@
     </message>
     <message>
         <source>Open Folders</source>
-        <translation>Otwórz katalogi</translation>
+        <translation>Otwórz foldery</translation>
     </message>
     <message>
         <source>Drag music files here or</source>
@@ -140,15 +138,15 @@
     </message>
     <message>
         <source>Click“  ♥  ”to add a song to My Favorites</source>
-        <translation>Kliknij“ ♥ ”, aby dodać utwór do Ulubionych</translation>
+        <translation>Kliknij“  ♥  ”,aby dodać utwór do Ulubionych</translation>
     </message>
     <message>
         <source>No songs yet. Click“  ➕  ”to add songs to the playlist.</source>
-        <translation>Brak piosenek. Kliknij“ ➕ ”, aby dodać utwory do playlisty.</translation>
+        <translation>Brak piosenek. Kliknij“  ➕  ”, aby dodać utwory do playlisty.</translation>
     </message>
     <message>
         <source> scan the Music directory</source>
-        <translation type="unfinished"></translation>
+        <translation> skanuj katalog Muzyka</translation>
     </message>
 </context>
 <context>
@@ -200,7 +198,7 @@
     </message>
     <message>
         <source>Open Folders</source>
-        <translation>Otwórz katalogi</translation>
+        <translation>Otwórz foldery</translation>
     </message>
     <message>
         <source>Drag music files here or</source>
@@ -289,11 +287,11 @@
     </message>
     <message>
         <source>Minimize to system tray</source>
-        <translation>Zminimalizuj do zasobnika systemowego</translation>
+        <translation>Minimalizuj do zasobnika systemowego</translation>
     </message>
     <message>
         <source>Exit</source>
-        <translation>Wyjście</translation>
+        <translation>Wyjdź</translation>
     </message>
     <message>
         <source>Do not ask again</source>
@@ -487,7 +485,7 @@
     </message>
     <message>
         <source>Reset</source>
-        <translation>Zresetuj</translation>
+        <translation>Resetuj</translation>
     </message>
     <message>
         <source>Preamplifier</source>
@@ -540,7 +538,7 @@
     </message>
     <message>
         <source>Please put the lyric file (same name as the song) and the song file in the same folder</source>
-        <translation>Umieść tekst piosenki w tym samym katalogu co piosenka (upewnij się, że posiadają tę samą nazwę).</translation>
+        <translation>Umieść tekst piosenki w tym samym folderze co piosenka (upewnij się, że posiadają tę samą nazwę).</translation>
     </message>
 </context>
 <context>
@@ -571,11 +569,11 @@
     </message>
     <message>
         <source>Added to &quot;%1&quot;</source>
-        <translation type="unfinished"></translation>
+        <translation>Dodano do &quot;%1&quot;</translation>
     </message>
     <message>
         <source>Removed from &quot;My Favorites&quot;</source>
-        <translation type="unfinished"></translation>
+        <translation>Usunięto z &quot;Moje ulubione&quot;</translation>
     </message>
     <message>
         <source>A disc is connected</source>
@@ -678,7 +676,7 @@
     <name>MusicMoreMenu</name>
     <message>
         <source>Pause</source>
-        <translation>Pauza</translation>
+        <translation>Wstrzymaj</translation>
     </message>
     <message>
         <source>Play</source>
@@ -713,7 +711,7 @@
     <name>QObject</name>
     <message>
         <source>Music is a local music player with beautiful design and simple functions.</source>
-        <translation>Muzyka to lokalny odtwarzacz muzyki o pięknym designie i prostych funkcjach.</translation>
+        <translation>Muzyka to lokalny odtwarzacz muzyki o pięknym wyglądzie i prostych funkcjach.</translation>
     </message>
     <message>
         <source>Music</source>
@@ -786,11 +784,11 @@
     </message>
     <message>
         <source>Play</source>
-        <translation>Odtwórz</translation>
+        <translation>Odtwarzanie</translation>
     </message>
     <message>
         <source>Autoplay</source>
-        <translation>Automatyczne odtwarzanie</translation>
+        <translation>Autoodtwarzanie</translation>
     </message>
     <message>
         <source>Remember playback position on exit</source>
@@ -798,7 +796,7 @@
     </message>
     <message>
         <source>Enable fade in/out</source>
-        <translation>Włącz wejście/wyjście</translation>
+        <translation>Włącz efekt rozpoczęcia/zakończenia</translation>
     </message>
     <message>
         <source>Close Main Window</source>
@@ -806,11 +804,11 @@
     </message>
     <message>
         <source>Minimize to system tray</source>
-        <translation>Zminimalizuj do zasobnika systemowego</translation>
+        <translation>Minimalizuj do zasobnika systemowego</translation>
     </message>
     <message>
         <source>Exit</source>
-        <translation>Wyjście</translation>
+        <translation>Wyjdź</translation>
     </message>
     <message>
         <source>Ask me always</source>
@@ -834,7 +832,7 @@
     </message>
     <message>
         <source>Volume up</source>
-        <translation>Pogłośnij</translation>
+        <translation>Podgłośnij</translation>
     </message>
     <message>
         <source>Volume down</source>
@@ -846,15 +844,15 @@
     </message>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished">Anuluj</translation>
+        <translation>Anuluj</translation>
     </message>
     <message>
         <source>Replace</source>
-        <translation type="unfinished"></translation>
+        <translation>Zamień</translation>
     </message>
     <message>
         <source>This shortcut key conflicts with [%1], click Replace to make this shortcut key take effect immediately</source>
-        <translation type="unfinished"></translation>
+        <translation>Ten skrót powoduje konflikt z [%1], kliknij Zastąp, aby skrót zadziałał od razu</translation>
     </message>
 </context>
 <context>
@@ -889,7 +887,7 @@
     </message>
     <message>
         <source>Volume Up</source>
-        <translation>Pogłośnij</translation>
+        <translation>Podgłośnij</translation>
     </message>
     <message>
         <source>Volume Down</source>
@@ -1012,7 +1010,7 @@
     <name>ToolButtonItem</name>
     <message>
         <source>Play All</source>
-        <translation type="unfinished">Odtwórz wszystkie</translation>
+        <translation>Odtwórz wszystkie</translation>
     </message>
 </context>
 <context>
@@ -1094,7 +1092,7 @@
     </message>
     <message>
         <source>Music is a local music player with beautiful design and simple functions.</source>
-        <translation>Muzyka to lokalny odtwarzacz muzyki o pięknym designie i prostych funkcjach.</translation>
+        <translation>Muzyka to lokalny odtwarzacz muzyki o pięknym wyglądzie i prostych funkcjach.</translation>
     </message>
     <message>
         <source>Version:</source>
@@ -1118,7 +1116,7 @@
     </message>
     <message>
         <source>%1 is released under %2</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 został wydany na licencji %2</translation>
     </message>
 </context>
 </TS>
