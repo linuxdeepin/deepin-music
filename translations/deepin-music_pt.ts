@@ -1,6 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS>
-<TS version="2.1" language="pt" sourcelanguage="en_US">
+<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="pt" sourcelanguage="en_US">
 <context>
     <name>AlbumDefaultPage</name>
     <message>
@@ -148,7 +146,7 @@
     </message>
     <message>
         <source> scan the Music directory</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -312,7 +310,7 @@
     <name>CurrentPlayList</name>
     <message>
         <source>Play queue</source>
-        <translation>Reproduzir fila</translation>
+        <translation>Reproduzir fila de espera</translation>
     </message>
     <message>
         <source>1 song</source>
@@ -509,7 +507,7 @@
     <name>ImportMenu</name>
     <message>
         <source>Play queue</source>
-        <translation>Reproduzir fila</translation>
+        <translation>Reproduzir fila de espera</translation>
     </message>
     <message>
         <source>My favorites</source>
@@ -571,11 +569,11 @@
     </message>
     <message>
         <source>Added to &quot;%1&quot;</source>
-        <translation type="unfinished"></translation>
+        <translation>Adicionada a &quot;%1&quot;</translation>
     </message>
     <message>
         <source>Removed from &quot;My Favorites&quot;</source>
-        <translation type="unfinished"></translation>
+        <translation>Removido de &quot;Minhas favoritas&quot;</translation>
     </message>
     <message>
         <source>A disc is connected</source>
@@ -846,15 +844,15 @@
     </message>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished">Cancelar</translation>
+        <translation>Cancelar</translation>
     </message>
     <message>
         <source>Replace</source>
-        <translation type="unfinished"></translation>
+        <translation>Substituir</translation>
     </message>
     <message>
         <source>This shortcut key conflicts with [%1], click Replace to make this shortcut key take effect immediately</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -1012,7 +1010,7 @@
     <name>ToolButtonItem</name>
     <message>
         <source>Play All</source>
-        <translation type="unfinished">Reproduzir tudo</translation>
+        <translation>Reproduzir tudo</translation>
     </message>
 </context>
 <context>
@@ -1063,7 +1061,7 @@
     </message>
     <message>
         <source>Play Queue</source>
-        <translation>Reproduzir fila</translation>
+        <translation>Reproduzir fila de espera</translation>
     </message>
 </context>
 <context>
@@ -1118,7 +1116,7 @@
     </message>
     <message>
         <source>%1 is released under %2</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 </TS>

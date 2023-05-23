@@ -1,6 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS>
-<TS version="2.1" language="zh_HK" sourcelanguage="en_US">
+<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="zh_HK" sourcelanguage="en_US">
 <context>
     <name>AlbumDefaultPage</name>
     <message>
@@ -16,8 +14,8 @@
         <translation>拖拽歌曲文件來添加歌曲 或</translation>
     </message>
     <message>
-        <source> scan the Music directory</source>
-        <translation> 掃描歌曲目錄</translation>
+        <source>scan the Music directory</source>
+        <translation>掃描歌曲目錄</translation>
     </message>
 </context>
 <context>
@@ -148,7 +146,7 @@
     </message>
     <message>
         <source> scan the Music directory</source>
-        <translation type="unfinished"></translation>
+        <translation>扫描歌曲目录</translation>
     </message>
 </context>
 <context>
@@ -207,8 +205,8 @@
         <translation>拖拽歌曲文件來添加歌曲 或</translation>
     </message>
     <message>
-        <source> scan the Music directory</source>
-        <translation> 掃描歌曲目錄</translation>
+        <source>scan the Music directory</source>
+        <translation>掃描歌曲目錄</translation>
     </message>
 </context>
 <context>
@@ -846,15 +844,15 @@
     </message>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished">取消</translation>
+        <translation>取 消</translation>
     </message>
     <message>
         <source>Replace</source>
-        <translation type="unfinished"></translation>
+        <translation>替 換</translation>
     </message>
     <message>
         <source>This shortcut key conflicts with [%1], click Replace to make this shortcut key take effect immediately</source>
-        <translation type="unfinished"></translation>
+        <translation>此快捷鍵與[%1]衝突，點擊替換使這個快捷鍵立即生效</translation>
     </message>
 </context>
 <context>
@@ -1012,7 +1010,7 @@
     <name>ToolButtonItem</name>
     <message>
         <source>Play All</source>
-        <translation type="unfinished">播放全部</translation>
+        <translation>播放全部</translation>
     </message>
 </context>
 <context>
@@ -1118,7 +1116,7 @@
     </message>
     <message>
         <source>%1 is released under %2</source>
-        <translation type="unfinished"></translation>
+        <translation>%1遵循%2協議發布</translation>
     </message>
 </context>
 </TS>
