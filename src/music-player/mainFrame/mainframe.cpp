@@ -89,7 +89,7 @@ MainFrame::MainFrame()
 //    m_titlebarwidget->setResultWidget(m_searchResult);
 
     m_titlebar = new DTitlebar(this);
-    m_titlebar->setFixedHeight(50);
+//    m_titlebar->setFixedHeight(50);
     m_titlebar->setTitle(tr("Music"));
     m_titlebar->setIcon(QIcon::fromTheme("deepin-music"));    //titlebar->setCustomWidget(titlebarwidget, Qt::AlignLeft, false);
 
@@ -99,13 +99,14 @@ MainFrame::MainFrame()
     AC_SET_OBJECT_NAME(m_backBtn, AC_titleBarLeft);
     AC_SET_ACCESSIBLE_NAME(m_backBtn, AC_titleBarLeft);
     m_backBtn->setVisible(false);
-    m_backBtn->setFixedSize(QSize(36, 36));
+//    m_backBtn->setFixedSize(QSize(36, 36));
 
     m_addMusicBtn = new DIconButton(DStyle::SP_IncreaseElement, this);
     m_addMusicBtn->setToolTip(tr("Add music"));
     AC_SET_OBJECT_NAME(m_addMusicBtn, AC_titleBarAddMusic);
     AC_SET_ACCESSIBLE_NAME(m_addMusicBtn, AC_titleBarAddMusic);
-    m_addMusicBtn->setFixedSize(QSize(36, 36));
+//    m_addMusicBtn->setFixedSize(QSize(36, 36));
+    slotSizeModeChanged(DGuiApplicationHelper::instance()->sizeMode());
 
     m_selectStr = tr("Select");
     m_selectAllStr = tr("Select All");
@@ -116,7 +117,7 @@ MainFrame::MainFrame()
     m_backBtn->setIcon(QIcon::fromTheme("left_arrow"));
     m_titlebar->addWidget(m_backBtn, Qt::AlignLeft);
     m_titlebar->addWidget(m_addMusicBtn, Qt::AlignRight);
-    m_titlebar->resize(width(), 50);
+//    m_titlebar->resize(width(), 50);
 
     // 返回按钮点击
     connect(m_backBtn, &DPushButton::clicked,
@@ -178,6 +179,7 @@ MainFrame::MainFrame()
             this, [=](MediaMeta meta) {
         this->setWindowTitle(meta.localPath);
     });
+    connect(DGuiApplicationHelper::instance(),&DGuiApplicationHelper::sizeModeChanged,this, &MainFrame::slotSizeModeChanged);
 
     if (CommonService::getInstance()->isTabletEnvironment()) {
         QDBusConnection connection = QDBusConnection::sessionBus();
@@ -631,6 +633,21 @@ void MainFrame::slotActiveChanged(bool isActive)
         } else if (m_musicStatckedWidget->pos().y() != 50) {
             m_musicStatckedWidget->animationToDownByInput();
         }
+    }
+}
+void MainFrame::slotSizeModeChanged(DGuiApplicationHelper::SizeMode sizeMode)
+{
+    if (sizeMode == DGuiApplicationHelper::SizeMode::CompactMode) {
+        qInfo() << "Size Mode Changed! Current SizeMode is CompactMode";
+        m_backBtn->setFixedSize(QSize(25, 25));
+        m_addMusicBtn->setFixedSize(QSize(25, 25));
+
+
+    } else {
+        qInfo() << "Size Mode Changed! Current SizeMode is " << sizeMode;
+        m_backBtn->setFixedSize(QSize(36, 36));
+        m_addMusicBtn->setFixedSize(QSize(36, 36));
+
     }
 }
 

@@ -59,6 +59,8 @@ public slots:
     void slotLeftClicked();
     // 虚拟键盘
     void slotActiveChanged(bool isActive);
+    // 紧凑模式
+    void slotSizeModeChanged(DGuiApplicationHelper::SizeMode sizeMode);
 private:
     /**
      * @brief initMenuAndShortCut
