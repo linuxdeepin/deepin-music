@@ -99,14 +99,18 @@ MainFrame::MainFrame()
     AC_SET_OBJECT_NAME(m_backBtn, AC_titleBarLeft);
     AC_SET_ACCESSIBLE_NAME(m_backBtn, AC_titleBarLeft);
     m_backBtn->setVisible(false);
-//    m_backBtn->setFixedSize(QSize(36, 36));
 
     m_addMusicBtn = new DIconButton(DStyle::SP_IncreaseElement, this);
     m_addMusicBtn->setToolTip(tr("Add music"));
     AC_SET_OBJECT_NAME(m_addMusicBtn, AC_titleBarAddMusic);
     AC_SET_ACCESSIBLE_NAME(m_addMusicBtn, AC_titleBarAddMusic);
-//    m_addMusicBtn->setFixedSize(QSize(36, 36));
+
+#ifdef OS_BUILD_1060
     slotSizeModeChanged(DGuiApplicationHelper::instance()->sizeMode());
+#else
+    m_backBtn->setFixedSize(QSize(36, 36));
+    m_addMusicBtn->setFixedSize(QSize(36, 36));
+#endif
 
     m_selectStr = tr("Select");
     m_selectAllStr = tr("Select All");
@@ -179,7 +183,10 @@ MainFrame::MainFrame()
             this, [=](MediaMeta meta) {
         this->setWindowTitle(meta.localPath);
     });
+
+#ifdef OS_BUILD_1060
     connect(DGuiApplicationHelper::instance(),&DGuiApplicationHelper::sizeModeChanged,this, &MainFrame::slotSizeModeChanged);
+#endif
 
     if (CommonService::getInstance()->isTabletEnvironment()) {
         QDBusConnection connection = QDBusConnection::sessionBus();
@@ -635,6 +642,7 @@ void MainFrame::slotActiveChanged(bool isActive)
         }
     }
 }
+#ifdef OS_BUILD_1060
 void MainFrame::slotSizeModeChanged(DGuiApplicationHelper::SizeMode sizeMode)
 {
     if (sizeMode == DGuiApplicationHelper::SizeMode::CompactMode) {
@@ -650,6 +658,7 @@ void MainFrame::slotSizeModeChanged(DGuiApplicationHelper::SizeMode sizeMode)
 
     }
 }
+#endif
 
 void MainFrame::slotSearchEditFoucusIn()
 {
