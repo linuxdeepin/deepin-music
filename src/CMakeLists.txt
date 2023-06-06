@@ -24,16 +24,6 @@ if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
    set(CMAKE_INSTALL_PREFIX /usr)
 endif()
 
-# 判断系统环境
-# 紧凑模式只在1060（dtk 5.6.4以后）上支持
-execute_process(COMMAND cat /etc/os-version OUTPUT_VARIABLE OS_INFO_STR)
-string(REGEX MATCHALL "MinorVersion=[0-9]+" MINOR_STR "${OS_INFO_STR}")
-string(REGEX MATCH "[0-9]+" MINOR_VERSION "${MINOR_STR}")
-if (MINOR_VERSION MATCHES "1060")
-    message("--------------------- os build on 1060")
-    add_definitions(-DOS_BUILD_1060)
-endif()
-
 add_subdirectory(libdmusic)
 add_subdirectory(music-player)
 add_subdirectory(libmusic-plugin)

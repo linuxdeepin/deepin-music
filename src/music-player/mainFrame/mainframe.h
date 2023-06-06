@@ -60,7 +60,7 @@ public slots:
     // 虚拟键盘
     void slotActiveChanged(bool isActive);
 
-#ifdef OS_BUILD_1060
+#ifdef DTKWIDGET_CLASS_DSizeMode
     // 紧凑模式
     void slotSizeModeChanged(DGuiApplicationHelper::SizeMode sizeMode);
 #endif
