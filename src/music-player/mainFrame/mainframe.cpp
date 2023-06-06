@@ -105,7 +105,7 @@ MainFrame::MainFrame()
     AC_SET_OBJECT_NAME(m_addMusicBtn, AC_titleBarAddMusic);
     AC_SET_ACCESSIBLE_NAME(m_addMusicBtn, AC_titleBarAddMusic);
 
-#ifdef OS_BUILD_1060
+#ifdef DTKWIDGET_CLASS_DSizeMode
     slotSizeModeChanged(DGuiApplicationHelper::instance()->sizeMode());
 #else
     m_backBtn->setFixedSize(QSize(36, 36));
@@ -184,7 +184,7 @@ MainFrame::MainFrame()
         this->setWindowTitle(meta.localPath);
     });
 
-#ifdef OS_BUILD_1060
+#ifdef DTKWIDGET_CLASS_DSizeMode
     connect(DGuiApplicationHelper::instance(),&DGuiApplicationHelper::sizeModeChanged,this, &MainFrame::slotSizeModeChanged);
 #endif
 
@@ -642,7 +642,7 @@ void MainFrame::slotActiveChanged(bool isActive)
         }
     }
 }
-#ifdef OS_BUILD_1060
+#ifdef DTKWIDGET_CLASS_DSizeMode
 void MainFrame::slotSizeModeChanged(DGuiApplicationHelper::SizeMode sizeMode)
 {
     if (sizeMode == DGuiApplicationHelper::SizeMode::CompactMode) {
