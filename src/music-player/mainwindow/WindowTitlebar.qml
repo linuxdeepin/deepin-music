@@ -88,8 +88,8 @@ TitleBar {
                 license: qsTr("%1 is released under %2").arg("Music").arg("GPLV3")
             }
         }
-        //QuitAction {}
-        MenuItem {
+        QuitAction {}
+        /*MenuItem {
             id: quitControl
             text: qsTr("Quit")
             onTriggered: {
@@ -117,7 +117,7 @@ TitleBar {
                     }
                 }
             }
-        }
+        }*/
     }
     content: titleBarContent
 
