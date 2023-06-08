@@ -1118,7 +1118,7 @@
     </message>
     <message>
         <source>Next page</source>
-        <translation>下一曲</translation>
+        <translation>下一页</translation>
     </message>
     <message>
         <source>Search</source>
