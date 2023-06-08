@@ -146,7 +146,7 @@
     </message>
     <message>
         <source> scan the Music directory</source>
-        <translation type="unfinished"/>
+        <translation>hae ne Musiikki kansiosta</translation>
     </message>
 </context>
 <context>
@@ -852,7 +852,7 @@
     </message>
     <message>
         <source>This shortcut key conflicts with [%1], click Replace to make this shortcut key take effect immediately</source>
-        <translation type="unfinished"/>
+        <translation> Tämä pikanäppäin on ristiriidassa [%1] kanssa, paina Korvaa ja tämä pikanäppäin tulee voimaan</translation>
     </message>
 </context>
 <context>
@@ -1116,7 +1116,7 @@
     </message>
     <message>
         <source>%1 is released under %2</source>
-        <translation type="unfinished"/>
+        <translation>%1 on julkaistu %2 ehdoilla</translation>
     </message>
 </context>
 </TS>

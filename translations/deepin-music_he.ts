@@ -351,7 +351,7 @@
     <name>DeleteLocalDialog</name>
     <message>
         <source>Are you sure you want to delete %1?</source>
-        <translation type="unfinished"/>
+        <translation>האם אתה בטוח שברצונך למחוק את %1?</translation>
     </message>
     <message>
         <source>Are you sure you want to delete the selected %1 songs?</source>
@@ -688,7 +688,7 @@
     </message>
     <message>
         <source>Open in file manager</source>
-        <translation type="unfinished"/>
+        <translation>פתח במנהל הקבצים</translation>
     </message>
     <message>
         <source>Remove from playlist</source>
@@ -931,7 +931,7 @@
     </message>
     <message>
         <source>Display shortcuts</source>
-        <translation type="unfinished"/>
+        <translation>הצג קיצור־דרך</translation>
     </message>
 </context>
 <context>
