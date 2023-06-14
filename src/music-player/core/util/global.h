@@ -34,4 +34,6 @@ public:
     static void setBoardVendorType(bool type);
     // boardVendor
     static bool boardVendorType();
+    //m900判断
+    static bool isPangu();
 };

@@ -11,6 +11,8 @@
 #include <QLibrary>
 #include <QDir>
 #include <QLibraryInfo>
+#include <QDBusInterface>
+#include <QDebug>
 
 DCORE_USE_NAMESPACE;
 
@@ -19,6 +21,9 @@ static bool waylandMode = false;
 static int engineType = 0;
 static bool initBoardVendorFlag = false;
 static bool boardVendorFlag = false;
+static bool initPanguFlag = false;
+static bool panguFlag = false;
+
 
 QString Global::configPath()
 {
@@ -125,3 +130,32 @@ bool Global::boardVendorType()
     return boardVendorFlag;
 }
 
+bool Global::isPangu()
+{
+    if (!initPanguFlag) {
+        QString validFrequency = "CurrentSpeed";
+        QDBusInterface systemInfoInterface("com.deepin.daemon.SystemInfo",
+                                           "/com/deepin/daemon/SystemInfo",
+                                           "org.freedesktop.DBus.Properties",
+                                           QDBusConnection::sessionBus());
+        qDebug() << "systemInfoInterface.isValid: " << systemInfoInterface.isValid();
+
+        initPanguFlag = true;
+        if (!systemInfoInterface.isValid())
+            return false;
+
+        QDBusMessage replyCpu = systemInfoInterface.call("Get", "com.deepin.daemon.SystemInfo", "CPUHardware");
+        QList<QVariant> outArgsCPU = replyCpu.arguments();
+        if (outArgsCPU.count()) {
+            QString CPUHardware = outArgsCPU.at(0).value<QDBusVariant>().variant().toString();
+            qInfo() << __FUNCTION__ << __LINE__ << "Current CPUHardware: " << CPUHardware;
+
+            if (CPUHardware.contains("PANGU")) {
+
+                panguFlag = true;
+            }
+        }
+        panguFlag = false;
+    }
+    return !panguFlag;
+}
