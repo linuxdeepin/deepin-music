@@ -809,8 +809,9 @@ void FooterWidget::slotSetWaveValue(int step, long duration)
 
 void FooterWidget::screenStandby(bool isStandby)
 {
-    if (!Global::boardVendorType())
+    if (!Global::boardVendorType() && !Global::isPangu()) //hw和m900都要阻止锁屏
         return;
+
     if (isStandby) {
         if (m_lastCookie > 0) {
             QDBusInterface iface("org.freedesktop.ScreenSaver",
