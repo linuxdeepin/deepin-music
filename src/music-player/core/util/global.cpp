@@ -133,7 +133,6 @@ bool Global::boardVendorType()
 bool Global::isPangu()
 {
     if (!initPanguFlag) {
-        QString validFrequency = "CurrentSpeed";
         QDBusInterface systemInfoInterface("com.deepin.daemon.SystemInfo",
                                            "/com/deepin/daemon/SystemInfo",
                                            "org.freedesktop.DBus.Properties",
@@ -157,5 +156,6 @@ bool Global::isPangu()
         }
         panguFlag = false;
     }
-    return !panguFlag;
+
+    return panguFlag;
 }
