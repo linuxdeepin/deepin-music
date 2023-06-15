@@ -137,7 +137,6 @@ bool Global::isPangu()
                                            "/com/deepin/daemon/SystemInfo",
                                            "org.freedesktop.DBus.Properties",
                                            QDBusConnection::sessionBus());
-        qDebug() << "systemInfoInterface.isValid: " << systemInfoInterface.isValid();
 
         initPanguFlag = true;
         if (!systemInfoInterface.isValid())
@@ -150,11 +149,9 @@ bool Global::isPangu()
             qInfo() << __FUNCTION__ << __LINE__ << "Current CPUHardware: " << CPUHardware;
 
             if (CPUHardware.contains("PANGU")) {
-
                 panguFlag = true;
             }
         }
-        panguFlag = false;
     }
 
     return panguFlag;
