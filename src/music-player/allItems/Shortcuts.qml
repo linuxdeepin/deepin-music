@@ -104,6 +104,9 @@ Item {
         id: favorite_song  //快捷键 我的喜欢
         sequence: { return Presenter.valueFromSettings("shortcuts.all.favorite_song");}
         onActivated: {
+            if (!globalVariant.currentMediaMeta.title)
+                return
+
             if(globalVariant.currentMediaMeta.favourite){
                 Presenter.removeFromPlayList(globalVariant.currentMediaMeta.hash, "fav");
                 globalVariant.currentMediaMeta.favourite = false;
