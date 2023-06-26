@@ -111,7 +111,15 @@ bool Global::checkBoardVendorType()
             || result.contains("PGUW", Qt::CaseInsensitive)
             || result.contains("L540", Qt::CaseInsensitive)
             || result.contains("W585", Qt::CaseInsensitive);
-            process.close();
+    process.close();
+
+    process.start("bash", QStringList() << "-c" << "dmidecode | grep -i \"Strings 4\"");
+    process.waitForStarted();
+    process.waitForFinished();
+    result = process.readAll();
+    //qDebug() << __func__ << result;
+    boardVendorFlag = result.contains("PWC30", Qt::CaseInsensitive);    //w525
+    process.close();
 
     initBoardVendorFlag = true;
     return boardVendorFlag;
