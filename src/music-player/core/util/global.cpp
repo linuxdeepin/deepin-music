@@ -113,7 +113,7 @@ bool Global::checkBoardVendorType()
             || result.contains("W585", Qt::CaseInsensitive);
     process.close();
 
-    process.start("bash", QStringList() << "-c" << "dmidecode | grep -i \"Strings 4\"");
+    process.start("bash", QStringList() << "-c" << "dmidecode | grep -i \"String 4\"");
     process.waitForStarted();
     process.waitForFinished();
     result = process.readAll();
