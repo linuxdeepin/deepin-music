@@ -160,8 +160,8 @@ MainFrame::MainFrame()
         // 使用dbus显示窗口
         this->titlebar()->setFocus();
         show();
-//        raise();
-//        activateWindow();
+        raise();
+        activateWindow();
         this->setWindowState((this->windowState() & ~Qt::WindowMinimized) | Qt::WindowActive);
     });
 
