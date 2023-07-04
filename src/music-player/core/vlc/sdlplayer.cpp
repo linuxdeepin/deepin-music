@@ -142,6 +142,9 @@ SdlPlayer::SdlPlayer(VlcInstance *instance)
         m_pCheckDataThread = new CheckDataZeroThread(this);
         connect(m_pCheckDataThread, &CheckDataZeroThread::sigPlayNextSong, this, &SdlPlayer::checkDataZero, Qt::QueuedConnection);
         connect(m_pCheckDataThread, &CheckDataZeroThread::sigExtraTime, this, &VlcMediaPlayer::timeChanged, Qt::QueuedConnection);
+        connect(this, &SdlPlayer::endReached, this, [=](){
+            m_pCheckDataThread->initTimeParams();
+        });
     }
     //}
 

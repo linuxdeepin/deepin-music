@@ -18,6 +18,8 @@
 
 #include <QDebug>
 
+extern int g_playbackStatus;
+
 typedef libvlc_media_player_t *(*vlc_media_player_new_function)(libvlc_instance_t *);
 typedef libvlc_event_manager_t *(*vlc_media_player_event_manager_function)(libvlc_media_player_t *);
 typedef void (*vlc_media_player_release_function)(libvlc_media_player_t *);
@@ -365,7 +367,14 @@ void VlcMediaPlayer::libvlc_callback(const libvlc_event_t *event,
         emit core->backward();
         break;
     case libvlc_MediaPlayerEndReached:
-        emit core->end(); //play end
+        g_playbackStatus = 0;
+        if (core->_data.isEmpty()) {
+            emit core->end(); //play end
+        } else {
+            g_playbackStatus = 1;
+            // 设置当前进度时间、步进、总时间
+            emit core->endReached();
+        }
         break;
     case libvlc_MediaPlayerEncounteredError:
         emit core->error();
