@@ -287,6 +287,8 @@ signals:
     */
     void stateChanged();
 
+    void endReached();
+
 protected:
     static void libvlc_callback(const libvlc_event_t *event,
                                 void *data);
@@ -298,6 +300,8 @@ protected:
     libvlc_event_manager_t *_vlcEvents;
 
     VlcEqualizer *_vlcEqualizer;
+
+    QByteArray _data;
 };
 
 #endif // VLCQT_MEDIAPLAYER_H_

@@ -146,7 +146,7 @@ private:
     SDL_AudioSpec obtainedAS;
     bool m_loadSdlLibrary;
 
-    QByteArray _data;
+//    QByteArray _data;
     int progressTag = 0;
     int m_volume = 50.0;
     bool m_mute = false;
