@@ -41,8 +41,8 @@ ApplicationWindow {
                 width: 220
                 height: parent.height
                 anchors.top: parent.top
-                blendColor: DTK.themeType === ApplicationHelper.LightType ? "#ddf7f7f7"
-                                                                          : "#ee252525"
+                blendColor: DTK.themeType === ApplicationHelper.LightType ? "#bbf7f7f7"
+                                                                          : "#dd252525"
                 Rectangle {
                     width: 1
                     height: parent.height
