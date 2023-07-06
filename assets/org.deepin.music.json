@@ -1,0 +1,26 @@
+{
+  "magic": "dsg.config.meta",
+  "version": "1.0",
+  "contents": {
+      "specialMuteRecovery": {
+          "value": 0,
+          "serial": 0,
+          "flags": ["global"],
+          "name": "Special Mute Recovery",
+          "name[zh_CN]": "特殊静音恢复",
+          "description": "Silent recovery on some special models, like Huawei",
+          "permissions": "readwrite",
+          "visibility": "private"
+      },
+	"specialBlockLockScreen": {
+          "value": 0,
+          "serial": 0,
+          "flags": ["global"],
+          "name": "Special Block Lock Screen",
+          "name[zh_CN]": "特殊阻止锁屏",
+          "description": "Block the lock screen on some special models, like m900",
+          "permissions": "readwrite",
+          "visibility": "private"
+      }
+  }
+}
