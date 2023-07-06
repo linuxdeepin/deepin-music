@@ -97,6 +97,7 @@ aux_source_directory(./listView/musicSearchList allSource)
 aux_source_directory(./listView/lyricLineList allSource)
 
 find_package(PkgConfig REQUIRED)
+find_package(DtkWidget REQUIRED)
 
 pkg_check_modules(Dtk REQUIRED IMPORTED_TARGET dtkwidget)
 pkg_check_modules(Dtk REQUIRED IMPORTED_TARGET dtkcore)
@@ -184,3 +185,11 @@ install(FILES ${PROJECT_SOURCE_DIR}/src/music-player/data/deepin-music.desktop
 install(FILES ${PROJECT_SOURCE_DIR}/src/music-player/icons/icons/deepin-music.svg
     DESTINATION ${CMAKE_INSTALL_DATADIR}/icons/hicolor/scalable/apps)
 install(DIRECTORY ${PROJECT_SOURCE_DIR}/assets/deepin-music DESTINATION ${CMAKE_INSTALL_DATADIR}/deepin-manual/manual-assets/application/)
+
+#hw机型增加DConfig配置
+set(APPID org.deepin.music)
+set(configFile ${PROJECT_SOURCE_DIR}/assets/org.deepin.music.json)
+if (DEFINED DSG_DATA_DIR)
+    message("-- DConfig is supported by DTK")
+    dconfig_meta_files(APPID ${APPID} FILES ${configFile})
+endif()

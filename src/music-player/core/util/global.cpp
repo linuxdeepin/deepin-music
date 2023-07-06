@@ -13,7 +13,9 @@
 #include <QLibraryInfo>
 #include <QDBusInterface>
 #include <QDebug>
-
+#ifdef DTKCORE_CLASS_DConfigFile
+#include <DConfig>
+#endif
 DCORE_USE_NAMESPACE;
 
 static QString appName;
@@ -100,29 +102,43 @@ bool Global::checkBoardVendorType()
 //        boardVendorFlag = result.contains("HUAWEI");
 //        file.close();
 //    }
-    QProcess process;
-    process.start("dmidecode", QStringList() << "-s" << "system-product-name");
-    process.waitForStarted();
-    process.waitForFinished();
-    QString result(process.readAll());
-    boardVendorFlag = result.contains("KLVV", Qt::CaseInsensitive)
-            || result.contains("KLVU", Qt::CaseInsensitive)
-            || result.contains("PGUV", Qt::CaseInsensitive)
-            || result.contains("PGUW", Qt::CaseInsensitive)
-            || result.contains("L540", Qt::CaseInsensitive)
-            || result.contains("W585", Qt::CaseInsensitive);
-    process.close();
+    int specialMuteRecovery = -1;
+#ifdef DTKCORE_CLASS_DConfigFile
+    //需要查询是否支持特殊机型静音恢复，例如hw机型
+    DConfig *dconfig = DConfig::create("org.deepin.music","org.deepin.music");
+    //需要判断Dconfig文件是否合法
+    if(dconfig && dconfig->isValid() && dconfig->keyList().contains("specialMuteRecovery")){
+        specialMuteRecovery = dconfig->value("specialMuteRecovery").toInt();
+    }
+#endif
+    qInfo() << "specialMuteRecovery value is:" << specialMuteRecovery;
+    if(specialMuteRecovery != -1){
+        boardVendorFlag = specialMuteRecovery? true:false;
+    }else{
+        QProcess process;
+        process.start("dmidecode", QStringList() << "-s" << "system-product-name");
+        process.waitForStarted();
+        process.waitForFinished();
+        QString result(process.readAll());
+        boardVendorFlag = result.contains("KLVV", Qt::CaseInsensitive)
+                || result.contains("KLVU", Qt::CaseInsensitive)
+                || result.contains("PGUV", Qt::CaseInsensitive)
+                || result.contains("PGUW", Qt::CaseInsensitive)
+                || result.contains("L540", Qt::CaseInsensitive)
+                || result.contains("W585", Qt::CaseInsensitive);
+        process.close();
 
-    process.start("bash", QStringList() << "-c" << "dmidecode | grep -i \"String 4\"");
-    process.waitForStarted();
-    process.waitForFinished();
-    result = process.readAll();
-    //qDebug() << __func__ << result;
-    boardVendorFlag = boardVendorFlag
-            || result.contains("PWC30", Qt::CaseInsensitive);    //w525
-    process.close();
-
+        process.start("bash", QStringList() << "-c" << "dmidecode | grep -i \"String 4\"");
+        process.waitForStarted();
+        process.waitForFinished();
+        result = process.readAll();
+        //qDebug() << __func__ << result;
+        boardVendorFlag = boardVendorFlag
+                || result.contains("PWC30", Qt::CaseInsensitive);    //w525
+        process.close();
+    }
     initBoardVendorFlag = true;
+    qInfo() << "Whether special mute recovery mode is supported?" << boardVendorFlag;
     return boardVendorFlag;
 }
 
@@ -141,27 +157,41 @@ bool Global::boardVendorType()
 
 bool Global::isPangu()
 {
-    if (!initPanguFlag) {
-        QDBusInterface systemInfoInterface("com.deepin.daemon.SystemInfo",
-                                           "/com/deepin/daemon/SystemInfo",
-                                           "org.freedesktop.DBus.Properties",
-                                           QDBusConnection::sessionBus());
-
+    int specialBlockLockScreen = -1;
+#ifdef DTKCORE_CLASS_DConfigFile
+    //需要查询是否支持特殊机型阻止锁屏，例如m900机型
+    DConfig *dconfig = DConfig::create("org.deepin.music","org.deepin.music");
+    if(dconfig && dconfig->isValid() && dconfig->keyList().contains("specialBlockLockScreen")){
+        specialBlockLockScreen = dconfig->value("specialBlockLockScreen").toInt();
+    }
+#endif
+    qInfo() << "specialBlockLockScreen value is:" << specialBlockLockScreen;
+    if(specialBlockLockScreen != -1){
         initPanguFlag = true;
-        if (!systemInfoInterface.isValid())
-            return false;
+        panguFlag = specialBlockLockScreen? true:false;
+    }else{
+        if (!initPanguFlag) {
+            QDBusInterface systemInfoInterface("com.deepin.daemon.SystemInfo",
+                                               "/com/deepin/daemon/SystemInfo",
+                                               "org.freedesktop.DBus.Properties",
+                                               QDBusConnection::sessionBus());
 
-        QDBusMessage replyCpu = systemInfoInterface.call("Get", "com.deepin.daemon.SystemInfo", "CPUHardware");
-        QList<QVariant> outArgsCPU = replyCpu.arguments();
-        if (outArgsCPU.count()) {
-            QString CPUHardware = outArgsCPU.at(0).value<QDBusVariant>().variant().toString();
-            qInfo() << __FUNCTION__ << __LINE__ << "Current CPUHardware: " << CPUHardware;
+            initPanguFlag = true;
+            if (!systemInfoInterface.isValid())
+                return false;
 
-            if (CPUHardware.contains("PANGU")) {
-                panguFlag = true;
+            QDBusMessage replyCpu = systemInfoInterface.call("Get", "com.deepin.daemon.SystemInfo", "CPUHardware");
+            QList<QVariant> outArgsCPU = replyCpu.arguments();
+            if (outArgsCPU.count()) {
+                QString CPUHardware = outArgsCPU.at(0).value<QDBusVariant>().variant().toString();
+                qInfo() << __FUNCTION__ << __LINE__ << "Current CPUHardware: " << CPUHardware;
+
+                if (CPUHardware.contains("PANGU")) {
+                    panguFlag = true;
+                }
             }
         }
     }
-
+    qInfo() << "Whether Block the lock screen on some special models is supported, like m900?" << panguFlag;
     return panguFlag;
 }
