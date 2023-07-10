@@ -3,7 +3,7 @@
   "version": "1.0",
   "contents": {
       "specialMuteRecovery": {
-          "value": 0,
+          "value": -1,
           "serial": 0,
           "flags": ["global"],
           "name": "Special Mute Recovery",
@@ -13,7 +13,7 @@
           "visibility": "private"
       },
 	"specialBlockLockScreen": {
-          "value": 0,
+          "value": -1,
           "serial": 0,
           "flags": ["global"],
           "name": "Special Block Lock Screen",
