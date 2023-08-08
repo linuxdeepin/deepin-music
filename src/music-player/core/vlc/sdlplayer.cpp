@@ -54,6 +54,7 @@ extern "C" {
 //消息定义见patch https://gerrit.uniontech.com/c/base/libsdl2/+/23685
 #define SDL_AUDIO_ERR_MSG "Error writing to datastream"
 int g_playbackStatus = 0;
+bool is_pa_connected = true;
 static QMutex vlc_mutex;
 
 static pa_context *context = nullptr;
@@ -154,8 +155,10 @@ SdlPlayer::SdlPlayer(VlcInstance *instance)
     context = pa_context_new_with_proplist(api, nullptr, proplist);
     pa_proplist_free(proplist);
     //connect to pulse
-    if (pa_context_connect(context, nullptr, PA_CONTEXT_NOFAIL, nullptr) < 0)
+    if (pa_context_connect(context, nullptr, PA_CONTEXT_NOFAIL, nullptr) < 0) {
+        is_pa_connected = false;
         qDebug() << __FUNCTION__ << "pa_context_connect: connect to pa failed";
+    }
 }
 
 SdlPlayer::~SdlPlayer()
@@ -267,8 +270,13 @@ void SdlPlayer::resume()
         SDL_PauseAudio_function PauseAudio = (SDL_PauseAudio_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSdlSymbol("SDL_PauseAudio");
         SDL_OpenAudio_function OpenAudio = (SDL_OpenAudio_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSdlSymbol("SDL_OpenAudio");
         SDL_Delay_function Delay = (SDL_Delay_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSdlSymbol("SDL_Delay");
-        if (GetAudioStatus() == SDL_AUDIO_STOPPED)
-            OpenAudio(&obtainedAS, nullptr);
+        if (GetAudioStatus() == SDL_AUDIO_STOPPED) {
+            if (OpenAudio(&obtainedAS, nullptr) < 0) {
+                qWarning() << __func__ << "SDL OpenAudio failed.";
+                pause();
+                return;
+            }
+        }
 
         if ((GetAudioStatus() != SDL_AUDIO_STOPPED)) {
             Delay(40);
@@ -431,13 +439,19 @@ int SdlPlayer::libvlc_audio_setup_cb(void **data, char *format, unsigned *rate, 
     desiredAS.callback = SDL_audio_cbk;
     desiredAS.userdata = sdlMediaPlayer;
 
-    if (OpenAudio(&desiredAS, &sdlMediaPlayer->obtainedAS) < 0) {}
+    if (is_pa_connected) { //pa连接成功才进行播放，否则会造成崩溃
+        if (OpenAudio(&desiredAS, &sdlMediaPlayer->obtainedAS) < 0) {
+            qWarning() << __func__ << "SDL OpenAudio failed.";
+            sdlMediaPlayer->pause();
+            return 0;
+        }
 
-    Delay(40);
-    PauseAudio(0);
+        Delay(40);
+        PauseAudio(0);
 
-    sdlMediaPlayer->resetVolume();
-    sdlMediaPlayer->m_sinkInputPath.clear();
+        sdlMediaPlayer->resetVolume();
+        sdlMediaPlayer->m_sinkInputPath.clear();
+    }
 
     return 0;
 }
