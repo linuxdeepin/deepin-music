@@ -1,3 +1,9 @@
+deepin-music (6.2.31) unstable; urgency=medium
+
+  * fix crash when connecting to pulseaudio failed
+
+ -- fengli <fengli@uniontech.com>  Tue, 15 Aug 2023 16:58:04 +0800
+
 deepin-music (6.2.30) unstable; urgency=medium
 
   * New version 6.2.30
