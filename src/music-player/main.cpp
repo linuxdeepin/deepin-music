@@ -15,6 +15,12 @@
 #include <DApplication>
 #include <QSurfaceFormat>
 
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <signal.h>
+#include <unistd.h>
+
 #include "config.h"
 
 #include "effect/shaderimageview.h"
@@ -26,6 +32,15 @@
 
 DWIDGET_USE_NAMESPACE;
 DCORE_USE_NAMESPACE;
+
+QScopedPointer<Presenter, QScopedPointerPodDeleter> presenter;
+
+void sig_term_handler(int signum, siginfo_t *info, void *ptr)
+{
+    qDebug() << "SIGTERM received.";
+    presenter->saveDataToDB();
+    exit(1);
+}
 
 // 此文件是QML应用的启动文件，一般无需修改
 int main(int argc, char *argv[])
@@ -126,7 +141,7 @@ int main(int argc, char *argv[])
     QQmlApplicationEngine engine;
     // 请在此处注册需要导入到QML中的C++类型
     // 例如： engine.rootContext()->setContextProperty("Utils", new Utils);
-    QScopedPointer<Presenter> presenter(new Presenter(QObject::tr("Unknown album"), QObject::tr("Unknown artist"), app));
+    presenter.reset(new Presenter(QObject::tr("Unknown album"), QObject::tr("Unknown artist"), app));
 
     EventsFilter eventsFilter(presenter.data());
     Shortcut shortcut(presenter.data());
@@ -148,6 +163,13 @@ int main(int argc, char *argv[])
     }
 
     QObject::connect(&engine, &QQmlApplicationEngine::quit, presenter.data(), &Presenter::saveDataToDB);
+
+    // 捕获强制退出信号，保存数据到数据库
+    static struct sigaction _sigact;
+    memset(&_sigact, 0, sizeof(_sigact));
+    _sigact.sa_sigaction = sig_term_handler;
+    _sigact.sa_flags = SA_SIGINFO;
+    sigaction(SIGTERM, &_sigact, NULL);
 
     return app->exec();
 }
