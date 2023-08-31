@@ -272,7 +272,7 @@ void SdlPlayer::resume()
         SDL_Delay_function Delay = (SDL_Delay_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSdlSymbol("SDL_Delay");
         if (GetAudioStatus() == SDL_AUDIO_STOPPED) {
             if (OpenAudio(&obtainedAS, nullptr) < 0) {
-                qWarning() << __func__ << "SDL OpenAudio failed.";
+                qCritical() << __func__ << "  SDL OpenAudio failed.";
                 pause();
                 return;
             }
@@ -441,9 +441,7 @@ int SdlPlayer::libvlc_audio_setup_cb(void **data, char *format, unsigned *rate, 
 
     if (is_pa_connected) { //pa连接成功才进行播放，否则会造成崩溃
         if (OpenAudio(&desiredAS, &sdlMediaPlayer->obtainedAS) < 0) {
-            qWarning() << __func__ << "SDL OpenAudio failed.";
-            sdlMediaPlayer->pause();
-            return 0;
+            qCritical() << __func__ << " SDL OpenAudio failed.";
         }
 
         Delay(40);
