@@ -19,7 +19,6 @@ _The **master** branch is current development branch, build dependencies may cha
 * libavformat-dev
 * libdtkcore-dev
 * libdtkgui-dev
-* libdframeworkdbus-dev
 * libudisks2-qt5-dev 
 * libvlc-dev
 * libvlccore-dev
