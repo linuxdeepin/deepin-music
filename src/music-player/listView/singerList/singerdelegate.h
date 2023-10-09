@@ -15,6 +15,7 @@ class SingerDataDelegate : public QStyledItemDelegate
 public:
     // Item 右边边距
     static constexpr int PlayItemRightMargin = 20;
+
 public:
     explicit SingerDataDelegate(QWidget *parent = Q_NULLPTR);
     ~SingerDataDelegate() override;
@@ -28,16 +29,9 @@ public:
     QSize sizeHint(const QStyleOptionViewItem &option,
                    const QModelIndex &index) const override;
 
-//    QWidget *createEditor(QWidget *parent, const QStyleOptionViewItem &option,
-//                          const QModelIndex &index) const override;
-
-//    void setEditorData(QWidget *editor, const QModelIndex &index) const override;
-
-//    void setModelData(QWidget *editor, QAbstractItemModel *model,
-//                      const QModelIndex &index) const override;
-
 protected:
     bool editorEvent(QEvent *event, QAbstractItemModel *model, const QStyleOptionViewItem &option, const QModelIndex &index) override;
+
 private:
     void drawIconMode(QPainter &painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
     // 平板icon模式
@@ -50,6 +44,7 @@ private:
     void drawListMode(QPainter &painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
     void mouseClicked(const QStyleOptionViewItem &option, const QModelIndex &index, const QPointF pressPos);
     void mouseDoubleClicked(const QStyleOptionViewItem &option, const QModelIndex &index);
+
 private:
     QPixmap hoverPlayImg ;
     QPixmap hoverSuspendImg ;

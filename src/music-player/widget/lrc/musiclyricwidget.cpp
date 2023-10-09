@@ -164,6 +164,11 @@ void MusicLyricWidget::showAnimation()
     animation->setEasingCurve(QEasingCurve::InCurve);
     animation->setStartValue(QPoint(0, height()));
     animation->setEndValue(QPoint(0, 50));
+#ifdef DTKWIDGET_CLASS_DSizeMode
+        if (DGuiApplicationHelper::instance()->sizeMode() == DGuiApplicationHelper::SizeMode::CompactMode) {
+            animation->setEndValue(QPoint(0, 40));
+        }
+#endif
 
     connect(animation, &QPropertyAnimation::finished,
             animation, &QPropertyAnimation::deleteLater);
@@ -182,6 +187,11 @@ void MusicLyricWidget::closeAnimation()
     animation->setEasingCurve(QEasingCurve::InCurve);
     animation->setStartValue(QPoint(0, 50));
     animation->setEndValue(QPoint(0, this->height()));
+#ifdef DTKWIDGET_CLASS_DSizeMode
+        if (DGuiApplicationHelper::instance()->sizeMode() == DGuiApplicationHelper::SizeMode::CompactMode) {
+            animation->setStartValue(QPoint(0, 40));
+        }
+#endif
 
     animation->connect(animation, &QPropertyAnimation::finished,
                        animation, &QPropertyAnimation::deleteLater);

@@ -249,62 +249,6 @@ void MusicSearchListview::switchToSearchResultTab(const QModelIndex &index)
     }
 }
 
-//QString MusicSearchListview::getCurrentIndexText(int row)
-//{
-//    QString currentIndexText;
-//    if (row >= 0 && row < this->rowCount()) {
-//        QModelIndex index = m_model->index(row, 0, QModelIndex());
-//        MediaMeta mediaMeta = index.data(Qt::UserRole + SearchType::SearchMusic).value<MediaMeta>();
-//        currentIndexText = mediaMeta.title;
-//    }
-//    return currentIndexText;
-//}
-
-//void MusicSearchListview::setPlayPixmap(QPixmap pixmap, QPixmap sidebarPixmap, QPixmap albumPixmap)
-//{
-//    m_playingPixmap = pixmap;
-//    m_sidebarPixmap = sidebarPixmap;
-//    m_albumPixmap = albumPixmap;
-//    update();
-//}
-
-//QPixmap MusicSearchListview::getPlayPixmap() const
-//{
-//    return m_playingPixmap;
-//}
-
-//QPixmap MusicSearchListview::getSidebarPixmap() const
-//{
-//    return m_sidebarPixmap;
-//}
-
-//QPixmap MusicSearchListview::getAlbumPixmap() const
-//{
-//    return m_albumPixmap;
-//}
-
-//void MusicSearchListview::setViewModeFlag(QListView::ViewMode mode)
-//{
-//    if (mode == QListView::IconMode) {
-//        setIconSize(QSize(170, 170));
-//        setGridSize(QSize(170, 170));
-//    } else {
-//        setIconSize(QSize(36, 36));
-//        setGridSize(QSize(-1, -1));
-//    }
-//    setViewMode(mode);
-//}
-
-//void MusicSearchListview::addItem(const QString str)
-//{
-//    QStandardItem *newItem = new QStandardItem;
-//    m_model->appendRow(newItem);
-
-//    auto row = m_model->rowCount() - 1;
-//    QModelIndex index = m_model->index(row, 0, QModelIndex());
-//    m_model->setData(index, str);
-//}
-
 void MusicSearchListview::SearchClear()
 {
     Q_EMIT this->sigSearchClear();

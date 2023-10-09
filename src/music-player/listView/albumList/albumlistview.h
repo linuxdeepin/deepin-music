@@ -6,6 +6,7 @@
 #pragma once
 
 #include <DListView>
+#include <DGuiApplicationHelper>
 
 #include "commonservice.h"
 #include "databaseservice.h"
@@ -46,9 +47,7 @@ public:
     void setThemeType(int type);
     int getThemeType() const;
 
-    //void setPlayPixmap(QPixmap pixmap, QPixmap sidebarPixmap, QPixmap albumPixmap);
     QPixmap getPlayPixmap() const;
-    //QPixmap getSidebarPixmap() const;
     QPixmap getPlayPixmap(bool isSelect = false);
     void updateList();
 
@@ -62,6 +61,7 @@ public:
 signals:
     void requestCustomContextMenu(const QPoint &pos);
     void modeChanged(int);
+
 public slots:
     // 跳转到当前播放歌曲位置
     void slotScrollToCurrentPosition(const QString &songlistHash);
@@ -73,6 +73,11 @@ public slots:
     void slotPlaybackStatusChanged(Player::PlaybackStatus statue);
     // 横竖屏切换
     void slotHScreen(bool isHScreen);
+#ifdef DTKWIDGET_CLASS_DSizeMode
+    // 切换紧凑模式
+    void slotSizeModeChanged(DGuiApplicationHelper::SizeMode sizeMode);
+#endif
+
 private slots:
     void slotCoverUpdate(const MediaMeta &meta);
     void slotRemoveSingleSong(const QString &listHash, const QString &musicHash);
@@ -80,15 +85,18 @@ private slots:
     void slotAddSingleSong(const QString &listHash, const MediaMeta &addMeta);
     // 多选歌曲删除时逻辑
     void slotRemoveSelectedSongs(const QString &deleteHash, const QStringList &musicHashs, bool removeFromLocal);
+
 protected:
     void dragEnterEvent(QDragEnterEvent *event) Q_DECL_OVERRIDE;
     void dragMoveEvent(QDragMoveEvent *event) Q_DECL_OVERRIDE;
     void dropEvent(QDropEvent *event) Q_DECL_OVERRIDE;
+
 private:
     // 排序
     void sortList(QList<AlbumInfo> &albumInfos, const DataBaseService::ListSortType &sortType);
     // 判断map中是否包含list中的某项
     bool mapContainsList(QMap<QString, MediaMeta> metasMap, QStringList musicHashs);
+
 private:
     int                     musicTheme     = 1; //light theme
     AlbumDataModel          *albumModel    = nullptr;
@@ -96,7 +104,6 @@ private:
     MediaMeta                 playingMeta;
     MediaMeta                 hoverinMeta;
     QPixmap                 playingPix = QPixmap(":/texts/music_play1_20px.svg");
-//    MusicListDialog        *musciListDialog = nullptr;
     QString                 m_hash; //用于区分当前列表是album列表还是搜索中的album列表
     QListView::ViewMode     m_viewModel = QListView::ListMode;
     QIcon                   m_defaultIcon = QIcon::fromTheme("cover_max");

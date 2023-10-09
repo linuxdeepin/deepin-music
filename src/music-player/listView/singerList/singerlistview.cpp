@@ -112,13 +112,6 @@ SingerListView::SingerListView(const QString &hash, QWidget *parent)
     setBatchSize(2000);
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
-//    musicListDialog = new MusicListDialog("artist", this);
-//    AC_SET_OBJECT_NAME(musicListDialog, AC_musicListDialogSinger);
-//    AC_SET_ACCESSIBLE_NAME(musicListDialog, AC_musicListDialogSinger);
-
-// 双击逻辑位置移动
-//    connect(this, &SingerListView::doubleClicked, this, &SingerListView::onDoubleClicked);
-
     setSelectionMode(QListView::SingleSelection);
     setSelectionBehavior(QAbstractItemView::SelectRows);
 
@@ -155,6 +148,10 @@ SingerListView::SingerListView(const QString &hash, QWidget *parent)
         connect(CommonService::getInstance(), &CommonService::signalHScreen,
                 this, &SingerListView::slotHScreen);
     }
+
+#ifdef DTKWIDGET_CLASS_DSizeMode
+    connect(DGuiApplicationHelper::instance(),&DGuiApplicationHelper::sizeModeChanged,this, &SingerListView::slotSizeModeChanged);
+#endif
 }
 
 SingerListView::~SingerListView()
@@ -360,13 +357,19 @@ void SingerListView::setViewModeFlag(QListView::ViewMode mode)
         }
     } else {
         if (mode == QListView::IconMode) {
-            setIconSize(QSize(150, 150));
+            //setIconSize(QSize(150, 150));
             setGridSize(QSize(-1, -1));
-            // 去除底部间距
-            setViewportMargins(-10, -13, -35, 0);
-            setSpacing(20);
+
+            if (DGuiApplicationHelper::instance()->sizeMode() == DGuiApplicationHelper::SizeMode::CompactMode) {
+                setSpacing(15);
+                setViewportMargins(-5, -13, -35, 0);
+            } else {
+                setSpacing(20);
+                // 去除底部间距
+                setViewportMargins(-10, -13, -35, 0);
+            }
         } else {
-            setIconSize(QSize(36, 36));
+            //setIconSize(QSize(36, 36));
             setGridSize(QSize(-1, -1));
             // 修改顶部间距
             setViewportMargins(0, 0, 8, 0);
@@ -385,7 +388,6 @@ QListView::ViewMode SingerListView::getViewMode()
 void SingerListView::setThemeType(int type)
 {
     musicTheme = type;
-//    musicListDialog->setThemeType(type);
 }
 
 int SingerListView::getThemeType() const
@@ -393,24 +395,10 @@ int SingerListView::getThemeType() const
     return musicTheme;
 }
 
-//void SingerListView::setPlayPixmap(QPixmap pixmap, QPixmap sidebarPixmap, QPixmap albumPixmap)
-//{
-////    if (musciListDialog->isVisible())
-////        musciListDialog->setPlayPixmap(pixmap, sidebarPixmap);
-//    playingPix = pixmap;
-//    sidebarPix = sidebarPixmap;
-//    update();
-//}
-
 QPixmap SingerListView::getPlayPixmap() const
 {
     return playingPix;
 }
-
-//QPixmap SingerListView::getSidebarPixmap() const
-//{
-//    return sidebarPix;
-//}
 
 QPixmap SingerListView::getPlayPixmap(bool isSelect)
 {
@@ -568,19 +556,21 @@ void SingerListView::slotHScreen(bool isHScreen)
     }
 }
 
-// 区分单双击需要，双击逻辑位置移动
-//void SingerListView::onDoubleClicked(const QModelIndex &index)
-//{
-//    SingerInfo signerTmp = index.data(Qt::UserRole).value<SingerInfo>();
-//    // 原来的弹框修改为显示二级菜单
-////    musicListDialog->flushDialog(signerTmp.musicinfos, false);
-////    musicListDialog->exec();
-//    if (m_hash == "artist") {
-//        emit CommonService::getInstance()->signalShowSubSonglist(signerTmp.musicinfos, SingerType);
-//    } else if (m_hash == "artistResult") {
-//        emit CommonService::getInstance()->signalShowSubSonglist(signerTmp.musicinfos, SearchSingerResultType);
-//    }
-//}
+#ifdef DTKWIDGET_CLASS_DSizeMode
+void SingerListView::slotSizeModeChanged(DGuiApplicationHelper::SizeMode sizeMode)
+{
+    if (m_viewModel != QListView::IconMode)
+        return;
+
+    if (sizeMode == DGuiApplicationHelper::SizeMode::CompactMode) {
+        setViewportMargins(-5, -13, -35, 0);
+        setSpacing(15);
+    } else {
+        setViewportMargins(-10, -13, -35, 0);
+        setSpacing(20);
+    }
+}
+#endif
 
 void SingerListView::slotCoverUpdate(const MediaMeta &meta)
 {

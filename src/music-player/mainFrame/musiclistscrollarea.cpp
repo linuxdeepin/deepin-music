@@ -35,9 +35,9 @@ MusicListScrollArea::MusicListScrollArea(QWidget *parent) : DScrollArea(parent)
     setWidgetResizable(true);
 
     setAutoFillBackground(true);
-    auto leftFramePalette = palette();
-    leftFramePalette.setColor(DPalette::Background, QColor("#FFFFFF"));
-    setPalette(leftFramePalette);
+//    auto leftFramePalette = palette();
+//    leftFramePalette.setColor(DPalette::Background, QColor("#FFFFFF"));
+//    setPalette(leftFramePalette);
 
     QWidget *widget = new QWidget(this);
     setWidget(widget);
@@ -58,10 +58,7 @@ MusicListScrollArea::MusicListScrollArea(QWidget *parent) : DScrollArea(parent)
     dataBaseLabel->setObjectName("MusicListScrollAreaDataBase");
     dataBaseLabel->setMargin(10);
     auto dataBaseLabelFont = dataBaseLabel->font();
-//    dataBaseLabelFont.setFamily("SourceHanSansSC");
     dataBaseLabelFont.setWeight(QFont::Medium);
-
-    // 解决字体不会根据系统字体大小改变问题
     dataBaseLabel->setFont(dataBaseLabelFont);
     auto dataBaseLabelLayout = new QHBoxLayout;
     dataBaseLabelLayout->setContentsMargins(0, 0, 15, 0);
@@ -80,7 +77,6 @@ MusicListScrollArea::MusicListScrollArea(QWidget *parent) : DScrollArea(parent)
     m_addListBtn->setEnabledCircle(true);
     m_addListBtn->setIconSize(QSize(20, 20));
     m_addListBtn->setFixedSize(26, 26);
-
     m_addListBtn->setFocusPolicy(Qt::TabFocus);
     m_addListBtn->installEventFilter(this);
 
@@ -92,19 +88,23 @@ MusicListScrollArea::MusicListScrollArea(QWidget *parent) : DScrollArea(parent)
 
     m_dataBaseListview = new MusicBaseListView(widget);
     m_dataBaseListview->setEditTriggers(QAbstractItemView::NoEditTriggers);
+
+
+#ifdef DTKWIDGET_CLASS_DSizeMode
+     slotSizeModeChanged(DGuiApplicationHelper::instance()->sizeMode());
+#else
     m_dataBaseListview->setFixedHeight(162);
+#endif
+
+
     AC_SET_OBJECT_NAME(m_dataBaseListview, AC_dataBaseListview);
     AC_SET_ACCESSIBLE_NAME(m_dataBaseListview, AC_dataBaseListview);
-
-    // m_dataBaseListview->setFocusPolicy(Qt::TabFocus);   //使用默认设置焦点方式
     m_dataBaseListview->installEventFilter(this);
 
     m_customizeListview = new MusicSongListView(widget);
-    musicLayout->setContentsMargins(0, 0, 0, 0);
-
-    // m_customizeListview->setFocusPolicy(Qt::TabFocus);
     m_customizeListview->installEventFilter(this);
 
+    musicLayout->setContentsMargins(0, 0, 0, 0);
     musicLayout->addLayout(dataBaseLabelLayout, 0);
     musicLayout->addWidget(m_dataBaseListview, 0, Qt::AlignTop);
     musicLayout->addLayout(customizeLayout);
@@ -112,7 +112,7 @@ MusicListScrollArea::MusicListScrollArea(QWidget *parent) : DScrollArea(parent)
     AC_SET_OBJECT_NAME(m_customizeListview, AC_customizeListview);
     AC_SET_ACCESSIBLE_NAME(m_customizeListview, AC_customizeListview);
 
-    slotTheme(DGuiApplicationHelper::instance()->themeType());
+//    slotTheme(DGuiApplicationHelper::instance()->themeType());
 
     connect(m_addListBtn, SIGNAL(clicked()), m_customizeListview, SLOT(addNewSongList()));
 
@@ -130,6 +130,9 @@ MusicListScrollArea::MusicListScrollArea(QWidget *parent) : DScrollArea(parent)
     connect(m_customizeListview, &MusicSongListView::sigUpdateDragScroll, this, &MusicListScrollArea::slotUpdateDragScroll);
     connect(m_customizeListview, &MusicSongListView::sigThemeTypeChanged, m_dataBaseListview, &MusicBaseListView::setThemeType);
     connect(CommonService::getInstance(), &CommonService::signalSwitchToView, this, &MusicListScrollArea::viewChanged);
+#ifdef DTKWIDGET_CLASS_DSizeMode
+    connect(DGuiApplicationHelper::instance(),&DGuiApplicationHelper::sizeModeChanged, this, &MusicListScrollArea::slotSizeModeChanged);
+#endif
 }
 
 void MusicListScrollArea::slotTheme(int type)
@@ -222,6 +225,21 @@ void MusicListScrollArea::slotUpdateDragScroll()
         m_customizeListview->update();
     }
 }
+
+#ifdef DTKWIDGET_CLASS_DSizeMode
+void MusicListScrollArea::slotSizeModeChanged(DGuiApplicationHelper::SizeMode sizeMode)
+{
+    if (sizeMode == DGuiApplicationHelper::SizeMode::CompactMode) {
+        m_dataBaseListview->setFixedHeight(24 * 4);
+        m_addListBtn->setIconSize(QSize(16, 16));
+        m_addListBtn->setFixedSize(21, 21);
+    } else {
+        m_dataBaseListview->setFixedHeight(162);
+        m_addListBtn->setIconSize(QSize(20, 20));
+        m_addListBtn->setFixedSize(26, 26);
+    }
+}
+#endif
 
 bool MusicListScrollArea::eventFilter(QObject *o, QEvent *e)
 {

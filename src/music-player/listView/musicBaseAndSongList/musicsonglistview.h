@@ -5,12 +5,14 @@
 
 #pragma once
 
-#include <DListView>
 #include <QDomElement>
-#include <DLineEdit>
 #include <QTimer>
 #include <QAbstractItemView>
 #include <QMimeData>
+
+#include <DListView>
+#include <DLineEdit>
+#include <DGuiApplicationHelper>
 
 DWIDGET_USE_NAMESPACE
 
@@ -30,14 +32,13 @@ class MusicSongListView : public DListView
 {
     Q_OBJECT
 public:
-    // Item高度
-    static constexpr int ItemHeight = 40;
-    // Item与listview宽度差
-    static constexpr int ItemWidthDiff = 64;
-    // Item编辑状态边距
-    static constexpr int ItemEditMargin = 5;
-    // Icon边长
-    static constexpr int ItemIconSide = 20;
+    static constexpr int ItemHeight = 40;          // Item高度
+    static constexpr int CompactItemHeight = 24;   // 紧凑模式Item高度
+    static constexpr int ItemWidthDiff = 64;       // Item与listview宽度差
+    static constexpr int ItemEditMargin = 5;       // Item编辑状态边距
+    static constexpr int CompactItemEditMargin = 2;// 紧凑模式Item编辑状态边距
+    static constexpr int ItemIconSide = 20;        // Icon边长
+
 public:
     explicit MusicSongListView(QWidget *parent = Q_NULLPTR);
     ~MusicSongListView() override;
@@ -69,6 +70,7 @@ public slots:
     void slotPopMessageWindow(int stat);
     // 更新滚动条
     void slotUpdateDragScroll();
+    void slotSizeModeChanged(DGuiApplicationHelper::SizeMode sizeMode);
 
 signals:
     void sigAddNewSongList();
@@ -100,30 +102,21 @@ private:
     // ESC快捷键
     void slotEscShortcut();
 
-//    void setAttrRecur(QDomElement elem, QString strtagname, QString strattr, QString strattrval);
     QString newDisplayName();
 
 private:
     friend MusicItemDelegate;
-    MusicBaseAndSonglistModel *m_model = nullptr;
-    MusicItemDelegate  *m_delegate        = nullptr;
-    // 重命名的Item
-    DStandardItem        *m_renameItem = nullptr;
-    // 重命名控件
-    DLineEdit            *m_renameLineEdit = nullptr;
+    MusicBaseAndSonglistModel *m_model          = nullptr;
+    MusicItemDelegate         *m_delegate       = nullptr;
+    DStandardItem             *m_renameItem     = nullptr; // 重命名的Item
+    DLineEdit                 *m_renameLineEdit = nullptr; // 重命名控件
+    QShortcut                 *m_renameShortcut = nullptr; // 重命名快捷键
+    QShortcut                 *m_escShortcut    = nullptr; // ESC快捷键
+    QTimer                     m_dragScrollTimer;
 
-    // 新建歌单快捷键
-//    QShortcut           *m_newItemShortcut = nullptr;
-    // 重命名快捷键
-    QShortcut           *m_renameShortcut = nullptr;
-    // ESC快捷键
-    QShortcut           *m_escShortcut = nullptr;
-    // 拖动滚动条
-    QTimer               m_dragScrollTimer;
-
-    bool                pixmapState         = false;
-    bool                m_heightChangeToMax = false;
-    bool                m_isDraging = false;
-    QModelIndex         m_preIndex;
+    bool                      pixmapState         = false;
+    bool                      m_heightChangeToMax = false;
+    bool                      m_isDraging         = false;
+    QModelIndex               m_preIndex;
 };
 

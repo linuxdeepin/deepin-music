@@ -5,18 +5,20 @@
 
 #pragma once
 
-#include <DBlurEffectWidget>
 #include <QPointer>
+#include <QShortcut>
+
+#include <DBlurEffectWidget>
 #include <DFloatingWidget>
 #include <DPushButton>
 #include <DButtonBox>
 #include <DToolButton>
 #include <DIconButton>
 #include <DBackgroundGroup>
-#include <QShortcut>
+#include <DGuiApplicationHelper>
 
 #include "player.h"
-#include <searchmeta.h>
+#include "searchmeta.h"
 #include "metabufferdetector.h"
 
 class QAudioBuffer;
@@ -26,7 +28,6 @@ class Label;
 class SoundVolume;
 class MusicPixmapButton;
 class Waveform;
-//class MetaBufferDetector;
 class HintFilter;
 class QTimer;
 class ControlIconButton;
@@ -38,6 +39,8 @@ public:
     static constexpr int Margin = 5;
     // 控件高度
     static constexpr int Height = 80;
+    static constexpr int CompactHeight = 50;
+
 public:
     explicit FooterWidget(QWidget *parent = nullptr);
     ~FooterWidget() override;
@@ -54,6 +57,7 @@ public:
     void slotSetWaveValue(int step, long duration);
     // 阻止休眠
     void screenStandby(bool isStandby);
+
 private:
     void initUI(QWidget *parent = nullptr);
     void installTipHint(QWidget *widget, const QString &hintstr);
@@ -66,8 +70,10 @@ private:
     // 设置按钮使能状态
     void resetBtnEnable();
     QString playModeStr(int mode);
+
 signals:
     void lyricClicked();
+
 public slots:
     // 刷新footer背景
     void slotFlushBackground();
@@ -110,41 +116,47 @@ public slots:
     // 快捷键响应
     void slotShortCutTriggered();
     void slotCoverUpdate(const MediaMeta &meta);
+#ifdef DTKWIDGET_CLASS_DSizeMode
+    // 切换紧凑模式
+    void slotSizeModeChanged(DGuiApplicationHelper::SizeMode sizeMode);
+#endif
+
 protected:
     virtual void resizeEvent(QResizeEvent *event) Q_DECL_OVERRIDE;
+
 private:
     int m_slotTheme = 0;
 
-    DBlurEffectWidget *m_forwardWidget = nullptr;
+    DBlurEffectWidget  *m_forwardWidget = nullptr;
 
-    DButtonBox        *m_ctlWidget = nullptr;
-    DButtonBoxButton  *m_btPlay     = nullptr;
-    DButtonBoxButton  *m_btPrev     = nullptr;
-    DButtonBoxButton  *m_btNext     = nullptr;
+    DButtonBox         *m_ctlWidget   = nullptr;
+    DButtonBoxButton   *m_btPlay      = nullptr;
+    DButtonBoxButton   *m_btPrev      = nullptr;
+    DButtonBoxButton   *m_btNext      = nullptr;
 
     MusicPixmapButton  *m_btCover     = nullptr;
-    Label           *m_title      = nullptr;
-    Label           *m_artist     = nullptr;
-    Waveform        *m_waveform   = nullptr;
-    DIconButton     *m_btFavorite = nullptr;
-    DIconButton     *m_btLyric    = nullptr;
-    DIconButton     *m_btPlayMode = nullptr;
-    ControlIconButton     *m_btSound    = nullptr;
-    DIconButton     *m_btPlayQueue = nullptr;
+    Label              *m_title       = nullptr;
+    Label              *m_artist      = nullptr;
+    Waveform           *m_waveform    = nullptr;
+    DIconButton        *m_btFavorite  = nullptr;
+    DIconButton        *m_btLyric     = nullptr;
+    DIconButton        *m_btPlayMode  = nullptr;
+    ControlIconButton  *m_btSound     = nullptr;
+    DIconButton        *m_btPlayQueue = nullptr;
 
-    // short cut on footer
-    QShortcut           *volUpShortcut          = nullptr;
-    QShortcut           *volDownShortcut        = nullptr;
-    QShortcut           *nextShortcut           = nullptr;
-    QShortcut           *playPauseShortcut      = nullptr;
-    QShortcut           *previousShortcut       = nullptr;
-    QShortcut           *muteShortcut = nullptr;
+    // shortcut on footer
+    QShortcut          *volUpShortcut     = nullptr;
+    QShortcut          *volDownShortcut   = nullptr;
+    QShortcut          *nextShortcut      = nullptr;
+    QShortcut          *playPauseShortcut = nullptr;
+    QShortcut          *previousShortcut  = nullptr;
+    QShortcut          *muteShortcut      = nullptr;
 
-    SoundVolume        *m_volSlider  = nullptr;
+    SoundVolume        *m_volSlider           = nullptr;
     MetaBufferDetector  m_metaBufferDetector;
-    HintFilter          *m_hintFilter = nullptr;
-    quint32             m_lastCookie = 0;
+    HintFilter         *m_hintFilter          = nullptr;
+    quint32             m_lastCookie          = 0;
 
-    QTimer             *m_limitRepeatClick = nullptr;
+    QTimer             *m_limitRepeatClick    = nullptr;
 };
 

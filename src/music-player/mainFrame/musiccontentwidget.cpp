@@ -44,9 +44,9 @@ MusicContentWidget::MusicContentWidget(QWidget *parent) : DWidget(parent)
 
     leftFrame = new MusicListScrollArea(this);
     leftFrame->setAutoFillBackground(true);
-    auto leftFramePalette = leftFrame->palette();
-    leftFramePalette.setColor(DPalette::Background, QColor("#FFFFFF"));
-    leftFrame->setPalette(leftFramePalette);
+//    auto leftFramePalette = leftFrame->palette();
+//    leftFramePalette.setColor(DPalette::Background, QColor("#FFFFFF"));
+//    leftFrame->setPalette(leftFramePalette);
     AC_SET_OBJECT_NAME(leftFrame, AC_MusicListScrollArea);
     AC_SET_ACCESSIBLE_NAME(leftFrame, AC_MusicListScrollArea);
 
@@ -61,20 +61,18 @@ MusicContentWidget::MusicContentWidget(QWidget *parent) : DWidget(parent)
 
 void MusicContentWidget::slotTheme(DGuiApplicationHelper::ColorType themeType)
 {
-    if (themeType == 1) {
-        auto palette = this->palette();
-        palette.setColor(DPalette::Background, QColor("#F8F8F8"));
-        setPalette(palette);
-    } else {
-        auto palette = this->palette();
-        palette.setColor(DPalette::Background, QColor("#252525"));
-        setPalette(palette);
-    }
+//    if (themeType == 1) {
+//        auto palette = this->palette();
+//        palette.setColor(DPalette::Background, QColor("#F8F8F8"));
+//        setPalette(palette);
+//    } else {
+//        auto palette = this->palette();
+//        palette.setColor(DPalette::Background, QColor("#252525"));
+//        setPalette(palette);
+//    }
 
     leftFrame->slotTheme(themeType);
     m_listDataWidget->slotTheme(themeType);
-//    m_dataBaseListview->slotTheme(type);
-//    m_customizeListview->slotTheme(type);
 }
 
 

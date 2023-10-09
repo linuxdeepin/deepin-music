@@ -26,19 +26,12 @@ public:
     QSize sizeHint(const QStyleOptionViewItem &option,
                    const QModelIndex &index) const override;
 
-//    QWidget *createEditor(QWidget *parent, const QStyleOptionViewItem &option,
-//                          const QModelIndex &index) const override;
-
-//    void setEditorData(QWidget *editor, const QModelIndex &index) const override;
-
-//    void setModelData(QWidget *editor, QAbstractItemModel *model,
-//                      const QModelIndex &index) const override;
-
 signals:
     void hoverPress(const QModelIndex &index);
 
 protected:
     bool editorEvent(QEvent *event, QAbstractItemModel *model, const QStyleOptionViewItem &option, const QModelIndex &index) override;
+
 private:
     void drawIconMode(QPainter &painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
     // 平板
@@ -49,6 +42,7 @@ private:
     void drawListMode(QPainter &painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
     void mouseClicked(const QStyleOptionViewItem &option, const QModelIndex &index, const QPointF pressPos);
     void mouseDoubleClicked(const QStyleOptionViewItem &option, const QModelIndex &index);
+
 private:
     QPixmap hoverPlayImg ;
     QPixmap hoverSuspendImg ;

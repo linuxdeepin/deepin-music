@@ -4,10 +4,11 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 #pragma once
-
-#include <DListView>
 #include <QPixmap>
 #include <QTimer>
+
+#include <DListView>
+#include <DGuiApplicationHelper>
 
 #include "commonservice.h"
 #include "databaseservice.h"
@@ -46,7 +47,6 @@ public:
     // 根据排序添加数据
     QList<MediaMeta> setDataBySortType(QList<MediaMeta> &mediaMetas, DataBaseService::ListSortType sortType);
 
-    //QPixmap getSidebarPixmap();
     //zy---begin
     QPixmap getPlayPixmap(bool isSelect = false);
     void playListChange();
@@ -89,23 +89,19 @@ public:
 
 public slots:
     void slotOnClicked(const QModelIndex &index);
-
     void slotOnDoubleClicked(const QModelIndex &index);
-
     void slotLoadData();
     void slotUpdatePlayingIcon();
-
     // 封面图片刷新
     void slotCoverUpdate(const MediaMeta &meta);
     void slotTheme(int type);
-
     // 删除单个歌单中的歌曲
     void slotRemoveSingleSong(const QString &listHash, const QString &musicHash);
     // 增加歌曲
     void slotMusicAddOne(const QString &listHash, MediaMeta addMeta);
     // 跳转到当前播放歌曲位置
     void slotScrollToCurrentPosition(const QString &songlistHash);
-    //右键菜单响应begin
+    ///右键菜单响应begin
     // 添加到播放队列
     void slotAddToPlayQueue();
     // 添加收藏
@@ -149,6 +145,10 @@ public slots:
     void slotHScreen(bool isHScreen);
     // 更新滚动条
     void slotUpdateDragScroll();
+#ifdef DTKWIDGET_CLASS_DSizeMode
+    // 切换紧凑模式
+    void slotSizeModeChanged(DGuiApplicationHelper::SizeMode sizeMode);
+#endif
 
 private:
     // 播放音乐相关处理
@@ -170,7 +170,6 @@ signals:
 
 public:
     bool getIsPlayQueue() const;
-    //void reflushItemMediaMeta(const MediaMeta &meta);
     bool getMenuIsShow();
 
 protected:
@@ -180,7 +179,6 @@ protected:
     virtual void dragEnterEvent(QDragEnterEvent *event) Q_DECL_OVERRIDE;
     virtual void startDrag(Qt::DropActions supportedActions) Q_DECL_OVERRIDE;
     virtual void keyPressEvent(QKeyEvent *event) Q_DECL_OVERRIDE;
-    //virtual void keyboardSearch(const QString &search) Q_DECL_OVERRIDE;
     void contextMenuEvent(QContextMenuEvent *event)Q_DECL_OVERRIDE;
 
     void dragMoveEvent(QDragMoveEvent *event) Q_DECL_OVERRIDE;

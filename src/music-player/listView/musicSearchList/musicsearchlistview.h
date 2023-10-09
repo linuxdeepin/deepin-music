@@ -34,18 +34,8 @@ public:
     int getThemeType() const;
     QString getSearchText()const;
 
-    void    setCurrentIndexInt(int row);
-//    QString getCurrentIndexText(int row);
+    void setCurrentIndexInt(int row);
 
-//    void setPlayPixmap(QPixmap pixmap, QPixmap sidebarPixmap, QPixmap albumPixmap);
-//    QPixmap getPlayPixmap() const;
-//    QPixmap getSidebarPixmap() const;
-//    QPixmap getAlbumPixmap() const;
-//    void updateList();
-    //void keyChoice();
-
-//    void setViewModeFlag(QListView::ViewMode mode);
-//    void addItem(const QString str);
 private:
     // 单击或者触屏单击时调用，跳转到搜索结果tab页
     void switchToSearchResultTab(const QModelIndex &index);

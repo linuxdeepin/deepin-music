@@ -11,6 +11,7 @@
 #include <DLabel>
 #include <DIconButton>
 #include <DToolButton>
+#include <DGuiApplicationHelper>
 
 DWIDGET_USE_NAMESPACE
 
@@ -18,12 +19,10 @@ DWIDGET_USE_NAMESPACE
 class DDropdown : public DWidget
 {
     Q_OBJECT
-    //Q_PROPERTY(QString status READ getStatus WRITE setStatus NOTIFY statusChanged)
 public:
     explicit DDropdown(QWidget *parent = Q_NULLPTR);
     ~DDropdown();
 
-    //QString getStatus() const;
     QList<QAction *> actions() const;
 
 signals:
@@ -36,6 +35,9 @@ public slots:
     void setCurrentAction(int index = 0);
     QAction *addAction(const QString &item, const QVariant &var);
     void setStatus(const QString &status);
+#ifdef DTKWIDGET_CLASS_DSizeMode
+    void slotSizeModeChanged(DGuiApplicationHelper::SizeMode sizeMode);
+#endif
 
 protected:
     virtual void enterEvent(QEvent *event);

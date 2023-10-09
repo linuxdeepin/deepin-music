@@ -104,7 +104,6 @@ PlayListView::PlayListView(const QString &hash, bool isPlayQueue, bool dragFlag,
     , m_listPageType(NullType)
     , m_dragFlag(dragFlag)
 {
-    //m_listPageType = NullType;
     m_IsPlayQueue = isPlayQueue;
     setObjectName("PlayListView");
 
@@ -114,6 +113,7 @@ PlayListView::PlayListView(const QString &hash, bool isPlayQueue, bool dragFlag,
 
     m_delegate = new PlayItemDelegate(this);
     setItemDelegate(m_delegate);
+    setViewportMargins(0, 0, 8, 0);
 
     setUniformItemSizes(true);
 
@@ -147,13 +147,6 @@ PlayListView::PlayListView(const QString &hash, bool isPlayQueue, bool dragFlag,
     m_pDetailShortcut->setContext(Qt::WidgetWithChildrenShortcut);
     m_pDetailShortcut->setKey(QKeySequence(QLatin1String("Ctrl+I")));
     connect(m_pDetailShortcut, &QShortcut::activated, this, &PlayListView::showDetailInfoDlg);
-//    //快捷移出歌单
-//    m_pRmvSongsShortcut = new QShortcut(this);
-//    m_pRmvSongsShortcut->setKey(QKeySequence(QLatin1String("Delete")));
-//    connect(m_pRmvSongsShortcut, SIGNAL(activated()), this, SLOT(slotRmvFromSongList()));
-//    //快捷显示菜单
-//    m_pShowMenuShortcut = new QShortcut(this);
-//    m_pShowMenuShortcut->setKey(QKeySequence(QLatin1String("Alt+M")));
 
     connect(Player::getInstance(), &Player::signalPlaybackStatusChanged,
             this, &PlayListView::slotPlaybackStatusChanged);
@@ -208,6 +201,10 @@ PlayListView::PlayListView(const QString &hash, bool isPlayQueue, bool dragFlag,
             this, &PlayListView::slotHScreen);
 
     connect(&m_dragScrollTimer, SIGNAL(timeout()), this, SLOT(slotUpdateDragScroll()));
+
+#ifdef DTKWIDGET_CLASS_DSizeMode
+    connect(DGuiApplicationHelper::instance(),&DGuiApplicationHelper::sizeModeChanged,this, &PlayListView::slotSizeModeChanged);
+#endif
 }
 
 PlayListView::~PlayListView()
@@ -434,7 +431,21 @@ QPixmap PlayListView::getPlayPixmap(bool isSelect)
         color = DGuiApplicationHelper::instance()->applicationPalette().highlight().color();
     }
 
-    QImage playingImage = Player::getInstance()->playingIcon().pixmap(QSize(20, 20), QIcon::Active, QIcon::On).toImage();
+    QSize iconSize(20, 20);
+#ifdef DTKWIDGET_CLASS_DSizeMode
+    if (DGuiApplicationHelper::instance()->sizeMode() == DGuiApplicationHelper::SizeMode::CompactMode) {
+        // 播放图标缩小80%
+        iconSize.setWidth(16);
+        iconSize.setHeight(16);
+    }
+#endif
+    QPixmap playingPixmap = QPixmap(iconSize);
+    playingPixmap.fill(Qt::transparent);
+    QPainter painter(&playingPixmap);
+    painter.setPen(color);
+    Player::getInstance()->playingIcon().paint(&painter, QRect(0, 0, iconSize.width(), iconSize.height()),
+                                               Qt::AlignCenter, QIcon::Active, QIcon::On);
+    /*QImage playingImage = Player::getInstance()->playingIcon().pixmap(iconSize, QIcon::Active, QIcon::On).toImage();
     for (int i = 0; i < playingImage.width(); i++) {
         for (int j = 0; j < playingImage.height(); j++) {
             if (playingImage.pixelColor(i, j) != QColor(0, 0, 0, 0)) {
@@ -442,8 +453,9 @@ QPixmap PlayListView::getPlayPixmap(bool isSelect)
             }
         }
     }
-    QPixmap playingPixmap = QPixmap::fromImage(playingImage);
-//    update();
+    QPixmap playingPixmap = QPixmap::fromImage(playingImage);*/
+
+    //update();
     return playingPixmap;
 }
 
@@ -619,12 +631,17 @@ void PlayListView::setViewModeFlag(QString hash, QListView::ViewMode mode)
     } else {
         if (mode == QListView::IconMode) {
             setGridSize(QSize(-1, -1));
-            setSpacing(0);
-            setIconSize(QSize(170, 210));
-            // 修改底部间距
-            setViewportMargins(0, 0, -35, 0);
+#ifdef DTKWIDGET_CLASS_DSizeMode
+            if (DGuiApplicationHelper::instance()->sizeMode() == DGuiApplicationHelper::SizeMode::CompactMode) {
+                setSpacing(5);
+                setViewportMargins(-1, 0, -35, 0);
+            } else
+#endif
+            {
+                setSpacing(10);
+                setViewportMargins(-5, 0, -35, 0);
+            }
         } else {
-            setIconSize(QSize(36, 36));
             setGridSize(QSize(-1, -1));
             setSpacing(0);
             // 修改顶部间距
@@ -1563,8 +1580,6 @@ void PlayListView::updateDropIndicator()
     QModelIndex indexDrop = m_model->index(curRow, 0);
     //刷新旧区域使dropIndicator消失
     update(rect());
-//    update(m_preIndex);
-//    update(indexDrop);
     m_preIndex = indexDrop;
 }
 
@@ -1587,7 +1602,7 @@ void PlayListView::slotUpdateDragScroll()
 {
     QPoint pos = QCursor::pos();
     pos = mapFromGlobal(pos);
-    auto curValue = verticalScrollBar()->value();
+    int curValue = verticalScrollBar()->value();
     // 向上滚动
     if (pos.y() < 20 && pos.y() > 0 && curValue > 0) {
         curValue -= 15;
@@ -1600,6 +1615,21 @@ void PlayListView::slotUpdateDragScroll()
     }
 }
 
+#ifdef DTKWIDGET_CLASS_DSizeMode
+void PlayListView::slotSizeModeChanged(DGuiApplicationHelper::SizeMode sizeMode)
+{
+    if (this->viewMode() != QListView::IconMode)
+        return;
+
+    if (sizeMode == DGuiApplicationHelper::SizeMode::CompactMode) {
+        setSpacing(5);
+        setViewportMargins(-1, 0, -35, 0);
+    } else {
+        setSpacing(10);
+        setViewportMargins(-5, 0, -35, 0);
+    }
+}
+#endif
 void PlayListView::dragMoveEvent(QDragMoveEvent *event)
 {
     if (event->mimeData()->hasFormat("text/uri-list")) {
@@ -1745,21 +1775,6 @@ void PlayListView::mouseReleaseEvent(QMouseEvent *event)
     }
     QListView::mouseReleaseEvent(event);
 }
-
-//void PlayListView::reflushItemMediaMeta(const MediaMeta &meta)
-//{
-//    for (int i = 0; i <  m_model->rowCount(); i++) {
-//        QModelIndex curIndex = m_model->index(i, 0);
-//        MediaMeta metaTemp = curIndex.data(Qt::UserRole).value<MediaMeta>();
-
-//        if (meta.hash == metaTemp.hash) {
-//            QVariant mediaMeta;
-//            mediaMeta.setValue(meta);
-//            m_model->setData(curIndex, mediaMeta, Qt::UserRole);
-//            break;
-//        }
-//    }
-//}
 
 void PlayListView::slotTextCodecMenuClicked(QAction *action)
 {

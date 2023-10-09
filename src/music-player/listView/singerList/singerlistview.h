@@ -6,6 +6,7 @@
 #pragma once
 
 #include <DListView>
+#include <DGuiApplicationHelper>
 
 #include "commonservice.h"
 #include "databaseservice.h"
@@ -49,9 +50,7 @@ public:
     void setThemeType(int type);
     int getThemeType() const;
 
-    // void setPlayPixmap(QPixmap pixmap, QPixmap sidebarPixmap, QPixmap albumPixmap);
     QPixmap getPlayPixmap() const;
-    //QPixmap getSidebarPixmap() const;
     QPixmap getPlayPixmap(bool isSelect = false);
 
     void updateList();
@@ -64,6 +63,7 @@ public:
     QString getHash() const;
     // 获取列表中歌手数量
     int getSingerCount();
+
 public slots:
     // 歌曲删除
     void slotRemoveSingleSong(const QString &listHash, const QString &musicHash);
@@ -73,9 +73,15 @@ public slots:
     void slotUpdatePlayingIcon();
     // 横竖屏切换
     void slotHScreen(bool isHScreen);
+#ifdef DTKWIDGET_CLASS_DSizeMode
+    // 紧凑模式
+    void slotSizeModeChanged(DGuiApplicationHelper::SizeMode sizeMode);
+#endif
+
 signals:
     void requestCustomContextMenu(const QPoint &pos);
     void modeChanged(int);
+
 private slots:
     void slotCoverUpdate(const MediaMeta &meta);
     // 接收编码变更，更新对应项编码
@@ -86,22 +92,24 @@ private slots:
     void slotRemoveSelectedSongs(const QString &deleteHash, const QStringList &musicHashs, bool removeFromLocal);
     // 播放状态发生改变
     void slotPlaybackStatusChanged(Player::PlaybackStatus statue);
+
 protected:
     void dragEnterEvent(QDragEnterEvent *event) Q_DECL_OVERRIDE;
     void dragMoveEvent(QDragMoveEvent *event) Q_DECL_OVERRIDE;
     void dropEvent(QDropEvent *event) Q_DECL_OVERRIDE;
+
 private:
     // 排序
     void sortList(QList<SingerInfo> &singerInfos, const DataBaseService::ListSortType &sortType);
     // 判断map中是否包含list中的某项
     bool mapContainsList(QMap<QString, MediaMeta> metasMap, QStringList musicHashs);
+
 private:
-    int                     musicTheme      = 1; //light theme
-    SingerDataModel         *singerModel    = nullptr;
-    SingerDataDelegate      *signerDelegate = nullptr;
-//    MusicListDialog        *musicListDialog = nullptr;
-    QPixmap                 playingPix = QPixmap(":/texts/music_play1_20px.svg");
-    QString                  m_hash; //用于区分当前列表是artist列表还是搜索中的artist列表
-    QListView::ViewMode      m_viewModel = QListView::ListMode;
-    QIcon                   m_defaultIcon = QIcon::fromTheme("cover_max");
+    int                     musicTheme       = 1;       //light theme
+    SingerDataModel        *singerModel      = nullptr;
+    SingerDataDelegate     *signerDelegate   = nullptr;
+    QPixmap                 playingPix       = QPixmap(":/texts/music_play1_20px.svg");
+    QString                 m_hash;          //用于区分当前列表是artist列表还是搜索中的artist列表
+    QListView::ViewMode     m_viewModel      = QListView::ListMode;
+    QIcon                   m_defaultIcon    = QIcon::fromTheme("cover_max");
 };
