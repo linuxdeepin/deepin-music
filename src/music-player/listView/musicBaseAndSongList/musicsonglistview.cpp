@@ -59,7 +59,8 @@ void MusicItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opt
     QColor color = DGuiApplicationHelper::instance()->applicationPalette().highlight().color();
     QPen pen(color, 1);
     painter->setPen(pen);
-    if (view == nullptr) return;
+    if (view == nullptr)
+        return;
     int curRowCount = view->m_model->rowCount();
     bool dragFlag = view->m_isDraging;
     QRect borderRect = option.rect;
@@ -77,6 +78,7 @@ void MusicItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opt
 MusicSongListView::MusicSongListView(QWidget *parent) : DListView(parent)
 {
     this->setEditTriggers(NoEditTriggers);
+    setFrameShape(QFrame::NoFrame);
 
     m_model = new MusicBaseAndSonglistModel(this);
     setModel(m_model);
@@ -95,11 +97,6 @@ MusicSongListView::MusicSongListView(QWidget *parent) : DListView(parent)
     font.setWeight(QFont::Medium);
     setFont(font);
 
-    setIconSize(QSize(ItemIconSide, ItemIconSide));
-    setItemSize(QSize(ItemHeight, ItemHeight));
-
-    setFrameShape(QFrame::NoFrame);
-
     DPalette pa = DApplicationHelper::instance()->palette(this);
     pa.setColor(DPalette::ItemBackground, Qt::transparent);
     DApplicationHelper::instance()->setPalette(this, pa);
@@ -117,6 +114,14 @@ MusicSongListView::MusicSongListView(QWidget *parent) : DListView(parent)
             this, &MusicSongListView::showContextMenu);
 
     init();
+
+#ifdef DTKWIDGET_CLASS_DSizeMode
+    slotSizeModeChanged(DGuiApplicationHelper::instance()->sizeMode());
+#else
+    setIconSize(QSize(ItemIconSide, ItemIconSide));
+    setItemSize(QSize(ItemHeight, ItemHeight));
+#endif
+
     initShortcut();
     connect(this, &MusicSongListView::clicked, this, [](QModelIndex midx) {
         qDebug() << "customize midx.row()" << midx.row();
@@ -133,12 +138,15 @@ MusicSongListView::MusicSongListView(QWidget *parent) : DListView(parent)
     connect(this, &MusicSongListView::currentChanged, this, &MusicSongListView::slotCurrentChanged);
 
     connect(CommonService::getInstance(), &CommonService::signalAddNewSongList, this, &MusicSongListView::addNewSongList);
-    //connect(CommonService::getInstance(), &CommonService::signalCdaSongListChanged, this, &MusicSongListView::changeCdaSongList);
     connect(CommonService::getInstance(), &CommonService::signalCdaSongListChanged, this, &MusicSongListView::slotPopMessageWindow);
     connect(DGuiApplicationHelper::instance(), &DGuiApplicationHelper::themeTypeChanged,
             this, &MusicSongListView::setThemeType);
 
     setThemeType(DGuiApplicationHelper::instance()->themeType());
+
+#ifdef DTKWIDGET_CLASS_DSizeMode
+    connect(DGuiApplicationHelper::instance(),&DGuiApplicationHelper::sizeModeChanged,this, &MusicSongListView::slotSizeModeChanged);
+#endif
 }
 
 MusicSongListView::~MusicSongListView()
@@ -208,6 +216,13 @@ void MusicSongListView::showContextMenu(const QPoint &pos)
 void MusicSongListView::adjustHeight()
 {
     setMinimumHeight(m_model->rowCount() * ItemHeight);
+
+#ifdef DTKWIDGET_CLASS_DSizeMode
+    if (DGuiApplicationHelper::instance()->sizeMode() == DGuiApplicationHelper::SizeMode::CompactMode) {
+        setMinimumHeight(m_model->rowCount() * CompactItemHeight);
+    }
+#endif
+
 }
 
 bool MusicSongListView::getHeightChangeToMax()
@@ -224,7 +239,11 @@ void MusicSongListView::addNewSongList()
     DStandardItem *item = new DStandardItem(icon, displayName);
     item->setForeground(DGuiApplicationHelper::instance()->themeType() == 1 ? QColor("#414D68") : QColor("#C0C6D4"));
     m_model->appendRow(item);
-    setMinimumHeight(m_model->rowCount() * ItemHeight);
+    if (DGuiApplicationHelper::instance()->sizeMode() == DGuiApplicationHelper::SizeMode::CompactMode) {
+        setMinimumHeight(m_model->rowCount() * CompactItemHeight);
+    } else {
+        setMinimumHeight(m_model->rowCount() * ItemHeight);
+    }
     setCurrentIndex(m_model->indexFromItem(item));
     //未显示时不编辑
     if (isVisible())
@@ -375,8 +394,16 @@ void MusicSongListView::slotUpdatePlayingIcon()
         QString cdahash = index.data(Qt::UserRole + CDA_USER_ROLE_OFFSET).value<QString>();
         if (!cdahash.isEmpty())
             hash = cdahash;
+
+        QSize iconSize(ItemIconSide, ItemIconSide);
+#ifdef DTKWIDGET_CLASS_DSizeMode
+    if (DGuiApplicationHelper::instance()->sizeMode() == DGuiApplicationHelper::SizeMode::CompactMode) {
+        iconSize.setWidth(ItemIconSide * 0.8);
+        iconSize.setHeight(ItemIconSide * 0.8);
+    }
+#endif
         if (hash == Player::getInstance()->getCurrentPlayListHash()) {
-            QPixmap playingPixmap = QPixmap(ItemIconSide, ItemIconSide);
+            QPixmap playingPixmap = QPixmap(iconSize);
             playingPixmap.fill(Qt::transparent);
             QPainter painter(&playingPixmap);
             DTK_NAMESPACE::Gui::DPalette pa;// = this->palette();
@@ -385,7 +412,7 @@ void MusicSongListView::slotUpdatePlayingIcon()
             } else {
                 painter.setPen(pa.color(QPalette::Active, DTK_NAMESPACE::Gui::DPalette::Highlight));
             }
-            Player::getInstance()->playingIcon().paint(&painter, QRect(0, 0, ItemIconSide, ItemIconSide), Qt::AlignCenter, QIcon::Active, QIcon::On);
+            Player::getInstance()->playingIcon().paint(&painter, QRect(0, 0, iconSize.width(), iconSize.height()), Qt::AlignCenter, QIcon::Active, QIcon::On);
 
             QIcon playingIcon(playingPixmap);
             DViewItemActionList actionList = item->actionList(Qt::RightEdge);
@@ -393,7 +420,7 @@ void MusicSongListView::slotUpdatePlayingIcon()
                 actionList.first()->setIcon(playingIcon);
             } else {
                 actionList.clear();
-                auto viewItemAction = new DViewItemAction(Qt::AlignCenter, QSize(ItemIconSide, ItemIconSide));
+                auto viewItemAction = new DViewItemAction(Qt::AlignCenter, iconSize);
                 viewItemAction->setParent(this);
                 viewItemAction->setIcon(playingIcon);
                 actionList.append(viewItemAction);
@@ -406,7 +433,7 @@ void MusicSongListView::slotUpdatePlayingIcon()
                 actionList.first()->setIcon(playingIcon);
             } else {
                 actionList.clear();
-                auto viewItemAction = new DViewItemAction(Qt::AlignCenter, QSize(ItemIconSide, ItemIconSide));
+                auto viewItemAction = new DViewItemAction(Qt::AlignCenter, iconSize);
                 //初始化指明父类，方便后续释放，防止内存泄露
                 viewItemAction->setParent(this);
                 viewItemAction->setIcon(playingIcon);
@@ -439,11 +466,6 @@ void MusicSongListView::slotMenuTriggered(QAction *action)
 
 void MusicSongListView::slotCurrentChanged(const QModelIndex &cur, const QModelIndex &pre)
 {
-// 逻辑变更，目前不用这段代码
-//    m_renameItem = dynamic_cast<DStandardItem *>(model->itemFromIndex(cur));
-//    if (m_renameItem) {
-//        m_renameItem->setIcon(QIcon::fromTheme("music_famousballad"));
-//    }
     Q_UNUSED(cur)
     DStandardItem *preStandardItem = dynamic_cast<DStandardItem *>(m_model->itemFromIndex(pre));
     if (preStandardItem) {
@@ -465,6 +487,12 @@ void MusicSongListView::slotDoubleClicked(const QModelIndex &index)
     }
     m_renameLineEdit->setVisible(true);
     m_renameLineEdit->move(50, m_renameItem->row() * this->sizeHintForIndex(index).height() + ItemEditMargin);
+#ifdef DTKWIDGET_CLASS_DSizeMode
+    if (DGuiApplicationHelper::instance()->sizeMode() == DGuiApplicationHelper::SizeMode::CompactMode) {
+        m_renameLineEdit->move(50, m_renameItem->row() * this->sizeHintForIndex(index).height() + CompactItemEditMargin);
+    }
+#endif
+
     if (CommonService::getInstance()->isTabletEnvironment()) {
         QPoint pos = this->mapToGlobal(m_renameLineEdit->pos());
         CommonService::getInstance()->setCurrentWidgetPosY(pos.y());
@@ -618,6 +646,11 @@ void MusicSongListView::resizeEvent(QResizeEvent *event)
 
     if (m_renameLineEdit) {
         m_renameLineEdit->resize(this->width() - 64, ItemHeight - ItemEditMargin * 2);
+#ifdef DTKWIDGET_CLASS_DSizeMode
+        if (DGuiApplicationHelper::instance()->sizeMode() == DGuiApplicationHelper::SizeMode::CompactMode) {
+            m_renameLineEdit->resize(this->width() - 64, CompactItemHeight - CompactItemEditMargin * 2);
+        }
+#endif
     }
 }
 
@@ -729,6 +762,20 @@ void MusicSongListView::slotUpdateDragScroll()
     if (!rect().contains(pos)) return;
     emit sigUpdateDragScroll();
 }
+
+#ifdef DTKWIDGET_CLASS_DSizeMode
+void MusicSongListView::slotSizeModeChanged(DGuiApplicationHelper::SizeMode sizeMode)
+{
+    if (sizeMode == DGuiApplicationHelper::SizeMode::CompactMode) {
+        setIconSize(QSize(16, 16));
+        setItemSize(QSize(CompactItemHeight, CompactItemHeight));
+    } else {
+        setIconSize(QSize(ItemIconSide, ItemIconSide));
+        setItemSize(QSize(ItemHeight, ItemHeight));
+    }
+    adjustHeight();
+}
+#endif
 
 void MusicSongListView::dragMoveEvent(QDragMoveEvent *event)
 {
@@ -880,6 +927,12 @@ void MusicSongListView::initRenameLineEdit()
     m_renameLineEdit = new DLineEdit(this);
     // 初始化编辑控件大小
     m_renameLineEdit->resize(this->width() - ItemWidthDiff, ItemHeight - ItemEditMargin * 2);
+#ifdef DTKWIDGET_CLASS_DSizeMode
+    if (DGuiApplicationHelper::instance()->sizeMode() == DGuiApplicationHelper::SizeMode::CompactMode) {
+        m_renameLineEdit->resize(this->width() - ItemWidthDiff, CompactItemHeight - CompactItemEditMargin * 2);
+    }
+#endif
+
     m_renameLineEdit->setVisible(false);
     m_renameLineEdit->setClearButtonEnabled(false);
 
@@ -902,12 +955,6 @@ void MusicSongListView::slotEscShortcut()
 
 void MusicSongListView::initShortcut()
 {
-    // 移动到mainframe中统一管理
-//    m_newItemShortcut = new QShortcut(this);
-//    m_newItemShortcut->setContext(Qt::WidgetWithChildrenShortcut);
-//    m_newItemShortcut->setKey(QKeySequence(QLatin1String("Ctrl+Shift+N")));
-//    connect(m_newItemShortcut, &QShortcut::activated, this, &MusicSongListView::addNewSongList);
-
     m_renameShortcut = new QShortcut(QKeySequence(Qt::Key_F2), this);
     m_renameShortcut->setContext(Qt::WindowShortcut);
     connect(m_renameShortcut, &QShortcut::activated, this, &MusicSongListView::slotRenameShortcut);
@@ -917,21 +964,6 @@ void MusicSongListView::initShortcut()
     m_escShortcut->setContext(Qt::WidgetWithChildrenShortcut);
     connect(m_escShortcut, &QShortcut::activated, this, &MusicSongListView::slotEscShortcut);
 }
-
-//void MusicSongListView::setAttrRecur(QDomElement elem, QString strtagname, QString strattr, QString strattrval)
-//{
-//    // if it has the tagname then overwritte desired attribute
-//    if (elem.tagName().compare(strtagname) == 0) {
-//        elem.setAttribute(strattr, strattrval);
-//    }
-//    // loop all children
-//    for (int i = 0; i < elem.childNodes().count(); i++) {
-//        if (!elem.childNodes().at(i).isElement()) {
-//            continue;
-//        }
-//        this->setAttrRecur(elem.childNodes().at(i).toElement(), strtagname, strattr, strattrval);
-//    }
-//}
 
 QString MusicSongListView::newDisplayName()
 {

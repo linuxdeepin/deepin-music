@@ -5,9 +5,12 @@
 
 #pragma once
 
+#include <QHBoxLayout>
+
 #include <DWidget>
 #include <DLabel>
 #include <DFloatingWidget>
+#include <DGuiApplicationHelper>
 
 DWIDGET_USE_NAMESPACE
 
@@ -22,6 +25,7 @@ public:
     static constexpr int Margin = 5;
     // 控件高度
     static constexpr int Height = 80;
+    static constexpr int CompactHeight = 50;
     // 动画持续时间
     static constexpr int AnimationDelay = 400;
 public:
@@ -33,8 +37,11 @@ public:
 
 public slots:
     void slotPlayListChanged();
-
     void setThemeType(int type);
+#ifdef DTKWIDGET_CLASS_DSizeMode
+    // 紧凑模式
+    void slotSizeModeChanged(DGuiApplicationHelper::SizeMode sizeMode);
+#endif
 
 signals:
     void signalAutoHidden();
@@ -57,14 +64,15 @@ private:
     void initAnimation();
 
 private:
-    DLabel              *m_titleLabel     = nullptr;
-    DLabel              *m_infoLabel      = nullptr;
-    DLabel              *m_emptyHits      = nullptr;
-    DWidget             *m_actionBar      = nullptr;
-    DPushButton         *m_btClearAll     = nullptr;
-    PlayListView        *m_playListView   = nullptr;
-    QAction             *m_customAction   = nullptr;
+    DLabel              *m_titleLabel      = nullptr;
+    DLabel              *m_infoLabel       = nullptr;
+    DLabel              *m_emptyHits       = nullptr;
+    DWidget             *m_actionBar       = nullptr;
+    DPushButton         *m_btClearAll      = nullptr;
+    PlayListView        *m_playListView    = nullptr;
+    QAction             *m_customAction    = nullptr;
 
-    QPropertyAnimation  *m_animationToUp = nullptr;
+    QPropertyAnimation  *m_animationToUp   = nullptr;
     QPropertyAnimation  *m_animationToDown = nullptr;
+    QHBoxLayout         *m_mainLayout      = nullptr;
 };

@@ -3,9 +3,17 @@
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
+#include <QVBoxLayout>
+#include <QGridLayout>
+
 #include <DDialog>
 #include <DFrame>
-#include <mediameta.h>
+#include <DLabel>
+#include <DPushButton>
+#include <DIconButton>
+#include <DGuiApplicationHelper>
+
+#include "mediameta.h"
 
 DWIDGET_USE_NAMESPACE
 
@@ -13,13 +21,6 @@ class InfoDialog;
 class MusicImageButton;
 class MusicTitleImageWidget;
 class PlayListView;
-
-#include <DLabel>
-#include <DPushButton>
-#include <QVBoxLayout>
-#include <QGridLayout>
-#include <DIconButton>
-
 class SubSonglistWidget : public DWidget
 {
     Q_OBJECT
@@ -35,12 +36,17 @@ public:
 public slots:
     void slotPlayAllClicked();
     void slotPlayRandomClicked();
+#ifdef DTKWIDGET_CLASS_DSizeMode
+    void slotSizeModeChanged(DGuiApplicationHelper::SizeMode sizeMode);
+#endif
 
 private:
     void setTitleImage(QPixmap &img);
     void initUI();
+
 protected:
     void resizeEvent(QResizeEvent *e) Q_DECL_OVERRIDE;
+
 private:
     // 当前主题
     int m_themeType = 1;

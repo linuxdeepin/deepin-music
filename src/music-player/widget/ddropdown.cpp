@@ -27,7 +27,11 @@ DDropdown::DDropdown(QWidget *parent) : DWidget(parent)
     dropdown->setIcon(QIcon::fromTheme("sort_rank_texts"));
     dropdown->setIconSize(QSize(36, 36));
     dropdown->setObjectName("DDropdownIcon");
+#ifdef DTKWIDGET_CLASS_DSizeMode
+    slotSizeModeChanged(DGuiApplicationHelper::instance()->sizeMode());
+#else
     dropdown->setFixedSize(36, 36);
+#endif
     dropdown->setWindowModality(Qt::WindowModal);
     DPalette pl = dropdown->palette();
     pl.setColor(DPalette::Light, QColor(Qt::transparent));
@@ -57,17 +61,15 @@ DDropdown::DDropdown(QWidget *parent) : DWidget(parent)
         Q_UNUSED(checked)
         Q_EMIT requestContextMenu();
     });
+#ifdef DTKWIDGET_CLASS_DSizeMode
+    connect(DGuiApplicationHelper::instance(),&DGuiApplicationHelper::sizeModeChanged,this, &DDropdown::slotSizeModeChanged);
+#endif
 }
 
 DDropdown::~DDropdown()
 {
 
 }
-
-//QString DDropdown::getStatus() const
-//{
-//    return status;
-//}
 
 QList<QAction *> DDropdown::actions() const
 {
@@ -111,6 +113,17 @@ void DDropdown::setStatus(const QString &status)
 {
     this->status = status;
 }
+
+#ifdef DTKWIDGET_CLASS_DSizeMode
+void DDropdown::slotSizeModeChanged(DGuiApplicationHelper::SizeMode sizeMode)
+{
+    if (sizeMode == DGuiApplicationHelper::SizeMode::CompactMode) {
+        dropdown->setFixedSize(24, 24);
+    } else {
+        dropdown->setFixedSize(36, 36);
+    }
+}
+#endif
 
 void DDropdown::enterEvent(QEvent *event)
 {

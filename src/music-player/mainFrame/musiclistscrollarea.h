@@ -8,6 +8,7 @@
 #include <DScrollArea>
 #include <DLabel>
 #include <DIconButton>
+#include <DGuiApplicationHelper>
 
 #include "mediameta.h"
 DWIDGET_USE_NAMESPACE
@@ -31,16 +32,19 @@ public slots:
     // 切换到搜索结果界面
     void viewChanged(ListPageSwitchType switchtype, const QString &hashOrSearchword);
     void slotUpdateDragScroll();
+#ifdef DTKWIDGET_CLASS_DSizeMode
+    void slotSizeModeChanged(DGuiApplicationHelper::SizeMode sizeMode);
+#endif
 
 protected:
     bool eventFilter(QObject *o, QEvent *e) Q_DECL_OVERRIDE;
     void resizeEvent(QResizeEvent *e) Q_DECL_OVERRIDE;
 
 private:
-    MusicBaseListView *m_dataBaseListview = nullptr;
-    MusicSongListView *m_customizeListview = nullptr;
-    DIconButton      *m_addListBtn;
-    DLabel                *dataBaseLabel;
-    DLabel                *customizeLabel;
+    MusicBaseListView  *m_dataBaseListview  = nullptr;
+    MusicSongListView  *m_customizeListview = nullptr;
+    DIconButton        *m_addListBtn;
+    DLabel             *dataBaseLabel;
+    DLabel             *customizeLabel;
 };
 

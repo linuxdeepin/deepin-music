@@ -9,6 +9,8 @@
 #include <DListView>
 #include <DToolButton>
 #include <DLabel>
+#include <DGuiApplicationHelper>
+
 #include <QHBoxLayout>
 #include <QResizeEvent>
 
@@ -33,6 +35,7 @@ public:
     ~MusicListDataWidget() override;
     void showEmptyHits(int count);
     void initInfoLabel(QString hash);
+
 public slots:
     void slotTheme(int type);
     // 左侧菜单切换ListView
@@ -49,10 +52,12 @@ public slots:
     // 删除了一首音乐
     void slotRemoveSingleSong(const QString &listHash, const QString &musicHash);
     void slotPlaylistNameUpdate(const QString &listHash);
-protected:
-    bool eventFilter(QObject *o, QEvent *e) Q_DECL_OVERRIDE;
+#ifdef DTKWIDGET_CLASS_DSizeMode
+    void slotSizeModeChanged(DGuiApplicationHelper::SizeMode sizeMode);
+#endif
 
 protected:
+    bool eventFilter(QObject *o, QEvent *e) Q_DECL_OVERRIDE;
     virtual void dragEnterEvent(QDragEnterEvent *event) Q_DECL_OVERRIDE;
     virtual void dropEvent(QDropEvent *event) Q_DECL_OVERRIDE;
     virtual void resizeEvent(QResizeEvent *event) Q_DECL_OVERRIDE;
@@ -66,14 +71,14 @@ private slots:
 
 private:
     void initUI();
-    void initTitle(QHBoxLayout *layout);
+    void initTitle(QHBoxLayout *layout);             // 初始化大标题
     void initAlbumAction(QHBoxLayout *layout);
     void initArtistAction(QHBoxLayout *layout);
     void initMusicAction(QHBoxLayout *layout);
     void initCustomMusicAction(QHBoxLayout *layout);
-    void initBtPlayAll(QHBoxLayout *layout);
-    void initCountLabel(QHBoxLayout *layout);
-    void initListIconMode(QHBoxLayout *layout);
+    void initBtPlayAll(QHBoxLayout *layout);         // 初始化播放所有按钮
+    void initCountLabel(QHBoxLayout *layout);        // 初始化数量标签
+    void initListIconMode(QHBoxLayout *layout);      // 初始化列表模式
     void initemptyHits(QVBoxLayout *layout);
     // 刷新显示模式按钮check状态
     void refreshModeBtn(DListView::ViewMode mode);
@@ -81,13 +86,13 @@ private:
     void refreshSortAction(const QString &hash = "");
     // 播放歌曲
     void playMetas(QList<MediaMeta> &metas);
+
 private:
     DWidget             *m_contentWidget           = nullptr;
     QStackedWidget      *m_pStackedWidget          = nullptr;
     DLabel              *m_emptyHits               = nullptr;
     ActionBar           *m_actionBar               = nullptr;
-    // 歌手专辑二级页面
-    SubSonglistWidget   *m_subSonglistWidget       = nullptr;
+    SubSonglistWidget   *m_subSonglistWidget       = nullptr; // 歌手专辑二级页面
     QWidget             *m_lableWidget             = nullptr;
     DLabel              *m_titleLabel              = nullptr;
     DDropdown           *m_albumDropdown           = nullptr;
@@ -102,15 +107,16 @@ private:
     AlbumListView       *m_albumListView           = nullptr;
     SingerListView      *m_singerListView          = nullptr;
     PlayListView        *m_musicListView           = nullptr;
-    AddMusicWidget      *m_addMusicWidget = nullptr;
+    AddMusicWidget      *m_addMusicWidget          = nullptr;
     SearchResultTabWidget *m_searchResultTabWidget = nullptr;
 
     QAction             *m_customAction            = nullptr;
-    bool                m_updateFlag               = false;
-    QString             m_currentHash;
-    ListPageSwitchType  m_preSwitchtype            = AllSongListType;
-    QString             m_preHash                  = "all";//记录前一次显示，当清除搜索时回到上一页面
-    QString             m_countStr;
+    bool                 m_updateFlag              = false;
+    QString              m_currentHash;
+    ListPageSwitchType   m_preSwitchtype           = AllSongListType;
+    QString              m_preHash                 = "all"; //记录前一次显示，当清除搜索时回到上一页面
+    QString              m_countStr;
+    QHBoxLayout         *m_actionInfoBarLayout      = nullptr;
 };
 
 class ActionBar : public DWidget

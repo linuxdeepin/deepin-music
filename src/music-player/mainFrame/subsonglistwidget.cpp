@@ -24,12 +24,32 @@
 #include "metadetector.h"
 DWIDGET_USE_NAMESPACE
 
+SubSonglistWidget::SubSonglistWidget(const QString &hash, QWidget *parent)
+    : DWidget(parent)
+    , m_hash(hash)
+{
+    AC_SET_OBJECT_NAME(this, AC_subSonglistWidget);
+    AC_SET_ACCESSIBLE_NAME(this, AC_subSonglistWidget);
+    initUI();
+
+    setThemeType(DGuiApplicationHelper::instance()->themeType());
+
+    connect(m_btPlayAll, &DPushButton::pressed, this, &SubSonglistWidget::slotPlayAllClicked);
+    connect(m_btRandomPlay, &DPushButton::pressed, this, &SubSonglistWidget::slotPlayRandomClicked);
+    connect(DGuiApplicationHelper::instance(), &DGuiApplicationHelper::themeTypeChanged,
+            this, &SubSonglistWidget::setThemeType);
+#ifdef DTKWIDGET_CLASS_DSizeMode
+    slotSizeModeChanged(DGuiApplicationHelper::instance()->sizeMode());
+    connect(DGuiApplicationHelper::instance(),&DGuiApplicationHelper::sizeModeChanged,this, &SubSonglistWidget::slotSizeModeChanged);
+#endif
+}
+
 void SubSonglistWidget::initUI()
 {
     this->setFocusPolicy(Qt::ClickFocus);
     this->setAutoFillBackground(true);
 
-    auto palette = this->palette();
+    QPalette palette = this->palette();
     QColor BackgroundColor("#F8F8F8");
     palette.setColor(DPalette::Window, BackgroundColor);
     setPalette(palette);
@@ -112,15 +132,8 @@ void SubSonglistWidget::initUI()
     m_musicListInfoView = new PlayListView(m_hash, false, false, this);
     mainLayout->addWidget(m_musicListInfoView, 1);
     mainLayout->addStretch();
-
     AC_SET_OBJECT_NAME(m_musicListInfoView, AC_musicListInfoView);
     AC_SET_ACCESSIBLE_NAME(m_musicListInfoView, AC_musicListInfoView);
-
-    connect(m_btPlayAll, &DPushButton::pressed, this, &SubSonglistWidget::slotPlayAllClicked);
-    connect(m_btRandomPlay, &DPushButton::pressed, this, &SubSonglistWidget::slotPlayRandomClicked);
-    connect(DGuiApplicationHelper::instance(), &DGuiApplicationHelper::themeTypeChanged,
-            this, &SubSonglistWidget::setThemeType);
-    setThemeType(DGuiApplicationHelper::instance()->themeType());
 }
 
 void SubSonglistWidget::resizeEvent(QResizeEvent *e)
@@ -132,15 +145,6 @@ void SubSonglistWidget::resizeEvent(QResizeEvent *e)
     m_titleLabel->setText(title);
 
     setTitleImage(m_img);
-}
-
-SubSonglistWidget::SubSonglistWidget(const QString &hash, QWidget *parent)
-    : DWidget(parent)
-    , m_hash(hash)
-{
-    AC_SET_OBJECT_NAME(this, AC_subSonglistWidget);
-    AC_SET_ACCESSIBLE_NAME(this, AC_subSonglistWidget);
-    initUI();
 }
 
 SubSonglistWidget::~SubSonglistWidget()
@@ -200,14 +204,10 @@ void SubSonglistWidget::setThemeType(int type)
         randomPlayPalette.setColor(DPalette::ButtonText, "#FFFFFF");
         randomPlayPalette.setColor(DPalette::Dark, QColor("#555454"));
         randomPlayPalette.setColor(DPalette::Light, QColor("#414141"));
-//        QColor randombcolor("#FFFFFF");
-//        randombcolor.setAlphaF(0.08);
-//        randomPlayPalette.setColor(DPalette::Shadow, randombcolor);
         m_btRandomPlay->setPalette(randomPlayPalette);
     }
     m_btPlayAll->setIcon(QIcon::fromTheme("play_all"));
     m_btRandomPlay->setIcon(QIcon::fromTheme("random_play"));
-//    infoDialog->setThemeType(type);
     setTitleImage(m_img);
 }
 
@@ -241,15 +241,11 @@ void SubSonglistWidget::flushDialog(QMap<QString, MediaMeta> musicinfos, ListPag
         }
         m_musicListInfoView->setListPageSwitchType(listPageType);
         if (listPageType == AlbumSubSongListType || listPageType == SearchAlbumSubSongListType) {
-// 解决字体不会根据系统字体大小改变问题
-//            titleFont.setPixelSize(24);
-//            infoFont.setPixelSize(18);
             m_titleLabel->setText(musicinfos.first().album);
             m_title = musicinfos.first().album;
             m_infoLabel->setText(musicinfos.first().singer);
             m_infoLabel->show();
         } else if (listPageType == SingerSubSongListType || listPageType == SearchSingerSubSongListType) {
-//            titleFont.setPixelSize(36);
             m_titleLabel->setText(musicinfos.first().singer);
             m_title = musicinfos.first().singer;
             m_infoLabel->hide();
@@ -310,6 +306,23 @@ void SubSonglistWidget::slotPlayRandomClicked()
         emit Player::getInstance()->signalPlayListChanged();
     }
 }
+
+#ifdef DTKWIDGET_CLASS_DSizeMode
+void SubSonglistWidget::slotSizeModeChanged(DGuiApplicationHelper::SizeMode sizeMode)
+{
+    if (sizeMode == DGuiApplicationHelper::SizeMode::CompactMode) {
+        m_btPlayAll->setIconSize(QSize(14, 14));
+        m_btPlayAll->setFixedHeight(24);
+        m_btRandomPlay->setIconSize(QSize(14, 14));
+        m_btRandomPlay->setFixedHeight(24);
+    } else {
+        m_btPlayAll->setIconSize(QSize(18, 18));
+        m_btPlayAll->setFixedHeight(30);
+        m_btRandomPlay->setIconSize(QSize(18, 18));
+        m_btRandomPlay->setFixedHeight(30);
+    }
+}
+#endif
 
 void SubSonglistWidget::setTitleImage(QPixmap &img)
 {

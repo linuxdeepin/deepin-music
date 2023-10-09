@@ -29,6 +29,32 @@ QT_END_NAMESPACE
 
 const int PlayItemRightMargin = 20;
 
+static inline int playPauseBtnSize()
+{
+#ifdef DTKWIDGET_CLASS_DSizeMode
+        if (DGuiApplicationHelper::instance()->sizeMode() == DGuiApplicationHelper::SizeMode::CompactMode) {
+            // 紧凑模式缩小到80%
+            return 40;
+        } else
+#endif
+        {
+            return 50;
+        }
+}
+
+static inline int heightTopMargin()
+{
+#ifdef DTKWIDGET_CLASS_DSizeMode
+        if (DGuiApplicationHelper::instance()->sizeMode() == DGuiApplicationHelper::SizeMode::CompactMode) {
+            // 紧凑模式缩小到80%
+            return 29;
+        } else
+#endif
+        {
+            return 36;
+        }
+}
+
 static inline int pixel2point(int pixel)
 {
     return pixel * 96 / 72;
@@ -38,10 +64,6 @@ void AlbumDataDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opt
                               const QModelIndex &index) const
 {
     auto listview = qobject_cast<const AlbumListView *>(option.widget);
-//    QList<AlbumInfo> albumlist = listview->getAlbumListData();
-//    if (index.row() >= albumlist.size()) {
-//        return;
-//    }
 
     if (CommonService::getInstance()->isTabletEnvironment()) {
         if (listview->viewMode() == QListView::IconMode) {
@@ -66,11 +88,25 @@ QSize AlbumDataDelegate::sizeHint(const QStyleOptionViewItem &option,
         if (CommonService::getInstance()->isTabletEnvironment()) {
             return QSize(200, 200);
         } else {
-            return QSize(150, 150);
+#ifdef DTKWIDGET_CLASS_DSizeMode
+            if (DGuiApplicationHelper::instance()->sizeMode() == DGuiApplicationHelper::SizeMode::CompactMode) {
+                return QSize(126, 126);
+            } else
+#endif
+            {
+                return QSize(150, 150);
+            }
         }
     } else {
-        auto baseSize = QStyledItemDelegate::sizeHint(option, index);
-        return QSize(baseSize.width(), 38);
+        QSize baseSize = QStyledItemDelegate::sizeHint(option, index);
+#ifdef DTKWIDGET_CLASS_DSizeMode
+        if (DGuiApplicationHelper::instance()->sizeMode() == DGuiApplicationHelper::SizeMode::CompactMode) {
+            return QSize(baseSize.width(), 30);
+        } else
+#endif
+        {
+            return QSize(baseSize.width(), 38);
+        }
     }
 }
 
@@ -137,20 +173,17 @@ bool AlbumDataDelegate::editorEvent(QEvent *event, QAbstractItemModel *model, co
 
 void AlbumDataDelegate::drawIconMode(QPainter &painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
-    auto listview = qobject_cast<const AlbumListView *>(option.widget);
+    const AlbumListView *listview = qobject_cast<const AlbumListView *>(option.widget);
     AlbumInfo albumTmp = index.data(Qt::UserRole).value<AlbumInfo>();
-
-    QFont fontT6 = DFontSizeManager::instance()->get(DFontSizeManager::T6);
-    QFont fontT9 = DFontSizeManager::instance()->get(DFontSizeManager::T9);
 
     painter.setRenderHint(QPainter::Antialiasing);
     painter.setRenderHint(QPainter::HighQualityAntialiasing);
     painter.setRenderHint(QPainter::SmoothPixmapTransform);
 
-    auto background = option.palette.background();
+    QBrush background = option.palette.background();
     painter.fillRect(option.rect, background);
     // 绘制阴影
-    QRect shadowRect(option.rect.x() - 10, option.rect.y(), 158, 158);
+    QRect shadowRect(option.rect.x() - 10, option.rect.y(), option.rect.width() + 8, option.rect.height() + 8);
     QPainterPath roundRectShadowPath;
     roundRectShadowPath.addRoundRect(shadowRect, 8, 8);
     painter.save();
@@ -163,10 +196,9 @@ void AlbumDataDelegate::drawIconMode(QPainter &painter, const QStyleOptionViewIt
     QPainterPath roundRectPath;
     roundRectPath.addRoundRect(rect, 10, 10);
     painter.setClipPath(roundRectPath);
-
     // 画背景图片
     QIcon opticon;
-    auto value = index.data(Qt::DecorationRole);
+    QVariant value = index.data(Qt::DecorationRole);
     if (value.type() == QVariant::Icon) {
         opticon = qvariant_cast<QIcon>(value);
     }
@@ -179,7 +211,7 @@ void AlbumDataDelegate::drawIconMode(QPainter &painter, const QStyleOptionViewIt
     QPen borderPen(borderPenColor);
     borderPen.setWidthF(2);
     painter.setPen(borderPen);
-    painter.drawRoundRect(rect/*.adjusted(1, 1, -1, 1)*/, 10, 10);
+    painter.drawRoundRect(rect, 10, 10);
     painter.restore();
 
     bool playFlag = albumTmp.musicinfos.keys().contains(Player::getInstance()->getActiveMeta().hash);
@@ -191,96 +223,116 @@ void AlbumDataDelegate::drawIconMode(QPainter &painter, const QStyleOptionViewIt
         fillColor = "#000000";
         fillColor.setAlphaF(0.3);
     }
-    int startHeight = rect.y() + rect.height() - 46;
-    int fillAllHeight = 46;
-    int curFillSize = fillAllHeight;
-    QRect fillBlurRect(rect.x(), rect.y() + rect.height() - fillAllHeight, rect.width(), fillAllHeight);
+    int blurHeight = 46;
+    int playingBlurHeight= 80;
+#ifdef DTKWIDGET_CLASS_DSizeMode
+    if (DGuiApplicationHelper::instance()->sizeMode() == DGuiApplicationHelper::SizeMode::CompactMode) {
+        blurHeight = 38;
+        playingBlurHeight = 70;
+    }
+#endif
+    int curBlurHeight = blurHeight;
+    QRect fillBlurRect(rect.x(), rect.y() + rect.height() - blurHeight, rect.width(), blurHeight);
 
     if (playFlag && (playStatue == Player::Playing)) {
-        fillBlurRect = QRect(rect.x(), rect.y() + rect.height() - 80, rect.width(), 86);
-        curFillSize = 80;
+        fillBlurRect = QRect(rect.x(), rect.y() + rect.height() - playingBlurHeight, rect.width(), 86);
+        curBlurHeight = playingBlurHeight;
     }
 
     // 设置模糊
-    QImage t_imageBlur = opticon.pixmap(rect.width(), rect.height()).toImage();
-    qreal t_ratioBlur = t_imageBlur.devicePixelRatioF();
-    curFillSize = static_cast<int>(curFillSize * t_ratioBlur);
-
-    t_imageBlur  = t_imageBlur.copy(0, rect.height() - curFillSize, t_imageBlur.width(), curFillSize);
+    QImage blurImage = opticon.pixmap(rect.width(), rect.height()).toImage();
+    qreal blurRatio = blurImage.devicePixelRatioF();
+    curBlurHeight = static_cast<int>(curBlurHeight * blurRatio);
+    blurImage  = blurImage.copy(0, rect.height() - curBlurHeight, blurImage.width(), curBlurHeight);
     QTransform old_transformBlur = painter.transform();
     painter.translate(fillBlurRect.topLeft());
-    qt_blurImage(&painter, t_imageBlur, 35, false, false);
+    qt_blurImage(&painter, blurImage, 35, false, false);
     painter.setTransform(old_transformBlur);
-    // 设置模糊
     painter.fillRect(fillBlurRect, fillColor);
 
     // draw playing
-    auto *listview2 = qobject_cast<AlbumListView *>(const_cast<QWidget *>(option.widget));
+    AlbumListView *listview2 = qobject_cast<AlbumListView *>(const_cast<QWidget *>(option.widget));
     if (playFlag && playStatue == Player::Playing) {
         if (option.state & QStyle::State_MouseOver) {
-            painter.drawPixmap(QRect(rect.x() + 56, rect.y() + 72, 36, 36), hoverSuspendImg);
+            painter.drawPixmap(QRect(rect.x() + (rect.width() - 36) / 2,
+                                     rect.y() + rect.height() - (playingBlurHeight + (playingBlurHeight - blurHeight - 36) / 2),
+                                     36, 36), hoverSuspendImg);
         } else {
             if (listview2) {
-                painter.drawPixmap(QRect(rect.x() + 64, rect.y() + 82, 20, 18), listview2->getPlayPixmap(true));
+                painter.drawPixmap(QRect(rect.x() + (rect.width() - 20) / 2,
+                                         rect.y() +  rect.height() - (playingBlurHeight + (playingBlurHeight - blurHeight - 50) / 2),
+                                         20, 18), listview2->getPlayPixmap(true));
             }
         }
     }
 
-    QRect fillRect(rect.x(), startHeight, rect.width(), fillAllHeight);
-
+    // 绘制专辑信息
+    QFont fontT6 = DFontSizeManager::instance()->get(DFontSizeManager::T6);
     QFontMetrics nameTextFm(fontT6);
-    painter.setFont(fontT6);
-    QRect nameFillRect(rect.x(), startHeight + 2, rect.width(), fillAllHeight * 3 / 2);
-    nameFillRect.adjust(8, 0, -7, 0);
+    QRect nameFillRect(rect.x(), rect.y() + rect.height() - blurHeight, rect.width(), blurHeight * 2 / 3);
     QString nameText = nameTextFm.elidedText(albumTmp.albumName.isEmpty() ? AlbumListView::tr("Unknown album") : albumTmp.albumName, Qt::ElideMiddle, nameFillRect.width());
+    nameFillRect.adjust(8, 2, -7, 0);
+    painter.setFont(fontT6);
     painter.setPen(Qt::white);
     painter.drawText(nameFillRect, Qt::AlignLeft | Qt::AlignTop, nameText);
 
+    QFont fontT9 = DFontSizeManager::instance()->get(DFontSizeManager::T9);
     QFontMetrics extraNameFm(fontT9);
-    painter.setFont(fontT9);
-    QRect extraNameFillRect(rect.x(), startHeight + fillAllHeight / 2 + 1, rect.width(), fillAllHeight / 2);
-    extraNameFillRect.adjust(8, 0, -7, 0);
+    QRect extraNameFillRect(rect.x(), rect.y() + rect.height() - blurHeight / 2, rect.width(), blurHeight / 2);
     QString extraNameText = extraNameFm.elidedText(albumTmp.singer.isEmpty() ? SingerListView::tr("Unknown artist") : albumTmp.singer, Qt::ElideMiddle, extraNameFillRect.width());
+    extraNameFillRect.adjust(8, 0, -7, 0);
+    painter.setFont(fontT9);
     painter.setPen(Qt::white);
     painter.drawText(extraNameFillRect, Qt::AlignLeft | Qt::AlignTop, extraNameText);
 
-    QBrush fillBrush(QColor(128, 128, 128, 0));
-
+    // 绘制播放按钮
     fillColor.setAlphaF(0.3);
     if (listview->getThemeType() == 2) {
         fillColor = "#000000";
         fillColor.setAlphaF(0.3);
     }
+    if ((option.state & QStyle::State_MouseOver)  && (!playFlag || (playStatue == Player::Paused))) {
+        int blurSize = 60;
+        int iconSize = 43;
+        int heightMargin = 36;
+#ifdef DTKWIDGET_CLASS_DSizeMode
+        if (DGuiApplicationHelper::instance()->sizeMode() == DGuiApplicationHelper::SizeMode::CompactMode) {
+            // 紧凑模式缩小到80%
+            blurSize = 48;
+            iconSize = 34;
+            heightMargin = 29;
+        }
+#endif
 
+        QImage blurImage = opticon.pixmap(rect.width(), rect.height()).toImage();
+        int t_ratio = static_cast<int>(blurImage.devicePixelRatioF());
+        QRect imageRect((rect.width() - playPauseBtnSize()) / 2, (rect.height() - playPauseBtnSize()) / 2,
+                          blurSize * t_ratio, blurSize * t_ratio);
+        blurImage  = blurImage.copy(imageRect);
+        QRect hoverRect(rect.x() + (rect.width() - playPauseBtnSize()) / 2, rect.y() + heightMargin,
+                          playPauseBtnSize() * t_ratio, playPauseBtnSize() * t_ratio);
+
+        QTransform old_transform = painter.transform();
+        painter.translate(hoverRect.topLeft());
+        // 截取成圆
+        QPainterPath imageClipPath;
+        imageClipPath.addEllipse(QRect(0, 0, playPauseBtnSize(), playPauseBtnSize()));
+        painter.setClipPath(imageClipPath);
+        qt_blurImage(&painter, blurImage, 30, false, false);
+        painter.setTransform(old_transform);
+        painter.fillRect(hoverRect, fillColor);
+        // 绘制图标
+        QPixmap t_hoverPlayImg(hoverPlayImg);
+        t_hoverPlayImg.setDevicePixelRatio(option.widget->devicePixelRatioF());
+        QRect pixMapRect(hoverRect.x() + (hoverRect.width() - iconSize) / 2, hoverRect.y() + (hoverRect.height() - iconSize) / 2,
+                             iconSize, iconSize);
+        painter.drawPixmap(pixMapRect, t_hoverPlayImg);
+    }
+
+    QBrush fillBrush(QColor(128, 128, 128, 0));
     if (option.state & QStyle::State_Selected) {
         fillBrush = QBrush(QColor(128, 128, 128, 90));
     }
-
-    if ((option.state & QStyle::State_MouseOver)  && (!playFlag || (playStatue == Player::Paused))) {
-        QImage t_image = opticon.pixmap(rect.width(), rect.height()).toImage();
-        int t_ratio = static_cast<int>(t_image.devicePixelRatioF());
-        QRect t_imageRect(rect.width() / 2 - 25, rect.height() / 2 - 25, 60 * t_ratio, 60 * t_ratio);
-        t_image  = t_image.copy(t_imageRect);
-        QRect t_hoverRect(rect.x() + 50, rect.y() + 36, 50 * t_ratio, 50 * t_ratio);
-
-        QTransform old_transform = painter.transform();
-        painter.translate(t_hoverRect.topLeft());
-
-        QPainterPath t_imageClipPath;
-        t_imageClipPath.addEllipse(QRect(0, 0, 50, 50));
-        painter.setClipPath(t_imageClipPath);
-
-        qt_blurImage(&painter, t_image, 30, false, false);
-        painter.setTransform(old_transform);
-        painter.fillRect(t_hoverRect, fillColor);
-
-        QPixmap t_hoverPlayImg(hoverPlayImg);
-        t_hoverPlayImg.setDevicePixelRatio(option.widget->devicePixelRatioF());
-        //            t_hoverRect.adjust(0, 0, -7 * t_ratio, -7 * t_ratio);
-        QRect t_pixMapRect(rect.x() + 53, rect.y() + 40, 43, 43);
-        painter.drawPixmap(t_pixMapRect, t_hoverPlayImg);
-    }
-
     painter.fillRect(option.rect, fillBrush);
 }
 
@@ -464,7 +516,7 @@ void AlbumDataDelegate::drawTabletIconMode(QPainter &painter, const QStyleOption
 
 void AlbumDataDelegate::drawListMode(QPainter &painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
-    auto listview = qobject_cast<const AlbumListView *>(option.widget);
+    const AlbumListView * listview = qobject_cast<const AlbumListView *>(option.widget);
     AlbumInfo albumTmp = index.data(Qt::UserRole).value<AlbumInfo>();
 
     QFont fontT9 = DFontSizeManager::instance()->get(DFontSizeManager::T9);
@@ -490,7 +542,7 @@ void AlbumDataDelegate::drawListMode(QPainter &painter, const QStyleOptionViewIt
         selecteColor.setAlphaF(0.20);
     }
 
-    auto background = (index.row() % 2) == 1 ? baseColor : alternateBaseColor;
+    QColor background = (index.row() % 2) == 1 ? baseColor : alternateBaseColor;
 
     int lrWidth = 10;
     if (!(option.state & QStyle::State_Selected) && !(option.state & QStyle::State_MouseOver)) {
@@ -559,7 +611,7 @@ void AlbumDataDelegate::drawListMode(QPainter &painter, const QStyleOptionViewIt
             // 未选中时，显示活动色
             otherColor = nameColor;
         }
-        QRect numRect(lrWidth, option.rect.y(), 40, option.rect.height());
+        QRect numRect(lrWidth, option.rect.y(), 32, option.rect.height());
         if (option.state & QStyle::State_Selected) {
             if (listview2) {
                 playicon = listview2->getPlayPixmap(true);
@@ -570,15 +622,12 @@ void AlbumDataDelegate::drawListMode(QPainter &painter, const QStyleOptionViewIt
             }
         }
         qreal t_ratio = playicon.devicePixelRatioF();
-        auto centerF = numRect.center();
-        QRect t_ratioRect;
-        t_ratioRect.setX(0);
-        t_ratioRect.setY(0);
-        t_ratioRect.setWidth(static_cast<int>(playicon.width() / t_ratio));
-        t_ratioRect.setHeight(static_cast<int>(playicon.height() / t_ratio));
-        auto iconRect = QRectF(centerF.x() - t_ratioRect.width() / 2,
-                               centerF.y() - t_ratioRect.height() / 2,
-                               t_ratioRect.width(), t_ratioRect.height());
+        int iconWidth = static_cast<int>(playicon.width() / t_ratio);
+        int iconHeight = static_cast<int>(playicon.height() / t_ratio);
+
+        QRectF iconRect = QRectF(numRect.x() + (numRect.width() - iconWidth) / 2,
+                                 numRect.y() + (numRect.height() - iconHeight) / 2,
+                                 iconWidth, iconHeight);
         painter.drawPixmap(iconRect.toRect(), playicon);
     } else {
         if (option.state & QStyle::State_Selected) {
@@ -650,12 +699,12 @@ void AlbumDataDelegate::mouseClicked(const QStyleOptionViewItem &option, const Q
     } else {
         int borderWidth = 10;
         QRect rect = option.rect.adjusted(borderWidth, borderWidth, -borderWidth, -borderWidth);
-        QRect hoverRect(rect.x() + 50, rect.y() + 36, 50, 50);
 
         QPainterPath imageClipPath;
-        imageClipPath.addEllipse(QRect(rect.x() + 50, rect.y() + 36, 50, 50));
+        imageClipPath.addEllipse(QRect(rect.x() + (rect.width() - playPauseBtnSize()) / 2, rect.y() + heightTopMargin(),
+                                       playPauseBtnSize(), playPauseBtnSize()));
         imageClipPath.closeSubpath();
-        auto fillPolygon = imageClipPath.toFillPolygon();
+        QPolygonF fillPolygon = imageClipPath.toFillPolygon();
 
         if (fillPolygon.containsPoint(pressPos, Qt::OddEvenFill)) {
             if (albumTmp.musicinfos.values().size() > 0) {

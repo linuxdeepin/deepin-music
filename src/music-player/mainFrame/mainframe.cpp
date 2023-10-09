@@ -85,11 +85,8 @@ MainFrame::MainFrame()
     this->setWindowTitle(tr("Music"));
 
     m_titlebarwidget = new TitlebarWidget(this);
-//    m_searchResult = new SearchResult(this);
-//    m_titlebarwidget->setResultWidget(m_searchResult);
 
     m_titlebar = new DTitlebar(this);
-//    m_titlebar->setFixedHeight(50);
     m_titlebar->setTitle(tr("Music"));
     m_titlebar->setIcon(QIcon::fromTheme("deepin-music"));    //titlebar->setCustomWidget(titlebarwidget, Qt::AlignLeft, false);
 
@@ -121,7 +118,6 @@ MainFrame::MainFrame()
     m_backBtn->setIcon(QIcon::fromTheme("left_arrow"));
     m_titlebar->addWidget(m_backBtn, Qt::AlignLeft);
     m_titlebar->addWidget(m_addMusicBtn, Qt::AlignRight);
-//    m_titlebar->resize(width(), 50);
 
     // 返回按钮点击
     connect(m_backBtn, &DPushButton::clicked,
@@ -248,6 +244,10 @@ void MainFrame::initUI(bool showLoading)
     // 歌词控件自动收起时更新歌词按钮
     connect(m_musicLyricWidget, &MusicLyricWidget::signalAutoHidden,
             m_footerWidget, &FooterWidget::slotLyricAutoHidden);
+
+    connect(m_musicLyricWidget, &MusicLyricWidget::signalAutoHidden, m_footerWidget, [=](){
+        m_isLyricShow = false;
+    });
 
     connect(CommonService::getInstance(), &CommonService::signalCdaImportFinished,
             this, &MainFrame::slotCdaImportFinished);
@@ -642,21 +642,38 @@ void MainFrame::slotActiveChanged(bool isActive)
         }
     }
 }
+
 #ifdef DTKWIDGET_CLASS_DSizeMode
 void MainFrame::slotSizeModeChanged(DGuiApplicationHelper::SizeMode sizeMode)
 {
     if (sizeMode == DGuiApplicationHelper::SizeMode::CompactMode) {
-        qInfo() << "Size Mode Changed! Current SizeMode is CompactMode";
         m_backBtn->setFixedSize(QSize(25, 25));
         m_addMusicBtn->setFixedSize(QSize(25, 25));
-
-
+        if (m_footerWidget) {
+            m_footerWidget->setGeometry(FooterWidget::Margin, height() - FooterWidget::CompactHeight - FooterWidget::Margin,
+                                        width() - FooterWidget::Margin * 2, FooterWidget::CompactHeight);
+        }
     } else {
-        qInfo() << "Size Mode Changed! Current SizeMode is " << sizeMode;
+        if (m_footerWidget) {
+            m_footerWidget->setGeometry(FooterWidget::Margin, height() - FooterWidget::Height - FooterWidget::Margin,
+                                        width() - FooterWidget::Margin * 2, FooterWidget::Height);
+        }
         m_backBtn->setFixedSize(QSize(36, 36));
         m_addMusicBtn->setFixedSize(QSize(36, 36));
-
     }
+
+    if (m_musicStatckedWidget) {
+        m_musicStatckedWidget->setGeometry(0, titlebar()->height(), width(), height() - m_footerWidget->height() - titlebar()->height());
+    }
+
+    if (m_musicContentWidget) {
+        m_musicContentWidget->setGeometry(0, titlebar()->height(), width(), height() - m_footerWidget->height() - titlebar()->height());
+    }
+
+    if (m_musicLyricWidget) {
+        m_musicLyricWidget->setGeometry(0, titlebar()->height(), width(), height() - titlebar()->height());
+    }
+    update();
 }
 #endif
 
@@ -683,6 +700,8 @@ void MainFrame::slotLyricClicked()
         //搜索页面使能
         m_titlebarwidget->setEnabled(true);
     }
+
+    m_isLyricShow = true;
 }
 
 void MainFrame::slotDBImportFinished(QString hash, int successCount)
@@ -1078,8 +1097,18 @@ void MainFrame::showEvent(QShowEvent *event)
     this->setFocus();
 
     if (m_footerWidget) {
+#ifdef DTKWIDGET_CLASS_DSizeMode
+        if (DGuiApplicationHelper::instance()->sizeMode() == DGuiApplicationHelper::SizeMode::CompactMode) {
+            m_footerWidget->setGeometry(FooterWidget::Margin, height() - FooterWidget::CompactHeight - FooterWidget::Margin,
+                                        width() - FooterWidget::Margin * 2, FooterWidget::CompactHeight);
+        } else {
+            m_footerWidget->setGeometry(FooterWidget::Margin, height() - FooterWidget::Height - FooterWidget::Margin,
+                                        width() - FooterWidget::Margin * 2, FooterWidget::Height);
+        }
+#else
         m_footerWidget->setGeometry(FooterWidget::Margin, height() - FooterWidget::Height - FooterWidget::Margin,
                                     width() - FooterWidget::Margin * 2, FooterWidget::Height);
+#endif
     }
 
     if (m_importWidget) {
@@ -1112,8 +1141,18 @@ void MainFrame::resizeEvent(QResizeEvent *e)
     }
 
     if (m_footerWidget) {
+#ifdef DTKWIDGET_CLASS_DSizeMode
+        if (DGuiApplicationHelper::instance()->sizeMode() == DGuiApplicationHelper::SizeMode::CompactMode) {
+            m_footerWidget->setGeometry(FooterWidget::Margin, height() - FooterWidget::CompactHeight - FooterWidget::Margin,
+                                        width() - FooterWidget::Margin * 2, FooterWidget::CompactHeight);
+        } else {
+            m_footerWidget->setGeometry(FooterWidget::Margin, height() - FooterWidget::Height - FooterWidget::Margin,
+                                        width() - FooterWidget::Margin * 2, FooterWidget::Height);
+        }
+#else
         m_footerWidget->setGeometry(FooterWidget::Margin, height() - FooterWidget::Height - FooterWidget::Margin,
                                     width() - FooterWidget::Margin * 2, FooterWidget::Height);
+#endif
     }
 
     if (m_musicStatckedWidget) {
@@ -1225,6 +1264,32 @@ void MainFrame::hideEvent(QHideEvent *event)
     //用于最小化时保存窗口位置信息,note：托盘到最小化或者退出程序也会触发该事件
     DMainWindow::hideEvent(event);
     m_geometryBa = saveGeometry();
+}
+
+void MainFrame::paintEvent(QPaintEvent* e)
+{
+    QPainter painter(this);
+    QRect rect(0, height() - FooterWidget::Height,
+               220, FooterWidget::Height);
+
+#ifdef DTKWIDGET_CLASS_DSizeMode
+    if (DGuiApplicationHelper::instance()->sizeMode() == DGuiApplicationHelper::SizeMode::CompactMode) {
+        rect.setY(height() - FooterWidget::CompactHeight);
+        rect.setHeight(FooterWidget::CompactHeight);
+    }
+#endif
+
+    QBrush brush(QColor("#FFFFFF"));
+    if (m_isLyricShow) {
+        brush.setColor(Qt::transparent);
+    } else {
+        if (DGuiApplicationHelper::instance()->themeType() == DGuiApplicationHelper::DarkType) {
+            brush.setColor("#232323");
+        }
+    }
+
+    painter.fillRect(rect, brush);
+    DMainWindow::paintEvent(e);
 }
 
 void MainFrame::playQueueAnimation()

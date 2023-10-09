@@ -19,15 +19,16 @@ class MusicContentWidget : public DWidget
     Q_OBJECT
 public:
     explicit MusicContentWidget(QWidget *parent = Q_NULLPTR);
+
 public slots:
     void slotTheme(DGuiApplicationHelper::ColorType themeType);
+
 protected:
     virtual void focusOutEvent(QFocusEvent *event) Q_DECL_OVERRIDE;
     virtual void keyPressEvent(QKeyEvent *event) Q_DECL_OVERRIDE;
 
 private:
     MusicListDataWidget   *m_listDataWidget;
-//    MusicImageButton      *m_addListBtn;
     MusicListScrollArea   *leftFrame;
     bool                   addFlag = false;
 };

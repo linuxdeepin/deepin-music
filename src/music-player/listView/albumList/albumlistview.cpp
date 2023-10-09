@@ -12,6 +12,7 @@
 #include <QResizeEvent>
 #include <QStandardItemModel>
 #include <QMimeData>
+#include <QPainter>
 
 #include <DMenu>
 #include <DDialog>
@@ -109,13 +110,6 @@ AlbumListView::AlbumListView(const QString &hash, QWidget *parent)
     setBatchSize(2000);
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
-//    musciListDialog = new MusicListDialog("album", this);
-//    AC_SET_OBJECT_NAME(musciListDialog, AC_musicListDialogAlbum);
-//    AC_SET_ACCESSIBLE_NAME(musciListDialog, AC_musicListDialogAlbum);
-
-// 双击逻辑位置移动
-//    connect(this, &AlbumListView::doubleClicked, this, &AlbumListView::onDoubleClicked);
-
     setSelectionMode(QListView::SingleSelection);
     setSelectionBehavior(QAbstractItemView::SelectRows);
 
@@ -151,6 +145,10 @@ AlbumListView::AlbumListView(const QString &hash, QWidget *parent)
         connect(CommonService::getInstance(), &CommonService::signalHScreen,
                 this, &AlbumListView::slotHScreen);
     }
+
+#ifdef DTKWIDGET_CLASS_DSizeMode
+    connect(DGuiApplicationHelper::instance(),&DGuiApplicationHelper::sizeModeChanged,this, &AlbumListView::slotSizeModeChanged);
+#endif
 }
 
 AlbumListView::~AlbumListView()
@@ -214,8 +212,6 @@ void AlbumListView::resetAlbumListDataBySongName(const QList<MediaMeta> &mediaMe
     sortList(albumInfoList, sortType);
 
     for (AlbumInfo albumInfo : albumInfoList) {
-//            static MediaMeta &tmpMeta = albumMeta;
-//            bool ret = std::any_of(mediaMetas.begin(), mediaMetas.end(), [](MediaMeta mt) {return mt.hash == tmpMeta.hash;});
         bool isAlbumContainSong = false;
         for (MediaMeta albumMeta : albumInfo.musicinfos.values()) {
 
@@ -226,12 +222,6 @@ void AlbumListView::resetAlbumListDataBySongName(const QList<MediaMeta> &mediaMe
                     break;
                 }
             }
-//            foreach (MediaMeta listMeta, mediaMetas) {
-//                if (albumMeta.hash == listMeta.hash) {
-//                    isAlbumContainSong = true;
-//                    break;
-//                }
-//            }
             if (isAlbumContainSong) {
                 break;
             }
@@ -270,8 +260,6 @@ void AlbumListView::resetAlbumListDataBySinger(const QList<SingerInfo> &singerIn
     sortList(albumInfoList, sortType);
 
     for (AlbumInfo albumInfo : albumInfoList) {
-//        static AlbumInfo &tmpMeta = albumInfo;
-//        bool ret = std::any_of(singerInfos.begin(), singerInfos.end(), [](SingerInfo mt) {return CommonService::getInstance()->containsStr(mt.singerName, tmpMeta.singer);});
         bool isAlbumContainSong = false;
         foreach (SingerInfo singerInfo, singerInfos) {
             if (CommonService::getInstance()->containsStr(singerInfo.singerName, albumInfo.singer)) {
@@ -365,9 +353,19 @@ void AlbumListView::setViewModeFlag(QListView::ViewMode mode)
         if (mode == QListView::IconMode) {
             setIconSize(QSize(150, 150));
             setGridSize(QSize(-1, -1));
-            // 去除底部间距
-            setViewportMargins(-10, -13, -35, 0);
-            setSpacing(20);
+#ifdef DTKWIDGET_CLASS_DSizeMode
+            if (DGuiApplicationHelper::instance()->sizeMode() == DGuiApplicationHelper::SizeMode::CompactMode) {
+                setViewportMargins(-5, -13, -35, 0);
+                setSpacing(15);
+            } else
+
+#endif
+            {
+                setSpacing(20);
+                // 去除底部间距
+                setViewportMargins(-10, -13, -35, 0);
+            }
+
         } else {
             setIconSize(QSize(36, 36));
             setGridSize(QSize(-1, -1));
@@ -391,15 +389,9 @@ MediaMeta AlbumListView::playing() const
     return playingMeta;
 }
 
-//MediaMeta AlbumListView::hoverin() const
-//{
-//    return hoverinMeta;
-//}
-
 void AlbumListView::setThemeType(int type)
 {
     musicTheme = type;
-//    musciListDialog->setThemeType(type);
 }
 
 int AlbumListView::getThemeType() const
@@ -407,24 +399,10 @@ int AlbumListView::getThemeType() const
     return musicTheme;
 }
 
-//void AlbumListView::setPlayPixmap(QPixmap pixmap, QPixmap sidebarPixmap, QPixmap albumPixmap)
-//{
-////    if (musciListDialog->isVisible())
-////        musciListDialog->setPlayPixmap(pixmap, sidebarPixmap);
-//    playingPix = pixmap;
-//    sidebarPix = sidebarPixmap;
-//    update();
-//}
-
 QPixmap AlbumListView::getPlayPixmap() const
 {
     return playingPix;
 }
-
-//QPixmap AlbumListView::getSidebarPixmap() const
-//{
-//    return sidebarPix;
-//}
 
 QPixmap AlbumListView::getPlayPixmap(bool isSelect)
 {
@@ -435,8 +413,22 @@ QPixmap AlbumListView::getPlayPixmap(bool isSelect)
     } else {
         color = QColor(DGuiApplicationHelper::instance()->applicationPalette().highlight().color());
     }
+    QSize iconSize(20, 18);
+#ifdef DTKWIDGET_CLASS_DSizeMode
+    if (DGuiApplicationHelper::instance()->sizeMode() == DGuiApplicationHelper::SizeMode::CompactMode) {
+        // 播放图标缩小80%
+        iconSize.setWidth(16);
+        iconSize.setHeight(16);
+    }
+#endif
 
-    QImage playingImage = Player::getInstance()->playingIcon().pixmap(QSize(20, 18), QIcon::Active, QIcon::On).toImage();
+    QPixmap playingPixmap = QPixmap(iconSize);
+    playingPixmap.fill(Qt::transparent);
+    QPainter painter(&playingPixmap);
+    painter.setPen(color);
+    Player::getInstance()->playingIcon().paint(&painter, QRect(0, 0, iconSize.width(), iconSize.height()),
+                                               Qt::AlignCenter, QIcon::Active, QIcon::On);
+    /*QImage playingImage = Player::getInstance()->playingIcon().pixmap(iconSize, QIcon::Active, QIcon::On).toImage();
     for (int i = 0; i < playingImage.width(); i++) {
         for (int j = 0; j < playingImage.height(); j++) {
             if (playingImage.pixelColor(i, j) != QColor(0, 0, 0, 0)) {
@@ -444,24 +436,11 @@ QPixmap AlbumListView::getPlayPixmap(bool isSelect)
             }
         }
     }
-    QPixmap playingPixmap = QPixmap::fromImage(playingImage);
-//    update();
+    QPixmap playingPixmap = QPixmap::fromImage(playingImage);*/
+
+    //update();
     return playingPixmap;
 }
-
-// 区分单双击需要，双击逻辑位置移动
-//void AlbumListView::onDoubleClicked(const QModelIndex &index)
-//{
-//    AlbumInfo albumTmp = index.data(Qt::UserRole).value<AlbumInfo>();
-//    // 修改为二级页面,去掉dialog
-////    musciListDialog->flushDialog(albumTmp.musicinfos, true);
-////    musciListDialog->exec();
-//    if (m_hash == "album") {
-//        emit CommonService::getInstance()->signalShowSubSonglist(albumTmp.musicinfos, AlbumType);
-//    } else if (m_hash == "albumResult") {
-//        emit CommonService::getInstance()->signalShowSubSonglist(albumTmp.musicinfos, SearchAlbumResultType);
-//    }
-//}
 
 void AlbumListView::slotCoverUpdate(const MediaMeta &meta)
 {
@@ -780,16 +759,6 @@ void AlbumListView::slotUpdateCodec(const MediaMeta &meta)
                 return;
             }
         }
-//        foreach (QString strhash, tmpmeta.musicinfos.keys()) {
-//            if (meta.hash == strhash) {
-//                tmpmeta.musicinfos[strhash].codec = meta.codec;
-//                tmpmeta.musicinfos[strhash].updateCodec(meta.codec.toUtf8());
-//                QVariant varmeta;
-//                varmeta.setValue(tmpmeta);
-//                albumModel->setData(albumModel->index(i, 0), varmeta, Qt::UserRole);
-//                return;
-//            }
-//        }
     }
 }
 
@@ -832,3 +801,19 @@ void AlbumListView::slotHScreen(bool isHScreen)
         }
     }
 }
+
+#ifdef DTKWIDGET_CLASS_DSizeMode
+void AlbumListView::slotSizeModeChanged(DGuiApplicationHelper::SizeMode sizeMode)
+{
+    if (m_viewModel != QListView::IconMode)
+        return;
+
+    if (sizeMode == DGuiApplicationHelper::SizeMode::CompactMode) {
+        setSpacing(15);
+        setViewportMargins(-5, -13, -35, 0);
+    } else {
+        setSpacing(20);
+        setViewportMargins(-10, -13, -35, 0);
+    }
+}
+#endif

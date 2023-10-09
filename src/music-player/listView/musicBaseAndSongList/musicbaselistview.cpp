@@ -37,7 +37,7 @@ MusicBaseListView::MusicBaseListView(QWidget *parent) : DListView(parent)
     if (CommonService::getInstance()->isTabletEnvironment()) {
         delegate->setBackgroundType(DStyledItemDelegate::NoBackground);
     }
-    auto delegateMargins = delegate->margins();
+    QMargins delegateMargins = delegate->margins();
     delegateMargins.setLeft(18);
     delegate->setMargins(delegateMargins);
     setItemDelegate(delegate);
@@ -49,8 +49,12 @@ MusicBaseListView::MusicBaseListView(QWidget *parent) : DListView(parent)
     font.setPixelSize(14);
     setFont(font);
 
+#ifdef DTKWIDGET_CLASS_DSizeMode
+    slotSizeModeChanged(DGuiApplicationHelper::instance()->sizeMode());
+#else
     setIconSize(QSize(20, 20));
     setItemSize(QSize(40, 40));
+#endif
 
     setFrameShape(QFrame::NoFrame);
 
@@ -62,30 +66,19 @@ MusicBaseListView::MusicBaseListView(QWidget *parent) : DListView(parent)
     setDropIndicatorShown(true);
     setSelectionMode(QListView::SingleSelection);
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-
     setContextMenuPolicy(Qt::CustomContextMenu);
-    connect(this, &MusicBaseListView::customContextMenuRequested,
-            this, &MusicBaseListView::showContextMenu);
 
-//    connect(this, &MusicBaseListView::triggerEdit,
-//    this, [ = ](const QModelIndex & index) {
-//        if (DGuiApplicationHelper::instance()->themeType() == 1) {
-//            auto curStandardItem = dynamic_cast<DStandardItem *>(model->itemFromIndex(index));
-//            curStandardItem->setIcon(QIcon(QString(":/mpimage/light/normal/famous_ballad_normal.svg")));
-//        }
-//    });
     init();
-    connect(this, &MusicBaseListView::clicked,
-            this, &MusicBaseListView::slotItemClicked);
 
-    connect(Player::getInstance(), &Player::signalUpdatePlayingIcon,
-            this, &MusicBaseListView::slotUpdatePlayingIcon);
-
+    connect(this, &MusicBaseListView::customContextMenuRequested, this, &MusicBaseListView::showContextMenu);
+    connect(this, &MusicBaseListView::clicked, this, &MusicBaseListView::slotItemClicked);
+    connect(Player::getInstance(), &Player::signalUpdatePlayingIcon, this, &MusicBaseListView::slotUpdatePlayingIcon);
     connect(CommonService::getInstance(), &CommonService::signalSwitchToView, this, &MusicBaseListView::viewChanged);
-
-
     connect(DGuiApplicationHelper::instance(), &DGuiApplicationHelper::themeTypeChanged,
             this, &MusicBaseListView::slotUpdatePlayingIcon);
+#ifdef DTKWIDGET_CLASS_DSizeMode
+    connect(DGuiApplicationHelper::instance(),&DGuiApplicationHelper::sizeModeChanged,this, &MusicBaseListView::slotSizeModeChanged);
+#endif
 }
 
 MusicBaseListView::~MusicBaseListView()
@@ -111,7 +104,7 @@ void SetSVGBackColor1(QDomElement elem, QString strtagname, QString strattr, QSt
 void MusicBaseListView::init()
 {
     QString displayName = tr("Albums");
-    auto item = new DStandardItem(QIcon::fromTheme("music_album"), displayName);
+    DStandardItem *item = new DStandardItem(QIcon::fromTheme("music_album"), displayName);
     item->setData(ListPageSwitchType::AlbumType, Qt::UserRole);
     item->setData("album", Qt::UserRole + 2);
     model->appendRow(item);
@@ -184,11 +177,6 @@ void MusicBaseListView::setThemeType(int type)
     }
 }
 
-//void MusicBaseListView::mousePressEvent(QMouseEvent *event)
-//{
-//    DListView::mousePressEvent(event);
-//}
-
 void MusicBaseListView::dragEnterEvent(QDragEnterEvent *event)
 {
     auto t_formats = event->mimeData()->formats();
@@ -219,8 +207,7 @@ void MusicBaseListView::dropEvent(QDropEvent *event)
         return;
     QString hash = indexDrop.data(Qt::UserRole + 2).value<QString>();
 
-//    auto t_playlistPtr = playlistPtr(index);
-    if (/*t_playlistPtr == nullptr || */(!event->mimeData()->hasFormat("text/uri-list") && !event->mimeData()->hasFormat("playlistview/x-datalist"))) {
+    if ((!event->mimeData()->hasFormat("text/uri-list") && !event->mimeData()->hasFormat("playlistview/x-datalist"))) {
         return;
     }
 
@@ -261,21 +248,6 @@ void MusicBaseListView::dropEvent(QDropEvent *event)
 //    DListView::dropEvent(event);
 }
 
-//void MusicBaseListView::SetAttrRecur(QDomElement elem, QString strtagname, QString strattr, QString strattrval)
-//{
-//    // if it has the tagname then overwritte desired attribute
-//    if (elem.tagName().compare(strtagname) == 0) {
-//        elem.setAttribute(strattr, strattrval);
-//    }
-//    // loop all children
-//    for (int i = 0; i < elem.childNodes().count(); i++) {
-//        if (!elem.childNodes().at(i).isElement()) {
-//            continue;
-//        }
-//        this->SetAttrRecur(elem.childNodes().at(i).toElement(), strtagname, strattr, strattrval);
-//    }
-//}
-
 void MusicBaseListView::setActionDisabled(const QString &hash, QAction *act)
 {
     if (hash == "album") {
@@ -297,9 +269,17 @@ void MusicBaseListView::slotUpdatePlayingIcon()
         if (item == nullptr) {
             continue;
         }
+
+        QSize iconSize(20, 20);
+#ifdef DTKWIDGET_CLASS_DSizeMode
+    if (DGuiApplicationHelper::instance()->sizeMode() == DGuiApplicationHelper::SizeMode::CompactMode) {
+        iconSize.setWidth(16);
+        iconSize.setHeight(16);
+    }
+#endif
         QString hash = index.data(Qt::UserRole + 2).value<QString>();
         if (hash == Player::getInstance()->getCurrentPlayListHash()) {
-            QPixmap playingPixmap = QPixmap(QSize(20, 20));
+            QPixmap playingPixmap = QPixmap(iconSize);
             playingPixmap.fill(Qt::transparent);
             QPainter painter(&playingPixmap);
             DTK_NAMESPACE::Gui::DPalette pa;// = this->palette();
@@ -308,7 +288,7 @@ void MusicBaseListView::slotUpdatePlayingIcon()
             } else {
                 painter.setPen(pa.color(QPalette::Active, DTK_NAMESPACE::Gui::DPalette::Highlight));
             }
-            Player::getInstance()->playingIcon().paint(&painter, QRect(0, 0, 20, 20), Qt::AlignCenter, QIcon::Active, QIcon::On);
+            Player::getInstance()->playingIcon().paint(&painter, QRect(0, 0, iconSize.width(), iconSize.height()), Qt::AlignCenter, QIcon::Active, QIcon::On);
 
             QIcon playingIcon(playingPixmap);
             DViewItemActionList actionList = item->actionList(Qt::RightEdge);
@@ -316,7 +296,7 @@ void MusicBaseListView::slotUpdatePlayingIcon()
                 actionList.first()->setIcon(playingIcon);
             } else {
                 actionList.clear();
-                auto viewItemAction = new DViewItemAction(Qt::AlignCenter, QSize(20, 20));
+                auto viewItemAction = new DViewItemAction(Qt::AlignCenter, iconSize);
                 viewItemAction->setParent(this);
                 viewItemAction->setIcon(playingIcon);
                 actionList.append(viewItemAction);
@@ -329,7 +309,7 @@ void MusicBaseListView::slotUpdatePlayingIcon()
                 actionList.first()->setIcon(playingIcon);
             } else {
                 actionList.clear();
-                auto viewItemAction = new DViewItemAction(Qt::AlignCenter, QSize(20, 20));
+                auto viewItemAction = new DViewItemAction(Qt::AlignCenter, iconSize);
                 //初始化指明父类，方便后续释放，防止内存泄露
                 viewItemAction->setParent(this);
                 viewItemAction->setIcon(playingIcon);
@@ -377,3 +357,16 @@ void MusicBaseListView::viewChanged(ListPageSwitchType switchtype, QString hashO
         this->clearSelection();
     }
 }
+
+#ifdef DTKWIDGET_CLASS_DSizeMode
+void MusicBaseListView::slotSizeModeChanged(DGuiApplicationHelper::SizeMode sizeMode)
+{
+    if (sizeMode == DGuiApplicationHelper::SizeMode::CompactMode) {
+        setIconSize(QSize(16, 16));
+        setItemSize(QSize(24, 24));
+    } else {
+        setIconSize(QSize(20, 20));
+        setItemSize(QSize(40, 40));
+    }
+}
+#endif

@@ -5,8 +5,10 @@
 
 #pragma once
 
-#include <DListView>
 #include <QDomElement>
+
+#include <DListView>
+#include <DGuiApplicationHelper>
 
 #include "commonservice.h"
 DWIDGET_USE_NAMESPACE
@@ -23,32 +25,30 @@ public:
 
     void init();
     void showContextMenu(const QPoint &pos);
+
 public slots:
     void setThemeType(int type);
     void slotUpdatePlayingIcon();
     void slotMenuTriggered(QAction *action);
     void slotItemClicked(const QModelIndex &index);
     void viewChanged(ListPageSwitchType switchtype, QString hashOrSearchword);
+#ifdef DTKWIDGET_CLASS_DSizeMode
+    void slotSizeModeChanged(DGuiApplicationHelper::SizeMode sizeMode);
+#endif
 
 protected:
-//    virtual void startDrag(Qt::DropActions supportedActions) Q_DECL_OVERRIDE;
-//    void mousePressEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
-
-//    void keyPressEvent(QKeyEvent *event) Q_DECL_OVERRIDE;
     void dragEnterEvent(QDragEnterEvent *event) Q_DECL_OVERRIDE;
     void dragMoveEvent(QDragMoveEvent *event) Q_DECL_OVERRIDE;
     void dropEvent(QDropEvent *event) Q_DECL_OVERRIDE;
 
 private:
-//    void SetAttrRecur(QDomElement elem, QString strtagname, QString strattr, QString strattrval);
     void setActionDisabled(const QString &hash, QAction *act);
+
 private:
-    //    QList<PlaylistPtr >  allPlaylists;
-    MusicBaseAndSonglistModel *model = nullptr;
-    DStyledItemDelegate  *delegate        = nullptr;
-    QStandardItem        *playingItem     = nullptr;
-    //QStandardItem      *m_currentitem = nullptr;
-    bool                m_sizeChangedFlag   = false;
-    bool                pixmapState         = false;
+    MusicBaseAndSonglistModel *model             = nullptr;
+    DStyledItemDelegate       *delegate          = nullptr;
+    QStandardItem             *playingItem       = nullptr;
+    bool                       m_sizeChangedFlag = false;
+    bool                       pixmapState       = false;
 };
 

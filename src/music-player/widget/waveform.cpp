@@ -34,14 +34,15 @@ Waveform::Waveform(Qt::Orientation orientation, QWidget *widget, QWidget *parent
     waveformScale->setAttribute(Qt::WA_TransparentForMouseEvents, true);
     waveformScale->hide();
 
-//    connect(d->player, &Player::positionChanged,
-//    this, [ = ](qint64 position, qint64 duration, qint64 coefficient) {
-//        d->lastPlayPosition = position;
-//        Q_EMIT progrossChanged(position, duration, coefficient);
-//    });
+#ifdef DTKWIDGET_CLASS_DSizeMode
+   slotSizeModeChanged(DGuiApplicationHelper::instance()->sizeMode());
+#endif
 
     connect(Player::getInstance(), &Player::positionChanged, this, &Waveform::onProgressChanged);
     connect(Player::getInstance(), &Player::signalMediaStop, this, &Waveform::clearBufferAudio);
+#ifdef DTKWIDGET_CLASS_DSizeMode
+    connect(DGuiApplicationHelper::instance(),&DGuiApplicationHelper::sizeModeChanged,this, &Waveform::slotSizeModeChanged);
+#endif
 }
 
 void Waveform::paintEvent(QPaintEvent *)
@@ -64,7 +65,6 @@ void Waveform::paintEvent(QPaintEvent *)
     QColor fillColor(Qt::black);
     if (themeType == 2)
         fillColor = QColor("#FFFFFF");
-    painter.save();
     if (devicePixelRatio > 1.0) {
         painter.setClipRect(QRect(rect().x(), rect().y(), static_cast<int>(curWidth - 1), rect().height()));
     } else {
@@ -72,17 +72,11 @@ void Waveform::paintEvent(QPaintEvent *)
     }
     for (int i = 0; i < sampleList.size(); i++) {
         volume = static_cast<int>(sampleList[i] * rect().height());
-//        if (volume == 0) {
-//            QPainterPath path;
-//            path.addRect(QRectF(rect().x() + i * WAVE_DURATION, rect().y() + (rect().height() - 1), WAVE_DURATION, 1));
-//            painter.fillPath(path, fillColor);
-//        } else {
         if (volume == 0) {
             volume = 1;
         }
         QRect sampleRect(rect().x() + i * WAVE_DURATION, rect().y() + (rect().height() - 1), WAVE_WIDTH, -qAbs(volume));
         painter.fillRect(sampleRect, fillColor);
-//        }
     }
     if (sampleList.size() < curWidth / WAVE_DURATION) {
         QPainterPath path;
@@ -109,17 +103,11 @@ void Waveform::paintEvent(QPaintEvent *)
     }
     for (int i = 0; i < sampleList.size(); i++) {
         volume = static_cast<int>(sampleList[i] * rect().height());
-//        if (volume == 0) {
-//            QPainterPath path;
-//            path.addRect(QRectF(rect().x() + i * WAVE_DURATION, rect().y() + (rect().height() - 1), WAVE_DURATION, 1));
-//            painter.fillPath(path, fillColor);
-//        } else {
         if (volume == 0) {
             volume = 1;
         }
         QRect sampleRect(rect().x() + i * WAVE_DURATION, rect().y() + (rect().height() - 1), WAVE_WIDTH, -qAbs(volume));
         painter.fillRect(sampleRect, fillColor);
-//        }
     }
     if (sampleList.size() < rect().width() / WAVE_DURATION) {
         fillColor = Qt::darkGray;
@@ -131,14 +119,7 @@ void Waveform::paintEvent(QPaintEvent *)
         painter.fillPath(path, fillColor);
     }
     painter.restore();
-
-    painter.restore();
 }
-
-//void Waveform::clearWave()
-//{
-//    sampleList.clear();
-//}
 
 void Waveform::onAudioBuffer(const QVector<float> &allData, const QString &hash)
 {
@@ -148,136 +129,6 @@ void Waveform::onAudioBuffer(const QVector<float> &allData, const QString &hash)
     updateAudioBuffer();
     this->update();
 }
-
-//void Waveform::onAudioBufferProbed(const QAudioBuffer &buffer)
-//{
-//    spectrumFlag = true;
-//    for (auto value : getBufferLevels(buffer)) {
-//        reciveSampleList.push_front(static_cast<float>(value));
-//        break;
-//    }
-//    if (reciveSampleList.size() > maxSampleNum)
-//        reciveSampleList.pop_back();
-
-//    powerSpectrum();
-//    update();
-
-////    if (width() > maxSampleNum)
-////        maxSampleNum = width();
-////    if (reciveSampleList.size() == maxSampleNum) {
-////        sampleList = reciveSampleList;
-////        reciveSampleList.clear();
-////    }
-
-////    updateScaleSize();
-////    update();
-//}
-
-//// returns the audio level for each channel
-//QVector<qreal> Waveform::getBufferLevels(const QAudioBuffer &buffer)
-//{
-//    QVector<qreal> values;
-
-//    if (!buffer.format().isValid() || buffer.format().byteOrder() != QAudioFormat::LittleEndian)
-//        return values;
-
-//    if (buffer.format().codec() != "audio/pcm")
-//        return values;
-
-//    int channelCount = buffer.format().channelCount();
-//    values.fill(0, channelCount);
-//    qreal peak_value = Waveform::getPeakValue(buffer.format());
-//    if (qFuzzyCompare(peak_value, qreal(0)))
-//        return values;
-
-//    switch (buffer.format().sampleType()) {
-//    case QAudioFormat::Unknown:
-//    case QAudioFormat::UnSignedInt:
-//        if (buffer.format().sampleSize() == 32)
-//            values = Waveform::getBufferLevels(buffer.constData<quint32>(), buffer.frameCount(), channelCount);
-//        if (buffer.format().sampleSize() == 16)
-//            values = Waveform::getBufferLevels(buffer.constData<quint16>(), buffer.frameCount(), channelCount);
-//        if (buffer.format().sampleSize() == 8)
-//            values = Waveform::getBufferLevels(buffer.constData<quint8>(), buffer.frameCount(), channelCount);
-//        for (int i = 0; i < values.size(); ++i)
-//            values[i] = qAbs(values.at(i) - peak_value / 2) / (peak_value / 2);
-//        break;
-//    case QAudioFormat::Float:
-//        if (buffer.format().sampleSize() == 32) {
-//            values = Waveform::getBufferLevels(buffer.constData<float>(), buffer.frameCount(), channelCount);
-//            for (int i = 0; i < values.size(); ++i)
-//                values[i] /= peak_value;
-//        }
-//        break;
-//    case QAudioFormat::SignedInt:
-//        if (buffer.format().sampleSize() == 32)
-//            values = Waveform::getBufferLevels(buffer.constData<qint32>(), buffer.frameCount(), channelCount);
-//        if (buffer.format().sampleSize() == 16)
-//            values = Waveform::getBufferLevels(buffer.constData<qint16>(), buffer.frameCount(), channelCount);
-//        if (buffer.format().sampleSize() == 8)
-//            values = Waveform::getBufferLevels(buffer.constData<qint8>(), buffer.frameCount(), channelCount);
-//        for (int i = 0; i < values.size(); ++i)
-//            values[i] /= peak_value;
-//        break;
-//    }
-
-//    return values;
-//}
-
-//template <class T>
-//QVector<qreal> Waveform::getBufferLevels(const T *buffer, int frames, int channels)
-//{
-//    QVector<qreal> max_values;
-//    max_values.fill(0, channels);
-
-//    for (int i = 0; i < frames; ++i) {
-//        for (int j = 0; j < channels; ++j) {
-//            qreal value = qAbs(qreal(buffer[i * channels + j]));
-//            if (value > max_values.at(j))
-//                max_values.replace(j, value);
-//        }
-//    }
-
-//    return max_values;
-//}
-
-//// This function returns the maximum possible sample value for a given audio format
-//qreal Waveform::getPeakValue(const QAudioFormat &format)
-//{
-//    // Note: Only the most common sample formats are supported
-//    if (!format.isValid())
-//        return qreal(0);
-
-//    if (format.codec() != "audio/pcm")
-//        return qreal(0);
-
-//    switch (format.sampleType()) {
-//    case QAudioFormat::Unknown:
-//        break;
-//    case QAudioFormat::Float:
-//        if (format.sampleSize() != 32) // other sample formats are not supported
-//            return qreal(0);
-//        return qreal(1.00003);
-//    case QAudioFormat::SignedInt:
-//        if (format.sampleSize() == 32)
-//            return qreal(INT_MAX);
-//        if (format.sampleSize() == 16)
-//            return qreal(SHRT_MAX);
-//        if (format.sampleSize() == 8)
-//            return qreal(CHAR_MAX);
-//        break;
-//    case QAudioFormat::UnSignedInt:
-//        if (format.sampleSize() == 32)
-//            return qreal(UINT_MAX);
-//        if (format.sampleSize() == 16)
-//            return qreal(USHRT_MAX);
-//        if (format.sampleSize() == 8)
-//            return qreal(UCHAR_MAX);
-//        break;
-//    }
-
-//    return qreal(0);
-//}
 
 void Waveform::mouseReleaseEvent(QMouseEvent *event)
 {
@@ -376,10 +227,16 @@ void Waveform::clearBufferAudio(const QString &hash)
     }
 }
 
-//void Waveform::hidewaveformScale()
-//{
-//    waveformScale->hide();
-//}
+#ifdef DTKWIDGET_CLASS_DSizeMode
+void Waveform::slotSizeModeChanged(DGuiApplicationHelper::SizeMode sizeMode)
+{
+    if (sizeMode == DGuiApplicationHelper::SizeMode::CompactMode) {
+        setFixedHeight(29);
+    } else {
+        setFixedHeight(40);
+    }
+}
+#endif
 
 void Waveform::enterEvent(QEvent *event)
 {
@@ -407,8 +264,6 @@ void Waveform::resizeEvent(QResizeEvent *event)
     DSlider::resizeEvent(event);
     if (!spectrumFlag)
         updateAudioBuffer();
-//    else
-//        powerSpectrum();
 }
 
 void Waveform::updateAudioBuffer()
@@ -426,41 +281,6 @@ void Waveform::updateAudioBuffer()
     spline(curSampleListX, reciveSampleList, endSampleListX, sampleList, width() / WAVE_DURATION + 1);
     update();
 }
-
-//bool Waveform::powerSpectrum()
-//{
-//    sampleList.clear();
-//    if (reciveSampleList.size() != maxSampleNum)
-//        return false;
-
-//    complex<float> *sample;
-
-//    sample = new complex<float>[maxSampleNum];
-//    for (int i = 0; i < maxSampleNum; i++)
-//        sample[i] = complex<float>(reciveSampleList[i]/* / 32768.0*/, 0);
-
-//    int log2N = static_cast<int>(log2(maxSampleNum - 1) + 1);
-//    int sign = -1;
-
-//    CFFT::process(sample, log2N, sign);
-
-//    QVector<float> curSampleListX, curSampleListY;
-//    for (int i = 0; i < maxSampleNum; i++) {
-//        curSampleListY.append(abs(sample[i]) / static_cast<float>(sqrt(2)) / 2);
-//        if (curSampleListY[i] < 0 || curSampleListY[i] > 1)
-//            curSampleListY[i] = 0;
-//    }
-//    curSampleListY = curSampleListY.mid(curSampleListY.size() / 2 - 3, 7);
-//    int singleWidth = width() / (curSampleListY.size() - 1);
-//    for (int i = 0; i < curSampleListY.size(); i++) {
-//        curSampleListX.append(i * singleWidth);
-//    }
-
-//    QVector<float> endSampleListX, endSampleListY;
-//    spline(curSampleListX, curSampleListY, endSampleListX, sampleList, width() / WAVE_DURATION + 1);
-//    delete [] sample;
-//    return true;
-//}
 
 void Waveform::spline(QVector<float> &x, QVector<float> &y, QVector<float> &vx, QVector<float> &vy, int pnt)
 {
@@ -576,15 +396,3 @@ void Waveform::updatePlayerPos(int value)
         Player::getInstance()->setPosition(position);
     }
 }
-
-//void Waveform::isPlayNextMeta(int value)
-//{
-//    int range = this->maximum() - this->minimum();
-//    Q_ASSERT(range != 0);
-
-////    if (value >= range) {
-////        Player::getInstance()->playNextMeta(true);
-////    }
-//}
-
-

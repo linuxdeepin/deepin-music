@@ -66,6 +66,10 @@ MusicListDataWidget::MusicListDataWidget(QWidget *parent) :
     connect(CommonService::getInstance(), &CommonService::loadData, this, [ = ]() {
         refreshInfoLabel("all");
     }, Qt::QueuedConnection);
+
+#ifdef DTKWIDGET_CLASS_DSizeMode
+    connect(DGuiApplicationHelper::instance(),&DGuiApplicationHelper::sizeModeChanged,this, &MusicListDataWidget::slotSizeModeChanged);
+#endif
 }
 
 MusicListDataWidget::~MusicListDataWidget()
@@ -109,7 +113,6 @@ void MusicListDataWidget::initInfoLabel(QString hash)
     m_infoLabel->setText(countStr);
 }
 
-// 左侧菜单切换ListView
 void MusicListDataWidget::slotViewChanged(ListPageSwitchType switchtype, const QString &hashOrSearchword, QMap<QString, MediaMeta> musicinfos)
 {
     // 任意非0数，隐藏无搜索结果界面
@@ -411,64 +414,6 @@ void MusicListDataWidget::slotImportFinished(QString hash, int successCount)
 
 bool MusicListDataWidget::eventFilter(QObject *o, QEvent *e)
 {
-//    if (o == d->btPlayAll) {
-//        if (e->type() == QEvent::FocusIn) {
-
-//            Q_EMIT changeFocus("AllMusicListID");
-//        }
-//    } else if (o == d->btIconMode) {
-//        if (e->type() == QEvent::KeyPress) {
-//            QKeyEvent *event = static_cast<QKeyEvent *>(e);
-//            if (event->key() == Qt::Key_Return) {
-
-//                Q_EMIT d->btIconMode->click();
-//            }
-//        }
-//    }  else  if (o == d->btlistMode) {
-//        if (e->type() == QEvent::KeyPress) {
-//            QKeyEvent *event = static_cast<QKeyEvent *>(e);
-//            if (event->key() == Qt::Key_Return) {
-
-//                Q_EMIT d->btlistMode->click();
-//            }
-//        } else if (e->type() == QEvent::FocusOut) {
-
-//            Q_EMIT changeFocus("btlistModeFocusOut");
-//        }
-//    } else if (o == d->musicListView) {
-
-//        if (e->type() == QEvent::KeyPress) {
-//            QKeyEvent *event = static_cast<QKeyEvent *>(e);
-//            if ((event->modifiers() == Qt::ControlModifier) && (event->key() == Qt::Key_M)) {
-
-//                int rowIndex = d->musicListView->currentIndex().row();
-//                int row = 40 * rowIndex;
-//                QPoint pos;
-
-//                if (row > 440) {
-//                    QPoint posm(300, 220);
-//                    pos = posm;
-//                } else {
-//                    QPoint posm(300, row);
-//                    pos = posm;
-//                }
-
-//                Q_EMIT requestCustomContextMenu(pos, 1);
-//            }
-//        } else if (e->type() == QEvent::FocusIn) {
-
-//            int rowIndex = d->musicListView->currentIndex().row();
-
-//            if (rowIndex == -1) {
-//                auto index = d->musicListView->item(0, 0);
-//                d->musicListView->setCurrentItem(index);
-//            }
-
-//        } else if (e->type() == QEvent::FocusOut) {
-
-//        }
-//    }
-
     return QWidget::eventFilter(o, e);
 }
 
@@ -485,9 +430,6 @@ void MusicListDataWidget::dragEnterEvent(QDragEnterEvent *event)
 
 void MusicListDataWidget::dropEvent(QDropEvent *event)
 {
-    // 不需要向下传递事件
-//    DWidget::dropEvent(event);
-
     if (!event->mimeData()->hasFormat("text/uri-list")) {
         return;
     }
@@ -502,7 +444,7 @@ void MusicListDataWidget::dropEvent(QDropEvent *event)
         DataBaseService::getInstance()->importMedias(m_currentHash, localpaths);
     }
 }
-// 大标题跟随resize变化
+
 void MusicListDataWidget::resizeEvent(QResizeEvent *event)
 {
     QWidget::resizeEvent(event);
@@ -515,7 +457,6 @@ void MusicListDataWidget::resizeEvent(QResizeEvent *event)
     m_infoLabel->setText(countStr);
 }
 
-// 大标题跟随size变化
 void MusicListDataWidget::showEvent(QShowEvent *event)
 {
     QWidget::showEvent(event);
@@ -717,7 +658,7 @@ void MusicListDataWidget::initUI()
     m_currentHash = "all";
 
     setAutoFillBackground(true);
-    auto palette = this->palette();
+    QPalette palette = this->palette();
     QColor background("#FFFFFF");
     background.setAlphaF(0.1);
     palette.setColor(DPalette::Background, background);
@@ -744,31 +685,31 @@ void MusicListDataWidget::initUI()
     layout->addWidget(m_pStackedWidget, 1);
 
     // action layout
-    QHBoxLayout *actionInfoBarLayout = new QHBoxLayout(m_actionBar);
+    m_actionInfoBarLayout = new QHBoxLayout(m_actionBar);
     if (CommonService::getInstance()->isTabletEnvironment()) {
-        actionInfoBarLayout->setContentsMargins(50, 0, 50, 0);
+        m_actionInfoBarLayout->setContentsMargins(50, 0, 50, 0);
     } else {
-        actionInfoBarLayout->setContentsMargins(10, 0, 8, 0);
+        m_actionInfoBarLayout->setContentsMargins(10, 0, 8, 0);
     }
-    actionInfoBarLayout->setSpacing(0);
+    m_actionInfoBarLayout->setSpacing(0);
     // 初始化全部播放按钮
-    initBtPlayAll(actionInfoBarLayout);
+    initBtPlayAll(m_actionInfoBarLayout);
     // 初始化数量标签
-    initCountLabel(actionInfoBarLayout);
+    initCountLabel(m_actionInfoBarLayout);
     // 两边控件撑满
-    actionInfoBarLayout->addStretch(100);
+    m_actionInfoBarLayout->addStretch(100);
     // 初始化大标题
-    initTitle(actionInfoBarLayout);
+    initTitle(m_actionInfoBarLayout);
     // 初始化列表模式
-    initListIconMode(actionInfoBarLayout);
+    initListIconMode(m_actionInfoBarLayout);
     // 初始化专辑排序action
-    initAlbumAction(actionInfoBarLayout);
+    initAlbumAction(m_actionInfoBarLayout);
     // 初始化演唱者排序action
-    initArtistAction(actionInfoBarLayout);
+    initArtistAction(m_actionInfoBarLayout);
     // 初始化歌曲排序action
-    initMusicAction(actionInfoBarLayout);
+    initMusicAction(m_actionInfoBarLayout);
     // 初始化自定义排序action
-    initCustomMusicAction(actionInfoBarLayout);
+    initCustomMusicAction(m_actionInfoBarLayout);
 
     // 初始化搜索结果为空时的标签
     initemptyHits(layoutContent);
@@ -808,13 +749,15 @@ void MusicListDataWidget::initUI()
     }
     m_musicListView->setFocusPolicy(Qt::StrongFocus);
     m_pStackedWidget->addWidget(m_musicListView);
-//    m_pCenterWidget->setMouseTracking(true);
     m_pStackedWidget->setCurrentWidget(m_musicListView);
     initInfoLabel("all");
     refreshSortAction();
     slotTheme(DGuiApplicationHelper::instance()->themeType());
+#ifdef DTKWIDGET_CLASS_DSizeMode
+    slotSizeModeChanged(DGuiApplicationHelper::instance()->sizeMode());
+#endif
 }
-// 初始化播放所有按钮
+
 void MusicListDataWidget::initBtPlayAll(QHBoxLayout *layout)
 {
     m_btPlayAll = new DPushButton(this);
@@ -841,7 +784,7 @@ void MusicListDataWidget::initBtPlayAll(QHBoxLayout *layout)
 
     connect(m_btPlayAll, &DPushButton::clicked, this, &MusicListDataWidget::slotPlayAllClicked);
 }
-// 初始化数量标签
+
 void MusicListDataWidget::initCountLabel(QHBoxLayout *layout)
 {
     m_infoLabel = new DLabel(this);
@@ -853,7 +796,7 @@ void MusicListDataWidget::initCountLabel(QHBoxLayout *layout)
 
     layout->addWidget(m_infoLabel, 0, Qt::AlignLeft | Qt::AlignVCenter);
 }
-// 初始化大标题
+
 void MusicListDataWidget::initTitle(QHBoxLayout *layout)
 {
     Q_UNUSED(layout)
@@ -863,10 +806,7 @@ void MusicListDataWidget::initTitle(QHBoxLayout *layout)
     lableLayout->setContentsMargins(0, 0, 0, 0);
 
     m_titleLabel = new DLabel(this);
-    QFont titleFont = m_titleLabel->font();
-//    titleFont.setFamily("SourceHanSansSC");
     m_titleLabel->setTextFormat(Qt::PlainText);
-    m_titleLabel->setFont(titleFont);
     m_titleLabel->setFixedHeight(36);
     m_titleLabel->setFixedWidth(300);
     m_titleLabel->setObjectName("MusicListDataTitle");
@@ -878,7 +818,7 @@ void MusicListDataWidget::initTitle(QHBoxLayout *layout)
     m_lableWidget->setGeometry(m_actionBar->geometry());
     lableLayout->addWidget(m_titleLabel, 100, Qt::AlignCenter);
 }
-// 初始化列表模式
+
 void MusicListDataWidget::initListIconMode(QHBoxLayout *layout)
 {
     // icon模式
@@ -1142,6 +1082,25 @@ void MusicListDataWidget::slotPlaylistNameUpdate(const QString &listHash)
     QString text = titleFm.elidedText(DataBaseService::getInstance()->getPlaylistNameByUUID(m_currentHash), Qt::ElideRight, 300);
     m_titleLabel->setText(text);
 }
+
+#ifdef DTKWIDGET_CLASS_DSizeMode
+void MusicListDataWidget::slotSizeModeChanged(DGuiApplicationHelper::SizeMode sizeMode)
+{
+    if (sizeMode == DGuiApplicationHelper::SizeMode::CompactMode) {
+        m_btIconMode->setFixedSize(24, 24);
+        m_btlistMode->setFixedSize(24, 24);
+        m_actionInfoBarLayout->setSpacing(10);
+        m_btPlayAll->setIconSize(QSize(14, 14));
+        m_btPlayAll->setFixedHeight(24);
+    } else {
+        m_btIconMode->setFixedSize(36, 36);
+        m_btlistMode->setFixedSize(36, 36);
+        m_actionInfoBarLayout->setSpacing(0);
+        m_btPlayAll->setIconSize(QSize(18, 18));
+        m_btPlayAll->setFixedHeight(30);
+    }
+}
+#endif
 
 void MusicListDataWidget::refreshSortAction(const QString &hash)
 {

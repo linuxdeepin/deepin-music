@@ -16,7 +16,6 @@
 #include <QDebug>
 #include <QAction>
 #include <QVBoxLayout>
-#include <QHBoxLayout>
 #include <QMimeData>
 #include <QResizeEvent>
 #include <QStandardItemModel>
@@ -62,7 +61,6 @@ PlayQueueWidget::PlayQueueWidget(QWidget *parent) :
 
     m_btClearAll = new DPushButton(this);
     m_btClearAll->setIcon(QIcon::fromTheme("clear_list"));
-//    m_btClearAll->setFont(infoFont);
     DFontSizeManager::instance()->bind(m_btClearAll, DFontSizeManager::T6);
     m_btClearAll->setObjectName("PlayListPlayAll");
     m_btClearAll->setText(tr("Empty"));
@@ -72,8 +70,6 @@ PlayQueueWidget::PlayQueueWidget(QWidget *parent) :
 
     m_btClearAll->setFocusPolicy(Qt::TabFocus);
     m_btClearAll->setDefault(true);
-//    m_btClearAll->installEventFilter(this);
-//    this->installEventFilter(this);
 
     m_emptyHits = new DLabel(this);
     m_emptyHits->setText(tr("No songs"));
@@ -91,15 +87,14 @@ PlayQueueWidget::PlayQueueWidget(QWidget *parent) :
 
     m_playListView = new PlayListView("play", true, true, this);
     m_playListView->setFocusPolicy(Qt::StrongFocus);
-//    m_playListView->installEventFilter(this);
 
-    QHBoxLayout *mainLayout = new QHBoxLayout(this);
-    mainLayout->setSpacing(0);
-    mainLayout->addWidget(m_actionBar, 0);
-    mainLayout->addWidget(m_playListView, 1);
-    mainLayout->addWidget(m_emptyHits, 0, Qt::AlignCenter);
-    mainLayout->addSpacing(12);
-    mainLayout->setContentsMargins(0, 30, 0, 70);
+    m_mainLayout = new QHBoxLayout(this);
+    m_mainLayout->setSpacing(0);
+    m_mainLayout->addWidget(m_actionBar, 0);
+    m_mainLayout->addWidget(m_playListView, 1);
+    m_mainLayout->addWidget(m_emptyHits, 0, Qt::AlignCenter);
+    m_mainLayout->addSpacing(12);
+    m_mainLayout->setContentsMargins(0, 30, 0, 70);
 
     initAnimation();
 
@@ -117,6 +112,10 @@ PlayQueueWidget::PlayQueueWidget(QWidget *parent) :
             this, &PlayQueueWidget::setThemeType);
 
     setThemeType(DGuiApplicationHelper::instance()->themeType());
+#ifdef DTKWIDGET_CLASS_DSizeMode
+    slotSizeModeChanged(DGuiApplicationHelper::instance()->sizeMode());
+    connect(DGuiApplicationHelper::instance(),&DGuiApplicationHelper::sizeModeChanged,this, &PlayQueueWidget::slotSizeModeChanged);
+#endif
 
     this->hide();
 }
@@ -164,39 +163,6 @@ void PlayQueueWidget::initAnimation()
         emit CommonService::getInstance()->signalPlayQueueClosed();
     });
 }
-
-// 废弃动画方法,已重写适用于最大化时动画
-//void PlayQueueWidget::playAnimationToUp(const QSize &size)
-//{
-//    QRect start(Margin, size.height() - Height - Margin, size.width() - Margin * 2, Height);
-//    QRect end(Margin, size.height() - 450, size.width() - Margin * 2, 445);
-//    QPropertyAnimation *animation = new QPropertyAnimation(this, "geometry");
-//    animation->setEasingCurve(QEasingCurve::InCurve);
-//    animation->setDuration(AnimationDelay);
-//    animation->setStartValue(start);
-//    animation->setEndValue(end);
-//    animation->start();
-//    this->show();
-//}
-
-// 废弃动画方法,已重写适用于最大化时动画
-//void PlayQueueWidget::playAnimationToDown(const QSize &size)
-//{
-//    QRect start(Margin, size.height() - Height - Margin, size.width() - Margin * 2, Height);
-//    QRect end(Margin, size.height() - 450, size.width() - Margin * 2, 445);
-//    QPropertyAnimation *animation = new QPropertyAnimation(this, "geometry");
-//    animation->setEasingCurve(QEasingCurve::InCurve);
-//    animation->setDuration(AnimationDelay);
-//    animation->setStartValue(end);
-//    animation->setEndValue(start);
-//    animation->start();
-//    animation->connect(animation, &QPropertyAnimation::finished, this, [ = ]() {
-//        this->hide();
-//        emit CommonService::getInstance()->signalPlayQueueClosed();
-//    });
-
-//    emit signalAutoHidden();
-//}
 
 void PlayQueueWidget::slotPlayListChanged()
 {
@@ -306,6 +272,19 @@ void PlayQueueWidget::setThemeType(int type)
 
     m_playListView->setThemeType(type);
 }
+
+#ifdef DTKWIDGET_CLASS_DSizeMode
+void PlayQueueWidget::slotSizeModeChanged(DGuiApplicationHelper::SizeMode sizeMode)
+{
+    if (sizeMode == DGuiApplicationHelper::SizeMode::CompactMode) {
+        m_mainLayout->setContentsMargins(0, 20, 0, 40);
+        this->setContentsMargins(3, 3, 3, 3);
+    } else {
+        m_mainLayout->setContentsMargins(0, 30, 0, 70);
+        this->setContentsMargins(6, 6, 6, 6);
+    }
+}
+#endif
 
 void PlayQueueWidget::slotClearAllClicked()
 {

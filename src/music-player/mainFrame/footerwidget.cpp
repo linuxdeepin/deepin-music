@@ -71,6 +71,46 @@ FooterWidget::FooterWidget(QWidget *parent) :
     m_limitRepeatClick = new QTimer(this);
     m_limitRepeatClick->setSingleShot(true);
     m_limitRepeatClick->setInterval(200);
+
+    connect(&m_metaBufferDetector, &MetaBufferDetector::metaBuffer, m_waveform, &Waveform::onAudioBuffer);
+    connect(m_btPlayQueue, &DIconButton::clicked, this, &FooterWidget::slotPlayQueueClick);
+    connect(m_btLyric, &DIconButton::clicked, this, &FooterWidget::slotLrcClick);
+    connect(m_btPlayMode, &DIconButton::clicked, this, &FooterWidget::slotPlayModeClick);
+    connect(m_btCover, &MusicPixmapButton::clicked, this, &FooterWidget::slotCoverClick);
+    connect(m_btPlay, SIGNAL(clicked(bool)), this, SLOT(slotPlayClick(bool)));
+    connect(m_btNext, SIGNAL(clicked(bool)), this, SLOT(slotNextClick(bool)));
+    connect(m_btPrev, SIGNAL(clicked(bool)), this, SLOT(slotPreClick(bool)));
+    connect(m_btSound, &DIconButton::clicked, this, &FooterWidget::slotSoundClick);
+    connect(m_btSound, &ControlIconButton::mouseIn, this, &FooterWidget::slotSoundMouseIn);
+    connect(m_btFavorite, &DIconButton::clicked, this, &FooterWidget::slotFavoriteClick);
+    // 歌单数据改变时设置上下一首按钮状态
+    connect(Player::getInstance(), &Player::signalPlaylistCountChange, this, [ = ]() {
+        m_btNext->setEnabled(Player::getInstance()->getPlayList()->size() > 1);
+        m_btPrev->setEnabled(Player::getInstance()->getPlayList()->size() > 1);
+    });
+
+    connect(Player::getInstance(), &Player::signalPlaybackStatusChanged,
+            this, &FooterWidget::slotPlaybackStatusChanged);
+    connect(Player::getInstance(), &Player::signalMediaMetaChanged,
+            this, &FooterWidget::slotMediaMetaChanged);
+
+    connect(CommonService::getInstance(), &CommonService::signalFluashFavoriteBtnIcon, this, &FooterWidget::fluashFavoriteBtnIcon);
+    connect(CommonService::getInstance(), &CommonService::signalSetPlayModel, this, &FooterWidget::setPlayModel);
+    connect(CommonService::getInstance(), &CommonService::signalPlayQueueClosed, this, &FooterWidget::slotFlushBackground);
+    // dbus
+    connect(Player::getInstance()->getMpris(), &MprisPlayer::volumeRequested, this, &FooterWidget::slotDbusVolumeChanged);
+    connect(m_volSlider, &SoundVolume::delayAutoHide, this, [ = ]() {
+        m_btSound->setChecked(false);
+    });
+
+    connect(m_volSlider, &SoundVolume::sigVolumeChanged, this, &FooterWidget::slotFlushSoundIcon);
+    connect(DataBaseService::getInstance(), &DataBaseService::signalFavSongRemove, this, &FooterWidget::slotFavoriteRemove);
+    connect(DataBaseService::getInstance(), &DataBaseService::signalFavSongAdd, this, &FooterWidget::flushFavoriteBtnIconAdd);
+
+#ifdef DTKWIDGET_CLASS_DSizeMode
+    slotSizeModeChanged(DGuiApplicationHelper::instance()->sizeMode());
+    connect(DGuiApplicationHelper::instance(),&DGuiApplicationHelper::sizeModeChanged,this, &FooterWidget::slotSizeModeChanged);
+#endif
 }
 
 FooterWidget::~FooterWidget()
@@ -83,9 +123,9 @@ FooterWidget::~FooterWidget()
 
 void FooterWidget::initUI(QWidget *parent)
 {
-    auto backLayout = new QVBoxLayout(this);
-    backLayout->setSpacing(0);
-    backLayout->setContentsMargins(0, 0, 0, 0);
+//    QVBoxLayout *backLayout = new QVBoxLayout(this);
+//    backLayout->setSpacing(0);
+//    backLayout->setContentsMargins(0, 0, 0, 0);
 
     m_forwardWidget = new DBlurEffectWidget(this);
     m_forwardWidget->setBlurRectXRadius(18);
@@ -97,17 +137,9 @@ void FooterWidget::initUI(QWidget *parent)
     m_forwardWidget->setMaskColor(maskColor);
     slotFlushBackground();
 
-//    this->layout()->addWidget(m_forwardWidget);
-
-    auto mainHBoxlayout = new QHBoxLayout(m_forwardWidget);
+    QHBoxLayout *mainHBoxlayout = new QHBoxLayout(m_forwardWidget);
     mainHBoxlayout->setSpacing(10);
     mainHBoxlayout->setContentsMargins(10, 10, 10, 10);
-
-//    auto downWidget = new DWidget();
-//    downWidget->setStyleSheet("background-color:red;");
-//    auto layout = new QHBoxLayout(downWidget);
-//    layout->setContentsMargins(0, 0, 10, 0);
-//    mainVBoxlayout->addWidget(downWidget);
 
     m_btPrev = new DButtonBoxButton(QIcon(":/icons/deepin/builtin/texts/music_last_36px.svg"), "", this);
     m_btPrev->setIconSize(QSize(36, 36));
@@ -181,7 +213,6 @@ void FooterWidget::initUI(QWidget *parent)
     m_waveform->setValue(0);
     m_waveform->adjustSize();
     mainHBoxlayout->addWidget(m_waveform, 100);
-
     AC_SET_OBJECT_NAME(m_waveform, AC_Waveform);
     AC_SET_ACCESSIBLE_NAME(m_waveform, AC_Waveform);
 
@@ -263,17 +294,12 @@ void FooterWidget::initUI(QWidget *parent)
     m_volSlider->hide();
     m_volSlider->setProperty("DelayHide", true);
     m_volSlider->setProperty("NoDelayShow", true);
-
     // 设置静音
     if (MusicSettings::value("base.play.mute").toBool()) {
         Player::getInstance()->setMuted(true);
     }
-
     AC_SET_OBJECT_NAME(m_volSlider, AC_VolSlider);
     AC_SET_ACCESSIBLE_NAME(m_volSlider, AC_VolSlider);
-
-//    m_metaBufferDetector = new MetaBufferDetector(nullptr);
-    connect(&m_metaBufferDetector, &MetaBufferDetector::metaBuffer, m_waveform, &Waveform::onAudioBuffer);
 
     // 设置提示框
     m_hintFilter =  new HintFilter(this);
@@ -283,42 +309,7 @@ void FooterWidget::initUI(QWidget *parent)
     installTipHint(m_btFavorite, tr("Favorite"));
     installTipHint(m_btLyric, tr("Lyrics"));
     installTipHint(m_btPlayQueue, tr("Play Queue"));
-    // 设置播放模式提示框
     installTipHint(m_btPlayMode, playModeStr(Player::getInstance()->mode()));
-
-    connect(m_btPlayQueue, &DIconButton::clicked, this, &FooterWidget::slotPlayQueueClick);
-    connect(m_btLyric, &DIconButton::clicked, this, &FooterWidget::slotLrcClick);
-    connect(m_btPlayMode, &DIconButton::clicked, this, &FooterWidget::slotPlayModeClick);
-    connect(m_btCover, &MusicPixmapButton::clicked, this, &FooterWidget::slotCoverClick);
-    connect(m_btPlay, SIGNAL(clicked(bool)), this, SLOT(slotPlayClick(bool)));
-    connect(m_btNext, SIGNAL(clicked(bool)), this, SLOT(slotNextClick(bool)));
-    connect(m_btPrev, SIGNAL(clicked(bool)), this, SLOT(slotPreClick(bool)));
-    connect(m_btSound, &DIconButton::clicked, this, &FooterWidget::slotSoundClick);
-    connect(m_btSound, &ControlIconButton::mouseIn, this, &FooterWidget::slotSoundMouseIn);
-    connect(m_btFavorite, &DIconButton::clicked, this, &FooterWidget::slotFavoriteClick);
-    // 歌单数据改变时设置上下一首按钮状态
-    connect(Player::getInstance(), &Player::signalPlaylistCountChange, this, [ = ]() {
-        m_btNext->setEnabled(Player::getInstance()->getPlayList()->size() > 1);
-        m_btPrev->setEnabled(Player::getInstance()->getPlayList()->size() > 1);
-    });
-
-    connect(Player::getInstance(), &Player::signalPlaybackStatusChanged,
-            this, &FooterWidget::slotPlaybackStatusChanged);
-    connect(Player::getInstance(), &Player::signalMediaMetaChanged,
-            this, &FooterWidget::slotMediaMetaChanged);
-
-    connect(CommonService::getInstance(), &CommonService::signalFluashFavoriteBtnIcon, this, &FooterWidget::fluashFavoriteBtnIcon);
-    connect(CommonService::getInstance(), &CommonService::signalSetPlayModel, this, &FooterWidget::setPlayModel);
-    connect(CommonService::getInstance(), &CommonService::signalPlayQueueClosed, this, &FooterWidget::slotFlushBackground);
-    // dbus
-    connect(Player::getInstance()->getMpris(), &MprisPlayer::volumeRequested, this, &FooterWidget::slotDbusVolumeChanged);
-    connect(m_volSlider, &SoundVolume::delayAutoHide, this, [ = ]() {
-        m_btSound->setChecked(false);
-    });
-
-    connect(m_volSlider, &SoundVolume::sigVolumeChanged, this, &FooterWidget::slotFlushSoundIcon);
-    connect(DataBaseService::getInstance(), &DataBaseService::signalFavSongRemove, this, &FooterWidget::slotFavoriteRemove);
-    connect(DataBaseService::getInstance(), &DataBaseService::signalFavSongAdd, this, &FooterWidget::flushFavoriteBtnIconAdd);
 
     slotFlushSoundIcon();
     resetBtnEnable();
@@ -326,7 +317,7 @@ void FooterWidget::initUI(QWidget *parent)
 
 void FooterWidget::installTipHint(QWidget *widget, const QString &hintstr)
 {
-    auto hintWidget = new ToolTips("", parentWidget()); //parentWidget()= mainframe
+    ToolTips *hintWidget = new ToolTips("", parentWidget()); //parentWidget()= mainframe
     hintWidget->hide();
     hintWidget->setText(hintstr);
     hintWidget->setFixedHeight(32);
@@ -340,7 +331,7 @@ void FooterWidget::moveVolSlider()
     m_volSlider->adjustSize();
     QSize sz = m_volSlider->size();
     centerPos.setX(centerPos.x()  - sz.width() / 2);
-    centerPos.setY(centerPos.y() - 35 - sz.height());
+    centerPos.setY(centerPos.y() - this->blurBackground()->rect().height() / 2 - sz.height());
     centerPos = m_volSlider->mapFromGlobal(centerPos);
     centerPos = m_volSlider->mapToParent(centerPos);
     m_volSlider->move(centerPos);
@@ -479,6 +470,7 @@ void FooterWidget::slotLyricAutoHidden()
 {
     // 歌词控件自动收起时更新歌词按钮
     m_btLyric->setChecked(false);
+    update();
 }
 
 void FooterWidget::slotPlayClick(bool click)
@@ -508,9 +500,7 @@ void FooterWidget::slotLrcClick(bool click)
 void FooterWidget::slotPlayModeClick(bool click)
 {
     Q_UNUSED(click)
-#ifdef TABLET_PC
-    qDebug() << __FUNCTION__ << "DGuiApplicationHelper::isTabletEnvironment() = " << DGuiApplicationHelper::isTabletEnvironment();
-#endif
+
     int playModel = m_btPlayMode->property("playModel").toInt();
     if (++playModel == 3)
         playModel = 0;
@@ -730,11 +720,6 @@ void FooterWidget::slotFlushSoundIcon()
     m_btSound->update();
 }
 
-//void FooterWidget::slotDelayAutoHide()
-//{
-//    m_btSound->setChecked(false);
-//}
-
 void FooterWidget::slotShortCutTriggered()
 {
     QShortcut *objCut = dynamic_cast<QShortcut *>(sender()) ;
@@ -792,6 +777,49 @@ void FooterWidget::slotCoverUpdate(const MediaMeta &meta)
     }
 }
 
+#ifdef DTKWIDGET_CLASS_DSizeMode
+void FooterWidget::slotSizeModeChanged(DGuiApplicationHelper::SizeMode sizeMode)
+{
+    if (sizeMode == DGuiApplicationHelper::SizeMode::CompactMode) {
+        m_btPrev->setFixedSize(32, 24);
+        m_btPlay->setFixedSize(32, 24);
+        m_btNext->setFixedSize(32, 24);
+
+        m_btCover->setFixedSize(24, 24);
+        m_btCover->setIconSize(QSize(24, 24));
+
+        m_title->setMaximumWidth(250);
+
+        m_btFavorite->setFixedSize(24, 24);
+        m_btLyric->setFixedSize(24, 24);
+        m_btPlayMode->setFixedSize(24, 24);
+        m_btSound->setFixedSize(24, 24);
+        m_btPlayQueue->setFixedSize(24, 24);
+
+        this->setContentsMargins(3, 3, 3, 3);
+    } else {
+        m_btPrev->setFixedSize(40, 50);
+        m_btPlay->setFixedSize(40, 50);
+        m_btNext->setFixedSize(40, 50);
+
+        m_btCover->setFixedSize(48, 48);
+        m_btCover->setIconSize(QSize(48, 48));
+
+        m_title->setMaximumWidth(140);
+
+        m_btFavorite->setFixedSize(50, 50);
+        m_btLyric->setFixedSize(50, 50);
+        m_btPlayMode->setFixedSize(50, 50);
+        m_btSound->setFixedSize(50, 50);
+        m_btPlayQueue->setFixedSize(50, 50);
+
+        this->setContentsMargins(6, 6, 6, 6);
+    }
+    // 音量条直接隐藏
+    m_volSlider->hide();
+}
+#endif
+
 void FooterWidget::slotLoadDetector(const QString &hash)
 {
     //查找hash对应路径
@@ -842,7 +870,16 @@ void FooterWidget::screenStandby(bool isStandby)
 void FooterWidget::resizeEvent(QResizeEvent *event)
 {
     if (m_forwardWidget) {
+#ifdef DTKWIDGET_CLASS_DSizeMode
+        if (DGuiApplicationHelper::instance()->sizeMode() == DGuiApplicationHelper::SizeMode::CompactMode) {
+            m_forwardWidget->setGeometry(2, 2, width() - 4, 46);
+        } else {
+            m_forwardWidget->setGeometry(6, 5, width() - 12, 70);
+        }
+#else
         m_forwardWidget->setGeometry(6, height() - 75, width() - 12, 70);
+#endif
+
     }
 
     moveVolSlider();
@@ -893,7 +930,7 @@ void FooterWidget::slotTheme(int type)
         m_forwardWidget->setMaskColor(maskColor);
         rStr = "light";
 
-        auto artistPl = m_artist->palette();
+        QPalette artistPl = m_artist->palette();
         QColor artistColor = artistPl.color(DPalette::BrightText);
         artistColor.setAlphaF(0.4);
         artistPl.setColor(DPalette::WindowText, artistColor);
