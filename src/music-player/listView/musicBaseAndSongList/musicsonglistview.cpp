@@ -239,9 +239,12 @@ void MusicSongListView::addNewSongList()
     DStandardItem *item = new DStandardItem(icon, displayName);
     item->setForeground(DGuiApplicationHelper::instance()->themeType() == 1 ? QColor("#414D68") : QColor("#C0C6D4"));
     m_model->appendRow(item);
+#ifdef DTKWIDGET_CLASS_DSizeMode
     if (DGuiApplicationHelper::instance()->sizeMode() == DGuiApplicationHelper::SizeMode::CompactMode) {
         setMinimumHeight(m_model->rowCount() * CompactItemHeight);
-    } else {
+    } else
+#endif
+    {
         setMinimumHeight(m_model->rowCount() * ItemHeight);
     }
     setCurrentIndex(m_model->indexFromItem(item));
