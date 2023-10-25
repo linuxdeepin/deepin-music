@@ -360,10 +360,13 @@ void SingerListView::setViewModeFlag(QListView::ViewMode mode)
             //setIconSize(QSize(150, 150));
             setGridSize(QSize(-1, -1));
 
+#ifdef DTKWIDGET_CLASS_DSizeMode
             if (DGuiApplicationHelper::instance()->sizeMode() == DGuiApplicationHelper::SizeMode::CompactMode) {
                 setSpacing(15);
                 setViewportMargins(-5, -13, -35, 0);
-            } else {
+            } else
+#endif
+            {
                 setSpacing(20);
                 // 去除底部间距
                 setViewportMargins(-10, -13, -35, 0);

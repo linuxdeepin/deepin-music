@@ -70,7 +70,9 @@ public slots:
     void slotPopMessageWindow(int stat);
     // 更新滚动条
     void slotUpdateDragScroll();
+#ifdef DTKWIDGET_CLASS_DSizeMode
     void slotSizeModeChanged(DGuiApplicationHelper::SizeMode sizeMode);
+#endif
 
 signals:
     void sigAddNewSongList();
