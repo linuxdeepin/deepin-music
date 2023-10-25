@@ -1,3 +1,9 @@
+deepin-music (6.2.34) unstable; urgency=medium
+
+  * fix compilation failed on 104x
+
+ -- fengli <fengli@uniontech.com>  Wed, 25 Oct 2023 15:11:37 +0800
+
 deepin-music (6.2.33) unstable; urgency=medium
 
   * Adapt to compact mode
