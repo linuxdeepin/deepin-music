@@ -72,6 +72,7 @@ void DBOperate::slotImportMetas(const QStringList &urls, const QSet<QString> &me
                 mediaMeta = AudioAnalysis::creatMediaMeta(filePath);
                 if (mediaMeta.length > 0) {
                     AudioAnalysis::parseMetaCover(mediaMeta);
+                    AudioAnalysis::parseMetaLyrics(mediaMeta);
                     curHashs << "all" << playlistHash;
                     allHashs << "all" << playlistHash;
                 } else {
@@ -86,6 +87,7 @@ void DBOperate::slotImportMetas(const QStringList &urls, const QSet<QString> &me
                 mediaMeta = AudioAnalysis::creatMediaMeta(filePath);
                 if (mediaMeta.length > 0) {
                     AudioAnalysis::parseMetaCover(mediaMeta);
+                    AudioAnalysis::parseMetaLyrics(mediaMeta);
                     curHashs << "all";
                     allHashs << "all";
                 } else {

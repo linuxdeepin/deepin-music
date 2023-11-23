@@ -25,6 +25,8 @@ extern "C" {
 #include <taglib/tag.h>
 #include <taglib/attachedpictureframe.h>
 #include <taglib/apetag.h>
+#include <taglib/synchronizedlyricsframe.h>
+#include <taglib/unsynchronizedlyricsframe.h>
 
 #include <QAudioInput>
 #include <QTextCodec>
@@ -488,6 +490,74 @@ QImage AudioAnalysis::getMetaCoverImage(DMusic::MediaMeta meta)
     }
 
     return image;
+}
+
+void AudioAnalysis::parseMetaLyrics(DMusic::MediaMeta &meta)
+{
+    QString tmpPath = DmGlobal::cachePath();
+    QString hash = meta.hash;
+    QString path = meta.localPath;
+    QString lyricDirPath = tmpPath + QDir::separator() + "lyrics";
+    QString lyricName = hash + ".lrc";
+    QDir lyricDir(lyricDirPath);
+    if (!lyricDir.exists()) {
+        lyricDir.cdUp();
+        lyricDir.mkdir("lyrics");
+        lyricDir.cd("lyrics");
+    }
+
+    if (!tmpPath.isEmpty() && !hash.isEmpty()) {
+        // 歌词文件存在，停止解析
+        if (lyricDir.exists(lyricName)) {
+            return;
+        }
+
+        if (!path.isEmpty()) {
+            QFile lyric(lyricDirPath + QDir::separator() + lyricName);
+            TagLib::MPEG::File f(path.toStdString().c_str());
+            QString lyricStr = "";
+
+            // 检查音乐文件
+            if (f.isValid()) {
+                // 音乐文件不一定存在ID3v2Tag
+                if (f.ID3v2Tag() != nullptr) {
+                    // 先获取同步歌词
+                    TagLib::ID3v2::FrameList syltFrames = f.ID3v2Tag()->frameListMap()["SYLT"];
+                    if (!syltFrames.isEmpty()) {
+                        TagLib::ID3v2::SynchronizedLyricsFrame *frame = dynamic_cast<TagLib::ID3v2::SynchronizedLyricsFrame *>(syltFrames.front());
+                        if (frame) {
+                            TagLib::ID3v2::SynchronizedLyricsFrame::SynchedTextList synchedTextList = frame->synchedText();
+                            for (unsigned int i = 0; i < synchedTextList.size(); i++){
+                                QString time = QDateTime::fromMSecsSinceEpoch(synchedTextList[i].time).toString("mm:ss.zzz");
+                                QString text = TStringToQString(synchedTextList[i].text).trimmed();
+                                lyricStr.append(QString("[%1]%2\n").arg(time).arg(text));
+                            }
+                        }
+                    }
+
+                    // 没获取到歌词，获取非同步歌词
+                    if (lyricStr.isEmpty()) {
+                        TagLib::ID3v2::FrameList usltFrames = f.ID3v2Tag()->frameListMap()["USLT"];
+                        if (!usltFrames.isEmpty()) {
+                            TagLib::ID3v2::UnsynchronizedLyricsFrame *frame = dynamic_cast<TagLib::ID3v2::UnsynchronizedLyricsFrame *>(usltFrames.front());
+                            if (frame) {
+                                lyricStr = TStringToQString(frame->text());
+                            }
+                        }
+                    }
+
+                    if (!lyricStr.isEmpty()) {
+                        if (lyric.open(QIODevice::WriteOnly)) {
+                            lyric.write(lyricStr.toUtf8());
+                        }
+                        lyric.close();
+                    }
+                }
+
+                f.clear();
+            }
+        }
+    }
 }
 
 void AudioAnalysis::startRecorder()
