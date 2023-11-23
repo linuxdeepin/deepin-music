@@ -548,7 +548,7 @@ QVariant SpeechCenter::removeFaverite(QString musicName)
 
 QVariant SpeechCenter::setMode(QString mode)
 {
-    qDebug() << __FUNCTION__ << "";
+    qDebug() << __FUNCTION__ << mode;
     int modeNumber = mode.toInt();
     bool isExit = false;
     QString str;
@@ -606,7 +606,7 @@ bool SpeechCenter::getNeedRefresh()
 
 QVariant SpeechCenter::setPosition(QVariant position)
 {
-    qDebug() << __FUNCTION__;
+    qDebug() << __FUNCTION__ << position;
     QString str;
     if(position < 0)
         str = "抱歉，设置失败，请重新尝试。";

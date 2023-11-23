@@ -42,6 +42,7 @@ include_directories(/usr/include/vlc)
 include_directories(/usr/include/vlc/plugins)
 include_directories(./../interface)
 include_directories(./../libdmusic)
+include_directories(./ai)
 include_directories(./core)
 include_directories(./core/util)
 include_directories(./presenter)
@@ -72,6 +73,7 @@ else()
     aux_source_directory(./ allSource)
 endif()
 
+aux_source_directory(./ai allSource)
 aux_source_directory(./core allSource)
 aux_source_directory(./core/util allSource)
 aux_source_directory(./core/plugin allSource)
@@ -185,6 +187,8 @@ install(FILES ${PROJECT_SOURCE_DIR}/src/music-player/data/deepin-music.desktop
 install(FILES ${PROJECT_SOURCE_DIR}/src/music-player/icons/icons/deepin-music.svg
     DESTINATION ${CMAKE_INSTALL_DATADIR}/icons/hicolor/scalable/apps)
 install(DIRECTORY ${PROJECT_SOURCE_DIR}/assets/deepin-music DESTINATION ${CMAKE_INSTALL_DATADIR}/deepin-manual/manual-assets/application/)
+
+install(FILES ${PROJECT_SOURCE_DIR}/assets/deepin-music.json DESTINATION /usr/lib/uos-ai-assistant/functions)
 
 #hw机型增加DConfig配置
 set(APPID org.deepin.music)

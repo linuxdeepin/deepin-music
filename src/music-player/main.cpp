@@ -35,6 +35,8 @@
 #include <functional>
 #include "mainframe.h"
 #include "speechexportbus.h"
+#include "dbusaiinterface.h"
+#include "ai.h"
 
 using namespace Dtk::Core;
 using namespace Dtk::Widget;
@@ -78,10 +80,11 @@ int main(int argc, char *argv[])
     DLogManager::registerConsoleAppender();
     DLogManager::registerFileAppender();
 
-
     QCommandLineParser parser;
+    QCommandLineOption functionCallOption("functioncall", "AI function call.");
     parser.setApplicationDescription("Deepin music player.");
     parser.addHelpOption();
+    parser.addOption(functionCallOption);
     parser.addVersionOption();
     parser.addPositionalArgument("file", "Music file path");
     parser.process(*app);
@@ -98,8 +101,7 @@ int main(int argc, char *argv[])
     app->loadTranslator();
     Global::initPlaybackEngineType();
     MusicSettings::init();
-//    VlcDynamicInstance::VlcFunctionInstance();
-//    Player::getInstance();
+
     //将检查唯一性提前可以先创建好缓存路径避免某种情况下创建数据库失败
     bool bc = checkOnly();
     if (!OpenFilePaths.isEmpty()) {
@@ -121,16 +123,26 @@ int main(int argc, char *argv[])
         }
     }
 
+
     if (!app->setSingleInstance("deepinmusic") || !bc) {
         qDebug() << "another deepin music has started";
-        QDBusInterface speechbus("org.mpris.MediaPlayer2.DeepinMusic",
-                                 "/org/mpris/speech",
-                                 "com.deepin.speech",
-                                 QDBusConnection::sessionBus());
-        if (speechbus.isValid()) {
-            QVariant mediaMeta;
-            mediaMeta.setValue(parser.positionalArguments());
-            QDBusReply<QVariant> msg  = speechbus.call(QString("invokeStrlist"), "OpenUris", mediaMeta); //0 function  ,1 params
+        if (parser.isSet("functioncall")) {
+            qDebug() << "single uos ai function call";
+
+            if (UosAIInterface::getInstance()->isConnected())
+                UosAIInterface::getInstance()->parseAIFunction(/*functions.value().toUtf8()*/);
+        } else {
+
+
+            QDBusInterface speechbus("org.mpris.MediaPlayer2.DeepinMusic",
+                                     "/org/mpris/speech",
+                                     "com.deepin.speech",
+                                     QDBusConnection::sessionBus());
+            if (speechbus.isValid()) {
+                QVariant mediaMeta;
+                mediaMeta.setValue(parser.positionalArguments());
+                QDBusReply<QVariant> msg  = speechbus.call(QString("invokeStrlist"), "OpenUris", mediaMeta); //0 function  ,1 params
+            }
         }
 
         /*-----show deepin-music----*/
@@ -141,7 +153,22 @@ int main(int argc, char *argv[])
         if (iface.isValid()) {
             iface.asyncCall("Raise");
         }
+
         return 0;
+    }
+
+
+    if (parser.isSet("functioncall")) {
+        qDebug() << "uos ai function call";
+        if (UosAIInterface::getInstance()->isConnected())
+            UosAIInterface::getInstance()->parseAIFunction(/*functions.value().toUtf8()*/);
+
+        /*QDBusReply<QString> reply = aiSessionBus.call("registerApp");
+        QString params;
+        if (reply.isValid()) {
+            params = reply.value();
+            DBusAIInterface *inter = new DBusAIInterface(params);
+        }*/
     }
 
     DApplicationSettings saveTheme;
@@ -156,6 +183,7 @@ int main(int argc, char *argv[])
     app->setQuitOnLastWindowClosed(false);
     int status = app->exec();
     Player::getInstance()->releasePlayer();
+
     return status;
 }
 
