@@ -241,6 +241,11 @@ QVariantList Presenter::getLyrics()
     if (!meta.localPath.isEmpty()) {
         QFileInfo fileInfo(meta.localPath);
         QString lrcPath = fileInfo.dir().path() + QDir::separator() + fileInfo.completeBaseName() + ".lrc";
+        // 同目录下歌词文件不存在，读取缓存中解析的歌词
+        QFile file(lrcPath);
+        if (!file.exists()) {
+            lrcPath = DmGlobal::cachePath() + QDir::separator() + "lyrics" + QDir::separator() + meta.hash + ".lrc";
+        }
         m_data->m_lyricAnalysis.setFromFile(lrcPath);
         QVector<QPair<qint64, QString> > allLyrics = m_data->m_lyricAnalysis.allLyrics();
         for (QPair<qint64, QString> lyric : allLyrics) {

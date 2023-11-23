@@ -27,6 +27,8 @@ public:
     static void parseMetaCover(DMusic::MediaMeta &meta);
     static QImage getMetaCoverImage(DMusic::MediaMeta meta);
 
+    static void parseMetaLyrics(DMusic::MediaMeta &meta);
+
 public slots:
     void startRecorder();
     void suspendRecorder();
