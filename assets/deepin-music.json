@@ -1,0 +1,113 @@
+{
+    "appid": "deepin-music",
+    "exec": "/usr/bin/deepin-music",
+    "functions": [
+        {
+            "name": "playOneSong",
+            "description": "播放某首歌曲",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "description": "歌曲名称"
+                    },
+                    "album": {
+                        "type": "string",
+                        "description": "专辑名称"
+                    },
+                    "songList": {
+                        "type": "string",
+                        "description": "歌单名称，例如：播放某个歌单的歌曲"
+                    },
+                    "index": {
+                        "type": "string",
+                        "description": "歌曲下标"
+                    }
+                },
+                "required": []
+            }
+        },
+        {
+            "name": "playSingerSong",
+            "description": "播放某个歌手的歌曲",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "singer": {
+                        "type": "string",
+                        "description": "歌手名称"
+                    },
+                    "musicName": {
+                        "type": "string",
+                        "description": "歌曲名称"
+                    }
+                },
+                "required": ["singer"]
+            }
+        },
+        {
+            "name": "playControl",
+            "description": "播放控制",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "play": {
+                        "type": "string",
+                        "description": "继续播放"
+                    },
+                    "pause": {
+                        "type": "string",
+                        "description": "暂停"
+                    },
+                    "stop": {
+                        "type": "string",
+                        "description": "停止播放"
+                    },
+                    "previous": {
+                        "type": "string",
+                        "description": "上一首"
+                    },
+                    "next": {
+                        "type": "string",
+                        "description": "下一首"
+                    },
+                    "playMode": {
+                        "type": "string",
+                        "description": "切换播放模式，例如：列表循环，单曲循环，随机播放"
+                    },
+                    "seek": {
+                        "type": "string",
+                        "description": "快进、快退到.."
+                    }
+                }
+            }
+        },
+        {
+            "name": "addRemoveFavorite",
+            "description": "收藏或取消收藏歌曲",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "addFavorite": {
+                        "type": "string",
+                        "description": "收藏歌曲、添加到收藏"
+                    },
+                    "removeFavorite": {
+                        "type": "string",
+                        "description": "取消收藏、从我的收藏移除歌曲"
+                    }
+                }
+            }
+        },
+{
+            "name": "playMyFavorite",
+            "description": "播放我收藏的音乐",
+            "parameters": {
+                "type": "object",
+            "properties": {
+            }
+            }
+        }
+    ]
+}
