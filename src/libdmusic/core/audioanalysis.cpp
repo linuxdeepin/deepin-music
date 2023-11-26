@@ -387,7 +387,10 @@ void AudioAnalysis::parseMetaCover(DMusic::MediaMeta &meta)
 
             format_close_input(&pFormatCtx);
             format_free_context(pFormatCtx);
-        } else {
+        }
+        
+        // ffmpeg 没有解析出来 尝试直接读取ID3v2
+        if (image.isNull()) {
 #ifdef _WIN32
             TagLib::MPEG::File f(path.toStdString().c_str());
 #else
@@ -451,7 +454,10 @@ QImage AudioAnalysis::getMetaCoverImage(DMusic::MediaMeta meta)
 
             format_close_input(&pFormatCtx);
             format_free_context(pFormatCtx);
-        } else {
+        }
+        
+        // ffmpeg 没有解析出来 尝试直接读取ID3v2
+        if (image.isNull()) {
 #ifdef _WIN32
             TagLib::MPEG::File f(meta.localPath.toStdWString().c_str());
 #else
@@ -474,8 +480,8 @@ QImage AudioAnalysis::getMetaCoverImage(DMusic::MediaMeta meta)
                 f.clear();
             }
         }
-
     }
+
     // 默认图片
     if (image.isNull()) {
         image = QImage(DmGlobal::cachePath() + "/images/default_cover.png");
