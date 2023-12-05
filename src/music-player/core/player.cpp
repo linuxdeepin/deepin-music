@@ -204,7 +204,8 @@ void Player::playMeta(MediaMeta meta)
                 //文件不存在提示
                 emit signalPlaybackStatusChanged(Player::Paused);
                 m_ActiveMeta = meta;
-                playNextMeta(false);
+                if (m_MetaList.size() > 1)
+                    playNextMeta(false);
                 INT_LAST_PROGRESS_FLAG = 0;
                 return;
             }
