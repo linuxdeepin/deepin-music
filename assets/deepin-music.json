@@ -12,6 +12,10 @@
                         "type": "string",
                         "description": "歌曲名称"
                     },
+                    "singer": {
+                        "type": "string",
+                        "description": "歌手名称"
+                    },
                     "album": {
                         "type": "string",
                         "description": "专辑名称"
@@ -29,32 +33,14 @@
             }
         },
         {
-            "name": "playSingerSong",
-            "description": "播放某个歌手的歌曲",
-            "parameters": {
-                "type": "object",
-                "properties": {
-                    "singer": {
-                        "type": "string",
-                        "description": "歌手名称"
-                    },
-                    "musicName": {
-                        "type": "string",
-                        "description": "歌曲名称"
-                    }
-                },
-                "required": ["singer"]
-            }
-        },
-        {
-            "name": "playControl",
-            "description": "状态控制",
+            "name": "stateControl",
+            "description": "状态切换",
             "parameters": {
                 "type": "object",
                 "properties": {
                     "control": {
                         "type": "string",
-                        "description": "Play继续播放,Pause暂停,Stop停止播放,Previous上一首,Next下一首,ListLoop列表循环,SingleLoop单曲循环,Shuffle随机播放",
+                        "description": "Play继续,Pause暂停,Stop停止,Previous上一首,Next下一首,ListLoop列表循环,SingleLoop单曲循环,Shuffle随机播放",
                         "enum": ["Play", "Pause", "Stop", "Previous", "Next", "ListLoop", "SingleLoop", "Shuffle"]
                     }
                 }
@@ -74,6 +60,15 @@
             }
         },
         {
+            "name": "playMyFavorite",
+            "description": "播放我收藏的音乐",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                }
+            }
+        },
+        {
             "name": "addRemoveFavorite",
             "description": "收藏或取消收藏歌曲",
             "parameters": {
@@ -89,15 +84,7 @@
                     }
                 }
             }
-        },
-        {
-            "name": "playMyFavorite",
-            "description": "播放我收藏的音乐",
-            "parameters": {
-                "type": "object",
-                "properties": {
-                }
-            }
         }
+
     ]
 }

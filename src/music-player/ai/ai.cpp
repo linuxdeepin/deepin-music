@@ -98,13 +98,17 @@ void UosAIInterface::handleAICall(QString &funcName, QMap<QString, QString> &arg
                 QTimer::singleShot(500, this, [=](){ //延时，保证状态正常更新
                     SpeechCenter::getInstance()->playMusic(arguments[keys[0]]);
                 });
-            } if (keys[0] == "album") {
+            } else if (keys[0] == "album") {
                 QTimer::singleShot(500, this, [=](){
                     SpeechCenter::getInstance()->playAlbum(arguments[keys[0]]);
                 });
-            } if (keys[0] == "songList") {
+            } else if (keys[0] == "songList") {
                 QTimer::singleShot(500, this, [=](){
                     SpeechCenter::getInstance()->playSonglist(arguments[keys[0]]);
+                });
+            } else if (keys[0] == "singer") {
+                QTimer::singleShot(500, this, [=](){
+                    SpeechCenter::getInstance()->playArtist(arguments[keys[0]]);
                 });
             }
         } else if (funcName == "playSingerSong") {
@@ -136,6 +140,8 @@ void UosAIInterface::handleAICall(QString &funcName, QMap<QString, QString> &arg
                 QDBusReply<QVariant> msg  = speechbus.call(QString("invoke"), "playMusic", arguments[keys[0]]);
             } else if (keys[0] == "album") {
                 QDBusReply<QVariant> msg  = speechbus.call(QString("invoke"), "playAlbum", arguments[keys[0]]);
+            } else if (keys[0] == "singer") {
+                QDBusReply<QVariant> msg  = speechbus.call(QString("invoke"), "playArtist", arguments[keys[0]]);
             } else if (keys[0] == "songList") {
                 QDBusReply<QVariant> msg  = speechbus.call(QString("invoke"), "playSonglist", arguments[keys[0]]);
             } else if (keys[0] == "index") {
@@ -150,6 +156,19 @@ void UosAIInterface::handleAICall(QString &funcName, QMap<QString, QString> &arg
                 if (!index.isEmpty() && index.toInt() > 0)
                     QDBusReply<QVariant> msg  = speechbus.call(QString("invoke"), "playIndex", index);
             }
+            break;
+        }
+
+        case 2: {
+            QString singer, title;
+            for(QString key : keys) {
+                if (key == "singer") {
+                    singer = arguments[key];
+                } else if (key == "name") {
+                    title = arguments[key];
+                }
+            }
+            QDBusReply<QVariant> msg  = speechbus.call(QString("invoke"), "playArtistMusic", singer + ":" + title);
             break;
         }
 
@@ -185,7 +204,7 @@ void UosAIInterface::handleAICall(QString &funcName, QMap<QString, QString> &arg
         default:
             break;
         }
-    } else if (funcName == "playControl") {
+    } else if (funcName == "stateControl") {
         switch (keys.size()) {
         case 0:
             break;
