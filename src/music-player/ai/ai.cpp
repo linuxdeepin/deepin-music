@@ -191,27 +191,45 @@ void UosAIInterface::handleAICall(QString &funcName, QMap<QString, QString> &arg
             break;
 
         case 1: {
-            if (keys[0] == "play") {
-                QDBusReply<QVariant> msg  = speechbus.call(QString("invoke"), "resume", "");
-            } else if (keys[0] == "pause") {
-                QDBusReply<QVariant> msg  = speechbus.call(QString("invoke"), "pause", "");
-            } else if (keys[0] == "stop") {
-                QDBusReply<QVariant> msg  = speechbus.call(QString("invoke"), "stop", "");
-            }  else if (keys[0] == "previous") {
-                QDBusReply<QVariant> msg  = speechbus.call(QString("invoke"), "pre", "");
-            } else if (keys[0] == "next") {
-                QDBusReply<QVariant> msg  = speechbus.call(QString("invoke"), "next", "");
-            } else if (keys[0] == "playMode") {
+            if (keys[0] == "control") {
                 QString playMode;
-                if (arguments[keys[0]].contains("列表循环"))
-                    playMode = "0";
-                else if (arguments[keys[0]].contains("单曲循环"))
-                    playMode = "1";
-                else if (arguments[keys[0]].contains("随机"))
-                    playMode = "2";
 
-                QDBusReply<QVariant> msg  = speechbus.call(QString("invoke"), "setMode", QString(playMode));
-            } else if (keys[0] == "seek") {
+                if (arguments[keys[0]] == "Play") {
+                    QDBusReply<QVariant> msg  = speechbus.call(QString("invoke"), "resume", "");
+                } else if (arguments[keys[0]] == "Pause") {
+                    QDBusReply<QVariant> msg  = speechbus.call(QString("invoke"), "pause", "");
+                } else if (arguments[keys[0]] == "Stop") {
+                    QDBusReply<QVariant> msg  = speechbus.call(QString("invoke"), "stop", "");
+                } else if (arguments[keys[0]] == "Previous") {
+                    QDBusReply<QVariant> msg  = speechbus.call(QString("invoke"), "pre", "");
+                } else if (arguments[keys[0]] == "Next") {
+                    QDBusReply<QVariant> msg  = speechbus.call(QString("invoke"), "next", "");
+                } else if (arguments[keys[0]].contains("ListLoop")) {
+                    playMode = "0";
+                } else if (arguments[keys[0]].contains("SingleLoop")) {
+                    playMode = "1";
+                } else if (arguments[keys[0]].contains("Shuffle")) {
+                    playMode = "2";
+                }
+
+                if (!playMode.isEmpty()) {
+                    QDBusReply<QVariant> msg  = speechbus.call(QString("invoke"), "setMode", QString(playMode));
+                }
+            }
+
+            break;
+        }
+
+        default:
+            break;
+        }
+    } else if (funcName == "seek") {
+        switch (keys.size()) {
+        case 0:
+            break;
+
+        case 1: {
+            if (keys[0] == "position") {
                 QRegExp rx("(\\d+)");
                 int pos = 0;
                 QStringList times;
@@ -235,6 +253,7 @@ void UosAIInterface::handleAICall(QString &funcName, QMap<QString, QString> &arg
         default:
             break;
         }
+
     } else if (funcName == "addRemoveFavorite") {
         switch (keys.size()) {
         case 0:

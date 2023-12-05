@@ -48,35 +48,25 @@
         },
         {
             "name": "playControl",
-            "description": "播放控制",
+            "description": "状态控制",
             "parameters": {
                 "type": "object",
                 "properties": {
-                    "play": {
+                    "control": {
                         "type": "string",
-                        "description": "继续播放"
-                    },
-                    "pause": {
-                        "type": "string",
-                        "description": "暂停"
-                    },
-                    "stop": {
-                        "type": "string",
-                        "description": "停止播放"
-                    },
-                    "previous": {
-                        "type": "string",
-                        "description": "上一首"
-                    },
-                    "next": {
-                        "type": "string",
-                        "description": "下一首"
-                    },
-                    "playMode": {
-                        "type": "string",
-                        "description": "切换播放模式，例如：列表循环，单曲循环，随机播放"
-                    },
-                    "seek": {
+                        "description": "Play继续播放,Pause暂停,Stop停止播放,Previous上一首,Next下一首,ListLoop列表循环,SingleLoop单曲循环,Shuffle随机播放",
+                        "enum": ["Play", "Pause", "Stop", "Previous", "Next", "ListLoop", "SingleLoop", "Shuffle"]
+                    }
+                }
+            }
+        },
+        {
+            "name": "seek",
+            "description": "快进/快退",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "position": {
                         "type": "string",
                         "description": "快进、快退到.."
                     }
@@ -100,13 +90,13 @@
                 }
             }
         },
-{
+        {
             "name": "playMyFavorite",
             "description": "播放我收藏的音乐",
             "parameters": {
                 "type": "object",
-            "properties": {
-            }
+                "properties": {
+                }
             }
         }
     ]
