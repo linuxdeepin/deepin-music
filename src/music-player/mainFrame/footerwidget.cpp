@@ -95,7 +95,9 @@ FooterWidget::FooterWidget(QWidget *parent) :
             this, &FooterWidget::slotMediaMetaChanged);
 
     connect(CommonService::getInstance(), &CommonService::signalFluashFavoriteBtnIcon, this, &FooterWidget::fluashFavoriteBtnIcon);
-    connect(CommonService::getInstance(), &CommonService::signalSetPlayModel, this, &FooterWidget::setPlayModel);
+    connect(CommonService::getInstance(), &CommonService::signalSetPlayModel, this, /*&FooterWidget::setPlayModel*/[=](Player::PlaybackMode playModel){
+        setPlayModel(playModel, true);
+    });
     connect(CommonService::getInstance(), &CommonService::signalPlayQueueClosed, this, &FooterWidget::slotFlushBackground);
     // dbus
     connect(Player::getInstance()->getMpris(), &MprisPlayer::volumeRequested, this, &FooterWidget::slotDbusVolumeChanged);
@@ -506,16 +508,6 @@ void FooterWidget::slotPlayModeClick(bool click)
         playModel = 0;
 
     setPlayModel(static_cast<Player::PlaybackMode>(playModel));
-    //更换提示框
-    auto hintWidget = m_btPlayMode->property("HintWidget").value<QWidget *>();
-    m_hintFilter->showHitsFor(m_btPlayMode, hintWidget);
-
-    if (hintWidget != nullptr) {
-        auto hintToolTips = static_cast<ToolTips *>(hintWidget);
-        if (hintToolTips != nullptr) {
-            hintToolTips->setText(playModeStr(playModel));
-        }
-    }
 }
 
 void FooterWidget::slotCoverClick(bool click)
@@ -658,7 +650,7 @@ void FooterWidget::slotMediaMetaChanged(MediaMeta activeMeta)
     }
 }
 
-void FooterWidget::setPlayModel(Player::PlaybackMode playModel)
+void FooterWidget::setPlayModel(Player::PlaybackMode playModel, bool isSignal)
 {
     switch (playModel) {
     case 0:
@@ -672,6 +664,18 @@ void FooterWidget::setPlayModel(Player::PlaybackMode playModel)
         break;
     default:
         break;
+    }
+
+    //更换提示框
+    auto hintWidget = m_btPlayMode->property("HintWidget").value<QWidget *>();
+    if (!isSignal)
+        m_hintFilter->showHitsFor(m_btPlayMode, hintWidget);
+
+    if (hintWidget != nullptr) {
+        auto hintToolTips = static_cast<ToolTips *>(hintWidget);
+        if (hintToolTips != nullptr) {
+            hintToolTips->setText(playModeStr(playModel));
+        }
     }
 
     m_btPlayMode->setProperty("playModel", QVariant(playModel));

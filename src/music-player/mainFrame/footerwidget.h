@@ -106,7 +106,7 @@ public slots:
     void slotPlaybackStatusChanged(Player::PlaybackStatus statue);
     void slotMediaMetaChanged(MediaMeta activeMeta);
 
-    void setPlayModel(Player::PlaybackMode playModel);
+    void setPlayModel(Player::PlaybackMode playModel, bool isSignal = false);
 
     // Dbug音量变化通知
     void slotDbusVolumeChanged(double volume);
