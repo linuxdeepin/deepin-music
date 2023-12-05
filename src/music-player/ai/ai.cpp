@@ -147,7 +147,7 @@ void UosAIInterface::handleAICall(QString &funcName, QMap<QString, QString> &arg
                     index = rx.cap(1);
                     pos += rx.matchedLength();
                 }
-                if (!index.isEmpty())
+                if (!index.isEmpty() && index.toInt() > 0)
                     QDBusReply<QVariant> msg  = speechbus.call(QString("invoke"), "playIndex", index);
             }
             break;
