@@ -25,8 +25,8 @@
                         "description": "歌单名称，例如：播放某个歌单的歌曲"
                     },
                     "index": {
-                        "type": "string",
-                        "description": "歌曲下标"
+                        "type": "int",
+                        "description": "用户希望播放的第几首歌的索引值"
                     }
                 },
                 "required": []

@@ -552,7 +552,7 @@ QVariant SpeechCenter::setMode(QString mode)
     int modeNumber = mode.toInt();
     bool isExit = false;
     QString str;
-    if (Player::getInstance()->status() == Player::PlaybackStatus::Playing) {
+    if (Player::getInstance()->status() != Player::PlaybackStatus::InvalidPlaybackStatus) {
         if (modeNumber == Player::PlaybackMode::RepeatAll) {
             str = m_settings->value("speechreply.speech.setModeRepeatAllOk").toString();
             Player::getInstance()->setMode(Player::PlaybackMode::RepeatAll);
