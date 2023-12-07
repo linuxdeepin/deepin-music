@@ -26,7 +26,7 @@
                     },
                     "index": {
                         "type": "int",
-                        "description": "用户希望播放的第几首歌的索引值"
+                        "description": "用户希望播放的第几首歌的索引值，范围是1-3000"
                     }
                 },
                 "required": []
