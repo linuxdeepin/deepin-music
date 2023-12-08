@@ -234,8 +234,6 @@ void Player::playMeta(MediaMeta meta)
                 qDebug() << "seek last position:" << lastOffset;
                 m_basePlayer->setTime(lastOffset);
                 m_basePlayer->play();
-                if (Global::checkBoardVendorType())
-                    m_basePlayer->resume();
 
                 QTimer *muteTimer = new QTimer(this);
                 muteTimer->setInterval(200);
