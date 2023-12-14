@@ -1,3 +1,9 @@
+deepin-music (6.2.35) unstable; urgency=medium
+
+  * Adapt to UOS AI voice control
+
+ -- fengli <fengli@uniontech.com>  Thu, 14 Dec 2023 13:41:29 +0800
+
 deepin-music (6.2.34) unstable; urgency=medium
 
   * fix compilation failed on 104x
