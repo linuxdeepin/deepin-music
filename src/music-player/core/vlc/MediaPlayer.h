@@ -161,6 +161,11 @@ public slots:
     virtual void pause();
 
     /*!
+        \brief Pauses the playback of current media if possible
+    */
+    virtual void pauseNew();
+
+    /*!
         \brief Resumes the playback of current media if possible
     */
     virtual void resume();

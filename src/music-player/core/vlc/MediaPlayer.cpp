@@ -240,6 +240,18 @@ void VlcMediaPlayer::pause()
     VlcError::showErrmsg();
 }
 
+void VlcMediaPlayer::pauseNew()
+{
+    if (!_vlcMediaPlayer)
+        return;
+    vlc_media_player_can_pause_function vlc_media_player_can_pause = (vlc_media_player_can_pause_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("libvlc_media_player_can_pause");
+    vlc_media_player_set_pause_function vlc_media_player_set_pause = (vlc_media_player_set_pause_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("libvlc_media_player_set_pause");
+    if (vlc_media_player_can_pause(_vlcMediaPlayer))
+        vlc_media_player_set_pause(_vlcMediaPlayer, true);
+
+    VlcError::showErrmsg();
+}
+
 void VlcMediaPlayer::resume()
 {
     if (!_vlcMediaPlayer)

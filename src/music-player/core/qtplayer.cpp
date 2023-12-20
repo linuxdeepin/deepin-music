@@ -95,6 +95,12 @@ void QtPlayer::pause()
     if (m_mediaPlayer != nullptr && m_mediaPlayer->state() == QMediaPlayer::PlayingState)
         m_mediaPlayer->pause();
 }
+
+void QtPlayer::pauseNew()
+{
+
+}
+
 void QtPlayer::resume()
 {
 

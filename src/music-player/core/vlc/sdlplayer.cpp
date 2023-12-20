@@ -100,7 +100,7 @@ typedef av_const int (*av_log2_function)(unsigned v);
 **/
 void SDL_LogOutputFunction_Err_Write(void *userdata, int category, SDL_LogPriority priority, const char *message)
 {
-    qDebug() << __FUNCTION__ << message;
+    qDebug() << __FUNCTION__ << "category: " << category << "priority: " << priority << "   " << message;
     SDL_GetAudioStatus_function GetAudioStatus = (SDL_GetAudioStatus_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSdlSymbol("SDL_GetAudioStatus");
     QString strmsg = message;
     if (strmsg == SDL_AUDIO_ERR_MSG && category == SDL_LOG_CATEGORY_AUDIO && priority == SDL_LOG_PRIORITY_ERROR) {
@@ -131,6 +131,7 @@ SdlPlayer::SdlPlayer(VlcInstance *instance)
         SDL_LogSetPriority_function LogSetPriority = (SDL_LogSetPriority_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSdlSymbol("SDL_LogSetPriority");
         SDL_LogSetOutputFunction_function LogSetOutputFunction = (SDL_LogSetOutputFunction_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSdlSymbol("SDL_LogSetOutputFunction");
         Init(SDL_INIT_AUDIO);
+
         vlc_audio_set_callbacks(_vlcMediaPlayer, libvlc_audio_play_cb, libvlc_audio_pause_cb, libvlc_audio_resume_cb, libvlc_audio_flush_cb, nullptr, this);
         vlc_audio_set_format_callbacks(_vlcMediaPlayer, libvlc_audio_setup_cb, nullptr);
 
@@ -194,6 +195,7 @@ void SdlPlayer::open(VlcMedia *media)
         SDL_UnlockAudio_function UnlockAudio = (SDL_UnlockAudio_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSdlSymbol("SDL_UnlockAudio");
         SDL_Delay_function Delay = (SDL_Delay_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSdlSymbol("SDL_Delay");
         SDL_CloseAudio_function CloseAudio = (SDL_CloseAudio_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSdlSymbol("SDL_CloseAudio");
+
         if (GetAudioStatus() != SDL_AUDIO_PLAYING)
             PauseAudio(1);
         cleanMemCache();
@@ -217,6 +219,7 @@ void SdlPlayer::open(VlcMedia *media)
 
 void SdlPlayer::play()
 {
+    qDebug() << "SdlPlayer play.";
     if (!_vlcMediaPlayer)
         return;
 
@@ -230,6 +233,7 @@ void SdlPlayer::play()
 
 void SdlPlayer::pause()
 {
+    qDebug() << "SdlPlayer pause.";
     if (!_vlcMediaPlayer)
         return;
     setProgressTag(0); //first start
@@ -243,6 +247,7 @@ void SdlPlayer::pause()
         SDL_UnlockAudio_function UnlockAudio = (SDL_UnlockAudio_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSdlSymbol("SDL_UnlockAudio");
         SDL_Delay_function Delay = (SDL_Delay_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSdlSymbol("SDL_Delay");
         SDL_CloseAudio_function CloseAudio = (SDL_CloseAudio_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSdlSymbol("SDL_CloseAudio");
+
         if (GetAudioStatus() != SDL_AUDIO_PAUSED && GetAudioStatus() != SDL_AUDIO_STOPPED)
             PauseAudio(1);
 
@@ -254,6 +259,24 @@ void SdlPlayer::pause()
             UnlockAudio();
             CloseAudio();
         }
+    }
+
+    VlcMediaPlayer::pause();
+}
+
+void SdlPlayer::pauseNew()
+{
+    qDebug() << __func__;
+    if (!_vlcMediaPlayer)
+        return;
+    setProgressTag(0);
+
+    if (m_loadSdlLibrary) {
+        SDL_GetAudioStatus_function GetAudioStatus = (SDL_GetAudioStatus_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSdlSymbol("SDL_GetAudioStatus");
+        SDL_PauseAudio_function PauseAudio = (SDL_PauseAudio_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSdlSymbol("SDL_PauseAudio");
+
+        if (GetAudioStatus() != SDL_AUDIO_PAUSED && GetAudioStatus() != SDL_AUDIO_STOPPED)
+            PauseAudio(1);
     }
 
     VlcMediaPlayer::pause();
@@ -408,6 +431,7 @@ void SdlPlayer::libvlc_audio_resume_cb(void *data, int64_t pts)
 
 int SdlPlayer::libvlc_audio_setup_cb(void **data, char *format, unsigned *rate, unsigned *channels)
 {
+    qDebug() << __func__ ;
     SDL_PauseAudio_function PauseAudio = (SDL_PauseAudio_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSdlSymbol("SDL_PauseAudio");
     SDL_Delay_function Delay = (SDL_Delay_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSdlSymbol("SDL_Delay");
     SDL_OpenAudio_function OpenAudio = (SDL_OpenAudio_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSdlSymbol("SDL_OpenAudio");

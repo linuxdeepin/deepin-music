@@ -32,6 +32,7 @@ public:
 public:
     void play() override;
     void pause() override;
+    void pauseNew() override;
     void resume() override;
     PlayerBase::PlayState state() override;
     void stop() override;

@@ -24,6 +24,7 @@ public:
     PlayerBase::PlayState state() override;
     void play() override;
     void pause() override;
+    void pauseNew() override;
     void resume() override;
     void stop() override;
     int length() override; //播放总时长
