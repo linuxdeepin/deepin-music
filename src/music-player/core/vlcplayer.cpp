@@ -134,6 +134,14 @@ void VlcPlayer::pause()
         m_qvplayer->pause();
     }
 }
+
+void VlcPlayer::pauseNew()
+{
+    if (m_qvplayer) {
+        m_qvplayer->pauseNew();
+    }
+}
+
 void VlcPlayer::resume()
 {
     if (m_qvplayer) {

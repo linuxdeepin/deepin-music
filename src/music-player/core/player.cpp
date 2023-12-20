@@ -228,7 +228,7 @@ void Player::playMeta(MediaMeta meta)
             QTimer::singleShot(100, this, [ = ]() {
                 setDbusMuted();
             });
-            m_basePlayer->pause();
+            m_basePlayer->pauseNew(); //此处只暂停，不关闭音频设备，防止后面打开失败
             qint64 lastOffset = m_ActiveMeta.offset;
             QTimer::singleShot(150, this, [ = ]() {//为了记录进度条生效，在加载的时候让音乐播放150ms
                 qDebug() << "seek last position:" << lastOffset;

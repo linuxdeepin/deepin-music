@@ -48,6 +48,11 @@ public:
     void pause();
 
     /*!
+        \brief Pauses the playback of current media if possible
+    */
+    void pauseNew();
+
+    /*!
         \brief Resumes the playback of current media if possible
     */
     void resume();
