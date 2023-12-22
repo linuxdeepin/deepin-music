@@ -1,3 +1,9 @@
+deepin-music (6.2.36) unstable; urgency=medium
+
+  * fix: 双击音乐文件冷启动,显示播放，实际无音频输出
+
+ -- fengli <fengli@uniontech.com>  Fri, 22 Dec 2023 15:25:25 +0800
+
 deepin-music (6.2.35) unstable; urgency=medium
 
   * Adapt to UOS AI voice control
