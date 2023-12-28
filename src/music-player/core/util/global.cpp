@@ -134,7 +134,8 @@ bool Global::checkBoardVendorType()
         result = process.readAll();
         //qDebug() << __func__ << result;
         boardVendorFlag = boardVendorFlag
-                || result.contains("PWC30", Qt::CaseInsensitive);    //w525
+                || result.contains("PWC30", Qt::CaseInsensitive)    //w525
+                || result.contains("PGUX", Qt::CaseInsensitive);
         process.close();
     }
     initBoardVendorFlag = true;
