@@ -50,8 +50,6 @@ set(TARGET_LIBS Qt5::Quick PkgConfig::DTK dmusic ${DtkDeclarative_LIBRARIES})
 
 target_link_libraries(${BIN_NAME} ${TARGET_LIBS})
 
-set_target_properties(${BIN_NAME} PROPERTIES INSTALL_RPATH ${DTK_QML_APP_PLUGIN_PATH})
-
 # install dconfig meta files
 dconfig_meta_files(APPID deepin-music FILES data/org.deepin.music.json)
 
