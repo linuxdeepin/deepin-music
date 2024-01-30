@@ -27,6 +27,7 @@
 #include "player.h"
 #include "ac-desktop-define.h"
 #include "commonservice.h"
+
 DGUI_USE_NAMESPACE
 
 AddMusicWidget::AddMusicWidget(QWidget *parent) : DWidget(parent)

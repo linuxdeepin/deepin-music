@@ -22,6 +22,7 @@
 #include "player.h"
 #include "playlistmodel.h"
 
+DGUI_USE_NAMESPACE
 DWIDGET_USE_NAMESPACE
 
 #ifdef DTKWIDGET_CLASS_DSizeMode

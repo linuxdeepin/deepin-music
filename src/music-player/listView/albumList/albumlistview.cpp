@@ -18,7 +18,6 @@
 #include <DDialog>
 #include <DDesktopServices>
 #include <DScrollBar>
-#include <DGuiApplicationHelper>
 
 #include "util/pinyinsearch.h"
 

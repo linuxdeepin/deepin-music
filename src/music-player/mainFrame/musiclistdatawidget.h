@@ -10,11 +10,13 @@
 #include <DToolButton>
 #include <DLabel>
 #include <DGuiApplicationHelper>
+#include <DApplicationHelper>
 
 #include <QHBoxLayout>
 #include <QResizeEvent>
 
 #include "mediameta.h"
+
 DWIDGET_USE_NAMESPACE
 
 class ActionBar;

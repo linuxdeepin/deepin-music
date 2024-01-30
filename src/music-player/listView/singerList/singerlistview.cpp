@@ -17,7 +17,6 @@
 #include <DDialog>
 #include <DDesktopServices>
 #include <DScrollBar>
-#include <DGuiApplicationHelper>
 
 #include "util/pinyinsearch.h"
 
@@ -28,7 +27,6 @@
 #include "global.h"
 #include "ac-desktop-define.h"
 
-DWIDGET_USE_NAMESPACE
 // 升序
 bool moreThanTimestampASC(SingerInfo v1, SingerInfo v2)
 {

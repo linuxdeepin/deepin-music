@@ -12,6 +12,7 @@
 #include <DStyle>
 #include <DFontSizeManager>
 
+DGUI_USE_NAMESPACE
 DWIDGET_USE_NAMESPACE
 
 TabletLabel::TabletLabel(const QString &text, QWidget *parent, int val):
