@@ -23,7 +23,6 @@
 #include <DDialog>
 #include <DDesktopServices>
 #include <DScrollBar>
-#include <DGuiApplicationHelper>
 #include <DLabel>
 #include "util/pinyinsearch.h"
 

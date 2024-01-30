@@ -12,6 +12,7 @@
 #include <DFloatingWidget>
 #include <DGuiApplicationHelper>
 
+DGUI_USE_NAMESPACE
 DWIDGET_USE_NAMESPACE
 
 class PlayListView;

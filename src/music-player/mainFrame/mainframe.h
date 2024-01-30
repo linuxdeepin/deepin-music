@@ -15,6 +15,7 @@
 #include "mediameta.h"
 
 DWIDGET_USE_NAMESPACE
+DGUI_USE_NAMESPACE
 
 class MusicStatckedWidget;
 class TitlebarWidget;

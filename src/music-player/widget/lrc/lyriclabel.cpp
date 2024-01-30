@@ -27,6 +27,7 @@
 #include <QDebug>
 
 DGUI_USE_NAMESPACE
+DGUI_USE_NAMESPACE
 
 LyricLabel::LyricLabel(bool touch, QWidget *parent)
     : AbstractWheelWidget(touch, parent)

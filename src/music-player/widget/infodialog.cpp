@@ -27,6 +27,7 @@
 #include "cover.h"
 #include "global.h"
 
+DGUI_USE_NAMESPACE
 DWIDGET_USE_NAMESPACE
 
 static const int CoverSize = 142;

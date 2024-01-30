@@ -11,6 +11,8 @@
 #include <DGuiApplicationHelper>
 
 #include "mediameta.h"
+
+DGUI_USE_NAMESPACE
 DWIDGET_USE_NAMESPACE
 
 class MusicBaseListView;

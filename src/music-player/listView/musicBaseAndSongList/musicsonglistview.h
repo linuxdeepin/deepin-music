@@ -14,6 +14,7 @@
 #include <DLineEdit>
 #include <DGuiApplicationHelper>
 
+DGUI_USE_NAMESPACE
 DWIDGET_USE_NAMESPACE
 
 class MusicBaseAndSonglistModel;

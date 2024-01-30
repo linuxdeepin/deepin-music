@@ -23,7 +23,9 @@
 
 class QAudioBuffer;
 
+DGUI_USE_NAMESPACE
 DWIDGET_USE_NAMESPACE
+
 class Label;
 class SoundVolume;
 class MusicPixmapButton;

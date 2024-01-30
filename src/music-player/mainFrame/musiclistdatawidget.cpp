@@ -21,8 +21,6 @@
 #include <DLabel>
 #include <DFrame>
 #include <DFontSizeManager>
-#include <DGuiApplicationHelper>
-#include <DApplicationHelper>
 
 #include "util/pinyinsearch.h"
 
@@ -43,8 +41,6 @@
 #include "subsonglistwidget.h"
 #include "addmusicwidget.h"
 #include "musicsettings.h"
-
-DWIDGET_USE_NAMESPACE
 
 MusicListDataWidget::MusicListDataWidget(QWidget *parent) :
     DWidget(parent)

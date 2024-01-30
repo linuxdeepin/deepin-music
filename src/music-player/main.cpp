@@ -9,6 +9,7 @@
 #include <QDBusPendingCall>
 #include <QCommandLineParser>
 #include <QProcessEnvironment>
+#include <QDir>
 
 #include <DLog>
 #include <DStandardPaths>
