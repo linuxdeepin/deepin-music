@@ -169,7 +169,7 @@ ApplicationWindow {
     SystemTrayIcon{
         id: systemTray
         visible: true
-        iconSource: "qrc:/dsg/img/deepin-music.svg"
+        iconName: "deepin-music"
         tooltip: qsTr("Music")
 
         onActivated: {
