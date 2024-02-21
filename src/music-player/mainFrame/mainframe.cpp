@@ -36,6 +36,7 @@
 #include <DSettingsOption>
 #include <DApplicationHelper>
 #include <DApplication>
+#include <DSysInfo>
 
 #include <unistd.h>
 #include "./core/musicsettings.h"
@@ -333,7 +334,7 @@ void MainFrame::initMenuAndShortcut()
     nextAction->setEnabled(false);
     auto quitAction = new QAction(tr("Exit"), this);
 
-    auto trayIconMenu = new DMenu(this);
+    DMenu *trayIconMenu = new DMenu(this);
     trayIconMenu->addAction(playAction);
     trayIconMenu->addAction(prevAction);
     trayIconMenu->addAction(nextAction);
@@ -341,7 +342,7 @@ void MainFrame::initMenuAndShortcut()
     trayIconMenu->addAction(quitAction);
 
     //tray icon
-    auto m_sysTrayIcon = new QSystemTrayIcon(this);
+    QSystemTrayIcon *m_sysTrayIcon = new QSystemTrayIcon(this);
     m_sysTrayIcon->setIcon(QIcon::fromTheme("deepin-music"));
     m_sysTrayIcon->setToolTip(tr("Music"));
     m_sysTrayIcon->setContextMenu(trayIconMenu);
@@ -389,8 +390,7 @@ void MainFrame::initMenuAndShortcut()
     });
 #endif
 
-    connect(m_sysTrayIcon, &QSystemTrayIcon::activated,
-    this, [ = ](QSystemTrayIcon::ActivationReason reason) {
+    connect(m_sysTrayIcon, &QSystemTrayIcon::activated, this, [ = ](QSystemTrayIcon::ActivationReason reason) {
         if (QSystemTrayIcon::Trigger == reason) {
             if (checkWindowVisible(Global::isWaylandMode())) {
                 m_preMaxFlag = isMaximized();
@@ -401,8 +401,10 @@ void MainFrame::initMenuAndShortcut()
                 }
                 show();
                 // 特性关闭后需要使用showNormal/showMaximized
-                if (m_preMaxFlag) showMaximized();
-                else showNormal();
+                if (m_preMaxFlag)
+                    showMaximized();
+                else
+                    showNormal();
                 // 使用dbus显示窗口
                 this->titlebar()->setFocus();
                 raise();
@@ -414,11 +416,13 @@ void MainFrame::initMenuAndShortcut()
 
 bool MainFrame::checkWindowVisible(bool waylandMode)
 {
-    if (waylandMode) {
+    const auto minorVersion = DTK_CORE_NAMESPACE::DSysInfo::minorVersion();
+    if (waylandMode && minorVersion.toLong() < 1070) { //1070及以后不需要通过dbus接口判断窗口状态
         QVariant v = DBusUtils::readDBusProperty("com.deepin.dde.daemon.Dock", "/com/deepin/dde/daemon/Dock",
                                                  "com.deepin.dde.daemon.Dock", "Entries");
 
-        if (!v.isValid()) return false;
+        if (!v.isValid())
+            return false;
 
         QList<QDBusObjectPath> allSinkInputsList = v.value<QList<QDBusObjectPath> >();
 
