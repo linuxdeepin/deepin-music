@@ -9,12 +9,16 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 
+set(CMAKE_C_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
+
 file(GLOB_RECURSE QRC_SOURCE_FILES ./*.qrc)
 set(QRC_FILES config.qrc)
 
 #文件夹包含
 include_directories(/usr/include/vlc)
 include_directories(/usr/include/vlc/plugins)
+include_directories(/usr/include/ffmpeg)
 include_directories(/runtime/include/vlc)
 include_directories(/runtime/include/vlc/plugins)
 include_directories(/runtime/include)
@@ -45,8 +49,9 @@ pkg_check_modules(MPRIS REQUIRED IMPORTED_TARGET mpris-qt5)
 pkg_check_modules(TAGLIB REQUIRED IMPORTED_TARGET taglib)
 pkg_check_modules(DTK REQUIRED IMPORTED_TARGET dtkcore)
 pkg_check_modules(udisks2 REQUIRED IMPORTED_TARGET udisks2-qt5)
+pkg_check_modules(icu REQUIRED IMPORTED_TARGET icu-i18n icu-io icu-uc)
 
-set(TARGET_LIBS PkgConfig::MPRIS KF5::Codecs PkgConfig::TAGLIB PkgConfig::DTK PkgConfig::udisks2)
+set(TARGET_LIBS PkgConfig::MPRIS KF5::Codecs PkgConfig::TAGLIB PkgConfig::DTK PkgConfig::udisks2 PkgConfig::icu)
 target_link_libraries(${CMD_NAME} ${TARGET_LIBS})
 
 qt5_use_modules(${CMD_NAME} ${QT_MODULES})

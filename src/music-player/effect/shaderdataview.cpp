@@ -56,7 +56,7 @@ void ShaderDataView::setShaderData(const QVector<int> &data)
 
 QVariant ShaderDataView::presenter() const
 {
-
+    return QVariant();
 }
 
 void ShaderDataView::setPresenter(const QVariant &presenter)
