@@ -27,7 +27,6 @@ Build-Depends:
  qtmultimedia5-dev,
  qttools5-dev,
  qttools5-dev-tools,
- libdframeworkdbus-dev,
  libudisks2-qt5-dev,
  qtdeclarative5-dev,
  libdtkdeclarative-dev,
