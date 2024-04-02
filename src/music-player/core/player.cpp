@@ -743,7 +743,7 @@ Player::PlaybackStatus Player::status()
         return PlaybackStatus::Playing;
     } else if (status == PlayerBase::Paused) {
         return PlaybackStatus::Paused;
-    } else if (status == PlayerBase::Stopped || status == PlayerBase::Idle) {
+    } else if (status == PlayerBase::Stopped || status == PlayerBase::Idle || status == PlayerBase::Ended) {
         return PlaybackStatus::Stopped;
     } else {
         return PlaybackStatus::InvalidPlaybackStatus;
