@@ -1,3 +1,10 @@
+deepin-music (6.2.40) unstable; urgency=medium
+
+  * fix: No response when clicking play after
+    unplugging the headphones(Bug: 248763)
+
+ -- renbin <renbin@uniontech.com>  Wed, 03 Apr 2024 16:25:26 +0800
+
 deepin-music (6.2.39) unstable; urgency=medium
 
   * New version 6.2.39.
