@@ -35,7 +35,7 @@ find_package(PkgConfig REQUIRED)
 
 find_package(Qt5 REQUIRED ${QT_MODULES})
 find_package(KF5Codecs)
-
+find_package(ICU COMPONENTS i18n)
 qt5_add_resources(QRC_FILES ${QRC_SOURCE_FILES})
 
 add_library(${CMD_NAME} SHARED ${ALL_SOURCES} ${QRC_FILES})
@@ -47,7 +47,7 @@ pkg_check_modules(DTK REQUIRED IMPORTED_TARGET dtkcore)
 pkg_check_modules(udisks2 REQUIRED IMPORTED_TARGET udisks2-qt5)
 
 set(TARGET_LIBS PkgConfig::MPRIS KF5::Codecs PkgConfig::TAGLIB PkgConfig::DTK PkgConfig::udisks2)
-target_link_libraries(${CMD_NAME} ${TARGET_LIBS})
+target_link_libraries(${CMD_NAME} ${TARGET_LIBS} ICU::i18n)
 
 qt5_use_modules(${CMD_NAME} ${QT_MODULES})
 

@@ -60,7 +60,7 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord )
     for	(float i = 0.0; i < NUM_PARTICLES; i++)
         pixel += Orb(uv, iColor, radius*(0.2+texture(iChannel0, vec2(float(i)/NUM_PARTICLES, 0.0)).x), i / NUM_PARTICLES);
 
-    vec4 t = mix(vec4(0.), vec4(pixel, 0.), 1.);
+    vec4 t = mix(vec4(0.), vec4(pixel, 0.9), 1.);
     fragColor = removeRing(t, fragCoord, 0.5);
 }
 "
