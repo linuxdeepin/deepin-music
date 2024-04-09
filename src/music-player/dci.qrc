@@ -96,5 +96,6 @@
         <file>dsg/icons/sidebar_list_add.dci</file>
         <file>dsg/icons/details_more.dci</file>
         <file>dsg/icons/headline_play_all.dci</file>
+        <file>dsg/icons/go_down.dci</file>
     </qresource>
 </RCC>

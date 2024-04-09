@@ -36,7 +36,7 @@ Rectangle{
         Rectangle {
             width: parent.width
             height: Window.height
-            color: "#ccdddddd"
+            color: DTK.themeType === ApplicationHelper.DarkType ? Qt.rgba(0, 0, 0, 0.4) : Qt.rgba(247, 247, 247, 0.4)
         }
     }
     FastBlur {
@@ -112,7 +112,7 @@ Rectangle{
                                 Label {
                                     width: parent.width
                                     text: titleStr
-                                    color: "#dd000000"
+                                    color: DTK.themeType === ApplicationHelper.DarkType ? Qt.rgba(255, 255, 255, 0.9) : Qt.rgba(0, 0, 0, 0.9)
                                     font: DTK.fontManager.t3
                                     elide: Text.ElideRight
                                 }
@@ -129,7 +129,7 @@ Rectangle{
                                     Text {
                                         width: 174
                                         height: parent.height
-                                        color: "#aa000000"
+                                        color: DTK.themeType === ApplicationHelper.DarkType ? Qt.rgba(255, 255, 255, 0.7) : Qt.rgba(0, 0, 0, 0.7)
                                         text: qsTr("Artist") + (": %1".arg(artist.length == 0 ? "未知" : artist));
                                         font: DTK.fontManager.t6
                                         elide: Text.ElideRight
@@ -137,7 +137,7 @@ Rectangle{
                                     Text {
                                         width: 174
                                         height: parent.height
-                                        color: "#aa000000"
+                                        color: DTK.themeType === ApplicationHelper.DarkType ? Qt.rgba(255, 255, 255, 0.7) : Qt.rgba(0, 0, 0, 0.7)
                                         text: qsTr("Album") + ": %1".arg(album.length == 0 ? "未知" : album);
                                         font: DTK.fontManager.t6
                                         elide: Text.ElideRight
@@ -177,7 +177,7 @@ Rectangle{
                                 wrapMode: Text.WrapAtWordBoundaryOrAnywhere
 
                                 text: qsTr("No lyrics found")
-                                color: "#70000000"
+                                color: DTK.themeType === ApplicationHelper.DarkType ? Qt.rgba(255, 255, 255, 0.7) : Qt.rgba(0, 0, 0, 0.7)
                                 font: DTK.fontManager.t5
                             }
                             Text {
@@ -187,7 +187,7 @@ Rectangle{
                                 wrapMode: Text.WrapAtWordBoundaryOrAnywhere
 
                                 text: qsTr("Please put the lyric file (same name as the song) and the song file in the same folder")
-                                color: "#70000000"
+                                color: DTK.themeType === ApplicationHelper.DarkType ? Qt.rgba(255, 255, 255, 0.7) : Qt.rgba(0, 0, 0, 0.7)
                                 font: DTK.fontManager.t6
                             }
                         }

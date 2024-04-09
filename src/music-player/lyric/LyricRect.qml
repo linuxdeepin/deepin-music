@@ -4,6 +4,7 @@
 
 import QtQuick 2.11
 import QtQuick.Controls 2.4
+import org.deepin.dtk 1.0
 
 Rectangle {
     property int curIndex: 0
@@ -100,29 +101,58 @@ Rectangle {
                     if( lyricItemRect.ListView.isCurrentItem ) {
                         return palette.highlight
                     }
-                    if (curIndex <= Math.abs(lyricRect.height / itemHeight / 2)) { //开始
-                        if (index > Math.abs(lyricRect.height / itemHeight) - 2) {
-                            return Qt.rgba(0, 0, 0, 0.24)
-                        } else if (index > Math.abs(lyricRect.height / itemHeight) - 3) {
-                            return Qt.rgba(0, 0, 0, 0.42)
-                        }  else {
-                            return Qt.rgba(0, 0, 0, 0.7)
+                    if(DTK.themeType === ApplicationHelper.LightType)
+                    {
+                        if (curIndex <= Math.abs(lyricRect.height / itemHeight / 2)) { //开始
+                            if (index > Math.abs(lyricRect.height / itemHeight) - 2) {
+                                return Qt.rgba(0, 0, 0, 0.24)
+                            } else if (index > Math.abs(lyricRect.height / itemHeight) - 3) {
+                                return Qt.rgba(0, 0, 0, 0.42)
+                            }  else {
+                                return Qt.rgba(0, 0, 0, 0.7)
+                            }
+                        } else if (curIndex > lrcModel.count - Math.abs(lyricRect.height / itemHeight / 2)) { //结尾
+                            if (index < lrcModel.count - Math.abs(lyricRect.height / itemHeight) + 1) {
+                                return Qt.rgba(0, 0, 0, 0.24)
+                            } else if (index < lrcModel.count - Math.abs(lyricRect.height / itemHeight) + 2) {
+                                return Qt.rgba(0, 0, 0, 0.42)
+                            }  else {
+                                return Qt.rgba(0, 0, 0, 0.7)
+                            }
+                        } else {  //中间部分
+                            if (Math.abs(curIndex - index) > Math.abs(lyricRect.height / itemHeight / 2) - 1) {
+                                return Qt.rgba(0, 0, 0, 0.24)
+                            } else if (Math.abs(curIndex - index) > Math.abs(lyricRect.height / itemHeight / 2) - 2) {
+                                return Qt.rgba(0, 0, 0, 0.42)
+                            }  else {
+                                return Qt.rgba(0, 0, 0, 0.7)
+                            }
                         }
-                    } else if (curIndex > lrcModel.count - Math.abs(lyricRect.height / itemHeight / 2)) { //结尾
-                        if (index < lrcModel.count - Math.abs(lyricRect.height / itemHeight) + 1) {
-                            return Qt.rgba(0, 0, 0, 0.24)
-                        } else if (index < lrcModel.count - Math.abs(lyricRect.height / itemHeight) + 2) {
-                            return Qt.rgba(0, 0, 0, 0.42)
-                        }  else {
-                            return Qt.rgba(0, 0, 0, 0.7)
-                        }
-                    } else {  //中间部分
-                        if (Math.abs(curIndex - index) > Math.abs(lyricRect.height / itemHeight / 2) - 1) {
-                            return Qt.rgba(0, 0, 0, 0.24)
-                        } else if (Math.abs(curIndex - index) > Math.abs(lyricRect.height / itemHeight / 2) - 2) {
-                            return Qt.rgba(0, 0, 0, 0.42)
-                        }  else {
-                            return Qt.rgba(0, 0, 0, 0.7)
+                    } else {
+                        if (curIndex <= Math.abs(lyricRect.height / itemHeight / 2)) { //开始
+                            if (index > Math.abs(lyricRect.height / itemHeight) - 2) {
+                                return Qt.rgba(255,255,255, 0.24)
+                            } else if (index > Math.abs(lyricRect.height / itemHeight) - 3) {
+                                return Qt.rgba(255,255,255, 0.42)
+                            }  else {
+                                return Qt.rgba(255,255,255, 0.7)
+                            }
+                        } else if (curIndex > lrcModel.count - Math.abs(lyricRect.height / itemHeight / 2)) { //结尾
+                            if (index < lrcModel.count - Math.abs(lyricRect.height / itemHeight) + 1) {
+                                return Qt.rgba(255,255,255, 0.24)
+                            } else if (index < lrcModel.count - Math.abs(lyricRect.height / itemHeight) + 2) {
+                                return Qt.rgba(255,255,255, 0.42)
+                            }  else {
+                                return Qt.rgba(255,255,255, 0.7)
+                            }
+                        } else {  //中间部分
+                            if (Math.abs(curIndex - index) > Math.abs(lyricRect.height / itemHeight / 2) - 1) {
+                                return Qt.rgba(255,255,255, 0.24)
+                            } else if (Math.abs(curIndex - index) > Math.abs(lyricRect.height / itemHeight / 2) - 2) {
+                                return Qt.rgba(255,255,255, 0.42)
+                            }  else {
+                                return Qt.rgba(255,255,255, 0.7)
+                            }
                         }
                     }
                 }

@@ -19,11 +19,18 @@ TitleBar {
     icon.name: isLyricShow ? "" : globalVariant.appIconName
     hoverEnabled: false
     DciIcon {
-        name: "go-down"
+        name: ""
         visible: isLyricShow
         sourceSize: Qt.size(12, 12)
         x: 20
         y: 26
+        ActionButton {
+        anchors.fill: parent
+        icon.name: "go_down"
+        icon.width: parent.width
+        icon.height: parent.height
+        hoverEnabled: false;
+        }
         MouseArea {
             anchors.fill: parent
             hoverEnabled: true
