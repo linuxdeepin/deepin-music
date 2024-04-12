@@ -1,3 +1,11 @@
+deepin-music (7.0.5) unstable; urgency=medium
+
+  * New version 7.0.5
+  * fix: wrong format dci with checked
+  * fix: Fix lyrics page with no dark mode(Bug: 248325)
+
+ -- lijiaxuan <lijiaxuan@uniontech.com>  Fri, 12 Apr 2024 17:03:33 +0800
+
 deepin-music (7.0.4) unstable; urgency=medium
 
   * New version 7.0.4
