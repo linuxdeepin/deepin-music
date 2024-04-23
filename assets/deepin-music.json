@@ -25,7 +25,7 @@
                         "description": "歌单名称，例如：播放某个歌单的歌曲"
                     },
                     "index": {
-                        "type": "int",
+                        "type": "integer",
                         "description": "用户希望播放的第几首歌的索引值，范围是1-3000"
                     }
                 },
