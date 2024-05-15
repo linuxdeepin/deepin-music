@@ -1149,6 +1149,9 @@ void Player::initPlayer()
     this, [ = ](qint64 position) {
         Q_EMIT positionChanged(position,  m_ActiveMeta.length, 1); //直接上报当前位置，offset无实质意义
     });
+    connect(this,&Player::mTimerOut,this,[=](){
+       m_timer->stop();
+    });
     connect(m_basePlayer, &PlayerBase::positionChanged,
     this, [ = ](float position) {
         qint64 curPosition = static_cast<qint64>(position * m_ActiveMeta.length);

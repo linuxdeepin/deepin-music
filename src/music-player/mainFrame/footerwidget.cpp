@@ -83,6 +83,7 @@ FooterWidget::FooterWidget(QWidget *parent) :
     connect(m_btSound, &DIconButton::clicked, this, &FooterWidget::slotSoundClick);
     connect(m_btSound, &ControlIconButton::mouseIn, this, &FooterWidget::slotSoundMouseIn);
     connect(m_btFavorite, &DIconButton::clicked, this, &FooterWidget::slotFavoriteClick);
+    connect(this,&FooterWidget::playerStatusChanged,Player::getInstance(),&Player::mTimerOut);
     // 歌单数据改变时设置上下一首按钮状态
     connect(Player::getInstance(), &Player::signalPlaylistCountChange, this, [ = ]() {
         m_btNext->setEnabled(Player::getInstance()->getPlayList()->size() > 1);
@@ -594,6 +595,7 @@ void FooterWidget::slotSoundMouseIn(bool in)
 void FooterWidget::slotPlaybackStatusChanged(Player::PlaybackStatus status)
 {
     setPlayProperty(status);
+    emit playerStatusChanged();
     if (status == Player::PlaybackStatus::Stopped) {
         Player::getInstance()->getMpris()->setPlaybackStatus(Mpris::Stopped);
     } else {

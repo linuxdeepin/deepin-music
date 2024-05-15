@@ -151,7 +151,7 @@ public:
 
 signals:
     void readyToResume();
-
+    void mTimerOut();
 public:
     //bool canControl() const;
     qlonglong position();
