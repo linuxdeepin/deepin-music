@@ -59,7 +59,8 @@ public:
     void slotSetWaveValue(int step, long duration);
     // 阻止休眠
     void screenStandby(bool isStandby);
-
+signals:
+    void playerStatusChanged();
 private:
     void initUI(QWidget *parent = nullptr);
     void installTipHint(QWidget *widget, const QString &hintstr);
@@ -75,7 +76,6 @@ private:
 
 signals:
     void lyricClicked();
-
 public slots:
     // 刷新footer背景
     void slotFlushBackground();
@@ -122,7 +122,6 @@ public slots:
     // 切换紧凑模式
     void slotSizeModeChanged(DGuiApplicationHelper::SizeMode sizeMode);
 #endif
-
 protected:
     virtual void resizeEvent(QResizeEvent *event) Q_DECL_OVERRIDE;
 
