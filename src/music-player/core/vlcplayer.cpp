@@ -131,6 +131,7 @@ void VlcPlayer::play()
 void VlcPlayer::pause()
 {
     if (m_qvplayer) {
+        static_cast<SdlPlayer*>(m_qvplayer)->setCachingThreadPause(true);
         m_qvplayer->pause();
     }
 }
@@ -146,6 +147,7 @@ void VlcPlayer::resume()
 {
     if (m_qvplayer) {
         m_qvplayer->resume();
+        static_cast<SdlPlayer*>(m_qvplayer)->setCachingThreadPause(false);
     }
 }
 PlayerBase::PlayState VlcPlayer::state()

@@ -12,6 +12,7 @@
 #include <SDL2/SDL_error.h>
 
 class CheckDataZeroThread;
+class CheckDataCachingThread;
 
 class VLCQT_CORE_EXPORT SdlPlayer : public VlcMediaPlayer
 {
@@ -76,6 +77,8 @@ public:
      * \return the mute status (boolean) if defined, -1 if undefined/unapplicable
      */
     bool getMute();
+
+    void setCachingThreadPause(bool pause);
 
 public slots:
     /*! \brief Set the movie time (in ms).
@@ -157,6 +160,7 @@ private:
     bool m_mute = false;
 
     CheckDataZeroThread *m_pCheckDataThread = nullptr;
+    CheckDataCachingThread *m_pCheckDataChingThread = nullptr;
 
     static int  switchOnceFlag;
 };
