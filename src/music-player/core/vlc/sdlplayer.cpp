@@ -57,7 +57,7 @@ extern "C" {
 int g_playbackStatus = 0;
 static int64_t g_dataCache = 0;
 int g_dataCacheBlock = 0;
-bool g_stillPlay = false;
+bool g_onlyDecodePause = false;
 bool is_pa_connected = true;
 static QMutex vlc_mutex;
 
@@ -154,10 +154,16 @@ SdlPlayer::SdlPlayer(VlcInstance *instance)
 
         m_pCheckDataChingThread = new CheckDataCachingThread(this);
         connect(m_pCheckDataChingThread, &CheckDataCachingThread::sigPusedDecode, this, [=](){
-            pause();
+            if (!m_pCheckDataChingThread->getPause()) {
+                g_onlyDecodePause = true;
+                VlcMediaPlayer::pause();
+            }
         });
         connect(m_pCheckDataChingThread, &CheckDataCachingThread::sigResumeDecode, this, [=](){
-            resume();
+            if (!m_pCheckDataChingThread->getPause()) {
+                g_onlyDecodePause = false;
+                VlcMediaPlayer::resume();
+            }
         });
     }
     //}
@@ -258,7 +264,7 @@ void SdlPlayer::pause()
         return;
     setProgressTag(0); //first start
 
-    if (m_loadSdlLibrary && !m_pCheckDataChingThread->getPause()) {
+    if (m_loadSdlLibrary) {
         SDL_GetAudioStatus_function GetAudioStatus = (SDL_GetAudioStatus_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSdlSymbol("SDL_GetAudioStatus");
         SDL_PauseAudio_function PauseAudio = (SDL_PauseAudio_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSdlSymbol("SDL_PauseAudio");
         SDL_GetQueuedAudioSize_function GetQueuedAudioSize = (SDL_GetQueuedAudioSize_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSdlSymbol("SDL_GetQueuedAudioSize");
@@ -281,6 +287,7 @@ void SdlPlayer::pause()
         }
     }
 
+    g_onlyDecodePause = false;
     VlcMediaPlayer::pause();
 }
 
@@ -308,7 +315,7 @@ void SdlPlayer::resume()
         return;
 
     VlcMediaPlayer::resume();
-    if (m_loadSdlLibrary && !m_pCheckDataChingThread->getPause()) {
+    if (m_loadSdlLibrary) {
         SDL_GetAudioStatus_function GetAudioStatus = (SDL_GetAudioStatus_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSdlSymbol("SDL_GetAudioStatus");
         SDL_PauseAudio_function PauseAudio = (SDL_PauseAudio_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSdlSymbol("SDL_PauseAudio");
         SDL_OpenAudio_function OpenAudio = (SDL_OpenAudio_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSdlSymbol("SDL_OpenAudio");
@@ -441,7 +448,7 @@ void SdlPlayer::libvlc_audio_pause_cb(void *data, int64_t pts)
     Q_UNUSED(pts)
     SDL_GetAudioStatus_function GetAudioStatus = (SDL_GetAudioStatus_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSdlSymbol("SDL_GetAudioStatus");
     SDL_PauseAudio_function PauseAudio = (SDL_PauseAudio_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSdlSymbol("SDL_PauseAudio");
-    if (GetAudioStatus() != SDL_AUDIO_PAUSED && GetAudioStatus() != SDL_AUDIO_STOPPED && !g_stillPlay)
+    if (GetAudioStatus() != SDL_AUDIO_PAUSED && GetAudioStatus() != SDL_AUDIO_STOPPED && !g_onlyDecodePause)
         PauseAudio(1);
 }
 
@@ -451,7 +458,7 @@ void SdlPlayer::libvlc_audio_resume_cb(void *data, int64_t pts)
     Q_UNUSED(pts)
     SDL_GetAudioStatus_function GetAudioStatus = (SDL_GetAudioStatus_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSdlSymbol("SDL_GetAudioStatus");
     SDL_PauseAudio_function PauseAudio = (SDL_PauseAudio_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSdlSymbol("SDL_PauseAudio");
-    if (GetAudioStatus() != SDL_AUDIO_PLAYING && !g_stillPlay)
+    if (GetAudioStatus() != SDL_AUDIO_PLAYING)
         PauseAudio(0);
 }
 
@@ -597,6 +604,7 @@ void SdlPlayer::cleanMemCache()
 {
     QMutexLocker locker(&vlc_mutex);
     g_dataCache = 0;
+    g_dataCacheBlock = 0;
     _data.clear();
 }
 

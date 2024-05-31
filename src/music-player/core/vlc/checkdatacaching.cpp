@@ -7,9 +7,9 @@
 #include <QDebug>
 
 #define MAXBLOCKSIZE 50
+#define MINBLOCKSIZE 30
 
 extern int g_dataCacheBlock;
-extern bool  g_stillPlay;
 
 #define POSITION_STEP_COUNT 6
 
@@ -22,8 +22,6 @@ CheckDataCachingThread::CheckDataCachingThread(QObject *parent)
 void CheckDataCachingThread::setThreadPause(bool pause)
 {
     m_pause = pause;
-    if (g_stillPlay)
-        g_stillPlay = !m_pause;
 }
 
 void CheckDataCachingThread::run()
@@ -35,11 +33,9 @@ void CheckDataCachingThread::run()
         }
         if (g_dataCacheBlock > MAXBLOCKSIZE) {
                 if (m_pause) continue;
-                g_stillPlay = true;
                 emit sigPusedDecode();
-        } else {
+        } else if (g_dataCacheBlock < MINBLOCKSIZE) {
                 if (m_pause) continue;
-                g_stillPlay = false;
                 emit sigResumeDecode();
         }
         msleep(500);

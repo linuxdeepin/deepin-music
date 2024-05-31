@@ -19,6 +19,7 @@
 #include <QDebug>
 
 extern int g_playbackStatus;
+extern bool g_onlyDecodePause;
 
 typedef libvlc_media_player_t *(*vlc_media_player_new_function)(libvlc_instance_t *);
 typedef libvlc_event_manager_t *(*vlc_media_player_event_manager_function)(libvlc_media_player_t *);
@@ -322,6 +323,9 @@ Vlc::State VlcMediaPlayer::state() const
     vlc_media_player_get_state_function vlc_media_player_get_state = (vlc_media_player_get_state_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("libvlc_media_player_get_state");
     state = vlc_media_player_get_state(_vlcMediaPlayer);
 
+    if (Vlc::State(state) == Vlc::State::Paused && g_onlyDecodePause) {
+        return Vlc::State::Playing;
+    }
     return Vlc::State(state);
 }
 void VlcMediaPlayer::stop()
