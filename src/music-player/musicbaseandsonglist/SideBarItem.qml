@@ -58,6 +58,7 @@ Column {
             backgroundVisible: false
             ButtonGroup.group: group
             type: control.type
+            font: DTK.fontManager.t6
         }
 
         Keys.onPressed: {
