@@ -189,10 +189,12 @@ FloatingPanel {
                         width: 36
                         height: 36
                         anchors.verticalCenter: parent.verticalCenter
-                        icon.name: favorite ? "toolbar_like_check" : "toolbar_like"
-                        icon.width: 36
-                        icon.height: 36
+                        icon.name: favorite ? "heart_check" : "heart"
+                        icon.width: 20
+                        icon.height: 20
                         enabled: songTitle.length === 0 ? false : true
+                        palette.windowText: favorite ? "#F75B5B" : undefined
+                        // contentItem.theme: DTK.themeType
 
                         ToolTip {
                             visible: likeBtn.hovered
