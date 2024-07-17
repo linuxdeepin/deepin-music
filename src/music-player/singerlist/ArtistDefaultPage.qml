@@ -55,7 +55,8 @@ Rectangle {
             Label {
                 id: lable
                 height: 20
-                color: Qt.rgba(0, 0, 0, 0.4)
+                color: DTK.themeType === ApplicationHelper.DarkType ? Qt.rgba(247, 247, 247, 0.7)
+                                                                    : Qt.rgba(0, 0, 0, 0.4)
                 text: qsTr("Drag music files here or");
             }
             Label {

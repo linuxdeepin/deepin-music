@@ -61,7 +61,8 @@ Rectangle {
             Label {
                 id: lable
                 height: 20
-                color: Qt.rgba(0, 0, 0, 0.4)
+                color: DTK.themeType === ApplicationHelper.DarkType ? Qt.rgba(247, 247, 247, 0.7)
+                                                                    : Qt.rgba(0, 0, 0, 0.4)
                 text: qsTr("Drag music files here or");
             }
             Label {
@@ -116,6 +117,7 @@ Rectangle {
                     name: "default_heart"
                     sourceSize: Qt.size(20, 20)
                     anchors.verticalCenter: parent.verticalCenter
+                    theme: DTK.themeType
                 }
                 Text {
                     text: qsTr("” to add a song to My Favorites")
@@ -161,6 +163,7 @@ Rectangle {
                     name: "default_add"
                     sourceSize: Qt.size(20, 20)
                     anchors.verticalCenter: parent.verticalCenter
+                    theme: DTK.themeType
                 }
                 Text {
                     text: qsTr("” to add songs to the playlist")

@@ -87,8 +87,6 @@
         <file>dsg/icons/playlist_more_checked.dci</file>
         <file>dsg/icons/playlist_delete_checked.dci</file>
         <file>dsg/icons/playlist_heart_checked.dci</file>
-        <file>dsg/icons/default_heart.dci</file>
-        <file>dsg/icons/default_add.dci</file>
         <file>dsg/icons/music_play1_blue.dci</file>
         <file>dsg/icons/music_play2_blue.dci</file>
         <file>dsg/icons/music_play3_blue.dci</file>
@@ -97,5 +95,7 @@
         <file>dsg/icons/details_more.dci</file>
         <file>dsg/icons/headline_play_all.dci</file>
         <file>dsg/icons/go_down.dci</file>
+        <file>dsg/icons/default_add.dci</file>
+        <file>dsg/icons/default_heart.dci</file>
     </qresource>
 </RCC>
