@@ -112,7 +112,7 @@ ItemDelegate{
             ActionButton {
                 id: heartBtn
                 icon.name: favourite ? "heart_check" : (rootRectangle.checked ? "like_checked" : "playlist_heart")
-                palette.windowText: favourite ? "#F75B5B" : undefined
+                palette.windowText: (favourite & !rootRectangle.checked)  ? "#F75B5B" : undefined
                 icon.width: 20
                 icon.height: 20
                 onClicked: {
