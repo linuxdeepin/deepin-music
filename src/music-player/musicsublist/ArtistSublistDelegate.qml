@@ -128,8 +128,10 @@ ItemDelegate {
                     text: title
                     verticalAlignment: Qt.AlignVCenter
                     anchors.verticalCenter: imagecell.verticalCenter
+                    palette.text: DTK.themeType === ApplicationHelper.DarkType ? "#B2F7F7F7" : "#000000"
                     color: checked ? palette.highlightedText :
                                      (imagecell.isCurPlay ? palette.highlight : palette.text)
+                    font: DTK.fontManager.t7
                 }
                 Loader {
                     id: buttonsLoader;
