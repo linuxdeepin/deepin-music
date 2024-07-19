@@ -165,8 +165,10 @@ ItemDelegate {
                         text: title
                         verticalAlignment: Qt.AlignVCenter
                         anchors.verticalCenter: parent.verticalCenter
+                        palette.text: DTK.themeType === ApplicationHelper.DarkType ? "#B2F7F7F7" : "#000000"
                         color: checked ? palette.highlightedText :
                                          (activeMeta ? palette.highlight : palette.text)
+                        font: DTK.fontManager.t7
 
                     }
                     Loader {
