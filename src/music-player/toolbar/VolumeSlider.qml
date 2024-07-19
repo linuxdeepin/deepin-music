@@ -50,6 +50,7 @@ FloatingPanel {
             Layout.alignment: Qt.AlignHCenter
             highlightedPassedGroove: true
             handleType: Slider.HandleType.NoArrowVertical
+            leftPadding: 15
 
             from: 0
             to: 100
