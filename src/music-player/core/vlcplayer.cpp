@@ -39,7 +39,11 @@ void VlcPlayer::init()
     if (m_qvinstance == nullptr) {
         m_qvinstance = new VlcInstance(VlcCommon::args(), nullptr);
         m_qvinstance->version();
+#ifdef __sw_64__
+        m_qvplayer = new VlcMediaPlayer(m_qvinstance);
+#else
         m_qvplayer = new SdlPlayer(m_qvinstance);
+#endif
         m_qvplayer->equalizer()->setPreamplification(12);
         m_qvmedia = new VlcMedia();
 
