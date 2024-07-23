@@ -49,6 +49,12 @@ FloatingPanel {
     id: toolbarRoot
     height:60
     width: parent.width
+
+    outsideBorderColor: Palette {
+        id: palette
+        normal: Qt.rgba(0, 0, 0, 0.04)
+    }
+
     anchors {
         left: parent.left
         right: parent.right
