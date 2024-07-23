@@ -66,6 +66,7 @@ Rectangle{
             font: DTK.fontManager.t4
         }
         Label {
+            topPadding: 4
             font: DTK.fontManager.t8
             text: musicinfo
             anchors.verticalCenter: buttonLable.verticalCenter

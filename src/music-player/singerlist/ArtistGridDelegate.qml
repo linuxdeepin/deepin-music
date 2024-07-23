@@ -106,7 +106,10 @@ Rectangle {
                 Label {
                     width: 148; height: 20
                     text: (name === "") ? "undefind": name
+                    elide: Text.ElideRight
                     font.pixelSize: 14
+                    color: DTK.themeType === ApplicationHelper.DarkType ? "#E5ffffff"
+                                                                        : "#E5000000"
                 }
                 Label {
                     width: 80; height: 17
