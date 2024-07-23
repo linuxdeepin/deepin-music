@@ -10,6 +10,7 @@ import org.deepin.dtk 1.0
 
 DialogWindow {
     property var musicData
+    property var radius: Style.control.radius
 
     width: 386
     height: 468
@@ -48,19 +49,20 @@ DialogWindow {
                 title: qsTr("Title")
                 description: musicData === undefined ? " " : musicData.title       //musicTitle
                 iconName: "action_edit"
-                corners: RoundRectangle.TopCorner
+                cornersRadius: [radius, radius, 0, 0]
             }
 
             PropertyItemDelegate {
                 Layout.fillWidth: true
                 title: qsTr("Artist")
                 description: musicData === undefined ? " " : musicData.artist    //musicArtist
+                cornersRadius: [0, 0, 0, 0]
             }
             PropertyItemDelegate {
                 Layout.fillWidth: true
                 title: qsTr("Album")
                 description: musicData === undefined ? " " : musicData.album       //musicAlbum
-                corners: RoundRectangle.BottomCorner
+                cornersRadius: [0, 0, radius, radius]
             }
         }
         RowLayout {
@@ -69,25 +71,26 @@ DialogWindow {
                 Layout.fillWidth: true
                 title: qsTr("Type")
                 description: musicData === undefined ? " " : musicData.filetype      //fileType
-                corners: RoundRectangle.LeftCorner
+                cornersRadius: [8, 0, 0, radius]
             }
             PropertyItemDelegate {
                 Layout.fillWidth: true
                 title: qsTr("Size")
                 description: "%1M".arg((musicData === undefined ? 0 : musicData.size / 1024 / 1024).toFixed(2))
+                cornersRadius: [0, 0, 0, 0]
             }
             PropertyItemDelegate {
                 Layout.fillWidth: true
                 title: qsTr("Duration")
                 description: musicData === undefined ? "0:00" : Math.floor(musicData.length / 1000 / 60) + ":" + Math.floor(musicData.length / 1000 % 60)
-                corners: RoundRectangle.RightCorner
+                cornersRadius: [0, radius, radius, 0]
             }
         }
         PropertyItemDelegate {
             Layout.fillWidth: true
             title: qsTr("Path")
             description: musicData === undefined ? " " : musicData.localPath       //filePath
-            corners: RoundRectangle.AllCorner
+            cornersRadius: [radius, radius, radius, radius]
         }
     }
 }
