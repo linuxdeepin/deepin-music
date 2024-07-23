@@ -65,6 +65,7 @@ Rectangle {
         icon.width: 20
         icon.height: 20
         visible: control.isCurPlay
+        palette.windowText: "white"
         onClicked:{
             if(control.m_isPlaying && control.isCurPlay){
                 icon.name = "list_play"

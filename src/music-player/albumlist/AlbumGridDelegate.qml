@@ -73,6 +73,7 @@ Rectangle {
                     icon.width: 40; icon.height: 40
                     icon.name: globalVariant.playingIconName //"details_playing"
                     visible: albumItem.hovered ? false : (activeMeta ? true : false)
+                    palette.windowText: "white"
                     checked: false
                 }
                 CircularButton {
@@ -111,6 +112,8 @@ Rectangle {
                 elide: Text.ElideRight
                 text: artist
                 font.pixelSize: 14
+                color: DTK.themeType === ApplicationHelper.DarkType ? "#E5ffffff"
+                                                                    : "#E5000000"
             }
             Label {
                 width: 166; height: 17
