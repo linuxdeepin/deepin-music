@@ -67,6 +67,8 @@ Rectangle {
                 if(currentIndex <= lrcModel.count - Math.round(lyricRect.height / 2 / itemHeight)) {
                     //console.log("originY:" + originY + "     contentY:" + contentY)
                     listViewLyric.contentY = (currentIndex - Math.round((lyricRect.height - /*highlightItemHeight*/ itemHeight) / itemHeight / 2)) * itemHeight + originY
+                } else {
+                    listViewLyric.contentY = (lrcModel.count - Math.round(lyricRect.height / itemHeight)) * itemHeight;
                 }
             }
         }

@@ -71,6 +71,7 @@ Rectangle {
                     icon.width: 40; icon.height: 40
                     icon.name: globalVariant.playingIconName //"details_playing"
                     visible: cirWidgetControl.hovered ?  false : (activeMeta ? true : false)
+                    palette.windowText: "white"
                 }
 
                 CircularButton {
