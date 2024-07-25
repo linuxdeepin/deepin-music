@@ -84,7 +84,6 @@ TitleBar {
         HelpAction { }
         AboutAction {
             aboutDialog: AboutDialog {
-                width: 360; height:362
                 productName: qsTr("Music")
                 productIcon: globalVariant.appIconName
                 description: qsTr("Music is a local music player with beautiful design and simple functions.")
@@ -92,7 +91,6 @@ TitleBar {
                 companyLogo: globalVariant.appIconName
                 websiteName: DTK.deepinWebsiteName
                 websiteLink: DTK.deepinWebsiteLink
-                license: qsTr("%1 is released under %2").arg("Music").arg("GPLV3")
             }
         }
         QuitAction {}
