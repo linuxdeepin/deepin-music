@@ -136,7 +136,7 @@ ItemDelegate {
                             id: heartbutton
                             anchors.verticalCenter: parent.verticalCenter
                             icon.width: 20; icon.height: 20
-                            icon.name: model.favourite ? "heart_check" : (sublistDelegate.checked ? "like_checked" : "heart")
+                            icon.name: model.favourite ? "heart_check" : "heart"
                             palette.windowText: (favourite & !sublistDelegate.checked)  ? "#F75B5B" : undefined
                             onClicked: {
                                 if(favourite === false){
