@@ -111,7 +111,7 @@ ItemDelegate{
             //layoutDirection: Qt.RightToLeft
             ActionButton {
                 id: heartBtn
-                icon.name: favourite ? "heart_check" : (rootRectangle.checked ? "like_checked" : "playlist_heart")
+                icon.name: favourite ? "heart_check" : "playlist_heart"
                 palette.windowText: (favourite & !rootRectangle.checked)  ? "#F75B5B" : undefined
                 icon.width: 20
                 icon.height: 20

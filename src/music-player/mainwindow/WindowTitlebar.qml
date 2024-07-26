@@ -12,6 +12,11 @@ TitleBar {
     signal lrcHideBtnClicked()
     signal searchItemTriggered(string text, int type)
 
+    property bool preHover: false
+    property bool nextHover: false
+    property bool preMaskVisible: true
+    property bool nextMaskVisible: true
+
     Loader { id: equalizerDlgLoader }
     Loader { id: settingDlgLoader }
 
@@ -84,7 +89,6 @@ TitleBar {
         HelpAction { }
         AboutAction {
             aboutDialog: AboutDialog {
-                width: 360; height:362
                 productName: qsTr("Music")
                 productIcon: globalVariant.appIconName
                 description: qsTr("Music is a local music player with beautiful design and simple functions.")
@@ -92,7 +96,6 @@ TitleBar {
                 companyLogo: globalVariant.appIconName
                 websiteName: DTK.deepinWebsiteName
                 websiteLink: DTK.deepinWebsiteLink
-                license: qsTr("%1 is released under %2").arg("Music").arg("GPLV3")
             }
         }
         QuitAction {}
@@ -128,6 +131,48 @@ TitleBar {
     }
     content: titleBarContent
 
+    Rectangle {
+        id: preMask
+        width: 36
+        height: width
+        x: 240
+        y: 7
+        visible: preMaskVisible
+        color: "transparent"
+
+        MouseArea {
+            anchors.fill: preMask
+            hoverEnabled: true
+            onEntered: {
+                preHover = true
+            }
+            onExited: {
+                preHover = false
+            }
+        }
+    }
+
+    Rectangle {
+        id: nextMask
+        width: preMask.width
+        height: preMask.width
+        x: 286
+        y: 7
+        visible: nextMaskVisible
+        color: "transparent"
+
+        MouseArea {
+            anchors.fill: nextMask
+            hoverEnabled: true
+            onEntered: {
+                nextHover = true
+            }
+            onExited: {
+                nextHover = false
+            }
+        }
+    }
+
     Component {
         id: titleBarContent
 
@@ -137,6 +182,7 @@ TitleBar {
                 left: parent.left
                 leftMargin: 30
             }
+
 
             RowLayout {
                 spacing: 10
@@ -149,9 +195,12 @@ TitleBar {
                     onClicked: {
                         globalVariant.globalSwitchButtonStatus = 1; //切换到上一级页面
                     }
+                    onEnabledChanged: {
+                        preMaskVisible = !enabled
+                    }
 
                     ToolTip {
-                        visible: preBtn.hovered
+                        visible: preHover || preBtn.hovered
                         text: qsTr("Previous page")
                     }
                 }
@@ -162,9 +211,11 @@ TitleBar {
                     enabled: (globalVariant.globalSwitchButtonStatus === 1) ? true: false
                     hoverEnabled: true
                     onClicked: {globalVariant.globalSwitchButtonStatus = 2;} //切换到下一级页面
-
+                    onEnabledChanged: {
+                        nextMaskVisible = !enabled
+                    }
                     ToolTip {
-                        visible: nextBtn.hovered
+                        visible: nextHover || nextBtn.hovered
                         text: qsTr("Next page")
                     }
                 }
