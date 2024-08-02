@@ -4,7 +4,7 @@
 
 import QtQuick 2.0
 import QtQuick.Controls 2.4
-import QtGraphicalEffects 1.0
+import Qt5Compat.GraphicalEffects
 import QtQuick.Layouts 1.11
 import org.deepin.dtk 1.0
 

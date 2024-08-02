@@ -4,9 +4,8 @@
 
 import QtQuick 2.11
 import QtQuick.Controls 2.4
-import QtGraphicalEffects 1.0
+import Qt5Compat.GraphicalEffects
 import org.deepin.dtk 1.0
-import org.deepin.dtk.impl 1.0 as D
 import org.deepin.dtk.style 1.0 as DS
 
 import audio.global 1.0
@@ -27,41 +26,42 @@ FloatingPanel {
     width: 320
     height: parent.height - 90
     radius: 8
-    background: D.InWindowBlur {
-        implicitWidth: DS.Style.floatingMessage.panel.width
-        implicitHeight: DS.Style.floatingMessage.panel.height
-        radius: 32
-        offscreen: true
+    // background: InWindowBlur {
+    //     implicitWidth: DS.Style.floatingMessage.panel.width
+    //     implicitHeight: DS.Style.floatingMessage.panel.height
+    //     anchors.fill: parent
+    //     radius: 32
+    //     offscreen: true
 
-        D.ItemViewport {
-            anchors.fill: parent
-            fixed: true
-            sourceItem: parent
-            radius: playlistRoot.radius
-            hideSource: false
-        }
+    //     ItemViewport {
+    //         anchors.fill: parent
+    //         fixed: true
+    //         sourceItem: parent
+    //         radius: playlistRoot.radius
+    //         hideSource: false
+    //     }
 
-        BoxShadow {
-            anchors.fill: backgroundRect
-            shadowOffsetX: 0
-            shadowOffsetY: 4
-            shadowColor: playlistRoot.D.ColorSelector.dropShadowColor
-            shadowBlur: 20
-            cornerRadius: backgroundRect.radius
-            spread: 0
-            hollow: true
-        }
-        Rectangle {
-            id: backgroundRect
-            anchors.fill: parent
-            radius: playlistRoot.radius
-            color: playlistRoot.D.ColorSelector.backgroundColor
-            border {
-                //color: playlistRoot.D.ColorSelector.borderColor
-                width: /*DS.Style.control.borderWidth*/0
-            }
-        }
-    }
+    //     BoxShadow {
+    //         anchors.fill: backgroundRect
+    //         shadowOffsetX: 0
+    //         shadowOffsetY: 4
+    //         shadowColor: playlistRoot.D.ColorSelector.borderColor
+    //         shadowBlur: 20
+    //         cornerRadius: backgroundRect.radius
+    //         spread: 0
+    //         hollow: true
+    //     }
+    //     Rectangle {
+    //         id: backgroundRect
+    //         anchors.fill: parent
+    //         radius: playlistRoot.radius
+    //         color: playlistRoot.D.ColorSelector.borderColor
+    //         border {
+    //             //color: playlistRoot.D.ColorSelector.borderColor
+    //             width: /*DS.Style.control.borderWidth*/0
+    //         }
+    //     }
+    // }
 
     MouseArea {
         anchors.fill: parent

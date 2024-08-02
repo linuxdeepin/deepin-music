@@ -2,8 +2,8 @@
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-import QtQuick 2.11
-import QtQuick.Window 2.11
+import QtQuick 2.15
+import QtQuick.Window 2.15
 import QtQuick.Layouts 1.11
 import QtQuick.Controls 2.0
 import org.deepin.dtk 1.0
@@ -14,7 +14,26 @@ Rectangle {
     property int itemfixedheight: 230
     property bool playing: false
     property bool activeMeta:(globalVariant.curPlayingAlbum === name) ? true : false
+    property var defaultY
     signal itemDoubleClicked(var albumData)
+
+    YAnimator {
+        id: albumHoverItemAnimator
+        target: rootrectangle
+        from: defaultY
+        to: defaultY - 30
+        duration: 300
+        easing.type: Easing.InOutQuad
+    }
+
+    YAnimator {
+        id: albumExitItemAnimator
+        target: rootrectangle
+        from: defaultY - 30
+        to: defaultY
+        duration: 300
+        easing.type: Easing.InOutQuad
+    }
 
     id: rootrectangle
     width: itemfixedwidth
@@ -100,6 +119,14 @@ Rectangle {
                     visible: albumItem.hovered
                 }
             }
+            onHoveredChanged: {
+                if (hovered) {
+                    defaultY = y
+                    albumHoverItemAnimator.start()
+                } else
+                    albumExitItemAnimator.start()
+            }
+
 //            background: Rectangle{
 //                id: itemWidget
 //                width: 168; height: 218

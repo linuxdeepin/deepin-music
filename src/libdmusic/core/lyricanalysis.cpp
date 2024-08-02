@@ -5,14 +5,17 @@
 
 #include "lyricanalysis.h"
 
-#include <KEncodingProber>
-
 #include <QFile>
 #include <QTextStream>
 #include <QTextCodec>
 #include <QTime>
 #include <QMimeDatabase>
 #include <QDebug>
+#include <QRegExp>
+
+#include <DTextEncoding>
+
+DCORE_USE_NAMESPACE
 
 static float codecConfidenceForData(const QTextCodec *codec, const QByteArray &data, const QLocale::Country &country)
 {
@@ -54,7 +57,7 @@ static float codecConfidenceForData(const QTextCodec *codec, const QByteArray &d
             break;
         default:
             // full-width character, emoji, 常用标点, 拉丁文补充1，天城文补充，CJK符号和标点符号（如：【】）
-            if ((ch.unicode() >= 0xff00 && ch <= 0xffef)
+            if ((ch.unicode() >= 0xff00 && ch <= (QChar)0xffef)
                     || (ch.unicode() >= 0x2600 && ch.unicode() <= 0x27ff)
                     || (ch.unicode() >= 0x2000 && ch.unicode() <= 0x206f)
                     || (ch.unicode() >= 0x80 && ch.unicode() <= 0xff)
@@ -167,80 +170,9 @@ QString LyricAnalysis::getFileCodec()
         return c->name();
     }
 
-    QMimeDatabase mime_database;
-    KEncodingProber::ProberType proberType = KEncodingProber::Universal;
-
-    // for CJK
-    const QList<QPair<KEncodingProber::ProberType, QLocale::Country>> fallback_list {
-        {KEncodingProber::ChineseSimplified, QLocale::China},
-        {KEncodingProber::ChineseTraditional, QLocale::China},
-        {KEncodingProber::Japanese, QLocale::Japan},
-        {KEncodingProber::Korean, QLocale::NorthKorea},
-        {KEncodingProber::Cyrillic, QLocale::Russia},
-        {KEncodingProber::Greek, QLocale::Greece},
-        {proberType, QLocale::system().country()}
-    };
-
-    KEncodingProber prober(proberType);
-    prober.feed(data);
-    float pre_confidence = prober.confidence();
-    QByteArray pre_encoding = prober.encoding();
-
-    QTextCodec *def_codec = QTextCodec::codecForLocale();
-    QByteArray encoding;
-    float confidence = 0;
-
-    for (auto i : fallback_list) {
-        prober.setProberType(i.first);
-        prober.feed(data);
-
-        float prober_confidence = prober.confidence();
-        QByteArray prober_encoding = prober.encoding();
-
-        if (i.first != proberType && qFuzzyIsNull(prober_confidence)) {
-            prober_confidence = pre_confidence;
-            prober_encoding = pre_encoding;
-        }
-
-    confidence:
-        if (QTextCodec *codec = QTextCodec::codecForName(prober_encoding)) {
-            if (def_codec == codec)
-                def_codec = nullptr;
-
-            float c = codecConfidenceForData(codec, data, i.second);
-
-            if (prober_confidence > 0.5f) {
-                c = c / 2 + prober_confidence / 2;
-            } else {
-                c = c / 3 * 2 + prober_confidence / 3;
-            }
-
-            if (c > confidence) {
-                confidence = c;
-                encoding = prober_encoding;
-            }
-
-            if (i.first == KEncodingProber::ChineseTraditional && c < 0.5f) {
-                // test Big5
-                c = codecConfidenceForData(QTextCodec::codecForName("Big5"), data, i.second);
-
-                if (c > 0.5f && c > confidence) {
-                    confidence = c;
-                    encoding = "Big5";
-                }
-            }
-        }
-
-        if (i.first != proberType) {
-            // 使用 proberType 类型探测出的结果结合此国家再次做编码检查
-            i.first = proberType;
-            prober_confidence = pre_confidence;
-            prober_encoding = pre_encoding;
-            goto confidence;
-        }
-    }
-
-    return encoding;
+    bool isOK = false;
+    QByteArray encode = DTextEncoding::detectFileEncoding(m_filePath, &isOK);
+    return encode;
 }
 
 void LyricAnalysis::setFromFile(const QString &filePath)
@@ -251,11 +183,9 @@ void LyricAnalysis::setFromFile(const QString &filePath)
     QFile file(filePath);
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
         return;
-    QTextStream read(&file);
-    if (!codecStr.isEmpty()) {
-        read.setCodec(QTextCodec::codecForName(codecStr.toStdString().c_str()));
-    }
-    parseLyric(read.readAll());
+    QByteArray array = file.readAll();
+    QTextCodec *codec = QTextCodec::codecForName(codecStr.toLatin1());
+    parseLyric(codec->toUnicode(array));
 }
 
 QVector<QPair<qint64, QString> > LyricAnalysis::allLyrics()

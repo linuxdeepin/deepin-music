@@ -56,6 +56,7 @@ int main(int argc, char *argv[])
 
     QSurfaceFormat format;
     format.setRenderableType(QSurfaceFormat::OpenGLES);
+    format.setVersion(3, 2);
     format.setDefaultFormat(format);
     // 1.可以使用自己创建的 QGuiApplication 对象；
     // 2.可以在创建 QGuiApplication 之前为程序设置一些属性（如使用

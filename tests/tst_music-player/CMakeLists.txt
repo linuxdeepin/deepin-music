@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.1.0)
+cmake_minimum_required(VERSION 3.10)
 
 project(tst_music-player)
 
@@ -9,9 +9,9 @@ project(tst_music-player)
 
 list(APPEND OTHER_FILES *.qml)
 
-find_package(DtkDeclarative REQUIRED)
-find_package(Qt5 COMPONENTS Quick QuickCompiler LinguistTools REQUIRED)
-find_package(Qt5Test REQUIRED)
+find_package(Dtk6Declarative REQUIRED)
+find_package(Qt6 COMPONENTS Quick LinguistTools REQUIRED)
+find_package(Qt6Test REQUIRED)
 
 include_directories(../../src/music-player/allItems)
 aux_source_directory(../../src/music-player/allItems ALLQMLSOURCE)
@@ -34,8 +34,6 @@ endif()
 
 LINK_DIRECTORIES(${CMAKE_BINARY_DIR}/../../src/libdmusic)
 target_link_libraries(${PROJECT_NAME} dmusic)
-
-qt5_use_modules(${PROJECT_NAME} Quick QuickTest)
 
 file(COPY tst_test.qml DESTINATION ${PROJECT_BINARY_DIR})
 

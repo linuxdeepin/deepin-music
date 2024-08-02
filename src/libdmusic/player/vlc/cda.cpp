@@ -23,9 +23,10 @@
 #include <QScopedPointer>
 #include <QMap>
 #include <QTimer>
+#include <QDBusInterface>
+#include <QDBusReply>
+#include <QDBusMessage>
 
-#include "ddiskmanager.h"
-#include "dblockdevice.h"
 #include "dynamiclibraries.h"
 #include "utils.h"
 
@@ -111,12 +112,20 @@ input_item_node_t *CdaThread::getInputNode()
 QString CdaThread::GetCdRomString()
 {
     QString strcda = "sr0"; //cdrom关键字
-    QStringList blDevList = DDiskManager::blockDevices(QVariantMap());//QVariantMap()为默认的参数，无需特定设置
-    //find sr0
-    foreach (QString tmpstr, blDevList) {
-        QString strdev = tmpstr.mid(tmpstr.lastIndexOf("/") + 1, tmpstr.size() - tmpstr.lastIndexOf("/"));
-        if (strdev.compare(strcda) == 0) {
-            return tmpstr;
+    QDBusInterface blockinterface("org.freedesktop.UDisks2", "/org/freedesktop/UDisks2/Manager",
+                                  "org.freedesktop.UDisks2.Manager",
+                                  QDBusConnection::systemBus());
+    QDBusReply<QVariant> reply = blockinterface.call(QLatin1String("GetBlockDevices"), QVariantMap());
+
+    if (reply.isValid()) {
+        QVariantList objectPathList = reply.value().toList();
+
+        for (const QVariant &variant : objectPathList) {
+            QString tmp = variant.value<QDBusObjectPath>().path();
+            QString strdev = tmp.mid(tmp.lastIndexOf("/") + 1, tmp.size() - tmp.lastIndexOf("/"));
+            if (strdev.compare(strcda) == 0) {
+                return tmp;
+            }
         }
     }
     return QString();
@@ -159,19 +168,17 @@ void CdaThread::run()
             continue;
         }
 
-        QSharedPointer<DBlockDevice> blk(DDiskManager::createBlockDevice(strcdrom));
-        DBlockDevice *pblk = blk.data();
-        if (!pblk) {
-            continue;
+        QDBusInterface udiskInterface("org.freedesktop.UDisks2", strcdrom, "org.freedesktop.UDisks2.Block");
+        qulonglong blocksize = 0;
+        QString type;
+        if (udiskInterface.isValid()) {
+            blocksize = udiskInterface.property("Size").toULongLong();
+            type = udiskInterface.property("IdType").toString();
         }
-
-        qulonglong blocksize = pblk->size();
         /**
          * 过滤空的光盘和文件类型为udf、iso9660格式的光盘
          **/
-        if (blocksize == 0
-                || pblk->fsType() == DBlockDevice::iso9660
-                || queryIdTypeFormDbus().toLower() == "udf") {
+        if (blocksize == 0 || type == "iso9660" || queryIdTypeFormDbus().toLower() == "udf") {
             setCdaState(CDROM_MOUNT_WITHOUT_CD);
             continue;
         }
