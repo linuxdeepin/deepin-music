@@ -5,7 +5,7 @@
 import QtQuick 2.11
 import QtQuick.Window 2.11
 import QtQuick.Layouts 1.11
-import QtGraphicalEffects 1.0
+import Qt5Compat.GraphicalEffects
 import org.deepin.dtk 1.0
 import "../toolbar"
 import audio.global 1.0

@@ -987,7 +987,7 @@ void DataManager::addMetasToPlayList(const QList<QString> &metaHash,
         }
         curPlaylist.sortCustomMetas = curPlaylist.sortMetas;
     }
-    emit signalAddMetaFinished(allPlaylistHashs.toList());
+    emit signalAddMetaFinished(allPlaylistHashs.values());
 }
 
 void DataManager::addMetasToPlayList(const QList<MediaMeta> &metas, const QString &playlistHash, const bool &addToPlay)
@@ -1036,7 +1036,7 @@ void DataManager::addMetasToPlayList(const QList<MediaMeta> &metas, const QStrin
         }
         curPlaylist.sortCustomMetas = curPlaylist.sortMetas;
     }
-    emit signalAddMetaFinished(allPlaylistHashs.toList());
+    emit signalAddMetaFinished(allPlaylistHashs.values());
 }
 
 void DataManager::clearPlayList(const QString &playlistHash, const bool &addToPlay)

@@ -3,7 +3,6 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 import QtQuick 2.0
-import QtQuick 2.0
 import QtQuick.Window 2.11
 import QtQuick.Layouts 1.11
 import QtQuick.Controls 2.0
@@ -22,7 +21,7 @@ Rectangle {
     Component { id: favouriteSongsList ;AllMusicList{listHash: "fav"; listTitle: qsTr("My Favorites")} }
 
     id: contentWindow
-    color: Qt.rgba(0, 0, 0, 0)
+    color: "transparent"
 
 
     MusicBaselistview {

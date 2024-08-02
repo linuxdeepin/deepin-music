@@ -18,7 +18,7 @@ Rectangle {
     property Menu albumMoreMenu: AlbumMoreMenu{}
     id: albumGrid;
     color: Qt.rgba(0, 0, 0, 0)
-    clip: true
+    clip: false
     GridView {
         id: albumGridView
         width: Math.floor((albumGrid.width - 10) / 208) * 208;

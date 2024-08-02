@@ -12,6 +12,7 @@
 #include <QCryptographicHash>
 #include <QDebug>
 #include <QTextCodec>
+#include <QRegExp>
 
 #include <DPinyin>
 

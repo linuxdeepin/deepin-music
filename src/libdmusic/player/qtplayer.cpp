@@ -6,6 +6,7 @@
 #include "qtplayer.h"
 #include "utils.h"
 
+#include <QAudioOutput>
 #include <QDBusObjectPath>
 #include <QDBusInterface>
 
@@ -29,10 +30,12 @@ void QtPlayer::init()
     if (m_mediaPlayer != nullptr) return;
 
     m_mediaPlayer = new QMediaPlayer(this);
+    m_audioOutput = new QAudioOutput(this);
+    m_mediaPlayer->setAudioOutput(m_audioOutput);
 
     connect(m_mediaPlayer, &QMediaPlayer::mediaStatusChanged, this, &QtPlayer::onMediaStatusChanged);
     connect(m_mediaPlayer, &QMediaPlayer::positionChanged, this, &QtPlayer::onPositionChanged);
-    connect(m_mediaPlayer, &QMediaPlayer::stateChanged, this, [ = ](QMediaPlayer::State newState) {
+    connect(m_mediaPlayer, &QMediaPlayer::playbackStateChanged, this, [ = ](QMediaPlayer::PlaybackState newState) {
         DmGlobal::PlaybackStatus state = DmGlobal::Stopped;
         switch (newState) {
         case QMediaPlayer::PlayingState: {
@@ -49,12 +52,16 @@ void QtPlayer::init()
         }
         emit stateChanged(state);
     });
-    connect(m_mediaPlayer, &QMediaPlayer::mutedChanged, this, &QtPlayer::signalMutedChanged);
+    connect(m_audioOutput, &QAudioOutput::mutedChanged, this, &QtPlayer::signalMutedChanged);
 }
 
 
 void QtPlayer::releasePlayer()
 {
+    if (m_audioOutput) {
+        delete m_audioOutput;
+        m_audioOutput = nullptr;
+    }
     if (m_mediaPlayer) {
         delete m_mediaPlayer;
         m_mediaPlayer = nullptr;
@@ -71,7 +78,7 @@ void QtPlayer::release()
 DmGlobal::PlaybackStatus QtPlayer::state()
 {
     if (m_mediaPlayer) {
-        int state = m_mediaPlayer->state();
+        int state = m_mediaPlayer->playbackState();
         switch (state) {
         case QMediaPlayer::PlayingState: {
             return DmGlobal::Playing;
@@ -95,15 +102,15 @@ void QtPlayer::play()
 
 void QtPlayer::pause()
 {
-    if (m_mediaPlayer != nullptr && m_mediaPlayer->state() == QMediaPlayer::PlayingState)
+    if (m_mediaPlayer != nullptr && m_mediaPlayer->playbackState() == QMediaPlayer::PlayingState)
         m_mediaPlayer->pause();
 }
 
 void QtPlayer::stop()
 {
     // 播放和状态状态都可以停止播放
-    if (m_mediaPlayer != nullptr && (m_mediaPlayer->state() == QMediaPlayer::State::PlayingState
-                                     || m_mediaPlayer->state() == QMediaPlayer::State::PausedState)) {
+    if (m_mediaPlayer != nullptr && (m_mediaPlayer->playbackState() == QMediaPlayer::PlayingState
+                                     || m_mediaPlayer->playbackState() == QMediaPlayer::PausedState)) {
         m_mediaPlayer->stop();
     }
 
@@ -136,27 +143,27 @@ void QtPlayer::setMediaMeta(MediaMeta meta)
     if (m_activeMeta.hash == meta.hash) return;
 
     m_activeMeta = meta;
-    m_mediaPlayer->setMedia(QUrl::fromLocalFile(m_activeMeta.localPath));
+    m_mediaPlayer->setSource(QUrl::fromLocalFile(m_activeMeta.localPath));
     emit metaChanged();
 }
 
 bool QtPlayer::getMute()
 {
     init();
-    return m_mediaPlayer->isMuted();
+    return m_audioOutput->isMuted();
 }
 
 void QtPlayer::setFadeInOutFactor(double fadeInOutFactor)
 {
     init();
-    m_mediaPlayer->setVolume(static_cast<int>(10 * fadeInOutFactor));
+    m_audioOutput->setVolume(static_cast<int>(10 * fadeInOutFactor));
 }
 
 void QtPlayer::setVolume(int volume)
 {
     init();
     m_volume = volume;
-    m_mediaPlayer->setVolume(volume);
+    m_audioOutput->setVolume(volume);
 }
 
 int QtPlayer::getVolume()
@@ -168,7 +175,7 @@ int QtPlayer::getVolume()
 void QtPlayer::setMute(bool mute)
 {
     init();
-    m_mediaPlayer->setMuted(mute);
+    m_audioOutput->setMuted(mute);
 }
 
 void QtPlayer::onMediaStatusChanged(QMediaPlayer::MediaStatus status)
@@ -182,7 +189,7 @@ void QtPlayer::onMediaStatusChanged(QMediaPlayer::MediaStatus status)
 void QtPlayer::onPositionChanged(qint64 position)
 {
     init();
-    if (m_mediaPlayer->duration() <= 0 || m_mediaPlayer->state() != QMediaPlayer::PlayingState) return;
+    if (m_mediaPlayer->duration() <= 0 || m_mediaPlayer->playbackState() != QMediaPlayer::PlayingState) return;
     m_currPositionChanged = position;
     float value = static_cast<float>(position) / m_mediaPlayer->duration();
     emit timeChanged(position);

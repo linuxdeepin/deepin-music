@@ -12,15 +12,15 @@ ListModel {
     signal metaCodecChanged(string name)
 
     id: albumModel
-    property int count: 0
+    property int listCount: 0
     property int musicCount: 0
     function loadArtistDatas() {
         var tempModel = Presenter.allAlbumInfos();
         albumModel.clear();
-        count = 0
+        listCount = 0
         musicCount = 0
         for(var i = 0; i < tempModel.length; i++){
-            count++;
+            listCount++;
             var albumData = tempModel[i];
             var curCount = 0;
             for(var key in albumData.musicinfos){
@@ -36,7 +36,7 @@ ListModel {
     function onDeleteOneMetaFromModel(playlistHashs, hash) {
         for (var i = 0; i < playlistHashs.length; i++){
             if (playlistHashs[i] === "all") {
-                for(var j = albumModel.count -1; j >=0; j--){
+                for(var j = albumModel.listCount -1; j >=0; j--){
                     for (var key in albumModel.get(j).musicinfos){
                         var curMusicInfos = albumModel.get(j).musicinfos;
                         var albumMusicCount = albumModel.get(j).musicCount;
@@ -46,7 +46,7 @@ ListModel {
                             musicCount--;
                             if(albumMusicCount <= 0){
                                 albumModel.remove(j);
-                                albumModel.count--
+                                albumModel.listCount--
                             }else{
                                 albumModel.setProperty(j, "musicCount", albumMusicCount);
                                 albumModel.setProperty(j, "musicinfos", curMusicInfos);
@@ -57,7 +57,7 @@ ListModel {
                 }
 
             }else if(playlistHashs[i] === "fav"){
-                for(var f = albumModel.count -1; f >=0; f--){
+                for(var f = albumModel.listCount -1; f >=0; f--){
                     for(var key2 in albumModel.get(f).musicinfos){
                         if(hash === key2){
                             var curMusicInfos2 = albumModel.get(f).musicinfos;
@@ -74,7 +74,7 @@ ListModel {
     function onAddOneMetaFinished(playlistHashs, mediaData){
         for (var i = 0; i < playlistHashs.length; i++){
             if (playlistHashs[i] === "fav"){
-                for(var j = albumModel.count -1; j >=0; j--){
+                for(var j = albumModel.listCount -1; j >=0; j--){
                     for(var key in albumModel.get(j).musicinfos){
                         if(mediaData.hash === key){
                             var curAlbum = albumModel.get(j).musicinfos;
@@ -93,7 +93,7 @@ ListModel {
             loadArtistDatas()
     }
     function onUpdatedMetaCodec(meta, preAlbum, preArtist) {
-        for (var i = 0; i < albumModel.count; i++) {
+        for (var i = 0; i < albumModel.listCount; i++) {
             if (albumModel.get(i).name === preAlbum) {
                 var album = albumModel.get(i)
                 var tmpModel = album.musicinfos
