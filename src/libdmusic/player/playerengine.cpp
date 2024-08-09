@@ -557,8 +557,10 @@ void PlayerEngine::playNextMeta(const DMusic::MediaMeta &meta, bool isAuto, bool
     QList<QPair<int, MediaMeta> > curMetaList;
     for (int i = 0; i < allMetas.size(); i++) {
         if ((QFile::exists(allMetas[i].localPath) && m_data->m_player->supportedSuffixList().contains(
-                    QFileInfo(allMetas[i].localPath).suffix().toLower())) || allMetas[i].mmType == DmGlobal::MimeTypeCDA)
-            curMetaList.append(qMakePair<int, MediaMeta>(i, allMetas[i]));
+                 QFileInfo(allMetas[i].localPath).suffix().toLower())) || allMetas[i].mmType == DmGlobal::MimeTypeCDA) {
+            auto&& indexRef = i; // 创建一个引用
+            curMetaList.append(qMakePair(std::move(indexRef), allMetas[i]));
+        }
     }
     if (curMetaList.size() > 0) {
         int index = -1;

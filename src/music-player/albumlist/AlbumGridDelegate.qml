@@ -2,8 +2,8 @@
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-import QtQuick 2.11
-import QtQuick.Window 2.11
+import QtQuick 2.15
+import QtQuick.Window 2.15
 import QtQuick.Layouts 1.11
 import QtQuick.Controls 2.0
 import org.deepin.dtk 1.0
@@ -14,7 +14,26 @@ Rectangle {
     property int itemfixedheight: 230
     property bool playing: false
     property bool activeMeta:(globalVariant.curPlayingAlbum === name) ? true : false
+    property int defaultY: -1
     signal itemDoubleClicked(var albumData)
+
+    YAnimator {
+        id: albumHoverItemAnimator
+        target: rootrectangle
+        from: defaultY
+        to: defaultY - 10
+        duration: 300
+        easing.type: Easing.InOutQuad
+    }
+
+    YAnimator {
+        id: albumExitItemAnimator
+        target: rootrectangle
+        from: defaultY - 10
+        to: defaultY
+        duration: 300
+        easing.type: Easing.InOutQuad
+    }
 
     id: rootrectangle
     width: itemfixedwidth
@@ -33,7 +52,7 @@ Rectangle {
             }
         }
     }
-    Column{
+    Column {
         id: albumColumn
         width: 168; height: 230
         anchors.centerIn: rootrectangle
@@ -51,8 +70,8 @@ Rectangle {
                 isCurPlay:activeMeta
 
                 CircularButton {
-                    width: 40
-                    height: 40
+                    width: 44
+                    height: 44
                     anchors.centerIn: parent
                     iconName: playing && activeMeta ? "details_pussed" : "details_play"
                     visible: albumItem.hovered
@@ -100,6 +119,17 @@ Rectangle {
                     visible: albumItem.hovered
                 }
             }
+            onHoveredChanged: {
+                if (hovered) {
+                    if (defaultY < 0) {
+                        var p = albumColumn.mapToItem(rootrectangle.parent, albumColumn.x, albumColumn.y)
+                        defaultY = p.y
+                    }
+                    albumHoverItemAnimator.start()
+                } else
+                    albumExitItemAnimator.start()
+            }
+
 //            background: Rectangle{
 //                id: itemWidget
 //                width: 168; height: 218

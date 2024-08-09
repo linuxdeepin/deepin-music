@@ -47,6 +47,7 @@ private:
 
 private:
     QMediaPlayer *m_mediaPlayer = nullptr;
+    QAudioOutput *m_audioOutput = nullptr;
     qint64 m_currPositionChanged = 0;
     QString m_sinkInputPath;
 };

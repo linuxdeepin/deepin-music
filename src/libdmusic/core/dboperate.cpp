@@ -103,7 +103,7 @@ void DBOperate::slotImportMetas(const QStringList &urls, const QSet<QString> &me
             allHashs << "play";
         }
         if (!curHashs.isEmpty())
-            emit signalAddOneMeta(curHashs.toList(), mediaMeta);
+            emit signalAddOneMeta(curHashs.values(), mediaMeta);
         // 自动播放
         if (mediaHash.isEmpty() && playFalg && mediaMeta.length > 0)
             mediaHash = mediaMeta.hash;
@@ -112,5 +112,5 @@ void DBOperate::slotImportMetas(const QStringList &urls, const QSet<QString> &me
     }
 
     if (importedCount > 0)
-        emit signalImportFinished(allHashs.toList(), importedFailCount, importedCount - importedFailCount - existCount, existCount, mediaHash);
+        emit signalImportFinished(allHashs.values(), importedFailCount, importedCount - importedFailCount - existCount, existCount, mediaHash);
 }

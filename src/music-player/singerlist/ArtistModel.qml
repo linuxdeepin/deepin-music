@@ -9,7 +9,7 @@ import QtQuick.Controls 2.0
 import org.deepin.dtk 1.0
 
 ListModel {
-    property int count: 0
+    property int listCount: 0
     property int musicCount: 0
     signal metaCodecChanged(string name)
 
@@ -17,11 +17,11 @@ ListModel {
     function loadArtistDatas() {
         var tempModel = Presenter.allArtistInfos();
         artistModels.clear();
-        count = 0
+        listCount = 0
         musicCount = 0
         for(var i = 0; i < tempModel.length; i++){
             var artistData = tempModel[i];
-            count++;
+            listCount++;
             var curCount = 0;
             for(var key in artistData.musicinfos){
                 curCount++;
@@ -36,7 +36,7 @@ ListModel {
     function onDeleteOneMetaFromModel(playlistHashs, hash) {
         for (var i = 0; i < playlistHashs.length; i++){
             if (playlistHashs[i] === "all") {
-                for(var j = artistModels.count -1; j >=0; j--){
+                for(var j = artistModels.listCount -1; j >=0; j--){
                     for (var key in artistModels.get(j).musicinfos){
                         var curMusicInfos = artistModels.get(j).musicinfos;
                         var albumMusicCount = artistModels.get(j).musicCount;
@@ -46,7 +46,7 @@ ListModel {
                             musicCount--;
                             if(albumMusicCount <= 0){
                                 artistModels.remove(j);
-                                artistModels.count--
+                                artistModels.listCount--
                             }else{
                                 artistModels.setProperty(j, "musicCount", albumMusicCount);
                                 artistModels.setProperty(j, "musicinfos", curMusicInfos);
@@ -57,7 +57,7 @@ ListModel {
                 }
 
             }else if(playlistHashs[i] === "fav"){
-                for(var f = artistModels.count -1; f >=0; f--){
+                for(var f = artistModels.listCount -1; f >=0; f--){
                     for(var key2 in artistModels.get(f).musicinfos){
                         if(hash === key2){
                             var curMusicInfos2 = artistModels.get(f).musicinfos;
@@ -74,7 +74,7 @@ ListModel {
     function onAddOneMetaFinished(playlistHashs, mediaData){
         for (var i = 0; i < playlistHashs.length; i++){
             if (playlistHashs[i] === "fav"){
-                for(var j = artistModels.count -1; j >=0; j--){
+                for(var j = artistModels.listCount -1; j >=0; j--){
                     for(var key in artistModels.get(j).musicinfos){
                         if(mediaData.hash === key){
                             var curAlbum = artistModels.get(j).musicinfos;
@@ -95,7 +95,7 @@ ListModel {
     }
 
     function onUpdatedMetaCodec(meta, preAlbum, preArtist) {
-        for (var i = 0; i < artistModels.count; i++) {
+        for (var i = 0; i < artistModels.listCount; i++) {
             if (artistModels.get(i).name === preArtist) {
 
                 var artist = artistModels.get(i)

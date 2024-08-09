@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 import QtQuick 2.0
-import QtQuick.Dialogs 1.3
+import QtQuick.Dialogs
 import Qt.labs.platform 1.0
 
 FileDialog {

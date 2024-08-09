@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 import QtQuick 2.0
-import QtGraphicalEffects 1.0
+import Qt5Compat.GraphicalEffects
 import org.deepin.dtk 1.0
 
 Button {
@@ -25,7 +25,7 @@ Button {
             anchors.fill: parent
             shadowOffsetX: 0
             shadowOffsetY: 2
-            shadowColor: /*control.D.ColorSelector.dropShadowColor*/Qt.rgba(0, 0, 0, 0.1)
+            shadowColor: /*control.D.ColorSelector.dropShadowColor*/Qt.rgba(0, 0, 0, 0.2)
             shadowBlur: 4
             cornerRadius: parent.radius
             spread: 0

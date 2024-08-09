@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 import QtQuick 2.0
-import QtGraphicalEffects 1.0
+import Qt5Compat.GraphicalEffects
 import audio.image 1.0
 import audio.global 1.0
 

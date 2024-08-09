@@ -85,5 +85,12 @@
         <file>dialogs/CDRemovedDialog.qml</file>
         <file>playlist/PlayListModel.qml</file>
         <file>allItems/CircularButton.qml</file>
+        <file>lyric/qsbfile/EffectWaterWave.qsb</file>
+        <file>lyric/qsbfile/EffectParticle.qsb</file>
+        <file>lyric/qsbfile/EffectSun.qsb</file>
+        <file>lyric/qsbfile/EffectLine.qsb</file>
+        <file>lyric/qsbfile/EffectLightWave.qsb</file>
+        <file>lyric/qsbfile/cusVertex.qsv</file>
+        <file>lyric/qsbfile/default.qsb</file>
     </qresource>
 </RCC>

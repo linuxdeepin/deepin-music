@@ -2,10 +2,9 @@
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-import QtQuick 2.0
-import QtGraphicalEffects 1.0
+import QtQuick
+import Qt5Compat.GraphicalEffects
 import org.deepin.dtk 1.0
-import org.deepin.dtk.impl 1.0 as D
 import org.deepin.dtk.style 1.0 as DS
 import audio.global 1.0
 
@@ -15,6 +14,15 @@ Rectangle {
     property int background_height
     property bool isCurPlay: false
     property bool isCurHover: false
+
+    ColorAnimation {
+        id: maskChangeAnimator
+        target: _imgMask
+        property: "color"
+        from: Qt.rgba(0, 0, 0, 0)
+        to: Qt.rgba(0, 0, 0, 0.3)
+        duration: 100
+    }
 
     id: imgRect
     anchors.centerIn: parent
@@ -33,8 +41,9 @@ Rectangle {
 //        sourceSize: Qt.size(parent.size, parent.size)
         antialiasing: true
         Rectangle {
+            id: _imgMask
             anchors.fill: parent
-            color: isCurPlay || isCurHover ? Qt.rgba(0, 0, 0, 0.3) : Qt.rgba(0, 0, 0, 0)
+            color: isCurPlay ? Qt.rgba(0, 0, 0, 0.3) : Qt.rgba(0, 0, 0, 0)
         }
     }
     Rectangle {
@@ -100,5 +109,18 @@ Rectangle {
         cornerRadius: imgRect.radius
         spread: 0
         hollow: true
+    }
+
+    onIsCurHoverChanged: {
+        if (isCurPlay)
+            return;
+        if (isCurHover) {
+            maskChangeAnimator.start()
+        } else {
+            if (maskChangeAnimator.running) {
+                maskChangeAnimator.stop()
+            }
+            _imgMask.color = Qt.rgba(0, 0, 0, 0)
+        }
     }
 }

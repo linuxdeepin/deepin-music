@@ -5,19 +5,16 @@ list(APPEND RESOURCES dci.qrc)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
-# Find the Qt5Quick library
-find_package(DtkDeclarative REQUIRED)
-find_package(Qt5 COMPONENTS Quick QuickCompiler LinguistTools REQUIRED)
-
-set(QT_MODULES Core Widgets)
-find_package(Qt5 REQUIRED ${QT_MODULES})
-
+# Find the Qt6Quick library
+find_package(Dtk6Declarative REQUIRED)
+find_package(Qt6 COMPONENTS Core Widgets Quick LinguistTools REQUIRED)
 find_package(PkgConfig REQUIRED)
-pkg_check_modules(DTK REQUIRED IMPORTED_TARGET dtkwidget)
-pkg_check_modules(DTK REQUIRED IMPORTED_TARGET dtkcore)
-pkg_check_modules(DTK REQUIRED IMPORTED_TARGET dtkgui)
 
-qtquick_compiler_add_resources(RCC_SOURCES ${RESOURCES})
+pkg_check_modules(DTK REQUIRED IMPORTED_TARGET dtk6widget)
+pkg_check_modules(DTK REQUIRED IMPORTED_TARGET dtk6core)
+pkg_check_modules(DTK REQUIRED IMPORTED_TARGET dtk6gui)
+
+qt6_add_resources(RCC_SOURCES ${RESOURCES})
 
 # 保证 src 目录下头文件全局可见
 include_directories(src)
@@ -36,22 +33,23 @@ set_source_files_properties(${TS}
 set(translate ${PROJECT_SOURCE_DIR}/translations)
 
 if (NOT (${CMAKE_BUILD_TYPE} MATCHES "Debug"))
-    qt5_add_translation(QM_FILES ${TS})
+    qt6_add_translation(QM_FILES ${TS})
 else()
-    qt5_create_translation(QM_FILES ${CMAKE_CURRENT_SOURCE_DIR} ${TS} OPTIONS -source-language en_US -no-obsolete)
+    qt6_create_translation(QM_FILES ${CMAKE_CURRENT_SOURCE_DIR} ${TS} OPTIONS -source-language en_US -no-obsolete)
 endif ()
 
 # Add EXE
-add_executable(${BIN_NAME} ${RESOURCES} ${ALLSOURCE} ${QM_FILES})
+add_executable(${BIN_NAME} ${RCC_SOURCES} ${ALLSOURCE} ${QM_FILES})
 
-qt5_use_modules(${BIN_NAME} ${QT_MODULES})
+# Use target_link_libraries instead of qt6_use_modules
+target_link_libraries(${BIN_NAME} Qt6::Core Qt6::Widgets)
 
-set(TARGET_LIBS Qt5::Quick PkgConfig::DTK dmusic ${DtkDeclarative_LIBRARIES})
+set(TARGET_LIBS Qt6::Quick PkgConfig::DTK dmusic ${Dtk6Declarative_LIBRARIES})
 
 target_link_libraries(${BIN_NAME} ${TARGET_LIBS})
 
 # install dconfig meta files
-dconfig_meta_files(APPID deepin-music FILES data/org.deepin.music.json)
+dtk_add_config_meta_files(APPID deepin-music FILES data/org.deepin.music.json)
 
 # Add install rule
 install(TARGETS ${BIN_NAME} DESTINATION ${APP_BIN_INSTALL_DIR})

@@ -2,7 +2,8 @@
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-import QtQuick 2.0
+import QtQuick 2.15
+import QtQuick.Window 2.2
 import "../lyric/"
 //import "."
 
@@ -10,22 +11,47 @@ LyricPage {
     id: lyricPage
     width: rootWindow.width
     height: rootWindow.height
-    visible: isLyricShow
+    visible: false
 
-    NumberAnimation on y {
+    signal animationFinished(var lyircShow)
+    signal animationStart(var show)
+
+    ParallelAnimation {
         id: lyricRaiseAnimation
-        running: false
-        to: -50
-        duration: 200
-        easing.type: Easing.OutCubic
+        YAnimator {
+            target: lyricPage
+            from: rootWindow.height
+            to: -50
+            duration: 450
+            easing.type: Easing.InOutCubic
+        }
+
+        OpacityAnimator {
+            target: lyricPage
+            from: 0
+            to: 1
+            duration: 450
+            easing.type: Easing.InQuint
+        }
     }
-    NumberAnimation on y {
+
+    ParallelAnimation {
         id: lyricHideAnimation
-        running: false
-        from: -50
-        to: rootWindow.height
-        duration: 200
-        easing.type: Easing.OutCubic
+        YAnimator {
+            target: lyricPage
+            from: -50
+            to: rootWindow.height
+            duration: 350
+            easing.type: Easing.InOutCubic
+        }
+
+        // OpacityAnimator {
+        //     target: lyricPage
+        //     from: 1
+        //     to: 0
+        //     duration: 350
+        //     easing.type: Easing.OutQuint
+        // }
     }
 
     /*function lrcUp() {
@@ -39,30 +65,43 @@ LyricPage {
     }*/
 
     function lyricWindowUp() {
-        if (isLyricShow) {
+        if (lyricPage.visible) {
+            animationFinished(true)
             lyricHideAnimation.start()
         } else {
             lyricPage.y = rootWindow.height
             lyricRaiseAnimation.start()
-            isLyricShow = true
+            lyricPage.visible = true
         }
     }
 
     Connections {
         target: lyricHideAnimation
         onStopped: {
-            isLyricShow = false
+            lyricPage.visible = false
+        }
+        onStarted: {
+            animationStart(false)
         }
     }
     Connections {
+        target:lyricRaiseAnimation
+        onFinished: {
+            animationFinished(false)
+        }
+        onStarted: {
+            animationStart(true)
+        }
+    }
+
+    Connections {
         target: rootWindow
         onClickForLyricUp: {
-            if (isLyricShow) {
+            if (lyricPage.visible) {
                 lyricHideAnimation.start()
             } else {
-                lyricPage.y = rootWindow.height
                 lyricRaiseAnimation.start()
-                isLyricShow = true
+                lyricPage.visible = true
             }
         }
     }

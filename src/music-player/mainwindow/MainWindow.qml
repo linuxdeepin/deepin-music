@@ -2,11 +2,11 @@
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-import QtQuick 2.11
-import QtQuick.Window 2.11
+import QtQuick 2.15
+import QtQuick.Window 2.15
 import QtQuick.Layouts 1.11
 import org.deepin.dtk 1.0
-import Qt.labs.platform 1.0
+import Qt.labs.platform 1.1
 import audio.global 1.0
 import "../playlist"
 import "../dialogs"
@@ -162,14 +162,28 @@ ApplicationWindow {
         z: 10
     }
 
-    Loader { id: lrcWindowLoader }
+    Loader {
+        id: lrcWindowLoader
+
+        onLoaded: {
+            lrcWindowLoader.item.animationFinished.connect(onAnimationFinished)
+            lrcWindowLoader.item.animationStart.connect(onAnimationStart)
+        }
+
+        function onAnimationFinished(isShow) {
+            isLyricShow = !isShow
+        }
+        function onAnimationStart(show) {
+            musicTitle.toggleLyrics(show)
+        }
+    }
 
     Loader { id: playlistLoader }
 
     SystemTrayIcon{
         id: systemTray
         visible: true
-        iconName: "deepin-music"
+        icon.name: "deepin-music"
         tooltip: qsTr("Music")
 
         onActivated: {
@@ -224,7 +238,7 @@ ApplicationWindow {
         //窗口显示完成后加载播放列表
         //console.log("onActiveChanged................", active, "  visibility:", visibility)
         if (active && playlistLoader.status === Loader.Null) {
-            playlistLoader.setSource("../playlist/CurrentPlayList.qml")
+            playlistLoader.setSource("qrc:/playlist/CurrentPlayList.qml")
             playlistLoader.item.width = 320
             playlistLoader.item.height = rootWindow.height - 90 - 50
             playlistLoader.item.y = height - playlistLoader.item.height - 80 - 50
@@ -336,6 +350,10 @@ ApplicationWindow {
                 break;
             }
             messageBoxLoader.item.show();
+        }
+
+        onClickPlayAllBtn: {
+            toolbox.startListBtnAnim()
         }
     }
 
