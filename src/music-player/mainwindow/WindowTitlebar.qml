@@ -2,9 +2,9 @@
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-import QtQuick 2.0
-import QtQuick.Window 2.11
-import QtQuick.Layouts 1.11
+import QtQuick
+import QtQuick.Window
+import QtQuick.Layouts
 import org.deepin.dtk 1.0
 import "../dialogs"
 
@@ -16,12 +16,15 @@ TitleBar {
     property bool nextHover: false
     property bool preMaskVisible: true
     property bool nextMaskVisible: true
+    property double opat: 1.0
+    property double disableOpat: 0.4
 
     Loader { id: equalizerDlgLoader }
     Loader { id: settingDlgLoader }
 
     id: titleBar
-    icon.name: isLyricShow ? "" : globalVariant.appIconName
+    icon.name: globalVariant.appIconName
+    icon.opacity: opat
     hoverEnabled: false
     DciIcon {
         name: ""
@@ -177,6 +180,7 @@ TitleBar {
         id: titleBarContent
 
         RowLayout {
+            id: titleRowLayout
             width: parent.width - 20
             anchors {
                 left: parent.left
@@ -190,6 +194,7 @@ TitleBar {
                     id: preBtn
                     icon.name: "arrow_ordinary_left"
                     visible: !isLyricShow
+                    opacity: (globalVariant.globalSwitchButtonStatus === 2) ? opat: disableOpat
                     enabled: (globalVariant.globalSwitchButtonStatus === 2) ? true: false
                     hoverEnabled: true
                     onClicked: {
@@ -208,6 +213,7 @@ TitleBar {
                     id: nextBtn
                     icon.name: "arrow_ordinary_right"
                     visible: !isLyricShow
+                    opacity: (globalVariant.globalSwitchButtonStatus === 1) ? opat: disableOpat
                     enabled: (globalVariant.globalSwitchButtonStatus === 1) ? true: false
                     hoverEnabled: true
                     onClicked: {globalVariant.globalSwitchButtonStatus = 2;} //切换到下一级页面
@@ -223,6 +229,7 @@ TitleBar {
             SearchEdit {
                 id: searchEdit
                 visible: !isLyricShow
+                opacity: opat
                 Layout.preferredWidth: 300
                 Layout.alignment: Qt.AlignCenter
                 placeholder: qsTr("Search")
@@ -307,6 +314,7 @@ TitleBar {
                 id: addBtn
                 icon.name: "action_add"
                 visible: !isLyricShow
+                opacity: opat
                 hoverEnabled: true
                 Layout.alignment: Qt.AlignRight
                 Layout.rightMargin: 20
@@ -320,6 +328,50 @@ TitleBar {
                     globalVariant.globalFileDlgOpen()
                 }
             }
+        }
+    }
+
+    function toggleLyrics(toggle) {
+        if (toggle) {
+            raiseTitlebarAnimation.start()
+        } else {
+            hideTitlebarAnimation.start()
+        }
+    }
+
+    ParallelAnimation {
+        id: hideTitlebarAnimation
+        NumberAnimation {
+            target: titleBar
+            property: "opat"
+            from: 0
+            to: 1
+            duration: 200
+        }
+        NumberAnimation {
+            target: titleBar
+            property: "disableOpat"
+            from: 0
+            to: 0.4
+            duration: 200
+        }
+    }
+
+    ParallelAnimation {
+        id: raiseTitlebarAnimation
+        NumberAnimation {
+            target: titleBar
+            property: "opat"
+            from: 1
+            to: 0
+            duration: 200
+        }
+        NumberAnimation {
+            target: titleBar
+            property: "disableOpat"
+            from: 0.4
+            to: 0
+            duration: 200
         }
     }
 }

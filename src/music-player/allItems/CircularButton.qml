@@ -25,7 +25,7 @@ Button {
             anchors.fill: parent
             shadowOffsetX: 0
             shadowOffsetY: 2
-            shadowColor: /*control.D.ColorSelector.dropShadowColor*/Qt.rgba(0, 0, 0, 0.1)
+            shadowColor: /*control.D.ColorSelector.dropShadowColor*/Qt.rgba(0, 0, 0, 0.2)
             shadowBlur: 4
             cornerRadius: parent.radius
             spread: 0

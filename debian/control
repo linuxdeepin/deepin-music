@@ -15,7 +15,7 @@ Build-Depends:
  libdbusextended-qt5-dev,
  libgsettings-qt-dev,
  libicu-dev,
- libmpris-qt5-dev,
+ libmpris-qt6-dev,
  libtag1-dev,
  qt6-svg-dev,
  libqt6sql6-sqlite,

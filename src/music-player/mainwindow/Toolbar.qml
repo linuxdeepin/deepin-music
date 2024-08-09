@@ -2,9 +2,9 @@
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-import QtQuick 2.11
-import QtQuick.Window 2.11
-import QtQuick.Layouts 1.11
+import QtQuick
+import QtQuick.Window
+import QtQuick.Layouts
 import Qt5Compat.GraphicalEffects
 import org.deepin.dtk 1.0
 import "../toolbar"
@@ -446,6 +446,26 @@ FloatingPanel {
         }
     }
 
+    SequentialAnimation {
+        id: btnRotationAnimator
+        RotationAnimator {
+            target: listBtn
+            from: 0
+            to: 15
+            duration: 500
+            easing.type: Easing.OutQuad
+        }
+        RotationAnimator {
+            target: listBtn
+            from: 15
+            to: 0
+            duration: 500
+            easing.type: Easing.OutElastic
+            easing.amplitude: 4
+            easing.period: 0.4
+        }
+    }
+
     Timer {
         id: volSliderHideTimer
         interval: 1000
@@ -571,6 +591,12 @@ FloatingPanel {
             volSliderHideTimer.start()
         } else {
             volSliderHideTimer.stop()
+        }
+    }
+
+    function startListBtnAnim() {
+        if (!btnRotationAnimator.running) {
+            btnRotationAnimator.start()
         }
     }
 

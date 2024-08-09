@@ -167,10 +167,14 @@ ApplicationWindow {
 
         onLoaded: {
             lrcWindowLoader.item.animationFinished.connect(onAnimationFinished)
+            lrcWindowLoader.item.animationStart.connect(onAnimationStart)
         }
 
         function onAnimationFinished(isShow) {
             isLyricShow = !isShow
+        }
+        function onAnimationStart(show) {
+            musicTitle.toggleLyrics(show)
         }
     }
 
@@ -346,6 +350,10 @@ ApplicationWindow {
                 break;
             }
             messageBoxLoader.item.show();
+        }
+
+        onClickPlayAllBtn: {
+            toolbox.startListBtnAnim()
         }
     }
 

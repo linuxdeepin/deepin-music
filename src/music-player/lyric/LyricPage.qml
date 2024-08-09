@@ -227,7 +227,7 @@ Rectangle{
         album = meta["album"]
         bgImgPath = "file:///" + meta["coverUrl"]
 
-        if (titleStr.length === 0) {
+        if (titleStr.length === 0 && lrcRectItem.visible) {
             lyricHideAnimation.start()
             return
         }

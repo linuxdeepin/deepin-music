@@ -56,6 +56,7 @@ Rectangle{
                 text: qsTr("Play All")
             }
             onClicked: {
+                globalVariant.clickPlayAllBtn();
                 Presenter.playPlaylist(pageHash);
             }
         }

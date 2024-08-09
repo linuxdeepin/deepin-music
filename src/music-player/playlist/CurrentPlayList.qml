@@ -131,6 +131,7 @@ FloatingPanel {
                         padding: 0
                         textColor: Palette {
                             normal: palette.text
+                            normalDark: palette.text
                             hovered: palette.highlight
                         }
 

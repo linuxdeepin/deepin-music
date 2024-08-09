@@ -20,10 +20,22 @@ Rectangle {
     property Menu importMenu: ImportMenu{}
     property Menu musicMoreMenu: MusicMoreMenu{pageHash: "artist"}
     property Menu selectMenu: MulitSelectMenu{pageHash: "artist"}
+    property point scalePoint: [0, 0]
+    property double xScale: 1.0
+    property double yScale: 1.0
 
     id: rootrectangle
     objectName: "artistSublist"
     color: "transparent"
+
+    transform: Scale {
+        id: scaleId
+        origin.x: scalePoint.x
+        origin.y: scalePoint.y
+        xScale: rootrectangle.xScale
+        yScale: rootrectangle.yScale
+    }
+
     MusicSublistTitle {
         id: musicSublistTitle
         anchors.left: rootrectangle.left; anchors.top: rootrectangle.top
