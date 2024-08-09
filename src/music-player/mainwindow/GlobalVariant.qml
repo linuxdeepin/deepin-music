@@ -36,6 +36,7 @@ Item {
     signal updateCurrentPlaylistTitleName(string name, string curHash);  //重命名刷新信号
     signal clearSelectGroup();    //删除后，清除选中数据的index
     signal sendFloatingMessageBox(string pageName, int msgType);  // 消息框提示信号
+    signal clickPlayAllBtn();    // 播放全部按钮点击，开始列表按钮动画
 
     Loader { id: globalFileDlgLoader }
     property Loader closeConfirmDlgLoader: Loader {}

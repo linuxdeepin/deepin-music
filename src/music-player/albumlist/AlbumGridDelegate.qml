@@ -14,14 +14,14 @@ Rectangle {
     property int itemfixedheight: 230
     property bool playing: false
     property bool activeMeta:(globalVariant.curPlayingAlbum === name) ? true : false
-    property var defaultY
+    property int defaultY: -1
     signal itemDoubleClicked(var albumData)
 
     YAnimator {
         id: albumHoverItemAnimator
         target: rootrectangle
         from: defaultY
-        to: defaultY - 30
+        to: defaultY - 10
         duration: 300
         easing.type: Easing.InOutQuad
     }
@@ -29,7 +29,7 @@ Rectangle {
     YAnimator {
         id: albumExitItemAnimator
         target: rootrectangle
-        from: defaultY - 30
+        from: defaultY - 10
         to: defaultY
         duration: 300
         easing.type: Easing.InOutQuad
@@ -52,7 +52,7 @@ Rectangle {
             }
         }
     }
-    Column{
+    Column {
         id: albumColumn
         width: 168; height: 230
         anchors.centerIn: rootrectangle
@@ -70,8 +70,8 @@ Rectangle {
                 isCurPlay:activeMeta
 
                 CircularButton {
-                    width: 40
-                    height: 40
+                    width: 44
+                    height: 44
                     anchors.centerIn: parent
                     iconName: playing && activeMeta ? "details_pussed" : "details_play"
                     visible: albumItem.hovered
@@ -121,7 +121,10 @@ Rectangle {
             }
             onHoveredChanged: {
                 if (hovered) {
-                    defaultY = y
+                    if (defaultY < 0) {
+                        var p = albumColumn.mapToItem(rootrectangle.parent, albumColumn.x, albumColumn.y)
+                        defaultY = p.y
+                    }
                     albumHoverItemAnimator.start()
                 } else
                     albumExitItemAnimator.start()

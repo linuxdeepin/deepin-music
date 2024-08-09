@@ -2,10 +2,10 @@
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-import QtQuick 2.0
-import QtQuick.Layouts 1.11
-import QtQuick.Window 2.11
-import QtQml.Models 2.11
+import QtQuick
+import QtQuick.Layouts
+import QtQuick.Window
+import QtQml.Models
 import org.deepin.dtk 1.0
 
 DialogWindow {
@@ -18,12 +18,17 @@ DialogWindow {
         enableInWindowBlendBlur: true
         content: Loader {
             sourceComponent: Label {
+                property Palette textColor: Palette {
+                    normal: Qt.rgba(0, 0, 0, 1)
+                    normalDark: Qt.rgba(247.0 / 255.0, 247.0 / 255.0, 247.0 / 255.0, 1)
+                }
                 anchors.centerIn: parent
                 textFormat: Text.PlainText
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
-                font: DTK.fontManager.t8
+                font: DTK.fontManager.t7
                 text: musicData === undefined ? " " : musicData.title       //musicTitle
+                color:ColorSelector.textColor
             }
         }
     }
@@ -37,12 +42,29 @@ DialogWindow {
             margins: 10
         }
 
-        Image {
+        Rectangle {
+            id: imageRect
+            width: 118
+            height: 118
             Layout.alignment: Qt.AlignHCenter
-            sourceSize: Qt.size(118, 118)
-            source: musicData === undefined ? " " : "file:///" + musicData.coverUrl  //imgSourcePath
+            BoxShadow {
+                anchors.fill: musicImage
+                shadowOffsetX: 0
+                shadowOffsetY: 10
+                shadowColor: Qt.rgba(0, 0, 0, 0.2)
+                shadowBlur: 20
+            }
+
+            Image {
+                id: musicImage
+                Layout.alignment: Qt.AlignHCenter
+                sourceSize: Qt.size(118, 118)
+                source: musicData === undefined ? " " : "file:///" + musicData.coverUrl  //imgSourcePath
+            }
         }
+
         ColumnLayout {
+            Layout.topMargin: 10
             spacing: 1
             PropertyItemDelegate {
                 Layout.fillWidth: true

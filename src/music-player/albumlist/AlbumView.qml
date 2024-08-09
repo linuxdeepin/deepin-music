@@ -2,22 +2,23 @@
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-import QtQuick 2.0
-
-import QtQuick 2.0
-import QtQuick.Window 2.11
-import QtQuick.Layouts 1.11
-import QtQuick.Controls 2.0
+import QtQuick
+import QtQuick.Window
+import QtQuick.Layouts
+import QtQuick.Controls
 import org.deepin.dtk 1.0
+import org.deepin.dtk.style 1.0 as DS
 import "../allItems"
 import "../musicsublist"
 
 Rectangle {
     property int switchType: globalVariant.globalSwitchButtonStatus;
     property ListModel albumModels: AlbumModel{}
+    property int animtorTime: 200
     //采用名字作为索引，确保qml能够识别，
     // property var artistData: artistModels.get(0)qml可能无法识别
     property string albumName:  albumModels.get(0).name
+    property point currentItemPos: [0, 0]
     signal itemDoubleClicked(var albumData)
 
     id: contenWindow
@@ -27,6 +28,7 @@ Rectangle {
     Component {
         id: albumSublistView
         AlbumSublistView {
+            scalePoint: currentItemPos
             albumData: {
                 for(var i = 0; i < albumModels.count; i++){
                     if(albumName === albumModels.get(i).name){
@@ -83,6 +85,8 @@ Rectangle {
                 visible: (contenWindow.albumModels.count === 0) ? false : true;
                 albumModel: contenWindow.albumModels
                 onItemDoubleClicked:{
+                    currentItemPos.x = gridview.view.currentItem.x + gridview.view.currentItem.width / 2
+                    currentItemPos.y = gridview.view.currentItem.y + gridview.view.currentItem.height / 2 - 20
                     contenWindow.itemDoubleClicked(albumData);
                 }
             }
@@ -100,15 +104,40 @@ Rectangle {
             Connections {
                 target: toolButtonItem
                 onViewChanged:{
-                    if(type === 0){
+                    if (type === 0) {
                         gridview.visible = true;
-                        listview.visible = false
-                    }else{
+                        toggleGridViewAnimation.start()
+                    } else {
                         listview.visible = true;
-                        gridview.visible = false;
+                        toggleListViewAnimation.start()
                     }
                 }
             }
+        }
+        popEnter: Transition {
+            // slide_in_left
+            NumberAnimation { property: "xScale"; from: 0; to: 1; duration: 300; easing.type: Easing.InOutQuad }
+            NumberAnimation { property: "yScale"; from: 0; to: 1; duration: 300; easing.type: Easing.InOutQuad }
+            NumberAnimation { property: "opacity"; from: 0.0; to: 1.0; duration: 300; easing.type: Easing.InOutQuad }
+        }
+
+        popExit: Transition {
+            // slide_out_right
+            NumberAnimation { property: "xScale"; from: 1; to: 0; duration: 300; easing.type: Easing.InOutQuad }
+            NumberAnimation { property: "yScale"; from: 1; to: 0; duration: 300; easing.type: Easing.InOutQuad }
+            NumberAnimation { property: "opacity"; from: 1.0; to: 0.0; duration: 200; easing.type: Easing.Easing.OutExpo }
+        }
+
+        pushEnter: Transition {
+            // slide_in_right
+            NumberAnimation { property: "xScale"; from: 0; to: 1; duration: 300; easing.type: Easing.InOutQuad }
+            NumberAnimation { property: "yScale"; from: 0; to: 1; duration: 300; easing.type: Easing.InOutQuad }
+            NumberAnimation { property: "opacity"; from: 0.0; to: 1.0; duration: 300; easing.type: Easing.InOutQuad }
+        }
+
+        pushExit: Transition {
+            // slide_out_left
+            NumberAnimation { property: "opacity"; from: 1.0; to: 0.0; duration: 200; easing.type: Easing.Easing.OutExpo }
         }
     }
     onItemDoubleClicked: {
@@ -151,5 +180,106 @@ Rectangle {
             toolButtonItem.sortType = 0
         else if (sortType === 13)
             toolButtonItem.sortType = 1
+    }
+
+    SequentialAnimation {
+        id: toggleGridViewAnimation
+
+        ParallelAnimation {
+            ScaleAnimator {
+                target: listview
+                from: 1
+                to: 0
+                duration: animtorTime
+                easing.type: Easing.InOutQuad
+            }
+            OpacityAnimator {
+                target: listview
+                from: 1
+                to: 0
+                duration: animtorTime
+                easing.type: Easing.InQuint
+            }
+        }
+
+        ParallelAnimation {
+            ScaleAnimator {
+                target: gridview
+                from: 0
+                to: 1
+                duration: animtorTime
+                easing.type: Easing.InOutQuad
+            }
+            OpacityAnimator {
+                target: gridview
+                from: 0
+                to: 1
+                duration: animtorTime
+                easing.type: Easing.InQuint
+            }
+        }
+    }
+
+    SequentialAnimation {
+        id: toggleListViewAnimation
+
+        ParallelAnimation {
+            id: gridHideAnimation
+            ScaleAnimator {
+                target: gridview
+                from: 1
+                to: 0
+                duration: animtorTime
+                easing.type: Easing.InOutQuad
+            }
+            OpacityAnimator {
+                target: gridview
+                from: 1
+                to: 0
+                duration: animtorTime
+                easing.type: Easing.InQuint
+            }
+        }
+
+        ParallelAnimation {
+            ScaleAnimator {
+                target: listview
+                from: 0
+                to: 1
+                duration: animtorTime
+                easing.type: Easing.InOutQuad
+            }
+            OpacityAnimator {
+                target: listview
+                from: 0
+                to: 1
+                duration: animtorTime
+                easing.type: Easing.InQuint
+            }
+        }
+
+        Component.onCompleted: {
+            listFirstScale.start()
+        }
+    }
+    ScaleAnimator {
+        id: listFirstScale
+        target: listview
+        from: 1
+        to: 0
+        duration: animtorTime
+        easing.type: Easing.InOutQuad
+    }
+    Connections {
+        target: toggleGridViewAnimation
+        onFinished: {
+            listview.visible = false
+        }
+    }
+    Connections {
+        target: toggleListViewAnimation
+        onFinished: {
+            gridview.visible = false
+        }
     }
 }

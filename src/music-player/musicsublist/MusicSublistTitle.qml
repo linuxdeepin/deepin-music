@@ -109,5 +109,4 @@ Rectangle{
             titleButton2.visible = true;
         }
     }
-
 }

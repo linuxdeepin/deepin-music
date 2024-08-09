@@ -15,11 +15,30 @@ Rectangle {
     property int itemfixedheight: 196
     property bool playing: (globalVariant.curPlayingStatus === DmGlobal.Playing) ? true : false
     property bool activeMeta:(globalVariant.curPlayingArtist === name) ? true : false
+    property int defaultY: -1
     signal itemDoubleClicked(var artistData)
     id: rootrectangle
     width: itemfixedwidth
     height: itemfixedheight
     color: Qt.rgba(0, 0, 0, 0)
+
+    YAnimator {
+        id: artistHoverItemAnimator
+        target: rootrectangle
+        from: defaultY
+        to: defaultY - 10
+        duration: 300
+        easing.type: Easing.InOutQuad
+    }
+
+    YAnimator {
+        id: artistExitItemAnimator
+        target: rootrectangle
+        from: defaultY - 10
+        to: defaultY
+        duration: 300
+        easing.type: Easing.InOutQuad
+    }
 
     MouseArea {
         anchors.fill: rootrectangle;
@@ -35,6 +54,7 @@ Rectangle {
         }
     }
     Column {
+        id: artistColumn
         width: 148
         anchors.horizontalCenter: parent.horizontalCenter
         spacing: 6
@@ -96,6 +116,18 @@ Rectangle {
                 id: cirWidget
                 width: 148; height: 148 //UI固定
                 color: "transparent"
+            }
+
+            onHoveredChanged: {
+                if (hovered) {
+                    if (defaultY < 0) {
+                        var p = artistColumn.mapToItem(rootrectangle.parent, artistColumn.x, artistColumn.y)
+                        defaultY = p.y
+                    }
+                    artistHoverItemAnimator.start()
+                } else {
+                    artistExitItemAnimator.start()
+                }
             }
         }
         Rectangle {

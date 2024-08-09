@@ -2,8 +2,8 @@
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-import QtQuick 2.0
-import QtQuick.Window 2.11
+import QtQuick 2.15
+import QtQuick.Window 2.15
 import QtQuick.Layouts 1.11
 import QtQuick.Controls 2.0
 import org.deepin.dtk 1.0
@@ -15,10 +15,11 @@ import audio.global 1.0
 Rectangle {
     property ListModel albumModel
     signal itemDoubleClicked(var albumData)
+    property alias view: albumGridView
     property Menu albumMoreMenu: AlbumMoreMenu{}
     id: albumGrid;
     color: Qt.rgba(0, 0, 0, 0)
-    clip: false
+    clip: true
     GridView {
         id: albumGridView
         width: Math.floor((albumGrid.width - 10) / 208) * 208;
@@ -35,6 +36,7 @@ Rectangle {
             id: itemDelegate
             playing: (globalVariant.curPlayingStatus === DmGlobal.Playing) ? true : false
             onItemDoubleClicked: {
+                albumGridView.currentIndex = index
                 albumGrid.itemDoubleClicked(albumData);
             }
         }
