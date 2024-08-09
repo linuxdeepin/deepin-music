@@ -19,6 +19,7 @@ Rectangle {
     property ListModel artistModels: ArtistModel{}
     signal itemDoubleClicked(var artistData)
     property int switchType: globalVariant.globalSwitchButtonStatus;
+    property point currentItemPos: [0, 0]
     property Menu artistMoreMenu: ArtistMoreMenu{}
     //采用名字作为索引，确保qml能够识别，
     // property var artistData: artistModels.get(0) qml可能无法识别
@@ -26,6 +27,7 @@ Rectangle {
     Component {
         id: artistSublistView
         ArtistSublistView {
+            scalePoint: currentItemPos
             artistData: {
                 for(var i = 0; i < artistModels.count; i++){
                     if(artistDataName === artistModels.get(i).name){
@@ -84,6 +86,8 @@ Rectangle {
                     delegate: ArtistGridDelegate{
                         id: musicSingerGridItem
                         onItemDoubleClicked: {
+                            currentItemPos.x = musicSingerGridItem.x + musicSingerGridItem.width / 2
+                            currentItemPos.y = musicSingerGridItem.y + musicSingerGridItem.height / 2 - 20
                             contenWindow.itemDoubleClicked(artistData);
                         }
                     }
@@ -104,6 +108,32 @@ Rectangle {
                     Presenter.importMetas(list, globalVariant.curListPage)
                 }
             }
+        }
+
+        popEnter: Transition {
+            // slide_in_left
+            NumberAnimation { property: "xScale"; from: 0; to: 1; duration: 300; easing.type: Easing.InOutQuad }
+            NumberAnimation { property: "yScale"; from: 0; to: 1; duration: 300; easing.type: Easing.InOutQuad }
+            NumberAnimation { property: "opacity"; from: 0.0; to: 1.0; duration: 300; easing.type: Easing.InOutQuad }
+        }
+
+        popExit: Transition {
+            // slide_out_right
+            NumberAnimation { property: "xScale"; from: 1; to: 0; duration: 300; easing.type: Easing.InOutQuad }
+            NumberAnimation { property: "yScale"; from: 1; to: 0; duration: 300; easing.type: Easing.InOutQuad }
+            NumberAnimation { property: "opacity"; from: 1.0; to: 0.0; duration: 200; easing.type: Easing.Easing.OutExpo }
+        }
+
+        pushEnter: Transition {
+            // slide_in_right
+            NumberAnimation { property: "xScale"; from: 0; to: 1; duration: 300; easing.type: Easing.InOutQuad }
+            NumberAnimation { property: "yScale"; from: 0; to: 1; duration: 300; easing.type: Easing.InOutQuad }
+            NumberAnimation { property: "opacity"; from: 0.0; to: 1.0; duration: 300; easing.type: Easing.InOutQuad }
+        }
+
+        pushExit: Transition {
+            // slide_out_left
+            NumberAnimation { property: "opacity"; from: 1.0; to: 0.0; duration: 200; easing.type: Easing.Easing.OutExpo }
         }
     }
     onItemDoubleClicked: {

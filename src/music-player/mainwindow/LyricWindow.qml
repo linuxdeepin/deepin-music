@@ -14,6 +14,7 @@ LyricPage {
     visible: false
 
     signal animationFinished(var lyircShow)
+    signal animationStart(var show)
 
     ParallelAnimation {
         id: lyricRaiseAnimation
@@ -21,7 +22,7 @@ LyricPage {
             target: lyricPage
             from: rootWindow.height
             to: -50
-            duration: 350
+            duration: 450
             easing.type: Easing.InOutCubic
         }
 
@@ -29,7 +30,7 @@ LyricPage {
             target: lyricPage
             from: 0
             to: 1
-            duration: 350
+            duration: 450
             easing.type: Easing.InQuint
         }
     }
@@ -44,13 +45,13 @@ LyricPage {
             easing.type: Easing.InOutCubic
         }
 
-        OpacityAnimator {
-            target: lyricPage
-            from: 1
-            to: 0
-            duration: 350
-            easing.type: Easing.OutQuint
-        }
+        // OpacityAnimator {
+        //     target: lyricPage
+        //     from: 1
+        //     to: 0
+        //     duration: 350
+        //     easing.type: Easing.OutQuint
+        // }
     }
 
     /*function lrcUp() {
@@ -79,11 +80,17 @@ LyricPage {
         onStopped: {
             lyricPage.visible = false
         }
+        onStarted: {
+            animationStart(false)
+        }
     }
     Connections {
         target:lyricRaiseAnimation
         onFinished: {
             animationFinished(false)
+        }
+        onStarted: {
+            animationStart(true)
         }
     }
 

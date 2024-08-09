@@ -22,6 +22,7 @@ Rectangle {
 
     id: contentWindow
     color: "transparent"
+    signal clickPlayAllBtn()
 
 
     MusicBaselistview {

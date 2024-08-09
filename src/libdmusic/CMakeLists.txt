@@ -34,14 +34,13 @@ aux_source_directory(./player/vlc ALL_SOURCES)
 find_package(PkgConfig REQUIRED)
 
 find_package(Qt6 REQUIRED COMPONENTS ${QT_MODULES})
-find_package(KF5Codecs)
 find_package(ICU COMPONENTS i18n)
 qt_add_resources(QRC_FILES ${QRC_SOURCE_FILES})
 
 add_library(${CMD_NAME} SHARED ${ALL_SOURCES} ${QRC_FILES})
 set_target_properties(dmusic PROPERTIES VERSION 1.0.0 SOVERSION 1.0)
 
-pkg_check_modules(MPRIS REQUIRED IMPORTED_TARGET mpris-qt5)
+pkg_check_modules(MPRIS REQUIRED IMPORTED_TARGET mpris-qt6)
 pkg_check_modules(TAGLIB REQUIRED IMPORTED_TARGET taglib)
 pkg_check_modules(DTK REQUIRED IMPORTED_TARGET dtk6core)
 # pkg_check_modules(udisks2 REQUIRED IMPORTED_TARGET udisks2-qt5)

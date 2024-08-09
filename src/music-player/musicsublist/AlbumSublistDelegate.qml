@@ -2,9 +2,9 @@
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-import QtQuick 2.11
-import QtQuick.Layouts 1.11
-import QtQuick.Controls 2.0
+import QtQuick
+import QtQuick.Layouts
+import QtQuick.Controls
 import audio.global 1.0
 import org.deepin.dtk 1.0
 import "../allItems"
@@ -118,6 +118,7 @@ ItemDelegate {
                             visible: sublistDelegate.hovered || activeMeta
                             ColorSelector.hovered: !sublistDelegate.checked
                             ColorSelector.pressed: false
+                            palette.windowText: sublistDelegate.hovered ? Qt.rgba(247, 247, 247, 1) : undefined
                             onClicked:{
                                 if(playing && activeMeta) {
                                     Presenter.pause();

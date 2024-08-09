@@ -15,7 +15,7 @@ Build-Depends:
  libdbusextended-qt5-dev,
  libgsettings-qt-dev,
  libicu-dev,
- libmpris-qt5-dev,
+ libmpris-qt6-dev,
  libtag1-dev,
  qt6-svg-dev,
  libqt6sql6-sqlite,
@@ -29,6 +29,7 @@ Build-Depends:
  libdframeworkdbus-dev,
  qt6-declarative-dev,
  libdtk6declarative-dev,
+ qt6-5compat-dev,
  libsdl2-dev
 Standards-Version: 3.9.8
 Homepage: http://www.deepin.org
