@@ -70,7 +70,8 @@ DialogWindow {
                 Layout.fillWidth: true
                 title: qsTr("Title")
                 description: musicData === undefined ? " " : musicData.title       //musicTitle
-                iconName: "action_edit"
+                // TODO(pengfeixx): The function is not implemented, and the entrance is temporarily removed
+                // iconName: "action_edit"
                 cornersRadius: [radius, radius, 0, 0]
             }
 

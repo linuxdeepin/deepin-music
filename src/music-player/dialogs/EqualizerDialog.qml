@@ -11,25 +11,25 @@ import org.deepin.dtk 1.0
 
 DialogWindow {
     property ListModel comBoxModel: ListModel {
-        ListElement { text: qsTr("Custom"); icon: "heart" }
-        ListElement { text: qsTr("Monophony"); icon: "heart" }
-        ListElement { text: qsTr("Classical"); icon: "heart" }
-        ListElement { text: qsTr("Club"); icon: "heart" }
-        ListElement { text: qsTr("Dance"); icon: "heart" }
-        ListElement { text: qsTr("Full Bass"); icon: "heart" }
-        ListElement { text: qsTr("Full Bass and Treble"); icon: "heart" }
-        ListElement { text: qsTr("Full Treble"); icon: "heart" }
-        ListElement { text: qsTr("Headphones"); icon: "heart" }
-        ListElement { text: qsTr("Hall"); icon: "heart" }
-        ListElement { text: qsTr("Live"); icon: "heart" }
-        ListElement { text: qsTr("Party"); icon: "heart" }
-        ListElement { text: qsTr("Pop"); icon: "heart" }
-        ListElement { text: qsTr("Reggae"); icon: "heart" }
-        ListElement { text: qsTr("Rock"); icon: "heart" }
-        ListElement { text: qsTr("Ska"); icon: "heart" }
-        ListElement { text: qsTr("Soft"); icon: "heart" }
-        ListElement { text: qsTr("Soft Rock"); icon: "heart" }
-        ListElement { text: qsTr("Techno"); icon: "heart" }
+        ListElement { text: qsTr("Custom") }
+        ListElement { text: qsTr("Monophony") }
+        ListElement { text: qsTr("Classical") }
+        ListElement { text: qsTr("Club") }
+        ListElement { text: qsTr("Dance") }
+        ListElement { text: qsTr("Full Bass") }
+        ListElement { text: qsTr("Full Bass and Treble") }
+        ListElement { text: qsTr("Full Treble") }
+        ListElement { text: qsTr("Headphones") }
+        ListElement { text: qsTr("Hall") }
+        ListElement { text: qsTr("Live") }
+        ListElement { text: qsTr("Party") }
+        ListElement { text: qsTr("Pop") }
+        ListElement { text: qsTr("Reggae") }
+        ListElement { text: qsTr("Rock") }
+        ListElement { text: qsTr("Ska") }
+        ListElement { text: qsTr("Soft") }
+        ListElement { text: qsTr("Soft Rock") }
+        ListElement { text: qsTr("Techno") }
     }
     property ListModel sliderModel: ListModel {
         ListElement {name: "60"; value: 0}

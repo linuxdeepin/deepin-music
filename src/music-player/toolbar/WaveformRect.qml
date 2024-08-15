@@ -16,6 +16,7 @@ Rectangle {
 
     property bool mousePressed: false
     property int hoverX: 0
+    property var palColor: DTK.palette.highlight
 
     id: waveformRect
     implicitWidth: 360
@@ -69,6 +70,8 @@ Rectangle {
         height: 3
         anchors.bottom: parent.bottom
         anchors.bottomMargin: 10
+        property color startColor: waveItem.stripedStartColor
+        property color endColor: waveItem.stripedEndColor
         color: "transparent"
         LinearGradient {
             id: linearGradient
@@ -77,8 +80,8 @@ Rectangle {
             start: Qt.point(0, 0)
             end: Qt.point(parent.width, 0)
             gradient: Gradient {
-                GradientStop { position: 0.0; color: "#0206cd"}
-                GradientStop { position: 1.0; color: "#3ce6ff"}
+                GradientStop { position: 0.0; color: shadowRect.startColor}
+                GradientStop { position: 1.0; color: shadowRect.endColor}
             }
         }
         FastBlur {
@@ -215,5 +218,44 @@ Rectangle {
             hoverX = position * width / totalSecs
             //console.log("updatePosition:hoverX:" + hoverX + "  totalSecs:" + totalSecs + "  width:" + waveformRect.width + "  position:" + position)
         }
+    }
+
+    function updateStriped(baseColor) {
+        var index = -1
+        var accentColor = [("#df4187"),
+                           ("#ff5d00"),
+                           ("#f8cb00"),
+                           ("#23c400"),
+                           ("#00a48a"),
+                           ("#0081ff"),
+                           ("#3c02ff"),
+                           ("#8c00d4"),
+                           ("#4d4d4d")]
+
+        for (var i = 0; i < accentColor.length; i++) {
+            if (Qt.colorEqual(accentColor[i], palColor)) {
+                index = i;
+                break;
+            }
+        }
+        if (index != -1) {
+            var waveColor = [{start: Qt.rgba(199/255, 0, 70/255, 1), end: Qt.rgba(206/255, 166/255, 255/255, 1)},
+                             {start: Qt.rgba(216/255, 54/255, 0, 1), end: Qt.rgba(255/255, 234/255, 165/255, 1)},
+                             {start: Qt.rgba(216/255, 139/255, 0, 1), end: Qt.rgba(254/255, 255/255, 45/255, 1)},
+                             {start: Qt.rgba(66/255, 134/255, 0, 1), end: Qt.rgba(99/255, 255/255, 162/255, 1)},
+                             {start: Qt.rgba(0, 141/255, 36/255, 1), end: Qt.rgba(77/255, 255/255, 191/255, 1)},
+                             {start: Qt.rgba(2/255, 6/255, 205/255, 1), end: Qt.rgba(60/255, 230/255, 255/255, 1)},
+                             {start: Qt.rgba(59/255, 20/255, 194/255, 1), end: Qt.rgba(248/255, 142/255, 255/255, 1)},
+                             {start: Qt.rgba(111/255, 0, 149/255, 1), end: Qt.rgba(255/255, 112/255, 205/255, 1)},
+                             {start: Qt.rgba(0, 0, 0, 1), end: Qt.rgba(132/255, 132/255, 132/255, 1)}]
+            waveItem.stripedStartColor = waveColor[index].start
+            waveItem.stripedEndColor = waveColor[index].end
+        } else {
+            waveItem.stripedStartColor = "#0206cd"
+            waveItem.stripedEndColor = "#3ce6ff"
+        }
+    }
+    onPalColorChanged: {
+        updateStriped(palColor)
     }
 }

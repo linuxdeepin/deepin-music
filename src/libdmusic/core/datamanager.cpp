@@ -1077,7 +1077,8 @@ void DataManager::removeFromPlayList(const QStringList listToDel, const QString 
                 int curIndex = playlist.sortMetas.indexOf(hash);
                 if (curIndex >= 0 && curIndex < playlist.sortMetas.size()) {
                     playlist.sortMetas.removeAt(curIndex);
-                    playlist.sortCustomMetas.removeAt(curIndex);
+                    if (curIndex >= 0 && curIndex < playlist.sortCustomMetas.size())
+                        playlist.sortCustomMetas.removeAt(curIndex);
                     playlistHashs << playlist.uuid;
                 }
             }
