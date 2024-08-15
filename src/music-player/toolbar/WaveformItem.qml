@@ -10,6 +10,9 @@ Rectangle {
     property int sampleRectWidth: 2
     property int waveformHeight: 30
 
+    property color stripedStartColor
+    property color stripedEndColor
+
     width: 360
     height: 30
     color: "#00000000"
@@ -48,6 +51,8 @@ Rectangle {
             itemWidth: sampleRectWidth
             itemCount: sampleCount
             chromatic: true
+            startColor: stripedStartColor
+            endColor: stripedEndColor
         }
     }
     Item {
