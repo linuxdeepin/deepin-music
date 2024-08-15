@@ -1,3 +1,11 @@
+deepin-music (7.0.6) unstable; urgency=medium
+
+  * New version 7.0.5
+  * Compatible with QT6 version
+  * Add music animation effects
+
+ -- xiepengfei <xiepengfei@uniontech.com>  Thu, 15 Aug 2024 17:45:22 +0800
+
 deepin-music (7.0.5) unstable; urgency=medium
 
   * New version 7.0.5
