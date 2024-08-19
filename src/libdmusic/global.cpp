@@ -125,6 +125,13 @@ bool DmGlobal::isWaylandMode()
     return waylandMode;
 }
 
+bool DmGlobal::isTreelandMode()
+{
+    if (qEnvironmentVariable("DDE_CURRENT_COMPOSITOR") == "TreeLand")
+        return true;
+    return false;
+}
+
 void DmGlobal::initPlaybackEngineType()
 {
     engineType = 0;
