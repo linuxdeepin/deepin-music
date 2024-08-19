@@ -105,6 +105,8 @@ public:
     static void setPlaybackEngineType(int type);
     // 播放引擎类型1为vlc，0为QMediaPlayer
     static int playbackEngineType();
+    //是否为treeland
+    static bool isTreelandMode();
 };
 Q_DECLARE_METATYPE(DmGlobal::PlaybackStatus)
 Q_DECLARE_METATYPE(DmGlobal::PlayerEngineType)
