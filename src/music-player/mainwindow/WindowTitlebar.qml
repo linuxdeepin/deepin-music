@@ -99,6 +99,9 @@ TitleBar {
                 companyLogo: globalVariant.appIconName
                 websiteName: DTK.deepinWebsiteName
                 websiteLink: DTK.deepinWebsiteLink
+                header: DialogTitleBar {
+                    enableInWindowBlendBlur: false
+                }
             }
         }
         QuitAction {}
