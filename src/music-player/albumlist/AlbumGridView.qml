@@ -30,6 +30,7 @@ Rectangle {
         anchors.leftMargin: (albumGrid.width - width) / 2
         anchors.rightMargin: (albumGrid.width - width) / 2
         cellWidth: 208; cellHeight: 242
+        boundsBehavior: Flickable.StopAtBounds
         ScrollBar.vertical: ScrollBar {}
         model: albumModel
         delegate: AlbumGridDelegate{
