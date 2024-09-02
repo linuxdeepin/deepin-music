@@ -2,9 +2,9 @@
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-import QtQuick 2.11
-import QtQuick.Controls 1.4
-import QtQuick.Controls.Styles 1.4
+import QtQuick
+import QtQuick.Controls
+import QtQuick.Layouts
 import org.deepin.dtk 1.0
 import audio.global 1.0
 
@@ -17,13 +17,12 @@ import "../allItems"
 
 Rectangle {
     property string pattern: "a"
-    property int curIndex: 0
     property Menu artistMoreMenu: ArtistMoreMenu{}
     property Menu albumMoreMenu: AlbumMoreMenu{}
     property ListModel songsModel: ListModel{}
     property ListModel albumsModel: ListModel{}
     property ListModel artistsModel: ListModel{}
-    property int switchType: globalVariant.globalSwitchButtonStatus;
+    property int curIndex: tabArea.currentIndex
     signal itemDoubleClicked(var artistData)
     property var artistData
 
@@ -57,248 +56,215 @@ Rectangle {
         }
     }
 
-    StackView {
-        id: myStackView
+    Rectangle {
         width: parent.width
         height: parent.height
-        clip: true
-        visible: curIndex < 0 ? false : true
-        initialItem: Rectangle {
+        color: "transparent"
+        ColumnLayout {
             width: parent.width
             height: parent.height
-            color: "transparent"
-            Column {
-                width: parent.width
-                height: parent.height
-                leftPadding: 20
-                rightPadding: 20
 
-                Rectangle {
-                    id: headArea
-                    width: parent.width - 40
-                    height: 72
-                    color: "transparent"
+            Rectangle {
+                id: headArea
+                width: parent.width - 40
+                height: 72
+                Layout.leftMargin: 20
+                Layout.rightMargin: 20
+                color: "transparent"
 
-                    Row {
-                        anchors.fill: parent
-                        topPadding: 17
-                        spacing: 10
-                        DciIcon {
-                            id: playall
-                            name: "headline_play_bottom";
-                            sourceSize: Qt.size(28, 28)
-                            ActionButton {
-                                anchors.fill: playall
-                                icon.name: "list_play";
-                                width: 20; height: 20
-                                hoverEnabled: false;
-                                onClicked: {
-                                    Presenter.playPlaylist("musicResult");
-                                }
+                Row {
+                    anchors.fill: parent
+                    topPadding: 17
+                    spacing: 10
+                    DciIcon {
+                        id: playall
+                        name: "headline_play_bottom";
+                        sourceSize: Qt.size(28, 28)
+                        ActionButton {
+                            anchors.fill: playall
+                            icon.name: "list_play";
+                            width: 20; height: 20
+                            hoverEnabled: false;
+                            onClicked: {
+                                Presenter.playPlaylist("musicResult");
                             }
                         }
-                        Label {
-                            id: buttonLable
-                            text: qsTr("Search Results")
-                            font: DTK.fontManager.t5
-                        }
-                        Label {
-                            font: DTK.fontManager.t8
-                            text: albumsModel.count !== 1 ? qsTr("%1 albums - %2 songs").arg(albumsModel.count).arg(songsModel.count) :
-                                                            (songsModel.count === 1 ? qsTr("1 album - 1 song") : qsTr("%1 album - %2 songs").arg(albumsModel.count).arg(songsModel.count))
+                    }
+                    Label {
+                        id: buttonLable
+                        text: qsTr("Search Results")
+                        font: DTK.fontManager.t5
+                    }
+                    Label {
+                        font: DTK.fontManager.t8
+                        text: albumsModel.count !== 1 ? qsTr("%1 albums - %2 songs").arg(albumsModel.count).arg(songsModel.count) :
+                                                        (songsModel.count === 1 ? qsTr("1 album - 1 song") : qsTr("%1 album - %2 songs").arg(albumsModel.count).arg(songsModel.count))
 
-                            anchors.verticalCenter: buttonLable.verticalCenter
-                        }
+                        anchors.verticalCenter: buttonLable.verticalCenter
                     }
                 }
+            }
 
-                TabView {
+            RowLayout {
+                id: headerLayout
+                Layout.rightMargin: 40
+                TabBar {
                     id: tabArea
                     width: parent.width - 40
                     height: parent.height - headArea.height
-                    currentIndex: curIndex
+                    Layout.leftMargin: 20
+                    Layout.rightMargin: 20
+                    currentIndex: 0
 
-                    Tab {
-                        id: musicTab
-                        title: qsTr("Music")
-                        AllMusicListView {
-                            width: tabArea.width
-                            height: tabArea.height
-                            mediaModel: songsModel
-                            viewListHash: "musicResult"
+                    TabButton {
+                        text: qsTr("Music")
+                        width: 82
+                    }
+                    TabButton {
+                        text: qsTr("Album")
+                        width: 82
+                    }
+                    TabButton {
+                        text: qsTr("Artist")
+                        width: 82
+                    }
+                }
+                Item { Layout.fillWidth: true }
+                SortMenu {
+                    id: allMusicSortMenu
+                    visible: tabArea.currentIndex === 0
+                    sortPageHash: "musicResult"
+                    Layout.alignment: Qt.AlignVCenter | Qt.AlignRight
+                    pageSortType: 0
+                }
+                SortMenu {
+                    id: albumMusicSortMenu
+                    visible: tabArea.currentIndex === 1
+                    sortPageHash: "albumResult"
+                    Layout.alignment: Qt.AlignVCenter | Qt.AlignRight
+                    pageSortType: 0
+                }
+                SortMenu {
+                    id: artistMusicSortMenu
+                    visible: tabArea.currentIndex === 2
+                    sortPageHash: "artistResult"
+                    Layout.alignment: Qt.AlignVCenter | Qt.AlignRight
+                    pageSortType: 0
+                }
+
+                Component.onCompleted: {
+                    var musicSortType = Presenter.playlistSortType("musicResult")
+                    var artistSortType = Presenter.playlistSortType("artistResult")
+                    var albumSortType = Presenter.playlistSortType("albumResult")
+
+                    switch(musicSortType) {
+                    case 10:
+                        allMusicSortMenu.pageSortType = 0
+                        break
+                    case 11:
+                        allMusicSortMenu.pageSortType = 1
+                        break
+                    case 12:
+                        allMusicSortMenu.pageSortType = 2
+                        break
+                    case 13:
+                        allMusicSortMenu.pageSortType = 3
+                        break
+                    default:
+                        allMusicSortMenu.pageSortType = -1
+                    }
+
+                    switch(albumSortType) {
+                    case 10:
+                        albumMusicSortMenu.pageSortType = 0
+                        break
+                    case 13:
+                        albumMusicSortMenu.pageSortType = 1
+                        break
+                    default:
+                        albumMusicSortMenu.pageSortType = -1
+                    }
+
+                    switch(artistSortType) {
+                    case 10:
+                        artistMusicSortMenu.pageSortType = 0
+                        break
+                    case 12:
+                        artistMusicSortMenu.pageSortType = 2
+                        break
+                    default:
+                        artistMusicSortMenu.pageSortType = -1
+                    }
+                }
+            }
+
+            StackLayout {
+                id: myStackView
+                Layout.fillHeight: true
+                Layout.fillWidth: true
+                Layout.leftMargin: 20
+                Layout.rightMargin: 20
+                clip: true
+                visible: curIndex < 0 ? false : true
+                currentIndex: tabArea.currentIndex
+
+                AllMusicListView {
+                    id: allMusicList
+                    width: parent.width
+                    height: parent.height
+                    mediaModel: songsModel
+                    viewListHash: "musicResult"
+                }
+                GridView {
+                    id: artistView
+                    width: Math.floor(parent.width / 196) * 196;
+                    height: parent.height
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    anchors.top: parent.top; anchors.topMargin: 34
+                    anchors.leftMargin: (parent.width - width) / 2
+                    anchors.rightMargin: (parent.width - width) / 2
+                    cellWidth: 196; cellHeight: 196
+                    ScrollBar.vertical: ScrollBar {}
+                    clip: true
+                    model: artistsModel
+                    delegate: ArtistGridDelegate{
+                        id: musicSingerGridItem
+                        onItemDoubleClicked: {
+                            searchRootRect.itemDoubleClicked(artistData);
                         }
                     }
-                    Tab {
-                        id: albumTab
-                        title: qsTr("Album")
-                        GridView {
-                            id: albumGridView
-                            width: Math.floor(parent.width / 201) * 201;
-                            height: parent.height
-                            anchors.horizontalCenter: parent.horizontalCenter
-                            anchors.top: parent.top; anchors.topMargin: 5
-                            anchors.leftMargin: (parent.width - width) / 2
-                            anchors.rightMargin: (parent.width - width) / 2
-                            cellWidth: 201; cellHeight: 228
-                            ScrollBar.vertical: ScrollBar {}
-                            clip: true
-                            model: albumsModel
-                            delegate: AlbumGridDelegate{
-                                id: itemDelegate
-                                playing: (globalVariant.curPlayingStatus === DmGlobal.Playing) ? true : false
-                                onItemDoubleClicked: {
-                                    console.log("onItemDoubleClicked: " + albumData);
-                                    searchRootRect.itemDoubleClicked(albumData);
-                                }
-                            }
-                            onWidthChanged: {
-                                var w =  Math.floor(tabArea.width / 201) * 201;
-                                var m = (tabArea.width - w) / 2;
-                                anchors.leftMargin = m;
-                                anchors.rightMargin = m;
-                            }
-                        }
-                        /*AlbumGridView {
-                            albumModel: albumsModel
-                        }*/
+                    onWidthChanged: {
+                        var w =  Math.floor(tabArea.width / 196) * 196;
+                        var m = (tabArea.width - w) / 2;
+                        anchors.leftMargin = m;
+                        anchors.rightMargin = m;
                     }
-                    Tab {
-                        id: artistTab
-                        title: qsTr("Artist")
-                        width: parent.width
-                        height: parent.height
-                        GridView {
-                            id: singergridview
-                            width: Math.floor(parent.width / 196) * 196;
-                            height: parent.height
-                            anchors.horizontalCenter: parent.horizontalCenter
-                            anchors.top: parent.top; anchors.topMargin: 34
-                            anchors.leftMargin: (parent.width - width) / 2
-                            anchors.rightMargin: (parent.width - width) / 2
-                            cellWidth: 196; cellHeight: 196
-                            ScrollBar.vertical: ScrollBar {}
-                            clip: true
-                            model: artistsModel
-                            delegate: ArtistGridDelegate{
-                                id: musicSingerGridItem
-                                onItemDoubleClicked: {
-                                    searchRootRect.itemDoubleClicked(artistData);
-                                }
-                            }
-                            onWidthChanged: {
-                                var w =  Math.floor(tabArea.width / 196) * 196;
-                                var m = (tabArea.width - w) / 2;
-                                anchors.leftMargin = m;
-                                anchors.rightMargin = m;
-                            }
+                }
+                GridView {
+                    id: albumGridView
+                    width: Math.floor(parent.width / 201) * 201;
+                    height: parent.height
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    anchors.top: parent.top; anchors.topMargin: 5
+                    anchors.leftMargin: (parent.width - width) / 2
+                    anchors.rightMargin: (parent.width - width) / 2
+                    cellWidth: 201; cellHeight: 228
+                    ScrollBar.vertical: ScrollBar {}
+                    clip: true
+                    model: albumsModel
+                    delegate: AlbumGridDelegate{
+                        id: itemDelegate
+                        playing: (globalVariant.curPlayingStatus === DmGlobal.Playing) ? true : false
+                        onItemDoubleClicked: {
+                            console.log("onItemDoubleClicked: " + albumData);
+                            searchRootRect.itemDoubleClicked(albumData);
                         }
                     }
-                    style: TabViewStyle {
-                        frameOverlap: -10
-                        tab: Rectangle {
-                            implicitWidth: 82
-                            implicitHeight: 36
-                            color: "transparent"
-                            Rectangle {
-                                width: 76
-                                height: 30
-                                color: styleData.selected ? palette.highlight : "transparent"
-                                anchors.centerIn: parent
-                                radius: 5
-                                Text {
-                                    id: text
-                                    anchors.centerIn: parent
-                                    text: styleData.title
-                                    color: styleData.selected ? "white" : "black"
-                                }
-                            }
-
-                        }
-                        tabBar: Rectangle {
-                            implicitWidth: 246
-                            implicitHeight: 46
-                            color: "transparent"
-
-                            /*FloatingPanel*/Rectangle {
-                                width: 245
-                                height: 36
-                                radius: 5
-                                color:  Qt.rgba(0, 0, 0, 0.05)
-                            }
-
-                            SortMenu{
-                                id: musicSortMenu
-                                anchors.right: parent.right
-                                anchors.verticalCenter: parent.verticalCenter
-                                visible: tabArea.currentIndex === 0 ? true : false
-                                sortPageHash: "musicResult"
-//                                pageSortType: 0
-                            }
-                            SortMenu{
-                                id: albumSortMenu
-                                anchors.right: parent.right
-                                anchors.verticalCenter: parent.verticalCenter
-                                visible: tabArea.currentIndex === 1 ? true : false
-                                sortPageHash: "albumResult"
-//                                pageSortType: 0
-                            }
-                            SortMenu{
-                                id: artistSortMenu
-                                anchors.right: parent.right
-                                anchors.verticalCenter: parent.verticalCenter
-                                visible: tabArea.currentIndex === 2 ? true : false
-                                sortPageHash: "artistResult"
-//                                pageSortType: 0
-                            }
-
-                            Component.onCompleted: {
-                                var musicSortType = Presenter.playlistSortType("musicResult")
-                                var artistSortType = Presenter.playlistSortType("artistResult")
-                                var albumSortType = Presenter.playlistSortType("albumResult")
-
-                                //console.log("search window onCompleted:musicSortType:" + musicSortType + "    artistSortType:" + artistSortType + "   albumSortType:" + albumSortType)
-
-                                switch(musicSortType) {
-                                case 10:
-                                    musicSortMenu.pageSortType = 0
-                                    break
-                                case 11:
-                                    musicSortMenu.pageSortType = 1
-                                    break
-                                case 12:
-                                    musicSortMenu.pageSortType = 2
-                                    break
-                                case 13:
-                                    musicSortMenu.pageSortType = 3
-                                    break
-                                default:
-                                    musicSortMenu.pageSortType = -1
-                                }
-
-                                switch(albumSortType) {
-                                case 10:
-                                    albumSortMenu.pageSortType = 0
-                                    break
-                                case 13:
-                                    albumSortMenu.pageSortType = 1
-                                    break
-                                default:
-                                    albumSortMenu.pageSortType = -1
-                                }
-
-                                switch(albumSortType) {
-                                case 10:
-                                    artistSortMenu.pageSortType = 0
-                                    break
-                                case 12:
-                                    artistSortMenu.pageSortType = 2
-                                    break
-                                default:
-                                    artistSortMenu.pageSortType = -1
-                                }
-                            }
-                        }
-                        frame: Rectangle { color: "transparent" }
+                    onWidthChanged: {
+                        var w =  Math.floor(tabArea.width / 201) * 201;
+                        var m = (tabArea.width - w) / 2;
+                        anchors.leftMargin = m;
+                        anchors.rightMargin = m;
                     }
                 }
             }
@@ -308,28 +274,6 @@ Rectangle {
     onItemDoubleClicked: {
         searchRootRect.artistData = artistData
         globalVariant.globalSwitchButtonStatus = 2;
-    }
-    onSwitchTypeChanged: {
-        if (switchType === 1) {
-            myStackView.pop(myStackView.initialItem); //回到上一级页面
-        } else if (switchType === 2){
-            if (tabArea.currentIndex === 1) {
-                var item = myStackView.find(function(item, index) { return item.objectName === "artistSublist"})
-                if(item !== null){
-                    myStackView.pop(item);
-                    return;
-                }
-                myStackView.push(artistSublistView); //切换到下一级页面
-            } else if (tabArea.currentIndex === 2) {
-                var item = myStackView.find(function(item, index) { return item.objectName === "albumSublist"})
-                if(item !== null){
-                    myStackView.pop(item);
-                    return;
-                }
-                myStackView.push(albumSublistView); //切换到下一级页面
-
-            }
-        }
     }
 
     function updateSearchResultInfo(text, type) {
@@ -374,7 +318,6 @@ Rectangle {
 
         curIndex = type
         tabArea.currentIndex = curIndex
-        myStackView.pop(myStackView.initialItem)
         globalVariant.globalSwitchButtonStatus = 0
     }
     function onDeleteOneMeta(playlistHashs, hash){
