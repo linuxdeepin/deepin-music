@@ -67,6 +67,7 @@ Rectangle {
         width: parent.width
         height: parent.height - 38
         anchors.top: headerView.bottom;
+        boundsBehavior: Flickable.StopAtBounds
         ScrollBar.vertical: ScrollBar {}
         model: mediaModel
         clip: true
