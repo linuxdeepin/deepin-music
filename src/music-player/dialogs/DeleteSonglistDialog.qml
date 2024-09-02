@@ -20,6 +20,10 @@ DialogWindow {
     modality: Qt.ApplicationModal
     icon: globalVariant.appIconName
 
+    header: DialogTitleBar {
+        enableInWindowBlendBlur: false
+    }
+
     Column {
         width: parent.width
         height: parent.height

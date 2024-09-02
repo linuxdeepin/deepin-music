@@ -73,7 +73,7 @@ DialogWindow {
     minimumWidth: 572
     minimumHeight: 426
     header: DialogTitleBar {
-        enableInWindowBlendBlur: true
+        enableInWindowBlendBlur: false
     }
 
     Column {
