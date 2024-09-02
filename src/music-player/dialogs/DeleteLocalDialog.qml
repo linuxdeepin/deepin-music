@@ -17,6 +17,9 @@ DialogWindow {
     modality: Qt.ApplicationModal
 //    color: Qt.rgba(247,247,247,0.80);
     icon: globalVariant.appIconName
+    header: DialogTitleBar {
+        enableInWindowBlendBlur: false
+    }
     ColumnLayout {
         width: parent.width
         Label {

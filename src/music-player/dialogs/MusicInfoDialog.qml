@@ -15,7 +15,7 @@ DialogWindow {
     width: 386
     height: 468
     header: DialogTitleBar {
-        enableInWindowBlendBlur: true
+        enableInWindowBlendBlur: false
         content: Loader {
             sourceComponent: Label {
                 property Palette textColor: Palette {
