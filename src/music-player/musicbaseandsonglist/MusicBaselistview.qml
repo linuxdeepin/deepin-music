@@ -21,17 +21,18 @@ Rectangle {
         focus: true
         width: 220
         height: 560
-        contentHeight: 220 + globalVariant.globalCustomPlaylistModel.count * 36
 
-        Column {
+        ColumnLayout {
             id: colum
-            topPadding: 15
+            anchors.fill: parent
             spacing: 30
             ButtonGroup { id: paneListGroup }
             SideBarItem{
                 id: musicbaseSidebar
                 Layout.alignment: Qt.AlignTop
                 Layout.topMargin: 15
+                height: 128
+                view.height: 108
                 title: qsTr("Library")
                 type: "library"
                 group: paneListGroup
@@ -46,6 +47,7 @@ Rectangle {
                 title: qsTr("Playlists")
                 type: "playlists"
                 group: paneListGroup
+                fillHeight: true
                 sideModel: globalVariant.globalCustomPlaylistModel //全局自定义歌单model
                 action: FloatingButton {
                     width: 21; height: 21
