@@ -377,7 +377,12 @@ void SdlPlayer::setCachingThreadPause(bool pause)
 
 void SdlPlayer::setTime(qint64 time)
 {
-    VlcMediaPlayer::setTime(time);
+    qint64 len = length();
+    if(len == 0) {
+        VlcMediaPlayer::setPosition(0);
+    } else {
+        VlcMediaPlayer::setPosition(time * 1.f/len);
+    }
     cleanMemCache(); //clear data when seek
 }
 
