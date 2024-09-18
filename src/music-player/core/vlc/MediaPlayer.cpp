@@ -184,7 +184,7 @@ void VlcMediaPlayer::removeCoreConnections()
     }
 }
 
-int VlcMediaPlayer::length() const
+qint64 VlcMediaPlayer::length() const
 {
     vlc_media_player_get_length_function vlc_media_player_get_length = (vlc_media_player_get_length_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("libvlc_media_player_get_length");
     libvlc_time_t length = vlc_media_player_get_length(_vlcMediaPlayer);

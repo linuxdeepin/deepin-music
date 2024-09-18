@@ -64,7 +64,7 @@ public:
         \brief Get the current movie length (in ms).
         \return the movie length (in ms), or -1 if there is no media (const int)
     */
-    int length() const;
+    qint64 length() const;
 
     /*!
         \brief Open media file or stream. Any media should be playable and opened.
