@@ -24,10 +24,6 @@ Settings.SettingsDialog {
     config: SettingsConfig {}
     flags: Qt.WindowCloseButtonHint | Qt.WindowStaysOnTopHint
 
-    header: DialogTitleBar {
-        enableInWindowBlendBlur: false
-    }
-
     groups: [  // 创建配置组，管理配置子组和Options
         Settings.SettingsGroup {
             key: "Basic"
