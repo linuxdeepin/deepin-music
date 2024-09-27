@@ -27,6 +27,7 @@ public:
 
     static void getCoverData(const QString &path, const QString &tmpPath, const QString &hash, int engineType);
     static QPixmap getCoverDataPixmap(MediaMeta meta, int engineType);
+    static QString getAudioType(MediaMeta meta);
 private:
     explicit MetaDetector();
     friend class DMusic::DSingleton<MetaDetector>;

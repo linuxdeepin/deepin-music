@@ -263,7 +263,6 @@ void SdlPlayer::pause()
     if (!_vlcMediaPlayer)
         return;
     setProgressTag(0); //first start
-
     if (m_loadSdlLibrary) {
         SDL_GetAudioStatus_function GetAudioStatus = (SDL_GetAudioStatus_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSdlSymbol("SDL_GetAudioStatus");
         SDL_PauseAudio_function PauseAudio = (SDL_PauseAudio_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSdlSymbol("SDL_PauseAudio");

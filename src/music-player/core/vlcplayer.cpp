@@ -21,6 +21,10 @@
 
 #include <QDBusObjectPath>
 #include <QDBusInterface>
+#include <QProcess>
+#include <QApplication>
+#include <QFile>
+#include <metadetector.h>
 
 VlcPlayer::VlcPlayer(QObject *parent)
     : PlayerBase(parent)
@@ -135,7 +139,9 @@ void VlcPlayer::play()
 void VlcPlayer::pause()
 {
     if (m_qvplayer) {
+#ifndef __sw_64__
         static_cast<SdlPlayer*>(m_qvplayer)->setCachingThreadPause(true);
+#endif
         m_qvplayer->pause();
     }
 }
@@ -151,7 +157,9 @@ void VlcPlayer::resume()
 {
     if (m_qvplayer) {
         m_qvplayer->resume();
+#ifndef __sw_64__
         static_cast<SdlPlayer*>(m_qvplayer)->setCachingThreadPause(false);
+#endif
     }
 }
 PlayerBase::PlayState VlcPlayer::state()
@@ -203,7 +211,19 @@ void VlcPlayer::setMediaMeta(MediaMeta meta)
 {
     init();
     m_activeMeta = meta;
-    m_qvmedia->initMedia(meta.localPath, meta.mmType == MIMETYPE_CDA ? false : true, m_qvinstance, meta.track);
+    if(MetaDetector::getInstance()->getAudioType(meta).toLower() == "ape") {
+        QString curPath = Global::cacheDir();
+        QString toPath = QString("%1/images/%2.mp3").arg(curPath).arg(meta.hash);
+        if(!QFile::exists(toPath)) {
+            QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
+            QString program = QString("ffmpeg -i %1  -ac 1 -ab 32 -ar 24000 %2").arg(meta.localPath).arg(toPath);
+            QProcess::execute(program);
+            QApplication::restoreOverrideCursor();
+        }
+        m_qvmedia->initMedia(toPath, meta.mmType == MIMETYPE_CDA ? false : true, m_qvinstance, meta.track);
+    } else {
+        m_qvmedia->initMedia(meta.localPath, meta.mmType == MIMETYPE_CDA ? false : true, m_qvinstance, meta.track);
+    }
     m_qvplayer->open(m_qvmedia);
 }
 
