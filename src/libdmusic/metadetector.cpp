@@ -73,7 +73,7 @@ typedef void (*frame_free_function)(AVFrame **);
 typedef int (*codec_close_function)(AVCodecContext *);
 typedef int (*codec_send_packet_function)(AVCodecContext *, const AVPacket *);
 typedef int (*codec_receive_frame_function)(AVCodecContext *, AVFrame *);
-
+typedef const char *(*avcodec_get_name_function)(enum AVCodecID);
 void MetaDetector::init()
 {
     localeCodes.insert("zh_CN", "GB18030");
@@ -132,6 +132,36 @@ QList<QByteArray> MetaDetector::detectEncodings(const MediaMeta &meta)
     }
 
     return detectEncodings(detectByte);
+}
+
+QString MetaDetector::getAudioType(MediaMeta meta)
+{
+    QString audioType;
+    format_alloc_context_function format_alloc_context = (format_alloc_context_function)FfmpegDynamicInstance::VlcFunctionInstance()->resolveSymbol("avformat_alloc_context", true);
+    format_open_input_function format_open_input = (format_open_input_function)FfmpegDynamicInstance::VlcFunctionInstance()->resolveSymbol("avformat_open_input", true);
+    format_find_stream_info_function format_find_stream_info = (format_find_stream_info_function)FfmpegDynamicInstance::VlcFunctionInstance()->resolveSymbol("avformat_find_stream_info", true);
+    format_close_input_function format_close_input = (format_close_input_function)FfmpegDynamicInstance::VlcFunctionInstance()->resolveSymbol("avformat_close_input", true);
+    format_free_context_function format_free_context = (format_free_context_function)FfmpegDynamicInstance::VlcFunctionInstance()->resolveSymbol("avformat_free_context", true);
+    avcodec_get_name_function avcodec_get_name = (avcodec_get_name_function)FfmpegDynamicInstance::VlcFunctionInstance()->resolveSymbol("avcodec_get_name", true);
+    AVFormatContext *pFormatCtx = format_alloc_context();
+    format_open_input(&pFormatCtx, meta.localPath.toStdString().c_str(), nullptr, nullptr);
+    if (pFormatCtx) {
+        // 遍历所有流
+        for (unsigned int i = 0; i < pFormatCtx->nb_streams; i++) {
+            AVStream* stream = pFormatCtx->streams[i];
+            AVCodecParameters* codecParameters = stream->codecpar;
+
+            // 检查是否是音频流
+            if (codecParameters->codec_type == AVMEDIA_TYPE_AUDIO) {
+                qInfo() << "音频编码格式: " << avcodec_get_name(codecParameters->codec_id);
+                audioType = avcodec_get_name(codecParameters->codec_id);
+                break;
+            }
+        }
+    }
+    format_close_input(&pFormatCtx);
+    format_free_context(pFormatCtx);
+    return audioType;
 }
 
 MediaMeta MetaDetector::updateMetaFromLocalfile(MediaMeta meta, const QFileInfo &fileInfo, int engineType)
