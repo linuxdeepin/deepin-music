@@ -105,6 +105,7 @@ void VlcPlayer::releasePlayer()
 
 void VlcPlayer::release()
 {
+    m_qtPlayer->release();
     releasePlayer();
 }
 
@@ -132,12 +133,18 @@ void VlcPlayer::startCdaThread()
 
 void VlcPlayer::play()
 {
+    if(m_bApe) {
+        return m_qtPlayer->play();
+    }
     init();
     m_qvplayer->play();
 }
 
 void VlcPlayer::pause()
 {
+    if(m_bApe) {
+        return m_qtPlayer->pause();
+    }
     if (m_qvplayer) {
 #ifndef __sw_64__
         static_cast<SdlPlayer*>(m_qvplayer)->setCachingThreadPause(true);
@@ -148,6 +155,9 @@ void VlcPlayer::pause()
 
 void VlcPlayer::pauseNew()
 {
+    if(m_bApe) {
+        return m_qtPlayer->pauseNew();
+    }
     if (m_qvplayer) {
         m_qvplayer->pauseNew();
     }
@@ -155,6 +165,9 @@ void VlcPlayer::pauseNew()
 
 void VlcPlayer::resume()
 {
+    if(m_bApe) {
+        return m_qtPlayer->resume();
+    }
     if (m_qvplayer) {
         m_qvplayer->resume();
 #ifndef __sw_64__
@@ -164,6 +177,9 @@ void VlcPlayer::resume()
 }
 PlayerBase::PlayState VlcPlayer::state()
 {
+    if(m_bApe) {
+        return m_qtPlayer->state();
+    }
     init();
     Vlc::State  state = m_qvplayer->state();
     switch (state) {
@@ -183,6 +199,9 @@ PlayerBase::PlayState VlcPlayer::state()
 
 void VlcPlayer::stop()
 {
+    if(m_bApe) {
+        return m_qtPlayer->stop();
+    }
     if (m_qvplayer) {
         m_qvplayer->stop();
     }
@@ -190,6 +209,9 @@ void VlcPlayer::stop()
 
 int VlcPlayer::length()
 {
+    if(m_bApe) {
+        return m_qtPlayer->length();
+    }
     init();
     qDebug() << "VlcPlayer: m_qvplayer->length()" << m_qvplayer->length();
     return  m_qvplayer->length();
@@ -197,12 +219,18 @@ int VlcPlayer::length()
 
 void VlcPlayer::setTime(qint64 time)
 {
+    if(m_bApe) {
+        return m_qtPlayer->setTime(time);
+    }
     init();
     m_qvplayer->setTime(time);
 }
 
 qint64 VlcPlayer::time()
 {
+    if(m_bApe) {
+        return m_qtPlayer->time();
+    }
     init();
     return m_qvplayer->time();
 }
@@ -211,17 +239,21 @@ void VlcPlayer::setMediaMeta(MediaMeta meta)
 {
     init();
     m_activeMeta = meta;
-    if(MetaDetector::getInstance()->getAudioType(meta).toLower() == "ape") {
-        QString curPath = Global::cacheDir();
-        QString toPath = QString("%1/images/%2.mp3").arg(curPath).arg(meta.hash);
-        if(!QFile::exists(toPath)) {
-            QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
-            QString program = QString("ffmpeg -i %1  -ac 1 -ab 32 -ar 24000 %2").arg(meta.localPath).arg(toPath);
-            QProcess::execute(program);
-            QApplication::restoreOverrideCursor();
-        }
-        m_qvmedia->initMedia(toPath, meta.mmType == MIMETYPE_CDA ? false : true, m_qvinstance, meta.track);
+    m_bApe = (MetaDetector::getInstance()->getAudioType(meta).toLower() == "ape");
+    if(m_bApe) {
+        connect(m_qtPlayer, &PlayerBase::timeChanged, this, &PlayerBase::timeChanged);
+        connect(m_qtPlayer, &PlayerBase::positionChanged, this, &PlayerBase::positionChanged);
+        connect(m_qtPlayer, &PlayerBase::stateChanged, this, &PlayerBase::stateChanged);
+        connect(m_qtPlayer, &PlayerBase::end, this, &PlayerBase::end);
+        connect(m_qtPlayer, &PlayerBase::sigSendCdaStatus, this, &PlayerBase::sigSendCdaStatus);
+        m_qtPlayer->setMediaMeta(meta);
     } else {
+        m_qtPlayer->stop();
+        disconnect(m_qtPlayer, &PlayerBase::timeChanged, this, &PlayerBase::timeChanged);
+        disconnect(m_qtPlayer, &PlayerBase::positionChanged, this, &PlayerBase::positionChanged);
+        disconnect(m_qtPlayer, &PlayerBase::stateChanged, this, &PlayerBase::stateChanged);
+        disconnect(m_qtPlayer, &PlayerBase::end, this, &PlayerBase::end);
+        disconnect(m_qtPlayer, &PlayerBase::sigSendCdaStatus, this, &PlayerBase::sigSendCdaStatus);
         m_qvmedia->initMedia(meta.localPath, meta.mmType == MIMETYPE_CDA ? false : true, m_qvinstance, meta.track);
     }
     m_qvplayer->open(m_qvmedia);
@@ -267,18 +299,27 @@ float VlcPlayer::amplificationForBandAt(uint bandIndex)
 
 void VlcPlayer::setVolume(int volume)
 {
+    if(m_bApe) {
+        return m_qtPlayer->setVolume(volume);
+    }
     init();
     m_qvplayer->setVolume(volume);
 }
 
 void VlcPlayer::setMute(bool value)
 {
+    if(m_bApe) {
+        return m_qtPlayer->setMute(value);
+    }
     init();
     m_qvplayer->setMute(value);
 }
 
 void VlcPlayer::initCddaTrack()
 {
+    if(m_bApe) {
+        return m_qtPlayer->initCddaTrack();
+    }
     init();
     m_qvplayer->initCddaTrack();
 }
@@ -316,8 +357,16 @@ QList<MediaMeta> VlcPlayer::getCdaMetaInfo()
     return QList<MediaMeta>();
 }
 
+void VlcPlayer::setQtPlayer(PlayerBase *qtPlayer)
+{
+    m_qtPlayer = qtPlayer;
+}
+
 bool VlcPlayer::getMute()
 {
+    if(m_bApe) {
+        return m_qtPlayer->getMute();
+    }
     return m_qvplayer->getMute();
 }
 

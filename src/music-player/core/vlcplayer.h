@@ -28,6 +28,7 @@ public:
     void initCdaThread();
     void initCddaTrack() override;
     QList<MediaMeta> getCdaMetaInfo() override;
+    void setQtPlayer(PlayerBase *qtPlayer);
 
 public:
     void play() override;
@@ -66,6 +67,8 @@ private:
     CdaThread *m_pCdaThread = nullptr;
     int m_Vlcstate = -1; //休眠状态缓存(上一次休眠时的状态)
     int m_volume = 50.0;
+    PlayerBase *m_qtPlayer = nullptr;
+    bool m_bApe = false;
 };
 
 #endif // VLCPLAYER_H
