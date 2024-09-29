@@ -1137,6 +1137,7 @@ void Player::initPlayer()
         qDebug() << __func__ << "QtPlayer";
     } else {
         m_basePlayer = new VlcPlayer(this);
+        (static_cast<VlcPlayer*>(m_basePlayer))->setQtPlayer(new QtPlayer(this));
         qDebug() << __func__ << "VlcPlayer";
     }
     m_basePlayer->setVolume(m_volume);
