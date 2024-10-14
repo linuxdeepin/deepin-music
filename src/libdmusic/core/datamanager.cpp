@@ -45,19 +45,19 @@ static bool moreThanTimestampASC(MediaMeta v1, MediaMeta v2)
     return v1.timestamp < v2.timestamp;
 }
 
-static bool moreThanTitleASC(const MediaMeta v1, const MediaMeta v2)
+static bool moreThanTitleASC(const MediaMeta &v1, const MediaMeta &v2)
 {
-    return v1.pinyinTitle.toLower() <= v2.pinyinTitle.toLower();
+    return v1.pinyinTitle.toLower() < v2.pinyinTitle.toLower();
 }
 
-static bool moreThanArtistASC(MediaMeta v1, MediaMeta v2)
+static bool moreThanArtistASC(const MediaMeta &v1, const MediaMeta &v2)
 {
-    return v1.pinyinArtist.toLower() <= v2.pinyinArtist.toLower();
+    return v1.pinyinArtist.toLower() < v2.pinyinArtist.toLower();
 }
 
-static bool moreThanAblumASC(const MediaMeta v1, const MediaMeta v2)
+static bool moreThanAblumASC(const MediaMeta &v1, const MediaMeta &v2)
 {
-    return v1.pinyinAlbum.toLower() <= v2.pinyinAlbum.toLower();
+    return v1.pinyinAlbum.toLower() < v2.pinyinAlbum.toLower();
 }
 // 降序
 static bool moreThanTimestampDES(MediaMeta v1, MediaMeta v2)
@@ -65,19 +65,19 @@ static bool moreThanTimestampDES(MediaMeta v1, MediaMeta v2)
     return v1.timestamp > v2.timestamp;
 }
 
-static bool moreThanTitleDES(const MediaMeta v1, const MediaMeta v2)
+static bool moreThanTitleDES(const MediaMeta &v1, const MediaMeta &v2)
 {
-    return v1.pinyinTitle.toLower() >= v2.pinyinTitle.toLower();
+    return v1.pinyinTitle.toLower() > v2.pinyinTitle.toLower();
 }
 
-static bool moreThanArtistDES(MediaMeta v1, MediaMeta v2)
+static bool moreThanArtistDES(const MediaMeta &v1, const MediaMeta &v2)
 {
-    return v1.pinyinArtist.toLower() >= v2.pinyinArtist.toLower();
+    return v1.pinyinArtist.toLower() > v2.pinyinArtist.toLower();
 }
 
-static bool moreThanAblumDES(const MediaMeta v1, const MediaMeta v2)
+static bool moreThanAblumDES(const MediaMeta &v1, const MediaMeta &v2)
 {
-    return v1.pinyinAlbum.toLower() >= v2.pinyinAlbum.toLower();
+    return v1.pinyinAlbum.toLower() > v2.pinyinAlbum.toLower();
 }
 
 // 升序
@@ -86,19 +86,19 @@ static bool moreThanAlbumTimestampASC(AlbumInfo v1, AlbumInfo v2)
     return v1.timestamp < v2.timestamp;
 }
 
-static bool moreThanAlbumTitleASC(const AlbumInfo v1, const AlbumInfo v2)
+static bool moreThanAlbumTitleASC(const AlbumInfo &v1, const AlbumInfo &v2)
 {
-    return v1.pinyin.toLower() <= v2.pinyin.toLower();
+    return v1.pinyin.toLower() < v2.pinyin.toLower();
 }
 // 降序
-static bool moreThanAlbumTimestampDES(AlbumInfo v1, AlbumInfo v2)
+static bool moreThanAlbumTimestampDES(const AlbumInfo &v1, const AlbumInfo &v2)
 {
     return v1.timestamp > v2.timestamp;
 }
 
-static bool moreThanAlbumTitleDES(const AlbumInfo v1, const AlbumInfo v2)
+static bool moreThanAlbumTitleDES(const AlbumInfo &v1, const AlbumInfo &v2)
 {
-    return v1.pinyin.toLower() >= v2.pinyin.toLower();
+    return v1.pinyin.toLower() > v2.pinyin.toLower();
 }
 
 // 升序
@@ -107,9 +107,9 @@ static bool moreThanArtistTimestampASC(ArtistInfo v1, ArtistInfo v2)
     return v1.timestamp < v2.timestamp;
 }
 
-static bool moreThanArtistTitleASC(ArtistInfo v1, ArtistInfo v2)
+static bool moreThanArtistTitleASC(const ArtistInfo &v1, const ArtistInfo &v2)
 {
-    return v1.pinyin.toLower() <= v2.pinyin.toLower();
+    return v1.pinyin.toLower() < v2.pinyin.toLower();
 }
 // 降序
 static bool moreThanArtistTimestampDES(ArtistInfo v1, ArtistInfo v2)
@@ -117,9 +117,9 @@ static bool moreThanArtistTimestampDES(ArtistInfo v1, ArtistInfo v2)
     return v1.timestamp > v2.timestamp;
 }
 
-static bool moreThanArtistTitleDES(ArtistInfo v1, ArtistInfo v2)
+static bool moreThanArtistTitleDES(const ArtistInfo &v1, const ArtistInfo &v2)
 {
-    return v1.pinyin.toLower() >= v2.pinyin.toLower();
+    return v1.pinyin.toLower() > v2.pinyin.toLower();
 }
 
 class DataManagerPrivate
