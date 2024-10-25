@@ -53,7 +53,8 @@ Depends: ${shlibs:Depends}, ${misc:Depends},
  qt6-multimedia-dev,
  vlc-plugin-base,
 # 识别编码格式
- libuchardet0
+ libuchardet0,
+ libmpris-qt6
 Description: Music software for UOS
  Music is a local music player with beautiful design and simple functions.
 
