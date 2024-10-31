@@ -1055,15 +1055,8 @@ void Player::onSleepWhenTaking(bool sleep)
                 INT_LAST_PROGRESS_FLAG = 1;
                 m_ActiveMeta.offset = time;
                 m_basePlayer->stop();
+                emit signalPlaybackStatusChanged(Player::Paused);
             }
-        }
-    } else { //设置状态
-        if (m_Vlcstate == Vlc::Playing) {
-            //播放
-            QTimer::singleShot(2000, [ = ]() {
-                playMeta(m_ActiveMeta);
-            });
-            m_Vlcstate = -1;
         }
     }
 }
