@@ -201,7 +201,7 @@ public slots:
     void setEqualizerbauds(int index, int val);
     void setEqualizerCurMode(int curIndex);
     void onSleepWhenTaking(bool sleep);
-
+    void onLockedScreen(const QString &name, QVariantMap map, const QStringList &params);
 private:
     explicit Player(QObject *parent = nullptr);
     ~Player();

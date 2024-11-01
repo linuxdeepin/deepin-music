@@ -150,6 +150,10 @@ void Player::init()
                                      "org.freedesktop.login1.Manager", QDBusConnection::systemBus());
         connect(m_pDBus, SIGNAL(PrepareForSleep(bool)), this, SLOT(onSleepWhenTaking(bool)));
     }
+
+    QDBusConnection::sessionBus().connect("com.deepin.SessionManager", "/com/deepin/SessionManager",
+                                              "org.freedesktop.DBus.Properties", "PropertiesChanged", this,
+                                              SLOT(onLockedScreen(QString, QVariantMap, QStringList)));
 }
 
 QStringList Player::supportedSuffixList() const
@@ -1039,6 +1043,32 @@ void Player::onSleepWhenTaking(bool sleep)
     qDebug() << "onSleepWhenTaking:" << sleep;
     if (sleep) {
         //休眠记录状态
+        if (m_basePlayer->state() == PlayerBase::Playing) {
+            //休眠唤醒前设置音量为1%
+            readSinkInputPath();
+            if (!m_sinkInputPath.isEmpty()) {
+                QDBusInterface ainterface("com.deepin.daemon.Audio", m_sinkInputPath,
+                                          "com.deepin.daemon.Audio.SinkInput",
+                                          QDBusConnection::sessionBus());
+                if (!ainterface.isValid()) return ;
+
+                //停止播放并记录播放位置
+                m_Vlcstate = Vlc::Playing;
+                m_basePlayer->pause();
+                qlonglong time = position();
+                INT_LAST_PROGRESS_FLAG = 1;
+                m_ActiveMeta.offset = time;
+                m_basePlayer->stop();
+                emit signalPlaybackStatusChanged(Player::Paused);
+            }
+        }
+    }
+}
+
+void Player::onLockedScreen(const QString &name, QVariantMap map, const QStringList &params)
+{
+    qDebug() << name << map << endl;
+    if (map.value("Locked").value<bool>()) {
         if (m_basePlayer->state() == PlayerBase::Playing) {
             //休眠唤醒前设置音量为1%
             readSinkInputPath();
