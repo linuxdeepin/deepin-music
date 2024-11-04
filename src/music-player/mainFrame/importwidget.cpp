@@ -25,6 +25,8 @@
 #include "player.h"
 #include "ac-desktop-define.h"
 #include "commonservice.h"
+#include "mainFrame/mainframe.h"
+#include <QTimer>
 DGUI_USE_NAMESPACE
 
 const QString linkTemplate = "<a href='%1'>%2</a>";
@@ -118,7 +120,7 @@ ImportWidget::ImportWidget(QWidget *parent) : DFrame(parent)
 
     connect(DataBaseService::getInstance(), &DataBaseService::signalImportedPercent,
             this, &ImportWidget::slotImportedPercent);
-
+    connect(this, &ImportWidget::signalImportWidgetShowAndClose, static_cast<MainFrame *>(parent), &MainFrame::slotImportWidgetShowAndClose);
     setThemeType(DGuiApplicationHelper::instance()->themeType());
 }
 
@@ -388,4 +390,7 @@ void ImportWidget::showWaitHint()
     m_importPathButton->hide();
     m_addMusicButton->hide();
     m_text->setText(tr("Loading music, please wait..."));
+    QTimer::singleShot(1000, this, [=](){
+        emit signalImportWidgetShowAndClose();
+    });
 }

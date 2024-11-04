@@ -73,6 +73,8 @@ private:
 public slots:
     void slotMenuTriggered(QAction *action);
     void slotAddMusicClicked();
+    // 导入界面显示与关闭动画
+    void slotImportWidgetShowAndClose();
 
 private slots:
     void setThemeType(DGuiApplicationHelper::ColorType themeType);
