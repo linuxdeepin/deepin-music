@@ -32,6 +32,7 @@ signals:
     void scanMusicDirectory();
     void selectImportDirectory();
     void importSelectFiles(const QStringList &urllist);
+    void signalImportWidgetShowAndClose();
 
 public slots:
     void showWaitHint();

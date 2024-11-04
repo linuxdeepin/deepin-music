@@ -719,24 +719,32 @@ void MainFrame::slotDBImportFinished(QString hash, int successCount)
         }
         return;
     }
-    // 导入界面显示与关闭动画
     if (m_importWidget && m_importWidget->isVisible()) {
-        m_musicStatckedWidget->show();
-        m_musicStatckedWidget->animationImportToDown(this->size() - QSize(0, m_footerWidget->height() + titlebar()->height()));
+        slotImportWidgetShowAndClose();
         // 切换到所有音乐界面
         if (hash != "CdaRole")
             emit CommonService::getInstance()->signalSwitchToView(AllSongListType, "all");
         else
             emit CommonService::getInstance()->signalSwitchToView(CdaType, hash); //处理cd加载时，切换到主页面，且没有歌曲存在的情况
+    }
+
+    m_titlebarwidget->setEnabled(true);
+    if (m_newSonglistAction) {
+        m_newSonglistAction->setEnabled(true);
+    }
+}
+
+void MainFrame::slotImportWidgetShowAndClose()
+{
+    // 导入界面显示与关闭动画
+    if (m_importWidget && m_importWidget->isVisible()) {
+        m_musicStatckedWidget->show();
+        m_musicStatckedWidget->animationImportToDown(this->size() - QSize(0, m_footerWidget->height() + titlebar()->height()));
         m_footerWidget->show();
         m_importWidget->closeAnimationToDown(this->size());
         if (CommonService::getInstance()->isTabletEnvironment() && m_select) {
             m_select->setEnabled(true);
         }
-    }
-    m_titlebarwidget->setEnabled(true);
-    if (m_newSonglistAction) {
-        m_newSonglistAction->setEnabled(true);
     }
 }
 
