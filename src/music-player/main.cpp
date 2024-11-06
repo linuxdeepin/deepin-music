@@ -51,8 +51,6 @@ int main(int argc, char *argv[])
     setenv("PULSE_PROP_media.role", "music", 1);
 
     DmGlobal::checkWaylandMode();
-    if (DmGlobal::isWaylandMode() && !DmGlobal::isTreelandMode()) //是否开启wayland
-        qputenv("QT_WAYLAND_SHELL_INTEGRATION", "kwayland-shell"); //add wayland parameter
 
     QSurfaceFormat format;
     format.setRenderableType(QSurfaceFormat::OpenGLES);
