@@ -570,12 +570,20 @@ void SdlPlayer::libvlc_audio_flush_cb(void *data, int64_t pts)
 
 void SdlPlayer::SDL_audio_cbk(void *userdata, uint8_t *stream, int len)
 {
+    if(userdata == nullptr || stream == nullptr) return;
     SDL_memset_function Memset = (SDL_memset_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSdlSymbol("SDL_memset");
     SDL_MixAudio_function MixAudio = (SDL_MixAudio_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSdlSymbol("SDL_MixAudio");
+    if(Memset == nullptr || MixAudio == nullptr) {
+         return;
+    }
     SdlPlayer *sdlMediaPlayer = static_cast<SdlPlayer *>(userdata);
         g_dataCache -= len;
         if (g_dataCache > 0) {
-        g_dataCacheBlock = g_dataCache / len;
+            if(len == 0 ) {
+                g_dataCacheBlock = 0;
+            } else {
+                g_dataCacheBlock = g_dataCache / len;
+            }
     } else
         g_dataCache = 0;
     Memset(stream, 0, size_t(len)); //init stream to forbid End symbol problem
