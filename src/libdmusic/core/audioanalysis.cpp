@@ -280,7 +280,15 @@ bool AudioAnalysis::parseMetaFromLocalFile(DMusic::MediaMeta &meta)
         AVFormatContext *pFormatCtx = format_alloc_context();
         format_open_input(&pFormatCtx, curFilePath.toStdString().c_str(), nullptr, nullptr);
         if (pFormatCtx) {
-            format_find_stream_info(pFormatCtx, nullptr);
+            int ret = format_find_stream_info(pFormatCtx, nullptr);
+            if (ret < 0)
+                return false;
+            bool hasAudio = false;
+            for (int i = 0; i < pFormatCtx->nb_streams; i++)
+                if (pFormatCtx->streams[i]->codecpar->codec_type == AVMEDIA_TYPE_AUDIO)
+                    hasAudio = true;
+            if (!hasAudio)
+                return false;
             int64_t duration = pFormatCtx->duration / 1000;
             if (duration > 0) {
                 meta.length = duration;
