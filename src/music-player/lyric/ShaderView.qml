@@ -17,7 +17,8 @@ Item {
         1: effectLightWaveView,
         2: effectSunView,
         3: effectWaterWaveView,
-        4: effectParticleView,
+        4: effectLightWaveView,
+        // 4: effectParticleView,
         5: commView,
     }
     Row {
