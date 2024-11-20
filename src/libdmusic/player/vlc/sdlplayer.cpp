@@ -164,7 +164,8 @@ void SdlPlayer::open(VlcMedia *media)
         LockAudio();
         Delay(40);
         UnlockAudio();
-        CloseAudio();
+        if (qEnvironmentVariable("DDE_CURRENT_COMPOSITOR") != "TreeLand")
+            CloseAudio();
 
         m_sinkInputPath.clear();
     }
@@ -241,7 +242,8 @@ void SdlPlayer::stop()
         LockAudio();
         Delay(40);
         UnlockAudio();
-        CloseAudio();
+        if (qEnvironmentVariable("DDE_CURRENT_COMPOSITOR") != "TreeLand")
+            CloseAudio();
     }
 }
 
