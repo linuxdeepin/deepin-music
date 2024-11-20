@@ -12,7 +12,7 @@ import audio.global 1.0
 import "../musicmousemenu"
 import "../dialogs"
 
-FloatingPanel {
+CurrentFloatingPanel {
     property int  headerHeight: 73
     property ListModel listmodel: PlayListModel{}
     property Menu playlistMoreMenu: MusicMoreMenu{pageHash:"play"}
