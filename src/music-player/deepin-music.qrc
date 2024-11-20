@@ -27,6 +27,7 @@
         <file>singerlist/ArtistGridDelegate.qml</file>
         <file>allItems/CircularImg.qml</file>
         <file>playlist/CurrentPlayList.qml</file>
+        <file>playlist/CurrentFloatingPanel.qml</file>
         <file>playlist/CurrentPlayListDelegate.qml</file>
         <file>toolbar/VolumeSlider.qml</file>
         <file>dialogs/EqualizerDialog.qml</file>
