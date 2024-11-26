@@ -51,7 +51,6 @@ Depends: ${shlibs:Depends}, ${misc:Depends},
  gstreamer1.0-pulseaudio,
  gvfs-bin,
  libqt6sql6-sqlite,
- qt6-multimedia-dev,
  vlc-plugin-base,
 # 识别编码格式
  libuchardet0,
