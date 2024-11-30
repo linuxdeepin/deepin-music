@@ -113,7 +113,7 @@ DialogWindow {
                             Presenter.setValueToSettings("base.close.close_action", closeAction)
                         }
                         Presenter.syncToSettings();
-                        Qt.quit()
+                        Presenter.forceExit();
                     }
                 }
             }

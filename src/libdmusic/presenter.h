@@ -104,6 +104,9 @@ public:
     Q_INVOKABLE QImage getEffectImage();
     Q_INVOKABLE void setEffectImage(const QImage &img);
 
+    // 退出
+    Q_INVOKABLE void forceExit();
+
 public slots:
     // 播放器
     void play();
