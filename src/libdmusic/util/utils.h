@@ -23,7 +23,7 @@ public:
     static QStringList detectEncodings(const QByteArray &rawData);
     static QString filePathHash(const QString &filepath);
     static void fft(std::complex<float> *Data, int Log2N, int sign);
-    static QVariant readDBusProperty(const QString &service, const QString &path, const QString &interface = QString(), const char *propert = "", QDBusConnection connection = QDBusConnection::sessionBus());
+    static QVariant readDBusProperty(const QString &service, const QString &path, const QString &interface = QString(), const char *property = "", QDBusConnection connection = QDBusConnection::sessionBus());
     static QVariantMap metaToVariantMap(const DMusic::MediaMeta &meta);
     static QVariantMap albumToVariantMap(const DMusic::AlbumInfo &album);
     static QVariantMap artistToVariantMap(const DMusic::ArtistInfo &artist);
