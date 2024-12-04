@@ -985,8 +985,8 @@ void DataManager::addMetasToPlayList(const QList<QString> &metaHash,
                 emit signalAddOneMeta(playlistHashs, meta, addToPlay);
             }
         }
-        curPlaylist.sortCustomMetas = curPlaylist.sortMetas;
     }
+    curPlaylist.sortCustomMetas = curPlaylist.sortMetas;
     emit signalAddMetaFinished(allPlaylistHashs.values());
 }
 
@@ -1034,8 +1034,8 @@ void DataManager::addMetasToPlayList(const QList<MediaMeta> &metas, const QStrin
                 emit signalAddOneMeta(playlistHashs, meta, addToPlay);
             }
         }
-        curPlaylist.sortCustomMetas = curPlaylist.sortMetas;
     }
+    curPlaylist.sortCustomMetas = curPlaylist.sortMetas;
     emit signalAddMetaFinished(allPlaylistHashs.values());
 }
 
@@ -1064,7 +1064,7 @@ void DataManager::removeFromPlayList(const QStringList listToDel, const QString 
             int curIndex = curPlaylist.sortMetas.indexOf(hash);
             if (curIndex >= 0 && curIndex < curPlaylist.sortMetas.size()) {
                 curPlaylist.sortMetas.removeAt(curIndex);
-                curPlaylist.sortCustomMetas.removeAt(curIndex);
+                curPlaylist.sortCustomMetas.removeOne(hash);
                 QStringList playlistHashs;
                 playlistHashs << playlistHash;
                 emit signalDeleteOneMeta(playlistHashs, hash, true);
