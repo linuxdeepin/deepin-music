@@ -59,8 +59,9 @@ ColumnLayout {
 
         delegate: SideBarItemDelegate{
             id: sidebarItem
-            width: 200; height: 36
-            backgroundVisible: false
+            width: 180; height: 36
+            backgroundVisible: true
+            normalBackgroundVisible: false
             ButtonGroup.group: group
             type: control.type
             font: DTK.fontManager.t6
