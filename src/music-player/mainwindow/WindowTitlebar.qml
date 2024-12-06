@@ -320,7 +320,7 @@ TitleBar {
                 opacity: opat
                 hoverEnabled: true
                 Layout.alignment: Qt.AlignRight
-                Layout.rightMargin: 20
+                Layout.rightMargin: 40
 
                 ToolTip {
                     visible: addBtn.hovered
