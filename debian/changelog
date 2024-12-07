@@ -1,3 +1,15 @@
+deepin-music (7.0.14) unstable; urgency=medium
+
+  * fix: remove unused dframeworkdbus dep
+    Thanks to Felix Yan
+  * fix: Fix the issue of new process starting when exiting(Bug: 289487)
+  * fix: crash when unfavorite music(Bug: 288429)
+  * fix: titlebar layout(Bug: 289505)(Influence: UI)
+  * fix: sidebar background color(Bug: 289767)(Influence: UI)
+  * fix: add-list button palette incorrect(Bug: 292287)(Influence: UI)
+
+ -- renbin <renbin@uniontech.com>  Sat, 07 Dec 2024 11:52:13 +0800
+
 deepin-music (7.0.13) unstable; urgency=medium
 
   * New version 7.0.13
