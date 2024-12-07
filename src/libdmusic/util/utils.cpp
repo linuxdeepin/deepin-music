@@ -178,7 +178,7 @@ void Utils::fft(std::complex<float> *Data, int Log2N, int sign)
             Data[i] /= length;
 }
 
-QVariant Utils::readDBusProperty(const QString &service, const QString &path, const QString &interface, const char *propert, QDBusConnection connection)
+QVariant Utils::readDBusProperty(const QString &service, const QString &path, const QString &interface, const char *property, QDBusConnection connection)
 {
     // 创建QDBusInterface接口
     dbusMutex.lock();
@@ -194,7 +194,7 @@ QVariant Utils::readDBusProperty(const QString &service, const QString &path, co
         return  v;
     }
     //调用远程的value方法
-    QVariant v = ainterface.property(propert);
+    QVariant v = ainterface.property(property);
     dbusMutex.unlock();
     return  v;
 }
