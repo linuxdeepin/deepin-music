@@ -437,8 +437,8 @@ Settings.SettingsDialog {
     property var duplicatDlg :DialogWindow {
         property int curId: 0
         property int duplicatId: 0
-        property string newValue: null
-        property string oldValue: null
+        property string newValue: ""
+        property string oldValue: ""
         property bool replaceFlag: false
 
         id: dialog
