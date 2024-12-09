@@ -183,7 +183,9 @@ ApplicationWindow {
     SystemTrayIcon{
         id: systemTray
         visible: true
+        // TODO: temporar setting, wait dtk fix IconEngine. icon.name is fallback
         icon.name: "deepin-music"
+        icon.source: "qrc:/dsg/img/deepin-music.svg"
         tooltip: qsTr("Music")
 
         onActivated: {
