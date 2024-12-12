@@ -72,7 +72,7 @@ Rectangle {
                     anchors.fill: parent
                     acceptedButtons: Qt.LeftButton
                     onClicked: {
-                        Presenter.importMetas(null,pageHash);
+                        Presenter.importMetas({}, pageHash);
                     }
                 }
             }
