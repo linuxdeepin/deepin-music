@@ -63,12 +63,17 @@ Menu {
         visible: (globalVariant.globalCustomPlaylistModel.tmpModel.count === 0) ? false : true
     }
 
-    Repeater {
-        id: repeater
+    Instantiator {
+        id: customInstantiator
 
+        // new append menu item need add to the end
+        property int previousMenuItemCount: 5
         model: globalVariant.globalCustomPlaylistModel.tmpModel
 
-        MenuItem {
+        onObjectAdded: (index, object) => importMenu.insertItem(index + previousMenuItemCount, object)
+        onObjectRemoved: (index, object) => importMenu.removeItem(object)
+
+        delegate: MenuItem {
             height: visible ? 30 : 0
             text: model.displayName.replace(/</g, "&lt;")
             visible: (model.uuid === pageHash) ? false : true
