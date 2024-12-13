@@ -238,6 +238,7 @@ void Presenter::setEffectImage(const QImage &img)
 void Presenter::forceExit()
 {
     saveDataToDB();
+    qApp->processEvents();
     QCoreApplication::exit(0);
     _Exit(0);
 }

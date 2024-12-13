@@ -228,7 +228,7 @@ ApplicationWindow {
             }
             MenuItem {
                 text: qsTr("Exit")
-                onTriggered: Qt.quit()
+                onTriggered: Presenter.forceExit();
             }
         }
     }
@@ -270,7 +270,7 @@ ApplicationWindow {
             globalVariant.closeConfirmDlgLoader.item.isMinimize = false
         } else if (closeAction == 1) {
             //退出
-            Qt.quit()
+            Presenter.forceExit();
         } else {
             //询问
             globalVariant.closeConfirmDlgLoader.item.isClose = Presenter.valueFromSettings("base.close.is_close")
@@ -389,7 +389,7 @@ ApplicationWindow {
         }
     }
     function onQuitRequested() {
-        Qt.quit()
+        Presenter.forceExit();
     }
     function onRaiseRequested() {
         //console.log("onRaiseRequested......................", rootWindow.visibility, rootWindow.visible)
