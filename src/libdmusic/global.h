@@ -157,6 +157,9 @@ struct MediaMeta {
     bool    toDelete    = false;
 
     QString codec;              //save codec
+
+    bool inMuiltSelect = false; // runtime properties
+    bool dragFlag = false;
 };
 
 struct PlaylistInfo {
