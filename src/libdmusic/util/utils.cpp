@@ -237,6 +237,10 @@ QVariantMap Utils::metaToVariantMap(const DMusic::MediaMeta &meta)
     metaMap.insert("toDelete", meta.toDelete);
     metaMap.insert("codec", meta.codec);
 
+    // qml runtime properties
+    metaMap.insert("inMulitSelect", meta.inMuiltSelect);
+    metaMap.insert("dragFlag", meta.dragFlag);
+
     return metaMap;
 }
 

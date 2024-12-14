@@ -31,7 +31,7 @@ Menu {
     }
 
     MenuSeparator {
-        height: visible ? 12 : 0
+        height: visible ? implicitHeight : 0
         visible: ("play" === pageHash) ? false : true
     }
 
@@ -59,7 +59,7 @@ Menu {
     MenuSeparator {
         id: menuSeparator
 
-        height: visible ? 12 : 0
+        height: visible ? implicitHeight : 0
         visible: (globalVariant.globalCustomPlaylistModel.tmpModel.count === 0) ? false : true
     }
 

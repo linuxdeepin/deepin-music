@@ -483,7 +483,7 @@ FloatingPanel {
 
     onPlayModeChanged: {
         globalVariant.curPlayMode = playMode
-        if (mediaData.hash == null)
+        if (mediaData.hash == "")
             return
 
         updatePlayControlBtnStatus()

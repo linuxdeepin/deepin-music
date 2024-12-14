@@ -78,7 +78,8 @@ Rectangle {
             autoExclusive: false
             width: listview.width - 40
             height: 56
-            backgroundVisible: index % 2 === 0
+            backgroundVisible: true
+            normalBackgroundVisible: index % 2 === 0
             delegateListHash: viewListHash
         }
 
