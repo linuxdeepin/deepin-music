@@ -65,7 +65,7 @@ depends:
 
 source:
   kind: local
-  url: "http://gerrit.uniontech.com/deepin-music"
+  url: "https://github.com/linuxdeepin/deepin-music"
   version: develop/snipe
   commit: b174391f283887fac3854194eec01ed71b31f0de
   patch: patches/fix-library-path.patch
