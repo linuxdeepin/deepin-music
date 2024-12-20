@@ -40,7 +40,6 @@ extern "C" {
 #define AUDIO_MAX_CALLBACKS_PER_SEC 30
 #endif
 
-//消息定义见patch https://gerrit.uniontech.com/c/base/libsdl2/+/23685
 #define SDL_AUDIO_ERR_MSG "Error writing to datastream"
 int g_playbackStatus = 0;
 static QMutex vlc_mutex;
