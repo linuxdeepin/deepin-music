@@ -247,6 +247,10 @@ ApplicationWindow {
             playlistLoader.item.playlistHided.connect(function(){
                 toolbox.updatePlaylistBtnStatus(false)
             })
+            playlistLoader.item.playlistEmpty.connect(function(){
+                if (isLyricShow)
+                    lrcWindowLoader.item.lyricWindowUp()
+            })
             toolbox.updatePlayControlBtnStatus()
         }
     }

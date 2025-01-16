@@ -20,6 +20,7 @@ CurrentFloatingPanel {
     property Menu selectMenu: MulitSelectMenu{pageHash: "play"}
     property MusicInfoDialog infoDialog: MusicInfoDialog{musicData: playlistView.model.get(0)}
     signal playlistHided()
+    signal playlistEmpty()
 
     id: playlistRoot
     visible: isPlaylistShow
@@ -136,6 +137,7 @@ CurrentFloatingPanel {
                         }
 
                         onClicked: {
+                            playlistEmpty()
                             listmodel.clear()
                             Presenter.clearPlayList("play")
                         }
