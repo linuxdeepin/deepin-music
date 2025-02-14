@@ -1,3 +1,10 @@
+deepin-music (7.0.18) unstable; urgency=medium
+
+  * chore: New version 7.0.18.
+  * chore: Adapt linglong.
+
+ -- wangrong <wangrong@uniontech.com>  Sat, 08 Feb 2025 15:13:35 +0800
+
 deepin-music (7.0.17) unstable; urgency=medium
 
   * chore: New version 7.0.17.

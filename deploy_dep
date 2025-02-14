@@ -1,0 +1,74 @@
+# SPDX-FileCopyrightText: 2023-2024 UnionTech Software Technology Co., Ltd.
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+#!/bin/bash
+set -e
+
+# 生成安装目录/文件和运行时依赖的必要库
+# 获取应用id
+ID_VALUE=$(awk -F ': ' '/^  id: / {print $2}' linglong.yaml)
+
+## 获取安装的文件列表并写入安装脚本（排除头文件、pc和cmake文件）
+# cmake 安装
+if ! grep -- "-- Installing:" install.log | sed 's/-- Installing: //' | grep -vE '\.(h|cmake|pc)$' > ${ID_VALUE}.install; then
+    echo "cmake install files are empty!"
+fi
+# qmake 安装
+if ! grep -- "-install qinstall" install.log | awk '{print $NF}' | grep -vE '\.(h|cmake|pc)$' >> ${ID_VALUE}.install; then
+    echo "qmake install files are empty!"
+fi
+# 动态库软连接
+if ! grep -- "^ln -f -s " install.log | awk '{print $NF}' >> ${ID_VALUE}.install; then
+    echo "Get library softlink empty!"
+fi
+
+# glib-compile-schemas 文件添加到 install 文件
+for SCHEMAS in "${PREFIX}"/share/glib-2.0/schemas/gschema*; do
+    if [[ -f "$SCHEMAS" ]]; then
+        echo "$SCHEMAS" >> "${ID_VALUE}.install"
+    fi
+done
+
+# 获取依赖的所有文件
+for LDFILE in "$@"; do
+
+    # 判断文件是否以 .so 结尾
+    if [[ "$LDFILE" == *.so ]]; then
+        FILE_PATH="${PREFIX}/lib/${TRIPLET}/$LDFILE"
+
+        # 添加依赖库到 install 文件
+        for SOFILE in "${PREFIX}/lib/${TRIPLET}"/${LDFILE}*; do
+            if [[ -f "$SOFILE" ]]; then
+                echo "$SOFILE" >> "${ID_VALUE}.install"
+            fi
+        done
+    else
+        FILE_PATH="${PREFIX}/bin/$LDFILE"
+    fi
+
+    # 获取依赖库
+    DEPENDENCIES=$(ldd "$FILE_PATH" | grep "$PREFIX") || continue
+    if [[ ! -z "$DEPENDENCIES" ]]; then
+        echo "$DEPENDENCIES" | while IFS= read -r line; do
+            LIB_PATH=${line##*=> }
+            LIB_PATH=${LIB_PATH%%(*}
+
+            # 获取基本库名并匹配相关库
+            LIB_DIR=$(dirname "$LIB_PATH")
+            BASE_LIB_NAME=$(basename "$LIB_PATH")
+
+            # 使用通配符查找相关库文件并将结果倒序存储到 install 文件
+            for FILE in "$LIB_DIR"/${BASE_LIB_NAME%.*}*; do
+                if [[ -f "$FILE" ]]; then
+                    echo "$FILE"
+                fi
+            done | sort -r >> "${ID_VALUE}.install"
+
+        done
+    fi
+done
+
+# 排除静态链接库
+#echo '^'${PREFIX}'/'${TRIPLET}'/.+(?<!\.a)$' >> "${ID_VALUE}.install"
+#echo '^'${PREFIX}'/lib/.+(?<!\.a|\.pc|\.cmake|\.h|\.sh|\.prf|\.inc)$' >> "${ID_VALUE}.install"

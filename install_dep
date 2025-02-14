@@ -1,0 +1,162 @@
+# SPDX-FileCopyrightText: 2023-2024 UnionTech Software Technology Co., Ltd.
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+#!/bin/bash
+set -e
+project_dir=$PWD
+cache_dir=${LINGLONG_FETCH_CACHE:-$PWD/linglong/cache}
+mkdir -p "$cache_dir"
+# 文件名 deb-source.bash
+# 包含要解压的deb目录
+deb_dir=$(realpath "$1")
+# 将deb解压到输出目录
+target=$(realpath "$2")
+# 默认会跳过base已安装的包，可以强制解压已安装的包
+include="$3"
+# 临时目录，将内容处理后再移动到 target
+out_dir="$(mktemp -d)"
+cd "$out_dir"
+# 临时文件，用于记录deb文件列表
+deb_list_file="$out_dir/deb.list"
+# 临时文件，用于记录强制安装的包名
+include_list_file="$out_dir/include.packages.list"
+# 临时文件，用于记录跳过安装的包名
+exclude_list_file="$out_dir/exclude.packages.list"
+# 包数据存放的临时目录
+data_list_dir="$out_dir/data"
+# 生成文件列表
+find "$deb_dir" -type f -name "*.deb" >"$deb_list_file"
+echo "$include" | tr ',' '\n' >"$include_list_file"
+# 用于记录安装的所有文件来自哪个包
+mkdir /tmp/deb-source-file || true
+
+# 如果base和runtime已安装则跳过，旧版本base没有/packages.list文件就使用/var/lib/dpkg/status
+grep 'Package: ' /var/lib/dpkg/status >"$exclude_list_file" || true
+# 跳过base和runtime已安装的包，也可使用install_dep_skip.list文件控制跳过哪些包
+cat /packages.list /runtime/packages.list "$PREFIX/packages.list" "$project_dir/install_dep_skip.list" >>"$exclude_list_file" || true
+
+# 遍历文件列表
+while IFS= read -r deb_file; do
+    # 输出deb名，但不换行，便于在包名后面加skip
+    echo -n "$deb_file"
+    # 提取control文件
+    control_file=$(ar -t "$deb_file" | grep control.tar)
+    ar -x "$deb_file" "$control_file"
+    # 获取包名
+    pkg=$(tar -xf "$control_file" ./control -O | grep '^Package:' | awk '{print $2}')
+    rm "$control_file"
+    # 如果在base和runtime中已安装，并且不包含在include（强制安装）列表则跳过安装，否则安装到$PREFIX目录
+    if grep -q "^Package: $pkg$" "$exclude_list_file" && ! grep -q "^$pkg$" "$include_list_file"; then
+        echo " skip"
+        echo "$deb_file" >>/tmp/deb-source-file/skip.list
+        continue
+    fi
+    # 记录到 packages.list
+    echo "Package: $pkg" >>"$PREFIX/packages.list"
+    # 换行
+    echo ""
+    # 缓存解压后的data.tar文件，便于在下次使用时，加快安装速度
+    deb_sha=$(sha256sum "$deb_file" | awk '{print $1}')
+    data_cache="$cache_dir/install_dep_$deb_sha"
+    if [ ! -e "$data_cache" ]; then
+        data_cache_tmp="$cache_dir/install_dep_tmp_$deb_sha"
+        # 查找data.tar文件，文件会因为压缩格式不同，有不同的后缀，例如data.tar.xz、data.tar.gz
+        data_file=$(ar -t "$deb_file" | grep data.tar)
+        case "$data_file" in
+        *.xz) ar -p "$deb_file" "$data_file" | unxz >"$data_cache_tmp" ;;
+        *.gz) ar -p "$deb_file" "$data_file" | gunzip >"$data_cache_tmp" ;;
+        *.zst) ar -p "$deb_file" "$data_file" | unzstd >"$data_cache_tmp" ;;
+        *)
+            echo "unknown file type"
+            exit 1
+            ;;
+        esac
+        mv "$data_cache_tmp" "$data_cache"
+    fi
+    # 解压data.tar文件到输出目录
+    mkdir "$data_list_dir"
+    tar -xvf "$data_cache" -C "$data_list_dir" >>"/tmp/deb-source-file/$(basename "$deb_file").list"
+    # 清理不需要复制的目录
+    rm -r "${data_list_dir:?}/usr/share/applications"* 2>/dev/null || true
+    # 修改pc文件的prefix
+    sed -i "s#/usr#$PREFIX#g" "$data_list_dir"/usr/lib/"$TRIPLET"/pkgconfig/*.pc 2>/dev/null || true
+    sed -i "s#/usr#$PREFIX#g" "$data_list_dir"/usr/share/pkgconfig/*.pc 2>/dev/null || true
+    # 修改指向/lib的绝对路径的软链接
+    find "$data_list_dir" -type l | while IFS= read -r file; do
+        linkTarget=$(readlink "$file")
+        # 如果指向的路径以/lib开头，并且文件不存在，则添加 /runtime 前缀
+        # 部分 dev 包会创建 so 文件的绝对链接指向 /lib 目录下
+        if echo "$linkTarget" | grep -q ^/lib && ! [ -f "$linkTarget" ]; then
+            ln -sf "$target$linkTarget" "$file"
+            echo "    FIX LINK" "$linkTarget" "=>" "$target$linkTarget"
+        fi
+    done
+
+    # 修复动态库的RUNPATH
+    find "$data_list_dir" -type f | while IFS= read -r file; do
+        fileinfo=$(file "$file")
+        # skip non-dynamic librarie
+        if ! echo "$fileinfo" | grep -q 'shared object'; then
+            continue
+        fi
+        # skip debug file
+        if echo "$fileinfo" | grep -q 'with debug_info'; then
+            continue
+        fi
+        runpath=$(readelf -d "$file" | grep RUNPATH | awk '{print $NF}')
+        # skip without runpath
+        if ! echo "$runpath" | grep -q '^\[/'; then
+            continue
+        fi
+        # 如果RUNPATH使用绝对路径，则添加/runtime前缀
+        runpath=${runpath#[}
+        runpath=${runpath%]}
+        newRunpath=${runpath//usr\/lib/runtime\/lib}
+        newRunpath=${newRunpath//usr/runtime}
+        patchelf --set-rpath "$newRunpath" "$file"
+        echo "    FIX RUNPATH" "$file" "$runpath" "=>" "$newRunpath"
+    done
+    # 复制/lib,/bin,/usr目录
+    cp -rP "$data_list_dir/lib" "$target" 2>/dev/null || true
+    cp -rP "$data_list_dir/bin" "$target" 2>/dev/null || true
+    cp -rP "$data_list_dir"/usr/* "$target" || true
+    rm -r "$data_list_dir"
+done <"$deb_list_file"
+
+# 修复相对路径的软链接(dev包内的软连接尝试修复指向base)
+find "$target" -type l | while IFS= read -r file; do
+    # 获取链接的绝对路径
+    linkTarget=$(readlink -m "$file")
+    # 如果链接指向的文件不存在
+    if [ ! -e "$linkTarget" ]; then
+        # 去掉前缀查看/lib下是否存在
+        linkTarget="${linkTarget#$target}"
+        if [ -e "$linkTarget" ]; then
+            ln -sf "$linkTarget" "$file"
+            echo "    FIX LINK" "$file" "=>" "$target$linkTarget"
+        fi
+        # 添加usr前缀查看/usr/lib下是否存在
+        linkTarget="/usr$target"
+        if [ -e "$linkTarget" ]; then
+            ln -sf "$target$linkTarget" "$file"
+            echo "    FIX LINK" "$file" "=>" "$target$linkTarget"
+        fi
+        # 添加 /runtime 前缀查看是否存在
+        linkTarget=$(readlink -m "$file")
+        linkTargetNoPrefix="${linkTarget#$target}"
+        runtimeLib="/runtime$linkTargetNoPrefix"
+        if [ -e "$runtimeLib" ]; then
+            ln -sf "$runtimeLib" "$file"
+            echo "    FIX LINK" "$file" "=>" "$runtimeLib"
+        fi
+    fi
+done
+
+# 更新ld.so.cache
+if [ -n "$LINGLONG_LD_SO_CACHE" ]; then
+    ldconfig -C "$LINGLONG_LD_SO_CACHE"
+fi
+
+# 清理临时目录
+rm -r "$out_dir"
