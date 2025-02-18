@@ -77,6 +77,7 @@ signals:
     void sendCdaStatus(int state);
     void quitRequested();
     void raiseRequested();
+    void playPlaylistRequested(const QString &playlistHash);
 
 private:
     void playNextMeta(const DMusic::MediaMeta &meta, bool isAuto, bool playFlag = true);
