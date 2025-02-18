@@ -97,6 +97,9 @@ Presenter::Presenter(const QString &unknownAlbumStr, const QString &unknownArtis
             emit updateCDStatus(state);
         }
     });
+    connect(m_data->m_playerEngine, &PlayerEngine::playPlaylistRequested, this, [this](const QString &playlistHash){
+        playPlaylist(playlistHash);
+    });
     connect(m_data->m_playerEngine, &PlayerEngine::quitRequested, this, &Presenter::quitRequested);
     connect(m_data->m_playerEngine, &PlayerEngine::raiseRequested, this, &Presenter::raiseRequested);
 

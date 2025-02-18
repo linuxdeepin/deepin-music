@@ -218,14 +218,18 @@ void PlayerEngine::setMprisPlayer(const QString &serviceName, const QString &des
     connect(m_data->m_mprisPlayer, &MprisPlayer::playRequested,
     this, [ = ]() {
         // dbus暂停立即执行
-        if (playbackStatus() == DmGlobal::Paused) {
-            resume();
+        if (isEmpty()) {
+            Q_EMIT playPlaylistRequested("all");
         } else {
-            if (playbackStatus() != DmGlobal::Playing) {
-                //播放列表为空时也应考虑，不然会出现dbus调用无效的情况
-                playNextMeta(false);
+            if (playbackStatus() == DmGlobal::Paused) {
+                resume();
             } else {
-                pauseNow();
+                if (playbackStatus() != DmGlobal::Playing) {
+                    //播放列表为空时也应考虑，不然会出现dbus调用无效的情况
+                    playNextMeta(false);
+                } else {
+                    pauseNow();
+                }
             }
         }
     });
