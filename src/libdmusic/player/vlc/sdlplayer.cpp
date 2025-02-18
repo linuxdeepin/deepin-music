@@ -469,16 +469,16 @@ void SdlPlayer::cleanMemCache()
 
 void SdlPlayer::readSinkInputPath()
 {
-    QVariant v = Utils::readDBusProperty("com.deepin.daemon.Audio1", "/com/deepin/daemon/Audio1",
-                                             "com.deepin.daemon.Audio1", "SinkInputs");
+    QVariant v = Utils::readDBusProperty("org.dde.daemon.Audio1", "/org/dde/daemon/Audio1",
+                                             "org.dde.daemon.Audio1", "SinkInputs");
 
     if (!v.isValid()) return;
 
     QList<QDBusObjectPath> allSinkInputsList = v.value<QList<QDBusObjectPath> >();
 
     for (auto curPath : allSinkInputsList) {
-        QVariant nameV = Utils::readDBusProperty("com.deepin.daemon.Audio1", curPath.path(),
-                                                     "com.deepin.daemon.Audio1.SinkInput", "Name");
+        QVariant nameV = Utils::readDBusProperty("org.dde.daemon.Audio1", curPath.path(),
+                                                     "org.dde.daemon.Audio1.SinkInput", "Name");
 
         if (!nameV.isValid() || nameV.toString() != "Deepin Music")
             continue;
@@ -496,13 +496,13 @@ void SdlPlayer::resetVolume()
 
     if (m_sinkInputPath.isEmpty()) return;
 
-    QVariant volumeV = Utils::readDBusProperty("com.deepin.daemon.Audio1", m_sinkInputPath,
-                                                   "com.deepin.daemon.Audio1.SinkInput", "Volume");
+    QVariant volumeV = Utils::readDBusProperty("org.dde.daemon.Audio1", m_sinkInputPath,
+                                                   "org.dde.daemon.Audio1.SinkInput", "Volume");
 
     if (!volumeV.isValid()) return;
 
-    QDBusInterface ainterface("com.deepin.daemon.Audio1", m_sinkInputPath,
-                              "com.deepin.daemon.Audio1.SinkInput",
+    QDBusInterface ainterface("org.dde.daemon.Audio1", m_sinkInputPath,
+                              "org.dde.daemon.Audio1.SinkInput",
                               QDBusConnection::sessionBus());
     if (!ainterface.isValid()) return ;
 
