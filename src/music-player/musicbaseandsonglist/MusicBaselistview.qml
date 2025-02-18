@@ -96,6 +96,7 @@ Rectangle {
                     sidebarMenuLoader.setSource("../musicmousemenu/SidebarMenu.qml")
                 if (sidebarMenuLoader.status === Loader.Ready ) {
                     sidebarMenuLoader.item.pageHash = key;
+                    sidebarMenuLoader.item.updateMenuState();
                     sidebarMenuLoader.item.popup();
                 }
             }
