@@ -12,7 +12,13 @@ Menu{
 
     id: playlistMenu
     width: 200
+
+    function updateMenuState() {
+        playMenuItem.enabled = Presenter.playlistMetaCount(playlistMenu.pageHash) > 0
+    }
+
     MenuItem {
+        id: playMenuItem
         text: qsTr("Play")
         onTriggered: {
             Presenter.playPlaylist(playlistMenu.pageHash);
