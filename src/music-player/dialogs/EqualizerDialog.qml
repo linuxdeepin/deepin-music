@@ -144,6 +144,7 @@ DialogWindow {
                         id: selectComBox
                         width: parent.width
                         height: parent.height
+                        maxVisibleItems: 9
 
                         textRole: "text"
                         iconNameRole: "icon"
