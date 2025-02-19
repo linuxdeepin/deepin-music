@@ -443,10 +443,8 @@ void PlayerEngine::playPreMeta()
         }
 
         if (preIndex != -1) {
-            DmGlobal::PlaybackStatus prePlaybackStatus = playbackStatus();
             setMediaMeta(allMetas.at(preIndex));
-            if (prePlaybackStatus == DmGlobal::Playing)
-                play();
+            play();
         } else {
             stop();
         }
