@@ -379,7 +379,7 @@ ApplicationWindow {
         }
     }
     function onImportFinished(playlistHashs, failCount, sucessCount, existCount) {
-        if (sucessCount <= 0 && failCount > 0) {
+        if (sucessCount <= 0 && failCount >= 0) {
             if (importFailedDlgLoader.status === Loader.Null)
                 importFailedDlgLoader.setSource("../dialogs/ImportFailedDialog.qml")
             if (importFailedDlgLoader.status === Loader.Ready)
