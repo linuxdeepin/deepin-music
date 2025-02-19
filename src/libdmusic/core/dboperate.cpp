@@ -111,6 +111,5 @@ void DBOperate::slotImportMetas(const QStringList &urls, const QSet<QString> &me
         importedCount++;
     }
 
-    if (importedCount > 0)
-        emit signalImportFinished(allHashs.values(), importedFailCount, importedCount - importedFailCount - existCount, existCount, mediaHash);
+    emit signalImportFinished(allHashs.values(), importedFailCount, importedCount - importedFailCount - existCount, existCount, mediaHash);
 }
