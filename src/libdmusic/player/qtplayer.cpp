@@ -205,16 +205,16 @@ void QtPlayer::resetPlayInfo()
 
     if (m_sinkInputPath.isEmpty()) return;
 
-    QVariant volumeV = Utils::readDBusProperty("org.dde.daemon.Audio1", m_sinkInputPath,
-                                               "org.dde.daemon.Audio1.SinkInput", "Volume");
+    QVariant volumeV = Utils::readDBusProperty("org.deepin.dde.Audio1", m_sinkInputPath,
+                                               "org.deepin.dde.Audio1.SinkInput", "Volume");
 
-    QVariant muteV = Utils::readDBusProperty("org.dde.daemon.Audio1", m_sinkInputPath,
-                                             "org.dde.daemon.Audio1.SinkInput", "Mute");
+    QVariant muteV = Utils::readDBusProperty("org.deepin.dde.Audio1", m_sinkInputPath,
+                                             "org.deepin.dde.Audio1.SinkInput", "Mute");
 
     if (!volumeV.isValid() || !muteV.isValid()) return;
 
-    QDBusInterface ainterface("org.dde.daemon.Audio1", m_sinkInputPath,
-                              "org.dde.daemon.Audio1.SinkInput",
+    QDBusInterface ainterface("org.deepin.dde.Audio1", m_sinkInputPath,
+                              "org.deepin.dde.Audio1.SinkInput",
                               QDBusConnection::sessionBus());
     if (!ainterface.isValid()) return ;
 
@@ -225,18 +225,18 @@ void QtPlayer::resetPlayInfo()
 
 void QtPlayer::readSinkInputPath()
 {
-    QVariant v = Utils::readDBusProperty("org.dde.daemon.Audio1", "/org/dde/daemon/Audio1",
-                                         "org.dde.daemon.Audio1", "SinkInputs");
+    QVariant v = Utils::readDBusProperty("org.deepin.dde.Audio1", "/org/deepin/dde/Audio1",
+                                         "org.deepin.dde.Audio1", "SinkInputs");
 
     if (!v.isValid()) return;
 
     QList<QDBusObjectPath> allSinkInputsList = v.value<QList<QDBusObjectPath> >();
 
     for (auto curPath : allSinkInputsList) {
-        QVariant nameV = Utils::readDBusProperty("org.dde.daemon.Audio1", curPath.path(),
-                                                 "org.dde.daemon.Audio1.SinkInput", "Name");
+        QVariant nameV = Utils::readDBusProperty("org.deepin.dde.Audio1", curPath.path(),
+                                                 "org.deepin.dde.Audio1.SinkInput", "Name");
 
-        if (!nameV.isValid() || nameV.toString() != "Deepin Music")
+        if (!nameV.isValid() || (nameV.toString() != "Deepin Music" && nameV.toString() != "deepin-music"))
             continue;
 
         m_sinkInputPath = curPath.path();
