@@ -15,6 +15,7 @@ public:
         : m_parent(parent)
     {
         m_keyStatus.insert(Qt::Key_Space, true);
+        m_keyStatus.insert(Qt::Key_A, true);
     }
 
 private:
@@ -43,9 +44,12 @@ bool EventsFilter::eventFilter(QObject *watched, QEvent *event)
         QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
         if (m_data->m_filterFlag && m_data->m_keyStatus.contains(keyEvent->key())
                 && m_data->m_keyStatus[keyEvent->key()]) {
-            if (event->type() == QEvent::KeyPress)
+            if (event->type() == QEvent::KeyPress) {
                 emit keyFiltered(keyEvent->key(), static_cast<int>(keyEvent->modifiers()));
-            return true;
+                if (keyEvent->key() == Qt::Key_Space) {
+                    return true;
+                }
+            }
         }
     }
     break;

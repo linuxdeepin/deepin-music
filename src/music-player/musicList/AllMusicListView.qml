@@ -56,6 +56,12 @@ Rectangle {
         }
     }
 
+    function selectAll() {
+        if (listview && listview.visible && mediaModel.count > 0) {
+            listview.selectAll();
+        }
+    }
+
     ListView {
         property var delegateModelGroup: new Array
         property var dragGroup: new Array
@@ -337,6 +343,16 @@ Rectangle {
         Connections {
             target: globalVariant
             onClearSelectGroup: {listview.removeModelGroup()}
+        }
+
+        function selectAll() {
+            listview.removeModelGroup();
+            for(var i = 0; i < mediaModel.count; i++) {
+                mediaModel.setProperty(i, "inMulitSelect", true);
+                listview.delegateModelGroup.push(i);
+                listview.dragGroup.push(mediaModel.get(i).coverUrl);
+            }
+            listview.lastIndex = mediaModel.count - 1;
         }
     }
 }
