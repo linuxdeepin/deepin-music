@@ -37,6 +37,7 @@ Item {
     signal clearSelectGroup();    //删除后，清除选中数据的index
     signal sendFloatingMessageBox(string pageName, int msgType);  // 消息框提示信号
     signal clickPlayAllBtn();    // 播放全部按钮点击，开始列表按钮动画
+    signal showSearchEdit()     // 显示搜索框信号
 
     Loader { id: globalFileDlgLoader }
     property Loader closeConfirmDlgLoader: Loader {}

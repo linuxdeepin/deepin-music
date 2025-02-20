@@ -36,6 +36,13 @@ Item {
         onActivated: { globalVariant.musicInfoDlgShow() }
     }
     Shortcut {
+        id: ctrlF   //快捷键 搜索
+        sequence: "Ctrl+F"
+        onActivated: { 
+            globalVariant.showSearchEdit()
+        }
+    }
+    Shortcut {
         id: ctrl_Shift_N  //快捷键 新建歌单
         sequence: "Ctrl+Shift+N"
         context: Qt.ApplicationShortcut
