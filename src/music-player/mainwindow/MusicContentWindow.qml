@@ -25,7 +25,6 @@ Rectangle {
     color: "transparent"
     signal clickPlayAllBtn()
 
-
     MusicBaselistview {
         id: musicBaselist
         width: 220;
@@ -57,6 +56,13 @@ Rectangle {
         }
 
         listViewStackView.push(Qt.resolvedUrl("SearchResultWindow.qml"), {pattern:text, curIndex: type});
+    }
+
+    function selectAll() {
+        var item = listViewStackView.currentItem;
+        if (item && item.objectName !== "artist" && item.objectName !== "album") {
+            item.selectAll();
+        }
     }
 
     Connections {

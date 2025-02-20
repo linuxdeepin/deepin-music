@@ -37,6 +37,7 @@ Rectangle {
             visible: (rootRectangle.mediaModels.count === 0) ? true : false
         }
         AllMusicListView {
+            id: musicListView
             width: rootRectangle.width
             height: rootRectangle.height - toolButtonItem.height/* - 70*/
             mediaModel: mediaModels
@@ -111,6 +112,12 @@ Rectangle {
             default:
                 toolButtonItem.sortType = -1
             }
+        }
+    }
+
+    function selectAll() {
+        if (musicListView && musicListView.visible) {
+            musicListView.selectAll();
         }
     }
 }

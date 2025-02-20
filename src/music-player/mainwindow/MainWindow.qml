@@ -71,12 +71,11 @@ ApplicationWindow {
         }
     }
 
-
-
     Shortcuts {
         id: shortcuts
         enabled: rootWindow.active
     }
+
     MusicContentWindow {
         id: contentWindow
         visible: !isLyricShow
@@ -402,11 +401,20 @@ ApplicationWindow {
         rootWindow.requestActivate()
     }
 
+    function onKeyFiltered(key, modifier) {
+        if (key === Qt.Key_A && modifier === Qt.ControlModifier) {
+            if (!isPlaylistShow && !isLyricShow) {
+                contentWindow.selectAll();
+            }
+        }
+    }
+
     Component.onCompleted: {
         Presenter.addOneMeta.connect(onAddOneMeta)
         Presenter.importFinished.connect(onImportFinished)
         Presenter.quitRequested.connect(onQuitRequested)
         Presenter.raiseRequested.connect(onRaiseRequested)
         globalVariant.devicePixelRatio = Screen.devicePixelRatio
+        EventsFilter.keyFiltered.connect(onKeyFiltered)
     }
 }
