@@ -26,6 +26,7 @@ Rectangle {
             id: toolButtonItem
             width: rootRectangle.width - 40; height: 68;
             title: listTitle
+            isPlayAll: rootRectangle.mediaModels.count > 0 ? true : false
             musicinfo: rootRectangle.mediaModels.count === 1 ? qsTr("1 song") : qsTr("%1 songs").arg(rootRectangle.mediaModels.count)
             isDefault: (rootRectangle.mediaModels.count === 0) ? false : true
             pageHash: rootRectangle.listHash
