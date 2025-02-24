@@ -17,6 +17,8 @@ Rectangle{
     property bool isDefault: true
     property int m_viewType: 0 // 0为icon、1为list
     property int sortType: DmGlobal.SortByNull
+    property bool isPlayAll: false
+
     signal viewChanged(var type)
 
     anchors.horizontalCenter: parent.horizontalCenter
@@ -47,6 +49,7 @@ Rectangle{
 //        }
         FloatingButton {
             id: palyBtn
+            enabled: isPlayAll
             width: 28; height: 28
             icon.name: "headline_play_all"
             icon.width: 28
