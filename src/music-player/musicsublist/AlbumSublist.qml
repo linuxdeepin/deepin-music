@@ -62,7 +62,8 @@ Rectangle {
             width: listview.width; height: 56
             m_musicIndex: index + 1
             m_mediaMeta: mediaListModels.get(index).musicData //meida数据
-            backgroundVisible: index % 2 === 0
+            backgroundVisible: true
+            normalBackgroundVisible: index % 2 === 0
             onDoubleClicked: {
                 Presenter.playAlbum(m_albumData.name, mediaListModels.get(index).musicData.hash);
             }

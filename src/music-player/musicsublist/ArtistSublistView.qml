@@ -94,7 +94,8 @@ Rectangle {
             width: listview.width - 40
             height: 56
             anchors.horizontalCenter: parent.horizontalCenter
-            backgroundVisible: index % 2 === 0
+            backgroundVisible: true
+            normalBackgroundVisible: index % 2 === 0
             autoExclusive: false
             checked: mediaListModels.get(index).inMulitSelect
         }

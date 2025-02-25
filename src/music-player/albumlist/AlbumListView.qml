@@ -61,7 +61,8 @@ Rectangle {
         focus: true
         delegate: AlbumListDelegate{
             width: listview.width - 40; height: 56
-            backgroundVisible: index % 2 === 0
+            backgroundVisible: true
+            normalBackgroundVisible: index % 2 === 0
             onDoubleClicked: {
                 //console.log(" listview onItemDoubleClicked: ", albumModels.get(index));
                 rootRectangle.itemDoubleClicked(albumModels.get(index));
