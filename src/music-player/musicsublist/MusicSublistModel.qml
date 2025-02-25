@@ -8,15 +8,32 @@ ListModel {
     property var meidaDataMap
     id: mediaListModels
     property int modelCount: mediaListModels.count
+    property bool isLoading: false  // Add global loading status flag
+
+    // Add listener for meidaDataMap changes with null check
+    onMeidaDataMapChanged: {
+        if (meidaDataMap !== undefined && meidaDataMap !== null) {
+            loadMediaDatas()
+        }
+    }
+
     function loadMediaDatas()
     {
-        var tmplist = meidaDataMap;
+        if (!meidaDataMap) {
+            mediaListModels.clear();  // Clear the list when meidaDataMap is empty
+            return;  // Return after clearing, this will trigger onModelCountChanged
+        }
+
+        // meidaDataMap is not empty, set flag and continue processing
+        isLoading = true;
         mediaListModels.clear();
+
+        var tmplist = meidaDataMap;
         for(var key in tmplist){
             tmplist[key].inMulitSelect = false;
             mediaListModels.append(tmplist[key]);
         }
-
+        isLoading = false;
     }
     function onDeleteOneMeta(playlistHashs, hash){
         for (var i = 0; i < playlistHashs.length; i++){
@@ -64,7 +81,7 @@ ListModel {
         Presenter.updatedMetaCodec.connect(onUpdatedMetaCodec)
     }
     onModelCountChanged: {
-        if(modelCount <= 0)
+        if(modelCount <= 0 && !isLoading)  // Only execute when not in loading state
             globalVariant.returnUpperlevelView();
     }
 }
