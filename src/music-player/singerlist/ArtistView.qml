@@ -48,6 +48,7 @@ Rectangle {
             color: Qt.rgba(0, 0, 0, 0)
             ToolButtonItem{
                 id: toolButtonItem
+                isPlayAll: contenWindow.artistModels.count > 0 ? true : false
                 width: rootRectangle.width - 40; height: 68;
                 anchors.left: rootRectangle.left; anchors.leftMargin: 20
                 title: qsTr("Artists")
