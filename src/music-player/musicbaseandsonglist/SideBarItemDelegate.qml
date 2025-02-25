@@ -81,8 +81,13 @@ ItemDelegate {
     }
     LineEdit {
         id: keyLineEdit
-        width: 180
-        visible: false;
+        width: item.width - 8
+        anchors {
+            left: item.left
+            leftMargin: 4
+            verticalCenter: item.verticalCenter
+        }
+        visible: false
         maximumLength: 30
 
         Keys.onEscapePressed: {

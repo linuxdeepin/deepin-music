@@ -50,6 +50,7 @@ Rectangle {
             ToolButtonItem{
                 id: toolButtonItem
                 width: contenWindow.width - 40; height: 68;
+                isPlayAll: contenWindow.albumModels.count > 0 ? true : false
                 title: qsTr("Albums")
                 musicinfo: qsTr("%1 albums - %2 songs").arg(contenWindow.albumModels.count).arg(contenWindow.albumModels.musicCount)
                 gridAndlistViewModel: (contenWindow.albumModels.count === 0) ? false : true
