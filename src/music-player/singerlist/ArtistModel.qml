@@ -117,6 +117,7 @@ ListModel {
     Component.onCompleted: {
         artistModels.loadArtistDatas();
         Presenter.importFinished.connect(loadArtistDatas);
+        Presenter.deleteFinished.connect(loadArtistDatas);
         Presenter.deleteOneMeta.connect(onDeleteOneMetaFromModel);
         Presenter.addOneMeta.connect(onAddOneMetaFinished);
         Presenter.playlistSortChanged.connect(playlistSortChanged)

@@ -1054,7 +1054,7 @@ void DataManager::removeFromPlayList(const QStringList listToDel, const QString 
                                      bool delFlag)
 {
     QString curHash = playlistHash.isEmpty() ? "play" : playlistHash;
-
+    QStringList allHashs;
     if (playlistHash != "all" && playlistHash != "album" && playlistHash != "artist" && !delFlag) {
         int index = playlistIndexFromHash(curHash);
         if (index < 0 || index >= m_data->m_allPlaylist.size()) return;
@@ -1067,6 +1067,9 @@ void DataManager::removeFromPlayList(const QStringList listToDel, const QString 
                 curPlaylist.sortCustomMetas.removeOne(hash);
                 QStringList playlistHashs;
                 playlistHashs << playlistHash;
+                if (!allHashs.contains(hash)){
+                    allHashs << hash;
+                }
                 emit signalDeleteOneMeta(playlistHashs, hash, true);
             }
         }
@@ -1080,6 +1083,9 @@ void DataManager::removeFromPlayList(const QStringList listToDel, const QString 
                     if (curIndex >= 0 && curIndex < playlist.sortCustomMetas.size())
                         playlist.sortCustomMetas.removeAt(curIndex);
                     playlistHashs << playlist.uuid;
+                    if (!allHashs.contains(hash)){
+                        allHashs << hash;
+                    }
                 }
             }
             if (!playlistHashs.isEmpty()) {
@@ -1091,6 +1097,9 @@ void DataManager::removeFromPlayList(const QStringList listToDel, const QString 
                 emit signalDeleteOneMeta(playlistHashs, hash, true);
             }
         }
+    }
+    if (!allHashs.isEmpty()){
+        emit signalDeleteFinished(allHashs);
     }
 }
 
