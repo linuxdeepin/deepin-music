@@ -231,4 +231,10 @@ Rectangle {
             Presenter.importMetas(list, globalVariant.curListPage)
         }
     }
+
+    onAlbumDataChanged: {
+        if (albumData && albumData.musicinfos !== undefined) {
+            mediaListModels.meidaDataMap = albumData.musicinfos
+        }
+    }
 }
