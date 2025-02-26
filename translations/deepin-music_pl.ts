@@ -133,12 +133,12 @@
 <context>
     <name>AlbumView</name>
     <message>
-        <location filename="../src/music-player/albumlist/AlbumView.qml" line="53"/>
+        <location filename="../src/music-player/albumlist/AlbumView.qml" line="54"/>
         <source>Albums</source>
         <translation>Albumy</translation>
     </message>
     <message>
-        <location filename="../src/music-player/albumlist/AlbumView.qml" line="54"/>
+        <location filename="../src/music-player/albumlist/AlbumView.qml" line="55"/>
         <source>%1 albums - %2 songs</source>
         <translation>%1 albumów - %2 utworów</translation>
     </message>
@@ -199,12 +199,12 @@
         <translation>Wszystkie utwory</translation>
     </message>
     <message>
-        <location filename="../src/music-player/musicList/AllMusicList.qml" line="29"/>
+        <location filename="../src/music-player/musicList/AllMusicList.qml" line="30"/>
         <source>1 song</source>
         <translation>1 utwór</translation>
     </message>
     <message>
-        <location filename="../src/music-player/musicList/AllMusicList.qml" line="29"/>
+        <location filename="../src/music-player/musicList/AllMusicList.qml" line="30"/>
         <source>%1 songs</source>
         <translation>%1 utworów</translation>
     </message>
@@ -323,12 +323,12 @@
 <context>
     <name>ArtistView</name>
     <message>
-        <location filename="../src/music-player/singerlist/ArtistView.qml" line="53"/>
+        <location filename="../src/music-player/singerlist/ArtistView.qml" line="54"/>
         <source>Artists</source>
         <translation>Wykonawcy</translation>
     </message>
     <message>
-        <location filename="../src/music-player/singerlist/ArtistView.qml" line="54"/>
+        <location filename="../src/music-player/singerlist/ArtistView.qml" line="55"/>
         <source>%1 artists - %2 songs</source>
         <translation>%1 wykonawców - %2 utworów</translation>
     </message>
@@ -592,17 +592,17 @@
         <translation>Korektor</translation>
     </message>
     <message>
-        <location filename="../src/music-player/dialogs/EqualizerDialog.qml" line="181"/>
+        <location filename="../src/music-player/dialogs/EqualizerDialog.qml" line="182"/>
         <source>Save</source>
         <translation>Zapisz</translation>
     </message>
     <message>
-        <location filename="../src/music-player/dialogs/EqualizerDialog.qml" line="204"/>
+        <location filename="../src/music-player/dialogs/EqualizerDialog.qml" line="205"/>
         <source>Reset</source>
         <translation>Resetuj</translation>
     </message>
     <message>
-        <location filename="../src/music-player/dialogs/EqualizerDialog.qml" line="313"/>
+        <location filename="../src/music-player/dialogs/EqualizerDialog.qml" line="314"/>
         <source>Preamplifier</source>
         <translation>Przedwzm.</translation>
     </message>
@@ -677,57 +677,57 @@
 <context>
     <name>MainWindow</name>
     <message>
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="189"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="188"/>
         <source>Music</source>
         <translation>Muzyka</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="204"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="203"/>
         <source>Play/Pause</source>
         <translation>Odtwórz/Wstrzymaj</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="208"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="207"/>
         <source>Previous</source>
         <translation>Poprzedni</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="219"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="218"/>
         <source>Next</source>
         <translation>Dalej</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="230"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="229"/>
         <source>Exit</source>
         <translation>Wyjdź</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="344"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="343"/>
         <source>Already added to the playlist</source>
         <translation>Utwór znajduje się już na playliście</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="347"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="346"/>
         <source>Added to &quot;%1&quot;</source>
         <translation>Dodano do &quot;%1&quot;</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="350"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="349"/>
         <source>Removed from &quot;My Favorites&quot;</source>
         <translation>Usunięto z &quot;Moje ulubione&quot;</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="353"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="352"/>
         <source>A disc is connected</source>
         <translation>Płyta jest podłączona</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="369"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="368"/>
         <source>My Favorites</source>
         <translation>Moje ulubione</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="391"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="390"/>
         <source>All Songs</source>
         <translation>Wszystkie utwory</translation>
     </message>
@@ -743,6 +743,11 @@
         <location filename="../src/music-player/musicmousemenu/MulitSelectMenu.qml" line="28"/>
         <source>Remove from playlist</source>
         <translation>Usuń z playlisty</translation>
+    </message>
+    <message>
+        <location filename="../src/music-player/musicmousemenu/MulitSelectMenu.qml" line="28"/>
+        <source>Remove from play queue</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/music-player/musicmousemenu/MulitSelectMenu.qml" line="35"/>
@@ -860,6 +865,11 @@
         <location filename="../src/music-player/musicmousemenu/MusicMoreMenu.qml" line="62"/>
         <source>Remove from playlist</source>
         <translation>Usuń z playlisty</translation>
+    </message>
+    <message>
+        <location filename="../src/music-player/musicmousemenu/MusicMoreMenu.qml" line="62"/>
+        <source>Remove from play queue</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/music-player/musicmousemenu/MusicMoreMenu.qml" line="72"/>
@@ -1160,12 +1170,12 @@
 <context>
     <name>Shortcuts</name>
     <message>
-        <location filename="../src/music-player/allItems/Shortcuts.qml" line="44"/>
+        <location filename="../src/music-player/allItems/Shortcuts.qml" line="51"/>
         <source>New playlist</source>
         <translation>Nowa playlista</translation>
     </message>
     <message>
-        <location filename="../src/music-player/allItems/Shortcuts.qml" line="113"/>
+        <location filename="../src/music-player/allItems/Shortcuts.qml" line="120"/>
         <source>My Favorites</source>
         <translation>Moje ulubione</translation>
     </message>
@@ -1173,22 +1183,22 @@
 <context>
     <name>SidebarMenu</name>
     <message>
-        <location filename="../src/music-player/musicmousemenu/SidebarMenu.qml" line="16"/>
+        <location filename="../src/music-player/musicmousemenu/SidebarMenu.qml" line="22"/>
         <source>Play</source>
         <translation>Odtwórz</translation>
     </message>
     <message>
-        <location filename="../src/music-player/musicmousemenu/SidebarMenu.qml" line="23"/>
+        <location filename="../src/music-player/musicmousemenu/SidebarMenu.qml" line="29"/>
         <source>Add songs</source>
         <translation>Dodaj utwory</translation>
     </message>
     <message>
-        <location filename="../src/music-player/musicmousemenu/SidebarMenu.qml" line="32"/>
+        <location filename="../src/music-player/musicmousemenu/SidebarMenu.qml" line="38"/>
         <source>Rename</source>
         <translation>Zmień nazwę</translation>
     </message>
     <message>
-        <location filename="../src/music-player/musicmousemenu/SidebarMenu.qml" line="46"/>
+        <location filename="../src/music-player/musicmousemenu/SidebarMenu.qml" line="52"/>
         <source>Delete</source>
         <translation>Usuń</translation>
     </message>
@@ -1251,7 +1261,7 @@
 <context>
     <name>ToolButtonItem</name>
     <message>
-        <location filename="../src/music-player/allItems/ToolButtonItem.qml" line="56"/>
+        <location filename="../src/music-player/allItems/ToolButtonItem.qml" line="59"/>
         <source>Play All</source>
         <translation>Odtwórz wszystkie</translation>
     </message>
@@ -1322,58 +1332,58 @@
 <context>
     <name>WindowTitlebar</name>
     <message>
-        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="55"/>
+        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="56"/>
         <source>Add playlist</source>
         <translation>Dodaj playlistę</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="57"/>
+        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="58"/>
         <source>New playlist</source>
         <translation>Nowa playlista</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="62"/>
-        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="327"/>
+        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="63"/>
+        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="329"/>
         <source>Add music</source>
         <translation>Dodaj muzykę</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="70"/>
+        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="71"/>
         <source>Equalizer</source>
         <translation>Korektor</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="81"/>
+        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="82"/>
         <source>Settings</source>
         <translation>Ustawienia</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="95"/>
+        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="96"/>
         <source>Music</source>
         <translation>Muzyka</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="97"/>
+        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="98"/>
         <source>Music is a local music player with beautiful design and simple functions.</source>
         <translation>Muzyka to lokalny odtwarzacz muzyki o pięknym wyglądzie i prostych funkcjach.</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="98"/>
+        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="99"/>
         <source>Version:</source>
         <translation>Wersja:</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="212"/>
+        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="213"/>
         <source>Previous page</source>
         <translation>Poprzednia strona</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="228"/>
+        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="229"/>
         <source>Next page</source>
         <translation>Następna strona</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="238"/>
+        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="239"/>
         <source>Search</source>
         <translation>Szukaj</translation>
     </message>

@@ -133,12 +133,12 @@
 <context>
     <name>AlbumView</name>
     <message>
-        <location filename="../src/music-player/albumlist/AlbumView.qml" line="53"/>
+        <location filename="../src/music-player/albumlist/AlbumView.qml" line="54"/>
         <source>Albums</source>
         <translation>Albumok</translation>
     </message>
     <message>
-        <location filename="../src/music-player/albumlist/AlbumView.qml" line="54"/>
+        <location filename="../src/music-player/albumlist/AlbumView.qml" line="55"/>
         <source>%1 albums - %2 songs</source>
         <translation>%1 album - %2 dal</translation>
     </message>
@@ -199,12 +199,12 @@
         <translation>Összes dal</translation>
     </message>
     <message>
-        <location filename="../src/music-player/musicList/AllMusicList.qml" line="29"/>
+        <location filename="../src/music-player/musicList/AllMusicList.qml" line="30"/>
         <source>1 song</source>
         <translation>1 dal</translation>
     </message>
     <message>
-        <location filename="../src/music-player/musicList/AllMusicList.qml" line="29"/>
+        <location filename="../src/music-player/musicList/AllMusicList.qml" line="30"/>
         <source>%1 songs</source>
         <translation>%1 dal</translation>
     </message>
@@ -323,12 +323,12 @@
 <context>
     <name>ArtistView</name>
     <message>
-        <location filename="../src/music-player/singerlist/ArtistView.qml" line="53"/>
+        <location filename="../src/music-player/singerlist/ArtistView.qml" line="54"/>
         <source>Artists</source>
         <translation>Előadók</translation>
     </message>
     <message>
-        <location filename="../src/music-player/singerlist/ArtistView.qml" line="54"/>
+        <location filename="../src/music-player/singerlist/ArtistView.qml" line="55"/>
         <source>%1 artists - %2 songs</source>
         <translation>%1 előadó - %2 dal</translation>
     </message>
@@ -592,17 +592,17 @@
         <translation>Hangszínszabályzó</translation>
     </message>
     <message>
-        <location filename="../src/music-player/dialogs/EqualizerDialog.qml" line="181"/>
+        <location filename="../src/music-player/dialogs/EqualizerDialog.qml" line="182"/>
         <source>Save</source>
         <translation>Mentés</translation>
     </message>
     <message>
-        <location filename="../src/music-player/dialogs/EqualizerDialog.qml" line="204"/>
+        <location filename="../src/music-player/dialogs/EqualizerDialog.qml" line="205"/>
         <source>Reset</source>
         <translation>Visszaállítás</translation>
     </message>
     <message>
-        <location filename="../src/music-player/dialogs/EqualizerDialog.qml" line="313"/>
+        <location filename="../src/music-player/dialogs/EqualizerDialog.qml" line="314"/>
         <source>Preamplifier</source>
         <translation>Előerősítés</translation>
     </message>
@@ -677,57 +677,57 @@
 <context>
     <name>MainWindow</name>
     <message>
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="189"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="188"/>
         <source>Music</source>
         <translation>Zene</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="204"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="203"/>
         <source>Play/Pause</source>
         <translation>Lejátszás/Szünet</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="208"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="207"/>
         <source>Previous</source>
         <translation>Előző</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="219"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="218"/>
         <source>Next</source>
         <translation>Következő</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="230"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="229"/>
         <source>Exit</source>
         <translation>Kilépés</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="344"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="343"/>
         <source>Already added to the playlist</source>
         <translation>Már hozzáadva a lejátszási listához</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="347"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="346"/>
         <source>Added to &quot;%1&quot;</source>
         <translation>Hozzáadva ide: &quot;% 1&quot;</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="350"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="349"/>
         <source>Removed from &quot;My Favorites&quot;</source>
         <translation>Eltávolítás a &quot; Kedvenceim&quot;-ből</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="353"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="352"/>
         <source>A disc is connected</source>
         <translation>A lemez csatlakoztatva</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="369"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="368"/>
         <source>My Favorites</source>
         <translation>Kedvenceim</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="391"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="390"/>
         <source>All Songs</source>
         <translation>Összes dal</translation>
     </message>
@@ -743,6 +743,11 @@
         <location filename="../src/music-player/musicmousemenu/MulitSelectMenu.qml" line="28"/>
         <source>Remove from playlist</source>
         <translation>Éltávoltás a lejátszási listáról </translation>
+    </message>
+    <message>
+        <location filename="../src/music-player/musicmousemenu/MulitSelectMenu.qml" line="28"/>
+        <source>Remove from play queue</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/music-player/musicmousemenu/MulitSelectMenu.qml" line="35"/>
@@ -860,6 +865,11 @@
         <location filename="../src/music-player/musicmousemenu/MusicMoreMenu.qml" line="62"/>
         <source>Remove from playlist</source>
         <translation>Éltávoltás a lejátszási listáról </translation>
+    </message>
+    <message>
+        <location filename="../src/music-player/musicmousemenu/MusicMoreMenu.qml" line="62"/>
+        <source>Remove from play queue</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/music-player/musicmousemenu/MusicMoreMenu.qml" line="72"/>
@@ -1160,12 +1170,12 @@
 <context>
     <name>Shortcuts</name>
     <message>
-        <location filename="../src/music-player/allItems/Shortcuts.qml" line="44"/>
+        <location filename="../src/music-player/allItems/Shortcuts.qml" line="51"/>
         <source>New playlist</source>
         <translation>Új lejátszási lista</translation>
     </message>
     <message>
-        <location filename="../src/music-player/allItems/Shortcuts.qml" line="113"/>
+        <location filename="../src/music-player/allItems/Shortcuts.qml" line="120"/>
         <source>My Favorites</source>
         <translation>Kedvenceim</translation>
     </message>
@@ -1173,22 +1183,22 @@
 <context>
     <name>SidebarMenu</name>
     <message>
-        <location filename="../src/music-player/musicmousemenu/SidebarMenu.qml" line="16"/>
+        <location filename="../src/music-player/musicmousemenu/SidebarMenu.qml" line="22"/>
         <source>Play</source>
         <translation>Lejátszás</translation>
     </message>
     <message>
-        <location filename="../src/music-player/musicmousemenu/SidebarMenu.qml" line="23"/>
+        <location filename="../src/music-player/musicmousemenu/SidebarMenu.qml" line="29"/>
         <source>Add songs</source>
         <translation>Dalok hozzáadása</translation>
     </message>
     <message>
-        <location filename="../src/music-player/musicmousemenu/SidebarMenu.qml" line="32"/>
+        <location filename="../src/music-player/musicmousemenu/SidebarMenu.qml" line="38"/>
         <source>Rename</source>
         <translation>Átnevezés</translation>
     </message>
     <message>
-        <location filename="../src/music-player/musicmousemenu/SidebarMenu.qml" line="46"/>
+        <location filename="../src/music-player/musicmousemenu/SidebarMenu.qml" line="52"/>
         <source>Delete</source>
         <translation>Törlés</translation>
     </message>
@@ -1251,7 +1261,7 @@
 <context>
     <name>ToolButtonItem</name>
     <message>
-        <location filename="../src/music-player/allItems/ToolButtonItem.qml" line="56"/>
+        <location filename="../src/music-player/allItems/ToolButtonItem.qml" line="59"/>
         <source>Play All</source>
         <translation>Összes lejátszása</translation>
     </message>
@@ -1322,58 +1332,58 @@
 <context>
     <name>WindowTitlebar</name>
     <message>
-        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="55"/>
+        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="56"/>
         <source>Add playlist</source>
         <translation>Lejátszási lista létrehozása</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="57"/>
+        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="58"/>
         <source>New playlist</source>
         <translation>Új lejátszási lista</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="62"/>
-        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="327"/>
+        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="63"/>
+        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="329"/>
         <source>Add music</source>
         <translation>Zene hozzáadása</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="70"/>
+        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="71"/>
         <source>Equalizer</source>
         <translation>Hangszínszabályzó</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="81"/>
+        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="82"/>
         <source>Settings</source>
         <translation>Beállítások</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="95"/>
+        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="96"/>
         <source>Music</source>
         <translation>Zene</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="97"/>
+        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="98"/>
         <source>Music is a local music player with beautiful design and simple functions.</source>
         <translation>A Zene egy zenelejátszó csodaszép dizájnnal és egyszerű funkciókkal.</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="98"/>
+        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="99"/>
         <source>Version:</source>
         <translation>Verzió:</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="212"/>
+        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="213"/>
         <source>Previous page</source>
         <translation>Előző oldal</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="228"/>
+        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="229"/>
         <source>Next page</source>
         <translation>Következő oldal</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="238"/>
+        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="239"/>
         <source>Search</source>
         <translation>Keresés</translation>
     </message>

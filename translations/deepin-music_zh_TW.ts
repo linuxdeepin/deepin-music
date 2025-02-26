@@ -133,12 +133,12 @@
 <context>
     <name>AlbumView</name>
     <message>
-        <location filename="../src/music-player/albumlist/AlbumView.qml" line="53"/>
+        <location filename="../src/music-player/albumlist/AlbumView.qml" line="54"/>
         <source>Albums</source>
         <translation>專輯</translation>
     </message>
     <message>
-        <location filename="../src/music-player/albumlist/AlbumView.qml" line="54"/>
+        <location filename="../src/music-player/albumlist/AlbumView.qml" line="55"/>
         <source>%1 albums - %2 songs</source>
         <translation>%1部專輯 - %2首歌曲</translation>
     </message>
@@ -199,12 +199,12 @@
         <translation>所有歌曲</translation>
     </message>
     <message>
-        <location filename="../src/music-player/musicList/AllMusicList.qml" line="29"/>
+        <location filename="../src/music-player/musicList/AllMusicList.qml" line="30"/>
         <source>1 song</source>
         <translation>1首歌曲</translation>
     </message>
     <message>
-        <location filename="../src/music-player/musicList/AllMusicList.qml" line="29"/>
+        <location filename="../src/music-player/musicList/AllMusicList.qml" line="30"/>
         <source>%1 songs</source>
         <translation>%1首歌曲</translation>
     </message>
@@ -323,12 +323,12 @@
 <context>
     <name>ArtistView</name>
     <message>
-        <location filename="../src/music-player/singerlist/ArtistView.qml" line="53"/>
+        <location filename="../src/music-player/singerlist/ArtistView.qml" line="54"/>
         <source>Artists</source>
         <translation>藝人</translation>
     </message>
     <message>
-        <location filename="../src/music-player/singerlist/ArtistView.qml" line="54"/>
+        <location filename="../src/music-player/singerlist/ArtistView.qml" line="55"/>
         <source>%1 artists - %2 songs</source>
         <translation>%1位藝人 - %2首歌曲</translation>
     </message>
@@ -592,17 +592,17 @@
         <translation>均衡器</translation>
     </message>
     <message>
-        <location filename="../src/music-player/dialogs/EqualizerDialog.qml" line="181"/>
+        <location filename="../src/music-player/dialogs/EqualizerDialog.qml" line="182"/>
         <source>Save</source>
         <translation>儲存</translation>
     </message>
     <message>
-        <location filename="../src/music-player/dialogs/EqualizerDialog.qml" line="204"/>
+        <location filename="../src/music-player/dialogs/EqualizerDialog.qml" line="205"/>
         <source>Reset</source>
         <translation>重 置</translation>
     </message>
     <message>
-        <location filename="../src/music-player/dialogs/EqualizerDialog.qml" line="313"/>
+        <location filename="../src/music-player/dialogs/EqualizerDialog.qml" line="314"/>
         <source>Preamplifier</source>
         <translation>前置放大</translation>
     </message>
@@ -677,57 +677,57 @@
 <context>
     <name>MainWindow</name>
     <message>
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="189"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="188"/>
         <source>Music</source>
         <translation>音樂</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="204"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="203"/>
         <source>Play/Pause</source>
         <translation>播放/暫停</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="208"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="207"/>
         <source>Previous</source>
         <translation>上一曲</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="219"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="218"/>
         <source>Next</source>
         <translation>下一曲</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="230"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="229"/>
         <source>Exit</source>
         <translation>退出</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="344"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="343"/>
         <source>Already added to the playlist</source>
         <translation>已添加此音樂</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="347"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="346"/>
         <source>Added to &quot;%1&quot;</source>
         <translation>已添加到“%1”</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="350"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="349"/>
         <source>Removed from &quot;My Favorites&quot;</source>
         <translation>歌曲已取消喜歡</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="353"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="352"/>
         <source>A disc is connected</source>
         <translation>檢測到有CD接入</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="369"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="368"/>
         <source>My Favorites</source>
         <translation>我喜歡的歌曲</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="391"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="390"/>
         <source>All Songs</source>
         <translation>所有歌曲</translation>
     </message>
@@ -743,6 +743,11 @@
         <location filename="../src/music-player/musicmousemenu/MulitSelectMenu.qml" line="28"/>
         <source>Remove from playlist</source>
         <translation>從歌單中刪除</translation>
+    </message>
+    <message>
+        <location filename="../src/music-player/musicmousemenu/MulitSelectMenu.qml" line="28"/>
+        <source>Remove from play queue</source>
+        <translation>從播放佇列中刪除</translation>
     </message>
     <message>
         <location filename="../src/music-player/musicmousemenu/MulitSelectMenu.qml" line="35"/>
@@ -860,6 +865,11 @@
         <location filename="../src/music-player/musicmousemenu/MusicMoreMenu.qml" line="62"/>
         <source>Remove from playlist</source>
         <translation>從歌單中刪除</translation>
+    </message>
+    <message>
+        <location filename="../src/music-player/musicmousemenu/MusicMoreMenu.qml" line="62"/>
+        <source>Remove from play queue</source>
+        <translation>從播放佇列中刪除</translation>
     </message>
     <message>
         <location filename="../src/music-player/musicmousemenu/MusicMoreMenu.qml" line="72"/>
@@ -1160,12 +1170,12 @@
 <context>
     <name>Shortcuts</name>
     <message>
-        <location filename="../src/music-player/allItems/Shortcuts.qml" line="44"/>
+        <location filename="../src/music-player/allItems/Shortcuts.qml" line="51"/>
         <source>New playlist</source>
         <translation>建立歌單</translation>
     </message>
     <message>
-        <location filename="../src/music-player/allItems/Shortcuts.qml" line="113"/>
+        <location filename="../src/music-player/allItems/Shortcuts.qml" line="120"/>
         <source>My Favorites</source>
         <translation>我喜歡的歌曲</translation>
     </message>
@@ -1173,22 +1183,22 @@
 <context>
     <name>SidebarMenu</name>
     <message>
-        <location filename="../src/music-player/musicmousemenu/SidebarMenu.qml" line="16"/>
+        <location filename="../src/music-player/musicmousemenu/SidebarMenu.qml" line="22"/>
         <source>Play</source>
         <translation>播放</translation>
     </message>
     <message>
-        <location filename="../src/music-player/musicmousemenu/SidebarMenu.qml" line="23"/>
+        <location filename="../src/music-player/musicmousemenu/SidebarMenu.qml" line="29"/>
         <source>Add songs</source>
         <translation>添加歌曲</translation>
     </message>
     <message>
-        <location filename="../src/music-player/musicmousemenu/SidebarMenu.qml" line="32"/>
+        <location filename="../src/music-player/musicmousemenu/SidebarMenu.qml" line="38"/>
         <source>Rename</source>
         <translation>重新命名</translation>
     </message>
     <message>
-        <location filename="../src/music-player/musicmousemenu/SidebarMenu.qml" line="46"/>
+        <location filename="../src/music-player/musicmousemenu/SidebarMenu.qml" line="52"/>
         <source>Delete</source>
         <translation>刪除</translation>
     </message>
@@ -1251,7 +1261,7 @@
 <context>
     <name>ToolButtonItem</name>
     <message>
-        <location filename="../src/music-player/allItems/ToolButtonItem.qml" line="56"/>
+        <location filename="../src/music-player/allItems/ToolButtonItem.qml" line="59"/>
         <source>Play All</source>
         <translation>播放全部</translation>
     </message>
@@ -1322,58 +1332,58 @@
 <context>
     <name>WindowTitlebar</name>
     <message>
-        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="55"/>
+        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="56"/>
         <source>Add playlist</source>
         <translation>添加新歌單</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="57"/>
+        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="58"/>
         <source>New playlist</source>
         <translation>建立歌單</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="62"/>
-        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="327"/>
+        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="63"/>
+        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="329"/>
         <source>Add music</source>
         <translation>添加音樂</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="70"/>
+        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="71"/>
         <source>Equalizer</source>
         <translation>均衡器</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="81"/>
+        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="82"/>
         <source>Settings</source>
         <translation>設定</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="95"/>
+        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="96"/>
         <source>Music</source>
         <translation>音樂</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="97"/>
+        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="98"/>
         <source>Music is a local music player with beautiful design and simple functions.</source>
         <translation>音樂是一款設計美觀，功能簡潔的本機音樂播放器。</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="98"/>
+        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="99"/>
         <source>Version:</source>
         <translation>版本號：</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="212"/>
+        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="213"/>
         <source>Previous page</source>
         <translation>上一頁</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="228"/>
+        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="229"/>
         <source>Next page</source>
         <translation>下一曲</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="238"/>
+        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="239"/>
         <source>Search</source>
         <translation>搜尋</translation>
     </message>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="bo" sourcelanguage="en_US">
+<TS version="2.1" language="bo_CN" sourcelanguage="en_US">
 <context>
     <name>AlbumDefaultPage</name>
     <message>
@@ -133,12 +133,12 @@
 <context>
     <name>AlbumView</name>
     <message>
-        <location filename="../src/music-player/albumlist/AlbumView.qml" line="53"/>
+        <location filename="../src/music-player/albumlist/AlbumView.qml" line="54"/>
         <source>Albums</source>
         <translation>ཆེད་བསྒྲིགས།</translation>
     </message>
     <message>
-        <location filename="../src/music-player/albumlist/AlbumView.qml" line="54"/>
+        <location filename="../src/music-player/albumlist/AlbumView.qml" line="55"/>
         <source>%1 albums - %2 songs</source>
         <translation>ཆེད་བསྒྲིགས་%1 - གླུ་གཞས་%2</translation>
     </message>
@@ -199,12 +199,12 @@
         <translation>གླུ་གཞས་ཡོངས།</translation>
     </message>
     <message>
-        <location filename="../src/music-player/musicList/AllMusicList.qml" line="29"/>
+        <location filename="../src/music-player/musicList/AllMusicList.qml" line="30"/>
         <source>1 song</source>
         <translation>གླུ་གཞས་1</translation>
     </message>
     <message>
-        <location filename="../src/music-player/musicList/AllMusicList.qml" line="29"/>
+        <location filename="../src/music-player/musicList/AllMusicList.qml" line="30"/>
         <source>%1 songs</source>
         <translation>གླུ་གཞས་%1</translation>
     </message>
@@ -323,12 +323,12 @@
 <context>
     <name>ArtistView</name>
     <message>
-        <location filename="../src/music-player/singerlist/ArtistView.qml" line="53"/>
+        <location filename="../src/music-player/singerlist/ArtistView.qml" line="54"/>
         <source>Artists</source>
         <translation>གླུ་པ།</translation>
     </message>
     <message>
-        <location filename="../src/music-player/singerlist/ArtistView.qml" line="54"/>
+        <location filename="../src/music-player/singerlist/ArtistView.qml" line="55"/>
         <source>%1 artists - %2 songs</source>
         <translation>གཞས་པ་%1 - གླུ་གཞས་%2</translation>
     </message>
@@ -592,17 +592,17 @@
         <translation>ངོ་སྙོམས་སྒྲིག་ཆས།</translation>
     </message>
     <message>
-        <location filename="../src/music-player/dialogs/EqualizerDialog.qml" line="181"/>
+        <location filename="../src/music-player/dialogs/EqualizerDialog.qml" line="182"/>
         <source>Save</source>
         <translation>ཉར་ཚགས། </translation>
     </message>
     <message>
-        <location filename="../src/music-player/dialogs/EqualizerDialog.qml" line="204"/>
+        <location filename="../src/music-player/dialogs/EqualizerDialog.qml" line="205"/>
         <source>Reset</source>
         <translation>བསྐྱར་སྒྲིག</translation>
     </message>
     <message>
-        <location filename="../src/music-player/dialogs/EqualizerDialog.qml" line="313"/>
+        <location filename="../src/music-player/dialogs/EqualizerDialog.qml" line="314"/>
         <source>Preamplifier</source>
         <translation>མདུན་བཀོད་ཆེར་སྒྱུར།</translation>
     </message>
@@ -677,57 +677,57 @@
 <context>
     <name>MainWindow</name>
     <message>
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="189"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="188"/>
         <source>Music</source>
         <translation>རོལ་མོ། </translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="204"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="203"/>
         <source>Play/Pause</source>
         <translation>གཏོང་བ།/སྐབས་སྡོད།</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="208"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="207"/>
         <source>Previous</source>
         <translation>སྔོན་མ།</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="219"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="218"/>
         <source>Next</source>
         <translation>རྗེས་མ། </translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="230"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="229"/>
         <source>Exit</source>
         <translation>ཕྱིར་དོན།</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="344"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="343"/>
         <source>Already added to the playlist</source>
         <translation>རོལ་མོ་དེ་བསྣན་ཟིན།</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="347"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="346"/>
         <source>Added to &quot;%1&quot;</source>
         <translation>“%1”བསྣན་ཟིན།</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="350"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="349"/>
         <source>Removed from &quot;My Favorites&quot;</source>
         <translation>&quot;ངའི་དགའ་ཤོས་&quot;ནས་ཕུད་ཟིན།</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="353"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="352"/>
         <source>A disc is connected</source>
         <translation>CDཪྙེད་བྱུང་།</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="369"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="368"/>
         <source>My Favorites</source>
         <translation>ངའི་ཉར་ཚགས།</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="391"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="390"/>
         <source>All Songs</source>
         <translation>གླུ་གཞས་ཡོངས།</translation>
     </message>
@@ -743,6 +743,11 @@
         <location filename="../src/music-player/musicmousemenu/MulitSelectMenu.qml" line="28"/>
         <source>Remove from playlist</source>
         <translation>གཞས་ཐོ་ནས་སུབ་པ།</translation>
+    </message>
+    <message>
+        <location filename="../src/music-player/musicmousemenu/MulitSelectMenu.qml" line="28"/>
+        <source>Remove from play queue</source>
+        <translation>གླུ་གཞས་ཐོ་གཞུང་ནས་མེད་པར་བཟོས།</translation>
     </message>
     <message>
         <location filename="../src/music-player/musicmousemenu/MulitSelectMenu.qml" line="35"/>
@@ -860,6 +865,11 @@
         <location filename="../src/music-player/musicmousemenu/MusicMoreMenu.qml" line="62"/>
         <source>Remove from playlist</source>
         <translation>གཞས་ཐོ་ནས་སུབ་པ།</translation>
+    </message>
+    <message>
+        <location filename="../src/music-player/musicmousemenu/MusicMoreMenu.qml" line="62"/>
+        <source>Remove from play queue</source>
+        <translation>གླུ་གཞས་ཐོ་གཞུང་ནས་མེད་པར་བཟོས།</translation>
     </message>
     <message>
         <location filename="../src/music-player/musicmousemenu/MusicMoreMenu.qml" line="72"/>
@@ -1160,12 +1170,12 @@
 <context>
     <name>Shortcuts</name>
     <message>
-        <location filename="../src/music-player/allItems/Shortcuts.qml" line="44"/>
+        <location filename="../src/music-player/allItems/Shortcuts.qml" line="51"/>
         <source>New playlist</source>
         <translation>གཞས་ཐོ་གསར་བཟོ།</translation>
     </message>
     <message>
-        <location filename="../src/music-player/allItems/Shortcuts.qml" line="113"/>
+        <location filename="../src/music-player/allItems/Shortcuts.qml" line="120"/>
         <source>My Favorites</source>
         <translation>ངའི་ཉར་ཚགས།</translation>
     </message>
@@ -1173,22 +1183,22 @@
 <context>
     <name>SidebarMenu</name>
     <message>
-        <location filename="../src/music-player/musicmousemenu/SidebarMenu.qml" line="16"/>
+        <location filename="../src/music-player/musicmousemenu/SidebarMenu.qml" line="22"/>
         <source>Play</source>
         <translation>གཏོང་བ།</translation>
     </message>
     <message>
-        <location filename="../src/music-player/musicmousemenu/SidebarMenu.qml" line="23"/>
+        <location filename="../src/music-player/musicmousemenu/SidebarMenu.qml" line="29"/>
         <source>Add songs</source>
         <translation>གླུ་གཞས་སྣོན་པ།</translation>
     </message>
     <message>
-        <location filename="../src/music-player/musicmousemenu/SidebarMenu.qml" line="32"/>
+        <location filename="../src/music-player/musicmousemenu/SidebarMenu.qml" line="38"/>
         <source>Rename</source>
         <translation>མིང་བསྐྱར་འདོགས།</translation>
     </message>
     <message>
-        <location filename="../src/music-player/musicmousemenu/SidebarMenu.qml" line="46"/>
+        <location filename="../src/music-player/musicmousemenu/SidebarMenu.qml" line="52"/>
         <source>Delete</source>
         <translation>སུབ་པ།</translation>
     </message>
@@ -1251,7 +1261,7 @@
 <context>
     <name>ToolButtonItem</name>
     <message>
-        <location filename="../src/music-player/allItems/ToolButtonItem.qml" line="56"/>
+        <location filename="../src/music-player/allItems/ToolButtonItem.qml" line="59"/>
         <source>Play All</source>
         <translation>ཚང་མ་གཏོང་བ།</translation>
     </message>
@@ -1322,58 +1332,58 @@
 <context>
     <name>WindowTitlebar</name>
     <message>
-        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="55"/>
+        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="56"/>
         <source>Add playlist</source>
         <translation>གླུ་གཞས་པ་སྣོན་པ། </translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="57"/>
+        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="58"/>
         <source>New playlist</source>
         <translation>གཞས་ཐོ་གསར་བཟོ།</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="62"/>
-        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="327"/>
+        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="63"/>
+        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="329"/>
         <source>Add music</source>
         <translation>རོལ་མོ་སྣོན་པ། </translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="70"/>
+        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="71"/>
         <source>Equalizer</source>
         <translation>ངོ་སྙོམས་སྒྲིག་ཆས།</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="81"/>
+        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="82"/>
         <source>Settings</source>
         <translation>སྒྲིག་འགོད།</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="95"/>
+        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="96"/>
         <source>Music</source>
         <translation>རོལ་མོ། </translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="97"/>
+        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="98"/>
         <source>Music is a local music player with beautiful design and simple functions.</source>
         <translation>རོལ་མོ་ནི་ཇུས་འགོད་སྙིང་རྗེ་བ་དང་། བྱེད་ནུས་སྟབས་བདེ་བའི་རང་གནས་རོལ་མོ་གཏོང་ཆས་ཞིག་རེད།</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="98"/>
+        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="99"/>
         <source>Version:</source>
         <translation>པར་གཞིའི་ཨང་གྲངས།</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="212"/>
+        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="213"/>
         <source>Previous page</source>
         <translation>ཤོག་ངོས་གོང་མ།</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="228"/>
+        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="229"/>
         <source>Next page</source>
         <translation>གཞས་རྗེས་མ།</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="238"/>
+        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="239"/>
         <source>Search</source>
         <translation>བཤེར་འཚོལ།</translation>
     </message>

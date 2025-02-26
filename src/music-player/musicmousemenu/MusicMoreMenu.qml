@@ -59,7 +59,7 @@ Menu{
         listHash: pageHash
     }
     MenuItem {
-        text: qsTr("Remove from playlist")
+        text: pageHash === "play" ? qsTr("Remove from play queue") : qsTr("Remove from playlist")
         onTriggered: {
             removeSong.show();
         }
