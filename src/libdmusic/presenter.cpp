@@ -539,7 +539,11 @@ void Presenter::playPlaylist(const QString &playlistHash, const QString &metaHas
         m_data->m_playerEngine->setMediaMeta(metaHash);
     }
     m_data->m_playerEngine->setCurrentPlayList(playlistHash);
-    m_data->m_playerEngine->play();
+    if (playlistHash == "musicResult" && metaHash.isEmpty()) {
+        m_data->m_playerEngine->forcePlay();
+    } else {
+        m_data->m_playerEngine->play();
+    }
 
     m_data->m_dataManager->setCurrentPlayliHash(playlistHash);
     m_data->m_dataManager->clearPlayList("play", false);
