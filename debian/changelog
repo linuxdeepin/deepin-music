@@ -1,3 +1,15 @@
+deepin-music (7.0.20) unstable; urgency=medium
+
+  * chore: update linglong version (#543)
+  * fix: add isPlayAll property and update translations (#544)
+  * fix: update UI components layout and playAll button state(Bug: 281269)
+  * fix: improve data loading in album and artist sublist views (#546)
+  * feat: add delete finished signal and improve list item background visibility (#547)
+  * fix: add conditional text for menu items based on context (#548)
+  * fix: add force play for empty metaHash in musicResult playlist (#549)
+
+ -- renbin <renbin@uniontech.com>  Thu, 27 Feb 2025 19:14:21 +0800
+
 deepin-music (7.0.19) unstable; urgency=medium
 
   * chore: New version 7.0.19.
