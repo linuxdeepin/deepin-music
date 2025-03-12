@@ -1,3 +1,9 @@
+deepin-music (7.0.21) unstable; urgency=medium
+
+  * chore: New version 7.0.21.
+
+ -- Wang Yu <wangyu@uniontch.com>  Wed, 12 Mar 2025 19:50:07 +0800
+
 deepin-music (7.0.20) unstable; urgency=medium
 
   * chore: update linglong version (#543)
