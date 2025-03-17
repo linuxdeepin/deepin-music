@@ -60,6 +60,7 @@ Rectangle {
         width: parent.width
         height: parent.height
         color: "transparent"
+        visible: curIndex < 0 ? false : true
         ColumnLayout {
             width: parent.width
             height: parent.height
