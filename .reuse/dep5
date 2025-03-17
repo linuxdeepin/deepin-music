@@ -14,7 +14,7 @@ Copyright: None
 License: CC0-1.0
 
 # xml toml json conf yaml sh
-Files:  *.toml *.json *conf *.yaml *.sh *.transifexrc *.toml
+Files:  *.toml *.json *conf *.yaml *.sh *.transifexrc
 Copyright: None
 License: CC0-1.0
 

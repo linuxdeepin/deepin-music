@@ -237,6 +237,7 @@ TitleBar {
                 Layout.preferredWidth: 300
                 Layout.alignment: Qt.AlignCenter
                 placeholder: qsTr("Search")
+                enabled: Presenter.isExistMeta()
                 Keys.onReturnPressed: {
                     //console.log("SearchEdit: Keys.onEnterPressed....")
                     if (text.length <= 0 || searchResDlg.songList == null)
@@ -295,7 +296,17 @@ TitleBar {
                     }
                 }
 
+                function importFinishedDatas(playlistHashs, failCount, sucessCount, existCount) {
+                    searchEdit.enabled = Presenter.isExistMeta()
+                }
+
+                function deleteFinishedDatas(playlistHash) {
+                    searchEdit.enabled = Presenter.isExistMeta()
+                }
+
                 Component.onCompleted: {
+                    Presenter.importFinished.connect(importFinishedDatas);
+                    Presenter.deleteFinished.connect(deleteFinishedDatas);
                     EventsFilter.mousePress.connect(onMousePressed)
                     searchEditRef = searchEdit
                 }
