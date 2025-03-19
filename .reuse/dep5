@@ -34,7 +34,7 @@ Copyright: None
 License: CC0-1.0
 
 # Project file
-Files: *.pro *.prf *.pri *.qrc *CMakeLists.txt .tx/*
+Files: *.pro *.prf *.pri *.qrc *CMakeLists.txt .tx/* *.h.in
 Copyright: None
 License: CC0-1.0
 

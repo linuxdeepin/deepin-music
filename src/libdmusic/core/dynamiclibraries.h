@@ -19,12 +19,6 @@ private:
     explicit DynamicLibraries();
     ~DynamicLibraries();
     bool loadLibraries();
-    /**
-     * @brief libPath get absolutely library path
-     * @param strlib library name
-     * @return
-     */
-    QString libPath(const QString &strlib);
     QLibrary vlccoreLib;
     QLibrary vlcLib;
     QLibrary avcodecLib;

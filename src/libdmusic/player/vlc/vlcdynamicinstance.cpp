@@ -4,6 +4,9 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 #include "vlcdynamicinstance.h"
+
+#include "global.h"
+
 #include <QDir>
 #include <QLibrary>
 #include <QLibraryInfo>
@@ -87,7 +90,7 @@ QFunctionPointer VlcDynamicInstance::resolveSdlSymbol(const char *symbol)
 
 bool VlcDynamicInstance::loadVlcLibrary()
 {
-    QString strvlccore = libPath(libvlccore);
+    QString strvlccore = DmGlobal::libPath(libvlccore);
     if (QLibrary::isLibrary(strvlccore)) {
         libcore.setFileName(strvlccore);
         if (!libcore.load())
@@ -96,7 +99,7 @@ bool VlcDynamicInstance::loadVlcLibrary()
         return false;
     }
 
-    QString strlibvlc = libPath(libvlc);
+    QString strlibvlc = DmGlobal::libPath(libvlc);
     if (QLibrary::isLibrary(strlibvlc)) {
         libdvlc.setFileName(strlibvlc);
         if (!libdvlc.load()) {
@@ -106,7 +109,7 @@ bool VlcDynamicInstance::loadVlcLibrary()
         return false;
     }
 
-    QString strlibcodec = libPath(libcodec);
+    QString strlibcodec = DmGlobal::libPath(libcodec);
     if (QLibrary::isLibrary(strlibcodec)) {
         libavcode.setFileName(strlibcodec);
         if (!libavcode.load()) {
@@ -116,7 +119,7 @@ bool VlcDynamicInstance::loadVlcLibrary()
         return false;
     }
 
-    QString strlibformate = libPath(libformate);
+    QString strlibformate = DmGlobal::libPath(libformate);
     if (QLibrary::isLibrary(strlibformate)) {
         libdformate.setFileName(strlibformate);
         if (!libdformate.load()) {
@@ -130,33 +133,11 @@ bool VlcDynamicInstance::loadVlcLibrary()
 
 bool VlcDynamicInstance::loadSdlLibrary()
 {
-    QString strSdl = libPath(libSDL2);
+    QString strSdl = DmGlobal::libPath(libSDL2);
     if (QLibrary::isLibrary(strSdl)) {
         libsdl2.setFileName(strSdl);
         return libsdl2.load();
     } else {
         return false;
     }
-}
-
-QString VlcDynamicInstance::libPath(const QString &strlib)
-{
-    QDir  dir;
-    QString path  = QLibraryInfo::location(QLibraryInfo::LibrariesPath);
-    dir.setPath(path);
-    QStringList list = dir.entryList(QStringList() << (strlib + "*"), QDir::NoDotAndDotDot | QDir::Files); //filter name with strlib
-    QString libPath;
-    if (list.contains(strlib)) {
-        libPath = path + "/" + strlib;
-    } else {
-        list.sort();
-        for (int i = list.size() - 1; i >= 0; i--) {
-            if (list[i].contains(".so")) {
-                libPath = path + "/" + list[i];
-                break;
-            }
-        }
-    }
-
-    return libPath;
 }

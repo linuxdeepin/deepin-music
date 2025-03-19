@@ -28,13 +28,6 @@ private:
 
     bool loadVlcLibrary();
 
-    /**
-     * @brief libPath get absolutely library path
-     * @param strlib library name
-     * @return
-     */
-    QString libPath(const QString &strlib);
-
 private:
     QLibrary libcore;
     QLibrary libdvlc;
