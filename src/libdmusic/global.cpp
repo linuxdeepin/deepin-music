@@ -10,6 +10,7 @@
 #include <QLibraryInfo>
 #include <QDir>
 #include <QDebug>
+#include <QLibrary>
 
 #include <DStandardPaths>
 
@@ -125,19 +126,54 @@ bool DmGlobal::isWaylandMode()
     return waylandMode;
 }
 
+QString DmGlobal::libPath(const QString &strlib)
+{
+    QDir  dir;
+    QString path  = QLibraryInfo::location(QLibraryInfo::LibrariesPath);
+    dir.setPath(path);
+    QStringList list = dir.entryList(QStringList() << (strlib + "*"), QDir::NoDotAndDotDot | QDir::Files); //filter name with strlib
+    QString libPath;
+    if (list.contains(strlib)) {
+        libPath = path + "/" + strlib;
+    } else {
+        list.sort();
+        for (int i = list.size() - 1; i >= 0; i--) {
+            if (list[i].contains(".so")) {
+                libPath = path + "/" + list[i];
+                break;
+            }
+        }
+    }
+    if (libPath.isEmpty()) {
+        libPath = strlib;
+    }
+
+    return libPath;
+}
+
+bool DmGlobal::libExist(const QString &strlib)
+{
+    // find all library paths by QLibrary
+    QString libName;
+    if (strlib.contains(".so"))
+        libName = strlib.mid(0, strlib.indexOf(".so"));
+    else
+        libName = strlib;
+    QLibrary lib(libName);
+    bool bExist = lib.load();
+    if (!bExist) {
+        qWarning() << "Failed to load library:" << lib.errorString();
+        lib.setFileName(libPath(strlib));
+        bExist = lib.load();
+    }
+    return bExist;
+}
+
 void DmGlobal::initPlaybackEngineType()
 {
     engineType = 0;
-    QDir dir(QLibraryInfo::location(QLibraryInfo::LibrariesPath));
-    QStringList list = dir.entryList(QStringList() << QString("libvlccore.so*") << QString("libavcodec.so*"), QDir::NoDotAndDotDot | QDir::Files);
-    bool vlcFlag = false, avFlag = false;
-    for (auto str : list) {
-        if (!vlcFlag && str.startsWith("libvlccore.so")) vlcFlag = true;
-        if (!avFlag && str.startsWith("libavcodec.so")) avFlag = true;
-        if (vlcFlag && avFlag) {
-            engineType = 1;
-            break;
-        }
+    if (libExist("libvlc.so") && libExist("libavcodec.so")) {
+        engineType = 1;
     }
     qDebug() << "initPlaybackEngineType: " << engineType;
 }

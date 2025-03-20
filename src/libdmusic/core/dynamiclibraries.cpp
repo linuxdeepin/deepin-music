@@ -76,7 +76,7 @@ QFunctionPointer DynamicLibraries::resolve(const char *symbol, bool ffmpeg)
 
 bool DynamicLibraries::loadLibraries()
 {
-    QString strvlccore = libPath(libvlccoreStr);
+    QString strvlccore = DmGlobal::libPath(libvlccoreStr);
     qDebug() << "vlccore path:" << strvlccore;
     if (QLibrary::isLibrary(strvlccore)) {
         vlccoreLib.setFileName(strvlccore);
@@ -89,7 +89,7 @@ bool DynamicLibraries::loadLibraries()
         return false;
     }
 
-    QString strlibvlc = libPath(libvlcStr);
+    QString strlibvlc = DmGlobal::libPath(libvlcStr);
     qDebug() << "libvlc path:" << strvlccore;
     if (QLibrary::isLibrary(strlibvlc)) {
         vlcLib.setFileName(strlibvlc);
@@ -102,7 +102,7 @@ bool DynamicLibraries::loadLibraries()
         return false;
     }
 
-    QString strlibcodec = libPath(libavcodecStr);
+    QString strlibcodec = DmGlobal::libPath(libavcodecStr);
     qDebug() << "libavcodec path:" << strvlccore;
     if (QLibrary::isLibrary(strlibcodec)) {
         avcodecLib.setFileName(strlibcodec);
@@ -115,7 +115,7 @@ bool DynamicLibraries::loadLibraries()
         return false;
     }
 
-    QString strlibformate = libPath(libavformateStr);
+    QString strlibformate = DmGlobal::libPath(libavformateStr);
     qDebug() << "libavformateLib path:" << strvlccore;
     if (QLibrary::isLibrary(strlibformate)) {
         avformateLib.setFileName(strlibformate);
@@ -128,20 +128,4 @@ bool DynamicLibraries::loadLibraries()
         return false;
     }
     return true;
-}
-
-QString DynamicLibraries::libPath(const QString &strlib)
-{
-    QDir  dir;
-    QString path  = QLibraryInfo::location(QLibraryInfo::LibrariesPath);
-    dir.setPath(path);
-    QStringList list = dir.entryList(QStringList() << (strlib + "*"), QDir::NoDotAndDotDot | QDir::Files); //filter name with strlib
-    if (list.contains(strlib)) {
-        return strlib;
-    } else {
-        list.sort();
-    }
-
-    Q_ASSERT(list.size() > 0);
-    return list.last();
 }

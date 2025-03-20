@@ -99,6 +99,10 @@ public:
     static void setWaylandMode(bool mode);
     // 是否开启Wayland
     static bool isWaylandMode();
+    // 获取动态库路径
+    static QString libPath(const QString &strlib);
+    // 检查系统是否存在动态库
+    static bool libExist(const QString &strlib);
     // 初始化播放引擎类型
     static void initPlaybackEngineType();
     // 设置播放引擎类型
