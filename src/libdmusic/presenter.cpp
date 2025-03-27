@@ -566,6 +566,10 @@ QString Presenter::getCurrentPlayList()
 void Presenter::importMetas(const QStringList &urls, const QString &playlistHash, const bool &playFalg)
 {
     qDebug() << __func__;
+    if (urls.isEmpty()) {
+        qInfo() << "importMetas urls is empty";
+        return;
+    }
     m_data->m_dataManager->importMetas(urls, playlistHash, playFalg);
 }
 
