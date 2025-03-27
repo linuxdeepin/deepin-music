@@ -100,7 +100,7 @@ DialogWindow {
                     Row {
                         anchors.verticalCenter: parent.verticalCenter
 
-                        Text {
+                        Label {
                             width: contentWidth < 55 ? 55 : contentWidth
                             anchors.verticalCenter: parent.verticalCenter
                             text: qsTr("Equalizer")
