@@ -378,17 +378,22 @@ ApplicationWindow {
         }
     }
     function onImportFinished(playlistHashs, failCount, sucessCount, existCount) {
-        if (sucessCount <= 0 && failCount >= 0) {
-            if (importFailedDlgLoader.status === Loader.Null)
-                importFailedDlgLoader.setSource("../dialogs/ImportFailedDialog.qml")
-            if (importFailedDlgLoader.status === Loader.Ready)
-                importFailedDlgLoader.item.show()
-        } else if (sucessCount <= 0 && existCount > 0) {
-            globalVariant.sendFloatingMessageBox("", 0)
-        } else {
-            if (globalVariant.curListPage === "all") {
-                globalVariant.sendFloatingMessageBox(qsTr("All Songs"), 1)
+        if (sucessCount <= 0) {
+            // 当所有文件都已存在时显示提示
+            if (existCount > 0 && sucessCount === 0 && failCount === 0) {
+                globalVariant.sendFloatingMessageBox("", 0);
+                return;
             }
+            
+            // 有导入失败的情况
+            if (importFailedDlgLoader.status === Loader.Null) {
+                importFailedDlgLoader.setSource("../dialogs/ImportFailedDialog.qml");
+            }
+            if (importFailedDlgLoader.status === Loader.Ready) {
+                importFailedDlgLoader.item.show();
+            }
+        } else if (globalVariant.curListPage === "all") {
+            globalVariant.sendFloatingMessageBox(qsTr("All Songs"), 1);
         }
     }
     function onQuitRequested() {
