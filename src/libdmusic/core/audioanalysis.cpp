@@ -179,9 +179,15 @@ bool AudioAnalysis::parseFileTagCodec(DMusic::MediaMeta &meta)
     meta.length = t_audioProperties->length() * 1000;
 
     bool encode = true;
+#if TAGLIB_MAJOR_VERSION > 1 || (TAGLIB_MAJOR_VERSION == 1 && TAGLIB_MINOR_VERSION >= 11)
+    encode &= tag->title().isEmpty() ? true : tag->title().isLatin1();
+    encode &= tag->artist().isEmpty() ? true : tag->artist().isLatin1();
+    encode &= tag->album().isEmpty() ? true : tag->album().isLatin1();
+#else
     encode &= tag->title().isNull() ? true : tag->title().isLatin1();
     encode &= tag->artist().isNull() ? true : tag->artist().isLatin1();
     encode &= tag->album().isNull() ? true : tag->album().isLatin1();
+#endif
     if (encode) {
         if (detectCodec.isEmpty()) {
             detectByte += tag->title().toCString();
