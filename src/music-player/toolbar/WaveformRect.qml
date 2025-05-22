@@ -93,6 +93,7 @@ Rectangle {
             source: linearGradient
             radius: 48
             transparentBorder: true
+            cached: true
         }
     }
 
@@ -172,6 +173,14 @@ Rectangle {
     }
 
     function onAudioDataChanged() {
+        // 将原有的pathelement手动清理一下
+        for (var i = 0; i < maskPath.pathElements.length; i++) {
+            var item = maskPath.pathElements[i];
+            if (item) {
+                item.destroy();
+            }
+        }
+        gc();
         maskPath.pathElements = []
         var pointCount = shapeMask.width / waveItem.sampleRectWidth / magnification
         var step = Math.floor(pointList.length / pointCount)

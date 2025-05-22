@@ -540,9 +540,11 @@ FloatingPanel {
     }
     function audioBufferChange(buffer,hash) {
         //console.log("toolbar audioBufferChange:...........")
+        pointList = null;
         pointList = []
         pointList = buffer
         waveform.onAudioDataChanged()
+        gc();
     }
     function onDeleteOneMeta(playlistHashs, hash) {
         for (var i = 0; i < playlistHashs.length; i++){
