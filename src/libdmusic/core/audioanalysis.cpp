@@ -179,9 +179,15 @@ bool AudioAnalysis::parseFileTagCodec(DMusic::MediaMeta &meta)
     meta.length = t_audioProperties->length() * 1000;
 
     bool encode = true;
+#if TAGLIB_MAJOR_VERSION > 1 || (TAGLIB_MAJOR_VERSION == 1 && TAGLIB_MINOR_VERSION >= 11)
+    encode &= tag->title().isEmpty() ? true : tag->title().isLatin1();
+    encode &= tag->artist().isEmpty() ? true : tag->artist().isLatin1();
+    encode &= tag->album().isEmpty() ? true : tag->album().isLatin1();
+#else
     encode &= tag->title().isNull() ? true : tag->title().isLatin1();
     encode &= tag->artist().isNull() ? true : tag->artist().isLatin1();
     encode &= tag->album().isNull() ? true : tag->album().isLatin1();
+#endif
     if (encode) {
         if (detectCodec.isEmpty()) {
             detectByte += tag->title().toCString();
@@ -387,8 +393,12 @@ void AudioAnalysis::parseMetaCover(DMusic::MediaMeta &meta)
             format_open_input(&pFormatCtx, path.toStdString().c_str(), nullptr, nullptr);
 
             if (pFormatCtx) {
+#if LIBAVFORMAT_VERSION_MAJOR < 61
                 if (pFormatCtx->iformat != nullptr && pFormatCtx->iformat->read_header(pFormatCtx) >= 0) {
-                    for (unsigned int i = 0; i < pFormatCtx->nb_streams; i++) {
+#else
+                {
+#endif
+                    for (unsigned int i = 0; i < pFormatCtx->nb_streams; ++i) {
                         if (pFormatCtx->streams[i]->disposition & AV_DISPOSITION_ATTACHED_PIC) {
                             AVPacket pkt = pFormatCtx->streams[i]->attached_pic;
                             image = QImage::fromData(static_cast<uchar *>(pkt.data), pkt.size);
@@ -452,10 +462,14 @@ QImage AudioAnalysis::getMetaCoverImage(DMusic::MediaMeta meta)
 
             AVFormatContext *pFormatCtx = format_alloc_context();
             format_open_input(&pFormatCtx, meta.localPath.toUtf8().data(), nullptr, nullptr);
-
+            
             if (pFormatCtx) {
+#if LIBAVFORMAT_VERSION_MAJOR < 61
                 if (pFormatCtx->iformat != nullptr && pFormatCtx->iformat->read_header(pFormatCtx) >= 0) {
-                    for (unsigned int i = 0; i < pFormatCtx->nb_streams; i++) {
+#else
+                {
+#endif
+                    for (unsigned int i = 0; i < pFormatCtx->nb_streams; ++i) {
                         if (pFormatCtx->streams[i]->disposition & AV_DISPOSITION_ATTACHED_PIC) {
                             AVPacket pkt = pFormatCtx->streams[i]->attached_pic;
                             image = QImage::fromData(static_cast<uchar *>(pkt.data), pkt.size);
