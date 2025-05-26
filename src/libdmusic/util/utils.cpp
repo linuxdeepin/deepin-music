@@ -4,6 +4,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 #include "utils.h"
+#include "util/log.h"
 
 #include <unicode/ucsdet.h>
 
@@ -77,6 +78,7 @@ QStringList Utils::simpleChineseSplit(QString &str)
 
 void Utils::updateChineseMetaInfo(DMusic::MediaMeta &meta)
 {
+    qCDebug(dmMusic) << "Updating Chinese meta info for:" << meta.title;
     for (auto &str : simpleChineseSplit(meta.title)) {
         meta.pinyinTitle += str;
         meta.pinyinTitleShort += str.at(0);
@@ -108,38 +110,37 @@ QStringList Utils::detectEncodings(const QByteArray &rawData)
 
     csd = ucsdet_open(&status);
     if (status != U_ZERO_ERROR) {
+        qCWarning(dmMusic) << "Failed to open charset detector, error:" << status;
         return charsets;
     }
 
     ucsdet_setText(csd, data, len, &status);
     if (status != U_ZERO_ERROR) {
+        qCWarning(dmMusic) << "Failed to set text for charset detection, error:" << status;
         ucsdet_close(csd);
         return charsets;
     }
 
     csm = ucsdet_detectAll(csd, &matchCount, &status);
     if (status != U_ZERO_ERROR) {
+        qCWarning(dmMusic) << "Failed to detect charsets, error:" << status;
         ucsdet_close(csd);
         return charsets;
     }
 
     if (matchCount > 0) {
         charsets.clear();
+        qCDebug(dmMusic) << "Found" << matchCount << "charset matches";
     }
 
-//    qDebug() << "match coding list" << charset;
     for (int32_t match = 0; match < matchCount; match += 1) {
         const char *name = ucsdet_getName(csm[match], &status);
         const char *lang = ucsdet_getLanguage(csm[match], &status);
-//        int32_t confidence = ucsdet_getConfidence(csm[match], &status);
         if (lang == nullptr || strlen(lang) == 0) {
             lang = "**";
         }
-//        qDebug() <<  name << lang << confidence;
         charsets << name;
     }
-//    qDebug() << "match coding list end";
-
 
     ucsdet_close(csd);
     return charsets;
@@ -180,23 +181,28 @@ void Utils::fft(std::complex<float> *Data, int Log2N, int sign)
 
 QVariant Utils::readDBusProperty(const QString &service, const QString &path, const QString &interface, const char *property, QDBusConnection connection)
 {
-    // 创建QDBusInterface接口
+    qCDebug(dmMusic) << "Reading DBus property -" << "Service:" << service << "Path:" << path << "Interface:" << interface << "Property:" << property;
+    
     dbusMutex.lock();
     QDBusInterface ainterface(service,
                               path,
                               interface,
                               connection);
     if (!ainterface.isValid()) {
-        qDebug() << qPrintable(QDBusConnection::sessionBus().lastError().message());
-        //cause dead lock if no unlock here,
+        qCWarning(dmMusic) << "Failed to create DBus interface:" << qPrintable(QDBusConnection::sessionBus().lastError().message());
         dbusMutex.unlock();
-        QVariant v(0) ;
-        return  v;
+        QVariant v(0);
+        return v;
     }
     //调用远程的value方法
     QVariant v = ainterface.property(property);
     dbusMutex.unlock();
-    return  v;
+    
+    if (!v.isValid()) {
+        qCWarning(dmMusic) << "Failed to read DBus property:" << property;
+    }
+    
+    return v;
 }
 
 QVariantMap Utils::metaToVariantMap(const DMusic::MediaMeta &meta)
@@ -339,6 +345,7 @@ QVariantMap Utils::playlistToVariantMap(const DMusic::PlaylistInfo &playlist)
 
 bool Utils::containsStr(QString searchText, QString text)
 {
+    qCDebug(dmMusic) << "Performing string search - Search text:" << searchText;
     text = QString(text).remove("\r").remove("\n");
     bool chineseFlag = false;
     for (auto ch : searchText) {
@@ -347,7 +354,9 @@ bool Utils::containsStr(QString searchText, QString text)
             break;
         }
     }
+    
     if (chineseFlag) {
+        qCDebug(dmMusic) << "Performing Chinese text search";
         return text.contains(searchText);
     } else {
         auto curTextList = simpleChineseSplit(text);
@@ -359,7 +368,6 @@ bool Utils::containsStr(QString searchText, QString text)
                 }
                 curTextListStr += mText;
             }
-//            curTextListStr = QString(curTextListStr.remove(" "));
             if (curTextListStr.contains(searchText, Qt::CaseInsensitive)) {
                 return true;
             }

@@ -14,6 +14,7 @@
 #include <QRegExp>
 
 #include <DTextEncoding>
+#include "util/log.h"
 
 DCORE_USE_NAMESPACE
 
@@ -109,16 +110,15 @@ LyricAnalysis::LyricAnalysis(): m_offset(0.00)
 
 int LyricAnalysis::getIndex(qint64 pos)
 {
-    //采用二分查找
-    //时间复杂度O(logn)
-    int lt, rt;
-    lt = 0;
-    rt = m_allLyrics.count();
+    qCDebug(dmMusic) << "Getting index for position:" << pos;
+    int lt = 0;
+    int rt = m_allLyrics.count();
     while (lt < rt - 1) {
         int mid = (lt + rt) >> 1;
         if (m_allLyrics[mid].first > pos) rt = mid;
         else lt = mid;
     }
+    qCDebug(dmMusic) << "Found index:" << lt << "for position:" << pos;
     return lt;
 }
 
@@ -132,19 +132,28 @@ qint64 LyricAnalysis::getPostion(int index)
 
 void LyricAnalysis::parseLyric(const QString &str)
 {
+    qCDebug(dmMusic) << "Parsing lyrics with length:" << str.length();
     auto lines = str.split("\n");
     QRegExp rx("\\[([^\\]]*)\\]\\s*(\\S.*\\S|\\S)\\s*$");
     QVector<QPair<qint64, QString>> tmp;
+
     for (auto line : lines) {
         if (rx.indexIn(line) != -1) {
             auto timeStr = rx.capturedTexts()[1];
             auto lyricStr = rx.capturedTexts()[2];
             QTime t = QTime::fromString(timeStr, "mm:ss.z");
             qint64 time = t.msecsSinceStartOfDay();
-            if (t.isValid())
+            if (t.isValid()) {
                 tmp.push_back({time, lyricStr});
+                qCDebug(dmMusic) << "Parsed lyric - Time:" << timeStr << "Text:" << lyricStr;
+            } else {
+                qCWarning(dmMusic) << "Invalid time format in lyric line:" << line;
+            }
+        } else {
+            qCDebug(dmMusic) << "Skipping non-matching line:" << line;
         }
     }
+
     std::sort(tmp.begin(), tmp.end());
     m_allLyrics.clear();
     for (auto item : tmp) {
@@ -154,42 +163,55 @@ void LyricAnalysis::parseLyric(const QString &str)
 
 QString LyricAnalysis::getFileCodec()
 {
+    qCDebug(dmMusic) << "Detecting file codec for:" << m_filePath;
     QFile fin(m_filePath);
     QString code;
-    if (!fin.open(QIODevice::ReadOnly))
+    if (!fin.open(QIODevice::ReadOnly)) {
+        qCWarning(dmMusic) << "Failed to open file for codec detection:" << m_filePath;
         return code;
+    }
 
     QByteArray data = fin.readAll();
     fin.close();
 
     if (data.isEmpty()) {
+        qCDebug(dmMusic) << "File is empty, using locale codec";
         return QTextCodec::codecForLocale()->name();
     }
 
     if (QTextCodec *c = QTextCodec::codecForUtfText(data, nullptr)) {
+        qCDebug(dmMusic) << "Detected UTF codec:" << c->name();
         return c->name();
     }
 
     bool isOK = false;
     QByteArray encode = DTextEncoding::detectFileEncoding(m_filePath, &isOK);
+    qCDebug(dmMusic) << "Detected file encoding:" << encode << "success:" << isOK;
     return encode;
 }
 
 void LyricAnalysis::setFromFile(const QString &filePath)
 {
+    qCDebug(dmMusic) << "Setting lyrics from file:" << filePath;
     m_filePath = filePath;
     m_allLyrics.clear();
+
     QString codecStr = getFileCodec();
     QFile file(filePath);
-    if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        qCWarning(dmMusic) << "Failed to open lyric file:" << filePath;
         return;
+    }
+
     QByteArray array = file.readAll();
     QTextCodec *codec = QTextCodec::codecForName(codecStr.toLatin1());
     parseLyric(codec->toUnicode(array));
+    qCDebug(dmMusic) << "Successfully loaded lyrics from file with codec:" << codecStr;
 }
 
 QVector<QPair<qint64, QString> > LyricAnalysis::allLyrics()
 {
+    qCDebug(dmMusic) << "Returning all lyrics, count:" << m_allLyrics.size();
     return m_allLyrics;
 }
 

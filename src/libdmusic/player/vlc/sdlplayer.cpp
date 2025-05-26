@@ -28,6 +28,7 @@ extern "C" {
 #include "checkdatazerothread.h"
 #include "Media.h"
 #include "util/utils.h"
+#include "util/log.h"
 
 #define PLAYBACK_STATUS_INIT        0
 #define PLAYBACK_STATUS_CHANGING    1
@@ -83,7 +84,7 @@ typedef av_const int (*av_log2_function)(unsigned v);
 **/
 void SDL_LogOutputFunction_Err_Write(void *userdata, int category, SDL_LogPriority priority, const char *message)
 {
-    qDebug() << __FUNCTION__ << message;
+    qCDebug(dmMusic) << "SDL log message - Category:" << category << "Priority:" << priority << "Message:" << message;
     SDL_GetAudioStatus_function GetAudioStatus = (SDL_GetAudioStatus_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSdlSymbol("SDL_GetAudioStatus");
     QString strmsg = message;
     if (strmsg == SDL_AUDIO_ERR_MSG && category == SDL_LOG_CATEGORY_AUDIO && priority == SDL_LOG_PRIORITY_ERROR) {
@@ -94,6 +95,7 @@ void SDL_LogOutputFunction_Err_Write(void *userdata, int category, SDL_LogPriori
             //线程监控g_playbackStatus的值由于有时间间隔无法及时执行下一首歌曲的操作,还是会因为sdl向pulseaudio写入数据错误而导致音乐崩溃，
             //这里直接调用VlcMediaPlayer中checkDataZero来播放下一首歌曲
             //g_playbackStatus = PLAYBACK_STATUS_RESTORE;
+            qCWarning(dmMusic) << "SDL audio error detected during playback, switching to next song";
             SdlPlayer *sdlPlayer = static_cast<SdlPlayer *>(userdata);
             sdlPlayer->checkDataZero();
         }
@@ -103,8 +105,10 @@ void SDL_LogOutputFunction_Err_Write(void *userdata, int category, SDL_LogPriori
 SdlPlayer::SdlPlayer(VlcInstance *instance)
     : VlcMediaPlayer(instance), m_loadSdlLibrary(false)
 {
+    qCDebug(dmMusic) << "Initializing SDL player";
     m_loadSdlLibrary = VlcDynamicInstance::VlcFunctionInstance()->loadSdlLibrary();
     if (m_loadSdlLibrary) {
+        qCDebug(dmMusic) << "SDL library loaded successfully, initializing SDL audio";
         SDL_Init_function Init = (SDL_Init_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSdlSymbol("SDL_GetAudioStatus");
         vlc_audio_set_callbacks_function vlc_audio_set_callbacks = (vlc_audio_set_callbacks_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("libvlc_audio_set_callbacks");
         vlc_audio_set_format_callbacks_function vlc_audio_set_format_callbacks = (vlc_audio_set_format_callbacks_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("libvlc_audio_set_format_callbacks");
@@ -123,26 +127,36 @@ SdlPlayer::SdlPlayer(VlcInstance *instance)
         m_pCheckDataThread = new CheckDataZeroThread(this, this);
         connect(m_pCheckDataThread, &CheckDataZeroThread::sigPlayNextSong, this, &SdlPlayer::checkDataZero, Qt::QueuedConnection);
         connect(m_pCheckDataThread, &CheckDataZeroThread::sigExtraTime, this, &VlcMediaPlayer::timeChanged, Qt::QueuedConnection);
+        qCDebug(dmMusic) << "SDL player initialization completed";
+    } else {
+        qCWarning(dmMusic) << "Failed to load SDL library";
     }
 }
 
 SdlPlayer::~SdlPlayer()
 {
+    qCDebug(dmMusic) << "Cleaning up SDL player";
     if (m_loadSdlLibrary) {
         SDL_Quit_function Quit = (SDL_Quit_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSdlSymbol("SDL_Quit");
         Quit();
+        qCDebug(dmMusic) << "SDL quit called";
         m_pCheckDataThread->quitThread();
         while (m_pCheckDataThread->isRunning()) {}
+        qCDebug(dmMusic) << "Check data thread stopped";
     }
 }
 
 void SdlPlayer::open(VlcMedia *media)
 {
+    qCDebug(dmMusic) << "Opening media in SDL player";
     //防止没打开文件
-    if (media->core() == nullptr)
+    if (media->core() == nullptr) {
+        qCWarning(dmMusic) << "Cannot open media: media core is null";
         return;
+    }
 
     if (m_loadSdlLibrary) {
+        qCDebug(dmMusic) << "Preparing SDL audio for new media";
         SDL_GetAudioStatus_function GetAudioStatus = (SDL_GetAudioStatus_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSdlSymbol("SDL_GetAudioStatus");
         SDL_PauseAudio_function PauseAudio = (SDL_PauseAudio_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSdlSymbol("SDL_PauseAudio");
         SDL_GetQueuedAudioSize_function GetQueuedAudioSize = (SDL_GetQueuedAudioSize_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSdlSymbol("SDL_GetQueuedAudioSize");
@@ -151,50 +165,67 @@ void SdlPlayer::open(VlcMedia *media)
         SDL_UnlockAudio_function UnlockAudio = (SDL_UnlockAudio_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSdlSymbol("SDL_UnlockAudio");
         SDL_Delay_function Delay = (SDL_Delay_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSdlSymbol("SDL_Delay");
         SDL_CloseAudio_function CloseAudio = (SDL_CloseAudio_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSdlSymbol("SDL_CloseAudio");
-        if (GetAudioStatus() != SDL_AUDIO_PLAYING)
+        if (GetAudioStatus() != SDL_AUDIO_PLAYING) {
             PauseAudio(1);
+            qCDebug(dmMusic) << "Audio paused for initialization";
+        }
         cleanMemCache();
         /**
           根据SDL官方标注，必须清空SDL队列播放后才能调用SDL_LockAudio()，
           不然可能引起不必要的错误,参数为1是SDL默认设备，无需更改
         **/
-        if (GetQueuedAudioSize(1) > 0)
+        if (GetQueuedAudioSize(1) > 0) {
             ClearQueuedAudio(1);
+            qCDebug(dmMusic) << "Cleared audio queue";
+        }
         LockAudio();
         Delay(40);
         UnlockAudio();
-        if (qEnvironmentVariable("DDE_CURRENT_COMPOSITOR") != "TreeLand")
+        if (qEnvironmentVariable("DDE_CURRENT_COMPOSITOR") != "TreeLand") {
             CloseAudio();
+            qCDebug(dmMusic) << "Closed audio device";
+        }
 
         m_sinkInputPath.clear();
     }
 
     VlcMediaPlayer::open(media);
     g_playbackStatus = PLAYBACK_STATUS_INIT;
+    qCDebug(dmMusic) << "Media opened successfully";
 }
 
 void SdlPlayer::play()
 {
-    if (!_vlcMediaPlayer)
+    if (!_vlcMediaPlayer) {
+        qCWarning(dmMusic) << "Cannot play: media player is null";
         return;
+    }
+    qCDebug(dmMusic) << "Starting playback";
     VlcMediaPlayer::play();
     if (m_loadSdlLibrary) {
-        if (!m_pCheckDataThread->isRunning())
+        if (!m_pCheckDataThread->isRunning()) {
             m_pCheckDataThread->start();
+            qCDebug(dmMusic) << "Started check data thread";
+        }
     }
 }
 
 void SdlPlayer::pause()
 {
-    if (!_vlcMediaPlayer)
+    if (!_vlcMediaPlayer) {
+        qCWarning(dmMusic) << "Cannot pause: media player is null";
         return;
+    }
+    qCDebug(dmMusic) << "Pausing playback";
     setProgressTag(0); //first start
 
     if (m_loadSdlLibrary) {
         SDL_GetAudioStatus_function GetAudioStatus = (SDL_GetAudioStatus_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSdlSymbol("SDL_GetAudioStatus");
         SDL_PauseAudio_function PauseAudio = (SDL_PauseAudio_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSdlSymbol("SDL_PauseAudio");
-        if (GetAudioStatus() != SDL_AUDIO_PAUSED && GetAudioStatus() != SDL_AUDIO_STOPPED)
+        if (GetAudioStatus() != SDL_AUDIO_PAUSED && GetAudioStatus() != SDL_AUDIO_STOPPED) {
             PauseAudio(1);
+            qCDebug(dmMusic) << "Audio paused";
+        }
     }
 
     VlcMediaPlayer::pause();
@@ -202,28 +233,37 @@ void SdlPlayer::pause()
 
 void SdlPlayer::resume()
 {
-    if (!_vlcMediaPlayer)
+    if (!_vlcMediaPlayer) {
+        qCWarning(dmMusic) << "Cannot resume: media player is null";
         return;
+    }
+    qCDebug(dmMusic) << "Resuming playback";
     VlcMediaPlayer::resume();
     if (m_loadSdlLibrary) {
         SDL_GetAudioStatus_function GetAudioStatus = (SDL_GetAudioStatus_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSdlSymbol("SDL_GetAudioStatus");
         SDL_PauseAudio_function PauseAudio = (SDL_PauseAudio_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSdlSymbol("SDL_PauseAudio");
         SDL_OpenAudio_function OpenAudio = (SDL_OpenAudio_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSdlSymbol("SDL_OpenAudio");
         SDL_Delay_function Delay = (SDL_Delay_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSdlSymbol("SDL_Delay");
-        if (GetAudioStatus() == SDL_AUDIO_STOPPED)
+        if (GetAudioStatus() == SDL_AUDIO_STOPPED) {
             OpenAudio(&obtainedAS, nullptr);
+            qCDebug(dmMusic) << "Reopened audio device";
+        }
 
         if ((GetAudioStatus() != SDL_AUDIO_STOPPED)) {
             Delay(40);
             PauseAudio(0);
+            qCDebug(dmMusic) << "Audio resumed";
         }
     }
 }
 
 void SdlPlayer::stop()
 {
-    if (!_vlcMediaPlayer)
+    if (!_vlcMediaPlayer) {
+        qCWarning(dmMusic) << "Cannot stop: media player is null";
         return;
+    }
+    qCDebug(dmMusic) << "Stopping playback";
     VlcMediaPlayer::stop();
     if (m_loadSdlLibrary) {
         cleanMemCache();
@@ -235,14 +275,18 @@ void SdlPlayer::stop()
         SDL_Delay_function Delay = (SDL_Delay_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSdlSymbol("SDL_Delay");
         SDL_CloseAudio_function CloseAudio = (SDL_CloseAudio_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSdlSymbol("SDL_CloseAudio");
 
-        if (GetQueuedAudioSize(1) > 0)
+        if (GetQueuedAudioSize(1) > 0) {
             ClearQueuedAudio(1);
+            qCDebug(dmMusic) << "Cleared audio queue";
+        }
         PauseAudio(1);
         LockAudio();
         Delay(40);
         UnlockAudio();
-        if (qEnvironmentVariable("DDE_CURRENT_COMPOSITOR") != "TreeLand")
+        if (qEnvironmentVariable("DDE_CURRENT_COMPOSITOR") != "TreeLand") {
             CloseAudio();
+            qCDebug(dmMusic) << "Closed audio device";
+        }
     }
 }
 
@@ -295,9 +339,18 @@ void SdlPlayer::libvlc_audio_play_cb(void *data, const void *samples, unsigned c
 {
     Q_UNUSED(pts)
     SdlPlayer *sdlMediaPlayer = static_cast<SdlPlayer *>(data);
-    if (sdlMediaPlayer->progressTag)
+    if (!sdlMediaPlayer) {
+        qCWarning(dmMusic) << "Invalid player instance in audio play callback";
         return;
+    }
+    
+    if (sdlMediaPlayer->progressTag) {
+        qCDebug(dmMusic) << "Audio play callback skipped due to progress tag";
+        return;
+    }
+
     int size = count * sdlMediaPlayer->obtainedAS.channels * sdlMediaPlayer->_rate / 8;
+    qCDebug(dmMusic) << "Processing audio data - Size:" << size << "Channels:" << sdlMediaPlayer->obtainedAS.channels << "Rate:" << sdlMediaPlayer->_rate;
 
     /** vlc解析的通道数超过设置到sdl的通道数时，声音会出现沙哑的问题，
         原因是SDL支持的最大channel数为6,当超过这个阈值时，SDL本身是不支持的，会按照正常的指针偏移去读取下一桢数据，
@@ -305,6 +358,7 @@ void SdlPlayer::libvlc_audio_play_cb(void *data, const void *samples, unsigned c
     **/
     char curSamples[size];
     if (sdlMediaPlayer->_channels != sdlMediaPlayer->obtainedAS.channels) {
+        qCDebug(dmMusic) << "Channel count mismatch - VLC:" << sdlMediaPlayer->_channels << "SDL:" << sdlMediaPlayer->obtainedAS.channels;
         for (int i = 0; i < count; ++i) {
             for (int j = 0; j < sdlMediaPlayer->obtainedAS.channels; ++j) {
                 memcpy((curSamples + (i * sdlMediaPlayer->obtainedAS.channels + j) * (sdlMediaPlayer->_rate / 8)),
@@ -312,70 +366,89 @@ void SdlPlayer::libvlc_audio_play_cb(void *data, const void *samples, unsigned c
                        sdlMediaPlayer->_rate / 8);
             }
         }
+        qCDebug(dmMusic) << "Channel conversion completed";
     } else {
         memcpy(curSamples, (char *)samples, size);
     }
 
     QByteArray ba((char *)curSamples, size);
-
     QMutexLocker locker(&vlc_mutex);
     sdlMediaPlayer->_data.append(ba);
+    qCDebug(dmMusic) << "Audio data appended to buffer - Size:" << ba.size();
 }
 
 void SdlPlayer::libvlc_audio_pause_cb(void *data, int64_t pts)
 {
     Q_UNUSED(data)
     Q_UNUSED(pts)
+    qCDebug(dmMusic) << "Audio pause callback triggered";
     SDL_GetAudioStatus_function GetAudioStatus = (SDL_GetAudioStatus_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSdlSymbol("SDL_GetAudioStatus");
     SDL_PauseAudio_function PauseAudio = (SDL_PauseAudio_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSdlSymbol("SDL_PauseAudio");
-    if (GetAudioStatus() != SDL_AUDIO_PAUSED && GetAudioStatus() != SDL_AUDIO_STOPPED)
+    if (GetAudioStatus() != SDL_AUDIO_PAUSED && GetAudioStatus() != SDL_AUDIO_STOPPED) {
         PauseAudio(1);
+        qCDebug(dmMusic) << "Audio paused successfully";
+    }
 }
 
 void SdlPlayer::libvlc_audio_resume_cb(void *data, int64_t pts)
 {
     Q_UNUSED(data)
     Q_UNUSED(pts)
+    qCDebug(dmMusic) << "Audio resume callback triggered";
     SDL_GetAudioStatus_function GetAudioStatus = (SDL_GetAudioStatus_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSdlSymbol("SDL_GetAudioStatus");
     SDL_PauseAudio_function PauseAudio = (SDL_PauseAudio_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSdlSymbol("SDL_PauseAudio");
-    if (GetAudioStatus() != SDL_AUDIO_PLAYING)
+    if (GetAudioStatus() != SDL_AUDIO_PLAYING) {
         PauseAudio(0);
+        qCDebug(dmMusic) << "Audio resumed successfully";
+    }
 }
 
 int SdlPlayer::libvlc_audio_setup_cb(void **data, char *format, unsigned *rate, unsigned *channels)
 {
+    qCDebug(dmMusic) << "Setting up audio - Format:" << format << "Rate:" << *rate << "Channels:" << *channels;
+    
     SDL_PauseAudio_function PauseAudio = (SDL_PauseAudio_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSdlSymbol("SDL_PauseAudio");
     SDL_Delay_function Delay = (SDL_Delay_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSdlSymbol("SDL_Delay");
     SDL_OpenAudio_function OpenAudio = (SDL_OpenAudio_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSdlSymbol("SDL_OpenAudio");
     av_log2_function Log2 = (av_log2_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("av_log2", true);
+    
     PauseAudio(1);
     SdlPlayer *sdlMediaPlayer = *(SdlPlayer **)data;
+    if (!sdlMediaPlayer) {
+        qCCritical(dmMusic) << "Invalid player instance in audio setup";
+        return -1;
+    }
+    
     sdlMediaPlayer->cleanMemCache();
-
     sdlMediaPlayer->_rate = libvlc_audio_format(format);
-
     sdlMediaPlayer->_channels = *channels;
     sdlMediaPlayer->_sampleRate = *rate;
 
     SDL_AudioSpec desiredAS;
-    //SDL
     desiredAS.freq = sdlMediaPlayer->_sampleRate;
     desiredAS.format = format_from_vlc_to_SDL(format);
     desiredAS.channels = static_cast<uint8_t>(sdlMediaPlayer->_channels);
     desiredAS.silence = 0;
     desiredAS.samples = FFMAX(AUDIO_MIN_BUFFER_SIZE, 2 << Log2(desiredAS.freq / AUDIO_MAX_CALLBACKS_PER_SEC));
-    //desiredAS.size = AUDIO_MIN_BUFFER_SIZE; let sdl adapt size  itself
     desiredAS.callback = SDL_audio_cbk;
     desiredAS.userdata = sdlMediaPlayer;
 
-    if (OpenAudio(&desiredAS, &sdlMediaPlayer->obtainedAS) < 0) {}
+    qCDebug(dmMusic) << "Opening audio device with spec - Freq:" << desiredAS.freq 
+                     << "Format:" << desiredAS.format 
+                     << "Channels:" << (int)desiredAS.channels
+                     << "Samples:" << desiredAS.samples;
+
+    if (OpenAudio(&desiredAS, &sdlMediaPlayer->obtainedAS) < 0) {
+        qCCritical(dmMusic) << "Failed to open audio device";
+        return -1;
+    }
 
     Delay(40);
     PauseAudio(0);
 
     sdlMediaPlayer->resetVolume();
     sdlMediaPlayer->m_sinkInputPath.clear();
-
+    qCDebug(dmMusic) << "Audio setup completed successfully";
     return 0;
 }
 
@@ -436,13 +509,21 @@ void SdlPlayer::SDL_audio_cbk(void *userdata, uint8_t *stream, int len)
 {
     SDL_memset_function Memset = (SDL_memset_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSdlSymbol("SDL_memset");
     SDL_MixAudio_function MixAudio = (SDL_MixAudio_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSdlSymbol("SDL_MixAudio");
+    
     SdlPlayer *sdlMediaPlayer = static_cast<SdlPlayer *>(userdata);
-    Memset(stream, 0, size_t(len)); //init stream to forbid End symbol problem
-    if (sdlMediaPlayer->_data.isEmpty()) {
-        if (g_playbackStatus == PLAYBACK_STATUS_CHANGING) //it could better calculate time between vlc time and media duration to know if sdl reachs end.
-            g_playbackStatus = PLAYBACK_STATUS_RESTORE;
+    if (!sdlMediaPlayer) {
+        qCWarning(dmMusic) << "Invalid player instance in audio callback";
+        return;
+    }
 
-        return ;
+    Memset(stream, 0, size_t(len));
+    
+    if (sdlMediaPlayer->_data.isEmpty()) {
+        if (g_playbackStatus == PLAYBACK_STATUS_CHANGING) {
+            g_playbackStatus = PLAYBACK_STATUS_RESTORE;
+            qCDebug(dmMusic) << "Playback status changed to restore due to empty buffer";
+        }
+        return;
     }
 
     if (sdlMediaPlayer->_data.size() >= len) {
@@ -469,13 +550,16 @@ void SdlPlayer::cleanMemCache()
 
 void SdlPlayer::readSinkInputPath()
 {
+    qCDebug(dmMusic) << "Reading sink input path";
     QVariant v = Utils::readDBusProperty("org.deepin.dde.Audio1", "/org/deepin/dde/Audio1",
                                              "org.deepin.dde.Audio1", "SinkInputs");
 
-    if (!v.isValid()) return;
+    if (!v.isValid()) {
+        qCWarning(dmMusic) << "Failed to read sink inputs from DBus";
+        return;
+    }
 
-    QList<QDBusObjectPath> allSinkInputsList = v.value<QList<QDBusObjectPath> >();
-
+    QList<QDBusObjectPath> allSinkInputsList = v.value<QList<QDBusObjectPath>>();
     for (auto curPath : allSinkInputsList) {
         QVariant nameV = Utils::readDBusProperty("org.deepin.dde.Audio1", curPath.path(),
                                                      "org.deepin.dde.Audio1.SinkInput", "Name");
@@ -484,29 +568,44 @@ void SdlPlayer::readSinkInputPath()
             continue;
 
         m_sinkInputPath = curPath.path();
+        qCDebug(dmMusic) << "Found sink input path:" << m_sinkInputPath;
         break;
     }
 }
 
 void SdlPlayer::resetVolume()
 {
-    // 防止重复
-    if (!m_sinkInputPath.isEmpty()) return;
+    if (!m_sinkInputPath.isEmpty()) {
+        qCDebug(dmMusic) << "Skipping volume reset - path already exists";
+        return;
+    }
+    
     readSinkInputPath();
-
-    if (m_sinkInputPath.isEmpty()) return;
+    if (m_sinkInputPath.isEmpty()) {
+        qCDebug(dmMusic) << "No sink input path found for volume reset";
+        return;
+    }
 
     QVariant volumeV = Utils::readDBusProperty("org.deepin.dde.Audio1", m_sinkInputPath,
                                                    "org.deepin.dde.Audio1.SinkInput", "Volume");
 
-    if (!volumeV.isValid()) return;
+    if (!volumeV.isValid()) {
+        qCWarning(dmMusic) << "Failed to read volume from sink input";
+        return;
+    }
 
     QDBusInterface ainterface("org.deepin.dde.Audio1", m_sinkInputPath,
                               "org.deepin.dde.Audio1.SinkInput",
                               QDBusConnection::sessionBus());
-    if (!ainterface.isValid()) return ;
+    if (!ainterface.isValid()) {
+        qCWarning(dmMusic) << "Invalid DBus interface for volume control";
+        return;
+    }
 
-    if (!qFuzzyCompare(volumeV.toDouble(), 1.0)) ainterface.call(QLatin1String("SetVolume"), 1.0, false);
+    if (!qFuzzyCompare(volumeV.toDouble(), 1.0)) {
+        ainterface.call(QLatin1String("SetVolume"), 1.0, false);
+        qCDebug(dmMusic) << "Volume reset to 1.0";
+    }
 
     m_sinkInputPath.clear();
 }

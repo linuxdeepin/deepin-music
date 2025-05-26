@@ -4,6 +4,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 #include "ckmeans.h"
+#include "util/log.h"
 #include <vector>
 #include <iostream>
 #include <math.h>
@@ -24,13 +25,21 @@ void CKMeans::kMeans()
     //构造待聚类数据集
     vector< vector<float> > data;
     QImage image = m_showImage;
-    if(image.isNull()) return;
+    if(image.isNull()) {
+        qCWarning(dmMusic) << "Cannot perform k-means: input image is null";
+        return;
+    }
+    
+    qCDebug(dmMusic) << "Processing image for k-means, original size:" << image.width() << "x" << image.height();
     image = image.scaled(420*1.8/3, 420*1.8/3, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
     m_showImage = image;
+    
     int width = image.width(), height = image.height();
     m_pointsCount = width * height;
     vector<float> points[m_pointsCount];
     int picCnt = 0;
+    
+    qCDebug(dmMusic) << "Extracting RGB data from image, scaled size:" << width << "x" << height;
     for (int i = 0; i < height; i++){
         for (int k = 0; k < width; k++){
             QRgb bits = image.pixel(i, k);
@@ -43,10 +52,8 @@ void CKMeans::kMeans()
          }
     }
 
-    //构建聚类算法
-    //数据加载入算法
+    qCDebug(dmMusic) << "Starting k-means clustering with" << m_clusterCount << "clusters and" << picCnt << "points";
     m_kmeans.loadData(data);
-    //运行k均值聚类算法
     m_kmeans.kmeans(m_clusterCount);
     //输出类中心
 //    for (int i = 0; i < m_clusterCount; i++)
@@ -103,10 +110,20 @@ void CKMeans::setShowImage(const QImage &img)
 
 void CKMeans::setPicPath(QString sPicPath)
 {
+    qCDebug(dmMusic) << "Setting picture path:" << sPicPath;
     m_sPicPath = sPicPath;
-    if(m_sPicPath.toLower().startsWith("qrc"))
+    if(m_sPicPath.toLower().startsWith("qrc")) {
         m_sPicPath = m_sPicPath.replace("qrc", "");
+        qCDebug(dmMusic) << "Adjusted resource path to:" << m_sPicPath;
+    }
+    
     m_showImage = QImage(m_sPicPath);
+    if (m_showImage.isNull()) {
+        qCWarning(dmMusic) << "Failed to load image from path:" << m_sPicPath;
+    } else {
+        qCDebug(dmMusic) << "Successfully loaded image, size:" << m_showImage.width() << "x" << m_showImage.height();
+    }
+    
     kMeans();
     emit picPathChanged(sPicPath);
 }

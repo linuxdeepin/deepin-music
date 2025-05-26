@@ -17,6 +17,7 @@
 
 #include "qtplayer.h"
 #include "vlcplayer.h"
+#include "util/log.h"
 
 static const int sFadeInOutAnimationDuration = 900; //ms
 static int INT_LAST_PROGRESS_FLAG = 1;
@@ -67,10 +68,10 @@ PlayerEnginePrivate::PlayerEnginePrivate(PlayerEngine *parent)
 {
     if (DmGlobal::playbackEngineType() != 1) {
         m_player = new QtPlayer(m_playerEngine);
-        qDebug() << __func__ << "QtPlayer";
+        qCDebug(dmMusic) << "Initializing QtPlayer engine";
     } else {
         m_player = new VlcPlayer(m_playerEngine);
-        qDebug() << __func__ << "VlcPlayer";
+        qCDebug(dmMusic) << "Initializing VlcPlayer engine";
     }
 
     m_changePictureTimer = new QTimer(m_playerEngine);
@@ -81,6 +82,7 @@ PlayerEngine::PlayerEngine(QObject *parent)
     : QObject(parent)
     , m_data(new PlayerEnginePrivate(this))
 {
+    qCDebug(dmMusic) << "Initializing PlayerEngine";
     connect(m_data->m_changePictureTimer, &QTimer::timeout, this, [ = ]() {
         int curNum = m_data->m_playingCount % 4 + 1;
         m_data->m_playingCount = curNum;
@@ -103,14 +105,17 @@ PlayerEngine::PlayerEngine(QObject *parent)
     this, [ = ](DmGlobal::PlaybackStatus status) {
         switch (status) {
         case DmGlobal::Playing:
+            qCInfo(dmMusic) << "Playback state changed to Playing";
             if (!m_data->m_changePictureTimer->isActive()) {
                 m_data->m_changePictureTimer->start();
             }
             break;
         case DmGlobal::Paused:
+            qCInfo(dmMusic) << "Playback state changed to Paused";
             m_data->m_changePictureTimer->stop();
             break;
         default:
+            qCInfo(dmMusic) << "Playback state changed to Stopped";
             m_data->m_changePictureTimer->stop();
             break;
         }
@@ -119,6 +124,7 @@ PlayerEngine::PlayerEngine(QObject *parent)
 
     connect(m_data->m_player, &PlayerBase::end,
     this, [ = ]() {
+        qCDebug(dmMusic) << "Current track playback ended";
         playNextMeta(true);
     });
     connect(m_data->m_player, &PlayerBase::sigSendCdaStatus,
@@ -144,6 +150,7 @@ PlayerEngine::PlayerEngine(QObject *parent)
 
 PlayerEngine::~PlayerEngine()
 {
+    qCDebug(dmMusic) << "Destroying PlayerEngine";
     if (m_data->m_mprisPlayer) {
         delete m_data->m_mprisPlayer;
         m_data->m_mprisPlayer = nullptr;
@@ -164,6 +171,7 @@ void PlayerEngine::setFadeInOut(bool flag)
 
 void PlayerEngine::setMprisPlayer(const QString &serviceName, const QString &desktopEntry, const QString &identity)
 {
+    qCDebug(dmMusic) << "Initializing MprisPlayer with service:" << serviceName;
     //init Mpris
     m_data->m_mprisPlayer = new MprisPlayer(this);
     m_data->m_mprisPlayer->setServiceName(serviceName);
@@ -264,7 +272,7 @@ void PlayerEngine::setMediaMeta(const QString &metaHash)
 
 void PlayerEngine::setMediaMeta(const MediaMeta &meta)
 {
-    // 防止重复设置
+    qCInfo(dmMusic) << "Setting media meta - Title:" << meta.title << "Artist:" << meta.artist;
     if (!m_data->m_player->getMediaMeta().localPath.isEmpty())
         INT_LAST_PROGRESS_FLAG = 0;
     m_data->m_player->setMediaMeta(meta);
@@ -341,6 +349,7 @@ bool PlayerEngine::isEmpty()
 
 void PlayerEngine::play()
 {
+    qCDebug(dmMusic) << "Play requested";
     // 防止淡入淡出时切换歌曲
     if (m_data->m_fadeInOut) {
         m_data->m_fadeOutAnimation->stop();
@@ -372,6 +381,7 @@ void PlayerEngine::forcePlay()
 
 void PlayerEngine::pause()
 {
+    qCDebug(dmMusic) << "Pause requested";
     if (m_data->m_fadeInOut) {
         m_data->m_fadeInAnimation->stop();
     }
@@ -425,6 +435,7 @@ void PlayerEngine::resume()
 
 void PlayerEngine::playPreMeta()
 {
+    qCDebug(dmMusic) << "Playing previous track";
     MediaMeta curMeta = m_data->m_player->getMediaMeta();
     QList<MediaMeta> &allMetas = m_data->m_metaList;
     // 歌单顺序播放
@@ -676,13 +687,14 @@ void PlayerEngine::resetDBusMpris(const DMusic::MediaMeta &meta)
 
 void PlayerEngine::playNextMeta(bool isAuto, bool playFlag)
 {
+    qCDebug(dmMusic) << "Playing next track, auto:" << isAuto << "playFlag:" << playFlag;
     MediaMeta curMeta = m_data->m_player->getMediaMeta();
-
     playNextMeta(curMeta, isAuto, playFlag);
 }
 
 void PlayerEngine::stop()
 {
+    qCInfo(dmMusic) << "Stop requested";
     m_data->m_player->stop();
     setMediaMeta(MediaMeta());
 }
@@ -720,6 +732,7 @@ void PlayerEngine::setVolume(int volume)
     if (m_data->m_player->getVolume() == curVolume) {
         emit volumeChanged(m_data->m_player->getVolume());
     } else {
+        qCDebug(dmMusic) << "Setting volume to:" << curVolume;
         m_data->m_player->setVolume(curVolume);
         emit volumeChanged(m_data->m_player->getVolume());
         setMute(curVolume == 0);
@@ -736,6 +749,7 @@ void PlayerEngine::setMute(bool mute)
     if (m_data->m_player->getMute() == mute) {
         emit muteChanged(mute);
     } else {
+        qCDebug(dmMusic) << "Setting mute state to:" << mute;
         m_data->m_player->setMute(mute);
         emit muteChanged(mute);
     }
@@ -753,6 +767,7 @@ DmGlobal::PlaybackStatus PlayerEngine::playbackStatus()
 
 void PlayerEngine::setPlaybackMode(DmGlobal::PlaybackMode mode)
 {
+    qCInfo(dmMusic) << "Setting playback mode to:" << mode;
     m_data->m_playbackMode = mode;
 }
 
@@ -778,6 +793,7 @@ QList<MediaMeta> PlayerEngine::getCdaMetaInfo()
 
 void PlayerEngine::setEqualizerEnabled(bool enabled)
 {
+    qCInfo(dmMusic) << "Setting equalizer enabled:" << enabled;
     m_data->m_player->setEqualizerEnabled(enabled);
 }
 
