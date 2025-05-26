@@ -13,6 +13,7 @@
 
 #include "audioanalysis.h"
 #include "utils.h"
+#include "util/log.h"
 
 using namespace DMusic;
 
@@ -28,13 +29,17 @@ void DBOperate::slotImportMetas(const QStringList &urls, const QSet<QString> &me
                                 const QSet<QString> &playMetaHashs, const QSet<QString> &allMetaHashs,
                                 const QString &playlistHash, const bool &playFalg)
 {
+    qCDebug(dmMusic) << "Starting meta import with" << urls.size() << "URLs, playlist:" << playlistHash;
     QString mediaHash;
     // 统计总共需要加载的数量
     QStringList filePaths;
     QStringList allUrls = urls;
     // 添加默认音乐目录
-    if (allUrls.isEmpty())
+    if (allUrls.isEmpty()) {
         allUrls.append(DmGlobal::musicPath());
+        qCDebug(dmMusic) << "No URLs provided, using default music path:" << DmGlobal::musicPath();
+    }
+    
     for (auto &curUrl : allUrls) {
         if (curUrl.isEmpty()) {
             continue;
@@ -43,6 +48,7 @@ void DBOperate::slotImportMetas(const QStringList &urls, const QSet<QString> &me
         QString filepath = url.toLocalFile().isEmpty() ? curUrl : url.toLocalFile();
         QFileInfo fileInfo(filepath);
         if (fileInfo.isDir()) {
+            qCDebug(dmMusic) << "Scanning directory:" << filepath;
             QDirIterator it(filepath, m_supportedSuffixs,
                             QDir::Files, QDirIterator::Subdirectories);
             while (it.hasNext()) {
@@ -52,7 +58,7 @@ void DBOperate::slotImportMetas(const QStringList &urls, const QSet<QString> &me
             filePaths.append(filepath);
         }
     }
-    qDebug() << __FUNCTION__ << "allCount = " << filePaths.size();
+    qCDebug(dmMusic) << "Found" << filePaths.size() << "files to process";
 
     int importedCount = 0, importedFailCount = 0, existCount = 0;
     QSet<QString> allHashs;
@@ -75,8 +81,10 @@ void DBOperate::slotImportMetas(const QStringList &urls, const QSet<QString> &me
                     AudioAnalysis::parseMetaLyrics(mediaMeta);
                     curHashs << "all" << playlistHash;
                     allHashs << "all" << playlistHash;
+                    qCDebug(dmMusic) << "Added new meta:" << mediaMeta.title << "to playlist:" << playlistHash;
                 } else {
                     importedFailCount++;
+                    qCWarning(dmMusic) << "Failed to import file:" << filePath;
                 }
             } else {
                 curHashs << playlistHash;
@@ -90,8 +98,10 @@ void DBOperate::slotImportMetas(const QStringList &urls, const QSet<QString> &me
                     AudioAnalysis::parseMetaLyrics(mediaMeta);
                     curHashs << "all";
                     allHashs << "all";
+                    qCDebug(dmMusic) << "Added new meta:" << mediaMeta.title << "to all music";
                 } else {
                     importedFailCount++;
+                    qCWarning(dmMusic) << "Failed to import file:" << filePath;
                 }
             } else {
                 existCount++;
@@ -101,6 +111,7 @@ void DBOperate::slotImportMetas(const QStringList &urls, const QSet<QString> &me
         if (mediaMeta.length > 0 && importPlay && !playMetaHashs.contains(mediaMeta.hash)) {
             curHashs << "play";
             allHashs << "play";
+            qCDebug(dmMusic) << "Auto-added meta:" << mediaMeta.title << "to play queue";
         }
         if (!curHashs.isEmpty())
             emit signalAddOneMeta(curHashs.values(), mediaMeta);

@@ -6,6 +6,7 @@
 #include "vlcdynamicinstance.h"
 
 #include "global.h"
+#include "util/log.h"
 
 #include <QDir>
 #include <QLibrary>
@@ -26,16 +27,27 @@ VlcDynamicInstance::VlcDynamicInstance(QObject *parent) : QObject(parent)
 
 VlcDynamicInstance::~VlcDynamicInstance()
 {
-    if (libcore.isLoaded())
+    qCDebug(dmMusic) << "Destroying VlcDynamicInstance";
+    if (libcore.isLoaded()) {
+        qCDebug(dmMusic) << "Unloading libvlccore";
         libcore.unload();
-    if (libdvlc.isLoaded())
+    }
+    if (libdvlc.isLoaded()) {
+        qCDebug(dmMusic) << "Unloading libvlc";
         libdvlc.unload();
-    if (libavcode.isLoaded())
+    }
+    if (libavcode.isLoaded()) {
+        qCDebug(dmMusic) << "Unloading libavcodec";
         libavcode.unload();
-    if (libdformate.isLoaded())
+    }
+    if (libdformate.isLoaded()) {
+        qCDebug(dmMusic) << "Unloading libavformat";
         libdformate.unload();
-    if (libsdl2.isLoaded())
+    }
+    if (libsdl2.isLoaded()) {
+        qCDebug(dmMusic) << "Unloading SDL2";
         libsdl2.unload();
+    }
 }
 
 VlcDynamicInstance *VlcDynamicInstance::VlcFunctionInstance()
@@ -55,8 +67,7 @@ QFunctionPointer VlcDynamicInstance::resolveSymbol(const char *symbol, bool bffm
         if (!fgp) {
             fgp = libdformate.resolve(symbol);
             if (!fgp) {
-                //never get here if obey the rule
-                qDebug() << "[VlcDynamicInstance::resolveSymbol] resolve function:" << symbol;
+                qCWarning(dmMusic) << "Failed to resolve FFmpeg symbol:" << symbol;
             }
         }
         m_funMap[symbol] = fgp;
@@ -69,8 +80,7 @@ QFunctionPointer VlcDynamicInstance::resolveSymbol(const char *symbol, bool bffm
     }
 
     if (!fp) {
-        //never get here if obey the rule
-        qDebug() << "[VlcDynamicInstance::resolveSymbol] resolve function:" << symbol;
+        qCWarning(dmMusic) << "Failed to resolve VLC symbol:" << symbol;
         return fp;
     } else {
         //cache fuctionpointer for next visiting
@@ -85,17 +95,27 @@ QFunctionPointer VlcDynamicInstance::resolveSdlSymbol(const char *symbol)
     if (m_funMap.contains(symbol)) {
         return m_funMap[symbol];
     }
-    return libsdl2.resolve(symbol);
+    QFunctionPointer fp = libsdl2.resolve(symbol);
+    if (!fp) {
+        qCWarning(dmMusic) << "Failed to resolve SDL2 symbol:" << symbol;
+    }
+    return fp;
 }
 
 bool VlcDynamicInstance::loadVlcLibrary()
 {
+    qCDebug(dmMusic) << "Loading VLC libraries";
+    
     QString strvlccore = DmGlobal::libPath(libvlccore);
     if (QLibrary::isLibrary(strvlccore)) {
         libcore.setFileName(strvlccore);
-        if (!libcore.load())
+        if (!libcore.load()) {
+            qCCritical(dmMusic) << "Failed to load libvlccore:" << strvlccore << "Error:" << libcore.errorString();
             return false;
+        }
+        qCDebug(dmMusic) << "Successfully loaded libvlccore";
     } else {
+        qCCritical(dmMusic) << "Invalid library path for libvlccore:" << strvlccore;
         return false;
     }
 
@@ -103,9 +123,12 @@ bool VlcDynamicInstance::loadVlcLibrary()
     if (QLibrary::isLibrary(strlibvlc)) {
         libdvlc.setFileName(strlibvlc);
         if (!libdvlc.load()) {
+            qCCritical(dmMusic) << "Failed to load libvlc:" << strlibvlc << "Error:" << libdvlc.errorString();
             return false;
         }
+        qCDebug(dmMusic) << "Successfully loaded libvlc";
     } else {
+        qCCritical(dmMusic) << "Invalid library path for libvlc:" << strlibvlc;
         return false;
     }
 
@@ -113,9 +136,12 @@ bool VlcDynamicInstance::loadVlcLibrary()
     if (QLibrary::isLibrary(strlibcodec)) {
         libavcode.setFileName(strlibcodec);
         if (!libavcode.load()) {
+            qCCritical(dmMusic) << "Failed to load libavcodec:" << strlibcodec << "Error:" << libavcode.errorString();
             return false;
         }
+        qCDebug(dmMusic) << "Successfully loaded libavcodec";
     } else {
+        qCCritical(dmMusic) << "Invalid library path for libavcodec:" << strlibcodec;
         return false;
     }
 
@@ -123,21 +149,33 @@ bool VlcDynamicInstance::loadVlcLibrary()
     if (QLibrary::isLibrary(strlibformate)) {
         libdformate.setFileName(strlibformate);
         if (!libdformate.load()) {
+            qCCritical(dmMusic) << "Failed to load libavformat:" << strlibformate << "Error:" << libdformate.errorString();
             return false;
         }
+        qCDebug(dmMusic) << "Successfully loaded libavformat";
     } else {
+        qCCritical(dmMusic) << "Invalid library path for libavformat:" << strlibformate;
         return false;
     }
+    qCInfo(dmMusic) << "All VLC libraries loaded successfully";
     return true;
 }
 
 bool VlcDynamicInstance::loadSdlLibrary()
 {
+    qCDebug(dmMusic) << "Loading SDL2 library";
     QString strSdl = DmGlobal::libPath(libSDL2);
     if (QLibrary::isLibrary(strSdl)) {
         libsdl2.setFileName(strSdl);
-        return libsdl2.load();
+        bool success = libsdl2.load();
+        if (!success) {
+            qCCritical(dmMusic) << "Failed to load SDL2:" << strSdl << "Error:" << libsdl2.errorString();
+        } else {
+            qCDebug(dmMusic) << "Successfully loaded SDL2";
+        }
+        return success;
     } else {
+        qCCritical(dmMusic) << "Invalid library path for SDL2:" << strSdl;
         return false;
     }
 }

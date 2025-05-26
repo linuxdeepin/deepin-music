@@ -4,6 +4,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 #include "global.h"
+#include "util/log.h"
 
 #include <QVariantMap>
 #include <QProcessEnvironment>
@@ -50,8 +51,10 @@ void DmGlobal::initPath()
 
 void DmGlobal::setConfigPath(const QString &path)
 {
-    if (!path.isEmpty())
+    if (!path.isEmpty()) {
+        qCDebug(dmMusic) << "Setting config path to:" << path;
         userConfigPath = path;
+    }
 }
 
 QString DmGlobal::configPath()
@@ -61,8 +64,10 @@ QString DmGlobal::configPath()
 
 void DmGlobal::setCachePath(const QString &path)
 {
-    if (!path.isEmpty())
+    if (!path.isEmpty()) {
+        qCDebug(dmMusic) << "Setting cache path to:" << path;
         userCachePath = path;
+    }
 }
 
 QString DmGlobal::cachePath()
@@ -72,8 +77,10 @@ QString DmGlobal::cachePath()
 
 void DmGlobal::setMusicPath(const QString &path)
 {
-    if (!path.isEmpty())
+    if (!path.isEmpty()) {
+        qCDebug(dmMusic) << "Setting music path to:" << path;
         userMusicPath = path;
+    }
 }
 
 QString DmGlobal::musicPath()
@@ -94,8 +101,10 @@ QString DmGlobal::unknownAlbumText()
 
 void DmGlobal::setUnknownArtistText(const QString &text)
 {
-    if (!text.isEmpty())
+    if (!text.isEmpty()) {
+        qCDebug(dmMusic) << "Setting unknown artist text to:" << text;
         unknownArtistStr = text;
+    }
 }
 
 QString DmGlobal::unknownArtistText()
@@ -110,14 +119,19 @@ bool DmGlobal::checkWaylandMode()
     QString WAYLAND_DISPLAY = e.value(QStringLiteral("WAYLAND_DISPLAY"));
 
     waylandMode = false;
-    if (XDG_SESSION_TYPE == QLatin1String("wayland") || WAYLAND_DISPLAY.contains(QLatin1String("wayland"), Qt::CaseInsensitive)) //是否开启wayland
+    if (XDG_SESSION_TYPE == QLatin1String("wayland") || WAYLAND_DISPLAY.contains(QLatin1String("wayland"), Qt::CaseInsensitive)) {
         waylandMode = true;
+        qCInfo(dmMusic) << "Wayland mode detected";
+    } else {
+        qCInfo(dmMusic) << "X11 mode detected";
+    }
 
     return waylandMode;
 }
 
 void DmGlobal::setWaylandMode(bool mode)
 {
+    qCDebug(dmMusic) << "Setting Wayland mode to:" << mode;
     waylandMode = mode;
 }
 
@@ -128,23 +142,29 @@ bool DmGlobal::isWaylandMode()
 
 QString DmGlobal::libPath(const QString &strlib)
 {
-    QDir  dir;
-    QString path  = QLibraryInfo::location(QLibraryInfo::LibrariesPath);
+    QDir dir;
+    QString path = QLibraryInfo::location(QLibraryInfo::LibrariesPath);
     dir.setPath(path);
-    QStringList list = dir.entryList(QStringList() << (strlib + "*"), QDir::NoDotAndDotDot | QDir::Files); //filter name with strlib
+    QStringList list = dir.entryList(QStringList() << (strlib + "*"), QDir::NoDotAndDotDot | QDir::Files);
     QString libPath;
+    
+    qCDebug(dmMusic) << "Searching for library:" << strlib << "in path:" << path;
+    
     if (list.contains(strlib)) {
         libPath = path + "/" + strlib;
+        qCDebug(dmMusic) << "Found exact library match:" << libPath;
     } else {
         list.sort();
         for (int i = list.size() - 1; i >= 0; i--) {
             if (list[i].contains(".so")) {
                 libPath = path + "/" + list[i];
+                qCDebug(dmMusic) << "Found compatible library:" << libPath;
                 break;
             }
         }
     }
     if (libPath.isEmpty()) {
+        qCWarning(dmMusic) << "Library not found in standard paths, using default:" << strlib;
         libPath = strlib;
     }
 
@@ -159,23 +179,36 @@ bool DmGlobal::libExist(const QString &strlib)
         libName = strlib.mid(0, strlib.indexOf(".so"));
     else
         libName = strlib;
+        
+    qCDebug(dmMusic) << "Checking existence of library:" << libName;
+    
     QLibrary lib(libName);
     bool bExist = lib.load();
     if (!bExist) {
-        qWarning() << "Failed to load library:" << lib.errorString();
+        qCWarning(dmMusic) << "Failed to load library:" << libName << "Error:" << lib.errorString();
         lib.setFileName(libPath(strlib));
         bExist = lib.load();
+        if (bExist) {
+            qCInfo(dmMusic) << "Successfully loaded library from alternate path:" << lib.fileName();
+        } else {
+            qCWarning(dmMusic) << "Failed to load library from alternate path. Error:" << lib.errorString();
+        }
+    } else {
+        qCDebug(dmMusic) << "Successfully loaded library:" << libName;
     }
     return bExist;
 }
 
 void DmGlobal::initPlaybackEngineType()
 {
+    qCDebug(dmMusic) << "Initializing playback engine";
     engineType = 0;
     if (libExist("libvlc.so") && libExist("libavcodec.so")) {
         engineType = 1;
+        qCInfo(dmMusic) << "VLC playback engine initialized successfully";
+    } else {
+        qCWarning(dmMusic) << "Failed to initialize VLC playback engine, falling back to default";
     }
-    qDebug() << "initPlaybackEngineType: " << engineType;
 }
 
 void DmGlobal::setPlaybackEngineType(int type)

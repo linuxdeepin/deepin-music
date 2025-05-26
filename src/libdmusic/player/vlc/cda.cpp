@@ -29,6 +29,7 @@
 
 #include "dynamiclibraries.h"
 #include "utils.h"
+#include "util/log.h"
 
 typedef input_item_t *(*input_item_NewExt_func)(const char *,
                                                 const char *,
@@ -43,17 +44,21 @@ typedef void (*vlc_stream_Delete_func)(stream_t *);
 
 QStringList getCDADirectory()
 {
+    qCDebug(dmMusic) << "Getting CDA directory paths";
     return QStringList() << "cdda:///dev/sr0"; //暂时只考虑sr0,原装光驱
 }
 
 QString queryIdTypeFormDbus()
 {
+    qCDebug(dmMusic) << "Querying ID type from DBus";
     QVariant vartype = Utils::readDBusProperty("org.freedesktop.UDisks2",
                                                "/org/freedesktop/UDisks2/block_devices/sr0",
                                                "org.freedesktop.UDisks2.Block",
                                                "IdType",
                                                QDBusConnection::systemBus());
-    return vartype.isValid() ? vartype.toString() : "";
+    QString result = vartype.isValid() ? vartype.toString() : "";
+    qCDebug(dmMusic) << "DBus ID type query result:" << result;
+    return result;
 }
 
 CdaThread::CdaThread(QObject *parent) : QThread(parent), m_cdaStat(CDROM_INVALID)
@@ -73,6 +78,7 @@ void CdaThread::doQuery()
 
 input_item_node_t *CdaThread::getInputNode()
 {
+    qCDebug(dmMusic) << "Getting input node for CDA";
     input_item_NewExt_func input_item_NewExt_fc = (input_item_NewExt_func)DynamicLibraries::instance()->resolve("input_item_NewExt");
     vlc_stream_NewURL_func vlc_stream_NewURL_fc = (vlc_stream_NewURL_func)DynamicLibraries::instance()->resolve("vlc_stream_NewURL");
     input_item_node_Create_func input_item_node_Create_fc = (input_item_node_Create_func)DynamicLibraries::instance()->resolve("input_item_node_Create");
@@ -83,13 +89,15 @@ input_item_node_t *CdaThread::getInputNode()
     input_item_node_t *p_items = nullptr;
     QStringList strcdalist = getCDADirectory();
 
-    if (strcdalist.size() < 0)
+    if (strcdalist.size() < 0) {
+        qCWarning(dmMusic) << "No CDA directories found";
         return p_items;
+    }
 
     QString strcda = strcdalist.at(0);
     input_item_t *p_input = input_item_NewExt_fc(strcda.toUtf8().data(), "access_demux", 0, ITEM_TYPE_DISC, ITEM_LOCAL);
     if (!p_input) {
-        qDebug() << "no cd driver?";
+        qCWarning(dmMusic) << "Failed to create input item for CD drive";
         return p_items;
     }
 
@@ -97,13 +105,13 @@ input_item_node_t *CdaThread::getInputNode()
 
     stream_t *pstream = vlc_stream_NewURL_fc((vlc_object_t *)m_play_t, strcda.toUtf8().data()); //打开CD，读取流，该操作较耗时
     if (!pstream) {
-        qDebug() << "create stream failed";
+        qCWarning(dmMusic) << "Failed to create stream for CD";
         return p_items;
     }
     p_items = input_item_node_Create_fc(p_input);
     input_item_Release_fc(p_input);
     int ret = vlc_stream_ReadDir_fc(pstream, p_items);//读取CD中的节点信息
-    qDebug() << __FUNCTION__ << ":vlc_stream_ReadDir result:" << ret;
+    qCDebug(dmMusic) << "Read CD directory result:" << ret;
     //释放stream流
     vlc_stream_Delete_fc(pstream);
     return p_items;
@@ -111,6 +119,7 @@ input_item_node_t *CdaThread::getInputNode()
 
 QString CdaThread::GetCdRomString()
 {
+    qCDebug(dmMusic) << "Getting CD-ROM device string";
     QString strcda = "sr0"; //cdrom关键字
     QDBusInterface blockinterface("org.freedesktop.UDisks2", "/org/freedesktop/UDisks2/Manager",
                                   "org.freedesktop.UDisks2.Manager",
@@ -124,15 +133,18 @@ QString CdaThread::GetCdRomString()
             QString tmp = variant.value<QDBusObjectPath>().path();
             QString strdev = tmp.mid(tmp.lastIndexOf("/") + 1, tmp.size() - tmp.lastIndexOf("/"));
             if (strdev.compare(strcda) == 0) {
+                qCDebug(dmMusic) << "Found CD-ROM device at:" << tmp;
                 return tmp;
             }
         }
     }
+    qCWarning(dmMusic) << "CD-ROM device not found";
     return QString();
 }
 
 void CdaThread::setCdaState(CdaThread::CdromState stat)
 {
+    qCDebug(dmMusic) << "Setting CDA state to:" << stat;
     if (stat != CDROM_MOUNT_WITH_CD) {
         stat = CDROM_INVALID;
     }
@@ -142,7 +154,7 @@ void CdaThread::setCdaState(CdaThread::CdromState stat)
         QThread::sleep(1); //状态一致时，统一休眠
         return;
     }
-    qDebug() << __FUNCTION__ << "cda state changed:" << stat;
+    qCDebug(dmMusic) << "CDA state changed from" << m_cdaStat << "to" << stat;
     m_cdaStat = stat;
     /**
      * 状态更改后再发送cda状态
@@ -152,18 +164,21 @@ void CdaThread::setCdaState(CdaThread::CdromState stat)
      * 非CDROM_MOUNT_WITH_CD清空缓存
      **/
     if (stat != CDROM_MOUNT_WITH_CD) {
+        qCDebug(dmMusic) << "Clearing media list cache";
         m_mediaList.clear();
     }
 }
 
 void CdaThread::run()
 {
+    qCDebug(dmMusic) << "CDA thread started";
     while (m_needRun) {
         QString strcdrom = GetCdRomString();
         /**
          * 没有cdrom，说明光驱已移出或损坏
          * */
         if (strcdrom.isEmpty()) {
+            qCWarning(dmMusic) << "No CD-ROM device found, setting invalid state";
             setCdaState(CDROM_INVALID);
             continue;
         }
@@ -174,11 +189,13 @@ void CdaThread::run()
         if (udiskInterface.isValid()) {
             blocksize = udiskInterface.property("Size").toULongLong();
             type = udiskInterface.property("IdType").toString();
+            qCDebug(dmMusic) << "CD-ROM properties - Size:" << blocksize << "Type:" << type;
         }
         /**
          * 过滤空的光盘和文件类型为udf、iso9660格式的光盘
          **/
         if (blocksize == 0 || type == "iso9660" || queryIdTypeFormDbus().toLower() == "udf") {
+            qCDebug(dmMusic) << "CD-ROM empty or unsupported format, setting no-CD state";
             setCdaState(CDROM_MOUNT_WITHOUT_CD);
             continue;
         }
@@ -187,6 +204,7 @@ void CdaThread::run()
          * 当状态不一致时，现在去读取节点信息并发送相关信号
          * */
         if (m_cdaStat != CDROM_MOUNT_WITH_CD) {
+            qCDebug(dmMusic) << "Reading CD-ROM node information";
             /**
              * 当blocksize有效时，可以开始读取cda节点名
              * */
@@ -196,7 +214,7 @@ void CdaThread::run()
              * */
             if (!p_items) {
                 setCdaState(CDROM_INVALID);
-                qCritical() << __FUNCTION__ << "read input_item_node_t failed,maybe caused by rejecting CD";
+                qCCritical(dmMusic) << __FUNCTION__ << "read input_item_node_t failed,maybe caused by rejecting CD";
                 continue;
             }
 
@@ -204,7 +222,7 @@ void CdaThread::run()
             for (int i = 0; i < p_items->i_children; i++) {
                 input_item_node_t *child = p_items->pp_children[i];
                 if (child != nullptr) {
-                    qDebug() << __FUNCTION__ << "thread id:" << QThread::currentThread() \
+                    qCDebug(dmMusic) << __FUNCTION__ << "thread id:" << QThread::currentThread() \
                              << "name:" << child->p_item->psz_name << "duration:" << child->p_item->i_duration;
                     //空光盘有可能节点不为空，检测持续时间
                     if (child->p_item->i_duration == 0)
@@ -225,6 +243,8 @@ void CdaThread::run()
                     meta.artist = DmGlobal::unknownArtistText();
                     meta.mmType = DmGlobal::MimeTypeCDA; //mimetype用于识别cd
                     m_mediaList << meta;
+                    qCDebug(dmMusic) << "Added CD track to media list -" << "Title:" << meta.title 
+                                   << "Track:" << meta.track;
                 }
             }
 
@@ -237,10 +257,12 @@ void CdaThread::run()
              * 发送添加歌单消息
              * */
             if (m_mediaList.size() > 0) {
+                qCDebug(dmMusic) << "Setting CD state to mounted with" << m_mediaList.size() << "tracks";
                 setCdaState(CDROM_MOUNT_WITH_CD);
             }
         }
         sleep(1);
     }
+    qCDebug(dmMusic) << "CDA thread stopped";
 }
 

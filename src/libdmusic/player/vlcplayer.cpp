@@ -4,6 +4,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 #include "vlcplayer.h"
+#include "util/log.h"
 
 #include <vlc/vlc.h>
 
@@ -45,6 +46,7 @@ void VlcPlayer::init()
 {
     //防止多次创建
     if (m_qvinstance == nullptr) {
+        qCDebug(dmMusic) << "Creating VLC instance and initializing components";
         m_qvinstance = new VlcInstance(VlcCommon::args(), nullptr);
         m_qvinstance->version();
         m_qvplayer = new SdlPlayer(m_qvinstance);
@@ -57,14 +59,17 @@ void VlcPlayer::init()
         this, [ = ](Vlc::State state) {
             switch (state) {
             case Vlc::Playing: {
+                qCInfo(dmMusic) << "VLC state changed to Playing";
                 emit stateChanged(DmGlobal::Playing);
                 break;
             }
             case Vlc::Paused: {
+                qCInfo(dmMusic) << "VLC state changed to Paused";
                 emit stateChanged(DmGlobal::Paused);
                 break;
             }
             case Vlc::Stopped: {
+                qCInfo(dmMusic) << "VLC state changed to Stopped";
                 emit stateChanged(DmGlobal::Stopped);
                 break;
             }
@@ -73,31 +78,38 @@ void VlcPlayer::init()
             }
         });
 
-        //当一首歌播放结束时，发送此信息，让player继续播放下一首
-        connect(m_qvplayer, &VlcMediaPlayer::end, this, &VlcPlayer::end);
+        connect(m_qvplayer, &VlcMediaPlayer::end, this, [ = ]() {
+            qCDebug(dmMusic) << "Current track playback ended";
+            emit end();
+        });
         initCdaThread();
     }
 }
 
 void VlcPlayer::releasePlayer()
 {
+    qCDebug(dmMusic) << "Releasing VLC player resources";
     //释放cd线程
     if (m_pCdaThread) {
+        qCDebug(dmMusic) << "Closing CDA thread";
         m_pCdaThread->closeThread();
         while (m_pCdaThread->isRunning()) {}
     }
 
     //删除媒体资源
     if (m_qvmedia) {
+        qCDebug(dmMusic) << "Releasing VLC media";
         delete m_qvmedia;
         m_qvmedia = nullptr;
     }
     //删除媒体播放器
     if (m_qvplayer) {
+        qCDebug(dmMusic) << "Releasing VLC media player";
         delete m_qvplayer;
         m_qvplayer = nullptr;
     }
     if (m_qvinstance) {
+        qCDebug(dmMusic) << "Releasing VLC instance";
         delete m_qvinstance;
         m_qvinstance = nullptr;
     }
@@ -111,6 +123,7 @@ void VlcPlayer::release()
 void VlcPlayer::initCdaThread()
 {
     if (nullptr == m_pCdaThread) {
+        qCDebug(dmMusic) << "Initializing CDA thread";
         m_pCdaThread = new CdaThread(this);
         connect(m_pCdaThread, &CdaThread::sigSendCdaStatus, this,
                 &PlayerBase::sigSendCdaStatus, Qt::QueuedConnection);
@@ -122,20 +135,21 @@ void VlcPlayer::startCdaThread()
 {
     //为了不影响主线程加载，1s后再加载CD
     QTimer::singleShot(1000, this, [ = ]() {
-        qDebug() << __func__ << "timer timeout.";
+        qCDebug(dmMusic) << __func__ << "timer timeout.";
         init();
-        qDebug() << "init cda thread.";
+        qCDebug(dmMusic) << "init cda thread.";
         //初始化mediaplayer
         m_pCdaThread->setMediaPlayerPointer(m_qvplayer->core());
-        qDebug() << "setMediaPlayerPointer.";
+        qCDebug(dmMusic) << "setMediaPlayerPointer.";
         //查询cd信息
         m_pCdaThread->doQuery();
-        qDebug() << "start cda thread.";
+        qCDebug(dmMusic) << "start cda thread.";
     });
 }
 
 void VlcPlayer::play()
 {
+    qCDebug(dmMusic) << "Starting playback";
     init();
     m_qvplayer->play();
 }
@@ -143,6 +157,7 @@ void VlcPlayer::play()
 void VlcPlayer::pause()
 {
     if (m_qvplayer) {
+        qCDebug(dmMusic) << "Pausing playback";
         m_qvplayer->pause();
     }
 }
@@ -173,6 +188,7 @@ DmGlobal::PlaybackStatus VlcPlayer::state()
 void VlcPlayer::stop()
 {
     if (m_qvplayer) {
+        qCDebug(dmMusic) << "Stopping playback";
         m_qvplayer->stop();
     }
 }
@@ -198,6 +214,7 @@ qint64 VlcPlayer::time()
 
 void VlcPlayer::setMediaMeta(MediaMeta meta)
 {
+    qCInfo(dmMusic) << "Setting media meta - Title:" << meta.title << "Path:" << meta.localPath;
     init();
     m_activeMeta = meta;
     m_qvmedia->initMedia(meta.localPath, meta.mmType == DmGlobal::MimeTypeCDA ? false : true, m_qvinstance, meta.track);
@@ -218,12 +235,14 @@ void VlcPlayer::setFadeInOutFactor(double fadeInOutFactor)
 void VlcPlayer::setEqualizerEnabled(bool enabled)
 {
     init();
+    qCInfo(dmMusic) << "Setting equalizer enabled:" << enabled;
     m_qvplayer->equalizer()->setEnabled(enabled);
 }
 
 void VlcPlayer::loadFromPreset(uint index)
 {
     init();
+    qCDebug(dmMusic) << "Loading equalizer preset:" << index;
     m_qvplayer->equalizer()->loadFromPreset(index);
 }
 
@@ -254,6 +273,7 @@ float VlcPlayer::preamplification()
 void VlcPlayer::setVolume(int volume)
 {
     init();
+    qCDebug(dmMusic) << "Setting volume to:" << volume;
     m_volume = volume;
     m_qvplayer->setVolume(volume);
 }
@@ -267,6 +287,7 @@ int VlcPlayer::getVolume()
 void VlcPlayer::setMute(bool value)
 {
     init();
+    qCDebug(dmMusic) << "Setting mute state to:" << value;
     m_qvplayer->setMute(value);
 }
 
@@ -279,6 +300,7 @@ void VlcPlayer::initCddaTrack()
 void VlcPlayer::setEqualizer(bool enabled, int curIndex, QList<int> indexbaud)
 {
     init();
+    qCInfo(dmMusic) << "Configuring equalizer - Enabled:" << enabled << "Index:" << curIndex;
     if (enabled) {
         //非自定义模式时
         if (curIndex > 0) {
@@ -291,8 +313,10 @@ void VlcPlayer::setEqualizer(bool enabled, int curIndex, QList<int> indexbaud)
             }
         } else {
             if (indexbaud.size() == 0) {
+                qCWarning(dmMusic) << "Empty equalizer band values provided";
                 return;
             } else {
+                qCDebug(dmMusic) << "Setting custom equalizer values";
                 m_qvplayer->equalizer()->setPreamplification(indexbaud.at(0));
                 for (int i = 1; i < 11; i++) {
                     m_qvplayer->equalizer()->setAmplificationForBandAt(indexbaud.at(i), uint(i - 1));
@@ -304,8 +328,11 @@ void VlcPlayer::setEqualizer(bool enabled, int curIndex, QList<int> indexbaud)
 
 QList<MediaMeta> VlcPlayer::getCdaMetaInfo()
 {
-    if (m_pCdaThread != nullptr)
+    if (m_pCdaThread != nullptr) {
+        qCDebug(dmMusic) << "Retrieving CDA meta information";
         return m_pCdaThread->getCdaMetaInfo();
+    }
+    qCWarning(dmMusic) << "CDA thread not initialized, cannot get meta info";
     return QList<MediaMeta>();
 }
 

@@ -46,6 +46,7 @@ extern "C" {
 #include "global.h"
 #include "utils.h"
 #include "audiodatadetector.h"
+#include "util/log.h"
 
 #if QT_VERSION >= 0x040000
 # define QStringToTString(s) TagLib::String(s.toUtf8().data(), TagLib::String::UTF8)
@@ -107,51 +108,71 @@ AudioAnalysis::AudioAnalysis(QObject *parent)
 
 void AudioAnalysis::parseAudioBuffer(const DMusic::MediaMeta &meta)
 {
+    qCDebug(dmMusic) << "Starting audio buffer parsing for file:" << meta.localPath << "hash:" << meta.hash;
     m_data->m_audioDataDetector->onClearBufferDetector();
     m_data->m_audioDataDetector->onBufferDetector(meta.localPath, meta.hash);
+    qCDebug(dmMusic) << "Audio buffer parsing completed for hash:" << meta.hash;
 }
 
 DMusic::MediaMeta AudioAnalysis::creatMediaMeta(const QString &path)
 {
+    qCDebug(dmMusic) << "Creating media metadata for path:" << path;
     DMusic::MediaMeta mediaMeta;
     QFileInfo fileinfo(path);
     while (fileinfo.isSymLink()) {  //to find final target
+        qCDebug(dmMusic) << "Following symlink from" << fileinfo.absoluteFilePath() << "to" << fileinfo.symLinkTarget();
         fileinfo.setFile(fileinfo.symLinkTarget());
     }
     auto hash = Utils::filePathHash(fileinfo.absoluteFilePath());
     mediaMeta.hash = hash;
     mediaMeta.localPath = path;
-    parseMetaFromLocalFile(mediaMeta);
+    
+    if (!parseMetaFromLocalFile(mediaMeta)) {
+        qCWarning(dmMusic) << "Failed to parse metadata from local file:" << path;
+    } else {
+        qCDebug(dmMusic) << "Successfully created media metadata for:" << path << "hash:" << hash;
+    }
 
     return mediaMeta;
 }
 
 void AudioAnalysis::convertMetaCodec(DMusic::MediaMeta &meta, const QString &codecName)
 {
+    qCDebug(dmMusic) << "Converting metadata codec to:" << codecName << "for file:" << meta.localPath;
     QTextCodec *codec = QTextCodec::codecForName(codecName.toLatin1());
     if (codec != nullptr) {
         meta.album = codec->toUnicode(meta.originalAlbum);
         meta.artist = codec->toUnicode(meta.originalArtist);
         meta.title = codec->toUnicode(meta.originalTitle);
+        qCDebug(dmMusic) << "Successfully converted metadata using codec:" << codecName;
+    } else {
+        qCWarning(dmMusic) << "Failed to find codec:" << codecName << "for file:" << meta.localPath;
     }
+    
     if (meta.title.isEmpty()) {
         QFileInfo localFi(meta.localPath);
         meta.title = localFi.completeBaseName();
+        qCDebug(dmMusic) << "Using filename as title:" << meta.title;
     }
     if (meta.album.isEmpty()) {
         meta.album = DmGlobal::unknownAlbumText();
+        qCDebug(dmMusic) << "Using default album name:" << meta.album;
     }
     if (meta.artist.isEmpty()) {
         meta.artist = DmGlobal::unknownArtistText();
+        qCDebug(dmMusic) << "Using default artist name:" << meta.artist;
     }
     meta.codec = codecName;
     Utils::updateChineseMetaInfo(meta);
+    qCDebug(dmMusic) << "Codec conversion completed for file:" << meta.localPath;
 }
 
 bool AudioAnalysis::parseFileTagCodec(DMusic::MediaMeta &meta)
 {
+    qCDebug(dmMusic) << "Parsing file tag codec for:" << meta.localPath;
+    
     if (meta.localPath.isEmpty()) {
-        qCritical() << "meta localPath is empty:" << meta.title << meta.hash;
+        qCCritical(dmMusic) << "Meta localPath is empty:" << meta.title << meta.hash;
         return false;
     }
 
@@ -166,23 +187,26 @@ bool AudioAnalysis::parseFileTagCodec(DMusic::MediaMeta &meta)
     TagLib::Tag *tag = f.tag();
 
     if (!f.file() || !tag) {
-        qCritical() << "TagLib: open file failed:" << meta.localPath << f.file();
+        qCCritical(dmMusic) << "TagLib: failed to open file or get tag:" << meta.localPath;
         meta.localPath.clear();
         return false;
     }
 
     TagLib::AudioProperties *t_audioProperties = f.audioProperties();
     if (t_audioProperties == nullptr) {
+        qCWarning(dmMusic) << "No audio properties found for file:" << meta.localPath;
         meta.localPath.clear();
         return false;
     }
     meta.length = t_audioProperties->length() * 1000;
+    qCDebug(dmMusic) << "Audio length detected:" << meta.length << "ms for file:" << meta.localPath;
 
     bool encode = true;
     encode &= tag->title().isNull() ? true : tag->title().isLatin1();
     encode &= tag->artist().isNull() ? true : tag->artist().isLatin1();
     encode &= tag->album().isNull() ? true : tag->album().isLatin1();
     if (encode) {
+        qCDebug(dmMusic) << "Tag contains Latin1 encoded data, detecting encoding for file:" << meta.localPath;
         if (detectCodec.isEmpty()) {
             detectByte += tag->title().toCString();
             detectByte += tag->artist().toCString();
@@ -216,6 +240,7 @@ bool AudioAnalysis::parseFileTagCodec(DMusic::MediaMeta &meta)
         }
 
         QString detectCodecStr(detectCodec);
+        qCDebug(dmMusic) << "Detected codec:" << detectCodec << "for file:" << meta.localPath;
         if (detectCodecStr.compare("utf-8", Qt::CaseInsensitive) == 0) {
             meta.album = TStringToQString(tag->album());
             meta.artist = TStringToQString(tag->artist());
@@ -224,6 +249,7 @@ bool AudioAnalysis::parseFileTagCodec(DMusic::MediaMeta &meta)
         } else {
             QTextCodec *codec = QTextCodec::codecForName(detectCodec.toLatin1());
             if (codec == nullptr) {
+                qCWarning(dmMusic) << "Failed to find codec" << detectCodec << "falling back to UTF-8 for file:" << meta.localPath;
                 meta.album = TStringToQString(tag->album());
                 meta.artist = TStringToQString(tag->artist());
                 meta.title = TStringToQString(tag->title());
@@ -236,6 +262,7 @@ bool AudioAnalysis::parseFileTagCodec(DMusic::MediaMeta &meta)
             meta.codec = detectCodec;
         }
     } else {
+        qCDebug(dmMusic) << "Tag contains Unicode data, using UTF-8 for file:" << meta.localPath;
         meta.album = TStringToQString(tag->album());
         meta.artist = TStringToQString(tag->artist());
         meta.title = TStringToQString(tag->title());
@@ -245,6 +272,7 @@ bool AudioAnalysis::parseFileTagCodec(DMusic::MediaMeta &meta)
     if (meta.title.isEmpty()) {
         QFileInfo localFi(meta.localPath);
         meta.title = localFi.completeBaseName();
+        qCDebug(dmMusic) << "Using filename as title:" << meta.title;
     }
 
     auto ss = tag->album();
@@ -256,21 +284,28 @@ bool AudioAnalysis::parseFileTagCodec(DMusic::MediaMeta &meta)
     meta.album = meta.album.simplified();
     meta.artist = meta.artist.simplified();
     meta.title = meta.title.simplified();
+    qCDebug(dmMusic) << "Successfully parsed file tag codec for:" << meta.localPath << "title:" << meta.title << "artist:" << meta.artist << "album:" << meta.album;
     return  true;
 }
 
 bool AudioAnalysis::parseMetaFromLocalFile(DMusic::MediaMeta &meta)
 {
+    qCDebug(dmMusic) << "Parsing metadata from local file:" << meta.localPath;
+    
     if (meta.localPath.isEmpty()) {
+        qCWarning(dmMusic) << "Local path is empty, cannot parse metadata";
         return false;
     }
     QString curFilePath = meta.localPath;
     QFileInfo fileInfo(curFilePath);
     meta.length = 0;
 
-    parseFileTagCodec(meta);
+    if (!parseFileTagCodec(meta)) {
+        qCWarning(dmMusic) << "Failed to parse file tag codec for:" << curFilePath;
+    }
 
     if (meta.length == 0 && DmGlobal::playbackEngineType() == 1) {
+        qCDebug(dmMusic) << "Using FFmpeg to get duration for file:" << curFilePath;
         //#ifndef DISABLE_LIBAV
         format_alloc_context_function format_alloc_context = (format_alloc_context_function)DynamicLibraries::instance()->resolve("avformat_alloc_context", true);
         format_open_input_function format_open_input = (format_open_input_function)DynamicLibraries::instance()->resolve("avformat_open_input", true);
@@ -281,19 +316,26 @@ bool AudioAnalysis::parseMetaFromLocalFile(DMusic::MediaMeta &meta)
         format_open_input(&pFormatCtx, curFilePath.toStdString().c_str(), nullptr, nullptr);
         if (pFormatCtx) {
             int ret = format_find_stream_info(pFormatCtx, nullptr);
-            if (ret < 0)
+            if (ret < 0) {
+                qCWarning(dmMusic) << "Failed to find stream info for file:" << curFilePath;
                 return false;
+            }
             bool hasAudio = false;
             for (int i = 0; i < pFormatCtx->nb_streams; i++)
                 if (pFormatCtx->streams[i]->codecpar->codec_type == AVMEDIA_TYPE_AUDIO)
                     hasAudio = true;
-            if (!hasAudio)
+            if (!hasAudio) {
+                qCWarning(dmMusic) << "No audio stream found in file:" << curFilePath;
                 return false;
+            }
             int64_t duration = pFormatCtx->duration / 1000;
             if (duration > 0) {
                 meta.length = duration;
                 meta.localPath = curFilePath;
+                qCDebug(dmMusic) << "Duration from FFmpeg:" << duration << "ms for file:" << curFilePath;
             }
+        } else {
+            qCWarning(dmMusic) << "Failed to open format context for file:" << curFilePath;
         }
         format_close_input(&pFormatCtx);
         format_free_context(pFormatCtx);
@@ -313,30 +355,41 @@ bool AudioAnalysis::parseMetaFromLocalFile(DMusic::MediaMeta &meta)
 
     if (meta.title.isEmpty()) {
         meta.title = fileInfo.completeBaseName();
+        qCDebug(dmMusic) << "Using filename as title:" << meta.title;
     }
     if (meta.album.isEmpty()) {
         meta.album = DmGlobal::unknownAlbumText();
+        qCDebug(dmMusic) << "Using default album:" << meta.album;
     }
     if (meta.artist.isEmpty()) {
         meta.artist = DmGlobal::unknownArtistText();
+        qCDebug(dmMusic) << "Using default artist:" << meta.artist;
     }
     Utils::updateChineseMetaInfo(meta);
 
+    qCInfo(dmMusic) << "Successfully parsed metadata from file:" << curFilePath << "length:" << meta.length << "ms";
     return true;
 }
 
 QStringList AudioAnalysis::detectEncodings(const DMusic::MediaMeta &meta)
 {
+    qCDebug(dmMusic) << "Detecting encodings for file:" << meta.localPath;
+    
     if (meta.localPath.isEmpty()) {
+        qCDebug(dmMusic) << "Local path is empty, returning default UTF-8 encoding";
         return QStringList() << "UTF-8";
     }
     QByteArray detectByte;
 
     if (!meta.cuePath.isEmpty()) {
+        qCDebug(dmMusic) << "Detecting encoding from CUE file:" << meta.cuePath;
         QFile cueFile(meta.cuePath);
         if (cueFile.open(QIODevice::ReadOnly)) {
             detectByte =  cueFile.readAll();
             return Utils::detectEncodings(detectByte);
+        }
+        else {
+            qCWarning(dmMusic) << "Failed to open CUE file:" << meta.cuePath;
         }
     }
 
@@ -344,11 +397,15 @@ QStringList AudioAnalysis::detectEncodings(const DMusic::MediaMeta &meta)
     detectByte += meta.originalTitle;
     detectByte += meta.originalArtist;
 
-    return Utils::detectEncodings(detectByte);
+    auto encodings = Utils::detectEncodings(detectByte);
+    qCDebug(dmMusic) << "Detected encodings from metadata:" << encodings;
+    return encodings;
 }
 
 void AudioAnalysis::parseMetaCover(DMusic::MediaMeta &meta)
 {
+    qCDebug(dmMusic) << "Parsing cover image for file:" << meta.localPath << "hash:" << meta.hash;
+    
     int engineType = DmGlobal::playbackEngineType();
     QString tmpPath = DmGlobal::cachePath();
     QString hash = meta.hash;
@@ -357,9 +414,13 @@ void AudioAnalysis::parseMetaCover(DMusic::MediaMeta &meta)
     QString imageName = hash + ".jpg";
     QDir imageDir(imagesDirPath);
     if (!imageDir.exists()) {
+        qCDebug(dmMusic) << "Creating images directory:" << imagesDirPath;
         bool isExists = imageDir.cdUp();
         isExists &= imageDir.mkdir("images");
         isExists &= imageDir.cd("images");
+        if (!isExists) {
+            qCWarning(dmMusic) << "Failed to create images directory:" << imagesDirPath;
+        }
     }
 
     QByteArray byteArray;
@@ -369,6 +430,7 @@ void AudioAnalysis::parseMetaCover(DMusic::MediaMeta &meta)
             if (!image.isNull()) {
                 meta.coverUrl = imagesDirPath + "/" + imageName;
                 meta.hasimage = true;
+                qCDebug(dmMusic) << "Found existing cover image:" << meta.coverUrl;
                 return;
             }
         }
@@ -376,8 +438,10 @@ void AudioAnalysis::parseMetaCover(DMusic::MediaMeta &meta)
 
 //#ifndef DISABLE_LIBAV
     if (!path.isEmpty()) {
+        qCDebug(dmMusic) << "Extracting cover image from file:" << path;
         QImage image;
         if (engineType == 1) {
+            qCDebug(dmMusic) << "Using FFmpeg to extract cover image";
             format_alloc_context_function format_alloc_context = (format_alloc_context_function)DynamicLibraries::instance()->resolve("avformat_alloc_context", true);
             format_open_input_function format_open_input = (format_open_input_function)DynamicLibraries::instance()->resolve("avformat_open_input", true);
             format_close_input_function format_close_input = (format_close_input_function)DynamicLibraries::instance()->resolve("avformat_close_input", true);
@@ -392,10 +456,13 @@ void AudioAnalysis::parseMetaCover(DMusic::MediaMeta &meta)
                         if (pFormatCtx->streams[i]->disposition & AV_DISPOSITION_ATTACHED_PIC) {
                             AVPacket pkt = pFormatCtx->streams[i]->attached_pic;
                             image = QImage::fromData(static_cast<uchar *>(pkt.data), pkt.size);
+                            qCDebug(dmMusic) << "Found attached picture via FFmpeg for file:" << path;
                             break;
                         }
                     }
                 }
+            } else {
+                qCWarning(dmMusic) << "Failed to open format context for cover extraction:" << path;
             }
 
             format_close_input(&pFormatCtx);
@@ -404,6 +471,7 @@ void AudioAnalysis::parseMetaCover(DMusic::MediaMeta &meta)
         
         // ffmpeg 没有解析出来 尝试直接读取ID3v2
         if (image.isNull()) {
+            qCDebug(dmMusic) << "FFmpeg failed to extract cover, trying TagLib ID3v2 for file:" << path;
 #ifdef _WIN32
             TagLib::MPEG::File f(path.toStdString().c_str());
 #else
@@ -420,10 +488,15 @@ void AudioAnalysis::parseMetaCover(DMusic::MediaMeta &meta)
                         buffer.setData(picFrame->picture().data(), static_cast<int>(picFrame->picture().size()));
                         QImageReader imageReader(&buffer);
                         image = imageReader.read();
+                        qCDebug(dmMusic) << "Found cover image via TagLib ID3v2 for file:" << path;
                     }
+                } else {
+                    qCDebug(dmMusic) << "No ID3v2 tag found in file:" << path;
                 }
 
                 f.clear();
+            } else {
+                qCWarning(dmMusic) << "Invalid MPEG file for TagLib processing:" << path;
             }
         }
 
@@ -435,16 +508,21 @@ void AudioAnalysis::parseMetaCover(DMusic::MediaMeta &meta)
             image.save(imagesDirPath + "/" + imageName);
             meta.coverUrl = imagesDirPath + "/" + imageName;
             meta.hasimage = true;
+            qCInfo(dmMusic) << "Successfully extracted and saved cover image:" << meta.coverUrl;
+        } else {
+            qCDebug(dmMusic) << "No cover image found in file:" << path;
         }
     }
 }
 
 QImage AudioAnalysis::getMetaCoverImage(DMusic::MediaMeta meta)
 {
+    qCDebug(dmMusic) << "Getting cover image for file:" << meta.localPath << "hasimage:" << meta.hasimage;
     QImage image;
     if (meta.hasimage) {
         int engineType = DmGlobal::playbackEngineType();
         if (engineType == 1) {
+            qCDebug(dmMusic) << "Using FFmpeg to get cover image for:" << meta.localPath;
             format_alloc_context_function format_alloc_context = (format_alloc_context_function)DynamicLibraries::instance()->resolve("avformat_alloc_context", true);
             format_open_input_function format_open_input = (format_open_input_function)DynamicLibraries::instance()->resolve("avformat_open_input", true);
             format_close_input_function format_close_input = (format_close_input_function)DynamicLibraries::instance()->resolve("avformat_close_input", true);
@@ -459,10 +537,15 @@ QImage AudioAnalysis::getMetaCoverImage(DMusic::MediaMeta meta)
                         if (pFormatCtx->streams[i]->disposition & AV_DISPOSITION_ATTACHED_PIC) {
                             AVPacket pkt = pFormatCtx->streams[i]->attached_pic;
                             image = QImage::fromData(static_cast<uchar *>(pkt.data), pkt.size);
+                            qCDebug(dmMusic) << "Found cover image via FFmpeg for:" << meta.localPath;
                             break;
                         }
                     }
+                } else {
+                    qCDebug(dmMusic) << "Failed to read header for cover extraction:" << meta.localPath;
                 }
+            } else {
+                qCWarning(dmMusic) << "Failed to open format context for cover retrieval:" << meta.localPath;
             }
 
             format_close_input(&pFormatCtx);
@@ -471,6 +554,7 @@ QImage AudioAnalysis::getMetaCoverImage(DMusic::MediaMeta meta)
         
         // ffmpeg 没有解析出来 尝试直接读取ID3v2
         if (image.isNull()) {
+            qCDebug(dmMusic) << "FFmpeg failed, trying TagLib ID3v2 for cover retrieval:" << meta.localPath;
 #ifdef _WIN32
             TagLib::MPEG::File f(meta.localPath.toStdWString().c_str());
 #else
@@ -487,10 +571,17 @@ QImage AudioAnalysis::getMetaCoverImage(DMusic::MediaMeta meta)
                         buffer.setData(picFrame->picture().data(), static_cast<int>(picFrame->picture().size()));
                         QImageReader imageReader(&buffer);
                         image = imageReader.read();
+                        qCDebug(dmMusic) << "Found cover image via TagLib for:" << meta.localPath;
+                    } else {
+                        qCDebug(dmMusic) << "No APIC frame found in ID3v2 tag for:" << meta.localPath;
                     }
+                } else {
+                    qCDebug(dmMusic) << "No ID3v2 tag found for cover retrieval:" << meta.localPath;
                 }
 
                 f.clear();
+            } else {
+                qCWarning(dmMusic) << "Invalid MPEG file for cover retrieval:" << meta.localPath;
             }
         }
     }
@@ -498,6 +589,7 @@ QImage AudioAnalysis::getMetaCoverImage(DMusic::MediaMeta meta)
     // 默认图片
     if (image.isNull()) {
         image = QImage(DmGlobal::cachePath() + "/images/default_cover.png");
+        qCDebug(dmMusic) << "Using default cover image for:" << meta.localPath;
     }
 
     return image;
@@ -505,6 +597,7 @@ QImage AudioAnalysis::getMetaCoverImage(DMusic::MediaMeta meta)
 
 void AudioAnalysis::parseMetaLyrics(DMusic::MediaMeta &meta)
 {
+    qCDebug(dmMusic) << "Parsing lyrics for file:" << meta.localPath << "hash:" << meta.hash;
     QString tmpPath = DmGlobal::cachePath();
     QString hash = meta.hash;
     QString path = meta.localPath;
@@ -512,6 +605,7 @@ void AudioAnalysis::parseMetaLyrics(DMusic::MediaMeta &meta)
     QString lyricName = hash + ".lrc";
     QDir lyricDir(lyricDirPath);
     if (!lyricDir.exists()) {
+        qCDebug(dmMusic) << "Creating lyrics directory:" << lyricDirPath;
         lyricDir.cdUp();
         lyricDir.mkdir("lyrics");
         lyricDir.cd("lyrics");
@@ -520,6 +614,7 @@ void AudioAnalysis::parseMetaLyrics(DMusic::MediaMeta &meta)
     if (!tmpPath.isEmpty() && !hash.isEmpty()) {
         // 歌词文件存在，停止解析
         if (lyricDir.exists(lyricName)) {
+            qCDebug(dmMusic) << "Lyrics file already exists, skipping parsing:" << lyricName;
             return;
         }
 
@@ -535,6 +630,7 @@ void AudioAnalysis::parseMetaLyrics(DMusic::MediaMeta &meta)
                     // 先获取同步歌词
                     TagLib::ID3v2::FrameList syltFrames = f.ID3v2Tag()->frameListMap()["SYLT"];
                     if (!syltFrames.isEmpty()) {
+                        qCDebug(dmMusic) << "Found synchronized lyrics in file:" << path;
                         TagLib::ID3v2::SynchronizedLyricsFrame *frame = dynamic_cast<TagLib::ID3v2::SynchronizedLyricsFrame *>(syltFrames.front());
                         if (frame) {
                             TagLib::ID3v2::SynchronizedLyricsFrame::SynchedTextList synchedTextList = frame->synchedText();
@@ -550,6 +646,7 @@ void AudioAnalysis::parseMetaLyrics(DMusic::MediaMeta &meta)
                     if (lyricStr.isEmpty()) {
                         TagLib::ID3v2::FrameList usltFrames = f.ID3v2Tag()->frameListMap()["USLT"];
                         if (!usltFrames.isEmpty()) {
+                            qCDebug(dmMusic) << "Found unsynchronized lyrics in file:" << path;
                             TagLib::ID3v2::UnsynchronizedLyricsFrame *frame = dynamic_cast<TagLib::ID3v2::UnsynchronizedLyricsFrame *>(usltFrames.front());
                             if (frame) {
                                 lyricStr = TStringToQString(frame->text());
@@ -560,12 +657,21 @@ void AudioAnalysis::parseMetaLyrics(DMusic::MediaMeta &meta)
                     if (!lyricStr.isEmpty()) {
                         if (lyric.open(QIODevice::WriteOnly)) {
                             lyric.write(lyricStr.toUtf8());
+                            qCInfo(dmMusic) << "Successfully extracted and saved lyrics for file:" << path;
+                        } else {
+                            qCWarning(dmMusic) << "Failed to open lyrics file for writing:" << lyricName;
                         }
                         lyric.close();
+                    } else {
+                        qCDebug(dmMusic) << "No lyrics found in file:" << path;
                     }
+                } else {
+                    qCDebug(dmMusic) << "No ID3v2 tag found for lyrics extraction:" << path;
                 }
 
                 f.clear();
+            } else {
+                qCWarning(dmMusic) << "Invalid MPEG file for lyrics extraction:" << path;
             }
         }
     }
@@ -573,8 +679,10 @@ void AudioAnalysis::parseMetaLyrics(DMusic::MediaMeta &meta)
 
 void AudioAnalysis::startRecorder()
 {
+    qCInfo(dmMusic) << "Starting audio recorder";
     // 初始化
     if (m_data->m_audioDevice == nullptr) {
+        qCDebug(dmMusic) << "Initializing audio recorder for the first time";
         QAudioFormat audioFormat;
         //TODO: 设置小端输出及格式
         // audioFormat.setByteOrder(QAudioFormat::LittleEndian);
@@ -584,33 +692,54 @@ void AudioAnalysis::startRecorder()
         audioFormat.setSampleFormat(QAudioFormat::Int16);
 
         QAudioDevice devInfo = QMediaDevices::defaultAudioOutput();
-        if (devInfo.isNull()) qDebug() << __func__;
-        if (!devInfo.isFormatSupported(audioFormat)) qDebug() << __func__;
+        if (devInfo.isNull()) {
+            qCWarning(dmMusic) << "Default audio output device is null";
+            qDebug() << __func__;
+        }
+        if (!devInfo.isFormatSupported(audioFormat)) {
+            qCWarning(dmMusic) << "Audio format not supported by device";
+            qDebug() << __func__;
+        }
 
-        if (nullptr == m_data->m_audioSource)
+        if (nullptr == m_data->m_audioSource) {
             m_data->m_audioSource = new QAudioSource(devInfo, audioFormat, this);
+            qCDebug(dmMusic) << "Created new audio source";
+        }
         // TODO:source连接问题待确认
         // m_data->m_audioDevice = m_data->m_audioSource->start();
         connect(m_data->m_audioDevice, &QIODevice::readyRead, this, &AudioAnalysis::parseData);
+        qCInfo(dmMusic) << "Audio recorder initialized and started";
     } else {
+        qCDebug(dmMusic) << "Resuming existing audio recorder";
         m_data->m_audioSource->resume();
+        qCInfo(dmMusic) << "Audio recorder resumed";
     }
 }
 
 void AudioAnalysis::suspendRecorder()
 {
+    qCDebug(dmMusic) << "Suspending audio recorder";
     if (nullptr != m_data->m_audioSource) {
         m_data->m_audioSource->suspend();
+        qCInfo(dmMusic) << "Audio recorder suspended";
+    } else {
+        qCDebug(dmMusic) << "Audio source is null, cannot suspend recorder";
     }
 }
 
 void AudioAnalysis::stopRecorder()
 {
+    qCInfo(dmMusic) << "Stopping audio recorder";
     if (nullptr != m_data->m_audioSource) {
         m_data->m_audioSource->stop();
+        qCDebug(dmMusic) << "Audio source stopped";
     }
-    m_data->m_audioDevice->deleteLater();
-    m_data->m_audioDevice = nullptr;
+    if (m_data->m_audioDevice != nullptr) {
+        m_data->m_audioDevice->deleteLater();
+        m_data->m_audioDevice = nullptr;
+        qCDebug(dmMusic) << "Audio device cleaned up";
+    }
+    qCInfo(dmMusic) << "Audio recorder stopped and cleaned up";
 }
 
 void AudioAnalysis::parseData()
