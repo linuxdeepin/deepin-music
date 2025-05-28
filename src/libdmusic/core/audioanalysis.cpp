@@ -393,8 +393,12 @@ void AudioAnalysis::parseMetaCover(DMusic::MediaMeta &meta)
             format_open_input(&pFormatCtx, path.toStdString().c_str(), nullptr, nullptr);
 
             if (pFormatCtx) {
+#if LIBAVFORMAT_VERSION_MAJOR < 61
                 if (pFormatCtx->iformat != nullptr && pFormatCtx->iformat->read_header(pFormatCtx) >= 0) {
-                    for (unsigned int i = 0; i < pFormatCtx->nb_streams; i++) {
+#else
+                {
+#endif
+                    for (unsigned int i = 0; i < pFormatCtx->nb_streams; ++i) {
                         if (pFormatCtx->streams[i]->disposition & AV_DISPOSITION_ATTACHED_PIC) {
                             AVPacket pkt = pFormatCtx->streams[i]->attached_pic;
                             image = QImage::fromData(static_cast<uchar *>(pkt.data), pkt.size);
@@ -460,8 +464,12 @@ QImage AudioAnalysis::getMetaCoverImage(DMusic::MediaMeta meta)
             format_open_input(&pFormatCtx, meta.localPath.toUtf8().data(), nullptr, nullptr);
 
             if (pFormatCtx) {
+#if LIBAVFORMAT_VERSION_MAJOR < 61
                 if (pFormatCtx->iformat != nullptr && pFormatCtx->iformat->read_header(pFormatCtx) >= 0) {
-                    for (unsigned int i = 0; i < pFormatCtx->nb_streams; i++) {
+#else
+                {
+#endif
+                    for (unsigned int i = 0; i < pFormatCtx->nb_streams; ++i) {
                         if (pFormatCtx->streams[i]->disposition & AV_DISPOSITION_ATTACHED_PIC) {
                             AVPacket pkt = pFormatCtx->streams[i]->attached_pic;
                             image = QImage::fromData(static_cast<uchar *>(pkt.data), pkt.size);
