@@ -4,6 +4,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 #include "vlcplayer.h"
+#include "qtplayer.h"
 
 #include "util/dbusutils.h"
 #include "util/global.h"
@@ -239,7 +240,10 @@ void VlcPlayer::setMediaMeta(MediaMeta meta)
 {
     init();
     m_activeMeta = meta;
-    m_bApe = (MetaDetector::getInstance()->getAudioType(meta).toLower() == "ape");
+    bool newIsApe = (MetaDetector::getInstance()->getAudioType(meta).toLower() == "ape");
+    bool engineChanged = (m_bApe != newIsApe);
+
+    m_bApe = newIsApe;
     if(m_bApe) {
         connect(m_qtPlayer, &PlayerBase::timeChanged, this, &PlayerBase::timeChanged);
         connect(m_qtPlayer, &PlayerBase::positionChanged, this, &PlayerBase::positionChanged);
@@ -257,6 +261,19 @@ void VlcPlayer::setMediaMeta(MediaMeta meta)
         m_qvmedia->initMedia(meta.localPath, meta.mmType == MIMETYPE_CDA ? false : true, m_qvinstance, meta.track);
     }
     m_qvplayer->open(m_qvmedia);
+
+    if (engineChanged) {
+        if (m_bApe) {
+            m_qtPlayer->setMute(m_qvplayer->getMute());
+            // m_qtPlayer->setVolume(m_qvplayer->getVolume()); //Qt自带播放器播放APE格式视频时调节音量可能会导致音量异常
+        } else {
+            m_qvplayer->setMute(m_qtPlayer->getMute());
+            m_qtPlayer->setMute(false);
+            auto qtPlayer = dynamic_cast<QtPlayer *>(m_qtPlayer);
+            if (qtPlayer)
+                m_qvplayer->setVolume(qtPlayer->getVolume());
+        }
+    }
 }
 
 void VlcPlayer::setFadeInOutFactor(double fadeInOutFactor)
