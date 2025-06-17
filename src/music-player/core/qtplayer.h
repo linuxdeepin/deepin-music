@@ -31,6 +31,7 @@ public:
     void setTime(qint64 time) override;
     qint64 time() override;
     void setVolume(int volume) override;
+    int getVolume();
     void setMute(bool value) override;
     void setMediaMeta(MediaMeta meta) override;
     bool getMute() override;

@@ -168,6 +168,12 @@ void QtPlayer::setVolume(int volume)
 {
     init();
     m_mediaPlayer->setVolume(volume);
+    m_mediaPlayer->setPosition(m_mediaPlayer->position() + 1); //微小跳转（触发解码器刷新） 1ms
+}
+
+int QtPlayer::getVolume()
+{
+    return m_mediaPlayer->volume();
 }
 
 void QtPlayer::setMute(bool value)
@@ -239,7 +245,6 @@ void QtPlayer::resetPlayInfo()
     readSinkInputPath();
 
     if (m_sinkInputPath.isEmpty()) return;
-
     QVariant volumeV = DBusUtils::readDBusProperty("com.deepin.daemon.Audio", m_sinkInputPath,
                                                    "com.deepin.daemon.Audio.SinkInput", "Volume");
 
