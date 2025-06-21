@@ -340,17 +340,14 @@ void SdlPlayer::libvlc_audio_play_cb(void *data, const void *samples, unsigned c
     Q_UNUSED(pts)
     SdlPlayer *sdlMediaPlayer = static_cast<SdlPlayer *>(data);
     if (!sdlMediaPlayer) {
-        qCWarning(dmMusic) << "Invalid player instance in audio play callback";
         return;
     }
     
     if (sdlMediaPlayer->progressTag) {
-        qCDebug(dmMusic) << "Audio play callback skipped due to progress tag";
         return;
     }
 
     int size = count * sdlMediaPlayer->obtainedAS.channels * sdlMediaPlayer->_rate / 8;
-    qCDebug(dmMusic) << "Processing audio data - Size:" << size << "Channels:" << sdlMediaPlayer->obtainedAS.channels << "Rate:" << sdlMediaPlayer->_rate;
 
     /** vlc解析的通道数超过设置到sdl的通道数时，声音会出现沙哑的问题，
         原因是SDL支持的最大channel数为6,当超过这个阈值时，SDL本身是不支持的，会按照正常的指针偏移去读取下一桢数据，
@@ -358,7 +355,6 @@ void SdlPlayer::libvlc_audio_play_cb(void *data, const void *samples, unsigned c
     **/
     char curSamples[size];
     if (sdlMediaPlayer->_channels != sdlMediaPlayer->obtainedAS.channels) {
-        qCDebug(dmMusic) << "Channel count mismatch - VLC:" << sdlMediaPlayer->_channels << "SDL:" << sdlMediaPlayer->obtainedAS.channels;
         for (int i = 0; i < count; ++i) {
             for (int j = 0; j < sdlMediaPlayer->obtainedAS.channels; ++j) {
                 memcpy((curSamples + (i * sdlMediaPlayer->obtainedAS.channels + j) * (sdlMediaPlayer->_rate / 8)),
@@ -366,7 +362,6 @@ void SdlPlayer::libvlc_audio_play_cb(void *data, const void *samples, unsigned c
                        sdlMediaPlayer->_rate / 8);
             }
         }
-        qCDebug(dmMusic) << "Channel conversion completed";
     } else {
         memcpy(curSamples, (char *)samples, size);
     }
@@ -374,7 +369,6 @@ void SdlPlayer::libvlc_audio_play_cb(void *data, const void *samples, unsigned c
     QByteArray ba((char *)curSamples, size);
     QMutexLocker locker(&vlc_mutex);
     sdlMediaPlayer->_data.append(ba);
-    qCDebug(dmMusic) << "Audio data appended to buffer - Size:" << ba.size();
 }
 
 void SdlPlayer::libvlc_audio_pause_cb(void *data, int64_t pts)
