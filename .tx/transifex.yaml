@@ -1,0 +1,13 @@
+filters:
+- filter_type: file
+  source_file: translations/deepin-music_en_US.ts
+  file_format: QT
+  source_language: en_US
+  translation_files_expression: translations/deepin-music_<lang>.ts
+- filter_type: file
+  source_file: translations/desktop/desktop.ts
+  file_format: QT
+  source_language: en
+  translation_files_expression: translations/desktop/desktop_<lang>.ts
+settings:
+  pr_branch_name: transifex_update_<br_unique_id>
