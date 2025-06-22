@@ -10,6 +10,7 @@
 #include <QDebug>
 
 #include "global.h"
+#include "util/log.h"
 
 static const QString libvlccoreStr = "libvlccore.so";
 static const QString libvlcStr = "libvlc.so";
@@ -26,6 +27,7 @@ DynamicLibraries::DynamicLibraries()
 
 DynamicLibraries::~DynamicLibraries()
 {
+    qCDebug(dmMusic) << "Unloading dynamic libraries";
     vlccoreLib.unload();
     vlcLib.unload();
     avcodecLib.unload();
@@ -50,7 +52,7 @@ QFunctionPointer DynamicLibraries::resolve(const char *symbol, bool ffmpeg)
             fgp = avformateLib.resolve(symbol);
             if (!fgp) {
                 //never get here if obey the rule
-                qDebug() << "[ffmpeg] resolve function:" << symbol;
+                qCWarning(dmMusic) << "[ffmpeg] resolve function:" << symbol;
             }
         }
         m_funMap[symbol] = fgp;
@@ -63,8 +65,7 @@ QFunctionPointer DynamicLibraries::resolve(const char *symbol, bool ffmpeg)
     }
 
     if (!fp) {
-        //never get here if obey the rule
-        qDebug() << "[VLC] resolve function:" << symbol;
+        qCWarning(dmMusic) << "Failed to resolve VLC function:" << symbol;
         return fp;
     } else {
         //cache fuctionpointer for next visiting
@@ -77,55 +78,56 @@ QFunctionPointer DynamicLibraries::resolve(const char *symbol, bool ffmpeg)
 bool DynamicLibraries::loadLibraries()
 {
     QString strvlccore = DmGlobal::libPath(libvlccoreStr);
-    qDebug() << "vlccore path:" << strvlccore;
+    qCDebug(dmMusic) << "Loading VLC core library from:" << strvlccore;
     if (QLibrary::isLibrary(strvlccore)) {
         vlccoreLib.setFileName(strvlccore);
         if (!vlccoreLib.load()) {
-            qDebug() << "vlccore load error!";
+            qCCritical(dmMusic) << "Failed to load VLC core library:" << vlccoreLib.errorString();
             return false;
         }
     } else {
-        qDebug() << "vlccore is not library!";
+        qCCritical(dmMusic) << "VLC core library path is not valid:" << strvlccore;
         return false;
     }
 
     QString strlibvlc = DmGlobal::libPath(libvlcStr);
-    qDebug() << "libvlc path:" << strvlccore;
+    qCDebug(dmMusic) << "Loading VLC library from:" << strlibvlc;
     if (QLibrary::isLibrary(strlibvlc)) {
         vlcLib.setFileName(strlibvlc);
         if (!vlcLib.load()) {
-            qDebug() << "libvlc load error!";
+            qCCritical(dmMusic) << "Failed to load VLC library:" << vlcLib.errorString();
             return false;
         }
     } else {
-        qDebug() << "libvlc is not library!";
+        qCCritical(dmMusic) << "VLC library path is not valid:" << strlibvlc;
         return false;
     }
 
     QString strlibcodec = DmGlobal::libPath(libavcodecStr);
-    qDebug() << "libavcodec path:" << strvlccore;
+    qCDebug(dmMusic) << "Loading avcodec library from:" << strlibcodec;
     if (QLibrary::isLibrary(strlibcodec)) {
         avcodecLib.setFileName(strlibcodec);
         if (!avcodecLib.load()) {
-            qDebug() << "libavcodec load error!";
+            qCCritical(dmMusic) << "Failed to load avcodec library:" << avcodecLib.errorString();
             return false;
         }
     } else {
-        qDebug() << "libavcodec is not library!";
+        qCCritical(dmMusic) << "avcodec library path is not valid:" << strlibcodec;
         return false;
     }
 
     QString strlibformate = DmGlobal::libPath(libavformateStr);
-    qDebug() << "libavformateLib path:" << strvlccore;
+    qCDebug(dmMusic) << "Loading avformat library from:" << strlibformate;
     if (QLibrary::isLibrary(strlibformate)) {
         avformateLib.setFileName(strlibformate);
         if (!avformateLib.load()) {
-            qDebug() << "libavformateLib load error!";
+            qCCritical(dmMusic) << "Failed to load avformat library:" << avformateLib.errorString();
             return false;
         }
     } else {
-        qDebug() << "libavformate is not library!";
+        qCCritical(dmMusic) << "avformat library path is not valid:" << strlibformate;
         return false;
     }
+    qCDebug(dmMusic) << "Successfully loaded all required libraries";
     return true;
 }

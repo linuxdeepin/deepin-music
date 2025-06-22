@@ -13,6 +13,7 @@
 #include "Instance.h"
 #include "dynamiclibraries.h"
 #include "global.h"
+#include "util/log.h"
 
 void logCallback(void *data,
                  int level,
@@ -38,7 +39,7 @@ void logCallback(void *data,
     message.prepend("VlcInstance  libvlc: ");
     switch (level) {
     case Vlc::ErrorLevel: {
-        qCritical(message.toUtf8().data(), NULL);
+        qCCritical(dmMusic) << message;
         if (message.contains("cannot write")) {
             /*****************************************
              *vlc write error. we need to stop
@@ -49,12 +50,12 @@ void logCallback(void *data,
         break;
     }
     case Vlc::WarningLevel:
-        qWarning(message.toUtf8().data(), NULL);
+        qCWarning(dmMusic) << message;
         break;
     case Vlc::NoticeLevel:
     case Vlc::DebugLevel:
     default:
-        qDebug(message.toUtf8().data(), NULL);
+        qCDebug(dmMusic) << message;
         break;
     }
 }
@@ -82,6 +83,12 @@ VlcInstance::VlcInstance(const QStringList &args,
     vlc_log_set_function vlc_log_set = (vlc_log_set_function)DynamicLibraries::instance()->resolve("libvlc_log_set");
 
     _vlcInstance = vlc_new(0, nullptr);
+    if (_vlcInstance) {
+        qCDebug(dmMusic) << "VLC instance created successfully";
+    } else {
+        qCCritical(dmMusic) << "Failed to create VLC instance";
+    }
+
     vlc_set_user_agent(_vlcInstance, DmGlobal::getAppName().toStdString().c_str(), "");//name
     vlc_set_app_id(_vlcInstance, "", "", "deepin-music");//icon
 
@@ -94,19 +101,21 @@ VlcInstance::VlcInstance(const QStringList &args,
     if (_vlcInstance) {
         vlc_log_set(_vlcInstance, logCallback, this);
         _status = true;
-        qDebug() << "Using libvlc version:" << version();
+        qCDebug(dmMusic) << "VLC instance initialized successfully, version:" << version();
     } else {
-        qCritical() << "VLC Error: libvlc failed to load!";
+        qCCritical(dmMusic) << "VLC Error: libvlc failed to load!";
     }
 }
 
 VlcInstance::~VlcInstance()
 {
+    qCDebug(dmMusic) << "Destroying VLC instance";
     //释放Instance
     if (_vlcInstance) {
         vlc_free_function vlc_free = (vlc_free_function)DynamicLibraries::instance()->resolve("libvlc_free");
         vlc_free(_vlcInstance);
         _vlcInstance = nullptr;
+        qCDebug(dmMusic) << "VLC instance released";
     }
 }
 
@@ -122,6 +131,7 @@ Vlc::LogLevel VlcInstance::logLevel() const
 
 void VlcInstance::catchPulseError(int err)
 {
+    qCWarning(dmMusic) << "Caught PulseAudio error:" << err;
     Q_UNUSED(err)
     emit sendErrorOccour(0);
 }

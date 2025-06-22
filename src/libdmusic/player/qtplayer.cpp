@@ -5,6 +5,7 @@
 
 #include "qtplayer.h"
 #include "utils.h"
+#include "util/log.h"
 
 #include <QAudioOutput>
 #include <QDBusObjectPath>
@@ -29,6 +30,7 @@ void QtPlayer::init()
     //防止多次创建
     if (m_mediaPlayer != nullptr) return;
 
+    qCDebug(dmMusic) << "Creating QMediaPlayer instance";
     m_mediaPlayer = new QMediaPlayer(this);
     m_audioOutput = new QAudioOutput(this);
     m_mediaPlayer->setAudioOutput(m_audioOutput);
@@ -40,14 +42,17 @@ void QtPlayer::init()
         switch (newState) {
         case QMediaPlayer::PlayingState: {
             state = DmGlobal::Playing;
+            qCInfo(dmMusic) << "QMediaPlayer state changed to Playing";
         }
         break;
         case QMediaPlayer::PausedState: {
             state = DmGlobal::Paused;
+            qCInfo(dmMusic) << "QMediaPlayer state changed to Paused";
         }
         break;
         default:
             state = DmGlobal::Stopped;
+            qCInfo(dmMusic) << "QMediaPlayer state changed to Stopped";
             break;
         }
         emit stateChanged(state);
@@ -58,6 +63,7 @@ void QtPlayer::init()
 
 void QtPlayer::releasePlayer()
 {
+    qCDebug(dmMusic) << "Releasing QMediaPlayer resources";
     if (m_audioOutput) {
         delete m_audioOutput;
         m_audioOutput = nullptr;
@@ -71,6 +77,7 @@ void QtPlayer::releasePlayer()
 
 void QtPlayer::release()
 {
+    qCDebug(dmMusic) << "Release requested";
     releasePlayer();
 }
 
@@ -97,13 +104,16 @@ DmGlobal::PlaybackStatus QtPlayer::state()
 void QtPlayer::play()
 {
     init();
+    qCDebug(dmMusic) << "Starting playback";
     m_mediaPlayer->play();
 }
 
 void QtPlayer::pause()
 {
-    if (m_mediaPlayer != nullptr && m_mediaPlayer->playbackState() == QMediaPlayer::PlayingState)
+    if (m_mediaPlayer != nullptr && m_mediaPlayer->playbackState() == QMediaPlayer::PlayingState) {
+        qCDebug(dmMusic) << "Pausing playback";
         m_mediaPlayer->pause();
+    }
 }
 
 void QtPlayer::stop()
@@ -111,6 +121,7 @@ void QtPlayer::stop()
     // 播放和状态状态都可以停止播放
     if (m_mediaPlayer != nullptr && (m_mediaPlayer->playbackState() == QMediaPlayer::PlayingState
                                      || m_mediaPlayer->playbackState() == QMediaPlayer::PausedState)) {
+        qCDebug(dmMusic) << "Stopping playback";
         m_mediaPlayer->stop();
     }
 
@@ -142,6 +153,7 @@ void QtPlayer::setMediaMeta(MediaMeta meta)
     init();
     if (m_activeMeta.hash == meta.hash) return;
 
+    qCInfo(dmMusic) << "Setting media meta - Title:" << meta.title << "Path:" << meta.localPath;
     m_activeMeta = meta;
     m_mediaPlayer->setSource(QUrl::fromLocalFile(m_activeMeta.localPath));
     emit metaChanged();
@@ -162,6 +174,7 @@ void QtPlayer::setFadeInOutFactor(double fadeInOutFactor)
 void QtPlayer::setVolume(int volume)
 {
     init();
+    qCDebug(dmMusic) << "Setting volume to:" << volume;
     m_volume = volume;
     m_audioOutput->setVolume(volume);
 }
@@ -175,13 +188,17 @@ int QtPlayer::getVolume()
 void QtPlayer::setMute(bool mute)
 {
     init();
+    qCDebug(dmMusic) << "Setting mute state to:" << mute;
     m_audioOutput->setMuted(mute);
 }
 
 void QtPlayer::onMediaStatusChanged(QMediaPlayer::MediaStatus status)
 {
-    // 过滤无效音乐文件
-    if (status == QMediaPlayer::MediaStatus::EndOfMedia || status == QMediaPlayer::MediaStatus::InvalidMedia) {
+    if (status == QMediaPlayer::MediaStatus::EndOfMedia) {
+        qCInfo(dmMusic) << "Media playback reached end";
+        emit end();
+    } else if (status == QMediaPlayer::MediaStatus::InvalidMedia) {
+        qCWarning(dmMusic) << "Invalid media detected for:" << m_activeMeta.localPath;
         emit end();
     }
 }
@@ -203,7 +220,10 @@ void QtPlayer::resetPlayInfo()
     if (!m_sinkInputPath.isEmpty()) return;
     readSinkInputPath();
 
-    if (m_sinkInputPath.isEmpty()) return;
+    if (m_sinkInputPath.isEmpty()) {
+        qCDebug(dmMusic) << "No sink input path found";
+        return;
+    }
 
     QVariant volumeV = Utils::readDBusProperty("org.deepin.dde.Audio1", m_sinkInputPath,
                                                "org.deepin.dde.Audio1.SinkInput", "Volume");
@@ -211,16 +231,28 @@ void QtPlayer::resetPlayInfo()
     QVariant muteV = Utils::readDBusProperty("org.deepin.dde.Audio1", m_sinkInputPath,
                                              "org.deepin.dde.Audio1.SinkInput", "Mute");
 
-    if (!volumeV.isValid() || !muteV.isValid()) return;
+    if (!volumeV.isValid() || !muteV.isValid()) {
+        qCWarning(dmMusic) << "Failed to read audio properties from DBus";
+        return;
+    }
 
     QDBusInterface ainterface("org.deepin.dde.Audio1", m_sinkInputPath,
                               "org.deepin.dde.Audio1.SinkInput",
                               QDBusConnection::sessionBus());
-    if (!ainterface.isValid()) return ;
+    if (!ainterface.isValid()) {
+        qCWarning(dmMusic) << "Failed to create DBus interface for audio";
+        return;
+    }
 
-    if (!qFuzzyCompare(volumeV.toDouble(), 1.0)) ainterface.call(QLatin1String("SetVolume"), 1.0, false);
+    if (!qFuzzyCompare(volumeV.toDouble(), 1.0)) {
+        qCDebug(dmMusic) << "Normalizing audio volume to 1.0";
+        ainterface.call(QLatin1String("SetVolume"), 1.0, false);
+    }
 
-    if (muteV.toBool()) ainterface.call(QLatin1String("SetMute"), false);
+    if (muteV.toBool()) {
+        qCDebug(dmMusic) << "Unmuting audio";
+        ainterface.call(QLatin1String("SetMute"), false);
+    }
 }
 
 void QtPlayer::readSinkInputPath()
@@ -228,9 +260,13 @@ void QtPlayer::readSinkInputPath()
     QVariant v = Utils::readDBusProperty("org.deepin.dde.Audio1", "/org/deepin/dde/Audio1",
                                          "org.deepin.dde.Audio1", "SinkInputs");
 
-    if (!v.isValid()) return;
+    if (!v.isValid()) {
+        qCWarning(dmMusic) << "Failed to read sink inputs from DBus";
+        return;
+    }
 
     QList<QDBusObjectPath> allSinkInputsList = v.value<QList<QDBusObjectPath> >();
+    qCDebug(dmMusic) << "Found" << allSinkInputsList.size() << "sink inputs";
 
     for (auto curPath : allSinkInputsList) {
         QVariant nameV = Utils::readDBusProperty("org.deepin.dde.Audio1", curPath.path(),
@@ -240,6 +276,7 @@ void QtPlayer::readSinkInputPath()
             continue;
 
         m_sinkInputPath = curPath.path();
+        qCDebug(dmMusic) << "Found Deepin Music sink input at:" << m_sinkInputPath;
         break;
     }
 }

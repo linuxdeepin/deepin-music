@@ -10,6 +10,7 @@
 #include "error.h"
 #include "MediaPlayer.h"
 #include "dynamiclibraries.h"
+#include "util/log.h"
 
 typedef libvlc_equalizer_t *(*vlc_audio_equalizer_new_function)(void);
 typedef void (*vlc_audio_equalizer_release_function)(libvlc_equalizer_t *);
@@ -28,28 +29,39 @@ VlcEqualizer::VlcEqualizer(VlcMediaPlayer *vlcMediaPlayer)
     : QObject(vlcMediaPlayer),
       _vlcMediaPlayer(vlcMediaPlayer)
 {
+    qCDebug(dmMusic) << "Creating new VLC equalizer for media player";
     vlc_audio_equalizer_new_function vlc_audio_equalizer_new = (vlc_audio_equalizer_new_function)DynamicLibraries::instance()->resolve("libvlc_audio_equalizer_new");
     _vlcEqualizer = vlc_audio_equalizer_new();
+    if (_vlcEqualizer) {
+        qCDebug(dmMusic) << "VLC equalizer created successfully";
+    } else {
+        qCWarning(dmMusic) << "Failed to create VLC equalizer";
+    }
 }
 
 VlcEqualizer::~VlcEqualizer()
 {
+    qCDebug(dmMusic) << "Destroying VLC equalizer";
     //释放均衡器
     if (_vlcEqualizer) {
         vlc_audio_equalizer_release_function vlc_audio_equalizer_release = (vlc_audio_equalizer_release_function)DynamicLibraries::instance()->resolve("libvlc_audio_equalizer_release");
         vlc_audio_equalizer_release(_vlcEqualizer);
+        qCDebug(dmMusic) << "VLC equalizer released";
     }
 }
 
 float VlcEqualizer::amplificationForBandAt(uint bandIndex) const
 {
+    qCDebug(dmMusic) << "Getting amplification for band index:" << bandIndex;
     if (_vlcEqualizer) {
         vlc_audio_equalizer_get_amp_at_index_function vlc_audio_equalizer_get_amp_at_index = (vlc_audio_equalizer_get_amp_at_index_function)DynamicLibraries::instance()->resolve("libvlc_audio_equalizer_get_amp_at_index");
         float ret = vlc_audio_equalizer_get_amp_at_index(_vlcEqualizer, bandIndex);
         if (!std::isnan(ret)) {
+            qCDebug(dmMusic) << "Amplification value for band" << bandIndex << "is" << ret;
             return ret;
         }
     }
+    qCWarning(dmMusic) << "Failed to get amplification for band" << bandIndex;
     return -1.0;
 }
 
@@ -75,10 +87,14 @@ float VlcEqualizer::amplificationForBandAt(uint bandIndex) const
 
 float VlcEqualizer::preamplification() const
 {
+    qCDebug(dmMusic) << "Getting preamplification value";
     if (_vlcEqualizer) {
         vlc_audio_equalizer_get_preamp_function vlc_audio_equalizer_get_preamp = (vlc_audio_equalizer_get_preamp_function)DynamicLibraries::instance()->resolve("libvlc_audio_equalizer_get_preamp");
-        return vlc_audio_equalizer_get_preamp(_vlcEqualizer);
+        float value = vlc_audio_equalizer_get_preamp(_vlcEqualizer);
+        qCDebug(dmMusic) << "Preamplification value is" << value;
+        return value;
     } else {
+        qCWarning(dmMusic) << "No equalizer available for preamplification";
         return 0.0;
     }
 }
@@ -102,31 +118,44 @@ float VlcEqualizer::preamplification() const
 
 void VlcEqualizer::loadFromPreset(uint index)
 {
+    qCDebug(dmMusic) << "Loading equalizer preset from index:" << index;
     if (_vlcEqualizer) {
         vlc_audio_equalizer_release_function vlc_audio_equalizer_release = (vlc_audio_equalizer_release_function)DynamicLibraries::instance()->resolve("libvlc_audio_equalizer_release");
         vlc_audio_equalizer_release(_vlcEqualizer);
+        qCDebug(dmMusic) << "Released previous equalizer settings";
     }
     //18：The custom mode
     if (index < 18) {
         vlc_audio_equalizer_new_from_preset_function vlc_audio_equalizer_new_from_preset = (vlc_audio_equalizer_new_from_preset_function)DynamicLibraries::instance()->resolve("libvlc_audio_equalizer_new_from_preset");
         _vlcEqualizer = vlc_audio_equalizer_new_from_preset(index);
         if (_vlcEqualizer) {
+            qCDebug(dmMusic) << "Successfully loaded preset" << index;
             emit presetLoaded();
+        } else {
+            qCWarning(dmMusic) << "Failed to load preset" << index;
         }
     } else {
         vlc_audio_equalizer_new_function vlc_audio_equalizer_new = (vlc_audio_equalizer_new_function)DynamicLibraries::instance()->resolve("libvlc_audio_equalizer_new");
         _vlcEqualizer = vlc_audio_equalizer_new();
+        qCDebug(dmMusic) << "Created new custom equalizer settings";
     }
 }
 
 void VlcEqualizer::setAmplificationForBandAt(float amp, uint bandIndex)
 {
+    qCDebug(dmMusic) << "Setting amplification for band" << bandIndex << "to" << amp;
     if (!_vlcEqualizer) {
+        qCWarning(dmMusic) << "No equalizer available to set amplification";
         return;
     }
     vlc_audio_equalizer_set_amp_at_index_function vlc_audio_equalizer_set_amp_at_index = (vlc_audio_equalizer_set_amp_at_index_function)DynamicLibraries::instance()->resolve("libvlc_audio_equalizer_set_amp_at_index");
     vlc_media_player_set_equalizer_function vlc_media_player_set_equalizer = (vlc_media_player_set_equalizer_function)DynamicLibraries::instance()->resolve("libvlc_media_player_set_equalizer");
-    vlc_audio_equalizer_set_amp_at_index(_vlcEqualizer, amp, bandIndex);
+    int result = vlc_audio_equalizer_set_amp_at_index(_vlcEqualizer, amp, bandIndex);
+    if (result == 0) {
+        qCDebug(dmMusic) << "Successfully set amplification for band" << bandIndex;
+    } else {
+        qCWarning(dmMusic) << "Failed to set amplification for band" << bandIndex;
+    }
     vlc_media_player_set_equalizer(_vlcMediaPlayer->core(), _vlcEqualizer);
 }
 
@@ -142,11 +171,18 @@ void VlcEqualizer::setEnabled(bool enabled)
 
 void VlcEqualizer::setPreamplification(float value)
 {
+    qCDebug(dmMusic) << "Setting preamplification to:" << value;
     if (!_vlcEqualizer) {
+        qCWarning(dmMusic) << "No equalizer available to set preamplification";
         return;
     }
     vlc_media_player_set_equalizer_function vlc_media_player_set_equalizer = (vlc_media_player_set_equalizer_function)DynamicLibraries::instance()->resolve("libvlc_media_player_set_equalizer");
     vlc_audio_equalizer_set_preamp_function vlc_audio_equalizer_set_preamp = (vlc_audio_equalizer_set_preamp_function)DynamicLibraries::instance()->resolve("libvlc_audio_equalizer_set_preamp");
-    vlc_audio_equalizer_set_preamp(_vlcEqualizer, value);
+    int result = vlc_audio_equalizer_set_preamp(_vlcEqualizer, value);
+    if (result == 0) {
+        qCDebug(dmMusic) << "Successfully set preamplification value";
+    } else {
+        qCWarning(dmMusic) << "Failed to set preamplification value";
+    }
     vlc_media_player_set_equalizer(_vlcMediaPlayer->core(), _vlcEqualizer);
 }

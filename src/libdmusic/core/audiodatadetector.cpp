@@ -30,6 +30,7 @@ extern "C" {
 
 #include "dynamiclibraries.h"
 #include "global.h"
+#include "util/log.h"
 
 typedef AVFormatContext *(*format_alloc_context_function)(void);
 typedef int (*format_open_input_function)(AVFormatContext **, const char *, AVInputFormat *, AVDictionary **);
@@ -74,8 +75,13 @@ void AudioDataDetector::run()
 {
     QString path = m_curPath;
     QString hash = m_curHash;
-    if (path.isEmpty())
+    qCInfo(dmMusic) << "Starting audio data detection for file:" << path << "hash:" << hash;
+    
+    if (path.isEmpty()) {
+        qCWarning(dmMusic) << "Path is empty, aborting audio data detection";
         return;
+    }
+    
     format_alloc_context_function format_alloc_context = (format_alloc_context_function)DynamicLibraries::instance()->resolve("avformat_alloc_context", true);
     format_open_input_function format_open_input = (format_open_input_function)DynamicLibraries::instance()->resolve("avformat_open_input", true);
     format_free_context_function format_free_context = (format_free_context_function)DynamicLibraries::instance()->resolve("avformat_free_context", true);
@@ -97,26 +103,34 @@ void AudioDataDetector::run()
     codec_receive_frame_function codec_receive_frame = (codec_receive_frame_function)DynamicLibraries::instance()->resolve("avcodec_receive_frame", true);
 
     AVFormatContext *pFormatCtx = format_alloc_context();
-    format_open_input(&pFormatCtx, path.toStdString().c_str(), nullptr, nullptr);
+    int ret = format_open_input(&pFormatCtx, path.toStdString().c_str(), nullptr, nullptr);
 
-    if (pFormatCtx == nullptr) {
+    if (pFormatCtx == nullptr || ret != 0) {
+        qCCritical(dmMusic) << "Failed to open input format context for file:" << path << "error code:" << ret;
         format_free_context(pFormatCtx);
         m_curPath.clear();
         m_curHash.clear();
         return;
     }
 
-    format_find_stream_info(pFormatCtx, nullptr);
+    qCDebug(dmMusic) << "Successfully opened format context for file:" << path;
+    ret = format_find_stream_info(pFormatCtx, nullptr);
+    if (ret < 0) {
+        qCWarning(dmMusic) << "Failed to find stream info for file:" << path << "error code:" << ret;
+    }
 
     int audio_stream_index = -1;
     audio_stream_index = find_best_stream(pFormatCtx, AVMEDIA_TYPE_AUDIO, -1, -1, nullptr, 0);
     if (audio_stream_index < 0) {
+        qCWarning(dmMusic) << "No audio stream found in file:" << path;
         format_close_input(&pFormatCtx);
         format_free_context(pFormatCtx);
         m_curPath.clear();
         m_curHash.clear();
         return;
     }
+
+    qCDebug(dmMusic) << "Found audio stream at index:" << audio_stream_index << "for file:" << path;
 
     AVStream *in_stream = pFormatCtx->streams[audio_stream_index];
     AVCodecParameters *in_codecpar = in_stream->codecpar;
@@ -125,7 +139,26 @@ void AudioDataDetector::run()
     codec_parameters_to_context(pCodecCtx, in_codecpar);
 
     AVCodec *pCodec = codec_find_decoder(pCodecCtx->codec_id);
-    codec_open2(pCodecCtx, pCodec, nullptr);
+    if (pCodec == nullptr) {
+        qCCritical(dmMusic) << "Failed to find decoder for codec ID:" << pCodecCtx->codec_id << "in file:" << path;
+        format_close_input(&pFormatCtx);
+        format_free_context(pFormatCtx);
+        m_curPath.clear();
+        m_curHash.clear();
+        return;
+    }
+    
+    ret = codec_open2(pCodecCtx, pCodec, nullptr);
+    if (ret < 0) {
+        qCCritical(dmMusic) << "Failed to open codec for file:" << path << "error code:" << ret;
+        format_close_input(&pFormatCtx);
+        format_free_context(pFormatCtx);
+        m_curPath.clear();
+        m_curHash.clear();
+        return;
+    }
+
+    qCDebug(dmMusic) << "Successfully initialized codec for file:" << path;
 
     AVPacket *packet = packet_alloc();
     AVFrame *frame = frame_alloc();
@@ -185,31 +218,44 @@ void AudioDataDetector::run()
 
 void AudioDataDetector::onBufferDetector(const QString &path, const QString &hash)
 {
+    qCDebug(dmMusic) << "Received buffer detection request for file:" << path << "hash:" << hash;
     QString curHash = m_curHash;
-    if (hash == curHash/* || true*/)
+    if (hash == curHash/* || true*/) {
+        qCDebug(dmMusic) << "Hash matches current processing hash, ignoring request:" << hash;
         return;
+    }
     if (isRunning()) {
+        qCDebug(dmMusic) << "Detection thread is running, setting stop flag";
         m_stopFlag = true;
     }
     m_curPath = path;
     m_curHash = hash;
     if (!queryCacheExisted(hash) && DmGlobal::playbackEngineType() == 1) { //查询到本地无缓存信息
+        qCInfo(dmMusic) << "No cache found for hash:" << hash << "starting audio data detection thread";
         start();
+    } else {
+        qCDebug(dmMusic) << "Cache exists for hash:" << hash << "or engine type is not FFmpeg, skipping detection";
     }
 }
 
 void AudioDataDetector::onClearBufferDetector()
 {
+    qCDebug(dmMusic) << "Clearing buffer detector, current path:" << m_curPath << "hash:" << m_curHash;
     if (isRunning()) {
+        qCDebug(dmMusic) << "Detection thread is running, setting stop flag";
         m_stopFlag = true;
     }
     m_curPath.clear();
     m_curHash.clear();
+    qCDebug(dmMusic) << "Buffer detector cleared";
 }
 
 void AudioDataDetector::resample(const QVector<float> &buffer, const QString &hash, bool forceQuit)
 {
+    qCDebug(dmMusic) << "Resampling audio data for hash:" << hash << "buffer size:" << buffer.size() << "forceQuit:" << forceQuit;
+    
     if (buffer.isEmpty()) {
+        qCWarning(dmMusic) << "Buffer is empty, cannot resample for hash:" << hash;
         qDebug() << __FUNCTION__ << "buffer size ==" << buffer.size();
         return;
     }
@@ -220,6 +266,7 @@ void AudioDataDetector::resample(const QVector<float> &buffer, const QString &ha
     t_buffer.reserve(1001);
     if (buffer.size() < 1000) {
         t_buffer = buffer;
+        qCDebug(dmMusic) << "Buffer size is small, using original buffer for hash:" << hash;
     } else {
         int num = buffer.size() / 1000;
         float t_curValue = 0;
@@ -229,6 +276,7 @@ void AudioDataDetector::resample(const QVector<float> &buffer, const QString &ha
             }
         }
         t_buffer.append(t_curValue);
+        qCDebug(dmMusic) << "Downsampled buffer from" << buffer.size() << "to" << t_buffer.size() << "for hash:" << hash;
     }
 
 
@@ -240,6 +288,7 @@ void AudioDataDetector::resample(const QVector<float> &buffer, const QString &ha
             mappingbuf.append(ft);
             s_buffer.append(qAbs(t_buffer[i] / max));
         }
+        qCDebug(dmMusic) << "Normalized buffer data for hash:" << hash;
     }
 
     if (!forceQuit) {
@@ -248,6 +297,7 @@ void AudioDataDetector::resample(const QVector<float> &buffer, const QString &ha
 
         QDir dir(path);
         if (!dir.exists()) {
+            qCDebug(dmMusic) << "Creating wave cache directory:" << path;
             dir.mkdir(path);
         }
         path += QString("%1.dat").arg(hash);
@@ -263,28 +313,41 @@ void AudioDataDetector::resample(const QVector<float> &buffer, const QString &ha
             }
 
             fwrite(buf, 4, mappingbuf.size(),  fp);
+            qCInfo(dmMusic) << "Successfully saved audio wave cache for hash:" << hash << "to:" << path;
         } else {
+            qCCritical(dmMusic) << "Failed to write audio wave cache file for hash:" << hash << "path:" << path;
             qWarning() << "can not write cache file " << hash << " failed";
         }
         if (fp)
             fclose(fp);
         delete []buf;
+    } else {
+        qCDebug(dmMusic) << "Force quit mode, skipping cache write for hash:" << hash;
     }
     Q_EMIT audioBufferFromThread(s_buffer, hash);
+    qCDebug(dmMusic) << "Emitted audio buffer data for hash:" << hash << "size:" << s_buffer.size();
 }
 
 bool AudioDataDetector::queryCacheExisted(const QString &hash)
 {
+    qCDebug(dmMusic) << "Querying cache existence for hash:" << hash;
     QString path = DmGlobal::cachePath() + QString("/wave/%1.dat").arg(hash);
     if (!QFile::exists(path) && DmGlobal::playbackEngineType() != 1) {
+        qCDebug(dmMusic) << "Cache file not found and engine type is not FFmpeg, using default data:" << path;
         path = ":/data/default_music.dat";
     }
+    
     QFile file(path);
     if (!file.open(QFile::ReadOnly)) {
+        qCWarning(dmMusic) << "Failed to open cache file for hash:" << hash << "path:" << path;
         return false;
     }
-    if (file.size() == 0)
+    if (file.size() == 0) {
+        qCWarning(dmMusic) << "Cache file is empty for hash:" << hash << "path:" << path;
         return false;
+    }
+
+    qCDebug(dmMusic) << "Found valid cache file for hash:" << hash << "path:" << path << "size:" << file.size();
 
     QVector<float> f_buffer;
 
@@ -296,7 +359,8 @@ bool AudioDataDetector::queryCacheExisted(const QString &hash)
     }
 
     file.close();
-
+    
+    qCInfo(dmMusic) << "Successfully loaded audio buffer from cache for hash:" << hash << "buffer size:" << f_buffer.size();
     Q_EMIT audioBuffer(f_buffer, hash);
     return true;
 }

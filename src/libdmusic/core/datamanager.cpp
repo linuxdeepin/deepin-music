@@ -22,6 +22,7 @@
 #include "utils.h"
 #include "dboperate.h"
 #include "musicsettings.h"
+#include "util/log.h"
 
 using namespace DMusic;
 
@@ -180,6 +181,7 @@ DataManager::~DataManager()
 
 void DataManager::setCurrentPlayliHash(const QString &hash)
 {
+    qCInfo(dmMusic) << "Setting current playlist hash from" << m_data->m_currentHash << "to" << hash;
     m_data->m_currentHash = hash;
     m_data->m_settings->setValue("base.play.last_playlist", hash);
     emit signalCurrentPlaylistSChanged(hash);
@@ -207,6 +209,7 @@ int DataManager::metaIndexFromHash(const QString &hash)
 
 int DataManager::playlistIndexFromHash(const QString &hash)
 {
+    qCDebug(dmMusic) << "Looking up playlist index for hash:" << hash;
     int index = -1;
     if (!hash.isEmpty()) {
         for (int i = 0; i < m_data->m_allPlaylist.size(); ++i) {
@@ -216,12 +219,13 @@ int DataManager::playlistIndexFromHash(const QString &hash)
             }
         }
     }
-
+    qCDebug(dmMusic) << "Found playlist index:" << index << "for hash:" << hash;
     return index;
 }
 
 void DataManager::deleteMetaFromAllMetas(const QStringList &hashs)
 {
+    qCDebug(dmMusic) << "Deleting metas with hashes:" << hashs;
     QStringList allHashs = hashs;
     for (int i = m_data->m_allMetas.size() - 1; i >= 0; --i) {
         if (allHashs.contains(m_data->m_allMetas[i].hash)) {
@@ -230,10 +234,12 @@ void DataManager::deleteMetaFromAllMetas(const QStringList &hashs)
             if (allHashs.isEmpty()) break;
         }
     }
+    qCDebug(dmMusic) << "Finished deleting metas";
 }
 
 void DataManager::addMetaToAlbum(const MediaMeta &meta)
 {
+    qCDebug(dmMusic) << "Adding meta to album:" << meta.album << "artist:" << meta.artist;
     strcmpAlbumName = meta.album;
     QList<AlbumInfo>::iterator itr = std::find_if(m_data->m_allAlbums.begin(), m_data->m_allAlbums.end(), compareAlbumName);
     if (itr != m_data->m_allAlbums.end()) {
@@ -241,6 +247,7 @@ void DataManager::addMetaToAlbum(const MediaMeta &meta)
         if (meta.timestamp < itr->timestamp) {
             itr->timestamp = meta.timestamp;
         }
+        qCDebug(dmMusic) << "Updated existing album:" << meta.album;
     } else {
         AlbumInfo albumNew;
         albumNew.pinyin = meta.pinyinAlbum;
@@ -249,16 +256,19 @@ void DataManager::addMetaToAlbum(const MediaMeta &meta)
         albumNew.musicinfos[meta.hash] = meta;
         albumNew.timestamp = meta.timestamp;
         m_data->m_allAlbums.append(albumNew);
+        qCDebug(dmMusic) << "Created new album:" << meta.album;
     }
 }
 
 void DataManager::deleteMetaFromAlbum(const QString &metaHash, const QString &name)
 {
+    qCDebug(dmMusic) << "Deleting meta" << metaHash << "from album:" << name;
     for (int i = 0; i < m_data->m_allAlbums.size(); ++i) {
         if (m_data->m_allAlbums[i].name == name) {
             m_data->m_allAlbums[i].musicinfos.remove(metaHash);
             if (m_data->m_allAlbums[i].musicinfos.isEmpty()) {
                 m_data->m_allAlbums.removeAt(i);
+                qCDebug(dmMusic) << "Removed empty album:" << name;
             }
             break;
         }
@@ -267,6 +277,7 @@ void DataManager::deleteMetaFromAlbum(const QString &metaHash, const QString &na
 
 void DataManager::addMetaToArtist(const MediaMeta &meta)
 {
+    qCDebug(dmMusic) << "Adding meta to artist:" << meta.artist;
     strcmpArtistName = meta.artist;
     QList<ArtistInfo>::iterator itr = std::find_if(m_data->m_allArtists.begin(), m_data->m_allArtists.end(), compareArtistName);
     if (itr != m_data->m_allArtists.end()) {
@@ -274,6 +285,7 @@ void DataManager::addMetaToArtist(const MediaMeta &meta)
         if (meta.timestamp < itr->timestamp) {
             itr->timestamp = meta.timestamp;
         }
+        qCDebug(dmMusic) << "Updated existing artist:" << meta.artist;
     } else {
         ArtistInfo artist;
         artist.pinyin = meta.pinyinArtist;
@@ -281,16 +293,19 @@ void DataManager::addMetaToArtist(const MediaMeta &meta)
         artist.musicinfos[meta.hash] = meta;
         artist.timestamp = meta.timestamp;
         m_data->m_allArtists.append(artist);
+        qCDebug(dmMusic) << "Created new artist:" << meta.artist;
     }
 }
 
 void DataManager::deleteMetaFromArtist(const QString &metaHash, const QString &name)
 {
+    qCDebug(dmMusic) << "Deleting meta" << metaHash << "from artist:" << name;
     for (int i = 0; i < m_data->m_allArtists.size(); ++i) {
         if (m_data->m_allArtists[i].name == name) {
             m_data->m_allArtists[i].musicinfos.remove(metaHash);
             if (m_data->m_allArtists[i].musicinfos.isEmpty()) {
                 m_data->m_allArtists.removeAt(i);
+                qCDebug(dmMusic) << "Removed empty artist:" << name;
             }
             break;
         }
@@ -299,37 +314,43 @@ void DataManager::deleteMetaFromArtist(const QString &metaHash, const QString &n
 
 int DataManager::allMusicCountDB()
 {
+    qCDebug(dmMusic) << "Getting total music count from database";
     int count = 0;
     QString queryString = QString("SELECT count(*) FROM musicNew");
     QSqlQuery queryNew(m_data->m_database);
     if (!queryNew.prepare(queryString)) {
-        qCritical() << queryNew.lastError();
+        qCCritical(dmMusic) << "Failed to prepare query:" << queryNew.lastError();
         return 0;
     }
     if (!queryNew.exec()) {
-        qCritical() << queryNew.lastError();
+        qCCritical(dmMusic) << "Failed to execute query:" << queryNew.lastError();
         count = 0;
     }
     while (queryNew.next()) {
         count = queryNew.value(0).toInt();
     }
+    qCDebug(dmMusic) << "Total music count:" << count;
     return count;
 }
 
 bool DataManager::loadCurrentMetasDB()
 {
+    qCDebug(dmMusic) << "Loading current playlist metas from database";
     int index = playlistIndexFromHash(m_data->m_currentHash);
-    if (index < 0 || index >= m_data->m_allPlaylist.size()) return false;
+    if (index < 0 || index >= m_data->m_allPlaylist.size()) {
+        qCWarning(dmMusic) << "Invalid playlist index for hash:" << m_data->m_currentHash;
+        return false;
+    }
 
     QSqlQuery query(m_data->m_database);
     // 加载歌单数据
     if (!query.prepare(QString("SELECT music_id FROM playlist_%1 order by sort_id ASC LIMIT %2")
                        .arg(m_data->m_currentHash).arg(FirstLoadCount))) {
-        qWarning() << query.lastError();
+        qCWarning(dmMusic) << "Failed to prepare query:" << query.lastError();
         return false;
     }
     if (!query.exec()) {
-        qWarning() << query.lastError();
+        qCWarning(dmMusic) << "Failed to execute query:" << query.lastError();
         return false;
     }
     m_data->m_allPlaylist[index].sortMetas.clear();
@@ -339,6 +360,7 @@ bool DataManager::loadCurrentMetasDB()
 //        m_data->m_allPlaylist[index].sortCustomMetas.append(query.value(0).toString());
     }
 
+    qCDebug(dmMusic) << "Loading song data for" << m_data->m_allPlaylist[index].sortMetas.size() << "metas";
     //加载歌曲数据
     for (QString metaStr : m_data->m_allPlaylist[index].sortMetas) {
         QString queryString = QString("SELECT hash, localpath, title, artist, album, "
@@ -348,11 +370,11 @@ bool DataManager::loadCurrentMetasDB()
                                       "FROM musicNew WHERE hash='%1'").arg(metaStr);
 
         if (!query.prepare(queryString)) {
-            qCritical() << query.lastError();
+            qCCritical(dmMusic) << "Failed to prepare meta query for hash:" << metaStr << "error:" << query.lastError();
             continue;
         }
         if (!query.exec()) {
-            qCritical() << query.lastError();
+            qCCritical(dmMusic) << "Failed to execute meta query for hash:" << metaStr << "error:" << query.lastError();
             continue;
         }
 
@@ -396,14 +418,17 @@ bool DataManager::loadCurrentMetasDB()
             m_data->m_allMetas.append(meta);
             addMetaToAlbum(meta);
             addMetaToArtist(meta);
+            qCDebug(dmMusic) << "Loaded meta from database:" << meta.title << "artist:" << meta.artist << "album:" << meta.album;
         }
     }
 
+    qCInfo(dmMusic) << "Successfully loaded" << m_data->m_allMetas.size() << "metas from database";
     return true;
 }
 
 bool DataManager::loadMetasDB()
 {
+    qCDebug(dmMusic) << "Loading all metas from database";
     QString queryString("SELECT hash, localpath, title, artist, album, "
                         "filetype, track, offset, length, size, "
                         "timestamp, invalid, search_id, cuepath, "
@@ -412,11 +437,11 @@ bool DataManager::loadMetasDB()
 
     QSqlQuery queryNew(m_data->m_database);
     if (!queryNew.prepare(queryString)) {
-        qCritical() << queryNew.lastError();
+        qCCritical(dmMusic) << "Failed to prepare query:" << queryNew.lastError();
         return false;
     }
     if (! queryNew.exec()) {
-        qCritical() << queryNew.lastError();
+        qCCritical(dmMusic) << "Failed to execute query:" << queryNew.lastError();
         return false;
     }
     m_data->m_allMetas.clear();
@@ -465,17 +490,19 @@ bool DataManager::loadMetasDB()
         addMetaToArtist(meta);
     }
 
+    qCInfo(dmMusic) << "Successfully loaded";
     return true;
 }
 
 bool DataManager::loadPlaylistDB()
 {
+    qCDebug(dmMusic) << "Loading playlists from database";
     QSqlQuery query(m_data->m_database);
     bool isPrepare = query.prepare("SELECT uuid, displayname, icon, readonly, hide, "
                                    "sort_type, order_type, sort_id FROM playlist order by sort_id ASC");
 
     if ((!isPrepare) || (! query.exec())) {
-        qWarning() << query.lastError();
+        qCWarning(dmMusic) << "Failed to load playlists:" << query.lastError();
         return false;
     }
 
@@ -496,22 +523,25 @@ bool DataManager::loadPlaylistDB()
         m_data->m_allPlaylist << playlistMeta;
     }
 
+    qCInfo(dmMusic) << "Successfully loaded";
     return true;
 }
 
 bool DataManager::loadPlaylistMetasDB()
 {
+    qCDebug(dmMusic) << "Loading playlist metas from database";
     QSqlQuery query(m_data->m_database);
     // 加载数据
     for (int i = 0; i < m_data->m_allPlaylist.size(); ++i) {
         if (!m_data->m_allPlaylist[i].saveFalg) continue;
+        
         if (!query.prepare(QString("SELECT music_id FROM playlist_%1 order by sort_id ASC")
                            .arg(m_data->m_allPlaylist[i].uuid))) {
-            qWarning() << query.lastError();
+            qCWarning(dmMusic) << "Failed to prepare query for playlist" << m_data->m_allPlaylist[i].uuid << ":" << query.lastError();
             continue;
         }
         if (!query.exec()) {
-            qWarning() << query.lastError();
+            qCWarning(dmMusic) << "Failed to execute query for playlist" << m_data->m_allPlaylist[i].uuid << ":" << query.lastError();
             continue;
         }
         m_data->m_allPlaylist[i].sortMetas.clear();
@@ -532,7 +562,7 @@ bool DataManager::isPlaylistExistDB(const QString &uuid)
     query.bindValue(":uuid", uuid);
 
     if ((!isPrepare) || (! query.exec())) {
-        qWarning() << query.lastError();
+        qCWarning(dmMusic) << "Failed to check playlist existence:" << query.lastError();
         return false;
     }
     query.first();
@@ -543,6 +573,8 @@ bool DataManager::isPlaylistExistDB(const QString &uuid)
 void DataManager::addPlaylistDB(const DMusic::PlaylistInfo &playlist)
 {
     if (!playlist.saveFalg) return;
+    
+    qCDebug(dmMusic) << "Adding playlist to database:" << playlist.uuid << playlist.displayName;
     QSqlQuery query;
     bool isPrepare = query.prepare("INSERT INTO playlist ("
                                    "uuid, displayname, icon, readonly, hide, "
@@ -562,7 +594,7 @@ void DataManager::addPlaylistDB(const DMusic::PlaylistInfo &playlist)
     query.bindValue(":sort_id", playlist.sortID);
 
     if ((!isPrepare) || (! query.exec())) {
-        qWarning() << query.lastError();
+        qCWarning(dmMusic) << "Failed to add playlist to database:" << query.lastError();
         return;
     }
 
@@ -571,34 +603,39 @@ void DataManager::addPlaylistDB(const DMusic::PlaylistInfo &playlist)
                                 "playlist_id TEXT, sort_id INTEGER"
                                 ")").arg(playlist.uuid);
     if (! query.exec(sqlstring)) {
-        qWarning() << query.lastError();
+        qCWarning(dmMusic) << "Failed to create playlist table:" << query.lastError();
         return;
     }
+    
+    qCDebug(dmMusic) << "Successfully added playlist to database:" << playlist.uuid;
 }
 
 bool DataManager::deletePlaylistDB(const QString &uuid)
 {
+    qCDebug(dmMusic) << "Deleting playlist from database:" << uuid;
     QSqlQuery query(m_data->m_database);
     QString sqlstring = QString("DROP TABLE IF EXISTS playlist_%1").arg(uuid);
     if (! query.exec(sqlstring)) {
-        qWarning() << query.lastError();
+        qCWarning(dmMusic) << "Failed to drop playlist table:" << query.lastError();
         return false;
     }
 
     sqlstring = QString("DELETE FROM playlist WHERE uuid = '%1'").arg(uuid);
     if (! query.exec(sqlstring)) {
-        qWarning() << query.lastError();
+        qCWarning(dmMusic) << "Failed to delete playlist record:" << query.lastError();
         return false;
     }
+    qCDebug(dmMusic) << "Successfully deleted playlist:" << uuid;
     return true;
 }
 
 bool DataManager::deleteAllPlaylistDB()
 {
+    qCDebug(dmMusic) << "Deleting all playlists from database";
     QSqlQuery query(m_data->m_database);
     QString sqlstring = QString("SELECT uuid FROM playlist");
     if (! query.exec(sqlstring)) {
-        qWarning() << query.lastError();
+        qCWarning(dmMusic) << "Failed to get playlist list:" << query.lastError();
         return false;
     }
     QStringList allPlaylistIDs;
@@ -614,6 +651,7 @@ bool DataManager::deleteAllPlaylistDB()
 
 int DataManager::addMetasToPlaylistDB(const QString &uuid, const QList<MediaMeta> &metas)
 {
+    qCDebug(dmMusic) << "Adding" << metas.size() << "metas to playlist:" << uuid;
     int insert_count = 0;
 
     for (MediaMeta meta : metas) {
@@ -623,7 +661,7 @@ int DataManager::addMetasToPlaylistDB(const QString &uuid, const QList<MediaMeta
             QSqlQuery queryNew(m_data->m_database);
             bool isPrepare = queryNew.prepare(queryString);
             if ((!isPrepare) || (!queryNew.exec())) {
-                qCritical() << queryNew.lastError();
+                qCCritical(dmMusic) << "Failed to get max sort_id:" << queryNew.lastError();
                 count = 0;
             }
             while (queryNew.next()) {
@@ -650,21 +688,23 @@ int DataManager::addMetasToPlaylistDB(const QString &uuid, const QList<MediaMeta
                 query.bindValue(":sort_id", count);
                 if (isPrepare && query.exec()) {
                     insert_count++;
+                    qCDebug(dmMusic) << "Added meta" << meta.title << "to playlist" << uuid;
                 } else {
-                    qCritical() << query.lastError() << sqlStr;
+                    qCCritical(dmMusic) << "Failed to add meta to playlist:" << query.lastError() << sqlStr;
                 }
             }
         } else {
-            // 查询是否存在失败,导入失败计数器加1
-            qCritical() << query.lastError() << sqlStr;
+            qCCritical(dmMusic) << "Failed to check if meta exists:" << query.lastError() << sqlStr;
         }
     }
 
+    qCInfo(dmMusic) << "Successfully added" << insert_count << "metas to playlist" << uuid;
     return insert_count;
 }
 
 void DataManager::saveDataToDB()
 {
+    qCDebug(dmMusic) << "Starting to save data to database";
     m_data->m_database.transaction();
 
     // 保存数据
@@ -675,7 +715,7 @@ void DataManager::saveDataToDB()
     sqlStr = QString("DELETE FROM musicNew");
     bool isPrepare = query.prepare(sqlStr);
     if ((!isPrepare) || (! query.exec())) {
-        qCritical() << query.lastError() << sqlStr;
+        qCCritical(dmMusic) << "Failed to clear musicNew table:" << query.lastError() << sqlStr;
     }
 
     // 删除歌曲
@@ -719,8 +759,8 @@ void DataManager::saveDataToDB()
         query.bindValue(":orialbum", meta.originalAlbum);
 
         if ((!isPrepare) || (! query.exec())) {
-            qCritical() << query.lastError();
-        }
+            qCWarning(dmMusic) << "Failed to save meta to database:" << meta.title << "error:" << query.lastError();
+        } 
     }
 
     // 删除歌单
@@ -793,39 +833,47 @@ QList<DMusic::MediaMeta> DataManager::getPlaylistMetas(const QString &hash, int 
 
 QList<PlaylistInfo> DataManager::allPlaylistInfos()
 {
+    qCDebug(dmMusic) << "Getting all playlist infos, count:" << m_data->m_allPlaylist.size();
     return m_data->m_allPlaylist;
 }
 
 QVariantList DataManager::allPlaylistVariantList()
 {
+    qCDebug(dmMusic) << "Getting all playlist variant list";
     QVariantList allList;
     for (const PlaylistInfo &info : m_data->m_allPlaylist) {
         allList.append(Utils::playlistToVariantMap(info));
     }
+    qCDebug(dmMusic) << "Retrieved" << allList.size() << "playlist variants";
     return allList;
 }
 
 QList<PlaylistInfo> DataManager::customPlaylistInfos()
 {
+    qCDebug(dmMusic) << "Getting custom playlist infos";
     QList<PlaylistInfo> playlists;
     for (const PlaylistInfo &info : m_data->m_allPlaylist) {
         if (info.readonly) continue;
         playlists.append(info);
     }
+    qCDebug(dmMusic) << "Retrieved" << playlists.size() << "custom playlists";
     return playlists;
 }
 
 QVariantList DataManager::customPlaylistVariantList()
 {
+    qCDebug(dmMusic) << "Getting custom playlist variant list";
     QVariantList allList;
     for (const PlaylistInfo &info : customPlaylistInfos()) {
         allList.append(Utils::playlistToVariantMap(info));
     }
+    qCDebug(dmMusic) << "Retrieved" << allList.size() << "custom playlist variants";
     return allList;
 }
 
 QList<AlbumInfo> DataManager::allAlbumInfos()
 {
+    qCDebug(dmMusic) << "Getting all album infos";
     m_data->m_allAlbums.clear();
     for (MediaMeta &meta : getPlaylistMetas()) {
         strcmpAlbumName = meta.album;
@@ -835,6 +883,7 @@ QList<AlbumInfo> DataManager::allAlbumInfos()
             if (meta.timestamp < itr->timestamp) {
                 itr->timestamp = meta.timestamp;
             }
+            qCDebug(dmMusic) << "Updated existing album:" << meta.album;
         } else {
             AlbumInfo albumNew;
             albumNew.name = meta.album;
@@ -843,6 +892,7 @@ QList<AlbumInfo> DataManager::allAlbumInfos()
             albumNew.musicinfos[meta.hash] = meta;
             albumNew.timestamp = meta.timestamp;
             m_data->m_allAlbums.append(albumNew);
+            qCDebug(dmMusic) << "Created new album:" << meta.album;
         }
     }
 
@@ -853,20 +903,24 @@ QList<AlbumInfo> DataManager::allAlbumInfos()
         sortPlaylist(playlistMeta.sortType, playlistMeta.uuid, false);
     }
 
+    qCDebug(dmMusic) << "Retrieved" << m_data->m_allAlbums.size() << "albums";
     return m_data->m_allAlbums;
 }
 
 QVariantList DataManager::allAlbumVariantList()
 {
+    qCDebug(dmMusic) << "Getting all album variant list";
     QVariantList allList;
     for (AlbumInfo info : allAlbumInfos()) {
         allList.append(Utils::albumToVariantMap(info));
     }
+    qCDebug(dmMusic) << "Retrieved" << allList.size() << "album variants";
     return allList;
 }
 
 QList<ArtistInfo> DataManager::allArtistInfos()
 {
+    qCDebug(dmMusic) << "Getting all artist infos";
     m_data->m_allArtists.clear();
     for (MediaMeta &meta : getPlaylistMetas()) {
         strcmpArtistName = meta.artist;
@@ -876,6 +930,7 @@ QList<ArtistInfo> DataManager::allArtistInfos()
             if (meta.timestamp < itr->timestamp) {
                 itr->timestamp = meta.timestamp;
             }
+            qCDebug(dmMusic) << "Updated existing artist:" << meta.artist;
         } else {
             ArtistInfo artist;
             artist.name = meta.artist;
@@ -883,6 +938,7 @@ QList<ArtistInfo> DataManager::allArtistInfos()
             artist.musicinfos[meta.hash] = meta;
             artist.timestamp = meta.timestamp;
             m_data->m_allArtists.append(artist);
+            qCDebug(dmMusic) << "Created new artist:" << meta.artist;
         }
     }
     // 排序
@@ -892,6 +948,7 @@ QList<ArtistInfo> DataManager::allArtistInfos()
         sortPlaylist(playlistMeta.sortType, playlistMeta.uuid, false);
     }
 
+    qCDebug(dmMusic) << "Retrieved" << m_data->m_allArtists.size() << "artists";
     return m_data->m_allArtists;
 }
 
@@ -906,6 +963,7 @@ QVariantList DataManager::allArtistVariantList()
 
 void DataManager::importMetas(const QStringList &urls, const QString &playlistHash, const bool &playFalg)
 {
+    qCDebug(dmMusic) << "Importing metas to playlist:" << playlistHash << "urls count:" << urls.size() << "playFlag:" << playFalg;
     QSet<QString> metaHashs, playMetaHashs, allMetaHashs;
     for (MediaMeta &meta : m_data->m_allMetas) {
         allMetaHashs.insert(meta.hash);
@@ -937,16 +995,24 @@ void DataManager::importMetas(const QStringList &urls, const QString &playlistHa
             }
         }
     }
+    qCDebug(dmMusic) << "Emitting import metas signal with" << metaHashs.size() << "existing metas";
     emit signalImportMetas(urls, metaHashs, importPlay, playMetaHashs, allMetaHashs, playlistHash, playFalg);
 }
 
 void DataManager::addMetasToPlayList(const QList<QString> &metaHash,
                                      const QString &playlistHash, const bool &addToPlay)
 {
-    if (playlistHash.isEmpty() || metaHash.isEmpty()) return;
+    qCDebug(dmMusic) << "Adding" << metaHash.size() << "metas to playlist:" << playlistHash << "addToPlay:" << addToPlay;
+    if (playlistHash.isEmpty() || metaHash.isEmpty()) {
+        qCWarning(dmMusic) << "Invalid parameters: playlistHash or metaHash is empty";
+        return;
+    }
 
     int index = playlistIndexFromHash(playlistHash);
-    if (index < 0 || index >= m_data->m_allPlaylist.size()) return;
+    if (index < 0 || index >= m_data->m_allPlaylist.size()) {
+        qCWarning(dmMusic) << "Invalid playlist index for hash:" << playlistHash;
+        return;
+    }
 
     PlaylistInfo &curPlaylist = m_data->m_allPlaylist[index];
     PlaylistInfo &favPlaylist = m_data->m_allPlaylist[playlistIndexFromHash("fav")];
@@ -969,6 +1035,7 @@ void DataManager::addMetasToPlayList(const QList<QString> &metaHash,
                 MediaMeta meta = metaFromHash(hash);
                 if (playlistHash == "fav" || favPlaylist.sortMetas.contains(meta.hash))
                     meta.favourite = true;
+                qCDebug(dmMusic) << "Added meta" << meta.title << "to playlists:" << playlistHashs;
                 emit signalAddOneMeta(playlistHashs, meta, addToPlay);
             }
         }
@@ -982,20 +1049,29 @@ void DataManager::addMetasToPlayList(const QList<QString> &metaHash,
                 MediaMeta meta = metaFromHash(hash);
                 if (playlistHash == "fav" || favPlaylist.sortMetas.contains(meta.hash))
                     meta.favourite = true;
+                qCDebug(dmMusic) << "Added meta" << meta.title << "to playlist:" << playlistHash;
                 emit signalAddOneMeta(playlistHashs, meta, addToPlay);
             }
         }
     }
     curPlaylist.sortCustomMetas = curPlaylist.sortMetas;
+    qCDebug(dmMusic) << "Finished adding metas to playlists:" << allPlaylistHashs;
     emit signalAddMetaFinished(allPlaylistHashs.values());
 }
 
 void DataManager::addMetasToPlayList(const QList<MediaMeta> &metas, const QString &playlistHash, const bool &addToPlay)
 {
-    if (playlistHash.isEmpty() || metas.isEmpty()) return;
+    qCDebug(dmMusic) << "Adding" << metas.size() << "metas to playlist:" << playlistHash << "addToPlay:" << addToPlay;
+    if (playlistHash.isEmpty() || metas.isEmpty()) {
+        qCWarning(dmMusic) << "Invalid parameters: playlistHash or metas is empty";
+        return;
+    }
 
     int index = playlistIndexFromHash(playlistHash);
-    if (index < 0 || index >= m_data->m_allPlaylist.size()) return;
+    if (index < 0 || index >= m_data->m_allPlaylist.size()) {
+        qCWarning(dmMusic) << "Invalid playlist index for hash:" << playlistHash;
+        return;
+    }
 
     PlaylistInfo &curPlaylist = m_data->m_allPlaylist[index];
     PlaylistInfo &favPlaylist = m_data->m_allPlaylist[playlistIndexFromHash("fav")];
@@ -1036,28 +1112,38 @@ void DataManager::addMetasToPlayList(const QList<MediaMeta> &metas, const QStrin
         }
     }
     curPlaylist.sortCustomMetas = curPlaylist.sortMetas;
+    qCDebug(dmMusic) << "Finished adding metas to playlists:" << allPlaylistHashs;
     emit signalAddMetaFinished(allPlaylistHashs.values());
 }
 
 void DataManager::clearPlayList(const QString &playlistHash, const bool &addToPlay)
 {
+    qCDebug(dmMusic) << "Clearing playlist:" << playlistHash << "addToPlay:" << addToPlay;
     QString curHash = playlistHash.isEmpty() ? "play" : playlistHash;
     int index = playlistIndexFromHash(curHash);
-    if (index < 0 || index >= m_data->m_allPlaylist.size()) return;
+    if (index < 0 || index >= m_data->m_allPlaylist.size()) {
+        qCWarning(dmMusic) << "Invalid playlist index for hash:" << curHash;
+        return;
+    }
 
     PlaylistInfo &curPlaylist = m_data->m_allPlaylist[index];
     curPlaylist.sortMetas.clear();
+    qCDebug(dmMusic) << "Cleared playlist:" << curHash;
     emit signalDeleteFinished(QStringList() << playlistHash);
 }
 
 void DataManager::removeFromPlayList(const QStringList listToDel, const QString &playlistHash,
                                      bool delFlag)
 {
+    qCDebug(dmMusic) << "Removing" << listToDel.size() << "metas from playlist:" << playlistHash << "delFlag:" << delFlag;
     QString curHash = playlistHash.isEmpty() ? "play" : playlistHash;
     QStringList allHashs;
     if (playlistHash != "all" && playlistHash != "album" && playlistHash != "artist" && !delFlag) {
         int index = playlistIndexFromHash(curHash);
-        if (index < 0 || index >= m_data->m_allPlaylist.size()) return;
+        if (index < 0 || index >= m_data->m_allPlaylist.size()) {
+            qCWarning(dmMusic) << "Invalid playlist index for hash:" << curHash;
+            return;
+        }
 
         PlaylistInfo &curPlaylist = m_data->m_allPlaylist[index];
         for (const QString &hash : listToDel) {
@@ -1070,6 +1156,7 @@ void DataManager::removeFromPlayList(const QStringList listToDel, const QString 
                 if (!allHashs.contains(hash)){
                     allHashs << hash;
                 }
+                qCDebug(dmMusic) << "Removed meta" << hash << "from playlist:" << playlistHash;
                 emit signalDeleteOneMeta(playlistHashs, hash, true);
             }
         }
@@ -1090,35 +1177,50 @@ void DataManager::removeFromPlayList(const QStringList listToDel, const QString 
             }
             if (!playlistHashs.isEmpty()) {
                 DMusic::MediaMeta meta = metaFromHash(hash);
-                if (delFlag) QFile::remove(meta.localPath);
+                if (delFlag) {
+                    qCDebug(dmMusic) << "Deleting file:" << meta.localPath;
+                    QFile::remove(meta.localPath);
+                }
                 deleteMetaFromAllMetas(QStringList() << meta.hash);
                 deleteMetaFromAlbum(meta.hash, meta.album);
                 deleteMetaFromArtist(meta.hash, meta.artist);
+                qCDebug(dmMusic) << "Removed meta" << meta.title << "from playlists:" << playlistHashs;
                 emit signalDeleteOneMeta(playlistHashs, hash, true);
             }
         }
     }
     if (!allHashs.isEmpty()){
+        qCDebug(dmMusic) << "Finished removing metas:" << allHashs;
         emit signalDeleteFinished(allHashs);
     }
 }
 
 bool DataManager::moveMetasPlayList(const QStringList &metaHashs, const QString &playlistHash, const QString &nextHash)
 {
-    if (playlistHash == "all" || playlistHash == "album" || playlistHash == "artist")
+    qCDebug(dmMusic) << "Moving" << metaHashs.size() << "metas in playlist:" << playlistHash << "before:" << nextHash;
+    if (playlistHash == "all" || playlistHash == "album" || playlistHash == "artist") {
+        qCWarning(dmMusic) << "Cannot move metas in system playlists";
         return false;
-    if (nextHash.isEmpty() && metaHashs.contains(nextHash))
+    }
+    if (nextHash.isEmpty() && metaHashs.contains(nextHash)) {
+        qCWarning(dmMusic) << "Invalid nextHash parameter";
         return false;
+    }
 
     QString curHash = playlistHash.isEmpty() ? "play" : playlistHash;
     int index = playlistIndexFromHash(curHash);
     int customIndex = index;
-    if (index < 0 || index >= m_data->m_allPlaylist.size()) return false;
+    if (index < 0 || index >= m_data->m_allPlaylist.size()) {
+        qCWarning(dmMusic) << "Invalid playlist index for hash:" << curHash;
+        return false;
+    }
 
     PlaylistInfo &curPlaylist = m_data->m_allPlaylist[index];
     if (curPlaylist.sortType != DmGlobal::SortByCustomASC
-            && curPlaylist.sortType != DmGlobal::SortByCustomDES)
+            && curPlaylist.sortType != DmGlobal::SortByCustomDES) {
+        qCWarning(dmMusic) << "Cannot move metas in non-custom sorted playlist";
         return false;
+    }
 
     QStringList curMetas;
     index = -1;
@@ -1128,8 +1230,10 @@ bool DataManager::moveMetasPlayList(const QStringList &metaHashs, const QString 
             curPlaylist.sortMetas.removeAt(i);
         }
     }
-    if (curMetas.isEmpty())
+    if (curMetas.isEmpty()) {
+        qCWarning(dmMusic) << "No metas to move";
         return false;
+    }
 
     index = curPlaylist.sortMetas.size() - 1;
     if (!nextHash.isEmpty()) {
@@ -1150,6 +1254,7 @@ bool DataManager::moveMetasPlayList(const QStringList &metaHashs, const QString 
 
     m_data->m_allPlaylist[customIndex].sortCustomMetas.clear();
     m_data->m_allPlaylist[customIndex].sortCustomMetas = curPlaylist.sortMetas;
+    qCDebug(dmMusic) << "Successfully moved" << curMetas.size() << "metas in playlist:" << playlistHash;
     return true;
 }
 
@@ -1160,6 +1265,7 @@ bool DataManager::isExistMeta()
 
 PlaylistInfo DataManager::addPlayList(const QString &name)
 {
+    qCDebug(dmMusic) << "Adding new playlist with name:" << name;
     QStringList existNames;
     for (PlaylistInfo &playlist : m_data->m_allPlaylist) {
         existNames.append(playlist.displayName);
@@ -1172,6 +1278,7 @@ PlaylistInfo DataManager::addPlayList(const QString &name)
                 break;
             }
         }
+        qCDebug(dmMusic) << "Name already exists, using modified name:" << curName;
     }
 
     PlaylistInfo playlistMeta;
@@ -1181,13 +1288,18 @@ PlaylistInfo DataManager::addPlayList(const QString &name)
     playlistMeta.sortType = DmGlobal::SortByCustomASC;
     m_data->m_allPlaylist << playlistMeta;
 
+    qCDebug(dmMusic) << "Created new playlist with UUID:" << playlistMeta.uuid << "name:" << curName;
     return playlistMeta;
 }
 
 void DataManager::sortPlaylist(const int &type, const QString &hash, bool signalFlag)
 {
+    qCDebug(dmMusic) << "Sorting playlist:" << hash << "type:" << type << "signalFlag:" << signalFlag;
     int index = playlistIndexFromHash(hash);
-    if (index < 0 || index >= m_data->m_allPlaylist.size()) return;
+    if (index < 0 || index >= m_data->m_allPlaylist.size()) {
+        qCWarning(dmMusic) << "Invalid playlist index for hash:" << hash;
+        return;
+    }
     PlaylistInfo &playlistMeta = m_data->m_allPlaylist[index];
 
     int sortType = DmGlobal::SortByAddTimeASC;
@@ -1201,6 +1313,7 @@ void DataManager::sortPlaylist(const int &type, const QString &hash, bool signal
             } else {
                 sortType = DmGlobal::SortByAddTimeASC;
             }
+            qCDebug(dmMusic) << "Sorting by add time, new sort type:" << sortType;
             break;
         }
         case DmGlobal::SortByTitle: {
@@ -1209,6 +1322,7 @@ void DataManager::sortPlaylist(const int &type, const QString &hash, bool signal
             } else {
                 sortType = DmGlobal::SortByTitleASC;
             }
+            qCDebug(dmMusic) << "Sorting by title, new sort type:" << sortType;
             break;
         }
         case DmGlobal::SortByArtist: {
@@ -1217,6 +1331,7 @@ void DataManager::sortPlaylist(const int &type, const QString &hash, bool signal
             } else {
                 sortType = DmGlobal::SortByArtistASC;
             }
+            qCDebug(dmMusic) << "Sorting by artist, new sort type:" << sortType;
             break;
         }
         case DmGlobal::SortByAblum: {
@@ -1225,22 +1340,24 @@ void DataManager::sortPlaylist(const int &type, const QString &hash, bool signal
             } else {
                 sortType = DmGlobal::SortByAblumASC;
             }
+            qCDebug(dmMusic) << "Sorting by album, new sort type:" << sortType;
             break;
         }
         case DmGlobal::SortByCustom: {
             sortType = DmGlobal::SortByCustomASC;
             playlistMeta.sortType = sortType;
+            qCDebug(dmMusic) << "Using custom sort type:" << sortType;
             emit signalPlaylistSortChanged(playlistMeta.uuid);
             break;
         }
         default:
+            qCDebug(dmMusic) << "Using default sort type:" << sortType;
             sortType = DmGlobal::SortByAddTimeASC;
             break;
         }
     } else {
         sortType = type;
     }
-
 
     playlistMeta.sortType = sortType;
 
@@ -1252,41 +1369,52 @@ void DataManager::sortPlaylist(const int &type, const QString &hash, bool signal
             allMetas.append(metaFromHash(hash));
         }
         bool sortFlag = true;
+        qCDebug(dmMusic) << "Sorting" << allMetas.size() << "metas in playlist";
+
         switch (sortType) {
         case DmGlobal::SortByAddTimeASC: {
             std::sort(allMetas.begin(), allMetas.end(), moreThanTimestampASC);
+            qCDebug(dmMusic) << "Sorted by timestamp ascending";
         }
         break;
         case DmGlobal::SortByTitleASC: {
             std::sort(allMetas.begin(), allMetas.end(), moreThanTitleASC);
+            qCDebug(dmMusic) << "Sorted by title ascending";
         }
         break;
         case DmGlobal::SortByArtistASC: {
             std::sort(allMetas.begin(), allMetas.end(), moreThanArtistASC);
+            qCDebug(dmMusic) << "Sorted by artist ascending";
         }
         break;
         case DmGlobal::SortByAblumASC: {
             std::sort(allMetas.begin(), allMetas.end(), moreThanAblumASC);
+            qCDebug(dmMusic) << "Sorted by album ascending";
         }
         break;
         case DmGlobal::SortByAddTimeDES: {
             std::sort(allMetas.begin(), allMetas.end(), moreThanTimestampDES);
+            qCDebug(dmMusic) << "Sorted by timestamp descending";
         }
         break;
         case DmGlobal::SortByTitleDES: {
             std::sort(allMetas.begin(), allMetas.end(), moreThanTitleDES);
+            qCDebug(dmMusic) << "Sorted by title descending";
         }
         break;
         case DmGlobal::SortByArtistDES: {
             std::sort(allMetas.begin(), allMetas.end(), moreThanArtistDES);
+            qCDebug(dmMusic) << "Sorted by artist descending";
         }
         break;
         case DmGlobal::SortByAblumDES: {
             std::sort(allMetas.begin(), allMetas.end(), moreThanAblumDES);
+            qCDebug(dmMusic) << "Sorted by album descending";
         }
         break;
         default:
             sortFlag = false;
+            qCDebug(dmMusic) << "No sorting performed";
             break;
         }
 
@@ -1304,80 +1432,106 @@ void DataManager::sortPlaylist(const int &type, const QString &hash, bool signal
                     playlistMeta.sortMetas.append(meta.hash);
                 }
             }
-            if (signalFlag)
+            if (signalFlag) {
+                qCDebug(dmMusic) << "Emitting playlist sort changed signal for:" << playlistMeta.uuid;
                 emit signalPlaylistSortChanged(playlistMeta.uuid);
+            }
         }
     } else {
         if (playlistMeta.uuid == "album") {
+            qCDebug(dmMusic) << "Sorting album list";
             bool sortFlag = true;
             switch (sortType) {
             case DmGlobal::SortByAddTimeASC: {
                 std::sort(m_data->m_allAlbums.begin(), m_data->m_allAlbums.end(), moreThanAlbumTimestampASC);
+                qCDebug(dmMusic) << "Sorted albums by timestamp ascending";
             }
             break;
             case DmGlobal::SortByAblumASC: {
                 std::sort(m_data->m_allAlbums.begin(), m_data->m_allAlbums.end(), moreThanAlbumTitleASC);
+                qCDebug(dmMusic) << "Sorted albums by title ascending";
             }
             break;
             case DmGlobal::SortByAddTimeDES: {
                 std::sort(m_data->m_allAlbums.begin(), m_data->m_allAlbums.end(), moreThanAlbumTimestampDES);
+                qCDebug(dmMusic) << "Sorted albums by timestamp descending";
             }
             break;
             case DmGlobal::SortByAblumDES: {
                 std::sort(m_data->m_allAlbums.begin(), m_data->m_allAlbums.end(), moreThanAlbumTitleDES);
+                qCDebug(dmMusic) << "Sorted albums by title descending";
             }
             break;
             default:
                 sortFlag = false;
+                qCDebug(dmMusic) << "No album sorting performed";
                 break;
             }
-            if (sortFlag && signalFlag) emit signalPlaylistSortChanged(playlistMeta.uuid);
+            if (sortFlag && signalFlag) {
+                qCDebug(dmMusic) << "Emitting album sort changed signal";
+                emit signalPlaylistSortChanged(playlistMeta.uuid);
+            }
         } else if (playlistMeta.uuid == "artist") {
+            qCDebug(dmMusic) << "Sorting artist list";
             bool sortFlag = true;
             switch (sortType) {
             case DmGlobal::SortByAddTimeASC: {
                 std::sort(m_data->m_allArtists.begin(), m_data->m_allArtists.end(), moreThanArtistTimestampASC);
+                qCDebug(dmMusic) << "Sorted artists by timestamp ascending";
             }
             break;
             case DmGlobal::SortByArtistASC: {
                 std::sort(m_data->m_allArtists.begin(), m_data->m_allArtists.end(), moreThanArtistTitleASC);
+                qCDebug(dmMusic) << "Sorted artists by name ascending";
             }
             break;
             case DmGlobal::SortByAddTimeDES: {
                 std::sort(m_data->m_allArtists.begin(), m_data->m_allArtists.end(), moreThanArtistTimestampDES);
+                qCDebug(dmMusic) << "Sorted artists by timestamp descending";
             }
             break;
             case DmGlobal::SortByArtistDES: {
                 std::sort(m_data->m_allArtists.begin(), m_data->m_allArtists.end(), moreThanArtistTitleDES);
+                qCDebug(dmMusic) << "Sorted artists by name descending";
             }
             break;
             default:
                 sortFlag = false;
+                qCDebug(dmMusic) << "No artist sorting performed";
                 break;
             }
-            if (sortFlag && signalFlag) emit signalPlaylistSortChanged(playlistMeta.uuid);
+            if (sortFlag && signalFlag) {
+                qCDebug(dmMusic) << "Emitting artist sort changed signal";
+                emit signalPlaylistSortChanged(playlistMeta.uuid);
+            }
         } else if (playlistMeta.uuid == "albumResult") {
+            qCDebug(dmMusic) << "Sorting album search results";
             bool sortFlag = true;
             QList<DMusic::AlbumInfo> searchAlbums = searchedAlbumInfos();
             switch (sortType) {
             case DmGlobal::SortByAddTimeASC: {
                 std::sort(searchAlbums.begin(), searchAlbums.end(), moreThanAlbumTimestampASC);
+                qCDebug(dmMusic) << "Sorted album results by timestamp ascending";
             }
             break;
             case DmGlobal::SortByAblumASC: {
                 std::sort(searchAlbums.begin(), searchAlbums.end(), moreThanAlbumTitleASC);
+                qCDebug(dmMusic) << "Sorted album results by title ascending";
             }
             break;
             case DmGlobal::SortByAddTimeDES: {
                 std::sort(searchAlbums.begin(), searchAlbums.end(), moreThanAlbumTimestampDES);
+                qCDebug(dmMusic) << "Sorted album results by timestamp descending";
             }
             break;
             case DmGlobal::SortByAblumDES: {
                 std::sort(searchAlbums.begin(), searchAlbums.end(), moreThanAlbumTitleDES);
+                qCDebug(dmMusic) << "Sorted album results by title descending";
             }
             break;
             default:
                 sortFlag = false;
+                qCDebug(dmMusic) << "No album result sorting performed";
                 break;
             }
             if (sortFlag && signalFlag) {
@@ -1385,30 +1539,37 @@ void DataManager::sortPlaylist(const int &type, const QString &hash, bool signal
                 for (const DMusic::AlbumInfo &info : searchAlbums) {
                     m_data->m_searchAlbums.append(info.name);
                 }
+                qCDebug(dmMusic) << "Updated sorted album search results, count:" << m_data->m_searchAlbums.size();
                 emit signalPlaylistSortChanged(playlistMeta.uuid);
             }
         } else {
+            qCDebug(dmMusic) << "Sorting artist search results";
             bool sortFlag = true;
             QList<DMusic::ArtistInfo> searchArtists = searchedArtistInfos();
             switch (sortType) {
             case DmGlobal::SortByAddTimeASC: {
                 std::sort(searchArtists.begin(), searchArtists.end(), moreThanArtistTimestampASC);
+                qCDebug(dmMusic) << "Sorted artist results by timestamp ascending";
             }
             break;
             case DmGlobal::SortByArtistASC: {
                 std::sort(searchArtists.begin(), searchArtists.end(), moreThanArtistTitleASC);
+                qCDebug(dmMusic) << "Sorted artist results by name ascending";
             }
             break;
             case DmGlobal::SortByAddTimeDES: {
                 std::sort(searchArtists.begin(), searchArtists.end(), moreThanArtistTimestampDES);
+                qCDebug(dmMusic) << "Sorted artist results by timestamp descending";
             }
             break;
             case DmGlobal::SortByArtistDES: {
                 std::sort(searchArtists.begin(), searchArtists.end(), moreThanArtistTitleDES);
+                qCDebug(dmMusic) << "Sorted artist results by name descending";
             }
             break;
             default:
                 sortFlag = false;
+                qCDebug(dmMusic) << "No artist result sorting performed";
                 break;
             }
             if (sortFlag && signalFlag) {
@@ -1416,6 +1577,7 @@ void DataManager::sortPlaylist(const int &type, const QString &hash, bool signal
                 for (const DMusic::ArtistInfo &info : searchArtists) {
                     m_data->m_searchArtists.append(info.name);
                 }
+                qCDebug(dmMusic) << "Updated sorted artist search results, count:" << m_data->m_searchArtists.size();
                 emit signalPlaylistSortChanged(playlistMeta.uuid);
             }
         }
@@ -1424,42 +1586,63 @@ void DataManager::sortPlaylist(const int &type, const QString &hash, bool signal
 
 bool DataManager::deletePlaylist(QString playlistHash)
 {
+    qCDebug(dmMusic) << "Deleting playlist:" << playlistHash;
     int index = playlistIndexFromHash(playlistHash);
-    if (index < 0 || index >= m_data->m_allPlaylist.size()) return false;
+    if (index < 0 || index >= m_data->m_allPlaylist.size()) {
+        qCWarning(dmMusic) << "Invalid playlist index for hash:" << playlistHash;
+        return false;
+    }
     m_data->m_allPlaylist.removeAt(index);
-    if (currentPlayliHash() == playlistHash)
+    if (currentPlayliHash() == playlistHash) {
+        qCDebug(dmMusic) << "Resetting current playlist hash as deleted playlist was current";
         setCurrentPlayliHash("");
+    }
+    qCDebug(dmMusic) << "Successfully deleted playlist:" << playlistHash;
     return true;
 }
 
 bool DataManager::renamePlaylist(const QString &name, const QString &playlistHash)
 {
+    qCDebug(dmMusic) << "Renaming playlist" << playlistHash << "to:" << name;
     int index = playlistIndexFromHash(playlistHash);
-    if (index < 0 || index >= m_data->m_allPlaylist.size()) return false;
+    if (index < 0 || index >= m_data->m_allPlaylist.size()) {
+        qCWarning(dmMusic) << "Invalid playlist index for hash:" << playlistHash;
+        return false;
+    }
 
     QStringList existNames;
     for (PlaylistInfo &playlist : m_data->m_allPlaylist) {
         existNames.append(playlist.displayName);
     }
-    if (existNames.contains(name)) return false;
+    if (existNames.contains(name)) {
+        qCWarning(dmMusic) << "Playlist name already exists:" << name;
+        return false;
+    }
 
     m_data->m_allPlaylist[index].displayName = name;
+    qCDebug(dmMusic) << "Successfully renamed playlist" << playlistHash << "to:" << name;
     return true;
 }
 
 void DataManager::movePlaylist(const QString &hash, const QString &nextHash)
 {
+    qCDebug(dmMusic) << "Moving playlist" << hash << "before:" << nextHash;
     int index = playlistIndexFromHash(hash);
-    if (index < 0 || index >= m_data->m_allPlaylist.size()) return;
+    if (index < 0 || index >= m_data->m_allPlaylist.size()) {
+        qCWarning(dmMusic) << "Invalid playlist index for hash:" << hash;
+        return;
+    }
 
     DMusic::PlaylistInfo playlist = m_data->m_allPlaylist[index];
     m_data->m_allPlaylist.removeAt(index);
 
     int nextIndex = playlistIndexFromHash(nextHash);
     if (nextIndex < 0 || nextIndex >= m_data->m_allPlaylist.size()) {
-        m_data->m_allPlaylist.append(playlist); m_data->m_allPlaylist.append(playlist);
+        m_data->m_allPlaylist.append(playlist);
+        qCDebug(dmMusic) << "Appended playlist to end as next index was invalid";
     } else {
         m_data->m_allPlaylist.insert(nextIndex, playlist);
+        qCDebug(dmMusic) << "Inserted playlist at index:" << nextIndex;
     }
 
     uint num = 12;
@@ -1468,20 +1651,31 @@ void DataManager::movePlaylist(const QString &hash, const QString &nextHash)
             m_data->m_allPlaylist[i].sortID = (++num);
         }
     }
+    qCDebug(dmMusic) << "Updated sort IDs for all playlists";
 }
 
 bool DataManager::isExistMeta(const QString &metaHash, const QString &playlistHash)
 {
+    qCDebug(dmMusic) << "Checking if meta" << metaHash << "exists in playlist:" << playlistHash;
     int index = playlistIndexFromHash(playlistHash);
-    if (index < 0 || index >= m_data->m_allPlaylist.size()) return false;
+    if (index < 0 || index >= m_data->m_allPlaylist.size()) {
+        qCWarning(dmMusic) << "Invalid playlist index for hash:" << playlistHash;
+        return false;
+    }
 
-    return m_data->m_allPlaylist[index].sortMetas.contains(metaHash);
+    bool exists = m_data->m_allPlaylist[index].sortMetas.contains(metaHash);
+    qCDebug(dmMusic) << "Meta exists in playlist:" << exists;
+    return exists;
 }
 
 void DataManager::updateMetaCodec(const MediaMeta &meta)
 {
+    qCDebug(dmMusic) << "Updating meta codec for:" << meta.hash;
     int index = metaIndexFromHash(meta.hash);
-    if (index < 0 || index >= m_data->m_allMetas.size()) return;
+    if (index < 0 || index >= m_data->m_allMetas.size()) {
+        qCWarning(dmMusic) << "Invalid meta index for hash:" << meta.hash;
+        return;
+    }
     m_data->m_allMetas[index] = meta;
 
     QString preAlbum, preArtist;
@@ -1493,6 +1687,7 @@ void DataManager::updateMetaCodec(const MediaMeta &meta)
                 if (m_data->m_allAlbums[j].name == meta.album) {
                     m_data->m_allAlbums[j].musicinfos[meta.hash] = meta;
                     existFla = true;
+                    qCDebug(dmMusic) << "Updated meta in existing album:" << meta.album;
                 }
             }
             if (!existFla) {
@@ -1503,11 +1698,14 @@ void DataManager::updateMetaCodec(const MediaMeta &meta)
                 albumNew.musicinfos[meta.hash] = meta;
                 albumNew.timestamp = meta.timestamp;
                 m_data->m_allAlbums.append(albumNew);
+                qCDebug(dmMusic) << "Created new album for meta:" << meta.album;
             }
             m_data->m_allAlbums[i].musicinfos.remove(meta.hash);
             // 踢出空专辑
-            if (m_data->m_allAlbums[i].musicinfos.isEmpty())
+            if (m_data->m_allAlbums[i].musicinfos.isEmpty()) {
                 m_data->m_allAlbums.removeAt(i);
+                qCDebug(dmMusic) << "Removed empty album:" << preAlbum;
+            }
             break;
         }
     }
@@ -1519,6 +1717,7 @@ void DataManager::updateMetaCodec(const MediaMeta &meta)
                 if (m_data->m_allArtists[j].name == meta.artist) {
                     m_data->m_allArtists[j].musicinfos[meta.hash] = meta;
                     existFla = true;
+                    qCDebug(dmMusic) << "Updated meta in existing artist:" << meta.artist;
                 }
             }
             if (!existFla) {
@@ -1528,86 +1727,110 @@ void DataManager::updateMetaCodec(const MediaMeta &meta)
                 artist.musicinfos[meta.hash] = meta;
                 artist.timestamp = meta.timestamp;
                 m_data->m_allArtists.append(artist);
+                qCDebug(dmMusic) << "Created new artist for meta:" << meta.artist;
             }
             m_data->m_allArtists[i].musicinfos.remove(meta.hash);
             // 踢出空艺人
-            if (m_data->m_allArtists[i].musicinfos.isEmpty())
+            if (m_data->m_allArtists[i].musicinfos.isEmpty()) {
                 m_data->m_allArtists.removeAt(i);
+                qCDebug(dmMusic) << "Removed empty artist:" << preArtist;
+            }
             break;
         }
     }
+    qCDebug(dmMusic) << "Finished updating meta codec, emitting signal";
     emit signalUpdatedMetaCodec(meta, preAlbum, preArtist);
 }
 
 void DataManager::quickSearchText(const QString &text, QStringList &metaTitles,
                                   QList<QPair<QString, QString> > &albums, QList<QPair<QString, QString> > &artists)
 {
+    qCDebug(dmMusic) << "Starting quick search for text:" << text;
     // 查找名称
     for (const MediaMeta &meta : m_data->m_allMetas) {
         if (Utils::containsStr(text, meta.title)) metaTitles.append(meta.title);
         if (metaTitles.size() > 4) break;
     }
+    qCDebug(dmMusic) << "Found" << metaTitles.size() << "matching titles";
+
     for (const DMusic::AlbumInfo &album : allAlbumInfos()) {
         if (!album.musicinfos.isEmpty() && Utils::containsStr(text, album.name))
             albums.append(qMakePair(album.name, album.musicinfos.first().coverUrl));
         if (albums.size() > 2) break;
     }
+    qCDebug(dmMusic) << "Found" << albums.size() << "matching albums";
+
     for (const DMusic::ArtistInfo &artist : allArtistInfos()) {
         if (!artist.musicinfos.isEmpty() && Utils::containsStr(text, artist.name))
             artists.append(qMakePair(artist.name, artist.musicinfos.first().coverUrl));
         if (artists.size() > 2) break;
     }
+    qCDebug(dmMusic) << "Found" << artists.size() << "matching artists";
 }
 
 void DataManager::searchText(const QString &text, QList<MediaMeta> &metas,
                              QList<AlbumInfo> &albums, QList<ArtistInfo> &artists, const QString &type)
 {
+    qCDebug(dmMusic) << "Starting detailed search for text:" << text << "type:" << type;
     // 查找名称
     m_data->m_searchMetas.clear();
     m_data->m_searchAlbums.clear();
     m_data->m_searchArtists.clear();
+
     if (type == "album") {
+        qCDebug(dmMusic) << "Searching in album mode";
         QSet<QString> artistNames;
         for (const DMusic::AlbumInfo &album : allAlbumInfos()) {
             if (!album.musicinfos.isEmpty() && Utils::containsStr(text, album.name)) {
                 albums.append(album);
+                qCDebug(dmMusic) << "Found matching album:" << album.name;
 
                 for (QString metaHash : album.musicinfos.keys()) {
                     if (!m_data->m_searchMetas.contains(metaHash)) {
                         metas.append(album.musicinfos[metaHash]);
                         m_data->m_searchMetas.append(metaHash);
+                        artistNames.insert(album.musicinfos[metaHash].artist);
                     }
-                    artistNames.insert(album.musicinfos[metaHash].artist);
                 }
             }
         }
+        qCDebug(dmMusic) << "Found" << albums.size() << "albums and" << metas.size() << "tracks";
 
         for (const DMusic::ArtistInfo &artist : allArtistInfos()) {
-            if (!artist.musicinfos.isEmpty() && artistNames.contains(artist.name))
+            if (!artist.musicinfos.isEmpty() && artistNames.contains(artist.name)) {
                 artists.append(artist);
+            }
         }
+        qCDebug(dmMusic) << "Found" << artists.size() << "related artists";
+
     } else if (type == "artist") {
+        qCDebug(dmMusic) << "Searching in artist mode";
         QSet<QString> albumNames;
         for (const DMusic::ArtistInfo &artist : allArtistInfos()) {
             if (!artist.musicinfos.isEmpty() && Utils::containsStr(text, artist.name)) {
                 artists.append(artist);
+                qCDebug(dmMusic) << "Found matching artist:" << artist.name;
 
                 for (QString metaHash : artist.musicinfos.keys()) {
                     if (!m_data->m_searchMetas.contains(metaHash)) {
                         metas.append(artist.musicinfos[metaHash]);
                         m_data->m_searchMetas.append(metaHash);
+                        albumNames.insert(artist.musicinfos[metaHash].album);
                     }
-                    albumNames.insert(artist.musicinfos[metaHash].album);
                 }
             }
         }
+        qCDebug(dmMusic) << "Found" << artists.size() << "artists and" << metas.size() << "tracks";
 
         for (const DMusic::AlbumInfo &album : allAlbumInfos()) {
             if (!album.musicinfos.isEmpty() && albumNames.contains(album.name)) {
                 albums.append(album);
             }
         }
+        qCDebug(dmMusic) << "Found" << albums.size() << "related albums";
+
     } else if (type == "music") {
+        qCDebug(dmMusic) << "Searching in music mode";
         QSet<QString> albumNames, artistNames;
         for (const MediaMeta &meta : m_data->m_allMetas) {
             if (Utils::containsStr(text, meta.title)) {
@@ -1615,18 +1838,26 @@ void DataManager::searchText(const QString &text, QList<MediaMeta> &metas,
                 metas.append(meta);
                 albumNames.insert(meta.album);
                 artistNames.insert(meta.artist);
+                qCDebug(dmMusic) << "Found matching track:" << meta.title;
             }
         }
+        qCDebug(dmMusic) << "Found" << metas.size() << "matching tracks";
+
         for (const DMusic::ArtistInfo &artist : allArtistInfos()) {
             if (!artist.musicinfos.isEmpty() && artistNames.contains(artist.name))
                 artists.append(artist);
         }
+        qCDebug(dmMusic) << "Found" << artists.size() << "related artists";
+
         for (const DMusic::AlbumInfo &album : allAlbumInfos()) {
             if (!album.musicinfos.isEmpty() && albumNames.contains(album.name)) {
                 albums.append(album);
             }
         }
+        qCDebug(dmMusic) << "Found" << albums.size() << "related albums";
+
     } else {
+        qCDebug(dmMusic) << "Searching in all modes";
         QSet<QString> albumNames, artistNames;
         for (const MediaMeta &meta : m_data->m_allMetas) {
             if (Utils::containsStr(text, meta.title)) {
@@ -1636,6 +1867,9 @@ void DataManager::searchText(const QString &text, QList<MediaMeta> &metas,
                 artistNames.insert(meta.artist);
             }
         }
+        qCDebug(dmMusic) << "Found" << metas.size() << "matching tracks";
+
+        // Search in albums
         for (const DMusic::AlbumInfo &album : allAlbumInfos()) {
             if (!album.musicinfos.isEmpty() && Utils::containsStr(text, album.name)) {
                 for (QString metaHash : album.musicinfos.keys()) {
@@ -1667,6 +1901,8 @@ void DataManager::searchText(const QString &text, QList<MediaMeta> &metas,
                 m_data->m_searchArtists.append(artist.name);
             }
         }
+        qCDebug(dmMusic) << "Found" << artists.size() << "related artists";
+
         if (!m_data->m_searchArtists.isEmpty()) {
             int index = playlistIndexFromHash("artistResult");
             if (index >= 0 || index < m_data->m_allPlaylist.size()) {
@@ -1679,6 +1915,8 @@ void DataManager::searchText(const QString &text, QList<MediaMeta> &metas,
                 m_data->m_searchAlbums.append(album.name);
             }
         }
+        qCDebug(dmMusic) << "Found" << albums.size() << "related albums";
+
         if (!m_data->m_searchArtists.isEmpty()) {
             int index = playlistIndexFromHash("albumResult");
             if (index >= 0 || index < m_data->m_allPlaylist.size()) {
@@ -1690,11 +1928,13 @@ void DataManager::searchText(const QString &text, QList<MediaMeta> &metas,
 
 QList<AlbumInfo> DataManager::searchedAlbumInfos()
 {
+    qCDebug(dmMusic) << "Getting searched album infos, count:" << m_data->m_searchAlbums.size();
     QList<AlbumInfo> searchedInfos;
     for (QString name : m_data->m_searchAlbums) {
         for (const DMusic::AlbumInfo &album : allAlbumInfos()) {
             if (!album.musicinfos.isEmpty() && album.name == name) {
                 searchedInfos.append(album);
+                qCDebug(dmMusic) << "Found album:" << album.name;
                 break;
             }
         }
@@ -1704,11 +1944,13 @@ QList<AlbumInfo> DataManager::searchedAlbumInfos()
 
 QList<ArtistInfo> DataManager::searchedArtistInfos()
 {
+    qCDebug(dmMusic) << "Getting searched artist infos, count:" << m_data->m_searchArtists.size();
     QList<ArtistInfo> searchedInfos;
     for (QString name : m_data->m_searchArtists) {
         for (const DMusic::ArtistInfo &artist : allArtistInfos()) {
             if (!artist.musicinfos.isEmpty() && artist.name == name) {
                 searchedInfos.append(artist);
+                qCDebug(dmMusic) << "Found artist:" << artist.name;
                 break;
             }
         }
@@ -1736,11 +1978,13 @@ QVariantList DataManager::searchedArtistVariantList()
 
 void DataManager::syncToSettings()
 {
+    qCDebug(dmMusic) << "Syncing settings to storage";
     m_data->m_settings->sync();
 }
 
 void DataManager::resetToSettings()
 {
+    qCDebug(dmMusic) << "Resetting settings to defaults";
     m_data->m_settings->reset();
 }
 
@@ -1757,6 +2001,7 @@ void DataManager::setValueToSettings(const QString &key, const QVariant &value, 
 
 void DataManager::slotAddOneMeta(QStringList playlistHashs, MediaMeta meta)
 {
+    qCDebug(dmMusic) << "Adding meta" << meta.title << "to playlists:" << playlistHashs;
     MediaMeta curMeta = playlistHashs.contains("all") ? meta : metaFromHash(meta.hash);
     for (PlaylistInfo &playlist : m_data->m_allPlaylist) {
         for (QString hash : playlistHashs) {
@@ -1765,16 +2010,20 @@ void DataManager::slotAddOneMeta(QStringList playlistHashs, MediaMeta meta)
                     m_data->m_allMetas.append(curMeta);
                     addMetaToAlbum(curMeta);
                     addMetaToArtist(curMeta);
+                    qCDebug(dmMusic) << "Added meta to all collections";
                 }
                 playlist.sortMetas.append(curMeta.hash);
                 playlist.sortCustomMetas.append(curMeta.hash);
+                qCDebug(dmMusic) << "Added meta to playlist:" << playlist.displayName;
             }
         }
     }
     emit signalAddOneMeta(playlistHashs, curMeta, true);
 }
+
 void DataManager::slotLazyLoadDatabase()
 {
+    qCDebug(dmMusic) << "Starting lazy load of database";
     loadMetasDB();
     loadPlaylistMetasDB();
     QStringList playlistHashs;
@@ -1782,11 +2031,13 @@ void DataManager::slotLazyLoadDatabase()
         if (playlist.saveFalg)
             playlistHashs.append(playlist.uuid);
     }
+    qCDebug(dmMusic) << "Lazy load complete, found" << playlistHashs.size() << "playlists";
     emit signalAddMetaFinished(playlistHashs);
 }
 
 void DataManager::initPlaylist()
 {
+    qCDebug(dmMusic) << "Initializing playlists";
     PlaylistInfo playlistMeta;
     playlistMeta.uuid = "album";
     playlistMeta.displayName = "Albums";
@@ -1901,11 +2152,11 @@ void DataManager::initPlaylist()
     m_data->m_allPlaylist << playlistMeta;
 
     QString dbPath = DmGlobal::cachePath() + "/mediameta.sqlite";
-    qDebug() << "dbPath:" << dbPath;
+    qCDebug(dmMusic) << "Opening database at:" << dbPath;
     m_data->m_database = QSqlDatabase::addDatabase("QSQLITE");
     m_data->m_database.setDatabaseName(dbPath);
     if (!m_data->m_database.open()) {
-        qDebug() << __FUNCTION__ << m_data->m_database.lastError();
+        qCCritical(dmMusic) << "Failed to open database:" << m_data->m_database.lastError();
     }
 
     QSqlQuery query(m_data->m_database);
@@ -1959,11 +2210,13 @@ void DataManager::initPlaylist()
     // 判断musicNew中是否有isCoverLoaded字段
     isExec &= query.exec("select sql from sqlite_master where name = \"musicNew\" and sql like \"%hasimage%\"");
     if (!query.next()) {
-        // 无isCoverLoaded字段,则增加isCoverLoaded字段,默认值1
+        qCDebug(dmMusic) << "Adding hasimage column with default value 1";
         isExec &= query.exec(QString("ALTER TABLE \"musicNew\" ADD COLUMN \"hasimage\" INTEGER default \"%1\"")
                              .arg("1"));
     }
 
+    // Create other tables
+    qCDebug(dmMusic) << "Creating additional tables";
     isExec &= query.exec("CREATE TABLE IF NOT EXISTS ablum (id int primary key, "
                          "name VARCHAR(20), localpath VARCHAR(4096), url VARCHAR(4096))");
 
@@ -1980,19 +2233,27 @@ void DataManager::initPlaylist()
     isExec &= query.exec("CREATE TABLE IF NOT EXISTS info (uuid TEXT primary key not null, "
                          "version INTEGER )");
 
-    // 初始化数据库
+    if (!isExec) {
+        qCCritical(dmMusic) << "Failed to create one or more tables";
+    }
+
+    // Initialize database
     if (!isPlaylistExistDB("album")) {
+        qCDebug(dmMusic) << "First time initialization - creating default playlists";
         for (PlaylistInfo playlist : m_data->m_allPlaylist) {
             addPlaylistDB(playlist);
         }
     } else {
+        qCDebug(dmMusic) << "Loading existing playlists";
         loadPlaylistDB();
 
         // 延迟加载
         if (allMusicCountDB() > FirstLoadCount && false) {
+            qCDebug(dmMusic) << "Using delayed loading for large library";
             loadCurrentMetasDB();
             QTimer::singleShot(500, this, &DataManager::slotLazyLoadDatabase);
         } else {
+            qCDebug(dmMusic) << "Loading entire library immediately";
             loadMetasDB();
             loadPlaylistMetasDB();
         }

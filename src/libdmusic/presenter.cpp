@@ -4,6 +4,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 #include "presenter.h"
+#include "util/log.h"
 
 #include <QDebug>
 #include <QColor>
@@ -55,6 +56,7 @@ Presenter::Presenter(const QString &unknownAlbumStr, const QString &unknownArtis
                      QObject *parent)
     : QObject(parent)
 {
+    qCInfo(dmMusic) << "Initializing Presenter";
     qRegisterMetaType<DMusic::MediaMeta>("DMusic::MediaMeta");
     qRegisterMetaType<DMusic::PlaylistInfo>("DMusic::PlaylistInfo");
     qRegisterMetaType<DMusic::AlbumInfo>("DMusic::AlbumInfo");
@@ -64,9 +66,13 @@ Presenter::Presenter(const QString &unknownAlbumStr, const QString &unknownArtis
     DmGlobal::setUnknownArtistText(unknownArtistStr);
 
     m_data = new PresenterPrivate(this);
+    
+    qCDebug(dmMusic) << "Setting up signal connections";
+    
     connect(m_data->m_playerEngine, &PlayerEngine::volumeChanged, this, &Presenter::volumeChanged);
     connect(m_data->m_playerEngine, &PlayerEngine::muteChanged, this, &Presenter::muteChanged);
     connect(m_data->m_playerEngine, &PlayerEngine::metaChanged, this, [ = ]() {
+        qCDebug(dmMusic) << "Meta changed, updating audio buffer and settings";
         m_data->m_audioAnalysis->parseAudioBuffer(m_data->m_playerEngine->getMediaMeta());
         m_data->m_dataManager->setValueToSettings("base.play.last_meta", m_data->m_playerEngine->getMediaMeta().hash, true);
         emit metaChanged();
@@ -74,15 +80,20 @@ Presenter::Presenter(const QString &unknownAlbumStr, const QString &unknownArtis
     connect(m_data->m_playerEngine, &PlayerEngine::playPictureChanged, this, &Presenter::updatePlayingIcon);
     connect(m_data->m_playerEngine, &PlayerEngine::positionChanged, this, &Presenter::positionChanged);
     connect(m_data->m_playerEngine, &PlayerEngine::playbackStatusChanged, this, [ = ](DmGlobal::PlaybackStatus status) {
+        qCDebug(dmMusic) << "Playback status changed to:" << status;
         if (status == DmGlobal::Playing) {
+            qCDebug(dmMusic) << "Starting audio recorder";
             m_data->m_audioAnalysis->startRecorder();
         } else {
+            qCDebug(dmMusic) << "Suspending audio recorder";
             m_data->m_audioAnalysis->suspendRecorder();
         }
         emit playbackStatusChanged(status);
     });
     connect(m_data->m_playerEngine, &PlayerEngine::sendCdaStatus, this, [ = ](int state) {
+        qCDebug(dmMusic) << "CD audio status changed to:" << state;
         if (state == -1) {
+            qCInfo(dmMusic) << "Removing all CD tracks from playlist";
             QList<QString> allCDHashs;
             for (auto meta : m_data->m_playerEngine->getMetas()) {
                 if (meta.filetype == "cdda") {
@@ -98,6 +109,7 @@ Presenter::Presenter(const QString &unknownAlbumStr, const QString &unknownArtis
         }
     });
     connect(m_data->m_playerEngine, &PlayerEngine::playPlaylistRequested, this, [this](const QString &playlistHash){
+        qCDebug(dmMusic) << "Playlist play requested for hash:" << playlistHash;
         playPlaylist(playlistHash);
     });
     connect(m_data->m_playerEngine, &PlayerEngine::quitRequested, this, &Presenter::quitRequested);
@@ -117,7 +129,10 @@ Presenter::Presenter(const QString &unknownAlbumStr, const QString &unknownArtis
     connect(m_data->m_dataManager, &DataManager::signalAddMetaFinished, this, &Presenter::addMetaFinished);
     connect(m_data->m_dataManager, &DataManager::signalAddOneMeta, this,
             [ = ](QStringList playlistHashs, DMusic::MediaMeta meta, const bool & addToPlay) {
-        if (playlistHashs.contains("play") && addToPlay) m_data->m_playerEngine->addMetasToPlayList(QList<DMusic::MediaMeta>() << meta);
+        qCDebug(dmMusic) << "Adding meta to playlists:" << playlistHashs << "Meta hash:" << meta.hash;
+        if (playlistHashs.contains("play") && addToPlay) {
+            m_data->m_playerEngine->addMetasToPlayList(QList<DMusic::MediaMeta>() << meta);
+        }
         emit addOneMeta(playlistHashs, Utils::metaToVariantMap(meta));
     });
     connect(m_data->m_dataManager, &DataManager::signalImportFinished, this, [ = ](QStringList playlistHashs, int failCount, int sucessCount, int existCount, QString mediaHash) {
@@ -194,6 +209,8 @@ Presenter::Presenter(const QString &unknownAlbumStr, const QString &unknownArtis
             }
         }
     });
+    
+    qCInfo(dmMusic) << "Presenter initialization completed";
 }
 
 Presenter::~Presenter()
@@ -240,6 +257,7 @@ void Presenter::setEffectImage(const QImage &img)
 
 void Presenter::forceExit()
 {
+    qCInfo(dmMusic) << "Force exit requested";
     saveDataToDB();
     qApp->processEvents();
     QCoreApplication::exit(0);
@@ -446,9 +464,11 @@ bool Presenter::preMetaFromPlay(const QString &metaHash)
 
 void Presenter::playAlbum(const QString &album, const QString &metaHash)
 {
+    qCInfo(dmMusic) << "Playing album:" << album << "Starting with track:" << metaHash;
     bool playFlag = m_data->m_playerEngine->getMediaMeta().hash != metaHash;
     QList<DMusic::AlbumInfo> albums = m_data->m_dataManager->allAlbumInfos();
     QList<DMusic::MediaMeta> allMetas;
+    
     for (const DMusic::AlbumInfo &curAlbum : albums) {
         if (curAlbum.name == album) {
             allMetas += curAlbum.musicinfos.values();
@@ -462,23 +482,36 @@ void Presenter::playAlbum(const QString &album, const QString &metaHash)
         }
     }
 
+    if (allMetas.isEmpty()) {
+        qCWarning(dmMusic) << "No tracks found for album:" << album;
+        return;
+    }
+
+    qCDebug(dmMusic) << "Loading" << allMetas.size() << "tracks from album";
     m_data->m_playerEngine->clearPlayList(playFlag);
     m_data->m_playerEngine->addMetasToPlayList(allMetas);
+    
     if (!metaHash.isEmpty() && m_data->m_playerEngine->getMediaMeta().hash != metaHash) {
+        qCDebug(dmMusic) << "Setting start track to:" << metaHash;
         m_data->m_playerEngine->setMediaMeta(metaHash);
     }
+    
     m_data->m_playerEngine->setCurrentPlayList("album");
     m_data->m_playerEngine->play();
     m_data->m_dataManager->setCurrentPlayliHash("album");
     m_data->m_dataManager->clearPlayList("play", false);
     m_data->m_dataManager->addMetasToPlayList(allMetas, "play", false);
+    
+    qCInfo(dmMusic) << "Album playback started successfully";
 }
 
 void Presenter::playArtist(const QString &artist, const QString &metaHash)
 {
+    qCInfo(dmMusic) << "Playing artist:" << artist << "Starting with track:" << metaHash;
     bool playFlag = m_data->m_playerEngine->getMediaMeta().hash != metaHash;
     QList<DMusic::ArtistInfo> artists = m_data->m_dataManager->allArtistInfos();
     QList<DMusic::MediaMeta> allMetas;
+    
     for (const DMusic::ArtistInfo &curArtist : artists) {
         if (curArtist.name == artist) {
             allMetas += curArtist.musicinfos.values();
@@ -492,24 +525,40 @@ void Presenter::playArtist(const QString &artist, const QString &metaHash)
         }
     }
 
+    if (allMetas.isEmpty()) {
+        qCWarning(dmMusic) << "No tracks found for artist:" << artist;
+        return;
+    }
+
+    qCDebug(dmMusic) << "Loading" << allMetas.size() << "tracks from artist";
     m_data->m_playerEngine->clearPlayList(playFlag);
     m_data->m_playerEngine->addMetasToPlayList(allMetas);
+    
     if (!metaHash.isEmpty() && m_data->m_playerEngine->getMediaMeta().hash != metaHash) {
+        qCDebug(dmMusic) << "Setting start track to:" << metaHash;
         m_data->m_playerEngine->setMediaMeta(metaHash);
     }
+    
     m_data->m_playerEngine->setCurrentPlayList("artist");
     m_data->m_playerEngine->play();
     m_data->m_dataManager->setCurrentPlayliHash("artist");
     m_data->m_dataManager->clearPlayList("play", false);
     m_data->m_dataManager->addMetasToPlayList(allMetas, "play", false);
+    
+    qCInfo(dmMusic) << "Artist playback started successfully";
 }
 
 void Presenter::playPlaylist(const QString &playlistHash, const QString &metaHash)
 {
-    if (playlistHash.isEmpty()) return;
+    if (playlistHash.isEmpty()) {
+        qCWarning(dmMusic) << "Cannot play empty playlist hash";
+        return;
+    }
 
+    qCInfo(dmMusic) << "Playing playlist:" << playlistHash << "Starting with track:" << metaHash;
     bool playFlag = m_data->m_playerEngine->getMediaMeta().hash != metaHash;
-    QList<DMusic::MediaMeta> allMetas = m_data->m_dataManager->getPlaylistMetas(playlistHash);
+    QList<DMusic::MediaMeta> allMetas;
+    
     if (playlistHash != "album" && playlistHash != "artist") {
         allMetas = m_data->m_dataManager->getPlaylistMetas(playlistHash);
     } else if (playlistHash == "album") {
@@ -523,9 +572,12 @@ void Presenter::playPlaylist(const QString &playlistHash, const QString &metaHas
             allMetas += artist.musicinfos.values();
         }
     }
+    
     if (playlistHash == "cdarole") {
+        qCDebug(dmMusic) << "Adding CD audio tracks to playlist";
         allMetas = m_data->m_playerEngine->getCdaMetaInfo() + allMetas;
     }
+    
     for (auto meta : allMetas) {
         if (m_data->m_playerEngine->getMediaMeta().hash == meta.hash) {
             playFlag = false;
@@ -533,11 +585,20 @@ void Presenter::playPlaylist(const QString &playlistHash, const QString &metaHas
         }
     }
 
+    if (allMetas.isEmpty()) {
+        qCWarning(dmMusic) << "No tracks found in playlist:" << playlistHash;
+        return;
+    }
+
+    qCDebug(dmMusic) << "Loading" << allMetas.size() << "tracks from playlist";
     m_data->m_playerEngine->clearPlayList(playFlag);
     m_data->m_playerEngine->addMetasToPlayList(allMetas);
+    
     if (!metaHash.isEmpty() && m_data->m_playerEngine->getMediaMeta().hash != metaHash) {
+        qCDebug(dmMusic) << "Setting start track to:" << metaHash;
         m_data->m_playerEngine->setMediaMeta(metaHash);
     }
+    
     m_data->m_playerEngine->setCurrentPlayList(playlistHash);
     if (playlistHash == "musicResult" && metaHash.isEmpty()) {
         m_data->m_playerEngine->forcePlay();
@@ -548,6 +609,8 @@ void Presenter::playPlaylist(const QString &playlistHash, const QString &metaHas
     m_data->m_dataManager->setCurrentPlayliHash(playlistHash);
     m_data->m_dataManager->clearPlayList("play", false);
     m_data->m_dataManager->addMetasToPlayList(allMetas, "play", false);
+    
+    qCInfo(dmMusic) << "Playlist playback started successfully";
 }
 
 void Presenter::setCurrentPlayList(const QString &playlistHash)
@@ -858,28 +921,37 @@ QVariantList Presenter::searchedArtistInfos()
 
 void Presenter::saveDataToDB()
 {
+    qCInfo(dmMusic) << "Saving application data to database";
     if (m_data->m_dataManager->valueFromSettings("base.play.remember_progress").toBool()) {
+        qCDebug(dmMusic) << "Saving last playback position:" << m_data->m_playerEngine->time();
         m_data->m_dataManager->setValueToSettings("base.play.last_position", m_data->m_playerEngine->time());
     }
     m_data->m_dataManager->setValueToSettings("base.play.volume", m_data->m_playerEngine->getVolume());
     m_data->m_dataManager->setValueToSettings("base.play.mute", m_data->m_playerEngine->getMute());
     m_data->m_dataManager->setValueToSettings("base.play.media_count", m_data->m_dataManager->getPlaylistMetas("play").size());
     m_data->m_dataManager->saveDataToDB();
+    qCInfo(dmMusic) << "Application data saved successfully";
 }
 
 void Presenter::syncToSettings()
 {
+    qCInfo(dmMusic) << "Synchronizing settings to storage";
     m_data->m_dataManager->syncToSettings();
 }
 
 void Presenter::resetToSettings()
 {
+    qCInfo(dmMusic) << "Resetting settings to default values";
+    
+    // Save current values that should be preserved
+    qCDebug(dmMusic) << "Preserving critical settings before reset";
     QVariant curAskCloseAction = m_data->m_dataManager->valueFromSettings("base.close.is_close");
     QVariant curLastPlaylist = m_data->m_dataManager->valueFromSettings("base.play.last_playlist");
     QVariant curLastMeta = m_data->m_dataManager->valueFromSettings("base.play.last_meta");
     QVariant curLastPosition = m_data->m_dataManager->valueFromSettings("base.play.last_position");
 
-    // 保留均衡器的配置
+    // Save equalizer settings
+    qCDebug(dmMusic) << "Preserving equalizer settings";
     QVariant curEqualizerBaud_12K = m_data->m_dataManager->valueFromSettings("equalizer.all.baud_12K");
     QVariant curEqualizerBaud_14K = m_data->m_dataManager->valueFromSettings("equalizer.all.baud_14K");
     QVariant curEqualizerBaud_16K = m_data->m_dataManager->valueFromSettings("equalizer.all.baud_16K");
@@ -894,14 +966,18 @@ void Presenter::resetToSettings()
     QVariant curEqualizerCurEffect = m_data->m_dataManager->valueFromSettings("equalizer.all.curEffect");
     QVariant curEqualizerSwitch = m_data->m_dataManager->valueFromSettings("equalizer.all.switch");
 
+    qCDebug(dmMusic) << "Performing settings reset";
     m_data->m_dataManager->resetToSettings();
 
+    // Restore preserved settings
+    qCDebug(dmMusic) << "Restoring preserved settings";
     m_data->m_dataManager->setValueToSettings("base.close.is_close", curAskCloseAction);
     m_data->m_dataManager->setValueToSettings("base.play.last_playlist", curLastPlaylist);
     m_data->m_dataManager->setValueToSettings("base.play.last_meta", curLastMeta);
     m_data->m_dataManager->setValueToSettings("base.play.last_position", curLastPosition);
 
-    // 恢复均衡器设置
+    // Restore equalizer settings
+    qCDebug(dmMusic) << "Restoring equalizer settings";
     m_data->m_dataManager->setValueToSettings("equalizer.all.baud_12K", curEqualizerBaud_12K);
     m_data->m_dataManager->setValueToSettings("equalizer.all.baud_14K", curEqualizerBaud_14K);
     m_data->m_dataManager->setValueToSettings("equalizer.all.baud_16K", curEqualizerBaud_16K);
@@ -917,6 +993,7 @@ void Presenter::resetToSettings()
     m_data->m_dataManager->setValueToSettings("equalizer.all.switch", curEqualizerSwitch);
 
     emit resetedFromSettings();
+    qCInfo(dmMusic) << "Settings reset completed successfully";
 }
 
 QVariant Presenter::valueFromSettings(const QString &key)
@@ -926,23 +1003,32 @@ QVariant Presenter::valueFromSettings(const QString &key)
 
 void Presenter::setValueToSettings(const QString &key, const QVariant &value)
 {
-    if (value.isNull()) return;
+    if (value.isNull()) {
+        qCWarning(dmMusic) << "Attempted to set null value for key:" << key;
+        return;
+    }
+    
+    qCDebug(dmMusic) << "Setting value for key:" << key << "Value:" << value;
     m_data->m_dataManager->setValueToSettings(key, value);
+    
     if (key == "base.play.fade_in_out") {
+        qCDebug(dmMusic) << "Updating fade in/out setting:" << value.toBool();
         m_data->m_playerEngine->setFadeInOut(value.toBool());
     }
+    
     emit valueChangedFromSettings(key, value);
 }
 
 QStringList Presenter::detectEncodings(const QString &metaHash)
 {
+    qCDebug(dmMusic) << "Detecting encodings for meta:" << metaHash;
     DMusic::MediaMeta meta = m_data->m_dataManager->metaFromHash(metaHash);
-    return  m_data->m_audioAnalysis->detectEncodings(meta);
+    return m_data->m_audioAnalysis->detectEncodings(meta);
 }
 
 void Presenter::updateMetaCodec(const QString &metaHash, const QString &codecStr)
 {
-    qDebug() << __func__;
+    qCInfo(dmMusic) << "Updating meta codec - Hash:" << metaHash << "Codec:" << codecStr;
     DMusic::MediaMeta meta = m_data->m_dataManager->metaFromHash(metaHash);
     m_data->m_audioAnalysis->convertMetaCodec(meta, codecStr);
     m_data->m_dataManager->updateMetaCodec(meta);
@@ -1001,3 +1087,5 @@ void Presenter::stop()
     qDebug() << __func__;
     m_data->m_playerEngine->stop();
 }
+
+

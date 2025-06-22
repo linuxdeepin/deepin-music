@@ -38,8 +38,8 @@ Package: deepin-music
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends},
  libvlc5,
- libdtkdeclarative5,
- qml-module-qt-labs-platform,
+ libdtk6declarative | libdtkdeclarative5,
+ qml6-module-qt-labs-platform | qml-module-qt-labs-platform,
  qml6-module-qtquick-dialogs,
  gstreamer1.0-fluendo-mp3,
  gstreamer1.0-libav,
