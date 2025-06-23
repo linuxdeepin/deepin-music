@@ -1,4 +1,4 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="ru_UA">
+<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="tzm">
 <context>
     <name>desktop</name>
     <message>
@@ -9,27 +9,27 @@
     <message>
         <location filename="Desktop Entry]GenericName" line="0"/>
         <source>Music</source>
-        <translation>Музыка</translation>
+        <translation>Music</translation>
     </message>
     <message>
         <location filename="X-Next Shortcut Group]Name" line="0"/>
         <source>Next track</source>
-        <translation>Следующий трек</translation>
+        <translation>Talɣa tamazɣa</translation>
     </message>
     <message>
         <location filename="Desktop Entry]Comment" line="0"/>
         <source>Play your music collection</source>
-        <translation>Воспроизводите свою музыкальную коллекцию</translation>
+        <translation>Talɣa tamazɣa</translation>
     </message>
     <message>
         <location filename="X-PlayPause Shortcut Group]Name" line="0"/>
         <source>Play/Pause track</source>
-        <translation>Воспроизвести/приостановить трек</translation>
+        <translation>Talɣa/tamazɣa talɣa</translation>
     </message>
     <message>
         <location filename="X-Previous Shortcut Group]Name" line="0"/>
         <source>Previous track</source>
-        <translation>Предыдущий трек</translation>
+        <translation>Talɣa tamazɣa</translation>
     </message>
 </context>
 </TS>
