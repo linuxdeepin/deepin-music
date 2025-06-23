@@ -3,37 +3,37 @@
     <name>AlbumDefaultPage</name>
     <message>
         <source>Add Songs</source>
-        <translation type="unfinished"/>
+        <translation>Añade canciones</translation>
     </message>
     <message>
         <source>Open Folders</source>
-        <translation type="unfinished"/>
+        <translation>Abre carpetas</translation>
     </message>
     <message>
         <source>Drag music files here or</source>
-        <translation type="unfinished"/>
+        <translation>Arrastra archivos de música aquí o</translation>
     </message>
     <message>
         <source>scan the Music directory</source>
-        <translation type="unfinished"/>
+        <translation>escanea el directorio de Música</translation>
     </message>
 </context>
 <context>
     <name>AlbumGridDelegate</name>
     <message>
         <source>1 song</source>
-        <translation type="unfinished"/>
+        <translation>1 canción</translation>
     </message>
     <message>
         <source>%1 songs</source>
-        <translation type="unfinished"/>
+        <translation>&apos;%1 canciones&apos;</translation>
     </message>
 </context>
 <context>
     <name>AlbumListDelegate</name>
     <message>
         <source>%1</source>
-        <translation type="unfinished"/>
+        <translation>&apos;%1&apos;</translation>
     </message>
 </context>
 <context>
@@ -48,26 +48,26 @@
     </message>
     <message>
         <source>Tracks</source>
-        <translation type="unfinished"/>
+        <translation>Rutas</translation>
     </message>
     <message>
         <source>Date added</source>
-        <translation type="unfinished"/>
+        <translation>Fecha de añadida</translation>
     </message>
 </context>
 <context>
     <name>AlbumMoreMenu</name>
     <message>
         <source>View details</source>
-        <translation type="unfinished"/>
+        <translation>Ver detalles</translation>
     </message>
     <message>
         <source>Play all</source>
-        <translation type="unfinished"/>
+        <translation>Reproducir todas</translation>
     </message>
     <message>
         <source>Add to</source>
-        <translation type="unfinished"/>
+        <translation>Añadir a</translation>
     </message>
 </context>
 <context>
@@ -89,7 +89,7 @@
     <name>AlbumSublistDelegate</name>
     <message>
         <source>My Favorites</source>
-        <translation type="unfinished"/>
+        <translation>Mis Favoritos</translation>
     </message>
 </context>
 <context>
@@ -111,64 +111,64 @@
     <name>AlbumView</name>
     <message>
         <source>Albums</source>
-        <translation type="unfinished"/>
+        <translation>Álbums</translation>
     </message>
     <message>
         <source>%1 albums - %2 songs</source>
-        <translation type="unfinished"/>
+        <translation>&apos;%1 álbums - %2 canciones&apos;</translation>
     </message>
 </context>
 <context>
     <name>AllMusicDefaultPage</name>
     <message>
         <source>Add Songs</source>
-        <translation type="unfinished"/>
+        <translation>Todas las Canciones</translation>
     </message>
     <message>
         <source>Open Folders</source>
-        <translation type="unfinished"/>
+        <translation>Las canciones favoritas mostrarán aquí.</translation>
     </message>
     <message>
         <source>Drag music files here or</source>
-        <translation type="unfinished"/>
+        <translation>Clic “ ♥ ” pa añadir una canción a Mis Favoritos</translation>
     </message>
     <message>
         <source>Your favorite songs will be displayed here.</source>
-        <translation type="unfinished"/>
+        <translation>Nun hai canciones. Clic “ ➕ ” pa añadir canciones a la lista de reproducción.</translation>
     </message>
     <message>
         <source>Click“  ♥  ”to add a song to My Favorites</source>
-        <translation type="unfinished"/>
+        <translation> escanea el directorio de Música</translation>
     </message>
     <message>
         <source>No songs yet. Click“  ➕  ”to add songs to the playlist.</source>
-        <translation type="unfinished"/>
+        <translation>Todo lo de Música</translation>
     </message>
     <message>
         <source> scan the Music directory</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>AllMusicList</name>
     <message>
         <source>All Songs</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>1 song</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>%1 songs</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>AllMusicListDelegate</name>
     <message>
         <source>My Favorites</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -194,52 +194,52 @@
     <name>ArtistDefaultPage</name>
     <message>
         <source>Add Songs</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Open Folders</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Drag music files here or</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>scan the Music directory</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>ArtistGridDelegate</name>
     <message>
         <source>1 song</source>
-        <translation type="unfinished"/>
+        <translation>1 canció</translation>
     </message>
     <message>
         <source>%1 songs</source>
-        <translation type="unfinished"/>
+        <translation>%1 canciones</translation>
     </message>
 </context>
 <context>
     <name>ArtistMoreMenu</name>
     <message>
         <source>View details</source>
-        <translation type="unfinished"/>
+        <translation>Ver detalles</translation>
     </message>
     <message>
         <source>Play all</source>
-        <translation type="unfinished"/>
+        <translation>Reproducir to</translation>
     </message>
     <message>
         <source>Add to</source>
-        <translation type="unfinished"/>
+        <translation>Añadir a</translation>
     </message>
 </context>
 <context>
     <name>ArtistSublistDelegate</name>
     <message>
         <source>My Favorites</source>
-        <translation type="unfinished"/>
+        <translation>Mis favoritos</translation>
     </message>
 </context>
 <context>
@@ -261,18 +261,18 @@
     <name>ArtistView</name>
     <message>
         <source>Artists</source>
-        <translation type="unfinished"/>
+        <translation>Artistas</translation>
     </message>
     <message>
         <source>%1 artists - %2 songs</source>
-        <translation type="unfinished"/>
+        <translation>%1 artistas - %2 canciones</translation>
     </message>
 </context>
 <context>
     <name>CDRemovedDialog</name>
     <message>
         <source>The CD has been removed</source>
-        <translation type="unfinished"/>
+        <translation>El CD foi elimináu</translation>
     </message>
     <message>
         <source>Cancel</source>
@@ -283,7 +283,7 @@
     <name>CloseConfirmDialog</name>
     <message>
         <source>Please choose your action</source>
-        <translation type="unfinished"/>
+        <translation>Por favor, elige la acción</translation>
     </message>
     <message>
         <source>Minimize to system tray</source>
@@ -295,7 +295,7 @@
     </message>
     <message>
         <source>Do not ask again</source>
-        <translation type="unfinished"/>
+        <translation>Non pedir nuevamente</translation>
     </message>
     <message>
         <source>Cancel</source>
@@ -310,15 +310,15 @@
     <name>CurrentPlayList</name>
     <message>
         <source>Play queue</source>
-        <translation type="unfinished"/>
+        <translation>Cola de reproducción</translation>
     </message>
     <message>
         <source>1 song</source>
-        <translation type="unfinished"/>
+        <translation>1 canció</translation>
     </message>
     <message>
         <source>%1 songs</source>
-        <translation type="unfinished"/>
+        <translation>%1 canciones</translation>
     </message>
     <message>
         <source>Empty</source>
@@ -329,37 +329,37 @@
     <name>CurrentPlayListDelegate</name>
     <message>
         <source>My Favorites</source>
-        <translation type="unfinished"/>
+        <translation>Mis favoritos</translation>
     </message>
 </context>
 <context>
     <name>CustomPlaylistModel</name>
     <message>
         <source>My Favorites</source>
-        <translation type="unfinished"/>
+        <translation>Mis favoritos</translation>
     </message>
     <message>
         <source>CD playlist</source>
-        <translation type="unfinished"/>
+        <translation>Lista de reproducción del CD</translation>
     </message>
     <message>
         <source>CD</source>
-        <translation type="unfinished"/>
+        <translation>CD</translation>
     </message>
 </context>
 <context>
     <name>DeleteLocalDialog</name>
     <message>
         <source>Are you sure you want to delete %1?</source>
-        <translation type="unfinished"/>
+        <translation>¿Estas seguru de que quier borrar %1?</translation>
     </message>
     <message>
         <source>Are you sure you want to delete the selected %1 songs?</source>
-        <translation type="unfinished"/>
+        <translation>¿Estas seguru de que quier borrar les seleccions %1 canciones?</translation>
     </message>
     <message>
         <source>The song files contained will also be deleted</source>
-        <translation type="unfinished"/>
+        <translation>Los ficheros de canciones incluyíos serán tamién borrados</translation>
     </message>
     <message>
         <source>Delete</source>
@@ -374,19 +374,19 @@
     <name>DeleteSonglistDialog</name>
     <message>
         <source>Are you sure you want to remove %1?</source>
-        <translation type="unfinished"/>
+        <translation>¿Estas seguru de que quier eliminar %1?</translation>
     </message>
     <message>
         <source>Are you sure you want to remove the selected %1 songs?</source>
-        <translation type="unfinished"/>
+        <translation>¿Estas seguru de que quier eliminar les seleccions %1 canciones?</translation>
     </message>
     <message>
         <source>Are you sure you want to delete this playlist?</source>
-        <translation type="unfinished"/>
+        <translation>¿Estas seguru de que quier borrar esta lista de reproducción?</translation>
     </message>
     <message>
         <source>Remove</source>
-        <translation type="unfinished"/>
+        <translation>Eliminar</translation>
     </message>
     <message>
         <source>Delete</source>
@@ -405,11 +405,11 @@
     </message>
     <message>
         <source>Monophony</source>
-        <translation type="unfinished"/>
+        <translation>Monofonía</translation>
     </message>
     <message>
         <source>Classical</source>
-        <translation type="unfinished"/>
+        <translation>Clásica</translation>
     </message>
     <message>
         <source>Club</source>
@@ -421,15 +421,15 @@
     </message>
     <message>
         <source>Full Bass</source>
-        <translation type="unfinished"/>
+        <translation>Bass completu</translation>
     </message>
     <message>
         <source>Full Bass and Treble</source>
-        <translation type="unfinished"/>
+        <translation>Bass completu y Treble completu</translation>
     </message>
     <message>
         <source>Full Treble</source>
-        <translation type="unfinished"/>
+        <translation>Treble completu</translation>
     </message>
     <message>
         <source>Headphones</source>
@@ -437,7 +437,7 @@
     </message>
     <message>
         <source>Hall</source>
-        <translation type="unfinished"/>
+        <translation>الهول</translation>
     </message>
     <message>
         <source>Live</source>
@@ -469,11 +469,11 @@
     </message>
     <message>
         <source>Soft Rock</source>
-        <translation type="unfinished"/>
+        <translation>الروك الطرية</translation>
     </message>
     <message>
         <source>Techno</source>
-        <translation type="unfinished"/>
+        <translation>التكنو</translation>
     </message>
     <message>
         <source>Equalizer</source>
@@ -489,14 +489,14 @@
     </message>
     <message>
         <source>Preamplifier</source>
-        <translation type="unfinished"/>
+        <translation>المُقدّم</translation>
     </message>
 </context>
 <context>
     <name>ImportFailedDialog</name>
     <message>
         <source>Import failed, no valid music file found</source>
-        <translation type="unfinished"/>
+        <translation>فشل الاستيراد، لم يتم العثور على ملف موسيقي صحيح</translation>
     </message>
     <message>
         <source>OK</source>
@@ -507,7 +507,7 @@
     <name>ImportMenu</name>
     <message>
         <source>Play queue</source>
-        <translation type="unfinished"/>
+        <translation>قائمة التشغيل</translation>
     </message>
     <message>
         <source>My favorites</source>
@@ -515,7 +515,7 @@
     </message>
     <message>
         <source>Create new playlist</source>
-        <translation type="unfinished"/>
+        <translation>إنشاء قائمة تشغيل جديدة</translation>
     </message>
     <message>
         <source>New playlist</source>
@@ -534,11 +534,11 @@
     </message>
     <message>
         <source>No lyrics found</source>
-        <translation type="unfinished"/>
+        <translation>لم يتم العثور على كلمات</translation>
     </message>
     <message>
         <source>Please put the lyric file (same name as the song) and the song file in the same folder</source>
-        <translation type="unfinished"/>
+        <translation>يرجى وضع ملف الكلمات (نفس الاسم الذي تم تعيينه للموسيقى) وملف الموسيقى في المجلد نفسه</translation>
     </message>
 </context>
 <context>
@@ -565,34 +565,34 @@
     </message>
     <message>
         <source>Already added to the playlist</source>
-        <translation type="unfinished"/>
+        <translation>تم إضافته بالفعل إلى القائمة</translation>
     </message>
     <message>
         <source>Added to &quot;%1&quot;</source>
-        <translation type="unfinished"/>
+        <translation>تم إضافته إلى &quot;%1&quot;</translation>
     </message>
     <message>
         <source>Removed from &quot;My Favorites&quot;</source>
-        <translation type="unfinished"/>
+        <translation>تم إزالته من &quot;المفضلة&quot; </translation>
     </message>
     <message>
         <source>A disc is connected</source>
-        <translation type="unfinished"/>
+        <translation>تم توصيل محرك أقراص</translation>
     </message>
     <message>
         <source>My Favorites</source>
-        <translation type="unfinished"/>
+        <translation>المفضلة</translation>
     </message>
     <message>
         <source>All Songs</source>
-        <translation type="unfinished"/>
+        <translation>جميع الأغاني</translation>
     </message>
 </context>
 <context>
     <name>MulitSelectMenu</name>
     <message>
         <source>Add to</source>
-        <translation type="unfinished"/>
+        <translation>أضف إلى</translation>
     </message>
     <message>
         <source>Remove from playlist</source>
@@ -611,23 +611,23 @@
     </message>
     <message>
         <source>Albums</source>
-        <translation type="unfinished"/>
+        <translation>الألبومات</translation>
     </message>
     <message>
         <source>Artists</source>
-        <translation type="unfinished"/>
+        <translation>الفنانين</translation>
     </message>
     <message>
         <source>All Songs</source>
-        <translation type="unfinished"/>
+        <translation>جميع الأغاني</translation>
     </message>
     <message>
         <source>Playlists</source>
-        <translation type="unfinished"/>
+        <translation>القوائم</translation>
     </message>
     <message>
         <source>Create playlist</source>
-        <translation type="unfinished"/>
+        <translation>أنشئ قائمة تشغيل</translation>
     </message>
     <message>
         <source>New playlist</source>
@@ -638,7 +638,7 @@
     <name>MusicContentWindow</name>
     <message>
         <source>My Favorites</source>
-        <translation type="unfinished"/>
+        <translation>المفضلة</translation>
     </message>
 </context>
 <context>
@@ -684,7 +684,7 @@
     </message>
     <message>
         <source>Add to</source>
-        <translation type="unfinished"/>
+        <translation>أضف إلى</translation>
     </message>
     <message>
         <source>Open in file manager</source>
@@ -711,7 +711,7 @@
     <name>QObject</name>
     <message>
         <source>Music is a local music player with beautiful design and simple functions.</source>
-        <translation type="unfinished"/>
+        <translation>Music هو جهاز تشغيل موسيقي محلي يتميز بتصميم جميل ووظائف بسيطة.</translation>
     </message>
     <message>
         <source>Music</source>
@@ -730,15 +730,15 @@
     <name>SearchResultDialog</name>
     <message>
         <source>Songs</source>
-        <translation type="unfinished"/>
+        <translation>الأغاني</translation>
     </message>
     <message>
         <source>Artists</source>
-        <translation type="unfinished"/>
+        <translation>الفنانين</translation>
     </message>
     <message>
         <source>Albums</source>
-        <translation type="unfinished"/>
+        <translation>الألبومات</translation>
     </message>
 </context>
 <context>
@@ -749,19 +749,19 @@
     </message>
     <message>
         <source>Search Results</source>
-        <translation type="unfinished"/>
+        <translation>نتائج البحث</translation>
     </message>
     <message>
         <source>%1 albums - %2 songs</source>
-        <translation type="unfinished"/>
+        <translation>&apos;%1 ألبومات - %2 أغاني&apos;</translation>
     </message>
     <message>
         <source>1 album - 1 song</source>
-        <translation type="unfinished"/>
+        <translation>1 ألبوم - 1 أغنية</translation>
     </message>
     <message>
         <source>%1 album - %2 songs</source>
-        <translation type="unfinished"/>
+        <translation>%1 ألبوم - %2 أغاني</translation>
     </message>
     <message>
         <source>Music</source>
@@ -792,11 +792,11 @@
     </message>
     <message>
         <source>Remember playback position on exit</source>
-        <translation type="unfinished"/>
+        <translation>تذكّر مكان التشغيل عند الخروج</translation>
     </message>
     <message>
         <source>Enable fade in/out</source>
-        <translation type="unfinished"/>
+        <translation>تمكين التدرج في الدخول والخروج</translation>
     </message>
     <message>
         <source>Close Main Window</source>
@@ -812,7 +812,7 @@
     </message>
     <message>
         <source>Ask me always</source>
-        <translation type="unfinished"/>
+        <translation>اسأله لي دائمًا</translation>
     </message>
     <message>
         <source>Shortcuts</source>
@@ -840,7 +840,7 @@
     </message>
     <message>
         <source>Favorite</source>
-        <translation type="unfinished"/>
+        <translation>المفضل</translation>
     </message>
     <message>
         <source>Cancel</source>
@@ -852,7 +852,7 @@
     </message>
     <message>
         <source>This shortcut key conflicts with [%1], click Replace to make this shortcut key take effect immediately</source>
-        <translation type="unfinished"/>
+        <translation>هذا المفتاح القصير يتعارض مع [%1]، انقر على استبدال لجعل هذا المفتاح القصير يصبح فعالًا فورًا</translation>
     </message>
 </context>
 <context>
@@ -863,11 +863,11 @@
     </message>
     <message>
         <source>Songs</source>
-        <translation type="unfinished"/>
+        <translation>الأغاني</translation>
     </message>
     <message>
         <source>Playlists</source>
-        <translation type="unfinished"/>
+        <translation>القوائم</translation>
     </message>
     <message>
         <source>Settings</source>
@@ -899,11 +899,11 @@
     </message>
     <message>
         <source>Favorite</source>
-        <translation type="unfinished"/>
+        <translation>المفضل</translation>
     </message>
     <message>
         <source>Unfavorite</source>
-        <translation type="unfinished"/>
+        <translation>الغاء المفضل</translation>
     </message>
     <message>
         <source>Song info</source>
@@ -919,7 +919,7 @@
     </message>
     <message>
         <source>Rename playlist</source>
-        <translation type="unfinished"/>
+        <translation>إعادة تسمية القائمة</translation>
     </message>
     <message>
         <source>Remove from playlist</source>
@@ -942,7 +942,7 @@
     </message>
     <message>
         <source>My Favorites</source>
-        <translation type="unfinished"/>
+        <translation>أحذي الأغاني</translation>
     </message>
 </context>
 <context>
@@ -953,7 +953,7 @@
     </message>
     <message>
         <source>Add songs</source>
-        <translation type="unfinished"/>
+        <translation>أضف أغاني</translation>
     </message>
     <message>
         <source>Rename</source>
@@ -968,7 +968,7 @@
     <name>SortMenu</name>
     <message>
         <source>CD playlist</source>
-        <translation type="unfinished"/>
+        <translation>قائمة CD</translation>
     </message>
     <message>
         <source>Custom</source>
@@ -976,7 +976,7 @@
     </message>
     <message>
         <source>Date added</source>
-        <translation type="unfinished"/>
+        <translation>التاريخ المضافة</translation>
     </message>
     <message>
         <source>Album</source>
@@ -995,11 +995,11 @@
     <name>SublistTitleButton</name>
     <message>
         <source>1 song</source>
-        <translation type="unfinished"/>
+        <translation>1 أغنية</translation>
     </message>
     <message>
         <source>%1 songs</source>
-        <translation type="unfinished"/>
+        <translation>%1 أغاني</translation>
     </message>
     <message>
         <source>Play All</source>
@@ -1017,15 +1017,15 @@
     <name>Toolbar</name>
     <message>
         <source>Sequential play</source>
-        <translation type="unfinished"/>
+        <translation>التشغيل المتسلسل</translation>
     </message>
     <message>
         <source>List loop</source>
-        <translation type="unfinished"/>
+        <translation>التشغيل المتكرر للقائمة</translation>
     </message>
     <message>
         <source>Single loop</source>
-        <translation type="unfinished"/>
+        <translation>التشغيل المتكرر للعنصر</translation>
     </message>
     <message>
         <source>Shuffle</source>
@@ -1033,15 +1033,15 @@
     </message>
     <message>
         <source>Unfavorite</source>
-        <translation type="unfinished"/>
+        <translation>الغاء المفضل</translation>
     </message>
     <message>
         <source>Favorite</source>
-        <translation type="unfinished"/>
+        <translation>المفضل</translation>
     </message>
     <message>
         <source>My Favorites</source>
-        <translation type="unfinished"/>
+        <translation>أحذي الأغاني</translation>
     </message>
     <message>
         <source>Previous</source>
@@ -1061,14 +1061,14 @@
     </message>
     <message>
         <source>Play Queue</source>
-        <translation type="unfinished"/>
+        <translation>التشغيل المُرتّب</translation>
     </message>
 </context>
 <context>
     <name>WindowTitlebar</name>
     <message>
         <source>Add playlist</source>
-        <translation type="unfinished"/>
+        <translation>أضف قائمة</translation>
     </message>
     <message>
         <source>New playlist</source>
@@ -1092,7 +1092,7 @@
     </message>
     <message>
         <source>Music is a local music player with beautiful design and simple functions.</source>
-        <translation type="unfinished"/>
+        <translation>Music هو مُشغل موسيقى محلي بتصميم جميل ووظائف بسيطة.</translation>
     </message>
     <message>
         <source>Version:</source>
@@ -1104,11 +1104,11 @@
     </message>
     <message>
         <source>Previous page</source>
-        <translation type="unfinished"/>
+        <translation>الصفحة السابقة</translation>
     </message>
     <message>
         <source>Next page</source>
-        <translation type="unfinished"/>
+        <translation>الصفحة التالية</translation>
     </message>
     <message>
         <source>Search</source>
@@ -1116,7 +1116,7 @@
     </message>
     <message>
         <source>%1 is released under %2</source>
-        <translation type="unfinished"/>
+        <translation>%1 تم الإصدار بموجب %2</translation>
     </message>
 </context>
 </TS>
