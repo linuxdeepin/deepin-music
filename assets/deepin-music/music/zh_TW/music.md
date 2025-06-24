@@ -1,4 +1,4 @@
-# 音樂 | deepin-music
+# 音樂 |deepin-music|
 
 ## 概述
 
