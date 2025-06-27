@@ -4,6 +4,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 #include "shortcut.h"
+#include "util/log.h"
 
 #include <QVariant>
 #include <QProcess>
@@ -28,6 +29,7 @@ public:
     ShortcutPrivate(Shortcut *parent)
         : m_parent(parent)
     {
+        qCDebug(dmMusic) << "ShortcutPrivate constructor";
     }
 
 private:
@@ -38,14 +40,17 @@ private:
 Shortcut::Shortcut(QObject *parent)
     : QObject(parent), m_data(new ShortcutPrivate(this))
 {
-
+    qCDebug(dmMusic) << "Shortcut constructor";
 }
 
 void Shortcut::show(const int &x, const int &y)
 {
+    qCDebug(dmMusic) << "Shortcut show";
     Presenter *presenter = dynamic_cast<Presenter *>(parent());
-    if (presenter == nullptr)
+    if (presenter == nullptr) {
+        qCWarning(dmMusic) << "Shortcut show failed, presenter is nullptr";
         return;
+    }
 
     ShortcutGroup group1;
     ShortcutGroup group2;
@@ -118,4 +123,5 @@ void Shortcut::show(const int &x, const int &y)
     shortcutViewProc->startDetached("deepin-shortcut-viewer", shortcutString);
 
     connect(shortcutViewProc, SIGNAL(finished(int)), shortcutViewProc, SLOT(deleteLater()));
+    qCDebug(dmMusic) << "Shortcut show end";
 }

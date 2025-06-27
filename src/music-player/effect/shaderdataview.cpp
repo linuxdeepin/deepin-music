@@ -4,6 +4,8 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 #include "shaderdataview.h"
+#include "util/log.h"
+
 #include <QPainter>
 #include <qmath.h>
 #include <QTimer>
@@ -14,11 +16,13 @@
 ShaderDataView::ShaderDataView(QQuickItem *parent)
     : QQuickPaintedItem(parent)
 {
+    qCDebug(dmMusic) << "ShaderDataView constructor";
     m_workPre = NULL;
 }
 
 ShaderDataView::~ShaderDataView()
 {
+    qCDebug(dmMusic) << "ShaderDataView destructor";
 }
 
 
@@ -30,7 +34,11 @@ QVector<int> ShaderDataView::shaderData() const
 
 void ShaderDataView::setShaderData(const QVector<int> &data)
 {
-    if (data.isEmpty()) return;
+    qCDebug(dmMusic) << "ShaderDataView setShaderData";
+    if (data.isEmpty()) {
+        qCDebug(dmMusic) << "ShaderDataView setShaderData empty";
+        return;
+    }
     m_shaderData = data;
     int nWidth = data.count();
     m_img =  QImage(QSize(nWidth, 1), QImage::Format_ARGB32);
@@ -56,13 +64,17 @@ void ShaderDataView::setShaderData(const QVector<int> &data)
 
 QVariant ShaderDataView::presenter() const
 {
-
+    qCDebug(dmMusic) << "ShaderDataView presenter";
+    return m_pPresenter;
 }
 
 void ShaderDataView::setPresenter(const QVariant &presenter)
 {
+    qCDebug(dmMusic) << "ShaderDataView setPresenter";
     m_pPresenter = presenter;
     if (m_pPresenter.canConvert<Presenter *>()) { //判断防止空指针
+        qCDebug(dmMusic) << "ShaderDataView setPresenter canConvert";
+
         m_workPre = m_pPresenter.value<Presenter *>();
         connect(m_workPre, &Presenter::audioSpectrumData, this, &ShaderDataView::slotAudioData);
     }
@@ -71,6 +83,8 @@ void ShaderDataView::setPresenter(const QVariant &presenter)
 
 void ShaderDataView::slotAudioData(QVector<int> audioData)
 {
+    qCDebug(dmMusic) << "ShaderDataView slotAudioData";
+
     m_shaderData.clear();
 
     float nMax = 2048.0;

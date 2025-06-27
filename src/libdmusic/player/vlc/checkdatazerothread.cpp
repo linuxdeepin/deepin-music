@@ -17,7 +17,7 @@ CheckDataZeroThread::CheckDataZeroThread(QObject *parent, SdlPlayer *player)
     : QThread(parent),
       m_player(player)
 {
-
+    qCDebug(dmMusic) << "Creating CheckDataZeroThread";
 }
 
 void CheckDataZeroThread::initTimeParams()

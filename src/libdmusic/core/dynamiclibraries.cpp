@@ -19,9 +19,13 @@ static const QString libavformateStr = "libavformat.so";
 
 DynamicLibraries::DynamicLibraries()
 {
+    qCDebug(dmMusic) << "Initializing dynamic libraries loader";
     bool bret = loadLibraries();
     if (!bret) {
+        qCWarning(dmMusic) << "Failed to load libraries, falling back to default engine";
         DmGlobal::setPlaybackEngineType(0);
+    } else {
+        qCDebug(dmMusic) << "Successfully initialized dynamic libraries";
     }
 }
 
@@ -36,31 +40,40 @@ DynamicLibraries::~DynamicLibraries()
 
 DynamicLibraries *DynamicLibraries::instance()
 {
+    qCDebug(dmMusic) << "Getting dynamic libraries instance";
     static DynamicLibraries  instance;
     return &instance;
 }
 
 QFunctionPointer DynamicLibraries::resolve(const char *symbol, bool ffmpeg)
 {
+    qCDebug(dmMusic) << "Resolving symbol:" << symbol;
     if (m_funMap.contains(symbol)) {
+        qCDebug(dmMusic) << "Symbol already resolved:" << symbol;
         return m_funMap[symbol];
     }
 
     if (ffmpeg) {
+        qCDebug(dmMusic) << "Resolving ffmpeg symbol:" << symbol;
         QFunctionPointer fgp = avcodecLib.resolve(symbol);
         if (!fgp) {
+            qCWarning(dmMusic) << "[ffmpeg] Failed to resolve function:" << symbol;
             fgp = avformateLib.resolve(symbol);
             if (!fgp) {
                 //never get here if obey the rule
                 qCWarning(dmMusic) << "[ffmpeg] resolve function:" << symbol;
+            } else {
+                qCDebug(dmMusic) << "[ffmpeg] Successfully resolved function from avformat:" << symbol;
             }
         }
         m_funMap[symbol] = fgp;
+        qCDebug(dmMusic) << "Successfully resolved ffmpeg function:" << symbol;
         return fgp;
     }
     //resolve function
     QFunctionPointer fp = vlcLib.resolve(symbol);
     if (!fp) {
+        qCDebug(dmMusic) << "Resolving VLC symbol:";
         fp = vlccoreLib.resolve(symbol);
     }
 
@@ -68,6 +81,7 @@ QFunctionPointer DynamicLibraries::resolve(const char *symbol, bool ffmpeg)
         qCWarning(dmMusic) << "Failed to resolve VLC function:" << symbol;
         return fp;
     } else {
+        qCDebug(dmMusic) << "Successfully resolved VLC function:" << symbol;
         //cache fuctionpointer for next visiting
         m_funMap[symbol] = fp;
     }

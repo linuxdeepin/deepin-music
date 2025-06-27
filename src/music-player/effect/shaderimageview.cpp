@@ -4,6 +4,8 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 #include "shaderimageview.h"
+#include "util/log.h"
+
 #include <QPainter>
 #include <qmath.h>
 #include <presenter.h>
@@ -12,43 +14,52 @@
 ShaderImageView::ShaderImageView(QQuickItem *parent)
     : QQuickPaintedItem(parent)
 {
+    qCDebug(dmMusic) << "ShaderImageView constructor";
     m_source = QString();
 }
 
 ShaderImageView::~ShaderImageView()
 {
-
+    qCDebug(dmMusic) << "ShaderImageView destructor";
 }
 
 QString ShaderImageView::source() const
 {
+    qCDebug(dmMusic) << "ShaderImageView source: " << m_source;
     return m_source;
 }
 
 void ShaderImageView::setSource(const QString &source)
 {
+    qCDebug(dmMusic) << "ShaderImageView setSource: " << source;
+
     m_source = source;
     emit sourceChanged();
 }
 
 QVariant ShaderImageView::presenter() const
 {
+    qCDebug(dmMusic) << "ShaderImageView presenter";
     return QVariant();
 }
 
 void ShaderImageView::setPresenter(const QVariant &presenter)
 {
+    qCDebug(dmMusic) << "ShaderImageView setPresenter";
     m_pPresenter = presenter;
     Presenter *pres = NULL;
     if (m_pPresenter.canConvert<Presenter *>()) { //判断防止空指针
         pres = m_pPresenter.value<Presenter *>();
         if (pres->getActivateMetImage().isNull()) {
+            qCDebug(dmMusic) << "ShaderImageView setPresenter: getActivateMetImage is null";
             pres->setEffectImage(QImage(":/dsg/img/test.jpg"));
         } else {
+            qCDebug(dmMusic) << "ShaderImageView setPresenter: getActivateMetImage is not null";
             pres->setEffectImage(pres->getActivateMetImage());
         }
     }
     emit presenterChanged();
+    qCDebug(dmMusic) << "ShaderImageView setPresenter: presenterChanged";
 }
 
 

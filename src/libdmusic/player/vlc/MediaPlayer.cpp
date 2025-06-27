@@ -437,7 +437,7 @@ void VlcMediaPlayer::libvlc_callback(const libvlc_event_t *event,
 //        emit core->timeChanged(event->u.media_player_time_changed.new_time);
 //        break;
     case libvlc_MediaPlayerPositionChanged:
-        qCDebug(dmMusic) << "Media player event: Position changed to" << event->u.media_player_position_changed.new_position;
+        // qCDebug(dmMusic) << "Media player event: Position changed to" << event->u.media_player_position_changed.new_position;
         emit core->positionChanged(event->u.media_player_position_changed.new_position);
         break;
     case libvlc_MediaPlayerSeekableChanged:
@@ -465,7 +465,7 @@ void VlcMediaPlayer::libvlc_callback(const libvlc_event_t *event,
         emit core->vout(event->u.media_player_vout.new_count);
         break;
     default:
-        qCDebug(dmMusic) << "Media player event: Unknown event type" << event->type;
+        // qCDebug(dmMusic) << "Media player event: Unknown event type" << event->type;
         break;
     }
 

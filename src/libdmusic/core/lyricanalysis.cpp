@@ -105,7 +105,7 @@ static float codecConfidenceForData(const QTextCodec *codec, const QByteArray &d
 
 LyricAnalysis::LyricAnalysis(): m_offset(0.00)
 {
-
+    qCDebug(dmMusic) << "LyricAnalysis constructor called";
 }
 
 int LyricAnalysis::getIndex(qint64 pos)
@@ -124,10 +124,14 @@ int LyricAnalysis::getIndex(qint64 pos)
 
 qint64 LyricAnalysis::getPostion(int index)
 {
-    if (index < m_allLyrics.size())
+    qCDebug(dmMusic) << "Getting position for index:" << index;
+    if (index < m_allLyrics.size()) {
+        qCDebug(dmMusic) << "Valid index, returning position:" << m_allLyrics[index].first;
         return m_allLyrics[index].first;
-    else
+    } else {
+        qCDebug(dmMusic) << "Invalid index, returning 0";
         return 0;
+    }
 }
 
 void LyricAnalysis::parseLyric(const QString &str)
@@ -212,15 +216,24 @@ void LyricAnalysis::setFromFile(const QString &filePath)
 QVector<QPair<qint64, QString> > LyricAnalysis::allLyrics()
 {
     qCDebug(dmMusic) << "Returning all lyrics, count:" << m_allLyrics.size();
+    if (m_allLyrics.isEmpty()) {
+        qCDebug(dmMusic) << "Lyrics list is empty";
+    }
     return m_allLyrics;
 }
 
 QString LyricAnalysis::getLineAt(int index)
 {
+    qCDebug(dmMusic) << "Getting line at index:" << index;
+    if (index < 0 || index >= m_allLyrics.size()) {
+        qCDebug(dmMusic) << "Invalid index, returning empty string";
+        return QString();
+    }
     return m_allLyrics[index].second;
 }
 
 int LyricAnalysis::getCount() const
 {
+    qCDebug(dmMusic) << "Getting lyrics count:" << m_allLyrics.size();
     return m_allLyrics.count();
 }

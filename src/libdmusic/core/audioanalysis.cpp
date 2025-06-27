@@ -88,7 +88,9 @@ public:
     AudioAnalysisPrivate(AudioAnalysis *parent)
         : m_parent(parent)
     {
+        qCDebug(dmMusic) << "Initializing AudioAnalysisPrivate";
         localeCodes.insert("zh_CN", "GB18030");
+        qCDebug(dmMusic) << "Added locale code mapping for zh_CN";
     }
 
 private:
@@ -102,8 +104,10 @@ private:
 AudioAnalysis::AudioAnalysis(QObject *parent)
     : QObject(parent), m_data(new AudioAnalysisPrivate(this))
 {
+    qCDebug(dmMusic) << "Initializing AudioAnalysis";
     m_data->m_audioDataDetector = new AudioDataDetector(this);
     connect(m_data->m_audioDataDetector, &AudioDataDetector::audioBuffer, this, &AudioAnalysis::audioBuffer);
+    qCDebug(dmMusic) << "AudioAnalysis initialized with audio data detector";
 }
 
 void AudioAnalysis::parseAudioBuffer(const DMusic::MediaMeta &meta)
@@ -694,11 +698,13 @@ void AudioAnalysis::startRecorder()
         QAudioDevice devInfo = QMediaDevices::defaultAudioOutput();
         if (devInfo.isNull()) {
             qCWarning(dmMusic) << "Default audio output device is null";
-            qDebug() << __func__;
+        } else {
+            qCDebug(dmMusic) << "Using default audio output device:" << devInfo.description();
         }
         if (!devInfo.isFormatSupported(audioFormat)) {
             qCWarning(dmMusic) << "Audio format not supported by device";
-            qDebug() << __func__;
+        } else {
+            qCDebug(dmMusic) << "Audio format supported by device";
         }
 
         if (nullptr == m_data->m_audioSource) {
@@ -744,6 +750,7 @@ void AudioAnalysis::stopRecorder()
 
 void AudioAnalysis::parseData()
 {
+    qCDebug(dmMusic) << "Processing audio data";
     QByteArray datas = m_data->m_audioDevice->readAll();
     qint16 *pdata = (qint16 *)(datas.data());
 
@@ -753,10 +760,12 @@ void AudioAnalysis::parseData()
     }
     int log2N = (int)log2(1024.0 - 1.0) + 1;
     Utils::fft(sampleData, log2N, -1);
+    qCDebug(dmMusic) << "FFT processing completed";
     QVector<int> curSampleData;
     for (int i = 0; i < 1024; ++i) {
         curSampleData.append(abs(sampleData[i]) / sqrt(2) / 2);
     }
 
     emit audioSpectrumData(curSampleData);
+    qCDebug(dmMusic) << "Emitted audio spectrum data with" << curSampleData.size() << "samples";
 }
