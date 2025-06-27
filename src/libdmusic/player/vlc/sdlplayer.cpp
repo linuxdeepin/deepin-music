@@ -326,12 +326,13 @@ void SdlPlayer::setMute(bool mute)
 
 void SdlPlayer::checkDataZero()
 {
-    // 数据清空后发送信号播放下一首
+    qCDebug(dmMusic) << "Checking for zero data condition, emitting end signal";
     emit end();
 }
 
 void SdlPlayer::setProgressTag(int prog)
 {
+    qCDebug(dmMusic) << "Setting progress tag to:" << prog;
     progressTag = prog;
 }
 
@@ -538,13 +539,15 @@ void SdlPlayer::SDL_audio_cbk(void *userdata, uint8_t *stream, int len)
 
 void SdlPlayer::cleanMemCache()
 {
+    qCDebug(dmMusic) << "Cleaning memory cache";
     QMutexLocker locker(&vlc_mutex);
     _data.clear();
+    qCDebug(dmMusic) << "Memory cache cleared";
 }
 
 void SdlPlayer::readSinkInputPath()
 {
-    qCDebug(dmMusic) << "Reading sink input path";
+    // qCDebug(dmMusic) << "Reading sink input path";
     QVariant v = Utils::readDBusProperty("org.deepin.dde.Audio1", "/org/deepin/dde/Audio1",
                                              "org.deepin.dde.Audio1", "SinkInputs");
 
@@ -562,7 +565,7 @@ void SdlPlayer::readSinkInputPath()
             continue;
 
         m_sinkInputPath = curPath.path();
-        qCDebug(dmMusic) << "Found sink input path:" << m_sinkInputPath;
+        // qCDebug(dmMusic) << "Found sink input path:" << m_sinkInputPath;
         break;
     }
 }

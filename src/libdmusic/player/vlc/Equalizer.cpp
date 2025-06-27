@@ -161,10 +161,13 @@ void VlcEqualizer::setAmplificationForBandAt(float amp, uint bandIndex)
 
 void VlcEqualizer::setEnabled(bool enabled)
 {
+    qCDebug(dmMusic) << "Setting equalizer enabled state to:" << enabled;
     vlc_media_player_set_equalizer_function vlc_media_player_set_equalizer = (vlc_media_player_set_equalizer_function)DynamicLibraries::instance()->resolve("libvlc_media_player_set_equalizer");
     if (enabled && _vlcEqualizer != nullptr) {
+        qCDebug(dmMusic) << "Enabling equalizer with current settings";
         vlc_media_player_set_equalizer(_vlcMediaPlayer->core(), _vlcEqualizer);
     } else {
+        qCDebug(dmMusic) << "Disabling equalizer";
         vlc_media_player_set_equalizer(_vlcMediaPlayer->core(), nullptr);
     }
 }

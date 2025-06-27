@@ -4,15 +4,19 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 #include "Common.h"
+#include "util/log.h"
 
 QStringList VlcCommon::args()
 {
+    qCDebug(dmMusic) << "VLC args:" << qgetenv("VLC_ARGS");
     QStringList args_list;
 
     QString args = qgetenv("VLC_ARGS");
-    if (!args.isEmpty())
+    if (!args.isEmpty()) {
+        qCDebug(dmMusic) << "VLC args:" << args;
         args_list << args.split(u' ', Qt::SkipEmptyParts);
-    else {
+    } else {
+        qCDebug(dmMusic) << "VLC args not found, using default args";
         args_list << "--intf=dummy"
                   << "--no-media-library"
                   << "--no-stats"
@@ -22,6 +26,7 @@ QStringList VlcCommon::args()
                   << "--drop-late-frames";
     }
 
+    qCDebug(dmMusic) << "VLC return args:" << args_list;
     return args_list;
 }
 

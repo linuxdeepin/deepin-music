@@ -20,9 +20,12 @@ using namespace DMusic;
 DBOperate::DBOperate(QStringList supportedSuffixs, QObject *parent)
     : QObject(parent)
 {
+    qCDebug(dmMusic) << "Initializing DBOperate with supported suffixes:" << supportedSuffixs;
     for (QString str : supportedSuffixs) {
         m_supportedSuffixs.append("*." + str);
+        qCDebug(dmMusic) << "Added supported suffix:" << "*." + str;
     }
+    qCDebug(dmMusic) << "DBOperate initialized with" << m_supportedSuffixs.size() << "supported suffixes";
 }
 
 void DBOperate::slotImportMetas(const QStringList &urls, const QSet<QString> &metaHashs, bool importPlay,
@@ -54,8 +57,10 @@ void DBOperate::slotImportMetas(const QStringList &urls, const QSet<QString> &me
             while (it.hasNext()) {
                 filePaths.append(it.next());
             }
+            qCDebug(dmMusic) << "Finished scanning directory, found" << filePaths.size() << "files";
         } else {
             filePaths.append(filepath);
+            qCDebug(dmMusic) << "Added single file:" << filepath;
         }
     }
     qCDebug(dmMusic) << "Found" << filePaths.size() << "files to process";

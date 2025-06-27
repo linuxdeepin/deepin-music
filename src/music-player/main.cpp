@@ -29,6 +29,7 @@
 #include "util/eventsfilter.h"
 #include "util/shortcut.h"
 #include "util/dbusadpator.h"
+#include "util/log.h"
 
 DWIDGET_USE_NAMESPACE;
 DCORE_USE_NAMESPACE;
@@ -45,7 +46,10 @@ void sig_term_handler(int signum, siginfo_t *info, void *ptr)
 // 此文件是QML应用的启动文件，一般无需修改
 int main(int argc, char *argv[])
 {
+    qCDebug(dmMusic) << "main start";
     if (!QString(qgetenv("XDG_CURRENT_DESKTOP")).toLower().startsWith("deepin")) {
+        qCDebug(dmMusic) << "XDG_CURRENT_DESKTOP is not deepin";
+
         setenv("XDG_CURRENT_DESKTOP", "Deepin", 1);
     }
     setenv("PULSE_PROP_media.role", "music", 1);
@@ -88,6 +92,7 @@ int main(int argc, char *argv[])
     // handle open file
     QStringList OpenFilePaths = parser.positionalArguments();
     if (!OpenFilePaths.isEmpty()) {
+        qCDebug(dmMusic) << "OpenFilePaths: " << OpenFilePaths;
         QStringList strList;
         for (QString str : OpenFilePaths) {
             QUrl url = QUrl::fromLocalFile(QDir::current().absoluteFilePath(str));
@@ -97,13 +102,14 @@ int main(int argc, char *argv[])
     }
 
     if (!app->setSingleInstance("deepinmusic")) {
-        qDebug() << "another deepin music has started";
+        qCDebug(dmMusic) << "another deepin music has started";
         QDBusInterface speechbus("org.mpris.MediaPlayer2.DeepinMusic",
                                  "/org/mpris/speech",
                                  "com.deepin.speech",
                                  QDBusConnection::sessionBus());
 
         if (speechbus.isValid()) {
+            qCDebug(dmMusic) << "another deepin music has started, call OpenUris";
             QVariant mediaMeta;
             mediaMeta.setValue(OpenFilePaths);
             speechbus.asyncCall("OpenUris", OpenFilePaths);
@@ -114,8 +120,10 @@ int main(int argc, char *argv[])
                              "org.mpris.MediaPlayer2",
                              QDBusConnection::sessionBus());
         if (iface.isValid()) {
+            qCDebug(dmMusic) << "another deepin music has started, call Raise";
             iface.asyncCall("Raise");
         }
+        qCDebug(dmMusic) << "another deepin music has started, return";
         return 0;
     }
 
@@ -154,10 +162,13 @@ int main(int argc, char *argv[])
     engine.rootContext()->setContextProperty("ShortcutDialg", &shortcut);
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
     engine.rootObjects()[0]->installEventFilter(&eventsFilter);
-    if (engine.rootObjects().isEmpty())
+    if (engine.rootObjects().isEmpty()) {
+        qCDebug(dmMusic) << "engine.rootObjects().isEmpty(), return -1";
         return -1;
+    }
     // 导入自动播放
     if (!OpenFilePaths.isEmpty()) {
+        qCDebug(dmMusic) << "OpenFilePaths: " << OpenFilePaths;
         presenter->importMetas(OpenFilePaths, "play", true);
     }
 

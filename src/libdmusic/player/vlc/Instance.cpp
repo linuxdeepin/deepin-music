@@ -126,6 +126,7 @@ libvlc_instance_t *VlcInstance::core()
 
 Vlc::LogLevel VlcInstance::logLevel() const
 {
+    // qCDebug(dmMusic) << "Getting VLC log level:" << _logLevel;
     return _logLevel;
 }
 
@@ -139,6 +140,17 @@ void VlcInstance::catchPulseError(int err)
 QString VlcInstance::version()
 {
     // Returns libvlc version
+    qCDebug(dmMusic) << "Getting VLC version";
     vlc_get_version_function vlc_get_version = (vlc_get_version_function)DynamicLibraries::instance()->resolve("libvlc_get_version");
-    return QString(vlc_get_version());
+    if (!vlc_get_version) {
+        qCWarning(dmMusic) << "Failed to resolve libvlc_get_version function";
+        return QString();
+    }
+    const char *version = vlc_get_version();
+    if (!version) {
+        qCWarning(dmMusic) << "Failed to get VLC version";
+        return QString();
+    }
+    qCDebug(dmMusic) << "VLC version:" << version;
+    return QString(version);
 }

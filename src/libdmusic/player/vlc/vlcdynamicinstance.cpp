@@ -21,8 +21,10 @@ const QString libSDL2 = "libSDL2";
 
 VlcDynamicInstance::VlcDynamicInstance(QObject *parent) : QObject(parent)
 {
+    qCDebug(dmMusic) << "Creating VlcDynamicInstance";
     bool bret = loadVlcLibrary();
     Q_ASSERT(bret == true);
+    qCDebug(dmMusic) << "VLC libraries loaded:" << bret;
 }
 
 VlcDynamicInstance::~VlcDynamicInstance()
@@ -83,6 +85,7 @@ QFunctionPointer VlcDynamicInstance::resolveSymbol(const char *symbol, bool bffm
         qCWarning(dmMusic) << "Failed to resolve VLC symbol:" << symbol;
         return fp;
     } else {
+        qCDebug(dmMusic) << "Successfully resolved VLC symbol:" << symbol;
         //cache fuctionpointer for next visiting
         m_funMap[symbol] = fp;
     }
@@ -164,6 +167,10 @@ bool VlcDynamicInstance::loadVlcLibrary()
 bool VlcDynamicInstance::loadSdlLibrary()
 {
     qCDebug(dmMusic) << "Loading SDL2 library";
+    if (libsdl2.isLoaded()) {
+        qCDebug(dmMusic) << "SDL2 already loaded";
+        return true;
+    }
     QString strSdl = DmGlobal::libPath(libSDL2);
     if (QLibrary::isLibrary(strSdl)) {
         libsdl2.setFileName(strSdl);

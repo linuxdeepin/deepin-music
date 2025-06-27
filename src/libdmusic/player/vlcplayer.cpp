@@ -23,6 +23,7 @@
 VlcPlayer::VlcPlayer(QObject *parent)
     : PlayerBase(parent)
 {
+    qCDebug(dmMusic) << "VlcPlayer constructor";
     m_supportedSuffix  << "aac"
                        << "amr"
                        << "wav"
@@ -168,21 +169,25 @@ DmGlobal::PlaybackStatus VlcPlayer::state()
         Vlc::State  state = m_qvplayer->state();
         switch (state) {
         case Vlc::Playing: {
+            qCDebug(dmMusic) << "Current state: Playing";
             return DmGlobal::Playing;
         }
         case Vlc::Paused: {
+            qCDebug(dmMusic) << "Current state: Paused";
             return DmGlobal::Paused;
         }
         case Vlc::Stopped: {
+            qCDebug(dmMusic) << "Current state: Stopped";
             return DmGlobal::Stopped;
         }
         default:
+            qCDebug(dmMusic) << "Current state: Unknown, returning Stopped";
             return DmGlobal::Stopped;
         }
     } else {
+        qCDebug(dmMusic) << "No player instance, state: Stopped";
         return DmGlobal::Stopped;
     }
-
 }
 
 void VlcPlayer::stop()
@@ -196,20 +201,24 @@ void VlcPlayer::stop()
 int VlcPlayer::length()
 {
     init();
-    qDebug() << "VlcPlayer: m_qvplayer->length()" << m_qvplayer->length();
-    return  m_qvplayer->length();
+    int len = m_qvplayer->length();
+    qCDebug(dmMusic) << "Track length:" << len << "ms";
+    return len;
 }
 
 void VlcPlayer::setTime(qint64 time)
 {
     init();
+    qCDebug(dmMusic) << "Setting playback position to:" << time << "ms";
     m_qvplayer->setTime(time);
 }
 
 qint64 VlcPlayer::time()
 {
     init();
-    return m_qvplayer->time();
+    qint64 pos = m_qvplayer->time();
+    qCDebug(dmMusic) << "Current playback position:" << pos << "ms";
+    return pos;
 }
 
 void VlcPlayer::setMediaMeta(MediaMeta meta)
@@ -294,6 +303,7 @@ void VlcPlayer::setMute(bool value)
 void VlcPlayer::initCddaTrack()
 {
     init();
+    qCDebug(dmMusic) << "Initializing CDDA track";
     m_qvplayer->initCddaTrack();
 }
 
@@ -338,7 +348,9 @@ QList<MediaMeta> VlcPlayer::getCdaMetaInfo()
 
 bool VlcPlayer::getMute()
 {
-    return m_qvplayer->getMute();
+    bool muted = m_qvplayer->getMute();
+    qCDebug(dmMusic) << "Current mute state:" << muted;
+    return muted;
 }
 
 

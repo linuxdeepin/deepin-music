@@ -60,15 +60,19 @@ typedef int (*codec_receive_frame_function)(AVCodecContext *, AVFrame *);
 AudioDataDetector::AudioDataDetector(QObject *parent)
     : QThread(parent)
 {
+    qCDebug(dmMusic) << "Initializing AudioDataDetector";
     connect(this, &AudioDataDetector::audioBufferFromThread, this, &AudioDataDetector::audioBuffer, Qt::QueuedConnection);
+    qCDebug(dmMusic) << "AudioDataDetector initialized with queued connection";
 }
 
 AudioDataDetector::~AudioDataDetector()
 {
+    qCDebug(dmMusic) << "Destroying AudioDataDetector";
     m_stopFlag = true;
     while (isRunning()) {
-
+        qCDebug(dmMusic) << "Waiting for detection thread to finish";
     }
+    qCDebug(dmMusic) << "AudioDataDetector destroyed";
 }
 
 void AudioDataDetector::run()
@@ -168,6 +172,7 @@ void AudioDataDetector::run()
     while (read_frame(pFormatCtx, packet) >= 0) {
         //stop detector
         if (m_stopFlag && curData.size() > 100) {
+            qCDebug(dmMusic) << "Stop flag detected, cleaning up resources for file:" << path;
             packet_unref(packet);
             frame_free(&frame);
             codec_close(pCodecCtx);
@@ -177,6 +182,7 @@ void AudioDataDetector::run()
             m_stopFlag = false;
             m_curPath.clear();
             m_curHash.clear();
+            qCDebug(dmMusic) << "Successfully stopped detection for file:" << path;
             return;
         }
 
@@ -281,6 +287,7 @@ void AudioDataDetector::resample(const QVector<float> &buffer, const QString &ha
 
 
     if (!t_buffer.isEmpty()) {
+        qCDebug(dmMusic) << "Normalizing buffer data for hash:" << hash << "original size:" << t_buffer.size();
         auto max = *(std::max_element(std::begin(t_buffer), std::end(t_buffer)));
         for (int i = 0; i < t_buffer.size(); ++i) {
             float ft = t_buffer[i] / max;
@@ -301,7 +308,7 @@ void AudioDataDetector::resample(const QVector<float> &buffer, const QString &ha
             dir.mkdir(path);
         }
         path += QString("%1.dat").arg(hash);
-        qDebug() << "path:" << QFileInfo(path);
+        qCDebug(dmMusic) << "Writing wave cache to path:" << path;
         //write cache
         char *buf = new char[mappingbuf.size() * 4 ];
         memset(buf, 0, mappingbuf.size() * 4);

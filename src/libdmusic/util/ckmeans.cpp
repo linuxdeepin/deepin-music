@@ -16,8 +16,10 @@ using namespace std;
 CKMeans::CKMeans(QObject *parent)
     : QObject(parent)
 {
+    qCDebug(dmMusic) << "Initializing CKMeans with default values";
     m_pointsCount = 1200;
     m_clusterCount = 1;
+    qCDebug(dmMusic) << "Default points count:" << m_pointsCount << "Cluster count:" << m_clusterCount;
 }
 
 void CKMeans::kMeans()
@@ -67,29 +69,37 @@ void CKMeans::kMeans()
 
 QString CKMeans::getPicPath()
 {
+    qCDebug(dmMusic) << "Getting picture path:" << m_sPicPath;
     return m_sPicPath;
 }
 
 QVector3D CKMeans::getColorMain()
 {
+    qCDebug(dmMusic) << "Getting main color from k-means centroids";
     if(m_kmeans.centroids.size() > 0) {
+        qCDebug(dmMusic) << "ids size > 0";
         return QVector3D(m_kmeans.centroids[0][0]/255, m_kmeans.centroids[0][1]/255, m_kmeans.centroids[0][2]/255);
     } else {
+        qCDebug(dmMusic) << "ids size <= 0";
         return QVector3D(0, 0, 0);
     }
 }
 
 QVector3D CKMeans::getColorSecond()
 {
+    qCDebug(dmMusic) << "Getting second color from k-means centroids";
     if(m_kmeans.centroids.size() > 1) {
+        qCDebug(dmMusic) << "ids size > 1";
         return QVector3D(m_kmeans.centroids[1][0]/255, m_kmeans.centroids[1][1]/255, m_kmeans.centroids[1][2]/255);
     } else {
+        qCDebug(dmMusic) << "ids size <= 1";
         return QVector3D(0, 0, 0);
     }
 }
 
 QColor CKMeans::getCommColorMain()
 {
+    qCDebug(dmMusic) << "Getting common main color from k-means centroids";
 //    return QColor(Qt::black);
     if(m_kmeans.centroids.empty()) return QColor(Qt::black);
     return QColor(m_kmeans.centroids[0][0], m_kmeans.centroids[0][1], m_kmeans.centroids[0][2]);
@@ -97,6 +107,7 @@ QColor CKMeans::getCommColorMain()
 
 QColor CKMeans::getCommColorSecond()
 {
+    qCDebug(dmMusic) << "Getting common second color from k-means centroids";
 //    return QColor(Qt::blue);
     if(m_kmeans.centroids.empty()) return QColor(Qt::black);
     return QColor(m_kmeans.centroids[1][0], m_kmeans.centroids[1][1], m_kmeans.centroids[1][2]);
@@ -104,6 +115,7 @@ QColor CKMeans::getCommColorSecond()
 
 void CKMeans::setShowImage(const QImage &img)
 {
+    qCDebug(dmMusic) << "Setting show image, size:" << img.width() << "x" << img.height();
     m_showImage = img;
     kMeans();
 }
@@ -130,10 +142,12 @@ void CKMeans::setPicPath(QString sPicPath)
 
 QString CKMeans::PicPath()
 {
+    qCDebug(dmMusic) << "Getting picture path:" << m_sPicPath;
     return m_sPicPath;
 }
 
 QImage CKMeans::getShowImage()
 {
+    qCDebug(dmMusic) << "Getting show image, size:" << m_showImage.width() << "x" << m_showImage.height();
     return m_showImage;
 }

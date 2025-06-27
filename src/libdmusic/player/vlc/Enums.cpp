@@ -4,9 +4,13 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 #include "Enums.h"
+#include "util/log.h"
 
 Vlc::Vlc(QObject *parent)
-    : QObject(parent) {}
+    : QObject(parent)
+{
+    qCDebug(dmMusic) << "Initializing VLC enums";
+}
 
 //QStringList Vlc::logLevel()
 //{

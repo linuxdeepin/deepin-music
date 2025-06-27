@@ -4,10 +4,10 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 #include "playerbase.h"
-#include <QDebug>
+#include "../util/log.h"
 
 PlayerBase::PlayerBase(QObject *parent)
     : QObject(parent)
 {
-
+    qCDebug(dmMusic) << "PlayerBase initialized";
 }

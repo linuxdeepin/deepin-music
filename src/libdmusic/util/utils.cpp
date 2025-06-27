@@ -24,23 +24,28 @@ static QMutex dbusMutex;
 
 bool Utils::isChinese(const QChar &c)
 {
-    return c.unicode() <= 0x9FBF && c.unicode() >= 0x4E00;
+    bool result = c.unicode() <= 0x9FBF && c.unicode() >= 0x4E00;
+    qCDebug(dmMusic) << "Checking if character is Chinese:" << c << "Result:" << result;
+    return result;
 }
 
 static inline bool isAlphabeta(const QChar &c)
 {
+    qCDebug(dmMusic) << "Checking if character is alphabeta:" << c;
     QRegExp re("[A-Za-z]*");
     return re.exactMatch(c);
 }
 
 static inline bool isNumber(const QChar &c)
 {
+    qCDebug(dmMusic) << "Checking if character is number:" << c;
     QRegExp re("[0-9]*");
     return re.exactMatch(c);
 }
 
 static inline QString toChinese(const QString &c)
 {
+    qCDebug(dmMusic) << "Converting to Chinese:" << c;
     QString pinyin = Dtk::Core::Chinese2Pinyin(c);
     if (pinyin.length() >= 2
             && isNumber(pinyin.at(pinyin.length() - 1))) {
@@ -51,15 +56,19 @@ static inline QString toChinese(const QString &c)
 
 QStringList Utils::simpleChineseSplit(QString &str)
 {
+    qCDebug(dmMusic) << "Splitting Chinese string:" << str;
     QStringList wordList;
     bool isLastAlphabeta = false;
     for (auto &c : str) {
         bool isCurAlphabeta = isAlphabeta(c);
         if (isCurAlphabeta) {
+            qCDebug(dmMusic) << "Current character is alphabeta:" << c;
             if (!isLastAlphabeta) {
                 wordList << c;
+                qCDebug(dmMusic) << "Add alphabeta to word list:" << c;
             } else {
                 wordList.last().append(c);
+                qCDebug(dmMusic) << "Add alphabeta to last word list:" << c;
             }
             continue;
         }
@@ -67,12 +76,15 @@ QStringList Utils::simpleChineseSplit(QString &str)
         //除了中文外，其它字符不作特殊处理
         if (isChinese(c)) {
             wordList << toChinese(c);
+            qCDebug(dmMusic) << "Add Chinese to word list:" << toChinese(c);
             continue;
         } else {
             wordList << c;
+            qCDebug(dmMusic) << "Add non-Chinese to word list:" << c;
             continue;
         }
     }
+    qCDebug(dmMusic) << "Splitted Chinese string:" << wordList;
     return wordList;
 }
 
@@ -91,10 +103,12 @@ void Utils::updateChineseMetaInfo(DMusic::MediaMeta &meta)
         meta.pinyinArtist += str;
         meta.pinyinArtistShort += str.at(0);
     }
+    qCDebug(dmMusic) << "Updated Chinese meta info end.";
 }
 
 QStringList Utils::detectEncodings(const QByteArray &rawData)
 {
+    qCDebug(dmMusic) << "Detecting encodings for raw data size:" << rawData.size();
     QStringList charsets;
     QByteArray charset = QTextCodec::codecForLocale()->name();
     charsets << charset;
@@ -143,16 +157,21 @@ QStringList Utils::detectEncodings(const QByteArray &rawData)
     }
 
     ucsdet_close(csd);
+    qCDebug(dmMusic) << "Detected encodings:" << charsets;
     return charsets;
 }
 
 QString Utils::filePathHash(const QString &filepath)
 {
-    return QString(QCryptographicHash::hash(filepath.toUtf8(), QCryptographicHash::Md5).toHex());
+    qCDebug(dmMusic) << "Generating file path hash for:" << filepath;
+    QString hash = QString(QCryptographicHash::hash(filepath.toUtf8(), QCryptographicHash::Md5).toHex());
+    qCDebug(dmMusic) << "Generated hash:" << hash;
+    return hash;
 }
 
 void Utils::fft(std::complex<float> *Data, int Log2N, int sign)
 {
+    qCDebug(dmMusic) << "Performing FFT - Log2N:" << Log2N << "Sign:" << sign;
     int i, j, k, step, length;
     complex<float> wn, temp, deltawn;
     length = 1 << Log2N;
@@ -174,14 +193,17 @@ void Utils::fft(std::complex<float> *Data, int Log2N, int sign)
             wn = wn * deltawn;
         }
     }
-    if (sign == 1)
+    if (sign == 1) {
+        qCDebug(dmMusic) << "Performing IFFT - Sign:" << sign;
         for (i = 0; i < length; i++)
             Data[i] /= length;
+    }
+    qCDebug(dmMusic) << "FFT finished.";
 }
 
 QVariant Utils::readDBusProperty(const QString &service, const QString &path, const QString &interface, const char *property, QDBusConnection connection)
 {
-    qCDebug(dmMusic) << "Reading DBus property -" << "Service:" << service << "Path:" << path << "Interface:" << interface << "Property:" << property;
+    // qCDebug(dmMusic) << "Reading DBus property -" << "Service:" << service << "Path:" << path << "Interface:" << interface << "Property:" << property;
     
     dbusMutex.lock();
     QDBusInterface ainterface(service,
@@ -207,6 +229,7 @@ QVariant Utils::readDBusProperty(const QString &service, const QString &path, co
 
 QVariantMap Utils::metaToVariantMap(const DMusic::MediaMeta &meta)
 {
+    qCDebug(dmMusic) << "Converting meta to variant map:" << meta.title;
     QVariantMap metaMap;
     metaMap.insert("hash", meta.hash);
     metaMap.insert("localPath", meta.localPath);
@@ -252,6 +275,7 @@ QVariantMap Utils::metaToVariantMap(const DMusic::MediaMeta &meta)
 
 QVariantMap Utils::albumToVariantMap(const DMusic::AlbumInfo &album)
 {
+    qCDebug(dmMusic) << "Converting album to variant map:" << album.name;
     QVariantMap infoMap;
     infoMap.insert("name", album.name);
     infoMap.insert("pinyin", album.pinyin);
@@ -271,6 +295,7 @@ QVariantMap Utils::albumToVariantMap(const DMusic::AlbumInfo &album)
 
 QVariantMap Utils::artistToVariantMap(const DMusic::ArtistInfo &artist)
 {
+    qCDebug(dmMusic) << "Converting artist to variant map:" << artist.name;
     QVariantMap infoMap;
     infoMap.insert("name", artist.name);
     infoMap.insert("pinyin", artist.pinyin);
@@ -289,34 +314,42 @@ QVariantMap Utils::artistToVariantMap(const DMusic::ArtistInfo &artist)
 
 int Utils::simplifyPlaylistSortType(const int &sortType)
 {
+    qCDebug(dmMusic) << "Simplifying playlist sort type:" << sortType;
     int  curSortType = DmGlobal::SortByAddTime;
     switch (sortType) {
     case DmGlobal::SortByAddTimeASC:
     case DmGlobal::SortByAddTimeDES: {
+        qCDebug(dmMusic) << "Playlist sort type is add time.";
+
         curSortType = DmGlobal::SortByAddTime;
         break;
     }
     case DmGlobal::SortByTitleASC:
     case DmGlobal::SortByTitleDES: {
+        qCDebug(dmMusic) << "Playlist sort type is title.";
         curSortType = DmGlobal::SortByTitle;
         break;
     }
     case DmGlobal::SortByAblumASC:
     case DmGlobal::SortByAblumDES: {
+        qCDebug(dmMusic) << "Playlist sort type is album.";
         curSortType = DmGlobal::SortByAblum;
         break;
     }
     case DmGlobal::SortByArtistASC:
     case DmGlobal::SortByArtistDES: {
+        qCDebug(dmMusic) << "Playlist sort type is artist.";
         curSortType = DmGlobal::SortByArtist;
         break;
     }
     case DmGlobal::SortByCustomASC:
     case DmGlobal::SortByCustomDES: {
+        qCDebug(dmMusic) << "Playlist sort type is custom.";
         curSortType = DmGlobal::SortByCustom;
         break;
     }
     default:
+        qCDebug(dmMusic) << "Playlist sort type is unknown.";
         curSortType = DmGlobal::SortByAddTime;
         break;
     }
@@ -325,6 +358,7 @@ int Utils::simplifyPlaylistSortType(const int &sortType)
 
 QVariantMap Utils::playlistToVariantMap(const DMusic::PlaylistInfo &playlist)
 {
+    qCDebug(dmMusic) << "Converting playlist to variant map:" << playlist.displayName;
     QVariantMap metaMap;
 
     metaMap.insert("uuid", playlist.uuid);
@@ -364,11 +398,13 @@ bool Utils::containsStr(QString searchText, QString text)
         if (!curTextList.isEmpty()) {
             for (auto mText : curTextList) {
                 if (mText.contains(searchText, Qt::CaseInsensitive)) {
+                    qCDebug(dmMusic) << "return true, Chinese text search - Matched text:" << mText;
                     return true;
                 }
                 curTextListStr += mText;
             }
             if (curTextListStr.contains(searchText, Qt::CaseInsensitive)) {
+                qCDebug(dmMusic) << "return true, English text search - Matched text:" << curTextListStr;
                 return true;
             }
         }

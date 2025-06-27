@@ -29,24 +29,29 @@ static int engineType = 0;
 DmGlobal::DmGlobal(QObject *parent)
     : QObject(parent)
 {
-
+    qCDebug(dmMusic) << "DmGlobal constructor initialized";
 }
 
 void DmGlobal::setAppName(const QString &name)
 {
+    qCDebug(dmMusic) << "Setting application name to:" << name;
     appName = name;
 }
 
 QString DmGlobal::getAppName()
 {
+    qCDebug(dmMusic) << "Getting application name:" << appName;
     return appName;
 }
 
 void DmGlobal::initPath()
 {
+    qCDebug(dmMusic) << "Initializing application paths";
     userConfigPath = DStandardPaths::writableLocation(QStandardPaths::AppConfigLocation);
     userCachePath = DStandardPaths::writableLocation(QStandardPaths::CacheLocation);
     userMusicPath = DStandardPaths::writableLocation(QStandardPaths::MusicLocation);
+    qCDebug(dmMusic) << "Paths initialized - config:" << userConfigPath
+                     << "cache:" << userCachePath << "music:" << userMusicPath;
 }
 
 void DmGlobal::setConfigPath(const QString &path)
@@ -72,6 +77,7 @@ void DmGlobal::setCachePath(const QString &path)
 
 QString DmGlobal::cachePath()
 {
+    qCDebug(dmMusic) << "Getting cache path:" << userCachePath;
     return userCachePath;
 }
 
@@ -85,17 +91,21 @@ void DmGlobal::setMusicPath(const QString &path)
 
 QString DmGlobal::musicPath()
 {
+    qCDebug(dmMusic) << "Getting music path:" << userMusicPath;
     return userMusicPath;
 }
 
 void DmGlobal::setUnknownAlbumText(const QString &text)
 {
-    if (!text.isEmpty())
+    if (!text.isEmpty()) {
+        qCDebug(dmMusic) << "Setting unknown album text to:" << text;
         unknownAlbumStr = text;
+    }
 }
 
 QString DmGlobal::unknownAlbumText()
 {
+    qCDebug(dmMusic) << "Getting unknown album text:" << unknownAlbumStr;
     return unknownAlbumStr;
 }
 
@@ -109,6 +119,7 @@ void DmGlobal::setUnknownArtistText(const QString &text)
 
 QString DmGlobal::unknownArtistText()
 {
+    qCDebug(dmMusic) << "Getting unknown artist text:" << unknownArtistStr;
     return unknownArtistStr;
 }
 
@@ -137,6 +148,7 @@ void DmGlobal::setWaylandMode(bool mode)
 
 bool DmGlobal::isWaylandMode()
 {
+    qCDebug(dmMusic) << "Checking Wayland mode:" << waylandMode;
     return waylandMode;
 }
 
@@ -213,10 +225,12 @@ void DmGlobal::initPlaybackEngineType()
 
 void DmGlobal::setPlaybackEngineType(int type)
 {
+    qCDebug(dmMusic) << "Setting playback engine type to:" << type;
     engineType = type;
 }
 
 int DmGlobal::playbackEngineType()
 {
+    qCDebug(dmMusic) << "Getting playback engine type:" << engineType;
     return engineType;
 }

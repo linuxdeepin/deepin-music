@@ -5,10 +5,12 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 #include "dbusadpator.h"
+#include "util/log.h"
 
 ApplicationAdaptor::ApplicationAdaptor(Presenter *pPresenter)
     : QDBusAbstractAdaptor(pPresenter)
 {
+    qCDebug(dmMusic) << "ApplicationAdaptor constructor";
     initMember();
 
     m_pPresenter = pPresenter;
@@ -16,12 +18,13 @@ ApplicationAdaptor::ApplicationAdaptor(Presenter *pPresenter)
 
 void ApplicationAdaptor::initMember()
 {
+    qCDebug(dmMusic) << "ApplicationAdaptor initMember";
     m_pPresenter = nullptr;
 }
 
 void ApplicationAdaptor::OpenUris(const QStringList &listFiles)
 {
-    qDebug() << __func__ << listFiles;
+    qCDebug(dmMusic) << "ApplicationAdaptor OpenUris";
 
     m_pPresenter->importMetas(listFiles, "play", true);
 
