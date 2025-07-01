@@ -1,3 +1,9 @@
+deepin-music (7.0.33) unstable; urgency=medium
+
+  * chore: update translation
+
+ -- xiepengfei <xiepengfei@uniontech.com>  Tue, 01 Jul 2025 19:23:43 +0800
+
 deepin-music (7.0.32) unstable; urgency=medium
 
   * fix: Update music section headers in translation files
