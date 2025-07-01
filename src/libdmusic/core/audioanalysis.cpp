@@ -317,32 +317,57 @@ bool AudioAnalysis::parseMetaFromLocalFile(DMusic::MediaMeta &meta)
         format_close_input_function format_close_input = (format_close_input_function)DynamicLibraries::instance()->resolve("avformat_close_input", true);
         format_free_context_function format_free_context = (format_free_context_function)DynamicLibraries::instance()->resolve("avformat_free_context", true);
         AVFormatContext *pFormatCtx = format_alloc_context();
-        format_open_input(&pFormatCtx, curFilePath.toStdString().c_str(), nullptr, nullptr);
-        if (pFormatCtx) {
-            int ret = format_find_stream_info(pFormatCtx, nullptr);
-            if (ret < 0) {
-                qCWarning(dmMusic) << "Failed to find stream info for file:" << curFilePath;
-                return false;
-            }
-            bool hasAudio = false;
-            for (int i = 0; i < pFormatCtx->nb_streams; i++)
-                if (pFormatCtx->streams[i]->codecpar->codec_type == AVMEDIA_TYPE_AUDIO)
-                    hasAudio = true;
-            if (!hasAudio) {
-                qCWarning(dmMusic) << "No audio stream found in file:" << curFilePath;
-                return false;
-            }
-            int64_t duration = pFormatCtx->duration / 1000;
-            if (duration > 0) {
-                meta.length = duration;
-                meta.localPath = curFilePath;
-                qCDebug(dmMusic) << "Duration from FFmpeg:" << duration << "ms for file:" << curFilePath;
-            }
-        } else {
-            qCWarning(dmMusic) << "Failed to open format context for file:" << curFilePath;
+        if (!pFormatCtx) {
+            qCWarning(dmMusic) << "Failed to allocate format context for file:" << curFilePath;
+            return false;
         }
-        format_close_input(&pFormatCtx);
-        format_free_context(pFormatCtx);
+        
+        auto cleanup = [&]() {
+            if (pFormatCtx) {
+                format_close_input(&pFormatCtx);
+                if (pFormatCtx) {
+                    format_free_context(pFormatCtx);
+                    pFormatCtx = nullptr;
+                }
+            }
+        };
+        
+        int ret = format_open_input(&pFormatCtx, curFilePath.toStdString().c_str(), nullptr, nullptr);
+        if (ret < 0) {
+            qCWarning(dmMusic) << "Failed to open input for file:" << curFilePath;
+            cleanup();
+            return false;
+        }
+        
+        ret = format_find_stream_info(pFormatCtx, nullptr);
+        if (ret < 0) {
+            qCWarning(dmMusic) << "Failed to find stream info for file:" << curFilePath;
+            cleanup();
+            return false;
+        }
+        
+        bool hasAudio = false;
+        for (unsigned int i = 0; i < pFormatCtx->nb_streams; i++) {
+            if (pFormatCtx->streams[i]->codecpar->codec_type == AVMEDIA_TYPE_AUDIO) {
+                hasAudio = true;
+                break;
+            }
+        }
+        
+        if (!hasAudio) {
+            qCWarning(dmMusic) << "No audio stream found in file:" << curFilePath;
+            cleanup();
+            return false;
+        }
+        
+        int64_t duration = pFormatCtx->duration / 1000;
+        if (duration > 0) {
+            meta.length = duration;
+            meta.localPath = curFilePath;
+            qCDebug(dmMusic) << "Duration from FFmpeg:" << duration << "ms for file:" << curFilePath;
+        }
+        
+        cleanup();
     }
 
     meta.size = fileInfo.size();
@@ -533,27 +558,43 @@ QImage AudioAnalysis::getMetaCoverImage(DMusic::MediaMeta meta)
             format_free_context_function format_free_context = (format_free_context_function)DynamicLibraries::instance()->resolve("avformat_free_context", true);
 
             AVFormatContext *pFormatCtx = format_alloc_context();
-            format_open_input(&pFormatCtx, meta.localPath.toUtf8().data(), nullptr, nullptr);
-
-            if (pFormatCtx) {
-                if (pFormatCtx->iformat != nullptr && pFormatCtx->iformat->read_header(pFormatCtx) >= 0) {
-                    for (unsigned int i = 0; i < pFormatCtx->nb_streams; i++) {
-                        if (pFormatCtx->streams[i]->disposition & AV_DISPOSITION_ATTACHED_PIC) {
-                            AVPacket pkt = pFormatCtx->streams[i]->attached_pic;
-                            image = QImage::fromData(static_cast<uchar *>(pkt.data), pkt.size);
-                            qCDebug(dmMusic) << "Found cover image via FFmpeg for:" << meta.localPath;
-                            break;
-                        }
+            if (!pFormatCtx) {
+                qCWarning(dmMusic) << "Failed to allocate format context for cover retrieval:" << meta.localPath;
+                return image;
+            }
+            
+            // 使用RAII风格的资源管理
+            auto cleanup = [&]() {
+                if (pFormatCtx) {
+                    format_close_input(&pFormatCtx);
+                    if (pFormatCtx) {
+                        format_free_context(pFormatCtx);
+                        pFormatCtx = nullptr;
                     }
-                } else {
-                    qCDebug(dmMusic) << "Failed to read header for cover extraction:" << meta.localPath;
                 }
-            } else {
-                qCWarning(dmMusic) << "Failed to open format context for cover retrieval:" << meta.localPath;
+            };
+            
+            int ret = format_open_input(&pFormatCtx, meta.localPath.toUtf8().data(), nullptr, nullptr);
+            if (ret < 0) {
+                qCWarning(dmMusic) << "Failed to open input for cover retrieval:" << meta.localPath;
+                cleanup();
+                return image;
             }
 
-            format_close_input(&pFormatCtx);
-            format_free_context(pFormatCtx);
+            if (pFormatCtx->iformat != nullptr && pFormatCtx->iformat->read_header(pFormatCtx) >= 0) {
+                for (unsigned int i = 0; i < pFormatCtx->nb_streams; i++) {
+                    if (pFormatCtx->streams[i]->disposition & AV_DISPOSITION_ATTACHED_PIC) {
+                        AVPacket pkt = pFormatCtx->streams[i]->attached_pic;
+                        image = QImage::fromData(static_cast<uchar *>(pkt.data), pkt.size);
+                        qCDebug(dmMusic) << "Found cover image via FFmpeg for:" << meta.localPath;
+                        break;
+                    }
+                }
+            } else {
+                qCDebug(dmMusic) << "Failed to read header for cover extraction:" << meta.localPath;
+            }
+
+            cleanup();
         }
         
         // ffmpeg 没有解析出来 尝试直接读取ID3v2

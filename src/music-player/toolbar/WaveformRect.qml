@@ -18,6 +18,10 @@ Rectangle {
     property int hoverX: 0
     property var palColor: DTK.palette.highlight
 
+    // 动态对象池：根据实际需求创建和扩展
+    property var pathCurvePool: []
+    property bool poolInitialized: false
+
     id: waveformRect
     implicitWidth: 360
     width: 360
@@ -45,7 +49,10 @@ Rectangle {
         }
 
         onWidthChanged: {
-            onAudioDataChanged()
+            // 只有在有数据时才重新绘制波形
+            if (parent.pointList && parent.pointList.length > 0) {
+                onAudioDataChanged(parent.pointList)
+            }
             updatePosition(curSecs)
         }
 
@@ -172,37 +179,73 @@ Rectangle {
         }
     }
 
-    function onAudioDataChanged() {
-        // 将原有的pathelement手动清理一下
-        for (var i = 0; i < maskPath.pathElements.length; i++) {
-            var item = maskPath.pathElements[i];
-            if (item) {
-                item.destroy();
-            }
+    // 从对象池获取或创建PathCurve对象
+    function getPathCurve(index) {
+        if (index < pathCurvePool.length) {
+            return pathCurvePool[index]
+        } else {
+            // 对象池中没有足够的对象，创建新的并加入池中
+            var newCurve = Qt.createQmlObject('import QtQuick 2.11; PathCurve {}', maskPath);
+            pathCurvePool.push(newCurve)
+            return newCurve
         }
-        gc();
+    }
+
+    // 初始化对象池（基于第一次实际需求）
+    function initializePool(requiredSize) {
+        if (poolInitialized) return
+        
+        console.warn("Initializing PathCurve object pool with", requiredSize, "objects based on actual requirements")
+        pathCurvePool = []
+        for (var i = 0; i < requiredSize; i++) {
+            var curve = Qt.createQmlObject('import QtQuick 2.11; PathCurve {}', maskPath);
+            pathCurvePool.push(curve)
+        }
+        poolInitialized = true
+        console.warn("PathCurve object pool initialized successfully with", pathCurvePool.length, "objects")
+    }
+
+    function onAudioDataChanged(pointList) {
+        // 如果没有传递参数，使用 parent.pointList 作为后备
+        if (pointList === undefined) {
+            pointList = parent.pointList || []
+        }
+        
+        // 清理原有的pathElements，但不销毁对象，只是清空数组
         maskPath.pathElements = []
-        var pointCount = shapeMask.width / waveItem.sampleRectWidth / magnification
+        
+        var pointCount = Math.floor(shapeMask.width / waveItem.sampleRectWidth / magnification)
+        if (pointCount <= 0) pointCount = 1  // 确保至少有1个点
+        
         var step = Math.floor(pointList.length / pointCount)
+        if (step < 1) step = 1  // 确保step至少为1
+        
+        
+        // 第一次使用时初始化对象池
+        if (!poolInitialized) {
+            var requiredObjects = (pointList.length === 0) ? 3 : (pointCount + 1)
+            initializePool(requiredObjects)
+        }
+        
         if (pointList.length === 0) {
-            var startCurve = Qt.createQmlObject('import QtQuick 2.11; PathCurve {}', maskPath);
+            console.warn("Creating static curves for empty pointList")
+            var startCurve = getPathCurve(0)
             startCurve.x = 0
             startCurve.y = shapeMask.height - 2
             maskPath.pathElements.push(startCurve)
 
-            var rightTopCurve = Qt.createQmlObject('import QtQuick 2.11; PathCurve {}', maskPath);
+            var rightTopCurve = getPathCurve(1)
             rightTopCurve.x = shapeMask.width
             rightTopCurve.y = shapeMask.height - 2
             maskPath.pathElements.push(rightTopCurve)
 
-            var endCurve = Qt.createQmlObject('import QtQuick 2.11; PathCurve {}', maskPath);
+            var endCurve = getPathCurve(2)
             endCurve.x = shapeMask.width
             endCurve.y = shapeMask.height
             maskPath.pathElements.push(endCurve)
         } else {
-            //console.log("pointModel:" + pointList.length + "    pointCount:" + pointCount + "        step:" + step)
             for(var i = 0; i < pointCount; i++) {
-                var pathcurve = Qt.createQmlObject('import QtQuick 2.11; PathCurve {}', maskPath);
+                var pathcurve = getPathCurve(i)
 
                 pathcurve.x = waveItem.sampleRectWidth * magnification * i
                 pathcurve.y = shapeMask.height - Math.ceil(pointList[i * step] *  waveItem.height)
@@ -213,7 +256,7 @@ Rectangle {
                     pathcurve.y = shapeMask.height - 2
                 maskPath.pathElements.push(pathcurve)
             }
-            var endCurve = Qt.createQmlObject('import QtQuick 2.11; PathCurve {}', maskPath);
+            var endCurve = getPathCurve(pointCount);
             endCurve.x = shapeMask.width
             endCurve.y = shapeMask.height
             maskPath.pathElements.push(endCurve)

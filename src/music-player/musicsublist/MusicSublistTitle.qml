@@ -44,6 +44,7 @@ Rectangle{
                 fillMode: Image.PreserveAspectCrop
                 clip: true
                 source: "file:///" + titleRectangle.currentData.coverUrl
+                cache: false
             }
             FastBlur {
                 anchors.fill: parent

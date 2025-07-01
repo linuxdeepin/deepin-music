@@ -53,9 +53,11 @@ typedef AVFrame *(*frame_alloc_function)(void);
 typedef int (*read_frame_function)(AVFormatContext *, AVPacket *);
 typedef void (*packet_unref_function)(AVPacket *);
 typedef void (*frame_free_function)(AVFrame **);
+typedef void (*packet_free_function)(AVPacket **);
 typedef int (*codec_close_function)(AVCodecContext *);
 typedef int (*codec_send_packet_function)(AVCodecContext *, const AVPacket *);
 typedef int (*codec_receive_frame_function)(AVCodecContext *, AVFrame *);
+typedef void (*codec_free_context_function)(AVCodecContext **);
 
 AudioDataDetector::AudioDataDetector(QObject *parent)
     : QThread(parent)
@@ -102,7 +104,9 @@ void AudioDataDetector::run()
 
     packet_unref_function packet_unref = (packet_unref_function)DynamicLibraries::instance()->resolve("av_packet_unref", true);
     frame_free_function frame_free = (frame_free_function)DynamicLibraries::instance()->resolve("av_frame_free", true);
+    packet_free_function packet_free = (packet_free_function)DynamicLibraries::instance()->resolve("av_packet_free", true);
     codec_close_function codec_close = (codec_close_function)DynamicLibraries::instance()->resolve("avcodec_close", true);
+    codec_free_context_function codec_free_context = (codec_free_context_function)DynamicLibraries::instance()->resolve("avcodec_free_context", true);
     codec_send_packet_function codec_send_packet = (codec_send_packet_function)DynamicLibraries::instance()->resolve("avcodec_send_packet", true);
     codec_receive_frame_function codec_receive_frame = (codec_receive_frame_function)DynamicLibraries::instance()->resolve("avcodec_receive_frame", true);
 
@@ -145,6 +149,7 @@ void AudioDataDetector::run()
     AVCodec *pCodec = codec_find_decoder(pCodecCtx->codec_id);
     if (pCodec == nullptr) {
         qCCritical(dmMusic) << "Failed to find decoder for codec ID:" << pCodecCtx->codec_id << "in file:" << path;
+        codec_free_context(&pCodecCtx);
         format_close_input(&pFormatCtx);
         format_free_context(pFormatCtx);
         m_curPath.clear();
@@ -155,6 +160,7 @@ void AudioDataDetector::run()
     ret = codec_open2(pCodecCtx, pCodec, nullptr);
     if (ret < 0) {
         qCCritical(dmMusic) << "Failed to open codec for file:" << path << "error code:" << ret;
+        codec_free_context(&pCodecCtx);
         format_close_input(&pFormatCtx);
         format_free_context(pFormatCtx);
         m_curPath.clear();
@@ -170,12 +176,13 @@ void AudioDataDetector::run()
     QVector<float> curData;
 
     while (read_frame(pFormatCtx, packet) >= 0) {
-        //stop detector
         if (m_stopFlag && curData.size() > 100) {
             qCDebug(dmMusic) << "Stop flag detected, cleaning up resources for file:" << path;
             packet_unref(packet);
+            packet_free(&packet);
             frame_free(&frame);
             codec_close(pCodecCtx);
+            codec_free_context(&pCodecCtx);
             format_close_input(&pFormatCtx);
             format_free_context(pFormatCtx);
             resample(curData, hash, true);//刷新波浪条
@@ -185,15 +192,14 @@ void AudioDataDetector::run()
             qCDebug(dmMusic) << "Successfully stopped detection for file:" << path;
             return;
         }
-
+        
         if (packet->stream_index == audio_stream_index) {
             int state;
             state = codec_send_packet(pCodecCtx, packet);
-            packet_unref(packet);
             if (state != 0) {
                 continue;
             }
-
+            
             state = codec_receive_frame(pCodecCtx, frame);
             if (state == 0) {
 
@@ -201,9 +207,8 @@ void AudioDataDetector::run()
                 if (path.endsWith(".ape") || path.endsWith(".APE")) {
                     for (int i = 0; (i + 1) < frame->linesize[0]; i++) {
                         auto  valDate = ((ptr[i]) << 16 | (ptr[i + 1]));
-                        //curData.append((float)valDate + qrand());
                         curData.append(static_cast<float>(valDate) + QRandomGenerator::global()->generate());
-                    }
+                }
                 } else {
                     for (int i = 0; (i + 1) < frame->linesize[0]; i += 1024) {
                         auto  valDate = ((ptr[i]) << 16 | (ptr[i + 1]));
@@ -212,11 +217,14 @@ void AudioDataDetector::run()
                 }
             }
         }
-    }
 
-    packet_unref(packet);
+        packet_unref(packet);
+    }
+    
+    packet_free(&packet);
     frame_free(&frame);
     codec_close(pCodecCtx);
+    codec_free_context(&pCodecCtx);
     format_close_input(&pFormatCtx);
     format_free_context(pFormatCtx);
     resample(curData, hash);

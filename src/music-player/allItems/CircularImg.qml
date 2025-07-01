@@ -37,6 +37,7 @@ Rectangle {
         smooth: true
         visible: false
         anchors.fill: parent
+        cache: false
         source: cuted_background
 //        sourceSize: Qt.size(parent.size, parent.size)
         antialiasing: true

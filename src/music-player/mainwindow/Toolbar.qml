@@ -49,7 +49,9 @@ FloatingPanel {
     id: toolbarRoot
     height:60
     width: parent.width
-
+    
+    blurMultiplier: 0.0
+    
     outsideBorderColor: Palette {
         id: palette
         normal: Qt.rgba(0, 0, 0, 0.04)
@@ -83,6 +85,7 @@ FloatingPanel {
 
             Image {
                 id: img
+                cache: false
                 width: songTitle.length === 0 ? 24 : parent.width
                 height: songTitle.length === 0 ? 24 : parent.height
                 anchors.centerIn: parent
@@ -508,7 +511,7 @@ FloatingPanel {
 
             //无歌曲不显示波形图
             pointList = []
-            waveform.onAudioDataChanged()
+            waveform.onAudioDataChanged(pointList)
 
             return
         }
@@ -539,11 +542,10 @@ FloatingPanel {
         updatePlayControlBtnStatus()
     }
     function audioBufferChange(buffer,hash) {
-        //console.log("toolbar audioBufferChange:...........")
-        pointList = null;
-        pointList = []
-        pointList = buffer
-        waveform.onAudioDataChanged()
+        pointList = []  // 先清空
+        pointList = buffer  // 设置新数据
+        
+        waveform.onAudioDataChanged(pointList)
         gc();
     }
     function onDeleteOneMeta(playlistHashs, hash) {

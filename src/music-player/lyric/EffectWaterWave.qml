@@ -21,6 +21,7 @@ CusShaderToy {
     pixelShader: "qrc:/lyric/qsbfile/EffectWaterWave.qsb"
     iChannel1: Image {
         source: "qrc:/dsg/img/bk.png"
+        cache: false
     }
     iChannel0: View_data {
         id : _image

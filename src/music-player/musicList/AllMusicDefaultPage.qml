@@ -32,6 +32,7 @@ Rectangle {
             anchors.horizontalCenter: allmusicDefault.horizontalCenter;
             source: "qrc:/dsg/img/allMusic_default.png"
             sourceSize: Qt.size(126, 126);
+            cache: false
         }
         Row{
             id: buttonRow
@@ -89,6 +90,7 @@ Rectangle {
             anchors.horizontalCenter: favmusicDefault.horizontalCenter;
             source: "qrc:/dsg/img/favourite_default.png"
             sourceSize: Qt.size(126, 126);
+            cache: false
         }
         Label {
             id: favouriteLable
@@ -145,6 +147,7 @@ Rectangle {
             anchors.horizontalCenter: songListDefault.horizontalCenter;
             source: "qrc:/dsg/img/favourite_default.png"
             sourceSize: Qt.size(126, 126);
+            cache: false
         }
         Rectangle {
             width: childrenRect.width

@@ -33,6 +33,7 @@ Rectangle{
         fillMode: Image.PreserveAspectCrop
         clip: true
         visible: false
+        cache: false
         Rectangle {
             width: parent.width
             height: Window.height

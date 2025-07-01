@@ -29,6 +29,7 @@ Rectangle {
         visible: false
         smooth: true
         antialiasing: true
+        cache: false
         Rectangle {
             id: curMask
             anchors.fill: parent
