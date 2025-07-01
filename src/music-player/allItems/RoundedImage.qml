@@ -35,6 +35,7 @@ Rectangle {
         visible: false
         smooth: true
         antialiasing: true
+        cache: false
         Rectangle {
             id: _mask
             anchors.fill: parent

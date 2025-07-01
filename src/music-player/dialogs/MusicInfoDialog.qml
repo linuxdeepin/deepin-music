@@ -60,6 +60,7 @@ DialogWindow {
                 Layout.alignment: Qt.AlignHCenter
                 sourceSize: Qt.size(118, 118)
                 source: musicData === undefined ? " " : "file:///" + musicData.coverUrl  //imgSourcePath
+                cache: false
             }
         }
 

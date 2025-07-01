@@ -26,6 +26,7 @@ Rectangle {
             anchors.horizontalCenter: defaultRectangle.horizontalCenter;
             source: "qrc:/dsg/img/artist_default.png"
             sourceSize: Qt.size(126, 126);
+            cache: false
         }
         Row{
             id: buttonRow

@@ -26,6 +26,7 @@ Rectangle {
 
         source: "file:///" + url
         fillMode: Image.PreserveAspectFit
+        cache: false
     }
     Rectangle {
         id: mask

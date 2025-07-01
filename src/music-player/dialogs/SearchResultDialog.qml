@@ -113,6 +113,7 @@ Popup {
                     anchors.verticalCenter: parent.verticalCenter
                     sourceSize: Qt.size(34, 34)
                     source: "file:///" + coverUrl
+                    cache: false
                 }
                 Label {
                     width: parent.width - 44 - 30 * 2
