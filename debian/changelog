@@ -1,3 +1,9 @@
+deepin-music (7.0.34) unstable; urgency=medium
+
+  * chore: Update deb sources for linglong yaml
+
+ -- wangrong <wangrong@uniontech.com>  Wed, 02 Jul 2025 10:30:00 +0800
+
 deepin-music (7.0.33) unstable; urgency=medium
 
   * chore: update translation
