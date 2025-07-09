@@ -1,3 +1,9 @@
+deepin-music (7.0.36) unstable; urgency=medium
+
+  * chore: Update deepin-manual resources
+
+ -- dengzhongyuan <dengzhongyuan@uniontech.com>  Wed, 09 Jul 2025 16:37:34 +0800
+
 deepin-music (7.0.35) unstable; urgency=medium
 
   * fix: Update toolbar implementation to avoid inheriting from FloatPanel
