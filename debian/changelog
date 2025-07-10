@@ -1,3 +1,9 @@
+deepin-music (7.0.37) unstable; urgency=medium
+
+  * chore: Update package URLs and digests in linglong.yaml files
+
+ -- dengzhongyuan <dengzhongyuan@uniontech.com>  Thu, 10 Jul 2025 16:54:30 +0800
+
 deepin-music (7.0.36) unstable; urgency=medium
 
   * chore: Update deepin-manual resources
