@@ -7,7 +7,7 @@ version: "1"
 package:
   id: org.deepin.music
   name: "deepin-music"
-  version: 7.0.37.1
+  version: 7.0.38.1
   kind: app
   description: |
     music for deepin os.
@@ -864,8 +864,8 @@ sources:
     url: http://10.20.64.92:8080/testing25_daily/pool/main/f/ffmpeg/libpostproc57_6.1.1-2deepin5_amd64.deb
     digest: 6c5525e0cc7c8c9b719ad4ba0f4fad45e717029026fd6f8052990b8767a4695b
   - kind: file
-    url: http://10.20.64.92:8080/testing25_daily/pool/main/p/protobuf/libprotobuf-lite32_3.21.12-8deepin1+rb1_amd64.deb
-    digest: 5e164ae64eca0438f4c1c01e7348f10943e85b354233ca06ea981b1cb72f0e64
+    url: http://10.20.64.92:8080/testing25_daily/pool/main/p/protobuf/libprotobuf-lite32_3.21.12-8deepin2_amd64.deb
+    digest: 6534df1a0417ffc6a0dbf87cf0519a193aa87e10d49a82b794bfe55da89f1a4f
   - kind: file
     url: http://10.20.64.92:8080/testing25_daily/pool/main/libp/libproxy/libproxy1v5_0.5.9-1_amd64.deb
     digest: 4ad4360252e008b89ea7885a7c27e2df5af4a45e0aede319e08b17db3c3af932
@@ -1026,11 +1026,11 @@ sources:
     url: http://10.20.64.92:8080/testing25_daily/pool/main/r/rtmpdump/librtmp1_2.4+20151223.gitfa8646d.1-deepin1_amd64.deb
     digest: 9743d579d479e0e2ef99f984986b2d9d40d7e0a43b6f0f74b935f3fd2d5b6caa
   - kind: file
-    url: http://10.20.64.92:8080/testing25_daily/pool/main/libs/libsamplerate/libsamplerate0-dev_0.2.2-1_amd64.deb
-    digest: b0f50dd7eb7bdb0ab997c7c149609bf78ac964804ed1552e5a228607e560af8b
+    url: http://10.20.64.92:8080/testing25_daily/pool/main/libs/libsamplerate/libsamplerate0-dev_0.2.2-4_amd64.deb
+    digest: dde86dc32286de0a58930cdc9fb39d6d0b31af2befaf42615cfaf58984a0eb02
   - kind: file
-    url: http://10.20.64.92:8080/testing25_daily/pool/main/libs/libsamplerate/libsamplerate0_0.2.2-1_amd64.deb
-    digest: 8ba9b50925d6722aad9a86f36483cc5cbf169c6199b21edd84f43bf142608cf5
+    url: http://10.20.64.92:8080/testing25_daily/pool/main/libs/libsamplerate/libsamplerate0_0.2.2-4_amd64.deb
+    digest: 50496e43facbda6b5c6a814a66adbbb2a42f8fb994cbf7a16d0bdb6b2aae648e
   - kind: file
     url: http://10.20.64.92:8080/testing25_daily/pool/main/c/cyrus-sasl2/libsasl2-2_2.1.28+dfsg1-4_amd64.deb
     digest: 9ff9bfa155660e99d78ab3501392fd17381adcb90bdf2457bac8c3af296b3815

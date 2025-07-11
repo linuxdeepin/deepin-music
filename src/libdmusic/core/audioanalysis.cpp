@@ -202,13 +202,13 @@ bool AudioAnalysis::parseFileTagCodec(DMusic::MediaMeta &meta)
         meta.localPath.clear();
         return false;
     }
-    meta.length = t_audioProperties->length() * 1000;
+    meta.length = t_audioProperties->lengthInSeconds() * 1000;
     qCDebug(dmMusic) << "Audio length detected:" << meta.length << "ms for file:" << meta.localPath;
 
     bool encode = true;
-    encode &= tag->title().isNull() ? true : tag->title().isLatin1();
-    encode &= tag->artist().isNull() ? true : tag->artist().isLatin1();
-    encode &= tag->album().isNull() ? true : tag->album().isLatin1();
+    encode &= tag->title().isEmpty() ? true : tag->title().isLatin1();
+    encode &= tag->artist().isEmpty() ? true : tag->artist().isLatin1();
+    encode &= tag->album().isEmpty() ? true : tag->album().isLatin1();
     if (encode) {
         qCDebug(dmMusic) << "Tag contains Latin1 encoded data, detecting encoding for file:" << meta.localPath;
         if (detectCodec.isEmpty()) {
