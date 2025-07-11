@@ -43,10 +43,11 @@ set_target_properties(dmusic PROPERTIES VERSION 1.0.0 SOVERSION 1.0)
 pkg_check_modules(MPRIS REQUIRED IMPORTED_TARGET mpris-qt6)
 pkg_check_modules(TAGLIB REQUIRED IMPORTED_TARGET taglib)
 pkg_check_modules(DTK REQUIRED IMPORTED_TARGET dtk6core)
+pkg_check_modules(FFMPEG REQUIRED IMPORTED_TARGET libavcodec libavformat)
 # pkg_check_modules(udisks2 REQUIRED IMPORTED_TARGET udisks2-qt5)
 
 set(TARGET_LIBS PkgConfig::TAGLIB PkgConfig::DTK)
-target_link_libraries(${CMD_NAME} ${TARGET_LIBS} PkgConfig::MPRIS PkgConfig::TAGLIB PkgConfig::DTK ICU::i18n)
+target_link_libraries(${CMD_NAME} ${TARGET_LIBS} PkgConfig::MPRIS PkgConfig::TAGLIB PkgConfig::DTK ICU::i18n PkgConfig::FFMPEG)
 target_link_libraries(${CMD_NAME} Qt6::Core Qt6::Multimedia Qt6::DBus Qt6::Sql Qt6::Core5Compat)
 
 # qt5_use_modules(${CMD_NAME} )
