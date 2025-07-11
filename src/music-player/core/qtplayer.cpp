@@ -217,7 +217,8 @@ bool QtPlayer::setDbusMute(bool value)
         if (!ainterface.isValid()) {
             return false;
         }
-        ainterface.call(QLatin1String("SetMute"), value);
+        if (isDbusMuted() != value)
+            ainterface.call(QLatin1String("SetMute"), value);
         return true;
     }
     return false;
