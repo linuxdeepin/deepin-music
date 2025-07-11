@@ -480,7 +480,11 @@ void AudioAnalysis::parseMetaCover(DMusic::MediaMeta &meta)
             format_open_input(&pFormatCtx, path.toStdString().c_str(), nullptr, nullptr);
 
             if (pFormatCtx) {
+#if LIBAVFORMAT_VERSION_MAJOR < 61
                 if (pFormatCtx->iformat != nullptr && pFormatCtx->iformat->read_header(pFormatCtx) >= 0) {
+#else
+                if (avformat_find_stream_info(pFormatCtx, nullptr) >= 0) {
+#endif
                     for (unsigned int i = 0; i < pFormatCtx->nb_streams; i++) {
                         if (pFormatCtx->streams[i]->disposition & AV_DISPOSITION_ATTACHED_PIC) {
                             AVPacket pkt = pFormatCtx->streams[i]->attached_pic;
@@ -581,7 +585,11 @@ QImage AudioAnalysis::getMetaCoverImage(DMusic::MediaMeta meta)
                 return image;
             }
 
+#if LIBAVFORMAT_VERSION_MAJOR < 61
             if (pFormatCtx->iformat != nullptr && pFormatCtx->iformat->read_header(pFormatCtx) >= 0) {
+#else
+            if (avformat_find_stream_info(pFormatCtx, nullptr) >= 0) {
+#endif
                 for (unsigned int i = 0; i < pFormatCtx->nb_streams; i++) {
                     if (pFormatCtx->streams[i]->disposition & AV_DISPOSITION_ATTACHED_PIC) {
                         AVPacket pkt = pFormatCtx->streams[i]->attached_pic;
