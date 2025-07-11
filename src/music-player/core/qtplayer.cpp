@@ -168,7 +168,6 @@ void QtPlayer::setVolume(int volume)
 {
     init();
     m_mediaPlayer->setVolume(volume);
-    m_mediaPlayer->setPosition(m_mediaPlayer->position() + 1); //微小跳转（触发解码器刷新） 1ms
 }
 
 int QtPlayer::getVolume()
@@ -217,7 +216,8 @@ bool QtPlayer::setDbusMute(bool value)
         if (!ainterface.isValid()) {
             return false;
         }
-        ainterface.call(QLatin1String("SetMute"), value);
+        if (isDbusMuted() != value)
+            ainterface.call(QLatin1String("SetMute"), value);
         return true;
     }
     return false;
