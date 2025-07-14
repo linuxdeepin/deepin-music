@@ -35,7 +35,7 @@ Rectangle {
             id: linerGra
             anchors.fill: parent
             start: Qt.point(0, 0)
-            end: Qt.point(curSecs * parent.width / totalSecs, 0)
+            end: Qt.point(totalSecs > 0 ? curSecs * parent.width / totalSecs : 0, 0)
             gradient: Gradient {
                 GradientStop { position: 0.0; color: startColor }
                 GradientStop { position: 1.0; color: endColor}
