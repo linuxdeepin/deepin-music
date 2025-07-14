@@ -63,7 +63,7 @@ Rectangle {
         Rectangle {
             x: 0
             y: 0
-            width: curSecs * parent.width / totalSecs
+            width: totalSecs > 0 ? curSecs * parent.width / totalSecs : 0
             height: 50
         }
     }

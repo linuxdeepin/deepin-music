@@ -93,7 +93,7 @@ Rectangle {
         }
         FastBlur {
             id: blur
-            width: curSecs * parent.width / totalSecs
+            width: totalSecs > 0 ? curSecs * parent.width / totalSecs : 0
             height: linearGradient.height
             anchors.left: linearGradient.left
             anchors.verticalCenter: linearGradient.verticalCenter
