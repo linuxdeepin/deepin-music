@@ -184,8 +184,9 @@ QString LyricAnalysis::getFileCodec()
         return QTextCodec::codecForLocale()->name();
     }
 
+    // 1. 首先检测UTF BOM标记
     if (QTextCodec *c = QTextCodec::codecForUtfText(data, nullptr)) {
-        qCDebug(dmMusic) << "Detected UTF codec:" << c->name();
+        qCDebug(dmMusic) << "Detected UTF codec with BOM:" << c->name();
         return c->name();
     }
 
@@ -193,20 +194,28 @@ QString LyricAnalysis::getFileCodec()
     QByteArray encode = DTextEncoding::detectFileEncoding(m_filePath, &isOK);
     qCDebug(dmMusic) << "DTK detected file encoding:" << encode << "success:" << isOK;
     
-    // 前面的两种方法检测编码失败，使用Utils中的方法进行检测，防止对gb2312的误判
+    // 使用更准确的Utils检测作为主要方法
     QStringList detectedEncodings = Utils::detectEncodings(data);
     if (!detectedEncodings.isEmpty()) {
-        QString bestEncoding = detectedEncodings.first();
-        qCDebug(dmMusic) << "Utils detected encodings:" << detectedEncodings << "using:" << bestEncoding;
-        return bestEncoding;
+        // 验证检测到的编码是否被QTextCodec支持
+        for (const QString &encoding : detectedEncodings) {
+            QTextCodec *codec = QTextCodec::codecForName(encoding.toLatin1());
+            if (codec != nullptr) {
+                qCDebug(dmMusic) << "Utils detected encodings:" << detectedEncodings << "using validated:" << encoding;
+                return encoding;
+            } else {
+                qCWarning(dmMusic) << "Detected encoding not supported by QTextCodec:" << encoding;
+            }
+        }
+        qCWarning(dmMusic) << "No supported encoding found in Utils detection results:" << detectedEncodings;
     }
     
-    // 如果Utils检测失败，回退到DTK结果
+    // 如果Utils检测失败或编码不支持，回退到DTK结果
     if (isOK && !encode.isEmpty()) {
         return encode;
     }
     
-    // 回退到本地编码
+    // 最后回退到本地编码
     return QTextCodec::codecForLocale()->name();
 }
 
