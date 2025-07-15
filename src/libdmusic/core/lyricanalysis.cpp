@@ -15,6 +15,7 @@
 
 #include <DTextEncoding>
 #include "util/log.h"
+#include "util/utils.h"
 
 DCORE_USE_NAMESPACE
 
@@ -172,7 +173,7 @@ QString LyricAnalysis::getFileCodec()
     QString code;
     if (!fin.open(QIODevice::ReadOnly)) {
         qCWarning(dmMusic) << "Failed to open file for codec detection:" << m_filePath;
-        return code;
+        return QTextCodec::codecForLocale()->name();
     }
 
     QByteArray data = fin.readAll();
@@ -190,8 +191,23 @@ QString LyricAnalysis::getFileCodec()
 
     bool isOK = false;
     QByteArray encode = DTextEncoding::detectFileEncoding(m_filePath, &isOK);
-    qCDebug(dmMusic) << "Detected file encoding:" << encode << "success:" << isOK;
-    return encode;
+    qCDebug(dmMusic) << "DTK detected file encoding:" << encode << "success:" << isOK;
+    
+    // 前面的两种方法检测编码失败，使用Utils中的方法进行检测，防止对gb2312的误判
+    QStringList detectedEncodings = Utils::detectEncodings(data);
+    if (!detectedEncodings.isEmpty()) {
+        QString bestEncoding = detectedEncodings.first();
+        qCDebug(dmMusic) << "Utils detected encodings:" << detectedEncodings << "using:" << bestEncoding;
+        return bestEncoding;
+    }
+    
+    // 如果Utils检测失败，回退到DTK结果
+    if (isOK && !encode.isEmpty()) {
+        return encode;
+    }
+    
+    // 回退到本地编码
+    return QTextCodec::codecForLocale()->name();
 }
 
 void LyricAnalysis::setFromFile(const QString &filePath)
