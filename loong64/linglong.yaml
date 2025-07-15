@@ -1155,26 +1155,14 @@ sources:
     url: http://10.20.64.92:8080/testing25_daily/pool/main/s/systemd/libsystemd0_255.2-4deepin11_loong64.deb
     digest: 2e66a084ee5197d6ca309c766a7fb0d9a4b397359e21a5b7a920dce4695cfcf4
   - kind: file
-    url: http://10.20.64.92:8080/testing25_daily/pool/main/t/taglib/libtag-c-dev_2.0.2-2_loong64.deb
-    digest: 185326269c038044d69e0f2258a95419e6e71f05617a402f2e21e9cc8f485fa6
+    url: https://pools.uniontech.com/desktop-professional-V25/pool/main/t/taglib/libtag1-dev_1.12-1deepin0_loong64.deb
+    digest: 545f8f6f1dab3018ed6d9c73acc0be69384e94028604d7642e31ed31bccc5df3
   - kind: file
-    url: http://10.20.64.92:8080/testing25_daily/pool/main/t/taglib/libtag-c2_2.0.2-2_loong64.deb
-    digest: 297fae7a69c118a170e6492e833e2c661c426ea6d4512f441d6191cb303f16eb
+    url: https://pools.uniontech.com/desktop-professional-V25/pool/main/t/taglib/libtag1v5-vanilla_1.12-1deepin0_loong64.deb
+    digest: ec1e67ba619eb837e8bdc8703e0f7b6b1969f55750fa2bff9780afd53a6b3259
   - kind: file
-    url: http://10.20.64.92:8080/testing25_daily/pool/main/t/taglib/libtag-dev_2.0.2-2_loong64.deb
-    digest: 6ae14752578a951892923afc2e75d2756c85d23ae7f5b55198010d01ce8f1145
-  - kind: file
-    url: http://10.20.64.92:8080/testing25_daily/pool/main/t/taglib/libtag1-dev_2.0.2-2_loong64.deb
-    digest: af88066856da6a595d8aad0b1c9a6b739dc546b6da53b6fc914212aec3372561
-  - kind: file
-    url: http://10.20.64.92:8080/testing25_daily/pool/main/t/taglib/libtag1v5-vanilla_1.12-1deepin0_loong64.deb
-    digest: d2688537a91f78d0b816045d583542bd5bb41bf4ef6e10d49672f4bbcf639997
-  - kind: file
-    url: http://10.20.64.92:8080/testing25_daily/pool/main/t/taglib/libtag1v5_1.12-1deepin0_loong64.deb
-    digest: 68acfd7d231bdd51d3e2f0e37c54710572b6685e153f11434ab9024f20ae3492
-  - kind: file
-    url: http://10.20.64.92:8080/testing25_daily/pool/main/t/taglib/libtag2_2.0.2-2_loong64.deb
-    digest: 01a561f564be6c9b185d53e7a7e2241eadd85f37747a63fee4f906f91d64c9fb
+    url: https://pools.uniontech.com/desktop-professional-V25/pool/main/t/taglib/libtag1v5_1.12-1deepin0_loong64.deb
+    digest: 0574efcb89436db156833fede60fb2793ea70bafe8db184f13cd21eec572322b
   - kind: file
     url: http://10.20.64.92:8080/testing25_daily/pool/main/libt/libtasn1-6/libtasn1-6_4.18.0-4_loong64.deb
     digest: 75dde4d8be25c4d18dcf4e27dffff588fabf9c2b365b3c22b2cbd12af97d90b3
