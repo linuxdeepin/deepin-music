@@ -1167,26 +1167,14 @@ sources:
     url: http://10.20.64.92:8080/testing25_daily/pool/main/s/systemd/libsystemd0_255.2-4deepin11_amd64.deb
     digest: 75f4b1c1d7e0caf4127313225fb3be35243b09df4cf93e0225f5fb27e6c4074d
   - kind: file
-    url: http://10.20.64.92:8080/testing25_daily/pool/main/t/taglib/libtag-c-dev_2.0.2-2_amd64.deb
-    digest: 149f03b2a1315e50db88e17ae2736a751d745da2060cbc11f728133976b7540b
+    url: https://pools.uniontech.com/desktop-professional-V25/pool/main/t/taglib/libtag1-dev_1.12-1deepin0_amd64.deb
+    digest: 2a88bac2c2e961ddb524b17bd62940438b99f734421956c5b171ef8b9376c766
   - kind: file
-    url: http://10.20.64.92:8080/testing25_daily/pool/main/t/taglib/libtag-c2_2.0.2-2_amd64.deb
-    digest: 8cecce4c82c39e2c48bfd9e63842fbb1b4005b840deae6a8b73c8b58a2f86ce6
+    url: https://pools.uniontech.com/desktop-professional-V25/pool/main/t/taglib/libtag1v5-vanilla_1.12-1deepin0_amd64.deb
+    digest: 6212c1eb5ca1e4a9340e0c6737acde50c96b23095e0889b551bdd0a51b860696
   - kind: file
-    url: http://10.20.64.92:8080/testing25_daily/pool/main/t/taglib/libtag-dev_2.0.2-2_amd64.deb
-    digest: 806751c462a8f3b2fb91df809e9a754c6a954b370c8bcf5b57fff0a1c1fb3b23
-  - kind: file
-    url: http://10.20.64.92:8080/testing25_daily/pool/main/t/taglib/libtag1-dev_2.0.2-2_amd64.deb
-    digest: d0c9b2f39daeadd9a9c36d4f15df8e99c90780725566822f684a24e39850bdd7
-  - kind: file
-    url: http://10.20.64.92:8080/testing25_daily/pool/main/t/taglib/libtag1v5-vanilla_1.12-1deepin0_amd64.deb
-    digest: 4fdd6319d141f7950b7a0581b38a34f9a2e63f35a8ff38b2ed13a7a77e80e90e
-  - kind: file
-    url: http://10.20.64.92:8080/testing25_daily/pool/main/t/taglib/libtag1v5_1.12-1deepin0_amd64.deb
-    digest: 6981b6a6a11c8e04e81c0e149166261c159f4860055f0dd25e3ed3cdffd14fa7
-  - kind: file
-    url: http://10.20.64.92:8080/testing25_daily/pool/main/t/taglib/libtag2_2.0.2-2_amd64.deb
-    digest: ec6092e1dbe95f4a06954406151bf1e47c844baa83492ec0324c5ff21d44a49e
+    url: https://pools.uniontech.com/desktop-professional-V25/pool/main/t/taglib/libtag1v5_1.12-1deepin0_amd64.deb
+    digest: f7e34270e50ce72e1b1358164901a7c9a06709cfb48b46a27bc7f84a78a68dd9
   - kind: file
     url: http://10.20.64.92:8080/testing25_daily/pool/main/libt/libtasn1-6/libtasn1-6_4.18.0-4_amd64.deb
     digest: 3f24f7a181f374bd6623bfdc7781e2cee5d948361a456d2f6216aa4ba5c44a2e
