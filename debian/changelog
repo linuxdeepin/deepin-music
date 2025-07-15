@@ -1,3 +1,9 @@
+deepin-music (7.0.39) unstable; urgency=medium
+
+  * fix: music player crash issue
+
+ -- dengzhongyuan <dengzhongyuan@uniontech.com>  Tue, 15 Jul 2025 10:24:15 +0800
+
 deepin-music (7.0.38) unstable; urgency=medium
 
   * chore: Update version to 7.0.37
