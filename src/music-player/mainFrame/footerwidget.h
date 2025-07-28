@@ -159,5 +159,7 @@ private:
     quint32             m_lastCookie          = 0;
 
     QTimer             *m_limitRepeatClick    = nullptr;
+    // 优化：添加进度条初始化状态跟踪
+    bool                m_progressBarInitialized = false;
 };
 
