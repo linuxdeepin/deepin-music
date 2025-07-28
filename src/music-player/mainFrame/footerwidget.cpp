@@ -213,7 +213,8 @@ void FooterWidget::initUI(QWidget *parent)
     m_waveform = new Waveform(Qt::Horizontal, static_cast<QWidget *>(parent), this);
     m_waveform->setMinimum(0);
     m_waveform->setMaximum(1000);
-    m_waveform->setValue(0);
+    // 优化：不立即设置为0，等待有效数据再设置
+    // m_waveform->setValue(0);  // 移除此行，避免不必要的初始化闪烁
     m_waveform->adjustSize();
     mainHBoxlayout->addWidget(m_waveform, 100);
     AC_SET_OBJECT_NAME(m_waveform, AC_Waveform);
@@ -619,8 +620,31 @@ void FooterWidget::slotMediaMetaChanged(MediaMeta activeMeta)
     } else {
         m_btCover->setIcon(QIcon::fromTheme("info_cover"));
     }
-    // 歌曲切换，进度条设置到初始位置
-    m_waveform->setValue(0);
+    
+    // 优化：智能处理进度条位置设置
+    bool bremember = MusicSettings::value("base.play.remember_progress").toBool();
+    qint64 lastPosition = 0;
+    bool hasValidPosition = false;
+    
+    if (bremember && !meta.hash.isEmpty()) {
+        // 检查是否有保存的进度信息
+        QString lastMetaHash = MusicSettings::value("base.play.last_meta").toString();
+        if (lastMetaHash == meta.hash) {
+            lastPosition = MusicSettings::value("base.play.last_position").toLongLong();
+            hasValidPosition = (lastPosition > 0 && lastPosition < meta.length);
+        }
+    }
+    
+    if (hasValidPosition) {
+        // 有有效的保存位置，直接设置到正确位置，避免闪烁
+        m_waveform->onProgressChanged(lastPosition, meta.length, 1);
+        m_progressBarInitialized = true;
+    } else {
+        // 没有有效位置，设置到初始位置
+        m_waveform->setValue(0);
+        m_progressBarInitialized = true;
+    }
+    
     slotFlushBackground();
     QFontMetrics fm(m_title->font());
     QString titleText = fm.elidedText(meta.title, Qt::ElideMiddle, m_title->maximumWidth());
@@ -838,7 +862,17 @@ void FooterWidget::slotLoadDetector(const QString &hash)
 
 void FooterWidget::slotSetWaveValue(int step, long duration)
 {
+    // 优化：检查是否已经设置了正确的位置，避免重复更新
+    if (m_progressBarInitialized) {
+        // 检查当前值是否已经是期望的值
+        qint64 currentPos = static_cast<qint64>((m_waveform->value() * 1.0 / (m_waveform->maximum() - m_waveform->minimum())) * duration);
+        if (qAbs(currentPos - step) < 1000) { // 允许1秒的误差
+            return; // 位置已经接近，不需要重复设置
+        }
+    }
+    
     m_waveform->onProgressChanged(step, duration, 1); //1:偏移率
+    m_progressBarInitialized = true;
 }
 
 void FooterWidget::screenStandby(bool isStandby)
