@@ -1,3 +1,9 @@
+deepin-music (7.0.41) unstable; urgency=medium
+
+  * chore: Fix tag encoding detection for older TagLib versions
+
+ -- dengzhongyuan <dengzhongyuan@uniontech.com>  Tue, 05 Aug 2025 20:54:05 +0800
+
 deepin-music (7.0.40) unstable; urgency=medium
 
   * chore: Update deepin-manual resources
