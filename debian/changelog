@@ -1,3 +1,9 @@
+deepin-music (7.0.42) unstable; urgency=medium
+
+  * chore: Add new Lao translation file
+
+ -- dengzhongyuan <dengzhongyuan@uniontech.com>  Thu, 07 Aug 2025 16:42:23 +0800
+
 deepin-music (7.0.41) unstable; urgency=medium
 
   * chore: Fix tag encoding detection for older TagLib versions
