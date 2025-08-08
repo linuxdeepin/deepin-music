@@ -265,7 +265,8 @@ void VlcPlayer::setMediaMeta(MediaMeta meta)
     if (engineChanged) {
         if (m_bApe) {
             m_qtPlayer->setMute(m_qvplayer->getMute());
-            // m_qtPlayer->setVolume(m_qvplayer->getVolume()); //Qt自带播放器播放APE格式视频时调节音量可能会导致音量异常
+            // 引擎切换时，需要同步音量值
+            m_qtPlayer->setVolume(m_qvplayer->getVolume()); //Qt自带播放器播放APE格式视频时调节音量可能会导致音量异常
         } else {
             m_qvplayer->setMute(m_qtPlayer->getMute());
             m_qtPlayer->setMute(false);
