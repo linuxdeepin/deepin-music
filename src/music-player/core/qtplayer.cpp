@@ -154,8 +154,9 @@ void QtPlayer::setMediaMeta(MediaMeta meta)
 bool QtPlayer::getMute()
 {
     init();
-//    return m_mediaPlayer->isMuted();
-    return isDbusMuted();
+    return m_mediaPlayer->isMuted();
+    //setDbusMute函数会触发“滴”声，影响用户体验
+    //return isDbusMuted();
 }
 
 void QtPlayer::setFadeInOutFactor(double fadeInOutFactor)
@@ -178,8 +179,9 @@ int QtPlayer::getVolume()
 void QtPlayer::setMute(bool value)
 {
     init();
-//    m_mediaPlayer->setMuted(value);
-    setDbusMute(value);
+    m_mediaPlayer->setMuted(value);
+    //setDbusMute函数会触发“滴”声，影响用户体验
+    //setDbusMute(value);
 }
 
 void QtPlayer::onMediaStatusChanged(QMediaPlayer::MediaStatus status)
