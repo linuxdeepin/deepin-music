@@ -27,26 +27,17 @@ TitleBar {
     icon.name: globalVariant.appIconName
     icon.opacity: opat
     hoverEnabled: false
-    DciIcon {
-        name: ""
-        visible: isLyricShow
-        sourceSize: Qt.size(12, 12)
-        x: 20
-        y: 26
-        ActionButton {
-        anchors.fill: parent
+    ActionButton {
         icon.name: "go_down"
-        icon.width: parent.width
-        icon.height: parent.height
-        hoverEnabled: false;
-        }
-        MouseArea {
-            anchors.fill: parent
-            hoverEnabled: true
-            onClicked: {
-                lrcHideBtnClicked()
-            }
-        }
+        icon.width: 12
+        icon.height: 12
+        hoverEnabled: true;
+        visible: isLyricShow
+        width: 36
+        height: 36
+        x: 8
+        y: 10
+        onClicked: lrcHideBtnClicked()
     }
 
     menu: Menu {
