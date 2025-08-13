@@ -1,3 +1,9 @@
+deepin-music (7.0.43) unstable; urgency=medium
+
+  * chore: Add Lao translation 
+
+ -- dengzhongyuan <dengzhongyuan@uniontech.com>  Wed, 13 Aug 2025 14:01:45 +0800
+
 deepin-music (7.0.42) unstable; urgency=medium
 
   * chore: Add new Lao translation file
