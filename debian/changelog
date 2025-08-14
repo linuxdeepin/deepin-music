@@ -1,3 +1,9 @@
+deepin-music (7.0.44) unstable; urgency=medium
+
+  * fix: Replace Control with FloatingPanel in Toolbar.qml
+
+ -- dengzhongyuan <dengzhongyuan@uniontech.com>  Thu, 14 Aug 2025 13:27:30 +0800
+
 deepin-music (7.0.43) unstable; urgency=medium
 
   * chore: Add Lao translation 
