@@ -11,7 +11,7 @@ import "../toolbar"
 import audio.global 1.0
 import "../allItems"
 
-Control {
+FloatingPanel {
     signal lyricToggleClicked()
     signal playlistBtnClicked()
 
@@ -47,15 +47,14 @@ Control {
     property var pointList: []
 
     id: toolbarRoot
-    height: 60
+    height:60
     width: parent.width
     
-    // 简单的背景，不使用模糊效果
-    background: Rectangle {
-        color: DTK.themeType === ApplicationHelper.LightType ? "#f0f0f0" : "#2d2d2d"
-        radius: 8
-        border.color: Qt.rgba(0, 0, 0, 0.1)
-        border.width: 1
+    blurMultiplier: 0.0
+    
+    outsideBorderColor: Palette {
+        id: palette
+        normal: Qt.rgba(0, 0, 0, 0.04)
     }
 
     anchors {
@@ -66,7 +65,6 @@ Control {
         rightMargin: 10
         bottomMargin: 10
     }
-    
     contentItem: Row {
         width: parent.width
         height: parent.height
@@ -94,17 +92,17 @@ Control {
                 source: mediaData ===  undefined || mediaData.localPath.length === 0 ? "qrc:/dsg/img/no_music.svg" : imgPath
                 visible: songTitle.length === 0 ? true : false
             }
-            
-            // 音乐封面图片
-            Image {
-                id: coverImg
-                cache: false
-                width: parent.width
-                height: parent.height
-                anchors.centerIn: parent
-                source: mediaData ===  undefined || mediaData.localPath.length === 0 ? "qrc:/dsg/img/no_music.svg" : imgPath
+            Rectangle {
+                id: mask
+                anchors.fill: parent
+                radius: 8
                 visible: songTitle.length === 0 ? false : true
-                fillMode: Image.PreserveAspectCrop
+            }
+            OpacityMask {
+                anchors.fill: parent
+                source: img
+                maskSource: mask
+                visible: songTitle.length === 0 ? false : true
             }
 
             // border
