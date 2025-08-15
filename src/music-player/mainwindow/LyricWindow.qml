@@ -22,16 +22,16 @@ LyricPage {
             target: lyricPage
             from: rootWindow.height
             to: -50
-            duration: 450
-            easing.type: Easing.InOutCubic
+            duration: 500
+            easing.type: Easing.OutCubic
         }
 
         OpacityAnimator {
             target: lyricPage
             from: 0
             to: 1
-            duration: 450
-            easing.type: Easing.InQuint
+            duration: 500
+            easing.type: Easing.InQuart
         }
     }
 
@@ -42,7 +42,7 @@ LyricPage {
             from: -50
             to: rootWindow.height
             duration: 350
-            easing.type: Easing.InOutCubic
+            easing.type: Easing.OutCubic
         }
 
         // OpacityAnimator {

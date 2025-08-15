@@ -80,7 +80,6 @@ Rectangle {
         height: rootrectangle.height - musicSublistTitle.height - 36
         anchors.left: musicSublistTitle.left/*; anchors.leftMargin: 20*/
         anchors.top: musicSublistTitle.bottom; anchors.topMargin: 36
-        boundsBehavior: Flickable.StopAtBounds
         ScrollBar.vertical: ScrollBar {
             id:artistSublistScrollBar
             stepSize:  mediaListModels.count > 1 ? 1 / mediaListModels.count : 0.1

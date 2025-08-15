@@ -55,7 +55,6 @@ ColumnLayout {
         Layout.leftMargin: 10
         model: sideModel
         clip: true
-        boundsBehavior: Flickable.StopAtBounds
 
         delegate: SideBarItemDelegate{
             id: sidebarItem

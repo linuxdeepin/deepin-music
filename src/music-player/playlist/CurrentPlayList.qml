@@ -156,7 +156,6 @@ CurrentFloatingPanel {
             height: parent.height - headerHeight
             anchors.left: parent.left
             ScrollBar.vertical: ScrollBar {}
-            boundsBehavior: Flickable.StopAtBounds
             clip: true
             focus: true
             model: listmodel

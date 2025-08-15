@@ -82,7 +82,6 @@ Rectangle {
                     anchors.left: viewParent.left
                     anchors.leftMargin: (viewParent.width - width) / 2
                     cellWidth: 208; cellHeight: 230
-                    boundsBehavior: Flickable.StopAtBounds
                     ScrollBar.vertical: ScrollBar {}
                     model: artistModels
                     delegate: ArtistGridDelegate{
