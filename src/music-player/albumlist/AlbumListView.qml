@@ -54,7 +54,6 @@ Rectangle {
         id: listview
         width: rootRectangle.width; height: rootRectangle.height - 36
         anchors.top: headerView.bottom
-        boundsBehavior: Flickable.StopAtBounds
         ScrollBar.vertical: ScrollBar {}
         model: albumModels
         clip: true
