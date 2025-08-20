@@ -53,17 +53,17 @@
     <message>
         <location filename="../../src/music-player/albumlist/AlbumListView.qml" line="38"/>
         <source>Artist</source>
-        <translation type="unfinished"/>
+        <translation>Музыкач</translation>
     </message>
     <message>
         <location filename="../../src/music-player/albumlist/AlbumListView.qml" line="43"/>
         <source>Tracks</source>
-        <translation type="unfinished"/>
+        <translation>Трактар</translation>
     </message>
     <message>
         <location filename="../../src/music-player/albumlist/AlbumListView.qml" line="48"/>
         <source>Date added</source>
-        <translation type="unfinished"/>
+        <translation>Күнү алынган</translation>
     </message>
 </context>
 <context>
@@ -204,7 +204,7 @@
     <message>
         <location filename="../../src/music-player/musicList/AllMusicList.qml" line="30"/>
         <source>%1 songs</source>
-        <translation type="unfinished"/>
+        <translation>%1 сөзлөр</translation>
     </message>
 </context>
 <context>
@@ -266,7 +266,7 @@
     <message>
         <location filename="../../src/music-player/singerlist/ArtistGridDelegate.qml" line="149"/>
         <source>1 song</source>
-        <translation type="unfinished"/>
+        <translation>1 сөз</translation>
     </message>
     <message>
         <location filename="../../src/music-player/singerlist/ArtistGridDelegate.qml" line="149"/>
@@ -289,7 +289,7 @@
     <message>
         <location filename="../../src/music-player/musicmousemenu/ArtistMoreMenu.qml" line="35"/>
         <source>Add to</source>
-        <translation type="unfinished"/>
+        <translation>Киргизе</translation>
     </message>
 </context>
 <context>
@@ -359,7 +359,7 @@
     <message>
         <location filename="../../src/music-player/dialogs/CloseConfirmDialog.qml" line="62"/>
         <source>Exit</source>
-        <translation type="unfinished"/>
+        <translation>Чыгыз</translation>
     </message>
     <message>
         <location filename="../../src/music-player/dialogs/CloseConfirmDialog.qml" line="73"/>
@@ -469,7 +469,7 @@
     <message>
         <location filename="../../src/music-player/dialogs/DeleteSonglistDialog.qml" line="45"/>
         <source>Are you sure you want to delete this playlist?</source>
-        <translation type="unfinished"/>
+        <translation>Биз бул жыылтыны өчүрөр булаймы?</translation>
     </message>
     <message>
         <location filename="../../src/music-player/dialogs/DeleteSonglistDialog.qml" line="55"/>
@@ -479,7 +479,7 @@
     <message>
         <location filename="../../src/music-player/dialogs/DeleteSonglistDialog.qml" line="55"/>
         <source>Delete</source>
-        <translation type="unfinished"/>
+        <translation>Өчүрүү</translation>
     </message>
     <message>
         <location filename="../../src/music-player/dialogs/DeleteSonglistDialog.qml" line="70"/>
@@ -517,17 +517,17 @@
     <message>
         <location filename="../../src/music-player/dialogs/EqualizerDialog.qml" line="19"/>
         <source>Full Bass</source>
-        <translation type="unfinished"/>
+        <translation>Толук Бас</translation>
     </message>
     <message>
         <location filename="../../src/music-player/dialogs/EqualizerDialog.qml" line="20"/>
         <source>Full Bass and Treble</source>
-        <translation type="unfinished"/>
+        <translation>Толук Бас жана Трел</translation>
     </message>
     <message>
         <location filename="../../src/music-player/dialogs/EqualizerDialog.qml" line="21"/>
         <source>Full Treble</source>
-        <translation type="unfinished"/>
+        <translation>Толук Трел</translation>
     </message>
     <message>
         <location filename="../../src/music-player/dialogs/EqualizerDialog.qml" line="22"/>
@@ -547,7 +547,7 @@
     <message>
         <location filename="../../src/music-player/dialogs/EqualizerDialog.qml" line="25"/>
         <source>Party</source>
-        <translation type="unfinished"/>
+        <translation>Түркөн</translation>
     </message>
     <message>
         <location filename="../../src/music-player/dialogs/EqualizerDialog.qml" line="26"/>
@@ -562,12 +562,12 @@
     <message>
         <location filename="../../src/music-player/dialogs/EqualizerDialog.qml" line="28"/>
         <source>Rock</source>
-        <translation type="unfinished"/>
+        <translation>Рок</translation>
     </message>
     <message>
         <location filename="../../src/music-player/dialogs/EqualizerDialog.qml" line="29"/>
         <source>Ska</source>
-        <translation type="unfinished"/>
+        <translation>Ска</translation>
     </message>
     <message>
         <location filename="../../src/music-player/dialogs/EqualizerDialog.qml" line="30"/>
@@ -728,7 +728,7 @@
     <message>
         <location filename="../../src/music-player/musicmousemenu/MulitSelectMenu.qml" line="35"/>
         <source>Delete from local disk</source>
-        <translation type="unfinished"/>
+        <translation>Жергиҙән дисктан Қылып Қоюу</translation>
     </message>
 </context>
 <context>
@@ -766,7 +766,7 @@
     <message>
         <location filename="../../src/music-player/musicbaseandsonglist/MusicBaselistview.qml" line="66"/>
         <source>New playlist</source>
-        <translation type="unfinished"/>
+        <translation>Яңы Playlist</translation>
     </message>
 </context>
 <context>
@@ -840,7 +840,7 @@
     <message>
         <location filename="../../src/music-player/musicmousemenu/MusicMoreMenu.qml" line="62"/>
         <source>Remove from play queue</source>
-        <translation type="unfinished"/>
+        <translation>Инкасация тәртиптен Қылып Қоюу</translation>
     </message>
     <message>
         <location filename="../../src/music-player/musicmousemenu/MusicMoreMenu.qml" line="62"/>
@@ -924,7 +924,7 @@
     <message>
         <location filename="../../src/music-player/mainwindow/SearchResultWindow.qml" line="102"/>
         <source>1 album - 1 song</source>
-        <translation type="unfinished"/>
+        <translation>1 альбом - 1 яңылар</translation>
     </message>
     <message>
         <location filename="../../src/music-player/mainwindow/SearchResultWindow.qml" line="102"/>
@@ -982,7 +982,7 @@
     <message>
         <location filename="../../src/music-player/dialogs/SettingsDialog.qml" line="91"/>
         <source>Minimize to system tray</source>
-        <translation type="unfinished"/>
+        <translation>Система үзәге өстәнгә җитәкле</translation>
     </message>
     <message>
         <location filename="../../src/music-player/dialogs/SettingsDialog.qml" line="98"/>
@@ -1022,7 +1022,7 @@
     <message>
         <location filename="../../src/music-player/dialogs/SettingsDialog.qml" line="335"/>
         <source>Volume down</source>
-        <translation type="unfinished"/>
+        <translation>Төрле ысул</translation>
     </message>
     <message>
         <location filename="../../src/music-player/dialogs/SettingsDialog.qml" line="379"/>
@@ -1100,7 +1100,7 @@
     <message>
         <location filename="../../src/music-player/util/shortcut.cpp" line="73"/>
         <source>Favorite</source>
-        <translation type="unfinished"/>
+        <translation>Таңдаң</translation>
     </message>
     <message>
         <location filename="../../src/music-player/util/shortcut.cpp" line="74"/>
@@ -1135,7 +1135,7 @@
     <message>
         <location filename="../../src/music-player/util/shortcut.cpp" line="84"/>
         <source>Help</source>
-        <translation type="unfinished"/>
+        <translation>Ярдам</translation>
     </message>
     <message>
         <location filename="../../src/music-player/util/shortcut.cpp" line="85"/>
@@ -1226,7 +1226,7 @@
     <message>
         <location filename="../../src/music-player/allItems/SublistTitleButton.qml" line="54"/>
         <source>%1 songs</source>
-        <translation type="unfinished"/>
+        <translation>%1 кылма өнөн</translation>
     </message>
     <message>
         <location filename="../../src/music-player/allItems/SublistTitleButton.qml" line="64"/>
@@ -1247,12 +1247,12 @@
     <message>
         <location filename="../../src/music-player/mainwindow/Toolbar.qml" line="43"/>
         <source>Sequential play</source>
-        <translation type="unfinished"/>
+        <translation>Дараалсан өйрөн</translation>
     </message>
     <message>
         <location filename="../../src/music-player/mainwindow/Toolbar.qml" line="43"/>
         <source>List loop</source>
-        <translation type="unfinished"/>
+        <translation>Списоктын үлдэгдэл</translation>
     </message>
     <message>
         <location filename="../../src/music-player/mainwindow/Toolbar.qml" line="43"/>
@@ -1272,7 +1272,7 @@
     <message>
         <location filename="../../src/music-player/mainwindow/Toolbar.qml" line="207"/>
         <source>Favorite</source>
-        <translation type="unfinished"/>
+        <translation>Идэвгээ нэмэх</translation>
     </message>
     <message>
         <location filename="../../src/music-player/mainwindow/Toolbar.qml" line="220"/>
@@ -1282,7 +1282,7 @@
     <message>
         <location filename="../../src/music-player/mainwindow/Toolbar.qml" line="238"/>
         <source>Previous</source>
-        <translation type="unfinished"/>
+        <translation>Өмнөх</translation>
     </message>
     <message>
         <location filename="../../src/music-player/mainwindow/Toolbar.qml" line="259"/>
@@ -1351,12 +1351,12 @@
     <message>
         <location filename="../../src/music-player/mainwindow/WindowTitlebar.qml" line="213"/>
         <source>Previous page</source>
-        <translation type="unfinished"/>
+        <translation>Өмнөх хуудас</translation>
     </message>
     <message>
         <location filename="../../src/music-player/mainwindow/WindowTitlebar.qml" line="229"/>
         <source>Next page</source>
-        <translation type="unfinished"/>
+        <translation>Дараах хуудас</translation>
     </message>
     <message>
         <location filename="../../src/music-player/mainwindow/WindowTitlebar.qml" line="239"/>
