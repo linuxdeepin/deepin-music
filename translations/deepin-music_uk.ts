@@ -1,6 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS>
-<TS version="2.1" language="uk" sourcelanguage="en_US">
+<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="uk" sourcelanguage="en_US">
 <context>
     <name>AlbumDefaultPage</name>
     <message>
@@ -11,7 +9,7 @@
     <message>
         <location filename="../src/music-player/albumlist/AlbumDefaultPage.qml" line="43"/>
         <source>Open Folders</source>
-        <translation>Відкрити теки</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/albumlist/AlbumDefaultPage.qml" line="59"/>
@@ -21,7 +19,7 @@
     <message>
         <location filename="../src/music-player/albumlist/AlbumDefaultPage.qml" line="63"/>
         <source> scan the Music directory</source>
-        <translation type="unfinished">сканувати каталог «Музика»</translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -42,7 +40,7 @@
     <message>
         <location filename="../src/music-player/albumlist/AlbumListDelegate.qml" line="107"/>
         <source>%1</source>
-        <translation>%1</translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -60,7 +58,7 @@
     <message>
         <location filename="../src/music-player/albumlist/AlbumListView.qml" line="43"/>
         <source>Tracks</source>
-        <translation>Доріжки</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/albumlist/AlbumListView.qml" line="48"/>
@@ -83,7 +81,7 @@
     <message>
         <location filename="../src/music-player/musicmousemenu/AlbumMoreMenu.qml" line="37"/>
         <source>Add to</source>
-        <translation>Додати</translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -91,12 +89,12 @@
     <message>
         <location filename="../src/music-player/musicsublist/AlbumSublist.qml" line="36"/>
         <source>Title</source>
-        <translation>Назва</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/musicsublist/AlbumSublist.qml" line="41"/>
         <source>Artist</source>
-        <translation>Виконавець</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/musicsublist/AlbumSublist.qml" line="46"/>
@@ -127,7 +125,7 @@
     <message>
         <location filename="../src/music-player/musicsublist/AlbumSublistView.qml" line="66"/>
         <source>Duration</source>
-        <translation>Тривалість</translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -135,7 +133,7 @@
     <message>
         <location filename="../src/music-player/albumlist/AlbumView.qml" line="54"/>
         <source>Albums</source>
-        <translation>Альбоми</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/albumlist/AlbumView.qml" line="55"/>
@@ -153,7 +151,7 @@
     <message>
         <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="50"/>
         <source>Open Folders</source>
-        <translation>Відкрити теки</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="65"/>
@@ -163,32 +161,32 @@
     <message>
         <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="99"/>
         <source>Your favorite songs will be displayed here</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="111"/>
         <source>Click “</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="122"/>
         <source>” to add a song to My Favorites</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="157"/>
         <source>No songs yet. Click “</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="168"/>
         <source>” to add songs to the playlist</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="69"/>
         <source> scan the Music directory</source>
-        <translation>сканувати каталог «Музика»</translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -201,12 +199,12 @@
     <message>
         <location filename="../src/music-player/musicList/AllMusicList.qml" line="30"/>
         <source>1 song</source>
-        <translation>1 піісня</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/musicList/AllMusicList.qml" line="30"/>
         <source>%1 songs</source>
-        <translation>%1 пісні</translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -232,7 +230,7 @@
     <message>
         <location filename="../src/music-player/musicList/AllMusicListView.qml" line="49"/>
         <source>Album</source>
-        <translation>Альбом</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/musicList/AllMusicListView.qml" line="54"/>
@@ -245,7 +243,7 @@
     <message>
         <location filename="../src/music-player/singerlist/ArtistDefaultPage.qml" line="36"/>
         <source>Add Songs</source>
-        <translation>Додати композиції</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/singerlist/ArtistDefaultPage.qml" line="44"/>
@@ -260,7 +258,7 @@
     <message>
         <location filename="../src/music-player/singerlist/ArtistDefaultPage.qml" line="64"/>
         <source> scan the Music directory</source>
-        <translation type="unfinished">сканувати каталог «Музика»</translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -273,7 +271,7 @@
     <message>
         <location filename="../src/music-player/singerlist/ArtistGridDelegate.qml" line="149"/>
         <source>%1 songs</source>
-        <translation>%1 пісні</translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -286,7 +284,7 @@
     <message>
         <location filename="../src/music-player/musicmousemenu/ArtistMoreMenu.qml" line="26"/>
         <source>Play all</source>
-        <translation>Відтворити усе</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/musicmousemenu/ArtistMoreMenu.qml" line="35"/>
@@ -312,12 +310,12 @@
     <message>
         <location filename="../src/music-player/musicsublist/ArtistSublistView.qml" line="65"/>
         <source>Album</source>
-        <translation>Альбом</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/musicsublist/ArtistSublistView.qml" line="70"/>
         <source>Duration</source>
-        <translation>Тривалість</translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -338,7 +336,7 @@
     <message>
         <location filename="../src/music-player/dialogs/CDRemovedDialog.qml" line="32"/>
         <source>The CD has been removed</source>
-        <translation>КД було вилучено</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/dialogs/CDRemovedDialog.qml" line="36"/>
@@ -361,12 +359,12 @@
     <message>
         <location filename="../src/music-player/dialogs/CloseConfirmDialog.qml" line="62"/>
         <source>Exit</source>
-        <translation>Вихід</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/dialogs/CloseConfirmDialog.qml" line="73"/>
         <source>Do not ask again</source>
-        <translation>Не запитуй знову</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/dialogs/CloseConfirmDialog.qml" line="90"/>
@@ -376,7 +374,7 @@
     <message>
         <location filename="../src/music-player/dialogs/CloseConfirmDialog.qml" line="98"/>
         <source>Confirm</source>
-        <translation>Підтвердити</translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -384,17 +382,17 @@
     <message>
         <location filename="../src/music-player/playlist/CurrentPlayList.qml" line="97"/>
         <source>Play queue</source>
-        <translation>Відтворити чергу</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/playlist/CurrentPlayList.qml" line="114"/>
         <source>1 song</source>
-        <translation>1 піісня</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/playlist/CurrentPlayList.qml" line="114"/>
         <source>%1 songs</source>
-        <translation>%1 пісні</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/playlist/CurrentPlayList.qml" line="128"/>
@@ -407,7 +405,7 @@
     <message>
         <location filename="../src/music-player/playlist/CurrentPlayListDelegate.qml" line="123"/>
         <source>My Favorites</source>
-        <translation>Мої улюблені</translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -415,12 +413,12 @@
     <message>
         <location filename="../src/music-player/musicbaseandsonglist/CustomPlaylistModel.qml" line="23"/>
         <source>My Favorites</source>
-        <translation>Мої улюблені</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/musicbaseandsonglist/CustomPlaylistModel.qml" line="80"/>
         <source>CD playlist</source>
-        <translation>Список відтворення КД</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/musicbaseandsonglist/CustomPlaylistModel.qml" line="86"/>
@@ -438,22 +436,22 @@
     <message>
         <location filename="../src/music-player/dialogs/DeleteLocalDialog.qml" line="36"/>
         <source>Are you sure you want to delete the selected %1 songs?</source>
-        <translation>Ви впевнені, що хочете видалити вибрані %1 пісні?</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/dialogs/DeleteLocalDialog.qml" line="45"/>
         <source>The song files contained will also be deleted</source>
-        <translation>Файли пісень, які там зберігаються, також буде вилучено.</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/dialogs/DeleteLocalDialog.qml" line="53"/>
         <source>Delete</source>
-        <translation>Видалити</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/dialogs/DeleteLocalDialog.qml" line="65"/>
         <source>Cancel</source>
-        <translation>Скасувати</translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -466,17 +464,17 @@
     <message>
         <location filename="../src/music-player/dialogs/DeleteSonglistDialog.qml" line="43"/>
         <source>Are you sure you want to remove the selected %1 songs?</source>
-        <translation>Ви впевнені, що хочете видалити вибрані %1 пісні?</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/dialogs/DeleteSonglistDialog.qml" line="45"/>
         <source>Are you sure you want to delete this playlist?</source>
-        <translation>Ви впевнені, що хочете видалити цей плейлист?</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/dialogs/DeleteSonglistDialog.qml" line="55"/>
         <source>Remove</source>
-        <translation>Видалити</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/dialogs/DeleteSonglistDialog.qml" line="55"/>
@@ -486,7 +484,7 @@
     <message>
         <location filename="../src/music-player/dialogs/DeleteSonglistDialog.qml" line="70"/>
         <source>Cancel</source>
-        <translation>Скасувати</translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -514,12 +512,12 @@
     <message>
         <location filename="../src/music-player/dialogs/EqualizerDialog.qml" line="18"/>
         <source>Dance</source>
-        <translation>Танець</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/dialogs/EqualizerDialog.qml" line="19"/>
         <source>Full Bass</source>
-        <translation>Повний бас</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/dialogs/EqualizerDialog.qml" line="20"/>
@@ -529,7 +527,7 @@
     <message>
         <location filename="../src/music-player/dialogs/EqualizerDialog.qml" line="21"/>
         <source>Full Treble</source>
-        <translation>Повна частота</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/dialogs/EqualizerDialog.qml" line="22"/>
@@ -559,17 +557,17 @@
     <message>
         <location filename="../src/music-player/dialogs/EqualizerDialog.qml" line="27"/>
         <source>Reggae</source>
-        <translation>Реґґі</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/dialogs/EqualizerDialog.qml" line="28"/>
         <source>Rock</source>
-        <translation>Рок</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/dialogs/EqualizerDialog.qml" line="29"/>
         <source>Ska</source>
-        <translation>Ска</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/dialogs/EqualizerDialog.qml" line="30"/>
@@ -579,17 +577,17 @@
     <message>
         <location filename="../src/music-player/dialogs/EqualizerDialog.qml" line="31"/>
         <source>Soft Rock</source>
-        <translation>Софт-рок</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/dialogs/EqualizerDialog.qml" line="32"/>
         <source>Techno</source>
-        <translation>Техно</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/dialogs/EqualizerDialog.qml" line="106"/>
         <source>Equalizer</source>
-        <translation>Еквалайзер</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/dialogs/EqualizerDialog.qml" line="182"/>
@@ -604,7 +602,7 @@
     <message>
         <location filename="../src/music-player/dialogs/EqualizerDialog.qml" line="314"/>
         <source>Preamplifier</source>
-        <translation>Підсилювач</translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -612,7 +610,7 @@
     <message>
         <location filename="../src/music-player/dialogs/FileDialog.qml" line="15"/>
         <source>All Music</source>
-        <translation type="unfinished"></translation>
+        <translation>Уся музика</translation>
     </message>
 </context>
 <context>
@@ -620,7 +618,7 @@
     <message>
         <location filename="../src/music-player/dialogs/ImportFailedDialog.qml" line="32"/>
         <source>Import failed, no valid music file found</source>
-        <translation>Не вдалося імпортувати. Не знайдено коректного файла звукових даних.</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/dialogs/ImportFailedDialog.qml" line="36"/>
@@ -656,7 +654,7 @@
     <message>
         <location filename="../src/music-player/lyric/LyricPage.qml" line="133"/>
         <source>Artist</source>
-        <translation>Виконавець</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/lyric/LyricPage.qml" line="141"/>
@@ -666,7 +664,7 @@
     <message>
         <location filename="../src/music-player/lyric/LyricPage.qml" line="179"/>
         <source>No lyrics found</source>
-        <translation>Тексту не знайдено</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/lyric/LyricPage.qml" line="189"/>
@@ -684,12 +682,12 @@
     <message>
         <location filename="../src/music-player/mainwindow/MainWindow.qml" line="203"/>
         <source>Play/Pause</source>
-        <translation>Відтворення/Пауза</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/mainwindow/MainWindow.qml" line="207"/>
         <source>Previous</source>
-        <translation>Назад</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/mainwindow/MainWindow.qml" line="218"/>
@@ -724,7 +722,7 @@
     <message>
         <location filename="../src/music-player/mainwindow/MainWindow.qml" line="368"/>
         <source>My Favorites</source>
-        <translation>Мої улюблені</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/mainwindow/MainWindow.qml" line="390"/>
@@ -747,12 +745,12 @@
     <message>
         <location filename="../src/music-player/musicmousemenu/MulitSelectMenu.qml" line="28"/>
         <source>Remove from play queue</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/musicmousemenu/MulitSelectMenu.qml" line="35"/>
         <source>Delete from local disk</source>
-        <translation>Видалити з локального диску</translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -760,12 +758,12 @@
     <message>
         <location filename="../src/music-player/musicbaseandsonglist/MusicBaselistview.qml" line="36"/>
         <source>Library</source>
-        <translation>Бібліотека</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/musicbaseandsonglist/MusicBaselistview.qml" line="40"/>
         <source>Albums</source>
-        <translation>Альбоми</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/musicbaseandsonglist/MusicBaselistview.qml" line="41"/>
@@ -790,7 +788,7 @@
     <message>
         <location filename="../src/music-player/musicbaseandsonglist/MusicBaselistview.qml" line="66"/>
         <source>New playlist</source>
-        <translation>Новий плейлист</translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -806,7 +804,7 @@
     <message>
         <location filename="../src/music-player/dialogs/MusicInfoDialog.qml" line="71"/>
         <source>Title</source>
-        <translation>Назва</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/dialogs/MusicInfoDialog.qml" line="80"/>
@@ -826,7 +824,7 @@
     <message>
         <location filename="../src/music-player/dialogs/MusicInfoDialog.qml" line="101"/>
         <source>Size</source>
-        <translation>Розмір</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/dialogs/MusicInfoDialog.qml" line="107"/>
@@ -844,7 +842,7 @@
     <message>
         <location filename="../src/music-player/musicmousemenu/MusicMoreMenu.qml" line="24"/>
         <source>Pause</source>
-        <translation>Пауза</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/musicmousemenu/MusicMoreMenu.qml" line="24"/>
@@ -854,7 +852,7 @@
     <message>
         <location filename="../src/music-player/musicmousemenu/MusicMoreMenu.qml" line="44"/>
         <source>Add to</source>
-        <translation>Додати</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/musicmousemenu/MusicMoreMenu.qml" line="52"/>
@@ -869,7 +867,7 @@
     <message>
         <location filename="../src/music-player/musicmousemenu/MusicMoreMenu.qml" line="62"/>
         <source>Remove from play queue</source>
-        <translation type="unfinished"></translation>
+        <translation>Видалити з черги відтворення</translation>
     </message>
     <message>
         <location filename="../src/music-player/musicmousemenu/MusicMoreMenu.qml" line="72"/>
@@ -879,7 +877,7 @@
     <message>
         <location filename="../src/music-player/musicmousemenu/MusicMoreMenu.qml" line="79"/>
         <source>Encoding</source>
-        <translation>Кодування</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/musicmousemenu/MusicMoreMenu.qml" line="104"/>
@@ -907,7 +905,7 @@
     <message>
         <location filename="../src/music-player/main.cpp" line="143"/>
         <source>Unknown artist</source>
-        <translation>Невідомий виконавець</translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -915,7 +913,7 @@
     <message>
         <location filename="../src/music-player/dialogs/SearchResultDialog.qml" line="27"/>
         <source>Songs</source>
-        <translation>Пісні</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/dialogs/SearchResultDialog.qml" line="39"/>
@@ -943,7 +941,7 @@
     <message>
         <location filename="../src/music-player/mainwindow/SearchResultWindow.qml" line="100"/>
         <source>%1 albums - %2 songs</source>
-        <translation>%1 альбомів — %2 композицій</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/mainwindow/SearchResultWindow.qml" line="101"/>
@@ -953,7 +951,7 @@
     <message>
         <location filename="../src/music-player/mainwindow/SearchResultWindow.qml" line="101"/>
         <source>%1 album - %2 songs</source>
-        <translation>%1 альбом — %2 композиції</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/mainwindow/SearchResultWindow.qml" line="120"/>
@@ -986,12 +984,12 @@
     <message>
         <location filename="../src/music-player/dialogs/SettingsDialog.qml" line="42"/>
         <source>Autoplay</source>
-        <translation>Автовідтворення</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/dialogs/SettingsDialog.qml" line="53"/>
         <source>Remember playback position on exit</source>
-        <translation>Запам&apos;ятовувати позицію відтворення при виході</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/dialogs/SettingsDialog.qml" line="66"/>
@@ -1001,7 +999,7 @@
     <message>
         <location filename="../src/music-player/dialogs/SettingsDialog.qml" line="78"/>
         <source>Close Main Window</source>
-        <translation>Закрити головне вікно</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/dialogs/SettingsDialog.qml" line="91"/>
@@ -1021,7 +1019,7 @@
     <message>
         <location filename="../src/music-player/dialogs/SettingsDialog.qml" line="137"/>
         <source>Shortcuts</source>
-        <translation>Поєднання клавіш</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/dialogs/SettingsDialog.qml" line="158"/>
@@ -1031,17 +1029,17 @@
     <message>
         <location filename="../src/music-player/dialogs/SettingsDialog.qml" line="201"/>
         <source>Previous</source>
-        <translation>Назад</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/dialogs/SettingsDialog.qml" line="245"/>
         <source>Next</source>
-        <translation>Далі</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/dialogs/SettingsDialog.qml" line="290"/>
         <source>Volume up</source>
-        <translation>Збільшити гучність</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/dialogs/SettingsDialog.qml" line="335"/>
@@ -1051,12 +1049,12 @@
     <message>
         <location filename="../src/music-player/dialogs/SettingsDialog.qml" line="379"/>
         <source>Favorite</source>
-        <translation>Улюблені</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/dialogs/SettingsDialog.qml" line="501"/>
         <source>Cancel</source>
-        <translation>Скасувати</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/dialogs/SettingsDialog.qml" line="534"/>
@@ -1079,7 +1077,7 @@
     <message>
         <location filename="../src/music-player/util/shortcut.cpp" line="56"/>
         <source>Songs</source>
-        <translation>Пісні</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/util/shortcut.cpp" line="57"/>
@@ -1089,7 +1087,7 @@
     <message>
         <location filename="../src/music-player/util/shortcut.cpp" line="58"/>
         <source>Settings</source>
-        <translation>Налаштування</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/util/shortcut.cpp" line="65"/>
@@ -1129,12 +1127,12 @@
     <message>
         <location filename="../src/music-player/util/shortcut.cpp" line="74"/>
         <source>Unfavorite</source>
-        <translation>Вилучити з вибраних</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/util/shortcut.cpp" line="75"/>
         <source>Song info</source>
-        <translation>Інформація про пісню</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/util/shortcut.cpp" line="78"/>
@@ -1144,7 +1142,7 @@
     <message>
         <location filename="../src/music-player/util/shortcut.cpp" line="79"/>
         <source>Add music</source>
-        <translation>Додати музику</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/util/shortcut.cpp" line="80"/>
@@ -1159,12 +1157,12 @@
     <message>
         <location filename="../src/music-player/util/shortcut.cpp" line="84"/>
         <source>Help</source>
-        <translation>Допомога</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/util/shortcut.cpp" line="85"/>
         <source>Display shortcuts</source>
-        <translation>Показати ярлики</translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -1185,7 +1183,7 @@
     <message>
         <location filename="../src/music-player/musicmousemenu/SidebarMenu.qml" line="22"/>
         <source>Play</source>
-        <translation>Відтворити</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/musicmousemenu/SidebarMenu.qml" line="29"/>
@@ -1195,7 +1193,7 @@
     <message>
         <location filename="../src/music-player/musicmousemenu/SidebarMenu.qml" line="38"/>
         <source>Rename</source>
-        <translation>Перейменувати</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/musicmousemenu/SidebarMenu.qml" line="52"/>
@@ -1208,7 +1206,7 @@
     <message>
         <location filename="../src/music-player/allItems/SortMenu.qml" line="29"/>
         <source>CD playlist</source>
-        <translation>Список відтворення КД</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/allItems/SortMenu.qml" line="33"/>
@@ -1217,20 +1215,16 @@
     </message>
     <message>
         <location filename="../src/music-player/allItems/SortMenu.qml" line="34"/>
-        <location filename="../src/music-player/allItems/SortMenu.qml" line="41"/>
-        <location filename="../src/music-player/allItems/SortMenu.qml" line="46"/>
         <source>Date added</source>
         <translation>Дата додавання</translation>
     </message>
     <message>
         <location filename="../src/music-player/allItems/SortMenu.qml" line="37"/>
-        <location filename="../src/music-player/allItems/SortMenu.qml" line="47"/>
         <source>Album</source>
-        <translation>Альбом</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/allItems/SortMenu.qml" line="36"/>
-        <location filename="../src/music-player/allItems/SortMenu.qml" line="42"/>
         <source>Artist</source>
         <translation>Виконавець</translation>
     </message>
@@ -1250,12 +1244,12 @@
     <message>
         <location filename="../src/music-player/allItems/SublistTitleButton.qml" line="54"/>
         <source>%1 songs</source>
-        <translation>%1 пісні</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/allItems/SublistTitleButton.qml" line="64"/>
         <source>Play All</source>
-        <translation>Відтворити всі</translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -1271,7 +1265,7 @@
     <message>
         <location filename="../src/music-player/mainwindow/Toolbar.qml" line="43"/>
         <source>Sequential play</source>
-        <translation>Послідовне відтворення</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/mainwindow/Toolbar.qml" line="43"/>
@@ -1291,7 +1285,7 @@
     <message>
         <location filename="../src/music-player/mainwindow/Toolbar.qml" line="207"/>
         <source>Unfavorite</source>
-        <translation>Вилучити з вибраних</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/mainwindow/Toolbar.qml" line="207"/>
@@ -1301,12 +1295,12 @@
     <message>
         <location filename="../src/music-player/mainwindow/Toolbar.qml" line="220"/>
         <source>My Favorites</source>
-        <translation>Мої улюблені</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/mainwindow/Toolbar.qml" line="238"/>
         <source>Previous</source>
-        <translation>Назад</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/mainwindow/Toolbar.qml" line="259"/>
@@ -1316,17 +1310,17 @@
     <message>
         <location filename="../src/music-player/mainwindow/Toolbar.qml" line="280"/>
         <source>Next</source>
-        <translation>Далі</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/mainwindow/Toolbar.qml" line="389"/>
         <source>Lyrics</source>
-        <translation>Текст пісні</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/mainwindow/Toolbar.qml" line="438"/>
         <source>Play Queue</source>
-        <translation>Відтворити чергу</translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -1343,9 +1337,8 @@
     </message>
     <message>
         <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="63"/>
-        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="329"/>
         <source>Add music</source>
-        <translation>Додати музику</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="71"/>
@@ -1360,7 +1353,7 @@
     <message>
         <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="96"/>
         <source>Music</source>
-        <translation>Музика</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="98"/>
@@ -1370,12 +1363,12 @@
     <message>
         <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="99"/>
         <source>Version:</source>
-        <translation>Версія:</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="213"/>
         <source>Previous page</source>
-        <translation>Попередня сторінка</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="229"/>
