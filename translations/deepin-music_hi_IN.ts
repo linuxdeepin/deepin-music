@@ -1,27 +1,25 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS>
-<TS version="2.1" language="hi_IN" sourcelanguage="en_US">
+<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="hi_IN" sourcelanguage="en_US">
 <context>
     <name>AlbumDefaultPage</name>
     <message>
         <location filename="../src/music-player/albumlist/AlbumDefaultPage.qml" line="35"/>
         <source>Add Songs</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/albumlist/AlbumDefaultPage.qml" line="43"/>
         <source>Open Folders</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/albumlist/AlbumDefaultPage.qml" line="59"/>
         <source>Drag music files here or</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/albumlist/AlbumDefaultPage.qml" line="63"/>
         <source> scan the Music directory</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -29,12 +27,12 @@
     <message>
         <location filename="../src/music-player/albumlist/AlbumGridDelegate.qml" line="116"/>
         <source>1 song</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/albumlist/AlbumGridDelegate.qml" line="116"/>
         <source>%1 songs</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -42,7 +40,7 @@
     <message>
         <location filename="../src/music-player/albumlist/AlbumListDelegate.qml" line="107"/>
         <source>%1</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -60,12 +58,12 @@
     <message>
         <location filename="../src/music-player/albumlist/AlbumListView.qml" line="43"/>
         <source>Tracks</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/albumlist/AlbumListView.qml" line="48"/>
         <source>Date added</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -73,17 +71,17 @@
     <message>
         <location filename="../src/music-player/musicmousemenu/AlbumMoreMenu.qml" line="20"/>
         <source>View details</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/musicmousemenu/AlbumMoreMenu.qml" line="28"/>
         <source>Play all</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/musicmousemenu/AlbumMoreMenu.qml" line="37"/>
         <source>Add to</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -109,7 +107,7 @@
     <message>
         <location filename="../src/music-player/musicsublist/AlbumSublistDelegate.qml" line="147"/>
         <source>My Favorites</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -135,12 +133,12 @@
     <message>
         <location filename="../src/music-player/albumlist/AlbumView.qml" line="54"/>
         <source>Albums</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/albumlist/AlbumView.qml" line="55"/>
         <source>%1 albums - %2 songs</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -148,47 +146,47 @@
     <message>
         <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="42"/>
         <source>Add Songs</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="50"/>
         <source>Open Folders</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="65"/>
         <source>Drag music files here or</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="99"/>
         <source>Your favorite songs will be displayed here</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="111"/>
         <source>Click “</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="122"/>
         <source>” to add a song to My Favorites</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="157"/>
         <source>No songs yet. Click “</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="168"/>
         <source>” to add songs to the playlist</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="69"/>
         <source> scan the Music directory</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -196,17 +194,17 @@
     <message>
         <location filename="../src/music-player/musicList/AllMusicList.qml" line="17"/>
         <source>All Songs</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/musicList/AllMusicList.qml" line="30"/>
         <source>1 song</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/musicList/AllMusicList.qml" line="30"/>
         <source>%1 songs</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -214,7 +212,7 @@
     <message>
         <location filename="../src/music-player/musicList/AllMusicListDelegate.qml" line="212"/>
         <source>My Favorites</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -245,22 +243,22 @@
     <message>
         <location filename="../src/music-player/singerlist/ArtistDefaultPage.qml" line="36"/>
         <source>Add Songs</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/singerlist/ArtistDefaultPage.qml" line="44"/>
         <source>Open Folders</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/singerlist/ArtistDefaultPage.qml" line="60"/>
         <source>Drag music files here or</source>
-        <translation>यहाँ गाने के फ़ाइल खींचें या</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/singerlist/ArtistDefaultPage.qml" line="64"/>
         <source> scan the Music directory</source>
-        <translation> म्यूजिक डायरेक्टरी की स्कैन करें</translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -268,12 +266,12 @@
     <message>
         <location filename="../src/music-player/singerlist/ArtistGridDelegate.qml" line="149"/>
         <source>1 song</source>
-        <translation>1 गाना</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/singerlist/ArtistGridDelegate.qml" line="149"/>
         <source>%1 songs</source>
-        <translation>%1 गाने</translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -281,17 +279,17 @@
     <message>
         <location filename="../src/music-player/musicmousemenu/ArtistMoreMenu.qml" line="18"/>
         <source>View details</source>
-        <translation>विवरण देखें</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/musicmousemenu/ArtistMoreMenu.qml" line="26"/>
         <source>Play all</source>
-        <translation>सभी गाने चलाएं</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/musicmousemenu/ArtistMoreMenu.qml" line="35"/>
         <source>Add to</source>
-        <translation>जोड़ें</translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -299,7 +297,7 @@
     <message>
         <location filename="../src/music-player/musicsublist/ArtistSublistDelegate.qml" line="102"/>
         <source>My Favorites</source>
-        <translation>मेरे पसंदीदा</translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -325,12 +323,12 @@
     <message>
         <location filename="../src/music-player/singerlist/ArtistView.qml" line="54"/>
         <source>Artists</source>
-        <translation>कलाकार</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/singerlist/ArtistView.qml" line="55"/>
         <source>%1 artists - %2 songs</source>
-        <translation>%1 कलाकार - %2 गाने</translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -338,7 +336,7 @@
     <message>
         <location filename="../src/music-player/dialogs/CDRemovedDialog.qml" line="32"/>
         <source>The CD has been removed</source>
-        <translation>सीडी हटा ली गई है</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/dialogs/CDRemovedDialog.qml" line="36"/>
@@ -351,7 +349,7 @@
     <message>
         <location filename="../src/music-player/dialogs/CloseConfirmDialog.qml" line="36"/>
         <source>Please choose your action</source>
-        <translation>कृपया अपना कार्य चुनें</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/dialogs/CloseConfirmDialog.qml" line="50"/>
@@ -366,7 +364,7 @@
     <message>
         <location filename="../src/music-player/dialogs/CloseConfirmDialog.qml" line="73"/>
         <source>Do not ask again</source>
-        <translation>दोबारा मत पूछें</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/dialogs/CloseConfirmDialog.qml" line="90"/>
@@ -384,17 +382,17 @@
     <message>
         <location filename="../src/music-player/playlist/CurrentPlayList.qml" line="97"/>
         <source>Play queue</source>
-        <translation>प्ले क्वी</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/playlist/CurrentPlayList.qml" line="114"/>
         <source>1 song</source>
-        <translation>1 गाना</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/playlist/CurrentPlayList.qml" line="114"/>
         <source>%1 songs</source>
-        <translation>%1 गाने</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/playlist/CurrentPlayList.qml" line="128"/>
@@ -407,7 +405,7 @@
     <message>
         <location filename="../src/music-player/playlist/CurrentPlayListDelegate.qml" line="123"/>
         <source>My Favorites</source>
-        <translation>मेरे पसंदीदा</translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -415,17 +413,17 @@
     <message>
         <location filename="../src/music-player/musicbaseandsonglist/CustomPlaylistModel.qml" line="23"/>
         <source>My Favorites</source>
-        <translation>मेरे पसंदीदा</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/musicbaseandsonglist/CustomPlaylistModel.qml" line="80"/>
         <source>CD playlist</source>
-        <translation>सीडी प्लेस्टिज</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/musicbaseandsonglist/CustomPlaylistModel.qml" line="86"/>
         <source>CD</source>
-        <translation>सीडी</translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -443,7 +441,7 @@
     <message>
         <location filename="../src/music-player/dialogs/DeleteLocalDialog.qml" line="45"/>
         <source>The song files contained will also be deleted</source>
-        <translation>संग्रहित गाने के फ़ाइलें भी हटा दी जाएंगी</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/dialogs/DeleteLocalDialog.qml" line="53"/>
@@ -461,12 +459,12 @@
     <message>
         <location filename="../src/music-player/dialogs/DeleteSonglistDialog.qml" line="41"/>
         <source>Are you sure you want to remove %1?</source>
-        <translation>%1 हटा देना चाहते हैं? आपकी पुष्टि करें</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/dialogs/DeleteSonglistDialog.qml" line="43"/>
         <source>Are you sure you want to remove the selected %1 songs?</source>
-        <translation>चयनित %1 गाने हटा देना चाहते हैं? आपकी पुष्टि करें</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/dialogs/DeleteSonglistDialog.qml" line="45"/>
@@ -499,7 +497,7 @@
     <message>
         <location filename="../src/music-player/dialogs/EqualizerDialog.qml" line="15"/>
         <source>Monophony</source>
-        <translation>मोनोफोनी</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/dialogs/EqualizerDialog.qml" line="16"/>
@@ -539,7 +537,7 @@
     <message>
         <location filename="../src/music-player/dialogs/EqualizerDialog.qml" line="23"/>
         <source>Hall</source>
-        <translation>हॉल</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/dialogs/EqualizerDialog.qml" line="24"/>
@@ -584,7 +582,7 @@
     <message>
         <location filename="../src/music-player/dialogs/EqualizerDialog.qml" line="32"/>
         <source>Techno</source>
-        <translation>टेक्नो</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/dialogs/EqualizerDialog.qml" line="106"/>
@@ -604,7 +602,7 @@
     <message>
         <location filename="../src/music-player/dialogs/EqualizerDialog.qml" line="314"/>
         <source>Preamplifier</source>
-        <translation>प्रीएम्पलिफायर</translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -612,7 +610,7 @@
     <message>
         <location filename="../src/music-player/dialogs/FileDialog.qml" line="15"/>
         <source>All Music</source>
-        <translation>सभी गाने</translation>
+        <translation>सारे गाने</translation>
     </message>
 </context>
 <context>
@@ -620,7 +618,7 @@
     <message>
         <location filename="../src/music-player/dialogs/ImportFailedDialog.qml" line="32"/>
         <source>Import failed, no valid music file found</source>
-        <translation>आयात विफल, कोई वैध गाना फ़ाइल नहीं मिली</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/dialogs/ImportFailedDialog.qml" line="36"/>
@@ -633,7 +631,7 @@
     <message>
         <location filename="../src/music-player/musicmousemenu/ImportMenu.qml" line="25"/>
         <source>Play queue</source>
-        <translation>प्ले क्वी</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/musicmousemenu/ImportMenu.qml" line="40"/>
@@ -643,7 +641,7 @@
     <message>
         <location filename="../src/music-player/musicmousemenu/ImportMenu.qml" line="49"/>
         <source>Create new playlist</source>
-        <translation>एक नई प्लेलिस्ट बनाएं</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/musicmousemenu/ImportMenu.qml" line="52"/>
@@ -666,12 +664,12 @@
     <message>
         <location filename="../src/music-player/lyric/LyricPage.qml" line="179"/>
         <source>No lyrics found</source>
-        <translation>कोई लिरिक नहीं मिले</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/lyric/LyricPage.qml" line="189"/>
         <source>Please put the lyric file (same name as the song) and the song file in the same folder</source>
-        <translation>कृपया गाने के लिरिक फ़ाइल (गाने के समान नाम) और गाने के फ़ाइल को समान फ़ोल्डर में रखें</translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -704,32 +702,32 @@
     <message>
         <location filename="../src/music-player/mainwindow/MainWindow.qml" line="343"/>
         <source>Already added to the playlist</source>
-        <translation>पहले से प्लेलिस्ट में जोड़ दिया गया है</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/mainwindow/MainWindow.qml" line="346"/>
         <source>Added to &quot;%1&quot;</source>
-        <translation>&quot;%1&quot; में जोड़ दिया गया है</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/mainwindow/MainWindow.qml" line="349"/>
         <source>Removed from &quot;My Favorites&quot;</source>
-        <translation>&quot;My Favorites&quot; से हटा दिया गया है</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/mainwindow/MainWindow.qml" line="352"/>
         <source>A disc is connected</source>
-        <translation>एक डिस्क कनेक्ट हो गई है</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/mainwindow/MainWindow.qml" line="368"/>
         <source>My Favorites</source>
-        <translation>मेरी पसंद</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/mainwindow/MainWindow.qml" line="390"/>
         <source>All Songs</source>
-        <translation>सभी गाने</translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -737,7 +735,7 @@
     <message>
         <location filename="../src/music-player/musicmousemenu/MulitSelectMenu.qml" line="19"/>
         <source>Add to</source>
-        <translation>जोड़े</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/musicmousemenu/MulitSelectMenu.qml" line="28"/>
@@ -747,7 +745,7 @@
     <message>
         <location filename="../src/music-player/musicmousemenu/MulitSelectMenu.qml" line="28"/>
         <source>Remove from play queue</source>
-        <translation>प्लेक्यू बरकरार रखें</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/musicmousemenu/MulitSelectMenu.qml" line="35"/>
@@ -765,27 +763,27 @@
     <message>
         <location filename="../src/music-player/musicbaseandsonglist/MusicBaselistview.qml" line="40"/>
         <source>Albums</source>
-        <translation>एल्बम</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/musicbaseandsonglist/MusicBaselistview.qml" line="41"/>
         <source>Artists</source>
-        <translation>अर्टिस्ट</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/musicbaseandsonglist/MusicBaselistview.qml" line="42"/>
         <source>All Songs</source>
-        <translation>सभी गाने</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/musicbaseandsonglist/MusicBaselistview.qml" line="47"/>
         <source>Playlists</source>
-        <translation>प्लेलिस्ट</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/musicbaseandsonglist/MusicBaselistview.qml" line="64"/>
         <source>Create playlist</source>
-        <translation>प्लेलिस्ट बनाएं</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/musicbaseandsonglist/MusicBaselistview.qml" line="66"/>
@@ -798,7 +796,7 @@
     <message>
         <location filename="../src/music-player/mainwindow/MusicContentWindow.qml" line="22"/>
         <source>My Favorites</source>
-        <translation>मेरी पसंद</translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -836,7 +834,7 @@
     <message>
         <location filename="../src/music-player/dialogs/MusicInfoDialog.qml" line="114"/>
         <source>Path</source>
-        <translation>पथ</translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -854,7 +852,7 @@
     <message>
         <location filename="../src/music-player/musicmousemenu/MusicMoreMenu.qml" line="44"/>
         <source>Add to</source>
-        <translation>जोड़े</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/musicmousemenu/MusicMoreMenu.qml" line="52"/>
@@ -869,7 +867,7 @@
     <message>
         <location filename="../src/music-player/musicmousemenu/MusicMoreMenu.qml" line="62"/>
         <source>Remove from play queue</source>
-        <translation>प्लेक्यू बरकरार रखें</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/musicmousemenu/MusicMoreMenu.qml" line="72"/>
@@ -892,7 +890,7 @@
     <message>
         <location filename="../src/music-player/main.cpp" line="131"/>
         <source>Music is a local music player with beautiful design and simple functions.</source>
-        <translation>म्यूजिक एक सुंदर डिज़ाइन और सरल कार्यों के साथ स्थानीय म्यूजिक प्लेयर है।</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/main.cpp" line="133"/>
@@ -915,17 +913,17 @@
     <message>
         <location filename="../src/music-player/dialogs/SearchResultDialog.qml" line="27"/>
         <source>Songs</source>
-        <translation>गाने</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/dialogs/SearchResultDialog.qml" line="39"/>
         <source>Artists</source>
-        <translation>अर्टिस्ट</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/dialogs/SearchResultDialog.qml" line="50"/>
         <source>Albums</source>
-        <translation>एल्बम</translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -938,22 +936,22 @@
     <message>
         <location filename="../src/music-player/mainwindow/SearchResultWindow.qml" line="95"/>
         <source>Search Results</source>
-        <translation>खोज नतीजे</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/mainwindow/SearchResultWindow.qml" line="100"/>
         <source>%1 albums - %2 songs</source>
-        <translation>&quot;%1 एल्बम - %2 गाने&quot;</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/mainwindow/SearchResultWindow.qml" line="101"/>
         <source>1 album - 1 song</source>
-        <translation>1 एल्बम - 1 गाना</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/mainwindow/SearchResultWindow.qml" line="101"/>
         <source>%1 album - %2 songs</source>
-        <translation>&quot;%1 एल्बम - %2 गाने&quot;</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/mainwindow/SearchResultWindow.qml" line="120"/>
@@ -991,7 +989,7 @@
     <message>
         <location filename="../src/music-player/dialogs/SettingsDialog.qml" line="53"/>
         <source>Remember playback position on exit</source>
-        <translation>निकलते समय प्लेबैक स्थिति याद रखें</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/dialogs/SettingsDialog.qml" line="66"/>
@@ -1016,7 +1014,7 @@
     <message>
         <location filename="../src/music-player/dialogs/SettingsDialog.qml" line="105"/>
         <source>Ask me always</source>
-        <translation>मुझे हमेशा पूछें</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/dialogs/SettingsDialog.qml" line="137"/>
@@ -1066,7 +1064,7 @@
     <message>
         <location filename="../src/music-player/dialogs/SettingsDialog.qml" line="490"/>
         <source>This shortcut key conflicts with [%1], click Replace to make this shortcut key take effect immediately</source>
-        <translation>इस शॉर्टकट कुंजी [%1] के साथ टकराती है, इस शॉर्टकट कुंजी को तुरंत सक्रिय करने के लिए Replace पर क्लिक करें।</translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -1079,12 +1077,12 @@
     <message>
         <location filename="../src/music-player/util/shortcut.cpp" line="56"/>
         <source>Songs</source>
-        <translation>गाने</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/util/shortcut.cpp" line="57"/>
         <source>Playlists</source>
-        <translation>प्लेलिस्ट</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/util/shortcut.cpp" line="58"/>
@@ -1129,7 +1127,7 @@
     <message>
         <location filename="../src/music-player/util/shortcut.cpp" line="74"/>
         <source>Unfavorite</source>
-        <translation>अनफेवरेट</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/util/shortcut.cpp" line="75"/>
@@ -1144,12 +1142,12 @@
     <message>
         <location filename="../src/music-player/util/shortcut.cpp" line="79"/>
         <source>Add music</source>
-        <translation>म्यूजिक जोड़ें</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/util/shortcut.cpp" line="80"/>
         <source>Rename playlist</source>
-        <translation>प्लेलिस्ट को नाम बदलें</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/util/shortcut.cpp" line="81"/>
@@ -1177,7 +1175,7 @@
     <message>
         <location filename="../src/music-player/allItems/Shortcuts.qml" line="120"/>
         <source>My Favorites</source>
-        <translation>मेरे फेवरेट</translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -1190,7 +1188,7 @@
     <message>
         <location filename="../src/music-player/musicmousemenu/SidebarMenu.qml" line="29"/>
         <source>Add songs</source>
-        <translation>गाने जोड़ें</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/musicmousemenu/SidebarMenu.qml" line="38"/>
@@ -1208,7 +1206,7 @@
     <message>
         <location filename="../src/music-player/allItems/SortMenu.qml" line="29"/>
         <source>CD playlist</source>
-        <translation>सीडी प्लेलिस्ट</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/allItems/SortMenu.qml" line="33"/>
@@ -1218,7 +1216,7 @@
     <message>
         <location filename="../src/music-player/allItems/SortMenu.qml" line="34"/>
         <source>Date added</source>
-        <translation>जोड़े गए तारीख</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/allItems/SortMenu.qml" line="37"/>
@@ -1241,12 +1239,12 @@
     <message>
         <location filename="../src/music-player/allItems/SublistTitleButton.qml" line="54"/>
         <source>1 song</source>
-        <translation>1 गाना</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/allItems/SublistTitleButton.qml" line="54"/>
         <source>%1 songs</source>
-        <translation>&apos;%1 गाने&apos;</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/allItems/SublistTitleButton.qml" line="64"/>
@@ -1267,17 +1265,17 @@
     <message>
         <location filename="../src/music-player/mainwindow/Toolbar.qml" line="43"/>
         <source>Sequential play</source>
-        <translation>अनुक्रमित खेल</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/mainwindow/Toolbar.qml" line="43"/>
         <source>List loop</source>
-        <translation>सूची के लूप</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/mainwindow/Toolbar.qml" line="43"/>
         <source>Single loop</source>
-        <translation>एक लूप</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/mainwindow/Toolbar.qml" line="43"/>
@@ -1287,7 +1285,7 @@
     <message>
         <location filename="../src/music-player/mainwindow/Toolbar.qml" line="207"/>
         <source>Unfavorite</source>
-        <translation>अनफेवरेट</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/mainwindow/Toolbar.qml" line="207"/>
@@ -1297,7 +1295,7 @@
     <message>
         <location filename="../src/music-player/mainwindow/Toolbar.qml" line="220"/>
         <source>My Favorites</source>
-        <translation>मेरे फेवरेट</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/mainwindow/Toolbar.qml" line="238"/>
@@ -1322,7 +1320,7 @@
     <message>
         <location filename="../src/music-player/mainwindow/Toolbar.qml" line="438"/>
         <source>Play Queue</source>
-        <translation>प्लेक्वी</translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -1330,7 +1328,7 @@
     <message>
         <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="56"/>
         <source>Add playlist</source>
-        <translation>प्लेलिस्ट जोड़ें</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="58"/>
@@ -1340,7 +1338,7 @@
     <message>
         <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="63"/>
         <source>Add music</source>
-        <translation>म्यूजिक जोड़ें</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="71"/>
@@ -1360,22 +1358,22 @@
     <message>
         <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="98"/>
         <source>Music is a local music player with beautiful design and simple functions.</source>
-        <translation>म्यूजिक एक सुंदर डिज़ाइन और सरल कार्यों के साथ स्थानीय म्यूजिक प्लेयर है।</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="99"/>
         <source>Version:</source>
-        <translation>संस्करण:</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="213"/>
         <source>Previous page</source>
-        <translation>पिछली पेज</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="229"/>
         <source>Next page</source>
-        <translation>अगली पेज</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="239"/>
