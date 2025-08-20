@@ -14,7 +14,7 @@
     <message>
         <location filename="X-Next Shortcut Group]Name" line="0"/>
         <source>Next track</source>
-        <translation>Próxima</translation>
+        <translation>Próxima faixa</translation>
     </message>
     <message>
         <location filename="Desktop Entry]Comment" line="0"/>
@@ -29,7 +29,7 @@
     <message>
         <location filename="X-Previous Shortcut Group]Name" line="0"/>
         <source>Previous track</source>
-        <translation>Anterior</translation>
+        <translation>Faixa anterior</translation>
     </message>
 </context>
 </TS>
