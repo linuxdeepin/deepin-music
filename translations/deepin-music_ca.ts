@@ -664,12 +664,12 @@
     <message>
         <location filename="../src/music-player/lyric/LyricPage.qml" line="179"/>
         <source>No lyrics found</source>
-        <translation>No s&apos;ha trobat cap lletra</translation>
+        <translation>No s&apos;ha trobat cap lletra.</translation>
     </message>
     <message>
         <location filename="../src/music-player/lyric/LyricPage.qml" line="189"/>
         <source>Please put the lyric file (same name as the song) and the song file in the same folder</source>
-        <translation>Poseu el fitxer de la lletra (amb el mateix nom que la cançó) i el fitxer de la cançó a la mateixa carpeta</translation>
+        <translation>Poseu el fitxer de la lletra (amb el mateix nom que la cançó) i el fitxer de la cançó a la mateixa carpeta.</translation>
     </message>
 </context>
 <context>
