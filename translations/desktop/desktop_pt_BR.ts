@@ -24,7 +24,7 @@
     <message>
         <location filename="X-PlayPause Shortcut Group]Name" line="0"/>
         <source>Play/Pause track</source>
-        <translation>Reproduzir/Pausar</translation>
+        <translation>Reproduzir / Pausar faixa</translation>
     </message>
     <message>
         <location filename="X-Previous Shortcut Group]Name" line="0"/>
