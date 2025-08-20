@@ -364,7 +364,7 @@
     <message>
         <location filename="../src/music-player/dialogs/CloseConfirmDialog.qml" line="73"/>
         <source>Do not ask again</source>
-        <translation type="unfinished"/>
+        <translation>אל תשאל שוב</translation>
     </message>
     <message>
         <location filename="../src/music-player/dialogs/CloseConfirmDialog.qml" line="90"/>
@@ -1157,7 +1157,7 @@
     <message>
         <location filename="../src/music-player/util/shortcut.cpp" line="84"/>
         <source>Help</source>
-        <translation>הצלה</translation>
+        <translation>עזרה</translation>
     </message>
     <message>
         <location filename="../src/music-player/util/shortcut.cpp" line="85"/>
