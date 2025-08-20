@@ -359,17 +359,17 @@
     <message>
         <location filename="../src/music-player/dialogs/CloseConfirmDialog.qml" line="62"/>
         <source>Exit</source>
-        <translation>बंद करें</translation>
+        <translation>बाहर</translation>
     </message>
     <message>
         <location filename="../src/music-player/dialogs/CloseConfirmDialog.qml" line="73"/>
         <source>Do not ask again</source>
-        <translation type="unfinished"/>
+        <translation>दोबारा मत पूछें</translation>
     </message>
     <message>
         <location filename="../src/music-player/dialogs/CloseConfirmDialog.qml" line="90"/>
         <source>Cancel</source>
-        <translation>रद्द करें</translation>
+        <translation>रद्द करो</translation>
     </message>
     <message>
         <location filename="../src/music-player/dialogs/CloseConfirmDialog.qml" line="98"/>
