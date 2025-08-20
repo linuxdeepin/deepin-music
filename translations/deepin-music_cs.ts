@@ -364,7 +364,7 @@
     <message>
         <location filename="../src/music-player/dialogs/CloseConfirmDialog.qml" line="73"/>
         <source>Do not ask again</source>
-        <translation type="unfinished"/>
+        <translation>Znovu se neptat</translation>
     </message>
     <message>
         <location filename="../src/music-player/dialogs/CloseConfirmDialog.qml" line="90"/>
@@ -1077,7 +1077,7 @@
     <message>
         <location filename="../src/music-player/util/shortcut.cpp" line="56"/>
         <source>Songs</source>
-        <translation>Skladby</translation>
+        <translation>Písně</translation>
     </message>
     <message>
         <location filename="../src/music-player/util/shortcut.cpp" line="57"/>
