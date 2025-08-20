@@ -199,7 +199,7 @@
     <message>
         <location filename="../src/music-player/musicList/AllMusicList.qml" line="30"/>
         <source>1 song</source>
-        <translation type="unfinished"/>
+        <translation>שיר אחד</translation>
     </message>
     <message>
         <location filename="../src/music-player/musicList/AllMusicList.qml" line="30"/>
@@ -271,7 +271,7 @@
     <message>
         <location filename="../src/music-player/singerlist/ArtistGridDelegate.qml" line="149"/>
         <source>%1 songs</source>
-        <translation type="unfinished"/>
+        <translation>1% שיר</translation>
     </message>
 </context>
 <context>
@@ -382,7 +382,7 @@
     <message>
         <location filename="../src/music-player/playlist/CurrentPlayList.qml" line="97"/>
         <source>Play queue</source>
-        <translation type="unfinished"/>
+        <translation>תור משחק</translation>
     </message>
     <message>
         <location filename="../src/music-player/playlist/CurrentPlayList.qml" line="114"/>
@@ -446,7 +446,7 @@
     <message>
         <location filename="../src/music-player/dialogs/DeleteLocalDialog.qml" line="53"/>
         <source>Delete</source>
-        <translation type="unfinished"/>
+        <translation>מחיקה</translation>
     </message>
     <message>
         <location filename="../src/music-player/dialogs/DeleteLocalDialog.qml" line="65"/>
@@ -464,7 +464,7 @@
     <message>
         <location filename="../src/music-player/dialogs/DeleteSonglistDialog.qml" line="43"/>
         <source>Are you sure you want to remove the selected %1 songs?</source>
-        <translation type="unfinished"/>
+        <translation>האם אתה בטוח שברצונך להסיר את %1 השירים שנבחרו?</translation>
     </message>
     <message>
         <location filename="../src/music-player/dialogs/DeleteSonglistDialog.qml" line="45"/>
@@ -557,7 +557,7 @@
     <message>
         <location filename="../src/music-player/dialogs/EqualizerDialog.qml" line="27"/>
         <source>Reggae</source>
-        <translation type="unfinished"/>
+        <translation>רגאיי</translation>
     </message>
     <message>
         <location filename="../src/music-player/dialogs/EqualizerDialog.qml" line="28"/>
@@ -788,7 +788,7 @@
     <message>
         <location filename="../src/music-player/musicbaseandsonglist/MusicBaselistview.qml" line="66"/>
         <source>New playlist</source>
-        <translation type="unfinished"/>
+        <translation>רשימת נגינה חדשה</translation>
     </message>
 </context>
 <context>
@@ -804,7 +804,7 @@
     <message>
         <location filename="../src/music-player/dialogs/MusicInfoDialog.qml" line="71"/>
         <source>Title</source>
-        <translation type="unfinished"/>
+        <translation>שם</translation>
     </message>
     <message>
         <location filename="../src/music-player/dialogs/MusicInfoDialog.qml" line="80"/>
@@ -824,7 +824,7 @@
     <message>
         <location filename="../src/music-player/dialogs/MusicInfoDialog.qml" line="101"/>
         <source>Size</source>
-        <translation type="unfinished"/>
+        <translation>גודל</translation>
     </message>
     <message>
         <location filename="../src/music-player/dialogs/MusicInfoDialog.qml" line="107"/>
@@ -842,7 +842,7 @@
     <message>
         <location filename="../src/music-player/musicmousemenu/MusicMoreMenu.qml" line="24"/>
         <source>Pause</source>
-        <translation type="unfinished"/>
+        <translation>השהיה</translation>
     </message>
     <message>
         <location filename="../src/music-player/musicmousemenu/MusicMoreMenu.qml" line="24"/>
@@ -913,7 +913,7 @@
     <message>
         <location filename="../src/music-player/dialogs/SearchResultDialog.qml" line="27"/>
         <source>Songs</source>
-        <translation type="unfinished"/>
+        <translation>שירים</translation>
     </message>
     <message>
         <location filename="../src/music-player/dialogs/SearchResultDialog.qml" line="39"/>
@@ -1049,7 +1049,7 @@
     <message>
         <location filename="../src/music-player/dialogs/SettingsDialog.qml" line="379"/>
         <source>Favorite</source>
-        <translation type="unfinished"/>
+        <translation>הוספה למועדפים</translation>
     </message>
     <message>
         <location filename="../src/music-player/dialogs/SettingsDialog.qml" line="501"/>
