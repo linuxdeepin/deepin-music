@@ -1088,7 +1088,7 @@
     <message>
         <location filename="../src/music-player/util/shortcut.cpp" line="58"/>
         <source>Settings</source>
-        <translation>Төзөмдөр</translation>
+        <translation>Сайттар</translation>
     </message>
     <message>
         <location filename="../src/music-player/util/shortcut.cpp" line="65"/>
