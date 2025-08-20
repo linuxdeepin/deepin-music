@@ -961,7 +961,7 @@
     <message>
         <location filename="../src/music-player/mainwindow/SearchResultWindow.qml" line="128"/>
         <source>Artist</source>
-        <translation type="unfinished"/>
+        <translation>نەمە</translation>
     </message>
     <message>
         <location filename="../src/music-player/mainwindow/SearchResultWindow.qml" line="124"/>
@@ -1024,7 +1024,7 @@
     <message>
         <location filename="../src/music-player/dialogs/SettingsDialog.qml" line="158"/>
         <source>Play/Pause</source>
-        <translation type="unfinished"/>
+        <translation>توانی/کەسکردن</translation>
     </message>
     <message>
         <location filename="../src/music-player/dialogs/SettingsDialog.qml" line="201"/>
