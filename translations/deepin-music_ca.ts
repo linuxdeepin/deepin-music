@@ -941,7 +941,7 @@
     <message>
         <location filename="../src/music-player/mainwindow/SearchResultWindow.qml" line="100"/>
         <source>%1 albums - %2 songs</source>
-        <translation>&apos;%1 àlbums - %2 cançons&apos;</translation>
+        <translation>%1 àlbums - %2 cançons</translation>
     </message>
     <message>
         <location filename="../src/music-player/mainwindow/SearchResultWindow.qml" line="101"/>
@@ -951,7 +951,7 @@
     <message>
         <location filename="../src/music-player/mainwindow/SearchResultWindow.qml" line="101"/>
         <source>%1 album - %2 songs</source>
-        <translation>&apos;%1 àlbum - %2 cançons&apos;</translation>
+        <translation>%1 àlbum - %2 cançons</translation>
     </message>
     <message>
         <location filename="../src/music-player/mainwindow/SearchResultWindow.qml" line="120"/>
@@ -989,7 +989,7 @@
     <message>
         <location filename="../src/music-player/dialogs/SettingsDialog.qml" line="53"/>
         <source>Remember playback position on exit</source>
-        <translation>Recorda la posició de reproducció en sortir</translation>
+        <translation>Recorda la posició de la reproducció en sortir.</translation>
     </message>
     <message>
         <location filename="../src/music-player/dialogs/SettingsDialog.qml" line="66"/>
@@ -1147,7 +1147,7 @@
     <message>
         <location filename="../src/music-player/util/shortcut.cpp" line="80"/>
         <source>Rename playlist</source>
-        <translation>Reanomena la llista de reproducció</translation>
+        <translation>Canvia el nom de la llista de reproducció</translation>
     </message>
     <message>
         <location filename="../src/music-player/util/shortcut.cpp" line="81"/>
@@ -1188,7 +1188,7 @@
     <message>
         <location filename="../src/music-player/musicmousemenu/SidebarMenu.qml" line="29"/>
         <source>Add songs</source>
-        <translation>Afegeix cançons</translation>
+        <translation>Afegiu-hi cançons</translation>
     </message>
     <message>
         <location filename="../src/music-player/musicmousemenu/SidebarMenu.qml" line="38"/>
@@ -1244,7 +1244,7 @@
     <message>
         <location filename="../src/music-player/allItems/SublistTitleButton.qml" line="54"/>
         <source>%1 songs</source>
-        <translation>&apos;%1 cançons&apos;</translation>
+        <translation>%1 cançons</translation>
     </message>
     <message>
         <location filename="../src/music-player/allItems/SublistTitleButton.qml" line="64"/>
