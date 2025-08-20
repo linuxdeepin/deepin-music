@@ -9,7 +9,7 @@
     <message>
         <location filename="../../src/music-player/albumlist/AlbumDefaultPage.qml" line="43"/>
         <source>Open Folders</source>
-        <translation type="unfinished"/>
+        <translation>Mappen openen</translation>
     </message>
     <message>
         <location filename="../../src/music-player/albumlist/AlbumDefaultPage.qml" line="59"/>
@@ -19,7 +19,7 @@
     <message>
         <location filename="../../src/music-player/albumlist/AlbumDefaultPage.qml" line="63"/>
         <source> scan the Music directory</source>
-        <translation type="unfinished"/>
+        <translation>indexeer de muziekmap</translation>
     </message>
 </context>
 <context>
@@ -27,7 +27,7 @@
     <message>
         <location filename="../../src/music-player/albumlist/AlbumGridDelegate.qml" line="116"/>
         <source>1 song</source>
-        <translation type="unfinished"/>
+        <translation>1 nummer</translation>
     </message>
     <message>
         <location filename="../../src/music-player/albumlist/AlbumGridDelegate.qml" line="116"/>
@@ -107,7 +107,7 @@
     <message>
         <location filename="../../src/music-player/musicsublist/AlbumSublistDelegate.qml" line="147"/>
         <source>My Favorites</source>
-        <translation type="unfinished"/>
+        <translation>Mijn favorieten</translation>
     </message>
 </context>
 <context>
@@ -115,7 +115,7 @@
     <message>
         <location filename="../../src/music-player/musicsublist/AlbumSublistView.qml" line="55"/>
         <source>Title</source>
-        <translation type="unfinished"/>
+        <translation>Titel</translation>
     </message>
     <message>
         <location filename="../../src/music-player/musicsublist/AlbumSublistView.qml" line="60"/>
@@ -125,7 +125,7 @@
     <message>
         <location filename="../../src/music-player/musicsublist/AlbumSublistView.qml" line="66"/>
         <source>Duration</source>
-        <translation type="unfinished"/>
+        <translation>Duur</translation>
     </message>
 </context>
 <context>
@@ -171,7 +171,7 @@
     <message>
         <location filename="../../src/music-player/musicList/AllMusicDefaultPage.qml" line="111"/>
         <source>Click “</source>
-        <translation type="unfinished"/>
+        <translation>Klik op ‘</translation>
     </message>
     <message>
         <location filename="../../src/music-player/musicList/AllMusicDefaultPage.qml" line="122"/>
@@ -181,7 +181,7 @@
     <message>
         <location filename="../../src/music-player/musicList/AllMusicDefaultPage.qml" line="157"/>
         <source>No songs yet. Click “</source>
-        <translation type="unfinished"/>
+        <translation>Er zijn nog geen nummers. Klik op ‘</translation>
     </message>
     <message>
         <location filename="../../src/music-player/musicList/AllMusicDefaultPage.qml" line="168"/>
@@ -212,7 +212,7 @@
     <message>
         <location filename="../../src/music-player/musicList/AllMusicListDelegate.qml" line="212"/>
         <source>My Favorites</source>
-        <translation type="unfinished"/>
+        <translation>Mijn favorieten</translation>
     </message>
 </context>
 <context>
@@ -230,7 +230,7 @@
     <message>
         <location filename="../../src/music-player/musicList/AllMusicListView.qml" line="49"/>
         <source>Album</source>
-        <translation type="unfinished"/>
+        <translation>Album</translation>
     </message>
     <message>
         <location filename="../../src/music-player/musicList/AllMusicListView.qml" line="54"/>
@@ -297,7 +297,7 @@
     <message>
         <location filename="../../src/music-player/musicsublist/ArtistSublistDelegate.qml" line="102"/>
         <source>My Favorites</source>
-        <translation type="unfinished"/>
+        <translation>Mijn favorieten</translation>
     </message>
 </context>
 <context>
@@ -336,7 +336,7 @@
     <message>
         <location filename="../../src/music-player/dialogs/CDRemovedDialog.qml" line="32"/>
         <source>The CD has been removed</source>
-        <translation type="unfinished"/>
+        <translation>De cd is uitgeworpen</translation>
     </message>
     <message>
         <location filename="../../src/music-player/dialogs/CDRemovedDialog.qml" line="36"/>
@@ -354,7 +354,7 @@
     <message>
         <location filename="../../src/music-player/dialogs/CloseConfirmDialog.qml" line="50"/>
         <source>Minimize to system tray</source>
-        <translation type="unfinished"/>
+        <translation>Minimaliseren naar systeemvak</translation>
     </message>
     <message>
         <location filename="../../src/music-player/dialogs/CloseConfirmDialog.qml" line="62"/>
@@ -374,7 +374,7 @@
     <message>
         <location filename="../../src/music-player/dialogs/CloseConfirmDialog.qml" line="98"/>
         <source>Confirm</source>
-        <translation type="unfinished"/>
+        <translation>Bevestigen</translation>
     </message>
 </context>
 <context>
@@ -387,12 +387,12 @@
     <message>
         <location filename="../../src/music-player/playlist/CurrentPlayList.qml" line="114"/>
         <source>1 song</source>
-        <translation type="unfinished"/>
+        <translation>1 nummer</translation>
     </message>
     <message>
         <location filename="../../src/music-player/playlist/CurrentPlayList.qml" line="114"/>
         <source>%1 songs</source>
-        <translation type="unfinished"/>
+        <translation>%1 nummers</translation>
     </message>
     <message>
         <location filename="../../src/music-player/playlist/CurrentPlayList.qml" line="128"/>
@@ -446,7 +446,7 @@
     <message>
         <location filename="../../src/music-player/dialogs/DeleteLocalDialog.qml" line="53"/>
         <source>Delete</source>
-        <translation type="unfinished"/>
+        <translation>Verwijderen</translation>
     </message>
     <message>
         <location filename="../../src/music-player/dialogs/DeleteLocalDialog.qml" line="65"/>
@@ -497,7 +497,7 @@
     <message>
         <location filename="../../src/music-player/dialogs/EqualizerDialog.qml" line="15"/>
         <source>Monophony</source>
-        <translation type="unfinished"/>
+        <translation>Monofonie</translation>
     </message>
     <message>
         <location filename="../../src/music-player/dialogs/EqualizerDialog.qml" line="16"/>
@@ -507,12 +507,12 @@
     <message>
         <location filename="../../src/music-player/dialogs/EqualizerDialog.qml" line="17"/>
         <source>Club</source>
-        <translation type="unfinished"/>
+        <translation>Club</translation>
     </message>
     <message>
         <location filename="../../src/music-player/dialogs/EqualizerDialog.qml" line="18"/>
         <source>Dance</source>
-        <translation type="unfinished"/>
+        <translation>Dance</translation>
     </message>
     <message>
         <location filename="../../src/music-player/dialogs/EqualizerDialog.qml" line="19"/>
@@ -532,12 +532,12 @@
     <message>
         <location filename="../../src/music-player/dialogs/EqualizerDialog.qml" line="22"/>
         <source>Headphones</source>
-        <translation type="unfinished"/>
+        <translation>Koptelefoon</translation>
     </message>
     <message>
         <location filename="../../src/music-player/dialogs/EqualizerDialog.qml" line="23"/>
         <source>Hall</source>
-        <translation type="unfinished"/>
+        <translation>Concertzaal</translation>
     </message>
     <message>
         <location filename="../../src/music-player/dialogs/EqualizerDialog.qml" line="24"/>
@@ -567,7 +567,7 @@
     <message>
         <location filename="../../src/music-player/dialogs/EqualizerDialog.qml" line="29"/>
         <source>Ska</source>
-        <translation type="unfinished"/>
+        <translation>Ska</translation>
     </message>
     <message>
         <location filename="../../src/music-player/dialogs/EqualizerDialog.qml" line="30"/>
@@ -597,12 +597,12 @@
     <message>
         <location filename="../../src/music-player/dialogs/EqualizerDialog.qml" line="205"/>
         <source>Reset</source>
-        <translation type="unfinished"/>
+        <translation>Herstellen</translation>
     </message>
     <message>
         <location filename="../../src/music-player/dialogs/EqualizerDialog.qml" line="314"/>
         <source>Preamplifier</source>
-        <translation type="unfinished"/>
+        <translation>Versterker</translation>
     </message>
 </context>
 <context>
@@ -618,7 +618,7 @@
     <message>
         <location filename="../../src/music-player/dialogs/ImportFailedDialog.qml" line="32"/>
         <source>Import failed, no valid music file found</source>
-        <translation type="unfinished"/>
+        <translation>Het importeren is mislukt: geen geldig muziekbestand aangetroffen!</translation>
     </message>
     <message>
         <location filename="../../src/music-player/dialogs/ImportFailedDialog.qml" line="36"/>
@@ -646,7 +646,7 @@
     <message>
         <location filename="../../src/music-player/lyric/LyricPage.qml" line="189"/>
         <source>Please put the lyric file (same name as the song) and the song file in the same folder</source>
-        <translation type="unfinished"/>
+        <translation>Plaats het songtekstbestand (met dezelfde naam als het muziekbestand) en het nummer in dezelfde map</translation>
     </message>
 </context>
 <context>
@@ -654,7 +654,7 @@
     <message>
         <location filename="../../src/music-player/mainwindow/MainWindow.qml" line="188"/>
         <source>Music</source>
-        <translation type="unfinished"/>
+        <translation>Muziek</translation>
     </message>
     <message>
         <location filename="../../src/music-player/mainwindow/MainWindow.qml" line="203"/>
@@ -674,17 +674,17 @@
     <message>
         <location filename="../../src/music-player/mainwindow/MainWindow.qml" line="229"/>
         <source>Exit</source>
-        <translation type="unfinished"/>
+        <translation>Afsluiten</translation>
     </message>
     <message>
         <location filename="../../src/music-player/mainwindow/MainWindow.qml" line="343"/>
         <source>Already added to the playlist</source>
-        <translation type="unfinished"/>
+        <translation>Reeds toegevoegd aan afspeellijst</translation>
     </message>
     <message>
         <location filename="../../src/music-player/mainwindow/MainWindow.qml" line="346"/>
         <source>Added to &quot;%1&quot;</source>
-        <translation type="unfinished"/>
+        <translation>Toegevoegd aan %1</translation>
     </message>
     <message>
         <location filename="../../src/music-player/mainwindow/MainWindow.qml" line="349"/>
@@ -694,7 +694,7 @@
     <message>
         <location filename="../../src/music-player/mainwindow/MainWindow.qml" line="352"/>
         <source>A disc is connected</source>
-        <translation type="unfinished"/>
+        <translation>Er is een schijf ingevoerd</translation>
     </message>
     <message>
         <location filename="../../src/music-player/mainwindow/MainWindow.qml" line="368"/>
@@ -735,7 +735,7 @@
     <message>
         <location filename="../../src/music-player/musicbaseandsonglist/MusicBaselistview.qml" line="36"/>
         <source>Library</source>
-        <translation type="unfinished"/>
+        <translation>Bibliotheek</translation>
     </message>
     <message>
         <location filename="../../src/music-player/musicbaseandsonglist/MusicBaselistview.qml" line="40"/>
@@ -750,7 +750,7 @@
     <message>
         <location filename="../../src/music-player/musicbaseandsonglist/MusicBaselistview.qml" line="42"/>
         <source>All Songs</source>
-        <translation type="unfinished"/>
+        <translation>Alle nummers</translation>
     </message>
     <message>
         <location filename="../../src/music-player/musicbaseandsonglist/MusicBaselistview.qml" line="47"/>
@@ -773,7 +773,7 @@
     <message>
         <location filename="../../src/music-player/mainwindow/MusicContentWindow.qml" line="22"/>
         <source>My Favorites</source>
-        <translation type="unfinished"/>
+        <translation>Mijn favorieten</translation>
     </message>
 </context>
 <context>
@@ -811,7 +811,7 @@
     <message>
         <location filename="../../src/music-player/dialogs/MusicInfoDialog.qml" line="114"/>
         <source>Path</source>
-        <translation type="unfinished"/>
+        <translation>Pad</translation>
     </message>
 </context>
 <context>
@@ -829,12 +829,12 @@
     <message>
         <location filename="../../src/music-player/musicmousemenu/MusicMoreMenu.qml" line="44"/>
         <source>Add to</source>
-        <translation type="unfinished"/>
+        <translation>Toevoegen aan</translation>
     </message>
     <message>
         <location filename="../../src/music-player/musicmousemenu/MusicMoreMenu.qml" line="52"/>
         <source>Open in file manager</source>
-        <translation type="unfinished"/>
+        <translation>Openen in bestandsbeheerder</translation>
     </message>
     <message>
         <location filename="../../src/music-player/musicmousemenu/MusicMoreMenu.qml" line="62"/>
@@ -849,7 +849,7 @@
     <message>
         <location filename="../../src/music-player/musicmousemenu/MusicMoreMenu.qml" line="72"/>
         <source>Delete from local disk</source>
-        <translation type="unfinished"/>
+        <translation>Verwijderen van lokale schijf</translation>
     </message>
     <message>
         <location filename="../../src/music-player/musicmousemenu/MusicMoreMenu.qml" line="79"/>
@@ -882,7 +882,7 @@
     <message>
         <location filename="../../src/music-player/main.cpp" line="143"/>
         <source>Unknown artist</source>
-        <translation type="unfinished"/>
+        <translation>Onbekende artiest</translation>
     </message>
 </context>
 <context>
@@ -900,7 +900,7 @@
     <message>
         <location filename="../../src/music-player/dialogs/SearchResultDialog.qml" line="50"/>
         <source>Albums</source>
-        <translation type="unfinished"/>
+        <translation>Albums</translation>
     </message>
 </context>
 <context>
@@ -913,7 +913,7 @@
     <message>
         <location filename="../../src/music-player/mainwindow/SearchResultWindow.qml" line="96"/>
         <source>Search Results</source>
-        <translation type="unfinished"/>
+        <translation>Zoekresultaat</translation>
     </message>
     <message>
         <location filename="../../src/music-player/mainwindow/SearchResultWindow.qml" line="101"/>
@@ -933,7 +933,7 @@
     <message>
         <location filename="../../src/music-player/mainwindow/SearchResultWindow.qml" line="121"/>
         <source>Music</source>
-        <translation type="unfinished"/>
+        <translation>Muziek</translation>
     </message>
     <message>
         <location filename="../../src/music-player/mainwindow/SearchResultWindow.qml" line="125"/>
@@ -1026,12 +1026,12 @@
     <message>
         <location filename="../../src/music-player/dialogs/SettingsDialog.qml" line="379"/>
         <source>Favorite</source>
-        <translation type="unfinished"/>
+        <translation>Toevoegen aan favorieten</translation>
     </message>
     <message>
         <location filename="../../src/music-player/dialogs/SettingsDialog.qml" line="490"/>
         <source>This shortcut key conflicts with [%1], click Replace to make this shortcut key take effect immediately</source>
-        <translation type="unfinished"/>
+        <translation>Deze sneltoets wordt al gebruikt door [1%]. Klik op ‘Vervangen’ om de nieuwe sneltoets toe te wijzen.</translation>
     </message>
     <message>
         <location filename="../../src/music-player/dialogs/SettingsDialog.qml" line="501"/>
@@ -1049,17 +1049,17 @@
     <message>
         <location filename="../../src/music-player/util/shortcut.cpp" line="55"/>
         <source>Play</source>
-        <translation type="unfinished"/>
+        <translation>Afspelen</translation>
     </message>
     <message>
         <location filename="../../src/music-player/util/shortcut.cpp" line="56"/>
         <source>Songs</source>
-        <translation type="unfinished"/>
+        <translation>Nummers</translation>
     </message>
     <message>
         <location filename="../../src/music-player/util/shortcut.cpp" line="57"/>
         <source>Playlists</source>
-        <translation type="unfinished"/>
+        <translation>Afspeellijsten</translation>
     </message>
     <message>
         <location filename="../../src/music-player/util/shortcut.cpp" line="58"/>
@@ -1074,7 +1074,7 @@
     <message>
         <location filename="../../src/music-player/util/shortcut.cpp" line="66"/>
         <source>Previous</source>
-        <translation type="unfinished"/>
+        <translation>Vorige</translation>
     </message>
     <message>
         <location filename="../../src/music-player/util/shortcut.cpp" line="67"/>
@@ -1094,7 +1094,7 @@
     <message>
         <location filename="../../src/music-player/util/shortcut.cpp" line="70"/>
         <source>Mute</source>
-        <translation type="unfinished"/>
+        <translation>Dempen</translation>
     </message>
     <message>
         <location filename="../../src/music-player/util/shortcut.cpp" line="73"/>
@@ -1104,12 +1104,12 @@
     <message>
         <location filename="../../src/music-player/util/shortcut.cpp" line="74"/>
         <source>Unfavorite</source>
-        <translation type="unfinished"/>
+        <translation>Verwijderen uit favorieten</translation>
     </message>
     <message>
         <location filename="../../src/music-player/util/shortcut.cpp" line="75"/>
         <source>Song info</source>
-        <translation type="unfinished"/>
+        <translation>Nummerinformatie</translation>
     </message>
     <message>
         <location filename="../../src/music-player/util/shortcut.cpp" line="78"/>
@@ -1119,12 +1119,12 @@
     <message>
         <location filename="../../src/music-player/util/shortcut.cpp" line="79"/>
         <source>Add music</source>
-        <translation type="unfinished"/>
+        <translation>Muziek toevoegen</translation>
     </message>
     <message>
         <location filename="../../src/music-player/util/shortcut.cpp" line="80"/>
         <source>Rename playlist</source>
-        <translation type="unfinished"/>
+        <translation>Naam wijzigen</translation>
     </message>
     <message>
         <location filename="../../src/music-player/util/shortcut.cpp" line="81"/>
@@ -1175,7 +1175,7 @@
     <message>
         <location filename="../../src/music-player/musicmousemenu/SidebarMenu.qml" line="56"/>
         <source>Delete</source>
-        <translation type="unfinished"/>
+        <translation>Verwijderen</translation>
     </message>
 </context>
 <context>
@@ -1276,7 +1276,7 @@
     <message>
         <location filename="../../src/music-player/mainwindow/Toolbar.qml" line="220"/>
         <source>My Favorites</source>
-        <translation type="unfinished"/>
+        <translation>Mijn favorieten</translation>
     </message>
     <message>
         <location filename="../../src/music-player/mainwindow/Toolbar.qml" line="238"/>
@@ -1286,12 +1286,12 @@
     <message>
         <location filename="../../src/music-player/mainwindow/Toolbar.qml" line="259"/>
         <source>Play/Pause</source>
-        <translation type="unfinished"/>
+        <translation>Afspelen/Pauzeren</translation>
     </message>
     <message>
         <location filename="../../src/music-player/mainwindow/Toolbar.qml" line="280"/>
         <source>Next</source>
-        <translation type="unfinished"/>
+        <translation>Volgende</translation>
     </message>
     <message>
         <location filename="../../src/music-player/mainwindow/Toolbar.qml" line="389"/>
@@ -1314,7 +1314,7 @@
     <message>
         <location filename="../../src/music-player/mainwindow/WindowTitlebar.qml" line="58"/>
         <source>New playlist</source>
-        <translation type="unfinished"/>
+        <translation>Nieuwe afspeellijst</translation>
     </message>
     <message>
         <location filename="../../src/music-player/mainwindow/WindowTitlebar.qml" line="63"/>
@@ -1325,7 +1325,7 @@
     <message>
         <location filename="../../src/music-player/mainwindow/WindowTitlebar.qml" line="71"/>
         <source>Equalizer</source>
-        <translation type="unfinished"/>
+        <translation>Equalizer</translation>
     </message>
     <message>
         <location filename="../../src/music-player/mainwindow/WindowTitlebar.qml" line="82"/>
@@ -1340,12 +1340,12 @@
     <message>
         <location filename="../../src/music-player/mainwindow/WindowTitlebar.qml" line="98"/>
         <source>Music is a local music player with beautiful design and simple functions.</source>
-        <translation type="unfinished"/>
+        <translation>Met Muziek kun je je lokale muziekverzameling afspelen in een mooi jasje voorzien van alle basisfuncties.</translation>
     </message>
     <message>
         <location filename="../../src/music-player/mainwindow/WindowTitlebar.qml" line="99"/>
         <source>Version:</source>
-        <translation type="unfinished"/>
+        <translation>Versie:</translation>
     </message>
     <message>
         <location filename="../../src/music-player/mainwindow/WindowTitlebar.qml" line="213"/>
@@ -1367,7 +1367,7 @@
     <name>desktop</name>
     <message>
         <source>Deepin Music</source>
-        <translation type="unfinished"/>
+        <translation type="vanished">Deepin Muziek</translation>
     </message>
     <message>
         <source>Music</source>
@@ -1383,7 +1383,7 @@
     </message>
     <message>
         <source>Play/Pause track</source>
-        <translation type="unfinished"/>
+        <translation type="vanished">Nummer afspelen/pauzeren</translation>
     </message>
     <message>
         <source>Previous track</source>
