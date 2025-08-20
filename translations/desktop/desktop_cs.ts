@@ -9,7 +9,7 @@
     <message>
         <location filename="../../src/music-player/albumlist/AlbumDefaultPage.qml" line="43"/>
         <source>Open Folders</source>
-        <translation type="unfinished"/>
+        <translation>Otevřít složky</translation>
     </message>
     <message>
         <location filename="../../src/music-player/albumlist/AlbumDefaultPage.qml" line="59"/>
@@ -27,7 +27,7 @@
     <message>
         <location filename="../../src/music-player/albumlist/AlbumGridDelegate.qml" line="116"/>
         <source>1 song</source>
-        <translation type="unfinished"/>
+        <translation>1 skladba</translation>
     </message>
     <message>
         <location filename="../../src/music-player/albumlist/AlbumGridDelegate.qml" line="116"/>
@@ -107,7 +107,7 @@
     <message>
         <location filename="../../src/music-player/musicsublist/AlbumSublistDelegate.qml" line="147"/>
         <source>My Favorites</source>
-        <translation type="unfinished"/>
+        <translation>Moje oblíbené</translation>
     </message>
 </context>
 <context>
@@ -115,7 +115,7 @@
     <message>
         <location filename="../../src/music-player/musicsublist/AlbumSublistView.qml" line="55"/>
         <source>Title</source>
-        <translation type="unfinished"/>
+        <translation>Název</translation>
     </message>
     <message>
         <location filename="../../src/music-player/musicsublist/AlbumSublistView.qml" line="60"/>
@@ -125,7 +125,7 @@
     <message>
         <location filename="../../src/music-player/musicsublist/AlbumSublistView.qml" line="66"/>
         <source>Duration</source>
-        <translation type="unfinished"/>
+        <translation>Doba trvání</translation>
     </message>
 </context>
 <context>
@@ -212,7 +212,7 @@
     <message>
         <location filename="../../src/music-player/musicList/AllMusicListDelegate.qml" line="212"/>
         <source>My Favorites</source>
-        <translation type="unfinished"/>
+        <translation>Moje oblíbené</translation>
     </message>
 </context>
 <context>
@@ -230,7 +230,7 @@
     <message>
         <location filename="../../src/music-player/musicList/AllMusicListView.qml" line="49"/>
         <source>Album</source>
-        <translation type="unfinished"/>
+        <translation>Album</translation>
     </message>
     <message>
         <location filename="../../src/music-player/musicList/AllMusicListView.qml" line="54"/>
@@ -271,7 +271,7 @@
     <message>
         <location filename="../../src/music-player/singerlist/ArtistGridDelegate.qml" line="149"/>
         <source>%1 songs</source>
-        <translation type="unfinished"/>
+        <translation>%1 skladeb</translation>
     </message>
 </context>
 <context>
@@ -297,7 +297,7 @@
     <message>
         <location filename="../../src/music-player/musicsublist/ArtistSublistDelegate.qml" line="102"/>
         <source>My Favorites</source>
-        <translation type="unfinished"/>
+        <translation>Moje oblíbené</translation>
     </message>
 </context>
 <context>
@@ -336,7 +336,7 @@
     <message>
         <location filename="../../src/music-player/dialogs/CDRemovedDialog.qml" line="32"/>
         <source>The CD has been removed</source>
-        <translation type="unfinished"/>
+        <translation>CD bylo vysunuto</translation>
     </message>
     <message>
         <location filename="../../src/music-player/dialogs/CDRemovedDialog.qml" line="36"/>
@@ -354,7 +354,7 @@
     <message>
         <location filename="../../src/music-player/dialogs/CloseConfirmDialog.qml" line="50"/>
         <source>Minimize to system tray</source>
-        <translation type="unfinished"/>
+        <translation>Zmenšit do oznamovací oblasti panelu</translation>
     </message>
     <message>
         <location filename="../../src/music-player/dialogs/CloseConfirmDialog.qml" line="62"/>
@@ -374,7 +374,7 @@
     <message>
         <location filename="../../src/music-player/dialogs/CloseConfirmDialog.qml" line="98"/>
         <source>Confirm</source>
-        <translation type="unfinished"/>
+        <translation>Potvrdit</translation>
     </message>
 </context>
 <context>
@@ -387,12 +387,12 @@
     <message>
         <location filename="../../src/music-player/playlist/CurrentPlayList.qml" line="114"/>
         <source>1 song</source>
-        <translation type="unfinished"/>
+        <translation>1 skladba</translation>
     </message>
     <message>
         <location filename="../../src/music-player/playlist/CurrentPlayList.qml" line="114"/>
         <source>%1 songs</source>
-        <translation type="unfinished"/>
+        <translation>%1 skladeb</translation>
     </message>
     <message>
         <location filename="../../src/music-player/playlist/CurrentPlayList.qml" line="128"/>
@@ -446,7 +446,7 @@
     <message>
         <location filename="../../src/music-player/dialogs/DeleteLocalDialog.qml" line="53"/>
         <source>Delete</source>
-        <translation type="unfinished"/>
+        <translation>Smazat</translation>
     </message>
     <message>
         <location filename="../../src/music-player/dialogs/DeleteLocalDialog.qml" line="65"/>
@@ -497,7 +497,7 @@
     <message>
         <location filename="../../src/music-player/dialogs/EqualizerDialog.qml" line="15"/>
         <source>Monophony</source>
-        <translation type="unfinished"/>
+        <translation>Monofonní</translation>
     </message>
     <message>
         <location filename="../../src/music-player/dialogs/EqualizerDialog.qml" line="16"/>
@@ -507,12 +507,12 @@
     <message>
         <location filename="../../src/music-player/dialogs/EqualizerDialog.qml" line="17"/>
         <source>Club</source>
-        <translation type="unfinished"/>
+        <translation>Klub</translation>
     </message>
     <message>
         <location filename="../../src/music-player/dialogs/EqualizerDialog.qml" line="18"/>
         <source>Dance</source>
-        <translation type="unfinished"/>
+        <translation>Taneční</translation>
     </message>
     <message>
         <location filename="../../src/music-player/dialogs/EqualizerDialog.qml" line="19"/>
@@ -532,12 +532,12 @@
     <message>
         <location filename="../../src/music-player/dialogs/EqualizerDialog.qml" line="22"/>
         <source>Headphones</source>
-        <translation type="unfinished"/>
+        <translation>Sluchátka</translation>
     </message>
     <message>
         <location filename="../../src/music-player/dialogs/EqualizerDialog.qml" line="23"/>
         <source>Hall</source>
-        <translation type="unfinished"/>
+        <translation>Hala</translation>
     </message>
     <message>
         <location filename="../../src/music-player/dialogs/EqualizerDialog.qml" line="24"/>
@@ -567,7 +567,7 @@
     <message>
         <location filename="../../src/music-player/dialogs/EqualizerDialog.qml" line="29"/>
         <source>Ska</source>
-        <translation type="unfinished"/>
+        <translation>Ska</translation>
     </message>
     <message>
         <location filename="../../src/music-player/dialogs/EqualizerDialog.qml" line="30"/>
@@ -597,12 +597,12 @@
     <message>
         <location filename="../../src/music-player/dialogs/EqualizerDialog.qml" line="205"/>
         <source>Reset</source>
-        <translation type="unfinished"/>
+        <translation>Nastavit znovu</translation>
     </message>
     <message>
         <location filename="../../src/music-player/dialogs/EqualizerDialog.qml" line="314"/>
         <source>Preamplifier</source>
-        <translation type="unfinished"/>
+        <translation>Předzesilovač</translation>
     </message>
 </context>
 <context>
@@ -618,7 +618,7 @@
     <message>
         <location filename="../../src/music-player/dialogs/ImportFailedDialog.qml" line="32"/>
         <source>Import failed, no valid music file found</source>
-        <translation type="unfinished"/>
+        <translation>Nepodařilo se naimportovat. Nenalezen žádný platný hudební soubor</translation>
     </message>
     <message>
         <location filename="../../src/music-player/dialogs/ImportFailedDialog.qml" line="36"/>
@@ -631,7 +631,7 @@
     <message>
         <location filename="../../src/music-player/lyric/LyricPage.qml" line="133"/>
         <source>Artist</source>
-        <translation type="unfinished"/>
+        <translation>Umělec</translation>
     </message>
     <message>
         <location filename="../../src/music-player/lyric/LyricPage.qml" line="141"/>
@@ -646,7 +646,7 @@
     <message>
         <location filename="../../src/music-player/lyric/LyricPage.qml" line="189"/>
         <source>Please put the lyric file (same name as the song) and the song file in the same folder</source>
-        <translation type="unfinished"/>
+        <translation>Vložte, prosím, soubor se zpěvním textem (stejný název jako skladba) a soubor se skladbou do stejné složky.</translation>
     </message>
 </context>
 <context>
@@ -654,7 +654,7 @@
     <message>
         <location filename="../../src/music-player/mainwindow/MainWindow.qml" line="188"/>
         <source>Music</source>
-        <translation type="unfinished"/>
+        <translation>Hudba</translation>
     </message>
     <message>
         <location filename="../../src/music-player/mainwindow/MainWindow.qml" line="203"/>
@@ -674,17 +674,17 @@
     <message>
         <location filename="../../src/music-player/mainwindow/MainWindow.qml" line="229"/>
         <source>Exit</source>
-        <translation type="unfinished"/>
+        <translation>Ukončit</translation>
     </message>
     <message>
         <location filename="../../src/music-player/mainwindow/MainWindow.qml" line="343"/>
         <source>Already added to the playlist</source>
-        <translation type="unfinished"/>
+        <translation>Už přidáno do seznamu skladeb</translation>
     </message>
     <message>
         <location filename="../../src/music-player/mainwindow/MainWindow.qml" line="346"/>
         <source>Added to &quot;%1&quot;</source>
-        <translation type="unfinished"/>
+        <translation>Přidáno do %1</translation>
     </message>
     <message>
         <location filename="../../src/music-player/mainwindow/MainWindow.qml" line="349"/>
@@ -694,7 +694,7 @@
     <message>
         <location filename="../../src/music-player/mainwindow/MainWindow.qml" line="352"/>
         <source>A disc is connected</source>
-        <translation type="unfinished"/>
+        <translation>Je připojen disk</translation>
     </message>
     <message>
         <location filename="../../src/music-player/mainwindow/MainWindow.qml" line="368"/>
@@ -735,7 +735,7 @@
     <message>
         <location filename="../../src/music-player/musicbaseandsonglist/MusicBaselistview.qml" line="36"/>
         <source>Library</source>
-        <translation type="unfinished"/>
+        <translation>Knihovna</translation>
     </message>
     <message>
         <location filename="../../src/music-player/musicbaseandsonglist/MusicBaselistview.qml" line="40"/>
@@ -750,7 +750,7 @@
     <message>
         <location filename="../../src/music-player/musicbaseandsonglist/MusicBaselistview.qml" line="42"/>
         <source>All Songs</source>
-        <translation type="unfinished"/>
+        <translation>Všechny skladby</translation>
     </message>
     <message>
         <location filename="../../src/music-player/musicbaseandsonglist/MusicBaselistview.qml" line="47"/>
@@ -773,7 +773,7 @@
     <message>
         <location filename="../../src/music-player/mainwindow/MusicContentWindow.qml" line="22"/>
         <source>My Favorites</source>
-        <translation type="unfinished"/>
+        <translation>Moje oblíbené</translation>
     </message>
 </context>
 <context>
@@ -781,7 +781,7 @@
     <message>
         <location filename="../../src/music-player/dialogs/MusicInfoDialog.qml" line="71"/>
         <source>Title</source>
-        <translation type="unfinished"/>
+        <translation>Název</translation>
     </message>
     <message>
         <location filename="../../src/music-player/dialogs/MusicInfoDialog.qml" line="80"/>
@@ -791,7 +791,7 @@
     <message>
         <location filename="../../src/music-player/dialogs/MusicInfoDialog.qml" line="86"/>
         <source>Album</source>
-        <translation type="unfinished"/>
+        <translation>Album</translation>
     </message>
     <message>
         <location filename="../../src/music-player/dialogs/MusicInfoDialog.qml" line="95"/>
@@ -811,7 +811,7 @@
     <message>
         <location filename="../../src/music-player/dialogs/MusicInfoDialog.qml" line="114"/>
         <source>Path</source>
-        <translation type="unfinished"/>
+        <translation>Popis umístění</translation>
     </message>
 </context>
 <context>
@@ -819,7 +819,7 @@
     <message>
         <location filename="../../src/music-player/musicmousemenu/MusicMoreMenu.qml" line="24"/>
         <source>Pause</source>
-        <translation type="unfinished"/>
+        <translation>Pozastavit</translation>
     </message>
     <message>
         <location filename="../../src/music-player/musicmousemenu/MusicMoreMenu.qml" line="24"/>
@@ -829,12 +829,12 @@
     <message>
         <location filename="../../src/music-player/musicmousemenu/MusicMoreMenu.qml" line="44"/>
         <source>Add to</source>
-        <translation type="unfinished"/>
+        <translation>Přidat do</translation>
     </message>
     <message>
         <location filename="../../src/music-player/musicmousemenu/MusicMoreMenu.qml" line="52"/>
         <source>Open in file manager</source>
-        <translation type="unfinished"/>
+        <translation>Otevřít ve správci souborů</translation>
     </message>
     <message>
         <location filename="../../src/music-player/musicmousemenu/MusicMoreMenu.qml" line="62"/>
@@ -849,7 +849,7 @@
     <message>
         <location filename="../../src/music-player/musicmousemenu/MusicMoreMenu.qml" line="72"/>
         <source>Delete from local disk</source>
-        <translation type="unfinished"/>
+        <translation>Smazat z místního disku</translation>
     </message>
     <message>
         <location filename="../../src/music-player/musicmousemenu/MusicMoreMenu.qml" line="79"/>
@@ -867,7 +867,7 @@
     <message>
         <location filename="../../src/music-player/main.cpp" line="131"/>
         <source>Music is a local music player with beautiful design and simple functions.</source>
-        <translation type="unfinished"/>
+        <translation>Hudba je pěkný přehrávač hudby na místním disku s jednoduchými funkcemi.</translation>
     </message>
     <message>
         <location filename="../../src/music-player/main.cpp" line="133"/>
@@ -882,7 +882,7 @@
     <message>
         <location filename="../../src/music-player/main.cpp" line="143"/>
         <source>Unknown artist</source>
-        <translation type="unfinished"/>
+        <translation>Neznámý umělec</translation>
     </message>
 </context>
 <context>
@@ -900,7 +900,7 @@
     <message>
         <location filename="../../src/music-player/dialogs/SearchResultDialog.qml" line="50"/>
         <source>Albums</source>
-        <translation type="unfinished"/>
+        <translation>Alba</translation>
     </message>
 </context>
 <context>
@@ -913,7 +913,7 @@
     <message>
         <location filename="../../src/music-player/mainwindow/SearchResultWindow.qml" line="96"/>
         <source>Search Results</source>
-        <translation type="unfinished"/>
+        <translation>Výsledek hledání</translation>
     </message>
     <message>
         <location filename="../../src/music-player/mainwindow/SearchResultWindow.qml" line="101"/>
@@ -933,7 +933,7 @@
     <message>
         <location filename="../../src/music-player/mainwindow/SearchResultWindow.qml" line="121"/>
         <source>Music</source>
-        <translation type="unfinished"/>
+        <translation>Hudba</translation>
     </message>
     <message>
         <location filename="../../src/music-player/mainwindow/SearchResultWindow.qml" line="125"/>
@@ -1001,7 +1001,7 @@
     <message>
         <location filename="../../src/music-player/dialogs/SettingsDialog.qml" line="158"/>
         <source>Play/Pause</source>
-        <translation type="unfinished"/>
+        <translation>Přehrát/Pozastavit</translation>
     </message>
     <message>
         <location filename="../../src/music-player/dialogs/SettingsDialog.qml" line="201"/>
@@ -1016,7 +1016,7 @@
     <message>
         <location filename="../../src/music-player/dialogs/SettingsDialog.qml" line="290"/>
         <source>Volume up</source>
-        <translation type="unfinished"/>
+        <translation>Hlasitěji</translation>
     </message>
     <message>
         <location filename="../../src/music-player/dialogs/SettingsDialog.qml" line="335"/>
@@ -1026,7 +1026,7 @@
     <message>
         <location filename="../../src/music-player/dialogs/SettingsDialog.qml" line="379"/>
         <source>Favorite</source>
-        <translation type="unfinished"/>
+        <translation>Oblíbené</translation>
     </message>
     <message>
         <location filename="../../src/music-player/dialogs/SettingsDialog.qml" line="490"/>
@@ -1049,17 +1049,17 @@
     <message>
         <location filename="../../src/music-player/util/shortcut.cpp" line="55"/>
         <source>Play</source>
-        <translation type="unfinished"/>
+        <translation>Přehrát</translation>
     </message>
     <message>
         <location filename="../../src/music-player/util/shortcut.cpp" line="56"/>
         <source>Songs</source>
-        <translation type="unfinished"/>
+        <translation>Skladby</translation>
     </message>
     <message>
         <location filename="../../src/music-player/util/shortcut.cpp" line="57"/>
         <source>Playlists</source>
-        <translation type="unfinished"/>
+        <translation>Seznamy skladeb</translation>
     </message>
     <message>
         <location filename="../../src/music-player/util/shortcut.cpp" line="58"/>
@@ -1074,7 +1074,7 @@
     <message>
         <location filename="../../src/music-player/util/shortcut.cpp" line="66"/>
         <source>Previous</source>
-        <translation type="unfinished"/>
+        <translation>Předchozí</translation>
     </message>
     <message>
         <location filename="../../src/music-player/util/shortcut.cpp" line="67"/>
@@ -1094,7 +1094,7 @@
     <message>
         <location filename="../../src/music-player/util/shortcut.cpp" line="70"/>
         <source>Mute</source>
-        <translation type="unfinished"/>
+        <translation>Ztlumit</translation>
     </message>
     <message>
         <location filename="../../src/music-player/util/shortcut.cpp" line="73"/>
@@ -1104,12 +1104,12 @@
     <message>
         <location filename="../../src/music-player/util/shortcut.cpp" line="74"/>
         <source>Unfavorite</source>
-        <translation type="unfinished"/>
+        <translation>Odebrat z oblíbených</translation>
     </message>
     <message>
         <location filename="../../src/music-player/util/shortcut.cpp" line="75"/>
         <source>Song info</source>
-        <translation type="unfinished"/>
+        <translation>Údaje o skladbě</translation>
     </message>
     <message>
         <location filename="../../src/music-player/util/shortcut.cpp" line="78"/>
@@ -1119,12 +1119,12 @@
     <message>
         <location filename="../../src/music-player/util/shortcut.cpp" line="79"/>
         <source>Add music</source>
-        <translation type="unfinished"/>
+        <translation>Přidat hudbu</translation>
     </message>
     <message>
         <location filename="../../src/music-player/util/shortcut.cpp" line="80"/>
         <source>Rename playlist</source>
-        <translation type="unfinished"/>
+        <translation>Přejmenovat seznam skladeb</translation>
     </message>
     <message>
         <location filename="../../src/music-player/util/shortcut.cpp" line="81"/>
@@ -1175,7 +1175,7 @@
     <message>
         <location filename="../../src/music-player/musicmousemenu/SidebarMenu.qml" line="56"/>
         <source>Delete</source>
-        <translation type="unfinished"/>
+        <translation>Smazat</translation>
     </message>
 </context>
 <context>
@@ -1276,7 +1276,7 @@
     <message>
         <location filename="../../src/music-player/mainwindow/Toolbar.qml" line="220"/>
         <source>My Favorites</source>
-        <translation type="unfinished"/>
+        <translation>Moje oblíbené</translation>
     </message>
     <message>
         <location filename="../../src/music-player/mainwindow/Toolbar.qml" line="238"/>
@@ -1286,12 +1286,12 @@
     <message>
         <location filename="../../src/music-player/mainwindow/Toolbar.qml" line="259"/>
         <source>Play/Pause</source>
-        <translation type="unfinished"/>
+        <translation>Přehrát/Pozastavit</translation>
     </message>
     <message>
         <location filename="../../src/music-player/mainwindow/Toolbar.qml" line="280"/>
         <source>Next</source>
-        <translation type="unfinished"/>
+        <translation>Další</translation>
     </message>
     <message>
         <location filename="../../src/music-player/mainwindow/Toolbar.qml" line="389"/>
@@ -1314,7 +1314,7 @@
     <message>
         <location filename="../../src/music-player/mainwindow/WindowTitlebar.qml" line="58"/>
         <source>New playlist</source>
-        <translation type="unfinished"/>
+        <translation>Nový seznam skladeb</translation>
     </message>
     <message>
         <location filename="../../src/music-player/mainwindow/WindowTitlebar.qml" line="63"/>
@@ -1325,7 +1325,7 @@
     <message>
         <location filename="../../src/music-player/mainwindow/WindowTitlebar.qml" line="71"/>
         <source>Equalizer</source>
-        <translation type="unfinished"/>
+        <translation>Ekvalizér</translation>
     </message>
     <message>
         <location filename="../../src/music-player/mainwindow/WindowTitlebar.qml" line="82"/>
@@ -1340,12 +1340,12 @@
     <message>
         <location filename="../../src/music-player/mainwindow/WindowTitlebar.qml" line="98"/>
         <source>Music is a local music player with beautiful design and simple functions.</source>
-        <translation type="unfinished"/>
+        <translation>Hudba je pěkný přehrávač hudby na místním disku s jednoduchými funkcemi.</translation>
     </message>
     <message>
         <location filename="../../src/music-player/mainwindow/WindowTitlebar.qml" line="99"/>
         <source>Version:</source>
-        <translation type="unfinished"/>
+        <translation>Verze:</translation>
     </message>
     <message>
         <location filename="../../src/music-player/mainwindow/WindowTitlebar.qml" line="213"/>
@@ -1367,7 +1367,7 @@
     <name>desktop</name>
     <message>
         <source>Deepin Music</source>
-        <translation type="unfinished"/>
+        <translation type="vanished">Deepin Hudba</translation>
     </message>
     <message>
         <source>Music</source>
@@ -1383,7 +1383,7 @@
     </message>
     <message>
         <source>Play/Pause track</source>
-        <translation type="unfinished"/>
+        <translation type="vanished">Přehrát/Pozastavit skladbu</translation>
     </message>
     <message>
         <source>Previous track</source>
