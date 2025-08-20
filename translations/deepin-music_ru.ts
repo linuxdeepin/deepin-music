@@ -19,7 +19,7 @@
     <message>
         <location filename="../src/music-player/albumlist/AlbumDefaultPage.qml" line="63"/>
         <source> scan the Music directory</source>
-        <translation type="unfinished"/>
+        <translation>сканировать папку Music</translation>
     </message>
 </context>
 <context>
@@ -1368,12 +1368,12 @@
     <message>
         <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="213"/>
         <source>Previous page</source>
-        <translation type="unfinished"/>
+        <translation>Предыдущая страница</translation>
     </message>
     <message>
         <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="229"/>
         <source>Next page</source>
-        <translation type="unfinished"/>
+        <translation>Следующая страница</translation>
     </message>
     <message>
         <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="239"/>
