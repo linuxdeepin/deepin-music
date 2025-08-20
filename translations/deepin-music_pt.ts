@@ -1,6 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS>
-<TS version="2.1" language="pt" sourcelanguage="en_US">
+<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="pt" sourcelanguage="en_US">
 <context>
     <name>AlbumDefaultPage</name>
     <message>
@@ -21,7 +19,7 @@
     <message>
         <location filename="../src/music-player/albumlist/AlbumDefaultPage.qml" line="63"/>
         <source> scan the Music directory</source>
-        <translation>varre o diretório de Música</translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -163,32 +161,32 @@
     <message>
         <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="99"/>
         <source>Your favorite songs will be displayed here</source>
-        <translation>Suas músicas favoritas serão exibidas aqui</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="111"/>
         <source>Click “</source>
-        <translation>Clique em “</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="122"/>
         <source>” to add a song to My Favorites</source>
-        <translation>” para adicionar uma música aos Meus Favoritos</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="157"/>
         <source>No songs yet. Click “</source>
-        <translation>Nenhuma música ainda. Clique em “</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="168"/>
         <source>” to add songs to the playlist</source>
-        <translation>” para adicionar músicas à lista de reprodução</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="69"/>
         <source> scan the Music directory</source>
-        <translation>varre o diretório de Música</translation>
+        <translation>analisar o diretório de Música</translation>
     </message>
 </context>
 <context>
@@ -260,7 +258,7 @@
     <message>
         <location filename="../src/music-player/singerlist/ArtistDefaultPage.qml" line="64"/>
         <source> scan the Music directory</source>
-        <translation>varre o diretório de Música</translation>
+        <translation>analisar o diretório de Música</translation>
     </message>
 </context>
 <context>
@@ -366,7 +364,7 @@
     <message>
         <location filename="../src/music-player/dialogs/CloseConfirmDialog.qml" line="73"/>
         <source>Do not ask again</source>
-        <translation>Não voltar a perguntar</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/dialogs/CloseConfirmDialog.qml" line="90"/>
@@ -394,7 +392,7 @@
     <message>
         <location filename="../src/music-player/playlist/CurrentPlayList.qml" line="114"/>
         <source>%1 songs</source>
-        <translation>%1 músicas</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/playlist/CurrentPlayList.qml" line="128"/>
@@ -612,7 +610,7 @@
     <message>
         <location filename="../src/music-player/dialogs/FileDialog.qml" line="15"/>
         <source>All Music</source>
-        <translation>Todas as Músicas</translation>
+        <translation>Toda a música</translation>
     </message>
 </context>
 <context>
@@ -747,7 +745,7 @@
     <message>
         <location filename="../src/music-player/musicmousemenu/MulitSelectMenu.qml" line="28"/>
         <source>Remove from play queue</source>
-        <translation>Remover da fila de reprodução</translation>
+        <translation>Remover da lista de espera</translation>
     </message>
     <message>
         <location filename="../src/music-player/musicmousemenu/MulitSelectMenu.qml" line="35"/>
@@ -869,7 +867,7 @@
     <message>
         <location filename="../src/music-player/musicmousemenu/MusicMoreMenu.qml" line="62"/>
         <source>Remove from play queue</source>
-        <translation>Remover da fila de reprodução</translation>
+        <translation>Remover da lista de espera</translation>
     </message>
     <message>
         <location filename="../src/music-player/musicmousemenu/MusicMoreMenu.qml" line="72"/>
@@ -943,7 +941,7 @@
     <message>
         <location filename="../src/music-player/mainwindow/SearchResultWindow.qml" line="100"/>
         <source>%1 albums - %2 songs</source>
-        <translation>%1 álbuns - %2 músicas</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/mainwindow/SearchResultWindow.qml" line="101"/>
@@ -953,7 +951,7 @@
     <message>
         <location filename="../src/music-player/mainwindow/SearchResultWindow.qml" line="101"/>
         <source>%1 album - %2 songs</source>
-        <translation>%1 álbum - %2 músicas</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/mainwindow/SearchResultWindow.qml" line="120"/>
@@ -1066,7 +1064,7 @@
     <message>
         <location filename="../src/music-player/dialogs/SettingsDialog.qml" line="490"/>
         <source>This shortcut key conflicts with [%1], click Replace to make this shortcut key take effect immediately</source>
-        <translation>Esta tecla de atalho conflita com [%1], clique em Substituir para que esta tecla de atalho tenha efeito imediato</translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -1246,7 +1244,7 @@
     <message>
         <location filename="../src/music-player/allItems/SublistTitleButton.qml" line="54"/>
         <source>%1 songs</source>
-        <translation>%1 músicas</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/allItems/SublistTitleButton.qml" line="64"/>
