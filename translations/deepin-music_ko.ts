@@ -359,12 +359,12 @@
     <message>
         <location filename="../src/music-player/dialogs/CloseConfirmDialog.qml" line="62"/>
         <source>Exit</source>
-        <translation>나가기</translation>
+        <translation>종료</translation>
     </message>
     <message>
         <location filename="../src/music-player/dialogs/CloseConfirmDialog.qml" line="73"/>
         <source>Do not ask again</source>
-        <translation type="unfinished"/>
+        <translation>다시 묻지 않기</translation>
     </message>
     <message>
         <location filename="../src/music-player/dialogs/CloseConfirmDialog.qml" line="90"/>
@@ -1072,7 +1072,7 @@
     <message>
         <location filename="../src/music-player/util/shortcut.cpp" line="55"/>
         <source>Play</source>
-        <translation>재생 설정</translation>
+        <translation>재생</translation>
     </message>
     <message>
         <location filename="../src/music-player/util/shortcut.cpp" line="56"/>
