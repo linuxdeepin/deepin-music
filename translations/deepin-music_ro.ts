@@ -1,27 +1,25 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS>
-<TS version="2.1" language="ro" sourcelanguage="en_US">
+<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="ro" sourcelanguage="en_US">
 <context>
     <name>AlbumDefaultPage</name>
     <message>
         <location filename="../src/music-player/albumlist/AlbumDefaultPage.qml" line="35"/>
         <source>Add Songs</source>
-        <translation>Adăugă muzică</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/albumlist/AlbumDefaultPage.qml" line="43"/>
         <source>Open Folders</source>
-        <translation>Deschide dosare</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/albumlist/AlbumDefaultPage.qml" line="59"/>
         <source>Drag music files here or</source>
-        <translation>Tragă fișierele de muzică aici sau</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/albumlist/AlbumDefaultPage.qml" line="63"/>
         <source> scan the Music directory</source>
-        <translation> scanza directorul Muzică</translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -60,12 +58,12 @@
     <message>
         <location filename="../src/music-player/albumlist/AlbumListView.qml" line="43"/>
         <source>Tracks</source>
-        <translation>Căi</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/albumlist/AlbumListView.qml" line="48"/>
         <source>Date added</source>
-        <translation>Data adăugării</translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -73,17 +71,17 @@
     <message>
         <location filename="../src/music-player/musicmousemenu/AlbumMoreMenu.qml" line="20"/>
         <source>View details</source>
-        <translation>Vizualizează detaliile</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/musicmousemenu/AlbumMoreMenu.qml" line="28"/>
         <source>Play all</source>
-        <translation>Redă tot</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/musicmousemenu/AlbumMoreMenu.qml" line="37"/>
         <source>Add to</source>
-        <translation>Adaugă la</translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -148,47 +146,47 @@
     <message>
         <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="42"/>
         <source>Add Songs</source>
-        <translation>Adăugă muzică</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="50"/>
         <source>Open Folders</source>
-        <translation>Deschide dosare</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="65"/>
         <source>Drag music files here or</source>
-        <translation>Tragă fișierele de muzică aici sau</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="99"/>
         <source>Your favorite songs will be displayed here</source>
-        <translation>Cântecele tale favorite vor fi afișate aici</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="111"/>
         <source>Click “</source>
-        <translation>Apasă pe “</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="122"/>
         <source>” to add a song to My Favorites</source>
-        <translation>” pentru a adăuga un cântec în Favoritele Mele</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="157"/>
         <source>No songs yet. Click “</source>
-        <translation>Niciun cântec încă. Apasă pe “</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="168"/>
         <source>” to add songs to the playlist</source>
-        <translation>” pentru a adăuga cântece în playlist</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="69"/>
         <source> scan the Music directory</source>
-        <translation> scanza directorul Muzică</translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -196,7 +194,7 @@
     <message>
         <location filename="../src/music-player/musicList/AllMusicList.qml" line="17"/>
         <source>All Songs</source>
-        <translation>Toate cântecele</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/musicList/AllMusicList.qml" line="30"/>
@@ -245,22 +243,22 @@
     <message>
         <location filename="../src/music-player/singerlist/ArtistDefaultPage.qml" line="36"/>
         <source>Add Songs</source>
-        <translation>Adăugă muzică</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/singerlist/ArtistDefaultPage.qml" line="44"/>
         <source>Open Folders</source>
-        <translation>Deschide dosare</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/singerlist/ArtistDefaultPage.qml" line="60"/>
         <source>Drag music files here or</source>
-        <translation>Tragă fișierele de muzică aici sau</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/singerlist/ArtistDefaultPage.qml" line="64"/>
         <source> scan the Music directory</source>
-        <translation> scanza directorul Muzică</translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -281,17 +279,17 @@
     <message>
         <location filename="../src/music-player/musicmousemenu/ArtistMoreMenu.qml" line="18"/>
         <source>View details</source>
-        <translation>Vizualizează detaliile</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/musicmousemenu/ArtistMoreMenu.qml" line="26"/>
         <source>Play all</source>
-        <translation>Redă tot</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/musicmousemenu/ArtistMoreMenu.qml" line="35"/>
         <source>Add to</source>
-        <translation>Adaugă la</translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -338,7 +336,7 @@
     <message>
         <location filename="../src/music-player/dialogs/CDRemovedDialog.qml" line="32"/>
         <source>The CD has been removed</source>
-        <translation>CD-ul a fost scos</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/dialogs/CDRemovedDialog.qml" line="36"/>
@@ -366,7 +364,7 @@
     <message>
         <location filename="../src/music-player/dialogs/CloseConfirmDialog.qml" line="73"/>
         <source>Do not ask again</source>
-        <translation>Nu întreba din nou</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/dialogs/CloseConfirmDialog.qml" line="90"/>
@@ -394,7 +392,7 @@
     <message>
         <location filename="../src/music-player/playlist/CurrentPlayList.qml" line="114"/>
         <source>%1 songs</source>
-        <translation>%1 cântece</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/playlist/CurrentPlayList.qml" line="128"/>
@@ -420,12 +418,12 @@
     <message>
         <location filename="../src/music-player/musicbaseandsonglist/CustomPlaylistModel.qml" line="80"/>
         <source>CD playlist</source>
-        <translation>Playlist CD</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/musicbaseandsonglist/CustomPlaylistModel.qml" line="86"/>
         <source>CD</source>
-        <translation>CD</translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -612,7 +610,7 @@
     <message>
         <location filename="../src/music-player/dialogs/FileDialog.qml" line="15"/>
         <source>All Music</source>
-        <translation>Toate muzica</translation>
+        <translation>Toate melodiile</translation>
     </message>
 </context>
 <context>
@@ -643,7 +641,7 @@
     <message>
         <location filename="../src/music-player/musicmousemenu/ImportMenu.qml" line="49"/>
         <source>Create new playlist</source>
-        <translation>Creeți o playlist nouă</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/musicmousemenu/ImportMenu.qml" line="52"/>
@@ -666,12 +664,12 @@
     <message>
         <location filename="../src/music-player/lyric/LyricPage.qml" line="179"/>
         <source>No lyrics found</source>
-        <translation>Nu s-au găsit versuri</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/lyric/LyricPage.qml" line="189"/>
         <source>Please put the lyric file (same name as the song) and the song file in the same folder</source>
-        <translation>Vă rugăm să puneți fișierul de versuri (același nume ca melodia) și fișierul melodie în același folder</translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -709,17 +707,17 @@
     <message>
         <location filename="../src/music-player/mainwindow/MainWindow.qml" line="346"/>
         <source>Added to &quot;%1&quot;</source>
-        <translation>Adăugat în &quot;%1&quot;</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/mainwindow/MainWindow.qml" line="349"/>
         <source>Removed from &quot;My Favorites&quot;</source>
-        <translation>Eliminat din &quot;Favorite&quot; </translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/mainwindow/MainWindow.qml" line="352"/>
         <source>A disc is connected</source>
-        <translation>Un disc este conectat</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/mainwindow/MainWindow.qml" line="368"/>
@@ -729,7 +727,7 @@
     <message>
         <location filename="../src/music-player/mainwindow/MainWindow.qml" line="390"/>
         <source>All Songs</source>
-        <translation>Toate melodii</translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -737,7 +735,7 @@
     <message>
         <location filename="../src/music-player/musicmousemenu/MulitSelectMenu.qml" line="19"/>
         <source>Add to</source>
-        <translation>Adăugați în</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/musicmousemenu/MulitSelectMenu.qml" line="28"/>
@@ -747,7 +745,7 @@
     <message>
         <location filename="../src/music-player/musicmousemenu/MulitSelectMenu.qml" line="28"/>
         <source>Remove from play queue</source>
-        <translation>Eliminați din lista de redare</translation>
+        <translation>Eliminați din coada de redare</translation>
     </message>
     <message>
         <location filename="../src/music-player/musicmousemenu/MulitSelectMenu.qml" line="35"/>
@@ -775,7 +773,7 @@
     <message>
         <location filename="../src/music-player/musicbaseandsonglist/MusicBaselistview.qml" line="42"/>
         <source>All Songs</source>
-        <translation>Toate melodii</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/musicbaseandsonglist/MusicBaselistview.qml" line="47"/>
@@ -785,7 +783,7 @@
     <message>
         <location filename="../src/music-player/musicbaseandsonglist/MusicBaselistview.qml" line="64"/>
         <source>Create playlist</source>
-        <translation>Creează playlist</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/musicbaseandsonglist/MusicBaselistview.qml" line="66"/>
@@ -854,7 +852,7 @@
     <message>
         <location filename="../src/music-player/musicmousemenu/MusicMoreMenu.qml" line="44"/>
         <source>Add to</source>
-        <translation>Adăugați în</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/musicmousemenu/MusicMoreMenu.qml" line="52"/>
@@ -869,7 +867,7 @@
     <message>
         <location filename="../src/music-player/musicmousemenu/MusicMoreMenu.qml" line="62"/>
         <source>Remove from play queue</source>
-        <translation>Eliminați din lista de redare</translation>
+        <translation>Eliminați din coada de redare</translation>
     </message>
     <message>
         <location filename="../src/music-player/musicmousemenu/MusicMoreMenu.qml" line="72"/>
@@ -943,7 +941,7 @@
     <message>
         <location filename="../src/music-player/mainwindow/SearchResultWindow.qml" line="100"/>
         <source>%1 albums - %2 songs</source>
-        <translation>%1 albume - %2 piese</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/mainwindow/SearchResultWindow.qml" line="101"/>
@@ -953,7 +951,7 @@
     <message>
         <location filename="../src/music-player/mainwindow/SearchResultWindow.qml" line="101"/>
         <source>%1 album - %2 songs</source>
-        <translation>%1 album - %2 piese</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/mainwindow/SearchResultWindow.qml" line="120"/>
@@ -991,7 +989,7 @@
     <message>
         <location filename="../src/music-player/dialogs/SettingsDialog.qml" line="53"/>
         <source>Remember playback position on exit</source>
-        <translation>Rețineți poziția de redare la ieșire</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/dialogs/SettingsDialog.qml" line="66"/>
@@ -1066,7 +1064,7 @@
     <message>
         <location filename="../src/music-player/dialogs/SettingsDialog.qml" line="490"/>
         <source>This shortcut key conflicts with [%1], click Replace to make this shortcut key take effect immediately</source>
-        <translation>Această combinație de taste conflict cu [%1], apăsați Replace pentru a face ca această combinație de taste să aibă efect imediat</translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -1190,7 +1188,7 @@
     <message>
         <location filename="../src/music-player/musicmousemenu/SidebarMenu.qml" line="29"/>
         <source>Add songs</source>
-        <translation>Adăugați melodii</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/musicmousemenu/SidebarMenu.qml" line="38"/>
@@ -1208,7 +1206,7 @@
     <message>
         <location filename="../src/music-player/allItems/SortMenu.qml" line="29"/>
         <source>CD playlist</source>
-        <translation>Playlist CD</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/allItems/SortMenu.qml" line="33"/>
@@ -1218,7 +1216,7 @@
     <message>
         <location filename="../src/music-player/allItems/SortMenu.qml" line="34"/>
         <source>Date added</source>
-        <translation>Data adăugării</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/allItems/SortMenu.qml" line="37"/>
@@ -1246,7 +1244,7 @@
     <message>
         <location filename="../src/music-player/allItems/SublistTitleButton.qml" line="54"/>
         <source>%1 songs</source>
-        <translation>%1 cântece</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/allItems/SublistTitleButton.qml" line="64"/>
@@ -1267,17 +1265,17 @@
     <message>
         <location filename="../src/music-player/mainwindow/Toolbar.qml" line="43"/>
         <source>Sequential play</source>
-        <translation>Redare secvențială</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/mainwindow/Toolbar.qml" line="43"/>
         <source>List loop</source>
-        <translation>Bucăți în buclă</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/mainwindow/Toolbar.qml" line="43"/>
         <source>Single loop</source>
-        <translation>Bucăți în buclă</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/mainwindow/Toolbar.qml" line="43"/>
@@ -1370,12 +1368,12 @@
     <message>
         <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="213"/>
         <source>Previous page</source>
-        <translation>Pagina anterioară</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="229"/>
         <source>Next page</source>
-        <translation>Pagina următoare</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="239"/>
