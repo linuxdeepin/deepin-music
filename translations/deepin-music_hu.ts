@@ -364,7 +364,7 @@
     <message>
         <location filename="../src/music-player/dialogs/CloseConfirmDialog.qml" line="73"/>
         <source>Do not ask again</source>
-        <translation type="unfinished"/>
+        <translation>Ne kérdezze újra</translation>
     </message>
     <message>
         <location filename="../src/music-player/dialogs/CloseConfirmDialog.qml" line="90"/>
@@ -1122,7 +1122,7 @@
     <message>
         <location filename="../src/music-player/util/shortcut.cpp" line="73"/>
         <source>Favorite</source>
-        <translation>Kedvenc</translation>
+        <translation>Kedvencek</translation>
     </message>
     <message>
         <location filename="../src/music-player/util/shortcut.cpp" line="74"/>
