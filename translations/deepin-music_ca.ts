@@ -181,7 +181,7 @@
     <message>
         <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="168"/>
         <source>” to add songs to the playlist</source>
-        <translation type="unfinished"/>
+        <translation>per afegir cançons a la llista de reproducció</translation>
     </message>
     <message>
         <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="69"/>
@@ -392,7 +392,7 @@
     <message>
         <location filename="../src/music-player/playlist/CurrentPlayList.qml" line="114"/>
         <source>%1 songs</source>
-        <translation type="unfinished"/>
+        <translation>&apos;%1 cançons&apos;</translation>
     </message>
     <message>
         <location filename="../src/music-player/playlist/CurrentPlayList.qml" line="128"/>
@@ -941,7 +941,7 @@
     <message>
         <location filename="../src/music-player/mainwindow/SearchResultWindow.qml" line="100"/>
         <source>%1 albums - %2 songs</source>
-        <translation type="unfinished"/>
+        <translation>&apos;%1 àlbums - %2 cançons&apos;</translation>
     </message>
     <message>
         <location filename="../src/music-player/mainwindow/SearchResultWindow.qml" line="101"/>
