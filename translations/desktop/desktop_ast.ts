@@ -567,7 +567,7 @@
     <message>
         <location filename="../../src/music-player/dialogs/EqualizerDialog.qml" line="29"/>
         <source>Ska</source>
-        <translation type="unfinished"/>
+        <translation>Ska</translation>
     </message>
     <message>
         <location filename="../../src/music-player/dialogs/EqualizerDialog.qml" line="30"/>
