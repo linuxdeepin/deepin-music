@@ -354,7 +354,7 @@
     <message>
         <location filename="../src/music-player/dialogs/CloseConfirmDialog.qml" line="50"/>
         <source>Minimize to system tray</source>
-        <translation>تصغير إلى منطقة اﻹعلام </translation>
+        <translation>تصغير إلى منطقة اﻹعلام</translation>
     </message>
     <message>
         <location filename="../src/music-player/dialogs/CloseConfirmDialog.qml" line="62"/>
@@ -1077,7 +1077,7 @@
     <message>
         <location filename="../src/music-player/util/shortcut.cpp" line="56"/>
         <source>Songs</source>
-        <translation>الاغاني</translation>
+        <translation>المقاطع الصوتية</translation>
     </message>
     <message>
         <location filename="../src/music-player/util/shortcut.cpp" line="57"/>
