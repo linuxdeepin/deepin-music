@@ -1,6 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS>
-<TS version="2.1" language="ady" sourcelanguage="en_US">
+<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="ady" sourcelanguage="en_US">
 <context>
     <name>AlbumDefaultPage</name>
     <message>
@@ -371,7 +369,7 @@
     <message>
         <location filename="../src/music-player/dialogs/CloseConfirmDialog.qml" line="90"/>
         <source>Cancel</source>
-        <translation>بەلە</translation>
+        <translation>إلغاء</translation>
     </message>
     <message>
         <location filename="../src/music-player/dialogs/CloseConfirmDialog.qml" line="98"/>
@@ -425,7 +423,7 @@
     <message>
         <location filename="../src/music-player/musicbaseandsonglist/CustomPlaylistModel.qml" line="86"/>
         <source>CD</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -529,7 +527,7 @@
     <message>
         <location filename="../src/music-player/dialogs/EqualizerDialog.qml" line="21"/>
         <source>Full Treble</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/music-player/dialogs/EqualizerDialog.qml" line="22"/>
@@ -1089,7 +1087,7 @@
     <message>
         <location filename="../src/music-player/util/shortcut.cpp" line="58"/>
         <source>Settings</source>
-        <translation>Төҙәтеү</translation>
+        <translation>الإعدادات</translation>
     </message>
     <message>
         <location filename="../src/music-player/util/shortcut.cpp" line="65"/>
@@ -1104,7 +1102,7 @@
     <message>
         <location filename="../src/music-player/util/shortcut.cpp" line="67"/>
         <source>Next</source>
-        <translation>Күпән-соҡын</translation>
+        <translation>التالي</translation>
     </message>
     <message>
         <location filename="../src/music-player/util/shortcut.cpp" line="68"/>
