@@ -1378,7 +1378,7 @@
     <message>
         <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="239"/>
         <source>Search</source>
-        <translation>Buscar en Internet</translation>
+        <translation>Buscar</translation>
     </message>
 </context>
 </TS>
