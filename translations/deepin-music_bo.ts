@@ -19,7 +19,7 @@
     <message>
         <location filename="../src/music-player/albumlist/AlbumDefaultPage.qml" line="63"/>
         <source> scan the Music directory</source>
-        <translation type="unfinished"/>
+        <translation>སྤྱིད་པ་བྱེད་དགོས་པའི་གཞུང་ལུང་།</translation>
     </message>
 </context>
 <context>
@@ -161,12 +161,12 @@
     <message>
         <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="99"/>
         <source>Your favorite songs will be displayed here</source>
-        <translation type="unfinished"/>
+        <translation>ཁྱེད་ཀྱི་གྲྭ་བྱེད་པའི་གཟའ་རྗེས་བཞིན་གྱི་གཟའ་རྗེས་བཞིན་གྱི་གཟའ་རྗེས་བཞིན་གྱི་གཟའ་རྗེས་བཞིན་གྱི་གཟའ་རྗེས་བཞིན་གྱི་གཟའ་རྗེས་བཞིན་གྱི་གཟའ་རྗེས་བཞིན་གྱི་གཟའ་རྗེས་བཞིན་གྱི་གཟའ་རྗེས་བཞིན་གྱི་གཟའ་རྗེས་བཞིན་གྱི་གཟའ་རྗེས་བཞིན་གྱི་གཟའ་རྗེས་བཞིན་གྱི་གཟའ་རྗེས་བཞིན་གྱི་གཟའ་རྗེས་བཞིན</translation>
     </message>
     <message>
         <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="111"/>
         <source>Click “</source>
-        <translation type="unfinished"/>
+        <translation>གྲྭ་བྱེད་པ་བྱེད་དགོས་པའི་“</translation>
     </message>
     <message>
         <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="122"/>
@@ -176,17 +176,17 @@
     <message>
         <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="157"/>
         <source>No songs yet. Click “</source>
-        <translation type="unfinished"/>
+        <translation>གཟའ་རྗེས་བཞིན་གྱི་གཟའ་རྗེས་བཞིན་གྱི་གཟའ་རྗེས་བཞིན་གྱི་གཟའ་རྗེས་བཞིན་གྱི་གཟའ་རྗེས་བཞིན་གྱི་གཟའ་རྗེས་བཞིན་གྱི་གཟའ་རྗེས་བཞིན་གྱི་གཟའ་རྗེས་བཞིན་གྱི་གཟའ་རྗེས་བཞིན་གྱི་གཟའ་རྗེས་བཞིན་གྱི་གཟའ་རྗེས་བཞིན་</translation>
     </message>
     <message>
         <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="168"/>
         <source>” to add songs to the playlist</source>
-        <translation type="unfinished"/>
+        <translation>” ཀྱི་གཟའ་རྗེས་བཞིན་གྱི་གཟའ་རྗེས་བཞིན་གྱི་གཟའ་རྗེས་བཞིན་གྱི་གཟའ་རྗེས་བཞིན་གྱི་གཟའ་རྗེས་བཞིན་གྱི་གཟའ་རྗེས་བཞིན་གྱི་གཟའ་རྗེས་བཞིན་</translation>
     </message>
     <message>
         <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="69"/>
         <source> scan the Music directory</source>
-        <translation>གླུ་གཞས་དཀར་ཆག་བཤེར་བ།</translation>
+        <translation>སྤྱིད་པ་བྱེད་དགོས་པའི་གཞུང་ལུང་།</translation>
     </message>
 </context>
 <context>
@@ -258,7 +258,7 @@
     <message>
         <location filename="../src/music-player/singerlist/ArtistDefaultPage.qml" line="64"/>
         <source> scan the Music directory</source>
-        <translation>གླུ་གཞས་དཀར་ཆག་བཤེར་བ།</translation>
+        <translation>སྤྱིད་པ་བྱེད་དགོས་པའི་གཞུང་ལུང་།</translation>
     </message>
 </context>
 <context>
@@ -359,7 +359,7 @@
     <message>
         <location filename="../src/music-player/dialogs/CloseConfirmDialog.qml" line="62"/>
         <source>Exit</source>
-        <translation>འཐོན་སྒོ།</translation>
+        <translation>ཕྱིར་འཐོན། </translation>
     </message>
     <message>
         <location filename="../src/music-player/dialogs/CloseConfirmDialog.qml" line="73"/>
@@ -392,7 +392,7 @@
     <message>
         <location filename="../src/music-player/playlist/CurrentPlayList.qml" line="114"/>
         <source>%1 songs</source>
-        <translation type="unfinished"/>
+        <translation>གླུ་གཞས་%1</translation>
     </message>
     <message>
         <location filename="../src/music-player/playlist/CurrentPlayList.qml" line="128"/>
@@ -610,7 +610,7 @@
     <message>
         <location filename="../src/music-player/dialogs/FileDialog.qml" line="15"/>
         <source>All Music</source>
-        <translation>རོལ་མོ་ཚང་མ། </translation>
+        <translation>རོལ་དབྱངས་ཡོད་ཚད།</translation>
     </message>
 </context>
 <context>
@@ -745,7 +745,7 @@
     <message>
         <location filename="../src/music-player/musicmousemenu/MulitSelectMenu.qml" line="28"/>
         <source>Remove from play queue</source>
-        <translation>གཏོང་བའི་རུ་སྒྲིག་ནས་སུབ་པ། </translation>
+        <translation>གླུ་གཞས་ཐོ་གཞུང་ནས་མེད་པར་བཟོས།</translation>
     </message>
     <message>
         <location filename="../src/music-player/musicmousemenu/MulitSelectMenu.qml" line="35"/>
@@ -867,7 +867,7 @@
     <message>
         <location filename="../src/music-player/musicmousemenu/MusicMoreMenu.qml" line="62"/>
         <source>Remove from play queue</source>
-        <translation>གཏོང་བའི་རུ་སྒྲིག་ནས་སུབ་པ། </translation>
+        <translation>གླུ་གཞས་ཐོ་གཞུང་ནས་མེད་པར་བཟོས།</translation>
     </message>
     <message>
         <location filename="../src/music-player/musicmousemenu/MusicMoreMenu.qml" line="72"/>
@@ -941,7 +941,7 @@
     <message>
         <location filename="../src/music-player/mainwindow/SearchResultWindow.qml" line="100"/>
         <source>%1 albums - %2 songs</source>
-        <translation type="unfinished"/>
+        <translation>ཆེད་བསྒྲིགས་%1 - གླུ་གཞས་%2</translation>
     </message>
     <message>
         <location filename="../src/music-player/mainwindow/SearchResultWindow.qml" line="101"/>
@@ -951,7 +951,7 @@
     <message>
         <location filename="../src/music-player/mainwindow/SearchResultWindow.qml" line="101"/>
         <source>%1 album - %2 songs</source>
-        <translation type="unfinished"/>
+        <translation>ཆེད་བསྒྲིགས་%1 - གླུ་གཞས་%2</translation>
     </message>
     <message>
         <location filename="../src/music-player/mainwindow/SearchResultWindow.qml" line="120"/>
@@ -1064,7 +1064,7 @@
     <message>
         <location filename="../src/music-player/dialogs/SettingsDialog.qml" line="490"/>
         <source>This shortcut key conflicts with [%1], click Replace to make this shortcut key take effect immediately</source>
-        <translation type="unfinished"/>
+        <translation>གཟའ་རྗེས་བཞིན་[%1] འགྲོ་བ་གཞིན་བྱེད་དགོས་པ་གཟའ་རྗེས་བཞིན་གྱི་གཟའ་རྗེས་བཞིན་བྱེད་དགོས་པ་གཟའ་རྗེས་བཞིན་གྱི་གཟའ་རྗེས་བཞིན་གྱི་གཟའ་རྗེས་བཞིན་བྱེད་དོན</translation>
     </message>
 </context>
 <context>
@@ -1244,7 +1244,7 @@
     <message>
         <location filename="../src/music-player/allItems/SublistTitleButton.qml" line="54"/>
         <source>%1 songs</source>
-        <translation type="unfinished"/>
+        <translation>གླུ་གཞས་%1</translation>
     </message>
     <message>
         <location filename="../src/music-player/allItems/SublistTitleButton.qml" line="64"/>
