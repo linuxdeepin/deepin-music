@@ -4,7 +4,7 @@
     <message>
         <location filename="Desktop Entry]Name" line="0"/>
         <source>Deepin Music</source>
-        <translation type="unfinished"/>
+        <translation>Deepin Musiek</translation>
     </message>
     <message>
         <location filename="Desktop Entry]GenericName" line="0"/>
@@ -14,22 +14,22 @@
     <message>
         <location filename="X-Next Shortcut Group]Name" line="0"/>
         <source>Next track</source>
-        <translation type="unfinished"/>
+        <translation>Volgende lied</translation>
     </message>
     <message>
         <location filename="Desktop Entry]Comment" line="0"/>
         <source>Play your music collection</source>
-        <translation type="unfinished"/>
+        <translation>Speel jou musiekkolleksie</translation>
     </message>
     <message>
         <location filename="X-PlayPause Shortcut Group]Name" line="0"/>
         <source>Play/Pause track</source>
-        <translation type="unfinished"/>
+        <translation>Speel/Pause lied</translation>
     </message>
     <message>
         <location filename="X-Previous Shortcut Group]Name" line="0"/>
         <source>Previous track</source>
-        <translation type="unfinished"/>
+        <translation>Vorige lied</translation>
     </message>
 </context>
 </TS>
