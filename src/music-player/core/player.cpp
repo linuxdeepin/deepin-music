@@ -228,10 +228,6 @@ void Player::playMeta(MediaMeta meta)
 
         //延迟设置进度
         if (INT_LAST_PROGRESS_FLAG && m_ActiveMeta.hash == meta.hash) {
-            //这里静音似乎没有用处，此时sinkInput还未初始化完成
-            QTimer::singleShot(100, this, [ = ]() {
-                setDbusMuted();
-            });
             m_basePlayer->pauseNew(); //此处只暂停，不关闭音频设备，防止后面打开失败
             qint64 lastOffset = m_ActiveMeta.offset;
             QTimer::singleShot(150, this, [ = ]() {//为了记录进度条生效，在加载的时候让音乐播放150ms
@@ -964,6 +960,27 @@ void Player::setDbusMuted(bool muted)
     }
 }
 
+void Player::setSinkInputMuted(bool muted)
+{
+    readSinkInputPath();
+    if (m_sinkInputPath.isEmpty()) {
+        qWarning() << "No sink input";
+        return;
+    }
+
+    QDBusInterface ainterface("com.deepin.daemon.Audio", m_sinkInputPath,
+            "com.deepin.daemon.Audio.SinkInput",
+            QDBusConnection::sessionBus());
+    if (!ainterface.isValid()) {
+        qWarning() << "Invalid sink input:" << m_sinkInputPath;
+        return;
+    }
+
+    // 因为SetMute接口会触发音量提示音，所以使用SetVolume代替
+    qDebug() << "Dbus call(SetVolume):" << m_sinkInputPath << (muted ? 0 : 100);
+    ainterface.call(QLatin1String("SetVolume"), muted ? 0.01 : 1, false);
+}
+
 void Player::setFadeInOutFactor(double fadeInOutFactor)
 {
     m_fadeInOutFactor = fadeInOutFactor;
@@ -1051,6 +1068,8 @@ void Player::onSleepWhenTaking(bool sleep)
                                           "com.deepin.daemon.Audio.SinkInput",
                                           QDBusConnection::sessionBus());
                 if (!ainterface.isValid()) return ;
+                // S3睡眠前，设置静音状态，避免一定概率的暂停延迟导致唤醒后仍有声音播出
+                setSinkInputMuted(true);
 
                 //停止播放并记录播放位置
                 m_Vlcstate = Vlc::Playing;
@@ -1062,6 +1081,9 @@ void Player::onSleepWhenTaking(bool sleep)
                 emit signalPlaybackStatusChanged(Player::Paused);
             }
         }
+    } else {
+        // S3睡眠后唤醒，恢复非静音状态
+        setSinkInputMuted(false);
     }
 }
 
@@ -1108,6 +1130,7 @@ void Player::readSinkInputPath()
             continue;
 
         m_sinkInputPath = curPath.path();
+        qDebug() << "Current sink input:" << m_sinkInputPath;
         break;
     }
 }

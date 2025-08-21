@@ -193,6 +193,7 @@ public slots:
      * to dbus mute
      * *********************/
     void setDbusMuted(bool muted = false);
+    void setSinkInputMuted(bool muted); // 用于S3等睡眠场景
     void setFadeInOutFactor(double fadeInOutFactor);
     void setFadeInOut(bool fadeInOut);
     void setEqualizer(bool enabled, int curIndex, QList<int> indexbaud);
