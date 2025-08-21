@@ -14,7 +14,7 @@
     <message>
         <location filename="X-Next Shortcut Group]Name" line="0"/>
         <source>Next track</source>
-        <translation type="unfinished"/>
+        <translation>Sekva kazo</translation>
     </message>
     <message>
         <location filename="Desktop Entry]Comment" line="0"/>
@@ -24,12 +24,12 @@
     <message>
         <location filename="X-PlayPause Shortcut Group]Name" line="0"/>
         <source>Play/Pause track</source>
-        <translation type="unfinished"/>
+        <translation>Ludi/Paŭzi kazo</translation>
     </message>
     <message>
         <location filename="X-Previous Shortcut Group]Name" line="0"/>
         <source>Previous track</source>
-        <translation type="unfinished"/>
+        <translation>Antaŭa kazo</translation>
     </message>
 </context>
 </TS>
