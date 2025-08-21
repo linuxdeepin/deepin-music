@@ -14,7 +14,7 @@
     <message>
         <location filename="X-Next Shortcut Group]Name" line="0"/>
         <source>Next track</source>
-        <translation type="unfinished"/>
+        <translation>Susunang track</translation>
     </message>
     <message>
         <location filename="Desktop Entry]Comment" line="0"/>
@@ -24,12 +24,12 @@
     <message>
         <location filename="X-PlayPause Shortcut Group]Name" line="0"/>
         <source>Play/Pause track</source>
-        <translation>i-play/i-pause ang track</translation>
+        <translation>Layunin/Pause track</translation>
     </message>
     <message>
         <location filename="X-Previous Shortcut Group]Name" line="0"/>
         <source>Previous track</source>
-        <translation type="unfinished"/>
+        <translation>Maliit na track</translation>
     </message>
 </context>
 </TS>
