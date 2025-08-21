@@ -669,7 +669,7 @@
     <message>
         <location filename="../src/music-player/lyric/LyricPage.qml" line="189"/>
         <source>Please put the lyric file (same name as the song) and the song file in the same folder</source>
-        <translation type="unfinished"/>
+        <translation>Coloque o arquivo da letra (mesmo nome da música) e o arquivo da música na mesma pasta</translation>
     </message>
 </context>
 <context>
