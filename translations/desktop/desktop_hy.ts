@@ -9,7 +9,7 @@
     <message>
         <location filename="Desktop Entry]GenericName" line="0"/>
         <source>Music</source>
-        <translation type="unfinished"/>
+        <translation>Երաժույթ</translation>
     </message>
     <message>
         <location filename="X-Next Shortcut Group]Name" line="0"/>
