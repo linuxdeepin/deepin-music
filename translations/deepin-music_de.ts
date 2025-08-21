@@ -1064,7 +1064,7 @@
     <message>
         <location filename="../src/music-player/dialogs/SettingsDialog.qml" line="490"/>
         <source>This shortcut key conflicts with [%1], click Replace to make this shortcut key take effect immediately</source>
-        <translation>Dieses Tastenkürzel verursacht einen Konflikt mit [%1], klicken Sie auf Ersetzen, um dieses Tastenkürzel als Ersatz festzulegen.</translation>
+        <translation>Dieses Tastenkürzel verursacht einen Konflikt mit [%1], klicken Sie auf Ersetzen, um dieses Tastenkürzel sofort festzulegen.</translation>
     </message>
 </context>
 <context>
