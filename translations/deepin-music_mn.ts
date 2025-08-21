@@ -1358,7 +1358,7 @@
     <message>
         <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="98"/>
         <source>Music is a local music player with beautiful design and simple functions.</source>
-        <translation type="unfinished"/>
+        <translation>Хөгжим нь хүүхэд таарах, хүүхэд таарахын төрөл, хүүхэд таарахын ажиллагаа</translation>
     </message>
     <message>
         <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="99"/>
