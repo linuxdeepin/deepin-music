@@ -19,7 +19,7 @@
     <message>
         <location filename="../src/music-player/albumlist/AlbumDefaultPage.qml" line="63"/>
         <source> scan the Music directory</source>
-        <translation type="unfinished"/>
+        <translation>Escanear el directorio de música</translation>
     </message>
 </context>
 <context>
@@ -161,12 +161,12 @@
     <message>
         <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="99"/>
         <source>Your favorite songs will be displayed here</source>
-        <translation type="unfinished"/>
+        <translation>Tus canciones favoritas se mostrarán aquí.</translation>
     </message>
     <message>
         <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="111"/>
         <source>Click “</source>
-        <translation type="unfinished"/>
+        <translation>Clic “</translation>
     </message>
     <message>
         <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="122"/>
