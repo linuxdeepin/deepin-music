@@ -81,7 +81,7 @@
     <message>
         <location filename="../src/music-player/musicmousemenu/AlbumMoreMenu.qml" line="37"/>
         <source>Add to</source>
-        <translation type="unfinished"/>
+        <translation>追加</translation>
     </message>
 </context>
 <context>
@@ -289,7 +289,7 @@
     <message>
         <location filename="../src/music-player/musicmousemenu/ArtistMoreMenu.qml" line="35"/>
         <source>Add to</source>
-        <translation type="unfinished"/>
+        <translation>追加</translation>
     </message>
 </context>
 <context>
@@ -735,7 +735,7 @@
     <message>
         <location filename="../src/music-player/musicmousemenu/MulitSelectMenu.qml" line="19"/>
         <source>Add to</source>
-        <translation type="unfinished"/>
+        <translation>追加</translation>
     </message>
     <message>
         <location filename="../src/music-player/musicmousemenu/MulitSelectMenu.qml" line="28"/>
@@ -852,7 +852,7 @@
     <message>
         <location filename="../src/music-player/musicmousemenu/MusicMoreMenu.qml" line="44"/>
         <source>Add to</source>
-        <translation type="unfinished"/>
+        <translation>追加</translation>
     </message>
     <message>
         <location filename="../src/music-player/musicmousemenu/MusicMoreMenu.qml" line="52"/>
@@ -1064,7 +1064,7 @@
     <message>
         <location filename="../src/music-player/dialogs/SettingsDialog.qml" line="490"/>
         <source>This shortcut key conflicts with [%1], click Replace to make this shortcut key take effect immediately</source>
-        <translation type="unfinished"/>
+        <translation>このショートカットキーは[%1]と競合しています。「置き換える」をクリックすると、変更が直ちに有効になります。</translation>
     </message>
 </context>
 <context>
