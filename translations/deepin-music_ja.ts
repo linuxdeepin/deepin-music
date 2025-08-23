@@ -19,7 +19,7 @@
     <message>
         <location filename="../src/music-player/albumlist/AlbumDefaultPage.qml" line="63"/>
         <source> scan the Music directory</source>
-        <translation type="unfinished"/>
+        <translation>ミュージックディレクトリをスキャンしてください</translation>
     </message>
 </context>
 <context>
