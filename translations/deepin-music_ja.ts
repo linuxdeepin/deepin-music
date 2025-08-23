@@ -664,7 +664,7 @@
     <message>
         <location filename="../src/music-player/lyric/LyricPage.qml" line="179"/>
         <source>No lyrics found</source>
-        <translation type="unfinished"/>
+        <translation>歌詞が見つかりません</translation>
     </message>
     <message>
         <location filename="../src/music-player/lyric/LyricPage.qml" line="189"/>
