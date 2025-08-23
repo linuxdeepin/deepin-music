@@ -186,7 +186,7 @@
     <message>
         <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="69"/>
         <source> scan the Music directory</source>
-        <translation>ミュージックディレクトリをスキャン</translation>
+        <translation>ミュージックディレクトリをスキャンしてください</translation>
     </message>
 </context>
 <context>
@@ -258,7 +258,7 @@
     <message>
         <location filename="../src/music-player/singerlist/ArtistDefaultPage.qml" line="64"/>
         <source> scan the Music directory</source>
-        <translation>ミュージックディレクトリをスキャン</translation>
+        <translation>ミュージックディレクトリをスキャンしてください</translation>
     </message>
 </context>
 <context>
@@ -974,7 +974,7 @@
     <message>
         <location filename="../src/music-player/dialogs/SettingsDialog.qml" line="30"/>
         <source>Basic</source>
-        <translation>ベーシック</translation>
+        <translation>基本</translation>
     </message>
     <message>
         <location filename="../src/music-player/dialogs/SettingsDialog.qml" line="34"/>
@@ -1064,7 +1064,7 @@
     <message>
         <location filename="../src/music-player/dialogs/SettingsDialog.qml" line="490"/>
         <source>This shortcut key conflicts with [%1], click Replace to make this shortcut key take effect immediately</source>
-        <translation>このショートカットキーは[%1]と競合しています。「置き換える」をクリックすると、変更が直ちに有効になります。</translation>
+        <translation>このショートカットキーは[%1]と競合しています。「置き換える」をクリックすると、変更が直ちに有効になります</translation>
     </message>
 </context>
 <context>
@@ -1320,7 +1320,7 @@
     <message>
         <location filename="../src/music-player/mainwindow/Toolbar.qml" line="438"/>
         <source>Play Queue</source>
-        <translation>キューを再生</translation>
+        <translation>再生キュー</translation>
     </message>
 </context>
 <context>
@@ -1363,7 +1363,7 @@
     <message>
         <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="99"/>
         <source>Version:</source>
-        <translation>バージョン</translation>
+        <translation>バージョン:</translation>
     </message>
     <message>
         <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="213"/>
