@@ -181,7 +181,7 @@
     <message>
         <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="168"/>
         <source>” to add songs to the playlist</source>
-        <translation>をクリックして、プレイリストに曲を追加します</translation>
+        <translation>&quot;をクリックして、プレイリストに曲を追加します</translation>
     </message>
     <message>
         <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="69"/>
