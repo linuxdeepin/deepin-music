@@ -4,22 +4,22 @@
     <message>
         <location filename="../src/music-player/albumlist/AlbumDefaultPage.qml" line="35"/>
         <source>Add Songs</source>
-        <translation type="unfinished"/>
+        <translation>曲を追加</translation>
     </message>
     <message>
         <location filename="../src/music-player/albumlist/AlbumDefaultPage.qml" line="43"/>
         <source>Open Folders</source>
-        <translation type="unfinished"/>
+        <translation>フォルダを開く</translation>
     </message>
     <message>
         <location filename="../src/music-player/albumlist/AlbumDefaultPage.qml" line="59"/>
         <source>Drag music files here or</source>
-        <translation type="unfinished"/>
+        <translation>ここに音楽ファイルをドロップするか、</translation>
     </message>
     <message>
         <location filename="../src/music-player/albumlist/AlbumDefaultPage.qml" line="63"/>
         <source> scan the Music directory</source>
-        <translation type="unfinished"/>
+        <translation>ミュージックディレクトリをスキャンしてください</translation>
     </message>
 </context>
 <context>
@@ -58,12 +58,12 @@
     <message>
         <location filename="../src/music-player/albumlist/AlbumListView.qml" line="43"/>
         <source>Tracks</source>
-        <translation type="unfinished"/>
+        <translation>トラック</translation>
     </message>
     <message>
         <location filename="../src/music-player/albumlist/AlbumListView.qml" line="48"/>
         <source>Date added</source>
-        <translation type="unfinished"/>
+        <translation>追加日</translation>
     </message>
 </context>
 <context>
@@ -71,17 +71,17 @@
     <message>
         <location filename="../src/music-player/musicmousemenu/AlbumMoreMenu.qml" line="20"/>
         <source>View details</source>
-        <translation type="unfinished"/>
+        <translation>詳細を表示</translation>
     </message>
     <message>
         <location filename="../src/music-player/musicmousemenu/AlbumMoreMenu.qml" line="28"/>
         <source>Play all</source>
-        <translation type="unfinished"/>
+        <translation>すべて再生</translation>
     </message>
     <message>
         <location filename="../src/music-player/musicmousemenu/AlbumMoreMenu.qml" line="37"/>
         <source>Add to</source>
-        <translation type="unfinished"/>
+        <translation>追加</translation>
     </message>
 </context>
 <context>
@@ -146,47 +146,47 @@
     <message>
         <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="42"/>
         <source>Add Songs</source>
-        <translation type="unfinished"/>
+        <translation>曲を追加</translation>
     </message>
     <message>
         <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="50"/>
         <source>Open Folders</source>
-        <translation type="unfinished"/>
+        <translation>フォルダを開く</translation>
     </message>
     <message>
         <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="65"/>
         <source>Drag music files here or</source>
-        <translation type="unfinished"/>
+        <translation>ここに音楽ファイルをドロップするか、</translation>
     </message>
     <message>
         <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="99"/>
         <source>Your favorite songs will be displayed here</source>
-        <translation type="unfinished"/>
+        <translation>お気に入りの曲はここに表示されます</translation>
     </message>
     <message>
         <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="111"/>
         <source>Click “</source>
-        <translation type="unfinished"/>
+        <translation>お気に入りの曲に追加&quot;</translation>
     </message>
     <message>
         <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="122"/>
         <source>” to add a song to My Favorites</source>
-        <translation type="unfinished"/>
+        <translation>&quot;をクリックして、お気に入りの曲に追加します</translation>
     </message>
     <message>
         <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="157"/>
         <source>No songs yet. Click “</source>
-        <translation type="unfinished"/>
+        <translation>まだ曲がありません&quot;</translation>
     </message>
     <message>
         <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="168"/>
         <source>” to add songs to the playlist</source>
-        <translation type="unfinished"/>
+        <translation>&quot;をクリックして、プレイリストに曲を追加します</translation>
     </message>
     <message>
         <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="69"/>
         <source> scan the Music directory</source>
-        <translation type="unfinished"/>
+        <translation>ミュージックディレクトリをスキャンしてください</translation>
     </message>
 </context>
 <context>
@@ -194,7 +194,7 @@
     <message>
         <location filename="../src/music-player/musicList/AllMusicList.qml" line="17"/>
         <source>All Songs</source>
-        <translation type="unfinished"/>
+        <translation>すべての曲</translation>
     </message>
     <message>
         <location filename="../src/music-player/musicList/AllMusicList.qml" line="30"/>
@@ -243,22 +243,22 @@
     <message>
         <location filename="../src/music-player/singerlist/ArtistDefaultPage.qml" line="36"/>
         <source>Add Songs</source>
-        <translation type="unfinished"/>
+        <translation>曲を追加</translation>
     </message>
     <message>
         <location filename="../src/music-player/singerlist/ArtistDefaultPage.qml" line="44"/>
         <source>Open Folders</source>
-        <translation type="unfinished"/>
+        <translation>フォルダを開く</translation>
     </message>
     <message>
         <location filename="../src/music-player/singerlist/ArtistDefaultPage.qml" line="60"/>
         <source>Drag music files here or</source>
-        <translation type="unfinished"/>
+        <translation>ここに音楽ファイルをドロップするか、</translation>
     </message>
     <message>
         <location filename="../src/music-player/singerlist/ArtistDefaultPage.qml" line="64"/>
         <source> scan the Music directory</source>
-        <translation type="unfinished"/>
+        <translation>ミュージックディレクトリをスキャンしてください</translation>
     </message>
 </context>
 <context>
@@ -279,17 +279,17 @@
     <message>
         <location filename="../src/music-player/musicmousemenu/ArtistMoreMenu.qml" line="18"/>
         <source>View details</source>
-        <translation type="unfinished"/>
+        <translation>詳細を表示</translation>
     </message>
     <message>
         <location filename="../src/music-player/musicmousemenu/ArtistMoreMenu.qml" line="26"/>
         <source>Play all</source>
-        <translation type="unfinished"/>
+        <translation>すべて再生</translation>
     </message>
     <message>
         <location filename="../src/music-player/musicmousemenu/ArtistMoreMenu.qml" line="35"/>
         <source>Add to</source>
-        <translation type="unfinished"/>
+        <translation>追加</translation>
     </message>
 </context>
 <context>
@@ -392,7 +392,7 @@
     <message>
         <location filename="../src/music-player/playlist/CurrentPlayList.qml" line="114"/>
         <source>%1 songs</source>
-        <translation type="unfinished"/>
+        <translation>&apos;%1 曲&apos;</translation>
     </message>
     <message>
         <location filename="../src/music-player/playlist/CurrentPlayList.qml" line="128"/>
@@ -664,12 +664,12 @@
     <message>
         <location filename="../src/music-player/lyric/LyricPage.qml" line="179"/>
         <source>No lyrics found</source>
-        <translation type="unfinished"/>
+        <translation>歌詞が見つかりません</translation>
     </message>
     <message>
         <location filename="../src/music-player/lyric/LyricPage.qml" line="189"/>
         <source>Please put the lyric file (same name as the song) and the song file in the same folder</source>
-        <translation type="unfinished"/>
+        <translation>歌詞ファイルを曲と同じファイル名にして、同じフォルダに保存してください</translation>
     </message>
 </context>
 <context>
@@ -707,12 +707,12 @@
     <message>
         <location filename="../src/music-player/mainwindow/MainWindow.qml" line="346"/>
         <source>Added to &quot;%1&quot;</source>
-        <translation type="unfinished"/>
+        <translation>&quot;%1&quot;に追加しました</translation>
     </message>
     <message>
         <location filename="../src/music-player/mainwindow/MainWindow.qml" line="349"/>
         <source>Removed from &quot;My Favorites&quot;</source>
-        <translation type="unfinished"/>
+        <translation>&quot;お気に入りの曲&quot;から削除されました</translation>
     </message>
     <message>
         <location filename="../src/music-player/mainwindow/MainWindow.qml" line="352"/>
@@ -727,7 +727,7 @@
     <message>
         <location filename="../src/music-player/mainwindow/MainWindow.qml" line="390"/>
         <source>All Songs</source>
-        <translation type="unfinished"/>
+        <translation>すべての曲</translation>
     </message>
 </context>
 <context>
@@ -735,7 +735,7 @@
     <message>
         <location filename="../src/music-player/musicmousemenu/MulitSelectMenu.qml" line="19"/>
         <source>Add to</source>
-        <translation type="unfinished"/>
+        <translation>追加</translation>
     </message>
     <message>
         <location filename="../src/music-player/musicmousemenu/MulitSelectMenu.qml" line="28"/>
@@ -773,7 +773,7 @@
     <message>
         <location filename="../src/music-player/musicbaseandsonglist/MusicBaselistview.qml" line="42"/>
         <source>All Songs</source>
-        <translation type="unfinished"/>
+        <translation>すべての曲</translation>
     </message>
     <message>
         <location filename="../src/music-player/musicbaseandsonglist/MusicBaselistview.qml" line="47"/>
@@ -783,7 +783,7 @@
     <message>
         <location filename="../src/music-player/musicbaseandsonglist/MusicBaselistview.qml" line="64"/>
         <source>Create playlist</source>
-        <translation type="unfinished"/>
+        <translation>プレイリストを作成</translation>
     </message>
     <message>
         <location filename="../src/music-player/musicbaseandsonglist/MusicBaselistview.qml" line="66"/>
@@ -852,7 +852,7 @@
     <message>
         <location filename="../src/music-player/musicmousemenu/MusicMoreMenu.qml" line="44"/>
         <source>Add to</source>
-        <translation type="unfinished"/>
+        <translation>追加</translation>
     </message>
     <message>
         <location filename="../src/music-player/musicmousemenu/MusicMoreMenu.qml" line="52"/>
@@ -941,7 +941,7 @@
     <message>
         <location filename="../src/music-player/mainwindow/SearchResultWindow.qml" line="100"/>
         <source>%1 albums - %2 songs</source>
-        <translation type="unfinished"/>
+        <translation>&apos;%1 アルバム - %2 曲&apos;</translation>
     </message>
     <message>
         <location filename="../src/music-player/mainwindow/SearchResultWindow.qml" line="101"/>
@@ -951,7 +951,7 @@
     <message>
         <location filename="../src/music-player/mainwindow/SearchResultWindow.qml" line="101"/>
         <source>%1 album - %2 songs</source>
-        <translation type="unfinished"/>
+        <translation>&apos;%1 アルバム - %2 曲&apos;</translation>
     </message>
     <message>
         <location filename="../src/music-player/mainwindow/SearchResultWindow.qml" line="120"/>
@@ -974,7 +974,7 @@
     <message>
         <location filename="../src/music-player/dialogs/SettingsDialog.qml" line="30"/>
         <source>Basic</source>
-        <translation>ベーシック</translation>
+        <translation>基本</translation>
     </message>
     <message>
         <location filename="../src/music-player/dialogs/SettingsDialog.qml" line="34"/>
@@ -989,7 +989,7 @@
     <message>
         <location filename="../src/music-player/dialogs/SettingsDialog.qml" line="53"/>
         <source>Remember playback position on exit</source>
-        <translation type="unfinished"/>
+        <translation>終了時に再生位置を記憶する</translation>
     </message>
     <message>
         <location filename="../src/music-player/dialogs/SettingsDialog.qml" line="66"/>
@@ -1064,7 +1064,7 @@
     <message>
         <location filename="../src/music-player/dialogs/SettingsDialog.qml" line="490"/>
         <source>This shortcut key conflicts with [%1], click Replace to make this shortcut key take effect immediately</source>
-        <translation type="unfinished"/>
+        <translation>このショートカットキーは[%1]と競合しています。「置き換える」をクリックすると、変更が直ちに有効になります</translation>
     </message>
 </context>
 <context>
@@ -1188,7 +1188,7 @@
     <message>
         <location filename="../src/music-player/musicmousemenu/SidebarMenu.qml" line="29"/>
         <source>Add songs</source>
-        <translation type="unfinished"/>
+        <translation>曲を追加</translation>
     </message>
     <message>
         <location filename="../src/music-player/musicmousemenu/SidebarMenu.qml" line="38"/>
@@ -1216,7 +1216,7 @@
     <message>
         <location filename="../src/music-player/allItems/SortMenu.qml" line="34"/>
         <source>Date added</source>
-        <translation type="unfinished"/>
+        <translation>追加日</translation>
     </message>
     <message>
         <location filename="../src/music-player/allItems/SortMenu.qml" line="37"/>
@@ -1244,7 +1244,7 @@
     <message>
         <location filename="../src/music-player/allItems/SublistTitleButton.qml" line="54"/>
         <source>%1 songs</source>
-        <translation type="unfinished"/>
+        <translation>&apos;%1 曲&apos;</translation>
     </message>
     <message>
         <location filename="../src/music-player/allItems/SublistTitleButton.qml" line="64"/>
@@ -1265,7 +1265,7 @@
     <message>
         <location filename="../src/music-player/mainwindow/Toolbar.qml" line="43"/>
         <source>Sequential play</source>
-        <translation type="unfinished"/>
+        <translation>シーケンシャル再生</translation>
     </message>
     <message>
         <location filename="../src/music-player/mainwindow/Toolbar.qml" line="43"/>
@@ -1320,7 +1320,7 @@
     <message>
         <location filename="../src/music-player/mainwindow/Toolbar.qml" line="438"/>
         <source>Play Queue</source>
-        <translation>キューを再生</translation>
+        <translation>再生キュー</translation>
     </message>
 </context>
 <context>
@@ -1363,17 +1363,17 @@
     <message>
         <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="99"/>
         <source>Version:</source>
-        <translation>バージョン</translation>
+        <translation>バージョン:</translation>
     </message>
     <message>
         <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="213"/>
         <source>Previous page</source>
-        <translation type="unfinished"/>
+        <translation>前のページ</translation>
     </message>
     <message>
         <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="229"/>
         <source>Next page</source>
-        <translation type="unfinished"/>
+        <translation>次のページ</translation>
     </message>
     <message>
         <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="239"/>

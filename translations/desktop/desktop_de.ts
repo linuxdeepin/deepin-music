@@ -19,7 +19,7 @@
     <message>
         <location filename="Desktop Entry]Comment" line="0"/>
         <source>Play your music collection</source>
-        <translation>Musik verwalten und abspielen</translation>
+        <translation>Spiele deine Musiksammlung ab</translation>
     </message>
     <message>
         <location filename="X-PlayPause Shortcut Group]Name" line="0"/>

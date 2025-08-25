@@ -19,7 +19,7 @@
     <message>
         <location filename="../src/music-player/albumlist/AlbumDefaultPage.qml" line="63"/>
         <source> scan the Music directory</source>
-        <translation type="unfinished"/>
+        <translation>Escanear el directorio de música</translation>
     </message>
 </context>
 <context>
@@ -161,27 +161,27 @@
     <message>
         <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="99"/>
         <source>Your favorite songs will be displayed here</source>
-        <translation type="unfinished"/>
+        <translation>Tus canciones favoritas se mostrarán aquí.</translation>
     </message>
     <message>
         <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="111"/>
         <source>Click “</source>
-        <translation type="unfinished"/>
+        <translation>Clic “</translation>
     </message>
     <message>
         <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="122"/>
         <source>” to add a song to My Favorites</source>
-        <translation type="unfinished"/>
+        <translation>” para agregar una canción a Mis favoritas</translation>
     </message>
     <message>
         <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="157"/>
         <source>No songs yet. Click “</source>
-        <translation type="unfinished"/>
+        <translation>No hay canciones. Haz clic en &quot;</translation>
     </message>
     <message>
         <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="168"/>
         <source>” to add songs to the playlist</source>
-        <translation type="unfinished"/>
+        <translation>para agregar canciones a la lista de reproducción</translation>
     </message>
     <message>
         <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="69"/>
@@ -1064,7 +1064,7 @@
     <message>
         <location filename="../src/music-player/dialogs/SettingsDialog.qml" line="490"/>
         <source>This shortcut key conflicts with [%1], click Replace to make this shortcut key take effect immediately</source>
-        <translation type="unfinished"/>
+        <translation>Este atajo de teclado está en conflicto con %1, haga clic en Reemplazar para aplicarlo inmediatamente</translation>
     </message>
 </context>
 <context>
@@ -1378,7 +1378,7 @@
     <message>
         <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="239"/>
         <source>Search</source>
-        <translation>Buscar en Internet</translation>
+        <translation>Buscar</translation>
     </message>
 </context>
 </TS>
