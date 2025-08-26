@@ -27,8 +27,8 @@ void QtPlayer::init()
 {
     //防止多次创建
     if (m_mediaPlayer == nullptr) {
+        qputenv("QT_GSTREAMER_USE_PLAYBIN_VOLUME", "1");
         m_mediaPlayer = new QMediaPlayer(this);
-
         connect(m_mediaPlayer, &QMediaPlayer::mediaStatusChanged, this, &QtPlayer::onMediaStatusChanged);
         connect(m_mediaPlayer, &QMediaPlayer::positionChanged, this, &QtPlayer::onPositionChanged);
         connect(m_mediaPlayer, &QMediaPlayer::stateChanged, this, [ = ](QMediaPlayer::State newState) {
