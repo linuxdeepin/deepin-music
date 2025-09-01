@@ -91,19 +91,22 @@ DialogWindow {
             Row {
                 width: parent.width
                 height: parent.height
-                spacing: 20
+                spacing: 30  // 增加组件之间的间距
                 Rectangle {
                     id: switchArea
-                    width: 108
+                    width: switchRow.width + 30  // 增加边距
                     height: parent.height
                     color: "transparent"
                     Row {
+                        id: switchRow
                         anchors.verticalCenter: parent.verticalCenter
+                        spacing: 15  // 增加标签和开关之间的间距
 
                         Label {
-                            width: contentWidth < 55 ? 55 : contentWidth
+                            width: Math.max(contentWidth, 70)  // 增加最小宽度
                             anchors.verticalCenter: parent.verticalCenter
                             text: qsTr("Equalizer")
+                            elide: Text.ElideRight  // 文本过长时显示省略号
                         }
                         Switch {
                             id: switchBtn
@@ -135,7 +138,7 @@ DialogWindow {
                 }
                 Rectangle{
                     id: comBoxArea
-                    width: 206
+                    width: Math.min(300, Math.max(206, selectComBox.implicitWidth + 20))  // 动态宽度，最小206，最大300
                     height: 36
                     color: "transparent"
                     anchors.verticalCenter: parent.verticalCenter
@@ -145,6 +148,7 @@ DialogWindow {
                         width: parent.width
                         height: parent.height
                         maxVisibleItems: 9
+                        popup.width: Math.max(width, popup.implicitWidth)  // 确保弹出菜单宽度足够显示所有文本
 
                         textRole: "text"
                         iconNameRole: "icon"
