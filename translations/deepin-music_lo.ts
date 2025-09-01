@@ -589,7 +589,7 @@
     <message>
         <location filename="../src/music-player/dialogs/EqualizerDialog.qml" line="106"/>
         <source>Equalizer</source>
-        <translation>ເຄື່ອງປະສົມສຽງ</translation>
+        <translation>ເອົາເຄີເຊີ</translation>
     </message>
     <message>
         <location filename="../src/music-player/dialogs/EqualizerDialog.qml" line="182"/>
@@ -1350,7 +1350,7 @@
     <message>
         <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="71"/>
         <source>Equalizer</source>
-        <translation>ເຄື່ອງແກ້ໄຂຕົວເລືອກ</translation>
+        <translation>ເອົາເຄີເຊີ</translation>
     </message>
     <message>
         <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="82"/>
