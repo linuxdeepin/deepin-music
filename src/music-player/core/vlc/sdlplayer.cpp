@@ -175,8 +175,9 @@ SdlPlayer::SdlPlayer(VlcInstance *instance)
     //connect to pulse
     if (pa_context_connect(context, nullptr, PA_CONTEXT_NOFAIL, nullptr) < 0) {
         is_pa_connected = false;
-        qDebug() << __FUNCTION__ << "pa_context_connect: connect to pa failed";
+        qCritical() << __FUNCTION__ << "pa_context_connect: connect to PulseAudio failed";
     }
+    qInfo() << "PulseAudio state:" << transPaContextState(pa_context_get_state(context));
 }
 
 SdlPlayer::~SdlPlayer()
@@ -500,15 +501,22 @@ int SdlPlayer::libvlc_audio_setup_cb(void **data, char *format, unsigned *rate, 
     desiredAS.userdata = sdlMediaPlayer;
 
     if (is_pa_connected) { //pa连接成功才进行播放，否则会造成崩溃
-        if (OpenAudio(&desiredAS, &sdlMediaPlayer->obtainedAS) < 0) {
-            qCritical() << __func__ << " SDL OpenAudio failed.";
+        // 实时查询PulseAudio的状态，概率性PulseAudio会异常退出
+        pa_context_state_t state = pa_context_get_state(context);
+        if (PA_CONTEXT_IS_GOOD(state)) {
+            qInfo() << "PulseAudio is connected, do OpenAudio. state:" << transPaContextState(state);
+            if (OpenAudio(&desiredAS, &sdlMediaPlayer->obtainedAS) < 0) {
+                qCritical() << __func__ << " SDL OpenAudio failed.";
+            }
+
+            Delay(40);
+            PauseAudio(0);
+
+            sdlMediaPlayer->resetVolume();
+            sdlMediaPlayer->m_sinkInputPath.clear();
+        } else {
+            qCritical() << "PulseAudio ERROR, maybe crashed, state:" << transPaContextState(state);
         }
-
-        Delay(40);
-        PauseAudio(0);
-
-        sdlMediaPlayer->resetVolume();
-        sdlMediaPlayer->m_sinkInputPath.clear();
     }
 
     return 0;
@@ -732,4 +740,27 @@ void SdlPlayer::switchToDefaultSink()
         pa_operation_unref(o);
 
     switchOnceFlag = 0;
+}
+
+QString SdlPlayer::transPaContextState(int state)
+{
+    switch (state)
+    {
+    case PA_CONTEXT_UNCONNECTED:    /**< The context hasn't been connected yet */
+        return QStringLiteral("PA_CONTEXT_UNCONNECTED");
+    case PA_CONTEXT_CONNECTING:     /**< A connection is being established */
+        return QStringLiteral("PA_CONTEXT_CONNECTING");
+    case PA_CONTEXT_AUTHORIZING:    /**< The client is authorizing itself to the daemon */
+        return QStringLiteral("PA_CONTEXT_AUTHORIZING");
+    case PA_CONTEXT_SETTING_NAME:   /**< The client is passing its application name to the daemon */
+        return QStringLiteral("PA_CONTEXT_SETTING_NAME");
+    case PA_CONTEXT_READY:          /**< The connection is established, the context is ready to execute operations */
+        return QStringLiteral("PA_CONTEXT_READY");
+    case PA_CONTEXT_FAILED:         /**< The connection failed or was disconnected */
+        return QStringLiteral("PA_CONTEXT_FAILED");
+    case PA_CONTEXT_TERMINATED:     /**< The connection was terminated cleanly */
+        return QStringLiteral("PA_CONTEXT_TERMINATED");
+    default:
+        return QStringLiteral("Unknown state: %1").arg(state);
+    }
 }

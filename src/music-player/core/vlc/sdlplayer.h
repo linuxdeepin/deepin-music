@@ -146,6 +146,9 @@ private:
 
     static void switchToDefaultSink();
 
+    // 将状态码翻译成文字信息，人类可读
+    static QString transPaContextState(int code);
+
 public:
     unsigned int _rate, _channels, _sampleRate;
 
