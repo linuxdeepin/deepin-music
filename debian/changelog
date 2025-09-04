@@ -1,3 +1,9 @@
+deepin-music (7.0.45) unstable; urgency=medium
+
+  * fix: Overlapping Interface Controls Issue
+
+ -- dengzhongyuan <dengzhongyuan@uniontech.com>  Thu, 04 Sep 2025 20:16:31 +0800
+
 deepin-music (7.0.44) unstable; urgency=medium
 
   * fix: Replace Control with FloatingPanel in Toolbar.qml
