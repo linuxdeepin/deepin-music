@@ -9,6 +9,7 @@
 #include <QObject>
 #include <QMap>
 #include <QLibrary>
+#include <QMutex>
 
 class VlcDynamicInstance : public QObject
 {
@@ -43,6 +44,7 @@ private:
     QLibrary libsdl2;
 
     QMap<QString, QFunctionPointer> m_funMap;
+    QMutex m_funMapMutex;  // 添加互斥锁
 };
 
 #endif // VLCDYNAMICINSTANCE_H

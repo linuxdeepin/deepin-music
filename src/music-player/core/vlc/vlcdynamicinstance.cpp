@@ -43,6 +43,9 @@ VlcDynamicInstance *VlcDynamicInstance::VlcFunctionInstance()
 
 QFunctionPointer VlcDynamicInstance::resolveSymbol(const char *symbol, bool bffmpeg)
 {
+    qDebug() << __func__ << symbol << bffmpeg;
+    // m_funMap是非线程安全的，对读写操作进行加锁
+    QMutexLocker locker(&m_funMapMutex);  // 自动加锁解锁
     if (m_funMap.contains(symbol)) {
         return m_funMap[symbol];
     }
@@ -53,7 +56,7 @@ QFunctionPointer VlcDynamicInstance::resolveSymbol(const char *symbol, bool bffm
             fgp = libdformate.resolve(symbol);
             if (!fgp) {
                 //never get here if obey the rule
-                qDebug() << "[VlcDynamicInstance::resolveSymbol] resolve function:" << symbol;
+                qCritical() << "[VlcDynamicInstance::resolveSymbol] resolve function:" << symbol << "FAILED";
             }
         }
         m_funMap[symbol] = fgp;
@@ -67,7 +70,7 @@ QFunctionPointer VlcDynamicInstance::resolveSymbol(const char *symbol, bool bffm
 
     if (!fp) {
         //never get here if obey the rule
-        qDebug() << "[VlcDynamicInstance::resolveSymbol] resolve function:" << symbol;
+        qCritical() << "[VlcDynamicInstance::resolveSymbol] resolve function:" << symbol << "FAILED";
         return fp;
     } else {
         //cache fuctionpointer for next visiting
@@ -79,6 +82,8 @@ QFunctionPointer VlcDynamicInstance::resolveSymbol(const char *symbol, bool bffm
 
 QFunctionPointer VlcDynamicInstance::resolveSdlSymbol(const char *symbol)
 {
+    // m_funMap是非线程安全的，对读写操作进行加锁
+    QMutexLocker locker(&m_funMapMutex);  // 自动加锁解锁
     if (m_funMap.contains(symbol)) {
         return m_funMap[symbol];
     }
