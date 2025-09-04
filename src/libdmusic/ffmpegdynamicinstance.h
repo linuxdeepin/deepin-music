@@ -9,6 +9,7 @@
 #include <QObject>
 #include <QLibrary>
 #include <QMap>
+#include <QMutex>
 
 class FfmpegDynamicInstance : public QObject
 {
@@ -34,6 +35,7 @@ private:
     QLibrary libddformate;
 
     QMap<QString, QFunctionPointer> m_funMap;
+    QMutex m_funMapMutex;  // 添加互斥锁
 };
 
 #endif // FFMPEGDYNAMICINSTANCE_H
