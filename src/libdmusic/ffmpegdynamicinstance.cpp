@@ -32,6 +32,9 @@ FfmpegDynamicInstance *FfmpegDynamicInstance::VlcFunctionInstance()
 
 QFunctionPointer FfmpegDynamicInstance::resolveSymbol(const char *symbol, bool bffmpeg)
 {
+    qDebug() << __func__ << symbol << bffmpeg;
+    // m_funMap是非线程安全的，对读写操作进行加锁
+    QMutexLocker locker(&m_funMapMutex);  // 自动加锁解锁
     if (m_funMap.contains(symbol)) {
         return m_funMap[symbol];
     }
@@ -43,7 +46,7 @@ QFunctionPointer FfmpegDynamicInstance::resolveSymbol(const char *symbol, bool b
 
     if (!fgp) {
         //never get here if obey the rule
-        qDebug() << "[FfmpegDynamicInstance::resolveSymbol] resolve function:" << symbol;
+        qCritical() << "[FfmpegDynamicInstance::resolveSymbol] resolve function:" << symbol << "FAILED";
         return fgp;
     } else {
         //cache fuctionpointer for next visiting
