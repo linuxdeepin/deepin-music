@@ -9,17 +9,17 @@
     <message>
         <location filename="../src/music-player/albumlist/AlbumDefaultPage.qml" line="43"/>
         <source>Open Folders</source>
-        <translation type="unfinished"/>
+        <translation>Ouvrir les dossiers</translation>
     </message>
     <message>
         <location filename="../src/music-player/albumlist/AlbumDefaultPage.qml" line="59"/>
         <source>Drag music files here or</source>
-        <translation type="unfinished"/>
+        <translation>Faites glisser les fichiers musicaux ici ou</translation>
     </message>
     <message>
         <location filename="../src/music-player/albumlist/AlbumDefaultPage.qml" line="63"/>
         <source> scan the Music directory</source>
-        <translation type="unfinished"/>
+        <translation> scanner le répertoire Musique</translation>
     </message>
 </context>
 <context>
@@ -151,12 +151,12 @@
     <message>
         <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="50"/>
         <source>Open Folders</source>
-        <translation type="unfinished"/>
+        <translation>Ouvrir les dossiers</translation>
     </message>
     <message>
         <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="65"/>
         <source>Drag music files here or</source>
-        <translation type="unfinished"/>
+        <translation>Faites glisser les fichiers musicaux ici ou</translation>
     </message>
     <message>
         <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="99"/>
@@ -248,12 +248,12 @@
     <message>
         <location filename="../src/music-player/singerlist/ArtistDefaultPage.qml" line="44"/>
         <source>Open Folders</source>
-        <translation type="unfinished"/>
+        <translation>Ouvrir les dossiers</translation>
     </message>
     <message>
         <location filename="../src/music-player/singerlist/ArtistDefaultPage.qml" line="60"/>
         <source>Drag music files here or</source>
-        <translation type="unfinished"/>
+        <translation>Faites glisser les fichiers musicaux ici ou</translation>
     </message>
     <message>
         <location filename="../src/music-player/singerlist/ArtistDefaultPage.qml" line="64"/>
