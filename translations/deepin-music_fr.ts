@@ -194,7 +194,7 @@
     <message>
         <location filename="../src/music-player/musicList/AllMusicList.qml" line="17"/>
         <source>All Songs</source>
-        <translation type="unfinished"/>
+        <translation>Toutes les chansons</translation>
     </message>
     <message>
         <location filename="../src/music-player/musicList/AllMusicList.qml" line="30"/>
@@ -727,7 +727,7 @@
     <message>
         <location filename="../src/music-player/mainwindow/MainWindow.qml" line="390"/>
         <source>All Songs</source>
-        <translation type="unfinished"/>
+        <translation>Toutes les chansons</translation>
     </message>
 </context>
 <context>
@@ -773,7 +773,7 @@
     <message>
         <location filename="../src/music-player/musicbaseandsonglist/MusicBaselistview.qml" line="42"/>
         <source>All Songs</source>
-        <translation type="unfinished"/>
+        <translation>Toutes les chansons</translation>
     </message>
     <message>
         <location filename="../src/music-player/musicbaseandsonglist/MusicBaselistview.qml" line="47"/>
