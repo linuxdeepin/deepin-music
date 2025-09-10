@@ -374,7 +374,7 @@
     <message>
         <location filename="../src/music-player/dialogs/CloseConfirmDialog.qml" line="98"/>
         <source>Confirm</source>
-        <translation type="unfinished"/>
+        <translation>تاییدە</translation>
     </message>
 </context>
 <context>
