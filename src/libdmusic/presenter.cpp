@@ -146,6 +146,13 @@ Presenter::Presenter(const QString &unknownAlbumStr, const QString &unknownArtis
                 m_data->m_playerEngine->setMediaMeta(mediaHash);
             m_data->m_playerEngine->play();
         }
+        
+        // 导入歌曲成功后保存数据库
+        if (sucessCount > 0) {
+            qCInfo(dmMusic) << "Saving database after importing" << sucessCount << "songs";
+            saveDataToDB();
+        }
+        
         emit importFinished(playlistHashs, failCount, sucessCount, existCount);
     });
     connect(m_data->m_dataManager, &DataManager::signalDeleteOneMeta, this,
@@ -818,6 +825,11 @@ QVariantMap Presenter::addPlayList(const QString &name)
 {
     qCDebug(dmMusic) << "Adding playlist:" << name;
     auto playlist = m_data->m_dataManager->addPlayList(name);
+    
+    // 创建歌单后保存数据库
+    qCInfo(dmMusic) << "Saving database after creating playlist:" << name;
+    saveDataToDB();
+    
     emit addedPlaylist(playlist.uuid);
     return Utils::playlistToVariantMap(playlist);
 }
