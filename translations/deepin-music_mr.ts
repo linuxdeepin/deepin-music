@@ -677,7 +677,7 @@
     <message>
         <location filename="../src/music-player/mainwindow/MainWindow.qml" line="188"/>
         <source>Music</source>
-        <translation type="unfinished"/>
+        <translation>म्यूजिक</translation>
     </message>
     <message>
         <location filename="../src/music-player/mainwindow/MainWindow.qml" line="203"/>
