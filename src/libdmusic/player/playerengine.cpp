@@ -509,8 +509,7 @@ void PlayerEngine::playPreMeta()
         }
 
         if (preIndex != -1) {
-            setMediaMeta(allMetas.at(preIndex));
-            play();
+            switchToNewTrackWithFade(allMetas.at(preIndex), true);
         } else {
             stop();
         }
@@ -578,8 +577,7 @@ void PlayerEngine::playPreMeta()
             break;
         }
         }
-        setMediaMeta(curMetaList.at(index));
-        play();
+        switchToNewTrackWithFade(curMetaList.at(index), true);
     }
     qCDebug(dmMusic) << "Play previous track finished";
 }
@@ -604,9 +602,7 @@ void PlayerEngine::playNextMeta(const DMusic::MediaMeta &meta, bool isAuto, bool
             }
         }
         if (newIndex != -1) {
-            setMediaMeta(allMetas.at(newIndex));
-            if (playFlag)
-                play();
+            switchToNewTrackWithFade(allMetas.at(newIndex), playFlag);
         } else if (!isAuto) {
             for (int i = 0; i < allMetas.size(); i++) {
                 if ((QFile::exists(allMetas[i].localPath) && m_data->m_player->supportedSuffixList().contains(
@@ -616,9 +612,7 @@ void PlayerEngine::playNextMeta(const DMusic::MediaMeta &meta, bool isAuto, bool
                 }
             }
             if (index != -1) {
-                setMediaMeta(allMetas[index]);
-                if (playFlag)
-                    play();
+                switchToNewTrackWithFade(allMetas[index], playFlag);
             }
         } else {
             qCDebug(dmMusic) << "No next track found";
@@ -720,11 +714,8 @@ void PlayerEngine::playNextMeta(const DMusic::MediaMeta &meta, bool isAuto, bool
 
         index = (index == -1 ? 0 : index);
         index = (index >= curMetaList.size() ? 0 : index);
-        setMediaMeta(curMetaList.at(index).second);
-        if (playFlag) {
-            qCDebug(dmMusic) << "Playing track at index:" << index;
-            play();
-        }
+        switchToNewTrackWithFade(curMetaList.at(index).second, playFlag);
+        qCDebug(dmMusic) << "Playing track at index:" << index;
     } else {
         qCDebug(dmMusic) << "No media meta set, stopping player";
         stop();
@@ -769,6 +760,68 @@ void PlayerEngine::stop()
     qCInfo(dmMusic) << "Stop requested";
     m_data->m_player->stop();
     setMediaMeta(MediaMeta());
+}
+
+void PlayerEngine::switchToNewTrackWithFade(const DMusic::MediaMeta &meta, bool playFlag)
+{
+    qCInfo(dmMusic) << "Switching to new track with fade:" << meta.title;
+    
+    // 检查用户是否启用了淡入淡出效果且当前正在播放
+    if (!m_data->m_fadeInOut || playbackStatus() != DmGlobal::Playing) {
+        // 没有启用淡入淡出或当前没有播放，直接切换
+        qCInfo(dmMusic) << "Direct track switch - fade enabled:" << m_data->m_fadeInOut << "playing:" << (playbackStatus() == DmGlobal::Playing);
+        setMediaMeta(meta);
+        if (playFlag) {
+            play();
+        }
+        return;
+    }
+    
+    // 启用了淡入淡出且正在播放，使用动画实现淡出-切换-淡入
+    qCInfo(dmMusic) << "Starting track switch with fade effect";
+    
+    QPropertyAnimation *switchFadeOut = new QPropertyAnimation(this, "fadeInOutFactor", this);
+    switchFadeOut->setEasingCurve(QEasingCurve::OutQuad);
+    switchFadeOut->setStartValue(1.0);
+    switchFadeOut->setEndValue(0.0);
+    switchFadeOut->setDuration(400);
+    
+    connect(switchFadeOut, &QPropertyAnimation::finished, this, [=]() {
+        qCInfo(dmMusic) << "Track switch fade out completed, switching to:" << meta.title;
+        setMediaMeta(meta);
+        
+        if (playFlag) {
+            m_data->m_player->play();
+            QPropertyAnimation *switchFadeIn = new QPropertyAnimation(this, "fadeInOutFactor", this);
+            switchFadeIn->setEasingCurve(QEasingCurve::InQuad);
+            switchFadeIn->setStartValue(0.0);
+            switchFadeIn->setEndValue(1.0);
+            switchFadeIn->setDuration(600); // 稍慢的淡入
+            connect(switchFadeIn, &QPropertyAnimation::finished, switchFadeIn, &QObject::deleteLater);
+            switchFadeIn->start();
+        }
+        switchFadeOut->deleteLater();
+    });
+    
+    switchFadeOut->start();
+}
+
+void PlayerEngine::switchToNewTrackWithFade(const QString &metaHash, bool playFlag)
+{
+    qCInfo(dmMusic) << "Switching to new track with fade by hash:" << metaHash;
+    
+    for (const auto &meta : m_data->m_metaList) {
+        if (meta.hash == metaHash) {
+            switchToNewTrackWithFade(meta, playFlag);
+            return;
+        }
+    }
+    
+    qCInfo(dmMusic) << "Meta not found in playlist for hash:" << metaHash << ", using direct switch";
+    setMediaMeta(metaHash);
+    if (playFlag) {
+        play();
+    }
 }
 
 void PlayerEngine::setFadeInOutFactor(double fadeInOutFactor)

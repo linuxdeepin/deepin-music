@@ -82,6 +82,8 @@ signals:
 private:
     void playNextMeta(const DMusic::MediaMeta &meta, bool isAuto, bool playFlag = true);
     void resetDBusMpris(const DMusic::MediaMeta &meta);
+    void switchToNewTrackWithFade(const DMusic::MediaMeta &meta, bool playFlag = true);
+    void switchToNewTrackWithFade(const QString &metaHash, bool playFlag = true);
 
 private:
     PlayerEnginePrivate  *m_data = nullptr;
