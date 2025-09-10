@@ -824,7 +824,7 @@
     <message>
         <location filename="../src/music-player/dialogs/MusicInfoDialog.qml" line="101"/>
         <source>Size</source>
-        <translation type="unfinished"/>
+        <translation>काम करें</translation>
     </message>
     <message>
         <location filename="../src/music-player/dialogs/MusicInfoDialog.qml" line="107"/>
@@ -895,7 +895,7 @@
     <message>
         <location filename="../src/music-player/main.cpp" line="133"/>
         <source>Music</source>
-        <translation type="unfinished"/>
+        <translation>म्यूजिक</translation>
     </message>
     <message>
         <location filename="../src/music-player/main.cpp" line="143"/>
@@ -956,7 +956,7 @@
     <message>
         <location filename="../src/music-player/mainwindow/SearchResultWindow.qml" line="120"/>
         <source>Music</source>
-        <translation type="unfinished"/>
+        <translation>म्यूजिक</translation>
     </message>
     <message>
         <location filename="../src/music-player/mainwindow/SearchResultWindow.qml" line="128"/>
@@ -1353,7 +1353,7 @@
     <message>
         <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="96"/>
         <source>Music</source>
-        <translation type="unfinished"/>
+        <translation>म्यूजिक</translation>
     </message>
     <message>
         <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="98"/>
