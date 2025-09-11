@@ -1,3 +1,9 @@
+deepin-music (7.0.46) unstable; urgency=medium
+
+  *  fix: Save database after importing songs and creating playlists
+
+ -- dengzhongyuan <dengzhongyuan@uniontech.com>  Thu, 11 Sep 2025 09:55:48 +0800
+
 deepin-music (7.0.45) unstable; urgency=medium
 
   * fix: Overlapping Interface Controls Issue
