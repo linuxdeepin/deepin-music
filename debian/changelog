@@ -1,3 +1,9 @@
+deepin-music (7.0.47) unstable; urgency=medium
+
+  * chore: Update linglong base and runtime
+
+ -- wangrong <wangrong@uniontech.com>  Thu, 18 Sep 2025 19:26:39 +0800
+
 deepin-music (7.0.46) unstable; urgency=medium
 
   *  fix: Save database after importing songs and creating playlists
