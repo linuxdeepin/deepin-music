@@ -1378,7 +1378,7 @@
     <message>
         <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="239"/>
         <source>Search</source>
-        <translation type="unfinished"/>
+        <translation>البحث</translation>
     </message>
 </context>
 </TS>
