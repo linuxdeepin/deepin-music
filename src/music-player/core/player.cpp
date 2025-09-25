@@ -1196,8 +1196,11 @@ void Player::initPlayer()
     this, [ = ](qint64 position) {
         Q_EMIT positionChanged(position,  m_ActiveMeta.length, 1); //直接上报当前位置，offset无实质意义
     });
-    connect(this,&Player::mTimerOut,this,[=](){
-       m_timer->stop();
+    connect(this, &Player::signalPlaybackStatusChanged, this, [=](Player::PlaybackStatus playbackStatus) {
+        // 只有非播放状态才需要暂停计时器，计时器是用来刷新动效的
+        if (m_timer && playbackStatus != Player::Playing) {
+            m_timer->stop();
+        }
     });
     connect(m_basePlayer, &PlayerBase::positionChanged,
     this, [ = ](float position) {
