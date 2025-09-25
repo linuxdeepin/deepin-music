@@ -55,7 +55,13 @@ void VlcPlayer::init()
         connect(m_qvplayer, &VlcMediaPlayer::timeChanged, this, &VlcPlayer::timeChanged);
         connect(m_qvplayer, &VlcMediaPlayer::positionChanged, this, &VlcPlayer::positionChanged);
         connect(m_qvmedia, &VlcMedia::stateChanged,
-        this, [ = ](Vlc::State state) {
+                this, [ = ](Vlc::State state) {
+            // ape文件播放时，不发送vlc状态改变信号，避免影响ape状态改变信号
+            if (m_bApe) {
+                qWarning() << "Ape is playing, bypass vlc state changed signal";
+                return;
+            }
+
             switch (state) {
             case Vlc::Playing: {
                 emit stateChanged(PlayerBase::PlayState::Playing);
