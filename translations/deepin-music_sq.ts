@@ -547,7 +547,7 @@
     <message>
         <location filename="../src/music-player/dialogs/EqualizerDialog.qml" line="25"/>
         <source>Party</source>
-        <translation>Party</translation>
+        <translation>Mbrëmje</translation>
     </message>
     <message>
         <location filename="../src/music-player/dialogs/EqualizerDialog.qml" line="26"/>
@@ -882,7 +882,7 @@
     <message>
         <location filename="../src/music-player/musicmousemenu/MusicMoreMenu.qml" line="104"/>
         <source>Song info</source>
-        <translation>Të dhëna kënge</translation>
+        <translation>Hollësi kënge</translation>
     </message>
 </context>
 <context>
@@ -890,12 +890,12 @@
     <message>
         <location filename="../src/music-player/main.cpp" line="131"/>
         <source>Music is a local music player with beautiful design and simple functions.</source>
-        <translation>Muzika është një lojtës lokal muzike me konceptim të hijshëm dhe funksione të thjeshta.</translation>
+        <translation>Music është një lojtës vendor muzike me konceptim të hijshëm dhe funksione të thjeshta.</translation>
     </message>
     <message>
         <location filename="../src/music-player/main.cpp" line="133"/>
         <source>Music</source>
-        <translation>Muzikë</translation>
+        <translation>Music</translation>
     </message>
     <message>
         <location filename="../src/music-player/main.cpp" line="143"/>
