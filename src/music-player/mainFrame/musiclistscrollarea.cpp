@@ -151,7 +151,7 @@ void MusicListScrollArea::slotTheme(int type)
         DApplicationHelper::instance()->setPalette(customizeLabel, dataBaseLabelPalette);
     } else {
         auto leftFramePalette = palette();
-        leftFramePalette.setColor(DPalette::Background, QColor("#232323"));
+        leftFramePalette.setColor(DPalette::Background, QColor("#262626"));
         setPalette(leftFramePalette);
 
         DPalette dataBaseLabelPalette = dataBaseLabel->palette();
