@@ -35,7 +35,8 @@ VlcPlayer::VlcPlayer(QObject *parent)
                        << "m4a"
                        << "ac3"
                        << "voc"
-                       << "aiff";
+                       << "aiff"
+                       << "opus";
 }
 
 VlcPlayer::~VlcPlayer()
