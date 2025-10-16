@@ -1,3 +1,9 @@
+deepin-music (7.0.48) unstable; urgency=medium
+
+  * Update version to 7.0.48. 
+
+ -- Tian ShiLin <tianshilin@uniontech.com>  Thu, 16 Oct 2025 19:11:55 +0800
+
 deepin-music (7.0.47) unstable; urgency=medium
 
   * chore: Update linglong base and runtime
