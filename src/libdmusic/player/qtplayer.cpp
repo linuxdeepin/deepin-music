@@ -18,7 +18,8 @@ QtPlayer::QtPlayer(QObject *parent)
     m_supportedSuffix << "wav"
                       << "ogg"
                       << "mp3"
-                      << "flac";
+                      << "flac"
+                      << "opus";
 }
 
 QtPlayer::~QtPlayer()
