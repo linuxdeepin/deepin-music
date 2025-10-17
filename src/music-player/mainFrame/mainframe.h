@@ -78,7 +78,7 @@ public slots:
 
 private slots:
     void setThemeType(DGuiApplicationHelper::ColorType themeType);
-    void slotSearchEditFoucusIn();
+    void slotSearchEditFocusIn();
     void slotLyricClicked();
     void slotDBImportFinished(QString hash, int successCount);
     void slotCdaImportFinished();

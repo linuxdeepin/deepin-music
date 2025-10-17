@@ -21,7 +21,7 @@ public:
 signals:
     void searchText(const QString &id, const QString &text);
     void locateMusic(const QString &hash);
-    void sigFoucusIn();
+    void sigFocusIn();
 
 public slots:
     //void onFocusIn();
