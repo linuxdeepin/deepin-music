@@ -132,8 +132,8 @@ MainFrame::MainFrame()
     connect(CommonService::getInstance(), &CommonService::signalAddMusic,
             this, &MainFrame::slotAddMusicClicked);
 
-    connect(m_titlebarwidget, &TitlebarWidget::sigSearchEditFoucusIn,
-            this, &MainFrame::slotSearchEditFoucusIn);
+    connect(m_titlebarwidget, &TitlebarWidget::sigSearchEditFocusIn,
+            this, &MainFrame::slotSearchEditFocusIn);
     // 导入成功
     connect(DataBaseService::getInstance(), &DataBaseService::signalImportFinished,
             this, &MainFrame::slotDBImportFinished);
@@ -683,9 +683,9 @@ void MainFrame::slotSizeModeChanged(DGuiApplicationHelper::SizeMode sizeMode)
 }
 #endif
 
-void MainFrame::slotSearchEditFoucusIn()
+void MainFrame::slotSearchEditFocusIn()
 {
-    m_titlebarwidget->slotSearchEditFoucusIn();
+    m_titlebarwidget->slotSearchEditFocusIn();
 }
 
 void MainFrame::slotLyricClicked()
@@ -807,7 +807,7 @@ void MainFrame::slotShortCutTriggered()
 
         connect(shortcutViewProc, SIGNAL(finished(int)), shortcutViewProc, SLOT(deleteLater()));
     } else if (objCut == searchShortcut) {
-        m_titlebarwidget->slotSearchEditFoucusIn();
+        m_titlebarwidget->slotSearchEditFocusIn();
     } else if (objCut == windowShortcut) {
         if (windowState() == Qt::WindowMaximized) {
             showNormal();

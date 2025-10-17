@@ -19,10 +19,10 @@ public:
 
 //    void setResultWidget(SearchResult *result);
 public slots:
-    void slotSearchEditFoucusIn();
+    void slotSearchEditFocusIn();
     void slotClearEdit();
 signals:
-    void sigSearchEditFoucusIn();
+    void sigSearchEditFocusIn();
 protected:
     virtual void resizeEvent(QResizeEvent *event) Q_DECL_OVERRIDE;
 public:

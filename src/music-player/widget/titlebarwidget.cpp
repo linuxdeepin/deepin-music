@@ -42,8 +42,8 @@ TitlebarWidget::TitlebarWidget(QWidget *parent) :
     m_search->setFixedWidth(354);
     m_search->setPlaceHolder(tr("Search"));
     layout->addWidget(m_search, Qt::AlignCenter);
-    QObject::connect(m_search, &SearchEdit::sigFoucusIn,
-                     this, &TitlebarWidget::slotSearchEditFoucusIn);
+    QObject::connect(m_search, &SearchEdit::sigFocusIn,
+                     this, &TitlebarWidget::slotSearchEditFocusIn);
     connect(CommonService::getInstance(), &CommonService::signalClearEdit, this, &TitlebarWidget::slotClearEdit);
 }
 
@@ -57,9 +57,9 @@ TitlebarWidget::~TitlebarWidget()
 //    m_search->setResultWidget(result);
 //}
 
-void TitlebarWidget::slotSearchEditFoucusIn()
+void TitlebarWidget::slotSearchEditFocusIn()
 {
-    //emit sigSearchEditFoucusIn();
+    //emit sigSearchEditFocusIn();
     m_search->lineEdit()->setFocus();
 }
 
