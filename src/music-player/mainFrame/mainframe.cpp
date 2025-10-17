@@ -90,6 +90,8 @@ MainFrame::MainFrame()
     m_titlebar = new DTitlebar(this);
     m_titlebar->setTitle(tr("Music"));
     m_titlebar->setIcon(QIcon::fromTheme("deepin-music"));    //titlebar->setCustomWidget(titlebarwidget, Qt::AlignLeft, false);
+    // 禁止分割屏幕，因为应用的最小尺寸会被分割屏幕功能破坏 setMinimumSize(QSize(1070, 680))
+    m_titlebar->setSplitScreenEnabled(false);
 
     m_titlebar->setCustomWidget(m_titlebarwidget);
     m_titlebar->layout()->setAlignment(m_titlebarwidget, Qt::AlignCenter);
