@@ -474,7 +474,7 @@
     <message>
         <location filename="../src/music-player/dialogs/DeleteSonglistDialog.qml" line="55"/>
         <source>Remove</source>
-        <translation type="unfinished"/>
+        <translation>ہٹائیں</translation>
     </message>
     <message>
         <location filename="../src/music-player/dialogs/DeleteSonglistDialog.qml" line="55"/>
@@ -492,7 +492,7 @@
     <message>
         <location filename="../src/music-player/dialogs/EqualizerDialog.qml" line="14"/>
         <source>Custom</source>
-        <translation type="unfinished"/>
+        <translation>اپنی مرضی کا</translation>
     </message>
     <message>
         <location filename="../src/music-player/dialogs/EqualizerDialog.qml" line="15"/>
@@ -1019,7 +1019,7 @@
     <message>
         <location filename="../src/music-player/dialogs/SettingsDialog.qml" line="137"/>
         <source>Shortcuts</source>
-        <translation type="unfinished"/>
+        <translation>شارٹ کٹس</translation>
     </message>
     <message>
         <location filename="../src/music-player/dialogs/SettingsDialog.qml" line="158"/>
@@ -1211,7 +1211,7 @@
     <message>
         <location filename="../src/music-player/allItems/SortMenu.qml" line="33"/>
         <source>Custom</source>
-        <translation type="unfinished"/>
+        <translation>اپنی مرضی کا</translation>
     </message>
     <message>
         <location filename="../src/music-player/allItems/SortMenu.qml" line="34"/>
