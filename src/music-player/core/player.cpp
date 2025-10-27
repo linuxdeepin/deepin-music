@@ -1057,7 +1057,8 @@ void Player::setEqualizerCurMode(int curIndex)
 
 void Player::onSleepWhenTaking(bool sleep)
 {
-    qDebug() << "onSleepWhenTaking:" << sleep;
+    qDebug() << "onSleepWhenTaking:" << sleep << "state:" << m_basePlayer->state() 
+            << "(Idle:0, Opening:1, Buffering:2, Playing:3, Paused:4, Stopped:5, Ended:6, Error:7)";
     if (sleep) {
         //休眠记录状态
         if (m_basePlayer->state() == PlayerBase::Playing) {
@@ -1067,7 +1068,10 @@ void Player::onSleepWhenTaking(bool sleep)
                 QDBusInterface ainterface("com.deepin.daemon.Audio", m_sinkInputPath,
                                           "com.deepin.daemon.Audio.SinkInput",
                                           QDBusConnection::sessionBus());
-                if (!ainterface.isValid()) return ;
+                if (!ainterface.isValid()) {
+                    qWarning() << "Invalid dbus sink input:" << m_sinkInputPath;
+                    return;
+                }
                 // S3睡眠前，设置静音状态，避免一定概率的暂停延迟导致唤醒后仍有声音播出
                 setSinkInputMuted(true);
 
@@ -1091,6 +1095,8 @@ void Player::onLockedScreen(const QString &name, QVariantMap map, const QStringL
 {
     qDebug() << name << map << endl;
     if (map.value("Locked").value<bool>()) {
+        qDebug() << "state:" << m_basePlayer->state() 
+                << "(Idle:0, Opening:1, Buffering:2, Playing:3, Paused:4, Stopped:5, Ended:6, Error:7)";
         if (m_basePlayer->state() == PlayerBase::Playing) {
             //休眠唤醒前设置音量为1%
             readSinkInputPath();
@@ -1118,7 +1124,10 @@ void Player::readSinkInputPath()
     QVariant v = DBusUtils::readDBusProperty("com.deepin.daemon.Audio", "/com/deepin/daemon/Audio",
                                              "com.deepin.daemon.Audio", "SinkInputs");
 
-    if (!v.isValid()) return;
+    if (!v.isValid()) {
+        qWarning() << "Invalid dbus sink inputs";
+        return;
+    }
 
     QList<QDBusObjectPath> allSinkInputsList = v.value<QList<QDBusObjectPath> >();
 
