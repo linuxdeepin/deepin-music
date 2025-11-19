@@ -11,7 +11,7 @@ Rectangle {
     property real widthPadding: 15
     property real contentSpacing: 10
     property string message: "message"
-    property real duration: 2000
+    property real duration: 1000
 
     width: playPauseBtn.width + texteLabel.width + widthPadding * 2 + contentSpacing
     height: 60
