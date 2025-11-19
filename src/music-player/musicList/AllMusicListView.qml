@@ -90,7 +90,7 @@ Rectangle {
 
         property bool isShiftModifier: false;
         property int keyChanged: 0; //如果方向改变,该值也会改变
-        Keys.onPressed: {
+        Keys.onPressed: function(event) {
             switch (event.key){
             case Qt.Key_Up:
                 listview.lastIndex--;
@@ -114,7 +114,7 @@ Rectangle {
                 listview.isShiftModifier = true;
                 break;
             case Qt.Key_Delete:
-                listview.delectSelectMusices();
+                listview.deleteSelectMusices();
                 break;
             case Qt.Key_L:
                 if (event.modifiers & Qt.ControlModifier) {
@@ -127,7 +127,7 @@ Rectangle {
             }
             event.accepted = true;
         }
-        Keys.onReleased: {
+        Keys.onReleased: function(event) {
             if(event.key === Qt.Key_Shift){
                 listview.isShiftModifier = false;
             }
@@ -316,7 +316,7 @@ Rectangle {
             }
             return hashList;
         }
-        function delectSelectMusices(){
+        function deleteSelectMusices(){
             var tmpSelect = getSelectGroupHashList();
             removeSong.deleteHashList = tmpSelect;
             removeSong.show();
@@ -352,6 +352,20 @@ Rectangle {
                 listview.dragGroup.push(mediaModel.get(i).coverUrl);
             }
             listview.lastIndex = mediaModel.count - 1;
+        }
+    }
+
+    Component.onCompleted: {
+        forceActiveFocus();
+    }
+
+    Keys.onPressed: function(event) {
+        if (event.key === Qt.Key_A && event.modifiers & Qt.ControlModifier) {
+            listview.selectAll();
+            event.accepted = true;
+        } else if (event.key === Qt.Key_Delete) {
+            listview.deleteSelectMusices();
+            event.accepted = true;
         }
     }
 }
