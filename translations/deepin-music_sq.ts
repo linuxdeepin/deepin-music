@@ -181,7 +181,7 @@
     <message>
         <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="168"/>
         <source>” to add songs to the playlist</source>
-        <translation type="unfinished"/>
+        <translation>për shtim këngësh te luajlista</translation>
     </message>
     <message>
         <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="69"/>
@@ -547,7 +547,7 @@
     <message>
         <location filename="../src/music-player/dialogs/EqualizerDialog.qml" line="25"/>
         <source>Party</source>
-        <translation>Party</translation>
+        <translation>Mbrëmje</translation>
     </message>
     <message>
         <location filename="../src/music-player/dialogs/EqualizerDialog.qml" line="26"/>
@@ -882,7 +882,7 @@
     <message>
         <location filename="../src/music-player/musicmousemenu/MusicMoreMenu.qml" line="104"/>
         <source>Song info</source>
-        <translation>Të dhëna kënge</translation>
+        <translation>Hollësi kënge</translation>
     </message>
 </context>
 <context>
@@ -890,12 +890,12 @@
     <message>
         <location filename="../src/music-player/main.cpp" line="131"/>
         <source>Music is a local music player with beautiful design and simple functions.</source>
-        <translation>Muzika është një lojtës lokal muzike me konceptim të hijshëm dhe funksione të thjeshta.</translation>
+        <translation>Music është një lojtës vendor muzike me konceptim të hijshëm dhe funksione të thjeshta.</translation>
     </message>
     <message>
         <location filename="../src/music-player/main.cpp" line="133"/>
         <source>Music</source>
-        <translation>Muzikë</translation>
+        <translation>Music</translation>
     </message>
     <message>
         <location filename="../src/music-player/main.cpp" line="143"/>
@@ -1132,7 +1132,7 @@
     <message>
         <location filename="../src/music-player/util/shortcut.cpp" line="75"/>
         <source>Song info</source>
-        <translation>Të dhëna kënge</translation>
+        <translation>Hollësi kënge</translation>
     </message>
     <message>
         <location filename="../src/music-player/util/shortcut.cpp" line="78"/>
@@ -1343,7 +1343,7 @@
     <message>
         <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="71"/>
         <source>Equalizer</source>
-        <translation>Ekualizator</translation>
+        <translation>Barazues</translation>
     </message>
     <message>
         <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="82"/>
@@ -1358,7 +1358,7 @@
     <message>
         <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="98"/>
         <source>Music is a local music player with beautiful design and simple functions.</source>
-        <translation>Muzika është një lojtës lokal muzike me konceptim të hijshëm dhe funksione të thjeshta.</translation>
+        <translation>Music është një lojtës vendor muzike me konceptim të hijshëm dhe funksione të thjeshta.</translation>
     </message>
     <message>
         <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="99"/>
