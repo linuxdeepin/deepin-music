@@ -40,6 +40,7 @@ Depends: ${shlibs:Depends}, ${misc:Depends},
  gvfs-bin,
  libqt5sql5-sqlite,
  libqt5multimedia5-plugins,
+ libvlc5,
  vlc-plugin-base
 Recommends: gstreamer1.0-pulseaudio, uos-reporter, deepin-event-log
 Description: Music software for UOS
