@@ -45,6 +45,7 @@ private:
     bool setDbusMute(bool value);
     bool isDbusMuted();
     void resetPlayInfo();
+    void setSinkInputAlmostMute();
     void readSinkInputPath();
     void releasePlayer();
 
@@ -52,6 +53,7 @@ private:
     QMediaPlayer *m_mediaPlayer = nullptr;
     qint64 m_currPositionChanged = 0;
     QString m_sinkInputPath;
+    int m_correctVolume = 0; // 记录正确的音量值
 };
 
 #endif // QTPLAYER_H

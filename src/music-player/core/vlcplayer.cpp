@@ -58,7 +58,7 @@ void VlcPlayer::init()
                 this, [ = ](Vlc::State state) {
             // ape文件播放时，不发送vlc状态改变信号，避免影响ape状态改变信号
             if (m_bApe) {
-                qWarning() << "Ape is playing, bypass vlc state changed signal";
+                qWarning() << "Ape is playing, bypass vlc state changed signal:" << state;
                 return;
             }
 
@@ -140,6 +140,7 @@ void VlcPlayer::startCdaThread()
 
 void VlcPlayer::play()
 {
+    qInfo() << __func__;
     if(m_bApe) {
         return m_qtPlayer->play();
     }
@@ -149,6 +150,7 @@ void VlcPlayer::play()
 
 void VlcPlayer::pause()
 {
+    qInfo() << __func__;
     if(m_bApe) {
         return m_qtPlayer->pause();
     }
@@ -162,6 +164,7 @@ void VlcPlayer::pause()
 
 void VlcPlayer::pauseNew()
 {
+    qInfo() << __func__;
     if(m_bApe) {
         return m_qtPlayer->pauseNew();
     }
@@ -172,6 +175,7 @@ void VlcPlayer::pauseNew()
 
 void VlcPlayer::resume()
 {
+    qInfo() << __func__;
     if(m_bApe) {
         return m_qtPlayer->resume();
     }
@@ -206,6 +210,7 @@ PlayerBase::PlayState VlcPlayer::state()
 
 void VlcPlayer::stop()
 {
+    qInfo() << __func__;
     if(m_bApe) {
         return m_qtPlayer->stop();
     }
@@ -265,20 +270,23 @@ void VlcPlayer::setMediaMeta(MediaMeta meta)
         disconnect(m_qtPlayer, &PlayerBase::end, this, &PlayerBase::end);
         disconnect(m_qtPlayer, &PlayerBase::sigSendCdaStatus, this, &PlayerBase::sigSendCdaStatus);
         m_qvmedia->initMedia(meta.localPath, meta.mmType == MIMETYPE_CDA ? false : true, m_qvinstance, meta.track);
+        m_qvplayer->open(m_qvmedia);
     }
-    m_qvplayer->open(m_qvmedia);
 
     if (engineChanged) {
         if (m_bApe) {
             m_qtPlayer->setMute(m_qvplayer->getMute());
             // 引擎切换时，需要同步音量值
-            m_qtPlayer->setVolume(m_qvplayer->getVolume()); //Qt自带播放器播放APE格式视频时调节音量可能会导致音量异常
+            int volume = MusicSettings::value("base.play.volume").toInt();
+            qInfo() << "Use ape engine, set volume:" << volume;
+            m_qtPlayer->setVolume(volume);
         } else {
             m_qvplayer->setMute(m_qtPlayer->getMute());
             m_qtPlayer->setMute(false);
-            auto qtPlayer = dynamic_cast<QtPlayer *>(m_qtPlayer);
-            if (qtPlayer)
-                m_qvplayer->setVolume(qtPlayer->getVolume());
+            // 引擎切换时，需要同步音量值
+            int volume = MusicSettings::value("base.play.volume").toInt();
+            qInfo() << "Use vlc engine, set volume:" << volume;
+            m_qvplayer->setVolume(volume);
         }
     }
 }

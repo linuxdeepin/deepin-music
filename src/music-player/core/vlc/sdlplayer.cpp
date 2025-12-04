@@ -512,8 +512,8 @@ int SdlPlayer::libvlc_audio_setup_cb(void **data, char *format, unsigned *rate, 
             Delay(40);
             PauseAudio(0);
 
-            sdlMediaPlayer->resetVolume();
             sdlMediaPlayer->m_sinkInputPath.clear();
+            sdlMediaPlayer->resetVolume();
         } else {
             qCritical() << "PulseAudio ERROR, maybe crashed, state:" << transPaContextState(state);
         }

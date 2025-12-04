@@ -29,6 +29,7 @@ void QtPlayer::init()
     if (m_mediaPlayer == nullptr) {
         qputenv("QT_GSTREAMER_USE_PLAYBIN_VOLUME", "1");
         m_mediaPlayer = new QMediaPlayer(this);
+        m_correctVolume = MusicSettings::value("base.play.volume").toInt();
         connect(m_mediaPlayer, &QMediaPlayer::mediaStatusChanged, this, &QtPlayer::onMediaStatusChanged);
         connect(m_mediaPlayer, &QMediaPlayer::positionChanged, this, &QtPlayer::onPositionChanged);
         connect(m_mediaPlayer, &QMediaPlayer::stateChanged, this, [ = ](QMediaPlayer::State newState) {
@@ -87,6 +88,8 @@ PlayerBase::PlayState QtPlayer::state()
 void QtPlayer::play()
 {
     init();
+    // 因为此引擎是通过sinkinput通道控制音量的，所以首先设置为最小音量，后面再设置为正确音量，防止破音。
+    setSinkInputAlmostMute();
     m_mediaPlayer->play();
 }
 
@@ -168,6 +171,7 @@ void QtPlayer::setFadeInOutFactor(double fadeInOutFactor)
 void QtPlayer::setVolume(int volume)
 {
     init();
+    m_correctVolume = volume;
     m_mediaPlayer->setVolume(volume);
 }
 
@@ -200,12 +204,20 @@ void QtPlayer::onPositionChanged(qint64 position)
     // 停止播放时，不设置进度
     if (m_mediaPlayer->duration() <= 0 || m_mediaPlayer->state() != QMediaPlayer::State::PlayingState)
         return;
+
+    // 在ape的播放初期，概率性出现音量不对的情况，所以在此处判断并设置正确音量。
+    int volume = this->getVolume();
+    if (volume != m_correctVolume) {
+        qInfo() << "Ape engine current volume:" << this->getVolume() << "vs" << m_correctVolume;
+        this->setVolume(m_correctVolume);
+    }
+
     m_currPositionChanged = position;
     float value = static_cast<float>(position) / m_mediaPlayer->duration();
 //    qDebug() << "position" << position << "value" << value;
     emit timeChanged(position);
     emit positionChanged(value);
-    resetPlayInfo();
+    //resetPlayInfo(); // 经过测试，此引擎调节音量使用的是通道音量，所以不能重置。
 }
 
 bool QtPlayer::setDbusMute(bool value)
@@ -284,4 +296,18 @@ void QtPlayer::readSinkInputPath()
         m_sinkInputPath = curPath.path();
         break;
     }
+}
+
+void QtPlayer::setSinkInputAlmostMute()
+{
+    qDebug() << __func__;
+    readSinkInputPath();
+    if (m_sinkInputPath.isEmpty()) return;
+
+    QDBusInterface ainterface("com.deepin.daemon.Audio", m_sinkInputPath,
+                              "com.deepin.daemon.Audio.SinkInput",
+                              QDBusConnection::sessionBus());
+    if (!ainterface.isValid()) return;
+
+    ainterface.call(QLatin1String("SetVolume"), 0.01, false);
 }
