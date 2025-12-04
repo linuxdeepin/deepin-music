@@ -199,6 +199,7 @@ Player::~Player()
 
 void Player::playMeta(MediaMeta meta)
 {
+    qInfo() << __func__ << meta.localPath;
     if (meta.hash != "") {
         if (meta.mmType != MIMETYPE_CDA) {
             int acint = access(meta.localPath.toStdString().c_str(), R_OK);
@@ -292,6 +293,7 @@ void Player::playMeta(MediaMeta meta)
 
 void Player::resume()
 {
+    qInfo() << __func__;
     if (m_ActiveMeta.localPath.isEmpty()) {
         Player::getInstance()->forcePlayMeta();//播放列表第一首歌
         return;
@@ -345,6 +347,7 @@ void Player::resume()
 
 void Player::pause()
 {
+    qInfo() << __func__;
     if (m_fadeInOut) {
         m_fadeInAnimation->stop();
     }
@@ -371,6 +374,7 @@ void Player::pause()
 
 void Player::pauseNow()
 {
+    qInfo() << __func__;
     m_basePlayer->pause();
     //设置音乐播放
     emit signalPlaybackStatusChanged(Player::Paused);
@@ -713,6 +717,7 @@ QString Player::getCurrentPlayListHash()
 
 void Player::stop(bool emitSignal)
 {
+    qInfo() << __func__;
     if (emitSignal) {
         //play停止后，发送清空当前波形图的信号
         emit signalMediaStop("");//不用当前的参数
