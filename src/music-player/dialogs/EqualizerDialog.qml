@@ -68,17 +68,22 @@ DialogWindow {
     property bool switched: false
     property int  curEQ: 0
 
-    maximumWidth: 572
-    maximumHeight: 426
+    width: 572
+    height: 426
     minimumWidth: 572
     minimumHeight: 426
+    maximumWidth: 572
+    maximumHeight: 426
     header: DialogTitleBar {
         enableInWindowBlendBlur: false
     }
 
     Column {
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.top: parent.top
+        anchors.margins: 0
         width: parent.width - 20
-        height: parent.height - 20
         spacing: 40
         leftPadding: 10
 
