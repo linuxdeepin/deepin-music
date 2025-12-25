@@ -31,7 +31,6 @@ FloatingPanel {
     property int coverRectWidth: 40
     property int infoRectWidth: 142
     property int playControlRectWidth: 220
-    property int rightAreaRectWidth: 228
     property int contentSpacing: 8
     property int leftPaddingWidth: 20
     property int rightPaddingWidth: 10
@@ -314,7 +313,7 @@ FloatingPanel {
         }
         Rectangle {
             id: waveformRect
-            width: parent.width - (coverRectWidth + infoRectWidth + playControlRectWidth + rightAreaRectWidth
+            width: parent.width - (coverRectWidth + infoRectWidth + playControlRectWidth + rightAreaRect.width
                                    + contentSpacing * 4 + leftPaddingWidth + rightPaddingWidth)
             height: parent.height
             color: "transparent"
@@ -330,18 +329,19 @@ FloatingPanel {
         }
         Rectangle {
             id: rightAreaRect
-            width: rightAreaRectWidth
+            width: rightAreaRow.implicitWidth
             height: parent.height
             color: "#00000000"
             Row {
-                width: parent.width
+                id: rightAreaRow
                 height: parent.height
                 spacing: 10
-                leftPadding: 10
+
+                Item { width: 10; height: 1 }  // 左侧间距
 
                 Rectangle {
                     id: timeLabel
-                    width: 80
+                    width: curTimeText.contentWidth + totalTimeText.contentWidth + 12
                     height: parent.height
                     color: "transparent"
                     anchors.verticalCenter: parent.verticalCenter
@@ -354,9 +354,7 @@ FloatingPanel {
 
                         Text {
                             id: curTimeText
-                            width: 37
                             anchors.verticalCenter: parent.verticalCenter
-                            elide: Text.ElideRight
                             horizontalAlignment: Text.AlignRight
                             enabled: songTitle.length === 0 ? false : true
                             text: enabled ? currentTime : "0:00"
@@ -365,9 +363,7 @@ FloatingPanel {
                         }
                         Text {
                             id: totalTimeText
-                            width: 44
                             anchors.verticalCenter: parent.verticalCenter
-                            elide: Text.ElideRight
                             enabled: songTitle.length === 0 ? false : true
                             text: "/ " + (enabled ? totalTime : "0:00")
                             color: DTK.themeType === ApplicationHelper.DarkType ? Qt.rgba(247, 247, 247, 0.7) : Qt.rgba(0, 0, 0, 0.7)
