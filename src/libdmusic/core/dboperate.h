@@ -7,6 +7,7 @@
 #define DBOPERATE_H
 
 #include "global.h"
+#include <QSet>
 
 class DBOperate : public QObject
 {
@@ -25,6 +26,7 @@ signals:
 
 private:
     QStringList          m_supportedSuffixs;
+    QSet<QString>        m_importingHashes;  // 记录已发起导入的文件 hash，防止短时间内重复解析
 };
 
 #endif //DBOPERATE_H
