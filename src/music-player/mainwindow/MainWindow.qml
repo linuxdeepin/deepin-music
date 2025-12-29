@@ -26,6 +26,9 @@ ApplicationWindow {
     minimumHeight: windowMiniHeight
     width: windowMiniWidth
     height: windowMiniHeight
+    title: globalVariant.currentMediaMeta && globalVariant.currentMediaMeta.localPath
+           ? globalVariant.currentMediaMeta.localPath
+           : qsTr("Music")
     DWindow.enabled: true
     DWindow.alphaBufferSize: 8
     flags: Qt.Window | Qt.WindowMinMaxButtonsHint | Qt.WindowCloseButtonHint | Qt.WindowTitleHint
