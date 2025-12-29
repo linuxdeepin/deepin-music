@@ -146,47 +146,83 @@
 <context>
     <name>AllMusicDefaultPage</name>
     <message>
+<<<<<<< HEAD
         <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="42"/>
+=======
+        <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="44"/>
+>>>>>>> c757e53a (fix(ui): enhance EqualizerDialog functionality and message handling)
         <source>Add Songs</source>
         <translation>گیتیں شامل کریں</translation>
     </message>
     <message>
+<<<<<<< HEAD
         <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="50"/>
+=======
+        <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="52"/>
+>>>>>>> c757e53a (fix(ui): enhance EqualizerDialog functionality and message handling)
         <source>Open Folders</source>
         <translation>فولڈر کھولیं</translation>
     </message>
     <message>
+<<<<<<< HEAD
         <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="65"/>
+=======
+        <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="67"/>
+>>>>>>> c757e53a (fix(ui): enhance EqualizerDialog functionality and message handling)
         <source>Drag music files here or</source>
         <translation>یہاں پر موسیقی فائلیں ڈرگ کریں یا</translation>
     </message>
     <message>
+<<<<<<< HEAD
         <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="99"/>
+=======
+        <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="104"/>
+>>>>>>> c757e53a (fix(ui): enhance EqualizerDialog functionality and message handling)
         <source>Your favorite songs will be displayed here</source>
         <translation>آپ کی پسندیدہ گیتیں اس جگہ دکھائی جائیں گی</translation>
     </message>
     <message>
+<<<<<<< HEAD
         <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="111"/>
+=======
+        <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="116"/>
+>>>>>>> c757e53a (fix(ui): enhance EqualizerDialog functionality and message handling)
         <source>Click “</source>
         <translation>کلک کریں “</translation>
     </message>
     <message>
+<<<<<<< HEAD
         <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="122"/>
+=======
+        <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="127"/>
+>>>>>>> c757e53a (fix(ui): enhance EqualizerDialog functionality and message handling)
         <source>” to add a song to My Favorites</source>
         <translation>” تاکہ آپ کی پسندیدہ گیتیں میری پسندیدہ گیتیں میں شامل کریں</translation>
     </message>
     <message>
+<<<<<<< HEAD
         <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="157"/>
+=======
+        <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="163"/>
+>>>>>>> c757e53a (fix(ui): enhance EqualizerDialog functionality and message handling)
         <source>No songs yet. Click “</source>
         <translation>کوئی گیت موجود نہیں ہے۔ کلک کریں “</translation>
     </message>
     <message>
+<<<<<<< HEAD
         <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="168"/>
+=======
+        <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="174"/>
+>>>>>>> c757e53a (fix(ui): enhance EqualizerDialog functionality and message handling)
         <source>” to add songs to the playlist</source>
         <translation>کی ایڈ کریں اور گیت ڈیٹا بیس میں شامل کریں</translation>
     </message>
     <message>
+<<<<<<< HEAD
         <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="69"/>
+=======
+        <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="71"/>
+>>>>>>> c757e53a (fix(ui): enhance EqualizerDialog functionality and message handling)
         <source> scan the Music directory</source>
         <translation>میوزک ڈیکٹری کی تلاش کریں</translation>
     </message>
@@ -597,14 +633,27 @@
         <translation>سیو کریں</translation>
     </message>
     <message>
+<<<<<<< HEAD
         <location filename="../src/music-player/dialogs/EqualizerDialog.qml" line="205"/>
+=======
+        <location filename="../src/music-player/dialogs/EqualizerDialog.qml" line="211"/>
+>>>>>>> c757e53a (fix(ui): enhance EqualizerDialog functionality and message handling)
         <source>Reset</source>
         <translation>ری سیٹ کریں</translation>
     </message>
     <message>
+<<<<<<< HEAD
         <location filename="../src/music-player/dialogs/EqualizerDialog.qml" line="314"/>
+=======
+        <location filename="../src/music-player/dialogs/EqualizerDialog.qml" line="320"/>
+>>>>>>> c757e53a (fix(ui): enhance EqualizerDialog functionality and message handling)
         <source>Preamplifier</source>
         <translation>پری امپلیفائر</translation>
+    </message>
+    <message>
+        <location filename="../src/music-player/dialogs/EqualizerDialog.qml" line="491"/>
+        <source>Sound Effects Saved</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -677,57 +726,67 @@
 <context>
     <name>MainWindow</name>
     <message>
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="188"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="31"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="191"/>
         <source>Music</source>
         <translation>میوزک</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="203"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="206"/>
         <source>Play/Pause</source>
         <translation>پلے/پیوڈ</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="207"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="211"/>
         <source>Previous</source>
         <translation>پہلے</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="218"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="222"/>
         <source>Next</source>
         <translation>اگلے</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="229"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="233"/>
         <source>Exit</source>
         <translation>نکل</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="343"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="373"/>
         <source>Already added to the playlist</source>
         <translation>پہلے ہی پلیئسٹ کی فہرست میں شامل ہے</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="346"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="376"/>
         <source>Added to &quot;%1&quot;</source>
         <translation> &quot;%1&quot; میں شامل ہو گیا</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="349"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="379"/>
         <source>Removed from &quot;My Favorites&quot;</source>
         <translation> &quot;می فیووریٹس&quot; سے ہٹا دیا گیا</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="352"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="382"/>
         <source>A disc is connected</source>
         <translation>ایک ڈسک کنیکٹ ہو گئی ہے</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="368"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="385"/>
+        <source>Sound Effects Saved</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="396"/>
         <source>My Favorites</source>
         <translation>می فیووریٹس</translation>
     </message>
     <message>
+<<<<<<< HEAD
         <location filename="../src/music-player/mainwindow/MainWindow.qml" line="390"/>
+=======
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="424"/>
+>>>>>>> c757e53a (fix(ui): enhance EqualizerDialog functionality and message handling)
         <source>All Songs</source>
         <translation>ہر گانے</translation>
     </message>

@@ -157,7 +157,7 @@ DialogWindow {
                         enabled: switched
                         currentIndex: curEQ
                         model: comBoxModel
-                        onActivated: {
+                        onActivated: function(index) {
                             if(index > 0) {
                                 saveBtn.enabled = false
                                 curList = baudsList[index - 1].slice()
@@ -202,6 +202,7 @@ DialogWindow {
                                 Presenter.setValueToSettings("equalizer.all.baud_16K", customList[10])
 
                                 Presenter.setValueToSettings("equalizer.all.curEffect", 0)
+                                showSaveToast()
                             }
                         }
                         Button {
@@ -306,8 +307,8 @@ DialogWindow {
                                     selectComBox.currentIndex = 0
                                     curList[0] = value
                                     Presenter.setEQpre(value)
-                                    for (var i = 1; i <= curList.length; i++) {
-                                        Presenter.setEQbauds(i, curList[i])
+                                    for (var i = 1; i < curList.length; i++) {
+                                        Presenter.setEQbauds(i - 1, curList[i])
                                     }
                                     saveBtn.enabled = true
                                 }
@@ -409,8 +410,8 @@ DialogWindow {
                                 selectComBox.currentIndex = 0
                                 curList[index + 1] = value
                                 Presenter.setEQpre(curList[0])
-                                for (var i = 1; i <= curList.length; i++) {
-                                    Presenter.setEQbauds(i, curList[i])
+                                for (var i = 1; i < curList.length; i++) {
+                                    Presenter.setEQbauds(i - 1, curList[i])
                                 }
                                 saveBtn.enabled = true
                             }
@@ -440,7 +441,7 @@ DialogWindow {
             curList = customList
             Presenter.setEQpre(curList[0])
             for (var i = 1; i < curList.length; i++) {
-                Presenter.setEQbauds(i, curList[i])
+                Presenter.setEQbauds(i - 1, curList[i])
             }
         }
     }
@@ -469,6 +470,26 @@ DialogWindow {
             curList = baudsList[curEQ - 1].slice()
         } else {
             curList = customList
+        }
+    }
+
+    // 复用全局 FloatingMessageBox 组件
+    Loader {
+        id: toastLoader
+        source: "../allItems/FloatingMessageBox.qml"
+        onLoaded: {
+            item.containerWidth = Qt.binding(function() { return parent.width })
+            item.containerHeight = Qt.binding(function() { return parent.height })
+            item.xOffset = 0
+            item.duration = 2000
+        }
+    }
+
+    function showSaveToast() {
+        if (toastLoader.status === Loader.Ready) {
+            toastLoader.item.type = 4
+            toastLoader.item.message = qsTr("Sound Effects Saved")
+            toastLoader.item.show()
         }
     }
 }
