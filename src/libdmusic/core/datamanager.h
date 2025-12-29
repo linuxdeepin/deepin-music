@@ -82,6 +82,7 @@ signals:
     void signalUpdatedMetaCodec(DMusic::MediaMeta meta, QString preAlbum, QString preArtist);
     void signalPlaylistSortChanged(QString playlistHash);
     void signalCurrentPlaylistSChanged(QString playlistHash);
+    void signalClearImportingHash(const QString &hash);
 
 private:
     void initPlaylist();

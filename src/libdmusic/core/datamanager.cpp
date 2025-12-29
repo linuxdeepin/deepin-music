@@ -174,6 +174,7 @@ DataManager::DataManager(QStringList supportedSuffixs, QObject *parent)
     connect(this, &DataManager::signalImportMetas, m_data->m_dbOperate, &DBOperate::slotImportMetas, Qt::QueuedConnection);
     connect(m_data->m_dbOperate, &DBOperate::signalAddOneMeta, this, &DataManager::slotAddOneMeta, Qt::QueuedConnection);
     connect(m_data->m_dbOperate, &DBOperate::signalImportFinished, this, &DataManager::signalImportFinished, Qt::QueuedConnection);
+    connect(this, &DataManager::signalClearImportingHash, m_data->m_dbOperate, &DBOperate::slotClearImportingHash, Qt::QueuedConnection);
 
     m_data->m_workerThread->start();
     qCDebug(dmMusic) << "DataManager initialized with worker thread";
@@ -242,8 +243,11 @@ void DataManager::deleteMetaFromAllMetas(const QStringList &hashs)
     QStringList allHashs = hashs;
     for (int i = m_data->m_allMetas.size() - 1; i >= 0; --i) {
         if (allHashs.contains(m_data->m_allMetas[i].hash)) {
-            allHashs.removeOne(m_data->m_allMetas[i].hash);
+            QString deletedHash = m_data->m_allMetas[i].hash;
+            allHashs.removeOne(deletedHash);
             m_data->m_allMetas.removeAt(i);
+            // 通知 DBOperate 清理 m_importingHashes 中对应的 hash，允许重新导入
+            emit signalClearImportingHash(deletedHash);
             if (allHashs.isEmpty()) break;
         }
     }

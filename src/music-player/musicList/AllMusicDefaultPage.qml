@@ -5,6 +5,7 @@
 import QtQuick 2.0
 import QtQuick.Layouts 1.11
 import QtQuick.Controls 2.0
+import Qt.labs.platform 1.0
 import org.deepin.dtk 1.0
 import "../dialogs"
 
@@ -73,7 +74,9 @@ Rectangle {
                     anchors.fill: parent
                     acceptedButtons: Qt.LeftButton
                     onClicked: {
-                        Presenter.importMetas({}, pageHash);
+                        var list = []
+                        list.push(StandardPaths.standardLocations(StandardPaths.MusicLocation)[0])
+                        Presenter.importMetas(list, pageHash);
                     }
                 }
             }

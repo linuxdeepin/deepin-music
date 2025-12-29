@@ -19,6 +19,7 @@ public slots:
     void slotImportMetas(const QStringList &urls, const QSet<QString> &metaHashs, bool importPlay,
                          const QSet<QString> &playMetaHashs, const QSet<QString> &allMetaHashs,
                          const QString &playlistHash = "", const bool &playFalg = false);
+    void slotClearImportingHash(const QString &hash);
 
 signals:
     void signalAddOneMeta(QStringList playlistHashs, DMusic::MediaMeta meta);
