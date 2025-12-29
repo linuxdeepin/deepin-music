@@ -33,6 +33,12 @@ void DBOperate::slotImportMetas(const QStringList &urls, const QSet<QString> &me
                                 const QString &playlistHash, const bool &playFalg)
 {
     qCDebug(dmMusic) << "Starting meta import with" << urls.size() << "URLs, playlist:" << playlistHash;
+    
+    // 清理已确认成功添加的 hash（这些 hash 已在 m_allMetas 中，不再需要跟踪）
+    for (const QString &hash : allMetaHashs) {
+        m_importingHashes.remove(hash);
+    }
+    
     QString mediaHash;
     // 统计总共需要加载的数量
     QStringList filePaths;
@@ -73,6 +79,14 @@ void DBOperate::slotImportMetas(const QStringList &urls, const QSet<QString> &me
             fileinfo.setFile(fileinfo.symLinkTarget());
         }
         auto hash = Utils::filePathHash(fileinfo.absoluteFilePath());
+        
+        // 检查是否已在其他导入任务中处理（防止短时间内重复解析）
+        if (m_importingHashes.contains(hash)) {
+            qCDebug(dmMusic) << "File already being imported by another task, skipping:" << filePath;
+            existCount++;
+            continue;
+        }
+        
         DMusic::MediaMeta mediaMeta;
         mediaMeta.hash = hash;
         QSet<QString> curHashs;
@@ -80,6 +94,8 @@ void DBOperate::slotImportMetas(const QStringList &urls, const QSet<QString> &me
             if (metaHashs.contains(mediaMeta.hash)) {
                 existCount++;
             } else if (!allMetaHashs.contains(mediaMeta.hash)) {
+                // 标记为正在导入，防止其他任务重复处理
+                m_importingHashes.insert(hash);
                 mediaMeta = AudioAnalysis::creatMediaMeta(filePath);
                 if (mediaMeta.length > 0) {
                     AudioAnalysis::parseMetaCover(mediaMeta);
@@ -97,6 +113,8 @@ void DBOperate::slotImportMetas(const QStringList &urls, const QSet<QString> &me
             }
         } else {
             if (!allMetaHashs.contains(mediaMeta.hash)) {
+                // 标记为正在导入，防止其他任务重复处理
+                m_importingHashes.insert(hash);
                 mediaMeta = AudioAnalysis::creatMediaMeta(filePath);
                 if (mediaMeta.length > 0) {
                     AudioAnalysis::parseMetaCover(mediaMeta);

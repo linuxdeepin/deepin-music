@@ -2039,18 +2039,37 @@ void DataManager::slotAddOneMeta(QStringList playlistHashs, MediaMeta meta)
 {
     qCDebug(dmMusic) << "Adding meta" << meta.title << "to playlists:" << playlistHashs;
     MediaMeta curMeta = playlistHashs.contains("all") ? meta : metaFromHash(meta.hash);
+    
+    // 检查 meta 是否已存在于 m_allMetas 中
+    int existingIndex = metaIndexFromHash(curMeta.hash);
+    if (existingIndex >= 0) {
+        // 如果已存在，使用已存在的 meta（可能包含更完整的信息）
+        curMeta = m_data->m_allMetas[existingIndex];
+        qCDebug(dmMusic) << "Meta already exists in allMetas, using existing:" << curMeta.title;
+    }
+    
     for (PlaylistInfo &playlist : m_data->m_allPlaylist) {
         for (QString hash : playlistHashs) {
             if (hash == playlist.uuid) {
                 if (hash == "all") {
-                    m_data->m_allMetas.append(curMeta);
-                    addMetaToAlbum(curMeta);
-                    addMetaToArtist(curMeta);
-                    qCDebug(dmMusic) << "Added meta to all collections";
+                    // 检查是否已存在，避免重复添加
+                    if (existingIndex < 0) {
+                        m_data->m_allMetas.append(curMeta);
+                        addMetaToAlbum(curMeta);
+                        addMetaToArtist(curMeta);
+                        qCDebug(dmMusic) << "Added meta to all collections";
+                    } else {
+                        qCDebug(dmMusic) << "Meta already exists in allMetas, skipping add to all:" << curMeta.title;
+                    }
                 }
-                playlist.sortMetas.append(curMeta.hash);
-                playlist.sortCustomMetas.append(curMeta.hash);
-                qCDebug(dmMusic) << "Added meta to playlist:" << playlist.displayName;
+                // 检查歌单中是否已存在，避免重复添加
+                if (!playlist.sortMetas.contains(curMeta.hash)) {
+                    playlist.sortMetas.append(curMeta.hash);
+                    playlist.sortCustomMetas.append(curMeta.hash);
+                    qCDebug(dmMusic) << "Added meta to playlist:" << playlist.displayName;
+                } else {
+                    qCDebug(dmMusic) << "Meta already exists in playlist:" << playlist.displayName << "hash:" << curMeta.hash;
+                }
             }
         }
     }
