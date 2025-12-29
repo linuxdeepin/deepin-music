@@ -12,11 +12,14 @@ Rectangle {
     property real contentSpacing: 10
     property string message: "message"
     property real duration: 1000
+    property real containerWidth: typeof rootWindow !== "undefined" ? rootWindow.width : parent.width
+    property real containerHeight: typeof rootWindow !== "undefined" ? rootWindow.height : parent.height
+    property real xOffset: typeof rootWindow !== "undefined" ? 110 : 0
 
     width: playPauseBtn.width + texteLabel.width + widthPadding * 2 + contentSpacing
     height: 60
-    x: rootWindow.width / 2 - width / 2 + 110
-    y: (rootWindow.height - height) / 2
+    x: containerWidth / 2 - width / 2 + xOffset
+    y: (containerHeight - height) / 2
     radius: 12
     color: {
         if(type === 1){

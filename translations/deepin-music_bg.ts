@@ -604,6 +604,11 @@
         <source>Preamplifier</source>
         <translation>Предусилвател</translation>
     </message>
+    <message>
+        <location filename="../src/music-player/dialogs/EqualizerDialog.qml" line="491"/>
+        <source>Sound Effects Saved</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>FileDialog</name>
@@ -675,52 +680,58 @@
 <context>
     <name>MainWindow</name>
     <message>
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="188"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="31"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="191"/>
         <source>Music</source>
         <translation>Музика</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="203"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="206"/>
         <source>Play/Pause</source>
         <translation>Изпълнение/Пауза</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="207"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="211"/>
         <source>Previous</source>
         <translation>Предишен</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="218"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="222"/>
         <source>Next</source>
         <translation>Следващ</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="229"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="233"/>
         <source>Exit</source>
         <translation>Изход</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="343"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="373"/>
         <source>Already added to the playlist</source>
         <translation>Вече добавен в плейлист</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="346"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="376"/>
         <source>Added to &quot;%1&quot;</source>
         <translation>Добавен в &quot;%1&quot;</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="349"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="379"/>
         <source>Removed from &quot;My Favorites&quot;</source>
         <translation>Премахнат от &quot;Моите избори&quot;</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="352"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="382"/>
         <source>A disc is connected</source>
         <translation>Върху диска е свързано устройство</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="368"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="385"/>
+        <source>Sound Effects Saved</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="396"/>
         <source>My Favorites</source>
         <translation>Моите избори</translation>
     </message>

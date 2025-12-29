@@ -144,47 +144,47 @@
 <context>
     <name>AllMusicDefaultPage</name>
     <message>
-        <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="42"/>
+        <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="44"/>
         <source>Add Songs</source>
         <translation>سىن ئەپەت قىلىش</translation>
     </message>
     <message>
-        <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="50"/>
+        <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="52"/>
         <source>Open Folders</source>
         <translation>كۆمارلىرىنى ئېچىش</translation>
     </message>
     <message>
-        <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="65"/>
+        <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="67"/>
         <source>Drag music files here or</source>
         <translation>سىن ئەپەت فايللىرىنى بۇ يەنە ھەيپەت ھەكىملىتىش ۋە</translation>
     </message>
     <message>
-        <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="99"/>
+        <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="104"/>
         <source>Your favorite songs will be displayed here</source>
         <translation>سىزنىڭ ياخشى ئەپەتلىرىڭىز بۇ يەنە كۆرۈنە</translation>
     </message>
     <message>
-        <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="111"/>
+        <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="116"/>
         <source>Click “</source>
         <translation>بۇ يەنە “</translation>
     </message>
     <message>
-        <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="122"/>
+        <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="127"/>
         <source>” to add a song to My Favorites</source>
         <translation>” سىن ئەپەتنىڭ ياخشى ئەپەتلىرىغا كىرەتىش ئۈچۈن</translation>
     </message>
     <message>
-        <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="157"/>
+        <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="163"/>
         <source>No songs yet. Click “</source>
         <translation>سىن ئەپەت ھەن. بۇ يەنە “</translation>
     </message>
     <message>
-        <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="168"/>
+        <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="174"/>
         <source>” to add songs to the playlist</source>
         <translation>” سىن ئەپەتنى پلاىلىستغا كىرەتىش ئۈچۈن</translation>
     </message>
     <message>
-        <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="69"/>
+        <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="71"/>
         <source> scan the Music directory</source>
         <translation>مۇسيقى نەمەنى ئېچىش</translation>
     </message>
@@ -595,14 +595,19 @@
         <translation>ساقلاش</translation>
     </message>
     <message>
-        <location filename="../src/music-player/dialogs/EqualizerDialog.qml" line="205"/>
+        <location filename="../src/music-player/dialogs/EqualizerDialog.qml" line="211"/>
         <source>Reset</source>
         <translation>قايتا بېكىتىش</translation>
     </message>
     <message>
-        <location filename="../src/music-player/dialogs/EqualizerDialog.qml" line="314"/>
+        <location filename="../src/music-player/dialogs/EqualizerDialog.qml" line="320"/>
         <source>Preamplifier</source>
         <translation>ئالدى چوڭايتقۇ</translation>
+    </message>
+    <message>
+        <location filename="../src/music-player/dialogs/EqualizerDialog.qml" line="491"/>
+        <source>Sound Effects Saved</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -675,57 +680,63 @@
 <context>
     <name>MainWindow</name>
     <message>
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="188"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="31"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="191"/>
         <source>Music</source>
         <translation>مۇزىكا</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="203"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="206"/>
         <source>Play/Pause</source>
         <translation>قويۇش\توختۇتۇش</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="207"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="211"/>
         <source>Previous</source>
         <translation>ئالدىنقى</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="218"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="222"/>
         <source>Next</source>
         <translation>كېيىنكى </translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="229"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="233"/>
         <source>Exit</source>
         <translation>چېكىنىش</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="343"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="373"/>
         <source>Already added to the playlist</source>
         <translation>قويۇش تىزىملىكىگە بۇرۇنلا قوشۇلغان</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="346"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="376"/>
         <source>Added to &quot;%1&quot;</source>
         <translation>بۇ &quot;%1&quot; گە كىرەتىش</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="349"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="379"/>
         <source>Removed from &quot;My Favorites&quot;</source>
         <translation>بۇ &quot;My Favorites&quot; دىن ئۆچۈرۈلدى</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="352"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="382"/>
         <source>A disc is connected</source>
         <translation>CD چېتىلغانلىقى بايقالدى</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="368"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="385"/>
+        <source>Sound Effects Saved</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="396"/>
         <source>My Favorites</source>
         <translation>ياقتۇرغانلىرىم</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="390"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="424"/>
         <source>All Songs</source>
         <translation>بەرمۇ سىن ئەپەتى</translation>
     </message>

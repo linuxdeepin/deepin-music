@@ -144,47 +144,47 @@
 <context>
     <name>AllMusicDefaultPage</name>
     <message>
-        <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="42"/>
+        <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="44"/>
         <source>Add Songs</source>
         <translation>노래 추가</translation>
     </message>
     <message>
-        <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="50"/>
+        <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="52"/>
         <source>Open Folders</source>
         <translation> 폴더 열기</translation>
     </message>
     <message>
-        <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="65"/>
+        <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="67"/>
         <source>Drag music files here or</source>
         <translation>음악 파일을 여기에 끌어다放하거나</translation>
     </message>
     <message>
-        <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="99"/>
+        <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="104"/>
         <source>Your favorite songs will be displayed here</source>
         <translation>당신이 좋아하는 노래는 여기에 표시됩니다</translation>
     </message>
     <message>
-        <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="111"/>
+        <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="116"/>
         <source>Click “</source>
         <translation>클릭 “</translation>
     </message>
     <message>
-        <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="122"/>
+        <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="127"/>
         <source>” to add a song to My Favorites</source>
         <translation>” 버튼을 클릭하여 My Favorites에 노래를 추가하세요</translation>
     </message>
     <message>
-        <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="157"/>
+        <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="163"/>
         <source>No songs yet. Click “</source>
         <translation>노래가 아직 없습니다. 클릭 “</translation>
     </message>
     <message>
-        <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="168"/>
+        <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="174"/>
         <source>” to add songs to the playlist</source>
         <translation>” 버튼을 클릭하여 플레이리스트에 노래를 추가하세요</translation>
     </message>
     <message>
-        <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="69"/>
+        <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="71"/>
         <source> scan the Music directory</source>
         <translation> 음악 디렉토리를 스캔하세요</translation>
     </message>
@@ -595,14 +595,19 @@
         <translation>저장</translation>
     </message>
     <message>
-        <location filename="../src/music-player/dialogs/EqualizerDialog.qml" line="205"/>
+        <location filename="../src/music-player/dialogs/EqualizerDialog.qml" line="211"/>
         <source>Reset</source>
         <translation>재설정</translation>
     </message>
     <message>
-        <location filename="../src/music-player/dialogs/EqualizerDialog.qml" line="314"/>
+        <location filename="../src/music-player/dialogs/EqualizerDialog.qml" line="320"/>
         <source>Preamplifier</source>
         <translation>프리 증폭기</translation>
+    </message>
+    <message>
+        <location filename="../src/music-player/dialogs/EqualizerDialog.qml" line="491"/>
+        <source>Sound Effects Saved</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -675,57 +680,63 @@
 <context>
     <name>MainWindow</name>
     <message>
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="188"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="31"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="191"/>
         <source>Music</source>
         <translation>음악</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="203"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="206"/>
         <source>Play/Pause</source>
         <translation>재생/일시정지</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="207"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="211"/>
         <source>Previous</source>
         <translation>이전</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="218"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="222"/>
         <source>Next</source>
         <translation>다음</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="229"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="233"/>
         <source>Exit</source>
         <translation>나가기</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="343"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="373"/>
         <source>Already added to the playlist</source>
         <translation>재생목록에 이미 추가됨</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="346"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="376"/>
         <source>Added to &quot;%1&quot;</source>
         <translation>&quot;%1&quot;에 추가되었습니다</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="349"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="379"/>
         <source>Removed from &quot;My Favorites&quot;</source>
         <translation>&quot;My Favorites&quot;에서 제거되었습니다</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="352"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="382"/>
         <source>A disc is connected</source>
         <translation>디스크가 연결되었습니다</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="368"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="385"/>
+        <source>Sound Effects Saved</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="396"/>
         <source>My Favorites</source>
         <translation>내 즐겨찾기</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="390"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="424"/>
         <source>All Songs</source>
         <translation>모든 곡</translation>
     </message>

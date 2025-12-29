@@ -144,47 +144,47 @@
 <context>
     <name>AllMusicDefaultPage</name>
     <message>
-        <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="42"/>
+        <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="44"/>
         <source>Add Songs</source>
         <translation>Dodaj pjesme</translation>
     </message>
     <message>
-        <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="50"/>
+        <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="52"/>
         <source>Open Folders</source>
         <translation>Otvori mape</translation>
     </message>
     <message>
-        <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="65"/>
+        <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="67"/>
         <source>Drag music files here or</source>
         <translation>Povucite datoteke glazbe ovdje ili</translation>
     </message>
     <message>
-        <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="99"/>
+        <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="104"/>
         <source>Your favorite songs will be displayed here</source>
         <translation>Vaše omiljene pjesme bit će prikazane ovdje</translation>
     </message>
     <message>
-        <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="111"/>
+        <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="116"/>
         <source>Click “</source>
         <translation>Kliknite „</translation>
     </message>
     <message>
-        <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="122"/>
+        <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="127"/>
         <source>” to add a song to My Favorites</source>
         <translation>“” da dodate pjesmu u Moje omiljene</translation>
     </message>
     <message>
-        <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="157"/>
+        <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="163"/>
         <source>No songs yet. Click “</source>
         <translation>Nema pjesama. Kliknite „</translation>
     </message>
     <message>
-        <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="168"/>
+        <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="174"/>
         <source>” to add songs to the playlist</source>
         <translation>“” da dodate pjesme u playlist</translation>
     </message>
     <message>
-        <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="69"/>
+        <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="71"/>
         <source> scan the Music directory</source>
         <translation> skenirajte direktorij Music</translation>
     </message>
@@ -595,14 +595,19 @@
         <translation>Spremi</translation>
     </message>
     <message>
-        <location filename="../src/music-player/dialogs/EqualizerDialog.qml" line="205"/>
+        <location filename="../src/music-player/dialogs/EqualizerDialog.qml" line="211"/>
         <source>Reset</source>
         <translation>Vrati</translation>
     </message>
     <message>
-        <location filename="../src/music-player/dialogs/EqualizerDialog.qml" line="314"/>
+        <location filename="../src/music-player/dialogs/EqualizerDialog.qml" line="320"/>
         <source>Preamplifier</source>
         <translation>Predpojačalo</translation>
+    </message>
+    <message>
+        <location filename="../src/music-player/dialogs/EqualizerDialog.qml" line="491"/>
+        <source>Sound Effects Saved</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -676,57 +681,63 @@ Molimo vas postavite datoteku pjesme (istu naziv kao i pjesma) i datoteku pjesme
 <context>
     <name>MainWindow</name>
     <message>
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="188"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="31"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="191"/>
         <source>Music</source>
         <translation>Glazba</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="203"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="206"/>
         <source>Play/Pause</source>
         <translation>Reprodukcija/Pauza</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="207"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="211"/>
         <source>Previous</source>
         <translation>Prijašnje</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="218"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="222"/>
         <source>Next</source>
         <translation>Slijedeće</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="229"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="233"/>
         <source>Exit</source>
         <translation>Izađi</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="343"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="373"/>
         <source>Already added to the playlist</source>
         <translation>Već dodano na listu izvođenja</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="346"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="376"/>
         <source>Added to &quot;%1&quot;</source>
         <translation>Dodano u &quot;%1&quot;</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="349"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="379"/>
         <source>Removed from &quot;My Favorites&quot;</source>
         <translation>Uključeno iz &quot;Moje omiljene&quot;</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="352"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="382"/>
         <source>A disc is connected</source>
         <translation>Disk je spojen</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="368"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="385"/>
+        <source>Sound Effects Saved</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="396"/>
         <source>My Favorites</source>
         <translation>Moji omiljeni</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="390"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="424"/>
         <source>All Songs</source>
         <translation>Sve pjesme</translation>
     </message>

@@ -146,47 +146,47 @@
 <context>
     <name>AllMusicDefaultPage</name>
     <message>
-        <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="42"/>
+        <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="44"/>
         <source>Add Songs</source>
         <translation>गाणी उमटवा</translation>
     </message>
     <message>
-        <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="50"/>
+        <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="52"/>
         <source>Open Folders</source>
         <translation>फोल्डर खोला</translation>
     </message>
     <message>
-        <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="65"/>
+        <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="67"/>
         <source>Drag music files here or</source>
         <translation>म्यूझिक फाइल्स येथे खेचा किंवा</translation>
     </message>
     <message>
-        <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="99"/>
+        <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="104"/>
         <source>Your favorite songs will be displayed here</source>
         <translation>तुमच्या माय फेवरिट्स गाणी येथे दाखवली जाईल</translation>
     </message>
     <message>
-        <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="111"/>
+        <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="116"/>
         <source>Click “</source>
         <translation>क्लिक “</translation>
     </message>
     <message>
-        <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="122"/>
+        <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="127"/>
         <source>” to add a song to My Favorites</source>
         <translation>” माझे माय फेवरिट्स मध्ये एक गाणी उमटवा</translation>
     </message>
     <message>
-        <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="157"/>
+        <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="163"/>
         <source>No songs yet. Click “</source>
         <translation>कोणतेही गाणी नाहीत. क्लिक “</translation>
     </message>
     <message>
-        <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="168"/>
+        <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="174"/>
         <source>” to add songs to the playlist</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="69"/>
+        <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="71"/>
         <source> scan the Music directory</source>
         <translation type="unfinished"></translation>
     </message>
@@ -597,14 +597,19 @@
         <translation>सेव</translation>
     </message>
     <message>
-        <location filename="../src/music-player/dialogs/EqualizerDialog.qml" line="205"/>
+        <location filename="../src/music-player/dialogs/EqualizerDialog.qml" line="211"/>
         <source>Reset</source>
         <translation>रीसेट</translation>
     </message>
     <message>
-        <location filename="../src/music-player/dialogs/EqualizerDialog.qml" line="314"/>
+        <location filename="../src/music-player/dialogs/EqualizerDialog.qml" line="320"/>
         <source>Preamplifier</source>
         <translation>प्रीएम्प्लिफायर</translation>
+    </message>
+    <message>
+        <location filename="../src/music-player/dialogs/EqualizerDialog.qml" line="491"/>
+        <source>Sound Effects Saved</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -677,57 +682,63 @@
 <context>
     <name>MainWindow</name>
     <message>
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="188"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="31"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="191"/>
         <source>Music</source>
         <translation>संगीत</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="203"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="206"/>
         <source>Play/Pause</source>
         <translation>प्ले/पॉज</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="207"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="211"/>
         <source>Previous</source>
         <translation>पूर्वीचे</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="218"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="222"/>
         <source>Next</source>
         <translation>पुढचे</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="229"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="233"/>
         <source>Exit</source>
         <translation>બંધ કરો</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="343"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="373"/>
         <source>Already added to the playlist</source>
         <translation>પોતાના સૂચિમાં નોંધપાત્ર છે</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="346"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="376"/>
         <source>Added to &quot;%1&quot;</source>
         <translation>&quot;%1&quot; નોંધપાત્ર કરવામાં આવ્યો છે</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="349"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="379"/>
         <source>Removed from &quot;My Favorites&quot;</source>
         <translation>&quot;My Favorites&quot; નોંધપાત્ર કરી નાખવામાં આવ્યો છે</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="352"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="382"/>
         <source>A disc is connected</source>
         <translation>એક ડિસ્ક જોડાયેલી છે</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="368"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="385"/>
+        <source>Sound Effects Saved</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="396"/>
         <source>My Favorites</source>
         <translation>મારી પસંદગીઓ</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="390"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="424"/>
         <source>All Songs</source>
         <translation>બધા ગીત</translation>
     </message>

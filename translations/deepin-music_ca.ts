@@ -144,47 +144,47 @@
 <context>
     <name>AllMusicDefaultPage</name>
     <message>
-        <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="42"/>
+        <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="44"/>
         <source>Add Songs</source>
         <translation>Afegiu-hi cançons</translation>
     </message>
     <message>
-        <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="50"/>
+        <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="52"/>
         <source>Open Folders</source>
         <translation>Obre carpetes</translation>
     </message>
     <message>
-        <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="65"/>
+        <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="67"/>
         <source>Drag music files here or</source>
         <translation>Arrossegueu fitxers de música aquí o</translation>
     </message>
     <message>
-        <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="99"/>
+        <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="104"/>
         <source>Your favorite songs will be displayed here</source>
         <translation>Les cançons preferides es mostraran aquí.</translation>
     </message>
     <message>
-        <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="111"/>
+        <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="116"/>
         <source>Click “</source>
         <translation>Feu clic a «</translation>
     </message>
     <message>
-        <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="122"/>
+        <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="127"/>
         <source>” to add a song to My Favorites</source>
         <translation>» per afegir una cançó als favorits.</translation>
     </message>
     <message>
-        <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="157"/>
+        <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="163"/>
         <source>No songs yet. Click “</source>
         <translation>Encara no hi ha cançons. Feu clic a «</translation>
     </message>
     <message>
-        <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="168"/>
+        <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="174"/>
         <source>” to add songs to the playlist</source>
         <translation>per afegir cançons a la llista de reproducció.</translation>
     </message>
     <message>
-        <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="69"/>
+        <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="71"/>
         <source> scan the Music directory</source>
         <translation>escanegeu el directori de música</translation>
     </message>
@@ -595,14 +595,19 @@
         <translation>Desa</translation>
     </message>
     <message>
-        <location filename="../src/music-player/dialogs/EqualizerDialog.qml" line="205"/>
+        <location filename="../src/music-player/dialogs/EqualizerDialog.qml" line="211"/>
         <source>Reset</source>
         <translation>Restableix</translation>
     </message>
     <message>
-        <location filename="../src/music-player/dialogs/EqualizerDialog.qml" line="314"/>
+        <location filename="../src/music-player/dialogs/EqualizerDialog.qml" line="320"/>
         <source>Preamplifier</source>
         <translation>Preamplificador</translation>
+    </message>
+    <message>
+        <location filename="../src/music-player/dialogs/EqualizerDialog.qml" line="491"/>
+        <source>Sound Effects Saved</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -675,57 +680,63 @@
 <context>
     <name>MainWindow</name>
     <message>
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="188"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="31"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="191"/>
         <source>Music</source>
         <translation>Música</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="203"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="206"/>
         <source>Play/Pause</source>
         <translation>Reprodueix / Pausa</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="207"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="211"/>
         <source>Previous</source>
         <translation>Anterior</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="218"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="222"/>
         <source>Next</source>
         <translation>Següent</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="229"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="233"/>
         <source>Exit</source>
         <translation>Surt</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="343"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="373"/>
         <source>Already added to the playlist</source>
         <translation>Ja s&apos;ha afegit a la llista de reproducció.</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="346"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="376"/>
         <source>Added to &quot;%1&quot;</source>
         <translation>S&apos;ha afegit a &quot;%1&quot;</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="349"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="379"/>
         <source>Removed from &quot;My Favorites&quot;</source>
         <translation>S&apos;ha eliminat dels favorits.</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="352"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="382"/>
         <source>A disc is connected</source>
         <translation>Hi ha un disc connectat</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="368"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="385"/>
+        <source>Sound Effects Saved</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="396"/>
         <source>My Favorites</source>
         <translation>Els favorits</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="390"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="424"/>
         <source>All Songs</source>
         <translation>Totes les cançons</translation>
     </message>

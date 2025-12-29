@@ -236,7 +236,6 @@ ApplicationWindow {
         }
     }
 
-    Loader { id: messageBoxLoader }
     Loader { id: importFailedDlgLoader }
 
     onActiveChanged: {
@@ -336,34 +335,59 @@ ApplicationWindow {
     }
     Connections {
         target: globalVariant
-        onSendFloatingMessageBox: {
+        function onSendFloatingMessageBox(pageName, msgType) {
             if (messageBoxLoader.status === Loader.Null) {
                 messageBoxLoader.setSource("../allItems/FloatingMessageBox.qml")
             }
 
-            messageBoxLoader.item.type = msgType;
-            switch (messageBoxLoader.item.type){
-            case 0:
-                messageBoxLoader.item.message = qsTr("Already added to the playlist");
-                break;
-            case 1:
-                messageBoxLoader.item.message = qsTr("Added to \"%1\"").arg(pageName);
-                break;
-            case 2:
-                messageBoxLoader.item.message = qsTr("Removed from \"My Favorites\"");
-                break;
-            case 3:
-                messageBoxLoader.item.message = qsTr("A disc is connected");
-                break;
-            default:
-                break;
+            if (messageBoxLoader.status === Loader.Ready) {
+                showFloatingMessage(pageName, msgType)
+            } else {
+                messageBoxLoader.pendingPageName = pageName
+                messageBoxLoader.pendingMsgType = msgType
             }
-            messageBoxLoader.item.show();
         }
 
-        onClickPlayAllBtn: {
+        function onClickPlayAllBtn() {
             toolbox.startListBtnAnim()
         }
+    }
+
+    Loader {
+        id: messageBoxLoader
+        property string pendingPageName: ""
+        property int pendingMsgType: -1
+
+        onLoaded: {
+            if (pendingMsgType >= 0) {
+                showFloatingMessage(pendingPageName, pendingMsgType)
+                pendingMsgType = -1
+            }
+        }
+    }
+
+    function showFloatingMessage(pageName, msgType) {
+        messageBoxLoader.item.type = msgType;
+        switch (messageBoxLoader.item.type){
+        case 0:
+            messageBoxLoader.item.message = qsTr("Already added to the playlist");
+            break;
+        case 1:
+            messageBoxLoader.item.message = qsTr("Added to \"%1\"").arg(pageName);
+            break;
+        case 2:
+            messageBoxLoader.item.message = qsTr("Removed from \"My Favorites\"");
+            break;
+        case 3:
+            messageBoxLoader.item.message = qsTr("A disc is connected");
+            break;
+        case 4:
+            messageBoxLoader.item.message = qsTr("Sound Effects Saved");
+            break;
+        default:
+            break;
+        }
+        messageBoxLoader.item.show();
     }
 
     function onAddOneMeta(playlistHashs, meta) {
