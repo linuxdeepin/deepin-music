@@ -66,7 +66,6 @@ LyricPage {
 
     function lyricWindowUp() {
         if (lyricPage.visible) {
-            animationFinished(true)
             lyricHideAnimation.start()
         } else {
             lyricPage.y = rootWindow.height
@@ -82,6 +81,8 @@ LyricPage {
         }
         onStarted: {
             animationStart(false)
+            // 动画开始时就更新状态，让 contentWindow 提前显示，避免空白
+            animationFinished(true)
         }
     }
     Connections {
