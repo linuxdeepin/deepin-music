@@ -147,3 +147,8 @@ void DBOperate::slotImportMetas(const QStringList &urls, const QSet<QString> &me
 
     emit signalImportFinished(allHashs.values(), importedFailCount, importedCount - importedFailCount - existCount, existCount, mediaHash);
 }
+
+void DBOperate::slotClearImportingHash(const QString &hash)
+{
+    m_importingHashes.remove(hash);
+}
