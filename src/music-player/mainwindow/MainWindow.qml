@@ -205,6 +205,7 @@ ApplicationWindow {
             MenuItem {
                 text: qsTr("Play/Pause")
                 onTriggered: Presenter.playPause()
+                enabled: globalVariant.playingCount > 0
             }
             MenuItem {
                 text: qsTr("Previous")
