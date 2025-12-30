@@ -31,6 +31,7 @@ ListModel {
         var tmplist = meidaDataMap;
         for(var key in tmplist){
             tmplist[key].inMulitSelect = false;
+            tmplist[key].dragFlag = false;
             mediaListModels.append(tmplist[key]);
         }
         isLoading = false;

@@ -49,7 +49,7 @@ ItemDelegate{
         acceptedButtons: Qt.RightButton | Qt.LeftButton
         drag.target: rootRectangle
 
-        onPressed: {
+        onPressed: function(mouse) {
             if (mouse.button ===  Qt.LeftButton){
                 listview.forceActiveFocus();
                 listview.currentIndex = index
@@ -106,7 +106,7 @@ ItemDelegate{
                 }
             }
         }
-        onReleased: {
+        onReleased: function(mouse) {
             rootRectangle.x = 0
             if ((mouse.modifiers !== Qt.ShiftModifier && mouse.modifiers !== Qt.ControlModifier)
                     && mouse.button ===  Qt.LeftButton && !isDragged) {

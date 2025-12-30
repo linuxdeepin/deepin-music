@@ -75,7 +75,9 @@ Rectangle {
     ListView{
         id: listview
         property var delegateModelGroup: new Array
+        property var dragGroup: new Array
         property int lastIndex: 0
+        property int dragToIndex: 0
         width: rootrectangle.width
         height: rootrectangle.height - musicSublistTitle.height - 36
         anchors.left: musicSublistTitle.left/*; anchors.leftMargin: 20*/
@@ -99,9 +101,132 @@ Rectangle {
             checked: mediaListModels.get(index).inMulitSelect
         }
 
+        // 拖拽放置区域
+        DropArea {
+            property int lastDragIndex: 0
+            property int toIndex: 0
+            property int hoverIndex: 0
+            property bool dragForSort: false
+
+            id: dropArea
+            anchors.fill: parent
+
+            onEntered: function(drag) {
+                console.warn("[ArtistSublistView] DropArea onEntered, drag.keys:", drag.keys)
+                drag.accepted = true
+                for(var j = 0; j < drag.keys.length; j++) {
+                    console.warn("[ArtistSublistView] Checking key:", drag.keys[j])
+                    if (drag.keys[j] === "music-list/index-list") {
+                        dragForSort = true
+                        console.warn("[ArtistSublistView] dragForSort set to true")
+                        break
+                    }
+                }
+            }
+            onPositionChanged: function(drag) {
+                updateHoverIndex(drag)
+
+                if (drag.y < 20 && !listview.atYBeginning) {
+                    scrollUpTimer.start()
+                } else {
+                    scrollUpTimer.stop()
+                }
+
+                if (drag.y > listview.height - 20 && !listview.atYEnd) {
+                    scrollDownTimer.start()
+                } else {
+                    scrollDownTimer.stop()
+                }
+            }
+            onDropped: function(drop) {
+                console.warn("[ArtistSublistView] DropArea onDropped, dragForSort:", dragForSort, "toIndex:", toIndex)
+                console.warn("[ArtistSublistView] delegateModelGroup:", listview.delegateModelGroup)
+                if (dragForSort) {
+                    scrollDownTimer.stop()
+                    scrollUpTimer.stop()
+
+                    listview.delegateModelGroup.sort()
+                    console.warn("[ArtistSublistView] After sort, delegateModelGroup:", listview.delegateModelGroup)
+
+                    var temp = 0
+                    for (var i = 0; i < listview.delegateModelGroup.length; i++){
+                        console.warn("[ArtistSublistView] Moving item, from:", listview.delegateModelGroup[i], "toIndex:", toIndex)
+                        if (listview.delegateModelGroup[i] <= toIndex) {
+                            mediaListModels.move(listview.delegateModelGroup[i] - temp, toIndex, 1)
+                            temp++
+                        } else {
+                            toIndex++
+                            mediaListModels.move(listview.delegateModelGroup[i], toIndex, 1)
+                        }
+                        mediaListModels.setProperty(toIndex, "inMulitSelect", false);
+                        mediaListModels.setProperty(toIndex - 1, "dragFlag", false);
+                    }
+                    listview.removeModelGroup()
+                    console.warn("[ArtistSublistView] Drag sort completed")
+                }
+                dragForSort = false
+            }
+            onExited: {
+                console.warn("[ArtistSublistView] DropArea onExited")
+                if (lastDragIndex >= 0)
+                    mediaListModels.setProperty(lastDragIndex, "dragFlag", false)
+                scrollDownTimer.stop()
+                scrollUpTimer.stop()
+                dragForSort = false
+            }
+
+            function updateHoverIndex(drag) {
+                hoverIndex = listview.indexAt(drag.x, drag.y + listview.contentY)
+
+                if (drag.y + listview.contentY < hoverIndex * 56 + 56 / 2)
+                    hoverIndex--
+                if (hoverIndex < 0)
+                    hoverIndex = -1
+
+                if (hoverIndex !== lastDragIndex) {
+                    console.warn("[ArtistSublistView] updateHoverIndex, hoverIndex:", hoverIndex, "lastDragIndex:", lastDragIndex)
+                    if (hoverIndex >= 0)
+                        mediaListModels.setProperty(hoverIndex, "dragFlag", true)
+                    if (lastDragIndex >= 0)
+                        mediaListModels.setProperty(lastDragIndex, "dragFlag", false)
+                }
+
+                toIndex = hoverIndex
+                lastDragIndex = hoverIndex
+                listview.dragToIndex = hoverIndex
+            }
+        }
+
+        Timer {
+            id: scrollDownTimer
+            interval: 40
+            repeat: true
+            running: false
+
+            onTriggered: {
+                if(!listview.atYEnd) {
+                    listview.contentY += 10
+                }
+            }
+        }
+        Timer {
+            id: scrollUpTimer
+            interval: 40
+            repeat: true
+            running: false
+
+            onTriggered: {
+                if(!listview.atYBeginning) {
+                    listview.contentY -= 10
+                }
+            }
+        }
+
+
         MouseArea{
             anchors.fill: parent
             acceptedButtons:Qt.NoButton
+            z: -1  // 确保不阻挡拖拽
             onWheel: {
                 if(wheel.angleDelta.y>1){
                     artistSublistScrollBar.decrease()
