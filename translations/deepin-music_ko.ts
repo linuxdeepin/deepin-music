@@ -607,7 +607,7 @@
     <message>
         <location filename="../src/music-player/dialogs/EqualizerDialog.qml" line="491"/>
         <source>Sound Effects Saved</source>
-        <translation type="unfinished"></translation>
+        <translation>음향 효과 저장됨</translation>
     </message>
 </context>
 <context>
@@ -728,7 +728,7 @@
     <message>
         <location filename="../src/music-player/mainwindow/MainWindow.qml" line="385"/>
         <source>Sound Effects Saved</source>
-        <translation type="unfinished"></translation>
+        <translation>음향 효과 저장됨</translation>
     </message>
     <message>
         <location filename="../src/music-player/mainwindow/MainWindow.qml" line="396"/>
