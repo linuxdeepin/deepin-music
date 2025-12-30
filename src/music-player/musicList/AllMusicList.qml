@@ -48,7 +48,7 @@ Rectangle {
 
     DropArea {
         anchors.fill: parent
-        onEntered: {
+        onEntered: function(drag) {
             drag.accepted = false
             for(var j = 0; j < drag.keys.length; j++) {
                 //console.log("onEntered  keys:", drag.keys[j])
@@ -59,7 +59,7 @@ Rectangle {
             }
         }
 
-        onDropped: {
+        onDropped: function(drop) {
             for(var j = 0; j < drop.keys.length; j++) {
                 if (drop.keys[j] === "text/uri-list") {
                     var list = []

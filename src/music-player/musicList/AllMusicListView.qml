@@ -144,22 +144,30 @@ Rectangle {
             id: dropArea
             anchors.fill: parent
 
-            onEntered: {
+            onEntered: function(drag) {
+                dragForSort = false
                 for(var j = 0; j < drag.keys.length; j++) {
-                    if (drag.keys[j] === "music-list/index-list" && Presenter.playlistSortType(viewListHash) === DmGlobal.SortByCustom) {
+                    // 检查两个键，因为 Drag.mimeData 可能只传递其中一个
+                    // 但只有在自定义排序模式下才允许拖拽排序
+                    if ((drag.keys[j] === "music-list/index-list" || drag.keys[j] === "music-list/hash-list") 
+                        && Presenter.playlistSortType(viewListHash) === DmGlobal.SortByCustom) {
                         dragForSort = true
                         break
                     }
                 }
 
+                // 只有在自定义排序模式下才允许拖拽排序
                 if (Presenter.playlistSortType(viewListHash) === DmGlobal.SortByCustom
-                        && viewListHash !== "cdarole")
+                        && viewListHash !== "cdarole") {
                     drag.accepted = true
-                else
+                } else {
                     drag.accepted = false
+                }
             }
-            onPositionChanged: {
-                updateHoverIndex()
+            onPositionChanged: function(drag) {
+                if (dragForSort) {
+                    updateHoverIndex(drag)
+                }
 
                 if (drag.y < 20 && !listview.atYBeginning) {
                     scrollUpTimer.start()
@@ -173,36 +181,53 @@ Rectangle {
                     scrollDownTimer.stop()
                 }
             }
-            onDropped: {
-                updateHoverIndex()
+            onDropped: function(drop) {
+                updateHoverIndex(drop)
+                
                 if (dragForSort) {
                     scrollDownTimer.stop()
                     scrollUpTimer.stop()
+
+                    // 处理 toIndex === -1 的情况（拖到列表顶部）
+                    var targetIndex = toIndex < 0 ? 0 : toIndex
 
                     var hashList = []
                     for (var i = 0; i < listview.delegateModelGroup.length; i++){
                         hashList.push(mediaModel.get(listview.delegateModelGroup[i]).hash);
                     }
-                    if (toIndex + 1 >= mediaModel.count) {
-                        Presenter.moveMetasPlayList(hashList, viewListHash, "")
-                    } else {
-                        Presenter.moveMetasPlayList(hashList, viewListHash, mediaModel.get(toIndex + 1).hash)
+                    // 只有在自定义排序模式下才调用 Presenter.moveMetasPlayList
+                    if (Presenter.playlistSortType(viewListHash) === DmGlobal.SortByCustom) {
+                        if (targetIndex + 1 >= mediaModel.count) {
+                            Presenter.moveMetasPlayList(hashList, viewListHash, "")
+                        } else {
+                            Presenter.moveMetasPlayList(hashList, viewListHash, mediaModel.get(targetIndex + 1).hash)
+                        }
                     }
 
                     listview.delegateModelGroup.sort()
 
                     var temp = 0
-                    for (var i = 0; i < listview.delegateModelGroup.length; i++) {
-                        if (listview.delegateModelGroup[i] <= toIndex) {
-                            mediaModel.move(listview.delegateModelGroup[i] - temp, toIndex, 1) //从前向后移动，每移动一个后剩余的项下标就减1
+                    var currentToIndex = targetIndex
+                    for (var i = 0; i < listview.delegateModelGroup.length; i++){
+                        var fromIndex = listview.delegateModelGroup[i]
+                        
+                        if (fromIndex <= currentToIndex) {
+                            // 从前往后移动，每移动一个后剩余的项下标就减1
+                            mediaModel.move(fromIndex - temp, currentToIndex, 1)
                             temp++
                         } else {
-                            toIndex++
-                            mediaModel.move(listview.delegateModelGroup[i], toIndex, 1) //从后向前移动，每移动一个后目标索引就会加1
+                            // 从后往前移动，每移动一个后目标索引就会加1
+                            currentToIndex++
+                            mediaModel.move(fromIndex, currentToIndex, 1)
                         }
-                        mediaModel.setProperty(toIndex, "inMulitSelect", false);
-                        mediaModel.setProperty(toIndex - 1, "dragFlag", false);
+                        if (currentToIndex >= 0 && currentToIndex < mediaModel.count) {
+                            mediaModel.setProperty(currentToIndex, "inMulitSelect", false);
+                        }
+                        if (currentToIndex - 1 >= 0 && currentToIndex - 1 < mediaModel.count) {
+                            mediaModel.setProperty(currentToIndex - 1, "dragFlag", false);
+                        }
                     }
+                    
                     listview.removeModelGroup()
                 }
                 dragForSort = false
@@ -214,18 +239,23 @@ Rectangle {
                 dragForSort = false
             }
 
-            function updateHoverIndex() {
-                hoverIndex = listview.indexAt(drag.x, drag.y + listview.contentY)
+            function updateHoverIndex(drag) {
+                var contentY = listview.contentY || 0
+                hoverIndex = listview.indexAt(drag.x, drag.y + contentY)
 
-                if (drag.y + listview.contentY < hoverIndex * 56 + 56 / 2)
-                    hoverIndex--
+                if (hoverIndex >= 0) {
+                    var itemY = hoverIndex * 56
+                    if (drag.y + contentY < itemY + 56 / 2)
+                        hoverIndex--
+                }
+                
                 if (hoverIndex < 0)
                     hoverIndex = -1
 
                 if (hoverIndex !== lastDragIndex) {
-                    if (hoverIndex >= 0)
+                    if (hoverIndex >= 0 && hoverIndex < mediaModel.count)
                         mediaModel.setProperty(hoverIndex, "dragFlag", true)
-                    if (lastDragIndex >= 0)
+                    if (lastDragIndex >= 0 && lastDragIndex < mediaModel.count)
                         mediaModel.setProperty(lastDragIndex, "dragFlag", false)
                 }
 

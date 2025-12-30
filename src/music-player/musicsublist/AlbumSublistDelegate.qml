@@ -12,22 +12,46 @@ import "../allItems"
 ItemDelegate {
     property bool playing: (globalVariant.curPlayingStatus === DmGlobal.Playing) ? true : false
     property bool activeMeta:(globalVariant.curPlayingHash === hash) ? true : false
+    property bool isDragged: false
 
     id: sublistDelegate
     hoverEnabled: true
+
+    // 拖拽支持
+    Drag.active: mouseArea.drag.active
+    Drag.supportedActions: Qt.MoveAction
+    Drag.dragType: Drag.Automatic
+    Drag.mimeData: {
+        "music-list/index-list": listview.delegateModelGroup
+    }
+    Drag.hotSpot.x: -15
+    Drag.hotSpot.y: -15
+    Drag.onActiveChanged: {
+        console.warn("[AlbumSublistDelegate] Drag.active changed:", Drag.active, "index:", index)
+    }
+    Drag.onDragStarted: {
+        console.warn("[AlbumSublistDelegate] Drag started, index:", index, "delegateModelGroup:", listview.delegateModelGroup)
+    }
+    Drag.onDragFinished: {
+        console.warn("[AlbumSublistDelegate] Drag finished, index:", index)
+        isDragged = true
+    }
+
     MouseArea {
         id: mouseArea
         anchors.fill: sublistDelegate
         acceptedButtons: Qt.RightButton | Qt.LeftButton
+        drag.target: sublistDelegate
+
         onDoubleClicked: {
             Presenter.playAlbum(album, hash);
         }
-        onClicked: {
+        onPressed: function(mouse) {
             if(mouse.button ===  Qt.LeftButton) {
                 listview.forceActiveFocus();
+                var inMulitSelect = mediaListModels.get(index).inMulitSelect;
                 switch(mouse.modifiers){
                 case Qt.ControlModifier:
-                    var inMulitSelect = mediaListModels.get(index).inMulitSelect;
                     mediaListModels.setProperty(index, "inMulitSelect", (!inMulitSelect));
                     listview.delegateModelGroup.push(index);
                     break;
@@ -35,7 +59,12 @@ ItemDelegate {
                     listview.checkMulti(index);
                     break;
                 default:
-                    listview.checkOne(index);
+                    if (!inMulitSelect)
+                        listview.checkOne(index);
+                    // 生成拖拽图像
+                    dragDelegate.grabToImage(function(result) {
+                        parent.Drag.imageSource = result.url
+                    });
                     break;
                 }
             } else if (mouse.button ===  Qt.RightButton) {
@@ -48,6 +77,26 @@ ItemDelegate {
                     selectMenu.popup();
                 }
             }
+        }
+        onReleased: function(mouse) {
+            sublistDelegate.x = 0
+            if ((mouse.modifiers !== Qt.ShiftModifier && mouse.modifiers !== Qt.ControlModifier)
+                    && mouse.button === Qt.LeftButton && !isDragged) {
+                listview.checkOne(index);
+                isDragged = false
+            }
+            if (parent.Drag.supportedActions === Qt.MoveAction && isDragged) {
+                if (listview.dragToIndex < 0)
+                    sublistDelegate.y = 0 + listview.originY;
+                else
+                    sublistDelegate.y = listview.dragToIndex * 56 + listview.originY;
+
+                if (index > listview.dragToIndex)
+                    sublistDelegate.y = index * 56 + listview.originY;
+
+                mediaListModels.setProperty(index, "dragFlag", false)
+            }
+            listview.dragToIndex = 0
         }
     }
     Component {
@@ -207,6 +256,44 @@ ItemDelegate {
                 verticalAlignment: Qt.AlignVCenter
                 anchors.verticalCenter: ablumLabel.verticalCenter
             }
+        }
+    }
+
+    // 拖拽指示线（显示在顶部）
+    Rectangle {
+        id: topDivider
+        width: parent.width
+        height: 1
+        y: 0
+        color: palette.highlight
+        visible: index === 0 && listview.dragToIndex === -1
+    }
+
+    // 拖拽指示线（显示在底部）
+    Rectangle {
+        id: bottomDivider
+        width: parent.width
+        height: 1
+        y: parent.height - 1
+        color: palette.highlight
+        visible: dragFlag
+    }
+
+    // 拖拽时显示的图像组件
+    Rectangle {
+        id: dragDelegate
+        width: txt.width + 20
+        height: txt.height + 10
+        radius: 5
+        color: palette.highlight
+        visible: false
+
+        Text {
+            id: txt
+            anchors.centerIn: parent
+            font: DTK.fontManager.t8
+            color: palette.highlightedText
+            text: title
         }
     }
 }
