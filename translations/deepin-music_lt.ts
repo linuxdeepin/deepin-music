@@ -683,7 +683,7 @@
         <location filename="../src/music-player/mainwindow/MainWindow.qml" line="31"/>
         <location filename="../src/music-player/mainwindow/MainWindow.qml" line="191"/>
         <source>Music</source>
-        <translation type="unfinished"/>
+        <translation>Muzika</translation>
     </message>
     <message>
         <location filename="../src/music-player/mainwindow/MainWindow.qml" line="206"/>
@@ -906,7 +906,7 @@
     <message>
         <location filename="../src/music-player/main.cpp" line="133"/>
         <source>Music</source>
-        <translation type="unfinished"/>
+        <translation>Muzika</translation>
     </message>
     <message>
         <location filename="../src/music-player/main.cpp" line="143"/>
@@ -967,7 +967,7 @@
     <message>
         <location filename="../src/music-player/mainwindow/SearchResultWindow.qml" line="120"/>
         <source>Music</source>
-        <translation type="unfinished"/>
+        <translation>Muzika</translation>
     </message>
     <message>
         <location filename="../src/music-player/mainwindow/SearchResultWindow.qml" line="128"/>
@@ -1045,7 +1045,7 @@
     <message>
         <location filename="../src/music-player/dialogs/SettingsDialog.qml" line="245"/>
         <source>Next</source>
-        <translation type="unfinished"/>
+        <translation>Kitas</translation>
     </message>
     <message>
         <location filename="../src/music-player/dialogs/SettingsDialog.qml" line="290"/>
@@ -1113,7 +1113,7 @@
     <message>
         <location filename="../src/music-player/util/shortcut.cpp" line="67"/>
         <source>Next</source>
-        <translation type="unfinished"/>
+        <translation>Kitas</translation>
     </message>
     <message>
         <location filename="../src/music-player/util/shortcut.cpp" line="68"/>
@@ -1199,7 +1199,7 @@
     <message>
         <location filename="../src/music-player/musicmousemenu/SidebarMenu.qml" line="29"/>
         <source>Add songs</source>
-        <translation type="unfinished"/>
+        <translation>Pridėti dainų</translation>
     </message>
     <message>
         <location filename="../src/music-player/musicmousemenu/SidebarMenu.qml" line="38"/>
@@ -1321,7 +1321,7 @@
     <message>
         <location filename="../src/music-player/mainwindow/Toolbar.qml" line="280"/>
         <source>Next</source>
-        <translation type="unfinished"/>
+        <translation>Kitas</translation>
     </message>
     <message>
         <location filename="../src/music-player/mainwindow/Toolbar.qml" line="389"/>
@@ -1364,7 +1364,7 @@
     <message>
         <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="96"/>
         <source>Music</source>
-        <translation type="unfinished"/>
+        <translation>Muzika</translation>
     </message>
     <message>
         <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="98"/>
