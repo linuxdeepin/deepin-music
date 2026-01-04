@@ -144,83 +144,47 @@
 <context>
     <name>AllMusicDefaultPage</name>
     <message>
-<<<<<<< HEAD
-        <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="42"/>
-=======
         <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="44"/>
->>>>>>> c757e53a (fix(ui): enhance EqualizerDialog functionality and message handling)
         <source>Add Songs</source>
         <translation>Додати композиції</translation>
     </message>
     <message>
-<<<<<<< HEAD
-        <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="50"/>
-=======
         <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="52"/>
->>>>>>> c757e53a (fix(ui): enhance EqualizerDialog functionality and message handling)
         <source>Open Folders</source>
         <translation>Відкрити теки</translation>
     </message>
     <message>
-<<<<<<< HEAD
-        <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="65"/>
-=======
         <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="67"/>
->>>>>>> c757e53a (fix(ui): enhance EqualizerDialog functionality and message handling)
         <source>Drag music files here or</source>
         <translation>Перетягніть сюди музичні файли або</translation>
     </message>
     <message>
-<<<<<<< HEAD
-        <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="99"/>
-=======
         <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="104"/>
->>>>>>> c757e53a (fix(ui): enhance EqualizerDialog functionality and message handling)
         <source>Your favorite songs will be displayed here</source>
         <translation>Тут буде показано ваші улюблені композиції</translation>
     </message>
     <message>
-<<<<<<< HEAD
-        <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="111"/>
-=======
         <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="116"/>
->>>>>>> c757e53a (fix(ui): enhance EqualizerDialog functionality and message handling)
         <source>Click “</source>
         <translation>Натисніть «</translation>
     </message>
     <message>
-<<<<<<< HEAD
-        <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="122"/>
-=======
         <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="127"/>
->>>>>>> c757e53a (fix(ui): enhance EqualizerDialog functionality and message handling)
         <source>” to add a song to My Favorites</source>
         <translation>», щоб додати композицію до улюблених</translation>
     </message>
     <message>
-<<<<<<< HEAD
-        <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="157"/>
-=======
         <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="163"/>
->>>>>>> c757e53a (fix(ui): enhance EqualizerDialog functionality and message handling)
         <source>No songs yet. Click “</source>
         <translation>Тут ще нічого немає. Натисніть «</translation>
     </message>
     <message>
-<<<<<<< HEAD
-        <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="168"/>
-=======
         <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="174"/>
->>>>>>> c757e53a (fix(ui): enhance EqualizerDialog functionality and message handling)
         <source>” to add songs to the playlist</source>
         <translation>щоб додати композиції до списку відтворення</translation>
     </message>
     <message>
-<<<<<<< HEAD
-        <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="69"/>
-=======
         <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="71"/>
->>>>>>> c757e53a (fix(ui): enhance EqualizerDialog functionality and message handling)
         <source> scan the Music directory</source>
         <translation>виконайте сканування каталогу «Музика»</translation>
     </message>
@@ -631,27 +595,19 @@
         <translation>Зберегти</translation>
     </message>
     <message>
-<<<<<<< HEAD
-        <location filename="../src/music-player/dialogs/EqualizerDialog.qml" line="205"/>
-=======
         <location filename="../src/music-player/dialogs/EqualizerDialog.qml" line="211"/>
->>>>>>> c757e53a (fix(ui): enhance EqualizerDialog functionality and message handling)
         <source>Reset</source>
         <translation>Скинути</translation>
     </message>
     <message>
-<<<<<<< HEAD
-        <location filename="../src/music-player/dialogs/EqualizerDialog.qml" line="314"/>
-=======
         <location filename="../src/music-player/dialogs/EqualizerDialog.qml" line="320"/>
->>>>>>> c757e53a (fix(ui): enhance EqualizerDialog functionality and message handling)
         <source>Preamplifier</source>
         <translation>Підсилювач</translation>
     </message>
     <message>
         <location filename="../src/music-player/dialogs/EqualizerDialog.qml" line="491"/>
         <source>Sound Effects Saved</source>
-        <translation type="unfinished"></translation>
+        <translation>Збережені звукові ефекти</translation>
     </message>
 </context>
 <context>
@@ -772,7 +728,7 @@
     <message>
         <location filename="../src/music-player/mainwindow/MainWindow.qml" line="385"/>
         <source>Sound Effects Saved</source>
-        <translation type="unfinished"></translation>
+        <translation>Збережені звукові ефекти</translation>
     </message>
     <message>
         <location filename="../src/music-player/mainwindow/MainWindow.qml" line="396"/>
@@ -780,11 +736,7 @@
         <translation>Мої улюблені</translation>
     </message>
     <message>
-<<<<<<< HEAD
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="390"/>
-=======
         <location filename="../src/music-player/mainwindow/MainWindow.qml" line="424"/>
->>>>>>> c757e53a (fix(ui): enhance EqualizerDialog functionality and message handling)
         <source>All Songs</source>
         <translation>Усі композиції</translation>
     </message>

@@ -607,7 +607,7 @@
     <message>
         <location filename="../src/music-player/dialogs/EqualizerDialog.qml" line="491"/>
         <source>Sound Effects Saved</source>
-        <translation type="unfinished"></translation>
+        <translation>Zvučni efekti spremljeni</translation>
     </message>
 </context>
 <context>
@@ -729,7 +729,7 @@ Molimo vas postavite datoteku pjesme (istu naziv kao i pjesma) i datoteku pjesme
     <message>
         <location filename="../src/music-player/mainwindow/MainWindow.qml" line="385"/>
         <source>Sound Effects Saved</source>
-        <translation type="unfinished"></translation>
+        <translation>Zvučni efekti spremljeni</translation>
     </message>
     <message>
         <location filename="../src/music-player/mainwindow/MainWindow.qml" line="396"/>

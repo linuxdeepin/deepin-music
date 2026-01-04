@@ -607,7 +607,7 @@
     <message>
         <location filename="../src/music-player/dialogs/EqualizerDialog.qml" line="491"/>
         <source>Sound Effects Saved</source>
-        <translation>Ses Efektleri Kaydedildi</translation>
+        <translation>Kayıtlı Ses Etkileri</translation>
     </message>
 </context>
 <context>
@@ -729,7 +729,7 @@ Lirik dosyasını (şarkıya eşit isimli) ve şarkıyı içeren dosyaları ayn�
     <message>
         <location filename="../src/music-player/mainwindow/MainWindow.qml" line="385"/>
         <source>Sound Effects Saved</source>
-        <translation type="unfinished"></translation>
+        <translation>Kayıtlı Ses Etkileri</translation>
     </message>
     <message>
         <location filename="../src/music-player/mainwindow/MainWindow.qml" line="396"/>
