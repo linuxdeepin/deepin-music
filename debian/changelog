@@ -1,3 +1,16 @@
+deepin-music (7.0.51) unstable; urgency=medium
+
+  * chore: Update version to 7.0.51
+  * fix(ui): enhance EqualizerDialog functionality and message handling
+  * fix(ui): update play/pause menu item state based on playing count
+  * fix(ui): update window title based on current media metadata
+  * fix(ui): improve lyric window animation handling
+  * fix(datamanager): implement signal to clear importing hashes on metadata deletion
+  * fix(datamanager): prevent duplicate meta additions and improve import handling
+  * fix(ui): enhance drag-and-drop functionality and update translations
+
+ -- re2zero <yangwu@uniontech.com>  Sun, 04 Jan 2026 13:12:46 +0800
+
 deepin-music (7.0.50) unstable; urgency=medium
 
   * fix(ui): update toolbar layout and time label widths
