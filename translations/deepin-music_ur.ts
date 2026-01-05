@@ -4,22 +4,22 @@
 <context>
     <name>AlbumDefaultPage</name>
     <message>
-        <location filename="../src/music-player/albumlist/AlbumDefaultPage.qml" line="35"/>
+        <location filename="../src/music-player/albumlist/AlbumDefaultPage.qml" line="36"/>
         <source>Add Songs</source>
         <translation>گیتیں شامل کریں</translation>
     </message>
     <message>
-        <location filename="../src/music-player/albumlist/AlbumDefaultPage.qml" line="43"/>
+        <location filename="../src/music-player/albumlist/AlbumDefaultPage.qml" line="44"/>
         <source>Open Folders</source>
         <translation>فولڈر کھولیں</translation>
     </message>
     <message>
-        <location filename="../src/music-player/albumlist/AlbumDefaultPage.qml" line="59"/>
+        <location filename="../src/music-player/albumlist/AlbumDefaultPage.qml" line="60"/>
         <source>Drag music files here or</source>
         <translation>یہاں پر موسیقی فائلیں ڈラگ کریں یا</translation>
     </message>
     <message>
-        <location filename="../src/music-player/albumlist/AlbumDefaultPage.qml" line="63"/>
+        <location filename="../src/music-player/albumlist/AlbumDefaultPage.qml" line="64"/>
         <source> scan the Music directory</source>
         <translation>میوزک ڈائریکٹری کا اسکن کریں</translation>
     </message>
@@ -107,7 +107,7 @@
 <context>
     <name>AlbumSublistDelegate</name>
     <message>
-        <location filename="../src/music-player/musicsublist/AlbumSublistDelegate.qml" line="147"/>
+        <location filename="../src/music-player/musicsublist/AlbumSublistDelegate.qml" line="196"/>
         <source>My Favorites</source>
         <translation>میری پسندیدہ گیتیں</translation>
     </message>
@@ -146,83 +146,47 @@
 <context>
     <name>AllMusicDefaultPage</name>
     <message>
-<<<<<<< HEAD
-        <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="42"/>
-=======
         <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="44"/>
->>>>>>> c757e53a (fix(ui): enhance EqualizerDialog functionality and message handling)
         <source>Add Songs</source>
         <translation>گیتیں شامل کریں</translation>
     </message>
     <message>
-<<<<<<< HEAD
-        <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="50"/>
-=======
         <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="52"/>
->>>>>>> c757e53a (fix(ui): enhance EqualizerDialog functionality and message handling)
         <source>Open Folders</source>
         <translation>فولڈر کھولیं</translation>
     </message>
     <message>
-<<<<<<< HEAD
-        <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="65"/>
-=======
         <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="67"/>
->>>>>>> c757e53a (fix(ui): enhance EqualizerDialog functionality and message handling)
         <source>Drag music files here or</source>
         <translation>یہاں پر موسیقی فائلیں ڈرگ کریں یا</translation>
     </message>
     <message>
-<<<<<<< HEAD
-        <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="99"/>
-=======
         <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="104"/>
->>>>>>> c757e53a (fix(ui): enhance EqualizerDialog functionality and message handling)
         <source>Your favorite songs will be displayed here</source>
         <translation>آپ کی پسندیدہ گیتیں اس جگہ دکھائی جائیں گی</translation>
     </message>
     <message>
-<<<<<<< HEAD
-        <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="111"/>
-=======
         <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="116"/>
->>>>>>> c757e53a (fix(ui): enhance EqualizerDialog functionality and message handling)
         <source>Click “</source>
         <translation>کلک کریں “</translation>
     </message>
     <message>
-<<<<<<< HEAD
-        <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="122"/>
-=======
         <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="127"/>
->>>>>>> c757e53a (fix(ui): enhance EqualizerDialog functionality and message handling)
         <source>” to add a song to My Favorites</source>
         <translation>” تاکہ آپ کی پسندیدہ گیتیں میری پسندیدہ گیتیں میں شامل کریں</translation>
     </message>
     <message>
-<<<<<<< HEAD
-        <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="157"/>
-=======
         <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="163"/>
->>>>>>> c757e53a (fix(ui): enhance EqualizerDialog functionality and message handling)
         <source>No songs yet. Click “</source>
         <translation>کوئی گیت موجود نہیں ہے۔ کلک کریں “</translation>
     </message>
     <message>
-<<<<<<< HEAD
-        <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="168"/>
-=======
         <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="174"/>
->>>>>>> c757e53a (fix(ui): enhance EqualizerDialog functionality and message handling)
         <source>” to add songs to the playlist</source>
         <translation>کی ایڈ کریں اور گیت ڈیٹا بیس میں شامل کریں</translation>
     </message>
     <message>
-<<<<<<< HEAD
-        <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="69"/>
-=======
         <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="71"/>
->>>>>>> c757e53a (fix(ui): enhance EqualizerDialog functionality and message handling)
         <source> scan the Music directory</source>
         <translation>میوزک ڈیکٹری کی تلاش کریں</translation>
     </message>
@@ -279,22 +243,22 @@
 <context>
     <name>ArtistDefaultPage</name>
     <message>
-        <location filename="../src/music-player/singerlist/ArtistDefaultPage.qml" line="36"/>
+        <location filename="../src/music-player/singerlist/ArtistDefaultPage.qml" line="37"/>
         <source>Add Songs</source>
         <translation>گیت شامل کریں</translation>
     </message>
     <message>
-        <location filename="../src/music-player/singerlist/ArtistDefaultPage.qml" line="44"/>
+        <location filename="../src/music-player/singerlist/ArtistDefaultPage.qml" line="45"/>
         <source>Open Folders</source>
         <translation>فولڈر کھولیں</translation>
     </message>
     <message>
-        <location filename="../src/music-player/singerlist/ArtistDefaultPage.qml" line="60"/>
+        <location filename="../src/music-player/singerlist/ArtistDefaultPage.qml" line="61"/>
         <source>Drag music files here or</source>
         <translation>یہاں موسیقی فائلیں ڈراف کریں یا</translation>
     </message>
     <message>
-        <location filename="../src/music-player/singerlist/ArtistDefaultPage.qml" line="64"/>
+        <location filename="../src/music-player/singerlist/ArtistDefaultPage.qml" line="65"/>
         <source> scan the Music directory</source>
         <translation>میوزک ڈیکٹری کی تلاش کریں</translation>
     </message>
@@ -333,7 +297,7 @@
 <context>
     <name>ArtistSublistDelegate</name>
     <message>
-        <location filename="../src/music-player/musicsublist/ArtistSublistDelegate.qml" line="102"/>
+        <location filename="../src/music-player/musicsublist/ArtistSublistDelegate.qml" line="147"/>
         <source>My Favorites</source>
         <translation>میرے پسندیدہ</translation>
     </message>
@@ -623,30 +587,22 @@
         <translation>ٹیکنو</translation>
     </message>
     <message>
-        <location filename="../src/music-player/dialogs/EqualizerDialog.qml" line="106"/>
+        <location filename="../src/music-player/dialogs/EqualizerDialog.qml" line="111"/>
         <source>Equalizer</source>
         <translation>ایکیولیزر</translation>
     </message>
     <message>
-        <location filename="../src/music-player/dialogs/EqualizerDialog.qml" line="182"/>
+        <location filename="../src/music-player/dialogs/EqualizerDialog.qml" line="187"/>
         <source>Save</source>
         <translation>سیو کریں</translation>
     </message>
     <message>
-<<<<<<< HEAD
-        <location filename="../src/music-player/dialogs/EqualizerDialog.qml" line="205"/>
-=======
         <location filename="../src/music-player/dialogs/EqualizerDialog.qml" line="211"/>
->>>>>>> c757e53a (fix(ui): enhance EqualizerDialog functionality and message handling)
         <source>Reset</source>
         <translation>ری سیٹ کریں</translation>
     </message>
     <message>
-<<<<<<< HEAD
-        <location filename="../src/music-player/dialogs/EqualizerDialog.qml" line="314"/>
-=======
         <location filename="../src/music-player/dialogs/EqualizerDialog.qml" line="320"/>
->>>>>>> c757e53a (fix(ui): enhance EqualizerDialog functionality and message handling)
         <source>Preamplifier</source>
         <translation>پری امپلیفائر</translation>
     </message>
@@ -703,22 +659,22 @@
 <context>
     <name>LyricPage</name>
     <message>
-        <location filename="../src/music-player/lyric/LyricPage.qml" line="133"/>
+        <location filename="../src/music-player/lyric/LyricPage.qml" line="134"/>
         <source>Artist</source>
         <translation>ارٹسٹ</translation>
     </message>
     <message>
-        <location filename="../src/music-player/lyric/LyricPage.qml" line="141"/>
+        <location filename="../src/music-player/lyric/LyricPage.qml" line="142"/>
         <source>Album</source>
         <translation>البوم</translation>
     </message>
     <message>
-        <location filename="../src/music-player/lyric/LyricPage.qml" line="179"/>
+        <location filename="../src/music-player/lyric/LyricPage.qml" line="180"/>
         <source>No lyrics found</source>
         <translation>کوئی لاریکس نہیں ملا</translation>
     </message>
     <message>
-        <location filename="../src/music-player/lyric/LyricPage.qml" line="189"/>
+        <location filename="../src/music-player/lyric/LyricPage.qml" line="190"/>
         <source>Please put the lyric file (same name as the song) and the song file in the same folder</source>
         <translation>لاریکس فائل (گانے کے ایک نام کے ساتھ) اور گانے کی فائل کو ایک ہی فولڈر میں رکھیں</translation>
     </message>
@@ -737,56 +693,52 @@
         <translation>پلے/پیوڈ</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="211"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="210"/>
         <source>Previous</source>
         <translation>پہلے</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="222"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="221"/>
         <source>Next</source>
         <translation>اگلے</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="233"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="232"/>
         <source>Exit</source>
         <translation>نکل</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="373"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="372"/>
         <source>Already added to the playlist</source>
         <translation>پہلے ہی پلیئسٹ کی فہرست میں شامل ہے</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="376"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="375"/>
         <source>Added to &quot;%1&quot;</source>
         <translation> &quot;%1&quot; میں شامل ہو گیا</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="379"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="378"/>
         <source>Removed from &quot;My Favorites&quot;</source>
         <translation> &quot;می فیووریٹس&quot; سے ہٹا دیا گیا</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="382"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="381"/>
         <source>A disc is connected</source>
         <translation>ایک ڈسک کنیکٹ ہو گئی ہے</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="385"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="384"/>
         <source>Sound Effects Saved</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="396"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="395"/>
         <source>My Favorites</source>
         <translation>می فیووریٹس</translation>
     </message>
     <message>
-<<<<<<< HEAD
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="390"/>
-=======
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="424"/>
->>>>>>> c757e53a (fix(ui): enhance EqualizerDialog functionality and message handling)
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="423"/>
         <source>All Songs</source>
         <translation>ہر گانے</translation>
     </message>
@@ -863,37 +815,37 @@
 <context>
     <name>MusicInfoDialog</name>
     <message>
-        <location filename="../src/music-player/dialogs/MusicInfoDialog.qml" line="71"/>
+        <location filename="../src/music-player/dialogs/MusicInfoDialog.qml" line="72"/>
         <source>Title</source>
         <translation>عنوان</translation>
     </message>
     <message>
-        <location filename="../src/music-player/dialogs/MusicInfoDialog.qml" line="80"/>
+        <location filename="../src/music-player/dialogs/MusicInfoDialog.qml" line="81"/>
         <source>Artist</source>
         <translation>کارکن</translation>
     </message>
     <message>
-        <location filename="../src/music-player/dialogs/MusicInfoDialog.qml" line="86"/>
+        <location filename="../src/music-player/dialogs/MusicInfoDialog.qml" line="87"/>
         <source>Album</source>
         <translation>البوم</translation>
     </message>
     <message>
-        <location filename="../src/music-player/dialogs/MusicInfoDialog.qml" line="95"/>
+        <location filename="../src/music-player/dialogs/MusicInfoDialog.qml" line="96"/>
         <source>Type</source>
         <translation>نوع</translation>
     </message>
     <message>
-        <location filename="../src/music-player/dialogs/MusicInfoDialog.qml" line="101"/>
+        <location filename="../src/music-player/dialogs/MusicInfoDialog.qml" line="102"/>
         <source>Size</source>
         <translation>سائز</translation>
     </message>
     <message>
-        <location filename="../src/music-player/dialogs/MusicInfoDialog.qml" line="107"/>
+        <location filename="../src/music-player/dialogs/MusicInfoDialog.qml" line="108"/>
         <source>Duration</source>
         <translation>زمانہ</translation>
     </message>
     <message>
-        <location filename="../src/music-player/dialogs/MusicInfoDialog.qml" line="114"/>
+        <location filename="../src/music-player/dialogs/MusicInfoDialog.qml" line="115"/>
         <source>Path</source>
         <translation>روٹ</translation>
     </message>
@@ -949,22 +901,22 @@
 <context>
     <name>QObject</name>
     <message>
-        <location filename="../src/music-player/main.cpp" line="131"/>
+        <location filename="../src/music-player/main.cpp" line="139"/>
         <source>Music is a local music player with beautiful design and simple functions.</source>
         <translation>میوزک ایک جامد ڈیزائن اور آسان کارکردگی والے محلي موسیقی پلیئر ہے۔</translation>
     </message>
     <message>
-        <location filename="../src/music-player/main.cpp" line="133"/>
+        <location filename="../src/music-player/main.cpp" line="141"/>
         <source>Music</source>
         <translation>میوزک</translation>
     </message>
     <message>
-        <location filename="../src/music-player/main.cpp" line="143"/>
+        <location filename="../src/music-player/main.cpp" line="151"/>
         <source>Unknown album</source>
         <translation>جانا نہیں گیا البوم</translation>
     </message>
     <message>
-        <location filename="../src/music-player/main.cpp" line="143"/>
+        <location filename="../src/music-player/main.cpp" line="151"/>
         <source>Unknown artist</source>
         <translation>جانا نہیں گیا ارٹسٹ</translation>
     </message>
@@ -995,37 +947,37 @@
         <translation>تلاش کے نتائج نہیں ہیں</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/SearchResultWindow.qml" line="95"/>
+        <location filename="../src/music-player/mainwindow/SearchResultWindow.qml" line="96"/>
         <source>Search Results</source>
         <translation>تلاش نتائج</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/SearchResultWindow.qml" line="100"/>
+        <location filename="../src/music-player/mainwindow/SearchResultWindow.qml" line="101"/>
         <source>%1 albums - %2 songs</source>
         <translation>&apos;%1 البوم - %2 گانے&apos;</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/SearchResultWindow.qml" line="101"/>
+        <location filename="../src/music-player/mainwindow/SearchResultWindow.qml" line="102"/>
         <source>1 album - 1 song</source>
         <translation>1 البوم - 1 گانے</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/SearchResultWindow.qml" line="101"/>
+        <location filename="../src/music-player/mainwindow/SearchResultWindow.qml" line="102"/>
         <source>%1 album - %2 songs</source>
         <translation>&apos;%1 البوم - %2 گانے&apos;</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/SearchResultWindow.qml" line="120"/>
+        <location filename="../src/music-player/mainwindow/SearchResultWindow.qml" line="121"/>
         <source>Music</source>
         <translation>میوزک</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/SearchResultWindow.qml" line="128"/>
+        <location filename="../src/music-player/mainwindow/SearchResultWindow.qml" line="129"/>
         <source>Artist</source>
         <translation>ارٹسٗٹ</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/SearchResultWindow.qml" line="124"/>
+        <location filename="../src/music-player/mainwindow/SearchResultWindow.qml" line="125"/>
         <source>Album</source>
         <translation>البوم</translation>
     </message>
@@ -1131,97 +1083,97 @@
 <context>
     <name>Shortcut</name>
     <message>
-        <location filename="../src/music-player/util/shortcut.cpp" line="55"/>
+        <location filename="../src/music-player/util/shortcut.cpp" line="60"/>
         <source>Play</source>
         <translation>پلے</translation>
     </message>
     <message>
-        <location filename="../src/music-player/util/shortcut.cpp" line="56"/>
+        <location filename="../src/music-player/util/shortcut.cpp" line="61"/>
         <source>Songs</source>
         <translation>گانے</translation>
     </message>
     <message>
-        <location filename="../src/music-player/util/shortcut.cpp" line="57"/>
+        <location filename="../src/music-player/util/shortcut.cpp" line="62"/>
         <source>Playlists</source>
         <translation>پلے لسٹ</translation>
     </message>
     <message>
-        <location filename="../src/music-player/util/shortcut.cpp" line="58"/>
+        <location filename="../src/music-player/util/shortcut.cpp" line="63"/>
         <source>Settings</source>
         <translation>سیٹنگز</translation>
     </message>
     <message>
-        <location filename="../src/music-player/util/shortcut.cpp" line="65"/>
+        <location filename="../src/music-player/util/shortcut.cpp" line="70"/>
         <source>Play/Pause</source>
         <translation>پلے/پیوڈیو</translation>
     </message>
     <message>
-        <location filename="../src/music-player/util/shortcut.cpp" line="66"/>
+        <location filename="../src/music-player/util/shortcut.cpp" line="71"/>
         <source>Previous</source>
         <translation>پچھلی</translation>
     </message>
     <message>
-        <location filename="../src/music-player/util/shortcut.cpp" line="67"/>
+        <location filename="../src/music-player/util/shortcut.cpp" line="72"/>
         <source>Next</source>
         <translation>اگلی</translation>
     </message>
     <message>
-        <location filename="../src/music-player/util/shortcut.cpp" line="68"/>
+        <location filename="../src/music-player/util/shortcut.cpp" line="73"/>
         <source>Volume Up</source>
         <translation>آواز بڑھائیں</translation>
     </message>
     <message>
-        <location filename="../src/music-player/util/shortcut.cpp" line="69"/>
+        <location filename="../src/music-player/util/shortcut.cpp" line="74"/>
         <source>Volume Down</source>
         <translation>آواز کم کریں</translation>
     </message>
     <message>
-        <location filename="../src/music-player/util/shortcut.cpp" line="70"/>
+        <location filename="../src/music-player/util/shortcut.cpp" line="75"/>
         <source>Mute</source>
         <translation>بند کریں</translation>
     </message>
     <message>
-        <location filename="../src/music-player/util/shortcut.cpp" line="73"/>
+        <location filename="../src/music-player/util/shortcut.cpp" line="78"/>
         <source>Favorite</source>
         <translation>پسندیدہ</translation>
     </message>
     <message>
-        <location filename="../src/music-player/util/shortcut.cpp" line="74"/>
+        <location filename="../src/music-player/util/shortcut.cpp" line="79"/>
         <source>Unfavorite</source>
         <translation>ن پسندیدہ</translation>
     </message>
     <message>
-        <location filename="../src/music-player/util/shortcut.cpp" line="75"/>
+        <location filename="../src/music-player/util/shortcut.cpp" line="80"/>
         <source>Song info</source>
         <translation>گانے کی معلومات</translation>
     </message>
     <message>
-        <location filename="../src/music-player/util/shortcut.cpp" line="78"/>
+        <location filename="../src/music-player/util/shortcut.cpp" line="83"/>
         <source>New playlist</source>
         <translation>نیو پلے لسٹ</translation>
     </message>
     <message>
-        <location filename="../src/music-player/util/shortcut.cpp" line="79"/>
+        <location filename="../src/music-player/util/shortcut.cpp" line="84"/>
         <source>Add music</source>
         <translation>میوزک اڈ کریں</translation>
     </message>
     <message>
-        <location filename="../src/music-player/util/shortcut.cpp" line="80"/>
+        <location filename="../src/music-player/util/shortcut.cpp" line="85"/>
         <source>Rename playlist</source>
         <translation>پلے لسٹ کا نام تبدیل کریں</translation>
     </message>
     <message>
-        <location filename="../src/music-player/util/shortcut.cpp" line="81"/>
+        <location filename="../src/music-player/util/shortcut.cpp" line="86"/>
         <source>Remove from playlist</source>
         <translation>پلے لسٹ سے ہٹا دیں</translation>
     </message>
     <message>
-        <location filename="../src/music-player/util/shortcut.cpp" line="84"/>
+        <location filename="../src/music-player/util/shortcut.cpp" line="89"/>
         <source>Help</source>
         <translation>مدد</translation>
     </message>
     <message>
-        <location filename="../src/music-player/util/shortcut.cpp" line="85"/>
+        <location filename="../src/music-player/util/shortcut.cpp" line="90"/>
         <source>Display shortcuts</source>
         <translation>کلچر کی کی دکھاٸیں</translation>
     </message>
@@ -1242,22 +1194,22 @@
 <context>
     <name>SidebarMenu</name>
     <message>
-        <location filename="../src/music-player/musicmousemenu/SidebarMenu.qml" line="22"/>
+        <location filename="../src/music-player/musicmousemenu/SidebarMenu.qml" line="26"/>
         <source>Play</source>
         <translation>چلاؤ</translation>
     </message>
     <message>
-        <location filename="../src/music-player/musicmousemenu/SidebarMenu.qml" line="29"/>
+        <location filename="../src/music-player/musicmousemenu/SidebarMenu.qml" line="33"/>
         <source>Add songs</source>
         <translation>歌曲 اضافہ کریں</translation>
     </message>
     <message>
-        <location filename="../src/music-player/musicmousemenu/SidebarMenu.qml" line="38"/>
+        <location filename="../src/music-player/musicmousemenu/SidebarMenu.qml" line="42"/>
         <source>Rename</source>
         <translation>نام تبدیل کریں</translation>
     </message>
     <message>
-        <location filename="../src/music-player/musicmousemenu/SidebarMenu.qml" line="52"/>
+        <location filename="../src/music-player/musicmousemenu/SidebarMenu.qml" line="56"/>
         <source>Delete</source>
         <translation>حذف کریں</translation>
     </message>
@@ -1276,16 +1228,20 @@
     </message>
     <message>
         <location filename="../src/music-player/allItems/SortMenu.qml" line="34"/>
+        <location filename="../src/music-player/allItems/SortMenu.qml" line="41"/>
+        <location filename="../src/music-player/allItems/SortMenu.qml" line="46"/>
         <source>Date added</source>
         <translation>مقررہ تاریخ</translation>
     </message>
     <message>
         <location filename="../src/music-player/allItems/SortMenu.qml" line="37"/>
+        <location filename="../src/music-player/allItems/SortMenu.qml" line="47"/>
         <source>Album</source>
         <translation>البوم</translation>
     </message>
     <message>
         <location filename="../src/music-player/allItems/SortMenu.qml" line="36"/>
+        <location filename="../src/music-player/allItems/SortMenu.qml" line="42"/>
         <source>Artist</source>
         <translation>ارٹسٹ</translation>
     </message>
@@ -1324,62 +1280,62 @@
 <context>
     <name>Toolbar</name>
     <message>
-        <location filename="../src/music-player/mainwindow/Toolbar.qml" line="43"/>
+        <location filename="../src/music-player/mainwindow/Toolbar.qml" line="42"/>
         <source>Sequential play</source>
         <translation>سرکیانسی چلاؤ</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/Toolbar.qml" line="43"/>
+        <location filename="../src/music-player/mainwindow/Toolbar.qml" line="42"/>
         <source>List loop</source>
         <translation>لست چکر</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/Toolbar.qml" line="43"/>
+        <location filename="../src/music-player/mainwindow/Toolbar.qml" line="42"/>
         <source>Single loop</source>
         <translation>ایک چکر</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/Toolbar.qml" line="43"/>
+        <location filename="../src/music-player/mainwindow/Toolbar.qml" line="42"/>
         <source>Shuffle</source>
         <translation>جھٹکا</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/Toolbar.qml" line="207"/>
+        <location filename="../src/music-player/mainwindow/Toolbar.qml" line="209"/>
         <source>Unfavorite</source>
         <translation>ن Favorites</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/Toolbar.qml" line="207"/>
+        <location filename="../src/music-player/mainwindow/Toolbar.qml" line="209"/>
         <source>Favorite</source>
         <translation>Favorites</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/Toolbar.qml" line="220"/>
+        <location filename="../src/music-player/mainwindow/Toolbar.qml" line="222"/>
         <source>My Favorites</source>
         <translation>می فائیوریٹس</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/Toolbar.qml" line="238"/>
+        <location filename="../src/music-player/mainwindow/Toolbar.qml" line="240"/>
         <source>Previous</source>
         <translation>پچھلے</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/Toolbar.qml" line="259"/>
+        <location filename="../src/music-player/mainwindow/Toolbar.qml" line="261"/>
         <source>Play/Pause</source>
         <translation>چلاؤ/پچھور</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/Toolbar.qml" line="280"/>
+        <location filename="../src/music-player/mainwindow/Toolbar.qml" line="282"/>
         <source>Next</source>
         <translation>اگلے</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/Toolbar.qml" line="389"/>
+        <location filename="../src/music-player/mainwindow/Toolbar.qml" line="388"/>
         <source>Lyrics</source>
         <translation>لاکریکس</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/Toolbar.qml" line="438"/>
+        <location filename="../src/music-player/mainwindow/Toolbar.qml" line="437"/>
         <source>Play Queue</source>
         <translation>چلاؤ کیو</translation>
     </message>
@@ -1387,57 +1343,58 @@
 <context>
     <name>WindowTitlebar</name>
     <message>
-        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="56"/>
+        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="47"/>
         <source>Add playlist</source>
         <translation>چلاؤ لسٹ اضافہ کریں</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="58"/>
+        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="49"/>
         <source>New playlist</source>
         <translation>نی چلاؤ لسٹ</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="63"/>
+        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="54"/>
+        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="331"/>
         <source>Add music</source>
         <translation>میوزک اضافہ کریں</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="71"/>
+        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="62"/>
         <source>Equalizer</source>
         <translation>اکیولیزر</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="82"/>
+        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="73"/>
         <source>Settings</source>
         <translation>Settings</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="96"/>
+        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="87"/>
         <source>Music</source>
         <translation>موزیک</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="98"/>
+        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="89"/>
         <source>Music is a local music player with beautiful design and simple functions.</source>
         <translation>موزیک ایک لокل موزیک پلیئر ہے جس میں خوبصورت ڈیزائن اور سادہ کامیابیاں ہیں۔</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="99"/>
+        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="90"/>
         <source>Version:</source>
         <translation>ویژن:</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="213"/>
+        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="204"/>
         <source>Previous page</source>
         <translation>پچھلی صفحہ</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="229"/>
+        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="220"/>
         <source>Next page</source>
         <translation>اگلی صفحہ</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="239"/>
+        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="230"/>
         <source>Search</source>
         <translation>تلاش</translation>
     </message>

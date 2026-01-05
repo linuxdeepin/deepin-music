@@ -1,23 +1,25 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="ka" sourcelanguage="en_US">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.1" language="ka" sourcelanguage="en_US">
 <context>
     <name>AlbumDefaultPage</name>
     <message>
-        <location filename="../src/music-player/albumlist/AlbumDefaultPage.qml" line="35"/>
+        <location filename="../src/music-player/albumlist/AlbumDefaultPage.qml" line="36"/>
         <source>Add Songs</source>
         <translation>სიმღერების დამატება</translation>
     </message>
     <message>
-        <location filename="../src/music-player/albumlist/AlbumDefaultPage.qml" line="43"/>
+        <location filename="../src/music-player/albumlist/AlbumDefaultPage.qml" line="44"/>
         <source>Open Folders</source>
         <translation>საქაღალდეების გახსნა</translation>
     </message>
     <message>
-        <location filename="../src/music-player/albumlist/AlbumDefaultPage.qml" line="59"/>
+        <location filename="../src/music-player/albumlist/AlbumDefaultPage.qml" line="60"/>
         <source>Drag music files here or</source>
         <translation>გადატანეთ მუსიკალური ფაილები აქ ან</translation>
     </message>
     <message>
-        <location filename="../src/music-player/albumlist/AlbumDefaultPage.qml" line="63"/>
+        <location filename="../src/music-player/albumlist/AlbumDefaultPage.qml" line="64"/>
         <source> scan the Music directory</source>
         <translation> დაამატეთ მუსიკას მიმდებარე საქაღალდეში</translation>
     </message>
@@ -105,7 +107,7 @@
 <context>
     <name>AlbumSublistDelegate</name>
     <message>
-        <location filename="../src/music-player/musicsublist/AlbumSublistDelegate.qml" line="147"/>
+        <location filename="../src/music-player/musicsublist/AlbumSublistDelegate.qml" line="196"/>
         <source>My Favorites</source>
         <translation>ჩემი სასურველი სიმღერები</translation>
     </message>
@@ -241,22 +243,22 @@
 <context>
     <name>ArtistDefaultPage</name>
     <message>
-        <location filename="../src/music-player/singerlist/ArtistDefaultPage.qml" line="36"/>
+        <location filename="../src/music-player/singerlist/ArtistDefaultPage.qml" line="37"/>
         <source>Add Songs</source>
         <translation>სინგლების დამატება</translation>
     </message>
     <message>
-        <location filename="../src/music-player/singerlist/ArtistDefaultPage.qml" line="44"/>
+        <location filename="../src/music-player/singerlist/ArtistDefaultPage.qml" line="45"/>
         <source>Open Folders</source>
         <translation>ფოლდშერების გახსნა</translation>
     </message>
     <message>
-        <location filename="../src/music-player/singerlist/ArtistDefaultPage.qml" line="60"/>
+        <location filename="../src/music-player/singerlist/ArtistDefaultPage.qml" line="61"/>
         <source>Drag music files here or</source>
         <translation>გადაატარეთ მუსიკას ფაილები აქ ან</translation>
     </message>
     <message>
-        <location filename="../src/music-player/singerlist/ArtistDefaultPage.qml" line="64"/>
+        <location filename="../src/music-player/singerlist/ArtistDefaultPage.qml" line="65"/>
         <source> scan the Music directory</source>
         <translation>მუსიკას დაიმატეთ სიაში და მას სახელით დაინახეთ</translation>
     </message>
@@ -295,7 +297,7 @@
 <context>
     <name>ArtistSublistDelegate</name>
     <message>
-        <location filename="../src/music-player/musicsublist/ArtistSublistDelegate.qml" line="102"/>
+        <location filename="../src/music-player/musicsublist/ArtistSublistDelegate.qml" line="147"/>
         <source>My Favorites</source>
         <translation>ჩემი საყვარული</translation>
     </message>
@@ -423,7 +425,7 @@
     <message>
         <location filename="../src/music-player/musicbaseandsonglist/CustomPlaylistModel.qml" line="86"/>
         <source>CD</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -562,7 +564,7 @@
     <message>
         <location filename="../src/music-player/dialogs/EqualizerDialog.qml" line="28"/>
         <source>Rock</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/music-player/dialogs/EqualizerDialog.qml" line="29"/>
@@ -585,12 +587,12 @@
         <translation>ტექნო</translation>
     </message>
     <message>
-        <location filename="../src/music-player/dialogs/EqualizerDialog.qml" line="106"/>
+        <location filename="../src/music-player/dialogs/EqualizerDialog.qml" line="111"/>
         <source>Equalizer</source>
         <translation>ეკვალიზერი</translation>
     </message>
     <message>
-        <location filename="../src/music-player/dialogs/EqualizerDialog.qml" line="182"/>
+        <location filename="../src/music-player/dialogs/EqualizerDialog.qml" line="187"/>
         <source>Save</source>
         <translation>შენახვა</translation>
     </message>
@@ -657,22 +659,22 @@
 <context>
     <name>LyricPage</name>
     <message>
-        <location filename="../src/music-player/lyric/LyricPage.qml" line="133"/>
+        <location filename="../src/music-player/lyric/LyricPage.qml" line="134"/>
         <source>Artist</source>
         <translation>მსახიობი</translation>
     </message>
     <message>
-        <location filename="../src/music-player/lyric/LyricPage.qml" line="141"/>
+        <location filename="../src/music-player/lyric/LyricPage.qml" line="142"/>
         <source>Album</source>
         <translation>ალბომი</translation>
     </message>
     <message>
-        <location filename="../src/music-player/lyric/LyricPage.qml" line="179"/>
+        <location filename="../src/music-player/lyric/LyricPage.qml" line="180"/>
         <source>No lyrics found</source>
         <translation>საუბრის ტექსტი ვერ მოიძებნა</translation>
     </message>
     <message>
-        <location filename="../src/music-player/lyric/LyricPage.qml" line="189"/>
+        <location filename="../src/music-player/lyric/LyricPage.qml" line="190"/>
         <source>Please put the lyric file (same name as the song) and the song file in the same folder</source>
         <translation>გთხოვთ დაამატოთ საუბრის ტექსტის ფაილი (ერთი და იგივე სახით მუსიკის ფაილს) ერთ საქაღალდეში</translation>
     </message>
@@ -691,52 +693,52 @@
         <translation>ჩასმა/გაჩერება</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="211"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="210"/>
         <source>Previous</source>
         <translation>წინა</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="222"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="221"/>
         <source>Next</source>
         <translation>შემდეგი</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="233"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="232"/>
         <source>Exit</source>
         <translation>გასვლა</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="373"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="372"/>
         <source>Already added to the playlist</source>
         <translation>უკვე დაამატეს სიაში</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="376"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="375"/>
         <source>Added to &quot;%1&quot;</source>
         <translation>დამატეს &quot;%1&quot;-ში</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="379"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="378"/>
         <source>Removed from &quot;My Favorites&quot;</source>
         <translation>გამოიტანა &quot;ჩემი საყვარელი&quot;-დან</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="382"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="381"/>
         <source>A disc is connected</source>
         <translation>დისკი შეერთებულია</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="385"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="384"/>
         <source>Sound Effects Saved</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="396"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="395"/>
         <source>My Favorites</source>
         <translation>ჩემი საყვარელი</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="424"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="423"/>
         <source>All Songs</source>
         <translation>ყველა სინი</translation>
     </message>
@@ -769,7 +771,7 @@
     <message>
         <location filename="../src/music-player/musicbaseandsonglist/MusicBaselistview.qml" line="36"/>
         <source>Library</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/music-player/musicbaseandsonglist/MusicBaselistview.qml" line="40"/>
@@ -794,7 +796,7 @@
     <message>
         <location filename="../src/music-player/musicbaseandsonglist/MusicBaselistview.qml" line="64"/>
         <source>Create playlist</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/music-player/musicbaseandsonglist/MusicBaselistview.qml" line="66"/>
@@ -813,39 +815,39 @@
 <context>
     <name>MusicInfoDialog</name>
     <message>
-        <location filename="../src/music-player/dialogs/MusicInfoDialog.qml" line="71"/>
+        <location filename="../src/music-player/dialogs/MusicInfoDialog.qml" line="72"/>
         <source>Title</source>
         <translation>სათაური</translation>
     </message>
     <message>
-        <location filename="../src/music-player/dialogs/MusicInfoDialog.qml" line="80"/>
+        <location filename="../src/music-player/dialogs/MusicInfoDialog.qml" line="81"/>
         <source>Artist</source>
         <translation>არტისტი</translation>
     </message>
     <message>
-        <location filename="../src/music-player/dialogs/MusicInfoDialog.qml" line="86"/>
+        <location filename="../src/music-player/dialogs/MusicInfoDialog.qml" line="87"/>
         <source>Album</source>
         <translation>ალბომი</translation>
     </message>
     <message>
-        <location filename="../src/music-player/dialogs/MusicInfoDialog.qml" line="95"/>
+        <location filename="../src/music-player/dialogs/MusicInfoDialog.qml" line="96"/>
         <source>Type</source>
         <translation>ტიპი</translation>
     </message>
     <message>
-        <location filename="../src/music-player/dialogs/MusicInfoDialog.qml" line="101"/>
+        <location filename="../src/music-player/dialogs/MusicInfoDialog.qml" line="102"/>
         <source>Size</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/music-player/dialogs/MusicInfoDialog.qml" line="107"/>
+        <location filename="../src/music-player/dialogs/MusicInfoDialog.qml" line="108"/>
         <source>Duration</source>
         <translation>ხანგრძლივობა</translation>
     </message>
     <message>
-        <location filename="../src/music-player/dialogs/MusicInfoDialog.qml" line="114"/>
+        <location filename="../src/music-player/dialogs/MusicInfoDialog.qml" line="115"/>
         <source>Path</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -853,7 +855,7 @@
     <message>
         <location filename="../src/music-player/musicmousemenu/MusicMoreMenu.qml" line="24"/>
         <source>Pause</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/music-player/musicmousemenu/MusicMoreMenu.qml" line="24"/>
@@ -868,7 +870,7 @@
     <message>
         <location filename="../src/music-player/musicmousemenu/MusicMoreMenu.qml" line="52"/>
         <source>Open in file manager</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/music-player/musicmousemenu/MusicMoreMenu.qml" line="62"/>
@@ -888,7 +890,7 @@
     <message>
         <location filename="../src/music-player/musicmousemenu/MusicMoreMenu.qml" line="79"/>
         <source>Encoding</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/music-player/musicmousemenu/MusicMoreMenu.qml" line="104"/>
@@ -899,24 +901,24 @@
 <context>
     <name>QObject</name>
     <message>
-        <location filename="../src/music-player/main.cpp" line="131"/>
+        <location filename="../src/music-player/main.cpp" line="139"/>
         <source>Music is a local music player with beautiful design and simple functions.</source>
         <translation>Music არის ლოკალური სიმღერების მომხმარებელი საკმარისად სარგებლობისთვის, საგულისხმო დიზაინით და მარტივი ფუნქციებით.</translation>
     </message>
     <message>
-        <location filename="../src/music-player/main.cpp" line="133"/>
+        <location filename="../src/music-player/main.cpp" line="141"/>
         <source>Music</source>
         <translation>მუსიკა</translation>
     </message>
     <message>
-        <location filename="../src/music-player/main.cpp" line="143"/>
+        <location filename="../src/music-player/main.cpp" line="151"/>
         <source>Unknown album</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/music-player/main.cpp" line="143"/>
+        <location filename="../src/music-player/main.cpp" line="151"/>
         <source>Unknown artist</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -945,37 +947,37 @@
         <translation>არ არის ძებნის რეზულტატი</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/SearchResultWindow.qml" line="95"/>
+        <location filename="../src/music-player/mainwindow/SearchResultWindow.qml" line="96"/>
         <source>Search Results</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/SearchResultWindow.qml" line="100"/>
+        <location filename="../src/music-player/mainwindow/SearchResultWindow.qml" line="101"/>
         <source>%1 albums - %2 songs</source>
         <translation>%1 ალბომი - %2 სიმღერა</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/SearchResultWindow.qml" line="101"/>
+        <location filename="../src/music-player/mainwindow/SearchResultWindow.qml" line="102"/>
         <source>1 album - 1 song</source>
         <translation>1 ალბომი - 1 სიმღერა</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/SearchResultWindow.qml" line="101"/>
+        <location filename="../src/music-player/mainwindow/SearchResultWindow.qml" line="102"/>
         <source>%1 album - %2 songs</source>
         <translation>%1 ალბომი - %2 სიმღერა</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/SearchResultWindow.qml" line="120"/>
+        <location filename="../src/music-player/mainwindow/SearchResultWindow.qml" line="121"/>
         <source>Music</source>
         <translation>მუსიკა</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/SearchResultWindow.qml" line="128"/>
+        <location filename="../src/music-player/mainwindow/SearchResultWindow.qml" line="129"/>
         <source>Artist</source>
         <translation>არტისტი</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/SearchResultWindow.qml" line="124"/>
+        <location filename="../src/music-player/mainwindow/SearchResultWindow.qml" line="125"/>
         <source>Album</source>
         <translation>ალბომი</translation>
     </message>
@@ -1081,97 +1083,97 @@
 <context>
     <name>Shortcut</name>
     <message>
-        <location filename="../src/music-player/util/shortcut.cpp" line="55"/>
+        <location filename="../src/music-player/util/shortcut.cpp" line="60"/>
         <source>Play</source>
         <translation>გათვისა</translation>
     </message>
     <message>
-        <location filename="../src/music-player/util/shortcut.cpp" line="56"/>
+        <location filename="../src/music-player/util/shortcut.cpp" line="61"/>
         <source>Songs</source>
         <translation>სიმღერები</translation>
     </message>
     <message>
-        <location filename="../src/music-player/util/shortcut.cpp" line="57"/>
+        <location filename="../src/music-player/util/shortcut.cpp" line="62"/>
         <source>Playlists</source>
         <translation>სიმღერების სია</translation>
     </message>
     <message>
-        <location filename="../src/music-player/util/shortcut.cpp" line="58"/>
+        <location filename="../src/music-player/util/shortcut.cpp" line="63"/>
         <source>Settings</source>
         <translation>პარამეტრები</translation>
     </message>
     <message>
-        <location filename="../src/music-player/util/shortcut.cpp" line="65"/>
+        <location filename="../src/music-player/util/shortcut.cpp" line="70"/>
         <source>Play/Pause</source>
         <translation>გათვისა/გაჩერება</translation>
     </message>
     <message>
-        <location filename="../src/music-player/util/shortcut.cpp" line="66"/>
+        <location filename="../src/music-player/util/shortcut.cpp" line="71"/>
         <source>Previous</source>
         <translation>წინა</translation>
     </message>
     <message>
-        <location filename="../src/music-player/util/shortcut.cpp" line="67"/>
+        <location filename="../src/music-player/util/shortcut.cpp" line="72"/>
         <source>Next</source>
         <translation>შემდეგი</translation>
     </message>
     <message>
-        <location filename="../src/music-player/util/shortcut.cpp" line="68"/>
+        <location filename="../src/music-player/util/shortcut.cpp" line="73"/>
         <source>Volume Up</source>
         <translation>ხანგრძლივობის ზრდა</translation>
     </message>
     <message>
-        <location filename="../src/music-player/util/shortcut.cpp" line="69"/>
+        <location filename="../src/music-player/util/shortcut.cpp" line="74"/>
         <source>Volume Down</source>
         <translation>ხანგრძლივობის დაბიჯება</translation>
     </message>
     <message>
-        <location filename="../src/music-player/util/shortcut.cpp" line="70"/>
+        <location filename="../src/music-player/util/shortcut.cpp" line="75"/>
         <source>Mute</source>
         <translation>გააუქმება</translation>
     </message>
     <message>
-        <location filename="../src/music-player/util/shortcut.cpp" line="73"/>
+        <location filename="../src/music-player/util/shortcut.cpp" line="78"/>
         <source>Favorite</source>
         <translation>საყვარელი</translation>
     </message>
     <message>
-        <location filename="../src/music-player/util/shortcut.cpp" line="74"/>
+        <location filename="../src/music-player/util/shortcut.cpp" line="79"/>
         <source>Unfavorite</source>
         <translation>მოყალიბებული</translation>
     </message>
     <message>
-        <location filename="../src/music-player/util/shortcut.cpp" line="75"/>
+        <location filename="../src/music-player/util/shortcut.cpp" line="80"/>
         <source>Song info</source>
         <translation>სიგირის ინფორმაცია</translation>
     </message>
     <message>
-        <location filename="../src/music-player/util/shortcut.cpp" line="78"/>
+        <location filename="../src/music-player/util/shortcut.cpp" line="83"/>
         <source>New playlist</source>
         <translation>ახალი სია</translation>
     </message>
     <message>
-        <location filename="../src/music-player/util/shortcut.cpp" line="79"/>
+        <location filename="../src/music-player/util/shortcut.cpp" line="84"/>
         <source>Add music</source>
         <translation>მუსიკას დამატება</translation>
     </message>
     <message>
-        <location filename="../src/music-player/util/shortcut.cpp" line="80"/>
+        <location filename="../src/music-player/util/shortcut.cpp" line="85"/>
         <source>Rename playlist</source>
         <translation>სიის ხელახლო დასახელება</translation>
     </message>
     <message>
-        <location filename="../src/music-player/util/shortcut.cpp" line="81"/>
+        <location filename="../src/music-player/util/shortcut.cpp" line="86"/>
         <source>Remove from playlist</source>
         <translation>წაშლა სიიდან</translation>
     </message>
     <message>
-        <location filename="../src/music-player/util/shortcut.cpp" line="84"/>
+        <location filename="../src/music-player/util/shortcut.cpp" line="89"/>
         <source>Help</source>
         <translation>დახმარება</translation>
     </message>
     <message>
-        <location filename="../src/music-player/util/shortcut.cpp" line="85"/>
+        <location filename="../src/music-player/util/shortcut.cpp" line="90"/>
         <source>Display shortcuts</source>
         <translation>სამართალების ჩვენება</translation>
     </message>
@@ -1192,22 +1194,22 @@
 <context>
     <name>SidebarMenu</name>
     <message>
-        <location filename="../src/music-player/musicmousemenu/SidebarMenu.qml" line="22"/>
+        <location filename="../src/music-player/musicmousemenu/SidebarMenu.qml" line="26"/>
         <source>Play</source>
         <translation>საუბრის დასაწყებად</translation>
     </message>
     <message>
-        <location filename="../src/music-player/musicmousemenu/SidebarMenu.qml" line="29"/>
+        <location filename="../src/music-player/musicmousemenu/SidebarMenu.qml" line="33"/>
         <source>Add songs</source>
         <translation>სინის დამატება</translation>
     </message>
     <message>
-        <location filename="../src/music-player/musicmousemenu/SidebarMenu.qml" line="38"/>
+        <location filename="../src/music-player/musicmousemenu/SidebarMenu.qml" line="42"/>
         <source>Rename</source>
         <translation>ხელახლო დასახელება</translation>
     </message>
     <message>
-        <location filename="../src/music-player/musicmousemenu/SidebarMenu.qml" line="52"/>
+        <location filename="../src/music-player/musicmousemenu/SidebarMenu.qml" line="56"/>
         <source>Delete</source>
         <translation>წაშლა</translation>
     </message>
@@ -1226,16 +1228,20 @@
     </message>
     <message>
         <location filename="../src/music-player/allItems/SortMenu.qml" line="34"/>
+        <location filename="../src/music-player/allItems/SortMenu.qml" line="41"/>
+        <location filename="../src/music-player/allItems/SortMenu.qml" line="46"/>
         <source>Date added</source>
         <translation>დამატების date</translation>
     </message>
     <message>
         <location filename="../src/music-player/allItems/SortMenu.qml" line="37"/>
+        <location filename="../src/music-player/allItems/SortMenu.qml" line="47"/>
         <source>Album</source>
         <translation>ალბომი</translation>
     </message>
     <message>
         <location filename="../src/music-player/allItems/SortMenu.qml" line="36"/>
+        <location filename="../src/music-player/allItems/SortMenu.qml" line="42"/>
         <source>Artist</source>
         <translation>არტისტი</translation>
     </message>
@@ -1274,62 +1280,62 @@
 <context>
     <name>Toolbar</name>
     <message>
-        <location filename="../src/music-player/mainwindow/Toolbar.qml" line="43"/>
+        <location filename="../src/music-player/mainwindow/Toolbar.qml" line="42"/>
         <source>Sequential play</source>
         <translation>სერიალური საუბრის დასაწყებად</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/Toolbar.qml" line="43"/>
+        <location filename="../src/music-player/mainwindow/Toolbar.qml" line="42"/>
         <source>List loop</source>
         <translation>სიის დამატება</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/Toolbar.qml" line="43"/>
+        <location filename="../src/music-player/mainwindow/Toolbar.qml" line="42"/>
         <source>Single loop</source>
         <translation>ერთი სიის დამატება</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/Toolbar.qml" line="43"/>
+        <location filename="../src/music-player/mainwindow/Toolbar.qml" line="42"/>
         <source>Shuffle</source>
         <translation>შაფული</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/Toolbar.qml" line="207"/>
+        <location filename="../src/music-player/mainwindow/Toolbar.qml" line="209"/>
         <source>Unfavorite</source>
         <translation>მოყალიბებული</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/Toolbar.qml" line="207"/>
+        <location filename="../src/music-player/mainwindow/Toolbar.qml" line="209"/>
         <source>Favorite</source>
         <translation>საყალიბებული</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/Toolbar.qml" line="220"/>
+        <location filename="../src/music-player/mainwindow/Toolbar.qml" line="222"/>
         <source>My Favorites</source>
         <translation>ჩემი საყალიბები</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/Toolbar.qml" line="238"/>
+        <location filename="../src/music-player/mainwindow/Toolbar.qml" line="240"/>
         <source>Previous</source>
         <translation>წინა</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/Toolbar.qml" line="259"/>
+        <location filename="../src/music-player/mainwindow/Toolbar.qml" line="261"/>
         <source>Play/Pause</source>
         <translation>გათვირმადება/გაჩერება</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/Toolbar.qml" line="280"/>
+        <location filename="../src/music-player/mainwindow/Toolbar.qml" line="282"/>
         <source>Next</source>
         <translation>შემდეგი</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/Toolbar.qml" line="389"/>
+        <location filename="../src/music-player/mainwindow/Toolbar.qml" line="388"/>
         <source>Lyrics</source>
         <translation>ტექსტები</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/Toolbar.qml" line="438"/>
+        <location filename="../src/music-player/mainwindow/Toolbar.qml" line="437"/>
         <source>Play Queue</source>
         <translation>თამამში მიმდინარე სიმღერები</translation>
     </message>
@@ -1337,57 +1343,58 @@
 <context>
     <name>WindowTitlebar</name>
     <message>
-        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="56"/>
+        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="47"/>
         <source>Add playlist</source>
         <translation>სიმღერების სიას დამატება</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="58"/>
+        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="49"/>
         <source>New playlist</source>
         <translation>ახალი სია</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="63"/>
+        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="54"/>
+        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="331"/>
         <source>Add music</source>
         <translation>სიმღერების დამატება</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="71"/>
+        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="62"/>
         <source>Equalizer</source>
         <translation>სიმღəრის განსაზღვრვა</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="82"/>
+        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="73"/>
         <source>Settings</source>
         <translation>პარამეტრები</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="96"/>
+        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="87"/>
         <source>Music</source>
         <translation>მუსიკა</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="98"/>
+        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="89"/>
         <source>Music is a local music player with beautiful design and simple functions.</source>
         <translation>Music არის ლოკალური სიმღერების მომხმარებელი საკმარისად სარგებლობისთვის, საგულისხმო დიზაინით და მარტივი ფუნქციებით.</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="99"/>
+        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="90"/>
         <source>Version:</source>
         <translation>ვერსია:</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="213"/>
+        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="204"/>
         <source>Previous page</source>
         <translation>წინა გვერდი</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="229"/>
+        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="220"/>
         <source>Next page</source>
         <translation>შემდეგი გვერდი</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="239"/>
+        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="230"/>
         <source>Search</source>
         <translation>ძებნა</translation>
     </message>

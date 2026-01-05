@@ -1,23 +1,25 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="ru_UA" sourcelanguage="en_US">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.1" language="ru_UA" sourcelanguage="en_US">
 <context>
     <name>AlbumDefaultPage</name>
     <message>
-        <location filename="../src/music-player/albumlist/AlbumDefaultPage.qml" line="35"/>
+        <location filename="../src/music-player/albumlist/AlbumDefaultPage.qml" line="36"/>
         <source>Add Songs</source>
         <translation>Добавить песни</translation>
     </message>
     <message>
-        <location filename="../src/music-player/albumlist/AlbumDefaultPage.qml" line="43"/>
+        <location filename="../src/music-player/albumlist/AlbumDefaultPage.qml" line="44"/>
         <source>Open Folders</source>
         <translation>Открыть папки</translation>
     </message>
     <message>
-        <location filename="../src/music-player/albumlist/AlbumDefaultPage.qml" line="59"/>
+        <location filename="../src/music-player/albumlist/AlbumDefaultPage.qml" line="60"/>
         <source>Drag music files here or</source>
         <translation>Перетащите музыкальные файлы сюда или</translation>
     </message>
     <message>
-        <location filename="../src/music-player/albumlist/AlbumDefaultPage.qml" line="63"/>
+        <location filename="../src/music-player/albumlist/AlbumDefaultPage.qml" line="64"/>
         <source> scan the Music directory</source>
         <translation>сканировать папку Music</translation>
     </message>
@@ -105,7 +107,7 @@
 <context>
     <name>AlbumSublistDelegate</name>
     <message>
-        <location filename="../src/music-player/musicsublist/AlbumSublistDelegate.qml" line="147"/>
+        <location filename="../src/music-player/musicsublist/AlbumSublistDelegate.qml" line="196"/>
         <source>My Favorites</source>
         <translation>Мои избранные</translation>
     </message>
@@ -241,22 +243,22 @@
 <context>
     <name>ArtistDefaultPage</name>
     <message>
-        <location filename="../src/music-player/singerlist/ArtistDefaultPage.qml" line="36"/>
+        <location filename="../src/music-player/singerlist/ArtistDefaultPage.qml" line="37"/>
         <source>Add Songs</source>
         <translation>Добавить песни</translation>
     </message>
     <message>
-        <location filename="../src/music-player/singerlist/ArtistDefaultPage.qml" line="44"/>
+        <location filename="../src/music-player/singerlist/ArtistDefaultPage.qml" line="45"/>
         <source>Open Folders</source>
         <translation>Открыть папки</translation>
     </message>
     <message>
-        <location filename="../src/music-player/singerlist/ArtistDefaultPage.qml" line="60"/>
+        <location filename="../src/music-player/singerlist/ArtistDefaultPage.qml" line="61"/>
         <source>Drag music files here or</source>
         <translation>Перетащите музыкальные файлы сюда или</translation>
     </message>
     <message>
-        <location filename="../src/music-player/singerlist/ArtistDefaultPage.qml" line="64"/>
+        <location filename="../src/music-player/singerlist/ArtistDefaultPage.qml" line="65"/>
         <source> scan the Music directory</source>
         <translation>сканировать музыкальную папку</translation>
     </message>
@@ -295,7 +297,7 @@
 <context>
     <name>ArtistSublistDelegate</name>
     <message>
-        <location filename="../src/music-player/musicsublist/ArtistSublistDelegate.qml" line="102"/>
+        <location filename="../src/music-player/musicsublist/ArtistSublistDelegate.qml" line="147"/>
         <source>My Favorites</source>
         <translation>Мои избранные</translation>
     </message>
@@ -423,7 +425,7 @@
     <message>
         <location filename="../src/music-player/musicbaseandsonglist/CustomPlaylistModel.qml" line="86"/>
         <source>CD</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -527,7 +529,7 @@
     <message>
         <location filename="../src/music-player/dialogs/EqualizerDialog.qml" line="21"/>
         <source>Full Treble</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/music-player/dialogs/EqualizerDialog.qml" line="22"/>
@@ -585,12 +587,12 @@
         <translation>Техно</translation>
     </message>
     <message>
-        <location filename="../src/music-player/dialogs/EqualizerDialog.qml" line="106"/>
+        <location filename="../src/music-player/dialogs/EqualizerDialog.qml" line="111"/>
         <source>Equalizer</source>
         <translation>Эквалайзер</translation>
     </message>
     <message>
-        <location filename="../src/music-player/dialogs/EqualizerDialog.qml" line="182"/>
+        <location filename="../src/music-player/dialogs/EqualizerDialog.qml" line="187"/>
         <source>Save</source>
         <translation>Сохранить</translation>
     </message>
@@ -657,22 +659,22 @@
 <context>
     <name>LyricPage</name>
     <message>
-        <location filename="../src/music-player/lyric/LyricPage.qml" line="133"/>
+        <location filename="../src/music-player/lyric/LyricPage.qml" line="134"/>
         <source>Artist</source>
         <translation>Исполнитель</translation>
     </message>
     <message>
-        <location filename="../src/music-player/lyric/LyricPage.qml" line="141"/>
+        <location filename="../src/music-player/lyric/LyricPage.qml" line="142"/>
         <source>Album</source>
         <translation>Альбом</translation>
     </message>
     <message>
-        <location filename="../src/music-player/lyric/LyricPage.qml" line="179"/>
+        <location filename="../src/music-player/lyric/LyricPage.qml" line="180"/>
         <source>No lyrics found</source>
         <translation>Лирики не найдены</translation>
     </message>
     <message>
-        <location filename="../src/music-player/lyric/LyricPage.qml" line="189"/>
+        <location filename="../src/music-player/lyric/LyricPage.qml" line="190"/>
         <source>Please put the lyric file (same name as the song) and the song file in the same folder</source>
         <translation>Пожалуйста, поместите файл лирики (такой же, как у песни) и файл песни в один и тот же папку</translation>
     </message>
@@ -691,52 +693,52 @@
         <translation>Поставить/приостановить</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="211"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="210"/>
         <source>Previous</source>
         <translation>Предыдущая</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="222"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="221"/>
         <source>Next</source>
         <translation>Следующая</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="233"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="232"/>
         <source>Exit</source>
         <translation>Выход</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="373"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="372"/>
         <source>Already added to the playlist</source>
         <translation>Уже добавлен в плейлист</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="376"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="375"/>
         <source>Added to &quot;%1&quot;</source>
         <translation>Добавлен в &quot;%1&quot;</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="379"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="378"/>
         <source>Removed from &quot;My Favorites&quot;</source>
         <translation>Удалён из &quot;Избранные&quot;</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="382"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="381"/>
         <source>A disc is connected</source>
         <translation>Подключен диск</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="385"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="384"/>
         <source>Sound Effects Saved</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="396"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="395"/>
         <source>My Favorites</source>
         <translation>Избранные</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="424"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="423"/>
         <source>All Songs</source>
         <translation>Все песни</translation>
     </message>
@@ -813,37 +815,37 @@
 <context>
     <name>MusicInfoDialog</name>
     <message>
-        <location filename="../src/music-player/dialogs/MusicInfoDialog.qml" line="71"/>
+        <location filename="../src/music-player/dialogs/MusicInfoDialog.qml" line="72"/>
         <source>Title</source>
         <translation>Название</translation>
     </message>
     <message>
-        <location filename="../src/music-player/dialogs/MusicInfoDialog.qml" line="80"/>
+        <location filename="../src/music-player/dialogs/MusicInfoDialog.qml" line="81"/>
         <source>Artist</source>
         <translation>Исполнитель</translation>
     </message>
     <message>
-        <location filename="../src/music-player/dialogs/MusicInfoDialog.qml" line="86"/>
+        <location filename="../src/music-player/dialogs/MusicInfoDialog.qml" line="87"/>
         <source>Album</source>
         <translation>Альбом</translation>
     </message>
     <message>
-        <location filename="../src/music-player/dialogs/MusicInfoDialog.qml" line="95"/>
+        <location filename="../src/music-player/dialogs/MusicInfoDialog.qml" line="96"/>
         <source>Type</source>
         <translation>Тип</translation>
     </message>
     <message>
-        <location filename="../src/music-player/dialogs/MusicInfoDialog.qml" line="101"/>
+        <location filename="../src/music-player/dialogs/MusicInfoDialog.qml" line="102"/>
         <source>Size</source>
         <translation>Размер</translation>
     </message>
     <message>
-        <location filename="../src/music-player/dialogs/MusicInfoDialog.qml" line="107"/>
+        <location filename="../src/music-player/dialogs/MusicInfoDialog.qml" line="108"/>
         <source>Duration</source>
         <translation>Продолжительность</translation>
     </message>
     <message>
-        <location filename="../src/music-player/dialogs/MusicInfoDialog.qml" line="114"/>
+        <location filename="../src/music-player/dialogs/MusicInfoDialog.qml" line="115"/>
         <source>Path</source>
         <translation>Путь</translation>
     </message>
@@ -888,7 +890,7 @@
     <message>
         <location filename="../src/music-player/musicmousemenu/MusicMoreMenu.qml" line="79"/>
         <source>Encoding</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/music-player/musicmousemenu/MusicMoreMenu.qml" line="104"/>
@@ -899,24 +901,24 @@
 <context>
     <name>QObject</name>
     <message>
-        <location filename="../src/music-player/main.cpp" line="131"/>
+        <location filename="../src/music-player/main.cpp" line="139"/>
         <source>Music is a local music player with beautiful design and simple functions.</source>
         <translation>Музыка — это локальный проигрыватель музыки с красивым дизайном и простыми функциями.</translation>
     </message>
     <message>
-        <location filename="../src/music-player/main.cpp" line="133"/>
+        <location filename="../src/music-player/main.cpp" line="141"/>
         <source>Music</source>
         <translation>Музыка</translation>
     </message>
     <message>
-        <location filename="../src/music-player/main.cpp" line="143"/>
+        <location filename="../src/music-player/main.cpp" line="151"/>
         <source>Unknown album</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/music-player/main.cpp" line="143"/>
+        <location filename="../src/music-player/main.cpp" line="151"/>
         <source>Unknown artist</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -942,40 +944,40 @@
     <message>
         <location filename="../src/music-player/mainwindow/SearchResultWindow.qml" line="55"/>
         <source>No search results</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/SearchResultWindow.qml" line="95"/>
+        <location filename="../src/music-player/mainwindow/SearchResultWindow.qml" line="96"/>
         <source>Search Results</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/SearchResultWindow.qml" line="100"/>
+        <location filename="../src/music-player/mainwindow/SearchResultWindow.qml" line="101"/>
         <source>%1 albums - %2 songs</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">%1 альбомов - %2 песен</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/SearchResultWindow.qml" line="101"/>
+        <location filename="../src/music-player/mainwindow/SearchResultWindow.qml" line="102"/>
         <source>1 album - 1 song</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/SearchResultWindow.qml" line="101"/>
+        <location filename="../src/music-player/mainwindow/SearchResultWindow.qml" line="102"/>
         <source>%1 album - %2 songs</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/SearchResultWindow.qml" line="120"/>
+        <location filename="../src/music-player/mainwindow/SearchResultWindow.qml" line="121"/>
         <source>Music</source>
         <translation>Музыка</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/SearchResultWindow.qml" line="128"/>
+        <location filename="../src/music-player/mainwindow/SearchResultWindow.qml" line="129"/>
         <source>Artist</source>
         <translation>Исполнитель</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/SearchResultWindow.qml" line="124"/>
+        <location filename="../src/music-player/mainwindow/SearchResultWindow.qml" line="125"/>
         <source>Album</source>
         <translation>Альбом</translation>
     </message>
@@ -985,7 +987,7 @@
     <message>
         <location filename="../src/music-player/dialogs/SettingsDialog.qml" line="30"/>
         <source>Basic</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/music-player/dialogs/SettingsDialog.qml" line="34"/>
@@ -995,22 +997,22 @@
     <message>
         <location filename="../src/music-player/dialogs/SettingsDialog.qml" line="42"/>
         <source>Autoplay</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/music-player/dialogs/SettingsDialog.qml" line="53"/>
         <source>Remember playback position on exit</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/music-player/dialogs/SettingsDialog.qml" line="66"/>
         <source>Enable fade in/out</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/music-player/dialogs/SettingsDialog.qml" line="78"/>
         <source>Close Main Window</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/music-player/dialogs/SettingsDialog.qml" line="91"/>
@@ -1025,12 +1027,12 @@
     <message>
         <location filename="../src/music-player/dialogs/SettingsDialog.qml" line="105"/>
         <source>Ask me always</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/music-player/dialogs/SettingsDialog.qml" line="137"/>
         <source>Shortcuts</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/music-player/dialogs/SettingsDialog.qml" line="158"/>
@@ -1081,97 +1083,97 @@
 <context>
     <name>Shortcut</name>
     <message>
-        <location filename="../src/music-player/util/shortcut.cpp" line="55"/>
+        <location filename="../src/music-player/util/shortcut.cpp" line="60"/>
         <source>Play</source>
         <translation>Воспроизвести</translation>
     </message>
     <message>
-        <location filename="../src/music-player/util/shortcut.cpp" line="56"/>
+        <location filename="../src/music-player/util/shortcut.cpp" line="61"/>
         <source>Songs</source>
         <translation>Песни</translation>
     </message>
     <message>
-        <location filename="../src/music-player/util/shortcut.cpp" line="57"/>
+        <location filename="../src/music-player/util/shortcut.cpp" line="62"/>
         <source>Playlists</source>
         <translation>Списки воспроизведения</translation>
     </message>
     <message>
-        <location filename="../src/music-player/util/shortcut.cpp" line="58"/>
+        <location filename="../src/music-player/util/shortcut.cpp" line="63"/>
         <source>Settings</source>
         <translation>Настройки</translation>
     </message>
     <message>
-        <location filename="../src/music-player/util/shortcut.cpp" line="65"/>
+        <location filename="../src/music-player/util/shortcut.cpp" line="70"/>
         <source>Play/Pause</source>
         <translation>Воспроизвести/Пауза</translation>
     </message>
     <message>
-        <location filename="../src/music-player/util/shortcut.cpp" line="66"/>
+        <location filename="../src/music-player/util/shortcut.cpp" line="71"/>
         <source>Previous</source>
         <translation>Предыдущий</translation>
     </message>
     <message>
-        <location filename="../src/music-player/util/shortcut.cpp" line="67"/>
+        <location filename="../src/music-player/util/shortcut.cpp" line="72"/>
         <source>Next</source>
         <translation>Следующий</translation>
     </message>
     <message>
-        <location filename="../src/music-player/util/shortcut.cpp" line="68"/>
+        <location filename="../src/music-player/util/shortcut.cpp" line="73"/>
         <source>Volume Up</source>
         <translation>Громче</translation>
     </message>
     <message>
-        <location filename="../src/music-player/util/shortcut.cpp" line="69"/>
+        <location filename="../src/music-player/util/shortcut.cpp" line="74"/>
         <source>Volume Down</source>
         <translation>Тише</translation>
     </message>
     <message>
-        <location filename="../src/music-player/util/shortcut.cpp" line="70"/>
+        <location filename="../src/music-player/util/shortcut.cpp" line="75"/>
         <source>Mute</source>
         <translation>Выключить звук</translation>
     </message>
     <message>
-        <location filename="../src/music-player/util/shortcut.cpp" line="73"/>
+        <location filename="../src/music-player/util/shortcut.cpp" line="78"/>
         <source>Favorite</source>
         <translation>Избранное</translation>
     </message>
     <message>
-        <location filename="../src/music-player/util/shortcut.cpp" line="74"/>
+        <location filename="../src/music-player/util/shortcut.cpp" line="79"/>
         <source>Unfavorite</source>
         <translation>Снять с избранных</translation>
     </message>
     <message>
-        <location filename="../src/music-player/util/shortcut.cpp" line="75"/>
+        <location filename="../src/music-player/util/shortcut.cpp" line="80"/>
         <source>Song info</source>
         <translation>Информация о песне</translation>
     </message>
     <message>
-        <location filename="../src/music-player/util/shortcut.cpp" line="78"/>
+        <location filename="../src/music-player/util/shortcut.cpp" line="83"/>
         <source>New playlist</source>
         <translation>Новый список воспроизведения</translation>
     </message>
     <message>
-        <location filename="../src/music-player/util/shortcut.cpp" line="79"/>
+        <location filename="../src/music-player/util/shortcut.cpp" line="84"/>
         <source>Add music</source>
         <translation>Добавить му音乐</translation>
     </message>
     <message>
-        <location filename="../src/music-player/util/shortcut.cpp" line="80"/>
+        <location filename="../src/music-player/util/shortcut.cpp" line="85"/>
         <source>Rename playlist</source>
         <translation>Переименовать список воспроизведения</translation>
     </message>
     <message>
-        <location filename="../src/music-player/util/shortcut.cpp" line="81"/>
+        <location filename="../src/music-player/util/shortcut.cpp" line="86"/>
         <source>Remove from playlist</source>
         <translation>Удалить из списка воспроизведения</translation>
     </message>
     <message>
-        <location filename="../src/music-player/util/shortcut.cpp" line="84"/>
+        <location filename="../src/music-player/util/shortcut.cpp" line="89"/>
         <source>Help</source>
         <translation>Помощь</translation>
     </message>
     <message>
-        <location filename="../src/music-player/util/shortcut.cpp" line="85"/>
+        <location filename="../src/music-player/util/shortcut.cpp" line="90"/>
         <source>Display shortcuts</source>
         <translation>Показать комбинации</translation>
     </message>
@@ -1192,22 +1194,22 @@
 <context>
     <name>SidebarMenu</name>
     <message>
-        <location filename="../src/music-player/musicmousemenu/SidebarMenu.qml" line="22"/>
+        <location filename="../src/music-player/musicmousemenu/SidebarMenu.qml" line="26"/>
         <source>Play</source>
         <translation>Воспроизвести</translation>
     </message>
     <message>
-        <location filename="../src/music-player/musicmousemenu/SidebarMenu.qml" line="29"/>
+        <location filename="../src/music-player/musicmousemenu/SidebarMenu.qml" line="33"/>
         <source>Add songs</source>
         <translation>Добавить песни</translation>
     </message>
     <message>
-        <location filename="../src/music-player/musicmousemenu/SidebarMenu.qml" line="38"/>
+        <location filename="../src/music-player/musicmousemenu/SidebarMenu.qml" line="42"/>
         <source>Rename</source>
         <translation>Переименовать</translation>
     </message>
     <message>
-        <location filename="../src/music-player/musicmousemenu/SidebarMenu.qml" line="52"/>
+        <location filename="../src/music-player/musicmousemenu/SidebarMenu.qml" line="56"/>
         <source>Delete</source>
         <translation>Удалить</translation>
     </message>
@@ -1226,16 +1228,20 @@
     </message>
     <message>
         <location filename="../src/music-player/allItems/SortMenu.qml" line="34"/>
+        <location filename="../src/music-player/allItems/SortMenu.qml" line="41"/>
+        <location filename="../src/music-player/allItems/SortMenu.qml" line="46"/>
         <source>Date added</source>
         <translation>Дата добавления</translation>
     </message>
     <message>
         <location filename="../src/music-player/allItems/SortMenu.qml" line="37"/>
+        <location filename="../src/music-player/allItems/SortMenu.qml" line="47"/>
         <source>Album</source>
         <translation>Альбом</translation>
     </message>
     <message>
         <location filename="../src/music-player/allItems/SortMenu.qml" line="36"/>
+        <location filename="../src/music-player/allItems/SortMenu.qml" line="42"/>
         <source>Artist</source>
         <translation>Исполнитель</translation>
     </message>
@@ -1274,62 +1280,62 @@
 <context>
     <name>Toolbar</name>
     <message>
-        <location filename="../src/music-player/mainwindow/Toolbar.qml" line="43"/>
+        <location filename="../src/music-player/mainwindow/Toolbar.qml" line="42"/>
         <source>Sequential play</source>
         <translation>Последовательное воспроизведение</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/Toolbar.qml" line="43"/>
+        <location filename="../src/music-player/mainwindow/Toolbar.qml" line="42"/>
         <source>List loop</source>
         <translation>Цикл списка</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/Toolbar.qml" line="43"/>
+        <location filename="../src/music-player/mainwindow/Toolbar.qml" line="42"/>
         <source>Single loop</source>
         <translation>Цикл одной песни</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/Toolbar.qml" line="43"/>
+        <location filename="../src/music-player/mainwindow/Toolbar.qml" line="42"/>
         <source>Shuffle</source>
         <translation>Перемешать</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/Toolbar.qml" line="207"/>
+        <location filename="../src/music-player/mainwindow/Toolbar.qml" line="209"/>
         <source>Unfavorite</source>
         <translation>Удалить из избранного</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/Toolbar.qml" line="207"/>
+        <location filename="../src/music-player/mainwindow/Toolbar.qml" line="209"/>
         <source>Favorite</source>
         <translation>Добавить в избранное</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/Toolbar.qml" line="220"/>
+        <location filename="../src/music-player/mainwindow/Toolbar.qml" line="222"/>
         <source>My Favorites</source>
         <translation>Мои избранные</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/Toolbar.qml" line="238"/>
+        <location filename="../src/music-player/mainwindow/Toolbar.qml" line="240"/>
         <source>Previous</source>
         <translation>Предыдущая</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/Toolbar.qml" line="259"/>
+        <location filename="../src/music-player/mainwindow/Toolbar.qml" line="261"/>
         <source>Play/Pause</source>
         <translation>Воспроизвести/Пауза</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/Toolbar.qml" line="280"/>
+        <location filename="../src/music-player/mainwindow/Toolbar.qml" line="282"/>
         <source>Next</source>
         <translation>Следующая</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/Toolbar.qml" line="389"/>
+        <location filename="../src/music-player/mainwindow/Toolbar.qml" line="388"/>
         <source>Lyrics</source>
         <translation>Текст песни</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/Toolbar.qml" line="438"/>
+        <location filename="../src/music-player/mainwindow/Toolbar.qml" line="437"/>
         <source>Play Queue</source>
         <translation>Очередь воспроизведения</translation>
     </message>
@@ -1337,57 +1343,58 @@
 <context>
     <name>WindowTitlebar</name>
     <message>
-        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="56"/>
+        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="47"/>
         <source>Add playlist</source>
         <translation>Добавить плейлист</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="58"/>
+        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="49"/>
         <source>New playlist</source>
         <translation>Новый плейлист</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="63"/>
+        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="54"/>
+        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="331"/>
         <source>Add music</source>
         <translation>Добавить музыку</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="71"/>
+        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="62"/>
         <source>Equalizer</source>
         <translation>Эквализатор</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="82"/>
+        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="73"/>
         <source>Settings</source>
         <translation>Настройки</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="96"/>
+        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="87"/>
         <source>Music</source>
         <translation>Музыка</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="98"/>
+        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="89"/>
         <source>Music is a local music player with beautiful design and simple functions.</source>
         <translation>Музыка — это локальный проигрыватель музыки с красивым дизайном и простыми функциями.</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="99"/>
+        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="90"/>
         <source>Version:</source>
         <translation>Версия:</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="213"/>
+        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="204"/>
         <source>Previous page</source>
         <translation>Предыдущая страница</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="229"/>
+        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="220"/>
         <source>Next page</source>
         <translation>Следующая страница</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="239"/>
+        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="230"/>
         <source>Search</source>
         <translation>Поиск</translation>
     </message>

@@ -1,23 +1,25 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="sw" sourcelanguage="en_US">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.1" language="sw" sourcelanguage="en_US">
 <context>
     <name>AlbumDefaultPage</name>
     <message>
-        <location filename="../src/music-player/albumlist/AlbumDefaultPage.qml" line="35"/>
+        <location filename="../src/music-player/albumlist/AlbumDefaultPage.qml" line="36"/>
         <source>Add Songs</source>
         <translation>Onesha Muziki</translation>
     </message>
     <message>
-        <location filename="../src/music-player/albumlist/AlbumDefaultPage.qml" line="43"/>
+        <location filename="../src/music-player/albumlist/AlbumDefaultPage.qml" line="44"/>
         <source>Open Folders</source>
         <translation>Onesha Mifumo</translation>
     </message>
     <message>
-        <location filename="../src/music-player/albumlist/AlbumDefaultPage.qml" line="59"/>
+        <location filename="../src/music-player/albumlist/AlbumDefaultPage.qml" line="60"/>
         <source>Drag music files here or</source>
         <translation>Jitisha faili ya muziki hangu au</translation>
     </message>
     <message>
-        <location filename="../src/music-player/albumlist/AlbumDefaultPage.qml" line="63"/>
+        <location filename="../src/music-player/albumlist/AlbumDefaultPage.qml" line="64"/>
         <source> scan the Music directory</source>
         <translation>kuchapisha jumla ya kifimo cha muziki</translation>
     </message>
@@ -105,7 +107,7 @@
 <context>
     <name>AlbumSublistDelegate</name>
     <message>
-        <location filename="../src/music-player/musicsublist/AlbumSublistDelegate.qml" line="147"/>
+        <location filename="../src/music-player/musicsublist/AlbumSublistDelegate.qml" line="196"/>
         <source>My Favorites</source>
         <translation>Mwanaume Wangu</translation>
     </message>
@@ -241,22 +243,22 @@
 <context>
     <name>ArtistDefaultPage</name>
     <message>
-        <location filename="../src/music-player/singerlist/ArtistDefaultPage.qml" line="36"/>
+        <location filename="../src/music-player/singerlist/ArtistDefaultPage.qml" line="37"/>
         <source>Add Songs</source>
         <translation>Ongeza Kipengele</translation>
     </message>
     <message>
-        <location filename="../src/music-player/singerlist/ArtistDefaultPage.qml" line="44"/>
+        <location filename="../src/music-player/singerlist/ArtistDefaultPage.qml" line="45"/>
         <source>Open Folders</source>
         <translation>Ongeza Folders</translation>
     </message>
     <message>
-        <location filename="../src/music-player/singerlist/ArtistDefaultPage.qml" line="60"/>
+        <location filename="../src/music-player/singerlist/ArtistDefaultPage.qml" line="61"/>
         <source>Drag music files here or</source>
         <translation>Ganduka kifunge cha muziki hapa au</translation>
     </message>
     <message>
-        <location filename="../src/music-player/singerlist/ArtistDefaultPage.qml" line="64"/>
+        <location filename="../src/music-player/singerlist/ArtistDefaultPage.qml" line="65"/>
         <source> scan the Music directory</source>
         <translation>Tafuta kifunge cha kifunge cha Music</translation>
     </message>
@@ -295,7 +297,7 @@
 <context>
     <name>ArtistSublistDelegate</name>
     <message>
-        <location filename="../src/music-player/musicsublist/ArtistSublistDelegate.qml" line="102"/>
+        <location filename="../src/music-player/musicsublist/ArtistSublistDelegate.qml" line="147"/>
         <source>My Favorites</source>
         <translation>Wango wa Moyo</translation>
     </message>
@@ -423,7 +425,7 @@
     <message>
         <location filename="../src/music-player/musicbaseandsonglist/CustomPlaylistModel.qml" line="86"/>
         <source>CD</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -572,7 +574,7 @@
     <message>
         <location filename="../src/music-player/dialogs/EqualizerDialog.qml" line="30"/>
         <source>Soft</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/music-player/dialogs/EqualizerDialog.qml" line="31"/>
@@ -585,12 +587,12 @@
         <translation>Techno</translation>
     </message>
     <message>
-        <location filename="../src/music-player/dialogs/EqualizerDialog.qml" line="106"/>
+        <location filename="../src/music-player/dialogs/EqualizerDialog.qml" line="111"/>
         <source>Equalizer</source>
         <translation>Equalizer</translation>
     </message>
     <message>
-        <location filename="../src/music-player/dialogs/EqualizerDialog.qml" line="182"/>
+        <location filename="../src/music-player/dialogs/EqualizerDialog.qml" line="187"/>
         <source>Save</source>
         <translation>Hifadhi</translation>
     </message>
@@ -657,22 +659,22 @@
 <context>
     <name>LyricPage</name>
     <message>
-        <location filename="../src/music-player/lyric/LyricPage.qml" line="133"/>
+        <location filename="../src/music-player/lyric/LyricPage.qml" line="134"/>
         <source>Artist</source>
         <translation>Mwana</translation>
     </message>
     <message>
-        <location filename="../src/music-player/lyric/LyricPage.qml" line="141"/>
+        <location filename="../src/music-player/lyric/LyricPage.qml" line="142"/>
         <source>Album</source>
         <translation>Album</translation>
     </message>
     <message>
-        <location filename="../src/music-player/lyric/LyricPage.qml" line="179"/>
+        <location filename="../src/music-player/lyric/LyricPage.qml" line="180"/>
         <source>No lyrics found</source>
         <translation>Hauko matokeo ya matokeo</translation>
     </message>
     <message>
-        <location filename="../src/music-player/lyric/LyricPage.qml" line="189"/>
+        <location filename="../src/music-player/lyric/LyricPage.qml" line="190"/>
         <source>Please put the lyric file (same name as the song) and the song file in the same folder</source>
         <translation>Tafuta matokeo ya matokeo (jina ya kwanza kama matokeo) na faili ya matokeo kwenye jina ya kwanza kwenye folder ya kwanza</translation>
     </message>
@@ -691,52 +693,52 @@
         <translation>Kuzalisha/Kuondoa</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="211"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="210"/>
         <source>Previous</source>
         <translation>Mwaka wa kwanza</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="222"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="221"/>
         <source>Next</source>
         <translation>Ingine</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="233"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="232"/>
         <source>Exit</source>
         <translation>Toka</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="373"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="372"/>
         <source>Already added to the playlist</source>
         <translation>Uko uko kwenye playlist</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="376"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="375"/>
         <source>Added to &quot;%1&quot;</source>
         <translation>Uko uko kwenye &quot;%1&quot;</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="379"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="378"/>
         <source>Removed from &quot;My Favorites&quot;</source>
         <translation>Uko umeondoleka kwenye &quot;Mwana wa mazungumzo&quot;</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="382"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="381"/>
         <source>A disc is connected</source>
         <translation>Disc inayotajwa inayotajwa</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="385"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="384"/>
         <source>Sound Effects Saved</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="396"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="395"/>
         <source>My Favorites</source>
         <translation>Mwana wa mazungumzo</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="424"/>
+        <location filename="../src/music-player/mainwindow/MainWindow.qml" line="423"/>
         <source>All Songs</source>
         <translation>Safu ya matokeo</translation>
     </message>
@@ -813,37 +815,37 @@
 <context>
     <name>MusicInfoDialog</name>
     <message>
-        <location filename="../src/music-player/dialogs/MusicInfoDialog.qml" line="71"/>
+        <location filename="../src/music-player/dialogs/MusicInfoDialog.qml" line="72"/>
         <source>Title</source>
         <translation>Jina</translation>
     </message>
     <message>
-        <location filename="../src/music-player/dialogs/MusicInfoDialog.qml" line="80"/>
+        <location filename="../src/music-player/dialogs/MusicInfoDialog.qml" line="81"/>
         <source>Artist</source>
         <translation>Mwenzimu</translation>
     </message>
     <message>
-        <location filename="../src/music-player/dialogs/MusicInfoDialog.qml" line="86"/>
+        <location filename="../src/music-player/dialogs/MusicInfoDialog.qml" line="87"/>
         <source>Album</source>
         <translation>Album</translation>
     </message>
     <message>
-        <location filename="../src/music-player/dialogs/MusicInfoDialog.qml" line="95"/>
+        <location filename="../src/music-player/dialogs/MusicInfoDialog.qml" line="96"/>
         <source>Type</source>
         <translation>Moyoni</translation>
     </message>
     <message>
-        <location filename="../src/music-player/dialogs/MusicInfoDialog.qml" line="101"/>
+        <location filename="../src/music-player/dialogs/MusicInfoDialog.qml" line="102"/>
         <source>Size</source>
         <translation>Ukubwa</translation>
     </message>
     <message>
-        <location filename="../src/music-player/dialogs/MusicInfoDialog.qml" line="107"/>
+        <location filename="../src/music-player/dialogs/MusicInfoDialog.qml" line="108"/>
         <source>Duration</source>
         <translation>Moyoni</translation>
     </message>
     <message>
-        <location filename="../src/music-player/dialogs/MusicInfoDialog.qml" line="114"/>
+        <location filename="../src/music-player/dialogs/MusicInfoDialog.qml" line="115"/>
         <source>Path</source>
         <translation>Jina la Jambla</translation>
     </message>
@@ -899,22 +901,22 @@
 <context>
     <name>QObject</name>
     <message>
-        <location filename="../src/music-player/main.cpp" line="131"/>
+        <location filename="../src/music-player/main.cpp" line="139"/>
         <source>Music is a local music player with beautiful design and simple functions.</source>
         <translation>Muziki ni programu ya jua ya muziki ya kati na uwanja wa muziki ya kati na mazungumzo ya kati.</translation>
     </message>
     <message>
-        <location filename="../src/music-player/main.cpp" line="133"/>
+        <location filename="../src/music-player/main.cpp" line="141"/>
         <source>Music</source>
         <translation>Muziki</translation>
     </message>
     <message>
-        <location filename="../src/music-player/main.cpp" line="143"/>
+        <location filename="../src/music-player/main.cpp" line="151"/>
         <source>Unknown album</source>
         <translation>Album Mwaka</translation>
     </message>
     <message>
-        <location filename="../src/music-player/main.cpp" line="143"/>
+        <location filename="../src/music-player/main.cpp" line="151"/>
         <source>Unknown artist</source>
         <translation>Mwenzimu Mwaka</translation>
     </message>
@@ -945,37 +947,37 @@
         <translation>Hakuna matokeo ya utafutaji</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/SearchResultWindow.qml" line="95"/>
+        <location filename="../src/music-player/mainwindow/SearchResultWindow.qml" line="96"/>
         <source>Search Results</source>
         <translation>Nafasi ya Matokeo</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/SearchResultWindow.qml" line="100"/>
+        <location filename="../src/music-player/mainwindow/SearchResultWindow.qml" line="101"/>
         <source>%1 albums - %2 songs</source>
         <translation>&apos;%1 Albumi - %2 Wajiboko&apos;</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/SearchResultWindow.qml" line="101"/>
+        <location filename="../src/music-player/mainwindow/SearchResultWindow.qml" line="102"/>
         <source>1 album - 1 song</source>
         <translation>1 Albumi - 1 Wajiboko</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/SearchResultWindow.qml" line="101"/>
+        <location filename="../src/music-player/mainwindow/SearchResultWindow.qml" line="102"/>
         <source>%1 album - %2 songs</source>
         <translation>&apos;%1 Albumi - %2 Wajiboko&apos;</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/SearchResultWindow.qml" line="120"/>
+        <location filename="../src/music-player/mainwindow/SearchResultWindow.qml" line="121"/>
         <source>Music</source>
         <translation>Muziki</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/SearchResultWindow.qml" line="128"/>
+        <location filename="../src/music-player/mainwindow/SearchResultWindow.qml" line="129"/>
         <source>Artist</source>
         <translation>Mwaka</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/SearchResultWindow.qml" line="124"/>
+        <location filename="../src/music-player/mainwindow/SearchResultWindow.qml" line="125"/>
         <source>Album</source>
         <translation>Mziki</translation>
     </message>
@@ -1081,97 +1083,97 @@
 <context>
     <name>Shortcut</name>
     <message>
-        <location filename="../src/music-player/util/shortcut.cpp" line="55"/>
+        <location filename="../src/music-player/util/shortcut.cpp" line="60"/>
         <source>Play</source>
         <translation>Ripoti</translation>
     </message>
     <message>
-        <location filename="../src/music-player/util/shortcut.cpp" line="56"/>
+        <location filename="../src/music-player/util/shortcut.cpp" line="61"/>
         <source>Songs</source>
         <translation>Mlango</translation>
     </message>
     <message>
-        <location filename="../src/music-player/util/shortcut.cpp" line="57"/>
+        <location filename="../src/music-player/util/shortcut.cpp" line="62"/>
         <source>Playlists</source>
         <translation>Mlango ya Ripoti</translation>
     </message>
     <message>
-        <location filename="../src/music-player/util/shortcut.cpp" line="58"/>
+        <location filename="../src/music-player/util/shortcut.cpp" line="63"/>
         <source>Settings</source>
         <translation>Sifa</translation>
     </message>
     <message>
-        <location filename="../src/music-player/util/shortcut.cpp" line="65"/>
+        <location filename="../src/music-player/util/shortcut.cpp" line="70"/>
         <source>Play/Pause</source>
         <translation>Ripoti / Kupata</translation>
     </message>
     <message>
-        <location filename="../src/music-player/util/shortcut.cpp" line="66"/>
+        <location filename="../src/music-player/util/shortcut.cpp" line="71"/>
         <source>Previous</source>
         <translation>Mwisho</translation>
     </message>
     <message>
-        <location filename="../src/music-player/util/shortcut.cpp" line="67"/>
+        <location filename="../src/music-player/util/shortcut.cpp" line="72"/>
         <source>Next</source>
         <translation>Ingine</translation>
     </message>
     <message>
-        <location filename="../src/music-player/util/shortcut.cpp" line="68"/>
+        <location filename="../src/music-player/util/shortcut.cpp" line="73"/>
         <source>Volume Up</source>
         <translation>Kilimo cha Kipande</translation>
     </message>
     <message>
-        <location filename="../src/music-player/util/shortcut.cpp" line="69"/>
+        <location filename="../src/music-player/util/shortcut.cpp" line="74"/>
         <source>Volume Down</source>
         <translation>Kilimo cha Kipande</translation>
     </message>
     <message>
-        <location filename="../src/music-player/util/shortcut.cpp" line="70"/>
+        <location filename="../src/music-player/util/shortcut.cpp" line="75"/>
         <source>Mute</source>
         <translation>Zima sauti</translation>
     </message>
     <message>
-        <location filename="../src/music-player/util/shortcut.cpp" line="73"/>
+        <location filename="../src/music-player/util/shortcut.cpp" line="78"/>
         <source>Favorite</source>
         <translation>Mipango</translation>
     </message>
     <message>
-        <location filename="../src/music-player/util/shortcut.cpp" line="74"/>
+        <location filename="../src/music-player/util/shortcut.cpp" line="79"/>
         <source>Unfavorite</source>
         <translation>Futa Mipango</translation>
     </message>
     <message>
-        <location filename="../src/music-player/util/shortcut.cpp" line="75"/>
+        <location filename="../src/music-player/util/shortcut.cpp" line="80"/>
         <source>Song info</source>
         <translation>Mlango ya Mlango</translation>
     </message>
     <message>
-        <location filename="../src/music-player/util/shortcut.cpp" line="78"/>
+        <location filename="../src/music-player/util/shortcut.cpp" line="83"/>
         <source>New playlist</source>
         <translation>Mlango ya Ripoti Mpya</translation>
     </message>
     <message>
-        <location filename="../src/music-player/util/shortcut.cpp" line="79"/>
+        <location filename="../src/music-player/util/shortcut.cpp" line="84"/>
         <source>Add music</source>
         <translation>Ongeza Mlango</translation>
     </message>
     <message>
-        <location filename="../src/music-player/util/shortcut.cpp" line="80"/>
+        <location filename="../src/music-player/util/shortcut.cpp" line="85"/>
         <source>Rename playlist</source>
         <translation>Tazama playlist</translation>
     </message>
     <message>
-        <location filename="../src/music-player/util/shortcut.cpp" line="81"/>
+        <location filename="../src/music-player/util/shortcut.cpp" line="86"/>
         <source>Remove from playlist</source>
         <translation>Ondoka na playlist</translation>
     </message>
     <message>
-        <location filename="../src/music-player/util/shortcut.cpp" line="84"/>
+        <location filename="../src/music-player/util/shortcut.cpp" line="89"/>
         <source>Help</source>
         <translation>Usaidizi</translation>
     </message>
     <message>
-        <location filename="../src/music-player/util/shortcut.cpp" line="85"/>
+        <location filename="../src/music-player/util/shortcut.cpp" line="90"/>
         <source>Display shortcuts</source>
         <translation>Tazama matokeo ya kifalasi</translation>
     </message>
@@ -1192,22 +1194,22 @@
 <context>
     <name>SidebarMenu</name>
     <message>
-        <location filename="../src/music-player/musicmousemenu/SidebarMenu.qml" line="22"/>
+        <location filename="../src/music-player/musicmousemenu/SidebarMenu.qml" line="26"/>
         <source>Play</source>
         <translation>Tazama</translation>
     </message>
     <message>
-        <location filename="../src/music-player/musicmousemenu/SidebarMenu.qml" line="29"/>
+        <location filename="../src/music-player/musicmousemenu/SidebarMenu.qml" line="33"/>
         <source>Add songs</source>
         <translation>Ongeza kipengele</translation>
     </message>
     <message>
-        <location filename="../src/music-player/musicmousemenu/SidebarMenu.qml" line="38"/>
+        <location filename="../src/music-player/musicmousemenu/SidebarMenu.qml" line="42"/>
         <source>Rename</source>
         <translation>Tazama</translation>
     </message>
     <message>
-        <location filename="../src/music-player/musicmousemenu/SidebarMenu.qml" line="52"/>
+        <location filename="../src/music-player/musicmousemenu/SidebarMenu.qml" line="56"/>
         <source>Delete</source>
         <translation>Futa</translation>
     </message>
@@ -1226,16 +1228,20 @@
     </message>
     <message>
         <location filename="../src/music-player/allItems/SortMenu.qml" line="34"/>
+        <location filename="../src/music-player/allItems/SortMenu.qml" line="41"/>
+        <location filename="../src/music-player/allItems/SortMenu.qml" line="46"/>
         <source>Date added</source>
         <translation>Tarehe ya kufunguka</translation>
     </message>
     <message>
         <location filename="../src/music-player/allItems/SortMenu.qml" line="37"/>
+        <location filename="../src/music-player/allItems/SortMenu.qml" line="47"/>
         <source>Album</source>
         <translation>Album</translation>
     </message>
     <message>
         <location filename="../src/music-player/allItems/SortMenu.qml" line="36"/>
+        <location filename="../src/music-player/allItems/SortMenu.qml" line="42"/>
         <source>Artist</source>
         <translation>Mzalendo</translation>
     </message>
@@ -1274,62 +1280,62 @@
 <context>
     <name>Toolbar</name>
     <message>
-        <location filename="../src/music-player/mainwindow/Toolbar.qml" line="43"/>
+        <location filename="../src/music-player/mainwindow/Toolbar.qml" line="42"/>
         <source>Sequential play</source>
         <translation>Tazama kwa sekwensi</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/Toolbar.qml" line="43"/>
+        <location filename="../src/music-player/mainwindow/Toolbar.qml" line="42"/>
         <source>List loop</source>
         <translation>Kifunguka ya lista</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/Toolbar.qml" line="43"/>
+        <location filename="../src/music-player/mainwindow/Toolbar.qml" line="42"/>
         <source>Single loop</source>
         <translation>Kifunguka ya kipengele cha moja</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/Toolbar.qml" line="43"/>
+        <location filename="../src/music-player/mainwindow/Toolbar.qml" line="42"/>
         <source>Shuffle</source>
         <translation>Shuffle</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/Toolbar.qml" line="207"/>
+        <location filename="../src/music-player/mainwindow/Toolbar.qml" line="209"/>
         <source>Unfavorite</source>
         <translation>Ondoka na mwenyekiti</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/Toolbar.qml" line="207"/>
+        <location filename="../src/music-player/mainwindow/Toolbar.qml" line="209"/>
         <source>Favorite</source>
         <translation>Mwenyekiti</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/Toolbar.qml" line="220"/>
+        <location filename="../src/music-player/mainwindow/Toolbar.qml" line="222"/>
         <source>My Favorites</source>
         <translation>Mwenyekiti Wangu</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/Toolbar.qml" line="238"/>
+        <location filename="../src/music-player/mainwindow/Toolbar.qml" line="240"/>
         <source>Previous</source>
         <translation>Mwisho wa kipengele cha moja</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/Toolbar.qml" line="259"/>
+        <location filename="../src/music-player/mainwindow/Toolbar.qml" line="261"/>
         <source>Play/Pause</source>
         <translation>Tazama/Una</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/Toolbar.qml" line="280"/>
+        <location filename="../src/music-player/mainwindow/Toolbar.qml" line="282"/>
         <source>Next</source>
         <translation>Ingine</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/Toolbar.qml" line="389"/>
+        <location filename="../src/music-player/mainwindow/Toolbar.qml" line="388"/>
         <source>Lyrics</source>
         <translation>Mwili</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/Toolbar.qml" line="438"/>
+        <location filename="../src/music-player/mainwindow/Toolbar.qml" line="437"/>
         <source>Play Queue</source>
         <translation>Mipango ya tazama</translation>
     </message>
@@ -1337,57 +1343,58 @@
 <context>
     <name>WindowTitlebar</name>
     <message>
-        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="56"/>
+        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="47"/>
         <source>Add playlist</source>
         <translation>Ongeza playlist</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="58"/>
+        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="49"/>
         <source>New playlist</source>
         <translation>Playlist ya ya</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="63"/>
+        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="54"/>
+        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="331"/>
         <source>Add music</source>
         <translation>Ongeza muziki</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="71"/>
+        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="62"/>
         <source>Equalizer</source>
         <translation>Equalizer</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="82"/>
+        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="73"/>
         <source>Settings</source>
         <translation>Sifa</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="96"/>
+        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="87"/>
         <source>Music</source>
         <translation>Muziki</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="98"/>
+        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="89"/>
         <source>Music is a local music player with beautiful design and simple functions.</source>
         <translation>Music ni player ya muziki ya kifichaka na uwanja wa muziki mbaya na funtions ya mafichaka.</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="99"/>
+        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="90"/>
         <source>Version:</source>
         <translation>Version:</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="213"/>
+        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="204"/>
         <source>Previous page</source>
         <translation>Sahili ya kichwa</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="229"/>
+        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="220"/>
         <source>Next page</source>
         <translation>Sahili ya kichwa kati</translation>
     </message>
     <message>
-        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="239"/>
+        <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="230"/>
         <source>Search</source>
         <translation>Tafuta</translation>
     </message>
