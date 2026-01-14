@@ -54,6 +54,7 @@ private:
     qint64 m_currPositionChanged = 0;
     QString m_sinkInputPath;
     int m_correctVolume = 0; // 记录正确的音量值
+    bool m_isTempMuted = false;
 };
 
 #endif // QTPLAYER_H

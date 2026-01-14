@@ -256,6 +256,7 @@ void VlcPlayer::setMediaMeta(MediaMeta meta)
 
     m_bApe = newIsApe;
     if(m_bApe) {
+        m_qvplayer->stop();
         connect(m_qtPlayer, &PlayerBase::timeChanged, this, &PlayerBase::timeChanged);
         connect(m_qtPlayer, &PlayerBase::positionChanged, this, &PlayerBase::positionChanged);
         connect(m_qtPlayer, &PlayerBase::stateChanged, this, &PlayerBase::stateChanged);
@@ -274,19 +275,18 @@ void VlcPlayer::setMediaMeta(MediaMeta meta)
     }
 
     if (engineChanged) {
+        int volume = MusicSettings::value("base.play.volume").toInt();
+        bool isMuted = MusicSettings::value("base.play.mute").toBool();
         if (m_bApe) {
-            m_qtPlayer->setMute(m_qvplayer->getMute());
             // 引擎切换时，需要同步音量值
-            int volume = MusicSettings::value("base.play.volume").toInt();
-            qInfo() << "Use ape engine, set volume:" << volume;
+            qInfo() << "Use ape engine, set volume:" << volume << "isMuted:" << isMuted;
             m_qtPlayer->setVolume(volume);
+            m_qtPlayer->setMute(isMuted);
         } else {
-            m_qvplayer->setMute(m_qtPlayer->getMute());
-            m_qtPlayer->setMute(false);
             // 引擎切换时，需要同步音量值
-            int volume = MusicSettings::value("base.play.volume").toInt();
-            qInfo() << "Use vlc engine, set volume:" << volume;
+            qInfo() << "Use vlc engine, set volume:" << volume << "isMuted:" << isMuted;
             m_qvplayer->setVolume(volume);
+            m_qvplayer->setMute(isMuted);
         }
     }
 }
