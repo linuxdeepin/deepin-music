@@ -244,6 +244,9 @@ void SdlPlayer::play()
     if (!_vlcMediaPlayer)
         return;
 
+    // 在播放之前重置sinkinput通道音量，避免被APE引擎设置的通道音量影响
+    m_sinkInputPath.clear();
+    resetVolume();
     VlcMediaPlayer::play();
     if (m_loadSdlLibrary) {
         if (!m_pCheckDataThread->isRunning())

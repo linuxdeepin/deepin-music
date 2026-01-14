@@ -5,6 +5,7 @@
 
 #include "qtplayer.h"
 #include "core/musicsettings.h"
+#include "core/player.h"
 #include "util/dbusutils.h"
 #include "util/global.h"
 
@@ -205,11 +206,37 @@ void QtPlayer::onPositionChanged(qint64 position)
     if (m_mediaPlayer->duration() <= 0 || m_mediaPlayer->state() != QMediaPlayer::State::PlayingState)
         return;
 
+    if (this->parent()) {
+        Player *myParent = dynamic_cast<Player *>(this->parent());
+        if (myParent) {
+            MediaMeta meta = myParent->getActiveMeta();
+            if (meta.hash != m_activeMeta.hash) {
+                qWarning() << __func__ << "meta changed, old:" << m_activeMeta.localPath << "new:" << meta.localPath;
+                return;
+            }
+        }
+    }
+
     // 在ape的播放初期，概率性出现音量不对的情况，所以在此处判断并设置正确音量。
     int volume = this->getVolume();
     if (volume != m_correctVolume) {
         qInfo() << "Ape engine current volume:" << this->getVolume() << "vs" << m_correctVolume;
         this->setVolume(m_correctVolume);
+    }
+    // 在第一片段到第二片段的过程中，高概率音量跳变，使用静音来规避
+    if (position == 0 && !m_isTempMuted && !m_sinkInputPath.isEmpty()) {
+        if (!getMute()) {
+            qInfo() << "Ape first segment to second segment, temp mute, position:" << position;
+            m_isTempMuted = true;
+            setMute(true);
+        }
+    } else if (position != 0 && m_isTempMuted) {
+        qInfo() << "Ape cancel temp mute, position:" << position;
+        m_isTempMuted = false;
+        setMute(false);
+    }
+    if (position != 0 && m_sinkInputPath.isEmpty()) {
+        readSinkInputPath();
     }
 
     m_currPositionChanged = position;
