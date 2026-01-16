@@ -106,8 +106,7 @@ Rectangle {
                 break;
             case Qt.Key_A:
                 if (event.modifiers & Qt.ControlModifier) {
-                    listview.lastIndex = 0;
-                    listview.checkMulti(mediaModels.count -1);
+                    listview.selectAll();
                 }
                 break;
             case Qt.Key_Shift:
@@ -382,6 +381,7 @@ Rectangle {
                 listview.dragGroup.push(mediaModel.get(i).coverUrl);
             }
             listview.lastIndex = mediaModel.count - 1;
+            listview.forceActiveFocus();
         }
     }
 
