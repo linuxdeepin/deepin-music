@@ -217,26 +217,16 @@ void QtPlayer::onPositionChanged(qint64 position)
         }
     }
 
-    // 在ape的播放初期，概率性出现音量不对的情况，所以在此处判断并设置正确音量。
-    int volume = this->getVolume();
-    if (volume != m_correctVolume) {
-        qInfo() << "Ape engine current volume:" << this->getVolume() << "vs" << m_correctVolume;
-        this->setVolume(m_correctVolume);
-    }
-    // 在第一片段到第二片段的过程中，高概率音量跳变，使用静音来规避
-    if (position == 0 && !m_isTempMuted && !m_sinkInputPath.isEmpty()) {
-        if (!getMute()) {
-            qInfo() << "Ape first segment to second segment, temp mute, position:" << position;
-            m_isTempMuted = true;
-            setMute(true);
+    // 在第一片段到第二片段的过程中，高概率音量跳变，此处使用尽可能接近的音量来规避。（此时setVolume()不起作用，所以设置sinkinput通道音量）
+    if (position == 0) {
+        setSinkInputAlmostMute(m_correctVolume);
+    } else {
+        // 在ape的播放初期，概率性出现音量不对的情况，所以在此处判断并设置正确音量。
+        int volume = this->getVolume();
+        if (volume != m_correctVolume) {
+            qInfo() << "Ape engine current volume:" << this->getVolume() << "vs" << m_correctVolume;
+            this->setVolume(m_correctVolume);
         }
-    } else if (position != 0 && m_isTempMuted) {
-        qInfo() << "Ape cancel temp mute, position:" << position;
-        m_isTempMuted = false;
-        setMute(false);
-    }
-    if (position != 0 && m_sinkInputPath.isEmpty()) {
-        readSinkInputPath();
     }
 
     m_currPositionChanged = position;
@@ -323,11 +313,15 @@ void QtPlayer::readSinkInputPath()
         m_sinkInputPath = curPath.path();
         break;
     }
+    qInfo() << __func__ << m_sinkInputPath;
 }
 
-void QtPlayer::setSinkInputAlmostMute()
+void QtPlayer::setSinkInputAlmostMute(int volume)
 {
-    qDebug() << __func__;
+    // sinkinput通道音量与setVolume音量对应列表，已通过测试获取（如此调节音量，尽量让用户无感）
+    // 测试方法：使用setVolume()分别设置0、10、20、30、40、50、60、70、80、90、100，然后查询sinkinput通道音量值。
+    static const QVector<double> VOLUME_LIST = { 0.01, 0.28, 0.41, 0.51, 0.6, 0.68, 0.75, 0.82, 0.88, 0.94, 1.0 };
+    qInfo() << __func__ << "get close to volume:" << volume;
     readSinkInputPath();
     if (m_sinkInputPath.isEmpty()) return;
 
@@ -336,5 +330,12 @@ void QtPlayer::setSinkInputAlmostMute()
                               QDBusConnection::sessionBus());
     if (!ainterface.isValid()) return;
 
-    ainterface.call(QLatin1String("SetVolume"), 0.01, false);
+    if (volume == 0) {
+        ainterface.call(QLatin1String("SetVolume"), 0.01, false);
+    } else {
+        int idx = volume / 10;
+        if (idx >= 0 && idx < VOLUME_LIST.size()) {
+            ainterface.call(QLatin1String("SetVolume"), VOLUME_LIST[idx], false);
+        }
+    }
 }
