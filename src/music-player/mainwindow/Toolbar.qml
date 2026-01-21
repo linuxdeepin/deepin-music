@@ -45,6 +45,11 @@ FloatingPanel {
     property ListModel pointModel: ListModel{}
     property var pointList: []
 
+    // 响应式显示控制
+    property bool showSongInfo: toolbarRoot.width > 500      // 歌曲信息
+    property bool showWaveform: toolbarRoot.width > 600      // 波形图
+    property bool showExtendedControls: toolbarRoot.width > 450  // 喜欢、播放模式按钮
+
     id: toolbarRoot
     height:60
     width: parent.width
@@ -154,7 +159,8 @@ FloatingPanel {
         }
         Rectangle {
             id: infoRect
-            width: infoRectWidth
+            width: showSongInfo ? infoRectWidth : 0
+            visible: showSongInfo
             height: 40
             color: "transparent"
             anchors.verticalCenter: parent.verticalCenter
@@ -196,6 +202,7 @@ FloatingPanel {
                         id: likeBtn
                         width: 36
                         height: 36
+                        visible: showExtendedControls  // 窗口窄时隐藏
                         anchors.verticalCenter: parent.verticalCenter
                         icon.name: favorite ? "heart_check" : "heart"
                         icon.width: 20
@@ -291,6 +298,7 @@ FloatingPanel {
                         id: playModeBtn
                         width: 36
                         height: 36
+                        visible: showExtendedControls  // 窗口窄时隐藏
                         anchors.verticalCenter: parent.verticalCenter
                         icon.name: modeIcon[playMode + 1]
                         icon.width: 36
@@ -313,8 +321,15 @@ FloatingPanel {
         }
         Rectangle {
             id: waveformRect
-            width: parent.width - (coverRectWidth + infoRectWidth + playControlRectWidth + rightAreaRect.width
-                                   + contentSpacing * 4 + leftPaddingWidth + rightPaddingWidth)
+            // 响应式宽度计算，考虑隐藏的元素
+            width: {
+                if (!showWaveform) return 0
+                var infoW = showSongInfo ? infoRectWidth : 0
+                var spacingCount = showSongInfo ? 4 : 3
+                return Math.max(0, parent.width - (coverRectWidth + infoW + playControlRectWidth + rightAreaRect.width
+                                   + contentSpacing * spacingCount + leftPaddingWidth + rightPaddingWidth))
+            }
+            visible: showWaveform
             height: parent.height
             color: "transparent"
             enabled: songTitle.length === 0 ? false : true

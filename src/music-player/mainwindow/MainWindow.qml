@@ -41,7 +41,8 @@ ApplicationWindow {
             anchors.fill: parent
             BehindWindowBlur {
                 id: leftBgArea
-                width: 220
+                width: parent.width > 600 ? 220 : 0  // 窗口太小时隐藏侧边栏背景
+                visible: parent.width > 600
                 height: parent.height
                 anchors.top: parent.top
                 blendColor: DTK.themeType === ApplicationHelper.LightType ? "#bbf7f7f7"

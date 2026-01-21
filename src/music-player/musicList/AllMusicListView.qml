@@ -22,17 +22,24 @@ Rectangle {
 
     id: musicListView
     color: "transparent"
+    // 判断是否显示扩展列（Artist, Album）
+    property bool showExtendedColumns: musicListView.width > 500
+
     //标题栏
     Row {
         id: headerView
         width: musicListView.width - 40; height: 36
         leftPadding: 20
+        clip: true  // 防止内容溢出重叠
         Rectangle {
             width: 56; height: 36
             color: "transparent"
         }
         Label {
-            width: parent.width - 2 * parent.width * scalingRatio - 158
+            // 窗口窄时，Title 列占据更多空间
+            width: showExtendedColumns 
+                   ? parent.width - 2 * parent.width * scalingRatio - 158
+                   : parent.width - 158
             height: 36
             leftPadding: 10
             text: qsTr("Title")
@@ -43,11 +50,13 @@ Rectangle {
             leftPadding: 10
             text: qsTr("Artist")
             verticalAlignment: Qt.AlignVCenter
+            visible: showExtendedColumns  // 窗口窄时隐藏
         }
         Label {
             width: parent.width * scalingRatio; height: 36
             text: qsTr("Album")
             verticalAlignment: Qt.AlignVCenter
+            visible: showExtendedColumns  // 窗口窄时隐藏
         }
         Label {
             width: 102; height: 36

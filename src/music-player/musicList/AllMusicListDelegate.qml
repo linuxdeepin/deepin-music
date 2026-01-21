@@ -15,6 +15,8 @@ ItemDelegate{
     property bool isDragged: false
     property int hoverY: height
     property string hashList: ""
+    // 判断是否显示扩展列（Artist, Album）
+    property bool showExtendedColumns: listview.width > 500
 
     id: rootRectangle
     anchors.horizontalCenter: parent.horizontalCenter
@@ -218,7 +220,10 @@ ItemDelegate{
         }
         Rectangle {
             id: columnMusic
-            width: parent.width - 2 * parent.width * scalingratio - 158
+            // 窗口窄时，Title 列占据更多空间
+            width: showExtendedColumns 
+                   ? parent.width - 2 * parent.width * scalingratio - 158
+                   : parent.width - 158
             height: 56
             color: Qt.rgba(0, 0, 0, 0)
             Row {
@@ -266,6 +271,7 @@ ItemDelegate{
             text: (artist === "") ? "undefind" : artist
             anchors.verticalCenter: parent.verticalCenter
             verticalAlignment: Qt.AlignVCenter
+            visible: showExtendedColumns  // 窗口窄时隐藏
         }
 
         Label {
@@ -276,6 +282,7 @@ ItemDelegate{
             text: (album === "") ? "undefind": album
             anchors.verticalCenter: parent.verticalCenter
             verticalAlignment: Qt.AlignVCenter
+            visible: showExtendedColumns  // 窗口窄时隐藏
         }
 
         Label {
