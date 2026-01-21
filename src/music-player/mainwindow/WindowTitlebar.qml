@@ -182,9 +182,13 @@ TitleBar {
                 leftMargin: 30
             }
 
+            // 响应式显示控制 - 使用内容区域自身宽度判断
+            property bool showSearchEdit: titleRowLayout.width > 400
+            property bool showNavButtons: titleRowLayout.width > 300
 
             RowLayout {
                 spacing: 10
+                visible: titleRowLayout.showNavButtons  // 窗口很窄时隐藏导航按钮
                 IconButton {
                     id: preBtn
                     icon.name: "arrow_ordinary_left"
@@ -223,9 +227,9 @@ TitleBar {
             }
             SearchEdit {
                 id: searchEdit
-                visible: !isLyricShow
+                visible: !isLyricShow && titleRowLayout.showSearchEdit  // 窗口窄时隐藏
                 opacity: opat
-                Layout.preferredWidth: 300
+                Layout.preferredWidth: titleRowLayout.showSearchEdit ? 300 : 0
                 Layout.alignment: Qt.AlignCenter
                 placeholder: qsTr("Search")
                 enabled: Presenter.isExistMeta()
@@ -320,7 +324,7 @@ TitleBar {
             IconButton {
                 id: addBtn
                 icon.name: "action_add"
-                visible: !isLyricShow
+                visible: !isLyricShow && titleRowLayout.showSearchEdit  // 窗口窄时隐藏
                 opacity: opat
                 hoverEnabled: true
                 Layout.alignment: Qt.AlignRight

@@ -27,7 +27,8 @@ Rectangle {
 
     MusicBaselistview {
         id: musicBaselist
-        width: 220;
+        width: parent.width > 600 ? 220 : 0  // 窗口太小时隐藏侧边栏
+        visible: parent.width > 600
         height: parent.height/* - 70*/
         anchors {
             left: parent.left
