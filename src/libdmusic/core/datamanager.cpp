@@ -379,17 +379,18 @@ bool DataManager::loadCurrentMetasDB()
 
     qCDebug(dmMusic) << "Loading song data for" << m_data->m_allPlaylist[index].sortMetas.size() << "metas";
     //加载歌曲数据
-    for (QString metaStr : m_data->m_allPlaylist[index].sortMetas) {
-        QString queryString = QString("SELECT hash, localpath, title, artist, album, "
-                                      "filetype, track, offset, length, size, "
-                                      "timestamp, invalid, search_id, cuepath, "
-                                      "lyricPath, codec, py_title, py_artist, py_album, hasimage, orititle, oriartist, orialbum "
-                                      "FROM musicNew WHERE hash='%1'").arg(metaStr);
-
+    // 防御性编程：使用参数化查询代替字符串拼接
+    const QString queryString = "SELECT hash, localpath, title, artist, album, "
+                                "filetype, track, offset, length, size, "
+                                "timestamp, invalid, search_id, cuepath, "
+                                "lyricPath, codec, py_title, py_artist, py_album, hasimage, orititle, oriartist, orialbum "
+                                "FROM musicNew WHERE hash=:hash";
+    for (const QString &metaStr : m_data->m_allPlaylist[index].sortMetas) {
         if (!query.prepare(queryString)) {
             qCCritical(dmMusic) << "Failed to prepare meta query for hash:" << metaStr << "error:" << query.lastError();
             continue;
         }
+        query.bindValue(":hash", metaStr);
         if (!query.exec()) {
             qCCritical(dmMusic) << "Failed to execute meta query for hash:" << metaStr << "error:" << query.lastError();
             continue;

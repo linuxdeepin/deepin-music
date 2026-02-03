@@ -407,12 +407,19 @@ int SdlPlayer::libvlc_audio_setup_cb(void **data, char *format, unsigned *rate, 
     SDL_OpenAudio_function OpenAudio = (SDL_OpenAudio_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSdlSymbol("SDL_OpenAudio");
     av_log2_function Log2 = (av_log2_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("av_log2", true);
     
-    PauseAudio(1);
+    // 防御性编程：先检查data指针有效性，再解引用
+    if (!data) {
+        qCCritical(dmMusic) << "Null data pointer in audio setup";
+        return -1;
+    }
     SdlPlayer *sdlMediaPlayer = *(SdlPlayer **)data;
     if (!sdlMediaPlayer) {
         qCCritical(dmMusic) << "Invalid player instance in audio setup";
         return -1;
     }
+    
+    // 在确认指针有效后再暂停音频，避免早期返回时音频被永久暂停
+    PauseAudio(1);
     
     sdlMediaPlayer->cleanMemCache();
     sdlMediaPlayer->_rate = libvlc_audio_format(format);
