@@ -45,7 +45,7 @@ build: |
     libvlc.so
     libavcodec.so
     libavformat.so
-    libSDL2.so
+    libSDL2-2.0.so
   )
 
   # 生成.install 文件

@@ -17,7 +17,7 @@ const QString libvlccore = "libvlccore.so";
 const QString libvlc = "libvlc.so";
 const QString libcodec = "libavcodec.so";
 const QString libformate = "libavformat.so";
-const QString libSDL2 = "libSDL2";
+const QString libSDL2 = "libSDL2-2.0";
 
 VlcDynamicInstance::VlcDynamicInstance(QObject *parent) : QObject(parent)
 {
@@ -172,17 +172,12 @@ bool VlcDynamicInstance::loadSdlLibrary()
         return true;
     }
     QString strSdl = DmGlobal::libPath(libSDL2);
-    if (QLibrary::isLibrary(strSdl)) {
-        libsdl2.setFileName(strSdl);
-        bool success = libsdl2.load();
-        if (!success) {
-            qCCritical(dmMusic) << "Failed to load SDL2:" << strSdl << "Error:" << libsdl2.errorString();
-        } else {
-            qCDebug(dmMusic) << "Successfully loaded SDL2";
-        }
-        return success;
+    libsdl2.setFileName(strSdl);
+    bool success = libsdl2.load();
+    if (!success) {
+        qCCritical(dmMusic) << "Failed to load SDL2:" << strSdl << "Error:" << libsdl2.errorString();
     } else {
-        qCCritical(dmMusic) << "Invalid library path for SDL2:" << strSdl;
-        return false;
+        qCDebug(dmMusic) << "Successfully loaded SDL2";
     }
+    return success;
 }
