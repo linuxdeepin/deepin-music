@@ -6,6 +6,8 @@ import QtQuick 2.15
 import QtQuick.Window 2.15
 import QtQuick.Layouts 1.11
 import org.deepin.dtk 1.0
+import org.deepin.dtk 1.0 as D
+import org.deepin.dtk.style 1.0 as DS
 import Qt.labs.platform 1.1
 import audio.global 1.0
 import "../playlist"
@@ -31,6 +33,8 @@ ApplicationWindow {
            : qsTr("Music")
     DWindow.enabled: true
     DWindow.alphaBufferSize: 8
+    DWindow.enableBlurWindow: true
+    color: "transparent"
     flags: Qt.Window | Qt.WindowMinMaxButtonsHint | Qt.WindowCloseButtonHint | Qt.WindowTitleHint
     header: WindowTitlebar { id: musicTitle }
     background: Rectangle {
@@ -39,14 +43,24 @@ ApplicationWindow {
 
         Row {
             anchors.fill: parent
-            BehindWindowBlur {
+            // 左侧导航栏毛玻璃效果
+            D.StyledBehindWindowBlur {
                 id: leftBgArea
-                width: parent.width > 600 ? 220 : 0  // 窗口太小时隐藏侧边栏背景
+                width: parent.width > 600 ? 220 : 0
                 visible: parent.width > 600
                 height: parent.height
                 anchors.top: parent.top
-                blendColor: DTK.themeType === ApplicationHelper.LightType ? "#bbf7f7f7"
-                                                                          : "#dd252525"
+                control: rootWindow
+                blendColor: {
+                    if (valid) {
+                        return DS.Style.control.selectColor(control ? control.palette.window : undefined,
+                            Qt.rgba(0.97, 0.97, 0.97, 0.73),
+                            Qt.rgba(0.15, 0.15, 0.15, 0.87))
+                    }
+                    return DS.Style.control.selectColor(undefined,
+                        DS.Style.behindWindowBlur.lightNoBlurColor,
+                        DS.Style.behindWindowBlur.darkNoBlurColor)
+                }
                 Rectangle {
                     width: 1
                     height: parent.height
@@ -55,22 +69,13 @@ ApplicationWindow {
                                                                          : "#ee252525"
                 }
             }
+            // 右侧区域纯色背景
             Rectangle {
                 id: rightBgArea
                 width: parent.width - leftBgArea.width
-                height: 50
+                height: parent.height
                 anchors.top: parent.top
-                color: Qt.rgba(0, 0, 0, 0.01)
-                BoxShadow {
-                    anchors.fill: rightBgArea
-                    shadowOffsetX: 0
-                    shadowOffsetY: 4
-                    shadowColor: Qt.rgba(0, 0, 0, 0.05)
-                    shadowBlur: 10
-                    cornerRadius: rightBgArea.radius
-                    spread: 0
-                    hollow: true
-                }
+                color: DTK.themeType === ApplicationHelper.LightType ? "#f7f7f7" : "#252525"
             }
         }
     }
