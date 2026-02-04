@@ -38,6 +38,7 @@ Settings.SettingsDialog {
                         //radius: 8
                     }
                     Settings.SettingsOption {
+                        id: autoPlayOption
                         key: "autoPlay"
                         name: qsTr("Autoplay")
                         Settings.CheckBox {}
@@ -49,6 +50,7 @@ Settings.SettingsDialog {
                         }
                     }
                     Settings.SettingsOption {
+                        id: rememberProgressOption
                         key: "rememberProgress"
                         name: qsTr("Remember playback position on exit")
                         Settings.CheckBox {}
@@ -62,6 +64,7 @@ Settings.SettingsDialog {
                         }
                     }
                     Settings.SettingsOption {
+                        id: fadeInOutOption
                         key: "fadeInOut"
                         name: qsTr("Enable fade in/out")
                         Settings.CheckBox {}
@@ -564,7 +567,46 @@ Settings.SettingsDialog {
         }
     }
 
+    // 刷新所有设置选项的显示值
+    function refreshAllSettings() {
+        // 刷新播放设置
+        autoPlayOption.value = Presenter.valueFromSettings("base.play.auto_play")
+        rememberProgressOption.value = Presenter.valueFromSettings("base.play.remember_progress")
+        fadeInOutOption.value = Presenter.valueFromSettings("base.play.fade_in_out")
+        // 刷新关闭行为设置
+        closeAct.value = Presenter.valueFromSettings("base.close.close_action")
+        // 刷新快捷键设置
+        shortcut0.value = Presenter.valueFromSettings("shortcuts.all.play_pause")
+        shortcut1.value = Presenter.valueFromSettings("shortcuts.all.previous")
+        shortcut2.value = Presenter.valueFromSettings("shortcuts.all.next")
+        shortcut3.value = Presenter.valueFromSettings("shortcuts.all.volume_up")
+        shortcut4.value = Presenter.valueFromSettings("shortcuts.all.volume_down")
+        shortcut5.value = Presenter.valueFromSettings("shortcuts.all.favorite_song")
+        updateInfos()
+    }
+
+    // 重写 contentView 的 footer，使用自定义的恢复默认按钮
+    contentView.footer: Item {
+        width: parent.width
+        height: 60
+
+        Button {
+            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.bottom: parent.bottom
+            text: qsTr("Restore Defaults")
+
+            onClicked: {
+                // 调用 Presenter 的重置方法，真正重置后端设置
+                Presenter.resetToSettings()
+                // 刷新 UI 显示
+                refreshAllSettings()
+            }
+        }
+    }
+
     Component.onCompleted: {
         Presenter.valueChangedFromSettings.connect(settingsValueChanged)
+        // 连接重置完成信号，确保 UI 同步更新
+        Presenter.resetedFromSettings.connect(refreshAllSettings)
     }
 }
