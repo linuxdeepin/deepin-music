@@ -53,6 +53,12 @@ build: |
   ID_VALUE=$(awk -F ': ' '/^  id: / {print $2}' linglong.yaml)
   find ${PREFIX}/lib/${TRIPLET}/vlc >> "${ID_VALUE}.install"
 
+  # 将 vlc 子目录下的 libvlc_pulse.so 复制到标准库路径，确保动态链接器能找到
+  if [ -f "${PREFIX}/lib/${TRIPLET}/vlc/libvlc_pulse.so.0" ]; then
+    cp -a "${PREFIX}/lib/${TRIPLET}/vlc/libvlc_pulse.so"* "${PREFIX}/lib/${TRIPLET}/"
+    ls "${PREFIX}/lib/${TRIPLET}/libvlc_pulse.so"* >> "${ID_VALUE}.install"
+  fi
+
 sources:
   # linglong:gen_deb_source sources mips64el https://pools.uniontech.com/desktop-professional-V25 snipe/2500 main community
   # linglong:gen_deb_source install libavutil-dev, libavcodec-dev, libavformat-dev, libdtk6core-bin, libdtk6gui-dev, libdtk6widget-dev, libdbusextended-qt5-dev, libgsettings-qt-dev, libicu-dev, libmpris-qt6-dev, libtag1-dev, qt6-svg-dev, libqt6sql6-sqlite, libxtst-dev, libvlc-dev, libvlccore-dev, vlc-plugin-base, qt6-multimedia-dev, qt6-tools-dev, qt6-tools-dev-tools, qml6-module-qtquick-dialogs, qt6-declarative-dev, libdtk6declarative-dev, qt6-5compat-dev, libsdl2-dev, libsdl1.2debian
