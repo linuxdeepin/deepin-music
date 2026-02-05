@@ -1,3 +1,9 @@
+deepin-music (7.0.54) unstable; urgency=medium
+
+  * fix: Fix build fail
+
+ -- wangrong <wangrong@uniontech.com>  Thu, 05 Feb 2026 19:39:48 +0800
+
 deepin-music (7.0.53) unstable; urgency=medium
 
   * fix(ui): improve drag-and-drop functionality in SideBarItem 
