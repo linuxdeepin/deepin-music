@@ -1,3 +1,17 @@
+deepin-music (7.0.53) unstable; urgency=medium
+
+  * fix(ui): improve drag-and-drop functionality in SideBarItem 
+  * fix(ui): optimize settings reset functionality in Presenter and SettingsDialog
+  * fix(ui): improve main window styling and blur effects
+  * fix(build): copy libvlc_pulse.so to standard library path
+  * fix(ui): enhance responsive design for main window components
+  * fix: Fix fail to load libSDL2 library
+  * fix(datamanager): enhance query safety and pointer validation
+  * chore: Update compiler flags for security enhancements
+  * fix(ui): streamline selection handling in AllMusicListView
+
+ -- dengzhongyuan <dengzhongyuan@uniontech.com>  Thu, 05 Feb 2026 15:50:48 +0800
+
 deepin-music (7.0.52) unstable; urgency=medium
 
   * chore: update translation
