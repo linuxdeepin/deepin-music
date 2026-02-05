@@ -93,7 +93,7 @@ ColumnLayout {
             property int lastDragY: 0
 
             id: dropArea
-            anchors.fill: control.type === "playlists" ? parent : null
+            anchors.fill: parent
 
             onEntered: {
                 console.log("onEntered.............", dragForSort)
@@ -160,11 +160,24 @@ ColumnLayout {
                     for (var i = 0; i < drop.urls.length; i++)
                         urlList.push(drop.urls[i])
 
-                    Presenter.importMetas(urlList, sideModel.get(toIndex).uuid)
+                    var hasValidIndex = toIndex >= 0 && toIndex < sideModel.count
+                    var targetUuid = ""
+
+                    if (hasValidIndex) {
+                        targetUuid = sideModel.get(toIndex).uuid
+                    } else if (control.type === "library") {
+                        targetUuid = "all"
+                    } else {
+                        console.warn("Drop ignored: invalid toIndex for non-library sidebar", toIndex)
+                        return
+                    }
+                    Presenter.importMetas(urlList, targetUuid)
                 }
             }
             onExited: {
-                sideModel.setProperty(toIndex, "dragFlag", false)
+                if (toIndex >= 0 && toIndex < sideModel.count) {
+                    sideModel.setProperty(toIndex, "dragFlag", false)
+                }
                 scrollDownTimer.stop()
                 scrollUpTimer.stop()
             }
