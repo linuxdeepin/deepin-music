@@ -10,9 +10,12 @@ find_package(Dtk6Declarative REQUIRED)
 find_package(Qt6 COMPONENTS Core Widgets Quick LinguistTools REQUIRED)
 find_package(PkgConfig REQUIRED)
 
-pkg_check_modules(DTK REQUIRED IMPORTED_TARGET dtk6widget)
+# pkg_check_modules(DTK REQUIRED IMPORTED_TARGET dtk6widget)
 pkg_check_modules(DTK REQUIRED IMPORTED_TARGET dtk6core)
 pkg_check_modules(DTK REQUIRED IMPORTED_TARGET dtk6gui)
+
+# Since the dtk6widget.pc file is incorrect, use cmake config file to find Dtk6Widget
+find_package(Dtk6Widget REQUIRED)
 
 qt6_add_resources(RCC_SOURCES ${RESOURCES})
 
@@ -44,7 +47,7 @@ add_executable(${BIN_NAME} ${RCC_SOURCES} ${ALLSOURCE} ${QM_FILES})
 # Use target_link_libraries instead of qt6_use_modules
 target_link_libraries(${BIN_NAME} Qt6::Core Qt6::Widgets)
 
-set(TARGET_LIBS Qt6::Quick PkgConfig::DTK dmusic ${Dtk6Declarative_LIBRARIES})
+set(TARGET_LIBS Qt6::Quick PkgConfig::DTK dmusic ${Dtk6Declarative_LIBRARIES} Dtk6::Widget)
 
 target_link_libraries(${BIN_NAME} ${TARGET_LIBS})
 
