@@ -7,7 +7,7 @@ version: "1"
 package:
   id: org.deepin.music
   name: "deepin-music"
-  version: 7.0.53.1
+  version: 7.0.54.1
   kind: app
   description: |
     music for deepin os.
