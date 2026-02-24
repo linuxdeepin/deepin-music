@@ -601,6 +601,10 @@ void PlayerEngine::playNextMeta(const DMusic::MediaMeta &meta, bool isAuto, bool
                 index = i;
             }
         }
+        // If current track not found in list (possibly removed)
+        // and no next track found, play the first track
+        if (index == -1 && newIndex == -1 && !allMetas.isEmpty())
+            newIndex = 0;
         if (newIndex != -1) {
             switchToNewTrackWithFade(allMetas.at(newIndex), playFlag);
         } else if (!isAuto) {
