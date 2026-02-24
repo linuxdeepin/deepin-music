@@ -1298,7 +1298,7 @@ void MainFrame::paintEvent(QPaintEvent* e)
         brush.setColor(Qt::transparent);
     } else {
         if (DGuiApplicationHelper::instance()->themeType() == DGuiApplicationHelper::DarkType) {
-            brush.setColor("#232323");
+            brush.setColor("#262626");
         }
     }
 
