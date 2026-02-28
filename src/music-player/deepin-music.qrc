@@ -16,6 +16,7 @@
         <file>mainwindow/Toolbar.qml</file>
         <file>mainwindow/LyricWindow.qml</file>
         <file>mainwindow/MusicContentWindow.qml</file>
+        <file>mainwindow/ToolFloatingPanel.qml</file>
         <file>musicList/AllMusicListModel.qml</file>
         <file>musicbaseandsonglist/MusicBaselistview.qml</file>
         <file>musicList/AllMusicList.qml</file>
