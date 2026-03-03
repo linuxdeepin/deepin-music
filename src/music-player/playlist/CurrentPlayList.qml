@@ -181,11 +181,8 @@ CurrentFloatingPanel {
 
                 onEntered: {
                     drag.accepted = true
-                    for(var j = 0; j < drag.keys.length; j++) {
-                        if (drag.keys[j] === "music-list/index-list") {
-                            dragForSort = true
-                            break
-                        }
+                    if (drag.source && drag.source.toString().indexOf("CurrentPlayListDelegate") >= 0) {
+                        dragForSort = true
                     }
                 }
                 onPositionChanged: {

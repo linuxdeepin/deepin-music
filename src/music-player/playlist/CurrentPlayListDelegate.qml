@@ -25,11 +25,12 @@ ItemDelegate{
     Drag.active: mouseArea.drag.active
     Drag.supportedActions: Qt.MoveAction
     Drag.dragType: Drag.Automatic
+    Drag.keys: ["music-list/index-list"]
     Drag.mimeData: {
         "music-list/index-list": playlistView.delegateModelGroup
     }
-    Drag.hotSpot.x: -15
-    Drag.hotSpot.y: -15
+    Drag.hotSpot.x: 0
+    Drag.hotSpot.y: 0
     Drag.onDragFinished: {
         isDragged = true
     }
