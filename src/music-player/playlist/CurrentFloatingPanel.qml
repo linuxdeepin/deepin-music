@@ -38,7 +38,7 @@ D.Control {
             anchors.fill: parent
             sourceComponent: D.ItemViewport {
                 anchors.fill: parent
-                compositionMode: DTK.CompositionMode.Source
+                compositionMode: D.DTK.CompositionMode.Source
                 fixed: true
                 hideSource: false
                 radius: control.radius
