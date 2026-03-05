@@ -5,6 +5,7 @@
 
 #include "vlcplayer.h"
 #include "qtplayer.h"
+#include "player.h"
 
 #include "util/dbusutils.h"
 #include "util/global.h"
@@ -275,8 +276,9 @@ void VlcPlayer::setMediaMeta(MediaMeta meta)
     }
 
     if (engineChanged) {
-        int volume = MusicSettings::value("base.play.volume").toInt();
-        bool isMuted = MusicSettings::value("base.play.mute").toBool();
+        // 音量调整时，配置文件的写入会有延迟，所以使用Player的函数获取音量值，以获得实时音量
+        int volume = Player::getInstance()->getVolume(); //MusicSettings::value("base.play.volume").toInt();
+        bool isMuted = Player::getInstance()->getMuted(); //MusicSettings::value("base.play.mute").toBool();
         if (m_bApe) {
             // 引擎切换时，需要同步音量值
             qInfo() << "Use ape engine, set volume:" << volume << "isMuted:" << isMuted;
