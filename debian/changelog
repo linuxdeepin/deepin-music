@@ -1,3 +1,12 @@
+deepin-music (7.0.55) unstable; urgency=medium
+
+  * fix(playlist): fix drag-and-drop sorting in current playlist
+  * fix: extract ToolFloatingPanel as reusable component
+  * fix: continue playback after removing currently playing track
+  * chore: Unify linglong.yaml
+
+ -- Wang Yu <wangyu@uniontech.com>  Thu, 05 Mar 2026 21:39:47 +0800
+
 deepin-music (7.0.54) unstable; urgency=medium
 
   * fix: Fix build fail
