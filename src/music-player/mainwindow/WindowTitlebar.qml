@@ -84,6 +84,7 @@ TitleBar {
         HelpAction { }
         AboutAction {
             aboutDialog: AboutDialog {
+                modality: Qt.WindowModal
                 productName: qsTr("Music")
                 productIcon: globalVariant.appIconName
                 description: qsTr("Music is a local music player with beautiful design and simple functions.")
