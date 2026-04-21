@@ -8,6 +8,11 @@ Files: .github/*
 Copyright: None
 License: CC0-1.0
 
+# config
+Files: config.h.in
+Copyright: None
+License: CC0-1.0
+
 # gitignore
 Files: .gitignore 
 Copyright: None
