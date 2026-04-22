@@ -1,4 +1,4 @@
-// Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co., Ltd.
+// Copyright (C) 2020 ~ 2026 Uniontech Software Technology Co., Ltd.
 // SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
@@ -18,6 +18,7 @@
 #include <QShortcut>
 #include <QFileInfo>
 #include <QTimer>
+#include <QDir>
 
 #include <DHiDPIHelper>
 #include <DPushButton>
@@ -927,13 +928,35 @@ void FooterWidget::resizeEvent(QResizeEvent *event)
 
 void FooterWidget::slotFlushBackground()
 {
-    QImage cover = QImage(":/icons/deepin/builtin/actions/info_cover_142px.svg");
-    QString imagesDirPath = Global::cacheDir() + "/images/" + Player::getInstance()->getActiveMeta().hash + ".jpg";
-    QFileInfo file(imagesDirPath);
-    if (file.exists()) {
-        cover = QImage(Global::cacheDir() + "/images/" + Player::getInstance()->getActiveMeta().hash + ".jpg");
+    auto clearBackground = [this]() {
+        m_forwardWidget->setSourceImage(QImage());
+        m_forwardWidget->update();
+    };
+    
+    QString cacheDir = Global::cacheDir();
+    if (cacheDir.isEmpty()) {
+        qWarning() << "Cache directory is invalid, clearing background";
+        clearBackground();
+        return;
     }
-
+    
+    QString imagesDirPath = QDir(cacheDir).filePath(
+        QString("images/%1.jpg").arg(Player::getInstance()->getActiveMeta().hash)
+    );
+    
+    QFileInfo file(imagesDirPath);
+    if (!file.exists()) {
+        clearBackground();
+        return;
+    }
+    
+    QImage cover(imagesDirPath);
+    if (cover.isNull() || cover.size().isEmpty()) {
+        qWarning() << "Failed to load cover image or invalid size:" << imagesDirPath;
+        clearBackground();
+        return;
+    }
+    
     double windowScale = (width() * 1.0) / height();
     int imageWidth = static_cast<int>(cover.height() * windowScale);
     QImage coverImage;
