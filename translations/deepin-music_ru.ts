@@ -423,7 +423,7 @@
     <message>
         <location filename="../src/music-player/musicbaseandsonglist/CustomPlaylistModel.qml" line="86"/>
         <source>CD</source>
-        <translation>Кассета</translation>
+        <translation>Компакт-диск</translation>
     </message>
 </context>
 <context>
@@ -431,12 +431,12 @@
     <message>
         <location filename="../src/music-player/dialogs/DeleteLocalDialog.qml" line="34"/>
         <source>Are you sure you want to delete %1?</source>
-        <translation>Вы уверены, что хотите удалить %1?</translation>
+        <translation>Уверены, что хотите удалить %1?</translation>
     </message>
     <message>
         <location filename="../src/music-player/dialogs/DeleteLocalDialog.qml" line="36"/>
         <source>Are you sure you want to delete the selected %1 songs?</source>
-        <translation>Вы уверены, что хотите удалить выбранные %1 песни?</translation>
+        <translation>Уверены, что хотите удалить выбранные %1 песни?</translation>
     </message>
     <message>
         <location filename="../src/music-player/dialogs/DeleteLocalDialog.qml" line="45"/>
@@ -459,17 +459,17 @@
     <message>
         <location filename="../src/music-player/dialogs/DeleteSonglistDialog.qml" line="41"/>
         <source>Are you sure you want to remove %1?</source>
-        <translation>Вы уверены, что хотите удалить %1?</translation>
+        <translation>Уверены, что хотите удалить %1?</translation>
     </message>
     <message>
         <location filename="../src/music-player/dialogs/DeleteSonglistDialog.qml" line="43"/>
         <source>Are you sure you want to remove the selected %1 songs?</source>
-        <translation>Вы уверены, что хотите удалить выделенные %1 треков?</translation>
+        <translation>Уверены, что хотите удалить выделенные %1 дорожек?</translation>
     </message>
     <message>
         <location filename="../src/music-player/dialogs/DeleteSonglistDialog.qml" line="45"/>
         <source>Are you sure you want to delete this playlist?</source>
-        <translation>Вы действительно хотите удалить этот список воспроизведения?</translation>
+        <translation>Уверены, что хотите удалить этот список воспроизведения?</translation>
     </message>
     <message>
         <location filename="../src/music-player/dialogs/DeleteSonglistDialog.qml" line="55"/>
@@ -607,7 +607,7 @@
     <message>
         <location filename="../src/music-player/dialogs/EqualizerDialog.qml" line="491"/>
         <source>Sound Effects Saved</source>
-        <translation>Звуковые эффекты Сохранены</translation>
+        <translation>Звуковые эффекты сохранены</translation>
     </message>
 </context>
 <context>
