@@ -315,7 +315,7 @@
     <message>
         <location filename="../src/music-player/musicsublist/ArtistSublistView.qml" line="70"/>
         <source>Duration</source>
-        <translation>Продолжительность</translation>
+        <translation>Длительность</translation>
     </message>
 </context>
 <context>
@@ -328,7 +328,7 @@
     <message>
         <location filename="../src/music-player/singerlist/ArtistView.qml" line="55"/>
         <source>%1 artists - %2 songs</source>
-        <translation>   %1 артисты - %2 песни</translation>
+        <translation>%1 исполнителей - %2 песен</translation>
     </message>
 </context>
 <context>
@@ -336,7 +336,7 @@
     <message>
         <location filename="../src/music-player/dialogs/CDRemovedDialog.qml" line="32"/>
         <source>The CD has been removed</source>
-        <translation>Компакт диск был извлечен</translation>
+        <translation>Компакт-диск был извлечён</translation>
     </message>
     <message>
         <location filename="../src/music-player/dialogs/CDRemovedDialog.qml" line="36"/>
@@ -354,7 +354,7 @@
     <message>
         <location filename="../src/music-player/dialogs/CloseConfirmDialog.qml" line="50"/>
         <source>Minimize to system tray</source>
-        <translation>Минимизировать в трей </translation>
+        <translation>Свернуть в трей </translation>
     </message>
     <message>
         <location filename="../src/music-player/dialogs/CloseConfirmDialog.qml" line="62"/>
