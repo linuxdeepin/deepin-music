@@ -1259,12 +1259,12 @@
     <message>
         <location filename="../src/music-player/allItems/SublistTitleButton.qml" line="54"/>
         <source>%1 songs</source>
-        <translation>%1 песни</translation>
+        <translation>&apos;%1 песни&apos;</translation>
     </message>
     <message>
         <location filename="../src/music-player/allItems/SublistTitleButton.qml" line="64"/>
         <source>Play All</source>
-        <translation>Воспроизвести Всё</translation>
+        <translation>Воспроизвести все</translation>
     </message>
 </context>
 <context>
@@ -1272,7 +1272,7 @@
     <message>
         <location filename="../src/music-player/allItems/ToolButtonItem.qml" line="59"/>
         <source>Play All</source>
-        <translation>Воспроизвести Всё</translation>
+        <translation>Воспроизвести все</translation>
     </message>
 </context>
 <context>
@@ -1290,7 +1290,7 @@
     <message>
         <location filename="../src/music-player/mainwindow/Toolbar.qml" line="42"/>
         <source>Single loop</source>
-        <translation>Одиночный Цикл</translation>
+        <translation>Одиночный цикл</translation>
     </message>
     <message>
         <location filename="../src/music-player/mainwindow/Toolbar.qml" line="42"/>
@@ -1320,7 +1320,7 @@
     <message>
         <location filename="../src/music-player/mainwindow/Toolbar.qml" line="261"/>
         <source>Play/Pause</source>
-        <translation>Воспроизведение / Пауза</translation>
+        <translation>Воспроизведение / пауза</translation>
     </message>
     <message>
         <location filename="../src/music-player/mainwindow/Toolbar.qml" line="282"/>
@@ -1374,7 +1374,7 @@
     <message>
         <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="89"/>
         <source>Music is a local music player with beautiful design and simple functions.</source>
-        <translation>Плеер - это локальный музыкальный плеер с красивым дизайном и простыми функциями.</translation>
+        <translation>Музыка — это локальный проигрыватель музыки с красивым дизайном и простыми функциями.</translation>
     </message>
     <message>
         <location filename="../src/music-player/mainwindow/WindowTitlebar.qml" line="90"/>
