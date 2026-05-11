@@ -19,12 +19,12 @@
     <message>
         <location filename="Desktop Entry]Comment" line="0"/>
         <source>Play your music collection</source>
-        <translation>Воспроизведение музыкальной коллекции</translation>
+        <translation>Воспроизведение вашей фонотеки</translation>
     </message>
     <message>
         <location filename="X-PlayPause Shortcut Group]Name" line="0"/>
         <source>Play/Pause track</source>
-        <translation>Воспроизведение/Пауза дорожки</translation>
+        <translation>Воспроизведение/пауза дорожки</translation>
     </message>
     <message>
         <location filename="X-Previous Shortcut Group]Name" line="0"/>
