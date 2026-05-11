@@ -99,7 +99,7 @@
     <message>
         <location filename="../src/music-player/musicsublist/AlbumSublist.qml" line="46"/>
         <source>Duration</source>
-        <translation>Продолжительность</translation>
+        <translation>Длительность</translation>
     </message>
 </context>
 <context>
@@ -125,7 +125,7 @@
     <message>
         <location filename="../src/music-player/musicsublist/AlbumSublistView.qml" line="66"/>
         <source>Duration</source>
-        <translation>Продолжительность</translation>
+        <translation>Длительность</translation>
     </message>
 </context>
 <context>
@@ -674,7 +674,7 @@
     <message>
         <location filename="../src/music-player/lyric/LyricPage.qml" line="190"/>
         <source>Please put the lyric file (same name as the song) and the song file in the same folder</source>
-        <translation>Пожалуйста, поместите файл с лириками (такой же, как и у песни) и файл песни в одну папку</translation>
+        <translation>Пожалуйста, поместите файл с текста песни (такой же, как и у песни) и файл песни в одну папку</translation>
     </message>
 </context>
 <context>
