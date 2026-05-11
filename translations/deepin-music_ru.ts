@@ -623,12 +623,12 @@
     <message>
         <location filename="../src/music-player/dialogs/ImportFailedDialog.qml" line="32"/>
         <source>Import failed, no valid music file found</source>
-        <translation>Не удалось импортировать, не найден действительный музыкальный файл</translation>
+        <translation>Ошибка импорта, не найден допустимый музыкальный файл</translation>
     </message>
     <message>
         <location filename="../src/music-player/dialogs/ImportFailedDialog.qml" line="36"/>
         <source>OK</source>
-        <translation>OK</translation>
+        <translation>ОК</translation>
     </message>
 </context>
 <context>
@@ -669,13 +669,12 @@
     <message>
         <location filename="../src/music-player/lyric/LyricPage.qml" line="180"/>
         <source>No lyrics found</source>
-        <translation>Лирики не найдены</translation>
+        <translation>Тексты песен не найдены</translation>
     </message>
     <message>
         <location filename="../src/music-player/lyric/LyricPage.qml" line="190"/>
         <source>Please put the lyric file (same name as the song) and the song file in the same folder</source>
-        <translation>&gt;-
-Пожалуйста, поместите файл с лириками (такой же, как и у песни) и файл песни в одну папку</translation>
+        <translation>Пожалуйста, поместите файл с лириками (такой же, как и у песни) и файл песни в одну папку</translation>
     </message>
 </context>
 <context>
@@ -689,7 +688,7 @@
     <message>
         <location filename="../src/music-player/mainwindow/MainWindow.qml" line="206"/>
         <source>Play/Pause</source>
-        <translation>Воспроизведение / Пауза</translation>
+        <translation>Воспроизведение / пауза</translation>
     </message>
     <message>
         <location filename="../src/music-player/mainwindow/MainWindow.qml" line="210"/>
@@ -714,7 +713,7 @@
     <message>
         <location filename="../src/music-player/mainwindow/MainWindow.qml" line="375"/>
         <source>Added to &quot;%1&quot;</source>
-        <translation>Добавлено в &quot;%1&quot;</translation>
+        <translation>Добавлено в «%1»</translation>
     </message>
     <message>
         <location filename="../src/music-player/mainwindow/MainWindow.qml" line="378"/>
@@ -729,7 +728,7 @@
     <message>
         <location filename="../src/music-player/mainwindow/MainWindow.qml" line="384"/>
         <source>Sound Effects Saved</source>
-        <translation>Звуковые эффекты Сохранены</translation>
+        <translation>Звуковые эффекты сохранены</translation>
     </message>
     <message>
         <location filename="../src/music-player/mainwindow/MainWindow.qml" line="395"/>
@@ -841,7 +840,7 @@
     <message>
         <location filename="../src/music-player/dialogs/MusicInfoDialog.qml" line="108"/>
         <source>Duration</source>
-        <translation>Продолжительность</translation>
+        <translation>Длительность</translation>
     </message>
     <message>
         <location filename="../src/music-player/dialogs/MusicInfoDialog.qml" line="115"/>
