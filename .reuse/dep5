@@ -34,7 +34,7 @@ Copyright: None
 License: CC0-1.0
 
 # Project file
-Files: *.pro *.prf *.pri *.qrc *CMakeLists.txt .tx/*
+Files: *.pro *.prf *.pri *.qrc *CMakeLists.txt .tx/* config.h.in
 Copyright: None
 License: CC0-1.0
 
@@ -67,3 +67,4 @@ License: GPL-3.0-or-later
 Files: tests/*
 Copyright: UnionTech Software Technology Co., Ltd.
 License: GPL-3.0-or-later
+
