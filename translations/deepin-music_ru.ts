@@ -1015,7 +1015,7 @@
     <message>
         <location filename="../src/music-player/dialogs/SettingsDialog.qml" line="91"/>
         <source>Minimize to system tray</source>
-        <translation>Минимизировать в трей </translation>
+        <translation>Свернуть в системный трей</translation>
     </message>
     <message>
         <location filename="../src/music-player/dialogs/SettingsDialog.qml" line="98"/>
@@ -1035,7 +1035,7 @@
     <message>
         <location filename="../src/music-player/dialogs/SettingsDialog.qml" line="158"/>
         <source>Play/Pause</source>
-        <translation>Воспроизведение / Пауза</translation>
+        <translation>Воспроизведение / пауза</translation>
     </message>
     <message>
         <location filename="../src/music-player/dialogs/SettingsDialog.qml" line="201"/>
@@ -1075,7 +1075,7 @@
     <message>
         <location filename="../src/music-player/dialogs/SettingsDialog.qml" line="490"/>
         <source>This shortcut key conflicts with [%1], click Replace to make this shortcut key take effect immediately</source>
-        <translation>Этот комбинации клавиш конфликтует с [%1], нажмите Заменить, чтобы сделать эту комбинацию клавиш действующей немедленно</translation>
+        <translation>Этот комбинации клавиш конфликтует с [%1], нажмите «Заменить», чтобы сделать эту комбинацию клавиш действующей немедленно</translation>
     </message>
 </context>
 <context>
@@ -1083,12 +1083,12 @@
     <message>
         <location filename="../src/music-player/util/shortcut.cpp" line="60"/>
         <source>Play</source>
-        <translation>Воспроизведение</translation>
+        <translation>Играть</translation>
     </message>
     <message>
         <location filename="../src/music-player/util/shortcut.cpp" line="61"/>
         <source>Songs</source>
-        <translation>Треки</translation>
+        <translation>Песни</translation>
     </message>
     <message>
         <location filename="../src/music-player/util/shortcut.cpp" line="62"/>
@@ -1103,7 +1103,7 @@
     <message>
         <location filename="../src/music-player/util/shortcut.cpp" line="70"/>
         <source>Play/Pause</source>
-        <translation>Воспроизведение / Пауза</translation>
+        <translation>Воспроизведение / пауза</translation>
     </message>
     <message>
         <location filename="../src/music-player/util/shortcut.cpp" line="71"/>
