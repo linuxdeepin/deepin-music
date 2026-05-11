@@ -901,7 +901,7 @@
     <message>
         <location filename="../src/music-player/main.cpp" line="139"/>
         <source>Music is a local music player with beautiful design and simple functions.</source>
-        <translation>Плеер - это локальный музыкальный плеер с красивым дизайном и простыми функциями.</translation>
+        <translation>Музыка — это локальный проигрыватель музыки с красивым дизайном и простыми функциями.</translation>
     </message>
     <message>
         <location filename="../src/music-player/main.cpp" line="141"/>
@@ -924,7 +924,7 @@
     <message>
         <location filename="../src/music-player/dialogs/SearchResultDialog.qml" line="27"/>
         <source>Songs</source>
-        <translation>Треки</translation>
+        <translation>Песни</translation>
     </message>
     <message>
         <location filename="../src/music-player/dialogs/SearchResultDialog.qml" line="39"/>
@@ -952,7 +952,7 @@
     <message>
         <location filename="../src/music-player/mainwindow/SearchResultWindow.qml" line="101"/>
         <source>%1 albums - %2 songs</source>
-        <translation>   %1 альбом - %2 песни</translation>
+        <translation>&apos;%1 альбом - %2 песни&apos;</translation>
     </message>
     <message>
         <location filename="../src/music-player/mainwindow/SearchResultWindow.qml" line="102"/>
@@ -962,7 +962,7 @@
     <message>
         <location filename="../src/music-player/mainwindow/SearchResultWindow.qml" line="102"/>
         <source>%1 album - %2 songs</source>
-        <translation>   %1 альбом - %2 песни</translation>
+        <translation>&apos;%1 альбом - %2 песни&apos;</translation>
     </message>
     <message>
         <location filename="../src/music-player/mainwindow/SearchResultWindow.qml" line="121"/>
@@ -1010,7 +1010,7 @@
     <message>
         <location filename="../src/music-player/dialogs/SettingsDialog.qml" line="78"/>
         <source>Close Main Window</source>
-        <translation>Закрыть Главное Окно</translation>
+        <translation>Закрыть главное окно</translation>
     </message>
     <message>
         <location filename="../src/music-player/dialogs/SettingsDialog.qml" line="91"/>
