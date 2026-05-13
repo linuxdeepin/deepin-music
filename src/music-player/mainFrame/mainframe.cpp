@@ -1136,6 +1136,10 @@ void MainFrame::changeEvent(QEvent *event)
         if (m_playQueueWidget) {
             m_playQueueWidget->stopAnimation();
         }
+        // 只在非最小化状态改变时更新标志位，避免与托盘收起逻辑冲突
+        if (!isMinimized()) {
+            m_preMaxFlag = isMaximized();
+        }
     }
 }
 
