@@ -15,3 +15,6 @@ linglong/
 obj-x86_64-linux-gnu/
 .specstory
 .cursorindexingignore
+.npm-cache/
+.cursor/
+.codegraph/

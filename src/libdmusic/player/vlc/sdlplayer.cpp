@@ -1,5 +1,4 @@
-// Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co., Ltd.
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2023 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -109,12 +108,14 @@ SdlPlayer::SdlPlayer(VlcInstance *instance)
     m_loadSdlLibrary = VlcDynamicInstance::VlcFunctionInstance()->loadSdlLibrary();
     if (m_loadSdlLibrary) {
         qCDebug(dmMusic) << "SDL library loaded successfully, initializing SDL audio";
-        SDL_Init_function Init = (SDL_Init_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSdlSymbol("SDL_GetAudioStatus");
+        SDL_Init_function Init = (SDL_Init_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSdlSymbol("SDL_Init");
         vlc_audio_set_callbacks_function vlc_audio_set_callbacks = (vlc_audio_set_callbacks_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("libvlc_audio_set_callbacks");
         vlc_audio_set_format_callbacks_function vlc_audio_set_format_callbacks = (vlc_audio_set_format_callbacks_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("libvlc_audio_set_format_callbacks");
         SDL_LogSetPriority_function LogSetPriority = (SDL_LogSetPriority_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSdlSymbol("SDL_LogSetPriority");
         SDL_LogSetOutputFunction_function LogSetOutputFunction = (SDL_LogSetOutputFunction_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSdlSymbol("SDL_LogSetOutputFunction");
-        Init(SDL_INIT_AUDIO);
+        if (Init(SDL_INIT_AUDIO) < 0) {
+            qCWarning(dmMusic) << "SDL_Init(AUDIO) returned non-zero; continuing but audio may not work";
+        }
         vlc_audio_set_callbacks(_vlcMediaPlayer, libvlc_audio_play_cb, libvlc_audio_pause_cb, libvlc_audio_resume_cb, libvlc_audio_flush_cb, nullptr, this);
         vlc_audio_set_format_callbacks(_vlcMediaPlayer, libvlc_audio_setup_cb, nullptr);
 
@@ -245,8 +246,11 @@ void SdlPlayer::resume()
         SDL_OpenAudio_function OpenAudio = (SDL_OpenAudio_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSdlSymbol("SDL_OpenAudio");
         SDL_Delay_function Delay = (SDL_Delay_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSdlSymbol("SDL_Delay");
         if (GetAudioStatus() == SDL_AUDIO_STOPPED) {
-            OpenAudio(&obtainedAS, nullptr);
-            qCDebug(dmMusic) << "Reopened audio device";
+            if (OpenAudio(&obtainedAS, nullptr) < 0) {
+                qCWarning(dmMusic) << "Failed to reopen audio device on resume";
+            } else {
+                qCDebug(dmMusic) << "Reopened audio device";
+            }
         }
 
         if ((GetAudioStatus() != SDL_AUDIO_STOPPED)) {
@@ -348,26 +352,45 @@ void SdlPlayer::libvlc_audio_play_cb(void *data, const void *samples, unsigned c
         return;
     }
 
-    int size = count * sdlMediaPlayer->obtainedAS.channels * sdlMediaPlayer->_rate / 8;
+    const unsigned bytesPerSample = sdlMediaPlayer->_rate / 8;
+    const unsigned dstChannels = sdlMediaPlayer->obtainedAS.channels;
+    const unsigned srcChannels = sdlMediaPlayer->_channels;
+    if (bytesPerSample == 0 || dstChannels == 0 || srcChannels == 0 || count == 0) {
+        return;
+    }
+    // 用 size_t 做累乘，避免高采样率/大 buffer 下 int 溢出。
+    const size_t size = static_cast<size_t>(count) * dstChannels * bytesPerSample;
 
     /** vlc解析的通道数超过设置到sdl的通道数时，声音会出现沙哑的问题，
         原因是SDL支持的最大channel数为6,当超过这个阈值时，SDL本身是不支持的，会按照正常的指针偏移去读取下一桢数据，
         导致解析出问题，声音沙哑。解决方案为舍弃掉samples中，超出SDL通道数的的数据，只拷贝SDL支持通道数内的数据。
     **/
     char curSamples[size];
-    if (sdlMediaPlayer->_channels != sdlMediaPlayer->obtainedAS.channels) {
-        for (int i = 0; i < count; ++i) {
-            for (int j = 0; j < sdlMediaPlayer->obtainedAS.channels; ++j) {
-                memcpy((curSamples + (i * sdlMediaPlayer->obtainedAS.channels + j) * (sdlMediaPlayer->_rate / 8)),
-                       (char *)samples + (i * sdlMediaPlayer->_channels + j)*sdlMediaPlayer->_rate / 8,
-                       sdlMediaPlayer->_rate / 8);
+    if (srcChannels > dstChannels) {
+        // 源声道多于目的：按帧只取前 dstChannels 个声道，丢弃多余声道。
+        for (unsigned i = 0; i < count; ++i) {
+            for (unsigned j = 0; j < dstChannels; ++j) {
+                memcpy(curSamples + (i * dstChannels + j) * bytesPerSample,
+                       static_cast<const char *>(samples) + (i * srcChannels + j) * bytesPerSample,
+                       bytesPerSample);
             }
         }
+    } else if (srcChannels == dstChannels) {
+        memcpy(curSamples, samples, size);
     } else {
-        memcpy(curSamples, (char *)samples, size);
+        // 源声道少于目的（理论上 stereo fallback 不会触发到这里，但留个兜底）：
+        // 把可用声道复制完后，多出来的目的声道用最后一个源声道填充，避免越界读 samples。
+        for (unsigned i = 0; i < count; ++i) {
+            for (unsigned j = 0; j < dstChannels; ++j) {
+                const unsigned srcChan = (j < srcChannels) ? j : (srcChannels - 1);
+                memcpy(curSamples + (i * dstChannels + j) * bytesPerSample,
+                       static_cast<const char *>(samples) + (i * srcChannels + srcChan) * bytesPerSample,
+                       bytesPerSample);
+            }
+        }
     }
 
-    QByteArray ba((char *)curSamples, size);
+    QByteArray ba(curSamples, static_cast<int>(size));
     QMutexLocker locker(&vlc_mutex);
     sdlMediaPlayer->_data.append(ba);
 }
@@ -401,12 +424,13 @@ void SdlPlayer::libvlc_audio_resume_cb(void *data, int64_t pts)
 int SdlPlayer::libvlc_audio_setup_cb(void **data, char *format, unsigned *rate, unsigned *channels)
 {
     qCDebug(dmMusic) << "Setting up audio - Format:" << format << "Rate:" << *rate << "Channels:" << *channels;
-    
+
     SDL_PauseAudio_function PauseAudio = (SDL_PauseAudio_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSdlSymbol("SDL_PauseAudio");
     SDL_Delay_function Delay = (SDL_Delay_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSdlSymbol("SDL_Delay");
     SDL_OpenAudio_function OpenAudio = (SDL_OpenAudio_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSdlSymbol("SDL_OpenAudio");
+    SDL_CloseAudio_function CloseAudio = (SDL_CloseAudio_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSdlSymbol("SDL_CloseAudio");
     av_log2_function Log2 = (av_log2_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("av_log2", true);
-    
+
     // 防御性编程：先检查data指针有效性，再解引用
     if (!data) {
         qCCritical(dmMusic) << "Null data pointer in audio setup";
@@ -417,10 +441,13 @@ int SdlPlayer::libvlc_audio_setup_cb(void **data, char *format, unsigned *rate, 
         qCCritical(dmMusic) << "Invalid player instance in audio setup";
         return -1;
     }
-    
+
     // 在确认指针有效后再暂停音频，避免早期返回时音频被永久暂停
     PauseAudio(1);
-    
+
+    // 关闭之前可能已打开的音频设备，避免重复打开失败
+    CloseAudio();
+
     sdlMediaPlayer->cleanMemCache();
     sdlMediaPlayer->_rate = libvlc_audio_format(format);
     sdlMediaPlayer->_channels = *channels;
@@ -435,14 +462,20 @@ int SdlPlayer::libvlc_audio_setup_cb(void **data, char *format, unsigned *rate, 
     desiredAS.callback = SDL_audio_cbk;
     desiredAS.userdata = sdlMediaPlayer;
 
-    qCDebug(dmMusic) << "Opening audio device with spec - Freq:" << desiredAS.freq 
-                     << "Format:" << desiredAS.format 
+    qCDebug(dmMusic) << "Opening audio device with spec - Freq:" << desiredAS.freq
+                     << "Format:" << desiredAS.format
                      << "Channels:" << (int)desiredAS.channels
                      << "Samples:" << desiredAS.samples;
 
     if (OpenAudio(&desiredAS, &sdlMediaPlayer->obtainedAS) < 0) {
-        qCCritical(dmMusic) << "Failed to open audio device";
-        return -1;
+        qCWarning(dmMusic) << "Failed to open audio device with" << (int)desiredAS.channels
+                           << "channels, retrying with stereo (2 channels)";
+        desiredAS.channels = 2;
+        if (OpenAudio(&desiredAS, &sdlMediaPlayer->obtainedAS) < 0) {
+            qCCritical(dmMusic) << "Failed to open audio device even with stereo";
+            return -1;
+        }
+        qCDebug(dmMusic) << "Audio device opened with stereo fallback";
     }
 
     Delay(40);
