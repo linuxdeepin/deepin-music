@@ -1,3 +1,9 @@
+deepin-music (7.0.58) unstable; urgency=medium
+
+  * fix(sdlplayer): fallback to stereo when multi-channel device open fails
+
+ -- dengzhongyuan <dengzhongyuan@uniontech.com>  Thu, 28 May 2026 17:19:37 +0800
+
 deepin-music (7.0.57) unstable; urgency=medium
 
   * chore: update translation
