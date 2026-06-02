@@ -1,4 +1,4 @@
-// Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co., Ltd.
+// Copyright (C) 2020 ~ 2026 Uniontech Software Technology Co., Ltd.
 // SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
@@ -95,6 +95,35 @@ void MetaBufferDetector::run()
     codec_close_function codec_close = (codec_close_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("avcodec_close", true);
     codec_send_packet_function codec_send_packet = (codec_send_packet_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("avcodec_send_packet", true);
     codec_receive_frame_function codec_receive_frame = (codec_receive_frame_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("avcodec_receive_frame", true);
+
+    auto checkSymbol = [](const char *name, bool valid) -> bool {
+        if (!valid) {
+            qWarning() << Q_FUNC_INFO << "resolve ffmpeg symbol failed:" << name;
+            return false;
+        }
+        return true;
+    };
+
+    if (!checkSymbol("avformat_alloc_context", format_alloc_context)
+            || !checkSymbol("avformat_open_input", format_open_input)
+            || !checkSymbol("avformat_free_context", format_free_context)
+            || !checkSymbol("avformat_find_stream_info", format_find_stream_info)
+            || !checkSymbol("av_find_best_stream", find_best_stream)
+            || !checkSymbol("avformat_close_input", format_close_input)
+            || !checkSymbol("avcodec_alloc_context3", codec_alloc_context3)
+            || !checkSymbol("avcodec_parameters_to_context", codec_parameters_to_context)
+            || !checkSymbol("avcodec_find_decoder", codec_find_decoder)
+            || !checkSymbol("avcodec_open2", codec_open2)
+            || !checkSymbol("av_packet_alloc", packet_alloc)
+            || !checkSymbol("av_frame_alloc", frame_alloc)
+            || !checkSymbol("av_read_frame", read_frame)
+            || !checkSymbol("av_packet_unref", packet_unref)
+            || !checkSymbol("av_frame_free", frame_free)
+            || !checkSymbol("avcodec_close", codec_close)
+            || !checkSymbol("avcodec_send_packet", codec_send_packet)
+            || !checkSymbol("avcodec_receive_frame", codec_receive_frame)) {
+        return;
+    }
 
     AVFormatContext *pFormatCtx = format_alloc_context();
     format_open_input(&pFormatCtx, path.toStdString().c_str(), nullptr, nullptr);
