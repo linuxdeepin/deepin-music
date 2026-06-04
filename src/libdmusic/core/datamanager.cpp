@@ -141,11 +141,26 @@ public:
     ~DataManagerPrivate()
     {
         qCDebug(dmMusic) << "Destroying DataManagerPrivate";
-        m_workerThread->quit();
+        // 1) 切断主线程与 worker 之间的 queued connection，阻止后续新 metacall 入队
+        //    （注意：已 posted 的 metacall 不会被撤销，但下面 wait 会等 worker 把它们处理完）
         if (m_dbOperate) {
-            qCDebug(dmMusic) << "Destroying DBOperate";
-            delete m_dbOperate;
+            m_parent->disconnect(m_dbOperate);
+            m_dbOperate->disconnect(m_parent);
+            // 2) 让 m_dbOperate 在自己 affinity 的 worker 线程里析构。
+            //    deleteLater 在 worker 的事件循环里 post 一个 DeferredDelete 事件；
+            //    quit() 后 worker 的 exec() 在返回前会先处理 DeferredDelete，从而在
+            //    正确的线程上 delete，满足 Qt 线程亲和性约束。
+            m_dbOperate->deleteLater();
             m_dbOperate = nullptr;
+        }
+        // 3) 请求事件循环退出 + 等线程真的结束
+        if (m_workerThread) {
+            m_workerThread->quit();
+            if (!m_workerThread->wait(3000)) {
+                qCWarning(dmMusic) << "Worker thread did not exit within 3s";
+            }
+            delete m_workerThread;
+            m_workerThread = nullptr;
         }
     }
 private:
@@ -183,8 +198,12 @@ DataManager::DataManager(QStringList supportedSuffixs, QObject *parent)
 DataManager::~DataManager()
 {
     qCDebug(dmMusic) << "Destroying DataManager";
-    m_data->m_workerThread->quit();
-    saveDataToDB();
+    if (m_data) {
+        saveDataToDB();
+        // 关键：触发 DataManagerPrivate 析构走安全销毁路径（disconnect + deleteLater + quit + wait）
+        delete m_data;
+        m_data = nullptr;
+    }
     qCDebug(dmMusic) << "DataManager destroyed";
 }
 
