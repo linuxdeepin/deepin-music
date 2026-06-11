@@ -1,3 +1,12 @@
+deepin-music (7.0.59) unstable; urgency=medium
+
+  * fix: Unresponsive click on tray panel applications
+  * fix(titlebar): fix window control button hover state not displayed
+  * fix: Music app process crash
+  * fix(sidebar): fix playlist name ellipsis overflow beyond blue border
+
+ -- Wang Yu <wangyu@uniontech.com>  Thu, 11 Jun 2026 19:36:50 +0800
+
 deepin-music (7.0.58) unstable; urgency=medium
 
   * fix(sdlplayer): fallback to stereo when multi-channel device open fails
