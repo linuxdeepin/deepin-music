@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2023 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -197,13 +197,12 @@ ApplicationWindow {
         tooltip: qsTr("Music")
 
         onActivated: {
-            //console.log("..........................", rootWindow.visibility, rootWindow.visible)
-            if (rootWindow.visibility === 2) {
-                rootWindow.showMinimized()
-            } else if (rootWindow.visibility === 3 || rootWindow.visibility === 0) {
+            if (rootWindow.visibility === Window.Minimized || !rootWindow.visible) {
                 rootWindow.show()
                 rootWindow.raise()
                 rootWindow.requestActivate()
+            } else {
+                rootWindow.showMinimized()
             }
         }
 
