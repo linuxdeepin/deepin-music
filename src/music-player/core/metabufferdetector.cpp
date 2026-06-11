@@ -126,22 +126,32 @@ void MetaBufferDetector::run()
     }
 
     AVFormatContext *pFormatCtx = format_alloc_context();
-    format_open_input(&pFormatCtx, path.toStdString().c_str(), nullptr, nullptr);
-
     if (pFormatCtx == nullptr) {
-        format_free_context(pFormatCtx);
         m_curPath.clear();
         m_curHash.clear();
         return;
     }
 
-    format_find_stream_info(pFormatCtx, nullptr);
+    if (format_open_input(&pFormatCtx, path.toStdString().c_str(), nullptr, nullptr) < 0 || pFormatCtx == nullptr) {
+        if (pFormatCtx != nullptr) {
+            format_free_context(pFormatCtx);
+        }
+        m_curPath.clear();
+        m_curHash.clear();
+        return;
+    }
+
+    if (format_find_stream_info(pFormatCtx, nullptr) < 0) {
+        format_close_input(&pFormatCtx);
+        m_curPath.clear();
+        m_curHash.clear();
+        return;
+    }
 
     int audio_stream_index = -1;
     audio_stream_index = find_best_stream(pFormatCtx, AVMEDIA_TYPE_AUDIO, -1, -1, nullptr, 0);
     if (audio_stream_index < 0) {
         format_close_input(&pFormatCtx);
-        format_free_context(pFormatCtx);
         m_curPath.clear();
         m_curHash.clear();
         return;
@@ -151,13 +161,45 @@ void MetaBufferDetector::run()
     AVCodecParameters *in_codecpar = in_stream->codecpar;
 
     AVCodecContext *pCodecCtx = codec_alloc_context3(nullptr);
-    codec_parameters_to_context(pCodecCtx, in_codecpar);
+    if (pCodecCtx == nullptr) {
+        format_close_input(&pFormatCtx);
+        m_curPath.clear();
+        m_curHash.clear();
+        return;
+    }
+
+    if (codec_parameters_to_context(pCodecCtx, in_codecpar) < 0) {
+        codec_close(pCodecCtx);
+        format_close_input(&pFormatCtx);
+        m_curPath.clear();
+        m_curHash.clear();
+        return;
+    }
 
     AVCodec *pCodec = codec_find_decoder(pCodecCtx->codec_id);
-    codec_open2(pCodecCtx, pCodec, nullptr);
+    if (pCodec == nullptr || codec_open2(pCodecCtx, pCodec, nullptr) < 0) {
+        codec_close(pCodecCtx);
+        format_close_input(&pFormatCtx);
+        m_curPath.clear();
+        m_curHash.clear();
+        return;
+    }
 
     AVPacket *packet = packet_alloc();
     AVFrame *frame = frame_alloc();
+    if (packet == nullptr || frame == nullptr) {
+        if (packet != nullptr) {
+            packet_unref(packet);
+        }
+        if (frame != nullptr) {
+            frame_free(&frame);
+        }
+        codec_close(pCodecCtx);
+        format_close_input(&pFormatCtx);
+        m_curPath.clear();
+        m_curHash.clear();
+        return;
+    }
 
     QVector<float> curData;
 
@@ -168,7 +210,6 @@ void MetaBufferDetector::run()
             frame_free(&frame);
             codec_close(pCodecCtx);
             format_close_input(&pFormatCtx);
-            format_free_context(pFormatCtx);
             resample(curData, hash, true);//刷新波浪条
             m_stopFlag = false;
             m_curPath.clear();
@@ -208,7 +249,6 @@ void MetaBufferDetector::run()
     frame_free(&frame);
     codec_close(pCodecCtx);
     format_close_input(&pFormatCtx);
-    format_free_context(pFormatCtx);
     resample(curData, hash);
 }
 
