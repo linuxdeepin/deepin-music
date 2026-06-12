@@ -12,8 +12,8 @@ DBusAIInterface::DBusAIInterface(QString &aiServicePath, QObject *parent) : QObj
     mp_interface = new QDBusInterface("com.deepin.copilot", aiServicePath, "com.deepin.copilot.app", QDBusConnection::sessionBus());
 
     if (mp_interface->isValid()) {
-        connect(mp_interface, SIGNAL(chatTextReceived(QString, QString)), this, SLOT(slotProcessChange(QString, QString)));
-        connect(mp_interface, SIGNAL(error(QString, qint32, QString)), this, SLOT(slotProcessEnd(QString, qint32, QString)));
+        connect(mp_interface, SIGNAL(chatTextReceived(QString, QString)), this, SLOT(slotChatTextReceived(QString, QString)));
+        connect(mp_interface, SIGNAL(error(QString, qint32, QString)), this, SLOT(slotError(QString, qint32, QString)));
     }
 
 }
