@@ -1,12 +1,10 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS>
-<TS version="2.1" language="es" sourcelanguage="en_US">
+<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="es" sourcelanguage="en_US">
 <context>
     <name>AlbumDefaultPage</name>
     <message>
         <location filename="../src/music-player/albumlist/AlbumDefaultPage.qml" line="36"/>
         <source>Add Songs</source>
-        <translation>Agregar canciones</translation>
+        <translation>Añadir canciones</translation>
     </message>
     <message>
         <location filename="../src/music-player/albumlist/AlbumDefaultPage.qml" line="44"/>
@@ -148,7 +146,7 @@
     <message>
         <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="44"/>
         <source>Add Songs</source>
-        <translation>Agregar canciones</translation>
+        <translation>Añadir canciones</translation>
     </message>
     <message>
         <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="52"/>
@@ -183,7 +181,7 @@
     <message>
         <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="174"/>
         <source>” to add songs to the playlist</source>
-        <translation>para agregar canciones a la lista de reproducción</translation>
+        <translation>para añadir canciones a la lista de reproducción</translation>
     </message>
     <message>
         <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="71"/>
@@ -245,7 +243,7 @@
     <message>
         <location filename="../src/music-player/singerlist/ArtistDefaultPage.qml" line="37"/>
         <source>Add Songs</source>
-        <translation>Agregar canciones</translation>
+        <translation>Añadir canciones</translation>
     </message>
     <message>
         <location filename="../src/music-player/singerlist/ArtistDefaultPage.qml" line="45"/>
@@ -609,7 +607,7 @@
     <message>
         <location filename="../src/music-player/dialogs/EqualizerDialog.qml" line="491"/>
         <source>Sound Effects Saved</source>
-        <translation type="unfinished"></translation>
+        <translation>Efectos de sonido guardados</translation>
     </message>
 </context>
 <context>
@@ -730,7 +728,7 @@
     <message>
         <location filename="../src/music-player/mainwindow/MainWindow.qml" line="384"/>
         <source>Sound Effects Saved</source>
-        <translation type="unfinished"></translation>
+        <translation>Efectos de sonido guardados</translation>
     </message>
     <message>
         <location filename="../src/music-player/mainwindow/MainWindow.qml" line="395"/>
@@ -1201,7 +1199,7 @@
     <message>
         <location filename="../src/music-player/musicmousemenu/SidebarMenu.qml" line="33"/>
         <source>Add songs</source>
-        <translation>Agregar canciones</translation>
+        <translation>Añadir canciones</translation>
     </message>
     <message>
         <location filename="../src/music-player/musicmousemenu/SidebarMenu.qml" line="42"/>
