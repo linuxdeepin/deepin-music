@@ -126,8 +126,8 @@ static bool moreThanArtistTitleDES(const ArtistInfo &v1, const ArtistInfo &v2)
 class DataManagerPrivate
 {
 public:
-    DataManagerPrivate(QStringList supportedSuffixs, DataManager *parent)
-        : m_parent(parent)
+    DataManagerPrivate(QStringList supportedSuffixs, DataManager *parent, const QString &dbPath)
+        : m_parent(parent), m_dbPath(dbPath)
     {
         qCDebug(dmMusic) << "Initializing DataManagerPrivate with supported suffixes:" << supportedSuffixs;
         m_settings = new MusicSettings(m_parent);
@@ -170,6 +170,7 @@ private:
     DBOperate                        *m_dbOperate        = nullptr;
     MusicSettings                    *m_settings         = nullptr;
     QSqlDatabase                      m_database;
+    QString                           m_dbPath;           // 可注入的 DB 路径，空=默认 cachePath/mediameta.sqlite
     QString                           m_currentHash;
     QList<DMusic::MediaMeta>          m_allMetas;
     QList<DMusic::AlbumInfo>          m_allAlbums;
@@ -180,8 +181,8 @@ private:
     QList<QString>                    m_searchAlbums;
 };
 
-DataManager::DataManager(QStringList supportedSuffixs, QObject *parent)
-    : QObject(parent), m_data(new DataManagerPrivate(supportedSuffixs, this))
+DataManager::DataManager(QStringList supportedSuffixs, QObject *parent, const QString &dbPath)
+    : QObject(parent), m_data(new DataManagerPrivate(supportedSuffixs, this, dbPath))
 {
     qCDebug(dmMusic) << "Initializing DataManager with supported suffixes:" << supportedSuffixs;
     initPlaylist();
@@ -2230,7 +2231,19 @@ void DataManager::initPlaylist()
     playlistMeta.saveFalg = false;
     m_data->m_allPlaylist << playlistMeta;
 
-    QString dbPath = DmGlobal::cachePath() + "/mediameta.sqlite";
+    // DB 路径白名单（安全）：仅允许测试用 ":memory:"（内存库，无文件系统副作用）；
+    // 空=默认 cachePath/mediameta.sqlite；其他任何路径一律拒绝并回退默认，
+    // 防止路径遍历导致任意文件创建/覆盖。
+    QString dbPath;
+    if (m_data->m_dbPath == ":memory:") {
+        dbPath = m_data->m_dbPath;
+    } else if (m_data->m_dbPath.isEmpty()) {
+        dbPath = DmGlobal::cachePath() + "/mediameta.sqlite";
+    } else {
+        qCWarning(dmMusic) << "Security: injected dbPath is not ':memory:' or empty, "
+                              "rejected to prevent path traversal, falling back to default.";
+        dbPath = DmGlobal::cachePath() + "/mediameta.sqlite";
+    }
     qCDebug(dmMusic) << "Opening database at:" << dbPath;
     m_data->m_database = QSqlDatabase::addDatabase("QSQLITE");
     m_data->m_database.setDatabaseName(dbPath);

@@ -12,7 +12,8 @@ class DataManager : public QObject
 {
     Q_OBJECT
 public:
-    DataManager(QStringList supportedSuffixs, QObject *parent = nullptr);
+    // dbPath 可选：测试注入 ":memory:" 或临时文件以隔离数据；为空走默认 cachePath/mediameta.sqlite
+    explicit DataManager(QStringList supportedSuffixs, QObject *parent = nullptr, const QString &dbPath = QString());
     ~DataManager();
 
     void setCurrentPlayliHash(const QString &hash);

@@ -46,12 +46,14 @@ void QTestMain::initTestCase()
 void QTestMain::cleanupTestCase()
 {
     qDebug() << "=====stop test=====";
-    exit(0);
+    // 不再调用 exit(0)：直接 exit 会绕过进程正常退出流程，导致 gcov 的 .gcda
+    // 覆盖率数据无法 flush 到磁盘，覆盖率统计恒为 0。改为正常返回，让 QTest::qExec
+    // 返回后进程自然退出，atexit 注册的 __gcov_dump 得以执行。
 }
 
 void QTestMain::testGTest()
 {
-    testing::GTEST_FLAG(output) = "xml:./report/report_deepin-movie-test.xml";
+    testing::GTEST_FLAG(output) = "xml:./report/report_deepin-music-test.xml";
     testing::InitGoogleTest(&m_argc,m_argv);
     int ret = RUN_ALL_TESTS();
 #ifndef __mips__
