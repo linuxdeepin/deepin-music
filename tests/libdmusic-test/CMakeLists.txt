@@ -25,11 +25,11 @@ set(CMAKE_CXX_OUTPUT_EXTENSION_REPLACE ON)
 set(OBJECT_DIR ${CMAKE_BINARY_DIR}/CMakeFiles/objects)
 
 
-# 设置Qt模块
-set(QT_MODULES Core Gui Widgets Svg Multimedia Xml Network Sql DBus Test)
+# 设置Qt模块（对齐主工程 Qt6 + Core5Compat）
+set(QT_MODULES Core Gui Widgets Svg Multimedia Xml Network Sql DBus Test Core5Compat)
 
 #先查找到这些qt相关的模块以供链接使用
-find_package(Qt6 REQUIRED ${QT_MODULES})
+find_package(Qt6 REQUIRED COMPONENTS ${QT_MODULES})
 
 # 包含源码文件夹
 include_directories(${CMAKE_INCLUDE_CURRENT_DIR})
@@ -70,17 +70,16 @@ else()
 endif()
 
 find_package(PkgConfig REQUIRED)
-find_package(KF5Codecs)
 
-pkg_check_modules(MPRIS REQUIRED IMPORTED_TARGET mpris-qt5)
+# 对齐主工程依赖集：mpris-qt6、taglib、dtk6core；移除主工程已废弃的 udisks2-qt5 与 KF5Codecs
+pkg_check_modules(MPRIS REQUIRED IMPORTED_TARGET mpris-qt6)
 pkg_check_modules(TAGLIB REQUIRED IMPORTED_TARGET taglib)
 pkg_check_modules(DTK REQUIRED IMPORTED_TARGET dtk6core)
-pkg_check_modules(udisks2 REQUIRED IMPORTED_TARGET udisks2-qt5)
 
 LINK_DIRECTORIES(${CMAKE_BINARY_DIR}/../../src/libdmusic)
-set(TARGET_LIBS PkgConfig::MPRIS KF5::Codecs PkgConfig::TAGLIB PkgConfig::DTK PkgConfig::udisks2 Qt6::Core Qt6::Gui Qt6::Widgets Qt6::Svg Qt::Multimedia Qt6::Xml Qt6::Network Qt6::Sql Qt6::DBus)
+set(TARGET_LIBS PkgConfig::MPRIS PkgConfig::TAGLIB PkgConfig::DTK Qt6::Core Qt6::Gui Qt6::Widgets Qt6::Svg Qt6::Multimedia Qt6::Xml Qt6::Network Qt6::Sql Qt6::DBus Qt6::Core5Compat)
 target_include_directories(${PROJECT_NAME} PUBLIC ${TARGET_LIBS} Qt6::Test)
-target_link_libraries(${PROJECT_NAME} ${TARGET_LIBS} ${GTEST_LIBRARIES} ${GTEST_MAIN_LIBRARIES} Qt6::Test dmusic)
+target_link_libraries(${PROJECT_NAME} ${TARGET_LIBS} Qt6::Test dmusic)
 target_link_libraries(${PROJECT_NAME} gmock gmock_main gtest gtest_main -lpthread -lm)
 
 include(GNUInstallDirs)

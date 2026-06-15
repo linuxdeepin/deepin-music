@@ -63,6 +63,10 @@ void QTestMain::testGTest()
 
 int main(int argc, char *argv[])
 {
+    // QSqlDatabase（DataManager 初始化时使用）等 Qt 模块要求 QCoreApplication 已创建，
+    // 否则 Presenter 构造 → DataManager::initPlaylist → QSqlDatabase::open 会解引用空指针 (SIGSEGV)。
+    QCoreApplication app(argc, argv);
+
     QTestMain testMain(argc, argv);
     QTest::qExec(&testMain, argc, argv);
     return 0;

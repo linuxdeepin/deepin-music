@@ -45,11 +45,16 @@ include_directories(${PROJECT_SOURCE_DIR})
 
 configure_file(${PROJECT_SOURCE_DIR}/config.h.in ${PROJECT_BINARY_DIR}/config.h @ONLY)
 
+# 单元测试覆盖率：Debug 构建时为所有目标开启 gcov 插桩，供 lcov/gcov 统计被测库（dmusic）的行覆盖率
+if (CMAKE_BUILD_TYPE STREQUAL "Debug")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fprofile-arcs -ftest-coverage -g")
+endif()
+
 # Application
 add_subdirectory(src)
 
 # Unit Tests
-# if (CMAKE_BUILD_TYPE STREQUAL "Debug")
-#     add_subdirectory(tests)
-# endif()
+if (CMAKE_BUILD_TYPE STREQUAL "Debug")
+    add_subdirectory(tests)
+endif()
 
