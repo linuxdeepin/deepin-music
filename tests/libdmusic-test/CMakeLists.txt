@@ -59,6 +59,9 @@ set_directory_properties(PROPERTIES CLEAN_NO_CUSTOM 1)
 # 添加需要安装的模块
 add_executable(${PROJECT_NAME} ${allTestSource})
 
+# 测试数据目录宏（testdata/sample.mp3 等真实音频样本，编译期注入源码绝对路径）
+target_compile_definitions(${PROJECT_NAME} PRIVATE TEST_DATA_DIR="${CMAKE_CURRENT_SOURCE_DIR}/testdata")
+
 # 添加gocv覆盖率文件的输出
 # 内存检测
 if (CMAKE_HOST_SYSTEM_PROCESSOR MATCHES "mips64")

@@ -16,15 +16,38 @@
 #include <QString>
 #include <QStringList>
 #include <QVariant>
+#include <QFile>
+#include <QSignalSpy>
 
 #include "datamanager.h"
 #include "global.h"
+
+#ifndef TEST_DATA_DIR
+#define TEST_DATA_DIR "."
+#endif
+
+namespace {
+QString sampleMp3Path()
+{
+    return QString(TEST_DATA_DIR) + "/sample.mp3";
+}
+}
 
 namespace {
 // 内存 DB 的 DataManager 工厂
 DataManager *makeDataMgr(const QStringList &suffix = QStringList{"mp3", "flac"})
 {
     return new DataManager(suffix, nullptr, ":memory:");
+}
+
+// 导入 sample.mp3 并返回已导入的 DataManager（用于"导入后操作"测试）
+std::unique_ptr<DataManager> importSample()
+{
+    auto dm = std::unique_ptr<DataManager>(makeDataMgr());
+    QSignalSpy spy(dm.get(), &DataManager::signalImportFinished);
+    dm->importMetas({sampleMp3Path()}, "play");
+    spy.wait(5000);
+    return dm;
 }
 }
 
@@ -211,4 +234,348 @@ TEST(DataManagerSearchTest, emptyLibrarySearchReturnsNoResults)
     EXPECT_TRUE(metaTitles.isEmpty());
     EXPECT_TRUE(albums.isEmpty());
     EXPECT_TRUE(artists.isEmpty());
+}
+
+// ============================================================================
+// metaFromHash / playlistFromHash : 不存在 hash 返回空对象
+// ============================================================================
+TEST(DataManagerQueryTest, metaFromHashNonexistentReturnsEmpty)
+{
+    std::unique_ptr<DataManager> dm(makeDataMgr());
+    const auto meta = dm->metaFromHash("nonexistent-hash-xyz");
+    EXPECT_TRUE(meta.hash.isEmpty());
+}
+
+TEST(DataManagerQueryTest, playlistFromHashBuiltinReturnsValid)
+{
+    std::unique_ptr<DataManager> dm(makeDataMgr());
+    // "play" 是内置歌单，应能查到
+    const auto pl = dm->playlistFromHash("play");
+    EXPECT_EQ(pl.uuid, "play");
+}
+
+TEST(DataManagerQueryTest, playlistFromHashNonexistentReturnsEmpty)
+{
+    std::unique_ptr<DataManager> dm(makeDataMgr());
+    const auto pl = dm->playlistFromHash("nonexistent-hash-xyz");
+    EXPECT_TRUE(pl.uuid.isEmpty());
+}
+
+// ============================================================================
+// 批量查询：空库返回空集合，不崩溃
+// ============================================================================
+TEST(DataManagerBulkQueryTest, emptyLibraryReturnsExpectedCollections)
+{
+    std::unique_ptr<DataManager> dm(makeDataMgr());
+    // 无歌曲：album/artist 相关集合应为空
+    EXPECT_TRUE(dm->allAlbumInfos().isEmpty());
+    EXPECT_TRUE(dm->allArtistInfos().isEmpty());
+    EXPECT_TRUE(dm->allAlbumVariantList().isEmpty());
+    EXPECT_TRUE(dm->allArtistVariantList().isEmpty());
+    // 内置歌单（album/artist/fav/play 等）构造时预置，故 allPlaylistVariantList 非空
+    EXPECT_FALSE(dm->allPlaylistVariantList().isEmpty());
+    // 用户自建歌单：空库应为空
+    EXPECT_TRUE(dm->customPlaylistVariantList().isEmpty());
+    // 搜索结果：未搜索时应为空
+    EXPECT_TRUE(dm->searchedAlbumVariantList().isEmpty());
+    EXPECT_TRUE(dm->searchedArtistVariantList().isEmpty());
+}
+
+// ============================================================================
+// movePlaylist : 移动歌单顺序不崩溃
+// ============================================================================
+TEST(DataManagerMovePlaylistTest, moveDoesNotCrash)
+{
+    std::unique_ptr<DataManager> dm(makeDataMgr());
+    const auto pl1 = dm->addPlayList("A");
+    const auto pl2 = dm->addPlayList("B");
+    dm->movePlaylist(pl1.uuid, pl2.uuid);
+    SUCCEED();
+}
+
+// ============================================================================
+// sortPlaylist : 排序不崩溃
+// ============================================================================
+TEST(DataManagerSortPlaylistTest, sortDoesNotCrash)
+{
+    std::unique_ptr<DataManager> dm(makeDataMgr());
+    dm->sortPlaylist(DmGlobal::SortByTitle, "play", true);
+    dm->sortPlaylist(DmGlobal::SortByAddTime, "play", false);
+    SUCCEED();
+}
+
+// ============================================================================
+// isExistMeta(hash, playlist) : 不存在返回 false
+// ============================================================================
+TEST(DataManagerIsExistMetaInPlaylistTest, nonexistentReturnsFalse)
+{
+    std::unique_ptr<DataManager> dm(makeDataMgr());
+    EXPECT_FALSE(dm->isExistMeta("no-such-meta", "play"));
+}
+
+// ============================================================================
+// searchText : 空库搜索返回空
+// ============================================================================
+TEST(DataManagerSearchTextTest, emptyLibraryReturnsNoResults)
+{
+    std::unique_ptr<DataManager> dm(makeDataMgr());
+    QList<DMusic::MediaMeta> metaTitles;
+    QList<DMusic::AlbumInfo> albums;
+    QList<DMusic::ArtistInfo> artists;
+    dm->searchText("anything", metaTitles, albums, artists);
+    EXPECT_TRUE(metaTitles.isEmpty());
+    EXPECT_TRUE(albums.isEmpty());
+    EXPECT_TRUE(artists.isEmpty());
+    // 搜索后查询搜索结果也应为空
+    EXPECT_TRUE(dm->searchedAlbumInfos().isEmpty());
+    EXPECT_TRUE(dm->searchedArtistInfos().isEmpty());
+}
+
+// ============================================================================
+// syncToSettings / resetToSettings : 不崩溃
+// ============================================================================
+TEST(DataManagerSettingsSyncTest, syncAndResetDoNotCrash)
+{
+    std::unique_ptr<DataManager> dm(makeDataMgr());
+    dm->syncToSettings();
+    dm->resetToSettings();
+    SUCCEED();
+}
+
+// ============================================================================
+// getPlaylistMetas 默认参数：不传 hash 返回全部（不崩溃）
+// ============================================================================
+TEST(DataManagerGetMetasDefaultTest, defaultArgsDoNotCrash)
+{
+    std::unique_ptr<DataManager> dm(makeDataMgr());
+    const auto metas = dm->getPlaylistMetas();
+    EXPECT_TRUE(metas.isEmpty());
+}
+
+// ============================================================================
+// addMetasToPlayList(metas) : 向歌单注入构造的 meta（不需文件），填充 sortMetas
+// 这是激活 sortPlaylist 排序谓词的关键前序步骤
+// ============================================================================
+TEST(DataManagerAddMetasTest, populatesSortMetasForBuiltinPlaylist)
+{
+    std::unique_ptr<DataManager> dm(makeDataMgr());
+    DMusic::MediaMeta m1; m1.hash = "h1"; m1.title = "B";
+    DMusic::MediaMeta m2; m2.hash = "h2"; m2.title = "A";
+    dm->addMetasToPlayList(QList<DMusic::MediaMeta>{m1, m2}, "play");
+    const auto pl = dm->playlistFromHash("play");
+    EXPECT_EQ(pl.sortMetas.size(), 2);
+    EXPECT_TRUE(pl.sortMetas.contains("h1"));
+    EXPECT_TRUE(pl.sortMetas.contains("h2"));
+}
+
+TEST(DataManagerAddMetasTest, emptyMetasOrHashIsNoop)
+{
+    std::unique_ptr<DataManager> dm(makeDataMgr());
+    dm->addMetasToPlayList(QList<DMusic::MediaMeta>{}, "play");                 // 空 metas
+    dm->addMetasToPlayList(QList<DMusic::MediaMeta>{DMusic::MediaMeta()}, "");  // 空 hash
+    EXPECT_EQ(dm->playlistFromHash("play").sortMetas.size(), 0);
+}
+
+// ============================================================================
+// sortPlaylist : 有元素时触发各排序谓词（moreThanTimestampASC/DES/TitleASC/...）
+// signalFlag=false 直接按 type 排序，覆盖各 ASC/DES 分支
+// ============================================================================
+TEST(DataManagerSortWithMetasTest, sortByAllTypesTriggersComparators)
+{
+    std::unique_ptr<DataManager> dm(makeDataMgr());
+    DMusic::MediaMeta m1; m1.hash = "h1";
+    DMusic::MediaMeta m2; m2.hash = "h2";
+    dm->addMetasToPlayList(QList<DMusic::MediaMeta>{m1, m2}, "play");
+    // 各排序类型（signalFlag=false 直接按 type 排序，触发对应 static 谓词）
+    dm->sortPlaylist(DmGlobal::SortByAddTimeASC, "play", false);
+    dm->sortPlaylist(DmGlobal::SortByAddTimeDES, "play", false);
+    dm->sortPlaylist(DmGlobal::SortByTitleASC,   "play", false);
+    dm->sortPlaylist(DmGlobal::SortByTitleDES,   "play", false);
+    dm->sortPlaylist(DmGlobal::SortByArtistASC,  "play", false);
+    dm->sortPlaylist(DmGlobal::SortByArtistDES,  "play", false);
+    dm->sortPlaylist(DmGlobal::SortByAblumASC,   "play", false);
+    dm->sortPlaylist(DmGlobal::SortByAblumDES,   "play", false);
+    SUCCEED();
+}
+
+TEST(DataManagerSortWithMetasTest, sortCustomSetsSortType)
+{
+    std::unique_ptr<DataManager> dm(makeDataMgr());
+    DMusic::MediaMeta m; m.hash = "h1";
+    dm->addMetasToPlayList(QList<DMusic::MediaMeta>{m}, "play");
+    dm->sortPlaylist(DmGlobal::SortByCustomASC, "play", false);
+    EXPECT_EQ(dm->playlistFromHash("play").sortType, DmGlobal::SortByCustomASC);
+}
+
+// ============================================================================
+// clearPlayList : 清空歌单元数据
+// ============================================================================
+TEST(DataManagerClearPlayListTest, clearsSortMetas)
+{
+    std::unique_ptr<DataManager> dm(makeDataMgr());
+    DMusic::MediaMeta m; m.hash = "h1";
+    dm->addMetasToPlayList(QList<DMusic::MediaMeta>{m}, "play");
+    EXPECT_EQ(dm->playlistFromHash("play").sortMetas.size(), 1);
+    dm->clearPlayList("play");
+    EXPECT_EQ(dm->playlistFromHash("play").sortMetas.size(), 0);
+}
+
+// ============================================================================
+// removeFromPlayList : delFlag=true 触发 deleteMetaFromAllMetas/Album/Artist
+// ============================================================================
+TEST(DataManagerRemoveFromPlayListTest, removeWithDelFlagFromPlay)
+{
+    std::unique_ptr<DataManager> dm(makeDataMgr());
+    DMusic::MediaMeta m; m.hash = "h1";
+    dm->addMetasToPlayList(QList<DMusic::MediaMeta>{m}, "play");
+    dm->removeFromPlayList({"h1"}, "play", true);  // delFlag=true
+    EXPECT_EQ(dm->playlistFromHash("play").sortMetas.size(), 0);
+}
+
+TEST(DataManagerRemoveFromPlayListTest, removeFromAllPlaylist)
+{
+    std::unique_ptr<DataManager> dm(makeDataMgr());
+    DMusic::MediaMeta m; m.hash = "h1";
+    dm->addMetasToPlayList(QList<DMusic::MediaMeta>{m}, "play");
+    dm->removeFromPlayList({"h1"}, "all", false);
+    SUCCEED();
+}
+
+// ============================================================================
+// moveMetasPlayList : 在 custom 排序的歌单内移动
+// ============================================================================
+TEST(DataManagerMoveMetasPlayListTest, movesInCustomSortedList)
+{
+    std::unique_ptr<DataManager> dm(makeDataMgr());
+    DMusic::MediaMeta m1; m1.hash = "h1";
+    DMusic::MediaMeta m2; m2.hash = "h2";
+    dm->addMetasToPlayList(QList<DMusic::MediaMeta>{m1, m2}, "play");
+    // moveMetasPlayList 要求 sortType == CustomASC/DES
+    dm->sortPlaylist(DmGlobal::SortByCustomASC, "play", false);
+    EXPECT_TRUE(dm->moveMetasPlayList({"h1"}, "play", "h2"));
+}
+
+TEST(DataManagerMoveMetasPlayListTest, rejectsSystemPlaylist)
+{
+    std::unique_ptr<DataManager> dm(makeDataMgr());
+    EXPECT_FALSE(dm->moveMetasPlayList({"h1"}, "all", ""));
+    EXPECT_FALSE(dm->moveMetasPlayList({"h1"}, "album", ""));
+}
+
+// ============================================================================
+// sortPlaylist signalFlag=true : 覆盖 ASC↔DES 翻转逻辑分支（line 1367-1418）
+// 之前只测 signalFlag=false（直接按 type），翻转分支完全未覆盖
+// ============================================================================
+TEST(DataManagerSortToggleTest, toggleSortCoversFlippingLogic)
+{
+    std::unique_ptr<DataManager> dm(makeDataMgr());
+    DMusic::MediaMeta m1; m1.hash = "h1";
+    DMusic::MediaMeta m2; m2.hash = "h2";
+    dm->addMetasToPlayList(QList<DMusic::MediaMeta>{m1, m2}, "play");
+    // signalFlag=true：根据当前 sortType 翻转。连续调用覆盖各 ASC↔DES 分支
+    dm->sortPlaylist(DmGlobal::SortByAddTime, "play", true);
+    dm->sortPlaylist(DmGlobal::SortByAddTime, "play", true);   // 翻转回
+    dm->sortPlaylist(DmGlobal::SortByTitle,   "play", true);
+    dm->sortPlaylist(DmGlobal::SortByArtist,  "play", true);
+    dm->sortPlaylist(DmGlobal::SortByAblum,   "play", true);
+    dm->sortPlaylist(DmGlobal::SortByCustom,  "play", true);   // Custom 分支 emit 信号
+    SUCCEED();
+}
+
+// ============================================================================
+// importMetas : 用真实 mp3 触发异步导入（DBOperate Worker 线程）
+// 激活 importMetas / slotImportMetas / addMetaToAlbum / addMetaToArtist /
+// load*DB 等核心数据通路——这是 :memory: 空库无法触及的路径
+// ============================================================================
+TEST(DataManagerImportTest, importMetasProcessesRealFile)
+{
+    ASSERT_TRUE(QFile::exists(sampleMp3Path())) << "testdata/sample.mp3 missing";
+    std::unique_ptr<DataManager> dm(makeDataMgr());
+    QSignalSpy spy(dm.get(), &DataManager::signalImportFinished);
+    dm->importMetas({sampleMp3Path()}, "play");
+    // 等待异步导入完成（Worker 线程 emit signalImportFinished）
+    EXPECT_TRUE(spy.wait(5000)) << "importMetas did not finish within 5s";
+    // 导入后库应有 meta
+    EXPECT_TRUE(dm->isExistMeta());
+}
+
+// ============================================================================
+// importMetas 后搜索：覆盖 searchText 的 music/album/artist/all 四个分支
+// 导入后库有 meta，空文本搜索匹配所有
+// ============================================================================
+TEST(DataManagerSearchAfterImportTest, searchTextMusicTypeFindsImported)
+{
+    auto dm = importSample();
+    ASSERT_TRUE(dm->isExistMeta());
+    QList<DMusic::MediaMeta> metas;
+    QList<DMusic::AlbumInfo> albums;
+    QList<DMusic::ArtistInfo> artists;
+    dm->searchText("", metas, albums, artists, "music");
+    EXPECT_FALSE(metas.isEmpty());
+}
+
+TEST(DataManagerSearchAfterImportTest, searchTextAlbumTypeDoesNotCrash)
+{
+    auto dm = importSample();
+    QList<DMusic::MediaMeta> metas;
+    QList<DMusic::AlbumInfo> albums;
+    QList<DMusic::ArtistInfo> artists;
+    dm->searchText("", metas, albums, artists, "album");
+    SUCCEED();
+}
+
+TEST(DataManagerSearchAfterImportTest, searchTextArtistTypeDoesNotCrash)
+{
+    auto dm = importSample();
+    QList<DMusic::MediaMeta> metas;
+    QList<DMusic::AlbumInfo> albums;
+    QList<DMusic::ArtistInfo> artists;
+    dm->searchText("", metas, albums, artists, "artist");
+    SUCCEED();
+}
+
+TEST(DataManagerSearchAfterImportTest, searchTextAllTypeFindsImported)
+{
+    auto dm = importSample();
+    QList<DMusic::MediaMeta> metas;
+    QList<DMusic::AlbumInfo> albums;
+    QList<DMusic::ArtistInfo> artists;
+    dm->searchText("", metas, albums, artists);  // 默认 type="" → else(all) 分支
+    EXPECT_FALSE(metas.isEmpty());
+}
+
+// ============================================================================
+// importMetas 后对 album/artist 歌单排序：覆盖 sortPlaylist 的 album/artist 分支
+// ============================================================================
+TEST(DataManagerSortAfterImportTest, sortAlbumAndArtistPlaylists)
+{
+    auto dm = importSample();
+    dm->sortPlaylist(DmGlobal::SortByTitleASC, "album", false);
+    dm->sortPlaylist(DmGlobal::SortByTitleASC, "artist", false);
+    SUCCEED();
+}
+
+// ============================================================================
+// updateMetaCodec : 导入后修改 meta 的 album，触发 album/artist 重索引
+// 覆盖 updateMetaCodec 的核心逻辑（line 1743-1801）
+// ============================================================================
+TEST(DataManagerUpdateMetaCodecTest, updateCodecReindexesAlbum)
+{
+    auto dm = importSample();
+    ASSERT_TRUE(dm->isExistMeta());
+    const QList<DMusic::MediaMeta> metas = dm->getPlaylistMetas("play");
+    ASSERT_FALSE(metas.isEmpty());
+    DMusic::MediaMeta meta = metas.first();
+    meta.album = "ModifiedAlbum";  // 改 album → 触发重索引
+    dm->updateMetaCodec(meta);
+    SUCCEED();
+}
+
+TEST(DataManagerUpdateMetaCodecTest, updateCodecNonexistentHashIsNoop)
+{
+    auto dm = importSample();
+    DMusic::MediaMeta meta;
+    meta.hash = "nonexistent-hash-xyz";
+    dm->updateMetaCodec(meta);  // hash 不在库 → 提前 return（line 1736）
+    SUCCEED();
 }

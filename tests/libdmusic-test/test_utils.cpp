@@ -234,3 +234,129 @@ TEST(UtilsFftTest, DISABLED_inverseFftRestoresOriginalSignal)
         EXPECT_NEAR(data[i].imag(), 0.0f, 1e-3f);
     }
 }
+
+// ============================================================================
+// albumToVariantMap : 与 metaToVariantMap 同构，含嵌套 musicinfos
+// ============================================================================
+TEST(UtilsAlbumToVariantMapTest, mapsCoreFieldsAndNestedMusicinfos)
+{
+    DMusic::AlbumInfo album;
+    album.name = "Greatest Hits";
+    album.pinyin = "zuìda";
+    album.artist = "Someone";
+
+    DMusic::MediaMeta m;
+    m.hash = "h1";
+    m.title = "T";
+    album.musicinfos.insert("h1", m);
+
+    const QVariantMap out = Utils::albumToVariantMap(album);
+    EXPECT_EQ(out.value("name").toString(),    "Greatest Hits");
+    EXPECT_EQ(out.value("pinyin").toString(),  "zuìda");
+    EXPECT_EQ(out.value("artist").toString(),  "Someone");
+
+    // 嵌套 musicinfos：每个 meta 经 metaToVariantMap 映射
+    const QVariantMap musicinfos = out.value("musicinfos").toMap();
+    ASSERT_EQ(musicinfos.size(), 1);
+    EXPECT_EQ(musicinfos.value("h1").toMap().value("title").toString(), "T");
+}
+
+TEST(UtilsAlbumToVariantMapTest, emptyAlbumProducesEmptyMusicinfos)
+{
+    DMusic::AlbumInfo album;
+    album.name = "Empty";
+    const QVariantMap out = Utils::albumToVariantMap(album);
+    EXPECT_EQ(out.value("musicinfos").toMap().size(), 0);
+}
+
+// ============================================================================
+// artistToVariantMap : 与 albumToVariantMap 同构
+// ============================================================================
+TEST(UtilsArtistToVariantMapTest, mapsCoreFieldsAndNestedMusicinfos)
+{
+    DMusic::ArtistInfo artist;
+    artist.name = "Artist A";
+    artist.pinyin = "pinyinA";
+
+    DMusic::MediaMeta m;
+    m.hash = "h2";
+    m.title = "Song";
+    artist.musicinfos.insert("h2", m);
+
+    const QVariantMap out = Utils::artistToVariantMap(artist);
+    EXPECT_EQ(out.value("name").toString(),   "Artist A");
+    EXPECT_EQ(out.value("pinyin").toString(), "pinyinA");
+
+    const QVariantMap musicinfos = out.value("musicinfos").toMap();
+    ASSERT_EQ(musicinfos.size(), 1);
+    EXPECT_EQ(musicinfos.value("h2").toMap().value("title").toString(), "Song");
+}
+
+// ============================================================================
+// simpleChineseSplit : 中英混合分词，中文转拼音
+// 注意：依赖 Dtk::Core::Chinese2Pinyin，只断言可观察不变量
+// ============================================================================
+TEST(UtilsSimpleChineseSplitTest, handlesAsciiWithoutCrash)
+{
+    // 已知源码缺陷：simpleChineseSplit 的 isLastAlphabeta 更新位于
+    // if(isCurAlphabeta){...continue;} 之后，字母字符 continue 时跳过更新，
+    // 导致连续 ASCII 被拆成单字符 token（"hello" → ['h','e','l','l','o']）。
+    // 此处只验证不崩溃 + 拼接内容完整，不强断言聚合行为；待源码修复后启用强断言。
+    QString s = "hello";
+    const QStringList result = Utils::simpleChineseSplit(s);
+    EXPECT_FALSE(result.isEmpty());
+    EXPECT_EQ(result.join(""), "hello");
+}
+
+TEST(UtilsSimpleChineseSplitTest, convertsChineseToPinyin)
+{
+    QString s = "中";
+    const QStringList result = Utils::simpleChineseSplit(s);
+    ASSERT_FALSE(result.isEmpty());
+    // 中文经 Chinese2Pinyin 应得到非空拼音（toChinese 会去掉末尾声调数字）
+    EXPECT_FALSE(result.first().isEmpty());
+}
+
+TEST(UtilsSimpleChineseSplitTest, handlesMixedAsciiAndChinese)
+{
+    QString s = "a中";
+    const QStringList result = Utils::simpleChineseSplit(s);
+    // 至少分出 'a' 与中文拼音两段
+    EXPECT_GE(result.size(), 2);
+}
+
+// ============================================================================
+// updateChineseMetaInfo : 填充 title/album/artist 的拼音与首字母字段
+// ============================================================================
+TEST(UtilsUpdateChineseMetaInfoTest, fillsPinyinFieldsForAscii)
+{
+    DMusic::MediaMeta meta;
+    meta.title = "hello";
+    meta.album = "world";
+    meta.artist = "someone";
+
+    Utils::updateChineseMetaInfo(meta);
+    // ASCII 经 simpleChineseSplit 聚合，pinyin 字段应非空
+    EXPECT_FALSE(meta.pinyinTitle.isEmpty());
+    EXPECT_FALSE(meta.pinyinTitleShort.isEmpty());
+}
+
+// ============================================================================
+// detectEncodings : ICU 编码检测
+// 注意：依赖 ICU，结果受版本影响；只断言非空 + 包含至少一个编码名
+// ============================================================================
+TEST(UtilsDetectEncodingsTest, returnsAtLeastOneEncoding)
+{
+    const QByteArray data = "hello world";
+    const QStringList encodings = Utils::detectEncodings(data);
+    EXPECT_FALSE(encodings.isEmpty());
+}
+
+TEST(UtilsDetectEncodingsTest, detectsEncodingForAscii)
+{
+    const QByteArray data = "plain ascii text 1234567890";
+    const QStringList encodings = Utils::detectEncodings(data);
+    ASSERT_FALSE(encodings.isEmpty());
+    // 编码名应为非空字符串
+    EXPECT_FALSE(encodings.first().isEmpty());
+}

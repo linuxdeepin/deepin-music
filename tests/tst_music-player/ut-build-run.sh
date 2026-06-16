@@ -18,7 +18,16 @@ lcov --directory . --capture --output-file ./html/${executable}_Coverage.info
 
 echo " =================== do filter begin ==================== "
 
-lcov --remove ./html/${executable}_Coverage.info '*/usr/include/*' '/usr/local/*'  -o ./html/${executable}_Coverage_fileter.info
+# 过滤：系统头、测试代码自身、构建产物（build-ut 目录含 autogen 生成的 moc/qrc）
+lcov --remove ./html/${executable}_Coverage.info \
+    '*/usr/include/*' \
+    '/usr/local/*' \
+    '*/tests/*' \
+    '*/build-ut/*' \
+    '*/build*/*_autogen/*' \
+    '*/moc_*.cpp' \
+    '*/qrc_*.cpp' \
+    -o ./html/${executable}_Coverage_fileter.info
 
 echo " =================== do filter end ====================== "
     
