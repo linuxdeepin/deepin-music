@@ -9,13 +9,15 @@
 
 #include "global.h"
 
+class PlayerBase;
 class PlayerEnginePrivate;
 class PlayerEngine : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(double fadeInOutFactor READ fadeInOutFactor WRITE setFadeInOutFactor NOTIFY fadeInOutFactorChanged)
 public:
-    PlayerEngine(QObject *parent = nullptr);
+    // injectedPlayer: 测试注入 FakePlayer（nullptr → 内部按 engineType 创建真实后端）
+    explicit PlayerEngine(QObject *parent = nullptr, PlayerBase *injectedPlayer = nullptr);
     ~PlayerEngine();
 
     double fadeInOutFactor() const;

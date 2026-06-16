@@ -158,3 +158,17 @@ TEST(AudioAnalysisParseFileTest, nonExistentFileHandledGracefully)
     EXPECT_TRUE(AudioAnalysis::parseMetaFromLocalFile(meta));
     EXPECT_EQ(meta.filetype, "mp3");
 }
+
+// ============================================================================
+// detectEncodings : 有 originalTitle 的 meta（走 Utils::detectEncodings 路径）
+// 覆盖 detectEncodings 的非空 original 字段分支（line 431-437）
+// ============================================================================
+TEST(AudioAnalysisDetectEncodingsTest, detectsEncodingsForMetaWithOriginalFields)
+{
+    DMusic::MediaMeta meta;
+    meta.originalTitle = "测试标题";
+    meta.originalArtist = "artist";
+    meta.originalAlbum = "album";
+    const QStringList encodings = AudioAnalysis::detectEncodings(meta);
+    EXPECT_FALSE(encodings.isEmpty());
+}

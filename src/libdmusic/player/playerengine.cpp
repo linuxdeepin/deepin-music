@@ -47,7 +47,7 @@ static QStringList mimeTypes()
 class PlayerEnginePrivate
 {
 private:
-    explicit PlayerEnginePrivate(PlayerEngine *parent);
+    explicit PlayerEnginePrivate(PlayerEngine *parent, PlayerBase *injectedPlayer = nullptr);
     friend class PlayerEngine;
     PlayerEngine               *m_playerEngine          = nullptr;
     QList<MediaMeta>            m_metaList;
@@ -63,11 +63,14 @@ private:
     bool                        m_fadeInOut             = false;
 };
 
-PlayerEnginePrivate::PlayerEnginePrivate(PlayerEngine *parent)
+PlayerEnginePrivate::PlayerEnginePrivate(PlayerEngine *parent, PlayerBase *injectedPlayer)
     : m_playerEngine(parent)
 {
     qCDebug(dmMusic) << "Initializing PlayerEnginePrivate";
-    if (DmGlobal::playbackEngineType() != 1) {
+    if (injectedPlayer) {
+        m_player = injectedPlayer;
+        qCDebug(dmMusic) << "Using injected player (test)";
+    } else if (DmGlobal::playbackEngineType() != 1) {
         m_player = new QtPlayer(m_playerEngine);
         qCDebug(dmMusic) << "Initializing QtPlayer engine";
     } else {
@@ -79,9 +82,9 @@ PlayerEnginePrivate::PlayerEnginePrivate(PlayerEngine *parent)
     m_changePictureTimer->setInterval(300);
 }
 
-PlayerEngine::PlayerEngine(QObject *parent)
+PlayerEngine::PlayerEngine(QObject *parent, PlayerBase *injectedPlayer)
     : QObject(parent)
-    , m_data(new PlayerEnginePrivate(this))
+    , m_data(new PlayerEnginePrivate(this, injectedPlayer))
 {
     qCDebug(dmMusic) << "Initializing PlayerEngine";
     connect(m_data->m_changePictureTimer, &QTimer::timeout, this, [ = ]() {

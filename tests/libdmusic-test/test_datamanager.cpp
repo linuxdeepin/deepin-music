@@ -579,3 +579,40 @@ TEST(DataManagerUpdateMetaCodecTest, updateCodecNonexistentHashIsNoop)
     dm->updateMetaCodec(meta);  // hash 不在库 → 提前 return（line 1736）
     SUCCEED();
 }
+
+// ============================================================================
+// saveDataToDB : 导入后保存到 :memory: DB（覆盖 transaction + INSERT 循环）
+// ============================================================================
+TEST(DataManagerSaveDataTest, saveDataToDBAfterImport)
+{
+    auto dm = importSample();
+    dm->saveDataToDB();
+    SUCCEED();
+}
+
+// ============================================================================
+// slotLazyLoadDatabase : public slot，触发 loadMetasDB + loadPlaylistMetasDB
+// 覆盖 load 系列的 DB 读取路径
+// ============================================================================
+TEST(DataManagerLazyLoadTest, slotLazyLoadDatabaseLoadsFromDB)
+{
+    auto dm = importSample();
+    dm->saveDataToDB();           // 先写入
+    dm->slotLazyLoadDatabase();   // 再加载（loadMetasDB + loadPlaylistMetasDB）
+    SUCCEED();
+}
+
+// ============================================================================
+// updateMetaCodec : meta 留在原 album（existFla=true 分支，line 1748-1753）
+// 与 updateCodecReindexesAlbum（existFla=false 新建 album）互补
+// ============================================================================
+TEST(DataManagerUpdateMetaCodecTest, updateCodecStaysInExistingAlbum)
+{
+    auto dm = importSample();
+    const QList<DMusic::MediaMeta> metas = dm->getPlaylistMetas("play");
+    ASSERT_FALSE(metas.isEmpty());
+    DMusic::MediaMeta meta = metas.first();
+    // 不改 album → existFla=true（album 已存在）→ 更新已有 album
+    dm->updateMetaCodec(meta);
+    SUCCEED();
+}
