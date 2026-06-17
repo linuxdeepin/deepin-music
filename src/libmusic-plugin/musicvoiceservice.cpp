@@ -8,7 +8,7 @@
 
 MusicVoiceService::MusicVoiceService()
 {
-    m_voice = new VoicePlugin();
+    m_voice = new VoicePlugin(this);
 }
 
 QString MusicVoiceService::serviceName()
