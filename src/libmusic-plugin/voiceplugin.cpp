@@ -21,6 +21,9 @@
 VoicePlugin::VoicePlugin(QObject *parent): QObject(parent)
 {
     m_settings = Dtk::Core::DSettings::fromJsonFile(":/speech/data/deepin-music-speechconfig.json");
+    if (m_settings) {
+        m_settings->setParent(this);
+    }
 }
 
 void VoicePlugin::process(const QString &semantic)
