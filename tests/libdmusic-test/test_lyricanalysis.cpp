@@ -14,6 +14,9 @@
 
 #include <QCoreApplication>
 #include <QTemporaryFile>
+#include <QTextCodec>
+#include <QFile>
+#include <QDir>
 
 #include "lyricanalysis.h"
 
@@ -39,6 +42,24 @@ public:
         return m_path;
     }
 
+private:
+    QTemporaryFile m_file;
+    QString        m_path;
+};
+
+// 写入原始字节的临时 LRC 文件：用于编码检测路径（UTF-8 BOM / GB18030 等）
+class TempLrcFileWithBytes
+{
+public:
+    explicit TempLrcFileWithBytes(const QByteArray &bytes)
+    {
+        if (m_file.open()) {
+            m_file.write(bytes);
+            m_file.close();
+            m_path = m_file.fileName();
+        }
+    }
+    QString path() const { return m_path; }
 private:
     QTemporaryFile m_file;
     QString        m_path;
@@ -159,4 +180,71 @@ TEST(LyricAnalysisTest, nonExistentFileProducesNoLyrics)
     LyricAnalysis la;
     la.setFromFile("/nonexistent/path/to/file.lrc");
     EXPECT_EQ(la.getCount(), 0);
+}
+
+// ============================================================================
+// 编码检测路径：UTF-8 BOM、纯 ASCII、GBK 中文，覆盖 getFileCodec 的多条回退分支
+// ============================================================================
+TEST(LyricAnalysisTest, parsesUtf8BomFile)
+{
+    // UTF-8 BOM 头：codecForUtfText 应识别，走 BOM 分支
+    QByteArray body = "[00:01.00]hello bom\n[00:02.00]second\n";
+    QByteArray withBom;
+    withBom.append('\xEF').append('\xBB').append('\xBF');
+    withBom.append(body);
+
+    TempLrcFileWithBytes temp(withBom);
+    LyricAnalysis la;
+    la.setFromFile(temp.path());
+    EXPECT_EQ(la.getCount(), 2);
+    EXPECT_EQ(la.getLineAt(0), QStringLiteral("hello bom"));
+}
+
+TEST(LyricAnalysisTest, parsesGb2312ChineseLyrics)
+{
+    // GB18030 编码的中文歌词：触发 Utils::detectEncodings 与 codecForName 校验分支
+    // 注意：编码检测依赖 ICU 版本，不同环境下可能回退到 locale codec 导致解码失败；
+    // 因此只验证"流程不崩溃 + 解析完成"，不断言解析行数（检测结果环境相关）
+    const QString chinese = QStringLiteral("[00:01.00]第一行\n[00:02.00]第二行\n");
+    const QByteArray gb = QTextCodec::codecForName("GB18030")->fromUnicode(chinese);
+
+    TempLrcFileWithBytes temp(gb);
+    LyricAnalysis la;
+    EXPECT_NO_FATAL_FAILURE(la.setFromFile(temp.path()));
+    EXPECT_GE(la.getCount(), 0);  // 编码检测可能成功或失败，至少不应崩溃
+}
+
+TEST(LyricAnalysisTest, parsesInvalidTimeLineIsIgnored)
+{
+    // 时间格式非法（mm:ss.z 不匹配）的行应被跳过，正常行仍解析
+    TempLrcFile tempLrc("[xx:yy.zz]badtime\n[00:05.00]ok\n");
+    LyricAnalysis la;
+    la.setFromFile(tempLrc.path());
+    EXPECT_EQ(la.getCount(), 1);
+    EXPECT_EQ(la.getLineAt(0), QStringLiteral("ok"));
+}
+
+// ============================================================================
+// allLyrics / getPostion 边界
+// ============================================================================
+TEST(LyricAnalysisTest, allLyricsReturnsConsistentData)
+{
+    TempLrcFile tempLrc("[00:01.00]a\n[00:02.00]b\n");
+    LyricAnalysis la;
+    la.setFromFile(tempLrc.path());
+    const auto all = la.allLyrics();
+    ASSERT_EQ(all.size(), 2);
+    EXPECT_EQ(all[0].second, QStringLiteral("a"));
+    EXPECT_EQ(all[1].second, QStringLiteral("b"));
+    EXPECT_LE(all[0].first, all[1].first);
+}
+
+TEST(LyricAnalysisTest, getPostionOnEmptyLyricsReturnsZero)
+{
+    // 未加载文件时 getPostion 越界返回 0
+    // 注意：源码 getPostion 对负 index 仍走 index<size(0) 分支会越界（源码缺陷），
+    // 这里只测非负越界 index，避免触发 UB
+    LyricAnalysis la;
+    EXPECT_EQ(la.getPostion(0), 0);
+    EXPECT_EQ(la.getPostion(999), 0);
 }

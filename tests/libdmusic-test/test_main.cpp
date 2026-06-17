@@ -6,6 +6,8 @@
 #include <QtTest>
 #include <QCoreApplication>
 #include <QTest>
+#include <QDir>
+#include <QStandardPaths>
 
 #include <gtest/gtest.h>
 #include <gmock/gmock-matchers.h>
@@ -41,6 +43,14 @@ QTestMain::QTestMain(int &argc, char **argv)
 void QTestMain::initTestCase()
 {
     qDebug() << "=====start test=====";
+    // 清理上次运行残留的测试 DB/缓存，避免跨 run 状态污染导致 flaky。
+    // DataManager 用 DmGlobal::cachePath()/mediameta.sqlite 持久化歌单/元数据，
+    // 测试写入但不清理，多次运行累积后依赖"空 DB"的用例(如 AllInfosEmpty)会失败。
+    const QString cacheDir = QStandardPaths::writableLocation(QStandardPaths::CacheLocation);
+    if (!cacheDir.isEmpty()) {
+        QDir(cacheDir).removeRecursively();
+        QDir().mkpath(cacheDir);
+    }
 }
 
 void QTestMain::cleanupTestCase()

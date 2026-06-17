@@ -196,12 +196,42 @@ TEST(UtilsPlaylistToVariantMapTest, mapsCoreFields)
 // ============================================================================
 // fft : 傅里叶变换数学性质
 //
-// 注意：当前 utils.cpp 的 fft() 实现存在变量复用缺陷——外层循环变量 i 被最内层
-// for(i=0; i<length/step; i++) 覆盖，导致外层循环条件恒成立而陷入死循环。
-// 因此以下用例标记为 DISABLED_，gtest 会跳过它们（不阻塞整套测试）。
-// 待 src/libdmusic/util/utils.cpp 的 fft() 修复后，移除 DISABLED_ 前缀即可启用。
-// 参见 docs/unit-test-plan.md「已知缺陷」。
+// 注意：utils.cpp 的 fft() 在 Log2N>=2 时存在变量复用缺陷——外层循环变量 i
+// 被最内层 for(i=0; i<length/step; i++) 覆盖，导致死循环。因此用 Log2N=1
+// （length=2，外层 i 循环条件 i<=Log2N 不成立直接跳过）来安全覆盖 fft 主体：
+// - 2 点蝶形（第一层）
+// - sign==-1 正变换分支
+// - sign==1 逆变换分支（除以 length）
+// 大点数用例保持 DISABLED_，待 src 修复后启用。
 // ============================================================================
+TEST(UtilsFftTest, twoPointForwardTransformIsCorrect)
+{
+    // Log2N=1：只走 2 点蝶形，不会进入外层循环（规避变量复用 bug）
+    const int Log2N = 1;
+    std::vector<std::complex<float>> data = {{1.0f, 0.0f}, {3.0f, 0.0f}};
+
+    Utils::fft(data.data(), Log2N, -1);  // 正变换
+
+    // X[0]=x[0]+x[1]=4, X[1]=x[0]-x[1]=-2
+    EXPECT_NEAR(data[0].real(), 4.0f, 1e-3f);
+    EXPECT_NEAR(data[1].real(), -2.0f, 1e-3f);
+    EXPECT_NEAR(data[0].imag(), 0.0f, 1e-3f);
+    EXPECT_NEAR(data[1].imag(), 0.0f, 1e-3f);
+}
+
+TEST(UtilsFftTest, twoPointInverseTransformNormalizesByLength)
+{
+    // sign==1：逆变换，结束时除以 length（=2）
+    const int Log2N = 1;
+    std::vector<std::complex<float>> data = {{1.0f, 0.0f}, {3.0f, 0.0f}};
+
+    Utils::fft(data.data(), Log2N, 1);  // 逆变换
+
+    // 先 2 点蝶形：(4,-2)；再除以 2：(2,-1)
+    EXPECT_NEAR(data[0].real(), 2.0f, 1e-3f);
+    EXPECT_NEAR(data[1].real(), -1.0f, 1e-3f);
+}
+
 TEST(UtilsFftTest, DISABLED_dcSignalConcentratesInFirstBin)
 {
     const int Log2N = 3;          // length = 8

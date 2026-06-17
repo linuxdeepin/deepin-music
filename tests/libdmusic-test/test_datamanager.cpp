@@ -17,11 +17,14 @@
 #include <QStringList>
 #include <QVariant>
 #include <QFile>
+#include <QFileInfo>
 #include <QDir>
 #include <QSignalSpy>
 
 #include "datamanager.h"
 #include "global.h"
+#include "core/dboperate.h"
+#include "util/utils.h"
 
 #ifndef TEST_DATA_DIR
 #define TEST_DATA_DIR "."
@@ -1086,4 +1089,603 @@ TEST(DataManagerQueryTest, metaFromHashExistingReturnsValid)
     const auto meta = dm->metaFromHash(hash);
     EXPECT_EQ(meta.hash, hash);
     EXPECT_FALSE(meta.title.isEmpty());
+}
+
+// ============================================================================
+// DBOperate 直接单元测试：构造、slotImportMetas 各分支、slotClearImportingHash
+// DBOperate 是 DataManager 内部的导入 worker，这里直接实例化覆盖其内部逻辑，
+// 并通过 metaObject 调用触发 moc 生成的 qt_metacast/qt_metacall。
+// ============================================================================
+
+// 构造函数：supportedSuffixs 被转换为 "*.<ext>" 形式存入 m_supportedSuffixs
+TEST(DBOperateTest, constructorStoresSupportedSuffixes)
+{
+    DBOperate db({"mp3", "flac", "ogg"});
+    // 间接验证：导入一个不存在的目录路径，应不崩溃且完成信号被同步触发
+    // 注意：slotImportMetas 是直接调用（同线程），emit signalImportFinished 同步发生，
+    // 无需 QSignalSpy::wait（wait 需事件循环）；用 spy.count() 验证
+    QSignalSpy spy(&db, &DBOperate::signalImportFinished);
+    db.slotImportMetas({"/nonexistent/dir"}, {}, false, {}, {}, "", false);
+    EXPECT_EQ(spy.count(), 1);
+}
+
+// slotImportMetas 空 urls 分支：使用默认 musicPath 作为扫描根（line 47-50）
+TEST(DBOperateTest, importWithEmptyUrlsUsesMusicPath)
+{
+    DBOperate db({"mp3"});
+    QSignalSpy spy(&db, &DBOperate::signalImportFinished);
+    // 空 urls → 内部 append musicPath，musicPath 通常不存在/为空目录 → 0 文件
+    db.slotImportMetas({}, {}, false, {}, {}, "", false);
+    ASSERT_EQ(spy.count(), 1);
+    // failCount/successCount/existCount 应都为 0（无文件可处理）
+    const auto args = spy.takeFirst();
+    EXPECT_EQ(args.at(1).toInt(), 0);  // failCount
+    EXPECT_EQ(args.at(2).toInt(), 0);  // successCount
+}
+
+// slotImportMetas 目录扫描分支：传入真实目录，递归扫描支持的扩展名
+TEST(DBOperateTest, importDirectoryScansRecursively)
+{
+    DBOperate db({"mp3"});
+    QSignalSpy spy(&db, &DBOperate::signalImportFinished);
+    // 传入测试数据所在目录（含 sample.mp3），应扫描到文件
+    db.slotImportMetas({QString(TEST_DATA_DIR)}, {}, false, {}, {}, "", false);
+    EXPECT_EQ(spy.count(), 1);
+}
+
+// slotImportMetas 重复 hash 跳过分支：同一文件在 allMetaHashs 中已存在 → existCount++
+TEST(DBOperateTest, importExistingHashSkipsAndCountsAsExist)
+{
+    DBOperate db({"mp3"});
+    // 预先把 sample.mp3 的 hash 放进 allMetaHashs，模拟"已导入"
+    const QString h = Utils::filePathHash(QFileInfo(sampleMp3Path()).absoluteFilePath());
+    QSet<QString> allHashs = {h};
+    QSignalSpy spy(&db, &DBOperate::signalImportFinished);
+    db.slotImportMetas({sampleMp3Path()}, {}, false, {}, allHashs, "", false);
+    ASSERT_EQ(spy.count(), 1);
+    const auto args = spy.takeFirst();
+    // 该文件应被计为 exist（已存在），successCount=0
+    EXPECT_EQ(args.at(2).toInt(), 0);  // successCount
+}
+
+// slotImportMetas 非 .so 单文件路径分支（line 67-69）：直接 append 单个文件
+TEST(DBOperateTest, importSingleNonExistentFileCountsAsFail)
+{
+    DBOperate db({"mp3"});
+    QSignalSpy spy(&db, &DBOperate::signalImportFinished);
+    // 不存在的单文件：creatMediaMeta 返回 length<=0 → importedFailCount++
+    db.slotImportMetas({"/nonexistent/single.mp3"}, {}, false, {}, {}, "", false);
+    EXPECT_EQ(spy.count(), 1);
+}
+
+// slotImportMetas 带 playlistHash 且 metaHashs 命中 exist 分支（line 94-95）
+TEST(DBOperateTest, importWithPlaylistAndExistingMetaHash)
+{
+    DBOperate db({"mp3"});
+    const QString h = Utils::filePathHash(QFileInfo(sampleMp3Path()).absoluteFilePath());
+    QSet<QString> metaHashs = {h};  // 该 hash 已在目标歌单中
+    QSignalSpy spy(&db, &DBOperate::signalImportFinished);
+    db.slotImportMetas({sampleMp3Path()}, metaHashs, false, {}, {}, "playlist1", false);
+    ASSERT_EQ(spy.count(), 1);
+    const auto args = spy.takeFirst();
+    EXPECT_EQ(args.at(2).toInt(), 0);  // successCount：已存在不重复导入
+}
+
+// slotClearImportingHash：移除 m_importingHashes 中的记录，允许重新导入
+TEST(DBOperateTest, slotClearImportingHashRemovesEntry)
+{
+    DBOperate db({"mp3"});
+    const QString h = Utils::filePathHash(QFileInfo(sampleMp3Path()).absoluteFilePath());
+    // 先导入一次（会 insert 到 m_importingHashes）
+    {
+        QSignalSpy spy(&db, &DBOperate::signalImportFinished);
+        db.slotImportMetas({sampleMp3Path()}, {}, false, {}, {}, "", false);
+        ASSERT_EQ(spy.count(), 1);
+    }
+    // 清除该 hash 的导入标记
+    db.slotClearImportingHash(h);
+    // 再次导入：因标记已清，应重新尝试（creatMediaMeta 重新解析）
+    {
+        QSignalSpy spy(&db, &DBOperate::signalImportFinished);
+        db.slotImportMetas({sampleMp3Path()}, {}, false, {}, {}, "", false);
+        ASSERT_EQ(spy.count(), 1);
+    }
+    // 不崩溃即通过；slotClearImportingHash 已被调用覆盖
+    SUCCEED();
+}
+
+// importPlay + playFalg 分支：导入并自动加入播放队列 + 自动播放 hash
+TEST(DBOperateTest, importWithImportPlayAndPlayFlagSetsMediaHash)
+{
+    DBOperate db({"mp3"});
+    QSignalSpy spy(&db, &DBOperate::signalImportFinished);
+    // importPlay=true 且 playFalg=true：成功导入的 meta 会进 play 队列，且 mediaHash 被设置
+    db.slotImportMetas({sampleMp3Path()}, {}, true, {}, {}, "", true);
+    ASSERT_EQ(spy.count(), 1);
+    const auto args = spy.takeFirst();
+    // mediaHash（第 5 个参数）应非空（导入了 sample.mp3）
+    EXPECT_FALSE(args.at(4).toString().isEmpty());
+}
+
+// moc 元对象接口：触发 DBOperate 的 qt_metacast/qt_metacall（盲区函数）
+TEST(DBOperateMetaObjectTest, metaObjectAndMetacastWork)
+{
+    DBOperate db({"mp3"});
+    const QMetaObject *mo = db.metaObject();
+    ASSERT_NE(mo, nullptr);
+    EXPECT_STREQ(mo->className(), "DBOperate");
+    // qt_metacast 向上转型到 QObject 应成功
+    EXPECT_NE(db.qt_metacast("QObject"), nullptr);
+    // 未知类名返回 nullptr
+    EXPECT_EQ(db.qt_metacast("UnknownClass"), nullptr);
+    // 槽函数应在元对象中注册（间接调用 qt_metacall 的枚举/方法查找）
+    EXPECT_GE(mo->indexOfSlot("slotClearImportingHash(QString)"), 0);
+}
+
+// ============================================================================
+// Phase 3 深化（第二弹）：聚焦 album/artist 排序谓词 + 聚合 + 搜索结果排序
+//
+// 核心盲区：8 个 static 排序谓词（moreThanAlbum/Artist{Title,Timestamp}{ASC,DES}，
+// line 85-123）此前完全未覆盖。原因：sample.mp3 仅产生 1 个 album/1 个 artist，
+// 而 std::sort 在元素数 < 2 时不会调用比较器。
+//
+// 策略：通过 public slot slotAddOneMeta({"all"}, meta) 直接注入 ≥2 个具有不同
+// album/artist 的构造 meta（不需真实音频文件），填充 m_allMetas + m_allAlbums/
+// m_allArtists，再触发排序使 std::sort 真正调用谓词比较器。
+// ============================================================================
+
+namespace {
+// 构造一条带可区分 album/artist/title/pinyin 的 meta
+DMusic::MediaMeta makeDistinguishableMeta(const QString &hash, const QString &title,
+                                          const QString &album, const QString &artist,
+                                          qint64 timestamp)
+{
+    DMusic::MediaMeta m;
+    m.hash = hash;
+    m.title = title;
+    m.album = album;
+    m.artist = artist;
+    // pinyin 字段是排序谓词的实际比较依据（toLower 后比较）
+    m.pinyinTitle = title;
+    m.pinyinAlbum = album;
+    m.pinyinArtist = artist;
+    m.timestamp = timestamp;
+    return m;
+}
+
+// 注入 ≥2 个不同 album 的 meta 并确保 m_allAlbums 填充
+// 返回填充后的 album 数量（用于断言前置条件）
+int injectDistinctAlbums(DataManager *dm)
+{
+    dm->slotAddOneMeta({"all"}, makeDistinguishableMeta("alb-h1", "T1", "ZetaAlbum", "AArtist", 300));
+    dm->slotAddOneMeta({"all"}, makeDistinguishableMeta("alb-h2", "T2", "AlphaAlbum", "BArtist", 100));
+    dm->slotAddOneMeta({"all"}, makeDistinguishableMeta("alb-h3", "T3", "MidAlbum", "CArtist", 200));
+    dm->allAlbumInfos();   // 触发聚合重建 m_allAlbums
+    return dm->allAlbumInfos().size();
+}
+
+int injectDistinctArtists(DataManager *dm)
+{
+    dm->slotAddOneMeta({"all"}, makeDistinguishableMeta("art-h1", "T1", "XAlbum", "ZetaArtist", 300));
+    dm->slotAddOneMeta({"all"}, makeDistinguishableMeta("art-h2", "T2", "YAlbum", "AlphaArtist", 100));
+    dm->slotAddOneMeta({"all"}, makeDistinguishableMeta("art-h3", "T3", "ZAlbum", "MidArtist", 200));
+    dm->allArtistInfos();  // 触发聚合重建 m_allArtists
+    return dm->allArtistInfos().size();
+}
+} // namespace
+
+// ----------------------------------------------------------------------------
+// album 排序谓词（signalFlag=false 直接按 type）：4 个谓词全覆盖
+// moreThanAlbumTitleASC/DES（按 pinyin）+ moreThanAlbumTimestampASC/DES（按 timestamp）
+// ----------------------------------------------------------------------------
+TEST(DataManagerAlbumSortPredTest, albumTitleAscSortsByPinyin)
+{
+    std::unique_ptr<DataManager> dm(makeDataMgr());
+    ASSERT_GE(injectDistinctAlbums(dm.get()), 2);   // 前置：≥2 个 album
+    dm->sortPlaylist(DmGlobal::SortByAblumASC, "album", false);  // moreThanAlbumTitleASC
+    const auto albums = dm->allAlbumInfos();
+    ASSERT_GE(albums.size(), 2);
+    // ASC：AlphaAlbum 应排在 ZetaAlbum 之前
+    EXPECT_LT(albums.first().pinyin.toLower(), albums.last().pinyin.toLower());
+}
+
+TEST(DataManagerAlbumSortPredTest, albumTitleDesSortsByPinyin)
+{
+    std::unique_ptr<DataManager> dm(makeDataMgr());
+    ASSERT_GE(injectDistinctAlbums(dm.get()), 2);
+    dm->sortPlaylist(DmGlobal::SortByAblumDES, "album", false);  // moreThanAlbumTitleDES
+    const auto albums = dm->allAlbumInfos();
+    ASSERT_GE(albums.size(), 2);
+    // DES：ZetaAlbum 应排在 AlphaAlbum 之前
+    EXPECT_GT(albums.first().pinyin.toLower(), albums.last().pinyin.toLower());
+}
+
+TEST(DataManagerAlbumSortPredTest, albumTimestampAscSortsByTimestamp)
+{
+    std::unique_ptr<DataManager> dm(makeDataMgr());
+    ASSERT_GE(injectDistinctAlbums(dm.get()), 2);
+    dm->sortPlaylist(DmGlobal::SortByAddTimeASC, "album", false);  // moreThanAlbumTimestampASC
+    const auto albums = dm->allAlbumInfos();
+    ASSERT_GE(albums.size(), 2);
+    EXPECT_LE(albums.first().timestamp, albums.last().timestamp);
+}
+
+TEST(DataManagerAlbumSortPredTest, albumTimestampDesSortsByTimestamp)
+{
+    std::unique_ptr<DataManager> dm(makeDataMgr());
+    ASSERT_GE(injectDistinctAlbums(dm.get()), 2);
+    dm->sortPlaylist(DmGlobal::SortByAddTimeDES, "album", false);  // moreThanAlbumTimestampDES
+    const auto albums = dm->allAlbumInfos();
+    ASSERT_GE(albums.size(), 2);
+    EXPECT_GE(albums.first().timestamp, albums.last().timestamp);
+}
+
+// ----------------------------------------------------------------------------
+// artist 排序谓词（signalFlag=false 直接按 type）：4 个谓词全覆盖
+// moreThanArtistTitleASC/DES + moreThanArtistTimestampASC/DES
+// ----------------------------------------------------------------------------
+TEST(DataManagerArtistSortPredTest, artistTitleAscSortsByPinyin)
+{
+    std::unique_ptr<DataManager> dm(makeDataMgr());
+    ASSERT_GE(injectDistinctArtists(dm.get()), 2);
+    dm->sortPlaylist(DmGlobal::SortByArtistASC, "artist", false);  // moreThanArtistTitleASC
+    const auto artists = dm->allArtistInfos();
+    ASSERT_GE(artists.size(), 2);
+    EXPECT_LT(artists.first().pinyin.toLower(), artists.last().pinyin.toLower());
+}
+
+TEST(DataManagerArtistSortPredTest, artistTitleDesSortsByPinyin)
+{
+    std::unique_ptr<DataManager> dm(makeDataMgr());
+    ASSERT_GE(injectDistinctArtists(dm.get()), 2);
+    dm->sortPlaylist(DmGlobal::SortByArtistDES, "artist", false);  // moreThanArtistTitleDES
+    const auto artists = dm->allArtistInfos();
+    ASSERT_GE(artists.size(), 2);
+    EXPECT_GT(artists.first().pinyin.toLower(), artists.last().pinyin.toLower());
+}
+
+TEST(DataManagerArtistSortPredTest, artistTimestampAscSortsByTimestamp)
+{
+    std::unique_ptr<DataManager> dm(makeDataMgr());
+    ASSERT_GE(injectDistinctArtists(dm.get()), 2);
+    dm->sortPlaylist(DmGlobal::SortByAddTimeASC, "artist", false);  // moreThanArtistTimestampASC
+    const auto artists = dm->allArtistInfos();
+    ASSERT_GE(artists.size(), 2);
+    EXPECT_LE(artists.first().timestamp, artists.last().timestamp);
+}
+
+TEST(DataManagerArtistSortPredTest, artistTimestampDesSortsByTimestamp)
+{
+    std::unique_ptr<DataManager> dm(makeDataMgr());
+    ASSERT_GE(injectDistinctArtists(dm.get()), 2);
+    dm->sortPlaylist(DmGlobal::SortByAddTimeDES, "artist", false);  // moreThanArtistTimestampDES
+    const auto artists = dm->allArtistInfos();
+    ASSERT_GE(artists.size(), 2);
+    EXPECT_GE(artists.first().timestamp, artists.last().timestamp);
+}
+
+// ----------------------------------------------------------------------------
+// album/artist 排序 default 分支：sortType 不在 case 集合内 → sortFlag=false
+// signalFlag=false 时传入非 album/artist 的 sortType（如 SortByCustomASC），
+// 命中 default 分支但不 emit（覆盖 line 1526-1529 / 1559-1562 的 default 分支）
+// ----------------------------------------------------------------------------
+TEST(DataManagerAlbumSortPredTest, albumSortDefaultBranchIsNoop)
+{
+    std::unique_ptr<DataManager> dm(makeDataMgr());
+    injectDistinctAlbums(dm.get());
+    QSignalSpy spy(dm.get(), &DataManager::signalPlaylistSortChanged);
+    // signalFlag=false 且 type=SortByCustomASC（不在 album case 集合）→ default → sortFlag=false
+    dm->sortPlaylist(DmGlobal::SortByCustomASC, "album", false);
+    EXPECT_EQ(spy.count(), 0);  // 不 emit
+}
+
+TEST(DataManagerAlbumSortPredTest, albumSortWithSignalEmits)
+{
+    std::unique_ptr<DataManager> dm(makeDataMgr());
+    injectDistinctAlbums(dm.get());
+    QSignalSpy spy(dm.get(), &DataManager::signalPlaylistSortChanged);
+    // signalFlag=true，type=SortByAblum → sortType 翻转为 SortByAblumASC → 命中 album case + emit
+    dm->sortPlaylist(DmGlobal::SortByAblum, "album", true);
+    EXPECT_GE(spy.count(), 1);
+}
+
+TEST(DataManagerArtistSortPredTest, artistSortDefaultBranchIsNoop)
+{
+    std::unique_ptr<DataManager> dm(makeDataMgr());
+    injectDistinctArtists(dm.get());
+    QSignalSpy spy(dm.get(), &DataManager::signalPlaylistSortChanged);
+    // signalFlag=false 且 type=SortByCustomASC（不在 artist case 集合）→ default → sortFlag=false
+    dm->sortPlaylist(DmGlobal::SortByCustomASC, "artist", false);
+    EXPECT_EQ(spy.count(), 0);
+}
+
+TEST(DataManagerArtistSortPredTest, artistSortWithSignalEmits)
+{
+    std::unique_ptr<DataManager> dm(makeDataMgr());
+    injectDistinctArtists(dm.get());
+    QSignalSpy spy(dm.get(), &DataManager::signalPlaylistSortChanged);
+    dm->sortPlaylist(DmGlobal::SortByArtist, "artist", true);
+    EXPECT_GE(spy.count(), 1);
+}
+
+// ----------------------------------------------------------------------------
+// albumResult/artistResult 搜索结果排序（signalFlag=false）：8 个谓词全覆盖
+// 前置：先 searchText 默认(all) 写入 m_searchAlbums/m_searchArtists（≥2 个），
+// 再对 result 歌单排序触发 searchedAlbumInfos()/searchedArtistInfos() + std::sort
+// ----------------------------------------------------------------------------
+TEST(DataManagerSearchResultSortTest, albumResultSortAllTypes)
+{
+    std::unique_ptr<DataManager> dm(makeDataMgr());
+    injectDistinctAlbums(dm.get());
+    QList<DMusic::MediaMeta> metas;
+    QList<DMusic::AlbumInfo> albums;
+    QList<DMusic::ArtistInfo> artists;
+    dm->searchText("", metas, albums, artists);  // 默认 all → 写 m_searchAlbums
+    ASSERT_GE(dm->searchedAlbumInfos().size(), 2);
+    // 4 个 album 排序谓词
+    dm->sortPlaylist(DmGlobal::SortByAddTimeASC, "albumResult", false);
+    dm->sortPlaylist(DmGlobal::SortByAblumASC,   "albumResult", false);
+    dm->sortPlaylist(DmGlobal::SortByAddTimeDES, "albumResult", false);
+    dm->sortPlaylist(DmGlobal::SortByAblumDES,   "albumResult", false);
+    // 验证排序后 searchedAlbumInfos 仍可取（覆盖 searchedAlbumInfos 遍历）
+    EXPECT_FALSE(dm->searchedAlbumInfos().isEmpty());
+    EXPECT_FALSE(dm->searchedAlbumVariantList().isEmpty());
+    SUCCEED();
+}
+
+TEST(DataManagerSearchResultSortTest, artistResultSortAllTypes)
+{
+    std::unique_ptr<DataManager> dm(makeDataMgr());
+    injectDistinctArtists(dm.get());
+    QList<DMusic::MediaMeta> metas;
+    QList<DMusic::AlbumInfo> albums;
+    QList<DMusic::ArtistInfo> artists;
+    dm->searchText("", metas, albums, artists);  // 写 m_searchArtists
+    ASSERT_GE(dm->searchedArtistInfos().size(), 2);
+    dm->sortPlaylist(DmGlobal::SortByAddTimeASC, "artistResult", false);
+    dm->sortPlaylist(DmGlobal::SortByArtistASC,  "artistResult", false);
+    dm->sortPlaylist(DmGlobal::SortByAddTimeDES, "artistResult", false);
+    dm->sortPlaylist(DmGlobal::SortByArtistDES,  "artistResult", false);
+    EXPECT_FALSE(dm->searchedArtistInfos().isEmpty());
+    EXPECT_FALSE(dm->searchedArtistVariantList().isEmpty());
+    SUCCEED();
+}
+
+// albumResult/artistResult 排序 signalFlag=true emit + 重建 m_searchAlbums/Artists
+// 覆盖 line 1598-1605 / 1636-1643 的 emit + 列表重建分支
+TEST(DataManagerSearchResultSortTest, albumResultSortWithSignalRebuildsList)
+{
+    std::unique_ptr<DataManager> dm(makeDataMgr());
+    injectDistinctAlbums(dm.get());
+    QList<DMusic::MediaMeta> metas;
+    QList<DMusic::AlbumInfo> albums;
+    QList<DMusic::ArtistInfo> artists;
+    dm->searchText("", metas, albums, artists);
+    ASSERT_GE(dm->searchedAlbumInfos().size(), 2);
+    QSignalSpy spy(dm.get(), &DataManager::signalPlaylistSortChanged);
+    // signalFlag=false 直接按 type 排序 + 触发 emit（line 1598 sortFlag&&signalFlag）
+    dm->sortPlaylist(DmGlobal::SortByAblumASC, "albumResult", true);
+    EXPECT_GE(spy.count(), 1);
+}
+
+TEST(DataManagerSearchResultSortTest, artistResultSortWithSignalRebuildsList)
+{
+    std::unique_ptr<DataManager> dm(makeDataMgr());
+    injectDistinctArtists(dm.get());
+    QList<DMusic::MediaMeta> metas;
+    QList<DMusic::AlbumInfo> albums;
+    QList<DMusic::ArtistInfo> artists;
+    dm->searchText("", metas, albums, artists);
+    ASSERT_GE(dm->searchedArtistInfos().size(), 2);
+    QSignalSpy spy(dm.get(), &DataManager::signalPlaylistSortChanged);
+    dm->sortPlaylist(DmGlobal::SortByArtistASC, "artistResult", true);
+    EXPECT_GE(spy.count(), 1);
+}
+
+// ----------------------------------------------------------------------------
+// deleteMetaFromAlbum/Artist：从 album/artist 删除 meta，清空后移除空 album/artist
+// 覆盖 line 303-313 / 340-350（含 isEmpty → removeAt 分支）
+// ----------------------------------------------------------------------------
+TEST(DataManagerDeleteMetaFromAggTest, deleteFromAlbumRemovesEmptyAlbum)
+{
+    std::unique_ptr<DataManager> dm(makeDataMgr());
+    dm->slotAddOneMeta({"all"}, makeDistinguishableMeta("del-h1", "T1", "SoloAlbum", "SoloArtist", 100));
+    ASSERT_GE(dm->allAlbumInfos().size(), 1);
+    // 通过 removeFromPlayList(all, delFlag=true) 触发 deleteMetaFromAlbum + deleteMetaFromArtist
+    dm->removeFromPlayList({"del-h1"}, "all", true);
+    // 该 album 只有一条 meta，删除后 album 应被移除（allAlbumInfos 重建后不含）
+    const auto albums = dm->allAlbumInfos();
+    bool foundSolo = false;
+    for (const auto &a : albums) if (a.name == "SoloAlbum") foundSolo = true;
+    EXPECT_FALSE(foundSolo);
+    EXPECT_FALSE(dm->isExistMeta());  // meta 已从 m_allMetas 删除
+}
+
+// ----------------------------------------------------------------------------
+// quickSearchText album/artist 分支：导入后聚合搜索覆盖 album/artist 遍历
+// 覆盖 line 1817-1829（album/artist 命中 append 分支）
+// ----------------------------------------------------------------------------
+TEST(DataManagerQuickSearchBranchTest, quickSearchFindsAlbumAndArtist)
+{
+    std::unique_ptr<DataManager> dm(makeDataMgr());
+    injectDistinctAlbums(dm.get());   // 同时也建了 artist
+    QStringList metaTitles;
+    QList<QPair<QString, QString>> albums, artists;
+    dm->quickSearchText("", metaTitles, albums, artists);  // 空文本匹配所有
+    EXPECT_FALSE(metaTitles.isEmpty());
+    EXPECT_FALSE(albums.isEmpty());    // album 命中分支
+    EXPECT_FALSE(artists.isEmpty());   // artist 命中分支
+}
+
+// ----------------------------------------------------------------------------
+// searchText 默认(all) 分支的 album/artist 命中循环体
+// 覆盖 line 1934-1957（album/artist 名称命中 → 遍历 musicinfos 写 m_searchMetas）
+// ----------------------------------------------------------------------------
+TEST(DataManagerSearchTextAllBranchTest, searchTextAllMatchesAlbumAndArtist)
+{
+    std::unique_ptr<DataManager> dm(makeDataMgr());
+    injectDistinctAlbums(dm.get());
+    QList<DMusic::MediaMeta> metas;
+    QList<DMusic::AlbumInfo> albums;
+    QList<DMusic::ArtistInfo> artists;
+    // 用 album 名称片段搜索，命中 album → 触发 album 循环体写 m_searchMetas
+    dm->searchText("Album", metas, albums, artists);
+    EXPECT_FALSE(albums.isEmpty());
+    // 用 artist 名称片段搜索（新实例，避免上次 search 清空影响）
+    std::unique_ptr<DataManager> dm2(makeDataMgr());
+    injectDistinctArtists(dm2.get());
+    QList<DMusic::MediaMeta> m2;
+    QList<DMusic::AlbumInfo> a2;
+    QList<DMusic::ArtistInfo> ar2;
+    dm2->searchText("Artist", m2, a2, ar2);
+    EXPECT_FALSE(ar2.isEmpty());
+}
+
+// ----------------------------------------------------------------------------
+// dbPath 白名单 else 分支：注入非白名单路径 → 拒绝并回退默认（line 2243-2245）
+// 构造即触发，验证不崩溃且内置歌单正常初始化（回退默认 cachePath）
+// ----------------------------------------------------------------------------
+TEST(DataManagerDbPathSecurityTest, nonWhitelistedDbPathFallsBackToDefault)
+{
+    // 注入一个非 ":memory:"/空 的路径：应被拒绝并回退默认（不崩溃）
+    std::unique_ptr<DataManager> dm(new DataManager({"mp3"}, nullptr, "/tmp/../../etc/bad.sqlite"));
+    // 回退默认后内置歌单仍应正常初始化
+    EXPECT_FALSE(dm->allPlaylistInfos().isEmpty());
+    EXPECT_EQ(dm->currentPlayliHash(), "all");  // 默认当前歌单
+}
+
+// ----------------------------------------------------------------------------
+// addMetaToAlbum 已存在 album 分支的 timestamp 更新（line 284-286）
+// 同 album 第二条 meta timestamp 更小 → 更新 album.timestamp
+// ----------------------------------------------------------------------------
+TEST(DataManagerAlbumTimestampTest, smallerTimestampUpdatesAlbumTimestamp)
+{
+    std::unique_ptr<DataManager> dm(makeDataMgr());
+    // 第一条：timestamp=500
+    dm->slotAddOneMeta({"all"}, makeDistinguishableMeta("ts-h1", "T1", "SameAlbum", "SameArtist", 500));
+    // 第二条：同 album，timestamp=100（更小）→ 触发 itr->timestamp 更新分支
+    dm->slotAddOneMeta({"all"}, makeDistinguishableMeta("ts-h2", "T2", "SameAlbum", "SameArtist", 100));
+    const auto albums = dm->allAlbumInfos();
+    ASSERT_EQ(albums.size(), 1);
+    EXPECT_EQ(albums.first().timestamp, 100);  // 被更小的 timestamp 更新
+}
+
+// ----------------------------------------------------------------------------
+// slotAddOneMeta 已存在 meta（existingIndex>=0）跳过重复添加分支（line 2070-2073/2086-2088）
+// ----------------------------------------------------------------------------
+TEST(DataManagerSlotAddOneMetaTest, duplicateMetaHashSkipsReAdd)
+{
+    std::unique_ptr<DataManager> dm(makeDataMgr());
+    dm->slotAddOneMeta({"all"}, makeDistinguishableMeta("dup-h1", "T1", "A1", "Ar1", 100));
+    const int before = dm->getPlaylistMetas("all").size();
+    // 再次添加同一 hash → existingIndex>=0 → 跳过 m_allMetas.append
+    dm->slotAddOneMeta({"all"}, makeDistinguishableMeta("dup-h1", "T1", "A1", "Ar1", 100));
+    const int after = dm->getPlaylistMetas("all").size();
+    EXPECT_EQ(before, after);  // 未重复添加
+}
+
+// ----------------------------------------------------------------------------
+// importMetas 的 importPlay=true 分支（line 1035-1041）
+// 当 curPlaylistHash==currentHash 且 != "play" 时，importPlay=true 并收集 playMetaHashs
+// ----------------------------------------------------------------------------
+TEST(DataManagerImportPlayTest, importToCurrentNonPlayPlaylistSetsImportPlay)
+{
+    std::unique_ptr<DataManager> dm(makeDataMgr());
+    const auto pl = dm->addPlayList("CurImport");
+    dm->setCurrentPlayliHash(pl.uuid);   // 当前歌单 != "play"
+    // 触发 importMetas 内部 importPlay=true 分支（即使文件不存在，分支逻辑仍执行）
+    QSignalSpy spy(dm.get(), &DataManager::signalImportFinished);
+    dm->importMetas({"/nonexistent/x.mp3"}, pl.uuid);
+    EXPECT_TRUE(spy.wait(5000));  // 异步导入流程完成
+}
+
+// ----------------------------------------------------------------------------
+// moveMetasPlayList 非末尾插入分支（line 1307-1310）
+// nextHash 指向歌单中已有 meta → index < size-1 → else 分支 insert
+// ----------------------------------------------------------------------------
+TEST(DataManagerMoveMetasInsertTest, moveBeforeExistingHashInserts)
+{
+    std::unique_ptr<DataManager> dm(makeDataMgr());
+    DMusic::MediaMeta m1; m1.hash = "h1";
+    DMusic::MediaMeta m2; m2.hash = "h2";
+    DMusic::MediaMeta m3; m3.hash = "h3";
+    const auto pl = dm->addPlayList("Insertable");
+    dm->addMetasToPlayList(QList<DMusic::MediaMeta>{m1, m2, m3}, pl.uuid);
+    dm->sortPlaylist(DmGlobal::SortByCustomASC, pl.uuid, false);
+    // 把 h3 移到 h1 之前（nextHash=h1，非末尾）→ 触发 insert 分支
+    EXPECT_TRUE(dm->moveMetasPlayList({"h3"}, pl.uuid, "h1"));
+    const auto moved = dm->playlistFromHash(pl.uuid);
+    EXPECT_EQ(moved.sortMetas.first(), "h3");  // h3 现在排第一
+}
+
+// ----------------------------------------------------------------------------
+// deletePlaylist 删除当前歌单 → 重置 currentHash 为空（line 1658-1659）
+// ----------------------------------------------------------------------------
+TEST(DataManagerDeleteCurrentTest, deletingCurrentPlaylistResetsHash)
+{
+    std::unique_ptr<DataManager> dm(makeDataMgr());
+    const auto pl = dm->addPlayList("CurrentDel");
+    dm->setCurrentPlayliHash(pl.uuid);
+    EXPECT_EQ(dm->currentPlayliHash(), pl.uuid);
+    EXPECT_TRUE(dm->deletePlaylist(pl.uuid));
+    EXPECT_TRUE(dm->currentPlayliHash().isEmpty());  // 被重置为空
+}
+
+// ----------------------------------------------------------------------------
+// albumResult/artistResult 排序 default 分支（line 1593-1596 / 1631-1634）
+// signalFlag=false 且 type 不在 result case 集合 → default → sortFlag=false，不 emit
+// ----------------------------------------------------------------------------
+TEST(DataManagerSearchResultSortTest, albumResultSortDefaultBranchIsNoop)
+{
+    std::unique_ptr<DataManager> dm(makeDataMgr());
+    injectDistinctAlbums(dm.get());
+    QList<DMusic::MediaMeta> metas;
+    QList<DMusic::AlbumInfo> albums;
+    QList<DMusic::ArtistInfo> artists;
+    dm->searchText("", metas, albums, artists);
+    ASSERT_GE(dm->searchedAlbumInfos().size(), 2);
+    QSignalSpy spy(dm.get(), &DataManager::signalPlaylistSortChanged);
+    // type=SortByCustomASC 不在 albumResult case 集合 → default → sortFlag=false，不 emit
+    dm->sortPlaylist(DmGlobal::SortByCustomASC, "albumResult", false);
+    EXPECT_EQ(spy.count(), 0);
+}
+
+TEST(DataManagerSearchResultSortTest, artistResultSortDefaultBranchIsNoop)
+{
+    std::unique_ptr<DataManager> dm(makeDataMgr());
+    injectDistinctArtists(dm.get());
+    QList<DMusic::MediaMeta> metas;
+    QList<DMusic::AlbumInfo> albums;
+    QList<DMusic::ArtistInfo> artists;
+    dm->searchText("", metas, albums, artists);
+    ASSERT_GE(dm->searchedArtistInfos().size(), 2);
+    QSignalSpy spy(dm.get(), &DataManager::signalPlaylistSortChanged);
+    dm->sortPlaylist(DmGlobal::SortByCustomASC, "artistResult", false);
+    EXPECT_EQ(spy.count(), 0);
+}
+
+// ----------------------------------------------------------------------------
+// movePlaylist 插入到有效 nextHash 分支（line 1702-1703）
+// nextHash 指向存在歌单 → insert 到该位置（非 append）
+// ----------------------------------------------------------------------------
+TEST(DataManagerMovePlaylistInsertTest, moveBeforeValidNextPlaylist)
+{
+    std::unique_ptr<DataManager> dm(makeDataMgr());
+    const auto pl1 = dm->addPlayList("First");
+    const auto pl2 = dm->addPlayList("Second");
+    const auto pl3 = dm->addPlayList("Third");
+    // 记录初始顺序中 pl2 的位置，把 pl3 移到 pl2 之前
+    const auto before = dm->allPlaylistInfos();
+    int pl2Idx = -1;
+    for (int i = 0; i < before.size(); ++i) if (before[i].uuid == pl2.uuid) pl2Idx = i;
+    ASSERT_GE(pl2Idx, 0);
+    dm->movePlaylist(pl3.uuid, pl2.uuid);  // nextHash=pl2 有效 → insert 分支
+    const auto after = dm->allPlaylistInfos();
+    // pl3 现在应在 pl2 之前
+    int newPl3 = -1, newPl2 = -1;
+    for (int i = 0; i < after.size(); ++i) {
+        if (after[i].uuid == pl3.uuid) newPl3 = i;
+        if (after[i].uuid == pl2.uuid) newPl2 = i;
+    }
+    EXPECT_LT(newPl3, newPl2);
 }

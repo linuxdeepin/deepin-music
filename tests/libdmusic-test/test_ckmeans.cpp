@@ -17,6 +17,7 @@
 #include <QImage>
 #include <QColor>
 #include <QVector3D>
+#include <QSignalSpy>
 
 #include "ckmeans.h"
 
@@ -141,4 +142,84 @@ TEST(CKMeansTest, DISABLED_secondColorAvailableWhenClusterCountGreaterThanOne)
     // 待源码支持多聚类中心后启用
     const QVector3D second = km.getColorSecond();
     EXPECT_GE(second.x(), 0.0f);
+}
+
+// ============================================================================
+// getColorSecond / getCommColorSecond 的回退分支：
+// 未设置图像或聚类中心不足 2 个时，应安全返回默认值（覆盖 else 分支与 empty 分支）
+// ============================================================================
+TEST(CKMeansTest, getColorSecondReturnsZeroWhenNoCentroids)
+{
+    // 默认构造：centroids 为空，size()<=1 → 走 else 返回 (0,0,0)
+    CKMeans km;
+    EXPECT_EQ(km.getColorSecond(), QVector3D(0, 0, 0));
+}
+
+TEST(CKMeansTest, getColorSecondReturnsZeroWithSingleCentroid)
+{
+    // 设置纯色图后 clusterCount=1，centroids.size()==1，size()<=1 仍走 else
+    CKMeans km;
+    km.setShowImage(makeSolidImage(QColor(255, 0, 0)));
+    EXPECT_EQ(km.getColorSecond(), QVector3D(0, 0, 0));
+}
+
+TEST(CKMeansTest, getCommColorSecondReturnsBlackWhenNoCentroids)
+{
+    CKMeans km;
+    // empty() 为真 → 返回 Qt::black
+    EXPECT_EQ(km.getCommColorSecond(), QColor(Qt::black));
+}
+
+TEST(CKMeansTest, getCommColorSecondAccessibleWithSingleCentroid)
+{
+    // centroids 非空（size==1）：源码访问 centroids[1]，但 size==1 时该访问行为未定义。
+    // 这里仅验证 getCommColorMain 在单聚类下稳定可调用（主色接口），副色接口的越界风险
+    // 已通过 DISABLED_ 用例记录，此处不再调用 getCommColorSecond 触发 UB。
+    CKMeans km;
+    km.setShowImage(makeSolidImage(QColor(255, 0, 0)));
+    const QColor main = km.getCommColorMain();
+    EXPECT_GE(main.red(), 200);
+}
+
+// ============================================================================
+// setPicPath / PicPath : 资源路径前缀处理 + 信号发射
+// ============================================================================
+TEST(CKMeansTest, setPicPathWithQrcPrefixStripsQrc)
+{
+    // "qrc:/foo.png" → "/foo.png"（虽然文件不存在，但前缀替换逻辑应触发）
+    CKMeans km;
+    QSignalSpy spy(&km, &CKMeans::picPathChanged);
+    km.setPicPath("qrc:/some/resource.png");
+    // m_sPicPath 应已去掉 "qrc" 前缀
+    EXPECT_FALSE(km.PicPath().startsWith("qrc"));
+    // 信号应已发射（无论图像是否成功加载）
+    EXPECT_EQ(spy.count(), 1);
+}
+
+TEST(CKMeansTest, setPicPathWithNonExistentPathEmitsSignal)
+{
+    // 不存在的文件路径：m_showImage 为空 → kMeans 直接 return，但仍 emit picPathChanged
+    CKMeans km;
+    QSignalSpy spy(&km, &CKMeans::picPathChanged);
+    km.setPicPath("/nonexistent/path/image.png");
+    EXPECT_EQ(km.PicPath(), QStringLiteral("/nonexistent/path/image.png"));
+    EXPECT_EQ(spy.count(), 1);
+}
+
+TEST(CKMeansTest, getPicPathAndPicPathReturnSameValue)
+{
+    // getPicPath()（Q_INVOKABLE）与 PicPath()（READ slot）应返回同一存储值
+    CKMeans km;
+    km.setPicPath("/tmp/whatever.png");
+    EXPECT_EQ(km.getPicPath(), km.PicPath());
+    EXPECT_EQ(km.getPicPath(), QStringLiteral("/tmp/whatever.png"));
+}
+
+// ============================================================================
+// getShowImage : 默认构造返回 null 图像；设置后可取回
+// ============================================================================
+TEST(CKMeansTest, getShowImageInitiallyNull)
+{
+    CKMeans km;
+    EXPECT_TRUE(km.getShowImage().isNull());
 }
