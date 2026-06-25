@@ -246,8 +246,14 @@ void PlayerEngine::setMprisPlayer(const QString &serviceName, const QString &des
                 resume();
             } else {
                 if (playbackStatus() != DmGlobal::Playing) {
-                    //播放列表为空时也应考虑，不然会出现dbus调用无效的情况
-                    playNextMeta(false);
+                    // After restart setMediaMeta restores the current track while the
+                    // backend state stays Stopped; play the current track instead of the next
+                    if (!getMediaMeta().localPath.isEmpty() && !getMediaMeta().hash.isEmpty()) {
+                        play();
+                    } else {
+                        // Empty playlist must also be handled, otherwise dbus calls are no-ops
+                        playNextMeta(false);
+                    }
                 } else {
                     pauseNow();
                 }
