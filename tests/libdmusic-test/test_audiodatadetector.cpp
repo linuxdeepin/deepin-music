@@ -33,9 +33,9 @@
 #include <QStandardPaths>
 #include <memory>
 
-#include "../src/libdmusic/core/audiodatadetector.h"
-#include "../src/libdmusic/core/dynamiclibraries.h"
-#include "../src/libdmusic/global.h"
+#include "audiodatadetector.h"
+#include "dynamiclibraries.h"
+#include "global.h"
 
 #ifndef TEST_DATA_DIR
 #define TEST_DATA_DIR "."
