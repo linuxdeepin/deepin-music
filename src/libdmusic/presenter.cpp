@@ -1,4 +1,4 @@
-// Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co., Ltd.
+// Copyright (C) 2020 ~ 2026 Uniontech Software Technology Co., Ltd.
 // SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
@@ -147,10 +147,10 @@ Presenter::Presenter(const QString &unknownAlbumStr, const QString &unknownArtis
             m_data->m_playerEngine->play();
         }
         
-        // 导入歌曲成功后保存数据库
+        // After import succeeds, incrementally persist musicNew; full saveDataToDB still runs on exit
         if (sucessCount > 0) {
-            qCInfo(dmMusic) << "Saving database after importing" << sucessCount << "songs";
-            saveDataToDB();
+            qCInfo(dmMusic) << "Incrementally saving" << sucessCount << "imported songs";
+            m_data->m_dataManager->upsertMetasDB();
         }
         
         emit importFinished(playlistHashs, failCount, sucessCount, existCount);

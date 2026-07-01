@@ -1,4 +1,4 @@
-// Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co., Ltd.
+// Copyright (C) 2020 ~ 2026 Uniontech Software Technology Co., Ltd.
 // SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
@@ -47,7 +47,9 @@ public:
     void movePlaylist(const QString &hash, const QString &nextHash);
     bool isExistMeta(const QString &metaHash, const QString &playlistHash);
     void saveDataToDB();
-
+    // Incrementally persist newly imported metas to musicNew; no table clear, no history rewrite.
+    // Consumes and clears m_importedMetas. Called after import finishes.
+    bool upsertMetasDB();
     // 更新编码
     void updateMetaCodec(const DMusic::MediaMeta &meta);
 

@@ -1,4 +1,4 @@
-// Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co., Ltd.
+// Copyright (C) 2020 ~ 2026 Uniontech Software Technology Co., Ltd.
 // SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
@@ -173,6 +173,7 @@ private:
     QString                           m_dbPath;           // 可注入的 DB 路径，空=默认 cachePath/mediameta.sqlite
     QString                           m_currentHash;
     QList<DMusic::MediaMeta>          m_allMetas;
+    QList<DMusic::MediaMeta>          m_importedMetas;   // newly imported metas this batch; consumed and cleared by upsertMetasDB
     QList<DMusic::AlbumInfo>          m_allAlbums;
     QList<DMusic::ArtistInfo>         m_allArtists;
     QList<DMusic::PlaylistInfo>       m_allPlaylist;
@@ -738,6 +739,86 @@ int DataManager::addMetasToPlaylistDB(const QString &uuid, const QList<MediaMeta
 
     qCInfo(dmMusic) << "Successfully added" << insert_count << "metas to playlist" << uuid;
     return insert_count;
+}
+
+bool DataManager::upsertMetasDB()
+{
+    if (m_data->m_importedMetas.isEmpty()) {
+        qCDebug(dmMusic) << "upsertMetasDB: no imported metas, skip";
+        return true;
+    }
+
+    qCDebug(dmMusic) << "upsertMetasDB: incrementally writing" << m_data->m_importedMetas.size() << "metas";
+    m_data->m_database.transaction();
+
+    QSqlQuery query(m_data->m_database);
+    bool isPrepare = query.prepare("INSERT OR REPLACE INTO musicNew ("
+                                   "hash, timestamp, title, artist, album, "
+                                   "filetype, size, track, offset, hasimage, favourite, localpath, length, "
+                                   "py_title, py_title_short, py_artist, py_artist_short, "
+                                   "py_album, py_album_short, lyricPath, codec, cuepath, orititle, oriartist, orialbum "
+                                   ") "
+                                   "VALUES ("
+                                   ":hash, :timestamp, :title, :artist, :album, "
+                                   ":filetype, :size, :track, :offset, :hasimage, :favourite, :localpath, :length, "
+                                   ":py_title, :py_title_short, :py_artist, :py_artist_short, "
+                                   ":py_album, :py_album_short, :lyricPath, :codec, :cuepath, :orititle, :oriartist, :orialbum "
+                                   ")");
+    if (!isPrepare) {
+        qCCritical(dmMusic) << "upsertMetasDB: prepare failed:" << query.lastError();
+        m_data->m_database.rollback();
+        return false;
+    }
+
+    int idx = 0;
+    for (const MediaMeta &meta : m_data->m_importedMetas) {
+        query.bindValue(":hash", meta.hash);
+        query.bindValue(":timestamp", meta.timestamp);
+        query.bindValue(":title", meta.title);
+        query.bindValue(":artist", meta.artist);
+        query.bindValue(":album", meta.album);
+        query.bindValue(":filetype", meta.filetype);
+        query.bindValue(":size", meta.size);
+        query.bindValue(":track", meta.track);
+        query.bindValue(":offset", meta.offset);
+        query.bindValue(":hasimage", meta.hasimage);
+        query.bindValue(":favourite", meta.favourite);
+        query.bindValue(":localpath", meta.localPath);
+        query.bindValue(":length", meta.length);
+        query.bindValue(":py_title", meta.pinyinTitle);
+        query.bindValue(":py_title_short", meta.pinyinTitleShort);
+        query.bindValue(":py_artist", meta.pinyinArtist);
+        query.bindValue(":py_artist_short", meta.pinyinArtistShort);
+        query.bindValue(":py_album", meta.pinyinAlbum);
+        query.bindValue(":py_album_short", meta.pinyinAlbumShort);
+        query.bindValue(":lyricPath", meta.lyricPath);
+        query.bindValue(":codec", meta.codec);
+        query.bindValue(":cuepath", meta.cuePath);
+        query.bindValue(":orititle", meta.originalTitle);
+        query.bindValue(":oriartist", meta.originalArtist);
+        query.bindValue(":orialbum", meta.originalAlbum);
+
+        if (!query.exec()) {
+            // Any single failure aborts the whole batch: rollback guarantees
+            // atomicity (no partial/silent loss). Exit-time full saveDataToDB
+            // will still persist on next shutdown.
+            qCCritical(dmMusic) << "upsertMetasDB: exec failed at index" << idx
+                                << "meta:" << meta.title << "error:" << query.lastError();
+            m_data->m_database.rollback();
+            return false;
+        }
+        idx++;
+    }
+
+    if (!m_data->m_database.commit()) {
+        qCCritical(dmMusic) << "upsertMetasDB: commit failed:" << m_data->m_database.lastError();
+        m_data->m_database.rollback();
+        return false;
+    }
+
+    qCInfo(dmMusic) << "upsertMetasDB: wrote" << m_data->m_importedMetas.size() << "metas";
+    m_data->m_importedMetas.clear();
+    return true;
 }
 
 void DataManager::saveDataToDB()
@@ -2080,6 +2161,7 @@ void DataManager::slotAddOneMeta(QStringList playlistHashs, MediaMeta meta)
                     // 检查是否已存在，避免重复添加
                     if (existingIndex < 0) {
                         m_data->m_allMetas.append(curMeta);
+                        m_data->m_importedMetas.append(curMeta);
                         addMetaToAlbum(curMeta);
                         addMetaToArtist(curMeta);
                         qCDebug(dmMusic) << "Added meta to all collections";
