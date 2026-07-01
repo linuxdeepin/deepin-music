@@ -14,6 +14,8 @@
 #include <QSqlDatabase>
 #include <QSqlError>
 #include <QSqlQuery>
+#include <QSet>
+#include <QRegularExpression>
 #include <QTimer>
 #include <QDebug>
 #include <QCoreApplication>
@@ -29,6 +31,17 @@ using namespace DMusic;
 static  QString strcmpArtistName = "";
 static  QString strcmpAlbumName = "";
 static int FirstLoadCount = 15;
+
+// Whitelist check for playlist uuid used as a SQL table name suffix.
+// Qt QSqlQuery cannot bind table names via placeholders, so uuid is concatenated
+// into SQL. Reject any uuid containing characters outside [A-Za-z0-9_-] to block
+// SQL injection (e.g. "all; DROP TABLE ..."). Legitimate uuids are builtin
+// keywords (all/album/artist/play/fav) or hex QUuid strings.
+static bool isValidPlaylistUuid(const QString &uuid)
+{
+    static const QRegularExpression re("^[A-Za-z0-9_-]+$");
+    return re.match(uuid).hasMatch();
+}
 
 static bool compareArtistName(const ArtistInfo &data)
 {
@@ -691,49 +704,74 @@ bool DataManager::deleteAllPlaylistDB()
 int DataManager::addMetasToPlaylistDB(const QString &uuid, const QList<MediaMeta> &metas)
 {
     qCDebug(dmMusic) << "Adding" << metas.size() << "metas to playlist:" << uuid;
+
+    // Reject suspicious uuid to prevent SQL injection via table-name concatenation.
+    if (!isValidPlaylistUuid(uuid)) {
+        qCCritical(dmMusic) << "addMetasToPlaylistDB: rejected invalid uuid:" << uuid;
+        return 0;
+    }
+
     int insert_count = 0;
 
-    for (MediaMeta meta : metas) {
-        int count = 0;
-        if (uuid != "album" && uuid != "artist" && uuid != "all") {
-            QString queryString = QString("SELECT MAX(sort_id) FROM playlist_%1").arg(uuid);
-            QSqlQuery queryNew(m_data->m_database);
-            bool isPrepare = queryNew.prepare(queryString);
-            if ((!isPrepare) || (!queryNew.exec())) {
-                qCCritical(dmMusic) << "Failed to get max sort_id:" << queryNew.lastError();
-                count = 0;
-            }
-            while (queryNew.next()) {
-                count = queryNew.value(0).toInt();
-                count++;
-            }
-        }
-
-        QSqlQuery query(m_data->m_database);
-        QString sqlStr = QString("SELECT * FROM playlist_%1 WHERE music_id = :music_id").arg(uuid);
-        bool isPrepare = query.prepare(sqlStr);
-        query.bindValue(":music_id", meta.hash);
-
-        if (isPrepare && query.exec()) {
-            if (!query.next()) {
-                // 不存在则添加
-                sqlStr = QString("INSERT INTO playlist_%1 "
-                                 "(music_id, playlist_id, sort_id) "
-                                 "SELECT :music_id, :playlist_id, :sort_id ").arg(uuid);
-
-                isPrepare = query.prepare(sqlStr);
-                query.bindValue(":playlist_id", uuid);
-                query.bindValue(":music_id", meta.hash);
-                query.bindValue(":sort_id", count);
-                if (isPrepare && query.exec()) {
-                    insert_count++;
-                    qCDebug(dmMusic) << "Added meta" << meta.title << "to playlist" << uuid;
-                } else {
-                    qCCritical(dmMusic) << "Failed to add meta to playlist:" << query.lastError() << sqlStr;
-                }
+    // sort_id base: query MAX once outside the loop instead of per-meta SELECT.
+    // Only custom playlists need sort_id; album/artist/all use default 0.
+    int nextSortId = 0;
+    if (uuid != "album" && uuid != "artist" && uuid != "all") {
+        QSqlQuery maxQuery(m_data->m_database);
+        QString maxSql = QString("SELECT MAX(sort_id) FROM playlist_%1").arg(uuid);
+        if (maxQuery.prepare(maxSql) && maxQuery.exec()) {
+            while (maxQuery.next()) {
+                nextSortId = maxQuery.value(0).toInt() + 1;
             }
         } else {
-            qCCritical(dmMusic) << "Failed to check if meta exists:" << query.lastError() << sqlStr;
+            qCCritical(dmMusic) << "Failed to get max sort_id:" << maxQuery.lastError();
+        }
+    }
+
+    // Dedup set: SELECT music_id once outside the loop instead of per-meta SELECT *.
+    QSet<QString> existingHashs;
+    {
+        QSqlQuery existQuery(m_data->m_database);
+        QString existSql = QString("SELECT music_id FROM playlist_%1").arg(uuid);
+        if (existQuery.prepare(existSql) && existQuery.exec()) {
+            while (existQuery.next()) {
+                existingHashs.insert(existQuery.value(0).toString());
+            }
+        } else {
+            qCCritical(dmMusic) << "Failed to load existing music_id:" << existQuery.lastError();
+        }
+    }
+
+    // Reuse a single prepared INSERT; loop only bindValue + exec.
+    QSqlQuery insertQuery(m_data->m_database);
+    QString insertSql = QString("INSERT INTO playlist_%1 "
+                                "(music_id, playlist_id, sort_id) "
+                                "VALUES (:music_id, :playlist_id, :sort_id)").arg(uuid);
+    bool isPrepare = insertQuery.prepare(insertSql);
+    if (!isPrepare) {
+        qCCritical(dmMusic) << "Failed to prepare insert:" << insertQuery.lastError() << insertSql;
+        return insert_count;
+    }
+
+    for (const MediaMeta &meta : metas) {
+        if (existingHashs.contains(meta.hash)) {
+            continue;  // already exists, skip
+        }
+
+        int sortId = 0;
+        if (uuid != "album" && uuid != "artist" && uuid != "all") {
+            sortId = nextSortId++;
+        }
+
+        insertQuery.bindValue(":music_id", meta.hash);
+        insertQuery.bindValue(":playlist_id", uuid);
+        insertQuery.bindValue(":sort_id", sortId);
+        if (insertQuery.exec()) {
+            existingHashs.insert(meta.hash);  // guard against duplicate hash in same batch
+            insert_count++;
+            qCDebug(dmMusic) << "Added meta" << meta.title << "to playlist" << uuid;
+        } else {
+            qCCritical(dmMusic) << "Failed to add meta to playlist:" << insertQuery.lastError() << insertSql;
         }
     }
 
