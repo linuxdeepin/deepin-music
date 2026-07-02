@@ -146,13 +146,6 @@ Presenter::Presenter(const QString &unknownAlbumStr, const QString &unknownArtis
                 m_data->m_playerEngine->setMediaMeta(mediaHash);
             m_data->m_playerEngine->play();
         }
-        
-        // After import succeeds, incrementally persist musicNew; full saveDataToDB still runs on exit
-        if (sucessCount > 0) {
-            qCInfo(dmMusic) << "Incrementally saving" << sucessCount << "imported songs";
-            m_data->m_dataManager->upsertMetasDB();
-        }
-        
         emit importFinished(playlistHashs, failCount, sucessCount, existCount);
     });
     connect(m_data->m_dataManager, &DataManager::signalDeleteOneMeta, this,
@@ -163,6 +156,9 @@ Presenter::Presenter(const QString &unknownAlbumStr, const QString &unknownArtis
     connect(m_data->m_dataManager, &DataManager::signalDeleteFinished, this, &Presenter::deleteFinished);
     connect(m_data->m_dataManager, &DataManager::signalUpdatedMetaCodec, this, [ = ](DMusic::MediaMeta meta, QString preAlbum, QString preArtist) {
         emit updatedMetaCodec(Utils::metaToVariantMap(meta), preAlbum, preArtist);
+    });
+    connect(m_data->m_dataManager, &DataManager::signalMetaCoverReady, this, [ = ](DMusic::MediaMeta meta) {
+        emit metaCoverReady(Utils::metaToVariantMap(meta));
     });
 
     connect(this, &Presenter::restorePlaybackStatus, this, [ = ]() {
@@ -1188,5 +1184,4 @@ void Presenter::stop()
     qCDebug(dmMusic) << "Stopping media";
     m_data->m_playerEngine->stop();
 }
-
 

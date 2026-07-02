@@ -24,6 +24,8 @@ public slots:
 signals:
     void signalAddOneMeta(QStringList playlistHashs, DMusic::MediaMeta meta);
     void signalImportFinished(QStringList playlistHashs, int failCount, int sucessCount, int existCount, QString mediaHash);
+    void signalCoverBatchFinished();
+    void signalMetaCoverReady(DMusic::MediaMeta meta);
 
 private:
     QStringList          m_supportedSuffixs;

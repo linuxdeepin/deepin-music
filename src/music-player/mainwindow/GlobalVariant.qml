@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2023 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -73,6 +73,44 @@ Item {
             musicInfoDlgLoader.item.musicData = currentSelectMediaMeta
             musicInfoDlgLoader.item.show()
         }
+    }
+    function updateGroupedModelCover(model, meta) {
+        if (!meta || !meta.hash)
+            return
+
+        for (var i = 0; i < model.listCount; i++) {
+            var group = model.get(i)
+            var musicinfos = group.musicinfos
+            if (!musicinfos || !updateMetaCover(musicinfos, meta))
+                continue
+
+            group.musicinfos = musicinfos
+            group.coverUrl = preferredCoverUrl(musicinfos)
+            model.set(i, group)
+        }
+    }
+    function updateMetaCover(musicinfos, meta) {
+        for (var key in musicinfos) {
+            if (musicinfos[key].hash === meta.hash) {
+                musicinfos[key].coverUrl = meta.coverUrl
+                musicinfos[key].hasimage = meta.hasimage
+                musicinfos[key].lyricPath = meta.lyricPath
+                return true
+            }
+        }
+
+        return false
+    }
+    function preferredCoverUrl(musicinfos) {
+        var coverUrl = ""
+        for (var key in musicinfos) {
+            if (musicinfos[key].hasimage === true)
+                return musicinfos[key].coverUrl
+            if (coverUrl === "")
+                coverUrl = musicinfos[key].coverUrl
+        }
+
+        return coverUrl
     }
 
     Component.onCompleted: {

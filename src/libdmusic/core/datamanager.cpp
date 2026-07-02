@@ -154,27 +154,34 @@ public:
     ~DataManagerPrivate()
     {
         qCDebug(dmMusic) << "Destroying DataManagerPrivate";
-        // 1) 切断主线程与 worker 之间的 queued connection，阻止后续新 metacall 入队
-        //    （注意：已 posted 的 metacall 不会被撤销，但下面 wait 会等 worker 把它们处理完）
+        stopWorkerAndDrain();
+    }
+
+    void stopWorkerAndDrain()
+    {
+        if (m_workerStopped) return;
+        m_workerStopped = true;
+
         if (m_dbOperate) {
-            m_parent->disconnect(m_dbOperate);
-            m_dbOperate->disconnect(m_parent);
-            // 2) 让 m_dbOperate 在自己 affinity 的 worker 线程里析构。
+            // 让 m_dbOperate 在自己 affinity 的 worker 线程里析构。
             //    deleteLater 在 worker 的事件循环里 post 一个 DeferredDelete 事件；
             //    quit() 后 worker 的 exec() 在返回前会先处理 DeferredDelete，从而在
             //    正确的线程上 delete，满足 Qt 线程亲和性约束。
             m_dbOperate->deleteLater();
             m_dbOperate = nullptr;
         }
-        // 3) 请求事件循环退出 + 等线程真的结束
+        // 请求事件循环退出 + 等线程真的结束。保持 DBOperate->DataManager 连接到
+        // worker 停止后，再排空主线程上已 posted 的封面回填事件。
         if (m_workerThread) {
             m_workerThread->quit();
-            if (!m_workerThread->wait(3000)) {
-                qCWarning(dmMusic) << "Worker thread did not exit within 3s";
-            }
+            m_workerThread->wait();
             delete m_workerThread;
             m_workerThread = nullptr;
         }
+        // Worker 已停，排空主线程上此前已 posted 给 DataManager 的 metacall
+        // （如 signalMetaCoverReady/signalCoverBatchFinished）。此时 m_parent 仍有效，
+        // slot 可安全更新 m_importedMetas，随后 DataManager 析构会统一保存。
+        QCoreApplication::sendPostedEvents(m_parent, 0);
     }
 private:
     friend class DataManager;
@@ -182,6 +189,7 @@ private:
     QThread                          *m_workerThread     = nullptr;
     DBOperate                        *m_dbOperate        = nullptr;
     MusicSettings                    *m_settings         = nullptr;
+    bool                               m_workerStopped    = false;
     QSqlDatabase                      m_database;
     QString                           m_dbPath;           // 可注入的 DB 路径，空=默认 cachePath/mediameta.sqlite
     QString                           m_currentHash;
@@ -205,6 +213,8 @@ DataManager::DataManager(QStringList supportedSuffixs, QObject *parent, const QS
     connect(this, &DataManager::signalImportMetas, m_data->m_dbOperate, &DBOperate::slotImportMetas, Qt::QueuedConnection);
     connect(m_data->m_dbOperate, &DBOperate::signalAddOneMeta, this, &DataManager::slotAddOneMeta, Qt::QueuedConnection);
     connect(m_data->m_dbOperate, &DBOperate::signalImportFinished, this, &DataManager::signalImportFinished, Qt::QueuedConnection);
+    connect(m_data->m_dbOperate, &DBOperate::signalCoverBatchFinished, this, &DataManager::slotCoverBatchFinished, Qt::QueuedConnection);
+    connect(m_data->m_dbOperate, &DBOperate::signalMetaCoverReady, this, &DataManager::slotMetaCoverReady, Qt::QueuedConnection);
     connect(this, &DataManager::signalClearImportingHash, m_data->m_dbOperate, &DBOperate::slotClearImportingHash, Qt::QueuedConnection);
 
     m_data->m_workerThread->start();
@@ -215,6 +225,7 @@ DataManager::~DataManager()
 {
     qCDebug(dmMusic) << "Destroying DataManager";
     if (m_data) {
+        m_data->stopWorkerAndDrain();
         saveDataToDB();
         // 关键：触发 DataManagerPrivate 析构走安全销毁路径（disconnect + deleteLater + quit + wait）
         delete m_data;
@@ -2273,6 +2284,50 @@ void DataManager::slotAddOneMeta(QStringList playlistHashs, MediaMeta meta)
         }
     }
     emit signalAddOneMeta(playlistHashs, curMeta, true);
+}
+
+void DataManager::slotMetaCoverReady(DMusic::MediaMeta meta)
+{
+    int index = metaIndexFromHash(meta.hash);
+    if (index < 0) return;
+
+    // 1. m_allMetas
+    m_data->m_allMetas[index].coverUrl = meta.coverUrl;
+    m_data->m_allMetas[index].hasimage = meta.hasimage;
+    m_data->m_allMetas[index].lyricPath = meta.lyricPath;
+
+    // 2. m_importedMetas (upsertMetasDB reads it; sync or it writes stale hasimage/coverUrl)
+    for (auto &im : m_data->m_importedMetas) {
+        if (im.hash == meta.hash) {
+            im.coverUrl = meta.coverUrl;
+            im.hasimage = meta.hasimage;
+            im.lyricPath = meta.lyricPath;
+            break;
+        }
+    }
+
+    // 3. album/artist musicinfos copy (no top-level coverUrl field; UI derives from musicinfos)
+    for (auto &alb : m_data->m_allAlbums) {
+        if (alb.musicinfos.contains(meta.hash)) {
+            alb.musicinfos[meta.hash] = m_data->m_allMetas[index];
+        }
+    }
+    for (auto &art : m_data->m_allArtists) {
+        if (art.musicinfos.contains(meta.hash)) {
+            art.musicinfos[meta.hash] = m_data->m_allMetas[index];
+        }
+    }
+
+    m_data->m_dirty = true;  // hasimage/coverUrl/lyricPath affect DB row
+    emit signalMetaCoverReady(m_data->m_allMetas[index]);
+}
+
+void DataManager::slotCoverBatchFinished()
+{
+    // 导入成功提示已在 signalImportFinished 发出；这里仅在封面/歌词补齐后
+    // 增量落库，避免 musicNew 先写入 stale coverUrl/hasimage/lyricPath。
+    upsertMetasDB();
+    emit signalCoverBatchFinished();
 }
 
 void DataManager::slotLazyLoadDatabase()

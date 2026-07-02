@@ -660,25 +660,37 @@ void AudioAnalysis::parseMetaLyrics(DMusic::MediaMeta &meta)
     QString tmpPath = DmGlobal::cachePath();
     QString hash = meta.hash;
     QString path = meta.localPath;
-    QString lyricDirPath = tmpPath + QDir::separator() + "lyrics";
+    QString lyricDirPath = QDir::cleanPath(tmpPath + QDir::separator() + "lyrics");
     QString lyricName = hash + ".lrc";
-    QDir lyricDir(lyricDirPath);
+    const QString lyricRootPath = QFileInfo(lyricDirPath).absoluteFilePath();
+    const QString lyricFilePath = QFileInfo(QDir::cleanPath(lyricRootPath + QDir::separator() + lyricName)).absoluteFilePath();
+    const QString lyricRootPrefix = lyricRootPath.endsWith(QDir::separator()) ? lyricRootPath : lyricRootPath + QDir::separator();
+    if (!lyricFilePath.startsWith(lyricRootPrefix)) {
+        qCWarning(dmMusic) << "Rejected unsafe lyrics path:" << lyricFilePath
+                           << "root:" << lyricRootPath
+                           << "hash:" << hash;
+        return;
+    }
+
+    QDir lyricDir(lyricRootPath);
     if (!lyricDir.exists()) {
-        qCDebug(dmMusic) << "Creating lyrics directory:" << lyricDirPath;
-        lyricDir.cdUp();
-        lyricDir.mkdir("lyrics");
-        lyricDir.cd("lyrics");
+        qCDebug(dmMusic) << "Creating lyrics directory:" << lyricRootPath;
+        if (!QDir().mkpath(lyricRootPath)) {
+            qCWarning(dmMusic) << "Failed to create lyrics directory:" << lyricRootPath;
+            return;
+        }
     }
 
     if (!tmpPath.isEmpty() && !hash.isEmpty()) {
         // 歌词文件存在，停止解析
         if (lyricDir.exists(lyricName)) {
             qCDebug(dmMusic) << "Lyrics file already exists, skipping parsing:" << lyricName;
+            meta.lyricPath = lyricFilePath;  // backfill for DB/persistence
             return;
         }
 
         if (!path.isEmpty()) {
-            QFile lyric(lyricDirPath + QDir::separator() + lyricName);
+            QFile lyric(lyricFilePath);
             TagLib::MPEG::File f(path.toStdString().c_str());
             QString lyricStr = "";
 
@@ -716,6 +728,7 @@ void AudioAnalysis::parseMetaLyrics(DMusic::MediaMeta &meta)
                     if (!lyricStr.isEmpty()) {
                         if (lyric.open(QIODevice::WriteOnly)) {
                             lyric.write(lyricStr.toUtf8());
+                            meta.lyricPath = lyricFilePath;  // backfill for DB/persistence
                             qCInfo(dmMusic) << "Successfully extracted and saved lyrics for file:" << path;
                         } else {
                             qCWarning(dmMusic) << "Failed to open lyrics file for writing:" << lyricName;

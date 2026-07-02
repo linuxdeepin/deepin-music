@@ -72,6 +72,8 @@ public:
 public slots:
     void slotAddOneMeta(QStringList playlistHashs, DMusic::MediaMeta meta);
     void slotLazyLoadDatabase();
+    void slotMetaCoverReady(DMusic::MediaMeta meta);
+    void slotCoverBatchFinished();
 
 signals:
     void signalImportMetas(const QStringList &urls, const QSet<QString> &metaHashs, bool importPlayFlag,
@@ -80,6 +82,8 @@ signals:
     void signalAddOneMeta(QStringList playlistHashs, DMusic::MediaMeta meta, const bool &addToPlay);
     void signalAddMetaFinished(QStringList playlistHashs);
     void signalImportFinished(QStringList playlistHashs, int failCount, int sucessCount, int existCount, QString mediaHash);
+    void signalCoverBatchFinished();
+    void signalMetaCoverReady(DMusic::MediaMeta meta);
     void signalDeleteOneMeta(QStringList playlistHashs, QString hash, const bool &addToPlay);
     void signalDeleteFinished(QStringList playlistHashs);
     void signalUpdatedMetaCodec(DMusic::MediaMeta meta, QString preAlbum, QString preArtist);

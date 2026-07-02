@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2023 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -62,6 +62,17 @@ ListModel {
         }
     }
 
+    function onMetaCoverReady(meta) {
+        for (var j = 0; j < playlistModel.count; j++) {
+            if (playlistModel.get(j)["hash"] === meta.hash) {
+                playlistModel.setProperty(j, "coverUrl", meta.coverUrl)
+                playlistModel.setProperty(j, "hasimage", meta.hasimage)
+                playlistModel.setProperty(j, "lyricPath", meta.lyricPath)
+                break
+            }
+        }
+    }
+
     Component.onCompleted: {
         loadplaylistData();
         Presenter.deleteOneMeta.connect(onDeleteOneMeta)
@@ -69,6 +80,7 @@ ListModel {
         Presenter.importFinished.connect(onAddMetaFinished)
         Presenter.addOneMeta.connect(onAddOneMeta)
         Presenter.updatedMetaCodec.connect(onUpdatedMetaCodec)
+        Presenter.metaCoverReady.connect(onMetaCoverReady)
 
         Presenter.currentPlaylistSChanged.connect(function(playlistHash){
             if (playlistHash === "") {
