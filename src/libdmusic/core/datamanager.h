@@ -102,7 +102,7 @@ private:
     bool loadPlaylistDB();
     bool loadPlaylistMetasDB();
     bool isPlaylistExistDB(const QString &uuid);
-    void addPlaylistDB(const DMusic::PlaylistInfo &playlist);
+    bool addPlaylistDB(const DMusic::PlaylistInfo &playlist);
     bool deletePlaylistDB(const QString &uuid);
     bool deleteAllPlaylistDB();
     int addMetasToPlaylistDB(const QString &uuid, const QList<DMusic::MediaMeta> &metas);

@@ -187,6 +187,7 @@ private:
     QString                           m_currentHash;
     QList<DMusic::MediaMeta>          m_allMetas;
     QList<DMusic::MediaMeta>          m_importedMetas;   // newly imported metas this batch; consumed and cleared by upsertMetasDB
+    bool                               m_dirty = false;   // true if persistent in-memory model changed and needs full saveDataToDB on exit
     QList<DMusic::AlbumInfo>          m_allAlbums;
     QList<DMusic::ArtistInfo>         m_allArtists;
     QList<DMusic::PlaylistInfo>       m_allPlaylist;
@@ -622,12 +623,12 @@ bool DataManager::isPlaylistExistDB(const QString &uuid)
     return query.value(0).toInt() > 0;
 }
 
-void DataManager::addPlaylistDB(const DMusic::PlaylistInfo &playlist)
+bool DataManager::addPlaylistDB(const DMusic::PlaylistInfo &playlist)
 {
-    if (!playlist.saveFalg) return;
-    
+    if (!playlist.saveFalg) return true;
+
     qCDebug(dmMusic) << "Adding playlist to database:" << playlist.uuid << playlist.displayName;
-    QSqlQuery query;
+    QSqlQuery query(m_data->m_database);
     bool isPrepare = query.prepare("INSERT INTO playlist ("
                                    "uuid, displayname, icon, readonly, hide, "
                                    "sort_type, order_type, sort_id "
@@ -647,7 +648,7 @@ void DataManager::addPlaylistDB(const DMusic::PlaylistInfo &playlist)
 
     if ((!isPrepare) || (! query.exec())) {
         qCWarning(dmMusic) << "Failed to add playlist to database:" << query.lastError();
-        return;
+        return false;
     }
 
     QString sqlstring = QString("CREATE TABLE IF NOT EXISTS playlist_%1 ("
@@ -656,10 +657,11 @@ void DataManager::addPlaylistDB(const DMusic::PlaylistInfo &playlist)
                                 ")").arg(playlist.uuid);
     if (! query.exec(sqlstring)) {
         qCWarning(dmMusic) << "Failed to create playlist table:" << query.lastError();
-        return;
+        return false;
     }
-    
+
     qCDebug(dmMusic) << "Successfully added playlist to database:" << playlist.uuid;
+    return true;
 }
 
 bool DataManager::deletePlaylistDB(const QString &uuid)
@@ -694,11 +696,12 @@ bool DataManager::deleteAllPlaylistDB()
     while (query.next()) {
         allPlaylistIDs.append(query.value(0).toString());
     }
+    bool ok = true;
     for (QString id : allPlaylistIDs) {
-        deletePlaylistDB(id);
+        if (!deletePlaylistDB(id)) ok = false;
     }
 
-    return true;
+    return ok;
 }
 
 int DataManager::addMetasToPlaylistDB(const QString &uuid, const QList<MediaMeta> &metas)
@@ -708,10 +711,11 @@ int DataManager::addMetasToPlaylistDB(const QString &uuid, const QList<MediaMeta
     // Reject suspicious uuid to prevent SQL injection via table-name concatenation.
     if (!isValidPlaylistUuid(uuid)) {
         qCCritical(dmMusic) << "addMetasToPlaylistDB: rejected invalid uuid:" << uuid;
-        return 0;
+        return -1;
     }
 
     int insert_count = 0;
+    bool anyFail = false;  // any failure -> return -1 so caller (saveDataToDB) can感知
 
     // sort_id base: query MAX once outside the loop instead of per-meta SELECT.
     // Only custom playlists need sort_id; album/artist/all use default 0.
@@ -725,6 +729,7 @@ int DataManager::addMetasToPlaylistDB(const QString &uuid, const QList<MediaMeta
             }
         } else {
             qCCritical(dmMusic) << "Failed to get max sort_id:" << maxQuery.lastError();
+            anyFail = true;
         }
     }
 
@@ -739,6 +744,7 @@ int DataManager::addMetasToPlaylistDB(const QString &uuid, const QList<MediaMeta
             }
         } else {
             qCCritical(dmMusic) << "Failed to load existing music_id:" << existQuery.lastError();
+            anyFail = true;
         }
     }
 
@@ -750,7 +756,7 @@ int DataManager::addMetasToPlaylistDB(const QString &uuid, const QList<MediaMeta
     bool isPrepare = insertQuery.prepare(insertSql);
     if (!isPrepare) {
         qCCritical(dmMusic) << "Failed to prepare insert:" << insertQuery.lastError() << insertSql;
-        return insert_count;
+        return -1;
     }
 
     for (const MediaMeta &meta : metas) {
@@ -772,11 +778,12 @@ int DataManager::addMetasToPlaylistDB(const QString &uuid, const QList<MediaMeta
             qCDebug(dmMusic) << "Added meta" << meta.title << "to playlist" << uuid;
         } else {
             qCCritical(dmMusic) << "Failed to add meta to playlist:" << insertQuery.lastError() << insertSql;
+            anyFail = true;
         }
     }
 
     qCInfo(dmMusic) << "Successfully added" << insert_count << "metas to playlist" << uuid;
-    return insert_count;
+    return anyFail ? -1 : insert_count;
 }
 
 bool DataManager::upsertMetasDB()
@@ -861,21 +868,30 @@ bool DataManager::upsertMetasDB()
 
 void DataManager::saveDataToDB()
 {
-    qCDebug(dmMusic) << "Starting to save data to database";
-    m_data->m_database.transaction();
+    // Guard: skip full rewrite if in-memory model unchanged since load.
+    if (!m_data->m_dirty) {
+        qCDebug(dmMusic) << "saveDataToDB: not dirty, skip full rewrite";
+        return;
+    }
 
-    // 保存数据
+    qCDebug(dmMusic) << "Starting to save data to database";
+    if (!m_data->m_database.transaction()) {
+        qCCritical(dmMusic) << "saveDataToDB: transaction failed:" << m_data->m_database.lastError();
+        return;  // dirty 保留
+    }
+
+    bool ok = true;
     QSqlQuery query(m_data->m_database);
-    QString sqlStr;
 
     // 删除歌曲
-    sqlStr = QString("DELETE FROM musicNew");
+    QString sqlStr = QString("DELETE FROM musicNew");
     bool isPrepare = query.prepare(sqlStr);
     if ((!isPrepare) || (! query.exec())) {
         qCCritical(dmMusic) << "Failed to clear musicNew table:" << query.lastError() << sqlStr;
+        ok = false;
     }
 
-    // 删除歌曲
+    // 重插歌曲
     for (MediaMeta meta : m_data->m_allMetas) {
         bool isPrepare = query.prepare("INSERT INTO musicNew ("
                                        "hash, timestamp, title, artist, album, "
@@ -917,23 +933,33 @@ void DataManager::saveDataToDB()
 
         if ((!isPrepare) || (! query.exec())) {
             qCWarning(dmMusic) << "Failed to save meta to database:" << meta.title << "error:" << query.lastError();
-        } 
+            ok = false;
+        }
     }
 
-    // 删除歌单
-    deleteAllPlaylistDB();
+    // 歌单：deleteAllPlaylistDB 已清全表+各 playlist_<uuid> 表，循环内直接重建。
+    // 四个返回值全部纳入 ok（歌单关系是 dirty 兜底核心）。
+    if (!deleteAllPlaylistDB()) ok = false;
     for (const PlaylistInfo &info : m_data->m_allPlaylist) {
         if (!info.saveFalg) continue;
 
-        if (isPlaylistExistDB(info.uuid)) {
-            deletePlaylistDB(info.uuid);
-        }
-        addPlaylistDB(info);
-
-        addMetasToPlaylistDB(info.uuid, getPlaylistMetas(info.uuid));
+        if (!addPlaylistDB(info)) ok = false;
+        if (addMetasToPlaylistDB(info.uuid, getPlaylistMetas(info.uuid)) < 0) ok = false;
     }
 
-    m_data->m_database.commit();
+    // 任一步失败：rollback 并保留 dirty，下次退出重试。
+    if (!ok) {
+        qCCritical(dmMusic) << "saveDataToDB: errors occurred, rollback, keep dirty";
+        m_data->m_database.rollback();
+        return;
+    }
+    if (!m_data->m_database.commit()) {
+        qCCritical(dmMusic) << "saveDataToDB: commit failed:" << m_data->m_database.lastError();
+        m_data->m_database.rollback();
+        return;  // dirty 保留
+    }
+
+    m_data->m_dirty = false;  // 全程成功才清
     qCInfo(dmMusic) << "Data saved successfully";
 }
 
@@ -1224,6 +1250,7 @@ void DataManager::addMetasToPlayList(const QList<QString> &metaHash,
     }
     curPlaylist.sortCustomMetas = curPlaylist.sortMetas;
     qCDebug(dmMusic) << "Finished adding metas to playlists:" << allPlaylistHashs;
+    if (!allPlaylistHashs.isEmpty()) m_data->m_dirty = true;  // real membership change
     emit signalAddMetaFinished(allPlaylistHashs.values());
     qCDebug(dmMusic) << "Adding metas to playlist finished";
 }
@@ -1284,6 +1311,7 @@ void DataManager::addMetasToPlayList(const QList<MediaMeta> &metas, const QStrin
     }
     curPlaylist.sortCustomMetas = curPlaylist.sortMetas;
     qCDebug(dmMusic) << "Finished adding metas to playlists:" << allPlaylistHashs;
+    if (!allPlaylistHashs.isEmpty()) m_data->m_dirty = true;  // real membership change
     emit signalAddMetaFinished(allPlaylistHashs.values());
     qCDebug(dmMusic) << "Adding metas to playlist finished";
 }
@@ -1299,7 +1327,14 @@ void DataManager::clearPlayList(const QString &playlistHash, const bool &addToPl
     }
 
     PlaylistInfo &curPlaylist = m_data->m_allPlaylist[index];
+    if (curPlaylist.sortMetas.isEmpty() && curPlaylist.sortCustomMetas.isEmpty()) {
+        qCDebug(dmMusic) << "Playlist already empty:" << curHash;
+        emit signalDeleteFinished(QStringList() << playlistHash);
+        return;  // no real change, not dirty
+    }
     curPlaylist.sortMetas.clear();
+    curPlaylist.sortCustomMetas.clear();
+    m_data->m_dirty = true;  // real membership change
     qCDebug(dmMusic) << "Cleared playlist:" << curHash;
     emit signalDeleteFinished(QStringList() << playlistHash);
 }
@@ -1364,6 +1399,7 @@ void DataManager::removeFromPlayList(const QStringList listToDel, const QString 
         }
     }
     if (!allHashs.isEmpty()){
+        m_data->m_dirty = true;  // real membership change
         qCDebug(dmMusic) << "Finished removing metas:" << allHashs;
         emit signalDeleteFinished(allHashs);
     }
@@ -1432,6 +1468,7 @@ bool DataManager::moveMetasPlayList(const QStringList &metaHashs, const QString 
 
     m_data->m_allPlaylist[customIndex].sortCustomMetas.clear();
     m_data->m_allPlaylist[customIndex].sortCustomMetas = curPlaylist.sortMetas;
+    m_data->m_dirty = true;  // real order change
     qCDebug(dmMusic) << "Successfully moved" << curMetas.size() << "metas in playlist:" << playlistHash;
     return true;
 }
@@ -1469,6 +1506,7 @@ PlaylistInfo DataManager::addPlayList(const QString &name)
     m_data->m_allPlaylist << playlistMeta;
 
     qCDebug(dmMusic) << "Created new playlist with UUID:" << playlistMeta.uuid << "name:" << curName;
+    m_data->m_dirty = true;  // new persistent playlist created
     return playlistMeta;
 }
 
@@ -1483,6 +1521,11 @@ void DataManager::sortPlaylist(const int &type, const QString &hash, bool signal
     PlaylistInfo &playlistMeta = m_data->m_allPlaylist[index];
 
     int sortType = DmGlobal::SortByAddTimeASC;
+    int oldSortType = playlistMeta.sortType;  // capture before mutation for dirty check
+    const bool trackSortMetasChange = playlistMeta.saveFalg
+                                      && playlistMeta.uuid != "album"
+                                      && playlistMeta.uuid != "artist";
+    const QStringList oldSortMetas = trackSortMetasChange ? playlistMeta.sortMetas : QStringList();
     if (signalFlag) {
         sortType = DmGlobal::SortByAddTimeASC;
         // 倒序
@@ -1762,6 +1805,11 @@ void DataManager::sortPlaylist(const int &type, const QString &hash, bool signal
             }
         }
     }
+    if (playlistMeta.saveFalg
+            && (oldSortType != playlistMeta.sortType
+                || (trackSortMetasChange && oldSortMetas != playlistMeta.sortMetas))) {
+        m_data->m_dirty = true;
+    }
 }
 
 bool DataManager::deletePlaylist(QString playlistHash)
@@ -1777,6 +1825,7 @@ bool DataManager::deletePlaylist(QString playlistHash)
         qCDebug(dmMusic) << "Resetting current playlist hash as deleted playlist was current";
         setCurrentPlayliHash("");
     }
+    m_data->m_dirty = true;  // persistent playlist removed
     qCDebug(dmMusic) << "Successfully deleted playlist:" << playlistHash;
     return true;
 }
@@ -1800,6 +1849,7 @@ bool DataManager::renamePlaylist(const QString &name, const QString &playlistHas
     }
 
     m_data->m_allPlaylist[index].displayName = name;
+    m_data->m_dirty = true;  // playlist display name changed
     qCDebug(dmMusic) << "Successfully renamed playlist" << playlistHash << "to:" << name;
     return true;
 }
@@ -1831,6 +1881,7 @@ void DataManager::movePlaylist(const QString &hash, const QString &nextHash)
             m_data->m_allPlaylist[i].sortID = (++num);
         }
     }
+    m_data->m_dirty = true;  // playlist order changed
     qCDebug(dmMusic) << "Updated sort IDs for all playlists";
 }
 
@@ -1857,6 +1908,7 @@ void DataManager::updateMetaCodec(const MediaMeta &meta)
         return;
     }
     m_data->m_allMetas[index] = meta;
+    m_data->m_dirty = true;  // meta content updated
 
     QString preAlbum, preArtist;
     for (int i = 0; i < m_data->m_allAlbums.size(); ++i) {
@@ -2202,6 +2254,7 @@ void DataManager::slotAddOneMeta(QStringList playlistHashs, MediaMeta meta)
                         m_data->m_importedMetas.append(curMeta);
                         addMetaToAlbum(curMeta);
                         addMetaToArtist(curMeta);
+                        m_data->m_dirty = true;  // new meta appended -> persistent model changed
                         qCDebug(dmMusic) << "Added meta to all collections";
                     } else {
                         qCDebug(dmMusic) << "Meta already exists in allMetas, skipping add to all:" << curMeta.title;
@@ -2211,6 +2264,7 @@ void DataManager::slotAddOneMeta(QStringList playlistHashs, MediaMeta meta)
                 if (!playlist.sortMetas.contains(curMeta.hash)) {
                     playlist.sortMetas.append(curMeta.hash);
                     playlist.sortCustomMetas.append(curMeta.hash);
+                    m_data->m_dirty = true;  // playlist membership changed
                     qCDebug(dmMusic) << "Added meta to playlist:" << playlist.displayName;
                 } else {
                     qCDebug(dmMusic) << "Meta already exists in playlist:" << playlist.displayName << "hash:" << curMeta.hash;
