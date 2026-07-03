@@ -198,7 +198,9 @@ private:
     QList<DMusic::MediaMeta>          m_importedMetas;   // newly imported metas this batch; consumed and cleared by upsertMetasDB
     bool                               m_dirty = false;   // true if persistent in-memory model changed and needs full saveDataToDB on exit
     QList<DMusic::AlbumInfo>          m_allAlbums;
+    QHash<QString, int>               m_albumNameIndex;   // album name -> m_allAlbums index
     QList<DMusic::ArtistInfo>         m_allArtists;
+    QHash<QString, int>               m_artistNameIndex;  // artist name -> m_allArtists index
     QList<DMusic::PlaylistInfo>       m_allPlaylist;
     QList<QString>                    m_searchMetas;
     QList<QString>                    m_searchArtists;
@@ -291,6 +293,76 @@ void DataManager::rebuildMetaHashIndex()
     }
 }
 
+void DataManager::rebuildAlbumNameIndex()
+{
+    m_data->m_albumNameIndex.clear();
+    m_data->m_albumNameIndex.reserve(m_data->m_allAlbums.size());
+    for (int i = 0; i < m_data->m_allAlbums.size(); ++i) {
+        if (!m_data->m_albumNameIndex.contains(m_data->m_allAlbums[i].name)) {
+            m_data->m_albumNameIndex.insert(m_data->m_allAlbums[i].name, i);
+        }
+    }
+}
+
+void DataManager::rebuildArtistNameIndex()
+{
+    m_data->m_artistNameIndex.clear();
+    m_data->m_artistNameIndex.reserve(m_data->m_allArtists.size());
+    for (int i = 0; i < m_data->m_allArtists.size(); ++i) {
+        if (!m_data->m_artistNameIndex.contains(m_data->m_allArtists[i].name)) {
+            m_data->m_artistNameIndex.insert(m_data->m_allArtists[i].name, i);
+        }
+    }
+}
+
+int DataManager::albumIndexFromName(const QString &name)
+{
+    auto it = m_data->m_albumNameIndex.constFind(name);
+    if (it == m_data->m_albumNameIndex.constEnd()) {
+        return -1;  // normal miss, keep O(1)
+    }
+    int idx = it.value();
+    if (idx >= 0 && idx < m_data->m_allAlbums.size()
+            && m_data->m_allAlbums[idx].name == name) {
+        return idx;
+    }
+    rebuildAlbumNameIndex();  // stale hit only: rebuild and recheck
+    it = m_data->m_albumNameIndex.constFind(name);
+    if (it == m_data->m_albumNameIndex.constEnd()) {
+        return -1;
+    }
+    idx = it.value();
+    if (idx >= 0 && idx < m_data->m_allAlbums.size()
+            && m_data->m_allAlbums[idx].name == name) {
+        return idx;
+    }
+    return -1;
+}
+
+int DataManager::artistIndexFromName(const QString &name)
+{
+    auto it = m_data->m_artistNameIndex.constFind(name);
+    if (it == m_data->m_artistNameIndex.constEnd()) {
+        return -1;
+    }
+    int idx = it.value();
+    if (idx >= 0 && idx < m_data->m_allArtists.size()
+            && m_data->m_allArtists[idx].name == name) {
+        return idx;
+    }
+    rebuildArtistNameIndex();
+    it = m_data->m_artistNameIndex.constFind(name);
+    if (it == m_data->m_artistNameIndex.constEnd()) {
+        return -1;
+    }
+    idx = it.value();
+    if (idx >= 0 && idx < m_data->m_allArtists.size()
+            && m_data->m_allArtists[idx].name == name) {
+        return idx;
+    }
+    return -1;
+}
+
 int DataManager::playlistIndexFromHash(const QString &hash)
 {
     qCDebug(dmMusic) << "Looking up playlist index for hash:" << hash;
@@ -329,12 +401,12 @@ void DataManager::deleteMetaFromAllMetas(const QStringList &hashs)
 void DataManager::addMetaToAlbum(const MediaMeta &meta)
 {
     qCDebug(dmMusic) << "Adding meta to album:" << meta.album << "artist:" << meta.artist;
-    strcmpAlbumName = meta.album;
-    QList<AlbumInfo>::iterator itr = std::find_if(m_data->m_allAlbums.begin(), m_data->m_allAlbums.end(), compareAlbumName);
-    if (itr != m_data->m_allAlbums.end()) {
-        itr->musicinfos[meta.hash] = meta;
-        if (meta.timestamp < itr->timestamp) {
-            itr->timestamp = meta.timestamp;
+    const int albumIndex = albumIndexFromName(meta.album);
+    if (albumIndex >= 0) {
+        auto &album = m_data->m_allAlbums[albumIndex];
+        album.musicinfos[meta.hash] = meta;
+        if (meta.timestamp < album.timestamp) {
+            album.timestamp = meta.timestamp;
         }
         qCDebug(dmMusic) << "Updated existing album:" << meta.album;
     } else {
@@ -344,6 +416,9 @@ void DataManager::addMetaToAlbum(const MediaMeta &meta)
         albumNew.artist = meta.artist;
         albumNew.musicinfos[meta.hash] = meta;
         albumNew.timestamp = meta.timestamp;
+        if (!m_data->m_albumNameIndex.contains(meta.album)) {
+            m_data->m_albumNameIndex.insert(meta.album, m_data->m_allAlbums.size());
+        }
         m_data->m_allAlbums.append(albumNew);
         qCDebug(dmMusic) << "Created new album:" << meta.album;
     }
@@ -362,17 +437,18 @@ void DataManager::deleteMetaFromAlbum(const QString &metaHash, const QString &na
             break;
         }
     }
+    rebuildAlbumNameIndex();  // removeAt shifts indices
 }
 
 void DataManager::addMetaToArtist(const MediaMeta &meta)
 {
     qCDebug(dmMusic) << "Adding meta to artist:" << meta.artist;
-    strcmpArtistName = meta.artist;
-    QList<ArtistInfo>::iterator itr = std::find_if(m_data->m_allArtists.begin(), m_data->m_allArtists.end(), compareArtistName);
-    if (itr != m_data->m_allArtists.end()) {
-        itr->musicinfos[meta.hash] = meta;
-        if (meta.timestamp < itr->timestamp) {
-            itr->timestamp = meta.timestamp;
+    const int artistIndex = artistIndexFromName(meta.artist);
+    if (artistIndex >= 0) {
+        auto &artist = m_data->m_allArtists[artistIndex];
+        artist.musicinfos[meta.hash] = meta;
+        if (meta.timestamp < artist.timestamp) {
+            artist.timestamp = meta.timestamp;
         }
         qCDebug(dmMusic) << "Updated existing artist:" << meta.artist;
     } else {
@@ -381,6 +457,9 @@ void DataManager::addMetaToArtist(const MediaMeta &meta)
         artist.name = meta.artist;
         artist.musicinfos[meta.hash] = meta;
         artist.timestamp = meta.timestamp;
+        if (!m_data->m_artistNameIndex.contains(meta.artist)) {
+            m_data->m_artistNameIndex.insert(meta.artist, m_data->m_allArtists.size());
+        }
         m_data->m_allArtists.append(artist);
         qCDebug(dmMusic) << "Created new artist:" << meta.artist;
     }
@@ -399,6 +478,7 @@ void DataManager::deleteMetaFromArtist(const QString &metaHash, const QString &n
             break;
         }
     }
+    rebuildArtistNameIndex();  // removeAt shifts indices
 }
 
 int DataManager::allMusicCountDB()
@@ -513,6 +593,8 @@ bool DataManager::loadCurrentMetasDB()
     }
 
     rebuildMetaHashIndex();
+    rebuildAlbumNameIndex();
+    rebuildArtistNameIndex();
     qCInfo(dmMusic) << "Successfully loaded" << m_data->m_allMetas.size() << "metas from database";
     return true;
 }
@@ -582,6 +664,8 @@ bool DataManager::loadMetasDB()
     }
 
     rebuildMetaHashIndex();
+    rebuildAlbumNameIndex();
+    rebuildArtistNameIndex();
     qCInfo(dmMusic) << "Successfully loaded";
     return true;
 }
@@ -1104,13 +1188,14 @@ QList<AlbumInfo> DataManager::allAlbumInfos()
 {
     qCDebug(dmMusic) << "Getting all album infos";
     m_data->m_allAlbums.clear();
+    m_data->m_albumNameIndex.clear();
     for (MediaMeta &meta : getPlaylistMetas()) {
-        strcmpAlbumName = meta.album;
-        QList<AlbumInfo>::iterator itr = std::find_if(m_data->m_allAlbums.begin(), m_data->m_allAlbums.end(), compareAlbumName);
-        if (itr != m_data->m_allAlbums.end()) {
-            itr->musicinfos[meta.hash] = meta;
-            if (meta.timestamp < itr->timestamp) {
-                itr->timestamp = meta.timestamp;
+        const int albumIndex = albumIndexFromName(meta.album);
+        if (albumIndex >= 0) {
+            auto &album = m_data->m_allAlbums[albumIndex];
+            album.musicinfos[meta.hash] = meta;
+            if (meta.timestamp < album.timestamp) {
+                album.timestamp = meta.timestamp;
             }
             qCDebug(dmMusic) << "Updated existing album:" << meta.album;
         } else {
@@ -1120,6 +1205,9 @@ QList<AlbumInfo> DataManager::allAlbumInfos()
             albumNew.pinyin = meta.pinyinAlbum;
             albumNew.musicinfos[meta.hash] = meta;
             albumNew.timestamp = meta.timestamp;
+            if (!m_data->m_albumNameIndex.contains(meta.album)) {
+                m_data->m_albumNameIndex.insert(meta.album, m_data->m_allAlbums.size());
+            }
             m_data->m_allAlbums.append(albumNew);
             qCDebug(dmMusic) << "Created new album:" << meta.album;
         }
@@ -1151,13 +1239,14 @@ QList<ArtistInfo> DataManager::allArtistInfos()
 {
     qCDebug(dmMusic) << "Getting all artist infos";
     m_data->m_allArtists.clear();
+    m_data->m_artistNameIndex.clear();
     for (MediaMeta &meta : getPlaylistMetas()) {
-        strcmpArtistName = meta.artist;
-        QList<ArtistInfo>::iterator itr = std::find_if(m_data->m_allArtists.begin(), m_data->m_allArtists.end(), compareArtistName);
-        if (itr != m_data->m_allArtists.end()) {
-            itr->musicinfos[meta.hash] = meta;
-            if (meta.timestamp < itr->timestamp) {
-                itr->timestamp = meta.timestamp;
+        const int artistIndex = artistIndexFromName(meta.artist);
+        if (artistIndex >= 0) {
+            auto &artist = m_data->m_allArtists[artistIndex];
+            artist.musicinfos[meta.hash] = meta;
+            if (meta.timestamp < artist.timestamp) {
+                artist.timestamp = meta.timestamp;
             }
             qCDebug(dmMusic) << "Updated existing artist:" << meta.artist;
         } else {
@@ -1166,6 +1255,9 @@ QList<ArtistInfo> DataManager::allArtistInfos()
             artist.pinyin = meta.pinyinArtist;
             artist.musicinfos[meta.hash] = meta;
             artist.timestamp = meta.timestamp;
+            if (!m_data->m_artistNameIndex.contains(meta.artist)) {
+                m_data->m_artistNameIndex.insert(meta.artist, m_data->m_allArtists.size());
+            }
             m_data->m_allArtists.append(artist);
             qCDebug(dmMusic) << "Created new artist:" << meta.artist;
         }
@@ -1849,6 +1941,9 @@ void DataManager::sortPlaylist(const int &type, const QString &hash, bool signal
                 || (trackSortMetasChange && oldSortMetas != playlistMeta.sortMetas))) {
         m_data->m_dirty = true;
     }
+    // sorting m_allAlbums/m_allArtists invalidates name->index; rebuild both
+    rebuildAlbumNameIndex();
+    rebuildArtistNameIndex();
 }
 
 bool DataManager::deletePlaylist(QString playlistHash)
@@ -2010,6 +2105,8 @@ void DataManager::updateMetaCodec(const MediaMeta &meta)
         }
     }
     qCDebug(dmMusic) << "Finished updating meta codec, emitting signal";
+    rebuildAlbumNameIndex();    // meta may have moved to new album/artist
+    rebuildArtistNameIndex();
     emit signalUpdatedMetaCodec(meta, preAlbum, preArtist);
 }
 

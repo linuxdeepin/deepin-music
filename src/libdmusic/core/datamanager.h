@@ -95,6 +95,10 @@ private:
     void initPlaylist();
     int metaIndexFromHash(const QString &hash);
     void rebuildMetaHashIndex();
+    int albumIndexFromName(const QString &name);
+    void rebuildAlbumNameIndex();
+    int artistIndexFromName(const QString &name);
+    void rebuildArtistNameIndex();
     int playlistIndexFromHash(const QString &hash);
     void deleteMetaFromAllMetas(const QStringList &hashs);
     void addMetaToAlbum(const DMusic::MediaMeta &meta);
