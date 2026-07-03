@@ -94,6 +94,7 @@ signals:
 private:
     void initPlaylist();
     int metaIndexFromHash(const QString &hash);
+    void rebuildMetaHashIndex();
     int playlistIndexFromHash(const QString &hash);
     void deleteMetaFromAllMetas(const QStringList &hashs);
     void addMetaToAlbum(const DMusic::MediaMeta &meta);

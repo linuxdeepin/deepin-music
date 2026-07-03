@@ -194,6 +194,7 @@ private:
     QString                           m_dbPath;           // 可注入的 DB 路径，空=默认 cachePath/mediameta.sqlite
     QString                           m_currentHash;
     QList<DMusic::MediaMeta>          m_allMetas;
+    QHash<QString, int>               m_metaHashIndex;  // hash -> m_allMetas index, for O(1) metaIndexFromHash
     QList<DMusic::MediaMeta>          m_importedMetas;   // newly imported metas this batch; consumed and cleared by upsertMetasDB
     bool                               m_dirty = false;   // true if persistent in-memory model changed and needs full saveDataToDB on exit
     QList<DMusic::AlbumInfo>          m_allAlbums;
@@ -251,19 +252,43 @@ QString DataManager::currentPlayliHash()
 int DataManager::metaIndexFromHash(const QString &hash)
 {
     qCDebug(dmMusic) << "Looking up meta index for hash:" << hash;
-    int index = -1;
-    if (!hash.isEmpty()) {
-        qCDebug(dmMusic) << "Total metas:" << m_data->m_allMetas.size();
-        for (int i = 0; i < m_data->m_allMetas.size(); ++i) {
-            if (m_data->m_allMetas[i].hash == hash) {
-                index = i;
-                break;
-            }
-        }
+    if (hash.isEmpty()) return -1;
+
+    auto it = m_data->m_metaHashIndex.constFind(hash);
+    if (it == m_data->m_metaHashIndex.constEnd()) {
+        return -1;  // miss, keep O(1) (import new songs mostly miss)
     }
 
-    qCDebug(dmMusic) << "Meta index for hash" << hash << ":" << index;
-    return index;
+    int idx = it.value();
+    if (idx >= 0 && idx < m_data->m_allMetas.size()
+            && m_data->m_allMetas[idx].hash == hash) {
+        return idx;
+    }
+
+    // hit but index entry stale (rare): rebuild and recheck
+    rebuildMetaHashIndex();
+    it = m_data->m_metaHashIndex.constFind(hash);
+    if (it == m_data->m_metaHashIndex.constEnd()) {
+        return -1;
+    }
+    idx = it.value();
+    if (idx >= 0 && idx < m_data->m_allMetas.size()
+            && m_data->m_allMetas[idx].hash == hash) {
+        return idx;
+    }
+    return -1;
+}
+
+void DataManager::rebuildMetaHashIndex()
+{
+    m_data->m_metaHashIndex.clear();
+    m_data->m_metaHashIndex.reserve(m_data->m_allMetas.size());
+    for (int i = 0; i < m_data->m_allMetas.size(); ++i) {
+        // duplicate hash: first wins, matching original linear-scan behavior
+        if (!m_data->m_metaHashIndex.contains(m_data->m_allMetas[i].hash)) {
+            m_data->m_metaHashIndex.insert(m_data->m_allMetas[i].hash, i);
+        }
+    }
 }
 
 int DataManager::playlistIndexFromHash(const QString &hash)
@@ -297,6 +322,7 @@ void DataManager::deleteMetaFromAllMetas(const QStringList &hashs)
             if (allHashs.isEmpty()) break;
         }
     }
+    rebuildMetaHashIndex();  // removeAt shifts indices; full rebuild is simplest
     qCDebug(dmMusic) << "Finished deleting metas";
 }
 
@@ -486,6 +512,7 @@ bool DataManager::loadCurrentMetasDB()
         }
     }
 
+    rebuildMetaHashIndex();
     qCInfo(dmMusic) << "Successfully loaded" << m_data->m_allMetas.size() << "metas from database";
     return true;
 }
@@ -554,6 +581,7 @@ bool DataManager::loadMetasDB()
         addMetaToArtist(meta);
     }
 
+    rebuildMetaHashIndex();
     qCInfo(dmMusic) << "Successfully loaded";
     return true;
 }
@@ -2261,6 +2289,9 @@ void DataManager::slotAddOneMeta(QStringList playlistHashs, MediaMeta meta)
                 if (hash == "all") {
                     // 检查是否已存在，避免重复添加
                     if (existingIndex < 0) {
+                        if (!m_data->m_metaHashIndex.contains(curMeta.hash)) {
+                            m_data->m_metaHashIndex.insert(curMeta.hash, m_data->m_allMetas.size());
+                        }
                         m_data->m_allMetas.append(curMeta);
                         m_data->m_importedMetas.append(curMeta);
                         addMetaToAlbum(curMeta);
