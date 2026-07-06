@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2023 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -6,6 +6,7 @@ import QtQuick 2.0
 import QtQuick.Window 2.11
 import QtQuick.Layouts 1.11
 import QtQuick.Controls 2.0
+import Qt.labs.platform 1.0
 import org.deepin.dtk 1.0
 
 import "../dialogs"
@@ -67,7 +68,11 @@ Rectangle {
                     anchors.fill: parent
                     acceptedButtons: Qt.LeftButton
                     onClicked: {
-                        Presenter.importMetas(null,"album");
+                        // StandardPaths.MusicLocation reliably returns $HOME/Music on Linux;
+                        // matches the pattern used in AllMusicDefaultPage.qml.
+                        var list = []
+                        list.push(StandardPaths.standardLocations(StandardPaths.MusicLocation)[0])
+                        Presenter.importMetas(list, "album");
                     }
                 }
             }
