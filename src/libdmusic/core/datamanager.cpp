@@ -1287,17 +1287,17 @@ QVariantList DataManager::allArtistVariantList()
 void DataManager::importMetas(const QStringList &urls, const QString &playlistHash, const bool &playFalg)
 {
     qCDebug(dmMusic) << "Importing metas to playlist:" << playlistHash << "urls count:" << urls.size() << "playFlag:" << playFalg;
+    QString targetPlaylistHash = playlistHash;
+    if (targetPlaylistHash == "album" || targetPlaylistHash == "artist")
+        targetPlaylistHash = "all";
+
     QSet<QString> metaHashs, playMetaHashs, allMetaHashs;
     for (MediaMeta &meta : m_data->m_allMetas) {
         allMetaHashs.insert(meta.hash);
     }
-    if (!playlistHash.isEmpty()) {
-        QString curPlaylistHash = playlistHash;
-        // 专辑或者艺人添加到所有歌单
-        if (playlistHash == "album" || playlistHash == "artist")
-            curPlaylistHash = "all";
+    if (!targetPlaylistHash.isEmpty()) {
         for (PlaylistInfo &playlist : m_data->m_allPlaylist) {
-            if (playlist.uuid == curPlaylistHash) {
+            if (playlist.uuid == targetPlaylistHash) {
                 for (QString &hash : playlist.sortMetas) {
                     metaHashs.insert(hash);
                 }
@@ -1305,7 +1305,7 @@ void DataManager::importMetas(const QStringList &urls, const QString &playlistHa
             }
         }
     }
-    QString curPlaylistHash = playlistHash.isEmpty() ? "all" : playlistHash;
+    QString curPlaylistHash = targetPlaylistHash.isEmpty() ? "all" : targetPlaylistHash;
     bool importPlay = false;
     if (curPlaylistHash == m_data->m_currentHash && curPlaylistHash != "play") {
         for (PlaylistInfo &playlist : m_data->m_allPlaylist) {
@@ -1319,7 +1319,7 @@ void DataManager::importMetas(const QStringList &urls, const QString &playlistHa
         }
     }
     qCDebug(dmMusic) << "Emitting import metas signal with" << metaHashs.size() << "existing metas";
-    emit signalImportMetas(urls, metaHashs, importPlay, playMetaHashs, allMetaHashs, playlistHash, playFalg);
+    emit signalImportMetas(urls, metaHashs, importPlay, playMetaHashs, allMetaHashs, targetPlaylistHash, playFalg);
 }
 
 void DataManager::addMetasToPlayList(const QList<QString> &metaHash,
