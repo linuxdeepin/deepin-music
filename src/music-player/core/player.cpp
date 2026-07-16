@@ -100,7 +100,9 @@ Player::Player(QObject *parent) : QObject(parent)
                           << "*.m4a"
                           << "*.ac3"
                           << "*.voc"
-                          << "*.aiff";
+                          << "*.aiff"
+                          << "*.wv"
+                          << "*.mp2";
         m_supportedSuffixStr  << "aac"
                               << "amr"
                               << "wav"
@@ -112,7 +114,9 @@ Player::Player(QObject *parent) : QObject(parent)
                               << "m4a"
                               << "ac3"
                               << "voc"
-                              << "aiff";
+                              << "aiff"
+                              << "wv"
+                              << "mp2";
     } else {
         m_supportedSuffix << "*.wav"
                           << "*.ogg"
