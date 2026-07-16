@@ -1,0 +1,13 @@
+{
+    "Plugin": {
+        "Version": "1.0",
+        "Id": "org.deepin.ds.music",
+        "Name": "Music Control",
+        "Name[zh_CN]": "音乐控制",
+        "Url": "main.qml",
+        "Category": "Music",
+        "Icon": "deepin-music",
+        "Description": "Music playback controls for the DDE Shell",
+        "Description[zh_CN]": "DDE Shell 音乐播放控制小组件"
+    }
+}

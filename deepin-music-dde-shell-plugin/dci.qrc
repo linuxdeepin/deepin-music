@@ -1,0 +1,9 @@
+<RCC>
+    <qresource prefix="/">
+        <file alias="dsg/icons/toolbar_previous.dci">icons/toolbar_previous.dci</file>
+        <file alias="dsg/icons/toolbar_play.dci">icons/toolbar_play.dci</file>
+        <file alias="dsg/icons/toolbar_pause.dci">icons/toolbar_pause.dci</file>
+        <file alias="dsg/icons/toolbar_next.dci">icons/toolbar_next.dci</file>
+        <file alias="dsg/icons/details_play.dci">icons/details_play.dci</file>
+    </qresource>
+</RCC>
