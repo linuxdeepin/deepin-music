@@ -470,41 +470,17 @@ void Presenter::showMetaFile(const QString &hash)
 bool Presenter::nextMetaFromPlay(const QString &metaHash)
 {
     qCDebug(dmMusic) << "Playing next track after:" << metaHash;
-    bool flag = false, hasMeta = false;
-    QList<DMusic::MediaMeta> allMetas = m_data->m_dataManager->getPlaylistMetas("play");
-    for (int i = 0; i < allMetas.size(); i++) {
-        if ((hasMeta || allMetas[i].hash == metaHash) && ((QFile::exists(allMetas[i].localPath) && m_data->m_playerEngine->supportedSuffixList().contains(
-                                                               QFileInfo(allMetas[i].localPath).suffix().toLower())) || allMetas[i].mmType == DmGlobal::MimeTypeCDA)) {
-            if (hasMeta) {
-                flag = true;
-                break;
-            } else {
-                hasMeta = true;
-            }
-        }
-    }
-    qCDebug(dmMusic) << "Next track found:" << flag;
-    return flag;
+    const bool hasNextMeta = m_data->m_playerEngine->hasNextPlayableMeta(metaHash);
+    qCDebug(dmMusic) << "Next track found:" << hasNextMeta;
+    return hasNextMeta;
 }
 
 bool Presenter::preMetaFromPlay(const QString &metaHash)
 {
     qCDebug(dmMusic) << "Playing previous track before:" << metaHash;
-    bool flag = false, hasMeta = false;
-    QList<DMusic::MediaMeta> allMetas = m_data->m_dataManager->getPlaylistMetas("play");
-    for (int i = allMetas.size() - 1; i >= 0; i--) {
-        if ((hasMeta || allMetas[i].hash == metaHash) && ((QFile::exists(allMetas[i].localPath) && m_data->m_playerEngine->supportedSuffixList().contains(
-                                                               QFileInfo(allMetas[i].localPath).suffix().toLower())) || allMetas[i].mmType == DmGlobal::MimeTypeCDA)) {
-            if (hasMeta) {
-                flag = true;
-                break;
-            } else {
-                hasMeta = true;
-            }
-        }
-    }
-    qCDebug(dmMusic) << "Previous track found:" << flag;
-    return flag;
+    const bool hasPreviousMeta = m_data->m_playerEngine->hasPreviousPlayableMeta(metaHash);
+    qCDebug(dmMusic) << "Previous track found:" << hasPreviousMeta;
+    return hasPreviousMeta;
 }
 
 void Presenter::playAlbum(const QString &album, const QString &metaHash)
@@ -602,45 +578,66 @@ void Presenter::playPlaylist(const QString &playlistHash, const QString &metaHas
     }
 
     qCInfo(dmMusic) << "Playing playlist:" << playlistHash << "Starting with track:" << metaHash;
-    bool playFlag = m_data->m_playerEngine->getMediaMeta().hash != metaHash;
+    const DMusic::MediaMeta currentMeta = m_data->m_playerEngine->getMediaMeta();
+    const QString currentMetaHash = currentMeta.hash;
+    bool playFlag = currentMetaHash != metaHash;
+    const QList<DMusic::MediaMeta> currentMetas = m_data->m_playerEngine->getMetas();
+    const bool canCompareQueue = playlistHash != "album" && playlistHash != "artist"
+                                 && playlistHash != "cdarole";
+    bool currentMetaInQueue = currentMetaHash.isEmpty();
+    if (canCompareQueue && !currentMetaInQueue) {
+        for (const auto &meta : currentMetas) {
+            if (meta.hash == currentMetaHash) {
+                currentMetaInQueue = true;
+                break;
+            }
+        }
+    }
+    const bool samePlayQueue = canCompareQueue && !currentMetas.isEmpty() && currentMetaInQueue
+                               && m_data->m_dataManager->isPlaylistQueueMatched(playlistHash, currentMetas);
     QList<DMusic::MediaMeta> allMetas;
-    
-    if (playlistHash != "album" && playlistHash != "artist") {
-        allMetas = m_data->m_dataManager->getPlaylistMetas(playlistHash);
-    } else if (playlistHash == "album") {
-        auto albums = m_data->m_dataManager->allAlbumInfos();
-        for (auto album : albums) {
-            allMetas += album.musicinfos.values();
+
+    if (!samePlayQueue) {
+        if (playlistHash != "album" && playlistHash != "artist") {
+            allMetas = m_data->m_dataManager->getPlaylistMetas(playlistHash);
+        } else if (playlistHash == "album") {
+            auto albums = m_data->m_dataManager->allAlbumInfos();
+            for (auto album : albums) {
+                allMetas += album.musicinfos.values();
+            }
+        } else {
+            auto artists = m_data->m_dataManager->allArtistInfos();
+            for (auto artist : artists) {
+                allMetas += artist.musicinfos.values();
+            }
         }
+
+        if (playlistHash == "cdarole") {
+            qCDebug(dmMusic) << "Adding CD audio tracks to playlist";
+            allMetas = m_data->m_playerEngine->getCdaMetaInfo() + allMetas;
+        }
+
+        for (const auto &meta : allMetas) {
+            if (currentMetaHash == meta.hash) {
+                playFlag = false;
+                break;
+            }
+        }
+
+        if (allMetas.isEmpty()) {
+            qCWarning(dmMusic) << "No tracks found in playlist:" << playlistHash;
+            return;
+        }
+
+        qCDebug(dmMusic) << "Loading" << allMetas.size() << "tracks from playlist";
+        m_data->m_playerEngine->clearPlayList(playFlag);
+        m_data->m_playerEngine->replaceMetasToPlayList(allMetas);
     } else {
-        auto artists = m_data->m_dataManager->allArtistInfos();
-        for (auto artist : artists) {
-            allMetas += artist.musicinfos.values();
-        }
+        // The active engine queue already matches the requested playback queue.
+        qCDebug(dmMusic) << "Reusing current play queue with" << currentMetas.size() << "tracks";
     }
     
-    if (playlistHash == "cdarole") {
-        qCDebug(dmMusic) << "Adding CD audio tracks to playlist";
-        allMetas = m_data->m_playerEngine->getCdaMetaInfo() + allMetas;
-    }
-    
-    for (auto meta : allMetas) {
-        if (m_data->m_playerEngine->getMediaMeta().hash == meta.hash) {
-            playFlag = false;
-            break;
-        }
-    }
-
-    if (allMetas.isEmpty()) {
-        qCWarning(dmMusic) << "No tracks found in playlist:" << playlistHash;
-        return;
-    }
-
-    qCDebug(dmMusic) << "Loading" << allMetas.size() << "tracks from playlist";
-    m_data->m_playerEngine->clearPlayList(playFlag);
-    m_data->m_playerEngine->addMetasToPlayList(allMetas);
-    
-    if (!metaHash.isEmpty() && m_data->m_playerEngine->getMediaMeta().hash != metaHash) {
+    if (!metaHash.isEmpty() && currentMetaHash != metaHash) {
         qCDebug(dmMusic) << "Setting start track to:" << metaHash;
         m_data->m_playerEngine->setMediaMeta(metaHash);
     }
@@ -653,8 +650,10 @@ void Presenter::playPlaylist(const QString &playlistHash, const QString &metaHas
     }
 
     m_data->m_dataManager->setCurrentPlayliHash(playlistHash);
-    m_data->m_dataManager->clearPlayList("play", false);
-    m_data->m_dataManager->addMetasToPlayList(allMetas, "play", false);
+    if (!samePlayQueue) {
+        m_data->m_dataManager->clearPlayList("play", false);
+        m_data->m_dataManager->addMetasToPlayList(allMetas, "play", false);
+    }
     
     qCInfo(dmMusic) << "Playlist playback started successfully";
 }

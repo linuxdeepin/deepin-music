@@ -20,6 +20,8 @@
 #include <QDebug>
 #include <QCoreApplication>
 
+#include <algorithm>
+
 #include "audioanalysis.h"
 #include "utils.h"
 #include "dboperate.h"
@@ -1089,10 +1091,13 @@ void DataManager::saveDataToDB()
 MediaMeta DataManager::metaFromHash(const QString &hash)
 {
     qCDebug(dmMusic) << "Looking up meta for hash:" << hash;
-    MediaMeta mata;
-    int index = metaIndexFromHash(hash);
-    if (index >= 0 && index < m_data->m_allMetas.size()) mata = m_data->m_allMetas[index];
-    return mata;
+    const int index = metaIndexFromHash(hash);
+    // Return the stored value directly so a successful lookup does not first
+    // construct a default MediaMeta (which initializes its default cover path).
+    if (index >= 0 && index < m_data->m_allMetas.size())
+        return m_data->m_allMetas.at(index);
+
+    return {};
 }
 
 PlaylistInfo DataManager::playlistFromHash(const QString &hash)
@@ -1107,6 +1112,48 @@ PlaylistInfo DataManager::playlistFromHash(const QString &hash)
     return playlist;
 }
 
+bool DataManager::isPlaylistQueueMatched(const QString &hash, const QList<DMusic::MediaMeta> &metas) const
+{
+    const QString curHash = !hash.isEmpty() ? hash : "all";
+    const auto playlistIt = std::find_if(m_data->m_allPlaylist.cbegin(), m_data->m_allPlaylist.cend(),
+                                         [&curHash](const PlaylistInfo &playlist) {
+        return playlist.uuid == curHash;
+    });
+    if (playlistIt == m_data->m_allPlaylist.cend())
+        return false;
+
+    int metaIndex = 0;
+    const auto matchesHash = [&metas, &metaIndex](const QString &metaHash) {
+        return metaIndex < metas.size() && metas.at(metaIndex++).hash == metaHash;
+    };
+
+    if (curHash == "all" && playlistIt->sortMetas.isEmpty()) {
+        for (const MediaMeta &meta : m_data->m_allMetas) {
+            if (!meta.hash.isEmpty() && !matchesHash(meta.hash))
+                return false;
+        }
+        return metaIndex == metas.size();
+    }
+
+    const QStringList &metaHashes = curHash == "musicResult" ? m_data->m_searchMetas
+                                    : (playlistIt->sortType == DmGlobal::SortByCustomASC
+                                       && !playlistIt->sortCustomMetas.isEmpty()
+                                       ? playlistIt->sortCustomMetas : playlistIt->sortMetas);
+    for (const QString &metaHash : metaHashes) {
+        const auto metaIt = m_data->m_metaHashIndex.constFind(metaHash);
+        if (metaIt == m_data->m_metaHashIndex.constEnd())
+            return false;
+
+        const int index = metaIt.value();
+        if (index < 0 || index >= m_data->m_allMetas.size()
+                || m_data->m_allMetas.at(index).hash != metaHash
+                || !matchesHash(metaHash))
+            return false;
+    }
+
+    return metaIndex == metas.size();
+}
+
 QList<DMusic::MediaMeta> DataManager::getPlaylistMetas(const QString &hash, int count)
 {
     qCDebug(dmMusic) << "Looking up playlist metas for hash:" << hash << "count:" << count;
@@ -1116,12 +1163,20 @@ QList<DMusic::MediaMeta> DataManager::getPlaylistMetas(const QString &hash, int 
     if (index < 0 || index >= m_data->m_allPlaylist.size())  return metas;
     int favIndex = playlistIndexFromHash("fav");
     bool favExist = (favIndex >= 0 && favIndex < m_data->m_allPlaylist.size());
+    QSet<QString> favouriteHashes;
+    if (favExist) {
+        const QStringList &favouriteMetas = m_data->m_allPlaylist[favIndex].sortMetas;
+        favouriteHashes.reserve(favouriteMetas.size());
+        for (const QString &favouriteHash : favouriteMetas)
+            favouriteHashes.insert(favouriteHash);
+    }
 
     if (hash == "all" && m_data->m_allPlaylist[index].sortMetas.isEmpty()) {
         qCDebug(dmMusic) << "Playlist metas is empty, using all metas";
+        metas.reserve(count >= 0 ? qMin(count, m_data->m_allMetas.size()) : m_data->m_allMetas.size());
         for (const DMusic::MediaMeta &meta : m_data->m_allMetas) {
             DMusic::MediaMeta curMeta = meta;
-            if (favExist && m_data->m_allPlaylist[favIndex].sortMetas.contains(curMeta.hash)) curMeta.favourite = true;
+            if (favouriteHashes.contains(curMeta.hash)) curMeta.favourite = true;
             if (!meta.hash.isEmpty())
                 metas.append(curMeta);
             if (count >= 0 && count == metas.size()) break;
@@ -1131,9 +1186,10 @@ QList<DMusic::MediaMeta> DataManager::getPlaylistMetas(const QString &hash, int 
         QStringList metaHashs = (hash == "musicResult") ? m_data->m_searchMetas :
                                 (m_data->m_allPlaylist[index].sortType == DmGlobal::SortByCustomASC && m_data->m_allPlaylist[index].sortCustomMetas.size() > 0 ? m_data->m_allPlaylist[index].sortCustomMetas
                                  : m_data->m_allPlaylist[index].sortMetas);
-        for (QString metaHash : metaHashs) {
+        metas.reserve(count >= 0 ? qMin(count, metaHashs.size()) : metaHashs.size());
+        for (const QString &metaHash : metaHashs) {
             DMusic::MediaMeta meta = metaFromHash(metaHash);
-            if (favExist && m_data->m_allPlaylist[favIndex].sortMetas.contains(meta.hash)) meta.favourite = true;
+            if (favouriteHashes.contains(meta.hash)) meta.favourite = true;
             if (!meta.hash.isEmpty())
                 metas.append(meta);
             if (count >= 0 && count == metas.size()) break;

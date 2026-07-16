@@ -20,6 +20,7 @@ public:
     QString currentPlayliHash();
     DMusic::MediaMeta metaFromHash(const QString &hash);
     DMusic::PlaylistInfo playlistFromHash(const QString &hash);
+    bool isPlaylistQueueMatched(const QString &hash, const QList<DMusic::MediaMeta> &metas) const;
     QList<DMusic::MediaMeta> getPlaylistMetas(const QString &hash = "", int count = -1);
     QList<DMusic::PlaylistInfo> allPlaylistInfos();
     QVariantList allPlaylistVariantList();

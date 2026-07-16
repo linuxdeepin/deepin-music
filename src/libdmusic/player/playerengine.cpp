@@ -6,6 +6,7 @@
 #include "playerengine.h"
 
 #include <QMimeDatabase>
+#include <QElapsedTimer>
 #include <QTimer>
 #include <QFile>
 #include <QFileInfo>
@@ -20,6 +21,7 @@
 #include "util/log.h"
 
 static const int sFadeInOutAnimationDuration = 900; //ms
+static const int sPlayableMetaCacheDuration = 1000; //ms
 static int INT_LAST_PROGRESS_FLAG = 1;
 static qint64 INT_LAST_PROGRESS_VALUE = 0;
 
@@ -61,6 +63,11 @@ private:
     QPropertyAnimation         *m_fadeInAnimation       = nullptr;
     QPropertyAnimation         *m_fadeOutAnimation      = nullptr;
     bool                        m_fadeInOut             = false;
+    bool                        m_playableMetaCacheValid = false;
+    QElapsedTimer                m_playableMetaCacheTimer;
+    QString                     m_playableMetaCacheHash;
+    bool                        m_hasNextPlayableMeta    = false;
+    bool                        m_hasPreviousPlayableMeta = false;
 };
 
 PlayerEnginePrivate::PlayerEnginePrivate(PlayerEngine *parent, PlayerBase *injectedPlayer)
@@ -312,10 +319,80 @@ MediaMeta PlayerEngine::getMediaMeta()
     return m_data->m_player->getMediaMeta();
 }
 
+bool PlayerEngine::hasNextPlayableMeta(const QString &metaHash)
+{
+    qCDebug(dmMusic) << "Checking next playable meta after:" << metaHash;
+    updatePlayableMetaCache(metaHash);
+    qCDebug(dmMusic) << "Next playable meta found:" << m_data->m_hasNextPlayableMeta;
+    return m_data->m_hasNextPlayableMeta;
+}
+
+bool PlayerEngine::hasPreviousPlayableMeta(const QString &metaHash)
+{
+    qCDebug(dmMusic) << "Checking previous playable meta before:" << metaHash;
+    updatePlayableMetaCache(metaHash);
+    qCDebug(dmMusic) << "Previous playable meta found:" << m_data->m_hasPreviousPlayableMeta;
+    return m_data->m_hasPreviousPlayableMeta;
+}
+
+void PlayerEngine::updatePlayableMetaCache(const QString &metaHash)
+{
+    if (m_data->m_playableMetaCacheValid && m_data->m_playableMetaCacheHash == metaHash
+            && m_data->m_playableMetaCacheTimer.isValid()
+            && m_data->m_playableMetaCacheTimer.elapsed() < sPlayableMetaCacheDuration)
+        return;
+
+    qCDebug(dmMusic) << "Updating playable meta cache for:" << metaHash;
+    const QStringList supportedSuffixes = supportedSuffixList();
+    bool hasCurrentMeta = false;
+    bool hasNextMeta = false;
+    bool hasPreviousMeta = false;
+
+    for (const MediaMeta &meta : m_data->m_metaList) {
+        const bool playable = meta.mmType == DmGlobal::MimeTypeCDA
+                              || (QFile::exists(meta.localPath)
+                                  && supportedSuffixes.contains(QFileInfo(meta.localPath).suffix().toLower()));
+        if (!playable)
+            continue;
+
+        if (meta.hash == metaHash) {
+            hasCurrentMeta = true;
+            continue;
+        }
+
+        if (hasCurrentMeta) {
+            hasNextMeta = true;
+            break;
+        }
+
+        hasPreviousMeta = true;
+    }
+
+    m_data->m_playableMetaCacheValid = true;
+    m_data->m_playableMetaCacheTimer.restart();
+    m_data->m_playableMetaCacheHash = metaHash;
+    m_data->m_hasNextPlayableMeta = hasCurrentMeta && hasNextMeta;
+    m_data->m_hasPreviousPlayableMeta = hasCurrentMeta && hasPreviousMeta;
+}
+
+void PlayerEngine::invalidatePlayableMetaCache()
+{
+    qCDebug(dmMusic) << "Invalidating playable meta cache";
+    m_data->m_playableMetaCacheValid = false;
+}
+
 void PlayerEngine::addMetasToPlayList(const QList<MediaMeta> &metaList)
 {
     qCDebug(dmMusic) << "Adding metas to play list";
     m_data->m_metaList << metaList;
+    invalidatePlayableMetaCache();
+}
+
+void PlayerEngine::replaceMetasToPlayList(const QList<MediaMeta> &metaList)
+{
+    qCDebug(dmMusic) << "Replacing play list with" << metaList.size() << "metas";
+    m_data->m_metaList = metaList;
+    invalidatePlayableMetaCache();
 }
 
 void PlayerEngine::removeMetaFromPlayList(const QString &metaHash)
@@ -324,6 +401,7 @@ void PlayerEngine::removeMetaFromPlayList(const QString &metaHash)
     for (int i = 0; i < m_data->m_metaList.size(); i++) {
         if (m_data->m_metaList[i].hash == metaHash) {
             m_data->m_metaList.removeAt(i);
+            invalidatePlayableMetaCache();
             qCDebug(dmMusic) << "Meta removed from play list";
             break;
         }
@@ -336,6 +414,7 @@ void PlayerEngine::removeMetasFromPlayList(const QStringList &metaHashs)
     QStringList curMetaHashs = metaHashs;
     QString playHash = getMediaMeta().hash;
     bool playFlag = curMetaHashs.contains(playHash);
+    bool metaListChanged = false;
     int curIndex = -1;
     for (int i = m_data->m_metaList.size() - 1; i >= 0; i--) {
         if (curIndex >= 0) curIndex = i - 1;
@@ -343,6 +422,7 @@ void PlayerEngine::removeMetasFromPlayList(const QStringList &metaHashs)
         if (curMetaHashs.contains(m_data->m_metaList[i].hash)) {
             curMetaHashs.removeOne(m_data->m_metaList[i].hash);
             m_data->m_metaList.removeAt(i);
+            metaListChanged = true;
             qCDebug(dmMusic) << "Meta removed from play list";
         }
         if (curMetaHashs.isEmpty()) {
@@ -350,6 +430,9 @@ void PlayerEngine::removeMetasFromPlayList(const QStringList &metaHashs)
             break;
         }
     }
+    if (metaListChanged)
+        invalidatePlayableMetaCache();
+
     if (m_data->m_metaList.isEmpty()) {
         qCDebug(dmMusic) << "Play list is empty, stop";
         stop();
@@ -370,6 +453,7 @@ void PlayerEngine::clearPlayList(bool stopFlag)
 {
     qCDebug(dmMusic) << "Clearing play list";
     m_data->m_metaList.clear();
+    invalidatePlayableMetaCache();
     if (stopFlag && !getMediaMeta().hash.isEmpty()) {
         qCDebug(dmMusic) << "Stop flag is true, stop player";
         stop();

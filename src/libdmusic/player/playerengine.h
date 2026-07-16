@@ -27,7 +27,10 @@ public:
     void setMediaMeta(const DMusic::MediaMeta &metaList);
     QStringList supportedSuffixList()const;
     DMusic::MediaMeta getMediaMeta();
+    bool hasNextPlayableMeta(const QString &metaHash);
+    bool hasPreviousPlayableMeta(const QString &metaHash);
     void addMetasToPlayList(const QList<DMusic::MediaMeta> &metaList);
+    void replaceMetasToPlayList(const QList<DMusic::MediaMeta> &metaList);
     void removeMetaFromPlayList(const QString &metaHash);
     void removeMetasFromPlayList(const QStringList &metaHashs);
     void clearPlayList(bool stopFlag = true);
@@ -86,6 +89,8 @@ private:
     void resetDBusMpris(const DMusic::MediaMeta &meta);
     void switchToNewTrackWithFade(const DMusic::MediaMeta &meta, bool playFlag = true);
     void switchToNewTrackWithFade(const QString &metaHash, bool playFlag = true);
+    void updatePlayableMetaCache(const QString &metaHash);
+    void invalidatePlayableMetaCache();
 
 private:
     PlayerEnginePrivate  *m_data = nullptr;
