@@ -21,6 +21,7 @@
 #include "util/log.h"
 
 static const int sFadeInOutAnimationDuration = 900; //ms
+static const int sManualNavigationMergeDuration = 500; //ms
 static const int sPlayableMetaCacheDuration = 1000; //ms
 static int INT_LAST_PROGRESS_FLAG = 1;
 static qint64 INT_LAST_PROGRESS_VALUE = 0;
@@ -54,6 +55,9 @@ private:
     PlayerEngine               *m_playerEngine          = nullptr;
     QList<MediaMeta>            m_metaList;
     QTimer                     *m_changePictureTimer    = nullptr;
+    QTimer                     *m_manualNavigationTimer = nullptr;
+    int                         m_pendingManualNavigation = 0;
+    bool                        m_keepManualNavigation   = false;
     PlayerBase                 *m_player                = nullptr;
     MprisPlayer                *m_mprisPlayer           = nullptr;
     QString                     m_playlistHash;
@@ -62,6 +66,8 @@ private:
     double                      m_fadeInOutFactor       = 1.0;
     QPropertyAnimation         *m_fadeInAnimation       = nullptr;
     QPropertyAnimation         *m_fadeOutAnimation      = nullptr;
+    QPropertyAnimation         *m_trackSwitchFadeOut    = nullptr;
+    QPropertyAnimation         *m_trackSwitchFadeIn     = nullptr;
     bool                        m_fadeInOut             = false;
     bool                        m_playableMetaCacheValid = false;
     QElapsedTimer                m_playableMetaCacheTimer;
@@ -87,6 +93,8 @@ PlayerEnginePrivate::PlayerEnginePrivate(PlayerEngine *parent, PlayerBase *injec
 
     m_changePictureTimer = new QTimer(m_playerEngine);
     m_changePictureTimer->setInterval(300);
+    m_manualNavigationTimer = new QTimer(m_playerEngine);
+    m_manualNavigationTimer->setInterval(sManualNavigationMergeDuration);
 }
 
 PlayerEngine::PlayerEngine(QObject *parent, PlayerBase *injectedPlayer)
@@ -98,6 +106,13 @@ PlayerEngine::PlayerEngine(QObject *parent, PlayerBase *injectedPlayer)
         int curNum = m_data->m_playingCount % 4 + 1;
         m_data->m_playingCount = curNum;
         emit playPictureChanged(QString("music_play%1").arg(curNum));
+    });
+    connect(m_data->m_manualNavigationTimer, &QTimer::timeout, this, [this]() {
+        if (m_data->m_pendingManualNavigation == 0) {
+            m_data->m_manualNavigationTimer->stop();
+            return;
+        }
+        executeManualNavigation();
     });
     connect(m_data->m_player, &PlayerBase::metaChanged, this, &PlayerEngine::metaChanged);
     connect(m_data->m_player, &PlayerBase::timeChanged,
@@ -301,6 +316,10 @@ void PlayerEngine::setMediaMeta(const QString &metaHash)
 void PlayerEngine::setMediaMeta(const MediaMeta &meta)
 {
     qCInfo(dmMusic) << "Setting media meta - Title:" << meta.title << "Artist:" << meta.artist;
+    if (!m_data->m_keepManualNavigation) {
+        cancelManualNavigation();
+        cancelTrackSwitchFade();
+    }
     if (!m_data->m_player->getMediaMeta().localPath.isEmpty())
         INT_LAST_PROGRESS_FLAG = 0;
     m_data->m_player->setMediaMeta(meta);
@@ -381,9 +400,36 @@ void PlayerEngine::invalidatePlayableMetaCache()
     m_data->m_playableMetaCacheValid = false;
 }
 
+void PlayerEngine::cancelManualNavigation()
+{
+    if (m_data->m_pendingManualNavigation == 0 && !m_data->m_manualNavigationTimer->isActive())
+        return;
+
+    qCDebug(dmMusic) << "Cancelling pending manual navigation:" << m_data->m_pendingManualNavigation;
+    m_data->m_pendingManualNavigation = 0;
+    m_data->m_manualNavigationTimer->stop();
+}
+
+void PlayerEngine::cancelTrackSwitchFade()
+{
+    if (m_data->m_trackSwitchFadeOut) {
+        qCDebug(dmMusic) << "Cancelling pending track switch fade out";
+        m_data->m_trackSwitchFadeOut->stop();
+        m_data->m_trackSwitchFadeOut->deleteLater();
+        m_data->m_trackSwitchFadeOut = nullptr;
+    }
+    if (m_data->m_trackSwitchFadeIn) {
+        qCDebug(dmMusic) << "Cancelling pending track switch fade in";
+        m_data->m_trackSwitchFadeIn->stop();
+        m_data->m_trackSwitchFadeIn->deleteLater();
+        m_data->m_trackSwitchFadeIn = nullptr;
+    }
+}
+
 void PlayerEngine::addMetasToPlayList(const QList<MediaMeta> &metaList)
 {
     qCDebug(dmMusic) << "Adding metas to play list";
+    cancelManualNavigation();
     m_data->m_metaList << metaList;
     invalidatePlayableMetaCache();
 }
@@ -391,6 +437,7 @@ void PlayerEngine::addMetasToPlayList(const QList<MediaMeta> &metaList)
 void PlayerEngine::replaceMetasToPlayList(const QList<MediaMeta> &metaList)
 {
     qCDebug(dmMusic) << "Replacing play list with" << metaList.size() << "metas";
+    cancelManualNavigation();
     m_data->m_metaList = metaList;
     invalidatePlayableMetaCache();
 }
@@ -398,6 +445,7 @@ void PlayerEngine::replaceMetasToPlayList(const QList<MediaMeta> &metaList)
 void PlayerEngine::removeMetaFromPlayList(const QString &metaHash)
 {
     qCDebug(dmMusic) << "Removing meta from play list, hash:" << metaHash;
+    cancelManualNavigation();
     for (int i = 0; i < m_data->m_metaList.size(); i++) {
         if (m_data->m_metaList[i].hash == metaHash) {
             m_data->m_metaList.removeAt(i);
@@ -411,6 +459,7 @@ void PlayerEngine::removeMetaFromPlayList(const QString &metaHash)
 void PlayerEngine::removeMetasFromPlayList(const QStringList &metaHashs)
 {
     qCDebug(dmMusic) << "Removing metas from play list";
+    cancelManualNavigation();
     QStringList curMetaHashs = metaHashs;
     QString playHash = getMediaMeta().hash;
     bool playFlag = curMetaHashs.contains(playHash);
@@ -452,6 +501,7 @@ void PlayerEngine::removeMetasFromPlayList(const QStringList &metaHashs)
 void PlayerEngine::clearPlayList(bool stopFlag)
 {
     qCDebug(dmMusic) << "Clearing play list";
+    cancelManualNavigation();
     m_data->m_metaList.clear();
     invalidatePlayableMetaCache();
     if (stopFlag && !getMediaMeta().hash.isEmpty()) {
@@ -582,97 +632,99 @@ void PlayerEngine::resume()
 
 void PlayerEngine::playPreMeta()
 {
-    qCDebug(dmMusic) << "Playing previous track";
-    MediaMeta curMeta = m_data->m_player->getMediaMeta();
-    QList<MediaMeta> &allMetas = m_data->m_metaList;
-    // 歌单顺序播放
-    if (m_data->m_playbackMode == DmGlobal::RepeatNull) {
-        qCDebug(dmMusic) << "Playback mode is RepeatNull, play previous track";
-        int index = -1, preIndex = -1;
-        for (int i = allMetas.size() - 1; i >= 0; i--) {
-            if (index != -1) {
-                if ((QFile::exists(allMetas[i].localPath) && m_data->m_player->supportedSuffixList().contains(
-                            QFileInfo(allMetas[i].localPath).suffix().toLower())) || allMetas[i].mmType == DmGlobal::MimeTypeCDA) {
-                    preIndex = i;
-                    break;
-                }
-            } else if (allMetas.at(i).hash == curMeta.hash) {
-                index = i;
-            }
-        }
+    qCDebug(dmMusic) << "Queueing previous track request";
+    requestManualNavigation(-1);
+}
 
-        if (preIndex != -1) {
-            switchToNewTrackWithFade(allMetas.at(preIndex), true);
-        } else {
-            stop();
+void PlayerEngine::requestManualNavigation(int steps)
+{
+    m_data->m_pendingManualNavigation += steps;
+    qCDebug(dmMusic) << "Queued manual navigation steps:" << m_data->m_pendingManualNavigation;
+    if (m_data->m_manualNavigationTimer->isActive())
+        return;
+
+    // Switch on the first click immediately. Further clicks are accumulated and
+    // applied in fixed-rate batches while the user keeps clicking.
+    executeManualNavigation();
+    m_data->m_manualNavigationTimer->start();
+}
+
+void PlayerEngine::executeManualNavigation()
+{
+    const int steps = m_data->m_pendingManualNavigation;
+    m_data->m_pendingManualNavigation = 0;
+    if (steps == 0)
+        return;
+
+    qCDebug(dmMusic) << "Executing merged manual navigation steps:" << steps;
+    const QStringList supportedSuffixes = supportedSuffixList();
+    QList<MediaMeta> playableMetas;
+    playableMetas.reserve(m_data->m_metaList.size());
+    for (const MediaMeta &meta : m_data->m_metaList) {
+        if (meta.mmType == DmGlobal::MimeTypeCDA
+                || (QFile::exists(meta.localPath)
+                    && supportedSuffixes.contains(QFileInfo(meta.localPath).suffix().toLower()))) {
+            playableMetas.append(meta);
         }
+    }
+
+    if (playableMetas.isEmpty()) {
+        qCDebug(dmMusic) << "No playable metas for manual navigation";
         return;
     }
 
-    QList<MediaMeta> curMetaList;
+    const QString currentMetaHash = m_data->m_player->getMediaMeta().hash;
+    int currentIndex = -1;
+    for (int i = 0; i < playableMetas.size(); ++i) {
+        if (playableMetas.at(i).hash == currentMetaHash) {
+            currentIndex = i;
+            break;
+        }
+    }
 
-    for (int i = 0; i < allMetas.size(); i++) {
-        if ((QFile::exists(allMetas[i].localPath)
-                && m_data->m_player->supportedSuffixList().contains(
-                    QFileInfo(allMetas[i].localPath).suffix().toLower())) || allMetas[i].mmType == DmGlobal::MimeTypeCDA)
-            curMetaList.append(allMetas[i]);
+    const bool currentMetaFound = currentIndex >= 0;
+    if (!currentMetaFound)
+        qCDebug(dmMusic) << "Current meta is not playable";
+
+    int targetIndex = currentIndex;
+    if (m_data->m_playbackMode == DmGlobal::RepeatNull) {
+        if (!currentMetaFound) {
+            if (steps < 0) {
+                qCDebug(dmMusic) << "Manual previous navigation reached the beginning";
+                stop();
+                return;
+            }
+            targetIndex = (steps - 1) % playableMetas.size();
+        } else {
+            if (steps < 0 && currentIndex + steps < 0) {
+                qCDebug(dmMusic) << "Manual previous navigation reached the beginning";
+                stop();
+                return;
+            }
+            targetIndex = (currentIndex + steps) % playableMetas.size();
+            if (targetIndex < 0)
+                targetIndex += playableMetas.size();
+        }
+    } else if (m_data->m_playbackMode == DmGlobal::Shuffle) {
+        if (!currentMetaFound)
+            currentIndex = 0;
+        targetIndex = currentIndex;
+        for (int i = 0; i < qAbs(steps) && playableMetas.size() > 1; ++i) {
+            int randomIndex = QRandomGenerator::global()->bounded(playableMetas.size());
+            if (randomIndex == targetIndex)
+                randomIndex = (randomIndex + 1) % playableMetas.size();
+            targetIndex = randomIndex;
+        }
+    } else {
+        if (!currentMetaFound)
+            currentIndex = steps < 0 ? 0 : -1;
+        targetIndex = (currentIndex + steps) % playableMetas.size();
+        if (targetIndex < 0)
+            targetIndex += playableMetas.size();
     }
-    if (curMetaList.size() > 0) {
-        qCDebug(dmMusic) << "Current meta list size:" << curMetaList.size();
-        //播放模式todo
-        int index = 0;
-        for (int i = 0; i < curMetaList.size(); i++) {
-            if (curMetaList.at(i).hash == curMeta.hash) {
-                index = i;
-                break;
-            }
-        }
-        //根据播放模式确定下一首
-        switch (m_data->m_playbackMode) {
-        case DmGlobal::RepeatAll:
-        case DmGlobal::RepeatSingle: {
-            if (index == 0) {
-                index = curMetaList.size() - 1;
-            } else {
-                index--;
-            }
-            break;
-        }
-        case DmGlobal::Shuffle: {
-            // 多个随机处理
-            if (curMetaList.size() > 1) {
-                QTime time;
-                time = QTime::currentTime();
-                int curIndex = static_cast<int>(QRandomGenerator::global()->bounded(time.msec() + time.msec() * 1000)) % curMetaList.size();
-                // 随机相同时特殊处理
-                if (curIndex == index) {
-                    if (curIndex == 0) {
-                        index = 1;
-                    } else if (curIndex == curMetaList.size() - 1) {
-                        index = 0;
-                    } else {
-                        index = curIndex - 1;
-                    }
-                } else {
-                    index = curIndex;
-                }
-            } else {
-                index = 0;
-            }
-            break;
-        }
-        default: {
-            if (index == 0) {
-                index = curMetaList.size() - 1;
-            } else {
-                index--;
-            }
-            break;
-        }
-        }
-        switchToNewTrackWithFade(curMetaList.at(index), true);
-    }
-    qCDebug(dmMusic) << "Play previous track finished";
+
+    qCDebug(dmMusic) << "Switching to merged manual navigation target:" << playableMetas.at(targetIndex).hash;
+    switchToNewTrackWithFade(playableMetas.at(targetIndex), true, true);
 }
 
 void PlayerEngine::playNextMeta(const DMusic::MediaMeta &meta, bool isAuto, bool playFlag)
@@ -848,58 +900,80 @@ void PlayerEngine::resetDBusMpris(const DMusic::MediaMeta &meta)
 void PlayerEngine::playNextMeta(bool isAuto, bool playFlag)
 {
     qCDebug(dmMusic) << "Playing next track, auto:" << isAuto << "playFlag:" << playFlag;
+    if (!isAuto) {
+        requestManualNavigation(1);
+        return;
+    }
+
     MediaMeta curMeta = m_data->m_player->getMediaMeta();
-    playNextMeta(curMeta, isAuto, playFlag);
+    playNextMeta(curMeta, true, playFlag);
 }
 
 void PlayerEngine::stop()
 {
     qCInfo(dmMusic) << "Stop requested";
+    cancelTrackSwitchFade();
     m_data->m_player->stop();
     setMediaMeta(MediaMeta());
 }
 
-void PlayerEngine::switchToNewTrackWithFade(const DMusic::MediaMeta &meta, bool playFlag)
+void PlayerEngine::switchToNewTrackWithFade(const DMusic::MediaMeta &meta, bool playFlag,
+                                                  bool keepManualNavigation)
 {
     qCInfo(dmMusic) << "Switching to new track with fade:" << meta.title;
-    
+    cancelTrackSwitchFade();
+
     // 检查用户是否启用了淡入淡出效果且当前正在播放
     if (!m_data->m_fadeInOut || playbackStatus() != DmGlobal::Playing) {
         // 没有启用淡入淡出或当前没有播放，直接切换
         qCInfo(dmMusic) << "Direct track switch - fade enabled:" << m_data->m_fadeInOut << "playing:" << (playbackStatus() == DmGlobal::Playing);
+        m_data->m_keepManualNavigation = keepManualNavigation;
         setMediaMeta(meta);
+        m_data->m_keepManualNavigation = false;
         if (playFlag) {
             play();
         }
         return;
     }
-    
+
     // 启用了淡入淡出且正在播放，使用动画实现淡出-切换-淡入
     qCInfo(dmMusic) << "Starting track switch with fade effect";
-    
-    QPropertyAnimation *switchFadeOut = new QPropertyAnimation(this, "fadeInOutFactor", this);
+
+    auto *switchFadeOut = new QPropertyAnimation(this, "fadeInOutFactor", this);
+    m_data->m_trackSwitchFadeOut = switchFadeOut;
     switchFadeOut->setEasingCurve(QEasingCurve::OutQuad);
     switchFadeOut->setStartValue(1.0);
     switchFadeOut->setEndValue(0.0);
     switchFadeOut->setDuration(400);
-    
-    connect(switchFadeOut, &QPropertyAnimation::finished, this, [=]() {
+
+    connect(switchFadeOut, &QPropertyAnimation::finished, this, [this, switchFadeOut, meta, playFlag, keepManualNavigation]() {
+        if (m_data->m_trackSwitchFadeOut != switchFadeOut)
+            return;
+
+        m_data->m_trackSwitchFadeOut = nullptr;
         qCInfo(dmMusic) << "Track switch fade out completed, switching to:" << meta.title;
+        m_data->m_keepManualNavigation = keepManualNavigation;
         setMediaMeta(meta);
-        
+        m_data->m_keepManualNavigation = false;
+
         if (playFlag) {
             m_data->m_player->play();
-            QPropertyAnimation *switchFadeIn = new QPropertyAnimation(this, "fadeInOutFactor", this);
+            auto *switchFadeIn = new QPropertyAnimation(this, "fadeInOutFactor", this);
+            m_data->m_trackSwitchFadeIn = switchFadeIn;
             switchFadeIn->setEasingCurve(QEasingCurve::InQuad);
             switchFadeIn->setStartValue(0.0);
             switchFadeIn->setEndValue(1.0);
             switchFadeIn->setDuration(600); // 稍慢的淡入
-            connect(switchFadeIn, &QPropertyAnimation::finished, switchFadeIn, &QObject::deleteLater);
+            connect(switchFadeIn, &QPropertyAnimation::finished, this, [this, switchFadeIn]() {
+                if (m_data->m_trackSwitchFadeIn == switchFadeIn)
+                    m_data->m_trackSwitchFadeIn = nullptr;
+                switchFadeIn->deleteLater();
+            });
             switchFadeIn->start();
         }
         switchFadeOut->deleteLater();
     });
-    
+
     switchFadeOut->start();
 }
 
