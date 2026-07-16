@@ -1,3 +1,11 @@
+deepin-music (7.0.61) unstable; urgency=medium
+
+  * fix(player): coalesce rapid manual track switches and cancel stale fades
+  * fix: remove deepin prefix from Chinese translations in desktop file
+  * perf(player): cache playable meta and reuse matched play queue
+
+ -- Wang Yu <wangyu@uniontech.com>  Thu, 16 Jul 2026 21:38:08 +0800
+
 deepin-music (7.0.60) unstable; urgency=medium
 
   * chore: Update version to 7.0.60
