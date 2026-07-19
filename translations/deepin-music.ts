@@ -981,6 +981,11 @@
         <source>Artist</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <location filename="../src/music-player/mainwindow/SearchResultWindow.qml" line="88"/>
+        <source>Play All</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>SettingsDialog</name>
@@ -1077,6 +1082,11 @@
     <message>
         <location filename="../src/music-player/dialogs/SettingsDialog.qml" line="534"/>
         <source>Replace</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/music-player/dialogs/SettingsDialog.qml" line="490"/>
+        <source>Restore Defaults</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

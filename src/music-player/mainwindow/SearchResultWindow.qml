@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2023 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -77,30 +77,29 @@ Rectangle {
                     anchors.fill: parent
                     topPadding: 17
                     spacing: 10
-                    DciIcon {
-                        id: playall
-                        name: "headline_play_bottom";
-                        sourceSize: Qt.size(28, 28)
-                        ActionButton {
-                            anchors.fill: playall
-                            icon.name: "list_play";
-                            width: 20; height: 20
-                            hoverEnabled: false;
-                            onClicked: {
-                                Presenter.playPlaylist("musicResult");
-                            }
+                    FloatingButton {
+                        id: playAllBtn
+                        width: 28; height: 28
+                        icon.name: "headline_play_all"
+                        icon.width: 28
+                        icon.height: 28
+                        ToolTip {
+                            visible: playAllBtn.hovered
+                            text: qsTr("Play All")
+                        }
+                        onClicked: {
+                            Presenter.playPlaylist("musicResult");
                         }
                     }
                     Label {
                         id: buttonLable
                         text: qsTr("Search Results")
-                        font: DTK.fontManager.t5
+                        font: DTK.fontManager.t4
                     }
                     Label {
                         font: DTK.fontManager.t8
                         text: albumsModel.count !== 1 ? qsTr("%1 albums - %2 songs").arg(albumsModel.count).arg(songsModel.count) :
                                                         (songsModel.count === 1 ? qsTr("1 album - 1 song") : qsTr("%1 album - %2 songs").arg(albumsModel.count).arg(songsModel.count))
-
                         anchors.verticalCenter: buttonLable.verticalCenter
                     }
                 }

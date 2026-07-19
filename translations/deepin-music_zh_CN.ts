@@ -981,6 +981,11 @@
         <source>Album</source>
         <translation>专辑</translation>
     </message>
+    <message>
+        <location filename="../src/music-player/mainwindow/SearchResultWindow.qml" line="88"/>
+        <source>Play All</source>
+        <translation>播放全部</translation>
+    </message>
 </context>
 <context>
     <name>SettingsDialog</name>
@@ -1078,6 +1083,11 @@
         <location filename="../src/music-player/dialogs/SettingsDialog.qml" line="490"/>
         <source>This shortcut key conflicts with [%1], click Replace to make this shortcut key take effect immediately</source>
         <translation>此快捷键与 [%1] 冲突，点击替换使这个快捷键立即生效</translation>
+    </message>
+    <message>
+        <location filename="../src/music-player/dialogs/SettingsDialog.qml" line="490"/>
+        <source>Restore Defaults</source>
+        <translation>恢复默认设置</translation>
     </message>
 </context>
 <context>
