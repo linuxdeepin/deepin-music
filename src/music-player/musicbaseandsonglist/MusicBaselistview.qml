@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2023 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -50,6 +50,7 @@ Rectangle {
                 fillHeight: true
                 sideModel: globalVariant.globalCustomPlaylistModel //全局自定义歌单model
                 action: FloatingButton {
+                    id: addPlaylistBtn
                     width: 21; height: 21
                     checked: false
 
@@ -60,8 +61,10 @@ Rectangle {
                         palette: DTK.makeIconPalette(parent.palette)
                     }
 
-                    ToolTip.visible: hovered
-                    ToolTip.text: qsTr("Create playlist")
+                    ToolTip {
+                        visible: addPlaylistBtn.hovered
+                        text: qsTr("Create playlist")
+                    }
                     onClicked: {
                         var tmpPlaylist = Presenter.addPlayList(qsTr("New playlist"));
                         globalVariant.globalCustomPlaylistModel.onAddPlaylist(tmpPlaylist);
