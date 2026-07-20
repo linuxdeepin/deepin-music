@@ -1014,16 +1014,16 @@ TEST(PlayerEnginePlayPreExpandedTest, playPreMetaShuffleDoesNotCrash)
     EXPECT_TRUE(true);
 }
 
-TEST(PlayerEnginePlayPreExpandedTest, playPreMetaNotFoundStops)
+TEST(PlayerEnginePlayPreExpandedTest, playPreMetaNotFoundKeepsPlaying)
 {
     InjectedEngine env;
     env.engine->setPlaybackMode(DmGlobal::RepeatNull);
     DMusic::MediaMeta m1; m1.hash = "pnf"; m1.localPath = "/tmp/pnf.mp3";
     env.engine->addMetasToPlayList({m1});
-    env.engine->setMediaMeta(m1);               // 当前 m1，无上一首 → stop
+    env.engine->setMediaMeta(m1);               // 当前 m1，无上一首 → 保持 Playing
     env.fake->m_fakeState = DmGlobal::Playing;
     env.engine->playPreMeta();
-    EXPECT_EQ(env.fake->m_fakeState, DmGlobal::Stopped);
+    EXPECT_EQ(env.fake->m_fakeState, DmGlobal::Playing);
 }
 
 // ---- switchToNewTrackWithFade(hash) 路径：通过 playPreMeta/playNextMeta 间接覆盖 ----
