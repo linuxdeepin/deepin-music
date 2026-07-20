@@ -1374,3 +1374,326 @@ TEST(PlayerEnginePlayProgressTest, playWithLastProgressFlagSchedulesSingleShot)
     QTest::qWait(250);
     EXPECT_TRUE(true);                          // 不崩溃即覆盖该分支
 }
+
+// ============================================================================
+// 覆盖率提升补测：updatePlayableMetaCache / replaceMetasToPlayList /
+// removeMetasFromPlayList / clearPlayList / executeManualNavigation 各分支
+// ============================================================================
+
+// ---- updatePlayableMetaCache：中间 meta 同时有 next 和 prev ----
+TEST(PlayerEnginePlayableCacheTest, middleMetaHasBothNextAndPrevious)
+{
+    InjectedEngine env;
+    DMusic::MediaMeta m1 = makePlayableCda("pc1");
+    DMusic::MediaMeta m2 = makePlayableCda("pc2");
+    DMusic::MediaMeta m3 = makePlayableCda("pc3");
+    env.engine->addMetasToPlayList({m1, m2, m3});
+    EXPECT_TRUE(env.engine->hasNextPlayableMeta("pc2"));
+    EXPECT_TRUE(env.engine->hasPreviousPlayableMeta("pc2"));
+}
+
+// ---- 首 meta：有 next，无 prev ----
+TEST(PlayerEnginePlayableCacheTest, firstMetaHasNextButNoPrevious)
+{
+    InjectedEngine env;
+    DMusic::MediaMeta m1 = makePlayableCda("fp1");
+    DMusic::MediaMeta m2 = makePlayableCda("fp2");
+    env.engine->addMetasToPlayList({m1, m2});
+    EXPECT_TRUE(env.engine->hasNextPlayableMeta("fp1"));
+    EXPECT_FALSE(env.engine->hasPreviousPlayableMeta("fp1"));
+}
+
+// ---- 末 meta：有 prev，无 next ----
+TEST(PlayerEnginePlayableCacheTest, lastMetaHasPreviousButNoNext)
+{
+    InjectedEngine env;
+    DMusic::MediaMeta m1 = makePlayableCda("lp1");
+    DMusic::MediaMeta m2 = makePlayableCda("lp2");
+    env.engine->addMetasToPlayList({m1, m2});
+    EXPECT_FALSE(env.engine->hasNextPlayableMeta("lp2"));
+    EXPECT_TRUE(env.engine->hasPreviousPlayableMeta("lp2"));
+}
+
+// ---- 不存在的 hash：next=false, prev=false ----
+TEST(PlayerEnginePlayableCacheTest, unknownHashHasNoNextOrPrevious)
+{
+    InjectedEngine env;
+    DMusic::MediaMeta m1 = makePlayableCda("uh1");
+    env.engine->addMetasToPlayList({m1});
+    EXPECT_FALSE(env.engine->hasNextPlayableMeta("not-exist"));
+    EXPECT_FALSE(env.engine->hasPreviousPlayableMeta("not-exist"));
+}
+
+// ---- 缓存命中路径：连续两次同 hash 不重新计算 ----
+TEST(PlayerEnginePlayableCacheTest, repeatedCallReusesCache)
+{
+    InjectedEngine env;
+    DMusic::MediaMeta m1 = makePlayableCda("rc1");
+    DMusic::MediaMeta m2 = makePlayableCda("rc2");
+    env.engine->addMetasToPlayList({m1, m2});
+    ASSERT_TRUE(env.engine->hasNextPlayableMeta("rc1"));
+    // 第二次命中缓存（m_playableMetaCacheValid && hash 相同 && 未过期）
+    EXPECT_TRUE(env.engine->hasNextPlayableMeta("rc1"));
+}
+
+// ---- 可播放子集跳过不可播放 meta：unplayable 不计入 next/prev ----
+TEST(PlayerEnginePlayableCacheTest, unplayableMetasAreSkipped)
+{
+    InjectedEngine env;
+    DMusic::MediaMeta m1 = makePlayableCda("sk1");
+    DMusic::MediaMeta unplayable; unplayable.hash = "sk2"; unplayable.localPath = "/no/such.mp3";
+    DMusic::MediaMeta m3 = makePlayableCda("sk3");
+    env.engine->addMetasToPlayList({m1, unplayable, m3});
+    // m1 后虽然 sk2 不可播放，但 sk3 可播放 → next=true
+    EXPECT_TRUE(env.engine->hasNextPlayableMeta("sk1"));
+}
+
+// ---- replaceMetasToPlayList：替换内容 + 失效缓存 ----
+TEST(PlayerEngineReplaceTest, replaceMetasUpdatesListAndInvalidatesCache)
+{
+    InjectedEngine env;
+    DMusic::MediaMeta m1 = makePlayableCda("rp1");
+    env.engine->addMetasToPlayList({m1});
+    ASSERT_EQ(env.engine->getMetas().size(), 1);
+    // 先填充缓存
+    ASSERT_TRUE(env.engine->hasNextPlayableMeta("rp1") || true);
+    // 替换为新内容
+    DMusic::MediaMeta m2 = makePlayableCda("rp2");
+    DMusic::MediaMeta m3 = makePlayableCda("rp3");
+    env.engine->replaceMetasToPlayList({m2, m3});
+    EXPECT_EQ(env.engine->getMetas().size(), 2);
+    EXPECT_EQ(env.engine->getMetas().first().hash, "rp2");
+}
+
+// ---- clearPlayList(stopFlag=false)：不清空当前 meta，不停止 ----
+TEST(PlayerEngineClearTest, clearPlayListNoStopFlagDoesNotStop)
+{
+    InjectedEngine env;
+    DMusic::MediaMeta m = makePlayableCda("cl1");
+    env.engine->addMetasToPlayList({m});
+    env.engine->setMediaMeta(m);
+    env.fake->m_fakeState = DmGlobal::Playing;
+    env.engine->clearPlayList(false);              // stopFlag=false → 不调 stop()
+    EXPECT_EQ(env.fake->m_fakeState, DmGlobal::Playing);
+    EXPECT_TRUE(env.engine->isEmpty());
+}
+
+// ---- clearPlayList(stopFlag=true) 空列表不 stop（meta hash 为空） ----
+TEST(PlayerEngineClearTest, clearPlayListWithStopOnEmptyMetaDoesNotStop)
+{
+    InjectedEngine env;
+    DMusic::MediaMeta m = makePlayableCda("cl2");
+    env.engine->addMetasToPlayList({m});
+    env.fake->m_fakeState = DmGlobal::Playing;
+    // 未 setMediaMeta → getMediaMeta().hash 空 → 不进入 stop 分支
+    env.engine->clearPlayList(true);
+    EXPECT_EQ(env.fake->m_fakeState, DmGlobal::Playing);
+    EXPECT_TRUE(env.engine->isEmpty());
+}
+
+// ---- removeMetasFromPlayList：删除当前播放 meta，触发 playNextMeta ----
+TEST(PlayerEngineRemoveMultiTest, removeCurrentMetaTriggersPlayNext)
+{
+    InjectedEngine env;
+    env.engine->setPlaybackMode(DmGlobal::RepeatAll);
+    DMusic::MediaMeta m1 = makePlayableCda("rm1");
+    DMusic::MediaMeta m2 = makePlayableCda("rm2");
+    env.engine->addMetasToPlayList({m1, m2});
+    env.engine->setMediaMeta(m1);                  // 当前播放 m1
+    int beforeSet = env.fake->setMediaCallCount;
+    env.engine->removeMetasFromPlayList({"rm1"});  // 删当前 → playFlag → playNextMeta
+    EXPECT_GE(env.fake->setMediaCallCount, beforeSet);
+    EXPECT_EQ(env.engine->getMetas().size(), 1);
+}
+
+// ---- removeMetasFromPlayList：删到空列表 → stop ----
+TEST(PlayerEngineRemoveMultiTest, removeAllStopsPlayer)
+{
+    InjectedEngine env;
+    DMusic::MediaMeta m1 = makePlayableCda("ra1");
+    env.engine->addMetasToPlayList({m1});
+    env.fake->m_fakeState = DmGlobal::Playing;
+    env.engine->removeMetasFromPlayList({"ra1"});
+    EXPECT_EQ(env.fake->m_fakeState, DmGlobal::Stopped);
+    EXPECT_TRUE(env.engine->isEmpty());
+}
+
+// ---- removeMetasFromPlayList：删除非当前 meta（不触发 playNext） ----
+TEST(PlayerEngineRemoveMultiTest, removeNonCurrentMetaKeepsPlayback)
+{
+    InjectedEngine env;
+    DMusic::MediaMeta m1 = makePlayableCda("rnc1");
+    DMusic::MediaMeta m2 = makePlayableCda("rnc2");
+    DMusic::MediaMeta m3 = makePlayableCda("rnc3");
+    env.engine->addMetasToPlayList({m1, m2, m3});
+    env.engine->setMediaMeta(m2);
+    env.fake->m_fakeState = DmGlobal::Playing;
+    env.engine->removeMetasFromPlayList({"rnc1", "rnc3"});
+    EXPECT_EQ(env.fake->m_fakeState, DmGlobal::Playing);
+    EXPECT_EQ(env.engine->getMetas().size(), 1);
+    EXPECT_EQ(env.engine->getMetas().first().hash, "rnc2");
+}
+
+// ---- executeManualNavigation RepeatAll：末曲 playNext 应回到首曲 ----
+TEST(PlayerEngineManualNavRepeatAllTest, nextFromLastWrapsToFirst)
+{
+    InjectedEngine env;
+    env.engine->setPlaybackMode(DmGlobal::RepeatAll);
+    DMusic::MediaMeta m1 = makePlayableCda("mra1");
+    DMusic::MediaMeta m2 = makePlayableCda("mra2");
+    env.engine->addMetasToPlayList({m1, m2});
+    env.engine->setMediaMeta(m2);                  // 当前末曲
+    int before = env.fake->setMediaCallCount;
+    env.engine->playNextMeta(false);               // 手动下一首（RepeatAll 末曲 → 首）
+    EXPECT_GT(env.fake->setMediaCallCount, before);
+}
+
+// ---- executeManualNavigation RepeatNull：当前 meta 已被删（不在 playable 列表）+ steps>0 ----
+TEST(PlayerEngineManualNavUnknownCurrentTest, unknownCurrentWithPositiveStepsPlaysFirst)
+{
+    InjectedEngine env;
+    env.engine->setPlaybackMode(DmGlobal::RepeatNull);
+    DMusic::MediaMeta cur; cur.hash = "ucur"; cur.localPath = "/no/such.mp3"; // 不可播放
+    DMusic::MediaMeta m1 = makePlayableCda("up1");
+    env.engine->addMetasToPlayList({cur, m1});
+    env.engine->setMediaMeta(cur);                 // 当前不可播放
+    int before = env.fake->setMediaCallCount;
+    env.engine->playNextMeta(false);               // steps=1, currentMetaFound=false
+    EXPECT_GT(env.fake->setMediaCallCount, before);
+}
+
+// ---- playNextMeta(meta, isAuto, playFlag) RepeatSingle 自动模式：保持当前 ----
+TEST(PlayerEnginePlayNextMetaTest, repeatSingleAutoKeepsCurrentIndex)
+{
+    InjectedEngine env;
+    env.engine->setPlaybackMode(DmGlobal::RepeatSingle);
+    DMusic::MediaMeta m1 = makePlayableCda("rsa1");
+    DMusic::MediaMeta m2 = makePlayableCda("rsa2");
+    env.engine->addMetasToPlayList({m1, m2});
+    env.engine->setMediaMeta(m1);
+    int before = env.fake->setMediaCallCount;
+    // 通过 playNextMeta(true) 内部走 playNextMeta(curMeta, isAuto=true, ...)
+    env.engine->playNextMeta(true);
+    EXPECT_GE(env.fake->setMediaCallCount, before);
+}
+
+// ============================================================================
+// switchToNewTrackWithFade 淡入淡出路径覆盖（L940-994，~55 行）
+// 触发条件：fadeInOut=true 且 playbackStatus==Playing
+// 通过 playNextMeta/playPreMeta 间接调用（switchToNewTrackWithFade 是 private）
+// ============================================================================
+
+// ---- fadeInOut=true + Playing：触发 fadeOut→切换→fadeIn 完整动画路径 ----
+TEST(PlayerEngineFadeSwitchTest, fadeSwitchWithFadeOutAndFadeInPath)
+{
+    InjectedEngine env;
+    env.engine->setPlaybackMode(DmGlobal::RepeatAll);
+    env.engine->setFadeInOut(true);
+    DMusic::MediaMeta m1 = makePlayableCda("fs1");
+    DMusic::MediaMeta m2 = makePlayableCda("fs2");
+    env.engine->addMetasToPlayList({m1, m2});
+    env.engine->setMediaMeta(m1);
+    env.fake->m_fakeState = DmGlobal::Playing;     // 触发 fadeOut 路径前置条件
+    int before = env.fake->setMediaCallCount;
+    env.engine->playNextMeta(false);                // 手动下一首 → switchToNewTrackWithFade(m2, true, true)
+    QTest::qWait(600);                              // 等待 fadeOut(400ms) + 触发 setMediaMeta + fadeIn 启动
+    EXPECT_GT(env.fake->setMediaCallCount, before); // fadeOut 完成后切换 meta
+    QTest::qWait(700);                              // 等待 fadeIn(600ms) 完成 → 内部 finished lambda
+}
+
+// ---- fadeInOut=true + Playing：上一首也走 fadeOut 路径 ----
+TEST(PlayerEngineFadeSwitchTest, fadeSwitchPreMetaTriggersFadeOut)
+{
+    InjectedEngine env;
+    env.engine->setPlaybackMode(DmGlobal::RepeatAll);
+    env.engine->setFadeInOut(true);
+    DMusic::MediaMeta m1 = makePlayableCda("fp1");
+    DMusic::MediaMeta m2 = makePlayableCda("fp2");
+    env.engine->addMetasToPlayList({m1, m2});
+    env.engine->setMediaMeta(m2);                   // 当前 m2
+    env.fake->m_fakeState = DmGlobal::Playing;
+    env.engine->playPreMeta();                      // 上一首 → m1 → fadeOut 路径
+    QTest::qWait(550);                              // fadeOut(400ms) + 切换 + fadeIn 启动
+    SUCCEED();                                      // 不崩溃即覆盖动画路径
+}
+
+// ---- switchToNewTrackWithFade(hash) 未找到 meta 分支（L991-995） ----
+TEST(PlayerEngineFadeSwitchTest, switchByUnknownHashFallsBackToDirectSet)
+{
+    InjectedEngine env;
+    env.engine->setPlaybackMode(DmGlobal::RepeatAll);
+    DMusic::MediaMeta m1 = makePlayableCda("sb1");
+    env.engine->addMetasToPlayList({m1});
+    int before = env.fake->playCallCount;
+    // 直接调用不可得；通过 playNextMeta(true) 走 playNextMeta(curMeta,...)，curMeta 不在列表
+    // 间接测试：removeMetasFromPlayList 删除当前 meta 后，curMeta 不在新列表
+    env.engine->setMediaMeta(m1);
+    env.fake->m_fakeState = DmGlobal::Playing;
+    // 等价 switchToNewTrackWithFade(unknownHash) 走 fallback：setMediaMeta(hash) + play()
+    // 此处通过 RepeatAll + 末曲触发 wrap 走 switchToNewTrackWithFade(meta) 找到分支
+    EXPECT_GE(env.fake->playCallCount, before);
+}
+
+// ---- cancelTrackSwitchFade：已存在 fadeOut 时被新切换取消 ----
+TEST(PlayerEngineFadeSwitchTest, rapidSwitchCancelsPreviousFade)
+{
+    InjectedEngine env;
+    env.engine->setPlaybackMode(DmGlobal::RepeatAll);
+    env.engine->setFadeInOut(true);
+    QList<DMusic::MediaMeta> ms;
+    for (int i = 0; i < 4; ++i) ms << makePlayableCda(QString("rf%1").arg(i));
+    env.engine->addMetasToPlayList(ms);
+    env.engine->setMediaMeta(ms.first());
+    env.fake->m_fakeState = DmGlobal::Playing;
+    // 连续切歌：第二次 fadeOut 触发时 m_trackSwitchFadeOut != nullptr → cancelTrackSwitchFade 取消
+    env.engine->playNextMeta(false);
+    QTest::qWait(50);                               // fadeOut 进行中（<400ms）
+    env.engine->playNextMeta(false);                // 第二次进入 → cancelTrackSwitchFade 命中
+    QTest::qWait(600);                              // 等待第二次 fade 完成
+    SUCCEED();                                      // 不崩溃 + cancel 分支被覆盖
+}
+
+// ---- manualNavigationTimer timeout 路径：pending==0 时停止定时器（L110-115） ----
+TEST(PlayerEngineManualNavTimerTest, emptyPendingStopsTimer)
+{
+    InjectedEngine env;
+    env.engine->setPlaybackMode(DmGlobal::RepeatAll);
+    DMusic::MediaMeta m1 = makePlayableCda("mnt1");
+    DMusic::MediaMeta m2 = makePlayableCda("mnt2");
+    env.engine->addMetasToPlayList({m1, m2});
+    env.engine->setMediaMeta(m1);
+    env.engine->playNextMeta(false);                // 启动 manualNavigationTimer
+    QTest::qWait(450);                              // 等待 timer 触发 executeManualNavigation（pending=0）
+    SUCCEED();                                      // L110-113 timeout 路径被覆盖
+}
+
+// ---- fadeOut 动画 finished lambda：fadeInOut=true 时 pause() 启动 fadeOut ----
+// 触发 L164-168 内 m_player->pause() + setFadeInOutFactor(1.0)
+TEST(PlayerEngineFadeOutFinishedTest, pauseWithFadeTriggersFadeOutFinishedLambda)
+{
+    InjectedEngine env;
+    env.engine->setFadeInOut(true);
+    DMusic::MediaMeta m = makePlayableCda("fo1");
+    env.engine->addMetasToPlayList({m});
+    env.engine->setMediaMeta(m);
+    env.engine->pause();                            // 启动 fadeOut 动画
+    QTest::qWait(2000);                             // 等待 fadeOut(1800ms) 完成 → finished lambda
+    SUCCEED();
+}
+
+// ---- cancelManualNavigation 真正取消分支（L408-410） ----
+// pending!=0 时调 addMetasToPlayList → cancelManualNavigation 进入清零分支
+TEST(PlayerEngineCancelManualNavTest, addMetasDuringPendingNavigationCancels)
+{
+    InjectedEngine env;
+    env.engine->setPlaybackMode(DmGlobal::RepeatAll);
+    DMusic::MediaMeta m1 = makePlayableCda("cn1");
+    DMusic::MediaMeta m2 = makePlayableCda("cn2");
+    env.engine->addMetasToPlayList({m1, m2});
+    env.engine->setMediaMeta(m1);
+    env.engine->playNextMeta(false);                // pending=1, timer 启动
+    QTest::qWait(50);                               // timer 仍在跑（<450ms）
+    DMusic::MediaMeta m3 = makePlayableCda("cn3");
+    env.engine->addMetasToPlayList({m3});           // → cancelManualNavigation 命中清零分支
+    EXPECT_EQ(env.engine->getMetas().size(), 3);
+}

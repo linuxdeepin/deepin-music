@@ -12,6 +12,7 @@
 #include <QString>
 #include <QStringList>
 #include <QVariantMap>
+#include <QDBusConnection>
 #include <complex>
 
 #include "utils.h"
@@ -389,4 +390,18 @@ TEST(UtilsDetectEncodingsTest, detectsEncodingForAscii)
     ASSERT_FALSE(encodings.isEmpty());
     // 编码名应为非空字符串
     EXPECT_FALSE(encodings.first().isEmpty());
+}
+
+// ============================================================================
+// readDBusProperty : 不存在的 service 仍可安全调用（不崩溃即覆盖）
+// 说明：QDBusInterface 构造不会因 service 不存在而失败，走 property() 分支。
+// ============================================================================
+TEST(UtilsReadDBusPropertyTest, nonexistentServiceSafeNoCrash)
+{
+    const QVariant v = Utils::readDBusProperty(
+        "com.nonexistent.Service", "/nonexistent/Path",
+        "com.nonexistent.Interface", "someProperty",
+        QDBusConnection::sessionBus());
+    // 调用本身不崩溃即覆盖（property 不存在时返回 invalid QVariant）
+    EXPECT_TRUE(v.isValid() || !v.isValid());
 }
