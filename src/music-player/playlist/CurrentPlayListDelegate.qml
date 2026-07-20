@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2023 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -113,7 +113,7 @@ ItemDelegate{
             ActionButton {
                 id: heartBtn
                 icon.name: favourite ? "heart_check" : "playlist_heart"
-                palette.windowText: (favourite & !rootRectangle.checked)  ? "#F75B5B" : undefined
+                palette.windowText: favourite ? "#F75B5B" : undefined
                 icon.width: 20
                 icon.height: 20
                 onClicked: {

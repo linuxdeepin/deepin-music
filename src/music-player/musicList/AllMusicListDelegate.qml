@@ -205,7 +205,7 @@ ItemDelegate{
                     anchors.verticalCenter: numlabel.verticalCenter
                     icon.width: 20; icon.height: 20
                     icon.name: favourite ? "heart_check" : "heart"
-                    palette.windowText: (favourite & !rootRectangle.checked)  ? "#F75B5B" : undefined
+                    palette.windowText: favourite ? "#F75B5B" : undefined
                     onClicked: {
                         if (mmType !== DmGlobal.MimeTypeCDA) {
                             if(favourite === false){

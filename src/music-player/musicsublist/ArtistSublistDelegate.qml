@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2023 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -138,7 +138,7 @@ ItemDelegate {
                     anchors.verticalCenter: parent.verticalCenter
                     icon.width: 20; icon.height: 20
                     icon.name: favourite ? "heart_check" : "heart"
-                    palette.windowText: (favourite & !sublistDelegate.checked)  ? "#F75B5B" : undefined
+                    palette.windowText: favourite ? "#F75B5B" : undefined
                     onClicked: {
                         if(favourite === false) {
                             Presenter.addMetasToPlayList(hash, "fav")
