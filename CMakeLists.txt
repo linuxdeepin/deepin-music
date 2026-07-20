@@ -53,9 +53,6 @@ endif()
 # Application
 add_subdirectory(src)
 
-# DDE Shell Plugin (standalone music control widget)
-add_subdirectory(deepin-music-dde-shell-plugin)
-
 # Unit Tests
 if (CMAKE_BUILD_TYPE STREQUAL "Debug")
     add_subdirectory(tests)
