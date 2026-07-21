@@ -1,4 +1,4 @@
-// Copyright (C) 2020 ~ 2020 Deepin Technology Co., Ltd.
+// Copyright (C) 2020 ~ 2026 Deepin Technology Co., Ltd.
 // SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
@@ -28,6 +28,10 @@ public:
     static QImage getMetaCoverImage(DMusic::MediaMeta meta);
 
     static void parseMetaLyrics(DMusic::MediaMeta &meta);
+
+    // Merged: extract cover + lyrics in a single TagLib file-open pass.
+    // Falls back to FFmpeg for cover if TagLib APIC is empty.
+    static void parseMetaCoverAndLyrics(DMusic::MediaMeta &meta);
 
 public slots:
     void startRecorder();

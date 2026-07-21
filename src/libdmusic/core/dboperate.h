@@ -1,4 +1,4 @@
-// Copyright (C) 2020 ~ 2020 Deepin Technology Co., Ltd.
+// Copyright (C) 2020 ~ 2026 Deepin Technology Co., Ltd.
 // SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
@@ -8,6 +8,8 @@
 
 #include "global.h"
 #include <QSet>
+#include <QtConcurrent>
+#include <QFuture>
 
 class DBOperate : public QObject
 {
@@ -26,6 +28,9 @@ signals:
     void signalImportFinished(QStringList playlistHashs, int failCount, int sucessCount, int existCount, QString mediaHash);
     void signalCoverBatchFinished();
     void signalMetaCoverReady(DMusic::MediaMeta meta);
+
+private:
+    void processPendingCovers(QList<DMusic::MediaMeta> &pendingCovers);
 
 private:
     QStringList          m_supportedSuffixs;

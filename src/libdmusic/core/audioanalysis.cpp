@@ -1,4 +1,4 @@
-// Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co., Ltd.
+// Copyright (C) 2020 ~ 2026 Uniontech Software Technology Co., Ltd.
 // SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
@@ -836,4 +836,195 @@ void AudioAnalysis::parseData()
 
     emit audioSpectrumData(curSampleData);
     qCDebug(dmMusic) << "Emitted audio spectrum data with" << curSampleData.size() << "samples";
+}
+
+void AudioAnalysis::parseMetaCoverAndLyrics(DMusic::MediaMeta &meta)
+{
+    qCDebug(dmMusic) << "parseMetaCoverAndLyrics for:" << meta.localPath << "hash:" << meta.hash;
+
+    QString tmpPath = DmGlobal::cachePath();
+    QString hash = meta.hash;
+    QString path = meta.localPath;
+
+    // --- 目录准备 ---
+    QString imagesDirPath = tmpPath + "/images";
+    QString imageName = hash + ".jpg";
+    QString coverPath = imagesDirPath + "/" + imageName;
+    QDir imageDir(imagesDirPath);
+    if (!imageDir.exists()) {
+        bool ok = imageDir.cdUp() && imageDir.mkdir("images") && imageDir.cd("images");
+        if (!ok) {
+            qCWarning(dmMusic) << "Failed to create images directory:" << imagesDirPath;
+        }
+    }
+
+    QString lyricDirPath = tmpPath + "/lyrics";
+    QString lyricName = hash + ".lrc";
+    QString lyricPath = lyricDirPath + "/" + lyricName;
+    QDir lyricDir(lyricDirPath);
+    if (!lyricDir.exists()) {
+        bool ok = lyricDir.cdUp() && lyricDir.mkdir("lyrics") && lyricDir.cd("lyrics");
+        if (!ok) {
+            qCWarning(dmMusic) << "Failed to create lyrics directory:" << lyricDirPath;
+        }
+    }
+
+    bool coverCached = QFile::exists(coverPath);
+    bool lyricsCached = QFile::exists(lyricPath);
+
+    if (coverCached) {
+        QImage image(coverPath);
+        if (!image.isNull()) {
+            meta.coverUrl = coverPath;
+            meta.hasimage = true;
+        }
+    }
+    if (lyricsCached) {
+        meta.lyricPath = lyricPath;
+    }
+
+    // 两个都已缓存，直接返回
+    if (coverCached && meta.hasimage && lyricsCached) {
+        qCDebug(dmMusic) << "Both cover and lyrics cached, skipping file open for:" << hash;
+        return;
+    }
+
+    if (path.isEmpty()) {
+        qCWarning(dmMusic) << "Path is empty, cannot parse cover/lyrics for:" << hash;
+        return;
+    }
+
+    // --- 单次 TagLib 打开，同时提取封面和歌词 ---
+#ifdef Q_OS_WIN
+    TagLib::MPEG::File f(path.toStdWString().c_str());
+#else
+    TagLib::MPEG::File f(path.toStdString().c_str());
+#endif
+
+    if (!f.isValid()) {
+        qCWarning(dmMusic) << "Invalid MPEG file for cover/lyrics extraction:" << path;
+        return;
+    }
+
+    // --- 封面提取 (APIC) ---
+    if (!coverCached && f.ID3v2Tag() != nullptr) {
+        TagLib::ID3v2::FrameList frameList = f.ID3v2Tag()->frameListMap()["APIC"];
+        if (!frameList.isEmpty()) {
+            TagLib::ID3v2::AttachedPictureFrame *picFrame =
+                static_cast<TagLib::ID3v2::AttachedPictureFrame *>(frameList.front());
+            QBuffer buffer;
+            buffer.setData(picFrame->picture().data(), static_cast<int>(picFrame->picture().size()));
+            QImageReader imageReader(&buffer);
+            QImage image = imageReader.read();
+            if (!image.isNull()) {
+                QByteArray byteArray;
+                QBuffer buf(&byteArray);
+                buf.open(QIODevice::WriteOnly);
+                image.save(&buf, "jpg");
+                image = image.scaled(QSize(200, 200), Qt::KeepAspectRatioByExpanding, Qt::SmoothTransformation);
+                image.save(coverPath);
+                meta.coverUrl = coverPath;
+                meta.hasimage = true;
+                qCInfo(dmMusic) << "Cover extracted via TagLib (merged pass):" << coverPath;
+            }
+        }
+    }
+
+    // --- 歌词提取 (SYLT / USLT) ---
+    if (!lyricsCached && f.ID3v2Tag() != nullptr) {
+        QString lyricStr;
+
+        // 先尝试同步歌词
+        TagLib::ID3v2::FrameList syltFrames = f.ID3v2Tag()->frameListMap()["SYLT"];
+        if (!syltFrames.isEmpty()) {
+            TagLib::ID3v2::SynchronizedLyricsFrame *frame =
+                dynamic_cast<TagLib::ID3v2::SynchronizedLyricsFrame *>(syltFrames.front());
+            if (frame) {
+                TagLib::ID3v2::SynchronizedLyricsFrame::SynchedTextList synchedTextList = frame->synchedText();
+                for (unsigned int i = 0; i < synchedTextList.size(); i++) {
+                    QString time = QDateTime::fromMSecsSinceEpoch(synchedTextList[i].time).toString("mm:ss.zzz");
+                    QString text = TStringToQString(synchedTextList[i].text).trimmed();
+                    lyricStr.append(QString("[%1]%2\n").arg(time).arg(text));
+                }
+            }
+        }
+
+        // 未获取到同步歌词，尝试非同步歌词
+        if (lyricStr.isEmpty()) {
+            TagLib::ID3v2::FrameList usltFrames = f.ID3v2Tag()->frameListMap()["USLT"];
+            if (!usltFrames.isEmpty()) {
+                TagLib::ID3v2::UnsynchronizedLyricsFrame *frame =
+                    dynamic_cast<TagLib::ID3v2::UnsynchronizedLyricsFrame *>(usltFrames.front());
+                if (frame) {
+                    lyricStr = TStringToQString(frame->text());
+                }
+            }
+        }
+
+        if (!lyricStr.isEmpty()) {
+            QDir lyricDir(lyricDirPath);
+            if (!lyricDir.exists()) {
+                QDir().mkpath(lyricDirPath);
+            }
+            QFile lyric(lyricPath);
+            if (lyric.open(QIODevice::WriteOnly)) {
+                lyric.write(lyricStr.toUtf8());
+                lyric.close();
+                meta.lyricPath = lyricPath;
+                qCInfo(dmMusic) << "Lyrics extracted via TagLib (merged pass):" << lyricPath;
+            } else {
+                qCWarning(dmMusic) << "Failed to write lyrics file:" << lyricPath;
+            }
+        }
+    }
+
+    // TagLib 未找到封面，回退到 FFmpeg 提取
+    if (!meta.hasimage && !coverCached) {
+        int engineType = DmGlobal::playbackEngineType();
+        if (engineType == 1) {
+            qCDebug(dmMusic) << "TagLib cover miss, trying FFmpeg for:" << path;
+            format_alloc_context_function format_alloc_context = (format_alloc_context_function)DynamicLibraries::instance()->resolve("avformat_alloc_context", true);
+            format_open_input_function format_open_input = (format_open_input_function)DynamicLibraries::instance()->resolve("avformat_open_input", true);
+            format_close_input_function format_close_input = (format_close_input_function)DynamicLibraries::instance()->resolve("avformat_close_input", true);
+            format_free_context_function format_free_context = (format_free_context_function)DynamicLibraries::instance()->resolve("avformat_free_context", true);
+
+            AVFormatContext *pFormatCtx = format_alloc_context();
+            format_open_input(&pFormatCtx, path.toStdString().c_str(), nullptr, nullptr);
+
+            if (pFormatCtx) {
+#if LIBAVFORMAT_VERSION_MAJOR < 61
+                if (pFormatCtx->iformat != nullptr && pFormatCtx->iformat->read_header(pFormatCtx) >= 0) {
+#else
+                if (avformat_find_stream_info(pFormatCtx, nullptr) >= 0) {
+#endif
+                    for (unsigned int i = 0; i < pFormatCtx->nb_streams; i++) {
+                        if (pFormatCtx->streams[i]->disposition & AV_DISPOSITION_ATTACHED_PIC) {
+                            AVPacket pkt = pFormatCtx->streams[i]->attached_pic;
+                            QImage image = QImage::fromData(static_cast<uchar *>(pkt.data), pkt.size);
+                            if (!image.isNull()) {
+                                image = image.scaled(QSize(200, 200), Qt::KeepAspectRatioByExpanding, Qt::SmoothTransformation);
+                                image.save(coverPath);
+                                meta.coverUrl = coverPath;
+                                meta.hasimage = true;
+                                qCInfo(dmMusic) << "Cover extracted via FFmpeg (merged pass):" << coverPath;
+                            }
+                            break;
+                        }
+                    }
+                }
+            }
+            format_close_input(&pFormatCtx);
+            format_free_context(pFormatCtx);
+        }
+    }
+
+    // FFmpeg 也没找到封面，使用默认封面
+    if (!meta.hasimage) {
+        meta.coverUrl = DmGlobal::cachePath() + "/images/default_cover.png";
+        qCDebug(dmMusic) << "Using default cover for:" << path;
+    }
+
+    f.clear();
+    qCInfo(dmMusic) << "parseMetaCoverAndLyrics completed for:" << hash
+                    << "hasimage:" << meta.hasimage << "lyricPath:" << meta.lyricPath;
 }
