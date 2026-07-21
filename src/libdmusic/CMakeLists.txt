@@ -3,7 +3,7 @@ project(libdmusic)
 set(CMD_NAME dmusic)
 add_definitions(-DLIBDMUSIC_LIBRARY)
 
-set(QT_MODULES Core Multimedia DBus Sql Core5Compat)
+set(QT_MODULES Core Multimedia DBus Sql Core5Compat Concurrent)
 
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
@@ -47,8 +47,11 @@ pkg_check_modules(FFMPEG REQUIRED IMPORTED_TARGET libavcodec libavformat)
 # pkg_check_modules(udisks2 REQUIRED IMPORTED_TARGET udisks2-qt5)
 
 set(TARGET_LIBS PkgConfig::TAGLIB PkgConfig::DTK)
-target_link_libraries(${CMD_NAME} ${TARGET_LIBS} PkgConfig::MPRIS PkgConfig::TAGLIB PkgConfig::DTK ICU::i18n PkgConfig::FFMPEG)
-target_link_libraries(${CMD_NAME} Qt6::Core Qt6::Multimedia Qt6::DBus Qt6::Sql Qt6::Core5Compat)
+target_link_libraries(${CMD_NAME} ${TARGET_LIBS} PkgConfig::TAGLIB PkgConfig::DTK ICU::i18n PkgConfig::FFMPEG)
+if(LINUX)
+  target_link_libraries(${CMD_NAME} PkgConfig::MPRIS)
+endif()
+target_link_libraries(${CMD_NAME} Qt6::Core Qt6::Multimedia Qt6::DBus Qt6::Sql Qt6::Core5Compat Qt6::Concurrent)
 
 # qt5_use_modules(${CMD_NAME} )
 
