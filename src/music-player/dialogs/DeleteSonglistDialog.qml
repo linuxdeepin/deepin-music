@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2023 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -47,11 +47,12 @@ DialogWindow {
             }
         }
 
-        Row {
-            width: parent.width
+        RowLayout {
+            anchors.horizontalCenter: parent.horizontalCenter
             spacing: 10
             WarningButton {
-                width: 185; height: 36
+                Layout.preferredWidth: 185
+                height: 36
                 text: removeMusic ? qsTr("Remove") : qsTr("Delete")
                 onClicked: {
                     if(removeMusic){
@@ -66,7 +67,8 @@ DialogWindow {
                 }
             }
             Button {
-                width: 185; height: 36
+                Layout.preferredWidth: 185
+                height: 36
                 text: qsTr("Cancel")
                 onClicked: {
                     dialog.close();

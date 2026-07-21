@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2023 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -156,7 +156,7 @@ Settings.SettingsDialog {
                 }
                 KeySequenceEdit {
                     id: sequenceEdit
-                    width: 430
+                    width: parent.width - parent.padding * 2
                     height: 36
                     text: qsTr("Play/Pause")
                     placeholderText: ""
@@ -199,7 +199,7 @@ Settings.SettingsDialog {
                     Presenter.setValueToSettings("shortcuts.all.previous", value)
                 }
                 KeySequenceEdit {
-                    width: 430
+                    width: parent.width - parent.padding * 2
                     height: 36
                     text: qsTr("Previous")
                     placeholderText: ""
@@ -243,7 +243,7 @@ Settings.SettingsDialog {
                     Presenter.setValueToSettings("shortcuts.all.next", value)
                 }
                 KeySequenceEdit {
-                    width: 430
+                    width: parent.width - parent.padding * 2
                     height: 36
                     text: qsTr("Next")
                     placeholderText: ""
@@ -288,7 +288,7 @@ Settings.SettingsDialog {
                     Presenter.setValueToSettings("shortcuts.all.volume_up", value)
                 }
                 KeySequenceEdit {
-                    width: 430
+                    width: parent.width - parent.padding * 2
                     height: 36
                     text: qsTr("Volume up")
                     placeholderText: ""
@@ -333,7 +333,7 @@ Settings.SettingsDialog {
                     Presenter.setValueToSettings("shortcuts.all.volume_down", value)
                 }
                 KeySequenceEdit {
-                    width: 430
+                    width: parent.width - parent.padding * 2
                     height: 36
                     text: qsTr("Volume down")
                     placeholderText: ""
@@ -377,7 +377,7 @@ Settings.SettingsDialog {
                     Presenter.setValueToSettings("shortcuts.all.favorite_song", value)
                 }
                 KeySequenceEdit {
-                    width: 430
+                    width: parent.width - parent.padding * 2
                     height: 36
                     text: qsTr("Favorite")
                     placeholderText: ""
