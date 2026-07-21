@@ -80,12 +80,11 @@ DialogWindow {
                 }
             }
         }
-        Row {
-            width: parent.width
-            spacing: 10
+        RowLayout {
             anchors.horizontalCenter: parent.horizontalCenter
+            spacing: 10
             Button {
-                width: 180
+                Layout.preferredWidth: 180
                 height: 30
                 text: qsTr("Cancel")
                 onClicked: {
@@ -93,7 +92,7 @@ DialogWindow {
                 }
             }
             Button {
-                width: 180
+                Layout.preferredWidth: 180
                 height: 30
                 text: qsTr("Confirm")
                 onClicked: {
