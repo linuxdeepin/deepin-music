@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2023 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -283,10 +283,12 @@ DialogWindow {
                             id: preamplifierSlider
                             Layout.fillHeight: true
                             Layout.alignment: Qt.AlignHCenter
+                            Layout.maximumWidth: parent.width
                             Layout.topMargin: 20
 
                             highlightedPassedGroove: true
                             handleType: Slider.HandleType.NoArrowVertical
+                            leftPadding: 15
 
                             height: 220
                             from: -20
@@ -381,9 +383,11 @@ DialogWindow {
                         id: delegateSlider
                         Layout.fillHeight: true
                         Layout.alignment: Qt.AlignHCenter
+                        Layout.maximumWidth: parent.width
                         Layout.topMargin: 20
                         highlightedPassedGroove: true
                         handleType: Slider.HandleType.NoArrowVertical
+                        leftPadding: 8
 
                         height: 220
                         from: -20
