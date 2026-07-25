@@ -12,7 +12,8 @@
 #include <QDBusReply>
 
 #include <DLog>
-#include <DApplication>
+#include <DGuiApplicationHelper>
+#include <QGuiApplication>
 #include <QSurfaceFormat>
 
 #include <stdio.h>
@@ -31,8 +32,8 @@
 #include "util/dbusadpator.h"
 #include "util/log.h"
 
-DWIDGET_USE_NAMESPACE;
 DCORE_USE_NAMESPACE;
+DGUI_USE_NAMESPACE;
 
 QScopedPointer<Presenter, QScopedPointerPodDeleter> presenter;
 
@@ -72,12 +73,12 @@ int main(int argc, char *argv[])
     }
     qputenv("D_POPUP_MODE", "embed");
 
-    DApplication *app = new DApplication(argc, argv);
+    QGuiApplication *app = new QGuiApplication(argc, argv);
     app->setAttribute(Qt::AA_UseHighDpiPixmaps);
     app->setOrganizationName("deepin");
     app->setApplicationName("deepin-music");
     // Version Time
-    app->setApplicationVersion(DApplication::buildVersion(VERSION));
+    app->setApplicationVersion(VERSION);
 
     DLogManager::registerConsoleAppender();
     DLogManager::registerFileAppender();
@@ -101,7 +102,7 @@ int main(int argc, char *argv[])
         OpenFilePaths = strList;
     }
 
-    if (!app->setSingleInstance("deepinmusic")) {
+    if (!DGuiApplicationHelper::setSingleInstance("deepinmusic")) {
         qCDebug(dmMusic) << "another deepin music has started";
         QDBusInterface speechbus("org.mpris.MediaPlayer2.DeepinMusic",
                                  "/org/mpris/speech",
@@ -129,21 +130,14 @@ int main(int argc, char *argv[])
 
     DmGlobal::initPlaybackEngineType();
     app->setQuitOnLastWindowClosed(false);
-    app->loadTranslator();
+    DGuiApplicationHelper::loadTranslator();
 
     // 请在此处注册QML中的C++类型
     qmlRegisterType<ShaderImageView>("audio.image", 1, 0, "View_image");
     qmlRegisterType<ShaderDataView>("audio.image", 1, 0, "View_data");
     qmlRegisterType<DmGlobal>("audio.global", 1, 0, "DmGlobal");
 
-    QString descriptionText = QObject::tr("Music is a local music player with beautiful design and simple functions.");
-    QString acknowledgementLink = "https://www.deepin.org/acknowledgments/deepin-music#thanks";
     DmGlobal::setAppName(QObject::tr("Music"));
-    qApp->setProductName(DmGlobal::getAppName());
-    qApp->setApplicationAcknowledgementPage(acknowledgementLink);
-    qApp->setProductIcon(QIcon::fromTheme("deepin-music"));
-    qApp->setApplicationDescription(descriptionText);
-    qApp->setApplicationDisplayName(DmGlobal::getAppName());
 
     QQmlApplicationEngine engine;
     // 请在此处注册需要导入到QML中的C++类型

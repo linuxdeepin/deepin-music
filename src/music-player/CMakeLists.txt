@@ -45,9 +45,9 @@ endif ()
 add_executable(${BIN_NAME} ${RCC_SOURCES} ${ALLSOURCE} ${QM_FILES})
 
 # Use target_link_libraries instead of qt6_use_modules
-target_link_libraries(${BIN_NAME} Qt6::Core Qt6::Widgets)
+target_link_libraries(${BIN_NAME} Qt6::Core)
 
-set(TARGET_LIBS Qt6::Quick PkgConfig::DTK dmusic ${Dtk6Declarative_LIBRARIES} Dtk6::Widget)
+set(TARGET_LIBS Qt6::Quick PkgConfig::DTK dmusic ${Dtk6Declarative_LIBRARIES} Dtk6::Gui)
 
 target_link_libraries(${BIN_NAME} ${TARGET_LIBS})
 
