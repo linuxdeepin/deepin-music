@@ -24,6 +24,10 @@ ColumnLayout {
     id: control
     spacing: 10
     Layout.leftMargin: 10
+    SystemPalette {
+        id: systemPalette
+        colorGroup: SystemPalette.Active
+    }
 
     Rectangle {
         id: siderTitle
@@ -35,9 +39,11 @@ ColumnLayout {
             width: 42; height: 20
             anchors.left: parent.left
             anchors.leftMargin: 10
-            color: Qt.rgba(0.6,0.6,0.6, 0.8)
+            color: systemPalette.placeholderText
             text: title
+            font: DTK.fontManager.t6
             horizontalAlignment: Qt.AlignLeft
+            elide: Text.ElideRight
         }
         Loader {
             anchors.right: parent.right

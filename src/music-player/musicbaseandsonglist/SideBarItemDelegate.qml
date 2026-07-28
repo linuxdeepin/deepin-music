@@ -6,12 +6,21 @@ import QtQuick 2.0
 import QtQuick.Layouts 1.11
 import QtQuick.Controls 2.4
 import QtQml.Models 2.11
+import Qt5Compat.GraphicalEffects
 import org.deepin.dtk 1.0
 
 
 ItemDelegate {
     property string type: "library"
+    readonly property color foregroundColor: checked ? systemPalette.highlightedText
+                                                     : systemPalette.windowText
     id: item
+    checked: globalVariant !== undefined && globalVariant.curListPage === model.uuid
+    palette.buttonText: foregroundColor
+    SystemPalette {
+        id: systemPalette
+        colorGroup: SystemPalette.Active
+    }
     // 屏蔽空格响应
     Keys.onSpacePressed: { event.accepted=false; }
     Keys.onReleased: { event.accepted=(event.key===Qt.Key_Space); }
@@ -56,19 +65,30 @@ ItemDelegate {
                 control.itemRightClicked(model.uuid, model.displayName);
             }
             control.itemClicked(model.uuid, model.displayName);
-            item.checked = true;
         }
         onWheel: {
             wheel.accepted = false
         }
     }
-    DciIcon {
+    Item {
         id: siderIcon
+        width: 20
+        height: 20
         anchors.left: item.left; anchors.leftMargin: 10
         anchors.verticalCenter: item.verticalCenter
-        name: item.checked ? model.icon_checked : model.icon
-        sourceSize: Qt.size(20, 20)
-        palette: DTK.makeIconPalette(item.palette)
+        DciIcon {
+            id: sidebarIconSource
+            anchors.fill: parent
+            visible: false
+            name: item.checked ? model.icon_checked : model.icon
+            sourceSize: Qt.size(20, 20)
+        }
+        ColorOverlay {
+            anchors.fill: parent
+            source: sidebarIconSource
+            color: item.foregroundColor
+            cached: true
+        }
     }
     Label {
         id: songName
@@ -76,6 +96,7 @@ ItemDelegate {
         anchors.right: item.right; anchors.rightMargin: 10
         anchors.verticalCenter: item.verticalCenter
         text: "%1".arg(model.displayName)
+        color: item.foregroundColor
         textFormat: Text.PlainText
         elide: Text.ElideRight
     }
@@ -91,7 +112,6 @@ ItemDelegate {
         maximumLength: 30
 
         Keys.onEscapePressed: {
-            item.checked = true;
             songName.visible = true;
             siderIcon.visible = true;
             keyLineEdit.visible = false;
@@ -99,7 +119,6 @@ ItemDelegate {
         }
 
         onEditingFinished: {
-            item.checked = true;
             songName.visible = true;
             siderIcon.visible = true;
             keyLineEdit.visible = false;
@@ -149,13 +168,11 @@ ItemDelegate {
 
     function enableRename(){
         control.itemClicked(model.uuid, model.displayName); //新建歌单后，自动切换到新歌单列表
-        item.checked = true;
         keyLineEdit.text = songName.text;
         keyLineEdit.forceActiveFocus()
         songName.visible = false;
         siderIcon.visible = false;
         keyLineEdit.visible = true;
-        item.checked = false;
     }
     function rename(){
         if(!model.editable)
@@ -166,6 +183,5 @@ ItemDelegate {
     function switchToPrevious(){
         item.forceActiveFocus();
         control.itemClicked(model.uuid, model.displayName);
-        item.checked = true
     }
 }

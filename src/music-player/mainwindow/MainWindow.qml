@@ -62,11 +62,12 @@ ApplicationWindow {
                         DS.Style.behindWindowBlur.darkNoBlurColor)
                 }
                 Rectangle {
-                    width: 1
+                    width: 1 / Screen.devicePixelRatio
                     height: parent.height
                     anchors.right: parent.right
-                    color: DTK.themeType === ApplicationHelper.LightType ? "#eee7e7e7"
-                                                                         : "#ee252525"
+                    color: DTK.themeType === ApplicationHelper.LightType
+                           ? Qt.rgba(0, 0, 0, 0.08)
+                           : Qt.rgba(0, 0, 0, 0.50)
                 }
             }
             // 右侧区域纯色背景
