@@ -19,6 +19,8 @@
 #include <QDBusConnection>
 #include <QDesktopWidget>
 #include <QScrollArea>
+#include <QScreen>
+#include <QGuiApplication>
 
 #include <DUtil>
 #include <DWidgetUtil>
@@ -199,9 +201,32 @@ MainFrame::~MainFrame()
     MusicSettings::release();
 }
 
+void MainFrame::applyDynamicMinimumSize()
+{
+    constexpr int defaultMinWidth = 900;
+    constexpr int defaultMinHeight = 600;
+    constexpr int minimumDimension = 100;
+    constexpr int snapMargin = 10;
+
+    QScreen *screen = QGuiApplication::primaryScreen();
+    if (!screen) {
+        setMinimumSize(defaultMinWidth, defaultMinHeight);
+        return;
+    }
+
+    const QRect availableGeometry = screen->availableGeometry();
+    const int minimumWidth = qBound(minimumDimension,
+                                    availableGeometry.width() / 2 - snapMargin,
+                                    defaultMinWidth);
+    const int minimumHeight = qBound(minimumDimension,
+                                     availableGeometry.height() / 2 - snapMargin,
+                                     defaultMinHeight);
+    setMinimumSize(minimumWidth, minimumHeight);
+}
+
 void MainFrame::initUI(bool showLoading)
 {
-    this->setMinimumSize(QSize(900, 600));
+    applyDynamicMinimumSize();
     this->setFocusPolicy(Qt::ClickFocus);
 
     m_titlebarwidget->setEnabled(showLoading);
@@ -1049,7 +1074,7 @@ void MainFrame::showEvent(QShowEvent *event)
 {
     Q_UNUSED(event)
     if (m_geometryBa.isEmpty()) {//初次直接显示默认窗口
-        this->setMinimumSize(QSize(1070, 680));
+        applyDynamicMinimumSize();
         this->resize(QSize(1070, 680));
         Dtk::Widget::moveToCenter(this);
 
