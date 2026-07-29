@@ -66,6 +66,7 @@ public slots:
 #endif
 
 private:
+    void applyDynamicMinimumSize();
     /**
      * @brief initMenuAndShortCut
      */
