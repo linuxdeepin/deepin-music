@@ -529,6 +529,14 @@ void PlayItemDelegate::drawIconMode(QPainter &painter, const QStyleOptionViewIte
         icon = qvariant_cast<QIcon>(value);
     }
     QRect pixmapRect(option.rect.x() + xoffset, option.rect.y() + yoffset, imgWidthAndHeight(), imgWidthAndHeight());
+    QRect shadowRect = pixmapRect.adjusted(-10, 0, 8, 8);
+    QPainterPath roundRectShadowPath;
+    roundRectShadowPath.addRoundRect(shadowRect, 8, 8);
+    painter.save();
+    painter.setClipPath(roundRectShadowPath);
+    painter.drawPixmap(shadowRect, m_shadowImg);
+    painter.restore();
+
     // 绘制选中时效果
     QBrush fillBrush(QColor(128, 128, 128, 0));
     if (option.state & QStyle::State_Selected) {
@@ -816,7 +824,7 @@ PlayItemDelegate::PlayItemDelegate(QWidget *parent)
     : QStyledItemDelegate(parent)
 {
     setObjectName("PlayItemStyleProxy");
-    m_shadowImg = DHiDPIHelper::loadNxPixmap(":/mpimage/light/shadow.svg");
+    m_shadowImg = DHiDPIHelper::loadNxPixmap(":/icons/deepin/builtin/actions/shadow_176px.svg");
     m_shadowImg = m_shadowImg.copy(5, 5, m_shadowImg.width() - 10, m_shadowImg.height() - 10);
     DStyle d;
     m_selectedPix = d.standardIcon(DStyle::SP_IndicatorChecked).pixmap(QSize(14, 14));
