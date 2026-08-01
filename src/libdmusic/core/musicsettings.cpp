@@ -1,5 +1,4 @@
-// Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co., Ltd.
-// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2023 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -10,10 +9,11 @@
 #include <QFile>
 #include <QFileInfo>
 #include <QDir>
-#include <qsettingbackend.h>
 #include <QImage>
 #include <QCoreApplication>
 #include <QDebug>
+
+#include <qsettingbackend.h>
 
 #include "global.h"
 #include "util/log.h"
@@ -77,7 +77,6 @@ void MusicSettings::init()
 
 QPointer<Dtk::Core::DSettings> MusicSettings::settings()
 {
-    qCDebug(dmMusic) << "Getting settings pointer";
     if (m_settings.isNull()) {
         qCWarning(dmMusic) << "Settings pointer is null";
     }
