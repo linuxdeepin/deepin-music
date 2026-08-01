@@ -1,5 +1,4 @@
-// Copyright (C) 2020 ~ 2020 Deepin Technology Co., Ltd.
-// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2023 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -10,17 +9,27 @@
 #include <QIcon>
 #include <QDBusInterface>
 #include <QDBusReply>
+#include <QFileInfo>
+
+#ifdef Q_OS_WIN
+#include <windows.h>
+#include <QSharedMemory>
+#endif
 
 #include <DLog>
 #include <DGuiApplicationHelper>
 #include <QGuiApplication>
 #include <QSurfaceFormat>
+#include <QWindow>
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
+#ifdef Q_OS_LINUX
 #include <signal.h>
 #include <unistd.h>
+#endif
 
 #include "config.h"
 
@@ -37,29 +46,63 @@ DGUI_USE_NAMESPACE;
 
 QScopedPointer<Presenter, QScopedPointerPodDeleter> presenter;
 
+#ifdef Q_OS_LINUX
 void sig_term_handler(int signum, siginfo_t *info, void *ptr)
 {
     qDebug() << "SIGTERM received.";
     presenter->saveDataToDB();
     exit(1);
 }
+#endif
 
 // 此文件是QML应用的启动文件，一般无需修改
 int main(int argc, char *argv[])
 {
     qCDebug(dmMusic) << "main start";
+#ifdef Q_OS_LINUX
     if (!QString(qgetenv("XDG_CURRENT_DESKTOP")).toLower().startsWith("deepin")) {
         qCDebug(dmMusic) << "XDG_CURRENT_DESKTOP is not deepin";
 
         setenv("XDG_CURRENT_DESKTOP", "Deepin", 1);
     }
     setenv("PULSE_PROP_media.role", "music", 1);
+#endif
+
+#ifdef Q_OS_WIN
+    // Auto-set environment variables so deepin-music.exe can run directly
+    // without needing a launcher batch file
+    wchar_t exePath[MAX_PATH];
+    GetModuleFileNameW(NULL, exePath, MAX_PATH);
+    QString appDir = QFileInfo(QString::fromWCharArray(exePath)).absolutePath();
+    if (qgetenv("QT_PLUGIN_PATH").isEmpty()) {
+        qputenv("QT_PLUGIN_PATH", (appDir + "/plugins").toUtf8());
+    }
+    if (qgetenv("QT_QPA_PLATFORM_PLUGIN_PATH").isEmpty()) {
+        qputenv("QT_QPA_PLATFORM_PLUGIN_PATH", (appDir + "/plugins/platforms").toUtf8());
+    }
+    if (qgetenv("QML2_IMPORT_PATH").isEmpty()) {
+        qputenv("QML2_IMPORT_PATH", (appDir + "/qml").toUtf8());
+    }
+    if (qgetenv("QT_QML_IMPORT_PATH").isEmpty()) {
+        qputenv("QT_QML_IMPORT_PATH", (appDir + "/qml").toUtf8());
+    }
+    if (qgetenv("DSG_DATA_DIRS").isEmpty()) {
+        qputenv("DSG_DATA_DIRS", (appDir + "/dsg").toUtf8());
+    }
+    // Add app directory to PATH for DLL resolution
+    QString currentPath = QString::fromLocal8Bit(qgetenv("PATH"));
+    if (!currentPath.contains(appDir)) {
+        qputenv("PATH", (appDir + ";" + currentPath).toUtf8());
+    }
+#endif
 
     DmGlobal::checkWaylandMode();
 
     QSurfaceFormat format;
+#ifdef Q_OS_LINUX
     format.setRenderableType(QSurfaceFormat::OpenGLES);
     format.setVersion(3, 2);
+#endif
     format.setDefaultFormat(format);
     // 1.可以使用自己创建的 QGuiApplication 对象；
     // 2.可以在创建 QGuiApplication 之前为程序设置一些属性（如使用
@@ -72,9 +115,14 @@ int main(int argc, char *argv[])
         qputenv("XDG_CURRENT_DESKTOP", "Deepin");
     }
     qputenv("D_POPUP_MODE", "embed");
+#ifdef Q_OS_WIN
+    qputenv("D_DTK_DISABLE_INWINDOWBLUR", "1");
+#endif
 
     QGuiApplication *app = new QGuiApplication(argc, argv);
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     app->setAttribute(Qt::AA_UseHighDpiPixmaps);
+#endif
     app->setOrganizationName("deepin");
     app->setApplicationName("deepin-music");
     // Version Time
@@ -102,6 +150,7 @@ int main(int argc, char *argv[])
         OpenFilePaths = strList;
     }
 
+#ifdef Q_OS_LINUX
     if (!DGuiApplicationHelper::setSingleInstance("deepinmusic")) {
         qCDebug(dmMusic) << "another deepin music has started";
         QDBusInterface speechbus("org.mpris.MediaPlayer2.DeepinMusic",
@@ -127,6 +176,22 @@ int main(int argc, char *argv[])
         qCDebug(dmMusic) << "another deepin music has started, return";
         return 0;
     }
+#endif
+
+#ifdef Q_OS_WIN
+    // Windows 单实例实现：使用命名互斥量
+    HANDLE hMutex = CreateMutexW(NULL, TRUE, L"deepin-music-single-instance");
+    if (GetLastError() == ERROR_ALREADY_EXISTS) {
+        qCDebug(dmMusic) << "another deepin music has started on Windows";
+        // 尝试激活现有窗口
+        HWND existingWindow = FindWindowW(NULL, L"Music");
+        if (existingWindow) {
+            SetForegroundWindow(existingWindow);
+            ShowWindow(existingWindow, SW_RESTORE);
+        }
+        return 0;
+    }
+#endif
 
     DmGlobal::initPlaybackEngineType();
     app->setQuitOnLastWindowClosed(false);
@@ -156,6 +221,11 @@ int main(int argc, char *argv[])
     engine.rootContext()->setContextProperty("ShortcutDialg", &shortcut);
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
     engine.rootObjects()[0]->installEventFilter(&eventsFilter);
+#ifdef Q_OS_WIN
+    if (auto *window = qobject_cast<QWindow*>(engine.rootObjects()[0])) {
+        window->setIcon(QIcon(":/dsg/img/deepin-music.svg"));
+    }
+#endif
     if (engine.rootObjects().isEmpty()) {
         qCDebug(dmMusic) << "engine.rootObjects().isEmpty(), return -1";
         return -1;
@@ -168,12 +238,14 @@ int main(int argc, char *argv[])
 
     QObject::connect(&engine, &QQmlApplicationEngine::quit, presenter.data(), &Presenter::saveDataToDB);
 
+#ifdef Q_OS_LINUX
     // 捕获强制退出信号，保存数据到数据库
     static struct sigaction _sigact;
     memset(&_sigact, 0, sizeof(_sigact));
     _sigact.sa_sigaction = sig_term_handler;
     _sigact.sa_flags = SA_SIGINFO;
     sigaction(SIGTERM, &_sigact, NULL);
+#endif
 
     return app->exec();
 }
