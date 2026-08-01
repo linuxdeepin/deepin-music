@@ -1,5 +1,4 @@
-// Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co., Ltd.
-// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2023 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -63,7 +62,7 @@ bool EventsFilter::eventFilter(QObject *watched, QEvent *event)
     case QEvent::QEvent::MouseButtonPress: {
         qCDebug(dmMusic) << "EventsFilter eventFilter mouse press";
         QMouseEvent *mouseEvent = static_cast<QMouseEvent *>(event);
-        emit mousePress(mouseEvent->globalX(), mouseEvent->globalY());
+        emit mousePress(mouseEvent->globalPosition().x(), mouseEvent->globalPosition().y());
     }
     break;
     default:
