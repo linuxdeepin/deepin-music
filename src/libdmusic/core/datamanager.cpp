@@ -6,6 +6,7 @@
 #include "datamanager.h"
 
 #include <QFileInfo>
+#include <QDir>
 #include <QDirIterator>
 #include <QDateTime>
 #include <QStandardPaths>
@@ -2657,6 +2658,7 @@ void DataManager::initPlaylist()
                               "rejected to prevent path traversal, falling back to default.";
         dbPath = DmGlobal::cachePath() + "/mediameta.sqlite";
     }
+    QDir().mkpath(QFileInfo(dbPath).absolutePath());
     qCDebug(dmMusic) << "Opening database at:" << dbPath;
     m_data->m_database = QSqlDatabase::addDatabase("QSQLITE");
     m_data->m_database.setDatabaseName(dbPath);

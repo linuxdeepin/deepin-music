@@ -162,6 +162,9 @@ Presenter::Presenter(const QString &unknownAlbumStr, const QString &unknownArtis
     });
     connect(m_data->m_dataManager, &DataManager::signalMetaCoverReady, this, [ = ](DMusic::MediaMeta meta) {
         emit metaCoverReady(Utils::metaToVariantMap(meta));
+        if (m_data->m_playerEngine->getMediaMeta().hash == meta.hash) {
+            emit metaChanged();
+        }
     });
 
     connect(this, &Presenter::restorePlaybackStatus, this, [ = ]() {
@@ -332,7 +335,16 @@ QImage Presenter::getActivateMetImage()
 QVariantMap Presenter::getActivateMeta()
 {
     qCDebug(dmMusic) << "Getting active media meta";
-    return Utils::metaToVariantMap(m_data->m_playerEngine->getMediaMeta());
+    DMusic::MediaMeta meta = m_data->m_playerEngine->getMediaMeta();
+    if (!meta.hash.isEmpty()) {
+        DMusic::MediaMeta latestMeta = m_data->m_dataManager->metaFromHash(meta.hash);
+        if (!latestMeta.hash.isEmpty()) {
+            meta.coverUrl = latestMeta.coverUrl;
+            meta.hasimage = latestMeta.hasimage;
+            meta.lyricPath = latestMeta.lyricPath;
+        }
+    }
+    return Utils::metaToVariantMap(meta);
 }
 
 QVariant Presenter::getPlaybackStatus()
