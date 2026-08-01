@@ -1,5 +1,4 @@
-// Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co., Ltd.
-// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2023 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -115,6 +114,9 @@ public slots:
         \brief set progress flag when play
     */
     void setProgressTag(int prog = -1);
+
+signals:
+    void audioDataReady(const QByteArray &data);
 
 private:
     static void libvlc_audio_play_cb(void *data, const void *samples,

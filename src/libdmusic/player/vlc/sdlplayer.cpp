@@ -3,6 +3,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 #include "sdlplayer.h"
+#include <cmath>
 
 #ifdef __cplusplus
 extern "C" {
@@ -105,6 +106,7 @@ SdlPlayer::SdlPlayer(VlcInstance *instance)
     : VlcMediaPlayer(instance), m_loadSdlLibrary(false)
 {
     qCDebug(dmMusic) << "Initializing SDL player";
+#ifdef Q_OS_LINUX
     m_loadSdlLibrary = VlcDynamicInstance::VlcFunctionInstance()->loadSdlLibrary();
     if (m_loadSdlLibrary) {
         qCDebug(dmMusic) << "SDL library loaded successfully, initializing SDL audio";
@@ -116,8 +118,14 @@ SdlPlayer::SdlPlayer(VlcInstance *instance)
         if (Init(SDL_INIT_AUDIO) < 0) {
             qCWarning(dmMusic) << "SDL_Init(AUDIO) returned non-zero; continuing but audio may not work";
         }
-        vlc_audio_set_callbacks(_vlcMediaPlayer, libvlc_audio_play_cb, libvlc_audio_pause_cb, libvlc_audio_resume_cb, libvlc_audio_flush_cb, nullptr, this);
-        vlc_audio_set_format_callbacks(_vlcMediaPlayer, libvlc_audio_setup_cb, nullptr);
+        if (vlc_audio_set_callbacks && vlc_audio_set_format_callbacks) {
+            qCDebug(dmMusic) << "Registering audio callbacks on _vlcMediaPlayer:" << _vlcMediaPlayer;
+            vlc_audio_set_callbacks(_vlcMediaPlayer, libvlc_audio_play_cb, libvlc_audio_pause_cb, libvlc_audio_resume_cb, libvlc_audio_flush_cb, nullptr, this);
+            vlc_audio_set_format_callbacks(_vlcMediaPlayer, libvlc_audio_setup_cb, nullptr);
+            qCDebug(dmMusic) << "Audio callbacks registered successfully";
+        } else {
+            qCCritical(dmMusic) << "Failed to resolve audio callback functions";
+        }
 
         //设置日志回调等级
         LogSetPriority(SDL_LOG_CATEGORY_AUDIO, SDL_LOG_PRIORITY_ERROR);
@@ -132,11 +140,15 @@ SdlPlayer::SdlPlayer(VlcInstance *instance)
     } else {
         qCWarning(dmMusic) << "Failed to load SDL library";
     }
+#else
+    qCDebug(dmMusic) << "Windows platform: using VLC default audio output, skipping SDL initialization";
+#endif
 }
 
 SdlPlayer::~SdlPlayer()
 {
     qCDebug(dmMusic) << "Cleaning up SDL player";
+#ifdef Q_OS_LINUX
     if (m_loadSdlLibrary) {
         SDL_Quit_function Quit = (SDL_Quit_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSdlSymbol("SDL_Quit");
         Quit();
@@ -145,6 +157,7 @@ SdlPlayer::~SdlPlayer()
         while (m_pCheckDataThread->isRunning()) {}
         qCDebug(dmMusic) << "Check data thread stopped";
     }
+#endif
 }
 
 void SdlPlayer::open(VlcMedia *media)
@@ -156,6 +169,7 @@ void SdlPlayer::open(VlcMedia *media)
         return;
     }
 
+#ifdef Q_OS_LINUX
     if (m_loadSdlLibrary) {
         qCDebug(dmMusic) << "Preparing SDL audio for new media";
         SDL_GetAudioStatus_function GetAudioStatus = (SDL_GetAudioStatus_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSdlSymbol("SDL_GetAudioStatus");
@@ -189,9 +203,14 @@ void SdlPlayer::open(VlcMedia *media)
 
         m_sinkInputPath.clear();
     }
+#endif
 
     VlcMediaPlayer::open(media);
+    
+#ifdef Q_OS_LINUX
     g_playbackStatus = PLAYBACK_STATUS_INIT;
+#endif
+    
     qCDebug(dmMusic) << "Media opened successfully";
 }
 
@@ -202,13 +221,18 @@ void SdlPlayer::play()
         return;
     }
     qCDebug(dmMusic) << "Starting playback";
+#ifdef Q_OS_LINUX
+    setProgressTag(0); // resume - allow audio processing
+#endif
     VlcMediaPlayer::play();
+#ifdef Q_OS_LINUX
     if (m_loadSdlLibrary) {
         if (!m_pCheckDataThread->isRunning()) {
             m_pCheckDataThread->start();
             qCDebug(dmMusic) << "Started check data thread";
         }
     }
+#endif
 }
 
 void SdlPlayer::pause()
@@ -218,7 +242,8 @@ void SdlPlayer::pause()
         return;
     }
     qCDebug(dmMusic) << "Pausing playback";
-    setProgressTag(0); //first start
+#ifdef Q_OS_LINUX
+    setProgressTag(1); // pause - stop audio processing
 
     if (m_loadSdlLibrary) {
         SDL_GetAudioStatus_function GetAudioStatus = (SDL_GetAudioStatus_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSdlSymbol("SDL_GetAudioStatus");
@@ -228,6 +253,7 @@ void SdlPlayer::pause()
             qCDebug(dmMusic) << "Audio paused";
         }
     }
+#endif
 
     VlcMediaPlayer::pause();
 }
@@ -240,6 +266,7 @@ void SdlPlayer::resume()
     }
     qCDebug(dmMusic) << "Resuming playback";
     VlcMediaPlayer::resume();
+#ifdef Q_OS_LINUX
     if (m_loadSdlLibrary) {
         SDL_GetAudioStatus_function GetAudioStatus = (SDL_GetAudioStatus_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSdlSymbol("SDL_GetAudioStatus");
         SDL_PauseAudio_function PauseAudio = (SDL_PauseAudio_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSdlSymbol("SDL_PauseAudio");
@@ -259,6 +286,7 @@ void SdlPlayer::resume()
             qCDebug(dmMusic) << "Audio resumed";
         }
     }
+#endif
 }
 
 void SdlPlayer::stop()
@@ -269,6 +297,7 @@ void SdlPlayer::stop()
     }
     qCDebug(dmMusic) << "Stopping playback";
     VlcMediaPlayer::stop();
+#ifdef Q_OS_LINUX
     if (m_loadSdlLibrary) {
         cleanMemCache();
         SDL_PauseAudio_function PauseAudio = (SDL_PauseAudio_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSdlSymbol("SDL_PauseAudio");
@@ -292,40 +321,59 @@ void SdlPlayer::stop()
             qCDebug(dmMusic) << "Closed audio device";
         }
     }
+#endif
 }
 
 int SdlPlayer::getVolume()
 {
+#ifdef Q_OS_LINUX
     return m_loadSdlLibrary ? m_volume : VlcMediaPlayer::getVolume();
+#else
+    return VlcMediaPlayer::getVolume();
+#endif
 }
 
 bool SdlPlayer::getMute()
 {
+#ifdef Q_OS_LINUX
     return m_loadSdlLibrary ? m_mute : VlcMediaPlayer::getMute();
+#else
+    return VlcMediaPlayer::getMute();
+#endif
 }
 
 void SdlPlayer::setTime(qint64 time)
 {
     VlcMediaPlayer::setTime(time);
+#ifdef Q_OS_LINUX
     cleanMemCache(); //clear data when seek
+#endif
 }
 
 void SdlPlayer::setVolume(int volume)
 {
+#ifdef Q_OS_LINUX
     if (m_loadSdlLibrary) {
         m_volume = volume;
     } else {
         VlcMediaPlayer::setVolume(volume);
     }
+#else
+    VlcMediaPlayer::setVolume(volume);
+#endif
 }
 
 void SdlPlayer::setMute(bool mute)
 {
+#ifdef Q_OS_LINUX
     if (m_loadSdlLibrary)
         m_mute = mute;
     else {
         VlcMediaPlayer::setMute(mute);
     }
+#else
+    VlcMediaPlayer::setMute(mute);
+#endif
 }
 
 void SdlPlayer::checkDataZero()
@@ -393,6 +441,10 @@ void SdlPlayer::libvlc_audio_play_cb(void *data, const void *samples, unsigned c
     QByteArray ba(curSamples, static_cast<int>(size));
     QMutexLocker locker(&vlc_mutex);
     sdlMediaPlayer->_data.append(ba);
+    locker.unlock();
+
+    QByteArray pcmData(static_cast<const char *>(samples), static_cast<int>(count * srcChannels * bytesPerSample));
+    emit sdlMediaPlayer->audioDataReady(pcmData);
 }
 
 void SdlPlayer::libvlc_audio_pause_cb(void *data, int64_t pts)
@@ -429,7 +481,6 @@ int SdlPlayer::libvlc_audio_setup_cb(void **data, char *format, unsigned *rate, 
     SDL_Delay_function Delay = (SDL_Delay_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSdlSymbol("SDL_Delay");
     SDL_OpenAudio_function OpenAudio = (SDL_OpenAudio_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSdlSymbol("SDL_OpenAudio");
     SDL_CloseAudio_function CloseAudio = (SDL_CloseAudio_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSdlSymbol("SDL_CloseAudio");
-    av_log2_function Log2 = (av_log2_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSymbol("av_log2", true);
 
     // 防御性编程：先检查data指针有效性，再解引用
     if (!data) {
@@ -458,7 +509,7 @@ int SdlPlayer::libvlc_audio_setup_cb(void **data, char *format, unsigned *rate, 
     desiredAS.format = format_from_vlc_to_SDL(format);
     desiredAS.channels = static_cast<uint8_t>(sdlMediaPlayer->_channels);
     desiredAS.silence = 0;
-    desiredAS.samples = FFMAX(AUDIO_MIN_BUFFER_SIZE, 2 << Log2(desiredAS.freq / AUDIO_MAX_CALLBACKS_PER_SEC));
+    desiredAS.samples = qMax(AUDIO_MIN_BUFFER_SIZE, 2 << static_cast<int>(std::log2(desiredAS.freq / AUDIO_MAX_CALLBACKS_PER_SEC)));
     desiredAS.callback = SDL_audio_cbk;
     desiredAS.userdata = sdlMediaPlayer;
 
