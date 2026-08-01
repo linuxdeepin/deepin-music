@@ -181,7 +181,7 @@ ToolFloatingPanel {
                     font.pixelSize: 12
                     color: DTK.themeType === ApplicationHelper.DarkType ? Qt.rgba(247, 247, 247, 0.7) : Qt.rgba(0, 0, 0, 0.7)
                     font {
-                        family: "SourceHanSansSC, SourceHanSansSC-Normal"
+                        //family: "SourceHanSansSC, SourceHanSansSC-Normal"
                         pixelSize: 12
                         weight: Font.Medium
                     }

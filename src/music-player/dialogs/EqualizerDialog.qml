@@ -10,6 +10,7 @@ import QtQuick.Controls 2.4
 import org.deepin.dtk 1.0
 
 DialogWindow {
+    id: equalizerDialog
     property ListModel comBoxModel: ListModel {
         ListElement { text: qsTr("Custom") }
         ListElement { text: qsTr("Monophony") }
@@ -74,6 +75,7 @@ DialogWindow {
     minimumHeight: 426
     maximumWidth: 572
     maximumHeight: 426
+    flags: Qt.platform.os === "windows" ? (Qt.Dialog | Qt.WindowCloseButtonHint | Qt.MSWindowsFixedSizeDialogHint | Qt.FramelessWindowHint) : undefined
     header: DialogTitleBar {
         enableInWindowBlendBlur: false
     }
@@ -433,6 +435,11 @@ DialogWindow {
     }
 
     onVisibleChanged: {
+        // Center window on screen
+        if (visible && Qt.platform.os === "windows") {
+            x = (Screen.width - width) / 2
+            y = (Screen.height - height) / 2
+        }
         dataLoad()
 
         selectComBox.currentIndex = Qt.binding(function(){return curEQ})

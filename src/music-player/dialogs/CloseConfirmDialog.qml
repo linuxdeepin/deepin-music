@@ -19,9 +19,17 @@ DialogWindow {
     height: 230
     modality: Qt.ApplicationModal
     icon: globalVariant.appIconName
+    flags: Qt.platform.os === "windows" ? (Qt.Dialog | Qt.WindowCloseButtonHint | Qt.MSWindowsFixedSizeDialogHint | Qt.FramelessWindowHint) : undefined
 
     header: DialogTitleBar {
         enableInWindowBlendBlur: false
+    }
+
+    onVisibleChanged: {
+        if (visible && Qt.platform.os === "windows") {
+            x = (Screen.width - width) / 2
+            y = (Screen.height - height) / 2
+        }
     }
 
     Column {

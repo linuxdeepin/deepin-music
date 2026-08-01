@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2023 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -18,6 +18,13 @@ DialogWindow {
     minimumHeight: 160
     modality: Qt.ApplicationModal
     icon: globalVariant.appIconName
+
+    onVisibleChanged: {
+        if (visible && Qt.platform.os === "windows") {
+            x = (Screen.width - width) / 2
+            y = (Screen.height - height) / 2
+        }
+    }
 
     ColumnLayout {
         anchors.fill: parent

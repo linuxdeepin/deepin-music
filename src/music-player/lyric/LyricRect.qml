@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2023 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -85,15 +85,15 @@ Rectangle {
 
         Rectangle {
             id: lyricItemRect
-            width: parent.width
+            width: parent ? parent.width : 0
             height: itemHeight
             color: "#00000000"
 
             Text {
                 id: txtLyric;
-                width: parent.width
-                anchors.left: parent.left
-                anchors.verticalCenter: parent.verticalCenter
+                width: parent ? parent.width : 0
+                anchors.left: parent ? parent.left : undefined
+                anchors.verticalCenter: parent ? parent.verticalCenter : undefined
 
                 wrapMode: Text.WrapAtWordBoundaryOrAnywhere
 
@@ -158,7 +158,7 @@ Rectangle {
                         }
                     }
                 }
-                font.family: "SourceHanSansSC"
+                //font.family: "SourceHanSansSC"
                 font.pixelSize: lyricItemRect.ListView.isCurrentItem ? 18 : 14
 
                 font.weight: lyricItemRect.ListView.isCurrentItem ? Font.DemiBold : Font.Medium

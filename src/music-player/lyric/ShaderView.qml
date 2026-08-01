@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2023 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -44,12 +44,10 @@ Item {
     Component {
         id: effectLineView;
         Item {
-            anchors.fill: parent
             EffectLine {
                 id: around
                 width: parent.width
                 height: parent.height
-                anchors.centerIn: parent
                 Circular_img {
                     id:circular_img
                     anchors.centerIn: around
@@ -62,13 +60,10 @@ Item {
     Component {
         id: effectLightWaveView;
         Item {
-            anchors.fill: parent
-
             EffectLightWave {
                 id: around
                 width: parent.width
                 height: parent.height
-                anchors.centerIn: parent
                 Circular_img {
                     id:circular_img
                     anchors.centerIn: around
@@ -81,12 +76,10 @@ Item {
     Component {
         id: effectSunView;
         Item {
-            anchors.fill: parent
             EffectSun {
                 id: around
                 width: parent.width
                 height: parent.height
-                anchors.centerIn: parent
 
                 Circular_img {
                     id:circular_img
@@ -100,12 +93,10 @@ Item {
     Component {
         id: effectWaterWaveView;
         Item {
-            anchors.fill: parent
             EffectWaterWave {
                 id: around
                 width: parent.width
                 height: parent.height
-                anchors.centerIn: parent
                 Circular_img {
                     id:circular_img
                     anchors.centerIn: around
@@ -118,12 +109,10 @@ Item {
     Component {
         id: effectParticleView;
         Item {
-            anchors.fill: parent
             EffectParticle {
                 id: around
                 width: parent.width
                 height: parent.height
-                anchors.centerIn: parent
                 Circular_img {
                     id:circular_img
                     anchors.centerIn: around
@@ -137,12 +126,10 @@ Item {
         id: commView
         Item {
             id: commItem
-            anchors.fill: parent
             Rectangle {
                 id: around
                 width: parent.width
                 height: parent.height
-                anchors.centerIn: parent
                 color: "transparent"
                 Circular_img {
                     id:circular_img
