@@ -1,5 +1,4 @@
-// Copyright (C) 2020 ~ 2020 Deepin Technology Co., Ltd.
-// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2023 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -12,6 +11,7 @@
 #include <QDir>
 #include <QDebug>
 #include <QLibrary>
+#include <QCoreApplication>
 
 #include <DStandardPaths>
 
@@ -155,26 +155,47 @@ bool DmGlobal::isWaylandMode()
 QString DmGlobal::libPath(const QString &strlib)
 {
     QDir dir;
-    QString path = QLibraryInfo::location(QLibraryInfo::LibrariesPath);
-    dir.setPath(path);
-    QStringList list = dir.entryList(QStringList() << (strlib + "*"), QDir::NoDotAndDotDot | QDir::Files);
+    QStringList searchPaths;
+    
+#ifdef Q_OS_WIN
+    // Windows 下先查找应用程序所在目录
+    searchPaths << QCoreApplication::applicationDirPath();
+#endif
+    
+    searchPaths << QLibraryInfo::path(QLibraryInfo::LibrariesPath);
+    
     QString libPath;
     
-    qCDebug(dmMusic) << "Searching for library:" << strlib << "in path:" << path;
+    qCDebug(dmMusic) << "Searching for library:" << strlib << "in paths:" << searchPaths;
     
-    if (list.contains(strlib)) {
-        libPath = path + "/" + strlib;
-        qCDebug(dmMusic) << "Found exact library match:" << libPath;
-    } else {
-        list.sort();
-        for (int i = list.size() - 1; i >= 0; i--) {
-            if (list[i].contains(".so")) {
-                libPath = path + "/" + list[i];
-                qCDebug(dmMusic) << "Found compatible library:" << libPath;
-                break;
+    for (const QString &path : searchPaths) {
+        dir.setPath(path);
+        if (!dir.exists()) {
+            continue;
+        }
+        
+        QStringList list = dir.entryList(QStringList() << (strlib + "*"), QDir::NoDotAndDotDot | QDir::Files);
+        
+        if (list.contains(strlib)) {
+            libPath = path + "/" + strlib;
+            qCDebug(dmMusic) << "Found exact library match:" << libPath;
+            return libPath;
+        } else {
+            list.sort();
+            for (int i = list.size() - 1; i >= 0; i--) {
+#ifdef Q_OS_WIN
+                if (list[i].contains(".dll")) {
+#else
+                if (list[i].contains(".so")) {
+#endif
+                    libPath = path + "/" + list[i];
+                    qCDebug(dmMusic) << "Found compatible library:" << libPath;
+                    return libPath;
+                }
             }
         }
     }
+    
     if (libPath.isEmpty()) {
         qCWarning(dmMusic) << "Library not found in standard paths, using default:" << strlib;
         libPath = strlib;
@@ -187,10 +208,14 @@ bool DmGlobal::libExist(const QString &strlib)
 {
     // find all library paths by QLibrary
     QString libName;
+#ifdef Q_OS_WIN
+    libName = strlib;
+#else
     if (strlib.contains(".so"))
         libName = strlib.mid(0, strlib.indexOf(".so"));
     else
         libName = strlib;
+#endif
         
     qCDebug(dmMusic) << "Checking existence of library:" << libName;
     
@@ -215,12 +240,21 @@ void DmGlobal::initPlaybackEngineType()
 {
     qCDebug(dmMusic) << "Initializing playback engine";
     engineType = 0;
+#ifdef Q_OS_WIN
+    if (libExist("libvlc") && libExist("avcodec-62")) {
+        engineType = 1;
+        qCInfo(dmMusic) << "Windows: VLC playback engine initialized successfully";
+    } else {
+        qCInfo(dmMusic) << "Windows: VLC not available, using QtPlayer engine";
+    }
+#else
     if (libExist("libvlc.so") && libExist("libavcodec.so")) {
         engineType = 1;
         qCInfo(dmMusic) << "VLC playback engine initialized successfully";
     } else {
         qCWarning(dmMusic) << "Failed to initialize VLC playback engine, falling back to default";
     }
+#endif
 }
 
 void DmGlobal::setPlaybackEngineType(int type)
