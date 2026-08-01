@@ -1,23 +1,39 @@
 project(libdmusic)
 #工程名称
 set(CMD_NAME dmusic)
-add_definitions(-DLIBDMUSIC_LIBRARY)
+add_definitions(-DLIBDMUSIC_LIBRARY -DVLCQT_CORE_LIBRARY)
 
 set(QT_MODULES Core Multimedia DBus Sql Core5Compat Concurrent)
 
 set(CMAKE_AUTOMOC ON)
-set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
+# Disable AUTORCC since qt_add_resources is used explicitly
+set(CMAKE_AUTORCC OFF)
 
 file(GLOB_RECURSE QRC_SOURCE_FILES ./*.qrc)
 set(QRC_FILES config.qrc)
 
 #文件夹包含
-include_directories(/usr/include/vlc)
-include_directories(/usr/include/vlc/plugins)
-include_directories(/runtime/include/vlc)
-include_directories(/runtime/include/vlc/plugins)
-include_directories(/runtime/include)
+find_path(VLC_INCLUDE_DIR vlc/vlc.h)
+if(VLC_INCLUDE_DIR)
+  include_directories(${VLC_INCLUDE_DIR})
+  if(EXISTS "${VLC_INCLUDE_DIR}/vlc/plugins")
+    include_directories(${VLC_INCLUDE_DIR}/vlc/plugins)
+  elseif(EXISTS "${VLC_INCLUDE_DIR}/plugins")
+    include_directories(${VLC_INCLUDE_DIR}/plugins)
+  endif()
+  # Also add vlc/ dir for libvlc_media.h etc.
+  if(EXISTS "${VLC_INCLUDE_DIR}/vlc")
+    include_directories(${VLC_INCLUDE_DIR}/vlc)
+  endif()
+endif()
+# VLC headers use poll() without including poll.h; force-include it
+add_definitions(-include poll.h)
+if(EXISTS "/runtime/include/vlc")
+  include_directories(/runtime/include/vlc)
+  include_directories(/runtime/include/vlc/plugins)
+  include_directories(/runtime/include)
+endif()
 include_directories(.)
 include_directories(./util)
 include_directories(./core)
@@ -35,12 +51,20 @@ find_package(PkgConfig REQUIRED)
 
 find_package(Qt6 REQUIRED COMPONENTS ${QT_MODULES})
 find_package(ICU COMPONENTS i18n)
+
 qt_add_resources(QRC_FILES ${QRC_SOURCE_FILES})
 
 add_library(${CMD_NAME} SHARED ${ALL_SOURCES} ${QRC_FILES})
+
+# On MinGW, export all symbols since VLC wrapper classes lack export macros
+if(WIN32 AND NOT MSVC)
+    target_link_options(${CMD_NAME} PRIVATE -Wl,--export-all-symbols)
+endif()
 set_target_properties(dmusic PROPERTIES VERSION 1.0.0 SOVERSION 1.0)
 
-pkg_check_modules(MPRIS REQUIRED IMPORTED_TARGET mpris-qt6)
+if(LINUX)
+  pkg_check_modules(MPRIS REQUIRED IMPORTED_TARGET mpris-qt6)
+endif()
 pkg_check_modules(TAGLIB REQUIRED IMPORTED_TARGET taglib)
 pkg_check_modules(DTK REQUIRED IMPORTED_TARGET dtk6core)
 pkg_check_modules(FFMPEG REQUIRED IMPORTED_TARGET libavcodec libavformat)
