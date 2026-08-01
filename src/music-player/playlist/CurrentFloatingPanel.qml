@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2022 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: LGPL-3.0-or-later
 // TODO: 兼容使用，BackdropBlitter 正常后替换
@@ -34,7 +34,7 @@ D.Control {
             sourceItem: parent
         }
         Loader {
-            active: Window.window && Window.window.color.a < 1
+            active: !!(Window.window && Window.window.color.a < 1 && blur.content)
             anchors.fill: parent
             sourceComponent: D.ItemViewport {
                 anchors.fill: parent

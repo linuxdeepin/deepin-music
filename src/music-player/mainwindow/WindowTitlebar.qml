@@ -6,6 +6,7 @@ import QtQuick
 import QtQuick.Window
 import QtQuick.Layouts
 import org.deepin.dtk 1.0
+import org.deepin.dtk 1.0 as D
 import "../dialogs"
 
 TitleBar {
@@ -24,9 +25,34 @@ TitleBar {
     Loader { id: settingDlgLoader }
 
     id: titleBar
-    icon.name: globalVariant.appIconName
-    icon.opacity: opat
     hoverEnabled: true
+
+    // App icon - use Image on Windows since DCI icon theme may not have app icon
+    Loader {
+        id: iconLoader
+        anchors.verticalCenter: parent.verticalCenter
+        x: 10
+        sourceComponent: Qt.platform.os === "windows" ? fallbackIcon : dciIcon
+        Component {
+            id: dciIcon
+            D.DciIcon {
+                name: globalVariant.appIconName
+                sourceSize { width: 24; height: 24 }
+                opacity: opat
+                palette: D.DTK.makeIconPalette(titleBar.palette)
+                mode: titleBar.D.ColorSelector.controlState
+                theme: titleBar.D.ColorSelector.controlTheme
+            }
+        }
+        Component {
+            id: fallbackIcon
+            Image {
+                width: 24; height: 24
+                source: "qrc:/dsg/img/deepin-music.svg"
+                opacity: opat
+            }
+        }
+    }
     ActionButton {
         icon.name: "go_down"
         icon.width: 12
@@ -86,14 +112,21 @@ TitleBar {
             aboutDialog: AboutDialog {
                 modality: Qt.WindowModal
                 productName: qsTr("Music")
-                productIcon: globalVariant.appIconName
+                productIcon: Qt.platform.os === "windows" ? "qrc:/dsg/img/deepin-music.svg" : globalVariant.appIconName
                 description: qsTr("Music is a local music player with beautiful design and simple functions.")
                 version: qsTr("Version:") + "%1".arg(Qt.application.version)
                 companyLogo: globalVariant.appIconName
                 websiteName: DTK.deepinWebsiteName
                 websiteLink: DTK.deepinWebsiteLink
+                flags: Qt.platform.os === "windows" ? (Qt.Dialog | Qt.WindowCloseButtonHint | Qt.FramelessWindowHint) : undefined
                 header: DialogTitleBar {
                     enableInWindowBlendBlur: false
+                }
+                onVisibleChanged: {
+                    if (visible && Qt.platform.os === "windows") {
+                        x = (Screen.width - width) / 2
+                        y = (Screen.height - height) / 2
+                    }
                 }
             }
         }

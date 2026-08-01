@@ -1,8 +1,9 @@
-// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2023 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 import QtQuick 2.11
+import org.deepin.dtk 1.0
 
 Rectangle {
     property real rectRadius: 8
@@ -22,7 +23,7 @@ Rectangle {
             width: parent.width
             height: parent.height - triangleHeight
             radius: rectRadius
-            color: palette.highlight
+            color: DTK.palette.highlight
         }
         Canvas {
             id: triangleCanvas

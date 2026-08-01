@@ -35,7 +35,7 @@ ApplicationWindow {
     DWindow.alphaBufferSize: 8
     DWindow.enableBlurWindow: true
     color: "transparent"
-    flags: Qt.Window | Qt.WindowMinMaxButtonsHint | Qt.WindowCloseButtonHint | Qt.WindowTitleHint
+    flags: Qt.Window | Qt.WindowMinMaxButtonsHint | Qt.WindowCloseButtonHint | (Qt.platform.os === "windows" ? Qt.FramelessWindowHint : Qt.WindowTitleHint)
     header: WindowTitlebar { id: musicTitle }
     background: Rectangle {
         anchors.fill: parent
@@ -455,5 +455,10 @@ ApplicationWindow {
         Presenter.raiseRequested.connect(onRaiseRequested)
         globalVariant.devicePixelRatio = Screen.devicePixelRatio
         EventsFilter.keyFiltered.connect(onKeyFiltered)
+        // Center window on screen
+        if (Screen.width > 0 && Screen.height > 0) {
+            x = (Screen.width - width) / 2
+            y = (Screen.height - height) / 2
+        }
     }
 }

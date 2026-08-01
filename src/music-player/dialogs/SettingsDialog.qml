@@ -24,6 +24,13 @@ Settings.SettingsDialog {
     config: SettingsConfig {}
     flags: Qt.WindowCloseButtonHint | Qt.WindowStaysOnTopHint
 
+    onVisibleChanged: {
+        if (visible && Qt.platform.os === "windows") {
+            x = (Screen.width - width) / 2
+            y = (Screen.height - height) / 2
+        }
+    }
+
     groups: [  // 创建配置组，管理配置子组和Options
         Settings.SettingsGroup {
             key: "Basic"
@@ -437,7 +444,7 @@ Settings.SettingsDialog {
         updateInfos()
     }
 
-    property var duplicatDlg :DialogWindow {
+    property var duplicatDlg : DialogWindow {
         property int curId: 0
         property int duplicatId: 0
         property string newValue: ""
@@ -449,6 +456,13 @@ Settings.SettingsDialog {
         modality: Qt.ApplicationModal
 //        color: Qt.rgba(247,247,247,0.80);
         icon: globalVariant.appIconName
+
+        onVisibleChanged: {
+            if (visible && Qt.platform.os === "windows") {
+                x = (Screen.width - width) / 2
+                y = (Screen.height - height) / 2
+            }
+        }
 
         onClosing: {
             if (!replaceFlag) {
