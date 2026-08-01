@@ -1,5 +1,4 @@
-// Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co., Ltd.
-// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2023 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -200,7 +199,7 @@ void QtPlayer::setFadeInOutFactor(double fadeInOutFactor)
 {
     qCDebug(dmMusic) << "Set fade in/out factor";
     init();
-    m_audioOutput->setVolume(static_cast<int>(10 * fadeInOutFactor));
+    m_audioOutput->setVolume(qBound(0.0, static_cast<qreal>(m_volume) / 100.0 * fadeInOutFactor, 1.0));
 }
 
 void QtPlayer::setVolume(int volume)
@@ -209,7 +208,7 @@ void QtPlayer::setVolume(int volume)
     init();
     qCDebug(dmMusic) << "Setting volume to:" << volume;
     m_volume = volume;
-    m_audioOutput->setVolume(volume);
+    m_audioOutput->setVolume(volume / 100.0);
 }
 
 int QtPlayer::getVolume()

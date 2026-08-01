@@ -1,5 +1,4 @@
-// Copyright (C) 2020 ~ 2026 Deepin Technology Co., Ltd.
-// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2023 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -37,13 +36,13 @@ public slots:
     void startRecorder();
     void suspendRecorder();
     void stopRecorder();
+    void feedAudioData(const QByteArray &data);
 
 signals:
     void audioSpectrumData(QVector<int> data);
     void audioBuffer(const QVector<float> &buffer, const QString &hash);
 
 private:
-    void parseData();
     static bool parseFileTagCodec(DMusic::MediaMeta &meta);
 
 private:

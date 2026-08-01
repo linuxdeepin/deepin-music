@@ -1,5 +1,4 @@
-// Copyright (C) 2020 ~ 2020 Deepin Technology Co., Ltd.
-// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2023 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -14,7 +13,9 @@
 #include <QPropertyAnimation>
 #include <QIcon>
 
+#ifdef Q_OS_LINUX
 #include <MprisPlayer>
+#endif
 
 #include "qtplayer.h"
 #include "vlcplayer.h"
@@ -59,7 +60,11 @@ private:
     int                         m_pendingManualNavigation = 0;
     bool                        m_keepManualNavigation   = false;
     PlayerBase                 *m_player                = nullptr;
+#ifdef Q_OS_LINUX
     MprisPlayer                *m_mprisPlayer           = nullptr;
+#else
+    void                        *m_mprisPlayer           = nullptr;
+#endif
     QString                     m_playlistHash;
     DmGlobal::PlaybackMode      m_playbackMode          = DmGlobal::RepeatNull;
     int                         m_playingCount          = 0;
@@ -153,6 +158,7 @@ PlayerEngine::PlayerEngine(QObject *parent, PlayerBase *injectedPlayer)
         qCDebug(dmMusic) << "Current track playback ended";
         playNextMeta(true);
     });
+    connect(m_data->m_player, &PlayerBase::audioDataReady, this, &PlayerEngine::audioDataReady);
     connect(m_data->m_player, &PlayerBase::sigSendCdaStatus,
             this, &PlayerEngine::sendCdaStatus);
 
@@ -178,11 +184,13 @@ PlayerEngine::PlayerEngine(QObject *parent, PlayerBase *injectedPlayer)
 PlayerEngine::~PlayerEngine()
 {
     qCDebug(dmMusic) << "Destroying PlayerEngine";
+#ifdef Q_OS_LINUX
     if (m_data->m_mprisPlayer) {
         qCDebug(dmMusic) << "Destroying MprisPlayer";
         delete m_data->m_mprisPlayer;
         m_data->m_mprisPlayer = nullptr;
     }
+#endif
 }
 
 double PlayerEngine::fadeInOutFactor() const
@@ -206,6 +214,7 @@ void PlayerEngine::setFadeInOut(bool flag)
 
 void PlayerEngine::setMprisPlayer(const QString &serviceName, const QString &desktopEntry, const QString &identity)
 {
+#ifdef Q_OS_LINUX
     qCDebug(dmMusic) << "Initializing MprisPlayer with service:" << serviceName;
     //init Mpris
     m_data->m_mprisPlayer = new MprisPlayer(this);
@@ -300,6 +309,7 @@ void PlayerEngine::setMprisPlayer(const QString &serviceName, const QString &des
     connect(m_data->m_mprisPlayer, &MprisPlayer::quitRequested, this, &PlayerEngine::quitRequested);
     connect(m_data->m_mprisPlayer, &MprisPlayer::raiseRequested, this, &PlayerEngine::raiseRequested);
     qCDebug(dmMusic) << "MprisPlayer initialized";
+#endif
 }
 
 void PlayerEngine::setMediaMeta(const QString &metaHash)
@@ -874,6 +884,7 @@ void PlayerEngine::playNextMeta(const DMusic::MediaMeta &meta, bool isAuto, bool
 
 void PlayerEngine::resetDBusMpris(const DMusic::MediaMeta &meta)
 {
+#ifdef Q_OS_LINUX
     qCDebug(dmMusic) << "Resetting DBus Mpris with meta:" << meta.title;
     QVariantMap metadata;
     metadata.insert(Mpris::metadataToString(Mpris::Title), meta.title);
@@ -895,6 +906,7 @@ void PlayerEngine::resetDBusMpris(const DMusic::MediaMeta &meta)
     metadata.insert(Mpris::metadataToString(Mpris::ArtUrl), str);
     m_data->m_mprisPlayer->setMetadata(metadata);
     qCDebug(dmMusic) << "DBus Mpris reset with meta:" << meta.title;
+#endif
 }
 
 void PlayerEngine::playNextMeta(bool isAuto, bool playFlag)

@@ -1,5 +1,4 @@
-// Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co., Ltd.
-// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2023 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -58,6 +57,7 @@ signals:
     void end();
     void sigSendCdaStatus(int state);
     void signalMutedChanged();
+    void audioDataReady(const QByteArray &data);
 
 protected:
     MediaMeta            m_activeMeta;

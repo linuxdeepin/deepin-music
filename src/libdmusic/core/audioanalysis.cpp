@@ -1,5 +1,4 @@
-// Copyright (C) 2020 ~ 2026 Uniontech Software Technology Co., Ltd.
-// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2023 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -28,7 +27,6 @@ extern "C" {
 #include <taglib/synchronizedlyricsframe.h>
 #include <taglib/unsynchronizedlyricsframe.h>
 
-#include <QAudioInput>
 #include <QTextCodec>
 #include <QFileInfo>
 #include <QDateTime>
@@ -38,9 +36,6 @@ extern "C" {
 #include <QBuffer>
 #include <QDebug>
 #include <QImageReader>
-#include <QAudioFormat>
-#include <QAudioSource>
-#include <QMediaDevices>
 
 #include "dynamiclibraries.h"
 #include "global.h"
@@ -96,8 +91,7 @@ public:
 private:
     friend class AudioAnalysis;
     AudioAnalysis                  *m_parent                  = nullptr;
-    QAudioSource                   *m_audioSource             = nullptr;
-    QIODevice                      *m_audioDevice             = nullptr;
+    bool                            m_recording               = false;
     AudioDataDetector              *m_audioDataDetector       = nullptr;
 };
 
@@ -183,8 +177,8 @@ bool AudioAnalysis::parseFileTagCodec(DMusic::MediaMeta &meta)
     QByteArray detectByte;
     QString detectCodec;
     auto mediaPath = QStringToTString(meta.localPath);
-#ifdef _WIN32
-    TagLib::FileRef f(meta->localPath.toStdWString().c_str());
+#ifdef Q_OS_WIN
+    TagLib::FileRef f(meta.localPath.toStdWString().c_str());
 #else
     TagLib::FileRef f(meta.localPath.toStdString().c_str());
 #endif
@@ -511,8 +505,8 @@ void AudioAnalysis::parseMetaCover(DMusic::MediaMeta &meta)
         // ffmpeg 没有解析出来 尝试直接读取ID3v2
         if (image.isNull()) {
             qCDebug(dmMusic) << "FFmpeg failed to extract cover, trying TagLib ID3v2 for file:" << path;
-#ifdef _WIN32
-            TagLib::MPEG::File f(path.toStdString().c_str());
+#ifdef Q_OS_WIN
+            TagLib::MPEG::File f(path.toStdWString().c_str());
 #else
             TagLib::MPEG::File f(path.toStdString().c_str());
 #endif
@@ -614,7 +608,7 @@ QImage AudioAnalysis::getMetaCoverImage(DMusic::MediaMeta meta)
         // ffmpeg 没有解析出来 尝试直接读取ID3v2
         if (image.isNull()) {
             qCDebug(dmMusic) << "FFmpeg failed, trying TagLib ID3v2 for cover retrieval:" << meta.localPath;
-#ifdef _WIN32
+#ifdef Q_OS_WIN
             TagLib::MPEG::File f(meta.localPath.toStdWString().c_str());
 #else
             TagLib::MPEG::File f(meta.localPath.toStdString().c_str());
@@ -660,23 +654,27 @@ void AudioAnalysis::parseMetaLyrics(DMusic::MediaMeta &meta)
     QString tmpPath = DmGlobal::cachePath();
     QString hash = meta.hash;
     QString path = meta.localPath;
-    QString lyricDirPath = QDir::cleanPath(tmpPath + QDir::separator() + "lyrics");
+
+    // --- 目录准备（与 parseMetaCoverAndLyrics 保持一致） ---
+    QString lyricDirPath = tmpPath + "/lyrics";
     QString lyricName = hash + ".lrc";
-    const QString lyricRootPath = QFileInfo(lyricDirPath).absoluteFilePath();
-    const QString lyricFilePath = QFileInfo(QDir::cleanPath(lyricRootPath + QDir::separator() + lyricName)).absoluteFilePath();
-    const QString lyricRootPrefix = lyricRootPath.endsWith(QDir::separator()) ? lyricRootPath : lyricRootPath + QDir::separator();
-    if (!lyricFilePath.startsWith(lyricRootPrefix)) {
-        qCWarning(dmMusic) << "Rejected unsafe lyrics path:" << lyricFilePath
-                           << "root:" << lyricRootPath
+    QString lyricPath = lyricDirPath + "/" + lyricName;
+
+    // 路径遍历保护
+    QString cleanLyricPath = QDir::cleanPath(lyricPath);
+    QString cleanLyricDirPath = QDir::cleanPath(lyricDirPath);
+    if (!cleanLyricPath.startsWith(cleanLyricDirPath + "/")) {
+        qCWarning(dmMusic) << "Rejected unsafe lyrics path:" << lyricPath
+                           << "dir:" << lyricDirPath
                            << "hash:" << hash;
         return;
     }
 
-    QDir lyricDir(lyricRootPath);
+    QDir lyricDir(lyricDirPath);
     if (!lyricDir.exists()) {
-        qCDebug(dmMusic) << "Creating lyrics directory:" << lyricRootPath;
-        if (!QDir().mkpath(lyricRootPath)) {
-            qCWarning(dmMusic) << "Failed to create lyrics directory:" << lyricRootPath;
+        bool ok = lyricDir.cdUp() && lyricDir.mkdir("lyrics") && lyricDir.cd("lyrics");
+        if (!ok) {
+            qCWarning(dmMusic) << "Failed to create lyrics directory:" << lyricDirPath;
             return;
         }
     }
@@ -685,13 +683,17 @@ void AudioAnalysis::parseMetaLyrics(DMusic::MediaMeta &meta)
         // 歌词文件存在，停止解析
         if (lyricDir.exists(lyricName)) {
             qCDebug(dmMusic) << "Lyrics file already exists, skipping parsing:" << lyricName;
-            meta.lyricPath = lyricFilePath;  // backfill for DB/persistence
+            meta.lyricPath = lyricPath;
             return;
         }
 
         if (!path.isEmpty()) {
-            QFile lyric(lyricFilePath);
+            QFile lyric(lyricPath);
+#ifdef Q_OS_WIN
+            TagLib::MPEG::File f(path.toStdWString().c_str());
+#else
             TagLib::MPEG::File f(path.toStdString().c_str());
+#endif
             QString lyricStr = "";
 
             // 检查音乐文件
@@ -728,7 +730,7 @@ void AudioAnalysis::parseMetaLyrics(DMusic::MediaMeta &meta)
                     if (!lyricStr.isEmpty()) {
                         if (lyric.open(QIODevice::WriteOnly)) {
                             lyric.write(lyricStr.toUtf8());
-                            meta.lyricPath = lyricFilePath;  // backfill for DB/persistence
+                            meta.lyricPath = lyricPath;
                             qCInfo(dmMusic) << "Successfully extracted and saved lyrics for file:" << path;
                         } else {
                             qCWarning(dmMusic) << "Failed to open lyrics file for writing:" << lyricName;
@@ -752,81 +754,36 @@ void AudioAnalysis::parseMetaLyrics(DMusic::MediaMeta &meta)
 void AudioAnalysis::startRecorder()
 {
     qCInfo(dmMusic) << "Starting audio recorder";
-    // 初始化
-    if (m_data->m_audioDevice == nullptr) {
-        qCDebug(dmMusic) << "Initializing audio recorder for the first time";
-        QAudioFormat audioFormat;
-        //TODO: 设置小端输出及格式
-        // audioFormat.setByteOrder(QAudioFormat::LittleEndian);
-        // audioFormat.setCodec("audio/pcm");
-        audioFormat.setChannelCount(1);
-        audioFormat.setSampleRate(44100);
-        audioFormat.setSampleFormat(QAudioFormat::Int16);
-
-        QAudioDevice devInfo = QMediaDevices::defaultAudioOutput();
-        if (devInfo.isNull()) {
-            qCWarning(dmMusic) << "Default audio output device is null";
-        } else {
-            qCDebug(dmMusic) << "Using default audio output device:" << devInfo.description();
-        }
-        if (!devInfo.isFormatSupported(audioFormat)) {
-            qCWarning(dmMusic) << "Audio format not supported by device";
-        } else {
-            qCDebug(dmMusic) << "Audio format supported by device";
-        }
-
-        if (nullptr == m_data->m_audioSource) {
-            m_data->m_audioSource = new QAudioSource(devInfo, audioFormat, this);
-            qCDebug(dmMusic) << "Created new audio source";
-        }
-        // TODO:source连接问题待确认
-        // m_data->m_audioDevice = m_data->m_audioSource->start();
-        connect(m_data->m_audioDevice, &QIODevice::readyRead, this, &AudioAnalysis::parseData);
-        qCInfo(dmMusic) << "Audio recorder initialized and started";
-    } else {
-        qCDebug(dmMusic) << "Resuming existing audio recorder";
-        m_data->m_audioSource->resume();
-        qCInfo(dmMusic) << "Audio recorder resumed";
-    }
+    m_data->m_recording = true;
 }
 
 void AudioAnalysis::suspendRecorder()
 {
-    qCDebug(dmMusic) << "Suspending audio recorder";
-    if (nullptr != m_data->m_audioSource) {
-        m_data->m_audioSource->suspend();
-        qCInfo(dmMusic) << "Audio recorder suspended";
-    } else {
-        qCDebug(dmMusic) << "Audio source is null, cannot suspend recorder";
-    }
+    qCInfo(dmMusic) << "Suspending audio recorder";
+    m_data->m_recording = false;
 }
 
 void AudioAnalysis::stopRecorder()
 {
     qCInfo(dmMusic) << "Stopping audio recorder";
-    if (nullptr != m_data->m_audioSource) {
-        m_data->m_audioSource->stop();
-        qCDebug(dmMusic) << "Audio source stopped";
-    }
-    if (m_data->m_audioDevice != nullptr) {
-        m_data->m_audioDevice->deleteLater();
-        m_data->m_audioDevice = nullptr;
-        qCDebug(dmMusic) << "Audio device cleaned up";
-    }
-    qCInfo(dmMusic) << "Audio recorder stopped and cleaned up";
+    m_data->m_recording = false;
 }
 
-void AudioAnalysis::parseData()
+void AudioAnalysis::feedAudioData(const QByteArray &data)
 {
-    qCDebug(dmMusic) << "Processing audio data";
-    QByteArray datas = m_data->m_audioDevice->readAll();
-    qint16 *pdata = (qint16 *)(datas.data());
+    if (!m_data->m_recording || data.isEmpty()) {
+        return;
+    }
+
+    qCDebug(dmMusic) << "Processing audio data from player, size:" << data.size();
+    const qint16 *pdata = reinterpret_cast<const qint16 *>(data.constData());
+    int sampleCount = data.size() / static_cast<int>(sizeof(qint16));
 
     std::complex<float> sampleData[1024];
     for (int i = 0; i < 1024; ++i) {
-        sampleData[i] = (i * 2) >= datas.size() ? std::complex<float>(0, 0) : std::complex<float>(pdata[i], 0);
+        sampleData[i] = (i * 2) >= sampleCount ? std::complex<float>(0, 0) : std::complex<float>(pdata[i * 2], 0);
     }
-    int log2N = (int)log2(1024.0 - 1.0) + 1;
+    int log2N = static_cast<int>(log2(1024.0 - 1.0)) + 1;
     Utils::fft(sampleData, log2N, -1);
     qCDebug(dmMusic) << "FFT processing completed";
     QVector<int> curSampleData;

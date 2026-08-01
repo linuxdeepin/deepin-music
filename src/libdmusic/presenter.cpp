@@ -1,5 +1,4 @@
-// Copyright (C) 2020 ~ 2026 Uniontech Software Technology Co., Ltd.
-// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2023 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -12,6 +11,9 @@
 #include <QDir>
 #include <QDBusInterface>
 #include <QCoreApplication>
+#include <QDesktopServices>
+#include <QUrl>
+#include <QProcess>
 
 #include "playerengine.h"
 #include "lyricanalysis.h"
@@ -127,6 +129,7 @@ Presenter::Presenter(const QString &unknownAlbumStr, const QString &unknownArtis
         }
         emit audioBuffer(list, hash);
     });
+    connect(m_data->m_playerEngine, &PlayerEngine::audioDataReady, m_data->m_audioAnalysis, &AudioAnalysis::feedAudioData);
 
     connect(m_data->m_dataManager, &DataManager::signalCurrentPlaylistSChanged, this, &Presenter::currentPlaylistSChanged);
     connect(m_data->m_dataManager, &DataManager::signalPlaylistSortChanged, this, &Presenter::playlistSortChanged);
@@ -461,10 +464,19 @@ void Presenter::showMetaFile(const QString &hash)
     DMusic::MediaMeta meta = m_data->m_dataManager->metaFromHash(hash);
     if (meta.localPath.isEmpty()) return;
 
+#ifdef Q_OS_WIN
+    // Windows 下使用 explorer 打开文件所在目录并选中文件
+    QFileInfo fileInfo(meta.localPath);
+    QStringList args;
+    args << "/select," << QDir::toNativeSeparators(fileInfo.absoluteFilePath());
+    QProcess::startDetached("explorer", args);
+#else
+    // Linux 下使用 DBus
     QDBusInterface interface(QStringLiteral("org.freedesktop.FileManager1"),
                              QStringLiteral("/org/freedesktop/FileManager1"),
                              QStringLiteral("org.freedesktop.FileManager1"));
     interface.call("ShowItems", QStringList() << meta.localPath, QString());
+#endif
 }
 
 bool Presenter::nextMetaFromPlay(const QString &metaHash)
@@ -1016,6 +1028,7 @@ void Presenter::saveDataToDB()
     m_data->m_dataManager->setValueToSettings("base.play.volume", m_data->m_playerEngine->getVolume());
     m_data->m_dataManager->setValueToSettings("base.play.mute", m_data->m_playerEngine->getMute());
     m_data->m_dataManager->setValueToSettings("base.play.media_count", m_data->m_dataManager->getPlaylistMetas("play").size());
+    m_data->m_dataManager->syncToSettings();
     m_data->m_dataManager->saveDataToDB();
     qCInfo(dmMusic) << "Application data saved successfully";
 }
