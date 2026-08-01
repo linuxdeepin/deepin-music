@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2023 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -119,12 +119,12 @@ Rectangle {
                 id: timeLabel
                 width: timeText.width > 50 ? timeText.width + 10 : 50
                 height: 25
-                fillColor: palette.highlight
+                fillColor: DTK.palette.highlight
                 Text {
                     id: timeText
                     anchors.horizontalCenter: parent.horizontalCenter
                     text: mousePressed ?  dragTime : currentTime
-                    color: palette.highlightedText
+                    color: DTK.palette.highlightedText
                     font: DTK.fontManager.t8
                     verticalAlignment: Text.AlignHCenter
                 }
@@ -138,7 +138,7 @@ Rectangle {
             Triangle {
                 width: 10
                 height: 10
-                fillColor: palette.highlight
+                fillColor: DTK.palette.highlight
                 anchors.horizontalCenter: parent.horizontalCenter
             }
         }

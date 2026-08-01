@@ -1,5 +1,4 @@
-// Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co., Ltd.
-// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2023 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -12,10 +11,21 @@
 #include "global.h"
 #include "util/log.h"
 
+#ifdef Q_OS_WIN
+static const QString libvlccoreStr = "libvlccore";
+static const QString libvlcStr = "libvlc";
+static const QString libavcodecStr = "avcodec-62";
+static const QString libavformateStr = "avformat-62";
+static const QString libavutilStr = "avutil-60";
+static const QString libswresampleStr = "swresample-6";
+#else
 static const QString libvlccoreStr = "libvlccore.so";
 static const QString libvlcStr = "libvlc.so";
 static const QString libavcodecStr = "libavcodec.so";
 static const QString libavformateStr = "libavformat.so";
+static const QString libavutilStr = "libavutil.so";
+static const QString libswresampleStr = "libswresample.so";
+#endif
 
 DynamicLibraries::DynamicLibraries()
 {
@@ -36,6 +46,8 @@ DynamicLibraries::~DynamicLibraries()
     vlcLib.unload();
     avcodecLib.unload();
     avformateLib.unload();
+    avutilLib.unload();
+    swresampleLib.unload();
 }
 
 DynamicLibraries *DynamicLibraries::instance()
@@ -56,18 +68,31 @@ QFunctionPointer DynamicLibraries::resolve(const char *symbol, bool ffmpeg)
     if (ffmpeg) {
         qCDebug(dmMusic) << "Resolving ffmpeg symbol:" << symbol;
         QFunctionPointer fgp = avcodecLib.resolve(symbol);
+        if (fgp) {
+            qCDebug(dmMusic) << "[ffmpeg] Resolved from avcodec:" << symbol;
+        }
         if (!fgp) {
-            qCWarning(dmMusic) << "[ffmpeg] Failed to resolve function:" << symbol;
             fgp = avformateLib.resolve(symbol);
-            if (!fgp) {
-                //never get here if obey the rule
-                qCWarning(dmMusic) << "[ffmpeg] resolve function:" << symbol;
-            } else {
-                qCDebug(dmMusic) << "[ffmpeg] Successfully resolved function from avformat:" << symbol;
+            if (fgp) {
+                qCDebug(dmMusic) << "[ffmpeg] Resolved from avformat:" << symbol;
             }
         }
+        if (!fgp) {
+            fgp = avutilLib.resolve(symbol);
+            if (fgp) {
+                qCDebug(dmMusic) << "[ffmpeg] Resolved from avutil:" << symbol;
+            }
+        }
+        if (!fgp) {
+            fgp = swresampleLib.resolve(symbol);
+            if (fgp) {
+                qCDebug(dmMusic) << "[ffmpeg] Resolved from swresample:" << symbol;
+            }
+        }
+        if (!fgp) {
+            qCWarning(dmMusic) << "[ffmpeg] Failed to resolve function:" << symbol;
+        }
         m_funMap[symbol] = fgp;
-        qCDebug(dmMusic) << "Successfully resolved ffmpeg function:" << symbol;
         return fgp;
     }
     //resolve function
@@ -106,6 +131,14 @@ bool DynamicLibraries::loadLibraries()
 
     QString strlibvlc = DmGlobal::libPath(libvlcStr);
     qCDebug(dmMusic) << "Loading VLC library from:" << strlibvlc;
+#ifdef Q_OS_WIN
+    // Make sure we load libvlc.dll, not libvlccore.dll
+    if (strlibvlc.contains("vlccore")) {
+        qCWarning(dmMusic) << "VLC library path contains vlccore, trying exact match";
+        strlibvlc = strlibvlc.left(strlibvlc.lastIndexOf("/")) + "/libvlc.dll";
+        qCDebug(dmMusic) << "Corrected VLC library path to:" << strlibvlc;
+    }
+#endif
     if (QLibrary::isLibrary(strlibvlc)) {
         vlcLib.setFileName(strlibvlc);
         if (!vlcLib.load()) {
@@ -142,6 +175,35 @@ bool DynamicLibraries::loadLibraries()
         qCCritical(dmMusic) << "avformat library path is not valid:" << strlibformate;
         return false;
     }
+
+    QString strlibutil = DmGlobal::libPath(libavutilStr);
+    qCDebug(dmMusic) << "Loading avutil library from:" << strlibutil;
+    if (QLibrary::isLibrary(strlibutil)) {
+        avutilLib.setFileName(strlibutil);
+        if (!avutilLib.load()) {
+            qCCritical(dmMusic) << "Failed to load avutil library:" << avutilLib.errorString();
+            return false;
+        }
+    } else {
+        qCCritical(dmMusic) << "avutil library path is not valid:" << strlibutil;
+        return false;
+    }
+
     qCDebug(dmMusic) << "Successfully loaded all required libraries";
+
+    QString strlibswresample = DmGlobal::libPath(libswresampleStr);
+    qCDebug(dmMusic) << "Loading swresample library from:" << strlibswresample;
+    if (QLibrary::isLibrary(strlibswresample)) {
+        swresampleLib.setFileName(strlibswresample);
+        if (!swresampleLib.load()) {
+            qCWarning(dmMusic) << "Failed to load swresample library:" << swresampleLib.errorString();
+            qCWarning(dmMusic) << "Waveform generation will not be available";
+        } else {
+            qCDebug(dmMusic) << "Successfully loaded swresample library";
+        }
+    } else {
+        qCWarning(dmMusic) << "swresample library path is not valid:" << strlibswresample;
+    }
+
     return true;
 }
