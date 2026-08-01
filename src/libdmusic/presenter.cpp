@@ -348,13 +348,30 @@ void Presenter::setActivateMeta(const QString &metaHash)
 QImage Presenter::getActivateMetImage()
 {
     qCDebug(dmMusic) << "Getting active media cover image";
-    return AudioAnalysis::getMetaCoverImage(m_data->m_playerEngine->getMediaMeta());
+    DMusic::MediaMeta meta = m_data->m_playerEngine->getMediaMeta();
+    if (!meta.hash.isEmpty()) {
+        DMusic::MediaMeta latestMeta = m_data->m_dataManager->metaFromHash(meta.hash);
+        if (!latestMeta.hash.isEmpty()) {
+            meta.hasimage = latestMeta.hasimage;
+            meta.coverUrl = latestMeta.coverUrl;
+        }
+    }
+    return AudioAnalysis::getMetaCoverImage(meta);
 }
 
 QVariantMap Presenter::getActivateMeta()
 {
     qCDebug(dmMusic) << "Getting active media meta";
-    return Utils::metaToVariantMap(m_data->m_playerEngine->getMediaMeta());
+    DMusic::MediaMeta meta = m_data->m_playerEngine->getMediaMeta();
+    if (!meta.hash.isEmpty()) {
+        DMusic::MediaMeta latestMeta = m_data->m_dataManager->metaFromHash(meta.hash);
+        if (!latestMeta.hash.isEmpty()) {
+            meta.coverUrl = latestMeta.coverUrl;
+            meta.hasimage = latestMeta.hasimage;
+            meta.lyricPath = latestMeta.lyricPath;
+        }
+    }
+    return Utils::metaToVariantMap(meta);
 }
 
 QVariant Presenter::getPlaybackStatus()
