@@ -15,9 +15,15 @@ pkg_check_modules(DTK REQUIRED IMPORTED_TARGET dtk6core)
 pkg_check_modules(DTK REQUIRED IMPORTED_TARGET dtk6gui)
 
 # Since the dtk6widget.pc file is incorrect, use cmake config file to find Dtk6Widget
+find_package(Qt6 COMPONENTS Svg REQUIRED)
 find_package(Dtk6Widget REQUIRED)
 
 qt6_add_resources(RCC_SOURCES ${RESOURCES})
+
+# Windows resource file for application icon
+if(WIN32)
+    set(WIN_RESOURCES appicon.rc)
+endif()
 
 # 保证 src 目录下头文件全局可见
 include_directories(src)
@@ -42,7 +48,11 @@ else()
 endif ()
 
 # Add EXE
-add_executable(${BIN_NAME} ${RCC_SOURCES} ${ALLSOURCE} ${QM_FILES})
+if(WIN32)
+    add_executable(${BIN_NAME} WIN32 ${RCC_SOURCES} ${ALLSOURCE} ${QM_FILES} ${WIN_RESOURCES})
+else()
+    add_executable(${BIN_NAME} ${RCC_SOURCES} ${ALLSOURCE} ${QM_FILES})
+endif()
 
 # Use target_link_libraries instead of qt6_use_modules
 target_link_libraries(${BIN_NAME} Qt6::Core)
