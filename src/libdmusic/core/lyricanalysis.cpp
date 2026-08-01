@@ -1,5 +1,4 @@
-// Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co., Ltd.
-// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2023 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -171,6 +170,10 @@ QString LyricAnalysis::getFileCodec()
     qCDebug(dmMusic) << "Detecting file codec for:" << m_filePath;
     QFile fin(m_filePath);
     QString code;
+    if (!fin.exists()) {
+        qCDebug(dmMusic) << "Lyric file does not exist yet, using locale codec:" << m_filePath;
+        return QTextCodec::codecForLocale()->name();
+    }
     if (!fin.open(QIODevice::ReadOnly)) {
         qCWarning(dmMusic) << "Failed to open file for codec detection:" << m_filePath;
         return QTextCodec::codecForLocale()->name();
@@ -227,6 +230,10 @@ void LyricAnalysis::setFromFile(const QString &filePath)
 
     QString codecStr = getFileCodec();
     QFile file(filePath);
+    if (!file.exists()) {
+        qCDebug(dmMusic) << "Lyric file does not exist, skipping:" << filePath;
+        return;
+    }
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
         qCWarning(dmMusic) << "Failed to open lyric file:" << filePath;
         return;
