@@ -188,7 +188,7 @@ bool AudioAnalysis::parseFileTagCodec(DMusic::MediaMeta &meta)
     QString detectCodec;
     auto mediaPath = QStringToTString(meta.localPath);
 #ifdef _WIN32
-    TagLib::FileRef f(meta->localPath.toStdWString().c_str());
+    TagLib::FileRef f(meta.localPath.toStdWString().c_str());
 #else
     TagLib::FileRef f(meta.localPath.toStdString().c_str());
 #endif
@@ -451,16 +451,8 @@ void AudioAnalysis::parseMetaCover(DMusic::MediaMeta &meta)
     QString path = meta.localPath;
     QString imagesDirPath = tmpPath + "/images";
     QString imageName = hash + ".jpg";
+    QDir().mkpath(imagesDirPath);
     QDir imageDir(imagesDirPath);
-    if (!imageDir.exists()) {
-        qCDebug(dmMusic) << "Creating images directory:" << imagesDirPath;
-        bool isExists = imageDir.cdUp();
-        isExists &= imageDir.mkdir("images");
-        isExists &= imageDir.cd("images");
-        if (!isExists) {
-            qCWarning(dmMusic) << "Failed to create images directory:" << imagesDirPath;
-        }
-    }
 
     QByteArray byteArray;
     if (!tmpPath.isEmpty() && !hash.isEmpty()) {
@@ -661,96 +653,87 @@ QImage AudioAnalysis::getMetaCoverImage(DMusic::MediaMeta meta)
 void AudioAnalysis::parseMetaLyrics(DMusic::MediaMeta &meta)
 {
     qCDebug(dmMusic) << "Parsing lyrics for file:" << meta.localPath << "hash:" << meta.hash;
+
     QString tmpPath = DmGlobal::cachePath();
     QString hash = meta.hash;
     QString path = meta.localPath;
-    QString lyricDirPath = QDir::cleanPath(tmpPath + QDir::separator() + "lyrics");
+
+    // --- 目录准备 ---
+    QString lyricDirPath = tmpPath + "/lyrics";
     QString lyricName = hash + ".lrc";
-    const QString lyricRootPath = QFileInfo(lyricDirPath).absoluteFilePath();
-    const QString lyricFilePath = QFileInfo(QDir::cleanPath(lyricRootPath + QDir::separator() + lyricName)).absoluteFilePath();
-    const QString lyricRootPrefix = lyricRootPath.endsWith(QDir::separator()) ? lyricRootPath : lyricRootPath + QDir::separator();
-    if (!lyricFilePath.startsWith(lyricRootPrefix)) {
-        qCWarning(dmMusic) << "Rejected unsafe lyrics path:" << lyricFilePath
-                           << "root:" << lyricRootPath
-                           << "hash:" << hash;
+    QString lyricPath = lyricDirPath + "/" + lyricName;
+    QDir().mkpath(lyricDirPath);
+    QDir lyricDir(lyricDirPath);
+
+    // 歌词文件已存在，直接使用缓存
+    if (lyricDir.exists(lyricName)) {
+        qCDebug(dmMusic) << "Lyrics file already exists, skipping parsing:" << lyricName;
+        meta.lyricPath = lyricPath;
         return;
     }
 
-    QDir lyricDir(lyricRootPath);
-    if (!lyricDir.exists()) {
-        qCDebug(dmMusic) << "Creating lyrics directory:" << lyricRootPath;
-        if (!QDir().mkpath(lyricRootPath)) {
-            qCWarning(dmMusic) << "Failed to create lyrics directory:" << lyricRootPath;
-            return;
-        }
+    if (path.isEmpty()) {
+        qCWarning(dmMusic) << "Path is empty, cannot parse lyrics for:" << hash;
+        return;
     }
 
-    if (!tmpPath.isEmpty() && !hash.isEmpty()) {
-        // 歌词文件存在，停止解析
-        if (lyricDir.exists(lyricName)) {
-            qCDebug(dmMusic) << "Lyrics file already exists, skipping parsing:" << lyricName;
-            meta.lyricPath = lyricFilePath;  // backfill for DB/persistence
-            return;
-        }
+    // --- 单次 TagLib 打开，提取歌词 ---
+    QFile lyric(lyricPath);
+    TagLib::MPEG::File f(path.toStdString().c_str());
+    QString lyricStr;
 
-        if (!path.isEmpty()) {
-            QFile lyric(lyricFilePath);
-            TagLib::MPEG::File f(path.toStdString().c_str());
-            QString lyricStr = "";
+    if (!f.isValid()) {
+        qCWarning(dmMusic) << "Invalid MPEG file for lyrics extraction:" << path;
+        return;
+    }
 
-            // 检查音乐文件
-            if (f.isValid()) {
-                // 音乐文件不一定存在ID3v2Tag
-                if (f.ID3v2Tag() != nullptr) {
-                    // 先获取同步歌词
-                    TagLib::ID3v2::FrameList syltFrames = f.ID3v2Tag()->frameListMap()["SYLT"];
-                    if (!syltFrames.isEmpty()) {
-                        qCDebug(dmMusic) << "Found synchronized lyrics in file:" << path;
-                        TagLib::ID3v2::SynchronizedLyricsFrame *frame = dynamic_cast<TagLib::ID3v2::SynchronizedLyricsFrame *>(syltFrames.front());
-                        if (frame) {
-                            TagLib::ID3v2::SynchronizedLyricsFrame::SynchedTextList synchedTextList = frame->synchedText();
-                            for (unsigned int i = 0; i < synchedTextList.size(); i++){
-                                QString time = QDateTime::fromMSecsSinceEpoch(synchedTextList[i].time).toString("mm:ss.zzz");
-                                QString text = TStringToQString(synchedTextList[i].text).trimmed();
-                                lyricStr.append(QString("[%1]%2\n").arg(time).arg(text));
-                            }
-                        }
-                    }
-
-                    // 没获取到歌词，获取非同步歌词
-                    if (lyricStr.isEmpty()) {
-                        TagLib::ID3v2::FrameList usltFrames = f.ID3v2Tag()->frameListMap()["USLT"];
-                        if (!usltFrames.isEmpty()) {
-                            qCDebug(dmMusic) << "Found unsynchronized lyrics in file:" << path;
-                            TagLib::ID3v2::UnsynchronizedLyricsFrame *frame = dynamic_cast<TagLib::ID3v2::UnsynchronizedLyricsFrame *>(usltFrames.front());
-                            if (frame) {
-                                lyricStr = TStringToQString(frame->text());
-                            }
-                        }
-                    }
-
-                    if (!lyricStr.isEmpty()) {
-                        if (lyric.open(QIODevice::WriteOnly)) {
-                            lyric.write(lyricStr.toUtf8());
-                            meta.lyricPath = lyricFilePath;  // backfill for DB/persistence
-                            qCInfo(dmMusic) << "Successfully extracted and saved lyrics for file:" << path;
-                        } else {
-                            qCWarning(dmMusic) << "Failed to open lyrics file for writing:" << lyricName;
-                        }
-                        lyric.close();
-                    } else {
-                        qCDebug(dmMusic) << "No lyrics found in file:" << path;
-                    }
-                } else {
-                    qCDebug(dmMusic) << "No ID3v2 tag found for lyrics extraction:" << path;
+    if (f.ID3v2Tag() != nullptr) {
+        // 先尝试同步歌词
+        TagLib::ID3v2::FrameList syltFrames = f.ID3v2Tag()->frameListMap()["SYLT"];
+        if (!syltFrames.isEmpty()) {
+            qCDebug(dmMusic) << "Found synchronized lyrics in file:" << path;
+            TagLib::ID3v2::SynchronizedLyricsFrame *frame =
+                dynamic_cast<TagLib::ID3v2::SynchronizedLyricsFrame *>(syltFrames.front());
+            if (frame) {
+                TagLib::ID3v2::SynchronizedLyricsFrame::SynchedTextList synchedTextList = frame->synchedText();
+                for (unsigned int i = 0; i < synchedTextList.size(); i++) {
+                    QString time = QDateTime::fromMSecsSinceEpoch(synchedTextList[i].time).toString("mm:ss.zzz");
+                    QString text = TStringToQString(synchedTextList[i].text).trimmed();
+                    lyricStr.append(QString("[%1]%2\n").arg(time).arg(text));
                 }
-
-                f.clear();
-            } else {
-                qCWarning(dmMusic) << "Invalid MPEG file for lyrics extraction:" << path;
             }
         }
+
+        // 没获取到歌词，获取非同步歌词
+        if (lyricStr.isEmpty()) {
+            TagLib::ID3v2::FrameList usltFrames = f.ID3v2Tag()->frameListMap()["USLT"];
+            if (!usltFrames.isEmpty()) {
+                qCDebug(dmMusic) << "Found unsynchronized lyrics in file:" << path;
+                TagLib::ID3v2::UnsynchronizedLyricsFrame *frame =
+                    dynamic_cast<TagLib::ID3v2::UnsynchronizedLyricsFrame *>(usltFrames.front());
+                if (frame) {
+                    lyricStr = TStringToQString(frame->text());
+                }
+            }
+        }
+    } else {
+        qCDebug(dmMusic) << "No ID3v2 tag found for lyrics extraction:" << path;
     }
+
+    if (!lyricStr.isEmpty()) {
+        if (lyric.open(QIODevice::WriteOnly)) {
+            lyric.write(lyricStr.toUtf8());
+            meta.lyricPath = lyricPath;
+            qCInfo(dmMusic) << "Successfully extracted and saved lyrics for file:" << path;
+        } else {
+            qCWarning(dmMusic) << "Failed to open lyrics file for writing:" << lyricName;
+        }
+        lyric.close();
+    } else {
+        qCDebug(dmMusic) << "No lyrics found in file:" << path;
+    }
+
+    f.clear();
 }
 
 void AudioAnalysis::startRecorder()
@@ -854,24 +837,14 @@ void AudioAnalysis::parseMetaCoverAndLyrics(DMusic::MediaMeta &meta)
     QString imagesDirPath = tmpPath + "/images";
     QString imageName = hash + ".jpg";
     QString coverPath = imagesDirPath + "/" + imageName;
+    QDir().mkpath(imagesDirPath);
     QDir imageDir(imagesDirPath);
-    if (!imageDir.exists()) {
-        bool ok = imageDir.cdUp() && imageDir.mkdir("images") && imageDir.cd("images");
-        if (!ok) {
-            qCWarning(dmMusic) << "Failed to create images directory:" << imagesDirPath;
-        }
-    }
 
     QString lyricDirPath = tmpPath + "/lyrics";
     QString lyricName = hash + ".lrc";
     QString lyricPath = lyricDirPath + "/" + lyricName;
+    QDir().mkpath(lyricDirPath);
     QDir lyricDir(lyricDirPath);
-    if (!lyricDir.exists()) {
-        bool ok = lyricDir.cdUp() && lyricDir.mkdir("lyrics") && lyricDir.cd("lyrics");
-        if (!ok) {
-            qCWarning(dmMusic) << "Failed to create lyrics directory:" << lyricDirPath;
-        }
-    }
 
     bool coverCached = QFile::exists(coverPath);
     bool lyricsCached = QFile::exists(lyricPath);

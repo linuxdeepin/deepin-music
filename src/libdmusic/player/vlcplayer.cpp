@@ -89,7 +89,7 @@ void VlcPlayer::init()
             qCDebug(dmMusic) << "Current track playback ended";
             emit end();
         });
-        connect(m_qvplayer, &SdlPlayer::audioDataReady, this, &PlayerBase::audioDataReady);
+        //connect(m_qvplayer, &SdlPlayer::audioDataReady, this, &PlayerBase::audioDataReady);
         initCdaThread();
     }
 }

@@ -51,6 +51,8 @@ void DmGlobal::initPath()
     userConfigPath = DStandardPaths::writableLocation(QStandardPaths::AppConfigLocation);
     userCachePath = DStandardPaths::writableLocation(QStandardPaths::CacheLocation);
     userMusicPath = DStandardPaths::writableLocation(QStandardPaths::MusicLocation);
+    QDir().mkpath(userConfigPath);
+    QDir().mkpath(userCachePath);
     qCDebug(dmMusic) << "Paths initialized - config:" << userConfigPath
                      << "cache:" << userCachePath << "music:" << userMusicPath;
 }
