@@ -1,5 +1,4 @@
-// Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co., Ltd.
-// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2023 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -50,6 +49,12 @@ void VlcPlayer::init()
     if (m_qvinstance == nullptr) {
         qCDebug(dmMusic) << "Creating VLC instance and initializing components";
         m_qvinstance = new VlcInstance(VlcCommon::args(), nullptr);
+        if (!m_qvinstance->core()) {
+            qCCritical(dmMusic) << "VLC instance core is null, cannot create media player";
+            delete m_qvinstance;
+            m_qvinstance = nullptr;
+            return;
+        }
         m_qvinstance->version();
         m_qvplayer = new SdlPlayer(m_qvinstance);
         m_qvplayer->equalizer()->setPreamplification(12);
@@ -84,6 +89,7 @@ void VlcPlayer::init()
             qCDebug(dmMusic) << "Current track playback ended";
             emit end();
         });
+        connect(m_qvplayer, &SdlPlayer::audioDataReady, this, &PlayerBase::audioDataReady);
         initCdaThread();
     }
 }
@@ -231,7 +237,9 @@ void VlcPlayer::setMediaMeta(MediaMeta meta)
     m_qvplayer->open(m_qvmedia);
     m_qvplayer->setCurMeta(meta);
     emit metaChanged();
+#ifdef Q_OS_LINUX
     malloc_trim(0);
+#endif
 }
 
 void VlcPlayer::setFadeInOutFactor(double fadeInOutFactor)
@@ -285,7 +293,9 @@ void VlcPlayer::setVolume(int volume)
     init();
     qCDebug(dmMusic) << "Setting volume to:" << volume;
     m_volume = volume;
-    m_qvplayer->setVolume(volume);
+    if (m_qvplayer) {
+        m_qvplayer->setVolume(volume);
+    }
 }
 
 int VlcPlayer::getVolume()
@@ -298,7 +308,9 @@ void VlcPlayer::setMute(bool value)
 {
     init();
     qCDebug(dmMusic) << "Setting mute state to:" << value;
-    m_qvplayer->setMute(value);
+    if (m_qvplayer) {
+        m_qvplayer->setMute(value);
+    }
 }
 
 void VlcPlayer::initCddaTrack()
@@ -349,6 +361,10 @@ QList<MediaMeta> VlcPlayer::getCdaMetaInfo()
 
 bool VlcPlayer::getMute()
 {
+    if (!m_qvplayer) {
+        qCWarning(dmMusic) << "VLC player not initialized, returning default mute state";
+        return false;
+    }
     bool muted = m_qvplayer->getMute();
     qCDebug(dmMusic) << "Current mute state:" << muted;
     return muted;
