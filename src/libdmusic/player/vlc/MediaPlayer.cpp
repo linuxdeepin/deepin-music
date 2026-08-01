@@ -1,7 +1,10 @@
-// Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co., Ltd.
-// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2023 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
+
+#ifdef Q_OS_WIN
+#include <winsock2.h>
+#endif
 
 #include <vlc/vlc.h>
 #include <vlc_common.h>
@@ -74,6 +77,14 @@ VlcMediaPlayer::VlcMediaPlayer(VlcInstance *instance)
     vlc_media_player_event_manager_function vlc_media_player_event_manager = (vlc_media_player_event_manager_function)DynamicLibraries::instance()->resolve("libvlc_media_player_event_manager");
     config_PutInt_func config_PutInt_fc = (config_PutInt_func)DynamicLibraries::instance()->resolve("config_PutInt");
     var_SetChecked_func var_SetChecked_fc = (var_SetChecked_func)DynamicLibraries::instance()->resolve("var_SetChecked");
+
+    if (!instance->core()) {
+        qCCritical(dmMusic) << "VlcMediaPlayer: VlcInstance core is null, cannot create media player";
+        _vlcMediaPlayer = nullptr;
+        _vlcEvents = nullptr;
+        _vlcEqualizer = nullptr;
+        return;
+    }
 
     _vlcMediaPlayer = vlc_media_player_new(instance->core());
     _vlcEvents = vlc_media_player_event_manager(_vlcMediaPlayer);

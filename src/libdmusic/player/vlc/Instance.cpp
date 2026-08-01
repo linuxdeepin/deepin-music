@@ -1,10 +1,11 @@
-// Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co., Ltd.
-// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2023 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 #include <QtCore/QDebug>
 #include <QtCore/QStringList>
+#include <QCoreApplication>
+#include <QDir>
 
 #include <vlc/vlc.h>
 
@@ -29,12 +30,20 @@ void logCallback(void *data,
     }
 
     char *result;
+#ifdef Q_OS_WIN
+    char buf[4096];
+    if (vsnprintf(buf, sizeof(buf), fmt, args) < 0) {
+        return;
+    }
+    QString message(buf);
+#else
     if (vasprintf(&result, fmt, args) < 0) {
         return; // LCOV_EXCL_LINE
     }
 
     QString message(result);
     free(result);
+#endif
 
     message.prepend("VlcInstance  libvlc: ");
     switch (level) {
@@ -82,15 +91,23 @@ VlcInstance::VlcInstance(const QStringList &args,
     vlc_set_app_id_function vlc_set_app_id = (vlc_set_app_id_function)DynamicLibraries::instance()->resolve("libvlc_set_app_id");
     vlc_log_set_function vlc_log_set = (vlc_log_set_function)DynamicLibraries::instance()->resolve("libvlc_log_set");
 
+#ifdef Q_OS_WIN
+    // Set VLC plugin path on Windows
+    QString pluginPath = QCoreApplication::applicationDirPath() + "/plugins/vlc";
+    if (QDir(pluginPath).exists()) {
+        qputenv("VLC_PLUGIN_PATH", pluginPath.toUtf8());
+        qCDebug(dmMusic) << "VLC plugin path set to:" << pluginPath;
+    }
+#endif
+
     _vlcInstance = vlc_new(0, nullptr);
     if (_vlcInstance) {
         qCDebug(dmMusic) << "VLC instance created successfully";
+        vlc_set_user_agent(_vlcInstance, DmGlobal::getAppName().toStdString().c_str(), "");//name
+        vlc_set_app_id(_vlcInstance, "", "", "deepin-music");//icon
     } else {
         qCCritical(dmMusic) << "Failed to create VLC instance";
     }
-
-    vlc_set_user_agent(_vlcInstance, DmGlobal::getAppName().toStdString().c_str(), "");//name
-    vlc_set_app_id(_vlcInstance, "", "", "deepin-music");//icon
 
     qRegisterMetaType<Vlc::Meta>("Vlc::Meta");
     qRegisterMetaType<Vlc::State>("Vlc::State");
