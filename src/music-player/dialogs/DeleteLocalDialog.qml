@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2023 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -13,10 +13,19 @@ DialogWindow {
     property var deleteHashList: []
     property string listHash: ""
     property string musicTitle: ""
-    minimumWidth: 400
+    width: 400
     modality: Qt.ApplicationModal
 //    color: Qt.rgba(247,247,247,0.80);
     icon: globalVariant.appIconName
+    flags: Qt.platform.os === "windows" ? (Qt.Dialog | Qt.WindowCloseButtonHint | Qt.MSWindowsFixedSizeDialogHint | Qt.FramelessWindowHint | Qt.WindowStaysOnTopHint) : undefined
+
+    onVisibleChanged: {
+        if (visible && Qt.platform.os === "windows") {
+            x = (Screen.width - width) / 2
+            y = (Screen.height - height) / 2
+        }
+    }
+
     header: DialogTitleBar {
         enableInWindowBlendBlur: false
     }

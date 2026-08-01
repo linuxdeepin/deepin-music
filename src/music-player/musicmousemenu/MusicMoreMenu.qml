@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2023 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -14,7 +14,7 @@ Menu{
     property var mediaData
     property var encodings: []
     property bool isPlaying: (globalVariant.curPlayingStatus === DmGlobal.Playing) ? true : false
-    property bool activeMeta: (globalVariant.curPlayingHash === mediaData.hash) ? true : false;
+    property bool activeMeta: (mediaData && globalVariant.curPlayingHash === mediaData.hash) ? true : false;
     property int itemIndex: -1  //判断当前菜单属于哪个列表项，用于控制菜单按钮的显隐
 
 
