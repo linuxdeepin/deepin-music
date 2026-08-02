@@ -136,7 +136,7 @@ TitleBar {
         height: width
         x: 240
         y: 7
-        visible: preMaskVisible
+        visible: preMaskVisible && !isLyricShow
         color: "transparent"
 
         MouseArea {
@@ -157,7 +157,7 @@ TitleBar {
         height: preMask.width
         x: 286
         y: 7
-        visible: nextMaskVisible
+        visible: nextMaskVisible && !isLyricShow
         color: "transparent"
 
         MouseArea {
