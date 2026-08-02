@@ -1,5 +1,4 @@
-// Copyright (C) 2020 ~ 2020 Deepin Technology Co., Ltd.
-// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2023 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -9,6 +8,11 @@
 #include <QVector>
 #include <QByteArray>
 #include <QPair>
+
+struct LyricWord {
+    qint64 time;    // 时间戳（毫秒）
+    QString text;   // 该时间点后的文本片段
+};
 
 class LyricAnalysis
 {
@@ -22,14 +26,18 @@ public:
     int getIndex(qint64 pos);
     qint64 getPostion(int index);
 
+    // 逐字歌词支持
+    bool hasWordTiming(int index) const;
+    QVector<LyricWord> getWordTiming(int index) const;
+
 private:
     void parseLyric(const QString &str);
     QString getFileCodec();
 
 private:
     QString                           m_filePath;
-    double                            m_offset;
     QVector<QPair<qint64, QString> >   m_allLyrics;
+    QVector<QVector<LyricWord>>        m_wordLyrics;   // 逐字歌词时间轴
 };
 
 #endif

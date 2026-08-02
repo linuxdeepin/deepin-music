@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2023 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -19,8 +19,10 @@ Rectangle{
     property string bgImgPath: "qrc:/dsg/img/music.svg"
     property bool withLrcs: lrcModel.count == 0 ? false : true
     property int centerAreaWidth: 899
+    property real currentPosition: 0
 //    property int curIndex: 0
     property ListModel lrcModel: ListModel{}
+    property var wordLyricsData: []
 
     signal currentIndexChanged(int index)
 
@@ -156,6 +158,8 @@ Rectangle{
                         anchors.horizontalCenter: parent.horizontalCenter
                         LyricRect {
                             id: lyricRect
+                            currentPosition: lrcRectItem.currentPosition
+                            wordLyricsData: lrcRectItem.wordLyricsData
                         }
                     }
                     Rectangle {
@@ -221,6 +225,7 @@ Rectangle{
 
     function metaChange(){
         lrcModel.clear()
+        wordLyricsData = []
 
         var meta = Presenter.getActivateMeta()
         titleStr = meta["title"]
@@ -234,9 +239,20 @@ Rectangle{
         }
 
         var lyricList = Presenter.getLyrics();
+        var tempWordData = [];
         for (var i = 0; i < lyricList.length; i++) {
-            lrcModel.append(lyricList[i])
+            var item = lyricList[i];
+            // 将 words 数据存储到单独的 JS 数组中
+            var words = item["words"] || [];
+            tempWordData.push(words);
+            // 创建不包含 words 的新对象，因为 ListModel 无法正确存储嵌套数据
+            lrcModel.append({
+                "time": item["time"],
+                "lyric": item["lyric"],
+                "hasWordTiming": item["hasWordTiming"]
+            });
         }
+        wordLyricsData = tempWordData;
 
         //切换shader
         switchShader();
@@ -244,6 +260,7 @@ Rectangle{
 
     function positionChange(position, length) {
         position = position + 500
+        currentPosition = position
         //二分法查找位置
         var lt,rt
         lt = 0

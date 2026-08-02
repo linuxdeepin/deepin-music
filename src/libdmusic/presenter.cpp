@@ -1,5 +1,4 @@
-// Copyright (C) 2020 ~ 2026 Uniontech Software Technology Co., Ltd.
-// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2023 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -328,10 +327,26 @@ QVariantList Presenter::getLyrics()
         }
         m_data->m_lyricAnalysis.setFromFile(lrcPath);
         QVector<QPair<qint64, QString> > allLyrics = m_data->m_lyricAnalysis.allLyrics();
-        for (QPair<qint64, QString> lyric : allLyrics) {
+        for (int i = 0; i < allLyrics.size(); i++) {
             QVariantMap curData;
-            curData.insert("time", lyric.first);
-            curData.insert("lyric", lyric.second);
+            curData.insert("time", allLyrics[i].first);
+            curData.insert("lyric", allLyrics[i].second);
+
+            // 逐字歌词时间轴
+            bool hasWords = m_data->m_lyricAnalysis.hasWordTiming(i);
+            curData.insert("hasWordTiming", hasWords);
+            if (hasWords) {
+                QVariantList wordsList;
+                QVector<LyricWord> words = m_data->m_lyricAnalysis.getWordTiming(i);
+                for (const LyricWord &w : words) {
+                    QVariantMap wordMap;
+                    wordMap.insert("time", w.time);
+                    wordMap.insert("text", w.text);
+                    wordsList.append(wordMap);
+                }
+                curData.insert("words", wordsList);
+            }
+
             lyrics.append(curData);
         }
     }
