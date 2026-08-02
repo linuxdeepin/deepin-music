@@ -18,6 +18,21 @@
 
 DCORE_USE_NAMESPACE
 
+// 解析 LRC 时间戳，正确处理厘秒（百分之一秒）格式
+static qint64 parseTimeStamp(const QString &timeStr)
+{
+    QStringList timeParts = timeStr.split('.');
+    QTime t = QTime::fromString(timeParts[0], "mm:ss");
+    if (!t.isValid()) return -1;
+    qint64 time = t.msecsSinceStartOfDay();
+    if (timeParts.size() > 1) {
+        QString frac = timeParts[1];
+        if (frac.length() == 2) time += frac.toInt() * 10;      // 厘秒转毫秒
+        else if (frac.length() == 3) time += frac.toInt();       // 已经是毫秒
+    }
+    return time;
+}
+
 static float codecConfidenceForData(const QTextCodec *codec, const QByteArray &data, const QLocale::Country &country)
 {
     qreal hep_count = 0;
@@ -103,7 +118,7 @@ static float codecConfidenceForData(const QTextCodec *codec, const QByteArray &d
     return qMax(0.0f, c);
 }
 
-LyricAnalysis::LyricAnalysis(): m_offset(0.00)
+LyricAnalysis::LyricAnalysis()
 {
     qCDebug(dmMusic) << "LyricAnalysis constructor called";
 }
@@ -139,29 +154,80 @@ void LyricAnalysis::parseLyric(const QString &str)
     qCDebug(dmMusic) << "Parsing lyrics with length:" << str.length();
     auto lines = str.split("\n");
     QRegExp rx("\\[([^\\]]*)\\]\\s*(\\S.*\\S|\\S)\\s*$");
+    // 用于检测时间戳数量的正则（不含行尾锚点）
+    QRegExp timestampRx("\\[\\d{2}:\\d{2}\\.\\d{2,3}\\]");
+    // 匹配逐字歌词中单个 [时间]文本 片段
+    QRegExp wordRx("\\[([^\\]]+)\\]([^\\[]*)");
     QVector<QPair<qint64, QString>> tmp;
+    QVector<QVector<LyricWord>> tmpWord;
 
     for (auto line : lines) {
-        if (rx.indexIn(line) != -1) {
-            auto timeStr = rx.capturedTexts()[1];
-            auto lyricStr = rx.capturedTexts()[2];
-            QTime t = QTime::fromString(timeStr, "mm:ss.z");
-            qint64 time = t.msecsSinceStartOfDay();
-            if (t.isValid()) {
-                tmp.push_back({time, lyricStr});
-                qCDebug(dmMusic) << "Parsed lyric - Time:" << timeStr << "Text:" << lyricStr;
+        // 检测是否包含多个时间戳（逐字歌词格式）
+        int timestampCount = 0;
+        int pos = 0;
+        while ((pos = timestampRx.indexIn(line, pos)) != -1) {
+            timestampCount++;
+            pos += timestampRx.matchedLength();
+        }
+
+        if (timestampCount > 1) {
+            // 逐字歌词格式：[mm:ss.xx]字[mm:ss.xx]字...
+            QVector<LyricWord> words;
+            qint64 firstTime = -1;
+            QString fullText;
+            pos = 0;
+            while ((pos = wordRx.indexIn(line, pos)) != -1) {
+                auto timeStr = wordRx.capturedTexts()[1];
+                auto textStr = wordRx.capturedTexts()[2];
+                qint64 time = parseTimeStamp(timeStr);
+                if (time >= 0) {
+                    if (firstTime < 0) firstTime = time;
+                    words.push_back({time, textStr});
+                    fullText += textStr;
+                    qCDebug(dmMusic) << "Parsed word - Time:" << timeStr << "ms:" << time << "Text:" << textStr;
+                }
+                pos += wordRx.matchedLength();
+            }
+            if (!words.isEmpty() && firstTime >= 0) {
+                tmp.push_back({firstTime, fullText});
+                tmpWord.push_back(words);
+                qCDebug(dmMusic) << "Parsed lyric line with" << words.size() << "words - Time:" << firstTime << "Text:" << fullText;
             } else {
-                qCWarning(dmMusic) << "Invalid time format in lyric line:" << line;
+                qCWarning(dmMusic) << "Invalid multi-timestamp lyric line:" << line;
+            }
+        } else if (timestampCount == 1) {
+            // 普通歌词格式：[mm:ss.xx]歌词文本
+            if (rx.indexIn(line) != -1) {
+                auto timeStr = rx.capturedTexts()[1];
+                auto lyricStr = rx.capturedTexts()[2];
+                qint64 time = parseTimeStamp(timeStr);
+                if (time >= 0) {
+                    tmp.push_back({time, lyricStr});
+                    tmpWord.push_back(QVector<LyricWord>()); // 空表示无逐字时间轴
+                    qCDebug(dmMusic) << "Parsed lyric - Time:" << timeStr << "Text:" << lyricStr;
+                } else {
+                    qCWarning(dmMusic) << "Invalid time format in lyric line:" << line;
+                }
+            } else {
+                qCDebug(dmMusic) << "Skipping non-matching line:" << line;
             }
         } else {
             qCDebug(dmMusic) << "Skipping non-matching line:" << line;
         }
     }
 
-    std::sort(tmp.begin(), tmp.end());
+    // 按时间排序（同时保持 word 和 lyric 的对应关系）
+    QVector<int> indices(tmp.size());
+    for (int i = 0; i < indices.size(); i++) indices[i] = i;
+    std::sort(indices.begin(), indices.end(), [&](int a, int b) {
+        return tmp[a].first < tmp[b].first;
+    });
+
     m_allLyrics.clear();
-    for (auto item : tmp) {
-        m_allLyrics.push_back(item);
+    m_wordLyrics.clear();
+    for (int i : indices) {
+        m_allLyrics.push_back(tmp[i]);
+        m_wordLyrics.push_back(tmpWord[i]);
     }
 }
 
@@ -268,4 +334,16 @@ int LyricAnalysis::getCount() const
 {
     qCDebug(dmMusic) << "Getting lyrics count:" << m_allLyrics.size();
     return m_allLyrics.count();
+}
+
+bool LyricAnalysis::hasWordTiming(int index) const
+{
+    if (index < 0 || index >= m_wordLyrics.size()) return false;
+    return !m_wordLyrics[index].isEmpty();
+}
+
+QVector<LyricWord> LyricAnalysis::getWordTiming(int index) const
+{
+    if (index < 0 || index >= m_wordLyrics.size()) return QVector<LyricWord>();
+    return m_wordLyrics[index];
 }

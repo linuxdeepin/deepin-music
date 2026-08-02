@@ -1,5 +1,4 @@
-// Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co., Ltd.
-// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2023 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -247,4 +246,95 @@ TEST(LyricAnalysisTest, getPostionOnEmptyLyricsReturnsZero)
     LyricAnalysis la;
     EXPECT_EQ(la.getPostion(0), 0);
     EXPECT_EQ(la.getPostion(999), 0);
+}
+
+// ============================================================================
+// 逐字歌词（多时间戳格式）解析
+// ============================================================================
+TEST(LyricAnalysisTest, parsesMultiTimestampLyrics)
+{
+    TempLrcFile tempLrc("[00:27.94]持[00:28.26]有[00:28.54]一[00:28.77]半[00:31.03]\n");
+    LyricAnalysis la;
+    la.setFromFile(tempLrc.path());
+    ASSERT_EQ(la.getCount(), 1);
+    EXPECT_EQ(la.getLineAt(0), QStringLiteral("持有一半"));
+    EXPECT_TRUE(la.hasWordTiming(0));
+    EXPECT_EQ(la.getWordTiming(0).size(), 5);
+}
+
+TEST(LyricAnalysisTest, wordTimingHasCorrectTimes)
+{
+    TempLrcFile tempLrc("[00:27.94]持[00:28.26]有[00:28.54]一[00:28.77]半[00:31.03]\n");
+    LyricAnalysis la;
+    la.setFromFile(tempLrc.path());
+    auto words = la.getWordTiming(0);
+    ASSERT_EQ(words.size(), 5);
+    EXPECT_EQ(words[0].time, 27940);
+    EXPECT_EQ(words[0].text, QStringLiteral("持"));
+    EXPECT_EQ(words[1].time, 28260);
+    EXPECT_EQ(words[1].text, QStringLiteral("有"));
+    EXPECT_EQ(words[2].time, 28540);
+    EXPECT_EQ(words[2].text, QStringLiteral("一"));
+    EXPECT_EQ(words[3].time, 28770);
+    EXPECT_EQ(words[3].text, QStringLiteral("半"));
+    EXPECT_EQ(words[4].time, 31030);
+    EXPECT_EQ(words[4].text, QStringLiteral(""));
+}
+
+TEST(LyricAnalysisTest, simpleLyricsHaveNoWordTiming)
+{
+    TempLrcFile tempLrc("[00:01.20]first line\n[00:03.50]second line\n");
+    LyricAnalysis la;
+    la.setFromFile(tempLrc.path());
+    EXPECT_FALSE(la.hasWordTiming(0));
+    EXPECT_FALSE(la.hasWordTiming(1));
+    EXPECT_TRUE(la.getWordTiming(0).isEmpty());
+}
+
+TEST(LyricAnalysisTest, mixedFormatLyrics)
+{
+    // 混合格式：普通歌词 + 逐字歌词
+    TempLrcFile tempLrc(
+        "[00:01.00]普通歌词\n"
+        "[00:05.00]逐[00:05.20]字[00:05.40]歌[00:05.60]词\n"
+        "[00:10.00]另一行普通歌词\n");
+    LyricAnalysis la;
+    la.setFromFile(tempLrc.path());
+    ASSERT_EQ(la.getCount(), 3);
+
+    // 第一行：普通歌词
+    EXPECT_FALSE(la.hasWordTiming(0));
+    EXPECT_EQ(la.getLineAt(0), QStringLiteral("普通歌词"));
+
+    // 第二行：逐字歌词
+    EXPECT_TRUE(la.hasWordTiming(1));
+    EXPECT_EQ(la.getLineAt(1), QStringLiteral("逐字歌词"));
+    EXPECT_EQ(la.getWordTiming(1).size(), 4);
+
+    // 第三行：普通歌词
+    EXPECT_FALSE(la.hasWordTiming(2));
+    EXPECT_EQ(la.getLineAt(2), QStringLiteral("另一行普通歌词"));
+}
+
+TEST(LyricAnalysisTest, multiTimestampSortedByFirstTime)
+{
+    // 多行逐字歌词，按首时间排序
+    TempLrcFile tempLrc(
+        "[00:10.00]第[00:10.20]二[00:10.40]行\n"
+        "[00:05.00]第[00:05.20]一[00:05.40]行\n");
+    LyricAnalysis la;
+    la.setFromFile(tempLrc.path());
+    ASSERT_EQ(la.getCount(), 2);
+    EXPECT_EQ(la.getLineAt(0), QStringLiteral("第一行"));
+    EXPECT_EQ(la.getLineAt(1), QStringLiteral("第二行"));
+    EXPECT_LE(la.getPostion(0), la.getPostion(1));
+}
+
+TEST(LyricAnalysisTest, wordTimingInvalidIndexReturnsEmpty)
+{
+    LyricAnalysis la;
+    EXPECT_TRUE(la.getWordTiming(-1).isEmpty());
+    EXPECT_TRUE(la.getWordTiming(999).isEmpty());
+    EXPECT_FALSE(la.hasWordTiming(-1));
+    EXPECT_FALSE(la.hasWordTiming(999));
 }

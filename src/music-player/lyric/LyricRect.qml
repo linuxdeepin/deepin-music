@@ -11,6 +11,8 @@ Rectangle {
     property bool isFlicking: false
     property int itemHeight: 45
     property int highlightItemHeight: 60
+    property real currentPosition: 0
+    property var wordLyricsData: []
 
     id: lyricRect
     width: parent.width
@@ -88,9 +90,46 @@ Rectangle {
             width: parent ? parent.width : 0
             height: itemHeight
             color: "#00000000"
+            property int lineIndex: index
+            property bool hasWordTiming: model !== undefined && model.hasWordTiming === true
+            property var lineWords: hasWordTiming ? wordLyricsData[lineIndex] : []
 
+            // 距离相关的透明度值
+            property real distanceOpacity: {
+                if (lyricItemRect.ListView.isCurrentItem) {
+                    return 1.0
+                }
+                if (curIndex <= Math.abs(lyricRect.height / itemHeight / 2)) {
+                    if (index > Math.abs(lyricRect.height / itemHeight) - 2) {
+                        return 0.24
+                    } else if (index > Math.abs(lyricRect.height / itemHeight) - 3) {
+                        return 0.42
+                    } else {
+                        return 0.7
+                    }
+                } else if (curIndex > lrcModel.count - Math.abs(lyricRect.height / itemHeight / 2)) {
+                    if (index < lrcModel.count - Math.abs(lyricRect.height / itemHeight) + 1) {
+                        return 0.24
+                    } else if (index < lrcModel.count - Math.abs(lyricRect.height / itemHeight) + 2) {
+                        return 0.42
+                    } else {
+                        return 0.7
+                    }
+                } else {
+                    if (Math.abs(curIndex - index) > Math.abs(lyricRect.height / itemHeight / 2) - 1) {
+                        return 0.24
+                    } else if (Math.abs(curIndex - index) > Math.abs(lyricRect.height / itemHeight / 2) - 2) {
+                        return 0.42
+                    } else {
+                        return 0.7
+                    }
+                }
+            }
+
+            // 普通歌词（无逐字时间轴）
             Text {
-                id: txtLyric;
+                id: txtLyric
+                visible: !lyricItemRect.hasWordTiming
                 width: parent ? parent.width : 0
                 anchors.left: parent ? parent.left : undefined
                 anchors.verticalCenter: parent ? parent.verticalCenter : undefined
@@ -99,76 +138,64 @@ Rectangle {
 
                 text: lyric
                 color: {
-                    // 根据距离添加渐变
                     if( lyricItemRect.ListView.isCurrentItem ) {
                         return palette.highlight
                     }
                     if(DTK.themeType === ApplicationHelper.LightType)
-                    {
-                        if (curIndex <= Math.abs(lyricRect.height / itemHeight / 2)) { //开始
-                            if (index > Math.abs(lyricRect.height / itemHeight) - 2) {
-                                return Qt.rgba(0, 0, 0, 0.24)
-                            } else if (index > Math.abs(lyricRect.height / itemHeight) - 3) {
-                                return Qt.rgba(0, 0, 0, 0.42)
-                            }  else {
-                                return Qt.rgba(0, 0, 0, 0.7)
-                            }
-                        } else if (curIndex > lrcModel.count - Math.abs(lyricRect.height / itemHeight / 2)) { //结尾
-                            if (index < lrcModel.count - Math.abs(lyricRect.height / itemHeight) + 1) {
-                                return Qt.rgba(0, 0, 0, 0.24)
-                            } else if (index < lrcModel.count - Math.abs(lyricRect.height / itemHeight) + 2) {
-                                return Qt.rgba(0, 0, 0, 0.42)
-                            }  else {
-                                return Qt.rgba(0, 0, 0, 0.7)
-                            }
-                        } else {  //中间部分
-                            if (Math.abs(curIndex - index) > Math.abs(lyricRect.height / itemHeight / 2) - 1) {
-                                return Qt.rgba(0, 0, 0, 0.24)
-                            } else if (Math.abs(curIndex - index) > Math.abs(lyricRect.height / itemHeight / 2) - 2) {
-                                return Qt.rgba(0, 0, 0, 0.42)
-                            }  else {
-                                return Qt.rgba(0, 0, 0, 0.7)
-                            }
-                        }
-                    } else {
-                        if (curIndex <= Math.abs(lyricRect.height / itemHeight / 2)) { //开始
-                            if (index > Math.abs(lyricRect.height / itemHeight) - 2) {
-                                return Qt.rgba(255,255,255, 0.24)
-                            } else if (index > Math.abs(lyricRect.height / itemHeight) - 3) {
-                                return Qt.rgba(255,255,255, 0.42)
-                            }  else {
-                                return Qt.rgba(255,255,255, 0.7)
-                            }
-                        } else if (curIndex > lrcModel.count - Math.abs(lyricRect.height / itemHeight / 2)) { //结尾
-                            if (index < lrcModel.count - Math.abs(lyricRect.height / itemHeight) + 1) {
-                                return Qt.rgba(255,255,255, 0.24)
-                            } else if (index < lrcModel.count - Math.abs(lyricRect.height / itemHeight) + 2) {
-                                return Qt.rgba(255,255,255, 0.42)
-                            }  else {
-                                return Qt.rgba(255,255,255, 0.7)
-                            }
-                        } else {  //中间部分
-                            if (Math.abs(curIndex - index) > Math.abs(lyricRect.height / itemHeight / 2) - 1) {
-                                return Qt.rgba(255,255,255, 0.24)
-                            } else if (Math.abs(curIndex - index) > Math.abs(lyricRect.height / itemHeight / 2) - 2) {
-                                return Qt.rgba(255,255,255, 0.42)
-                            }  else {
-                                return Qt.rgba(255,255,255, 0.7)
-                            }
-                        }
-                    }
+                        return Qt.rgba(0, 0, 0, distanceOpacity)
+                    else
+                        return Qt.rgba(255,255,255, distanceOpacity)
                 }
                 //font.family: "SourceHanSansSC"
                 font.pixelSize: lyricItemRect.ListView.isCurrentItem ? 18 : 14
-
                 font.weight: lyricItemRect.ListView.isCurrentItem ? Font.DemiBold : Font.Medium
             }
+
+            // 逐字歌词（有逐字时间轴）
+            Flow {
+                id: wordFlow
+                visible: lyricItemRect.hasWordTiming
+                width: parent.width
+                anchors.left: parent.left
+                anchors.verticalCenter: parent.verticalCenter
+
+                Repeater {
+                    id: wordRepeater
+                    model: lyricItemRect.lineWords
+
+                    Text {
+                        property bool wordSung: modelData.time <= lyricRect.currentPosition
+
+                        text: modelData.text
+                        color: {
+                            if (lyricItemRect.ListView.isCurrentItem) {
+                                if (wordSung)
+                                    return palette.highlight
+                                else
+                                    return DTK.themeType === ApplicationHelper.LightType
+                                        ? Qt.rgba(0, 0, 0, 0.4)
+                                        : Qt.rgba(255, 255, 255, 0.4)
+                            } else {
+                                if(DTK.themeType === ApplicationHelper.LightType)
+                                    return Qt.rgba(0, 0, 0, distanceOpacity)
+                                else
+                                    return Qt.rgba(255,255,255, distanceOpacity)
+                            }
+                        }
+                        Behavior on color {
+                            ColorAnimation { duration: 150 }
+                        }
+                        font.pixelSize: lyricItemRect.ListView.isCurrentItem ? 18 : 14
+                        font.weight: lyricItemRect.ListView.isCurrentItem ? Font.DemiBold : Font.Medium
+                    }
+                }
+            }
+
             MouseArea {
                 id: mouseArea
                 anchors.fill: parent
                 onDoubleClicked: {
                     console.log("onDoubleClicked:  index:" + index)
-                    //isFlicking = false
                     curIndex = index
                     var time = lrcModel.get(curIndex)["time"]
                     Presenter.setPosition(time)
