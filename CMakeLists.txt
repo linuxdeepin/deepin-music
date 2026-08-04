@@ -58,3 +58,11 @@ if (CMAKE_BUILD_TYPE STREQUAL "Debug")
     add_subdirectory(tests)
 endif()
 
+# Auto-generated unit tests (qt-autotest-generator skill).
+# Append-only: only adds a new Debug-gated subdirectory, never touches the
+# existing tests/ block above.
+enable_testing()
+if (CMAKE_BUILD_TYPE STREQUAL "Debug")
+    add_subdirectory(autotests)
+endif()
+
