@@ -19,7 +19,8 @@ public:
 
     void parseAudioBuffer(const DMusic::MediaMeta &meta);
 
-    static DMusic::MediaMeta creatMediaMeta(const QString &path);
+    static DMusic::MediaMeta creatMediaMeta(const QString &path,
+                                            const QString &precomputedHash = QString());
     static void convertMetaCodec(DMusic::MediaMeta &meta, const QString &codecName);
     static bool parseMetaFromLocalFile(DMusic::MediaMeta &meta);
     static QStringList detectEncodings(const DMusic::MediaMeta &meta);
