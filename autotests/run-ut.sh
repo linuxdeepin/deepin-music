@@ -115,7 +115,7 @@ step_1_prepare_build_env() {
 step_2_configure_cmake() {
     print_step 2 "Configuring CMake..."
     cd "$BUILD_DIR"
-    cmake "$SCRIPT_DIR" -DCMAKE_BUILD_TYPE=Debug -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DBUILD_TESTS=ON
+    cmake "$PROJECT_ROOT" -DCMAKE_BUILD_TYPE=Debug -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
     print_success "CMake configuration completed"
 }
 
@@ -178,7 +178,7 @@ step_5_generate_coverage() {
     # Filter coverage data to only include source files
     if [ -f "$BUILD_DIR/coverage/total.info" ]; then
         # Remove test files from coverage
-        lcov --extract "$BUILD_DIR/coverage/total.info" "*/src/*" --output-file "$BUILD_DIR/coverage/filtered.info" >> "$REPORT_DIR/coverage_output.log" 2>&1 || true
+        lcov --extract "$BUILD_DIR/coverage/total.info" "*/src/libdmusic/*" --output-file "$BUILD_DIR/coverage/filtered.info" >> "$REPORT_DIR/coverage_output.log" 2>&1 || true
         lcov --remove "$BUILD_DIR/coverage/filtered.info" "*/test*" "*/autotests/*" --output-file "$BUILD_DIR/coverage/filtered.info" >> "$REPORT_DIR/coverage_output.log" 2>&1 || true
     fi
     
