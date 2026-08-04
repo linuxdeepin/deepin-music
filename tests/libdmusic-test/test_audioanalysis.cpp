@@ -202,6 +202,16 @@ TEST(AudioAnalysisParseFileTest, creatMediaMetaBuildsHashAndFiletype)
     EXPECT_EQ(meta.filetype, "mp3");
 }
 
+TEST(AudioAnalysisParseFileTest, creatMediaMetaUsesPrecomputedHash)
+{
+    ASSERT_TRUE(QFile::exists(sampleMp3Path()));
+    const QString precomputedHash = "precomputed-hash";
+    const auto meta = AudioAnalysis::creatMediaMeta(sampleMp3Path(), precomputedHash);
+    EXPECT_EQ(meta.hash, precomputedHash);
+    EXPECT_EQ(meta.localPath, sampleMp3Path());
+    EXPECT_EQ(meta.filetype, "mp3");
+}
+
 TEST(AudioAnalysisParseFileTest, parseMetaCoverDoesNotCrash)
 {
     DMusic::MediaMeta meta;

@@ -118,23 +118,27 @@ void AudioAnalysis::parseAudioBuffer(const DMusic::MediaMeta &meta)
     qCDebug(dmMusic) << "Audio buffer parsing completed for hash:" << meta.hash;
 }
 
-DMusic::MediaMeta AudioAnalysis::creatMediaMeta(const QString &path)
+DMusic::MediaMeta AudioAnalysis::creatMediaMeta(const QString &path,
+                                                const QString &precomputedHash)
 {
     qCDebug(dmMusic) << "Creating media metadata for path:" << path;
     DMusic::MediaMeta mediaMeta;
-    QFileInfo fileinfo(path);
-    while (fileinfo.isSymLink()) {  //to find final target
-        qCDebug(dmMusic) << "Following symlink from" << fileinfo.absoluteFilePath() << "to" << fileinfo.symLinkTarget();
-        fileinfo.setFile(fileinfo.symLinkTarget());
-    }
-    auto hash = Utils::filePathHash(fileinfo.absoluteFilePath());
-    mediaMeta.hash = hash;
+    mediaMeta.hash = precomputedHash;
     mediaMeta.localPath = path;
-    
+
+    if (mediaMeta.hash.isEmpty()) {
+        QFileInfo fileinfo(path);
+        while (fileinfo.isSymLink()) {  //to find final target
+            qCDebug(dmMusic) << "Following symlink from" << fileinfo.absoluteFilePath() << "to" << fileinfo.symLinkTarget();
+            fileinfo.setFile(fileinfo.symLinkTarget());
+        }
+        mediaMeta.hash = Utils::filePathHash(fileinfo.absoluteFilePath());
+    }
+
     if (!parseMetaFromLocalFile(mediaMeta)) {
         qCWarning(dmMusic) << "Failed to parse metadata from local file:" << path;
     } else {
-        qCDebug(dmMusic) << "Successfully created media metadata for:" << path << "hash:" << hash;
+        qCDebug(dmMusic) << "Successfully created media metadata for:" << path << "hash:" << mediaMeta.hash;
     }
 
     return mediaMeta;

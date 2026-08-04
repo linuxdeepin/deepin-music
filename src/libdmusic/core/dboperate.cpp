@@ -97,7 +97,7 @@ void DBOperate::slotImportMetas(const QStringList &urls, const QSet<QString> &me
             } else if (!allMetaHashs.contains(mediaMeta.hash)) {
                 // 标记为正在导入，防止其他任务重复处理
                 m_importingHashes.insert(hash);
-                mediaMeta = AudioAnalysis::creatMediaMeta(filePath);
+                mediaMeta = AudioAnalysis::creatMediaMeta(filePath, hash);
                 if (mediaMeta.length > 0) {
                     mediaMeta.hasimage = false;
                     pendingCovers.append(mediaMeta);  // cover/lyrics extracted after loop
@@ -116,7 +116,7 @@ void DBOperate::slotImportMetas(const QStringList &urls, const QSet<QString> &me
             if (!allMetaHashs.contains(mediaMeta.hash)) {
                 // 标记为正在导入，防止其他任务重复处理
                 m_importingHashes.insert(hash);
-                mediaMeta = AudioAnalysis::creatMediaMeta(filePath);
+                mediaMeta = AudioAnalysis::creatMediaMeta(filePath, hash);
                 if (mediaMeta.length > 0) {
                     mediaMeta.hasimage = false;
                     pendingCovers.append(mediaMeta);  // cover/lyrics extracted after loop
