@@ -142,7 +142,12 @@ SdlPlayer::~SdlPlayer()
         Quit();
         qCDebug(dmMusic) << "SDL quit called";
         m_pCheckDataThread->quitThread();
-        while (m_pCheckDataThread->isRunning()) {}
+        // 使用带超时的等待替代忙等待，避免阻塞主线程
+        if (m_pCheckDataThread->isRunning() && !m_pCheckDataThread->wait(3000)) {
+            qCWarning(dmMusic) << "Check data thread did not stop within timeout, terminating";
+            m_pCheckDataThread->terminate();
+            m_pCheckDataThread->wait(1000);  // 给 terminate 一点时间
+        }
         qCDebug(dmMusic) << "Check data thread stopped";
     }
 }
@@ -597,7 +602,7 @@ void SdlPlayer::readSinkInputPath()
     }
 
     QList<QDBusObjectPath> allSinkInputsList = v.value<QList<QDBusObjectPath>>();
-    for (auto curPath : allSinkInputsList) {
+    for (const auto &curPath : allSinkInputsList) {
         QVariant nameV = Utils::readDBusProperty("org.deepin.dde.Audio1", curPath.path(),
                                                      "org.deepin.dde.Audio1.SinkInput", "Name");
 

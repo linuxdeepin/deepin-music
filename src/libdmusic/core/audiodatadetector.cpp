@@ -16,6 +16,7 @@
 #include <QDir>
 #include <QStandardPaths>
 #include <QDebug>
+#include "util/log.h"
 
 //#ifndef DISABLE_LIBAV
 #ifdef __cplusplus
@@ -71,8 +72,11 @@ AudioDataDetector::~AudioDataDetector()
 {
     qCDebug(dmMusic) << "Destroying AudioDataDetector";
     m_stopFlag = true;
-    while (isRunning()) {
-        qCDebug(dmMusic) << "Waiting for detection thread to finish";
+    // 使用带超时的等待替代忙等待
+    if (isRunning() && !wait(3000)) {
+        qCWarning(dmMusic) << "Detection thread did not stop within timeout, terminating";
+        terminate();
+        wait(1000);  // 给 terminate 一点时间
     }
     qCDebug(dmMusic) << "AudioDataDetector destroyed";
 }
@@ -270,7 +274,7 @@ void AudioDataDetector::resample(const QVector<float> &buffer, const QString &ha
     
     if (buffer.isEmpty()) {
         qCWarning(dmMusic) << "Buffer is empty, cannot resample for hash:" << hash;
-        qDebug() << __FUNCTION__ << "buffer size ==" << buffer.size();
+        qCWarning(dmMusic) << __FUNCTION__ << "buffer size ==" << buffer.size();
         return;
     }
 

@@ -12,6 +12,10 @@
 #include <QDir>
 #include <QDBusInterface>
 #include <QCoreApplication>
+#include <QDesktopServices>
+#include <QUrl>
+#include <QProcess>
+#include <memory>
 
 #include "playerengine.h"
 #include "lyricanalysis.h"
@@ -30,7 +34,7 @@ public:
         m_playerEngine = new PlayerEngine(m_parent);
         m_dataManager = new DataManager(m_playerEngine->supportedSuffixList(), m_parent);
         m_playerEngine->setPlaybackMode((DmGlobal::PlaybackMode)m_dataManager->valueFromSettings("base.play.playmode").toInt());
-        m_pkmeans = new CKMeans;
+        m_pkmeans = std::make_unique<CKMeans>();
         m_playerEngine->addMetasToPlayList(m_dataManager->getPlaylistMetas("play"));
         m_audioAnalysis = new AudioAnalysis(m_parent);
     }
@@ -38,18 +42,12 @@ public:
     {
         qCDebug(dmMusic) << "PresenterPrivate destructor";
         m_audioAnalysis->stopRecorder();
-        // 颜色聚类
-        if (m_pkmeans) {
-            qCDebug(dmMusic) << "PresenterPrivate destructor delete m_pkmeans";
-            delete m_pkmeans;
-            m_pkmeans = nullptr;
-        }
     }
 private:
     friend class Presenter;
     Presenter                  *m_parent;
     PlayerEngine               *m_playerEngine     = nullptr;
-    CKMeans                    *m_pkmeans          = nullptr;
+    std::unique_ptr<CKMeans>    m_pkmeans;
     DataManager                *m_dataManager      = nullptr;
     AudioAnalysis              *m_audioAnalysis    = nullptr;
     LyricAnalysis               m_lyricAnalysis;
@@ -245,7 +243,7 @@ QStringList Presenter::supportedSuffixList() const
 {
     qCDebug(dmMusic) << "Getting supported file suffixes";
     QStringList suffixList;
-    for (QString str : m_data->m_playerEngine->supportedSuffixList()) {
+    for (const QString &str : m_data->m_playerEngine->supportedSuffixList()) {
         suffixList.append("*." + str);
     }
     qCDebug(dmMusic) << "Supported suffixes:" << suffixList;
@@ -282,8 +280,6 @@ void Presenter::forceExit()
     saveDataToDB();
     qApp->processEvents();
     QCoreApplication::exit(0);
-    qCDebug(dmMusic) << "Forcing immediate exit";
-    _Exit(0);
 }
 
 QVariantList Presenter::getLyrics()
@@ -323,7 +319,15 @@ void Presenter::setActivateMeta(const QString &metaHash)
 QImage Presenter::getActivateMetImage()
 {
     qCDebug(dmMusic) << "Getting active media cover image";
-    return AudioAnalysis::getMetaCoverImage(m_data->m_playerEngine->getMediaMeta());
+    DMusic::MediaMeta meta = m_data->m_playerEngine->getMediaMeta();
+    if (!meta.hash.isEmpty()) {
+        DMusic::MediaMeta latestMeta = m_data->m_dataManager->metaFromHash(meta.hash);
+        if (!latestMeta.hash.isEmpty()) {
+            meta.coverUrl = latestMeta.coverUrl;
+            meta.hasimage = latestMeta.hasimage;
+        }
+    }
+    return AudioAnalysis::getMetaCoverImage(meta);
 }
 
 QVariantMap Presenter::getActivateMeta()
@@ -493,7 +497,7 @@ void Presenter::playAlbum(const QString &album, const QString &metaHash)
     for (const DMusic::AlbumInfo &curAlbum : albums) {
         if (curAlbum.name == album) {
             allMetas += curAlbum.musicinfos.values();
-            for (auto meta : allMetas) {
+            for (const auto &meta : allMetas) {
                 if (m_data->m_playerEngine->getMediaMeta().hash == meta.hash) {
                     playFlag = false;
                     break;
@@ -536,7 +540,7 @@ void Presenter::playArtist(const QString &artist, const QString &metaHash)
     for (const DMusic::ArtistInfo &curArtist : artists) {
         if (curArtist.name == artist) {
             allMetas += curArtist.musicinfos.values();
-            for (auto meta : allMetas) {
+            for (const auto &meta : allMetas) {
                 if (m_data->m_playerEngine->getMediaMeta().hash == meta.hash) {
                     playFlag = false;
                     break;
@@ -602,12 +606,12 @@ void Presenter::playPlaylist(const QString &playlistHash, const QString &metaHas
             allMetas = m_data->m_dataManager->getPlaylistMetas(playlistHash);
         } else if (playlistHash == "album") {
             auto albums = m_data->m_dataManager->allAlbumInfos();
-            for (auto album : albums) {
+            for (const auto &album : albums) {
                 allMetas += album.musicinfos.values();
             }
         } else {
             auto artists = m_data->m_dataManager->allArtistInfos();
-            for (auto artist : artists) {
+            for (const auto &artist : artists) {
                 allMetas += artist.musicinfos.values();
             }
         }
@@ -1091,7 +1095,6 @@ QVariant Presenter::valueFromSettings(const QString &key)
 
 void Presenter::setValueToSettings(const QString &key, const QVariant &value)
 {
-    qCDebug(dmMusic) << "Setting value for key:" << key << "Value:" << value;
     if (value.isNull()) {
         qCWarning(dmMusic) << "Attempted to set null value for key:" << key;
         return;

@@ -95,7 +95,12 @@ void VlcPlayer::releasePlayer()
     if (m_pCdaThread) {
         qCDebug(dmMusic) << "Closing CDA thread";
         m_pCdaThread->closeThread();
-        while (m_pCdaThread->isRunning()) {}
+        // 使用带超时的等待替代忙等待，避免阻塞主线程
+        if (m_pCdaThread->isRunning() && !m_pCdaThread->wait(3000)) {
+            qCWarning(dmMusic) << "CDA thread did not stop within timeout, terminating";
+            m_pCdaThread->terminate();
+            m_pCdaThread->wait(1000);  // 给 terminate 一点时间
+        }
     }
 
     //删除媒体资源
@@ -139,6 +144,7 @@ void VlcPlayer::startCdaThread()
     QTimer::singleShot(1000, this, [ = ]() {
         qCDebug(dmMusic) << __func__ << "timer timeout.";
         init();
+        if (!m_qvplayer) return;
         qCDebug(dmMusic) << "init cda thread.";
         //初始化mediaplayer
         m_pCdaThread->setMediaPlayerPointer(m_qvplayer->core());
@@ -153,7 +159,9 @@ void VlcPlayer::play()
 {
     qCDebug(dmMusic) << "Starting playback";
     init();
-    m_qvplayer->play();
+    if (m_qvplayer) {
+        m_qvplayer->play();
+    }
 }
 
 void VlcPlayer::pause()
@@ -202,6 +210,7 @@ void VlcPlayer::stop()
 int VlcPlayer::length()
 {
     init();
+    if (!m_qvplayer) return 0;
     int len = m_qvplayer->length();
     qCDebug(dmMusic) << "Track length:" << len << "ms";
     return len;
@@ -210,6 +219,7 @@ int VlcPlayer::length()
 void VlcPlayer::setTime(qint64 time)
 {
     init();
+    if (!m_qvplayer) return;
     qCDebug(dmMusic) << "Setting playback position to:" << time << "ms";
     m_qvplayer->setTime(time);
 }
@@ -217,6 +227,7 @@ void VlcPlayer::setTime(qint64 time)
 qint64 VlcPlayer::time()
 {
     init();
+    if (!m_qvplayer) return 0;
     qint64 pos = m_qvplayer->time();
     qCDebug(dmMusic) << "Current playback position:" << pos << "ms";
     return pos;
@@ -226,6 +237,7 @@ void VlcPlayer::setMediaMeta(MediaMeta meta)
 {
     qCInfo(dmMusic) << "Setting media meta - Title:" << meta.title << "Path:" << meta.localPath;
     init();
+    if (!m_qvplayer) return;
     m_activeMeta = meta;
     m_qvmedia->initMedia(meta.localPath, meta.mmType == DmGlobal::MimeTypeCDA ? false : true, m_qvinstance, meta.track);
     m_qvplayer->open(m_qvmedia);
@@ -237,6 +249,7 @@ void VlcPlayer::setMediaMeta(MediaMeta meta)
 void VlcPlayer::setFadeInOutFactor(double fadeInOutFactor)
 {
     init();
+    if (!m_qvplayer) return;
     m_qvplayer->equalizer()->blockSignals(true);
     setPreamplification(static_cast<float>(12 * fadeInOutFactor));
     m_qvplayer->equalizer()->blockSignals(false);
@@ -245,6 +258,7 @@ void VlcPlayer::setFadeInOutFactor(double fadeInOutFactor)
 void VlcPlayer::setEqualizerEnabled(bool enabled)
 {
     init();
+    if (!m_qvplayer) return;
     qCInfo(dmMusic) << "Setting equalizer enabled:" << enabled;
     m_qvplayer->equalizer()->setEnabled(enabled);
 }
@@ -252,6 +266,7 @@ void VlcPlayer::setEqualizerEnabled(bool enabled)
 void VlcPlayer::loadFromPreset(uint index)
 {
     init();
+    if (!m_qvplayer) return;
     qCDebug(dmMusic) << "Loading equalizer preset:" << index;
     m_qvplayer->equalizer()->loadFromPreset(index);
 }
@@ -259,24 +274,28 @@ void VlcPlayer::loadFromPreset(uint index)
 void VlcPlayer::setPreamplification(float value)
 {
     init();
+    if (!m_qvplayer) return;
     m_qvplayer->equalizer()->setPreamplification(value);
 }
 
 void VlcPlayer::setAmplificationForBandAt(float amp, uint bandIndex)
 {
     init();
+    if (!m_qvplayer) return;
     m_qvplayer->equalizer()->setAmplificationForBandAt(amp, bandIndex);
 }
 
 float VlcPlayer::amplificationForBandAt(uint bandIndex)
 {
     init();
+    if (!m_qvplayer) return 0.0f;
     return m_qvplayer->equalizer()->amplificationForBandAt(bandIndex);
 }
 
 float VlcPlayer::preamplification()
 {
     init();
+    if (!m_qvplayer) return 0.0f;
     return m_qvplayer->equalizer()->preamplification();
 }
 
@@ -304,6 +323,7 @@ void VlcPlayer::setMute(bool value)
 void VlcPlayer::initCddaTrack()
 {
     init();
+    if (!m_qvplayer) return;
     qCDebug(dmMusic) << "Initializing CDDA track";
     m_qvplayer->initCddaTrack();
 }
@@ -311,6 +331,7 @@ void VlcPlayer::initCddaTrack()
 void VlcPlayer::setEqualizer(bool enabled, int curIndex, QList<int> indexbaud)
 {
     init();
+    if (!m_qvplayer) return;
     qCInfo(dmMusic) << "Configuring equalizer - Enabled:" << enabled << "Index:" << curIndex;
     if (enabled) {
         //非自定义模式时

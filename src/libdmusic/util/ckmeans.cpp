@@ -1,5 +1,4 @@
-// Copyright (C) 2020 ~ 2020 Deepin Technology Co., Ltd.
-// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2023 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -57,13 +56,6 @@ void CKMeans::kMeans()
     qCDebug(dmMusic) << "Starting k-means clustering with" << m_clusterCount << "clusters and" << picCnt << "points";
     m_kmeans.loadData(data);
     m_kmeans.kmeans(m_clusterCount);
-    //输出类中心
-//    for (int i = 0; i < m_clusterCount; i++)
-//    {
-//        for (int j = 0; j < 3; j++)
-//            cout << m_kmeans.centroids[i][j] << ',' << '\t' ;
-//        cout << endl;
-//    }
 
 }
 
@@ -100,7 +92,6 @@ QVector3D CKMeans::getColorSecond()
 QColor CKMeans::getCommColorMain()
 {
     qCDebug(dmMusic) << "Getting common main color from k-means centroids";
-//    return QColor(Qt::black);
     if(m_kmeans.centroids.empty()) return QColor(Qt::black);
     return QColor(m_kmeans.centroids[0][0], m_kmeans.centroids[0][1], m_kmeans.centroids[0][2]);
 }
@@ -108,7 +99,6 @@ QColor CKMeans::getCommColorMain()
 QColor CKMeans::getCommColorSecond()
 {
     qCDebug(dmMusic) << "Getting common second color from k-means centroids";
-//    return QColor(Qt::blue);
     if(m_kmeans.centroids.empty()) return QColor(Qt::black);
     return QColor(m_kmeans.centroids[1][0], m_kmeans.centroids[1][1], m_kmeans.centroids[1][2]);
 }

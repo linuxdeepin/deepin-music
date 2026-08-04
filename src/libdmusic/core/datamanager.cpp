@@ -1,5 +1,4 @@
-// Copyright (C) 2020 ~ 2026 Uniontech Software Technology Co., Ltd.
-// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2023 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -176,7 +175,12 @@ public:
         // worker 停止后，再排空主线程上已 posted 的封面回填事件。
         if (m_workerThread) {
             m_workerThread->quit();
-            m_workerThread->wait();
+            // 使用带超时的等待，避免无限阻塞主线程
+            if (!m_workerThread->wait(3000)) {
+                qCWarning(dmMusic) << "Worker thread did not stop within timeout, terminating";
+                m_workerThread->terminate();
+                m_workerThread->wait(1000);  // 给 terminate 一点时间
+            }
             delete m_workerThread;
             m_workerThread = nullptr;
         }
@@ -507,6 +511,10 @@ int DataManager::allMusicCountDB()
 bool DataManager::loadCurrentMetasDB()
 {
     qCDebug(dmMusic) << "Loading current playlist metas from database";
+    if (!isValidPlaylistUuid(m_data->m_currentHash)) {
+        qCWarning(dmMusic) << "Invalid current playlist hash:" << m_data->m_currentHash;
+        return false;
+    }
     int index = playlistIndexFromHash(m_data->m_currentHash);
     if (index < 0 || index >= m_data->m_allPlaylist.size()) {
         qCWarning(dmMusic) << "Invalid playlist index for hash:" << m_data->m_currentHash;
@@ -528,7 +536,6 @@ bool DataManager::loadCurrentMetasDB()
 
     while (query.next()) {
         m_data->m_allPlaylist[index].sortMetas.append(query.value(0).toString());
-//        m_data->m_allPlaylist[index].sortCustomMetas.append(query.value(0).toString());
     }
 
     qCDebug(dmMusic) << "Loading song data for" << m_data->m_allPlaylist[index].sortMetas.size() << "metas";
@@ -712,6 +719,10 @@ bool DataManager::loadPlaylistMetasDB()
     // 加载数据
     for (int i = 0; i < m_data->m_allPlaylist.size(); ++i) {
         if (!m_data->m_allPlaylist[i].saveFalg) continue;
+        if (!isValidPlaylistUuid(m_data->m_allPlaylist[i].uuid)) {
+            qCWarning(dmMusic) << "Skipping playlist with invalid uuid:" << m_data->m_allPlaylist[i].uuid;
+            continue;
+        }
         
         if (!query.prepare(QString("SELECT music_id FROM playlist_%1 order by sort_id ASC")
                            .arg(m_data->m_allPlaylist[i].uuid))) {
@@ -792,6 +803,12 @@ bool DataManager::addPlaylistDB(const DMusic::PlaylistInfo &playlist)
 bool DataManager::deletePlaylistDB(const QString &uuid)
 {
     qCDebug(dmMusic) << "Deleting playlist from database:" << uuid;
+
+    if (!isValidPlaylistUuid(uuid)) {
+        qCCritical(dmMusic) << "deletePlaylistDB: rejected invalid uuid:" << uuid;
+        return false;
+    }
+
     QSqlQuery query(m_data->m_database);
     QString sqlstring = QString("DROP TABLE IF EXISTS playlist_%1").arg(uuid);
     if (! query.exec(sqlstring)) {
@@ -822,7 +839,7 @@ bool DataManager::deleteAllPlaylistDB()
         allPlaylistIDs.append(query.value(0).toString());
     }
     bool ok = true;
-    for (QString id : allPlaylistIDs) {
+    for (const QString &id : allPlaylistIDs) {
         if (!deletePlaylistDB(id)) ok = false;
     }
 
@@ -1008,17 +1025,10 @@ void DataManager::saveDataToDB()
     bool ok = true;
     QSqlQuery query(m_data->m_database);
 
-    // 删除歌曲
-    QString sqlStr = QString("DELETE FROM musicNew");
-    bool isPrepare = query.prepare(sqlStr);
-    if ((!isPrepare) || (! query.exec())) {
-        qCCritical(dmMusic) << "Failed to clear musicNew table:" << query.lastError() << sqlStr;
-        ok = false;
-    }
-
-    // 重插歌曲
-    for (MediaMeta meta : m_data->m_allMetas) {
-        bool isPrepare = query.prepare("INSERT INTO musicNew ("
+    // 使用 INSERT OR REPLACE 替代 DELETE + INSERT，大幅减少 I/O 操作
+    // hash 是主键，直接使用 UPSERT 语义
+    for (const MediaMeta &meta : m_data->m_allMetas) {
+        bool isPrepare = query.prepare("INSERT OR REPLACE INTO musicNew ("
                                        "hash, timestamp, title, artist, album, "
                                        "filetype, size, track, offset, hasimage, favourite, localpath, length, "
                                        "py_title, py_title_short, py_artist, py_artist_short, "
@@ -1059,6 +1069,34 @@ void DataManager::saveDataToDB()
         if ((!isPrepare) || (! query.exec())) {
             qCWarning(dmMusic) << "Failed to save meta to database:" << meta.title << "error:" << query.lastError();
             ok = false;
+        }
+    }
+
+    // 删除数据库中不再存在的歌曲（增量删除）
+    if (ok) {
+        QSet<QString> currentHashes;
+        for (const MediaMeta &meta : m_data->m_allMetas) {
+            currentHashes.insert(meta.hash);
+        }
+
+        // 查询数据库中所有 hash
+        if (query.exec("SELECT hash FROM musicNew")) {
+            QStringList hashesToDelete;
+            while (query.next()) {
+                QString dbHash = query.value(0).toString();
+                if (!currentHashes.contains(dbHash)) {
+                    hashesToDelete << dbHash;
+                }
+            }
+            // 批量删除
+            for (const QString &hash : hashesToDelete) {
+                query.prepare("DELETE FROM musicNew WHERE hash = :hash");
+                query.bindValue(":hash", hash);
+                if (!query.exec()) {
+                    qCWarning(dmMusic) << "Failed to delete orphaned meta:" << hash << query.lastError();
+                    ok = false;
+                }
+            }
         }
     }
 
@@ -1463,7 +1501,7 @@ void DataManager::addMetasToPlayList(const QList<MediaMeta> &metas, const QStrin
     if (m_data->m_currentHash == playlistHash && playlistHash != "play") {
         qCDebug(dmMusic) << "Adding metas to current playlist";
         PlaylistInfo &playPlaylist = m_data->m_allPlaylist[playlistIndexFromHash("play")];
-        for (MediaMeta meta : metas) {
+        for (const MediaMeta &meta : metas) {
             if (!curPlaylist.sortMetas.contains(meta.hash)) {
                 if (meta.filetype != "cdda")
                     curPlaylist.sortMetas.append(meta.hash);
@@ -1476,23 +1514,31 @@ void DataManager::addMetasToPlayList(const QList<MediaMeta> &metas, const QStrin
                     playlistHashs << "play";
                     allPlaylistHashs << "play";
                 }
-                if (playlistHash == "fav" || favPlaylist.sortMetas.contains(meta.hash))
-                    meta.favourite = true;
-                emit signalAddOneMeta(playlistHashs, meta, addToPlay);
+                if (playlistHash == "fav" || favPlaylist.sortMetas.contains(meta.hash)) {
+                    MediaMeta emitMeta = meta;
+                    emitMeta.favourite = true;
+                    emit signalAddOneMeta(playlistHashs, emitMeta, addToPlay);
+                } else {
+                    emit signalAddOneMeta(playlistHashs, meta, addToPlay);
+                }
             }
         }
     } else {
         qCDebug(dmMusic) << "Adding metas to custom playlist";
-        for (MediaMeta meta : metas) {
+        for (const MediaMeta &meta : metas) {
             if (!curPlaylist.sortMetas.contains(meta.hash)) {
                 if (meta.filetype != "cdda")
                     curPlaylist.sortMetas.append(meta.hash);
                 QStringList playlistHashs;
                 playlistHashs << playlistHash;
                 allPlaylistHashs << playlistHash;
-                if (playlistHash == "fav" || favPlaylist.sortMetas.contains(meta.hash))
-                    meta.favourite = true;
-                emit signalAddOneMeta(playlistHashs, meta, addToPlay);
+                if (playlistHash == "fav" || favPlaylist.sortMetas.contains(meta.hash)) {
+                    MediaMeta emitMeta = meta;
+                    emitMeta.favourite = true;
+                    emit signalAddOneMeta(playlistHashs, emitMeta, addToPlay);
+                } else {
+                    emit signalAddOneMeta(playlistHashs, meta, addToPlay);
+                }
             }
         }
     }
@@ -1775,7 +1821,7 @@ void DataManager::sortPlaylist(const int &type, const QString &hash, bool signal
             && playlistMeta.uuid != "albumResult" && playlistMeta.uuid != "artistResult") {
         QList<DMusic::MediaMeta> allMetas;
         QStringList sortMetas = playlistMeta.uuid == "musicResult" ? m_data->m_searchMetas : playlistMeta.sortMetas;
-        for (QString hash : sortMetas) {
+        for (const QString &hash : sortMetas) {
             allMetas.append(metaFromHash(hash));
         }
         bool sortFlag = true;
@@ -2209,7 +2255,7 @@ void DataManager::searchText(const QString &text, QList<MediaMeta> &metas,
                 albums.append(album);
                 qCDebug(dmMusic) << "Found matching album:" << album.name;
 
-                for (QString metaHash : album.musicinfos.keys()) {
+                for (const QString &metaHash : album.musicinfos.keys()) {
                     if (!m_data->m_searchMetas.contains(metaHash)) {
                         metas.append(album.musicinfos[metaHash]);
                         m_data->m_searchMetas.append(metaHash);
@@ -2235,7 +2281,7 @@ void DataManager::searchText(const QString &text, QList<MediaMeta> &metas,
                 artists.append(artist);
                 qCDebug(dmMusic) << "Found matching artist:" << artist.name;
 
-                for (QString metaHash : artist.musicinfos.keys()) {
+                for (const QString &metaHash : artist.musicinfos.keys()) {
                     if (!m_data->m_searchMetas.contains(metaHash)) {
                         metas.append(artist.musicinfos[metaHash]);
                         m_data->m_searchMetas.append(metaHash);
@@ -2296,7 +2342,7 @@ void DataManager::searchText(const QString &text, QList<MediaMeta> &metas,
         // Search in albums
         for (const DMusic::AlbumInfo &album : allAlbumInfos()) {
             if (!album.musicinfos.isEmpty() && Utils::containsStr(text, album.name)) {
-                for (QString metaHash : album.musicinfos.keys()) {
+                for (const QString &metaHash : album.musicinfos.keys()) {
                     if (!m_data->m_searchMetas.contains(metaHash)) {
                         m_data->m_searchMetas.append(metaHash);
                         metas.append(album.musicinfos[metaHash]);
@@ -2308,7 +2354,7 @@ void DataManager::searchText(const QString &text, QList<MediaMeta> &metas,
         }
         for (const DMusic::ArtistInfo &artist : allArtistInfos()) {
             if (!artist.musicinfos.isEmpty() && Utils::containsStr(text, artist.name)) {
-                for (QString metaHash : artist.musicinfos.keys()) {
+                for (const QString &metaHash : artist.musicinfos.keys()) {
                     if (!m_data->m_searchMetas.contains(metaHash)) {
                         m_data->m_searchMetas.append(metaHash);
                         metas.append(artist.musicinfos[metaHash]);
@@ -2354,7 +2400,7 @@ QList<AlbumInfo> DataManager::searchedAlbumInfos()
 {
     qCDebug(dmMusic) << "Getting searched album infos, count:" << m_data->m_searchAlbums.size();
     QList<AlbumInfo> searchedInfos;
-    for (QString name : m_data->m_searchAlbums) {
+    for (const QString &name : m_data->m_searchAlbums) {
         for (const DMusic::AlbumInfo &album : allAlbumInfos()) {
             if (!album.musicinfos.isEmpty() && album.name == name) {
                 searchedInfos.append(album);
@@ -2370,7 +2416,7 @@ QList<ArtistInfo> DataManager::searchedArtistInfos()
 {
     qCDebug(dmMusic) << "Getting searched artist infos, count:" << m_data->m_searchArtists.size();
     QList<ArtistInfo> searchedInfos;
-    for (QString name : m_data->m_searchArtists) {
+    for (const QString &name : m_data->m_searchArtists) {
         for (const DMusic::ArtistInfo &artist : allArtistInfos()) {
             if (!artist.musicinfos.isEmpty() && artist.name == name) {
                 searchedInfos.append(artist);
@@ -2437,7 +2483,7 @@ void DataManager::slotAddOneMeta(QStringList playlistHashs, MediaMeta meta)
     }
     
     for (PlaylistInfo &playlist : m_data->m_allPlaylist) {
-        for (QString hash : playlistHashs) {
+        for (const QString &hash : playlistHashs) {
             if (hash == playlist.uuid) {
                 if (hash == "all") {
                     // 检查是否已存在，避免重复添加

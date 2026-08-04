@@ -31,7 +31,8 @@ MusicSettings::~MusicSettings()
     if (m_settings != nullptr) {
         qCDebug(dmMusic) << "Syncing and cleaning up settings";
         m_settings->sync();
-        qApp->processEvents();
+        // 移除 processEvents() 调用，避免在析构函数中处理事件导致潜在问题
+        // sync() 已经是同步操作，会将设置写入磁盘
         delete m_settings;
         m_settings = nullptr;
         qCDebug(dmMusic) << "Settings cleanup completed";

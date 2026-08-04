@@ -317,7 +317,7 @@ void QtPlayer::readSinkInputPath()
     QList<QDBusObjectPath> allSinkInputsList = v.value<QList<QDBusObjectPath> >();
     qCDebug(dmMusic) << "Found" << allSinkInputsList.size() << "sink inputs";
 
-    for (auto curPath : allSinkInputsList) {
+    for (const auto &curPath : allSinkInputsList) {
         QVariant nameV = Utils::readDBusProperty("org.deepin.dde.Audio1", curPath.path(),
                                                  "org.deepin.dde.Audio1.SinkInput", "Name");
 

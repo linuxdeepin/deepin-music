@@ -1,5 +1,4 @@
-// Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co., Ltd.
-// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2023 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -13,7 +12,7 @@
 #include <QCryptographicHash>
 #include <QDebug>
 #include <QTextCodec>
-#include <QRegExp>
+#include <QRegularExpression>
 
 #include <DPinyin>
 
@@ -31,16 +30,12 @@ bool Utils::isChinese(const QChar &c)
 
 static inline bool isAlphabeta(const QChar &c)
 {
-    qCDebug(dmMusic) << "Checking if character is alphabeta:" << c;
-    QRegExp re("[A-Za-z]*");
-    return re.exactMatch(c);
+    return c.isLetter() && c.isLetterOrNumber();
 }
 
 static inline bool isNumber(const QChar &c)
 {
-    qCDebug(dmMusic) << "Checking if character is number:" << c;
-    QRegExp re("[0-9]*");
-    return re.exactMatch(c);
+    return c.isDigit();
 }
 
 static inline QString toChinese(const QString &c)
@@ -382,7 +377,7 @@ bool Utils::containsStr(QString searchText, QString text)
     qCDebug(dmMusic) << "Performing string search - Search text:" << searchText;
     text = QString(text).remove("\r").remove("\n");
     bool chineseFlag = false;
-    for (auto ch : searchText) {
+    for (const auto &ch : searchText) {
         if (isChinese(ch)) {
             chineseFlag = true;
             break;
@@ -396,7 +391,7 @@ bool Utils::containsStr(QString searchText, QString text)
         auto curTextList = simpleChineseSplit(text);
         QString curTextListStr = "";
         if (!curTextList.isEmpty()) {
-            for (auto mText : curTextList) {
+            for (const auto &mText : curTextList) {
                 if (mText.contains(searchText, Qt::CaseInsensitive)) {
                     qCDebug(dmMusic) << "return true, Chinese text search - Matched text:" << mText;
                     return true;
