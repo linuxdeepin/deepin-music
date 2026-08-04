@@ -5,11 +5,14 @@
 import QtQuick 2.0
 import QtQuick.Layouts 1.11
 import QtQuick.Controls 2.0
+import audio.global 1.0
 import org.deepin.dtk 1.0
 import "../allItems"
 
 ItemDelegate {
     property var m_mediaMeta
+    property bool playing: (globalVariant.curPlayingStatus === DmGlobal.Playing) ? true : false
+    property bool activeMeta:(globalVariant.curPlayingHash === hash) ? true : false
     property bool isDragged: false
 
     id: sublistDelegate
@@ -55,9 +58,8 @@ ItemDelegate {
                         listview.checkOne(index);
                     // 生成拖拽图像
                     dragDelegate.grabToImage(function(result) {
-                        console.warn("[ArtistSublistDelegate] Drag image generated:", result.url)
                         parent.Drag.imageSource = result.url
-                    });
+                    }, Qt.size(dragDelegate.width, dragDelegate.height));
                     break;
                 }
             } else if (mouse.button ===  Qt.RightButton) {
@@ -129,29 +131,69 @@ ItemDelegate {
         color: sublistDelegate.hovered ? Qt.rgba(0, 0, 0, 0.08) : Qt.rgba(0, 0, 0, 0)
         Row {
             Rectangle {
-                width: 26
-                height: 56
+                id: columnNumber
+                width: 56; height: 56
                 color: Qt.rgba(0, 0, 0, 0)
-                ActionButton {
-                    id: heartbutton
-                    anchors.left: parent.left; anchors.leftMargin: 5
-                    anchors.verticalCenter: parent.verticalCenter
-                    icon.width: 20; icon.height: 20
-                    icon.name: favourite ? "heart_check" : "heart"
-                    palette.windowText: favourite ? "#F75B5B" : undefined
-                    onClicked: {
-                        if(favourite === false) {
-                            Presenter.addMetasToPlayList(hash, "fav")
-                        } else {
-                            Presenter.removeFromPlayList(hash, "fav")
-                            globalVariant.sendFloatingMessageBox(qsTr("My Favorites"), 2);
+                Row {
+                    anchors.centerIn: parent
+                    Rectangle {
+                        width: 36
+                        height: 56
+                        color: Qt.rgba(0, 0, 0, 0)
+                        Label {
+                            id: numLable
+                            anchors.verticalCenter: parent.verticalCenter
+                            verticalAlignment: Qt.AlignVCenter
+                            horizontalAlignment: Qt.AlignLeft
+                            leftPadding: 10
+                            elide: Text.ElideRight
+                            text: (index+1 < 10) ? "0%1".arg(index + 1) : index+1
+                        }
+                        ActionButton {
+                            id: playActionButton
+                            icon.name: sublistDelegate.hovered ? (playing && activeMeta ? "list_pussed" : "list_play")
+                                                               : (sublistDelegate.checked ? globalVariant.playingIconName : globalVariant.playingIconName + "_blue")
+                            icon.width: 20
+                            icon.height: 20
+                            anchors.centerIn: parent
+                            visible: false
+                            ColorSelector.hovered: !sublistDelegate.checked
+                            ColorSelector.pressed: false
+                            palette.windowText: sublistDelegate.hovered ? Qt.rgba(247, 247, 247, 1) : undefined
+                            onClicked: {
+                                if(playing && activeMeta) {
+                                    Presenter.pause();
+                                } else {
+                                    Presenter.playArtist(artist, hash);
+                                }
+                            }
+                        }
+                    }
+                    Rectangle {
+                        width: 20
+                        height: 56
+                        color: Qt.rgba(0, 0, 0, 0)
+                        ActionButton {
+                            id: heartbutton
+                            anchors.verticalCenter: parent.verticalCenter
+                            icon.width: 20; icon.height: 20
+                            icon.name: favourite ? "heart_check" : "heart"
+                            palette.windowText: favourite ? "#F75B5B" : undefined
+                            onClicked: {
+                                if(favourite === false) {
+                                    Presenter.addMetasToPlayList(hash, "fav")
+                                } else {
+                                    Presenter.removeFromPlayList(hash, "fav")
+                                    globalVariant.sendFloatingMessageBox(qsTr("My Favorites"), 2);
+                                }
+                            }
                         }
                     }
                 }
             }
             Rectangle {
                 id: columnMusic
-                width: sublistDelegate.width - 368; height: 56
+                width: sublistDelegate.width - 342 - 56; height: 56
                 color: Qt.rgba(0, 0, 0, 0)
                 ImageCell {
                     id: imagecell

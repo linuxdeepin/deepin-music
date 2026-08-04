@@ -1,5 +1,4 @@
-// Copyright (C) 2022 UnionTech Technology Co., Ltd.
-// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2023 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -26,6 +25,8 @@ Control {
         onClicked: control.clicked()
     }
     padding: 5
+    implicitWidth: 66
+    implicitHeight: 40
     contentItem: ColumnLayout {
         Label {
             property Palette backgroundColor: Palette {

@@ -27,7 +27,7 @@ DialogWindow {
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
                 font: DTK.fontManager.t7
-                text: musicData === undefined ? " " : musicData.title       //musicTitle
+                text: !musicData ? " " : musicData.title
                 color:ColorSelector.textColor
             }
         }
@@ -59,7 +59,7 @@ DialogWindow {
                 id: musicImage
                 Layout.alignment: Qt.AlignHCenter
                 sourceSize: Qt.size(118, 118)
-                source: musicData === undefined ? " " : "file:///" + musicData.coverUrl  //imgSourcePath
+                source: !musicData || !musicData.coverUrl ? "" : "file:///" + musicData.coverUrl
                 cache: false
             }
         }
@@ -69,8 +69,9 @@ DialogWindow {
             spacing: 1
             PropertyItemDelegate {
                 Layout.fillWidth: true
+                Layout.preferredHeight: 60
                 title: qsTr("Title")
-                description: musicData === undefined ? " " : musicData.title       //musicTitle
+                description: !musicData ? " " : musicData.title
                 // TODO(pengfeixx): The function is not implemented, and the entrance is temporarily removed
                 // iconName: "action_edit"
                 cornersRadius: [radius, radius, 0, 0]
@@ -78,14 +79,16 @@ DialogWindow {
 
             PropertyItemDelegate {
                 Layout.fillWidth: true
+                Layout.preferredHeight: 60
                 title: qsTr("Artist")
-                description: musicData === undefined ? " " : musicData.artist    //musicArtist
+                description: !musicData ? " " : musicData.artist
                 cornersRadius: [0, 0, 0, 0]
             }
             PropertyItemDelegate {
                 Layout.fillWidth: true
+                Layout.preferredHeight: 60
                 title: qsTr("Album")
-                description: musicData === undefined ? " " : musicData.album       //musicAlbum
+                description: !musicData ? " " : musicData.album
                 cornersRadius: [0, 0, radius, radius]
             }
         }
@@ -93,27 +96,31 @@ DialogWindow {
             spacing: 1
             PropertyItemDelegate {
                 Layout.fillWidth: true
+                Layout.preferredHeight: 60
                 title: qsTr("Type")
-                description: musicData === undefined ? " " : musicData.filetype      //fileType
+                description: !musicData ? " " : musicData.filetype
                 cornersRadius: [8, 0, 0, radius]
             }
             PropertyItemDelegate {
                 Layout.fillWidth: true
+                Layout.preferredHeight: 60
                 title: qsTr("Size")
-                description: "%1M".arg((musicData === undefined ? 0 : musicData.size / 1024 / 1024).toFixed(2))
+                description: "%1M".arg((!musicData ? 0 : musicData.size / 1024 / 1024).toFixed(2))
                 cornersRadius: [0, 0, 0, 0]
             }
             PropertyItemDelegate {
                 Layout.fillWidth: true
+                Layout.preferredHeight: 60
                 title: qsTr("Duration")
-                description: musicData === undefined ? "0:00" : Math.floor(musicData.length / 1000 / 60) + ":" + Math.floor(musicData.length / 1000 % 60)
+                description: !musicData ? "0:00" : Math.floor(musicData.length / 1000 / 60) + ":" + Math.floor(musicData.length / 1000 % 60)
                 cornersRadius: [0, radius, radius, 0]
             }
         }
         PropertyItemDelegate {
             Layout.fillWidth: true
+            Layout.preferredHeight: 60
             title: qsTr("Path")
-            description: musicData === undefined ? " " : musicData.localPath       //filePath
+            description: !musicData ? " " : musicData.localPath
             cornersRadius: [radius, radius, radius, radius]
         }
     }

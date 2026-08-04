@@ -151,12 +151,12 @@ Rectangle {
 
         onPressed: {
             mousePressed = true
-            curSecs = Math.floor(mouse.x / width * totalSecs)
+            curSecs = Math.floor(mouseX / width * totalSecs)
             hoverX = mouseX
         }
 
         onReleased: {
-            Presenter.setPosition(Math.ceil(mouse.x / width * totalSecs) * 1000 + 100)
+            Presenter.setPosition(Math.ceil(mouseX / width * totalSecs) * 1000 + 100)
             mousePressed = false
         }
         onPositionChanged: {

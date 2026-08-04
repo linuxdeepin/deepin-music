@@ -48,6 +48,7 @@ ListModel {
         }
     }
     function onAddOneMeta(playlistHashs, meta) {
+        if (!mediaModels) return
         for (var i = 0; i < playlistHashs.length; i++) {
             if (playlistHashs[i] === dataHash) {
                 meta.inMulitSelect = false
