@@ -309,7 +309,7 @@ TitleBar {
             }
             SearchResultDialog {
                 id: searchResDlg
-                width: 360
+                width: 360 //searchEdit.width
                 x: searchEdit.x - (width - searchEdit.width) / 2
                 y: 50
 

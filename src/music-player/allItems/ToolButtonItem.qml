@@ -79,6 +79,8 @@ Rectangle{
     }
     SortMenu{
         id: dataSort
+        anchors.right: parent.right
+        anchors.verticalCenter: parent.verticalCenter
         sortPageHash: pageHash
         pageSortType: sortType
         pageTitle: title

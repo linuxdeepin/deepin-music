@@ -18,6 +18,10 @@ Popup {
     id: searchResultRect
     width: 360
     height: (songList == null ? 0 : songList.length + artistModel.count + albumModel.count) * itemHeight + 110
+    leftPadding: 8
+    rightPadding: 8
+    topPadding: 8
+    bottomPadding: 8
 
     Column {
         width: parent.width
@@ -26,7 +30,9 @@ Popup {
         MenuSeparator {
             text: qsTr("Songs")
             anchors.left: parent.left
-            anchors.leftMargin: 30
+            anchors.leftMargin: 12
+            font.pixelSize: 14
+            font.bold: true
             visible: (songList == null || songList.length == 0) ? false : true
         }
 
@@ -38,7 +44,9 @@ Popup {
         MenuSeparator {
             text: qsTr("Artists")
             anchors.left: parent.left
-            anchors.leftMargin: 30
+            anchors.leftMargin: 12
+            font.pixelSize: 14
+            font.bold: true
             visible: artistModel.count === 0 ? false : true
         }
         Repeater {
@@ -49,7 +57,9 @@ Popup {
         MenuSeparator {
             text: qsTr("Albums")
             anchors.left: parent.left
-            anchors.leftMargin: 30
+            anchors.leftMargin: 12
+            font.pixelSize: 14
+            font.bold: true
             visible: albumModel.count === 0 ? false : true
         }
         Repeater {
@@ -64,6 +74,7 @@ Popup {
             id: itemRect
             width: parent.width
             height: itemHeight
+            radius: 6
             color: "#00000000"
             Row {
                 width: parent.width
@@ -85,11 +96,11 @@ Popup {
                     itemRect.color = palette.highlight
                 }
                 onExited: {
-                    itemRect.color = "transparent"
+                    itemRect.color = "#00000000"
                 }
                 onClicked: {
                     searchItemTriggered(songList[index], 0)
-                    searchResultRect.visible = false
+                    searchResultRect.close()
                 }
             }
         }
@@ -101,6 +112,7 @@ Popup {
             id: itemRect
             width: parent.width
             height: itemHeight
+            radius: 6
             color: "#00000000"
             Row {
                 width: parent.width
@@ -130,10 +142,9 @@ Popup {
                     itemRect.color = palette.highlight
                 }
                 onExited: {
-                    itemRect.color = "transparent"
+                    itemRect.color = "#00000000"
                 }
                 onClicked: {
-//                    console.log(model.type)
                     var type = 0
 
                     if (model.type === "artist")
@@ -142,7 +153,7 @@ Popup {
                         type = 2
 
                     searchItemTriggered(model.name, type)
-                    searchResultRect.visible = false
+                    searchResultRect.close()
                 }
             }
         }

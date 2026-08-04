@@ -13,8 +13,6 @@ ToolButton{
 
     id: sortBtn
     width: 54; height: 36
-    anchors.right: parent.right
-    anchors.verticalCenter: parent.verticalCenter
     indicator: ButtonIndicator {}
     icon.name: {
         if (sortPageHash === "artist" || sortPageHash === "artistResult") {
