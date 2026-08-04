@@ -62,6 +62,23 @@ void ShaderImageView::setPresenter(const QVariant &presenter)
     qCDebug(dmMusic) << "ShaderImageView setPresenter: presenterChanged";
 }
 
+void ShaderImageView::refreshCover()
+{
+    Presenter *pres = NULL;
+    if (m_pPresenter.canConvert<Presenter *>()) {
+        pres = m_pPresenter.value<Presenter *>();
+        if (pres) {
+            QImage img = pres->getActivateMetImage();
+            if (!img.isNull()) {
+                pres->setEffectImage(img);
+                if (window() && isComponentComplete()) {
+                    update();
+                }
+            }
+        }
+    }
+}
+
 
 
 void ShaderImageView::paint(QPainter *painter)

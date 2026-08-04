@@ -36,6 +36,12 @@ Rectangle {
                 smooth: true
                 presenter: Presenter
 
+                Connections {
+                    target: Presenter
+                    function onMetaChanged() {
+                        _image.refreshCover()
+                    }
+                }
             }
         FastBlur {
             anchors.top: _image.top; anchors.topMargin: 3

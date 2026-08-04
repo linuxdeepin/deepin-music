@@ -10,6 +10,13 @@
 #include <QIcon>
 #include <QDBusInterface>
 #include <QDBusReply>
+#include <QFileInfo>
+#include <QLoggingCategory>
+
+#ifdef Q_OS_WIN
+#include <windows.h>
+#include <QSharedMemory>
+#endif
 
 #include <DLog>
 #include <DGuiApplicationHelper>
@@ -21,6 +28,8 @@
 #include <string.h>
 #include <signal.h>
 #include <unistd.h>
+#include <QSocketNotifier>
+#endif
 
 #include "config.h"
 
@@ -37,11 +46,18 @@ DGUI_USE_NAMESPACE;
 
 QScopedPointer<Presenter, QScopedPointerPodDeleter> presenter;
 
+#ifdef Q_OS_LINUX
+static volatile sig_atomic_t s_sigTermReceived = 0;
+static int s_sigTermPipe[2] = {-1, -1};
+
 void sig_term_handler(int signum, siginfo_t *info, void *ptr)
 {
-    qDebug() << "SIGTERM received.";
-    presenter->saveDataToDB();
-    exit(1);
+    s_sigTermReceived = 1;
+    char c = 1;
+    // write() is async-signal-safe per POSIX
+    if (s_sigTermPipe[1] != -1) {
+        write(s_sigTermPipe[1], &c, sizeof(c));
+    }
 }
 
 // 此文件是QML应用的启动文件，一般无需修改
@@ -87,15 +103,24 @@ int main(int argc, char *argv[])
     parser.setApplicationDescription("Deepin music player.");
     parser.addHelpOption();
     parser.addVersionOption();
+    parser.addOption({{"d", "debug"}, "Enable debug log output"});
     parser.addPositionalArgument("file", "Music file path");
     parser.process(*app);
+
+    // 默认屏蔽 debug 级别日志，--debug 时启用
+    if (!parser.isSet("debug")) {
+        QLoggingCategory::setFilterRules(QStringLiteral("deepin.music.debug=false\n"
+                                                        "deepin.music.warning=true\n"
+                                                        "deepin.music.critical=true\n"
+                                                        "deepin.music.fatal=true"));
+    }
 
     // handle open file
     QStringList OpenFilePaths = parser.positionalArguments();
     if (!OpenFilePaths.isEmpty()) {
         qCDebug(dmMusic) << "OpenFilePaths: " << OpenFilePaths;
         QStringList strList;
-        for (QString str : OpenFilePaths) {
+        for (const QString &str : OpenFilePaths) {
             QUrl url = QUrl::fromLocalFile(QDir::current().absoluteFilePath(str));
             strList.append(url.toLocalFile().isEmpty() ? str : url.toLocalFile());
         }
@@ -169,11 +194,25 @@ int main(int argc, char *argv[])
     QObject::connect(&engine, &QQmlApplicationEngine::quit, presenter.data(), &Presenter::saveDataToDB);
 
     // 捕获强制退出信号，保存数据到数据库
-    static struct sigaction _sigact;
-    memset(&_sigact, 0, sizeof(_sigact));
-    _sigact.sa_sigaction = sig_term_handler;
-    _sigact.sa_flags = SA_SIGINFO;
-    sigaction(SIGTERM, &_sigact, NULL);
+    // 使用管道机制确保信号处理的安全性：signal handler 仅写入管道，
+    // 主线程通过 QSocketNotifier 监听管道读端，在事件循环中安全处理退出
+    if (pipe(s_sigTermPipe) == 0) {
+        static struct sigaction _sigact;
+        memset(&_sigact, 0, sizeof(_sigact));
+        _sigact.sa_sigaction = sig_term_handler;
+        _sigact.sa_flags = SA_SIGINFO;
+        sigaction(SIGTERM, &_sigact, NULL);
+
+        auto *notifier = new QSocketNotifier(s_sigTermPipe[0], QSocketNotifier::Read, app);
+        QObject::connect(notifier, &QSocketNotifier::activated, [&]() {
+            qCInfo(dmMusic) << "SIGTERM received, saving data and exiting...";
+            char c;
+            read(s_sigTermPipe[0], &c, sizeof(c));
+            presenter->saveDataToDB();
+            app->quit();
+        });
+    }
+#endif
 
     return app->exec();
 }

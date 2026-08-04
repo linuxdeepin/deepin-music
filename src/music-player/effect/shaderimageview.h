@@ -27,6 +27,7 @@ public:
     void setSource(const QString &source);
     QVariant presenter() const;
     void setPresenter(const QVariant &presenter);
+    Q_INVOKABLE void refreshCover();
 private:
     QString m_source;
     QVariant m_pPresenter;
