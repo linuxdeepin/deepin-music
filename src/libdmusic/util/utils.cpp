@@ -13,7 +13,6 @@
 #include <QCryptographicHash>
 #include <QDebug>
 #include <QTextCodec>
-#include <QRegExp>
 
 #include <DPinyin>
 
@@ -32,15 +31,14 @@ bool Utils::isChinese(const QChar &c)
 static inline bool isAlphabeta(const QChar &c)
 {
     qCDebug(dmMusic) << "Checking if character is alphabeta:" << c;
-    QRegExp re("[A-Za-z]*");
-    return re.exactMatch(c);
+    return (c >= QLatin1Char('A') && c <= QLatin1Char('Z'))
+            || (c >= QLatin1Char('a') && c <= QLatin1Char('z'));
 }
 
 static inline bool isNumber(const QChar &c)
 {
     qCDebug(dmMusic) << "Checking if character is number:" << c;
-    QRegExp re("[0-9]*");
-    return re.exactMatch(c);
+    return c >= QLatin1Char('0') && c <= QLatin1Char('9');
 }
 
 static inline QString toChinese(const QString &c)

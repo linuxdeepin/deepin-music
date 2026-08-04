@@ -327,16 +327,12 @@ TEST(UtilsArtistToVariantMapTest, mapsCoreFieldsAndNestedMusicinfos)
 // simpleChineseSplit : 中英混合分词，中文转拼音
 // 注意：依赖 Dtk::Core::Chinese2Pinyin，只断言可观察不变量
 // ============================================================================
-TEST(UtilsSimpleChineseSplitTest, handlesAsciiWithoutCrash)
+TEST(UtilsSimpleChineseSplitTest, preservesAsciiLetterAndDigitClassification)
 {
-    // 已知源码缺陷：simpleChineseSplit 的 isLastAlphabeta 更新位于
-    // if(isCurAlphabeta){...continue;} 之后，字母字符 continue 时跳过更新，
-    // 导致连续 ASCII 被拆成单字符 token（"hello" → ['h','e','l','l','o']）。
-    // 此处只验证不崩溃 + 拼接内容完整，不强断言聚合行为；待源码修复后启用强断言。
-    QString s = "hello";
+    // 此任务仅替换字符分类实现，不改变当前连续 ASCII 字母、数字和符号的分词结果。
+    QString s = "Ab12-";
     const QStringList result = Utils::simpleChineseSplit(s);
-    EXPECT_FALSE(result.isEmpty());
-    EXPECT_EQ(result.join(""), "hello");
+    EXPECT_EQ(result, QStringList({"A", "b", "1", "2", "-"}));
 }
 
 TEST(UtilsSimpleChineseSplitTest, convertsChineseToPinyin)
