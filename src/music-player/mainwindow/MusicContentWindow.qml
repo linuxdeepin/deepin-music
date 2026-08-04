@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2023-2026 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2023 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -74,7 +74,7 @@ Rectangle {
             var item = listViewStackView.find(function(item, index) { return item.objectName === type })
             if(item !== null){
                 if(item.objectName === "artist" || item.objectName === "album"){
-                    item.returnUpperlevelView(); //回到上一级页面
+                    item.returnUpperlevelView();
                 }
                 listViewStackView.pop(item);
                 return;

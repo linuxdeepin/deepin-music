@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2023 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -23,7 +23,7 @@ Rectangle {
     property Menu artistMoreMenu: ArtistMoreMenu{}
     //采用名字作为索引，确保qml能够识别，
     // property var artistData: artistModels.get(0) qml可能无法识别
-    property string artistDataName: artistModels.get(0).name
+    property string artistDataName: artistModels.count > 0 ? artistModels.get(0).name : ""
     Component {
         id: artistSublistView
         ArtistSublistView {
@@ -112,32 +112,25 @@ Rectangle {
         }
 
         popEnter: Transition {
-            // slide_in_left
-            NumberAnimation { property: "xScale"; from: 0; to: 1; duration: 300; easing.type: Easing.InOutQuad }
-            NumberAnimation { property: "yScale"; from: 0; to: 1; duration: 300; easing.type: Easing.InOutQuad }
+            NumberAnimation { property: "scale"; from: 0.8; to: 1; duration: 300; easing.type: Easing.InOutQuad }
             NumberAnimation { property: "opacity"; from: 0.0; to: 1.0; duration: 300; easing.type: Easing.InOutQuad }
         }
 
         popExit: Transition {
-            // slide_out_right
-            NumberAnimation { property: "xScale"; from: 1; to: 0; duration: 300; easing.type: Easing.InOutQuad }
-            NumberAnimation { property: "yScale"; from: 1; to: 0; duration: 300; easing.type: Easing.InOutQuad }
-            NumberAnimation { property: "opacity"; from: 1.0; to: 0.0; duration: 200; easing.type: Easing.Easing.OutExpo }
+            NumberAnimation { property: "scale"; from: 1; to: 0.8; duration: 300; easing.type: Easing.InOutQuad }
+            NumberAnimation { property: "opacity"; from: 1.0; to: 0.0; duration: 200; easing.type: Easing.OutExpo }
         }
 
         pushEnter: Transition {
-            // slide_in_right
-            NumberAnimation { property: "xScale"; from: 0; to: 1; duration: 300; easing.type: Easing.InOutQuad }
-            NumberAnimation { property: "yScale"; from: 0; to: 1; duration: 300; easing.type: Easing.InOutQuad }
+            NumberAnimation { property: "scale"; from: 1.2; to: 1; duration: 300; easing.type: Easing.InOutQuad }
             NumberAnimation { property: "opacity"; from: 0.0; to: 1.0; duration: 300; easing.type: Easing.InOutQuad }
         }
 
         pushExit: Transition {
-            // slide_out_left
-            NumberAnimation { property: "opacity"; from: 1.0; to: 0.0; duration: 200; easing.type: Easing.Easing.OutExpo }
+            NumberAnimation { property: "opacity"; from: 1.0; to: 0.0; duration: 200; easing.type: Easing.OutExpo }
         }
     }
-    onItemDoubleClicked: {
+    onItemDoubleClicked: function(artistData) {
         contenWindow.artistDataName = artistData.name;
         globalVariant.globalSwitchButtonStatus = 2; //使能上一页按钮，失能下一页按钮
     }
@@ -159,15 +152,19 @@ Rectangle {
     }
     Connections {
         target: artistMoreMenu
-        onViewArtistDatails: { contenWindow.itemDoubleClicked(artistData);}
+        function onViewArtistDatails(artistData) {
+            contenWindow.itemDoubleClicked(artistData);
+        }
     }
     Connections {
         target: globalVariant
-        onReturnUpperlevelView: {contenWindow.returnUpperlevelView();}
+        function onReturnUpperlevelView() {
+            contenWindow.returnUpperlevelView();
+        }
     }
     Connections {
         target: artistModels
-        onMetaCodecChanged: {
+        function onMetaCodecChanged(name) {
             contenWindow.artistDataName = name;
         }
     }

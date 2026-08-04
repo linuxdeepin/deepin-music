@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2023 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -76,10 +76,10 @@ LyricPage {
 
     Connections {
         target: lyricHideAnimation
-        onStopped: {
+        function onStopped() {
             lyricPage.visible = false
         }
-        onStarted: {
+        function onStarted() {
             animationStart(false)
             // 动画开始时就更新状态，让 contentWindow 提前显示，避免空白
             animationFinished(true)
@@ -87,23 +87,11 @@ LyricPage {
     }
     Connections {
         target:lyricRaiseAnimation
-        onFinished: {
+        function onFinished() {
             animationFinished(false)
         }
-        onStarted: {
+        function onStarted() {
             animationStart(true)
-        }
-    }
-
-    Connections {
-        target: rootWindow
-        onClickForLyricUp: {
-            if (lyricPage.visible) {
-                lyricHideAnimation.start()
-            } else {
-                lyricRaiseAnimation.start()
-                lyricPage.visible = true
-            }
         }
     }
 

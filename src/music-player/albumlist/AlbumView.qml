@@ -17,7 +17,7 @@ Rectangle {
     property int animtorTime: 200
     //采用名字作为索引，确保qml能够识别，
     // property var artistData: artistModels.get(0)qml可能无法识别
-    property string albumName:  albumModels.get(0).name
+    property string albumName: albumModels.count > 0 ? albumModels.get(0).name : ""
     property point currentItemPos: [0, 0]
     signal itemDoubleClicked(var albumData)
 
@@ -87,7 +87,7 @@ Rectangle {
                 anchors.top: toolButtonItem.bottom;
                 visible: (contenWindow.albumModels.count === 0) ? false : true;
                 albumModel: contenWindow.albumModels
-                onItemDoubleClicked:{
+                onItemDoubleClicked: function(albumData){
                     currentItemPos.x = gridview.view.currentItem.x + gridview.view.currentItem.width / 2
                     currentItemPos.y = gridview.view.currentItem.y + gridview.view.currentItem.height / 2 - 20
                     contenWindow.itemDoubleClicked(albumData);
@@ -106,7 +106,7 @@ Rectangle {
 
             Connections {
                 target: toolButtonItem
-                onViewChanged:{
+                function onViewChanged(type) {
                     if (type === 0) {
                         gridview.visible = true;
                         toggleGridViewAnimation.start()
@@ -118,32 +118,25 @@ Rectangle {
             }
         }
         popEnter: Transition {
-            // slide_in_left
-            NumberAnimation { property: "xScale"; from: 0; to: 1; duration: 300; easing.type: Easing.InOutQuad }
-            NumberAnimation { property: "yScale"; from: 0; to: 1; duration: 300; easing.type: Easing.InOutQuad }
+            NumberAnimation { property: "scale"; from: 0.8; to: 1; duration: 300; easing.type: Easing.InOutQuad }
             NumberAnimation { property: "opacity"; from: 0.0; to: 1.0; duration: 300; easing.type: Easing.InOutQuad }
         }
 
         popExit: Transition {
-            // slide_out_right
-            NumberAnimation { property: "xScale"; from: 1; to: 0; duration: 300; easing.type: Easing.InOutQuad }
-            NumberAnimation { property: "yScale"; from: 1; to: 0; duration: 300; easing.type: Easing.InOutQuad }
-            NumberAnimation { property: "opacity"; from: 1.0; to: 0.0; duration: 200; easing.type: Easing.Easing.OutExpo }
+            NumberAnimation { property: "scale"; from: 1; to: 0.8; duration: 300; easing.type: Easing.InOutQuad }
+            NumberAnimation { property: "opacity"; from: 1.0; to: 0.0; duration: 200; easing.type: Easing.OutExpo }
         }
 
         pushEnter: Transition {
-            // slide_in_right
-            NumberAnimation { property: "xScale"; from: 0; to: 1; duration: 300; easing.type: Easing.InOutQuad }
-            NumberAnimation { property: "yScale"; from: 0; to: 1; duration: 300; easing.type: Easing.InOutQuad }
+            NumberAnimation { property: "scale"; from: 1.2; to: 1; duration: 300; easing.type: Easing.InOutQuad }
             NumberAnimation { property: "opacity"; from: 0.0; to: 1.0; duration: 300; easing.type: Easing.InOutQuad }
         }
 
         pushExit: Transition {
-            // slide_out_left
-            NumberAnimation { property: "opacity"; from: 1.0; to: 0.0; duration: 200; easing.type: Easing.Easing.OutExpo }
+            NumberAnimation { property: "opacity"; from: 1.0; to: 0.0; duration: 200; easing.type: Easing.OutExpo }
         }
     }
-    onItemDoubleClicked: {
+    onItemDoubleClicked: function(albumData) {
         contenWindow.albumName = albumData.name
         globalVariant.globalSwitchButtonStatus = 2; //使能上一页按钮，失能下一页按钮
     }
@@ -168,11 +161,13 @@ Rectangle {
 
     Connections {
         target: globalVariant
-        onReturnUpperlevelView: {contenWindow.returnUpperlevelView();}
+        function onReturnUpperlevelView() {
+            contenWindow.returnUpperlevelView();
+        }
     }
     Connections {
         target: albumModels
-        onMetaCodecChanged: {
+        function onMetaCodecChanged(name) {
             contenWindow.albumName = name;
         }
     }
@@ -309,13 +304,13 @@ Rectangle {
     }
     Connections {
         target: toggleGridViewAnimation
-        onFinished: {
+        function onFinished() {
             listview.visible = false
         }
     }
     Connections {
         target: toggleListViewAnimation
-        onFinished: {
+        function onFinished() {
             gridview.visible = false
         }
     }

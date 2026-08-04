@@ -1,5 +1,4 @@
-// Copyright (C) 2022-2026 UnionTech Technology Co., Ltd.
-// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2023 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -224,7 +223,6 @@ ColumnLayout {
             Connections {
                 target: musicBaseScrollView.contentItem
                 function onContentYChanged() {
-//                    console.log("Connections........onContentYChanged   ", musicBaseScrollView.contentItem.contentY)
                     if (control.type === "playlists")
                         dropArea.updateHoverIndex()
                 }

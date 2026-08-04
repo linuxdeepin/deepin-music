@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2023 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -94,11 +94,11 @@ Rectangle {
         delegate: ArtistSublistDelegate{
             width: listview.width - 40
             height: 56
-            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.horizontalCenter: parent ? parent.horizontalCenter : undefined
             backgroundVisible: true
             normalBackgroundVisible: index % 2 === 0
             autoExclusive: false
-            checked: mediaListModels.get(index).inMulitSelect
+            checked: mediaListModels.get(index) ? mediaListModels.get(index).inMulitSelect : false
         }
 
         // 拖拽放置区域
@@ -227,7 +227,7 @@ Rectangle {
             anchors.fill: parent
             acceptedButtons:Qt.NoButton
             z: -1  // 确保不阻挡拖拽
-            onWheel: {
+            onWheel: function(wheel) {
                 if(wheel.angleDelta.y>1){
                     artistSublistScrollBar.decrease()
                 } else{
@@ -347,7 +347,9 @@ Rectangle {
         }
         Connections {
             target: globalVariant
-            onClearSelectGroup: {listview.removeModelGroup()}
+            function onClearSelectGroup() {
+                listview.removeModelGroup()
+            }
         }
     }
 
