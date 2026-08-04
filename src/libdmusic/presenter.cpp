@@ -12,6 +12,9 @@
 #include <QDir>
 #include <QDBusInterface>
 #include <QCoreApplication>
+#include <QDesktopServices>
+#include <QUrl>
+#include <QProcess>
 
 #include "playerengine.h"
 #include "lyricanalysis.h"
@@ -486,10 +489,19 @@ void Presenter::showMetaFile(const QString &hash)
     DMusic::MediaMeta meta = m_data->m_dataManager->metaFromHash(hash);
     if (meta.localPath.isEmpty()) return;
 
+#ifdef Q_OS_WIN
+    // Windows 下使用 explorer 打开文件所在目录并选中文件
+    QFileInfo fileInfo(meta.localPath);
+    QStringList args;
+    args << "/select," << QDir::toNativeSeparators(fileInfo.absoluteFilePath());
+    QProcess::startDetached("explorer", args);
+#else
+    // Linux 下使用 DBus
     QDBusInterface interface(QStringLiteral("org.freedesktop.FileManager1"),
                              QStringLiteral("/org/freedesktop/FileManager1"),
                              QStringLiteral("org.freedesktop.FileManager1"));
     interface.call("ShowItems", QStringList() << meta.localPath, QString());
+#endif
 }
 
 bool Presenter::nextMetaFromPlay(const QString &metaHash)
