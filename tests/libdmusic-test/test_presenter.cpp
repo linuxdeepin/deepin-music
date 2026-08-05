@@ -1,4 +1,5 @@
-// Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2020 - 2026 UnionTech Software Technology Co., Ltd.
+//
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 // presenter.cpp 的单元测试：覆盖巨型编排类的 getter/setter、空 DB 防御分支、
@@ -32,7 +33,9 @@ protected:
     {
         // 每个用例新建实例，确保 DB / 设置状态隔离
         m_presenter = new Presenter("unknowAlbum", "unknowArtist");
+#ifdef Q_OS_LINUX
         m_presenter->setMprisPlayer("DeepinMusic", "deepin-music", "Deepin Music Player");
+#endif
     }
 
     void TearDown() override
@@ -54,7 +57,9 @@ TEST(Presenter, Construct)
 {
     Presenter *presenter = new Presenter("unknowAlbum", "unknowArtist");
     ASSERT_NE(presenter, nullptr);
+#ifdef Q_OS_LINUX
     presenter->setMprisPlayer("DeepinMusic", "deepin-music", "Deepin Music Player");
+#endif
     delete presenter;
 }
 
