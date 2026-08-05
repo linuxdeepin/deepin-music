@@ -1,5 +1,4 @@
-// Copyright (C) 2020 ~ 2020 Deepin Technology Co., Ltd.
-// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2023 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -15,7 +14,13 @@
 #include <QIcon>
 #include <QDBusConnection>
 
+#ifdef Q_OS_LINUX
 #include <MprisPlayer>
+#endif
+
+#ifdef Q_OS_WIN
+#include "winsmtc.h"
+#endif
 
 #include "qtplayer.h"
 #include "vlcplayer.h"
@@ -60,7 +65,14 @@ private:
     int                         m_pendingManualNavigation = 0;
     bool                        m_keepManualNavigation   = false;
     PlayerBase                 *m_player                = nullptr;
+#ifdef Q_OS_LINUX
     MprisPlayer                *m_mprisPlayer           = nullptr;
+#else
+    void                       *m_mprisPlayer           = nullptr;
+#endif
+#ifdef Q_OS_WIN
+    WinSMTC                    *m_winSmtc               = nullptr;
+#endif
     QString                     m_playlistHash;
     DmGlobal::PlaybackMode      m_playbackMode          = DmGlobal::RepeatNull;
     int                         m_playingCount          = 0;
@@ -190,11 +202,20 @@ PlayerEngine::PlayerEngine(QObject *parent, PlayerBase *injectedPlayer)
 PlayerEngine::~PlayerEngine()
 {
     qCDebug(dmMusic) << "Destroying PlayerEngine";
+#ifdef Q_OS_LINUX
     if (m_data->m_mprisPlayer) {
         qCDebug(dmMusic) << "Destroying MprisPlayer";
         delete m_data->m_mprisPlayer;
         m_data->m_mprisPlayer = nullptr;
     }
+#endif
+#ifdef Q_OS_WIN
+    if (m_data->m_winSmtc) {
+        m_data->m_winSmtc->shutdown();
+        delete m_data->m_winSmtc;
+        m_data->m_winSmtc = nullptr;
+    }
+#endif
 }
 
 double PlayerEngine::fadeInOutFactor() const
@@ -216,6 +237,7 @@ void PlayerEngine::setFadeInOut(bool flag)
     }
 }
 
+#ifdef Q_OS_LINUX
 void PlayerEngine::setMprisPlayer(const QString &serviceName, const QString &desktopEntry, const QString &identity)
 {
     qCDebug(dmMusic) << "Initializing MprisPlayer with service:" << serviceName;
@@ -313,6 +335,75 @@ void PlayerEngine::setMprisPlayer(const QString &serviceName, const QString &des
     connect(m_data->m_mprisPlayer, &MprisPlayer::raiseRequested, this, &PlayerEngine::raiseRequested);
     qCDebug(dmMusic) << "MprisPlayer initialized";
 }
+#endif
+
+#ifdef Q_OS_WIN
+void PlayerEngine::setWinSMTC(void *hwnd)
+{
+    if (!hwnd) return;
+
+    m_data->m_winSmtc = new WinSMTC(this);
+
+    if (!m_data->m_winSmtc->initialize(static_cast<HWND>(hwnd))) {
+        qWarning() << "WinSMTC: Failed to initialize";
+        delete m_data->m_winSmtc;
+        m_data->m_winSmtc = nullptr;
+        return;
+    }
+
+    connect(m_data->m_winSmtc, &WinSMTC::playRequested, this, [this]() {
+        if (playbackStatus() == DmGlobal::Paused) {
+            resume();
+        } else if (playbackStatus() != DmGlobal::Playing) {
+            if (isEmpty()) {
+                Q_EMIT playPlaylistRequested("all");
+            } else {
+                if (!getMediaMeta().localPath.isEmpty() && !getMediaMeta().hash.isEmpty()) {
+                    play();
+                } else {
+                    playNextMeta(false);
+                }
+            }
+        } else {
+            pauseNow();
+        }
+    });
+
+    connect(m_data->m_winSmtc, &WinSMTC::pauseRequested, this, &PlayerEngine::pauseNow);
+
+    connect(m_data->m_winSmtc, &WinSMTC::stopRequested, this, &PlayerEngine::stop);
+
+    connect(m_data->m_winSmtc, &WinSMTC::nextRequested, this, [this]() {
+        playNextMeta(false);
+    });
+
+    connect(m_data->m_winSmtc, &WinSMTC::previousRequested, this, &PlayerEngine::playPreMeta);
+
+    connect(this, &PlayerEngine::playbackStatusChanged, this, [this](DmGlobal::PlaybackStatus status) {
+        if (!m_data->m_winSmtc) return;
+        switch (status) {
+        case DmGlobal::Playing:
+            m_data->m_winSmtc->updatePlaybackStatus(1);
+            break;
+        case DmGlobal::Paused:
+            m_data->m_winSmtc->updatePlaybackStatus(2);
+            break;
+        default:
+            m_data->m_winSmtc->updatePlaybackStatus(0);
+            break;
+        }
+    });
+
+    m_data->m_winSmtc->setControlsEnabled(true, true, true,
+        hasNextPlayableMeta(getMediaMeta().hash),
+        hasPreviousPlayableMeta(getMediaMeta().hash));
+
+    MediaMeta currentMeta = getMediaMeta();
+    if (!currentMeta.hash.isEmpty()) {
+        resetDBusMpris(currentMeta);
+    }
+}
+#endif
 
 void PlayerEngine::setMediaMeta(const QString &metaHash)
 {
@@ -899,6 +990,7 @@ void PlayerEngine::playNextMeta(const DMusic::MediaMeta &meta, bool isAuto, bool
 
 void PlayerEngine::resetDBusMpris(const DMusic::MediaMeta &meta)
 {
+#ifdef Q_OS_LINUX
     qCDebug(dmMusic) << "Resetting DBus Mpris with meta:" << meta.title;
     QVariantMap metadata;
     metadata.insert(Mpris::metadataToString(Mpris::Title), meta.title);
@@ -920,6 +1012,26 @@ void PlayerEngine::resetDBusMpris(const DMusic::MediaMeta &meta)
     metadata.insert(Mpris::metadataToString(Mpris::ArtUrl), str);
     m_data->m_mprisPlayer->setMetadata(metadata);
     qCDebug(dmMusic) << "DBus Mpris reset with meta:" << meta.title;
+#endif
+#ifdef Q_OS_WIN
+    if (m_data->m_winSmtc) {
+        QString artPath = DmGlobal::cachePath() + "/images/" + meta.hash + ".jpg";
+        QFileInfo artInfo(artPath);
+        if (!artInfo.exists()) {
+            artPath = DmGlobal::cachePath() + "/images/" + "default_cover_max.jpg";
+            artInfo.setFile(artPath);
+            if (!artInfo.exists()) {
+                QIcon icon = QIcon::fromTheme("cover_max");
+                icon.pixmap(QSize(50, 50)).save(artPath);
+            }
+        }
+        m_data->m_winSmtc->updateMetadata(meta.title, meta.artist, meta.album,
+                                          meta.length, artPath);
+        m_data->m_winSmtc->setControlsEnabled(true, true, true,
+            hasNextPlayableMeta(meta.hash),
+            hasPreviousPlayableMeta(meta.hash));
+    }
+#endif
 }
 
 void PlayerEngine::playNextMeta(bool isAuto, bool playFlag)

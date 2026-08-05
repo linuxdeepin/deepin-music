@@ -21,6 +21,10 @@
 #include <QSharedMemory>
 #endif
 
+#ifdef Q_OS_WIN
+#include <windows.h>
+#endif
+
 #include <DLog>
 #include <DGuiApplicationHelper>
 #include <QGuiApplication>
@@ -41,6 +45,8 @@
 #include "effect/shaderimageview.h"
 #include "effect/shaderdataview.h"
 #include "presenter.h"
+#include "player/playerengine.h"
+#include "player/winsmtc.h"
 #include "util/eventsfilter.h"
 #include "util/shortcut.h"
 #include "util/dbusadpator.h"
@@ -128,6 +134,16 @@ int main(int argc, char *argv[])
     qputenv("D_POPUP_MODE", "embed");
 #ifdef Q_OS_WIN
     qputenv("D_DTK_DISABLE_INWINDOWBLUR", "1");
+    typedef HRESULT (WINAPI *SetCurrentProcessExplicitAppUserModelIDProc)(PCWSTR);
+    HMODULE shell32 = LoadLibraryW(L"shell32.dll");
+    if (shell32) {
+        auto proc = (SetCurrentProcessExplicitAppUserModelIDProc)GetProcAddress(shell32, "SetCurrentProcessExplicitAppUserModelID");
+        if (proc) {
+            proc(L"Deepin.DeepinMusicPlayer");
+        }
+        FreeLibrary(shell32);
+    }
+    WinSMTC::ensureStartMenuShortcut();
 #endif
 
     QGuiApplication *app = new QGuiApplication(argc, argv);
@@ -226,25 +242,33 @@ int main(int argc, char *argv[])
     EventsFilter eventsFilter(presenter.data());
     Shortcut shortcut(presenter.data());
 
+#ifdef Q_OS_LINUX
     ApplicationAdaptor adaptor(presenter.data());
     QDBusConnection::sessionBus().registerObject("/org/mpris/speech", "com.deepin.speech", &adaptor, QDBusConnection::RegisterOption::ExportAllSlots);
+#endif
 
+#ifdef Q_OS_LINUX
     presenter->setMprisPlayer("DeepinMusic", "deepin-music", "Deepin Music Player");
+#endif
     engine.rootContext()->setContextProperty("Presenter", presenter.data());
     engine.rootContext()->setContextProperty("EventsFilter", &eventsFilter);
     engine.rootContext()->setContextProperty("ShortcutDialg", &shortcut);
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
+
     logStartupStage("qml-components-created");
     engine.rootObjects()[0]->installEventFilter(&eventsFilter);
 #ifdef Q_OS_WIN
     if (auto *window = qobject_cast<QWindow*>(engine.rootObjects()[0])) {
         window->setIcon(QIcon(":/dsg/img/deepin-music.svg"));
+        presenter->playerEngine()->setWinSMTC(reinterpret_cast<void*>(window->winId()));
     }
 #endif
+
     if (engine.rootObjects().isEmpty()) {
         qCDebug(dmMusic) << "engine.rootObjects().isEmpty(), return -1";
         return -1;
     }
+
     if (auto *window = qobject_cast<QQuickWindow *>(engine.rootObjects().first())) {
         const auto deferredUiTriggered = std::make_shared<bool>(false);
         const auto triggerDeferredUi = [&startupTimer, window, presenter = presenter.data(), deferredUiTriggered](const char *trigger) {
@@ -270,6 +294,7 @@ int main(int argc, char *argv[])
             triggerDeferredUi("fallback-timeout");
         });
     }
+
     // 导入自动播放
     if (!OpenFilePaths.isEmpty()) {
         qCDebug(dmMusic) << "OpenFilePaths: " << OpenFilePaths;

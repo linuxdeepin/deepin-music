@@ -1,5 +1,4 @@
-// Copyright (C) 2020 ~ 2020 Deepin Technology Co., Ltd.
-// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2023 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -22,7 +21,12 @@ public:
 
     double fadeInOutFactor() const;
     void setFadeInOut(bool flag);
+#ifdef Q_OS_LINUX
     void setMprisPlayer(const QString &serviceName, const QString &desktopEntry, const QString &identity);
+#endif
+#ifdef Q_OS_WIN
+    void setWinSMTC(void *hwnd);
+#endif
     void setMediaMeta(const QString &metaHash);
     void setMediaMeta(const DMusic::MediaMeta &metaList);
     QStringList supportedSuffixList()const;

@@ -254,6 +254,7 @@ Presenter::~Presenter()
     }
 }
 
+#ifdef Q_OS_LINUX
 void Presenter::setMprisPlayer(const QString &serviceName, const QString &desktopEntry, const QString &identity)
 {
     qCDebug(dmMusic) << "Setting MPRIS player - Service:" << serviceName
@@ -261,6 +262,7 @@ void Presenter::setMprisPlayer(const QString &serviceName, const QString &deskto
                      << "Identity:" << identity;
     m_data->m_playerEngine->setMprisPlayer(serviceName, desktopEntry, identity);
 }
+#endif
 
 void Presenter::prepareStartupAssets()
 {
@@ -277,6 +279,11 @@ QStringList Presenter::supportedSuffixList() const
     }
     qCDebug(dmMusic) << "Supported suffixes:" << suffixList;
     return suffixList;
+}
+
+PlayerEngine* Presenter::playerEngine() const
+{
+    return m_data->m_playerEngine;
 }
 
 QColor Presenter::getMainColorByKmeans()

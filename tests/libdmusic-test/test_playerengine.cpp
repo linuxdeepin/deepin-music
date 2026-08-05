@@ -1,5 +1,4 @@
-// Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co., Ltd.
-// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2023 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -252,7 +251,9 @@ TEST(PlayerEngineInjectedTest, forcePlayTriggersFakePlay)
     auto fake = std::make_unique<FakePlayer>();
     auto engine = std::make_unique<PlayerEngine>(nullptr, fake.get());
     // setMediaMeta→resetDBusMpris 依赖 m_mprisPlayer 已初始化，否则 SEGV
+#ifdef Q_OS_LINUX
     engine->setMprisPlayer("org.test.Mpris", "test", "Test");
+#endif
     DMusic::MediaMeta m; m.hash = "h1"; m.localPath = "/tmp/x.mp3";
     engine->addMetasToPlayList(QList<DMusic::MediaMeta>{m});
     engine->forcePlay();  // setMediaMeta(first) + play()
@@ -264,7 +265,9 @@ TEST(PlayerEngineInjectedTest, stopResetsFakeState)
 {
     auto fake = std::make_unique<FakePlayer>();
     auto engine = std::make_unique<PlayerEngine>(nullptr, fake.get());
+#ifdef Q_OS_LINUX
     engine->setMprisPlayer("org.test.Mpris", "test", "Test");  // 同上，避免 resetDBusMpris 崩溃
+#endif
     engine->stop();  // m_player->stop + setMediaMeta(empty)
     EXPECT_EQ(fake->m_fakeState, DmGlobal::Stopped);
 }
@@ -292,7 +295,9 @@ TEST(PlayerEngineFadeInOutTest, setFadeInOutFactorChangesValue)
 TEST(PlayerEngineMediaMetaTest, setMediaMetaByHashWithExistingMeta)
 {
     std::unique_ptr<PlayerEngine> eng(makeEngine());
+#ifdef Q_OS_LINUX
     eng->setMprisPlayer("org.test.Mpris", "test", "Test");  // 初始化 mprisPlayer
+#endif
     DMusic::MediaMeta m;
     m.hash = "test-hash-001";
     m.title = "Test Song";
@@ -306,7 +311,9 @@ TEST(PlayerEngineMediaMetaTest, setMediaMetaByHashWithExistingMeta)
 TEST(PlayerEngineMediaMetaTest, setMediaMetaByMetaObject)
 {
     std::unique_ptr<PlayerEngine> eng(makeEngine());
+#ifdef Q_OS_LINUX
     eng->setMprisPlayer("org.test.Mpris", "test", "Test");  // 初始化 mprisPlayer
+#endif
     DMusic::MediaMeta m;
     m.hash = "test-hash-002";
     m.title = "Test Song 2";
@@ -449,7 +456,9 @@ TEST(PlayerEngineRemovePlayingTest, removePlayingMetaDoesNotCrash)
 {
     auto fake = std::make_unique<FakePlayerEnhanced>();
     auto engine = std::make_unique<PlayerEngine>(nullptr, fake.get());
+#ifdef Q_OS_LINUX
     engine->setMprisPlayer("org.test.Mpris", "test", "Test");
+#endif
 
     DMusic::MediaMeta m1; m1.hash = "play1"; m1.localPath = "/tmp/p1.mp3";
     DMusic::MediaMeta m2; m2.hash = "play2"; m2.localPath = "/tmp/p2.mp3";
@@ -500,7 +509,9 @@ struct InjectedEngine {
         fake = std::make_unique<FakePlayer>();
         engine = std::make_unique<PlayerEngine>(nullptr, fake.get());
         if (withMpris) {
+#ifdef Q_OS_LINUX
             engine->setMprisPlayer("org.test.Mpris", "test", "Test");
+#endif
         }
     }
 };

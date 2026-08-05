@@ -1,5 +1,4 @@
-// Copyright (C) 2020 ~ 2020 Deepin Technology Co., Ltd.
-// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2023 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -16,6 +15,7 @@
 #include "global.h"
 
 class PresenterPrivate;
+class PlayerEngine;
 class LIBDMUSICSHARED_EXPORT Presenter : public QObject
 {
     Q_OBJECT
@@ -24,7 +24,9 @@ public:
     ~Presenter();
 
     // dbus接口
+#ifdef Q_OS_LINUX
     Q_INVOKABLE void setMprisPlayer(const QString &serviceName, const QString &desktopEntry, const QString &identity);
+#endif
     void prepareStartupAssets();
 
     // 播放控制
@@ -108,6 +110,8 @@ public:
 
     // 退出
     Q_INVOKABLE void forceExit();
+
+    PlayerEngine* playerEngine() const;
 
 public slots:
     // 播放器
