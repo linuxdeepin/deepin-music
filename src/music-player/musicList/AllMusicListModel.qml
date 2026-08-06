@@ -77,7 +77,7 @@ ListModel {
         }
     }
 
-    function onMetaCoverReady(meta) {
+    function onMetaAnalysisReady(meta) {
         for (var j = 0; j < mediaModels.count; j++) {
             if (mediaModels.get(j)["hash"] === meta.hash) {
                 mediaModels.setProperty(j, "coverUrl", meta.coverUrl)
@@ -95,6 +95,6 @@ ListModel {
         Presenter.addOneMeta.connect(onAddOneMeta);
         Presenter.playlistSortChanged.connect(playlistSortChanged)
         Presenter.updatedMetaCodec.connect(onUpdatedMetaCodec)
-        Presenter.metaCoverReady.connect(onMetaCoverReady)
+        Presenter.metaAnalysisReady.connect(onMetaAnalysisReady)
     }
 }

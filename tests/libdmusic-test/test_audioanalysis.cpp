@@ -23,6 +23,7 @@
 #include <QDir>
 #include <QTemporaryFile>
 #include <QBuffer>
+#include <QSignalSpy>
 #include <memory>
 
 #include <taglib/mpegfile.h>
@@ -34,6 +35,7 @@
 #include <taglib/textidentificationframe.h>
 
 #include "audioanalysis.h"
+#include "mediametaworker.h"
 #include "global.h"
 #include "utils.h"
 
@@ -212,6 +214,21 @@ TEST(AudioAnalysisParseFileTest, creatMediaMetaUsesPrecomputedHash)
     EXPECT_EQ(meta.filetype, "mp3");
 }
 
+
+TEST(MediaMetaWorkerTest, enqueueMetasDeduplicatesByHash)
+{
+    ASSERT_TRUE(QFile::exists(sampleMp3Path()));
+    MediaMetaWorker worker;
+    QSignalSpy spy(&worker, &MediaMetaWorker::signalMetaAnalysisReady);
+
+    DMusic::MediaMeta meta;
+    meta.localPath = sampleMp3Path();
+    meta.hash = "duplicate-cover-hash";
+
+    worker.enqueueMetas({meta, meta});
+    EXPECT_EQ(spy.count(), 1);
+}
+
 TEST(AudioAnalysisParseFileTest, parseMetaCoverDoesNotCrash)
 {
     DMusic::MediaMeta meta;
@@ -227,6 +244,15 @@ TEST(AudioAnalysisParseFileTest, parseMetaLyricsDoesNotCrash)
     meta.localPath = sampleMp3Path();
     meta.hash = Utils::filePathHash(sampleMp3Path());
     AudioAnalysis::parseMetaLyrics(meta);       // 提取歌词（可能无），不崩溃即可
+    SUCCEED();
+}
+
+TEST(AudioAnalysisParseFileTest, parseMetaCoverAndLyricsDoesNotCrash)
+{
+    DMusic::MediaMeta meta;
+    meta.localPath = sampleMp3Path();
+    meta.hash = Utils::filePathHash(sampleMp3Path());
+    AudioAnalysis::parseMetaCoverAndLyrics(meta); // 一次打开文件解析封面和歌词
     SUCCEED();
 }
 

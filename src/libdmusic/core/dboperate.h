@@ -7,8 +7,6 @@
 
 #include "global.h"
 #include <QSet>
-#include <QtConcurrent>
-#include <QFuture>
 
 class DBOperate : public QObject
 {
@@ -25,11 +23,8 @@ public slots:
 signals:
     void signalAddOneMeta(QStringList playlistHashs, DMusic::MediaMeta meta);
     void signalImportFinished(QStringList playlistHashs, int failCount, int sucessCount, int existCount, QString mediaHash);
-    void signalCoverBatchFinished();
-    void signalMetaCoverReady(DMusic::MediaMeta meta);
-
-private:
-    void processPendingCovers(QList<DMusic::MediaMeta> &pendingCovers);
+    void signalMetaBatchFinished();
+    void signalEnqueueMetaTasks(QList<DMusic::MediaMeta> metas);
 
 private:
     QStringList          m_supportedSuffixs;

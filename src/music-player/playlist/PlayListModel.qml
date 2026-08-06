@@ -62,7 +62,7 @@ ListModel {
         }
     }
 
-    function onMetaCoverReady(meta) {
+    function onMetaAnalysisReady(meta) {
         for (var j = 0; j < playlistModel.count; j++) {
             if (playlistModel.get(j)["hash"] === meta.hash) {
                 playlistModel.setProperty(j, "coverUrl", meta.coverUrl)
@@ -80,7 +80,7 @@ ListModel {
         Presenter.importFinished.connect(onAddMetaFinished)
         Presenter.addOneMeta.connect(onAddOneMeta)
         Presenter.updatedMetaCodec.connect(onUpdatedMetaCodec)
-        Presenter.metaCoverReady.connect(onMetaCoverReady)
+        Presenter.metaAnalysisReady.connect(onMetaAnalysisReady)
 
         Presenter.currentPlaylistSChanged.connect(function(playlistHash){
             if (playlistHash === "") {

@@ -25,6 +25,7 @@
 #include "audioanalysis.h"
 #include "utils.h"
 #include "dboperate.h"
+#include "mediametaworker.h"
 #include "musicsettings.h"
 #include "util/log.h"
 
@@ -151,6 +152,12 @@ public:
         m_dbOperate = new DBOperate(supportedSuffixs);
         m_workerThread = new QThread(m_parent);
         m_dbOperate->moveToThread(m_workerThread);
+        m_mediaMetaWorker = new MediaMetaWorker;
+        m_mediaMetaThread = new QThread(m_parent);
+        m_mediaMetaWorker->moveToThread(m_mediaMetaThread);
+        m_metaUpsertTimer = new QTimer(m_parent);
+        m_metaUpsertTimer->setSingleShot(true);
+        m_metaUpsertTimer->setInterval(1000);
         qCDebug(dmMusic) << "DataManagerPrivate initialized with current playlist:" << m_currentHash;
     }
     ~DataManagerPrivate()
@@ -164,6 +171,10 @@ public:
         if (m_workerStopped) return;
         m_workerStopped = true;
 
+        if (m_metaUpsertTimer) {
+            m_metaUpsertTimer->stop();
+        }
+
         if (m_dbOperate) {
             // 让 m_dbOperate 在自己 affinity 的 worker 线程里析构。
             //    deleteLater 在 worker 的事件循环里 post 一个 DeferredDelete 事件；
@@ -172,17 +183,22 @@ public:
             m_dbOperate->deleteLater();
             m_dbOperate = nullptr;
         }
-        // 请求事件循环退出 + 等线程真的结束。保持 DBOperate->DataManager 连接到
-        // worker 停止后，再排空主线程上已 posted 的封面回填事件。
         if (m_workerThread) {
             m_workerThread->quit();
             m_workerThread->wait();
             delete m_workerThread;
             m_workerThread = nullptr;
         }
-        // Worker 已停，排空主线程上此前已 posted 给 DataManager 的 metacall
-        // （如 signalMetaCoverReady/signalCoverBatchFinished）。此时 m_parent 仍有效，
-        // slot 可安全更新 m_importedMetas，随后 DataManager 析构会统一保存。
+        if (m_mediaMetaWorker) {
+            m_mediaMetaWorker->deleteLater();
+            m_mediaMetaWorker = nullptr;
+        }
+        if (m_mediaMetaThread) {
+            m_mediaMetaThread->quit();
+            m_mediaMetaThread->wait();
+            delete m_mediaMetaThread;
+            m_mediaMetaThread = nullptr;
+        }
         QCoreApplication::sendPostedEvents(m_parent, 0);
     }
 private:
@@ -190,6 +206,9 @@ private:
     DataManager                      *m_parent;
     QThread                          *m_workerThread     = nullptr;
     DBOperate                        *m_dbOperate        = nullptr;
+    QThread                          *m_mediaMetaThread      = nullptr;
+    MediaMetaWorker                      *m_mediaMetaWorker      = nullptr;
+    QTimer                           *m_metaUpsertTimer = nullptr;
     MusicSettings                    *m_settings         = nullptr;
     bool                               m_workerStopped    = false;
     QSqlDatabase                      m_database;
@@ -213,16 +232,21 @@ DataManager::DataManager(QStringList supportedSuffixs, QObject *parent, const QS
     : QObject(parent), m_data(new DataManagerPrivate(supportedSuffixs, this, dbPath))
 {
     qCDebug(dmMusic) << "Initializing DataManager with supported suffixes:" << supportedSuffixs;
+    qRegisterMetaType<DMusic::MediaMeta>("DMusic::MediaMeta");
+    qRegisterMetaType<QList<DMusic::MediaMeta>>("QList<DMusic::MediaMeta>");
     initPlaylist();
 
     connect(this, &DataManager::signalImportMetas, m_data->m_dbOperate, &DBOperate::slotImportMetas, Qt::QueuedConnection);
     connect(m_data->m_dbOperate, &DBOperate::signalAddOneMeta, this, &DataManager::slotAddOneMeta, Qt::QueuedConnection);
     connect(m_data->m_dbOperate, &DBOperate::signalImportFinished, this, &DataManager::signalImportFinished, Qt::QueuedConnection);
-    connect(m_data->m_dbOperate, &DBOperate::signalCoverBatchFinished, this, &DataManager::slotCoverBatchFinished, Qt::QueuedConnection);
-    connect(m_data->m_dbOperate, &DBOperate::signalMetaCoverReady, this, &DataManager::slotMetaCoverReady, Qt::QueuedConnection);
+    connect(m_data->m_dbOperate, &DBOperate::signalMetaBatchFinished, this, &DataManager::slotMetaBatchFinished, Qt::QueuedConnection);
+    connect(m_data->m_dbOperate, &DBOperate::signalEnqueueMetaTasks, m_data->m_mediaMetaWorker, &MediaMetaWorker::enqueueMetas, Qt::QueuedConnection);
+    connect(m_data->m_mediaMetaWorker, &MediaMetaWorker::signalMetaAnalysisReady, this, &DataManager::slotMetaAnalysisReady, Qt::QueuedConnection);
+    connect(m_data->m_metaUpsertTimer, &QTimer::timeout, this, &DataManager::slotMetaBatchFinished);
     connect(this, &DataManager::signalClearImportingHash, m_data->m_dbOperate, &DBOperate::slotClearImportingHash, Qt::QueuedConnection);
 
     m_data->m_workerThread->start();
+    m_data->m_mediaMetaThread->start();
     qCDebug(dmMusic) << "DataManager initialized with worker thread";
 }
 
@@ -2470,7 +2494,7 @@ void DataManager::slotAddOneMeta(QStringList playlistHashs, MediaMeta meta)
     emit signalAddOneMeta(playlistHashs, curMeta, true);
 }
 
-void DataManager::slotMetaCoverReady(DMusic::MediaMeta meta)
+void DataManager::slotMetaAnalysisReady(DMusic::MediaMeta meta)
 {
     int index = metaIndexFromHash(meta.hash);
     if (index < 0) return;
@@ -2480,14 +2504,19 @@ void DataManager::slotMetaCoverReady(DMusic::MediaMeta meta)
     m_data->m_allMetas[index].hasimage = meta.hasimage;
     m_data->m_allMetas[index].lyricPath = meta.lyricPath;
 
-    // 2. m_importedMetas (upsertMetasDB reads it; sync or it writes stale hasimage/coverUrl)
+    // 2. m_importedMetas (upsertMetasDB reads it; append if base import already flushed)
+    bool importedMetaSynced = false;
     for (auto &im : m_data->m_importedMetas) {
         if (im.hash == meta.hash) {
             im.coverUrl = meta.coverUrl;
             im.hasimage = meta.hasimage;
             im.lyricPath = meta.lyricPath;
+            importedMetaSynced = true;
             break;
         }
+    }
+    if (!importedMetaSynced) {
+        m_data->m_importedMetas.append(m_data->m_allMetas[index]);
     }
 
     // 3. album/artist musicinfos copy (no top-level coverUrl field; UI derives from musicinfos)
@@ -2503,15 +2532,16 @@ void DataManager::slotMetaCoverReady(DMusic::MediaMeta meta)
     }
 
     m_data->m_dirty = true;  // hasimage/coverUrl/lyricPath affect DB row
-    emit signalMetaCoverReady(m_data->m_allMetas[index]);
+    if (m_data->m_metaUpsertTimer && !m_data->m_metaUpsertTimer->isActive()) {
+        m_data->m_metaUpsertTimer->start();
+    }
+    emit signalMetaAnalysisReady(m_data->m_allMetas[index]);
 }
 
-void DataManager::slotCoverBatchFinished()
+void DataManager::slotMetaBatchFinished()
 {
-    // 导入成功提示已在 signalImportFinished 发出；这里仅在封面/歌词补齐后
-    // 增量落库，避免 musicNew 先写入 stale coverUrl/hasimage/lyricPath。
     upsertMetasDB();
-    emit signalCoverBatchFinished();
+    emit signalMetaBatchFinished();
 }
 
 void DataManager::slotLazyLoadDatabase()
