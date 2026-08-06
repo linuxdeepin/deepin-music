@@ -37,6 +37,8 @@ DynamicLibraries::DynamicLibraries()
         DmGlobal::setPlaybackEngineType(0);
     } else {
         qCDebug(dmMusic) << "Successfully initialized dynamic libraries";
+        // 加载成功时设置引擎类型为 VLC
+        DmGlobal::setPlaybackEngineType(1);
     }
 }
 

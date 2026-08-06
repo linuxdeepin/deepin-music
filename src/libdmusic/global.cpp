@@ -4,6 +4,7 @@
 
 #include "global.h"
 #include "util/log.h"
+#include "core/dynamiclibraries.h"
 
 #include <QVariantMap>
 #include <QProcessEnvironment>
@@ -240,21 +241,10 @@ void DmGlobal::initPlaybackEngineType()
 {
     qCDebug(dmMusic) << "Initializing playback engine";
     engineType = 0;
-#ifdef Q_OS_WIN
-    if (libExist("libvlc") && libExist("avcodec-62")) {
-        engineType = 1;
-        qCInfo(dmMusic) << "Windows: VLC playback engine initialized successfully";
-    } else {
-        qCInfo(dmMusic) << "Windows: VLC not available, using QtPlayer engine";
-    }
-#else
-    if (libExist("libvlc.so") && libExist("libavcodec.so")) {
-        engineType = 1;
-        qCInfo(dmMusic) << "VLC playback engine initialized successfully";
-    } else {
-        qCWarning(dmMusic) << "Failed to initialize VLC playback engine, falling back to default";
-    }
-#endif
+    // 触发 DynamicLibraries 单例初始化，它会加载 VLC 库并设置 engineType
+    // 这样避免了重复加载库的开销
+    DynamicLibraries::instance();
+    qCInfo(dmMusic) << "Playback engine type initialized to:" << engineType;
 }
 
 void DmGlobal::setPlaybackEngineType(int type)
