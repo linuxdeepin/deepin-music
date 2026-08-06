@@ -72,7 +72,7 @@ void DBOperate::slotImportMetas(const QStringList &urls, const QSet<QString> &me
 
     int importedCount = 0, importedFailCount = 0, existCount = 0;
     QSet<QString> allHashs;
-    QList<DMusic::MediaMeta> pendingCovers;  // newly imported metas to extract cover/lyrics after loop
+    QList<DMusic::MediaMeta> pendingMetas;  // newly imported metas to extract cover and lyrics in background
     for (auto &filePath : filePaths) {
         QFileInfo fileinfo(filePath);
         while (fileinfo.isSymLink()) {  //to find final target
@@ -99,7 +99,7 @@ void DBOperate::slotImportMetas(const QStringList &urls, const QSet<QString> &me
                 mediaMeta = AudioAnalysis::creatMediaMeta(filePath, hash);
                 if (mediaMeta.length > 0) {
                     mediaMeta.hasimage = false;
-                    pendingCovers.append(mediaMeta);  // cover/lyrics extracted after loop
+                    pendingMetas.append(mediaMeta);  // cover and lyrics extracted by MediaMetaWorker
                     curHashs << "all" << playlistHash;
                     allHashs << "all" << playlistHash;
                     qCDebug(dmMusic) << "Added new meta:" << mediaMeta.title << "to playlist:" << playlistHash;
@@ -118,7 +118,7 @@ void DBOperate::slotImportMetas(const QStringList &urls, const QSet<QString> &me
                 mediaMeta = AudioAnalysis::creatMediaMeta(filePath, hash);
                 if (mediaMeta.length > 0) {
                     mediaMeta.hasimage = false;
-                    pendingCovers.append(mediaMeta);  // cover/lyrics extracted after loop
+                    pendingMetas.append(mediaMeta);  // cover and lyrics extracted by MediaMetaWorker
                     curHashs << "all";
                     allHashs << "all";
                     qCDebug(dmMusic) << "Added new meta:" << mediaMeta.title << "to all music";
@@ -145,45 +145,18 @@ void DBOperate::slotImportMetas(const QStringList &urls, const QSet<QString> &me
         importedCount++;
     }
 
-    // Emit importFinished first so UI shows success / auto-play immediately,
-    // without waiting for the cover batch. upsertMetasDB is triggered later by
-    // signalCoverBatchFinished so m_importedMetas has correct hasimage/coverUrl.
+    // Emit importFinished first so UI shows success / auto-play immediately.
     emit signalImportFinished(allHashs.values(), importedFailCount, importedCount - importedFailCount - existCount, existCount, mediaHash);
 
-    // Extract cover/lyrics after the import loop using parallel batch processing.
-    if (!pendingCovers.isEmpty()) {
-        processPendingCovers(pendingCovers);
+    if (!pendingMetas.isEmpty()) {
+        emit signalEnqueueMetaTasks(pendingMetas);
     }
 
-    emit signalCoverBatchFinished();
+    // Persist base metadata without waiting for background cover and lyrics extraction.
+    emit signalMetaBatchFinished();
 }
 
 void DBOperate::slotClearImportingHash(const QString &hash)
 {
     m_importingHashes.remove(hash);
-}
-
-void DBOperate::processPendingCovers(QList<DMusic::MediaMeta> &pendingCovers)
-{
-    qCInfo(dmMusic) << "Processing" << pendingCovers.size() << "covers/lyrics in parallel batch mode";
-
-    const int batchSize = 8;
-
-    // 使用 QtConcurrent::map 并行处理（修改原地数据）
-    QtConcurrent::map(pendingCovers, [](DMusic::MediaMeta &meta) {
-        AudioAnalysis::parseMetaCoverAndLyrics(meta);
-    }).waitForFinished();
-
-    // 分批发送批量信号，避免一次性更新过多 UI
-    for (int i = 0; i < pendingCovers.size(); i += batchSize) {
-        int end = qMin(i + batchSize, pendingCovers.size());
-        QList<DMusic::MediaMeta> batch = pendingCovers.mid(i, end - i);
-
-        // 逐条发送以保持与现有 UI 逻辑兼容
-        for (const DMusic::MediaMeta &meta : batch) {
-            emit signalMetaCoverReady(meta);
-        }
-    }
-
-    qCInfo(dmMusic) << "Parallel cover/lyrics batch processing completed";
 }

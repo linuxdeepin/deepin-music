@@ -157,8 +157,8 @@ Presenter::Presenter(const QString &unknownAlbumStr, const QString &unknownArtis
     connect(m_data->m_dataManager, &DataManager::signalUpdatedMetaCodec, this, [ = ](DMusic::MediaMeta meta, QString preAlbum, QString preArtist) {
         emit updatedMetaCodec(Utils::metaToVariantMap(meta), preAlbum, preArtist);
     });
-    connect(m_data->m_dataManager, &DataManager::signalMetaCoverReady, this, [ = ](DMusic::MediaMeta meta) {
-        emit metaCoverReady(Utils::metaToVariantMap(meta));
+    connect(m_data->m_dataManager, &DataManager::signalMetaAnalysisReady, this, [ = ](DMusic::MediaMeta meta) {
+        emit metaAnalysisReady(Utils::metaToVariantMap(meta));
     });
 
     connect(this, &Presenter::restorePlaybackStatus, this, [ = ]() {

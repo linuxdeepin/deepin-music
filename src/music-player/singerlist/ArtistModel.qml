@@ -114,7 +114,7 @@ ListModel {
         }
     }
 
-    function onMetaCoverReady(meta) {
+    function onMetaAnalysisReady(meta) {
         globalVariant.updateGroupedModelCover(artistModels, meta)
     }
 
@@ -126,6 +126,6 @@ ListModel {
         Presenter.addOneMeta.connect(onAddOneMetaFinished);
         Presenter.playlistSortChanged.connect(playlistSortChanged)
         Presenter.updatedMetaCodec.connect(onUpdatedMetaCodec)
-        Presenter.metaCoverReady.connect(onMetaCoverReady)
+        Presenter.metaAnalysisReady.connect(onMetaAnalysisReady)
     }
 }

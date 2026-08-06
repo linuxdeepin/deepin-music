@@ -144,7 +144,7 @@ signals:
     void deletedPlaylist(QString playlistHash);
     void renamedPlaylist(const QString &name, const QString &playlistHash);
     void updatedMetaCodec(QVariantMap meta, QString preAlbum, QString preArtist);
-    void metaCoverReady(QVariantMap meta);
+    void metaAnalysisReady(QVariantMap meta);
     void updateCDStatus(int status);
     void quitRequested();
     void raiseRequested();
