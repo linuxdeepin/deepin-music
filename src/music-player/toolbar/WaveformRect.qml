@@ -122,11 +122,12 @@ Rectangle {
                 fillColor: DTK.palette.highlight
                 Text {
                     id: timeText
+                    height: parent.height - 8
                     anchors.horizontalCenter: parent.horizontalCenter
-                    text: mousePressed ?  dragTime : currentTime
+                    anchors.verticalCenter: parent.verticalCenter
+                    text: mousePressed ? dragTime : currentTime
                     color: DTK.palette.highlightedText
                     font: DTK.fontManager.t8
-                    verticalAlignment: Text.AlignHCenter
                 }
             }
             Rectangle {
