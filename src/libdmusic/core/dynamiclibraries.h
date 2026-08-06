@@ -19,6 +19,7 @@ private:
     ~DynamicLibraries();
     bool loadLibraries();
     QLibrary vlccoreLib;
+    QLibrary taglibPlugin;
     QLibrary vlcLib;
     QLibrary avcodecLib;
     QLibrary avformateLib;

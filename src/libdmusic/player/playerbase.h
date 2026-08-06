@@ -7,6 +7,7 @@
 #define PLAYERBASE_H
 
 #include "global.h"
+#include <QByteArray>
 #include <QObject>
 
 using namespace DMusic;
@@ -58,6 +59,7 @@ signals:
     void end();
     void sigSendCdaStatus(int state);
     void signalMutedChanged();
+    void audioDataReady(const QByteArray &data);
 
 protected:
     MediaMeta            m_activeMeta;
