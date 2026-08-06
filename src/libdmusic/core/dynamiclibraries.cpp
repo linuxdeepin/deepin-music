@@ -4,6 +4,7 @@
 
 #include "dynamiclibraries.h"
 #include <QDir>
+#include <QFileInfo>
 #include <QLibrary>
 #include <QLibraryInfo>
 #include <QDebug>
@@ -124,6 +125,23 @@ bool DynamicLibraries::loadLibraries()
             qCCritical(dmMusic) << "Failed to load VLC core library:" << vlccoreLib.errorString();
             return false;
         }
+
+#ifdef Q_OS_LINUX
+        // VLC's TagLib plugin is linked to TagLib 1, while dmusic links to
+        // TagLib 2. Load the plugin with deep binding before libvlc starts
+        // loading metadata modules, so it uses its compatible TagLib symbols.
+        const QString taglibPluginPath = QFileInfo(strvlccore).dir().filePath(
+                    "vlc/plugins/meta_engine/libtaglib_plugin.so");
+        if (QFileInfo::exists(taglibPluginPath)) {
+            taglibPlugin.setFileName(taglibPluginPath);
+            taglibPlugin.setLoadHints(QLibrary::DeepBindHint | QLibrary::PreventUnloadHint);
+            if (!taglibPlugin.load()) {
+                qCCritical(dmMusic) << "Failed to deep-bind VLC TagLib plugin:"
+                                    << taglibPlugin.errorString();
+                return false;
+            }
+        }
+#endif
     } else {
         qCCritical(dmMusic) << "VLC core library path is not valid:" << strvlccore;
         return false;
