@@ -72,6 +72,7 @@ public:
 
 public slots:
     void slotAddOneMeta(QStringList playlistHashs, DMusic::MediaMeta meta);
+    void slotEnqueueMetaTasks(const QList<DMusic::MediaMeta> &metas);
     void slotLazyLoadDatabase();
     void slotMetaAnalysisReady(DMusic::MediaMeta meta);
     void slotMetaBatchFinished();
@@ -84,6 +85,7 @@ signals:
     void signalAddMetaFinished(QStringList playlistHashs);
     void signalImportFinished(QStringList playlistHashs, int failCount, int sucessCount, int existCount, QString mediaHash);
     void signalMetaBatchFinished();
+    void signalEnqueueMetaTasks(QList<DMusic::MediaMeta> metas);
     void signalMetaAnalysisReady(DMusic::MediaMeta meta);
     void signalDeleteOneMeta(QStringList playlistHashs, QString hash, const bool &addToPlay);
     void signalDeleteFinished(QStringList playlistHashs);
@@ -94,6 +96,8 @@ signals:
 
 private:
     void initPlaylist();
+    void restorePendingMetaTasks();
+    void removePendingMetaTasks(const QStringList &hashes);
     int metaIndexFromHash(const QString &hash);
     void rebuildMetaHashIndex();
     int albumIndexFromName(const QString &name);
