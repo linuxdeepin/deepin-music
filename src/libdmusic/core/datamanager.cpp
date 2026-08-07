@@ -19,6 +19,12 @@
 #include <QTimer>
 #include <QDebug>
 #include <QCoreApplication>
+#include <QDir>
+#include <QFile>
+#include <QJsonArray>
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QSaveFile>
 
 #include <algorithm>
 
@@ -45,6 +51,91 @@ static bool isValidPlaylistUuid(const QString &uuid)
     static const QRegularExpression re("^[A-Za-z0-9_-]+$");
     return re.match(uuid).hasMatch();
 }
+
+namespace {
+
+QString pendingMetaAnalysisPath()
+{
+    return DmGlobal::cachePath() + "/meta-analysis-pending.json";
+}
+
+QHash<QString, QString> loadPendingMetaAnalysisTasks()
+{
+    QHash<QString, QString> tasks;
+    QFile file(pendingMetaAnalysisPath());
+    if (!file.exists()) {
+        return tasks;
+    }
+    if (!file.open(QIODevice::ReadOnly)) {
+        qCWarning(dmMusic) << "Failed to open pending metadata tasks:" << file.errorString();
+        return tasks;
+    }
+
+    const QJsonDocument document = QJsonDocument::fromJson(file.readAll());
+    if (!document.isArray()) {
+        qCWarning(dmMusic) << "Invalid pending metadata tasks file";
+        return tasks;
+    }
+
+    for (const QJsonValue &value : document.array()) {
+        const QJsonObject object = value.toObject();
+        const QString hash = object.value("hash").toString();
+        const QString localPath = object.value("localPath").toString();
+        if (!hash.isEmpty() && !localPath.isEmpty()) {
+            tasks.insert(hash, localPath);
+        }
+    }
+    return tasks;
+}
+
+bool isSafePendingMetaPath(const QString &path)
+{
+    const QFileInfo fileInfo(path);
+    if (!fileInfo.exists() || !fileInfo.isFile() || fileInfo.isSymLink()) {
+        return false;
+    }
+
+    // Reject symlinks in parent directories as well. The canonical path must
+    // refer to the exact path stored by the media database.
+    return fileInfo.canonicalFilePath() == QDir::cleanPath(fileInfo.absoluteFilePath());
+}
+
+bool savePendingMetaAnalysisTasks(const QHash<QString, QString> &tasks)
+{
+    const QString path = pendingMetaAnalysisPath();
+    if (tasks.isEmpty()) {
+        return !QFile::exists(path) || QFile::remove(path);
+    }
+
+    if (!QDir().mkpath(DmGlobal::cachePath())) {
+        qCWarning(dmMusic) << "Failed to create cache directory for pending metadata tasks";
+        return false;
+    }
+
+    QStringList hashes = tasks.keys();
+    hashes.sort();
+    QJsonArray array;
+    for (const QString &hash : hashes) {
+        QJsonObject object;
+        object.insert("hash", hash);
+        object.insert("localPath", tasks.value(hash));
+        array.append(object);
+    }
+
+    QSaveFile file(path);
+    if (!file.open(QIODevice::WriteOnly)) {
+        qCWarning(dmMusic) << "Failed to write pending metadata tasks:" << file.errorString();
+        return false;
+    }
+    file.write(QJsonDocument(array).toJson(QJsonDocument::Compact));
+    if (!file.commit()) {
+        qCWarning(dmMusic) << "Failed to commit pending metadata tasks:" << file.errorString();
+        return false;
+    }
+    return true;
+}
+
+} // namespace
 
 static bool compareArtistName(const ArtistInfo &data)
 {
@@ -146,6 +237,7 @@ public:
         : m_parent(parent), m_dbPath(dbPath)
     {
         qCDebug(dmMusic) << "Initializing DataManagerPrivate with supported suffixes:" << supportedSuffixs;
+        m_pendingMetaTasks = loadPendingMetaAnalysisTasks();
         m_settings = new MusicSettings(m_parent);
         m_currentHash = m_settings->value("base.play.last_playlist").toString();
         if (m_currentHash.isEmpty()) m_currentHash = "all";
@@ -190,6 +282,9 @@ public:
             m_workerThread = nullptr;
         }
         if (m_mediaMetaWorker) {
+            // Only the file currently being parsed is allowed to finish.
+            // Queued tasks remain in the sidecar file for the next startup.
+            m_mediaMetaWorker->requestStop();
             m_mediaMetaWorker->deleteLater();
             m_mediaMetaWorker = nullptr;
         }
@@ -217,6 +312,8 @@ private:
     QList<DMusic::MediaMeta>          m_allMetas;
     QHash<QString, int>               m_metaHashIndex;  // hash -> m_allMetas index, for O(1) metaIndexFromHash
     QList<DMusic::MediaMeta>          m_importedMetas;   // newly imported metas this batch; consumed and cleared by upsertMetasDB
+    QHash<QString, QString>            m_pendingMetaTasks;
+    QSet<QString>                      m_metaAnalysisReadyHashes;
     bool                               m_dirty = false;   // true if persistent in-memory model changed and needs full saveDataToDB on exit
     QList<DMusic::AlbumInfo>          m_allAlbums;
     QHash<QString, int>               m_albumNameIndex;   // album name -> m_allAlbums index
@@ -240,13 +337,15 @@ DataManager::DataManager(QStringList supportedSuffixs, QObject *parent, const QS
     connect(m_data->m_dbOperate, &DBOperate::signalAddOneMeta, this, &DataManager::slotAddOneMeta, Qt::QueuedConnection);
     connect(m_data->m_dbOperate, &DBOperate::signalImportFinished, this, &DataManager::signalImportFinished, Qt::QueuedConnection);
     connect(m_data->m_dbOperate, &DBOperate::signalMetaBatchFinished, this, &DataManager::slotMetaBatchFinished, Qt::QueuedConnection);
-    connect(m_data->m_dbOperate, &DBOperate::signalEnqueueMetaTasks, m_data->m_mediaMetaWorker, &MediaMetaWorker::enqueueMetas, Qt::QueuedConnection);
+    connect(m_data->m_dbOperate, &DBOperate::signalEnqueueMetaTasks, this, &DataManager::slotEnqueueMetaTasks, Qt::QueuedConnection);
+    connect(this, &DataManager::signalEnqueueMetaTasks, m_data->m_mediaMetaWorker, &MediaMetaWorker::enqueueMetas, Qt::QueuedConnection);
     connect(m_data->m_mediaMetaWorker, &MediaMetaWorker::signalMetaAnalysisReady, this, &DataManager::slotMetaAnalysisReady, Qt::QueuedConnection);
     connect(m_data->m_metaUpsertTimer, &QTimer::timeout, this, &DataManager::slotMetaBatchFinished);
     connect(this, &DataManager::signalClearImportingHash, m_data->m_dbOperate, &DBOperate::slotClearImportingHash, Qt::QueuedConnection);
 
     m_data->m_workerThread->start();
     m_data->m_mediaMetaThread->start();
+    restorePendingMetaTasks();
     qCDebug(dmMusic) << "DataManager initialized with worker thread";
 }
 
@@ -255,6 +354,9 @@ DataManager::~DataManager()
     qCDebug(dmMusic) << "Destroying DataManager";
     if (m_data) {
         m_data->stopWorkerAndDrain();
+        // Persist results already delivered to the main thread without waiting
+        // for queued analysis results that have not arrived yet.
+        slotMetaBatchFinished();
         saveDataToDB();
         // 关键：触发 DataManagerPrivate 析构走安全销毁路径（disconnect + deleteLater + quit + wait）
         delete m_data;
@@ -420,6 +522,7 @@ void DataManager::deleteMetaFromAllMetas(const QStringList &hashs)
             if (allHashs.isEmpty()) break;
         }
     }
+    removePendingMetaTasks(hashs);
     rebuildMetaHashIndex();  // removeAt shifts indices; full rebuild is simplest
     qCDebug(dmMusic) << "Finished deleting metas";
 }
@@ -2494,10 +2597,80 @@ void DataManager::slotAddOneMeta(QStringList playlistHashs, MediaMeta meta)
     emit signalAddOneMeta(playlistHashs, curMeta, true);
 }
 
+void DataManager::slotEnqueueMetaTasks(const QList<DMusic::MediaMeta> &metas)
+{
+    if (m_data->m_workerStopped) {
+        return;
+    }
+
+    bool changed = false;
+    for (const DMusic::MediaMeta &meta : metas) {
+        if (meta.hash.isEmpty() || meta.localPath.isEmpty()) {
+            continue;
+        }
+        if (m_data->m_pendingMetaTasks.value(meta.hash) != meta.localPath) {
+            m_data->m_pendingMetaTasks.insert(meta.hash, meta.localPath);
+            changed = true;
+        }
+    }
+    if (changed) {
+        savePendingMetaAnalysisTasks(m_data->m_pendingMetaTasks);
+    }
+    emit signalEnqueueMetaTasks(metas);
+}
+
+void DataManager::restorePendingMetaTasks()
+{
+    QList<DMusic::MediaMeta> tasks;
+    bool changed = false;
+    for (auto it = m_data->m_pendingMetaTasks.begin(); it != m_data->m_pendingMetaTasks.end();) {
+        const int index = metaIndexFromHash(it.key());
+        if (index < 0) {
+            it = m_data->m_pendingMetaTasks.erase(it);
+            changed = true;
+            continue;
+        }
+
+        const QString trustedPath = m_data->m_allMetas.at(index).localPath;
+        if (it.value() != trustedPath) {
+            // The sidecar is only a recovery hint. Never let its path override
+            // the path loaded from the media database.
+            it.value() = trustedPath;
+            changed = true;
+        }
+
+        if (isSafePendingMetaPath(trustedPath)) {
+            tasks.append(m_data->m_allMetas.at(index));
+        }
+        ++it;
+    }
+    if (changed) {
+        savePendingMetaAnalysisTasks(m_data->m_pendingMetaTasks);
+    }
+    if (!tasks.isEmpty()) {
+        emit signalEnqueueMetaTasks(tasks);
+    }
+}
+
+void DataManager::removePendingMetaTasks(const QStringList &hashes)
+{
+    bool changed = false;
+    for (const QString &hash : hashes) {
+        changed = m_data->m_pendingMetaTasks.remove(hash) > 0 || changed;
+        m_data->m_metaAnalysisReadyHashes.remove(hash);
+    }
+    if (changed) {
+        savePendingMetaAnalysisTasks(m_data->m_pendingMetaTasks);
+    }
+}
+
 void DataManager::slotMetaAnalysisReady(DMusic::MediaMeta meta)
 {
     int index = metaIndexFromHash(meta.hash);
-    if (index < 0) return;
+    if (index < 0) {
+        removePendingMetaTasks(QStringList() << meta.hash);
+        return;
+    }
 
     // 1. m_allMetas
     m_data->m_allMetas[index].coverUrl = meta.coverUrl;
@@ -2532,6 +2705,7 @@ void DataManager::slotMetaAnalysisReady(DMusic::MediaMeta meta)
     }
 
     m_data->m_dirty = true;  // hasimage/coverUrl/lyricPath affect DB row
+    m_data->m_metaAnalysisReadyHashes.insert(meta.hash);
     if (m_data->m_metaUpsertTimer && !m_data->m_metaUpsertTimer->isActive()) {
         m_data->m_metaUpsertTimer->start();
     }
@@ -2540,7 +2714,12 @@ void DataManager::slotMetaAnalysisReady(DMusic::MediaMeta meta)
 
 void DataManager::slotMetaBatchFinished()
 {
-    upsertMetasDB();
+    const bool persisted = upsertMetasDB();
+    if (persisted && !m_data->m_metaAnalysisReadyHashes.isEmpty()) {
+        const QStringList hashes = m_data->m_metaAnalysisReadyHashes.values();
+        m_data->m_metaAnalysisReadyHashes.clear();
+        removePendingMetaTasks(hashes);
+    }
     emit signalMetaBatchFinished();
 }
 

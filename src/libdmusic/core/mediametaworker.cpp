@@ -7,14 +7,25 @@
 #include "audioanalysis.h"
 #include "util/log.h"
 
+#include <QTimer>
+
 MediaMetaWorker::MediaMetaWorker(QObject *parent)
     : QObject(parent)
 {
     qCDebug(dmMusic) << "MediaMetaWorker initialized";
 }
 
+void MediaMetaWorker::requestStop()
+{
+    m_stopRequested.store(true, std::memory_order_release);
+}
+
 void MediaMetaWorker::enqueueMetas(const QList<DMusic::MediaMeta> &metas)
 {
+    if (m_stopRequested.load(std::memory_order_acquire)) {
+        return;
+    }
+
     for (const DMusic::MediaMeta &meta : metas) {
         if (meta.hash.isEmpty() || meta.localPath.isEmpty()) {
             continue;
@@ -28,17 +39,33 @@ void MediaMetaWorker::enqueueMetas(const QList<DMusic::MediaMeta> &metas)
         m_pendingHashes.insert(meta.hash);
     }
 
-    processQueue();
+    scheduleNext();
 }
 
-void MediaMetaWorker::processQueue()
+void MediaMetaWorker::scheduleNext()
 {
-    while (!m_queue.isEmpty()) {
-        DMusic::MediaMeta meta = m_queue.dequeue();
-        m_pendingHashes.remove(meta.hash);
-
-        AudioAnalysis::parseMetaCoverAndLyrics(meta);
-        m_doneHashes.insert(meta.hash);
-        emit signalMetaAnalysisReady(meta);
+    if (m_stopRequested.load(std::memory_order_acquire)
+        || m_processScheduled || m_queue.isEmpty()) {
+        return;
     }
+
+    m_processScheduled = true;
+    QTimer::singleShot(0, this, &MediaMetaWorker::processNext);
+}
+
+void MediaMetaWorker::processNext()
+{
+    m_processScheduled = false;
+    if (m_stopRequested.load(std::memory_order_acquire) || m_queue.isEmpty()) {
+        return;
+    }
+
+    DMusic::MediaMeta meta = m_queue.dequeue();
+    m_pendingHashes.remove(meta.hash);
+
+    AudioAnalysis::parseMetaCoverAndLyrics(meta);
+    m_doneHashes.insert(meta.hash);
+    emit signalMetaAnalysisReady(meta);
+
+    scheduleNext();
 }

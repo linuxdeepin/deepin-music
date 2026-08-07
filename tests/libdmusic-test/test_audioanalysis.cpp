@@ -226,6 +226,7 @@ TEST(MediaMetaWorkerTest, enqueueMetasDeduplicatesByHash)
     meta.hash = "duplicate-cover-hash";
 
     worker.enqueueMetas({meta, meta});
+    ASSERT_TRUE(spy.wait(1000));
     EXPECT_EQ(spy.count(), 1);
 }
 
