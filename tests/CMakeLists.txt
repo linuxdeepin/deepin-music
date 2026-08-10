@@ -4,4 +4,12 @@
 # add_subdirectory(tst_music-player)
 add_subdirectory(libdmusic-test)
 
+# ── 模块化单元测试自动发现（增量补全）─────────────────────────────────────
+# 每个测试类独立子目录 tests/ut_<classname>/，含独立 CMakeLists.txt。
+# 新增测试只需新建 ut_<classname>/ 子目录，无需修改本文件，避免多 PR 合并冲突。
+file(GLOB MULTICA_UT_SUBDIRS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/ut_*)
+foreach(_ut_dir ${MULTICA_UT_SUBDIRS})
+    add_subdirectory(${_ut_dir})
+endforeach()
+
 

@@ -20,3 +20,10 @@ obj-x86_64-linux-gnu/
 .codegraph/
 .trellis/
 AGENTS.md
+
+# 单元测试生成产物（不入库）
+build-debug/
+.codebase-memory/
+tests/.ut-session.json
+*.info
+*.gcov
