@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2023 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -181,6 +181,40 @@ Rectangle {
             toolButtonItem.sortType = 0
         else if (sortType === 13)
             toolButtonItem.sortType = 1
+
+        restoreTimer.start()
+    }
+
+    Timer {
+        id: restoreTimer
+        interval: 50
+        onTriggered: {
+            var mode = globalVariant.albumDisplayMode
+            // 静默恢复按钮选中态
+            toolButtonItem.restoreViewMode(mode)
+
+            toggleGridViewAnimation.stop()
+            toggleListViewAnimation.stop()
+            listFirstScale.stop()
+            // 恢复期间不播放动画：直接把两个 view 设为终态
+            if (mode === 1) {
+                // 列表模式：隐藏 grid、显示 list，scale/opacity 均置为 1
+                gridview.visible = false
+                gridview.scale = 1
+                gridview.opacity = 1
+                listview.visible = true
+                listview.scale = 1
+                listview.opacity = 1
+            } else {
+                // 平铺模式：隐藏 list、显示 grid
+                listview.visible = false
+                listview.scale = 1
+                listview.opacity = 1
+                gridview.visible = true
+                gridview.scale = 1
+                gridview.opacity = 1
+            }
+        }
     }
 
     SequentialAnimation {
