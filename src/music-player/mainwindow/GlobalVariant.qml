@@ -14,6 +14,7 @@ Item {
     // 0: 为初始化, 1: 使能下一页按钮，失能上一页按钮，并切换页面到一级页面
     // 2：使能上一页按钮，失能下一页按钮，并切换到二级页面
     property int globalSwitchButtonStatus: 0;
+    property int albumDisplayMode: 0  //专辑页显示模式：0=平铺、1=列表；跨实例持久化，切菜单重建后恢复选中态
     property var currentMediaMeta  //当前歌曲
     property string curPlayingHash: Presenter.valueFromSettings("base.play.last_meta")
     property int curPlayingStatus: DmGlobal.Idle

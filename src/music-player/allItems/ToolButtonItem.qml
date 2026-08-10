@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2023 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -18,6 +18,7 @@ Rectangle{
     property int m_viewType: 0 // 0为icon、1为list
     property int sortType: DmGlobal.SortByNull
     property bool isPlayAll: false
+    property bool _restoringViewType: false  //恢复显示模式时屏蔽切换动画信号
 
     signal viewChanged(var type)
 
@@ -111,7 +112,23 @@ Rectangle{
             }
         }
     }
+    function updateViewButtonChecked() {
+        gridViewButton.checked = (m_viewType === 0)
+        listViewButton.checked = (m_viewType === 1)
+    }
+    function restoreViewMode(mode) {
+        //由 AlbumView 在视图布局 settle 后调用，静默恢复 m_viewType 并同步按钮选中态
+        _restoringViewType = true
+        m_viewType = mode
+        _restoringViewType = false
+        updateViewButtonChecked()
+    }
     onM_viewTypeChanged: {
-        viewChanged(m_viewType);
+        if (_restoringViewType)
+            return
+        if (gridAndlistViewModel)
+            globalVariant.albumDisplayMode = m_viewType
+        updateViewButtonChecked()
+        viewChanged(m_viewType)
     }
 }
