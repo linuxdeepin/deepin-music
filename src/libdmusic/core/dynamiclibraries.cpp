@@ -15,15 +15,15 @@
 #ifdef Q_OS_WIN
 static const QString libvlccoreStr = "libvlccore";
 static const QString libvlcStr = "libvlc";
-static const QString libavcodecStr = "avcodec-62";
-static const QString libavformateStr = "avformat-62";
-static const QString libavutilStr = "avutil-60";
-static const QString libswresampleStr = "swresample-6";
+static const QString libavcodecStr = "avcodec";
+static const QString libavformatStr = "avformat";
+static const QString libavutilStr = "avutil";
+static const QString libswresampleStr = "swresample";
 #else
 static const QString libvlccoreStr = "libvlccore.so";
 static const QString libvlcStr = "libvlc.so";
 static const QString libavcodecStr = "libavcodec.so";
-static const QString libavformateStr = "libavformat.so";
+static const QString libavformatStr = "libavformat.so";
 static const QString libavutilStr = "libavutil.so";
 static const QString libswresampleStr = "libswresample.so";
 #endif
@@ -181,7 +181,7 @@ bool DynamicLibraries::loadLibraries()
         return false;
     }
 
-    QString strlibformate = DmGlobal::libPath(libavformateStr);
+    QString strlibformate = DmGlobal::libPath(libavformatStr);
     qCDebug(dmMusic) << "Loading avformat library from:" << strlibformate;
     if (QLibrary::isLibrary(strlibformate)) {
         avformateLib.setFileName(strlibformate);
